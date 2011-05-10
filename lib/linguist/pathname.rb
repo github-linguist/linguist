@@ -22,6 +22,22 @@ module Linguist
       Language.find_by_extension(extname)
     end
 
+    def lexer
+      if language
+        language.lexer
+      else
+        'plain'
+      end
+    end
+
+    def lexer_name
+      if language
+        language.name
+      else
+        'Text'
+      end
+    end
+
     def to_s
       @path.dup
     end
