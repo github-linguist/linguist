@@ -19,24 +19,6 @@ class TestLanguage < Test::Unit::TestCase
     assert_nil Language.find_by_extension('foo.rb')
   end
 
-  def test_find_by_filename
-    ruby = Language['Ruby']
-    assert_equal ruby, Language.find_by_filename('.rb')
-    assert_equal ruby, Language.find_by_filename('rb')
-    assert_equal ruby, Language.find_by_filename('foo.rb')
-    assert_equal ruby, Language.find_by_filename('./foo.rb')
-    assert_equal ruby, Language.find_by_filename('foo/bar.rb')
-
-    assert_equal ruby, Language.find_by_filename('Rakefile')
-    assert_equal ruby, Language.find_by_filename('vendor/Rakefile')
-    assert_equal ruby, Language.find_by_filename('./Rakefile')
-
-    assert_equal Language['Gentoo Ebuild'], Language.find_by_filename('file.ebuild')
-    assert_equal Language['Python'], Language.find_by_filename('itty.py')
-    assert_equal Language['Nu'], Language.find_by_filename('itty.nu')
-    assert_nil Language.find_by_filename('defun.kt')
-  end
-
   def test_find_by_lexer
     assert_equal Language['Perl'], Language.find_by_lexer('perl')
     assert_equal Language['Python'], Language.find_by_lexer('python')

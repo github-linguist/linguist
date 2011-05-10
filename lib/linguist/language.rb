@@ -35,20 +35,6 @@ module Linguist
       @extension_index[extension]
     end
 
-    def self.find_by_filename(filename)
-      basename = File.basename(filename)
-
-      if basename[0] == ?.
-        ext = basename
-      elsif basename.include?('.')
-        ext = File.extname(basename)
-      else
-        ext = basename
-      end
-
-      find_by_extension(ext)
-    end
-
     def self.find_by_lexer(lexer)
       @lexer_index[lexer]
     end
