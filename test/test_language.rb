@@ -16,4 +16,10 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal "Python", Language['Python'].name
     assert_equal "Ruby",   Language['Ruby'].name
   end
+
+  def test_extensions
+    assert Language['Perl'].extensions.include?('.pl')
+    assert Language['Python'].extensions.include?('.py')
+    assert Language['Ruby'].extensions.include?('.rb')
+  end
 end

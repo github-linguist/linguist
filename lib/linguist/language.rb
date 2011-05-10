@@ -4,8 +4,8 @@ module Linguist
   class Language
     @name_index = {}
 
-    def self.create(name)
-      language = new(name)
+    def self.create(attributes = {})
+      language = new(attributes)
 
       @name_index[language.name.downcase] = language
 
@@ -20,14 +20,15 @@ module Linguist
       find_by_name(name)
     end
 
-    attr_reader :name
+    attr_reader :name, :extensions
 
-    def initialize(name)
-      @name = name
+    def initialize(attributes = {})
+      @name       = attributes[:name]
+      @extensions = attributes[:extensions] || []
     end
   end
 
   YAML.load_file(File.expand_path("../extensions.yml", __FILE__)).each do |name, options|
-    Language.create(name)
+    Language.create(:name => name, :extensions => options[:ext])
   end
 end
