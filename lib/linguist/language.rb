@@ -7,13 +7,13 @@ module Linguist
     def self.create(name)
       language = new(name)
 
-      @name_index[language.name] = language
+      @name_index[language.name.downcase] = language
 
       language
     end
 
     def self.find_by_name(name)
-      @name_index[name]
+      @name_index[name.downcase]
     end
 
     def self.[](name)
