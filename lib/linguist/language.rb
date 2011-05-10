@@ -53,6 +53,10 @@ module Linguist
       @lexer_index[lexer]
     end
 
+    def self.lexers
+      @lexer_index.to_a
+    end
+
     def initialize(attributes = {})
       @name       = attributes[:name] || raise(ArgumentError, "missing name")
       @lexer      = attributes[:lexer] || default_lexer
