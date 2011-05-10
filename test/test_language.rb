@@ -44,6 +44,13 @@ class TestLanguage < Test::Unit::TestCase
     end
   end
 
+  def test_lexer
+    assert_equal 'perl',   Language['Perl'].lexer
+    assert_equal 'python', Language['Python'].lexer
+    assert_equal 'ruby',   Language['Ruby'].lexer
+    assert_equal 'cpp',    Language['C++'].lexer
+  end
+
   def test_extensions
     assert Language['Perl'].extensions.include?('.pl')
     assert Language['Python'].extensions.include?('.py')

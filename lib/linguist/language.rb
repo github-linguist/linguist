@@ -44,15 +44,20 @@ module Linguist
       find_by_extension(ext)
     end
 
-    attr_reader :name, :extensions
-
     def initialize(attributes = {})
       @name       = attributes[:name] || raise(ArgumentError, "missing name")
+      @lexer      = attributes[:lexer] || default_lexer
       @extensions = attributes[:extensions] || []
+    end
+
+    attr_reader :name, :lexer, :extensions
+
+    def default_lexer
+      name.downcase.gsub(/\s/, '-')
     end
   end
 
   YAML.load_file(File.expand_path("../extensions.yml", __FILE__)).each do |name, options|
-    Language.create(:name => name, :extensions => options[:ext])
+    Language.create(:name => name, :lexer => options[:lexer], :extensions => options[:ext])
   end
 end
