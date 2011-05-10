@@ -3,12 +3,17 @@ require 'yaml'
 module Linguist
   class Language
     @name_index      = {}
+    @lexer_index     = {}
     @extension_index = {}
 
     def self.create(attributes = {})
       language = new(attributes)
 
       @name_index[language.name.downcase] = language
+
+      if language.default_lexer? || !@lexer_index.key?(language.lexer)
+        @lexer_index[language.lexer] = language
+      end
 
       language.extensions.each do |extension|
         @extension_index[extension] = language
@@ -44,6 +49,10 @@ module Linguist
       find_by_extension(ext)
     end
 
+    def self.find_by_lexer(lexer)
+      @lexer_index[lexer]
+    end
+
     def initialize(attributes = {})
       @name       = attributes[:name] || raise(ArgumentError, "missing name")
       @lexer      = attributes[:lexer] || default_lexer
@@ -54,6 +63,10 @@ module Linguist
 
     def default_lexer
       name.downcase.gsub(/\s/, '-')
+    end
+
+    def default_lexer?
+      lexer == default_lexer
     end
   end
 

@@ -32,6 +32,15 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal ruby, Language.find_by_filename('./Rakefile')
   end
 
+  def test_find_by_lexer
+    assert_equal Language['Perl'], Language.find_by_lexer('perl')
+    assert_equal Language['Python'], Language.find_by_lexer('python')
+    assert_equal Language['Ruby'], Language.find_by_lexer('ruby')
+    assert_equal Language['C++'], Language.find_by_lexer('cpp')
+    assert_equal Language['JavaScript'], Language.find_by_lexer('javascript')
+    assert_equal Language['Scheme'], Language.find_by_lexer('scheme')
+  end
+
   def test_name
     assert_equal "Perl",   Language['Perl'].name
     assert_equal "Python", Language['Python'].name
