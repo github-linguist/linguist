@@ -1,0 +1,506 @@
+# This file maps file extensions and exact file names to languages.
+# If the key begins with a `.`, it's an extension.
+# Anything else will only match exactly, albeit case insensitively.
+ASP:
+  :lexer: aspx-vb
+  :ext:
+  - .ascx
+  - .axd
+  - .asax
+  - .asmx
+  - .aspx
+  - .ashx
+  - .asp
+ActionScript:
+  :lexer: as3
+  :ext:
+  - .as
+Ada:
+  :ext:
+  - .adb
+  - .ads
+AppleScript:
+  :ext:
+  - .scpt
+Arc:
+  :ext:
+  - .arc
+Assembly:
+  :lexer: nasm
+  :ext:
+  - .asm
+Batchfile:
+  :lexer: bat
+  :ext:
+  - .bat
+  - .cmd
+Befunge:
+  :ext:
+  - .befunge
+Boo:
+  :ext:
+  - .boo
+Brainfuck:
+  :ext:
+  - .b
+  - .bf
+BlitzMax:
+  :ext:
+  - .bmx
+C:
+  :ext:
+  - .c
+  - .h
+C#:
+  :lexer: csharp
+  :ext:
+  - .cs
+C++:
+  :lexer: cpp
+  :ext:
+  - .cpp
+  - .hh
+  - .cc
+  - .h++
+  - .hpp
+  - .hxx
+  - .c++
+  - .cxx
+  - .tcc
+CSS:
+  :ext:
+  - .css
+ChucK:
+  :lexer: java
+  :ext:
+  - .ck
+Clojure:
+  :ext:
+  - .clj
+CoffeeScript:
+  :ext:
+  - .coffee
+  - Cakefile
+ColdFusion:
+  :lexer: cfm
+  :ext:
+  - .cfm
+  - .cfc
+Common Lisp:
+  :ext:
+  - .cl
+  - .lisp
+  - .ny
+Cucumber:
+  :ext:
+  - .feature
+Cython:
+  :ext:
+  - .pyx
+  - .pxd
+  - .pxi
+D:
+  :ext:
+  - .d
+  - .di
+Darcs Patch:
+  :lexer: dpatch
+  :ext:
+  - .darcspatch
+  - .dpatch
+Delphi:
+  :ext:
+  - .pas
+Diff:
+  :ext:
+  - .diff
+  - .patch
+D-ObjDump:
+  :ext:
+  - .d  -objdump
+Dylan:
+  :ext:
+  - .dylan
+Eiffel:
+  :ext:
+  - .e
+Emacs Lisp:
+  :lexer: scheme
+  :ext:
+  - .el
+  - .emacs
+Erlang:
+  :ext:
+  - .hrl
+  - .erl
+F#:
+  :lexer: ocaml
+  :ext:
+  - .fs
+  - .fsi
+  - .fsx
+Factor:
+  :ext:
+  - .factor
+FORTRAN:
+  :ext:
+  - .f
+  - .f90
+  - .F
+  - .F90
+GAS:
+  :ext:
+  - .s
+  - .S
+Genshi:
+  :ext:
+  - .kid
+Gentoo Ebuild:
+  :lexer: bash
+  :ext:
+  - .ebuild
+Gentoo Eclass:
+  :lexer: bash
+  :ext:
+  - .eclass
+Gettext Catalog:
+  :lexer: pot
+  :ext:
+  - .po
+  - .pot
+Go:
+  :ext:
+  - .go
+Groff:
+  :ext:
+  - .man
+  - .[1234567]
+HTML:
+  :ext:
+  - .html
+  - .xhtml
+  - .htm
+  - .xslt
+HTML+Django:
+  :ext:
+  - .mustache
+HTML+ERB:
+  :ext:
+  - .erb
+  - .html.erb
+HTML+PHP:
+  :ext:
+  - .phtml
+HaXe:
+  :ext:
+  - .hx
+  - .hxml
+  - .mtt
+Haml:
+  :ext:
+  - .haml
+Haskell:
+  :ext:
+  - .hs
+  - .lhs
+  - .hsc
+INI:
+  :ext:
+  - .ini
+  - .cfg
+  - .properties
+IRC log:
+  :lexer: irc
+  :ext:
+  - .weechatlog
+Io:
+  :ext:
+  - .io
+Java:
+  :ext:
+  - .java
+  - .pde
+Groovy:
+  :lexer: java
+  :ext:
+  - .groovy
+JavaScript:
+  :ext:
+  - .js
+  - .sjs
+  - Jakefile
+  - .jss
+  - .ssjs
+  - .jsx
+  - .jake
+JSON:
+  :lexer: javascript
+  :ext:
+  - .json
+Literate Haskell:
+  :lexer: lhs
+  :ext:
+  - .lhs
+LLVM:
+  :ext:
+  - .ll
+Lua:
+  :ext:
+  - .lua
+  - .nse
+Makefile:
+  :ext:
+  - .mak
+  - Makefile
+Mako:
+  :ext:
+  - .mao
+Markdown:
+  :ext:
+  - .md
+  - .mkd
+  - .mkdown
+  - .markdown
+  - .ron
+Matlab:
+  :ext:
+  - .matlab
+Max/MSP:
+  :ext:
+  - .mxt
+Mirah:
+  :lexer: ruby
+  :ext:
+  - .duby
+  - .mir
+  - .mirah
+Moocode:
+  :ext:
+  - .moo
+Myghty:
+  :ext:
+  - .myt
+Nu:
+  :lexer: scheme
+  :ext:
+  - .nu
+  - Nukefile
+NumPy:
+  :ext:
+  - .numpy
+  - .numsc
+  - .numpyw
+OCaml:
+  :ext:
+  - .ml
+  - .mly
+  - .mli
+  - .mll
+Cpp-ObjDump:
+  :ext:
+  - .cppobjdump
+  - .c++objdump
+  - .cxx-objdump
+C-ObjDump:
+  :ext:
+  - .c-objdump
+ObjDump:
+  :ext:
+  - .objdump
+Objective-C:
+  :ext:
+  - .m
+  - .mm
+Objective-J:
+  :ext:
+  - .j
+  - .sj
+PHP:
+  :ext:
+  - .php
+  - .php[345]
+  - .aw
+  - .php3
+  - .php4
+  - .php5
+Parrot Internal Representation:
+  :lexer: pir
+  :ext:
+  - .pir
+  - .pbc
+  - .pasm
+Perl:
+  :ext:
+  - .pl
+  - .ph
+  - .PL
+  - .pod
+  - .pm
+  - .t
+  - .perl
+  - .psgi
+Pure Data:
+  :ext:
+  - .pd
+Python:
+  :ext:
+  - .py
+  - .pyw
+Python traceback:
+  :lexer: pytb
+  :ext:
+  - .pytb
+R:
+  :ext:
+  - .r
+  - .R
+Racket:
+  :ext:
+  - .rkt
+  - .rktl
+  - .rktd
+RHTML:
+  :ext:
+  - .rhtml
+Raw token data:
+  :lexer: raw
+  :ext:
+  - .raw
+Rebol:
+  :ext:
+  - .rebol
+  - .r2
+  - .r3
+Redcode:
+  :ext:
+  - .cw
+Ruby:
+  :ext:
+  - .rb
+  - .ru
+  - .builder
+  - Capfile
+  - .rbw
+  - .rbx
+  - .god
+  - .rake
+  - .gemspec
+  - Rakefile
+  - .irbrc
+  - Thorfile
+  - .thor
+  - Gemfile
+SQL:
+  :ext:
+  - .sql
+Sass:
+  :ext:
+  - .sass
+Scala:
+  :ext:
+  - .scala
+Scheme:
+  :ext:
+  - .sls
+  - .ss
+  - .sps
+  - .scm
+Self:
+  :ext:
+  - .self
+Shell:
+  :lexer: bash
+  :ext:
+  - .sh
+  - .zsh
+  - .bash
+Smalltalk:
+  :ext:
+  - .st
+Smarty:
+  :ext:
+  - .tpl
+SuperCollider:
+  :ext:
+  - .sc
+Tcl:
+  :ext:
+  - .tcl
+Tcsh:
+  :ext:
+  - .tcsh
+  - .csh
+TeX:
+  :ext:
+  - .tex
+  - .sty
+  - .toc
+  - .cls
+  - .aux
+Text:
+  :ext:
+  - .txt
+Textile:
+  :ext:
+  - .textile
+Vala:
+  :ext:
+  - .vala
+VHDL:
+  :ext:
+  - .vhdl
+  - .vhd
+Verilog:
+  :ext:
+  - .v
+VimL:
+  :lexer: vim
+  :ext:
+  - .vim
+  - .vimrc
+Visual Basic:
+  :ext:
+  - .bas
+  - .vbs
+  - .frx
+  - .vba
+  - .vb
+XML:
+  :ext:
+  - .xml
+  - .rss
+  - .xsl
+  - .wsdl
+  - .xul
+  - .xsd
+  - .plist
+  - .mxml
+  - .rdf
+XQuery:
+  :ext:
+  - .xqy
+  - .xq
+  - .xquery
+XS:
+  :lexer: c
+  :ext:
+  - .xs
+YAML:
+  :ext:
+  - .yml
+  - .yaml
+Java Server Pages:
+  :lexer: jsp
+  :ext:
+  - .jsp
+mupad:
+  :ext:
+  - .mu
+ooc:
+  :ext:
+  - .ooc
+reStructuredText:
+  :lexer: rst
+  :ext:
+  - .rst
+  - .rest
