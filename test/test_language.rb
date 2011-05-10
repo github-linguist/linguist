@@ -30,6 +30,11 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal ruby, Language.find_by_filename('Rakefile')
     assert_equal ruby, Language.find_by_filename('vendor/Rakefile')
     assert_equal ruby, Language.find_by_filename('./Rakefile')
+
+    assert_equal Language['Gentoo Ebuild'], Language.find_by_filename('file.ebuild')
+    assert_equal Language['Python'], Language.find_by_filename('itty.py')
+    assert_equal Language['Nu'], Language.find_by_filename('itty.nu')
+    assert_nil Language.find_by_filename('defun.kt')
   end
 
   def test_find_by_lexer
@@ -39,6 +44,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['C++'], Language.find_by_lexer('cpp')
     assert_equal Language['JavaScript'], Language.find_by_lexer('javascript')
     assert_equal Language['Scheme'], Language.find_by_lexer('scheme')
+    assert_nil Language.find_by_lexer('kt')
   end
 
   def test_name
@@ -58,6 +64,8 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal 'python', Language['Python'].lexer
     assert_equal 'ruby',   Language['Ruby'].lexer
     assert_equal 'cpp',    Language['C++'].lexer
+    assert_equal 'bash',   Language['Gentoo Ebuild'].lexer
+    assert_equal 'scheme', Language['Nu'].lexer
   end
 
   def test_extensions
