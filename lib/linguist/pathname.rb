@@ -1,3 +1,5 @@
+require 'linguist/language'
+
 module Linguist
   class Pathname
     def initialize(path)
