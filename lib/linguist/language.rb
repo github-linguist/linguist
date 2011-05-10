@@ -43,7 +43,7 @@ module Linguist
     attr_reader :name, :extensions
 
     def initialize(attributes = {})
-      @name       = attributes[:name]
+      @name       = attributes[:name] || raise(ArgumentError, "missing name")
       @extensions = attributes[:extensions] || []
     end
   end

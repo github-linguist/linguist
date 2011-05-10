@@ -32,6 +32,12 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal "Ruby",   Language['Ruby'].name
   end
 
+  def test_error_without_name
+    assert_raise ArgumentError do
+      Language.new :name => nil
+    end
+  end
+
   def test_extensions
     assert Language['Perl'].extensions.include?('.pl')
     assert Language['Python'].extensions.include?('.py')
