@@ -16,14 +16,20 @@ class TestLanguage < Test::Unit::TestCase
     ruby = Language['Ruby']
     assert_equal ruby, Language.find_by_extension('.rb')
     assert_equal ruby, Language.find_by_extension('rb')
-    assert_equal ruby, Language.find_by_extension('foo.rb')
-    assert_equal ruby, Language.find_by_extension('./foo.rb')
-    assert_equal ruby, Language.find_by_extension('foo/bar.rb')
+    assert_nil Language.find_by_extension('foo.rb')
+  end
 
-    # TODO: Review questionable usage
-    assert_equal ruby, Language.find_by_extension('Rakefile')
-    assert_equal ruby, Language.find_by_extension('vendor/Rakefile')
-    assert_equal ruby, Language.find_by_extension('./Rakefile')
+  def test_find_by_filename
+    ruby = Language['Ruby']
+    assert_equal ruby, Language.find_by_filename('.rb')
+    assert_equal ruby, Language.find_by_filename('rb')
+    assert_equal ruby, Language.find_by_filename('foo.rb')
+    assert_equal ruby, Language.find_by_filename('./foo.rb')
+    assert_equal ruby, Language.find_by_filename('foo/bar.rb')
+
+    assert_equal ruby, Language.find_by_filename('Rakefile')
+    assert_equal ruby, Language.find_by_filename('vendor/Rakefile')
+    assert_equal ruby, Language.find_by_filename('./Rakefile')
   end
 
   def test_name

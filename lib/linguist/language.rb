@@ -26,7 +26,11 @@ module Linguist
       @name_index[name.downcase]
     end
 
-    def self.find_by_extension(filename)
+    def self.find_by_extension(extension)
+      @extension_index[extension]
+    end
+
+    def self.find_by_filename(filename)
       basename = File.basename(filename)
 
       if basename[0] == ?.
@@ -37,7 +41,7 @@ module Linguist
         ext = basename
       end
 
-      @extension_index[ext]
+      find_by_extension(ext)
     end
 
     attr_reader :name, :extensions
