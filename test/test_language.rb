@@ -55,4 +55,10 @@ class TestLanguage < Test::Unit::TestCase
     assert Language['Python'].extensions.include?('.py')
     assert Language['Ruby'].extensions.include?('.rb')
   end
+
+  def test_eql
+    assert Language['Ruby'].eql?(Language['Ruby'])
+    assert !Language['Ruby'].eql?(Language['Python'])
+    assert !Language['Ruby'].eql?(Language.new(:name => 'Ruby'))
+  end
 end

@@ -58,6 +58,14 @@ module Linguist
     def default_lexer?
       lexer == default_lexer
     end
+
+    def ==(other)
+      eql?(other)
+    end
+
+    def eql?(other)
+      equal?(other)
+    end
   end
 
   YAML.load_file(File.expand_path("../extensions.yml", __FILE__)).each do |name, options|
