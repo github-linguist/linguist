@@ -73,4 +73,12 @@ class TestLanguage < Test::Unit::TestCase
     assert !Language['Ruby'].eql?(Language['Python'])
     assert !Language['Ruby'].eql?(Language.new(:name => 'Ruby'))
   end
+
+  def test_popular
+    assert Language['Ruby'].popular?
+    assert Language['Perl'].popular?
+    assert Language['Python'].popular?
+    assert Language['Assembly'].unpopular?
+    assert Language['Brainfuck'].unpopular?
+  end
 end

@@ -43,6 +43,14 @@ module Linguist
       @lexer_index.to_a
     end
 
+    def self.popular
+      @name_index.values.select(&:popular?).sort_by { |lang| lang.name.downcase }
+    end
+
+    def self.unpopular
+      @name_index.values.select(&:unpopular?).sort_by { |lang| lang.name.downcase }
+    end
+
     def self.lexer2name(lexer)
       if language = find_by_lexer(lexer)
         language.name
@@ -59,6 +67,7 @@ module Linguist
       @name       = attributes[:name] || raise(ArgumentError, "missing name")
       @lexer      = attributes[:lexer] || default_lexer
       @extensions = attributes[:extensions] || []
+      @popular    = attributes[:popular] || false
     end
 
     attr_reader :name, :lexer, :extensions
@@ -71,6 +80,14 @@ module Linguist
       lexer == default_lexer
     end
 
+    def popular?
+      @popular
+    end
+
+    def unpopular?
+      !popular?
+    end
+
     def ==(other)
       eql?(other)
     end
@@ -80,7 +97,14 @@ module Linguist
     end
   end
 
+  popular = YAML.load_file(File.expand_path("../popular.yml", __FILE__))
+
   YAML.load_file(File.expand_path("../extensions.yml", __FILE__)).each do |name, options|
-    Language.create(:name => name, :lexer => options[:lexer], :extensions => options[:ext])
+    Language.create(
+      :name => name,
+      :lexer => options[:lexer],
+      :extensions => options[:ext],
+      :popular => popular.include?(name)
+    )
   end
 end
