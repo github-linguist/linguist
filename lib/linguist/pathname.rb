@@ -28,7 +28,7 @@ module Linguist
       if language
         language.lexer
       else
-        'plain'
+        'text'
       end
     end
 

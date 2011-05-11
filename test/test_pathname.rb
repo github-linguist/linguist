@@ -48,7 +48,7 @@ class TestPathname < Test::Unit::TestCase
     assert_equal 'bash',   Pathname.new("file.ebuild").lexer
     assert_equal 'python', Pathname.new("itty.py").lexer
     assert_equal 'scheme', Pathname.new("itty.nu").lexer
-    assert_equal 'plain',  Pathname.new("defun.kt").lexer
+    assert_equal 'text',   Pathname.new("defun.kt").lexer
   end
 
   def test_lexer_name
