@@ -29,6 +29,18 @@ class TestLanguage < Test::Unit::TestCase
     assert_nil Language.find_by_lexer('kt')
   end
 
+  def test_lexer2name
+    assert_equal 'Ruby',   Language.lexer2name('ruby')
+    assert_equal 'Python', Language.lexer2name('python')
+    assert_nil Language.lexer2name('kt')
+  end
+
+  def test_name2lexer
+    assert_equal 'ruby',   Language.name2lexer('Ruby')
+    assert_equal 'python', Language.name2lexer('Python')
+    assert_nil Language.name2lexer('defunkt')
+  end
+
   def test_name
     assert_equal "Perl",   Language['Perl'].name
     assert_equal "Python", Language['Python'].name
