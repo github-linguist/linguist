@@ -1,4 +1,5 @@
 require 'linguist/language'
+require 'mime/types'
 
 module Linguist
   class Pathname
@@ -26,6 +27,13 @@ module Linguist
 
     def lexer
       language.lexer
+    end
+
+    def mime_type
+      @mime_type ||= begin
+        guesses = MIME::Types.type_for(extname)
+        guesses.first ? guesses.first.simplified : 'text/plain'
+      end
     end
 
     def to_s
