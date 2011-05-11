@@ -16,5 +16,9 @@ class TestMime < Test::Unit::TestCase
     assert_equal 'text/plain; charset=utf-8', Mime.lookup(".latex")
 
     assert_equal 'application/octet-stream', Mime.lookup(".dmg")
+
+    assert_equal 'application/java-archive', Mime.lookup(".jar")
+    assert_equal 'application/java-archive', Mime.lookup(".ear")
+    assert_equal 'application/java-archive', Mime.lookup(".war")
   end
 end

@@ -1,5 +1,11 @@
 require 'mime/types'
 
+# Register 'ear' and 'war' as java
+java = MIME::Types['application/java-archive'].first
+java.extensions << 'ear'
+java.extensions << 'war'
+MIME::Types.index_extensions(java)
+
 module Linguist
   module Mime
     Special = YAML.load_file(File.expand_path("../special_mime_types.yml", __FILE__))
