@@ -36,7 +36,7 @@ module Linguist
     end
 
     def self.find_by_lexer(lexer)
-      @lexer_index[lexer]
+      @lexer_index[lexer] || self['Text']
     end
 
     def self.popular

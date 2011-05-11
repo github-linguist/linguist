@@ -13,10 +13,9 @@ class TestLanguage < Test::Unit::TestCase
   end
 
   def test_find_by_extension
-    ruby = Language['Ruby']
-    assert_equal ruby, Language.find_by_extension('.rb')
-    assert_equal ruby, Language.find_by_extension('rb')
-    assert_nil Language.find_by_extension('foo.rb')
+    assert_equal Language['Ruby'], Language.find_by_extension('.rb')
+    assert_equal Language['Ruby'], Language.find_by_extension('rb')
+    assert_nil Language.find_by_extension('.kt')
   end
 
   def test_find_by_lexer
@@ -26,7 +25,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['C++'], Language.find_by_lexer('cpp')
     assert_equal Language['JavaScript'], Language.find_by_lexer('javascript')
     assert_equal Language['Scheme'], Language.find_by_lexer('scheme')
-    assert_nil Language.find_by_lexer('kt')
+    assert_equal Language['Text'], Language.find_by_lexer('kt')
   end
 
   def test_name
