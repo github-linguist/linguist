@@ -47,18 +47,6 @@ module Linguist
       @name_index.values.select(&:unpopular?).sort_by { |lang| lang.name.downcase }
     end
 
-    def self.lexer2name(lexer)
-      if language = find_by_lexer(lexer)
-        language.name
-      end
-    end
-
-    def self.name2lexer(name)
-      if language = find_by_name(name)
-        language.lexer
-      end
-    end
-
     def initialize(attributes = {})
       @name       = attributes[:name] || raise(ArgumentError, "missing name")
       @lexer      = attributes[:lexer] || default_lexer
