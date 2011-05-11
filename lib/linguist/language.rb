@@ -39,10 +39,6 @@ module Linguist
       @lexer_index[lexer]
     end
 
-    def self.lexers
-      @lexer_index.to_a
-    end
-
     def self.popular
       @name_index.values.select(&:popular?).sort_by { |lang| lang.name.downcase }
     end
