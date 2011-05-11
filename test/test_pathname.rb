@@ -57,4 +57,28 @@ class TestPathname < Test::Unit::TestCase
     assert_equal 'application/python', Pathname.new("itty.py").mime_type
     assert_equal 'text/plain; charset=utf-8', Pathname.new("defun.kt").mime_type
   end
+
+  def test_media_type
+    assert_equal 'application', Pathname.new("file.js").media_type
+    assert_equal 'text', Pathname.new("file.txt").media_type
+    assert_equal 'text', Pathname.new("defun.kt").media_type
+  end
+
+  def test_file
+    assert Pathname.new("octocat.png").file?
+    assert Pathname.new("linguist.gem").file?
+  end
+
+  def test_text
+    assert Pathname.new("file.txt").text?
+    assert Pathname.new("file.json").text?
+  end
+
+  def test_image
+    assert Pathname.new("octocat.png").image?
+    assert Pathname.new("octocat.jpg").image?
+    assert Pathname.new("octocat.jpeg").image?
+    assert Pathname.new("octocat.gif").image?
+    assert !Pathname.new("octocat.psd").image?
+  end
 end
