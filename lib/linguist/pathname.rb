@@ -21,23 +21,11 @@ module Linguist
     end
 
     def language
-      Language.find_by_extension(extname)
+      Language.find_by_extension(extname) || Language['Text']
     end
 
     def lexer
-      if language
-        language.lexer
-      else
-        'text'
-      end
-    end
-
-    def lexer_name
-      if language
-        language.name
-      else
-        'Text'
-      end
+      language.lexer
     end
 
     def to_s
