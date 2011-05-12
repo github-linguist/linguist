@@ -37,19 +37,6 @@ module Linguist
       mime_type.split('/').first
     end
 
-    def file?
-      image? || !text? || mime_type == 'octet-stream'
-    end
-
-    def text?
-      media_type == 'text' ||
-        mime_type == 'application/json'
-    end
-
-    def image?
-      ['.png', '.jpg', '.jpeg', '.gif'].include?(extname)
-    end
-
     def to_s
       @path.dup
     end
