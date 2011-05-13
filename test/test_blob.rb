@@ -49,4 +49,22 @@ class TestBlob < Test::Unit::TestCase
   def test_size
     assert_equal 15, blob("foo.rb").size
   end
+
+  def test_file
+    assert blob("octocat.png").file?
+    assert blob("linguist.gem").file?
+  end
+
+  def test_text
+    assert blob("file.txt").text?
+    assert blob("file.json").text?
+  end
+
+  def test_image
+    assert blob("octocat.png").image?
+    assert blob("octocat.jpg").image?
+    assert blob("octocat.jpeg").image?
+    assert blob("octocat.gif").image?
+    assert !blob("octocat.psd").image?
+  end
 end
