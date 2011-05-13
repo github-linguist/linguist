@@ -12,10 +12,6 @@ module Linguist
 
     attr_reader :name
 
-    def data
-      @blob.data
-    end
-
     def mime_type
       Mime.lookup(name.extname)
     end
@@ -29,8 +25,24 @@ module Linguist
       end
     end
 
+    def data
+      @blob.data
+    end
+
+    def lines
+      @lines ||= data ? data.split("\n", -1) : []
+    end
+
     def size
       @blob.size
+    end
+
+    def loc
+      lines.size
+    end
+
+    def sloc
+      lines.grep(/\S/).size
     end
 
     def submodule?

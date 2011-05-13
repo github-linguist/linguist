@@ -51,8 +51,20 @@ class TestBlob < Test::Unit::TestCase
     assert_equal "module Foo\nend\n", blob("foo.rb").data
   end
 
+  def test_lines
+    assert_equal ["module Foo", "end", ""], blob("foo.rb").lines
+  end
+
   def test_size
     assert_equal 15, blob("foo.rb").size
+  end
+
+  def test_loc
+    assert_equal 3, blob("foo.rb").loc
+  end
+
+  def test_sloc
+    assert_equal 2, blob("foo.rb").sloc
   end
 
   def test_binary
