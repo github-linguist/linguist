@@ -40,5 +40,10 @@ module Linguist
     def to_s
       @path.dup
     end
+
+    def eql?(other)
+      other.is_a?(self.class) && @path == other.to_s
+    end
+    alias_method :==, :eql?
   end
 end
