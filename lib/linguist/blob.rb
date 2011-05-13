@@ -26,8 +26,12 @@ module Linguist
       defined?(Grit::Submodule) && @blob.kind_of?(Grit::Submodule)
     end
 
+    def binary?
+      mime_type == 'octet-stream' || !(text? || image?)
+    end
+
     def file?
-      image? || !text? || mime_type == 'octet-stream'
+      image? || binary?
     end
 
     def text?

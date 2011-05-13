@@ -50,6 +50,14 @@ class TestBlob < Test::Unit::TestCase
     assert_equal 15, blob("foo.rb").size
   end
 
+  def test_binary
+    assert blob("linguist.gem").binary?
+    assert blob("git.deb").binary?
+    assert blob("git.exe").binary?
+    assert !blob("file.txt").binary?
+    assert !blob("octocat.png").binary?
+  end
+
   def test_file
     assert blob("octocat.png").file?
     assert blob("linguist.gem").file?
