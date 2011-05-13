@@ -92,4 +92,53 @@ class TestBlob < Test::Unit::TestCase
     assert blob("octocat.gif").image?
     assert !blob("octocat.psd").image?
   end
+
+  def test_language
+    assert_equal Language['Ruby'], blob("foo.rb").language
+    assert_equal Language['Ruby'], blob("script.rb").language
+    assert_equal Language['Text'], blob("octocat.png").language
+  end
+
+  def test_lexer
+    assert_equal 'ruby', blob("grit.rb").lexer
+    assert_equal 'text', blob("README").lexer
+    assert_equal 'diff', blob("dude-thing-okay--001.patch").lexer
+    assert_equal 'scheme', blob("dude.el").lexer
+    assert_equal 'javascript', blob("dude.js").lexer
+    assert_equal 'ruby', blob("Capfile").lexer
+
+    assert_equal 'ruby', blob("Rakefile").lexer
+    assert_equal 'ruby', blob("subdir/Rakefile").lexer
+  end
+
+  def test_shebang_script
+    assert_equal 'sh', blob("script.sh").shebang_script
+    assert_equal 'bash', blob("script.bash").shebang_script
+    assert_equal 'zsh', blob("script.zsh").shebang_script
+    assert_equal 'perl', blob("script.pl").shebang_script
+    assert_equal 'ruby', blob("script.rb").shebang_script
+    assert_equal 'ruby', blob("script2.rb").shebang_script
+    assert_equal 'python', blob("script.py").shebang_script
+    assert_equal 'node', blob("script.js").shebang_script
+    assert_equal 'groovy', blob("script.groovy").shebang_script
+    assert_equal 'macruby', blob("script.mrb").shebang_script
+    assert_equal 'rake', blob("script.rake").shebang_script
+    assert_equal 'foo', blob("script.foo").shebang_script
+    assert_equal nil, blob("foo.rb").shebang_script
+  end
+
+  def test_shebang_language
+    assert_equal Language['Shell'], blob("script.sh").shebang_language
+    assert_equal Language['Shell'], blob("script.bash").shebang_language
+    assert_equal Language['Shell'], blob("script.zsh").shebang_language
+    assert_equal Language['Perl'], blob("script.pl").shebang_language
+    assert_equal Language['Ruby'], blob("script.rb").shebang_language
+    assert_equal Language['Python'], blob("script.py").shebang_language
+    assert_equal Language['JavaScript'], blob("script.js").shebang_language
+    assert_equal Language['Java'], blob("script.groovy").shebang_language
+    assert_equal Language['Ruby'], blob("script.mrb").shebang_language
+    assert_equal Language['Ruby'], blob("script.rake").shebang_language
+    assert_equal nil, blob("script.foo").shebang_language
+    assert_equal nil, blob("foo.rb").shebang_language
+  end
 end

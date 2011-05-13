@@ -1,3 +1,4 @@
+require 'linguist/language'
 require 'linguist/mime'
 require 'linguist/pathname'
 
@@ -76,6 +77,66 @@ module Linguist
 
     def viewable?
       !file? && !large?
+    end
+
+    def language
+      if text?
+        shebang_language || name.language
+      else
+        Language['Text']
+      end
+    end
+
+    def lexer
+      language.lexer
+    end
+
+    def shebang_script
+      return if !text? || large?
+
+      if (match = data.match(/(.+)\n?/)) && (bang = match[0]) =~ /^#!/
+        bang.sub!(/^#! /, '#!')
+        tokens = bang.split(' ')
+        pieces = tokens.first.split('/')
+        if pieces.size > 1
+          script = pieces.last
+        else
+          script = pieces.first.sub('#!', '')
+        end
+
+        script = script == 'env' ? tokens[1] : script
+
+        # python2.4 => python
+        if script =~ /((?:\d+\.?)+)/
+          script.sub! $1, ''
+        end
+
+        script
+      end
+    end
+
+    def shebang_language
+      if script = shebang_script
+        case script
+        when 'bash'
+          Language['Shell']
+        when 'groovy'
+          Language['Java']
+        when 'macruby'
+          Language['Ruby']
+        when 'node'
+          Language['JavaScript']
+        when 'rake'
+          Language['Ruby']
+        when 'sh'
+          Language['Shell']
+        when 'zsh'
+          Language['Shell']
+        else
+          lang = Language.find_by_lexer(shebang_script)
+          lang != Language['Text'] ? lang : nil
+        end
+      end
     end
   end
 end
