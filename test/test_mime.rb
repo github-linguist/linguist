@@ -6,6 +6,8 @@ class TestMime < Test::Unit::TestCase
   include Linguist
 
   def test_lookup
+    assert_equal 'text/plain; charset=utf-8', Mime.lookup(nil)
+
     assert_equal 'text/plain; charset=utf-8', Mime.lookup(".rb")
     assert_equal 'text/plain; charset=utf-8', Mime.lookup(".js")
     assert_equal 'text/plain; charset=utf-8', Mime.lookup(".py")
