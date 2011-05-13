@@ -8,19 +8,24 @@ module Linguist
   class Blob
     def initialize(blob)
       @blob = blob
-      @name = Pathname.new(blob.name || "")
     end
 
-    attr_reader :name
+    def name
+      @blob.name
+    end
+
+    def pathname
+      Pathname.new(name || "")
+    end
 
     def mime_type
-      Mime.lookup(name.extname)
+      Mime.lookup(pathname.extname)
     end
 
     def disposition
       case mime_type
       when 'application/octet-stream', 'application/java-archive'
-        "attachment; filename=#{EscapeUtils.escape_url(name.basename)}"
+        "attachment; filename=#{EscapeUtils.escape_url(pathname.basename)}"
       else
         'inline'
       end
@@ -61,12 +66,12 @@ module Linguist
     def text?
       return false if submodule?
 
-      name.media_type == 'text' ||
-        name.mime_type == 'application/json'
+      pathname.media_type == 'text' ||
+        pathname.mime_type == 'application/json'
     end
 
     def image?
-      ['.png', '.jpg', '.jpeg', '.gif'].include?(name.extname)
+      ['.png', '.jpg', '.jpeg', '.gif'].include?(pathname.extname)
     end
 
     MEGABYTE = 1024 * 1024
@@ -81,7 +86,7 @@ module Linguist
 
     def language
       if text?
-        shebang_language || name.language
+        shebang_language || pathname.language
       else
         Language['Text']
       end

@@ -30,7 +30,11 @@ class TestBlob < Test::Unit::TestCase
   end
 
   def test_name
-    assert_equal Pathname.new("foo.rb"), blob("foo.rb").name
+    assert_equal "foo.rb", blob("foo.rb").name
+  end
+
+  def test_pathname
+    assert_equal Pathname.new("foo.rb"), blob("foo.rb").pathname
   end
 
   def test_mime_type
