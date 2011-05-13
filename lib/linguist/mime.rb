@@ -10,13 +10,11 @@ module Linguist
   module Mime
     Special = YAML.load_file(File.expand_path("../special_mime_types.yml", __FILE__))
 
-    def self.lookup(ext, orginal_type = nil)
+    def self.lookup(ext)
       ext ||= ''
 
-      if orginal_type.nil?
-        guesses = ::MIME::Types.type_for(ext)
-        orginal_type = guesses.first ? guesses.first.simplified : 'text/plain'
-      end
+      guesses = ::MIME::Types.type_for(ext)
+      orginal_type = guesses.first ? guesses.first.simplified : 'text/plain'
 
       type = Special[orginal_type] ||
         Special[ext.sub(/^\./, '')] ||

@@ -15,7 +15,7 @@ module Linguist
     end
 
     def mime_type
-      Mime.lookup(name.extname, @blob.mime_type)
+      Mime.lookup(name.extname)
     end
 
     def size
