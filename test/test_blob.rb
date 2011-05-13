@@ -16,11 +16,6 @@ class TestBlob < Test::Unit::TestCase
       @name
     end
 
-    def mime_type
-      guesses = ::MIME::Types.type_for(name)
-      orginal_type = guesses.first ? guesses.first.simplified : 'text/plain'
-    end
-
     def data
       File.read(@path)
     end
@@ -39,7 +34,9 @@ class TestBlob < Test::Unit::TestCase
   end
 
   def test_mime_type
-    assert_equal "application/ruby", blob("foo.rb").mime_type
+    assert_equal "text/plain; charset=utf-8", blob("grit.rb").mime_type
+    assert_equal "text/plain; charset=utf-8", blob("bar.xml").mime_type
+    assert_equal "application/octet-stream", blob("dog.o").mime_type
   end
 
   def test_data
