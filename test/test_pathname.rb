@@ -52,14 +52,14 @@ class TestPathname < Test::Unit::TestCase
   end
 
   def test_mime_type
-    assert_equal 'application/ruby', Pathname.new("file.rb").mime_type
-    assert_equal 'application/javascript', Pathname.new("file.js").mime_type
-    assert_equal 'application/python', Pathname.new("itty.py").mime_type
+    assert_equal 'text/plain; charset=utf-8', Pathname.new("file.rb").mime_type
+    assert_equal 'text/plain; charset=utf-8', Pathname.new("file.js").mime_type
+    assert_equal 'text/plain; charset=utf-8', Pathname.new("itty.py").mime_type
     assert_equal 'text/plain; charset=utf-8', Pathname.new("defun.kt").mime_type
   end
 
   def test_media_type
-    assert_equal 'application', Pathname.new("file.js").media_type
+    assert_equal 'text', Pathname.new("file.js").media_type
     assert_equal 'text', Pathname.new("file.txt").media_type
     assert_equal 'text', Pathname.new("defun.kt").media_type
   end
