@@ -41,6 +41,7 @@ class TestBlob < Test::Unit::TestCase
 
   def test_disposition
     assert_equal "attachment; filename=foo.bin", blob("foo.bin").disposition
+    assert_equal "attachment; filename=linguist.gem", blob("pkg/linguist.gem").disposition
     assert_equal "attachment; filename=foo+bar.jar", blob("foo bar.jar").disposition
     assert_equal "inline", blob("foo.txt").disposition
     assert_equal "inline", blob("grit.rb").disposition

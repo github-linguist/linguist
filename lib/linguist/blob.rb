@@ -23,7 +23,7 @@ module Linguist
     def disposition
       case mime_type
       when 'application/octet-stream', 'application/java-archive'
-        "attachment; filename=#{EscapeUtils.escape_url(name.to_s)}"
+        "attachment; filename=#{EscapeUtils.escape_url(name.basename)}"
       else
         'inline'
       end
