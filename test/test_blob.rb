@@ -39,6 +39,13 @@ class TestBlob < Test::Unit::TestCase
     assert_equal "application/octet-stream", blob("dog.o").mime_type
   end
 
+  def test_disposition
+    assert_equal "attachment; filename=foo.bin", blob("foo.bin").disposition
+    assert_equal "attachment; filename=foo+bar.jar", blob("foo bar.jar").disposition
+    assert_equal "inline", blob("foo.txt").disposition
+    assert_equal "inline", blob("grit.rb").disposition
+  end
+
   def test_data
     assert_equal "module Foo\nend\n", blob("foo.rb").data
   end

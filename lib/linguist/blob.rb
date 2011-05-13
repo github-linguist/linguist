@@ -1,6 +1,8 @@
 require 'linguist/mime'
 require 'linguist/pathname'
 
+require 'escape_utils'
+
 module Linguist
   class Blob
     def initialize(blob)
@@ -16,6 +18,15 @@ module Linguist
 
     def mime_type
       Mime.lookup(name.extname)
+    end
+
+    def disposition
+      case mime_type
+      when 'application/octet-stream', 'application/java-archive'
+        "attachment; filename=#{EscapeUtils.escape_url(name.to_s)}"
+      else
+        'inline'
+      end
     end
 
     def size
