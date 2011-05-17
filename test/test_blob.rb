@@ -38,9 +38,15 @@ class TestBlob < Test::Unit::TestCase
   end
 
   def test_mime_type
-    assert_equal "text/plain; charset=utf-8", blob("grit.rb").mime_type
-    assert_equal "text/plain; charset=utf-8", blob("bar.xml").mime_type
-    assert_equal "application/octet-stream", blob("dog.o").mime_type
+    assert_equal "text/plain", blob("grit.rb").mime_type
+    assert_equal "application/xml", blob("bar.xml").mime_type
+    assert_equal "text/plain", blob("dog.o").mime_type
+  end
+
+  def test_special_mime_type
+    assert_equal "text/plain; charset=utf-8", blob("grit.rb").special_mime_type
+    assert_equal "text/plain; charset=utf-8", blob("bar.xml").special_mime_type
+    assert_equal "application/octet-stream", blob("dog.o").special_mime_type
   end
 
   def test_disposition

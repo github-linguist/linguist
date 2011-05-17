@@ -11,11 +11,18 @@ module Linguist
     end
 
     def mime_type
-      @mime_type ||= Mime.lookup(pathname.extname)
+      @mime_type ||= begin
+        guesses = MIME::Types.type_for(pathname.extname)
+        guesses.first ? guesses.first.simplified : 'text/plain'
+      end
+    end
+
+    def special_mime_type
+      Mime.lookup(pathname.extname)
     end
 
     def disposition
-      case mime_type
+      case special_mime_type
       when 'application/octet-stream', 'application/java-archive'
         "attachment; filename=#{EscapeUtils.escape_url(pathname.basename)}"
       else
@@ -36,7 +43,7 @@ module Linguist
     end
 
     def binary?
-      mime_type == 'octet-stream' || !(text? || image?)
+      special_mime_type == 'octet-stream' || !(text? || image?)
     end
 
     def file?
