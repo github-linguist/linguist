@@ -11,9 +11,11 @@ module Linguist
 
       @name_index[language.name.downcase] = language
 
-      if language.default_lexer? || !@lexer_index.key?(language.lexer)
+      if attributes[:default_lexer] || language.default_lexer?
         @lexer_index[language.lexer.downcase] = language
       end
+
+      @lexer_index[language.lexer.downcase] ||= language
 
       language.extensions.each do |extension|
         @extension_index[extension] = language
@@ -87,6 +89,7 @@ module Linguist
     Language.create(
       :name => name,
       :lexer => options[:lexer],
+      :default_lexer => options[:default_lexer],
       :extensions => options[:ext],
       :popular => popular.include?(name)
     )
