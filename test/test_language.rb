@@ -28,6 +28,20 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['Text'], Language.find_by_lexer('kt')
   end
 
+  def test_find
+    assert_equal "Ruby", Language['Ruby'].name
+    assert_equal "Ruby", Language['ruby'].name
+    assert_equal "Ruby", Language['RUBY'].name
+    assert_equal "C++", Language['C++'].name
+    assert_equal "C++", Language['c++'].name
+    assert_equal "C++", Language['cpp'].name
+    assert_equal "C#", Language['C#'].name
+    assert_equal "C#", Language['c#'].name
+    assert_equal "C#", Language['csharp'].name
+    assert_equal "C#", Language['CSHARP'].name
+    assert_equal "Text", Language['defunkt'].name
+  end
+
   def test_name
     assert_equal "Perl",   Language['Perl'].name
     assert_equal "Python", Language['Python'].name

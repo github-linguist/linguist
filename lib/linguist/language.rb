@@ -12,7 +12,7 @@ module Linguist
       @name_index[language.name.downcase] = language
 
       if language.default_lexer? || !@lexer_index.key?(language.lexer)
-        @lexer_index[language.lexer] = language
+        @lexer_index[language.lexer.downcase] = language
       end
 
       language.extensions.each do |extension|
@@ -24,7 +24,7 @@ module Linguist
     end
 
     def self.[](name)
-      find_by_name(name)
+      find_by_name(name) || find_by_lexer(name)
     end
 
     def self.find_by_name(name)
@@ -36,7 +36,7 @@ module Linguist
     end
 
     def self.find_by_lexer(lexer)
-      @lexer_index[lexer] || self['Text']
+      @lexer_index[lexer.downcase] || self['Text']
     end
 
     def self.popular
