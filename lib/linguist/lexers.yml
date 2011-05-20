@@ -1,0 +1,1813 @@
+---
+- !ruby/struct:Linguist::Lexer
+  name: JavaScript+Mako
+  aliases:
+  - js+mako
+  - javascript+mako
+  filenames:
+  mimetypes:
+  - application/x-javascript+mako
+  - text/x-javascript+mako
+  - text/javascript+mako
+- !ruby/struct:Linguist::Lexer
+  name: Brainfuck
+  aliases:
+  - brainfuck
+  - bf
+  filenames:
+  - *.bf
+  - *.b
+  mimetypes:
+  - application/x-brainfuck
+- !ruby/struct:Linguist::Lexer
+  name: HTML+Cheetah
+  aliases:
+  - html+cheetah
+  - html+spitfire
+  filenames:
+  mimetypes:
+  - text/html+cheetah
+  - text/html+spitfire
+- !ruby/struct:Linguist::Lexer
+  name: Bash
+  aliases:
+  - bash
+  - sh
+  - ksh
+  filenames:
+  - *.sh
+  - *.ksh
+  - *.bash
+  - *.ebuild
+  - *.eclass
+  mimetypes:
+  - application/x-sh
+  - application/x-shellscript
+- !ruby/struct:Linguist::Lexer
+  name: CSS+Myghty
+  aliases:
+  - css+myghty
+  filenames:
+  mimetypes:
+  - text/css+myghty
+- !ruby/struct:Linguist::Lexer
+  name: Coldfusion HTML
+  aliases:
+  - cfm
+  filenames:
+  - *.cfm
+  - *.cfml
+  - *.cfc
+  mimetypes:
+  - application/x-coldfusion
+- !ruby/struct:Linguist::Lexer
+  name: Smarty
+  aliases:
+  - smarty
+  filenames:
+  - *.tpl
+  mimetypes:
+  - application/x-smarty
+- !ruby/struct:Linguist::Lexer
+  name: Protocol Buffer
+  aliases:
+  - protobuf
+  filenames:
+  - *.proto
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: ApacheConf
+  aliases:
+  - apacheconf
+  - aconf
+  - apache
+  filenames:
+  - .htaccess
+  - apache.conf
+  - apache2.conf
+  mimetypes:
+  - text/x-apacheconf
+- !ruby/struct:Linguist::Lexer
+  name: Java
+  aliases:
+  - java
+  filenames:
+  - *.java
+  mimetypes:
+  - text/x-java
+- !ruby/struct:Linguist::Lexer
+  name: JavaScript+Genshi Text
+  aliases:
+  - js+genshitext
+  - js+genshi
+  - javascript+genshitext
+  - javascript+genshi
+  filenames:
+  mimetypes:
+  - application/x-javascript+genshi
+  - text/x-javascript+genshi
+  - text/javascript+genshi
+- !ruby/struct:Linguist::Lexer
+  name: Erlang
+  aliases:
+  - erlang
+  filenames:
+  - *.erl
+  - *.hrl
+  mimetypes:
+  - text/x-erlang
+- !ruby/struct:Linguist::Lexer
+  name: CoffeeScript
+  aliases:
+  - coffee-script
+  - coffeescript
+  filenames:
+  - *.coffee
+  mimetypes:
+  - text/coffeescript
+- !ruby/struct:Linguist::Lexer
+  name: ANTLR With ActionScript Target
+  aliases:
+  - antlr-as
+  - antlr-actionscript
+  filenames:
+  - *.G
+  - *.g
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: d-objdump
+  aliases:
+  - d-objdump
+  filenames:
+  - *.d-objdump
+  mimetypes:
+  - text/x-d-objdump
+- !ruby/struct:Linguist::Lexer
+  name: CSS+Ruby
+  aliases:
+  - css+erb
+  - css+ruby
+  filenames:
+  mimetypes:
+  - text/css+ruby
+- !ruby/struct:Linguist::Lexer
+  name: MySQL
+  aliases:
+  - mysql
+  filenames:
+  mimetypes:
+  - text/x-mysql
+- !ruby/struct:Linguist::Lexer
+  name: C++
+  aliases:
+  - cpp
+  - c++
+  filenames:
+  - *.cpp
+  - *.hpp
+  - *.c++
+  - *.h++
+  - *.cc
+  - *.hh
+  - *.cxx
+  - *.hxx
+  mimetypes:
+  - text/x-c++hdr
+  - text/x-c++src
+- !ruby/struct:Linguist::Lexer
+  name: XML+Smarty
+  aliases:
+  - xml+smarty
+  filenames:
+  mimetypes:
+  - application/xml+smarty
+- !ruby/struct:Linguist::Lexer
+  name: autohotkey
+  aliases:
+  - ahk
+  filenames:
+  - *.ahk
+  - *.ahkl
+  mimetypes:
+  - text/x-autohotkey
+- !ruby/struct:Linguist::Lexer
+  name: Felix
+  aliases:
+  - felix
+  - flx
+  filenames:
+  - *.flx
+  - *.flxh
+  mimetypes:
+  - text/x-felix
+- !ruby/struct:Linguist::Lexer
+  name: CMake
+  aliases:
+  - cmake
+  filenames:
+  - *.cmake
+  - CMakeLists.txt
+  mimetypes:
+  - text/x-cmake
+- !ruby/struct:Linguist::Lexer
+  name: Mako
+  aliases:
+  - mako
+  filenames:
+  - *.mao
+  mimetypes:
+  - application/x-mako
+- !ruby/struct:Linguist::Lexer
+  name: Python
+  aliases:
+  - python
+  - py
+  filenames:
+  - *.py
+  - *.pyw
+  - *.sc
+  - SConstruct
+  - SConscript
+  - *.tac
+  mimetypes:
+  - text/x-python
+  - application/x-python
+- !ruby/struct:Linguist::Lexer
+  name: JavaScript+Myghty
+  aliases:
+  - js+myghty
+  - javascript+myghty
+  filenames:
+  mimetypes:
+  - application/x-javascript+myghty
+  - text/x-javascript+myghty
+  - text/javascript+mygthy
+- !ruby/struct:Linguist::Lexer
+  name: XML+Mako
+  aliases:
+  - xml+mako
+  filenames:
+  mimetypes:
+  - application/xml+mako
+- !ruby/struct:Linguist::Lexer
+  name: Scaml
+  aliases:
+  - scaml
+  - SCAML
+  filenames:
+  - *.scaml
+  mimetypes:
+  - text/x-scaml
+- !ruby/struct:Linguist::Lexer
+  name: MAQL
+  aliases:
+  - maql
+  filenames:
+  - *.maql
+  mimetypes:
+  - text/x-gooddata-maql
+  - application/x-gooddata-maql
+- !ruby/struct:Linguist::Lexer
+  name: Boo
+  aliases:
+  - boo
+  filenames:
+  - *.boo
+  mimetypes:
+  - text/x-boo
+- !ruby/struct:Linguist::Lexer
+  name: ActionScript
+  aliases:
+  - as
+  - actionscript
+  filenames:
+  - *.as
+  mimetypes:
+  - application/x-actionscript
+  - text/x-actionscript
+  - text/actionscript
+- !ruby/struct:Linguist::Lexer
+  name: VB.net
+  aliases:
+  - vb.net
+  - vbnet
+  filenames:
+  - *.vb
+  - *.bas
+  mimetypes:
+  - text/x-vbnet
+  - text/x-vba
+- !ruby/struct:Linguist::Lexer
+  name: SquidConf
+  aliases:
+  - squidconf
+  - squid.conf
+  - squid
+  filenames:
+  - squid.conf
+  mimetypes:
+  - text/x-squidconf
+- !ruby/struct:Linguist::Lexer
+  name: D
+  aliases:
+  - d
+  filenames:
+  - *.d
+  - *.di
+  mimetypes:
+  - text/x-dsrc
+- !ruby/struct:Linguist::Lexer
+  name: Logtalk
+  aliases:
+  - logtalk
+  filenames:
+  - *.lgt
+  mimetypes:
+  - text/x-logtalk
+- !ruby/struct:Linguist::Lexer
+  name: SCSS
+  aliases:
+  - scss
+  filenames:
+  - *.scss
+  mimetypes:
+  - text/x-scss
+- !ruby/struct:Linguist::Lexer
+  name: BBCode
+  aliases:
+  - bbcode
+  filenames:
+  mimetypes:
+  - text/x-bbcode
+- !ruby/struct:Linguist::Lexer
+  name: Haml
+  aliases:
+  - haml
+  - HAML
+  filenames:
+  - *.haml
+  mimetypes:
+  - text/x-haml
+- !ruby/struct:Linguist::Lexer
+  name: MuPAD
+  aliases:
+  - mupad
+  filenames:
+  - *.mu
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: XML+Ruby
+  aliases:
+  - xml+erb
+  - xml+ruby
+  filenames:
+  mimetypes:
+  - application/xml+ruby
+- !ruby/struct:Linguist::Lexer
+  name: Debian Control file
+  aliases:
+  - control
+  filenames:
+  - control
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: Jade
+  aliases:
+  - jade
+  - JADE
+  filenames:
+  - *.jade
+  mimetypes:
+  - text/x-jade
+- !ruby/struct:Linguist::Lexer
+  name: RHTML
+  aliases:
+  - rhtml
+  - html+erb
+  - html+ruby
+  filenames:
+  - *.rhtml
+  mimetypes:
+  - text/html+ruby
+- !ruby/struct:Linguist::Lexer
+  name: XML+Velocity
+  aliases:
+  - xml+velocity
+  filenames:
+  mimetypes:
+  - application/xml+velocity
+- !ruby/struct:Linguist::Lexer
+  name: JavaScript+Cheetah
+  aliases:
+  - js+cheetah
+  - javascript+cheetah
+  - js+spitfire
+  - javascript+spitfire
+  filenames:
+  mimetypes:
+  - application/x-javascript+cheetah
+  - text/x-javascript+cheetah
+  - text/javascript+cheetah
+  - application/x-javascript+spitfire
+  - text/x-javascript+spitfire
+  - text/javascript+spitfire
+- !ruby/struct:Linguist::Lexer
+  name: Python Traceback
+  aliases:
+  - pytb
+  filenames:
+  - *.pytb
+  mimetypes:
+  - text/x-python-traceback
+- !ruby/struct:Linguist::Lexer
+  name: cfstatement
+  aliases:
+  - cfs
+  filenames:
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: Ada
+  aliases:
+  - ada
+  - ada95ada2005
+  filenames:
+  - *.adb
+  - *.ads
+  - *.ada
+  mimetypes:
+  - text/x-ada
+- !ruby/struct:Linguist::Lexer
+  name: objdump
+  aliases:
+  - objdump
+  filenames:
+  - *.objdump
+  mimetypes:
+  - text/x-objdump
+- !ruby/struct:Linguist::Lexer
+  name: CSS+Mako
+  aliases:
+  - css+mako
+  filenames:
+  mimetypes:
+  - text/css+mako
+- !ruby/struct:Linguist::Lexer
+  name: Gherkin
+  aliases:
+  - Cucumber
+  - cucumber
+  - Gherkin
+  - gherkin
+  filenames:
+  - *.feature
+  mimetypes:
+  - text/x-gherkin
+- !ruby/struct:Linguist::Lexer
+  name: Ragel in Java Host
+  aliases:
+  - ragel-java
+  filenames:
+  - *.rl
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: Io
+  aliases:
+  - io
+  filenames:
+  - *.io
+  mimetypes:
+  - text/x-iosrc
+- !ruby/struct:Linguist::Lexer
+  name: Vala
+  aliases:
+  - vala
+  - vapi
+  filenames:
+  - *.vala
+  - *.vapi
+  mimetypes:
+  - text/x-vala
+- !ruby/struct:Linguist::Lexer
+  name: Haskell
+  aliases:
+  - haskell
+  - hs
+  filenames:
+  - *.hs
+  mimetypes:
+  - text/x-haskell
+- !ruby/struct:Linguist::Lexer
+  name: Lua
+  aliases:
+  - lua
+  filenames:
+  - *.lua
+  - *.wlua
+  mimetypes:
+  - text/x-lua
+  - application/x-lua
+- !ruby/struct:Linguist::Lexer
+  name: Sass
+  aliases:
+  - sass
+  - SASS
+  filenames:
+  - *.sass
+  mimetypes:
+  - text/x-sass
+- !ruby/struct:Linguist::Lexer
+  name: ANTLR With ObjectiveC Target
+  aliases:
+  - antlr-objc
+  filenames:
+  - *.G
+  - *.g
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: XML
+  aliases:
+  - xml
+  filenames:
+  - *.xml
+  - *.xsl
+  - *.rss
+  - *.xslt
+  - *.xsd
+  - *.wsdl
+  mimetypes:
+  - text/xml
+  - application/xml
+  - image/svg+xml
+  - application/rss+xml
+  - application/atom+xml
+  - application/xsl+xml
+  - application/xslt+xml
+- !ruby/struct:Linguist::Lexer
+  name: Groff
+  aliases:
+  - groff
+  - nroff
+  - man
+  filenames:
+  - *.[1234567]
+  - *.man
+  mimetypes:
+  - application/x-troff
+  - text/troff
+- !ruby/struct:Linguist::Lexer
+  name: GLSL
+  aliases:
+  - glsl
+  filenames:
+  - *.vert
+  - *.frag
+  - *.geo
+  mimetypes:
+  - text/x-glslsrc
+- !ruby/struct:Linguist::Lexer
+  name: Genshi Text
+  aliases:
+  - genshitext
+  filenames:
+  mimetypes:
+  - application/x-genshi-text
+  - text/x-genshi
+- !ruby/struct:Linguist::Lexer
+  name: Objective-J
+  aliases:
+  - objective-j
+  - objectivej
+  - obj-j
+  - objj
+  filenames:
+  - *.j
+  mimetypes:
+  - text/x-objective-j
+- !ruby/struct:Linguist::Lexer
+  name: GAS
+  aliases:
+  - gas
+  filenames:
+  - *.s
+  - *.S
+  mimetypes:
+  - text/x-gas
+- !ruby/struct:Linguist::Lexer
+  name: Python console session
+  aliases:
+  - pycon
+  filenames:
+  mimetypes:
+  - text/x-python-doctest
+- !ruby/struct:Linguist::Lexer
+  name: MXML
+  aliases:
+  - mxml
+  filenames:
+  - *.mxml
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: XML+Cheetah
+  aliases:
+  - xml+cheetah
+  - xml+spitfire
+  filenames:
+  mimetypes:
+  - application/xml+cheetah
+  - application/xml+spitfire
+- !ruby/struct:Linguist::Lexer
+  name: Go
+  aliases:
+  - go
+  filenames:
+  - *.go
+  mimetypes:
+  - text/x-gosrc
+- !ruby/struct:Linguist::Lexer
+  name: Ragel in C Host
+  aliases:
+  - ragel-c
+  filenames:
+  - *.rl
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: aspx-cs
+  aliases:
+  - aspx-cs
+  filenames:
+  - *.aspx
+  - *.asax
+  - *.ascx
+  - *.ashx
+  - *.asmx
+  - *.axd
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: Properties
+  aliases:
+  - properties
+  filenames:
+  - *.properties
+  mimetypes:
+  - text/x-java-properties
+- !ruby/struct:Linguist::Lexer
+  name: Ragel in Ruby Host
+  aliases:
+  - ragel-ruby
+  - ragel-rb
+  filenames:
+  - *.rl
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: BlitzMax
+  aliases:
+  - blitzmax
+  - bmax
+  filenames:
+  - *.bmx
+  mimetypes:
+  - text/x-bmx
+- !ruby/struct:Linguist::Lexer
+  name: HTML+Genshi
+  aliases:
+  - html+genshi
+  - html+kid
+  filenames:
+  mimetypes:
+  - text/html+genshi
+- !ruby/struct:Linguist::Lexer
+  name: Perl
+  aliases:
+  - perl
+  - pl
+  filenames:
+  - *.pl
+  - *.pm
+  mimetypes:
+  - text/x-perl
+  - application/x-perl
+- !ruby/struct:Linguist::Lexer
+  name: INI
+  aliases:
+  - ini
+  - cfg
+  filenames:
+  - *.ini
+  - *.cfg
+  mimetypes:
+  - text/x-ini
+- !ruby/struct:Linguist::Lexer
+  name: c-objdump
+  aliases:
+  - c-objdump
+  filenames:
+  - *.c-objdump
+  mimetypes:
+  - text/x-c-objdump
+- !ruby/struct:Linguist::Lexer
+  name: Tcsh
+  aliases:
+  - tcsh
+  - csh
+  filenames:
+  - *.tcsh
+  - *.csh
+  mimetypes:
+  - application/x-csh
+- !ruby/struct:Linguist::Lexer
+  name: RConsole
+  aliases:
+  - rconsole
+  - rout
+  filenames:
+  - *.Rout
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: CSS+Smarty
+  aliases:
+  - css+smarty
+  filenames:
+  mimetypes:
+  - text/css+smarty
+- !ruby/struct:Linguist::Lexer
+  name: Text only
+  aliases:
+  - text
+  filenames:
+  - *.txt
+  mimetypes:
+  - text/plain
+- !ruby/struct:Linguist::Lexer
+  name: ANTLR With C# Target
+  aliases:
+  - antlr-csharp
+  - antlr-c#
+  filenames:
+  - *.G
+  - *.g
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: Darcs Patch
+  aliases:
+  - dpatch
+  filenames:
+  - *.dpatch
+  - *.darcspatch
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: LLVM
+  aliases:
+  - llvm
+  filenames:
+  - *.ll
+  mimetypes:
+  - text/x-llvm
+- !ruby/struct:Linguist::Lexer
+  name: Nginx configuration file
+  aliases:
+  - nginx
+  filenames:
+  mimetypes:
+  - text/x-nginx-conf
+- !ruby/struct:Linguist::Lexer
+  name: AppleScript
+  aliases:
+  - applescript
+  filenames:
+  - *.applescript
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: HTML+Smarty
+  aliases:
+  - html+smarty
+  filenames:
+  mimetypes:
+  - text/html+smarty
+- !ruby/struct:Linguist::Lexer
+  name: Literate Haskell
+  aliases:
+  - lhs
+  - literate-haskell
+  filenames:
+  - *.lhs
+  mimetypes:
+  - text/x-literate-haskell
+- !ruby/struct:Linguist::Lexer
+  name: PHP
+  aliases:
+  - php
+  - php3
+  - php4
+  - php5
+  filenames:
+  - *.php
+  - *.php[345]
+  mimetypes:
+  - text/x-php
+- !ruby/struct:Linguist::Lexer
+  name: MiniD
+  aliases:
+  - minid
+  filenames:
+  - *.md
+  mimetypes:
+  - text/x-minidsrc
+- !ruby/struct:Linguist::Lexer
+  name: Ooc
+  aliases:
+  - ooc
+  filenames:
+  - *.ooc
+  mimetypes:
+  - text/x-ooc
+- !ruby/struct:Linguist::Lexer
+  name: SQL
+  aliases:
+  - sql
+  filenames:
+  - *.sql
+  mimetypes:
+  - text/x-sql
+- !ruby/struct:Linguist::Lexer
+  name: NASM
+  aliases:
+  - nasm
+  filenames:
+  - *.asm
+  - *.ASM
+  mimetypes:
+  - text/x-nasm
+- !ruby/struct:Linguist::Lexer
+  name: Debian Sourcelist
+  aliases:
+  - sourceslist
+  - sources.list
+  filenames:
+  - sources.list
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: Delphi
+  aliases:
+  - delphi
+  - pas
+  - pascal
+  - objectpascal
+  filenames:
+  - *.pas
+  mimetypes:
+  - text/x-pascal
+- !ruby/struct:Linguist::Lexer
+  name: aspx-vb
+  aliases:
+  - aspx-vb
+  filenames:
+  - *.aspx
+  - *.asax
+  - *.ascx
+  - *.ashx
+  - *.asmx
+  - *.axd
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: HTML+Evoque
+  aliases:
+  - html+evoque
+  filenames:
+  - *.html
+  mimetypes:
+  - text/html+evoque
+- !ruby/struct:Linguist::Lexer
+  name: NumPy
+  aliases:
+  - numpy
+  filenames:
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: Modula-2
+  aliases:
+  - modula2
+  - m2
+  filenames:
+  - *.def
+  - *.mod
+  mimetypes:
+  - text/x-modula2
+- !ruby/struct:Linguist::Lexer
+  name: HTML+Django/Jinja
+  aliases:
+  - html+django
+  - html+jinja
+  filenames:
+  mimetypes:
+  - text/html+django
+  - text/html+jinja
+- !ruby/struct:Linguist::Lexer
+  name: CSS+PHP
+  aliases:
+  - css+php
+  filenames:
+  mimetypes:
+  - text/css+php
+- !ruby/struct:Linguist::Lexer
+  name: VimL
+  aliases:
+  - vim
+  filenames:
+  - *.vim
+  - .vimrc
+  mimetypes:
+  - text/x-vim
+- !ruby/struct:Linguist::Lexer
+  name: CSS+Genshi Text
+  aliases:
+  - css+genshitext
+  - css+genshi
+  filenames:
+  mimetypes:
+  - text/css+genshi
+- !ruby/struct:Linguist::Lexer
+  name: Ragel
+  aliases:
+  - ragel
+  filenames:
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: Scalate Server Page
+  aliases:
+  - ssp
+  filenames:
+  - *.ssp
+  mimetypes:
+  - application/x-ssp
+- !ruby/struct:Linguist::Lexer
+  name: XML+Evoque
+  aliases:
+  - xml+evoque
+  filenames:
+  - *.xml
+  mimetypes:
+  - application/xml+evoque
+- !ruby/struct:Linguist::Lexer
+  name: haXe
+  aliases:
+  - hx
+  - haXe
+  filenames:
+  - *.hx
+  mimetypes:
+  - text/haxe
+- !ruby/struct:Linguist::Lexer
+  name: Redcode
+  aliases:
+  - redcode
+  filenames:
+  - *.cw
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: Django/Jinja
+  aliases:
+  - django
+  - jinja
+  filenames:
+  mimetypes:
+  - application/x-django-templating
+  - application/x-jinja
+- !ruby/struct:Linguist::Lexer
+  name: Scala
+  aliases:
+  - scala
+  filenames:
+  - *.scala
+  mimetypes:
+  - text/x-scala
+- !ruby/struct:Linguist::Lexer
+  name: Lighttpd configuration file
+  aliases:
+  - lighty
+  - lighttpd
+  filenames:
+  mimetypes:
+  - text/x-lighttpd-conf
+- !ruby/struct:Linguist::Lexer
+  name: HTML+Velocity
+  aliases:
+  - html+velocity
+  filenames:
+  mimetypes:
+  - text/html+velocity
+- !ruby/struct:Linguist::Lexer
+  name: Ragel in D Host
+  aliases:
+  - ragel-d
+  filenames:
+  - *.rl
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: Ruby irb session
+  aliases:
+  - rbcon
+  - irb
+  filenames:
+  mimetypes:
+  - text/x-ruby-shellsession
+- !ruby/struct:Linguist::Lexer
+  name: CSS
+  aliases:
+  - css
+  filenames:
+  - *.css
+  mimetypes:
+  - text/css
+- !ruby/struct:Linguist::Lexer
+  name: JavaScript+Smarty
+  aliases:
+  - js+smarty
+  - javascript+smarty
+  filenames:
+  mimetypes:
+  - application/x-javascript+smarty
+  - text/x-javascript+smarty
+  - text/javascript+smarty
+- !ruby/struct:Linguist::Lexer
+  name: Asymptote
+  aliases:
+  - asy
+  - asymptote
+  filenames:
+  - *.asy
+  mimetypes:
+  - text/x-asymptote
+- !ruby/struct:Linguist::Lexer
+  name: XML+PHP
+  aliases:
+  - xml+php
+  filenames:
+  mimetypes:
+  - application/xml+php
+- !ruby/struct:Linguist::Lexer
+  name: Fortran
+  aliases:
+  - fortran
+  filenames:
+  - *.f
+  - *.f90
+  mimetypes:
+  - text/x-fortran
+- !ruby/struct:Linguist::Lexer
+  name: Gnuplot
+  aliases:
+  - gnuplot
+  filenames:
+  - *.plot
+  - *.plt
+  mimetypes:
+  - text/x-gnuplot
+- !ruby/struct:Linguist::Lexer
+  name: REBOL
+  aliases:
+  - rebol
+  filenames:
+  - *.r
+  - *.r3
+  mimetypes:
+  - text/x-rebol
+- !ruby/struct:Linguist::Lexer
+  name: ERB
+  aliases:
+  - erb
+  filenames:
+  mimetypes:
+  - application/x-ruby-templating
+- !ruby/struct:Linguist::Lexer
+  name: Befunge
+  aliases:
+  - befunge
+  filenames:
+  - *.befunge
+  mimetypes:
+  - application/x-befunge
+- !ruby/struct:Linguist::Lexer
+  name: Dylan
+  aliases:
+  - dylan
+  filenames:
+  - *.dylan
+  - *.dyl
+  mimetypes:
+  - text/x-dylan
+- !ruby/struct:Linguist::Lexer
+  name: MoinMoin/Trac Wiki markup
+  aliases:
+  - trac-wiki
+  - moin
+  filenames:
+  mimetypes:
+  - text/x-trac-wiki
+- !ruby/struct:Linguist::Lexer
+  name: Matlab
+  aliases:
+  - matlab
+  - octave
+  filenames:
+  - *.m
+  mimetypes:
+  - text/matlab
+- !ruby/struct:Linguist::Lexer
+  name: C
+  aliases:
+  - c
+  filenames:
+  - *.c
+  - *.h
+  mimetypes:
+  - text/x-chdr
+  - text/x-csrc
+- !ruby/struct:Linguist::Lexer
+  name: HTML
+  aliases:
+  - html
+  filenames:
+  - *.html
+  - *.htm
+  - *.xhtml
+  - *.xslt
+  mimetypes:
+  - text/html
+  - application/xhtml+xml
+- !ruby/struct:Linguist::Lexer
+  name: Genshi
+  aliases:
+  - genshi
+  - kid
+  - xml+genshi
+  - xml+kid
+  filenames:
+  - *.kid
+  mimetypes:
+  - application/x-genshi
+  - application/x-kid
+- !ruby/struct:Linguist::Lexer
+  name: reStructuredText
+  aliases:
+  - rst
+  - rest
+  - restructuredtext
+  filenames:
+  - *.rst
+  - *.rest
+  mimetypes:
+  - text/x-rst
+  - text/prs.fallenstein.rst
+- !ruby/struct:Linguist::Lexer
+  name: Velocity
+  aliases:
+  - velocity
+  filenames:
+  - *.vm
+  - *.fhtml
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: IRC logs
+  aliases:
+  - irc
+  filenames:
+  - *.weechatlog
+  mimetypes:
+  - text/x-irclog
+- !ruby/struct:Linguist::Lexer
+  name: Prolog
+  aliases:
+  - prolog
+  filenames:
+  - *.prolog
+  - *.pro
+  - *.pl
+  mimetypes:
+  - text/x-prolog
+- !ruby/struct:Linguist::Lexer
+  name: CSS+Django/Jinja
+  aliases:
+  - css+django
+  - css+jinja
+  filenames:
+  mimetypes:
+  - text/css+django
+  - text/css+jinja
+- !ruby/struct:Linguist::Lexer
+  name: Smalltalk
+  aliases:
+  - smalltalk
+  - squeak
+  filenames:
+  - *.st
+  mimetypes:
+  - text/x-smalltalk
+- !ruby/struct:Linguist::Lexer
+  name: YAML
+  aliases:
+  - yaml
+  filenames:
+  - *.yaml
+  - *.yml
+  mimetypes:
+  - text/x-yaml
+- !ruby/struct:Linguist::Lexer
+  name: HTML+Myghty
+  aliases:
+  - html+myghty
+  filenames:
+  mimetypes:
+  - text/html+myghty
+- !ruby/struct:Linguist::Lexer
+  name: Makefile
+  aliases:
+  - make
+  - makefile
+  - mf
+  - bsdmake
+  filenames:
+  - *.mak
+  - Makefile
+  - makefile
+  - Makefile.*
+  - GNUmakefile
+  mimetypes:
+  - text/x-makefile
+- !ruby/struct:Linguist::Lexer
+  name: XSLT
+  aliases:
+  - xslt
+  filenames:
+  - *.xsl
+  - *.xslt
+  mimetypes:
+  - text/xml
+  - application/xml
+  - image/svg+xml
+  - application/rss+xml
+  - application/atom+xml
+  - application/xsl+xml
+  - application/xslt+xml
+- !ruby/struct:Linguist::Lexer
+  name: S
+  aliases:
+  - splus
+  - s
+  - r
+  filenames:
+  - *.S
+  - *.R
+  mimetypes:
+  - text/S-plus
+  - text/S
+  - text/R
+- !ruby/struct:Linguist::Lexer
+  name: sqlite3con
+  aliases:
+  - sqlite3
+  filenames:
+  - *.sqlite3-console
+  mimetypes:
+  - text/x-sqlite3-console
+- !ruby/struct:Linguist::Lexer
+  name: OCaml
+  aliases:
+  - ocaml
+  filenames:
+  - *.ml
+  - *.mli
+  - *.mll
+  - *.mly
+  mimetypes:
+  - text/x-ocaml
+- !ruby/struct:Linguist::Lexer
+  name: Gettext Catalog
+  aliases:
+  - pot
+  - po
+  filenames:
+  - *.pot
+  - *.po
+  mimetypes:
+  - application/x-gettext
+  - text/x-gettext
+  - text/gettext
+- !ruby/struct:Linguist::Lexer
+  name: Ruby
+  aliases:
+  - rb
+  - ruby
+  - duby
+  filenames:
+  - *.rb
+  - *.rbw
+  - Rakefile
+  - *.rake
+  - *.gemspec
+  - *.rbx
+  - *.duby
+  mimetypes:
+  - text/x-ruby
+  - application/x-ruby
+- !ruby/struct:Linguist::Lexer
+  name: Python 3.0 Traceback
+  aliases:
+  - py3tb
+  filenames:
+  - *.py3tb
+  mimetypes:
+  - text/x-python3-traceback
+- !ruby/struct:Linguist::Lexer
+  name: POVRay
+  aliases:
+  - pov
+  filenames:
+  - *.pov
+  - *.inc
+  mimetypes:
+  - text/x-povray
+- !ruby/struct:Linguist::Lexer
+  name: Ragel in CPP Host
+  aliases:
+  - ragel-cpp
+  filenames:
+  - *.rl
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: Evoque
+  aliases:
+  - evoque
+  filenames:
+  - *.evoque
+  mimetypes:
+  - application/x-evoque
+- !ruby/struct:Linguist::Lexer
+  name: Java Server Page
+  aliases:
+  - jsp
+  filenames:
+  - *.jsp
+  mimetypes:
+  - application/x-jsp
+- !ruby/struct:Linguist::Lexer
+  name: ABAP
+  aliases:
+  - abap
+  filenames:
+  - *.abap
+  mimetypes:
+  - text/x-abap
+- !ruby/struct:Linguist::Lexer
+  name: HTML+Mako
+  aliases:
+  - html+mako
+  filenames:
+  mimetypes:
+  - text/html+mako
+- !ruby/struct:Linguist::Lexer
+  name: Diff
+  aliases:
+  - diff
+  - udiff
+  filenames:
+  - *.diff
+  - *.patch
+  mimetypes:
+  - text/x-diff
+  - text/x-patch
+- !ruby/struct:Linguist::Lexer
+  name: Matlab session
+  aliases:
+  - matlabsession
+  filenames:
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: Mason
+  aliases:
+  - mason
+  filenames:
+  - *.m
+  - *.mhtml
+  - *.mc
+  - *.mi
+  - autohandler
+  - dhandler
+  mimetypes:
+  - application/x-mason
+- !ruby/struct:Linguist::Lexer
+  name: HTML+PHP
+  aliases:
+  - html+php
+  filenames:
+  - *.phtml
+  mimetypes:
+  - application/x-php
+  - application/x-httpd-php
+  - application/x-httpd-php3
+  - application/x-httpd-php4
+  - application/x-httpd-php5
+- !ruby/struct:Linguist::Lexer
+  name: PostScript
+  aliases:
+  - postscript
+  filenames:
+  - *.ps
+  - *.eps
+  mimetypes:
+  - application/postscript
+- !ruby/struct:Linguist::Lexer
+  name: verilog
+  aliases:
+  - v
+  filenames:
+  - *.v
+  - *.sv
+  mimetypes:
+  - text/x-verilog
+- !ruby/struct:Linguist::Lexer
+  name: ANTLR With Java Target
+  aliases:
+  - antlr-java
+  filenames:
+  - *.G
+  - *.g
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: Tcl
+  aliases:
+  - tcl
+  filenames:
+  - *.tcl
+  mimetypes:
+  - text/x-tcl
+  - text/x-script.tcl
+  - application/x-tcl
+- !ruby/struct:Linguist::Lexer
+  name: JavaScript+Ruby
+  aliases:
+  - js+erb
+  - javascript+erb
+  - js+ruby
+  - javascript+ruby
+  filenames:
+  mimetypes:
+  - application/x-javascript+ruby
+  - text/x-javascript+ruby
+  - text/javascript+ruby
+- !ruby/struct:Linguist::Lexer
+  name: Makefile
+  aliases:
+  - basemake
+  filenames:
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: ANTLR With Python Target
+  aliases:
+  - antlr-python
+  filenames:
+  - *.G
+  - *.g
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: cpp-objdump
+  aliases:
+  - cpp-objdump
+  - c++-objdumb
+  - cxx-objdump
+  filenames:
+  - *.cpp-objdump
+  - *.c++-objdump
+  - *.cxx-objdump
+  mimetypes:
+  - text/x-cpp-objdump
+- !ruby/struct:Linguist::Lexer
+  name: Ioke
+  aliases:
+  - ioke
+  - ik
+  filenames:
+  - *.ik
+  mimetypes:
+  - text/x-iokesrc
+- !ruby/struct:Linguist::Lexer
+  name: Python 3
+  aliases:
+  - python3
+  - py3
+  filenames:
+  mimetypes:
+  - text/x-python3
+  - application/x-python3
+- !ruby/struct:Linguist::Lexer
+  name: Batchfile
+  aliases:
+  - bat
+  filenames:
+  - *.bat
+  - *.cmd
+  mimetypes:
+  - application/x-dos-batch
+- !ruby/struct:Linguist::Lexer
+  name: ANTLR
+  aliases:
+  - antlr
+  filenames:
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: JavaScript+Django/Jinja
+  aliases:
+  - js+django
+  - javascript+django
+  - js+jinja
+  - javascript+jinja
+  filenames:
+  mimetypes:
+  - application/x-javascript+django
+  - application/x-javascript+jinja
+  - text/x-javascript+django
+  - text/x-javascript+jinja
+  - text/javascript+django
+  - text/javascript+jinja
+- !ruby/struct:Linguist::Lexer
+  name: Cython
+  aliases:
+  - cython
+  - pyx
+  filenames:
+  - *.pyx
+  - *.pxd
+  - *.pxi
+  mimetypes:
+  - text/x-cython
+  - application/x-cython
+- !ruby/struct:Linguist::Lexer
+  name: Scheme
+  aliases:
+  - scheme
+  - scm
+  filenames:
+  - *.scm
+  mimetypes:
+  - text/x-scheme
+  - application/x-scheme
+- !ruby/struct:Linguist::Lexer
+  name: Erlang erl session
+  aliases:
+  - erl
+  filenames:
+  - *.erl-sh
+  mimetypes:
+  - text/x-erl-shellsession
+- !ruby/struct:Linguist::Lexer
+  name: Clojure
+  aliases:
+  - clojure
+  - clj
+  filenames:
+  - *.clj
+  mimetypes:
+  - text/x-clojure
+  - application/x-clojure
+- !ruby/struct:Linguist::Lexer
+  name: Modelica
+  aliases:
+  - modelica
+  filenames:
+  - *.mo
+  mimetypes:
+  - text/x-modelica
+- !ruby/struct:Linguist::Lexer
+  name: ANTLR With Perl Target
+  aliases:
+  - antlr-perl
+  filenames:
+  - *.G
+  - *.g
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: Myghty
+  aliases:
+  - myghty
+  filenames:
+  - *.myt
+  - autodelegate
+  mimetypes:
+  - application/x-myghty
+- !ruby/struct:Linguist::Lexer
+  name: Duel
+  aliases:
+  - duel
+  - Duel Engine
+  - Duel View
+  - JBST
+  - jbst
+  - JsonML+BST
+  filenames:
+  - *.duel
+  - *.jbst
+  mimetypes:
+  - text/x-duel
+  - text/x-jbst
+- !ruby/struct:Linguist::Lexer
+  name: MOOCode
+  aliases:
+  - moocode
+  filenames:
+  - *.moo
+  mimetypes:
+  - text/x-moocode
+- !ruby/struct:Linguist::Lexer
+  name: Newspeak
+  aliases:
+  - newspeak
+  filenames:
+  - *.ns2
+  mimetypes:
+  - text/x-newspeak
+- !ruby/struct:Linguist::Lexer
+  name: Bash Session
+  aliases:
+  - console
+  filenames:
+  - *.sh-session
+  mimetypes:
+  - application/x-shell-session
+- !ruby/struct:Linguist::Lexer
+  name: Raw token data
+  aliases:
+  - raw
+  filenames:
+  mimetypes:
+  - application/x-pygments-tokens
+- !ruby/struct:Linguist::Lexer
+  name: C#
+  aliases:
+  - csharp
+  - c#
+  filenames:
+  - *.cs
+  mimetypes:
+  - text/x-csharp
+- !ruby/struct:Linguist::Lexer
+  name: TeX
+  aliases:
+  - tex
+  - latex
+  filenames:
+  - *.tex
+  - *.aux
+  - *.toc
+  mimetypes:
+  - text/x-tex
+  - text/x-latex
+- !ruby/struct:Linguist::Lexer
+  name: Cheetah
+  aliases:
+  - cheetah
+  - spitfire
+  filenames:
+  - *.tmpl
+  - *.spt
+  mimetypes:
+  - application/x-cheetah
+  - application/x-spitfire
+- !ruby/struct:Linguist::Lexer
+  name: GoodData-CL
+  aliases:
+  - gooddata-cl
+  filenames:
+  - *.gdc
+  mimetypes:
+  - text/x-gooddata-cl
+- !ruby/struct:Linguist::Lexer
+  name: Objective-C
+  aliases:
+  - objective-c
+  - objectivec
+  - obj-c
+  - objc
+  filenames:
+  - *.m
+  mimetypes:
+  - text/x-objective-c
+- !ruby/struct:Linguist::Lexer
+  name: JavaScript
+  aliases:
+  - js
+  - javascript
+  filenames:
+  - *.js
+  mimetypes:
+  - application/javascript
+  - application/x-javascript
+  - text/x-javascript
+  - text/javascript
+- !ruby/struct:Linguist::Lexer
+  name: Common Lisp
+  aliases:
+  - common-lisp
+  - cl
+  filenames:
+  - *.cl
+  - *.lisp
+  - *.el
+  mimetypes:
+  - text/x-common-lisp
+- !ruby/struct:Linguist::Lexer
+  name: Embedded Ragel
+  aliases:
+  - ragel-em
+  filenames:
+  - *.rl
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: ActionScript 3
+  aliases:
+  - as3
+  - actionscript3
+  filenames:
+  - *.as
+  mimetypes:
+  - application/x-actionscript
+  - text/x-actionscript
+  - text/actionscript
+- !ruby/struct:Linguist::Lexer
+  name: ANTLR With CPP Target
+  aliases:
+  - antlr-cpp
+  filenames:
+  - *.G
+  - *.g
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: Hybris
+  aliases:
+  - hybris
+  - hy
+  filenames:
+  - *.hy
+  - *.hyb
+  mimetypes:
+  - text/x-hybris
+  - application/x-hybris
+- !ruby/struct:Linguist::Lexer
+  name: JavaScript+PHP
+  aliases:
+  - js+php
+  - javascript+php
+  filenames:
+  mimetypes:
+  - application/x-javascript+php
+  - text/x-javascript+php
+  - text/javascript+php
+- !ruby/struct:Linguist::Lexer
+  name: Factor
+  aliases:
+  - factor
+  filenames:
+  - *.factor
+  mimetypes:
+  - text/x-factor
+- !ruby/struct:Linguist::Lexer
+  name: XQuery
+  aliases:
+  - xquery
+  - xqy
+  filenames:
+  - *.xqy
+  - *.xquery
+  mimetypes:
+  - text/xquery
+  - application/xquery
+- !ruby/struct:Linguist::Lexer
+  name: Ragel in Objective C Host
+  aliases:
+  - ragel-objc
+  filenames:
+  - *.rl
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: XML+Django/Jinja
+  aliases:
+  - xml+django
+  - xml+jinja
+  filenames:
+  mimetypes:
+  - application/xml+django
+  - application/xml+jinja
+- !ruby/struct:Linguist::Lexer
+  name: ANTLR With Ruby Target
+  aliases:
+  - antlr-ruby
+  - antlr-rb
+  filenames:
+  - *.G
+  - *.g
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
+  name: XML+Myghty
+  aliases:
+  - xml+myghty
+  filenames:
+  mimetypes:
+  - application/xml+myghty
