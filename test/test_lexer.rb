@@ -50,4 +50,16 @@ class TestLexer < Test::Unit::TestCase
 </div>
     HTML
   end
+
+  def test_colorize_without_wrapper
+    assert_equal <<-HTML, Lexer['Text only'].colorize_without_wrapper("Hello")
+Hello
+    HTML
+
+    assert_equal <<-HTML, Lexer['Ruby'].colorize_without_wrapper("def foo\n  'foo'\nend\n")
+<span class="k">def</span> <span class="nf">foo</span>
+  <span class="s1">&#39;foo&#39;</span>
+<span class="k">end</span>
+    HTML
+  end
 end

@@ -81,6 +81,10 @@ module Linguist
       lexer.colorize(text)
     end
 
+    def colorize_without_wrapper(text)
+      lexer.colorize_without_wrapper(text)
+    end
+
     def ==(other)
       eql?(other)
     end

@@ -179,4 +179,11 @@ class TestBlob < Test::Unit::TestCase
 </div>
     HTML
   end
+
+  def test_colorize_without_wrapper
+    assert_equal <<-HTML, blob("foo.rb").colorize_without_wrapper
+<span class="k">module</span> <span class="nn">Foo</span>
+<span class="k">end</span>
+    HTML
+  end
 end

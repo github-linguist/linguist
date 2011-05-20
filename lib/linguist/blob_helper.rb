@@ -137,5 +137,10 @@ module Linguist
       return if !text? || large?
       lexer.colorize(data)
     end
+
+    def colorize_without_wrapper
+      return if !text? || large?
+      lexer.colorize_without_wrapper(data)
+    end
   end
 end

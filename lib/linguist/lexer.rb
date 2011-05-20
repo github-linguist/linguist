@@ -23,7 +23,15 @@ module Linguist
     end
 
     def colorize(text)
-      Albino.colorize(text, to_s)
+      Albino.colorize(text, self)
+    end
+
+    def colorize_without_wrapper(text)
+      if text = colorize(text)
+        text[%r{<div class="highlight"><pre>(.*?)</pre>\s*</div>}m, 1]
+      else
+        ''
+      end
     end
 
     def ==(other)
