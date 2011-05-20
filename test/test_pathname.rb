@@ -42,13 +42,22 @@ class TestPathname < Test::Unit::TestCase
     assert_equal Language['Text'], Pathname.new("defun.kt").language
   end
 
+  def test_lexer_name
+    assert_equal 'ruby',   Pathname.new("file.rb").lexer_name
+    assert_equal 'ruby',   Pathname.new("Rakefile").lexer_name
+    assert_equal 'bash',   Pathname.new("file.ebuild").lexer_name
+    assert_equal 'python', Pathname.new("itty.py").lexer_name
+    assert_equal 'scheme', Pathname.new("itty.nu").lexer_name
+    assert_equal 'text',   Pathname.new("defun.kt").lexer_name
+  end
+
   def test_lexer
-    assert_equal 'ruby',   Pathname.new("file.rb").lexer
-    assert_equal 'ruby',   Pathname.new("Rakefile").lexer
-    assert_equal 'bash',   Pathname.new("file.ebuild").lexer
-    assert_equal 'python', Pathname.new("itty.py").lexer
-    assert_equal 'scheme', Pathname.new("itty.nu").lexer
-    assert_equal 'text',   Pathname.new("defun.kt").lexer
+    assert_equal Lexer['Ruby'],      Pathname.new("file.rb").lexer
+    assert_equal Lexer['Ruby'],      Pathname.new("Rakefile").lexer
+    assert_equal Lexer['Bash'],      Pathname.new("file.ebuild").lexer
+    assert_equal Lexer['Python'],    Pathname.new("itty.py").lexer
+    assert_equal Lexer['Scheme'],    Pathname.new("itty.nu").lexer
+    assert_equal Lexer['Text Only'], Pathname.new("defun.kt").lexer
   end
 
   def test_mime_type

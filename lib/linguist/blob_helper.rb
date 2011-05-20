@@ -81,6 +81,10 @@ module Linguist
       end
     end
 
+    def lexer_name
+      language.lexer_name
+    end
+
     def lexer
       language.lexer
     end

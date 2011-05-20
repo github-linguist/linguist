@@ -116,16 +116,25 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['Text'], blob("octocat.png").language
   end
 
-  def test_lexer
-    assert_equal 'ruby', blob("grit.rb").lexer
-    assert_equal 'text', blob("README").lexer
-    assert_equal 'diff', blob("dude-thing-okay--001.patch").lexer
-    assert_equal 'scheme', blob("dude.el").lexer
-    assert_equal 'javascript', blob("dude.js").lexer
-    assert_equal 'ruby', blob("Capfile").lexer
+  def test_lexer_name
+    assert_equal 'ruby', blob("grit.rb").lexer_name
+    assert_equal 'text', blob("README").lexer_name
+    assert_equal 'diff', blob("dude-thing-okay--001.patch").lexer_name
+    assert_equal 'scheme', blob("dude.el").lexer_name
+    assert_equal 'javascript', blob("dude.js").lexer_name
+    assert_equal 'ruby', blob("Capfile").lexer_name
 
-    assert_equal 'ruby', blob("Rakefile").lexer
-    assert_equal 'ruby', blob("subdir/Rakefile").lexer
+    assert_equal 'ruby', blob("Rakefile").lexer_name
+    assert_equal 'ruby', blob("subdir/Rakefile").lexer_name
+  end
+
+  def test_lexer
+    assert_equal Lexer['Ruby'], blob("grit.rb").lexer
+    assert_equal Lexer['Text only'], blob("README").lexer
+    assert_equal Lexer['Diff'], blob("dude-thing-okay--001.patch").lexer
+    assert_equal Lexer['Scheme'], blob("dude.el").lexer
+    assert_equal Lexer['JavaScript'], blob("dude.js").lexer
+    assert_equal Lexer['Ruby'], blob("Capfile").lexer
   end
 
   def test_shebang_script

@@ -1,3 +1,5 @@
+require 'linguist/lexer'
+
 require 'yaml'
 
 module Linguist
@@ -12,10 +14,10 @@ module Linguist
       @name_index[language.name.downcase] = language
 
       if attributes[:default_lexer] || language.default_lexer?
-        @lexer_index[language.lexer.downcase] = language
+        @lexer_index[language.lexer_name.downcase] = language
       end
 
-      @lexer_index[language.lexer.downcase] ||= language
+      @lexer_index[language.lexer_name.downcase] ||= language
 
       language.extensions.each do |extension|
         @extension_index[extension] = language
@@ -51,19 +53,20 @@ module Linguist
 
     def initialize(attributes = {})
       @name       = attributes[:name] || raise(ArgumentError, "missing name")
-      @lexer      = attributes[:lexer] || default_lexer
+      @lexer_name = attributes[:lexer_name] || default_lexer_name
+      @lexer      = Lexer.find_by_alias(@lexer_name)
       @extensions = attributes[:extensions] || []
       @popular    = attributes[:popular] || false
     end
 
-    attr_reader :name, :lexer, :extensions
+    attr_reader :name, :lexer_name, :lexer, :extensions
 
-    def default_lexer
+    def default_lexer_name
       name.downcase.gsub(/\s/, '-')
     end
 
     def default_lexer?
-      lexer == default_lexer
+      lexer_name == default_lexer_name
     end
 
     def popular?
@@ -88,7 +91,7 @@ module Linguist
   YAML.load_file(File.expand_path("../extensions.yml", __FILE__)).each do |name, options|
     Language.create(
       :name => name,
-      :lexer => options[:lexer],
+      :lexer_name => options[:lexer],
       :default_lexer => options[:default_lexer],
       :extensions => options[:ext],
       :popular => popular.include?(name)

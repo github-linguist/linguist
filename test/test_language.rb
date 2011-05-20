@@ -58,13 +58,22 @@ class TestLanguage < Test::Unit::TestCase
     end
   end
 
+  def test_lexer_name
+    assert_equal 'perl',   Language['Perl'].lexer_name
+    assert_equal 'python', Language['Python'].lexer_name
+    assert_equal 'ruby',   Language['Ruby'].lexer_name
+    assert_equal 'cpp',    Language['C++'].lexer_name
+    assert_equal 'bash',   Language['Gentoo Ebuild'].lexer_name
+    assert_equal 'scheme', Language['Nu'].lexer_name
+  end
+
   def test_lexer
-    assert_equal 'perl',   Language['Perl'].lexer
-    assert_equal 'python', Language['Python'].lexer
-    assert_equal 'ruby',   Language['Ruby'].lexer
-    assert_equal 'cpp',    Language['C++'].lexer
-    assert_equal 'bash',   Language['Gentoo Ebuild'].lexer
-    assert_equal 'scheme', Language['Nu'].lexer
+    assert_equal Lexer['Perl'],   Language['Perl'].lexer
+    assert_equal Lexer['Python'], Language['Python'].lexer
+    assert_equal Lexer['Ruby'],   Language['Ruby'].lexer
+    assert_equal Lexer['C++'],    Language['C++'].lexer
+    assert_equal Lexer['Bash'],   Language['Gentoo Ebuild'].lexer
+    assert_equal Lexer['Scheme'], Language['Nu'].lexer
   end
 
   def test_extensions
