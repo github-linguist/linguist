@@ -1,0 +1,22 @@
+#!/usr/bin/env python
+
+from pygments.lexers import get_all_lexers
+
+print "---"
+
+for name, aliases, filenames, mimetypes in get_all_lexers():
+    print "- !ruby/struct:Linguist::Lexer"
+
+    print "  name: %s" % name
+
+    print "  aliases:"
+    for alias in aliases:
+        print "  - %s" % alias
+
+    print "  filenames:"
+    for filename in filenames:
+        print "  - %s" % filename
+
+    print "  mimetypes:"
+    for mimetype in mimetypes:
+        print "  - %s" % mimetype
