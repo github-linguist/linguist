@@ -43,10 +43,6 @@ module Linguist
       content_type.include?('octet') || !(text? || image?)
     end
 
-    def file?
-      image? || binary?
-    end
-
     def text?
       content_type[/(text|json)/]
     end
@@ -62,7 +58,7 @@ module Linguist
     end
 
     def viewable?
-      !file? && !large?
+      !image? && !binary? && !large?
     end
 
     def generated?

@@ -87,11 +87,6 @@ class TestBlob < Test::Unit::TestCase
     assert !blob("octocat.png").binary?
   end
 
-  def test_file
-    assert blob("octocat.png").file?
-    assert blob("linguist.gem").file?
-  end
-
   def test_text
     assert blob("file.txt").text?
     assert blob("file.json").text?
@@ -104,6 +99,12 @@ class TestBlob < Test::Unit::TestCase
     assert blob("octocat.jpeg").image?
     assert blob("octocat.gif").image?
     assert !blob("octocat.psd").image?
+  end
+
+  def test_viewable
+    assert blob("foo.rb").viewable?
+    assert !blob("octocat.png").viewable?
+    assert !blob("linguist.gem").viewable?
   end
 
   def test_generated
