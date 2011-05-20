@@ -1,3 +1,4 @@
+require 'albino'
 require 'yaml'
 
 module Linguist
@@ -19,6 +20,10 @@ module Linguist
 
     def to_s
       aliases.first
+    end
+
+    def colorize(text)
+      Albino.colorize(text, to_s)
     end
 
     def ==(other)

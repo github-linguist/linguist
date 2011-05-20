@@ -77,6 +77,10 @@ module Linguist
       !popular?
     end
 
+    def colorize(text)
+      lexer.colorize(text)
+    end
+
     def ==(other)
       eql?(other)
     end

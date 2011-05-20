@@ -170,4 +170,13 @@ class TestBlob < Test::Unit::TestCase
     assert_equal nil, blob("script.foo").shebang_language
     assert_equal nil, blob("foo.rb").shebang_language
   end
+
+  def test_colorize
+    assert_equal <<-HTML, blob("foo.rb").colorize
+<div class="highlight"><pre><span class="k">module</span> <span class="nn">Foo</span>
+<span class="k">end</span>
+</pre>
+</div>
+    HTML
+  end
 end

@@ -132,5 +132,10 @@ module Linguist
         end
       end
     end
+
+    def colorize
+      return if !text? || large?
+      lexer.colorize(data)
+    end
   end
 end
