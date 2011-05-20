@@ -69,6 +69,10 @@ module Linguist
       !file? && !large?
     end
 
+    def generated?
+      ['.xib', '.nib', '.pbxproj'].include?(pathname.extname)
+    end
+
     def language
       if text?
         shebang_language || pathname.language

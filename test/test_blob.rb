@@ -103,6 +103,13 @@ class TestBlob < Test::Unit::TestCase
     assert !blob("octocat.psd").image?
   end
 
+  def test_generated
+    assert !blob("README").generated?
+    assert blob("MainMenu.xib").generated?
+    assert blob("MainMenu.nib").generated?
+    assert blob("project.pbxproj").generated?
+  end
+
   def test_language
     assert_equal Language['Ruby'], blob("foo.rb").language
     assert_equal Language['Ruby'], blob("script.rb").language
