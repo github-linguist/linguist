@@ -96,6 +96,14 @@ class TestLanguage < Test::Unit::TestCase
     assert Language['Brainfuck'].unpopular?
   end
 
+  def test_common
+    assert Language['Perl'].common?
+    assert Language['Python'].common?
+    assert Language['Ruby'].common?
+    assert !Language['Brainfuck'].common?
+    assert !Language['Makefile'].common?
+  end
+
   def test_colorize
     assert_equal <<-HTML, Language['Text'].colorize("Hello")
 <div class="highlight"><pre>Hello

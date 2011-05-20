@@ -57,6 +57,7 @@ module Linguist
       @lexer      = Lexer.find_by_alias(@lexer_name)
       @extensions = attributes[:extensions] || []
       @popular    = attributes[:popular] || false
+      @common     = attributes[:common] || false
     end
 
     attr_reader :name, :lexer_name, :lexer, :extensions
@@ -77,6 +78,10 @@ module Linguist
       !popular?
     end
 
+    def common?
+      @common
+    end
+
     def colorize(text)
       lexer.colorize(text)
     end
@@ -95,6 +100,7 @@ module Linguist
   end
 
   popular = YAML.load_file(File.expand_path("../popular.yml", __FILE__))
+  common  = YAML.load_file(File.expand_path("../common.yml", __FILE__))
 
   YAML.load_file(File.expand_path("../extensions.yml", __FILE__)).each do |name, options|
     Language.create(
@@ -102,7 +108,8 @@ module Linguist
       :lexer_name => options[:lexer],
       :default_lexer => options[:default_lexer],
       :extensions => options[:ext],
-      :popular => popular.include?(name)
+      :popular => popular.include?(name),
+      :common => common.include?(name)
     )
   end
 end
