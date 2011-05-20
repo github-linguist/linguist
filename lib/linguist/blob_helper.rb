@@ -84,7 +84,7 @@ module Linguist
     def shebang_script
       return if !text? || large?
 
-      if (match = data.match(/(.+)\n?/)) && (bang = match[0]) =~ /^#!/
+      if data && (match = data.match(/(.+)\n?/)) && (bang = match[0]) =~ /^#!/
         bang.sub!(/^#! /, '#!')
         tokens = bang.split(' ')
         pieces = tokens.first.split('/')
