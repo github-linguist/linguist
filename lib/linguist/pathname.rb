@@ -34,11 +34,19 @@ module Linguist
     end
 
     def mime_type
-      @mime_type ||= Mime.lookup(extname)
+      @mime_type ||= Mime.mime_for(extname)
     end
 
     def media_type
-      mime_type.split('/').first
+      mime_type.split('/')[0]
+    end
+
+    def sub_type
+      mime_type.split('/')[1]
+    end
+
+    def content_type
+      @content_type ||= Mime.content_type_for(extname)
     end
 
     def to_s

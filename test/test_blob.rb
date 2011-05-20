@@ -41,12 +41,14 @@ class TestBlob < Test::Unit::TestCase
     assert_equal "text/plain", blob("grit.rb").mime_type
     assert_equal "application/xml", blob("bar.xml").mime_type
     assert_equal "text/plain", blob("dog.o").mime_type
+    assert_equal "application/sh", blob("script.sh").mime_type
   end
 
-  def test_special_mime_type
-    assert_equal "text/plain; charset=utf-8", blob("grit.rb").special_mime_type
-    assert_equal "text/plain; charset=utf-8", blob("bar.xml").special_mime_type
-    assert_equal "application/octet-stream", blob("dog.o").special_mime_type
+  def test_content_type
+    assert_equal "text/plain; charset=utf-8", blob("grit.rb").content_type
+    assert_equal "text/plain; charset=utf-8", blob("bar.xml").content_type
+    assert_equal "application/octet-stream", blob("dog.o").content_type
+    assert_equal "text/plain; charset=utf-8", blob("script.sh").content_type
   end
 
   def test_disposition
@@ -93,6 +95,7 @@ class TestBlob < Test::Unit::TestCase
   def test_text
     assert blob("file.txt").text?
     assert blob("file.json").text?
+    assert blob("script.sh").text?
   end
 
   def test_image

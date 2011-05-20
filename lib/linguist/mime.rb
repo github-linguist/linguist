@@ -1,5 +1,11 @@
 require 'mime/types'
 
+# Register additional binary extensions
+binary = MIME::Types['application/octet-stream'].first
+binary.extensions << 'dmg'
+binary.extensions << 'dll'
+MIME::Types.index_extensions(binary)
+
 # Register 'ear' and 'war' as java
 java = MIME::Types['application/java-archive'].first
 java.extensions << 'ear'
@@ -8,20 +14,19 @@ MIME::Types.index_extensions(java)
 
 module Linguist
   module Mime
-    Special = YAML.load_file(File.expand_path("../special_mime_types.yml", __FILE__))
+    Special = YAML.load_file(File.expand_path("../content_types.yml", __FILE__))
 
-    def self.lookup(ext)
+    def self.mime_for(ext)
       ext ||= ''
-
       guesses = ::MIME::Types.type_for(ext)
-      orginal_type = guesses.first ? guesses.first.simplified : 'text/plain'
+      guesses.first ? guesses.first.simplified : 'text/plain'
+    end
 
-      type = Special[orginal_type] ||
-        Special[ext.sub(/^\./, '')] ||
-        orginal_type
-
+    def self.content_type_for(ext)
+      ext ||= ''
+      type = mime_for(ext)
+      type = Special[type] || Special[ext.sub(/^\./, '')] || type
       type += '; charset=utf-8' if type =~ /^text\//
-
       type
     end
   end
