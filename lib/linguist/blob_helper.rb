@@ -80,7 +80,11 @@ module Linguist
 
     def language
       if text?
-        shebang_language || pathname.language
+        if pathname.extname == ""
+          shebang_language || pathname.language
+        else
+          pathname.language
+        end
       else
         Language['Text']
       end

@@ -118,6 +118,7 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['Ruby'], blob("foo.rb").language
     assert_equal Language['Ruby'], blob("script.rb").language
     assert_equal Language['Text'], blob("octocat.png").language
+    assert_equal Language['Ruby'], blob("wrong_shebang.rb").language
   end
 
   def test_lexer_name
