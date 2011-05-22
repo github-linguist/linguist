@@ -1,37 +1,5 @@
 module Linguist
   class Repository
-    IgnorePaths = %w(
-      yui
-      tiny_mce
-      ckeditor
-      redbox
-      active_scaffold
-      rico_corner
-      code_highlighter
-      vendor
-      bundle
-      node_modules
-      cache
-      assets
-      bookends
-      dojo
-      extjs
-      sencha
-      mochikit
-      prototype(.*)\.js
-      mootools\.js
-      jquery([^.]*)(\.min)?\.js
-      jquery\-\d\.\d\.\d(\.min)?\.js
-      effects\.js
-      controls\.js
-      dragdrop\.js
-      fabfile\.py
-      less([^.]*)(\.min)?\.js
-      less\-\d+\.\d+\.\d+(\.min)?\.js
-    )
-
-    IgnoreRegexp = Regexp.new(IgnorePaths.join('|'))
-
     def initialize(paths)
       @paths = paths
 
@@ -60,7 +28,7 @@ module Linguist
 
     def compute_stats
       @paths.each do |path, blob|
-        next if path =~ IgnoreRegexp
+        next if blob.vendored? || blob.generated?
 
         language = blob.language
 
