@@ -70,6 +70,14 @@ module Linguist
       lexer_name == default_lexer_name
     end
 
+    def search_term
+      if name == 'Text'
+        nil
+      else
+        lexer_name
+      end
+    end
+
     def popular?
       @popular
     end

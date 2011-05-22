@@ -58,6 +58,16 @@ class TestLanguage < Test::Unit::TestCase
     end
   end
 
+  def test_search_term
+    assert_equal 'perl',   Language['Perl'].search_term
+    assert_equal 'python', Language['Python'].search_term
+    assert_equal 'ruby',   Language['Ruby'].search_term
+    assert_equal 'cpp',    Language['C++'].search_term
+    assert_equal 'bash',   Language['Gentoo Ebuild'].search_term
+    assert_equal 'scheme', Language['Nu'].search_term
+    assert_equal nil, Language['Text'].search_term
+  end
+
   def test_lexer_name
     assert_equal 'perl',   Language['Perl'].lexer_name
     assert_equal 'python', Language['Python'].lexer_name
@@ -65,6 +75,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal 'cpp',    Language['C++'].lexer_name
     assert_equal 'bash',   Language['Gentoo Ebuild'].lexer_name
     assert_equal 'scheme', Language['Nu'].lexer_name
+    assert_equal 'text', Language['Text'].lexer_name
   end
 
   def test_lexer
