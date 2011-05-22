@@ -3,6 +3,7 @@ module Linguist
     def initialize(paths)
       @paths = paths
 
+      @computed_stats = false
       @language = @size = nil
       @sizes = Hash.new { 0 }
     end
@@ -27,6 +28,8 @@ module Linguist
     end
 
     def compute_stats
+      return if @computed_stats
+
       @paths.each do |path, blob|
         next if blob.vendored? || blob.generated?
 
@@ -43,7 +46,7 @@ module Linguist
         @language = primary[0]
       end
 
-      nil
+      @computed_stats = true
     end
   end
 end
