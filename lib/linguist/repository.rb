@@ -58,7 +58,7 @@ module Linguist
 
         language = blob.language
 
-        if language.popular?
+        if language.common?
           @languages[language.name] += 1
           @sizes[language.name]     += blob.size
         end
