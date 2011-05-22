@@ -49,8 +49,8 @@ class TestRepository < Test::Unit::TestCase
   end
 
   def test_linguist_languages
-    assert linguist_repo.languages['Ruby'] > 30_000
-    assert linguist_repo.languages['Python'] < 1000
+    assert linguist_repo.languages[Language['Ruby']] > 30_000
+    assert linguist_repo.languages[Language['Python']] < 1000
   end
 
   def test_linguist_size
