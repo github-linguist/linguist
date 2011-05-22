@@ -43,8 +43,17 @@ module Linguist
     end
 
     YAML.load_file(File.expand_path("../lexers.yml", __FILE__)).each do |lexer|
+      if @name_index.key?(lexer.name.downcase)
+        warn "Duplicate lexer name: #{lexer.name}"
+      end
+
       @name_index[lexer.name.downcase] = lexer
+
       lexer.aliases.each do |name|
+        if @alias_index.key?(name)
+          warn "Duplicate alias: #{name}"
+        end
+
         @alias_index[name] = lexer
       end
     end
