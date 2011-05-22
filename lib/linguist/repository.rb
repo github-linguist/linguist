@@ -35,9 +35,8 @@ module Linguist
     def initialize(paths)
       @paths = paths
 
-      @stats     = nil
-      @languages = Hash.new { 0 }
-      @sizes     = Hash.new { 0 }
+      @stats = nil
+      @sizes = Hash.new { 0 }
     end
 
     def [](path)
@@ -45,7 +44,16 @@ module Linguist
     end
 
     def language
-      stats[:primary]
+      Language[stats[:primary]]
+    end
+
+    def languages
+      stats
+      @sizes
+    end
+
+    def size
+      stats[:total_size]
     end
 
     def stats
@@ -59,8 +67,7 @@ module Linguist
         language = blob.language
 
         if language.common?
-          @languages[language.name] += 1
-          @sizes[language.name]     += blob.size
+          @sizes[language.name] += blob.size
         end
       end
 
