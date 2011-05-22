@@ -11,6 +11,10 @@ module Linguist
     def self.create(attributes = {})
       language = new(attributes)
 
+      if @name_index.key?(language.name.downcase)
+        warn "Duplicate language name: #{language.name}"
+      end
+
       @name_index[language.name.downcase] = language
 
       if attributes[:default_lexer] || language.default_lexer?
@@ -20,6 +24,10 @@ module Linguist
       @lexer_index[language.lexer_name.downcase] ||= language
 
       language.extensions.each do |extension|
+        if @extension_index.key?(extension)
+          warn "Duplicate extension: #{extension}"
+        end
+
         @extension_index[extension] = language
         @extension_index[extension.sub(/^./, '')] = language
       end
