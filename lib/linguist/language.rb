@@ -113,6 +113,10 @@ module Linguist
     def eql?(other)
       equal?(other)
     end
+
+    def hash
+      name.hash
+    end
   end
 
   popular = YAML.load_file(File.expand_path("../popular.yml", __FILE__))
