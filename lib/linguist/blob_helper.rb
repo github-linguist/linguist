@@ -3,6 +3,7 @@ require 'linguist/mime'
 require 'linguist/pathname'
 
 require 'escape_utils'
+require 'yaml'
 
 module Linguist
   module BlobHelper
@@ -63,6 +64,13 @@ module Linguist
 
     def generated?
       ['.xib', '.nib', '.pbxproj'].include?(pathname.extname)
+    end
+
+    vendored_paths = YAML.load_file(File.expand_path("../vendor.yml", __FILE__))
+    VendoredRegexp = Regexp.new(vendored_paths.join('|'))
+
+    def vendored?
+      name =~ VendoredRegexp
     end
 
     # Determine if the blob contains bad content that can be used for various

@@ -114,6 +114,19 @@ class TestBlob < Test::Unit::TestCase
     assert blob("project.pbxproj").generated?
   end
 
+  def test_vendored
+    assert !blob("README").vendored?
+
+    assert blob("node_modules/coffee-script/lib/coffee-script.js").vendored?
+    assert blob("vendor/plugins/will_paginate/lib/will_paginate.rb").vendored?
+
+    assert blob("public/javascripts/jquery.js").vendored?
+    assert blob("public/javascripts/prototype.js").vendored?
+    assert blob("public/javascripts/effects.js").vendored?
+    assert blob("public/javascripts/controls.js").vendored?
+    assert blob("public/javascripts/dragdrop.js").vendored?
+  end
+
   def test_language
     assert_equal Language['Ruby'], blob("foo.rb").language
     assert_equal Language['Ruby'], blob("script.rb").language
