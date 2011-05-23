@@ -68,16 +68,6 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal nil, Language['Text'].search_term
   end
 
-  def test_lexer_name
-    assert_equal 'perl',   Language['Perl'].lexer_name
-    assert_equal 'python', Language['Python'].lexer_name
-    assert_equal 'ruby',   Language['Ruby'].lexer_name
-    assert_equal 'cpp',    Language['C++'].lexer_name
-    assert_equal 'bash',   Language['Gentoo Ebuild'].lexer_name
-    assert_equal 'scheme', Language['Nu'].lexer_name
-    assert_equal 'text', Language['Text'].lexer_name
-  end
-
   def test_lexer
     assert_equal Lexer['Perl'],   Language['Perl'].lexer
     assert_equal Lexer['Python'], Language['Python'].lexer

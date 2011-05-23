@@ -134,18 +134,6 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['Ruby'], blob("wrong_shebang.rb").language
   end
 
-  def test_lexer_name
-    assert_equal 'ruby', blob("grit.rb").lexer_name
-    assert_equal 'text', blob("README").lexer_name
-    assert_equal 'diff', blob("dude-thing-okay--001.patch").lexer_name
-    assert_equal 'scheme', blob("dude.el").lexer_name
-    assert_equal 'javascript', blob("dude.js").lexer_name
-    assert_equal 'ruby', blob("Capfile").lexer_name
-
-    assert_equal 'ruby', blob("Rakefile").lexer_name
-    assert_equal 'ruby', blob("subdir/Rakefile").lexer_name
-  end
-
   def test_lexer
     assert_equal Lexer['Ruby'], blob("grit.rb").lexer
     assert_equal Lexer['Text only'], blob("README").lexer

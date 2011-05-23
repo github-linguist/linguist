@@ -25,10 +25,6 @@ module Linguist
       Language.find_by_extension(extname) || Language['Text']
     end
 
-    def lexer_name
-      language.lexer_name
-    end
-
     def lexer
       language.lexer
     end
