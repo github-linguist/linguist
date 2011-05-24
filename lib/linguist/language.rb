@@ -79,11 +79,7 @@ module Linguist
     end
 
     def search_term
-      if name == 'Text'
-        nil
-      else
-        lexer_name
-      end
+      lexer_name
     end
 
     def popular?

@@ -65,7 +65,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal 'cpp',    Language['C++'].search_term
     assert_equal 'bash',   Language['Gentoo Ebuild'].search_term
     assert_equal 'scheme', Language['Nu'].search_term
-    assert_equal nil, Language['Text'].search_term
+    assert_equal 'text',   Language['Text'].search_term
   end
 
   def test_lexer
