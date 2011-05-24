@@ -86,9 +86,23 @@ module Linguist
       end
     end
 
+    def indexable?
+      if !text?
+        false
+      elsif generated?
+        false
+      elsif ['.po', '.sql'].include?(pathname.extname)
+        false
+      elsif Language.find_by_extension(pathname.extname)
+        true
+      else
+        false
+      end
+    end
+
     def language
       if text?
-        if pathname.extname == ""
+        if !Language.find_by_extension(pathname.extname)
           shebang_language || pathname.language
         else
           pathname.language

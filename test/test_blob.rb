@@ -127,6 +127,15 @@ class TestBlob < Test::Unit::TestCase
     assert blob("public/javascripts/dragdrop.js").vendored?
   end
 
+  def test_indexable
+    assert blob("file.txt").indexable?
+    assert blob("file.rb").indexable?
+    assert !blob("defun.kt").indexable?
+    assert !blob("github.po").indexable?
+    assert !blob("dump.sql").indexable?
+    assert !blob("linguist.gem").indexable?
+  end
+
   def test_language
     assert_equal Language['Ruby'], blob("foo.rb").language
     assert_equal Language['Ruby'], blob("script.rb").language
