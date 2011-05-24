@@ -1,16 +1,12 @@
 require 'mime/types'
+require 'yaml'
 
-# Register additional binary extensions
-binary = MIME::Types['application/octet-stream'].first
-binary.extensions << 'dmg'
-binary.extensions << 'dll'
-MIME::Types.index_extensions(binary)
-
-# Register 'ear' and 'war' as java
-java = MIME::Types['application/java-archive'].first
-java.extensions << 'ear'
-java.extensions << 'war'
-MIME::Types.index_extensions(java)
+# Register additional mime type extensions
+YAML.load_file(File.expand_path("../mimes.yml", __FILE__)).each do |mime_type, exts|
+  mime = MIME::Types[mime_type].first
+  exts.each { |ext| mime.extensions << ext }
+  MIME::Types.index_extensions(mime)
+end
 
 module Linguist
   module Mime
