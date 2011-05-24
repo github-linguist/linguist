@@ -30,19 +30,15 @@ Features
 Usage
 -----
 
-    file = Linguist::SourceFile.new("linguist.rb")
+    file = Linguist::Blob.new("linguist.rb")
     file.language.name #=> "Ruby"
 
-    file = Linguist::SourceFile.new("linguist.gem")
+    file = Linguist::Blob.new("linguist.gem")
     file.binary? #=> true
 
-    project = Linguist::Project.new(".")
+    project = Linguist::Repository.new(".")
     project.language.name  #=> "Ruby"
-    project.language_stats #=> { "Ruby" => 0.98, "Shell" => 0.02 }
-
-    # Using Grit backend
-    repo = Grit::Repo.new("./.git")
-    project = Linguist::Project.new(repo)
+    project.languages      #=> { "Ruby" => 0.98, "Shell" => 0.02 }
 
 
 Contributing
