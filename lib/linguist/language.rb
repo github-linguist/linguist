@@ -122,7 +122,7 @@ module Linguist
   popular = YAML.load_file(File.expand_path("../popular.yml", __FILE__))
   common  = YAML.load_file(File.expand_path("../common.yml", __FILE__))
 
-  YAML.load_file(File.expand_path("../extensions.yml", __FILE__)).each do |name, options|
+  YAML.load_file(File.expand_path("../languages.yml", __FILE__)).each do |name, options|
     Language.create(
       :name => name,
       :lexer_name => options[:lexer],
