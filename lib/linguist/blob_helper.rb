@@ -63,7 +63,14 @@ module Linguist
     end
 
     def generated?
-      ['.xib', '.nib', '.pbxproj'].include?(pathname.extname)
+      if ['.xib', '.nib', '.pbxproj'].include?(pathname.extname)
+        true
+      elsif pathname.extname == '.js'
+        # JS is minified if any lines are longer than 1000c
+        lines.any? { |l| l.length > 1000 }
+      else
+        false
+      end
     end
 
     vendored_paths = YAML.load_file(File.expand_path("../vendor.yml", __FILE__))

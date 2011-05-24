@@ -112,6 +112,10 @@ class TestBlob < Test::Unit::TestCase
     assert blob("MainMenu.xib").generated?
     assert blob("MainMenu.nib").generated?
     assert blob("project.pbxproj").generated?
+
+    # Minified JS
+    assert !blob("jquery-1.6.1.js").generated?
+    assert blob("jquery-1.6.1.min.js").generated?
   end
 
   def test_vendored
