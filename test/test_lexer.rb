@@ -11,10 +11,24 @@ class TestLexer < Test::Unit::TestCase
     assert_equal Lexer['Ruby'], Lexer.find_by_name('RUBY')
   end
 
+  def test_find_all_by_name
+    Lexer.all.each do |lexer|
+      assert_equal lexer, Lexer.find_by_name(lexer.name)
+    end
+  end
+
   def test_find_by_alias
     assert_equal Lexer['Ruby'], Lexer.find_by_alias('rb')
     assert_equal Lexer['Ruby'], Lexer.find_by_alias('ruby')
     assert_equal Lexer['Ruby'], Lexer.find_by_alias('duby')
+  end
+
+  def test_find_all_by_alias
+    Lexer.all.each do |lexer|
+      lexer.aliases.each do |name|
+        assert_equal lexer, Lexer.find_by_alias(name)
+      end
+    end
   end
 
   def test_name

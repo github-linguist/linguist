@@ -4,8 +4,16 @@ require 'yaml'
 module Linguist
   # Mirror of Pygments Lexer structure.
   class Lexer < Struct.new(:name, :aliases, :filenames, :mimetypes)
+    @lexers      = []
     @name_index  = {}
     @alias_index = {}
+
+    # Public: Get all Lexers
+    #
+    # Returns an Array of Lexers
+    def self.all
+      @lexers
+    end
 
     # Public: Look up Lexer by its proper name.
     #
@@ -92,6 +100,8 @@ module Linguist
     # `bin/pygments-lexers` dumps a YAML list of all the available
     # Pygments lexers.
     YAML.load_file(File.expand_path("../lexers.yml", __FILE__)).each do |lexer|
+      @lexers << lexer
+
       # All Lexer names should be unique. Warn if there is a duplicate.
       if @name_index.key?(lexer.name.downcase)
         warn "Duplicate lexer name: #{lexer.name}"
