@@ -116,6 +116,15 @@ class TestBlob < Test::Unit::TestCase
     # Minified JS
     assert !blob("jquery-1.6.1.js").generated?
     assert blob("jquery-1.6.1.min.js").generated?
+
+    # CoffeScript JS
+
+    # These examples are to basic to tell
+    assert !blob("coffee/empty.js").generated?
+    assert !blob("coffee/hello.js").generated?
+
+    assert blob("coffee/intro.js").generated?
+    assert blob("coffee/classes.js").generated?
   end
 
   def test_vendored
