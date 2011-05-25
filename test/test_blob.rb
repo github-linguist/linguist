@@ -121,14 +121,59 @@ class TestBlob < Test::Unit::TestCase
   def test_vendored
     assert !blob("README").vendored?
 
+    # Node depedencies
     assert blob("node_modules/coffee-script/lib/coffee-script.js").vendored?
+
+    # Rails vendor/
     assert blob("vendor/plugins/will_paginate/lib/will_paginate.rb").vendored?
 
-    assert blob("public/javascripts/jquery.js").vendored?
+    # C deps
+    assert blob("deps/http_parser/http_parser.c").vendored?
+    assert blob("deps/v8/src/v8.h").vendored?
+
+    # Prototype
+    assert !blob("public/javascripts/application.js").vendored?
     assert blob("public/javascripts/prototype.js").vendored?
     assert blob("public/javascripts/effects.js").vendored?
     assert blob("public/javascripts/controls.js").vendored?
     assert blob("public/javascripts/dragdrop.js").vendored?
+
+    # jQuery
+    assert blob("jquery.js").vendored?
+    assert blob("public/javascripts/jquery.js").vendored?
+    assert blob("public/javascripts/jquery.min.js").vendored?
+    assert blob("public/javascripts/jquery-1.5.2.js").vendored?
+    assert blob("public/javascripts/jquery-1.6.1.js").vendored?
+    assert blob("public/javascripts/jquery-1.6.1.min.js").vendored?
+    assert !blob("public/javascripts/jquery.github.menu.js").vendored?
+
+    # MooTools
+    assert blob("public/javascripts/mootools-core-1.3.2-full-compat.js").vendored?
+    assert blob("public/javascripts/mootools-core-1.3.2-full-compat-yc.js").vendored?
+
+    # Dojo
+    assert blob("public/javascripts/dojo.js").vendored?
+
+    # MochiKit
+    assert blob("public/javascripts/MochiKit.js").vendored?
+
+    # YUI
+    assert blob("public/javascripts/yahoo-dom-event.js").vendored?
+    assert blob("public/javascripts/yahoo-min.js").vendored?
+    assert blob("public/javascripts/yuiloader-dom-event.js").vendored?
+
+    # LESS
+    assert blob("public/javascripts/less-1.1.0.js").vendored?
+    assert blob("public/javascripts/less-1.1.0.min.js").vendored?
+
+    # WYS editors
+    assert blob("public/javascripts/ckeditor.js").vendored?
+    assert blob("public/javascripts/tiny_mce.js").vendored?
+    assert blob("public/javascripts/tiny_mce_popup.js").vendored?
+    assert blob("public/javascripts/tiny_mce_src.js").vendored?
+
+    # Fabric
+    assert blob("fabfile.py").vendored?
   end
 
   def test_indexable
