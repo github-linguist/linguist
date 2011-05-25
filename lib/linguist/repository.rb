@@ -10,8 +10,8 @@ module Linguist
     def self.from_directory(base_path)
       paths = Dir["#{base_path}/**/*"].inject({}) do |h, path|
         if File.file?(path)
-          name    = path.sub("#{base_path}/", '')
-          h[name] = FileBlob.new(path, name)
+          blob = FileBlob.new(path, base_path)
+          h[blob.name] = blob
         end
         h
       end

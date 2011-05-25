@@ -6,9 +6,12 @@ require 'mime/types'
 class TestBlob < Test::Unit::TestCase
   include Linguist
 
+  def fixtures_path
+    File.expand_path("../fixtures/blob", __FILE__)
+  end
+
   def blob(name)
-    path = File.expand_path("../fixtures/blob/#{name}", __FILE__)
-    FileBlob.new(path, name)
+    FileBlob.new(File.join(fixtures_path, name), fixtures_path)
   end
 
   def test_name

@@ -4,8 +4,9 @@ module Linguist
   class FileBlob
     include BlobHelper
 
-    def initialize(path, name = path)
-      @path, @name = path, name
+    def initialize(path, base_path = nil)
+      @path = path
+      @name = base_path ? path.sub("#{base_path}/", '') : path
     end
 
     attr_reader :name
