@@ -3,6 +3,7 @@ Gem::Specification.new do |s|
   s.version = '0.0.1'
   s.summary = "GitHub Language detection"
 
+  s.files = Dir['lib/**/*']
   s.add_dependency 'albino',       '1.3.2'
   s.add_dependency 'escape_utils', '0.2.3'
   s.add_dependency 'mime-types',   '1.15'
