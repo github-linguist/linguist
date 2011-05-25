@@ -31,7 +31,7 @@ elsif File.file?(path)
   puts "  language:     #{blob.language}"
 
   if blob.large?
-    puts "  large (blob is too large to be shown"
+    puts "  large (blob is too large to be shown)"
   end
 
   if blob.generated?
