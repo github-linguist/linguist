@@ -1,6 +1,8 @@
-# This file maps file extensions and exact file names to languages.
-# If the key begins with a `.`, it's an extension.
-# Anything else will only match exactly, albeit case insensitively.
+# Defines all Lanaguges known to GitHub
+#
+# lexer - An explicit lexer String (defaults to name.downcase)
+# ext   - An Array of associated extensions
+
 ASP:
   :lexer: aspx-vb
   :ext:
