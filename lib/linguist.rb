@@ -1,8 +1,7 @@
-module Linguist
-end
-
 require 'linguist/blob'
 require 'linguist/blob_helper'
 require 'linguist/language'
+require 'linguist/lexer'
 require 'linguist/mime'
 require 'linguist/pathname'
+require 'linguist/repository'
