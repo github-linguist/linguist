@@ -1,4 +1,4 @@
-require 'linguist/blob'
+require 'linguist/file_blob'
 
 require 'test/unit'
 require 'mime/types'
@@ -6,27 +6,9 @@ require 'mime/types'
 class TestBlob < Test::Unit::TestCase
   include Linguist
 
-  class FixtureBlob
-    def initialize(name)
-      @name = name
-      @path = File.expand_path("../fixtures/blob/#{name}", __FILE__)
-    end
-
-    def name
-      @name
-    end
-
-    def data
-      File.read(@path)
-    end
-
-    def size
-      File.size(@path)
-    end
-  end
-
   def blob(name)
-    Blob.new(FixtureBlob.new(name))
+    path = File.expand_path("../fixtures/blob/#{name}", __FILE__)
+    FileBlob.new(path, name)
   end
 
   def test_name

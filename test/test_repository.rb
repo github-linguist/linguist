@@ -5,34 +5,8 @@ require 'test/unit'
 class TestRepository < Test::Unit::TestCase
   include Linguist
 
-  class FixtureBlob
-    def initialize(name, path)
-      @name = name
-      @path = path
-    end
-
-    def name
-      @name
-    end
-
-    def data
-      File.read(@path)
-    end
-
-    def size
-      File.size(@path)
-    end
-  end
-
   def repo(base_path)
-    paths = Dir["#{base_path}/**/*"].inject({}) do |h, path|
-      if File.file?(path)
-        name = path.sub("#{base_path}/", '')
-        h[name] = Blob.new(FixtureBlob.new(name, path))
-      end
-      h
-    end
-    Repository.new(paths)
+    Repository.from_directory(base_path)
   end
 
   def linguist_repo

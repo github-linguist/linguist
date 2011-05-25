@@ -1,5 +1,23 @@
+require 'linguist/file_blob'
+
 module Linguist
   class Repository
+    # Public: Initialize a new Repository from a File directory
+    #
+    # base_path - A path String
+    #
+    # Returns a Repository
+    def self.from_directory(base_path)
+      paths = Dir["#{base_path}/**/*"].inject({}) do |h, path|
+        if File.file?(path)
+          name    = path.sub("#{base_path}/", '')
+          h[name] = FileBlob.new(path, name)
+        end
+        h
+      end
+      new(paths)
+    end
+
     # Public: Initialize a new Repository
     #
     # paths - A Hash of String path keys and Blob values.
