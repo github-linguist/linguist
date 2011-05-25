@@ -12,10 +12,24 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal ruby, Language.find_by_name('RUBY')
   end
 
+  def test_find_all_by_name
+    Language.all.each do |language|
+      assert_equal language, Language.find_by_name(language.name)
+    end
+  end
+
   def test_find_by_extension
     assert_equal Language['Ruby'], Language.find_by_extension('.rb')
     assert_equal Language['Ruby'], Language.find_by_extension('rb')
     assert_nil Language.find_by_extension('.kt')
+  end
+
+  def test_find_all_by_extension
+    Language.all.each do |language|
+      language.extensions.each do |extension|
+        assert_equal language, Language.find_by_extension(extension)
+      end
+    end
   end
 
   def test_find_by_lexer

@@ -4,6 +4,7 @@ require 'yaml'
 
 module Linguist
   class Language
+    @languages       = []
     @name_index      = {}
     @lexer_index     = {}
     @extension_index = {}
@@ -15,6 +16,8 @@ module Linguist
     # Returns a Language object
     def self.create(attributes = {})
       language = new(attributes)
+
+      @languages << language
 
       # All Language names should be unique. Warn if there is a duplicate.
       if @name_index.key?(language.name.downcase)
@@ -49,6 +52,13 @@ module Linguist
       end
 
       language
+    end
+
+    # Public: Get all Languages
+    #
+    # Returns an Array of Languages
+    def self.all
+      @languages
     end
 
     # Public: Look up Language by its proper name.
@@ -122,7 +132,7 @@ module Linguist
     #
     # Returns an Array of Lexers.
     def self.popular
-      @popular ||= @name_index.values.select(&:popular?).sort_by { |lang| lang.name.downcase }
+      @popular ||= all.select(&:popular?).sort_by { |lang| lang.name.downcase }
     end
 
     # Public: A List of non-popular languages
@@ -134,7 +144,7 @@ module Linguist
     #
     # Returns an Array of Lexers.
     def self.unpopular
-      @unpopular ||= @name_index.values.select(&:unpopular?).sort_by { |lang| lang.name.downcase }
+      @unpopular ||= all.select(&:unpopular?).sort_by { |lang| lang.name.downcase }
     end
 
     # Internal: Initialize a new Language
