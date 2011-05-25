@@ -124,7 +124,7 @@ module Linguist
     #
     # Returns an Array of lines
     def lines
-      @lines ||= data ? data.split("\n", -1) : []
+      @lines ||= (viewable? && data) ? data.split("\n", -1) : []
     end
 
     # Public: Get number of lines of code
