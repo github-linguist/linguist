@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+
+require 'linguist/blob'
+require 'linguist/repository'
+
+path = ARGV[0] || Dir.pwd
+
+if File.directory?(path)
+  repo = Linguist::Repository.from_directory(path)
+  repo.languages.sort_by { |_, size| size }.reverse.each do |language, size|
+    percentage = ((size / repo.size.to_f) * 100).round
+    puts "%-4s %s" % ["#{percentage}%", language]
+  end
+else
+  abort "usage: linguist <path>"
+end
