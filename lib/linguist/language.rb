@@ -219,16 +219,6 @@ module Linguist
       lexer_name == default_lexer_name
     end
 
-    # Public: Get name for code search
-    #
-    # For historical reasons, code search uses a lower case form of
-    # the language name rather than the proper casing.
-    #
-    # Returns lexer String
-    def search_term
-      lexer_name
-    end
-
     # Public: Is it popular?
     #
     # Returns true or false
