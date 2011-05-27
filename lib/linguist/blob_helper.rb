@@ -269,8 +269,12 @@ module Linguist
     # Returns a Language object
     def language
       if text?
-        # First see if there is a Language for the extension
-        if Language.find_by_extension(extname)
+        # If its a header file (.h) try to guess the language
+        if language = header_language
+          language
+
+        # See if there is a Language for the extension
+        elsif Language.find_by_extension(extname)
           pathname.language
 
         # Try to detect Language from shebang line
@@ -291,6 +295,21 @@ module Linguist
     # Returns a Lexer.
     def lexer
       language.lexer
+    end
+
+    # Internal: Guess language of header files (.h).
+    #
+    # Returns a Language.
+    def header_language
+      return unless extname == '.h'
+
+      if lines.grep(/^@(interface|property|private|public|end)/).any?
+        Language['Objective-C']
+      elsif lines.grep(/^class |^\s+(public|protected|private):/).any?
+        Language['C++']
+      else
+        Language['C']
+      end
     end
 
     # Internal: Extract the script name from the shebang line

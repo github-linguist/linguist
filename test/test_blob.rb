@@ -180,10 +180,20 @@ class TestBlob < Test::Unit::TestCase
   end
 
   def test_language
-    assert_equal Language['Ruby'], blob("foo.rb").language
-    assert_equal Language['Ruby'], blob("script.rb").language
-    assert_equal Language['Text'], blob("octocat.png").language
-    assert_equal Language['Ruby'], blob("wrong_shebang.rb").language
+    assert_equal Language['Ruby'],        blob("foo.rb").language
+    assert_equal Language['Ruby'],        blob("script.rb").language
+    assert_equal Language['Text'],        blob("octocat.png").language
+    assert_equal Language['Ruby'],        blob("wrong_shebang.rb").language
+    assert_equal Language['C'],           blob("hello.c").language
+    assert_equal Language['C'],           blob("hello.h").language
+    assert_equal Language['C++'],         blob("hello.cpp").language
+    assert_equal Language['C++'],         blob("bar.h").language
+    assert_equal Language['C++'],         blob("bar.hpp").language
+    assert_equal Language['Objective-C'], blob("hello.m").language
+    assert_equal Language['Objective-C'], blob("Foo.m").language
+    assert_equal Language['Objective-C'], blob("Foo.h").language
+    assert_equal Language['Objective-C'], blob("FooAppDelegate.m").language
+    assert_equal Language['Objective-C'], blob("FooAppDelegate.h").language
   end
 
   def test_lexer
