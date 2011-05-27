@@ -209,13 +209,16 @@ module Linguist
     # Public: Should the blob be indexed for searching?
     #
     # Excluded:
+    # - Files over 0.1MB
     # - Non-text files
     # - Generated source files
     # - .po and .sql files
     #
     # Return true or false
     def indexable?
-      if !text?
+      if size > 100 * 1024
+        false
+      elsif !text?
         false
       elsif generated?
         false
