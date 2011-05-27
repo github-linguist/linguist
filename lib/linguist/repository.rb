@@ -8,23 +8,26 @@ module Linguist
     #
     # Returns a Repository
     def self.from_directory(base_path)
-      paths = Dir["#{base_path}/**/*"].inject({}) do |h, path|
-        if File.file?(path)
-          blob = FileBlob.new(path, base_path)
-          h[blob.name] = blob
-        end
-        h
-      end
-      new(paths)
+      new Dir["#{base_path}/**/*"].
+        select { |f| File.file?(f) }.
+        map { |path| FileBlob.new(path, base_path) }
     end
 
     # Public: Initialize a new Repository
     #
-    # paths - A Hash of String path keys and Blob values.
+    # paths - An Array of Blob objects or a Hash of String path keys
+    #         and Blob values.
     #
     # Returns a Repository
     def initialize(paths)
-      @paths = paths
+      if paths.is_a?(Array)
+        @paths = paths.inject({}) do |h, blob|
+          h[blob.name] = blob
+          h
+        end
+      else
+        @paths = paths
+      end
 
       @computed_stats = false
       @language = @size = nil
