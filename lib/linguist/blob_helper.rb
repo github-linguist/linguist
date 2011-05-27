@@ -110,7 +110,7 @@ module Linguist
     #
     # Return true or false
     def vendored?
-      name =~ VendoredRegexp
+      name =~ VendoredRegexp ? true : false
     end
 
     ################################################################
