@@ -20,13 +20,16 @@ module Linguist
     #
     # Returns a Repository
     def initialize(paths)
-      if paths.is_a?(Array)
+      case paths
+      when Array
         @paths = paths.inject({}) do |h, blob|
           h[blob.name] = blob
           h
         end
-      else
+      when Hash
         @paths = paths
+      else
+        raise ArgumentError, "#{paths.class} is not an Array or Hash"
       end
 
       @computed_stats = false
