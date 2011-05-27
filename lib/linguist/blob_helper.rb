@@ -216,18 +216,18 @@ module Linguist
     #
     # Return true or false
     def indexable?
-      if size > 100 * 1024
-        false
-      elsif !text?
-        false
-      elsif generated?
+      if !text?
         false
       elsif ['.po', '.sql'].include?(pathname.extname)
         false
-      elsif Language.find_by_extension(pathname.extname)
-        true
-      else
+      elsif !Language.find_by_extension(pathname.extname)
         false
+      elsif generated?
+        false
+      elsif size > 100 * 1024
+        false
+      else
+        true
       end
     end
 
