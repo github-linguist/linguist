@@ -16,6 +16,18 @@ module Linguist
       Pathname.new(name || "")
     end
 
+    # Public: Get the extname of the path
+    #
+    # Examples
+    #
+    #   blob(name='foo.rb').extname
+    #   # => '.rb'
+    #
+    # Returns a String
+    def extname
+      pathname.extname
+    end
+
     # Public: Get the actual blob mime type
     #
     # Examples
@@ -70,7 +82,7 @@ module Linguist
     #
     # Return true or false
     def image?
-      ['.png', '.jpg', '.jpeg', '.gif'].include?(pathname.extname)
+      ['.png', '.jpg', '.jpeg', '.gif'].include?(extname)
     end
 
     # Public: Is the blob binary?
@@ -158,11 +170,11 @@ module Linguist
     #
     # Return true or false
     def generated?
-      if ['.xib', '.nib', '.pbxproj'].include?(pathname.extname)
+      if ['.xib', '.nib', '.pbxproj'].include?(extname)
         true
       elsif generated_coffeescript?
         true
-      elsif pathname.extname == '.js'
+      elsif extname == '.js'
         # JS is minified if any lines are longer than 1000c
         lines.any? { |l| l.length > 1000 }
       else
@@ -180,7 +192,7 @@ module Linguist
     #
     # Return true or false
     def generated_coffeescript?
-      return unless pathname.extname == '.js'
+      return unless extname == '.js'
 
       if lines[0] == '(function() {' &&     # First line is module closure opening
           lines[-2] == '}).call(this);' &&  # Second to last line closes module closure
@@ -218,9 +230,9 @@ module Linguist
     def indexable?
       if !text?
         false
-      elsif ['.po', '.sql'].include?(pathname.extname)
+      elsif ['.po', '.sql'].include?(extname)
         false
-      elsif !Language.find_by_extension(pathname.extname)
+      elsif !Language.find_by_extension(extname)
         false
       elsif generated?
         false
@@ -258,7 +270,7 @@ module Linguist
     def language
       if text?
         # First see if there is a Language for the extension
-        if Language.find_by_extension(pathname.extname)
+        if Language.find_by_extension(extname)
           pathname.language
 
         # Try to detect Language from shebang line
