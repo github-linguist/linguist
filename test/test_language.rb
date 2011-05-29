@@ -61,9 +61,50 @@ class TestLanguage < Test::Unit::TestCase
   end
 
   def test_name
-    assert_equal "Perl",   Language['Perl'].name
-    assert_equal "Python", Language['Python'].name
-    assert_equal "Ruby",   Language['Ruby'].name
+    assert_equal "Perl",    Language['Perl'].name
+    assert_equal "Python",  Language['Python'].name
+    assert_equal "Ruby",    Language['Ruby'].name
+  end
+
+  # Used for code search indexing. Changing any of these values may
+  # require reindexing repositories.
+  def test_search_term
+    assert_equal "perl",        Language['Perl'].search_term
+    assert_equal "python",      Language['Python'].search_term
+    assert_equal "ruby",        Language['Ruby'].search_term
+    assert_equal "common-lisp", Language['Common Lisp'].search_term
+    assert_equal "html+erb",    Language['HTML+ERB'].search_term
+    assert_equal "max/msp",     Language['Max/MSP'].search_term
+    assert_equal "pure-data",   Language['Pure Data'].search_term
+
+    assert_equal "aspx-vb",    Language['ASP'].search_term
+    assert_equal "as3",        Language['ActionScript'].search_term
+    assert_equal "nasm",       Language['Assembly'].search_term
+    assert_equal "bat",        Language['Batchfile'].search_term
+    assert_equal "csharp",     Language['C#'].search_term
+    assert_equal "cpp",        Language['C++'].search_term
+    assert_equal "java",       Language['ChucK'].search_term
+    assert_equal "cfm",        Language['ColdFusion'].search_term
+    assert_equal "dpatch",     Language['Darcs Patch'].search_term
+    assert_equal "scheme",     Language['Emacs Lisp'].search_term
+    assert_equal "ocaml",      Language['F#'].search_term
+    assert_equal "bash",       Language['Gentoo Ebuild'].search_term
+    assert_equal "bash",       Language['Gentoo Eclass'].search_term
+    assert_equal "pot",        Language['Gettext Catalog'].search_term
+    assert_equal "irc",        Language['IRC log'].search_term
+    assert_equal "java",       Language['Groovy'].search_term
+    assert_equal "javascript", Language['JSON'].search_term
+    assert_equal "lhs",        Language['Literate Haskell'].search_term
+    assert_equal "ruby",       Language['Mirah'].search_term
+    assert_equal "scheme",     Language['Nu'].search_term
+    assert_equal "pir",        Language['Parrot Internal Representation'].search_term
+    assert_equal "pytb",       Language['Python traceback'].search_term
+    assert_equal "raw",        Language['Raw token data'].search_term
+    assert_equal "bash",       Language['Shell'].search_term
+    assert_equal "vim",        Language['VimL'].search_term
+    assert_equal "c",          Language['XS'].search_term
+    assert_equal "jsp",        Language['Java Server Pages'].search_term
+    assert_equal "rst",        Language['reStructuredText'].search_term
   end
 
   def test_error_without_name

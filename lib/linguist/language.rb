@@ -219,6 +219,10 @@ module Linguist
       lexer_name == default_lexer_name
     end
 
+    def search_term
+      lexer_name
+    end
+
     # Public: Is it popular?
     #
     # Returns true or false
