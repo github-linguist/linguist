@@ -14,6 +14,7 @@ class TestLexer < Test::Unit::TestCase
   def test_find_all_by_name
     Lexer.all.each do |lexer|
       assert_equal lexer, Lexer.find_by_name(lexer.name)
+      assert_equal lexer, Lexer[lexer.name]
     end
   end
 
@@ -27,6 +28,7 @@ class TestLexer < Test::Unit::TestCase
     Lexer.all.each do |lexer|
       lexer.aliases.each do |name|
         assert_equal lexer, Lexer.find_by_alias(name)
+        assert_equal lexer, Lexer[name]
       end
     end
   end
