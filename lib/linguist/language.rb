@@ -6,6 +6,7 @@ module Linguist
   class Language
     @languages       = []
     @name_index      = {}
+    @alias_index     = {}
     @lexer_index     = {}
     @extension_index = {}
 
@@ -26,6 +27,16 @@ module Linguist
 
       # Case-insensitive language name index
       @name_index[language.name.downcase] = language
+
+      language.aliases.each do |name|
+        # All Language aliases should be unique. Warn if there is a duplicate.
+        if @alias_index.key?(name)
+          warn "Duplicate alias: #{name}"
+        end
+
+        @alias_index[name] = language
+      end
+
 
       # Set langauge as the default for reverse lexer lookup if
       # :default_lexer is set or the language is the same name as its
@@ -75,6 +86,20 @@ module Linguist
       @name_index[name.downcase]
     end
 
+    # Public: Look up Language by one of its aliases.
+    #
+    # name - A case-sensitive String alias of the Language
+    #
+    # Examples
+    #
+    #   Language.find_by_alias('cpp')
+    #   # => #<Language name="C++">
+    #
+    # Returns the Lexer or nil if none was found.
+    def self.find_by_alias(name)
+      @alias_index[name.downcase]
+    end
+
     # Public: Look up Language by extension.
     #
     # extension - The extension String. May include leading "."
@@ -87,23 +112,6 @@ module Linguist
     # Returns the Language or nil if none was found.
     def self.find_by_extension(extension)
       @extension_index[extension]
-    end
-
-    # Deprecated: Look up Language by its lexer.
-    #
-    # The use of this method is discouraged since multiple languages
-    # may have the same lexer name.
-    #
-    # name - The case-insensitive String lexer of the Language
-    #
-    # Examples
-    #
-    #   Language.find_by_lexer('cpp')
-    #   # => #<Language name="C++">
-    #
-    # Returns the Language or Language['Text'] if none was found.
-    def self.find_by_lexer(lexer)
-      @lexer_index[lexer.downcase] || self['Text']
     end
 
     # Public: Look up Language by its name or lexer.
@@ -120,7 +128,7 @@ module Linguist
     #
     # Returns the Language or nil if none was found.
     def self.[](name)
-      find_by_name(name) || find_by_lexer(name)
+      find_by_name(name) || find_by_alias(name) || self['Text']
     end
 
     # Public: A List of popular languages
@@ -154,8 +162,11 @@ module Linguist
       # @name is required
       @name = attributes[:name] || raise(ArgumentError, "missing name")
 
+      # Set aliases
+      @aliases = [default_alias_name] + (attributes[:aliases] || [])
+
       # Use :lexer_name or fallback to `@name.downcase`
-      @lexer_name = attributes[:lexer_name] || default_lexer_name
+      @lexer_name = attributes[:lexer_name] || default_alias_name
 
       # Lookup Lexer object
       @lexer = Lexer.find_by_alias(@lexer_name)
@@ -179,6 +190,16 @@ module Linguist
     #
     # Returns the name String
     attr_reader :name
+
+    # Public: Get aliases
+    #
+    # Examples
+    #
+    #   Language['C++'].aliases
+    #   # => ["cpp"]
+    #
+    # Returns an Array of String names
+    attr_reader :aliases
 
     # Deprecated: Get lexer name
     #
@@ -205,10 +226,10 @@ module Linguist
     # Returns the extensions Array
     attr_reader :extensions
 
-    # Internal: Get default lexer name
+    # Internal: Get default alias name
     #
-    # Returns the lexer name String
-    def default_lexer_name
+    # Returns the alias name String
+    def default_alias_name
       name.downcase.gsub(/\s/, '-')
     end
 
@@ -216,7 +237,7 @@ module Linguist
     #
     # Returns true or false
     def default_lexer?
-      lexer_name == default_lexer_name
+      lexer_name == default_alias_name
     end
 
     def search_term
@@ -286,12 +307,13 @@ module Linguist
 
   YAML.load_file(File.expand_path("../languages.yml", __FILE__)).each do |name, options|
     Language.create(
-      :name => name,
+      :name    => name,
+      :aliases => options[:aliases],
       :lexer_name => options[:lexer],
       :default_lexer => options[:default_lexer],
       :extensions => options[:ext],
-      :popular => popular.include?(name),
-      :common => common.include?(name)
+      :popular    => popular.include?(name),
+      :common     => common.include?(name)
     )
   end
 end

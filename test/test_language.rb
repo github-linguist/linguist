@@ -15,6 +15,82 @@ class TestLanguage < Test::Unit::TestCase
   def test_find_all_by_name
     Language.all.each do |language|
       assert_equal language, Language.find_by_name(language.name)
+      assert_equal language, Language[language.name]
+    end
+  end
+
+  def test_find_by_alias
+    assert_equal Language['Perl'],      Language.find_by_alias('perl')
+    assert_equal Language['Python'],    Language.find_by_alias('python')
+    assert_equal Language['Ruby'],      Language.find_by_alias('ruby')
+    assert_equal Language['HTML+ERB'],  Language.find_by_alias('html+erb')
+    assert_equal Language['Max/MSP'],   Language.find_by_alias('max/msp')
+    assert_equal Language['Pure Data'], Language.find_by_alias('pure-data')
+
+    assert_equal Language['ASP'],          Language.find_by_alias('asp')
+    assert_equal Language['ASP'],          Language.find_by_alias('aspx')
+    assert_equal Language['ASP'],          Language.find_by_alias('aspx-vb')
+    assert_equal Language['ActionScript'], Language.find_by_alias('as3')
+    assert_equal Language['Assembly'],     Language.find_by_alias('nasm')
+    assert_equal Language['Batchfile'],    Language.find_by_alias('bat')
+
+    assert_equal Language['C++'], Language.find_by_alias('c++')
+    assert_equal Language['C++'], Language.find_by_alias('cpp')
+    assert_equal Language['C#'],  Language.find_by_alias('c#')
+    assert_equal Language['C#'],  Language.find_by_alias('csharp')
+
+    assert_equal Language['Java'],              Language.find_by_alias('java')
+    assert_equal Language['ChucK'],             Language.find_by_alias('chuck')
+    assert_equal Language['Groovy'],            Language.find_by_alias('groovy')
+    assert_equal Language['Java Server Pages'], Language.find_by_alias('jsp')
+
+    assert_equal Language['ColdFusion'],  Language.find_by_alias('cfm')
+    assert_equal Language['Darcs Patch'], Language.find_by_alias('dpatch')
+
+    assert_equal Language['Common Lisp'], Language.find_by_alias('common-lisp')
+    assert_equal Language['Common Lisp'], Language.find_by_alias('lisp')
+    assert_equal Language['Emacs Lisp'],  Language.find_by_alias('emacs-lisp')
+    assert_equal Language['Emacs Lisp'],  Language.find_by_alias('elisp')
+    assert_equal Language['Nu'],          Language.find_by_alias('nu')
+    assert_equal Language['Scheme'],      Language.find_by_alias('scheme')
+
+    assert_equal Language['OCaml'],           Language.find_by_alias('ocaml')
+    assert_equal Language['F#'],              Language.find_by_alias('f#')
+    assert_equal Language['Gettext Catalog'], Language.find_by_alias('pot')
+    assert_equal Language['IRC log'],         Language.find_by_alias('irc')
+
+    assert_equal Language['JavaScript'], Language.find_by_alias('javascript')
+    assert_equal Language['JavaScript'], Language.find_by_alias('js')
+    assert_equal Language['JSON'],       Language.find_by_alias('json')
+
+    assert_equal Language['Haskell'],          Language.find_by_alias('haskell')
+    assert_equal Language['Literate Haskell'], Language.find_by_alias('literate-haskell')
+    assert_equal Language['Literate Haskell'], Language.find_by_alias('lhs')
+
+    assert_equal Language['Parrot Internal Representation'], Language.find_by_alias('pir')
+
+    assert_equal Language['Python traceback'], Language.find_by_alias('pytb')
+
+    assert_equal Language['Raw token data'],   Language.find_by_alias('raw')
+    assert_equal Language['reStructuredText'], Language.find_by_alias('rst')
+
+    assert_equal Language['Shell'], Language.find_by_alias('shell')
+    assert_equal Language['Shell'], Language.find_by_alias('sh')
+    assert_equal Language['Shell'], Language.find_by_alias('bash')
+    assert_equal Language['Shell'], Language.find_by_alias('zsh')
+
+    assert_equal Language['VimL'], Language.find_by_alias('viml')
+    assert_equal Language['VimL'], Language.find_by_alias('vim')
+
+    assert_equal Language['XS'], Language.find_by_alias('xs')
+  end
+
+  def test_find_all_by_alias
+    Language.all.each do |language|
+      language.aliases.each do |name|
+        assert_equal language, Language.find_by_alias(name)
+        assert_equal language, Language[name]
+      end
     end
   end
 
@@ -30,20 +106,6 @@ class TestLanguage < Test::Unit::TestCase
         assert_equal language, Language.find_by_extension(extension)
       end
     end
-  end
-
-  def test_find_by_lexer
-    assert_equal Language['C'], Language.find_by_lexer('c')
-    assert_equal Language['C++'], Language.find_by_lexer('cpp')
-    assert_equal Language['Java'], Language.find_by_lexer('java')
-    assert_equal Language['JavaScript'], Language.find_by_lexer('javascript')
-    assert_equal Language['OCaml'], Language.find_by_lexer('ocaml')
-    assert_equal Language['Perl'], Language.find_by_lexer('perl')
-    assert_equal Language['Python'], Language.find_by_lexer('python')
-    assert_equal Language['Ruby'], Language.find_by_lexer('ruby')
-    assert_equal Language['Scheme'], Language.find_by_lexer('scheme')
-    assert_equal Language['Shell'], Language.find_by_lexer('bash')
-    assert_equal Language['Text'], Language.find_by_lexer('kt')
   end
 
   def test_find

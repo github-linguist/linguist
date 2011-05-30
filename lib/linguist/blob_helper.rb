@@ -369,7 +369,7 @@ module Linguist
         if lang = Shebangs[script]
           lang
         else
-          lang = Language.find_by_lexer(script)
+          lang = Language[script]
           lang != Language['Text'] ? lang : nil
         end
       end

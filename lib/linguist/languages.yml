@@ -1,10 +1,14 @@
 # Defines all Lanaguges known to GitHub
 #
-# lexer - An explicit lexer String (defaults to name.downcase)
-# ext   - An Array of associated extensions
+# lexer   - An explicit lexer String (defaults to name.downcase)
+# aliases - An Array of additional aliases (implicitly includes name.downcase)
+# ext     - An Array of associated extensions
 
 ASP:
   :lexer: aspx-vb
+  :aliases:
+  - aspx
+  - aspx-vb
   :ext:
   - .ascx
   - .axd
@@ -15,6 +19,8 @@ ASP:
   - .asp
 ActionScript:
   :lexer: as3
+  :aliases:
+  - as3
   :ext:
   - .as
 Ada:
@@ -29,10 +35,14 @@ Arc:
   - .arc
 Assembly:
   :lexer: nasm
+  :aliases:
+  - nasm
   :ext:
   - .asm
 Batchfile:
   :lexer: bat
+  :aliases:
+  - bat
   :ext:
   - .bat
   - .cmd
@@ -55,10 +65,14 @@ C:
   - .h
 C#:
   :lexer: csharp
+  :aliases:
+  - csharp
   :ext:
   - .cs
 C++:
   :lexer: cpp
+  :aliases:
+  - cpp
   :ext:
   - .cpp
   - .hh
@@ -85,10 +99,14 @@ CoffeeScript:
   - Cakefile
 ColdFusion:
   :lexer: cfm
+  :aliases:
+  - cfm
   :ext:
   - .cfm
   - .cfc
 Common Lisp:
+  :aliases:
+  - lisp
   :ext:
   - .cl
   - .lisp
@@ -107,6 +125,8 @@ D:
   - .di
 Darcs Patch:
   :lexer: dpatch
+  :aliases:
+  - dpatch
   :ext:
   - .darcspatch
   - .dpatch
@@ -128,6 +148,8 @@ Eiffel:
   - .e
 Emacs Lisp:
   :lexer: scheme
+  :aliases:
+  - elisp
   :ext:
   - .el
   - .emacs
@@ -167,6 +189,8 @@ Gentoo Eclass:
   - .eclass
 Gettext Catalog:
   :lexer: pot
+  :aliases:
+  - pot
   :ext:
   - .po
   - .pot
@@ -212,6 +236,8 @@ INI:
   - .properties
 IRC log:
   :lexer: irc
+  :aliases:
+  - irc
   :ext:
   - .weechatlog
 Io:
@@ -226,6 +252,8 @@ Groovy:
   :ext:
   - .groovy
 JavaScript:
+  :aliases:
+  - js
   :ext:
   - .js
   - .sjs
@@ -240,6 +268,8 @@ JSON:
   - .json
 Literate Haskell:
   :lexer: lhs
+  :aliases:
+  - lhs
   :ext:
   - .lhs
 LLVM:
@@ -326,6 +356,8 @@ PHP:
   - .php5
 Parrot Internal Representation:
   :lexer: pir
+  :aliases:
+  - pir
   :ext:
   - .pir
   - .pbc
@@ -349,6 +381,8 @@ Python:
   - .pyw
 Python traceback:
   :lexer: pytb
+  :aliases:
+  - pytb
   :ext:
   - .pytb
 R:
@@ -365,6 +399,8 @@ RHTML:
   - .rhtml
 Raw token data:
   :lexer: raw
+  :aliases:
+  - raw
   :ext:
   - .raw
 Rebol:
@@ -412,6 +448,10 @@ Self:
 Shell:
   :lexer: bash
   :default_lexer: true
+  :aliases:
+  - sh
+  - bash
+  - zsh
   :ext:
   - .sh
   - .zsh
@@ -457,6 +497,8 @@ Verilog:
   - .v
 VimL:
   :lexer: vim
+  :aliases:
+  - vim
   :ext:
   - .vim
   - .vimrc
@@ -493,6 +535,8 @@ YAML:
   - .yaml
 Java Server Pages:
   :lexer: jsp
+  :aliases:
+  - jsp
   :ext:
   - .jsp
 mupad:
@@ -503,6 +547,8 @@ ooc:
   - .ooc
 reStructuredText:
   :lexer: rst
+  :aliases:
+  - rst
   :ext:
   - .rst
   - .rest
