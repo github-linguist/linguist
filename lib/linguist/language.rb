@@ -154,7 +154,8 @@ module Linguist
       @aliases = [default_alias_name] + (attributes[:aliases] || [])
 
       # Lookup Lexer object
-      @lexer = Lexer.find_by_alias(attributes[:lexer] || default_alias_name)
+      @lexer = Lexer.find_by_alias(attributes[:lexer] || default_alias_name) ||
+        raise(ArgumentError, "#{@name} is missing lexer")
 
       # Set legacy search term
       @search_term = attributes[:search_term] || default_alias_name
