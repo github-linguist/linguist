@@ -1,11 +1,15 @@
 # Defines all Lanaguges known to GitHub
 #
-# lexer   - An explicit lexer String (defaults to name.downcase)
-# aliases - An Array of additional aliases (implicitly includes name.downcase)
-# ext     - An Array of associated extensions
+# lexer       - An explicit lexer String (defaults to name.downcase)
+# aliases     - An Array of additional aliases (implicitly
+#               includes name.downcase)
+# ext         - An Array of associated extensions
+# search_term - Deprecated: Some langauges maybe indexed under a
+#               different alias. Avoid defining new exceptions.
 
 ASP:
   :lexer: aspx-vb
+  :search_term: aspx-vb
   :aliases:
   - aspx
   - aspx-vb
@@ -19,6 +23,7 @@ ASP:
   - .asp
 ActionScript:
   :lexer: as3
+  :search_term: as3
   :aliases:
   - as3
   :ext:
@@ -35,12 +40,14 @@ Arc:
   - .arc
 Assembly:
   :lexer: nasm
+  :search_term: nasm
   :aliases:
   - nasm
   :ext:
   - .asm
 Batchfile:
   :lexer: bat
+  :search_term: bat
   :aliases:
   - bat
   :ext:
@@ -65,12 +72,14 @@ C:
   - .h
 C#:
   :lexer: csharp
+  :search_term: csharp
   :aliases:
   - csharp
   :ext:
   - .cs
 C++:
   :lexer: cpp
+  :search_term: cpp
   :aliases:
   - cpp
   :ext:
@@ -88,6 +97,7 @@ CSS:
   - .css
 ChucK:
   :lexer: java
+  :search_term: java
   :ext:
   - .ck
 Clojure:
@@ -99,6 +109,7 @@ CoffeeScript:
   - Cakefile
 ColdFusion:
   :lexer: cfm
+  :search_term: cfm
   :aliases:
   - cfm
   :ext:
@@ -125,6 +136,7 @@ D:
   - .di
 Darcs Patch:
   :lexer: dpatch
+  :search_term: dpatch
   :aliases:
   - dpatch
   :ext:
@@ -148,6 +160,7 @@ Eiffel:
   - .e
 Emacs Lisp:
   :lexer: scheme
+  :search_term: scheme
   :aliases:
   - elisp
   :ext:
@@ -159,6 +172,7 @@ Erlang:
   - .erl
 F#:
   :lexer: ocaml
+  :search_term: ocaml
   :ext:
   - .fs
   - .fsi
@@ -181,14 +195,17 @@ Genshi:
   - .kid
 Gentoo Ebuild:
   :lexer: bash
+  :search_term: bash
   :ext:
   - .ebuild
 Gentoo Eclass:
   :lexer: bash
+  :search_term: bash
   :ext:
   - .eclass
 Gettext Catalog:
   :lexer: pot
+  :search_term: pot
   :aliases:
   - pot
   :ext:
@@ -236,6 +253,7 @@ INI:
   - .properties
 IRC log:
   :lexer: irc
+  :search_term: irc
   :aliases:
   - irc
   :ext:
@@ -249,6 +267,7 @@ Java:
   - .pde
 Groovy:
   :lexer: java
+  :search_term: java
   :ext:
   - .groovy
 JavaScript:
@@ -264,10 +283,12 @@ JavaScript:
   - .jake
 JSON:
   :lexer: javascript
+  :search_term: javascript
   :ext:
   - .json
 Literate Haskell:
   :lexer: lhs
+  :search_term: lhs
   :aliases:
   - lhs
   :ext:
@@ -301,6 +322,7 @@ Max/MSP:
   - .mxt
 Mirah:
   :lexer: ruby
+  :search_term: ruby
   :ext:
   - .duby
   - .mir
@@ -313,6 +335,7 @@ Myghty:
   - .myt
 Nu:
   :lexer: scheme
+  :search_term: scheme
   :ext:
   - .nu
   - Nukefile
@@ -356,6 +379,7 @@ PHP:
   - .php5
 Parrot Internal Representation:
   :lexer: pir
+  :search_term: pir
   :aliases:
   - pir
   :ext:
@@ -381,6 +405,7 @@ Python:
   - .pyw
 Python traceback:
   :lexer: pytb
+  :search_term: pytb
   :aliases:
   - pytb
   :ext:
@@ -399,6 +424,7 @@ RHTML:
   - .rhtml
 Raw token data:
   :lexer: raw
+  :search_term: raw
   :aliases:
   - raw
   :ext:
@@ -447,7 +473,7 @@ Self:
   - .self
 Shell:
   :lexer: bash
-  :default_lexer: true
+  :search_term: bash
   :aliases:
   - sh
   - bash
@@ -497,6 +523,7 @@ Verilog:
   - .v
 VimL:
   :lexer: vim
+  :search_term: vim
   :aliases:
   - vim
   :ext:
@@ -527,6 +554,7 @@ XQuery:
   - .xquery
 XS:
   :lexer: c
+  :search_term: c
   :ext:
   - .xs
 YAML:
@@ -535,6 +563,7 @@ YAML:
   - .yaml
 Java Server Pages:
   :lexer: jsp
+  :search_term: jsp
   :aliases:
   - jsp
   :ext:
@@ -547,6 +576,7 @@ ooc:
   - .ooc
 reStructuredText:
   :lexer: rst
+  :search_term: rst
   :aliases:
   - rst
   :ext:

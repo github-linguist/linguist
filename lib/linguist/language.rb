@@ -7,7 +7,6 @@ module Linguist
     @languages       = []
     @name_index      = {}
     @alias_index     = {}
-    @lexer_index     = {}
     @extension_index = {}
 
     # Internal: Create a new Language object
@@ -36,17 +35,6 @@ module Linguist
 
         @alias_index[name] = language
       end
-
-
-      # Set langauge as the default for reverse lexer lookup if
-      # :default_lexer is set or the language is the same name as its
-      # lexer.
-      if attributes[:default_lexer] || language.default_lexer?
-        @lexer_index[language.lexer_name.downcase] = language
-      end
-
-      # Case-insensitive lexer name index
-      @lexer_index[language.lexer_name.downcase] ||= language
 
       language.extensions.each do |extension|
         # All Language extensions should be unique. Warn if there is a
@@ -165,11 +153,11 @@ module Linguist
       # Set aliases
       @aliases = [default_alias_name] + (attributes[:aliases] || [])
 
-      # Use :lexer_name or fallback to `@name.downcase`
-      @lexer_name = attributes[:lexer_name] || default_alias_name
-
       # Lookup Lexer object
-      @lexer = Lexer.find_by_alias(@lexer_name)
+      @lexer = Lexer.find_by_alias(attributes[:lexer] || default_alias_name)
+
+      # Set legacy search term
+      @search_term = attributes[:search_term] || default_alias_name
 
       # Set extensions or default to [].
       # Consider using `@lexer.extensions`
@@ -201,7 +189,7 @@ module Linguist
     # Returns an Array of String names
     attr_reader :aliases
 
-    # Deprecated: Get lexer name
+    # Deprecated: Get code search term
     #
     # Examples
     #
@@ -210,7 +198,7 @@ module Linguist
     #   # => "perl"
     #
     # Returns the name String
-    attr_reader :lexer_name
+    attr_reader :search_term
 
     # Public: Get Lexer
     #
@@ -231,17 +219,6 @@ module Linguist
     # Returns the alias name String
     def default_alias_name
       name.downcase.gsub(/\s/, '-')
-    end
-
-    # Internal: Is the language using the default lexer
-    #
-    # Returns true or false
-    def default_lexer?
-      lexer_name == default_alias_name
-    end
-
-    def search_term
-      lexer_name
     end
 
     # Public: Is it popular?
@@ -307,13 +284,13 @@ module Linguist
 
   YAML.load_file(File.expand_path("../languages.yml", __FILE__)).each do |name, options|
     Language.create(
-      :name    => name,
-      :aliases => options[:aliases],
-      :lexer_name => options[:lexer],
-      :default_lexer => options[:default_lexer],
-      :extensions => options[:ext],
-      :popular    => popular.include?(name),
-      :common     => common.include?(name)
+      :name        => name,
+      :aliases     => options[:aliases],
+      :lexer       => options[:lexer],
+      :search_term => options[:search_term],
+      :extensions  => options[:ext],
+      :popular     => popular.include?(name),
+      :common      => common.include?(name)
     )
   end
 end
