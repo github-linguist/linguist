@@ -22,7 +22,7 @@ ASP:
   - .ashx
   - .asp
 ActionScript:
-  :lexer: as3
+  :lexer: ActionScript 3
   :search_term: as3
   :aliases:
   - as3
@@ -36,7 +36,7 @@ AppleScript:
   :ext:
   - .scpt
 Arc:
-  :lexer: text
+  :lexer: Text only
   :ext:
   - .arc
 Assembly:
@@ -47,7 +47,6 @@ Assembly:
   :ext:
   - .asm
 Batchfile:
-  :lexer: bat
   :search_term: bat
   :aliases:
   - bat
@@ -72,14 +71,12 @@ C:
   - .c
   - .h
 C#:
-  :lexer: csharp
   :search_term: csharp
   :aliases:
   - csharp
   :ext:
   - .cs
 C++:
-  :lexer: cpp
   :search_term: cpp
   :aliases:
   - cpp
@@ -109,7 +106,7 @@ CoffeeScript:
   - .coffee
   - Cakefile
 ColdFusion:
-  :lexer: cfm
+  :lexer: ColdFusion HTML
   :search_term: cfm
   :aliases:
   - cfm
@@ -124,6 +121,7 @@ Common Lisp:
   - .lisp
   - .ny
 Cucumber:
+  :lexer: Gherkin
   :ext:
   - .feature
 Cython:
@@ -136,7 +134,6 @@ D:
   - .d
   - .di
 Darcs Patch:
-  :lexer: dpatch
   :search_term: dpatch
   :aliases:
   - dpatch
@@ -157,11 +154,11 @@ Dylan:
   :ext:
   - .dylan
 Eiffel:
-  :lexer: text
+  :lexer: Text only
   :ext:
   - .e
 Emacs Lisp:
-  :lexer: scheme
+  :lexer: Scheme
   :search_term: scheme
   :aliases:
   - elisp
@@ -206,7 +203,6 @@ Gentoo Eclass:
   :ext:
   - .eclass
 Gettext Catalog:
-  :lexer: pot
   :search_term: pot
   :aliases:
   - pot
@@ -227,9 +223,11 @@ HTML:
   - .htm
   - .xslt
 HTML+Django:
+  :lexer: HTML+Django/Jinja
   :ext:
   - .mustache
 HTML+ERB:
+  :lexer: RHTML
   :ext:
   - .erb
   - .html.erb
@@ -237,7 +235,7 @@ HTML+PHP:
   :ext:
   - .phtml
 HaXe:
-  :lexer: hx
+  :lexer: haXe
   :ext:
   - .hx
   - .hxml
@@ -255,7 +253,7 @@ INI:
   - .cfg
   - .properties
 IRC log:
-  :lexer: irc
+  :lexer: IRC logs
   :search_term: irc
   :aliases:
   - irc
@@ -290,7 +288,6 @@ JSON:
   :ext:
   - .json
 Literate Haskell:
-  :lexer: lhs
   :search_term: lhs
   :aliases:
   - lhs
@@ -311,7 +308,7 @@ Mako:
   :ext:
   - .mao
 Markdown:
-  :lexer: text
+  :lexer: Text only
   :ext:
   - .md
   - .mkd
@@ -322,11 +319,11 @@ Matlab:
   :ext:
   - .matlab
 Max/MSP:
-  :lexer: text
+  :lexer: Text only
   :ext:
   - .mxt
 Mirah:
-  :lexer: ruby
+  :lexer: Ruby
   :search_term: ruby
   :ext:
   - .duby
@@ -383,7 +380,7 @@ PHP:
   - .php4
   - .php5
 Parrot Internal Representation:
-  :lexer: text
+  :lexer: Text only
   :search_term: pir
   :aliases:
   - pir
@@ -402,7 +399,7 @@ Perl:
   - .perl
   - .psgi
 Pure Data:
-  :lexer: text
+  :lexer: Text only
   :ext:
   - .pd
 Python:
@@ -410,18 +407,18 @@ Python:
   - .py
   - .pyw
 Python traceback:
-  :lexer: pytb
   :search_term: pytb
   :aliases:
   - pytb
   :ext:
   - .pytb
 R:
+  :lexer: S
   :ext:
   - .r
   - .R
 Racket:
-  :lexer: text
+  :lexer: Text only
   :ext:
   - .rkt
   - .rktl
@@ -430,7 +427,6 @@ RHTML:
   :ext:
   - .rhtml
 Raw token data:
-  :lexer: raw
   :search_term: raw
   :aliases:
   - raw
@@ -476,11 +472,11 @@ Scheme:
   - .sps
   - .scm
 Self:
-  :lexer: text
+  :lexer: Text only
   :ext:
   - .self
 Shell:
-  :lexer: bash
+  :lexer: Bash
   :search_term: bash
   :aliases:
   - sh
@@ -497,7 +493,7 @@ Smarty:
   :ext:
   - .tpl
 SuperCollider:
-  :lexer: text
+  :lexer: Text only
   :ext:
   - .sc
 Tcl:
@@ -515,26 +511,26 @@ TeX:
   - .cls
   - .aux
 Text:
+  :lexer: Text only
   :ext:
   - .txt
 Textile:
-  :lexer: text
+  :lexer: Text only
   :ext:
   - .textile
 Vala:
   :ext:
   - .vala
 VHDL:
-  :lexer: text
+  :lexer: Text only
   :ext:
   - .vhdl
   - .vhd
 Verilog:
-  :lexer: text
+  :lexer: Text only
   :ext:
   - .v
 VimL:
-  :lexer: vim
   :search_term: vim
   :aliases:
   - vim
@@ -542,7 +538,7 @@ VimL:
   - .vim
   - .vimrc
 Visual Basic:
-  :lexer: text
+  :lexer: Text only
   :ext:
   - .bas
   - .vbs
@@ -575,7 +571,7 @@ YAML:
   - .yml
   - .yaml
 Java Server Pages:
-  :lexer: jsp
+  :lexer: Java Server Page
   :search_term: jsp
   :aliases:
   - jsp
@@ -588,7 +584,6 @@ ooc:
   :ext:
   - .ooc
 reStructuredText:
-  :lexer: rst
   :search_term: rst
   :aliases:
   - rst
