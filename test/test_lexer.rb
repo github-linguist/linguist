@@ -39,9 +39,9 @@ class TestLexer < Test::Unit::TestCase
   end
 
   def test_aliases
-    assert_equal ['rb', 'ruby'],   Lexer['Ruby'].aliases
-    assert_equal ['python', 'py'], Lexer['Python'].aliases
-    assert_equal ['perl', 'pl'],   Lexer['Perl'].aliases
+    assert_equal ['rb', 'ruby', 'duby'], Lexer['Ruby'].aliases
+    assert_equal ['python', 'py'],       Lexer['Python'].aliases
+    assert_equal ['perl', 'pl'],         Lexer['Perl'].aliases
   end
 
   def test_eql
