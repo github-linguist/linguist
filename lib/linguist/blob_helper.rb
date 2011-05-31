@@ -223,16 +223,16 @@ module Linguist
     # Excluded:
     # - Files over 0.1MB
     # - Non-text files
+    # - Langauges marked as not searchable
     # - Generated source files
-    # - .po and .sql files
     #
     # Return true or false
     def indexable?
       if !text?
         false
-      elsif ['.po', '.sql'].include?(extname)
-        false
       elsif !Language.find_by_extension(extname)
+        false
+      elsif !language.searchable?
         false
       elsif generated?
         false

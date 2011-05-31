@@ -164,9 +164,10 @@ module Linguist
       # Consider using `@lexer.extensions`
       @extensions = attributes[:extensions] || []
 
-      # Set popular or common flags
-      @popular = attributes[:popular] || false
-      @common  = attributes[:common] || false
+      # Set popular, common, and searchable flags
+      @popular    = attributes.key?(:popular)    ? attributes[:popular]    : false
+      @common     = attributes.key?(:common)     ? attributes[:common]     : false
+      @searchable = attributes.key?(:searchable) ? attributes[:searchable] : true
     end
 
     # Public: Get proper name
@@ -243,6 +244,16 @@ module Linguist
       @common
     end
 
+    # Public: Is it searchable?
+    #
+    # Unsearchable languages won't by indexed by solr and won't show
+    # up in the code search dropdown.
+    #
+    # Returns true or false
+    def searchable?
+      @searchable
+    end
+
     # Public: Highlight syntax of text
     #
     # text - String of code to be highlighted
@@ -288,6 +299,7 @@ module Linguist
       :name        => name,
       :aliases     => options[:aliases],
       :lexer       => options[:lexer],
+      :searchable  => options.key?(:searchable) ? options[:searchable] : true,
       :search_term => options[:search_term],
       :extensions  => options[:ext],
       :popular     => popular.include?(name),

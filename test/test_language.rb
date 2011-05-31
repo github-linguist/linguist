@@ -320,6 +320,12 @@ class TestLanguage < Test::Unit::TestCase
     assert !Language['Makefile'].common?
   end
 
+  def test_searchable
+    assert Language['Ruby'].searchable?
+    assert !Language['Gettext Catalog'].searchable?
+    assert !Language['SQL'].searchable?
+  end
+
   def test_colorize
     assert_equal <<-HTML, Language['Text'].colorize("Hello")
 <div class="highlight"><pre>Hello
