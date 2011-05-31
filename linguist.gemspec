@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name    = 'linguist'
-  s.version = '0.0.3'
+  s.version = '0.0.4'
   s.summary = "GitHub Language detection"
 
   s.files = Dir['lib/**/*']
