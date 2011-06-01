@@ -148,7 +148,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal "java",       Language['ChucK'].search_term
     assert_equal "cfm",        Language['ColdFusion'].search_term
     assert_equal "dpatch",     Language['Darcs Patch'].search_term
-    assert_equal "scheme",     Language['Emacs Lisp'].search_term
+    assert_equal "emacs-lisp", Language['Emacs Lisp'].search_term
     assert_equal "ocaml",      Language['F#'].search_term
     assert_equal "bash",       Language['Gentoo Ebuild'].search_term
     assert_equal "bash",       Language['Gentoo Eclass'].search_term
