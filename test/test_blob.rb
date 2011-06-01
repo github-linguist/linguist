@@ -194,6 +194,7 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['Objective-C'], blob("Foo.h").language
     assert_equal Language['Objective-C'], blob("FooAppDelegate.m").language
     assert_equal Language['Objective-C'], blob("FooAppDelegate.h").language
+    assert_equal Language['GAS'],         blob("hello.s").language
   end
 
   def test_lexer
