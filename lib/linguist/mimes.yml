@@ -49,17 +49,59 @@ application/x-wais-source:
 application/vnd.mozilla.xul+xml:
   binary: false
 
+application/vnd.adobe.air-application-installer-package+zip:
+  binary: true
+  extensions:
+  - air
+
 application/octet-stream:
   binary: true
   extensions:
-  - dmg
+  # TODO: Lookup actual content type for these extensions
+  - a
+  - blend
   - dll
+  - dmg
+  - gem
+  - graffle
+  - ipa
+  - lib
+  - mcz
+  - nib
+  - o
+  - odp
+  - ods
+  - odt
+  - otf
+  - ogv
+  - pfx
+  - pigx
+  - plgx
+  - pptx
+  - psd
+  - sib
+  - so
+  - spl
+  - sqlite3
+  - swc
+  - ucode
+  - xpi
 
 application/java-archive:
   binary: true
   extensions:
   - ear
   - war
+
+application/x-chrome-extension:
+  binary: true
+  extensions:
+  - crx
+
+application/x-debian-package:
+  binary: true
+  extensions:
+  - deb
 
 application/x-shockwave-flash:
   binary: true
@@ -74,3 +116,18 @@ image/jpeg:
 
 image/png:
   attachment: false
+
+image/x-icns:
+  binary: true
+  extensions:
+  - icns
+
+text/cache-manifest:
+  extensions:
+  - manifest
+
+video/quicktime:
+  binary: true
+  extensions:
+  - qt
+  - mov

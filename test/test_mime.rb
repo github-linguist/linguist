@@ -7,6 +7,7 @@ class TestMime < Test::Unit::TestCase
 
   def test_mime
     assert_equal 'text/plain', Mime.mime_for(nil)
+    assert_equal 'text/plain', Mime.mime_for("")
 
     assert_equal 'application/ruby', Mime.mime_for(".rb")
     assert_equal 'application/javascript', Mime.mime_for(".js")
@@ -14,10 +15,18 @@ class TestMime < Test::Unit::TestCase
 
     assert_equal 'text/plain', Mime.mime_for(".kt")
     assert_equal 'text/html', Mime.mime_for(".html")
+    assert_equal 'text/cache-manifest', Mime.mime_for(".manifest")
     assert_equal 'application/sh', Mime.mime_for(".sh")
     assert_equal 'application/latex', Mime.mime_for(".latex")
 
+    assert_equal 'application/vnd.adobe.air-application-installer-package+zip',
+      Mime.mime_for(".air")
     assert_equal 'application/shockwave-flash', Mime.mime_for(".swf")
+
+    assert_equal 'application/chrome-extension', Mime.mime_for(".crx")
+    assert_equal 'application/debian-package', Mime.mime_for(".deb")
+
+    assert_equal 'video/quicktime', Mime.mime_for(".mov")
 
     assert_equal 'application/octet-stream', Mime.mime_for(".dmg")
     assert_equal 'application/octet-stream', Mime.mime_for(".exe")
@@ -30,6 +39,7 @@ class TestMime < Test::Unit::TestCase
 
   def test_content_type
     assert_equal 'text/plain; charset=utf-8', Mime.content_type_for(nil)
+    assert_equal 'text/plain; charset=utf-8', Mime.content_type_for("")
 
     assert_equal 'text/plain; charset=utf-8', Mime.content_type_for(".rb")
     assert_equal 'text/plain; charset=utf-8', Mime.content_type_for(".js")
@@ -40,10 +50,11 @@ class TestMime < Test::Unit::TestCase
     assert_equal 'text/plain; charset=utf-8', Mime.content_type_for(".sh")
     assert_equal 'text/plain; charset=utf-8', Mime.content_type_for(".latex")
 
-    assert_equal 'application/octet-stream', Mime.content_type_for(".swf")
+    assert_equal 'application/octet-stream', Mime.content_type_for(".air")
+    assert_equal 'application/octet-stream', Mime.content_type_for(".dll")
     assert_equal 'application/octet-stream', Mime.content_type_for(".dmg")
     assert_equal 'application/octet-stream', Mime.content_type_for(".exe")
-    assert_equal 'application/octet-stream', Mime.content_type_for(".dll")
+    assert_equal 'application/octet-stream', Mime.content_type_for(".swf")
 
     assert_equal 'application/java-archive', Mime.content_type_for(".jar")
     assert_equal 'application/java-archive', Mime.content_type_for(".ear")
@@ -51,6 +62,9 @@ class TestMime < Test::Unit::TestCase
   end
 
   def test_binary
+    assert !Mime.binary?(nil)
+    assert !Mime.binary?("")
+
     assert Mime.binary?("application/octet-stream")
     assert !Mime.binary?("text/plain")
 
@@ -58,13 +72,12 @@ class TestMime < Test::Unit::TestCase
     assert Mime.binary?("application/ogg")
     assert Mime.binary?("application/pdf")
     assert Mime.binary?("application/x-gzip")
+    assert Mime.binary?("application/x-shockwave-flash")
     assert Mime.binary?("application/zip")
     assert Mime.binary?("audio/mp4")
     assert Mime.binary?("image/gif")
     assert Mime.binary?("image/jpeg")
     assert Mime.binary?("image/png")
-    assert Mime.binary?("java-archive")
-    assert Mime.binary?("x-shockwave-flash")
 
     assert Mime.binary?(".a")
     assert Mime.binary?(".air")

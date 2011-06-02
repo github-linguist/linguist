@@ -88,7 +88,7 @@ module Linguist
     # Returns true or false
     def self.binary?(ext_or_mime_type)
       mime_type = lookup_mime_type_for(ext_or_mime_type)
-      mime_type.nil? || mime_type.binary?
+      mime_type ? mime_type.binary? : false
     end
 
     # Internal: Lookup mime type for extension or mime type
