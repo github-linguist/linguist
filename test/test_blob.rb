@@ -195,6 +195,17 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['Objective-C'], blob("FooAppDelegate.m").language
     assert_equal Language['Objective-C'], blob("FooAppDelegate.h").language
     assert_equal Language['GAS'],         blob("hello.s").language
+
+    # Config files
+    assert_equal Language['Shell'], blob(".profile").language
+    assert_equal Language['Shell'], blob(".bashrc").language
+    assert_equal Language['Shell'], blob(".bash_profile").language
+    assert_equal Language['Shell'], blob(".zshrc").language
+    assert_equal Language['Shell'], blob(".zlogin").language
+    assert_equal Language['VimL'],  blob(".vimrc").language
+    assert_equal Language['VimL'],  blob(".gvimrc").language
+    assert_equal Language['INI'],   blob(".gitconfig").language
+    assert_equal Language['YAML'],  blob(".gemrc").language
   end
 
   def test_lexer

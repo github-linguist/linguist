@@ -247,8 +247,9 @@ Haskell:
   - .hsc
 INI:
   :ext:
-  - .ini
   - .cfg
+  - .gitconfig
+  - .ini
   - .properties
 IRC log:
   :lexer: IRC logs
@@ -488,9 +489,14 @@ Shell:
   - bash
   - zsh
   :ext:
-  - .sh
-  - .zsh
   - .bash
+  - .bash_profile
+  - .bashrc
+  - .profile
+  - .sh
+  - .zlogin
+  - .zsh
+  - .zshrc
 Smalltalk:
   :ext:
   - .st
@@ -542,6 +548,7 @@ VimL:
   :ext:
   - .vim
   - .vimrc
+  - .gvimrc
 Visual Basic:
   :lexer: Text only
   :ext:
@@ -574,6 +581,7 @@ YAML:
   :ext:
   - .yml
   - .yaml
+  - .gemrc
 Java Server Pages:
   :lexer: Java Server Page
   :search_term: jsp
