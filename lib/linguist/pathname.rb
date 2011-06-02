@@ -1,6 +1,8 @@
 require 'linguist/language'
 require 'linguist/mime'
 
+require 'escape_utils'
+
 module Linguist
   # Similar to ::Pathname, Linguist::Pathname wraps a path string and
   # provides helpful query methods. Its useful when you only have a
@@ -97,6 +99,30 @@ module Linguist
     # Returns a content type String.
     def content_type
       @content_type ||= Mime.content_type_for(extname)
+    end
+
+    # Public: Determine if the Pathname should be served as an
+    # attachment.
+    #
+    # Returns true or false.
+    def attachment?
+      @attachment ||= Mime.attachment?(extname)
+    end
+
+    # Public: Get the Content-Disposition header value
+    #
+    # This value is used when serving raw blobs.
+    #
+    #   # => "attachment; filename=file.tar"
+    #   # => "inline"
+    #
+    # Returns a content disposition String.
+    def disposition
+      if attachment?
+        "attachment; filename=#{EscapeUtils.escape_url(basename)}"
+      else
+        'inline'
+      end
     end
 
     def to_s

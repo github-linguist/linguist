@@ -1,11 +1,42 @@
 require 'mime/types'
 require 'yaml'
 
+module MIME
+  class Type
+    attr_accessor :binary
+
+    undef_method :binary?
+    def binary?
+      if defined? @binary
+        @binary
+      else
+        @encoding == 'base64'
+      end
+    end
+
+    attr_accessor :attachment
+
+    def attachment?
+      if defined? @attachment
+        @attachment
+      else
+        binary?
+      end
+    end
+  end
+end
+
 # Register additional mime type extensions
 mime_extensions = YAML.load_file(File.expand_path("../mimes.yml", __FILE__))
-mime_extensions.each do |mime_type, exts|
+mime_extensions.each do |mime_type, options|
   mime = MIME::Types[mime_type].first || MIME::Type.new(mime_type)
-  exts.each { |ext| mime.extensions << ext }
+
+  (options['extensions'] || []).each { |ext| mime.extensions << ext }
+
+  mime.binary     = options['binary']     if options.key?('binary')
+  mime.attachment = options['attachment'] if options.key?('attachment')
+
+  MIME::Types.add_type_variant(mime)
   MIME::Types.index_extensions(mime)
 end
 
@@ -58,6 +89,50 @@ module Linguist
       type += '; charset=utf-8' if type =~ /^text\//
 
       type
+    end
+
+    # Internal: Determine if extension or mime type is binary.
+    #
+    # ext_or_mime_type - A file extension ".txt" or mime type "text/plain".
+    #
+    # Returns true or false
+    def self.binary?(ext_or_mime_type)
+      mime_type = lookup_mime_type_for(ext_or_mime_type)
+      mime_type.nil? || mime_type.binary?
+    end
+
+    # Internal: Determine if extension or mime type is an attachment.
+    #
+    # ext_or_mime_type - A file extension ".txt" or mime type "text/plain".
+    #
+    # Attachments are files that should be downloaded rather than be
+    # displayed in the browser.
+    #
+    # This is used to set our Content-Disposition headers.
+    #
+    # Attachment files should generally binary files but non-
+    # attachments do not imply plain text. For an example Images are
+    # not treated as attachments.
+    #
+    # Returns true or false
+    def self.attachment?(ext_or_mime_type)
+      mime_type = lookup_mime_type_for(ext_or_mime_type)
+      mime_type.nil? || mime_type.attachment?
+    end
+
+    # Internal: Lookup mime type for extension or mime type
+    #
+    # Returns a MIME::Type
+    def self.lookup_mime_type_for(ext_or_mime_type)
+      ext_or_mime_type ||= ''
+
+      if ext_or_mime_type =~ /\w+\/\w+/
+        guesses = ::MIME::Types[ext_or_mime_type]
+      else
+        guesses = ::MIME::Types.type_for(ext_or_mime_type)
+      end
+
+      guesses.first
     end
   end
 end

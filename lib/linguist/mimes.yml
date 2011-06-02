@@ -2,13 +2,75 @@
 #
 # Review this list if we ever upgrade from mime-types 1.15 to 1.16
 
+application/atom+xml:
+  binary: false
+
+application/javascript:
+  binary: false
+  extensions:
+  - js
+
+application/json:
+  binary: false
+  extensions:
+  - json
+
+application/rdf+xml:
+  binary: false
+
+application/sh:
+  binary: false
+
+application/x-troff-ms:
+  binary: false
+
+application/netcdf:
+  binary: false
+
+application/x-perl:
+  binary: false
+  extensions:
+  - pl
+  - pm
+
+application/x-python:
+  binary: false
+  extensions:
+  - py
+
+application/x-ruby:
+  binary: false
+  extensions:
+  - rb
+
+application/x-wais-source:
+  binary: false
+
+application/vnd.mozilla.xul+xml:
+  binary: false
+
 application/octet-stream:
-- dmg
-- dll
+  binary: true
+  extensions:
+  - dmg
+  - dll
 
 application/java-archive:
-- ear
-- war
+  binary: true
+  extensions:
+  - ear
+  - war
 
 application/x-shockwave-flash:
-- swf
+  binary: true
+  extensions:
+  - swf
+
+image/gif:
+  attachment: false
+
+image/jpeg:
+  attachment: false
+
+image/png:
+  attachment: false

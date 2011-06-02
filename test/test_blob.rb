@@ -23,7 +23,7 @@ class TestBlob < Test::Unit::TestCase
   end
 
   def test_mime_type
-    assert_equal "text/plain", blob("grit.rb").mime_type
+    assert_equal "application/ruby", blob("grit.rb").mime_type
     assert_equal "application/xml", blob("bar.xml").mime_type
     assert_equal "text/plain", blob("dog.o").mime_type
     assert_equal "application/sh", blob("script.sh").mime_type
@@ -31,6 +31,7 @@ class TestBlob < Test::Unit::TestCase
 
   def test_content_type
     assert_equal "text/plain; charset=utf-8", blob("grit.rb").content_type
+    assert_equal "text/plain; charset=utf-8", blob("foo.pl").content_type
     assert_equal "text/plain; charset=utf-8", blob("bar.xml").content_type
     assert_equal "application/octet-stream", blob("dog.o").content_type
     assert_equal "text/plain; charset=utf-8", blob("script.sh").content_type
@@ -69,7 +70,9 @@ class TestBlob < Test::Unit::TestCase
     assert blob("git.deb").binary?
     assert blob("git.exe").binary?
     assert !blob("file.txt").binary?
+    assert !blob("foo.rb").binary?
     assert !blob("octocat.png").binary?
+    assert !blob("script.pl").binary?
   end
 
   def test_text
@@ -88,6 +91,7 @@ class TestBlob < Test::Unit::TestCase
 
   def test_viewable
     assert blob("foo.rb").viewable?
+    assert blob("script.pl").viewable?
     assert !blob("octocat.png").viewable?
     assert !blob("linguist.gem").viewable?
   end

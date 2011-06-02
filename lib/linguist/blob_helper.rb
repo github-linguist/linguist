@@ -2,7 +2,6 @@ require 'linguist/language'
 require 'linguist/mime'
 require 'linguist/pathname'
 
-require 'escape_utils'
 require 'yaml'
 
 module Linguist
@@ -63,12 +62,7 @@ module Linguist
     #
     # Returns a content disposition String.
     def disposition
-      case content_type
-      when 'application/octet-stream', 'application/java-archive'
-        "attachment; filename=#{EscapeUtils.escape_url(pathname.basename)}"
-      else
-        'inline'
-      end
+      pathname.disposition
     end
 
     # Public: Is the blob text?
