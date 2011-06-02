@@ -17,6 +17,8 @@ class TestMime < Test::Unit::TestCase
     assert_equal 'application/sh', Mime.mime_for(".sh")
     assert_equal 'application/latex', Mime.mime_for(".latex")
 
+    assert_equal 'application/shockwave-flash', Mime.mime_for(".swf")
+
     assert_equal 'application/octet-stream', Mime.mime_for(".dmg")
     assert_equal 'application/octet-stream', Mime.mime_for(".exe")
     assert_equal 'application/octet-stream', Mime.mime_for(".dll")
@@ -38,6 +40,7 @@ class TestMime < Test::Unit::TestCase
     assert_equal 'text/plain; charset=utf-8', Mime.content_type_for(".sh")
     assert_equal 'text/plain; charset=utf-8', Mime.content_type_for(".latex")
 
+    assert_equal 'application/octet-stream', Mime.content_type_for(".swf")
     assert_equal 'application/octet-stream', Mime.content_type_for(".dmg")
     assert_equal 'application/octet-stream', Mime.content_type_for(".exe")
     assert_equal 'application/octet-stream', Mime.content_type_for(".dll")

@@ -4,7 +4,7 @@ require 'yaml'
 # Register additional mime type extensions
 mime_extensions = YAML.load_file(File.expand_path("../mimes.yml", __FILE__))
 mime_extensions.each do |mime_type, exts|
-  mime = MIME::Types[mime_type].first
+  mime = MIME::Types[mime_type].first || MIME::Type.new(mime_type)
   exts.each { |ext| mime.extensions << ext }
   MIME::Types.index_extensions(mime)
 end
