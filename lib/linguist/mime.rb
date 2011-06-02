@@ -9,6 +9,8 @@ module MIME
     def binary?
       if defined? @binary
         @binary
+      elsif media_type == 'text'
+        false
       else
         @encoding == 'base64'
       end
