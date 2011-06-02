@@ -85,30 +85,6 @@ module Linguist
       @mime_type ||= Mime.mime_for(extname)
     end
 
-    # Public: Get the mime media type
-    #
-    # Examples
-    #
-    #   Pathname.new('index.html').media_type
-    #   # => 'text'
-    #
-    # Returns a media type String.
-    def media_type
-      mime_type.split('/')[0]
-    end
-
-    # Public: Get the mime sub type
-    #
-    # Examples
-    #
-    #   Pathname.new('index.html').sub_type
-    #   # => 'html'
-    #
-    # Returns a media type String.
-    def sub_type
-      mime_type.split('/')[1]
-    end
-
     # Public: Get the Content-Type header
     #
     # This value is used when serving raw blobs.
