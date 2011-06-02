@@ -219,6 +219,7 @@ class TestBlob < Test::Unit::TestCase
     assert_equal 'macruby', blob("script.mrb").shebang_script
     assert_equal 'rake', blob("script.rake").shebang_script
     assert_equal 'foo', blob("script.foo").shebang_script
+    assert_equal 'nush', blob("script.nu").shebang_script
     assert_equal nil, blob("foo.rb").shebang_script
   end
 
@@ -230,9 +231,10 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['Ruby'], blob("script.rb").shebang_language
     assert_equal Language['Python'], blob("script.py").shebang_language
     assert_equal Language['JavaScript'], blob("script.js").shebang_language
-    assert_equal Language['Java'], blob("script.groovy").shebang_language
+    assert_equal Language['Groovy'], blob("script.groovy").shebang_language
     assert_equal Language['Ruby'], blob("script.mrb").shebang_language
     assert_equal Language['Ruby'], blob("script.rake").shebang_language
+    assert_equal Language['Nu'], blob("script.nu").shebang_language
     assert_equal nil, blob("script.foo").shebang_language
     assert_equal nil, blob("foo.rb").shebang_language
   end
