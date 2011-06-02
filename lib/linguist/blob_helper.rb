@@ -62,7 +62,11 @@ module Linguist
     #
     # Returns a content disposition String.
     def disposition
-      pathname.disposition
+      if viewable?
+        'inline'
+      else
+        "attachment; filename=#{EscapeUtils.escape_url(pathname.basename)}"
+      end
     end
 
     # Public: Is the blob text?

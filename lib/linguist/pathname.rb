@@ -110,37 +110,6 @@ module Linguist
       @content_type ||= Mime.content_type_for(extname)
     end
 
-    # Public: Determine if the Pathname is a binary mime type.
-    #
-    # Returns true or false.
-    def binary?
-      @binary ||= language? ? false : Mime.binary?(extname)
-    end
-
-    # Public: Determine if the Pathname should be served as an
-    # attachment.
-    #
-    # Returns true or false.
-    def attachment?
-      @attachment ||= language? ? false : Mime.attachment?(extname)
-    end
-
-    # Public: Get the Content-Disposition header value
-    #
-    # This value is used when serving raw blobs.
-    #
-    #   # => "attachment; filename=file.tar"
-    #   # => "inline"
-    #
-    # Returns a content disposition String.
-    def disposition
-      if attachment?
-        "attachment; filename=#{EscapeUtils.escape_url(basename)}"
-      else
-        'inline'
-      end
-    end
-
     def to_s
       @path.dup
     end
