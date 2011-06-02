@@ -224,7 +224,7 @@ module Linguist
     def indexable?
       if !text?
         false
-      elsif !Language.find_by_extension(extname)
+      elsif !language?
         false
       elsif !language.searchable?
         false
@@ -262,26 +262,41 @@ module Linguist
     #
     # Returns a Language object
     def language
+      guess_language || Language['Text']
+    end
+
+    # Internal: Guess language
+    #
+    # Returns a Language or nil
+    def guess_language
       if text?
         # If its a header file (.h) try to guess the language
         if language = header_language
           language
 
         # See if there is a Language for the extension
-        elsif Language.find_by_extension(extname)
-          pathname.language
+        elsif language = Language.find_by_extension(extname)
+          language
 
         # Try to detect Language from shebang line
         elsif language = shebang_language
           language
 
-        # Default to Pathname#language
         else
-          pathname.language
+          nil
         end
       else
-        Language['Text']
+        nil
       end
+    end
+
+    # Internal: Has a language.
+    #
+    # Will return false if language was guessed to be Text.
+    #
+    # Returns true or false.
+    def language?
+      guess_language ? true : false
     end
 
     # Deprecated: Get the lexer of the blob.

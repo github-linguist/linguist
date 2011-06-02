@@ -68,6 +68,15 @@ module Linguist
       Language.find_by_extension(extname) || Language['Text']
     end
 
+    # Internal: Has a language.
+    #
+    # Will return false if language was guessed to be Text.
+    #
+    # Returns true or false.
+    def language?
+      Language.find_by_extension(extname) ? true : false
+    end
+
     # Deprecated: Get the lexer of the path
     #
     # Returns a Lexer.
@@ -101,12 +110,19 @@ module Linguist
       @content_type ||= Mime.content_type_for(extname)
     end
 
+    # Public: Determine if the Pathname is a binary mime type.
+    #
+    # Returns true or false.
+    def binary?
+      @binary ||= language? ? false : Mime.binary?(extname)
+    end
+
     # Public: Determine if the Pathname should be served as an
     # attachment.
     #
     # Returns true or false.
     def attachment?
-      @attachment ||= Mime.attachment?(extname)
+      @attachment ||= language? ? false : Mime.attachment?(extname)
     end
 
     # Public: Get the Content-Disposition header value
