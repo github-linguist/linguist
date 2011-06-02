@@ -353,12 +353,6 @@ module Linguist
       end
     end
 
-    shebangs = YAML.load_file(File.expand_path("../shebangs.yml", __FILE__))
-    Shebangs = shebangs.inject({}) { |h, (name, scripts)|
-      scripts.each { |script| h[script] = Language[name] }
-      h
-    }
-
     # Internal: Get Language for shebang script
     #
     # Matches script name with shebang script name mappings in "shebangs.yml"
@@ -366,12 +360,8 @@ module Linguist
     # Returns the Language or nil
     def shebang_language
       if script = shebang_script
-        if lang = Shebangs[script]
-          lang
-        else
-          lang = Language[script]
-          lang != Language['Text'] ? lang : nil
-        end
+        lang = Language[script]
+        lang != Language['Text'] ? lang : nil
       end
     end
 
