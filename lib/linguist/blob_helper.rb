@@ -62,18 +62,25 @@ module Linguist
     #
     # Returns a content disposition String.
     def disposition
-      if viewable?
+      if image? || viewable?
         'inline'
       else
         "attachment; filename=#{EscapeUtils.escape_url(pathname.basename)}"
       end
     end
 
+    # Public: Is the blob binary?
+    #
+    # Return true or false
+    def binary?
+      pathname.binary?
+    end
+
     # Public: Is the blob text?
     #
     # Return true or false
     def text?
-      content_type[/(text|json)/]
+      !binary?
     end
 
     # Public: Is the blob a supported image format?
@@ -81,13 +88,6 @@ module Linguist
     # Return true or false
     def image?
       ['.png', '.jpg', '.jpeg', '.gif'].include?(extname)
-    end
-
-    # Public: Is the blob binary?
-    #
-    # Return true or false
-    def binary?
-      content_type.include?('octet') || !(text? || image?)
     end
 
     MEGABYTE = 1024 * 1024
@@ -105,7 +105,7 @@ module Linguist
     #
     # Return true or false
     def viewable?
-      !image? && !binary? && !large?
+      text? && !large?
     end
 
     vendored_paths = YAML.load_file(File.expand_path("../vendor.yml", __FILE__))

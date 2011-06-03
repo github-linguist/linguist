@@ -110,6 +110,13 @@ module Linguist
       @content_type ||= Mime.content_type_for(extname)
     end
 
+    # Public: Is the path binary?
+    #
+    # Return true or false
+    def binary?
+      @binary ||= Mime.binary?(extname)
+    end
+
     def to_s
       @path.dup
     end

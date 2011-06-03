@@ -43,9 +43,10 @@ class TestBlob < Test::Unit::TestCase
     assert_equal "attachment; filename=foo.bin", blob("foo.bin").disposition
     assert_equal "attachment; filename=linguist.gem", blob("pkg/linguist.gem").disposition
     assert_equal "attachment; filename=foo+bar.jar", blob("foo bar.jar").disposition
+    assert_equal "inline", blob("README").disposition
     assert_equal "inline", blob("foo.txt").disposition
     assert_equal "inline", blob("grit.rb").disposition
-    assert_equal "inline", blob("README").disposition
+    assert_equal "inline", blob("octocat.png").disposition
   end
 
   def test_data
@@ -72,10 +73,10 @@ class TestBlob < Test::Unit::TestCase
     assert blob("linguist.gem").binary?
     assert blob("git.deb").binary?
     assert blob("git.exe").binary?
+    assert blob("octocat.png").binary?
     assert !blob("README").binary?
     assert !blob("file.txt").binary?
     assert !blob("foo.rb").binary?
-    assert !blob("octocat.png").binary?
     assert !blob("script.pl").binary?
   end
 
