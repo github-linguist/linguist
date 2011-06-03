@@ -37,30 +37,6 @@ class TestMime < Test::Unit::TestCase
     assert_equal 'application/java-archive', Mime.mime_for(".war")
   end
 
-  def test_content_type
-    assert_equal 'text/plain; charset=utf-8', Mime.content_type_for(nil)
-    assert_equal 'text/plain; charset=utf-8', Mime.content_type_for("")
-
-    assert_equal 'text/plain; charset=utf-8', Mime.content_type_for(".rb")
-    assert_equal 'text/plain; charset=utf-8', Mime.content_type_for(".js")
-    assert_equal 'text/plain; charset=utf-8', Mime.content_type_for(".py")
-
-    assert_equal 'text/plain; charset=utf-8', Mime.content_type_for(".kt")
-    assert_equal 'text/plain; charset=utf-8', Mime.content_type_for(".html")
-    assert_equal 'text/plain; charset=utf-8', Mime.content_type_for(".sh")
-    assert_equal 'text/plain; charset=utf-8', Mime.content_type_for(".latex")
-
-    assert_equal 'application/octet-stream', Mime.content_type_for(".air")
-    assert_equal 'application/octet-stream', Mime.content_type_for(".dll")
-    assert_equal 'application/octet-stream', Mime.content_type_for(".dmg")
-    assert_equal 'application/octet-stream', Mime.content_type_for(".exe")
-    assert_equal 'application/octet-stream', Mime.content_type_for(".swf")
-
-    assert_equal 'application/java-archive', Mime.content_type_for(".jar")
-    assert_equal 'application/java-archive', Mime.content_type_for(".ear")
-    assert_equal 'application/java-archive', Mime.content_type_for(".war")
-  end
-
   def test_binary
     assert !Mime.binary?(nil)
     assert !Mime.binary?("")

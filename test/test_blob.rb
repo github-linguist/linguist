@@ -31,12 +31,17 @@ class TestBlob < Test::Unit::TestCase
   end
 
   def test_content_type
-    assert_equal "text/plain; charset=utf-8", blob("grit.rb").content_type
-    assert_equal "text/plain; charset=utf-8", blob("foo.pl").content_type
-    assert_equal "text/plain; charset=utf-8", blob("bar.xml").content_type
     assert_equal "application/octet-stream", blob("dog.o").content_type
-    assert_equal "text/plain; charset=utf-8", blob("script.sh").content_type
-    assert_equal "text/plain; charset=utf-8", blob("README").content_type
+    assert_equal "application/pdf", blob("foo.pdf").content_type
+    assert_equal "image/png", blob("foo.png").content_type
+    assert_equal "text/plain", blob("README").content_type
+    assert_equal "text/plain", blob("foo.html").content_type
+    assert_equal "text/plain", blob("foo.pl").content_type
+    assert_equal "text/plain", blob("foo.py").content_type
+    assert_equal "text/plain", blob("foo.rb").content_type
+    assert_equal "text/plain", blob("foo.sh").content_type
+    assert_equal "text/plain", blob("foo.xhtml").content_type
+    assert_equal "text/plain", blob("foo.xml").content_type
   end
 
   def test_disposition

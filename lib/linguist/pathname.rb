@@ -107,7 +107,7 @@ module Linguist
     #
     # Returns a content type String.
     def content_type
-      @content_type ||= Mime.content_type_for(extname)
+      @content_type ||= binary? ? mime_type : 'text/plain'
     end
 
     # Public: Is the path binary?

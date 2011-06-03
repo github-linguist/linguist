@@ -51,36 +51,6 @@ module Linguist
       mime_type ? mime_type.simplified : 'text/plain'
     end
 
-    Special = YAML.load_file(File.expand_path("../content_types.yml", __FILE__))
-
-    # Internal: Look up Content-Type header to serve for extension.
-    #
-    # This value is used when serving raw blobs.
-    #
-    #   /github/linguist/raw/master/lib/linguist/mime.rb
-    #
-    # ext - The extension String. May include leading "."
-    #
-    #   Mime.content_type_for('.html')
-    #   # => 'text/plain; charset=utf-8'
-    #
-    # Return Content-Type String otherwise falls back to
-    # 'text/plain; charset=utf-8'.
-    def self.content_type_for(ext)
-      ext ||= ''
-
-      # Lookup mime type
-      type = mime_for(ext)
-
-      # Substitute actual mime type if an override exists in content_types.yml
-      type = Special[type] || Special[ext.sub(/^\./, '')] || type
-
-      # Append default charset to text files
-      type += '; charset=utf-8' if type =~ /^text\//
-
-      type
-    end
-
     # Internal: Determine if extension or mime type is binary.
     #
     # ext_or_mime_type - A file extension ".txt" or mime type "text/plain".
