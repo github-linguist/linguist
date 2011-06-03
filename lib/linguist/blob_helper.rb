@@ -241,25 +241,6 @@ module Linguist
       end
     end
 
-    # Public: Determine if the blob contains bad content that can be
-    # used for various cross site attacks.
-    #
-    # Right now this is limited to flash files -- the flash  plugin
-    # ignores the response content type and treats any URL as flash
-    # when the <object> tag is specified correctly regardless of file
-    # extension.
-    #
-    # Requires Blob#data
-    #
-    # Returns true when the blob data should not be served with any
-    # content-type.
-    def forbidden?
-      if data = self.data
-        data.size >= 8 &&                 # all flash has at least 8 bytes
-          %w(CWS FWS).include?(data[0,3]) # file type sigs
-      end
-    end
-
     # Public: Detects the Language of the blob.
     #
     # May load Blob#data
