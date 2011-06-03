@@ -62,7 +62,7 @@ module Linguist
     #
     # Returns a content disposition String.
     def disposition
-      if image? || viewable?
+      if text? || image?
         'inline'
       else
         "attachment; filename=#{EscapeUtils.escape_url(pathname.basename)}"
