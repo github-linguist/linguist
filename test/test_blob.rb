@@ -224,6 +224,9 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['YAML'],  blob(".gemrc").language
 
     assert_equal Language['Text'], blob("README").language
+
+    # https://github.com/xquery/xprocxq/blob/master/src/xquery/util.xqm
+    assert_equal Language['XQuery'], blob("xprocxq.xqm").language
   end
 
   def test_lexer
