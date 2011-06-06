@@ -26,6 +26,10 @@ class TestMime < Test::Unit::TestCase
     assert_equal 'application/chrome-extension', Mime.mime_for(".crx")
     assert_equal 'application/debian-package', Mime.mime_for(".deb")
 
+    assert_equal 'application/silverlight-app', Mime.mime_for(".xap")
+    assert_equal 'application/xaml+xml', Mime.mime_for(".xaml")
+    assert_equal 'application/ms-xbap', Mime.mime_for(".xbap")
+
     assert_equal 'video/quicktime', Mime.mime_for(".mov")
 
     assert_equal 'application/postscript', Mime.mime_for(".ai")
@@ -54,6 +58,7 @@ class TestMime < Test::Unit::TestCase
     assert Mime.binary?("application/postscript")
     assert Mime.binary?("application/x-gzip")
     assert Mime.binary?("application/x-shockwave-flash")
+    assert Mime.binary?("application/x-silverlight-app")
     assert Mime.binary?("application/zip")
     assert Mime.binary?("audio/mp4")
     assert Mime.binary?("image/gif")
@@ -105,9 +110,11 @@ class TestMime < Test::Unit::TestCase
     assert !Mime.binary?("application/json")
     assert !Mime.binary?("application/rdf+xml")
     assert !Mime.binary?("application/sh")
+    assert !Mime.binary?("application/x-ms-xbap")
     assert !Mime.binary?("application/x-perl")
     assert !Mime.binary?("application/x-python")
     assert !Mime.binary?("application/x-ruby")
+    assert !Mime.binary?("application/xaml+xml")
     assert !Mime.binary?("application/xhtml+xml")
     assert !Mime.binary?("application/xml")
     assert !Mime.binary?("text/css")
