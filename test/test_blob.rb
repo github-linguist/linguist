@@ -23,10 +23,11 @@ class TestBlob < Test::Unit::TestCase
   end
 
   def test_mime_type
-    assert_equal "application/ruby", blob("grit.rb").mime_type
-    assert_equal "application/xml", blob("bar.xml").mime_type
     assert_equal "application/octet-stream", blob("dog.o").mime_type
+    assert_equal "application/postscript", blob("octocat.ai").mime_type
+    assert_equal "application/ruby", blob("grit.rb").mime_type
     assert_equal "application/sh", blob("script.sh").mime_type
+    assert_equal "application/xml", blob("bar.xml").mime_type
     assert_equal "text/plain", blob("README").mime_type
   end
 
@@ -45,9 +46,10 @@ class TestBlob < Test::Unit::TestCase
   end
 
   def test_disposition
+    assert_equal "attachment; filename=foo+bar.jar", blob("foo bar.jar").disposition
     assert_equal "attachment; filename=foo.bin", blob("foo.bin").disposition
     assert_equal "attachment; filename=linguist.gem", blob("pkg/linguist.gem").disposition
-    assert_equal "attachment; filename=foo+bar.jar", blob("foo bar.jar").disposition
+    assert_equal "attachment; filename=octocat.ai", blob("octocat.ai").disposition
     assert_equal "inline", blob("README").disposition
     assert_equal "inline", blob("foo.txt").disposition
     assert_equal "inline", blob("grit.rb").disposition
@@ -75,9 +77,10 @@ class TestBlob < Test::Unit::TestCase
   end
 
   def test_binary
-    assert blob("linguist.gem").binary?
     assert blob("git.deb").binary?
     assert blob("git.exe").binary?
+    assert blob("linguist.gem").binary?
+    assert blob("octocat.ai").binary?
     assert blob("octocat.png").binary?
     assert !blob("README").binary?
     assert !blob("file.txt").binary?
@@ -97,6 +100,7 @@ class TestBlob < Test::Unit::TestCase
     assert blob("octocat.jpg").image?
     assert blob("octocat.jpeg").image?
     assert blob("octocat.gif").image?
+    assert !blob("octocat.ai").image?
     assert !blob("octocat.psd").image?
   end
 
@@ -105,6 +109,7 @@ class TestBlob < Test::Unit::TestCase
     assert blob("foo.rb").viewable?
     assert blob("script.pl").viewable?
     assert !blob("linguist.gem").viewable?
+    assert !blob("octocat.ai").viewable?
     assert !blob("octocat.png").viewable?
   end
 

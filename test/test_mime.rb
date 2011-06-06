@@ -28,6 +28,10 @@ class TestMime < Test::Unit::TestCase
 
     assert_equal 'video/quicktime', Mime.mime_for(".mov")
 
+    assert_equal 'application/postscript', Mime.mime_for(".ai")
+    assert_equal 'application/postscript', Mime.mime_for(".eps")
+    assert_equal 'application/postscript', Mime.mime_for(".ps")
+
     assert_equal 'application/octet-stream', Mime.mime_for(".dmg")
     assert_equal 'application/octet-stream', Mime.mime_for(".exe")
     assert_equal 'application/octet-stream', Mime.mime_for(".dll")
@@ -47,6 +51,7 @@ class TestMime < Test::Unit::TestCase
     assert Mime.binary?("application/java-archive")
     assert Mime.binary?("application/ogg")
     assert Mime.binary?("application/pdf")
+    assert Mime.binary?("application/postscript")
     assert Mime.binary?("application/x-gzip")
     assert Mime.binary?("application/x-shockwave-flash")
     assert Mime.binary?("application/zip")
@@ -116,7 +121,6 @@ class TestMime < Test::Unit::TestCase
     assert !Mime.binary?(".ms")
     assert !Mime.binary?(".nc")
     assert !Mime.binary?(".pl")
-    assert !Mime.binary?(".ps")
     assert !Mime.binary?(".py")
     assert !Mime.binary?(".rb")
     assert !Mime.binary?(".sh")
