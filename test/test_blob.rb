@@ -225,8 +225,12 @@ class TestBlob < Test::Unit::TestCase
 
     assert_equal Language['Text'], blob("README").language
 
-    # https://github.com/xquery/xprocxq/blob/master/src/xquery/util.xqm
-    assert_equal Language['XQuery'], blob("xprocxq.xqm").language
+    # https://github.com/xquery/xprocxq/blob/master/src/xquery/xproc.xqm
+    assert_equal Language['XQuery'], blob("xproc.xqm").language
+
+    # https://github.com/wycats/osx-window-sizing/blob/master/center.applescript
+    assert_equal Language['AppleScript'], blob("center.scpt").language
+    assert_equal Language['AppleScript'], blob("center.applescript").language
   end
 
   def test_lexer
