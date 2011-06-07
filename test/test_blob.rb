@@ -7,7 +7,7 @@ class TestBlob < Test::Unit::TestCase
   include Linguist
 
   def fixtures_path
-    File.expand_path("../fixtures/blob", __FILE__)
+    File.expand_path("../fixtures", __FILE__)
   end
 
   def blob(name)
