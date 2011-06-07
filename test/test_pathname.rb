@@ -13,21 +13,19 @@ class TestPathname < Test::Unit::TestCase
     assert_equal 'file.rb', Pathname.new("file.rb").basename
     assert_equal 'file.rb', Pathname.new("./file.rb").basename
     assert_equal 'file.rb', Pathname.new("sub/dir/file.rb").basename
+    assert_equal '.profile', Pathname.new(".profile").basename
   end
 
   def test_extname
-    assert_equal '.rb', Pathname.new(".rb").extname
     assert_equal '.rb', Pathname.new("file.rb").extname
     assert_equal '.rb', Pathname.new("./file.rb").extname
     assert_equal '.rb', Pathname.new("sub/dir/file.rb").extname
-
-    assert_equal 'Rakefile', Pathname.new("Rakefile").extname
-    assert_equal 'Rakefile', Pathname.new("./Rakefile").extname
-    assert_equal 'Rakefile', Pathname.new("vendor/Rakefile").extname
+    assert_equal '',    Pathname.new(".profile").extname
   end
 
   def test_language
-    assert_equal Language['Ruby'], Pathname.new(".rb").language
+    assert_equal Language['Text'], Pathname.new(".rb").language
+
     assert_equal Language['Ruby'], Pathname.new("file.rb").language
     assert_equal Language['Ruby'], Pathname.new("./file.rb").language
     assert_equal Language['Ruby'], Pathname.new("sub/dir/file.rb").language

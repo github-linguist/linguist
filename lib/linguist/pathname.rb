@@ -39,18 +39,9 @@ module Linguist
     #   Pathname.new('file.rb').extname
     #   # => '.rb'
     #
-    #   Pathname.new('Rakefile').extname
-    #   # => 'Rakefile'
-    #
     # Returns a String.
     def extname
-      if basename[0] == ?.
-        basename
-      elsif basename.include?('.')
-        File.extname(basename)
-      else
-        basename
-      end
+      File.extname(@path)
     end
 
     # Public: Get the language of the path
@@ -65,7 +56,7 @@ module Linguist
     #
     # Returns a Langauge.
     def language
-      Language.find_by_extension(extname) || Language['Text']
+      Language.find_by_filename(@path) || Language['Text']
     end
 
     # Internal: Has a language.
@@ -74,7 +65,7 @@ module Linguist
     #
     # Returns true or false.
     def language?
-      Language.find_by_extension(extname) ? true : false
+      Language.find_by_filename(@path) ? true : false
     end
 
     # Deprecated: Get the lexer of the path

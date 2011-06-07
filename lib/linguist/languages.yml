@@ -105,6 +105,7 @@ Clojure:
 CoffeeScript:
   :ext:
   - .coffee
+  :filenames:
   - Cakefile
 ColdFusion:
   :lexer: ColdFusion HTML
@@ -249,9 +250,10 @@ Haskell:
 INI:
   :ext:
   - .cfg
-  - .gitconfig
   - .ini
   - .properties
+  :filenames:
+  - .gitconfig
 IRC log:
   :lexer: IRC logs
   :search_term: irc
@@ -277,11 +279,12 @@ JavaScript:
   :ext:
   - .js
   - .sjs
-  - Jakefile
   - .jss
   - .ssjs
   - .jsx
   - .jake
+  :filenames:
+  - Jakefile
 JSON:
   :lexer: javascript
   :search_term: javascript
@@ -303,6 +306,7 @@ Lua:
 Makefile:
   :ext:
   - .mak
+  :filenames:
   - Makefile
 Mako:
   :ext:
@@ -341,6 +345,7 @@ Nu:
   - nush
   :ext:
   - .nu
+  :filenames:
   - Nukefile
 NumPy:
   :ext:
@@ -451,16 +456,17 @@ Ruby:
   - .rb
   - .ru
   - .builder
-  - Capfile
   - .rbw
   - .rbx
   - .god
   - .rake
   - .gemspec
-  - Rakefile
   - .irbrc
-  - Thorfile
   - .thor
+  :filenames:
+  - Capfile
+  - Rakefile
+  - Thorfile
   - Gemfile
 SQL:
   :searchable: false
@@ -491,10 +497,11 @@ Shell:
   - zsh
   :ext:
   - .bash
+  - .sh
+  :filenames:
   - .bash_profile
   - .bashrc
   - .profile
-  - .sh
   - .zlogin
   - .zsh
   - .zshrc
@@ -548,6 +555,7 @@ VimL:
   - vim
   :ext:
   - .vim
+  :filenames:
   - .vimrc
   - .gvimrc
 Visual Basic:
@@ -583,6 +591,7 @@ YAML:
   :ext:
   - .yml
   - .yaml
+  :filenames:
   - .gemrc
 Java Server Pages:
   :lexer: Java Server Page

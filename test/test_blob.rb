@@ -92,7 +92,11 @@ class TestBlob < Test::Unit::TestCase
     assert blob("README").text?
     assert blob("file.json").text?
     assert blob("file.txt").text?
+    assert blob("md").text?
     assert blob("script.sh").text?
+    assert blob("tender.md").text?
+    assert blob("txt").text?
+    assert blob("zip").text?
   end
 
   def test_image

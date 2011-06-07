@@ -8,6 +8,7 @@ module Linguist
     @name_index      = {}
     @alias_index     = {}
     @extension_index = {}
+    @filename_index  = {}
 
     # Internal: Create a new Language object
     #
@@ -37,6 +38,10 @@ module Linguist
       end
 
       language.extensions.each do |extension|
+        if extension !~ /^\./
+          warn "Extension is missing a '.': #{extension.inspect}"
+        end
+
         # All Language extensions should be unique. Warn if there is a
         # duplicate.
         if @extension_index.key?(extension)
@@ -47,7 +52,11 @@ module Linguist
         @extension_index[extension] = language
 
         # Index the extension without a leading ".": "rb"
-        @extension_index[extension.sub(/^./, '')] = language
+        @extension_index[extension.sub(/^\./, '')] = language
+      end
+
+      language.filenames.each do |filename|
+        @filename_index[filename] = language
       end
 
       language
@@ -100,6 +109,21 @@ module Linguist
     # Returns the Language or nil if none was found.
     def self.find_by_extension(extension)
       @extension_index[extension]
+    end
+
+    # Public: Look up Language by filename.
+    #
+    # filename - The path String.
+    #
+    # Examples
+    #
+    #   Language.find_by_filename('foo.rb')
+    #   # => #<Language name="Ruby">
+    #
+    # Returns the Language or nil if none was found.
+    def self.find_by_filename(filename)
+      basename, extname = File.basename(filename), File.extname(filename)
+      @filename_index[basename] || @extension_index[extname]
     end
 
     # Public: Look up Language by its name or lexer.
@@ -163,6 +187,7 @@ module Linguist
       # Set extensions or default to [].
       # Consider using `@lexer.extensions`
       @extensions = attributes[:extensions] || []
+      @filenames  = attributes[:filenames]  || []
 
       # Set popular, common, and searchable flags
       @popular    = attributes.key?(:popular)    ? attributes[:popular]    : false
@@ -211,10 +236,19 @@ module Linguist
     #
     # Examples
     #
-    #   # => ['.rb', '.rake', 'Rakefile', ...]
+    #   # => ['.rb', '.rake', ...]
     #
     # Returns the extensions Array
     attr_reader :extensions
+
+    # Public: Get filenames
+    #
+    # Examples
+    #
+    #   # => ['Rakefile', ...]
+    #
+    # Returns the extensions Array
+    attr_reader :filenames
 
     # Internal: Get default alias name
     #
@@ -302,6 +336,7 @@ module Linguist
       :searchable  => options.key?(:searchable) ? options[:searchable] : true,
       :search_term => options[:search_term],
       :extensions  => options[:ext],
+      :filenames   => options[:filenames],
       :popular     => popular.include?(name),
       :common      => common.include?(name)
     )

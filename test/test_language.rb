@@ -108,6 +108,15 @@ class TestLanguage < Test::Unit::TestCase
     end
   end
 
+  def test_find_by_filename
+    assert_equal Language['Ruby'], Language.find_by_filename('foo.rb')
+    assert_equal Language['Ruby'], Language.find_by_filename('foo/bar.rb')
+    assert_equal Language['Ruby'], Language.find_by_filename('Rakefile')
+    assert_nil Language.find_by_filename('rb')
+    assert_nil Language.find_by_filename('.rb')
+    assert_nil Language.find_by_filename('.kt')
+  end
+
   def test_find
     assert_equal "Ruby", Language['Ruby'].name
     assert_equal "Ruby", Language['ruby'].name
