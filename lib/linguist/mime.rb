@@ -9,8 +9,6 @@ module MIME
     def binary?
       if defined? @binary
         @binary
-      elsif media_type == 'text'
-        false
       else
         @encoding == 'base64'
       end
@@ -25,7 +23,17 @@ mime_extensions.each do |mime_type, options|
 
   (options['extensions'] || []).each { |ext| mime.extensions << ext }
 
-  mime.binary = options['binary']     if options.key?('binary')
+  (options['exclude_extensions'] || []).each do |ext|
+    mime.extensions.delete(ext)
+
+    MIME::Types.instance_eval do
+      @__types__.instance_eval do
+        @extension_index[ext].delete(mime)
+      end
+    end
+  end
+
+  mime.binary = options['binary'] if options.key?('binary')
 
   MIME::Types.add_type_variant(mime)
   MIME::Types.index_extensions(mime)

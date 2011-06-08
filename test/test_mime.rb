@@ -9,9 +9,11 @@ class TestMime < Test::Unit::TestCase
     assert_equal 'text/plain', Mime.mime_for(nil)
     assert_equal 'text/plain', Mime.mime_for("")
 
-    assert_equal 'application/ruby', Mime.mime_for(".rb")
     assert_equal 'application/javascript', Mime.mime_for(".js")
+    assert_equal 'application/perl', Mime.mime_for(".pl")
+    assert_equal 'application/perl', Mime.mime_for(".pm")
     assert_equal 'application/python', Mime.mime_for(".py")
+    assert_equal 'application/ruby', Mime.mime_for(".rb")
 
     assert_equal 'text/plain', Mime.mime_for(".kt")
     assert_equal 'text/html', Mime.mime_for(".html")
@@ -108,6 +110,7 @@ class TestMime < Test::Unit::TestCase
     assert !Mime.binary?("application/atom+xml")
     assert !Mime.binary?("application/javascript")
     assert !Mime.binary?("application/json")
+    assert !Mime.binary?("application/perl")
     assert !Mime.binary?("application/rdf+xml")
     assert !Mime.binary?("application/sh")
     assert !Mime.binary?("application/x-ms-xbap")
@@ -128,6 +131,7 @@ class TestMime < Test::Unit::TestCase
     assert !Mime.binary?(".ms")
     assert !Mime.binary?(".nc")
     assert !Mime.binary?(".pl")
+    assert !Mime.binary?(".pm")
     assert !Mime.binary?(".py")
     assert !Mime.binary?(".rb")
     assert !Mime.binary?(".sh")
