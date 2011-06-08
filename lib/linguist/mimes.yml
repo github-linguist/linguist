@@ -1,92 +1,26 @@
 # Additional types to add to MIME::Types
+#
+#   <type> @<extensions> :<encoding>
+#
+# Follows same format as mime-types data file
+#   https://github.com/halostatue/mime-types/blob/master/lib/mime/types.rb.data
 
-application/x-troff-ms:
-  encoding: 8bit
+# TODO: Lookup actual types
+application/octet-stream @a,blend,gem,graffle,ipa,lib,mcz,nib,o,odp,ods,odt,otf,ogv,pfx,pigx,plgx,pptx,psd,sib,spl,sqlite3,swc,ucode,xpi
 
-application/netcdf:
-  encoding: 8bit
-
-application/x-pagemaker:
-  exclude_extensions:
-  - pm
-
-application/x-wais-source:
-  encoding: 8bit
-
-application/vnd.mozilla.xul+xml:
-  encoding: 8bit
-
-application/vnd.adobe.air-application-installer-package+zip:
-  extensions:
-  - air
-
-application/octet-stream:
-  extensions:
-  # TODO: Lookup actual content type for these extensions
-  - a
-  - blend
-  - gem
-  - graffle
-  - ipa
-  - lib
-  - mcz
-  - nib
-  - o
-  - odp
-  - ods
-  - odt
-  - otf
-  - ogv
-  - pfx
-  - pigx
-  - plgx
-  - pptx
-  - psd
-  - sib
-  - spl
-  - sqlite3
-  - swc
-  - ucode
-  - xpi
-
-application/postscript:
-  encoding: base64
-
-application/java-archive:
-  extensions:
-  - ear
-  - war
-
-application/x-chrome-extension:
-  extensions:
-  - crx
-
-application/x-shockwave-flash:
-  extensions:
-  - swf
-
-image/x-icns:
-  extensions:
-  - icns
-
-text/cache-manifest:
-  extensions:
-  - manifest
-
-application/ogg:
-  extensions:
-  - ogg
-
-application/x-silverlight-app:
-  extensions:
-  - xap
-
-application/xaml+xml:
-  encoding: 8bit
-  extensions:
-  - xaml
-
-application/x-ms-xbap:
-  encoding: 8bit
-  extensions:
-  - xbap
+application/java-archive @ear,war
+application/netcdf :8bit
+application/ogg @ogg
+application/postscript :base64
+application/vnd.adobe.air-application-installer-package+zip @air
+application/vnd.mozilla.xul+xml :8bit
+application/x-chrome-extension @crx
+application/x-ms-xbap @xbap :8bit
+application/x-pagemaker @-pm
+application/x-shockwave-flash @swf
+application/x-silverlight-app @xap
+application/x-troff-ms :8bit
+application/x-wais-source :8bit
+application/xaml+xml @xaml :8bit
+image/x-icns @icns
+text/cache-manifest @manifest

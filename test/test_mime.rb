@@ -120,6 +120,7 @@ class TestMime < Test::Unit::TestCase
     assert !Mime.binary?("application/xaml+xml")
     assert !Mime.binary?("application/xhtml+xml")
     assert !Mime.binary?("application/xml")
+    assert !Mime.binary?("text/cache-manifest")
     assert !Mime.binary?("text/css")
     assert !Mime.binary?("text/csv")
     assert !Mime.binary?("text/html")

@@ -2,27 +2,42 @@ require 'mime/types'
 require 'yaml'
 
 # Register additional mime type extensions
-mime_extensions = YAML.load_file(File.expand_path("../mimes.yml", __FILE__))
-mime_extensions.each do |mime_type, options|
-  mime = MIME::Types[mime_type].first || MIME::Type.new(mime_type)
+File.read(File.expand_path("../mimes.yml", __FILE__)).lines.each do |line|
+  next unless line =~ %r{^
+    #{MIME::Type::MEDIA_TYPE_RE}
+    (?:\s@([^\s]+))?
+    (?:\s:(#{MIME::Type::ENCODING_RE}))?
+  }x
 
-  (options['extensions'] || []).each { |ext| mime.extensions << ext }
+  mediatype  = $1
+  subtype    = $2
+  extensions = $3
+  encoding   = $4
 
-  (options['exclude_extensions'] || []).each do |ext|
-    mime.extensions.delete(ext)
+  mime_type = MIME::Types["#{mediatype}/#{subtype}"].first ||
+    MIME::Type.new("#{mediatype}/#{subtype}")
 
-    MIME::Types.instance_eval do
-      @__types__.instance_eval do
-        @extension_index[ext].delete(mime)
+  if extensions
+    extensions.split(/,/).each do |extension|
+      if extension =~ /^-(\w+)/
+        extension = $1
+        mime_type.extensions.delete(extension)
+
+        MIME::Types.instance_eval do
+          @__types__.instance_eval do
+            @extension_index[extension].delete(mime_type)
+          end
+        end
+      else
+        mime_type.extensions << extension
       end
     end
   end
 
-  mime.binary  = options['binary']    if options.key?('binary')
-  mime.encoding = options['encoding'] if options.key?('encoding')
+  mime_type.encoding = encoding
 
-  MIME::Types.add_type_variant(mime)
-  MIME::Types.index_extensions(mime)
+  MIME::Types.add_type_variant(mime_type)
+  MIME::Types.index_extensions(mime_type)
 end
 
 module Linguist
