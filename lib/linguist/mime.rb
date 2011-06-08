@@ -1,21 +1,6 @@
 require 'mime/types'
 require 'yaml'
 
-module MIME
-  class Type
-    attr_accessor :binary
-
-    undef_method :binary?
-    def binary?
-      if defined? @binary
-        @binary
-      else
-        @encoding == 'base64'
-      end
-    end
-  end
-end
-
 # Register additional mime type extensions
 mime_extensions = YAML.load_file(File.expand_path("../mimes.yml", __FILE__))
 mime_extensions.each do |mime_type, options|
@@ -33,7 +18,8 @@ mime_extensions.each do |mime_type, options|
     end
   end
 
-  mime.binary = options['binary'] if options.key?('binary')
+  mime.binary  = options['binary']    if options.key?('binary')
+  mime.encoding = options['encoding'] if options.key?('encoding')
 
   MIME::Types.add_type_variant(mime)
   MIME::Types.index_extensions(mime)

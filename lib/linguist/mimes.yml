@@ -1,44 +1,20 @@
 # Additional types to add to MIME::Types
 
-application/atom+xml:
-  binary: false
-
-application/javascript:
-  binary: false
-
-application/json:
-  binary: false
-
-application/rdf+xml:
-  binary: false
-
-application/sh:
-  binary: false
-
 application/x-troff-ms:
-  binary: false
+  encoding: 8bit
 
 application/netcdf:
-  binary: false
+  encoding: 8bit
 
 application/x-pagemaker:
   exclude_extensions:
   - pm
 
-application/x-perl:
-  binary: false
-
-application/x-python:
-  binary: false
-
-application/x-ruby:
-  binary: false
-
 application/x-wais-source:
-  binary: false
+  encoding: 8bit
 
 application/vnd.mozilla.xul+xml:
-  binary: false
+  encoding: 8bit
 
 application/vnd.adobe.air-application-installer-package+zip:
   extensions:
@@ -74,7 +50,7 @@ application/octet-stream:
   - xpi
 
 application/postscript:
-  binary: true
+  encoding: base64
 
 application/java-archive:
   extensions:
@@ -88,15 +64,6 @@ application/x-chrome-extension:
 application/x-shockwave-flash:
   extensions:
   - swf
-
-image/gif:
-  attachment: false
-
-image/jpeg:
-  attachment: false
-
-image/png:
-  attachment: false
 
 image/x-icns:
   extensions:
@@ -115,11 +82,11 @@ application/x-silverlight-app:
   - xap
 
 application/xaml+xml:
-  binary: false
+  encoding: 8bit
   extensions:
   - xaml
 
 application/x-ms-xbap:
-  binary: false
+  encoding: 8bit
   extensions:
   - xbap
