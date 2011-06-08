@@ -126,6 +126,7 @@ class TestBlob < Test::Unit::TestCase
     # Minified JS
     assert !blob("jquery-1.6.1.js").generated?
     assert blob("jquery-1.6.1.min.js").generated?
+    assert blob("jquery-1.4.2.min.js").generated?
 
     # CoffeScript JS
 

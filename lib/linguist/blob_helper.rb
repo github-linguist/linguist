@@ -173,8 +173,8 @@ module Linguist
       elsif generated_coffeescript?
         true
       elsif extname == '.js'
-        # JS is minified if any lines are longer than 1000c
-        lines.any? { |l| l.length > 1000 }
+        # JS is minified if any lines are longer than 500c
+        lines.any? { |l| l.length > 500 }
       else
         false
       end
