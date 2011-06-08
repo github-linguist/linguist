@@ -1,19 +1,13 @@
 # Additional types to add to MIME::Types
-#
-# Review this list if we ever upgrade from mime-types 1.15 to 1.16
 
 application/atom+xml:
   binary: false
 
 application/javascript:
   binary: false
-  extensions:
-  - js
 
 application/json:
   binary: false
-  extensions:
-  - json
 
 application/rdf+xml:
   binary: false
@@ -29,19 +23,12 @@ application/netcdf:
 
 application/x-perl:
   binary: false
-  extensions:
-  - pl
-  - pm
 
 application/x-python:
   binary: false
-  extensions:
-  - py
 
 application/x-ruby:
   binary: false
-  extensions:
-  - rb
 
 application/x-wais-source:
   binary: false
@@ -50,18 +37,14 @@ application/vnd.mozilla.xul+xml:
   binary: false
 
 application/vnd.adobe.air-application-installer-package+zip:
-  binary: true
   extensions:
   - air
 
 application/octet-stream:
-  binary: true
   extensions:
   # TODO: Lookup actual content type for these extensions
   - a
   - blend
-  - dll
-  - dmg
   - gem
   - graffle
   - ipa
@@ -80,7 +63,6 @@ application/octet-stream:
   - pptx
   - psd
   - sib
-  - so
   - spl
   - sqlite3
   - swc
@@ -91,23 +73,15 @@ application/postscript:
   binary: true
 
 application/java-archive:
-  binary: true
   extensions:
   - ear
   - war
 
 application/x-chrome-extension:
-  binary: true
   extensions:
   - crx
 
-application/x-debian-package:
-  binary: true
-  extensions:
-  - deb
-
 application/x-shockwave-flash:
-  binary: true
   extensions:
   - swf
 
@@ -121,7 +95,6 @@ image/png:
   attachment: false
 
 image/x-icns:
-  binary: true
   extensions:
   - icns
 
@@ -129,14 +102,11 @@ text/cache-manifest:
   extensions:
   - manifest
 
-video/quicktime:
-  binary: true
+application/ogg:
   extensions:
-  - qt
-  - mov
+  - ogg
 
 application/x-silverlight-app:
-  binary: true
   extensions:
   - xap
 
