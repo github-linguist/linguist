@@ -32,6 +32,13 @@ class TestMime < Test::Unit::TestCase
     assert_equal 'application/xaml+xml', Mime.mime_for(".xaml")
     assert_equal 'application/ms-xbap', Mime.mime_for(".xbap")
 
+    assert_equal 'application/vnd.oasis.opendocument.presentation', Mime.mime_for(".odp")
+    assert_equal 'application/vnd.oasis.opendocument.spreadsheet', Mime.mime_for(".ods")
+    assert_equal 'application/vnd.oasis.opendocument.text', Mime.mime_for(".odt")
+    assert_equal 'application/vnd.openofficeorg.extension', Mime.mime_for(".oxt")
+    assert_equal 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+      Mime.mime_for(".pptx")
+
     assert_equal 'video/quicktime', Mime.mime_for(".mov")
 
     assert_equal 'application/postscript', Mime.mime_for(".ai")
