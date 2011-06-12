@@ -266,7 +266,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['Python'],            Language['Python'].lexer
     assert_equal Lexer['Python Traceback'],  Language['Python traceback'].lexer
     assert_equal Lexer['S'],                 Language['R'].lexer
-    assert_equal Lexer['Text only'],         Language['Racket'].lexer
+    assert_equal Lexer['Scheme'],            Language['Racket'].lexer
     assert_equal Lexer['RHTML'],             Language['RHTML'].lexer
     assert_equal Lexer['Raw token data'],    Language['Raw token data'].lexer
     assert_equal Lexer['REBOL'],             Language['Rebol'].lexer
