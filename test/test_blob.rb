@@ -242,6 +242,9 @@ class TestBlob < Test::Unit::TestCase
     # https://github.com/wycats/osx-window-sizing/blob/master/center.applescript
     assert_equal Language['AppleScript'], blob("center.scpt").language
     assert_equal Language['AppleScript'], blob("center.applescript").language
+
+    # https://github.com/Araq/Nimrod/tree/master/examples
+    assert_equal Language['Nimrod'], blob("foo.nim").language
   end
 
   def test_lexer

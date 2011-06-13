@@ -251,6 +251,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['Ruby'],              Language['Mirah'].lexer
     assert_equal Lexer['Moocode'],           Language['Moocode'].lexer
     assert_equal Lexer['Myghty'],            Language['Myghty'].lexer
+    assert_equal Lexer['Nimrod'],            Language['Nimrod'].lexer
     assert_equal Lexer['Scheme'],            Language['Nu'].lexer
     assert_equal Lexer['NumPy'],             Language['NumPy'].lexer
     assert_equal Lexer['OCaml'],             Language['OCaml'].lexer

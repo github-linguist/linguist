@@ -15,9 +15,10 @@ class TestMime < Test::Unit::TestCase
     assert_equal 'application/python', Mime.mime_for(".py")
     assert_equal 'application/ruby', Mime.mime_for(".rb")
 
-    assert_equal 'text/plain', Mime.mime_for(".kt")
-    assert_equal 'text/html', Mime.mime_for(".html")
     assert_equal 'text/cache-manifest', Mime.mime_for(".manifest")
+    assert_equal 'text/html', Mime.mime_for(".html")
+    assert_equal 'text/nimrod', Mime.mime_for(".nim")
+    assert_equal 'text/plain', Mime.mime_for(".kt")
     assert_equal 'application/sh', Mime.mime_for(".sh")
     assert_equal 'application/latex', Mime.mime_for(".latex")
 
@@ -133,6 +134,7 @@ class TestMime < Test::Unit::TestCase
     assert !Mime.binary?("text/html")
     assert !Mime.binary?("text/javascript")
     assert !Mime.binary?("text/plain")
+    assert !Mime.binary?("text/x-nimrod")
 
     assert !Mime.binary?(".js")
     assert !Mime.binary?(".latex")
