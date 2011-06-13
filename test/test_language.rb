@@ -259,6 +259,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['objdump'],           Language['ObjDump'].lexer
     assert_equal Lexer['Objective-C'],       Language['Objective-C'].lexer
     assert_equal Lexer['Objective-J'],       Language['Objective-J'].lexer
+    assert_equal Lexer['C'],                 Language['OpenCL'].lexer
     assert_equal Lexer['PHP'],               Language['PHP'].lexer
     assert_equal Lexer['Text only'],         Language['Parrot Internal Representation'].lexer
     assert_equal Lexer['Perl'],              Language['Perl'].lexer
