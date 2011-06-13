@@ -31,6 +31,16 @@
   - text/html+cheetah
   - text/html+spitfire
 - !ruby/struct:Linguist::Lexer
+  name: Nimrod
+  aliases:
+  - nimrod
+  - nim
+  filenames:
+  - *.nim
+  - *.nimrod
+  mimetypes:
+  - text/x-nimrod
+- !ruby/struct:Linguist::Lexer
   name: Bash
   aliases:
   - bash
@@ -116,6 +126,8 @@
   - scm
   filenames:
   - *.scm
+  - *.ss
+  - *.rkt
   mimetypes:
   - text/x-scheme
   - application/x-scheme
@@ -1301,6 +1313,16 @@
   mimetypes:
   - text/x-ocaml
 - !ruby/struct:Linguist::Lexer
+  name: eC
+  aliases:
+  - ec
+  filenames:
+  - *.ec
+  - *.eh
+  mimetypes:
+  - text/x-echdr
+  - text/x-ecsrc
+- !ruby/struct:Linguist::Lexer
   name: Gettext Catalog
   aliases:
   - pot
@@ -1361,16 +1383,6 @@
   - *.evoque
   mimetypes:
   - application/x-evoque
-- !ruby/struct:Linguist::Lexer
-  name: eC
-  aliases:
-  - ec
-  filenames:
-  - *.ec
-  - *.eh
-  mimetypes:
-  - text/x-echdr
-  - text/x-ecsrc
 - !ruby/struct:Linguist::Lexer
   name: Java Server Page
   aliases:
