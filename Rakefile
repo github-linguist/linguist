@@ -10,5 +10,12 @@ end
 CLOBBER.include 'lib/linguist/lexers.yml'
 
 file 'lib/linguist/lexers.yml' do |f|
-  sh "./bin/pygments-lexers > #{f.name}"
+  # GitHub vendored pygments path
+  #   vendor/python/pygments
+  path = File.expand_path('../../../python/pygments', __FILE__)
+  ENV['PYTHONPATH'] = path if File.directory?(path)
+
+  sh "python ./bin/pygments-lexers > #{f.name}"
 end
+
+task :lexers => 'lib/linguist/lexers.yml'
