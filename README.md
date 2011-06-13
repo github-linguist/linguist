@@ -30,10 +30,10 @@ Features
 Usage
 -----
 
-    file = Linguist::Blob.new("linguist.rb")
+    file = Linguist::FileBlob.new("linguist.rb")
     file.language.name #=> "Ruby"
 
-    file = Linguist::Blob.new("linguist.gem")
+    file = Linguist::FileBlob.new("linguist.gem")
     file.binary? #=> true
 
     project = Linguist::Repository.new(".")
