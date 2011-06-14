@@ -3,6 +3,11 @@ require 'yaml'
 
 module Linguist
   # Mirror of Pygments Lexer structure.
+  #
+  # name      - Proper lexer name (JavaScript, Ruby, Python)
+  # aliases   - Aliases for lookup (js, javascript)
+  # filenames - Filename globs (*.js)
+  # mimetypes - Mime types (application/javascript)
   class Lexer < Struct.new(:name, :aliases, :filenames, :mimetypes)
     @lexers      = []
     @name_index  = {}
@@ -18,7 +23,7 @@ module Linguist
       $?.success?
     end
 
-    # Public: Get all Lexers
+    # Internal: Get all Lexers
     #
     # Returns an Array of Lexers
     def self.all
