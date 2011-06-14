@@ -108,6 +108,9 @@ module Linguist
       @binary ||= Mime.binary?(extname)
     end
 
+    # Public: Return self as String
+    #
+    # Returns a String
     def to_s
       @path.dup
     end

@@ -2,6 +2,7 @@ require 'linguist/language'
 require 'linguist/mime'
 require 'linguist/pathname'
 
+require 'escape_utils'
 require 'yaml'
 
 module Linguist
