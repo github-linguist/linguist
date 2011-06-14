@@ -22,6 +22,7 @@ ASP:
   - .aspx
   - .ashx
   - .asp
+
 ActionScript:
   lexer: ActionScript 3
   search_term: as3
@@ -29,18 +30,22 @@ ActionScript:
   - as3
   extensions:
   - .as
+
 Ada:
   extensions:
   - .adb
   - .ads
+
 AppleScript:
   extensions:
   - .scpt
   - .applescript
+
 Arc:
   lexer: Text only
   extensions:
   - .arc
+
 Assembly:
   lexer: nasm
   search_term: nasm
@@ -48,6 +53,7 @@ Assembly:
   - nasm
   extensions:
   - .asm
+
 Batchfile:
   search_term: bat
   aliases:
@@ -55,29 +61,35 @@ Batchfile:
   extensions:
   - .bat
   - .cmd
+
 Befunge:
   extensions:
   - .befunge
+
+BlitzMax:
+  extensions:
+  - .bmx
+
 Boo:
   extensions:
   - .boo
+
 Brainfuck:
   extensions:
   - .b
   - .bf
-BlitzMax:
-  extensions:
-  - .bmx
 C:
   extensions:
   - .c
   - .h
+
 C#:
   search_term: csharp
   aliases:
   - csharp
   extensions:
   - .cs
+
 C++:
   search_term: cpp
   aliases:
@@ -92,21 +104,30 @@ C++:
   - .c++
   - .cxx
   - .tcc
+
+C-ObjDump:
+  extensions:
+  - .c-objdump
+
 CSS:
   extensions:
   - .css
+
 ChucK:
   lexer: java
   extensions:
   - .ck
+
 Clojure:
   extensions:
   - .clj
+
 CoffeeScript:
   extensions:
   - .coffee
   filenames:
   - Cakefile
+
 ColdFusion:
   lexer: ColdFusion HTML
   search_term: cfm
@@ -115,25 +136,40 @@ ColdFusion:
   extensions:
   - .cfm
   - .cfc
+
 Common Lisp:
   aliases:
   - lisp
   extensions:
   - .lisp
   - .ny
+
+Cpp-ObjDump:
+  extensions:
+  - .cppobjdump
+  - .c++objdump
+  - .cxx-objdump
+
 Cucumber:
   lexer: Gherkin
   extensions:
   - .feature
+
 Cython:
   extensions:
   - .pyx
   - .pxd
   - .pxi
+
 D:
   extensions:
   - .d
   - .di
+
+D-ObjDump:
+  extensions:
+  - .d-objdump
+
 Darcs Patch:
   search_term: dpatch
   aliases:
@@ -141,23 +177,25 @@ Darcs Patch:
   extensions:
   - .darcspatch
   - .dpatch
+
 Delphi:
   extensions:
   - .pas
+
 Diff:
   extensions:
   - .diff
   - .patch
-D-ObjDump:
-  extensions:
-  - .d  -objdump
+
 Dylan:
   extensions:
   - .dylan
+
 Eiffel:
   lexer: Text only
   extensions:
   - .e
+
 Emacs Lisp:
   lexer: Scheme
   aliases:
@@ -165,10 +203,12 @@ Emacs Lisp:
   extensions:
   - .el
   - .emacs
+
 Erlang:
   extensions:
   - .hrl
   - .erl
+
 F#:
   lexer: ocaml
   search_term: ocaml
@@ -176,30 +216,37 @@ F#:
   - .fs
   - .fsi
   - .fsx
-Factor:
-  extensions:
-  - .factor
+
 FORTRAN:
   extensions:
   - .f
   - .f90
   - .F
   - .F90
+
+Factor:
+  extensions:
+  - .factor
+
 GAS:
   extensions:
   - .s
   - .S
+
 Genshi:
   extensions:
   - .kid
+
 Gentoo Ebuild:
   lexer: bash
   extensions:
   - .ebuild
+
 Gentoo Eclass:
   lexer: bash
   extensions:
   - .eclass
+
 Gettext Catalog:
   search_term: pot
   searchable: false
@@ -208,44 +255,59 @@ Gettext Catalog:
   extensions:
   - .po
   - .pot
+
 Go:
   extensions:
   - .go
+
 Groff:
   extensions:
   - .man
   - .[1234567]
+
+Groovy:
+  lexer: java
+  extensions:
+  - .groovy
+
 HTML:
   extensions:
   - .html
   - .xhtml
   - .htm
   - .xslt
+
 HTML+Django:
   lexer: HTML+Django/Jinja
   extensions:
   - .mustache
+
 HTML+ERB:
   lexer: RHTML
   extensions:
   - .erb
   - .html.erb
+
 HTML+PHP:
   extensions:
   - .phtml
+
 HaXe:
   lexer: haXe
   extensions:
   - .hx
   - .hxml
   - .mtt
+
 Haml:
   extensions:
   - .haml
+
 Haskell:
   extensions:
   - .hs
   - .hsc
+
 INI:
   extensions:
   - .cfg
@@ -253,6 +315,7 @@ INI:
   - .properties
   filenames:
   - .gitconfig
+
 IRC log:
   lexer: IRC logs
   search_term: irc
@@ -260,17 +323,30 @@ IRC log:
   - irc
   extensions:
   - .weechatlog
+
 Io:
   extensions:
   - .io
+
+JSON:
+  lexer: javascript
+  search_term: javascript
+  extensions:
+  - .json
+
 Java:
   extensions:
   - .java
   - .pde
-Groovy:
-  lexer: java
+
+Java Server Pages:
+  lexer: Java Server Page
+  search_term: jsp
+  aliases:
+  - jsp
   extensions:
-  - .groovy
+  - .jsp
+
 JavaScript:
   aliases:
   - js
@@ -284,32 +360,33 @@ JavaScript:
   - .jake
   filenames:
   - Jakefile
-JSON:
-  lexer: javascript
-  search_term: javascript
+
+LLVM:
   extensions:
-  - .json
+  - .ll
+
 Literate Haskell:
   search_term: lhs
   aliases:
   - lhs
   extensions:
   - .lhs
-LLVM:
-  extensions:
-  - .ll
+
 Lua:
   extensions:
   - .lua
   - .nse
+
 Makefile:
   extensions:
   - .mak
   filenames:
   - Makefile
+
 Mako:
   extensions:
   - .mao
+
 Markdown:
   lexer: Text only
   extensions:
@@ -318,13 +395,16 @@ Markdown:
   - .mkdown
   - .markdown
   - .ron
+
 Matlab:
   extensions:
   - .matlab
+
 Max/MSP:
   lexer: Text only
   extensions:
   - .mxt
+
 Mirah:
   lexer: Ruby
   search_term: ruby
@@ -332,15 +412,19 @@ Mirah:
   - .duby
   - .mir
   - .mirah
+
 Moocode:
   extensions:
   - .moo
+
 Myghty:
   extensions:
   - .myt
+
 Nimrod:
   extensions:
   - .nim
+
 Nu:
   lexer: scheme
   aliases:
@@ -349,40 +433,39 @@ Nu:
   - .nu
   filenames:
   - Nukefile
+
 NumPy:
   extensions:
   - .numpy
   - .numsc
   - .numpyw
+
 OCaml:
   extensions:
   - .ml
   - .mly
   - .mli
   - .mll
-Cpp-ObjDump:
-  extensions:
-  - .cppobjdump
-  - .c++objdump
-  - .cxx-objdump
-C-ObjDump:
-  extensions:
-  - .c-objdump
+
 ObjDump:
   extensions:
   - .objdump
+
 Objective-C:
   extensions:
   - .m
   - .mm
+
 Objective-J:
   extensions:
   - .j
   - .sj
+
 OpenCL:
   lexer: C
   extensions:
   - .cl
+
 PHP:
   extensions:
   - .php
@@ -391,6 +474,7 @@ PHP:
   - .php3
   - .php4
   - .php5
+
 Parrot Internal Representation:
   lexer: Text only
   search_term: pir
@@ -400,6 +484,7 @@ Parrot Internal Representation:
   - .pir
   - .pbc
   - .pasm
+
 Perl:
   extensions:
   - .pl
@@ -410,48 +495,58 @@ Perl:
   - .t
   - .perl
   - .psgi
+
 Pure Data:
   lexer: Text only
   extensions:
   - .pd
+
 Python:
   extensions:
   - .py
   - .pyw
+
 Python traceback:
   search_term: pytb
   aliases:
   - pytb
   extensions:
   - .pytb
+
 R:
   lexer: S
   extensions:
   - .r
   - .R
+
+RHTML:
+  extensions:
+  - .rhtml
+
 Racket:
   lexer: Scheme
   extensions:
   - .rkt
   - .rktl
   - .rktd
-RHTML:
-  extensions:
-  - .rhtml
+
 Raw token data:
   search_term: raw
   aliases:
   - raw
   extensions:
   - .raw
+
 Rebol:
   extensions:
   - .rebol
   - .r2
   - .r3
+
 Redcode:
   extensions:
   - .cw
+
 Ruby:
   aliases:
   - jruby
@@ -474,26 +569,32 @@ Ruby:
   - Rakefile
   - Thorfile
   - Gemfile
+
 SQL:
   searchable: false
   extensions:
   - .sql
+
 Sass:
   extensions:
   - .sass
+
 Scala:
   extensions:
   - .scala
+
 Scheme:
   extensions:
   - .sls
   - .ss
   - .sps
   - .scm
+
 Self:
   lexer: Text only
   extensions:
   - .self
+
 Shell:
   lexer: Bash
   search_term: bash
@@ -511,23 +612,29 @@ Shell:
   - .zlogin
   - .zsh
   - .zshrc
+
 Smalltalk:
   extensions:
   - .st
+
 Smarty:
   extensions:
   - .tpl
+
 SuperCollider:
   lexer: Text only
   extensions:
   - .sc
+
 Tcl:
   extensions:
   - .tcl
+
 Tcsh:
   extensions:
   - .tcsh
   - .csh
+
 TeX:
   extensions:
   - .tex
@@ -535,26 +642,32 @@ TeX:
   - .toc
   - .cls
   - .aux
+
 Text:
   lexer: Text only
   extensions:
   - .txt
+
 Textile:
   lexer: Text only
   extensions:
   - .textile
-Vala:
-  extensions:
-  - .vala
+
 VHDL:
   lexer: Text only
   extensions:
   - .vhdl
   - .vhd
+
+Vala:
+  extensions:
+  - .vala
+
 Verilog:
   lexer: Text only
   extensions:
   - .v
+
 VimL:
   search_term: vim
   aliases:
@@ -564,6 +677,7 @@ VimL:
   filenames:
   - .vimrc
   - .gvimrc
+
 Visual Basic:
   lexer: Text only
   extensions:
@@ -572,6 +686,7 @@ Visual Basic:
   - .frx
   - .vba
   - .vb
+
 XML:
   extensions:
   - .xml
@@ -583,35 +698,34 @@ XML:
   - .plist
   - .mxml
   - .rdf
+
 XQuery:
   extensions:
   - .xq
   - .xqm
   - .xquery
   - .xqy
+
 XS:
   lexer: c
   extensions:
   - .xs
+
 YAML:
   extensions:
   - .yml
   - .yaml
   filenames:
   - .gemrc
-Java Server Pages:
-  lexer: Java Server Page
-  search_term: jsp
-  aliases:
-  - jsp
-  extensions:
-  - .jsp
+
 mupad:
   extensions:
   - .mu
+
 ooc:
   extensions:
   - .ooc
+
 reStructuredText:
   search_term: rst
   aliases:
