@@ -271,6 +271,14 @@ class TestLanguage < Test::Unit::TestCase
   def test_find_by_extension
     assert_equal Language['Ruby'], Language.find_by_extension('.rb')
     assert_equal Language['Ruby'], Language.find_by_extension('rb')
+    assert_equal Language['Groff'], Language.find_by_extension('man')
+    assert_equal Language['Groff'], Language.find_by_extension('1')
+    assert_equal Language['Groff'], Language.find_by_extension('2')
+    assert_equal Language['Groff'], Language.find_by_extension('3')
+    assert_equal Language['PHP'], Language.find_by_extension('php')
+    assert_equal Language['PHP'], Language.find_by_extension('php3')
+    assert_equal Language['PHP'], Language.find_by_extension('php4')
+    assert_equal Language['PHP'], Language.find_by_extension('php5')
     assert_nil Language.find_by_extension('.kt')
   end
 
