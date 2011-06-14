@@ -100,10 +100,10 @@ class TestBlob < Test::Unit::TestCase
   end
 
   def test_image
-    assert blob("octocat.png").image?
-    assert blob("octocat.jpg").image?
-    assert blob("octocat.jpeg").image?
     assert blob("octocat.gif").image?
+    assert blob("octocat.jpeg").image?
+    assert blob("octocat.jpg").image?
+    assert blob("octocat.png").image?
     assert !blob("octocat.ai").image?
     assert !blob("octocat.psd").image?
   end
@@ -200,38 +200,38 @@ class TestBlob < Test::Unit::TestCase
     assert blob("file.txt").indexable?
     assert blob("foo.rb").indexable?
     assert !blob("defun.kt").indexable?
-    assert !blob("github.po").indexable?
     assert !blob("dump.sql").indexable?
+    assert !blob("github.po").indexable?
     assert !blob("linguist.gem").indexable?
   end
 
   def test_language
-    assert_equal Language['Ruby'],        blob("foo.rb").language
-    assert_equal Language['Ruby'],        blob("script.rb").language
-    assert_equal Language['Text'],        blob("octocat.png").language
-    assert_equal Language['Ruby'],        blob("wrong_shebang.rb").language
     assert_equal Language['C'],           blob("hello.c").language
     assert_equal Language['C'],           blob("hello.h").language
-    assert_equal Language['C++'],         blob("hello.cpp").language
     assert_equal Language['C++'],         blob("bar.h").language
     assert_equal Language['C++'],         blob("bar.hpp").language
-    assert_equal Language['Objective-C'], blob("hello.m").language
-    assert_equal Language['Objective-C'], blob("Foo.m").language
-    assert_equal Language['Objective-C'], blob("Foo.h").language
-    assert_equal Language['Objective-C'], blob("FooAppDelegate.m").language
-    assert_equal Language['Objective-C'], blob("FooAppDelegate.h").language
-    assert_equal Language['OpenCL'],      blob("fft.cl").language
+    assert_equal Language['C++'],         blob("hello.cpp").language
     assert_equal Language['GAS'],         blob("hello.s").language
+    assert_equal Language['Objective-C'], blob("Foo.h").language
+    assert_equal Language['Objective-C'], blob("Foo.m").language
+    assert_equal Language['Objective-C'], blob("FooAppDelegate.h").language
+    assert_equal Language['Objective-C'], blob("FooAppDelegate.m").language
+    assert_equal Language['Objective-C'], blob("hello.m").language
+    assert_equal Language['OpenCL'],      blob("fft.cl").language
+    assert_equal Language['Ruby'],        blob("foo.rb").language
+    assert_equal Language['Ruby'],        blob("script.rb").language
+    assert_equal Language['Ruby'],        blob("wrong_shebang.rb").language
+    assert_equal Language['Text'],        blob("octocat.png").language
 
     # Config files
-    assert_equal Language['Shell'], blob(".profile").language
-    assert_equal Language['Shell'], blob(".bashrc").language
-    assert_equal Language['Shell'], blob(".bash_profile").language
-    assert_equal Language['Shell'], blob(".zshrc").language
-    assert_equal Language['Shell'], blob(".zlogin").language
-    assert_equal Language['VimL'],  blob(".vimrc").language
-    assert_equal Language['VimL'],  blob(".gvimrc").language
     assert_equal Language['INI'],   blob(".gitconfig").language
+    assert_equal Language['Shell'], blob(".bash_profile").language
+    assert_equal Language['Shell'], blob(".bashrc").language
+    assert_equal Language['Shell'], blob(".profile").language
+    assert_equal Language['Shell'], blob(".zlogin").language
+    assert_equal Language['Shell'], blob(".zshrc").language
+    assert_equal Language['VimL'],  blob(".gvimrc").language
+    assert_equal Language['VimL'],  blob(".vimrc").language
     assert_equal Language['YAML'],  blob(".gemrc").language
 
     assert_equal Language['Text'], blob("README").language
@@ -248,12 +248,12 @@ class TestBlob < Test::Unit::TestCase
   end
 
   def test_lexer
-    assert_equal Lexer['Ruby'], blob("grit.rb").lexer
-    assert_equal Lexer['Text only'], blob("README").lexer
     assert_equal Lexer['Diff'], blob("dude-thing-okay--001.patch").lexer
-    assert_equal Lexer['Scheme'], blob("dude.el").lexer
     assert_equal Lexer['JavaScript'], blob("dude.js").lexer
     assert_equal Lexer['Ruby'], blob("Capfile").lexer
+    assert_equal Lexer['Ruby'], blob("grit.rb").lexer
+    assert_equal Lexer['Scheme'], blob("dude.el").lexer
+    assert_equal Lexer['Text only'], blob("README").lexer
   end
 
   def test_shebang_script
