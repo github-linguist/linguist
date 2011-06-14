@@ -3,6 +3,10 @@ require 'linguist/lexer'
 require 'yaml'
 
 module Linguist
+  # Langage names that are recognizable by GitHub. Defined languages
+  # can be highlighted, searched and listed under the Top Languages page.
+  #
+  # Langages are defined in `lib/linguist/langages.yml`.
   class Language
     @languages       = []
     @name_index      = {}
@@ -62,7 +66,7 @@ module Linguist
       language
     end
 
-    # Public: Get all Languages
+    # Internal: Get all Languages
     #
     # Returns an Array of Languages
     def self.all
