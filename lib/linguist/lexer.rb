@@ -8,6 +8,16 @@ module Linguist
     @name_index  = {}
     @alias_index = {}
 
+    # Internal: Test if system has Pygments
+    #
+    # Only used in tests to disable tests that require Pygments.
+    #
+    # Returns true if `pygmentize` in is PATH otherwise false.
+    def self.has_pygments?
+      `which #{Albino.bin}`
+      $?.success?
+    end
+
     # Public: Get all Lexers
     #
     # Returns an Array of Lexers

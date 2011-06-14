@@ -50,31 +50,33 @@ class TestLexer < Test::Unit::TestCase
     assert !Lexer['Ruby'].eql?(Lexer.new('Ruby'))
   end
 
-  def test_colorize
-    assert_equal <<-HTML, Lexer['Text only'].colorize("Hello")
+  if Lexer.has_pygments?
+    def test_colorize
+      assert_equal <<-HTML, Lexer['Text only'].colorize("Hello")
 <div class="highlight"><pre>Hello
 </pre>
 </div>
-    HTML
+      HTML
 
-    assert_equal <<-HTML, Lexer['Ruby'].colorize("def foo\n  'foo'\nend\n")
+      assert_equal <<-HTML, Lexer['Ruby'].colorize("def foo\n  'foo'\nend\n")
 <div class="highlight"><pre><span class="k">def</span> <span class="nf">foo</span>
   <span class="s1">&#39;foo&#39;</span>
 <span class="k">end</span>
 </pre>
 </div>
-    HTML
-  end
+      HTML
+    end
 
-  def test_colorize_without_wrapper
-    assert_equal <<-HTML, Lexer['Text only'].colorize_without_wrapper("Hello")
+    def test_colorize_without_wrapper
+      assert_equal <<-HTML, Lexer['Text only'].colorize_without_wrapper("Hello")
 Hello
-    HTML
+      HTML
 
-    assert_equal <<-HTML, Lexer['Ruby'].colorize_without_wrapper("def foo\n  'foo'\nend\n")
+      assert_equal <<-HTML, Lexer['Ruby'].colorize_without_wrapper("def foo\n  'foo'\nend\n")
 <span class="k">def</span> <span class="nf">foo</span>
   <span class="s1">&#39;foo&#39;</span>
 <span class="k">end</span>
-    HTML
+      HTML
+    end
   end
 end

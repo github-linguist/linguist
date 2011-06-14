@@ -289,19 +289,21 @@ class TestBlob < Test::Unit::TestCase
     assert_equal nil, blob("foo.rb").shebang_language
   end
 
-  def test_colorize
-    assert_equal <<-HTML, blob("foo.rb").colorize
+  if Lexer.has_pygments?
+    def test_colorize
+      assert_equal <<-HTML, blob("foo.rb").colorize
 <div class="highlight"><pre><span class="k">module</span> <span class="nn">Foo</span>
 <span class="k">end</span>
 </pre>
 </div>
-    HTML
-  end
+      HTML
+    end
 
-  def test_colorize_without_wrapper
-    assert_equal <<-HTML, blob("foo.rb").colorize_without_wrapper
+    def test_colorize_without_wrapper
+      assert_equal <<-HTML, blob("foo.rb").colorize_without_wrapper
 <span class="k">module</span> <span class="nn">Foo</span>
 <span class="k">end</span>
-    HTML
+      HTML
+    end
   end
 end
