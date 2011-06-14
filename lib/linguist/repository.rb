@@ -1,6 +1,11 @@
 require 'linguist/file_blob'
 
 module Linguist
+  # A Repository is an abstraction of a Grit::Repo or a basic file
+  # system tree. It holds a list of paths pointing to Blobish objects.
+  #
+  # Its primary purpose is for gathering langauge statistics across
+  # the entire project.
   class Repository
     # Public: Initialize a new Repository from a File directory
     #
