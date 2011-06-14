@@ -331,12 +331,12 @@ module Linguist
   YAML.load_file(File.expand_path("../languages.yml", __FILE__)).each do |name, options|
     Language.create(
       :name        => name,
-      :aliases     => options[:aliases],
-      :lexer       => options[:lexer],
-      :searchable  => options.key?(:searchable) ? options[:searchable] : true,
-      :search_term => options[:search_term],
-      :extensions  => options[:ext],
-      :filenames   => options[:filenames],
+      :aliases     => options['aliases'],
+      :lexer       => options['lexer'],
+      :searchable  => options.key?('searchable') ? options['searchable'] : true,
+      :search_term => options['search_term'],
+      :extensions  => options['extensions'],
+      :filenames   => options['filenames'],
       :popular     => popular.include?(name),
       :common      => common.include?(name)
     )

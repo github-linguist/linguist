@@ -9,12 +9,12 @@
 #               different alias. Avoid defining new exceptions.
 
 ASP:
-  :lexer: aspx-vb
-  :search_term: aspx-vb
-  :aliases:
+  lexer: aspx-vb
+  search_term: aspx-vb
+  aliases:
   - aspx
   - aspx-vb
-  :ext:
+  extensions:
   - .ascx
   - .axd
   - .asax
@@ -23,66 +23,66 @@ ASP:
   - .ashx
   - .asp
 ActionScript:
-  :lexer: ActionScript 3
-  :search_term: as3
-  :aliases:
+  lexer: ActionScript 3
+  search_term: as3
+  aliases:
   - as3
-  :ext:
+  extensions:
   - .as
 Ada:
-  :ext:
+  extensions:
   - .adb
   - .ads
 AppleScript:
-  :ext:
+  extensions:
   - .scpt
   - .applescript
 Arc:
-  :lexer: Text only
-  :ext:
+  lexer: Text only
+  extensions:
   - .arc
 Assembly:
-  :lexer: nasm
-  :search_term: nasm
-  :aliases:
+  lexer: nasm
+  search_term: nasm
+  aliases:
   - nasm
-  :ext:
+  extensions:
   - .asm
 Batchfile:
-  :search_term: bat
-  :aliases:
+  search_term: bat
+  aliases:
   - bat
-  :ext:
+  extensions:
   - .bat
   - .cmd
 Befunge:
-  :ext:
+  extensions:
   - .befunge
 Boo:
-  :ext:
+  extensions:
   - .boo
 Brainfuck:
-  :ext:
+  extensions:
   - .b
   - .bf
 BlitzMax:
-  :ext:
+  extensions:
   - .bmx
 C:
-  :ext:
+  extensions:
   - .c
   - .h
 C#:
-  :search_term: csharp
-  :aliases:
+  search_term: csharp
+  aliases:
   - csharp
-  :ext:
+  extensions:
   - .cs
 C++:
-  :search_term: cpp
-  :aliases:
+  search_term: cpp
+  aliases:
   - cpp
-  :ext:
+  extensions:
   - .cpp
   - .hh
   - .cc
@@ -93,298 +93,298 @@ C++:
   - .cxx
   - .tcc
 CSS:
-  :ext:
+  extensions:
   - .css
 ChucK:
-  :lexer: java
-  :ext:
+  lexer: java
+  extensions:
   - .ck
 Clojure:
-  :ext:
+  extensions:
   - .clj
 CoffeeScript:
-  :ext:
+  extensions:
   - .coffee
-  :filenames:
+  filenames:
   - Cakefile
 ColdFusion:
-  :lexer: ColdFusion HTML
-  :search_term: cfm
-  :aliases:
+  lexer: ColdFusion HTML
+  search_term: cfm
+  aliases:
   - cfm
-  :ext:
+  extensions:
   - .cfm
   - .cfc
 Common Lisp:
-  :aliases:
+  aliases:
   - lisp
-  :ext:
+  extensions:
   - .lisp
   - .ny
 Cucumber:
-  :lexer: Gherkin
-  :ext:
+  lexer: Gherkin
+  extensions:
   - .feature
 Cython:
-  :ext:
+  extensions:
   - .pyx
   - .pxd
   - .pxi
 D:
-  :ext:
+  extensions:
   - .d
   - .di
 Darcs Patch:
-  :search_term: dpatch
-  :aliases:
+  search_term: dpatch
+  aliases:
   - dpatch
-  :ext:
+  extensions:
   - .darcspatch
   - .dpatch
 Delphi:
-  :ext:
+  extensions:
   - .pas
 Diff:
-  :ext:
+  extensions:
   - .diff
   - .patch
 D-ObjDump:
-  :ext:
+  extensions:
   - .d  -objdump
 Dylan:
-  :ext:
+  extensions:
   - .dylan
 Eiffel:
-  :lexer: Text only
-  :ext:
+  lexer: Text only
+  extensions:
   - .e
 Emacs Lisp:
-  :lexer: Scheme
-  :aliases:
+  lexer: Scheme
+  aliases:
   - elisp
-  :ext:
+  extensions:
   - .el
   - .emacs
 Erlang:
-  :ext:
+  extensions:
   - .hrl
   - .erl
 F#:
-  :lexer: ocaml
-  :search_term: ocaml
-  :ext:
+  lexer: ocaml
+  search_term: ocaml
+  extensions:
   - .fs
   - .fsi
   - .fsx
 Factor:
-  :ext:
+  extensions:
   - .factor
 FORTRAN:
-  :ext:
+  extensions:
   - .f
   - .f90
   - .F
   - .F90
 GAS:
-  :ext:
+  extensions:
   - .s
   - .S
 Genshi:
-  :ext:
+  extensions:
   - .kid
 Gentoo Ebuild:
-  :lexer: bash
-  :ext:
+  lexer: bash
+  extensions:
   - .ebuild
 Gentoo Eclass:
-  :lexer: bash
-  :ext:
+  lexer: bash
+  extensions:
   - .eclass
 Gettext Catalog:
-  :search_term: pot
-  :searchable: false
-  :aliases:
+  search_term: pot
+  searchable: false
+  aliases:
   - pot
-  :ext:
+  extensions:
   - .po
   - .pot
 Go:
-  :ext:
+  extensions:
   - .go
 Groff:
-  :ext:
+  extensions:
   - .man
   - .[1234567]
 HTML:
-  :ext:
+  extensions:
   - .html
   - .xhtml
   - .htm
   - .xslt
 HTML+Django:
-  :lexer: HTML+Django/Jinja
-  :ext:
+  lexer: HTML+Django/Jinja
+  extensions:
   - .mustache
 HTML+ERB:
-  :lexer: RHTML
-  :ext:
+  lexer: RHTML
+  extensions:
   - .erb
   - .html.erb
 HTML+PHP:
-  :ext:
+  extensions:
   - .phtml
 HaXe:
-  :lexer: haXe
-  :ext:
+  lexer: haXe
+  extensions:
   - .hx
   - .hxml
   - .mtt
 Haml:
-  :ext:
+  extensions:
   - .haml
 Haskell:
-  :ext:
+  extensions:
   - .hs
   - .hsc
 INI:
-  :ext:
+  extensions:
   - .cfg
   - .ini
   - .properties
-  :filenames:
+  filenames:
   - .gitconfig
 IRC log:
-  :lexer: IRC logs
-  :search_term: irc
-  :aliases:
+  lexer: IRC logs
+  search_term: irc
+  aliases:
   - irc
-  :ext:
+  extensions:
   - .weechatlog
 Io:
-  :ext:
+  extensions:
   - .io
 Java:
-  :ext:
+  extensions:
   - .java
   - .pde
 Groovy:
-  :lexer: java
-  :ext:
+  lexer: java
+  extensions:
   - .groovy
 JavaScript:
-  :aliases:
+  aliases:
   - js
   - node
-  :ext:
+  extensions:
   - .js
   - .sjs
   - .jss
   - .ssjs
   - .jsx
   - .jake
-  :filenames:
+  filenames:
   - Jakefile
 JSON:
-  :lexer: javascript
-  :search_term: javascript
-  :ext:
+  lexer: javascript
+  search_term: javascript
+  extensions:
   - .json
 Literate Haskell:
-  :search_term: lhs
-  :aliases:
+  search_term: lhs
+  aliases:
   - lhs
-  :ext:
+  extensions:
   - .lhs
 LLVM:
-  :ext:
+  extensions:
   - .ll
 Lua:
-  :ext:
+  extensions:
   - .lua
   - .nse
 Makefile:
-  :ext:
+  extensions:
   - .mak
-  :filenames:
+  filenames:
   - Makefile
 Mako:
-  :ext:
+  extensions:
   - .mao
 Markdown:
-  :lexer: Text only
-  :ext:
+  lexer: Text only
+  extensions:
   - .md
   - .mkd
   - .mkdown
   - .markdown
   - .ron
 Matlab:
-  :ext:
+  extensions:
   - .matlab
 Max/MSP:
-  :lexer: Text only
-  :ext:
+  lexer: Text only
+  extensions:
   - .mxt
 Mirah:
-  :lexer: Ruby
-  :search_term: ruby
-  :ext:
+  lexer: Ruby
+  search_term: ruby
+  extensions:
   - .duby
   - .mir
   - .mirah
 Moocode:
-  :ext:
+  extensions:
   - .moo
 Myghty:
-  :ext:
+  extensions:
   - .myt
 Nimrod:
-  :ext:
+  extensions:
   - .nim
 Nu:
-  :lexer: scheme
-  :aliases:
+  lexer: scheme
+  aliases:
   - nush
-  :ext:
+  extensions:
   - .nu
-  :filenames:
+  filenames:
   - Nukefile
 NumPy:
-  :ext:
+  extensions:
   - .numpy
   - .numsc
   - .numpyw
 OCaml:
-  :ext:
+  extensions:
   - .ml
   - .mly
   - .mli
   - .mll
 Cpp-ObjDump:
-  :ext:
+  extensions:
   - .cppobjdump
   - .c++objdump
   - .cxx-objdump
 C-ObjDump:
-  :ext:
+  extensions:
   - .c-objdump
 ObjDump:
-  :ext:
+  extensions:
   - .objdump
 Objective-C:
-  :ext:
+  extensions:
   - .m
   - .mm
 Objective-J:
-  :ext:
+  extensions:
   - .j
   - .sj
 OpenCL:
-  :lexer: C
-  :ext:
+  lexer: C
+  extensions:
   - .cl
 PHP:
-  :ext:
+  extensions:
   - .php
   - .php[345]
   - .aw
@@ -392,16 +392,16 @@ PHP:
   - .php4
   - .php5
 Parrot Internal Representation:
-  :lexer: Text only
-  :search_term: pir
-  :aliases:
+  lexer: Text only
+  search_term: pir
+  aliases:
   - pir
-  :ext:
+  extensions:
   - .pir
   - .pbc
   - .pasm
 Perl:
-  :ext:
+  extensions:
   - .pl
   - .ph
   - .PL
@@ -411,54 +411,54 @@ Perl:
   - .perl
   - .psgi
 Pure Data:
-  :lexer: Text only
-  :ext:
+  lexer: Text only
+  extensions:
   - .pd
 Python:
-  :ext:
+  extensions:
   - .py
   - .pyw
 Python traceback:
-  :search_term: pytb
-  :aliases:
+  search_term: pytb
+  aliases:
   - pytb
-  :ext:
+  extensions:
   - .pytb
 R:
-  :lexer: S
-  :ext:
+  lexer: S
+  extensions:
   - .r
   - .R
 Racket:
-  :lexer: Scheme
-  :ext:
+  lexer: Scheme
+  extensions:
   - .rkt
   - .rktl
   - .rktd
 RHTML:
-  :ext:
+  extensions:
   - .rhtml
 Raw token data:
-  :search_term: raw
-  :aliases:
+  search_term: raw
+  aliases:
   - raw
-  :ext:
+  extensions:
   - .raw
 Rebol:
-  :ext:
+  extensions:
   - .rebol
   - .r2
   - .r3
 Redcode:
-  :ext:
+  extensions:
   - .cw
 Ruby:
-  :aliases:
+  aliases:
   - jruby
   - macruby
   - rake
   - rbx
-  :ext:
+  extensions:
   - .rb
   - .ru
   - .builder
@@ -469,42 +469,42 @@ Ruby:
   - .gemspec
   - .irbrc
   - .thor
-  :filenames:
+  filenames:
   - Capfile
   - Rakefile
   - Thorfile
   - Gemfile
 SQL:
-  :searchable: false
-  :ext:
+  searchable: false
+  extensions:
   - .sql
 Sass:
-  :ext:
+  extensions:
   - .sass
 Scala:
-  :ext:
+  extensions:
   - .scala
 Scheme:
-  :ext:
+  extensions:
   - .sls
   - .ss
   - .sps
   - .scm
 Self:
-  :lexer: Text only
-  :ext:
+  lexer: Text only
+  extensions:
   - .self
 Shell:
-  :lexer: Bash
-  :search_term: bash
-  :aliases:
+  lexer: Bash
+  search_term: bash
+  aliases:
   - sh
   - bash
   - zsh
-  :ext:
+  extensions:
   - .bash
   - .sh
-  :filenames:
+  filenames:
   - .bash_profile
   - .bashrc
   - .profile
@@ -512,68 +512,68 @@ Shell:
   - .zsh
   - .zshrc
 Smalltalk:
-  :ext:
+  extensions:
   - .st
 Smarty:
-  :ext:
+  extensions:
   - .tpl
 SuperCollider:
-  :lexer: Text only
-  :ext:
+  lexer: Text only
+  extensions:
   - .sc
 Tcl:
-  :ext:
+  extensions:
   - .tcl
 Tcsh:
-  :ext:
+  extensions:
   - .tcsh
   - .csh
 TeX:
-  :ext:
+  extensions:
   - .tex
   - .sty
   - .toc
   - .cls
   - .aux
 Text:
-  :lexer: Text only
-  :ext:
+  lexer: Text only
+  extensions:
   - .txt
 Textile:
-  :lexer: Text only
-  :ext:
+  lexer: Text only
+  extensions:
   - .textile
 Vala:
-  :ext:
+  extensions:
   - .vala
 VHDL:
-  :lexer: Text only
-  :ext:
+  lexer: Text only
+  extensions:
   - .vhdl
   - .vhd
 Verilog:
-  :lexer: Text only
-  :ext:
+  lexer: Text only
+  extensions:
   - .v
 VimL:
-  :search_term: vim
-  :aliases:
+  search_term: vim
+  aliases:
   - vim
-  :ext:
+  extensions:
   - .vim
-  :filenames:
+  filenames:
   - .vimrc
   - .gvimrc
 Visual Basic:
-  :lexer: Text only
-  :ext:
+  lexer: Text only
+  extensions:
   - .bas
   - .vbs
   - .frx
   - .vba
   - .vb
 XML:
-  :ext:
+  extensions:
   - .xml
   - .rss
   - .xsl
@@ -584,38 +584,38 @@ XML:
   - .mxml
   - .rdf
 XQuery:
-  :ext:
+  extensions:
   - .xq
   - .xqm
   - .xquery
   - .xqy
 XS:
-  :lexer: c
-  :ext:
+  lexer: c
+  extensions:
   - .xs
 YAML:
-  :ext:
+  extensions:
   - .yml
   - .yaml
-  :filenames:
+  filenames:
   - .gemrc
 Java Server Pages:
-  :lexer: Java Server Page
-  :search_term: jsp
-  :aliases:
+  lexer: Java Server Page
+  search_term: jsp
+  aliases:
   - jsp
-  :ext:
+  extensions:
   - .jsp
 mupad:
-  :ext:
+  extensions:
   - .mu
 ooc:
-  :ext:
+  extensions:
   - .ooc
 reStructuredText:
-  :search_term: rst
-  :aliases:
+  search_term: rst
+  aliases:
   - rst
-  :ext:
+  extensions:
   - .rst
   - .rest
