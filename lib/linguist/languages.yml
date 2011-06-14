@@ -1,4 +1,9 @@
-# Defines all Lanaguges known to GitHub
+# Defines all Languges known to GitHub.
+#
+# All languages have an associated lexer for syntax highlighting. It
+# defaults to name.downcase, which covers most cases. Make sure the
+# lexer exists in lexers.yml. This is a list of available in our
+# version of pygments.
 #
 # lexer       - An explicit lexer String (defaults to name.downcase)
 # aliases     - An Array of additional aliases (implicitly
@@ -7,6 +12,11 @@
 # searchable  - Boolean flag to enable searching (defaults to true)
 # search_term - Deprecated: Some langauges maybe indexed under a
 #               different alias. Avoid defining new exceptions.
+#
+# Any additions or modifications (even trivial) should have corresponding
+# test change in `test/test_language.rb`.
+#
+# Please keep this list alphabetized.
 
 ASP:
   lexer: aspx-vb
