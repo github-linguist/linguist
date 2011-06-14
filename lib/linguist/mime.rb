@@ -2,7 +2,11 @@ require 'mime/types'
 require 'yaml'
 
 # Register additional mime type extensions
+#
+# Follows same format as mime-types data file
+#   https://github.com/halostatue/mime-types/blob/master/lib/mime/types.rb.data
 File.read(File.expand_path("../mimes.yml", __FILE__)).lines.each do |line|
+  # Regexp was cargo culted from mime-types lib
   next unless line =~ %r{^
     #{MIME::Type::MEDIA_TYPE_RE}
     (?:\s@([^\s]+))?
@@ -14,7 +18,9 @@ File.read(File.expand_path("../mimes.yml", __FILE__)).lines.each do |line|
   extensions = $3
   encoding   = $4
 
+  # Lookup existing mime type
   mime_type = MIME::Types["#{mediatype}/#{subtype}"].first ||
+    # Or create a new instance
     MIME::Type.new("#{mediatype}/#{subtype}")
 
   if extensions
@@ -23,8 +29,11 @@ File.read(File.expand_path("../mimes.yml", __FILE__)).lines.each do |line|
     end
   end
 
-  mime_type.encoding = encoding
+  if encoding
+    mime_type.encoding = encoding
+  end
 
+  # Kind of hacky, but we need to reindex the mime type after making changes
   MIME::Types.add_type_variant(mime_type)
   MIME::Types.index_extensions(mime_type)
 end
@@ -51,12 +60,22 @@ module Linguist
 
     # Internal: Determine if extension or mime type is binary.
     #
-    # ext_or_mime_type - A file extension ".txt" or mime type "text/plain".
+    # ext_or_mime_type - A file extension ".exe" or
+    #                    mime type "application/octet-stream".
     #
     # Returns true or false
     def self.binary?(ext_or_mime_type)
       mime_type = lookup_mime_type_for(ext_or_mime_type)
       mime_type ? mime_type.binary? : false
+    end
+
+    # Internal: Determine if extension or mime type is plain text.
+    #
+    # ext_or_mime_type - A file extension ".txt" or mime type "text/plain".
+    #
+    # Returns true or false
+    def self.text?(ext_or_mime_type)
+      !binary?(ext_or_mime_type)
     end
 
     # Internal: Lookup mime type for extension or mime type
