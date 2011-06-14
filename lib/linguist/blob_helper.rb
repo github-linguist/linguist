@@ -124,11 +124,6 @@ module Linguist
       name =~ VendoredRegexp ? true : false
     end
 
-    ################################################################
-    # Below here are methods they may access Blob#data. Consider the
-    # performance implications of loading it.
-    ################################################################
-
     # Public: Get each line of data
     #
     # Requires Blob#data
