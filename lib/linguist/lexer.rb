@@ -23,7 +23,7 @@ module Linguist
       $?.success?
     end
 
-    # Internal: Get all Lexers
+    # Public: Get all Lexers
     #
     # Returns an Array of Lexers
     def self.all

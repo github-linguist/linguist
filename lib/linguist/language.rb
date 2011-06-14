@@ -66,7 +66,7 @@ module Linguist
       language
     end
 
-    # Internal: Get all Languages
+    # Public: Get all Languages
     #
     # Returns an Array of Languages
     def self.all
