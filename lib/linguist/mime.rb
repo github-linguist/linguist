@@ -19,18 +19,7 @@ File.read(File.expand_path("../mimes.yml", __FILE__)).lines.each do |line|
 
   if extensions
     extensions.split(/,/).each do |extension|
-      if extension =~ /^-(\w+)/
-        extension = $1
-        mime_type.extensions.delete(extension)
-
-        MIME::Types.instance_eval do
-          @__types__.instance_eval do
-            @extension_index[extension].delete(mime_type)
-          end
-        end
-      else
-        mime_type.extensions << extension
-      end
+      mime_type.extensions << extension
     end
   end
 
@@ -72,6 +61,8 @@ module Linguist
 
     # Internal: Lookup mime type for extension or mime type
     #
+    # ext_or_mime_type - A file extension ".txt" or mime type "text/plain".
+    #
     # Returns a MIME::Type
     def self.lookup_mime_type_for(ext_or_mime_type)
       ext_or_mime_type ||= ''
@@ -82,7 +73,11 @@ module Linguist
         guesses = ::MIME::Types.type_for(ext_or_mime_type)
       end
 
-      guesses.first
+      # Prefer text mime types over binary
+      guesses.detect { |type| type.ascii? } ||
+
+        # Otherwise use the first guess
+        guesses.first
     end
   end
 end
