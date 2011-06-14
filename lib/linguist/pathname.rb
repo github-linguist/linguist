@@ -1,8 +1,6 @@
 require 'linguist/language'
 require 'linguist/mime'
 
-require 'escape_utils'
-
 module Linguist
   # Similar to ::Pathname, Linguist::Pathname wraps a path string and
   # provides helpful query methods. Its useful when you only have a
