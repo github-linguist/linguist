@@ -1,9 +1,27 @@
 # Additional types to add to MIME::Types
 #
+# MIME types are used to set the Content-Type of raw binary blobs. All text
+# blobs are served as text/plain regardless of their type to ensure they
+# open in the browser rather than downloading.
+#
+# The encoding helps determine whether a file should be treated as plain
+# text or binary. By default, a mime type's encoding is base64 (binary).
+# These types will show a "View Raw" link. To force a type to render as
+# plain text, set it to 8bit for UTF-8. text/* types will be treated as
+# text by default.
+#
 #   <type> @<extensions> :<encoding>
+#
+# type       - mediatype/subtype
+# extensions - comma seperated extension list
+# encoding   - base64 (binary), 7bit (ASCII), 8bit (UTF-8), or
+#              quoted-printable (Printable ASCII).
 #
 # Follows same format as mime-types data file
 #   https://github.com/halostatue/mime-types/blob/master/lib/mime/types.rb.data
+#
+# Any additions or modifications (even trivial) should have corresponding
+# test change in `test/test_mime.rb`.
 
 # TODO: Lookup actual types
 application/octet-stream @a,blend,gem,graffle,ipa,lib,mcz,nib,o,ogv,otf,pfx,pigx,plgx,psd,sib,spl,sqlite3,swc,ucode,xpi
@@ -29,5 +47,5 @@ application/x-wais-source :8bit
 application/xaml+xml @xaml :8bit
 image/x-icns @icns
 text/cache-manifest @manifest
-text/x-nimrod @nim :8bit
+text/x-nimrod @nim
 video/vnd.nokia.interleaved-multimedia @-nim
