@@ -224,6 +224,11 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['Ruby'],        blob("wrong_shebang.rb").language
     assert_equal Language['Text'],        blob("octocat.png").language
 
+    # ML
+    assert_equal Language['OCaml'],       blob("Foo.ml").language
+    assert_equal Language['Standard ML'], blob("Foo.sig").language
+    assert_equal Language['Standard ML'], blob("Foo.sml").language
+
     # Config files
     assert_equal Language['INI'],   blob(".gitconfig").language
     assert_equal Language['Shell'], blob(".bash_profile").language

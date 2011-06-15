@@ -73,6 +73,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['NumPy'], Language['NumPy'].lexer
     assert_equal Lexer['OCaml'], Language['F#'].lexer
     assert_equal Lexer['OCaml'], Language['OCaml'].lexer
+    assert_equal Lexer['OCaml'], Language['Standard ML'].lexer
     assert_equal Lexer['Objective-C'], Language['Objective-C'].lexer
     assert_equal Lexer['Objective-J'], Language['Objective-J'].lexer
     assert_equal Lexer['Ooc'], Language['ooc'].lexer
