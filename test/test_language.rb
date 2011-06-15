@@ -97,7 +97,6 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['Scheme'], Language['Racket'].lexer
     assert_equal Lexer['Scheme'], Language['Scheme'].lexer
     assert_equal Lexer['Smalltalk'], Language['Smalltalk'].lexer
-    assert_equal Lexer['Smalltalk'], Language['SuperCollider'].lexer
     assert_equal Lexer['Smarty'], Language['Smarty'].lexer
     assert_equal Lexer['Tcl'], Language['Tcl'].lexer
     assert_equal Lexer['Tcsh'], Language['Tcsh'].lexer
@@ -122,6 +121,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['Text only'], Language['Parrot Internal Representation'].lexer
     assert_equal Lexer['Text only'], Language['Pure Data'].lexer
     assert_equal Lexer['Text only'], Language['Self'].lexer
+    assert_equal Lexer['Text only'], Language['SuperCollider'].lexer
     assert_equal Lexer['Text only'], Language['Textile'].lexer
     assert_equal Lexer['Text only'], Language['VHDL'].lexer
     assert_equal Lexer['Text only'], Language['Verilog'].lexer
