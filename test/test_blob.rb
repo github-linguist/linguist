@@ -245,6 +245,10 @@ class TestBlob < Test::Unit::TestCase
 
     # https://github.com/Araq/Nimrod/tree/master/examples
     assert_equal Language['Nimrod'], blob("foo.nim").language
+
+    # http://supercollider.sourceforge.net/
+    # https://github.com/drichert/BCR2000.sc/blob/master/BCR2000.sc
+    assert_equal Language['SuperCollider'], blob("BCR2000.sc").language
   end
 
   def test_lexer
