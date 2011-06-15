@@ -211,6 +211,7 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['C++'],         blob("bar.h").language
     assert_equal Language['C++'],         blob("bar.hpp").language
     assert_equal Language['C++'],         blob("hello.cpp").language
+    assert_equal Language['C++'],         blob("cuda.cu").language
     assert_equal Language['GAS'],         blob("hello.s").language
     assert_equal Language['Objective-C'], blob("Foo.h").language
     assert_equal Language['Objective-C'], blob("Foo.m").language

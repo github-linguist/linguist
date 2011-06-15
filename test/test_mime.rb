@@ -46,6 +46,14 @@ class TestMime < Test::Unit::TestCase
     assert_equal 'text/cache-manifest', Mime.mime_for('.manifest')
     assert_equal 'text/html', Mime.mime_for('.html')
     assert_equal 'text/nimrod', Mime.mime_for('.nim')
+    assert_equal 'text/plain', Mime.mime_for('.c')
+    assert_equal 'text/plain', Mime.mime_for('.cc')
+    assert_equal 'text/plain', Mime.mime_for('.cpp')
+    assert_equal 'text/plain', Mime.mime_for('.cu')
+    assert_equal 'text/plain', Mime.mime_for('.cxx')
+    assert_equal 'text/plain', Mime.mime_for('.h')
+    assert_equal 'text/plain', Mime.mime_for('.hh')
+    assert_equal 'text/plain', Mime.mime_for('.hpp')
     assert_equal 'text/plain', Mime.mime_for('.kt')
     assert_equal 'video/quicktime', Mime.mime_for('.mov')
   end
@@ -141,6 +149,7 @@ class TestMime < Test::Unit::TestCase
     assert Mime.text?('text/x-nimrod')
 
     # Legacy. Prefer testing mime types instead of extensions.
+    assert Mime.text?('.cu')
     assert Mime.text?('.js')
     assert Mime.text?('.latex')
     assert Mime.text?('.ms')
