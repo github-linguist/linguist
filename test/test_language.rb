@@ -177,6 +177,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['Python traceback'], Language.find_by_alias('pytb')
     assert_equal Language['Python'], Language.find_by_alias('python')
     assert_equal Language['Raw token data'], Language.find_by_alias('raw')
+    assert_equal Language['Ruby'], Language.find_by_alias('rb')
     assert_equal Language['Ruby'], Language.find_by_alias('ruby')
     assert_equal Language['Scheme'], Language.find_by_alias('scheme')
     assert_equal Language['Shell'], Language.find_by_alias('bash')
