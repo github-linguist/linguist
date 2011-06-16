@@ -65,6 +65,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['Makefile'], Language['Makefile'].lexer
     assert_equal Lexer['Mako'], Language['Mako'].lexer
     assert_equal Lexer['Matlab'], Language['Matlab'].lexer
+    assert_equal Lexer['MiniD'], Language['MiniD'].lexer
     assert_equal Lexer['Moocode'], Language['Moocode'].lexer
     assert_equal Lexer['MuPAD'], Language['mupad'].lexer
     assert_equal Lexer['Myghty'], Language['Myghty'].lexer
@@ -168,6 +169,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['Makefile'], Language.find_by_alias('makefile')
     assert_equal Language['Markdown'], Language.find_by_alias('markdown')
     assert_equal Language['Max/MSP'], Language.find_by_alias('max/msp')
+    assert_equal Language['MiniD'], Language.find_by_alias('minid')
     assert_equal Language['Nu'], Language.find_by_alias('nu')
     assert_equal Language['OCaml'], Language.find_by_alias('ocaml')
     assert_equal Language['PHP'], Language.find_by_alias('php')
