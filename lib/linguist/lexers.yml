@@ -132,6 +132,14 @@
   - text/x-scheme
   - application/x-scheme
 - !ruby/struct:Linguist::Lexer
+  name: Nemerle
+  aliases:
+  - nemerle
+  filenames:
+  - *.n
+  mimetypes:
+  - text/x-nemerle
+- !ruby/struct:Linguist::Lexer
   name: CoffeeScript
   aliases:
   - coffee-script
@@ -196,6 +204,14 @@
   filenames:
   mimetypes:
   - application/xml+smarty
+- !ruby/struct:Linguist::Lexer
+  name: Groovy
+  aliases:
+  - groovy
+  filenames:
+  - *.groovy
+  mimetypes:
+  - text/x-groovy
 - !ruby/struct:Linguist::Lexer
   name: autohotkey
   aliases:
@@ -298,9 +314,9 @@
   filenames:
   - *.as
   mimetypes:
-  - application/x-actionscript
-  - text/x-actionscript
-  - text/actionscript
+  - application/x-actionscript3
+  - text/x-actionscript3
+  - text/actionscript3
 - !ruby/struct:Linguist::Lexer
   name: VB.net
   aliases:
@@ -555,8 +571,6 @@
   - image/svg+xml
   - application/rss+xml
   - application/atom+xml
-  - application/xsl+xml
-  - application/xslt+xml
 - !ruby/struct:Linguist::Lexer
   name: Groff
   aliases:
@@ -1151,6 +1165,7 @@
   filenames:
   - *.c
   - *.h
+  - *.idc
   mimetypes:
   - text/x-chdr
   - text/x-csrc
@@ -1273,11 +1288,6 @@
   - *.xsl
   - *.xslt
   mimetypes:
-  - text/xml
-  - application/xml
-  - image/svg+xml
-  - application/rss+xml
-  - application/atom+xml
   - application/xsl+xml
   - application/xslt+xml
 - !ruby/struct:Linguist::Lexer
@@ -1497,6 +1507,12 @@
   - text/x-javascript+ruby
   - text/javascript+ruby
 - !ruby/struct:Linguist::Lexer
+  name: Base Makefile
+  aliases:
+  - basemake
+  filenames:
+  mimetypes:
+- !ruby/struct:Linguist::Lexer
   name: ANTLR With Python Target
   aliases:
   - antlr-python
@@ -1652,6 +1668,15 @@
   mimetypes:
   - text/x-duel
   - text/x-jbst
+- !ruby/struct:Linguist::Lexer
+  name: FSharp
+  aliases:
+  - fsharp
+  filenames:
+  - *.fs
+  - *.fsi
+  mimetypes:
+  - text/x-fsharp
 - !ruby/struct:Linguist::Lexer
   name: MOOCode
   aliases:
