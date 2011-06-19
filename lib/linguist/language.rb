@@ -192,7 +192,6 @@ module Linguist
       @search_term = attributes[:search_term] || default_alias_name
 
       # Set extensions or default to [].
-      # Consider using `@lexer.extensions`
       @extensions = attributes[:extensions] || []
       @filenames  = attributes[:filenames]  || []
 
