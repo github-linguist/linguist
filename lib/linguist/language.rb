@@ -135,8 +135,6 @@ module Linguist
     #
     # name - The String name of the Language
     #
-    # TODO: Consider returning nil instead of Text
-    #
     # Examples
     #
     #   Language['Ruby']
@@ -145,9 +143,9 @@ module Linguist
     #   Language['ruby']
     #   # => #<Language name="Ruby">
     #
-    # Returns the Language or Text if none was found.
+    # Returns the Language or nil if none was found.
     def self.[](name)
-      @index[name] || self['Text']
+      @index[name]
     end
 
     # Public: A List of popular languages

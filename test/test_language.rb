@@ -320,7 +320,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal 'C#', Language['C#'].name
     assert_equal 'C#', Language['c#'].name
     assert_equal 'C#', Language['csharp'].name
-    assert_equal 'Text', Language['defunkt'].name
+    assert_nil Language['defunkt']
   end
 
   def test_name
