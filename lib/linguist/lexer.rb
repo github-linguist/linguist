@@ -9,9 +9,10 @@ module Linguist
   # filenames - Filename globs (*.js)
   # mimetypes - Mime types (application/javascript)
   class Lexer < Struct.new(:name, :aliases, :filenames, :mimetypes)
-    @lexers      = []
-    @name_index  = {}
-    @alias_index = {}
+    @lexers          = []
+    @name_index      = {}
+    @alias_index     = {}
+    @mimetypes_index = {}
 
     # Internal: Test if system has Pygments
     #
@@ -56,6 +57,20 @@ module Linguist
     # Returns the Lexer or nil if none was found.
     def self.find_by_alias(name)
       @alias_index[name]
+    end
+
+    # Public: Look up Lexer by one of it's mime types.
+    #
+    # type - A mime type String.
+    #
+    # Examples
+    #
+    #  Lexer.find_by_mimetype('application/x-ruby')
+    #  # => #<Lexer name="Ruby">
+    #
+    # Returns the Lexer or nil if none was found.
+    def self.find_by_mimetype(type)
+      @mimetypes_index[type]
     end
 
     # Public: Look up Lexer by name or alias.
@@ -131,6 +146,15 @@ module Linguist
         end
 
         @alias_index[name] = lexer
+      end
+
+      lexer.mimetypes.each do |type|
+        # All Lexer mimetypes should be unique. Warn if there is a duplicate.
+        if @mimetypes_index.key?(name)
+          warn "Duplicate mimetype: #{name}"
+        end
+
+        @mimetypes_index[type] = lexer
       end
     end
   end

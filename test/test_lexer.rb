@@ -32,6 +32,19 @@ class TestLexer < Test::Unit::TestCase
     end
   end
 
+  def test_find_by_mimetype
+    assert_equal Lexer['Ruby'], Lexer.find_by_mimetype('text/x-ruby')
+    assert_equal Lexer['Ruby'], Lexer.find_by_mimetype('application/x-ruby')
+  end
+
+  def test_find_all_by_mimetype
+    Lexer.all.each do |lexer|
+      lexer.mimetypes.each do |type|
+        assert_equal lexer, Lexer.find_by_mimetype(type)
+      end
+    end
+  end
+
   def test_name
     assert_equal 'Ruby',   Lexer['Ruby'].name
     assert_equal 'Python', Lexer['Python'].name
