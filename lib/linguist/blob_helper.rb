@@ -256,7 +256,7 @@ module Linguist
           language
 
         # See if there is a Language for the extension
-        elsif language = Language.find_by_filename(pathname.to_s)
+        elsif language = pathname.language
           language
 
         # Try to detect Language from shebang line

@@ -24,7 +24,7 @@ class TestPathname < Test::Unit::TestCase
   end
 
   def test_language
-    assert_equal Language['Text'], Pathname.new(".rb").language
+    assert_nil Pathname.new(".rb").language
 
     assert_equal Language['Ruby'], Pathname.new("file.rb").language
     assert_equal Language['Ruby'], Pathname.new("./file.rb").language
@@ -37,7 +37,8 @@ class TestPathname < Test::Unit::TestCase
     assert_equal Language['Gentoo Ebuild'], Pathname.new("file.ebuild").language
     assert_equal Language['Python'], Pathname.new("itty.py").language
     assert_equal Language['Nu'], Pathname.new("itty.nu").language
-    assert_equal Language['Text'], Pathname.new("defun.kt").language
+
+    assert_nil Pathname.new("defun.kt").language
   end
 
   def test_lexer

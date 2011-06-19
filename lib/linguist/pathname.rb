@@ -52,25 +52,16 @@ module Linguist
     #   Pathname.new('file.rb').language
     #   # => Language['Ruby']
     #
-    # Returns a Langauge.
+    # Returns a Langauge or nil if none was found.
     def language
-      Language.find_by_filename(@path) || Language['Text']
+      @language ||= Language.find_by_filename(@path)
     end
 
-    # Internal: Has a language.
-    #
-    # Will return false if language was guessed to be Text.
-    #
-    # Returns true or false.
-    def language?
-      Language.find_by_filename(@path) ? true : false
-    end
-
-    # Deprecated: Get the lexer of the path
+    # Internal: Get the lexer of the path
     #
     # Returns a Lexer.
     def lexer
-      language.lexer
+      language ? language.lexer : Lexer['Text only']
     end
 
     # Public: Get the mime type
