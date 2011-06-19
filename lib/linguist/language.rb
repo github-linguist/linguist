@@ -9,6 +9,7 @@ module Linguist
   # Langages are defined in `lib/linguist/langages.yml`.
   class Language
     @languages       = []
+    @index           = {}
     @name_index      = {}
     @alias_index     = {}
     @extension_index = {}
@@ -30,7 +31,7 @@ module Linguist
       end
 
       # Language name index
-      @name_index[language.name] = language
+      @index[language.name] = @name_index[language.name] = language
 
       language.aliases.each do |name|
         # All Language aliases should be unique. Warn if there is a duplicate.
@@ -38,7 +39,7 @@ module Linguist
           warn "Duplicate alias: #{name}"
         end
 
-        @alias_index[name] = language
+        @index[name] = @alias_index[name] = language
       end
 
       language.extensions.each do |extension|
@@ -134,6 +135,8 @@ module Linguist
     #
     # name - The String name of the Language
     #
+    # TODO: Consider returning nil instead of Text
+    #
     # Examples
     #
     #   Language['Ruby']
@@ -142,9 +145,9 @@ module Linguist
     #   Language['ruby']
     #   # => #<Language name="Ruby">
     #
-    # Returns the Language or nil if none was found.
+    # Returns the Language or Text if none was found.
     def self.[](name)
-      find_by_name(name) || find_by_alias(name) || self['Text']
+      @index[name] || self['Text']
     end
 
     # Public: A List of popular languages
