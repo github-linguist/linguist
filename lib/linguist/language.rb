@@ -25,12 +25,12 @@ module Linguist
       @languages << language
 
       # All Language names should be unique. Warn if there is a duplicate.
-      if @name_index.key?(language.name.downcase)
+      if @name_index.key?(language.name)
         warn "Duplicate language name: #{language.name}"
       end
 
-      # Case-insensitive language name index
-      @name_index[language.name.downcase] = language
+      # Language name index
+      @name_index[language.name] = language
 
       language.aliases.each do |name|
         # All Language aliases should be unique. Warn if there is a duplicate.
@@ -75,7 +75,7 @@ module Linguist
 
     # Public: Look up Language by its proper name.
     #
-    # name - The case-insensitive String name of the Language
+    # name - The String name of the Language
     #
     # Examples
     #
@@ -84,12 +84,12 @@ module Linguist
     #
     # Returns the Language or nil if none was found.
     def self.find_by_name(name)
-      @name_index[name.downcase]
+      @name_index[name]
     end
 
     # Public: Look up Language by one of its aliases.
     #
-    # name - A case-sensitive String alias of the Language
+    # name - A String alias of the Language
     #
     # Examples
     #
@@ -98,7 +98,7 @@ module Linguist
     #
     # Returns the Lexer or nil if none was found.
     def self.find_by_alias(name)
-      @alias_index[name.downcase]
+      @alias_index[name]
     end
 
     # Public: Look up Language by extension.
@@ -132,7 +132,7 @@ module Linguist
 
     # Public: Look up Language by its name or lexer.
     #
-    # name - The case-insensitive String name of the Language
+    # name - The String name of the Language
     #
     # Examples
     #

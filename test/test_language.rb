@@ -262,8 +262,6 @@ class TestLanguage < Test::Unit::TestCase
   def test_find_by_name
     ruby = Language['Ruby']
     assert_equal ruby, Language.find_by_name('Ruby')
-    assert_equal ruby, Language.find_by_name('ruby')
-    assert_equal ruby, Language.find_by_name('RUBY')
   end
 
   def test_find_all_by_name
@@ -316,14 +314,12 @@ class TestLanguage < Test::Unit::TestCase
   def test_find
     assert_equal 'Ruby', Language['Ruby'].name
     assert_equal 'Ruby', Language['ruby'].name
-    assert_equal 'Ruby', Language['RUBY'].name
     assert_equal 'C++', Language['C++'].name
     assert_equal 'C++', Language['c++'].name
     assert_equal 'C++', Language['cpp'].name
     assert_equal 'C#', Language['C#'].name
     assert_equal 'C#', Language['c#'].name
     assert_equal 'C#', Language['csharp'].name
-    assert_equal 'C#', Language['CSHARP'].name
     assert_equal 'Text', Language['defunkt'].name
   end
 
