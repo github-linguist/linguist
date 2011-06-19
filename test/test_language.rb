@@ -27,11 +27,11 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['CSS'], Language['CSS'].lexer
     assert_equal Lexer['Clojure'], Language['Clojure'].lexer
     assert_equal Lexer['CoffeeScript'], Language['CoffeeScript'].lexer
-    assert_equal Lexer['ColdFusion HTML'], Language['ColdFusion'].lexer
+    assert_equal Lexer['Coldfusion HTML'], Language['ColdFusion'].lexer
     assert_equal Lexer['Common Lisp'], Language['Common Lisp'].lexer
     assert_equal Lexer['Cython'], Language['Cython'].lexer
     assert_equal Lexer['D'], Language['D'].lexer
-    assert_equal Lexer['D-ObjDump'], Language['d-objdump'].lexer
+    assert_equal Lexer['d-objdump'], Language['d-objdump'].lexer
     assert_equal Lexer['Darcs Patch'], Language['Darcs Patch'].lexer
     assert_equal Lexer['Delphi'], Language['Delphi'].lexer
     assert_equal Lexer['Diff'], Language['Diff'].lexer
@@ -66,7 +66,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['Mako'], Language['Mako'].lexer
     assert_equal Lexer['Matlab'], Language['Matlab'].lexer
     assert_equal Lexer['MiniD'], Language['MiniD'].lexer
-    assert_equal Lexer['Moocode'], Language['Moocode'].lexer
+    assert_equal Lexer['MOOCode'], Language['Moocode'].lexer
     assert_equal Lexer['MuPAD'], Language['mupad'].lexer
     assert_equal Lexer['Myghty'], Language['Myghty'].lexer
     assert_equal Lexer['NASM'], Language['Assembly'].lexer

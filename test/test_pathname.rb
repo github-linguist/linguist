@@ -46,7 +46,7 @@ class TestPathname < Test::Unit::TestCase
     assert_equal Lexer['Bash'],      Pathname.new("file.ebuild").lexer
     assert_equal Lexer['Python'],    Pathname.new("itty.py").lexer
     assert_equal Lexer['Scheme'],    Pathname.new("itty.nu").lexer
-    assert_equal Lexer['Text Only'], Pathname.new("defun.kt").lexer
+    assert_equal Lexer['Text only'], Pathname.new("defun.kt").lexer
   end
 
   def test_mime_type

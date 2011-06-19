@@ -57,7 +57,7 @@ Arc:
   - .arc
 
 Assembly:
-  lexer: nasm
+  lexer: NASM
   search_term: nasm
   aliases:
   - nasm
@@ -117,6 +117,7 @@ C++:
   - .tcc
 
 C-ObjDump:
+  lexer: c-objdump
   extensions:
   - .c-objdump
 
@@ -125,7 +126,7 @@ CSS:
   - .css
 
 ChucK:
-  lexer: java
+  lexer: Java
   extensions:
   - .ck
 
@@ -140,7 +141,7 @@ CoffeeScript:
   - Cakefile
 
 ColdFusion:
-  lexer: ColdFusion HTML
+  lexer: Coldfusion HTML
   search_term: cfm
   aliases:
   - cfm
@@ -156,6 +157,7 @@ Common Lisp:
   - .ny
 
 Cpp-ObjDump:
+  lexer: cpp-objdump
   extensions:
   - .cppobjdump
   - .c++objdump
@@ -178,6 +180,7 @@ D:
   - .di
 
 D-ObjDump:
+  lexer: d-objdump
   extensions:
   - .d-objdump
 
@@ -221,7 +224,7 @@ Erlang:
   - .erl
 
 F#:
-  lexer: ocaml
+  lexer: OCaml
   search_term: ocaml
   extensions:
   - .fs
@@ -229,6 +232,7 @@ F#:
   - .fsx
 
 FORTRAN:
+  lexer: Fortran
   extensions:
   - .f
   - .f90
@@ -249,12 +253,12 @@ Genshi:
   - .kid
 
 Gentoo Ebuild:
-  lexer: bash
+  lexer: Bash
   extensions:
   - .ebuild
 
 Gentoo Eclass:
-  lexer: bash
+  lexer: Bash
   extensions:
   - .eclass
 
@@ -283,7 +287,7 @@ Groff:
   - .7
 
 Groovy:
-  lexer: java
+  lexer: Java
   extensions:
   - .groovy
 
@@ -346,7 +350,7 @@ Io:
   - .io
 
 JSON:
-  lexer: javascript
+  lexer: JavaScript
   search_term: javascript
   extensions:
   - .json
@@ -434,6 +438,7 @@ Mirah:
   - .mirah
 
 Moocode:
+  lexer: MOOCode
   extensions:
   - .moo
 
@@ -446,7 +451,7 @@ Nimrod:
   - .nim
 
 Nu:
-  lexer: scheme
+  lexer: Scheme
   aliases:
   - nush
   extensions:
@@ -468,6 +473,7 @@ OCaml:
   - .mll
 
 ObjDump:
+  lexer: objdump
   extensions:
   - .objdump
 
@@ -526,6 +532,7 @@ Python:
   - .pyw
 
 Python traceback:
+  lexer: Python Traceback
   search_term: pytb
   aliases:
   - pytb
@@ -557,6 +564,7 @@ Raw token data:
   - .raw
 
 Rebol:
+  lexer: REBOL
   extensions:
   - .rebol
   - .r2
@@ -735,7 +743,7 @@ XQuery:
   - .xqy
 
 XS:
-  lexer: c
+  lexer: C
   extensions:
   - .xs
 
@@ -747,10 +755,12 @@ YAML:
   - .gemrc
 
 mupad:
+  lexer: MuPAD
   extensions:
   - .mu
 
 ooc:
+  lexer: Ooc
   extensions:
   - .ooc
 
