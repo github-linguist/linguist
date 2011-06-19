@@ -33,7 +33,7 @@ module Linguist
 
     # Public: Look up Lexer by its proper name.
     #
-    # name - The case-insensitive String name of the Lexer
+    # name - The String name of the Lexer
     #
     # Examples
     #
@@ -42,12 +42,12 @@ module Linguist
     #
     # Returns the Lexer or nil if none was found.
     def self.find_by_name(name)
-      @name_index[name.downcase]
+      @name_index[name]
     end
 
     # Public: Look up Lexer by one of its aliases.
     #
-    # name - A case-sensitive String alias of the Lexer
+    # name - A String alias of the Lexer
     #
     # Examples
     #
@@ -75,7 +75,7 @@ module Linguist
 
     # Public: Look up Lexer by name or alias.
     #
-    # name - A case-insensitive String name or alias
+    # name - A String name or alias
     #
     #   Lexer['Ruby']
     #   => #<Lexer name="Ruby">
@@ -133,11 +133,11 @@ module Linguist
       @lexers << lexer
 
       # All Lexer names should be unique. Warn if there is a duplicate.
-      if @name_index.key?(lexer.name.downcase)
+      if @name_index.key?(lexer.name)
         warn "Duplicate lexer name: #{lexer.name}"
       end
 
-      @name_index[lexer.name.downcase] = lexer
+      @name_index[lexer.name] = lexer
 
       lexer.aliases.each do |name|
         # All Lexer aliases should be unique. Warn if there is a duplicate.

@@ -7,8 +7,6 @@ class TestLexer < Test::Unit::TestCase
 
   def test_find_by_name
     assert_equal Lexer['Ruby'], Lexer.find_by_name('Ruby')
-    assert_equal Lexer['Ruby'], Lexer.find_by_name('ruby')
-    assert_equal Lexer['Ruby'], Lexer.find_by_name('RUBY')
   end
 
   def test_find_all_by_name
