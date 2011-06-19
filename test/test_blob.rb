@@ -222,7 +222,7 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['Ruby'],        blob("foo.rb").language
     assert_equal Language['Ruby'],        blob("script.rb").language
     assert_equal Language['Ruby'],        blob("wrong_shebang.rb").language
-    assert_equal Language['Text'],        blob("octocat.png").language
+    assert_nil blob("octocat.png").language
 
     # ML
     assert_equal Language['OCaml'],       blob("Foo.ml").language
@@ -240,7 +240,7 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['VimL'],  blob(".vimrc").language
     assert_equal Language['YAML'],  blob(".gemrc").language
 
-    assert_equal Language['Text'], blob("README").language
+    assert_nil blob("README").language
 
     # https://github.com/xquery/xprocxq/blob/master/src/xquery/xproc.xqm
     assert_equal Language['XQuery'], blob("xproc.xqm").language

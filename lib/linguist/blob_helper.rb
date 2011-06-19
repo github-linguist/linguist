@@ -222,9 +222,9 @@ module Linguist
     #
     # Return true or false
     def indexable?
-      if !text?
+      if binary?
         false
-      elsif !language?
+      elsif language.nil?
         false
       elsif !language.searchable?
         false
@@ -241,50 +241,36 @@ module Linguist
     #
     # May load Blob#data
     #
-    # Returns a Language object
+    # Returns a Language or nil if none is detected
     def language
-      guess_language || Language['Text']
+      if defined? @language
+        @language
+      else
+        @language = guess_language
+      end
     end
 
     # Internal: Guess language
     #
     # Returns a Language or nil
     def guess_language
-      if text?
-        # If its a header file (.h) try to guess the language
-        if language = header_language
-          language
+      return if binary?
+
+      # If its a header file (.h) try to guess the language
+      header_language ||
 
         # See if there is a Language for the extension
-        elsif language = pathname.language
-          language
+        pathname.language ||
 
         # Try to detect Language from shebang line
-        elsif language = shebang_language
-          language
-
-        else
-          nil
-        end
-      else
-        nil
-      end
+        shebang_language
     end
 
-    # Internal: Has a language.
-    #
-    # Will return false if language was guessed to be Text.
-    #
-    # Returns true or false.
-    def language?
-      guess_language ? true : false
-    end
-
-    # Deprecated: Get the lexer of the blob.
+    # Internal: Get the lexer of the blob.
     #
     # Returns a Lexer.
     def lexer
-      language.lexer
+      language ? language.lexer : Lexer['Text only']
     end
 
     # Internal: Guess language of header files (.h).
@@ -350,8 +336,7 @@ module Linguist
     # Returns the Language or nil
     def shebang_language
       if script = shebang_script
-        lang = Language[script]
-        lang != Language['Text'] ? lang : nil
+        Language[script]
       end
     end
 
