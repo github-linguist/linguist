@@ -10,6 +10,7 @@ module Linguist
   # mimetypes - Mime types (application/javascript)
   class Lexer < Struct.new(:name, :aliases, :filenames, :mimetypes)
     @lexers          = []
+    @index           = {}
     @name_index      = {}
     @alias_index     = {}
     @mimetypes_index = {}
@@ -29,6 +30,18 @@ module Linguist
     # Returns an Array of Lexers
     def self.all
       @lexers
+    end
+
+    # Public: Look up Lexer by name or alias.
+    #
+    # name - A String name or alias
+    #
+    #   Lexer['Ruby']
+    #   => #<Lexer name="Ruby">
+    #
+    # Returns the Lexer or nil if none was found.
+    def self.[](name)
+      @index[name]
     end
 
     # Public: Look up Lexer by its proper name.
@@ -71,18 +84,6 @@ module Linguist
     # Returns the Lexer or nil if none was found.
     def self.find_by_mimetype(type)
       @mimetypes_index[type]
-    end
-
-    # Public: Look up Lexer by name or alias.
-    #
-    # name - A String name or alias
-    #
-    #   Lexer['Ruby']
-    #   => #<Lexer name="Ruby">
-    #
-    # Returns the Lexer or nil if none was found.
-    def self.[](name)
-      find_by_name(name) || find_by_alias(name)
     end
 
     # Public: Return a alias of the Lexer to pass to Pygments.
@@ -137,7 +138,7 @@ module Linguist
         warn "Duplicate lexer name: #{lexer.name}"
       end
 
-      @name_index[lexer.name] = lexer
+      @index[lexer.name] = @name_index[lexer.name] = lexer
 
       lexer.aliases.each do |name|
         # All Lexer aliases should be unique. Warn if there is a duplicate.
@@ -145,7 +146,7 @@ module Linguist
           warn "Duplicate alias: #{name}"
         end
 
-        @alias_index[name] = lexer
+        @index[name] = @alias_index[name] = lexer
       end
 
       lexer.mimetypes.each do |type|
