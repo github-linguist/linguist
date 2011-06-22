@@ -86,12 +86,13 @@ module Linguist
 
       @paths.each do |path, blob|
         # Skip vendored or generated blobs
-        next if blob.vendored? || blob.generated?
+        next if blob.vendored? || blob.generated? || blob.language.nil?
 
-        language = blob.language
+        # Get langauge group
+        language = blob.language.group
 
-        # Only include major langauges
-        if language && language.major?
+        # Only include major languages
+        if language.major?
           @sizes[language] += blob.size
         end
       end
