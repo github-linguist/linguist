@@ -90,8 +90,8 @@ module Linguist
 
         language = blob.language
 
-        # Only include common langauges
-        if language && language.common?
+        # Only include major langauges
+        if language && language.major?
           @sizes[language] += blob.size
         end
       end

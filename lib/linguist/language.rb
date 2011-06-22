@@ -193,14 +193,14 @@ module Linguist
       @extensions = attributes[:extensions] || []
       @filenames  = attributes[:filenames]  || []
 
-      # Set popular, common, and searchable flags
+      # Set popular, major, and searchable flags
       @popular    = attributes.key?(:popular)    ? attributes[:popular]    : false
-      @common     = attributes.key?(:common)     ? attributes[:common]     : false
+      @major      = attributes.key?(:major)     ? attributes[:major]     : false
       @searchable = attributes.key?(:searchable) ? attributes[:searchable] : true
 
       # If group name is set, save the name so we can lazy load it later
       if attributes[:group_name]
-        if common?
+        if major?
           warn "#{name} is a major langauage, it should not be grouped with #{attributes[:group_name]}"
         end
 
@@ -303,11 +303,24 @@ module Linguist
       !popular?
     end
 
-    # Public: Is it common?
+    # Public: Is it major language?
+    #
+    # Major languages should be actual programming
+    # languages. Configuration formats should be excluded.
     #
     # Returns true or false
-    def common?
-      @common
+    def major?
+      @major
+    end
+
+    # Public: Is it a minor language?
+    #
+    # Minor langauage include variants of major languages and
+    # markup languages like HTML and YAML.
+    #
+    # Returns true or false
+    def minor?
+      !major?
     end
 
     # Public: Is it searchable?
@@ -358,7 +371,6 @@ module Linguist
   end
 
   popular = YAML.load_file(File.expand_path("../popular.yml", __FILE__))
-  common  = YAML.load_file(File.expand_path("../common.yml", __FILE__))
 
   YAML.load_file(File.expand_path("../languages.yml", __FILE__)).each do |name, options|
     Language.create(
@@ -370,8 +382,8 @@ module Linguist
       :search_term => options['search_term'],
       :extensions  => options['extensions'],
       :filenames   => options['filenames'],
-      :popular     => popular.include?(name),
-      :common      => common.include?(name)
+      :major       => options['major'],
+      :popular     => popular.include?(name)
     )
   end
 end

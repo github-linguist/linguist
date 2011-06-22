@@ -9,6 +9,7 @@
 # aliases     - An Array of additional aliases (implicitly
 #               includes name.downcase)
 # extension   - An Array of associated extensions
+# major       - Boolean flag major programming languages
 # searchable  - Boolean flag to enable searching (defaults to true)
 # search_term - Deprecated: Some langauges maybe indexed under a
 #               different alias. Avoid defining new exceptions.
@@ -19,6 +20,7 @@
 # Please keep this list alphabetized.
 
 ASP:
+  major: true
   lexer: aspx-vb
   search_term: aspx-vb
   aliases:
@@ -34,6 +36,7 @@ ASP:
   - .asp
 
 ActionScript:
+  major: true
   lexer: ActionScript 3
   search_term: as3
   aliases:
@@ -42,6 +45,7 @@ ActionScript:
   - .as
 
 Ada:
+  major: true
   extensions:
   - .adb
   - .ads
@@ -52,11 +56,13 @@ AppleScript:
   - .applescript
 
 Arc:
+  major: true
   lexer: Text only
   extensions:
   - .arc
 
 Assembly:
+  major: true
   lexer: NASM
   search_term: nasm
   aliases:
@@ -82,6 +88,7 @@ BlitzMax:
   - .bmx
 
 Boo:
+  major: true
   extensions:
   - .boo
 
@@ -91,11 +98,13 @@ Brainfuck:
   - .bf
 
 C:
+  major: true
   extensions:
   - .c
   - .h
 
 C#:
+  major: true
   search_term: csharp
   aliases:
   - csharp
@@ -103,6 +112,7 @@ C#:
   - .cs
 
 C++:
+  major: true
   search_term: cpp
   aliases:
   - cpp
@@ -133,16 +143,19 @@ ChucK:
   - .ck
 
 Clojure:
+  major: true
   extensions:
   - .clj
 
 CoffeeScript:
+  major: true
   extensions:
   - .coffee
   filenames:
   - Cakefile
 
 ColdFusion:
+  major: true
   lexer: Coldfusion HTML
   search_term: cfm
   aliases:
@@ -152,6 +165,7 @@ ColdFusion:
   - .cfc
 
 Common Lisp:
+  major: true
   aliases:
   - lisp
   extensions:
@@ -178,6 +192,7 @@ Cython:
   - .pxi
 
 D:
+  major: true
   extensions:
   - .d
   - .di
@@ -196,6 +211,7 @@ Darcs Patch:
   - .dpatch
 
 Delphi:
+  major: true
   extensions:
   - .pas
 
@@ -205,15 +221,18 @@ Diff:
   - .patch
 
 Dylan:
+  major: true
   extensions:
   - .dylan
 
 Eiffel:
+  major: true
   lexer: Text only
   extensions:
   - .e
 
 Emacs Lisp:
+  major: true
   lexer: Scheme
   aliases:
   - elisp
@@ -222,11 +241,13 @@ Emacs Lisp:
   - .emacs
 
 Erlang:
+  major: true
   extensions:
   - .hrl
   - .erl
 
 F#:
+  major: true
   lexer: OCaml
   search_term: ocaml
   extensions:
@@ -235,6 +256,7 @@ F#:
   - .fsx
 
 FORTRAN:
+  major: true
   lexer: Fortran
   extensions:
   - .f
@@ -243,6 +265,7 @@ FORTRAN:
   - .F90
 
 Factor:
+  major: true
   extensions:
   - .factor
 
@@ -278,6 +301,7 @@ Gettext Catalog:
   - .pot
 
 Go:
+  major: true
   extensions:
   - .go
 
@@ -293,6 +317,7 @@ Groff:
   - .7
 
 Groovy:
+  major: true
   lexer: Java
   extensions:
   - .groovy
@@ -323,6 +348,7 @@ HTML+PHP:
   - .phtml
 
 HaXe:
+  major: true
   lexer: haXe
   extensions:
   - .hx
@@ -334,6 +360,7 @@ Haml:
   - .haml
 
 Haskell:
+  major: true
   extensions:
   - .hs
   - .hsc
@@ -355,6 +382,7 @@ IRC log:
   - .weechatlog
 
 Io:
+  major: true
   extensions:
   - .io
 
@@ -366,6 +394,7 @@ JSON:
   - .json
 
 Java:
+  major: true
   extensions:
   - .java
   - .pde
@@ -380,6 +409,7 @@ Java Server Pages:
   - .jsp
 
 JavaScript:
+  major: true
   aliases:
   - js
   - node
@@ -406,6 +436,7 @@ Literate Haskell:
   - .lhs
 
 Lua:
+  major: true
   extensions:
   - .lua
   - .nse
@@ -434,6 +465,7 @@ Matlab:
   - .matlab
 
 Max/MSP:
+  major: true
   lexer: Text only
   extensions:
   - .mxt
@@ -442,6 +474,7 @@ MiniD: # Legacy
   searchable: false
 
 Mirah:
+  major: true
   lexer: Ruby
   search_term: ruby
   extensions:
@@ -463,6 +496,7 @@ Nimrod:
   - .nim
 
 Nu:
+  major: true
   lexer: Scheme
   aliases:
   - nush
@@ -479,6 +513,7 @@ NumPy:
   - .numpyw
 
 OCaml:
+  major: true
   extensions:
   - .ml
   - .mly
@@ -491,11 +526,13 @@ ObjDump:
   - .objdump
 
 Objective-C:
+  major: true
   extensions:
   - .m
   - .mm
 
 Objective-J:
+  major: true
   extensions:
   - .j
   - .sj
@@ -507,6 +544,7 @@ OpenCL:
   - .cl
 
 PHP:
+  major: true
   extensions:
   - .php
   - .aw
@@ -525,6 +563,7 @@ Parrot Internal Representation:
   - .pasm
 
 Perl:
+  major: true
   extensions:
   - .pl
   - .ph
@@ -536,11 +575,13 @@ Perl:
   - .psgi
 
 Pure Data:
+  major: true
   lexer: Text only
   extensions:
   - .pd
 
 Python:
+  major: true
   extensions:
   - .py
   - .pyw
@@ -555,6 +596,7 @@ Python traceback:
   - .pytb
 
 R:
+  major: true
   lexer: S
   extensions:
   - .r
@@ -566,6 +608,7 @@ RHTML:
   - .rhtml
 
 Racket:
+  major: true
   lexer: Scheme
   extensions:
   - .rkt
@@ -591,6 +634,7 @@ Redcode:
   - .cw
 
 Ruby:
+  major: true
   aliases:
   - jruby
   - macruby
@@ -624,10 +668,12 @@ Sass:
   - .sass
 
 Scala:
+  major: true
   extensions:
   - .scala
 
 Scheme:
+  major: true
   extensions:
   - .sls
   - .ss
@@ -635,11 +681,13 @@ Scheme:
   - .scm
 
 Self:
+  major: true
   lexer: Text only
   extensions:
   - .self
 
 Shell:
+  major: true
   lexer: Bash
   search_term: bash
   aliases:
@@ -658,6 +706,7 @@ Shell:
   - .zshrc
 
 Smalltalk:
+  major: true
   extensions:
   - .st
 
@@ -674,15 +723,18 @@ Standard ML:
   - .sml
 
 SuperCollider:
+  major: true
   lexer: Text only
   extensions:
   - .sc
 
 Tcl:
+  major: true
   extensions:
   - .tcl
 
 Tcsh:
+  group: Shell
   extensions:
   - .tcsh
   - .csh
@@ -706,21 +758,25 @@ Textile:
   - .textile
 
 VHDL:
+  major: true
   lexer: Text only
   extensions:
   - .vhdl
   - .vhd
 
 Vala:
+  major: true
   extensions:
   - .vala
 
 Verilog:
+  major: true
   lexer: Text only
   extensions:
   - .v
 
 VimL:
+  major: true
   search_term: vim
   aliases:
   - vim
@@ -731,6 +787,7 @@ VimL:
   - .gvimrc
 
 Visual Basic:
+  major: true
   lexer: Text only
   extensions:
   - .bas
@@ -752,6 +809,7 @@ XML:
   - .rdf
 
 XQuery:
+  major: true
   extensions:
   - .xq
   - .xqm
@@ -776,6 +834,7 @@ mupad:
   - .mu
 
 ooc:
+  major: true
   lexer: Ooc
   extensions:
   - .ooc
