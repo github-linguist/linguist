@@ -65,6 +65,7 @@ Assembly:
   - .asm
 
 Batchfile:
+  group: Shell
   search_term: bat
   aliases:
   - bat
@@ -88,6 +89,7 @@ Brainfuck:
   extensions:
   - .b
   - .bf
+
 C:
   extensions:
   - .c
@@ -169,6 +171,7 @@ Cucumber:
   - .feature
 
 Cython:
+  group: Python
   extensions:
   - .pyx
   - .pxd
@@ -244,6 +247,7 @@ Factor:
   - .factor
 
 GAS:
+  group: Assembly
   extensions:
   - .s
   - .S
@@ -253,11 +257,13 @@ Genshi:
   - .kid
 
 Gentoo Ebuild:
+  group: Shell
   lexer: Bash
   extensions:
   - .ebuild
 
 Gentoo Eclass:
+  group: Shell
   lexer: Bash
   extensions:
   - .eclass
@@ -299,17 +305,20 @@ HTML:
   - .xslt
 
 HTML+Django:
+  group: HTML
   lexer: HTML+Django/Jinja
   extensions:
   - .mustache
 
 HTML+ERB:
+  group: HTML
   lexer: RHTML
   extensions:
   - .erb
   - .html.erb
 
 HTML+PHP:
+  group: HTML
   extensions:
   - .phtml
 
@@ -350,6 +359,7 @@ Io:
   - .io
 
 JSON:
+  group: JavaScript
   lexer: JavaScript
   search_term: javascript
   extensions:
@@ -361,6 +371,7 @@ Java:
   - .pde
 
 Java Server Pages:
+  group: Java
   lexer: Java Server Page
   search_term: jsp
   aliases:
@@ -387,6 +398,7 @@ LLVM:
   - .ll
 
 Literate Haskell:
+  group: Haskell
   search_term: lhs
   aliases:
   - lhs
@@ -460,6 +472,7 @@ Nu:
   - Nukefile
 
 NumPy:
+  group: Python
   extensions:
   - .numpy
   - .numsc
@@ -488,6 +501,7 @@ Objective-J:
   - .sj
 
 OpenCL:
+  group: C
   lexer: C
   extensions:
   - .cl
@@ -532,6 +546,7 @@ Python:
   - .pyw
 
 Python traceback:
+  group: Python
   lexer: Python Traceback
   search_term: pytb
   aliases:
@@ -546,6 +561,7 @@ R:
   - .R
 
 RHTML:
+  group: HTML
   extensions:
   - .rhtml
 

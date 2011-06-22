@@ -197,6 +197,21 @@ module Linguist
       @popular    = attributes.key?(:popular)    ? attributes[:popular]    : false
       @common     = attributes.key?(:common)     ? attributes[:common]     : false
       @searchable = attributes.key?(:searchable) ? attributes[:searchable] : true
+
+      # If group name is set, save the name so we can lazy load it later
+      if attributes[:group_name]
+        if common?
+          warn "#{name} is a major langauage, it should not be grouped with #{attributes[:group_name]}"
+        end
+
+        @group = nil
+        @group_name = attributes[:group_name]
+
+      # Otherwise we can set it to self now
+      else
+        @group = self
+      end
+
     end
 
     # Public: Get proper name
@@ -259,6 +274,19 @@ module Linguist
     # Returns the alias name String
     def default_alias_name
       name.downcase.gsub(/\s/, '-')
+    end
+
+    # Public: Get Language group
+    #
+    # Minor languages maybe grouped with major languages for
+    # accounting purposes. For an example, JSP files are grouped as
+    # Java.
+    #
+    # For major languages, group should always return self.
+    #
+    # Returns a Language
+    def group
+      @group ||= Language.find_by_name(@group_name)
     end
 
     # Public: Is it popular?
@@ -337,6 +365,7 @@ module Linguist
       :name        => name,
       :aliases     => options['aliases'],
       :lexer       => options['lexer'],
+      :group_name  => options['group'],
       :searchable  => options.key?('searchable') ? options['searchable'] : true,
       :search_term => options['search_term'],
       :extensions  => options['extensions'],

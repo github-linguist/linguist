@@ -196,6 +196,28 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['reStructuredText'], Language.find_by_alias('rst')
   end
 
+  def test_common_groups
+    Language.all.each do |language|
+      if language.common?
+        assert_equal language, language.group
+      end
+    end
+  end
+
+  def test_groups
+    assert_equal Language['Assembly'], Language['GAS'].group
+    assert_equal Language['C'], Language['OpenCL'].group
+    assert_equal Language['Haskell'], Language['Literate Haskell'].group
+    assert_equal Language['Java'], Language['Java Server Pages'].group
+    assert_equal Language['JavaScript'], Language['JSON'].group
+    assert_equal Language['Python'], Language['Cython'].group
+    assert_equal Language['Python'], Language['NumPy'].group
+    assert_equal Language['Python'], Language['Python traceback'].group
+    assert_equal Language['Shell'], Language['Batchfile'].group
+    assert_equal Language['Shell'], Language['Gentoo Ebuild'].group
+    assert_equal Language['Shell'], Language['Gentoo Eclass'].group
+  end
+
   # Used for code search indexing. Changing any of these values may
   # require reindexing repositories.
   def test_search_term
