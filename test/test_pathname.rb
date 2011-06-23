@@ -58,8 +58,8 @@ class TestPathname < Test::Unit::TestCase
   end
 
   def test_content_type
-    assert_equal 'text/plain', Pathname.new("file.txt").content_type
-    assert_equal 'text/plain', Pathname.new("file.rb").content_type
+    assert_equal 'text/plain; charset=utf8', Pathname.new("file.txt").content_type
+    assert_equal 'text/plain; charset=utf8', Pathname.new("file.rb").content_type
     assert_equal 'image/png', Pathname.new("octocat.png").content_type
   end
 end

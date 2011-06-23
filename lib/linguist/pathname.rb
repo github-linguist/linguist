@@ -87,7 +87,7 @@ module Linguist
     #
     # Returns a content type String.
     def content_type
-      @content_type ||= binary? ? mime_type : 'text/plain'
+      @content_type ||= binary? ? mime_type : 'text/plain; charset=utf8'
     end
 
     # Public: Is the path binary?
