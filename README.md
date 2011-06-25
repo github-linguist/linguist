@@ -6,9 +6,9 @@ We use this library at GitHub to detect file language types for syntax highlight
 
 ### Language detection
 
-Linguist defines the list of all languages known to GitHub in a [yaml file](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml). In order for a file to be hightlighted, a language and lexer must be defined there.
+Linguist defines the list of all languages known to GitHub in a [yaml file](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml). In order for a file to be hightlighed, a language and lexer must be defined there.
 
-Most languages are detected by their file extension. This is the fastest and most common situation. For script files, which are usually extensionless, we do "deep content inspection"™ and check the shebang of the file. Checking the file's contents may also be used for disambiguating langauges. C, C++ and Obj-C all use `.h` files. Looking for common keywords, we are usually able to guess the correct language.
+Most languages are detected by their file extension. This is the fastest and most common situation. For script files, which are usually extensionless, we do "deep content inspection"™ and check the shebang of the file. Checking the file's contents may also be used for disambiguating languages. C, C++ and Obj-C all use `.h` files. Looking for common keywords, we are usually able to guess the correct language.
 
 In the actual GitHub app we deal with `Grit::Blob` objects. For testing, there is a simple `FileBlob` API.
 
@@ -24,7 +24,7 @@ See [lib/linguist/language.rb](https://github.com/github/linguist/blob/master/li
 
 The actual syntax highlighting is handled by our Pygments wrapper, [Albino](https://github.com/github/albino). Linguist provides a [Lexer abstraction](https://github.com/github/linguist/blob/master/lib/linguist/lexer.rb) that determines which highlighter should be used on a file.
 
-We typical run on a prelease version of Pygments to get early access to new lexers. The [lexers.yml](https://github.com/github/linguist/blob/master/lib/linguist/lexers.yml) file is a dump of the lexers we have available on our server. If there is a new lexer in pygments-main not on the list, [open an issue](https://github.com/github/linguist/issues) and we'll try to upgrade it soon.
+We typical run on a prerelease version of Pygments to get early access to new lexers. The [lexers.yml](https://github.com/github/linguist/blob/master/lib/linguist/lexers.yml) file is a dump of the lexers we have available on our server. If there is a new lexer in pygments-main not on the list, [open an issue](https://github.com/github/linguist/issues) and we'll try to upgrade it soon.
 
 ### MIME type detection
 
@@ -32,7 +32,7 @@ Most of the MIME types handling is done by the Ruby [mime-types gem](https://git
 
 MIME types are used to set the Content-Type of raw binary blobs which are served from a special `raw.github.com` domain. However, all text blobs are served as `text/plain` regardless of their type to ensure they open in the browser rather than downloading.
 
-The MIME type also determines whether a blob is binary or plain text. So if you're seeing a blob that says "View Raw" and it is actually plain text, the mime type and encoding probably needs to be expliclity stated.
+The MIME type also determines whether a blob is binary or plain text. So if you're seeing a blob that says "View Raw" and it is actually plain text, the mime type and encoding probably needs to be explicitly stated.
 
     file = Linguist::FileBlob.new("linguist.zip")
     file.binary? #=> true
@@ -41,7 +41,7 @@ See [lib/linguist/mimes.yml](https://github.com/github/linguist/blob/master/lib/
 
 ### Stats
 
-The [Language Graph](https://github.com/github/linguist/graphs/languages) is built by aggregating the languages of all repo's blobs. The top language in the graph determines the project's primay language. Collectively, these stats make up the [Top Languages](https://github.com/languages) page.
+The [Language Graph](https://github.com/github/linguist/graphs/languages) is built by aggregating the languages of all repo's blobs. The top language in the graph determines the project's primary language. Collectively, these stats make up the [Top Languages](https://github.com/languages) page.
 
 The repository stats API can be used on a directory:
 
@@ -62,12 +62,11 @@ Checking other code into your git repo is a common practice. But this often infl
     file = Linguist::FileBlob.new("vendor/plugins/foo.rb")
     file.vendored? # => true
 
-See [Linguist::BlobHelper#vendored?](https://github.com/github/linguist/blob/master/lib/linguist/blob_helper.rb) and
-[lib/linguist/vendor.yml](https://github.com/github/linguist/blob/master/lib/linguist/vendor.yml).
+See [Linguist::BlobHelper#vendored?](https://github.com/github/linguist/blob/master/lib/linguist/blob_helper.rb) and [lib/linguist/vendor.yml](https://github.com/github/linguist/blob/master/lib/linguist/vendor.yml).
 
 ### Generated file detection
 
-Not all plain text files are true source files. Generated files like minified js and compiled CoffeeScript can be detected and excluded from langauge stats. As an extra bonus, these files are supressed in Diffs.
+Not all plain text files are true source files. Generated files like minified js and compiled CoffeeScript can be detected and excluded from language stats. As an extra bonus, these files are suppressed in Diffs.
 
     file = Linguist::FileBlob.new("underscore.min.js")
     file.generated? # => true
