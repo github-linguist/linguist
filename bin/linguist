@@ -17,10 +17,8 @@ elsif File.file?(path)
     'Text'
   elsif blob.image?
     'Image'
-  elsif blob.binary?
-    'Binary'
   else
-    '???'
+    'Binary'
   end
 
   puts "#{blob.name}: #{blob.loc} lines (#{blob.sloc} sloc)"
