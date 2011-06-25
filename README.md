@@ -1,6 +1,6 @@
 # Linguist
 
-We use this library at GitHub to detect file language types for syntax highlighting, ignore binary files, suppress generated code in diffs and generate language breakdown graphs.
+We use this library at GitHub to detect blob languages, highlight code, ignore binary files, suppress generated files in diffs and generate language breakdown graphs.
 
 ## Features
 
