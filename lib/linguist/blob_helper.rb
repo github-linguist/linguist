@@ -331,8 +331,6 @@ module Linguist
 
     # Internal: Get Language for shebang script
     #
-    # Matches script name with shebang script name mappings in "shebangs.yml"
-    #
     # Returns the Language or nil
     def shebang_language
       if script = shebang_script
