@@ -27,7 +27,6 @@ elsif File.file?(path)
   puts "  type:         #{type}"
   puts "  extension:    #{blob.pathname.extname}"
   puts "  mime type:    #{blob.mime_type}"
-  puts "  content type: #{blob.content_type}"
   puts "  language:     #{blob.language}"
 
   if blob.large?
