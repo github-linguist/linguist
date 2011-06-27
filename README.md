@@ -70,11 +70,15 @@ See [Linguist::BlobHelper#generated?](https://github.com/github/linguist/blob/ma
 
 ## Installation
 
-To get it, clone the repo and run Bundler.
+To get it, clone the repo and run [Bundler](http://gembundler.com/) to install its dependencies.
 
     git clone https://github.com/github/linguist.git
     cd linguist/
     bundle install
+
+To run the tests:
+
+    bundle exec rake test
 
 *Since this code is specific to GitHub, is not published as a official rubygem.*
 
