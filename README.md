@@ -18,7 +18,7 @@ In the actual GitHub app we deal with `Grit::Blob` objects. For testing, there i
 
 See [lib/linguist/language.rb](https://github.com/github/linguist/blob/master/lib/linguist/language.rb) and [lib/linguist/languages.yml](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml).
 
-#### Syntax Highlighting
+### Syntax Highlighting
 
 The actual syntax highlighting is handled by our Pygments wrapper, [Albino](https://github.com/github/albino). Linguist provides a [Lexer abstraction](https://github.com/github/linguist/blob/master/lib/linguist/lexer.rb) that determines which highlighter should be used on a file.
 
@@ -52,7 +52,7 @@ These stats are also printed out by the binary. Try running `linguist` on itself
     $ bundle exec linguist lib/
     100%  Ruby
 
-### Ignore vendored files
+#### Ignore vendored files
 
 Checking other code into your git repo is a common practice. But this often inflates your project's language stats and may even cause your project to be labeled as another language. We are able to identify some of these files and directories and exclude them.
 
@@ -60,7 +60,7 @@ Checking other code into your git repo is a common practice. But this often infl
 
 See [Linguist::BlobHelper#vendored?](https://github.com/github/linguist/blob/master/lib/linguist/blob_helper.rb) and [lib/linguist/vendor.yml](https://github.com/github/linguist/blob/master/lib/linguist/vendor.yml).
 
-### Generated file detection
+#### Generated file detection
 
 Not all plain text files are true source files. Generated files like minified js and compiled CoffeeScript can be detected and excluded from language stats. As an extra bonus, these files are suppressed in Diffs.
 
