@@ -258,6 +258,9 @@ class TestBlob < Test::Unit::TestCase
 
     # https://github.com/gradleware/oreilly-gradle-book-examples/blob/master/ant-antbuilder/build.gradle
     assert_equal Language['Groovy'], blob("build.gradle").language
+
+    # http://docs.racket-lang.org/scribble/
+    assert_equal Language['Racket'], blob("scribble.scrbl").language
   end
 
   def test_lexer
