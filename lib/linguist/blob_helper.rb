@@ -154,7 +154,7 @@ module Linguist
     # Public: Is the blob a generated file?
     #
     # Generated source code is supressed in diffs and is ignored by
-    # langauge statistics.
+    # language statistics.
     #
     # Requires Blob#data
     #
