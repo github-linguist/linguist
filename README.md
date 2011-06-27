@@ -68,6 +68,16 @@ Not all plain text files are true source files. Generated files like minified js
 
 See [Linguist::BlobHelper#generated?](https://github.com/github/linguist/blob/master/lib/linguist/blob_helper.rb).
 
+## Installation
+
+To get it, clone the repo and run Bundler.
+
+    git clone https://github.com/github/linguist.git
+    cd linguist/
+    bundle install
+
+*Since this code is specific to GitHub, is not published as a official rubygem.*
+
 ## Contributing
 
 1. Fork it.
