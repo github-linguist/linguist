@@ -308,7 +308,7 @@ module Linguist
       # Fail fast if blob isn't viewable?
       return unless viewable?
 
-      if data && (match = data.match(/(.+)\n?/)) && (bang = match[0]) =~ /^#!/
+      if data && (match = lines[0].match(/(.+)\n?/)) && (bang = match[0]) =~ /^#!/
         bang.sub!(/^#! /, '#!')
         tokens = bang.split(' ')
         pieces = tokens.first.split('/')
@@ -323,6 +323,16 @@ module Linguist
         # python2.4 => python
         if script =~ /((?:\d+\.?)+)/
           script.sub! $1, ''
+        end
+
+        # Check for multiline shebang hacks that exec themselves
+        #
+        #   #!/bin/sh
+        #   exec foo "$0" "$@"
+        #
+        if script == 'sh' &&
+            lines[0...5].any? { |l| l.match(/exec (\w+).+\$0.+\$@/) }
+          script = $1
         end
 
         script
