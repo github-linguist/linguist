@@ -38,6 +38,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['Dylan'], Language['Dylan'].lexer
     assert_equal Lexer['Erlang'], Language['Erlang'].lexer
     assert_equal Lexer['Factor'], Language['Factor'].lexer
+    assert_equal Lexer['Fancy'], Language['Fancy'].lexer
     assert_equal Lexer['Fortran'], Language['FORTRAN'].lexer
     assert_equal Lexer['GAS'], Language['GAS'].lexer
     assert_equal Lexer['Genshi'], Language['Genshi'].lexer
