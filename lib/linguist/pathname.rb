@@ -4,7 +4,7 @@ require 'linguist/mime'
 module Linguist
   # Similar to ::Pathname, Linguist::Pathname wraps a path string and
   # provides helpful query methods. Its useful when you only have a
-  # filename but not a blob and need to figure out the langauge of the file.
+  # filename but not a blob and need to figure out the language of the file.
   class Pathname
     # Public: Initialize a Pathname
     #
@@ -52,7 +52,7 @@ module Linguist
     #   Pathname.new('file.rb').language
     #   # => Language['Ruby']
     #
-    # Returns a Langauge or nil if none was found.
+    # Returns a Language or nil if none was found.
     def language
       @language ||= Language.find_by_filename(@path)
     end

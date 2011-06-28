@@ -3,10 +3,10 @@ require 'linguist/lexer'
 require 'yaml'
 
 module Linguist
-  # Langage names that are recognizable by GitHub. Defined languages
+  # Language names that are recognizable by GitHub. Defined languages
   # can be highlighted, searched and listed under the Top Languages page.
   #
-  # Langages are defined in `lib/linguist/langages.yml`.
+  # Languages are defined in `lib/linguist/languages.yml`.
   class Language
     @languages       = []
     @index           = {}
@@ -201,7 +201,7 @@ module Linguist
       # If group name is set, save the name so we can lazy load it later
       if attributes[:group_name]
         if major?
-          warn "#{name} is a major langauage, it should not be grouped with #{attributes[:group_name]}"
+          warn "#{name} is a major language, it should not be grouped with #{attributes[:group_name]}"
         end
 
         @group = nil
@@ -315,7 +315,7 @@ module Linguist
 
     # Public: Is it a minor language?
     #
-    # Minor langauage include variants of major languages and
+    # Minor language include variants of major languages and
     # markup languages like HTML and YAML.
     #
     # Returns true or false
