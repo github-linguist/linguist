@@ -88,6 +88,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['Raw token data'], Language['Raw token data'].lexer
     assert_equal Lexer['Redcode'], Language['Redcode'].lexer
     assert_equal Lexer['Ruby'], Language['Mirah'].lexer
+    assert_equal Lexer['Ruby'], Language['Puppet'].lexer
     assert_equal Lexer['Ruby'], Language['Ruby'].lexer
     assert_equal Lexer['S'], Language['R'].lexer
     assert_equal Lexer['SQL'], Language['SQL'].lexer
@@ -175,6 +176,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['PHP'], Language.find_by_alias('php')
     assert_equal Language['Parrot Internal Representation'], Language.find_by_alias('pir')
     assert_equal Language['Perl'], Language.find_by_alias('perl')
+    assert_equal Language['Puppet'], Language.find_by_alias('puppet')
     assert_equal Language['Pure Data'], Language.find_by_alias('pure-data')
     assert_equal Language['Python traceback'], Language.find_by_alias('pytb')
     assert_equal Language['Python'], Language.find_by_alias('python')
