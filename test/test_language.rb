@@ -117,6 +117,7 @@ class TestLanguage < Test::Unit::TestCase
 
     # Missing Pygments lexers
     assert_equal Lexer['Text only'], Language['Eiffel'].lexer
+    assert_equal Lexer['Text only'], Language['LilyPond'].lexer
     assert_equal Lexer['Text only'], Language['Markdown'].lexer
     assert_equal Lexer['Text only'], Language['Max/MSP'].lexer
     assert_equal Lexer['Text only'], Language['Parrot Internal Representation'].lexer
