@@ -351,9 +351,9 @@ module Linguist
     # Public: Highlight syntax of blob
     #
     # Returns html String
-    def colorize
+    def colorize(options = {})
       return if !text? || large?
-      lexer.colorize(data)
+      lexer.colorize(data, options)
     end
 
     # Public: Highlight syntax of blob without the outer highlight div

@@ -78,6 +78,24 @@ class TestLexer < Test::Unit::TestCase
       HTML
     end
 
+        def test_colorize_with_options
+          assert_equal <<-HTML, Lexer['Text only'].colorize("Hello", {"O" => "linenos=table"}) + "\n"
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre>Hello
+</pre></div>
+</td></tr></table>
+          HTML
+
+          assert_equal <<-HTML, Lexer['Ruby'].colorize("def foo\n  'foo'\nend\n", {"O" => "linenos=table"}) + "\n"
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">foo</span>
+  <span class="s1">&#39;foo&#39;</span>
+<span class="k">end</span>
+</pre></div>
+</td></tr></table>
+          HTML
+        end
+
     def test_colorize_without_wrapper
       assert_equal <<-HTML, Lexer['Text only'].colorize_without_wrapper("Hello")
 Hello
