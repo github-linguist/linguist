@@ -23,6 +23,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['C'], Language['C'].lexer
     assert_equal Lexer['C'], Language['OpenCL'].lexer
     assert_equal Lexer['C'], Language['XS'].lexer
+    assert_equal Lexer['C'], Language['Processing'].lexer
     assert_equal Lexer['C++'], Language['C++'].lexer
     assert_equal Lexer['CSS'], Language['CSS'].lexer
     assert_equal Lexer['Clojure'], Language['Clojure'].lexer
