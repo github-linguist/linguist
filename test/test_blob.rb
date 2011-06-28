@@ -240,6 +240,7 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['VimL'],  blob(".vimrc").language
     assert_equal Language['YAML'],  blob(".gemrc").language
 
+    assert_nil blob("blank").language
     assert_nil blob("README").language
 
     # https://github.com/xquery/xprocxq/blob/master/src/xquery/xproc.xqm

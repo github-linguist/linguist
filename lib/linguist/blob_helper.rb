@@ -308,7 +308,7 @@ module Linguist
       # Fail fast if blob isn't viewable?
       return unless viewable?
 
-      if data && (match = lines[0].match(/(.+)\n?/)) && (bang = match[0]) =~ /^#!/
+      if lines.any? && (match = lines[0].match(/(.+)\n?/)) && (bang = match[0]) =~ /^#!/
         bang.sub!(/^#! /, '#!')
         tokens = bang.split(' ')
         pieces = tokens.first.split('/')
