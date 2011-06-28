@@ -100,8 +100,9 @@ module Linguist
     # text - String of code to be highlighted
     #
     # Returns html String
-    def colorize(text)
-      Albino.colorize(text, self)
+    def colorize(text, options = {})
+      syntaxer = Albino.new(text, self)
+      syntaxer.colorize(options)
     end
 
     # Public: Highlight syntax of text without the outer highlight div

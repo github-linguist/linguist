@@ -319,6 +319,16 @@ class TestBlob < Test::Unit::TestCase
       HTML
     end
 
+    def test_colorize_with_options
+      assert_equal <<-HTML, blob("foo.rb").colorize({"O" => "linenos=table"}) + "\n"
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">module</span> <span class="nn">Foo</span>
+<span class="k">end</span>
+</pre></div>
+</td></tr></table>
+      HTML
+    end
+
     def test_colorize_without_wrapper
       assert_equal <<-HTML, blob("foo.rb").colorize_without_wrapper
 <span class="k">module</span> <span class="nn">Foo</span>
