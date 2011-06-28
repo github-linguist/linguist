@@ -4,7 +4,7 @@ module Linguist
   # A Repository is an abstraction of a Grit::Repo or a basic file
   # system tree. It holds a list of paths pointing to Blobish objects.
   #
-  # Its primary purpose is for gathering langauge statistics across
+  # Its primary purpose is for gathering language statistics across
   # the entire project.
   class Repository
     # Public: Initialize a new Repository from a File directory
@@ -49,12 +49,12 @@ module Linguist
       @paths[path]
     end
 
-    # Public: Returns a breakdown of langauge stats.
+    # Public: Returns a breakdown of language stats.
     #
     # Examples
     #
-    #   # => { Langauge['Ruby'] => 46319,
-    #          Langauge['JavaScript'] => 258 }
+    #   # => { Language['Ruby'] => 46319,
+    #          Language['JavaScript'] => 258 }
     #
     # Returns a Hash of Language keys and Integer size values.
     def languages
@@ -88,7 +88,7 @@ module Linguist
         # Skip vendored or generated blobs
         next if blob.vendored? || blob.generated? || blob.language.nil?
 
-        # Get langauge group
+        # Get language group
         language = blob.language.group
 
         # Only include major languages
