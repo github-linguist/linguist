@@ -387,13 +387,6 @@ Io:
   extensions:
   - .io
 
-LilyPond:
-  major: true
-  lexer: Text only
-  extensions:
-  - .ly
-  - .ily
-
 JSON:
   group: JavaScript
   lexer: JavaScript
@@ -430,6 +423,13 @@ JavaScript:
   - .jake
   filenames:
   - Jakefile
+
+LilyPond:
+  major: true
+  lexer: Text only
+  extensions:
+  - .ly
+  - .ily
 
 LLVM:
   extensions:
