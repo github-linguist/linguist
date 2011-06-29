@@ -259,6 +259,9 @@ module Linguist
       # If its a header file (.h) try to guess the language
       header_language ||
 
+        # If it's a .r file, try to guess the language
+        r_language ||
+
         # See if there is a Language for the extension
         pathname.language ||
 
@@ -285,6 +288,19 @@ module Linguist
         Language['C++']
       else
         Language['C']
+      end
+    end
+
+    # Internal: Guess language of .r files.
+    #
+    # Returns a Language.
+    def r_language
+      return unless extname == '.r'
+
+      if lines.grep(/(rebol|(:\s+func|make\s+object!|^\s*context)\s*\[)/i).any?
+        Language['Rebol']
+      else
+        Language['R']
       end
     end
 

@@ -224,6 +224,10 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['Ruby'],        blob("wrong_shebang.rb").language
     assert_nil blob("octocat.png").language
 
+    # .r disambiguation
+    assert_equal Language['R'],           blob("hello-r.R").language
+    assert_equal Language['Rebol'],       blob("hello-rebol.r").language
+
     # ML
     assert_equal Language['OCaml'],       blob("Foo.ml").language
     assert_equal Language['Standard ML'], blob("Foo.sig").language
