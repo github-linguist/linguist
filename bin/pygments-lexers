@@ -15,11 +15,20 @@ for name, aliases, filenames, mimetypes in get_all_lexers():
     print "  aliases: !ruby/array"
     for alias in aliases:
         print "  - \"%s\"" % alias
+        break
+    else:
+        print "    []"
 
     print "  filenames: !ruby/array"
     for filename in filenames:
         print "  - \"%s\"" % filename
+        break
+    else:
+        print "    []"
 
     print "  mimetypes: !ruby/array"
     for mimetype in mimetypes:
         print "  - \"%s\"" % mimetype
+        break
+    else:
+        print "    []"
