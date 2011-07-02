@@ -10,16 +10,25 @@ print "---"
 for name, aliases, filenames, mimetypes in get_all_lexers():
     print "- !ruby/struct:Linguist::Lexer"
 
-    print "  name: %s" % name
+    print "  name: \"%s\"" % name
 
     print "  aliases: !ruby/array"
     for alias in aliases:
-        print "  - %s" % alias
+        print "  - \"%s\"" % alias
+        break
+    else:
+        print "    []"
 
     print "  filenames: !ruby/array"
     for filename in filenames:
-        print "  - %s" % filename
+        print "  - \"%s\"" % filename
+        break
+    else:
+        print "    []"
 
     print "  mimetypes: !ruby/array"
     for mimetype in mimetypes:
-        print "  - %s" % mimetype
+        print "  - \"%s\"" % mimetype
+        break
+    else:
+        print "    []"
