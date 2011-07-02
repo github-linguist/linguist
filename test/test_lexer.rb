@@ -43,6 +43,12 @@ class TestLexer < Test::Unit::TestCase
     end
   end
 
+  def test_empty_attributes
+    assert_equal Lexer['Protocol Buffer'].mimetypes, []
+    assert_equal Lexer['Base Makefile'].filenames, []
+    #all lexers have aliases
+  end
+
   def test_name
     assert_equal 'Ruby',   Lexer['Ruby'].name
     assert_equal 'Python', Lexer['Python'].name
