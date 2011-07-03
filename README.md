@@ -6,7 +6,7 @@ We use this library at GitHub to detect blob languages, highlight code, ignore b
 
 ### Language detection
 
-Linguist defines the list of all languages known to GitHub in a [yaml file](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml). In order for a file to be hightlighed, a language and lexer must be defined there.
+Linguist defines the list of all languages known to GitHub in a [yaml file](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml). In order for a file to be highlighted, a language and lexer must be defined there.
 
 Most languages are detected by their file extension. This is the fastest and most common situation. For script files, which are usually extensionless, we do "deep content inspection"™ and check the shebang of the file. Checking the file's contents may also be used for disambiguating languages. C, C++ and Obj-C all use `.h` files. Looking for common keywords, we are usually able to guess the correct language.
 
