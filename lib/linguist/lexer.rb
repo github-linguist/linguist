@@ -15,6 +15,46 @@ module Linguist
     @alias_index     = {}
     @mimetypes_index = {}
 
+    # Internal: Create a new Lexer object
+    #
+    # name  - Name of Lexer
+    # attrs - A hash of attributes
+    #
+    # Returns a Lexer object
+    def self.create(name, attrs)
+      name      = name
+      aliases   = attrs['aliases']   || []
+      filenames = attrs['filenames'] || []
+      mimetypes = attrs['mimetypes'] || []
+
+      @lexers << lexer = new(name, aliases, filenames, mimetypes)
+
+      # All Lexer names should be unique. Warn if there is a duplicate.
+      if @name_index.key?(lexer.name)
+        warn "Duplicate lexer name: #{lexer.name}"
+      end
+
+      @index[lexer.name] = @name_index[lexer.name] = lexer
+
+      lexer.aliases.each do |name|
+        # All Lexer aliases should be unique. Warn if there is a duplicate.
+        if @alias_index.key?(name)
+          warn "Duplicate alias: #{name}"
+        end
+
+        @index[name] = @alias_index[name] = lexer
+      end
+
+      lexer.mimetypes.each do |type|
+        # All Lexer mimetypes should be unique. Warn if there is a duplicate.
+        if @mimetypes_index.key?(name)
+          warn "Duplicate mimetype: #{name}"
+        end
+
+        @mimetypes_index[type] = lexer
+      end
+    end
+
     # Internal: Test if system has Pygments
     #
     # Only used in tests to disable tests that require Pygments.
@@ -130,33 +170,8 @@ module Linguist
     #
     # `bin/pygments-lexers` dumps a YAML list of all the available
     # Pygments lexers.
-    YAML.load_file(File.expand_path("../lexers.yml", __FILE__)).each do |lexer|
-      @lexers << lexer
-
-      # All Lexer names should be unique. Warn if there is a duplicate.
-      if @name_index.key?(lexer.name)
-        warn "Duplicate lexer name: #{lexer.name}"
-      end
-
-      @index[lexer.name] = @name_index[lexer.name] = lexer
-
-      lexer.aliases.each do |name|
-        # All Lexer aliases should be unique. Warn if there is a duplicate.
-        if @alias_index.key?(name)
-          warn "Duplicate alias: #{name}"
-        end
-
-        @index[name] = @alias_index[name] = lexer
-      end
-
-      lexer.mimetypes.each do |type|
-        # All Lexer mimetypes should be unique. Warn if there is a duplicate.
-        if @mimetypes_index.key?(name)
-          warn "Duplicate mimetype: #{name}"
-        end
-
-        @mimetypes_index[type] = lexer
-      end
+    YAML.load_file(File.expand_path("../lexers.yml", __FILE__)).each do |name, attrs|
+      Lexer.create(name, attrs)
     end
   end
 end

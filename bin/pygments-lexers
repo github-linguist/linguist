@@ -8,18 +8,19 @@ print "# Pygments version %s" % __version__
 print "---"
 
 for name, aliases, filenames, mimetypes in get_all_lexers():
-    print "- !ruby/struct:Linguist::Lexer"
+    print "%s:" % name
 
-    print "  name: %s" % name
+    if any(aliases):
+        print "  aliases:"
+        for alias in aliases:
+            print "  - '%s'" % alias
 
-    print "  aliases: !ruby/array"
-    for alias in aliases:
-        print "  - %s" % alias
+    if any(filenames):
+        print "  filenames:"
+        for filename in filenames:
+            print "  - '%s'" % filename
 
-    print "  filenames: !ruby/array"
-    for filename in filenames:
-        print "  - %s" % filename
-
-    print "  mimetypes: !ruby/array"
-    for mimetype in mimetypes:
-        print "  - %s" % mimetype
+    if any(mimetypes):
+        print "  mimetypes:"
+        for mimetype in mimetypes:
+            print "  - '%s'" % mimetype
