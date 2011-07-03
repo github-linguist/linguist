@@ -20,33 +20,15 @@ module Linguist
 
     # Public: Initialize a new Repository
     #
-    # paths - An Array of Blob objects or a Hash of String path keys
-    #         and Blob values.
+    # enum - Enumerator that responds to `each` and
+    #        yields Blob objects
     #
     # Returns a Repository
-    def initialize(paths)
-      case paths
-      when Array
-        @paths = paths.inject({}) do |h, blob|
-          h[blob.name] = blob
-          h
-        end
-      when Hash
-        @paths = paths
-      else
-        raise ArgumentError, "#{paths.class} is not an Array or Hash"
-      end
-
+    def initialize(enum)
+      @enum = enum
       @computed_stats = false
       @language = @size = nil
       @sizes = Hash.new { 0 }
-    end
-
-    # Public: Lookup blob for path.
-    #
-    # Returns a Blob
-    def [](path)
-      @paths[path]
     end
 
     # Public: Returns a breakdown of language stats.
@@ -84,7 +66,7 @@ module Linguist
     def compute_stats
       return if @computed_stats
 
-      @paths.each do |path, blob|
+      @enum.each do |blob|
         # Skip vendored or generated blobs
         next if blob.vendored? || blob.generated? || blob.language.nil?
 

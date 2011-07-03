@@ -13,11 +13,6 @@ class TestRepository < Test::Unit::TestCase
     repo(File.expand_path("../..", __FILE__))
   end
 
-  def test_lookup_path
-    assert linguist_repo['lib/linguist.rb']
-    assert_equal Language['Ruby'], linguist_repo['lib/linguist.rb'].language
-  end
-
   def test_linguist_language
     assert_equal Language['JavaScript'], linguist_repo.language
   end
