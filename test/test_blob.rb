@@ -123,6 +123,12 @@ class TestBlob < Test::Unit::TestCase
     assert blob("MainMenu.nib").generated?
     assert blob("project.pbxproj").generated?
 
+    # Long line
+    assert !blob("uglify.js").generated?
+
+    # Inlined JS, but mostly code
+    assert !blob("json2_backbone.js").generated?
+
     # Minified JS
     assert !blob("jquery-1.6.1.js").generated?
     assert blob("jquery-1.6.1.min.js").generated?

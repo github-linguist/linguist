@@ -19,7 +19,7 @@ class TestRepository < Test::Unit::TestCase
   end
 
   def test_linguist_language
-    assert_equal Language['Ruby'], linguist_repo.language
+    assert_equal Language['JavaScript'], linguist_repo.language
   end
 
   def test_linguist_languages
