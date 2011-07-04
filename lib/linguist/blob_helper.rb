@@ -390,6 +390,9 @@ module Linguist
     #
     # Returns a Language.
     def first_line_language
+      # Fail fast if blob isn't viewable?
+      return unless viewable?
+
       if lines[0] =~ /^<\?php/
         Language['PHP']
       end
