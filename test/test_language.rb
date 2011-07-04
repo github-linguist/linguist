@@ -375,6 +375,10 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['PHP'], Language.find_by_extension('php3')
     assert_equal Language['PHP'], Language.find_by_extension('php4')
     assert_equal Language['PHP'], Language.find_by_extension('php5')
+    assert_equal Language['PHP'], Language.find_by_extension('module')
+    assert_equal Language['PHP'], Language.find_by_extension('install')
+    assert_equal Language['PHP'], Language.find_by_extension('test')
+    assert_equal Language['PHP'], Language.find_by_extension('inc')
     assert_nil Language.find_by_extension('.kt')
   end
 
