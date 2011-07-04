@@ -285,7 +285,10 @@ module Linguist
         pathname.language ||
 
         # Try to detect Language from shebang line
-        shebang_language
+        shebang_language ||
+
+        # Try to detect Language from first line
+        first_line_language
     end
 
     # Internal: Get the lexer of the blob.
@@ -380,6 +383,15 @@ module Linguist
     def shebang_language
       if script = shebang_script
         Language[script]
+      end
+    end
+
+    # Internal: Guess language from the first line
+    #
+    # Returns a Language.
+    def first_line_language
+      if lines[0] =~ /^<\?php/
+        Language['PHP']
       end
     end
 
