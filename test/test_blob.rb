@@ -326,6 +326,10 @@ class TestBlob < Test::Unit::TestCase
     assert_equal nil, blob("foo.rb").shebang_language
   end
 
+  def test_first_line_language
+   assert_equal Language['PHP'], blob("foo.module").first_line_language
+  end
+
   if Lexer.has_pygments?
     def test_colorize
       assert_equal <<-HTML, blob("foo.rb").colorize
