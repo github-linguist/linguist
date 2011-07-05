@@ -462,5 +462,15 @@ Hello
 <span class="k">end</span>
       HTML
     end
+
+    def test_colorize_doesnt_strip_newlines
+      assert_equal <<-HTML, Language['Ruby'].colorize_without_wrapper("\n\n# Foo\ndef 'foo'\nend\n")
+
+
+<span class="c1"># Foo</span>
+<span class="k">def</span> <span class="s1">&#39;foo&#39;</span>
+<span class="k">end</span>
+      HTML
+    end
   end
 end
