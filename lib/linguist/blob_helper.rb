@@ -287,6 +287,9 @@ module Linguist
         # See if there is a Language for the extension
         pathname.language ||
 
+        # Look for idioms in first line
+        first_line_language ||
+
         # Try to detect Language from shebang line
         shebang_language
     end
@@ -354,6 +357,20 @@ module Linguist
         Language['Rebol']
       else
         Language['R']
+      end
+    end
+
+    # Internal: Guess language from the first line.
+    #
+    # Look for leading "<?php"
+    #
+    # Returns a Language.
+    def first_line_language
+      # Fail fast if blob isn't viewable?
+      return unless viewable?
+
+      if lines.first.to_s =~ /^<\?php/
+        Language['PHP']
       end
     end
 

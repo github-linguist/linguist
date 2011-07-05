@@ -278,6 +278,9 @@ class TestBlob < Test::Unit::TestCase
 
     # http://docs.racket-lang.org/scribble/
     assert_equal Language['Racket'], blob("scribble.scrbl").language
+
+    # https://github.com/drupal/drupal/blob/7.x/modules/php/php.module
+    assert_equal Language['PHP'], blob("drupal.module").language
   end
 
   def test_lexer
