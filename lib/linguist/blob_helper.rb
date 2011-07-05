@@ -262,6 +262,9 @@ module Linguist
         # If it's a .r file, try to guess the language
         r_language ||
 
+        # If it's a .pl file, try to guess the language
+        pl_language ||
+
         # See if there is a Language for the extension
         pathname.language ||
 
@@ -301,6 +304,26 @@ module Linguist
         Language['Rebol']
       else
         Language['R']
+      end
+    end
+
+    # Internal: Guess language of .pl files
+    # 
+    # Returns a Language.
+    def pl_language
+      return unless extname == '.pl'
+
+      # The rules for disambiguation are: 
+      #
+      # 1. Many perl files begin with a shebang
+      # 2. Most Prolog source files have a rule somewhere (marked by the :- operator)
+      # 3. Default to Perl, because it is more popular
+      if shebang_script == 'perl'
+        Language['Perl']
+      elsif lines.grep(/:-/).any?
+        Language['Prolog']
+      else
+        Language['Perl']
       end
     end
 

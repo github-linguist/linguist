@@ -81,6 +81,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['Ooc'], Language['ooc'].lexer
     assert_equal Lexer['PHP'], Language['PHP'].lexer
     assert_equal Lexer['Perl'], Language['Perl'].lexer
+    assert_equal Lexer['Prolog'], Language['Prolog'].lexer
     assert_equal Lexer['Python Traceback'], Language['Python traceback'].lexer
     assert_equal Lexer['Python'], Language['Python'].lexer
     assert_equal Lexer['REBOL'], Language['Rebol'].lexer
@@ -310,6 +311,7 @@ class TestLanguage < Test::Unit::TestCase
     assert Language['Objective-J'].major?
     assert Language['PHP'].major?
     assert Language['Perl'].major?
+    assert Language['Prolog'].major?
     assert Language['Pure Data'].major?
     assert Language['Python'].major?
     assert Language['R'].major?
