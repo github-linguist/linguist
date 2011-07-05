@@ -278,6 +278,9 @@ module Linguist
       # If its a header file (.h) try to guess the language
       header_language ||
 
+        # If it's a .m file, try to guess the language
+        m_language ||
+
         # If it's a .r file, try to guess the language
         r_language ||
 
@@ -307,6 +310,37 @@ module Linguist
         Language['C++']
       else
         Language['C']
+      end
+    end
+
+    # Internal: Guess language of .m files.
+    #
+    # Objective-C heuristics:
+    # * Keywords
+    #
+    # Matlab heuristics:
+    # * Leading function keyword
+    # * "%" comments
+    #
+    # Returns a Language.
+    def m_language
+      return unless extname == '.m'
+
+      # Objective-C keywords
+      if lines.grep(/^#import|@(interface|implementation|property|synthesize|end)/).any?
+        Language['Objective-C']
+
+      # File function
+      elsif lines.first.to_s =~ /^function /
+        Language['Matlab']
+
+      # Matlab comment
+      elsif lines.grep(/^%/).any?
+        Language['Matlab']
+
+      # Fallback to Objective-C, don't want any Matlab false positives
+      else
+        Language['Objective-C']
       end
     end
 

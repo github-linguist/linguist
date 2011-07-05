@@ -234,6 +234,12 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['R'],           blob("hello-r.R").language
     assert_equal Language['Rebol'],       blob("hello-rebol.r").language
 
+    # .m disambiguation
+    assert_equal Language['Objective-C'], blob("Foo.m").language
+    assert_equal Language['Objective-C'], blob("hello.m").language
+    assert_equal Language['Matlab'], blob("matlab_function.m").language
+    # assert_equal Language['Matlab'], blob("matlab_script.m").language
+
     # ML
     assert_equal Language['OCaml'],       blob("Foo.ml").language
     assert_equal Language['Standard ML'], blob("Foo.sig").language
