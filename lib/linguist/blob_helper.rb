@@ -281,6 +281,9 @@ module Linguist
         # If it's a .m file, try to guess the language
         m_language ||
 
+        # If it's a .pl file, try to guess the language
+        pl_language ||
+
         # If it's a .r file, try to guess the language
         r_language ||
 
@@ -344,6 +347,26 @@ module Linguist
       # Fallback to Objective-C, don't want any Matlab false positives
       else
         Language['Objective-C']
+      end
+    end
+
+    # Internal: Guess language of .pl files
+    #
+    # Returns a Language.
+    def pl_language
+      return unless extname == '.pl'
+
+      # The rules for disambiguation are:
+      #
+      # 1. Many perl files begin with a shebang
+      # 2. Most Prolog source files have a rule somewhere (marked by the :- operator)
+      # 3. Default to Perl, because it is more popular
+      if shebang_script == 'perl'
+        Language['Perl']
+      elsif lines.grep(/:-/).any?
+        Language['Prolog']
+      else
+        Language['Perl']
       end
     end
 
