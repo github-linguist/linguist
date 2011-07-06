@@ -253,7 +253,6 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal 'ocaml',         Language['F#'].search_term
     assert_equal 'pot',           Language['Gettext Catalog'].search_term
     assert_equal 'irc',           Language['IRC log'].search_term
-    assert_equal 'javascript',    Language['JSON'].search_term
     assert_equal 'lhs',           Language['Literate Haskell'].search_term
     assert_equal 'ruby',          Language['Mirah'].search_term
     assert_equal 'pir',           Language['Parrot Internal Representation'].search_term
