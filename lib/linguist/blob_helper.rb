@@ -275,17 +275,8 @@ module Linguist
     def guess_language
       return if binary?
 
-      # If its a header file (.h) try to guess the language
-      header_language ||
-
-        # If it's a .m file, try to guess the language
-        m_language ||
-
-        # If it's a .pl file, try to guess the language
-        pl_language ||
-
-        # If it's a .r file, try to guess the language
-        r_language ||
+      # Disambiguate between multiple language extensions
+      disambiguate_extension_language ||
 
         # See if there is a Language for the extension
         pathname.language ||
@@ -304,12 +295,22 @@ module Linguist
       language ? language.lexer : Lexer['Text only']
     end
 
+    # Internal: Disambiguates between multiple language extensions.
+    #
+    # Delegates to "guess_EXTENSION_language".
+    #
+    # Returns a Language or nil.
+    def disambiguate_extension_language
+      if Language.ambiguous?(extname)
+        name = "guess_#{extname.sub(/^\./, '')}_language"
+        send(name) if respond_to?(name)
+      end
+    end
+
     # Internal: Guess language of header files (.h).
     #
     # Returns a Language.
-    def header_language
-      return unless extname == '.h'
-
+    def guess_h_language
       if lines.grep(/^@(interface|property|private|public|end)/).any?
         Language['Objective-C']
       elsif lines.grep(/^class |^\s+(public|protected|private):/).any?
@@ -329,9 +330,7 @@ module Linguist
     # * "%" comments
     #
     # Returns a Language.
-    def m_language
-      return unless extname == '.m'
-
+    def guess_m_language
       # Objective-C keywords
       if lines.grep(/^#import|@(interface|implementation|property|synthesize|end)/).any?
         Language['Objective-C']
@@ -352,15 +351,14 @@ module Linguist
 
     # Internal: Guess language of .pl files
     #
+    # The rules for disambiguation are:
+    #
+    # 1. Many perl files begin with a shebang
+    # 2. Most Prolog source files have a rule somewhere (marked by the :- operator)
+    # 3. Default to Perl, because it is more popular
+    #
     # Returns a Language.
-    def pl_language
-      return unless extname == '.pl'
-
-      # The rules for disambiguation are:
-      #
-      # 1. Many perl files begin with a shebang
-      # 2. Most Prolog source files have a rule somewhere (marked by the :- operator)
-      # 3. Default to Perl, because it is more popular
+    def guess_pl_language
       if shebang_script == 'perl'
         Language['Perl']
       elsif lines.grep(/:-/).any?
@@ -373,9 +371,7 @@ module Linguist
     # Internal: Guess language of .r files.
     #
     # Returns a Language.
-    def r_language
-      return unless extname == '.r'
-
+    def guess_r_language
       if lines.grep(/(rebol|(:\s+func|make\s+object!|^\s*context)\s*\[)/i).any?
         Language['Rebol']
       else
@@ -472,6 +468,13 @@ module Linguist
     def colorize_without_wrapper
       return if !text? || large?
       lexer.colorize_without_wrapper(data)
+    end
+
+    Language.overridden_extensions.each do |extension|
+      name = "guess_#{extension.sub(/^\./, '')}_language"
+      unless instance_methods.include?(name)
+        warn "Language##{name} was not defined"
+      end
     end
   end
 end
