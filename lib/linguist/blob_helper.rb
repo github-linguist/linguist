@@ -170,8 +170,9 @@ module Linguist
     # Requires Blob#data
     #
     # Includes:
-    # - XCode project XML files
+    # - XCode project XML files (xib, nib, pbxproj)
     # - Minified JavaScript
+    # - TeX generated files (toc, aux)
     #
     # Return true or false
     def generated?
