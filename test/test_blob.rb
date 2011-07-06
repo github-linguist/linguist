@@ -267,6 +267,9 @@ class TestBlob < Test::Unit::TestCase
     # https://github.com/drichert/BCR2000.sc/blob/master/BCR2000.sc
     assert_equal Language['SuperCollider'], blob("BCR2000.sc").language
 
+    # https://github.com/harrah/xsbt/wiki/Quick-Configuration-Examples
+    assert_equal Language['Scala'], blob('build.sbt').language
+
     # https://github.com/gradleware/oreilly-gradle-book-examples/blob/master/ant-antbuilder/build.gradle
     assert_equal Language['Groovy'], blob("build.gradle").language
 
