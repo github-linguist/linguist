@@ -20,136 +20,49 @@ class TestLanguage < Test::Unit::TestCase
   end
 
   def test_lexer
-    # Add an assertion to this list if you add/change any lexers
-    # in languages.yml. Please keep this list alphabetized.
     assert_equal Lexer['ActionScript 3'], Language['ActionScript'].lexer
-    assert_equal Lexer['Ada'], Language['Ada'].lexer
-    assert_equal Lexer['AppleScript'], Language['AppleScript'].lexer
     assert_equal Lexer['Bash'], Language['Gentoo Ebuild'].lexer
     assert_equal Lexer['Bash'], Language['Gentoo Eclass'].lexer
     assert_equal Lexer['Bash'], Language['Shell'].lexer
-    assert_equal Lexer['Batchfile'], Language['Batchfile'].lexer
-    assert_equal Lexer['Befunge'], Language['Befunge'].lexer
-    assert_equal Lexer['BlitzMax'], Language['BlitzMax'].lexer
-    assert_equal Lexer['Boo'], Language['Boo'].lexer
-    assert_equal Lexer['Brainfuck'], Language['Brainfuck'].lexer
-    assert_equal Lexer['C#'], Language['C#'].lexer
-    assert_equal Lexer['C'], Language['C'].lexer
     assert_equal Lexer['C'], Language['OpenCL'].lexer
     assert_equal Lexer['C'], Language['XS'].lexer
     assert_equal Lexer['C++'], Language['C++'].lexer
-    assert_equal Lexer['CSS'], Language['CSS'].lexer
-    assert_equal Lexer['Clojure'], Language['Clojure'].lexer
-    assert_equal Lexer['CoffeeScript'], Language['CoffeeScript'].lexer
     assert_equal Lexer['Coldfusion HTML'], Language['ColdFusion'].lexer
-    assert_equal Lexer['Common Lisp'], Language['Common Lisp'].lexer
-    assert_equal Lexer['Cython'], Language['Cython'].lexer
-    assert_equal Lexer['D'], Language['D'].lexer
-    assert_equal Lexer['d-objdump'], Language['d-objdump'].lexer
-    assert_equal Lexer['Darcs Patch'], Language['Darcs Patch'].lexer
-    assert_equal Lexer['Delphi'], Language['Delphi'].lexer
-    assert_equal Lexer['Diff'], Language['Diff'].lexer
-    assert_equal Lexer['Dylan'], Language['Dylan'].lexer
-    assert_equal Lexer['Erlang'], Language['Erlang'].lexer
-    assert_equal Lexer['Factor'], Language['Factor'].lexer
-    assert_equal Lexer['Fancy'], Language['Fancy'].lexer
     assert_equal Lexer['Fortran'], Language['FORTRAN'].lexer
-    assert_equal Lexer['GAS'], Language['GAS'].lexer
-    assert_equal Lexer['Genshi'], Language['Genshi'].lexer
-    assert_equal Lexer['Gettext Catalog'], Language['Gettext Catalog'].lexer
     assert_equal Lexer['Gherkin'], Language['Cucumber'].lexer
-    assert_equal Lexer['Go'], Language['Go'].lexer
-    assert_equal Lexer['Groff'], Language['Groff'].lexer
     assert_equal Lexer['HTML'], Language['HTML'].lexer
     assert_equal Lexer['HTML+Django/Jinja'], Language['HTML+Django'].lexer
     assert_equal Lexer['HTML+PHP'], Language['HTML+PHP'].lexer
-    assert_equal Lexer['Haml'], Language['Haml'].lexer
-    assert_equal Lexer['Haskell'], Language['Haskell'].lexer
-    assert_equal Lexer['INI'], Language['INI'].lexer
-    assert_equal Lexer['IRC logs'], Language['IRC log'].lexer
-    assert_equal Lexer['Io'], Language['Io'].lexer
-    assert_equal Lexer['Java Server Page'], Language['Java Server Pages'].lexer
     assert_equal Lexer['Java'], Language['ChucK'].lexer
     assert_equal Lexer['Java'], Language['Groovy'].lexer
     assert_equal Lexer['Java'], Language['Java'].lexer
     assert_equal Lexer['JavaScript'], Language['JSON'].lexer
     assert_equal Lexer['JavaScript'], Language['JavaScript'].lexer
-    assert_equal Lexer['LLVM'], Language['LLVM'].lexer
-    assert_equal Lexer['Literate Haskell'], Language['Literate Haskell'].lexer
-    assert_equal Lexer['Lua'], Language['Lua'].lexer
-    assert_equal Lexer['Makefile'], Language['Makefile'].lexer
-    assert_equal Lexer['Mako'], Language['Mako'].lexer
-    assert_equal Lexer['Matlab'], Language['Matlab'].lexer
-    assert_equal Lexer['MiniD'], Language['MiniD'].lexer
     assert_equal Lexer['MOOCode'], Language['Moocode'].lexer
     assert_equal Lexer['MuPAD'], Language['mupad'].lexer
-    assert_equal Lexer['Myghty'], Language['Myghty'].lexer
     assert_equal Lexer['NASM'], Language['Assembly'].lexer
-    assert_equal Lexer['Nimrod'], Language['Nimrod'].lexer
-    assert_equal Lexer['NumPy'], Language['NumPy'].lexer
     assert_equal Lexer['OCaml'], Language['F#'].lexer
     assert_equal Lexer['OCaml'], Language['OCaml'].lexer
     assert_equal Lexer['OCaml'], Language['Standard ML'].lexer
-    assert_equal Lexer['Objective-C'], Language['Objective-C'].lexer
-    assert_equal Lexer['Objective-J'], Language['Objective-J'].lexer
     assert_equal Lexer['Ooc'], Language['ooc'].lexer
-    assert_equal Lexer['PHP'], Language['PHP'].lexer
-    assert_equal Lexer['Perl'], Language['Perl'].lexer
-    assert_equal Lexer['Prolog'], Language['Prolog'].lexer
-    assert_equal Lexer['Python Traceback'], Language['Python traceback'].lexer
-    assert_equal Lexer['Python'], Language['Python'].lexer
     assert_equal Lexer['REBOL'], Language['Rebol'].lexer
     assert_equal Lexer['RHTML'], Language['HTML+ERB'].lexer
     assert_equal Lexer['RHTML'], Language['RHTML'].lexer
-    assert_equal Lexer['Raw token data'], Language['Raw token data'].lexer
-    assert_equal Lexer['Redcode'], Language['Redcode'].lexer
     assert_equal Lexer['Ruby'], Language['Mirah'].lexer
     assert_equal Lexer['Ruby'], Language['Ruby'].lexer
     assert_equal Lexer['S'], Language['R'].lexer
-    assert_equal Lexer['SQL'], Language['SQL'].lexer
-    assert_equal Lexer['Sass'], Language['Sass'].lexer
-    assert_equal Lexer['Scala'], Language['Scala'].lexer
     assert_equal Lexer['Scheme'], Language['Emacs Lisp'].lexer
     assert_equal Lexer['Scheme'], Language['Nu'].lexer
     assert_equal Lexer['Scheme'], Language['Racket'].lexer
     assert_equal Lexer['Scheme'], Language['Scheme'].lexer
-    assert_equal Lexer['Smalltalk'], Language['Smalltalk'].lexer
-    assert_equal Lexer['Smarty'], Language['Smarty'].lexer
-    assert_equal Lexer['Tcl'], Language['Tcl'].lexer
-    assert_equal Lexer['Tcsh'], Language['Tcsh'].lexer
     assert_equal Lexer['TeX'], Language['TeX'].lexer
     assert_equal Lexer['Text only'], Language['Text'].lexer
-    assert_equal Lexer['Vala'], Language['Vala'].lexer
-    assert_equal Lexer['VimL'], Language['VimL'].lexer
-    assert_equal Lexer['XML'], Language['XML'].lexer
-    assert_equal Lexer['XQuery'], Language['XQuery'].lexer
-    assert_equal Lexer['YAML'], Language['YAML'].lexer
     assert_equal Lexer['aspx-vb'], Language['ASP'].lexer
-    assert_equal Lexer['c-objdump'], Language['C-ObjDump'].lexer
-    assert_equal Lexer['cpp-objdump'], Language['Cpp-ObjDump'].lexer
     assert_equal Lexer['haXe'], Language['HaXe'].lexer
-    assert_equal Lexer['objdump'], Language['ObjDump'].lexer
     assert_equal Lexer['reStructuredText'], Language['reStructuredText'].lexer
-
-    # Missing Pygments lexers
-    assert_equal Lexer['Text only'], Language['Eiffel'].lexer
-    assert_equal Lexer['Text only'], Language['LilyPond'].lexer
-    assert_equal Lexer['Text only'], Language['Markdown'].lexer
-    assert_equal Lexer['Text only'], Language['Max/MSP'].lexer
-    assert_equal Lexer['Text only'], Language['Parrot Internal Representation'].lexer
-    assert_equal Lexer['Text only'], Language['Pure Data'].lexer
-    assert_equal Lexer['Text only'], Language['Self'].lexer
-    assert_equal Lexer['Text only'], Language['SuperCollider'].lexer
-    assert_equal Lexer['Text only'], Language['Textile'].lexer
-    assert_equal Lexer['Text only'], Language['VHDL'].lexer
-    assert_equal Lexer['Text only'], Language['Verilog'].lexer
-    assert_equal Lexer['Text only'], Language['Visual Basic'].lexer
-    assert_equal Lexer['Text only'], Language['Arc'].lexer
   end
 
   def test_find_by_alias
-    # Add an assertion to this list if you add/change any aliases
-    # in languages.yml. Please keep this list alphabetized.
     assert_equal Language['ASP'], Language.find_by_alias('asp')
     assert_equal Language['ASP'], Language.find_by_alias('aspx')
     assert_equal Language['ASP'], Language.find_by_alias('aspx-vb')
@@ -161,20 +74,15 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['C'], Language.find_by_alias('c')
     assert_equal Language['C++'], Language.find_by_alias('c++')
     assert_equal Language['C++'], Language.find_by_alias('cpp')
-    assert_equal Language['ChucK'], Language.find_by_alias('chuck')
     assert_equal Language['ColdFusion'], Language.find_by_alias('cfm')
     assert_equal Language['Common Lisp'], Language.find_by_alias('common-lisp')
     assert_equal Language['Common Lisp'], Language.find_by_alias('lisp')
     assert_equal Language['Darcs Patch'], Language.find_by_alias('dpatch')
-    assert_equal Language['Diff'], Language.find_by_alias('diff')
     assert_equal Language['Emacs Lisp'], Language.find_by_alias('elisp')
     assert_equal Language['Emacs Lisp'], Language.find_by_alias('emacs-lisp')
-    assert_equal Language['F#'], Language.find_by_alias('f#')
     assert_equal Language['Gettext Catalog'], Language.find_by_alias('pot')
-    assert_equal Language['Groovy'], Language.find_by_alias('groovy')
     assert_equal Language['HTML'], Language.find_by_alias('html')
     assert_equal Language['HTML+ERB'], Language.find_by_alias('html+erb')
-    assert_equal Language['Haskell'], Language.find_by_alias('haskell')
     assert_equal Language['IRC log'], Language.find_by_alias('irc')
     assert_equal Language['JSON'], Language.find_by_alias('json')
     assert_equal Language['Java Server Pages'], Language.find_by_alias('jsp')
@@ -183,17 +91,8 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['JavaScript'], Language.find_by_alias('js')
     assert_equal Language['Literate Haskell'], Language.find_by_alias('lhs')
     assert_equal Language['Literate Haskell'], Language.find_by_alias('literate-haskell')
-    assert_equal Language['Makefile'], Language.find_by_alias('makefile')
-    assert_equal Language['Markdown'], Language.find_by_alias('markdown')
-    assert_equal Language['Max/MSP'], Language.find_by_alias('max/msp')
-    assert_equal Language['MiniD'], Language.find_by_alias('minid')
-    assert_equal Language['Nu'], Language.find_by_alias('nu')
-    assert_equal Language['OCaml'], Language.find_by_alias('ocaml')
-    assert_equal Language['PHP'], Language.find_by_alias('php')
     assert_equal Language['Parrot Internal Representation'], Language.find_by_alias('pir')
-    assert_equal Language['Perl'], Language.find_by_alias('perl')
     assert_equal Language['Pure Data'], Language.find_by_alias('pure-data')
-    assert_equal Language['Python'], Language.find_by_alias('python')
     assert_equal Language['Raw token data'], Language.find_by_alias('raw')
     assert_equal Language['Ruby'], Language.find_by_alias('rb')
     assert_equal Language['Ruby'], Language.find_by_alias('ruby')
@@ -203,27 +102,24 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['Shell'], Language.find_by_alias('shell')
     assert_equal Language['Shell'], Language.find_by_alias('zsh')
     assert_equal Language['TeX'], Language.find_by_alias('tex')
-    assert_equal Language['Textile'], Language.find_by_alias('textile')
     assert_equal Language['VimL'], Language.find_by_alias('vim')
     assert_equal Language['VimL'], Language.find_by_alias('viml')
-    assert_equal Language['XML'], Language.find_by_alias('xml')
-    assert_equal Language['XS'], Language.find_by_alias('xs')
-    assert_equal Language['YAML'], Language.find_by_alias('yaml')
     assert_equal Language['reStructuredText'], Language.find_by_alias('rst')
   end
 
   def test_groups
+    # Test a couple identity cases
+    assert_equal Language['Perl'], Language['Perl'].group
+    assert_equal Language['Python'], Language['Python'].group
+    assert_equal Language['Ruby'], Language['Ruby'].group
+
+    # Test a few special groups
     assert_equal Language['Assembly'], Language['GAS'].group
     assert_equal Language['C'], Language['OpenCL'].group
     assert_equal Language['Haskell'], Language['Literate Haskell'].group
     assert_equal Language['Java'], Language['Java Server Pages'].group
-    assert_equal Language['JavaScript'], Language['JSON'].group
-    assert_equal Language['Perl'], Language['Perl'].group
     assert_equal Language['Python'], Language['Cython'].group
     assert_equal Language['Python'], Language['NumPy'].group
-    assert_equal Language['Python'], Language['Python traceback'].group
-    assert_equal Language['Python'], Language['Python'].group
-    assert_equal Language['Ruby'], Language['Ruby'].group
     assert_equal Language['Shell'], Language['Batchfile'].group
     assert_equal Language['Shell'], Language['Gentoo Ebuild'].group
     assert_equal Language['Shell'], Language['Gentoo Eclass'].group
