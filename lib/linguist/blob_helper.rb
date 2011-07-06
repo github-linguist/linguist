@@ -471,8 +471,8 @@ module Linguist
     end
 
     Language.overridden_extensions.each do |extension|
-      name = "guess_#{extension.sub(/^\./, '')}_language"
-      unless instance_methods.include?(name)
+      name = "guess_#{extension.sub(/^\./, '')}_language".to_sym
+      unless instance_methods.map(&:to_sym).include?(name)
         warn "Language##{name} was not defined"
       end
     end
