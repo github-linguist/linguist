@@ -6,6 +6,9 @@ class TestLanguage < Test::Unit::TestCase
   include Linguist
 
   def test_ambiguous_extensions
+    assert Language.ambiguous?('.h')
+    assert_equal Language['C'], Language.find_by_extension('h')
+
     assert Language.ambiguous?('.m')
     assert_equal Language['Objective-C'], Language.find_by_extension('m')
 

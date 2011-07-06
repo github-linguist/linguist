@@ -101,6 +101,8 @@ Brainfuck:
 
 C:
   major: true
+  overrides:
+  - .h
   extensions:
   - .c
   - .h
@@ -124,6 +126,7 @@ C++:
   - .cpp
   - .cu
   - .cxx
+  - .h
   - .h++
   - .hh
   - .hpp
@@ -547,6 +550,7 @@ Objective-C:
   overrides:
   - .m
   extensions:
+  - .h
   - .m
   - .mm
 
