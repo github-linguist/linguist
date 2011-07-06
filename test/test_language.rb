@@ -5,6 +5,20 @@ require 'test/unit'
 class TestLanguage < Test::Unit::TestCase
   include Linguist
 
+  def test_ambiguous_extensions
+    assert Language.ambiguous?('.h')
+    assert_equal Language['C'], Language.find_by_extension('h')
+
+    assert Language.ambiguous?('.m')
+    assert_equal Language['Objective-C'], Language.find_by_extension('m')
+
+    assert Language.ambiguous?('.pl')
+    assert_equal Language['Perl'], Language.find_by_extension('pl')
+
+    assert Language.ambiguous?('.r')
+    assert_equal Language['R'], Language.find_by_extension('r')
+  end
+
   def test_lexer
     # Add an assertion to this list if you add/change any lexers
     # in languages.yml. Please keep this list alphabetized.
@@ -81,6 +95,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['Ooc'], Language['ooc'].lexer
     assert_equal Lexer['PHP'], Language['PHP'].lexer
     assert_equal Lexer['Perl'], Language['Perl'].lexer
+    assert_equal Lexer['Prolog'], Language['Prolog'].lexer
     assert_equal Lexer['Python Traceback'], Language['Python traceback'].lexer
     assert_equal Lexer['Python'], Language['Python'].lexer
     assert_equal Lexer['REBOL'], Language['Rebol'].lexer
@@ -198,23 +213,18 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['reStructuredText'], Language.find_by_alias('rst')
   end
 
-  def test_major_groups
-    Language.all.each do |language|
-      if language.major?
-        assert_equal language, language.group
-      end
-    end
-  end
-
   def test_groups
     assert_equal Language['Assembly'], Language['GAS'].group
     assert_equal Language['C'], Language['OpenCL'].group
     assert_equal Language['Haskell'], Language['Literate Haskell'].group
     assert_equal Language['Java'], Language['Java Server Pages'].group
     assert_equal Language['JavaScript'], Language['JSON'].group
+    assert_equal Language['Perl'], Language['Perl'].group
     assert_equal Language['Python'], Language['Cython'].group
     assert_equal Language['Python'], Language['NumPy'].group
     assert_equal Language['Python'], Language['Python traceback'].group
+    assert_equal Language['Python'], Language['Python'].group
+    assert_equal Language['Ruby'], Language['Ruby'].group
     assert_equal Language['Shell'], Language['Batchfile'].group
     assert_equal Language['Shell'], Language['Gentoo Ebuild'].group
     assert_equal Language['Shell'], Language['Gentoo Eclass'].group
@@ -270,71 +280,21 @@ class TestLanguage < Test::Unit::TestCase
     assert Language['Brainfuck'].unpopular?
   end
 
-  def test_major
-    # Add an assertion to this list if you add/change any major
-    # settings in languages.yml. Please keep this list alphabetized.
-    assert Language['ASP'].major?
-    assert Language['ActionScript'].major?
-    assert Language['Ada'].major?
-    assert Language['Arc'].major?
-    assert Language['Assembly'].major?
-    assert Language['Boo'].major?
-    assert Language['C#'].major?
-    assert Language['C'].major?
-    assert Language['C++'].major?
-    assert Language['Clojure'].major?
-    assert Language['CoffeeScript'].major?
-    assert Language['ColdFusion'].major?
-    assert Language['Common Lisp'].major?
-    assert Language['D'].major?
-    assert Language['Delphi'].major?
-    assert Language['Dylan'].major?
-    assert Language['Eiffel'].major?
-    assert Language['Emacs Lisp'].major?
-    assert Language['Erlang'].major?
-    assert Language['F#'].major?
-    assert Language['FORTRAN'].major?
-    assert Language['Factor'].major?
-    assert Language['Go'].major?
-    assert Language['Groovy'].major?
-    assert Language['HaXe'].major?
-    assert Language['Haskell'].major?
-    assert Language['Io'].major?
-    assert Language['Java'].major?
-    assert Language['JavaScript'].major?
-    assert Language['Lua'].major?
-    assert Language['Max/MSP'].major?
-    assert Language['Nu'].major?
-    assert Language['OCaml'].major?
-    assert Language['Objective-C'].major?
-    assert Language['Objective-J'].major?
-    assert Language['PHP'].major?
-    assert Language['Perl'].major?
-    assert Language['Pure Data'].major?
-    assert Language['Python'].major?
-    assert Language['R'].major?
-    assert Language['Racket'].major?
-    assert Language['Ruby'].major?
-    assert Language['Scala'].major?
-    assert Language['Scheme'].major?
-    assert Language['Self'].major?
-    assert Language['Smalltalk'].major?
-    assert Language['SuperCollider'].major?
-    assert Language['Tcl'].major?
-    assert Language['VHDL'].major?
-    assert Language['Vala'].major?
-    assert Language['Verilog'].major?
-    assert Language['VimL'].major?
-    assert Language['Visual Basic'].major?
-    assert Language['XQuery'].major?
-    assert Language['ooc'].major?
+  def test_programming
+    assert_equal :programming, Language['JavaScript'].type
+    assert_equal :programming, Language['Perl'].type
+    assert_equal :programming, Language['Python'].type
+    assert_equal :programming, Language['Ruby'].type
   end
 
-  def test_minor
-    assert Language['Brainfuck'].minor?
-    assert Language['HTML'].minor?
-    assert Language['Makefile'].minor?
-    assert Language['YAML'].minor?
+  def test_markup
+    assert_equal :markup, Language['HTML'].type
+    assert_equal :markup, Language['YAML'].type
+  end
+
+  def test_other
+    assert_nil Language['Brainfuck'].type
+    assert_nil Language['Makefile'].type
   end
 
   def test_searchable
@@ -381,7 +341,9 @@ class TestLanguage < Test::Unit::TestCase
   def test_find_all_by_extension
     Language.all.each do |language|
       language.extensions.each do |extension|
-        assert_equal language, Language.find_by_extension(extension)
+        unless Language.ambiguous?(extension)
+          assert_equal language, Language.find_by_extension(extension)
+        end
       end
     end
   end
@@ -457,6 +419,16 @@ Hello
       assert_equal <<-HTML, Language['Ruby'].colorize_without_wrapper("def foo\n  'foo'\nend\n")
 <span class="k">def</span> <span class="nf">foo</span>
   <span class="s1">&#39;foo&#39;</span>
+<span class="k">end</span>
+      HTML
+    end
+
+    def test_colorize_doesnt_strip_newlines
+      assert_equal <<-HTML, Language['Ruby'].colorize_without_wrapper("\n\n# Foo\ndef 'foo'\nend\n")
+
+
+<span class="c1"># Foo</span>
+<span class="k">def</span> <span class="s1">&#39;foo&#39;</span>
 <span class="k">end</span>
       HTML
     end

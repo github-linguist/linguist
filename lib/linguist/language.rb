@@ -9,11 +9,29 @@ module Linguist
   # Languages are defined in `lib/linguist/languages.yml`.
   class Language
     @languages       = []
+    @overrides       = {}
     @index           = {}
     @name_index      = {}
     @alias_index     = {}
     @extension_index = {}
     @filename_index  = {}
+
+    # Valid Languages types
+    TYPES = [:markup, :programming]
+
+    # Internal: Test if extension maps to multiple Languages.
+    #
+    # Returns true or false.
+    def self.ambiguous?(extension)
+      @overrides.include?(extension)
+    end
+
+    # Include?: Return overridden extensions.
+    #
+    # Returns extensions Array.
+    def self.overridden_extensions
+      @overrides.keys
+    end
 
     # Internal: Create a new Language object
     #
@@ -47,17 +65,21 @@ module Linguist
           warn "Extension is missing a '.': #{extension.inspect}"
         end
 
-        # All Language extensions should be unique. Warn if there is a
-        # duplicate.
-        if @extension_index.key?(extension)
-          warn "Duplicate extension: #{extension}"
+        unless ambiguous?(extension)
+          # Index the extension with a leading ".": ".rb"
+          @extension_index[extension] = language
+
+          # Index the extension without a leading ".": "rb"
+          @extension_index[extension.sub(/^\./, '')] = language
+        end
+      end
+
+      language.overrides.each do |extension|
+        if extension !~ /^\./
+          warn "Extension is missing a '.': #{extension.inspect}"
         end
 
-        # Index the extension with a leading ".": ".rb"
-        @extension_index[extension] = language
-
-        # Index the extension without a leading ".": "rb"
-        @extension_index[extension.sub(/^\./, '')] = language
+        @overrides[extension] = language
       end
 
       language.filenames.each do |filename|
@@ -179,6 +201,12 @@ module Linguist
       # @name is required
       @name = attributes[:name] || raise(ArgumentError, "missing name")
 
+      # Set type
+      @type = attributes[:type] ? attributes[:type].to_sym : nil
+      if @type && !TYPES.include?(@type)
+        raise ArgumentError, "invalid type: #{@type}"
+      end
+
       # Set aliases
       @aliases = [default_alias_name] + (attributes[:aliases] || [])
 
@@ -191,19 +219,15 @@ module Linguist
 
       # Set extensions or default to [].
       @extensions = attributes[:extensions] || []
+      @overrides  = attributes[:overrides]  || []
       @filenames  = attributes[:filenames]  || []
 
-      # Set popular, major, and searchable flags
+      # Set popular, and searchable flags
       @popular    = attributes.key?(:popular)    ? attributes[:popular]    : false
-      @major      = attributes.key?(:major)     ? attributes[:major]     : false
       @searchable = attributes.key?(:searchable) ? attributes[:searchable] : true
 
       # If group name is set, save the name so we can lazy load it later
       if attributes[:group_name]
-        if major?
-          warn "#{name} is a major language, it should not be grouped with #{attributes[:group_name]}"
-        end
-
         @group = nil
         @group_name = attributes[:group_name]
 
@@ -211,7 +235,6 @@ module Linguist
       else
         @group = self
       end
-
     end
 
     # Public: Get proper name
@@ -224,6 +247,11 @@ module Linguist
     #
     # Returns the name String
     attr_reader :name
+
+    # Public: Get type.
+    #
+    # Returns a type Symbol or nil.
+    attr_reader :type
 
     # Public: Get aliases
     #
@@ -260,6 +288,11 @@ module Linguist
     # Returns the extensions Array
     attr_reader :extensions
 
+    # Internal: Get overridden extensions.
+    #
+    # Returns the extensions Array.
+    attr_reader :overrides
+
     # Public: Get filenames
     #
     # Examples
@@ -278,12 +311,6 @@ module Linguist
 
     # Public: Get Language group
     #
-    # Minor languages maybe grouped with major languages for
-    # accounting purposes. For an example, JSP files are grouped as
-    # Java.
-    #
-    # For major languages, group should always return self.
-    #
     # Returns a Language
     def group
       @group ||= Language.find_by_name(@group_name)
@@ -301,26 +328,6 @@ module Linguist
     # Returns true or false
     def unpopular?
       !popular?
-    end
-
-    # Public: Is it major language?
-    #
-    # Major languages should be actual programming
-    # languages. Configuration formats should be excluded.
-    #
-    # Returns true or false
-    def major?
-      @major
-    end
-
-    # Public: Is it a minor language?
-    #
-    # Minor language include variants of major languages and
-    # markup languages like HTML and YAML.
-    #
-    # Returns true or false
-    def minor?
-      !major?
     end
 
     # Public: Is it searchable?
@@ -375,14 +382,15 @@ module Linguist
   YAML.load_file(File.expand_path("../languages.yml", __FILE__)).each do |name, options|
     Language.create(
       :name        => name,
+      :type        => options['type'],
       :aliases     => options['aliases'],
       :lexer       => options['lexer'],
       :group_name  => options['group'],
       :searchable  => options.key?('searchable') ? options['searchable'] : true,
       :search_term => options['search_term'],
       :extensions  => options['extensions'],
+      :overrides   => options['overrides'],
       :filenames   => options['filenames'],
-      :major       => options['major'],
       :popular     => popular.include?(name)
     )
   end

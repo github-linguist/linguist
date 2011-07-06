@@ -230,6 +230,17 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['Ruby'],        blob("wrong_shebang.rb").language
     assert_nil blob("octocat.png").language
 
+    # .pl disambiguation
+    assert_equal Language['Prolog'],      blob("test-prolog.pl").language
+    assert_equal Language['Perl'],        blob("test-perl.pl").language
+    assert_equal Language['Perl'],        blob("test-perl2.pl").language
+
+    # .m disambiguation
+    assert_equal Language['Objective-C'], blob("Foo.m").language
+    assert_equal Language['Objective-C'], blob("hello.m").language
+    assert_equal Language['Matlab'], blob("matlab_function.m").language
+    assert_equal Language['Matlab'], blob("matlab_script.m").language
+
     # .r disambiguation
     assert_equal Language['R'],           blob("hello-r.R").language
     assert_equal Language['Rebol'],       blob("hello-rebol.r").language
@@ -275,6 +286,9 @@ class TestBlob < Test::Unit::TestCase
 
     # http://docs.racket-lang.org/scribble/
     assert_equal Language['Racket'], blob("scribble.scrbl").language
+
+    # https://github.com/drupal/drupal/blob/7.x/modules/php/php.module
+    assert_equal Language['PHP'], blob("drupal.module").language
   end
 
   def test_lexer

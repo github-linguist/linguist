@@ -141,7 +141,7 @@ module Linguist
     #
     # Returns html String
     def colorize(text)
-      Albino.colorize(text, self)
+      Albino.new(text, self).colorize(:O => 'stripnl=false')
     end
 
     # Public: Highlight syntax of text without the outer highlight div
