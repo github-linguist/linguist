@@ -248,26 +248,19 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal 'bat',           Language['Batchfile'].search_term
     assert_equal 'csharp',        Language['C#'].search_term
     assert_equal 'cpp',           Language['C++'].search_term
-    assert_equal 'chuck',         Language['ChucK'].search_term
     assert_equal 'cfm',           Language['ColdFusion'].search_term
     assert_equal 'dpatch',        Language['Darcs Patch'].search_term
-    assert_equal 'emacs-lisp',    Language['Emacs Lisp'].search_term
     assert_equal 'ocaml',         Language['F#'].search_term
-    assert_equal 'gentoo-ebuild', Language['Gentoo Ebuild'].search_term
-    assert_equal 'gentoo-eclass', Language['Gentoo Eclass'].search_term
     assert_equal 'pot',           Language['Gettext Catalog'].search_term
     assert_equal 'irc',           Language['IRC log'].search_term
-    assert_equal 'groovy',        Language['Groovy'].search_term
     assert_equal 'javascript',    Language['JSON'].search_term
     assert_equal 'lhs',           Language['Literate Haskell'].search_term
     assert_equal 'ruby',          Language['Mirah'].search_term
-    assert_equal 'nu',            Language['Nu'].search_term
     assert_equal 'pir',           Language['Parrot Internal Representation'].search_term
     assert_equal 'pytb',          Language['Python traceback'].search_term
     assert_equal 'raw',           Language['Raw token data'].search_term
     assert_equal 'bash',          Language['Shell'].search_term
     assert_equal 'vim',           Language['VimL'].search_term
-    assert_equal 'xs',            Language['XS'].search_term
     assert_equal 'jsp',           Language['Java Server Pages'].search_term
     assert_equal 'rst',           Language['reStructuredText'].search_term
   end
