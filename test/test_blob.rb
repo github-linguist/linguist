@@ -289,6 +289,9 @@ class TestBlob < Test::Unit::TestCase
 
     # https://github.com/drupal/drupal/blob/7.x/modules/php/php.module
     assert_equal Language['PHP'], blob("drupal.module").language
+
+    # https://github.com/googleapi/googleapi/blob/master/demos/gmail_demo/gmail.dpr
+    assert_equal Language['Delphi'], blob("program.dpr").language
   end
 
   def test_lexer
