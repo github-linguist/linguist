@@ -204,6 +204,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['Shell'], Language.find_by_alias('shell')
     assert_equal Language['Shell'], Language.find_by_alias('zsh')
     assert_equal Language['TeX'], Language.find_by_alias('tex')
+    assert_equal Language['TeX'], Language.find_by_alias('latex')
     assert_equal Language['Textile'], Language.find_by_alias('textile')
     assert_equal Language['VimL'], Language.find_by_alias('vim')
     assert_equal Language['VimL'], Language.find_by_alias('viml')
