@@ -16,6 +16,9 @@ module Linguist
     @extension_index = {}
     @filename_index  = {}
 
+    # Valid Languages types
+    TYPES = [:markup, :programming]
+
     # Internal: Test if extension maps to multiple Languages.
     #
     # Returns true or false.
@@ -198,6 +201,12 @@ module Linguist
       # @name is required
       @name = attributes[:name] || raise(ArgumentError, "missing name")
 
+      # Set type
+      @type = attributes[:type] ? attributes[:type].to_sym : nil
+      if @type && !TYPES.include?(@type)
+        raise ArgumentError, "invalid type: #{@type}"
+      end
+
       # Set aliases
       @aliases = [default_alias_name] + (attributes[:aliases] || [])
 
@@ -213,17 +222,12 @@ module Linguist
       @overrides  = attributes[:overrides]  || []
       @filenames  = attributes[:filenames]  || []
 
-      # Set popular, major, and searchable flags
+      # Set popular, and searchable flags
       @popular    = attributes.key?(:popular)    ? attributes[:popular]    : false
-      @major      = attributes.key?(:major)     ? attributes[:major]     : false
       @searchable = attributes.key?(:searchable) ? attributes[:searchable] : true
 
       # If group name is set, save the name so we can lazy load it later
       if attributes[:group_name]
-        if major?
-          warn "#{name} is a major language, it should not be grouped with #{attributes[:group_name]}"
-        end
-
         @group = nil
         @group_name = attributes[:group_name]
 
@@ -231,7 +235,6 @@ module Linguist
       else
         @group = self
       end
-
     end
 
     # Public: Get proper name
@@ -244,6 +247,11 @@ module Linguist
     #
     # Returns the name String
     attr_reader :name
+
+    # Public: Get type.
+    #
+    # Returns a type Symbol or nil.
+    attr_reader :type
 
     # Public: Get aliases
     #
@@ -303,12 +311,6 @@ module Linguist
 
     # Public: Get Language group
     #
-    # Minor languages maybe grouped with major languages for
-    # accounting purposes. For an example, JSP files are grouped as
-    # Java.
-    #
-    # For major languages, group should always return self.
-    #
     # Returns a Language
     def group
       @group ||= Language.find_by_name(@group_name)
@@ -326,26 +328,6 @@ module Linguist
     # Returns true or false
     def unpopular?
       !popular?
-    end
-
-    # Public: Is it major language?
-    #
-    # Major languages should be actual programming
-    # languages. Configuration formats should be excluded.
-    #
-    # Returns true or false
-    def major?
-      @major
-    end
-
-    # Public: Is it a minor language?
-    #
-    # Minor language include variants of major languages and
-    # markup languages like HTML and YAML.
-    #
-    # Returns true or false
-    def minor?
-      !major?
     end
 
     # Public: Is it searchable?
@@ -400,6 +382,7 @@ module Linguist
   YAML.load_file(File.expand_path("../languages.yml", __FILE__)).each do |name, options|
     Language.create(
       :name        => name,
+      :type        => options['type'],
       :aliases     => options['aliases'],
       :lexer       => options['lexer'],
       :group_name  => options['group'],
@@ -408,7 +391,6 @@ module Linguist
       :extensions  => options['extensions'],
       :overrides   => options['overrides'],
       :filenames   => options['filenames'],
-      :major       => options['major'],
       :popular     => popular.include?(name)
     )
   end

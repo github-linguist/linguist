@@ -5,13 +5,12 @@
 # lexer exists in lexers.yml. This is a list of available in our
 # version of pygments.
 #
+# type        - Either programming, markup, or nil
 # lexer       - An explicit lexer String (defaults to name.downcase)
 # aliases     - An Array of additional aliases (implicitly
 #               includes name.downcase)
 # extension   - An Array of associated extensions
 # overrides   - An Array of extensions that takes precedence over conflicts
-# major       - Boolean flag major programming languages. Please leave
-#               this option to GitHub staff to decide.
 # searchable  - Boolean flag to enable searching (defaults to true)
 # search_term - Deprecated: Some languages maybe indexed under a
 #               different alias. Avoid defining new exceptions.
@@ -22,7 +21,7 @@
 # Please keep this list alphabetized.
 
 ASP:
-  major: true
+  type: programming
   lexer: aspx-vb
   search_term: aspx-vb
   aliases:
@@ -38,7 +37,7 @@ ASP:
   - .asp
 
 ActionScript:
-  major: true
+  type: programming
   lexer: ActionScript 3
   search_term: as3
   aliases:
@@ -47,7 +46,7 @@ ActionScript:
   - .as
 
 Ada:
-  major: true
+  type: programming
   extensions:
   - .adb
   - .ads
@@ -58,13 +57,13 @@ AppleScript:
   - .applescript
 
 Arc:
-  major: true
+  type: programming
   lexer: Text only
   extensions:
   - .arc
 
 Assembly:
-  major: true
+  type: programming
   lexer: NASM
   search_term: nasm
   aliases:
@@ -73,6 +72,7 @@ Assembly:
   - .asm
 
 Batchfile:
+  type: programming
   group: Shell
   search_term: bat
   aliases:
@@ -90,7 +90,7 @@ BlitzMax:
   - .bmx
 
 Boo:
-  major: true
+  type: programming
   extensions:
   - .boo
 
@@ -100,7 +100,7 @@ Brainfuck:
   - .bf
 
 C:
-  major: true
+  type: programming
   overrides:
   - .h
   extensions:
@@ -108,7 +108,7 @@ C:
   - .h
 
 C#:
-  major: true
+  type: programming
   search_term: csharp
   aliases:
   - csharp
@@ -116,7 +116,7 @@ C#:
   - .cs
 
 C++:
-  major: true
+  type: programming
   search_term: cpp
   aliases:
   - cpp
@@ -148,19 +148,19 @@ ChucK:
   - .ck
 
 Clojure:
-  major: true
+  type: programming
   extensions:
   - .clj
 
 CoffeeScript:
-  major: true
+  type: programming
   extensions:
   - .coffee
   filenames:
   - Cakefile
 
 ColdFusion:
-  major: true
+  type: programming
   lexer: Coldfusion HTML
   search_term: cfm
   aliases:
@@ -170,7 +170,7 @@ ColdFusion:
   - .cfc
 
 Common Lisp:
-  major: true
+  type: programming
   aliases:
   - lisp
   extensions:
@@ -190,6 +190,7 @@ Cucumber:
   - .feature
 
 Cython:
+  type: programming
   group: Python
   extensions:
   - .pyx
@@ -197,7 +198,7 @@ Cython:
   - .pxi
 
 D:
-  major: true
+  type: programming
   extensions:
   - .d
   - .di
@@ -216,7 +217,7 @@ Darcs Patch:
   - .dpatch
 
 Delphi:
-  major: true
+  type: programming
   extensions:
   - .pas
 
@@ -226,18 +227,18 @@ Diff:
   - .patch
 
 Dylan:
-  major: true
+  type: programming
   extensions:
   - .dylan
 
 Eiffel:
-  major: true
+  type: programming
   lexer: Text only
   extensions:
   - .e
 
 Emacs Lisp:
-  major: true
+  type: programming
   lexer: Scheme
   aliases:
   - elisp
@@ -246,13 +247,13 @@ Emacs Lisp:
   - .emacs
 
 Erlang:
-  major: true
+  type: programming
   extensions:
   - .hrl
   - .erl
 
 F#:
-  major: true
+  type: programming
   lexer: OCaml
   search_term: ocaml
   extensions:
@@ -261,7 +262,7 @@ F#:
   - .fsx
 
 FORTRAN:
-  major: true
+  type: programming
   lexer: Fortran
   extensions:
   - .f
@@ -270,17 +271,18 @@ FORTRAN:
   - .F90
 
 Factor:
-  major: true
+  type: programming
   extensions:
   - .factor
 
 Fancy:
-  major: true
+  type: programming
   extensions:
   - .fy
   - .fancypack
 
 GAS:
+  type: programming
   group: Assembly
   extensions:
   - .s
@@ -312,7 +314,7 @@ Gettext Catalog:
   - .pot
 
 Go:
-  major: true
+  type: programming
   extensions:
   - .go
 
@@ -328,13 +330,14 @@ Groff:
   - '.7'
 
 Groovy:
-  major: true
+  type: programming
   lexer: Java
   extensions:
   - .gradle
   - .groovy
 
 HTML:
+  type: markup
   extensions:
   - .html
   - .xhtml
@@ -342,12 +345,14 @@ HTML:
   - .xslt
 
 HTML+Django:
+  type: markup
   group: HTML
   lexer: HTML+Django/Jinja
   extensions:
   - .mustache
 
 HTML+ERB:
+  type: markup
   group: HTML
   lexer: RHTML
   extensions:
@@ -355,12 +360,13 @@ HTML+ERB:
   - .html.erb
 
 HTML+PHP:
+  type: markup
   group: HTML
   extensions:
   - .phtml
 
 HaXe:
-  major: true
+  type: programming
   lexer: haXe
   extensions:
   - .hx
@@ -368,11 +374,12 @@ HaXe:
   - .mtt
 
 Haml:
+  type: markup
   extensions:
   - .haml
 
 Haskell:
-  major: true
+  type: programming
   extensions:
   - .hs
   - .hsc
@@ -394,7 +401,7 @@ IRC log:
   - .weechatlog
 
 Io:
-  major: true
+  type: programming
   extensions:
   - .io
 
@@ -406,7 +413,7 @@ JSON:
   - .json
 
 Java:
-  major: true
+  type: programming
   extensions:
   - .java
   - .pde
@@ -421,7 +428,7 @@ Java Server Pages:
   - .jsp
 
 JavaScript:
-  major: true
+  type: programming
   aliases:
   - js
   - node
@@ -447,6 +454,7 @@ LilyPond:
   - .ily
 
 Literate Haskell:
+  type: programming
   group: Haskell
   search_term: lhs
   aliases:
@@ -455,7 +463,7 @@ Literate Haskell:
   - .lhs
 
 Lua:
-  major: true
+  type: programming
   extensions:
   - .lua
   - .nse
@@ -471,6 +479,7 @@ Mako:
   - .mao
 
 Markdown:
+  type: programming
   lexer: Text only
   extensions:
   - .md
@@ -485,7 +494,7 @@ Matlab:
   - .matlab
 
 Max/MSP:
-  major: true
+  type: programming
   lexer: Text only
   extensions:
   - .mxt
@@ -494,7 +503,7 @@ MiniD: # Legacy
   searchable: false
 
 Mirah:
-  major: true
+  type: programming
   lexer: Ruby
   search_term: ruby
   extensions:
@@ -516,7 +525,7 @@ Nimrod:
   - .nim
 
 Nu:
-  major: true
+  type: programming
   lexer: Scheme
   aliases:
   - nush
@@ -533,7 +542,7 @@ NumPy:
   - .numpyw
 
 OCaml:
-  major: true
+  type: programming
   extensions:
   - .ml
   - .mly
@@ -546,7 +555,7 @@ ObjDump:
   - .objdump
 
 Objective-C:
-  major: true
+  type: programming
   overrides:
   - .m
   extensions:
@@ -555,19 +564,20 @@ Objective-C:
   - .mm
 
 Objective-J:
-  major: true
+  type: programming
   extensions:
   - .j
   - .sj
 
 OpenCL:
+  type: programming
   group: C
   lexer: C
   extensions:
   - .cl
 
 PHP:
-  major: true
+  type: programming
   extensions:
   - .php
   - .aw
@@ -587,7 +597,7 @@ Parrot Internal Representation:
   - .pasm
 
 Perl:
-  major: true
+  type: programming
   overrides:
   - .pl
   extensions:
@@ -601,20 +611,20 @@ Perl:
   - .psgi
 
 Prolog:
-  major: true
+  type: programming
   extensions:
   - .pl
   - .pro
   - .prolog
 
 Pure Data:
-  major: true
+  type: programming
   lexer: Text only
   extensions:
   - .pd
 
 Python:
-  major: true
+  type: programming
   extensions:
   - .py
   - .pyw
@@ -629,7 +639,7 @@ Python traceback:
   - .pytb
 
 R:
-  major: true
+  type: programming
   lexer: S
   overrides:
   - .r
@@ -638,12 +648,13 @@ R:
   - .R
 
 RHTML:
+  type: markup
   group: HTML
   extensions:
   - .rhtml
 
 Racket:
-  major: true
+  type: programming
   lexer: Scheme
   extensions:
   - .rkt
@@ -671,7 +682,7 @@ Redcode:
   - .cw
 
 Ruby:
-  major: true
+  type: programming
   aliases:
   - jruby
   - macruby
@@ -706,12 +717,12 @@ Sass:
   - .sass
 
 Scala:
-  major: true
+  type: programming
   extensions:
   - .scala
 
 Scheme:
-  major: true
+  type: programming
   extensions:
   - .sls
   - .ss
@@ -719,13 +730,13 @@ Scheme:
   - .scm
 
 Self:
-  major: true
+  type: programming
   lexer: Text only
   extensions:
   - .self
 
 Shell:
-  major: true
+  type: programming
   lexer: Bash
   search_term: bash
   aliases:
@@ -745,7 +756,7 @@ Shell:
   - .zshrc
 
 Smalltalk:
-  major: true
+  type: programming
   extensions:
   - .st
 
@@ -762,17 +773,18 @@ Standard ML:
   - .sml
 
 SuperCollider:
-  major: true
+  type: programming
   lexer: Text only
   extensions:
   - .sc
 
 Tcl:
-  major: true
+  type: programming
   extensions:
   - .tcl
 
 Tcsh:
+  type: programming
   group: Shell
   extensions:
   - .tcsh
@@ -792,30 +804,31 @@ Text:
   - .txt
 
 Textile:
+  type: markup
   lexer: Text only
   extensions:
   - .textile
 
 VHDL:
-  major: true
+  type: programming
   lexer: Text only
   extensions:
   - .vhdl
   - .vhd
 
 Vala:
-  major: true
+  type: programming
   extensions:
   - .vala
 
 Verilog:
-  major: true
+  type: programming
   lexer: Text only
   extensions:
   - .v
 
 VimL:
-  major: true
+  type: programming
   search_term: vim
   aliases:
   - vim
@@ -826,7 +839,7 @@ VimL:
   - .gvimrc
 
 Visual Basic:
-  major: true
+  type: programming
   lexer: Text only
   extensions:
   - .bas
@@ -836,6 +849,7 @@ Visual Basic:
   - .vb
 
 XML:
+  type: markup
   extensions:
   - .xml
   - .rss
@@ -848,7 +862,7 @@ XML:
   - .rdf
 
 XQuery:
-  major: true
+  type: programming
   extensions:
   - .xq
   - .xqm
@@ -861,6 +875,7 @@ XS:
   - .xs
 
 YAML:
+  type: markup
   extensions:
   - .yml
   - .yaml
@@ -873,12 +888,13 @@ mupad:
   - .mu
 
 ooc:
-  major: true
+  type: programming
   lexer: Ooc
   extensions:
   - .ooc
 
 reStructuredText:
+  type: markup
   search_term: rst
   aliases:
   - rst

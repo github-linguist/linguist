@@ -213,23 +213,18 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['reStructuredText'], Language.find_by_alias('rst')
   end
 
-  def test_major_groups
-    Language.all.each do |language|
-      if language.major?
-        assert_equal language, language.group
-      end
-    end
-  end
-
   def test_groups
     assert_equal Language['Assembly'], Language['GAS'].group
     assert_equal Language['C'], Language['OpenCL'].group
     assert_equal Language['Haskell'], Language['Literate Haskell'].group
     assert_equal Language['Java'], Language['Java Server Pages'].group
     assert_equal Language['JavaScript'], Language['JSON'].group
+    assert_equal Language['Perl'], Language['Perl'].group
     assert_equal Language['Python'], Language['Cython'].group
     assert_equal Language['Python'], Language['NumPy'].group
     assert_equal Language['Python'], Language['Python traceback'].group
+    assert_equal Language['Python'], Language['Python'].group
+    assert_equal Language['Ruby'], Language['Ruby'].group
     assert_equal Language['Shell'], Language['Batchfile'].group
     assert_equal Language['Shell'], Language['Gentoo Ebuild'].group
     assert_equal Language['Shell'], Language['Gentoo Eclass'].group
@@ -285,72 +280,21 @@ class TestLanguage < Test::Unit::TestCase
     assert Language['Brainfuck'].unpopular?
   end
 
-  def test_major
-    # Add an assertion to this list if you add/change any major
-    # settings in languages.yml. Please keep this list alphabetized.
-    assert Language['ASP'].major?
-    assert Language['ActionScript'].major?
-    assert Language['Ada'].major?
-    assert Language['Arc'].major?
-    assert Language['Assembly'].major?
-    assert Language['Boo'].major?
-    assert Language['C#'].major?
-    assert Language['C'].major?
-    assert Language['C++'].major?
-    assert Language['Clojure'].major?
-    assert Language['CoffeeScript'].major?
-    assert Language['ColdFusion'].major?
-    assert Language['Common Lisp'].major?
-    assert Language['D'].major?
-    assert Language['Delphi'].major?
-    assert Language['Dylan'].major?
-    assert Language['Eiffel'].major?
-    assert Language['Emacs Lisp'].major?
-    assert Language['Erlang'].major?
-    assert Language['F#'].major?
-    assert Language['FORTRAN'].major?
-    assert Language['Factor'].major?
-    assert Language['Go'].major?
-    assert Language['Groovy'].major?
-    assert Language['HaXe'].major?
-    assert Language['Haskell'].major?
-    assert Language['Io'].major?
-    assert Language['Java'].major?
-    assert Language['JavaScript'].major?
-    assert Language['Lua'].major?
-    assert Language['Max/MSP'].major?
-    assert Language['Nu'].major?
-    assert Language['OCaml'].major?
-    assert Language['Objective-C'].major?
-    assert Language['Objective-J'].major?
-    assert Language['PHP'].major?
-    assert Language['Perl'].major?
-    assert Language['Prolog'].major?
-    assert Language['Pure Data'].major?
-    assert Language['Python'].major?
-    assert Language['R'].major?
-    assert Language['Racket'].major?
-    assert Language['Ruby'].major?
-    assert Language['Scala'].major?
-    assert Language['Scheme'].major?
-    assert Language['Self'].major?
-    assert Language['Smalltalk'].major?
-    assert Language['SuperCollider'].major?
-    assert Language['Tcl'].major?
-    assert Language['VHDL'].major?
-    assert Language['Vala'].major?
-    assert Language['Verilog'].major?
-    assert Language['VimL'].major?
-    assert Language['Visual Basic'].major?
-    assert Language['XQuery'].major?
-    assert Language['ooc'].major?
+  def test_programming
+    assert_equal :programming, Language['JavaScript'].type
+    assert_equal :programming, Language['Perl'].type
+    assert_equal :programming, Language['Python'].type
+    assert_equal :programming, Language['Ruby'].type
   end
 
-  def test_minor
-    assert Language['Brainfuck'].minor?
-    assert Language['HTML'].minor?
-    assert Language['Makefile'].minor?
-    assert Language['YAML'].minor?
+  def test_markup
+    assert_equal :markup, Language['HTML'].type
+    assert_equal :markup, Language['YAML'].type
+  end
+
+  def test_other
+    assert_nil Language['Brainfuck'].type
+    assert_nil Language['Makefile'].type
   end
 
   def test_searchable

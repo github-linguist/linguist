@@ -70,12 +70,9 @@ module Linguist
         # Skip vendored or generated blobs
         next if blob.vendored? || blob.generated? || blob.language.nil?
 
-        # Get language group
-        language = blob.language.group
-
-        # Only include major languages
-        if language.major?
-          @sizes[language] += blob.size
+        # Only include programming languages
+        if blob.language.type == :programming
+          @sizes[blob.language.group] += blob.size
         end
       end
 
