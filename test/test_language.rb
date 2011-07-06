@@ -5,6 +5,17 @@ require 'test/unit'
 class TestLanguage < Test::Unit::TestCase
   include Linguist
 
+  def test_ambiguous_extensions
+    assert Language.ambiguous?('.m')
+    assert_equal Language['Objective-C'], Language.find_by_extension('m')
+
+    assert Language.ambiguous?('.pl')
+    assert_equal Language['Perl'], Language.find_by_extension('pl')
+
+    assert Language.ambiguous?('.r')
+    assert_equal Language['R'], Language.find_by_extension('r')
+  end
+
   def test_lexer
     # Add an assertion to this list if you add/change any lexers
     # in languages.yml. Please keep this list alphabetized.
@@ -383,7 +394,9 @@ class TestLanguage < Test::Unit::TestCase
   def test_find_all_by_extension
     Language.all.each do |language|
       language.extensions.each do |extension|
-        assert_equal language, Language.find_by_extension(extension)
+        unless Language.ambiguous?(extension)
+          assert_equal language, Language.find_by_extension(extension)
+        end
       end
     end
   end

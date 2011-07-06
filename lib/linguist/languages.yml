@@ -9,6 +9,7 @@
 # aliases     - An Array of additional aliases (implicitly
 #               includes name.downcase)
 # extension   - An Array of associated extensions
+# overrides   - An Array of extensions that takes precedence over conflicts
 # major       - Boolean flag major programming languages. Please leave
 #               this option to GitHub staff to decide.
 # searchable  - Boolean flag to enable searching (defaults to true)
@@ -477,6 +478,7 @@ Markdown:
 
 Matlab:
   extensions:
+  - .m
   - .matlab
 
 Max/MSP:
@@ -542,6 +544,8 @@ ObjDump:
 
 Objective-C:
   major: true
+  overrides:
+  - .m
   extensions:
   - .m
   - .mm
@@ -580,6 +584,8 @@ Parrot Internal Representation:
 
 Perl:
   major: true
+  overrides:
+  - .pl
   extensions:
   - .pl
   - .ph
@@ -593,6 +599,7 @@ Perl:
 Prolog:
   major: true
   extensions:
+  - .pl
   - .pro
   - .prolog
 
@@ -620,6 +627,8 @@ Python traceback:
 R:
   major: true
   lexer: S
+  overrides:
+  - .r
   extensions:
   - .r
   - .R
@@ -648,9 +657,10 @@ Raw token data:
 Rebol:
   lexer: REBOL
   extensions:
-  - .rebol
+  - .r
   - .r2
   - .r3
+  - .rebol
 
 Redcode:
   extensions:

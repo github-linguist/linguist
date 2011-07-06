@@ -9,11 +9,26 @@ module Linguist
   # Languages are defined in `lib/linguist/languages.yml`.
   class Language
     @languages       = []
+    @overrides       = {}
     @index           = {}
     @name_index      = {}
     @alias_index     = {}
     @extension_index = {}
     @filename_index  = {}
+
+    # Internal: Test if extension maps to multiple Languages.
+    #
+    # Returns true or false.
+    def self.ambiguous?(extension)
+      @overrides.include?(extension)
+    end
+
+    # Include?: Return overridden extensions.
+    #
+    # Returns extensions Array.
+    def self.overridden_extensions
+      @overrides.keys
+    end
 
     # Internal: Create a new Language object
     #
@@ -47,17 +62,21 @@ module Linguist
           warn "Extension is missing a '.': #{extension.inspect}"
         end
 
-        # All Language extensions should be unique. Warn if there is a
-        # duplicate.
-        if @extension_index.key?(extension)
-          warn "Duplicate extension: #{extension}"
+        unless ambiguous?(extension)
+          # Index the extension with a leading ".": ".rb"
+          @extension_index[extension] = language
+
+          # Index the extension without a leading ".": "rb"
+          @extension_index[extension.sub(/^\./, '')] = language
+        end
+      end
+
+      language.overrides.each do |extension|
+        if extension !~ /^\./
+          warn "Extension is missing a '.': #{extension.inspect}"
         end
 
-        # Index the extension with a leading ".": ".rb"
-        @extension_index[extension] = language
-
-        # Index the extension without a leading ".": "rb"
-        @extension_index[extension.sub(/^\./, '')] = language
+        @overrides[extension] = language
       end
 
       language.filenames.each do |filename|
@@ -191,6 +210,7 @@ module Linguist
 
       # Set extensions or default to [].
       @extensions = attributes[:extensions] || []
+      @overrides  = attributes[:overrides]  || []
       @filenames  = attributes[:filenames]  || []
 
       # Set popular, major, and searchable flags
@@ -259,6 +279,11 @@ module Linguist
     #
     # Returns the extensions Array
     attr_reader :extensions
+
+    # Internal: Get overridden extensions.
+    #
+    # Returns the extensions Array.
+    attr_reader :overrides
 
     # Public: Get filenames
     #
@@ -381,6 +406,7 @@ module Linguist
       :searchable  => options.key?('searchable') ? options['searchable'] : true,
       :search_term => options['search_term'],
       :extensions  => options['extensions'],
+      :overrides   => options['overrides'],
       :filenames   => options['filenames'],
       :major       => options['major'],
       :popular     => popular.include?(name)
