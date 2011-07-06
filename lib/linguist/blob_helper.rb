@@ -173,6 +173,9 @@ module Linguist
     # - XCode project XML files
     # - Minified JavaScript
     #
+    # Please add additional test coverage to
+    # `test/test_blob.rb#test_generated` if you make any changes.
+    #
     # Return true or false
     def generated?
       if ['.xib', '.nib', '.pbxproj'].include?(extname)
@@ -239,6 +242,9 @@ module Linguist
     # - Langauges marked as not searchable
     # - Generated source files
     #
+    # Please add additional test coverage to
+    # `test/test_blob.rb#test_indexable` if you make any changes.
+    #
     # Return true or false
     def indexable?
       if binary?
@@ -271,6 +277,9 @@ module Linguist
 
     # Internal: Guess language
     #
+    # Please add additional test coverage to
+    # `test/test_blob.rb#test_language` if you make any changes.
+    #
     # Returns a Language or nil
     def guess_language
       return if binary?
@@ -298,6 +307,9 @@ module Linguist
     # Internal: Disambiguates between multiple language extensions.
     #
     # Delegates to "guess_EXTENSION_language".
+    #
+    # Please add additional test coverage to
+    # `test/test_blob.rb#test_language` if you add another method.
     #
     # Returns a Language or nil.
     def disambiguate_extension_language
@@ -407,6 +419,9 @@ module Linguist
     #
     #   '#!/usr/bash/python2.4'
     #   # => 'python'
+    #
+    # Please add additional test coverage to
+    # `test/test_blob.rb#test_shebang_script` if you make any changes.
     #
     # Returns a script name String or nil
     def shebang_script
