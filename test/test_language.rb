@@ -193,7 +193,6 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['Parrot Internal Representation'], Language.find_by_alias('pir')
     assert_equal Language['Perl'], Language.find_by_alias('perl')
     assert_equal Language['Pure Data'], Language.find_by_alias('pure-data')
-    assert_equal Language['Python traceback'], Language.find_by_alias('pytb')
     assert_equal Language['Python'], Language.find_by_alias('python')
     assert_equal Language['Raw token data'], Language.find_by_alias('raw')
     assert_equal Language['Ruby'], Language.find_by_alias('rb')
@@ -256,7 +255,6 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal 'lhs',           Language['Literate Haskell'].search_term
     assert_equal 'ruby',          Language['Mirah'].search_term
     assert_equal 'pir',           Language['Parrot Internal Representation'].search_term
-    assert_equal 'pytb',          Language['Python traceback'].search_term
     assert_equal 'raw',           Language['Raw token data'].search_term
     assert_equal 'bash',          Language['Shell'].search_term
     assert_equal 'vim',           Language['VimL'].search_term
