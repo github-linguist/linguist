@@ -17,7 +17,7 @@ module Linguist
     @filename_index  = {}
 
     # Valid Languages types
-    TYPES = [:markup, :programming]
+    TYPES = [:data, :markup, :programming]
 
     # Internal: Test if extension maps to multiple Languages.
     #

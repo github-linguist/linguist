@@ -5,7 +5,7 @@
 # lexer exists in lexers.yml. This is a list of available in our
 # version of pygments.
 #
-# type        - Either programming, markup, or nil
+# type        - Either data, programming, markup, or nil
 # lexer       - An explicit lexer String (defaults to name.downcase)
 # aliases     - An Array of additional aliases (implicitly
 #               includes name.downcase)
@@ -134,6 +134,7 @@ C++:
   - .tcc
 
 C-ObjDump:
+  type: data
   lexer: c-objdump
   extensions:
   - .c-objdump
@@ -178,6 +179,7 @@ Common Lisp:
   - .ny
 
 Cpp-ObjDump:
+  type: data
   lexer: cpp-objdump
   extensions:
   - .cppobjdump
@@ -204,6 +206,7 @@ D:
   - .di
 
 D-ObjDump:
+  type: data
   lexer: d-objdump
   extensions:
   - .d-objdump
@@ -386,6 +389,7 @@ Haskell:
   - .hsc
 
 INI:
+  type: data
   extensions:
   - .cfg
   - .ini
@@ -407,6 +411,7 @@ Io:
   - .io
 
 JSON:
+  type: data
   group: JavaScript
   lexer: JavaScript
   searchable: false
@@ -551,6 +556,7 @@ OCaml:
   - .mll
 
 ObjDump:
+  type: data
   lexer: objdump
   extensions:
   - .objdump
@@ -631,6 +637,7 @@ Python:
   - .pyw
 
 Python traceback:
+  type: data
   group: Python
   lexer: Python Traceback
   search_term: pytb
@@ -709,6 +716,7 @@ Ruby:
   - Gemfile
 
 SQL:
+  type: data
   searchable: false
   extensions:
   - .sql
@@ -801,6 +809,7 @@ TeX:
   - .aux
 
 Text:
+  type: data
   lexer: Text only
   extensions:
   - .txt
