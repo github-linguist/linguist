@@ -171,6 +171,7 @@ class TestMime < Test::Unit::TestCase
     assert Mime.text?('.sh')
     assert Mime.text?('.sig')
     assert Mime.text?('.sml')
+    assert Mime.text?('.sps')
     assert Mime.text?('.src')
     assert Mime.text?('.tcl')
     assert Mime.text?('.texi')

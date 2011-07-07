@@ -292,6 +292,9 @@ class TestBlob < Test::Unit::TestCase
 
     # https://github.com/googleapi/googleapi/blob/master/demos/gmail_demo/gmail.dpr
     assert_equal Language['Delphi'], blob("program.dpr").language
+
+    # https://github.com/dharmatech/agave/blob/master/demos/asteroids.sps
+    assert_equal Language['Scheme'], blob("asteroids.sps").language
   end
 
   def test_lexer
