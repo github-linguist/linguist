@@ -296,7 +296,7 @@ class TestBlob < Test::Unit::TestCase
     # https://github.com/philiplaureano/Nemerle.FizzBuzz/blob/master/FizzBuzz/FizzBuzzer.n
     assert_equal Language['Nemerle'], blob("hello.n").language
 
-        # https://github.com/dharmatech/agave/blob/master/demos/asteroids.sps
+    # https://github.com/dharmatech/agave/blob/master/demos/asteroids.sps
     assert_equal Language['Scheme'], blob("asteroids.sps").language
   end
 
