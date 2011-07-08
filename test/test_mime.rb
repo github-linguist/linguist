@@ -48,6 +48,7 @@ class TestMime < Test::Unit::TestCase
     assert_equal 'application/xaml+xml', Mime.mime_for('.xaml')
     assert_equal 'text/cache-manifest', Mime.mime_for('.manifest')
     assert_equal 'text/html', Mime.mime_for('.html')
+    assert_equal 'text/nemerle', Mime.mime_for('.n')
     assert_equal 'text/nimrod', Mime.mime_for('.nim')
     assert_equal 'text/ocaml', Mime.mime_for('.ml')
     assert_equal 'text/ocaml', Mime.mime_for('.sig')
@@ -156,6 +157,7 @@ class TestMime < Test::Unit::TestCase
     assert Mime.text?('text/javascript')
     assert Mime.text?('text/plain')
     assert Mime.text?('text/x-nimrod')
+    assert Mime.text?('text/x-nemerle')
 
     # Legacy. Prefer testing mime types instead of extensions.
     assert Mime.text?('.cu')
