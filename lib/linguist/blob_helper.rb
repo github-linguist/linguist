@@ -385,7 +385,7 @@ module Linguist
     # Returns a Language.
     def guess_r_language
       if lines.grep(/(rebol|(:\s+func|make\s+object!|^\s*context)\s*\[)/i).any?
-        Language['Rebol']
+        Language['REBOL']
       else
         Language['R']
       end

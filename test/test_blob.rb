@@ -243,7 +243,7 @@ class TestBlob < Test::Unit::TestCase
 
     # .r disambiguation
     assert_equal Language['R'],           blob("hello-r.R").language
-    assert_equal Language['Rebol'],       blob("hello-rebol.r").language
+    assert_equal Language['REBOL'],       blob("hello-rebol.r").language
 
     # ML
     assert_equal Language['OCaml'],       blob("Foo.ml").language
