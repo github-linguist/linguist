@@ -45,7 +45,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['OCaml'], Language['OCaml'].lexer
     assert_equal Lexer['OCaml'], Language['Standard ML'].lexer
     assert_equal Lexer['Ooc'], Language['ooc'].lexer
-    assert_equal Lexer['REBOL'], Language['Rebol'].lexer
+    assert_equal Lexer['REBOL'], Language['REBOL'].lexer
     assert_equal Lexer['RHTML'], Language['HTML+ERB'].lexer
     assert_equal Lexer['RHTML'], Language['RHTML'].lexer
     assert_equal Lexer['Ruby'], Language['Mirah'].lexer
