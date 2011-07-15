@@ -62,6 +62,8 @@ class TestMime < Test::Unit::TestCase
     assert_equal 'text/plain', Mime.mime_for('.hh')
     assert_equal 'text/plain', Mime.mime_for('.hpp')
     assert_equal 'text/plain', Mime.mime_for('.kt')
+    assert_equal 'text/rust', Mime.mime_for('.rs')
+    assert_equal 'text/rust', Mime.mime_for('.rc')
     assert_equal 'video/quicktime', Mime.mime_for('.mov')
   end
 
