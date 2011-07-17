@@ -298,6 +298,9 @@ class TestBlob < Test::Unit::TestCase
 
     # https://github.com/dharmatech/agave/blob/master/demos/asteroids.sps
     assert_equal Language['Scheme'], blob("asteroids.sps").language
+
+    # https://github.com/graydon/rust
+    assert_equal Language['Rust'], blob("hello.rs").language
   end
 
   def test_lexer
