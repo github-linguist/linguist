@@ -304,7 +304,7 @@ class TestBlob < Test::Unit::TestCase
     # with xml with unknown extension to ensure xml files are properly recognized
     # by the first line.
     assert_equal Language['XML'], blob("image.svg").language
-    end
+  end
 
   def test_lexer
     assert_equal Lexer['Diff'], blob("dude-thing-okay--001.patch").lexer
