@@ -402,9 +402,9 @@ module Linguist
 
       if lines.first.to_s =~ /^<\?php/
         Language['PHP']
-	  elsif lines.first.to_s =~ /^<\?xml/
+      elsif lines.first.to_s =~ /^<\?xml/
         Language['XML']
-	  end
+      end
     end
 
     # Internal: Extract the script name from the shebang line
