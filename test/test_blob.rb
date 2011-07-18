@@ -298,6 +298,12 @@ class TestBlob < Test::Unit::TestCase
 
     # https://github.com/dharmatech/agave/blob/master/demos/asteroids.sps
     assert_equal Language['Scheme'], blob("asteroids.sps").language
+	
+	# XML detected by first line test. If you add svg extension to the
+    # xml extensions list in languages.yml please create a new test
+    # with xml with unknown extension to ensure xml files are properly recognized
+    # by the first line.
+	assert_equal Language['XML'], blob("image.svg").language
   end
 
   def test_lexer
