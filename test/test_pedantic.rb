@@ -17,6 +17,20 @@ class TestPedantic < Test::Unit::TestCase
     assert_sorted languages
   end
 
+  def test_extensions_are_sorted
+    extensions = nil
+    file("languages.yml").lines.each do |line|
+      if line =~ /^  extensions:$/
+        extensions = []
+      elsif extensions && line =~ /^  - \.(\w+)$/
+        extensions << $1
+      else
+        assert_sorted extensions if extensions
+        extensions = nil
+      end
+    end
+  end
+
   def assert_sorted(list)
     previous = nil
     list.each do |item|
