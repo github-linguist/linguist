@@ -139,6 +139,13 @@ C-ObjDump:
   extensions:
   - .c-objdump
 
+CMake:
+  extensions:
+  - .cmake
+  - .cmake.in
+  filenames:
+  - CMakeLists.txt
+
 CSS:
   extensions:
   - .css
@@ -153,13 +160,6 @@ Clojure:
   extensions:
   - .clj
   - .cljs
-
-CMake:
-  extensions:
-  - .cmake
-  - .cmake.in
-  filenames:
-  - CMakeLists.txt
 
 CoffeeScript:
   type: programming
