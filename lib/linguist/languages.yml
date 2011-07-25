@@ -5,15 +5,17 @@
 # lexer exists in lexers.yml. This is a list of available in our
 # version of pygments.
 #
-# type        - Either data, programming, markup, or nil
-# lexer       - An explicit lexer String (defaults to name.downcase)
-# aliases     - An Array of additional aliases (implicitly
-#               includes name.downcase)
-# extension   - An Array of associated extensions
-# overrides   - An Array of extensions that takes precedence over conflicts
-# searchable  - Boolean flag to enable searching (defaults to true)
-# search_term - Deprecated: Some languages maybe indexed under a
-#               different alias. Avoid defining new exceptions.
+# type              - Either data, programming, markup, or nil
+# lexer             - An explicit lexer String (defaults to name.downcase)
+# aliases           - An Array of additional aliases (implicitly
+#                     includes name.downcase)
+# extension         - An Array of associated extensions
+# primary_extension - A String for the main extension associated with
+#                     the langauge. (defaults to extensions.first)
+# overrides         - An Array of extensions that takes precedence over conflicts
+# searchable        - Boolean flag to enable searching (defaults to true)
+# search_term       - Deprecated: Some languages maybe indexed under a
+#                     different alias. Avoid defining new exceptions.
 #
 # Any additions or modifications (even trivial) should have corresponding
 # test change in `test/test_blob.rb`.
@@ -27,14 +29,15 @@ ASP:
   aliases:
   - aspx
   - aspx-vb
+  primary_extension: .asp
   extensions:
-  - .ascx
-  - .axd
   - .asax
-  - .asmx
-  - .aspx
+  - .ascx
   - .ashx
+  - .asmx
   - .asp
+  - .aspx
+  - .axd
 
 ActionScript:
   type: programming
@@ -52,9 +55,10 @@ Ada:
   - .ads
 
 AppleScript:
+  primary_extension: .scpt
   extensions:
-  - .scpt
   - .applescript
+  - .scpt
 
 Arc:
   type: programming
@@ -77,6 +81,7 @@ Batchfile:
   search_term: bat
   aliases:
   - bat
+  primary_extension: .bat
   extensions:
   - .bat
   - .cmd
@@ -103,6 +108,7 @@ C:
   type: programming
   overrides:
   - .h
+  primary_extension: .c
   extensions:
   - .c
   - .h
@@ -120,6 +126,7 @@ C++:
   search_term: cpp
   aliases:
   - cpp
+  primary_extension: .cpp
   extensions:
   - .c++
   - .cc
@@ -157,6 +164,7 @@ ChucK:
 
 Clojure:
   type: programming
+  primary_extension: .clj
   extensions:
   - .clj
   - .cljs
@@ -174,14 +182,16 @@ ColdFusion:
   search_term: cfm
   aliases:
   - cfm
+  primary_extension: .cfm
   extensions:
-  - .cfm
   - .cfc
+  - .cfm
 
 Common Lisp:
   type: programming
   aliases:
   - lisp
+  primary_extension: .lisp
   extensions:
   - .lisp
   - .ny
@@ -202,10 +212,11 @@ Cucumber:
 Cython:
   type: programming
   group: Python
+  primary_extension: .pyx
   extensions:
-  - .pyx
   - .pxd
   - .pxi
+  - .pyx
 
 D:
   type: programming
@@ -229,9 +240,10 @@ Darcs Patch:
 
 Delphi:
   type: programming
+  primary_extension: .pas
   extensions:
-  - .pas
   - .dpr
+  - .pas
 
 Diff:
   extensions:
@@ -254,15 +266,17 @@ Emacs Lisp:
   lexer: Scheme
   aliases:
   - elisp
+  primary_extension: .el
   extensions:
   - .el
   - .emacs
 
 Erlang:
   type: programming
+  primary_extension: .erl
   extensions:
-  - .hrl
   - .erl
+  - .hrl
 
 F#:
   type: programming
@@ -276,11 +290,12 @@ F#:
 FORTRAN:
   type: programming
   lexer: Fortran
+  primary_extension: .f90
   extensions:
-  - .f
-  - .f90
   - .F
   - .F90
+  - .f
+  - .f90
 
 Factor:
   type: programming
@@ -289,16 +304,18 @@ Factor:
 
 Fancy:
   type: programming
+  primary_extension: .fy
   extensions:
-  - .fy
   - .fancypack
+  - .fy
 
 GAS:
   type: programming
   group: Assembly
+  primary_extension: .s
   extensions:
-  - .s
   - .S
+  - .s
 
 Genshi:
   extensions:
@@ -331,8 +348,8 @@ Go:
   - .go
 
 Groff:
+  primary_extension: .man
   extensions:
-  - .man
   - '.1'
   - '.2'
   - '.3'
@@ -340,20 +357,23 @@ Groff:
   - '.5'
   - '.6'
   - '.7'
+  - .man
 
 Groovy:
   type: programming
   lexer: Java
+  primary_extension: .groovy
   extensions:
   - .gradle
   - .groovy
 
 HTML:
   type: markup
+  primary_extension: .html
   extensions:
+  - .htm
   - .html
   - .xhtml
-  - .htm
   - .xslt
 
 HTML+Django:
@@ -367,6 +387,7 @@ HTML+ERB:
   type: markup
   group: HTML
   lexer: RHTML
+  primary_extension: .erb
   extensions:
   - .erb
   - .html.erb
@@ -446,14 +467,15 @@ JavaScript:
   aliases:
   - js
   - node
+  primary_extension: .js
   extensions:
+  - .jake
   - .js
   - .jsm
-  - .sjs
   - .jss
-  - .ssjs
   - .jsx
-  - .jake
+  - .sjs
+  - .ssjs
   filenames:
   - Jakefile
 
@@ -463,9 +485,10 @@ LLVM:
 
 LilyPond:
   lexer: Text only
+  primary_extension: .ly
   extensions:
-  - .ly
   - .ily
+  - .ly
 
 Literate Haskell:
   type: programming
@@ -478,6 +501,7 @@ Literate Haskell:
 
 Lua:
   type: programming
+  primary_extension: .lua
   extensions:
   - .lua
   - .nse
@@ -495,15 +519,17 @@ Mako:
 Markdown:
   type: markup
   lexer: Text only
+  primary_extension: .md
   extensions:
+  - .markdown
   - .md
   - .mkd
   - .mkdown
-  - .markdown
   - .ron
 
 Matlab:
   type: programming
+  primary_extension: .matlab
   extensions:
   - .m
   - .matlab
@@ -556,18 +582,20 @@ Nu:
 
 NumPy:
   group: Python
+  primary_extension: .numpy
   extensions:
   - .numpy
-  - .numsc
   - .numpyw
+  - .numsc
 
 OCaml:
   type: programming
+  primary_extension: .ml
   extensions:
   - .ml
-  - .mly
   - .mli
   - .mll
+  - .mly
 
 ObjDump:
   type: data
@@ -579,6 +607,7 @@ Objective-C:
   type: programming
   overrides:
   - .m
+  primary_extension: .m
   extensions:
   - .h
   - .m
@@ -613,24 +642,26 @@ Parrot Internal Representation:
   search_term: pir
   aliases:
   - pir
+  primary_extension: .pir
   extensions:
-  - .pir
-  - .pbc
   - .pasm
+  - .pbc
+  - .pir
 
 Perl:
   type: programming
   overrides:
   - .pl
+  primary_extension: .pl
   extensions:
-  - .pl
-  - .ph
   - .PL
-  - .pod
-  - .pm
-  - .t
   - .perl
+  - .ph
+  - .pl
+  - .pm
+  - .pod
   - .psgi
+  - .t
 
 Prolog:
   type: programming
@@ -647,6 +678,7 @@ Pure Data:
 
 Python:
   type: programming
+  primary_extension: .py
   extensions:
   - .py
   - .pyw
@@ -665,9 +697,10 @@ R:
   lexer: S
   overrides:
   - .r
+  primary_extension: .r
   extensions:
-  - .r
   - .R
+  - .r
 
 RHTML:
   type: markup
@@ -678,10 +711,11 @@ RHTML:
 Racket:
   type: programming
   lexer: Scheme
+  primary_extension: .rkt
   extensions:
   - .rkt
-  - .rktl
   - .rktd
+  - .rktl
   - .scrbl
 
 Raw token data:
@@ -712,18 +746,19 @@ Ruby:
   - rake
   - rb
   - rbx
+  primary_extension: .rb
   extensions:
-  - .rb
-  - .ru
   - .builder
+  - .gemspec
+  - .god
+  - .irbrc
+  - .rake
+  - .rb
+  - .rbuild
   - .rbw
   - .rbx
-  - .god
-  - .rake
-  - .gemspec
-  - .irbrc
+  - .ru
   - .thor
-  - .rbuild
   filenames:
   - Capfile
   - Rakefile
@@ -734,9 +769,10 @@ Ruby:
 Rust:
   type: programming
   lexer: Text only
+  primary_extension: .rs
   extensions:
-  - .rs
   - .rc
+  - .rs
 
 SQL:
   type: data
@@ -750,17 +786,19 @@ Sass:
 
 Scala:
   type: programming
+  primary_extension: .scala
   extensions:
   - .sbt
   - .scala
 
 Scheme:
   type: programming
+  primary_extension: .scm
   extensions:
-  - .sls
-  - .ss
-  - .sps
   - .scm
+  - .sls
+  - .sps
+  - .ss
 
 Self:
   type: programming
@@ -776,6 +814,7 @@ Shell:
   - sh
   - bash
   - zsh
+  primary_extension: .sh
   extensions:
   - .bash
   - .sh
@@ -801,6 +840,7 @@ Standard ML:
   lexer: OCaml
   aliases:
   - sml
+  primary_extension: .sml
   extensions:
   - .sig
   - .sml
@@ -819,18 +859,20 @@ Tcl:
 Tcsh:
   type: programming
   group: Shell
+  primary_extension: .tcsh
   extensions:
-  - .tcsh
   - .csh
+  - .tcsh
 
 TeX:
   type: markup
+  primary_extension: .tex
   extensions:
-  - .tex
-  - .sty
-  - .toc
-  - .cls
   - .aux
+  - .cls
+  - .sty
+  - .tex
+  - .toc
 
 Text:
   type: data
@@ -847,9 +889,10 @@ Textile:
 VHDL:
   type: programming
   lexer: Text only
+  primary_extension: .vhd
   extensions:
-  - .vhdl
   - .vhd
+  - .vhdl
 
 Vala:
   type: programming
@@ -876,15 +919,17 @@ VimL:
 Visual Basic:
   type: programming
   lexer: Text only
+  primary_extension: .vb
   extensions:
   - .bas
-  - .vbs
   - .frx
-  - .vba
   - .vb
+  - .vba
+  - .vbs
 
 XML:
   type: markup
+  primary_extension: .xml
   extensions:
   - .kml
   - .mxml
@@ -913,9 +958,10 @@ XS:
 
 YAML:
   type: markup
+  primary_extension: .yml
   extensions:
-  - .yml
   - .yaml
+  - .yml
   filenames:
   - .gemrc
 
