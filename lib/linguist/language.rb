@@ -222,6 +222,13 @@ module Linguist
       @overrides  = attributes[:overrides]  || []
       @filenames  = attributes[:filenames]  || []
 
+      @primary_extension = default_primary_extension || extensions.first
+
+      # Prepend primary extension unless its already included
+      if primary_extension && !extensions.include?(primary_extension)
+        @extensions = [primary_extension] + extensions
+      end
+
       # Set popular, and searchable flags
       @popular    = attributes.key?(:popular)    ? attributes[:popular]    : false
       @searchable = attributes.key?(:searchable) ? attributes[:searchable] : true
@@ -288,6 +295,14 @@ module Linguist
     # Returns the extensions Array
     attr_reader :extensions
 
+    # Public: Get primary extension
+    #
+    # Defaults to the first extension but can be overriden
+    # in the languages.yml.
+    #
+    # Returns the extension String.
+    attr_reader :primary_extension
+
     # Internal: Get overridden extensions.
     #
     # Returns the extensions Array.
@@ -307,6 +322,13 @@ module Linguist
     # Returns the alias name String
     def default_alias_name
       name.downcase.gsub(/\s/, '-')
+    end
+
+    # Internal: Get default primary extension.
+    #
+    # Returns the extension String.
+    def default_primary_extension
+      extensions.first
     end
 
     # Public: Get Language group
