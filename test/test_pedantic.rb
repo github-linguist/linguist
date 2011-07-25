@@ -31,6 +31,20 @@ class TestPedantic < Test::Unit::TestCase
     end
   end
 
+  def test_filenames_are_sorted
+    filenames = nil
+    file("languages.yml").lines.each do |line|
+      if line =~ /^  filenames:$/
+        filenames = []
+      elsif filenames && line =~ /^  - \.(\w+)$/
+        filenames << $1
+      else
+        assert_sorted filenames if filenames
+        filenames = nil
+      end
+    end
+  end
+
   def assert_sorted(list)
     previous = nil
     list.each do |item|
