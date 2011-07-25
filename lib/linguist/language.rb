@@ -222,7 +222,7 @@ module Linguist
       @overrides  = attributes[:overrides]  || []
       @filenames  = attributes[:filenames]  || []
 
-      @primary_extension = default_primary_extension || extensions.first
+      @primary_extension = attributes[:primary_extension] || default_primary_extension || extensions.first
 
       # Prepend primary extension unless its already included
       if primary_extension && !extensions.include?(primary_extension)
@@ -403,17 +403,18 @@ module Linguist
 
   YAML.load_file(File.expand_path("../languages.yml", __FILE__)).each do |name, options|
     Language.create(
-      :name        => name,
-      :type        => options['type'],
-      :aliases     => options['aliases'],
-      :lexer       => options['lexer'],
-      :group_name  => options['group'],
-      :searchable  => options.key?('searchable') ? options['searchable'] : true,
-      :search_term => options['search_term'],
-      :extensions  => options['extensions'],
-      :overrides   => options['overrides'],
-      :filenames   => options['filenames'],
-      :popular     => popular.include?(name)
+      :name              => name,
+      :type              => options['type'],
+      :aliases           => options['aliases'],
+      :lexer             => options['lexer'],
+      :group_name        => options['group'],
+      :searchable        => options.key?('searchable') ? options['searchable'] : true,
+      :search_term       => options['search_term'],
+      :extensions        => options['extensions'],
+      :primary_extension => options['primary_extension'],
+      :overrides         => options['overrides'],
+      :filenames         => options['filenames'],
+      :popular           => popular.include?(name)
     )
   end
 end
