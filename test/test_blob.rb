@@ -123,6 +123,19 @@ class TestBlob < Test::Unit::TestCase
     assert blob("MainMenu.nib").generated?
     assert blob("project.pbxproj").generated?
 
+    # Visual Studio Files
+    assert blob("project.csproj").generated?
+    assert blob("project.dbproj").generated?
+    assert blob("project.isproj").generated?
+    assert blob("project.pyproj").generated?
+    assert blob("project.rbproj").generated?
+    assert blob("project.vbproj").generated?
+    assert blob("project.vdproj").generated?
+    assert blob("project.vcxproj").generated?
+    assert blob("project.wixproj").generated?
+    assert blob("project.resx").generated?
+    assert blob("project.sln").generated?
+
     # Long line
     assert !blob("uglify.js").generated?
 

@@ -178,7 +178,7 @@ module Linguist
     #
     # Return true or false
     def generated?
-      if ['.xib', '.nib', '.pbxproj', '.xcworkspacedata', '.xcuserstate'].include?(extname)
+      if ['.xib', '.nib', '.pbxproj', '.xcworkspacedata', '.xcuserstate', '.csproj', '.dbproj', '.fsproj', '.pyproj', '.rbproj', '.vbproj', '.vcxproj', '.wixproj', '.resx', '.sln', '.vdproj', '.isproj'].include?(extname)
         true
       elsif generated_coffeescript? || minified_javascript?
         true
