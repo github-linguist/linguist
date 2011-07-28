@@ -314,6 +314,9 @@ class TestBlob < Test::Unit::TestCase
 
     # https://github.com/graydon/rust
     assert_equal Language['Rust'], blob("hello.rs").language
+
+    # https://github.com/olabini/ioke
+    assert_equal Language['Ioke'], blob("hello.ik").language
   end
 
   def test_lexer
