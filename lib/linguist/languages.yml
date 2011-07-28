@@ -648,24 +648,18 @@ Parrot Internal Representation:
   search_term: pir
   aliases:
   - pir
-  primary_extension: .pir
+  group: Parrot
   extensions:
   - .pir
 
 Parrot Assembly:
   type: programming
   lexer: Text only
-  search_term: pasm
-  primary_extension: .pasm
+  group: Parrot
+  aliases:
+  - pasm
   extensions:
     - .pasm
-
-Parrot Bytecode:
-  type: data
-  search_term: pbc
-  primary_extension: .pbc
-  extensions:
-    - .pbc
 
 Perl:
   type: programming

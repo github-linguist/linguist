@@ -82,7 +82,6 @@ class TestBlob < Test::Unit::TestCase
     assert blob("linguist.gem").binary?
     assert blob("octocat.ai").binary?
     assert blob("octocat.png").binary?
-    assert blob("hello.pbc").binary?
     assert !blob("README").binary?
     assert !blob("file.txt").binary?
     assert !blob("foo.rb").binary?
@@ -322,7 +321,6 @@ class TestBlob < Test::Unit::TestCase
     # https://github.com/parrot/parrot
     assert_equal Language['Parrot Internal Representation'], blob("hello.pir").language
     assert_equal Language['Parrot Assembly'], blob("hello.pasm").language
-    assert_equal Language['Parrot Bytecode'], blob("hello.pbc").language
   end
 
   def test_lexer
