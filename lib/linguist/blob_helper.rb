@@ -194,13 +194,8 @@ module Linguist
     # file extension.
     #
     # Returns true of false.
-
     def xcode_project_file?
-      if ['.xib', '.nib', '.pbxproj', '.xcworkspacedata', '.xcuserstate'].include?(extname)
-        true
-      else
-        false
-      end
+      ['.xib', '.nib', '.pbxproj', '.xcworkspacedata', '.xcuserstate'].include?(extname)
     end
 
     # Internal: Is the blob a Visual Studio project file?
@@ -209,13 +204,8 @@ module Linguist
     # file extension.
     #
     # Returns true of false.
-
     def visual_studio_project_file?
-      if ['.csproj', '.dbproj', '.fsproj', '.pyproj', '.rbproj', '.vbproj', '.vcxproj', '.wixproj', '.resx', '.sln', '.vdproj', '.isproj'].include?(extname)
-        true
-      else
-        false
-      end
+      ['.csproj', '.dbproj', '.fsproj', '.pyproj', '.rbproj', '.vbproj', '.vcxproj', '.wixproj', '.resx', '.sln', '.vdproj', '.isproj'].include?(extname)
     end
 
     # Internal: Is the blob minified JS?
