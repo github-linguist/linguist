@@ -643,15 +643,23 @@ PHP:
   - .phpt
 
 Parrot Internal Representation:
+  type: programming
   lexer: Text only
   search_term: pir
   aliases:
   - pir
-  primary_extension: .pir
+  group: Parrot
   extensions:
-  - .pasm
-  - .pbc
   - .pir
+
+Parrot Assembly:
+  type: programming
+  lexer: Text only
+  group: Parrot
+  aliases:
+  - pasm
+  extensions:
+    - .pasm
 
 Perl:
   type: programming
