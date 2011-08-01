@@ -317,6 +317,10 @@ class TestBlob < Test::Unit::TestCase
 
     # https://github.com/olabini/ioke
     assert_equal Language['Ioke'], blob("hello.ik").language
+
+    # https://github.com/parrot/parrot
+    assert_equal Language['Parrot Internal Representation'], blob("hello.pir").language
+    assert_equal Language['Parrot Assembly'], blob("hello.pasm").language
   end
 
   def test_lexer
