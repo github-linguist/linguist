@@ -295,10 +295,16 @@ module Linguist
     # Returns the extensions Array
     attr_reader :extensions
 
-    # Public: Get primary extension
+    # Deprecated: Get primary extension
     #
     # Defaults to the first extension but can be overriden
     # in the languages.yml.
+    #
+    # The primary extension can not be nil. Tests should verify this.
+    #
+    # This attribute is only used by app/helpers/gists_helper.rb for
+    # creating the language dropdown. It really should be using `name`
+    # instead. Would like to drop primary extension.
     #
     # Returns the extension String.
     attr_reader :primary_extension

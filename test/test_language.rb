@@ -277,6 +277,12 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal '.pl', Language['Perl'].primary_extension
     assert_equal '.py', Language['Python'].primary_extension
     assert_equal '.rb', Language['Ruby'].primary_extension
+
+    # This is a nasty requirement, but theres some code in GitHub that
+    # expects this. Really want to drop this.
+    Language.all.each do |language|
+      assert language.primary_extension, "#{language} has no primary extension"
+    end
   end
 
   def test_eql
