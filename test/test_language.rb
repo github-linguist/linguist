@@ -124,6 +124,11 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['Shell'], Language['Gentoo Ebuild'].group
     assert_equal Language['Shell'], Language['Gentoo Eclass'].group
     assert_equal Language['Shell'], Language['Tcsh'].group
+
+    # Ensure everyone has a group
+    Language.all.each do |language|
+      assert language.group, "#{language} has no group"
+    end
   end
 
   # Used for code search indexing. Changing any of these values may
