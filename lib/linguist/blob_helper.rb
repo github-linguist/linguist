@@ -181,7 +181,7 @@ module Linguist
     def generated?
       if xcode_project_file? || visual_studio_project_file?
         true
-      elsif generated_coffeescript? || minified_javascript?
+      elsif generated_coffeescript? || minified_javascript? || generated_net_docfile?
         true
       else
         false
@@ -253,6 +253,27 @@ module Linguist
       else
         false
       end
+    end
+
+    # Internal: Is this a generated documentation file for a .NET assembly?
+    #
+    # Requires Blob#data
+    #
+    # .NET developers often check in the XML Intellisense file along with an
+    # assembly - however, these don't have a special extension, so we have to
+    # dig into the contents to determine if it's a docfile. Luckily, these files
+    # are extremely structured, so recognizing them is easy.
+    #
+    # Returns true or false
+    def generated_net_docfile?
+      return false unless extname == ".xml"
+      return false unless lines.count > 3
+
+      # .NET Docfiles always open with <doc> and their first tag is an
+      # <assembly> tag
+      return lines[1].include?("<doc>") &&
+        lines[2].include?("<assembly>") &&
+        lines[-2].include?("</doc>")
     end
 
     # Public: Should the blob be indexed for searching?
