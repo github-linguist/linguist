@@ -136,6 +136,9 @@ class TestBlob < Test::Unit::TestCase
     assert blob("project.resx").generated?
     assert blob("project.sln").generated?
 
+    # Generated .NET Docfiles
+    assert blob("net_docfile.xml").generated?
+
     # Long line
     assert !blob("uglify.js").generated?
 
