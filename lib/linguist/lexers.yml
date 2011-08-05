@@ -352,15 +352,13 @@ Jade:
   - '*.jade'
   mimetypes:
   - 'text/x-jade'
-RHTML:
+c-objdump:
   aliases:
-  - 'rhtml'
-  - 'html+erb'
-  - 'html+ruby'
+  - 'c-objdump'
   filenames:
-  - '*.rhtml'
+  - '*.c-objdump'
   mimetypes:
-  - 'text/html+ruby'
+  - 'text/x-c-objdump'
 XML+Velocity:
   aliases:
   - 'xml+velocity'
@@ -433,6 +431,11 @@ Io:
   - '*.io'
   mimetypes:
   - 'text/x-iosrc'
+PL/pgSQL:
+  aliases:
+  - 'plpgsql'
+  mimetypes:
+  - 'text/x-plpgsql'
 Vala:
   aliases:
   - 'vala'
@@ -609,6 +612,13 @@ Perl:
   mimetypes:
   - 'text/x-perl'
   - 'application/x-perl'
+Scala:
+  aliases:
+  - 'scala'
+  filenames:
+  - '*.scala'
+  mimetypes:
+  - 'text/x-scala'
 INI:
   aliases:
   - 'ini'
@@ -618,13 +628,15 @@ INI:
   - '*.cfg'
   mimetypes:
   - 'text/x-ini'
-c-objdump:
+RHTML:
   aliases:
-  - 'c-objdump'
+  - 'rhtml'
+  - 'html+erb'
+  - 'html+ruby'
   filenames:
-  - '*.c-objdump'
+  - '*.rhtml'
   mimetypes:
-  - 'text/x-c-objdump'
+  - 'text/html+ruby'
 Tcsh:
   aliases:
   - 'tcsh'
@@ -682,11 +694,13 @@ AppleScript:
   - 'applescript'
   filenames:
   - '*.applescript'
-HTML+Smarty:
+Python 3.0 Traceback:
   aliases:
-  - 'html+smarty'
+  - 'py3tb'
+  filenames:
+  - '*.py3tb'
   mimetypes:
-  - 'text/html+smarty'
+  - 'text/x-python3-traceback'
 Literate Haskell:
   aliases:
   - 'lhs'
@@ -780,6 +794,12 @@ Modula-2:
   - '*.mod'
   mimetypes:
   - 'text/x-modula2'
+PostgreSQL SQL dialect:
+  aliases:
+  - 'postgresql'
+  - 'postgres'
+  mimetypes:
+  - 'text/x-postgresql'
 HTML+Django/Jinja:
   aliases:
   - 'html+django'
@@ -857,13 +877,13 @@ Django/Jinja:
   mimetypes:
   - 'application/x-django-templating'
   - 'application/x-jinja'
-Scala:
+DTD:
   aliases:
-  - 'scala'
+  - 'dtd'
   filenames:
-  - '*.scala'
+  - '*.dtd'
   mimetypes:
-  - 'text/x-scala'
+  - 'application/xml-dtd'
 Lighttpd configuration file:
   aliases:
   - 'lighty'
@@ -1155,13 +1175,11 @@ Ruby:
   mimetypes:
   - 'text/x-ruby'
   - 'application/x-ruby'
-Python 3.0 Traceback:
+HTML+Smarty:
   aliases:
-  - 'py3tb'
-  filenames:
-  - '*.py3tb'
+  - 'html+smarty'
   mimetypes:
-  - 'text/x-python3-traceback'
+  - 'text/html+smarty'
 POVRay:
   aliases:
   - 'pov'
@@ -1332,6 +1350,13 @@ Batchfile:
 ANTLR:
   aliases:
   - 'antlr'
+PostgreSQL console (psql):
+  aliases:
+  - 'psql'
+  - 'postgresql-console'
+  - 'postgres-console'
+  mimetypes:
+  - 'text/x-postgresql-psql'
 JavaScript+Django/Jinja:
   aliases:
   - 'js+django'
@@ -1457,6 +1482,13 @@ C#:
   - '*.cs'
   mimetypes:
   - 'text/x-csharp'
+Gosu Template:
+  aliases:
+  - 'gst'
+  filenames:
+  - '*.gst'
+  mimetypes:
+  - 'text/x-gosu-template'
 TeX:
   aliases:
   - 'tex'
@@ -1501,11 +1533,13 @@ JavaScript:
   - 'javascript'
   filenames:
   - '*.js'
+  - '*.json'
   mimetypes:
   - 'application/javascript'
   - 'application/x-javascript'
   - 'text/x-javascript'
   - 'text/javascript'
+  - 'application/json'
 Common Lisp:
   aliases:
   - 'common-lisp'
@@ -1537,6 +1571,16 @@ ANTLR With CPP Target:
   filenames:
   - '*.G'
   - '*.g'
+Gosu:
+  aliases:
+  - 'gosu'
+  filenames:
+  - '*.gs'
+  - '*.gsx'
+  - '*.gsp'
+  - '*.vark'
+  mimetypes:
+  - 'text/x-gosu'
 Hybris:
   aliases:
   - 'hybris'
