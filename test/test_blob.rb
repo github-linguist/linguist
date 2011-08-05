@@ -324,6 +324,13 @@ class TestBlob < Test::Unit::TestCase
     # https://github.com/parrot/parrot
     assert_equal Language['Parrot Internal Representation'], blob("hello.pir").language
     assert_equal Language['Parrot Assembly'], blob("hello.pasm").language
+    
+    # http://gosu-lang.org
+    assert_equal Language['Gosu'], blob("Hello.gs").language
+    assert_equal Language['Gosu'], blob("Hello.gsx").language
+    assert_equal Language['Gosu'], blob("hello.gsp").language
+    assert_equal Language['Gosu'], blob("Hello.gst").language
+    assert_equal Language['Gosu'], blob("hello.vark").language
   end
 
   def test_lexer
