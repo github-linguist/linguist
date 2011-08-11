@@ -266,7 +266,7 @@ module Linguist
     #
     # Returns true or false
     def generated_net_docfile?
-      return false unless extname == ".xml"
+      return false unless extname.downcase == ".xml"
       return false unless lines.count > 3
 
       # .NET Docfiles always open with <doc> and their first tag is an
