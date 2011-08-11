@@ -79,6 +79,7 @@ class TestBlob < Test::Unit::TestCase
   def test_binary
     assert blob("git.deb").binary?
     assert blob("git.exe").binary?
+    assert blob("hello.pbc").binary?
     assert blob("linguist.gem").binary?
     assert blob("octocat.ai").binary?
     assert blob("octocat.png").binary?
@@ -324,7 +325,7 @@ class TestBlob < Test::Unit::TestCase
     # https://github.com/parrot/parrot
     assert_equal Language['Parrot Internal Representation'], blob("hello.pir").language
     assert_equal Language['Parrot Assembly'], blob("hello.pasm").language
-    
+
     # http://gosu-lang.org
     assert_equal Language['Gosu'], blob("Hello.gs").language
     assert_equal Language['Gosu'], blob("Hello.gsx").language
