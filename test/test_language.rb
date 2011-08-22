@@ -296,43 +296,41 @@ class TestLanguage < Test::Unit::TestCase
   end
 
 
-  if Lexer.has_pygments?
-    def test_colorize
-      assert_equal <<-HTML, Language['Text'].colorize("Hello")
+  def test_colorize
+    assert_equal <<-HTML, Language['Text'].colorize("Hello")
 <div class="highlight"><pre>Hello
 </pre>
 </div>
-      HTML
+    HTML
 
-      assert_equal <<-HTML, Language['Ruby'].colorize("def foo\n  'foo'\nend\n")
+    assert_equal <<-HTML, Language['Ruby'].colorize("def foo\n  'foo'\nend\n")
 <div class="highlight"><pre><span class="k">def</span> <span class="nf">foo</span>
   <span class="s1">&#39;foo&#39;</span>
 <span class="k">end</span>
 </pre>
 </div>
-      HTML
-    end
+    HTML
+  end
 
-    def test_colorize_without_wrapper
-      assert_equal <<-HTML, Language['Text'].colorize_without_wrapper("Hello")
+  def test_colorize_without_wrapper
+    assert_equal <<-HTML, Language['Text'].colorize_without_wrapper("Hello")
 Hello
-      HTML
+    HTML
 
-      assert_equal <<-HTML, Language['Ruby'].colorize_without_wrapper("def foo\n  'foo'\nend\n")
+    assert_equal <<-HTML, Language['Ruby'].colorize_without_wrapper("def foo\n  'foo'\nend\n")
 <span class="k">def</span> <span class="nf">foo</span>
   <span class="s1">&#39;foo&#39;</span>
 <span class="k">end</span>
-      HTML
-    end
+    HTML
+  end
 
-    def test_colorize_doesnt_strip_newlines
-      assert_equal <<-HTML, Language['Ruby'].colorize_without_wrapper("\n\n# Foo\ndef 'foo'\nend\n")
+  def test_colorize_doesnt_strip_newlines
+    assert_equal <<-HTML, Language['Ruby'].colorize_without_wrapper("\n\n# Foo\ndef 'foo'\nend\n")
 
 
 <span class="c1"># Foo</span>
 <span class="k">def</span> <span class="s1">&#39;foo&#39;</span>
 <span class="k">end</span>
-      HTML
-    end
+    HTML
   end
 end

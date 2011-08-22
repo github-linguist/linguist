@@ -1,4 +1,4 @@
-require 'albino'
+require 'pygments'
 require 'yaml'
 
 module Linguist
@@ -53,16 +53,6 @@ module Linguist
 
         @mimetypes_index[type] = lexer
       end
-    end
-
-    # Internal: Test if system has Pygments
-    #
-    # Only used in tests to disable tests that require Pygments.
-    #
-    # Returns true if `pygmentize` in is PATH otherwise false.
-    def self.has_pygments?
-      `which #{Albino.bin}`
-      $?.success?
     end
 
     # Public: Get all Lexers
@@ -141,7 +131,7 @@ module Linguist
     #
     # Returns html String
     def colorize(text)
-      Albino.new(text, self).colorize(:O => 'stripnl=false')
+      Pygments.highlight(text, :lexer => aliases.first, :options => {:stripnl => false})
     end
 
     # Public: Highlight syntax of text without the outer highlight div
