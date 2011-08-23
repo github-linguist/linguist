@@ -3,6 +3,7 @@ require 'linguist/mime'
 require 'linguist/pathname'
 
 require 'escape_utils'
+require 'pygments'
 require 'yaml'
 
 module Linguist
@@ -343,7 +344,7 @@ module Linguist
     #
     # Returns a Lexer.
     def lexer
-      language ? language.lexer : Lexer['Text only']
+      language ? language.lexer : Pygments::Lexer.find_by_name('Text only')
     end
 
     # Internal: Disambiguates between multiple language extensions.
@@ -512,19 +513,27 @@ module Linguist
 
     # Public: Highlight syntax of blob
     #
+    # options - A Hash of options (defaults to {})
+    #
     # Returns html String
-    def colorize
+    def colorize(options = {})
       return if !text? || large?
-      lexer.colorize(data)
+      lexer.highlight(data, options)
     end
 
     # Public: Highlight syntax of blob without the outer highlight div
     # wrapper.
     #
+    # options - A Hash of options (defaults to {})
+    #
     # Returns html String
-    def colorize_without_wrapper
+    def colorize_without_wrapper(options = {})
       return if !text? || large?
-      lexer.colorize_without_wrapper(data)
+      if text = lexer.highlight(data, options)
+        text[%r{<div class="highlight"><pre>(.*?)</pre>\s*</div>}m, 1]
+      else
+        ''
+      end
     end
 
     Language.overridden_extensions.each do |extension|

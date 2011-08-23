@@ -2,9 +2,12 @@ require 'linguist/file_blob'
 
 require 'test/unit'
 require 'mime/types'
+require 'pygments'
 
 class TestBlob < Test::Unit::TestCase
   include Linguist
+
+  Lexer = Pygments::Lexer
 
   def fixtures_path
     File.expand_path("../fixtures", __FILE__)
