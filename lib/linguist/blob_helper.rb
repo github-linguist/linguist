@@ -438,7 +438,7 @@ module Linguist
     # 
     # Returns a Language.
     def guess_gsp_language
-    	    if lines.grep(/<%|<%@|${|<%|<g:|<meta name="layout"|<r:/).any?
+    	    if lines.grep(/<%|<%@|\${|<%|<g:|<meta name="layout"|<r:/).any?
     	Language['Groovy Server Pages']
       else
         Language['Gosu']
