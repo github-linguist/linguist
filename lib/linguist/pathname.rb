@@ -1,5 +1,6 @@
 require 'linguist/language'
 require 'linguist/mime'
+require 'pygments'
 
 module Linguist
   # Similar to ::Pathname, Linguist::Pathname wraps a path string and
@@ -61,7 +62,7 @@ module Linguist
     #
     # Returns a Lexer.
     def lexer
-      language ? language.lexer : Lexer['Text only']
+      language ? language.lexer : Pygments::Lexer.find_by_name('Text only')
     end
 
     # Public: Get the mime type

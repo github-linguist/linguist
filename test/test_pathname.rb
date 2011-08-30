@@ -1,9 +1,12 @@
 require 'linguist/pathname'
 
 require 'test/unit'
+require 'pygments'
 
 class TestPathname < Test::Unit::TestCase
   include Linguist
+
+  Lexer = Pygments::Lexer
 
   def test_to_s
     assert_equal "file.rb", Pathname.new("file.rb").to_s
