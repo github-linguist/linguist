@@ -1,6 +1,5 @@
-require 'linguist/lexer'
-
 require 'yaml'
+require 'pygments'
 
 module Linguist
   # Language names that are recognizable by GitHub. Defined languages
@@ -211,7 +210,7 @@ module Linguist
       @aliases = [default_alias_name] + (attributes[:aliases] || [])
 
       # Lookup Lexer object
-      @lexer = Lexer.find_by_name(attributes[:lexer] || name) ||
+      @lexer = Pygments::Lexer.find_by_name(attributes[:lexer] || name) ||
         raise(ArgumentError, "#{@name} is missing lexer")
 
       # Set legacy search term
@@ -370,21 +369,12 @@ module Linguist
 
     # Public: Highlight syntax of text
     #
-    # text - String of code to be highlighted
+    # text    - String of code to be highlighted
+    # options - A Hash of options (defaults to {})
     #
     # Returns html String
-    def colorize(text)
-      lexer.colorize(text)
-    end
-
-    # Public: Highlight syntax of text without the outer highlight div
-    # wrapper.
-    #
-    # text - String of code to be highlighted
-    #
-    # Returns html String
-    def colorize_without_wrapper(text)
-      lexer.colorize_without_wrapper(text)
+    def colorize(text, options = {})
+      lexer.highlight(text, options = {})
     end
 
     # Public: Return name as String representation
