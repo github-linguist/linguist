@@ -433,19 +433,17 @@ module Linguist
         Language['R']
       end
     end
-    
-    
+
     # Internal: Guess language of .gsp files.
-    # 
+    #
     # Returns a Language.
     def guess_gsp_language
-    	    if lines.grep(/<%|<%@|\${|<%|<g:|<meta name="layout"|<r:/).any?
-    	Language['Groovy Server Pages']
+      if lines.grep(/<%|<%@|\$\{|<%|<g:|<meta name="layout"|<r:/).any?
+        Language['Groovy Server Pages']
       else
         Language['Gosu']
       end
     end
-    
 
     # Internal: Guess language from the first line.
     #

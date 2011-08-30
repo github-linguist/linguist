@@ -335,12 +335,12 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['Gosu'], blob("hello.gsp").language
     assert_equal Language['Gosu'], blob("Hello.gst").language
     assert_equal Language['Gosu'], blob("hello.vark").language
-    
-    #Groovy Server Pages 
+
+    # Groovy Server Pages
     assert_equal Language['Groovy Server Pages'], blob("bar.gsp").language
     assert_equal Language['Groovy Server Pages'], blob("hello-resources.gsp").language
     assert_equal Language['Groovy Server Pages'], blob("hello-pagedirective.gsp").language
-    assert_equal Language['Groovy Server Pages'], blob("hello-var.gsp").language 
+    assert_equal Language['Groovy Server Pages'], blob("hello-var.gsp").language
   end
 
   def test_lexer
