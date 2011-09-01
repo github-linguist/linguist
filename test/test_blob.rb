@@ -341,6 +341,9 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['Groovy Server Pages'], blob("hello-resources.gsp").language
     assert_equal Language['Groovy Server Pages'], blob("hello-pagedirective.gsp").language
     assert_equal Language['Groovy Server Pages'], blob("hello-var.gsp").language
+
+    # https://github.com/Lexikos/AutoHotkey_L
+    assert_equal Language['AutoHotkey'], blob("hello.ahk").language
   end
 
   def test_lexer
