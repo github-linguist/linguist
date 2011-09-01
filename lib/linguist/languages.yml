@@ -390,7 +390,7 @@ Groovy Server Pages:
   group: Groovy
   lexer: Java Server Page
   overrides:
-  - .gsp  
+  - .gsp
   aliases:
   - gsp
   extensions:
@@ -451,6 +451,7 @@ INI:
   extensions:
   - .cfg
   - .ini
+  - .prefs
   - .properties
   filenames:
   - .gitconfig
@@ -996,6 +997,9 @@ XML:
   - .xsd
   - .xsl
   - .xul
+  filenames:
+  - .classpath
+  - .project
 
 XQuery:
   type: programming
