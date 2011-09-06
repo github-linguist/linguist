@@ -75,6 +75,14 @@ Assembly:
   extensions:
   - .asm
 
+AutoHotkey:
+  type: programming
+  lexer: autohotkey
+  aliases:
+  - ahk
+  extensions:
+  - .ahk
+
 Batchfile:
   type: programming
   group: Shell
@@ -928,6 +936,13 @@ Textile:
   lexer: Text only
   extensions:
   - .textile
+
+Twig:
+  type: markup
+  group: PHP
+  lexer: HTML+Django/Jinja
+  extensions:
+  - .twig
 
 VHDL:
   type: programming
