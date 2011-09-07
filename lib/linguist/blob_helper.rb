@@ -2,6 +2,7 @@ require 'linguist/language'
 require 'linguist/mime'
 require 'linguist/pathname'
 
+require 'charlock_holmes'
 require 'escape_utils'
 require 'pygments'
 require 'yaml'
@@ -52,7 +53,7 @@ module Linguist
     #
     # Returns a content type String.
     def content_type
-      pathname.content_type
+      @content_type ||= binary? ? mime_type : "text/plain; charset=#{encoding.downcase}"
     end
 
     # Public: Get the Content-Disposition header value
@@ -71,11 +72,30 @@ module Linguist
       end
     end
 
+    def encoding
+      if hash = detect_encoding
+        hash[:encoding]
+      end
+    end
+
+    # Try to guess the encoding
+    #
+    # Returns: a Hash, with :encoding, :confidence, :type
+    #          this will return nil if an error occurred during detection or
+    #          no valid encoding could be found
+    def detect_encoding
+      @detect_encoding ||= CharlockHolmes::EncodingDetector.new.detect(data) if data
+    end
+
     # Public: Is the blob binary?
     #
     # Return true or false
     def binary?
-      pathname.binary?
+      if mime_type = Mime.lookup_mime_type_for(pathname.extname)
+        mime_type.binary?
+      else
+        detect_encoding.nil? || detect_encoding[:type] == :binary
+      end
     end
 
     # Public: Is the blob text?
@@ -529,6 +549,8 @@ module Linguist
     # Returns html String
     def colorize(options = {})
       return if !text? || large?
+      options[:options] ||= {}
+      options[:options][:encoding] ||= encoding
       lexer.highlight(data, options)
     end
 
@@ -540,7 +562,7 @@ module Linguist
     # Returns html String
     def colorize_without_wrapper(options = {})
       return if !text? || large?
-      if text = lexer.highlight(data, options)
+      if text = colorize(options)
         text[%r{<div class="highlight"><pre>(.*?)</pre>\s*</div>}m, 1]
       else
         ''

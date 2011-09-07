@@ -38,14 +38,11 @@ class TestBlob < Test::Unit::TestCase
     assert_equal "application/octet-stream", blob("dog.o").content_type
     assert_equal "application/pdf", blob("foo.pdf").content_type
     assert_equal "image/png", blob("foo.png").content_type
-    assert_equal "text/plain; charset=utf8", blob("README").content_type
-    assert_equal "text/plain; charset=utf8", blob("foo.html").content_type
-    assert_equal "text/plain; charset=utf8", blob("foo.pl").content_type
-    assert_equal "text/plain; charset=utf8", blob("foo.py").content_type
-    assert_equal "text/plain; charset=utf8", blob("foo.rb").content_type
-    assert_equal "text/plain; charset=utf8", blob("foo.sh").content_type
-    assert_equal "text/plain; charset=utf8", blob("foo.xhtml").content_type
-    assert_equal "text/plain; charset=utf8", blob("foo.xml").content_type
+    assert_equal "text/plain; charset=iso-8859-2", blob("README").content_type
+    assert_equal "text/plain; charset=iso-8859-1", blob("script.pl").content_type
+    assert_equal "text/plain; charset=iso-8859-1", blob("script.py").content_type
+    assert_equal "text/plain; charset=iso-8859-1", blob("script.rb").content_type
+    assert_equal "text/plain; charset=iso-8859-1", blob("script.sh").content_type
   end
 
   def test_disposition
@@ -79,6 +76,13 @@ class TestBlob < Test::Unit::TestCase
     assert_equal 2, blob("foo.rb").sloc
   end
 
+  def test_encoding
+    assert_equal "ISO-8859-2", blob("README").encoding
+    assert_equal "ISO-8859-1", blob("dump.sql").encoding
+    assert_equal "UTF-8", blob("file.txt").encoding
+    assert_nil blob("dog.o").encoding
+  end
+
   def test_binary
     assert blob("git.deb").binary?
     assert blob("git.exe").binary?
@@ -86,6 +90,7 @@ class TestBlob < Test::Unit::TestCase
     assert blob("linguist.gem").binary?
     assert blob("octocat.ai").binary?
     assert blob("octocat.png").binary?
+    assert blob("zip").binary?
     assert !blob("README").binary?
     assert !blob("file.txt").binary?
     assert !blob("foo.rb").binary?
@@ -330,7 +335,6 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['Parrot Assembly'], blob("hello.pasm").language
 
     # http://gosu-lang.org
-    assert_equal Language['Gosu'], blob("Hello.gs").language
     assert_equal Language['Gosu'], blob("Hello.gsx").language
     assert_equal Language['Gosu'], blob("hello.gsp").language
     assert_equal Language['Gosu'], blob("Hello.gst").language
