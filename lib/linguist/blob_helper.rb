@@ -94,7 +94,7 @@ module Linguist
       if mime_type = Mime.lookup_mime_type_for(pathname.extname)
         mime_type.binary?
       else
-        detect_encoding.nil? || detect_encoding[:type] == :binary
+        encoding.nil? || detect_encoding[:type] == :binary
       end
     end
 
