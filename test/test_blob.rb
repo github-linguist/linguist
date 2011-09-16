@@ -348,6 +348,16 @@ class TestBlob < Test::Unit::TestCase
 
     # https://github.com/Lexikos/AutoHotkey_L
     assert_equal Language['AutoHotkey'], blob("hello.ahk").language
+
+    # Haml
+    assert_equal Language['Haml'], blob("hello.haml").language
+    assert_equal Language['HTML'], blob("hello.haml").language.group
+
+    # Sass
+    assert_equal Language['Sass'], blob("screen.sass").language
+    assert_equal Language['CSS'], blob("screen.sass").language.group
+    assert_equal Language['SCSS'], blob("screen.scss").language
+    assert_equal Language['CSS'], blob("screen.scss").language.group
   end
 
   def test_lexer

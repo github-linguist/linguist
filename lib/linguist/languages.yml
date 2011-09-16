@@ -437,6 +437,7 @@ HaXe:
   - .mtt
 
 Haml:
+  group: HTML
   type: markup
   extensions:
   - .haml
@@ -825,6 +826,12 @@ Rust:
   - .rc
   - .rs
 
+SCSS:
+  type: markup
+  group: CSS
+  extensions:
+  - .scss
+
 SQL:
   type: data
   searchable: false
@@ -832,6 +839,8 @@ SQL:
   - .sql
 
 Sass:
+  type: markup
+  group: CSS
   extensions:
   - .sass
 
