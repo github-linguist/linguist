@@ -225,6 +225,9 @@ class TestBlob < Test::Unit::TestCase
 
     # Fabric
     assert blob("fabfile.py").vendored?
+    
+    # WAF
+    assert blob("waf").vendored?
   end
 
   def test_indexable
