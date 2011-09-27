@@ -46,7 +46,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['NASM'], Language['Assembly'].lexer
     assert_equal Lexer['OCaml'], Language['F#'].lexer
     assert_equal Lexer['OCaml'], Language['OCaml'].lexer
-    assert_equal Lexer['OCaml'], Language['Standard ML'].lexer
+    assert_equal Lexer['Standard ML'], Language['Standard ML'].lexer
     assert_equal Lexer['Ooc'], Language['ooc'].lexer
     assert_equal Lexer['REBOL'], Language['Rebol'].lexer
     assert_equal Lexer['RHTML'], Language['HTML+ERB'].lexer
