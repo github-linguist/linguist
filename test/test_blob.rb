@@ -79,7 +79,7 @@ class TestBlob < Test::Unit::TestCase
   def test_encoding
     assert_equal "ISO-8859-2", blob("README").encoding
     assert_equal "ISO-8859-1", blob("dump.sql").encoding
-    assert_equal "UTF-8", blob("file.txt").encoding
+    assert_equal "UTF-8", blob("foo.txt").encoding
     assert_nil blob("dog.o").encoding
   end
 
@@ -225,7 +225,7 @@ class TestBlob < Test::Unit::TestCase
 
     # Fabric
     assert blob("fabfile.py").vendored?
-    
+
     # WAF
     assert blob("waf").vendored?
   end
