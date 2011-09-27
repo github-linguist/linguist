@@ -53,7 +53,9 @@ module Linguist
     #
     # Returns a content type String.
     def content_type
-      @content_type ||= binary? ? mime_type : "text/plain; charset=#{encoding.downcase}"
+      @content_type ||= binary? ?
+        mime_type :
+        (encoding ? "text/plain; charset=#{encoding.downcase}" : "text/plain")
     end
 
     # Public: Get the Content-Disposition header value
