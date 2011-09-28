@@ -68,6 +68,8 @@ module Linguist
     def disposition
       if text? || image?
         'inline'
+      elsif name.nil?
+        "attachment"
       else
         "attachment; filename=#{EscapeUtils.escape_url(pathname.basename)}"
       end
