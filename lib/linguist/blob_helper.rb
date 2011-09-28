@@ -92,8 +92,22 @@ module Linguist
     #
     # Return true or false
     def binary?
-      return false if data.empty?
-      encoding.nil? || detect_encoding[:type] == :binary
+      # Large blobs aren't even loaded into memory
+      if data.nil?
+        true
+
+      # Treat blank files as text
+      elsif data == ""
+        false
+
+      # Charlock doesn't know what to think
+      elsif encoding.nil?
+        true
+
+      # If Charlock says its binary
+      else
+        detect_encoding[:type] == :binary
+      end
     end
 
     # Public: Is the blob text?

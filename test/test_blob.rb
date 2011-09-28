@@ -84,6 +84,13 @@ class TestBlob < Test::Unit::TestCase
   end
 
   def test_binary
+    # Large blobs aren't loaded
+    large_blob = blob("git.exe")
+    large_blob.instance_eval do
+      def data; end
+    end
+    assert large_blob.binary?
+
     assert blob("git.deb").binary?
     assert blob("git.exe").binary?
     assert blob("hello.pbc").binary?
