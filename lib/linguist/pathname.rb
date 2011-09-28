@@ -77,27 +77,6 @@ module Linguist
       @mime_type ||= Mime.mime_for(extname)
     end
 
-    # Public: Get the Content-Type header
-    #
-    # This value is used when serving raw blobs.
-    #
-    # Examples
-    #
-    #   Pathname.new('file.txt').content_type
-    #   # => 'text/plain; charset=utf-8'
-    #
-    # Returns a content type String.
-    def content_type
-      @content_type ||= binary? ? mime_type : 'text/plain; charset=utf8'
-    end
-
-    # Public: Is the path binary?
-    #
-    # Return true or false
-    def binary?
-      @binary ||= Mime.binary?(extname)
-    end
-
     # Public: Return self as String
     #
     # Returns a String

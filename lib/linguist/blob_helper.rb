@@ -53,8 +53,7 @@ module Linguist
     #
     # Returns a content type String.
     def content_type
-      @content_type ||= binary? ?
-        mime_type :
+      @content_type ||= binary? ? mime_type :
         (encoding ? "text/plain; charset=#{encoding.downcase}" : "text/plain")
     end
 
@@ -93,11 +92,8 @@ module Linguist
     #
     # Return true or false
     def binary?
-      if mime_type = Mime.lookup_mime_type_for(pathname.extname)
-        mime_type.binary?
-      else
-        encoding.nil? || detect_encoding[:type] == :binary
-      end
+      return false if data.empty?
+      encoding.nil? || detect_encoding[:type] == :binary
     end
 
     # Public: Is the blob text?

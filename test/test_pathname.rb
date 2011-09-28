@@ -59,10 +59,4 @@ class TestPathname < Test::Unit::TestCase
     assert_equal 'application/python', Pathname.new("itty.py").mime_type
     assert_equal 'text/plain', Pathname.new("defun.kt").mime_type
   end
-
-  def test_content_type
-    assert_equal 'text/plain; charset=utf8', Pathname.new("file.txt").content_type
-    assert_equal 'text/plain; charset=utf8', Pathname.new("file.rb").content_type
-    assert_equal 'image/png', Pathname.new("octocat.png").content_type
-  end
 end

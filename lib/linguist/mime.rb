@@ -58,26 +58,6 @@ module Linguist
       mime_type ? mime_type.simplified : 'text/plain'
     end
 
-    # Internal: Determine if extension or mime type is binary.
-    #
-    # ext_or_mime_type - A file extension ".exe" or
-    #                    mime type "application/octet-stream".
-    #
-    # Returns true or false
-    def self.binary?(ext_or_mime_type)
-      mime_type = lookup_mime_type_for(ext_or_mime_type)
-      mime_type ? mime_type.binary? : false
-    end
-
-    # Internal: Determine if extension or mime type is plain text.
-    #
-    # ext_or_mime_type - A file extension ".txt" or mime type "text/plain".
-    #
-    # Returns true or false
-    def self.text?(ext_or_mime_type)
-      !binary?(ext_or_mime_type)
-    end
-
     # Internal: Lookup mime type for extension or mime type
     #
     # ext_or_mime_type - A file extension ".txt" or mime type "text/plain".
