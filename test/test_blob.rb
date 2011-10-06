@@ -28,8 +28,8 @@ class TestBlob < Test::Unit::TestCase
   def test_mime_type
     assert_equal "application/octet-stream", blob("dog.o").mime_type
     assert_equal "application/postscript", blob("octocat.ai").mime_type
-    assert_equal "application/ruby", blob("grit.rb").mime_type
-    assert_equal "application/sh", blob("script.sh").mime_type
+    assert_equal "application/x-ruby", blob("grit.rb").mime_type
+    assert_equal "application/x-sh", blob("script.sh").mime_type
     assert_equal "application/xml", blob("bar.xml").mime_type
     assert_equal "text/plain", blob("README").mime_type
   end

@@ -54,9 +54,9 @@ class TestPathname < Test::Unit::TestCase
   end
 
   def test_mime_type
-    assert_equal 'application/ruby', Pathname.new("file.rb").mime_type
+    assert_equal 'application/x-ruby', Pathname.new("file.rb").mime_type
     assert_equal 'application/javascript', Pathname.new("file.js").mime_type
-    assert_equal 'application/python', Pathname.new("itty.py").mime_type
+    assert_equal 'application/x-python', Pathname.new("itty.py").mime_type
     assert_equal 'text/plain', Pathname.new("defun.kt").mime_type
   end
 end

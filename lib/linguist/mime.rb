@@ -55,7 +55,7 @@ module Linguist
     # Return mime type String otherwise falls back to 'text/plain'.
     def self.mime_for(ext)
       mime_type = lookup_mime_type_for(ext)
-      mime_type ? mime_type.simplified : 'text/plain'
+      mime_type ? mime_type.to_s : 'text/plain'
     end
 
     # Internal: Lookup mime type for extension or mime type
