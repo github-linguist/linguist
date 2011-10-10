@@ -562,7 +562,7 @@ module Linguist
     #
     # Returns html String
     def colorize(options = {})
-      return if !text? || large?
+      return if !text? || large? || generated?
       options[:options] ||= {}
       options[:options][:encoding] ||= encoding
       lexer.highlight(data, options)
@@ -575,7 +575,6 @@ module Linguist
     #
     # Returns html String
     def colorize_without_wrapper(options = {})
-      return if !text? || large?
       if text = colorize(options)
         text[%r{<div class="highlight"><pre>(.*?)</pre>\s*</div>}m, 1]
       else
