@@ -5,5 +5,8 @@ rvm:
   - rbx
   - ree
 
+before_script:
+  - "apt-get install libicu-dev"
+
 notifications:
   disabled: true
