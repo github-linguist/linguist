@@ -6,7 +6,7 @@ rvm:
   - ree
 
 before_script:
-  - "apt-get install libicu-dev"
+  - "sudo apt-get install libicu-dev"
 
 notifications:
   disabled: true
