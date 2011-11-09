@@ -4,6 +4,6 @@ rvm:
   - jruby
   - rbx
   - ree
-before_install: "sudo apt-get install libicu-dev -y"
+before_install: sudo apt-get install libicu-dev -y
 notifications:
   disabled: true
