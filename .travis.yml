@@ -1,9 +1,9 @@
+before_script: sudo apt-get install libicu-dev -y
 rvm:
   - 1.8.7
   - 1.9.2
   - jruby
   - rbx
   - ree
-before_script: sudo apt-get install libicu-dev -y
 notifications:
   disabled: true
