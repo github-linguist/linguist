@@ -82,6 +82,8 @@ To run the tests:
 
 *Since this code is specific to GitHub, is not published as a official rubygem.*
 
+If you are seeing errors like `StandardError: could not find any magic files!`, it means the CharlockHolmes gem didn’t install correctly. See the [installing section](https://github.com/brianmario/charlock_holmes/blob/master/README.md) of the CharlockHolmes README for more information.
+
 ## Contributing
 
 1. Fork it.
