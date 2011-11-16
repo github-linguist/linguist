@@ -717,6 +717,7 @@ Perl:
   type: programming
   overrides:
   - .pl
+  - .t
   primary_extension: .pl
   extensions:
   - .PL
@@ -965,6 +966,14 @@ Textile:
   lexer: Text only
   extensions:
   - .textile
+  
+Turing:
+  type: programming
+  lexer: Text only
+  primary_extension: .t
+  extensions:
+  - .t
+  - .tu
 
 Twig:
   type: markup
