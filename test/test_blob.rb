@@ -263,6 +263,7 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['Ruby'],        blob("foo.rb").language
     assert_equal Language['Ruby'],        blob("script.rb").language
     assert_equal Language['Ruby'],        blob("wrong_shebang.rb").language
+    assert_equal Language['Arduino'],     blob("hello.ino").language
     assert_nil blob("octocat.png").language
 
     # .pl disambiguation
