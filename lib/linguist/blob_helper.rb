@@ -467,7 +467,7 @@ module Linguist
         Language['R']
       end
     end
-    
+
     # Internal: Guess language of .t files.
     #
     # Makes fairly sure that it is Turing.
