@@ -470,12 +470,20 @@ module Linguist
 
     # Internal: Guess language of .t files.
     #
-    # Makes fairly sure that it is Turing.
-    # Turing is not very popular so it would not be good to have perl users' files being confused.
-    #
     # Returns a Language.
     def guess_t_language
-      if lines.grep(/:=/).any? && lines.grep(/proc |procedure |fcn |function /).any? && lines.grep(/var/).any?
+      score = 0
+      score += 1 if lines.grep(/^% /).any?
+      score += data.gsub(/ := /).count
+      score += data.gsub(/proc |procedure |fcn |function /).count
+      score += data.gsub(/var \w+: \w+/).count
+
+      # Tell-tale signs its gotta be Perl
+      if lines.grep(/^(my )?(sub |\$|@|%)\w+/).any?
+        score = 0
+      end
+
+      if score >= 3
         Language['Turing']
       else
         Language['Perl']
