@@ -20,6 +20,9 @@ class TestLanguage < Test::Unit::TestCase
 
     assert Language.ambiguous?('.r')
     assert_equal Language['R'], Language.find_by_extension('r')
+
+    assert Language.ambiguous?('.t')
+    assert_equal Language['Perl'], Language.find_by_extension('t')
   end
 
   def test_lexer

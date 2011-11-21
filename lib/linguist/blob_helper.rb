@@ -468,6 +468,28 @@ module Linguist
       end
     end
 
+    # Internal: Guess language of .t files.
+    #
+    # Returns a Language.
+    def guess_t_language
+      score = 0
+      score += 1 if lines.grep(/^% /).any?
+      score += data.gsub(/ := /).count
+      score += data.gsub(/proc |procedure |fcn |function /).count
+      score += data.gsub(/var \w+: \w+/).count
+
+      # Tell-tale signs its gotta be Perl
+      if lines.grep(/^(my )?(sub |\$|@|%)\w+/).any?
+        score = 0
+      end
+
+      if score >= 3
+        Language['Turing']
+      else
+        Language['Perl']
+      end
+    end
+
     # Internal: Guess language of .gsp files.
     #
     # Returns a Language.
