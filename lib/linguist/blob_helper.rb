@@ -142,6 +142,13 @@ module Linguist
       ['.module', '.install', '.test', '.inc'].include?(extname)
     end
 
+    # Public: Is the blob likely to have a shebang?
+    #
+    # Return true or false
+    def shebang_extname?
+      extname.empty?
+    end
+
     MEGABYTE = 1024 * 1024
 
     # Public: Is the blob too big to load?
@@ -592,6 +599,9 @@ module Linguist
     #
     # Returns the Language or nil
     def shebang_language
+      # Skip file extensions unlikely to have shebangs
+      return unless shebang_extname?
+
       if script = shebang_script
         Language[script]
       end

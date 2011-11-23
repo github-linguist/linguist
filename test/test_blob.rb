@@ -17,6 +17,12 @@ class TestBlob < Test::Unit::TestCase
     FileBlob.new(File.join(fixtures_path, name), fixtures_path)
   end
 
+  def script_blob(name)
+    blob = blob(name)
+    blob.instance_variable_set(:@name, 'script')
+    blob
+  end
+
   def test_name
     assert_equal "foo.rb", blob("foo.rb").name
   end
@@ -385,40 +391,40 @@ class TestBlob < Test::Unit::TestCase
   end
 
   def test_shebang_script
-    assert_equal 'sh', blob("script.sh").shebang_script
-    assert_equal 'bash', blob("script.bash").shebang_script
-    assert_equal 'zsh', blob("script.zsh").shebang_script
-    assert_equal 'perl', blob("script.pl").shebang_script
-    assert_equal 'ruby', blob("script.rb").shebang_script
-    assert_equal 'ruby', blob("script2.rb").shebang_script
-    assert_equal 'python', blob("script.py").shebang_script
-    assert_equal 'node', blob("script.js").shebang_script
-    assert_equal 'groovy', blob("script.groovy").shebang_script
-    assert_equal 'macruby', blob("script.mrb").shebang_script
-    assert_equal 'rake', blob("script.rake").shebang_script
-    assert_equal 'foo', blob("script.foo").shebang_script
-    assert_equal 'nush', blob("script.nu").shebang_script
-    assert_equal 'scala', blob("script.scala").shebang_script
-    assert_equal 'racket', blob("script.rkt").shebang_script
-    assert_equal nil, blob("foo.rb").shebang_script
+    assert_equal 'sh', script_blob("script.sh").shebang_script
+    assert_equal 'bash', script_blob("script.bash").shebang_script
+    assert_equal 'zsh', script_blob("script.zsh").shebang_script
+    assert_equal 'perl', script_blob("script.pl").shebang_script
+    assert_equal 'ruby', script_blob("script.rb").shebang_script
+    assert_equal 'ruby', script_blob("script2.rb").shebang_script
+    assert_equal 'python', script_blob("script.py").shebang_script
+    assert_equal 'node', script_blob("script.js").shebang_script
+    assert_equal 'groovy', script_blob("script.groovy").shebang_script
+    assert_equal 'macruby', script_blob("script.mrb").shebang_script
+    assert_equal 'rake', script_blob("script.rake").shebang_script
+    assert_equal 'foo', script_blob("script.foo").shebang_script
+    assert_equal 'nush', script_blob("script.nu").shebang_script
+    assert_equal 'scala', script_blob("script.scala").shebang_script
+    assert_equal 'racket', script_blob("script.rkt").shebang_script
+    assert_equal nil, script_blob("foo.rb").shebang_script
   end
 
   def test_shebang_language
-    assert_equal Language['Shell'], blob("script.sh").shebang_language
-    assert_equal Language['Shell'], blob("script.bash").shebang_language
-    assert_equal Language['Shell'], blob("script.zsh").shebang_language
-    assert_equal Language['Perl'], blob("script.pl").shebang_language
-    assert_equal Language['Ruby'], blob("script.rb").shebang_language
-    assert_equal Language['Python'], blob("script.py").shebang_language
-    assert_equal Language['JavaScript'], blob("script.js").shebang_language
-    assert_equal Language['Groovy'], blob("script.groovy").shebang_language
-    assert_equal Language['Ruby'], blob("script.mrb").shebang_language
-    assert_equal Language['Ruby'], blob("script.rake").shebang_language
-    assert_equal Language['Nu'], blob("script.nu").shebang_language
-    assert_equal Language['Scala'], blob("script.scala").shebang_language
-    assert_equal Language['Racket'], blob("script.rkt").shebang_language
-    assert_equal nil, blob("script.foo").shebang_language
-    assert_equal nil, blob("foo.rb").shebang_language
+    assert_equal Language['Shell'], script_blob("script.sh").shebang_language
+    assert_equal Language['Shell'], script_blob("script.bash").shebang_language
+    assert_equal Language['Shell'], script_blob("script.zsh").shebang_language
+    assert_equal Language['Perl'], script_blob("script.pl").shebang_language
+    assert_equal Language['Ruby'], script_blob("script.rb").shebang_language
+    assert_equal Language['Python'], script_blob("script.py").shebang_language
+    assert_equal Language['JavaScript'], script_blob("script.js").shebang_language
+    assert_equal Language['Groovy'], script_blob("script.groovy").shebang_language
+    assert_equal Language['Ruby'], script_blob("script.mrb").shebang_language
+    assert_equal Language['Ruby'], script_blob("script.rake").shebang_language
+    assert_equal Language['Nu'], script_blob("script.nu").shebang_language
+    assert_equal Language['Scala'], script_blob("script.scala").shebang_language
+    assert_equal Language['Racket'], script_blob("script.rkt").shebang_language
+    assert_equal nil, script_blob("script.foo").shebang_language
+    assert_equal nil, script_blob("foo.rb").shebang_language
   end
 
   def test_colorize
