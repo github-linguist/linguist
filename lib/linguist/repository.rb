@@ -67,6 +67,9 @@ module Linguist
       return if @computed_stats
 
       @enum.each do |blob|
+        # Skip binary file extensions
+        next if blob.binary_mime_type?
+
         # Skip vendored or generated blobs
         next if blob.vendored? || blob.generated? || blob.language.nil?
 

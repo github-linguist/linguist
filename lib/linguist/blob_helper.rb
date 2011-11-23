@@ -90,6 +90,15 @@ module Linguist
       @detect_encoding ||= CharlockHolmes::EncodingDetector.new.detect(data) if data
     end
 
+    # Public: Is the blob binary according to its mime type
+    #
+    # Return true or false
+    def binary_mime_type?
+      if mime_type = Mime.lookup_mime_type_for(pathname.extname)
+        mime_type.binary?
+      end
+    end
+
     # Public: Is the blob binary?
     #
     # Return true or false
