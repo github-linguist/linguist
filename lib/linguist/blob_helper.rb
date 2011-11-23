@@ -135,6 +135,13 @@ module Linguist
       ['.png', '.jpg', '.jpeg', '.gif'].include?(extname)
     end
 
+    # Public: Is the blob a possible drupal php file?
+    #
+    # Return true or false
+    def drupal_extname?
+      ['.module', '.install', '.test', '.inc'].include?(extname)
+    end
+
     MEGABYTE = 1024 * 1024
 
     # Public: Is the blob too big to load?
@@ -512,10 +519,13 @@ module Linguist
 
     # Internal: Guess language from the first line.
     #
-    # Look for leading "<?php"
+    # Look for leading "<?php" in Drupal files
     #
     # Returns a Language.
     def first_line_language
+      # Only check files with drupal php extensions
+      return unless drupal_extname?
+
       # Fail fast if blob isn't viewable?
       return unless viewable?
 
