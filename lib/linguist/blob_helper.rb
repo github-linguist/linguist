@@ -147,6 +147,7 @@ module Linguist
     # Return true or false
     def shebang_extname?
       extname.empty? &&
+        mode &&
         (mode.to_i(8) & 05) == 05
     end
 
