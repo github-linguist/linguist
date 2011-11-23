@@ -368,7 +368,7 @@ module Linguist
     #
     # Returns a Language or nil
     def guess_language
-      return if binary?
+      return if binary_mime_type?
 
       # Disambiguate between multiple language extensions
       disambiguate_extension_language ||
