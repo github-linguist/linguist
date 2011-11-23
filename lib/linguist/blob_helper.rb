@@ -146,7 +146,8 @@ module Linguist
     #
     # Return true or false
     def shebang_extname?
-      extname.empty?
+      extname.empty? &&
+        (mode.to_i(8) & 05) == 05
     end
 
     MEGABYTE = 1024 * 1024

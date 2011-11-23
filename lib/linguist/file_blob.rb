@@ -32,6 +32,13 @@ module Linguist
     # Returns a String
     attr_reader :name
 
+    # Public: Read file permissions
+    #
+    # Returns a String like '100644'
+    def mode
+      File.stat(@path).mode.to_s(8)
+    end
+
     # Public: Read file contents.
     #
     # Returns a String.
