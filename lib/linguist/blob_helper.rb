@@ -150,7 +150,7 @@ module Linguist
     #
     # Return true or false
     def viewable?
-      text? && !large?
+      !large? && text?
     end
 
     vendored_paths = YAML.load_file(File.expand_path("../vendor.yml", __FILE__))
