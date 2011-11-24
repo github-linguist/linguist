@@ -90,6 +90,15 @@ module Linguist
       @detect_encoding ||= CharlockHolmes::EncodingDetector.new.detect(data) if data
     end
 
+    # Public: Is the blob binary according to its mime type
+    #
+    # Return true or false
+    def binary_mime_type?
+      if mime_type = Mime.lookup_mime_type_for(pathname.extname)
+        mime_type.binary?
+      end
+    end
+
     # Public: Is the blob binary?
     #
     # Return true or false
@@ -126,6 +135,22 @@ module Linguist
       ['.png', '.jpg', '.jpeg', '.gif'].include?(extname)
     end
 
+    # Public: Is the blob a possible drupal php file?
+    #
+    # Return true or false
+    def drupal_extname?
+      ['.module', '.install', '.test', '.inc'].include?(extname)
+    end
+
+    # Public: Is the blob likely to have a shebang?
+    #
+    # Return true or false
+    def shebang_extname?
+      extname.empty? &&
+        mode &&
+        (mode.to_i(8) & 05) == 05
+    end
+
     MEGABYTE = 1024 * 1024
 
     # Public: Is the blob too big to load?
@@ -141,7 +166,7 @@ module Linguist
     #
     # Return true or false
     def viewable?
-      text? && !large?
+      !large? && text?
     end
 
     vendored_paths = YAML.load_file(File.expand_path("../vendor.yml", __FILE__))
@@ -359,7 +384,7 @@ module Linguist
     #
     # Returns a Language or nil
     def guess_language
-      return if binary?
+      return if binary_mime_type?
 
       # Disambiguate between multiple language extensions
       disambiguate_extension_language ||
@@ -503,10 +528,13 @@ module Linguist
 
     # Internal: Guess language from the first line.
     #
-    # Look for leading "<?php"
+    # Look for leading "<?php" in Drupal files
     #
     # Returns a Language.
     def first_line_language
+      # Only check files with drupal php extensions
+      return unless drupal_extname?
+
       # Fail fast if blob isn't viewable?
       return unless viewable?
 
@@ -573,6 +601,9 @@ module Linguist
     #
     # Returns the Language or nil
     def shebang_language
+      # Skip file extensions unlikely to have shebangs
+      return unless shebang_extname?
+
       if script = shebang_script
         Language[script]
       end
