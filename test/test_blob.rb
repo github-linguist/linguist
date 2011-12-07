@@ -253,6 +253,10 @@ class TestBlob < Test::Unit::TestCase
     assert blob("Scripts/MicrosoftMvcValidation.debug.js").vendored?
     assert blob("Scripts/MicrosoftMvcValidation.js").vendored?
 
+
+    # jQuery validation plugin (MS bundles this with asp.net mvc)
+    assert blob("Scripts/jquery.validate.js").vendored?
+
     # NuGet Packages
     assert blob("packages/Modernizr.2.0.6/Content/Scripts/modernizr-2.0.6-development-only.js").vendored?
   end
