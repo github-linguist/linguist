@@ -241,6 +241,20 @@ class TestBlob < Test::Unit::TestCase
 
     # WAF
     assert blob("waf").vendored?
+
+    # Visual Studio IntelliSense
+    assert blob("Scripts/jquery-1.7-vsdoc.js").vendored?
+
+    # Microsoft Ajax
+    assert blob("Scripts/MicrosoftAjax.debug.js").vendored?
+    assert blob("Scripts/MicrosoftAjax.js").vendored?
+    assert blob("Scripts/MicrosoftMvcAjax.debug.js").vendored?
+    assert blob("Scripts/MicrosoftMvcAjax.js").vendored?
+    assert blob("Scripts/MicrosoftMvcValidation.debug.js").vendored?
+    assert blob("Scripts/MicrosoftMvcValidation.js").vendored?
+
+    # NuGet Packages
+    assert blob("packages/Modernizr.2.0.6/Content/Scripts/modernizr-2.0.6-development-only.js").vendored?
   end
 
   def test_indexable
