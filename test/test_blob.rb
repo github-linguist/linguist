@@ -280,6 +280,10 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['R'],           blob("hello-r.R").language
     assert_equal Language['Rebol'],       blob("hello-rebol.r").language
 
+    # .t disabiguation
+    assert_equal Language['Turing'], blob("test-turing.t").language
+    assert_equal Language['Perl'], blob("test-perl.t").language
+
     # ML
     assert_equal Language['OCaml'],       blob("Foo.ml").language
     assert_equal Language['Standard ML'], blob("Foo.sig").language

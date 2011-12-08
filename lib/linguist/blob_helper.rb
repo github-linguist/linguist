@@ -475,7 +475,7 @@ module Linguist
     #
     # Returns a Language.
     def guess_t_language
-      if lines.grep(/:=/).any? && lines.grep(/proc |procedure |fcn |function /).any? && lines.grep(/var/).any?
+      if lines.grep(/:=/).any? && lines.grep(/proc |procedure |fcn |function /).any? && lines.grep(/var/).any? && lines.grep(/\{|\}/).none?
         Language['Turing']
       else
         Language['Perl']
