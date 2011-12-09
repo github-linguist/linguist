@@ -206,6 +206,8 @@ class TestBlob < Test::Unit::TestCase
     assert blob("jquery.js").vendored?
     assert blob("public/javascripts/jquery.js").vendored?
     assert blob("public/javascripts/jquery.min.js").vendored?
+    assert blob("public/javascripts/jquery-1.7.js").vendored?
+    assert blob("public/javascripts/jquery-1.7.min.js").vendored?
     assert blob("public/javascripts/jquery-1.5.2.js").vendored?
     assert blob("public/javascripts/jquery-1.6.1.js").vendored?
     assert blob("public/javascripts/jquery-1.6.1.min.js").vendored?
