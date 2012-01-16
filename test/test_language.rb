@@ -100,6 +100,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['Literate Haskell'], Language.find_by_alias('lhs')
     assert_equal Language['Literate Haskell'], Language.find_by_alias('literate-haskell')
     assert_equal Language['Parrot Internal Representation'], Language.find_by_alias('pir')
+    assert_equal Language['Puppet'], Language.find_by_alias('puppet')
     assert_equal Language['Pure Data'], Language.find_by_alias('pure-data')
     assert_equal Language['Raw token data'], Language.find_by_alias('raw')
     assert_equal Language['Ruby'], Language.find_by_alias('rb')
@@ -148,6 +149,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal 'common-lisp', Language['Common Lisp'].search_term
     assert_equal 'html+erb',    Language['HTML+ERB'].search_term
     assert_equal 'max/msp',     Language['Max/MSP'].search_term
+    assert_equal 'puppet',      Language['Puppet'].search_term
     assert_equal 'pure-data',   Language['Pure Data'].search_term
 
     assert_equal 'aspx-vb',       Language['ASP'].search_term
