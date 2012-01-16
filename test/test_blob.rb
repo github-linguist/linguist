@@ -165,6 +165,9 @@ class TestBlob < Test::Unit::TestCase
     assert !blob("coffee/empty.js").generated?
     assert !blob("coffee/hello.js").generated?
 
+    assert blob("coffee/intro-old.js").generated?
+    assert blob("coffee/classes-old.js").generated?
+
     assert blob("coffee/intro.js").generated?
     assert blob("coffee/classes.js").generated?
   end
