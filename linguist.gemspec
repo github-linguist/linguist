@@ -3,6 +3,8 @@ Gem::Specification.new do |s|
   s.version = '1.0.0'
   s.summary = "GitHub Language detection"
 
+  s.authors = "GitHub"
+
   s.files = Dir['lib/**/*']
   s.executables << 'linguist'
 
