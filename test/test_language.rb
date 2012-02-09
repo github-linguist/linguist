@@ -9,6 +9,9 @@ class TestLanguage < Test::Unit::TestCase
   Lexer = Pygments::Lexer
 
   def test_ambiguous_extensions
+    assert Language.ambiguous?('.cls')
+    assert_equal Language['OpenEdge ABL'], Language.find_by_extension('cls')
+
     assert Language.ambiguous?('.h')
     assert_equal Language['C'], Language.find_by_extension('h')
 
@@ -53,6 +56,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['NASM'], Language['Assembly'].lexer
     assert_equal Lexer['OCaml'], Language['F#'].lexer
     assert_equal Lexer['OCaml'], Language['OCaml'].lexer
+    assert_equal Lexer['OpenEdge ABL'], Language['OpenEdge ABL'].lexer
     assert_equal Lexer['Standard ML'], Language['Standard ML'].lexer
     assert_equal Lexer['Ooc'], Language['ooc'].lexer
     assert_equal Lexer['REBOL'], Language['Rebol'].lexer
@@ -104,6 +108,9 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['JavaScript'], Language.find_by_alias('js')
     assert_equal Language['Literate Haskell'], Language.find_by_alias('lhs')
     assert_equal Language['Literate Haskell'], Language.find_by_alias('literate-haskell')
+    assert_equal Language['OpenEdge ABL'], Language.find_by_alias('openedge')
+    assert_equal Language['OpenEdge ABL'], Language.find_by_alias('progress')
+    assert_equal Language['OpenEdge ABL'], Language.find_by_alias('abl')
     assert_equal Language['Parrot Internal Representation'], Language.find_by_alias('pir')
     assert_equal Language['Powershell'], Language.find_by_alias('posh')
     assert_equal Language['Puppet'], Language.find_by_alias('puppet')
