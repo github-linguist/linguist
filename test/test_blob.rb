@@ -97,6 +97,7 @@ class TestBlob < Test::Unit::TestCase
     end
     assert large_blob.binary?
 
+    assert blob("binary.rb").binary?
     assert blob("git.deb").binary?
     assert blob("git.exe").binary?
     assert blob("hello.pbc").binary?
@@ -119,6 +120,7 @@ class TestBlob < Test::Unit::TestCase
     assert blob("script.sh").text?
     assert blob("tender.md").text?
     assert blob("txt").text?
+    assert !blob("binary.rb").text?
   end
 
   def test_image
@@ -262,6 +264,9 @@ class TestBlob < Test::Unit::TestCase
   end
 
   def test_language
+    # Binary file using a language ext
+    assert_equal nil, blob("binary.rb").language
+
     assert_equal Language['C'],           blob("hello.c").language
     assert_equal Language['C'],           blob("hello.h").language
     assert_equal Language['C++'],         blob("bar.h").language
