@@ -100,6 +100,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['Literate Haskell'], Language.find_by_alias('lhs')
     assert_equal Language['Literate Haskell'], Language.find_by_alias('literate-haskell')
     assert_equal Language['Parrot Internal Representation'], Language.find_by_alias('pir')
+    assert_equal Language['Powershell'], Language.find_by_alias('posh')
     assert_equal Language['Puppet'], Language.find_by_alias('puppet')
     assert_equal Language['Pure Data'], Language.find_by_alias('pure-data')
     assert_equal Language['Raw token data'], Language.find_by_alias('raw')
@@ -183,6 +184,7 @@ class TestLanguage < Test::Unit::TestCase
   def test_programming
     assert_equal :programming, Language['JavaScript'].type
     assert_equal :programming, Language['Perl'].type
+    assert_equal :programming, Language['Powershell'].type
     assert_equal :programming, Language['Python'].type
     assert_equal :programming, Language['Ruby'].type
   end
@@ -235,6 +237,8 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['PHP'], Language.find_by_extension('php3')
     assert_equal Language['PHP'], Language.find_by_extension('php4')
     assert_equal Language['PHP'], Language.find_by_extension('php5')
+    assert_equal Language['Powershell'], Language.find_by_extension('psm1')
+    assert_equal Language['Powershell'], Language.find_by_extension('ps1')
     assert_nil Language.find_by_extension('.kt')
   end
 
