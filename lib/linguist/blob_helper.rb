@@ -380,7 +380,9 @@ module Linguist
     #
     # Returns a Language or nil
     def guess_language
-      return if binary_mime_type?
+      # Fail fast if its a known binary mime type to avoid loading the
+      # blob contents.
+      return if binary_mime_type? || binary?
 
       # Disambiguate between multiple language extensions
       disambiguate_extension_language ||
