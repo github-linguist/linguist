@@ -141,9 +141,14 @@ class TestBlob < Test::Unit::TestCase
 
   def test_generated
     assert !blob("README").generated?
+
+    # Xcode project files
     assert blob("MainMenu.xib").generated?
     assert blob("MainMenu.nib").generated?
     assert blob("project.pbxproj").generated?
+
+    # Gemfile.locks
+    assert blob("Gemfile.lock").generated?
 
     # Generated .NET Docfiles
     assert blob("net_docfile.xml").generated?

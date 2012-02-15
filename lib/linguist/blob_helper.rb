@@ -238,9 +238,11 @@ module Linguist
     #
     # Return true or false
     def generated?
-      if xcode_project_file?
+      if xcode_project_file? || generated_net_docfile?
         true
-      elsif generated_coffeescript? || minified_javascript? || generated_net_docfile?
+      elsif generated_coffeescript? || minified_javascript?
+        true
+      elsif name == 'Gemfile.lock'
         true
       else
         false
