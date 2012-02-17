@@ -300,6 +300,12 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['Perl'],        blob("perl-test.t").language
     assert_equal Language['Turing'],      blob("turing.t").language
 
+    # .v disambiguation
+    # https://github.com/progranism/Open-Source-FPGA-Bitcoin-Miner/blob/master/src/sha-256-functions.v
+    assert_equal Language['Verilog'],     blob("sha-256-functions.v").language
+    # https://github.com/coq/coq/blob/trunk/doc/faq/interval_discr.v
+    assert_equal Language['Coq'],         blob("interval_discr.v").language
+
     # ML
     assert_equal Language['OCaml'],       blob("Foo.ml").language
     assert_equal Language['Standard ML'], blob("Foo.sig").language

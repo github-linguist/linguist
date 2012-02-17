@@ -214,6 +214,12 @@ Common Lisp:
   - .lisp
   - .ny
 
+Coq:
+  type: programming
+  lexer: Coq
+  extensions:
+  - .v
+
 Cpp-ObjDump:
   type: data
   lexer: cpp-objdump
@@ -1047,6 +1053,8 @@ Vala:
 Verilog:
   type: programming
   lexer: verilog
+  overrides:
+  - .v
   extensions:
   - .v
 
