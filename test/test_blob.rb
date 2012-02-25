@@ -393,6 +393,9 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['CSS'], blob("screen.sass").language.group
     assert_equal Language['SCSS'], blob("screen.scss").language
     assert_equal Language['CSS'], blob("screen.scss").language.group
+
+    # Tea
+    assert_equal Language['Tea'], blob("foo.tea").language
   end
 
   def test_lexer
@@ -402,6 +405,7 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Lexer['Ruby'], blob("grit.rb").lexer
     assert_equal Lexer['Scheme'], blob("dude.el").lexer
     assert_equal Lexer['Text only'], blob("README").lexer
+    assert_equal Lexer['Java Server Page'], blob("foo.tea").lexer
   end
 
   def test_shebang_script
