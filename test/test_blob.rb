@@ -287,6 +287,10 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['Arduino'],     blob("hello.ino").language
     assert_nil blob("octocat.png").language
 
+    # .cls disambiguation
+    assert_equal Language['OpenEdge ABL'], blob("openedge.cls").language
+    assert_equal Language['TeX'], blob("latex.cls").language
+
     # .pl disambiguation
     assert_equal Language['Prolog'],      blob("test-prolog.pl").language
     assert_equal Language['Perl'],        blob("test-perl.pl").language
@@ -405,6 +409,9 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['CSS'], blob("screen.sass").language.group
     assert_equal Language['SCSS'], blob("screen.scss").language
     assert_equal Language['CSS'], blob("screen.scss").language.group
+
+    # OpenEdge ABL / Progress
+    assert_equal Language['OpenEdge ABL'], blob("openedge.p").language
   end
 
   def test_lexer
