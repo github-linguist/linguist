@@ -317,6 +317,11 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['Standard ML'], blob("Foo.sig").language
     assert_equal Language['Standard ML'], blob("Foo.sml").language
 
+    # Scilab
+    assert_equal Language['Scilab'],       blob("scilab_script.sce").language
+    assert_equal Language['Scilab'],       blob("scilab_function.sci").language
+    assert_equal Language['Scilab'],       blob("scilab_test.tst").language
+
     # Config files
     assert_equal Language['INI'],   blob(".gitconfig").language
     assert_equal Language['Shell'], blob(".bash_profile").language
