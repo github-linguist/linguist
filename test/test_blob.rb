@@ -405,6 +405,9 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['CSS'], blob("screen.sass").language.group
     assert_equal Language['SCSS'], blob("screen.scss").language
     assert_equal Language['CSS'], blob("screen.scss").language.group
+
+    # http://shenlanguage.org
+    assert_equal Language['Shen'], blob("foldl.shen").language
   end
 
   def test_lexer
