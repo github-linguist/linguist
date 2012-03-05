@@ -23,6 +23,9 @@ class TestLanguage < Test::Unit::TestCase
 
     assert Language.ambiguous?('.t')
     assert_equal Language['Perl'], Language.find_by_extension('t')
+
+    assert Language.ambiguous?('.v')
+    assert_equal Language['Verilog'], Language.find_by_extension('v')
   end
 
   def test_lexer
@@ -34,6 +37,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['C'], Language['XS'].lexer
     assert_equal Lexer['C++'], Language['C++'].lexer
     assert_equal Lexer['Coldfusion HTML'], Language['ColdFusion'].lexer
+    assert_equal Lexer['Coq'], Language['Coq'].lexer
     assert_equal Lexer['Fortran'], Language['FORTRAN'].lexer
     assert_equal Lexer['Gherkin'], Language['Cucumber'].lexer
     assert_equal Lexer['HTML'], Language['HTML'].lexer
@@ -63,6 +67,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['Scheme'], Language['Scheme'].lexer
     assert_equal Lexer['TeX'], Language['TeX'].lexer
     assert_equal Lexer['Text only'], Language['Text'].lexer
+    assert_equal Lexer['Verilog'], Language['Verilog'].lexer
     assert_equal Lexer['aspx-vb'], Language['ASP'].lexer
     assert_equal Lexer['haXe'], Language['HaXe'].lexer
     assert_equal Lexer['reStructuredText'], Language['reStructuredText'].lexer

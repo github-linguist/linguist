@@ -511,6 +511,17 @@ module Linguist
       end
     end
 
+    # Internal: Guess language of .v files.
+    #
+    # Returns a Language
+    def guess_v_language
+      if lines.grep(/^(\/\*|\/\/|module|parameter|input|output|wire|reg|always|initial|begin|\`)/).any?
+        Language['Verilog']
+      else
+        Language['Coq']
+      end
+    end
+
     # Internal: Guess language of .gsp files.
     #
     # Returns a Language.
