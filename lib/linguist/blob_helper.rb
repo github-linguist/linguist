@@ -417,6 +417,17 @@ module Linguist
       end
     end
 
+    # Internal: Guess language of .cls files
+    #
+    # Returns a Language.
+    def guess_cls_language
+      if lines.grep(/^(%|\\)/).any?
+        Language['TeX']
+      else
+        Language['OpenEdge ABL']
+      end
+    end
+
     # Internal: Guess language of header files (.h).
     #
     # Returns a Language.
