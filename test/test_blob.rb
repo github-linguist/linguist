@@ -405,7 +405,7 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Lexer['Ruby'], blob("grit.rb").lexer
     assert_equal Lexer['Scheme'], blob("dude.el").lexer
     assert_equal Lexer['Text only'], blob("README").lexer
-    assert_equal Lexer['Java Server Page'], blob("foo.tea").lexer
+    assert_equal Lexer['Tea'], blob("foo.tea").lexer
   end
 
   def test_shebang_script
