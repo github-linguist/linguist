@@ -291,6 +291,15 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal 'Ruby',   Language['Ruby'].name
   end
 
+  def test_escaped_name
+    assert_equal 'C', Language['C'].escaped_name
+    assert_equal 'C%23', Language['C#'].escaped_name
+    assert_equal 'C%2B%2B', Language['C++'].escaped_name
+    assert_equal 'Objective-C', Language['Objective-C'].escaped_name
+    assert_equal 'Common%20Lisp', Language['Common Lisp'].escaped_name
+    assert_equal 'Max%2FMSP', Language['Max/MSP'].escaped_name
+  end
+
   def test_error_without_name
     assert_raise ArgumentError do
       Language.new :name => nil

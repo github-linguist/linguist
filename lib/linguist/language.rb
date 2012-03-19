@@ -1,5 +1,5 @@
+require 'escape_utils'
 require 'pygments'
-require 'uri'
 require 'yaml'
 
 module Linguist
@@ -333,7 +333,7 @@ module Linguist
     #
     # Returns the escaped String.
     def escaped_name
-      URI.escape(name)
+      EscapeUtils.escape_url(name).gsub('+', '%20')
     end
 
     # Internal: Get default alias name
