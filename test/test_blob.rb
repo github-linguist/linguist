@@ -274,6 +274,7 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['C++'],         blob("hello.cpp").language
     assert_equal Language['C++'],         blob("cuda.cu").language
     assert_equal Language['GAS'],         blob("hello.s").language
+    assert_equal Language['Logtalk'],     blob("foo.lgt").language
     assert_equal Language['Objective-C'], blob("Foo.h").language
     assert_equal Language['Objective-C'], blob("Foo.m").language
     assert_equal Language['Objective-C'], blob("FooAppDelegate.h").language
@@ -285,6 +286,10 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['Ruby'],        blob("wrong_shebang.rb").language
     assert_equal Language['Arduino'],     blob("hello.ino").language
     assert_nil blob("octocat.png").language
+
+    # .cls disambiguation
+    assert_equal Language['OpenEdge ABL'], blob("openedge.cls").language
+    assert_equal Language['TeX'], blob("latex.cls").language
 
     # .pl disambiguation
     assert_equal Language['Prolog'],      blob("test-prolog.pl").language
@@ -305,10 +310,21 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['Perl'],        blob("perl-test.t").language
     assert_equal Language['Turing'],      blob("turing.t").language
 
+    # .v disambiguation
+    # https://github.com/progranism/Open-Source-FPGA-Bitcoin-Miner/blob/master/src/sha-256-functions.v
+    assert_equal Language['Verilog'],     blob("sha-256-functions.v").language
+    # https://github.com/coq/coq/blob/trunk/doc/faq/interval_discr.v
+    assert_equal Language['Coq'],         blob("interval_discr.v").language
+
     # ML
     assert_equal Language['OCaml'],       blob("Foo.ml").language
     assert_equal Language['Standard ML'], blob("Foo.sig").language
     assert_equal Language['Standard ML'], blob("Foo.sml").language
+
+    # Scilab
+    assert_equal Language['Scilab'],       blob("scilab_script.sce").language
+    assert_equal Language['Scilab'],       blob("scilab_function.sci").language
+    assert_equal Language['Scilab'],       blob("scilab_test.tst").language
 
     # Config files
     assert_equal Language['INI'],   blob(".gitconfig").language
@@ -393,6 +409,9 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['CSS'], blob("screen.sass").language.group
     assert_equal Language['SCSS'], blob("screen.scss").language
     assert_equal Language['CSS'], blob("screen.scss").language.group
+
+    # OpenEdge ABL / Progress
+    assert_equal Language['OpenEdge ABL'], blob("openedge.p").language
 
     # Tea
     assert_equal Language['Tea'], blob("foo.tea").language

@@ -120,6 +120,11 @@ Brainfuck:
   - .b
   - .bf
 
+Bro:
+  type: programming
+  extensions:
+  - .bro
+
 C:
   type: programming
   overrides:
@@ -128,6 +133,7 @@ C:
   extensions:
   - .c
   - .h
+  - .w
 
 C#:
   type: programming
@@ -161,6 +167,15 @@ C-ObjDump:
   lexer: c-objdump
   extensions:
   - .c-objdump
+
+C2hs Haskell:
+  type: programming
+  lexer: Haskell
+  group: Haskell
+  aliases:
+  - c2hs
+  extensions:
+  - .chs
 
 CMake:
   extensions:
@@ -213,6 +228,12 @@ Common Lisp:
   extensions:
   - .lisp
   - .ny
+
+Coq:
+  type: programming
+  lexer: Coq
+  extensions:
+  - .v
 
 Cpp-ObjDump:
   type: data
@@ -279,6 +300,13 @@ Eiffel:
   lexer: Text only
   extensions:
   - .e
+
+Elixir:
+  type: programming
+  primary_extension: .ex
+  extensions:
+  - .ex
+  - .exs
 
 Emacs Lisp:
   type: programming
@@ -566,6 +594,12 @@ Literate Haskell:
   extensions:
   - .lhs
 
+Logtalk:
+  type: programming
+  primary_extension: .lgt
+  extensions:
+  - .lgt
+
 Lua:
   type: programming
   primary_extension: .lua
@@ -706,6 +740,19 @@ OpenCL:
   extensions:
   - .cl
 
+OpenEdge ABL:
+  type: programming
+  aliases:
+  - progress
+  - openedge
+  - abl
+  primary_extension: .p
+  overrides:
+  - .cls
+  extensions:
+  - .cls
+  - .p
+
 PHP:
   type: programming
   extensions:
@@ -756,6 +803,15 @@ Perl:
   - .pod
   - .psgi
   - .t
+
+Powershell:
+  type: programming
+  lexer: Text only
+  aliases:
+  - posh
+  extensions:
+  - .ps1
+  - .psm1
 
 Prolog:
   type: programming
@@ -920,6 +976,13 @@ Scheme:
   - .sps
   - .ss
 
+Scilab:
+  type: programming
+  primary_extension: .sci
+  extensions:
+  - .sce
+  - .tst
+
 Self:
   type: programming
   lexer: Text only
@@ -1050,6 +1113,8 @@ Vala:
 Verilog:
   type: programming
   lexer: verilog
+  overrides:
+  - .v
   extensions:
   - .v
 

@@ -1,5 +1,6 @@
-require 'yaml'
+require 'escape_utils'
 require 'pygments'
+require 'yaml'
 
 module Linguist
   # Language names that are recognizable by GitHub. Defined languages
@@ -321,6 +322,19 @@ module Linguist
     #
     # Returns the extensions Array
     attr_reader :filenames
+
+    # Public: Get URL escaped name.
+    #
+    # Examples
+    #
+    #   "C%23"
+    #   "C%2B%2B"
+    #   "Common%20Lisp"
+    #
+    # Returns the escaped String.
+    def escaped_name
+      EscapeUtils.escape_url(name).gsub('+', '%20')
+    end
 
     # Internal: Get default alias name
     #

@@ -9,6 +9,9 @@ class TestLanguage < Test::Unit::TestCase
   Lexer = Pygments::Lexer
 
   def test_ambiguous_extensions
+    assert Language.ambiguous?('.cls')
+    assert_equal Language['OpenEdge ABL'], Language.find_by_extension('cls')
+
     assert Language.ambiguous?('.h')
     assert_equal Language['C'], Language.find_by_extension('h')
 
@@ -23,6 +26,9 @@ class TestLanguage < Test::Unit::TestCase
 
     assert Language.ambiguous?('.t')
     assert_equal Language['Perl'], Language.find_by_extension('t')
+
+    assert Language.ambiguous?('.v')
+    assert_equal Language['Verilog'], Language.find_by_extension('v')
   end
 
   def test_lexer
@@ -34,6 +40,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['C'], Language['XS'].lexer
     assert_equal Lexer['C++'], Language['C++'].lexer
     assert_equal Lexer['Coldfusion HTML'], Language['ColdFusion'].lexer
+    assert_equal Lexer['Coq'], Language['Coq'].lexer
     assert_equal Lexer['Fortran'], Language['FORTRAN'].lexer
     assert_equal Lexer['Gherkin'], Language['Cucumber'].lexer
     assert_equal Lexer['HTML'], Language['HTML'].lexer
@@ -49,6 +56,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['NASM'], Language['Assembly'].lexer
     assert_equal Lexer['OCaml'], Language['F#'].lexer
     assert_equal Lexer['OCaml'], Language['OCaml'].lexer
+    assert_equal Lexer['OpenEdge ABL'], Language['OpenEdge ABL'].lexer
     assert_equal Lexer['Standard ML'], Language['Standard ML'].lexer
     assert_equal Lexer['Ooc'], Language['ooc'].lexer
     assert_equal Lexer['REBOL'], Language['Rebol'].lexer
@@ -63,6 +71,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['Scheme'], Language['Scheme'].lexer
     assert_equal Lexer['TeX'], Language['TeX'].lexer
     assert_equal Lexer['Text only'], Language['Text'].lexer
+    assert_equal Lexer['Verilog'], Language['Verilog'].lexer
     assert_equal Lexer['aspx-vb'], Language['ASP'].lexer
     assert_equal Lexer['haXe'], Language['HaXe'].lexer
     assert_equal Lexer['reStructuredText'], Language['reStructuredText'].lexer
@@ -99,7 +108,11 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['JavaScript'], Language.find_by_alias('js')
     assert_equal Language['Literate Haskell'], Language.find_by_alias('lhs')
     assert_equal Language['Literate Haskell'], Language.find_by_alias('literate-haskell')
+    assert_equal Language['OpenEdge ABL'], Language.find_by_alias('openedge')
+    assert_equal Language['OpenEdge ABL'], Language.find_by_alias('progress')
+    assert_equal Language['OpenEdge ABL'], Language.find_by_alias('abl')
     assert_equal Language['Parrot Internal Representation'], Language.find_by_alias('pir')
+    assert_equal Language['Powershell'], Language.find_by_alias('posh')
     assert_equal Language['Puppet'], Language.find_by_alias('puppet')
     assert_equal Language['Pure Data'], Language.find_by_alias('pure-data')
     assert_equal Language['Raw token data'], Language.find_by_alias('raw')
@@ -183,6 +196,7 @@ class TestLanguage < Test::Unit::TestCase
   def test_programming
     assert_equal :programming, Language['JavaScript'].type
     assert_equal :programming, Language['Perl'].type
+    assert_equal :programming, Language['Powershell'].type
     assert_equal :programming, Language['Python'].type
     assert_equal :programming, Language['Ruby'].type
   end
@@ -235,6 +249,8 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['PHP'], Language.find_by_extension('php3')
     assert_equal Language['PHP'], Language.find_by_extension('php4')
     assert_equal Language['PHP'], Language.find_by_extension('php5')
+    assert_equal Language['Powershell'], Language.find_by_extension('psm1')
+    assert_equal Language['Powershell'], Language.find_by_extension('ps1')
     assert_nil Language.find_by_extension('.kt')
   end
 
@@ -273,6 +289,15 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal 'Perl',   Language['Perl'].name
     assert_equal 'Python', Language['Python'].name
     assert_equal 'Ruby',   Language['Ruby'].name
+  end
+
+  def test_escaped_name
+    assert_equal 'C', Language['C'].escaped_name
+    assert_equal 'C%23', Language['C#'].escaped_name
+    assert_equal 'C%2B%2B', Language['C++'].escaped_name
+    assert_equal 'Objective-C', Language['Objective-C'].escaped_name
+    assert_equal 'Common%20Lisp', Language['Common Lisp'].escaped_name
+    assert_equal 'Max%2FMSP', Language['Max/MSP'].escaped_name
   end
 
   def test_error_without_name
