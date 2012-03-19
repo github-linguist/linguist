@@ -412,6 +412,9 @@ class TestBlob < Test::Unit::TestCase
 
     # OpenEdge ABL / Progress
     assert_equal Language['OpenEdge ABL'], blob("openedge.p").language
+
+    # Tea
+    assert_equal Language['Tea'], blob("foo.tea").language
   end
 
   def test_lexer
@@ -421,6 +424,7 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Lexer['Ruby'], blob("grit.rb").lexer
     assert_equal Lexer['Scheme'], blob("dude.el").lexer
     assert_equal Lexer['Text only'], blob("README").lexer
+    assert_equal Lexer['Tea'], blob("foo.tea").lexer
   end
 
   def test_shebang_script
