@@ -10,7 +10,7 @@ class TestLanguage < Test::Unit::TestCase
 
   def test_ambiguous_extensions
     assert Language.ambiguous?('.cls')
-    assert_equal Language['OpenEdge ABL'], Language.find_by_extension('cls')
+    assert_equal Language['TeX'], Language.find_by_extension('cls')
 
     assert Language.ambiguous?('.h')
     assert_equal Language['C'], Language.find_by_extension('h')

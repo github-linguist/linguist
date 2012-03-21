@@ -423,8 +423,15 @@ module Linguist
     def guess_cls_language
       if lines.grep(/^(%|\\)/).any?
         Language['TeX']
-      else
+      elsif lines.grep(/^\s*(CLASS|METHOD|INTERFACE).*:\s*/i).any? || lines.grep(/^\s*(USING|DEFINE)/i).any?
         Language['OpenEdge ABL']
+      elsif lines.grep(/\{$/).any? || lines.grep(/\}$/).any?
+        Language['Apex']
+      elsif lines.grep(/^(\'\*|Attribute|Option|Sub|Private|Protected|Public|Friend)/i).any?
+        Language['Visual Basic']
+      else
+        # The most common language should be the fallback
+        Language['TeX']
       end
     end
 
