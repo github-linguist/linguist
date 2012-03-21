@@ -54,6 +54,12 @@ Ada:
   - .adb
   - .ads
 
+Apex:
+  type: programming
+  lexer: Text only
+  extensions:
+  - .cls
+
 AppleScript:
   aliases:
   - osascript
@@ -747,8 +753,6 @@ OpenEdge ABL:
   - openedge
   - abl
   primary_extension: .p
-  overrides:
-  - .cls
   extensions:
   - .cls
   - .p
@@ -1053,6 +1057,8 @@ Tcsh:
 TeX:
   type: markup
   primary_extension: .tex
+  overrides:
+  - .cls
   extensions:
   - .aux
   - .cls

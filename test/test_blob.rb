@@ -288,8 +288,14 @@ class TestBlob < Test::Unit::TestCase
     assert_nil blob("octocat.png").language
 
     # .cls disambiguation
-    assert_equal Language['OpenEdge ABL'], blob("openedge.cls").language
-    assert_equal Language['TeX'], blob("latex.cls").language
+    # https://github.com/abevoelker/abl-email-client/blob/master/com/abevoelker/email/Email.cls
+    assert_equal Language['OpenEdge ABL'], blob("Email.cls").language
+    # https://github.com/emcmanis/Thesis/blob/master/TeX/Thesis%20Template/reedthesis.cls
+    assert_equal Language['TeX'], blob("reedthesis.cls").language
+    # https://github.com/DangerMouseB/VLMessaging/blob/master/VLMMachineRouter/cApplication.cls
+    assert_equal Language['Visual Basic'], blob("cApplication.cls").language
+    # https://github.com/apex-commons/base/blob/master/src/classes/ArrayUtils.cls
+    assert_equal Language['Apex'], blob("ArrayUtils.cls").language
 
     # .pl disambiguation
     assert_equal Language['Prolog'],      blob("test-prolog.pl").language
