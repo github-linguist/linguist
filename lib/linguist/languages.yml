@@ -9,6 +9,7 @@
 # lexer             - An explicit lexer String (defaults to name.downcase)
 # aliases           - An Array of additional aliases (implicitly
 #                     includes name.downcase)
+# ace_mode          - A String name of Ace Mode (if available)
 # extension         - An Array of associated extensions
 # primary_extension - A String for the main extension associated with
 #                     the langauge. (defaults to extensions.first)
@@ -143,6 +144,7 @@ C:
 
 C#:
   type: programming
+  ace_mode: csharp
   search_term: csharp
   aliases:
   - csharp
@@ -151,6 +153,7 @@ C#:
 
 C++:
   type: programming
+  ace_mode: c_cpp
   search_term: cpp
   aliases:
   - cpp
@@ -191,6 +194,7 @@ CMake:
   - CMakeLists.txt
 
 CSS:
+  ace_mode: css
   extensions:
   - .css
 
@@ -201,6 +205,7 @@ ChucK:
 
 Clojure:
   type: programming
+  ace_mode: clojure
   primary_extension: .clj
   extensions:
   - .clj
@@ -208,6 +213,7 @@ Clojure:
 
 CoffeeScript:
   type: programming
+  ace_mode: coffee
   aliases:
   - coffee
   extensions:
@@ -218,6 +224,7 @@ CoffeeScript:
 ColdFusion:
   type: programming
   lexer: Coldfusion HTML
+  ace_mode: coldfusion
   search_term: cfm
   aliases:
   - cfm
@@ -444,6 +451,7 @@ Groff:
 Groovy:
   type: programming
   lexer: Java
+  ace_mode: groovy
   primary_extension: .groovy
   extensions:
   - .gradle
@@ -461,6 +469,7 @@ Groovy Server Pages:
 
 HTML:
   type: markup
+  ace_mode: html
   primary_extension: .html
   extensions:
   - .htm
@@ -493,6 +502,7 @@ HTML+PHP:
 HaXe:
   type: programming
   lexer: haXe
+  ace_mode: haxe
   extensions:
   - .hx
   - .hxml
@@ -542,12 +552,14 @@ JSON:
   type: data
   group: JavaScript
   lexer: JavaScript
+  ace_mode: json
   searchable: false
   extensions:
   - .json
 
 Java:
   type: programming
+  ace_mode: java
   extensions:
   - .java
   - .pde
@@ -563,6 +575,7 @@ Java Server Pages:
 
 JavaScript:
   type: programming
+  ace_mode: javascript
   aliases:
   - js
   - node
@@ -608,6 +621,7 @@ Logtalk:
 
 Lua:
   type: programming
+  ace_mode: lua
   primary_extension: .lua
   extensions:
   - .lua
@@ -630,6 +644,7 @@ Mako:
 Markdown:
   type: markup
   lexer: Text only
+  ace_mode: markdown
   primary_extension: .md
   extensions:
   - .markdown
@@ -704,6 +719,7 @@ NumPy:
 
 OCaml:
   type: programming
+  ace_mode: ocaml
   primary_extension: .ml
   extensions:
   - .ml
@@ -759,6 +775,7 @@ OpenEdge ABL:
 
 PHP:
   type: programming
+  ace_mode: php
   extensions:
   - .aw
   - .ctp
@@ -793,6 +810,7 @@ Parrot Assembly:
 
 Perl:
   type: programming
+  ace_mode: perl
   overrides:
   - .pl
   - .t
@@ -811,6 +829,7 @@ Perl:
 Powershell:
   type: programming
   lexer: Text only
+  ace_mode: powershell
   aliases:
   - posh
   extensions:
@@ -838,6 +857,7 @@ Pure Data:
 
 Python:
   type: programming
+  ace_mode: python
   primary_extension: .py
   extensions:
   - .py
@@ -901,6 +921,7 @@ Redcode:
 
 Ruby:
   type: programming
+  ace_mode: ruby
   aliases:
   - jruby
   - macruby
@@ -941,11 +962,13 @@ Rust:
 SCSS:
   type: markup
   group: CSS
+  ace_mode: scss
   extensions:
   - .scss
 
 SQL:
   type: data
+  ace_mode: sql
   searchable: false
   extensions:
   - .sql
@@ -966,6 +989,7 @@ Sass:
 
 Scala:
   type: programming
+  ace_mode: scala
   primary_extension: .scala
   extensions:
   - .sbt
@@ -1056,6 +1080,7 @@ Tcsh:
 
 TeX:
   type: markup
+  ace_mode: latex
   primary_extension: .tex
   overrides:
   - .cls
@@ -1072,12 +1097,14 @@ TeX:
 Text:
   type: data
   lexer: Text only
+  ace_mode: text
   extensions:
   - .txt
 
 Textile:
   type: markup
   lexer: Text only
+  ace_mode: textile
   extensions:
   - .textile
 
@@ -1144,6 +1171,7 @@ Visual Basic:
 
 XML:
   type: markup
+  ace_mode: xml
   primary_extension: .xml
   extensions:
   - .glade

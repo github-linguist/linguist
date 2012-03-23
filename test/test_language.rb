@@ -306,6 +306,21 @@ class TestLanguage < Test::Unit::TestCase
     end
   end
 
+  def test_ace_mode
+    assert_equal 'c_cpp', Language['C++'].ace_mode
+    assert_equal 'coffee', Language['CoffeeScript'].ace_mode
+    assert_equal 'csharp', Language['C#'].ace_mode
+    assert_equal 'css', Language['CSS'].ace_mode
+    assert_equal 'javascript', Language['JavaScript'].ace_mode
+    assert_equal 'text', Language['Text'].ace_mode
+  end
+
+  def test_ace_modes
+    assert Language.ace_modes.include?(Language['Text'])
+    assert Language.ace_modes.include?(Language['Ruby'])
+    assert !Language.ace_modes.include?(Language['FORTRAN'])
+  end
+
   def test_extensions
     assert Language['Perl'].extensions.include?('.pl')
     assert Language['Python'].extensions.include?('.py')
