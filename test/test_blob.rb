@@ -287,6 +287,7 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['Ruby'],        blob("script.rb").language
     assert_equal Language['Ruby'],        blob("wrong_shebang.rb").language
     assert_equal Language['Arduino'],     blob("hello.ino").language
+    assert_equal Language['VHDL'],        blob("foo.vhd").language
     assert_nil blob("octocat.png").language
 
     # .cls disambiguation
@@ -436,6 +437,7 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Lexer['Scheme'], blob("dude.el").lexer
     assert_equal Lexer['Text only'], blob("README").lexer
     assert_equal Lexer['Tea'], blob("foo.tea").lexer
+    assert_equal Lexer['vhdl'], blob("foo.vhd").lexer
   end
 
   def test_shebang_script
