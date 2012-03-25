@@ -62,6 +62,7 @@ Apex:
   - .cls
 
 AppleScript:
+  type: programming
   aliases:
   - osascript
   primary_extension: .scpt
@@ -110,10 +111,12 @@ Batchfile:
   - .cmd
 
 Befunge:
+  type: programming
   extensions:
   - .befunge
 
 BlitzMax:
+  type: programming
   extensions:
   - .bmx
 
@@ -123,6 +126,7 @@ Boo:
   - .boo
 
 Brainfuck:
+  type: programming
   extensions:
   - .b
   - .bf
@@ -199,6 +203,7 @@ CSS:
   - .css
 
 ChucK:
+  type: programming
   lexer: Java
   extensions:
   - .ck
@@ -397,22 +402,26 @@ GAS:
   - .s
 
 Genshi:
+  type: markup
   extensions:
   - .kid
 
 Gentoo Ebuild:
+  type: programming
   group: Shell
   lexer: Bash
   extensions:
   - .ebuild
 
 Gentoo Eclass:
+  type: programming
   group: Shell
   lexer: Bash
   extensions:
   - .eclass
 
 Gettext Catalog:
+  type: data
   search_term: pot
   searchable: false
   aliases:
@@ -458,6 +467,7 @@ Groovy:
   - .groovy
 
 Groovy Server Pages:
+  type: markup
   group: Groovy
   lexer: Java Server Page
   overrides:
@@ -509,6 +519,7 @@ HaXe:
   - .mtt
 
 Haml:
+  type: markup
   group: HTML
   type: markup
   extensions:
@@ -531,6 +542,7 @@ INI:
   - .gitconfig
 
 IRC log:
+  type: data
   lexer: IRC logs
   search_term: irc
   aliases:
@@ -565,6 +577,7 @@ Java:
   - .pde
 
 Java Server Pages:
+  type: markup
   group: Java
   lexer: Java Server Page
   search_term: jsp
@@ -598,6 +611,7 @@ LLVM:
   - .ll
 
 LilyPond:
+  type: programming
   lexer: Text only
   primary_extension: .ly
   extensions:
@@ -628,6 +642,7 @@ Lua:
   - .nse
 
 Makefile:
+  type: programming
   extensions:
   - .mak
   - .mk
@@ -637,6 +652,7 @@ Makefile:
   - GNUmakefile
 
 Mako:
+  type: markup
   extensions:
   - .mako
   - .mao
@@ -685,6 +701,7 @@ Moocode:
   - .moo
 
 Myghty:
+  type: markup
   extensions:
   - .myt
 
@@ -710,6 +727,7 @@ Nu:
   - Nukefile
 
 NumPy:
+  type: programming
   group: Python
   primary_extension: .numpy
   extensions:
@@ -900,6 +918,7 @@ Racket:
   - .scrbl
 
 Raw token data:
+  type: data
   search_term: raw
   aliases:
   - raw
@@ -916,6 +935,7 @@ Rebol:
   - .rebol
 
 Redcode:
+  type: programming
   extensions:
   - .cw
 
@@ -1046,6 +1066,7 @@ Smalltalk:
   - .st
 
 Smarty:
+  type: markup
   extensions:
   - .tpl
 
@@ -1205,6 +1226,7 @@ XQuery:
   - .xqy
 
 XS:
+  type: programming
   lexer: C
   extensions:
   - .xs
