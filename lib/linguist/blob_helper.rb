@@ -457,6 +457,9 @@ module Linguist
     # * Leading function keyword
     # * "%" comments
     #
+    # M heuristics:
+    # * ";" comments
+    #
     # Returns a Language.
     def guess_m_language
       # Objective-C keywords
@@ -470,6 +473,10 @@ module Linguist
       # Matlab comment
       elsif lines.grep(/^%/).any?
         Language['Matlab']
+
+      # M comment
+      elsif lines.grep(/^[ \t]*;/).any?
+        Language['M']
 
       # Fallback to Objective-C, don't want any Matlab false positives
       else
