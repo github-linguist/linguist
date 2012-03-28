@@ -41,24 +41,24 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['C++'], Language['C++'].lexer
     assert_equal Lexer['Coldfusion HTML'], Language['ColdFusion'].lexer
     assert_equal Lexer['Coq'], Language['Coq'].lexer
+    assert_equal Lexer['FSharp'], Language['F#'].lexer
+    assert_equal Lexer['FSharp'], Language['F#'].lexer
     assert_equal Lexer['Fortran'], Language['FORTRAN'].lexer
     assert_equal Lexer['Gherkin'], Language['Cucumber'].lexer
+    assert_equal Lexer['Groovy'], Language['Groovy'].lexer
     assert_equal Lexer['HTML'], Language['HTML'].lexer
     assert_equal Lexer['HTML+Django/Jinja'], Language['HTML+Django'].lexer
     assert_equal Lexer['HTML+PHP'], Language['HTML+PHP'].lexer
+    assert_equal Lexer['JSON'], Language['JSON'].lexer
     assert_equal Lexer['Java'], Language['ChucK'].lexer
-    assert_equal Lexer['Java'], Language['Groovy'].lexer
     assert_equal Lexer['Java'], Language['Java'].lexer
-    assert_equal Lexer['JavaScript'], Language['JSON'].lexer
     assert_equal Lexer['JavaScript'], Language['JavaScript'].lexer
     assert_equal Lexer['MOOCode'], Language['Moocode'].lexer
     assert_equal Lexer['MuPAD'], Language['mupad'].lexer
     assert_equal Lexer['NASM'], Language['Assembly'].lexer
-    assert_equal Lexer['OCaml'], Language['F#'].lexer
     assert_equal Lexer['OCaml'], Language['OCaml'].lexer
-    assert_equal Lexer['OpenEdge ABL'], Language['OpenEdge ABL'].lexer
-    assert_equal Lexer['Standard ML'], Language['Standard ML'].lexer
     assert_equal Lexer['Ooc'], Language['ooc'].lexer
+    assert_equal Lexer['OpenEdge ABL'], Language['OpenEdge ABL'].lexer
     assert_equal Lexer['REBOL'], Language['Rebol'].lexer
     assert_equal Lexer['RHTML'], Language['HTML+ERB'].lexer
     assert_equal Lexer['RHTML'], Language['RHTML'].lexer
@@ -69,6 +69,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['Scheme'], Language['Nu'].lexer
     assert_equal Lexer['Scheme'], Language['Racket'].lexer
     assert_equal Lexer['Scheme'], Language['Scheme'].lexer
+    assert_equal Lexer['Standard ML'], Language['Standard ML'].lexer
     assert_equal Lexer['TeX'], Language['TeX'].lexer
     assert_equal Lexer['Text only'], Language['Text'].lexer
     assert_equal Lexer['Verilog'], Language['Verilog'].lexer
