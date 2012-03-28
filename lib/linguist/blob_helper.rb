@@ -53,7 +53,7 @@ module Linguist
     #
     # Returns a content type String.
     def content_type
-      @content_type ||= binary? ? mime_type :
+      @content_type ||= (binary_mime_type? || binary?) ? mime_type :
         (encoding ? "text/plain; charset=#{encoding.downcase}" : "text/plain")
     end
 

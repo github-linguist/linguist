@@ -1,6 +1,10 @@
 require 'mime/types'
 require 'yaml'
 
+class MIME::Type
+  attr_accessor :override
+end
+
 # Register additional mime type extensions
 #
 # Follows same format as mime-types data file
@@ -32,6 +36,8 @@ File.read(File.expand_path("../mimes.yml", __FILE__)).lines.each do |line|
   if encoding
     mime_type.encoding = encoding
   end
+
+  mime_type.override = true
 
   # Kind of hacky, but we need to reindex the mime type after making changes
   MIME::Types.add_type_variant(mime_type)
@@ -72,8 +78,11 @@ module Linguist
         guesses = ::MIME::Types.type_for(ext_or_mime_type)
       end
 
-      # Prefer text mime types over binary
-      guesses.detect { |type| type.ascii? } ||
+      # Use custom override first
+      guesses.detect { |type| type.override } ||
+
+        # Prefer text mime types over binary
+        guesses.detect { |type| type.ascii? } ||
 
         # Otherwise use the first guess
         guesses.first
