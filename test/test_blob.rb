@@ -262,7 +262,7 @@ class TestBlob < Test::Unit::TestCase
   def test_indexable
     assert blob("file.txt").indexable?
     assert blob("foo.rb").indexable?
-    assert !blob("defun.kt").indexable?
+    assert !blob("defu.nkt").indexable?
     assert !blob("dump.sql").indexable?
     assert !blob("github.po").indexable?
     assert !blob("linguist.gem").indexable?
@@ -423,6 +423,9 @@ class TestBlob < Test::Unit::TestCase
 
     # Tea
     assert_equal Language['Tea'], blob("foo.tea").language
+
+    # Kotlin
+    assert_equal Language['Kotlin'], blob("Foo.kt").language
   end
 
   def test_lexer

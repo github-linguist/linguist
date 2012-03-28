@@ -251,7 +251,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['PHP'], Language.find_by_extension('php5')
     assert_equal Language['PowerShell'], Language.find_by_extension('psm1')
     assert_equal Language['PowerShell'], Language.find_by_extension('ps1')
-    assert_nil Language.find_by_extension('.kt')
+    assert_nil Language.find_by_extension('.nkt')
   end
 
   def test_find_all_by_extension
@@ -270,7 +270,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['Ruby'], Language.find_by_filename('Rakefile')
     assert_nil Language.find_by_filename('rb')
     assert_nil Language.find_by_filename('.rb')
-    assert_nil Language.find_by_filename('.kt')
+    assert_nil Language.find_by_filename('.nkt')
   end
 
   def test_find
