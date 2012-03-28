@@ -33,6 +33,7 @@ class TestBlob < Test::Unit::TestCase
 
   def test_mime_type
     assert_equal "application/octet-stream", blob("dog.o").mime_type
+    assert_equal "application/ogg", blob("foo.ogg").mime_type
     assert_equal "application/postscript", blob("octocat.ai").mime_type
     assert_equal "application/x-ruby", blob("grit.rb").mime_type
     assert_equal "application/x-sh", blob("script.sh").mime_type
@@ -42,6 +43,7 @@ class TestBlob < Test::Unit::TestCase
 
   def test_content_type
     assert_equal "application/octet-stream", blob("dog.o").content_type
+    assert_equal "application/ogg", blob("foo.ogg").content_type
     assert_equal "application/pdf", blob("foo.pdf").content_type
     assert_equal "image/png", blob("foo.png").content_type
     assert_equal "text/plain; charset=iso-8859-2", blob("README").content_type
@@ -260,7 +262,7 @@ class TestBlob < Test::Unit::TestCase
   def test_indexable
     assert blob("file.txt").indexable?
     assert blob("foo.rb").indexable?
-    assert !blob("defun.kt").indexable?
+    assert !blob("defu.nkt").indexable?
     assert !blob("dump.sql").indexable?
     assert !blob("github.po").indexable?
     assert !blob("linguist.gem").indexable?
@@ -285,11 +287,18 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['Ruby'],        blob("script.rb").language
     assert_equal Language['Ruby'],        blob("wrong_shebang.rb").language
     assert_equal Language['Arduino'],     blob("hello.ino").language
+    assert_equal Language['VHDL'],        blob("foo.vhd").language
     assert_nil blob("octocat.png").language
 
     # .cls disambiguation
-    assert_equal Language['OpenEdge ABL'], blob("openedge.cls").language
-    assert_equal Language['TeX'], blob("latex.cls").language
+    # https://github.com/abevoelker/abl-email-client/blob/master/com/abevoelker/email/Email.cls
+    assert_equal Language['OpenEdge ABL'], blob("Email.cls").language
+    # https://github.com/emcmanis/Thesis/blob/master/TeX/Thesis%20Template/reedthesis.cls
+    assert_equal Language['TeX'], blob("reedthesis.cls").language
+    # https://github.com/DangerMouseB/VLMessaging/blob/master/VLMMachineRouter/cApplication.cls
+    assert_equal Language['Visual Basic'], blob("cApplication.cls").language
+    # https://github.com/apex-commons/base/blob/master/src/classes/ArrayUtils.cls
+    assert_equal Language['Apex'], blob("ArrayUtils.cls").language
 
     # .pl disambiguation
     assert_equal Language['Prolog'],      blob("test-prolog.pl").language
@@ -412,6 +421,12 @@ class TestBlob < Test::Unit::TestCase
 
     # OpenEdge ABL / Progress
     assert_equal Language['OpenEdge ABL'], blob("openedge.p").language
+
+    # Tea
+    assert_equal Language['Tea'], blob("foo.tea").language
+
+    # Kotlin
+    assert_equal Language['Kotlin'], blob("Foo.kt").language
   end
 
   def test_lexer
@@ -421,6 +436,8 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Lexer['Ruby'], blob("grit.rb").lexer
     assert_equal Lexer['Scheme'], blob("dude.el").lexer
     assert_equal Lexer['Text only'], blob("README").lexer
+    assert_equal Lexer['Tea'], blob("foo.tea").lexer
+    assert_equal Lexer['vhdl'], blob("foo.vhd").lexer
   end
 
   def test_shebang_script

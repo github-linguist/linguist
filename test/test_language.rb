@@ -10,7 +10,7 @@ class TestLanguage < Test::Unit::TestCase
 
   def test_ambiguous_extensions
     assert Language.ambiguous?('.cls')
-    assert_equal Language['OpenEdge ABL'], Language.find_by_extension('cls')
+    assert_equal Language['TeX'], Language.find_by_extension('cls')
 
     assert Language.ambiguous?('.h')
     assert_equal Language['C'], Language.find_by_extension('h')
@@ -41,24 +41,24 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['C++'], Language['C++'].lexer
     assert_equal Lexer['Coldfusion HTML'], Language['ColdFusion'].lexer
     assert_equal Lexer['Coq'], Language['Coq'].lexer
+    assert_equal Lexer['FSharp'], Language['F#'].lexer
+    assert_equal Lexer['FSharp'], Language['F#'].lexer
     assert_equal Lexer['Fortran'], Language['FORTRAN'].lexer
     assert_equal Lexer['Gherkin'], Language['Cucumber'].lexer
+    assert_equal Lexer['Groovy'], Language['Groovy'].lexer
     assert_equal Lexer['HTML'], Language['HTML'].lexer
     assert_equal Lexer['HTML+Django/Jinja'], Language['HTML+Django'].lexer
     assert_equal Lexer['HTML+PHP'], Language['HTML+PHP'].lexer
+    assert_equal Lexer['JSON'], Language['JSON'].lexer
     assert_equal Lexer['Java'], Language['ChucK'].lexer
-    assert_equal Lexer['Java'], Language['Groovy'].lexer
     assert_equal Lexer['Java'], Language['Java'].lexer
-    assert_equal Lexer['JavaScript'], Language['JSON'].lexer
     assert_equal Lexer['JavaScript'], Language['JavaScript'].lexer
     assert_equal Lexer['MOOCode'], Language['Moocode'].lexer
     assert_equal Lexer['MuPAD'], Language['mupad'].lexer
     assert_equal Lexer['NASM'], Language['Assembly'].lexer
-    assert_equal Lexer['OCaml'], Language['F#'].lexer
     assert_equal Lexer['OCaml'], Language['OCaml'].lexer
-    assert_equal Lexer['OpenEdge ABL'], Language['OpenEdge ABL'].lexer
-    assert_equal Lexer['Standard ML'], Language['Standard ML'].lexer
     assert_equal Lexer['Ooc'], Language['ooc'].lexer
+    assert_equal Lexer['OpenEdge ABL'], Language['OpenEdge ABL'].lexer
     assert_equal Lexer['REBOL'], Language['Rebol'].lexer
     assert_equal Lexer['RHTML'], Language['HTML+ERB'].lexer
     assert_equal Lexer['RHTML'], Language['RHTML'].lexer
@@ -69,6 +69,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['Scheme'], Language['Nu'].lexer
     assert_equal Lexer['Scheme'], Language['Racket'].lexer
     assert_equal Lexer['Scheme'], Language['Scheme'].lexer
+    assert_equal Lexer['Standard ML'], Language['Standard ML'].lexer
     assert_equal Lexer['TeX'], Language['TeX'].lexer
     assert_equal Lexer['Text only'], Language['Text'].lexer
     assert_equal Lexer['Verilog'], Language['Verilog'].lexer
@@ -112,7 +113,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['OpenEdge ABL'], Language.find_by_alias('progress')
     assert_equal Language['OpenEdge ABL'], Language.find_by_alias('abl')
     assert_equal Language['Parrot Internal Representation'], Language.find_by_alias('pir')
-    assert_equal Language['Powershell'], Language.find_by_alias('posh')
+    assert_equal Language['PowerShell'], Language.find_by_alias('posh')
     assert_equal Language['Puppet'], Language.find_by_alias('puppet')
     assert_equal Language['Pure Data'], Language.find_by_alias('pure-data')
     assert_equal Language['Raw token data'], Language.find_by_alias('raw')
@@ -196,7 +197,7 @@ class TestLanguage < Test::Unit::TestCase
   def test_programming
     assert_equal :programming, Language['JavaScript'].type
     assert_equal :programming, Language['Perl'].type
-    assert_equal :programming, Language['Powershell'].type
+    assert_equal :programming, Language['PowerShell'].type
     assert_equal :programming, Language['Python'].type
     assert_equal :programming, Language['Ruby'].type
   end
@@ -249,9 +250,9 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['PHP'], Language.find_by_extension('php3')
     assert_equal Language['PHP'], Language.find_by_extension('php4')
     assert_equal Language['PHP'], Language.find_by_extension('php5')
-    assert_equal Language['Powershell'], Language.find_by_extension('psm1')
-    assert_equal Language['Powershell'], Language.find_by_extension('ps1')
-    assert_nil Language.find_by_extension('.kt')
+    assert_equal Language['PowerShell'], Language.find_by_extension('psm1')
+    assert_equal Language['PowerShell'], Language.find_by_extension('ps1')
+    assert_nil Language.find_by_extension('.nkt')
   end
 
   def test_find_all_by_extension
@@ -270,7 +271,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['Ruby'], Language.find_by_filename('Rakefile')
     assert_nil Language.find_by_filename('rb')
     assert_nil Language.find_by_filename('.rb')
-    assert_nil Language.find_by_filename('.kt')
+    assert_nil Language.find_by_filename('.nkt')
   end
 
   def test_find
@@ -291,10 +292,34 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal 'Ruby',   Language['Ruby'].name
   end
 
+  def test_escaped_name
+    assert_equal 'C', Language['C'].escaped_name
+    assert_equal 'C%23', Language['C#'].escaped_name
+    assert_equal 'C%2B%2B', Language['C++'].escaped_name
+    assert_equal 'Objective-C', Language['Objective-C'].escaped_name
+    assert_equal 'Common%20Lisp', Language['Common Lisp'].escaped_name
+    assert_equal 'Max%2FMSP', Language['Max/MSP'].escaped_name
+  end
+
   def test_error_without_name
     assert_raise ArgumentError do
       Language.new :name => nil
     end
+  end
+
+  def test_ace_mode
+    assert_equal 'c_cpp', Language['C++'].ace_mode
+    assert_equal 'coffee', Language['CoffeeScript'].ace_mode
+    assert_equal 'csharp', Language['C#'].ace_mode
+    assert_equal 'css', Language['CSS'].ace_mode
+    assert_equal 'javascript', Language['JavaScript'].ace_mode
+    assert_equal 'text', Language['Text'].ace_mode
+  end
+
+  def test_ace_modes
+    assert Language.ace_modes.include?(Language['Text'])
+    assert Language.ace_modes.include?(Language['Ruby'])
+    assert !Language.ace_modes.include?(Language['FORTRAN'])
   end
 
   def test_extensions

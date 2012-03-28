@@ -41,7 +41,7 @@ class TestPathname < Test::Unit::TestCase
     assert_equal Language['Python'], Pathname.new("itty.py").language
     assert_equal Language['Nu'], Pathname.new("itty.nu").language
 
-    assert_nil Pathname.new("defun.kt").language
+    assert_nil Pathname.new("defu.nkt").language
   end
 
   def test_lexer
@@ -50,13 +50,13 @@ class TestPathname < Test::Unit::TestCase
     assert_equal Lexer['Bash'],      Pathname.new("file.ebuild").lexer
     assert_equal Lexer['Python'],    Pathname.new("itty.py").lexer
     assert_equal Lexer['Scheme'],    Pathname.new("itty.nu").lexer
-    assert_equal Lexer['Text only'], Pathname.new("defun.kt").lexer
+    assert_equal Lexer['Text only'], Pathname.new("defu.nkt").lexer
   end
 
   def test_mime_type
     assert_equal 'application/x-ruby', Pathname.new("file.rb").mime_type
     assert_equal 'application/javascript', Pathname.new("file.js").mime_type
     assert_equal 'application/x-python', Pathname.new("itty.py").mime_type
-    assert_equal 'text/plain', Pathname.new("defun.kt").mime_type
+    assert_equal 'text/plain', Pathname.new("defu.nkt").mime_type
   end
 end

@@ -1,5 +1,6 @@
-require 'yaml'
+require 'escape_utils'
 require 'pygments'
+require 'yaml'
 
 module Linguist
   # Language names that are recognizable by GitHub. Defined languages
@@ -193,6 +194,13 @@ module Linguist
       @unpopular ||= all.select(&:unpopular?).sort_by { |lang| lang.name.downcase }
     end
 
+    # Public: A List of languages compatible with Ace.
+    #
+    # Returns an Array of Languages.
+    def self.ace_modes
+      @ace_modes ||= all.select(&:ace_mode).sort_by { |lang| lang.name.downcase }
+    end
+
     # Internal: Initialize a new Language
     #
     # attributes - A hash of attributes
@@ -212,6 +220,8 @@ module Linguist
       # Lookup Lexer object
       @lexer = Pygments::Lexer.find_by_name(attributes[:lexer] || name) ||
         raise(ArgumentError, "#{@name} is missing lexer")
+
+      @ace_mode = attributes[:ace_mode]
 
       # Set legacy search term
       @search_term = attributes[:search_term] || default_alias_name
@@ -285,6 +295,17 @@ module Linguist
     # Returns the Lexer
     attr_reader :lexer
 
+    # Public: Get Ace mode
+    #
+    # Examples
+    #
+    #  # => "text"
+    #  # => "javascript"
+    #  # => "c_cpp"
+    #
+    # Returns a String name or nil
+    attr_reader :ace_mode
+
     # Public: Get extensions
     #
     # Examples
@@ -321,6 +342,19 @@ module Linguist
     #
     # Returns the extensions Array
     attr_reader :filenames
+
+    # Public: Get URL escaped name.
+    #
+    # Examples
+    #
+    #   "C%23"
+    #   "C%2B%2B"
+    #   "Common%20Lisp"
+    #
+    # Returns the escaped String.
+    def escaped_name
+      EscapeUtils.escape_url(name).gsub('+', '%20')
+    end
 
     # Internal: Get default alias name
     #
@@ -403,6 +437,7 @@ module Linguist
       :type              => options['type'],
       :aliases           => options['aliases'],
       :lexer             => options['lexer'],
+      :ace_mode          => options['ace_mode'],
       :group_name        => options['group'],
       :searchable        => options.key?('searchable') ? options['searchable'] : true,
       :search_term       => options['search_term'],

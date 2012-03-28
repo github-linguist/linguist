@@ -18,7 +18,7 @@
 - ^tools/
 
 # Node depedencies
-- ^node_modules/
+- node_modules/
 
 # Vendored depedencies
 - vendor/
@@ -88,4 +88,9 @@
 
 # NuGet
 - ^[Pp]ackages/
+
+# ExtJS
+- (^|/)ext(js)?(-\d\.\d\.\d)?(-gpl)?/
+
+# Samples folders
 - ^[Ss]amples/
