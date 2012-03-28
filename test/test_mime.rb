@@ -39,7 +39,7 @@ class TestMime < Test::Unit::TestCase
     assert_equal 'application/x-shockwave-flash', Mime.mime_for('.swf')
     assert_equal 'application/x-silverlight-app', Mime.mime_for('.xap')
     assert_equal 'application/x-supercollider', Mime.mime_for('.sc')
-    assert_equal 'application/vnd.adobe.air-application-installer-package+zip', Mime.mime_for('.air')
+    assert_equal 'application/vnd.adobe.air-applicationinstaller-package+zip', Mime.mime_for('.air')
     assert_equal 'application/vnd.oasis.opendocument.presentation', Mime.mime_for('.odp')
     assert_equal 'application/vnd.oasis.opendocument.spreadsheet', Mime.mime_for('.ods')
     assert_equal 'application/vnd.oasis.opendocument.text', Mime.mime_for('.odt')
