@@ -62,6 +62,7 @@ Apex:
   - .cls
 
 AppleScript:
+  type: programming
   aliases:
   - osascript
   primary_extension: .scpt
@@ -114,6 +115,7 @@ Befunge:
   - .befunge
 
 BlitzMax:
+  type: programming
   extensions:
   - .bmx
 
@@ -341,7 +343,7 @@ Erlang:
 
 F#:
   type: programming
-  lexer: OCaml
+  lexer: FSharp
   search_term: ocaml
   extensions:
   - .fs
@@ -384,7 +386,7 @@ Fancy:
 
 Fantom:
   type: programming
-  lexer: Java
+  lexer: Fantom
   extensions:
   - .fan
 
@@ -397,6 +399,7 @@ GAS:
   - .s
 
 Genshi:
+  type: markup
   extensions:
   - .kid
 
@@ -413,6 +416,7 @@ Gentoo Eclass:
   - .eclass
 
 Gettext Catalog:
+  type: data
   search_term: pot
   searchable: false
   aliases:
@@ -450,7 +454,7 @@ Groff:
 
 Groovy:
   type: programming
-  lexer: Java
+  lexer: Groovy
   ace_mode: groovy
   primary_extension: .groovy
   extensions:
@@ -458,6 +462,7 @@ Groovy:
   - .groovy
 
 Groovy Server Pages:
+  type: markup
   group: Groovy
   lexer: Java Server Page
   overrides:
@@ -509,6 +514,7 @@ HaXe:
   - .mtt
 
 Haml:
+  type: markup
   group: HTML
   type: markup
   extensions:
@@ -531,6 +537,7 @@ INI:
   - .gitconfig
 
 IRC log:
+  type: data
   lexer: IRC logs
   search_term: irc
   aliases:
@@ -551,7 +558,7 @@ Ioke:
 JSON:
   type: data
   group: JavaScript
-  lexer: JavaScript
+  lexer: JSON
   ace_mode: json
   searchable: false
   extensions:
@@ -565,6 +572,7 @@ Java:
   - .pde
 
 Java Server Pages:
+  type: markup
   group: Java
   lexer: Java Server Page
   search_term: jsp
@@ -638,6 +646,7 @@ Makefile:
   - GNUmakefile
 
 Mako:
+  type: markup
   extensions:
   - .mako
   - .mao
@@ -686,6 +695,7 @@ Moocode:
   - .moo
 
 Myghty:
+  type: markup
   extensions:
   - .myt
 
@@ -711,6 +721,7 @@ Nu:
   - Nukefile
 
 NumPy:
+  type: programming
   group: Python
   primary_extension: .numpy
   extensions:
@@ -752,7 +763,7 @@ Objective-J:
 
 Opa:
   type: programming
-  lexer: Text only
+  lexer: Opa
   extensions:
   - .opa
 
@@ -829,7 +840,7 @@ Perl:
 
 PowerShell:
   type: programming
-  lexer: Text only
+  lexer: PowerShell
   ace_mode: powershell
   aliases:
   - posh
@@ -901,6 +912,7 @@ Racket:
   - .scrbl
 
 Raw token data:
+  type: data
   search_term: raw
   aliases:
   - raw
@@ -1047,6 +1059,7 @@ Smalltalk:
   - .st
 
 Smarty:
+  type: markup
   extensions:
   - .tpl
 
@@ -1126,7 +1139,7 @@ Twig:
 
 VHDL:
   type: programming
-  lexer: Text only
+  lexer: vhdl
   primary_extension: .vhd
   extensions:
   - .vhd
@@ -1206,6 +1219,7 @@ XQuery:
   - .xqy
 
 XS:
+  type: programming
   lexer: C
   extensions:
   - .xs
