@@ -458,7 +458,7 @@ module Linguist
     # * "%" comments
     #
     # M heuristics:
-    # * ";" comments
+    # * Look at first line.  It is either a comment (1st regex) or label/code (2nd regex)
     #
     # Returns a Language.
     def guess_m_language
@@ -466,7 +466,7 @@ module Linguist
       if lines.grep(/^#import|@(interface|implementation|property|synthesize|end)/).any?
         Language['Objective-C']
 
-      # File function
+      # Matlab leading function keyword
       elsif lines.first.to_s =~ /^function /
         Language['Matlab']
 
@@ -474,8 +474,8 @@ module Linguist
       elsif lines.grep(/^%/).any?
         Language['Matlab']
 
-      # M comment
-      elsif lines.grep(/^[ \t]*;/).any?
+      # M (see M heuristics above)
+      elsif lines.first.to_s =~ /^[\t ]*;/ or lines.first.to_s =~ /^%?[A-Za-z0-9]+[\t ]*;*/
         Language['M']
 
       # Fallback to Objective-C, don't want any Matlab false positives
