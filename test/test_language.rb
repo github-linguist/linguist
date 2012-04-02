@@ -252,6 +252,11 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['PHP'], Language.find_by_extension('php5')
     assert_equal Language['PowerShell'], Language.find_by_extension('psm1')
     assert_equal Language['PowerShell'], Language.find_by_extension('ps1')
+
+    # Aliases for Streamline.js ( https://github.com/Sage/streamlinejs )
+    assert_equal Language['JavaScript'], Language.find_by_extension('_js')
+    assert_equal Language['CoffeeScript'], Language.find_by_extension('_coffee')
+
     assert_nil Language.find_by_extension('.nkt')
   end
 
