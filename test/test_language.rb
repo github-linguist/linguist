@@ -337,6 +337,8 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal '.pl', Language['Perl'].primary_extension
     assert_equal '.py', Language['Python'].primary_extension
     assert_equal '.rb', Language['Ruby'].primary_extension
+    assert_equal '.js', Language['JavaScript'].primary_extension
+    assert_equal '.coffee', Language['CoffeeScript'].primary_extension
 
     # This is a nasty requirement, but theres some code in GitHub that
     # expects this. Really want to drop this.
