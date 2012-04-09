@@ -304,6 +304,16 @@ Delphi:
   - .lpr
   - .pas
 
+DCPU-16 Assembly:
+  type: programming
+  lexer: dasm16
+  primary_extension: .dasm16
+  extensions:
+  - .dasm
+  - .dasm16
+  aliases:
+  - dasm16
+
 Diff:
   extensions:
   - .diff
@@ -603,6 +613,13 @@ JavaScript:
   - .ssjs
   filenames:
   - Jakefile
+
+Julia:
+  type: programming
+  lexer: Julia
+  primary_extension: .jl
+  extensions:
+  - .jl
 
 Kotlin:
   type: programming
