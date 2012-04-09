@@ -302,11 +302,12 @@ Delphi:
 DCPU-16 Assembly:
   type: programming
   lexer: dasm16
+  primary_extension: .dasm16
+  extensions:
+  - .dasm
+  - .dasm16
   aliases:
   - dasm16
-  extensions:
-  - .dasm16
-  - .dasm
 
 Diff:
   extensions:
