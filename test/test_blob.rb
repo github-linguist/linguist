@@ -427,6 +427,9 @@ class TestBlob < Test::Unit::TestCase
 
     # Kotlin
     assert_equal Language['Kotlin'], blob("Foo.kt").language
+
+    # Julia: http://julialang.org/
+    assert_equal Language['Julia'], blob("stockcorr.jl").language
   end
 
   def test_lexer
@@ -438,6 +441,7 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Lexer['Text only'], blob("README").lexer
     assert_equal Lexer['Tea'], blob("foo.tea").lexer
     assert_equal Lexer['vhdl'], blob("foo.vhd").lexer
+    assert_equal Lexer['Julia'], blob("stockcorr.jl").lexer
   end
 
   def test_shebang_script
