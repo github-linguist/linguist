@@ -430,6 +430,9 @@ class TestBlob < Test::Unit::TestCase
 
     # Julia: http://julialang.org/
     assert_equal Language['Julia'], blob("stockcorr.jl").language
+
+    # Dart: http://dartlang.org/
+    assert_equal Language['Dart'], blob("point.dart").language
   end
 
   def test_lexer
@@ -442,6 +445,7 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Lexer['Tea'], blob("foo.tea").lexer
     assert_equal Lexer['vhdl'], blob("foo.vhd").lexer
     assert_equal Lexer['Julia'], blob("stockcorr.jl").lexer
+    assert_equal Lexer['Dart'], blob("point.dart").lexer
   end
 
   def test_shebang_script
