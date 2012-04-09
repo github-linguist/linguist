@@ -90,6 +90,11 @@ Assembly:
   extensions:
   - .asm
 
+Augeas:
+  type: programming
+  extensions:
+  - .aug
+
 AutoHotkey:
   type: programming
   lexer: autohotkey
@@ -876,7 +881,6 @@ Prolog:
 
 Puppet:
   type: programming
-  lexer: Text only
   extensions:
   - .pp
   filenames:
