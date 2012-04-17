@@ -881,6 +881,8 @@ Prolog:
 
 Puppet:
   type: programming
+  # Lexer is too buggy and slow
+  lexer: Text only
   extensions:
   - .pp
   filenames:
