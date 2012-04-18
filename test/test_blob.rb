@@ -192,6 +192,9 @@ class TestBlob < Test::Unit::TestCase
     assert blob("deps/http_parser/http_parser.c").vendored?
     assert blob("deps/v8/src/v8.h").vendored?
 
+    # External
+    assert blob("external/llvm-3.0/lib/CodeGen/Analysis.cpp").vendored?
+
     # Prototype
     assert !blob("public/javascripts/application.js").vendored?
     assert blob("public/javascripts/prototype.js").vendored?
