@@ -309,6 +309,17 @@ class TestLanguage < Test::Unit::TestCase
     end
   end
 
+  def test_color
+    assert_equal '#701516', Language['Ruby'].color
+    assert_equal '#3581ba', Language['Python'].color
+    assert_equal '#f15501', Language['JavaScript'].color
+  end
+
+  def test_colors
+    assert Language.colors.include?(Language['Ruby'])
+    assert Language.colors.include?(Language['Python'])
+  end
+
   def test_ace_mode
     assert_equal 'c_cpp', Language['C++'].ace_mode
     assert_equal 'coffee', Language['CoffeeScript'].ace_mode

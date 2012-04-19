@@ -194,6 +194,13 @@ module Linguist
       @unpopular ||= all.select(&:unpopular?).sort_by { |lang| lang.name.downcase }
     end
 
+    # Public: A List of languages with assigned colors.
+    #
+    # Returns an Array of Languages.
+    def self.colors
+      @colors ||= all.select(&:color).sort_by { |lang| lang.name.downcase }
+    end
+
     # Public: A List of languages compatible with Ace.
     #
     # Returns an Array of Languages.
@@ -213,6 +220,8 @@ module Linguist
       if @type && !TYPES.include?(@type)
         raise ArgumentError, "invalid type: #{@type}"
       end
+
+      @color = attributes[:color]
 
       # Set aliases
       @aliases = [default_alias_name] + (attributes[:aliases] || [])
@@ -268,6 +277,11 @@ module Linguist
     #
     # Returns a type Symbol or nil.
     attr_reader :type
+
+    # Public: Get color.
+    #
+    # Returns a hex color String.
+    attr_reader :color
 
     # Public: Get aliases
     #
@@ -434,6 +448,7 @@ module Linguist
   YAML.load_file(File.expand_path("../languages.yml", __FILE__)).each do |name, options|
     Language.create(
       :name              => name,
+      :color             => options['color'],
       :type              => options['type'],
       :aliases           => options['aliases'],
       :lexer             => options['lexer'],
