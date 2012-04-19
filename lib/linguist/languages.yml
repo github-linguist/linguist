@@ -250,7 +250,6 @@ Common Lisp:
 
 Coq:
   type: programming
-  lexer: Coq
   extensions:
   - .v
 
@@ -298,7 +297,6 @@ Darcs Patch:
 
 Dart:
   type: programming
-  lexer: Dart
   extensions:
   - .dart
 
@@ -622,13 +620,11 @@ JavaScript:
 
 Julia:
   type: programming
-  lexer: Julia
   extensions:
   - .jl
 
 Kotlin:
   type: programming
-  lexer: Kotlin
   extensions:
   - .kt
   - .ktm
@@ -884,8 +880,6 @@ Prolog:
 
 Puppet:
   type: programming
-  # Lexer is too buggy and slow
-  lexer: Text only
   extensions:
   - .pp
   filenames:
@@ -1091,7 +1085,6 @@ Smarty:
 
 Standard ML:
   type: programming
-  lexer: Standard ML
   aliases:
   - sml
   primary_extension: .sml
@@ -1136,7 +1129,6 @@ TeX:
 
 Tea:
   type: markup
-  lexer: Tea
   extensions:
   - .tea
 
