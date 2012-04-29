@@ -640,7 +640,7 @@ module Linguist
     #
     # Returns html String
     def colorize(options = {})
-      return if !text? || large? || generated?
+      return if !text? || large?
       options[:options] ||= {}
       options[:options][:encoding] ||= encoding
       lexer.highlight(data, options)
