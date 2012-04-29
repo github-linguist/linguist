@@ -501,7 +501,7 @@ class TestBlob < Test::Unit::TestCase
     HTML
   end
 
-  def test_colorize_skips_minified_files
-    assert_nil blob("jquery-1.6.1.min.js").colorize
+  def test_colorize_doesnt_skip_minified_files
+    assert blob("jquery-1.6.1.min.js").colorize
   end
 end
