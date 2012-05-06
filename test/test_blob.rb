@@ -181,6 +181,7 @@ class TestBlob < Test::Unit::TestCase
 
   def test_vendored
     assert !blob("README").vendored?
+    assert !blob("ext/extconf.rb").vendored?
 
     # Node depedencies
     assert blob("node_modules/coffee-script/lib/coffee-script.js").vendored?
