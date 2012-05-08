@@ -451,24 +451,26 @@ module Linguist
     # Internal: Guess language of .m files.
     #
     # Objective-C heuristics:
-    # * Keywords
+    # * Keywords  ("#import", "#include", "#ifdef", #define, "@end") or "//" and opening "\*" comments
     #
     # Matlab heuristics:
-    # * Leading function keyword
+    # * Leading "function " of "classdef " keyword
     # * "%" comments
+    #
+    # Note: All "#" keywords, e.g., "#import", are guaranteed to be Objective-C. Because the ampersand
+    # is used to created function handles and anonymous functions in Matlab, most "@" keywords are not
+    # safe heuristics. However, "end" is a reserved term in Matlab and can't be used to create a valid
+    # function handle. Because @end is required to close any @implementation, @property, @interface,
+    # @synthesize, etc. directive in Objective-C, only @end needs to be checked for.
     #
     # Returns a Language.
     def guess_m_language
-      # Objective-C keywords
-      if lines.grep(/^#import|@(interface|implementation|property|synthesize|end)/).any?
+      # Objective-C keywords or comments
+      if lines.grep(/^#(import|include|ifdef|define)|@end/).any? || lines.grep(/^\s*\/\//).any? || lines.grep(/^\s*\/\*/).any?
         Language['Objective-C']
 
-      # File function
-      elsif lines.first.to_s =~ /^function /
-        Language['Matlab']
-
-      # Matlab comment
-      elsif lines.grep(/^%/).any?
+      # Matlab file function or class or comments
+      elsif lines.first.grep(/^\s*(function |classdef )/).any? || lines.grep(/^\s*%/).any?
         Language['Matlab']
 
       # Fallback to Objective-C, don't want any Matlab false positives
