@@ -434,6 +434,9 @@ class TestBlob < Test::Unit::TestCase
 
     # Dart: http://dartlang.org/
     assert_equal Language['Dart'], blob("point.dart").language
+
+    # Arch Linux PKGBUILD
+    assert_equal Language['Shell'], blob("PKGBUILD").language
   end
 
   def test_lexer
@@ -447,6 +450,7 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Lexer['vhdl'], blob("foo.vhd").lexer
     assert_equal Lexer['Julia'], blob("stockcorr.jl").lexer
     assert_equal Lexer['Dart'], blob("point.dart").lexer
+    assert_equal Lexer['Bash'], blob("PKGBUILD").lexer
   end
 
   def test_shebang_script
