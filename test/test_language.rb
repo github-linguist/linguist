@@ -254,6 +254,11 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['PHP'], Language.find_by_extension('php5')
     assert_equal Language['PowerShell'], Language.find_by_extension('psm1')
     assert_equal Language['PowerShell'], Language.find_by_extension('ps1')
+
+    # Aliases for Streamline.js ( https://github.com/Sage/streamlinejs )
+    assert_equal Language['JavaScript'], Language.find_by_extension('_js')
+    assert_equal Language['CoffeeScript'], Language.find_by_extension('_coffee')
+
     assert_nil Language.find_by_extension('.nkt')
   end
 
@@ -345,6 +350,8 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal '.pl', Language['Perl'].primary_extension
     assert_equal '.py', Language['Python'].primary_extension
     assert_equal '.rb', Language['Ruby'].primary_extension
+    assert_equal '.js', Language['JavaScript'].primary_extension
+    assert_equal '.coffee', Language['CoffeeScript'].primary_extension
 
     # This is a nasty requirement, but theres some code in GitHub that
     # expects this. Really want to drop this.
