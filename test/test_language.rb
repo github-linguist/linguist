@@ -73,6 +73,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['TeX'], Language['TeX'].lexer
     assert_equal Lexer['Text only'], Language['Text'].lexer
     assert_equal Lexer['Verilog'], Language['Verilog'].lexer
+    assert_equal Lexer['XSLT'], Language['XSLT'].lexer
     assert_equal Lexer['aspx-vb'], Language['ASP'].lexer
     assert_equal Lexer['haXe'], Language['HaXe'].lexer
     assert_equal Lexer['reStructuredText'], Language['reStructuredText'].lexer
@@ -148,6 +149,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['Shell'], Language['Gentoo Ebuild'].group
     assert_equal Language['Shell'], Language['Gentoo Eclass'].group
     assert_equal Language['Shell'], Language['Tcsh'].group
+    assert_equal Language['XML'], Language['XSLT'].group
 
     # Ensure everyone has a group
     Language.all.each do |language|

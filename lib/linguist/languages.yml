@@ -534,7 +534,6 @@ HTML:
   - .htm
   - .html
   - .xhtml
-  - .xslt
 
 HTML+Django:
   type: markup
@@ -1324,6 +1323,12 @@ XS:
   lexer: C
   extensions:
   - .xs
+
+XSLT:
+  type: markup
+  group: XML
+  extensions:
+  - .xslt
 
 YAML:
   type: markup
