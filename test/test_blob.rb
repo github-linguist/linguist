@@ -307,6 +307,7 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['Perl'],        blob("test-perl2.pl").language
 
     # .m disambiguation
+    assert_equal Language['Objective-C'], blob("empty.m").language
     assert_equal Language['Objective-C'], blob("Foo.m").language
     assert_equal Language['Objective-C'], blob("hello.m").language
     assert_equal Language['Matlab'], blob("matlab_function.m").language
