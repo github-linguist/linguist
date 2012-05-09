@@ -470,7 +470,7 @@ module Linguist
         Language['Objective-C']
 
       # Matlab file function or class or comments
-      elsif lines.any? && lines.first.grep(/^\s*(function |classdef )/).any? || lines.grep(/^\s*%/).any?
+      elsif lines.any? && lines.first.match(/^\s*(function |classdef )/) || lines.grep(/^\s*%/).any?
         Language['Matlab']
 
       # Fallback to Objective-C, don't want any Matlab false positives
