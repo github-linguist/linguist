@@ -441,6 +441,9 @@ class TestBlob < Test::Unit::TestCase
 
     # Arch Linux PKGBUILD
     assert_equal Language['Shell'], blob("PKGBUILD").language
+
+    # XML
+    assert_equal Language['XSLT'], blob("test.xslt").language
   end
 
   def test_lexer
