@@ -478,7 +478,7 @@ module Linguist
       elsif lines.first.to_s =~ /^[\t ]*;/ or lines.first.to_s =~ /^%?[A-Za-z0-9]+[\t ]*;*/
         Language['M']
 
-      # Fallback to Objective-C, don't want any Matlab false positives
+      # Fallback to Objective-C, don't want any M or Matlab false positives
       else
         Language['Objective-C']
       end
