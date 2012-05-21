@@ -341,15 +341,16 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['Scilab'],       blob("scilab_test.tst").language
 
     # Config files
-    assert_equal Language['INI'],   blob(".gitconfig").language
-    assert_equal Language['Shell'], blob(".bash_profile").language
-    assert_equal Language['Shell'], blob(".bashrc").language
-    assert_equal Language['Shell'], blob(".profile").language
-    assert_equal Language['Shell'], blob(".zlogin").language
-    assert_equal Language['Shell'], blob(".zshrc").language
-    assert_equal Language['VimL'],  blob(".gvimrc").language
-    assert_equal Language['VimL'],  blob(".vimrc").language
-    assert_equal Language['YAML'],  blob(".gemrc").language
+    assert_equal Language['INI'],        blob(".gitconfig").language
+    assert_equal Language['Shell'],      blob(".bash_profile").language
+    assert_equal Language['Shell'],      blob(".bashrc").language
+    assert_equal Language['Shell'],      blob(".profile").language
+    assert_equal Language['Shell'],      blob(".zlogin").language
+    assert_equal Language['Shell'],      blob(".zshrc").language
+    assert_equal Language['VimL'],       blob(".gvimrc").language
+    assert_equal Language['VimL'],       blob(".vimrc").language
+    assert_equal Language['YAML'],       blob(".gemrc").language
+    assert_equal Language['Emacs Lisp'], blob(".emacs").language
 
     assert_nil blob("blank").language
     assert_nil blob("README").language
