@@ -513,7 +513,12 @@ class TestBlob < Test::Unit::TestCase
     HTML
   end
 
-  def test_colorize_doesnt_skip_minified_files
-    assert blob("jquery-1.6.1.min.js").colorize
+  def test_colorize_does_skip_minified_files
+    assert_nil blob("jquery-1.6.1.min.js").colorize
+  end
+
+  # Pygments.rb was taking exceeding long on this particular file
+  def test_colorize_doesnt_blow_up_with_files_with_high_ratio_of_long_lines
+    assert_nil blob("steelseries-min.js").colorize
   end
 end

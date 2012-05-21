@@ -160,6 +160,29 @@ module Linguist
       size.to_i > MEGABYTE
     end
 
+    # Public: Is the blob safe to colorize?
+    #
+    # We use Pygments.rb for syntax highlighting blobs, which
+    # has some quirks and also is essentially 'un-killable' via
+    # normal timeout.  To workaround this we try to
+    # carefully handling Pygments.rb anything it can't handle.
+    #
+    # Return true or false
+    def safe_to_colorize?
+      text? && !large? && !high_ratio_of_long_lines?
+    end
+
+    # Internal: Does the blob have a ratio of long lines?
+    #
+    # These types of files are usually going to make Pygments.rb
+    # angry if we try to colorize them.
+    #
+    # Return true or false
+    def high_ratio_of_long_lines?
+      return false if loc == 0
+      size / loc > 5000
+    end
+
     # Public: Is the blob viewable?
     #
     # Non-viewable blobs will just show a "View Raw" link
@@ -642,7 +665,7 @@ module Linguist
     #
     # Returns html String
     def colorize(options = {})
-      return if !text? || large?
+      return unless safe_to_colorize?
       options[:options] ||= {}
       options[:options][:encoding] ||= encoding
       lexer.highlight(data, options)
