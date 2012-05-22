@@ -53,7 +53,7 @@ module Linguist
     #
     # Returns a content type String.
     def content_type
-      @content_type ||= binary? ? mime_type :
+      @content_type ||= (binary_mime_type? || binary?) ? mime_type :
         (encoding ? "text/plain; charset=#{encoding.downcase}" : "text/plain")
     end
 
@@ -158,6 +158,29 @@ module Linguist
     # Return true or false
     def large?
       size.to_i > MEGABYTE
+    end
+
+    # Public: Is the blob safe to colorize?
+    #
+    # We use Pygments.rb for syntax highlighting blobs, which
+    # has some quirks and also is essentially 'un-killable' via
+    # normal timeout.  To workaround this we try to
+    # carefully handling Pygments.rb anything it can't handle.
+    #
+    # Return true or false
+    def safe_to_colorize?
+      text? && !large? && !high_ratio_of_long_lines?
+    end
+
+    # Internal: Does the blob have a ratio of long lines?
+    #
+    # These types of files are usually going to make Pygments.rb
+    # angry if we try to colorize them.
+    #
+    # Return true or false
+    def high_ratio_of_long_lines?
+      return false if loc == 0
+      size / loc > 5000
     end
 
     # Public: Is the blob viewable?
@@ -451,27 +474,29 @@ module Linguist
     # Internal: Guess language of .m files.
     #
     # Objective-C heuristics:
-    # * Keywords
+    # * Keywords  ("#import", "#include", "#ifdef", #define, "@end") or "//" and opening "\*" comments
     #
     # Matlab heuristics:
-    # * Leading function keyword
+    # * Leading "function " of "classdef " keyword
     # * "%" comments
     #
     # M heuristics:
     # * Look at first line.  It is either a comment (1st regex) or label/code (2nd regex)
     #
+    # Note: All "#" keywords, e.g., "#import", are guaranteed to be Objective-C. Because the ampersand
+    # is used to created function handles and anonymous functions in Matlab, most "@" keywords are not
+    # safe heuristics. However, "end" is a reserved term in Matlab and can't be used to create a valid
+    # function handle. Because @end is required to close any @implementation, @property, @interface,
+    # @synthesize, etc. directive in Objective-C, only @end needs to be checked for.
+    #
     # Returns a Language.
     def guess_m_language
-      # Objective-C keywords
-      if lines.grep(/^#import|@(interface|implementation|property|synthesize|end)/).any?
+      # Objective-C keywords or comments
+      if lines.grep(/^#(import|include|ifdef|define)|@end/).any? || lines.grep(/^\s*\/\//).any? || lines.grep(/^\s*\/\*/).any?
         Language['Objective-C']
 
-      # Matlab leading function keyword
-      elsif lines.first.to_s =~ /^function /
-        Language['Matlab']
-
-      # Matlab comment
-      elsif lines.grep(/^%/).any?
+      # Matlab file function or class or comments
+      elsif lines.any? && lines.first.match(/^\s*(function |classdef )/) || lines.grep(/^\s*%/).any?
         Language['Matlab']
 
       # M (see M heuristics above)
@@ -647,7 +672,7 @@ module Linguist
     #
     # Returns html String
     def colorize(options = {})
-      return if !text? || large? || generated?
+      return unless safe_to_colorize?
       options[:options] ||= {}
       options[:options][:encoding] ||= encoding
       lexer.highlight(data, options)

@@ -33,6 +33,7 @@ class TestBlob < Test::Unit::TestCase
 
   def test_mime_type
     assert_equal "application/octet-stream", blob("dog.o").mime_type
+    assert_equal "application/ogg", blob("foo.ogg").mime_type
     assert_equal "application/postscript", blob("octocat.ai").mime_type
     assert_equal "application/x-ruby", blob("grit.rb").mime_type
     assert_equal "application/x-sh", blob("script.sh").mime_type
@@ -42,6 +43,7 @@ class TestBlob < Test::Unit::TestCase
 
   def test_content_type
     assert_equal "application/octet-stream", blob("dog.o").content_type
+    assert_equal "application/ogg", blob("foo.ogg").content_type
     assert_equal "application/pdf", blob("foo.pdf").content_type
     assert_equal "image/png", blob("foo.png").content_type
     assert_equal "text/plain; charset=iso-8859-2", blob("README").content_type
@@ -179,6 +181,7 @@ class TestBlob < Test::Unit::TestCase
 
   def test_vendored
     assert !blob("README").vendored?
+    assert !blob("ext/extconf.rb").vendored?
 
     # Node depedencies
     assert blob("node_modules/coffee-script/lib/coffee-script.js").vendored?
@@ -260,7 +263,7 @@ class TestBlob < Test::Unit::TestCase
   def test_indexable
     assert blob("file.txt").indexable?
     assert blob("foo.rb").indexable?
-    assert !blob("defun.kt").indexable?
+    assert !blob("defu.nkt").indexable?
     assert !blob("dump.sql").indexable?
     assert !blob("github.po").indexable?
     assert !blob("linguist.gem").indexable?
@@ -285,6 +288,7 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['Ruby'],        blob("script.rb").language
     assert_equal Language['Ruby'],        blob("wrong_shebang.rb").language
     assert_equal Language['Arduino'],     blob("hello.ino").language
+    assert_equal Language['VHDL'],        blob("foo.vhd").language
     assert_nil blob("octocat.png").language
 
     # .cls disambiguation
@@ -303,10 +307,14 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Language['Perl'],        blob("test-perl2.pl").language
 
     # .m disambiguation
+    assert_equal Language['Objective-C'], blob("empty.m").language
     assert_equal Language['Objective-C'], blob("Foo.m").language
     assert_equal Language['Objective-C'], blob("hello.m").language
     assert_equal Language['Matlab'], blob("matlab_function.m").language
     assert_equal Language['Matlab'], blob("matlab_script.m").language
+    assert_equal Language['Matlab'], blob("matlab_function2.m").language
+    assert_equal Language['Matlab'], blob("matlab_script2.m").language
+    assert_equal Language['Matlab'], blob("matlab_class.m").language
     assert_equal Language['M'], blob("m_simple.m").language
 
     # .r disambiguation
@@ -419,6 +427,24 @@ class TestBlob < Test::Unit::TestCase
 
     # OpenEdge ABL / Progress
     assert_equal Language['OpenEdge ABL'], blob("openedge.p").language
+
+    # Tea
+    assert_equal Language['Tea'], blob("foo.tea").language
+
+    # Kotlin
+    assert_equal Language['Kotlin'], blob("Foo.kt").language
+
+    # Julia: http://julialang.org/
+    assert_equal Language['Julia'], blob("stockcorr.jl").language
+
+    # Dart: http://dartlang.org/
+    assert_equal Language['Dart'], blob("point.dart").language
+
+    # Arch Linux PKGBUILD
+    assert_equal Language['Shell'], blob("PKGBUILD").language
+
+    # XML
+    assert_equal Language['XSLT'], blob("test.xslt").language
   end
 
   def test_lexer
@@ -428,6 +454,11 @@ class TestBlob < Test::Unit::TestCase
     assert_equal Lexer['Ruby'], blob("grit.rb").lexer
     assert_equal Lexer['Scheme'], blob("dude.el").lexer
     assert_equal Lexer['Text only'], blob("README").lexer
+    assert_equal Lexer['Tea'], blob("foo.tea").lexer
+    assert_equal Lexer['vhdl'], blob("foo.vhd").lexer
+    assert_equal Lexer['Julia'], blob("stockcorr.jl").lexer
+    assert_equal Lexer['Dart'], blob("point.dart").lexer
+    assert_equal Lexer['Bash'], blob("PKGBUILD").lexer
   end
 
   def test_shebang_script
@@ -483,7 +514,12 @@ class TestBlob < Test::Unit::TestCase
     HTML
   end
 
-  def test_colorize_skips_minified_files
+  def test_colorize_does_skip_minified_files
     assert_nil blob("jquery-1.6.1.min.js").colorize
+  end
+
+  # Pygments.rb was taking exceeding long on this particular file
+  def test_colorize_doesnt_blow_up_with_files_with_high_ratio_of_long_lines
+    assert_nil blob("steelseries-min.js").colorize
   end
 end
