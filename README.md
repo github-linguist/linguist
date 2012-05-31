@@ -20,13 +20,13 @@ See [lib/linguist/language.rb](https://github.com/github/linguist/blob/master/li
 
 ### Syntax Highlighting
 
-The actual syntax highlighting is handled by our Pygments wrapper, [Albino](https://github.com/github/albino). Linguist provides a [Lexer abstraction](https://github.com/github/linguist/blob/master/lib/linguist/lexer.rb) that determines which highlighter should be used on a file.
+The actual syntax highlighting is handled by our Pygments wrapper, [pygments.rb](https://github.com/tmm1/pygments.rb). It also provides a [Lexer abstraction](https://github.com/tmm1/pygments.rb/blob/master/lib/pygments/lexer.rb) that determines which highlighter should be used on a file.
 
 We typically run on a prerelease version of Pygments to get early access to new lexers. The [lexers.yml](https://github.com/github/linguist/blob/master/lib/linguist/lexers.yml) file is a dump of the lexers we have available on our server. If there is a new lexer in pygments-main not on the list, [open an issue](https://github.com/github/linguist/issues) and we'll try to upgrade it soon.
 
 ### MIME type detection
 
-Most of the MIME types handling is done by the Ruby [mime-types gem](https://github.com/halostatue/mime-types/blob/master/lib/mime/types.rb.data). But we have our own list of additions and overrides. To add or modify this list, see [lib/linguist/mimes.yml](https://github.com/github/linguist/blob/master/lib/linguist/mimes.yml).
+Most of the MIME types handling is done by the Ruby [mime-types gem](https://github.com/halostatue/mime-types). But we have our own list of additions and overrides. To add or modify this list, see [lib/linguist/mimes.yml](https://github.com/github/linguist/blob/master/lib/linguist/mimes.yml).
 
 MIME types are used to set the Content-Type of raw binary blobs which are served from a special `raw.github.com` domain. However, all text blobs are served as `text/plain` regardless of their type to ensure they open in the browser rather than downloading.
 
