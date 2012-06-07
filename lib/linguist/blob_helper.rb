@@ -279,7 +279,7 @@ module Linguist
     #
     # Returns true of false.
     def xcode_project_file?
-      ['.xib', '.nib', '.pbxproj', '.xcworkspacedata', '.xcuserstate'].include?(extname)
+      ['.xib', '.nib', '.storyboard', '.pbxproj', '.xcworkspacedata', '.xcuserstate'].include?(extname)
     end
 
     # Internal: Is the blob minified JS?
