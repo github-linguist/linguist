@@ -12,7 +12,8 @@
 # ace_mode          - A String name of Ace Mode (if available)
 # extension         - An Array of associated extensions
 # primary_extension - A String for the main extension associated with
-#                     the langauge. (defaults to extensions.first)
+#                     the langauge. (defaults to extensions.first).
+#                     Must be unique.
 # overrides         - An Array of extensions that takes precedence over conflicts
 # searchable        - Boolean flag to enable searching (defaults to true)
 # search_term       - Deprecated: Some languages maybe indexed under a
@@ -267,6 +268,7 @@ Common Lisp:
 
 Coq:
   type: programming
+  primary_extension: .coq
   extensions:
   - .v
 
