@@ -445,6 +445,10 @@ module Linguist
     def hash
       name.hash
     end
+
+    def inspect
+      "#<#{self.class} name=#{name}>"
+    end
   end
 
   popular = YAML.load_file(File.expand_path("../popular.yml", __FILE__))
