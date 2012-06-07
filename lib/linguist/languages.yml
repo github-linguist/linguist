@@ -63,6 +63,9 @@ Ada:
 Apex:
   type: programming
   lexer: Text only
+  primary_extension: .cls
+  overrides:
+  - .cls
   extensions:
   - .cls
 
@@ -1191,8 +1194,6 @@ TeX:
   type: markup
   ace_mode: latex
   primary_extension: .tex
-  overrides:
-  - .cls
   extensions:
   - .aux
   - .cls
