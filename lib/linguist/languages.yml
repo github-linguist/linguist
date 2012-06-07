@@ -902,10 +902,9 @@ Perl:
   type: programming
   ace_mode: perl
   color: "#0298c3"
+  primary_extension: .pl
   overrides:
   - .pl
-  - .t
-  primary_extension: .pl
   extensions:
   - .PL
   - .perl
@@ -1227,6 +1226,9 @@ Turing:
   type: programming
   color: "#45f715"
   lexer: Text only
+  primary_extension: .t
+  overrides:
+  - .t
   extensions:
   - .t
   - .tu
