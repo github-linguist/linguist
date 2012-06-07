@@ -43,18 +43,18 @@ module Linguist
 
       @languages << language
 
-      # All Language names should be unique. Warn if there is a duplicate.
+      # All Language names should be unique. Raise if there is a duplicate.
       if @name_index.key?(language.name)
-        warn "Duplicate language name: #{language.name}"
+        raise ArgumentError, "Duplicate language name: #{language.name}"
       end
 
       # Language name index
       @index[language.name] = @name_index[language.name] = language
 
       language.aliases.each do |name|
-        # All Language aliases should be unique. Warn if there is a duplicate.
+        # All Language aliases should be unique. Raise if there is a duplicate.
         if @alias_index.key?(name)
-          warn "Duplicate alias: #{name}"
+          raise ArgumentError, "Duplicate alias: #{name}"
         end
 
         @index[name] = @alias_index[name] = language
@@ -62,7 +62,7 @@ module Linguist
 
       language.extensions.each do |extension|
         if extension !~ /^\./
-          warn "Extension is missing a '.': #{extension.inspect}"
+          raise ArgumentError, "Extension is missing a '.': #{extension.inspect}"
         end
 
         unless ambiguous?(extension)
@@ -76,7 +76,7 @@ module Linguist
 
       language.overrides.each do |extension|
         if extension !~ /^\./
-          warn "Extension is missing a '.': #{extension.inspect}"
+          raise ArgumentError, "Extension is missing a '.': #{extension.inspect}"
         end
 
         if l = @overrides[extension]
