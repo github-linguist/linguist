@@ -10,7 +10,7 @@ class TestLanguage < Test::Unit::TestCase
 
   def test_ambiguous_extensions
     assert Language.ambiguous?('.cls')
-    assert_equal Language['TeX'], Language.find_by_extension('cls')
+    assert_equal Language['Apex'], Language.find_by_extension('cls')
 
     assert Language.ambiguous?('.h')
     assert_equal Language['C'], Language.find_by_extension('h')
@@ -25,7 +25,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['R'], Language.find_by_extension('r')
 
     assert Language.ambiguous?('.t')
-    assert_equal Language['Perl'], Language.find_by_extension('t')
+    assert_equal Language['Turing'], Language.find_by_extension('t')
 
     assert Language.ambiguous?('.v')
     assert_equal Language['Verilog'], Language.find_by_extension('v')
@@ -266,6 +266,8 @@ class TestLanguage < Test::Unit::TestCase
 
   def test_find_all_by_extension
     Language.all.each do |language|
+      assert_equal language, Language.find_by_extension(language.primary_extension)
+
       language.extensions.each do |extension|
         unless Language.ambiguous?(extension)
           assert_equal language, Language.find_by_extension(extension)
@@ -355,6 +357,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal '.rb', Language['Ruby'].primary_extension
     assert_equal '.js', Language['JavaScript'].primary_extension
     assert_equal '.coffee', Language['CoffeeScript'].primary_extension
+    assert_equal '.t', Language['Turing'].primary_extension
 
     # This is a nasty requirement, but theres some code in GitHub that
     # expects this. Really want to drop this.
