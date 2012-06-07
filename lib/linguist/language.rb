@@ -79,6 +79,10 @@ module Linguist
           warn "Extension is missing a '.': #{extension.inspect}"
         end
 
+        if l = @overrides[extension]
+          raise ArgumentError, "#{extension} is already overridden by #{l.name}"
+        end
+
         @overrides[extension] = language
       end
 
