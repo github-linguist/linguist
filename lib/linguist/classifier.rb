@@ -5,6 +5,10 @@ module Linguist
   class Classifier
     PATH = File.expand_path('../classifier.yml', __FILE__)
 
+    def self.exist?
+      File.exist?(PATH)
+    end
+
     def self.instance
       @instance ||= YAML.load_file(PATH)
     end
@@ -61,5 +65,5 @@ module Linguist
   end
 
   # Eager load instance
-  Classifier.instance
+  Classifier.instance if Classifier.exist?
 end
