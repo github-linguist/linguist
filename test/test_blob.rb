@@ -1,4 +1,5 @@
 require 'linguist/file_blob'
+require 'linguist/sample'
 
 require 'test/unit'
 require 'mime/types'
@@ -22,23 +23,6 @@ class TestBlob < Test::Unit::TestCase
     blob = blob(name)
     blob.instance_variable_set(:@name, 'script')
     blob
-  end
-
-  def each_language_fixture
-    Dir["#{fixtures_path}/*"].each do |path|
-      name = File.basename(path)
-
-      if name == 'text' || name == 'binary'
-        next
-      else
-        assert language = Language.find_by_alias(name), "No language alias for #{name.inspect}"
-      end
-
-      Dir.entries(path).each do |filename|
-        next if filename == '.' || filename == '..'
-        yield language, blob(File.join(path, filename))
-      end
-    end
   end
 
   def test_name
@@ -287,9 +271,9 @@ class TestBlob < Test::Unit::TestCase
   end
 
   def test_language
-    # Drop any files under test/fixtures/LANGUAGE
-    each_language_fixture do |language, blob|
-      assert_equal language, blob.language, blob.name
+    Sample.each do |sample|
+      blob = blob(sample.path)
+      assert_equal sample.language, blob.language, blob.name
     end
   end
 
