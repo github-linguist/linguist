@@ -32,6 +32,16 @@ class TestTokenizer < Test::Unit::TestCase
     assert_equal %w(foo {- -}), Tokenizer.new("foo {- Comment -}").tokens
   end
 
+  def test_sgml_tags
+    assert_equal %w(<html> </html>), Tokenizer.new("<html></html>").tokens
+    assert_equal %w(<div> id </div>), Tokenizer.new("<div id></div>").tokens
+    assert_equal %w(<div> id= </div>), Tokenizer.new("<div id=foo></div>").tokens
+    assert_equal %w(<div> id class </div>), Tokenizer.new("<div id class></div>").tokens
+    assert_equal %w(<div> id= </div>), Tokenizer.new("<div id=\"foo bar\"></div>").tokens
+    assert_equal %w(<div> id= </div>), Tokenizer.new("<div id='foo bar'></div>").tokens
+    assert_equal %w(<?xml> version=), Tokenizer.new("<?xml version=\"1.0\"?>").tokens
+  end
+
   def test_c_tokens
     assert_equal %w(#include <stdio.h> int main \( \) { printf \( \) ; return 0 ; }), tokenize("c/hello.c")
     assert_equal %w(#ifndef HELLO_H #define HELLO_H void hello \( \) ; #endif), tokenize("c/hello.h")

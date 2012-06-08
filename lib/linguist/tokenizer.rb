@@ -18,6 +18,10 @@ module Linguist
     #
     # Returns Array of Strings.
     def tokens
+      extract_tokens(data)
+    end
+
+    def extract_tokens(data)
       s = StringScanner.new(data)
 
       tokens = []
@@ -55,13 +59,51 @@ module Linguist
         elsif s.scan(/'/)
           s.skip_until(/[^\\]'/)
 
+        # SGML style brackets
+        elsif token = s.scan(/<[^>]+>/)
+          extract_sgml_tokens(token).each { |t| tokens << t }
+
         # Common programming punctuation
-        elsif token = s.scan(/;|\{|\}|\(|\)/)
+        elsif token = s.scan(/;|\{|\}|\(|\)|<<?/)
           tokens << token
 
         # Regular token
-        elsif token = s.scan(/[\w\.@#\/<>]+/)
+        elsif token = s.scan(/[\w\.@#\/]+/)
             tokens << token
+
+        else
+          s.getch
+        end
+      end
+
+      tokens
+    end
+
+    def extract_sgml_tokens(data)
+      s = StringScanner.new(data)
+
+      tokens = []
+
+      until s.eos?
+        if token = s.scan(/<\/?[^\s>]+/)
+          tokens << "#{token}>"
+
+        elsif token = s.scan(/\w+=/)
+          tokens << token
+
+          if s.scan(/"/)
+            s.skip_until(/[^\\]"/)
+          elsif s.scan(/'/)
+            s.skip_until(/[^\\]'/)
+          else
+            s.skip_until(/\w+/)
+          end
+
+        elsif token = s.scan(/\w+/)
+          tokens << token
+
+        elsif s.scan(/>/)
+          s.terminate
 
         else
           s.getch
