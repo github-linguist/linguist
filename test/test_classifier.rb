@@ -1,5 +1,6 @@
 require 'linguist/classifier'
 require 'linguist/language'
+require 'linguist/sample'
 
 require 'test/unit'
 
@@ -14,7 +15,7 @@ class TestClassifier < Test::Unit::TestCase
     File.read(File.join(fixtures_path, name))
   end
 
-  def test_classify
+  def test_train_and_classify
     classifier = Classifier.new
     classifier.train Language["Ruby"], fixture("ruby/foo.rb")
     classifier.train Language["Objective-C"], fixture("objective-c/Foo.h")
@@ -23,4 +24,16 @@ class TestClassifier < Test::Unit::TestCase
     results = classifier.classify(fixture("objective-c/hello.m"))
     assert_equal Language["Objective-C"], results.first[0]
   end
+
+  def test_instance_classify_empty
+    results = Classifier.instance.classify("")
+    assert results.first[1] < 0.5, results.first.inspect
+  end
+
+  # def test_instance_classify
+  #   Sample.each do |sample|
+  #     results = Classifier.instance.classify(sample.data)
+  #     assert_equal sample.language, results.first[0], sample.path
+  #   end
+  # end
 end

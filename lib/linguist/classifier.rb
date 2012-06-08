@@ -3,6 +3,12 @@ require 'linguist/tokenizer'
 module Linguist
   # Language bayesian classifier.
   class Classifier
+    PATH = File.expand_path('../classifier.yml', __FILE__)
+
+    def self.instance
+      @instance ||= YAML.load_file(PATH)
+    end
+
     def initialize
       @tokens_total    = 0
       @languages_total = 0
@@ -53,4 +59,7 @@ module Linguist
       @languages[language].to_f / @languages_total.to_f
     end
   end
+
+  # Eager load instance
+  Classifier.instance
 end
