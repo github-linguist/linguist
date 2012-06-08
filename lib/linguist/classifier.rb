@@ -4,15 +4,16 @@ module Linguist
   # Language bayesian classifier.
   class Classifier
     def initialize
+      @tokens_total    = 0
+      @languages_total = 0
       @tokens          = Hash.new { |h, k| h[k] = Hash.new(0) }
       @language_tokens = Hash.new(0)
       @languages       = Hash.new(0)
-      @languages_total = 0
-      @tokens_total    = 0
     end
 
     def train(language, data)
-      tokens = Tokenizer.new(data).tokens
+      language = language.name
+      tokens   = Tokenizer.new(data).tokens
 
       tokens.each do |token|
         @tokens[language][token] += 1
@@ -31,7 +32,7 @@ module Linguist
         scores[language] = tokens_probability(tokens, language) * language_probability(language)
       end
 
-      scores.sort { |a, b| b[1] <=> a[1] }
+      scores.sort { |a, b| b[1] <=> a[1] }.map { |score| [Language[score[0]], score[1]] }
     end
 
     def tokens_probability(tokens, language)
