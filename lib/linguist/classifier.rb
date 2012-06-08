@@ -34,6 +34,21 @@ module Linguist
       @languages_total += 1
     end
 
+    def gc
+      @tokens.each do |language, tokens|
+        if @language_tokens[language] > 20
+          tokens.each do |name, count|
+            if count == 1
+              @tokens[language].delete(name)
+              @language_tokens[language] -= 1
+              @tokens_total -= 1
+            end
+          end
+        end
+      end
+      self
+    end
+
     def classify(data)
       tokens = Tokenizer.new(data).tokens
 

@@ -29,7 +29,7 @@ module Linguist
     def self.classifier
       classifier = Classifier.new
       each { |sample| classifier.train(sample.language, sample.data) }
-      classifier
+      classifier.gc
     end
 
     def initialize(path, language)

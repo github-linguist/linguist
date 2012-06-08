@@ -15,7 +15,7 @@ class TestClassifier < Test::Unit::TestCase
     File.read(File.join(fixtures_path, name))
   end
 
-  def test_train_and_classify
+  def test_classify
     classifier = Classifier.new
     classifier.train Language["Ruby"], fixture("ruby/foo.rb")
     classifier.train Language["Objective-C"], fixture("objective-c/Foo.h")
@@ -28,6 +28,10 @@ class TestClassifier < Test::Unit::TestCase
   def test_instance_classify_empty
     results = Classifier.instance.classify("")
     assert results.first[1] < 0.5, results.first.inspect
+  end
+
+  def test_gc
+    Classifier.instance.gc
   end
 
   # def test_instance_classify
