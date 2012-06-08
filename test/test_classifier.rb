@@ -14,7 +14,7 @@ class TestClassifier < Test::Unit::TestCase
     File.read(File.join(fixtures_path, name))
   end
 
-  def test_truth
+  def test_classify
     classifier = Classifier.new
     classifier.train Language["Ruby"], fixture("ruby/foo.rb")
     classifier.train Language["Objective-C"], fixture("objective-c/Foo.h")
