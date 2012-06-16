@@ -1,0 +1,31 @@
+package my
+
+class Test
+{
+	var myVar : Int = 1
+}
+
+class Test2 : Test
+{
+	final var myVar = 1
+
+	this() : Test
+	{
+		var local = ""
+
+		if(local.my())
+		{}
+	}
+
+	meth String#lang() : String
+	{
+		var my = if(Bool.TRUE) 1 else 2
+		for(a : "")
+		{}
+	}
+
+	meth my()
+	{
+
+	}
+}
