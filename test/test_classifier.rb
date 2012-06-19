@@ -1,6 +1,7 @@
 require 'linguist/classifier'
 require 'linguist/language'
 require 'linguist/sample'
+require 'linguist/tokenizer'
 
 require 'test/unit'
 
@@ -22,6 +23,10 @@ class TestClassifier < Test::Unit::TestCase
     classifier.train Language["Objective-C"], fixture("objective-c/Foo.m")
 
     results = classifier.classify(fixture("objective-c/hello.m"))
+    assert_equal Language["Objective-C"], results.first[0]
+
+    tokens  = Tokenizer.new(fixture("objective-c/hello.m")).tokens
+    results = classifier.classify(tokens)
     assert_equal Language["Objective-C"], results.first[0]
   end
 
