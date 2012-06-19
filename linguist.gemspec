@@ -12,5 +12,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'escape_utils',    '~> 0.2.3'
   s.add_dependency 'mime-types',      '~> 1.18'
   s.add_dependency 'pygments.rb',     '~> 0.2.11'
+  s.add_development_dependency 'minitest'
   s.add_development_dependency 'rake'
 end
