@@ -103,8 +103,8 @@ module Linguist
       scores = {}
       languages.each do |language|
         language_name = language.is_a?(Language) ? language.name : language
-        scores[language_name] = tokens_probability(tokens, language_name) *
-                                  language_probability(language_name)
+        scores[language_name] = tokens_probability(tokens, language_name) +
+                                   language_probability(language_name)
       end
 
       scores.sort { |a, b| b[1] <=> a[1] }.map { |score| [Language[score[0]], score[1]] }
@@ -117,8 +117,8 @@ module Linguist
     #
     # Returns Float between 0.0 and 1.0.
     def tokens_probability(tokens, language)
-      tokens.inject(1.0) do |sum, token|
-        sum *= token_probability(token, language)
+      tokens.inject(0.0) do |sum, token|
+        sum += Math.log(token_probability(token, language))
       end
     end
 
@@ -142,7 +142,7 @@ module Linguist
     #
     # Returns Float between 0.0 and 1.0.
     def language_probability(language)
-      @languages[language].to_f / @languages_total.to_f
+      Math.log(@languages[language].to_f / @languages_total.to_f)
     end
   end
 
