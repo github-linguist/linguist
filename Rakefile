@@ -8,7 +8,7 @@ Rake::TestTask.new do |t|
 end
 
 
-file 'lib/linguist/classifier.yml' do |f|
+file 'lib/linguist/classifier.yml' => Dir['test/fixtures/**/*'] do |f|
   require 'linguist/sample'
   classifier = Linguist::Sample.classifier
   File.open(f.name, 'w') { |io| YAML.dump(classifier, io) }
