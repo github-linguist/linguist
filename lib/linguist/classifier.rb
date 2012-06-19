@@ -129,10 +129,10 @@ module Linguist
     #
     # Returns Float between 0.0 and 1.0.
     def token_probability(token, language)
-      if @tokens[language][token] == 0
+      if @tokens[language][token].to_f == 0.0
         1 / @tokens_total.to_f
       else
-        @tokens[language][token].to_f / @languages[language].to_f
+        @tokens[language][token].to_f / @language_tokens[language].to_f
       end
     end
 
