@@ -44,7 +44,6 @@ class TestTokenizer < Test::Unit::TestCase
 
   def test_c_tokens
     assert_equal %w(#include <stdio.h> int main \( \) { printf \( \) ; return 0 ; }), tokenize(:"c/hello.c")
-    assert_equal %w(#ifndef HELLO_H #define HELLO_H void hello \( \) ; #endif), tokenize(:"c/hello.h")
   end
 
   def test_cpp_tokens
