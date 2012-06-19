@@ -30,6 +30,19 @@ class TestClassifier < Test::Unit::TestCase
     assert_equal Language["Objective-C"], results.first[0]
   end
 
+  def test_restricted_classify
+    classifier = Classifier.new
+    classifier.train Language["Ruby"], fixture("ruby/foo.rb")
+    classifier.train Language["Objective-C"], fixture("objective-c/Foo.h")
+    classifier.train Language["Objective-C"], fixture("objective-c/Foo.m")
+
+    results = classifier.classify(fixture("objective-c/hello.m"), [Language["Objective-C"]])
+    assert_equal Language["Objective-C"], results.first[0]
+
+    results = classifier.classify(fixture("objective-c/hello.m"), [Language["Ruby"]])
+    assert_equal Language["Ruby"], results.first[0]
+  end
+
   def test_instance_classify_empty
     results = Classifier.instance.classify("")
     assert results.first[1] < 0.5, results.first.inspect

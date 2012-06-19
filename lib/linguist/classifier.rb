@@ -74,7 +74,8 @@ module Linguist
 
     # Public: Guess language of data.
     #
-    # data - Array of tokens or String data to analyze.
+    # data      - Array of tokens or String data to analyze.
+    # languages - Array of Languages to restrict to.
     #
     # Examples
     #
@@ -83,12 +84,14 @@ module Linguist
     #
     # Returns sorted Array of result pairs. Each pair contains the
     # Language and a Float score.
-    def classify(tokens)
+    def classify(tokens, languages = @languages.keys)
       tokens = Tokenizer.new(tokens).tokens if tokens.is_a?(String)
 
       scores = {}
-      @languages.keys.each do |language|
-        scores[language] = tokens_probability(tokens, language) * language_probability(language)
+      languages.each do |language|
+        language_name = language.is_a?(Language) ? language.name : language
+        scores[language_name] = tokens_probability(tokens, language_name) *
+                                  language_probability(language_name)
       end
 
       scores.sort { |a, b| b[1] <=> a[1] }.map { |score| [Language[score[0]], score[1]] }
