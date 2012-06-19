@@ -16,6 +16,13 @@ class TestClassifier < Test::Unit::TestCase
     File.read(File.join(fixtures_path, name))
   end
 
+  def test_instance_freshness
+    # Just warn, it shouldn't scare people off by breaking the build.
+    unless Classifier.instance.eql?(Linguist::Sample.classifier)
+      warn "Classifier database is out of date. Run `bundle exec rake classifier`."
+    end
+  end
+
   def test_classify
     classifier = Classifier.new
     classifier.train Language["Ruby"], fixture("ruby/foo.rb")

@@ -29,6 +29,19 @@ module Linguist
       @languages       = Hash.new(0)
     end
 
+    # Public: Compare Classifier objects.
+    #
+    # other - Classifier object to compare to.
+    #
+    # Returns Boolean.
+    def eql?(other)
+      # Lazy fast check counts only
+      other.is_a?(self.class) &&
+        @tokens_total == other.instance_variable_get(:@tokens_total) &&
+        @languages_total == other.instance_variable_get(:@languages_total)
+    end
+    alias_method :==, :eql?
+
     # Public: Train classifier that data is a certain language.
     #
     # language - Language of data
