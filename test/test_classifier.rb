@@ -59,10 +59,16 @@ class TestClassifier < Test::Unit::TestCase
     Classifier.instance.gc
   end
 
-  # def test_instance_classify
-  #   Sample.each do |sample|
-  #     results = Classifier.instance.classify(sample.data)
-  #     assert_equal sample.language, results.first[0], sample.path
-  #   end
-  # end
+  def test_classify_ambiguous_languages
+    Sample.each do |sample|
+      next unless sample.language.overrides.any?
+
+      extname   = File.extname(sample.path)
+      languages = Language.all.select { |l| l.extensions.include?(extname) }
+      next unless languages.length > 1
+
+      results = Classifier.instance.classify(sample.data, languages)
+      assert_equal sample.language, results.first[0], "#{sample.path}\n#{results.inspect}"
+    end
+  end
 end
