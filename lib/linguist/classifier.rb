@@ -3,16 +3,24 @@ require 'linguist/tokenizer'
 module Linguist
   # Language bayesian classifier.
   class Classifier
+    # Internal: Path to persisted classifier db.
     PATH = File.expand_path('../classifier.yml', __FILE__)
 
+    # Public: Check if persisted db exists on disk.
+    #
+    # Returns Boolean.
     def self.exist?
       File.exist?(PATH)
     end
 
+    # Public: Get persisted Classifier instance.
+    #
+    # Returns Classifier.
     def self.instance
       @instance ||= YAML.load_file(PATH)
     end
 
+    # Public: Initialize a Classifier.
     def initialize
       @tokens_total    = 0
       @languages_total = 0
@@ -21,6 +29,16 @@ module Linguist
       @languages       = Hash.new(0)
     end
 
+    # Public: Train classifier that data is a certain language.
+    #
+    # language - Language of data
+    # data     - String contents of file
+    #
+    # Examples
+    #
+    #   train(Language['Ruby'], "def hello; end")
+    #
+    # Returns nothing.
     def train(language, data)
       language = language.name
       tokens   = Tokenizer.new(data).tokens
@@ -32,8 +50,13 @@ module Linguist
       end
       @languages[language] += 1
       @languages_total += 1
+
+      nil
     end
 
+    # Public: Prune infrequent tokens.
+    #
+    # Returns receiver Classifier instance.
     def gc
       @tokens.each do |language, tokens|
         if @language_tokens[language] > 20
@@ -49,6 +72,17 @@ module Linguist
       self
     end
 
+    # Public: Guess language of data.
+    #
+    # data - String data to analyze.
+    #
+    # Examples
+    #
+    #   classify("def hello; end")
+    #   # => [ [Language['Ruby'], 0.90], [Language['Python'], 0.2], ... ]
+    #
+    # Returns sorted Array of result pairs. Each pair contains the
+    # Language and a Float score.
     def classify(data)
       tokens = Tokenizer.new(data).tokens
 
@@ -60,12 +94,24 @@ module Linguist
       scores.sort { |a, b| b[1] <=> a[1] }.map { |score| [Language[score[0]], score[1]] }
     end
 
+    # Internal: Probably of set of tokens in a language occuring - P(D | C)
+    #
+    # tokens   - Array of String tokens.
+    # language - Language to check.
+    #
+    # Returns Float between 0.0 and 1.0.
     def tokens_probability(tokens, language)
       tokens.inject(1.0) do |sum, token|
         sum *= token_probability(token, language)
       end
     end
 
+    # Internal: Probably of token in language occuring - P(F | C)
+    #
+    # token    - String token.
+    # language - Language to check.
+    #
+    # Returns Float between 0.0 and 1.0.
     def token_probability(token, language)
       if @tokens[language][token] == 0
         1 / @tokens_total.to_f
@@ -74,6 +120,11 @@ module Linguist
       end
     end
 
+    # Internal: Probably of a language occuring - P(C)
+    #
+    # language - Language to check.
+    #
+    # Returns Float between 0.0 and 1.0.
     def language_probability(language)
       @languages[language].to_f / @languages_total.to_f
     end
