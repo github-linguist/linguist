@@ -26,7 +26,7 @@ module Linguist
       @overrides.include?(extension)
     end
 
-    # Include?: Return overridden extensions.
+    # Internal: Return overridden extensions.
     #
     # Returns extensions Array.
     def self.overridden_extensions
