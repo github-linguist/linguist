@@ -184,10 +184,10 @@ class TestBlob < Test::Unit::TestCase
     assert blob("javascript/jquery-1.4.2.min.js").generated?
 
     # CoffeeScript-generated JS
-	# TODO
+    # TODO
 
-	# PEG.js-generated parsers
-	assert blob("javascript/parser.js").generated?
+    # PEG.js-generated parsers
+    assert blob("javascript/parser.js").generated?
 
     # These examples are too basic to tell
     assert !blob("javascript/empty.js").generated?
