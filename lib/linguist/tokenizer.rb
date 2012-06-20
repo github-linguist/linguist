@@ -73,12 +73,15 @@ module Linguist
         elsif s.scan(/'/)
           s.skip_until(/[^\\]'/)
 
+        # Skip number literals
+        elsif s.scan(/\d+/)
+
         # SGML style brackets
         elsif token = s.scan(/<[^>]+>/)
           extract_sgml_tokens(token).each { |t| tokens << t }
 
         # Common programming punctuation
-        elsif token = s.scan(/;|\{|\}|\(|\)|<<?/)
+        elsif token = s.scan(/;|\{|\}|\(|\)|<<?|\+/)
           tokens << token
 
         # Regular token
