@@ -1,5 +1,4 @@
 require 'linguist/file_blob'
-
 require 'test/unit'
 require 'mime/types'
 require 'pygments'
@@ -250,6 +249,13 @@ class TestBlob < Test::Unit::TestCase
     # LESS
     assert blob("public/javascripts/less-1.1.0.js").vendored?
     assert blob("public/javascripts/less-1.1.0.min.js").vendored?
+
+    # Bootstrap
+    assert blob("public/javascripts/bootstrap.min.js").vendored?
+    assert blob("public/javascripts/bootstrap.js").vendored?
+    assert blob("public/javascripts/bootstrap-carousel.js").vendored?
+    assert blob("public/javascripts/bootstrap-tooltip.min.js").vendored?
+    assert !blob("public/javascripts/bootstrapper.min.js").vendored?
 
     # WYS editors
     assert blob("public/javascripts/ckeditor.js").vendored?
