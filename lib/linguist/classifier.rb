@@ -108,7 +108,6 @@ module Linguist
                                    language_probability(language_name)
       end
 
-      puts scores.inspect
       scores.sort { |a, b| b[1] <=> a[1] }.map { |score| [Language[score[0]], score[1]] }
     end
 
