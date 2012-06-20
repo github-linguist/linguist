@@ -144,6 +144,39 @@ module Linguist
     def language_probability(language)
       Math.log(@languages[language].to_f / @languages_total.to_f)
     end
+
+    # Public: Serialize classifier to YAML.
+    #
+    # opts - Hash of YAML options.
+    #
+    # Returns nothing.
+    def to_yaml(io)
+      data = "--- !ruby/object:Linguist::Classifier\n"
+
+      data << "languages_total: #{@languages_total}\n"
+      data << "tokens_total: #{@tokens_total}\n"
+
+      data << "languages:\n"
+      @languages.sort.each do |language, count|
+        data << "  #{language.inspect}: #{count}\n"
+      end
+
+      data << "language_tokens:\n"
+      @language_tokens.sort.each do |language, count|
+        data << "  #{language.inspect}: #{count}\n"
+      end
+
+      data << "tokens:\n"
+      @tokens.sort.each do |language, tokens|
+        data << "  #{language.inspect}:\n"
+        tokens.sort.each do |token, count|
+          data << "    #{token.inspect}: #{count}\n"
+        end
+      end
+
+      io.write data
+      nil
+    end
   end
 
   # Eager load instance
