@@ -1,3 +1,4 @@
+require 'linguist/classifier'
 require 'linguist/language'
 require 'linguist/mime'
 require 'linguist/pathname'
@@ -453,9 +454,28 @@ module Linguist
     # Returns a Language or nil.
     def disambiguate_extension_language
       if Language.ambiguous?(extname)
+        possible_languages = Language.all.select { |l| l.extensions.include?(extname) }
+
         name = "guess_#{extname.sub(/^\./, '')}_language"
-        send(name) if respond_to?(name)
+        language = send(name) if respond_to?(name)
+
+        if possible_languages.any?
+          results = Classifier.instance.classify(data, possible_languages)
+          guessed_language, score = results.first
+
+          if guessed_language != language
+            report_classifier_incorrect_guess(language, guessed_language, score)
+          end
+        end
+
+        language
       end
+    end
+
+    class LanguageClassifierError < StandardError; end
+
+    def report_classifier_incorrect_guess(expected, actual, score)
+      raise LanguageClassifierError, "Expected #{expected}, but was #{actual} scoring #{score}.\n#{name}\n#{data}"
     end
 
     # Internal: Guess language of .cls files
