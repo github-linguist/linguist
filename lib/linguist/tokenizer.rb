@@ -86,7 +86,7 @@ module Linguist
 
         # Regular token
         elsif token = s.scan(/[\w\.@#\/]+/)
-            tokens << token
+          tokens << token
 
         else
           s.getch
