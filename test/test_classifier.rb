@@ -55,6 +55,10 @@ class TestClassifier < Test::Unit::TestCase
     assert results.first[1] < 0.5, results.first.inspect
   end
 
+  def test_verify
+    assert Classifier.instance.verify
+  end
+
   def test_gc
     Classifier.instance.gc
   end

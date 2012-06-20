@@ -68,6 +68,15 @@ module Linguist
       nil
     end
 
+    # Public: Verify internal counts are consistent.
+    #
+    # Returns Boolean.
+    def verify
+      @languages.inject(0) { |n, (l, c)| n += c } == @languages_total &&
+        @language_tokens.inject(0) { |n, (l, c)| n += c } == @tokens_total &&
+        @tokens.inject(0) { |n, (l, ts)| n += ts.inject(0) { |m, (t, c)| m += c } } == @tokens_total
+    end
+
     # Public: Prune infrequent tokens.
     #
     # Returns receiver Classifier instance.
