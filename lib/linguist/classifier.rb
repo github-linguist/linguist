@@ -157,19 +157,19 @@ module Linguist
 
       data << "languages:\n"
       @languages.sort.each do |language, count|
-        data << "  #{language.inspect}: #{count}\n"
+        data << "  #{{language => count}.to_yaml.lines.to_a[1]}"
       end
 
       data << "language_tokens:\n"
       @language_tokens.sort.each do |language, count|
-        data << "  #{language.inspect}: #{count}\n"
+        data << "  #{{language => count}.to_yaml.lines.to_a[1]}"
       end
 
       data << "tokens:\n"
       @tokens.sort.each do |language, tokens|
-        data << "  #{language.inspect}:\n"
+        data << "  #{{language => true}.to_yaml.lines.to_a[1].sub(/ true/, "")}"
         tokens.sort.each do |token, count|
-          data << "    #{token.inspect}: #{count}\n"
+          data << "    #{{token => count}.to_yaml.lines.to_a[1]}"
         end
       end
 
