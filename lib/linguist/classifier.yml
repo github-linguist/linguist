@@ -1,6 +1,6 @@
 --- !ruby/object:Linguist::Classifier
-languages_total: 215
-tokens_total: 152461
+languages_total: 217
+tokens_total: 152712
 languages:
   Apex: 6
   AppleScript: 2
@@ -27,7 +27,7 @@ languages:
   Kotlin: 1
   Logtalk: 1
   Markdown: 1
-  Matlab: 4
+  Matlab: 6
   Nemerle: 1
   Nimrod: 1
   Nu: 1
@@ -93,7 +93,7 @@ language_tokens:
   Kotlin: 149
   Logtalk: 43
   Markdown: 1
-  Matlab: 206
+  Matlab: 457
   Nemerle: 17
   Nimrod: 2
   Nu: 6
@@ -9139,53 +9139,96 @@ tokens:
   Markdown:
     Tender: 1
   Matlab:
-    "%": 11
-    (: 24
-    ): 24
-    +: 1
-    ...: 2
-    ;: 14
-    A: 2
-    B: 3
+    "%": 31
+    "&": 1
+    (: 53
+    ): 53
+    "*": 5
+    +: 3
+    "-": 5
+    ...: 3
+    /length: 1
+    ;: 24
+    "@getState": 1
+    "@iirFilter": 1
+    A: 3
+    AVERAGE: 1
+    B: 4
     Calculate: 1
     Call: 1
     Comments: 1
+    FILTFCN: 1
     G: 1
+    II: 1
+    MAKEFILTER: 1
     Matlab: 2
+    Output: 1
     R: 1
-    and: 1
+    STATEFCN: 1
+    The: 1
+    Update: 1
+    X: 2
+    a: 8
+    also: 1
+    and: 3
     arbitrary: 1
+    assume: 1
     at: 2
-    b: 2
+    average: 1
+    b: 7
     black: 1
     blue: 1
+    can: 1
     classdef: 1
     command: 2
+    computes: 1
+    corresponding: 1
     cyan: 1
+    delay: 1
     directory: 1
     disp: 8
-    end: 8
+    element: 1
+    end: 19
     enumeration: 1
+    error: 1
     example: 2
-    function: 4
+    filter: 2
+    filtfcn: 2
+    first: 1
+    form: 1
+    function: 10
     g: 2
+    getState: 1
     green: 1
-    in: 1
-    is: 2
+    handle: 1
+    have: 1
+    if: 1
+    iirFilter: 1
+    in: 2
+    input: 1
+    internal: 2
+    is: 5
+    it: 2
+    length.: 1
     line: 2
-    line.: 2
+    line.: 3
+    m: 3
     magenta: 1
+    makeFilter: 1
     mandatory: 2
     matlab_class: 2
     matlab_function: 4
+    mean: 1
     methods: 1
+    n: 3
+    new: 1
     not: 2
     num2str: 3
     obj: 2
     obj.B: 2
     obj.G: 2
     obj.R: 2
-    of: 3
+    of: 6
     only: 2
     or: 1
     output: 2
@@ -9196,22 +9239,44 @@ tokens:
     resides: 1
     result: 4
     ret: 3
-    same: 1
+    return: 1
+    returns: 2
+    s: 1
+    same: 3
     script: 2
     semicolon: 2
+    simpler: 1
+    size: 2
     spaces: 1
-    sum: 1
+    state: 2
+    state.: 1
+    statefcn: 2
+    sum: 2
     suppresses: 2
     tabs: 1
-    the: 1
+    that: 2
+    the: 9
+    time.: 1
     to: 2
+    v: 10
+    vOut: 2
+    value: 1
     value1: 5
     value2: 5
+    vector: 3
+    vector.: 1
+    where: 1
     which: 1
     white: 1
     whitespace: 1
     with: 1
+    x: 4
+    xn: 4
+    y: 2
     yellow: 1
+    yn: 2
+    zeros: 1
+    "|": 2
   Nemerle:
     (: 2
     ): 2
