@@ -1,3 +1,4 @@
+require 'linguist/classifier'
 require 'linguist/language'
 require 'linguist/mime'
 require 'linguist/pathname'
@@ -453,8 +454,15 @@ module Linguist
     # Returns a Language or nil.
     def disambiguate_extension_language
       if Language.ambiguous?(extname)
-        name = "guess_#{extname.sub(/^\./, '')}_language"
-        send(name) if respond_to?(name)
+        # name = "guess_#{extname.sub(/^\./, '')}_language"
+        # send(name) if respond_to?(name)
+
+        possible_languages = Language.all.select { |l| l.extensions.include?(extname) }
+        if possible_languages.any?
+          if result = Classifier.instance.classify(data, possible_languages).first
+            result[0]
+          end
+        end
       end
     end
 
