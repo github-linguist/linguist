@@ -1,6 +1,6 @@
 --- !ruby/object:Linguist::Classifier
 languages_total: 215
-tokens_total: 152347
+tokens_total: 152461
 languages:
   Apex: 6
   AppleScript: 2
@@ -72,59 +72,59 @@ language_tokens:
   AppleScript: 190
   Arduino: 20
   AutoHotkey: 3
-  C: 34176
-  C++: 8283
+  C: 34180
+  C++: 8284
   CoffeeScript: 2340
-  Coq: 1523
+  Coq: 1524
   Dart: 68
   Delphi: 30
   Diff: 16
   Emacs Lisp: 3
-  GAS: 127
-  Gosu: 412
+  GAS: 133
+  Gosu: 414
   Groovy: 71
   Groovy Server Pages: 91
-  Haml: 3
+  Haml: 4
   INI: 6
   Ioke: 4
   Java: 6032
-  JavaScript: 22968
+  JavaScript: 22985
   Julia: 173
   Kotlin: 149
-  Logtalk: 40
+  Logtalk: 43
   Markdown: 1
-  Matlab: 224
+  Matlab: 206
   Nemerle: 17
   Nimrod: 2
   Nu: 6
   OCaml: 365
-  Objective-C: 28540
+  Objective-C: 28640
   Opa: 32
   OpenCL: 88
-  OpenEdge ABL: 715
-  PHP: 12269
+  OpenEdge ABL: 717
+  PHP: 12292
   Parrot Assembly: 8
   Parrot Internal Representation: 7
-  Perl: 7192
+  Perl: 7232
   PowerShell: 14
   Prolog: 61
-  Python: 4386
+  Python: 4425
   R: 14
   Racket: 246
   Rebol: 5
-  Ruby: 4450
+  Ruby: 4460
   Rust: 8
-  SCSS: 38
-  Sass: 27
-  Scala: 353
+  SCSS: 39
+  Sass: 28
+  Scala: 365
   Scheme: 3549
-  Scilab: 67
-  Shell: 263
+  Scilab: 71
+  Shell: 264
   Standard ML: 223
   SuperCollider: 139
-  TeX: 1289
+  TeX: 1152
   Tea: 3
-  Turing: 51
+  Turing: 52
   VHDL: 42
   Verilog: 190
   VimL: 20
@@ -580,6 +580,7 @@ tokens:
     "#n": 1
     "#string": 1
     "#undef": 5
+    "%": 4
     "&": 379
     "&&": 190
     (: 3463
@@ -3599,6 +3600,7 @@ tokens:
     "#ifndef": 5
     "#include": 71
     "#undef": 1
+    "%": 1
     "&": 91
     "&&": 13
     (: 917
@@ -5096,6 +5098,7 @@ tokens:
     "||": 3
     "}": 31
   Coq:
+    "%": 1
     (: 130
     ): 132
     "*": 38
@@ -5399,6 +5402,7 @@ tokens:
     ): 1
     print: 1
   GAS:
+    "%": 6
     (: 1
     ): 1
     +: 2
@@ -5453,6 +5457,7 @@ tokens:
     xd: 1
     xe: 1
   Gosu:
+    "%": 2
     (: 54
     ): 55
     "*/": 4
@@ -5677,6 +5682,7 @@ tokens:
     "{": 1
     "}": 1
   Haml:
+    "%": 1
     Hello: 1
     World: 1
     p: 1
@@ -6580,6 +6586,7 @@ tokens:
     "#x": 1
     "#x27": 1
     "#x2F": 1
+    "%": 17
     "&": 22
     "&&": 114
     (: 2299
@@ -9102,6 +9109,7 @@ tokens:
     "{": 6
     "}": 6
   Logtalk:
+    "%": 3
     (: 4
     ): 4
     "-": 3
@@ -9131,6 +9139,7 @@ tokens:
   Markdown:
     Tender: 1
   Matlab:
+    "%": 11
     (: 24
     ): 24
     +: 1
@@ -9138,16 +9147,13 @@ tokens:
     ;: 14
     A: 2
     B: 3
-    Calculate: 2
-    Call: 2
+    Calculate: 1
+    Call: 1
     Comments: 1
-    Display: 1
     G: 1
     Matlab: 2
     R: 1
-    Simple: 1
-    adding: 1
-    and: 3
+    and: 1
     arbitrary: 1
     at: 2
     b: 2
@@ -9156,23 +9162,22 @@ tokens:
     classdef: 1
     command: 2
     cyan: 1
-    directory: 2
+    directory: 1
     disp: 8
-    displaying: 1
     end: 8
     enumeration: 1
     example: 2
-    function: 6
+    function: 4
     g: 2
     green: 1
-    in: 2
+    in: 1
     is: 2
     line: 2
     line.: 2
     magenta: 1
     mandatory: 2
     matlab_class: 2
-    matlab_function: 5
+    matlab_function: 4
     methods: 1
     not: 2
     num2str: 3
@@ -9180,7 +9185,7 @@ tokens:
     obj.B: 2
     obj.G: 2
     obj.R: 2
-    of: 4
+    of: 3
     only: 2
     or: 1
     output: 2
@@ -9188,25 +9193,21 @@ tokens:
     properties: 1
     r: 2
     red: 1
-    resides: 2
+    resides: 1
     result: 4
     ret: 3
-    return: 2
-    same: 2
+    same: 1
     script: 2
     semicolon: 2
     spaces: 1
-    sum: 2
+    sum: 1
     suppresses: 2
     tabs: 1
-    the: 4
+    the: 1
     to: 2
-    two: 1
-    value: 2
-    value1: 6
-    value2: 6
-    values: 1
-    which: 2
+    value1: 5
+    value2: 5
+    which: 1
     white: 1
     whitespace: 1
     with: 1
@@ -9378,6 +9379,7 @@ tokens:
     "#include": 18
     "#pragma": 52
     "#warning": 1
+    "%": 100
     "&": 56
     "&&": 168
     (: 2598
@@ -12147,6 +12149,7 @@ tokens:
     "}": 2
   OpenEdge ABL:
     "#@": 1
+    "%": 2
     "&": 3
     (: 31
     ): 31
@@ -12362,6 +12365,7 @@ tokens:
     vstatus: 1
   PHP:
     "#": 3
+    "%": 23
     "&": 9
     "&&": 59
     (: 1253
@@ -13562,10 +13566,11 @@ tokens:
     "#.": 3
     "#7": 2
     "#I": 5
+    "%": 44
     "&": 12
     "&&": 30
-    (: 328
-    ): 322
+    (: 327
+    ): 321
     "*": 8
     "*.*s": 1
     "*/": 1
@@ -13600,7 +13605,7 @@ tokens:
     /usr/bin/env: 1
     /usr/bin/perl: 1
     /usr/local/bin/perl: 1
-    ;: 447
+    ;: 446
     <: 3
     <"\n">: 1
     <$fh>: 1
@@ -14169,7 +14174,7 @@ tokens:
     has: 1
     has.: 1
     has_lines: 2
-    hash: 12
+    hash: 11
     hash.: 3
     have: 3
     head1: 14
@@ -14709,6 +14714,7 @@ tokens:
     "########": 2
     "############################################": 2
     "##############################################": 2
+    "%": 39
     (: 437
     ): 436
     "**": 3
@@ -15830,6 +15836,7 @@ tokens:
     "#": 412
     "#erb": 1
     "#remove": 1
+    "%": 10
     "&": 51
     "&&": 1
     (: 286
@@ -16879,6 +16886,7 @@ tokens:
     "}": 1
   SCSS:
     "#3bbfce": 1
+    "%": 1
     (: 1
     ): 1
     "-": 3
@@ -16898,6 +16906,7 @@ tokens:
     "}": 2
   Sass:
     "#3bbfce": 1
+    "%": 1
     (: 1
     ): 1
     "-": 3
@@ -16914,6 +16923,7 @@ tokens:
     px: 1
   Scala:
     "#": 2
+    "%": 12
     (: 23
     ): 23
     "*/": 1
@@ -17242,6 +17252,7 @@ tokens:
     x: 8
     y: 3
   Scilab:
+    "%": 4
     (: 7
     ): 7
     +: 5
@@ -17274,6 +17285,7 @@ tokens:
     then: 1
   Shell:
     "#": 8
+    "%": 1
     "&": 2
     "&&": 3
     (: 12
@@ -17498,25 +17510,22 @@ tokens:
   TeX:
     "#1": 12
     "#2": 4
+    "%": 82
     "&": 1
-    (: 6
-    ): 6
+    (: 3
+    ): 3
     "*ASSUME*": 1
-    "-": 7
-    -}: 5
+    "-": 3
+    -}: 4
     .: 1
     .0em: 1
     .0in: 2
     .4: 1
     .5em: 2
     .5in: 3
-    .5pt: 1
-    .6in: 1
     .75em: 1
-    .9in: 1
     /01/27: 1
     /12/04: 3
-    /12/05: 1
     /Creator: 1
     "@advisor": 3
     "@afterheading": 1
@@ -17552,8 +17561,7 @@ tokens:
     A: 1
     Abstract: 2
     Acknowledgements: 1
-    And: 1
-    Approved: 2
+    Approved: 1
     Arts: 1
     AtBeginDocument: 1
     AtBeginDvi: 2
@@ -17561,117 +17569,88 @@ tokens:
     BTS: 2
     Bachelor: 1
     Ben: 1
-    C: 1
     Capitals: 1
-    Carlisle: 1
     Class: 5
     College: 5
     Contents: 1
     CurrentOption: 1
-    David: 2
+    David: 1
     Dec: 1
     DeclareOption*: 1
     Degree: 2
     Division: 2
     Fulfillment: 1
-    I: 2
-    If: 2
+    I: 1
+    If: 1
     In: 1
-    It: 1
-    Jan: 1
     LE: 1
-    LEFT: 2
-    LO: 3
-    LaTeX: 4
+    LEFT: 1
+    LO: 2
+    LaTeX: 3
     LaTeX2e: 1
     LoadClass: 1
-    May: 1
-    Minor: 1
-    "NO": 1
     NeedsTeXFormat: 1
     "No": 3
-    Noble: 3
-    Noble.: 1
-    Not: 1
+    Noble: 2
     Oddities: 1
-    PBC: 1
-    Page: 2
+    Page: 1
     Partial: 1
     PassOptionsToClass: 1
-    Patrick: 1
-    Perkinson: 2
+    Perkinson: 1
     Presented: 1
     ProcessOptions: 1
     ProvidesClass: 1
-    Psych: 1
-    RE: 3
+    RE: 2
     RIGHT: 2
     RO: 1
     RTcleardoublepage: 3
     RToldchapter: 1
     RToldcleardoublepage: 1
     RTpercent: 3
-    Redistribution: 1
     Reed: 5
     References: 1
-    Removed: 1
     RequirePackage: 1
     Requirements: 2
     SN: 3
     Salzberg: 1
-    Sam: 4
-    Sep: 1
+    Sam: 2
     Specified.: 1
-    Stolen: 2
     TOC: 1
-    Table: 2
-    The: 4
+    Table: 1
+    The: 3
     Thesis: 5
-    This: 4
-    Title: 1
+    This: 2
     Using: 1
     We: 1
     When: 1
     With: 1
-    You: 1
-    a: 4
-    above: 1
+    a: 1
     abstract: 1
-    actually: 2
+    actually: 1
     addcontentsline: 5
     addpenalty: 1
     adds: 1
     addtocontents: 2
-    addtolength: 8
+    addtolength: 5
     addvspace: 2
-    adjust: 1
     advance: 1
     advisor: 1
     advisor#1: 1
-    all: 2
     altadvisor#1: 1
-    and: 5
+    and: 3
     any: 2
-    apacite: 1
     approved: 1
     approvedforthe#1: 1
-    as: 3
-    back: 1
+    as: 2
     baselineskip: 2
-    be: 7
+    be: 2
     begin: 4
     begingroup: 1
-    below: 3
+    below: 2
     bfseries: 3
     bibname: 2
-    big: 1
     bigskip: 2
-    binding: 1
-    blank: 1
     book: 2
-    book.cls: 2
-    both: 1
-    bug: 1
     but: 1
     by: 1
     c: 5
@@ -17679,33 +17658,23 @@ tokens:
     c@secnumdepth: 1
     c@tocdepth: 1
     called: 1
-    caps.: 2
+    caps.: 1
     center: 7
     centerline: 8
-    changed: 1
-    chapter: 10
+    chapter: 9
     chaptermark: 1
     chapters: 1
-    choose: 1
     cleardoublepage: 5
     clearpage: 3
     cm: 2
-    comment: 2
-    conflicts: 1
-    contents: 1
+    comment: 1
     contentsname: 1
     copy0: 1
-    copyright: 1
-    deal: 1
     def: 12
-    definition: 1
     department: 1
     department#1: 1
-    dependency.: 1
-    different: 1
-    division: 2
+    division: 1
     division#1: 1
-    do: 1
     does: 1
     else: 7
     empty: 4
@@ -17718,33 +17687,26 @@ tokens:
     evensidemargin: 2
     fancy: 1
     fancyhdr: 1
-    fancyhead: 7
+    fancyhead: 5
     fancyhf: 1
     fi: 13
-    file: 2
+    file: 1
     file.: 1
     fix: 1
-    following: 2
-    font: 1
     fontsize: 7
     footnote: 1
     footnoterule: 1
     footnotesize: 1
-    for: 6
-    from: 3
+    for: 4
     frontmatter: 1
     gdef: 6
-    general: 1
     given: 3
-    gives: 1
     global: 2
-    hacked: 1
-    have: 1
     hb@xt@: 1
     hbox: 15
-    headers: 7
-    headheight: 4
-    headsep: 3
+    headers: 2
+    headheight: 2
+    headsep: 2
     here: 1
     hfill: 1
     his: 1
@@ -17761,28 +17723,23 @@ tokens:
     ifnum: 2
     ifodd: 1
     ifx: 1
-    in: 9
+    in: 8
     inbetween: 1
     indexname: 1
     instead: 1
-    is: 3
-    it: 1
+    is: 2
     it.: 1
     italic: 1
     just: 1
     l@chapter: 1
     leaders: 1
     leavevmode: 1
-    left: 1
-    leftmark: 3
+    leftmark: 2
     leftskip: 2
     let: 10
     library: 1
-    like: 1
-    lines: 1
     lineskip: 1
     lof: 1
-    long: 1
     lot: 1
     lowercase: 1
     m: 1
@@ -17790,21 +17747,15 @@ tokens:
     m@th: 1
     mainmatter: 1
     major: 1
-    majors: 2
+    majors: 1
     makebox: 6
-    makes: 2
+    makes: 1
     maketitle: 1
-    margins: 1
-    may: 1
-    messed: 1
     mkern: 2
-    modified: 2
     modifier: 1
-    more: 1
     mu: 2
     my: 1
     name: 2
-    need: 1
     newcommand: 2
     newenvironment: 1
     newif: 1
@@ -17812,24 +17763,18 @@ tokens:
     nobreak: 2
     noexpand: 3
     normalfont: 1
-    not: 4
+    not: 3
     nouppercase: 2
     "null": 3
-    number/heading: 1
-    numbering: 1
-    oddsidemargin: 2
-    of: 11
+    oddsidemargin: 1
+    of: 9
     oldthebibliography: 2
     oldtheindex: 2
     "on": 1
-    one: 1
     onecolumn: 1
-    options: 1
-    or: 1
     out: 1
-    out.: 1
     p@: 3
-    page: 6
+    page: 2
     pages: 2
     pagestyle: 2
     par: 6
@@ -17837,98 +17782,78 @@ tokens:
     parindent: 1
     pdfinfo: 1
     penalty: 1
-    permitted.: 1
-    prepared: 1
     protect: 2
     psych: 1
     rawpostscript: 1
     reedthesis: 1
     refstepcounter: 1
     relax: 2
-    remove: 1
     removed: 1
     renewcommand: 6
     renewenvironment: 2
     requested: 1
-    right: 1
-    rightmark: 3
+    rightmark: 2
     rightskip: 1
-    rules: 1
-    same: 2
-    scshape: 2
+    same: 1
+    scshape: 1
     secdef: 1
-    seems: 1
     selectfont: 6
     setbox0: 2
     setcounter: 1
-    setlength: 10
+    setlength: 8
     show: 1
-    side: 3
+    side: 2
     sign: 1
-    six: 1
-    size: 1
-    slshape: 4
+    slshape: 3
     small: 2
-    so: 3
     space: 4
     space#1: 1
     special: 2
-    sure: 2
-    symbol: 1
+    sure: 1
     t: 1
     tabular: 2
     template: 1
-    textheight: 4
-    textwidth: 2
-    tgp: 1
+    textheight: 3
+    textwidth: 1
     thanks: 1
     that: 1
-    the: 23
+    the: 13
     thebibliography: 2
     thechapter: 1
     thechapter.: 1
     thedivisionof#1: 1
     theindex: 2
-    them: 1
     thepage: 1
-    thing: 2
+    thing: 1
     things: 1
     this: 1
     thispagestyle: 3
     time: 1
-    title: 1
     titlepage: 2
-    to: 14
+    to: 10
     toc: 5
-    tocbibind: 1
-    topmargin: 6
+    topmargin: 5
     tweaks: 1
     twocolumn: 1
     typeout: 1
-    up.: 1
-    us: 1
     use: 2
     variety: 1
     vfil: 8
     vskip: 4
-    want: 1
     wd0: 7
-    we: 1
-    will: 2
-    with: 2
+    will: 1
     without: 1
-    would: 1
-    you: 2
-    your: 1
+    you: 1
     z@: 2
-    "{": 182
-    "{-": 5
-    "}": 187
+    "{": 174
+    "{-": 4
+    "}": 178
   Tea:
     <%>: 1
     foo: 1
     template: 1
   Turing:
+    "%": 1
     (: 3
     ): 3
     "*": 1

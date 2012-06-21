@@ -49,6 +49,11 @@ module Linguist
           tokens << "//"
           s.skip_until(/\n|\Z/)
 
+        # Leading Tex or Matlab comments
+        elsif token = s.scan(/\n%/)
+          tokens << "%"
+          s.skip_until(/\n|\Z/)
+
         # C multiline comments
         elsif token = s.scan(/\/\*/)
           tokens << "/*"
@@ -89,7 +94,7 @@ module Linguist
           tokens << token
 
         # Common operators
-        elsif token = s.scan(/<<?|\+|\-|\*|\/|&&?|\|\|?/)
+        elsif token = s.scan(/<<?|\+|\-|\*|\/|%|&&?|\|\|?/)
           tokens << token
 
         else
