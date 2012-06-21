@@ -1,5 +1,5 @@
 Gem::Specification.new do |s|
-  s.name    = 'linguist'
+  s.name    = 'github-linguist'
   s.version = '1.0.0'
   s.summary = "GitHub Language detection"
 
