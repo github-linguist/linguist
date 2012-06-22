@@ -170,7 +170,7 @@ module Linguist
       @tokens.sort.each do |language, tokens|
         data << "  #{{language => true}.to_yaml.lines.to_a[1].sub(/ true/, "")}"
         tokens.sort.each do |token, count|
-          data << "    #{{token => count}.to_yaml.lines.to_a[1]}"
+          data << "    #{{token => count}.to_yaml.lines.to_a[1].sub(/! /, "")}"
         end
       end
 

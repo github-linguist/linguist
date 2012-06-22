@@ -11,7 +11,7 @@ end
 file 'lib/linguist/classifier.yml' => Dir['samples/**/*'] do |f|
   require 'linguist/sample'
   classifier = Linguist::Sample.classifier
-  File.open(f.name, 'w') { |io| YAML.dump(classifier, io) }
+  File.open(f.name, 'w') { |io| classifier.to_yaml(io) }
 end
 
 CLOBBER.include 'lib/linguist/classifier.yml'
