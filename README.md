@@ -8,7 +8,9 @@ We use this library at GitHub to detect blob languages, highlight code, ignore b
 
 Linguist defines the list of all languages known to GitHub in a [yaml file](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml). In order for a file to be highlighted, a language and lexer must be defined there.
 
-Most languages are detected by their file extension. This is the fastest and most common situation. For script files, which are usually extensionless, we do "deep content inspection"™ and check the shebang of the file. Checking the file's contents may also be used for disambiguating languages. C, C++ and Obj-C all use `.h` files. Looking for common keywords, we are usually able to guess the correct language.
+Most languages are detected by their file extension. This is the fastest and most common situation. 
+
+For disambiguating between files with common extensions, we use a [bayesian classifier](https://github.com/github/linguist/blob/master/lib/linguist/classifier.rb). For an example, this helps us tell the difference between `.h` files which could be either C, C++, or Obj-C.
 
 In the actual GitHub app we deal with `Grit::Blob` objects. For testing, there is a simple `FileBlob` API.
 
@@ -22,23 +24,11 @@ See [lib/linguist/language.rb](https://github.com/github/linguist/blob/master/li
 
 The actual syntax highlighting is handled by our Pygments wrapper, [pygments.rb](https://github.com/tmm1/pygments.rb). It also provides a [Lexer abstraction](https://github.com/tmm1/pygments.rb/blob/master/lib/pygments/lexer.rb) that determines which highlighter should be used on a file.
 
-We typically run on a prerelease version of Pygments to get early access to new lexers. The [lexers.yml](https://github.com/github/linguist/blob/master/lib/linguist/lexers.yml) file is a dump of the lexers we have available on our server. If there is a new lexer in pygments-main not on the list, [open an issue](https://github.com/github/linguist/issues) and we'll try to upgrade it soon.
-
-### MIME type detection
-
-Most of the MIME types handling is done by the Ruby [mime-types gem](https://github.com/halostatue/mime-types). But we have our own list of additions and overrides. To add or modify this list, see [lib/linguist/mimes.yml](https://github.com/github/linguist/blob/master/lib/linguist/mimes.yml).
-
-MIME types are used to set the Content-Type of raw binary blobs which are served from a special `raw.github.com` domain. However, all text blobs are served as `text/plain` regardless of their type to ensure they open in the browser rather than downloading.
-
-The MIME type also determines whether a blob is binary or plain text. So if you're seeing a blob that says "View Raw" and it is actually plain text, the mime type and encoding probably needs to be explicitly stated.
-
-    Linguist::FileBlob.new("linguist.zip").binary? #=> true
-
-See [lib/linguist/mimes.yml](https://github.com/github/linguist/blob/master/lib/linguist/mimes.yml).
+We typically run on a prerelease version of Pygments, [pygments.rb](https://github.com/tmm1/pygments.rb), to get early access to new lexers. The [lexers.yml](https://github.com/github/linguist/blob/master/lib/linguist/lexers.yml) file is a dump of the lexers we have available on our server.
 
 ### Stats
 
-The [Language Graph](https://github.com/github/linguist/graphs/languages) is built by aggregating the languages of all repo's blobs. The top language in the graph determines the project's primary language. Collectively, these stats make up the [Top Languages](https://github.com/languages) page.
+The Language Graph you see on every repository is built by aggregating the languages of all repo's blobs. The top language in the graph determines the project's primary language. Collectively, these stats make up the [Top Languages](https://github.com/languages) page.
 
 The repository stats API can be used on a directory:
 
@@ -70,7 +60,9 @@ See [Linguist::BlobHelper#generated?](https://github.com/github/linguist/blob/ma
 
 ## Installation
 
-To get it, clone the repo and run [Bundler](http://gembundler.com/) to install its dependencies.
+github.com is usually running the latest version of the `github-linguist` gem that is released on [RubyGems.org](http://rubygems.org/gems/github-linguist).
+
+But for development you are going to want to checkout out the source. To get it, clone the repo and run [Bundler](http://gembundler.com/) to install its dependencies.
 
     git clone https://github.com/github/linguist.git
     cd linguist/
@@ -80,17 +72,14 @@ To run the tests:
 
     bundle exec rake test
 
-*Since this code is specific to GitHub, is not published as a official rubygem.*
-
-If you are seeing errors like `StandardError: could not find any magic files!`, it means the CharlockHolmes gem didn’t install correctly. See the [installing section](https://github.com/brianmario/charlock_holmes/blob/master/README.md) of the CharlockHolmes README for more information.
-
 ## Contributing
 
-1. Fork it.
-2. Create a branch (`git checkout -b detect-foo-language`)
-3. Make your changes
-4. Run the tests (`bundle install` then `bundle exec rake`)
-5. Commit your changes (`git commit -am "Added detection for the new Foo language"`)
-6. Push to the branch (`git push origin detect-foo-language`)
-7. Create a [Pull Request](http://help.github.com/pull-requests/) from your branch.
-8. Promote it. Get others to drop in and +1 it.
+The majority of patches won't need to touch any Ruby code at all. The [master language list](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml) is just a configuration file.
+
+Almost all bug fixes or new language additions show come with some addition code samples. Just drop them under [`samples/`](https://github.com/github/linguist/tree/master/lib) in the correct subdirectory and our test suite will automatically test them. In most cases you shouldn't need to add any additional assertions.
+
+### Testing
+
+Sometimes getting the tests running can be to much work especially if you don't have much Ruby experience. Its okay, be lazy and let our build bot [Travis](http://travis-ci.org/#!/github/linguist) run the tests for you. Just open a pull request and the bot will start cranking away.
+
+Heres our current build status, which is hopefully green: [![Build Status](https://secure.travis-ci.org/github/linguist.png?branch=master)](http://travis-ci.org/github/linguist)
