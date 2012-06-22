@@ -8,7 +8,7 @@ We use this library at GitHub to detect blob languages, highlight code, ignore b
 
 Linguist defines the list of all languages known to GitHub in a [yaml file](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml). In order for a file to be highlighted, a language and lexer must be defined there.
 
-Most languages are detected by their file extension. This is the fastest and most common situation. 
+Most languages are detected by their file extension. This is the fastest and most common situation.
 
 For disambiguating between files with common extensions, we use a [bayesian classifier](https://github.com/github/linguist/blob/master/lib/linguist/classifier.rb). For an example, this helps us tell the difference between `.h` files which could be either C, C++, or Obj-C.
 
@@ -76,7 +76,7 @@ To run the tests:
 
 The majority of patches won't need to touch any Ruby code at all. The [master language list](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml) is just a configuration file.
 
-Almost all bug fixes or new language additions show come with some addition code samples. Just drop them under [`samples/`](https://github.com/github/linguist/tree/master/lib) in the correct subdirectory and our test suite will automatically test them. In most cases you shouldn't need to add any additional assertions.
+Almost all bug fixes or new language additions show come with some addition code samples. Just drop them under [`samples/`](https://github.com/github/linguist/tree/master/samples) in the correct subdirectory and our test suite will automatically test them. In most cases you shouldn't need to add any additional assertions.
 
 ### Testing
 
