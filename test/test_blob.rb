@@ -10,13 +10,13 @@ class TestBlob < Test::Unit::TestCase
 
   Lexer = Pygments::Lexer
 
-  def fixtures_path
-    File.expand_path("../fixtures", __FILE__)
+  def samples_path
+    File.expand_path("../../samples", __FILE__)
   end
 
   def blob(name)
-    name = File.join(fixtures_path, name) unless name =~ /^\//
-    FileBlob.new(name, fixtures_path)
+    name = File.join(samples_path, name) unless name =~ /^\//
+    FileBlob.new(name, samples_path)
   end
 
   def script_blob(name)

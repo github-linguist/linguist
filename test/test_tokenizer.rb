@@ -5,12 +5,12 @@ require 'test/unit'
 class TestTokenizer < Test::Unit::TestCase
   include Linguist
 
-  def fixtures_path
-    File.expand_path("../fixtures", __FILE__)
+  def samples_path
+    File.expand_path("../../samples", __FILE__)
   end
 
   def tokenize(data)
-    data = File.read(File.join(fixtures_path, data.to_s)) if data.is_a?(Symbol)
+    data = File.read(File.join(samples_path, data.to_s)) if data.is_a?(Symbol)
     Tokenizer.new(data).tokens
   end
 

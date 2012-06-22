@@ -5,7 +5,7 @@ module Linguist
   # Model for accessing classifier training data.
   class Sample
     # Samples live in test/ for now, we'll eventually move them out
-    PATH = File.expand_path("../../../test/fixtures", __FILE__)
+    PATH = File.expand_path("../../../samples", __FILE__)
 
     # Public: Iterate over each Sample.
     #

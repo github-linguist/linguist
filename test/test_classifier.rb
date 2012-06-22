@@ -8,12 +8,12 @@ require 'test/unit'
 class TestClassifier < Test::Unit::TestCase
   include Linguist
 
-  def fixtures_path
-    File.expand_path("../fixtures", __FILE__)
+  def samples_path
+    File.expand_path("../../samples", __FILE__)
   end
 
   def fixture(name)
-    File.read(File.join(fixtures_path, name))
+    File.read(File.join(samples_path, name))
   end
 
   def test_instance_freshness
