@@ -153,24 +153,26 @@ module Linguist
     def to_yaml(io)
       data = "--- !ruby/object:Linguist::Classifier\n"
 
+      escape = lambda { |s| s.inspect.gsub(/\\#/, "\#") }
+
       data << "languages_total: #{@languages_total}\n"
       data << "tokens_total: #{@tokens_total}\n"
 
       data << "languages:\n"
       @languages.sort.each do |language, count|
-        data << "  #{{language => count}.to_yaml.lines.to_a[1]}"
+        data << "  #{escape.call(language)}: #{count}\n"
       end
 
       data << "language_tokens:\n"
       @language_tokens.sort.each do |language, count|
-        data << "  #{{language => count}.to_yaml.lines.to_a[1]}"
+        data << "  #{escape.call(language)}: #{count}\n"
       end
 
       data << "tokens:\n"
       @tokens.sort.each do |language, tokens|
-        data << "  #{{language => true}.to_yaml.lines.to_a[1].sub(/ true/, "")}"
+        data << "  #{escape.call(language)}:\n"
         tokens.sort.each do |token, count|
-          data << "    #{{token => count}.to_yaml.lines.to_a[1].sub(/! /, "")}"
+          data << "    #{escape.call(token)}: #{count}\n"
         end
       end
 
