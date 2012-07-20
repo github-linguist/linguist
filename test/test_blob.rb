@@ -276,8 +276,9 @@ class TestBlob < Test::Unit::TestCase
 
   def test_language
     Sample.each do |sample|
-      blob = blob(sample.path)
-      assert_equal sample.language, blob.language, blob.name
+      blob     = blob(sample[:path])
+      language = Linguist::Language.find_by_alias(sample[:language])
+      assert_equal language, blob.language, blob.name
     end
   end
 

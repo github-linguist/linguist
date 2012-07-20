@@ -69,14 +69,15 @@ class TestClassifier < Test::Unit::TestCase
 
   def test_classify_ambiguous_languages
     Sample.each do |sample|
-      next unless sample.language.overrides.any?
+      language = Linguist::Language.find_by_alias(sample[:language])
+      next unless language.overrides.any?
 
-      extname   = File.extname(sample.path)
+      extname   = File.extname(sample[:path])
       languages = Language.all.select { |l| l.extensions.include?(extname) }.map(&:name)
       next unless languages.length > 1
 
-      results = Classifier.instance.classify(sample.data, languages)
-      assert_equal sample.language.name, results.first[0], "#{sample.path}\n#{results.inspect}"
+      results = Classifier.instance.classify(File.read(sample[:path]), languages)
+      assert_equal language.name, results.first[0], "#{sample[:path]}\n#{results.inspect}"
     end
   end
 end
