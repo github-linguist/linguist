@@ -26,13 +26,6 @@ module Linguist
       @overrides.include?(extension)
     end
 
-    # Internal: Return overridden extensions.
-    #
-    # Returns extensions Array.
-    def self.overridden_extensions
-      @overrides.keys
-    end
-
     # Internal: Create a new Language object
     #
     # attributes - A hash of attributes
