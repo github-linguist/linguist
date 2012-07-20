@@ -1,4 +1,3 @@
-require 'linguist/language'
 require 'linguist/tokenizer'
 
 module Linguist
@@ -45,17 +44,16 @@ module Linguist
 
     # Public: Train classifier that data is a certain language.
     #
-    # language - Language of data
+    # language - String language of data
     # data     - String contents of file
     #
     # Examples
     #
-    #   train(Language['Ruby'], "def hello; end")
+    #   train('Ruby', "def hello; end")
     #
     # Returns nothing.
     def train(language, data)
-      language = language.name
-      tokens   = Tokenizer.tokenize(data)
+      tokens = Tokenizer.tokenize(data)
 
       tokens.each do |token|
         @tokens[language][token] += 1
@@ -87,27 +85,26 @@ module Linguist
     # Public: Guess language of data.
     #
     # data      - Array of tokens or String data to analyze.
-    # languages - Array of Languages to restrict to.
+    # languages - Array of language name Strings to restrict to.
     #
     # Examples
     #
     #   classify("def hello; end")
-    #   # => [ [Language['Ruby'], 0.90], [Language['Python'], 0.2], ... ]
+    #   # => [ 'Ruby', 0.90], ['Python', 0.2], ... ]
     #
     # Returns sorted Array of result pairs. Each pair contains the
-    # Language and a Float score.
+    # String language name and a Float score.
     def classify(tokens, languages = @languages.keys)
       return [] if tokens.nil?
       tokens = Tokenizer.tokenize(tokens) if tokens.is_a?(String)
 
       scores = {}
       languages.each do |language|
-        language_name = language.is_a?(Language) ? language.name : language
-        scores[language_name] = tokens_probability(tokens, language_name) +
-                                   language_probability(language_name)
+        scores[language] = tokens_probability(tokens, language) +
+                                   language_probability(language)
       end
 
-      scores.sort { |a, b| b[1] <=> a[1] }.map { |score| [Language[score[0]], score[1]] }
+      scores.sort { |a, b| b[1] <=> a[1] }.map { |score| [score[0], score[1]] }
     end
 
     # Internal: Probably of set of tokens in a language occuring - P(D | C)

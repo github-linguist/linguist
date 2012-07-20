@@ -439,10 +439,10 @@ module Linguist
     # Returns a Language or nil.
     def disambiguate_extension_language
       if Language.ambiguous?(extname)
-        possible_languages = Language.all.select { |l| l.extensions.include?(extname) }
+        possible_languages = Language.all.select { |l| l.extensions.include?(extname) }.map(&:name)
         if possible_languages.any?
           if result = Classifier.instance.classify(data, possible_languages).first
-            result[0]
+            Language[result[0]]
           end
         end
       end
