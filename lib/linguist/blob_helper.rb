@@ -136,13 +136,6 @@ module Linguist
       ['.png', '.jpg', '.jpeg', '.gif'].include?(extname)
     end
 
-    # Public: Is the blob a possible drupal php file?
-    #
-    # Return true or false
-    def drupal_extname?
-      ['.module', '.install', '.test', '.inc'].include?(extname)
-    end
-
     # Public: Is the blob likely to have a shebang?
     #
     # Return true or false
@@ -430,9 +423,6 @@ module Linguist
         # See if there is a Language for the extension
         pathname.language ||
 
-        # Look for idioms in first line
-        first_line_language ||
-
         # Try to detect Language from shebang line
         shebang_language
     end
@@ -455,23 +445,6 @@ module Linguist
             result[0]
           end
         end
-      end
-    end
-
-    # Internal: Guess language from the first line.
-    #
-    # Look for leading "<?php" in Drupal files
-    #
-    # Returns a Language.
-    def first_line_language
-      # Only check files with drupal php extensions
-      return unless drupal_extname?
-
-      # Fail fast if blob isn't viewable?
-      return unless viewable?
-
-      if lines.first.to_s =~ /^<\?php/
-        Language['PHP']
       end
     end
 
