@@ -72,6 +72,12 @@ module Linguist
           s.skip_until(/-->/)
           tokens << "-->"
 
+        # Coq multiline comments
+        elsif token = s.scan(/\(\*/)
+          tokens << "(*"
+          s.skip_until(/\*\)/)
+          tokens << "*)"
+
         # Skip single or double quoted strings
         elsif s.scan(/"/)
           s.skip_until(/[^\\]"/)
