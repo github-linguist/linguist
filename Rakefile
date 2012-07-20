@@ -35,7 +35,7 @@ namespace :classifier do
         guessed_language, score = Linguist::Classifier.instance.classify(data).first
 
         total += 1
-        guessed_language.name == file_language ? correct += 1 : incorrect += 1
+        guessed_language == file_language ? correct += 1 : incorrect += 1
 
         print "\r\e[0K%d:%d  %g%%" % [correct, incorrect, (correct.to_f/total.to_f)*100]
         $stdout.flush
