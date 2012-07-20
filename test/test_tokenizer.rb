@@ -87,6 +87,6 @@ class TestTokenizer < Test::Unit::TestCase
   def test_ruby_tokens
     assert_equal %w(module Foo end), tokenize(:"ruby/foo.rb")
     assert_equal %w(# /usr/bin/env ruby puts), tokenize(:"ruby/script.rb")
-    assert_equal %w(task default do puts end), tokenize(:"ruby/Rakefile")
+    assert_equal %w(task default do puts end), tokenize(:"ruby/filenames/Rakefile")
   end
 end

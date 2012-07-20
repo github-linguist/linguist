@@ -22,7 +22,24 @@ module Linguist
         dirname = File.join(PATH, category)
         Dir.entries(dirname).each do |filename|
           next if filename == '.' || filename == '..'
-          yield({ :path => File.join(dirname, filename), :language => category })
+
+          if filename == 'filenames'
+            Dir.entries(File.join(dirname, filename)).each do |subfilename|
+              next if subfilename == '.' || subfilename == '..'
+
+              yield({
+                :path    => File.join(dirname, filename, subfilename),
+                :language => category,
+                :filename => subfilename
+              })
+            end
+          else
+            yield({
+              :path     => File.join(dirname, filename),
+              :language => category,
+              :extname  => File.extname(filename)
+            })
+          end
         end
       end
 
@@ -36,13 +53,27 @@ module Linguist
     def self.extensions
       extensions = {}
       each do |sample|
-        extname = File.extname(sample[:path])
         # TODO: For now skip empty extnames
-        next if extname == ""
+        next if sample[:extname].nil? || sample[:extname] == ""
         extensions[sample[:language]] ||= Set.new
-        extensions[sample[:language]] << extname
+        extensions[sample[:language]] << sample[:extname]
       end
       extensions
+    end
+
+    # Get all filenames listed in samples/
+    #
+    # Returns Hash of sample language keys with a Set of filename
+    # Strings.
+    def self.filenames
+      filenames = {}
+      each do |sample|
+        # TODO: For now skip empty extnames
+        next if sample[:filename].nil?
+        filenames[sample[:language]] ||= Set.new
+        filenames[sample[:language]] << sample[:filename]
+      end
+      filenames
     end
 
     # Public: Build Classifier from all samples.
