@@ -1,3 +1,5 @@
+require 'set'
+
 module Linguist
   # Model for accessing classifier training data.
   module Sample
@@ -25,6 +27,22 @@ module Linguist
       end
 
       nil
+    end
+
+    # Get all extensions listed in samples/
+    #
+    # Returns Hash of sample language keys with a Set of extension
+    # Strings.
+    def self.extensions
+      extensions = {}
+      each do |sample|
+        extname = File.extname(sample[:path])
+        # TODO: For now skip empty extnames
+        next if extname == ""
+        extensions[sample[:language]] ||= Set.new
+        extensions[sample[:language]] << extname
+      end
+      extensions
     end
 
     # Public: Build Classifier from all samples.

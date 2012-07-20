@@ -2,6 +2,8 @@ require 'escape_utils'
 require 'pygments'
 require 'yaml'
 
+require 'linguist/sample'
+
 module Linguist
   # Language names that are recognizable by GitHub. Defined languages
   # can be highlighted, searched and listed under the Top Languages page.
@@ -444,10 +446,25 @@ module Linguist
     end
   end
 
+  extensions = Sample.extensions
   popular = YAML.load_file(File.expand_path("../popular.yml", __FILE__))
 
   YAML.load_file(File.expand_path("../languages.yml", __FILE__)).each do |name, options|
-    Language.create(
+    aliases = [name.downcase.gsub(/\s/, '-') ] + (options[:aliases] || [])
+    options['extensions'] ||= []
+    aliases.each do |name|
+      if extnames = extensions[name]
+        extnames.each do |extname|
+          if !options['extensions'].include?(extname)
+            options['extensions'] << extname
+          else
+            warn "#{name} #{extname.inspect} is already defined in samples/. Remove from languages.yml."
+          end
+        end
+      end
+    end
+
+    lang = Language.create(
       :name              => name,
       :color             => options['color'],
       :type              => options['type'],
@@ -457,7 +474,7 @@ module Linguist
       :group_name        => options['group'],
       :searchable        => options.key?('searchable') ? options['searchable'] : true,
       :search_term       => options['search_term'],
-      :extensions        => options['extensions'],
+      :extensions        => options['extensions'].sort,
       :primary_extension => options['primary_extension'],
       :overrides         => options['overrides'],
       :filenames         => options['filenames'],
