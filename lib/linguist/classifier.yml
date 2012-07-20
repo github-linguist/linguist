@@ -1,6 +1,6 @@
 --- !ruby/object:Linguist::Classifier
 languages_total: 241
-tokens_total: 172817
+tokens_total: 164005
 languages:
   "Apex": 6
   "AppleScript": 2
@@ -73,11 +73,11 @@ language_tokens:
   "AppleScript": 190
   "Arduino": 20
   "AutoHotkey": 3
-  "C": 34180
-  "C++": 8284
+  "C": 28587
+  "C++": 7788
   "Ceylon": 50
   "CoffeeScript": 2340
-  "Coq": 18324
+  "Coq": 17450
   "Dart": 68
   "Delphi": 30
   "Diff": 16
@@ -93,42 +93,42 @@ language_tokens:
   "JavaScript": 22985
   "Julia": 173
   "Kotlin": 149
-  "Logtalk": 43
+  "Logtalk": 23
   "Markdown": 1
-  "Matlab": 457
+  "Matlab": 335
   "Nemerle": 17
   "Nimrod": 2
   "Nu": 6
-  "OCaml": 365
-  "Objective-C": 28640
+  "OCaml": 261
+  "Objective-C": 28134
   "Opa": 32
   "OpenCL": 88
   "OpenEdge ABL": 717
   "PHP": 12292
   "Parrot Assembly": 8
   "Parrot Internal Representation": 7
-  "Perl": 7232
+  "Perl": 7231
   "PowerShell": 14
   "Prolog": 61
-  "Python": 4425
+  "Python": 4357
   "R": 14
   "Racket": 246
   "Rebol": 5
-  "Ruby": 4460
+  "Ruby": 3539
   "Rust": 8
   "SCSS": 39
   "Sass": 28
-  "Scala": 365
+  "Scala": 352
   "Scheme": 3549
   "Scilab": 71
   "Shell": 264
-  "Standard ML": 223
+  "Standard ML": 220
   "SuperCollider": 139
-  "TeX": 1152
+  "TeX": 1073
   "Tea": 3
-  "Turing": 52
+  "Turing": 45
   "VHDL": 42
-  "Verilog": 3445
+  "Verilog": 3440
   "VimL": 20
   "Visual Basic": 294
   "XML": 5505
@@ -571,8 +571,8 @@ tokens:
     "MsgBox": 1
     "World": 1
   "C":
-    "#": 17
-    "#define": 57
+    "#": 16
+    "#define": 53
     "#else": 11
     "#endif": 43
     "#if": 17
@@ -582,43 +582,35 @@ tokens:
     "#n": 1
     "#string": 1
     "#undef": 5
-    "%": 4
-    "&": 379
-    "&&": 190
-    "(": 3463
-    ")": 3464
-    "*": 79
-    "**": 6
-    "***argv": 3
-    "***tail": 3
-    "**alias_argv": 1
-    "**argv": 9
+    "%": 2
+    "&": 285
+    "&&": 189
+    "(": 2896
+    "(*": 16
+    ")": 2908
+    "*": 63
+    "*)": 16
+    "**": 4
+    "***argv": 2
+    "***tail": 1
+    "**argv": 6
+    "**column_data": 1
     "**commit_graft": 1
     "**commit_list_append": 2
     "**diff": 4
     "**diff_ptr": 1
     "**encoding_p": 1
     "**environ": 1
-    "**exclude": 3
-    "**insert": 1
-    "**list": 7
-    "**list_p": 1
+    "**list": 5
     "**msg_p": 2
-    "**new_argv": 1
     "**next": 2
     "**orig_argv": 1
-    "**other": 1
     "**pathspec": 1
-    "**plist": 1
-    "**pp": 1
-    "**pptr": 3
-    "**reference": 1
-    "**rslt": 1
-    "**stack": 2
+    "**pptr": 1
+    "**stack": 1
     "**subject": 2
-    "**tail": 4
-    "**twos": 3
-    "*/": 610
+    "**twos": 1
+    "*/": 568
     "*1000000": 1
     "*1024": 4
     "*1024*256": 1
@@ -630,61 +622,53 @@ tokens:
     "*24": 1
     "*60": 1
     "*REDIS_EXPIRELOOKUPS_TIME_PERC/REDIS_HZ/100": 1
-    "*_": 1
     "*_entry": 1
     "*_param": 1
-    "*a": 11
+    "*a": 9
     "*active_writer": 1
     "*after_subject": 1
-    "*alias_argv": 1
-    "*alias_command": 1
-    "*alias_string": 1
     "*arg": 1
-    "*argc": 11
-    "*argcp": 7
-    "*argv": 20
+    "*argc": 1
+    "*argcp": 4
+    "*argv": 6
     "*argv0": 1
-    "*at": 1
-    "*author": 4
-    "*autolink": 6
-    "*b": 8
-    "*base": 1
-    "*bases": 2
+    "*author": 2
+    "*b": 6
     "*blob_type": 2
     "*body_mark": 1
-    "*bol": 1
-    "*buf": 12
-    "*buffer": 10
+    "*buf": 9
+    "*buffer": 6
     "*bufptr": 1
-    "*c": 18
+    "*c": 15
     "*cache": 4
-    "*callbacks": 1
-    "*cb_data": 1
+    "*cell_work": 1
     "*cfg": 2
-    "*char_trigger": 1
     "*check_commit": 1
     "*clientData": 1
-    "*cmd": 11
+    "*cmd": 5
+    "*col_data": 1
+    "*column_data": 1
+    "*columns": 2
     "*commandTable": 1
-    "*commit": 23
+    "*commit": 10
     "*commit_buffer": 2
-    "*commit_graft": 2
     "*commit_list_get_next": 1
-    "*commit_list_insert": 2
+    "*commit_list_insert": 1
     "*commit_list_insert_by_date": 1
     "*commit_type": 2
     "*configfile": 1
     "*const": 4
     "*context": 1
-    "*ctx": 6
+    "*ctx": 5
+    "*curtag": 2
     "*d": 1
     "*da": 1
-    "*data": 20
+    "*data": 11
     "*dateptr": 1
     "*db": 3
     "*de": 2
     "*delta": 6
-    "*desc": 3
+    "*desc": 1
     "*description": 1
     "*dict": 2
     "*diff": 8
@@ -696,191 +680,148 @@ tokens:
     "*diff_strdup_prefix": 1
     "*doc": 2
     "*dup": 1
-    "*each_commit_graft_fn": 1
     "*encoding": 2
-    "*end": 1
     "*entry": 2
-    "*envchanged": 10
-    "*eob": 1
-    "*eof": 1
-    "*eol": 5
+    "*envchanged": 1
+    "*eol": 1
     "*eventLoop": 2
-    "*exclude": 3
-    "*extra": 7
-    "*f": 4
-    "*field": 2
+    "*extra": 1
+    "*f": 2
     "*fmt": 2
-    "*fn": 1
     "*format": 1
     "*format_subject": 1
-    "*fp": 4
+    "*fp": 3
     "*from": 1
-    "*get_merge_bases": 2
-    "*get_merge_bases_many": 2
-    "*get_merge_parent": 2
-    "*get_octopus_merge_bases": 2
+    "*get_merge_bases": 1
+    "*get_merge_bases_many": 1
+    "*get_merge_parent": 1
+    "*get_octopus_merge_bases": 1
     "*get_shallow_commits": 1
     "*git_cache_get": 1
     "*git_cache_try_store": 1
     "*git_diff_list_alloc": 1
     "*git_hash_new_ctx": 1
-    "*graft": 6
-    "*graft_file": 2
+    "*graft": 3
     "*hcpu": 3
     "*head": 1
     "*header_field_mark": 1
     "*header_value_mark": 1
-    "*heads": 3
-    "*http_cb": 1
-    "*http_data_cb": 1
+    "*heads": 2
     "*http_errno_description": 1
     "*http_errno_name": 1
     "*http_method_str": 1
-    "*i": 1
     "*idle": 1
-    "*in": 2
-    "*interesting": 1
-    "*it": 1
-    "*item": 13
-    "*j": 1
-    "*k": 1
+    "*in": 1
+    "*item": 10
     "*key": 5
     "*key1": 4
     "*key2": 4
-    "*keyid": 2
     "*keyobj": 2
-    "*l": 2
-    "*last": 1
-    "*line": 7
+    "*l": 1
+    "*line": 1
     "*line_separator": 1
     "*link": 1
-    "*list": 15
-    "*list_p": 2
+    "*list": 2
     "*ln": 3
     "*logmsg_reencode": 1
-    "*lookupCommand": 1
-    "*lookupCommandByCString": 1
     "*lookup_blob": 2
     "*lookup_commit": 2
-    "*lookup_commit_graft": 2
+    "*lookup_commit_graft": 1
     "*lookup_commit_or_die": 2
     "*lookup_commit_reference": 2
     "*lookup_commit_reference_by_name": 2
     "*lookup_commit_reference_gently": 2
     "*match": 3
     "*matcher": 1
-    "*md": 2
-    "*merge_bases_many": 1
-    "*mergetag": 2
+    "*md": 1
     "*message": 1
     "*method_strings": 1
-    "*msg": 8
+    "*msg": 6
     "*n": 1
-    "*name": 7
+    "*name": 6
     "*nb": 3
-    "*new": 2
+    "*new": 1
     "*new_entry": 1
     "*new_iter": 2
-    "*new_list": 1
     "*new_oid": 1
     "*new_parent": 2
     "*new_tree": 1
-    "*next": 13
+    "*next": 6
     "*nitem": 2
     "*node": 2
     "*nr_calls": 1
     "*o": 4
     "*o1": 2
     "*o2": 2
-    "*oa": 3
-    "*ob": 14
-    "*obj": 6
-    "*object": 1
+    "*ob": 3
+    "*obj": 5
     "*oid": 2
     "*oitem": 2
-    "*old": 1
     "*old_entry": 1
     "*old_iter": 2
     "*old_tree": 3
-    "*one": 4
+    "*one": 1
     "*onto": 1
-    "*op": 2
-    "*opaque": 2
     "*opts": 6
-    "*orig": 1
-    "*other": 2
     "*out": 3
     "*output_encoding": 2
-    "*p": 15
+    "*p": 9
     "*param": 1
-    "*parent": 5
-    "*parents": 11
-    "*parser": 10
+    "*parents": 4
+    "*parser": 9
     "*patch_mode": 1
     "*path": 2
     "*pathspec": 2
     "*pattern": 1
-    "*payload": 1
     "*pgdat": 1
-    "*pool": 4
-    "*pop_commit": 2
-    "*pop_most_recent_commit": 2
-    "*pp": 5
-    "*pptr": 1
+    "*pool": 3
+    "*pop_commit": 1
+    "*pop_most_recent_commit": 1
+    "*pp": 4
     "*prefix": 7
     "*privdata": 8
     "*process": 1
     "*ptr": 1
-    "*q": 1
-    "*read_commit_extra_header_lines": 2
-    "*read_commit_extra_headers": 2
-    "*read_graft_line": 2
-    "*reduce_heads": 2
+    "*read_commit_extra_header_lines": 1
+    "*read_commit_extra_headers": 1
+    "*read_graft_line": 1
+    "*reduce_heads": 1
     "*reencode_commit_message": 1
-    "*ref": 1
     "*ref_name": 2
-    "*reference": 1
     "*reflog_info": 1
-    "*refs": 1
     "*repo": 7
     "*res": 2
-    "*result": 4
-    "*ret": 6
+    "*result": 1
+    "*ret": 2
     "*rev1": 1
     "*rev2": 1
     "*revision": 1
-    "*rndr": 14
-    "*rop": 1
-    "*rslt": 1
-    "*s": 2
+    "*rndr": 4
+    "*row_work": 1
+    "*s": 1
     "*sb": 7
-    "*scan": 3
+    "*scan": 2
     "*section": 2
     "*server.dbnum": 1
     "*settings": 2
-    "*sha1": 19
-    "*sig": 1
-    "*sign_commit": 4
-    "*signature": 2
+    "*sha1": 16
+    "*sign_commit": 2
+    "*signature": 1
     "*slave": 2
     "*sp": 1
-    "*src": 4
-    "*stack": 2
+    "*src": 3
     "*state": 1
     "*str": 1
     "*sub": 1
-    "*subdir": 1
-    "*subject": 2
+    "*subject": 1
     "*swap": 1
     "*t": 1
-    "*tail": 5
-    "*temp": 2
+    "*tail": 2
+    "*temp": 1
     "*text": 1
     "*title": 1
     "*tmp": 1
-    "*top": 1
-    "*tree": 5
-    "*two": 1
+    "*tree": 3
     "*u": 2
     "*url_mark": 1
     "*use_noid": 1
@@ -895,13 +836,9 @@ tokens:
     "*ver_revision": 2
     "*w": 1
     "*what": 1
-    "*with_commit": 1
-    "*work": 2
-    "*work_item": 1
-    "+": 367
-    "-": 1519
+    "+": 284
+    "-": 1279
     "-}": 1
-    ".": 2
     "...": 1
     ".0": 1
     ".0/R_Zero": 2
@@ -915,29 +852,28 @@ tokens:
     ".hard_limit_bytes": 3
     ".hcpu": 1
     ".id": 1
-    ".item": 3
+    ".item": 2
     ".len": 3
     ".lock": 1
     ".mod": 1
     ".name": 1
     ".off": 2
     ".refcount": 1
-    ".size": 3
+    ".size": 2
     ".soft_limit_bytes": 3
     ".soft_limit_seconds": 3
     ".watched_keys": 1
-    "/": 6
-    "/*": 607
-    "//": 1
+    "/": 4
+    "/*": 568
     "/1000": 1
     "/1000000": 2
-    "/REDIS_HZ": 2
+    "/REDIS_HZ": 1
     "/server.loading_loaded_bytes": 1
-    "/sizeof": 5
+    "/sizeof": 4
     "0": 1
     "0x20": 1
     "0x80": 1
-    "1": 2
+    "1": 1
     "45": 1
     "46": 1
     "47": 1
@@ -945,10 +881,10 @@ tokens:
     "5": 1
     "7": 1
     "9": 1
-    ";": 3425
-    "<": 160
-    "<<": 19
-    "<=>": 8
+    ";": 2808
+    "<": 140
+    "<<": 15
+    "<=>": 7
     "<arpa/inet.h>": 1
     "<assert.h>": 5
     "<ctype.h>": 3
@@ -990,7 +926,6 @@ tokens:
     "<sys/wait.h>": 2
     "<time.h>": 1
     "<unistd.h>": 1
-    "@": 3
     "AE_ERR": 2
     "AE_READABLE": 2
     "AF_UNIX": 2
@@ -1000,8 +935,8 @@ tokens:
     "BITS_PER_LONG": 2
     "BITS_TO_LONGS": 1
     "BLOB_H": 2
-    "BUFFER_BLOCK": 6
-    "BUFFER_SPAN": 6
+    "BUFFER_BLOCK": 5
+    "BUFFER_SPAN": 9
     "BUG_ON": 4
     "CALLBACK_DATA": 10
     "CALLBACK_DATA_": 4
@@ -1062,7 +997,6 @@ tokens:
     "DELETE": 2
     "DICT_HT_INITIAL_SIZE": 2
     "DICT_NOTUSED": 6
-    "DICT_OK": 1
     "DIFF_NEW_PREFIX_DEFAULT": 1
     "DIFF_OLD_PREFIX_DEFAULT": 1
     "Does": 1
@@ -1080,7 +1014,7 @@ tokens:
     "EXEC_BIT_MASK": 3
     "EXPORT_SYMBOL": 8
     "EXPORT_SYMBOL_GPL": 4
-    "FILE": 4
+    "FILE": 3
     "FLEX_ARRAY": 1
     "FNM_NOMATCH": 1
     "FOR": 11
@@ -1117,23 +1051,17 @@ tokens:
     "GIT_DIFF_INCLUDE_UNTRACKED": 1
     "GIT_DIFF_RECURSE_UNTRACKED_DIRS": 1
     "GIT_DIFF_REVERSE": 3
-    "GIT_DIR_ENVIRONMENT": 3
     "GIT_ENOTFOUND": 1
-    "GIT_HTML_PATH": 1
     "GIT_IDXENTRY_INTENT_TO_ADD": 1
     "GIT_IDXENTRY_SKIP_WORKTREE": 1
-    "GIT_INFO_PATH": 1
     "GIT_ITERATOR_WORKDIR": 2
-    "GIT_MAN_PATH": 1
     "GIT_MODE_PERMS_MASK": 1
     "GIT_MODE_TYPE": 3
-    "GIT_NAMESPACE_ENVIRONMENT": 2
     "GIT_OBJ_BLOB": 1
     "GIT_SUBMODULE_IGNORE_ALL": 1
     "GIT_UNUSED": 1
     "GIT_VECTOR_GET": 2
     "GIT_VERSION": 1
-    "GIT_WORK_TREE_ENVIRONMENT": 2
     "GPERF_CASE_STRNCMP": 1
     "GPERF_DOWNCASE": 1
     "HAVE_BACKTRACE": 1
@@ -1201,7 +1129,6 @@ tokens:
     "HTTP_TRACE": 1
     "HTTP_UNLOCK": 2
     "HTTP_UNSUBSCRIBE": 1
-    "IDENT_STRICT": 2
     "INVALID_CHUNK_SIZE": 1
     "INVALID_CONSTANT": 1
     "INVALID_CONTENT_LENGTH": 1
@@ -1248,30 +1175,15 @@ tokens:
     "LUA_GCCOUNT": 1
     "M": 1
     "MARK": 7
+    "MARKDOWN_GROW": 1
     "MASK_DECLARE_1": 3
     "MASK_DECLARE_2": 3
     "MASK_DECLARE_4": 3
     "MASK_DECLARE_8": 9
-    "MD_CHAR_AUTOLINK_EMAIL": 1
-    "MD_CHAR_AUTOLINK_URL": 1
-    "MD_CHAR_AUTOLINK_WWW": 1
-    "MD_CHAR_CODESPAN": 2
-    "MD_CHAR_EMPHASIS": 4
-    "MD_CHAR_ENTITITY": 1
-    "MD_CHAR_ESCAPE": 1
-    "MD_CHAR_LANGLE": 2
-    "MD_CHAR_LINEBREAK": 2
-    "MD_CHAR_LINK": 2
-    "MD_CHAR_NONE": 1
-    "MD_CHAR_SUPERSCRIPT": 1
     "MERGE": 2
     "MIN": 3
     "MKACTIVITY": 2
     "MKCOL": 2
-    "MKDA_EMAIL": 1
-    "MKDA_NORMAL": 1
-    "MKDA_NOT_AUTOLINK": 2
-    "MKDEXT_STRIKETHROUGH": 1
     "MKD_AUTOLINK": 1
     "MKD_LI_END": 1
     "MKD_NOHEADER": 1
@@ -1295,14 +1207,11 @@ tokens:
     "NOTIFY": 2
     "NOTIFY_DONE": 1
     "NOTIFY_OK": 1
-    "NO_REPLACE_OBJECTS_ENVIRONMENT": 1
     "NR_CPUS": 2
-    "NULL": 321
+    "NULL": 281
     "N_": 1
     "OBJ_BLOB": 3
-    "OBJ_COMMIT": 7
-    "OBJ_TAG": 1
-    "OBJ_TREE": 1
+    "OBJ_COMMIT": 5
     "OK": 1
     "OPTIONS": 2
     "O_APPEND": 2
@@ -1310,11 +1219,8 @@ tokens:
     "O_RDONLY": 1
     "O_RDWR": 2
     "O_WRONLY": 2
-    "PARENT1": 5
-    "PARENT2": 5
     "PARSING_HEADER": 2
     "PATCH": 2
-    "PATH_MAX": 1
     "PAUSED": 1
     "PM_HIBERNATION_PREPARE": 1
     "PM_POST_HIBERNATION": 1
@@ -1332,34 +1238,23 @@ tokens:
     "PUT": 2
     "Qtrue": 10
     "RAW_NOTIFIER_HEAD": 1
-    "REDIS_AOF_OFF": 6
+    "REDIS_AOF_OFF": 5
     "REDIS_AOF_ON": 2
     "REDIS_AOF_REWRITE_MIN_SIZE": 1
     "REDIS_AOF_REWRITE_PERC": 1
     "REDIS_BIO_AOF_FSYNC": 1
     "REDIS_BLOCKED": 2
     "REDIS_CALL_FULL": 1
-    "REDIS_CALL_PROPAGATE": 1
-    "REDIS_CALL_SLOWLOG": 2
-    "REDIS_CALL_STATS": 2
     "REDIS_CLIENT_LIMIT_CLASS_NORMAL": 3
     "REDIS_CLIENT_LIMIT_CLASS_PUBSUB": 3
     "REDIS_CLIENT_LIMIT_CLASS_SLAVE": 3
-    "REDIS_CLOSE_AFTER_REPLY": 1
     "REDIS_CLUSTER_OK": 1
-    "REDIS_CMD_ADMIN": 1
-    "REDIS_CMD_DENYOOM": 2
-    "REDIS_CMD_FORCE_REPLICATION": 2
-    "REDIS_CMD_NOSCRIPT": 1
-    "REDIS_CMD_PUBSUB": 1
-    "REDIS_CMD_RANDOM": 1
-    "REDIS_CMD_READONLY": 1
-    "REDIS_CMD_SORT_FOR_SCRIPT": 1
-    "REDIS_CMD_WRITE": 3
+    "REDIS_CMD_DENYOOM": 1
+    "REDIS_CMD_WRITE": 2
     "REDIS_DEFAULT_DBNUM": 1
     "REDIS_ENCODING_INT": 4
     "REDIS_ENCODING_RAW": 1
-    "REDIS_ERR": 6
+    "REDIS_ERR": 5
     "REDIS_EXPIRELOOKUPS_PER_CRON": 2
     "REDIS_EXPIRELOOKUPS_PER_CRON/4": 1
     "REDIS_HASH_MAX_ZIPLIST_ENTRIES": 1
@@ -1370,7 +1265,6 @@ tokens:
     "REDIS_LIST_MAX_ZIPLIST_VALUE": 1
     "REDIS_LOG_RAW": 2
     "REDIS_LRU_CLOCK_MAX": 1
-    "REDIS_LUA_CLIENT": 1
     "REDIS_LUA_TIME_LIMIT": 1
     "REDIS_MASTER": 2
     "REDIS_MAXIDLETIME": 1
@@ -1389,10 +1283,7 @@ tokens:
     "REDIS_NOTICE": 13
     "REDIS_NOTUSED": 5
     "REDIS_OK": 23
-    "REDIS_OPS_SEC_SAMPLES": 3
-    "REDIS_PROPAGATE_AOF": 2
-    "REDIS_PROPAGATE_NONE": 2
-    "REDIS_PROPAGATE_REPL": 3
+    "REDIS_OPS_SEC_SAMPLES": 2
     "REDIS_REPL_CONNECTED": 3
     "REDIS_REPL_NONE": 1
     "REDIS_REPL_ONLINE": 1
@@ -1421,9 +1312,8 @@ tokens:
     "REDIS_WARNING": 19
     "REDIS_ZSET_MAX_ZIPLIST_ENTRIES": 1
     "REDIS_ZSET_MAX_ZIPLIST_VALUE": 1
-    "REF_TABLE_SIZE": 2
+    "REF_TABLE_SIZE": 1
     "REPORT": 2
-    "RESULT": 4
     "RLIMIT_NOFILE": 2
     "RSTRING_LEN": 2
     "RSTRING_PTR": 2
@@ -1431,7 +1321,6 @@ tokens:
     "RUN_SETUP": 81
     "RUN_SETUP_GENTLY": 16
     "RUN_SILENT_EXEC_FAILURE": 1
-    "RUN_USING_SHELL": 1
     "RUSAGE_CHILDREN": 1
     "RUSAGE_SELF": 1
     "R_Nan": 2
@@ -1461,11 +1350,10 @@ tokens:
     "SOCK_NONBLOCK": 2
     "SOCK_STREAM": 2
     "SPAWN_WAIT_EXEC": 5
-    "STALE": 6
     "STDERR_FILENO": 2
     "STDIN_FILENO": 1
     "STDOUT_FILENO": 2
-    "STRBUF_INIT": 3
+    "STRBUF_INIT": 1
     "STRICT": 1
     "STRICT_CHECK": 15
     "STRIP_EXTENSION": 1
@@ -1501,6 +1389,7 @@ tokens:
     "UNSUBSCRIBE": 2
     "UPGRADE": 4
     "USE_PAGER": 3
+    "UTF8_BOM": 1
     "UV_CREATE_PIPE": 4
     "UV_IGNORE": 2
     "UV_INHERIT_FD": 3
@@ -1527,7 +1416,7 @@ tokens:
     "YA_FREE": 2
     "YA_MALLOC": 1
     "ZMALLOC_LIB": 2
-    "_": 4
+    "_": 3
     "_MSC_VER": 2
     "_WIN32": 2
     "__APPLE__": 2
@@ -1561,12 +1450,13 @@ tokens:
     "_cpu_up": 3
     "_entry": 1
     "_exit": 6
-    "_ms_": 2
+    "_isspace": 3
+    "_ms_": 1
     "_param": 1
     "_strnicmp": 1
     "_zonerefs": 1
-    "a": 15
-    "a_date": 3
+    "a": 13
+    "a_date": 2
     "abbrev": 1
     "abort": 1
     "acceptTcpHandler": 1
@@ -1579,16 +1469,13 @@ tokens:
     "action": 2
     "active": 2
     "activeExpireCycle": 2
-    "active_char": 10
-    "addReply": 14
+    "addReply": 13
     "addReplyBulk": 1
     "addReplyBulkLongLong": 2
     "addReplyError": 6
-    "addReplyErrorFormat": 2
+    "addReplyErrorFormat": 1
     "addReplyMultiBulkLen": 1
     "addReplySds": 3
-    "add_extra_header": 2
-    "add_link_ref": 1
     "adjustOpenFilesLimit": 2
     "aeCreateEventLoop": 1
     "aeCreateFileEvent": 2
@@ -1600,11 +1487,7 @@ tokens:
     "aeSetBeforeSleepProc": 1
     "afs": 8
     "afsBuffer": 3
-    "alias_argv": 5
-    "alias_command": 9
-    "alias_lookup": 1
-    "alias_string": 6
-    "all_flags": 7
+    "alias_command": 4
     "alloc": 6
     "alloc_blob_node": 1
     "alloc_commit_node": 1
@@ -1613,8 +1496,6 @@ tokens:
     "alloc_nr": 1
     "allowComments": 4
     "allsections": 12
-    "alone": 1
-    "alsoPropagate": 1
     "an": 1
     "anetPeerToString": 1
     "anetTcpServer": 1
@@ -1625,35 +1506,31 @@ tokens:
     "ap": 4
     "appendCommand": 1
     "appendServerSaveParams": 3
-    "append_merge_tag_headers": 3
+    "append_merge_tag_headers": 1
     "arch_disable_nonboot_cpus_begin": 2
     "arch_disable_nonboot_cpus_end": 2
     "arch_enable_nonboot_cpus_begin": 2
     "arch_enable_nonboot_cpus_end": 2
-    "argc": 43
-    "argcp": 1
-    "argv": 66
+    "argc": 26
+    "argcp": 2
+    "argv": 54
     "argv0": 2
     "arity": 3
     "ascii_logo": 1
-    "asize": 1
     "ask": 3
     "askingCommand": 1
-    "assert": 43
-    "assert_sha1_type": 1
+    "assert": 41
     "atoi": 3
     "authCommand": 3
     "authenticated": 3
-    "author": 4
-    "b": 28
+    "b": 23
     "b_date": 3
     "backgroundRewriteDoneHandler": 1
     "backgroundSaveDoneHandler": 1
     "bad": 1
-    "bad_graft_data": 5
-    "base": 6
-    "bases": 7
+    "base": 1
     "beforeSleep": 2
+    "beg": 10
     "bestkey": 9
     "bestval": 5
     "bgrewriteaofCommand": 1
@@ -1664,32 +1541,28 @@ tokens:
     "bitcountCommand": 1
     "bitopCommand": 1
     "blob": 6
+    "block_lines": 3
     "blpopCommand": 1
     "body": 6
     "body_mark": 2
     "bogus": 1
-    "bol": 3
     "bool": 6
     "bpop.timeout": 2
-    "break": 197
+    "break": 182
     "brpopCommand": 1
     "brpoplpushCommand": 1
-    "buf": 100
-    "buf_size": 2
-    "buffer": 32
-    "buffer.buf": 2
-    "buffer.len": 1
+    "buf": 56
+    "buffer": 9
+    "bufgrow": 1
     "buflen": 3
-    "bufnew": 3
     "bufptr": 12
-    "bufput": 3
-    "bufputc": 1
+    "bufputc": 2
     "bufrelease": 3
     "build_all_zonelists": 1
     "bysignal": 4
     "bytesConsumed": 2
     "bytesToHuman": 3
-    "c": 232
+    "c": 192
     "c.cmd": 1
     "c.value": 3
     "c.want": 2
@@ -1699,38 +1572,25 @@ tokens:
     "c_ru.ru_utime.tv_sec": 1
     "c_ru.ru_utime.tv_usec/1000000": 1
     "cache": 26
-    "call": 2
-    "callbacks": 5
-    "calls": 6
-    "case": 226
-    "cb": 2
-    "cb.codespan": 1
+    "call": 1
+    "callbacks": 3
+    "calloc": 1
+    "calls": 4
+    "case": 217
+    "cb.blockhtml": 6
     "cb.doc_footer": 2
-    "cb.double_emphasis": 1
-    "cb.emphasis": 1
-    "cb.image": 1
-    "cb.linebreak": 1
-    "cb.link": 1
-    "cb.triple_emphasis": 1
-    "cb_data": 1
+    "cb.doc_header": 2
+    "cb.table_cell": 3
+    "cb.table_row": 2
+    "cell_end": 6
+    "cell_start": 5
+    "cell_work": 3
     "cfg": 6
     "ch": 145
     "changes": 2
-    "char": 237
-    "char*": 8
+    "char": 192
+    "char*": 7
     "char**": 1
-    "char_autolink_email": 2
-    "char_autolink_url": 2
-    "char_autolink_www": 2
-    "char_codespan": 2
-    "char_emphasis": 2
-    "char_entity": 2
-    "char_escape": 2
-    "char_langle_tag": 2
-    "char_linebreak": 2
-    "char_link": 2
-    "char_superscript": 2
-    "char_trigger": 1
     "character": 1
     "chdir": 2
     "checkUTF8": 1
@@ -1741,10 +1601,9 @@ tokens:
     "child_watcher": 5
     "child_watcher.data": 1
     "classes": 1
-    "cleanup": 8
-    "clear_commit_marks": 9
-    "clear_commit_marks_1": 2
-    "clear_commit_marks_for_object_array": 2
+    "cleanup": 2
+    "clear_commit_marks": 1
+    "clear_commit_marks_for_object_array": 1
     "clear_tasks_mm_cpumask": 1
     "clientCommand": 1
     "clientData": 1
@@ -1758,7 +1617,7 @@ tokens:
     "clusterInit": 1
     "clusterNode": 1
     "clusterNodesDictType": 1
-    "cmd": 85
+    "cmd": 46
     "cmd.buf": 1
     "cmd_add": 2
     "cmd_annotate": 1
@@ -1866,43 +1725,38 @@ tokens:
     "cmd_write_tree": 1
     "cmit_fmt": 3
     "cmp": 9
-    "cnt": 7
+    "col": 9
+    "col_data": 2
+    "columns": 3
     "comm": 1
     "commandTableDictType": 2
     "commands": 3
-    "commit": 130
+    "commit": 59
     "commit_buffer": 1
-    "commit_extra_header": 19
-    "commit_graft": 26
-    "commit_graft_alloc": 5
-    "commit_graft_nr": 9
-    "commit_graft_pos": 4
-    "commit_graft_prepared": 3
-    "commit_list": 89
-    "commit_list_compare_by_date": 2
-    "commit_list_count": 2
-    "commit_list_get_next": 1
-    "commit_list_insert": 10
-    "commit_list_insert_by_date": 9
-    "commit_list_set_next": 2
-    "commit_list_sort_by_date": 3
-    "commit_pager_choice": 5
-    "commit_tree": 2
-    "commit_tree_extended": 3
-    "commit_type": 1
-    "commit_utf8_warn": 2
+    "commit_extra_header": 7
+    "commit_graft": 13
+    "commit_graft_alloc": 4
+    "commit_graft_nr": 5
+    "commit_graft_pos": 2
+    "commit_list": 35
+    "commit_list_count": 1
+    "commit_list_insert": 2
+    "commit_list_set_next": 1
+    "commit_list_sort_by_date": 2
+    "commit_pager_choice": 4
+    "commit_tree": 1
+    "commit_tree_extended": 1
     "cond": 1
     "config": 4
     "configCommand": 1
     "config_bool": 5
     "configfile": 2
-    "const": 245
+    "const": 204
     "container": 17
     "content_length": 27
-    "continue": 27
-    "copypos": 6
+    "continue": 19
     "core_initcall": 2
-    "count": 12
+    "count": 6
     "counters.process_init": 1
     "cpu": 57
     "cpu_active_bits": 4
@@ -1955,36 +1809,35 @@ tokens:
     "createStringObject": 11
     "create_object": 2
     "ctime.seconds": 2
-    "ctx": 13
+    "ctx": 14
     "current": 3
+    "curtag": 8
     "d": 12
     "da": 2
     "daemonize": 2
-    "data": 53
+    "data": 67
     "data.fd": 1
     "data.stream": 7
-    "date": 6
+    "date": 4
     "date_mode": 2
     "date_mode_explicit": 1
     "dateptr": 2
-    "db": 12
+    "db": 10
     "dbDelete": 2
     "dbDictType": 2
-    "dbid": 9
     "dbsizeCommand": 1
     "de": 12
     "debugCommand": 1
     "decodeBuf": 2
     "decoration": 1
     "decrCommand": 1
-    "decrRefCount": 7
+    "decrRefCount": 6
     "decrbyCommand": 1
-    "default": 23
+    "default": 22
     "define": 14
     "defined": 7
     "defsections": 11
     "defvalue": 2
-    "del": 2
     "delCommand": 1
     "delta": 54
     "delta_type": 8
@@ -1994,17 +1847,15 @@ tokens:
     "depends": 1
     "depth": 1
     "deref_tag": 1
-    "desc": 8
+    "desc": 5
     "dev": 2
     "dict": 11
-    "dictAdd": 1
     "dictCreate": 6
     "dictDisableResize": 1
     "dictEnableResize": 1
     "dictEncObjHash": 4
     "dictEncObjKeyCompare": 4
     "dictEntry": 2
-    "dictFetchValue": 2
     "dictFind": 1
     "dictGenCaseHashFunction": 1
     "dictGenHashFunction": 5
@@ -2029,8 +1880,8 @@ tokens:
     "dictSlots": 3
     "dictType": 8
     "dictVanillaFree": 1
-    "die": 8
-    "die_errno": 4
+    "die": 5
+    "die_errno": 3
     "diff": 84
     "diff_delta__alloc": 2
     "diff_delta__cmp": 3
@@ -2044,40 +1895,37 @@ tokens:
     "diff_prefix_from_pathspec": 4
     "diff_strdup_prefix": 2
     "diffcaps": 13
-    "dirty": 5
     "disable_nonboot_cpus": 1
     "discardCommand": 2
-    "do": 9
-    "do_sign_commit": 2
+    "do": 8
+    "do_render": 4
     "doc": 6
+    "doc_size": 6
+    "document": 9
     "done_alias": 4
     "done_help": 3
     "double": 7
     "dumpCommand": 1
     "dup": 15
     "dup2": 4
-    "duration": 4
     "e": 4
-    "each_commit_graft_fn": 2
+    "each_commit_graft_fn": 1
     "echoCommand": 2
     "elapsed": 3
     "elapsed*remaining_bytes": 1
-    "else": 147
+    "else": 120
+    "empty_cell": 2
     "enable_nonboot_cpus": 1
     "encoding": 8
-    "encoding_is_utf8": 4
-    "end": 6
+    "end": 18
+    "end_tag": 4
     "endif": 1
     "entry": 17
-    "enum": 34
-    "envchanged": 12
+    "enum": 29
     "environ": 4
-    "eob": 4
-    "eof": 9
-    "eol": 5
     "err": 38
-    "errno": 20
-    "error": 74
+    "errno": 19
+    "error": 71
     "error_lineno": 3
     "estimateObjectIdleTime": 1
     "eta": 4
@@ -2089,13 +1937,11 @@ tokens:
     "evalCommand": 1
     "evalShaCommand": 1
     "eventLoop": 2
-    "exclude": 4
-    "excluded_header_field": 2
     "execCommand": 2
     "execv_dashed_external": 2
     "execvp": 1
     "existsCommand": 1
-    "exit": 21
+    "exit": 16
     "exitFromChild": 1
     "exit_cb": 3
     "exit_status": 3
@@ -2106,32 +1952,28 @@ tokens:
     "expired": 4
     "expires": 3
     "ext": 4
-    "ext_flags": 1
-    "extensions": 2
     "extern": 32
-    "extra": 21
-    "f": 16
+    "f": 15
     "fail": 19
     "false": 4
-    "fclose": 6
+    "fclose": 5
     "fd": 34
     "fds": 20
-    "feedAppendOnlyFile": 1
     "ferror": 1
     "fflush": 2
-    "fgets": 2
-    "field": 7
+    "fgets": 1
     "field_data": 5
     "field_set": 5
     "file_size": 6
     "fileno": 1
     "find": 1
+    "find_block_tag": 1
     "find_commit_subject": 2
     "find_lock_task_mm": 1
     "first_cpu": 3
     "firstkey": 1
     "fl": 8
-    "flags": 118
+    "flags": 86
     "flags_extended": 2
     "float": 11
     "flushAppendOnlyFile": 2
@@ -2139,28 +1981,27 @@ tokens:
     "flushallCommand": 1
     "flushdbCommand": 1
     "fmt": 4
-    "fn": 3
-    "fopen": 4
-    "for": 69
-    "for_each_commit_graft": 2
+    "fn": 1
+    "fopen": 3
+    "for": 37
+    "for_each_commit_graft": 1
     "for_each_cpu": 1
     "for_each_online_cpu": 1
     "for_each_process": 2
     "fork": 2
     "format_commit_message": 1
-    "fp": 16
-    "fprintf": 24
-    "free": 23
+    "fp": 13
+    "fprintf": 18
+    "free": 8
     "freeClient": 1
     "freeClientsInAsyncFreeQueue": 1
     "freeMemoryIfNeeded": 2
     "freePubsubPattern": 1
-    "free_commit_extra_headers": 3
-    "free_commit_list": 6
+    "free_commit_extra_headers": 1
+    "free_commit_list": 1
     "free_link_refs": 1
     "free_obj": 4
     "free_ptr": 2
-    "free_return": 3
     "from": 5
     "frozen_cpus": 9
     "fstat": 1
@@ -2175,15 +2016,10 @@ tokens:
     "getOperationsPerSecond": 2
     "getRandomHexChars": 1
     "get_commit_format": 1
-    "get_graft_file": 1
-    "get_merge_bases": 2
-    "get_merge_bases_many": 2
     "get_online_cpus": 2
-    "get_sha1": 2
-    "get_sha1_hex": 4
-    "get_signing_key": 1
+    "get_sha1": 1
+    "get_sha1_hex": 2
     "getbitCommand": 1
-    "getcwd": 1
     "getkeys_proc": 1
     "getpid": 7
     "getrangeCommand": 2
@@ -2201,7 +2037,6 @@ tokens:
     "git__size_t_powerof2": 1
     "git_attr_fnmatch": 4
     "git_attr_fnmatch__parse": 1
-    "git_author_info": 1
     "git_buf": 3
     "git_buf_common_prefix": 1
     "git_buf_cstr": 1
@@ -2219,12 +2054,9 @@ tokens:
     "git_cached_obj_decref": 3
     "git_cached_obj_freeptr": 1
     "git_cached_obj_incref": 3
-    "git_commit_encoding": 2
-    "git_committer_info": 1
     "git_config": 3
     "git_config_get_bool": 1
     "git_config_maybe_bool": 1
-    "git_config_push_parameter": 1
     "git_delta_t": 5
     "git_diff_delta": 19
     "git_diff_index_to_tree": 1
@@ -2236,8 +2068,6 @@ tokens:
     "git_diff_tree_to_tree": 1
     "git_diff_workdir_to_index": 1
     "git_diff_workdir_to_tree": 1
-    "git_dir": 3
-    "git_exec_path": 1
     "git_extract_argv0_path": 1
     "git_futils_open_ro": 1
     "git_hash_buf": 1
@@ -2277,14 +2107,13 @@ tokens:
     "git_repository": 7
     "git_repository_config__weakptr": 1
     "git_repository_workdir": 1
-    "git_set_argv_exec_path": 1
     "git_setup_gettext": 1
     "git_startup_info": 2
     "git_strarray": 2
     "git_submodule": 1
     "git_submodule_lookup": 1
     "git_tree": 4
-    "git_usage_string": 7
+    "git_usage_string": 2
     "git_vector": 1
     "git_vector_foreach": 4
     "git_vector_free": 3
@@ -2294,12 +2123,9 @@ tokens:
     "git_version_string": 1
     "giterr_clear": 1
     "giterr_set": 1
-    "goto": 92
+    "goto": 85
     "gperf_case_strncmp": 1
-    "gpg_sig_header": 4
-    "gpg_sig_header_len": 5
-    "graft": 19
-    "graft_file": 3
+    "graft": 10
     "grafts_replace_parents": 1
     "growth": 3
     "h_C": 3
@@ -2323,26 +2149,26 @@ tokens:
     "h_upgrade": 4
     "hand": 28
     "handle": 10
-    "handle_alias": 2
+    "handle_alias": 1
     "handle_internal_command": 3
-    "handle_options": 3
-    "handle_signed_tag": 2
+    "handle_options": 2
     "has_non_ascii": 1
     "hash": 12
     "hashDictType": 1
-    "hashcmp": 3
+    "hashcmp": 2
     "hashslot": 3
     "have_repository": 1
     "hcpu": 10
     "hdelCommand": 1
     "head": 2
+    "header_end": 7
     "header_field": 5
     "header_field_mark": 2
+    "header_flag": 3
     "header_state": 42
     "header_states": 1
     "header_value": 6
     "header_value_mark": 2
-    "heads": 4
     "hello": 1
     "help": 4
     "help_unknown_cmd": 1
@@ -2360,7 +2186,8 @@ tokens:
     "hsetCommand": 1
     "hsetnxCommand": 1
     "htNeedsResize": 3
-    "http": 1
+    "htmlblock_end": 3
+    "htmlblock_end_tag": 1
     "http_cb": 3
     "http_data_cb": 4
     "http_errno": 11
@@ -2372,7 +2199,6 @@ tokens:
     "http_method_str": 1
     "http_minor": 11
     "http_parser": 13
-    "http_parser*": 2
     "http_parser_execute": 2
     "http_parser_h": 2
     "http_parser_init": 2
@@ -2385,28 +2211,23 @@ tokens:
     "http_should_keep_alive": 2
     "http_strerror_tab": 7
     "hvalsCommand": 1
-    "i": 228
-    "i/41": 1
-    "id": 9
-    "id_end": 1
-    "id_offset": 2
+    "i": 162
+    "id": 7
     "idle": 4
     "idle_cpu": 1
     "idle_thread_get": 1
     "idletime": 2
-    "if": 764
+    "if": 638
     "ignore": 1
     "ignore_dups": 2
     "ignore_prefix": 6
-    "in": 2
-    "in_link_body": 1
-    "in_merge_bases": 3
-    "in_signature": 5
+    "in": 1
+    "in_merge_bases": 1
     "incrCommand": 1
     "incrbyCommand": 1
     "incrbyfloatCommand": 1
     "incrementallyRehash": 2
-    "indegree": 8
+    "indegree": 1
     "indent": 1
     "index": 53
     "info": 63
@@ -2416,43 +2237,32 @@ tokens:
     "init_cpu_online": 1
     "init_cpu_possible": 1
     "init_cpu_present": 1
-    "inline": 5
+    "inline": 2
     "ino": 2
-    "ins": 2
-    "insert": 3
-    "inspos": 7
-    "int": 367
+    "int": 305
     "int*": 2
     "int16_t": 1
     "int32_t": 1
     "int64_t": 1
     "int8_t": 3
     "interactive_add": 1
-    "interesting": 1
     "ip": 4
     "ipc": 1
-    "is_bare_repository_cfg": 1
     "is_connect": 4
-    "is_descendant_of": 2
-    "is_encoding_utf8": 1
-    "is_mail_autolink": 1
-    "is_repository_shallow": 2
-    "is_utf8": 1
-    "isalnum": 2
-    "isspace": 1
-    "it": 13
-    "item": 67
+    "is_descendant_of": 1
+    "is_empty": 4
+    "is_ref": 1
+    "is_repository_shallow": 1
+    "item": 24
     "iteration": 3
     "iterations": 4
-    "its": 1
-    "j": 145
+    "j": 119
     "jsonText": 4
     "jsonTextLen": 4
-    "k": 12
-    "key": 13
+    "k": 7
+    "key": 9
     "key1": 5
     "key2": 5
-    "keyid": 3
     "keylistDictType": 4
     "keyobj": 6
     "keyptrDictType": 2
@@ -2460,41 +2270,33 @@ tokens:
     "keysCommand": 1
     "keys_freed": 3
     "kill": 4
-    "l": 3
     "l1": 4
     "l2": 3
-    "last": 1
-    "lastcmd": 1
     "lastinteraction": 3
     "lastsaveCommand": 1
-    "len": 53
-    "length": 3
+    "len": 23
+    "length": 2
     "level": 11
     "lexer": 4
     "li": 6
-    "lifo": 4
+    "lifo": 1
     "likely": 1
     "limit": 3
     "limit.rlim_cur": 2
     "limit.rlim_max": 1
     "lindexCommand": 1
-    "line": 30
-    "line_end": 3
-    "link": 2
-    "link_end": 3
-    "link_offset": 4
-    "link_ref": 4
+    "link_ref": 2
     "linsertCommand": 1
     "linuxOvercommitMemoryValue": 2
     "linuxOvercommitMemoryWarning": 2
-    "list": 47
+    "list": 1
     "list*": 1
     "listAddNodeTail": 1
     "listCreate": 6
     "listDelNode": 1
     "listFirst": 2
     "listIter": 2
-    "listLength": 16
+    "listLength": 14
     "listMatchPubsubPattern": 1
     "listNext": 2
     "listNode": 4
@@ -2515,13 +2317,12 @@ tokens:
     "localtime": 1
     "lock": 6
     "lol": 3
-    "long": 103
-    "lookupCommand": 1
+    "long": 97
     "lookupCommandByCString": 3
     "lookup_commit": 2
     "lookup_commit_graft": 1
     "lookup_commit_reference": 2
-    "lookup_commit_reference_gently": 2
+    "lookup_commit_reference_gently": 1
     "lookup_object": 2
     "lookup_tree": 1
     "loop": 7
@@ -2537,31 +2338,24 @@ tokens:
     "lua_gc": 1
     "m": 3
     "main": 3
-    "malloc": 3
-    "mark": 13
-    "markdown_char_ptrs": 1
-    "markdown_char_t": 1
+    "malloc": 2
+    "mark": 3
     "match": 14
     "matcher": 3
-    "max_nesting": 3
     "maxfiles": 6
     "maybe_modified": 2
-    "md": 35
+    "md": 18
     "megabytes": 1
     "mem_freed": 4
     "mem_online_node": 1
     "mem_tofree": 3
     "mem_used": 9
-    "memchr": 3
-    "memcmp": 11
-    "memcpy": 7
-    "memmove": 3
-    "memset": 5
+    "memcmp": 6
+    "memcpy": 6
+    "memset": 4
     "memtest": 2
-    "merge_bases_many": 2
-    "merge_remote_desc": 4
-    "merge_remote_util": 2
-    "mergetag": 6
+    "merge_remote_desc": 3
+    "merge_remote_util": 1
     "message": 1
     "message_begin": 3
     "message_complete": 7
@@ -2569,11 +2363,10 @@ tokens:
     "method_strings": 2
     "mgetCommand": 1
     "mi": 5
-    "microseconds": 3
+    "microseconds": 1
     "microseconds/c": 1
     "might_sleep": 1
     "migrateCommand": 1
-    "mkd_autolink": 1
     "mkd_cleanup": 2
     "mkd_compile": 2
     "mkd_document": 1
@@ -2587,16 +2380,16 @@ tokens:
     "moveCommand": 1
     "msetCommand": 1
     "msetnxCommand": 1
-    "msg": 14
+    "msg": 10
     "mstime": 5
     "mtime.seconds": 2
     "multiCommand": 2
     "mutex": 1
     "mutex_lock": 5
     "mutex_unlock": 6
-    "n": 38
+    "n": 20
     "n/": 3
-    "name": 19
+    "name": 12
     "name.machine": 1
     "name.release": 1
     "name.sysname": 1
@@ -2604,8 +2397,8 @@ tokens:
     "nb": 2
     "need": 1
     "need_8bit_cte": 2
-    "new": 7
-    "new_argv": 11
+    "new": 4
+    "new_argv": 7
     "new_entry": 5
     "new_file.flags": 4
     "new_file.mode": 4
@@ -2613,13 +2406,12 @@ tokens:
     "new_file.path": 6
     "new_file.size": 3
     "new_iter": 13
-    "new_list": 4
     "new_oid": 3
     "new_parent": 6
     "new_prefix": 2
     "new_src": 3
     "new_tree": 2
-    "next": 88
+    "next": 8
     "nid": 5
     "nitem": 32
     "nmode": 10
@@ -2632,50 +2424,40 @@ tokens:
     "nongit_ok": 2
     "normal_url_char": 3
     "nosave": 2
-    "not": 1
     "not_shallow_flag": 1
     "notes": 1
     "notifier_block": 3
     "notifier_to_errno": 1
     "notify_cpu_starting": 1
     "now": 5
-    "nr": 1
     "nr_calls": 9
-    "nr_parent": 4
+    "nr_parent": 3
     "nr_to_call": 2
     "nread": 7
-    "num": 10
+    "num": 8
     "num*100/slots": 1
-    "num_head": 4
     "num_online_cpus": 2
-    "num_other": 5
     "numclients": 3
     "numclients/": 1
-    "numcommands": 7
-    "numops": 8
+    "numcommands": 5
     "o": 18
     "o1": 7
     "o2": 7
-    "oa": 14
-    "ob": 4
-    "obj": 21
-    "object": 14
-    "object.flags": 13
+    "ob": 8
+    "obj": 18
+    "object": 10
     "object.parsed": 4
-    "object.sha1": 12
+    "object.sha1": 8
     "objectCommand": 1
-    "object_array": 3
-    "object_type": 4
-    "objects": 1
+    "object_array": 2
+    "object_type": 1
     "obuf_bytes": 3
     "of": 1
     "off": 5
     "off_t": 1
-    "offset": 12
     "oid": 17
     "oid_for_workdir_item": 2
     "oitem": 29
-    "old": 1
     "old_entry": 5
     "old_file.flags": 2
     "old_file.mode": 2
@@ -2689,7 +2471,7 @@ tokens:
     "old_uf": 4
     "oldlimit": 5
     "omode": 8
-    "on": 2
+    "on": 1
     "on_##FOR": 4
     "on_body": 1
     "on_header_field": 1
@@ -2698,21 +2480,19 @@ tokens:
     "on_message_begin": 1
     "on_message_complete": 1
     "on_url": 1
-    "one": 10
     "online": 2
     "onto": 7
     "onto_new": 6
     "onto_pool": 7
     "oom": 3
-    "op": 10
-    "opaque": 1
+    "opaque": 8
     "open": 4
     "openlog": 1
-    "ops": 7
+    "ops": 1
     "ops*1000/t": 1
     "ops_sec": 3
     "option": 7
-    "option_count": 4
+    "option_count": 1
     "options": 17
     "options.args": 1
     "options.cwd": 2
@@ -2729,32 +2509,31 @@ tokens:
     "opts.new_prefix": 4
     "opts.old_prefix": 4
     "opts.pathspec": 2
-    "org": 6
-    "orig": 4
-    "orig_argv": 1
-    "other": 6
     "out": 11
     "out_notify": 3
     "out_release": 3
-    "p": 78
+    "p": 51
     "p_close": 1
     "p_fnmatch": 1
     "pager_command_config": 2
     "pager_config": 3
     "pager_program": 1
     "param": 2
-    "parent": 17
-    "parents": 45
+    "parent": 7
+    "parents": 4
     "parse_blob_buffer": 2
     "parse_block": 1
-    "parse_commit": 7
+    "parse_commit": 3
     "parse_commit_buffer": 3
     "parse_commit_date": 2
-    "parse_object": 2
-    "parse_signature": 1
-    "parse_signed_commit": 2
+    "parse_htmlblock": 1
+    "parse_inline": 1
+    "parse_object": 1
+    "parse_signed_commit": 1
+    "parse_table_header": 1
+    "parse_table_row": 1
     "parse_url_char": 5
-    "parser": 333
+    "parser": 334
     "passes": 1
     "patch": 1
     "path": 20
@@ -2765,7 +2544,6 @@ tokens:
     "pathspec.strings": 1
     "pattern": 3
     "paused": 3
-    "payload": 1
     "peak_hmem": 3
     "peel_to_type": 1
     "perc": 3
@@ -2783,29 +2561,25 @@ tokens:
     "pid_t": 2
     "pingCommand": 2
     "pipe": 1
-    "pipes": 16
-    "plist": 1
+    "pipes": 23
     "pm_notifier": 1
     "poll": 1
     "pollfd": 1
-    "pool": 19
-    "pop_commit": 1
+    "pool": 12
     "populateCommandTable": 2
     "port": 7
-    "pos": 21
+    "pos": 7
     "possible": 2
-    "pp": 2
     "pp_commit_easy": 1
     "pp_remainder": 1
     "pp_title_line": 1
     "pp_user_info": 1
-    "pptr": 9
+    "pptr": 5
     "prefix": 34
     "prefix.ptr": 2
     "prefix.size": 1
-    "prefixcmp": 8
+    "prefixcmp": 3
     "prepareForShutdown": 2
-    "prepare_commit_graft": 2
     "present": 2
     "preserve_subject": 1
     "pretty_print_commit": 1
@@ -2813,30 +2587,26 @@ tokens:
     "printf": 4
     "printk": 12
     "privdata": 8
-    "proc": 15
+    "proc": 14
     "process": 19
-    "processCommand": 1
     "processInputBuffer": 1
-    "propagate": 3
     "propagateExpire": 2
     "psetexCommand": 1
     "psubscribeCommand": 2
-    "ptr": 20
+    "ptr": 18
     "pttlCommand": 1
     "publishCommand": 1
     "pubsub_channels": 2
     "pubsub_patterns": 2
     "punsubscribeCommand": 2
     "put_online_cpus": 2
-    "puts": 4
-    "q": 12
     "querybuf": 6
     "querybuf_peak": 2
     "querybuf_size": 3
     "querybuf_size/": 1
     "queueMultiCommand": 1
     "quiet": 5
-    "r": 9
+    "r": 5
     "randomkeyCommand": 1
     "raw_notifier_chain_register": 1
     "raw_notifier_chain_unregister": 1
@@ -2859,37 +2629,26 @@ tokens:
     "rdbRemoveTempFile": 1
     "rdbSave": 1
     "rdbSaveBackground": 1
-    "read_commit_extra_header_lines": 1
-    "read_graft_file": 2
-    "read_graft_line": 1
-    "read_replace_refs": 1
-    "read_sha1_file": 4
+    "read_sha1_file": 1
     "realloc": 1
     "redisAsciiArt": 2
     "redisAssert": 1
-    "redisClient": 14
-    "redisCommand": 14
-    "redisCommandTable": 7
+    "redisClient": 12
+    "redisCommand": 6
+    "redisCommandTable": 5
     "redisDb": 3
     "redisGitDirty": 3
     "redisGitSHA1": 3
     "redisLog": 33
     "redisLogFromHandler": 2
     "redisLogRaw": 3
-    "redisOp": 4
-    "redisOpArray": 3
-    "redisOpArrayAppend": 2
-    "redisOpArrayFree": 2
-    "redisOpArrayInit": 2
-    "redisPanic": 1
     "redisServer": 1
     "reexecute_byte": 7
-    "ref": 6
     "ref_name": 2
     "refcount": 1
     "reflog_walk_info": 1
-    "refs": 3
-    "register_commit_graft": 3
+    "refs": 2
+    "register_commit_graft": 2
     "register_cpu_notifier": 2
     "register_shallow": 1
     "remaining_bytes": 1
@@ -2897,44 +2656,40 @@ tokens:
     "renameGetKeys": 2
     "renamenxCommand": 1
     "replicationCron": 1
-    "replicationFeedMonitors": 1
-    "replicationFeedSlaves": 1
     "replstate": 1
     "repo": 23
     "res": 4
-    "resetCommandTableStats": 1
     "resetServerSaveParams": 2
     "restoreCommand": 1
-    "result": 40
-    "ret": 45
+    "result": 12
+    "ret": 24
     "retcode": 3
-    "return": 359
-    "retval": 5
+    "return": 304
+    "retval": 3
     "rev_info": 2
     "revents": 2
     "rewriteAppendOnlyFileBackground": 2
     "rlim_t": 3
     "rlimit": 1
-    "rndr": 2
-    "rndr_newbuf": 1
-    "rndr_popbuf": 1
-    "robj": 10
+    "rndr": 25
+    "rndr_newbuf": 2
+    "rndr_popbuf": 2
+    "robj": 7
     "robj*": 3
-    "rop": 6
+    "row_work": 4
     "rpopCommand": 1
     "rpoplpushCommand": 1
     "rpushCommand": 1
     "rpushxCommand": 1
-    "rslt": 15
     "rstatus": 1
     "ruby_obj": 11
     "run_add_interactive": 1
     "run_argv": 2
     "run_builtin": 2
-    "run_command_v_opt": 2
+    "run_command_v_opt": 1
     "run_with_period": 6
     "rusage": 1
-    "s": 24
+    "s": 22
     "s1": 2
     "s2": 2
     "s_body_identity": 3
@@ -3004,22 +2759,19 @@ tokens:
     "saveCommand": 1
     "save_commit_buffer": 3
     "save_our_env": 3
-    "saved_errno": 2
+    "saved_errno": 1
     "saveparam": 1
-    "saw_signature": 4
-    "scan": 3
+    "scan": 4
     "scardCommand": 1
     "schedule": 1
     "scriptCommand": 2
     "scriptingInit": 1
-    "sd_callbacks": 3
-    "sd_markdown": 20
+    "sd_markdown": 6
     "sd_markdown_free": 1
-    "sd_markdown_new": 1
     "sd_version": 1
     "sdiffCommand": 1
     "sdiffstoreCommand": 1
-    "sds": 15
+    "sds": 13
     "sdsAllocSize": 1
     "sdsRemoveFreeSpace": 1
     "sdsavail": 1
@@ -3027,9 +2779,9 @@ tokens:
     "sdscatprintf": 24
     "sdscatrepr": 1
     "sdsempty": 8
-    "sdsfree": 3
+    "sdsfree": 2
     "sdslen": 14
-    "sdsnew": 29
+    "sdsnew": 27
     "seconds": 2
     "section": 14
     "sections": 11
@@ -3043,9 +2795,6 @@ tokens:
     "self_ru.ru_utime.tv_usec/1000000": 1
     "server": 1
     "server.activerehashing": 2
-    "server.also_propagate": 3
-    "server.also_propagate.numops": 2
-    "server.also_propagate.ops": 1
     "server.aof_buf": 3
     "server.aof_child_pid": 10
     "server.aof_current_size": 2
@@ -3064,7 +2813,7 @@ tokens:
     "server.aof_rewrite_time_last": 2
     "server.aof_rewrite_time_start": 2
     "server.aof_selected_db": 1
-    "server.aof_state": 8
+    "server.aof_state": 7
     "server.arch_bits": 3
     "server.assert_failed": 1
     "server.assert_file": 1
@@ -3080,14 +2829,14 @@ tokens:
     "server.cluster.myself": 1
     "server.cluster.state": 1
     "server.cluster_enabled": 6
-    "server.commands": 4
+    "server.commands": 1
     "server.cronloops": 3
     "server.current_client": 3
     "server.daemonize": 5
     "server.db": 23
     "server.dbnum": 8
     "server.delCommand": 1
-    "server.dirty": 5
+    "server.dirty": 3
     "server.el": 7
     "server.hash_max_ziplist_entries": 1
     "server.hash_max_ziplist_value": 1
@@ -3096,7 +2845,7 @@ tokens:
     "server.lastsave": 3
     "server.list_max_ziplist_entries": 1
     "server.list_max_ziplist_value": 1
-    "server.loading": 6
+    "server.loading": 4
     "server.loading_loaded_bytes": 3
     "server.loading_start_time": 2
     "server.loading_total_bytes": 3
@@ -3117,7 +2866,7 @@ tokens:
     "server.maxmemory": 6
     "server.maxmemory_policy": 11
     "server.maxmemory_samples": 3
-    "server.monitors": 4
+    "server.monitors": 2
     "server.multiCommand": 1
     "server.neterr": 4
     "server.ops_sec_idx": 4
@@ -3149,7 +2898,7 @@ tokens:
     "server.saveparamslen": 3
     "server.set_max_intset_entries": 1
     "server.shutdown_asap": 3
-    "server.slaves": 11
+    "server.slaves": 9
     "server.slowlog_log_slower_than": 1
     "server.slowlog_max_len": 1
     "server.sofd": 9
@@ -3158,7 +2907,7 @@ tokens:
     "server.stat_fork_time": 2
     "server.stat_keyspace_hits": 2
     "server.stat_keyspace_misses": 2
-    "server.stat_numcommands": 5
+    "server.stat_numcommands": 4
     "server.stat_numconnections": 2
     "server.stat_peak_memory": 5
     "server.stat_rejected_conn": 2
@@ -3184,7 +2933,7 @@ tokens:
     "set_cpu_possible": 1
     "set_cpu_present": 1
     "setbitCommand": 1
-    "setenv": 9
+    "setenv": 1
     "setexCommand": 1
     "setgid": 1
     "setnxCommand": 1
@@ -3195,13 +2944,13 @@ tokens:
     "setuid": 1
     "setupSignalHandlers": 2
     "setup_git_directory": 1
-    "setup_git_directory_gently": 2
+    "setup_git_directory_gently": 1
     "setup_pager": 1
     "setup_path": 1
     "setup_work_tree": 1
     "sflags": 1
-    "sha1": 29
-    "sha1_to_hex": 10
+    "sha1": 20
+    "sha1_to_hex": 8
     "shallow_flag": 1
     "shared": 1
     "shared.bgsaveerr": 2
@@ -3225,7 +2974,7 @@ tokens:
     "shared.noscripterr": 1
     "shared.nullbulk": 1
     "shared.nullmultibulk": 2
-    "shared.ok": 4
+    "shared.ok": 3
     "shared.oomerr": 2
     "shared.outofrangeerr": 1
     "shared.plus": 1
@@ -3248,15 +2997,11 @@ tokens:
     "short": 3
     "show_notes": 1
     "shutdownCommand": 2
-    "sig": 11
-    "sig.buf": 2
+    "sig": 2
     "sigaction": 6
     "sigemptyset": 2
-    "sign_buffer": 1
-    "sign_commit": 3
     "signal": 2
     "signal_pipe": 7
-    "signature": 1
     "signum": 4
     "sigsegvHandler": 1
     "sigtermHandler": 2
@@ -3264,10 +3009,10 @@ tokens:
     "sinterCommand": 2
     "sinterstoreCommand": 1
     "sismemberCommand": 1
-    "size": 66
+    "size": 59
     "size_mask": 6
-    "size_t": 76
-    "sizeof": 69
+    "size_t": 40
+    "sizeof": 52
     "slave": 3
     "slaveid": 3
     "slaveofCommand": 2
@@ -3277,95 +3022,77 @@ tokens:
     "slots": 2
     "slowlogCommand": 1
     "slowlogInit": 1
-    "slowlogPushEntryIfNeeded": 1
     "smoveCommand": 1
     "snprintf": 2
     "socketpair": 2
     "sortCommand": 1
-    "sort_in_topological_order": 2
+    "sort_in_topological_order": 1
     "sp": 4
-    "split_cmdline": 1
-    "split_cmdline_strerror": 1
     "spopCommand": 1
     "sprintf": 4
     "srand": 1
     "srandmemberCommand": 1
-    "src": 6
+    "src": 3
     "sremCommand": 1
     "ssize_t": 1
     "st": 2
     "st.st_mode": 2
-    "stack": 2
     "stack_free": 2
-    "stack_init": 2
-    "stack_push": 1
-    "standard_header_field": 2
-    "start": 8
+    "start": 6
+    "start_of_line": 2
     "start_state": 1
     "startup_info": 3
     "stat": 3
     "statStr": 6
     "state": 104
     "stateStack": 3
-    "static": 112
+    "static": 80
     "statloc": 5
     "status": 57
     "status_code": 8
-    "stderr": 21
+    "stderr": 15
     "stdio_count": 7
     "stdout": 5
     "stime": 1
     "str": 8
-    "strbuf": 21
-    "strbuf_add": 4
-    "strbuf_add_lines": 1
-    "strbuf_addbuf": 1
-    "strbuf_addch": 2
-    "strbuf_addf": 6
-    "strbuf_addstr": 1
-    "strbuf_detach": 2
-    "strbuf_init": 1
-    "strbuf_insert": 3
-    "strbuf_release": 4
-    "strbuf_reset": 1
-    "strcasecmp": 14
-    "strchr": 1
-    "strchrnul": 1
-    "strcmp": 31
+    "strbuf": 12
+    "strbuf_addf": 1
+    "strbuf_release": 1
+    "strcasecmp": 13
+    "strcmp": 19
     "strdup": 1
     "strerror": 4
     "strftime": 1
     "strict": 1
     "string": 2
     "strings": 1
-    "strlen": 9
+    "strlen": 8
     "strlenCommand": 1
     "strncasecmp": 2
     "strncmp": 1
-    "strstr": 1
     "strtol": 2
     "strtoul": 2
-    "struct": 379
+    "struct": 217
     "sub": 2
-    "subdir": 4
+    "subdir": 3
     "subscribeCommand": 2
     "sum": 3
     "sunionCommand": 1
     "sunionstoreCommand": 1
     "swap": 1
-    "switch": 32
+    "switch": 31
     "syncCommand": 1
     "syslog": 1
     "syslogLevelMap": 2
-    "system_path": 3
     "szres": 8
     "t": 27
-    "tab": 4
-    "tag_length": 1
-    "tail": 22
+    "tag": 1
+    "tag_end": 7
+    "tag_len": 3
+    "tag_size": 3
+    "tail": 12
     "take_cpu_down": 2
     "take_cpu_down_param": 3
-    "target": 6
     "task_cpu": 1
     "task_pid_nr": 1
     "task_struct": 5
@@ -3373,9 +3100,9 @@ tokens:
     "tasklist_lock": 2
     "tasks_frozen": 4
     "tcd_param": 2
-    "temp": 3
+    "temp": 1
     "term_signal": 3
-    "text": 13
+    "text": 22
     "the": 3
     "thiskey": 7
     "thisval": 8
@@ -3384,20 +3111,16 @@ tokens:
     "time_t": 4
     "timelimit": 5
     "timeval": 4
-    "title": 2
-    "title_end": 8
-    "title_offset": 8
     "tmp": 2
     "to": 2
     "to_cpumask": 15
     "to_read": 6
     "tokens": 3
     "tolower": 2
-    "top": 5
     "trace_argv_printf": 3
     "trace_repo_setup": 1
     "trackOperationsPerSecond": 2
-    "tree": 6
+    "tree": 3
     "true": 4
     "tryResizeHashTables": 2
     "ttlCommand": 1
@@ -3405,31 +3128,28 @@ tokens:
     "tv.tv_sec": 4
     "tv.tv_usec": 3
     "tv.tv_usec/1000": 1
-    "two": 1
-    "twos": 8
-    "type": 41
+    "type": 27
     "typeCommand": 1
-    "typedef": 16
+    "typedef": 15
     "typename": 2
-    "u": 14
+    "u": 10
     "uf": 14
     "uid": 2
     "uint16_t": 6
     "uint32_t": 6
     "uint64_t": 8
-    "uint8_t": 17
+    "uint8_t": 6
     "uname": 1
     "unblockClientWaitingData": 1
+    "under_end": 1
     "unhex": 3
     "unhex_val": 7
     "unlikely": 1
     "unlink": 3
     "unregister_cpu_notifier": 2
-    "unregister_shallow": 2
-    "unscape_text": 1
-    "unsigned": 138
+    "unregister_shallow": 1
+    "unsigned": 116
     "unsubscribeCommand": 2
-    "unused_nongit": 2
     "unwatchCommand": 1
     "updateDictResizePolicy": 2
     "updateLRUClock": 3
@@ -3438,16 +3158,16 @@ tokens:
     "uptime/": 1
     "url": 4
     "url_mark": 2
-    "usage": 7
+    "usage": 2
     "use_fd": 7
     "use_noid": 2
-    "use_pager": 10
+    "use_pager": 8
     "used": 7
     "used*100/size": 1
     "userformat_find_requirements": 1
     "userformat_want": 2
     "ust": 4
-    "ustime": 9
+    "ustime": 7
     "util": 3
     "utime": 1
     "utsname": 1
@@ -3488,18 +3208,17 @@ tokens:
     "va_list": 1
     "va_start": 1
     "val": 20
-    "valid": 1
     "validateUTF8": 3
-    "value": 9
+    "value": 4
     "var": 3
     "vec": 2
     "verbose": 2
     "version": 2
     "vkeys": 8
-    "void": 236
+    "void": 210
     "void*": 1
     "vsnprintf": 1
-    "w": 1
+    "w": 6
     "wait3": 1
     "wake_up_process": 1
     "want": 3
@@ -3508,26 +3227,21 @@ tokens:
     "watchCommand": 2
     "watchdogScheduleSignal": 1
     "watcher": 4
-    "while": 61
-    "with_commit": 5
-    "work": 13
-    "work_bufs": 13
-    "work_item": 6
+    "while": 41
+    "work": 4
+    "work.size": 5
+    "work_bufs": 8
     "writable": 8
     "write": 7
     "write_lock_irq": 1
-    "write_sha1_file": 1
     "write_unlock_irq": 1
     "x": 12
-    "xcalloc": 4
     "xf": 1
     "xff": 3
     "xffff": 1
-    "xlen": 4
-    "xmalloc": 5
-    "xmemdupz": 1
+    "xmalloc": 2
     "xrealloc": 2
-    "xstrdup": 3
+    "xstrdup": 2
     "yajl_alloc": 1
     "yajl_alloc_funcs": 3
     "yajl_bs_free": 1
@@ -3563,7 +3277,7 @@ tokens:
     "zaddCommand": 1
     "zcardCommand": 1
     "zcountCommand": 1
-    "zfree": 4
+    "zfree": 2
     "zincrbyCommand": 1
     "zinterstoreCommand": 1
     "zmalloc": 2
@@ -3576,7 +3290,6 @@ tokens:
     "zrangeCommand": 1
     "zrangebyscoreCommand": 1
     "zrankCommand": 1
-    "zrealloc": 1
     "zremCommand": 1
     "zremrangebyrankCommand": 1
     "zremrangebyscoreCommand": 1
@@ -3588,11 +3301,11 @@ tokens:
     "zstrdup": 5
     "zunionInterGetKeys": 4
     "zunionstoreCommand": 1
-    "{": 1170
+    "{": 1023
     "{-": 1
-    "|": 107
-    "||": 130
-    "}": 1167
+    "|": 82
+    "||": 112
+    "}": 1025
   "C++":
     "#define": 5
     "#endif": 12
@@ -3603,11 +3316,13 @@ tokens:
     "#include": 71
     "#undef": 1
     "%": 1
-    "&": 91
+    "&": 74
     "&&": 13
-    "(": 917
-    ")": 916
-    "*": 14
+    "(": 842
+    "(*": 3
+    ")": 843
+    "*": 13
+    "*)": 3
     "**": 2
     "**env": 1
     "**envp": 1
@@ -3616,12 +3331,11 @@ tokens:
     "*O": 1
     "*Q": 1
     "*R": 1
-    "*bn": 2
     "*ctx": 2
     "*e": 1
     "*eckey": 2
     "*ecsig": 1
-    "*env": 2
+    "*env": 1
     "*env_instance": 1
     "*eor": 1
     "*field": 1
@@ -3638,23 +3352,22 @@ tokens:
     "*sig": 2
     "*sor": 1
     "*targetFrame": 4
-    "*this": 1
     "*x": 1
     "*zero": 1
     "+": 40
-    "-": 115
+    "-": 114
     ".": 2
     ".0": 1
     ".Equals": 1
     "/": 9
     "/*": 9
-    "//": 458
+    "//": 457
     "//end": 1
     "/8": 2
     "1": 2
     "128": 4
     "2": 1
-    ";": 846
+    ";": 793
     "<": 27
     "<1024>": 2
     "<27>": 1
@@ -3689,7 +3402,7 @@ tokens:
     "<uint32_t*>": 1
     "<unibrow::LineTerminator,>": 1
     "<unibrow::WhiteSpace,>": 1
-    "<unsigned>": 21
+    "<unsigned>": 19
     "<vector>": 1
     "ADD": 1
     "AND": 1
@@ -3715,7 +3428,7 @@ tokens:
     "AddLiteralCharAdvance": 3
     "Advance": 40
     "AllStatic": 1
-    "BIGNUM": 11
+    "BIGNUM": 9
     "BITCOIN_KEY_H": 2
     "BIT_AND": 1
     "BIT_NOT": 2
@@ -3728,33 +3441,30 @@ tokens:
     "BN_CTX_new": 2
     "BN_CTX_start": 1
     "BN_add": 1
-    "BN_bin2bn": 4
-    "BN_bn2bin": 3
-    "BN_clear_free": 2
+    "BN_bin2bn": 3
+    "BN_bn2bin": 2
     "BN_cmp": 1
     "BN_copy": 1
     "BN_mod_inverse": 1
     "BN_mod_mul": 2
     "BN_mod_sub": 1
     "BN_mul_word": 1
-    "BN_new": 1
     "BN_num_bits": 2
-    "BN_num_bytes": 1
     "BN_rshift": 1
     "BN_zero": 1
     "Bar": 2
     "ByteArray*": 1
-    "CKey": 38
+    "CKey": 26
     "CKeyID": 5
     "CLASSIC_MODE": 2
     "COLON": 2
     "COMMA": 2
     "CONDITIONAL": 2
     "CPU": 2
-    "CPrivKey": 6
-    "CPubKey": 14
+    "CPrivKey": 3
+    "CPubKey": 11
     "CScriptID": 3
-    "CSecret": 7
+    "CSecret": 4
     "CallCompletedCallback": 4
     "CallDepthIsZero": 1
     "CallOnce": 1
@@ -3778,8 +3488,6 @@ tokens:
     "ECDSA_SIG_new": 1
     "ECDSA_SIG_recover_key_GFp": 3
     "ECDSA_do_sign": 1
-    "ECDSA_sign": 1
-    "ECDSA_size": 1
     "ECDSA_verify": 1
     "EC_GROUP": 2
     "EC_GROUP_get_curve_GFp": 1
@@ -3789,12 +3497,10 @@ tokens:
     "EC_KEY*": 1
     "EC_KEY_copy": 1
     "EC_KEY_dup": 1
-    "EC_KEY_free": 3
-    "EC_KEY_generate_key": 1
+    "EC_KEY_free": 1
     "EC_KEY_get0_group": 2
-    "EC_KEY_get0_private_key": 1
-    "EC_KEY_new_by_curve_name": 3
-    "EC_KEY_regenerate_key": 2
+    "EC_KEY_new_by_curve_name": 2
+    "EC_KEY_regenerate_key": 1
     "EC_KEY_set_conv_form": 1
     "EC_KEY_set_private_key": 1
     "EC_KEY_set_public_key": 2
@@ -3837,9 +3543,9 @@ tokens:
     "GetDataStartAddress": 1
     "GetHash": 1
     "GetID": 1
-    "GetPrivKey": 2
-    "GetPubKey": 6
-    "GetSecret": 3
+    "GetPrivKey": 1
+    "GetPubKey": 5
+    "GetSecret": 2
     "GlobalSetUp": 1
     "HEAP": 1
     "HandleScopeImplementer*": 1
@@ -3863,7 +3569,7 @@ tokens:
     "InspectorBackendStub": 1
     "IsByteOrderMark": 2
     "IsCarriageReturn": 2
-    "IsCompressed": 3
+    "IsCompressed": 2
     "IsDead": 2
     "IsDecimalDigit": 2
     "IsDefaultIsolate": 1
@@ -3874,7 +3580,7 @@ tokens:
     "IsInitialized": 1
     "IsLineFeed": 2
     "IsLineTerminator": 6
-    "IsNull": 2
+    "IsNull": 1
     "IsRunning": 1
     "IsValid": 4
     "IsWhiteSpace": 2
@@ -3897,15 +3603,15 @@ tokens:
     "MB": 1
     "MOD": 1
     "MUL": 1
-    "MakeNewKey": 2
+    "MakeNewKey": 1
     "Max": 1
     "Min": 1
     "NDEBUG": 4
     "NE": 1
     "NE_STRICT": 1
-    "NID_secp256k1": 3
+    "NID_secp256k1": 2
     "NOT": 1
-    "NULL": 54
+    "NULL": 49
     "NUM_TOKENS": 1
     "New": 2
     "NewCapacity": 3
@@ -3987,19 +3693,19 @@ tokens:
     "Select": 32
     "Serializer": 1
     "SetCompactSignature": 2
-    "SetCompressedPubKey": 7
+    "SetCompressedPubKey": 4
     "SetEntropySource": 2
     "SetFatalError": 2
     "SetHarmonyModules": 1
     "SetHarmonyScoping": 1
-    "SetPrivKey": 2
-    "SetPubKey": 2
+    "SetPrivKey": 1
+    "SetPubKey": 1
     "SetReturnAddressLocationResolver": 3
-    "SetSecret": 2
+    "SetSecret": 1
     "SetUp": 4
     "SetUpCaches": 1
     "SetUpJSCallerSavedCodeData": 1
-    "Sign": 2
+    "Sign": 1
     "SignCompact": 2
     "SkipMultiLineComment": 3
     "SkipSingleLineComment": 6
@@ -4075,8 +3781,7 @@ tokens:
     "blockDim.y": 2
     "blockIdx.x*blockDim.x": 1
     "blockIdx.y*blockDim.y": 1
-    "bn": 7
-    "bool": 98
+    "bool": 89
     "both": 1
     "break": 30
     "buffer": 1
@@ -4093,8 +3798,8 @@ tokens:
     "case": 32
     "cast": 1
     "ch": 5
-    "char": 34
-    "char*": 12
+    "char": 32
+    "char*": 7
     "char**": 2
     "character": 1
     "check": 2
@@ -4106,11 +3811,11 @@ tokens:
     "code_unit_count": 7
     "coffee2js": 1
     "complete_": 4
-    "const": 102
+    "const": 91
     "context": 8
     "continue": 2
     "cout": 1
-    "ctx": 26
+    "ctx": 25
     "cu_array": 4
     "cudaAddressModeClamp": 2
     "cudaArray*": 1
@@ -4130,7 +3835,6 @@ tokens:
     "current_pos": 4
     "current_token": 1
     "d": 4
-    "d2i_ECPrivateKey": 1
     "d_data": 1
     "default": 1
     "defined": 5
@@ -4159,7 +3863,7 @@ tokens:
     "entropy_mutex.Pointer": 1
     "entropy_source": 4
     "enum": 3
-    "env": 2
+    "env": 3
     "env_instance": 3
     "envp": 4
     "envvar": 2
@@ -4167,7 +3871,7 @@ tokens:
     "envvar.left": 1
     "envvar.mid": 1
     "eor": 3
-    "err": 26
+    "err": 25
     "error": 1
     "escape": 1
     "exceptionHandler": 2
@@ -4175,11 +3879,11 @@ tokens:
     "explicit": 3
     "f": 4
     "fCompr": 3
-    "fCompressed": 9
-    "fCompressedPubKey": 8
+    "fCompressed": 3
+    "fCompressedPubKey": 5
     "fOk": 3
-    "fSet": 12
-    "false": 42
+    "fSet": 7
+    "false": 40
     "field": 3
     "findScript": 1
     "float": 2
@@ -4189,7 +3893,7 @@ tokens:
     "free_buffer": 3
     "friend": 4
     "google_breakpad": 1
-    "goto": 24
+    "goto": 23
     "gridDim": 2
     "group": 12
     "handle_scope_implementer": 5
@@ -4201,15 +3905,13 @@ tokens:
     "has_fatal_error_": 5
     "has_line_terminator_before_next_": 9
     "has_multiline_comment_before_next_": 5
-    "hash": 21
+    "hash": 20
     "heap_number": 4
     "height": 5
     "hello": 2
     "hint": 3
     "i": 47
-    "i2d_ECPrivateKey": 2
-    "i2o_ECPublicKey": 2
-    "if": 149
+    "if": 132
     "image": 1
     "immediately": 1
     "in": 4
@@ -4220,7 +3922,7 @@ tokens:
     "inline": 12
     "instance": 3
     "instantiated": 1
-    "int": 67
+    "int": 62
     "int32_t": 1
     "internal": 5
     "invalid": 4
@@ -4271,7 +3973,7 @@ tokens:
     "key2.GetPubKey": 1
     "key2.SetSecret": 1
     "keyRec": 5
-    "key_error": 17
+    "key_error": 6
     "keyword": 1
     "l": 1
     "length": 8
@@ -4305,12 +4007,11 @@ tokens:
     "modules": 2
     "msg": 1
     "msglen": 2
-    "n": 9
+    "n": 7
     "nBitsR": 3
     "nBitsS": 3
-    "nBytes": 3
     "nRecId": 4
-    "nSize": 12
+    "nSize": 2
     "nV": 6
     "name": 3
     "namespace": 10
@@ -4329,7 +4030,6 @@ tokens:
     "next_literal_ascii_string": 1
     "next_literal_length": 1
     "next_literal_utf16_string": 1
-    "o2i_ECPublicKey": 1
     "octal": 1
     "octal_pos_": 5
     "octal_position": 1
@@ -4341,13 +4041,12 @@ tokens:
     "ourselves": 1
     "p": 1
     "parse": 3
-    "pbegin": 8
     "peek": 1
     "peek_location": 1
     "phantom": 1
     "phantom.execute": 1
     "phantom.returnValue": 1
-    "pkey": 28
+    "pkey": 14
     "pos": 12
     "pos_": 6
     "position_": 17
@@ -4372,8 +4071,8 @@ tokens:
     "report": 2
     "resolver": 3
     "resourceFilePath": 1
-    "ret": 24
-    "return": 117
+    "ret": 23
+    "return": 107
     "rr": 4
     "runtime_error": 2
     "s": 5
@@ -4407,7 +4106,7 @@ tokens:
     "state": 15
     "static": 56
     "static_cast": 7
-    "std": 20
+    "std": 18
     "str": 2
     "string": 1
     "struct": 2
@@ -4428,11 +4127,11 @@ tokens:
     "threadIdx.x": 1
     "threadIdx.y": 1
     "thread_id": 1
-    "throw": 15
+    "throw": 4
     "to": 3
     "tok": 2
     "token": 61
-    "true": 38
+    "true": 31
     "type": 1
     "typedef": 5
     "u": 6
@@ -4441,7 +4140,7 @@ tokens:
     "uc32": 19
     "uchar": 4
     "uint160": 8
-    "uint256": 11
+    "uint256": 10
     "uint32_t": 8
     "uint32_t*": 2
     "uint64_t": 2
@@ -4450,7 +4149,7 @@ tokens:
     "unicode_cache": 3
     "unicode_cache_": 10
     "union": 1
-    "unsigned": 22
+    "unsigned": 16
     "up": 1
     "use_crankshaft_": 6
     "using": 1
@@ -4462,26 +4161,20 @@ tokens:
     "val": 3
     "valid": 1
     "value": 3
-    "vchPrivKey": 6
-    "vchPrivKey.size": 1
-    "vchPubKey": 10
+    "vchPrivKey": 1
+    "vchPubKey": 6
     "vchPubKey.begin": 1
     "vchPubKey.end": 1
     "vchPubKey.size": 3
-    "vchPubKey.vchPubKey": 1
-    "vchPubKey.vchPubKey.size": 2
     "vchPubKeyIn": 2
-    "vchRet": 3
-    "vchRet.resize": 1
-    "vchSecret": 3
-    "vchSecret.size": 1
-    "vchSig": 19
+    "vchSecret": 1
+    "vchSig": 18
     "vchSig.clear": 2
-    "vchSig.resize": 3
+    "vchSig.resize": 2
     "vchSig.size": 2
-    "vector": 16
+    "vector": 14
     "virtual": 4
-    "void": 59
+    "void": 58
     "void*": 1
     "w": 1
     "want": 1
@@ -4499,10 +4192,10 @@ tokens:
     "y": 4
     "y*width": 1
     "zero": 3
-    "{": 296
+    "{": 283
     "|": 2
-    "||": 9
-    "}": 298
+    "||": 8
+    "}": 285
   "Ceylon":
     "(": 4
     ")": 4
@@ -5127,44 +4820,29 @@ tokens:
     "||": 3
     "}": 31
   "Coq":
-    "%": 3
+    "%": 2
     "&": 19
-    "(": 1293
-    ")": 1297
-    "*": 170
-    "**": 36
-    "**************************************************************": 1
-    "************************************************************************": 5
+    "(": 1228
+    "(*": 102
+    ")": 1240
+    "*": 55
+    "*)": 102
     "*.": 58
-    "*Reserved": 1
-    "+": 227
-    "-": 456
-    ".": 463
-    ".*": 1
-    "..": 2
-    ".1": 1
-    "/": 36
-    "//": 1
+    "+": 228
+    "-": 445
+    ".": 469
+    "..": 4
+    "/": 37
     "0": 5
-    "1": 6
-    "1999": 3
-    "2": 5
-    "2003": 1
-    "2006": 1
-    "2010": 3
-    "9": 1
-    "95": 1
-    ";": 378
-    "<": 79
-    "<----->": 2
-    "<---->": 1
+    "1": 2
+    "2": 2
+    ";": 376
+    "<": 65
     "<->": 32
-    "<=>": 11
-    "<=m}>": 3
+    "<=>": 9
+    "<=m}>": 1
     "<=n),>": 1
     "<=n}>": 1
-    "<=n}|>": 1
-    "<O___,,>": 3
     "@HdRel_inv": 2
     "@In": 1
     "@Permutation": 6
@@ -5174,8 +4852,8 @@ tokens:
     "@meq": 4
     "@munion": 1
     "@rev": 1
-    "A": 115
-    "A.": 3
+    "A": 102
+    "A.": 7
     "A1": 3
     "A1.": 1
     "A2": 4
@@ -5186,12 +4864,10 @@ tokens:
     "ANum": 36
     "APlus": 15
     "Abs": 2
-    "Actually": 1
-    "Adapted": 1
     "Alternative": 1
-    "Arguments": 13
+    "Arguments": 11
+    "Arguments.": 2
     "Arith.": 2
-    "Assistant": 4
     "B": 8
     "BAnd": 5
     "BD.": 1
@@ -5202,11 +4878,8 @@ tokens:
     "BO": 4
     "BTrue": 6
     "Basics.": 2
-    "Bene": 1
-    "Building": 2
     "CAss": 2
     "CIf": 2
-    "CNRS": 4
     "CSeq": 2
     "CSkip": 1
     "CSkip.": 1
@@ -5218,16 +4891,12 @@ tokens:
     "Coiso2.": 3
     "Compare_dec": 1
     "ConT3": 1
-    "Conclusion": 1
     "Constructors": 2
     "Context.": 1
-    "Copyright": 4
-    "Coq": 8
     "D": 9
     "DO": 5
     "Defined.": 1
-    "Definition": 60
-    "Development": 4
+    "Definition": 58
     "E": 9
     "E.": 2
     "E1": 2
@@ -5259,22 +4928,17 @@ tokens:
     "FI": 3
     "Fact": 3
     "False.": 1
-    "File": 1
     "Fixpoint": 36
-    "For": 2
     "Forall2": 1
-    "From": 3
-    "G": 7
-    "GNU": 4
+    "G": 6
     "Gamma": 10
-    "General": 4
     "Global": 4
     "H": 77
-    "H.": 77
+    "H.": 76
     "H0": 15
     "H0.": 9
     "H1": 18
-    "H1.": 30
+    "H1.": 29
     "H11": 2
     "H11.": 1
     "H12": 5
@@ -5310,7 +4974,6 @@ tokens:
     "He1.": 1
     "He2": 1
     "He2.": 2
-    "Heap": 1
     "HeapT3": 1
     "Heq": 8
     "Heq.": 6
@@ -5388,8 +5051,6 @@ tokens:
     "Ht.": 3
     "Htrans": 1
     "Htrans.": 1
-    "Huet": 1
-    "Huffmann": 1
     "Hx": 24
     "Hx.": 4
     "Hxx": 1
@@ -5441,43 +5102,29 @@ tokens:
     "IHt1.": 1
     "IHt2": 3
     "IHt3": 1
-    "INRIA": 4
     "Id": 8
     "Immediate": 1
     "Imp.": 1
     "Implicit": 15
     "Import": 11
-    "In": 8
-    "InA": 9
+    "In": 7
+    "InA": 8
     "InA_split": 2
-    "Indeed": 1
     "Inductive": 38
     "Injection": 1
     "Instance": 6
-    "Inutilisable": 1
-    "Inversion": 2
-    "It": 1
-    "Jean": 1
-    "K": 1
     "K_dec_set": 1
     "L12": 2
     "LE": 11
     "LE.": 3
-    "LIX": 4
-    "LRI": 4
     "LT": 14
     "LT.": 5
-    "Laurent": 1
     "LeA": 1
     "LeA.": 1
-    "Leaf": 1
-    "Leibniz": 1
     "Lemma": 56
-    "Lesser": 4
     "Let": 9
-    "License": 4
-    "List": 4
-    "ListNotations": 1
+    "List": 2
+    "ListNotations.": 1
     "Lists.": 1
     "Local": 6
     "Logic.": 1
@@ -5490,61 +5137,38 @@ tokens:
     "Lt.lt_not_le": 2
     "Ltac": 1
     "M": 4
-    "Marc": 1
-    "May": 1
-    "Mergesort": 1
     "Mergesort.": 1
-    "Merging": 1
     "Minus.minus_Sn_m": 1
     "Module": 9
-    "Morphisms": 1
-    "Morphisms.": 1
-    "Multiset": 3
+    "Morphisms.": 2
+    "Multiset": 2
     "N": 2
     "NEQ": 1
-    "NEW": 2
     "NatList.": 2
     "NoDup": 2
-    "NoDupA": 4
+    "NoDupA": 3
     "NoDupA_equivlistA_permut": 1
     "NoDup_Permutation": 1
     "NoDup_Permutation_bis": 2
     "NoDup_cardinal_incl": 2
     "NoDup_remove_1": 1
-    "Node": 1
     "None": 17
     "None.": 2
     "Nonsense.": 4
-    "Nota": 1
-    "Notation": 44
-    "Notin": 1
-    "O": 99
+    "Notation": 43
+    "O": 97
     "O.": 4
-    "O___": 1
-    "October": 1
     "Omega": 1
     "P": 31
     "P.": 5
-    "P1": 2
-    "P11": 1
-    "P11.": 1
-    "P12": 1
-    "P12.": 2
-    "P2": 1
-    "P2.": 1
-    "P21": 1
-    "P21.": 2
-    "P22": 1
     "PD": 2
     "PG": 2
-    "PL": 1
     "PN.": 2
-    "PPS": 4
-    "Parameter": 1
-    "Permut": 1
+    "Permut.": 1
     "PermutSetoid": 1
     "Permut_permut.": 1
-    "Permutation": 51
+    "Permutation": 42
+    "Permutation.": 1
     "Permutation_NoDup": 1
     "Permutation_add_inside": 1
     "Permutation_alt": 1
@@ -5580,25 +5204,22 @@ tokens:
     "Permutation_rev": 3
     "Permutation_trans": 1
     "Playground1.": 5
-    "Preliminary": 1
-    "Proof": 18
-    "Proof.": 204
+    "Proof": 12
+    "Proof.": 203
     "Prop": 13
     "Prop.": 1
     "Proper": 5
-    "Proving": 4
-    "Public": 4
     "Q": 3
     "Q.": 2
-    "Qed": 24
-    "Qed.": 196
+    "Qed": 23
+    "Qed.": 197
     "R": 54
     "Relations": 2
     "Relations.": 1
     "Require": 17
     "Reserved": 3
     "Resolve": 5
-    "S": 182
+    "S": 181
     "S.": 1
     "SCase": 24
     "SCase.": 3
@@ -5632,23 +5253,20 @@ tokens:
     "Section": 4
     "Set": 4
     "Setoid": 1
-    "SetoidList": 1
+    "SetoidList.": 1
     "SfLib.": 2
-    "Showing": 3
     "SimpleArith0.": 2
     "SimpleArith1.": 2
     "SimpleArith2.": 1
-    "SingletonBag": 4
-    "Sketch": 1
+    "SingletonBag": 2
     "Sn_le_Sm__n_le_m": 2
     "Sn_le_Sm__n_le_m.": 1
     "Some": 26
     "Sorted": 5
     "Sorted.": 1
     "Sorted_inv": 2
-    "Sorting": 1
-    "Specification": 2
-    "T": 52
+    "Sorting.": 1
+    "T": 49
     "T.": 9
     "T0": 2
     "T1": 25
@@ -5659,39 +5277,30 @@ tokens:
     "T2.": 1
     "T3": 2
     "THEN": 3
-    "TODO": 2
+    "TODO": 1
     "T_Abs.": 1
     "T_App": 2
     "T_Var.": 1
     "Tactic": 10
-    "Team": 4
     "Temp1.": 1
     "Temp2.": 1
     "Temp3.": 1
     "Temp4.": 2
     "Temp5.": 1
-    "Th": 1
-    "The": 10
-    "Theorem": 114
-    "This": 7
-    "Tree": 25
+    "Theorem": 111
+    "Tree": 24
     "Tree.": 1
     "Tree_Leaf": 9
     "Tree_Leaf.": 1
     "Tree_Node": 11
-    "Trees": 1
-    "Treesort": 1
     "True": 1
-    "Type": 91
+    "Type": 88
+    "Type.": 3
     "V": 6
     "V1": 5
     "V2": 4
-    "VV": 3
-    "VV/": 1
     "Variable": 7
-    "Version": 4
     "WHILE": 5
-    "We": 1
     "X": 212
     "X.": 4
     "X0": 2
@@ -5701,10 +5310,10 @@ tokens:
     "Y.": 1
     "Z": 24
     "_": 68
-    "a": 231
+    "a": 210
     "a*b": 1
     "a.": 5
-    "a0": 13
+    "a0": 11
     "a0.": 1
     "a1": 56
     "a2": 59
@@ -5713,20 +5322,16 @@ tokens:
     "adapt_injective": 1
     "adapt_injective.": 1
     "adapt_ok": 2
-    "adjacent": 1
     "aeval": 44
     "aexp": 37
     "aexp.": 2
     "aexp1": 1
     "al": 3
     "all3_spec": 1
-    "already": 1
-    "an": 3
-    "and": 7
+    "and": 1
     "andb": 6
     "andb3": 5
     "andb_false_r": 1
-    "antisym": 1
     "antisymmetric": 3
     "app": 5
     "app_ass": 1
@@ -5738,25 +5343,20 @@ tokens:
     "app_nil_end": 1
     "app_nil_end.": 1
     "app_nil_r": 2
-    "apparatus": 1
     "appears_free_in": 1
     "apply": 325
-    "are": 2
     "arith": 5
     "arith.": 8
-    "as": 95
+    "as": 90
     "assert": 55
     "assertion": 3
     "associativity": 10
     "assumption": 3
     "assumption.": 49
-    "at": 20
+    "at": 19
     "auto": 77
     "auto.": 48
-    "automatically": 2
-    "average": 1
-    "axiom": 1
-    "b": 82
+    "b": 79
     "b.": 9
     "b1": 28
     "b1.": 1
@@ -5765,10 +5365,6 @@ tokens:
     "bad": 1
     "bag": 3
     "base": 3
-    "based": 1
-    "basic": 1
-    "be": 2
-    "begin": 2
     "beq_id": 13
     "beq_id_eq": 5
     "beq_id_false_not_eq.": 1
@@ -5781,7 +5377,6 @@ tokens:
     "beq_nat_sym": 1
     "beq_natlist": 5
     "beq_natlist_refl": 1
-    "between": 2
     "beval": 12
     "bexp": 22
     "bexp.": 2
@@ -5794,32 +5389,25 @@ tokens:
     "bl": 3
     "ble_n_Sn.": 1
     "ble_nat": 5
-    "bogus": 1
     "bool": 33
     "bool.": 1
     "bool_step_prop4": 1
     "bool_step_prop4.": 2
     "bool_step_prop4_holds": 1
-    "bounded": 3
-    "boundedness": 2
+    "bounded": 1
     "break_list": 4
     "build_heap": 3
-    "building": 1
-    "but": 1
-    "by": 13
-    "c": 89
+    "by": 9
+    "c": 88
     "c.": 2
     "c1": 16
     "c2": 11
-    "can": 1
     "card": 2
     "card_inj": 1
     "card_inj_aux": 1
     "card_interval": 1
     "card_interval.": 2
-    "cardinal": 1
-    "cardinality": 4
-    "case": 5
+    "case": 2
     "ceval__ceval_step": 3
     "ceval__ceval_step.": 1
     "ceval_and_ceval_step_coincide": 1
@@ -5834,7 +5422,7 @@ tokens:
     "ceval_step__ceval": 1
     "ceval_step__ceval.": 1
     "ceval_step_more": 5
-    "change": 2
+    "change": 1
     "characterization": 1
     "clear": 11
     "clos_refl_trans": 8
@@ -5842,13 +5430,7 @@ tokens:
     "com.": 1
     "com_cases": 1
     "combine": 3
-    "compatibilty": 1
-    "compatible": 2
-    "complex": 1
-    "complexity": 1
-    "composition": 1
-    "concerns": 1
-    "conclude": 1
+    "compatible": 1
     "congruence.": 1
     "cons": 27
     "cons_leA": 2
@@ -5857,45 +5439,32 @@ tokens:
     "constfun": 1
     "constructor": 4
     "constructor.": 6
-    "contents": 15
-    "context": 2
+    "contents": 12
+    "context": 1
     "context_invariance...": 2
     "contra.": 14
     "contradict": 3
     "contradiction": 8
-    "contribution": 1
-    "corresponding": 1
-    "could": 1
     "count": 7
     "countoddmembers": 1
     "curry_uncurry": 1
     "d": 7
-    "dans": 1
     "datatypes.": 47
     "day": 9
     "day.": 1
-    "decidable": 5
     "decide": 1
     "decide_left": 1
-    "define": 1
-    "defines": 1
-    "definition": 2
-    "defs": 1
-    "defs.": 1
+    "defs.": 2
     "dep_pair_intro": 2
     "dep_pair_intro.": 3
-    "dependent": 6
-    "deprecated": 2
-    "destruct": 87
-    "development": 1
+    "dependent": 5
+    "destruct": 85
     "discriminate": 4
     "discriminate.": 1
-    "distributed": 3
     "do": 5
-    "domain": 1
     "double": 2
     "double_injective": 1
-    "e": 43
+    "e": 42
     "e.": 7
     "e1": 25
     "e1.": 1
@@ -5904,16 +5473,15 @@ tokens:
     "eapply": 7
     "eauto": 8
     "eauto.": 7
-    "elements": 2
     "elim": 21
     "else": 13
-    "empty": 4
+    "empty": 3
     "emptyBag": 4
     "empty_relation.": 1
     "empty_relation_not_partial_funcion": 1
     "empty_state": 13
     "empty_state.": 1
-    "end": 16
+    "end": 14
     "end.": 52
     "eq": 4
     "eq.": 11
@@ -5921,9 +5489,10 @@ tokens:
     "eq1.": 11
     "eq2": 1
     "eq2.": 9
-    "eqA": 29
-    "eqA_dec": 27
-    "eqA_dec.": 1
+    "eqA": 28
+    "eqA.": 1
+    "eqA_dec": 26
+    "eqA_dec.": 2
     "eqA_equiv": 1
     "eq_S.": 1
     "eq_add_S": 3
@@ -5931,25 +5500,19 @@ tokens:
     "eq_rect": 3
     "eq_rect_eq_nat": 2
     "eq_rect_eq_nat.": 1
-    "equality": 6
-    "equipment": 1
     "equiv_Tree": 1
-    "equivalence": 2
-    "equivalent": 1
-    "et": 1
-    "eval": 9
-    "eval__stepmany": 1
+    "equivalence": 1
+    "eval": 8
     "eval__value": 1
     "eval_cases": 1
     "evenb": 5
-    "every": 1
     "ex_falso_quodlibet.": 1
     "exact": 3
     "execute_theorem": 1
     "execute_theorem.": 1
     "exfalso.": 1
     "exist": 7
-    "exists": 49
+    "exists": 48
     "existsb": 3
     "existsb2": 2
     "existsb2.": 1
@@ -5958,7 +5521,7 @@ tokens:
     "extend": 1
     "extend.": 2
     "extend_neq": 1
-    "f": 132
+    "f": 120
     "f.": 4
     "f_equal": 1
     "f_equal.": 1
@@ -5969,9 +5532,7 @@ tokens:
     "factorial": 2
     "false": 42
     "false.": 11
-    "file": 6
     "filter": 3
-    "finite": 2
     "first": 20
     "fix": 2
     "flat_exist": 3
@@ -5981,35 +5542,24 @@ tokens:
     "fold_map": 2
     "fold_map.": 1
     "fold_map_correct": 1
-    "follows": 1
-    "for": 3
-    "forall": 226
+    "forall": 224
     "forallb": 4
     "friday": 3
-    "from": 2
     "fst": 3
     "ftrue": 1
     "fun": 19
-    "functional": 1
-    "g": 9
-    "generalize": 13
-    "generated": 2
+    "g": 6
+    "generalize": 12
     "grumble": 3
     "gtA": 1
     "h": 14
     "h.": 1
     "h2": 1
-    "has": 2
     "has_type": 4
-    "have": 1
-    "having": 1
     "hd_opt": 8
     "head": 1
-    "heap": 4
     "heap_exist": 3
     "heap_to_list": 2
-    "hide": 4
-    "holding": 1
     "i": 31
     "i1": 6
     "i2": 14
@@ -6020,14 +5570,14 @@ tokens:
     "idBBBB": 2
     "ident": 10
     "idtac": 1
-    "if": 16
+    "if": 13
     "if_eqA": 1
     "if_eqA_refl": 3
     "if_eqA_rewrite_l": 1
     "if_eqA_rewrite_r": 1
     "if_eqA_then": 1
-    "iff": 2
-    "in": 157
+    "iff": 1
+    "in": 147
     "in_app_iff": 1
     "in_map_iff": 1
     "in_map_iff.": 2
@@ -6039,43 +5589,33 @@ tokens:
     "incl": 3
     "index": 3
     "index_okx": 1
-    "induction": 75
-    "initial": 1
+    "induction": 74
     "inj_restrict": 1
     "injection": 8
     "injective": 6
     "injective_bounded_surjective": 1
     "injective_map_NoDup": 2
-    "injectivity": 1
     "insert": 2
     "insert_exist": 4
     "insert_spec": 3
-    "insertion": 1
-    "instead": 1
-    "intermediate": 1
-    "interval": 3
     "interval_dec": 1
     "interval_dec.": 1
     "interval_discr": 1
     "into": 2
     "intro": 28
-    "introduce": 1
-    "intros": 228
-    "intros.": 28
+    "intros": 227
+    "intros.": 27
     "intuition": 1
     "intuition.": 2
-    "inversion": 95
+    "inversion": 90
     "inversion_clear": 6
     "invert_heap": 3
-    "irrelevance": 2
-    "is": 22
+    "is": 4
     "is_heap": 18
     "is_heap_rec": 1
     "is_heap_rect": 1
-    "it": 1
     "j": 6
     "j.": 1
-    "just": 1
     "k": 7
     "k1": 20
     "k1.": 1
@@ -6093,9 +5633,9 @@ tokens:
     "l3": 12
     "l3.": 1
     "l4": 3
-    "le": 3
-    "le.": 3
-    "leA": 27
+    "le": 1
+    "le.": 4
+    "leA": 25
     "leA_Tree": 16
     "leA_Tree_Leaf": 5
     "leA_Tree_Node": 1
@@ -6111,7 +5651,8 @@ tokens:
     "le_S_n": 2
     "le_Sn_le": 2
     "le_Sn_n": 5
-    "le_antisymmetric": 2
+    "le_antisymmetric": 1
+    "le_antisymmetric.": 1
     "le_ind": 1
     "le_lt_dec": 9
     "le_lt_trans": 2
@@ -6123,31 +5664,25 @@ tokens:
     "le_not_a_partial_function": 1
     "le_not_lt": 1
     "le_order": 1
-    "le_reflexive": 2
-    "le_step": 1
-    "le_trans": 5
+    "le_reflexive": 1
+    "le_reflexive.": 1
+    "le_trans": 4
+    "le_trans.": 1
     "le_uniqueness_proof": 1
     "left": 8
     "left.": 3
-    "lemma": 3
     "length": 23
-    "length.": 1
     "let": 4
-    "level": 14
-    "list": 77
-    "list.": 1
+    "level": 13
+    "list": 72
     "list123": 1
     "list_contents": 30
     "list_contents_app": 5
     "list_contents_app.": 1
     "list_to_heap": 2
-    "lists": 6
-    "lists.": 1
-    "log": 1
     "loop": 1
     "loop_never_stops": 1
     "low_trans": 3
-    "lower": 1
     "lt": 3
     "lt.": 2
     "lt_O_neq": 2
@@ -6157,7 +5692,7 @@ tokens:
     "lt_trans": 4
     "lx": 4
     "ly": 4
-    "m": 196
+    "m": 189
     "m.": 19
     "m0": 1
     "m1": 1
@@ -6184,7 +5719,6 @@ tokens:
     "minus": 3
     "minustwo": 1
     "monday": 5
-    "more": 1
     "mult": 3
     "mult_0_plus": 1
     "mult_0_r.": 4
@@ -6202,14 +5736,13 @@ tokens:
     "mult_plus_1.": 1
     "mult_plus_distr_r": 1
     "mult_plus_distr_r.": 1
-    "multiplicity": 8
+    "multiplicity": 6
     "multiplicity_InA": 4
     "multiplicity_InA.": 1
     "multiplicity_InA_O": 2
     "multiplicity_InA_S": 1
     "multiplicity_NoDupA": 1
-    "multiset": 4
-    "multisets": 4
+    "multiset": 2
     "mumble": 5
     "mumble.": 1
     "munion": 18
@@ -6218,14 +5751,13 @@ tokens:
     "munion_comm": 1
     "munion_comm.": 2
     "munion_rotate.": 1
-    "must": 1
-    "n": 358
+    "n": 338
     "n.": 38
     "n0": 4
     "n1": 19
     "n2": 15
     "nandb": 5
-    "nat": 99
+    "nat": 91
     "nat.": 3
     "nat_bijection_Permutation": 1
     "nat_scope.": 3
@@ -6242,22 +5774,18 @@ tokens:
     "next_nat_partial_function": 1
     "next_weekday": 3
     "nf_same_as_value": 3
-    "nil": 41
-    "nil.": 1
+    "nil": 39
+    "nil.": 2
     "nil_app": 1
     "nil_is_heap": 5
     "nil_is_heap.": 1
     "nn.": 1
     "node_is_heap": 7
-    "normal_form": 4
-    "normal_form.": 3
-    "normal_form_of.": 2
-    "normal_forms_unique": 1
+    "normal_form": 3
+    "normal_form.": 2
     "normalizing": 1
-    "not": 2
+    "not": 1
     "not.": 3
-    "notations": 1
-    "notion": 2
     "now": 19
     "nth": 2
     "nth_error": 7
@@ -6269,24 +5797,20 @@ tokens:
     "o": 20
     "o.": 3
     "oddb": 5
-    "of": 32
+    "of": 4
     "omega": 2
     "omega.": 6
-    "on": 10
     "only": 3
     "optimize_0plus": 10
     "optimize_0plus_sound": 2
     "option": 10
     "option_elim": 2
     "option_elim_hd": 1
-    "or": 1
     "orb": 8
-    "order": 3
-    "ordered": 1
+    "order": 2
+    "order.": 1
     "other": 20
     "other.": 4
-    "ought": 2
-    "over": 1
     "override": 5
     "override.": 2
     "override_eq": 1
@@ -6296,14 +5820,13 @@ tokens:
     "override_example3": 1
     "override_example4": 1
     "override_neq": 1
-    "p": 93
+    "p": 78
     "p.": 9
     "pair": 7
     "parsing": 3
-    "partial_function": 7
-    "partial_function.": 6
+    "partial_function": 6
+    "partial_function.": 5
     "partial_map": 4
-    "particular": 1
     "pattern": 2
     "perm_nil": 1
     "perm_skip": 1
@@ -6336,10 +5859,9 @@ tokens:
     "permut_sym_app": 1
     "permut_tran": 1
     "permut_trans": 4
-    "permutation": 47
+    "permutation": 43
     "permutation.": 1
-    "permutation_Permutation": 2
-    "permutations": 1
+    "permutation_Permutation": 1
     "plus": 10
     "plus2": 1
     "plus2_spec": 1
@@ -6364,12 +5886,9 @@ tokens:
     "plus_swap": 2
     "plus_swap.": 2
     "pose": 1
-    "postulate": 1
     "power": 2
-    "prealable.": 1
     "pred": 3
     "pred_inj.": 1
-    "preliminary": 1
     "preorder": 1
     "preservation": 1
     "prod": 3
@@ -6377,11 +5896,6 @@ tokens:
     "prod_uncurry": 3
     "proj1_sig": 1
     "proj2_sig": 1
-    "proof": 1
-    "proofs": 3
-    "properties": 1
-    "property": 1
-    "prove": 3
     "q": 15
     "q.": 2
     "r": 10
@@ -6391,15 +5905,13 @@ tokens:
     "r2": 2
     "red": 7
     "red.": 1
-    "refl": 1
     "refl_equal": 4
     "refl_step_closure": 11
     "reflexive": 5
     "reflexive.": 1
     "reflexivity": 14
-    "reflexivity.": 180
-    "relation": 21
-    "relations": 1
+    "reflexivity.": 178
+    "relation": 19
     "remember": 9
     "remove_all": 2
     "remove_decreases_count": 1
@@ -6407,14 +5919,13 @@ tokens:
     "rename": 2
     "repeat": 9
     "replace": 4
-    "requires": 1
-    "results": 3
+    "results": 1
     "rev": 7
     "rev_exercise": 1
     "rev_involutive.": 1
     "rev_snoc": 1
     "revert": 5
-    "rewrite": 223
+    "rewrite": 222
     "right": 7
     "right.": 9
     "rsc_R": 2
@@ -6429,7 +5940,6 @@ tokens:
     "rt_step.": 2
     "rt_trans": 3
     "rtc_rsc_coincide": 1
-    "ry": 1
     "s": 12
     "s.": 5
     "s1": 20
@@ -6440,17 +5950,12 @@ tokens:
     "s_execute": 21
     "s_execute1": 1
     "s_execute2": 1
-    "same": 1
-    "sans": 1
     "saturday": 3
     "seq": 2
     "seq_NoDup": 1
     "seq_NoDup.": 1
-    "set": 3
+    "set": 1
     "setoid_rewrite": 2
-    "sets": 1
-    "short": 1
-    "shows": 1
     "silly1": 1
     "silly2a": 1
     "silly3": 1
@@ -6466,50 +5971,43 @@ tokens:
     "simple": 7
     "singletonBag": 10
     "sinstr": 2
-    "skip": 1
     "snd": 3
     "snoc": 9
     "snoc_with_append": 1
-    "sorted": 4
     "specialize": 6
-    "split": 17
-    "split.": 10
+    "split": 15
+    "split.": 12
     "st": 132
     "st.": 2
     "st1": 6
     "st2": 3
     "st2.": 1
-    "state": 13
+    "state": 12
     "step": 9
     "step.": 3
     "step_cases": 4
     "step_deterministic": 1
     "step_example3": 1
-    "step_normal_form": 1
-    "step_normal_form.": 1
     "stepmany": 4
-    "stepmany.": 1
     "stepmany_congr2": 1
     "stepmany_congr_1": 1
     "strong_progress": 2
     "subst": 10
-    "subst.": 37
+    "subst.": 33
     "substitution_preserves_typing": 1
     "subtract_3_from_5_slowly": 1
     "subtract_slowly": 1
     "subtract_slowly.": 1
     "subtract_slowly_body": 2
     "sunday": 2
-    "supply": 1
-    "surjective": 2
+    "surjective": 1
     "surjective_pairing": 1
-    "surjectivity": 1
     "swap_pair": 1
     "sym_not_eq.": 2
     "symmetric": 2
     "symmetry": 5
     "symmetry.": 2
-    "t": 96
+    "t": 93
     "t.": 4
     "t1": 48
     "t2": 51
@@ -6519,10 +6017,8 @@ tokens:
     "t_false": 1
     "t_true": 1
     "tactic": 10
-    "take": 1
     "tauto": 1
     "tauto.": 1
-    "terms": 3
     "test": 4
     "test_aeval1": 1
     "test_andb31": 1
@@ -6550,12 +6046,7 @@ tokens:
     "test_repeat1": 1
     "test_step_1": 1
     "test_step_2": 1
-    "than": 2
-    "that": 8
-    "the": 24
     "then": 12
-    "there": 1
-    "this": 2
     "thursday": 3
     "tl": 7
     "tm": 43
@@ -6570,20 +6061,15 @@ tokens:
     "tm_plus": 30
     "tm_true": 8
     "tm_var": 6
-    "to": 6
-    "tools": 2
     "total": 2
     "total_relation": 1
     "total_relation1.": 2
     "total_relation_not_partial_function": 1
     "tp": 2
-    "transitive": 9
+    "transitive": 8
     "transitive.": 1
     "transitivity": 4
-    "transpositions": 1
-    "tree": 2
-    "trees": 5
-    "treesort": 2
+    "treesort": 1
     "treesort_twist1": 1
     "treesort_twist2": 1
     "trivial": 13
@@ -6593,7 +6079,6 @@ tokens:
     "try": 10
     "tuesday": 3
     "tuesday.": 1
-    "two": 5
     "tx": 2
     "ty": 7
     "ty.": 2
@@ -6602,12 +6087,9 @@ tokens:
     "ty_arrow": 7
     "type_scope.": 1
     "types_unique": 1
-    "un": 2
     "uncurry_uncurry": 1
-    "under": 3
-    "unfold": 67
+    "unfold": 60
     "unfold_example_bad": 1
-    "unicity": 1
     "update": 28
     "update.": 3
     "update_eq": 1
@@ -6617,12 +6099,9 @@ tokens:
     "update_permute": 1
     "update_same": 1
     "update_shadow": 1
-    "use": 3
-    "used.": 1
-    "uses": 1
     "using": 17
-    "v": 37
-    "v.": 2
+    "v": 28
+    "v.": 1
     "v1": 7
     "v2": 2
     "v_abs": 1
@@ -6636,37 +6115,32 @@ tokens:
     "value.": 1
     "value_not_same_as_normal_form": 2
     "via": 1
-    "we": 2
     "wednesday": 3
-    "what": 1
     "where": 5
-    "which": 1
-    "while": 1
-    "with": 216
-    "worst": 1
-    "x": 260
-    "x.": 5
+    "with": 214
+    "x": 254
+    "x.": 4
     "x0": 8
     "x0.": 1
     "x1": 17
     "x1.": 1
     "x2": 14
     "x=": 1
-    "xSn": 28
+    "xSn": 21
     "xo": 2
     "xs": 7
-    "y": 123
-    "y.": 14
-    "y1": 7
-    "y2": 6
-    "y2.": 4
+    "y": 119
+    "y.": 15
+    "y1": 6
+    "y2": 5
+    "y2.": 3
     "z": 14
     "z.": 6
     "zero_nbeq_S": 1
-    "{": 36
-    "|": 398
+    "{": 40
+    "|": 393
     "||": 2
-    "}": 29
+    "}": 36
   "Dart":
     "(": 7
     ")": 7
@@ -10445,35 +9919,19 @@ tokens:
     ")": 4
     "-": 3
     ".": 2
-    "Logtalk": 1
-    "a": 1
-    "argument": 1
-    "automatically": 1
-    "directive": 1
     "end_object.": 1
-    "executed": 1
-    "file": 1
     "hello_world": 1
     "initialization": 1
-    "initialization/1": 1
-    "into": 1
-    "is": 3
-    "loaded": 1
-    "memory": 1
     "nl": 2
-    "object": 2
-    "source": 1
-    "the": 2
-    "this": 1
-    "when": 1
+    "object": 1
     "write": 1
   "Markdown":
     "Tender": 1
   "Matlab":
     "%": 31
     "&": 1
-    "(": 53
-    ")": 53
+    "(": 50
+    ")": 50
     "*": 5
     "+": 3
     "-": 5
@@ -10482,125 +9940,60 @@ tokens:
     ";": 24
     "@getState": 1
     "@iirFilter": 1
-    "A": 3
-    "AVERAGE": 1
-    "B": 4
-    "Calculate": 1
-    "Call": 1
-    "Comments": 1
-    "FILTFCN": 1
+    "A": 2
+    "B": 3
+    "Call": 2
     "G": 1
-    "II": 1
-    "MAKEFILTER": 1
-    "Matlab": 2
-    "Output": 1
     "R": 1
-    "STATEFCN": 1
-    "The": 1
-    "Update": 1
-    "X": 2
-    "a": 8
-    "also": 1
-    "and": 3
-    "arbitrary": 1
-    "assume": 1
-    "at": 2
+    "a": 4
     "average": 1
-    "b": 7
+    "b": 6
     "black": 1
     "blue": 1
-    "can": 1
     "classdef": 1
-    "command": 2
-    "computes": 1
-    "corresponding": 1
     "cyan": 1
-    "delay": 1
-    "directory": 1
+    "directory": 2
     "disp": 8
-    "element": 1
-    "end": 19
+    "end": 17
     "enumeration": 1
     "error": 1
-    "example": 2
-    "filter": 2
     "filtfcn": 2
-    "first": 1
-    "form": 1
-    "function": 10
+    "function": 9
     "g": 2
     "getState": 1
     "green": 1
-    "handle": 1
-    "have": 1
     "if": 1
     "iirFilter": 1
     "in": 2
-    "input": 1
-    "internal": 2
-    "is": 5
-    "it": 2
-    "length.": 1
-    "line": 2
-    "line.": 3
     "m": 3
     "magenta": 1
     "makeFilter": 1
-    "mandatory": 2
     "matlab_class": 2
-    "matlab_function": 4
-    "mean": 1
+    "matlab_function": 5
     "methods": 1
     "n": 3
-    "new": 1
-    "not": 2
     "num2str": 3
     "obj": 2
     "obj.B": 2
     "obj.G": 2
     "obj.R": 2
-    "of": 6
-    "only": 2
-    "or": 1
-    "output": 2
-    "precended": 1
     "properties": 1
     "r": 2
     "red": 1
-    "resides": 1
+    "resides": 2
     "result": 4
     "ret": 3
-    "return": 1
-    "returns": 2
-    "s": 1
-    "same": 3
-    "script": 2
-    "semicolon": 2
-    "simpler": 1
+    "same": 2
     "size": 2
-    "spaces": 1
-    "state": 2
-    "state.": 1
     "statefcn": 2
-    "sum": 2
-    "suppresses": 2
-    "tabs": 1
-    "that": 2
-    "the": 9
-    "time.": 1
-    "to": 2
+    "sum": 1
+    "the": 2
     "v": 10
     "vOut": 2
-    "value": 1
-    "value1": 5
-    "value2": 5
-    "vector": 3
-    "vector.": 1
-    "where": 1
-    "which": 1
+    "value1": 4
+    "value2": 4
+    "which": 2
     "white": 1
-    "whitespace": 1
-    "with": 1
     "x": 4
     "xn": 4
     "y": 2
@@ -10632,84 +10025,34 @@ tokens:
     "nush": 1
     "puts": 1
   "OCaml":
-    "(": 9
-    ")": 11
-    "*": 3
-    "**": 1
+    "(": 7
+    "(*": 2
+    ")": 9
+    "*)": 2
     "-": 21
-    ".": 1
-    ";": 13
+    ";": 12
     "<": 1
     "<->": 3
-    "<http://www.gnu.org/licenses/>": 1
     "@": 6
-    "@author": 1
-    "A": 1
-    "ANY": 1
-    "Affero": 3
     "Base.List.iter": 1
-    "Copyright": 1
-    "FITNESS": 1
-    "FOR": 1
-    "Foundation.": 1
-    "Free": 1
-    "GNU": 3
-    "General": 3
-    "Gesbert": 1
-    "If": 1
     "Lazy": 1
-    "License": 3
     "List": 1
-    "Louis": 1
-    "MERCHANTABILITY": 1
-    "MLstate": 1
     "None": 5
-    "OPA": 2
-    "OPA.": 2
     "Ops": 2
     "Option": 1
-    "PARTICULAR": 1
-    "PURPOSE.": 1
-    "Public": 3
-    "See": 1
-    "Software": 1
     "Some": 5
-    "This": 1
-    "WARRANTY": 1
-    "WITHOUT": 1
-    "You": 1
     "_": 1
-    "a": 4
+    "a": 3
     "acc": 5
-    "along": 1
-    "and/or": 1
-    "as": 1
-    "be": 1
-    "but": 1
-    "by": 1
-    "can": 1
-    "copy": 1
     "cps": 7
-    "details.": 1
-    "distributed": 1
     "end": 4
-    "even": 1
     "f": 10
-    "file": 1
     "fold": 2
-    "for": 1
     "force": 1
-    "free": 1
     "fun": 8
     "function": 1
     "get_state": 1
-    "have": 1
     "hd": 6
-    "hope": 1
-    "implied": 1
-    "in": 1
-    "is": 3
-    "it": 3
     "k": 21
     "l": 8
     "l.push": 1
@@ -10720,56 +10063,34 @@ tokens:
     "make": 1
     "map": 3
     "match": 4
-    "modify": 1
     "module": 4
-    "more": 1
     "mutable": 1
-    "not": 1
-    "of": 4
     "open": 1
     "opt": 2
     "option": 1
-    "or": 1
-    "part": 1
-    "published": 1
     "push": 4
     "rec": 3
-    "received": 1
-    "redistribute": 1
-    "see": 1
-    "should": 1
-    "software": 1
     "struct": 4
-    "terms": 1
-    "that": 1
-    "the": 7
     "tl": 6
     "type": 2
-    "under": 1
     "unit": 4
-    "useful": 1
     "value": 3
-    "version": 1
     "waiters": 5
-    "warranty": 1
     "when": 1
-    "will": 1
-    "with": 5
-    "without": 1
+    "with": 4
     "x": 14
-    "you": 1
     "{": 1
     "|": 15
     "}": 3
   "Objective-C":
     "#": 7
     "##__VA_ARGS__": 7
-    "#define": 67
-    "#else": 9
-    "#endif": 82
+    "#define": 65
+    "#else": 8
+    "#endif": 79
     "#error": 6
     "#if": 61
-    "#ifdef": 13
+    "#ifdef": 10
     "#ifndef": 9
     "#import": 53
     "#include": 18
@@ -10777,14 +10098,16 @@ tokens:
     "#warning": 1
     "%": 100
     "&": 56
-    "&&": 168
-    "(": 2598
-    ")": 2598
-    "*": 356
-    "**": 42
+    "&&": 167
+    "(": 2574
+    "(*": 2
+    ")": 2572
+    "*": 355
+    "*)": 2
+    "**": 41
     "**error": 1
-    "**keys": 2
-    "**objects": 2
+    "**keys": 1
+    "**objects": 1
     "*.*s": 1
     "*/": 49
     "*1.5": 1
@@ -10796,9 +10119,6 @@ tokens:
     "*ASIRequestTimedOutError": 1
     "*ASITooMuchRedirectionError": 1
     "*ASIUnableToCreateRequestError": 1
-    "*JKClassFormatterIMP": 1
-    "*NSNumberAllocImp": 1
-    "*NSNumberInitWithUnsignedLongLongImp": 1
     "*PACFileData": 2
     "*PACFileReadStream": 2
     "*PACFileRequest": 2
@@ -10815,7 +10135,6 @@ tokens:
     "*adapter": 1
     "*argv": 1
     "*array": 9
-    "*arrayClass": 1
     "*atAddEntry": 1
     "*atCharacterPtr": 2
     "*atEntry": 3
@@ -10828,10 +10147,8 @@ tokens:
     "*bandwidthThrottlingLock": 1
     "*bandwidthUsageTracker": 1
     "*blocks": 1
-    "*bytes": 1
     "*c": 1
     "*cLength": 1
-    "*cacheItem": 1
     "*cacheSlot": 4
     "*cachedHeaders": 1
     "*cancelledLock": 2
@@ -10839,7 +10156,7 @@ tokens:
     "*cbSignature": 1
     "*cell": 8
     "*certificates": 1
-    "*cfHashes": 2
+    "*cfHashes": 1
     "*clientCallBackInfo": 1
     "*clientCertificates": 2
     "*compressedBody": 1
@@ -10859,15 +10176,14 @@ tokens:
     "*defaultUserAgent": 1
     "*delegateAuthenticationLock": 1
     "*dictionary": 13
-    "*dictionaryClass": 1
     "*domain": 2
     "*downloadDestinationPath": 2
-    "*encodeState": 10
+    "*encodeState": 9
     "*encoding": 1
     "*entry": 4
     "*entryForKey": 1
     "*err": 4
-    "*error": 6
+    "*error": 4
     "*error_": 1
     "*etag": 1
     "*exception": 1
@@ -10893,7 +10209,6 @@ tokens:
     "*indicator": 1
     "*inflatedFileDownloadOutputStream": 2
     "*invocation": 1
-    "*items": 1
     "*jk_cachedObjects": 2
     "*jk_create_dictionary": 1
     "*jk_managedBuffer_resize": 1
@@ -10922,9 +10237,6 @@ tokens:
     "*newObjects": 1
     "*newVisibleIndexPaths": 1
     "*ntlmDomain": 1
-    "*nullClass": 1
-    "*numberClass": 1
-    "*object": 1
     "*objectPtr": 2
     "*objectStack": 3
     "*objects": 5
@@ -10961,7 +10273,7 @@ tokens:
     "*proxyToUse": 1
     "*proxyType": 2
     "*proxyUsername": 2
-    "*ptr": 4
+    "*ptr": 2
     "*pullDownView": 1
     "*rawResponseData": 2
     "*readStream": 2
@@ -10996,9 +10308,8 @@ tokens:
     "*statusTimer": 2
     "*stop": 8
     "*stream": 1
-    "*stringClass": 1
     "*stringEncoding": 1
-    "*target": 5
+    "*target": 2
     "*tempUserAgentString": 1
     "*temporaryFileDownloadPath": 2
     "*temporaryUncompressedDataDownloadPath": 2
@@ -11019,8 +10330,8 @@ tokens:
     "*usernameAndPassword": 1
     "*v": 2
     "*window": 2
-    "+": 213
-    "-": 728
+    "+": 211
+    "-": 721
     ".": 2
     "...": 12
     ".0": 7
@@ -11043,7 +10354,7 @@ tokens:
     ".size.height": 1
     "/": 16
     "/*": 49
-    "//": 772
+    "//": 771
     "//#import": 1
     "//#include": 1
     "////////////": 6
@@ -11054,7 +10365,7 @@ tokens:
     "//block": 12
     "//self.variableHeightRows": 1
     "0": 2
-    ";": 2685
+    ";": 2583
     "<": 62
     "<<": 17
     "<=>": 15
@@ -11111,7 +10422,7 @@ tokens:
     "@end": 45
     "@finally": 1
     "@implementation": 18
-    "@interface": 24
+    "@interface": 23
     "@optional": 2
     "@private": 2
     "@property": 150
@@ -11174,7 +10485,7 @@ tokens:
     "AuthenticationScheme": 2
     "Authorization": 1
     "Automatic": 1
-    "BOOL": 154
+    "BOOL": 153
     "Basic": 1
     "Bundle": 1
     "C": 7
@@ -11198,7 +10509,7 @@ tokens:
     "CFHTTPMessageRef": 3
     "CFHTTPMessageSetHeaderFieldValue": 2
     "CFHash": 2
-    "CFHashCode": 3
+    "CFHashCode": 1
     "CFMutableDictionaryRef": 2
     "CFOptionFlags": 1
     "CFReadStreamCopyProperty": 2
@@ -11206,7 +10517,7 @@ tokens:
     "CFReadStreamCreateForStreamedHTTPRequest": 2
     "CFReadStreamRef": 9
     "CFReadStreamSetProperty": 4
-    "CFRelease": 25
+    "CFRelease": 23
     "CFRetain": 5
     "CFStreamEventType": 2
     "CFStringConvertEncodingToNSStringEncoding": 1
@@ -11230,7 +10541,7 @@ tokens:
     "CGSizeZero": 1
     "CONNECTION": 4
     "Cache": 1
-    "Class": 4
+    "Class": 3
     "Closing": 1
     "Code": 1
     "Collection": 1
@@ -11283,46 +10594,44 @@ tokens:
     "It": 1
     "JKArray": 13
     "JKAtIndexKey": 1
-    "JKBuffer": 3
+    "JKBuffer": 2
     "JKClassArray": 1
     "JKClassDictionary": 1
-    "JKClassFormatterBlock": 2
-    "JKClassFormatterIMP": 1
     "JKClassNull": 1
     "JKClassNumber": 1
     "JKClassString": 1
     "JKClassUnknown": 1
-    "JKConstBuffer": 4
-    "JKConstPtrRange": 6
+    "JKConstBuffer": 2
+    "JKConstPtrRange": 2
     "JKDictionary": 21
     "JKDictionaryEnumerator": 4
-    "JKEncodeCache": 8
+    "JKEncodeCache": 6
     "JKEncodeOptionAsData": 10
     "JKEncodeOptionAsString": 10
     "JKEncodeOptionAsTypeMask": 1
     "JKEncodeOptionCollectionObj": 17
     "JKEncodeOptionStringObj": 3
     "JKEncodeOptionStringObjTrimQuotes": 3
-    "JKEncodeOptionType": 4
-    "JKEncodeState": 13
+    "JKEncodeOptionType": 2
+    "JKEncodeState": 11
     "JKErrorDomain": 3
     "JKErrorLine0Key": 1
     "JKErrorLine1Key": 1
-    "JKFastClassLookup": 4
+    "JKFastClassLookup": 2
     "JKFlags": 5
-    "JKHash": 8
+    "JKHash": 6
     "JKHashTableEntry": 22
     "JKLineNumberKey": 1
-    "JKManagedBuffer": 9
-    "JKManagedBufferFlags": 2
+    "JKManagedBuffer": 5
+    "JKManagedBufferFlags": 1
     "JKManagedBufferLocationMask": 1
     "JKManagedBufferLocationShift": 1
     "JKManagedBufferMustFree": 2
     "JKManagedBufferOnHeap": 1
     "JKManagedBufferOnStack": 1
-    "JKObjCImpCache": 4
-    "JKObjectStack": 7
-    "JKObjectStackFlags": 2
+    "JKObjCImpCache": 2
+    "JKObjectStack": 5
+    "JKObjectStackFlags": 1
     "JKObjectStackLocationMask": 1
     "JKObjectStackLocationShift": 1
     "JKObjectStackMustFree": 1
@@ -11334,28 +10643,28 @@ tokens:
     "JKParseAcceptValue": 2
     "JKParseAcceptValueOrEnd": 1
     "JKParseOptionComments": 2
-    "JKParseOptionFlags": 13
+    "JKParseOptionFlags": 12
     "JKParseOptionLooseUnicode": 2
     "JKParseOptionNone": 1
     "JKParseOptionPermitTextAfterValidJSON": 2
     "JKParseOptionStrict": 1
     "JKParseOptionUnicodeNewlines": 2
     "JKParseOptionValidFlags": 1
-    "JKParseState": 21
-    "JKParseToken": 4
-    "JKPtrRange": 5
-    "JKRange": 3
-    "JKSERIALIZER_BLOCKS_PROTO": 4
+    "JKParseState": 20
+    "JKParseToken": 2
+    "JKPtrRange": 2
+    "JKRange": 2
+    "JKSERIALIZER_BLOCKS_PROTO": 1
     "JKSerializeOptionEscapeForwardSlashes": 2
     "JKSerializeOptionEscapeUnicode": 2
-    "JKSerializeOptionFlags": 32
+    "JKSerializeOptionFlags": 30
     "JKSerializeOptionNone": 7
     "JKSerializeOptionPretty": 2
     "JKSerializeOptionValidFlags": 1
-    "JKSerializer": 19
-    "JKTokenCache": 4
-    "JKTokenCacheItem": 5
-    "JKTokenType": 3
+    "JKSerializer": 18
+    "JKTokenCache": 2
+    "JKTokenCacheItem": 2
+    "JKTokenType": 2
     "JKTokenTypeArrayBegin": 1
     "JKTokenTypeArrayEnd": 1
     "JKTokenTypeComma": 1
@@ -11369,8 +10678,8 @@ tokens:
     "JKTokenTypeString": 1
     "JKTokenTypeTrue": 1
     "JKTokenTypeWhiteSpace": 1
-    "JKTokenValue": 4
-    "JKValueType": 3
+    "JKTokenValue": 2
+    "JKValueType": 1
     "JKValueTypeDouble": 1
     "JKValueTypeLongLong": 1
     "JKValueTypeNone": 1
@@ -11381,11 +10690,11 @@ tokens:
     "JK_ATTRIBUTES": 15
     "JK_AT_STRING_PTR": 1
     "JK_CACHE_PROBES": 1
-    "JK_CACHE_SLOTS": 2
+    "JK_CACHE_SLOTS": 1
     "JK_CACHE_SLOTS_BITS": 2
     "JK_DEPRECATED_ATTRIBUTE": 6
     "JK_ENABLE_CF_TRANSFER_OWNERSHIP_CALLBACKS": 2
-    "JK_ENCODE_CACHE_SLOTS": 2
+    "JK_ENCODE_CACHE_SLOTS": 1
     "JK_END_STRING_PTR": 2
     "JK_EXPECTED": 4
     "JK_EXPECT_F": 15
@@ -11482,7 +10791,7 @@ tokens:
     "NSDownArrowFunctionKey": 1
     "NSEnumerationOptions": 4
     "NSEnumerator": 2
-    "NSError": 70
+    "NSError": 67
     "NSError**": 2
     "NSEvent": 3
     "NSEvent*": 1
@@ -11521,12 +10830,9 @@ tokens:
     "NSNotFound": 1
     "NSNotification": 2
     "NSNumber": 15
-    "NSNumberAlloc": 1
-    "NSNumberAllocImp": 3
-    "NSNumberClass": 1
-    "NSNumberInitWithUnsignedLongLong": 1
-    "NSNumberInitWithUnsignedLongLongImp": 3
-    "NSObject": 6
+    "NSNumberAllocImp": 2
+    "NSNumberInitWithUnsignedLongLongImp": 2
+    "NSObject": 5
     "NSOperation": 1
     "NSOperationQueue": 3
     "NSOrderedAscending": 4
@@ -11596,7 +10902,7 @@ tokens:
     "SBJsonStreamParserComplete": 1
     "SBJsonStreamParserError": 1
     "SBJsonStreamParserWaitingForData": 1
-    "SEL": 31
+    "SEL": 26
     "SIZE_MAX": 1
     "SSIZE_MAX": 1
     "SSL": 1
@@ -11689,7 +10995,7 @@ tokens:
     "UIViewAutoresizingFlexibleHeight": 1
     "UIViewAutoresizingFlexibleWidth": 4
     "UIViewController": 2
-    "UL": 152
+    "UL": 149
     "ULLONG_MAX": 1
     "ULONG_MAX": 3
     "UNI_MAX_BMP": 1
@@ -11736,7 +11042,7 @@ tokens:
     "_JSONKIT_H_": 2
     "_NSStringObjectFromJSONString": 1
     "__APPLE_CC__": 2
-    "__BLOCKS__": 5
+    "__BLOCKS__": 2
     "__FILE__": 1
     "__GNUC_MINOR__": 1
     "__GNUC__": 6
@@ -11849,7 +11155,7 @@ tokens:
     "adapter.delegate": 1
     "addBasicAuthenticationHeaderWithUsername": 3
     "addHeader": 2
-    "addIdx": 5
+    "addIdx": 4
     "addImageView": 5
     "addIndex": 3
     "addKeyEntry": 2
@@ -11866,7 +11172,7 @@ tokens:
     "addView": 5
     "advanceBy": 1
     "after": 1
-    "age": 4
+    "age": 3
     "agent": 2
     "aligned": 1
     "all": 1
@@ -11928,7 +11234,7 @@ tokens:
     "atAddEntry": 6
     "atCharacterPtr": 5
     "atEntry": 45
-    "atIndex": 9
+    "atIndex": 7
     "atObject": 12
     "atScrollPosition": 3
     "atStringCharacter": 3
@@ -11967,7 +11273,7 @@ tokens:
     "behaviour": 1
     "bit": 1
     "bits": 2
-    "block": 50
+    "block": 48
     "blocks": 17
     "blue": 3
     "both": 1
@@ -11986,13 +11292,13 @@ tokens:
     "bundle": 3
     "but": 4
     "by": 3
-    "bytes": 12
+    "bytes": 9
     "bytesRead": 5
     "bytesReceivedBlock": 7
     "bytesSentBlock": 13
     "c": 9
     "cLength": 2
-    "cache": 10
+    "cache": 8
     "cache.count": 1
     "cachePolicy": 6
     "cacheStoragePolicy": 3
@@ -12015,7 +11321,7 @@ tokens:
     "cancelOnRequestThread": 2
     "cancelled": 6
     "cancelledLock": 33
-    "capacity": 53
+    "capacity": 46
     "capacityForCount": 4
     "case": 16
     "causes": 1
@@ -12032,18 +11338,13 @@ tokens:
     "certificate": 2
     "certificates": 3
     "cfEncoding": 3
-    "cfHash": 1
     "challenge": 1
-    "char": 27
+    "char": 23
     "characterAtIndex": 1
     "charactersIgnoringModifiers": 1
     "charset": 5
     "checkRequestStatus": 3
     "class": 47
-    "classFormatterBlock": 1
-    "classFormatterDelegate": 1
-    "classFormatterIMP": 1
-    "classFormatterSelector": 1
     "class_getInstanceSize": 2
     "cleanup": 1
     "clearCache": 1
@@ -12082,7 +11383,7 @@ tokens:
     "connectionInfo": 14
     "connections": 1
     "connectionsLock": 4
-    "const": 32
+    "const": 31
     "constrainedToSize": 2
     "constructor": 1
     "contentLength": 4
@@ -12103,7 +11404,7 @@ tokens:
     "cookiesWithResponseHeaderFields": 1
     "copy": 18
     "copyWithZone": 2
-    "count": 106
+    "count": 104
     "countByEnumeratingWithState": 2
     "create": 4
     "credentialWithUser": 2
@@ -12139,20 +11440,19 @@ tokens:
     "defaultTimeOutSeconds": 3
     "defaultUserAgentString": 2
     "defined": 8
-    "delegate": 69
+    "delegate": 67
     "delegateAuthenticationLock": 1
     "delegateTableViewWillDisplayCellForRowAtIndexPath": 1
     "delegates": 2
     "delete": 1
     "deprecated": 1
-    "depth": 1
     "depthChange": 2
     "dequeueReusableCellWithIdentifier": 2
     "derepeaterEnabled": 1
     "deselectRowAtIndexPath": 3
     "destroyReadStream": 4
     "detection": 1
-    "dictionary": 66
+    "dictionary": 59
     "dictionaryWithCapacity": 3
     "dictionaryWithObjectsAndKeys": 12
     "didChangeValueForKey": 1
@@ -12177,8 +11477,7 @@ tokens:
     "document.pdf": 1
     "does": 4
     "domain": 3
-    "double": 4
-    "doubleValue": 1
+    "double": 3
     "download": 2
     "downloadCache": 12
     "downloadComplete": 3
@@ -12191,7 +11490,7 @@ tokens:
     "en_GB": 1
     "en_US_POSIX": 1
     "encode": 1
-    "encodeOption": 23
+    "encodeOption": 20
     "encodeState": 12
     "encoding": 3
     "endBackgroundTask": 1
@@ -12205,9 +11504,8 @@ tokens:
     "enumerateIndexesUsingBlock": 2
     "enumeratedCount": 8
     "err": 10
-    "error": 146
+    "error": 145
     "errorExit": 1
-    "errorIsPrev": 1
     "errorWithDomain": 7
     "error_": 2
     "es": 3
@@ -12236,7 +11534,6 @@ tokens:
     "failure": 1
     "failureBlock": 9
     "false": 3
-    "fastClassLookup": 1
     "fetchPACFile": 1
     "fffffff": 1
     "fffffffffffffffLL": 1
@@ -12257,7 +11554,6 @@ tokens:
     "firstByteMark": 1
     "firstIndexPath": 4
     "firstResponder": 3
-    "flags": 2
     "float": 2
     "floating": 1
     "floor": 1
@@ -12272,7 +11568,6 @@ tokens:
     "forURL": 2
     "forceSaveScrollPosition": 1
     "format": 23
-    "formatObject": 1
     "formatter.": 1
     "found": 1
     "foundValidNextRow": 4
@@ -12310,7 +11605,6 @@ tokens:
     "handshake": 1
     "has": 6
     "hasBytesAvailable": 1
-    "hash": 2
     "hashing": 1
     "have": 3
     "haveBuiltPostBody": 4
@@ -12340,10 +11634,10 @@ tokens:
     "https": 1
     "i": 52
     "iPhone": 2
-    "id": 207
+    "id": 190
     "identifier": 7
-    "idx": 33
-    "if": 413
+    "idx": 31
+    "if": 412
     "imageFrame": 2
     "imageFrame.size": 1
     "in": 22
@@ -12357,7 +11651,7 @@ tokens:
     "incrementUploadSizeBy": 7
     "incremented": 2
     "incremented.": 1
-    "index": 12
+    "index": 11
     "indexAtPosition": 2
     "indexOfSectionWithHeaderAtPoint": 2
     "indexOfSectionWithHeaderAtVerticalOffset": 2
@@ -12408,15 +11702,14 @@ tokens:
     "inputStreamWithData": 2
     "inputStreamWithFileAtPath": 2
     "insertObject": 1
-    "int": 65
+    "int": 63
     "intValue": 4
     "intoString": 4
     "invalidate": 2
     "invalidateHoverForView": 1
-    "invocation": 10
+    "invocation": 7
     "invocationWithMethodSignature": 2
     "invoke": 1
-    "invokeWithTarget": 1
     "irow": 3
     "is": 25
     "isARepeat": 1
@@ -12542,26 +11835,24 @@ tokens:
     "layoutSubviewsReentrancyGuard": 1
     "ld": 2
     "len": 6
-    "length": 43
+    "length": 39
     "let": 1
     "level": 3
     "levels": 1
     "limit": 1
     "line": 2
     "lineEnd": 1
-    "lineNumber": 1
     "lineStart": 2
-    "lineStartIndex": 2
+    "lineStartIndex": 1
     "ll": 1
     "loadView": 4
     "locale": 1
-    "location": 3
+    "location": 2
     "lock": 16
     "log": 1
     "logging": 2
     "logic": 1
-    "long": 91
-    "longLongValue": 1
+    "long": 85
     "longer": 2
     "lower": 1
     "lowercaseString": 3
@@ -12604,7 +11895,6 @@ tokens:
     "moveRowAtIndexPath": 2
     "must": 7
     "mutableCollection": 7
-    "mutableCollections": 1
     "mutableCopy": 6
     "mutableCopyWithZone": 2
     "mutableObjectFromJSONData": 1
@@ -12660,7 +11950,7 @@ tokens:
     "ntlmComponents": 1
     "ntlmDomain": 2
     "null": 1
-    "number": 4
+    "number": 3
     "numberOfRows": 13
     "numberOfRowsInSection": 9
     "numberOfSections": 10
@@ -12668,10 +11958,9 @@ tokens:
     "numberOfTimesToRetryOnTimeout": 5
     "numberWithBool": 3
     "numberWithInt": 2
-    "objCImpCache": 1
     "objc_arc": 1
     "objc_getClass": 2
-    "object": 55
+    "object": 51
     "object.": 5
     "objectAtIndex": 10
     "objectForKey": 41
@@ -12680,8 +11969,7 @@ tokens:
     "objectFromJSONString": 1
     "objectFromJSONStringWithParseOptions": 2
     "objectIndex": 48
-    "objectStack": 1
-    "objectToRelease": 4
+    "objectToRelease": 2
     "objectWithData": 5
     "objectWithString": 5
     "objectWithUTF8String": 2
@@ -12691,7 +11979,7 @@ tokens:
     "occurred": 3
     "of": 8
     "ofTotal": 6
-    "offset": 25
+    "offset": 24
     "offsetsFromUTF8": 1
     "oldCapacity": 2
     "oldCount": 2
@@ -12706,8 +11994,8 @@ tokens:
     "one": 1
     "open": 2
     "option.": 1
-    "optionFlags": 2
-    "options": 25
+    "optionFlags": 1
+    "options": 24
     "options.": 1
     "or": 9
     "origin": 1
@@ -12720,7 +12008,7 @@ tokens:
     "parse": 2
     "parseJSONData": 2
     "parseMimeType": 2
-    "parseOptionFlags": 12
+    "parseOptionFlags": 11
     "parseState": 15
     "parseStringEncodingFromHeaders": 3
     "parseUTF8String": 2
@@ -12768,12 +12056,8 @@ tokens:
     "prepareForDisplay": 1
     "prepareForReuse": 1
     "present": 2
-    "prev_atIndex": 1
-    "prev_lineNumber": 1
-    "prev_lineStartIndex": 1
     "previousOffset": 3
     "previously": 1
-    "prng_lfsr": 1
     "problem": 1
     "processInfo": 2
     "progress": 6
@@ -12799,7 +12083,6 @@ tokens:
     "proxyType": 6
     "proxyUsername": 7
     "ptr": 3
-    "ptrRange": 1
     "pullDownRect": 4
     "pullDownView": 1
     "pullDownViewIsVisible": 3
@@ -12831,7 +12114,6 @@ tokens:
     "realm": 15
     "reason": 1
     "received": 5
-    "receiver": 3
     "recordBandwidthUsage": 1
     "rect": 9
     "rectForHeaderOfSection": 5
@@ -12900,7 +12182,7 @@ tokens:
     "resize": 9
     "respectively.": 1
     "respond": 1
-    "respondsToSelector": 23
+    "respondsToSelector": 22
     "response": 5
     "responseCode": 8
     "responseCookies": 2
@@ -12922,7 +12204,6 @@ tokens:
     "returned": 2
     "reuse": 2
     "reused": 1
-    "roundSizeUpToMultipleOf": 2
     "roundf": 2
     "row": 32
     "rowCount": 3
@@ -12981,7 +12262,7 @@ tokens:
     "seems": 1
     "selectRowAtIndexPath": 3
     "selectValidIndexPath": 3
-    "selector": 58
+    "selector": 52
     "self": 848
     "self.animateSelectionChanges": 1
     "self.bounds": 1
@@ -13009,8 +12290,7 @@ tokens:
     "sentinel": 1
     "sequence": 1
     "serialize": 5
-    "serializeObject": 20
-    "serializeOptionFlags": 1
+    "serializeObject": 19
     "serializeOptions": 42
     "serializeUnsupportedClassesUsingBlock": 8
     "serializeUnsupportedClassesUsingDelegate": 9
@@ -13198,11 +12478,11 @@ tokens:
     "signature": 2
     "signed": 1
     "single": 1
-    "size": 12
+    "size": 11
     "size.height": 1
     "size.width": 1
     "sizeWithFont": 2
-    "size_t": 42
+    "size_t": 29
     "sizeof": 13
     "so": 2
     "sortedArrayUsingComparator": 1
@@ -13238,7 +12518,7 @@ tokens:
     "stream": 8
     "streamSuccessfullyOpened": 1
     "string": 11
-    "stringBuffer": 3
+    "stringBuffer": 1
     "stringBuffer.bytes.length": 2
     "stringBuffer.bytes.ptr": 4
     "stringBuffer.flags": 1
@@ -13250,7 +12530,7 @@ tokens:
     "stringWithUTF8String": 1
     "strong": 3
     "strtoull": 1
-    "struct": 36
+    "struct": 20
     "structure.": 1
     "stuff": 1
     "style": 28
@@ -13326,13 +12606,12 @@ tokens:
     "toIndexPath.section": 1
     "toProposedIndexPath": 1
     "toRemove": 2
-    "token": 4
+    "token": 3
     "token.value.hash": 1
     "token.value.ptrRange.length": 1
     "token.value.type": 1
-    "tokenBuffer": 2
+    "tokenBuffer": 1
     "tokenBufferIdx": 2
-    "tokenPtrRange": 1
     "top": 4
     "topVisibleIndex": 2
     "total": 3
@@ -13342,9 +12621,9 @@ tokens:
     "totalSize": 4
     "trailingBytesForUTF8": 1
     "true": 3
-    "type": 8
+    "type": 5
     "type.": 7
-    "typedef": 50
+    "typedef": 47
     "types": 2
     "u": 10
     "u.": 2
@@ -13357,13 +12636,12 @@ tokens:
     "undefined": 1
     "underlyingError": 1
     "unexpectedly.": 1
-    "union": 1
     "unknown": 2
     "unlock": 20
     "unsafe_unretained": 2
     "unscheduleReadStream": 2
-    "unsigned": 78
-    "unsignedLongLongValue": 2
+    "unsigned": 71
+    "unsignedLongLongValue": 1
     "unsubscribeFromNetworkReachabilityNotifications": 1
     "unsupported": 1
     "until": 2
@@ -13373,7 +12651,7 @@ tokens:
     "updateDownloadProgress": 1
     "updateExpiryForRequest": 1
     "updatePartialDownloadSize": 4
-    "updateProgressIndicator": 6
+    "updateProgressIndicator": 5
     "updateProgressIndicators": 3
     "updateStatus": 3
     "updateUploadProgress": 1
@@ -13400,7 +12678,7 @@ tokens:
     "using": 3
     "usingBlock": 6
     "usingCache": 5
-    "utf8ConversionBuffer": 2
+    "utf8ConversionBuffer": 1
     "v": 6
     "v.origin.y": 1
     "v.size.height": 5
@@ -13410,7 +12688,7 @@ tokens:
     "va_start": 1
     "valid": 2
     "validatesSecureCertificate": 5
-    "value": 30
+    "value": 28
     "valueForKey": 5
     "values": 1
     "varArgsList": 4
@@ -13431,7 +12709,7 @@ tokens:
     "visibleCellsNeedRelayout": 5
     "visibleHeadersNeedRelayout": 1
     "visibleRect": 6
-    "void": 301
+    "void": 293
     "vsnprintf": 1
     "waitUntilDone": 11
     "waiting": 2
@@ -13486,10 +12764,10 @@ tokens:
     "yyyy": 1
     "z": 1
     "zone": 12
-    "{": 811
+    "{": 791
     "|": 34
     "||": 52
-    "}": 811
+    "}": 790
   "Opa":
     "(": 4
     ")": 4
@@ -14965,8 +14243,8 @@ tokens:
     "%": 44
     "&": 12
     "&&": 30
-    "(": 327
-    ")": 321
+    "(": 328
+    ")": 322
     "*": 8
     "*.*s": 1
     "*/": 1
@@ -15492,7 +14770,7 @@ tokens:
     "eval": 3
     "even": 3
     "example": 1
-    "examples/benchmarks/fib.pl": 2
+    "examples/benchmarks/fib.pl": 1
     "exist": 2
     "exists": 9
     "exit": 4
@@ -15570,7 +14848,7 @@ tokens:
     "has": 1
     "has.": 1
     "has_lines": 2
-    "hash": 11
+    "hash": 12
     "hash.": 3
     "have": 3
     "head1": 14
@@ -15699,7 +14977,7 @@ tokens:
     "must": 2
     "mxml": 1
     "my": 142
-    "n": 27
+    "n": 26
     "nOo_/": 1
     "name": 15
     "nargs": 2
@@ -15781,7 +15059,7 @@ tokens:
     "path_query": 1
     "pattern": 2
     "per": 1
-    "perl": 6
+    "perl": 5
     "pipe": 2
     "pipe.": 1
     "plack.request.body": 2
@@ -15964,7 +15242,7 @@ tokens:
     "this": 10
     "through": 2
     "thru": 1
-    "time": 4
+    "time": 3
     "times": 2
     "to": 42
     "to.": 1
@@ -16111,12 +15389,14 @@ tokens:
     "############################################": 2
     "##############################################": 2
     "%": 39
-    "(": 437
-    ")": 436
-    "**": 3
-    "**kwargs": 9
-    "**lookup_kwargs": 2
-    "*args": 5
+    "(": 418
+    "(*": 6
+    ")": 418
+    "*": 3
+    "*)": 6
+    "**kwargs": 8
+    "*args": 3
+    "*lookup_kwargs": 2
     "*not*": 2
     "+": 5
     "-": 32
@@ -16135,7 +15415,6 @@ tokens:
     ".filter": 3
     ".get": 1
     ".globals": 1
-    ".join": 1
     ".start": 4
     ".update": 1
     ".values": 1
@@ -16307,7 +15586,7 @@ tokens:
     "applicaton": 1
     "applied": 1
     "are": 3
-    "args": 6
+    "args": 7
     "args_len": 2
     "argument": 3
     "argument.": 1
@@ -16338,7 +15617,6 @@ tokens:
     "base._meta.concrete_model": 2
     "base._meta.local_fields": 1
     "base._meta.local_many_to_many": 1
-    "base._meta.module_name": 1
     "base._meta.parents": 1
     "base._meta.virtual_fields": 1
     "base_managers": 2
@@ -16389,8 +15667,6 @@ tokens:
     "cls": 29
     "cls.__doc__": 3
     "cls.__module__": 1
-    "cls.__name__": 1
-    "cls.__name__.lower": 2
     "cls.__new__": 1
     "cls._base_manager": 1
     "cls._get_next_or_previous_in_order": 2
@@ -16429,10 +15705,7 @@ tokens:
     "data.decode": 1
     "data.find": 1
     "data_dir": 2
-    "date": 3
-    "date.day": 1
-    "date.month": 1
-    "date.year": 1
+    "date": 2
     "date_checks": 4
     "date_checks.append": 3
     "date_error_message": 1
@@ -16507,8 +15780,8 @@ tokens:
     "executing": 1
     "explicitly": 2
     "exposed": 1
-    "f": 19
-    "f.attname": 5
+    "f": 18
+    "f.attname": 4
     "f.blank": 1
     "f.clean": 1
     "f.name": 5
@@ -16547,7 +15820,7 @@ tokens:
     "follows": 1
     "foo.crt": 1
     "foo.key": 1
-    "for": 53
+    "for": 52
     "force_insert": 2
     "force_unicode": 3
     "force_update": 5
@@ -16558,7 +15831,7 @@ tokens:
     "from": 30
     "frozenset": 1
     "full_clean": 1
-    "func": 2
+    "func": 1
     "function": 3
     "functions.": 1
     "functools": 1
@@ -16568,7 +15841,7 @@ tokens:
     "get_absolute_url": 2
     "get_model": 3
     "get_text_list": 2
-    "getattr": 24
+    "getattr": 23
     "give": 1
     "gt": 1
     "handle.": 1
@@ -16604,7 +15877,7 @@ tokens:
     "implementation": 2
     "implemented": 1
     "import": 38
-    "in": 67
+    "in": 66
     "including": 1
     "indirectly": 1
     "initialization": 2
@@ -16635,7 +15908,7 @@ tokens:
     "key": 6
     "key.upper": 1
     "kwargs": 9
-    "kwargs.keys": 2
+    "kwargs.keys": 1
     "kwargs.pop": 6
     "lambda": 1
     "len": 7
@@ -16650,7 +15923,7 @@ tokens:
     "logic": 1
     "lookup_kwargs": 8
     "lookup_kwargs.keys": 1
-    "lookup_type": 7
+    "lookup_type": 5
     "lookup_value": 3
     "lt": 1
     "m": 3
@@ -16702,7 +15975,7 @@ tokens:
     "multi": 2
     "multipart/form": 2
     "must": 2
-    "name": 35
+    "name": 30
     "native_str": 2
     "necessarily": 1
     "need": 4
@@ -16753,10 +16026,7 @@ tokens:
     "options": 1
     "opts": 5
     "opts._prepare": 1
-    "opts.app_label": 1
-    "opts.fields": 1
     "opts.get_field": 4
-    "opts.module_name": 1
     "opts.order_with_respect_to": 2
     "opts.order_with_respect_to.rel.to": 1
     "opts.verbose_name": 1
@@ -16842,9 +16112,8 @@ tokens:
     "request": 10
     "request.": 1
     "request.finish": 1
-    "request.method": 2
+    "request.method": 1
     "request.method.lower": 1
-    "request.uri": 1
     "request.write": 1
     "request_callback": 4
     "requested": 1
@@ -16874,10 +16143,10 @@ tokens:
     "scheme": 1
     "see": 1
     "seed_cache": 2
-    "self": 77
+    "self": 76
     "self.__class__": 8
     "self.__class__.__dict__.get": 2
-    "self.__class__.__name__": 3
+    "self.__class__.__name__": 1
     "self.__dict__": 1
     "self.__eq__": 1
     "self._deferred": 1
@@ -16888,9 +16157,8 @@ tokens:
     "self._meta.fields": 4
     "self._meta.get_field": 1
     "self._meta.local_fields": 1
-    "self._meta.object_name": 1
     "self._meta.parents.keys": 2
-    "self._meta.pk.attname": 2
+    "self._meta.pk.attname": 1
     "self._meta.proxy_for_model": 1
     "self._meta.unique_together": 1
     "self._on_headers": 1
@@ -17037,7 +16305,7 @@ tokens:
     "tuple": 3
     "type": 3
     "type.__new__": 1
-    "u": 3
+    "u": 2
     "ugettext_lazy": 1
     "unable": 1
     "unicode": 7
@@ -17047,7 +16315,7 @@ tokens:
     "unique_checks": 4
     "unique_checks.append": 2
     "unique_error_message": 1
-    "unique_for": 9
+    "unique_for": 5
     "unique_together": 2
     "unique_togethers": 2
     "unique_togethers.append": 1
@@ -17110,7 +16378,7 @@ tokens:
     "you": 11
     "your": 2
     "zip": 3
-    "{": 17
+    "{": 14
     "}": 17
   "R":
     "(": 3
@@ -17229,51 +16497,36 @@ tokens:
     "hello": 2
     "print": 1
   "Ruby":
-    "#": 412
-    "#erb": 1
+    "#": 354
     "#remove": 1
-    "%": 10
-    "&": 51
-    "&&": 1
-    "(": 286
-    ")": 284
-    "*": 6
+    "%": 9
+    "&": 24
+    "&&": 8
+    "(": 201
+    "(*": 11
+    ")": 208
+    "*": 2
+    "*)": 11
     "*/": 1
-    "*CHECKSUM_TYPES": 1
-    "*args": 18
-    "*attrs": 1
-    "*coding": 1
-    "*extensions": 4
-    "*options": 1
-    "*result": 2
-    "*types": 2
-    "+": 51
-    "-": 43
-    ".": 5
-    ".#": 2
-    ".*": 2
-    "..": 2
-    "./views": 1
-    ".0": 1
+    "*args": 14
+    "+": 46
+    "-": 31
+    ".": 3
+    "..": 1
     ".basename": 1
-    ".callback": 1
     ".capitalize": 1
-    ".class_eval": 1
     ".collect": 2
     ".deep_merge": 1
     ".destroy": 1
     ".downcase": 2
     ".each": 5
-    ".errback": 1
     ".first": 1
     ".flatten.each": 1
     ".flatten.uniq": 1
     ".freeze": 1
-    ".gsub": 2
-    ".include": 1
+    ".gsub": 3
     ".join": 1
-    ".map": 5
-    ".png": 1
+    ".map": 6
     ".pop": 1
     ".rb": 1
     ".select": 1
@@ -17281,60 +16534,44 @@ tokens:
     ".slice": 1
     ".sort": 2
     ".sort_by": 1
-    ".split": 2
     ".strip": 1
-    ".to_f": 1
-    ".to_s": 4
+    ".to_s": 3
     ".to_s.split": 1
+    ".to_sym": 1
     ".unshift": 1
     ".upcase": 1
-    "/": 37
-    "/./": 1
-    "//": 5
+    "/": 28
+    "//": 3
     "/@name": 1
     "/Library/Taps/": 1
-    "/__sinatra__/404.png": 1
     "/_id": 1
     "/i": 1
-    "/images/#": 1
-    "/m": 1
     "/redis": 1
     "/usr/bin/env": 5
-    ";": 36
-    "<": 5
-    "<#{@instance.class}>": 1
-    "</h1>": 1
-    "<<": 11
+    ";": 31
+    "<": 1
+    "<<": 13
     "<=>": 2
-    "<h1>": 1
     "@#": 2
-    "@@": 1
     "@after_fork": 2
-    "@app.call": 1
     "@before_first_fork": 2
     "@before_fork": 2
-    "@body": 1
     "@bottle_sha1": 2
     "@bottle_url": 2
     "@bottle_version": 1
     "@buildpath": 2
     "@cc_failures": 2
     "@coder": 1
-    "@conditions": 2
-    "@conditions.dup": 1
     "@dependencies": 1
     "@downloader": 1
     "@downloader.cached_location": 1
     "@env": 2
-    "@env.include": 1
     "@head": 4
     "@keg_only_reason": 1
     "@mirrors": 3
     "@mirrors.uniq": 1
     "@name": 3
-    "@params": 1
     "@path": 1
-    "@preferred_extension": 1
     "@queue": 1
     "@queues": 2
     "@queues.delete": 1
@@ -17355,7 +16592,7 @@ tokens:
     "@url": 8
     "@url.nil": 1
     "@version": 10
-    "A": 9
+    "A": 6
     "ARGV.build_devel": 2
     "ARGV.build_head": 2
     "ARGV.debug": 1
@@ -17367,24 +16604,21 @@ tokens:
     "Admin": 1
     "Archive": 1
     "Ark": 1
-    "Array": 3
+    "Array": 2
     "Bar": 1
     "Base": 1
     "Boondocks": 1
     "Busines": 1
     "C": 2
-    "CHECKSUM_TYPES": 1
+    "CHECKSUM_TYPES": 2
     "CHECKSUM_TYPES.detect": 1
     "CHECKSUM_TYPES.each": 1
     "CMakeCache.txt": 1
-    "Cascade": 1
     "Class.new": 2
-    "CommonLogger": 2
     "Compiler": 1
     "Compiler.new": 1
     "CompilerFailure.new": 2
     "CompilerFailures.new": 1
-    "Content": 2
     "CoreExtensions": 1
     "CurlDownloadStrategyError": 1
     "DCMAKE_BUILD_TYPE": 1
@@ -17399,23 +16633,17 @@ tokens:
     "Digest.const_get": 1
     "Dir": 4
     "Dir.pwd": 3
-    "ENOENT": 1
-    "ENV": 2
+    "ENV": 3
     "ENV.remove_cc_etc": 1
     "EOF": 2
     "EggAndHam": 1
-    "Errno": 1
-    "Erubis": 1
-    "EventMachine": 1
-    "EventMachine.next_tick": 1
+    "Exception": 1
     "Expected": 1
-    "ExtendedRack": 1
     "File.basename": 2
-    "File.dirname": 2
-    "File.exist": 2
+    "File.dirname": 4
+    "File.exist": 3
     "File.expand_path": 1
-    "File.fnmatch": 1
-    "File.join": 4
+    "File.join": 6
     "FileUtils": 1
     "FileUtils.rm": 1
     "Foo": 2
@@ -17425,7 +16653,6 @@ tokens:
     "Formula.factory": 2
     "Formula.path": 1
     "FormulaUnavailableError.new": 1
-    "Found": 1
     "From": 1
     "Got": 1
     "Grit": 1
@@ -17437,16 +16664,12 @@ tokens:
     "HOMEBREW_PREFIX": 2
     "HOMEBREW_REPOSITORY": 4
     "HOMEBREW_REPOSITORY/": 2
+    "HTML": 1
     "HTTP": 2
     "Hash": 2
     "Hash.new": 1
-    "Hello": 1
-    "Helpers": 2
-    "IO.binread": 1
+    "Helpers": 1
     "IO.pipe": 1
-    "IO.read": 1
-    "IO.respond_to": 1
-    "If": 1
     "Ilib": 1
     "Inflections": 4
     "Inflector": 1
@@ -17458,30 +16681,28 @@ tokens:
     "KegOnlyReason.new": 1
     "LAST": 1
     "Last": 1
-    "LoadError": 2
+    "LoadError": 3
     "Lost": 1
-    "MIME_TYPES": 1
     "MacOS.cat": 1
     "MacOS.lion": 1
     "Man": 2
     "Men": 1
     "Message": 2
-    "Mime": 1
-    "Mime.mime_type": 1
     "Module": 2
     "MultiJsonCoder.new": 1
-    "NameError": 2
+    "NameError": 1
     "Namespace": 1
     "Namespace.new": 2
     "Net": 4
     "NoClassError.new": 1
     "NoQueueError.new": 1
     "None": 1
-    "Not": 1
     "NotFound": 1
     "NotImplementedError": 1
     "Object.const_get": 1
     "Of": 1
+    "Parser": 1
+    "Parser.new": 1
     "Past": 1
     "Patches.new": 1
     "Pathname": 2
@@ -17492,58 +16713,47 @@ tokens:
     "Plugin.before_dequeue_hooks": 1
     "Plugin.before_enqueue_hooks": 1
     "Post": 2
-    "Proc.new": 1
+    "Proc.new": 8
     "Q": 1
     "Queue.new": 1
-    "RUBY_IGNORE_CALLERS": 1
-    "Rack": 7
+    "RUBY_ENGINE": 2
+    "Rack": 1
     "Raiders": 1
     "RawScaledScorer": 1
     "Redis": 3
     "Redis.connect": 2
     "Redis.new": 1
     "Redis.respond_to": 1
-    "Regexp.escape": 1
     "Request": 2
-    "Response": 3
     "Resque": 3
     "RuntimeError": 1
-    "S": 2
-    "Server": 1
-    "Sinatra": 5
-    "Sinatra/#": 1
+    "SecureRandom.hex": 1
+    "Sinatra": 1
     "SoftwareSpecification.new": 3
-    "Someone": 1
-    "Sorry": 1
     "Stand": 1
     "Stat": 2
-    "String": 7
-    "Struct.new": 1
+    "String": 5
     "SystemCallError": 1
-    "Template": 1
-    "Templates#erubis": 1
     "Test": 2
     "The": 4
     "TheManWithoutAPast": 1
     "ThreadError": 1
-    "Time": 1
     "To": 1
-    "Type": 2
+    "TypeError": 1
+    "URI": 3
+    "URI.const_defined": 1
     "URI.escape": 1
     "URL.": 1
     "Unit": 2
-    "Unknown": 1
     "UnknownModule": 2
-    "Utils.bytesize": 1
-    "VERSION": 2
+    "VERSION": 1
     "W": 1
     "Without": 1
     "Wno": 1
     "Worker.all": 1
     "Worker.find": 1
     "Worker.working": 1
-    "World": 1
-    "X": 2
+    "X": 1
     "YAML.load_file": 1
     "Z": 3
     "Z/": 1
@@ -17552,82 +16762,54 @@ tokens:
     "Za": 1
     "_": 1
     "_.": 1
-    "__END__": 1
     "__FILE__": 3
     "_id": 1
-    "a": 8
+    "a": 7
     "above.": 1
-    "absolute": 1
+    "absolute_redirects": 1
     "acc": 1
-    "accept": 2
-    "accept.detect": 1
-    "accept.first": 1
-    "accept_entry": 2
-    "add_filter": 3
-    "add_script_name": 1
-    "addr": 3
-    "after": 2
+    "accept": 1
+    "accept_entry": 1
+    "add_charset": 1
     "after_fork": 2
-    "after_response": 2
-    "age": 1
-    "agent": 2
-    "alias": 4
-    "alias_method": 1
+    "alias": 1
+    "alias_method": 2
     "all": 1
-    "already": 1
     "an": 1
-    "and": 16
-    "app": 5
-    "app.call": 1
-    "app.count": 1
-    "app_file": 1
-    "app_file=": 1
-    "applauds": 1
-    "application": 1
-    "application/#": 1
+    "and": 8
+    "app_file": 3
     "apply_inflections": 3
     "arg": 1
     "arg.to_s": 1
-    "args": 1
+    "args": 3
     "args.collect": 1
     "args.dup": 1
     "args.empty": 1
     "args.length": 1
-    "async": 3
     "at": 1
-    "attachment": 1
     "attempt": 1
     "attr": 4
     "attr_accessor": 1
     "attr_reader": 5
     "attr_rw": 4
     "attr_writer": 4
+    "attrs": 1
     "attrs.each": 1
-    "automatically.": 1
     "b": 7
     "b.class": 1
     "b.name": 2
-    "backup": 1
     "base": 4
     "base.class_eval": 1
-    "be": 3
-    "before": 2
     "before_first_fork": 2
     "before_fork": 2
     "before_hooks": 2
     "before_hooks.any": 2
     "begin": 8
     "bin": 1
-    "binread": 1
-    "bk": 12
+    "bind": 1
     "blargle": 1
-    "block": 41
-    "block.each": 1
-    "block_given": 7
-    "body": 6
-    "body.close": 2
-    "body.inject": 1
-    "body.respond_to": 3
+    "block": 25
+    "block_given": 5
     "boondocks": 1
     "bottle": 1
     "bottle_base_url": 1
@@ -17642,20 +16824,12 @@ tokens:
     "brew": 2
     "buildpath": 1
     "business": 1
-    "by": 1
     "bzip2": 1
-    "c": 1
     "cached_download": 1
-    "call": 5
-    "call_without_check": 3
-    "callback": 3
-    "callback.call": 1
-    "caller_files.first": 1
     "camel_cased_word": 1
     "camel_cased_word.to_s.dup": 1
     "camelcase": 1
     "camelize": 1
-    "captures": 1
     "case": 4
     "caveats": 1
     "cc": 3
@@ -17663,106 +16837,84 @@ tokens:
     "cc.is_a": 1
     "cc.name": 1
     "cc_failures": 1
-    "char": 1
+    "char": 4
     "characters": 1
     "checksum_type": 2
-    "class": 8
-    "class_eval": 2
+    "class": 4
+    "class_eval": 1
     "class_value": 3
-    "cleaned_caller.first.join": 1
-    "close": 1
     "cmd": 5
     "cmd.split": 1
     "coder": 3
-    "compile": 1
     "compiler": 3
-    "condition": 4
-    "conditions": 2
     "config": 3
     "config.is_a": 1
     "config.log": 1
     "config_file": 2
+    "configure": 1
     "connect": 1
-    "content": 3
-    "content_type": 1
-    "convert": 1
+    "content_type": 3
     "count": 5
-    "crowd": 1
     "curl": 1
     "d": 5
-    "data": 4
-    "data.each_line": 1
+    "data": 1
     "db": 3
     "decode": 2
-    "def": 168
+    "def": 130
     "default": 2
-    "define_method": 1
-    "define_singleton_method": 1
+    "default_encoding": 1
     "defined": 1
-    "delete": 2
     "dep": 3
     "dep.to_s": 1
     "dependencies": 1
     "dependencies.add": 1
     "depends_on": 1
-    "deprecated": 2
     "deps": 1
     "dequeue": 1
     "dev": 1
     "devel": 1
-    "do": 27
+    "development": 4
+    "do": 26
     "doc": 1
-    "don": 1
     "download": 1
     "download_strategy": 1
     "download_strategy.new": 2
     "downloader": 4
     "downloader.fetch": 1
     "downloader.stage": 1
-    "e": 8
+    "dump_errors": 1
+    "e": 6
     "e.backtrace": 1
     "e.inspect": 1
-    "e.start_with": 1
     "e.was_running_configure": 1
-    "each": 3
-    "each_pair": 1
+    "each": 1
     "echo": 1
     "egg_and_ham": 1
     "egg_and_hams": 2
-    "else": 23
+    "else": 21
     "elsif": 7
     "empty_path_info": 1
-    "enable": 1
-    "enc": 2
+    "enc": 5
     "encoded": 1
-    "encoding": 3
-    "end": 250
-    "ended": 1
-    "engine": 2
+    "end": 204
     "enqueue": 1
     "enqueue_to": 2
     "entries": 1
     "entries.map": 1
-    "entry": 1
-    "entry.delete": 1
-    "enum_for": 1
-    "env": 15
-    "env.include": 1
     "environment": 2
     "eql": 1
     "err": 1
     "err.to_s": 1
-    "errback": 1
+    "error": 2
     "etc": 1
     "exec": 1
     "exit": 1
     "expand_deps": 1
-    "expected": 1
     "explanation": 1
     "explanation.to_s.chomp": 1
     "explicitly_requested": 1
-    "ext": 1
     "extend": 2
+    "extensions": 4
     "external_deps": 1
     "f": 15
     "f.deps.map": 1
@@ -17773,66 +16925,46 @@ tokens:
     "failure.build": 1
     "failure.build.zero": 1
     "failure.compiler": 1
-    "false": 17
+    "false": 24
     "fancyCategory": 1
     "fancy_categories": 1
     "fetch": 1
     "fetched": 4
     "fetched.kind_of": 1
-    "file": 7
-    "file.nil": 1
-    "filters": 1
-    "finish": 1
+    "file": 1
+    "filename": 2
     "first": 1
     "fn": 2
     "fn.incremental_hash": 1
-    "for": 1
     "force": 1
-    "force_encoding": 2
     "fork": 1
     "formula_with_that_name": 1
     "formula_with_that_name.file": 1
     "formula_with_that_name.readable": 1
-    "forwarded": 1
-    "found": 1
-    "found.": 1
-    "from": 2
+    "from": 1
     "from_name": 2
     "from_path": 1
     "from_url": 1
     "ftp": 1
-    "generate_method": 1
-    "get": 2
+    "get": 1
     "glob": 2
     "gzip": 1
     "h": 2
-    "halt": 2
-    "handler": 1
-    "handler_name": 1
-    "has": 2
     "hash": 3
     "hash.upcase": 1
     "hasher": 2
-    "have": 1
-    "head": 4
+    "head": 2
     "head_prefix": 2
     "head_prefix.directory": 1
-    "header": 1
-    "headers": 4
-    "headers.delete": 2
-    "his": 1
+    "helpers": 1
     "homepage": 2
     "hook": 8
-    "host": 6
-    "host_name": 2
-    "http#": 1
-    "http_status": 1
+    "host": 3
+    "http": 1
     "https": 1
     "humanize": 1
     "id": 1
-    "idempotent": 1
-    "if": 79
-    "image": 1
+    "if": 67
     "include": 3
     "incomplete": 1
     "inflections.acronym_regex": 2
@@ -17844,32 +16976,29 @@ tokens:
     "info": 2
     "initialize": 1
     "inline": 3
-    "inline_templates": 1
-    "inspect": 2
+    "inspect": 1
     "install": 1
     "install_type": 4
-    "installed": 2
+    "installed": 1
     "installed_prefix": 1
     "installed_prefix.children.length": 1
     "instance_eval": 2
     "instance_variable_defined": 2
     "instance_variable_get": 2
     "instance_variable_set": 1
-    "instead.": 1
     "interactive_shell": 1
     "invalid": 1
-    "io": 1
-    "io.gsub": 1
-    "is": 4
-    "it": 2
+    "is": 1
+    "it": 1
     "item": 4
     "javascript": 1
+    "json": 1
     "k": 2
     "keg_only": 2
     "keg_only_reason": 1
     "key": 6
     "key.sub": 1
-    "keys": 1
+    "keys": 6
     "klass": 16
     "klass.instance_variable_get": 1
     "klass.new": 2
@@ -17878,16 +17007,14 @@ tokens:
     "klass.send": 4
     "klass.to_s.empty": 1
     "klass_name": 2
-    "l": 2
     "last": 2
     "lib": 1
     "libexec": 1
-    "line": 2
-    "lines": 2
     "linked_keg": 1
     "list_range": 1
     "load": 3
-    "longer": 1
+    "lock": 1
+    "logging": 1
     "lower_case_and_underscored_word": 1
     "lower_case_and_underscored_word.to_s.dup": 1
     "m": 2
@@ -17902,20 +17029,16 @@ tokens:
     "man7": 1
     "man8": 1
     "map": 1
-    "match": 1
+    "match": 6
     "match.downcase": 1
-    "max": 1
     "md5": 2
-    "media": 1
     "men": 1
     "message": 2
     "message_id": 1
     "messageid": 1
     "method": 2
-    "method_defined": 2
-    "mime": 1
-    "mime_type": 2
-    "mime_types": 2
+    "method_override": 3
+    "methodoverride": 2
     "mirror": 1
     "mirror_list": 1
     "mirror_list.empty": 1
@@ -17923,104 +17046,94 @@ tokens:
     "mirrors": 4
     "mismatch": 1
     "mktemp": 1
-    "module": 8
-    "n": 9
+    "module": 7
+    "n": 3
     "n.id": 1
-    "name": 57
+    "name": 49
     "name.basename": 1
     "name.capitalize.gsub": 1
     "name.hash": 1
     "name.include": 2
     "name.kind_of": 2
     "name.to_s": 3
+    "names": 1
     "names.each": 1
     "namespace": 3
     "nd": 5
     "next": 1
-    "nil": 28
-    "no": 1
+    "nil": 19
     "nodes": 1
-    "nodoc": 1
-    "not": 7
+    "not": 4
     "number": 2
-    "object": 1
     "ohai": 4
-    "on": 2
     "onoe": 3
     "opoo": 1
-    "options": 12
-    "options.delete": 1
-    "options.delete_if": 1
-    "options.key": 1
-    "options.size": 1
-    "opts": 15
-    "or": 13
+    "options": 2
+    "or": 6
     "ordinal": 1
     "out": 1
     "override": 3
-    "p": 5
+    "p": 2
     "p.compressed_filename": 2
     "p.compression": 1
     "p.patch_args": 1
     "p.to_s": 2
-    "params": 1
     "part": 1
-    "pass": 1
-    "patch": 3
+    "patch": 2
     "patch_list": 1
     "patch_list.download": 1
     "patch_list.each": 1
     "patch_list.empty": 1
     "patch_list.external_patches": 1
     "patches": 2
-    "path": 33
+    "path": 11
+    "path.keys": 1
+    "path.names": 1
     "path.nil": 1
     "path.realpath.to_s": 1
     "path.relative_path_from": 1
-    "path.respond_to": 1
+    "path.respond_to": 5
     "path.stem": 1
     "path.to_s": 1
     "paths": 3
-    "pattern": 6
+    "pattern": 1
     "peek": 1
     "pending": 1
-    "performing": 1
     "pid": 1
     "plist_name": 2
     "plist_path": 1
     "plugin": 2
     "pluralize": 1
+    "png": 1
     "pointed": 1
     "pop": 1
-    "port": 6
+    "port": 4
     "possible_alias": 1
     "possible_alias.file": 1
     "possible_alias.realpath.basename": 1
     "possible_cached_formula": 1
     "possible_cached_formula.file": 1
     "possible_cached_formula.to_s": 1
-    "post": 3
+    "post": 2
     "post_id": 1
     "posts": 3
-    "preferred_type": 2
+    "preferred_type": 1
     "prefix": 15
     "prefix.parent": 1
+    "prefixed_redirects": 1
     "pretty_args": 1
     "pretty_args.delete": 1
-    "private": 5
+    "private": 1
     "processed": 2
     "protected": 1
-    "provides": 1
-    "public": 2
-    "public_dir": 2
-    "public_folder": 2
+    "protection": 1
+    "public": 1
+    "public_folder": 3
     "puni": 2
     "puni_puni": 1
     "push": 1
-    "put": 2
     "puts": 19
     "python": 1
-    "quality": 3
     "queue": 24
     "queue.to_s": 1
     "queue_from_class": 4
@@ -18029,16 +17142,15 @@ tokens:
     "queues.size": 1
     "r": 3
     "rack": 1
-    "rack.errors": 1
     "raiders_of_the_lost_ark": 1
     "raise": 14
+    "raise_errors": 1
     "rake": 1
     "raw_scaled_scorers": 1
     "rd": 4
     "rd.close": 1
     "reason": 2
     "recursive_deps": 1
-    "redirect": 1
     "redis": 7
     "redis.client.id": 1
     "redis.keys": 1
@@ -18049,47 +17161,43 @@ tokens:
     "redis.server": 1
     "redis.smembers": 1
     "redis_id": 2
-    "registry.": 1
     "relative_pathname": 1
     "relative_pathname.stem.to_s": 1
+    "reload_templates": 1
     "remove": 1
     "remove_queue": 1
     "remove_worker": 1
-    "removed": 1
     "removed_ENV_variables": 1
     "replacement": 4
-    "request.host": 1
-    "request.preferred_type": 1
-    "request.secure": 1
-    "request.user_agent.to_s": 1
-    "require": 57
+    "request.path_info": 1
+    "require": 58
     "require_all": 4
     "rescue": 11
     "reserve": 1
-    "response": 2
-    "response.body": 3
-    "response.status": 2
+    "reset": 1
+    "response.status": 1
     "resque": 2
-    "result": 15
+    "result": 8
     "result.downcase": 1
     "result.gsub": 1
     "result.sub": 2
     "retry": 2
-    "return": 32
-    "route": 9
+    "return": 24
+    "root": 5
     "ruby": 2
+    "ruby_engine": 6
+    "ruby_engine.nil": 1
     "rule": 4
     "rules": 1
     "rules.each": 1
+    "run": 1
+    "running": 1
     "rv": 3
-    "s": 5
-    "s*": 2
+    "s": 2
     "s/": 1
-    "safe": 2
     "safe_system": 4
     "sbin": 1
-    "secure": 1
-    "self": 12
+    "self": 10
     "self.aliases": 1
     "self.all": 1
     "self.attr_rw": 1
@@ -18108,6 +17216,7 @@ tokens:
     "self.class_s": 2
     "self.configuration": 1
     "self.data": 1
+    "self.defer": 1
     "self.each": 1
     "self.expand_deps": 1
     "self.factory": 1
@@ -18117,29 +17226,27 @@ tokens:
     "self.names": 1
     "self.new": 1
     "self.path": 1
-    "self.public_folder": 1
     "self.redis": 2
     "self.register": 1
     "self.sha1": 1
     "self.url": 1
     "self.use": 1
     "self.version": 1
-    "server": 8
+    "send_file": 1
+    "server": 9
     "server.split": 2
+    "server.unshift": 6
     "servers": 1
-    "servers.join": 1
-    "set": 2
+    "session_secret": 2
+    "sessions": 1
+    "set": 30
     "set_instance_variable": 12
-    "settings.absolute_redirects": 1
-    "settings.default_encoding": 1
-    "settings.prefixed_redirects": 1
-    "setup_close": 2
+    "settings.add_charset": 1
     "sha1": 4
     "sha1.shift": 1
     "sha256": 1
     "share": 1
-    "sinatra.error": 1
-    "sinatra.static_file": 2
+    "show_exceptions": 1
     "singularize": 1
     "size": 2
     "skip_clean": 2
@@ -18147,17 +17254,14 @@ tokens:
     "skip_clean_paths": 1
     "source": 2
     "specs": 14
-    "splat": 1
-    "ssl": 1
     "st": 5
     "stable": 1
-    "stage": 3
-    "stale": 1
+    "stage": 2
     "stand": 1
     "standard": 2
     "start": 6
-    "status": 8
-    "status.to_i": 2
+    "static": 1
+    "static_cache_control": 1
     "std_cmake_args": 1
     "stderr.puts": 2
     "stderr.reopen": 1
@@ -18166,85 +17270,53 @@ tokens:
     "string": 3
     "string.gsub": 1
     "string.sub": 2
-    "strong": 1
-    "super": 3
-    "superclass.class_eval": 1
     "supplied": 4
     "supplied.empty": 1
     "supplied.upcase": 1
-    "supported": 1
     "system": 1
-    "t": 6
-    "taken": 1
+    "t": 2
     "tap": 1
     "tapd": 1
     "tapd.directory": 1
     "tapd.find_formula": 1
     "target_file": 6
     "task": 2
-    "template": 2
     "term": 1
     "term.to_s": 1
-    "test": 1
-    "text/css": 1
-    "tfrom": 1
+    "test": 3
+    "text": 1
     "th": 4
-    "the": 4
+    "the": 3
     "then": 4
     "this": 1
     "thread_safe": 2
-    "throw": 2
-    "to": 2
+    "threaded": 1
     "to_check": 2
     "to_s": 2
-    "trace": 1
-    "true": 18
-    "type": 35
-    "type.count": 1
-    "type.nil": 1
-    "type.to_s": 1
-    "type.to_s.include": 1
+    "true": 14
+    "type": 10
     "type.to_s.upcase": 1
-    "types": 1
-    "types.detect": 1
-    "types.empty": 1
-    "types.flatten": 2
-    "types.include": 2
-    "types.map": 1
-    "unable": 1
-    "undef_method": 1
     "underscore": 1
-    "unless": 17
+    "unless": 11
     "unstable": 2
     "uppercase_first_letter": 2
-    "uri": 5
+    "uri": 1
     "url": 12
-    "use": 1
-    "used": 1
-    "user_agent": 2
-    "utf": 1
+    "use_code": 1
     "v": 2
     "v.to_s.empty": 1
     "val": 10
     "val.nil": 3
     "validate": 1
     "validate_variable": 7
-    "value": 20
-    "value.body": 1
-    "value.inspect": 1
-    "value.to_str": 1
-    "values": 1
+    "value": 2
     "var": 1
-    "verb": 2
     "verify_download_integrity": 2
     "version": 9
-    "w": 6
-    "warn": 1
-    "weak": 1
+    "views": 1
+    "w": 8
+    "webrick": 1
     "when": 7
-    "while": 1
-    "will": 3
-    "with": 1
     "word": 7
     "word.downcase": 1
     "word.empty": 1
@@ -18260,17 +17332,16 @@ tokens:
     "working.size": 1
     "wr": 3
     "wr.close": 1
-    "x": 2
-    "xml": 1
+    "x": 1
+    "xhtml": 1
+    "xml": 2
     "yield": 5
-    "you": 1
-    "z": 7
-    "z0": 1
+    "z": 6
     "zA": 1
-    "{": 93
-    "|": 85
-    "||": 25
-    "}": 93
+    "{": 65
+    "|": 74
+    "||": 21
+    "}": 65
   "Rust":
     "(": 1
     ")": 1
@@ -18319,11 +17390,11 @@ tokens:
     "px": 1
   "Scala":
     "#": 2
-    "%": 12
+    "%": 7
     "(": 23
     ")": 23
     "*/": 1
-    "+": 19
+    "+": 15
     "-": 1
     ".currentRef.project": 1
     "/": 2
@@ -18381,7 +17452,6 @@ tokens:
     "finally": 1
     "for": 1
     "fork": 2
-    "from": 1
     "highest": 1
     "id": 1
     "import": 2
@@ -18396,7 +17466,7 @@ tokens:
     "javaOptions": 1
     "javacOptions": 1
     "level": 1
-    "libosmVersion": 4
+    "libosmVersion": 1
     "libraryDependencies": 3
     "logLevel": 2
     "logging": 1
@@ -18460,9 +17530,10 @@ tokens:
   "Scheme":
     "#": 6
     "#f": 5
-    "(": 362
+    "(": 359
+    "(*": 3
     ")": 373
-    "*": 3
+    "*)": 3
     "+": 28
     "-": 188
     ".": 1
@@ -18799,9 +17870,11 @@ tokens:
     "{": 7
     "}": 7
   "Standard ML":
-    "(": 20
-    ")": 21
-    "*": 6
+    "(": 19
+    "(*": 1
+    ")": 20
+    "*": 4
+    "*)": 1
     "-": 9
     ";": 1
     "B": 1
@@ -18833,7 +17906,7 @@ tokens:
     "handle": 1
     "if": 1
     "ignore": 1
-    "inject": 4
+    "inject": 3
     "isUndefined": 2
     "lazy": 11
     "let": 1
@@ -18906,20 +17979,21 @@ tokens:
   "TeX":
     "#1": 12
     "#2": 4
-    "%": 82
-    "&": 1
+    "%": 85
     "(": 3
-    ")": 3
-    "*ASSUME*": 1
-    "-": 3
-    "-}": 4
+    ")": 2
+    "-": 2
+    "-}": 5
     ".": 1
     ".0em": 1
     ".0in": 2
     ".4": 1
     ".5em": 2
     ".5in": 3
+    ".5pt": 1
+    ".6in": 1
     ".75em": 1
+    ".9in": 1
     "/01/27": 1
     "/12/04": 3
     "/Creator": 1
@@ -18956,48 +18030,35 @@ tokens:
     "@undefined": 1
     "A": 1
     "Abstract": 2
-    "Acknowledgements": 1
     "Approved": 1
     "Arts": 1
     "AtBeginDocument": 1
     "AtBeginDvi": 2
     "AtEndDocument": 1
-    "BTS": 2
     "Bachelor": 1
-    "Ben": 1
-    "Capitals": 1
-    "Class": 5
+    "Class": 4
     "College": 5
     "Contents": 1
     "CurrentOption": 1
-    "David": 1
-    "Dec": 1
     "DeclareOption*": 1
     "Degree": 2
     "Division": 2
     "Fulfillment": 1
-    "I": 1
     "If": 1
     "In": 1
     "LE": 1
-    "LEFT": 1
     "LO": 2
     "LaTeX": 3
     "LaTeX2e": 1
     "LoadClass": 1
     "NeedsTeXFormat": 1
     "No": 3
-    "Noble": 2
-    "Oddities": 1
-    "Page": 1
     "Partial": 1
     "PassOptionsToClass": 1
-    "Perkinson": 1
     "Presented": 1
     "ProcessOptions": 1
     "ProvidesClass": 1
     "RE": 2
-    "RIGHT": 2
     "RO": 1
     "RTcleardoublepage": 3
     "RToldchapter": 1
@@ -19008,73 +18069,54 @@ tokens:
     "RequirePackage": 1
     "Requirements": 2
     "SN": 3
-    "Salzberg": 1
-    "Sam": 2
-    "Specified.": 1
-    "TOC": 1
     "Table": 1
     "The": 3
     "Thesis": 5
-    "This": 2
-    "Using": 1
-    "We": 1
-    "When": 1
-    "With": 1
-    "a": 1
+    "above": 1
     "abstract": 1
-    "actually": 1
     "addcontentsline": 5
     "addpenalty": 1
-    "adds": 1
     "addtocontents": 2
-    "addtolength": 5
+    "addtolength": 8
     "addvspace": 2
     "advance": 1
     "advisor": 1
     "advisor#1": 1
+    "all": 1
     "altadvisor#1": 1
-    "and": 3
-    "any": 2
-    "approved": 1
     "approvedforthe#1": 1
-    "as": 2
     "baselineskip": 2
-    "be": 2
+    "be": 1
     "begin": 4
     "begingroup": 1
-    "below": 2
     "bfseries": 3
     "bibname": 2
     "bigskip": 2
     "book": 2
-    "but": 1
-    "by": 1
     "c": 5
     "c@page": 1
     "c@secnumdepth": 1
     "c@tocdepth": 1
-    "called": 1
     "caps.": 1
-    "center": 7
+    "center": 4
     "centerline": 8
     "chapter": 9
     "chaptermark": 1
-    "chapters": 1
-    "cleardoublepage": 5
+    "choose": 1
+    "cleardoublepage": 4
     "clearpage": 3
     "cm": 2
-    "comment": 1
     "contentsname": 1
     "copy0": 1
     "def": 12
     "department": 1
     "department#1": 1
+    "different": 1
     "division": 1
     "division#1": 1
-    "does": 1
     "else": 7
     "empty": 4
-    "end": 5
+    "end": 4
     "endgroup": 1
     "endoldthebibliography": 2
     "endoldtheindex": 2
@@ -19086,27 +18128,21 @@ tokens:
     "fancyhead": 5
     "fancyhf": 1
     "fi": 13
-    "file": 1
-    "file.": 1
-    "fix": 1
+    "following": 1
     "fontsize": 7
     "footnote": 1
     "footnoterule": 1
     "footnotesize": 1
-    "for": 4
-    "frontmatter": 1
+    "for": 3
     "gdef": 6
     "given": 3
     "global": 2
     "hb@xt@": 1
     "hbox": 15
     "headers": 2
-    "headheight": 2
-    "headsep": 2
-    "here": 1
+    "headheight": 4
+    "headsep": 3
     "hfill": 1
-    "his": 1
-    "how": 1
     "hrulefill": 5
     "hskip": 1
     "hss": 1
@@ -19119,39 +18155,26 @@ tokens:
     "ifnum": 2
     "ifodd": 1
     "ifx": 1
-    "in": 8
-    "inbetween": 1
+    "in": 6
     "indexname": 1
-    "instead": 1
-    "is": 2
-    "it.": 1
-    "italic": 1
-    "just": 1
     "l@chapter": 1
     "leaders": 1
     "leavevmode": 1
     "leftmark": 2
     "leftskip": 2
     "let": 10
-    "library": 1
+    "like": 1
     "lineskip": 1
     "lof": 1
     "lot": 1
-    "lowercase": 1
-    "m": 1
     "m@ne": 2
     "m@th": 1
-    "mainmatter": 1
     "major": 1
-    "majors": 1
     "makebox": 6
     "makes": 1
     "maketitle": 1
     "mkern": 2
-    "modifier": 1
     "mu": 2
-    "my": 1
-    "name": 2
     "newcommand": 2
     "newenvironment": 1
     "newif": 1
@@ -19159,19 +18182,18 @@ tokens:
     "nobreak": 2
     "noexpand": 3
     "normalfont": 1
-    "not": 3
     "nouppercase": 2
     "null": 3
-    "oddsidemargin": 1
-    "of": 9
+    "oddsidemargin": 2
+    "of": 6
     "oldthebibliography": 2
     "oldtheindex": 2
-    "on": 1
+    "one": 1
     "onecolumn": 1
-    "out": 1
+    "options": 1
+    "or": 1
     "p@": 3
-    "page": 2
-    "pages": 2
+    "page": 1
     "pagestyle": 2
     "par": 6
     "parfillskip": 1
@@ -19179,71 +18201,57 @@ tokens:
     "pdfinfo": 1
     "penalty": 1
     "protect": 2
-    "psych": 1
     "rawpostscript": 1
     "reedthesis": 1
     "refstepcounter": 1
     "relax": 2
-    "removed": 1
+    "remove": 1
     "renewcommand": 6
     "renewenvironment": 2
-    "requested": 1
     "rightmark": 2
     "rightskip": 1
-    "same": 1
-    "scshape": 1
+    "scshape": 2
     "secdef": 1
     "selectfont": 6
     "setbox0": 2
     "setcounter": 1
-    "setlength": 8
-    "show": 1
-    "side": 2
+    "setlength": 10
     "sign": 1
-    "slshape": 3
-    "small": 2
+    "slshape": 2
+    "small": 1
     "space": 4
     "space#1": 1
     "special": 2
     "sure": 1
     "t": 1
     "tabular": 2
-    "template": 1
-    "textheight": 3
-    "textwidth": 1
+    "textheight": 4
+    "textwidth": 2
     "thanks": 1
-    "that": 1
-    "the": 13
+    "the": 7
     "thebibliography": 2
     "thechapter": 1
     "thechapter.": 1
     "thedivisionof#1": 1
     "theindex": 2
     "thepage": 1
-    "thing": 1
-    "things": 1
-    "this": 1
     "thispagestyle": 3
-    "time": 1
     "titlepage": 2
-    "to": 10
+    "to": 6
     "toc": 5
-    "topmargin": 5
-    "tweaks": 1
+    "topmargin": 6
     "twocolumn": 1
     "typeout": 1
-    "use": 2
-    "variety": 1
     "vfil": 8
     "vskip": 4
     "wd0": 7
-    "will": 1
-    "without": 1
+    "would": 1
     "you": 1
+    "your": 1
     "z@": 2
-    "{": 174
-    "{-": 4
-    "}": 178
+    "{": 180
+    "{-": 5
+    "}": 185
   "Tea":
     "<%>": 1
     "foo": 1
@@ -19255,22 +18263,16 @@ tokens:
     "*": 1
     "-": 1
     "..": 1
-    "Accepts": 1
-    "a": 1
-    "and": 1
-    "calculates": 1
     "else": 1
     "end": 3
     "exit": 1
-    "factorial": 5
+    "factorial": 4
     "function": 1
     "get": 1
     "if": 2
     "int": 2
-    "its": 1
     "loop": 2
     "n": 9
-    "number": 1
     "put": 3
     "real": 1
     "result": 2
@@ -19318,9 +18320,11 @@ tokens:
     "%": 3
     "&": 6
     "&&": 3
-    "(": 372
-    ")": 371
-    "*": 5
+    "(": 371
+    "(*": 1
+    ")": 370
+    "*": 4
+    "*)": 1
     "*/": 4
     "+": 36
     "-": 71
@@ -19449,10 +18453,10 @@ tokens:
     ".x_dotclockdiv2": 2
     "/": 11
     "/*": 4
-    "//": 369
+    "//": 367
     "////////////////////////////////////////////////////////////////////////////////": 14
     "1": 7
-    ";": 287
+    ";": 285
     "<": 47
     "<<": 2
     "<=>": 4
