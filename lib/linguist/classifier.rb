@@ -55,7 +55,7 @@ module Linguist
     # Returns nothing.
     def train(language, data)
       language = language.name
-      tokens   = Tokenizer.new(data).tokens
+      tokens   = Tokenizer.tokenize(data)
 
       tokens.each do |token|
         @tokens[language][token] += 1
@@ -98,7 +98,7 @@ module Linguist
     # Language and a Float score.
     def classify(tokens, languages = @languages.keys)
       return [] if tokens.nil?
-      tokens = Tokenizer.new(tokens).tokens if tokens.is_a?(String)
+      tokens = Tokenizer.tokenize(tokens) if tokens.is_a?(String)
 
       scores = {}
       languages.each do |language|

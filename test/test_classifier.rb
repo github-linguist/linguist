@@ -32,7 +32,7 @@ class TestClassifier < Test::Unit::TestCase
     results = classifier.classify(fixture("objective-c/hello.m"))
     assert_equal Language["Objective-C"], results.first[0]
 
-    tokens  = Tokenizer.new(fixture("objective-c/hello.m")).tokens
+    tokens  = Tokenizer.tokenize(fixture("objective-c/hello.m"))
     results = classifier.classify(tokens)
     assert_equal Language["Objective-C"], results.first[0]
   end

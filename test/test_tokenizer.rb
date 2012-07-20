@@ -11,7 +11,7 @@ class TestTokenizer < Test::Unit::TestCase
 
   def tokenize(data)
     data = File.read(File.join(samples_path, data.to_s)) if data.is_a?(Symbol)
-    Tokenizer.new(data).tokens
+    Tokenizer.tokenize(data)
   end
 
   def test_skip_string_literals

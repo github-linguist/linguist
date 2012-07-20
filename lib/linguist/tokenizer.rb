@@ -5,23 +5,13 @@ module Linguist
   # It strips any data strings or comments and preserves significant
   # language symbols.
   class Tokenizer
-    # Public: Initialize a Tokenizer.
+    # Public: Extract tokens from data
     #
-    # data - String data to scan.
-    def initialize(data)
-      @data = data
-    end
-
-    # Public: Get source data.
-    #
-    # Returns String.
-    attr_reader :data
-
-    # Public: Extract tokens from data.
+    # data - String to tokenize
     #
     # Returns Array of token Strings.
-    def tokens
-      extract_tokens(data)
+    def self.tokenize(data)
+      new.extract_tokens(data)
     end
 
     SINGLE_LINE_COMMENTS = [
