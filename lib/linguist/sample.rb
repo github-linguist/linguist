@@ -39,7 +39,7 @@ module Linguist
     # Returns trained Classifier.
     def self.classifier
       classifier = Classifier.new
-      each { |sample| classifier.train(sample.language, sample.data) }
+      each { |sample| classifier.train(sample.language.name, sample.data) }
       classifier.gc
     end
 
