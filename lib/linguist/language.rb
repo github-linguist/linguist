@@ -239,7 +239,9 @@ module Linguist
       @overrides  = attributes[:overrides]  || []
       @filenames  = attributes[:filenames]  || []
 
-      @primary_extension = attributes[:primary_extension] || default_primary_extension || extensions.first
+      unless @primary_extension = attributes[:primary_extension]
+        raise ArgumentError, "#{@name} is missing primary extension"
+      end
 
       # Prepend primary extension unless its already included
       if primary_extension && !extensions.include?(primary_extension)
@@ -374,13 +376,6 @@ module Linguist
     # Returns the alias name String
     def default_alias_name
       name.downcase.gsub(/\s/, '-')
-    end
-
-    # Internal: Get default primary extension.
-    #
-    # Returns the extension String.
-    def default_primary_extension
-      extensions.first
     end
 
     # Public: Get Language group
