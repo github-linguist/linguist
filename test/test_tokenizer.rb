@@ -29,9 +29,9 @@ class TestTokenizer < Test::Unit::TestCase
   end
 
   def test_skip_comments
-    assert_equal %w(foo #), tokenize("foo # Comment")
-    assert_equal %w(foo # bar), tokenize("foo # Comment\nbar")
-    assert_equal %w(foo //), tokenize("foo // Comment")
+    assert_equal %w(foo #), tokenize("foo\n# Comment")
+    assert_equal %w(foo # bar), tokenize("foo\n# Comment\nbar")
+    assert_equal %w(foo //), tokenize("foo\n// Comment")
     assert_equal %w(foo /* */), tokenize("foo /* Comment */")
     assert_equal %w(foo /* */), tokenize("foo /* \nComment\n */")
     assert_equal %w(foo <!-- -->), tokenize("foo <!-- Comment -->")
