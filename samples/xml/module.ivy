@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<ivy-module version="2.0" xmlns:ea="http://www.easyant.org"> 
+    <info organisation="org.apache.easyant" module="standard-java-app" revision="0.1" status="integration" >
+        <description>
+            this is a easyant module.ivy sample file for java standard application
+        </description>
+        <!--
+            This easyant section is equivalent to having a module.ant like this:
+            
+            <project name="org.apache.easyant#standard-java-app"
+                xmlns:ea="antlib:org.apache.easyant">
+                
+                <property name="run.main.classname" value="org.apache.easyant.example.Example"/>
+            
+                <ea:build organisation="org.apache.easyant.buildtypes" module="build-std-java" revision="0.9"/>
+                <ea:plugin organisation="org.apache.easyant.plugins" module="run-java" revision="0.9"/>
+            </project>              
+          -->
+        <ea:build organisation="org.apache.easyant.buildtypes" module="build-std-java" revision="0.9"/>
+            <ea:property name="run.main.classname" value="org.apache.easyant.example.Example"/>
+            <ea:plugin organisation="org.apache.easyant.plugins" module="run-java" revision="0.9"/>
+        </ea:build>
+    </info>
+    <configurations>
+        <conf name="default" visibility="public" description="runtime dependencies and master artifact can be used with this conf"/>
+        <conf name="test" visibility="private" description="this scope indicates that the dependency is not required for normal use of the application, and is only available for the test compilation and execution phases."/>
+    </configurations>
+    <dependencies>
+        <dependency org="hsqldb" name="hsqldb" rev="1.8.0.7" conf="default->default"/>
+        <dependency org="junit" name="junit" rev="4.4" conf="test->default" />
+
+    </dependencies>
+</ivy-module>
