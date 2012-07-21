@@ -136,13 +136,6 @@ module Linguist
       ['.png', '.jpg', '.jpeg', '.gif'].include?(extname)
     end
 
-    # Public: Is the blob a possible drupal php file?
-    #
-    # Return true or false
-    def drupal_extname?
-      ['.module', '.install', '.test', '.inc'].include?(extname)
-    end
-
     # Public: Is the blob likely to have a shebang?
     #
     # Return true or false
@@ -430,9 +423,6 @@ module Linguist
         # See if there is a Language for the extension
         pathname.language ||
 
-        # Look for idioms in first line
-        first_line_language ||
-
         # Try to detect Language from shebang line
         shebang_language
     end
@@ -446,176 +436,15 @@ module Linguist
 
     # Internal: Disambiguates between multiple language extensions.
     #
-    # Delegates to "guess_EXTENSION_language".
-    #
-    # Please add additional test coverage to
-    # `test/test_blob.rb#test_language` if you add another method.
-    #
     # Returns a Language or nil.
     def disambiguate_extension_language
       if Language.ambiguous?(extname)
-        # name = "guess_#{extname.sub(/^\./, '')}_language"
-        # send(name) if respond_to?(name)
-
-        possible_languages = Language.all.select { |l| l.extensions.include?(extname) }
+        possible_languages = Language.all.select { |l| l.extensions.include?(extname) }.map(&:name)
         if possible_languages.any?
           if result = Classifier.instance.classify(data, possible_languages).first
-            result[0]
+            Language[result[0]]
           end
         end
-      end
-    end
-
-    # Internal: Guess language of .cls files
-    #
-    # Returns a Language.
-    def guess_cls_language
-      if lines.grep(/^(%|\\)/).any?
-        Language['TeX']
-      elsif lines.grep(/^\s*(CLASS|METHOD|INTERFACE).*:\s*/i).any? || lines.grep(/^\s*(USING|DEFINE)/i).any?
-        Language['OpenEdge ABL']
-      elsif lines.grep(/\{$/).any? || lines.grep(/\}$/).any?
-        Language['Apex']
-      elsif lines.grep(/^(\'\*|Attribute|Option|Sub|Private|Protected|Public|Friend)/i).any?
-        Language['Visual Basic']
-      else
-        # The most common language should be the fallback
-        Language['TeX']
-      end
-    end
-
-    # Internal: Guess language of header files (.h).
-    #
-    # Returns a Language.
-    def guess_h_language
-      if lines.grep(/^@(interface|property|private|public|end)/).any?
-        Language['Objective-C']
-      elsif lines.grep(/^class |^\s+(public|protected|private):/).any?
-        Language['C++']
-      else
-        Language['C']
-      end
-    end
-
-    # Internal: Guess language of .m files.
-    #
-    # Objective-C heuristics:
-    # * Keywords  ("#import", "#include", "#ifdef", #define, "@end") or "//" and opening "\*" comments
-    #
-    # Matlab heuristics:
-    # * Leading "function " of "classdef " keyword
-    # * "%" comments
-    #
-    # Note: All "#" keywords, e.g., "#import", are guaranteed to be Objective-C. Because the ampersand
-    # is used to created function handles and anonymous functions in Matlab, most "@" keywords are not
-    # safe heuristics. However, "end" is a reserved term in Matlab and can't be used to create a valid
-    # function handle. Because @end is required to close any @implementation, @property, @interface,
-    # @synthesize, etc. directive in Objective-C, only @end needs to be checked for.
-    #
-    # Returns a Language.
-    def guess_m_language
-      # Objective-C keywords or comments
-      if lines.grep(/^#(import|include|ifdef|define)|@end/).any? || lines.grep(/^\s*\/\//).any? || lines.grep(/^\s*\/\*/).any?
-        Language['Objective-C']
-
-      # Matlab file function or class or comments
-      elsif lines.any? && lines.first.match(/^\s*(function |classdef )/) || lines.grep(/^\s*%/).any?
-        Language['Matlab']
-
-      # Fallback to Objective-C, don't want any Matlab false positives
-      else
-        Language['Objective-C']
-      end
-    end
-
-    # Internal: Guess language of .pl files
-    #
-    # The rules for disambiguation are:
-    #
-    # 1. Many perl files begin with a shebang
-    # 2. Most Prolog source files have a rule somewhere (marked by the :- operator)
-    # 3. Default to Perl, because it is more popular
-    #
-    # Returns a Language.
-    def guess_pl_language
-      if shebang_script == 'perl'
-        Language['Perl']
-      elsif lines.grep(/:-/).any?
-        Language['Prolog']
-      else
-        Language['Perl']
-      end
-    end
-
-    # Internal: Guess language of .r files.
-    #
-    # Returns a Language.
-    def guess_r_language
-      if lines.grep(/(rebol|(:\s+func|make\s+object!|^\s*context)\s*\[)/i).any?
-        Language['Rebol']
-      else
-        Language['R']
-      end
-    end
-
-    # Internal: Guess language of .t files.
-    #
-    # Returns a Language.
-    def guess_t_language
-      score = 0
-      score += 1 if lines.grep(/^% /).any?
-      score += data.gsub(/ := /).count
-      score += data.gsub(/proc |procedure |fcn |function /).count
-      score += data.gsub(/var \w+: \w+/).count
-
-      # Tell-tale signs its gotta be Perl
-      if lines.grep(/^(my )?(sub |\$|@|%)\w+/).any?
-        score = 0
-      end
-
-      if score >= 3
-        Language['Turing']
-      else
-        Language['Perl']
-      end
-    end
-
-    # Internal: Guess language of .v files.
-    #
-    # Returns a Language
-    def guess_v_language
-      if lines.grep(/^(\/\*|\/\/|module|parameter|input|output|wire|reg|always|initial|begin|\`)/).any?
-        Language['Verilog']
-      else
-        Language['Coq']
-      end
-    end
-
-    # Internal: Guess language of .gsp files.
-    #
-    # Returns a Language.
-    def guess_gsp_language
-      if lines.grep(/<%|<%@|\$\{|<%|<g:|<meta name="layout"|<r:/).any?
-        Language['Groovy Server Pages']
-      else
-        Language['Gosu']
-      end
-    end
-
-    # Internal: Guess language from the first line.
-    #
-    # Look for leading "<?php" in Drupal files
-    #
-    # Returns a Language.
-    def first_line_language
-      # Only check files with drupal php extensions
-      return unless drupal_extname?
-
-      # Fail fast if blob isn't viewable?
-      return unless viewable?
-
-      if lines.first.to_s =~ /^<\?php/
-        Language['PHP']
       end
     end
 
@@ -708,13 +537,6 @@ module Linguist
         text[%r{<div class="highlight"><pre>(.*?)</pre>\s*</div>}m, 1]
       else
         ''
-      end
-    end
-
-    Language.overridden_extensions.each do |extension|
-      name = "guess_#{extension.sub(/^\./, '')}_language".to_sym
-      unless instance_methods.map(&:to_sym).include?(name)
-        raise NotImplementedError, "Language##{name} was not defined"
       end
     end
   end

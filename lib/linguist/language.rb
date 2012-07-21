@@ -2,6 +2,8 @@ require 'escape_utils'
 require 'pygments'
 require 'yaml'
 
+require 'linguist/sample'
+
 module Linguist
   # Language names that are recognizable by GitHub. Defined languages
   # can be highlighted, searched and listed under the Top Languages page.
@@ -24,13 +26,6 @@ module Linguist
     # Returns true or false.
     def self.ambiguous?(extension)
       @overrides.include?(extension)
-    end
-
-    # Internal: Return overridden extensions.
-    #
-    # Returns extensions Array.
-    def self.overridden_extensions
-      @overrides.keys
     end
 
     # Internal: Create a new Language object
@@ -244,7 +239,9 @@ module Linguist
       @overrides  = attributes[:overrides]  || []
       @filenames  = attributes[:filenames]  || []
 
-      @primary_extension = attributes[:primary_extension] || default_primary_extension || extensions.first
+      unless @primary_extension = attributes[:primary_extension]
+        raise ArgumentError, "#{@name} is missing primary extension"
+      end
 
       # Prepend primary extension unless its already included
       if primary_extension && !extensions.include?(primary_extension)
@@ -381,13 +378,6 @@ module Linguist
       name.downcase.gsub(/\s/, '-')
     end
 
-    # Internal: Get default primary extension.
-    #
-    # Returns the extension String.
-    def default_primary_extension
-      extensions.first
-    end
-
     # Public: Get Language group
     #
     # Returns a Language
@@ -451,10 +441,37 @@ module Linguist
     end
   end
 
+  extensions = Sample.extensions
+  filenames = Sample.filenames
   popular = YAML.load_file(File.expand_path("../popular.yml", __FILE__))
 
   YAML.load_file(File.expand_path("../languages.yml", __FILE__)).each do |name, options|
-    Language.create(
+    aliases = [name.downcase.gsub(/\s/, '-') ] + (options[:aliases] || [])
+    options['extensions'] ||= []
+    options['filenames'] ||= []
+    aliases.each do |name|
+      if extnames = extensions[name]
+        extnames.each do |extname|
+          if !options['extensions'].include?(extname)
+            options['extensions'] << extname
+          else
+            warn "#{name} #{extname.inspect} is already defined in samples/. Remove from languages.yml."
+          end
+        end
+      end
+
+      if fns = filenames[name]
+        fns.each do |filename|
+          if !options['filenames'].include?(filename)
+            options['filenames'] << filename
+          else
+            warn "#{name} #{filename.inspect} is already defined in samples/. Remove from languages.yml."
+          end
+        end
+      end
+    end
+
+    lang = Language.create(
       :name              => name,
       :color             => options['color'],
       :type              => options['type'],
@@ -464,7 +481,7 @@ module Linguist
       :group_name        => options['group'],
       :searchable        => options.key?('searchable') ? options['searchable'] : true,
       :search_term       => options['search_term'],
-      :extensions        => options['extensions'],
+      :extensions        => options['extensions'].sort,
       :primary_extension => options['primary_extension'],
       :overrides         => options['overrides'],
       :filenames         => options['filenames'],

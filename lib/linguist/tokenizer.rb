@@ -5,24 +5,35 @@ module Linguist
   # It strips any data strings or comments and preserves significant
   # language symbols.
   class Tokenizer
-    # Public: Initialize a Tokenizer.
+    # Public: Extract tokens from data
     #
-    # data - String data to scan.
-    def initialize(data)
-      @data = data
-    end
-
-    # Public: Get source data.
-    #
-    # Returns String.
-    attr_reader :data
-
-    # Public: Extract tokens from data.
+    # data - String to tokenize
     #
     # Returns Array of token Strings.
-    def tokens
-      extract_tokens(data)
+    def self.tokenize(data)
+      new.extract_tokens(data)
     end
+
+    SINGLE_LINE_COMMENTS = [
+      '//', # C
+      '#',  # Ruby
+      '%',  # Tex
+    ]
+
+    MULTI_LINE_COMMENTS = [
+      ['/*', '*/'],    # C
+      ['<!--', '-->'], # XML
+      ['{-', '-}'],    # Haskell
+      ['(*', '*)']     # Coq
+    ]
+
+    START_SINGLE_LINE_COMMENT =  Regexp.compile(SINGLE_LINE_COMMENTS.map { |c|
+      "^\s*#{Regexp.escape(c)} "
+    }.join("|"))
+
+    START_MULTI_LINE_COMMENT =  Regexp.compile(MULTI_LINE_COMMENTS.map { |c|
+      Regexp.escape(c[0])
+    }.join("|"))
 
     # Internal: Extract generic tokens from data.
     #
@@ -39,38 +50,17 @@ module Linguist
 
       tokens = []
       until s.eos?
-        # Ruby single line comment
-        if token = s.scan(/# /)
-          tokens << "#"
+        # Single line comment
+        if token = s.scan(START_SINGLE_LINE_COMMENT)
+          tokens << token.strip
           s.skip_until(/\n|\Z/)
 
-        # C style single line comment
-        elsif token = s.scan(/\/\/ /)
-          tokens << "//"
-          s.skip_until(/\n|\Z/)
-
-        # Leading Tex or Matlab comments
-        elsif token = s.scan(/\n%/)
-          tokens << "%"
-          s.skip_until(/\n|\Z/)
-
-        # C multiline comments
-        elsif token = s.scan(/\/\*/)
-          tokens << "/*"
-          s.skip_until(/\*\//)
-          tokens << "*/"
-
-        # Haskell multiline comments
-        elsif token = s.scan(/\{-/)
-          tokens << "{-"
-          s.skip_until(/-\}/)
-          tokens << "-}"
-
-        # XML multiline comments
-        elsif token = s.scan(/<!--/)
-          tokens << "<!--"
-          s.skip_until(/-->/)
-          tokens << "-->"
+        # Multiline comments
+        elsif token = s.scan(START_MULTI_LINE_COMMENT)
+          tokens << token
+          close_token = MULTI_LINE_COMMENTS.assoc(token)[1]
+          s.skip_until(Regexp.compile(Regexp.escape(close_token)))
+          tokens << close_token
 
         # Skip single or double quoted strings
         elsif s.scan(/"/)

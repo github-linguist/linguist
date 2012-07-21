@@ -11,7 +11,7 @@ class TestTokenizer < Test::Unit::TestCase
 
   def tokenize(data)
     data = File.read(File.join(samples_path, data.to_s)) if data.is_a?(Symbol)
-    Tokenizer.new(data).tokens
+    Tokenizer.tokenize(data)
   end
 
   def test_skip_string_literals
@@ -29,13 +29,14 @@ class TestTokenizer < Test::Unit::TestCase
   end
 
   def test_skip_comments
-    assert_equal %w(foo #), tokenize("foo # Comment")
-    assert_equal %w(foo # bar), tokenize("foo # Comment\nbar")
-    assert_equal %w(foo //), tokenize("foo // Comment")
+    assert_equal %w(foo #), tokenize("foo\n# Comment")
+    assert_equal %w(foo # bar), tokenize("foo\n# Comment\nbar")
+    assert_equal %w(foo //), tokenize("foo\n// Comment")
     assert_equal %w(foo /* */), tokenize("foo /* Comment */")
     assert_equal %w(foo /* */), tokenize("foo /* \nComment\n */")
     assert_equal %w(foo <!-- -->), tokenize("foo <!-- Comment -->")
     assert_equal %w(foo {- -}), tokenize("foo {- Comment -}")
+    assert_equal %w(foo \(* *\)), tokenize("foo (* Comment *)")
     assert_equal %w(% %), tokenize("2 % 10\n% Comment")
   end
 
@@ -86,6 +87,6 @@ class TestTokenizer < Test::Unit::TestCase
   def test_ruby_tokens
     assert_equal %w(module Foo end), tokenize(:"ruby/foo.rb")
     assert_equal %w(# /usr/bin/env ruby puts), tokenize(:"ruby/script.rb")
-    assert_equal %w(task default do puts end), tokenize(:"ruby/Rakefile")
+    assert_equal %w(task default do puts end), tokenize(:"ruby/filenames/Rakefile")
   end
 end

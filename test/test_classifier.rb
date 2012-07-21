@@ -25,29 +25,29 @@ class TestClassifier < Test::Unit::TestCase
 
   def test_classify
     classifier = Classifier.new
-    classifier.train Language["Ruby"], fixture("ruby/foo.rb")
-    classifier.train Language["Objective-C"], fixture("objective-c/Foo.h")
-    classifier.train Language["Objective-C"], fixture("objective-c/Foo.m")
+    classifier.train "Ruby", fixture("ruby/foo.rb")
+    classifier.train "Objective-C", fixture("objective-c/Foo.h")
+    classifier.train "Objective-C", fixture("objective-c/Foo.m")
 
     results = classifier.classify(fixture("objective-c/hello.m"))
-    assert_equal Language["Objective-C"], results.first[0]
+    assert_equal "Objective-C", results.first[0]
 
-    tokens  = Tokenizer.new(fixture("objective-c/hello.m")).tokens
+    tokens  = Tokenizer.tokenize(fixture("objective-c/hello.m"))
     results = classifier.classify(tokens)
-    assert_equal Language["Objective-C"], results.first[0]
+    assert_equal "Objective-C", results.first[0]
   end
 
   def test_restricted_classify
     classifier = Classifier.new
-    classifier.train Language["Ruby"], fixture("ruby/foo.rb")
-    classifier.train Language["Objective-C"], fixture("objective-c/Foo.h")
-    classifier.train Language["Objective-C"], fixture("objective-c/Foo.m")
+    classifier.train "Ruby", fixture("ruby/foo.rb")
+    classifier.train "Objective-C", fixture("objective-c/Foo.h")
+    classifier.train "Objective-C", fixture("objective-c/Foo.m")
 
-    results = classifier.classify(fixture("objective-c/hello.m"), [Language["Objective-C"]])
-    assert_equal Language["Objective-C"], results.first[0]
+    results = classifier.classify(fixture("objective-c/hello.m"), ["Objective-C"])
+    assert_equal "Objective-C", results.first[0]
 
-    results = classifier.classify(fixture("objective-c/hello.m"), [Language["Ruby"]])
-    assert_equal Language["Ruby"], results.first[0]
+    results = classifier.classify(fixture("objective-c/hello.m"), ["Ruby"])
+    assert_equal "Ruby", results.first[0]
   end
 
   def test_instance_classify_empty
@@ -69,18 +69,15 @@ class TestClassifier < Test::Unit::TestCase
 
   def test_classify_ambiguous_languages
     Sample.each do |sample|
-      # TODO: These tests are pending
-      next if sample.path =~ /hello.h/
-      next if sample.path =~ /MainMenuViewController.h/
+      language = Linguist::Language.find_by_alias(sample[:language])
+      next unless language.overrides.any?
 
-      next unless sample.language.overrides.any?
-
-      extname   = File.extname(sample.path)
-      languages = Language.all.select { |l| l.extensions.include?(extname) }
+      extname   = File.extname(sample[:path])
+      languages = Language.all.select { |l| l.extensions.include?(extname) }.map(&:name)
       next unless languages.length > 1
 
-      results = Classifier.instance.classify(sample.data, languages)
-      assert_equal sample.language, results.first[0], "#{sample.path}\n#{results.inspect}"
+      results = Classifier.instance.classify(File.read(sample[:path]), languages)
+      assert_equal language.name, results.first[0], "#{sample[:path]}\n#{results.inspect}"
     end
   end
 end

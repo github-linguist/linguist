@@ -1,13 +1,12 @@
-require 'linguist/classifier'
-require 'linguist/language'
+require 'set'
 
 module Linguist
   # Model for accessing classifier training data.
-  class Sample
+  module Sample
     # Samples live in test/ for now, we'll eventually move them out
     PATH = File.expand_path("../../../samples", __FILE__)
 
-    # Public: Iterate over each Sample.
+    # Public: Iterate over each sample.
     #
     # &block - Yields Sample to block
     #
@@ -20,55 +19,77 @@ module Linguist
         # Possibly reconsider this later
         next if category == 'text' || category == 'binary'
 
-        # Map directory name to a Language alias
-        language = Linguist::Language.find_by_alias(category)
-        raise "No language for #{category.inspect}" unless language
-
         dirname = File.join(PATH, category)
         Dir.entries(dirname).each do |filename|
           next if filename == '.' || filename == '..'
-          yield new(File.join(dirname, filename), language)
+
+          if filename == 'filenames'
+            Dir.entries(File.join(dirname, filename)).each do |subfilename|
+              next if subfilename == '.' || subfilename == '..'
+
+              yield({
+                :path    => File.join(dirname, filename, subfilename),
+                :language => category,
+                :filename => subfilename
+              })
+            end
+          else
+            yield({
+              :path     => File.join(dirname, filename),
+              :language => category,
+              :extname  => File.extname(filename)
+            })
+          end
         end
       end
 
       nil
     end
 
+    # Get all extensions listed in samples/
+    #
+    # Returns Hash of sample language keys with a Set of extension
+    # Strings.
+    def self.extensions
+      extensions = {}
+      each do |sample|
+        # TODO: For now skip empty extnames
+        next if sample[:extname].nil? || sample[:extname] == ""
+        extensions[sample[:language]] ||= Set.new
+        extensions[sample[:language]] << sample[:extname]
+      end
+      extensions
+    end
+
+    # Get all filenames listed in samples/
+    #
+    # Returns Hash of sample language keys with a Set of filename
+    # Strings.
+    def self.filenames
+      filenames = {}
+      each do |sample|
+        # TODO: For now skip empty extnames
+        next if sample[:filename].nil?
+        filenames[sample[:language]] ||= Set.new
+        filenames[sample[:language]] << sample[:filename]
+      end
+      filenames
+    end
+
     # Public: Build Classifier from all samples.
     #
     # Returns trained Classifier.
     def self.classifier
+      require 'linguist/classifier'
+      require 'linguist/language'
+
       classifier = Classifier.new
-      each { |sample| classifier.train(sample.language, sample.data) }
+      each { |sample|
+        language = Language.find_by_alias(sample[:language])
+        data     = File.read(sample[:path])
+        classifier.train(language.name, data)
+      }
       classifier.gc
-    end
-
-    # Internal: Initialize Sample.
-    #
-    # Samples should be initialized by Sample.each.
-    #
-    # path     - String full path to file.
-    # language - Language of sample.
-    def initialize(path, language)
-      @path     = path
-      @language = language
-    end
-
-    # Public: Get full path to file.
-    #
-    # Returns String.
-    attr_reader :path
-
-    # Public: Get sample language.
-    #
-    # Returns Language.
-    attr_reader :language
-
-    # Public: Read file contents.
-    #
-    # Returns String.
-    def data
-      File.read(path)
     end
   end
 end

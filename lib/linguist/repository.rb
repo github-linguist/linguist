@@ -80,7 +80,7 @@ module Linguist
       end
 
       # Compute total size
-      @size = @sizes.inject(0) { |s,(k,v)| s + v }
+      @size = @sizes.inject(0) { |s,(_,v)| s + v }
 
       # Get primary language
       if primary = @sizes.max_by { |(_, size)| size }
