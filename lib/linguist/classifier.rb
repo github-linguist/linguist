@@ -17,16 +17,16 @@ module Linguist
     #
     # Returns Classifier.
     def self.instance
-      @instance ||= YAML.load_file(PATH)
+      @instance ||= new(YAML.load_file(PATH))
     end
 
     # Public: Initialize a Classifier.
-    def initialize
-      @tokens_total    = 0
-      @languages_total = 0
-      @tokens          = {}
-      @language_tokens = {}
-      @languages       = {}
+    def initialize(attrs = {})
+      @tokens_total    = attrs['tokens_total'] || 0
+      @languages_total = attrs['languages_total'] || 0
+      @tokens          = attrs['tokens'] || {}
+      @language_tokens = attrs['language_tokens'] || {}
+      @languages       = attrs['languages'] || {}
     end
 
     # Public: Compare Classifier objects.
@@ -152,8 +152,7 @@ module Linguist
     #
     # Returns nothing.
     def to_yaml(io)
-      data = "--- !ruby/object:Linguist::Classifier\n"
-
+      data = ""
       escape = lambda { |s| s.inspect.gsub(/\\#/, "\#") }
 
       data << "languages_total: #{@languages_total}\n"
