@@ -14,8 +14,6 @@ module Linguist
     # Hash of serialized samples object
     if File.exist?(PATH)
       DATA = YAML.load_file(PATH)
-    else
-      DATA = nil
     end
 
     # Public: Iterate over each sample.
