@@ -441,8 +441,8 @@ module Linguist
     end
   end
 
-  extensions = Samples::DATA['extnames'] rescue {} # TODO: BAH!
-  filenames = Samples::DATA['filenames'] rescue {} # TODO: BAH!
+  extensions = Samples::DATA['extnames']
+  filenames = Samples::DATA['filenames']
   popular = YAML.load_file(File.expand_path("../popular.yml", __FILE__))
 
   YAML.load_file(File.expand_path("../languages.yml", __FILE__)).each do |name, options|

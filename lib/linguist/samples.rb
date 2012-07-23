@@ -1,6 +1,7 @@
-require 'set'
 require 'yaml'
+
 require 'linguist/md5'
+require 'linguist/classifier'
 
 module Linguist
   # Model for accessing classifier training data.
@@ -27,7 +28,7 @@ module Linguist
 
         # Skip text and binary for now
         # Possibly reconsider this later
-        next if category == 'text' || category == 'binary'
+        next if category == 'Text' || category == 'Binary'
 
         dirname = File.join(ROOT, category)
         Dir.entries(dirname).each do |filename|
@@ -60,32 +61,29 @@ module Linguist
     #
     # Returns trained Classifier.
     def self.data
-      require 'linguist/classifier'
-      require 'linguist/language'
-
       db = {}
       db['extnames'] = {}
       db['filenames'] = {}
 
       each do |sample|
-        language = Language.find_by_alias(sample[:language])
+        language_name = sample[:language]
 
         # TODO: For now skip empty extnames
         if sample[:extname] && sample[:extname] != ""
-          db['extnames'][language.name] ||= []
-          if !db['extnames'][language.name].include?(sample[:extname])
-            db['extnames'][language.name] << sample[:extname]
+          db['extnames'][language_name] ||= []
+          if !db['extnames'][language_name].include?(sample[:extname])
+            db['extnames'][language_name] << sample[:extname]
           end
         end
 
         # TODO: For now skip empty extnames
         if fn = sample[:filename]
-          db['filenames'][language.name] ||= []
-          db['filenames'][language.name] << fn
+          db['filenames'][language_name] ||= []
+          db['filenames'][language_name] << fn
         end
 
         data = File.read(sample[:path])
-        Classifier.train!(db, language.name, data)
+        Classifier.train!(db, language_name, data)
       end
 
       db['md5'] = Linguist::MD5.hexdigest(db)

@@ -65,28 +65,28 @@ class TestTokenizer < Test::Unit::TestCase
   end
 
   def test_c_tokens
-    assert_equal %w(#ifndef HELLO_H #define HELLO_H void hello \( \) ; #endif), tokenize(:"c/hello.h")
-    assert_equal %w(#include <stdio.h> int main \( \) { printf \( \) ; return ; }), tokenize(:"c/hello.c")
+    assert_equal %w(#ifndef HELLO_H #define HELLO_H void hello \( \) ; #endif), tokenize(:"C/hello.h")
+    assert_equal %w(#include <stdio.h> int main \( \) { printf \( \) ; return ; }), tokenize(:"C/hello.c")
   end
 
   def test_cpp_tokens
-    assert_equal %w(class Bar { protected char *name ; public void hello \( \) ; }), tokenize(:"cpp/bar.h")
-    assert_equal %w(#include <iostream> using namespace std ; int main \( \) { cout << << endl ; }), tokenize(:"cpp/hello.cpp")
+    assert_equal %w(class Bar { protected char *name ; public void hello \( \) ; }), tokenize(:"C++/bar.h")
+    assert_equal %w(#include <iostream> using namespace std ; int main \( \) { cout << << endl ; }), tokenize(:"C++/hello.cpp")
   end
 
   def test_objective_c_tokens
-    assert_equal %w(#import <Foundation/Foundation.h> @interface Foo NSObject { } @end), tokenize(:"objective-c/Foo.h")
-    assert_equal %w(#import @implementation Foo @end), tokenize(:"objective-c/Foo.m")
-    assert_equal %w(#import <Cocoa/Cocoa.h> int main \( int argc char *argv \) { NSLog \( @ \) ; return ; }), tokenize(:"objective-c/hello.m")
+    assert_equal %w(#import <Foundation/Foundation.h> @interface Foo NSObject { } @end), tokenize(:"Objective-C/Foo.h")
+    assert_equal %w(#import @implementation Foo @end), tokenize(:"Objective-C/Foo.m")
+    assert_equal %w(#import <Cocoa/Cocoa.h> int main \( int argc char *argv \) { NSLog \( @ \) ; return ; }), tokenize(:"Objective-C/hello.m")
   end
 
   def test_javascript_tokens
-    assert_equal %w( \( function \( \) { console.log \( \) ; } \) .call \( this \) ;), tokenize(:"javascript/hello.js")
+    assert_equal %w( \( function \( \) { console.log \( \) ; } \) .call \( this \) ;), tokenize(:"JavaScript/hello.js")
   end
 
   def test_ruby_tokens
-    assert_equal %w(module Foo end), tokenize(:"ruby/foo.rb")
-    assert_equal %w(# /usr/bin/env ruby puts), tokenize(:"ruby/script.rb")
-    assert_equal %w(task default do puts end), tokenize(:"ruby/filenames/Rakefile")
+    assert_equal %w(module Foo end), tokenize(:"Ruby/foo.rb")
+    assert_equal %w(# /usr/bin/env ruby puts), tokenize(:"Ruby/script.rb")
+    assert_equal %w(task default do puts end), tokenize(:"Ruby/filenames/Rakefile")
   end
 end

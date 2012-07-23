@@ -34,63 +34,63 @@ class TestBlob < Test::Unit::TestCase
   end
 
   def test_mime_type
-    assert_equal "application/octet-stream", blob("binary/dog.o").mime_type
-    assert_equal "application/ogg", blob("binary/foo.ogg").mime_type
-    assert_equal "application/postscript", blob("binary/octocat.ai").mime_type
-    assert_equal "application/x-ruby", blob("ruby/grit.rb").mime_type
-    assert_equal "application/x-sh", blob("shell/script.sh").mime_type
-    assert_equal "application/xml", blob("xml/bar.xml").mime_type
-    assert_equal "text/plain", blob("text/README").mime_type
+    assert_equal "application/octet-stream", blob("Binary/dog.o").mime_type
+    assert_equal "application/ogg", blob("Binary/foo.ogg").mime_type
+    assert_equal "application/postscript", blob("Binary/octocat.ai").mime_type
+    assert_equal "application/x-ruby", blob("Ruby/grit.rb").mime_type
+    assert_equal "application/x-sh", blob("Shell/script.sh").mime_type
+    assert_equal "application/xml", blob("XML/bar.xml").mime_type
+    assert_equal "text/plain", blob("Text/README").mime_type
   end
 
   def test_content_type
-    assert_equal "application/octet-stream", blob("binary/dog.o").content_type
-    assert_equal "application/ogg", blob("binary/foo.ogg").content_type
-    assert_equal "application/pdf", blob("binary/foo.pdf").content_type
-    assert_equal "image/png", blob("binary/foo.png").content_type
-    assert_equal "text/plain; charset=iso-8859-2", blob("text/README").content_type
-    assert_equal "text/plain; charset=iso-8859-1", blob("perl/script.pl").content_type
-    assert_equal "text/plain; charset=iso-8859-1", blob("python/script.py").content_type
-    assert_equal "text/plain; charset=iso-8859-1", blob("ruby/script.rb").content_type
-    assert_equal "text/plain; charset=iso-8859-1", blob("shell/script.sh").content_type
+    assert_equal "application/octet-stream", blob("Binary/dog.o").content_type
+    assert_equal "application/ogg", blob("Binary/foo.ogg").content_type
+    assert_equal "application/pdf", blob("Binary/foo.pdf").content_type
+    assert_equal "image/png", blob("Binary/foo.png").content_type
+    assert_equal "text/plain; charset=iso-8859-2", blob("Text/README").content_type
+    assert_equal "text/plain; charset=iso-8859-1", blob("Perl/script.pl").content_type
+    assert_equal "text/plain; charset=iso-8859-1", blob("Python/script.py").content_type
+    assert_equal "text/plain; charset=iso-8859-1", blob("Ruby/script.rb").content_type
+    assert_equal "text/plain; charset=iso-8859-1", blob("Shell/script.sh").content_type
   end
 
   def test_disposition
-    assert_equal "attachment; filename=foo+bar.jar", blob("binary/foo bar.jar").disposition
-    assert_equal "attachment; filename=foo.bin", blob("binary/foo.bin").disposition
-    assert_equal "attachment; filename=linguist.gem", blob("binary/linguist.gem").disposition
-    assert_equal "attachment; filename=octocat.ai", blob("binary/octocat.ai").disposition
-    assert_equal "inline", blob("text/README").disposition
-    assert_equal "inline", blob("text/foo.txt").disposition
-    assert_equal "inline", blob("ruby/grit.rb").disposition
-    assert_equal "inline", blob("binary/octocat.png").disposition
+    assert_equal "attachment; filename=foo+bar.jar", blob("Binary/foo bar.jar").disposition
+    assert_equal "attachment; filename=foo.bin", blob("Binary/foo.bin").disposition
+    assert_equal "attachment; filename=linguist.gem", blob("Binary/linguist.gem").disposition
+    assert_equal "attachment; filename=octocat.ai", blob("Binary/octocat.ai").disposition
+    assert_equal "inline", blob("Text/README").disposition
+    assert_equal "inline", blob("Text/foo.txt").disposition
+    assert_equal "inline", blob("Ruby/grit.rb").disposition
+    assert_equal "inline", blob("Binary/octocat.png").disposition
   end
 
   def test_data
-    assert_equal "module Foo\nend\n", blob("ruby/foo.rb").data
+    assert_equal "module Foo\nend\n", blob("Ruby/foo.rb").data
   end
 
   def test_lines
-    assert_equal ["module Foo", "end", ""], blob("ruby/foo.rb").lines
+    assert_equal ["module Foo", "end", ""], blob("Ruby/foo.rb").lines
   end
 
   def test_size
-    assert_equal 15, blob("ruby/foo.rb").size
+    assert_equal 15, blob("Ruby/foo.rb").size
   end
 
   def test_loc
-    assert_equal 3, blob("ruby/foo.rb").loc
+    assert_equal 3, blob("Ruby/foo.rb").loc
   end
 
   def test_sloc
-    assert_equal 2, blob("ruby/foo.rb").sloc
+    assert_equal 2, blob("Ruby/foo.rb").sloc
   end
 
   def test_encoding
-    assert_equal "ISO-8859-2", blob("text/README").encoding
-    assert_equal "ISO-8859-1", blob("text/dump.sql").encoding
-    assert_equal "UTF-8", blob("text/foo.txt").encoding
-    assert_nil blob("binary/dog.o").encoding
+    assert_equal "ISO-8859-2", blob("Text/README").encoding
+    assert_equal "ISO-8859-1", blob("Text/dump.sql").encoding
+    assert_equal "UTF-8", blob("Text/foo.txt").encoding
+    assert_nil blob("Binary/dog.o").encoding
   end
 
   def test_binary
@@ -101,91 +101,91 @@ class TestBlob < Test::Unit::TestCase
     end
     assert large_blob.binary?
 
-    assert blob("binary/git.deb").binary?
-    assert blob("binary/git.exe").binary?
-    assert blob("binary/hello.pbc").binary?
-    assert blob("binary/linguist.gem").binary?
-    assert blob("binary/octocat.ai").binary?
-    assert blob("binary/octocat.png").binary?
-    assert blob("binary/zip").binary?
-    assert !blob("text/README").binary?
-    assert !blob("text/file.txt").binary?
-    assert !blob("ruby/foo.rb").binary?
-    assert !blob("perl/script.pl").binary?
+    assert blob("Binary/git.deb").binary?
+    assert blob("Binary/git.exe").binary?
+    assert blob("Binary/hello.pbc").binary?
+    assert blob("Binary/linguist.gem").binary?
+    assert blob("Binary/octocat.ai").binary?
+    assert blob("Binary/octocat.png").binary?
+    assert blob("Binary/zip").binary?
+    assert !blob("Text/README").binary?
+    assert !blob("Text/file.txt").binary?
+    assert !blob("Ruby/foo.rb").binary?
+    assert !blob("Perl/script.pl").binary?
   end
 
   def test_text
-    assert blob("text/README").text?
-    assert blob("text/dump.sql").text?
-    assert blob("text/file.json").text?
-    assert blob("text/file.txt").text?
-    assert blob("text/md").text?
-    assert blob("shell/script.sh").text?
-    assert blob("text/txt").text?
+    assert blob("Text/README").text?
+    assert blob("Text/dump.sql").text?
+    assert blob("Text/file.json").text?
+    assert blob("Text/file.txt").text?
+    assert blob("Text/md").text?
+    assert blob("Shell/script.sh").text?
+    assert blob("Text/txt").text?
   end
 
   def test_image
-    assert blob("binary/octocat.gif").image?
-    assert blob("binary/octocat.jpeg").image?
-    assert blob("binary/octocat.jpg").image?
-    assert blob("binary/octocat.png").image?
-    assert !blob("binary/octocat.ai").image?
-    assert !blob("binary/octocat.psd").image?
+    assert blob("Binary/octocat.gif").image?
+    assert blob("Binary/octocat.jpeg").image?
+    assert blob("Binary/octocat.jpg").image?
+    assert blob("Binary/octocat.png").image?
+    assert !blob("Binary/octocat.ai").image?
+    assert !blob("Binary/octocat.psd").image?
   end
 
   def test_viewable
-    assert blob("text/README").viewable?
-    assert blob("ruby/foo.rb").viewable?
-    assert blob("perl/script.pl").viewable?
-    assert !blob("binary/linguist.gem").viewable?
-    assert !blob("binary/octocat.ai").viewable?
-    assert !blob("binary/octocat.png").viewable?
+    assert blob("Text/README").viewable?
+    assert blob("Ruby/foo.rb").viewable?
+    assert blob("Perl/script.pl").viewable?
+    assert !blob("Binary/linguist.gem").viewable?
+    assert !blob("Binary/octocat.ai").viewable?
+    assert !blob("Binary/octocat.png").viewable?
   end
 
   def test_generated
-    assert !blob("text/README").generated?
+    assert !blob("Text/README").generated?
 
     # Xcode project files
-    assert blob("xml/MainMenu.xib").generated?
-    assert blob("binary/MainMenu.nib").generated?
-    assert blob("xml/project.pbxproj").generated?
+    assert blob("XML/MainMenu.xib").generated?
+    assert blob("Binary/MainMenu.nib").generated?
+    assert blob("XML/project.pbxproj").generated?
 
     # Gemfile.locks
     assert blob("Gemfile.lock").generated?
 
     # Generated .NET Docfiles
-    assert blob("xml/net_docfile.xml").generated?
+    assert blob("XML/net_docfile.xml").generated?
 
     # Long line
-    assert !blob("javascript/uglify.js").generated?
+    assert !blob("JavaScript/uglify.js").generated?
 
     # Inlined JS, but mostly code
-    assert !blob("javascript/json2_backbone.js").generated?
+    assert !blob("JavaScript/json2_backbone.js").generated?
 
     # Minified JS
-    assert !blob("javascript/jquery-1.6.1.js").generated?
-    assert blob("javascript/jquery-1.6.1.min.js").generated?
-    assert blob("javascript/jquery-1.4.2.min.js").generated?
+    assert !blob("JavaScript/jquery-1.6.1.js").generated?
+    assert blob("JavaScript/jquery-1.6.1.min.js").generated?
+    assert blob("JavaScript/jquery-1.4.2.min.js").generated?
 
     # CoffeeScript-generated JS
     # TODO
 
     # PEG.js-generated parsers
-    assert blob("javascript/parser.js").generated?
+    assert blob("JavaScript/parser.js").generated?
 
     # These examples are too basic to tell
-    assert !blob("javascript/empty.js").generated?
-    assert !blob("javascript/hello.js").generated?
+    assert !blob("JavaScript/empty.js").generated?
+    assert !blob("JavaScript/hello.js").generated?
 
-    assert blob("javascript/intro-old.js").generated?
-    assert blob("javascript/classes-old.js").generated?
+    assert blob("JavaScript/intro-old.js").generated?
+    assert blob("JavaScript/classes-old.js").generated?
 
-    assert blob("javascript/intro.js").generated?
-    assert blob("javascript/classes.js").generated?
+    assert blob("JavaScript/intro.js").generated?
+    assert blob("JavaScript/classes.js").generated?
   end
 
   def test_vendored
-    assert !blob("text/README").vendored?
+    assert !blob("Text/README").vendored?
     assert !blob("ext/extconf.rb").vendored?
 
     # Node depedencies
@@ -266,47 +266,46 @@ class TestBlob < Test::Unit::TestCase
   end
 
   def test_indexable
-    assert blob("text/file.txt").indexable?
-    assert blob("ruby/foo.rb").indexable?
-    assert !blob("text/defu.nkt").indexable?
-    assert !blob("text/dump.sql").indexable?
-    assert !blob("binary/github.po").indexable?
-    assert !blob("binary/linguist.gem").indexable?
+    assert blob("Text/file.txt").indexable?
+    assert blob("Ruby/foo.rb").indexable?
+    assert !blob("Text/defu.nkt").indexable?
+    assert !blob("Text/dump.sql").indexable?
+    assert !blob("Binary/github.po").indexable?
+    assert !blob("Binary/linguist.gem").indexable?
   end
 
   def test_language
     Samples.each do |sample|
-      blob     = blob(sample[:path])
-      language = Linguist::Language.find_by_alias(sample[:language])
-      assert_equal language, blob.language, blob.name
+      blob = blob(sample[:path])
+      assert_equal sample[:language], blob.language.name, blob.name
     end
   end
 
   def test_lexer
-    assert_equal Lexer['Ruby'], blob("ruby/foo.rb").lexer
+    assert_equal Lexer['Ruby'], blob("Ruby/foo.rb").lexer
   end
 
   def test_shebang_script
-    assert_equal 'sh', script_blob("shell/script.sh").shebang_script
-    assert_equal 'bash', script_blob("shell/script.bash").shebang_script
-    assert_equal 'zsh', script_blob("shell/script.zsh").shebang_script
-    assert_equal 'perl', script_blob("perl/script.pl").shebang_script
-    assert_equal 'ruby', script_blob("ruby/script.rb").shebang_script
-    assert_equal 'ruby', script_blob("ruby/script2.rb").shebang_script
-    assert_equal 'python', script_blob("python/script.py").shebang_script
-    assert_equal 'node', script_blob("javascript/script.js").shebang_script
-    assert_equal 'groovy', script_blob("groovy/script.groovy").shebang_script
-    assert_equal 'macruby', script_blob("ruby/macruby-script").shebang_script
-    assert_equal 'rake', script_blob("ruby/script.rake").shebang_script
-    assert_equal 'foo', script_blob("text/script.foo").shebang_script
-    assert_equal 'nush', script_blob("nu/script.nu").shebang_script
-    assert_equal 'scala', script_blob("scala/script.scala").shebang_script
-    assert_equal 'racket', script_blob("racket/script.rkt").shebang_script
-    assert_equal nil, script_blob("ruby/foo.rb").shebang_script
+    assert_equal 'sh', script_blob("Shell/script.sh").shebang_script
+    assert_equal 'bash', script_blob("Shell/script.bash").shebang_script
+    assert_equal 'zsh', script_blob("Shell/script.zsh").shebang_script
+    assert_equal 'perl', script_blob("Perl/script.pl").shebang_script
+    assert_equal 'ruby', script_blob("Ruby/script.rb").shebang_script
+    assert_equal 'ruby', script_blob("Ruby/script2.rb").shebang_script
+    assert_equal 'python', script_blob("Python/script.py").shebang_script
+    assert_equal 'node', script_blob("JavaScript/script.js").shebang_script
+    assert_equal 'groovy', script_blob("Groovy/script.groovy").shebang_script
+    assert_equal 'macruby', script_blob("Ruby/macruby-script").shebang_script
+    assert_equal 'rake', script_blob("Ruby/script.rake").shebang_script
+    assert_equal 'foo', script_blob("Text/script.foo").shebang_script
+    assert_equal 'nush', script_blob("Nu/script.nu").shebang_script
+    assert_equal 'scala', script_blob("Scala/script.scala").shebang_script
+    assert_equal 'racket', script_blob("Racket/script.rkt").shebang_script
+    assert_equal nil, script_blob("Ruby/foo.rb").shebang_script
   end
 
   def test_colorize
-    assert_equal <<-HTML, blob("ruby/foo.rb").colorize
+    assert_equal <<-HTML, blob("Ruby/foo.rb").colorize
 <div class="highlight"><pre><span class="k">module</span> <span class="nn">Foo</span>
 <span class="k">end</span>
 </pre>
@@ -315,18 +314,18 @@ class TestBlob < Test::Unit::TestCase
   end
 
   def test_colorize_without_wrapper
-    assert_equal <<-HTML, blob("ruby/foo.rb").colorize_without_wrapper
+    assert_equal <<-HTML, blob("Ruby/foo.rb").colorize_without_wrapper
 <span class="k">module</span> <span class="nn">Foo</span>
 <span class="k">end</span>
     HTML
   end
 
   def test_colorize_does_skip_minified_files
-    assert_nil blob("javascript/jquery-1.6.1.min.js").colorize
+    assert_nil blob("JavaScript/jquery-1.6.1.min.js").colorize
   end
 
   # Pygments.rb was taking exceeding long on this particular file
   def test_colorize_doesnt_blow_up_with_files_with_high_ratio_of_long_lines
-    assert_nil blob("javascript/steelseries-min.js").colorize
+    assert_nil blob("JavaScript/steelseries-min.js").colorize
   end
 end

@@ -18,28 +18,28 @@ class TestClassifier < Test::Unit::TestCase
 
   def test_classify
     db = {}
-    Classifier.train! db, "Ruby", fixture("ruby/foo.rb")
-    Classifier.train! db, "Objective-C", fixture("objective-c/Foo.h")
-    Classifier.train! db, "Objective-C", fixture("objective-c/Foo.m")
+    Classifier.train! db, "Ruby", fixture("Ruby/foo.rb")
+    Classifier.train! db, "Objective-C", fixture("Objective-C/Foo.h")
+    Classifier.train! db, "Objective-C", fixture("Objective-C/Foo.m")
 
-    results = Classifier.classify(db, fixture("objective-c/hello.m"))
+    results = Classifier.classify(db, fixture("Objective-C/hello.m"))
     assert_equal "Objective-C", results.first[0]
 
-    tokens  = Tokenizer.tokenize(fixture("objective-c/hello.m"))
+    tokens  = Tokenizer.tokenize(fixture("Objective-C/hello.m"))
     results = Classifier.classify(db, tokens)
     assert_equal "Objective-C", results.first[0]
   end
 
   def test_restricted_classify
     db = {}
-    Classifier.train! db, "Ruby", fixture("ruby/foo.rb")
-    Classifier.train! db, "Objective-C", fixture("objective-c/Foo.h")
-    Classifier.train! db, "Objective-C", fixture("objective-c/Foo.m")
+    Classifier.train! db, "Ruby", fixture("Ruby/foo.rb")
+    Classifier.train! db, "Objective-C", fixture("Objective-C/Foo.h")
+    Classifier.train! db, "Objective-C", fixture("Objective-C/Foo.m")
 
-    results = Classifier.classify(db, fixture("objective-c/hello.m"), ["Objective-C"])
+    results = Classifier.classify(db, fixture("Objective-C/hello.m"), ["Objective-C"])
     assert_equal "Objective-C", results.first[0]
 
-    results = Classifier.classify(db, fixture("objective-c/hello.m"), ["Ruby"])
+    results = Classifier.classify(db, fixture("Objective-C/hello.m"), ["Ruby"])
     assert_equal "Ruby", results.first[0]
   end
 
@@ -54,7 +54,7 @@ class TestClassifier < Test::Unit::TestCase
 
   def test_classify_ambiguous_languages
     Samples.each do |sample|
-      language = Linguist::Language.find_by_alias(sample[:language])
+      language = Linguist::Language.find_by_name(sample[:language])
       next unless language.overrides.any?
 
       extname   = File.extname(sample[:path])
