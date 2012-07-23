@@ -29,19 +29,6 @@ module Linguist
       @languages       = attrs['languages'] || {}
     end
 
-    # Public: Compare Classifier objects.
-    #
-    # other - Classifier object to compare to.
-    #
-    # Returns Boolean.
-    def eql?(other)
-      # Lazy fast check counts only
-      other.is_a?(self.class) &&
-        @tokens_total == other.instance_variable_get(:@tokens_total) &&
-        @languages_total == other.instance_variable_get(:@languages_total)
-    end
-    alias_method :==, :eql?
-
     # Public: Train classifier that data is a certain language.
     #
     # language - String language of data
@@ -144,6 +131,19 @@ module Linguist
     # Returns Float between 0.0 and 1.0.
     def language_probability(language)
       Math.log(@languages[language].to_f / @languages_total.to_f)
+    end
+
+    # Public: Returns serializable hash representation.
+    #
+    # Returns Hash.
+    def to_hash
+      {
+        'tokens_total'    => @tokens_total,
+        'languages_total' => @languages_total,
+        'tokens'          => @tokens,
+        'language_tokens' => @language_tokens,
+        'languages'       => @languages
+      }
     end
 
     # Public: Serialize classifier to YAML.
