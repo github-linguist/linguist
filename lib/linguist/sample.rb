@@ -1,10 +1,18 @@
 require 'set'
+require 'yaml'
 
 module Linguist
   # Model for accessing classifier training data.
   module Sample
     # Samples live in test/ for now, we'll eventually move them out
     PATH = File.expand_path("../../../samples", __FILE__)
+
+    YML = File.expand_path('../samples.yml', __FILE__)
+    if File.exist?(YML)
+      DATA = YAML.load_file(YML)
+    else
+      DATA = nil
+    end
 
     # Public: Iterate over each sample.
     #
@@ -90,6 +98,41 @@ module Linguist
         classifier.train(language.name, data)
       }
       classifier
+    end
+    
+    # Public: Serialize samples data to YAML.
+    #
+    # data - Hash
+    # io   - IO object to write to
+    #
+    # Returns nothing.
+    def self.serialize_to_yaml(data, io)
+      data = ""
+      escape = lambda { |s| s.inspect.gsub(/\\#/, "\#") }
+
+      data << "languages_total: #{data['languages_total']}\n"
+      data << "tokens_total: #{data['tokens_total']}\n"
+
+      data << "languages:\n"
+      data['languages'].sort.each do |language, count|
+        data << "  #{escape.call(language)}: #{count}\n"
+      end
+
+      data << "language_tokens:\n"
+      data['language_tokens'].sort.each do |language, count|
+        data << "  #{escape.call(language)}: #{count}\n"
+      end
+
+      data << "tokens:\n"
+      data['tokens'].sort.each do |language, tokens|
+        data << "  #{escape.call(language)}:\n"
+        tokens.sort.each do |token, count|
+          data << "    #{escape.call(token)}: #{count}\n"
+        end
+      end
+
+      io.write data
+      nil
     end
   end
 end

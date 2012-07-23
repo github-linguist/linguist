@@ -3,23 +3,6 @@ require 'linguist/tokenizer'
 module Linguist
   # Language bayesian classifier.
   class Classifier
-    # Internal: Path to persisted classifier db.
-    PATH = File.expand_path('../samples.yml', __FILE__)
-
-    # Public: Check if persisted db exists on disk.
-    #
-    # Returns Boolean.
-    def self.exist?
-      File.exist?(PATH)
-    end
-
-    # Public: Get persisted Classifier instance.
-    #
-    # Returns Classifier.
-    def self.instance
-      @instance ||= new(YAML.load_file(PATH))
-    end
-
     # Public: Initialize a Classifier.
     def initialize(attrs = {})
       @tokens_total    = attrs['tokens_total'] || 0
@@ -129,42 +112,5 @@ module Linguist
         'languages'       => @languages
       }
     end
-
-    # Public: Serialize classifier to YAML.
-    #
-    # opts - Hash of YAML options.
-    #
-    # Returns nothing.
-    def to_yaml(io)
-      data = ""
-      escape = lambda { |s| s.inspect.gsub(/\\#/, "\#") }
-
-      data << "languages_total: #{@languages_total}\n"
-      data << "tokens_total: #{@tokens_total}\n"
-
-      data << "languages:\n"
-      @languages.sort.each do |language, count|
-        data << "  #{escape.call(language)}: #{count}\n"
-      end
-
-      data << "language_tokens:\n"
-      @language_tokens.sort.each do |language, count|
-        data << "  #{escape.call(language)}: #{count}\n"
-      end
-
-      data << "tokens:\n"
-      @tokens.sort.each do |language, tokens|
-        data << "  #{escape.call(language)}:\n"
-        tokens.sort.each do |token, count|
-          data << "    #{escape.call(token)}: #{count}\n"
-        end
-      end
-
-      io.write data
-      nil
-    end
   end
-
-  # Eager load instance
-  Classifier.instance if Classifier.exist?
 end
