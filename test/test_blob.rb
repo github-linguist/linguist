@@ -29,10 +29,6 @@ class TestBlob < Test::Unit::TestCase
     assert_equal "foo.rb", blob("foo.rb").name
   end
 
-  def test_pathname
-    assert_equal Pathname.new("foo.rb"), blob("foo.rb").pathname
-  end
-
   def test_mime_type
     assert_equal "application/octet-stream", blob("Binary/dog.o").mime_type
     assert_equal "application/ogg", blob("Binary/foo.ogg").mime_type

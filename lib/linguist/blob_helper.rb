@@ -1,7 +1,6 @@
 require 'linguist/classifier'
 require 'linguist/language'
 require 'linguist/mime'
-require 'linguist/pathname'
 require 'linguist/samples'
 
 require 'charlock_holmes'
@@ -13,13 +12,6 @@ module Linguist
   # BlobHelper is a mixin for Blobish classes that respond to "name",
   # "data" and "size" such as Grit::Blob.
   module BlobHelper
-    # Internal: Get a Pathname wrapper for Blob#name
-    #
-    # Returns a Pathname.
-    def pathname
-      Pathname.new(name || "")
-    end
-
     # Public: Get the extname of the path
     #
     # Examples
@@ -29,7 +21,7 @@ module Linguist
     #
     # Returns a String
     def extname
-      pathname.extname
+      File.extname(name)
     end
 
     # Public: Get the actual blob mime type
@@ -41,7 +33,7 @@ module Linguist
     #
     # Returns a mime type String.
     def mime_type
-      @mime_type ||= pathname.mime_type
+      @mime_type ||= Mime.mime_for(extname)
     end
 
     # Public: Get the Content-Type header value
@@ -73,7 +65,7 @@ module Linguist
       elsif name.nil?
         "attachment"
       else
-        "attachment; filename=#{EscapeUtils.escape_url(pathname.basename)}"
+        "attachment; filename=#{EscapeUtils.escape_url(File.basename(name))}"
       end
     end
 
@@ -96,7 +88,7 @@ module Linguist
     #
     # Return true or false
     def binary_mime_type?
-      if mime_type = Mime.lookup_mime_type_for(pathname.extname)
+      if mime_type = Mime.lookup_mime_type_for(extname)
         mime_type.binary?
       end
     end
@@ -422,7 +414,7 @@ module Linguist
       disambiguate_extension_language ||
 
         # See if there is a Language for the extension
-        pathname.language ||
+        Language.find_by_filename(name) ||
 
         # Try to detect Language from shebang line
         shebang_language
