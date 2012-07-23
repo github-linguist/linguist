@@ -10,7 +10,7 @@ end
 
 file 'lib/linguist/samples.yml' => Dir['samples/**/*'] do |f|
   require 'linguist/samples'
-  yaml = Linguist::Samples.serialize_to_yaml(Linguist::Samples.data)
+  yaml = YAML.dump(Linguist::Samples.data)
   File.open(f.name, 'w') { |io| io.write yaml }
 end
 

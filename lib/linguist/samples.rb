@@ -88,60 +88,9 @@ module Linguist
         Classifier.train!(db, language.name, data)
       end
 
-      db['md5'] = MD5.hexdigest(db)
+      db['md5'] = Linguist::MD5.hexdigest(db)
 
       db
-    end
-    
-    # Public: Serialize samples data to YAML.
-    #
-    # db - Hash
-    #
-    # Returns String.
-    def self.serialize_to_yaml(db)
-      out = ""
-      escape = lambda { |s| s.inspect.gsub(/\\#/, "\#") }
-
-      out << "md5: #{db['md5']}\n"
-
-      out << "extnames:\n"
-      db['extnames'].sort.each do |language, extnames|
-        out << "  #{escape.call(language)}:\n"
-        extnames.sort.each do |extname|
-          out << "   - #{escape.call(extname)}\n"
-        end
-      end
-
-      out << "filenames:\n"
-      db['filenames'].sort.each do |language, filenames|
-        out << "  #{escape.call(language)}:\n"
-        filenames.sort.each do |filename|
-          out << "   - #{escape.call(filename)}\n"
-        end
-      end
-
-      out << "languages_total: #{db['languages_total']}\n"
-      out << "tokens_total: #{db['tokens_total']}\n"
-
-      out << "languages:\n"
-      db['languages'].sort.each do |language, count|
-        out << "  #{escape.call(language)}: #{count}\n"
-      end
-
-      out << "language_tokens:\n"
-      db['language_tokens'].sort.each do |language, count|
-        out << "  #{escape.call(language)}: #{count}\n"
-      end
-
-      out << "tokens:\n"
-      db['tokens'].sort.each do |language, tokens|
-        out << "  #{escape.call(language)}:\n"
-        tokens.sort.each do |token, count|
-          out << "    #{escape.call(token)}: #{count}\n"
-        end
-      end
-
-      out
     end
   end
 end
