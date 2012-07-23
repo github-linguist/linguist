@@ -1,17 +1,28 @@
 require 'set'
 require 'yaml'
+require 'linguist/md5'
 
 module Linguist
   # Model for accessing classifier training data.
   module Samples
-    # Samples live in test/ for now, we'll eventually move them out
-    PATH = File.expand_path("../../../samples", __FILE__)
+    # Path to samples root directory
+    ROOT = File.expand_path("../../../samples", __FILE__)
 
-    YML = File.expand_path('../samples.yml', __FILE__)
-    if File.exist?(YML)
-      DATA = YAML.load_file(YML)
+    # Path for serialized samples db
+    PATH = File.expand_path('../samples.yml', __FILE__)
+
+    # Hash of serialized samples object
+    if File.exist?(PATH)
+      DATA = YAML.load_file(PATH)
     else
       DATA = nil
+    end
+
+    # Check if serialized db is out of sync from db directory.
+    #
+    # Returns Boolean.
+    def self.outdated?
+      MD5.hexdigest(DATA) != MD5.hexdigest(classifier.to_hash)
     end
 
     # Public: Iterate over each sample.
@@ -20,14 +31,14 @@ module Linguist
     #
     # Returns nothing.
     def self.each(&block)
-      Dir.entries(PATH).each do |category|
+      Dir.entries(ROOT).each do |category|
         next if category == '.' || category == '..'
 
         # Skip text and binary for now
         # Possibly reconsider this later
         next if category == 'text' || category == 'binary'
 
-        dirname = File.join(PATH, category)
+        dirname = File.join(ROOT, category)
         Dir.entries(dirname).each do |filename|
           next if filename == '.' || filename == '..'
 

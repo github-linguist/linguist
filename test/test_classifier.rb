@@ -2,7 +2,6 @@ require 'linguist/classifier'
 require 'linguist/language'
 require 'linguist/samples'
 require 'linguist/tokenizer'
-require 'linguist/md5'
 
 require 'test/unit'
 
@@ -18,11 +17,8 @@ class TestClassifier < Test::Unit::TestCase
   end
 
   def test_instance_freshness
-    serialized = Linguist::MD5.hexdigest(Samples::DATA)
-    latest     = Linguist::MD5.hexdigest(Linguist::Samples.classifier.to_hash)
-
     # Just warn, it shouldn't scare people off by breaking the build.
-    if serialized != latest
+    if Samples.outdated?
       warn "Classifier database is out of date. Run `bundle exec rake classifier`."
     end
   end
