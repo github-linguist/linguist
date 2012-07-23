@@ -3,56 +3,76 @@ require 'linguist/tokenizer'
 module Linguist
   # Language bayesian classifier.
   class Classifier
-    # Public: Initialize a Classifier.
-    def initialize(attrs = {})
-      @tokens_total    = attrs['tokens_total'] || 0
-      @languages_total = attrs['languages_total'] || 0
-      @tokens          = attrs['tokens'] || {}
-      @language_tokens = attrs['language_tokens'] || {}
-      @languages       = attrs['languages'] || {}
-    end
-
     # Public: Train classifier that data is a certain language.
     #
+    # db       - Hash classifier database object
     # language - String language of data
     # data     - String contents of file
     #
     # Examples
     #
-    #   train('Ruby', "def hello; end")
+    #   Classifier.train(db, 'Ruby', "def hello; end")
     #
     # Returns nothing.
-    def train(language, data)
+    def self.train!(db, language, data)
       tokens = Tokenizer.tokenize(data)
 
+      db['tokens_total'] ||= 0
+      db['languages_total'] ||= 0
+      db['tokens'] ||= {}
+      db['language_tokens'] ||= {}
+      db['languages'] ||= {}
+
       tokens.each do |token|
-        @tokens[language] ||= {}
-        @tokens[language][token] ||= 0
-        @tokens[language][token] += 1
-        @language_tokens[language] ||= 0
-        @language_tokens[language] += 1
-        @tokens_total += 1
+        db['tokens'][language] ||= {}
+        db['tokens'][language][token] ||= 0
+        db['tokens'][language][token] += 1
+        db['language_tokens'][language] ||= 0
+        db['language_tokens'][language] += 1
+        db['tokens_total'] += 1
       end
-      @languages[language] ||= 0
-      @languages[language] += 1
-      @languages_total += 1
+      db['languages'][language] ||= 0
+      db['languages'][language] += 1
+      db['languages_total'] += 1
 
       nil
     end
 
     # Public: Guess language of data.
     #
+    # db        - Hash of classifer tokens database.
     # data      - Array of tokens or String data to analyze.
     # languages - Array of language name Strings to restrict to.
     #
     # Examples
     #
-    #   classify("def hello; end")
+    #   Classifier.classify(db, "def hello; end")
     #   # => [ 'Ruby', 0.90], ['Python', 0.2], ... ]
     #
     # Returns sorted Array of result pairs. Each pair contains the
     # String language name and a Float score.
-    def classify(tokens, languages = @languages.keys)
+    def self.classify(db, tokens, languages = nil)
+      languages ||= db['languages'].keys
+      new(db).classify(tokens, languages)
+    end
+
+    # Internal: Initialize a Classifier.
+    def initialize(db = {})
+      @tokens_total    = db['tokens_total']
+      @languages_total = db['languages_total']
+      @tokens          = db['tokens']
+      @language_tokens = db['language_tokens']
+      @languages       = db['languages']
+    end
+
+    # Internal: Guess language of data
+    #
+    # data      - Array of tokens or String data to analyze.
+    # languages - Array of language name Strings to restrict to.
+    #
+    # Returns sorted Array of result pairs. Each pair contains the
+    # String language name and a Float score.
+    def classify(tokens, languages)
       return [] if tokens.nil?
       tokens = Tokenizer.tokenize(tokens) if tokens.is_a?(String)
 
@@ -98,19 +118,6 @@ module Linguist
     # Returns Float between 0.0 and 1.0.
     def language_probability(language)
       Math.log(@languages[language].to_f / @languages_total.to_f)
-    end
-
-    # Public: Returns serializable hash representation.
-    #
-    # Returns Hash.
-    def to_hash
-      {
-        'tokens_total'    => @tokens_total,
-        'languages_total' => @languages_total,
-        'tokens'          => @tokens,
-        'language_tokens' => @language_tokens,
-        'languages'       => @languages
-      }
     end
   end
 end

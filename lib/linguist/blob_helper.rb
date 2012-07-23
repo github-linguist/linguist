@@ -442,7 +442,7 @@ module Linguist
       if Language.ambiguous?(extname)
         possible_languages = Language.all.select { |l| l.extensions.include?(extname) }.map(&:name)
         if possible_languages.any?
-          if result = Classifier.new(Samples::DATA).classify(data, possible_languages).first
+          if result = Classifier.classify(Samples::DATA, data, possible_languages).first
             Language[result[0]]
           end
         end

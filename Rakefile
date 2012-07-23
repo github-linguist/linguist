@@ -10,7 +10,8 @@ end
 
 file 'lib/linguist/samples.yml' => Dir['samples/**/*'] do |f|
   require 'linguist/samples'
-  File.open(f.name, 'w') { |io| Linguist::Samples.serialize_to_yaml(Linguist::Samples::DATA, io) }
+  yaml = Linguist::Samples.serialize_to_yaml(Linguist::Samples.data)
+  File.open(f.name, 'w') { |io| io.write yaml }
 end
 
 CLOBBER.include 'lib/linguist/samples.yml'
@@ -31,7 +32,7 @@ namespace :classifier do
       next if file_language.nil? || file_language == 'Text'
       begin
         data = open(file_url).read
-        guessed_language, score = Linguist::Classifier.new(Samples::DATA).classify(data).first
+        guessed_language, score = Linguist::Classifier.classify(Samples::DATA, data).first
 
         total += 1
         guessed_language == file_language ? correct += 1 : incorrect += 1

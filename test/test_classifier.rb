@@ -24,39 +24,39 @@ class TestClassifier < Test::Unit::TestCase
   end
 
   def test_classify
-    classifier = Classifier.new
-    classifier.train "Ruby", fixture("ruby/foo.rb")
-    classifier.train "Objective-C", fixture("objective-c/Foo.h")
-    classifier.train "Objective-C", fixture("objective-c/Foo.m")
+    db = {}
+    Classifier.train! db, "Ruby", fixture("ruby/foo.rb")
+    Classifier.train! db, "Objective-C", fixture("objective-c/Foo.h")
+    Classifier.train! db, "Objective-C", fixture("objective-c/Foo.m")
 
-    results = classifier.classify(fixture("objective-c/hello.m"))
+    results = Classifier.classify(db, fixture("objective-c/hello.m"))
     assert_equal "Objective-C", results.first[0]
 
     tokens  = Tokenizer.tokenize(fixture("objective-c/hello.m"))
-    results = classifier.classify(tokens)
+    results = Classifier.classify(db, tokens)
     assert_equal "Objective-C", results.first[0]
   end
 
   def test_restricted_classify
-    classifier = Classifier.new
-    classifier.train "Ruby", fixture("ruby/foo.rb")
-    classifier.train "Objective-C", fixture("objective-c/Foo.h")
-    classifier.train "Objective-C", fixture("objective-c/Foo.m")
+    db = {}
+    Classifier.train! db, "Ruby", fixture("ruby/foo.rb")
+    Classifier.train! db, "Objective-C", fixture("objective-c/Foo.h")
+    Classifier.train! db, "Objective-C", fixture("objective-c/Foo.m")
 
-    results = classifier.classify(fixture("objective-c/hello.m"), ["Objective-C"])
+    results = Classifier.classify(db, fixture("objective-c/hello.m"), ["Objective-C"])
     assert_equal "Objective-C", results.first[0]
 
-    results = classifier.classify(fixture("objective-c/hello.m"), ["Ruby"])
+    results = Classifier.classify(db, fixture("objective-c/hello.m"), ["Ruby"])
     assert_equal "Ruby", results.first[0]
   end
 
   def test_instance_classify_empty
-    results = Classifier.new(Samples::DATA).classify("")
+    results = Classifier.classify(Samples::DATA, "")
     assert results.first[1] < 0.5, results.first.inspect
   end
 
   def test_instance_classify_nil
-    assert_equal [], Classifier.new(Samples::DATA).classify(nil)
+    assert_equal [], Classifier.classify(Samples::DATA, nil)
   end
 
   def test_verify
@@ -76,7 +76,7 @@ class TestClassifier < Test::Unit::TestCase
       languages = Language.all.select { |l| l.extensions.include?(extname) }.map(&:name)
       next unless languages.length > 1
 
-      results = Classifier.new(Samples::DATA).classify(File.read(sample[:path]), languages)
+      results = Classifier.classify(Samples::DATA, File.read(sample[:path]), languages)
       assert_equal language.name, results.first[0], "#{sample[:path]}\n#{results.inspect}"
     end
   end

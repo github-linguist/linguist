@@ -22,7 +22,7 @@ module Linguist
     #
     # Returns Boolean.
     def self.outdated?
-      MD5.hexdigest(DATA) != MD5.hexdigest(classifier.to_hash)
+      MD5.hexdigest(DATA) != MD5.hexdigest(data)
     end
 
     # Public: Iterate over each sample.
@@ -98,52 +98,50 @@ module Linguist
     # Public: Build Classifier from all samples.
     #
     # Returns trained Classifier.
-    def self.classifier
+    def self.data
       require 'linguist/classifier'
       require 'linguist/language'
 
-      classifier = Classifier.new
-      each { |sample|
+      db = {}
+      each do |sample|
         language = Language.find_by_alias(sample[:language])
         data     = File.read(sample[:path])
-        classifier.train(language.name, data)
-      }
-      classifier
+        Classifier.train!(db, language.name, data)
+      end
+      db
     end
     
     # Public: Serialize samples data to YAML.
     #
-    # data - Hash
-    # io   - IO object to write to
+    # db - Hash
     #
-    # Returns nothing.
-    def self.serialize_to_yaml(data, io)
-      data = ""
+    # Returns String.
+    def self.serialize_to_yaml(db)
+      out = ""
       escape = lambda { |s| s.inspect.gsub(/\\#/, "\#") }
 
-      data << "languages_total: #{data['languages_total']}\n"
-      data << "tokens_total: #{data['tokens_total']}\n"
+      out << "languages_total: #{db['languages_total']}\n"
+      out << "tokens_total: #{db['tokens_total']}\n"
 
-      data << "languages:\n"
-      data['languages'].sort.each do |language, count|
-        data << "  #{escape.call(language)}: #{count}\n"
+      out << "languages:\n"
+      db['languages'].sort.each do |language, count|
+        out << "  #{escape.call(language)}: #{count}\n"
       end
 
-      data << "language_tokens:\n"
-      data['language_tokens'].sort.each do |language, count|
-        data << "  #{escape.call(language)}: #{count}\n"
+      out << "language_tokens:\n"
+      db['language_tokens'].sort.each do |language, count|
+        out << "  #{escape.call(language)}: #{count}\n"
       end
 
-      data << "tokens:\n"
-      data['tokens'].sort.each do |language, tokens|
-        data << "  #{escape.call(language)}:\n"
+      out << "tokens:\n"
+      db['tokens'].sort.each do |language, tokens|
+        out << "  #{escape.call(language)}:\n"
         tokens.sort.each do |token, count|
-          data << "    #{escape.call(token)}: #{count}\n"
+          out << "    #{escape.call(token)}: #{count}\n"
         end
       end
 
-      io.write data
-      nil
+      out
     end
   end
 end
