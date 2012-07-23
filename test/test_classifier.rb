@@ -16,13 +16,6 @@ class TestClassifier < Test::Unit::TestCase
     File.read(File.join(samples_path, name))
   end
 
-  def test_instance_freshness
-    # Just warn, it shouldn't scare people off by breaking the build.
-    if Samples::DATA['md5'] != Samples.data['md5']
-      warn "Classifier database is out of date. Run `bundle exec rake classifier`."
-    end
-  end
-
   def test_classify
     db = {}
     Classifier.train! db, "Ruby", fixture("ruby/foo.rb")
@@ -57,14 +50,6 @@ class TestClassifier < Test::Unit::TestCase
 
   def test_instance_classify_nil
     assert_equal [], Classifier.classify(Samples::DATA, nil)
-  end
-
-  def test_verify
-    data = Samples::DATA
-
-    assert_equal data['languages_total'], data['languages'].inject(0) { |n, (_, c)| n += c }
-    assert_equal data['tokens_total'], data['language_tokens'].inject(0) { |n, (_, c)| n += c }
-    assert_equal data['tokens_total'], data['tokens'].inject(0) { |n, (_, ts)| n += ts.inject(0) { |m, (_, c)| m += c } }
   end
 
   def test_classify_ambiguous_languages

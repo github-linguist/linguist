@@ -16,7 +16,7 @@ end
 
 CLOBBER.include 'lib/linguist/samples.yml'
 
-task :classifier => [:clobber, 'lib/linguist/samples.yml']
+task :samples => [:clobber, 'lib/linguist/samples.yml']
 
 namespace :classifier do
   LIMIT = 1_000
