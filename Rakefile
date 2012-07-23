@@ -8,15 +8,15 @@ Rake::TestTask.new do |t|
 end
 
 
-file 'lib/linguist/classifier.yml' => Dir['samples/**/*'] do |f|
+file 'lib/linguist/samples.yml' => Dir['samples/**/*'] do |f|
   require 'linguist/sample'
   classifier = Linguist::Sample.classifier
   File.open(f.name, 'w') { |io| classifier.to_yaml(io) }
 end
 
-CLOBBER.include 'lib/linguist/classifier.yml'
+CLOBBER.include 'lib/linguist/samples.yml'
 
-task :classifier => [:clobber, 'lib/linguist/classifier.yml']
+task :classifier => [:clobber, 'lib/linguist/samples.yml']
 
 namespace :classifier do
   LIMIT = 1_000

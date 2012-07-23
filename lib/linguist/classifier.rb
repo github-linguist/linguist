@@ -4,7 +4,7 @@ module Linguist
   # Language bayesian classifier.
   class Classifier
     # Internal: Path to persisted classifier db.
-    PATH = File.expand_path('../classifier.yml', __FILE__)
+    PATH = File.expand_path('../samples.yml', __FILE__)
 
     # Public: Check if persisted db exists on disk.
     #
