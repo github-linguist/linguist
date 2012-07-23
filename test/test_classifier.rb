@@ -18,7 +18,7 @@ class TestClassifier < Test::Unit::TestCase
 
   def test_instance_freshness
     # Just warn, it shouldn't scare people off by breaking the build.
-    if Samples.outdated?
+    if Samples::DATA['md5'] != Samples.data['md5']
       warn "Classifier database is out of date. Run `bundle exec rake classifier`."
     end
   end

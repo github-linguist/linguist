@@ -18,13 +18,6 @@ module Linguist
       DATA = nil
     end
 
-    # Check if serialized db is out of sync from db directory.
-    #
-    # Returns Boolean.
-    def self.outdated?
-      MD5.hexdigest(DATA) != MD5.hexdigest(data)
-    end
-
     # Public: Iterate over each sample.
     #
     # &block - Yields Sample to block
@@ -108,6 +101,7 @@ module Linguist
         data     = File.read(sample[:path])
         Classifier.train!(db, language.name, data)
       end
+      db['md5'] = MD5.hexdigest(db)
       db
     end
     
@@ -119,6 +113,8 @@ module Linguist
     def self.serialize_to_yaml(db)
       out = ""
       escape = lambda { |s| s.inspect.gsub(/\\#/, "\#") }
+
+      out << "md5: #{db['md5']}\n"
 
       out << "languages_total: #{db['languages_total']}\n"
       out << "tokens_total: #{db['tokens_total']}\n"
