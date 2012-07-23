@@ -89,7 +89,7 @@ module Linguist
         data     = File.read(sample[:path])
         classifier.train(language.name, data)
       }
-      classifier.gc
+      classifier
     end
   end
 end

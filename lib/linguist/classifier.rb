@@ -57,13 +57,6 @@ module Linguist
       nil
     end
 
-    # Public: Prune infrequent tokens.
-    #
-    # Returns receiver Classifier instance.
-    def gc
-      self
-    end
-
     # Public: Guess language of data.
     #
     # data      - Array of tokens or String data to analyze.

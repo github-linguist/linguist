@@ -71,10 +71,6 @@ class TestClassifier < Test::Unit::TestCase
     assert_equal data['tokens_total'], data['tokens'].inject(0) { |n, (_, ts)| n += ts.inject(0) { |m, (_, c)| m += c } }
   end
 
-  def test_gc
-    Classifier.instance.gc
-  end
-
   def test_classify_ambiguous_languages
     Sample.each do |sample|
       language = Linguist::Language.find_by_alias(sample[:language])
