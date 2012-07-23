@@ -24,9 +24,9 @@ module Linguist
     def initialize
       @tokens_total    = 0
       @languages_total = 0
-      @tokens          = Hash.new { |h, k| h[k] = Hash.new(0) }
-      @language_tokens = Hash.new(0)
-      @languages       = Hash.new(0)
+      @tokens          = {}
+      @language_tokens = {}
+      @languages       = {}
     end
 
     # Public: Compare Classifier objects.
@@ -56,10 +56,14 @@ module Linguist
       tokens = Tokenizer.tokenize(data)
 
       tokens.each do |token|
+        @tokens[language] ||= {}
+        @tokens[language][token] ||= 0
         @tokens[language][token] += 1
+        @language_tokens[language] ||= 0
         @language_tokens[language] += 1
         @tokens_total += 1
       end
+      @languages[language] ||= 0
       @languages[language] += 1
       @languages_total += 1
 
