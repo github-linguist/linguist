@@ -64,7 +64,11 @@ class TestClassifier < Test::Unit::TestCase
   end
 
   def test_verify
-    assert Classifier.instance.verify
+    data = Classifier.instance.to_hash
+
+    assert_equal data['languages_total'], data['languages'].inject(0) { |n, (_, c)| n += c }
+    assert_equal data['tokens_total'], data['language_tokens'].inject(0) { |n, (_, c)| n += c }
+    assert_equal data['tokens_total'], data['tokens'].inject(0) { |n, (_, ts)| n += ts.inject(0) { |m, (_, c)| m += c } }
   end
 
   def test_gc
