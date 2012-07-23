@@ -21,7 +21,7 @@ module Linguist
     #
     # Returns a String
     def extname
-      File.extname(name)
+      File.extname(name.to_s)
     end
 
     # Public: Get the actual blob mime type
@@ -33,7 +33,7 @@ module Linguist
     #
     # Returns a mime type String.
     def mime_type
-      @mime_type ||= Mime.mime_for(extname)
+      @mime_type ||= Mime.mime_for(extname.to_s)
     end
 
     # Public: Get the Content-Type header value
@@ -414,7 +414,7 @@ module Linguist
       disambiguate_extension_language ||
 
         # See if there is a Language for the extension
-        Language.find_by_filename(name) ||
+        Language.find_by_filename(name.to_s) ||
 
         # Try to detect Language from shebang line
         shebang_language
