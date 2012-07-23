@@ -14,4 +14,5 @@ Gem::Specification.new do |s|
   s.add_dependency 'pygments.rb',     '~> 0.2.13'
   s.add_development_dependency 'json'
   s.add_development_dependency 'rake'
+  s.add_development_dependency 'yajl-ruby'
 end

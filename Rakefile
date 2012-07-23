@@ -8,15 +8,16 @@ Rake::TestTask.new do |t|
 end
 
 
-file 'lib/linguist/samples.yml' => Dir['samples/**/*'] do |f|
+file 'lib/linguist/samples.json' => Dir['samples/**/*'] do |f|
   require 'linguist/samples'
-  yaml = YAML.dump(Linguist::Samples.data)
-  File.open(f.name, 'w') { |io| io.write yaml }
+  require 'yajl'
+  json = Yajl::Encoder.encode(Linguist::Samples.data, :pretty => true)
+  File.open(f.name, 'w') { |io| io.write json }
 end
 
-CLOBBER.include 'lib/linguist/samples.yml'
+CLOBBER.include 'lib/linguist/samples.json'
 
-task :samples => [:clobber, 'lib/linguist/samples.yml']
+task :samples => [:clobber, 'lib/linguist/samples.json']
 
 namespace :classifier do
   LIMIT = 1_000

@@ -10,7 +10,7 @@ module Linguist
     ROOT = File.expand_path("../../../samples", __FILE__)
 
     # Path for serialized samples db
-    PATH = File.expand_path('../samples.yml', __FILE__)
+    PATH = File.expand_path('../samples.json', __FILE__)
 
     # Hash of serialized samples object
     if File.exist?(PATH)
