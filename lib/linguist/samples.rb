@@ -3,7 +3,7 @@ require 'yaml'
 
 module Linguist
   # Model for accessing classifier training data.
-  module Sample
+  module Samples
     # Samples live in test/ for now, we'll eventually move them out
     PATH = File.expand_path("../../../samples", __FILE__)
 

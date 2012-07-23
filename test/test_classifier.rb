@@ -1,6 +1,6 @@
 require 'linguist/classifier'
 require 'linguist/language'
-require 'linguist/sample'
+require 'linguist/samples'
 require 'linguist/tokenizer'
 require 'linguist/md5'
 
@@ -18,8 +18,8 @@ class TestClassifier < Test::Unit::TestCase
   end
 
   def test_instance_freshness
-    serialized = Linguist::MD5.hexdigest(Sample::DATA)
-    latest     = Linguist::MD5.hexdigest(Linguist::Sample.classifier.to_hash)
+    serialized = Linguist::MD5.hexdigest(Samples::DATA)
+    latest     = Linguist::MD5.hexdigest(Linguist::Samples.classifier.to_hash)
 
     # Just warn, it shouldn't scare people off by breaking the build.
     if serialized != latest
@@ -55,16 +55,16 @@ class TestClassifier < Test::Unit::TestCase
   end
 
   def test_instance_classify_empty
-    results = Classifier.new(Sample::DATA).classify("")
+    results = Classifier.new(Samples::DATA).classify("")
     assert results.first[1] < 0.5, results.first.inspect
   end
 
   def test_instance_classify_nil
-    assert_equal [], Classifier.new(Sample::DATA).classify(nil)
+    assert_equal [], Classifier.new(Samples::DATA).classify(nil)
   end
 
   def test_verify
-    data = Sample::DATA
+    data = Samples::DATA
 
     assert_equal data['languages_total'], data['languages'].inject(0) { |n, (_, c)| n += c }
     assert_equal data['tokens_total'], data['language_tokens'].inject(0) { |n, (_, c)| n += c }
@@ -72,7 +72,7 @@ class TestClassifier < Test::Unit::TestCase
   end
 
   def test_classify_ambiguous_languages
-    Sample.each do |sample|
+    Samples.each do |sample|
       language = Linguist::Language.find_by_alias(sample[:language])
       next unless language.overrides.any?
 
@@ -80,7 +80,7 @@ class TestClassifier < Test::Unit::TestCase
       languages = Language.all.select { |l| l.extensions.include?(extname) }.map(&:name)
       next unless languages.length > 1
 
-      results = Classifier.new(Sample::DATA).classify(File.read(sample[:path]), languages)
+      results = Classifier.new(Samples::DATA).classify(File.read(sample[:path]), languages)
       assert_equal language.name, results.first[0], "#{sample[:path]}\n#{results.inspect}"
     end
   end

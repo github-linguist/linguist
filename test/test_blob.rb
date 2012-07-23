@@ -1,5 +1,5 @@
 require 'linguist/file_blob'
-require 'linguist/sample'
+require 'linguist/samples'
 
 require 'test/unit'
 require 'mime/types'
@@ -275,7 +275,7 @@ class TestBlob < Test::Unit::TestCase
   end
 
   def test_language
-    Sample.each do |sample|
+    Samples.each do |sample|
       blob     = blob(sample[:path])
       language = Linguist::Language.find_by_alias(sample[:language])
       assert_equal language, blob.language, blob.name

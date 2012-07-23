@@ -2,7 +2,7 @@ require 'escape_utils'
 require 'pygments'
 require 'yaml'
 
-require 'linguist/sample'
+require 'linguist/samples'
 
 module Linguist
   # Language names that are recognizable by GitHub. Defined languages
@@ -441,8 +441,8 @@ module Linguist
     end
   end
 
-  extensions = Sample.extensions
-  filenames = Sample.filenames
+  extensions = Samples.extensions
+  filenames = Samples.filenames
   popular = YAML.load_file(File.expand_path("../popular.yml", __FILE__))
 
   YAML.load_file(File.expand_path("../languages.yml", __FILE__)).each do |name, options|
