@@ -40,16 +40,16 @@ class TestMD5 < Test::Unit::TestCase
 
   def test_hexdigest_array
     assert_equal "4410ec34d9e6c1a68100ca0ce033fb17", MD5.hexdigest([])
-    assert_equal "a57e31bc7bce57d04dd6a07e74fd0d88", MD5.hexdigest([1])
-    assert_equal "ecbda6354c6e0370df33d43ce14701f4", MD5.hexdigest([1, 2])
-    assert_equal "5c42a2601d344f359017e2b76390e2cc", MD5.hexdigest([1, 2, 3])
-    assert_equal "c1816755a379d2b32289647ad1870d12", MD5.hexdigest([1, 2, [3]])
+    assert_equal "759f28c1d0c20c22e79c91d339855d95", MD5.hexdigest([1])
+    assert_equal "9efe07b352dd94cd1cdc9d1a8d054f8f", MD5.hexdigest([1, 2])
+    assert_equal "60b1ef7201404f20c3d12f47499c3a1f", MD5.hexdigest([1, 2, 3])
+    assert_equal "2f82cdc166616208077ff1dd0a8faeff", MD5.hexdigest([1, 2, [3]])
   end
 
   def test_hexdigest_hash
     assert_equal "fae8a9257e154175da4193dbf6552ef6", MD5.hexdigest({})
-    assert_equal "b3646d6d84a803baa5ee2e5354057a65", MD5.hexdigest({:a => 1})
-    assert_equal "92c08085470d42ca0d33dd3ec5a8e098", MD5.hexdigest({:b => 2})
+    assert_equal "868ee214faf277829a85667cf332749f", MD5.hexdigest({:a => 1})
+    assert_equal "fa9df957c2b26de6fcca9d062ea8701e", MD5.hexdigest({:b => 2})
 
     assert_not_equal MD5.hexdigest([:b, 2]), MD5.hexdigest({:b => 2})
 
