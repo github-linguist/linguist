@@ -21,6 +21,7 @@ namespace :classifier do
   desc "Run classifier against #{LIMIT} public gists"
   task :test do
     require 'linguist/classifier'
+    require 'linguist/samples'
 
     total, correct, incorrect = 0, 0, 0
     $stdout.sync = true
@@ -29,7 +30,7 @@ namespace :classifier do
       next if file_language.nil? || file_language == 'Text'
       begin
         data = open(file_url).read
-        guessed_language, score = Linguist::Classifier.classify(Samples::DATA, data).first
+        guessed_language, score = Linguist::Classifier.classify(Linguist::Samples::DATA, data).first
 
         total += 1
         guessed_language == file_language ? correct += 1 : incorrect += 1
