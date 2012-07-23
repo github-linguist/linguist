@@ -469,7 +469,7 @@ module Linguist
       end
     end
 
-    lang = Language.create(
+    Language.create(
       :name              => name,
       :color             => options['color'],
       :type              => options['type'],
