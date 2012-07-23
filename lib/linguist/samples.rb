@@ -56,36 +56,6 @@ module Linguist
       nil
     end
 
-    # Get all extensions listed in samples/
-    #
-    # Returns Hash of sample language keys with a Set of extension
-    # Strings.
-    def self.extensions
-      extensions = {}
-      each do |sample|
-        # TODO: For now skip empty extnames
-        next if sample[:extname].nil? || sample[:extname] == ""
-        extensions[sample[:language]] ||= Set.new
-        extensions[sample[:language]] << sample[:extname]
-      end
-      extensions
-    end
-
-    # Get all filenames listed in samples/
-    #
-    # Returns Hash of sample language keys with a Set of filename
-    # Strings.
-    def self.filenames
-      filenames = {}
-      each do |sample|
-        # TODO: For now skip empty extnames
-        next if sample[:filename].nil?
-        filenames[sample[:language]] ||= Set.new
-        filenames[sample[:language]] << sample[:filename]
-      end
-      filenames
-    end
-
     # Public: Build Classifier from all samples.
     #
     # Returns trained Classifier.
@@ -94,12 +64,32 @@ module Linguist
       require 'linguist/language'
 
       db = {}
+      db['extnames'] = {}
+      db['filenames'] = {}
+
       each do |sample|
         language = Language.find_by_alias(sample[:language])
-        data     = File.read(sample[:path])
+
+        # TODO: For now skip empty extnames
+        if sample[:extname] && sample[:extname] != ""
+          db['extnames'][language.name] ||= []
+          if !db['extnames'][language.name].include?(sample[:extname])
+            db['extnames'][language.name] << sample[:extname]
+          end
+        end
+
+        # TODO: For now skip empty extnames
+        if fn = sample[:filename]
+          db['filenames'][language.name] ||= []
+          db['filenames'][language.name] << fn
+        end
+
+        data = File.read(sample[:path])
         Classifier.train!(db, language.name, data)
       end
+
       db['md5'] = MD5.hexdigest(db)
+
       db
     end
     
@@ -113,6 +103,22 @@ module Linguist
       escape = lambda { |s| s.inspect.gsub(/\\#/, "\#") }
 
       out << "md5: #{db['md5']}\n"
+
+      out << "extnames:\n"
+      db['extnames'].sort.each do |language, extnames|
+        out << "  #{escape.call(language)}:\n"
+        extnames.sort.each do |extname|
+          out << "   - #{escape.call(extname)}\n"
+        end
+      end
+
+      out << "filenames:\n"
+      db['filenames'].sort.each do |language, filenames|
+        out << "  #{escape.call(language)}:\n"
+        filenames.sort.each do |filename|
+          out << "   - #{escape.call(filename)}\n"
+        end
+      end
 
       out << "languages_total: #{db['languages_total']}\n"
       out << "tokens_total: #{db['tokens_total']}\n"
