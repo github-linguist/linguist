@@ -64,9 +64,17 @@ module Linguist
 
         # Skip single or double quoted strings
         elsif s.scan(/"/)
-          s.skip_until(/[^\\]"/)
+          if s.peek(1) == "\""
+            s.getch
+          else
+            s.skip_until(/[^\\]"/)
+          end
         elsif s.scan(/'/)
-          s.skip_until(/[^\\]'/)
+          if s.peek(1) == "'"
+            s.getch
+          else
+            s.skip_until(/[^\\]'/)
+          end
 
         # Skip number literals
         elsif s.scan(/(0x)?\d(\d|\.)*/)

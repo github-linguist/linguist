@@ -20,6 +20,10 @@ class TestTokenizer < Test::Unit::TestCase
     assert_equal %w(print), tokenize("print 'Josh'")
     assert_equal %w(print), tokenize('print "Hello \"Josh\""')
     assert_equal %w(print), tokenize("print 'Hello \\'Josh\\''")
+    assert_equal %w(print), tokenize("print \"Hello\", \"Josh\"")
+    assert_equal %w(print), tokenize("print 'Hello', 'Josh'")
+    assert_equal %w(print), tokenize("print \"Hello\", \"\", \"Josh\"")
+    assert_equal %w(print), tokenize("print 'Hello', '', 'Josh'")
   end
 
   def test_skip_number_literals
