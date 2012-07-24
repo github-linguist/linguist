@@ -20,12 +20,17 @@ class TestTokenizer < Test::Unit::TestCase
     assert_equal %w(print), tokenize("print 'Josh'")
     assert_equal %w(print), tokenize('print "Hello \"Josh\""')
     assert_equal %w(print), tokenize("print 'Hello \\'Josh\\''")
+    assert_equal %w(print), tokenize("print \"Hello\", \"Josh\"")
+    assert_equal %w(print), tokenize("print 'Hello', 'Josh'")
+    assert_equal %w(print), tokenize("print \"Hello\", \"\", \"Josh\"")
+    assert_equal %w(print), tokenize("print 'Hello', '', 'Josh'")
   end
 
   def test_skip_number_literals
     assert_equal %w(+), tokenize('1 + 1')
     assert_equal %w(add \( \)), tokenize('add(123, 456)')
     assert_equal %w(|), tokenize('0x01 | 0x10')
+    assert_equal %w(*), tokenize('500.42 * 1.0')
   end
 
   def test_skip_comments
@@ -77,11 +82,15 @@ class TestTokenizer < Test::Unit::TestCase
   def test_objective_c_tokens
     assert_equal %w(#import <Foundation/Foundation.h> @interface Foo NSObject { } @end), tokenize(:"Objective-C/Foo.h")
     assert_equal %w(#import @implementation Foo @end), tokenize(:"Objective-C/Foo.m")
-    assert_equal %w(#import <Cocoa/Cocoa.h> int main \( int argc char *argv \) { NSLog \( @ \) ; return ; }), tokenize(:"Objective-C/hello.m")
+    assert_equal %w(#import <Cocoa/Cocoa.h> int main \( int argc char *argv [ ] \) { NSLog \( @ \) ; return ; }), tokenize(:"Objective-C/hello.m")
   end
 
   def test_javascript_tokens
     assert_equal %w( \( function \( \) { console.log \( \) ; } \) .call \( this \) ;), tokenize(:"JavaScript/hello.js")
+  end
+
+  def test_json_tokens
+    assert_equal %w( { [ ] { } } ), tokenize(:"JSON/product.json")
   end
 
   def test_ruby_tokens

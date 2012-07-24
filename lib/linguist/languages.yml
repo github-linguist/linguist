@@ -634,8 +634,6 @@ JSON:
   ace_mode: json
   searchable: false
   primary_extension: .json
-  extensions:
-  - .json
 
 Java:
   type: programming
@@ -757,13 +755,15 @@ Matlab:
   extensions:
   - .matlab
 
-Max/MSP:
+Max:
   type: programming
   color: "#ce279c"
   lexer: Text only
+  aliases:
+  - max/msp
+  - maxmsp
+  search_term: max/msp
   primary_extension: .mxt
-  extensions:
-  - .mxt
 
 MiniD: # Legacy
   searchable: false

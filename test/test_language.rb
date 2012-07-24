@@ -165,7 +165,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal 'ruby',        Language['Ruby'].search_term
     assert_equal 'common-lisp', Language['Common Lisp'].search_term
     assert_equal 'html+erb',    Language['HTML+ERB'].search_term
-    assert_equal 'max/msp',     Language['Max/MSP'].search_term
+    assert_equal 'max/msp',     Language['Max'].search_term
     assert_equal 'puppet',      Language['Puppet'].search_term
     assert_equal 'pure-data',   Language['Pure Data'].search_term
 
@@ -310,7 +310,6 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal 'C%2B%2B', Language['C++'].escaped_name
     assert_equal 'Objective-C', Language['Objective-C'].escaped_name
     assert_equal 'Common%20Lisp', Language['Common Lisp'].escaped_name
-    assert_equal 'Max%2FMSP', Language['Max/MSP'].escaped_name
   end
 
   def test_error_without_name
