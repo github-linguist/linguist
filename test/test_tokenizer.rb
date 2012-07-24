@@ -78,11 +78,15 @@ class TestTokenizer < Test::Unit::TestCase
   def test_objective_c_tokens
     assert_equal %w(#import <Foundation/Foundation.h> @interface Foo NSObject { } @end), tokenize(:"Objective-C/Foo.h")
     assert_equal %w(#import @implementation Foo @end), tokenize(:"Objective-C/Foo.m")
-    assert_equal %w(#import <Cocoa/Cocoa.h> int main \( int argc char *argv \) { NSLog \( @ \) ; return ; }), tokenize(:"Objective-C/hello.m")
+    assert_equal %w(#import <Cocoa/Cocoa.h> int main \( int argc char *argv [ ] \) { NSLog \( @ \) ; return ; }), tokenize(:"Objective-C/hello.m")
   end
 
   def test_javascript_tokens
     assert_equal %w( \( function \( \) { console.log \( \) ; } \) .call \( this \) ;), tokenize(:"JavaScript/hello.js")
+  end
+
+  def test_json_tokens
+    assert_equal %w( { [ ] { } } ), tokenize(:"JSON/product.json")
   end
 
   def test_ruby_tokens

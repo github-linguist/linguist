@@ -76,7 +76,7 @@ module Linguist
           extract_sgml_tokens(token).each { |t| tokens << t }
 
         # Common programming punctuation
-        elsif token = s.scan(/;|\{|\}|\(|\)/)
+        elsif token = s.scan(/;|\{|\}|\(|\)|\[|\]/)
           tokens << token
 
         # Regular token
