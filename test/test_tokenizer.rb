@@ -26,6 +26,7 @@ class TestTokenizer < Test::Unit::TestCase
     assert_equal %w(+), tokenize('1 + 1')
     assert_equal %w(add \( \)), tokenize('add(123, 456)')
     assert_equal %w(|), tokenize('0x01 | 0x10')
+    assert_equal %w(*), tokenize('500.42 * 1.0')
   end
 
   def test_skip_comments

@@ -69,7 +69,7 @@ module Linguist
           s.skip_until(/[^\\]'/)
 
         # Skip number literals
-        elsif s.scan(/(0x)?\d+/)
+        elsif s.scan(/(0x)?\d(\d|\.)*/)
 
         # SGML style brackets
         elsif token = s.scan(/<[^\s<>][^<>]*>/)
