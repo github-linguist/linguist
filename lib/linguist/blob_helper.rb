@@ -238,6 +238,8 @@ module Linguist
     def indexable?
       if binary?
         false
+      elsif extname == '.txt'
+        true
       elsif language.nil?
         false
       elsif !language.searchable?
