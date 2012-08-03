@@ -224,7 +224,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal [Language['Ruby']], Language.find_by_filename('foo/bar.rb')
     assert_equal [Language['Ruby']], Language.find_by_filename('Rakefile')
     assert_equal [Language['Ruby']], Language.find_by_filename('PKGBUILD.rb')
-    assert_equal [Language['C'], Language['C++'], Language['Objective-C']], Language.find_by_filename('foo.h')
+    assert_equal ['C', 'C++', 'Objective-C'], Language.find_by_filename('foo.h').map(&:name).sort
     assert_equal [], Language.find_by_filename('rb')
     assert_equal [], Language.find_by_filename('.rb')
     assert_equal [], Language.find_by_filename('.nkt')
