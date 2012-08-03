@@ -45,6 +45,10 @@ module Linguist
               })
             end
           else
+            if File.extname(filename) == ""
+              raise "#{File.join(dirname, filename)} is missing an extension, maybe it belongs in filenames/ subdir"
+            end
+
             yield({
               :path     => File.join(dirname, filename),
               :language => category,
@@ -68,18 +72,16 @@ module Linguist
       each do |sample|
         language_name = sample[:language]
 
-        # TODO: For now skip empty extnames
-        if sample[:extname] && sample[:extname] != ""
+        if sample[:extname]
           db['extnames'][language_name] ||= []
           if !db['extnames'][language_name].include?(sample[:extname])
             db['extnames'][language_name] << sample[:extname]
           end
         end
 
-        # TODO: For now skip empty extnames
-        if fn = sample[:filename]
+        if sample[:filename]
           db['filenames'][language_name] ||= []
-          db['filenames'][language_name] << fn
+          db['filenames'][language_name] << sample[:filename]
         end
 
         data = File.read(sample[:path])
