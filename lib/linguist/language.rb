@@ -2,6 +2,7 @@ require 'escape_utils'
 require 'pygments'
 require 'yaml'
 
+require 'linguist/classifier'
 require 'linguist/samples'
 
 module Linguist
@@ -60,6 +61,35 @@ module Linguist
       end
 
       language
+    end
+
+    # Public: Detects the Language of the blob.
+    #
+    # name - String filename
+    # data - String blob data. A block also maybe passed in for lazy
+    #        loading. This behavior is deprecated and you should always
+    #        pass in a String.
+    # mode - Optional String mode (defaults to nil)
+    #
+    # Returns Language or nil.
+    def self.detect(name, data, mode = nil)
+      # A bit of an elegant hack. If the file is exectable but extensionless,
+      # append a "magic" extension so it can be classified with other
+      # languages that have shebang scripts.
+      if File.extname(name).empty? && mode && (mode.to_i(8) & 05) == 05
+        name += ".script!"
+      end
+
+      possible_languages = find_by_filename(name)
+
+      if possible_languages.length > 1
+        data = data.call() if data.respond_to?(:call)
+        if result = Classifier.classify(Samples::DATA, data, possible_languages.map(&:name)).first
+          Language[result[0]]
+        end
+      else
+        possible_languages.first
+      end
     end
 
     # Public: Get all Languages

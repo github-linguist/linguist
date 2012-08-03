@@ -1,8 +1,6 @@
-require 'linguist/classifier'
 require 'linguist/generated'
 require 'linguist/language'
 require 'linguist/mime'
-require 'linguist/samples'
 
 require 'charlock_holmes'
 require 'escape_utils'
@@ -261,37 +259,8 @@ module Linguist
     def language
       if defined? @language
         @language
-      else
-        @language = guess_language
-      end
-    end
-
-    # Internal: Guess language
-    #
-    # Please add additional test coverage to
-    # `test/test_blob.rb#test_language` if you make any changes.
-    #
-    # Returns a Language or nil
-    def guess_language
-      return if binary_mime_type?
-
-      name = self.name.to_s
-
-      # A bit of an elegant hack. If the file is exectable but extensionless,
-      # append a "magic" extension so it can be classified with other
-      # languages that have shebang scripts.
-      if extname.empty? && mode && (mode.to_i(8) & 05) == 05
-        name += ".script!"
-      end
-
-      possible_languages = Language.find_by_filename(name)
-
-      if possible_languages.length > 1
-        if result = Classifier.classify(Samples::DATA, data, possible_languages.map(&:name)).first
-          Language[result[0]]
-        end
-      else
-        possible_languages.first
+      elsif !binary_mime_type?
+        @language = Language.detect(name.to_s, lambda { data }, mode)
       end
     end
 
