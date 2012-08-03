@@ -8,16 +8,6 @@ class TestLanguage < Test::Unit::TestCase
 
   Lexer = Pygments::Lexer
 
-  def test_ambiguous_extensions
-    assert Language.ambiguous?('.cls')
-    assert Language.ambiguous?('.h')
-    assert Language.ambiguous?('.m')
-    assert Language.ambiguous?('.pl')
-    assert Language.ambiguous?('.r')
-    assert Language.ambiguous?('.t')
-    assert Language.ambiguous?('.v')
-  end
-
   def test_lexer
     assert_equal Lexer['ActionScript 3'], Language['ActionScript'].lexer
     assert_equal Lexer['Bash'], Language['Gentoo Ebuild'].lexer

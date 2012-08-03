@@ -54,11 +54,8 @@ class TestClassifier < Test::Unit::TestCase
 
   def test_classify_ambiguous_languages
     Samples.each do |sample|
-      language = Linguist::Language.find_by_name(sample[:language])
-      next unless language.overrides.any?
-
-      extname   = File.extname(sample[:path])
-      languages = Language.all.select { |l| l.extensions.include?(extname) }.map(&:name)
+      language  = Linguist::Language.find_by_name(sample[:language])
+      languages = Language.find_by_filename(sample[:path]).map(&:name)
       next unless languages.length > 1
 
       results = Classifier.classify(Samples::DATA, File.read(sample[:path]), languages)

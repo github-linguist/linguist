@@ -1,3 +1,5 @@
+require 'strscan'
+
 module Linguist
   # Generic programming language tokenizer.
   #
@@ -50,8 +52,13 @@ module Linguist
 
       tokens = []
       until s.eos?
+        if token = s.scan(/^#!.+$/)
+          if name = extract_shebang(token)
+            tokens << "SHEBANG#!#{name}"
+          end
+
         # Single line comment
-        if token = s.scan(START_SINGLE_LINE_COMMENT)
+        elsif token = s.scan(START_SINGLE_LINE_COMMENT)
           tokens << token.strip
           s.skip_until(/\n|\Z/)
 
@@ -101,6 +108,33 @@ module Linguist
       end
 
       tokens
+    end
+
+    # Internal: Extract normalized shebang command token.
+    #
+    # Examples
+    #
+    #   extract_shebang("#!/usr/bin/ruby")
+    #   # => "ruby"
+    #
+    #   extract_shebang("#!/usr/bin/env node")
+    #   # => "node"
+    #
+    # Returns String token or nil it couldn't be parsed.
+    def extract_shebang(data)
+      s = StringScanner.new(data)
+
+      if path = s.scan(/^#!\s*\S+/)
+        script = path.split('/').last
+        if script == 'env'
+          s.scan(/\s+/)
+          script = s.scan(/\S+/)
+        end
+        script = script[/[^\d]+/, 0]
+        return script
+      end
+
+      nil
     end
 
     # Internal: Extract tokens from inside SGML tag.

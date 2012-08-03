@@ -15,7 +15,6 @@
 #                     the language. Must be unique. Used when a Language is picked
 #                     from a dropdown and we need to automatically choose an
 #                     extension.
-# overrides         - An Array of extensions that takes precedence over conflicts
 # searchable        - Boolean flag to enable searching (defaults to true)
 # search_term       - Deprecated: Some languages maybe indexed under a
 #                     different alias. Avoid defining new exceptions.
@@ -67,8 +66,6 @@ Apex:
   type: programming
   lexer: Text only
   primary_extension: .cls
-  overrides:
-  - .cls
 
 AppleScript:
   aliases:
@@ -157,8 +154,6 @@ Bro:
 C:
   type: programming
   color: "#555"
-  overrides:
-  - .h
   primary_extension: .c
   extensions:
   - .w
@@ -533,8 +528,6 @@ Groovy:
 Groovy Server Pages:
   group: Groovy
   lexer: Java Server Page
-  overrides:
-  - .gsp
   aliases:
   - gsp
   primary_extension: .gsp
@@ -841,8 +834,6 @@ ObjDump:
 Objective-C:
   type: programming
   color: "#438eff"
-  overrides:
-  - .m
   primary_extension: .m
   extensions:
   - .mm
@@ -915,8 +906,6 @@ Perl:
   ace_mode: perl
   color: "#0298c3"
   primary_extension: .pl
-  overrides:
-  - .pl
   extensions:
   - .PL
   - .perl
@@ -983,8 +972,6 @@ R:
   type: programming
   color: "#198ce7"
   lexer: S
-  overrides:
-  - .r
   primary_extension: .r
   extensions:
   - .r
@@ -1208,8 +1195,6 @@ Turing:
   color: "#45f715"
   lexer: Text only
   primary_extension: .t
-  overrides:
-  - .t
   extensions:
   - .tu
 
@@ -1241,8 +1226,6 @@ Verilog:
   type: programming
   lexer: verilog
   color: "#848bf3"
-  overrides:
-  - .v
   primary_extension: .v
 
 VimL:

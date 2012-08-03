@@ -45,10 +45,6 @@ class TestBlob < Test::Unit::TestCase
     assert_equal "application/pdf", blob("Binary/foo.pdf").content_type
     assert_equal "image/png", blob("Binary/foo.png").content_type
     assert_equal "text/plain; charset=iso-8859-2", blob("Text/README").content_type
-    assert_equal "text/plain; charset=iso-8859-1", blob("Perl/script.pl").content_type
-    assert_equal "text/plain; charset=iso-8859-1", blob("Python/script.py").content_type
-    assert_equal "text/plain; charset=iso-8859-1", blob("Ruby/script.rb").content_type
-    assert_equal "text/plain; charset=iso-8859-1", blob("Shell/script.sh").content_type
   end
 
   def test_disposition
@@ -278,25 +274,6 @@ class TestBlob < Test::Unit::TestCase
 
   def test_lexer
     assert_equal Lexer['Ruby'], blob("Ruby/foo.rb").lexer
-  end
-
-  def test_shebang_script
-    assert_equal 'sh', script_blob("Shell/script.sh").shebang_script
-    assert_equal 'bash', script_blob("Shell/script.bash").shebang_script
-    assert_equal 'zsh', script_blob("Shell/script.zsh").shebang_script
-    assert_equal 'perl', script_blob("Perl/script.pl").shebang_script
-    assert_equal 'ruby', script_blob("Ruby/script.rb").shebang_script
-    assert_equal 'ruby', script_blob("Ruby/script2.rb").shebang_script
-    assert_equal 'python', script_blob("Python/script.py").shebang_script
-    assert_equal 'node', script_blob("JavaScript/script.js").shebang_script
-    assert_equal 'groovy', script_blob("Groovy/script.groovy").shebang_script
-    assert_equal 'macruby', script_blob("Ruby/macruby-script").shebang_script
-    assert_equal 'rake', script_blob("Ruby/script.rake").shebang_script
-    assert_equal 'foo', script_blob("Text/script.foo").shebang_script
-    assert_equal 'nush', script_blob("Nu/script.nu").shebang_script
-    assert_equal 'scala', script_blob("Scala/script.scala").shebang_script
-    assert_equal 'racket', script_blob("Racket/script.rkt").shebang_script
-    assert_equal nil, script_blob("Ruby/foo.rb").shebang_script
   end
 
   def test_colorize

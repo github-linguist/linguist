@@ -11,7 +11,6 @@ module Linguist
   # Languages are defined in `lib/linguist/languages.yml`.
   class Language
     @languages       = []
-    @overrides       = {}
     @index           = {}
     @name_index      = {}
     @alias_index     = {}
@@ -20,13 +19,6 @@ module Linguist
 
     # Valid Languages types
     TYPES = [:data, :markup, :programming]
-
-    # Internal: Test if extension maps to multiple Languages.
-    #
-    # Returns true or false.
-    def self.ambiguous?(extension)
-      @overrides.include?(extension)
-    end
 
     # Internal: Create a new Language object
     #
@@ -61,18 +53,6 @@ module Linguist
         end
 
         @extension_index[extension] << language
-      end
-
-      language.overrides.each do |extension|
-        if extension !~ /^\./
-          raise ArgumentError, "Extension is missing a '.': #{extension.inspect}"
-        end
-
-        if l = @overrides[extension]
-          raise ArgumentError, "#{extension} is already overridden by #{l.name}"
-        end
-
-        @overrides[extension] = language
       end
 
       language.filenames.each do |filename|
@@ -216,7 +196,6 @@ module Linguist
 
       # Set extensions or default to [].
       @extensions = attributes[:extensions] || []
-      @overrides  = attributes[:overrides]  || []
       @filenames  = attributes[:filenames]  || []
 
       unless @primary_extension = attributes[:primary_extension]
@@ -323,11 +302,6 @@ module Linguist
     #
     # Returns the extension String.
     attr_reader :primary_extension
-
-    # Internal: Get overridden extensions.
-    #
-    # Returns the extensions Array.
-    attr_reader :overrides
 
     # Public: Get filenames
     #
@@ -461,7 +435,6 @@ module Linguist
       :search_term       => options['search_term'],
       :extensions        => options['extensions'].sort,
       :primary_extension => options['primary_extension'],
-      :overrides         => options['overrides'],
       :filenames         => options['filenames'],
       :popular           => popular.include?(name)
     )

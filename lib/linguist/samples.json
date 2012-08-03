@@ -57,7 +57,7 @@
     ],
     "Groovy": [
       ".gradle",
-      ".groovy"
+      ".script!"
     ],
     "Groovy Server Pages": [
       ".gsp"
@@ -72,7 +72,8 @@
       ".java"
     ],
     "JavaScript": [
-      ".js"
+      ".js",
+      ".script!"
     ],
     "JSON": [
       ".maxhelp",
@@ -104,7 +105,7 @@
       ".nim"
     ],
     "Nu": [
-      ".nu"
+      ".script!"
     ],
     "Objective-C": [
       ".h",
@@ -132,7 +133,8 @@
     "Perl": [
       ".pm",
       ".pl",
-      ".t"
+      ".t",
+      ".script!"
     ],
     "PHP": [
       ".php",
@@ -146,20 +148,22 @@
       ".pl"
     ],
     "Python": [
-      ".py"
+      ".py",
+      ".script!"
     ],
     "R": [
       ".R"
     ],
     "Racket": [
-      ".scrbl",
-      ".rkt"
+      ".script!",
+      ".scrbl"
     ],
     "Rebol": [
       ".r"
     ],
     "Ruby": [
       ".rb",
+      ".script!",
       ".rabl",
       ".rake"
     ],
@@ -171,7 +175,7 @@
     ],
     "Scala": [
       ".sbt",
-      ".scala"
+      ".script!"
     ],
     "Scheme": [
       ".sps"
@@ -185,6 +189,7 @@
       ".scss"
     ],
     "Shell": [
+      ".script!",
       ".bash",
       ".sh",
       ".zsh"
@@ -235,8 +240,8 @@
       "PKGBUILD"
     ]
   },
-  "tokens_total": 331511,
-  "languages_total": 250,
+  "tokens_total": 331500,
+  "languages_total": 255,
   "tokens": {
     "Apex": {
       "/*": 15,
@@ -6682,9 +6687,7 @@
       "println": 2,
       "it.toString": 1,
       "-": 1,
-      "#": 1,
-      "/usr/bin/env": 1,
-      "groovy": 1
+      "SHEBANG#!groovy": 1
     },
     "Groovy Server Pages": {
       "<html>": 4,
@@ -6744,9 +6747,7 @@
       "josh@github.com": 1
     },
     "Ioke": {
-      "#": 1,
-      "/usr/bin/env": 1,
-      "ioke": 1,
+      "SHEBANG#!ioke": 1,
       "println": 1
     },
     "Java": {
@@ -7528,13 +7529,13 @@
     "JavaScript": {
       "/*": 134,
       "*/": 138,
-      "function": 2319,
-      "(": 18005,
-      ")": 18021,
-      "{": 6174,
-      ";": 8412,
+      "function": 2320,
+      "(": 18012,
+      ")": 18028,
+      "{": 6176,
+      ";": 8417,
       "//": 2853,
-      "var": 1528,
+      "var": 1529,
       "Modal": 2,
       "content": 5,
       "options": 112,
@@ -7545,7 +7546,7 @@
       ".proxy": 1,
       "this.hide": 1,
       "this": 1045,
-      "}": 6180,
+      "}": 6182,
       "Modal.prototype": 1,
       "constructor": 4,
       "toggle": 16,
@@ -7643,9 +7644,9 @@
       "_super": 4,
       "Snake.name": 1,
       "Horse.name": 1,
-      "console.log": 2,
+      "console.log": 3,
       "util": 1,
-      "require": 8,
+      "require": 9,
       "net": 1,
       "stream": 1,
       "url": 77,
@@ -7924,7 +7925,7 @@
       "OutgoingMessage.prototype._flush": 1,
       "this.socket.writable": 2,
       "this.socket.write": 1,
-      "req": 36,
+      "req": 37,
       "OutgoingMessage.call": 2,
       "req.method": 5,
       "req.httpVersionMajor": 2,
@@ -8057,7 +8058,7 @@
       "req.res": 9,
       "req.res.readable": 1,
       "req.res.emit": 1,
-      "res": 16,
+      "res": 17,
       "req.res._emitPending": 1,
       "res._emitEnd": 1,
       "res.emit": 1,
@@ -8318,7 +8319,7 @@
       "Ta": 1,
       "<[\\w\\W]+>": 4,
       "|": 343,
-      "#": 23,
+      "#": 22,
       "Ua": 1,
       ".": 67,
       "Va": 1,
@@ -9761,7 +9762,7 @@
       "results.splice": 2,
       "Sizzle.matches": 2,
       "Sizzle.matchesSelector": 2,
-      "node": 46,
+      "node": 45,
       "isXML": 34,
       "Expr.order.length": 2,
       "Expr.order": 2,
@@ -11635,7 +11636,7 @@
       "url=": 1,
       "dataTypes=": 1,
       "crossDomain=": 2,
-      "http": 2,
+      "http": 3,
       "80": 2,
       "443": 2,
       "s=": 14,
@@ -12250,6 +12251,11 @@
       "define": 2,
       "define.amd": 1,
       "define.amd.jQuery": 1,
+      "SHEBANG#!node": 2,
+      "http.createServer": 1,
+      "res.writeHead": 1,
+      "res.end": 1,
+      ".listen": 1,
       "JSON": 3,
       "Date.prototype.toJSON": 2,
       "this.valueOf": 2,
@@ -12807,7 +12813,6 @@
       "this.column": 1,
       "result.SyntaxError.prototype": 1,
       "Error.prototype": 1,
-      "/usr/bin/env": 1,
       "steelseries": 13,
       "n.charAt": 1,
       "n.substring": 1,
@@ -16148,9 +16153,7 @@
       "echo": 1
     },
     "Nu": {
-      "#": 1,
-      "/usr/bin/env": 1,
-      "nush": 1,
+      "SHEBANG#!nush": 1,
       "(": 1,
       "puts": 1,
       ")": 1
@@ -19406,27 +19409,22 @@
       "lcPostBase64Data.": 1
     },
     "Parrot Assembly": {
-      "#": 1,
-      "/usr/bin/env": 1,
-      "parrot": 1,
+      "SHEBANG#!parrot": 1,
       ".pcc_sub": 1,
       "main": 2,
       "say": 1,
       "end": 1
     },
     "Parrot Internal Representation": {
-      "#": 1,
-      "/usr/bin/env": 1,
-      "parrot": 1,
+      "SHEBANG#!parrot": 1,
       ".sub": 1,
       "main": 1,
       "say": 1,
       ".end": 1
     },
     "Perl": {
-      "#": 258,
-      "/usr/bin/env": 1,
-      "perl": 13,
+      "SHEBANG#!perl": 4,
+      "#": 249,
       "use": 70,
       "warnings": 15,
       ";": 1152,
@@ -19434,14 +19432,14 @@
       "our": 34,
       "VERSION": 15,
       "MAIN": 1,
-      "{": 1102,
+      "{": 1100,
       "if": 267,
       "(": 895,
       "App": 129,
       "Ack": 134,
       "ne": 11,
       "main": 3,
-      ")": 895,
+      ")": 893,
       "die": 37,
       "}": 1113,
       "my": 395,
@@ -19451,7 +19449,7 @@
       "last": 15,
       "_": 100,
       "eq": 31,
-      "/": 70,
+      "/": 68,
       "-": 843,
       "th": 1,
       "[": 154,
@@ -19734,7 +19732,7 @@
       "unless": 34,
       "explicitly": 1,
       "<NUM>": 2,
-      "print": 29,
+      "print": 30,
       "file.": 2,
       "Multiple": 1,
       "with": 25,
@@ -19867,6 +19865,7 @@
       "skipped": 2,
       "make": 3,
       "binary": 3,
+      "perl": 8,
       "ruby": 3,
       "php": 2,
       "python": 1,
@@ -20390,6 +20389,7 @@
       "lc": 5,
       "r": 10,
       "header": 17,
+      "SHEBANG#!#!": 2,
       "lua": 2,
       "erl": 2,
       "hp": 2,
@@ -20669,6 +20669,7 @@
       "number": 1,
       "handed": 1,
       "argument.": 1,
+      "SHEBANG#!#! perl": 4,
       "examples/benchmarks/fib.pl": 1,
       "Fibonacci": 2,
       "Benchmark": 1,
@@ -21066,9 +21067,7 @@
       "formats": 1,
       "<+3M>": 1,
       "reference.": 1,
-      "AUTHOR": 1,
-      "/usr/local/bin/perl": 1,
-      "/usr/bin/perl": 1
+      "AUTHOR": 1
     },
     "PHP": {
       "<": 9,
@@ -22178,7 +22177,7 @@
       "future_builtins": 1,
       "zip": 3,
       "django.db.models.manager": 1,
-      "#": 177,
+      "#": 175,
       "django.conf": 1,
       "settings": 1,
       "django.core.exceptions": 1,
@@ -22707,10 +22706,8 @@
       "meth": 5,
       "request.method.lower": 1,
       "request.method": 1,
-      "/usr/bin/env": 2,
-      "python2.4": 1,
+      "SHEBANG#!python": 2,
       "print": 1,
-      "python": 1,
       "absolute_import": 1,
       "division": 1,
       "with_statement": 1,
@@ -22899,13 +22896,29 @@
       "}": 1
     },
     "Racket": {
+      "SHEBANG#!sh": 1,
+      "#": 2,
+      "|": 2,
+      "-": 95,
+      "*": 2,
+      "scheme": 1,
+      "exec": 1,
+      "racket": 1,
+      "um": 1,
+      "(": 7,
+      "require": 2,
+      "racket/file": 1,
+      "racket/path": 1,
+      "racket/list": 1,
+      "racket/string": 1,
+      "for": 2,
+      "syntax": 1,
+      "racket/base": 1,
+      ")": 7,
       "#lang": 1,
       "scribble/manual": 1,
       "@": 3,
-      "(": 7,
-      "require": 2,
       "scribble/bnf": 1,
-      ")": 7,
       "@title": 1,
       "{": 2,
       "Scribble": 3,
@@ -22922,11 +22935,9 @@
       "collection": 1,
       "of": 3,
       "tools": 1,
-      "for": 2,
       "creating": 1,
       "prose": 2,
       "documents": 1,
-      "-": 95,
       "papers": 1,
       "books": 1,
       "library": 1,
@@ -22986,21 +22997,7 @@
       ";": 1,
       "@include": 8,
       "section": 9,
-      "@index": 1,
-      "#": 3,
-      "/bin/sh": 1,
-      "|": 2,
-      "*": 2,
-      "scheme": 1,
-      "exec": 1,
-      "racket": 1,
-      "um": 1,
-      "racket/file": 1,
-      "racket/path": 1,
-      "racket/list": 1,
-      "racket/string": 1,
-      "syntax": 1,
-      "racket/base": 1
+      "@index": 1
     },
     "Rebol": {
       "REBOL": 1,
@@ -23025,12 +23022,12 @@
       "task": 2,
       "default": 2,
       "do": 36,
-      "puts": 20,
+      "puts": 21,
       "end": 248,
       "module": 8,
       "Foo": 1,
       "require": 58,
-      "#": 481,
+      "#": 476,
       "class": 7,
       "Formula": 2,
       "include": 3,
@@ -23173,7 +23170,7 @@
       "e": 8,
       "ARGV.debug": 1,
       "%": 11,
-      "w": 8,
+      "w": 7,
       "config.log": 1,
       "CMakeCache.txt": 1,
       ".select": 1,
@@ -23197,7 +23194,7 @@
       "to_s": 2,
       "std_cmake_args": 1,
       "W": 1,
-      "-": 33,
+      "-": 31,
       "DCMAKE_INSTALL_PREFIX": 1,
       "DCMAKE_BUILD_TYPE": 1,
       "None": 1,
@@ -23643,8 +23640,7 @@
       "err.to_s": 1,
       "DEFAULTS.deep_merge": 1,
       ".deep_merge": 1,
-      "/usr/bin/env": 5,
-      "macruby": 1,
+      "SHEBANG#!macruby": 1,
       "object": 2,
       "@user": 1,
       "person": 1,
@@ -23784,11 +23780,8 @@
       "keys": 6,
       "redis.keys": 1,
       "key.sub": 1,
-      "rake": 1,
-      "ruby": 2,
-      "Ilib": 1,
-      "test": 6,
-      "echo": 1,
+      "SHEBANG#!ruby": 2,
+      "SHEBANG#!rake": 1,
       "Sinatra": 2,
       "Request": 2,
       "<": 2,
@@ -23824,6 +23817,7 @@
       ".to_sym": 1,
       "raise_errors": 1,
       "Proc.new": 11,
+      "test": 5,
       "dump_errors": 1,
       "show_exceptions": 1,
       "sessions": 1,
@@ -23974,7 +23968,7 @@
       "Delegator.target.helpers": 1,
       "self.use": 1,
       "Delegator.target.use": 1,
-      "python": 1
+      "SHEBANG#!python": 1
     },
     "Rust": {
       "fn": 1,
@@ -24122,10 +24116,10 @@
       "Credentials": 2,
       "Path.userHome": 1,
       "/": 2,
-      "#": 2,
-      "/bin/sh": 1,
+      "SHEBANG#!sh": 1,
       "exec": 1,
       "scala": 1,
+      "#": 1,
       "object": 1,
       "HelloWorld": 1,
       "def": 1,
@@ -24385,7 +24379,9 @@
     "Shell": {
       "export": 6,
       "PATH": 5,
-      "#": 10,
+      "SHEBANG#!bash": 4,
+      "echo": 14,
+      "#": 5,
       "pkgname": 1,
       "stud": 4,
       "-": 23,
@@ -24439,13 +24435,10 @@
       "init.stud": 1,
       "mkdir": 1,
       "p": 1,
-      "/usr/bin/env": 2,
-      "bash": 2,
       "set": 2,
       "e": 1,
       "n": 2,
       "x": 1,
-      "echo": 11,
       "unset": 3,
       "system": 1,
       "exec": 1,
@@ -24479,9 +24472,8 @@
       "rvm_is_not_a_shell_function": 2,
       "rvm_path/scripts": 1,
       "rvm": 1,
-      "/bin/bash": 1,
-      "/bin/sh": 1,
-      "/bin/zsh": 1
+      "SHEBANG#!sh": 2,
+      "SHEBANG#!zsh": 2
     },
     "Standard ML": {
       "signature": 2,
@@ -26469,13 +26461,13 @@
     "Emacs Lisp": 3,
     "GAS": 133,
     "Gosu": 422,
-    "Groovy": 71,
+    "Groovy": 69,
     "Groovy Server Pages": 91,
     "Haml": 4,
     "INI": 8,
-    "Ioke": 4,
+    "Ioke": 2,
     "Java": 7515,
-    "JavaScript": 150260,
+    "JavaScript": 150293,
     "JSON": 619,
     "Julia": 202,
     "Kotlin": 155,
@@ -26485,30 +26477,30 @@
     "Max": 58,
     "Nemerle": 17,
     "Nimrod": 2,
-    "Nu": 6,
+    "Nu": 4,
     "Objective-C": 38749,
     "OCaml": 273,
     "Opa": 32,
     "OpenCL": 88,
     "OpenEdge ABL": 3072,
-    "Parrot Assembly": 8,
-    "Parrot Internal Representation": 7,
-    "Perl": 17087,
+    "Parrot Assembly": 6,
+    "Parrot Internal Representation": 5,
+    "Perl": 17075,
     "PHP": 23550,
     "PowerShell": 14,
     "Prolog": 61,
-    "Python": 4084,
+    "Python": 4080,
     "R": 14,
-    "Racket": 270,
+    "Racket": 269,
     "Rebol": 11,
-    "Ruby": 4339,
+    "Ruby": 4324,
     "Rust": 8,
     "Sass": 28,
-    "Scala": 319,
+    "Scala": 318,
     "Scheme": 3484,
     "Scilab": 72,
     "SCSS": 39,
-    "Shell": 315,
+    "Shell": 314,
     "Standard ML": 247,
     "SuperCollider": 141,
     "Tea": 3,
@@ -26545,7 +26537,7 @@
     "INI": 1,
     "Ioke": 1,
     "Java": 5,
-    "JavaScript": 19,
+    "JavaScript": 20,
     "JSON": 5,
     "Julia": 1,
     "Kotlin": 1,
@@ -26563,7 +26555,7 @@
     "OpenEdge ABL": 5,
     "Parrot Assembly": 1,
     "Parrot Internal Representation": 1,
-    "Perl": 12,
+    "Perl": 13,
     "PHP": 6,
     "PowerShell": 2,
     "Prolog": 1,
@@ -26578,7 +26570,7 @@
     "Scheme": 1,
     "Scilab": 3,
     "SCSS": 1,
-    "Shell": 11,
+    "Shell": 14,
     "Standard ML": 2,
     "SuperCollider": 1,
     "Tea": 1,
@@ -26593,5 +26585,5 @@
     "XSLT": 1,
     "YAML": 1
   },
-  "md5": "34a5b1ab9d3cf845a0603cef9e9f6509"
+  "md5": "c1a765b2d321e1a0fe84a6f1624b6663"
 }

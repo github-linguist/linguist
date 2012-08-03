@@ -85,6 +85,17 @@ class TestTokenizer < Test::Unit::TestCase
     assert_equal %w(#import <Cocoa/Cocoa.h> int main \( int argc char *argv [ ] \) { NSLog \( @ \) ; return ; }), tokenize(:"Objective-C/hello.m")
   end
 
+  def test_shebang
+    assert_equal "SHEBANG#!sh", tokenize(:"Shell/sh.script!")[0]
+    assert_equal "SHEBANG#!bash", tokenize(:"Shell/bash.script!")[0]
+    assert_equal "SHEBANG#!zsh", tokenize(:"Shell/zsh.script!")[0]
+    assert_equal "SHEBANG#!perl", tokenize(:"Perl/perl.script!")[0]
+    assert_equal "SHEBANG#!python", tokenize(:"Python/python.script!")[0]
+    assert_equal "SHEBANG#!ruby", tokenize(:"Ruby/ruby.script!")[0]
+    assert_equal "SHEBANG#!ruby", tokenize(:"Ruby/ruby2.script!")[0]
+    assert_equal "SHEBANG#!node", tokenize(:"JavaScript/js.script!")[0]
+  end
+
   def test_javascript_tokens
     assert_equal %w( \( function \( \) { console.log \( \) ; } \) .call \( this \) ;), tokenize(:"JavaScript/hello.js")
   end
@@ -95,7 +106,6 @@ class TestTokenizer < Test::Unit::TestCase
 
   def test_ruby_tokens
     assert_equal %w(module Foo end), tokenize(:"Ruby/foo.rb")
-    assert_equal %w(# /usr/bin/env ruby puts), tokenize(:"Ruby/script.rb")
     assert_equal %w(task default do puts end), tokenize(:"Ruby/filenames/Rakefile")
   end
 end

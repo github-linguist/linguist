@@ -129,15 +129,6 @@ module Linguist
       ['.png', '.jpg', '.jpeg', '.gif'].include?(extname)
     end
 
-    # Public: Is the blob likely to have a shebang?
-    #
-    # Return true or false
-    def shebang_extname?
-      extname.empty? &&
-        mode &&
-        (mode.to_i(8) & 05) == 05
-    end
-
     MEGABYTE = 1024 * 1024
 
     # Public: Is the blob too big to load?
@@ -410,14 +401,23 @@ module Linguist
     def guess_language
       return if binary_mime_type?
 
-      possible_languages = Language.find_by_filename(name.to_s)
+      name = self.name.to_s
+
+      # A bit of an elegant hack. If the file is exectable but extensionless,
+      # append a "magic" extension so it can be classified with other
+      # languages that have shebang scripts.
+      if extname.empty? && mode && (mode.to_i(8) & 05) == 05
+        name += ".script!"
+      end
+
+      possible_languages = Language.find_by_filename(name)
 
       if possible_languages.length > 1
         if result = Classifier.classify(Samples::DATA, data, possible_languages.map(&:name)).first
           Language[result[0]]
         end
       else
-        possible_languages.first || shebang_language
+        possible_languages.first
       end
     end
 
@@ -426,72 +426,6 @@ module Linguist
     # Returns a Lexer.
     def lexer
       language ? language.lexer : Pygments::Lexer.find_by_name('Text only')
-    end
-
-    # Internal: Extract the script name from the shebang line
-    #
-    # Requires Blob#data
-    #
-    # Examples
-    #
-    #   '#!/usr/bin/ruby'
-    #   # => 'ruby'
-    #
-    #   '#!/usr/bin/env ruby'
-    #   # => 'ruby'
-    #
-    #   '#!/usr/bash/python2.4'
-    #   # => 'python'
-    #
-    # Please add additional test coverage to
-    # `test/test_blob.rb#test_shebang_script` if you make any changes.
-    #
-    # Returns a script name String or nil
-    def shebang_script
-      # Fail fast if blob isn't viewable?
-      return unless viewable?
-
-      if lines.any? && (match = lines[0].match(/(.+)\n?/)) && (bang = match[0]) =~ /^#!/
-        bang.sub!(/^#! /, '#!')
-        tokens = bang.split(' ')
-        pieces = tokens.first.split('/')
-        if pieces.size > 1
-          script = pieces.last
-        else
-          script = pieces.first.sub('#!', '')
-        end
-
-        script = script == 'env' ? tokens[1] : script
-
-        # python2.4 => python
-        if script =~ /((?:\d+\.?)+)/
-          script.sub! $1, ''
-        end
-
-        # Check for multiline shebang hacks that exec themselves
-        #
-        #   #!/bin/sh
-        #   exec foo "$0" "$@"
-        #
-        if script == 'sh' &&
-            lines[0...5].any? { |l| l.match(/exec (\w+).+\$0.+\$@/) }
-          script = $1
-        end
-
-        script
-      end
-    end
-
-    # Internal: Get Language for shebang script
-    #
-    # Returns the Language or nil
-    def shebang_language
-      # Skip file extensions unlikely to have shebangs
-      return unless shebang_extname?
-
-      if script = shebang_script
-        Language[script]
-      end
     end
 
     # Public: Highlight syntax of blob
