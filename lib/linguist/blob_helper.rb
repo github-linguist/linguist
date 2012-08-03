@@ -410,14 +410,15 @@ module Linguist
     def guess_language
       return if binary_mime_type?
 
-      # Disambiguate between multiple language extensions
-      disambiguate_extension_language ||
+      possible_languages = Language.find_by_filename(name.to_s)
 
-        # See if there is a Language for the extension
-        Language.find_by_filename(name.to_s) ||
-
-        # Try to detect Language from shebang line
-        shebang_language
+      if possible_languages.length > 1
+        if result = Classifier.classify(Samples::DATA, data, possible_languages.map(&:name)).first
+          Language[result[0]]
+        end
+      else
+        possible_languages.first || shebang_language
+      end
     end
 
     # Internal: Get the lexer of the blob.
@@ -425,20 +426,6 @@ module Linguist
     # Returns a Lexer.
     def lexer
       language ? language.lexer : Pygments::Lexer.find_by_name('Text only')
-    end
-
-    # Internal: Disambiguates between multiple language extensions.
-    #
-    # Returns a Language or nil.
-    def disambiguate_extension_language
-      if Language.ambiguous?(extname)
-        possible_languages = Language.all.select { |l| l.extensions.include?(extname) }.map(&:name)
-        if possible_languages.any?
-          if result = Classifier.classify(Samples::DATA, data, possible_languages).first
-            Language[result[0]]
-          end
-        end
-      end
     end
 
     # Internal: Extract the script name from the shebang line

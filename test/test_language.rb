@@ -10,25 +10,12 @@ class TestLanguage < Test::Unit::TestCase
 
   def test_ambiguous_extensions
     assert Language.ambiguous?('.cls')
-    assert_equal Language['Apex'], Language.find_by_extension('cls')
-
     assert Language.ambiguous?('.h')
-    assert_equal Language['C'], Language.find_by_extension('h')
-
     assert Language.ambiguous?('.m')
-    assert_equal Language['Objective-C'], Language.find_by_extension('m')
-
     assert Language.ambiguous?('.pl')
-    assert_equal Language['Perl'], Language.find_by_extension('pl')
-
     assert Language.ambiguous?('.r')
-    assert_equal Language['R'], Language.find_by_extension('r')
-
     assert Language.ambiguous?('.t')
-    assert_equal Language['Turing'], Language.find_by_extension('t')
-
     assert Language.ambiguous?('.v')
-    assert_equal Language['Verilog'], Language.find_by_extension('v')
   end
 
   def test_lexer
@@ -242,48 +229,16 @@ class TestLanguage < Test::Unit::TestCase
     end
   end
 
-  def test_find_by_extension
-    assert_equal Language['Ruby'], Language.find_by_extension('.rb')
-    assert_equal Language['Ruby'], Language.find_by_extension('rb')
-    assert_equal Language['Dart'], Language.find_by_extension('dart')
-    assert_equal Language['Groff'], Language.find_by_extension('man')
-    assert_equal Language['Groff'], Language.find_by_extension('1')
-    assert_equal Language['Groff'], Language.find_by_extension('2')
-    assert_equal Language['Groff'], Language.find_by_extension('3')
-    assert_equal Language['PHP'], Language.find_by_extension('php')
-    assert_equal Language['PHP'], Language.find_by_extension('php3')
-    assert_equal Language['PHP'], Language.find_by_extension('php4')
-    assert_equal Language['PHP'], Language.find_by_extension('php5')
-    assert_equal Language['PowerShell'], Language.find_by_extension('psm1')
-    assert_equal Language['PowerShell'], Language.find_by_extension('ps1')
-
-    # Aliases for Streamline.js ( https://github.com/Sage/streamlinejs )
-    assert_equal Language['JavaScript'], Language.find_by_extension('_js')
-    assert_equal Language['CoffeeScript'], Language.find_by_extension('_coffee')
-
-    assert_nil Language.find_by_extension('.nkt')
-  end
-
-  def test_find_all_by_extension
-    Language.all.each do |language|
-      assert_equal language, Language.find_by_extension(language.primary_extension)
-
-      language.extensions.each do |extension|
-        unless Language.ambiguous?(extension)
-          assert_equal language, Language.find_by_extension(extension)
-        end
-      end
-    end
-  end
-
   def test_find_by_filename
-    assert_equal Language['Shell'], Language.find_by_filename('PKGBUILD')
-    assert_equal Language['Ruby'], Language.find_by_filename('foo.rb')
-    assert_equal Language['Ruby'], Language.find_by_filename('foo/bar.rb')
-    assert_equal Language['Ruby'], Language.find_by_filename('Rakefile')
-    assert_nil Language.find_by_filename('rb')
-    assert_nil Language.find_by_filename('.rb')
-    assert_nil Language.find_by_filename('.nkt')
+    assert_equal [Language['Shell']], Language.find_by_filename('PKGBUILD')
+    assert_equal [Language['Ruby']], Language.find_by_filename('foo.rb')
+    assert_equal [Language['Ruby']], Language.find_by_filename('foo/bar.rb')
+    assert_equal [Language['Ruby']], Language.find_by_filename('Rakefile')
+    assert_equal [Language['Ruby']], Language.find_by_filename('PKGBUILD.rb')
+    assert_equal [Language['C'], Language['C++'], Language['Objective-C']], Language.find_by_filename('foo.h')
+    assert_equal [], Language.find_by_filename('rb')
+    assert_equal [], Language.find_by_filename('.rb')
+    assert_equal [], Language.find_by_filename('.nkt')
   end
 
   def test_find

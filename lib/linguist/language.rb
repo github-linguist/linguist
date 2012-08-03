@@ -15,8 +15,8 @@ module Linguist
     @index           = {}
     @name_index      = {}
     @alias_index     = {}
-    @extension_index = {}
-    @filename_index  = {}
+    @extension_index = Hash.new { |h,k| h[k] = [] }
+    @filename_index  = Hash.new { |h,k| h[k] = [] }
 
     # Valid Languages types
     TYPES = [:data, :markup, :programming]
@@ -60,13 +60,7 @@ module Linguist
           raise ArgumentError, "Extension is missing a '.': #{extension.inspect}"
         end
 
-        unless ambiguous?(extension)
-          # Index the extension with a leading ".": ".rb"
-          @extension_index[extension] = language
-
-          # Index the extension without a leading ".": "rb"
-          @extension_index[extension.sub(/^\./, '')] = language
-        end
+        @extension_index[extension] << language
       end
 
       language.overrides.each do |extension|
@@ -82,7 +76,7 @@ module Linguist
       end
 
       language.filenames.each do |filename|
-        @filename_index[filename] = language
+        @filename_index[filename] << language
       end
 
       language
@@ -123,33 +117,19 @@ module Linguist
       @alias_index[name]
     end
 
-    # Public: Look up Language by extension.
-    #
-    # extension - The extension String. May include leading "."
-    #
-    # Examples
-    #
-    #   Language.find_by_extension('.rb')
-    #   # => #<Language name="Ruby">
-    #
-    # Returns the Language or nil if none was found.
-    def self.find_by_extension(extension)
-      @extension_index[extension]
-    end
-
-    # Public: Look up Language by filename.
+    # Public: Look up Languages by filename.
     #
     # filename - The path String.
     #
     # Examples
     #
     #   Language.find_by_filename('foo.rb')
-    #   # => #<Language name="Ruby">
+    #   # => [#<Language name="Ruby">]
     #
-    # Returns the Language or nil if none was found.
+    # Returns all matching Languages or [] if none were found.
     def self.find_by_filename(filename)
       basename, extname = File.basename(filename), File.extname(filename)
-      @filename_index[basename] || @extension_index[extname]
+      @filename_index[basename] + @extension_index[extname]
     end
 
     # Public: Look up Language by its name or lexer.
