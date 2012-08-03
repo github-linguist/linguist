@@ -58,7 +58,6 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['Scheme'], Language['Scheme'].lexer
     assert_equal Lexer['Standard ML'], Language['Standard ML'].lexer
     assert_equal Lexer['TeX'], Language['TeX'].lexer
-    assert_equal Lexer['Text only'], Language['Text'].lexer
     assert_equal Lexer['Verilog'], Language['Verilog'].lexer
     assert_equal Lexer['XSLT'], Language['XSLT'].lexer
     assert_equal Lexer['aspx-vb'], Language['ASP'].lexer
@@ -290,11 +289,9 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal 'csharp', Language['C#'].ace_mode
     assert_equal 'css', Language['CSS'].ace_mode
     assert_equal 'javascript', Language['JavaScript'].ace_mode
-    assert_equal 'text', Language['Text'].ace_mode
   end
 
   def test_ace_modes
-    assert Language.ace_modes.include?(Language['Text'])
     assert Language.ace_modes.include?(Language['Ruby'])
     assert !Language.ace_modes.include?(Language['FORTRAN'])
   end
@@ -327,12 +324,6 @@ class TestLanguage < Test::Unit::TestCase
 
 
   def test_colorize
-    assert_equal <<-HTML, Language['Text'].colorize("Hello")
-<div class="highlight"><pre>Hello
-</pre>
-</div>
-    HTML
-
     assert_equal <<-HTML, Language['Ruby'].colorize("def foo\n  'foo'\nend\n")
 <div class="highlight"><pre><span class="k">def</span> <span class="nf">foo</span>
   <span class="s1">&#39;foo&#39;</span>

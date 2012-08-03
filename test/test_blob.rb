@@ -262,7 +262,6 @@ class TestBlob < Test::Unit::TestCase
   end
 
   def test_indexable
-    assert blob("Text/file.txt").indexable?
     assert blob("Ruby/foo.rb").indexable?
     assert !blob("Text/defu.nkt").indexable?
     assert !blob("Text/dump.sql").indexable?
