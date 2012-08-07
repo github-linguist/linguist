@@ -37,7 +37,8 @@ module Linguist
     #
     # Returns an Array of lines
     def lines
-      @lines ||= data.split("\n", -1)
+      # TODO: data should be required to be a String, no nils
+      @lines ||= data ? data.split("\n", -1) : []
     end
 
     # Internal: Is the blob a generated file?
