@@ -85,7 +85,8 @@
 - -vsdoc\.js$
 
 # jQuery validation plugin (MS bundles this with asp.net mvc)
-- (^|/)jquery([^.]*)\.validate(\.min)?\.js$
+- (^|/)jquery([^.]*)\.validate(\.unobtrusive)?(\.min)?\.js$
+- (^|/)jquery([^.]*)\.unobtrusive\-ajax(\.min)?\.js$
 
 # Microsoft Ajax
 - (^|/)[Mm]icrosoft([Mm]vc)?([Aa]jax|[Vv]alidation)(\.debug)?\.js$
