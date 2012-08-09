@@ -207,6 +207,23 @@ class TestBlob < Test::Unit::TestCase
     assert blob("public/javascripts/jquery-1.6.1.js").vendored?
     assert blob("public/javascripts/jquery-1.6.1.min.js").vendored?
     assert !blob("public/javascripts/jquery.github.menu.js").vendored?
+    
+    # jQuery UI
+    assert blob("themes/ui-lightness/jquery-ui.css").vendored?
+    assert blob("themes/ui-lightness/jquery-ui-1.8.22.custom.css").vendored?
+    assert blob("themes/ui-lightness/jquery.ui.accordion.css").vendored?
+    assert blob("ui/i18n/jquery.ui.datepicker-ar.js").vendored?
+    assert blob("ui/i18n/jquery-ui-i18n.js").vendored?
+    assert blob("ui/jquery.effects.blind.js").vendored?
+    assert blob("ui/jquery-ui-1.8.22.custom.js").vendored?
+    assert blob("ui/jquery-ui-1.8.22.custom.min.js").vendored?
+    assert blob("ui/jquery-ui-1.8.22.js").vendored?
+    assert blob("ui/jquery-ui-1.8.js").vendored?
+    assert blob("ui/jquery-ui.min.js").vendored?
+    assert blob("ui/jquery.ui.accordion.js").vendored?
+    assert blob("ui/minified/jquery.effects.blind.min.js").vendored?
+    assert blob("ui/minified/jquery.ui.accordion.min.js").vendored?
+    
 
     # MooTools
     assert blob("public/javascripts/mootools-core-1.3.2-full-compat.js").vendored?
