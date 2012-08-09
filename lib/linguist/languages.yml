@@ -62,6 +62,14 @@ Ada:
   - .adb
   - .ads
 
+Agda:
+  type: programming
+  lexer: Text only
+  color: "#3366cc"
+  primary_extension: .agda
+  extensions:
+  - .agda
+
 Apex:
   type: programming
   lexer: Text only
@@ -689,6 +697,17 @@ LilyPond:
   extensions:
   - .ily
   - .ly
+
+Literate Agda:
+  type: programming
+  lexer: Text only
+  group: Agda
+  search_term: lagda
+  aliases:
+  - lagda
+  primary_extension: .lagda
+  extensions:
+  - .lagda
 
 Literate Haskell:
   type: programming
