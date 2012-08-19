@@ -2,19 +2,21 @@
 #
 # All languages have an associated lexer for syntax highlighting. It
 # defaults to name.downcase, which covers most cases. Make sure the
-# lexer exists in lexers.yml. This is a list of available in our
-# version of pygments.
+# lexer exists in lexers.yml. This is a list of available lexers in
+# our version of pygments.
 #
 # type              - Either data, programming, markup, or nil
 # lexer             - An explicit lexer String (defaults to name.downcase)
 # aliases           - An Array of additional aliases (implicitly
 #                     includes name.downcase)
 # ace_mode          - A String name of Ace Mode (if available)
-# extension         - An Array of associated extensions
+# extension         - An Array of associated extensions. If file samples
+#                     are included in 'samples/<Language Name>/', then
+#                     its extension does not need to be listed.
 # primary_extension - A String for the main extension associated with
-#                     the language. Must be unique. Used when a Language is picked
-#                     from a dropdown and we need to automatically choose an
-#                     extension.
+#                     the language. Must be unique. Used when a Language
+#                     is picked from a dropdown and we need to
+#                     automatically choose an extension.
 # searchable        - Boolean flag to enable searching (defaults to true)
 # search_term       - Deprecated: Some languages maybe indexed under a
 #                     different alias. Avoid defining new exceptions.
@@ -689,11 +691,6 @@ Lasso:
   ace_mode: lasso
   color: "#2584c3"
   primary_extension: .lasso
-  extensions:
-  - .inc
-  - .las
-  - .lasso9
-  - .ldml
 
 LilyPond:
   lexer: Text only
