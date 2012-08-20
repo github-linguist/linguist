@@ -32,7 +32,10 @@ module Linguist
     #
     # Returns a mime type String.
     def mime_type
-      @mime_type ||= Mime.mime_for(extname.to_s)
+      @mime_type ||= begin
+        mime_type = Mime.lookup_mime_type_for(extname.to_s)
+        mime_type ? mime_type.to_s : 'text/plain'
+      end
     end
 
     # Public: Get the Content-Type header value

@@ -3,24 +3,6 @@ require 'yaml'
 
 module Linguist
   module Mime
-    # Internal: Look up mime type for extension.
-    #
-    # ext - The extension String. May include leading "."
-    #
-    # Examples
-    #
-    #   Mime.mime_for('.html')
-    #   # => 'text/html'
-    #
-    #   Mime.mime_for('txt')
-    #   # => 'text/plain'
-    #
-    # Return mime type String otherwise falls back to 'text/plain'.
-    def self.mime_for(ext)
-      mime_type = lookup_mime_type_for(ext)
-      mime_type ? mime_type.to_s : 'text/plain'
-    end
-
     # Internal: Lookup mime type for extension or mime type
     #
     # ext_or_mime_type - A file extension ".txt" or mime type "text/plain".
