@@ -1,9 +1,9 @@
 require 'linguist/generated'
 require 'linguist/language'
-require 'linguist/mime'
 
 require 'charlock_holmes'
 require 'escape_utils'
+require 'mime/types'
 require 'pygments'
 require 'yaml'
 
@@ -23,6 +23,22 @@ module Linguist
       File.extname(name.to_s)
     end
 
+    # Internal: Lookup mime type for extension.
+    #
+    # Returns a MIME::Type
+    def _mime_type
+      if defined? @_mime_type
+        @_mime_type
+      else
+        guesses = ::MIME::Types.type_for(extname.to_s)
+
+        # Prefer text mime types over binary
+        @_mime_type = guesses.detect { |type| type.ascii? } ||
+          # Otherwise use the first guess
+          guesses.first
+      end
+    end
+
     # Public: Get the actual blob mime type
     #
     # Examples
@@ -32,10 +48,14 @@ module Linguist
     #
     # Returns a mime type String.
     def mime_type
-      @mime_type ||= begin
-        mime_type = Mime.lookup_mime_type_for(extname.to_s)
-        mime_type ? mime_type.to_s : 'text/plain'
-      end
+      _mime_type ? _mime_type.to_s : 'text/plain'
+    end
+
+    # Internal: Is the blob binary according to its mime type
+    #
+    # Return true or false
+    def binary_mime_type?
+      _mime_type ? _mime_type.binary? : false
     end
 
     # Public: Get the Content-Type header value
@@ -84,15 +104,6 @@ module Linguist
     #          no valid encoding could be found
     def detect_encoding
       @detect_encoding ||= CharlockHolmes::EncodingDetector.new.detect(data) if data
-    end
-
-    # Internal: Is the blob binary according to its mime type
-    #
-    # Return true or false
-    def binary_mime_type?
-      if mime_type = Mime.lookup_mime_type_for(extname)
-        mime_type.binary?
-      end
     end
 
     # Public: Is the blob binary?
