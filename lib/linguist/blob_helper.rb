@@ -259,11 +259,9 @@ module Linguist
     #
     # Returns a Language or nil if none is detected
     def language
-      if defined? @language
-        @language
-      elsif !binary_mime_type?
-        @language = Language.detect(name.to_s, lambda { data }, mode)
-      end
+      return @language if defined? @language
+      data_loader = lambda { binary_mime_type? ? "" : data }
+      @language = Language.detect(name.to_s, data_loader, mode)
     end
 
     # Internal: Get the lexer of the blob.
