@@ -16,12 +16,15 @@ module Linguist
       new.extract_tokens(data)
     end
 
+    # Start state on token, ignore anything till the next newline
     SINGLE_LINE_COMMENTS = [
       '//', # C
       '#',  # Ruby
       '%',  # Tex
     ]
 
+    # Start state on opening token, ignore anything until the closing
+    # token is reached.
     MULTI_LINE_COMMENTS = [
       ['/*', '*/'],    # C
       ['<!--', '-->'], # XML
@@ -30,7 +33,7 @@ module Linguist
     ]
 
     START_SINGLE_LINE_COMMENT =  Regexp.compile(SINGLE_LINE_COMMENTS.map { |c|
-      "^\s*#{Regexp.escape(c)} "
+      "\s*#{Regexp.escape(c)} "
     }.join("|"))
 
     START_MULTI_LINE_COMMENT =  Regexp.compile(MULTI_LINE_COMMENTS.map { |c|
@@ -58,16 +61,16 @@ module Linguist
           end
 
         # Single line comment
-        elsif token = s.scan(START_SINGLE_LINE_COMMENT)
-          tokens << token.strip
+        elsif s.beginning_of_line? && token = s.scan(START_SINGLE_LINE_COMMENT)
+          # tokens << token.strip
           s.skip_until(/\n|\Z/)
 
         # Multiline comments
         elsif token = s.scan(START_MULTI_LINE_COMMENT)
-          tokens << token
+          # tokens << token
           close_token = MULTI_LINE_COMMENTS.assoc(token)[1]
           s.skip_until(Regexp.compile(Regexp.escape(close_token)))
-          tokens << close_token
+          # tokens << close_token
 
         # Skip single or double quoted strings
         elsif s.scan(/"/)
