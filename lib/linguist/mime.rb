@@ -1,49 +1,6 @@
 require 'mime/types'
 require 'yaml'
 
-class MIME::Type
-  attr_accessor :override
-end
-
-# Register additional mime type extensions
-#
-# Follows same format as mime-types data file
-#   https://github.com/halostatue/mime-types/blob/master/lib/mime/types.rb.data
-File.read(File.expand_path("../mimes.yml", __FILE__)).lines.each do |line|
-  # Regexp was cargo culted from mime-types lib
-  next unless line =~ %r{^
-    #{MIME::Type::MEDIA_TYPE_RE}
-    (?:\s@([^\s]+))?
-    (?:\s:(#{MIME::Type::ENCODING_RE}))?
-  }x
-
-  mediatype  = $1
-  subtype    = $2
-  extensions = $3
-  encoding   = $4
-
-  # Lookup existing mime type
-  mime_type = MIME::Types["#{mediatype}/#{subtype}"].first ||
-    # Or create a new instance
-    MIME::Type.new("#{mediatype}/#{subtype}")
-
-  if extensions
-    extensions.split(/,/).each do |extension|
-      mime_type.extensions << extension
-    end
-  end
-
-  if encoding
-    mime_type.encoding = encoding
-  end
-
-  mime_type.override = true
-
-  # Kind of hacky, but we need to reindex the mime type after making changes
-  MIME::Types.add_type_variant(mime_type)
-  MIME::Types.index_extensions(mime_type)
-end
-
 module Linguist
   module Mime
     # Internal: Look up mime type for extension.
@@ -78,11 +35,8 @@ module Linguist
         guesses = ::MIME::Types.type_for(ext_or_mime_type)
       end
 
-      # Use custom override first
-      guesses.detect { |type| type.override } ||
-
-        # Prefer text mime types over binary
-        guesses.detect { |type| type.ascii? } ||
+      # Prefer text mime types over binary
+      guesses.detect { |type| type.ascii? } ||
 
         # Otherwise use the first guess
         guesses.first

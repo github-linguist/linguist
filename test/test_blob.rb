@@ -30,7 +30,6 @@ class TestBlob < Test::Unit::TestCase
   end
 
   def test_mime_type
-    assert_equal "application/octet-stream", blob("Binary/dog.o").mime_type
     assert_equal "application/postscript", blob("Binary/octocat.ai").mime_type
     assert_equal "application/x-ruby", blob("Ruby/grit.rb").mime_type
     assert_equal "application/x-sh", blob("Shell/script.sh").mime_type
@@ -40,7 +39,6 @@ class TestBlob < Test::Unit::TestCase
   end
 
   def test_content_type
-    assert_equal "application/octet-stream", blob("Binary/dog.o").content_type
     assert_equal "application/pdf", blob("Binary/foo.pdf").content_type
     assert_equal "audio/ogg", blob("Binary/foo.ogg").content_type
     assert_equal "image/png", blob("Binary/foo.png").content_type
