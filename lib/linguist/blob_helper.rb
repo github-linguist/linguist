@@ -83,7 +83,7 @@ module Linguist
       @detect_encoding ||= CharlockHolmes::EncodingDetector.new.detect(data) if data
     end
 
-    # Public: Is the blob binary according to its mime type
+    # Internal: Is the blob binary according to its mime type
     #
     # Return true or false
     def binary_mime_type?
@@ -260,8 +260,14 @@ module Linguist
     # Returns a Language or nil if none is detected
     def language
       return @language if defined? @language
-      data_loader = lambda { binary_mime_type? ? "" : data }
-      @language = Language.detect(name.to_s, data_loader, mode)
+
+      if defined?(@data) && @data.is_a?(String)
+        data = @data
+      else
+        data = lambda { binary_mime_type? ? "" : self.data }
+      end
+
+      @language = Language.detect(name.to_s, data, mode)
     end
 
     # Internal: Get the lexer of the blob.
