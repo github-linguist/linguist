@@ -16,6 +16,9 @@ module Linguist
       new.extract_tokens(data)
     end
 
+    # Read up to 100KB
+    BYTE_LIMIT = 100_000
+
     # Start state on token, ignore anything till the next newline
     SINGLE_LINE_COMMENTS = [
       '//', # C
@@ -55,6 +58,8 @@ module Linguist
 
       tokens = []
       until s.eos?
+        break if s.pos >= BYTE_LIMIT
+
         if token = s.scan(/^#!.+$/)
           if name = extract_shebang(token)
             tokens << "SHEBANG#!#{name}"
