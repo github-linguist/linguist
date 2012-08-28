@@ -253,6 +253,9 @@ class TestBlob < Test::Unit::TestCase
 
     # NuGet Packages
     assert blob("packages/Modernizr.2.0.6/Content/Scripts/modernizr-2.0.6-development-only.js").vendored?
+    
+    # Tests
+    assert blob("test/main.coffee").vendored?
   end
 
   def test_indexable
