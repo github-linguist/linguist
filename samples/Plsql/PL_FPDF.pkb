@@ -7,8 +7,8 @@ CREATE OR REPLACE PACKAGE BODY PL_FPDF AS
 * Licence :  GPL                                                               *
 *                                                                              *
 ********************************************************************************
-* Cette librairie PL/SQL est un portage de la version 1.53 de FPDF, célèbre    *
-* classe PHP développée par Olivier PLATHEY (http://www.fpdf.org/)             *
+* Cette librairie PL/SQL est un portage de la version 1.53 de FPDF, cÃ©lÃ¨bre    *
+* classe PHP dÃ©veloppÃ©e par Olivier PLATHEY (http://www.fpdf.org/)             *
 ********************************************************************************
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -170,7 +170,7 @@ type ArrayCharWidths is table of charSet index by word;
  AliasNbPages word;       	-- alias for total number of pages
  PDFVersion word;         	-- PDF version number
  
- -- Proprietés ajoutées lors du portage en PLSQL.
+ -- ProprietÃ©s ajoutÃ©es lors du portage en PLSQL.
  fpdf_charwidths ArrayCharWidths;		-- Characters table.
  MyHeader_Proc txt;						-- Personal Header procedure.
  MyHeader_ProcParam tv4000a;            -- Table of parameters of the personal header Proc.
@@ -181,7 +181,7 @@ type ArrayCharWidths is table of charSet index by word;
  Linespacing number;
  
  -- variables dont je ne maitrise pas bien l'emploi.
- -- A vérifier au court de la validation du portage.
+ -- A vÃ©rifier au court de la validation du portage.
  originalsize word;
  size1 word;
  size2 word;
@@ -191,7 +191,7 @@ type ArrayCharWidths is table of charSet index by word;
 *                                                                              *
 *******************************************************************************/
 ----------------------------------------------------------------------------------
--- proc. and func. spécifiques ajoutées au portage.
+-- proc. and func. spÃ©cifiques ajoutÃ©es au portage.
 ----------------------------------------------------------------------------------
 procedure print (pstr varchar2) is
 begin
@@ -474,7 +474,7 @@ begin
 end getFontZapfdingbats;
 
 ----------------------------------------------------------------------------------
--- Inclusion des métriques d'une font.
+-- Inclusion des mÃ©triques d'une font.
 ----------------------------------------------------------------------------------
 procedure p_includeFont (pfontname varchar2) is
 mySet charSet;
@@ -524,7 +524,7 @@ end p_includeFont;
 
 
 ----------------------------------------------------------------------------------
--- p_getFontMetrics : récupérer les metric d'une font.
+-- p_getFontMetrics : rÃ©cupÃ©rer les metric d'une font.
 ----------------------------------------------------------------------------------
 function p_getFontMetrics(pFontName varchar2) return charSet is
 mySet charSet;
@@ -570,7 +570,7 @@ begin
 end p_getFontMetrics;
 
 ----------------------------------------------------------------------------------
--- Parcours le tableau des images et renvoie true si l'image cherché existe 
+-- Parcours le tableau des images et renvoie true si l'image cherchÃ© existe 
 -- dans le tableau.
 ----------------------------------------------------------------------------------
 function imageExists(pFile varchar2) return boolean is
@@ -587,7 +587,7 @@ end imageExists;
 
 ----------------------------------------------------------------------------------
 -- Parcours le tableau des charwidths et renvoie true si il existe pour la font
--- donnée.
+-- donnÃ©e.
 ----------------------------------------------------------------------------------
 function fpdf_charwidthsExists(pFontName varchar2) return boolean is
 chTab charSet;
@@ -606,7 +606,7 @@ end fpdf_charwidthsExists;
 
 ----------------------------------------------------------------------------------
 -- Parcours le tableau des fonts et renvoie true si il existe pour la font
--- donnée.
+-- donnÃ©e.
 ----------------------------------------------------------------------------------
 function fontsExists(pFontName varchar2) return boolean is
 ft word;
@@ -717,8 +717,8 @@ begin
 end SetLineSpacing;
 
 ----------------------------------------------------------------------------------
--- Compatibilité PHP -> PLSQL : proc. and func. spécifiques au portages
--- 				 	 		  	ajoutée pour des facilités de traduction
+-- CompatibilitÃ© PHP -> PLSQL : proc. and func. spÃ©cifiques au portages
+-- 				 	 		  	ajoutÃ©e pour des facilitÃ©s de traduction
 ----------------------------------------------------------------------------------
 function ord(pStr varchar2) return number is
 begin
@@ -799,7 +799,7 @@ function is_string (pstr varchar2) return boolean is
 temp varchar2(2000);
 begin
   temp := to_number(pstr);
-  -- Si on passe là c'est que la variable contient un nombre sinon => exception.
+  -- Si on passe lÃ  c'est que la variable contient un nombre sinon => exception.
   return false;
 exception
 when others then
@@ -835,7 +835,7 @@ begin
 end substr_count;
 
 ----------------------------------------------------------------------------------------
---  Traduction des méthodes PHP.
+--  Traduction des mÃ©thodes PHP.
 ----------------------------------------------------------------------------------------
 procedure p_dochecks is
 begin
@@ -846,7 +846,7 @@ end p_dochecks;
 ----------------------------------------------------------------------------------------
 function p_getfontpath return varchar2 is
 begin
-    -- Procedure inutile avec le PLSQL : toutes les fonts sont chargées en mémoire.
+    -- Procedure inutile avec le PLSQL : toutes les fonts sont chargÃ©es en mÃ©moire.
 	return null;
 end p_getfontpath;
 
@@ -1907,7 +1907,7 @@ end p_parseImage;
 -- Methods added to FPDF primary class
 ----------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------
--- SetDash Ecrire en pointillés
+-- SetDash Ecrire en pointillÃ©s
 ----------------------------------------------------------------------------------------
 procedure SetDash(pblack number default 0, pwhite number default 0) is
   s txt;
@@ -2748,7 +2748,7 @@ procedure AddFont (family varchar2, style varchar2 default '',filename varchar2 
   d pls_integer;
   nb pls_integer;
   myDiff varchar2(2000);
-  myType varchar2(256); -- ????????? Cette variable est peut-être globale ????????????
+  myType varchar2(256); -- ????????? Cette variable est peut-Ãªtre globale ????????????
   -- tabNull tv4000;
 begin
 	-- Add a TrueType or Type1 font
@@ -3155,7 +3155,7 @@ begin
 			if(myBorder is not null and nl = 2) then
 				myB := myB2;
 			end if; 
-			-- si on passe là on continue à la prochaine itération de la boucle 
+			-- si on passe lÃ  on continue Ã  la prochaine itÃ©ration de la boucle 
 			-- en PHP il y avait l'instruction "continue" .
 			lb_skip := true;
 		end if; 
@@ -3536,12 +3536,12 @@ begin
 	SetTextColor(132,0,132);
 	
 /* TEST HELLOWORD */
-	Cell(0,1.2,'(Helloworld avec des parenthèses !)',0,1,'C');
+	Cell(0,1.2,'(Helloworld avec des parenthÃ¨ses !)',0,1,'C');
 
    
 /*
  -- Test image
-   print('Test de chargement d''une image à partir d''une url...<br>');
+   print('Test de chargement d''une image Ã  partir d''une url...<br>');
    --img := '/v2/images/b2i/fonds/fd_livret_college.png';
    img := '/v2/images/picto_laclassev2.png';
    --img := '/v2/images/picto_calendar.jpg';
@@ -3572,11 +3572,11 @@ begin
  --img := '/v2/images/picto_laclassev2.png';
  
  Image(img,1, 1, 10);
- Cell(0,1.2,'Validation des compétences du B2i',0,1,'C');
+ Cell(0,1.2,'Validation des compÃ©tences du B2i',0,1,'C');
  
 /*
   AddPage();
-  Cell(0,1.2,'Validation des compétences du B2i page 2',0,1,'C');
+  Cell(0,1.2,'Validation des compÃ©tences du B2i page 2',0,1,'C');
   
   /*
   someTxt := 'some Texte some Texte some Texte some Texte some Texte some Texte some Texte some Texte ';
@@ -3615,13 +3615,13 @@ begin
 end MyRepetitiveFooter;
 
 --------------------------------------------------------------------------------
--- Affiche le numéro de page en base de page
+-- Affiche le numÃ©ro de page en base de page
 --------------------------------------------------------------------------------
 procedure lpc_footer is
 begin
     if(PageNo != 1) then
         SetTextColor(88, 90, 90);
-        -- Le numéro de la page courante est en gras
+        -- Le numÃ©ro de la page courante est en gras
         SetFont('helvetica','B',12);
         Text(18, 29.3, PageNo);
         -- Le reste normal

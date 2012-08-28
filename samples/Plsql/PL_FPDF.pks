@@ -7,8 +7,8 @@ CREATE OR REPLACE PACKAGE PL_FPDF AS
 * Licence :  GPL                                                               *
 *                                                                              *
 ********************************************************************************
-* Cette librairie PL/SQL est un portage de la version 1.53 de FPDF, célèbre    *
-* classe PHP développée par Olivier PLATHEY (http://www.fpdf.org/)             *
+* Cette librairie PL/SQL est un portage de la version 1.53 de FPDF, cÃ©lÃ¨bre    *
+* classe PHP dÃ©veloppÃ©e par Olivier PLATHEY (http://www.fpdf.org/)             *
 ********************************************************************************
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -153,7 +153,7 @@ procedure MyRepetitiveHeader(param1 varchar2, param2 varchar2);
 procedure MyRepetitiveFooter;
 procedure testHeader;
 --------------------------------------------------------------------------------
--- Affiche le numéro de page en base de page
+-- Affiche le numÃ©ro de page en base de page
 --------------------------------------------------------------------------------
 procedure lpc_footer;
 
