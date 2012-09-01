@@ -250,7 +250,9 @@ module Linguist
     #
     # Return true or false
     def indexable?
-      if binary?
+      if size > 100 * 1024
+        false
+      elsif binary?
         false
       elsif extname == '.txt'
         true
@@ -259,8 +261,6 @@ module Linguist
       elsif !language.searchable?
         false
       elsif generated?
-        false
-      elsif size > 100 * 1024
         false
       else
         true
