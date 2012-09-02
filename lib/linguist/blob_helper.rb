@@ -160,7 +160,7 @@ module Linguist
     #
     # Return true or false
     def safe_to_colorize?
-      text? && !large? && !high_ratio_of_long_lines?
+      !large? && text? && !high_ratio_of_long_lines?
     end
 
     # Internal: Does the blob have a ratio of long lines?
