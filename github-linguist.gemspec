@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name    = 'github-linguist'
-  s.version = '2.3.1'
+  s.version = '2.3.2'
   s.summary = "GitHub Language detection"
 
   s.authors = "GitHub"
@@ -12,6 +12,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'escape_utils',    '~> 0.2.3'
   s.add_dependency 'mime-types',      '~> 1.19'
   s.add_dependency 'pygments.rb',     '>= 0.2.13'
+  s.add_development_dependency 'mocha'
   s.add_development_dependency 'json'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'yajl-ruby'

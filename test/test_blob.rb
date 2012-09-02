@@ -2,6 +2,7 @@ require 'linguist/file_blob'
 require 'linguist/samples'
 
 require 'test/unit'
+require 'mocha'
 require 'mime/types'
 require 'pygments'
 
@@ -261,6 +262,12 @@ class TestBlob < Test::Unit::TestCase
     assert !blob("Text/dump.sql").indexable?
     assert !blob("Binary/github.po").indexable?
     assert !blob("Binary/linguist.gem").indexable?
+
+    # large binary blobs should fail on size check first, not call 
+    # into charlock_holmes and alloc big buffers for testing encoding
+    b = blob("Binary/octocat.ai")
+    b.expects(:binary?).never
+    assert !b.indexable?
   end
 
   def test_language
