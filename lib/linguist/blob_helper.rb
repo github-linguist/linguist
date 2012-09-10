@@ -226,7 +226,7 @@ module Linguist
     # Returns true when mac format is detected.
     def mac_format?
       return if !viewable?
-      if pos = data.index("\r")
+      if pos = data[0, 4096].index("\r")
         data[pos + 1] != ?\n
       end
     end
