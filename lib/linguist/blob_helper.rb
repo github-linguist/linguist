@@ -204,7 +204,31 @@ module Linguist
     #
     # Returns an Array of lines
     def lines
-      @lines ||= (viewable? && data) ? data.split("\n", -1) : []
+      @lines ||=
+        if viewable? && data
+          data.split(line_split_character, -1)
+        else
+          []
+        end
+    end
+
+    # Character used to split lines. This is almost always "\n" except when Mac
+    # Format is detected in which case it's "\r".
+    #
+    # Returns a split pattern string.
+    def line_split_character
+      @line_split_character ||= (mac_format?? "\r" : "\n")
+    end
+
+    # Public: Is the data in ** Mac Format **. This format uses \r (0x0d) characters
+    # for line ends and does not include a \n (0x0a).
+    #
+    # Returns true when mac format is detected.
+    def mac_format?
+      return if !viewable?
+      if pos = data.index("\r")
+        data[pos + 1] != ?\n
+      end
     end
 
     # Public: Get number of lines of code
