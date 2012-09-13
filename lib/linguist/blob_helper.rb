@@ -58,6 +58,15 @@ module Linguist
       _mime_type ? _mime_type.binary? : false
     end
 
+    # Internal: Is the blob binary according to its mime type,
+    # overriding it if we have better data from the languages.yml
+    # database.
+    #
+    # Return true or false
+    def likely_binary?
+       binary_mime_type? and not Language.find_by_filename(name)
+    end
+
     # Public: Get the Content-Type header value
     #
     # This value is used when serving raw blobs.
