@@ -299,6 +299,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal '.js', Language['JavaScript'].primary_extension
     assert_equal '.coffee', Language['CoffeeScript'].primary_extension
     assert_equal '.t', Language['Turing'].primary_extension
+    assert_equal '.txl', Language['TXL'].primary_extension
 
     # This is a nasty requirement, but theres some code in GitHub that
     # expects this. Really want to drop this.
