@@ -1,17 +1,5 @@
-(************************************************************************)
-(*  v      *   The Coq Proof Assistant  /  The Coq Development Team     *)
-(* <O___,, *   INRIA - CNRS - LIX - LRI - PPS - Copyright 1999-2010     *)
-(*   \VV/  **************************************************************)
-(*    //   *      This file is distributed under the terms of the       *)
-(*         *       GNU Lesser General Public License Version 2.1        *)
-(************************************************************************)
-
-(*********************************************************************)
-(** * List permutations as a composition of adjacent transpositions  *)
-(*********************************************************************)
-
 (* Adapted in May 2006 by Jean-Marc Notin from initial contents by
-   Laurent Théry (Huffmann contribution, October 2003) *)
+   Laurent Thery (Huffmann contribution, October 2003) *)
 
 Require Import List Setoid Compare_dec Morphisms.
 Import ListNotations. (* For notations [] and [a;b;c] *)
