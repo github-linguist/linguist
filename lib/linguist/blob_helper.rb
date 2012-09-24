@@ -302,7 +302,7 @@ module Linguist
       if defined?(@data) && @data.is_a?(String)
         data = @data
       else
-        data = lambda { binary_mime_type? ? "" : self.data }
+        data = lambda { (binary_mime_type? || binary?) ? "" : self.data }
       end
 
       @language = Language.detect(name.to_s, data, mode)

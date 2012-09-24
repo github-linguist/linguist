@@ -84,7 +84,9 @@ module Linguist
 
       if possible_languages.length > 1
         data = data.call() if data.respond_to?(:call)
-        if result = Classifier.classify(Samples::DATA, data, possible_languages.map(&:name)).first
+        if data.nil? || data == ""
+          nil
+        elsif result = Classifier.classify(Samples::DATA, data, possible_languages.map(&:name)).first
           Language[result[0]]
         end
       else
