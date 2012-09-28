@@ -335,7 +335,7 @@ module Linguist
     # Returns html String
     def colorize_without_wrapper(options = {})
       if text = colorize(options)
-        text[%r{<div class="highlight"><pre>(.*?)</pre>\s*</div>}m, 1]
+        text[%r{<div class="highlight"><pre>(.*?)</pre></div>}m, 1]
       else
         ''
       end
