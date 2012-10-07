@@ -319,12 +319,11 @@ class TestLanguage < Test::Unit::TestCase
 
 
   def test_colorize
-    assert_equal <<-HTML, Language['Ruby'].colorize("def foo\n  'foo'\nend\n")
+    assert_equal <<-HTML.chomp, Language['Ruby'].colorize("def foo\n  'foo'\nend\n")
 <div class="highlight"><pre><span class="k">def</span> <span class="nf">foo</span>
   <span class="s1">&#39;foo&#39;</span>
 <span class="k">end</span>
-</pre>
-</div>
+</pre></div>
     HTML
   end
 end

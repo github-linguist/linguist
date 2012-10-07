@@ -271,7 +271,7 @@ class TestBlob < Test::Unit::TestCase
     assert !blob("Binary/github.po").indexable?
     assert !blob("Binary/linguist.gem").indexable?
 
-    # large binary blobs should fail on size check first, not call 
+    # large binary blobs should fail on size check first, not call
     # into charlock_holmes and alloc big buffers for testing encoding
     b = blob("Binary/octocat.ai")
     b.expects(:binary?).never
@@ -291,11 +291,10 @@ class TestBlob < Test::Unit::TestCase
   end
 
   def test_colorize
-    assert_equal <<-HTML, blob("Ruby/foo.rb").colorize
+    assert_equal <<-HTML.chomp, blob("Ruby/foo.rb").colorize
 <div class="highlight"><pre><span class="k">module</span> <span class="nn">Foo</span>
 <span class="k">end</span>
-</pre>
-</div>
+</pre></div>
     HTML
   end
 
