@@ -286,6 +286,11 @@ class TestLanguage < Test::Unit::TestCase
     assert !Language.ace_modes.include?(Language['FORTRAN'])
   end
 
+  def test_wrap
+    assert_equal false, Language['C'].wrap
+    assert_equal true, Language['Markdown'].wrap
+  end
+
   def test_extensions
     assert Language['Perl'].extensions.include?('.pl')
     assert Language['Python'].extensions.include?('.py')
