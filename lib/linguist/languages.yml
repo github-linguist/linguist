@@ -930,6 +930,9 @@ PowerShell:
   aliases:
   - posh
   primary_extension: .ps1
+  extensions:
+  - .psd1
+  - .psm1
 
 Prolog:
   type: programming
@@ -1263,10 +1266,12 @@ XML:
   ace_mode: xml
   primary_extension: .xml
   extensions:
+  - .cdxml
   - .glade
   - .kml
   - .mxml
   - .plist
+  - .ps1xml
   - .rdf
   - .rss
   - .svg
