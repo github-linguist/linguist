@@ -168,6 +168,9 @@ class TestBlob < Test::Unit::TestCase
 
     # CoffeeScript-generated JS
     # TODO
+	
+	# TypeScript-generated JS
+	# TODO
 
     # PEG.js-generated parsers
     assert blob("JavaScript/parser.js").generated?
