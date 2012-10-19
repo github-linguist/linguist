@@ -51,6 +51,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['Verilog'], Language['Verilog'].lexer
     assert_equal Lexer['XSLT'], Language['XSLT'].lexer
     assert_equal Lexer['aspx-vb'], Language['ASP'].lexer
+    assert_equal Lexer['Awk'], Language['AWK'].lexer
     assert_equal Lexer['haXe'], Language['HaXe'].lexer
     assert_equal Lexer['reStructuredText'], Language['reStructuredText'].lexer
   end
@@ -59,6 +60,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['ASP'], Language.find_by_alias('asp')
     assert_equal Language['ASP'], Language.find_by_alias('aspx')
     assert_equal Language['ASP'], Language.find_by_alias('aspx-vb')
+    assert_equal Language['AWK'], Language.find_by_alias('gawk')
     assert_equal Language['ActionScript'], Language.find_by_alias('as3')
     assert_equal Language['Assembly'], Language.find_by_alias('nasm')
     assert_equal Language['Batchfile'], Language.find_by_alias('bat')
