@@ -6,7 +6,7 @@
 # version of pygments.
 #
 # type              - Either data, programming, markup, or nil
-# lexer             - An explicit lexer String (defaults to name.downcase)
+# lexer             - An explicit lexer String (defaults to name)
 # aliases           - An Array of additional aliases (implicitly
 #                     includes name.downcase)
 # ace_mode          - A String name of Ace Mode (if available)
@@ -1023,6 +1023,13 @@ Redcode:
   primary_extension: .cw
   extensions:
   - .cw
+
+Rouge:
+  type: programming
+  lexer: Clojure
+  ace_mode: clojure
+  color: "#cc0088"
+  primary_extension: .rg
 
 Ruby:
   type: programming
