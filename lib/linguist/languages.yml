@@ -566,7 +566,9 @@ HTML+ERB:
   primary_extension: .erb
   extensions:
   - .erb
+  - .erb.deface
   - .html.erb
+  - .html.erb.deface
 
 HTML+PHP:
   type: markup
@@ -590,6 +592,8 @@ Haml:
   group: HTML
   type: markup
   primary_extension: .haml
+  extensions:
+  - .haml.deface
 
 Haskell:
   type: programming
