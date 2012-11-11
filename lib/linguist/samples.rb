@@ -24,7 +24,7 @@ module Linguist
     # Returns nothing.
     def self.each(&block)
       Dir.entries(ROOT).each do |category|
-        next if category == '.' || category == '..'
+        next if category == '.' || category == '..' || !File.directory?(category)
 
         # Skip text and binary for now
         # Possibly reconsider this later
