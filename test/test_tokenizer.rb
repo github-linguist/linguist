@@ -94,6 +94,7 @@ class TestTokenizer < Test::Unit::TestCase
     assert_equal "SHEBANG#!ruby", tokenize(:"Ruby/ruby.script!")[0]
     assert_equal "SHEBANG#!ruby", tokenize(:"Ruby/ruby2.script!")[0]
     assert_equal "SHEBANG#!node", tokenize(:"JavaScript/js.script!")[0]
+    assert_equal "echo", tokenize(:"Shell/invalid-shebang.sh")[0]
   end
 
   def test_javascript_tokens
