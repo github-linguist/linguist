@@ -20,7 +20,7 @@ module Linguist
     #
     # Returns a String
     def extname
-      File.extname(name.to_s).downcase
+      File.extname(name.to_s)
     end
 
     # Internal: Lookup mime type for extension.
@@ -139,7 +139,7 @@ module Linguist
     #
     # Return true or false
     def image?
-      ['.png', '.jpg', '.jpeg', '.gif'].include?(extname)
+      ['.png', '.jpg', '.jpeg', '.gif'].include?(extname.downcase)
     end
 
     MEGABYTE = 1024 * 1024
