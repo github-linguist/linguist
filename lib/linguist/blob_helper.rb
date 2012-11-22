@@ -20,7 +20,7 @@ module Linguist
     #
     # Returns a String
     def extname
-      File.extname(name.to_s)
+      File.extname(name.to_s).downcase
     end
 
     # Internal: Lookup mime type for extension.
