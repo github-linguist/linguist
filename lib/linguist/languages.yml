@@ -575,17 +575,6 @@ HTML+PHP:
   extensions:
   - .phtml
 
-HaXe:
-  type: programming
-  lexer: haXe
-  ace_mode: haxe
-  color: "#346d51"
-  primary_extension: .hx
-  extensions:
-  - .hx
-  - .hxml
-  - .mtt
-
 Haml:
   group: HTML
   type: markup
@@ -598,6 +587,16 @@ Haskell:
   extensions:
   - .hs
   - .hsc
+
+Haxe:
+  type: programming
+  lexer: haXe
+  ace_mode: haxe
+  color: "#346d51"
+  primary_extension: .hx
+  extensions:
+  - .hx
+  - .hxsl
 
 INI:
   type: data

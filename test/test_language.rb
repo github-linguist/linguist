@@ -51,7 +51,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['Verilog'], Language['Verilog'].lexer
     assert_equal Lexer['XSLT'], Language['XSLT'].lexer
     assert_equal Lexer['aspx-vb'], Language['ASP'].lexer
-    assert_equal Lexer['haXe'], Language['HaXe'].lexer
+    assert_equal Lexer['haXe'], Language['Haxe'].lexer
     assert_equal Lexer['reStructuredText'], Language['reStructuredText'].lexer
   end
 
