@@ -26,6 +26,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['HTML'], Language['HTML'].lexer
     assert_equal Lexer['HTML+Django/Jinja'], Language['HTML+Django'].lexer
     assert_equal Lexer['HTML+PHP'], Language['HTML+PHP'].lexer
+    assert_equal Lexer['HTTP'], Language['HTTP'].lexer
     assert_equal Lexer['JSON'], Language['JSON'].lexer
     assert_equal Lexer['Java'], Language['ChucK'].lexer
     assert_equal Lexer['Java'], Language['Java'].lexer
