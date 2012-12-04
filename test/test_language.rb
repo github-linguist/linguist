@@ -109,6 +109,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['VimL'], Language.find_by_alias('vim')
     assert_equal Language['VimL'], Language.find_by_alias('viml')
     assert_equal Language['reStructuredText'], Language.find_by_alias('rst')
+    assert_equal Language['YAML'], Language.find_by_alias('yml')
   end
 
   def test_groups
