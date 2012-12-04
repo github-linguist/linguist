@@ -80,6 +80,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['HTML'], Language.find_by_alias('html')
     assert_equal Language['HTML'], Language.find_by_alias('xhtml')
     assert_equal Language['HTML+ERB'], Language.find_by_alias('html+erb')
+    assert_equal Language['HTML+ERB'], Language.find_by_alias('erb')
     assert_equal Language['IRC log'], Language.find_by_alias('irc')
     assert_equal Language['JSON'], Language.find_by_alias('json')
     assert_equal Language['Java Server Pages'], Language.find_by_alias('jsp')
