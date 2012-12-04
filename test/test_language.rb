@@ -78,6 +78,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['Emacs Lisp'], Language.find_by_alias('emacs-lisp')
     assert_equal Language['Gettext Catalog'], Language.find_by_alias('pot')
     assert_equal Language['HTML'], Language.find_by_alias('html')
+    assert_equal Language['HTML'], Language.find_by_alias('xhtml')
     assert_equal Language['HTML+ERB'], Language.find_by_alias('html+erb')
     assert_equal Language['IRC log'], Language.find_by_alias('irc')
     assert_equal Language['JSON'], Language.find_by_alias('json')
