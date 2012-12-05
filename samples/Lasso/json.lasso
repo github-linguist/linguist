@@ -8,6 +8,7 @@
 	// <http://json.org/>
 	// <http://json-rpc.org/>
 	// <http://www.ietf.org/rfc/rfc4627.txt?number=4627>
+	// This tag is now incorporated in Lasso 8.6.0.1
 	//
 	
 If: (Lasso_TagExists: 'Encode_JSON') == False;
