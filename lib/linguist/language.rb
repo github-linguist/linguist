@@ -84,7 +84,9 @@ module Linguist
 
       if possible_languages.length > 1
         data = data.call() if data.respond_to?(:call)
-        if result = Classifier.classify(Samples::DATA, data, possible_languages.map(&:name)).first
+        if data.nil? || data == ""
+          nil
+        elsif result = Classifier.classify(Samples::DATA, data, possible_languages.map(&:name)).first
           Language[result[0]]
         end
       else
@@ -220,6 +222,7 @@ module Linguist
         raise(ArgumentError, "#{@name} is missing lexer")
 
       @ace_mode = attributes[:ace_mode]
+      @wrap = attributes[:wrap] || false
 
       # Set legacy search term
       @search_term = attributes[:search_term] || default_alias_name
@@ -309,6 +312,11 @@ module Linguist
     #
     # Returns a String name or nil
     attr_reader :ace_mode
+
+    # Public: Should language lines be wrapped
+    #
+    # Returns true or false
+    attr_reader :wrap
 
     # Public: Get extensions
     #
@@ -460,6 +468,7 @@ module Linguist
       :aliases           => options['aliases'],
       :lexer             => options['lexer'],
       :ace_mode          => options['ace_mode'],
+      :wrap              => options['wrap'],
       :group_name        => options['group'],
       :searchable        => options.key?('searchable') ? options['searchable'] : true,
       :search_term       => options['search_term'],

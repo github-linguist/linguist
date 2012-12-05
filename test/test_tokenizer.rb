@@ -34,15 +34,15 @@ class TestTokenizer < Test::Unit::TestCase
   end
 
   def test_skip_comments
-    assert_equal %w(foo #), tokenize("foo\n# Comment")
-    assert_equal %w(foo # bar), tokenize("foo\n# Comment\nbar")
-    assert_equal %w(foo //), tokenize("foo\n// Comment")
-    assert_equal %w(foo /* */), tokenize("foo /* Comment */")
-    assert_equal %w(foo /* */), tokenize("foo /* \nComment\n */")
-    assert_equal %w(foo <!-- -->), tokenize("foo <!-- Comment -->")
-    assert_equal %w(foo {- -}), tokenize("foo {- Comment -}")
-    assert_equal %w(foo \(* *\)), tokenize("foo (* Comment *)")
-    assert_equal %w(% %), tokenize("2 % 10\n% Comment")
+    assert_equal %w(foo), tokenize("foo\n# Comment")
+    assert_equal %w(foo bar), tokenize("foo\n# Comment\nbar")
+    assert_equal %w(foo), tokenize("foo\n// Comment")
+    assert_equal %w(foo), tokenize("foo /* Comment */")
+    assert_equal %w(foo), tokenize("foo /* \nComment\n */")
+    assert_equal %w(foo), tokenize("foo <!-- Comment -->")
+    assert_equal %w(foo), tokenize("foo {- Comment -}")
+    assert_equal %w(foo), tokenize("foo (* Comment *)")
+    assert_equal %w(%), tokenize("2 % 10\n% Comment")
   end
 
   def test_sgml_tags
@@ -94,6 +94,7 @@ class TestTokenizer < Test::Unit::TestCase
     assert_equal "SHEBANG#!ruby", tokenize(:"Ruby/ruby.script!")[0]
     assert_equal "SHEBANG#!ruby", tokenize(:"Ruby/ruby2.script!")[0]
     assert_equal "SHEBANG#!node", tokenize(:"JavaScript/js.script!")[0]
+    assert_equal "SHEBANG#!php", tokenize(:"PHP/php.script!")[0]
   end
 
   def test_javascript_tokens

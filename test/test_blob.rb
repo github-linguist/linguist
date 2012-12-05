@@ -2,6 +2,7 @@ require 'linguist/file_blob'
 require 'linguist/samples'
 
 require 'test/unit'
+require 'mocha'
 require 'mime/types'
 require 'pygments'
 
@@ -30,19 +31,17 @@ class TestBlob < Test::Unit::TestCase
   end
 
   def test_mime_type
-    assert_equal "application/octet-stream", blob("Binary/dog.o").mime_type
-    assert_equal "application/ogg", blob("Binary/foo.ogg").mime_type
     assert_equal "application/postscript", blob("Binary/octocat.ai").mime_type
     assert_equal "application/x-ruby", blob("Ruby/grit.rb").mime_type
     assert_equal "application/x-sh", blob("Shell/script.sh").mime_type
     assert_equal "application/xml", blob("XML/bar.xml").mime_type
+    assert_equal "audio/ogg", blob("Binary/foo.ogg").mime_type
     assert_equal "text/plain", blob("Text/README").mime_type
   end
 
   def test_content_type
-    assert_equal "application/octet-stream", blob("Binary/dog.o").content_type
-    assert_equal "application/ogg", blob("Binary/foo.ogg").content_type
     assert_equal "application/pdf", blob("Binary/foo.pdf").content_type
+    assert_equal "audio/ogg", blob("Binary/foo.ogg").content_type
     assert_equal "image/png", blob("Binary/foo.png").content_type
     assert_equal "text/plain; charset=iso-8859-2", blob("Text/README").content_type
   end
@@ -64,6 +63,14 @@ class TestBlob < Test::Unit::TestCase
 
   def test_lines
     assert_equal ["module Foo", "end", ""], blob("Ruby/foo.rb").lines
+  end
+
+  def test_mac_format
+    assert blob("Text/mac.txt").mac_format?
+  end
+
+  def test_lines_mac_format
+    assert_equal ["line 1", "line 2", ""], blob("Text/mac.txt").lines
   end
 
   def test_size
@@ -263,11 +270,18 @@ class TestBlob < Test::Unit::TestCase
     assert !blob("Text/dump.sql").indexable?
     assert !blob("Binary/github.po").indexable?
     assert !blob("Binary/linguist.gem").indexable?
+
+    # large binary blobs should fail on size check first, not call
+    # into charlock_holmes and alloc big buffers for testing encoding
+    b = blob("Binary/octocat.ai")
+    b.expects(:binary?).never
+    assert !b.indexable?
   end
 
   def test_language
     Samples.each do |sample|
       blob = blob(sample[:path])
+      assert blob.language, "No language for #{sample[:path]}"
       assert_equal sample[:language], blob.language.name, blob.name
     end
   end
@@ -277,11 +291,10 @@ class TestBlob < Test::Unit::TestCase
   end
 
   def test_colorize
-    assert_equal <<-HTML, blob("Ruby/foo.rb").colorize
+    assert_equal <<-HTML.chomp, blob("Ruby/foo.rb").colorize
 <div class="highlight"><pre><span class="k">module</span> <span class="nn">Foo</span>
 <span class="k">end</span>
-</pre>
-</div>
+</pre></div>
     HTML
   end
 

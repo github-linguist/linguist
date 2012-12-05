@@ -1,11 +1,3 @@
-(************************************************************************)
-(*  v      *   The Coq Proof Assistant  /  The Coq Development Team     *)
-(* <O___,, *   INRIA - CNRS - LIX - LRI - PPS - Copyright 1999-2010     *)
-(*   \VV/  **************************************************************)
-(*    //   *      This file is distributed under the terms of the       *)
-(*         *       GNU Lesser General Public License Version 2.1        *)
-(************************************************************************)
-
 Require Import Omega Relations Multiset SetoidList.
 
 (** This file is deprecated, use [Permutation.v] instead.
@@ -154,7 +146,7 @@ Lemma permut_add_cons_inside :
 Proof.
   intros;
     replace (a :: l) with ([] ++ a :: l); trivial;
-	apply permut_add_inside; trivial.
+        apply permut_add_inside; trivial.
 Qed.
 
 Lemma permut_middle :
@@ -168,8 +160,8 @@ Lemma permut_sym_app :
 Proof.
   intros l1 l2;
     unfold permutation, meq;
-	intro a; do 2 rewrite list_contents_app; simpl;
-	  auto with arith.
+        intro a; do 2 rewrite list_contents_app; simpl;
+          auto with arith.
 Qed.
 
 Lemma permut_rev :

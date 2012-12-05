@@ -76,12 +76,14 @@ module Linguist
           db['extnames'][language_name] ||= []
           if !db['extnames'][language_name].include?(sample[:extname])
             db['extnames'][language_name] << sample[:extname]
+            db['extnames'][language_name].sort!
           end
         end
 
         if sample[:filename]
           db['filenames'][language_name] ||= []
           db['filenames'][language_name] << sample[:filename]
+          db['filenames'][language_name].sort!
         end
 
         data = File.read(sample[:path])

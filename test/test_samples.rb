@@ -1,4 +1,6 @@
 require 'linguist/samples'
+require 'tempfile'
+require 'yajl'
 
 require 'test/unit'
 
@@ -12,6 +14,19 @@ class TestSamples < Test::Unit::TestCase
     # Just warn, it shouldn't scare people off by breaking the build.
     if serialized['md5'] != latest['md5']
       warn "Samples database is out of date. Run `bundle exec rake samples`."
+
+      expected = Tempfile.new('expected.json')
+      expected.write Yajl::Encoder.encode(serialized, :pretty => true)
+      expected.close
+
+      actual = Tempfile.new('actual.json')
+      actual.write Yajl::Encoder.encode(latest, :pretty => true)
+      actual.close
+
+      warn `diff #{expected.path} #{actual.path}`
+
+      expected.unlink
+      actual.unlink
     end
   end
 

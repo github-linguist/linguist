@@ -1,9 +1,9 @@
 require 'linguist/generated'
 require 'linguist/language'
-require 'linguist/mime'
 
 require 'charlock_holmes'
 require 'escape_utils'
+require 'mime/types'
 require 'pygments'
 require 'yaml'
 
@@ -23,6 +23,22 @@ module Linguist
       File.extname(name.to_s)
     end
 
+    # Internal: Lookup mime type for extension.
+    #
+    # Returns a MIME::Type
+    def _mime_type
+      if defined? @_mime_type
+        @_mime_type
+      else
+        guesses = ::MIME::Types.type_for(extname.to_s)
+
+        # Prefer text mime types over binary
+        @_mime_type = guesses.detect { |type| type.ascii? } ||
+          # Otherwise use the first guess
+          guesses.first
+      end
+    end
+
     # Public: Get the actual blob mime type
     #
     # Examples
@@ -32,7 +48,14 @@ module Linguist
     #
     # Returns a mime type String.
     def mime_type
-      @mime_type ||= Mime.mime_for(extname.to_s)
+      _mime_type ? _mime_type.to_s : 'text/plain'
+    end
+
+    # Internal: Is the blob binary according to its mime type
+    #
+    # Return true or false
+    def binary_mime_type?
+      _mime_type ? _mime_type.binary? : false
     end
 
     # Public: Get the Content-Type header value
@@ -81,15 +104,6 @@ module Linguist
     #          no valid encoding could be found
     def detect_encoding
       @detect_encoding ||= CharlockHolmes::EncodingDetector.new.detect(data) if data
-    end
-
-    # Public: Is the blob binary according to its mime type
-    #
-    # Return true or false
-    def binary_mime_type?
-      if mime_type = Mime.lookup_mime_type_for(extname)
-        mime_type.binary?
-      end
     end
 
     # Public: Is the blob binary?
@@ -146,7 +160,7 @@ module Linguist
     #
     # Return true or false
     def safe_to_colorize?
-      text? && !large? && !high_ratio_of_long_lines?
+      !large? && text? && !high_ratio_of_long_lines?
     end
 
     # Internal: Does the blob have a ratio of long lines?
@@ -190,7 +204,31 @@ module Linguist
     #
     # Returns an Array of lines
     def lines
-      @lines ||= (viewable? && data) ? data.split("\n", -1) : []
+      @lines ||=
+        if viewable? && data
+          data.split(line_split_character, -1)
+        else
+          []
+        end
+    end
+
+    # Character used to split lines. This is almost always "\n" except when Mac
+    # Format is detected in which case it's "\r".
+    #
+    # Returns a split pattern string.
+    def line_split_character
+      @line_split_character ||= (mac_format?? "\r" : "\n")
+    end
+
+    # Public: Is the data in ** Mac Format **. This format uses \r (0x0d) characters
+    # for line ends and does not include a \n (0x0a).
+    #
+    # Returns true when mac format is detected.
+    def mac_format?
+      return if !viewable?
+      if pos = data[0, 4096].index("\r")
+        data[pos + 1] != ?\n
+      end
     end
 
     # Public: Get number of lines of code
@@ -236,7 +274,9 @@ module Linguist
     #
     # Return true or false
     def indexable?
-      if binary?
+      if size > 100 * 1024
+        false
+      elsif binary?
         false
       elsif extname == '.txt'
         true
@@ -245,8 +285,6 @@ module Linguist
       elsif !language.searchable?
         false
       elsif generated?
-        false
-      elsif size > 100 * 1024
         false
       else
         true
@@ -259,11 +297,15 @@ module Linguist
     #
     # Returns a Language or nil if none is detected
     def language
-      if defined? @language
-        @language
-      elsif !binary_mime_type?
-        @language = Language.detect(name.to_s, lambda { data }, mode)
+      return @language if defined? @language
+
+      if defined?(@data) && @data.is_a?(String)
+        data = @data
+      else
+        data = lambda { (binary_mime_type? || binary?) ? "" : self.data }
       end
+
+      @language = Language.detect(name.to_s, data, mode)
     end
 
     # Internal: Get the lexer of the blob.
