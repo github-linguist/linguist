@@ -61,6 +61,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['ASP'], Language.find_by_alias('aspx')
     assert_equal Language['ASP'], Language.find_by_alias('aspx-vb')
     assert_equal Language['ActionScript'], Language.find_by_alias('as3')
+    assert_equal Language['ApacheConf'], Language.find_by_alias('apache')
     assert_equal Language['Assembly'], Language.find_by_alias('nasm')
     assert_equal Language['Batchfile'], Language.find_by_alias('bat')
     assert_equal Language['C#'], Language.find_by_alias('c#')
@@ -230,6 +231,8 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal [Language['Ruby']], Language.find_by_filename('foo/bar.rb')
     assert_equal [Language['Ruby']], Language.find_by_filename('Rakefile')
     assert_equal [Language['Ruby']], Language.find_by_filename('PKGBUILD.rb')
+    assert_equal Language['ApacheConf'], Language.find_by_filename('httpd.conf').first
+    assert_equal [Language['ApacheConf']], Language.find_by_filename('.htaccess')
     assert_equal ['C', 'C++', 'Objective-C'], Language.find_by_filename('foo.h').map(&:name).sort
     assert_equal [], Language.find_by_filename('rb')
     assert_equal [], Language.find_by_filename('.rb')
