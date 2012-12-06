@@ -69,6 +69,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['C++'], Language.find_by_alias('c++')
     assert_equal Language['C++'], Language.find_by_alias('cpp')
     assert_equal Language['CoffeeScript'], Language.find_by_alias('coffee')
+    assert_equal Language['CoffeeScript'], Language.find_by_alias('coffee-script')
     assert_equal Language['ColdFusion'], Language.find_by_alias('cfm')
     assert_equal Language['Common Lisp'], Language.find_by_alias('common-lisp')
     assert_equal Language['Common Lisp'], Language.find_by_alias('lisp')
