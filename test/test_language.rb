@@ -233,6 +233,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal [Language['Ruby']], Language.find_by_filename('PKGBUILD.rb')
     assert_equal Language['ApacheConf'], Language.find_by_filename('httpd.conf').first
     assert_equal [Language['ApacheConf']], Language.find_by_filename('.htaccess')
+    assert_equal Language['Nginx'], Language.find_by_filename('nginx.conf').first
     assert_equal ['C', 'C++', 'Objective-C'], Language.find_by_filename('foo.h').map(&:name).sort
     assert_equal [], Language.find_by_filename('rb')
     assert_equal [], Language.find_by_filename('.rb')
