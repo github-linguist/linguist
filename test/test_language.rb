@@ -238,6 +238,9 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal [], Language.find_by_filename('rb')
     assert_equal [], Language.find_by_filename('.rb')
     assert_equal [], Language.find_by_filename('.nkt')
+    assert_equal [Language['Shell']], Language.find_by_filename('.bashrc')
+    assert_equal [Language['Shell']], Language.find_by_filename('bash_profile')
+    assert_equal [Language['Shell']], Language.find_by_filename('.zshrc')
   end
 
   def test_find
