@@ -1,6 +1,7 @@
 <?LassoScript
 
 	//
+	//
 	// JSON Encoding and Decoding
 	//
 	// Copyright 2007-2012 LassoSoft Inc.
