@@ -68,10 +68,6 @@ ApacheConf:
   aliases:
   - apache
   primary_extension: .apacheconf
-  filenames:
-  - .htaccess
-  - httpd.conf
-  - apache2.conf
 
 Apex:
   type: programming
@@ -834,8 +830,6 @@ Nginx:
   type: markup
   lexer: Nginx configuration file
   primary_extension: .nginxconf
-  filenames:
-  - nginx.conf
 
 Nimrod:
   type: programming
