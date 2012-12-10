@@ -11,7 +11,7 @@
 #                     includes name.downcase)
 # ace_mode          - A String name of Ace Mode (if available)
 # wrap              - Boolean wrap to enable line wrapping (default: false)
-# extension         - An Array of associated extensions
+# extensions        - An Array of associated extensions
 # primary_extension - A String for the main extension associated with
 #                     the language. Must be unique. Used when a Language is picked
 #                     from a dropdown and we need to automatically choose an
@@ -77,12 +77,16 @@ Apex:
   type: programming
   lexer: Text only
   primary_extension: .cls
+  extensions:
+  - .cls
 
 AppleScript:
   type: programming
   aliases:
   - osascript
   primary_extension: .applescript
+  extensions:
+  - .applescript
 
 Arc:
   type: programming
@@ -97,6 +101,8 @@ Arduino:
   color: "#bd79d1"
   lexer: C++
   primary_extension: .ino
+  extensions:
+  - .ino
 
 Assembly:
   type: programming
@@ -122,6 +128,8 @@ AutoHotkey:
   aliases:
   - ahk
   primary_extension: .ahk
+  extensions:
+  - .ahk
 
 Batchfile:
   type: programming
@@ -168,6 +176,7 @@ C:
   color: "#555"
   primary_extension: .c
   extensions:
+  - .c
   - .w
 
 C#:
@@ -192,6 +201,7 @@ C++:
   extensions:
   - .C
   - .c++
+  - .cpp
   - .cxx
   - .H
   - .h++
@@ -234,6 +244,8 @@ Ceylon:
   type: programming
   lexer: Text only
   primary_extension: .ceylon
+  extensions:
+  - .ceylon
 
 ChucK:
   lexer: Java
@@ -260,6 +272,7 @@ CoffeeScript:
   primary_extension: .coffee
   extensions:
   - ._coffee
+  - .coffee
   filenames:
   - Cakefile
 
@@ -290,6 +303,8 @@ Common Lisp:
 Coq:
   type: programming
   primary_extension: .coq
+  extensions:
+  - .coq
 
 Cpp-ObjDump:
   type: data
@@ -342,6 +357,8 @@ Darcs Patch:
 Dart:
   type: programming
   primary_extension: .dart
+  extensions:
+  - .dart
 
 Delphi:
   type: programming
@@ -387,6 +404,7 @@ Ecl:
   primary_extension: .ecl
   lexer: ECL
   extensions:
+  - .ecl
   - .eclxml
 
 Eiffel:
@@ -529,6 +547,8 @@ Gosu:
   type: programming
   color: "#82937f"
   primary_extension: .gs
+  extensions:
+  - .gs
 
 Groff:
   primary_extension: .man
@@ -547,6 +567,8 @@ Groovy:
   ace_mode: groovy
   color: "#e69f56"
   primary_extension: .groovy
+  extensions:
+  - .groovy
 
 Groovy Server Pages:
   group: Groovy
@@ -554,6 +576,8 @@ Groovy Server Pages:
   aliases:
   - gsp
   primary_extension: .gsp
+  extensions:
+  - .gsp
 
 HTML:
   type: markup
@@ -600,6 +624,8 @@ Haml:
   group: HTML
   type: markup
   primary_extension: .haml
+  extensions:
+  - .haml
 
 Haskell:
   type: programming
@@ -647,6 +673,8 @@ Ioke:
   type: programming
   color: "#078193"
   primary_extension: .ik
+  extensions:
+  - .ik
 
 JSON:
   type: data
@@ -654,6 +682,8 @@ JSON:
   ace_mode: json
   searchable: false
   primary_extension: .json
+  extensions:
+  - .json
 
 Java:
   type: programming
@@ -661,6 +691,7 @@ Java:
   color: "#b07219"
   primary_extension: .java
   extensions:
+  - .java
   - .pde
 
 Java Server Pages:
@@ -685,6 +716,7 @@ JavaScript:
   - ._js
   - .bones
   - .jake
+  - .js
   - .jsfl
   - .jsm
   - .jss
@@ -698,6 +730,8 @@ JavaScript:
 Julia:
   type: programming
   primary_extension: .jl
+  extensions:
+  - .jl
 
 Kotlin:
   type: programming
@@ -731,6 +765,8 @@ Literate Haskell:
 Logtalk:
   type: programming
   primary_extension: .lgt
+  extensions:
+  - .lgt
 
 Lua:
   type: programming
@@ -769,6 +805,7 @@ Markdown:
   - .markdown
   - .mkd
   - .mkdown
+  - .md
   - .ron
 
 Matlab:
@@ -787,10 +824,14 @@ Max:
   - maxmsp
   search_term: max/msp
   primary_extension: .mxt
+  extensions:
+  - .mxt
 
 MiniD: # Legacy
   searchable: false
   primary_extension: .minid # Dummy extension
+  extensions:
+  - .minid
 
 Mirah:
   type: programming
@@ -842,6 +883,8 @@ Nu:
   primary_extension: .nu
   filenames:
   - Nukefile
+  extensions:
+  - .nu
 
 NumPy:
   group: Python
@@ -857,6 +900,7 @@ OCaml:
   color: "#3be133"
   primary_extension: .ml
   extensions:
+  - .ml
   - .mli
   - .mll
   - .mly
@@ -891,12 +935,16 @@ Objective-J:
 Opa:
   type: programming
   primary_extension: .opa
+  extensions:
+  - .opa
 
 OpenCL:
   type: programming
   group: C
   lexer: C
   primary_extension: .cl
+  extensions:
+  - .cl
 
 OpenEdge ABL:
   type: programming
@@ -905,6 +953,8 @@ OpenEdge ABL:
   - openedge
   - abl
   primary_extension: .p
+  extensions:
+  - .p
 
 PHP:
   type: programming
@@ -926,6 +976,8 @@ Parrot:
   color: "#f3ca0a"
   lexer: Text only
   primary_extension: .parrot # Dummy extension
+  extensions:
+  - .parrot
 
 Parrot Internal Representation:
   group: Parrot
@@ -934,6 +986,8 @@ Parrot Internal Representation:
   aliases:
   - pir
   primary_extension: .pir
+  extensions:
+  - .pir
 
 Parrot Assembly:
   group: Parrot
@@ -942,6 +996,8 @@ Parrot Assembly:
   aliases:
   - pasm
   primary_extension: .pasm
+  extensions:
+  - .pasm
 
 Perl:
   type: programming
@@ -949,9 +1005,9 @@ Perl:
   color: "#0298c3"
   primary_extension: .pl
   extensions:
-  - .PL
   - .perl
   - .ph
+  - .pl
   - .plx
   - .pm6
   - .pod
@@ -963,6 +1019,8 @@ PowerShell:
   aliases:
   - posh
   primary_extension: .ps1
+  extensions:
+  - .ps1
 
 Prolog:
   type: programming
@@ -995,6 +1053,7 @@ Python:
   color: "#3581ba"
   primary_extension: .py
   extensions:
+  - .py
   - .pyw
   - .wsgi
   - .xpy
@@ -1074,6 +1133,7 @@ Ruby:
   - .god
   - .irbrc
   - .podspec
+  - .rb
   - .rbuild
   - .rbw
   - .rbx
@@ -1092,12 +1152,16 @@ Rust:
   color: "#dea584"
   lexer: Text only
   primary_extension: .rs
+  extensions:
+  - .rs
 
 SCSS:
   type: markup
   group: CSS
   ace_mode: scss
   primary_extension: .scss
+  extensions:
+  - .scss
 
 SQL:
   type: data
@@ -1119,12 +1183,16 @@ Sass:
   type: markup
   group: CSS
   primary_extension: .sass
+  extensions:
+  - .sass
 
 Scala:
   type: programming
   ace_mode: scala
   color: "#7dd3b0"
   primary_extension: .scala
+  extensions:
+  - .scala
 
 Scheme:
   type: programming
@@ -1138,6 +1206,8 @@ Scheme:
 Scilab:
   type: programming
   primary_extension: .sci
+  extensions:
+  - .sci
 
 Self:
   type: programming
@@ -1157,6 +1227,8 @@ Shell:
   - bash
   - zsh
   primary_extension: .sh
+  extensions:
+  - .sh
   filenames:
   - .zsh
   - bash_logout
@@ -1186,12 +1258,16 @@ Standard ML:
   aliases:
   - sml
   primary_extension: .sml
+  extensions:
+  - .sml
 
 SuperCollider:
   type: programming
   color: "#46390b"
   lexer: Text only
   primary_extension: .sc
+  extensions:
+  - .sc
 
 Tcl:
   type: programming
@@ -1226,6 +1302,8 @@ TeX:
 Tea:
   type: markup
   primary_extension: .tea
+  extensions:
+  - .tea
 
 Textile:
   type: markup
@@ -1273,6 +1351,8 @@ Verilog:
   lexer: verilog
   color: "#848bf3"
   primary_extension: .v
+  extensions:
+  - .v
 
 VimL:
   type: programming
@@ -1321,6 +1401,7 @@ XML:
   - .wxl
   - .wxs
   - .xaml
+  - .xml
   - .xlf
   - .xliff
   - .xsd
@@ -1349,6 +1430,8 @@ XSLT:
   type: markup
   group: XML
   primary_extension: .xslt
+  extensions:
+  - .xslt
 
 YAML:
   type: markup
