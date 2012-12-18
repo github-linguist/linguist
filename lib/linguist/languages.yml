@@ -63,6 +63,12 @@ Ada:
   - .adb
   - .ads
 
+ApacheConf:
+  type: markup
+  aliases:
+  - apache
+  primary_extension: .apacheconf
+
 Apex:
   type: programming
   lexer: Text only
@@ -180,8 +186,10 @@ C++:
   - cpp
   primary_extension: .cpp
   extensions:
+  - .C
   - .c++
   - .cxx
+  - .H
   - .h++
   - .hh
   - .hxx
@@ -244,6 +252,7 @@ CoffeeScript:
   color: "#244776"
   aliases:
   - coffee
+  - coffee-script
   primary_extension: .coffee
   extensions:
   - ._coffee
@@ -383,6 +392,12 @@ Elixir:
   extensions:
   - .ex
   - .exs
+
+Elm:
+  type: programming
+  lexer: Haskell
+  group: Haskell
+  primary_extension: .elm
 
 Emacs Lisp:
   type: programming
@@ -537,6 +552,8 @@ Groovy Server Pages:
 HTML:
   type: markup
   ace_mode: html
+  aliases:
+  - xhtml
   primary_extension: .html
   extensions:
   - .htm
@@ -555,6 +572,8 @@ HTML+ERB:
   type: markup
   group: HTML
   lexer: RHTML
+  aliases:
+  - erb
   primary_extension: .erb
   extensions:
   - .erb
@@ -567,21 +586,19 @@ HTML+PHP:
   extensions:
   - .phtml
 
-HaXe:
-  type: programming
-  lexer: haXe
-  ace_mode: haxe
-  color: "#346d51"
-  primary_extension: .hx
-  extensions:
-  - .hx
-  - .hxml
-  - .mtt
+HTTP:
+  type: data
+  primary_extension: .http
 
 Haml:
   group: HTML
   type: markup
   primary_extension: .haml
+
+Handlebars:
+  type: markup
+  lexer: Text only
+  primary_extension: .handlebars
 
 Haskell:
   type: programming
@@ -590,6 +607,15 @@ Haskell:
   extensions:
   - .hs
   - .hsc
+
+Haxe:
+  type: programming
+  lexer: haXe
+  ace_mode: haxe
+  color: "#346d51"
+  primary_extension: .hx
+  extensions:
+  - .hxsl
 
 INI:
   type: data
@@ -722,6 +748,8 @@ Lua:
   - .nse
 
 Makefile:
+  aliases:
+  - make
   extensions:
   - .mak
   - .mk
@@ -797,6 +825,11 @@ Nemerle:
   color: "#0d3c6e"
   primary_extension: .n
 
+Nginx:
+  type: markup
+  lexer: Nginx configuration file
+  primary_extension: .nginxconf
+
 Nimrod:
   type: programming
   color: "#37775b"
@@ -842,6 +875,9 @@ ObjDump:
 Objective-C:
   type: programming
   color: "#438eff"
+  aliases:
+  - obj-c
+  - objc
   primary_extension: .m
   extensions:
   - .mm
@@ -849,6 +885,8 @@ Objective-C:
 Objective-J:
   type: programming
   color: "#ff0c5a"
+  aliases:
+  - obj-j
   primary_extension: .j
   extensions:
   - .j
@@ -1123,10 +1161,6 @@ Shell:
   - bash
   - zsh
   primary_extension: .sh
-  filenames:
-  - .zsh
-  - bashrc
-  - zshrc
 
 Smalltalk:
   type: programming
@@ -1171,6 +1205,8 @@ Tcsh:
 TeX:
   type: markup
   ace_mode: latex
+  aliases:
+  - latex
   primary_extension: .tex
   extensions:
   - .aux
@@ -1260,6 +1296,11 @@ Visual Basic:
 XML:
   type: markup
   ace_mode: xml
+  aliases:
+  - rss
+  - xsd
+  - xsl
+  - wsdl
   primary_extension: .xml
   extensions:
   - .glade
@@ -1305,6 +1346,8 @@ XSLT:
 
 YAML:
   type: markup
+  aliases:
+  - yml
   primary_extension: .yml
   extensions:
   - .yaml

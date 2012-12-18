@@ -26,6 +26,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['HTML'], Language['HTML'].lexer
     assert_equal Lexer['HTML+Django/Jinja'], Language['HTML+Django'].lexer
     assert_equal Lexer['HTML+PHP'], Language['HTML+PHP'].lexer
+    assert_equal Lexer['HTTP'], Language['HTTP'].lexer
     assert_equal Lexer['JSON'], Language['JSON'].lexer
     assert_equal Lexer['Java'], Language['ChucK'].lexer
     assert_equal Lexer['Java'], Language['Java'].lexer
@@ -51,7 +52,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['Verilog'], Language['Verilog'].lexer
     assert_equal Lexer['XSLT'], Language['XSLT'].lexer
     assert_equal Lexer['aspx-vb'], Language['ASP'].lexer
-    assert_equal Lexer['haXe'], Language['HaXe'].lexer
+    assert_equal Lexer['haXe'], Language['Haxe'].lexer
     assert_equal Lexer['reStructuredText'], Language['reStructuredText'].lexer
   end
 
@@ -60,6 +61,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['ASP'], Language.find_by_alias('aspx')
     assert_equal Language['ASP'], Language.find_by_alias('aspx-vb')
     assert_equal Language['ActionScript'], Language.find_by_alias('as3')
+    assert_equal Language['ApacheConf'], Language.find_by_alias('apache')
     assert_equal Language['Assembly'], Language.find_by_alias('nasm')
     assert_equal Language['Batchfile'], Language.find_by_alias('bat')
     assert_equal Language['C#'], Language.find_by_alias('c#')
@@ -68,6 +70,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['C++'], Language.find_by_alias('c++')
     assert_equal Language['C++'], Language.find_by_alias('cpp')
     assert_equal Language['CoffeeScript'], Language.find_by_alias('coffee')
+    assert_equal Language['CoffeeScript'], Language.find_by_alias('coffee-script')
     assert_equal Language['ColdFusion'], Language.find_by_alias('cfm')
     assert_equal Language['Common Lisp'], Language.find_by_alias('common-lisp')
     assert_equal Language['Common Lisp'], Language.find_by_alias('lisp')
@@ -78,7 +81,9 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['Emacs Lisp'], Language.find_by_alias('emacs-lisp')
     assert_equal Language['Gettext Catalog'], Language.find_by_alias('pot')
     assert_equal Language['HTML'], Language.find_by_alias('html')
+    assert_equal Language['HTML'], Language.find_by_alias('xhtml')
     assert_equal Language['HTML+ERB'], Language.find_by_alias('html+erb')
+    assert_equal Language['HTML+ERB'], Language.find_by_alias('erb')
     assert_equal Language['IRC log'], Language.find_by_alias('irc')
     assert_equal Language['JSON'], Language.find_by_alias('json')
     assert_equal Language['Java Server Pages'], Language.find_by_alias('jsp')
@@ -87,6 +92,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['JavaScript'], Language.find_by_alias('js')
     assert_equal Language['Literate Haskell'], Language.find_by_alias('lhs')
     assert_equal Language['Literate Haskell'], Language.find_by_alias('literate-haskell')
+    assert_equal Language['Objective-C'], Language.find_by_alias('objc')
     assert_equal Language['OpenEdge ABL'], Language.find_by_alias('openedge')
     assert_equal Language['OpenEdge ABL'], Language.find_by_alias('progress')
     assert_equal Language['OpenEdge ABL'], Language.find_by_alias('abl')
@@ -106,6 +112,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['VimL'], Language.find_by_alias('vim')
     assert_equal Language['VimL'], Language.find_by_alias('viml')
     assert_equal Language['reStructuredText'], Language.find_by_alias('rst')
+    assert_equal Language['YAML'], Language.find_by_alias('yml')
   end
 
   def test_groups
@@ -224,10 +231,16 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal [Language['Ruby']], Language.find_by_filename('foo/bar.rb')
     assert_equal [Language['Ruby']], Language.find_by_filename('Rakefile')
     assert_equal [Language['Ruby']], Language.find_by_filename('PKGBUILD.rb')
+    assert_equal Language['ApacheConf'], Language.find_by_filename('httpd.conf').first
+    assert_equal [Language['ApacheConf']], Language.find_by_filename('.htaccess')
+    assert_equal Language['Nginx'], Language.find_by_filename('nginx.conf').first
     assert_equal ['C', 'C++', 'Objective-C'], Language.find_by_filename('foo.h').map(&:name).sort
     assert_equal [], Language.find_by_filename('rb')
     assert_equal [], Language.find_by_filename('.rb')
     assert_equal [], Language.find_by_filename('.nkt')
+    assert_equal [Language['Shell']], Language.find_by_filename('.bashrc')
+    assert_equal [Language['Shell']], Language.find_by_filename('bash_profile')
+    assert_equal [Language['Shell']], Language.find_by_filename('.zshrc')
   end
 
   def test_find
