@@ -1,4 +1,5 @@
 require 'linguist/blob_helper'
+require 'digest/md5'
 
 module Linguist
   # A ContentsBlog is a wrapper around a String object to make it quack
