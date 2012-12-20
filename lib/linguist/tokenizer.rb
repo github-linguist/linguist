@@ -138,7 +138,7 @@ module Linguist
           s.scan(/\s+/)
           script = s.scan(/\S+/)
         end
-        script = script[/[^\d]+/, 0]
+        script = script[/[^\d]+/, 0] if script
         return script
       end
 
