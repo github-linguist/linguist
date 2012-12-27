@@ -66,12 +66,14 @@ module Linguist
     def compute_stats
       return if @computed_stats
 
+      @vendor = Vendor.new(@enum)
+
       @enum.each do |blob|
         # Skip binary file extensions
         next if blob.binary_mime_type?
 
         # Skip vendored or generated blobs
-        next if blob.vendored? || blob.generated? || blob.language.nil?
+        next if @vendor.vendored?(blob) || blob.generated? || blob.language.nil?
 
         # Only include programming languages
         if blob.language.type == :programming
