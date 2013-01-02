@@ -32,10 +32,11 @@ The Language Graph you see on every repository is built by aggregating the langu
 
 The repository stats API can be used on a directory:
 
-    project = Linguist::Repository.from_directory(".")
-    project.language.name  #=> "Ruby"
-    project.languages      #=> { "Ruby" => 0.98,
-                                 "Shell" => 0.02 }
+```ruby
+project = Linguist::Repository.from_directory(".")
+project.language.name  #=> "Ruby"
+project.languages      #=> { "Ruby" => 0.98, "Shell" => 0.02 }
+```
 
 These stats are also printed out by the binary. Try running `linguist` on itself:
 
