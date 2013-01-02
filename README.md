@@ -24,7 +24,7 @@ See [lib/linguist/language.rb](https://github.com/github/linguist/blob/master/li
 
 The actual syntax highlighting is handled by our Pygments wrapper, [pygments.rb](https://github.com/tmm1/pygments.rb). It also provides a [Lexer abstraction](https://github.com/tmm1/pygments.rb/blob/master/lib/pygments/lexer.rb) that determines which highlighter should be used on a file.
 
-We typically run on a prerelease version of Pygments, [pygments.rb](https://github.com/tmm1/pygments.rb), to get early access to new lexers. The [lexers.yml](https://github.com/github/linguist/blob/master/lib/linguist/lexers.yml) file is a dump of the lexers we have available on our server.
+We typically run on a prerelease version of Pygments, [pygments.rb](https://github.com/tmm1/pygments.rb), to get early access to new lexers. The [languages.yml](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml) file is a dump of the lexers we have available on our server.
 
 ### Stats
 
@@ -32,10 +32,11 @@ The Language Graph you see on every repository is built by aggregating the langu
 
 The repository stats API can be used on a directory:
 
-    project = Linguist::Repository.from_directory(".")
-    project.language.name  #=> "Ruby"
-    project.languages      #=> { "Ruby" => 0.98,
-                                 "Shell" => 0.02 }
+```ruby
+project = Linguist::Repository.from_directory(".")
+project.language.name  #=> "Ruby"
+project.languages      #=> { "Ruby" => 0.98, "Shell" => 0.02 }
+```
 
 These stats are also printed out by the binary. Try running `linguist` on itself:
 
