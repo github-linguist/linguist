@@ -1,4 +1,5 @@
 <?LassoScript
+
 	//
 	// JSON Encoding and Decoding
 	//
