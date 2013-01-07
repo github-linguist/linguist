@@ -246,6 +246,10 @@ Clojure:
   - .clj
   - .cljs
 
+Cobol:
+  type: programming
+  primary_extension: .cob
+  
 CoffeeScript:
   type: programming
   ace_mode: coffee
@@ -633,6 +637,9 @@ INI:
   - .prefs
   - .properties
   primary_extension: .ini
+  
+INTERCAL:
+  type: programming
 
 IRC log:
   lexer: IRC logs
@@ -717,6 +724,9 @@ LLVM:
   primary_extension: .ll
   extensions:
   - .ll
+  
+LOLCODE:
+  type: programming
 
 Lasso:
   type: programming
@@ -893,8 +903,14 @@ Objective-C:
   - obj-c
   - objc
   primary_extension: .m
-  extensions:
-  - .mm
+  
+Objective-C++:
+  type: programming
+  color: "#4886FC"
+  aliases:
+  - obj-c++
+  - objc++
+  primary_extension: .mm
 
 Objective-J:
   type: programming
@@ -1307,6 +1323,11 @@ Visual Basic:
   - .vb
   - .vba
   - .vbs
+  
+Whitespace:
+  type: programming
+  color: "FFFFFF"
+  primary_extension: .ws
 
 XML:
   type: markup
