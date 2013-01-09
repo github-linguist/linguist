@@ -267,8 +267,8 @@ class TestBlob < Test::Unit::TestCase
     assert blob("packages/Modernizr.2.0.6/Content/Scripts/modernizr-2.0.6-development-only.js").vendored?
 
     # Samples
-    assert blob("samples").vendored?
-    assert blob("spec/Samples").vendored?
+    assert blob("samples/").vendored?
+    assert blob("spec/Samples/").vendored?
   end
 
   def test_indexable
