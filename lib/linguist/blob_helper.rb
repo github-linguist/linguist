@@ -142,6 +142,13 @@ module Linguist
       ['.png', '.jpg', '.jpeg', '.gif'].include?(extname)
     end
 
+    # Public: Is the blob a support 3D model format?
+    #
+    # Return true or false
+    def solid?
+      ['.stl', '.obj'].include?(extname)
+    end
+
     MEGABYTE = 1024 * 1024
 
     # Public: Is the blob too big to load?
