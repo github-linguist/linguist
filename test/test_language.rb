@@ -10,6 +10,7 @@ class TestLanguage < Test::Unit::TestCase
 
   def test_lexer
     assert_equal Lexer['ActionScript 3'], Language['ActionScript'].lexer
+    assert_equal Lexer['Awk'], Language['Awk'].lexer
     assert_equal Lexer['Bash'], Language['Gentoo Ebuild'].lexer
     assert_equal Lexer['Bash'], Language['Gentoo Eclass'].lexer
     assert_equal Lexer['Bash'], Language['Shell'].lexer
@@ -63,6 +64,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['ActionScript'], Language.find_by_alias('as3')
     assert_equal Language['ApacheConf'], Language.find_by_alias('apache')
     assert_equal Language['Assembly'], Language.find_by_alias('nasm')
+    assert_equal Language['Awk'], Language.find_by_alias('gawk')
     assert_equal Language['Batchfile'], Language.find_by_alias('bat')
     assert_equal Language['C#'], Language.find_by_alias('c#')
     assert_equal Language['C#'], Language.find_by_alias('csharp')
