@@ -1281,9 +1281,11 @@ XS:
   primary_extension: .xs
 
 XSLT:
-  type: markup
+  type: programming
   group: XML
   primary_extension: .xslt
+  extensions:
+    - .xsl
 
 YAML:
   type: markup
