@@ -444,9 +444,6 @@ class TestBlob < Test::Unit::TestCase
 
     # XML
     assert_equal Language['XSLT'], blob("test.xslt").language
-
-    # Pike: http://pike.ida.liu.se/
-    assert_equal Language['Pike'], blob("rsif.pike").language
   end
 
   def test_lexer
