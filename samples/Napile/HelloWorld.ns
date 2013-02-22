@@ -1,0 +1,21 @@
+package test
+
+import napile.logging.Logger
+
+util class HelloWorld
+{
+  static var MY_VAR : Int 
+  {
+    local set
+  } = 1234
+
+  static meth main(val arg : Array<String>)
+  {
+    print()  
+  }
+
+  local static macro print()
+  {
+    Logger.System.info("Hello World")
+  }
+}
