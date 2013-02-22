@@ -24,4 +24,8 @@ class TestRepository < Test::Unit::TestCase
   def test_linguist_size
     assert linguist_repo.size > 30_000
   end
+
+  def test_binary_override
+    assert_equal repo(File.expand_path("../../samples/Nimrod", __FILE__)).language, Language["Nimrod"]
+  end
 end
