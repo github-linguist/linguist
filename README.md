@@ -88,6 +88,6 @@ Almost all bug fixes or new language additions should come with some additional 
 
 ### Testing
 
-Sometimes getting the tests running can be too much work, especially if you don't have much Ruby experience. Its okay, be lazy and let our build bot [Travis](http://travis-ci.org/#!/github/linguist) run the tests for you. Just open a pull request and the bot will start cranking away.
+Sometimes getting the tests running can be too much work, especially if you don't have much Ruby experience. It's okay, be lazy and let our build bot [Travis](http://travis-ci.org/#!/github/linguist) run the tests for you. Just open a pull request and the bot will start cranking away.
 
-Heres our current build status, which is hopefully green: [![Build Status](https://secure.travis-ci.org/github/linguist.png?branch=master)](http://travis-ci.org/github/linguist)
+Here's our current build status, which is hopefully green: [![Build Status](https://secure.travis-ci.org/github/linguist.png?branch=master)](http://travis-ci.org/github/linguist)
