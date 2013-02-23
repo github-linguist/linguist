@@ -348,12 +348,6 @@ Ecl:
   extensions:
   - .eclxml
 
-edn:
-  type: data
-  ace_mode: clojure
-  color: "#db5855"
-  primary_extension: .edn
-
 Eiffel:
   type: programming
   lexer: Text only
@@ -1346,6 +1340,13 @@ eC:
   primary_extension: .ec
   extensions:
   - .eh
+
+edn:
+  type: data
+  lexer: Clojure
+  ace_mode: clojure
+  color: "#db5855"
+  primary_extension: .edn
 
 fish:
   type: programming
