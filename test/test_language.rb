@@ -109,6 +109,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['Shell'], Language.find_by_alias('shell')
     assert_equal Language['Shell'], Language.find_by_alias('zsh')
     assert_equal Language['TeX'], Language.find_by_alias('tex')
+    assert_equal Language['TypeScript'], Language.find_by_alias('ts')
     assert_equal Language['VimL'], Language.find_by_alias('vim')
     assert_equal Language['VimL'], Language.find_by_alias('viml')
     assert_equal Language['reStructuredText'], Language.find_by_alias('rst')
@@ -292,6 +293,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal 'csharp', Language['C#'].ace_mode
     assert_equal 'css', Language['CSS'].ace_mode
     assert_equal 'javascript', Language['JavaScript'].ace_mode
+    assert_equal 'typescript', Language['TypeScript'].ace_mode
   end
 
   def test_ace_modes
@@ -317,6 +319,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal '.js', Language['JavaScript'].primary_extension
     assert_equal '.coffee', Language['CoffeeScript'].primary_extension
     assert_equal '.t', Language['Turing'].primary_extension
+    assert_equal '.ts', Language['TypeScript'].primary_extension
 
     # This is a nasty requirement, but theres some code in GitHub that
     # expects this. Really want to drop this.
