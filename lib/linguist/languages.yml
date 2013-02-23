@@ -540,7 +540,9 @@ HTML+ERB:
   - erb
   primary_extension: .erb
   extensions:
+  - .erb.deface
   - .html.erb
+  - .html.erb.deface
 
 HTML+PHP:
   type: markup
@@ -555,6 +557,9 @@ Haml:
   group: HTML
   type: markup
   primary_extension: .haml
+  extensions:
+  - .haml.deface
+  - .html.haml.deface
 
 Handlebars:
   type: markup
