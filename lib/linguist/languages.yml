@@ -1341,7 +1341,6 @@ XML:
   - .xlf
   - .xliff
   - .xsd
-  - .xsl
   - .xul
   - .zcml
   filenames:
@@ -1361,9 +1360,11 @@ XS:
   primary_extension: .xs
 
 XSLT:
-  type: markup
+  type: programming
   group: XML
   primary_extension: .xslt
+  extensions:
+    - .xsl
 
 Xtend:
   type: programming
