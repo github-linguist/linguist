@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'charlock_holmes', '~> 0.6.6'
   s.add_dependency 'escape_utils',    '~> 0.2.3'
   s.add_dependency 'mime-types',      '~> 1.19'
-  s.add_dependency 'pygments.rb',     '~> 0.4.0'
+  s.add_dependency 'pygments.rb',     '~> 0.4.1'
   s.add_development_dependency 'mocha'
   s.add_development_dependency 'json'
   s.add_development_dependency 'rake'
