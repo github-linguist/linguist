@@ -319,7 +319,6 @@ Delphi:
   primary_extension: .pas
   extensions:
   - .dfm
-  - .dpr
   - .lpr
 
 DCPU-16 ASM:
@@ -448,7 +447,6 @@ Forth:
   lexer: Text only
   extensions:
   - .4th
-  - .forth
   - .fth
 
 GAS:
@@ -590,8 +588,6 @@ INI:
   - .prefs
   - .properties
   primary_extension: .ini
-  filenames:
-  - .editorconfig
 
 IRC log:
   lexer: IRC logs
@@ -677,11 +673,6 @@ Lasso:
   ace_mode: lasso
   color: "#2584c3"
   primary_extension: .lasso
-  extensions:
-  - .inc
-  - .las
-  - .lasso9
-  - .ldml
 
 Less:
   type: markup
@@ -727,7 +718,6 @@ Lua:
   primary_extension: .lua
   extensions:
   - .nse
-  - .pd_lua
 
 Makefile:
   aliases:
@@ -847,7 +837,6 @@ OCaml:
   color: "#3be133"
   primary_extension: .ml
   extensions:
-  - .eliom
   - .eliomi
   - .mli
   - .mll
@@ -882,8 +871,6 @@ Omgrofl:
   primary_extension: .omgrofl
   color: "#cabbff"
   lexer: Text only
-  extensions:
-  - .omgrofl
 
 Opa:
   type: programming
@@ -1164,7 +1151,6 @@ Shell:
   - zsh
   primary_extension: .sh
   extensions:
-  - .bash
   - .tmux
 
 Smalltalk:
@@ -1187,8 +1173,6 @@ SuperCollider:
   color: "#46390b"
   lexer: Text only
   primary_extension: .sc
-  extensions:
-  - .scd
 
 TOML:
   type: data
@@ -1369,8 +1353,6 @@ XSLT:
 Xtend:
   type: programming
   primary_extension: .xtend
-  extensions:
-  - .xtend
 
 YAML:
   type: markup
