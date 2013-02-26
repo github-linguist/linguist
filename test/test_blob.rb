@@ -135,7 +135,6 @@ class TestBlob < Test::Unit::TestCase
   def test_solid
     assert blob("Binary/cube.stl").solid?
     assert blob("Text/cube.stl").solid?
-    assert blob("Text/cube.obj").solid?
   end
 
   def test_viewable
