@@ -155,7 +155,7 @@ module Linguist
     #
     # Return true or false
     def solid?
-      ['.stl', '.obj'].include?(extname)
+      extname.downcase == '.stl'
     end
 
     MEGABYTE = 1024 * 1024
