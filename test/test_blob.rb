@@ -190,6 +190,10 @@ class TestBlob < Test::Unit::TestCase
 
     assert blob("JavaScript/intro.js").generated?
     assert blob("JavaScript/classes.js").generated?
+
+    # Cython-generated C/C++
+    assert blob("C/sgd_fast.c").generated?
+    assert blob("C++/wrapper_inner.cpp").generated?
   end
 
   def test_vendored
