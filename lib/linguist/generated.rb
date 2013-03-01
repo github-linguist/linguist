@@ -53,6 +53,7 @@ module Linguist
     def generated?
       name == 'Gemfile.lock' ||
         minified_javascript? ||
+        minified_css? ||
         compiled_coffeescript? ||
         xcode_project_file? ||
         generated_net_docfile? ||
@@ -78,6 +79,21 @@ module Linguist
     # Returns true or false.
     def minified_javascript?
       return unless extname == '.js'
+      if lines.any?
+        (lines.inject(0) { |n, l| n += l.length } / lines.length) > 100
+      else
+        false
+      end
+    end
+
+    # Internal: Is the blob minified CSS?
+    #
+    # Consider CSS minified if the average line length is
+    # greater than 100c.
+    #
+    # Returns true or false.
+    def minified_css?
+      return unless extname == '.css'
       if lines.any?
         (lines.inject(0) { |n, l| n += l.length } / lines.length) > 100
       else
