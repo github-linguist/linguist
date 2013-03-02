@@ -72,15 +72,14 @@ module Linguist
 
     # Internal: Is the blob minified files?
     #
-    # Consider a file minified if the average line length is
-    # greater then 100c. Currently only JS and CSS files are
-    # detected by this method.
+    # Consider a file minified if it contains more than 5% spaces.
+    # Currently, only JS and CSS files are detected by this method.
     #
     # Returns true or false.
     def minified_files?
       return unless ['.js', '.css'].include? extname
-      if lines.any?
-        (lines.inject(0) { |n, l| n += l.length } / lines.length) > 100
+      if data && data.length > 200
+        (data.each_char.count{ |c| c <= ' ' } / data.length.to_f) < 0.05
       else
         false
       end
