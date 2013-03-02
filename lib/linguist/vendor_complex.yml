@@ -5,3 +5,8 @@
 #
 # Please add additional test coverage to
 # `test/test_blob.rb#test_vendored` if you make any changes.
+
+# Bootstrap
+
+- name: (^|/)bootstrap(\-([^.]*))?(\.min)?\.(js|css)
+  contain: Twitter, Inc.
