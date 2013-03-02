@@ -327,6 +327,11 @@ class TestBlob < Test::Unit::TestCase
 
     # Vagrant
     assert blob("Vagrantfile").vendored?
+
+    # Twitter Bootstrap
+    assert blob("JavaScript/bootstrap-modal.js").vendored?
+    assert blob("JavaScript/bootstrap.min.js").vendored?
+    assert blob("JavaScript/bootstrap.js").vendored?
   end
 
   def test_language
