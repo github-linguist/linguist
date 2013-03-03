@@ -73,7 +73,7 @@ module Linguist
     #
     # Returns Language or nil.
     def self.detect(name, data, mode = nil)
-      # A bit of an elegant hack. If the file is exectable but extensionless,
+      # A bit of an elegant hack. If the file is executable but extensionless,
       # append a "magic" extension so it can be classified with other
       # languages that have shebang scripts.
       if File.extname(name).empty? && mode && (mode.to_i(8) & 05) == 05
@@ -329,7 +329,7 @@ module Linguist
 
     # Deprecated: Get primary extension
     #
-    # Defaults to the first extension but can be overriden
+    # Defaults to the first extension but can be overridden
     # in the languages.yml.
     #
     # The primary extension can not be nil. Tests should verify this.

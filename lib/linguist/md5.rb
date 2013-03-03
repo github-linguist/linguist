@@ -4,7 +4,7 @@ module Linguist
   module MD5
     # Public: Create deep nested digest of value object.
     #
-    # Useful for object comparsion.
+    # Useful for object comparison.
     #
     # obj - Object to digest.
     #
