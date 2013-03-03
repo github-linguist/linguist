@@ -40,7 +40,7 @@ module Linguist
 
     # Public: Guess language of data.
     #
-    # db        - Hash of classifer tokens database.
+    # db        - Hash of classifier tokens database.
     # data      - Array of tokens or String data to analyze.
     # languages - Array of language name Strings to restrict to.
     #
@@ -85,7 +85,7 @@ module Linguist
       scores.sort { |a, b| b[1] <=> a[1] }.map { |score| [score[0], score[1]] }
     end
 
-    # Internal: Probably of set of tokens in a language occuring - P(D | C)
+    # Internal: Probably of set of tokens in a language occurring - P(D | C)
     #
     # tokens   - Array of String tokens.
     # language - Language to check.
@@ -97,7 +97,7 @@ module Linguist
       end
     end
 
-    # Internal: Probably of token in language occuring - P(F | C)
+    # Internal: Probably of token in language occurring - P(F | C)
     #
     # token    - String token.
     # language - Language to check.
@@ -111,7 +111,7 @@ module Linguist
       end
     end
 
-    # Internal: Probably of a language occuring - P(C)
+    # Internal: Probably of a language occurring - P(C)
     #
     # language - Language to check.
     #

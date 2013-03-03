@@ -199,7 +199,7 @@ class TestBlob < Test::Unit::TestCase
     assert !blob("Text/README").vendored?
     assert !blob("ext/extconf.rb").vendored?
 
-    # Node depedencies
+    # Node dependencies
     assert blob("node_modules/coffee-script/lib/coffee-script.js").vendored?
 
     # Rails vendor/
