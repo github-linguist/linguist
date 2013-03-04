@@ -43,7 +43,7 @@ module Linguist
 
     # Internal: Is the blob a generated file?
     #
-    # Generated source code is supressed in diffs and is ignored by
+    # Generated source code is suppressed in diffs and is ignored by
     # language statistics.
     #
     # Please add additional test coverage to

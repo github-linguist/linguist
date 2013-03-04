@@ -267,7 +267,7 @@ module Linguist
 
     # Public: Is the blob a generated file?
     #
-    # Generated source code is supressed in diffs and is ignored by
+    # Generated source code is suppressed in diffs and is ignored by
     # language statistics.
     #
     # May load Blob#data
@@ -282,7 +282,7 @@ module Linguist
     # Excluded:
     # - Files over 0.1MB
     # - Non-text files
-    # - Langauges marked as not searchable
+    # - Languages marked as not searchable
     # - Generated source files
     #
     # Please add additional test coverage to
