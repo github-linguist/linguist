@@ -1,0 +1,31 @@
+/* Maxima uses C style comments. */
+
+/*
+  Including multi line comments.
+  This example is copied from jkovacic's repository 
+  jkovacic/maxima-ht/homogenous_transformation.mac
+  (https://github.com/jkovacic/maxima-ht).
+  
+  It is licenced under the Apache 2.0 license
+*/
+
+Rot(rx, ry, rz, theta) :=
+block (
+    [u, ux, uy, uz, cth, c1, sth],
+    cth: cos(theta),
+    sth: sin(theta),
+    c1: 1-cth,
+    u: sqrt(rx^2 + ry^2 + rz^2),
+    if u = 0 then
+        error("A non-zero vector is required."),
+    ux: rx/u,
+    uy: ry/u,
+    uz: rz/u,
+
+    matrix([cth+ux^2*c1, ux*uy*c1-uz*sth, ux*uz*c1+uy*sth, 0],
+           [uy*ux*c1+uz*sth, cth+uy^2*c1, uy*uz*c1-ux*sth, 0],
+           [uz*ux*c1-uy*sth, uz*uy*c1+ux*sth, cth+uz^2*c1 , 0],
+           [0, 0, 0, 1])
+)$
+
+/* All statements, functions, etc. end either with a colon or a dollar sign*/
