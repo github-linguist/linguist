@@ -2,7 +2,7 @@ require 'linguist/file_blob'
 require 'linguist/samples'
 
 require 'test/unit'
-require 'mocha'
+require 'mocha/setup'
 require 'mime/types'
 require 'pygments'
 
@@ -208,7 +208,7 @@ class TestBlob < Test::Unit::TestCase
     # C deps
     assert blob("deps/http_parser/http_parser.c").vendored?
     assert blob("deps/v8/src/v8.h").vendored?
-    
+
     # Debian packaging
     assert blob("debian/cron.d").vendored?
 
