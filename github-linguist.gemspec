@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name    = 'github-linguist'
-  s.version = '2.6.5'
+  s.version = '2.6.6'
   s.summary = "GitHub Language detection"
 
   s.authors  = "GitHub"
