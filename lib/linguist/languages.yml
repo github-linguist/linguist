@@ -304,6 +304,13 @@ D-ObjDump:
   lexer: d-objdump
   primary_extension: .d-objdump
 
+DOT:
+  type: programming
+  lexer: Text only
+  primary_extension: .dot
+  extensions:
+  - .gv
+
 Darcs Patch:
   search_term: dpatch
   aliases:
@@ -335,7 +342,7 @@ DCPU-16 ASM:
 
 Diff:
   primary_extension: .diff
-
+  
 Dylan:
   type: programming
   color: "#3ebc27"
