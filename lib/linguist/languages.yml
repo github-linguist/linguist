@@ -794,6 +794,14 @@ Max:
   - .maxhelp
   - .maxpat
 
+Mercury:
+  type: programming
+  # This is the background colour on the web page.
+  color: "#abcdef"
+  primary_extension: .m
+  # Mercury's syntax is not prolog syntax, but they do share the lexer
+  lexer: Prolog
+
 MiniD: # Legacy
   searchable: false
   primary_extension: .minid # Dummy extension
