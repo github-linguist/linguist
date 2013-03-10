@@ -23,7 +23,7 @@ module Linguist
     SINGLE_LINE_COMMENTS = [
       '//', # C
       '#',  # Ruby
-      '%',  # Tex
+      '%',  # Tex,Matlab
     ]
 
     # Start state on opening token, ignore anything until the closing
@@ -32,7 +32,8 @@ module Linguist
       ['/*', '*/'],    # C
       ['<!--', '-->'], # XML
       ['{-', '-}'],    # Haskell
-      ['(*', '*)']     # Coq
+      ['(*', '*)'],     # Coq
+      ['%{','}%']     #Matlab
     ]
 
     START_SINGLE_LINE_COMMENT =  Regexp.compile(SINGLE_LINE_COMMENTS.map { |c|
