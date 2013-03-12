@@ -629,8 +629,6 @@ Java:
   ace_mode: java
   color: "#b07219"
   primary_extension: .java
-  extensions:
-  - .pde
 
 Java Server Pages:
   group: Java
@@ -995,6 +993,12 @@ PowerShell:
   - posh
   primary_extension: .ps1
 
+Processing:
+  type: programming
+  lexer: Java
+  color: "#2779ab"
+  primary_extension: .pde
+  
 Prolog:
   type: programming
   color: "#74283c"
