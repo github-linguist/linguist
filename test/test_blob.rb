@@ -273,6 +273,10 @@ class TestBlob < Test::Unit::TestCase
 
     # NuGet Packages
     assert blob("packages/Modernizr.2.0.6/Content/Scripts/modernizr-2.0.6-development-only.js").vendored?
+
+    # Test fixtures
+    assert blob("test/fixtures/random.rkt").vendored?
+    assert blob("Test/fixtures/random.rkt").vendored?
   end
 
   def test_indexable
