@@ -23,8 +23,6 @@ class TestSamples < Test::Unit::TestCase
       actual.write Yajl::Encoder.encode(latest, :pretty => true)
       actual.close
 
-      warn `diff #{expected.path} #{actual.path}`
-
       expected.unlink
       actual.unlink
     end
