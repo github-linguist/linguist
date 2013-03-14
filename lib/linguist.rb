@@ -1,5 +1,5 @@
 require 'linguist/blob_helper'
+require 'linguist/generated'
 require 'linguist/language'
-require 'linguist/mime'
-require 'linguist/pathname'
 require 'linguist/repository'
+require 'linguist/samples'

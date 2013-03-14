@@ -1,6 +1,8 @@
 require 'linguist/file_blob'
+require 'linguist/samples'
 
 require 'test/unit'
+require 'mocha/setup'
 require 'mime/types'
 require 'pygments'
 
@@ -9,12 +11,13 @@ class TestBlob < Test::Unit::TestCase
 
   Lexer = Pygments::Lexer
 
-  def fixtures_path
-    File.expand_path("../fixtures", __FILE__)
+  def samples_path
+    File.expand_path("../../samples", __FILE__)
   end
 
   def blob(name)
-    FileBlob.new(File.join(fixtures_path, name), fixtures_path)
+    name = File.join(samples_path, name) unless name =~ /^\//
+    FileBlob.new(name, samples_path)
   end
 
   def script_blob(name)
@@ -27,68 +30,66 @@ class TestBlob < Test::Unit::TestCase
     assert_equal "foo.rb", blob("foo.rb").name
   end
 
-  def test_pathname
-    assert_equal Pathname.new("foo.rb"), blob("foo.rb").pathname
-  end
-
   def test_mime_type
-    assert_equal "application/octet-stream", blob("dog.o").mime_type
-    assert_equal "application/ogg", blob("foo.ogg").mime_type
-    assert_equal "application/postscript", blob("octocat.ai").mime_type
-    assert_equal "application/x-ruby", blob("grit.rb").mime_type
-    assert_equal "application/x-sh", blob("script.sh").mime_type
-    assert_equal "application/xml", blob("bar.xml").mime_type
-    assert_equal "text/plain", blob("README").mime_type
+    assert_equal "application/postscript", blob("Binary/octocat.ai").mime_type
+    assert_equal "application/x-ruby", blob("Ruby/grit.rb").mime_type
+    assert_equal "application/x-sh", blob("Shell/script.sh").mime_type
+    assert_equal "application/xml", blob("XML/bar.xml").mime_type
+    assert_equal "audio/ogg", blob("Binary/foo.ogg").mime_type
+    assert_equal "text/plain", blob("Text/README").mime_type
   end
 
   def test_content_type
-    assert_equal "application/octet-stream", blob("dog.o").content_type
-    assert_equal "application/ogg", blob("foo.ogg").content_type
-    assert_equal "application/pdf", blob("foo.pdf").content_type
-    assert_equal "image/png", blob("foo.png").content_type
-    assert_equal "text/plain; charset=iso-8859-2", blob("README").content_type
-    assert_equal "text/plain; charset=iso-8859-1", blob("script.pl").content_type
-    assert_equal "text/plain; charset=iso-8859-1", blob("script.py").content_type
-    assert_equal "text/plain; charset=iso-8859-1", blob("script.rb").content_type
-    assert_equal "text/plain; charset=iso-8859-1", blob("script.sh").content_type
+    assert_equal "application/pdf", blob("Binary/foo.pdf").content_type
+    assert_equal "audio/ogg", blob("Binary/foo.ogg").content_type
+    assert_equal "image/png", blob("Binary/foo.png").content_type
+    assert_equal "text/plain; charset=iso-8859-2", blob("Text/README").content_type
   end
 
   def test_disposition
-    assert_equal "attachment; filename=foo+bar.jar", blob("foo bar.jar").disposition
-    assert_equal "attachment; filename=foo.bin", blob("foo.bin").disposition
-    assert_equal "attachment; filename=linguist.gem", blob("pkg/linguist.gem").disposition
-    assert_equal "attachment; filename=octocat.ai", blob("octocat.ai").disposition
-    assert_equal "inline", blob("README").disposition
-    assert_equal "inline", blob("foo.txt").disposition
-    assert_equal "inline", blob("grit.rb").disposition
-    assert_equal "inline", blob("octocat.png").disposition
+    assert_equal "attachment; filename=foo+bar.jar", blob("Binary/foo bar.jar").disposition
+    assert_equal "attachment; filename=foo.bin", blob("Binary/foo.bin").disposition
+    assert_equal "attachment; filename=linguist.gem", blob("Binary/linguist.gem").disposition
+    assert_equal "attachment; filename=octocat.ai", blob("Binary/octocat.ai").disposition
+    assert_equal "inline", blob("Text/README").disposition
+    assert_equal "inline", blob("Text/foo.txt").disposition
+    assert_equal "inline", blob("Ruby/grit.rb").disposition
+    assert_equal "inline", blob("Binary/octocat.png").disposition
   end
 
   def test_data
-    assert_equal "module Foo\nend\n", blob("foo.rb").data
+    assert_equal "module Foo\nend\n", blob("Ruby/foo.rb").data
   end
 
   def test_lines
-    assert_equal ["module Foo", "end", ""], blob("foo.rb").lines
+    assert_equal ["module Foo", "end", ""], blob("Ruby/foo.rb").lines
+  end
+
+  def test_mac_format
+    assert blob("Text/mac.txt").mac_format?
+  end
+
+  def test_lines_mac_format
+    assert_equal ["line 1", "line 2", ""], blob("Text/mac.txt").lines
   end
 
   def test_size
-    assert_equal 15, blob("foo.rb").size
+    assert_equal 15, blob("Ruby/foo.rb").size
   end
 
   def test_loc
-    assert_equal 3, blob("foo.rb").loc
+    assert_equal 3, blob("Ruby/foo.rb").loc
   end
 
   def test_sloc
-    assert_equal 2, blob("foo.rb").sloc
+    assert_equal 2, blob("Ruby/foo.rb").sloc
   end
 
   def test_encoding
-    assert_equal "ISO-8859-2", blob("README").encoding
-    assert_equal "ISO-8859-1", blob("dump.sql").encoding
-    assert_equal "UTF-8", blob("foo.txt").encoding
-    assert_nil blob("dog.o").encoding
+    assert_equal "ISO-8859-2", blob("Text/README").encoding
+    assert_equal "ISO-8859-1", blob("Text/dump.sql").encoding
+    assert_equal "UTF-8", blob("Text/foo.txt").encoding
+    assert_nil blob("Binary/dog.o").encoding
   end
 
   def test_binary
@@ -99,91 +100,102 @@ class TestBlob < Test::Unit::TestCase
     end
     assert large_blob.binary?
 
-    assert blob("git.deb").binary?
-    assert blob("git.exe").binary?
-    assert blob("hello.pbc").binary?
-    assert blob("linguist.gem").binary?
-    assert blob("octocat.ai").binary?
-    assert blob("octocat.png").binary?
-    assert blob("zip").binary?
-    assert !blob("README").binary?
-    assert !blob("file.txt").binary?
-    assert !blob("foo.rb").binary?
-    assert !blob("script.pl").binary?
+    assert blob("Binary/git.deb").binary?
+    assert blob("Binary/git.exe").binary?
+    assert blob("Binary/hello.pbc").binary?
+    assert blob("Binary/linguist.gem").binary?
+    assert blob("Binary/octocat.ai").binary?
+    assert blob("Binary/octocat.png").binary?
+    assert blob("Binary/zip").binary?
+    assert !blob("Text/README").binary?
+    assert !blob("Text/file.txt").binary?
+    assert !blob("Ruby/foo.rb").binary?
+    assert !blob("Perl/script.pl").binary?
   end
 
   def test_text
-    assert blob("README").text?
-    assert blob("dump.sql").text?
-    assert blob("file.json").text?
-    assert blob("file.txt").text?
-    assert blob("md").text?
-    assert blob("script.sh").text?
-    assert blob("tender.md").text?
-    assert blob("txt").text?
+    assert blob("Text/README").text?
+    assert blob("Text/dump.sql").text?
+    assert blob("Text/file.json").text?
+    assert blob("Text/file.txt").text?
+    assert blob("Text/md").text?
+    assert blob("Shell/script.sh").text?
+    assert blob("Text/txt").text?
   end
 
   def test_image
-    assert blob("octocat.gif").image?
-    assert blob("octocat.jpeg").image?
-    assert blob("octocat.jpg").image?
-    assert blob("octocat.png").image?
-    assert !blob("octocat.ai").image?
-    assert !blob("octocat.psd").image?
+    assert blob("Binary/octocat.gif").image?
+    assert blob("Binary/octocat.jpeg").image?
+    assert blob("Binary/octocat.jpg").image?
+    assert blob("Binary/octocat.png").image?
+    assert !blob("Binary/octocat.ai").image?
+    assert !blob("Binary/octocat.psd").image?
+  end
+
+  def test_solid
+    assert blob("Binary/cube.stl").solid?
+    assert blob("Text/cube.stl").solid?
   end
 
   def test_viewable
-    assert blob("README").viewable?
-    assert blob("foo.rb").viewable?
-    assert blob("script.pl").viewable?
-    assert !blob("linguist.gem").viewable?
-    assert !blob("octocat.ai").viewable?
-    assert !blob("octocat.png").viewable?
+    assert blob("Text/README").viewable?
+    assert blob("Ruby/foo.rb").viewable?
+    assert blob("Perl/script.pl").viewable?
+    assert !blob("Binary/linguist.gem").viewable?
+    assert !blob("Binary/octocat.ai").viewable?
+    assert !blob("Binary/octocat.png").viewable?
   end
 
   def test_generated
-    assert !blob("README").generated?
+    assert !blob("Text/README").generated?
 
     # Xcode project files
-    assert blob("MainMenu.xib").generated?
-    assert blob("MainMenu.nib").generated?
-    assert blob("project.pbxproj").generated?
+    assert blob("XML/MainMenu.xib").generated?
+    assert blob("Binary/MainMenu.nib").generated?
+    assert blob("XML/project.pbxproj").generated?
 
     # Gemfile.locks
     assert blob("Gemfile.lock").generated?
 
     # Generated .NET Docfiles
-    assert blob("net_docfile.xml").generated?
+    assert blob("XML/net_docfile.xml").generated?
 
     # Long line
-    assert !blob("uglify.js").generated?
+    assert !blob("JavaScript/uglify.js").generated?
 
     # Inlined JS, but mostly code
-    assert !blob("json2_backbone.js").generated?
+    assert !blob("JavaScript/json2_backbone.js").generated?
 
     # Minified JS
-    assert !blob("jquery-1.6.1.js").generated?
-    assert blob("jquery-1.6.1.min.js").generated?
-    assert blob("jquery-1.4.2.min.js").generated?
+    assert !blob("JavaScript/jquery-1.6.1.js").generated?
+    assert blob("JavaScript/jquery-1.6.1.min.js").generated?
+    assert blob("JavaScript/jquery-1.4.2.min.js").generated?
 
-    # CoffeScript JS
+    # CoffeeScript-generated JS
+    # TODO
 
-    # These examples are to basic to tell
-    assert !blob("coffee/empty.js").generated?
-    assert !blob("coffee/hello.js").generated?
+    # TypeScript-generated JS
+    # TODO
 
-    assert blob("coffee/intro-old.js").generated?
-    assert blob("coffee/classes-old.js").generated?
+    # PEG.js-generated parsers
+    assert blob("JavaScript/parser.js").generated?
 
-    assert blob("coffee/intro.js").generated?
-    assert blob("coffee/classes.js").generated?
+    # These examples are too basic to tell
+    assert !blob("JavaScript/empty.js").generated?
+    assert !blob("JavaScript/hello.js").generated?
+
+    assert blob("JavaScript/intro-old.js").generated?
+    assert blob("JavaScript/classes-old.js").generated?
+
+    assert blob("JavaScript/intro.js").generated?
+    assert blob("JavaScript/classes.js").generated?
   end
 
   def test_vendored
-    assert !blob("README").vendored?
+    assert !blob("Text/README").vendored?
     assert !blob("ext/extconf.rb").vendored?
 
-    # Node depedencies
+    # Node dependencies
     assert blob("node_modules/coffee-script/lib/coffee-script.js").vendored?
 
     # Rails vendor/
@@ -192,6 +204,9 @@ class TestBlob < Test::Unit::TestCase
     # C deps
     assert blob("deps/http_parser/http_parser.c").vendored?
     assert blob("deps/v8/src/v8.h").vendored?
+
+    # Debian packaging
+    assert blob("debian/cron.d").vendored?
 
     # Prototype
     assert !blob("public/javascripts/application.js").vendored?
@@ -258,268 +273,59 @@ class TestBlob < Test::Unit::TestCase
 
     # NuGet Packages
     assert blob("packages/Modernizr.2.0.6/Content/Scripts/modernizr-2.0.6-development-only.js").vendored?
+
+    # Test fixtures
+    assert blob("test/fixtures/random.rkt").vendored?
+    assert blob("Test/fixtures/random.rkt").vendored?
   end
 
   def test_indexable
-    assert blob("file.txt").indexable?
-    assert blob("foo.rb").indexable?
-    assert !blob("defu.nkt").indexable?
-    assert !blob("dump.sql").indexable?
-    assert !blob("github.po").indexable?
-    assert !blob("linguist.gem").indexable?
+    assert blob("Ruby/foo.rb").indexable?
+    assert !blob("Text/defu.nkt").indexable?
+    assert !blob("Text/dump.sql").indexable?
+    assert !blob("Binary/github.po").indexable?
+    assert !blob("Binary/linguist.gem").indexable?
+
+    # large binary blobs should fail on size check first, not call
+    # into charlock_holmes and alloc big buffers for testing encoding
+    b = blob("Binary/octocat.ai")
+    b.expects(:binary?).never
+    assert !b.indexable?
   end
 
   def test_language
-    assert_equal Language['C'],           blob("hello.c").language
-    assert_equal Language['C'],           blob("hello.h").language
-    assert_equal Language['C++'],         blob("bar.h").language
-    assert_equal Language['C++'],         blob("bar.hpp").language
-    assert_equal Language['C++'],         blob("hello.cpp").language
-    assert_equal Language['C++'],         blob("cuda.cu").language
-    assert_equal Language['GAS'],         blob("hello.s").language
-    assert_equal Language['Logtalk'],     blob("foo.lgt").language
-    assert_equal Language['Objective-C'], blob("Foo.h").language
-    assert_equal Language['Objective-C'], blob("Foo.m").language
-    assert_equal Language['Objective-C'], blob("FooAppDelegate.h").language
-    assert_equal Language['Objective-C'], blob("FooAppDelegate.m").language
-    assert_equal Language['Objective-C'], blob("hello.m").language
-    assert_equal Language['OpenCL'],      blob("fft.cl").language
-    assert_equal Language['Ruby'],        blob("foo.rb").language
-    assert_equal Language['Ruby'],        blob("script.rb").language
-    assert_equal Language['Ruby'],        blob("wrong_shebang.rb").language
-    assert_equal Language['Arduino'],     blob("hello.ino").language
-    assert_equal Language['VHDL'],        blob("foo.vhd").language
-    assert_nil blob("octocat.png").language
-
-    # .cls disambiguation
-    # https://github.com/abevoelker/abl-email-client/blob/master/com/abevoelker/email/Email.cls
-    assert_equal Language['OpenEdge ABL'], blob("Email.cls").language
-    # https://github.com/emcmanis/Thesis/blob/master/TeX/Thesis%20Template/reedthesis.cls
-    assert_equal Language['TeX'], blob("reedthesis.cls").language
-    # https://github.com/DangerMouseB/VLMessaging/blob/master/VLMMachineRouter/cApplication.cls
-    assert_equal Language['Visual Basic'], blob("cApplication.cls").language
-    # https://github.com/apex-commons/base/blob/master/src/classes/ArrayUtils.cls
-    assert_equal Language['Apex'], blob("ArrayUtils.cls").language
-
-    # .pl disambiguation
-    assert_equal Language['Prolog'],      blob("test-prolog.pl").language
-    assert_equal Language['Perl'],        blob("test-perl.pl").language
-    assert_equal Language['Perl'],        blob("test-perl2.pl").language
-
-    # .m disambiguation
-    assert_equal Language['Objective-C'], blob("empty.m").language
-    assert_equal Language['Objective-C'], blob("Foo.m").language
-    assert_equal Language['Objective-C'], blob("hello.m").language
-    assert_equal Language['Matlab'], blob("matlab_function.m").language
-    assert_equal Language['Matlab'], blob("matlab_script.m").language
-    assert_equal Language['Matlab'], blob("matlab_function2.m").language
-    assert_equal Language['Matlab'], blob("matlab_script2.m").language
-    assert_equal Language['Matlab'], blob("matlab_class.m").language
-    assert_equal Language['M'], blob("m_simple.m").language
-
-    # .r disambiguation
-    assert_equal Language['R'],           blob("hello-r.R").language
-    assert_equal Language['Rebol'],       blob("hello-rebol.r").language
-
-    # .t disambiguation
-    assert_equal Language['Perl'],        blob("perl-test.t").language
-    assert_equal Language['Turing'],      blob("turing.t").language
-
-    # .v disambiguation
-    # https://github.com/progranism/Open-Source-FPGA-Bitcoin-Miner/blob/master/src/sha-256-functions.v
-    assert_equal Language['Verilog'],     blob("sha-256-functions.v").language
-    # https://github.com/coq/coq/blob/trunk/doc/faq/interval_discr.v
-    assert_equal Language['Coq'],         blob("interval_discr.v").language
-
-    # ML
-    assert_equal Language['OCaml'],       blob("Foo.ml").language
-    assert_equal Language['Standard ML'], blob("Foo.sig").language
-    assert_equal Language['Standard ML'], blob("Foo.sml").language
-
-    # Scilab
-    assert_equal Language['Scilab'],       blob("scilab_script.sce").language
-    assert_equal Language['Scilab'],       blob("scilab_function.sci").language
-    assert_equal Language['Scilab'],       blob("scilab_test.tst").language
-
-    # Config files
-    assert_equal Language['INI'],   blob(".gitconfig").language
-    assert_equal Language['Shell'], blob(".bash_profile").language
-    assert_equal Language['Shell'], blob(".bashrc").language
-    assert_equal Language['Shell'], blob(".profile").language
-    assert_equal Language['Shell'], blob(".zlogin").language
-    assert_equal Language['Shell'], blob(".zshrc").language
-    assert_equal Language['VimL'],  blob(".gvimrc").language
-    assert_equal Language['VimL'],  blob(".vimrc").language
-    assert_equal Language['YAML'],  blob(".gemrc").language
-
-    assert_nil blob("blank").language
-    assert_nil blob("README").language
-
-    # https://github.com/xquery/xprocxq/blob/master/src/xquery/xproc.xqm
-    assert_equal Language['XQuery'], blob("xproc.xqm").language
-
-    # https://github.com/wycats/osx-window-sizing/blob/master/center.applescript
-    assert_equal Language['AppleScript'], blob("center.scpt").language
-    assert_equal Language['AppleScript'], blob("center.applescript").language
-
-    # https://github.com/Araq/Nimrod/tree/master/examples
-    assert_equal Language['Nimrod'], blob("foo.nim").language
-
-    # http://supercollider.sourceforge.net/
-    # https://github.com/drichert/BCR2000.sc/blob/master/BCR2000.sc
-    assert_equal Language['SuperCollider'], blob("BCR2000.sc").language
-
-    # https://github.com/harrah/xsbt/wiki/Quick-Configuration-Examples
-    assert_equal Language['Scala'], blob('build.sbt').language
-
-    # https://github.com/gradleware/oreilly-gradle-book-examples/blob/master/ant-antbuilder/build.gradle
-    assert_equal Language['Groovy'], blob("build.gradle").language
-
-    # http://docs.racket-lang.org/scribble/
-    assert_equal Language['Racket'], blob("scribble.scrbl").language
-
-    # https://github.com/drupal/drupal/blob/7.x/modules/php/php.module
-    assert_equal Language['PHP'], blob("drupal.module").language
-
-    # https://github.com/googleapi/googleapi/blob/master/demos/gmail_demo/gmail.dpr
-    assert_equal Language['Delphi'], blob("program.dpr").language
-
-    # https://github.com/philiplaureano/Nemerle.FizzBuzz/blob/master/FizzBuzz/FizzBuzzer.n
-    assert_equal Language['Nemerle'], blob("hello.n").language
-
-    # https://github.com/dharmatech/agave/blob/master/demos/asteroids.sps
-    assert_equal Language['Scheme'], blob("asteroids.sps").language
-
-    # https://github.com/graydon/rust
-    assert_equal Language['Rust'], blob("hello.rs").language
-
-    # https://github.com/olabini/ioke
-    assert_equal Language['Ioke'], blob("hello.ik").language
-
-    # https://github.com/parrot/parrot
-    assert_equal Language['Parrot Internal Representation'], blob("hello.pir").language
-    assert_equal Language['Parrot Assembly'], blob("hello.pasm").language
-
-    # http://gosu-lang.org
-    assert_equal Language['Gosu'], blob("Hello.gsx").language
-    assert_equal Language['Gosu'], blob("hello.gsp").language
-    assert_equal Language['Gosu'], blob("Hello.gst").language
-    assert_equal Language['Gosu'], blob("hello.vark").language
-
-    # Groovy Server Pages
-    assert_equal Language['Groovy Server Pages'], blob("bar.gsp").language
-    assert_equal Language['Groovy Server Pages'], blob("hello-resources.gsp").language
-    assert_equal Language['Groovy Server Pages'], blob("hello-pagedirective.gsp").language
-    assert_equal Language['Groovy Server Pages'], blob("hello-var.gsp").language
-
-    # https://github.com/Lexikos/AutoHotkey_L
-    assert_equal Language['AutoHotkey'], blob("hello.ahk").language
-
-    # Haml
-    assert_equal Language['Haml'], blob("hello.haml").language
-    assert_equal Language['HTML'], blob("hello.haml").language.group
-
-    # Sass
-    assert_equal Language['Sass'], blob("screen.sass").language
-    assert_equal Language['CSS'], blob("screen.sass").language.group
-    assert_equal Language['SCSS'], blob("screen.scss").language
-    assert_equal Language['CSS'], blob("screen.scss").language.group
-
-    # OpenEdge ABL / Progress
-    assert_equal Language['OpenEdge ABL'], blob("openedge.p").language
-
-    # Tea
-    assert_equal Language['Tea'], blob("foo.tea").language
-
-    # Kotlin
-    assert_equal Language['Kotlin'], blob("Foo.kt").language
-
-    # Julia: http://julialang.org/
-    assert_equal Language['Julia'], blob("stockcorr.jl").language
-
-    # Dart: http://dartlang.org/
-    assert_equal Language['Dart'], blob("point.dart").language
-
-    # Arch Linux PKGBUILD
-    assert_equal Language['Shell'], blob("PKGBUILD").language
-
-    # XML
-    assert_equal Language['XSLT'], blob("test.xslt").language
+    Samples.each do |sample|
+      blob = blob(sample[:path])
+      assert blob.language, "No language for #{sample[:path]}"
+      assert_equal sample[:language], blob.language.name, blob.name
+    end
   end
 
   def test_lexer
-    assert_equal Lexer['Diff'], blob("dude-thing-okay--001.patch").lexer
-    assert_equal Lexer['JavaScript'], blob("dude.js").lexer
-    assert_equal Lexer['Ruby'], blob("Capfile").lexer
-    assert_equal Lexer['Ruby'], blob("grit.rb").lexer
-    assert_equal Lexer['Scheme'], blob("dude.el").lexer
-    assert_equal Lexer['Text only'], blob("README").lexer
-    assert_equal Lexer['Tea'], blob("foo.tea").lexer
-    assert_equal Lexer['vhdl'], blob("foo.vhd").lexer
-    assert_equal Lexer['Julia'], blob("stockcorr.jl").lexer
-    assert_equal Lexer['Dart'], blob("point.dart").lexer
-    assert_equal Lexer['Bash'], blob("PKGBUILD").lexer
-  end
-
-  def test_shebang_script
-    assert_equal 'sh', script_blob("script.sh").shebang_script
-    assert_equal 'bash', script_blob("script.bash").shebang_script
-    assert_equal 'zsh', script_blob("script.zsh").shebang_script
-    assert_equal 'perl', script_blob("script.pl").shebang_script
-    assert_equal 'ruby', script_blob("script.rb").shebang_script
-    assert_equal 'ruby', script_blob("script2.rb").shebang_script
-    assert_equal 'python', script_blob("script.py").shebang_script
-    assert_equal 'node', script_blob("script.js").shebang_script
-    assert_equal 'groovy', script_blob("script.groovy").shebang_script
-    assert_equal 'macruby', script_blob("script.mrb").shebang_script
-    assert_equal 'rake', script_blob("script.rake").shebang_script
-    assert_equal 'foo', script_blob("script.foo").shebang_script
-    assert_equal 'nush', script_blob("script.nu").shebang_script
-    assert_equal 'scala', script_blob("script.scala").shebang_script
-    assert_equal 'racket', script_blob("script.rkt").shebang_script
-    assert_equal nil, script_blob("foo.rb").shebang_script
-  end
-
-  def test_shebang_language
-    assert_equal Language['Shell'], script_blob("script.sh").shebang_language
-    assert_equal Language['Shell'], script_blob("script.bash").shebang_language
-    assert_equal Language['Shell'], script_blob("script.zsh").shebang_language
-    assert_equal Language['Perl'], script_blob("script.pl").shebang_language
-    assert_equal Language['Ruby'], script_blob("script.rb").shebang_language
-    assert_equal Language['Python'], script_blob("script.py").shebang_language
-    assert_equal Language['JavaScript'], script_blob("script.js").shebang_language
-    assert_equal Language['Groovy'], script_blob("script.groovy").shebang_language
-    assert_equal Language['Ruby'], script_blob("script.mrb").shebang_language
-    assert_equal Language['Ruby'], script_blob("script.rake").shebang_language
-    assert_equal Language['Nu'], script_blob("script.nu").shebang_language
-    assert_equal Language['Scala'], script_blob("script.scala").shebang_language
-    assert_equal Language['Racket'], script_blob("script.rkt").shebang_language
-    assert_equal nil, script_blob("script.foo").shebang_language
-    assert_equal nil, script_blob("foo.rb").shebang_language
+    assert_equal Lexer['Ruby'], blob("Ruby/foo.rb").lexer
   end
 
   def test_colorize
-    assert_equal <<-HTML, blob("foo.rb").colorize
+    assert_equal <<-HTML.chomp, blob("Ruby/foo.rb").colorize
 <div class="highlight"><pre><span class="k">module</span> <span class="nn">Foo</span>
 <span class="k">end</span>
-</pre>
-</div>
+</pre></div>
     HTML
   end
 
   def test_colorize_without_wrapper
-    assert_equal <<-HTML, blob("foo.rb").colorize_without_wrapper
+    assert_equal <<-HTML, blob("Ruby/foo.rb").colorize_without_wrapper
 <span class="k">module</span> <span class="nn">Foo</span>
 <span class="k">end</span>
     HTML
   end
 
   def test_colorize_does_skip_minified_files
-    assert_nil blob("jquery-1.6.1.min.js").colorize
+    assert_nil blob("JavaScript/jquery-1.6.1.min.js").colorize
   end
 
   # Pygments.rb was taking exceeding long on this particular file
   def test_colorize_doesnt_blow_up_with_files_with_high_ratio_of_long_lines
-    assert_nil blob("steelseries-min.js").colorize
+    assert_nil blob("JavaScript/steelseries-min.js").colorize
   end
 end

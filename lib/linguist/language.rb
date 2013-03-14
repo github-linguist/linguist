@@ -2,6 +2,9 @@ require 'escape_utils'
 require 'pygments'
 require 'yaml'
 
+require 'linguist/classifier'
+require 'linguist/samples'
+
 module Linguist
   # Language names that are recognizable by GitHub. Defined languages
   # can be highlighted, searched and listed under the Top Languages page.
@@ -9,29 +12,14 @@ module Linguist
   # Languages are defined in `lib/linguist/languages.yml`.
   class Language
     @languages       = []
-    @overrides       = {}
     @index           = {}
     @name_index      = {}
     @alias_index     = {}
-    @extension_index = {}
-    @filename_index  = {}
+    @extension_index = Hash.new { |h,k| h[k] = [] }
+    @filename_index  = Hash.new { |h,k| h[k] = [] }
 
     # Valid Languages types
     TYPES = [:data, :markup, :programming]
-
-    # Internal: Test if extension maps to multiple Languages.
-    #
-    # Returns true or false.
-    def self.ambiguous?(extension)
-      @overrides.include?(extension)
-    end
-
-    # Include?: Return overridden extensions.
-    #
-    # Returns extensions Array.
-    def self.overridden_extensions
-      @overrides.keys
-    end
 
     # Internal: Create a new Language object
     #
@@ -43,18 +31,18 @@ module Linguist
 
       @languages << language
 
-      # All Language names should be unique. Warn if there is a duplicate.
+      # All Language names should be unique. Raise if there is a duplicate.
       if @name_index.key?(language.name)
-        warn "Duplicate language name: #{language.name}"
+        raise ArgumentError, "Duplicate language name: #{language.name}"
       end
 
       # Language name index
       @index[language.name] = @name_index[language.name] = language
 
       language.aliases.each do |name|
-        # All Language aliases should be unique. Warn if there is a duplicate.
+        # All Language aliases should be unique. Raise if there is a duplicate.
         if @alias_index.key?(name)
-          warn "Duplicate alias: #{name}"
+          raise ArgumentError, "Duplicate alias: #{name}"
         end
 
         @index[name] = @alias_index[name] = language
@@ -62,31 +50,48 @@ module Linguist
 
       language.extensions.each do |extension|
         if extension !~ /^\./
-          warn "Extension is missing a '.': #{extension.inspect}"
+          raise ArgumentError, "Extension is missing a '.': #{extension.inspect}"
         end
 
-        unless ambiguous?(extension)
-          # Index the extension with a leading ".": ".rb"
-          @extension_index[extension] = language
-
-          # Index the extension without a leading ".": "rb"
-          @extension_index[extension.sub(/^\./, '')] = language
-        end
-      end
-
-      language.overrides.each do |extension|
-        if extension !~ /^\./
-          warn "Extension is missing a '.': #{extension.inspect}"
-        end
-
-        @overrides[extension] = language
+        @extension_index[extension] << language
       end
 
       language.filenames.each do |filename|
-        @filename_index[filename] = language
+        @filename_index[filename] << language
       end
 
       language
+    end
+
+    # Public: Detects the Language of the blob.
+    #
+    # name - String filename
+    # data - String blob data. A block also maybe passed in for lazy
+    #        loading. This behavior is deprecated and you should always
+    #        pass in a String.
+    # mode - Optional String mode (defaults to nil)
+    #
+    # Returns Language or nil.
+    def self.detect(name, data, mode = nil)
+      # A bit of an elegant hack. If the file is executable but extensionless,
+      # append a "magic" extension so it can be classified with other
+      # languages that have shebang scripts.
+      if File.extname(name).empty? && mode && (mode.to_i(8) & 05) == 05
+        name += ".script!"
+      end
+
+      possible_languages = find_by_filename(name)
+
+      if possible_languages.length > 1
+        data = data.call() if data.respond_to?(:call)
+        if data.nil? || data == ""
+          nil
+        elsif result = Classifier.classify(Samples::DATA, data, possible_languages.map(&:name)).first
+          Language[result[0]]
+        end
+      else
+        possible_languages.first
+      end
     end
 
     # Public: Get all Languages
@@ -124,33 +129,19 @@ module Linguist
       @alias_index[name]
     end
 
-    # Public: Look up Language by extension.
-    #
-    # extension - The extension String. May include leading "."
-    #
-    # Examples
-    #
-    #   Language.find_by_extension('.rb')
-    #   # => #<Language name="Ruby">
-    #
-    # Returns the Language or nil if none was found.
-    def self.find_by_extension(extension)
-      @extension_index[extension]
-    end
-
-    # Public: Look up Language by filename.
+    # Public: Look up Languages by filename.
     #
     # filename - The path String.
     #
     # Examples
     #
     #   Language.find_by_filename('foo.rb')
-    #   # => #<Language name="Ruby">
+    #   # => [#<Language name="Ruby">]
     #
-    # Returns the Language or nil if none was found.
+    # Returns all matching Languages or [] if none were found.
     def self.find_by_filename(filename)
       basename, extname = File.basename(filename), File.extname(filename)
-      @filename_index[basename] || @extension_index[extname]
+      @filename_index[basename] + @extension_index[extname]
     end
 
     # Public: Look up Language by its name or lexer.
@@ -231,16 +222,18 @@ module Linguist
         raise(ArgumentError, "#{@name} is missing lexer")
 
       @ace_mode = attributes[:ace_mode]
+      @wrap = attributes[:wrap] || false
 
       # Set legacy search term
       @search_term = attributes[:search_term] || default_alias_name
 
       # Set extensions or default to [].
       @extensions = attributes[:extensions] || []
-      @overrides  = attributes[:overrides]  || []
       @filenames  = attributes[:filenames]  || []
 
-      @primary_extension = attributes[:primary_extension] || default_primary_extension || extensions.first
+      unless @primary_extension = attributes[:primary_extension]
+        raise ArgumentError, "#{@name} is missing primary extension"
+      end
 
       # Prepend primary extension unless its already included
       if primary_extension && !extensions.include?(primary_extension)
@@ -320,6 +313,11 @@ module Linguist
     # Returns a String name or nil
     attr_reader :ace_mode
 
+    # Public: Should language lines be wrapped
+    #
+    # Returns true or false
+    attr_reader :wrap
+
     # Public: Get extensions
     #
     # Examples
@@ -331,7 +329,7 @@ module Linguist
 
     # Deprecated: Get primary extension
     #
-    # Defaults to the first extension but can be overriden
+    # Defaults to the first extension but can be overridden
     # in the languages.yml.
     #
     # The primary extension can not be nil. Tests should verify this.
@@ -342,11 +340,6 @@ module Linguist
     #
     # Returns the extension String.
     attr_reader :primary_extension
-
-    # Internal: Get overridden extensions.
-    #
-    # Returns the extensions Array.
-    attr_reader :overrides
 
     # Public: Get filenames
     #
@@ -375,13 +368,6 @@ module Linguist
     # Returns the alias name String
     def default_alias_name
       name.downcase.gsub(/\s/, '-')
-    end
-
-    # Internal: Get default primary extension.
-    #
-    # Returns the extension String.
-    def default_primary_extension
-      extensions.first
     end
 
     # Public: Get Language group
@@ -441,11 +427,40 @@ module Linguist
     def hash
       name.hash
     end
+
+    def inspect
+      "#<#{self.class} name=#{name}>"
+    end
   end
 
+  extensions = Samples::DATA['extnames']
+  filenames = Samples::DATA['filenames']
   popular = YAML.load_file(File.expand_path("../popular.yml", __FILE__))
 
   YAML.load_file(File.expand_path("../languages.yml", __FILE__)).each do |name, options|
+    options['extensions'] ||= []
+    options['filenames'] ||= []
+
+    if extnames = extensions[name]
+      extnames.each do |extname|
+        if !options['extensions'].include?(extname)
+          options['extensions'] << extname
+        else
+          warn "#{name} #{extname.inspect} is already defined in samples/. Remove from languages.yml."
+        end
+      end
+    end
+
+    if fns = filenames[name]
+      fns.each do |filename|
+        if !options['filenames'].include?(filename)
+          options['filenames'] << filename
+        else
+          warn "#{name} #{filename.inspect} is already defined in samples/. Remove from languages.yml."
+        end
+      end
+    end
+
     Language.create(
       :name              => name,
       :color             => options['color'],
@@ -453,12 +468,12 @@ module Linguist
       :aliases           => options['aliases'],
       :lexer             => options['lexer'],
       :ace_mode          => options['ace_mode'],
+      :wrap              => options['wrap'],
       :group_name        => options['group'],
       :searchable        => options.key?('searchable') ? options['searchable'] : true,
       :search_term       => options['search_term'],
-      :extensions        => options['extensions'],
+      :extensions        => options['extensions'].sort,
       :primary_extension => options['primary_extension'],
-      :overrides         => options['overrides'],
       :filenames         => options['filenames'],
       :popular           => popular.include?(name)
     )

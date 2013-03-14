@@ -23,12 +23,11 @@ elsif File.file?(path)
 
   puts "#{blob.name}: #{blob.loc} lines (#{blob.sloc} sloc)"
   puts "  type:      #{type}"
-  puts "  extension: #{blob.pathname.extname}"
   puts "  mime type: #{blob.mime_type}"
   puts "  language:  #{blob.language}"
 
   if blob.large?
-    puts "  blob is to large to be shown"
+    puts "  blob is too large to be shown"
   end
 
   if blob.generated?

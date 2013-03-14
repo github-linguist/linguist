@@ -1,0 +1,65 @@
+require 'linguist/classifier'
+require 'linguist/language'
+require 'linguist/samples'
+require 'linguist/tokenizer'
+
+require 'test/unit'
+
+class TestClassifier < Test::Unit::TestCase
+  include Linguist
+
+  def samples_path
+    File.expand_path("../../samples", __FILE__)
+  end
+
+  def fixture(name)
+    File.read(File.join(samples_path, name))
+  end
+
+  def test_classify
+    db = {}
+    Classifier.train! db, "Ruby", fixture("Ruby/foo.rb")
+    Classifier.train! db, "Objective-C", fixture("Objective-C/Foo.h")
+    Classifier.train! db, "Objective-C", fixture("Objective-C/Foo.m")
+
+    results = Classifier.classify(db, fixture("Objective-C/hello.m"))
+    assert_equal "Objective-C", results.first[0]
+
+    tokens  = Tokenizer.tokenize(fixture("Objective-C/hello.m"))
+    results = Classifier.classify(db, tokens)
+    assert_equal "Objective-C", results.first[0]
+  end
+
+  def test_restricted_classify
+    db = {}
+    Classifier.train! db, "Ruby", fixture("Ruby/foo.rb")
+    Classifier.train! db, "Objective-C", fixture("Objective-C/Foo.h")
+    Classifier.train! db, "Objective-C", fixture("Objective-C/Foo.m")
+
+    results = Classifier.classify(db, fixture("Objective-C/hello.m"), ["Objective-C"])
+    assert_equal "Objective-C", results.first[0]
+
+    results = Classifier.classify(db, fixture("Objective-C/hello.m"), ["Ruby"])
+    assert_equal "Ruby", results.first[0]
+  end
+
+  def test_instance_classify_empty
+    results = Classifier.classify(Samples::DATA, "")
+    assert results.first[1] < 0.5, results.first.inspect
+  end
+
+  def test_instance_classify_nil
+    assert_equal [], Classifier.classify(Samples::DATA, nil)
+  end
+
+  def test_classify_ambiguous_languages
+    Samples.each do |sample|
+      language  = Linguist::Language.find_by_name(sample[:language])
+      languages = Language.find_by_filename(sample[:path]).map(&:name)
+      next unless languages.length > 1
+
+      results = Classifier.classify(Samples::DATA, File.read(sample[:path]), languages)
+      assert_equal language.name, results.first[0], "#{sample[:path]}\n#{results.inspect}"
+    end
+  end
+end

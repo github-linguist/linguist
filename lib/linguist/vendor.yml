@@ -16,13 +16,19 @@
 #  https://github.com/joyent/node
 - ^deps/
 - ^tools/
+- (^|/)configure$
+- (^|/)configure.ac$
+- (^|/)config.guess$
+- (^|/)config.sub$
 
-# Node depedencies
+# Node dependencies
 - node_modules/
 
-# Vendored depedencies
+# Vendored dependencies
 - vendor/
 
+# Debian packaging
+- ^debian/
 
 ## Commonly Bundled JavaScript frameworks ##
 
@@ -61,7 +67,15 @@
 # MathJax
 - (^|/)MathJax/
 
+# SyntaxHighlighter - http://alexgorbatchev.com/
+- (^|/)shBrush([^.]*)\.js$
+- (^|/)shCore\.js$
+- (^|/)shLegacy\.js$
+
 ## Python ##
+
+# django
+- (^|/)admin_media/
 
 # Fabric
 - ^fabfile\.py$
@@ -94,3 +108,6 @@
 
 # Samples folders
 - ^[Ss]amples/
+
+# Test fixtures
+- ^[Tt]est/fixtures/
