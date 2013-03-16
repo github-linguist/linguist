@@ -1,9 +1,14 @@
 require 'rake/clean'
 require 'rake/testtask'
+require 'rake/extensiontask'
 
 task :default => :test
 
 Rake::TestTask.new
+
+Rake::ExtensionTask.new('cclassifier') do |r|
+  r.lib_dir = 'lib/linguist'
+end
 
 task :samples do
   require 'linguist/samples'

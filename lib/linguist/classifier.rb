@@ -3,9 +3,12 @@ require 'linguist/tokenizer'
 module Linguist
   # Language bayesian classifier.
   class Classifier
+    # Load the C extension
+    require 'linguist/cclassifier'
+
     # Public: Train classifier that data is a certain language.
     #
-    # db       - Hash classifier database object
+    # db       - Instance of Classifier::TrainingDB
     # language - String language of data
     # data     - String contents of file
     #
@@ -15,27 +18,7 @@ module Linguist
     #
     # Returns nothing.
     def self.train!(db, language, data)
-      tokens = Tokenizer.tokenize(data)
-
-      db['tokens_total'] ||= 0
-      db['languages_total'] ||= 0
-      db['tokens'] ||= {}
-      db['language_tokens'] ||= {}
-      db['languages'] ||= {}
-
-      tokens.each do |token|
-        db['tokens'][language] ||= {}
-        db['tokens'][language][token] ||= 0
-        db['tokens'][language][token] += 1
-        db['language_tokens'][language] ||= 0
-        db['language_tokens'][language] += 1
-        db['tokens_total'] += 1
-      end
-      db['languages'][language] ||= 0
-      db['languages'][language] += 1
-      db['languages_total'] += 1
-
-      nil
+      db.train! language, Tokenizer.tokenize(data)
     end
 
     # Public: Guess language of data.
@@ -52,17 +35,13 @@ module Linguist
     # Returns sorted Array of result pairs. Each pair contains the
     # String language name and a Float score.
     def self.classify(db, tokens, languages = nil)
-      languages ||= db['languages'].keys
+      languages ||= db.language_names
       new(db).classify(tokens, languages)
     end
 
     # Internal: Initialize a Classifier.
-    def initialize(db = {})
-      @tokens_total    = db['tokens_total']
-      @languages_total = db['languages_total']
-      @tokens          = db['tokens']
-      @language_tokens = db['language_tokens']
-      @languages       = db['languages']
+    def initialize(db = nil)
+      @database = db || TrainingDB.new
     end
 
     # Internal: Guess language of data
@@ -77,9 +56,10 @@ module Linguist
       tokens = Tokenizer.tokenize(tokens) if tokens.is_a?(String)
 
       scores = {}
-      languages.each do |language|
-        scores[language] = tokens_probability(tokens, language) +
-                                   language_probability(language)
+      languages.each do |lang_name|
+        if lang = @database[lang_name]
+          scores[lang_name] = tokens_probability(tokens, lang) + language_probability(lang)
+        end
       end
 
       scores.sort { |a, b| b[1] <=> a[1] }.map { |score| [score[0], score[1]] }
@@ -104,10 +84,12 @@ module Linguist
     #
     # Returns Float between 0.0 and 1.0.
     def token_probability(token, language)
-      if @tokens[language][token].to_f == 0.0
-        1 / @tokens_total.to_f
+      probability = language.token_probability(token)
+
+      if probability == 0.0
+        1.0 / @database.tokens_total
       else
-        @tokens[language][token].to_f / @language_tokens[language].to_f
+        probability / language.token_count
       end
     end
 
@@ -117,7 +99,7 @@ module Linguist
     #
     # Returns Float between 0.0 and 1.0.
     def language_probability(language)
-      Math.log(@languages[language].to_f / @languages_total.to_f)
+      Math.log(language.sample_count / @database.samples_total)
     end
   end
 end
