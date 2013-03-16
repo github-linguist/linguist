@@ -1,6 +1,12 @@
 #include <ruby.h>
 #include <ruby/st.h>
+
 #include <arpa/inet.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+
 #include "judy.h"
 
 #define MAX_TOKEN_SIZE 64
@@ -63,7 +69,7 @@ static void rb_lng_trainingdb__free(void *_db)
 	xfree(db);
 }
 
-static VALUE rb_lng_trainingdb_new(VALUE self, VALUE rb_path)
+static struct training_db *new_training_db(void)
 {
 	struct training_db *db = NULL;
 
@@ -74,6 +80,20 @@ static VALUE rb_lng_trainingdb_new(VALUE self, VALUE rb_path)
 	db->lang_ids = 1;
 	db->samples_total = 0;
 	db->tokens_total = 0;
+
+	return db;
+}
+
+static VALUE rb_lng_trainingdb_new(VALUE self)
+{
+	return Data_Wrap_Struct(self, NULL, &rb_lng_trainingdb__free, new_training_db());
+}
+
+static VALUE rb_lng_trainingdb_load(VALUE self, VALUE rb_path)
+{
+	struct training_db *db = new_training_db();
+
+	Check_Type(rb_path, T_STRING);
 
 	return Data_Wrap_Struct(self, NULL, &rb_lng_trainingdb__free, db);
 }
@@ -379,7 +399,8 @@ void Init_cclassifier()
 	VALUE rb_mClassifier = rb_const_get(rb_mLinguist, rb_intern("Classifier"));
 
 	rb_cLinguistDB = rb_define_class_under(rb_mClassifier, "TrainingDB", rb_cObject);
-	rb_define_singleton_method(rb_cLinguistDB, "new", rb_lng_trainingdb_new, 1);
+	rb_define_singleton_method(rb_cLinguistDB, "new", rb_lng_trainingdb_new, 0);
+	rb_define_singleton_method(rb_cLinguistDB, "load", rb_lng_trainingdb_load, 1);
 
 	rb_define_method(rb_cLinguistDB, "train!", rb_lng_trainingdb_train, 2);
 	rb_define_method(rb_cLinguistDB, "[]", rb_lng_trainingdb_get_lang, 1);
