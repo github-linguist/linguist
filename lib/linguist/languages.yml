@@ -1328,7 +1328,6 @@ XML:
   aliases:
   - rss
   - xsd
-  - xsl
   - wsdl
   primary_extension: .xml
   extensions:
@@ -1368,7 +1367,6 @@ XML:
 
 XProc:
   type: programming
-  group: XML
   lexer: XML
   primary_extension: .xpl
   extensions:
@@ -1388,7 +1386,8 @@ XS:
 
 XSLT:
   type: programming
-  group: XML
+  aliases:
+  - xsl
   primary_extension: .xslt
   extensions:
     - .xsl
