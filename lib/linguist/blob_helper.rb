@@ -58,6 +58,15 @@ module Linguist
       _mime_type ? _mime_type.binary? : false
     end
 
+    # Internal: Is the blob binary according to its mime type,
+    # overriding it if we have better data from the languages.yml
+    # database.
+    #
+    # Return true or false
+    def likely_binary?
+       binary_mime_type? and not Language.find_by_filename(name)
+    end
+
     # Public: Get the Content-Type header value
     #
     # This value is used when serving raw blobs.
@@ -139,7 +148,14 @@ module Linguist
     #
     # Return true or false
     def image?
-      ['.png', '.jpg', '.jpeg', '.gif'].include?(extname)
+      ['.png', '.jpg', '.jpeg', '.gif'].include?(extname.downcase)
+    end
+
+    # Public: Is the blob a supported 3D model format?
+    #
+    # Return true or false
+    def solid?
+      extname.downcase == '.stl'
     end
 
     MEGABYTE = 1024 * 1024
@@ -251,7 +267,7 @@ module Linguist
 
     # Public: Is the blob a generated file?
     #
-    # Generated source code is supressed in diffs and is ignored by
+    # Generated source code is suppressed in diffs and is ignored by
     # language statistics.
     #
     # May load Blob#data
@@ -266,7 +282,7 @@ module Linguist
     # Excluded:
     # - Files over 0.1MB
     # - Non-text files
-    # - Langauges marked as not searchable
+    # - Languages marked as not searchable
     # - Generated source files
     #
     # Please add additional test coverage to

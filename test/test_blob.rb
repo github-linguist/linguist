@@ -2,7 +2,7 @@ require 'linguist/file_blob'
 require 'linguist/samples'
 
 require 'test/unit'
-require 'mocha'
+require 'mocha/setup'
 require 'mime/types'
 require 'pygments'
 
@@ -132,6 +132,11 @@ class TestBlob < Test::Unit::TestCase
     assert !blob("Binary/octocat.psd").image?
   end
 
+  def test_solid
+    assert blob("Binary/cube.stl").solid?
+    assert blob("Text/cube.stl").solid?
+  end
+
   def test_viewable
     assert blob("Text/README").viewable?
     assert blob("Ruby/foo.rb").viewable?
@@ -169,6 +174,9 @@ class TestBlob < Test::Unit::TestCase
     # CoffeeScript-generated JS
     # TODO
 
+    # TypeScript-generated JS
+    # TODO
+
     # PEG.js-generated parsers
     assert blob("JavaScript/parser.js").generated?
 
@@ -187,7 +195,7 @@ class TestBlob < Test::Unit::TestCase
     assert !blob("Text/README").vendored?
     assert !blob("ext/extconf.rb").vendored?
 
-    # Node depedencies
+    # Node dependencies
     assert blob("node_modules/coffee-script/lib/coffee-script.js").vendored?
 
     # Rails vendor/
@@ -196,7 +204,7 @@ class TestBlob < Test::Unit::TestCase
     # C deps
     assert blob("deps/http_parser/http_parser.c").vendored?
     assert blob("deps/v8/src/v8.h").vendored?
-    
+
     # Debian packaging
     assert blob("debian/cron.d").vendored?
 
@@ -265,6 +273,10 @@ class TestBlob < Test::Unit::TestCase
 
     # NuGet Packages
     assert blob("packages/Modernizr.2.0.6/Content/Scripts/modernizr-2.0.6-development-only.js").vendored?
+
+    # Test fixtures
+    assert blob("test/fixtures/random.rkt").vendored?
+    assert blob("Test/fixtures/random.rkt").vendored?
   end
 
   def test_indexable
