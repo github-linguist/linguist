@@ -8,11 +8,17 @@
 #define PI 3.1415
 
 #if PI == 4
-DoStuff()
+
+#define G 5
+
 #elif PI == 3
-DoOtherStuff()
+
+#define I 6
+
 #else
-DoNothing()
+
+#define K 7
+
 #endif
 
 
@@ -77,3 +83,5 @@ var/list/NullList = null
 		world.log << "PI is [CONST_VARIABLE]!"
 	else
 		world.log << "PI is approximety [pi]"
+
+#undef PI // Undefine PI
