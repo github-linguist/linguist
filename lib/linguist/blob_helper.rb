@@ -158,6 +158,13 @@ module Linguist
       extname.downcase == '.stl'
     end
 
+    # Public: Is the blob a PDF?
+    #
+    # Return true or false
+    def pdf?
+      extname.downcase == '.pdf'
+    end
+
     MEGABYTE = 1024 * 1024
 
     # Public: Is the blob too big to load?
