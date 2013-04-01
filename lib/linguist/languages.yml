@@ -216,7 +216,7 @@ CSS:
 
 Ceylon:
   type: programming
-  lexer: Text only
+  lexer: Ceylon
   primary_extension: .ceylon
 
 ChucK:
@@ -242,6 +242,7 @@ CoffeeScript:
   extensions:
   - ._coffee
   - .cson
+  - .iced
   filenames:
   - Cakefile
 
@@ -744,6 +745,13 @@ Lua:
   primary_extension: .lua
   extensions:
   - .nse
+
+M:
+  type: programming
+  lexer: Common Lisp
+  aliases:
+  - mumps
+  primary_extension: .m
 
 Makefile:
   aliases:
@@ -1327,7 +1335,6 @@ XML:
   aliases:
   - rss
   - xsd
-  - xsl
   - wsdl
   primary_extension: .xml
   extensions:
@@ -1350,6 +1357,7 @@ XML:
   - .tmPreferences
   - .tmSnippet
   - .tml
+  - .ui
   - .vxml
   - .wsdl
   - .wxi
@@ -1367,7 +1375,6 @@ XML:
 
 XProc:
   type: programming
-  group: XML
   lexer: XML
   primary_extension: .xpl
   extensions:
@@ -1387,7 +1394,8 @@ XS:
 
 XSLT:
   type: programming
-  group: XML
+  aliases:
+  - xsl
   primary_extension: .xslt
   extensions:
     - .xsl

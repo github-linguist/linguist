@@ -137,6 +137,10 @@ class TestBlob < Test::Unit::TestCase
     assert blob("Text/cube.stl").solid?
   end
 
+  def test_pdf
+    assert blob("Binary/foo.pdf").pdf?
+  end
+
   def test_viewable
     assert blob("Text/README").viewable?
     assert blob("Ruby/foo.rb").viewable?
