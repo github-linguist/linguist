@@ -137,6 +137,10 @@ class TestBlob < Test::Unit::TestCase
     assert blob("Text/cube.stl").solid?
   end
 
+  def test_pdf
+    assert blob("Binary/foo.pdf").pdf?
+  end
+
   def test_viewable
     assert blob("Text/README").viewable?
     assert blob("Ruby/foo.rb").viewable?
@@ -273,6 +277,10 @@ class TestBlob < Test::Unit::TestCase
 
     # NuGet Packages
     assert blob("packages/Modernizr.2.0.6/Content/Scripts/modernizr-2.0.6-development-only.js").vendored?
+
+    # Test fixtures
+    assert blob("test/fixtures/random.rkt").vendored?
+    assert blob("Test/fixtures/random.rkt").vendored?
   end
 
   def test_indexable

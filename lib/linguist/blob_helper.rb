@@ -148,7 +148,7 @@ module Linguist
     #
     # Return true or false
     def image?
-      ['.png', '.jpg', '.jpeg', '.gif'].include?(extname)
+      ['.png', '.jpg', '.jpeg', '.gif'].include?(extname.downcase)
     end
 
     # Public: Is the blob a supported 3D model format?
@@ -156,6 +156,13 @@ module Linguist
     # Return true or false
     def solid?
       extname.downcase == '.stl'
+    end
+
+    # Public: Is the blob a PDF?
+    #
+    # Return true or false
+    def pdf?
+      extname.downcase == '.pdf'
     end
 
     MEGABYTE = 1024 * 1024

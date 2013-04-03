@@ -133,7 +133,6 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['Shell'], Language['Gentoo Ebuild'].group
     assert_equal Language['Shell'], Language['Gentoo Eclass'].group
     assert_equal Language['Shell'], Language['Tcsh'].group
-    assert_equal Language['XML'], Language['XSLT'].group
 
     # Ensure everyone has a group
     Language.all.each do |language|

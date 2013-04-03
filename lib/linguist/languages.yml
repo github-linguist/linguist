@@ -216,7 +216,7 @@ CSS:
 
 Ceylon:
   type: programming
-  lexer: Text only
+  lexer: Ceylon
   primary_extension: .ceylon
 
 ChucK:
@@ -242,6 +242,7 @@ CoffeeScript:
   extensions:
   - ._coffee
   - .cson
+  - .iced
   filenames:
   - Cakefile
 
@@ -629,8 +630,6 @@ Java:
   ace_mode: java
   color: "#b07219"
   primary_extension: .java
-  extensions:
-  - .pde
 
 Java Server Pages:
   group: Java
@@ -746,6 +745,13 @@ Lua:
   primary_extension: .lua
   extensions:
   - .nse
+
+M:
+  type: programming
+  lexer: Common Lisp
+  aliases:
+  - mumps
+  primary_extension: .m
 
 Makefile:
   aliases:
@@ -1002,6 +1008,12 @@ PowerShell:
   aliases:
   - posh
   primary_extension: .ps1
+
+Processing:
+  type: programming
+  lexer: Java
+  color: "#2779ab"
+  primary_extension: .pde
 
 Prolog:
   type: programming
@@ -1331,10 +1343,10 @@ XML:
   aliases:
   - rss
   - xsd
-  - xsl
   - wsdl
   primary_extension: .xml
   extensions:
+  - .axml
   - .ccxml
   - .dita
   - .ditamap
@@ -1354,6 +1366,7 @@ XML:
   - .tmPreferences
   - .tmSnippet
   - .tml
+  - .ui
   - .vxml
   - .wsdl
   - .wxi
@@ -1371,7 +1384,6 @@ XML:
 
 XProc:
   type: programming
-  group: XML
   lexer: XML
   primary_extension: .xpl
   extensions:
@@ -1391,7 +1403,8 @@ XS:
 
 XSLT:
   type: programming
-  group: XML
+  aliases:
+  - xsl
   primary_extension: .xslt
   extensions:
     - .xsl
