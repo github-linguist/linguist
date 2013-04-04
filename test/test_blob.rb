@@ -137,6 +137,10 @@ class TestBlob < Test::Unit::TestCase
     assert blob("Text/cube.stl").solid?
   end
 
+  def test_csv
+    assert blob("Text/cars.csv").csv?
+  end
+
   def test_pdf
     assert blob("Binary/foo.pdf").pdf?
   end
