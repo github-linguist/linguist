@@ -58,13 +58,13 @@ See [Linguist::BlobHelper#vendored?](https://github.com/github/linguist/blob/mas
 
 #### Generated file detection
 
-Not all plain text files are true source files. Generated files like minified js and compiled CoffeeScript can be detected and excluded from language stats. As an extra bonus, these files are suppressed in Diffs.
+Not all plain text files are true source files. Generated files like minified js and compiled CoffeeScript can be detected and excluded from language stats. As an extra bonus, these files are suppressed in diffs.
 
 ```ruby
 Linguist::FileBlob.new("underscore.min.js").generated? # => true
 ```
 
-See [Linguist::BlobHelper#generated?](https://github.com/github/linguist/blob/master/lib/linguist/blob_helper.rb).
+See [Linguist::Generated#generated?](https://github.com/github/linguist/blob/master/lib/linguist/generated.rb).
 
 ## Installation
 
