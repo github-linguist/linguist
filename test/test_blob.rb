@@ -203,6 +203,8 @@ class TestBlob < Test::Unit::TestCase
     assert blob("C++/protocol-buffer.pb.cc").generated?
     assert blob("Java/ProtocolBuffer.java").generated?
     assert blob("Python/protocol_buffer_pb2.py").generated?
+
+    assert blob("C/com_contoso_Confabulator.h").generated?
   end
 
   def test_vendored
