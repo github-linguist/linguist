@@ -32,7 +32,8 @@ module Linguist
       ['/*', '*/'],    # C
       ['<!--', '-->'], # XML
       ['{-', '-}'],    # Haskell
-      ['(*', '*)']     # Coq
+      ['(*', '*)'],    # Coq
+      ['"""', '"""']   # Python
     ]
 
     START_SINGLE_LINE_COMMENT =  Regexp.compile(SINGLE_LINE_COMMENTS.map { |c|
