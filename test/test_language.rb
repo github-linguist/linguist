@@ -242,6 +242,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal [Language['Shell']], Language.find_by_filename('.bashrc')
     assert_equal [Language['Shell']], Language.find_by_filename('bash_profile')
     assert_equal [Language['Shell']], Language.find_by_filename('.zshrc')
+    assert_equal [Language['Clojure']], Language.find_by_filename('riemann.config')
   end
 
   def test_find
