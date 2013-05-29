@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="{% block html_lang %}en{% endblock %}">
+<head>
+{% from "bootstrap/macros.html" import debugmin %}
+{% block head %}
+    <title>{% block title %}App Name{% endblock %}</title>
+    {% block meta %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="{% block meta_description %}{% endblock %}">
+        <meta name="author" content="{% block meta_author %}{% endblock %}">
+    {% endblock %}
+
+    {% block css_bootstrap %}
+        <link href="{{ STATIC_URL }}css/bootstrap{{ debugmin() }}.css" rel="stylesheet">
+    {% endblock %}
+    {% block css_bootstrap_responsive %}
+        <link href="{{ STATIC_URL }}css/bootstrap-responsive{{ debugmin() }}.css" rel="stylesheet">
+    {% endblock %}
+    {% block css_site %}
+    {% endblock %}
+    {% block css_extra %}
+    {% endblock %}
+
+    {% block js_html5_shim %}
+        <!--[if lt IE 9]>
+            <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+    {% endblock %}
+    {% block js_head %}
+    {% endblock %}
+{% endblock %}
+</head>
+
+{# TODO: write a class builder macro #}
+<body class="{% block body_classes %}{% endblock %}" id="{% block body_id %}{% endblock %}"{% block bodytag_extra %}{% endblock %}>
+{% block body %}
+
+    {% block navbar_wrapper %}
+    {% endblock %}
+
+    {% block pre_container %}
+    {% endblock %}
+
+    {% block container_wrapper %}
+        <div class="container container-primary">
+            {% block container %}
+
+                {% block messages %}
+                    {% include "bootstrap/includes/messages.html" %}
+                {% endblock %}
+
+                {% block pre_content %}
+                {% endblock %}
+
+                {% block content %}
+                {% endblock %}
+
+
+                {% block post_content %}
+                {% endblock %}
+
+            {% endblock %}
+        </div>
+    {% endblock %}
+
+
+    {% block post_container %}
+    {% endblock %}
+
+    {% block js_jquery %}
+        {# Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline #}
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="{{ STATIC_URL }}js/jquery-1.9.1.min.js"><\/script>')</script>
+    {% endblock %}
+    {% block js_bootstrap %}
+        <script src="{{ STATIC_URL }}js/bootstrap{{ debugmin() }}.js"></script>
+    {% endblock %}
+    {% block js_analytics %}
+        {# Via HTML5BP. Asynchronous Google Analytics snippet. mathiasbynens.be/notes/async-analytics-snippet #}
+        <script>
+            {% block google_analytics %}
+                {% if not DEBUG %}
+                    var _gaq=[['_setAccount','{% block google_analytics_id %}UA-XXXXX-X{% endblock %}'],['_trackPageview']];
+                    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+                    g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+                    s.parentNode.insertBefore(g,s)}(document,'script'));
+                {% endif %}
+            {% endblock %}
+        </script>
+    {% endblock %}
+    {% block js_footer %}
+        {# Add your javascript here #}
+    {% endblock %}
+
+{% endblock %}
+</body>
+</html>

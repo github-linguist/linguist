@@ -1,0 +1,23 @@
+{% extends 'page_template2.html' %}
+
+{% block title %}Syntax{% endblock %}
+
+{% block subtitle %}Examples of Jinja syntax{% endblock %}
+
+{% block content %}
+<table>  {# comment #}
+{% for country in countries %}
+  {%- if country.Population > 100000000 -%} {#- dictionary access similar to attribute access -#}
+  <tr style="background-color: red">
+  {%- elif country.Population > 10000000 -%} {#- - after % or # removes extra newlines -#}
+  <tr style="background-color: pink">
+  {%- else -%}
+  <tr>
+  {%- endif -%}
+  <td>{{ country['Name'] }}</td><td style="text-align: right">{{ country['Population'] }}</td></tr>
+  {% if loop.index % 10 == 0 %} {#- loop is a special variable -#}
+  <tr style="background-color:black"><td colspan="3" style="text-align: center; color: white">{{ loop.index }}</td></tr>
+  {% endif %}
+{% endfor %}
+</table>
+{% endblock %}

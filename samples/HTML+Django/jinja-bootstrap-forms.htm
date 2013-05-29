@@ -1,0 +1,15 @@
+{#{% if form.non_field_errors %}#}
+{#    {% include "bootstrap/non_field_errors.html" %}#}
+{#{% endif %}#}
+
+{#{% for field in form.hidden_fields %}#}
+{#    {% for error in field.errors %}#}
+{#        {% include "bootstrap/non_field_error.html" %}#}
+{#    {% endfor %}#}
+{#{% endfor %}#}
+
+{% from "bootstrap/forms/macros.html" import field %}
+
+{% for field in form %}
+    {{ field(field)  }}
+{% endfor %}
