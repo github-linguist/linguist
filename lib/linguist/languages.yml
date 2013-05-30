@@ -225,6 +225,15 @@ ChucK:
   lexer: Java
   primary_extension: .ck
 
+COBOL:
+  type: programming
+  primary_extension: .cob
+  extensions:
+  - .cbl
+  - .ccp
+  - .cobol
+  - .cpy
+
 Clojure:
   type: programming
   ace_mode: clojure
@@ -234,15 +243,6 @@ Clojure:
   - .cljs
   filenames:
   - riemann.config
-
-COBOL:
-  type: programming
-  primary_extension: .cob
-  extensions:
-  - .cbl
-  - .cpy
-  - .cobol
-  - .ccp
 
 CoffeeScript:
   type: programming
