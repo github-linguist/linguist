@@ -158,6 +158,13 @@ module Linguist
       extname.downcase == '.stl'
     end
 
+    # Public: Is this blob a CSV file?
+    #
+    # Return true or false
+    def csv?
+      text? && extname.downcase == '.csv'
+    end
+
     # Public: Is the blob a PDF?
     #
     # Return true or false

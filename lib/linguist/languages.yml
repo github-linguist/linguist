@@ -166,6 +166,8 @@ C#:
   aliases:
   - csharp
   primary_extension: .cs
+  extensions:
+  - .csx
 
 C++:
   type: programming
@@ -230,6 +232,8 @@ Clojure:
   primary_extension: .clj
   extensions:
   - .cljs
+  filenames:
+  - riemann.config
 
 CoffeeScript:
   type: programming
@@ -436,6 +440,9 @@ Factor:
   type: programming
   color: "#636746"
   primary_extension: .factor
+  filenames:
+    - .factor-rc
+    - .factor-boot-rc
 
 Fancy:
   type: programming
@@ -538,6 +545,7 @@ HTML+Django:
   lexer: HTML+Django/Jinja
   primary_extension: .mustache # TODO: This is incorrect
   extensions:
+  - .jinja
   - .mustache
 
 HTML+ERB:
@@ -874,6 +882,7 @@ OCaml:
   color: "#3be133"
   primary_extension: .ml
   extensions:
+  - .eliom
   - .eliomi
   - .mli
   - .mll
@@ -1006,7 +1015,7 @@ Processing:
   lexer: Java
   color: "#2779ab"
   primary_extension: .pde
-  
+
 Prolog:
   type: programming
   color: "#74283c"
@@ -1284,6 +1293,14 @@ TypeScript:
   - ts
   primary_extension: .ts
 
+Unified Parallel C:
+  type: programming
+  group: C
+  lexer: C
+  ace_mode: c_cpp
+  color: "#755223"
+  primary_extension: .upc 
+  
 VHDL:
   type: programming
   lexer: vhdl
@@ -1338,6 +1355,7 @@ XML:
   - wsdl
   primary_extension: .xml
   extensions:
+  - .axml
   - .ccxml
   - .dita
   - .ditamap
@@ -1410,6 +1428,7 @@ YAML:
   - yml
   primary_extension: .yml
   extensions:
+  - .reek
   - .yaml
 
 eC:
@@ -1451,3 +1470,10 @@ reStructuredText:
   primary_extension: .rst
   extensions:
   - .rest
+
+wisp:
+  type: programming
+  lexer: Clojure
+  ace_mode: clojure
+  color: "#7582D1"
+  primary_extension: .wisp
