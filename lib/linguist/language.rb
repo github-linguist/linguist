@@ -73,6 +73,16 @@ module Linguist
     #
     # Returns Language or nil.
     def self.detect(name, data, mode = nil)
+      # First analyze the file extension.
+      # If there is only one language possibility for the extension,
+      # that language is used.
+      # Otherwise, the responsibility is passed to the Classifier.
+      if not File.extname(name).empty?
+        possibilities = @extension_index[File.extname(name)]
+        if possibilities.length == 1
+          possibilities[0]
+        end
+      end
       # A bit of an elegant hack. If the file is executable but extensionless,
       # append a "magic" extension so it can be classified with other
       # languages that have shebang scripts.
