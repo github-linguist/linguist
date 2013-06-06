@@ -14,6 +14,9 @@ module Linguist
     #   Classifier.train(db, 'Ruby', "def hello; end")
     #
     # Returns nothing.
+    #
+    # Set LINGUIST_DEBUG=1 or =2 to see probabilities per-token,
+    # per-language.  See also dump_all_tokens, below.
     def self.train!(db, language, data)
       tokens = Tokenizer.tokenize(data)
 
@@ -132,6 +135,16 @@ private
       @verbosity ||= (ENV['LINGUIST_DEBUG']||0).to_i
     end
 
+    # Internal: show a table of probabilities for each <token,language> pair.
+    #
+    # The number in each table entry is the number of "points" that each
+    # token contributes toward the belief that the file under test is a
+    # particular language.  Points are additive.
+    #
+    # Points are the number of times a token appears in the file, times
+    # how much more likely (log of probability ratio) that token is to
+    # appear in one language vs. the least-likely language.  Dashes
+    # indicate the least-likely language (and zero points) for each token.
     def dump_all_tokens(tokens, languages)
       maxlen = tokens.map{|tok| tok.size}.max
       printf "%#{maxlen}s", ""
