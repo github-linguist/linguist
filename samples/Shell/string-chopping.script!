@@ -1,0 +1,4 @@
+#!/bin/bash
+
+name=foodforthought.jpg
+echo ${name##*fo}
