@@ -77,9 +77,16 @@ module Linguist
       tokens = Tokenizer.tokenize(tokens) if tokens.is_a?(String)
 
       scores = {}
+      if verbosity >= 2
+        dump_all_tokens(tokens, languages)
+      end
       languages.each do |language|
         scores[language] = tokens_probability(tokens, language) +
                                    language_probability(language)
+        if verbosity >= 1
+          printf "%10s = %10.3f + %7.3f = %10.3f\n",
+            language, tokens_probability(tokens, language), language_probability(language), scores[language]
+        end
       end
 
       scores.sort { |a, b| b[1] <=> a[1] }.map { |score| [score[0], score[1]] }
@@ -118,6 +125,30 @@ module Linguist
     # Returns Float between 0.0 and 1.0.
     def language_probability(language)
       Math.log(@languages[language].to_f / @languages_total.to_f)
+    end
+
+private
+    def verbosity
+      @verbosity ||= (ENV['LINGUIST_DEBUG']||0).to_i
+    end
+
+    def dump_all_tokens(tokens, languages)
+      maxlen = tokens.map{|tok| tok.size}.max
+      printf "%#{maxlen}s", ""
+      puts "    #" + languages.map{|lang| sprintf("%10s", lang)}.join
+      tokmap = Hash.new(0)
+      tokens.each{|tok| tokmap[tok] += 1}
+      tokmap.sort.each{|tok, count|
+        arr = languages.map{|lang| [lang, token_probability(tok, lang)] }
+        min = arr.map{|a,b| b}.min
+        minlog = Math.log(min)
+        if !arr.inject(true) {|result, n| result && n[1] == arr[0][1]}  # if not all the same
+          printf "%#{maxlen}s%5d", tok, count
+          puts arr.map{|ent|
+            ent[1] == min ? "         -" : sprintf("%10.3f", count*(Math.log(ent[1])-minlog))
+          }.join
+        end
+      }
     end
   end
 end
