@@ -8,6 +8,11 @@ require 'pygments'
 require 'yaml'
 
 module Linguist
+  # DEPRECATED Avoid mixing into Blob classes. Prefer functional interfaces
+  # like `Language.detect` over `Blob#language`.
+  #
+  # Avoid adding additional bloat to this module.
+  #
   # BlobHelper is a mixin for Blobish classes that respond to "name",
   # "data" and "size" such as Grit::Blob.
   module BlobHelper
