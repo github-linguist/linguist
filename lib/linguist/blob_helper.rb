@@ -9,7 +9,8 @@ require 'yaml'
 
 module Linguist
   # DEPRECATED Avoid mixing into Blob classes. Prefer functional interfaces
-  # like `Language.detect` over `Blob#language`.
+  # like `Language.detect` over `Blob#language`. Functions are much easier to
+  # cache and compose.
   #
   # Avoid adding additional bloat to this module.
   #
