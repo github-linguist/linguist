@@ -250,7 +250,7 @@ module Linguist
       @line_split_character ||= (mac_format?? "\r" : "\n")
     end
 
-    # Public: Is the data in ** Mac Format **. This format uses \r (0x0d) characters
+    # Private: Is the data in ** Mac Format **. This format uses \r (0x0d) characters
     # for line ends and does not include a \n (0x0a).
     #
     # Returns true when mac format is detected.
