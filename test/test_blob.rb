@@ -287,20 +287,6 @@ class TestBlob < Test::Unit::TestCase
     assert blob("Test/fixtures/random.rkt").vendored?
   end
 
-  def test_indexable
-    assert blob("Ruby/foo.rb").indexable?
-    assert !blob("Text/defu.nkt").indexable?
-    assert !blob("Text/dump.sql").indexable?
-    assert !blob("Binary/github.po").indexable?
-    assert !blob("Binary/linguist.gem").indexable?
-
-    # large binary blobs should fail on size check first, not call
-    # into charlock_holmes and alloc big buffers for testing encoding
-    b = blob("Binary/octocat.ai")
-    b.expects(:binary?).never
-    assert !b.indexable?
-  end
-
   def test_language
     Samples.each do |sample|
       blob = blob(sample[:path])

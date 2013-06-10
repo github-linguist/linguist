@@ -278,36 +278,6 @@ module Linguist
       @_generated ||= Generated.generated?(name, lambda { data })
     end
 
-    # Public: Should the blob be indexed for searching?
-    #
-    # Excluded:
-    # - Files over 0.1MB
-    # - Non-text files
-    # - Languages marked as not searchable
-    # - Generated source files
-    #
-    # Please add additional test coverage to
-    # `test/test_blob.rb#test_indexable` if you make any changes.
-    #
-    # Return true or false
-    def indexable?
-      if size > 100 * 1024
-        false
-      elsif binary?
-        false
-      elsif extname == '.txt'
-        true
-      elsif language.nil?
-        false
-      elsif !language.searchable?
-        false
-      elsif generated?
-        false
-      else
-        true
-      end
-    end
-
     # Public: Detects the Language of the blob.
     #
     # May load Blob#data
