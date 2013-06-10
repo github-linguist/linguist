@@ -130,38 +130,38 @@ module Linguist
       Math.log(@languages[language].to_f / @languages_total.to_f)
     end
 
-private
-    def verbosity
-      @verbosity ||= (ENV['LINGUIST_DEBUG']||0).to_i
-    end
+    private
+      def verbosity
+        @verbosity ||= (ENV['LINGUIST_DEBUG']||0).to_i
+      end
 
-    # Internal: show a table of probabilities for each <token,language> pair.
-    #
-    # The number in each table entry is the number of "points" that each
-    # token contributes toward the belief that the file under test is a
-    # particular language.  Points are additive.
-    #
-    # Points are the number of times a token appears in the file, times
-    # how much more likely (log of probability ratio) that token is to
-    # appear in one language vs. the least-likely language.  Dashes
-    # indicate the least-likely language (and zero points) for each token.
-    def dump_all_tokens(tokens, languages)
-      maxlen = tokens.map{|tok| tok.size}.max
-      printf "%#{maxlen}s", ""
-      puts "    #" + languages.map{|lang| sprintf("%10s", lang)}.join
-      tokmap = Hash.new(0)
-      tokens.each{|tok| tokmap[tok] += 1}
-      tokmap.sort.each{|tok, count|
-        arr = languages.map{|lang| [lang, token_probability(tok, lang)] }
-        min = arr.map{|a,b| b}.min
-        minlog = Math.log(min)
-        if !arr.inject(true) {|result, n| result && n[1] == arr[0][1]}  # if not all the same
-          printf "%#{maxlen}s%5d", tok, count
-          puts arr.map{|ent|
-            ent[1] == min ? "         -" : sprintf("%10.3f", count*(Math.log(ent[1])-minlog))
-          }.join
-        end
-      }
-    end
+      # Internal: show a table of probabilities for each <token,language> pair.
+      #
+      # The number in each table entry is the number of "points" that each
+      # token contributes toward the belief that the file under test is a
+      # particular language.  Points are additive.
+      #
+      # Points are the number of times a token appears in the file, times
+      # how much more likely (log of probability ratio) that token is to
+      # appear in one language vs. the least-likely language.  Dashes
+      # indicate the least-likely language (and zero points) for each token.
+      def dump_all_tokens(tokens, languages)
+        maxlen = tokens.map{|tok| tok.size}.max
+        printf "%#{maxlen}s", ""
+        puts "    #" + languages.map{|lang| sprintf("%10s", lang)}.join
+        tokmap = Hash.new(0)
+        tokens.each{|tok| tokmap[tok] += 1}
+        tokmap.sort.each{|tok, count|
+          arr = languages.map{|lang| [lang, token_probability(tok, lang)] }
+          min = arr.map{|a,b| b}.min
+          minlog = Math.log(min)
+          if !arr.inject(true) {|result, n| result && n[1] == arr[0][1]}  # if not all the same
+            printf "%#{maxlen}s%5d", tok, count
+            puts arr.map{|ent|
+              ent[1] == min ? "         -" : sprintf("%10.3f", count*(Math.log(ent[1])-minlog))
+            }.join
+          end
+        }
+      end
   end
 end
