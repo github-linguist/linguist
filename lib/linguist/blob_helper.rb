@@ -343,19 +343,5 @@ module Linguist
       options[:options][:encoding] ||= encoding
       lexer.highlight(data, options)
     end
-
-    # Public: Highlight syntax of blob without the outer highlight div
-    # wrapper.
-    #
-    # options - A Hash of options (defaults to {})
-    #
-    # Returns html String
-    def colorize_without_wrapper(options = {})
-      if text = colorize(options)
-        text[%r{<div class="highlight"><pre>(.*?)</pre>\s*</div>}m, 1]
-      else
-        ''
-      end
-    end
   end
 end

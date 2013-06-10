@@ -321,13 +321,6 @@ class TestBlob < Test::Unit::TestCase
     HTML
   end
 
-  def test_colorize_without_wrapper
-    assert_equal <<-HTML, blob("Ruby/foo.rb").colorize_without_wrapper
-<span class="k">module</span> <span class="nn">Foo</span>
-<span class="k">end</span>
-    HTML
-  end
-
   def test_colorize_does_skip_minified_files
     assert_nil blob("JavaScript/jquery-1.6.1.min.js").colorize
   end
