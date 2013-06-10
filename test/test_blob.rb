@@ -64,7 +64,7 @@ class TestBlob < Test::Unit::TestCase
   def test_lines
     assert_equal ["module Foo", "end", ""], blob("Ruby/foo.rb").lines
     assert_equal ["line 1", "line 2", ""], blob("Text/mac.txt").lines
-    assert_equal 473, blob("Emacs Lisp/ess-julia.el").lines.length
+    assert_equal 475, blob("Emacs Lisp/ess-julia.el").lines.length
   end
 
   def test_size
