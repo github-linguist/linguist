@@ -67,6 +67,7 @@ class TestBlob < Test::Unit::TestCase
 
   def test_mac_format
     assert blob("Text/mac.txt").mac_format?
+    assert !blob("Emacs Lisp/ess-julia.el").mac_format?
   end
 
   def test_lines_mac_format
