@@ -241,7 +241,7 @@ module Linguist
     def lines
       @lines ||=
         if viewable? && data
-          data.split(line_split_character, -1)
+          data.split(/\r\n|\r|\n/, -1)
         else
           []
         end
