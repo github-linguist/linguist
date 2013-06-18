@@ -87,7 +87,7 @@ Arc:
 
 Arduino:
   type: programming
-  color: "#bd79d1"
+  color: "#00979c" # Taken from arduino.cc
   lexer: C++
   primary_extension: .ino
 
@@ -238,7 +238,7 @@ Clojure:
 CoffeeScript:
   type: programming
   ace_mode: coffee
-  color: "#244776"
+  color: "#1c1c34" # Dominant color from coffeescript.org logo
   aliases:
   - coffee
   - coffee-script
@@ -326,6 +326,7 @@ Darcs Patch:
 
 Dart:
   type: programming
+  color: "#04c7c2" # Dominant color in current dart logo, alternatively can be #0484CB
   primary_extension: .dart
 
 Delphi:
@@ -399,7 +400,7 @@ Emacs Lisp:
 
 Erlang:
   type: programming
-  color: "#949e0e"
+  color: "#9b0000"
   primary_extension: .erl
   extensions:
   - .hrl
@@ -497,7 +498,7 @@ Gettext Catalog:
 
 Go:
   type: programming
-  color: "#8d04eb"
+  color: "#e0ebf5" # Taken from golang.org
   primary_extension: .go
 
 Gosu:
@@ -519,7 +520,7 @@ Groff:
 Groovy:
   type: programming
   ace_mode: groovy
-  color: "#e69f56"
+  color: "#3483a1" # Groovy logo star fill
   primary_extension: .groovy
 
 Groovy Server Pages:
@@ -584,7 +585,7 @@ Handlebars:
 
 Haskell:
   type: programming
-  color: "#29b544"
+  color: "#4e6272" # taken from haskell.org
   primary_extension: .hs
   extensions:
   - .hsc
@@ -636,7 +637,7 @@ JSON:
 Java:
   type: programming
   ace_mode: java
-  color: "#b07219"
+  color: "#587993" # As per Sun branding, Alternatively can be #e76f00
   primary_extension: .java
 
 Java Server Pages:
@@ -650,7 +651,7 @@ Java Server Pages:
 JavaScript:
   type: programming
   ace_mode: javascript
-  color: "#f15501"
+  color: "#0769ad" # jQuery Primary Blue
   aliases:
   - js
   - node
@@ -816,7 +817,7 @@ Mirah:
   type: programming
   lexer: Ruby
   search_term: ruby
-  color: "#c7a938"
+  color: "#9b111e" # Ruby red
   primary_extension: .druby
   extensions:
   - .duby
@@ -894,7 +895,7 @@ ObjDump:
 
 Objective-C:
   type: programming
-  color: "#438eff"
+  color: "#4c90f6" # Dominant color of current Xcode icon
   aliases:
   - obj-c
   - objc
@@ -940,7 +941,7 @@ OpenEdge ABL:
 PHP:
   type: programming
   ace_mode: php
-  color: "#6e03c1"
+  color: "#777bb4" # PHP logo predominant color
   primary_extension: .php
   extensions:
   - .aw
@@ -977,7 +978,7 @@ Parrot Assembly:
 Perl:
   type: programming
   ace_mode: perl
-  color: "#0298c3"
+  color: "#004065" # Perl blue from perl.org
   primary_extension: .pl
   extensions:
   - .PL
@@ -1040,7 +1041,7 @@ Pure Data:
 Python:
   type: programming
   ace_mode: python
-  color: "#3581ba"
+  color: "#407cab" # Dominant blue from python.org logo, alternatively can be #f7d24f, dominant yellow
   primary_extension: .py
   extensions:
   - .gyp
@@ -1169,7 +1170,7 @@ Sass:
 Scala:
   type: programming
   ace_mode: scala
-  color: "#7dd3b0"
+  color: "#bc1a1d" # Dominant red in current scala-lang.org logo
   primary_extension: .scala
 
 Scheme:
