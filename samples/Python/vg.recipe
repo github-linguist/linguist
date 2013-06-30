@@ -1,0 +1,39 @@
+# -*- python -*-
+import re
+
+class VgNo(BasicNewsRecipe):
+    title          = u'VG.no'
+    description    = 'Norske nyheter'
+    language = 'no'
+    publication_type = 'newspaper'
+    oldest_article = 1
+    max_articles_per_feed = 100
+
+    feeds          = [(u'Forsiden', u'http://www.vg.no/rss/nyfront.php?frontId=1'),
+                      (u'Nyheter innenriks', u'http://www.vg.no/rss/create.php?categories=10'),
+                      (u'Nyheter utenriks', u'http://www.vg.no/rss/create.php?categories=12'),
+                      (u'Sport', u'http://www.vg.no/rss/create.php?categories=20'),
+                      (u'Rampelys musikk', u'http://www.vg.no/rss/create.php?categories=30'),
+                      (u'Rampelys musikkanm', u'http://www.vg.no/rss/create.php?categories=45&keywords=&limit=10'),
+                      (u'Rampelys film', u'http://www.vg.no/rss/create.php?categories=26'),
+                      (u'Rampelys filmanm', u'http://www.vg.no/rss/create.php?categories=27'),
+                      (u'Rampelys bøke', u'http://www.vg.no/rss/create.php?categories=28'),
+                      (u'Dine Penger', u'http://www.vg.no/rss/create.php?categories=90'),
+                      (u'Interaktiv spill', u'http://www.vg.no/rss/create.php?categories=41')]
+
+    def print_version(self, url):
+        spliturl = re.split('artid=',url)
+        spliturl[0] = 'http://www.vg.no/nyheter/utskriftsvennlig/?artId='
+        return ''.join(spliturl)
+
+    def get_cover_url(self):
+       url = 'http://static.buyandread.com/thumbnail/verdensgang/verdensgang-large.jpg'
+       return url
+
+    def preprocess_raw_html(self, raw_html, url):
+        # Create corrected paragraph markup for article body text.
+        raw_html = self.paraDivision.sub('</p><p>', raw_html)
+        return raw_html
+
+    # Regular expressions used to find paragraphs in VG article body text.
+    paraDivision = re.compile('<br/><br/>')
