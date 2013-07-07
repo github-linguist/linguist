@@ -446,7 +446,6 @@ module Linguist
         if !options['extensions'].include?(extname)
           options['extensions'] << extname
         else
-          warn "#{name} #{extname.inspect} is already defined in samples/. Remove from languages.yml."
         end
       end
     end
@@ -456,7 +455,6 @@ module Linguist
         if !options['filenames'].include?(filename)
           options['filenames'] << filename
         else
-          warn "#{name} #{filename.inspect} is already defined in samples/. Remove from languages.yml."
         end
       end
     end
