@@ -1008,6 +1008,9 @@ PowerShell:
   aliases:
   - posh
   primary_extension: .ps1
+  extensions:
+  - .psd1
+  - .psm1
 
 Processing:
   type: programming
@@ -1362,6 +1365,7 @@ XML:
   extensions:
   - .axml
   - .ccxml
+  - .cdxml
   - .dita
   - .ditamap
   - .ditaval
@@ -1370,6 +1374,7 @@ XML:
   - .kml
   - .mxml
   - .plist
+  - .ps1xml
   - .pt
   - .rdf
   - .rss
