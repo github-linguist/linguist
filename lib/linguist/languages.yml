@@ -581,7 +581,11 @@ Handlebars:
   type: markup
   lexer: Text only
   primary_extension: .handlebars
-
+  extensions:
+  - .html.handlebars
+  - .hbs
+  - .html.hbs
+  
 Haskell:
   type: programming
   color: "#29b544"
