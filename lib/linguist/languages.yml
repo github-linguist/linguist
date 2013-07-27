@@ -1439,14 +1439,6 @@ Xtend:
   type: programming
   primary_extension: .xtend
 
-xBase:
-  type: programming
-  lexer: Text only
-  color: "#3A4040"
-  primary_extension: .prg
-  extensions:
-  - .ch
-
 YAML:
   type: markup
   aliases:
@@ -1495,6 +1487,14 @@ reStructuredText:
   primary_extension: .rst
   extensions:
   - .rest
+
+xBase:
+  type: programming
+  lexer: Text only
+  color: "#3a4040"
+  primary_extension: .prg
+  extensions:
+  - .ch
 
 wisp:
   type: programming
