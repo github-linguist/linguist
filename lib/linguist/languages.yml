@@ -1488,6 +1488,13 @@ reStructuredText:
   extensions:
   - .rest
 
+wisp:
+  type: programming
+  lexer: Clojure
+  ace_mode: clojure
+  color: "#7582D1"
+  primary_extension: .wisp
+
 xBase:
   type: programming
   lexer: Text only
@@ -1495,10 +1502,3 @@ xBase:
   primary_extension: .prg
   extensions:
   - .ch
-
-wisp:
-  type: programming
-  lexer: Clojure
-  ace_mode: clojure
-  color: "#7582D1"
-  primary_extension: .wisp
