@@ -21,6 +21,13 @@ module Linguist
     # Valid Languages types
     TYPES = [:data, :markup, :programming]
 
+    # Names of non-programming languages that we will still detect
+    #
+    # Returns an array
+    def self.detectable_markup
+      ["CSS", "Less", "Sass"]
+    end
+
     # Internal: Create a new Language object
     #
     # attributes - A hash of attributes
