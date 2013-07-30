@@ -233,7 +233,7 @@ class TestBlob < Test::Unit::TestCase
     assert blob("public/javascripts/jquery-1.6.1.js").vendored?
     assert blob("public/javascripts/jquery-1.6.1.min.js").vendored?
     assert !blob("public/javascripts/jquery.github.menu.js").vendored?
-    
+
     # jQuery UI
     assert blob("themes/ui-lightness/jquery-ui.css").vendored?
     assert blob("themes/ui-lightness/jquery-ui-1.8.22.custom.css").vendored?
@@ -249,7 +249,7 @@ class TestBlob < Test::Unit::TestCase
     assert blob("ui/jquery.ui.accordion.js").vendored?
     assert blob("ui/minified/jquery.effects.blind.min.js").vendored?
     assert blob("ui/minified/jquery.ui.accordion.min.js").vendored?
-    
+
 
     # MooTools
     assert blob("public/javascripts/mootools-core-1.3.2-full-compat.js").vendored?
@@ -265,10 +265,6 @@ class TestBlob < Test::Unit::TestCase
     assert blob("public/javascripts/yahoo-dom-event.js").vendored?
     assert blob("public/javascripts/yahoo-min.js").vendored?
     assert blob("public/javascripts/yuiloader-dom-event.js").vendored?
-
-    # LESS
-    assert blob("public/javascripts/less-1.1.0.js").vendored?
-    assert blob("public/javascripts/less-1.1.0.min.js").vendored?
 
     # WYS editors
     assert blob("public/javascripts/ckeditor.js").vendored?
