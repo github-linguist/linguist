@@ -197,6 +197,14 @@ class TestBlob < Test::Unit::TestCase
     assert blob("C++/protocol-buffer.pb.cc").generated?
     assert blob("Java/ProtocolBuffer.java").generated?
     assert blob("Python/protocol_buffer_pb2.py").generated?
+
+    # Minified CSS
+    assert !blob("CSS/bootstrap.css").generated?
+    assert blob("CSS/bootstrap.min.css").generated?
+
+    # Cython-generated C/C++
+    assert blob("C/sgd_fast.c").generated?
+    assert blob("C++/wrapper_inner.cpp").generated?
   end
 
   def test_vendored
