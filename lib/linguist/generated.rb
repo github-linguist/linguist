@@ -52,7 +52,7 @@ module Linguist
     # Return true or false
     def generated?
       name == 'Gemfile.lock' ||
-        minified_javascript? ||
+        minified_javascript_or_css? ||
         compiled_coffeescript? ||
         xcode_project_file? ||
         generated_parser? ||
@@ -77,8 +77,8 @@ module Linguist
     # greater then 100c.
     #
     # Returns true or false.
-    def minified_javascript?
-      return unless extname == '.js'
+    def minified_javascript_or_css?
+      return unless extname =~ /^\.(?:js|css)$/
       if lines.any?
         (lines.inject(0) { |n, l| n += l.length } / lines.length) > 100
       else
