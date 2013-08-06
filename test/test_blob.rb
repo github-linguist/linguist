@@ -201,10 +201,6 @@ class TestBlob < Test::Unit::TestCase
     # Minified CSS
     assert !blob("CSS/bootstrap.css").generated?
     assert blob("CSS/bootstrap.min.css").generated?
-
-    # Cython-generated C/C++
-    assert blob("C/sgd_fast.c").generated?
-    assert blob("C++/wrapper_inner.cpp").generated?
   end
 
   def test_vendored
