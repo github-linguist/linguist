@@ -212,6 +212,7 @@ class TestBlob < Test::Unit::TestCase
 
     # Rails vendor/
     assert blob("vendor/plugins/will_paginate/lib/will_paginate.rb").vendored?
+    assert blob("thirdparty/plugins/will_paginate/lib/will_paginate.rb").vendored?
 
     # C deps
     assert blob("deps/http_parser/http_parser.c").vendored?
