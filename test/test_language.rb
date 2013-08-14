@@ -160,7 +160,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal 'cpp',           Language['C++'].search_term
     assert_equal 'cfm',           Language['ColdFusion'].search_term
     assert_equal 'dpatch',        Language['Darcs Patch'].search_term
-    assert_equal 'ocaml',         Language['F#'].search_term
+    assert_equal 'fsharp'         Language['F#'].search_term
     assert_equal 'pot',           Language['Gettext Catalog'].search_term
     assert_equal 'irc',           Language['IRC log'].search_term
     assert_equal 'lhs',           Language['Literate Haskell'].search_term
