@@ -204,7 +204,7 @@ class TestBlob < Test::Unit::TestCase
   end
 
   def test_vendored
-    assert blob("Text/README").vendored?
+    assert !blob("Text/README").vendored?
     assert !blob("ext/extconf.rb").vendored?
 
     # Node dependencies
