@@ -246,6 +246,11 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal [Language['HTML+Django']], Language.find_by_filename('index.jinja')
   end
 
+  def test_find_by_shebang
+    assert_equal [Language['Ruby']], Language.find_by_shebang('#!/usr/bin/env ruby')
+    assert_equal [Language['Python']], Language.find_by_shebang('#!/usr/bin/python')
+  end
+
   def test_find
     assert_equal 'Ruby', Language['Ruby'].name
     assert_equal 'Ruby', Language['ruby'].name
