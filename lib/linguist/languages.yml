@@ -1167,6 +1167,12 @@ SCSS:
   ace_mode: scss
   primary_extension: .scss
 
+SPARQL:
+  type: data
+  group: LinkedData
+  lexer: n3
+  primary_extension: .sparql
+
 SQL:
   type: data
   ace_mode: sql
@@ -1302,6 +1308,12 @@ Turing:
   primary_extension: .t
   extensions:
   - .tu
+
+Turtle:
+  type: data
+  group: LinkedData
+  lexer: n3
+  primary_extension: .ttl
 
 Twig:
   type: markup
