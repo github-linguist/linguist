@@ -36,6 +36,9 @@ module Linguist
         if languages.all? { |l| ["AsciiDoc", "AGS Script"].include?(l) }
           result = disambiguate_asc(data)
         end
+        if languages.all? { |l| ["FORTRAN", "Forth"].include?(l) }
+          result = disambiguate_f(data)
+        end
         return result
       end
     end
@@ -135,6 +138,16 @@ module Linguist
     def self.disambiguate_asc(data)
       matches = []
       matches << Language["AsciiDoc"] if /^=+(\s|\n)/.match(data)
+      matches
+    end
+
+    def self.disambiguate_f(data)
+      matches = []
+      if /^: /.match(data)
+        matches << Language["Forth"]
+      elsif /^([c*][^a-z]|      subroutine\s)/i.match(data)
+        matches << Language["FORTRAN"]
+      end
       matches
     end
 

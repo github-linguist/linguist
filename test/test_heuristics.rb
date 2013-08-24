@@ -105,6 +105,16 @@ class TestHeuristcs < Test::Unit::TestCase
     end
   end
 
+  def test_f_by_heuristics
+    languages = ["FORTRAN", "Forth"]
+    languages.each do |language|
+      all_fixtures(language).each do |fixture|
+        results = Heuristics.disambiguate_f(fixture("#{language}/#{File.basename(fixture)}"))
+        assert_equal Language[language], results.first
+      end
+    end
+  end
+
   # Candidate languages = ["Hack", "PHP"]
   def test_hack_by_heuristics
     results = Heuristics.disambiguate_hack(fixture("Hack/funs.php"))
