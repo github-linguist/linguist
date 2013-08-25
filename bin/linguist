@@ -9,6 +9,7 @@ require 'linguist/file_blob'
 require 'linguist/repository'
 
 path = ARGV[0] || Dir.pwd
+$global_path = path
 
 if File.directory?(path)
   repo = Linguist::Repository.from_directory(path)
