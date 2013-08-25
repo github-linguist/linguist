@@ -86,21 +86,34 @@ module Linguist
       if File.extname(name).empty? && mode && (mode.to_i(8) & 05) == 05
         name += ".script!"
       end
-      # An ugly hack to detect C as the language
-      # If there is foo.h, check for foo.c, and return C if true
-      if File.extname(name) == ".h"
-        if($global_path != nil)
-          filepath = $global_path + "/" + File.dirname(name) + "/" \
-                       + File.basename(name, ".h") + ".c"
-          if File.exists?(filepath)
-            return Language["C"]
-          end
-        end
-      end
 
       possible_languages = find_by_filename(name)
 
       if possible_languages.length > 1
+
+        # An ugly hack to fix C .h's detected as c++ (and vice versa)
+        # If there is foo.h, check for foo.c, and return C if true
+        # If not, go throuch c++'s extensions and return C++ if there's a match
+        if File.extname(name) == ".h"
+          if($global_path != nil)
+            filepath = $global_path + "/" + File.dirname(name) + "/" \
+                         + File.basename(name, ".h")
+            if File.exists?(filepath + ".c")
+              return Language["C"]
+            else
+              Language["C++"].extensions.each { |ext|
+                if ext == ".h"
+                  next
+                end
+                if File.exists?(filepath + ext)
+                  print ext + " " + filepath
+                  return Language["C++"]
+                end
+              }
+            end
+          end
+        end
+
         data = data.call() if data.respond_to?(:call)
         if data.nil? || data == ""
           nil
