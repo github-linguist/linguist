@@ -452,7 +452,6 @@ module Linguist
       extnames.each do |extname|
         if !options['extensions'].include?(extname)
           options['extensions'] << extname
-        else
         end
       end
     end
@@ -461,7 +460,6 @@ module Linguist
       fns.each do |filename|
         if !options['filenames'].include?(filename)
           options['filenames'] << filename
-        else
         end
       end
     end
