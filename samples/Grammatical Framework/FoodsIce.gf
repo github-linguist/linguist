@@ -4,32 +4,32 @@
 
 concrete FoodsIce of Foods = open Prelude in {
 
---flags coding=utf8;
+  flags coding=utf8;
 
   lincat
-    Comment = SS ; 
-    Quality = {s : Gender => Number => Defin => Str} ; 
-    Kind = {s : Number => Str ; g : Gender} ; 
-    Item = {s : Str ; g : Gender ; n : Number} ; 
+    Comment = SS ;
+    Quality = {s : Gender => Number => Defin => Str} ;
+    Kind = {s : Number => Str ; g : Gender} ;
+    Item = {s : Str ; g : Gender ; n : Number} ;
 
   lin
     Pred item quality =  ss (item.s ++ copula item.n ++ quality.s ! item.g ! item.n ! Ind) ;
-         This, That  = det Sg "þessi"   "þessi"  "þetta" ;
-         These, Those = det Pl "þessir" "þessar" "þessi" ;
+         This, That  = det Sg "Ã¾essi"   "Ã¾essi"  "Ã¾etta" ;
+         These, Those = det Pl "Ã¾essir" "Ã¾essar" "Ã¾essi" ;
     Mod quality kind = { s = \\n => quality.s ! kind.g ! n ! Def ++ kind.s ! n ; g = kind.g } ;
-         Wine = noun "vín" "vín" Neutr ;
-         Cheese = noun "ostur" "ostar" Masc ; 
-         Fish = noun "fiskur" "fiskar" Masc ; 
+         Wine = noun "vÃ­n" "vÃ­n" Neutr ;
+         Cheese = noun "ostur" "ostar" Masc ;
+         Fish = noun "fiskur" "fiskar" Masc ;
          -- the word "pizza" is more commonly used in Iceland, but "flatbaka" is the Icelandic word for it
-         Pizza = noun "flatbaka" "flatbökur" Fem ;
-    Very qual = {s = \\g,n,defOrInd => "mjög" ++ qual.s ! g ! n ! defOrInd } ;
+         Pizza = noun "flatbaka" "flatbÃ¶kur" Fem ;
+    Very qual = {s = \\g,n,defOrInd => "mjÃ¶g" ++ qual.s ! g ! n ! defOrInd } ;
          Fresh = regAdj "ferskur" ;
          Warm = regAdj "heitur" ;
-         Boring = regAdj "leiðinlegur" ;
+         Boring = regAdj "leiÃ°inlegur" ;
          -- the order of the given adj forms is: mSg fSg nSg mPl fPl nPl mSgDef f/nSgDef _PlDef
-         Italian = adjective "ítalskur" "ítölsk" "ítalskt" "ítalskir" "ítalskar" "ítölsk" "ítalski" "ítalska" "ítalsku" ;
-         Expensive = adjective "dýr" "dýr" "dýrt" "dýrir" "dýrar" "dýr" "dýri" "dýra" "dýru" ; 
-         Delicious = adjective "ljúffengur" "ljúffeng" "ljúffengt" "ljúffengir" "ljúffengar" "ljúffeng" "ljúffengi" "ljúffenga" "ljúffengu" ;
+         Italian = adjective "Ã­talskur" "Ã­tÃ¶lsk" "Ã­talskt" "Ã­talskir" "Ã­talskar" "Ã­tÃ¶lsk" "Ã­talski" "Ã­talska" "Ã­talsku" ;
+         Expensive = adjective "dÃ½r" "dÃ½r" "dÃ½rt" "dÃ½rir" "dÃ½rar" "dÃ½r" "dÃ½ri" "dÃ½ra" "dÃ½ru" ;
+         Delicious = adjective "ljÃºffengur" "ljÃºffeng" "ljÃºffengt" "ljÃºffengir" "ljÃºffengar" "ljÃºffeng" "ljÃºffengi" "ljÃºffenga" "ljÃºffengu" ;
 
   param
     Number = Sg | Pl ;
@@ -37,19 +37,19 @@ concrete FoodsIce of Foods = open Prelude in {
     Defin = Ind | Def ;
 
   oper
-    det : Number -> Str -> Str -> Str -> {s : Number => Str ; g : Gender} -> 
-        {s : Str ; g : Gender ; n : Number} = 
+    det : Number -> Str -> Str -> Str -> {s : Number => Str ; g : Gender} ->
+        {s : Str ; g : Gender ; n : Number} =
       \n,masc,fem,neutr,cn -> {
         s = case cn.g of {Masc => masc ; Fem => fem; Neutr => neutr } ++ cn.s ! n ;
         g = cn.g ;
         n = n
       } ;
 
-    noun : Str -> Str -> Gender -> {s : Number => Str ; g : Gender} = 
+    noun : Str -> Str -> Gender -> {s : Number => Str ; g : Gender} =
       \man,men,g -> {
         s = table {
           Sg => man ;
-          Pl => men 
+          Pl => men
           } ;
         g = g
       } ;
@@ -65,7 +65,7 @@ concrete FoodsIce of Foods = open Prelude in {
             < Neutr, Pl, Ind > => fersk_pl;
             < Masc, Sg, Def > => ferski ;
             < Fem, Sg, Def > | < Neutr, Sg, Def > => ferska ;
-            < _ , Pl, Def > => fersku 
+            < _ , Pl, Def > => fersku
             }
           } ;
 
@@ -76,7 +76,7 @@ concrete FoodsIce of Foods = open Prelude in {
         (fersk + "ir") (fersk + "ar") fersk
         (fersk + "i") (fersk + "a") (fersk + "u") ;
 
-    copula : Number -> Str = 
+    copula : Number -> Str =
       \n -> case n of {
         Sg => "er" ;
         Pl => "eru"
