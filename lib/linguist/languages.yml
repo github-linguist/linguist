@@ -339,14 +339,6 @@ Dart:
   type: programming
   primary_extension: .dart
 
-Delphi:
-  type: programming
-  color: "#b0ce4e"
-  primary_extension: .pas
-  extensions:
-  - .dfm
-  - .lpr
-
 DCPU-16 ASM:
   type: programming
   lexer: dasm16
@@ -1001,6 +993,15 @@ Parrot Assembly:
   aliases:
   - pasm
   primary_extension: .pasm
+
+Pascal:
+  type: programming
+  lexer: Delphi
+  color: "#b0ce4e"
+  primary_extension: .pas
+  extensions:
+  - .dfm
+  - .lpr
 
 Perl:
   type: programming
