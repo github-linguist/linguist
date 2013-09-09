@@ -40,6 +40,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['REBOL'], Language['Rebol'].lexer
     assert_equal Lexer['RHTML'], Language['HTML+ERB'].lexer
     assert_equal Lexer['RHTML'], Language['RHTML'].lexer
+    assert_equal Lexer['Ruby'], Language['Crystal'].lexer
     assert_equal Lexer['Ruby'], Language['Mirah'].lexer
     assert_equal Lexer['Ruby'], Language['Ruby'].lexer
     assert_equal Lexer['S'], Language['R'].lexer
