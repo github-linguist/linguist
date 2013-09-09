@@ -4,6 +4,7 @@ require 'yaml'
 
 require 'linguist/classifier'
 require 'linguist/samples'
+require 'linguist/modeline'
 
 module Linguist
   # Language names that are recognizable by GitHub. Defined languages
@@ -17,6 +18,7 @@ module Linguist
     @alias_index     = {}
     @extension_index = Hash.new { |h,k| h[k] = [] }
     @filename_index  = Hash.new { |h,k| h[k] = [] }
+    @modeline_index  = Hash.new { |h,k| h[k] = [] }
 
     # Valid Languages types
     TYPES = [:data, :markup, :programming]
@@ -67,6 +69,10 @@ module Linguist
         @filename_index[filename] << language
       end
 
+      language.modelines.each do |modeline|
+        @modeline_index[modeline] << language
+      end
+
       language
     end
 
@@ -95,6 +101,13 @@ module Linguist
           nil
         elsif result = Classifier.classify(Samples::DATA, data, possible_languages.map(&:name)).first
           Language[result[0]]
+        end
+      elsif File.extname(name).empty?
+        data = data.call() if data.respond_to?(:call)
+        if result = Modeline.extract_mode(data)
+          find_by_modeline(result).first
+        else
+          possible_languages.first
         end
       else
         possible_languages.first
@@ -149,6 +162,20 @@ module Linguist
     def self.find_by_filename(filename)
       basename, extname = File.basename(filename), File.extname(filename)
       @filename_index[basename] + @extension_index[extname]
+    end
+
+    # Public: Look up Languages by filename.
+    #
+    # filename - The path String.
+    #
+    # Examples
+    #
+    #   Language.find_by_filename('foo.rb')
+    #   # => [#<Language name="Ruby">]
+    #
+    # Returns all matching Languages or [] if none were found.
+    def self.find_by_modeline(mode)
+      @modeline_index[mode]
     end
 
     # Public: Look up Language by its name or lexer.
@@ -237,6 +264,8 @@ module Linguist
       # Set extensions or default to [].
       @extensions = attributes[:extensions] || []
       @filenames  = attributes[:filenames]  || []
+
+      @modelines  = attributes[:modelines]  || []
 
       unless @primary_extension = attributes[:primary_extension]
         raise ArgumentError, "#{@name} is missing primary extension"
@@ -357,6 +386,15 @@ module Linguist
     # Returns the extensions Array
     attr_reader :filenames
 
+    # Public: Get modelines
+    #
+    # Examples
+    #
+    #   # => ['cpp', ...]
+    #
+    # Returns the modelines Array
+    attr_reader :modelines
+
     # Public: Get URL escaped name.
     #
     # Examples
@@ -447,6 +485,7 @@ module Linguist
   YAML.load_file(File.expand_path("../languages.yml", __FILE__)).each do |name, options|
     options['extensions'] ||= []
     options['filenames'] ||= []
+    options['modelines'] ||= []
 
     if extnames = extensions[name]
       extnames.each do |extname|
@@ -478,6 +517,7 @@ module Linguist
       :extensions        => options['extensions'].sort,
       :primary_extension => options['primary_extension'],
       :filenames         => options['filenames'],
+      :modelines         => options['modelines'],
       :popular           => popular.include?(name)
     )
   end
