@@ -193,6 +193,10 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal :markup, Language['HTML'].type
   end
 
+  def test_data
+    assert_equal :data, Language['YAML'].type
+  end
+
   def test_other
     assert_nil Language['Brainfuck'].type
     assert_nil Language['Makefile'].type
