@@ -21,6 +21,13 @@ module Linguist
     # Valid Languages types
     TYPES = [:data, :markup, :programming]
 
+    # Names of non-programming languages that we will still detect
+    #
+    # Returns an array
+    def self.detectable_markup
+      ["CSS", "Less", "Sass"]
+    end
+
     # Internal: Create a new Language object
     #
     # attributes - A hash of attributes
@@ -445,8 +452,6 @@ module Linguist
       extnames.each do |extname|
         if !options['extensions'].include?(extname)
           options['extensions'] << extname
-        else
-          warn "#{name} #{extname.inspect} is already defined in samples/. Remove from languages.yml."
         end
       end
     end
@@ -455,8 +460,6 @@ module Linguist
       fns.each do |filename|
         if !options['filenames'].include?(filename)
           options['filenames'] << filename
-        else
-          warn "#{name} #{filename.inspect} is already defined in samples/. Remove from languages.yml."
         end
       end
     end

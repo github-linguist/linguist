@@ -58,13 +58,13 @@ See [Linguist::BlobHelper#vendored?](https://github.com/github/linguist/blob/mas
 
 #### Generated file detection
 
-Not all plain text files are true source files. Generated files like minified js and compiled CoffeeScript can be detected and excluded from language stats. As an extra bonus, these files are suppressed in Diffs.
+Not all plain text files are true source files. Generated files like minified js and compiled CoffeeScript can be detected and excluded from language stats. As an extra bonus, these files are suppressed in diffs.
 
 ```ruby
 Linguist::FileBlob.new("underscore.min.js").generated? # => true
 ```
 
-See [Linguist::BlobHelper#generated?](https://github.com/github/linguist/blob/master/lib/linguist/blob_helper.rb).
+See [Linguist::Generated#generated?](https://github.com/github/linguist/blob/master/lib/linguist/generated.rb).
 
 ## Installation
 
@@ -83,6 +83,8 @@ To run the tests:
 ## Contributing
 
 The majority of patches won't need to touch any Ruby code at all. The [master language list](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml) is just a configuration file.
+
+We try to only add languages once they have a some usage on GitHub, so please note in-the-wild usage examples in your pull request.
 
 Almost all bug fixes or new language additions should come with some additional code samples. Just drop them under [`samples/`](https://github.com/github/linguist/tree/master/samples) in the correct subdirectory and our test suite will automatically test them. In most cases you shouldn't need to add any new assertions.
 

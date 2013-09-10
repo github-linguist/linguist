@@ -8,6 +8,12 @@ require 'pygments'
 require 'yaml'
 
 module Linguist
+  # DEPRECATED Avoid mixing into Blob classes. Prefer functional interfaces
+  # like `Language.detect` over `Blob#language`. Functions are much easier to
+  # cache and compose.
+  #
+  # Avoid adding additional bloat to this module.
+  #
   # BlobHelper is a mixin for Blobish classes that respond to "name",
   # "data" and "size" such as Grit::Blob.
   module BlobHelper
@@ -64,7 +70,7 @@ module Linguist
     #
     # Return true or false
     def likely_binary?
-       binary_mime_type? and not Language.find_by_filename(name)
+      binary_mime_type? && !Language.find_by_filename(name)
     end
 
     # Public: Get the Content-Type header value
@@ -148,7 +154,7 @@ module Linguist
     #
     # Return true or false
     def image?
-      ['.png', '.jpg', '.jpeg', '.gif'].include?(extname)
+      ['.png', '.jpg', '.jpeg', '.gif'].include?(extname.downcase)
     end
 
     # Public: Is the blob a supported 3D model format?
@@ -156,6 +162,20 @@ module Linguist
     # Return true or false
     def solid?
       extname.downcase == '.stl'
+    end
+
+    # Public: Is this blob a CSV file?
+    #
+    # Return true or false
+    def csv?
+      text? && extname.downcase == '.csv'
+    end
+
+    # Public: Is the blob a PDF?
+    #
+    # Return true or false
+    def pdf?
+      extname.downcase == '.pdf'
     end
 
     MEGABYTE = 1024 * 1024
@@ -169,11 +189,10 @@ module Linguist
 
     # Public: Is the blob safe to colorize?
     #
-    # We use Pygments.rb for syntax highlighting blobs, which
-    # has some quirks and also is essentially 'un-killable' via
-    # normal timeout.  To workaround this we try to
-    # carefully handling Pygments.rb anything it can't handle.
-    #
+    # We use Pygments for syntax highlighting blobs. Pygments
+    # can be too slow for very large blobs or for certain 
+    # corner-case blobs.
+    # 
     # Return true or false
     def safe_to_colorize?
       !large? && text? && !high_ratio_of_long_lines?
@@ -222,29 +241,10 @@ module Linguist
     def lines
       @lines ||=
         if viewable? && data
-          data.split(line_split_character, -1)
+          data.split(/\r\n|\r|\n/, -1)
         else
           []
         end
-    end
-
-    # Character used to split lines. This is almost always "\n" except when Mac
-    # Format is detected in which case it's "\r".
-    #
-    # Returns a split pattern string.
-    def line_split_character
-      @line_split_character ||= (mac_format?? "\r" : "\n")
-    end
-
-    # Public: Is the data in ** Mac Format **. This format uses \r (0x0d) characters
-    # for line ends and does not include a \n (0x0a).
-    #
-    # Returns true when mac format is detected.
-    def mac_format?
-      return if !viewable?
-      if pos = data[0, 4096].index("\r")
-        data[pos + 1] != ?\n
-      end
     end
 
     # Public: Get number of lines of code
@@ -275,36 +275,6 @@ module Linguist
     # Return true or false
     def generated?
       @_generated ||= Generated.generated?(name, lambda { data })
-    end
-
-    # Public: Should the blob be indexed for searching?
-    #
-    # Excluded:
-    # - Files over 0.1MB
-    # - Non-text files
-    # - Languages marked as not searchable
-    # - Generated source files
-    #
-    # Please add additional test coverage to
-    # `test/test_blob.rb#test_indexable` if you make any changes.
-    #
-    # Return true or false
-    def indexable?
-      if size > 100 * 1024
-        false
-      elsif binary?
-        false
-      elsif extname == '.txt'
-        true
-      elsif language.nil?
-        false
-      elsif !language.searchable?
-        false
-      elsif generated?
-        false
-      else
-        true
-      end
     end
 
     # Public: Detects the Language of the blob.
@@ -341,20 +311,6 @@ module Linguist
       options[:options] ||= {}
       options[:options][:encoding] ||= encoding
       lexer.highlight(data, options)
-    end
-
-    # Public: Highlight syntax of blob without the outer highlight div
-    # wrapper.
-    #
-    # options - A Hash of options (defaults to {})
-    #
-    # Returns html String
-    def colorize_without_wrapper(options = {})
-      if text = colorize(options)
-        text[%r{<div class="highlight"><pre>(.*?)</pre>\s*</div>}m, 1]
-      else
-        ''
-      end
     end
   end
 end

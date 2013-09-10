@@ -133,7 +133,6 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['Shell'], Language['Gentoo Ebuild'].group
     assert_equal Language['Shell'], Language['Gentoo Eclass'].group
     assert_equal Language['Shell'], Language['Tcsh'].group
-    assert_equal Language['XML'], Language['XSLT'].group
 
     # Ensure everyone has a group
     Language.all.each do |language|
@@ -161,7 +160,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal 'cpp',           Language['C++'].search_term
     assert_equal 'cfm',           Language['ColdFusion'].search_term
     assert_equal 'dpatch',        Language['Darcs Patch'].search_term
-    assert_equal 'ocaml',         Language['F#'].search_term
+    assert_equal 'fsharp',        Language['F#'].search_term
     assert_equal 'pot',           Language['Gettext Catalog'].search_term
     assert_equal 'irc',           Language['IRC log'].search_term
     assert_equal 'lhs',           Language['Literate Haskell'].search_term
@@ -192,7 +191,10 @@ class TestLanguage < Test::Unit::TestCase
 
   def test_markup
     assert_equal :markup, Language['HTML'].type
-    assert_equal :markup, Language['YAML'].type
+  end
+
+  def test_data
+    assert_equal :data, Language['YAML'].type
   end
 
   def test_other
@@ -243,6 +245,8 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal [Language['Shell']], Language.find_by_filename('.bashrc')
     assert_equal [Language['Shell']], Language.find_by_filename('bash_profile')
     assert_equal [Language['Shell']], Language.find_by_filename('.zshrc')
+    assert_equal [Language['Clojure']], Language.find_by_filename('riemann.config')
+    assert_equal [Language['HTML+Django']], Language.find_by_filename('index.jinja')
   end
 
   def test_find

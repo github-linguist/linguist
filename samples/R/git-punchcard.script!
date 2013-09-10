@@ -1,0 +1,31 @@
+#! /usr/bin/env Rscript
+# vim: filetype=r:
+
+ParseDates <- function(lines) {
+  dates <- matrix(unlist(strsplit(lines, " +")), ncol=6, byrow=TRUE)
+  days  <- dates[,1]
+  times <- dates[,4]
+  hours <- matrix(unlist(strsplit(times, ":")), ncol=3, byrow=TRUE)[,1]
+  all.days  <- c("Sun", "Sat", "Fri", "Thu", "Wed", "Tue", "Mon")
+  all.hours <- 0:23
+  data.frame( Day  = factor(days , levels=all.days)
+            , Hour = factor(hours, levels=all.hours)
+            )
+}
+
+Main <- function() {
+  lines <- system("git log --format=%ad", intern=TRUE)
+  punchcard <- as.data.frame(table(ParseDates(lines)))
+  punchcard <-
+    ( ggplot2::ggplot(punchcard, ggplot2::aes(y=Day, x=Hour))
+    + ggplot2::geom_point(ggplot2::aes(size=Freq))
+    + ggplot2::scale_size(range=c(0, 15))
+    )
+  ggplot2::ggsave( filename = "punchcard.png"
+                 , plot     = punchcard
+                 , width    = 10
+                 , height   = 5
+                 )
+}
+
+Main()

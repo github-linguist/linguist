@@ -63,14 +63,8 @@ class TestBlob < Test::Unit::TestCase
 
   def test_lines
     assert_equal ["module Foo", "end", ""], blob("Ruby/foo.rb").lines
-  end
-
-  def test_mac_format
-    assert blob("Text/mac.txt").mac_format?
-  end
-
-  def test_lines_mac_format
     assert_equal ["line 1", "line 2", ""], blob("Text/mac.txt").lines
+    assert_equal 475, blob("Emacs Lisp/ess-julia.el").lines.length
   end
 
   def test_size
@@ -137,6 +131,14 @@ class TestBlob < Test::Unit::TestCase
     assert blob("Text/cube.stl").solid?
   end
 
+  def test_csv
+    assert blob("Text/cars.csv").csv?
+  end
+
+  def test_pdf
+    assert blob("Binary/foo.pdf").pdf?
+  end
+
   def test_viewable
     assert blob("Text/README").viewable?
     assert blob("Ruby/foo.rb").viewable?
@@ -189,6 +191,16 @@ class TestBlob < Test::Unit::TestCase
 
     assert blob("JavaScript/intro.js").generated?
     assert blob("JavaScript/classes.js").generated?
+
+    # Protocol Buffer generated code
+    assert blob("C++/protocol-buffer.pb.h").generated?
+    assert blob("C++/protocol-buffer.pb.cc").generated?
+    assert blob("Java/ProtocolBuffer.java").generated?
+    assert blob("Python/protocol_buffer_pb2.py").generated?
+
+    # Minified CSS
+    assert !blob("CSS/bootstrap.css").generated?
+    assert blob("CSS/bootstrap.min.css").generated?
   end
 
   def test_vendored
@@ -226,6 +238,23 @@ class TestBlob < Test::Unit::TestCase
     assert blob("public/javascripts/jquery-1.6.1.min.js").vendored?
     assert !blob("public/javascripts/jquery.github.menu.js").vendored?
 
+    # jQuery UI
+    assert blob("themes/ui-lightness/jquery-ui.css").vendored?
+    assert blob("themes/ui-lightness/jquery-ui-1.8.22.custom.css").vendored?
+    assert blob("themes/ui-lightness/jquery.ui.accordion.css").vendored?
+    assert blob("ui/i18n/jquery.ui.datepicker-ar.js").vendored?
+    assert blob("ui/i18n/jquery-ui-i18n.js").vendored?
+    assert blob("ui/jquery.effects.blind.js").vendored?
+    assert blob("ui/jquery-ui-1.8.22.custom.js").vendored?
+    assert blob("ui/jquery-ui-1.8.22.custom.min.js").vendored?
+    assert blob("ui/jquery-ui-1.8.22.js").vendored?
+    assert blob("ui/jquery-ui-1.8.js").vendored?
+    assert blob("ui/jquery-ui.min.js").vendored?
+    assert blob("ui/jquery.ui.accordion.js").vendored?
+    assert blob("ui/minified/jquery.effects.blind.min.js").vendored?
+    assert blob("ui/minified/jquery.ui.accordion.min.js").vendored?
+
+
     # MooTools
     assert blob("public/javascripts/mootools-core-1.3.2-full-compat.js").vendored?
     assert blob("public/javascripts/mootools-core-1.3.2-full-compat-yc.js").vendored?
@@ -240,10 +269,6 @@ class TestBlob < Test::Unit::TestCase
     assert blob("public/javascripts/yahoo-dom-event.js").vendored?
     assert blob("public/javascripts/yahoo-min.js").vendored?
     assert blob("public/javascripts/yuiloader-dom-event.js").vendored?
-
-    # LESS
-    assert blob("public/javascripts/less-1.1.0.js").vendored?
-    assert blob("public/javascripts/less-1.1.0.min.js").vendored?
 
     # WYS editors
     assert blob("public/javascripts/ckeditor.js").vendored?
@@ -270,23 +295,18 @@ class TestBlob < Test::Unit::TestCase
 
     # jQuery validation plugin (MS bundles this with asp.net mvc)
     assert blob("Scripts/jquery.validate.js").vendored?
+    assert blob("Scripts/jquery.validate.min.js").vendored?
+    assert blob("Scripts/jquery.validate.unobtrusive.js").vendored?
+    assert blob("Scripts/jquery.validate.unobtrusive.min.js").vendored?
+    assert blob("Scripts/jquery.unobtrusive-ajax.js").vendored?
+    assert blob("Scripts/jquery.unobtrusive-ajax.min.js").vendored?
 
     # NuGet Packages
     assert blob("packages/Modernizr.2.0.6/Content/Scripts/modernizr-2.0.6-development-only.js").vendored?
-  end
 
-  def test_indexable
-    assert blob("Ruby/foo.rb").indexable?
-    assert !blob("Text/defu.nkt").indexable?
-    assert !blob("Text/dump.sql").indexable?
-    assert !blob("Binary/github.po").indexable?
-    assert !blob("Binary/linguist.gem").indexable?
-
-    # large binary blobs should fail on size check first, not call
-    # into charlock_holmes and alloc big buffers for testing encoding
-    b = blob("Binary/octocat.ai")
-    b.expects(:binary?).never
-    assert !b.indexable?
+    # Test fixtures
+    assert blob("test/fixtures/random.rkt").vendored?
+    assert blob("Test/fixtures/random.rkt").vendored?
   end
 
   def test_language
@@ -306,13 +326,6 @@ class TestBlob < Test::Unit::TestCase
 <div class="highlight"><pre><span class="k">module</span> <span class="nn">Foo</span>
 <span class="k">end</span>
 </pre></div>
-    HTML
-  end
-
-  def test_colorize_without_wrapper
-    assert_equal <<-HTML, blob("Ruby/foo.rb").colorize_without_wrapper
-<span class="k">module</span> <span class="nn">Foo</span>
-<span class="k">end</span>
     HTML
   end
 
