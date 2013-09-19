@@ -24,6 +24,9 @@
 # Node dependencies
 - node_modules/
 
+# Erlang bundles
+- ^rebar$
+
 # Vendored dependencies
 - vendor/
 
@@ -58,10 +61,6 @@
 # YUI
 - (^|/)yahoo-([^.]*)\.js$
 - (^|/)yui([^.]*)\.js$
-
-# LESS css
-- (^|/)less([^.]*)(\.min)?\.js$
-- (^|/)less\-\d+\.\d+\.\d+(\.min)?\.js$
 
 # WYS editors
 - (^|/)ckeditor\.js$
@@ -114,5 +113,17 @@
 # Samples folders
 - ^[Ss]amples/
 
+# LICENSE, README, git config files
+- ^COPYING$
+- ^LICENSE$
+- gitattributes$
+- gitignore$
+- gitmodules$
+- ^README$
+- ^readme$
+
 # Test fixtures
 - ^[Tt]est/fixtures/
+
+# .DS_Store's
+- .[Dd][Ss]_[Ss]tore$

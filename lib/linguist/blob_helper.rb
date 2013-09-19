@@ -189,11 +189,10 @@ module Linguist
 
     # Public: Is the blob safe to colorize?
     #
-    # We use Pygments.rb for syntax highlighting blobs, which
-    # has some quirks and also is essentially 'un-killable' via
-    # normal timeout.  To workaround this we try to
-    # carefully handling Pygments.rb anything it can't handle.
-    #
+    # We use Pygments for syntax highlighting blobs. Pygments
+    # can be too slow for very large blobs or for certain 
+    # corner-case blobs.
+    # 
     # Return true or false
     def safe_to_colorize?
       !large? && text? && !high_ratio_of_long_lines?

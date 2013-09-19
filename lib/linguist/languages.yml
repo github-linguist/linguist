@@ -218,8 +218,18 @@ CMake:
   filenames:
   - CMakeLists.txt
 
+COBOL:
+  type: programming
+  primary_extension: .cob
+  extensions:
+  - .cbl
+  - .ccp
+  - .cobol
+  - .cpy
+
 CSS:
   ace_mode: css
+  color: "#1f085e"
   primary_extension: .css
 
 Ceylon:
@@ -238,6 +248,7 @@ Clojure:
   primary_extension: .clj
   extensions:
   - .cljs
+  - .cljx
   filenames:
   - riemann.config
 
@@ -278,6 +289,7 @@ Common Lisp:
   - .asd
   - .lsp
   - .ny
+  - .podsl
 
 Coq:
   type: programming
@@ -333,14 +345,6 @@ Darcs Patch:
 Dart:
   type: programming
   primary_extension: .dart
-
-Delphi:
-  type: programming
-  color: "#b0ce4e"
-  primary_extension: .pas
-  extensions:
-  - .dfm
-  - .lpr
 
 DCPU-16 ASM:
   type: programming
@@ -405,7 +409,7 @@ Emacs Lisp:
 
 Erlang:
   type: programming
-  color: "#949e0e"
+  color: "#0faf8d"
   primary_extension: .erl
   extensions:
   - .hrl
@@ -414,7 +418,9 @@ F#:
   type: programming
   lexer: FSharp
   color: "#b845fc"
-  search_term: ocaml
+  search_term: fsharp
+  aliases:
+  - fsharp
   primary_extension: .fs
   extensions:
   - .fsi
@@ -479,6 +485,18 @@ GAS:
   extensions:
   - .S
 
+GLSL:
+  group: C
+  type: programming
+  primary_extension: .glsl
+  extensions:
+  - .fp
+  - .frag
+  - .geom
+  - .glslv
+  - .shader
+  - .vert
+
 Genshi:
   primary_extension: .kid
 
@@ -503,7 +521,7 @@ Gettext Catalog:
 
 Go:
   type: programming
-  color: "#8d04eb"
+  color: "#a89b4d"
   primary_extension: .go
 
 Gosu:
@@ -607,7 +625,6 @@ Haxe:
 INI:
   type: data
   extensions:
-  - .cfg
   - .ini
   - .prefs
   - .properties
@@ -686,6 +703,13 @@ Kotlin:
   - .ktm
   - .kts
 
+LFE:
+  type: programming
+  primary_extension: .lfe
+  color: "#004200"
+  lexer: Common Lisp
+  group: Erlang
+
 LLVM:
   primary_extension: .ll
 
@@ -758,6 +782,8 @@ Logos:
 Logtalk:
   type: programming
   primary_extension: .lgt
+  extensions:
+  - .logtalk
 
 Lua:
   type: programming
@@ -766,6 +792,7 @@ Lua:
   primary_extension: .lua
   extensions:
   - .nse
+  - .rbxs
 
 M:
   type: programming
@@ -987,6 +1014,15 @@ Parrot Assembly:
   - pasm
   primary_extension: .pasm
 
+Pascal:
+  type: programming
+  lexer: Delphi
+  color: "#b0ce4e"
+  primary_extension: .pas
+  extensions:
+  - .dfm
+  - .lpr
+
 Perl:
   type: programming
   ace_mode: perl
@@ -994,6 +1030,7 @@ Perl:
   primary_extension: .pl
   extensions:
   - .PL
+  - .nqp
   - .perl
   - .ph
   - .plx
@@ -1146,6 +1183,7 @@ Ruby:
   - .thor
   - .watchr
   filenames:
+  - Berksfile
   - Gemfile
   - Guardfile
   - Podfile
@@ -1216,6 +1254,13 @@ Shell:
   primary_extension: .sh
   extensions:
   - .tmux
+  filenames:
+  - Dockerfile
+
+Slash:
+  type: programming
+  color: "#007eff"
+  primary_extension: .sl
 
 Smalltalk:
   type: programming
@@ -1224,6 +1269,11 @@ Smalltalk:
 
 Smarty:
   primary_extension: .tpl
+
+Squirrel:
+  type: programming
+  lexer: C++
+  primary_extension: .nut
 
 Standard ML:
   type: programming
@@ -1312,8 +1362,8 @@ Unified Parallel C:
   lexer: C
   ace_mode: c_cpp
   color: "#755223"
-  primary_extension: .upc 
-  
+  primary_extension: .upc
+
 VHDL:
   type: programming
   lexer: vhdl
@@ -1359,12 +1409,16 @@ Visual Basic:
   - .vba
   - .vbs
 
+Volt:
+    type: programming
+    lexer: D
+    color: "#0098db"
+    primary_extension: .volt
+
 XC:
   type: programming
   lexer: C
   primary_extension: .xc
-  extensions:
-  - .xc
 
 XML:
   type: markup
@@ -1402,9 +1456,11 @@ XML:
   - .wxi
   - .wxl
   - .wxs
+  - .x3d
   - .xaml
   - .xlf
   - .xliff
+  - .xmi
   - .xsd
   - .xul
   - .zcml
@@ -1444,7 +1500,7 @@ Xtend:
   primary_extension: .xtend
 
 YAML:
-  type: markup
+  type: data
   aliases:
   - yml
   primary_extension: .yml
