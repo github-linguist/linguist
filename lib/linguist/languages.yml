@@ -74,6 +74,16 @@ Arduino:
   lexer: C++
   primary_extension: .ino
 
+AsciiDoc:
+  type: markup
+  lexer: Text only
+  ace_mode: asciidoc
+  wrap: true
+  primary_extension: .asciidoc
+  extensions:
+  - .adoc
+  - .asc
+
 ASP:
   type: programming
   color: "#6a40fd"
