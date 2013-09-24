@@ -29,23 +29,6 @@ ABAP:
   lexer: ABAP
   primary_extension: .abap
 
-ASP:
-  type: programming
-  color: "#6a40fd"
-  lexer: aspx-vb
-  search_term: aspx-vb
-  aliases:
-  - aspx
-  - aspx-vb
-  primary_extension: .asp
-  extensions:
-  - .asax
-  - .ascx
-  - .ashx
-  - .asmx
-  - .aspx
-  - .axd
-
 ActionScript:
   type: programming
   lexer: ActionScript 3
@@ -90,6 +73,23 @@ Arduino:
   color: "#bd79d1"
   lexer: C++
   primary_extension: .ino
+
+ASP:
+  type: programming
+  color: "#6a40fd"
+  lexer: aspx-vb
+  search_term: aspx-vb
+  aliases:
+  - aspx
+  - aspx-vb
+  primary_extension: .asp
+  extensions:
+  - .asax
+  - .ascx
+  - .ashx
+  - .asmx
+  - .aspx
+  - .axd
 
 Assembly:
   type: programming
