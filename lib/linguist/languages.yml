@@ -22,12 +22,29 @@
 # Any additions or modifications (even trivial) should have corresponding
 # test change in `test/test_blob.rb`.
 #
-# Please keep this list alphabetized.
+# Please keep this list alphabetized. Capitalization comes before lower case.
 
 ABAP:
   type: programming
   lexer: ABAP
   primary_extension: .abap
+
+ASP:
+  type: programming
+  color: "#6a40fd"
+  lexer: aspx-vb
+  search_term: aspx-vb
+  aliases:
+  - aspx
+  - aspx-vb
+  primary_extension: .asp
+  extensions:
+  - .asax
+  - .ascx
+  - .ashx
+  - .asmx
+  - .aspx
+  - .axd
 
 ActionScript:
   type: programming
@@ -83,23 +100,6 @@ AsciiDoc:
   extensions:
   - .adoc
   - .asc
-
-ASP:
-  type: programming
-  color: "#6a40fd"
-  lexer: aspx-vb
-  search_term: aspx-vb
-  aliases:
-  - aspx
-  - aspx-vb
-  primary_extension: .asp
-  extensions:
-  - .asax
-  - .ascx
-  - .ashx
-  - .asmx
-  - .aspx
-  - .axd
 
 Assembly:
   type: programming
@@ -851,7 +851,7 @@ Max:
   - .maxhelp
   - .maxpat
 
-Mediawiki:
+MediaWiki:
   type: markup
   lexer: Text only
   wrap: true
@@ -1129,6 +1129,13 @@ R:
   lexer: S
   primary_extension: .r
 
+RDoc:
+  type: markup
+  lexer: Text only
+  ace_mode: rdoc
+  wrap: true
+  primary_extension: .rdoc
+
 RHTML:
   type: markup
   group: HTML
@@ -1166,13 +1173,6 @@ Rebol:
 
 Redcode:
   primary_extension: .cw
-
-RDoc:
-  type: markup
-  lexer: Text only
-  ace_mode: rdoc
-  wrap: true
-  primary_extension: .rdoc
 
 Rouge:
   type: programming
