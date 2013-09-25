@@ -25,7 +25,7 @@ module Linguist
     #
     # Returns an array
     def self.detectable_markup
-      ["CSS", "Less", "Sass", "Markdown", "Textile", "reStructuredText", "AsciiDoc", "RDoc", "Org", "Creole", "Mediawiki"]
+      ["AsciiDoc", "CSS", "Creole", "Less", "Markdown", "Mediawiki", "Org", "RDoc", "Sass", "Textile", "reStructuredText"]
     end
 
     # Internal: Create a new Language object
