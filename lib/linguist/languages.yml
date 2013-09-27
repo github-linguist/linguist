@@ -242,6 +242,7 @@ Clojure:
   primary_extension: .clj
   extensions:
   - .cljs
+  - .cljx
   filenames:
   - riemann.config
 
@@ -282,6 +283,7 @@ Common Lisp:
   - .asd
   - .lsp
   - .ny
+  - .podsl
 
 Coq:
   type: programming
@@ -337,14 +339,6 @@ Darcs Patch:
 Dart:
   type: programming
   primary_extension: .dart
-
-Delphi:
-  type: programming
-  color: "#b0ce4e"
-  primary_extension: .pas
-  extensions:
-  - .dfm
-  - .lpr
 
 DCPU-16 ASM:
   type: programming
@@ -635,7 +629,6 @@ Haxe:
 INI:
   type: data
   extensions:
-  - .cfg
   - .ini
   - .prefs
   - .properties
@@ -713,6 +706,13 @@ Kotlin:
   extensions:
   - .ktm
   - .kts
+
+LFE:
+  type: programming
+  primary_extension: .lfe
+  color: "#004200"
+  lexer: Common Lisp
+  group: Erlang
 
 LLVM:
   primary_extension: .ll
@@ -1011,6 +1011,15 @@ Parrot Assembly:
   - pasm
   primary_extension: .pasm
 
+Pascal:
+  type: programming
+  lexer: Delphi
+  color: "#b0ce4e"
+  primary_extension: .pas
+  extensions:
+  - .dfm
+  - .lpr
+
 Perl:
   type: programming
   ace_mode: perl
@@ -1101,6 +1110,8 @@ R:
   color: "#198ce7"
   lexer: S
   primary_extension: .r
+  filenames:
+  - .Rprofile
 
 RHTML:
   type: markup
@@ -1258,6 +1269,11 @@ Smalltalk:
 Smarty:
   primary_extension: .tpl
 
+Squirrel:
+  type: programming
+  lexer: C++
+  primary_extension: .nut
+
 Standard ML:
   type: programming
   color: "#dc566d"
@@ -1334,7 +1350,6 @@ Twig:
 TypeScript:
   type: programming
   color: "#31859c"
-  lexer: Text only
   aliases:
   - ts
   primary_extension: .ts
@@ -1439,6 +1454,7 @@ XML:
   - .wxi
   - .wxl
   - .wxs
+  - .x3d
   - .xaml
   - .xlf
   - .xliff
@@ -1482,7 +1498,7 @@ Xtend:
   primary_extension: .xtend
 
 YAML:
-  type: markup
+  type: data
   aliases:
   - yml
   primary_extension: .yml
