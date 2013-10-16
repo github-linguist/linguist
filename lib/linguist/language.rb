@@ -156,7 +156,10 @@ module Linguist
     # Returns all matching Languages or [] if none were found.
     def self.find_by_filename(filename)
       basename, extname = File.basename(filename), File.extname(filename)
-      @filename_index[basename] + @extension_index[extname]
+      langs = [@primary_extension_index[extname]] +
+              @filename_index[basename] +
+              @extension_index[extname]
+      langs.compact.uniq
     end
 
     # Public: Look up Language by its name or lexer.
