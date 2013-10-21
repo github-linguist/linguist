@@ -1,4 +1,4 @@
-#pragma rtGlobals=1		// Use modern global access method.
+#pragma rtGlobals=1		// Use modern global access method
 
 Function median(w)
 	wave w
