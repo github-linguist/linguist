@@ -219,7 +219,10 @@ class TestBlob < Test::Unit::TestCase
 
     # Debian packaging
     assert blob("debian/cron.d").vendored?
-
+    
+    # Documentations
+    assert blob("doc/index.html").vendored?
+    
     # Prototype
     assert !blob("public/javascripts/application.js").vendored?
     assert blob("public/javascripts/prototype.js").vendored?
