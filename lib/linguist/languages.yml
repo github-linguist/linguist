@@ -22,7 +22,7 @@
 # Any additions or modifications (even trivial) should have corresponding
 # test change in `test/test_blob.rb`.
 #
-# Please keep this list alphabetized. Capitalization comes before lower case.
+# Please keep this list alphabetized.
 
 ABAP:
   type: programming
@@ -90,16 +90,6 @@ Arduino:
   color: "#bd79d1"
   lexer: C++
   primary_extension: .ino
-
-AsciiDoc:
-  type: markup
-  lexer: Text only
-  ace_mode: asciidoc
-  wrap: true
-  primary_extension: .asciidoc
-  extensions:
-  - .adoc
-  - .asc
 
 Assembly:
   type: programming
@@ -306,12 +296,6 @@ Cpp-ObjDump:
   extensions:
   - .c++objdump
   - .cxx-objdump
-
-Creole:
-  type: markup
-  lexer: Text only
-  wrap: true
-  primary_extension: .creole
 
 Cucumber:
   lexer: Gherkin
@@ -862,12 +846,6 @@ Max:
   - .maxhelp
   - .maxpat
 
-MediaWiki:
-  type: markup
-  lexer: Text only
-  wrap: true
-  primary_extension: .mediawiki
-
 MiniD: # Legacy
   searchable: false
   primary_extension: .minid # Dummy extension
@@ -996,12 +974,6 @@ OpenEdge ABL:
   - openedge
   - abl
   primary_extension: .p
-
-Org:
-  type: markup
-  lexer: Text only
-  wrap: true
-  primary_extension: .org
 
 PHP:
   type: programming
@@ -1141,13 +1113,6 @@ R:
   primary_extension: .r
   filenames:
   - .Rprofile
-
-RDoc:
-  type: markup
-  lexer: Text only
-  ace_mode: rdoc
-  wrap: true
-  primary_extension: .rdoc
 
 RHTML:
   type: markup
