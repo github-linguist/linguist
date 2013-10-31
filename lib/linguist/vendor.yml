@@ -27,6 +27,9 @@
 # Erlang bundles
 - ^rebar$
 
+# Bootstrap minified css and js
+- (^|/)bootstrap([^.]*)(\.min)\.(js|css)$
+
 # Vendored dependencies
 - vendors?/
 
