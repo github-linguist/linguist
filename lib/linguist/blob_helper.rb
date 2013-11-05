@@ -70,7 +70,7 @@ module Linguist
     #
     # Return true or false
     def likely_binary?
-       binary_mime_type? and not Language.find_by_filename(name)
+      binary_mime_type? && !Language.find_by_filename(name)
     end
 
     # Public: Get the Content-Type header value
@@ -189,11 +189,10 @@ module Linguist
 
     # Public: Is the blob safe to colorize?
     #
-    # We use Pygments.rb for syntax highlighting blobs, which
-    # has some quirks and also is essentially 'un-killable' via
-    # normal timeout.  To workaround this we try to
-    # carefully handling Pygments.rb anything it can't handle.
-    #
+    # We use Pygments for syntax highlighting blobs. Pygments
+    # can be too slow for very large blobs or for certain 
+    # corner-case blobs.
+    # 
     # Return true or false
     def safe_to_colorize?
       !large? && text? && !high_ratio_of_long_lines?
@@ -278,36 +277,6 @@ module Linguist
       @_generated ||= Generated.generated?(name, lambda { data })
     end
 
-    # Public: Should the blob be indexed for searching?
-    #
-    # Excluded:
-    # - Files over 0.1MB
-    # - Non-text files
-    # - Languages marked as not searchable
-    # - Generated source files
-    #
-    # Please add additional test coverage to
-    # `test/test_blob.rb#test_indexable` if you make any changes.
-    #
-    # Return true or false
-    def indexable?
-      if size > 100 * 1024
-        false
-      elsif binary?
-        false
-      elsif extname == '.txt'
-        true
-      elsif language.nil?
-        false
-      elsif !language.searchable?
-        false
-      elsif generated?
-        false
-      else
-        true
-      end
-    end
-
     # Public: Detects the Language of the blob.
     #
     # May load Blob#data
@@ -342,20 +311,6 @@ module Linguist
       options[:options] ||= {}
       options[:options][:encoding] ||= encoding
       lexer.highlight(data, options)
-    end
-
-    # Public: Highlight syntax of blob without the outer highlight div
-    # wrapper.
-    #
-    # options - A Hash of options (defaults to {})
-    #
-    # Returns html String
-    def colorize_without_wrapper(options = {})
-      if text = colorize(options)
-        text[%r{<div class="highlight"><pre>(.*?)</pre>\s*</div>}m, 1]
-      else
-        ''
-      end
     end
   end
 end

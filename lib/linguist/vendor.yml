@@ -24,8 +24,15 @@
 # Node dependencies
 - node_modules/
 
+# Erlang bundles
+- ^rebar$
+
+# Bootstrap minified css and js
+- (^|/)bootstrap([^.]*)(\.min)\.(js|css)$
+
 # Vendored dependencies
-- vendor/
+- thirdparty/
+- vendors?/
 
 # Debian packaging
 - ^debian/
@@ -34,7 +41,11 @@
 
 # jQuery
 - (^|/)jquery([^.]*)(\.min)?\.js$
-- (^|/)jquery\-\d\.\d(\.\d)?(\.min)?\.js$
+- (^|/)jquery\-\d\.\d+(\.\d+)?(\.min)?\.js$
+
+# jQuery UI
+- (^|/)jquery\-ui(\-\d\.\d+(\.\d+)?)?(\.\w+)?(\.min)?\.(js|css)$
+- (^|/)jquery\.(ui|effects)\.([^.]*)(\.min)?\.(js|css)$
 
 # Prototype
 - (^|/)prototype(.*)\.js$
@@ -54,10 +65,6 @@
 # YUI
 - (^|/)yahoo-([^.]*)\.js$
 - (^|/)yui([^.]*)\.js$
-
-# LESS css
-- (^|/)less([^.]*)(\.min)?\.js$
-- (^|/)less\-\d+\.\d+\.\d+(\.min)?\.js$
 
 # WYS editors
 - (^|/)ckeditor\.js$
@@ -95,7 +102,8 @@
 - -vsdoc\.js$
 
 # jQuery validation plugin (MS bundles this with asp.net mvc)
-- (^|/)jquery([^.]*)\.validate(\.min)?\.js$
+- (^|/)jquery([^.]*)\.validate(\.unobtrusive)?(\.min)?\.js$
+- (^|/)jquery([^.]*)\.unobtrusive\-ajax(\.min)?\.js$
 
 # Microsoft Ajax
 - (^|/)[Mm]icrosoft([Mm]vc)?([Aa]jax|[Vv]alidation)(\.debug)?\.js$
@@ -104,10 +112,34 @@
 - ^[Pp]ackages/
 
 # ExtJS
-- (^|/)extjs/
+- (^|/)extjs/.*?\.js$
+- (^|/)extjs/.*?\.xml$
+- (^|/)extjs/.*?\.txt$
+- (^|/)extjs/.*?\.html$
+- (^|/)extjs/.*?\.properties$
+- (^|/)extjs/.sencha/
+- (^|/)extjs/docs/
+- (^|/)extjs/builds/
+- (^|/)extjs/cmd/
+- (^|/)extjs/examples/
+- (^|/)extjs/locale/
+- (^|/)extjs/packages/
+- (^|/)extjs/plugins/
+- (^|/)extjs/resources/
+- (^|/)extjs/src/
+- (^|/)extjs/welcome/
 
 # Samples folders
 - ^[Ss]amples/
+
+# LICENSE, README, git config files
+- ^COPYING$
+- ^LICENSE$
+- gitattributes$
+- gitignore$
+- gitmodules$
+- ^README$
+- ^readme$
 
 # Test fixtures
 - ^[Tt]est/fixtures/
@@ -115,3 +147,6 @@
 # PhoneGap/Cordova
 - (^|/)cordova([^.]*)(\.min)?\.js$
 - (^|/)cordova\-\d\.\d(\.\d)?(\.min)?\.js$
+
+# .DS_Store's
+- .[Dd][Ss]_[Ss]tore$
