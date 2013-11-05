@@ -216,6 +216,9 @@ class TestBlob < Test::Unit::TestCase
     # Rails vendor/
     assert blob("vendor/plugins/will_paginate/lib/will_paginate.rb").vendored?
 
+    # 'thirdparty' directory
+    assert blob("thirdparty/lib/main.c").vendored?
+
     # C deps
     assert blob("deps/http_parser/http_parser.c").vendored?
     assert blob("deps/v8/src/v8.h").vendored?
