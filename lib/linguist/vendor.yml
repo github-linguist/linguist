@@ -112,7 +112,22 @@
 - ^[Pp]ackages/
 
 # ExtJS
-- (^|/)extjs/
+- (^|/)extjs/.*?\.js$
+- (^|/)extjs/.*?\.xml$
+- (^|/)extjs/.*?\.txt$
+- (^|/)extjs/.*?\.html$
+- (^|/)extjs/.*?\.properties$
+- (^|/)extjs/.sencha/
+- (^|/)extjs/docs/
+- (^|/)extjs/builds/
+- (^|/)extjs/cmd/
+- (^|/)extjs/examples/
+- (^|/)extjs/locale/
+- (^|/)extjs/packages/
+- (^|/)extjs/plugins/
+- (^|/)extjs/resources/
+- (^|/)extjs/src/
+- (^|/)extjs/welcome/
 
 # Samples folders
 - ^[Ss]amples/
