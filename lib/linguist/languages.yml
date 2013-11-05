@@ -67,7 +67,11 @@ Ada:
   primary_extension: .adb
   extensions:
   - .ads
- 
+
+Agda:
+  type: programming
+  primary_extension: .agda
+
 ApacheConf:
   type: markup
   aliases:
@@ -123,6 +127,7 @@ Awk:
   lexer: Awk
   primary_extension: .awk
   extensions:
+  - .auk
   - .gawk
   - .mawk
   - .nawk
@@ -437,6 +442,8 @@ Emacs Lisp:
   - elisp
   - emacs
   primary_extension: .el
+  filenames:   
+  - .emacs
   extensions:
   - .emacs
 
@@ -794,7 +801,6 @@ LLVM:
 Lasso:
   type: programming
   lexer: Lasso
-  ace_mode: lasso
   color: "#2584c3"
   primary_extension: .lasso
 
@@ -802,7 +808,6 @@ Less:
   type: markup
   group: CSS
   lexer: CSS
-  ace_mode: less
   primary_extension: .less
 
 LilyPond:
@@ -810,6 +815,13 @@ LilyPond:
   primary_extension: .ly
   extensions:
   - .ily
+
+Literate Agda:
+  type: programming
+  group: Agda
+  primary_extension: .lagda
+  extensions:
+    - .lagda
 
 Literate CoffeeScript:
   type: programming
