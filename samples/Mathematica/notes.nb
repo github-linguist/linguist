@@ -1,0 +1,122 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 9.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      3084,        113]
+NotebookOptionsPosition[      2505,         88]
+NotebookOutlinePosition[      2859,        104]
+CellTagsIndexPosition[      2816,        101]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell["Demonstrate a usual Mathematica notebook", "Subsubtitle",
+ CellChangeTimes->{{3.5858863004577703`*^9, 3.58588631532314*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["A Test Notebook", "Title",
+ CellChangeTimes->{{3.5858857020896463`*^9, 3.585885711193797*^9}}],
+
+Cell["We just use a simple Text cell", "Text",
+ CellChangeTimes->{
+  3.5858846924952307`*^9, {3.5858856879799633`*^9, 3.585885700922269*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"f", "[", "x_", "]"}], " ", "=", " ", 
+  RowBox[{"x", "^", "2"}]}]], "Input",
+ CellChangeTimes->{{3.58588571547892*^9, 3.58588572796824*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Plot", "[", 
+   RowBox[{
+    RowBox[{"f", "[", "x", "]"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"x", ",", 
+      RowBox[{"-", "2"}], ",", "2"}], "}"}]}], "]"}], " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{"Just", " ", "an", " ", "easy", " ", "plot"}], " ", 
+   "*)"}]}]], "Input",
+ CellChangeTimes->{{3.585885729948606*^9, 3.585885746784307*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"Recursion", " ", "&"}], " ", "Fibonaccy"}], " ", "*)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{"g", "[", "1", "]"}], " ", "=", " ", "1"}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"g", "[", "0", "]"}], " ", "=", " ", "0"}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"g", "[", "n_", "]"}], " ", ":=", " ", 
+     RowBox[{
+      RowBox[{"g", "[", 
+       RowBox[{"n", "-", "1"}], "]"}], "+", 
+      RowBox[{"g", "[", 
+       RowBox[{"n", "-", "2"}], "]"}]}]}], ";"}]}]}]], "Input",
+ CellChangeTimes->{{3.585885749091485*^9, 3.585885811292904*^9}, 
+   3.585885865686294*^9}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"g", "[", "20", "]"}]], "Input",
+ CellChangeTimes->{{3.585885872704052*^9, 3.585885874729063*^9}}],
+
+Cell[BoxData["6765"], "Output",
+ CellChangeTimes->{3.5858858753669977`*^9}]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{740, 617},
+WindowMargins->{{4, Automatic}, {Automatic, 4}},
+FrontEndVersion->"9.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (January 25, \
+2013)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[557, 20, 130, 1, 29, "Subsubtitle"],
+Cell[CellGroupData[{
+Cell[712, 25, 100, 1, 92, "Title"],
+Cell[815, 28, 141, 2, 30, "Text"],
+Cell[959, 32, 175, 4, 28, "Input"],
+Cell[1137, 38, 376, 11, 28, "Input"],
+Cell[1516, 51, 737, 24, 80, "Input"],
+Cell[CellGroupData[{
+Cell[2278, 79, 121, 2, 28, "Input"],
+Cell[2402, 83, 75, 1, 28, "Output"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
