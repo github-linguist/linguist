@@ -198,6 +198,9 @@ class TestBlob < Test::Unit::TestCase
     assert blob("Java/ProtocolBuffer.java").generated?
     assert blob("Python/protocol_buffer_pb2.py").generated?
 
+    # Generated JNI
+    assert blob("C/jni_layer.h").generated?
+
     # Minified CSS
     assert !blob("CSS/bootstrap.css").generated?
     assert blob("CSS/bootstrap.min.css").generated?
@@ -207,11 +210,17 @@ class TestBlob < Test::Unit::TestCase
     assert !blob("Text/README").vendored?
     assert !blob("ext/extconf.rb").vendored?
 
+    # Dependencies
+    assert blob("dependencies/windows/headers/GL/glext.h").vendored?
+
     # Node dependencies
     assert blob("node_modules/coffee-script/lib/coffee-script.js").vendored?
 
     # Rails vendor/
     assert blob("vendor/plugins/will_paginate/lib/will_paginate.rb").vendored?
+
+    # 'thirdparty' directory
+    assert blob("thirdparty/lib/main.c").vendored?
 
     # C deps
     assert blob("deps/http_parser/http_parser.c").vendored?
@@ -236,6 +245,8 @@ class TestBlob < Test::Unit::TestCase
     assert blob("public/javascripts/jquery-1.5.2.js").vendored?
     assert blob("public/javascripts/jquery-1.6.1.js").vendored?
     assert blob("public/javascripts/jquery-1.6.1.min.js").vendored?
+    assert blob("public/javascripts/jquery-1.10.1.js").vendored?
+    assert blob("public/javascripts/jquery-1.10.1.min.js").vendored?
     assert !blob("public/javascripts/jquery.github.menu.js").vendored?
 
     # jQuery UI
@@ -307,6 +318,15 @@ class TestBlob < Test::Unit::TestCase
     # Test fixtures
     assert blob("test/fixtures/random.rkt").vendored?
     assert blob("Test/fixtures/random.rkt").vendored?
+    
+    # Cordova/PhoneGap
+    assert blob("cordova.js").vendored?
+    assert blob("cordova.min.js").vendored?
+    assert blob("cordova-2.1.0.js").vendored?
+    assert blob("cordova-2.1.0.min.js").vendored?
+
+    # Vagrant
+    assert blob("Vagrantfile").vendored?
   end
 
   def test_language

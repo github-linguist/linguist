@@ -15,8 +15,10 @@ module Linguist
     @index           = {}
     @name_index      = {}
     @alias_index     = {}
-    @extension_index = Hash.new { |h,k| h[k] = [] }
-    @filename_index  = Hash.new { |h,k| h[k] = [] }
+
+    @extension_index          = Hash.new { |h,k| h[k] = [] }
+    @filename_index           = Hash.new { |h,k| h[k] = [] }
+    @primary_extension_index  = {}
 
     # Valid Languages types
     TYPES = [:data, :markup, :programming]
@@ -62,6 +64,12 @@ module Linguist
 
         @extension_index[extension] << language
       end
+
+      if @primary_extension_index.key?(language.primary_extension)
+        raise ArgumentError, "Duplicate primary extension: #{language.primary_extension}"
+      end
+
+      @primary_extension_index[language.primary_extension] = language
 
       language.filenames.each do |filename|
         @filename_index[filename] << language
@@ -148,7 +156,10 @@ module Linguist
     # Returns all matching Languages or [] if none were found.
     def self.find_by_filename(filename)
       basename, extname = File.basename(filename), File.extname(filename)
-      @filename_index[basename] + @extension_index[extname]
+      langs = [@primary_extension_index[extname]] +
+              @filename_index[basename] +
+              @extension_index[extname]
+      langs.compact.uniq
     end
 
     # Public: Look up Language by its name or lexer.
