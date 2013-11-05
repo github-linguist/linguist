@@ -615,6 +615,12 @@ Handlebars:
   - .html.handlebars
   - .html.hbs
 
+Harbour:
+  type: programming
+  lexer: Text only
+  color: "#0e60e3"
+  primary_extension: .hb
+
 Haskell:
   type: programming
   color: "#29b544"
@@ -1599,3 +1605,11 @@ wisp:
   ace_mode: clojure
   color: "#7582D1"
   primary_extension: .wisp
+
+xBase:
+  type: programming
+  lexer: Text only
+  color: "#3a4040"
+  primary_extension: .prg
+  extensions:
+  - .ch
