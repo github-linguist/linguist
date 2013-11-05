@@ -88,11 +88,12 @@ module Linguist
     #
     # Returns Language or nil.
     def self.detect(name, data, mode = nil)
-      # A bit of an elegant hack. If the file is executable but extensionless,
-      # append a "magic" extension so it can be classified with other
-      # languages that have shebang scripts.
+      # If the file is executable but extensionless,
+      # try to find the language by the shebang (assuming that it's on the
+      # first line of the script) and return it.
       if File.extname(name).empty? && mode && (mode.to_i(8) & 05) == 05
-        name += ".script!"
+        shebang = File.open(name, &:readline)
+        return Language.find_by_shebang(shebang)
       end
 
       possible_languages = find_by_filename(name)
@@ -160,6 +161,17 @@ module Linguist
               @filename_index[basename] +
               @extension_index[extname]
       langs.compact.uniq
+    end
+
+    # Public: Look up Languages by shebang.
+    #
+    # shebang - The shebang String.
+    #
+    # Returns all matching languages or [] if none were found.
+    def self.find_by_shebang(shebang)
+      tokenizer = Tokenizer.new
+      shebang = tokenizer.extract_shebang(shebang)
+      [Language[shebang]] || []
     end
 
     # Public: Look up Language by its name or lexer.
