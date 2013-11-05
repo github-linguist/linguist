@@ -198,6 +198,9 @@ class TestBlob < Test::Unit::TestCase
     assert blob("Java/ProtocolBuffer.java").generated?
     assert blob("Python/protocol_buffer_pb2.py").generated?
 
+    # Generated JNI
+    assert blob("C/jni_layer.h").generated?
+
     # Minified CSS
     assert !blob("CSS/bootstrap.css").generated?
     assert blob("CSS/bootstrap.min.css").generated?
