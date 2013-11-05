@@ -324,6 +324,9 @@ class TestBlob < Test::Unit::TestCase
     assert blob("cordova.min.js").vendored?
     assert blob("cordova-2.1.0.js").vendored?
     assert blob("cordova-2.1.0.min.js").vendored?
+
+    # Vagrant
+    assert blob("Vagrantfile").vendored?
   end
 
   def test_language
