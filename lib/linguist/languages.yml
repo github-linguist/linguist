@@ -67,7 +67,13 @@ Ada:
   primary_extension: .adb
   extensions:
   - .ads
- 
+
+Agda:
+  type: programming
+  primary_extension: .agda
+  extensions:
+    - .agda
+
 ApacheConf:
   type: markup
   aliases:
@@ -804,6 +810,13 @@ LilyPond:
   primary_extension: .ly
   extensions:
   - .ily
+
+Literate Agda:
+  type: programming
+  group: Agda
+  primary_extension: .lagda
+  extensions:
+    - .lagda
 
 Literate CoffeeScript:
   type: programming
