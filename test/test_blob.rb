@@ -204,6 +204,8 @@ class TestBlob < Test::Unit::TestCase
     # Minified CSS
     assert !blob("CSS/bootstrap.css").generated?
     assert blob("CSS/bootstrap.min.css").generated?
+
+    assert Linguist::Generated.generated?("node_modules/grunt/lib/grunt.js", nil)
   end
 
   def test_vendored
