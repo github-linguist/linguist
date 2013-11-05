@@ -223,6 +223,13 @@ class TestBlob < Test::Unit::TestCase
     assert blob("deps/http_parser/http_parser.c").vendored?
     assert blob("deps/v8/src/v8.h").vendored?
 
+    # xcode framework
+    assert blob("appname/framework/someframework.framework").vendored?
+    assert blob("appname/framework/resorcefile.xml").vendored?
+    assert blob("framework/someframework.framework").vendored?
+    assert blob("framework/resorcefile.h").vendored?
+    assert !blob("appname/code/appresource.h").vendored?
+    
     # Debian packaging
     assert blob("debian/cron.d").vendored?
 
