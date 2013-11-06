@@ -1,0 +1,36 @@
+#! /usr/bin/env ruby
+# -*- coding: UTF-8 -*-
+
+require 'trollop'
+require 'ud'
+
+opts = Trollop.options do
+  version "ud #{UD.version}"
+  banner <<-EOS
+UD is a command-line tool to scrape definitions from the Urban Dictionary.
+
+Usage:
+    ud [options] <word(s)>
+where [options] are:
+EOS
+
+  opt :ratio, 'Filter by upvotes/downvotes ratio', :type => :float, :default => 0.0
+  opt :count, 'Limit the number of definitions', :type => :int, :default => 1, :short => '-n'
+  opt :color, 'Use colorized output', :default => true
+  opt :up, 'Shortcut for \'-r 2\''
+
+end
+
+Trollop.die :ratio, 'must be non-negative' if opts[:ratio] < 0
+Trollop.die :count, 'must be non-negative' if opts[:count] < 0
+
+opts[:ratio] = 2 if opts[:up]
+
+if ARGV.empty?
+  puts 'Error: No word provided. Use -h or --help to see the help.'
+  exit 1
+end
+
+q = UD.query(ARGV.join(' '), opts)
+puts UD.format_results(q, opts[:color])
+
