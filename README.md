@@ -88,6 +88,10 @@ We try to only add languages once they have some usage on GitHub, so please note
 
 Almost all bug fixes or new language additions should come with some additional code samples. Just drop them under [`samples/`](https://github.com/github/linguist/tree/master/samples) in the correct subdirectory and our test suite will automatically test them. In most cases you shouldn't need to add any new assertions.
 
+To update the samples.json after adding new files to [`samples/`](https://github.com/github/linguist/tree/master/samples):
+
+    bundle exec rake samples
+
 ### Testing
 
 Sometimes getting the tests running can be too much work, especially if you don't have much Ruby experience. It's okay, be lazy and let our build bot [Travis](http://travis-ci.org/#!/github/linguist) run the tests for you. Just open a pull request and the bot will start cranking away.
