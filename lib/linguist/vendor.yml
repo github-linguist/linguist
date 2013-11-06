@@ -12,6 +12,9 @@
 # Caches
 - cache/
 
+# Dependencies
+- ^[Dd]ependencies/
+
 # C deps
 #  https://github.com/joyent/node
 - ^deps/
@@ -27,8 +30,12 @@
 # Erlang bundles
 - ^rebar$
 
+# Bootstrap minified css and js
+- (^|/)bootstrap([^.]*)(\.min)\.(js|css)$
+
 # Vendored dependencies
-- vendor/
+- thirdparty/
+- vendors?/
 
 # Debian packaging
 - ^debian/
@@ -86,6 +93,8 @@
 # WAF
 - ^waf$
 
+# .osx
+- ^.osx$
 
 ## Obj-C ##
 
@@ -108,7 +117,22 @@
 - ^[Pp]ackages/
 
 # ExtJS
-- (^|/)extjs/
+- (^|/)extjs/.*?\.js$
+- (^|/)extjs/.*?\.xml$
+- (^|/)extjs/.*?\.txt$
+- (^|/)extjs/.*?\.html$
+- (^|/)extjs/.*?\.properties$
+- (^|/)extjs/.sencha/
+- (^|/)extjs/docs/
+- (^|/)extjs/builds/
+- (^|/)extjs/cmd/
+- (^|/)extjs/examples/
+- (^|/)extjs/locale/
+- (^|/)extjs/packages/
+- (^|/)extjs/plugins/
+- (^|/)extjs/resources/
+- (^|/)extjs/src/
+- (^|/)extjs/welcome/
 
 # Samples folders
 - ^[Ss]amples/
@@ -124,6 +148,13 @@
 
 # Test fixtures
 - ^[Tt]est/fixtures/
+
+# PhoneGap/Cordova
+- (^|/)cordova([^.]*)(\.min)?\.js$
+- (^|/)cordova\-\d\.\d(\.\d)?(\.min)?\.js$
+
+# Vagrant
+- ^Vagrantfile$
 
 # .DS_Store's
 - .[Dd][Ss]_[Ss]tore$

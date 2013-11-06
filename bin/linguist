@@ -12,8 +12,9 @@ path = ARGV[0] || Dir.pwd
 if File.directory?(path)
   repo = Linguist::Repository.from_directory(path)
   repo.languages.sort_by { |_, size| size }.reverse.each do |language, size|
-    percentage = ((size / repo.size.to_f) * 100).round
-    puts "%-4s %s" % ["#{percentage}%", language]
+    percentage = ((size / repo.size.to_f) * 100)
+    percentage = sprintf '%.2f' % percentage
+    puts "%-7s %s" % ["#{percentage}%", language]
   end
 elsif File.file?(path)
   blob = Linguist::FileBlob.new(path, Dir.pwd)

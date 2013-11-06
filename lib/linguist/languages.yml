@@ -22,13 +22,19 @@
 # Any additions or modifications (even trivial) should have corresponding
 # test change in `test/test_blob.rb`.
 #
-# Please keep this list alphabetized. Capitalization comes before lower case.
+# Please keep this list alphabetized.
 
 ABAP:
   type: programming
   lexer: ABAP
   primary_extension: .abap
-
+  
+ANTLR:
+  type: programming
+  color: "#9DC3FF"
+  lexer: ANTLR
+  primary_extension: .g4
+  
 ASP:
   type: programming
   color: "#6a40fd"
@@ -62,6 +68,10 @@ Ada:
   extensions:
   - .ads
 
+Agda:
+  type: programming
+  primary_extension: .agda
+
 ApacheConf:
   type: markup
   aliases:
@@ -91,16 +101,6 @@ Arduino:
   lexer: C++
   primary_extension: .ino
 
-AsciiDoc:
-  type: markup
-  lexer: Text only
-  ace_mode: asciidoc
-  wrap: true
-  primary_extension: .asciidoc
-  extensions:
-  - .adoc
-  - .asc
-
 Assembly:
   type: programming
   lexer: NASM
@@ -127,6 +127,7 @@ Awk:
   lexer: Awk
   primary_extension: .awk
   extensions:
+  - .auk
   - .gawk
   - .mawk
   - .nawk
@@ -146,6 +147,11 @@ Befunge:
 
 BlitzMax:
   primary_extension: .bmx
+
+Bluespec:
+  type: programming
+  lexer: verilog
+  primary_extension: .bsv
 
 Boo:
   type: programming
@@ -194,8 +200,10 @@ C++:
   - .H
   - .h++
   - .hh
+  - .hpp
   - .hxx
   - .tcc
+  - .tpp
 
 C-ObjDump:
   type: data
@@ -245,14 +253,26 @@ ChucK:
   lexer: Java
   primary_extension: .ck
 
+Clean:
+  type: programming
+  color: "#3a81ad"
+  lexer: Text only
+  primary_extension: .icl
+  extensions:
+  - .dcl
+
 Clojure:
   type: programming
   ace_mode: clojure
   color: "#db5855"
   primary_extension: .clj
   extensions:
+  - .cl2
+  - .cljc
   - .cljs
+  - .cljscm
   - .cljx
+  - .hic
   filenames:
   - riemann.config
 
@@ -291,6 +311,7 @@ Common Lisp:
   primary_extension: .lisp
   extensions:
   - .asd
+  - .cl
   - .lsp
   - .ny
   - .podsl
@@ -307,15 +328,15 @@ Cpp-ObjDump:
   - .c++objdump
   - .cxx-objdump
 
-Creole:
-  type: markup
-  lexer: Text only
-  wrap: true
-  primary_extension: .creole
-
 Cucumber:
   lexer: Gherkin
   primary_extension: .feature
+
+Cuda:
+  lexer: CUDA
+  primary_extension: .cu
+  extensions:
+  - .cuh
 
 Cython:
   type: programming
@@ -336,6 +357,14 @@ D-ObjDump:
   type: data
   lexer: d-objdump
   primary_extension: .d-objdump
+  
+DM:
+  type: programming
+  color: "#075ff1"
+  lexer: Text only
+  primary_extension: .dm
+  aliases:
+  - byond
 
 DOT:
   type: programming
@@ -364,7 +393,7 @@ DCPU-16 ASM:
   - .dasm
   aliases:
   - dasm16
-
+  
 Diff:
   primary_extension: .diff
 
@@ -413,6 +442,8 @@ Emacs Lisp:
   - elisp
   - emacs
   primary_extension: .el
+  filenames:   
+  - .emacs
   extensions:
   - .emacs
 
@@ -528,6 +559,12 @@ Gettext Catalog:
   extensions:
   - .pot
 
+Glyph:
+  type: programming
+  color: "#e4cc98"
+  lexer: Tcl
+  primary_extension: .glf
+
 Go:
   type: programming
   color: "#a89b4d"
@@ -628,7 +665,6 @@ Haskell:
 
 Haxe:
   type: programming
-  lexer: haXe
   ace_mode: haxe
   color: "#346d51"
   primary_extension: .hx
@@ -642,6 +678,17 @@ INI:
   - .prefs
   - .properties
   primary_extension: .ini
+
+Idris:
+  type: programming
+  lexer: Text only
+  primary_extension: .idr
+  extensions:
+  - .lidr
+
+Inno Setup:
+  primary_extension: .iss
+  lexer: Text only
 
 IRC log:
   lexer: IRC logs
@@ -673,6 +720,19 @@ JSON:
   ace_mode: json
   searchable: false
   primary_extension: .json
+  extensions:
+  - .sublime-keymap
+  - .sublime_metrics
+  - .sublime-mousemap
+  - .sublime-project
+  - .sublime_session
+  - .sublime-settings
+  - .sublime-workspace
+
+Jade:
+  group: HTML
+  type: markup
+  primary_extension: .jade
 
 Java:
   type: programming
@@ -715,6 +775,12 @@ Julia:
   primary_extension: .jl
   color: "#a270ba"
 
+KRL:
+  lexer: Text only
+  type: programming
+  color: "#f5c800"
+  primary_extension: .krl
+
 Kotlin:
   type: programming
   primary_extension: .kt
@@ -735,7 +801,6 @@ LLVM:
 Lasso:
   type: programming
   lexer: Lasso
-  ace_mode: lasso
   color: "#2584c3"
   primary_extension: .lasso
 
@@ -743,7 +808,6 @@ Less:
   type: markup
   group: CSS
   lexer: CSS
-  ace_mode: less
   primary_extension: .less
 
 LilyPond:
@@ -751,6 +815,13 @@ LilyPond:
   primary_extension: .ly
   extensions:
   - .ily
+
+Literate Agda:
+  type: programming
+  group: Agda
+  primary_extension: .lagda
+  extensions:
+    - .lagda
 
 Literate CoffeeScript:
   type: programming
@@ -861,12 +932,6 @@ Max:
   extensions:
   - .maxhelp
   - .maxpat
-
-MediaWiki:
-  type: markup
-  lexer: Text only
-  wrap: true
-  primary_extension: .mediawiki
 
 MiniD: # Legacy
   searchable: false
@@ -997,11 +1062,11 @@ OpenEdge ABL:
   - abl
   primary_extension: .p
 
-Org:
-  type: markup
+Oxygene:
+  type: programming
   lexer: Text only
-  wrap: true
-  primary_extension: .org
+  color: "#5a63a3"
+  primary_extension: .oxygene
 
 PHP:
   type: programming
@@ -1084,6 +1149,9 @@ PowerShell:
   aliases:
   - posh
   primary_extension: .ps1
+  extensions:
+  - .psd1
+  - .psm1
 
 Processing:
   type: programming
@@ -1097,6 +1165,13 @@ Prolog:
   primary_extension: .prolog
   extensions:
   - .pro
+
+Protocol Buffer:
+  type: markup
+  aliases:
+  - protobuf
+  - Protocol Buffers
+  primary_extension: .proto
 
 Puppet:
   type: programming
@@ -1134,20 +1209,31 @@ Python traceback:
   searchable: false
   primary_extension: .pytb
 
+QML:
+  type: markup
+  color: "#44a51c"
+  primary_extension: .qml
+
 R:
   type: programming
   color: "#198ce7"
   lexer: S
   primary_extension: .r
+  extensions:
+  - .R
   filenames:
   - .Rprofile
 
-RDoc:
-  type: markup
-  lexer: Text only
-  ace_mode: rdoc
-  wrap: true
-  primary_extension: .rdoc
+REALbasic:
+  type: programming
+  lexer: VB.net
+  primary_extension: .rbbas
+  extensions:
+  - .rbfrm
+  - .rbmnu
+  - .rbres
+  - .rbtbar
+  - .rbuistate
 
 RHTML:
   type: markup
@@ -1187,6 +1273,12 @@ Rebol:
 Redcode:
   primary_extension: .cw
 
+RobotFramework:
+  type: programming
+  primary_extension: .robot
+  # extensions:
+  # - .txt
+
 Rouge:
   type: programming
   lexer: Clojure
@@ -1210,6 +1302,7 @@ Ruby:
   - .gemspec
   - .god
   - .irbrc
+  - .mspec
   - .podspec
   - .rbuild
   - .rbw
@@ -1258,6 +1351,11 @@ Scala:
   ace_mode: scala
   color: "#7dd3b0"
   primary_extension: .scala
+
+Scaml:
+  group: HTML
+  type: markup
+  primary_extension: .scaml
 
 Scheme:
   type: programming
@@ -1337,6 +1435,8 @@ Tcl:
   type: programming
   color: "#e4cc98"
   primary_extension: .tcl
+  extensions:
+  - .adp
 
 Tcsh:
   type: programming
@@ -1357,6 +1457,9 @@ TeX:
   - .dtx
   - .ins
   - .ltx
+  - .mkii
+  - .mkiv
+  - .mkvi
   - .sty
   - .toc
 
@@ -1419,9 +1522,7 @@ Verilog:
   color: "#848bf3"
   primary_extension: .v
   extensions:
-  - .sv
-  - .svh
-  - .vh
+  - .veo
 
 VimL:
   type: programming
@@ -1431,6 +1532,7 @@ VimL:
   - vim
   primary_extension: .vim
   filenames:
+  - .vimrc
   - vimrc
   - gvimrc
 
@@ -1441,6 +1543,7 @@ Visual Basic:
   primary_extension: .vb
   extensions:
   - .bas
+  - .frm
   - .frx
   - .vba
   - .vbs
@@ -1467,6 +1570,8 @@ XML:
   extensions:
   - .axml
   - .ccxml
+  - .clixml
+  - .cproject
   - .dita
   - .ditamap
   - .ditaval
@@ -1476,6 +1581,8 @@ XML:
   - .kml
   - .mxml
   - .plist
+  - .ps1xml
+  - .psc1
   - .pt
   - .rdf
   - .rss
@@ -1518,6 +1625,8 @@ XQuery:
   primary_extension: .xquery
   extensions:
   - .xq
+  - .xql
+  - .xqm
   - .xqy
 
 XS:
@@ -1569,6 +1678,11 @@ mupad:
   lexer: MuPAD
   primary_extension: .mu
 
+nesC:
+  type: programming
+  color: "#ffce3b"
+  primary_extension: .nc
+
 ooc:
   type: programming
   lexer: Ooc
@@ -1591,3 +1705,9 @@ wisp:
   ace_mode: clojure
   color: "#7582D1"
   primary_extension: .wisp
+
+xBase:
+  type: programming
+  lexer: Text only
+  color: "#3a4040"
+  primary_extension: .prg
