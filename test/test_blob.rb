@@ -265,6 +265,16 @@ class TestBlob < Test::Unit::TestCase
     assert blob("ui/minified/jquery.effects.blind.min.js").vendored?
     assert blob("ui/minified/jquery.ui.accordion.min.js").vendored?
 
+	# Bootstrap
+    assert blob("bootstrap.js").vendored?
+    assert blob("js/bootstrap.js").vendored?
+    assert blob("bootstrap-modal.js").vendored?
+    assert blob("bootstrap.min.js").vendored?
+    assert blob("bootstrap.css").vendored?
+    assert blob("bootstrap.min.css").vendored?
+    assert blob("css/bootstrap.min.css").vendored?
+    assert blob("bootstrap-responsive.min.css").vendored?
+    assert blob("bootstrap-combined.no-icons.min.css").vendored?
 
     # MooTools
     assert blob("public/javascripts/mootools-core-1.3.2-full-compat.js").vendored?
