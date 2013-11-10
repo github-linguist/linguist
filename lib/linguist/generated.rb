@@ -75,7 +75,7 @@ module Linguist
 
     # Internal: Is the blob minified files?
     #
-    # Consider a file minified if it contains more than 5% spaces.
+    # Consider a file minified if it contains less than 5% spaces.
     # Currently, only JS and CSS files are detected by this method.
     #
     # Returns true or false.
