@@ -31,9 +31,10 @@ We typically run on a pre-release version of Pygments, [pygments.rb](https://git
 
 ### Stats
 
-The Language Graph you see on every repository is built by aggregating the languages of all repo's blobs. The top language in the graph determines the project's primary language. Collectively, these stats make up the [Top Languages](https://github.com/languages) page.
+The Language Graph you see on every repository is built by aggregating the languages of each file in that repository. 
+The top language in the graph determines the project's primary language. Collectively, these stats make up the [Top Languages](https://github.com/languages) page.
 
-The repository stats API can be used on a directory:
+The repository stats API, accessed through `#languages`, can be used on a directory:
 
 ```ruby
 project = Linguist::Repository.from_directory(".")
@@ -41,7 +42,7 @@ project.language.name  #=> "Ruby"
 project.languages      #=> { "Ruby" => 0.98, "Shell" => 0.02 }
 ```
 
-These stats are also printed out by the binary. Try running `linguist` on itself:
+These stats are also printed out by the `linguist` binary. Try running `linguist` on itself:
 
     $ bundle exec linguist lib/
     100%  Ruby
