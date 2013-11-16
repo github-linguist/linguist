@@ -28,13 +28,13 @@ ABAP:
   type: programming
   lexer: ABAP
   primary_extension: .abap
-  
+
 ANTLR:
   type: programming
   color: "#9DC3FF"
   lexer: ANTLR
   primary_extension: .g4
-  
+
 ASP:
   type: programming
   color: "#6a40fd"
@@ -122,6 +122,15 @@ AutoHotkey:
   - ahk
   primary_extension: .ahk
 
+AutoIt:
+  type: programming
+  color: "#36699B"
+  aliases:
+  - au3
+  - AutoIt3
+  - AutoItScript
+  primary_extension: .au3
+
 Awk:
   type: programming
   lexer: Awk
@@ -144,6 +153,15 @@ Batchfile:
 
 Befunge:
   primary_extension: .befunge
+
+BlitzBasic:
+  type: programming
+  aliases:
+  - blitzplus
+  - blitz3d
+  primary_extension: .bb
+  extensions:
+  - .decls
 
 BlitzMax:
   primary_extension: .bmx
@@ -357,7 +375,7 @@ D-ObjDump:
   type: data
   lexer: d-objdump
   primary_extension: .d-objdump
-  
+
 DM:
   type: programming
   color: "#075ff1"
@@ -383,6 +401,7 @@ Darcs Patch:
 
 Dart:
   type: programming
+  color: "#98BAD6"
   primary_extension: .dart
 
 DCPU-16 ASM:
@@ -393,7 +412,7 @@ DCPU-16 ASM:
   - .dasm
   aliases:
   - dasm16
-  
+
 Diff:
   primary_extension: .diff
 
@@ -408,7 +427,7 @@ Ecere Projects:
   lexer: JSON
   primary_extension: .epj
 
-Ecl:
+ECL:
   type: programming
   color: "#8a1267"
   primary_extension: .ecl
@@ -442,7 +461,7 @@ Emacs Lisp:
   - elisp
   - emacs
   primary_extension: .el
-  filenames:   
+  filenames:
   - .emacs
   extensions:
   - .emacs
@@ -972,6 +991,12 @@ Nemerle:
   color: "#0d3c6e"
   primary_extension: .n
 
+NetLogo:
+  type: programming
+  lexer: Common Lisp
+  color: "#ff2b2b"
+  primary_extension: .nlogo
+
 Nginx:
   type: markup
   lexer: Nginx configuration file
@@ -1311,6 +1336,7 @@ Ruby:
   - .thor
   - .watchr
   filenames:
+  - Appraisals
   - Berksfile
   - Gemfile
   - Guardfile
@@ -1503,6 +1529,12 @@ Unified Parallel C:
   color: "#755223"
   primary_extension: .upc
 
+UnrealScript:
+  type: programming
+  color: "#a54c4d"
+  lexer: Java
+  primary_extension: .uc
+
 VHDL:
   type: programming
   lexer: vhdl
@@ -1581,6 +1613,7 @@ XML:
   - .kml
   - .mxml
   - .plist
+  - .pluginspec
   - .ps1xml
   - .psc1
   - .pt
@@ -1611,6 +1644,7 @@ XML:
   filenames:
   - .classpath
   - .project
+  - phpunit.xml.dist
 
 XProc:
   type: programming

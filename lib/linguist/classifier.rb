@@ -15,8 +15,8 @@ module Linguist
     #
     # Returns nothing.
     #
-    # Set LINGUIST_DEBUG=1 or =2 to see probabilities per-token,
-    # per-language.  See also dump_all_tokens, below.
+    # Set LINGUIST_DEBUG=1 or =2 to see probabilities per-token or
+    # per-language.  See also #dump_all_tokens, below.
     def self.train!(db, language, data)
       tokens = Tokenizer.tokenize(data)
 
@@ -151,10 +151,10 @@ module Linguist
         printf "%#{maxlen}s", ""
         puts "    #" + languages.map { |lang| sprintf("%10s", lang) }.join
         
-        tokmap = Hash.new(0)
-        tokens.each { |tok| tokmap[tok] += 1 }
+        token_map = Hash.new(0)
+        tokens.each { |tok| token_map[tok] += 1 }
         
-        tokmap.sort.each { |tok, count|
+        token_map.sort.each { |tok, count|
           arr = languages.map { |lang| [lang, token_probability(tok, lang)] }
           min = arr.map { |a,b| b }.min
           minlog = Math.log(min)
