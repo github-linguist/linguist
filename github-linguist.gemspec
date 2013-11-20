@@ -13,8 +13,9 @@ Gem::Specification.new do |s|
   s.add_dependency 'escape_utils',    '~> 0.3.1'
   s.add_dependency 'mime-types',      '~> 1.19'
   s.add_dependency 'pygments.rb',     '~> 0.5.2'
-  s.add_development_dependency 'mocha'
+  
   s.add_development_dependency 'json'
+  s.add_development_dependency 'mocha'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'yajl-ruby'
 end
