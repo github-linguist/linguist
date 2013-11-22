@@ -427,6 +427,13 @@ Ecere Projects:
   lexer: JSON
   primary_extension: .epj
 
+eC:
+  type: programming
+  search_term: ec
+  primary_extension: .ec
+  extensions:
+  - .eh  
+
 ECL:
   type: programming
   color: "#8a1267"
@@ -434,6 +441,13 @@ ECL:
   lexer: ECL
   extensions:
   - .eclxml
+
+edn:
+  type: data
+  lexer: Clojure
+  ace_mode: clojure
+  color: "#db5855"
+  primary_extension: .edn
 
 Eiffel:
   type: programming
@@ -484,6 +498,12 @@ F#:
   extensions:
   - .fsi
   - .fsx
+
+fish:
+  type: programming
+  group: Shell
+  lexer: Text only
+  primary_extension: .fish
 
 FORTRAN:
   type: programming
@@ -980,16 +1000,22 @@ MoonScript:
   type: programming
   primary_extension: .moon
 
+mupad:
+  lexer: MuPAD
+  primary_extension: .mu
+
 Myghty:
   primary_extension: .myt
-
-NSIS:
-  primary_extension: .nsi
 
 Nemerle:
   type: programming
   color: "#0d3c6e"
   primary_extension: .n
+
+nesC:
+  type: programming
+  color: "#ffce3b"
+  primary_extension: .nc
 
 NetLogo:
   type: programming
@@ -1025,6 +1051,9 @@ NumPy:
   extensions:
   - .numpyw
   - .numsc
+
+NSIS:
+  primary_extension: .nsi
 
 OCaml:
   type: programming
@@ -1066,6 +1095,12 @@ Omgrofl:
   primary_extension: .omgrofl
   color: "#cabbff"
   lexer: Text only
+
+ooc:
+  type: programming
+  lexer: Ooc
+  color: "#b0b77e"
+  primary_extension: .ooc
 
 Opa:
   type: programming
@@ -1297,6 +1332,16 @@ Rebol:
 
 Redcode:
   primary_extension: .cw
+
+reStructuredText:
+  type: markup
+  wrap: true
+  search_term: rst
+  aliases:
+  - rst
+  primary_extension: .rst
+  extensions:
+  - .rest
 
 RobotFramework:
   type: programming
@@ -1586,6 +1631,19 @@ Volt:
     color: "#0098db"
     primary_extension: .volt
 
+wisp:
+  type: programming
+  lexer: Clojure
+  ace_mode: clojure
+  color: "#7582D1"
+  primary_extension: .wisp
+
+xBase:
+  type: programming
+  lexer: Text only
+  color: "#3a4040"
+  primary_extension: .prg
+
 XC:
   type: programming
   lexer: C
@@ -1687,61 +1745,3 @@ YAML:
   extensions:
   - .reek
   - .yaml
-
-eC:
-  type: programming
-  search_term: ec
-  primary_extension: .ec
-  extensions:
-  - .eh
-
-edn:
-  type: data
-  lexer: Clojure
-  ace_mode: clojure
-  color: "#db5855"
-  primary_extension: .edn
-
-fish:
-  type: programming
-  group: Shell
-  lexer: Text only
-  primary_extension: .fish
-
-mupad:
-  lexer: MuPAD
-  primary_extension: .mu
-
-nesC:
-  type: programming
-  color: "#ffce3b"
-  primary_extension: .nc
-
-ooc:
-  type: programming
-  lexer: Ooc
-  color: "#b0b77e"
-  primary_extension: .ooc
-
-reStructuredText:
-  type: markup
-  wrap: true
-  search_term: rst
-  aliases:
-  - rst
-  primary_extension: .rst
-  extensions:
-  - .rest
-
-wisp:
-  type: programming
-  lexer: Clojure
-  ace_mode: clojure
-  color: "#7582D1"
-  primary_extension: .wisp
-
-xBase:
-  type: programming
-  lexer: Text only
-  color: "#3a4040"
-  primary_extension: .prg
