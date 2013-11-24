@@ -747,6 +747,10 @@ JSON:
   - .sublime_session
   - .sublime-settings
   - .sublime-workspace
+  - .maxpat
+  - .maxhelp
+  - .maxpresets
+  - .maxproj
   filenames:
   - composer.lock
 
@@ -944,15 +948,17 @@ Matlab:
 Max:
   type: programming
   color: "#ce279c"
-  lexer: Text only
+  lexer: JSON
   aliases:
   - max/msp
   - maxmsp
   search_term: max/msp
-  primary_extension: .mxt
+  primary_extension: .maxpat
   extensions:
   - .maxhelp
-  - .maxpat
+  - .maxproj
+  - .mxt # Legacy
+  - .pat # Legacy
 
 MiniD: # Legacy
   searchable: false
