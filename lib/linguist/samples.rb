@@ -1,4 +1,4 @@
-require 'yaml'
+require 'json'
 
 require 'linguist/md5'
 require 'linguist/classifier'
@@ -14,7 +14,7 @@ module Linguist
 
     # Hash of serialized samples object
     if File.exist?(PATH)
-      DATA = YAML.load_file(PATH)
+      DATA = JSON.load(File.read(PATH))
     end
 
     # Public: Iterate over each sample.
