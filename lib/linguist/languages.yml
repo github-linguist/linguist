@@ -70,6 +70,7 @@ Ada:
 
 Agda:
   type: programming
+  color: "#467C91"
   primary_extension: .agda
 
 ApacheConf:
@@ -384,7 +385,7 @@ D-ObjDump:
 DM:
   type: programming
   color: "#075ff1"
-  lexer: Text only
+  lexer: C++
   primary_extension: .dm
   aliases:
   - byond
@@ -752,6 +753,8 @@ JSON:
   - .sublime_session
   - .sublime-settings
   - .sublime-workspace
+  filenames:
+  - composer.lock
 
 Jade:
   group: HTML
@@ -947,15 +950,17 @@ Matlab:
 Max:
   type: programming
   color: "#ce279c"
-  lexer: Text only
+  lexer: JSON
   aliases:
   - max/msp
   - maxmsp
   search_term: max/msp
-  primary_extension: .mxt
+  primary_extension: .maxpat
   extensions:
   - .maxhelp
-  - .maxpat
+  - .maxproj
+  - .mxt
+  - .pat
 
 MiniD: # Legacy
   searchable: false
@@ -1478,6 +1483,7 @@ Tcsh:
 
 TeX:
   type: markup
+  color: "#3D6117"
   ace_mode: latex
   aliases:
   - latex
@@ -1545,6 +1551,14 @@ VHDL:
   lexer: vhdl
   color: "#543978"
   primary_extension: .vhdl
+  extensions:
+  - .vhd
+  - .vhf
+  - .vhi
+  - .vho
+  - .vhs
+  - .vht
+  - .vhw
 
 Vala:
   type: programming
@@ -1616,6 +1630,7 @@ XML:
   - .grxml
   - .jelly
   - .kml
+  - .launch
   - .mxml
   - .plist
   - .pluginspec
@@ -1625,6 +1640,7 @@ XML:
   - .rdf
   - .rss
   - .scxml
+  - .srdf
   - .svg
   - .tmCommand
   - .tmLanguage
@@ -1633,12 +1649,14 @@ XML:
   - .tmTheme
   - .tml
   - .ui
+  - .urdf
   - .vxml
   - .wsdl
   - .wxi
   - .wxl
   - .wxs
   - .x3d
+  - .xacro
   - .xaml
   - .xlf
   - .xliff
@@ -1691,6 +1709,7 @@ YAML:
   primary_extension: .yml
   extensions:
   - .reek
+  - .rviz
   - .yaml
 
 eC:
