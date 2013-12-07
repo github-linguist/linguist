@@ -114,7 +114,7 @@ module Linguist
   # Used to retrieve the interpreter from the shebang line of a file's
   # data.
   def self.interpreter_from_shebang(data)
-    lines = data.lines
+    lines = data.lines.to_a
 
     if lines.any? && (match = lines[0].match(/(.+)\n?/)) && (bang = match[0]) =~ /^#!/
       bang.sub!(/^#! /, '#!')
@@ -134,7 +134,15 @@ module Linguist
         script.sub! $1, ''
       end
 
+      # Check for multiline shebang hacks that call `exec`
+      if script == 'sh' &&
+        lines[0...5].any? { |l| l.match(/exec (\w+).+\$0.+\$@/) }
+        script = $1
+      end
+
       script
+    else
+      nil
     end
   end
 

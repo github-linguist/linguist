@@ -110,10 +110,10 @@ module Linguist
         data = data.call() if data.respond_to?(:call)
         if data.nil? || data == ""
           nil
-        elsif result = find_by_shebang(data)
+        elsif (result = find_by_shebang(data)) && !result.empty?
           result.first
-        elsif result = Classifier.classify(Samples::DATA, data, possible_languages.map(&:name)).first
-          Language[result[0]]
+        elsif classified = Classifier.classify(Samples::DATA, data, possible_languages.map(&:name)).first
+          Language[classified[0]]
         end
       else
         possible_languages.first
