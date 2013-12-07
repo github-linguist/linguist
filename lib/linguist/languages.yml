@@ -29,13 +29,13 @@ ABAP:
   type: programming
   lexer: ABAP
   primary_extension: .abap
-  
+
 ANTLR:
   type: programming
   color: "#9DC3FF"
   lexer: ANTLR
   primary_extension: .g4
-  
+
 ASP:
   type: programming
   color: "#6a40fd"
@@ -71,6 +71,7 @@ Ada:
 
 Agda:
   type: programming
+  color: "#467C91"
   primary_extension: .agda
 
 ApacheConf:
@@ -122,6 +123,15 @@ AutoHotkey:
   aliases:
   - ahk
   primary_extension: .ahk
+
+AutoIt:
+  type: programming
+  color: "#36699B"
+  aliases:
+  - au3
+  - AutoIt3
+  - AutoItScript
+  primary_extension: .au3
 
 Awk:
   type: programming
@@ -177,6 +187,11 @@ Brainfuck:
   primary_extension: .b
   extensions:
   - .bf
+
+Brightscript:
+  type: programming
+  lexer: Text only
+  primary_extension: .brs
 
 Bro:
   type: programming
@@ -378,11 +393,11 @@ D-ObjDump:
   type: data
   lexer: d-objdump
   primary_extension: .d-objdump
-  
+
 DM:
   type: programming
   color: "#075ff1"
-  lexer: Text only
+  lexer: C++
   primary_extension: .dm
   aliases:
   - byond
@@ -404,6 +419,7 @@ Darcs Patch:
 
 Dart:
   type: programming
+  color: "#98BAD6"
   primary_extension: .dart
 
 DCPU-16 ASM:
@@ -414,7 +430,7 @@ DCPU-16 ASM:
   - .dasm
   aliases:
   - dasm16
-  
+
 Diff:
   primary_extension: .diff
 
@@ -463,7 +479,7 @@ Emacs Lisp:
   - elisp
   - emacs
   primary_extension: .el
-  filenames:   
+  filenames:
   - .emacs
   extensions:
   - .emacs
@@ -749,6 +765,8 @@ JSON:
   - .sublime_session
   - .sublime-settings
   - .sublime-workspace
+  filenames:
+  - composer.lock
 
 Jade:
   group: HTML
@@ -946,15 +964,17 @@ Matlab:
 Max:
   type: programming
   color: "#ce279c"
-  lexer: Text only
+  lexer: JSON
   aliases:
   - max/msp
   - maxmsp
   search_term: max/msp
-  primary_extension: .mxt
+  primary_extension: .maxpat
   extensions:
   - .maxhelp
-  - .maxpat
+  - .maxproj
+  - .mxt
+  - .pat
 
 MiniD: # Legacy
   searchable: false
@@ -994,6 +1014,12 @@ Nemerle:
   type: programming
   color: "#0d3c6e"
   primary_extension: .n
+
+NetLogo:
+  type: programming
+  lexer: Common Lisp
+  color: "#ff2b2b"
+  primary_extension: .nlogo
 
 Nginx:
   type: markup
@@ -1488,6 +1514,7 @@ Tcsh:
 
 TeX:
   type: markup
+  color: "#3D6117"
   ace_mode: latex
   aliases:
   - latex
@@ -1544,11 +1571,25 @@ Unified Parallel C:
   color: "#755223"
   primary_extension: .upc
 
+UnrealScript:
+  type: programming
+  color: "#a54c4d"
+  lexer: Java
+  primary_extension: .uc
+
 VHDL:
   type: programming
   lexer: vhdl
   color: "#543978"
   primary_extension: .vhdl
+  extensions:
+  - .vhd
+  - .vhf
+  - .vhi
+  - .vho
+  - .vhs
+  - .vht
+  - .vhw
 
 Vala:
   type: programming
@@ -1620,6 +1661,7 @@ XML:
   - .grxml
   - .jelly
   - .kml
+  - .launch
   - .mxml
   - .plist
   - .pluginspec
@@ -1629,6 +1671,7 @@ XML:
   - .rdf
   - .rss
   - .scxml
+  - .srdf
   - .svg
   - .tmCommand
   - .tmLanguage
@@ -1637,12 +1680,14 @@ XML:
   - .tmTheme
   - .tml
   - .ui
+  - .urdf
   - .vxml
   - .wsdl
   - .wxi
   - .wxl
   - .wxs
   - .x3d
+  - .xacro
   - .xaml
   - .xlf
   - .xliff
@@ -1653,6 +1698,7 @@ XML:
   filenames:
   - .classpath
   - .project
+  - phpunit.xml.dist
 
 XProc:
   type: programming
@@ -1694,6 +1740,7 @@ YAML:
   primary_extension: .yml
   extensions:
   - .reek
+  - .rviz
   - .yaml
 
 eC:

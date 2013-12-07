@@ -1,6 +1,10 @@
 require 'escape_utils'
 require 'pygments'
 require 'yaml'
+begin
+  require 'json'
+rescue LoadError
+end
 
 require 'linguist/classifier'
 require 'linguist/samples'
@@ -487,7 +491,16 @@ module Linguist
   filenames = Samples::DATA['filenames']
   popular = YAML.load_file(File.expand_path("../popular.yml", __FILE__))
 
-  YAML.load_file(File.expand_path("../languages.yml", __FILE__)).each do |name, options|
+  languages_yml = File.expand_path("../languages.yml", __FILE__)
+  languages_json = File.expand_path("../languages.json", __FILE__)
+
+  if File.exist?(languages_json) && defined?(JSON)
+    languages = JSON.load(File.read(languages_json))
+  else
+    languages = YAML.load_file(languages_yml)
+  end
+
+  languages.each do |name, options|
     options['extensions'] ||= []
     options['interpreters'] ||= []
     options['filenames'] ||= []
