@@ -57,6 +57,7 @@ module Linguist
             yield({
               :path     => File.join(dirname, filename),
               :language => category,
+              :interpreter => File.exist?(filename) ? Linguist.interpreter_from_shebang(File.read(filename)) : nil,
               :extname  => File.extname(filename)
             })
           end
@@ -72,6 +73,7 @@ module Linguist
     def self.data
       db = {}
       db['extnames'] = {}
+      db['interpreters'] = {}
       db['filenames'] = {}
 
       each do |sample|
@@ -82,6 +84,14 @@ module Linguist
           if !db['extnames'][language_name].include?(sample[:extname])
             db['extnames'][language_name] << sample[:extname]
             db['extnames'][language_name].sort!
+          end
+        end
+
+        if sample[:interpreter]
+          db['interpreters'][language_name] ||= []
+          if !db['interpreters'][language_name].include?(sample[:interpreter])
+            db['interpreters'][language_name] << sample[:interpreter]
+            db['interpreters'][language_name].sort!
           end
         end
 
@@ -100,4 +110,32 @@ module Linguist
       db
     end
   end
+
+  # Used to retrieve the interpreter from the shebang line of a file's
+  # data.
+  def self.interpreter_from_shebang(data)
+    lines = data.lines
+
+    if lines.any? && (match = lines[0].match(/(.+)\n?/)) && (bang = match[0]) =~ /^#!/
+      bang.sub!(/^#! /, '#!')
+      tokens = bang.split(' ')
+      pieces = tokens.first.split('/')
+
+      if pieces.size > 1
+        script = pieces.last
+      else
+        script = pieces.first.sub('#!', '')
+      end
+
+      script = script == 'env' ? tokens[1] : script
+
+      # "python2.6" -> "python"
+      if script =~ /((?:\d+\.?)+)/
+        script.sub! $1, ''
+      end
+
+      script
+    end
+  end
+
 end

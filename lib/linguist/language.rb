@@ -21,6 +21,7 @@ module Linguist
     @alias_index     = {}
 
     @extension_index          = Hash.new { |h,k| h[k] = [] }
+    @interpreter_index        = Hash.new { |h,k| h[k] = [] }
     @filename_index           = Hash.new { |h,k| h[k] = [] }
     @primary_extension_index  = {}
 
@@ -75,6 +76,10 @@ module Linguist
 
       @primary_extension_index[language.primary_extension] = language
 
+      language.interpreters.each do |interpreter|
+        @interpreter_index[interpreter] << language
+      end
+
       language.filenames.each do |filename|
         @filename_index[filename] << language
       end
@@ -105,6 +110,8 @@ module Linguist
         data = data.call() if data.respond_to?(:call)
         if data.nil? || data == ""
           nil
+        elsif result = find_by_shebang(data)
+          result.first
         elsif result = Classifier.classify(Samples::DATA, data, possible_languages.map(&:name)).first
           Language[result[0]]
         end
@@ -164,6 +171,20 @@ module Linguist
               @filename_index[basename] +
               @extension_index[extname]
       langs.compact.uniq
+    end
+
+    # Public: Look up Languages by shebang line.
+    #
+    # data - Array of tokens or String data to analyze.
+    #
+    # Examples
+    #
+    #   Language.find_by_shebang("#!/bin/bash\ndate;")
+    #   # => [#<Language name="Bash">]
+    #
+    # Returns the matching Language
+    def self.find_by_shebang(data)
+      @interpreter_index[Linguist.interpreter_from_shebang(data)]
     end
 
     # Public: Look up Language by its name or lexer.
@@ -251,6 +272,7 @@ module Linguist
 
       # Set extensions or default to [].
       @extensions = attributes[:extensions] || []
+      @interpreters = attributes[:interpreters]   || []
       @filenames  = attributes[:filenames]  || []
 
       unless @primary_extension = attributes[:primary_extension]
@@ -363,6 +385,15 @@ module Linguist
     # Returns the extension String.
     attr_reader :primary_extension
 
+    # Public: Get interpreters
+    #
+    # Examples
+    #
+    #   # => ['awk', 'gawk', 'mawk' ...]
+    #
+    # Returns the interpreters Array
+    attr_reader :interpreters
+
     # Public: Get filenames
     #
     # Examples
@@ -456,6 +487,7 @@ module Linguist
   end
 
   extensions = Samples::DATA['extnames']
+  interpreters = Samples::DATA['interpreters']
   filenames = Samples::DATA['filenames']
   popular = YAML.load_file(File.expand_path("../popular.yml", __FILE__))
 
@@ -470,12 +502,25 @@ module Linguist
 
   languages.each do |name, options|
     options['extensions'] ||= []
+    options['interpreters'] ||= []
     options['filenames'] ||= []
 
     if extnames = extensions[name]
       extnames.each do |extname|
         if !options['extensions'].include?(extname)
           options['extensions'] << extname
+        end
+      end
+    end
+
+    if interpreters == nil
+      interpreters = {}
+    end
+
+    if interpreter_names = interpreters[name]
+      interpreter_names.each do |interpreter|
+        if !options['interpreters'].include?(interpreter)
+          options['interpreters'] << interpreter
         end
       end
     end
@@ -500,6 +545,7 @@ module Linguist
       :searchable        => options.key?('searchable') ? options['searchable'] : true,
       :search_term       => options['search_term'],
       :extensions        => options['extensions'].sort,
+      :interpreters      => options['interpreters'].sort,
       :primary_extension => options['primary_extension'],
       :filenames         => options['filenames'],
       :popular           => popular.include?(name)

@@ -249,6 +249,36 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal [Language['HTML+Django']], Language.find_by_filename('index.jinja')
   end
 
+  def test_find_by_shebang
+    assert_equal 'ruby', Linguist.interpreter_from_shebang("#!/usr/bin/ruby\n# baz")
+    { []         => ["",
+                     "foo",
+                     "#bar",
+                     "#baz",
+                     "///",
+                     "\n\n\n\n\n",
+                     " #!/usr/sbin/ruby",
+                     "\n#!/usr/sbin/ruby"],
+      ['Ruby']   => ["#!/usr/bin/env ruby\n# baz",
+                     "#!/usr/sbin/ruby\n# bar",
+                     "#!/usr/bin/ruby\n# foo",
+                     "#!/usr/sbin/ruby",
+                     "#!/usr/sbin/ruby foo bar baz\n"],
+      ['R']      => ["#!/usr/bin/env Rscript\n# example R script\n#\n"],
+      ['Shell']  => ["#!/usr/bin/bash\n", "#!/bin/sh"],
+      ['Python'] => ["#!/bin/python\n# foo\n# bar\n# baz",
+                     "#!/usr/bin/python2.7\n\n\n\n",
+                     "#!/usr/bin/python3\n\n\n\n"],
+      ["Common Lisp"] => ["#!/usr/bin/sbcl --script\n\n"]
+    }.each do |languages, bodies|
+      bodies.each do |body|
+        assert_equal([body, languages.map{|l| Language[l]}],
+                     [body, Language.find_by_shebang(body)])
+        
+      end
+    end
+  end
+
   def test_find
     assert_equal 'Ruby', Language['Ruby'].name
     assert_equal 'Ruby', Language['ruby'].name
