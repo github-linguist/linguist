@@ -206,7 +206,7 @@ module Linguist
       !!name.match(/node_modules\//)
     end
 
-    # the php composer tool generates a look file to represent a specific dependency state.
+    # the php composer tool generates a lock file to represent a specific dependency state.
     # In general not meant for humans in pull requests.
     #
     # Returns true or false.
