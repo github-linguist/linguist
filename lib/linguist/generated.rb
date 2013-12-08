@@ -60,6 +60,7 @@ module Linguist
         generated_net_designer_file? ||
         generated_protocol_buffer? ||
         generated_jni_header? ||
+        composer_lock? ||
         node_modules?
     end
 
@@ -203,6 +204,14 @@ module Linguist
     # Returns true or false.
     def node_modules?
       !!name.match(/node_modules\//)
+    end
+
+    # the php composer tool generates a look file to represent a specific dependency state.
+    # In general not meant for humans in pull requests.
+    #
+    # Returns true or false.
+    def composer_lock?
+      !!name.match(/composer.lock/)
     end
   end
 end

@@ -179,6 +179,9 @@ class TestBlob < Test::Unit::TestCase
     # TypeScript-generated JS
     # TODO
 
+    # Composer generated composer.lock file
+    assert blob("JSON/composer.lock").generated?
+
     # PEG.js-generated parsers
     assert blob("JavaScript/parser.js").generated?
 
