@@ -104,7 +104,7 @@ Arduino:
   primary_extension: .ino
 
 AsciiDoc:
-  type: markup
+  type: prose
   lexer: Text only
   ace_mode: asciidoc
   wrap: true
@@ -375,7 +375,7 @@ Cpp-ObjDump:
   - .cxx-objdump
 
 Creole:
-  type: markup
+  type: prose
   lexer: Text only
   wrap: true
   primary_extension: .creole
@@ -961,7 +961,7 @@ Mako:
   - .mao
 
 Markdown:
-  type: markup
+  type: prose
   lexer: Text only
   ace_mode: markdown
   wrap: true
@@ -993,7 +993,7 @@ Max:
   - .pat
 
 MediaWiki:
-  type: markup
+  type: prose
   lexer: Text only
   wrap: true
   primary_extension: .mediawiki
@@ -1134,7 +1134,7 @@ OpenEdge ABL:
   primary_extension: .p
 
 Org:
-  type: markup
+  type: prose
   lexer: Text only
   wrap: true
   primary_extension: .org
@@ -1308,6 +1308,13 @@ R:
   interpreters:
   - Rscript
 
+RDoc:
+  type: prose
+  lexer: Text only
+  ace_mode: rdoc
+  wrap: true
+  primary_extension: .rdoc
+
 REALbasic:
   type: programming
   lexer: VB.net
@@ -1318,13 +1325,6 @@ REALbasic:
   - .rbres
   - .rbtbar
   - .rbuistate
-
-RDoc:
-  type: markup
-  lexer: Text only
-  ace_mode: rdoc
-  wrap: true
-  primary_extension: .rdoc
 
 RHTML:
   type: markup
