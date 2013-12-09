@@ -368,6 +368,9 @@ class TestLanguage < Test::Unit::TestCase
     assert !Language['Ruby'].eql?(Language['Python'])
   end
 
+  def test_by_type
+    assert_equal 8, Language.by_type(:prose).length
+  end
 
   def test_colorize
     assert_equal <<-HTML.chomp, Language['Ruby'].colorize("def foo\n  'foo'\nend\n")
