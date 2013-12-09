@@ -26,13 +26,22 @@ module Linguist
     @primary_extension_index  = {}
 
     # Valid Languages types
-    TYPES = [:data, :markup, :programming]
+    TYPES = [:data, :markup, :programming, :prose]
 
     # Names of non-programming languages that we will still detect
     #
     # Returns an array
     def self.detectable_markup
       ["CSS", "Less", "Sass", "TeX"]
+    end
+
+    # Detect languages by a specific type
+    #
+    # type - A symbol that exists within TYPES
+    #
+    # Returns an array
+    def self.by_type(type)
+      all.select { |h| h.type == type }
     end
 
     # Internal: Create a new Language object
