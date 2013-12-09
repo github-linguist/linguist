@@ -369,7 +369,7 @@ class TestLanguage < Test::Unit::TestCase
   end
 
   def test_by_type
-    assert_equal 6, Language.by_type(:prose).length
+    assert_equal 8, Language.by_type(:prose).length
   end
 
   def test_colorize
