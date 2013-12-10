@@ -274,7 +274,7 @@ class TestLanguage < Test::Unit::TestCase
       bodies.each do |body|
         assert_equal([body, languages.map{|l| Language[l]}],
                      [body, Language.find_by_shebang(body)])
-        
+
       end
     end
   end
@@ -369,7 +369,7 @@ class TestLanguage < Test::Unit::TestCase
   end
 
   def test_by_type
-    assert_equal 8, Language.by_type(:prose).length
+    assert_equal 9, Language.by_type(:prose).length
   end
 
   def test_colorize
