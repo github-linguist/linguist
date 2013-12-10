@@ -1203,7 +1203,6 @@ Perl:
   - .ph
   - .plx
   - .pm6
-  - .pod
   - .psgi
   interpreters:
   - perl
@@ -1215,6 +1214,15 @@ Pike:
   primary_extension: .pike
   extensions:
   - .pmod
+
+Pod:
+  type: prose
+  lexer: Text only
+  ace_mode: perl
+  wrap: true
+  primary_extension: .pod
+  interpreters:
+  - perl
 
 PogoScript:
   type: programming
