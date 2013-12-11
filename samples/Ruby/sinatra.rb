@@ -598,11 +598,6 @@ module Sinatra
       render :less, template, options, locals
     end
 
-    def stylus(template, options={}, locals={})
-      options.merge! :layout => false, :default_content_type => :css
-      render :stylus, template, options, locals
-    end
-
     def builder(template=nil, options={}, locals={}, &block)
       options[:default_content_type] = :xml
       render_ruby(:builder, template, options, locals, &block)
