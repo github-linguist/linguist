@@ -1340,6 +1340,14 @@ RHTML:
   group: HTML
   primary_extension: .rhtml
 
+RMarkdown:
+  type: markup
+  lexer: Text only
+  wrap: true
+  primary_extension: .rmd
+  extensions:
+  - .Rmd
+
 Racket:
   type: programming
   lexer: Racket
