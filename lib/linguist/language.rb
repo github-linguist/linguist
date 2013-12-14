@@ -117,6 +117,7 @@ module Linguist
 
       if possible_languages.length > 1
         data = data.call() if data.respond_to?(:call)
+
         if data.nil? || data == ""
           nil
         elsif (result = find_by_shebang(data)) && !result.empty?
