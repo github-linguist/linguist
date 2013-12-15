@@ -1160,6 +1160,12 @@ PHP:
   - .phpt
   filenames:
   - Phakefile
+  
+PAWN:
+  type: programming
+  lexer: C++
+  color: "#dbb284"
+  primary_extension: .pwn 
 
 Parrot:
   type: programming
@@ -1182,12 +1188,6 @@ Parrot Assembly:
   aliases:
   - pasm
   primary_extension: .pasm
-
-PAWN:
-  type: programming
-  lexer: C++
-  color: "#dbb284"
-  primary_extension: .pwn  
   
 Pascal:
   type: programming
