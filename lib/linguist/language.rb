@@ -123,6 +123,7 @@ module Linguist
         elsif (result = find_by_shebang(data)) && !result.empty?
           result.first
         elsif classified = Classifier.classify(Samples::DATA, data, possible_languages.map(&:name)).first
+          # Return the actual Language object based of the string language name (i.e., first element of `#classify`)
           Language[classified[0]]
         end
       else
