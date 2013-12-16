@@ -11,9 +11,9 @@ module Linguist
 
     # Returns an array of language name Strings, or []
     def self.find_by_heuristics(data, languages)
-      if languages.all? { |l| ["pod", "perl"].include?(l) }
+      if languages.all? { |l| ["pod", "perl"].include?(l.downcase) }
         disambiguate_pod(data, languages)
-      elsif languages.all? { |l| ["objective-c", "c++"].include?(l) }
+      elsif languages.all? { |l| ["objective-c", "c++"].include?(l.downcase) }
         disambiguate_h(data, languages)
       end
     end
@@ -27,7 +27,7 @@ module Linguist
     # Returns an array of still-possible languages, or nil
     def self.disambiguate_pod(data, languages)
       matches = []
-      matches << Language["Perl"] if data.includes?("my $")
+      matches << Language["Perl"] if data.include?("my $")
       matches
     end
 
@@ -35,7 +35,7 @@ module Linguist
     # We want to look for Objective-C.
     def self.disambiguate_h(data, languages)
       matches = []
-      matches << Language["Objective-C"] if data.includes?("NSData *") && data.includes?("@interface")
+      matches << Language["Objective-C"] if data.include?("@interface")
       matches
     end
   end
