@@ -233,6 +233,20 @@ module Linguist
       name =~ VendoredRegexp ? true : false
     end
 
+    # Internal: Explicitly remove invalid UTF-8 sequences by conversion.
+    #
+    # Only affects Ruby 1.9+ since 1.8 is charset naive.
+    # 
+    # Returns the data blob with invalid characters replaced with \uFFFD if needed.
+    def _safe_data
+      if ''.respond_to?(:encode!)
+        safe_utf8 = Encoding::Converter.new(encoding, 'utf-8', :invalid => :replace)
+        safe_utf8.convert(data).dump
+      else
+        data
+      end
+    end       
+
     # Public: Get each line of data
     #
     # Requires Blob#data
@@ -241,7 +255,7 @@ module Linguist
     def lines
       @lines ||=
         if viewable? && data
-          data.split(/\r\n|\r|\n/, -1)
+          _safe_data.split(/\r\n|\r|\n/, -1)
         else
           []
         end
@@ -274,7 +288,7 @@ module Linguist
     #
     # Return true or false
     def generated?
-      @_generated ||= Generated.generated?(name, lambda { data })
+      @_generated ||= Generated.generated?(name, lambda { _safe_data })
     end
 
     # Public: Detects the Language of the blob.
