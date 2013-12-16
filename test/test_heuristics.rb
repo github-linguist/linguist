@@ -20,4 +20,9 @@ class TestHeuristcs < Test::Unit::TestCase
     results = Heuristics.find_by_heuristics(fixture("Objective-C/StyleViewController.h"), languages)
     assert_equal Language["Objective-C"], results.first
   end
+
+  def test_detect_still_works_if_nothing_matches
+    match = Language.detect("Hello.m", fixture("Objective-C/hello.m"))
+    assert_equal Language["Objective-C"], match
+  end
 end
