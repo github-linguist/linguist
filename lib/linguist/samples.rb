@@ -101,7 +101,16 @@ module Linguist
           db['filenames'][language_name].sort!
         end
 
-        data = File.read(sample[:path])
+        # Avoid throwing an error on invalid byte sequences. Encoding to and from the same
+        # charset is a no-op, so read in as UTF-16, then to convert to UTF-8. Not an issue in Ruby 1.8.
+        if ''.respond_to?(:encode!)
+          initial_data = File.read(sample[:path]).encode('UTF-16BE', :invalid => :replace)
+          safe_utf8 = Encoding::Converter.new('UTF-16BE', 'UTF-8', :invalid => :replace)
+          data = safe_utf8.convert(initial_data)
+        else
+          data = File.read(sample[:path])
+        end
+
         Classifier.train!(db, language_name, data)
       end
 
