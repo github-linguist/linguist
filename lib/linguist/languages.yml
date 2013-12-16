@@ -782,6 +782,7 @@ JSON:
   - .sublime-settings
   - .sublime-workspace
   filenames:
+  - .jshintrc
   - composer.lock
 
 Jade:
@@ -1222,8 +1223,6 @@ Pod:
   ace_mode: perl
   wrap: true
   primary_extension: .pod
-  interpreters:
-  - perl
 
 PogoScript:
   type: programming
@@ -1339,6 +1338,15 @@ RHTML:
   type: markup
   group: HTML
   primary_extension: .rhtml
+
+RMarkdown:
+  type: markup
+  lexer: Text only
+  wrap: true
+  ace_mode: markdown
+  primary_extension: .rmd
+  extensions:
+  - .Rmd
 
 Racket:
   type: programming
