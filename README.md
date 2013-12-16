@@ -10,7 +10,11 @@ Linguist defines the list of all languages known to GitHub in a [yaml file](http
 
 Most languages are detected by their file extension. This is the fastest and most common situation.
 
-For disambiguating between files with common extensions, we use a [Bayesian classifier](https://github.com/github/linguist/blob/master/lib/linguist/classifier.rb). For an example, this helps us tell the difference between `.h` files which could be either C, C++, or Obj-C.
+For disambiguating between files with common extensions, we first apply
+some common-sense heuristics to pick out obvious languages. After that, we use a
+[Bayesian
+classifier](https://github.com/github/linguist/blob/master/lib/linguist/classifier.rb).
+For an example, this process can help us tell the difference between `.h` files which could be either C, C++, or Obj-C.
 
 In the actual GitHub app we deal with `Grit::Blob` objects. For testing, there is a simple `FileBlob` API.
 
@@ -31,7 +35,7 @@ We typically run on a pre-release version of Pygments, [pygments.rb](https://git
 
 ### Stats
 
-The Language Graph you see on every repository is built by aggregating the languages of each file in that repository. 
+The Language Graph you see on every repository is built by aggregating the languages of each file in that repository.
 The top language in the graph determines the project's primary language. Collectively, these stats make up the [Top Languages](https://github.com/languages) page.
 
 The repository stats API, accessed through `#languages`, can be used on a directory:
