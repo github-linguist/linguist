@@ -14,7 +14,7 @@ For disambiguating between files with common extensions, we first apply
 some common-sense heuristics to pick out obvious languages. After that, we use a
 [Bayesian
 classifier](https://github.com/github/linguist/blob/master/lib/linguist/classifier.rb).
-For an example, this process us tell the difference between `.h` files which could be either C, C++, or Obj-C.
+For an example, this process can help us tell the difference between `.h` files which could be either C, C++, or Obj-C.
 
 In the actual GitHub app we deal with `Grit::Blob` objects. For testing, there is a simple `FileBlob` API.
 
