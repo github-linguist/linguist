@@ -1281,7 +1281,6 @@ Python:
   color: "#3581ba"
   primary_extension: .py
   extensions:
-  - .gyp
   - .lmi
   - .pyt
   - .pyw
@@ -1291,6 +1290,13 @@ Python:
   - wscript
   interpreters:
   - python
+
+GYP:
+  ace_mode: json
+  color: "#f3d158"
+  primary_extension: .gyp
+  extensions
+  - .gyp
 
 Python traceback:
   type: data
@@ -1468,7 +1474,7 @@ Scala:
 Scaml:
   group: HTML
   type: markup
-  primary_extension: .scaml
+  primary_extension: .scamlp
 
 Scheme:
   type: programming
