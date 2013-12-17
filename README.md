@@ -1,22 +1,20 @@
 # Linguist
 
-We use this library at GitHub to detect blob languages, highlight code, ignore binary files, suppress generated files in diffs and generate language breakdown graphs.
+We use this library at GitHub to detect blob languages, highlight code, ignore binary files, suppress generated files in diffs, and generate language breakdown graphs.
 
 ## Features
 
 ### Language detection
 
-Linguist defines the list of all languages known to GitHub in a [yaml file](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml). In order for a file to be highlighted, a language and lexer must be defined there.
+Linguist defines the list of all languages known to GitHub in a [yaml file](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml). In order for a file to be highlighted, a language and lexer must be defined there. 
 
 Most languages are detected by their file extension. This is the fastest and most common situation.
 
 For disambiguating between files with common extensions, we first apply
 some common-sense heuristics to pick out obvious languages. After that, we use a
-[Bayesian
+[statistical
 classifier](https://github.com/github/linguist/blob/master/lib/linguist/classifier.rb).
-For an example, this process can help us tell the difference between `.h` files which could be either C, C++, or Obj-C.
-
-In the actual GitHub app we deal with `Grit::Blob` objects. For testing, there is a simple `FileBlob` API.
+This process can help us tell the difference between, for example, `.h` files which could be either C, C++, or Obj-C.
 
 ```ruby
 
@@ -31,8 +29,6 @@ See [lib/linguist/language.rb](https://github.com/github/linguist/blob/master/li
 
 The actual syntax highlighting is handled by our Pygments wrapper, [pygments.rb](https://github.com/tmm1/pygments.rb). It also provides a [Lexer abstraction](https://github.com/tmm1/pygments.rb/blob/master/lib/pygments/lexer.rb) that determines which highlighter should be used on a file.
 
-We typically run on a pre-release version of Pygments, [pygments.rb](https://github.com/tmm1/pygments.rb), to get early access to new lexers. The [languages.yml](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml) file is a dump of the lexers we have available on our server.
-
 ### Stats
 
 The Language Graph you see on every repository is built by aggregating the languages of each file in that repository.
@@ -46,7 +42,7 @@ project.language.name  #=> "Ruby"
 project.languages      #=> { "Ruby" => 0.98, "Shell" => 0.02 }
 ```
 
-These stats are also printed out by the `linguist` binary. Try running `linguist` on itself:
+These stats are also printed out by the `linguist` binary. You can try running `linguist` on the `lib/` directory in this repository itself:
 
     $ bundle exec linguist lib/
     100%  Ruby
