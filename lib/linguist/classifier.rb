@@ -130,7 +130,7 @@ module Linguist
         @verbosity ||= (ENV['LINGUIST_DEBUG'] || 0).to_i
       end
 
-      def debug_dump_probabilities
+      def debug_dump_probabilities(tokens, language)
         printf("%10s = %10.3f + %7.3f = %10.3f\n",
             language, tokens_probability(tokens, language), language_probability(language), scores[language])
       end
