@@ -18,7 +18,10 @@ module Linguist
     # Set LINGUIST_DEBUG=1 or =2 to see probabilities per-token or
     # per-language.  See also #dump_all_tokens, below.
     def self.train!(db, language, data)
-      tokens = Tokenizer.tokenize(data)
+
+      tokens = ! ''.respond_to?(:encode!) ? Tokenizer.tokenize(data) :
+                               Tokenizer.tokenize(data.encode('UTF-8',
+                        :invalid => :replace, :undefined => :replace))
 
       db['tokens_total'] ||= 0
       db['languages_total'] ||= 0
