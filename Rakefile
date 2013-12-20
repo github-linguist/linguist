@@ -1,7 +1,7 @@
+require 'json'
 require 'rake/clean'
 require 'rake/testtask'
 require 'yaml'
-require 'json'
 
 task :default => :test
 
