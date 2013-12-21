@@ -27,6 +27,12 @@ class TestHeuristcs < Test::Unit::TestCase
       assert_equal Language["Objective-C"], results.first
     end
   end
+   
+  def test_cpp_by_heuristics
+    languages = ["C++", "Objective-C"]
+    results = Heuristics.find_by_heuristics(fixture("C++/render_adapter.cpp"), languages)
+    assert_equal Language["C++"], results.first
+  end
 
   def test_detect_still_works_if_nothing_matches
     match = Language.detect("Hello.m", fixture("Objective-C/hello.m"))

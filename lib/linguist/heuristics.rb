@@ -16,12 +16,14 @@ module Linguist
     end
 
     # .h extensions are ambigious between C, C++, and Objective-C.
-    # We want to shortcut look for Objective-C.
+    # We want to shortcut look for Objective-C _and_ now C++ too!
     #
     # Returns an array of Languages or []
+    # TODO rename this method as we're not strictly disambiguating between .h files here.
     def self.disambiguate_h(data, languages)
       matches = []
       matches << Language["Objective-C"] if data.include?("@interface")
+      matches << Language["C++"] if data.include?("#include <cstdint>")
       matches
     end
   end
