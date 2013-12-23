@@ -185,6 +185,9 @@ class TestBlob < Test::Unit::TestCase
     # PEG.js-generated parsers
     assert blob("JavaScript/parser.js").generated?
 
+    # Generated PostScript
+    assert !blob("PostScript/sierpinski.ps").generated?
+
     # These examples are too basic to tell
     assert !blob("JavaScript/empty.js").generated?
     assert !blob("JavaScript/hello.js").generated?
