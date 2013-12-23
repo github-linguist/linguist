@@ -33,7 +33,7 @@ module Linguist
     #
     # Returns an array
     def self.detectable_markup
-      ["CSS", "Less", "Sass", "Stylus", "TeX"]
+      ["CSS", "Less", "Sass", "SCSS", "Stylus", "TeX"]
     end
 
     # Detect languages by a specific type
