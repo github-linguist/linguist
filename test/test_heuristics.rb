@@ -30,7 +30,7 @@ class TestHeuristcs < Test::Unit::TestCase
    
   def test_cpp_by_heuristics
     languages = ["C++", "Objective-C"]
-    results = Heuristics.find_by_heuristics(fixture("C++/render_adapter.cpp"), languages)
+    results = Heuristics.disambiguate_h(fixture("C++/render_adapter.cpp"), languages)
     assert_equal Language["C++"], results.first
   end
 
