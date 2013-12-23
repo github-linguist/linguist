@@ -1,6 +1,8 @@
 module Linguist
   # A collection of simple heuristics that can be used to better analyze languages.
   class Heuristics
+    ACTIVE = false
+
     # Public: Given an array of String language names,
     # apply heuristics against the given data and return an array
     # of matching languages, or nil.
@@ -10,8 +12,10 @@ module Linguist
     #
     # Returns an array of Languages or []
     def self.find_by_heuristics(data, languages)
-      if languages.all? { |l| ["Objective-C", "C++"].include?(l) }
-        disambiguate_h(data, languages)
+      if active?
+        if languages.all? { |l| ["Objective-C", "C++"].include?(l) }
+          disambiguate_h(data, languages)
+        end
       end
     end
 
@@ -25,6 +29,10 @@ module Linguist
       matches << Language["Objective-C"] if data.include?("@interface")
       matches << Language["C++"] if data.include?("#include <cstdint>")
       matches
+    end
+
+    def self.active?
+      !!ACTIVE
     end
   end
 end
