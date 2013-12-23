@@ -55,7 +55,8 @@ module Linguist
     #
     # Returns Array of token Strings.
     def extract_tokens(data)
-      s = StringScanner.new(data)
+      s = ''.respond_to?(:encode!) ? StringScanner.new(data.encode('UTF-16BE',
+          :invalid => :replace,:undefined => :replace).encode('UTF-8')) : StringScanner.new(data)
 
       tokens = []
       until s.eos?
