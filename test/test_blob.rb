@@ -278,7 +278,6 @@ class TestBlob < Test::Unit::TestCase
     assert blob("ui/minified/jquery.effects.blind.min.js").vendored?
     assert blob("ui/minified/jquery.ui.accordion.min.js").vendored?
 
-
     # MooTools
     assert blob("public/javascripts/mootools-core-1.3.2-full-compat.js").vendored?
     assert blob("public/javascripts/mootools-core-1.3.2-full-compat-yc.js").vendored?
@@ -299,6 +298,10 @@ class TestBlob < Test::Unit::TestCase
     assert blob("public/javascripts/tiny_mce.js").vendored?
     assert blob("public/javascripts/tiny_mce_popup.js").vendored?
     assert blob("public/javascripts/tiny_mce_src.js").vendored?
+
+    # AngularJS
+    assert blob("public/javascripts/angular.js").vendored?
+    assert blob("public/javascripts/angular.min.js").vendored?
 
     # Fabric
     assert blob("fabfile.py").vendored?
