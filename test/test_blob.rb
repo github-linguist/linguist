@@ -224,6 +224,11 @@ class TestBlob < Test::Unit::TestCase
     # Node dependencies
     assert blob("node_modules/coffee-script/lib/coffee-script.js").vendored?
 
+    # Bower Components
+    assert blob("bower_components/custom/custom.js").vendored?
+    assert blob("app/bower_components/custom/custom.js").vendored?
+    assert blob("vendor/assets/bower_components/custom/custom.js").vendored?
+
     # Rails vendor/
     assert blob("vendor/plugins/will_paginate/lib/will_paginate.rb").vendored?
 
@@ -326,7 +331,7 @@ class TestBlob < Test::Unit::TestCase
     # Test fixtures
     assert blob("test/fixtures/random.rkt").vendored?
     assert blob("Test/fixtures/random.rkt").vendored?
-    
+
     # Cordova/PhoneGap
     assert blob("cordova.js").vendored?
     assert blob("cordova.min.js").vendored?
