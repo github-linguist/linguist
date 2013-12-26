@@ -1,0 +1,34 @@
+// code from https://en.wikipedia.org/wiki/Neko_(programming_language)
+
+$print("Hello World!");
+
+$int("67.87"); // Converts string "67.87" to integer 67
+$float(12345); // Converts integer 12345 to float 12345.0000
+$string($array(1,2,3)); // Converts array [1,2,3] to string "[1,2,3]"
+
+foo = function() {
+    $print(this.x);
+}
+o = $new(null);
+o.x = 3;
+o.bar = function() { 
+    foo(); 
+};
+o.bar(); // prints 3
+
+var x = 3;
+f = function() {
+    $print(x);
+}
+x = 4;
+f(); // print 3
+
+var proto = $new(null);
+proto.foo = function() { 
+  $print(this.msg) 
+}
+
+var o = $new(null);
+o.msg = "hello";
+$objsetproto(o,proto);
+o.foo(); // print "hello"
