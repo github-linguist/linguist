@@ -192,6 +192,7 @@ class TestLanguage < Test::Unit::TestCase
 
   def test_markup
     assert_equal :markup, Language['HTML'].type
+    assert_equal :markup, Language['SCSS'].type
   end
 
   def test_data
