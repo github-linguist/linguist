@@ -5,6 +5,7 @@ Gem::Specification.new do |s|
 
   s.authors  = "GitHub"
   s.homepage = "https://github.com/github/linguist"
+  s.license  = "MIT"
 
   s.files = Dir['lib/**/*']
   s.executables << 'linguist'
