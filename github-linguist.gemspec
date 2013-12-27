@@ -2,6 +2,7 @@ Gem::Specification.new do |s|
   s.name    = 'github-linguist'
   s.version = '2.10.8'
   s.summary = "GitHub Language detection"
+  s.description = 'We use this library at GitHub to detect blob languages, highlight code, ignore binary files, suppress generated files in diffs, and generate language breakdown graphs.'
 
   s.authors  = "GitHub"
   s.homepage = "https://github.com/github/linguist"
