@@ -63,7 +63,7 @@ module Linguist
 
     # Public: Return the language breakdown of this repository by file
     def breakdown_by_file
-      compute_stats unless @computed_stats
+      compute_stats
       @file_breakdown
     end
 
