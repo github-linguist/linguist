@@ -6,7 +6,7 @@ We use this library at GitHub to detect blob languages, highlight code, ignore b
 
 ### Language detection
 
-Linguist defines the list of all languages known to GitHub in a [yaml file](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml). In order for a file to be highlighted, a language and lexer must be defined there.
+Linguist defines a list of all languages known to GitHub in a [yaml file](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml). In order for a file to be highlighted, a language and lexer must be defined there.
 
 Most languages are detected by their file extension. This is the fastest and most common situation.
 

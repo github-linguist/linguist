@@ -29,7 +29,7 @@ module Linguist
       @computed_stats = false
       @language = @size = nil
       @sizes = Hash.new { 0 }
-      @file_breakdown = {}
+      @file_breakdown = Hash.new { |h,k| h[k] = Array.new }
     end
 
     # Public: Returns a breakdown of language stats.
@@ -83,12 +83,8 @@ module Linguist
         # Only include programming languages and acceptable markup languages
         if blob.language.type == :programming || Language.detectable_markup.include?(blob.language.name)
 
-          # Build up the per-file breakdown stats if asked
-          if @file_breakdown[blob.language.group.name]
-            @file_breakdown[blob.language.group.name] << blob.name
-          else
-            @file_breakdown[blob.language.group.name] = [blob.name]
-          end
+          # Build up the per-file breakdown stats
+          @file_breakdown[blob.language.group.name] << blob.name
 
           @sizes[blob.language.group] += blob.size
         end
