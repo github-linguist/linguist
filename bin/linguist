@@ -15,6 +15,12 @@ if File.directory?(path)
     percentage = sprintf '%.2f' % percentage
     puts "%-7s %s" % ["#{percentage}%", language]
   end
+  puts
+  breakdown = repo.breakdown_by_file
+  breakdown.each do |lang, files|
+    puts "#{lang}: #{files}"
+    puts
+  end
 elsif File.file?(path)
   blob = Linguist::FileBlob.new(path, Dir.pwd)
   type = if blob.text?

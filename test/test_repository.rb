@@ -25,6 +25,11 @@ class TestRepository < Test::Unit::TestCase
     assert linguist_repo.size > 30_000
   end
 
+  def test_linguist_breakdown
+    assert linguist_repo.breakdown_by_file.has_key?("Ruby")
+    assert linguist_repo.breakdown_by_file["Ruby"].include?("bin/linguist")
+  end
+
   def test_binary_override
     assert_equal repo(File.expand_path("../../samples/Nimrod", __FILE__)).language, Language["Nimrod"]
   end

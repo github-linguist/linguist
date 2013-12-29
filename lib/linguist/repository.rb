@@ -29,6 +29,7 @@ module Linguist
       @computed_stats = false
       @language = @size = nil
       @sizes = Hash.new { 0 }
+      @file_breakdown = {}
     end
 
     # Public: Returns a breakdown of language stats.
@@ -60,6 +61,12 @@ module Linguist
       @size
     end
 
+    # Public: Return the language breakdown of this repository by file
+    def breakdown_by_file
+      compute_stats unless @computed_stats
+      @file_breakdown
+    end
+
     # Internal: Compute language breakdown for each blob in the Repository.
     #
     # Returns nothing
@@ -75,6 +82,14 @@ module Linguist
 
         # Only include programming languages and acceptable markup languages
         if blob.language.type == :programming || Language.detectable_markup.include?(blob.language.name)
+
+          # Build up the per-file breakdown stats if asked
+          if @file_breakdown[blob.language.group.name]
+            @file_breakdown[blob.language.group.name] << blob.name
+          else
+            @file_breakdown[blob.language.group.name] = [blob.name]
+          end
+
           @sizes[blob.language.group] += blob.size
         end
       end
