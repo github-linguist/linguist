@@ -14,7 +14,10 @@ module Linguist
     def self.find_by_heuristics(data, languages)
       if active?
         if languages.all? { |l| ["Objective-C", "C++"].include?(l) }
-          disambiguate_h(data, languages)
+          disambiguate_c(data, languages)
+        end
+        if languages.all? { |l| ["Perl", "Prolog"].include?(l) }
+          disambiguate_pl(data, languages)
         end
       end
     end
@@ -23,11 +26,16 @@ module Linguist
     # We want to shortcut look for Objective-C _and_ now C++ too!
     #
     # Returns an array of Languages or []
-    # TODO rename this method as we're not strictly disambiguating between .h files here.
-    def self.disambiguate_h(data, languages)
+    def self.disambiguate_c(data, languages)
       matches = []
       matches << Language["Objective-C"] if data.include?("@interface")
       matches << Language["C++"] if data.include?("#include <cstdint>")
+      matches
+    end
+
+    def self_disambiguate_pl(data, languages)
+      matches = []
+      matches << Language["Prolog"] if data.include?(":-")
       matches
     end
 

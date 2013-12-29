@@ -23,14 +23,14 @@ class TestHeuristcs < Test::Unit::TestCase
   def test_obj_c_by_heuristics
     languages = ["C++", "Objective-C"]
     all_h_fixtures("Objective-C").each do |fixture|
-      results = Heuristics.disambiguate_h(fixture("Objective-C/#{File.basename(fixture)}"), languages)
+      results = Heuristics.disambiguate_c(fixture("Objective-C/#{File.basename(fixture)}"), languages)
       assert_equal Language["Objective-C"], results.first
     end
   end
-   
+
   def test_cpp_by_heuristics
     languages = ["C++", "Objective-C"]
-    results = Heuristics.disambiguate_h(fixture("C++/render_adapter.cpp"), languages)
+    results = Heuristics.disambiguate_c(fixture("C++/render_adapter.cpp"), languages)
     assert_equal Language["C++"], results.first
   end
 
