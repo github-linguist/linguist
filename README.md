@@ -41,9 +41,12 @@ project.language.name  #=> "Ruby"
 project.languages      #=> { "Ruby" => 0.98, "Shell" => 0.02 }
 ```
 
-These stats are also printed out by the `linguist` binary. This will also output the breakdown of files by language. You can try running `linguist` on the `lib/` directory in this repository itself:
+These stats are also printed out by the `linguist` binary. You can pass
+`--breakdown`` flag, and the binary will also output the breakdown of files by language.
 
-    $ bundle exec linguist lib/
+You can try running `linguist` on the `lib/` directory in this repository itself:
+
+    $ bundle exec linguist lib/ --breakdown
     100%  Ruby
 
     Ruby: ["linguist/blob_helper.rb", "linguist/classifier.rb", "linguist/file_blob.rb", "linguist/generated.rb",
