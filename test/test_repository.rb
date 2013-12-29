@@ -28,6 +28,7 @@ class TestRepository < Test::Unit::TestCase
   def test_linguist_breakdown
     assert linguist_repo.breakdown_by_file.has_key?("Ruby")
     assert linguist_repo.breakdown_by_file["Ruby"].include?("bin/linguist")
+    assert linguist_repo.breakdown_by_file["Ruby"].include?("lib/linguist/language.rb")
   end
 
   def test_binary_override
