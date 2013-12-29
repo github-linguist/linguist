@@ -83,8 +83,8 @@ module Linguist
       debug_dump_all_tokens(tokens, languages) if verbosity >= 2
 
       languages.each do |language|
-        debug_dump_probabilities(tokens, language) if verbosity >= 1
         scores[language] = tokens_probability(tokens, language) + language_probability(language)
+        debug_dump_probabilities(tokens, language, scores[language]) if verbosity >= 1
       end
 
       scores.sort { |a, b| b[1] <=> a[1] }.map { |score| [score[0], score[1]] }
@@ -130,9 +130,9 @@ module Linguist
         @verbosity ||= (ENV['LINGUIST_DEBUG'] || 0).to_i
       end
 
-      def debug_dump_probabilities(tokens, language)
+      def debug_dump_probabilities(tokens, language, score)
         printf("%10s = %10.3f + %7.3f = %10.3f\n",
-            language, tokens_probability(tokens, language), language_probability(language), scores[language])
+            language, tokens_probability(tokens, language), language_probability(language), score)
       end
 
       # Internal: show a table of probabilities for each <token,language> pair.
