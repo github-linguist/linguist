@@ -41,8 +41,8 @@ project.language.name  #=> "Ruby"
 project.languages      #=> { "Ruby" => 0.98, "Shell" => 0.02 }
 ```
 
-These stats are also printed out by the `linguist` binary. You can pass
-`--breakdown`` flag, and the binary will also output the breakdown of files by language.
+These stats are also printed out by the `linguist` binary. You can use the
+`--breakdown` flag, and the binary will also output the breakdown of files by language.
 
 You can try running `linguist` on the `lib/` directory in this repository itself:
 
