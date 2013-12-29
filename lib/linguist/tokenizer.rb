@@ -13,7 +13,9 @@ module Linguist
     #
     # Returns Array of token Strings.
     def self.tokenize(data)
-      new.extract_tokens(data)
+      ''.respond_to?(:encode!) && new.extract_tokens(data.encode('UTF-16LE',
+        :invalid => :replace, :undefined => :replace).encode('UTF-8',
+        :invalid => :replace, :undefined => :replace)) || new.extract_tokens(data)
     end
 
     # Read up to 100KB
@@ -36,7 +38,7 @@ module Linguist
       ['"""', '"""']   # Python
     ]
 
-    START_SINGLE_LINE_COMMENT =  Regexp.compile(SINGLE_LINE_COMMENTS.map { |c|
+    START_SINGLE_LINE_COMMENT = Regexp.compile(SINGLE_LINE_COMMENTS.map { |c|
       "\s*#{Regexp.escape(c)} "
     }.join("|"))
 

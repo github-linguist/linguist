@@ -101,7 +101,10 @@ module Linguist
           db['filenames'][language_name].sort!
         end
 
-        data = File.read(sample[:path])
+        # Avoid throwing an error on invalid byte sequences. Encoding to and from the same
+        # charset is a no-op, so read in as UTF-16, then to convert to UTF-8. Not an issue in Ruby 1.8.
+        data = ''.respond_to?(:encode!) ? File.read(sample[:path]).encode('UTF-16BE', :invalid => :replace,
+                  :undefined => :replace).encode('UTF-8') : File.read(sample[:path])
         Classifier.train!(db, language_name, data)
       end
 
@@ -114,7 +117,8 @@ module Linguist
   # Used to retrieve the interpreter from the shebang line of a file's
   # data.
   def self.interpreter_from_shebang(data)
-    lines = data.lines.to_a
+    lines = ''.respond_to?(:encode!) ? data.encode('UTF-16BE', :invalid => :replace,
+               :undefined => :replace).encode('UTF-8').lines.to_a : data.lines.to_a
 
     if lines.any? && (match = lines[0].match(/(.+)\n?/)) && (bang = match[0]) =~ /^#!/
       bang.sub!(/^#! /, '#!')
