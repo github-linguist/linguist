@@ -38,4 +38,16 @@ class TestHeuristcs < Test::Unit::TestCase
     match = Language.detect("Hello.m", fixture("Objective-C/hello.m"))
     assert_equal Language["Objective-C"], match
   end
+  
+  def test_pl_prolog_by_heuristics
+    languages = ["Perl", "Prolog"]
+    results = Heuristics.disambiguate_pl(fixture("Prolog/turing.pl"), languages)
+    assert_equal Language["Prolog"], results.first
+  end
+  
+  def test_pl_perl_by_heuristics
+    languages = ["Perl", "Prolog"]
+    results = Heuristics.disambiguate_pl(fixture("Perl/perl-test.t"), languages)
+    assert_equal Language["Perl"], results.first
+  end
 end

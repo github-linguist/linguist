@@ -33,9 +33,10 @@ module Linguist
       matches
     end
 
-    def self_disambiguate_pl(data, languages)
+    def self.disambiguate_pl(data, languages)
       matches = []
       matches << Language["Prolog"] if data.include?(":-")
+      matches << Language["Perl"] if data.include?("use strict")
       matches
     end
 
