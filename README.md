@@ -47,11 +47,21 @@ These stats are also printed out by the `linguist` binary. You can use the
 You can try running `linguist` on the `lib/` directory in this repository itself:
 
     $ bundle exec linguist lib/ --breakdown
-    100%  Ruby
 
-    Ruby: ["linguist/blob_helper.rb", "linguist/classifier.rb", "linguist/file_blob.rb", "linguist/generated.rb",
-           "linguist/heuristics.rb", "linguist/language.rb", "linguist/md5.rb", "linguist/repository.rb",
-           "linguist/samples.rb", "linguist/tokenizer.rb", "linguist.rb"]
+    100.00% Ruby
+
+    Ruby:
+    linguist/blob_helper.rb
+    linguist/classifier.rb
+    linguist/file_blob.rb
+    linguist/generated.rb
+    linguist/heuristics.rb
+    linguist/language.rb
+    linguist/md5.rb
+    linguist/repository.rb
+    linguist/samples.rb
+    linguist/tokenizer.rb
+    linguist.rb
 
 #### Ignore vendored files
 

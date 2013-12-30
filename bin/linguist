@@ -28,7 +28,11 @@ if File.directory?(path)
     puts
     file_breakdown = repo.breakdown_by_file
     file_breakdown.each do |lang, files|
-      puts "#{lang}: #{files}"
+      puts "#{lang}:" 
+      files.each do |file|
+        puts file
+      end
+      puts
     end
   end
 elsif File.file?(path)
