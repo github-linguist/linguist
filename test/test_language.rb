@@ -104,6 +104,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['Raw token data'], Language.find_by_alias('raw')
     assert_equal Language['Ruby'], Language.find_by_alias('rb')
     assert_equal Language['Ruby'], Language.find_by_alias('ruby')
+    assert_equal Language['R'], Language.find_by_alias('r')
     assert_equal Language['Scheme'], Language.find_by_alias('scheme')
     assert_equal Language['Shell'], Language.find_by_alias('bash')
     assert_equal Language['Shell'], Language.find_by_alias('sh')
