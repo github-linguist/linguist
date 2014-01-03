@@ -49,7 +49,6 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['Racket'], Language['Racket'].lexer
     assert_equal Lexer['Scheme'], Language['Scheme'].lexer
     assert_equal Lexer['Standard ML'], Language['Standard ML'].lexer
-    assert_equal Lexer['TeX'], Language['TeX'].lexer
     assert_equal Lexer['Verilog'], Language['Verilog'].lexer
     assert_equal Lexer['XSLT'], Language['XSLT'].lexer
     assert_equal Lexer['aspx-vb'], Language['ASP'].lexer
