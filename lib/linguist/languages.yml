@@ -1172,6 +1172,14 @@ Oxygene:
   color: "#5a63a3"
   primary_extension: .oxygene
 
+PAWN:
+  type: programming
+  lexer: C++
+  color: "#dbb284"
+  primary_extension: .pwn
+  extensions:
+  - .inc
+  
 PHP:
   type: programming
   ace_mode: php
@@ -1208,7 +1216,7 @@ Parrot Assembly:
   aliases:
   - pasm
   primary_extension: .pasm
-
+  
 Pascal:
   type: programming
   lexer: Delphi
@@ -1217,7 +1225,7 @@ Pascal:
   extensions:
   - .dfm
   - .lpr
-
+  
 Perl:
   type: programming
   ace_mode: perl
