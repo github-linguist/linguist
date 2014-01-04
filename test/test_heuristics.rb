@@ -50,4 +50,16 @@ class TestHeuristcs < Test::Unit::TestCase
     results = Heuristics.disambiguate_pl(fixture("Perl/perl-test.t"), languages)
     assert_equal Language["Perl"], results.first
   end
+
+  def test_ts_typescript_by_heuristics
+    languages = ["TypeScript", "XML"]
+    results = Heuristics.disambiguate_ts(fixture("TypeScript/classes.ts"), languages)
+    assert_equal Language["TypeScript"], results.first
+  end
+
+  def test_ts_xml_by_heuristics
+    languages = ["TypeScript", "XML"]
+    results = Heuristics.disambiguate_ts(fixture("XML/pt_BR.xml"), languages)
+    assert_equal Language["XML"], results.first
+  end
 end
