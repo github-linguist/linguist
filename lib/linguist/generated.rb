@@ -222,16 +222,14 @@ module Linguist
                lines[1].include?("#include <jni.h>")
     end
 
-    # node_modules/ can contain large amounts of files, in general not meant
-    # for humans in pull requests.
+    # Internal: Is the blob part of node_modules/, which are not meant for humans in pull requests.
     #
     # Returns true or false.
     def node_modules?
       !!name.match(/node_modules\//)
     end
 
-    # the php composer tool generates a lock file to represent a specific dependency state.
-    # In general not meant for humans in pull requests.
+    # Internal: Is the blob a generated php composer lock file?
     #
     # Returns true or false.
     def composer_lock?
