@@ -146,4 +146,12 @@ module Linguist
     end
   end
 
+  def self.interpreter_from_override(data)
+    lines = data.lines.to_a
+    if lines.any?
+      lines[0...5].any? { |l| l.match(/\Wlinguist-override:\s*(\w+)/) }
+      $1 if $1 != nil
+    end
+  end
+
 end
