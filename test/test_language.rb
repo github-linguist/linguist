@@ -20,7 +20,6 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['Coq'], Language['Coq'].lexer
     assert_equal Lexer['FSharp'], Language['F#'].lexer
     assert_equal Lexer['FSharp'], Language['F#'].lexer
-    assert_equal Lexer['Fortran'], Language['FORTRAN'].lexer
     assert_equal Lexer['Gherkin'], Language['Cucumber'].lexer
     assert_equal Lexer['Groovy'], Language['Groovy'].lexer
     assert_equal Lexer['HTML'], Language['HTML'].lexer
