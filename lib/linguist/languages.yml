@@ -53,6 +53,18 @@ ASP:
   - .aspx
   - .axd
 
+ATS:
+  type: programming
+  color: "#1ac620"
+  primary_extension: .dats
+  lexer: OCaml
+  aliases:
+  - ats2
+  extensions:
+  - .sats
+  - .hats
+  - .atxt
+
 ActionScript:
   type: programming
   lexer: ActionScript 3
@@ -215,6 +227,7 @@ C:
   primary_extension: .c
   extensions:
   - .w
+  - .cats
 
 C#:
   type: programming
