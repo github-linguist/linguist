@@ -309,6 +309,16 @@ ChucK:
   lexer: Java
   primary_extension: .ck
 
+Cirru:
+  type: programming
+  color: "#aaaaff"
+  primary_extension: .cirru
+  # ace_mode: cirru
+  # lexer: Cirru
+  lexer: Text only
+  extensions:
+  - .cr
+
 Clean:
   type: programming
   color: "#3a81ad"
@@ -666,6 +676,8 @@ Groovy:
   ace_mode: groovy
   color: "#e69f56"
   primary_extension: .groovy
+  interpreters:
+  - groovy
 
 Groovy Server Pages:
   group: Groovy
