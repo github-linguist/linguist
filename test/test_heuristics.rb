@@ -15,14 +15,14 @@ class TestHeuristcs < Test::Unit::TestCase
     File.read(File.join(samples_path, name))
   end
 
-  # Only calling out '.h' filenames as these are the ones causing issues
-  def all_h_fixtures(language_name)
-    Dir.glob("#{samples_path}/#{language_name}/*.h")
+  def all_fixtures(language_name, file="*")
+    Dir.glob("#{samples_path}/#{language_name}/#{file}")
   end
 
   def test_obj_c_by_heuristics
     languages = ["C++", "Objective-C"]
-    all_h_fixtures("Objective-C").each do |fixture|
+    # Only calling out '.h' filenames as these are the ones causing issues
+    all_fixtures("Objective-C", "*.h").each do |fixture|
       results = Heuristics.disambiguate_c(fixture("Objective-C/#{File.basename(fixture)}"), languages)
       assert_equal Language["Objective-C"], results.first
     end
@@ -61,5 +61,15 @@ class TestHeuristcs < Test::Unit::TestCase
     languages = ["TypeScript", "XML"]
     results = Heuristics.disambiguate_ts(fixture("XML/pt_BR.xml"), languages)
     assert_equal Language["XML"], results.first
+  end
+
+  def test_cl_by_heuristics
+    languages = ["Common Lisp", "OpenCL"]
+    languages.each do |language|
+      all_fixtures(language).each do |fixture|
+        results = Heuristics.disambiguate_cl(fixture("#{language}/#{File.basename(fixture)}"), languages)
+        assert_equal Language[language], results.first
+      end
+    end
   end
 end
