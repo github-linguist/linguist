@@ -22,6 +22,9 @@ module Linguist
         if languages.all? { |l| ["TypeScript", "XML"].include?(l) }
           disambiguate_ts(data, languages)
         end
+        if languages.all? { |l| ["Common Lisp", "OpenCL"].include?(l) }
+          disambiguate_cl(data, languages)
+        end
       end
     end
 
@@ -50,6 +53,13 @@ module Linguist
       else
         matches << Language["TypeScript"]
       end
+      matches
+    end
+
+    def self.disambiguate_cl(data, languages)
+      matches = []
+      matches << Language["Common Lisp"] if data.include?("(defun ")
+      matches << Language["OpenCL"] if /\/\* |\/\/ |^\}/.match(data)
       matches
     end
 
