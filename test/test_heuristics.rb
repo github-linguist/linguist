@@ -50,6 +50,18 @@ class TestHeuristcs < Test::Unit::TestCase
     results = Heuristics.disambiguate_pl(fixture("Perl/perl-test.t"), languages)
     assert_equal Language["Perl"], results.first
   end
+  
+  def test_ecl_prolog_by_heuristics
+    languages = ["ECL", "Prolog"]
+    results = Heuristics.disambiguate_ecl(fixture("Prolog/or-constraint.ecl"), languages)
+    assert_equal Language["Prolog"], results.first
+  end
+  
+  def test_ecl_ecl_by_heuristics
+    languages = ["ECL", "Prolog"]
+    results = Heuristics.disambiguate_ecl(fixture("ECL/sample.ecl"), languages)
+    assert_equal Language["ECL"], results.first
+  end
 
   def test_ts_typescript_by_heuristics
     languages = ["TypeScript", "XML"]
