@@ -25,6 +25,8 @@ module Linguist
         if languages.all? { |l| ["Common Lisp", "OpenCL"].include?(l) }
           disambiguate_cl(data, languages)
         end
+        if languages.all? { |l| ["Common Lisp", "NewLisp"].include?(l) }
+          disambiguate_nl(data, languages)
       end
     end
 
@@ -62,6 +64,13 @@ module Linguist
       matches << Language["OpenCL"] if /\/\* |\/\/ |^\}/.match(data)
       matches
     end
+    
+    def self.disambiguate_nl(data, languages)
+	  matches = []
+	  matches << Language["Common Lisp"] if data.include?("(defun ")
+	  matches << Language["NewLisp"] if data.include?("true") # CL has t rather than true, I think
+	  matches
+	end
 
     def self.active?
       !!ACTIVE
