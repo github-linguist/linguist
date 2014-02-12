@@ -27,6 +27,7 @@ module Linguist
         end
         if languages.all? { |l| ["Common Lisp", "NewLisp"].include?(l) }
           disambiguate_nl(data, languages)
+        end
       end
     end
 
