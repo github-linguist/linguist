@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby # language - single word output (or error) from 'linguist'.
+# 2014, G. Nixon, public domain or license of your choice. No warranty, etc.
+
+# USAGE:
+#         language [ file | directory ]
+
+# Outputs a language (formatted like an interpreter) or returns non-zero.
+
+# Currently only tested to correctly emit 'ruby', 'sh', and 'python',
+# but likely a few others (lua, perl, etc.) will work as well.
+
+# Important: passing a multiple files (or a glob) does not return an aggregate
+# or error. It returns the language of the *first* file on the command line.
+
+require 'linguist/file_blob'
+require 'linguist/repository'
+
+path = ARGV[0] || Dir.pwd
+
+if File.directory?(path)
+  langforpath = Linguist::Repository.from_directory(path)
+else
+  langforpath = Linguist::FileBlob.new(path, Dir.pwd)
+end
+
+if langforpath.language.to_s.downcase == 'shell'
+ puts 'sh'
+else
+ puts langforpath.language.to_s.downcase
+end

@@ -1,0 +1,58 @@
+#!/usr/bin/env sh # speaka - try to confirm a language for a given file.
+# 2014, G. Nixon, public domain or license of your choice. No warranty, etc.
+
+# USAGE:
+#        speaka [de] language ...
+#        speaka no language ...
+
+# No output; returns 0 or 1.
+
+#   speaka sh script.sh -> returns 0 (if script.sh is valid POSIX sh/bash.)
+#   speaka shell script.sh -> returns 0 (if script.sh is valid POSIX sh/bash.)
+#   speaka de ruby ruby.rb -> returns 0 (if ruby.rb is valid ruby.)
+#   speaka no python ruby.rb -> returns 0 (if ruby.rb is valid ruby.)
+#   speaka no python python.py -> returns 1 (if python.py is valid python.)
+
+#   speaka de english -> returns 1
+#   speaka no english -> returns 1
+
+# If only one arguement is passed (missing either language or file), returns 1.
+
+# Important: treatment of multiple arguments.
+
+#  If the first argument is:
+#    -  'de' (and 'de' is not a file), it is ignored.
+#    -  'no' (and 'no' is not a file), return value is reversed.
+#  The return value when *both* are are passed is undefined, but usually is 1.
+
+#  Otherwise, if multiple files are passed, the return value is based on:
+#    -  the language of the *first* file on the command line.
+
+
+# We can't find 'language' or 'linguist'.
+[ "$(language "$0")" = "sh" ] || return 1
+
+while [ x"$1" = x"no" ] || [ x"$1" = x"de" ]; do
+  case "$1" in no) no=no; shift ;; de) shift ;; esac
+done
+
+[ $# -lt 2 ] && return 1
+
+detected="$(language "$2")" || return 1
+testlang="$(command echo "$1" | tr '[:upper:]' '[:lower:]')"
+
+langtest() {
+  case "$testlang" in
+    sh|shell|bash) [ x"$detected" = x"sh" ] && return 0 ;;
+    py|python) [ x"$detected" = x"python" ] && return 0 ;;
+    rb|ruby) [ x"$detected" = x"ruby" ] && return 0 ;;
+    *) [ x"$detected" = x"$testlang" ] && return 0 ;;
+  esac
+}
+
+langtest; isnotlang=$?
+
+[ $isnotlang = 1 ] && [ x"$no" = x"no" ] && exit 0
+[ $isnotlang = 0 ] && [ x"$no" = x"no" ] && exit 1
+
+exit $isnotlang
