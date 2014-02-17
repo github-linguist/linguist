@@ -97,6 +97,4 @@ the convertions of Clojure's hiccup.
   [] -> ""
   [[K V]|AS] -> (@s " " (to-str K) "='"
                     (if (cons? V) (join " " (map (function str) V)) (to-str V))
-                    "'" (attributes AS)))
-
-)
+                    "'" (attributes AS))))
