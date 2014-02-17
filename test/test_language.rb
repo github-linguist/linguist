@@ -213,7 +213,7 @@ class TestLanguage < Test::Unit::TestCase
   def test_searchable
     assert Language['Ruby'].searchable?
     assert !Language['Gettext Catalog'].searchable?
-    assert !Language['SQL'].searchable?
+    assert Language['SQL'].searchable?
   end
 
   def test_find_by_name
