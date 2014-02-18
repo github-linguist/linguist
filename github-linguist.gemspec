@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.license  = "MIT"
 
   s.files = Dir['lib/**/*']
-  s.executables << 'linguist'
+  %w(linguist language shebangalang speaka).each{ |bin| s.executables << bin }
 
   s.add_dependency 'charlock_holmes', '~> 0.6.6'
   s.add_dependency 'escape_utils',    '>= 0.3.1'
