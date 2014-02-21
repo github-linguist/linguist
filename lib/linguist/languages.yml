@@ -53,6 +53,18 @@ ASP:
   - .aspx
   - .axd
 
+ATS:
+  type: programming
+  color: "#1ac620"
+  primary_extension: .dats
+  lexer: OCaml
+  aliases:
+  - ats2
+  extensions:
+  - .atxt
+  - .hats
+  - .sats
+
 ActionScript:
   type: programming
   lexer: ActionScript 3
@@ -92,6 +104,8 @@ AppleScript:
   primary_extension: .applescript
   extensions:
   - .scpt
+  interpreters:
+  - osascript
 
 Arc:
   type: programming
@@ -214,6 +228,7 @@ C:
   color: "#555"
   primary_extension: .c
   extensions:
+  - .cats
   - .w
 
 C#:
@@ -832,6 +847,13 @@ JSON5:
   lexer: JavaScript
   primary_extension: .json5
 
+JSONLD:
+  type: data
+  group: JavaScript
+  ace_mode: json
+  lexer: JavaScript
+  primary_extension: .jsonld
+
 Jade:
   group: HTML
   type: markup
@@ -1389,6 +1411,7 @@ R:
   primary_extension: .r
   extensions:
   - .R
+  - .rsx
   filenames:
   - .Rprofile
   interpreters:
@@ -1553,6 +1576,7 @@ Scheme:
   color: "#1e4aec"
   primary_extension: .scm
   extensions:
+  - .sld
   - .sls
   - .ss
   interpreters:

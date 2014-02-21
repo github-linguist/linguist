@@ -47,6 +47,9 @@
 # Debian packaging
 - ^debian/
 
+# Haxelib projects often contain a neko bytecode file named run.n
+- run.n$
+
 ## Commonly Bundled JavaScript frameworks ##
 
 # jQuery
