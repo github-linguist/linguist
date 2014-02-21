@@ -1,0 +1,30 @@
+{
+  "@context": {
+    "property": "http://example.com/vocab#property"
+  },
+  "@id": "../document-relative",
+  "@type": "#document-relative",
+  "property": {
+    "@context": {
+      "@base": "http://example.org/test/"
+    },
+    "@id": "../document-base-overwritten",
+    "@type": "#document-base-overwritten",
+    "property": [
+      {
+        "@context": null,
+        "@id": "../document-relative",
+        "@type": "#document-relative",
+        "property": "context completely reset, drops property"
+      },
+      {
+        "@context": {
+          "@base": null
+        },
+        "@id": "../document-relative",
+        "@type": "#document-relative",
+        "property": "only @base is cleared"
+      }
+    ]
+  }
+}
