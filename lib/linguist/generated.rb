@@ -241,6 +241,8 @@ module Linguist
     #
     # Returns true or false
     def vcr_cassette?
+      return false unless extname == '.yml'
+      return false unless lines.count > 2
       # VCR Cassettes have "recorded_with: VCR" in the second last line.
       return lines[-2].include?("recorded_with: VCR")
     end
