@@ -343,6 +343,14 @@ class TestBlob < Test::Unit::TestCase
 
     # Vagrant
     assert blob("Vagrantfile").vendored?
+
+    # Gradle
+    assert blob("gradlew").vendored?
+    assert blob("gradlew.bat").vendored?
+    assert blob("gradle/wrapper/gradle-wrapper.properties").vendored?
+    assert blob("subproject/gradlew").vendored?
+    assert blob("subproject/gradlew.bat").vendored?
+    assert blob("subproject/gradle/wrapper/gradle-wrapper.properties").vendored?
   end
 
   def test_language
