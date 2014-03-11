@@ -541,6 +541,14 @@ FORTRAN:
   - .for
   - .fpp
 
+FLUX:
+  type: programming
+  color: "#33CCFF"
+  primary_extension: .fx
+  lexer: Text only
+  extensions:
+  - .flux
+
 Factor:
   type: programming
   color: "#636746"
@@ -557,16 +565,6 @@ Fancy:
   - .fancypack
   filenames:
   - Fakefile
-
-FLUX:
-  type: programming
-  color: "#33CCFF"
-  primary_extension: .fx
-  lexer: Text only
-  extensions:
-  - .FX
-  - .FLUX
-  - .flux
   
 Fantom:
   type: programming
