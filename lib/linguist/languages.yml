@@ -562,6 +562,16 @@ Fantom:
   type: programming
   color: "#dbded5"
   primary_extension: .fan
+  
+FLUX:
+  type: programming
+  color: "#33CCFF"
+  primary_extension: .fx
+  lexer: Text only
+  extensions:
+  - .flux
+  - .FLUX
+  - .FX
 
 Forth:
   type: programming
@@ -723,15 +733,6 @@ Haxe:
   primary_extension: .hx
   extensions:
   - .hxsl
-  
-HOW:
-  type: programming
-  coloe: "#CC0099"
-  lexer: Text only
-  primary_extension: .how
-  extensions:
-  - .howmeta
-  - .howproj
 
 INI:
   type: data
