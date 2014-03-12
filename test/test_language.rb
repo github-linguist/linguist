@@ -40,6 +40,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['REBOL'], Language['Rebol'].lexer
     assert_equal Lexer['RHTML'], Language['HTML+ERB'].lexer
     assert_equal Lexer['RHTML'], Language['RHTML'].lexer
+    assert_equal Lexer['Ruby'], Language['Crystal'].lexer
     assert_equal Lexer['Ruby'], Language['Mirah'].lexer
     assert_equal Lexer['Ruby'], Language['Ruby'].lexer
     assert_equal Lexer['S'], Language['R'].lexer
@@ -103,6 +104,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['Raw token data'], Language.find_by_alias('raw')
     assert_equal Language['Ruby'], Language.find_by_alias('rb')
     assert_equal Language['Ruby'], Language.find_by_alias('ruby')
+    assert_equal Language['R'], Language.find_by_alias('r')
     assert_equal Language['Scheme'], Language.find_by_alias('scheme')
     assert_equal Language['Shell'], Language.find_by_alias('bash')
     assert_equal Language['Shell'], Language.find_by_alias('sh')
@@ -191,10 +193,16 @@ class TestLanguage < Test::Unit::TestCase
 
   def test_markup
     assert_equal :markup, Language['HTML'].type
+    assert_equal :markup, Language['SCSS'].type
   end
 
   def test_data
     assert_equal :data, Language['YAML'].type
+  end
+
+  def test_prose
+    assert_equal :prose, Language['Markdown'].type
+    assert_equal :prose, Language['Org'].type
   end
 
   def test_other
@@ -247,6 +255,36 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal [Language['Shell']], Language.find_by_filename('.zshrc')
     assert_equal [Language['Clojure']], Language.find_by_filename('riemann.config')
     assert_equal [Language['HTML+Django']], Language.find_by_filename('index.jinja')
+  end
+
+  def test_find_by_shebang
+    assert_equal 'ruby', Linguist.interpreter_from_shebang("#!/usr/bin/ruby\n# baz")
+    { []         => ["",
+                     "foo",
+                     "#bar",
+                     "#baz",
+                     "///",
+                     "\n\n\n\n\n",
+                     " #!/usr/sbin/ruby",
+                     "\n#!/usr/sbin/ruby"],
+      ['Ruby']   => ["#!/usr/bin/env ruby\n# baz",
+                     "#!/usr/sbin/ruby\n# bar",
+                     "#!/usr/bin/ruby\n# foo",
+                     "#!/usr/sbin/ruby",
+                     "#!/usr/sbin/ruby foo bar baz\n"],
+      ['R']      => ["#!/usr/bin/env Rscript\n# example R script\n#\n"],
+      ['Shell']  => ["#!/usr/bin/bash\n", "#!/bin/sh"],
+      ['Python'] => ["#!/bin/python\n# foo\n# bar\n# baz",
+                     "#!/usr/bin/python2.7\n\n\n\n",
+                     "#!/usr/bin/python3\n\n\n\n"],
+      ["Common Lisp"] => ["#!/usr/bin/sbcl --script\n\n"]
+    }.each do |languages, bodies|
+      bodies.each do |body|
+        assert_equal([body, languages.map{|l| Language[l]}],
+                     [body, Language.find_by_shebang(body)])
+
+      end
+    end
   end
 
   def test_find
@@ -338,6 +376,9 @@ class TestLanguage < Test::Unit::TestCase
     assert !Language['Ruby'].eql?(Language['Python'])
   end
 
+  def test_by_type
+    assert !Language.by_type(:prose).nil?
+  end
 
   def test_colorize
     assert_equal <<-HTML.chomp, Language['Ruby'].colorize("def foo\n  'foo'\nend\n")

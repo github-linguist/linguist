@@ -12,6 +12,9 @@
 # Caches
 - cache/
 
+# Dependencies
+- ^[Dd]ependencies/
+
 # C deps
 #  https://github.com/joyent/node
 - ^deps/
@@ -24,14 +27,28 @@
 # Node dependencies
 - node_modules/
 
+# Bower Components
+- bower_components/
+
 # Erlang bundles
 - ^rebar$
 
+# Bootstrap minified css and js
+- (^|/)bootstrap([^.]*)(\.min)?\.(js|css)$
+
+# Foundation css
+- foundation.min.css
+- foundation.css
+
 # Vendored dependencies
-- vendor/
+- thirdparty/
+- vendors?/
 
 # Debian packaging
 - ^debian/
+
+# Haxelib projects often contain a neko bytecode file named run.n
+- run.n$
 
 ## Commonly Bundled JavaScript frameworks ##
 
@@ -48,6 +65,9 @@
 - (^|/)effects\.js$
 - (^|/)controls\.js$
 - (^|/)dragdrop\.js$
+
+# Typescript definition files
+- (.*?)\.d\.ts$
 
 # MooTools
 - (^|/)mootools([^.]*)\d+\.\d+.\d+([^.]*)\.js$
@@ -75,6 +95,9 @@
 - (^|/)shCore\.js$
 - (^|/)shLegacy\.js$
 
+# AngularJS
+- (^|/)angular([^.]*)(\.min)?\.js$
+
 ## Python ##
 
 # django
@@ -86,11 +109,20 @@
 # WAF
 - ^waf$
 
+# .osx
+- ^.osx$
 
 ## Obj-C ##
 
 # Sparkle
 - (^|/)Sparkle/
+
+## Groovy ##
+
+# Gradle
+- (^|/)gradlew$
+- (^|/)gradlew\.bat$
+- (^|/)gradle/wrapper/
 
 ## .NET ##
 
@@ -108,14 +140,30 @@
 - ^[Pp]ackages/
 
 # ExtJS
-- (^|/)extjs/
+- (^|/)extjs/.*?\.js$
+- (^|/)extjs/.*?\.xml$
+- (^|/)extjs/.*?\.txt$
+- (^|/)extjs/.*?\.html$
+- (^|/)extjs/.*?\.properties$
+- (^|/)extjs/.sencha/
+- (^|/)extjs/docs/
+- (^|/)extjs/builds/
+- (^|/)extjs/cmd/
+- (^|/)extjs/examples/
+- (^|/)extjs/locale/
+- (^|/)extjs/packages/
+- (^|/)extjs/plugins/
+- (^|/)extjs/resources/
+- (^|/)extjs/src/
+- (^|/)extjs/welcome/
 
 # Samples folders
 - ^[Ss]amples/
 
 # LICENSE, README, git config files
 - ^COPYING$
-- ^LICENSE$
+- LICENSE$
+- License$
 - gitattributes$
 - gitignore$
 - gitmodules$
@@ -124,6 +172,13 @@
 
 # Test fixtures
 - ^[Tt]est/fixtures/
+
+# PhoneGap/Cordova
+- (^|/)cordova([^.]*)(\.min)?\.js$
+- (^|/)cordova\-\d\.\d(\.\d)?(\.min)?\.js$
+
+# Vagrant
+- ^Vagrantfile$
 
 # .DS_Store's
 - .[Dd][Ss]_[Ss]tore$

@@ -1,15 +1,19 @@
+import 'dart:math' as math;
+
 class Point {
+  num x, y;
+
   Point(this.x, this.y);
-  distanceTo(Point other) {
+
+  num distanceTo(Point other) {
     var dx = x - other.x;
     var dy = y - other.y;
-    return Math.sqrt(dx * dx + dy * dy);
+    return math.sqrt(dx * dx + dy * dy);
   }
-  var x, y;
 }
 
-main() {
-  Point p = new Point(2, 3);
-  Point q = new Point(3, 4);
+void main() {
+  var p = new Point(2, 3);
+  var q = new Point(3, 4);
   print('distance from p to q = ${p.distanceTo(q)}');
 }
