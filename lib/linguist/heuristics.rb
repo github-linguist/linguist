@@ -1,7 +1,7 @@
 module Linguist
   # A collection of simple heuristics that can be used to better analyze languages.
   class Heuristics
-    ACTIVE = false
+    ACTIVE = true
 
     # Public: Given an array of String language names,
     # apply heuristics against the given data and return an array
@@ -27,6 +27,9 @@ module Linguist
         end
         if languages.all? { |l| ["Common Lisp", "OpenCL"].include?(l) }
           disambiguate_cl(data, languages)
+        end
+        if languages.all? { |l| ["PLSQL", "PLpgSQL", "SQL"].include?(l) }
+          disambiguate_sql(data, languages)
         end
       end
     end
@@ -70,6 +73,18 @@ module Linguist
       matches = []
       matches << Language["Common Lisp"] if data.include?("(defun ")
       matches << Language["OpenCL"] if /\/\* |\/\/ |^\}/.match(data)
+      matches
+    end
+
+    def self.disambiguate_sql(data, languages)
+      matches = []
+
+      plsqlkeywords = [/begin\b/i,/package\b/i,/exception\b/i, /pragma\b/i , /constructor\W+function\b/i]
+      re = Regexp.union(plsqlkeywords)
+
+      matches << Language["SQL"] if ! data.match(re)  
+
+      #matches << Language["PLSQL"] if data.match(/pragma\b/i) #pragma is plsql only (not PLpgSQL)
       matches
     end
 
