@@ -1,7 +1,7 @@
 module Linguist
   # A collection of simple heuristics that can be used to better analyze languages.
   class Heuristics
-    ACTIVE = true
+    ACTIVE = false
 
     # Public: Given an array of String language names,
     # apply heuristics against the given data and return an array
@@ -79,7 +79,7 @@ module Linguist
     def self.disambiguate_sql(data, languages)
       matches = []
 
-      plsqlkeywords = [/begin\b/i,/package\b/i,/exception\b/i, /pragma\b/i , /constructor\W+function\b/i]
+      plsqlkeywords = [/begin\b/i,/boolean\b/i, /package\b/i,/exception\b/i, /pragma\b/i , /constructor\W+function\b/i]
       re = Regexp.union(plsqlkeywords)
 
       matches << Language["SQL"] if ! data.match(re)  
