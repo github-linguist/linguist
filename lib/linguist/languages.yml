@@ -254,6 +254,7 @@ C++:
   extensions:
   - .C
   - .c++
+  - .cc
   - .cxx
   - .H
   - .h++
@@ -341,6 +342,7 @@ Clojure:
   - .cljscm
   - .cljx
   - .hic
+  - .cljs.hl
   filenames:
   - riemann.config
 
@@ -490,6 +492,9 @@ Dylan:
   type: programming
   color: "#3ebc27"
   primary_extension: .dylan
+  extensions:
+  - .intr
+  - .lid
 
 Ecere Projects:
   type: data
@@ -555,6 +560,14 @@ F#:
   - .fsi
   - .fsx
 
+FLUX:
+  type: programming
+  color: "#33CCFF"
+  primary_extension: .fx
+  lexer: Text only
+  extensions:
+  - .flux
+
 FORTRAN:
   type: programming
   lexer: Fortran
@@ -593,7 +606,7 @@ Fancy:
   - .fancypack
   filenames:
   - Fakefile
-
+  
 Fantom:
   type: programming
   color: "#dbded5"
@@ -699,6 +712,7 @@ HTML:
   extensions:
   - .htm
   - .xhtml
+  - .html.hl
 
 HTML+Django:
   type: markup
@@ -1041,6 +1055,13 @@ Markdown:
   - .mkd
   - .mkdown
   - .ron
+
+Mask:
+  type: markup
+  lexer: SCSS
+  color: "#f97732"
+  ace_mode: scss
+  primary_extension: .mask
 
 Matlab:
   type: programming
@@ -1534,6 +1555,7 @@ Ruby:
   - Appraisals
   - Berksfile
   - Gemfile
+  - Gemfile.lock
   - Guardfile
   - Podfile
   - Thorfile
@@ -1623,6 +1645,12 @@ Shell:
   - zsh
   filenames:
   - Dockerfile
+
+Shen:
+  type: programming
+  color: "#120F14"
+  lexer: Text only
+  primary_extension: .shen
 
 Slash:
   type: programming
