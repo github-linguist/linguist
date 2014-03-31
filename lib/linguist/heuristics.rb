@@ -28,6 +28,9 @@ module Linguist
         if languages.all? { |l| ["Common Lisp", "OpenCL"].include?(l) }
           disambiguate_cl(data, languages)
         end
+        if languages.all? { |l| ["Objective-C", "M", "Matlab"].include?(l) }
+          disambiguate_objc(data, languages)
+        end
       end
     end
 
@@ -70,6 +73,26 @@ module Linguist
       matches = []
       matches << Language["Common Lisp"] if data.include?("(defun ")
       matches << Language["OpenCL"] if /\/\* |\/\/ |^\}/.match(data)
+      matches
+    end
+
+    def self.disambiguate_objc(data, languages)
+      matches = []
+
+      if /(#import|@import)/.match(data)
+        matches << Language["Objective-C"]
+        #check if it is found within a Matlab comment (% or %{%}) or string ''
+        #or if there's a valid function handle called @import
+        if /((%\{\n*|%).*?(#import|@import)|'.*?(#import|@import).*?')/.match(data) or /@import(?! +\w+?;)/.match(data)
+          matches << Language["Matlab"]
+        end
+        #check if it is found within a M comment (;) or string ("")
+        #or if there's #import is used as a modulo
+        if /(;.*?(#import|@import)|".*?(#import|@import).*?")/.match(data) or /\w+.*?#import/.match(data)
+          matches << Language["M"]
+        end
+      end
+
       matches
     end
 
