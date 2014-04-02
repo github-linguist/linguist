@@ -43,7 +43,7 @@ module Linguist
         matches << Language["Objective-C"]
       end
       if (/^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set)>/.match(data) or
-          /^\s*template\s*</.match(data) or /[^@]class\s+\w+/.match(data) or /^[^@](private|public|protected):$/.match(data))
+          /^\s*template\s*</.match(data) or /^[^@]class\s+\w+/.match(data) or /^[^@](private|public|protected):$/.match(data))
         matches << Language["C++"]
       end
       matches
