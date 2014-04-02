@@ -32,6 +32,15 @@ class TestHeuristcs < Test::Unit::TestCase
     languages = ["C++", "Objective-C"]
     results = Heuristics.disambiguate_c(fixture("C++/render_adapter.cpp"), languages)
     assert_equal Language["C++"], results.first
+    languages = ["C++", "Objective-C", "C"]
+    results = Heuristics.disambiguate_c(fixture("C++/ThreadedQueue.h"), languages)
+    assert_equal Language["C++"], results.first
+  end
+
+  def test_c_by_heuristics
+    languages = ["C++", "Objective-C", "C"]
+    results = Heuristics.disambiguate_c(fixture("C/ArrowLeft.h"), languages)
+    assert_equal nil, results.first
   end
 
   def test_detect_still_works_if_nothing_matches
