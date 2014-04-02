@@ -39,8 +39,7 @@ module Linguist
       matches = []
       if (/@(interface|class|protocol|synchronised|selector|implementation)/.match(data))
         matches << Language["Objective-C"]
-      end
-      if (/^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set)>$/.match(data) or
+      elsif (/^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set)>/.match(data) or
           /template\s*</.match(data) or /[^@]class/.match(data))
         matches << Language["C++"]
       end
