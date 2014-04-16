@@ -1616,11 +1616,6 @@ Self:
   lexer: Text only
   primary_extension: .self
 
-ShellSession:
-  type: programming
-  lexer: Bash Session
-  primary_extension: .sh-session
-
 Shell:
   type: programming
   lexer: Bash
@@ -1640,6 +1635,11 @@ Shell:
   - zsh
   filenames:
   - Dockerfile
+
+ShellSession:
+  type: programming
+  lexer: Bash Session
+  primary_extension: .sh-session
 
 Shen:
   type: programming
