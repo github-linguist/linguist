@@ -33,6 +33,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['JavaScript'], Language['JavaScript'].lexer
     assert_equal Lexer['MOOCode'], Language['Moocode'].lexer
     assert_equal Lexer['MuPAD'], Language['mupad'].lexer
+    assert_equal Lexer['NewLisp'], Language['NewLisp'].lexer
     assert_equal Lexer['NASM'], Language['Assembly'].lexer
     assert_equal Lexer['OCaml'], Language['OCaml'].lexer
     assert_equal Lexer['Ooc'], Language['ooc'].lexer
