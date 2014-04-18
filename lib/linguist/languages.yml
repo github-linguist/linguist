@@ -802,6 +802,9 @@ INI:
   - .prefs
   - .properties
   primary_extension: .ini
+  
+Inno Setup:
+  primary_extension: .iss
 
 Idris:
   type: programming
@@ -1088,6 +1091,18 @@ MediaWiki:
   lexer: Text only
   wrap: true
   primary_extension: .mediawiki
+
+Mercury:
+  type: programming
+  # This is the background colour on the web page.
+  color: "#abcdef"
+  # The primary extension is .m, but lingist won't accept duplicates
+  primary_extension: .mercury
+  # Mercury's syntax is not prolog syntax, but they do share the lexer
+  lexer: Prolog
+  extensions:
+  - .m
+  - .moo
 
 MiniD: # Legacy
   searchable: false
