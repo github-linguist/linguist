@@ -19,6 +19,15 @@ module Linguist
         if languages.all? { |l| ["Perl", "Prolog"].include?(l) }
           disambiguate_pl(data, languages)
         end
+        if languages.all? { |l| ["ECL", "Prolog"].include?(l) }
+          disambiguate_ecl(data, languages)
+        end
+        if languages.all? { |l| ["TypeScript", "XML"].include?(l) }
+          disambiguate_ts(data, languages)
+        end
+        if languages.all? { |l| ["Common Lisp", "OpenCL"].include?(l) }
+          disambiguate_cl(data, languages)
+        end
       end
     end
 
@@ -37,6 +46,30 @@ module Linguist
       matches = []
       matches << Language["Prolog"] if data.include?(":-")
       matches << Language["Perl"] if data.include?("use strict")
+      matches
+    end
+
+    def self.disambiguate_ecl(data, languages)
+      matches = []
+      matches << Language["Prolog"] if data.include?(":-")
+      matches << Language["ECL"] if data.include?(":=")
+      matches
+    end
+
+    def self.disambiguate_ts(data, languages)
+      matches = []
+      if (data.include?("</translation>"))
+        matches << Language["XML"]
+      else
+        matches << Language["TypeScript"]
+      end
+      matches
+    end
+
+    def self.disambiguate_cl(data, languages)
+      matches = []
+      matches << Language["Common Lisp"] if data.include?("(defun ")
+      matches << Language["OpenCL"] if /\/\* |\/\/ |^\}/.match(data)
       matches
     end
 

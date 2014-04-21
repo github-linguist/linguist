@@ -62,7 +62,8 @@ module Linguist
         generated_protocol_buffer? ||
         generated_jni_header? ||
         composer_lock? ||
-        node_modules?
+        node_modules? ||
+        vcr_cassette?
     end
 
     # Internal: Is the blob an XCode project file?
@@ -222,20 +223,28 @@ module Linguist
                lines[1].include?("#include <jni.h>")
     end
 
-    # node_modules/ can contain large amounts of files, in general not meant
-    # for humans in pull requests.
+    # Internal: Is the blob part of node_modules/, which are not meant for humans in pull requests.
     #
     # Returns true or false.
     def node_modules?
       !!name.match(/node_modules\//)
     end
 
-    # the php composer tool generates a lock file to represent a specific dependency state.
-    # In general not meant for humans in pull requests.
+    # Internal: Is the blob a generated php composer lock file?
     #
     # Returns true or false.
     def composer_lock?
       !!name.match(/composer.lock/)
+    end
+
+    # Is the blob a VCR Cassette file?
+    #
+    # Returns true or false
+    def vcr_cassette?
+      return false unless extname == '.yml'
+      return false unless lines.count > 2
+      # VCR Cassettes have "recorded_with: VCR" in the second last line.
+      return lines[-2].include?("recorded_with: VCR")
     end
   end
 end
