@@ -28,6 +28,9 @@ module Linguist
         if languages.all? { |l| ["Common Lisp", "OpenCL"].include?(l) }
           disambiguate_cl(data, languages)
         end
+        if languages.all? { |l| ["Rebol", "R"].include?(l) }
+          disambiguate_r(data, languages)
+        end
       end
     end
 
@@ -70,6 +73,13 @@ module Linguist
       matches = []
       matches << Language["Common Lisp"] if data.include?("(defun ")
       matches << Language["OpenCL"] if /\/\* |\/\/ |^\}/.match(data)
+      matches
+    end
+
+    def self.disambiguate_r(data, languages)
+      matches = []
+      matches << Language["Rebol"] if /\bRebol\b/i.match(data)
+      matches << Language["R"] if data.include?("<-")
       matches
     end
 

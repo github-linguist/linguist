@@ -10,7 +10,7 @@
 # ace_mode          - A String name of Ace Mode (if available)
 # wrap              - Boolean wrap to enable line wrapping (default: false)
 # extension         - An Array of associated extensions
-# interpreter       - An Array of associated interpreters
+# interpreters      - An Array of associated interpreters
 # primary_extension - A String for the main extension associated with
 #                     the language. Must be unique. Used when a Language is picked
 #                     from a dropdown and we need to automatically choose an
@@ -86,6 +86,12 @@ Agda:
   color: "#467C91"
   primary_extension: .agda
 
+Alloy:
+  type: programming  # 'modeling' would be more appropiate
+  lexer: Text only
+  color: "#cc5c24"
+  primary_extension: .als
+
 ApacheConf:
   type: markup
   aliases:
@@ -128,6 +134,12 @@ AsciiDoc:
   extensions:
   - .adoc
   - .asc
+
+AspectJ:
+  type: programming
+  lexer: AspectJ
+  color: "#1957b0"
+  primary_extension: .aj
 
 Assembly:
   type: programming
@@ -261,6 +273,7 @@ C++:
   - .hh
   - .hpp
   - .hxx
+  - .inl
   - .tcc
   - .tpp
 
@@ -300,7 +313,7 @@ COBOL:
 
 CSS:
   ace_mode: css
-  color: "#1f085e"
+  color: "#563d7c"
   primary_extension: .css
 
 Ceylon:
@@ -488,10 +501,19 @@ DCPU-16 ASM:
 Diff:
   primary_extension: .diff
 
+Dogescript:
+  type: programming
+  lexer: Text only
+  color: "#cca760"
+  primary_extension: .djs
+
 Dylan:
   type: programming
   color: "#3ebc27"
   primary_extension: .dylan
+  extensions:
+  - .intr
+  - .lid
 
 Ecere Projects:
   type: data
@@ -506,6 +528,14 @@ ECL:
   lexer: ECL
   extensions:
   - .eclxml
+
+Eagle:
+  type: markup
+  color: "#3994bc"
+  lexer: XML
+  primary_extension: .sch
+  extensions:
+  - .brd
 
 Eiffel:
   type: programming
@@ -603,7 +633,7 @@ Fancy:
   - .fancypack
   filenames:
   - Fakefile
-  
+
 Fantom:
   type: programming
   color: "#dbded5"
@@ -616,6 +646,17 @@ Forth:
   lexer: Text only
   extensions:
   - .4th
+
+Frege:
+  type: programming
+  color: "#00cafe"
+  lexer: Haskell
+  primary_extension: .fr
+
+Game Maker Language:
+  type: programming
+  lexer: JavaScript
+  primary_extension: .gml
 
 GAS:
   type: programming
@@ -664,6 +705,17 @@ Glyph:
   lexer: Tcl
   primary_extension: .glf
 
+Gnuplot:
+  type: programming
+  color: "#f0a9f0"
+  lexer: Gnuplot
+  primary_extension: .gp
+  extensions:
+  - .gnu
+  - .gnuplot
+  - .plot
+  - .plt
+
 Go:
   type: programming
   color: "#a89b4d"
@@ -673,6 +725,16 @@ Gosu:
   type: programming
   color: "#82937f"
   primary_extension: .gs
+
+Grammatical Framework:
+  type: programming
+  lexer: Haskell
+  aliases:
+  - gf
+  wrap: false
+  primary_extension: .gf
+  searchable: true
+  color: "#ff0000"
 
 Groff:
   primary_extension: .man
@@ -865,6 +927,12 @@ JSONLD:
   lexer: JavaScript
   primary_extension: .jsonld
 
+JSONiq:
+  type: programming
+  ace_mode: jsoniq
+  lexer: XQuery
+  primary_extension: .jq
+
 Jade:
   group: HTML
   type: markup
@@ -887,7 +955,7 @@ Java Server Pages:
 JavaScript:
   type: programming
   ace_mode: javascript
-  color: "#f15501"
+  color: "#f7df1e"
   aliases:
   - js
   - node
@@ -907,6 +975,8 @@ JavaScript:
   - .ssjs
   filenames:
   - Jakefile
+  interpreters:
+  - node
 
 Julia:
   type: programming
@@ -1060,6 +1130,11 @@ Mask:
   ace_mode: scss
   primary_extension: .mask
 
+Mathematica:
+  type: programming
+  primary_extension: .mathematica
+  lexer: Text only
+
 Matlab:
   type: programming
   color: "#bb92ac"
@@ -1186,9 +1261,14 @@ Objective-C:
   - obj-c
   - objc
   primary_extension: .m
-  extensions:
-  - .h
-  - .mm
+
+Objective-C++:
+  type: programming
+  color: "#4886FC"
+  aliases:
+  - obj-c++
+  - objc++
+  primary_extension: .mm
 
 Objective-J:
   type: programming
@@ -1391,6 +1471,12 @@ Pure Data:
   lexer: Text only
   primary_extension: .pd
 
+PureScript:
+  type: programming
+  color: "#f3ce45"
+  lexer: Haskell
+  primary_extension: .purs
+
 Python:
   type: programming
   ace_mode: python
@@ -1494,10 +1580,12 @@ Rebol:
   type: programming
   lexer: REBOL
   color: "#358a5b"
-  primary_extension: .rebol
+  primary_extension: .reb
   extensions:
+  - .r
   - .r2
   - .r3
+  - .rebol
 
 Redcode:
   primary_extension: .cw
@@ -1636,6 +1724,11 @@ Shell:
   filenames:
   - Dockerfile
 
+ShellSession:
+  type: programming
+  lexer: Bash Session
+  primary_extension: .sh-session
+
 Shen:
   type: programming
   color: "#120F14"
@@ -1655,6 +1748,13 @@ Smalltalk:
 Smarty:
   primary_extension: .tpl
 
+SourcePawn:
+  type: programming
+  color: "#f69e1d"
+  aliases:
+  - sourcemod
+  primary_extension: .sp
+
 Squirrel:
   type: programming
   lexer: C++
@@ -1669,6 +1769,19 @@ Standard ML:
   extensions:
   - .fun
 
+Stata:
+  type: programming
+  lexer: Text only
+  extensions:
+  - .ado
+  - .do
+  - .doh
+  - .ihlp
+  - .mata
+  - .matah
+  - .sthlp
+  primary_extension: .do
+
 Stylus:
   type: markup
   group: CSS
@@ -1680,6 +1793,15 @@ SuperCollider:
   color: "#46390b"
   lexer: Text only
   primary_extension: .scd
+
+SystemVerilog:
+  type: programming
+  color: "#343761"
+  lexer: systemverilog
+  primary_extension: .sv
+  extensions:
+  - .svh
+  - .vh
 
 TOML:
   type: data
@@ -1696,6 +1818,7 @@ Tcl:
   primary_extension: .tcl
   extensions:
   - .adp
+  - .tm
 
 Tcsh:
   type: programming
@@ -1858,6 +1981,7 @@ XML:
   - .kml
   - .launch
   - .mxml
+  - .osm
   - .plist
   - .pluginspec
   - .ps1xml
@@ -1937,6 +2061,12 @@ YAML:
   - .reek
   - .rviz
   - .yaml
+
+Zephir:
+  type: programming
+  lexer: PHP
+  color: "#118f9e"
+  primary_extension: .zep
 
 eC:
   type: programming
