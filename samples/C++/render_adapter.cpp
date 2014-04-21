@@ -1,0 +1,6 @@
+#include <cstdint>
+
+namespace Gui
+{
+
+}

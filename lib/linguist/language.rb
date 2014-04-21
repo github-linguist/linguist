@@ -7,6 +7,7 @@ rescue LoadError
 end
 
 require 'linguist/classifier'
+require 'linguist/heuristics'
 require 'linguist/samples'
 
 module Linguist
@@ -32,7 +33,7 @@ module Linguist
     #
     # Returns an array
     def self.detectable_markup
-      ["CSS", "Less", "Sass", "TeX"]
+      ["CSS", "Less", "Sass", "SCSS", "Stylus", "TeX"]
     end
 
     # Detect languages by a specific type
@@ -113,18 +114,32 @@ module Linguist
         name += ".script!"
       end
 
+      # First try to find languages that match based on filename.
       possible_languages = find_by_filename(name)
 
+      # If there is more than one possible language with that extension (or no
+      # extension at all, in the case of extensionless scripts), we need to continue
+      # our detection work
       if possible_languages.length > 1
         data = data.call() if data.respond_to?(:call)
+        possible_language_names = possible_languages.map(&:name)
+
+        # Don't bother with emptiness
         if data.nil? || data == ""
           nil
+        # Check if there's a shebang line and use that as authoritative
         elsif (result = find_by_shebang(data)) && !result.empty?
           result.first
-        elsif classified = Classifier.classify(Samples::DATA, data, possible_languages.map(&:name)).first
+        # No shebang. Still more work to do. Try to find it with our heuristics.
+        elsif (determined = Heuristics.find_by_heuristics(data, possible_language_names)) && !determined.empty?
+          determined.first
+        # Lastly, fall back to the probablistic classifier.
+        elsif classified = Classifier.classify(Samples::DATA, data, possible_language_names ).first
+          # Return the actual Language object based of the string language name (i.e., first element of `#classify`)
           Language[classified[0]]
         end
       else
+        # Simplest and most common case, we can just return the one match based on extension
         possible_languages.first
       end
     end
@@ -470,7 +485,7 @@ module Linguist
     #
     # Returns html String
     def colorize(text, options = {})
-      lexer.highlight(text, options = {})
+      lexer.highlight(text, options)
     end
 
     # Public: Return name as String representation

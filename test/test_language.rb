@@ -10,6 +10,7 @@ class TestLanguage < Test::Unit::TestCase
 
   def test_lexer
     assert_equal Lexer['ActionScript 3'], Language['ActionScript'].lexer
+    assert_equal Lexer['AspectJ'], Language['AspectJ'].lexer
     assert_equal Lexer['Bash'], Language['Gentoo Ebuild'].lexer
     assert_equal Lexer['Bash'], Language['Gentoo Eclass'].lexer
     assert_equal Lexer['Bash'], Language['Shell'].lexer
@@ -40,6 +41,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['REBOL'], Language['Rebol'].lexer
     assert_equal Lexer['RHTML'], Language['HTML+ERB'].lexer
     assert_equal Lexer['RHTML'], Language['RHTML'].lexer
+    assert_equal Lexer['Ruby'], Language['Crystal'].lexer
     assert_equal Lexer['Ruby'], Language['Mirah'].lexer
     assert_equal Lexer['Ruby'], Language['Ruby'].lexer
     assert_equal Lexer['S'], Language['R'].lexer
@@ -103,6 +105,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['Raw token data'], Language.find_by_alias('raw')
     assert_equal Language['Ruby'], Language.find_by_alias('rb')
     assert_equal Language['Ruby'], Language.find_by_alias('ruby')
+    assert_equal Language['R'], Language.find_by_alias('r')
     assert_equal Language['Scheme'], Language.find_by_alias('scheme')
     assert_equal Language['Shell'], Language.find_by_alias('bash')
     assert_equal Language['Shell'], Language.find_by_alias('sh')
@@ -191,10 +194,16 @@ class TestLanguage < Test::Unit::TestCase
 
   def test_markup
     assert_equal :markup, Language['HTML'].type
+    assert_equal :markup, Language['SCSS'].type
   end
 
   def test_data
     assert_equal :data, Language['YAML'].type
+  end
+
+  def test_prose
+    assert_equal :prose, Language['Markdown'].type
+    assert_equal :prose, Language['Org'].type
   end
 
   def test_other
@@ -274,7 +283,7 @@ class TestLanguage < Test::Unit::TestCase
       bodies.each do |body|
         assert_equal([body, languages.map{|l| Language[l]}],
                      [body, Language.find_by_shebang(body)])
-        
+
       end
     end
   end
@@ -314,7 +323,7 @@ class TestLanguage < Test::Unit::TestCase
   def test_color
     assert_equal '#701516', Language['Ruby'].color
     assert_equal '#3581ba', Language['Python'].color
-    assert_equal '#f15501', Language['JavaScript'].color
+    assert_equal '#f7df1e', Language['JavaScript'].color
     assert_equal '#31859c', Language['TypeScript'].color
   end
 
@@ -369,12 +378,21 @@ class TestLanguage < Test::Unit::TestCase
   end
 
   def test_by_type
-    assert_equal 8, Language.by_type(:prose).length
+    assert !Language.by_type(:prose).nil?
   end
 
   def test_colorize
     assert_equal <<-HTML.chomp, Language['Ruby'].colorize("def foo\n  'foo'\nend\n")
 <div class="highlight"><pre><span class="k">def</span> <span class="nf">foo</span>
+  <span class="s1">&#39;foo&#39;</span>
+<span class="k">end</span>
+</pre></div>
+    HTML
+  end
+
+  def test_colorize_with_options
+    assert_equal <<-HTML.chomp, Language['Ruby'].colorize("def foo\n  'foo'\nend\n", :options => { :cssclass => "highlight highlight-ruby" })
+<div class="highlight highlight-ruby"><pre><span class="k">def</span> <span class="nf">foo</span>
   <span class="s1">&#39;foo&#39;</span>
 <span class="k">end</span>
 </pre></div>
