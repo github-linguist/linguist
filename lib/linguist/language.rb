@@ -485,7 +485,7 @@ module Linguist
     #
     # Returns html String
     def colorize(text, options = {})
-      lexer.highlight(text, options = {})
+      lexer.highlight(text, options)
     end
 
     # Public: Return name as String representation
