@@ -70,6 +70,16 @@ Linguist::FileBlob.new("vendor/plugins/foo.rb").vendored? # => true
 
 See [Linguist::BlobHelper#vendored?](https://github.com/github/linguist/blob/master/lib/linguist/blob_helper.rb) and [lib/linguist/vendor.yml](https://github.com/github/linguist/blob/master/lib/linguist/vendor.yml).
 
+
+#### Other Ignored files
+
+you may place a .linguistignore.yml file in your base directory to selectively exclude certain files/directories from the 
+language statistics generated for the project.
+
+the format is the same as vendor.yml
+
+See [Linguist::Ignored](lib/linguist/ignored.rb)
+
 #### Generated file detection
 
 Not all plain text files are true source files. Generated files like minified js and compiled CoffeeScript can be detected and excluded from language stats. As an extra bonus, these files are suppressed in diffs.
@@ -105,6 +115,8 @@ Almost all bug fixes or new language additions should come with some additional 
 To update the `samples.json` after adding new files to [`samples/`](https://github.com/github/linguist/tree/master/samples):
 
     bundle exec rake samples
+
+Remember to include the updated samples.json file in your commit/pull request
 
 ### Testing
 

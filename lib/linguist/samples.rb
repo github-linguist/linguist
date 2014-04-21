@@ -28,7 +28,7 @@ module Linguist
     #
     # Returns nothing.
     def self.each(&block)
-      Dir.entries(ROOT).each do |category|
+      Dir.entries(ROOT).sort!.each do |category|
         next if category == '.' || category == '..'
 
         # Skip text and binary for now
@@ -36,7 +36,7 @@ module Linguist
         next if category == 'Text' || category == 'Binary'
 
         dirname = File.join(ROOT, category)
-        Dir.entries(dirname).each do |filename|
+        Dir.entries(dirname).sort!.each do |filename|
           next if filename == '.' || filename == '..'
 
           if filename == 'filenames'

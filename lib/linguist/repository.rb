@@ -78,7 +78,7 @@ module Linguist
         next if blob.likely_binary?
 
         # Skip vendored or generated blobs
-        next if blob.vendored? || blob.generated? || blob.language.nil?
+        next if blob.vendored? || blob.generated? || blob.language.nil? || blob.ignored?
 
         # Only include programming languages and acceptable markup languages
         if blob.language.type == :programming || Language.detectable_markup.include?(blob.language.name)

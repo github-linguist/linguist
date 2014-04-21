@@ -1,4 +1,5 @@
 require 'linguist/generated'
+require 'linguist/ignored'
 require 'linguist/language'
 
 require 'charlock_holmes'
@@ -232,6 +233,16 @@ module Linguist
     def vendored?
       name =~ VendoredRegexp ? true : false
     end
+
+    # Public: Is the blob in the ignored list
+    #
+    # Ignored files are ignored by language statistics.
+    #
+    # Return true or false
+    def ignored?
+      @_ignored ||= Ignored.ignored?(name,lambda { data}, base_path )
+    end
+
 
     # Public: Get each line of data
     #
