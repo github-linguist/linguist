@@ -10,6 +10,7 @@ class TestLanguage < Test::Unit::TestCase
 
   def test_lexer
     assert_equal Lexer['ActionScript 3'], Language['ActionScript'].lexer
+    assert_equal Lexer['AspectJ'], Language['AspectJ'].lexer
     assert_equal Lexer['Bash'], Language['Gentoo Ebuild'].lexer
     assert_equal Lexer['Bash'], Language['Gentoo Eclass'].lexer
     assert_equal Lexer['Bash'], Language['Shell'].lexer
@@ -322,7 +323,7 @@ class TestLanguage < Test::Unit::TestCase
   def test_color
     assert_equal '#701516', Language['Ruby'].color
     assert_equal '#3581ba', Language['Python'].color
-    assert_equal '#f15501', Language['JavaScript'].color
+    assert_equal '#f7df1e', Language['JavaScript'].color
     assert_equal '#31859c', Language['TypeScript'].color
   end
 

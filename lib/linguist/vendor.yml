@@ -10,7 +10,7 @@
 ## Vendor Conventions ##
 
 # Caches
-- cache/
+- (^|/)cache/
 
 # Dependencies
 - ^[Dd]ependencies/
@@ -46,6 +46,9 @@
 
 # Debian packaging
 - ^debian/
+
+# Haxelib projects often contain a neko bytecode file named run.n
+- run.n$
 
 ## Commonly Bundled JavaScript frameworks ##
 
@@ -95,6 +98,9 @@
 # AngularJS
 - (^|/)angular([^.]*)(\.min)?\.js$
 
+# React
+- (^|/)react(-[^.]*)?(\.min)?\.js$
+
 ## Python ##
 
 # django
@@ -113,6 +119,13 @@
 
 # Sparkle
 - (^|/)Sparkle/
+
+## Groovy ##
+
+# Gradle
+- (^|/)gradlew$
+- (^|/)gradlew\.bat$
+- (^|/)gradle/wrapper/
 
 ## .NET ##
 
