@@ -1,0 +1,44 @@
+{-- 
+    This program displays the
+    current time on stdandard output
+    every other second.
+    -}
+    
+module examples.CommandLineClock where
+
+data Date = native java.util.Date where
+    native new :: () -> IO (MutableIO Date)     -- new Date()
+    native toString :: Mutable s Date -> ST s String    -- d.toString()
+
+--- 'IO' action to give us the current time as 'String'
+current :: IO String
+current = do
+    d <- Date.new ()
+    d.toString
+
+{- 
+    "java.lang.Thread.sleep" takes a "long" and
+    returns nothing, but may throw an InterruptedException.
+    This is without doubt an IO action.
+    
+    public static void sleep(long millis)
+                  throws InterruptedException
+    
+    Encoded in Frege:
+    - argument type  long   Long
+    - result         void   ()
+    - does IO               IO ()
+    - throws ...            throws ....
+     
+-}
+-- .... defined in frege.java.Lang
+-- native sleep java.lang.Thread.sleep :: Long -> IO () throws InterruptedException
+
+      
+main args =  
+    forever do
+        current >>= print
+        print "\r"
+        stdout.flush
+        Thread.sleep 999
+                
