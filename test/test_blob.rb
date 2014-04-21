@@ -211,6 +211,9 @@ class TestBlob < Test::Unit::TestCase
     assert !blob("CSS/bootstrap.css").generated?
     assert blob("CSS/bootstrap.min.css").generated?
 
+    # Generated VCR
+    assert blob("YAML/vcr_cassette.yml").generated?
+
     assert Linguist::Generated.generated?("node_modules/grunt/lib/grunt.js", nil)
   end
 

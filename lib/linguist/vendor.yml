@@ -10,7 +10,7 @@
 ## Vendor Conventions ##
 
 # Caches
-- cache/
+- (^|/)cache/
 
 # Dependencies
 - ^[Dd]ependencies/
@@ -97,6 +97,9 @@
 
 # AngularJS
 - (^|/)angular([^.]*)(\.min)?\.js$
+
+# React
+- (^|/)react(-[^.]*)?(\.min)?\.js$
 
 ## Python ##
 
