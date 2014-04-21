@@ -1,18 +1,17 @@
 # Linguist
 
-We use this library at GitHub to detect blob languages, highlight code, ignore binary files, suppress generated files in diffs and generate language breakdown graphs.
+We use this library at GitHub to detect blob languages, highlight code, ignore binary files, suppress generated files in diffs, and generate language breakdown graphs.
 
 ## Features
 
 ### Language detection
 
-Linguist defines the list of all languages known to GitHub in a [yaml file](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml). In order for a file to be highlighted, a language and lexer must be defined there.
+Linguist defines a list of all languages known to GitHub in a [yaml file](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml). In order for a file to be highlighted, a language and a lexer must be defined there.
 
-Most languages are detected by their file extension. This is the fastest and most common situation.
-
-For disambiguating between files with common extensions, we use a [Bayesian classifier](https://github.com/github/linguist/blob/master/lib/linguist/classifier.rb). For an example, this helps us tell the difference between `.h` files which could be either C, C++, or Obj-C.
-
-In the actual GitHub app we deal with `Grit::Blob` objects. For testing, there is a simple `FileBlob` API.
+Most languages are detected by their file extension. For disambiguating between files with common extensions, we first apply some common-sense heuristics to pick out obvious languages. After that, we use a
+[statistical
+classifier](https://github.com/github/linguist/blob/master/lib/linguist/classifier.rb).
+This process can help us tell the difference between, for example, `.h` files which could be either C, C++, or Obj-C.
 
 ```ruby
 
@@ -27,13 +26,11 @@ See [lib/linguist/language.rb](https://github.com/github/linguist/blob/master/li
 
 The actual syntax highlighting is handled by our Pygments wrapper, [pygments.rb](https://github.com/tmm1/pygments.rb). It also provides a [Lexer abstraction](https://github.com/tmm1/pygments.rb/blob/master/lib/pygments/lexer.rb) that determines which highlighter should be used on a file.
 
-We typically run on a pre-release version of Pygments, [pygments.rb](https://github.com/tmm1/pygments.rb), to get early access to new lexers. The [languages.yml](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml) file is a dump of the lexers we have available on our server.
-
 ### Stats
 
-The Language Graph you see on every repository is built by aggregating the languages of all repo's blobs. The top language in the graph determines the project's primary language. Collectively, these stats make up the [Top Languages](https://github.com/languages) page.
+The Language stats bar that you see on every repository is built by aggregating the languages of each file in that repository. The top language in the graph determines the project's primary language.
 
-The repository stats API can be used on a directory:
+The repository stats API, accessed through `#languages`, can be used on a directory:
 
 ```ruby
 project = Linguist::Repository.from_directory(".")
@@ -41,10 +38,27 @@ project.language.name  #=> "Ruby"
 project.languages      #=> { "Ruby" => 0.98, "Shell" => 0.02 }
 ```
 
-These stats are also printed out by the binary. Try running `linguist` on itself:
+These stats are also printed out by the `linguist` binary. You can use the
+`--breakdown` flag, and the binary will also output the breakdown of files by language.
 
-    $ bundle exec linguist lib/
-    100%  Ruby
+You can try running `linguist` on the `lib/` directory in this repository itself:
+
+    $ bundle exec linguist lib/ --breakdown
+
+    100.00% Ruby
+
+    Ruby:
+    linguist/blob_helper.rb
+    linguist/classifier.rb
+    linguist/file_blob.rb
+    linguist/generated.rb
+    linguist/heuristics.rb
+    linguist/language.rb
+    linguist/md5.rb
+    linguist/repository.rb
+    linguist/samples.rb
+    linguist/tokenizer.rb
+    linguist.rb
 
 #### Ignore vendored files
 
@@ -82,14 +96,18 @@ To run the tests:
 
 ## Contributing
 
-The majority of patches won't need to touch any Ruby code at all. The [master language list](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml) is just a configuration file.
+The majority of contributions won't need to touch any Ruby code at all. The [master language list](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml) is just a YAML configuration file.
 
 We try to only add languages once they have some usage on GitHub, so please note in-the-wild usage examples in your pull request.
 
 Almost all bug fixes or new language additions should come with some additional code samples. Just drop them under [`samples/`](https://github.com/github/linguist/tree/master/samples) in the correct subdirectory and our test suite will automatically test them. In most cases you shouldn't need to add any new assertions.
 
+To update the `samples.json` after adding new files to [`samples/`](https://github.com/github/linguist/tree/master/samples):
+
+    bundle exec rake samples
+
 ### Testing
 
-Sometimes getting the tests running can be too much work, especially if you don't have much Ruby experience. It's okay, be lazy and let our build bot [Travis](http://travis-ci.org/#!/github/linguist) run the tests for you. Just open a pull request and the bot will start cranking away.
+Sometimes getting the tests running can be too much work, especially if you don't have much Ruby experience. It's okay: be lazy and let our build bot [Travis](http://travis-ci.org/#!/github/linguist) run the tests for you. Just open a pull request and the bot will start cranking away.
 
 Here's our current build status, which is hopefully green: [![Build Status](https://secure.travis-ci.org/github/linguist.png?branch=master)](http://travis-ci.org/github/linguist)

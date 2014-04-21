@@ -1,0 +1,164 @@
+#+OPTIONS:    H:3 num:nil toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t TeX:t LaTeX:t skip:nil d:(HIDE) tags:not-in-toc
+#+STARTUP:    align fold nodlcheck hidestars oddeven lognotestate
+#+SEQ_TODO:   TODO(t) INPROGRESS(i) WAITING(w@) | DONE(d) CANCELED(c@)
+#+TAGS:       Write(w) Update(u) Fix(f) Check(c)
+#+TITLE:      org-ruby
+#+AUTHOR:     Brian Dewey
+#+EMAIL:      bdewey@gmail.com
+#+LANGUAGE:   en
+#+PRIORITIES: A C B
+#+CATEGORY:   worg
+
+{Back to Worg's index}
+
+* Motivation
+
+  The dominant simple plain-text markup languages for the web are
+  Textile and Markdown. A factor for the popularity of those markup
+  formats is the widespread availability of simple, free packages for
+  converting the formats to HTML. For example, the world of
+  Ruby-powered websites has settled on RedCloth for converting Textile
+  to HTML.
+
+  The default way to convert org-mode files to HTML is the powerful
+  publishing functionality provided by =emacs=. However, =emacs= does
+  not easiliy integrate into many existing website frameworks.
+
+  =Org-ruby= tries to make it easier to use org-mode files in both
+  dyanmic and static website generation tools written in
+  Ruby. =Org-ruby= is a simple Ruby gem to convert org-mode files to
+  HTML.
+
+* Using Org-ruby
+
+  =Org-ruby= follows the same model as other Ruby markup
+  libraries. You install the gem:
+
+  #+BEGIN_EXAMPLE
+  sudo gem install org-ruby
+  #+END_EXAMPLE
+
+  Then, to convert an org-file to HTML in your Ruby code:
+
+  #+BEGIN_EXAMPLE
+  require 'rubygems'
+  require 'org-ruby'
+
+  data = IO.read(filename)
+  puts Orgmode::Parser.new(data).to_html
+  #+END_EXAMPLE
+
+* Walkthrough: Using org-ruby with Webby
+
+  Here is an example of how to integrate =org-ruby= into Webby, a
+  static website generation tool written in Ruby.
+
+  Webby follows a similar pattern to other static site generation
+  tools (like nanoc, Jekyll, and webgen):
+
+  - You author website content in text with simple markup
+  - Each page is fed through one or more /filters/ to produce HTML
+  - The HTML is mixed in with layouts to produce the final pages
+
+  For a Webby site, a the source for a page may look like this:
+
+  #+BEGIN_EXAMPLE
+  ---
+  title:           Special Directories
+  created_at:      2009-12-17
+  status:          Complete
+  filter:
+    - erb
+    - maruku
+  tags:
+    - powershell
+  ---
+  <%= @page.title %>
+  ==================
+
+  Special Directories are a set of directories, each of which has a
+  function that will navigate you to the appropriate directory using
+  the push-location cmdlet. For example, the function `home` might
+  navigate to `c:\users\bdewey.`
+
+  Install
+  -------
+
+  Copy the module to somewhere in `ENV:PSModulePath`. Then,
+
+      InstallModule SpecialDirectories
+  #+END_EXAMPLE
+
+  In the above example, the text is written in Markdown. At the top of
+  the file, metadata informs Webby to pass the text through two
+  /filters/ to produce HTML. The first filter, =erb=, handles embedded
+  Ruby. In this case, it will replace ~<%= @page.title %>~ with the
+  page title (=Special Directories=). The second filter uses Maruku to
+  translate Markdown into HTML.
+
+  You can use the exact same pattern to include org-mode files in a
+  Webby site. For this walkthrough, I assume you already have Webby
+  installed, and that you've already created a site.
+
+  1. Make sure you have =org-ruby= installed: =sudo gem install
+     org-ruby=.
+  2. You need to register a new Webby filter to handle org-mode
+     content. Webby makes this easy. In the =lib/= folder of your
+     site, create a file =orgmode.rb=:
+
+     #+BEGIN_EXAMPLE
+     require 'org-ruby'
+
+     Webby::Filters.register :org do |input|
+       Orgmode::Parser.new(input).to_html
+     end
+     #+END_EXAMPLE
+
+     This code creates a new filter, =org=, that will use the
+     =org-ruby= parser to translate org-mode input into HTML.
+  3. Create your content. For example:
+
+     #+BEGIN_EXAMPLE
+---
+title:              Orgmode Parser
+created_at:         2009-12-21
+status:             Under development
+filter:
+  - erb
+  - org
+tags:
+  - orgmode
+  - ruby
+---
+<%= @page.title %>
+
+  Status: <%= @page.status %>
+
+* Description
+
+  Helpful Ruby routines for parsing orgmode files. The most
+  significant thing this library does today is convert orgmode files
+  to textile. Currently, you cannot do much to customize the
+  conversion. The supplied textile conversion is optimized for
+  extracting "content" from the orgfile as opposed to "metadata."
+
+
+* History
+
+** 2009-12-29: Version 0.4
+
+   - The first thing output in HTML gets the class "title"
+   - HTML output is now indented
+   - Proper support for multi-paragraph list items.
+
+     See? This paragraph is part of the last bullet.
+
+   - Fixed bugs:
+     - "rake spec" wouldn't work on Linux. Needed "require 'rubygems'".
+       #+END_EXAMPLE
+
+     This file will go through the =erb= and =org= filters; as defined
+     in the previous step, the =org= filter will use =org-ruby= to
+     generate HTML.
+
+  That's all there is to it!
