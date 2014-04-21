@@ -10,7 +10,7 @@
 # ace_mode          - A String name of Ace Mode (if available)
 # wrap              - Boolean wrap to enable line wrapping (default: false)
 # extension         - An Array of associated extensions
-# interpreter       - An Array of associated interpreters
+# interpreters      - An Array of associated interpreters
 # primary_extension - A String for the main extension associated with
 #                     the language. Must be unique. Used when a Language is picked
 #                     from a dropdown and we need to automatically choose an
@@ -1740,6 +1740,7 @@ Tcl:
   primary_extension: .tcl
   extensions:
   - .adp
+  - .tm
 
 Tcsh:
   type: programming
