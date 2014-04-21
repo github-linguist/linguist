@@ -10,7 +10,7 @@
 # ace_mode          - A String name of Ace Mode (if available)
 # wrap              - Boolean wrap to enable line wrapping (default: false)
 # extension         - An Array of associated extensions
-# interpreter       - An Array of associated interpreters
+# interpreters      - An Array of associated interpreters
 # primary_extension - A String for the main extension associated with
 #                     the language. Must be unique. Used when a Language is picked
 #                     from a dropdown and we need to automatically choose an
@@ -128,6 +128,12 @@ AsciiDoc:
   extensions:
   - .adoc
   - .asc
+
+AspectJ:
+  type: programming
+  lexer: AspectJ
+  color: "#1957b0"
+  primary_extension: .aj
 
 Assembly:
   type: programming
@@ -300,7 +306,7 @@ COBOL:
 
 CSS:
   ace_mode: css
-  color: "#1f085e"
+  color: "#563d7c"
   primary_extension: .css
 
 Ceylon:
@@ -488,6 +494,12 @@ DCPU-16 ASM:
 Diff:
   primary_extension: .diff
 
+Dogescript:
+  type: programming
+  lexer: Text only
+  color: "#cca760"
+  primary_extension: .djs
+
 Dylan:
   type: programming
   color: "#3ebc27"
@@ -509,6 +521,14 @@ ECL:
   lexer: ECL
   extensions:
   - .eclxml
+
+Eagle:
+  type: markup
+  color: "#3994bc"
+  lexer: XML
+  primary_extension: .sch
+  extensions:
+  - .brd
 
 Eiffel:
   type: programming
@@ -606,7 +626,7 @@ Fancy:
   - .fancypack
   filenames:
   - Fakefile
-  
+
 Fantom:
   type: programming
   color: "#dbded5"
@@ -619,6 +639,17 @@ Forth:
   lexer: Text only
   extensions:
   - .4th
+
+Frege:
+  type: programming
+  color: "#00cafe"
+  lexer: Haskell
+  primary_extension: .fr
+
+Game Maker Language:
+  type: programming
+  lexer: JavaScript
+  primary_extension: .gml
 
 GAS:
   type: programming
@@ -667,6 +698,17 @@ Glyph:
   lexer: Tcl
   primary_extension: .glf
 
+Gnuplot:
+  type: programming
+  color: "#f0a9f0"
+  lexer: Gnuplot
+  primary_extension: .gp
+  extensions:
+  - .gnu
+  - .gnuplot
+  - .plot
+  - .plt
+
 Go:
   type: programming
   color: "#a89b4d"
@@ -676,6 +718,16 @@ Gosu:
   type: programming
   color: "#82937f"
   primary_extension: .gs
+
+Grammatical Framework:
+  type: programming
+  lexer: Haskell
+  aliases:
+  - gf
+  wrap: false
+  primary_extension: .gf
+  searchable: true
+  color: "#ff0000"
 
 Groff:
   primary_extension: .man
@@ -890,7 +942,7 @@ Java Server Pages:
 JavaScript:
   type: programming
   ace_mode: javascript
-  color: "#f15501"
+  color: "#f7df1e"
   aliases:
   - js
   - node
@@ -910,6 +962,8 @@ JavaScript:
   - .ssjs
   filenames:
   - Jakefile
+  interpreters:
+  - node
 
 Julia:
   type: programming
@@ -1063,6 +1117,11 @@ Mask:
   ace_mode: scss
   primary_extension: .mask
 
+Mathematica:
+  type: programming
+  primary_extension: .mathematica
+  lexer: Text only
+
 Matlab:
   type: programming
   color: "#bb92ac"
@@ -1187,8 +1246,14 @@ Objective-C:
   - obj-c
   - objc
   primary_extension: .m
-  extensions:
-  - .mm
+
+Objective-C++:
+  type: programming
+  color: "#4886FC"
+  aliases:
+  - obj-c++
+  - objc++
+  primary_extension: .mm
 
 Objective-J:
   type: programming
@@ -1688,6 +1753,15 @@ SuperCollider:
   lexer: Text only
   primary_extension: .scd
 
+SystemVerilog:
+  type: programming
+  color: "#343761"
+  lexer: systemverilog
+  primary_extension: .sv
+  extensions:
+  - .svh
+  - .vh
+
 TOML:
   type: data
   primary_extension: .toml
@@ -1703,6 +1777,7 @@ Tcl:
   primary_extension: .tcl
   extensions:
   - .adp
+  - .tm
 
 Tcsh:
   type: programming
@@ -1865,6 +1940,7 @@ XML:
   - .kml
   - .launch
   - .mxml
+  - .osm
   - .plist
   - .pluginspec
   - .ps1xml
