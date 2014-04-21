@@ -19,6 +19,9 @@ module Linguist
         if languages.all? { |l| ["Perl", "Prolog"].include?(l) }
           disambiguate_pl(data, languages)
         end
+        if languages.all? { |l| ["ECL", "Prolog"].include?(l) }
+          disambiguate_ecl(data, languages)
+        end
         if languages.all? { |l| ["TypeScript", "XML"].include?(l) }
           disambiguate_ts(data, languages)
         end
@@ -43,6 +46,13 @@ module Linguist
       matches = []
       matches << Language["Prolog"] if data.include?(":-")
       matches << Language["Perl"] if data.include?("use strict")
+      matches
+    end
+
+    def self.disambiguate_ecl(data, languages)
+      matches = []
+      matches << Language["Prolog"] if data.include?(":-")
+      matches << Language["ECL"] if data.include?(":=")
       matches
     end
 

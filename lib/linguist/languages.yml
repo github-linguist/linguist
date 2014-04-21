@@ -53,6 +53,18 @@ ASP:
   - .aspx
   - .axd
 
+ATS:
+  type: programming
+  color: "#1ac620"
+  primary_extension: .dats
+  lexer: OCaml
+  aliases:
+  - ats2
+  extensions:
+  - .atxt
+  - .hats
+  - .sats
+
 ActionScript:
   type: programming
   lexer: ActionScript 3
@@ -92,6 +104,8 @@ AppleScript:
   primary_extension: .applescript
   extensions:
   - .scpt
+  interpreters:
+  - osascript
 
 Arc:
   type: programming
@@ -114,6 +128,12 @@ AsciiDoc:
   extensions:
   - .adoc
   - .asc
+
+AspectJ:
+  type: programming
+  lexer: AspectJ
+  color: "#1957b0"
+  primary_extension: .aj
 
 Assembly:
   type: programming
@@ -214,6 +234,7 @@ C:
   color: "#555"
   primary_extension: .c
   extensions:
+  - .cats
   - .w
 
 C#:
@@ -239,6 +260,7 @@ C++:
   extensions:
   - .C
   - .c++
+  - .cc
   - .cxx
   - .H
   - .h++
@@ -284,7 +306,7 @@ COBOL:
 
 CSS:
   ace_mode: css
-  color: "#1f085e"
+  color: "#563d7c"
   primary_extension: .css
 
 Ceylon:
@@ -326,6 +348,7 @@ Clojure:
   - .cljscm
   - .cljx
   - .hic
+  - .cljs.hl
   filenames:
   - riemann.config
 
@@ -475,6 +498,9 @@ Dylan:
   type: programming
   color: "#3ebc27"
   primary_extension: .dylan
+  extensions:
+  - .intr
+  - .lid
 
 Ecere Projects:
   type: data
@@ -540,6 +566,14 @@ F#:
   - .fsi
   - .fsx
 
+FLUX:
+  type: programming
+  color: "#33CCFF"
+  primary_extension: .fx
+  lexer: Text only
+  extensions:
+  - .flux
+
 FORTRAN:
   type: programming
   lexer: Fortran
@@ -578,7 +612,7 @@ Fancy:
   - .fancypack
   filenames:
   - Fakefile
-
+  
 Fantom:
   type: programming
   color: "#dbded5"
@@ -684,6 +718,7 @@ HTML:
   extensions:
   - .htm
   - .xhtml
+  - .html.hl
 
 HTML+Django:
   type: markup
@@ -832,6 +867,13 @@ JSON5:
   lexer: JavaScript
   primary_extension: .json5
 
+JSONLD:
+  type: data
+  group: JavaScript
+  ace_mode: json
+  lexer: JavaScript
+  primary_extension: .jsonld
+
 Jade:
   group: HTML
   type: markup
@@ -854,7 +896,7 @@ Java Server Pages:
 JavaScript:
   type: programming
   ace_mode: javascript
-  color: "#f15501"
+  color: "#f7df1e"
   aliases:
   - js
   - node
@@ -874,6 +916,8 @@ JavaScript:
   - .ssjs
   filenames:
   - Jakefile
+  interpreters:
+  - node
 
 Julia:
   type: programming
@@ -1024,6 +1068,13 @@ Mathematica:
   type: programming
   primary_extension: .mathematica
   lexer: Text only
+
+Mask:
+  type: markup
+  lexer: SCSS
+  color: "#f97732"
+  ace_mode: scss
+  primary_extension: .mask
 
 Matlab:
   type: programming
@@ -1328,6 +1379,7 @@ Prolog:
   color: "#74283c"
   primary_extension: .prolog
   extensions:
+  - .ecl
   - .pl
 
 Protocol Buffer:
@@ -1392,6 +1444,7 @@ R:
   primary_extension: .r
   extensions:
   - .R
+  - .rsx
   filenames:
   - .Rprofile
   interpreters:
@@ -1505,6 +1558,7 @@ Ruby:
   - Appraisals
   - Berksfile
   - Gemfile
+  - Gemfile.lock
   - Guardfile
   - Podfile
   - Thorfile
@@ -1556,6 +1610,7 @@ Scheme:
   color: "#1e4aec"
   primary_extension: .scm
   extensions:
+  - .sld
   - .sls
   - .ss
   interpreters:
@@ -1593,6 +1648,12 @@ Shell:
   - zsh
   filenames:
   - Dockerfile
+
+Shen:
+  type: programming
+  color: "#120F14"
+  lexer: Text only
+  primary_extension: .shen
 
 Slash:
   type: programming
@@ -1632,6 +1693,15 @@ SuperCollider:
   color: "#46390b"
   lexer: Text only
   primary_extension: .scd
+
+SystemVerilog:
+  type: programming
+  color: "#343761"
+  lexer: systemverilog
+  primary_extension: .sv
+  extensions:
+  - .svh
+  - .vh
 
 TOML:
   type: data
@@ -1810,6 +1880,7 @@ XML:
   - .kml
   - .launch
   - .mxml
+  - .osm
   - .plist
   - .pluginspec
   - .ps1xml

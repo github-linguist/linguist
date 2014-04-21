@@ -211,6 +211,9 @@ class TestBlob < Test::Unit::TestCase
     assert !blob("CSS/bootstrap.css").generated?
     assert blob("CSS/bootstrap.min.css").generated?
 
+    # Generated VCR
+    assert blob("YAML/vcr_cassette.yml").generated?
+
     assert Linguist::Generated.generated?("node_modules/grunt/lib/grunt.js", nil)
   end
 
@@ -343,6 +346,14 @@ class TestBlob < Test::Unit::TestCase
 
     # Vagrant
     assert blob("Vagrantfile").vendored?
+
+    # Gradle
+    assert blob("gradlew").vendored?
+    assert blob("gradlew.bat").vendored?
+    assert blob("gradle/wrapper/gradle-wrapper.properties").vendored?
+    assert blob("subproject/gradlew").vendored?
+    assert blob("subproject/gradlew.bat").vendored?
+    assert blob("subproject/gradle/wrapper/gradle-wrapper.properties").vendored?
   end
 
   def test_language
