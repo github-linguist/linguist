@@ -217,6 +217,10 @@ class TestBlob < Test::Unit::TestCase
     assert Linguist::Generated.generated?("node_modules/grunt/lib/grunt.js", nil)
   end
 
+  def test_ignored
+    assert !blob("README.md").ignored?
+  end
+
   def test_vendored
     assert !blob("Text/README").vendored?
     assert !blob("ext/extconf.rb").vendored?

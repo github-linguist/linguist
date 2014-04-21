@@ -15,6 +15,7 @@ module Linguist
     # Returns a FileBlob.
     def initialize(path, base_path = nil)
       @path = path
+      @base_path = base_path 
       @name = base_path ? path.sub("#{base_path}/", '') : path
     end
 
@@ -31,6 +32,10 @@ module Linguist
     #
     # Returns a String
     attr_reader :name
+
+    # Public: base_path
+    # Returns a String
+    attr_reader :base_path
 
     # Public: Read file permissions
     #
