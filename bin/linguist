@@ -1,13 +1,21 @@
 #!/usr/bin/env ruby
 
 # linguist — detect language type for a file, or, given a directory, determine language breakdown
-#
-# usage: linguist <path>
+#     usage: linguist <path> [<--breakdown>]
 
 require 'linguist/file_blob'
 require 'linguist/repository'
 
 path = ARGV[0] || Dir.pwd
+
+# special case if not given a directory but still given the --breakdown option
+if path == "--breakdown"
+  path = Dir.pwd
+  breakdown = true
+end
+
+ARGV.shift
+breakdown = true if ARGV[0] == "--breakdown"
 
 if File.directory?(path)
   repo = Linguist::Repository.from_directory(path)
@@ -15,6 +23,17 @@ if File.directory?(path)
     percentage = ((size / repo.size.to_f) * 100)
     percentage = sprintf '%.2f' % percentage
     puts "%-7s %s" % ["#{percentage}%", language]
+  end
+  if breakdown
+    puts
+    file_breakdown = repo.breakdown_by_file
+    file_breakdown.each do |lang, files|
+      puts "#{lang}:" 
+      files.each do |file|
+        puts file
+      end
+      puts
+    end
   end
 elsif File.file?(path)
   blob = Linguist::FileBlob.new(path, Dir.pwd)

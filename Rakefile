@@ -1,5 +1,7 @@
+require 'json'
 require 'rake/clean'
 require 'rake/testtask'
+require 'yaml'
 
 task :default => :test
 
@@ -11,6 +13,13 @@ task :samples do
   data = Linguist::Samples.data
   json = Yajl::Encoder.encode(data, :pretty => true)
   File.open('lib/linguist/samples.json', 'w') { |io| io.write json }
+end
+
+task :build_gem do
+  languages = YAML.load_file("lib/linguist/languages.yml")
+  File.write("lib/linguist/languages.json", JSON.dump(languages))
+  `gem build github-linguist.gemspec`
+  File.delete("lib/linguist/languages.json")
 end
 
 namespace :classifier do
