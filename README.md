@@ -28,7 +28,7 @@ The actual syntax highlighting is handled by our Pygments wrapper, [pygments.rb]
 
 ### Stats
 
-The Language stats bar that you see on every repository is built by aggregating the languages of each file in that repository. The top language in the graph determines the project's primary language. Collectively, these stats make up the [Top Languages](https://github.com/languages) page.
+The Language stats bar that you see on every repository is built by aggregating the languages of each file in that repository. The top language in the graph determines the project's primary language.
 
 The repository stats API, accessed through `#languages`, can be used on a directory:
 
