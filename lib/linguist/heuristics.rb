@@ -31,6 +31,9 @@ module Linguist
         if languages.all? { |l| ["PLSQL", "PLpgSQL", "SQL"].include?(l) }
           disambiguate_sql(data, languages)
         end
+        if languages.all? { |l| ["Rebol", "R"].include?(l) }
+          disambiguate_r(data, languages)
+        end
       end
     end
 
@@ -85,6 +88,13 @@ module Linguist
       matches << Language["SQL"] if ! data.match(re)  
 
       #matches << Language["PLSQL"] if data.match(/pragma\b/i) #pragma is plsql only (not PLpgSQL)
+      matches
+    end
+
+    def self.disambiguate_r(data, languages)
+      matches = []
+      matches << Language["Rebol"] if /\bRebol\b/i.match(data)
+      matches << Language["R"] if data.include?("<-")
       matches
     end
 

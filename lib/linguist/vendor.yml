@@ -10,7 +10,7 @@
 ## Vendor Conventions ##
 
 # Caches
-- cache/
+- (^|/)cache/
 
 # Dependencies
 - ^[Dd]ependencies/
@@ -101,6 +101,9 @@
 # AngularJS
 - (^|/)angular([^.]*)(\.min)?\.js$
 
+# React
+- (^|/)react(-[^.]*)?(\.min)?\.js$
+
 ## Python ##
 
 # django
@@ -131,6 +134,7 @@
 
 # Visual Studio IntelliSense
 - -vsdoc\.js$
+- \.intellisense\.js$
 
 # jQuery validation plugin (MS bundles this with asp.net mvc)
 - (^|/)jquery([^.]*)\.validate(\.unobtrusive)?(\.min)?\.js$
@@ -185,3 +189,6 @@
 
 # .DS_Store's
 - .[Dd][Ss]_[Ss]tore$
+
+# Mercury --use-subdirs
+- Mercury/
