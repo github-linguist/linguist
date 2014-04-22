@@ -49,8 +49,8 @@ class TestSamples < Test::Unit::TestCase
         # then check that there are examples for that language with the extension 
         if language_matches.length > 1
           language_matches.each do |language|
-            assert File.directory?("samples/#{language.name}")
-            assert Dir.glob("samples/#{language.name}/*#{extension}").any?
+            assert File.directory?("samples/#{language.name}"), "#{language.name} is missing a samples directory"
+            assert Dir.glob("samples/#{language.name}/*#{extension}").any?, "#{language.name} is missing samples for extension #{extension}"
           end
         end
       end
