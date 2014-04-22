@@ -39,10 +39,7 @@ class TestSamples < Test::Unit::TestCase
   # If a language extension isn't globally unique then make sure there are samples
   def test_presence
     Linguist::Language.all.each do |language|
-      # TODO - feels like there should be a better way to do this.
-      extensions = [language.primary_extension] + language.extensions
-      
-      extensions.uniq.each do |extension|
+      language.all_extensions.each do |extension|
         language_matches = Language.find_by_filename("foo.#{extension}")
         
         # If there is more than one language match for a given extension
