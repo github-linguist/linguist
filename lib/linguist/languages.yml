@@ -728,7 +728,7 @@ Gnuplot:
 
 Go:
   type: programming
-  color: "#a89b4d"
+  color: "#375eab"
   primary_extension: .go
 
 Gosu:
@@ -1002,6 +1002,12 @@ KRL:
   type: programming
   color: "#f5c800"
   primary_extension: .krl
+  
+Kit:
+  type: markup
+  lexer: HTML
+  ace_mode: html
+  primary_extension: .kit
 
 Kotlin:
   type: programming
@@ -1105,6 +1111,12 @@ M:
   primary_extension: .mumps
   extensions:
   - .m
+
+MTML:
+  type: markup
+  lexer: HTML
+  color: "#0095d9"
+  primary_extension: .mtml
 
 Makefile:
   aliases:
