@@ -2,7 +2,6 @@ require 'linguist/samples'
 require 'linguist/language'
 require 'tempfile'
 require 'yajl'
-require 'pry'
 require 'test/unit'
 
 class TestSamples < Test::Unit::TestCase
