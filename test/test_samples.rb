@@ -1,7 +1,8 @@
 require 'linguist/samples'
+require 'linguist/language'
 require 'tempfile'
 require 'yajl'
-
+require 'pry'
 require 'test/unit'
 
 class TestSamples < Test::Unit::TestCase
@@ -34,5 +35,26 @@ class TestSamples < Test::Unit::TestCase
     assert_equal data['languages_total'], data['languages'].inject(0) { |n, (_, c)| n += c }
     assert_equal data['tokens_total'], data['language_tokens'].inject(0) { |n, (_, c)| n += c }
     assert_equal data['tokens_total'], data['tokens'].inject(0) { |n, (_, ts)| n += ts.inject(0) { |m, (_, c)| m += c } }
+  end
+  
+  # If a language extension isn't globally unique then make sure there are samples
+  def test_presence
+    Linguist::Language.all.each do |language|
+      # TODO - feels like there should be a better way to do this.
+      extensions = [language.primary_extension] + language.extensions
+      
+      extensions.uniq.each do |extension|
+        language_matches = Language.find_by_filename("foo.#{extension}")
+        
+        # If there is more than one language match for a given extension
+        # then check that there are examples for that language with the extension 
+        if language_matches.length > 1
+          language_matches.each do |language|
+            assert File.directory?("samples/#{language.name}")
+            assert Dir.glob("samples/#{language.name}/*#{extension}").any?
+          end
+        end
+      end
+    end
   end
 end
