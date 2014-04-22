@@ -281,6 +281,23 @@ class TestBlob < Test::Unit::TestCase
     assert blob("ui/minified/jquery.effects.blind.min.js").vendored?
     assert blob("ui/minified/jquery.ui.accordion.min.js").vendored?
 
+    # Mercury
+    assert blob("Mercury/asm_fast.gc/").vendored?
+    assert blob("Mercury/asm_fast.gc.trseg.debug.stseg/").vendored?
+    assert blob("Mercury/hlc.gc/").vendored?
+    assert blob("Mercury/hlc.par.gc/").vendored?
+    assert blob("Mercury/erlang/").vendored?
+    assert blob("Mercury/asm_fast.gc.profdeep/").vendored?
+    assert blob("Mercury/java/").vendored?
+    assert blob("Mercury/beams/").vendored?
+    assert blob("Mercury/classs/").vendored?
+    assert blob("Mercury/css/").vendored?
+    assert blob("Mercury/java_dates/").vendored?
+    assert blob("Mercury/erls/").vendored?
+    assert blob("Mercury/ints/").vendored?
+    assert blob("Mercury/int3s/").vendored?
+    assert blob("Mercury/opts/").vendored?
+
     # MooTools
     assert blob("public/javascripts/mootools-core-1.3.2-full-compat.js").vendored?
     assert blob("public/javascripts/mootools-core-1.3.2-full-compat-yc.js").vendored?
