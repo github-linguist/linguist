@@ -297,6 +297,7 @@ class TestBlob < Test::Unit::TestCase
     assert blob("Mercury/ints/").vendored?
     assert blob("Mercury/int3s/").vendored?
     assert blob("Mercury/opts/").vendored?
+    assert !blob("Mercury/hello_world.m").vendored?
 
     # MooTools
     assert blob("public/javascripts/mootools-core-1.3.2-full-compat.js").vendored?
