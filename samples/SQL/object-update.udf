@@ -1,0 +1,8 @@
+
+if not exists(select * from sysobjects where name = '%object_name%' and type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+  exec('create FUNCTION dbo.%object_name%() returns int as begin return null end')
+GO
+
+%object_ddl%
+
+go
