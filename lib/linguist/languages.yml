@@ -1185,6 +1185,7 @@ Mercury:
   primary_extension: .mercury
   # Mercury's syntax is not prolog syntax, but they do share the lexer
   lexer: Prolog
+  ace_mode: prolog
   extensions:
   - .m
   - .moo
@@ -1210,6 +1211,7 @@ Monkey:
   primary_extension: .monkey
 
 Moocode:
+  type: programming
   lexer: MOOCode
   primary_extension: .moo
 
