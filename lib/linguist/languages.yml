@@ -688,10 +688,13 @@ GLSL:
   extensions:
   - .fp
   - .frag
+  - .fshader
   - .geom
   - .glslv
+  - .gshader
   - .shader
   - .vert
+  - .vshader
 
 Genshi:
   primary_extension: .kid
@@ -888,6 +891,14 @@ Idris:
   primary_extension: .idr
   extensions:
   - .lidr
+
+Inform 7:
+  type: programming
+  lexer: Text only
+  wrap: true
+  primary_extension: .ni
+  extensions:
+  - .i7x
 
 Inno Setup:
   primary_extension: .iss
