@@ -332,8 +332,6 @@ Cirru:
   # ace_mode: cirru
   # lexer: Cirru
   lexer: Text only
-  extensions:
-  - .cr
 
 Clean:
   type: programming
@@ -1689,12 +1687,14 @@ Ruby:
   filenames:
   - Appraisals
   - Berksfile
+  - Buildfile
   - Gemfile
   - Gemfile.lock
   - Guardfile
   - Podfile
   - Thorfile
   - Vagrantfile
+  - buildfile
 
 Rust:
   type: programming
