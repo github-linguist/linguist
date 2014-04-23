@@ -816,6 +816,11 @@ HTML+PHP:
   group: HTML
   primary_extension: .phtml
 
+HTML+Liquid:
+  type: markup
+  group: HTML
+  primary_extension: .html
+
 HTTP:
   type: data
   primary_extension: .http
@@ -1065,6 +1070,13 @@ LilyPond:
   primary_extension: .ly
   extensions:
   - .ily
+
+Liquid:
+  type: markup
+  lexer: Liquid
+  primary_extension: .liquid
+  extensions:
+  - .html
 
 Literate Agda:
   type: programming
