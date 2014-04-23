@@ -40,7 +40,7 @@ class TestSamples < Test::Unit::TestCase
   def test_presence
     Linguist::Language.all.each do |language|
       language.all_extensions.each do |extension|
-        language_matches = Language.find_by_filename("foo.#{extension}")
+        language_matches = Language.find_by_filename("foo#{extension}")
         
         # If there is more than one language match for a given extension
         # then check that there are examples for that language with the extension 
