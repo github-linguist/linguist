@@ -57,7 +57,7 @@ class TestSamples < Test::Unit::TestCase
   Samples.each do |sample|
     define_method "test_#{sample[:path]}_not_binary" do
       blob = blob(sample[:path])
-      assert !blob.binary_mime_type? && !blob.binary?, "#{sample[:path]} is a binary file"
+      assert !blob.likely_binary? && !blob.binary?, "#{sample[:path]} is a binary file"
     end
   end
 
