@@ -63,7 +63,8 @@ module Linguist
         generated_jni_header? ||
         composer_lock? ||
         node_modules? ||
-        vcr_cassette?
+        vcr_cassette? ||
+        compiled_mercury?
     end
 
     # Internal: Is the blob an XCode project file?
@@ -245,6 +246,10 @@ module Linguist
       return false unless lines.count > 2
       # VCR Cassettes have "recorded_with: VCR" in the second last line.
       return lines[-2].include?("recorded_with: VCR")
+    end
+
+    def compiled_mercury?
+      !!name.match(/(^|\/)Mercury\/((c_|err_|java_|cs_|erl_)?date\d?|int\d?|opt|java|csharp|(asm_fast|hlc)(\.[a-z]+)+|module_dep|o|d|c|class|cs|obj|erl(ang)?|hrl|beam)s?\//)
     end
   end
 end

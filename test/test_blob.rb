@@ -213,7 +213,26 @@ class TestBlob < Test::Unit::TestCase
 
     # Generated VCR
     assert blob("YAML/vcr_cassette.yml").generated?
+    
+    # Mercury compiler output
+    assert blob("Mercury/asm_fast.gc/").generated?
+    assert blob("Mercury/asm_fast.gc.trseg.debug.stseg/").generated?
+    assert blob("Mercury/hlc.gc/").generated?
+    assert blob("Mercury/hlc.par.gc/").generated?
+    assert blob("Mercury/erlang/").generated?
+    assert blob("Mercury/asm_fast.gc.profdeep/").generated?
+    assert blob("Mercury/java/").generated?
+    assert blob("Mercury/beams/").generated?
+    assert blob("Mercury/classs/").generated?
+    assert blob("Mercury/css/").generated?
+    assert blob("Mercury/java_dates/").generated?
+    assert blob("Mercury/erls/").generated?
+    assert blob("Mercury/ints/").generated?
+    assert blob("Mercury/int3s/").generated?
+    assert blob("Mercury/opts/").generated?
+    assert !blob("Mercury/hello_world.m").generated?
 
+    # Generated grunt.js file
     assert Linguist::Generated.generated?("node_modules/grunt/lib/grunt.js", nil)
   end
 
@@ -280,24 +299,6 @@ class TestBlob < Test::Unit::TestCase
     assert blob("ui/jquery.ui.accordion.js").vendored?
     assert blob("ui/minified/jquery.effects.blind.min.js").vendored?
     assert blob("ui/minified/jquery.ui.accordion.min.js").vendored?
-
-    # Mercury
-    assert blob("Mercury/asm_fast.gc/").vendored?
-    assert blob("Mercury/asm_fast.gc.trseg.debug.stseg/").vendored?
-    assert blob("Mercury/hlc.gc/").vendored?
-    assert blob("Mercury/hlc.par.gc/").vendored?
-    assert blob("Mercury/erlang/").vendored?
-    assert blob("Mercury/asm_fast.gc.profdeep/").vendored?
-    assert blob("Mercury/java/").vendored?
-    assert blob("Mercury/beams/").vendored?
-    assert blob("Mercury/classs/").vendored?
-    assert blob("Mercury/css/").vendored?
-    assert blob("Mercury/java_dates/").vendored?
-    assert blob("Mercury/erls/").vendored?
-    assert blob("Mercury/ints/").vendored?
-    assert blob("Mercury/int3s/").vendored?
-    assert blob("Mercury/opts/").vendored?
-    assert !blob("Mercury/hello_world.m").vendored?
 
     # MooTools
     assert blob("public/javascripts/mootools-core-1.3.2-full-compat.js").vendored?
