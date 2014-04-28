@@ -75,6 +75,18 @@ class TestHeuristcs < Test::Unit::TestCase
     assert_equal Language["XML"], results.first
   end
 
+  def test_lsp_commonlisp_by_heuristics
+    languages = ["Common Lisp", "NewLisp"]
+    results = Heuristics.disambiguate_lsp(fixture("Common Lisp/sample.lsp"), languages)
+    assert_equal Language["Common Lisp"], results.first
+  end
+
+  def test_lsp_newlisp_by_heuristics
+    languages = ["Common Lisp", "NewLisp"]
+    results = Heuristics.disambiguate_lsp(fixture("NewLisp/irc.lsp"), languages)
+    assert_equal Language["NewLisp"], results.first
+  end
+
   def test_cl_by_heuristics
     languages = ["Common Lisp", "OpenCL"]
     languages.each do |language|
