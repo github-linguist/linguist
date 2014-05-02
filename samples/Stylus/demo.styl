@@ -1,0 +1,31 @@
+border-radius()
+  -webkit-border-radius arguments
+  -moz-border-radius arguments
+  border-radius arguments
+
+a.button
+  border-radius 5px
+
+fonts = helvetica, arial, sans-serif
+
+body {
+  padding: 50px;
+  font: 14px/1.4 fonts;
+}
+
+form
+  input[type=text]
+    padding: 5px
+    border: 1px solid #eee
+    color: #ddd
+
+textarea
+  @extends form input[type=text]
+  padding: 10px
+
+$foo
+  color: #FFF
+
+.bar
+  background: #000
+  @extends $foo

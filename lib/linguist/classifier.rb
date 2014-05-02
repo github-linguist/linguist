@@ -15,8 +15,8 @@ module Linguist
     #
     # Returns nothing.
     #
-    # Set LINGUIST_DEBUG=1 or =2 to see probabilities per-token,
-    # per-language.  See also dump_all_tokens, below.
+    # Set LINGUIST_DEBUG=1 or =2 to see probabilities per-token or
+    # per-language.  See also #dump_all_tokens, below.
     def self.train!(db, language, data)
       tokens = Tokenizer.tokenize(data)
 
@@ -78,18 +78,13 @@ module Linguist
     def classify(tokens, languages)
       return [] if tokens.nil?
       tokens = Tokenizer.tokenize(tokens) if tokens.is_a?(String)
-
       scores = {}
-      if verbosity >= 2
-        dump_all_tokens(tokens, languages)
-      end
+
+      debug_dump_all_tokens(tokens, languages) if verbosity >= 2
+
       languages.each do |language|
-        scores[language] = tokens_probability(tokens, language) +
-                                   language_probability(language)
-        if verbosity >= 1
-          printf "%10s = %10.3f + %7.3f = %10.3f\n",
-            language, tokens_probability(tokens, language), language_probability(language), scores[language]
-        end
+        scores[language] = tokens_probability(tokens, language) + language_probability(language)
+        debug_dump_probabilities(tokens, language, scores[language]) if verbosity >= 1
       end
 
       scores.sort { |a, b| b[1] <=> a[1] }.map { |score| [score[0], score[1]] }
@@ -135,6 +130,11 @@ module Linguist
         @verbosity ||= (ENV['LINGUIST_DEBUG'] || 0).to_i
       end
 
+      def debug_dump_probabilities(tokens, language, score)
+        printf("%10s = %10.3f + %7.3f = %10.3f\n",
+            language, tokens_probability(tokens, language), language_probability(language), score)
+      end
+
       # Internal: show a table of probabilities for each <token,language> pair.
       #
       # The number in each table entry is the number of "points" that each
@@ -145,22 +145,22 @@ module Linguist
       # how much more likely (log of probability ratio) that token is to
       # appear in one language vs. the least-likely language.  Dashes
       # indicate the least-likely language (and zero points) for each token.
-      def dump_all_tokens(tokens, languages)
+      def debug_dump_all_tokens(tokens, languages)
         maxlen = tokens.map { |tok| tok.size }.max
-        
+
         printf "%#{maxlen}s", ""
         puts "    #" + languages.map { |lang| sprintf("%10s", lang) }.join
-        
-        tokmap = Hash.new(0)
-        tokens.each { |tok| tokmap[tok] += 1 }
-        
-        tokmap.sort.each { |tok, count|
+
+        token_map = Hash.new(0)
+        tokens.each { |tok| token_map[tok] += 1 }
+
+        token_map.sort.each { |tok, count|
           arr = languages.map { |lang| [lang, token_probability(tok, lang)] }
           min = arr.map { |a,b| b }.min
           minlog = Math.log(min)
           if !arr.inject(true) { |result, n| result && n[1] == arr[0][1] }
             printf "%#{maxlen}s%5d", tok, count
-            
+
             puts arr.map { |ent|
               ent[1] == min ? "         -" : sprintf("%10.3f", count * (Math.log(ent[1]) - minlog))
             }.join
