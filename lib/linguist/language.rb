@@ -426,6 +426,11 @@ module Linguist
     #
     # Returns the extensions Array
     attr_reader :filenames
+    
+    # Public: Return all possible extensions for language
+    def all_extensions
+      (extensions + [primary_extension]).uniq
+    end
 
     # Public: Get URL escaped name.
     #
@@ -485,7 +490,7 @@ module Linguist
     #
     # Returns html String
     def colorize(text, options = {})
-      lexer.highlight(text, options = {})
+      lexer.highlight(text, options)
     end
 
     # Public: Return name as String representation

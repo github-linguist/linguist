@@ -1,0 +1,6 @@
+use translog;
+DROP VIEW IF EXISTS `suspendedtoday`;
+
+create view suspendedtoday as
+select * from suspended 
+where datediff(datetime, now()) = 0; 

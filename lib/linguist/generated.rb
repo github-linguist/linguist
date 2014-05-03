@@ -62,7 +62,8 @@ module Linguist
         generated_protocol_buffer? ||
         generated_jni_header? ||
         composer_lock? ||
-        node_modules?
+        node_modules? ||
+        vcr_cassette?
     end
 
     # Internal: Is the blob an XCode project file?
@@ -234,6 +235,16 @@ module Linguist
     # Returns true or false.
     def composer_lock?
       !!name.match(/composer.lock/)
+    end
+
+    # Is the blob a VCR Cassette file?
+    #
+    # Returns true or false
+    def vcr_cassette?
+      return false unless extname == '.yml'
+      return false unless lines.count > 2
+      # VCR Cassettes have "recorded_with: VCR" in the second last line.
+      return lines[-2].include?("recorded_with: VCR")
     end
   end
 end
