@@ -10,7 +10,7 @@
 ## Vendor Conventions ##
 
 # Caches
-- cache/
+- (^|/)cache/
 
 # Dependencies
 - ^[Dd]ependencies/
@@ -46,6 +46,9 @@
 
 # Debian packaging
 - ^debian/
+
+# Haxelib projects often contain a neko bytecode file named run.n
+- run.n$
 
 ## Commonly Bundled JavaScript frameworks ##
 
@@ -95,6 +98,12 @@
 # AngularJS
 - (^|/)angular([^.]*)(\.min)?\.js$
 
+# D3.js
+- (^|\/)d3(\.v\d+)?([^.]*)(\.min)?\.js$
+
+# React
+- (^|/)react(-[^.]*)?(\.min)?\.js$
+
 ## Python ##
 
 # django
@@ -114,10 +123,18 @@
 # Sparkle
 - (^|/)Sparkle/
 
+## Groovy ##
+
+# Gradle
+- (^|/)gradlew$
+- (^|/)gradlew\.bat$
+- (^|/)gradle/wrapper/
+
 ## .NET ##
 
 # Visual Studio IntelliSense
 - -vsdoc\.js$
+- \.intellisense\.js$
 
 # jQuery validation plugin (MS bundles this with asp.net mvc)
 - (^|/)jquery([^.]*)\.validate(\.unobtrusive)?(\.min)?\.js$
@@ -172,3 +189,6 @@
 
 # .DS_Store's
 - .[Dd][Ss]_[Ss]tore$
+
+# Mercury --use-subdirs
+- Mercury/

@@ -291,7 +291,7 @@ module Linguist
         data = lambda { (binary_mime_type? || binary?) ? "" : self.data }
       end
 
-      @language = binary? ? nil : Language.detect(name.to_s, data, mode)
+      @language = Language.detect(name.to_s, data, mode)
     end
 
     # Internal: Get the lexer of the blob.

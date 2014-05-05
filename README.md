@@ -106,6 +106,29 @@ To update the `samples.json` after adding new files to [`samples/`](https://gith
 
     bundle exec rake samples
 
+### A note on language extensions
+
+Linguist has a number of methods available to it for identifying the language of a particular file. The initial lookup is based upon the extension of the file, possible file extensions are defined in an array called `extensions`. Take a look at this example for example for `Perl`:
+
+```
+Perl:
+  type: programming
+  ace_mode: perl
+  color: "#0298c3"
+  extensions:
+  - .pl
+  - .PL
+  - .perl
+  - .ph
+  - .plx
+  - .pm
+  - .pod
+  - .psgi
+  interpreters:
+  - perl
+```
+Any of the extensions defined are valid but the first in this array should be the most popular.
+
 ### Testing
 
 Sometimes getting the tests running can be too much work, especially if you don't have much Ruby experience. It's okay: be lazy and let our build bot [Travis](http://travis-ci.org/#!/github/linguist) run the tests for you. Just open a pull request and the bot will start cranking away.
