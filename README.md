@@ -134,3 +134,18 @@ Any of the extensions defined are valid but the first in this array should be th
 Sometimes getting the tests running can be too much work, especially if you don't have much Ruby experience. It's okay: be lazy and let our build bot [Travis](http://travis-ci.org/#!/github/linguist) run the tests for you. Just open a pull request and the bot will start cranking away.
 
 Here's our current build status, which is hopefully green: [![Build Status](https://secure.travis-ci.org/github/linguist.png?branch=master)](http://travis-ci.org/github/linguist)
+
+### Releasing
+
+If you are the current maintainer of this gem:
+
+ 0. Bump gem version in github-linguist.gemspec.  For example, [like this](https://github.com/github/linguist/commit/97908204a385940e47251af9ecb689e8f6515c48).
+ 0. Make a PR to github/linguist.  For example, [#1075](https://github.com/github/linguist/pull/1075).
+ 0. Cut a gem: `gem build github-linguist.gemspec`
+ 0. Testing:
+   0. Bump the Gemfile and Gemfile.lock versions for an app which relies on this gem
+   0. Install the new gem locally
+   0. Test behavior locally, branch deploy, whatever needs to happen
+ 0. Merge github/linguist PR
+ 0. Tag `vx.xx.xx` release on github/linguist; push tag
+ 0. Push to rubygems.org -- `gem push github-linguist-2.10.12.gem`
