@@ -139,9 +139,13 @@ Here's our current build status, which is hopefully green: [![Build Status](http
 
 If you are the current maintainer of this gem:
 
+ 0. Create a branch for the release: `git checkout -b cut-release-vxx.xx.xx`
+ 0. Make sure your local dependencies are up to date: `bundle install`
+ 0. Ensure that samples are updated: `bundle exec rake samples`
+ 0. Ensure that tests are green: `bundle exec rake test`
  0. Bump gem version in github-linguist.gemspec.  For example, [like this](https://github.com/github/linguist/commit/97908204a385940e47251af9ecb689e8f6515c48).
  0. Make a PR to github/linguist.  For example, [#1075](https://github.com/github/linguist/pull/1075).
- 0. Cut a gem: `gem build github-linguist.gemspec`
+ 0. Build a local gem: `gem build github-linguist.gemspec`
  0. Testing:
    0. Bump the Gemfile and Gemfile.lock versions for an app which relies on this gem
    0. Install the new gem locally
