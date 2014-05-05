@@ -306,10 +306,6 @@ class TestBlob < Test::Unit::TestCase
     assert blob("public/javascripts/angular.js").vendored?
     assert blob("public/javascripts/angular.min.js").vendored?
 
-    # D3.js
-    assert blob("public/javascripts/d3.v3.js").vendored?
-    assert blob("public/javascripts/d3.v3.min.js").vendored?
-
     # Fabric
     assert blob("fabfile.py").vendored?
 
