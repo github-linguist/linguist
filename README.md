@@ -100,6 +100,12 @@ The majority of contributions won't need to touch any Ruby code at all. The [mas
 
 We try to only add languages once they have some usage on GitHub, so please note in-the-wild usage examples in your pull request.
 
+Almost all bug fixes or new language additions should come with some additional code samples. Just drop them under [`samples/`](https://github.com/github/linguist/tree/master/samples) in the correct subdirectory and our test suite will automatically test them. In most cases you shouldn't need to add any new assertions.
+
+To update the `samples.json` after adding new files to [`samples/`](https://github.com/github/linguist/tree/master/samples):
+
+    bundle exec rake samples
+
 ### A note on language extensions
 
 Linguist has a number of methods available to it for identifying the language of a particular file. The initial lookup is based upon the extension of the file, possible file extensions are defined in an array called `extensions`. Take a look at this example for example for `Perl`:
@@ -122,12 +128,6 @@ Perl:
   - perl
 ```
 Any of the extensions defined are valid but the first in this array should be the most popular.
-
-Almost all bug fixes or new language additions should come with some additional code samples. Just drop them under [`samples/`](https://github.com/github/linguist/tree/master/samples) in the correct subdirectory and our test suite will automatically test them. In most cases you shouldn't need to add any new assertions.
-
-To update the `samples.json` after adding new files to [`samples/`](https://github.com/github/linguist/tree/master/samples):
-
-    bundle exec rake samples
 
 ### Testing
 
