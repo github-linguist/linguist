@@ -213,7 +213,26 @@ class TestBlob < Test::Unit::TestCase
 
     # Generated VCR
     assert blob("YAML/vcr_cassette.yml").generated?
+    
+    # Mercury compiler output
+    assert blob("Mercury/asm_fast.gc/").generated?
+    assert blob("Mercury/asm_fast.gc.trseg.debug.stseg/").generated?
+    assert blob("Mercury/hlc.gc/").generated?
+    assert blob("Mercury/hlc.par.gc/").generated?
+    assert blob("Mercury/erlang/").generated?
+    assert blob("Mercury/asm_fast.gc.profdeep/").generated?
+    assert blob("Mercury/java/").generated?
+    assert blob("Mercury/beams/").generated?
+    assert blob("Mercury/classs/").generated?
+    assert blob("Mercury/css/").generated?
+    assert blob("Mercury/java_dates/").generated?
+    assert blob("Mercury/erls/").generated?
+    assert blob("Mercury/ints/").generated?
+    assert blob("Mercury/int3s/").generated?
+    assert blob("Mercury/opts/").generated?
+    assert !blob("Mercury/hello_world.m").generated?
 
+    # Generated grunt.js file
     assert Linguist::Generated.generated?("node_modules/grunt/lib/grunt.js", nil)
   end
 
@@ -309,10 +328,6 @@ class TestBlob < Test::Unit::TestCase
     # D3.js
     assert blob("public/javascripts/d3.v3.js").vendored?
     assert blob("public/javascripts/d3.v3.min.js").vendored?
-
-    # Modernizr
-    assert blob("public/javascripts/modernizr-2.7.1.js").vendored?
-    assert blob("public/javascripts/modernizr.custom.01009.js").vendored?
 
     # Fabric
     assert blob("fabfile.py").vendored?
