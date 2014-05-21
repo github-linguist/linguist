@@ -11,6 +11,17 @@ class TestBlob < Test::Unit::TestCase
 
   Lexer = Pygments::Lexer
 
+  def setup
+    # git blobs are normally loaded as ASCII-8BIT since they may contain data
+    # with arbitrary encoding not known ahead of time
+    @original_external = Encoding.default_external
+    Encoding.default_external = Encoding.find("ASCII-8BIT")
+  end
+
+  def teardown
+    Encoding.default_external = @original_external
+  end
+
   def samples_path
     File.expand_path("../../samples", __FILE__)
   end
@@ -65,6 +76,14 @@ class TestBlob < Test::Unit::TestCase
     assert_equal ["module Foo", "end", ""], blob("Ruby/foo.rb").lines
     assert_equal ["line 1", "line 2", ""], blob("Text/mac.txt").lines
     assert_equal 475, blob("Emacs Lisp/ess-julia.el").lines.length
+  end
+
+  def test_lines_maintains_original_encoding
+    # Even if the file's encoding is detected as something like UTF-16LE,
+    # earlier versions of the gem made implicit guarantees that the encoding of
+    # each `line` is in the same encoding as the file was originally read (in
+    # practice, UTF-8 or ASCII-8BIT)
+    assert_equal Encoding.default_external, blob("Text/utf16le.txt").lines.first.encoding
   end
 
   def test_size
