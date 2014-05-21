@@ -263,7 +263,7 @@ module Linguist
     #
     # Returns Integer
     def sloc
-      lines.grep(Regexp.new('\S'.encode(encoding))).size
+      lines.grep(Regexp.new('\S'.encode(encoding || 'ASCII-8BIT'))).size
     end
 
     # Public: Is the blob a generated file?
