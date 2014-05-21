@@ -241,7 +241,8 @@ module Linguist
     def lines
       @lines ||=
         if viewable? && data
-          data.split(/\r\n|\r|\n/, -1)
+          newlines = Regexp.new("\r\n|\r|\n".encode(encoding))
+          data.force_encoding(encoding).split(newlines, -1)
         else
           []
         end
@@ -262,7 +263,7 @@ module Linguist
     #
     # Returns Integer
     def sloc
-      lines.grep(/\S/).size
+      lines.grep(Regexp.new('\S'.encode(encoding))).size
     end
 
     # Public: Is the blob a generated file?
