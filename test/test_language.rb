@@ -214,7 +214,7 @@ class TestLanguage < Test::Unit::TestCase
   def test_searchable
     assert Language['Ruby'].searchable?
     assert !Language['Gettext Catalog'].searchable?
-    assert !Language['SQL'].searchable?
+    assert Language['SQL'].searchable?
   end
 
   def test_find_by_name
@@ -323,7 +323,7 @@ class TestLanguage < Test::Unit::TestCase
   def test_color
     assert_equal '#701516', Language['Ruby'].color
     assert_equal '#3581ba', Language['Python'].color
-    assert_equal '#f7df1e', Language['JavaScript'].color
+    assert_equal '#f1e05a', Language['JavaScript'].color
     assert_equal '#31859c', Language['TypeScript'].color
   end
 

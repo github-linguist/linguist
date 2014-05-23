@@ -101,8 +101,15 @@
 # AngularJS
 - (^|/)angular([^.]*)(\.min)?\.js$
 
+# D3.js
+- (^|\/)d3(\.v\d+)?([^.]*)(\.min)?\.js$
+
 # React
 - (^|/)react(-[^.]*)?(\.min)?\.js$
+
+# Modernizr
+- (^|/)modernizr\-\d\.\d+(\.\d+)?(\.min)?\.js$
+- (^|/)modernizr\.custom\.\d+\.js$
 
 ## Python ##
 
@@ -144,7 +151,7 @@
 - (^|/)[Mm]icrosoft([Mm]vc)?([Aa]jax|[Vv]alidation)(\.debug)?\.js$
 
 # NuGet
-- ^[Pp]ackages/
+- ^[Pp]ackages\/.+\.\d+\/
 
 # ExtJS
 - (^|/)extjs/.*?\.js$
