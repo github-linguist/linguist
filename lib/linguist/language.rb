@@ -277,7 +277,7 @@ module Linguist
       @aliases = [default_alias_name] + (attributes[:aliases] || [])
 
       # Lookup Lexer object
-      @lexer = Pygments::Lexer.find_by_name(attributes[:lexer] || name) ||
+      @lexer = Pygments::Lexer.find_by_name(attributes[:lexer] || name) || Pygments::Lexer.find_by_alias((attributes[:lexer] || name).downcase) ||
         raise(ArgumentError, "#{@name} is missing lexer")
 
       @ace_mode = attributes[:ace_mode]

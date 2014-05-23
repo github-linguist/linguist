@@ -24,7 +24,6 @@
 
 ABAP:
   type: programming
-  lexer: ABAP
   extensions:
   - .abap
 
@@ -1500,6 +1499,21 @@ PHP:
   filenames:
   - Phakefile
 
+PLSQL:
+  type: programming
+  lexer: plpgsql  #this will do until something more specific exists
+  extensions:
+  - .pls
+  - .pkb
+  - .pks
+  - .plb
+  - .sql
+
+PLpgSQL:
+  type: programming
+  extensions:
+  - .sql
+
 Parrot:
   type: programming
   color: "#f3ca0a"
@@ -1591,7 +1605,7 @@ PostScript:
   extensions:
   - .ps
   - .eps
-
+ 
 PowerShell:
   type: programming
   ace_mode: powershell
@@ -1852,12 +1866,21 @@ SCSS:
 SQL:
   type: programming
   ace_mode: sql
+  lexer: sql
   extensions:
   - .sql
   - .prc
   - .tab
   - .udf
   - .viw
+
+SQLPL:
+  type: programming
+  ace_mode: sql
+  lexer: PL/pgSQL  
+  extensions:
+  - .sql
+  - .db2
 
 Sage:
   type: programming

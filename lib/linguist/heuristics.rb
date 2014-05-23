@@ -28,6 +28,9 @@ module Linguist
         if languages.all? { |l| ["Common Lisp", "OpenCL"].include?(l) }
           disambiguate_cl(data, languages)
         end
+        if languages.all? { |l| ["PLSQL", "PLpgSQL", "SQL", "SQLPL"].include?(l) }
+          disambiguate_sql(data, languages)
+        end
         if languages.all? { |l| ["Rebol", "R"].include?(l) }
           disambiguate_r(data, languages)
         end
@@ -73,6 +76,21 @@ module Linguist
       matches = []
       matches << Language["Common Lisp"] if data.include?("(defun ")
       matches << Language["OpenCL"] if /\/\* |\/\/ |^\}/.match(data)
+      matches
+    end
+
+    def self.disambiguate_sql(data, languages)
+      matches = []
+      plpgsqlkeywords = [/^\\i\b/i]
+      re = Regexp.union(plpgsqlkeywords)
+      matches << Language["PLpgSQL"] if data.match(re)  
+
+      plsqlkeywords = [/begin\b/i,/boolean\b/i, /package\b/i,/exception\b/i, /pragma\b/i , /constructor\W+function\b/i]
+      re = Regexp.union(plsqlkeywords)
+
+      matches << Language["SQL"] if ! data.match(re)  
+
+      #matches << Language["PLSQL"] if data.match(/pragma\b/i) #pragma is plsql only (not PLpgSQL)
       matches
     end
 
