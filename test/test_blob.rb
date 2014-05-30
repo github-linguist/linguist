@@ -11,6 +11,17 @@ class TestBlob < Test::Unit::TestCase
 
   Lexer = Pygments::Lexer
 
+  def setup
+    # git blobs are normally loaded as ASCII-8BIT since they may contain data
+    # with arbitrary encoding not known ahead of time
+    @original_external = Encoding.default_external
+    Encoding.default_external = Encoding.find("ASCII-8BIT")
+  end
+
+  def teardown
+    Encoding.default_external = @original_external
+  end
+
   def samples_path
     File.expand_path("../../samples", __FILE__)
   end
@@ -67,6 +78,14 @@ class TestBlob < Test::Unit::TestCase
     assert_equal 475, blob("Emacs Lisp/ess-julia.el").lines.length
   end
 
+  def test_lines_maintains_original_encoding
+    # Even if the file's encoding is detected as something like UTF-16LE,
+    # earlier versions of the gem made implicit guarantees that the encoding of
+    # each `line` is in the same encoding as the file was originally read (in
+    # practice, UTF-8 or ASCII-8BIT)
+    assert_equal Encoding.default_external, blob("Text/utf16le.txt").lines.first.encoding
+  end
+
   def test_size
     assert_equal 15, blob("Ruby/foo.rb").size
   end
@@ -77,12 +96,15 @@ class TestBlob < Test::Unit::TestCase
 
   def test_sloc
     assert_equal 2, blob("Ruby/foo.rb").sloc
+    assert_equal 3, blob("Text/utf16le-windows.txt").sloc
   end
 
   def test_encoding
     assert_equal "ISO-8859-2", blob("Text/README").encoding
     assert_equal "ISO-8859-1", blob("Text/dump.sql").encoding
     assert_equal "UTF-8", blob("Text/foo.txt").encoding
+    assert_equal "UTF-16LE", blob("Text/utf16le.txt").encoding
+    assert_equal "UTF-16LE", blob("Text/utf16le-windows.txt").encoding
     assert_nil blob("Binary/dog.o").encoding
   end
 
@@ -305,6 +327,14 @@ class TestBlob < Test::Unit::TestCase
     # AngularJS
     assert blob("public/javascripts/angular.js").vendored?
     assert blob("public/javascripts/angular.min.js").vendored?
+
+    # D3.js
+    assert blob("public/javascripts/d3.v3.js").vendored?
+    assert blob("public/javascripts/d3.v3.min.js").vendored?
+
+    # Modernizr
+    assert blob("public/javascripts/modernizr-2.7.1.js").vendored?
+    assert blob("public/javascripts/modernizr.custom.01009.js").vendored?
 
     # Fabric
     assert blob("fabfile.py").vendored?

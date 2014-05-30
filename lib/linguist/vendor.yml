@@ -98,8 +98,15 @@
 # AngularJS
 - (^|/)angular([^.]*)(\.min)?\.js$
 
+# D3.js
+- (^|\/)d3(\.v\d+)?([^.]*)(\.min)?\.js$
+
 # React
 - (^|/)react(-[^.]*)?(\.min)?\.js$
+
+# Modernizr
+- (^|/)modernizr\-\d\.\d+(\.\d+)?(\.min)?\.js$
+- (^|/)modernizr\.custom\.\d+\.js$
 
 ## Python ##
 
@@ -131,6 +138,7 @@
 
 # Visual Studio IntelliSense
 - -vsdoc\.js$
+- \.intellisense\.js$
 
 # jQuery validation plugin (MS bundles this with asp.net mvc)
 - (^|/)jquery([^.]*)\.validate(\.unobtrusive)?(\.min)?\.js$
@@ -140,7 +148,7 @@
 - (^|/)[Mm]icrosoft([Mm]vc)?([Aa]jax|[Vv]alidation)(\.debug)?\.js$
 
 # NuGet
-- ^[Pp]ackages/
+- ^[Pp]ackages\/.+\.\d+\/
 
 # ExtJS
 - (^|/)extjs/.*?\.js$
@@ -185,3 +193,6 @@
 
 # .DS_Store's
 - .[Dd][Ss]_[Ss]tore$
+
+# Mercury --use-subdirs
+- Mercury/
