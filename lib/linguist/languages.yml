@@ -293,6 +293,7 @@ C++:
   - .inl
   - .tcc
   - .tpp
+  - .ipp
 
 C-ObjDump:
   type: data
@@ -819,6 +820,9 @@ Groovy:
   color: "#e69f56"
   extensions:
   - .groovy
+  - .grt
+  - .gtpl
+  - .gvy
   interpreters:
   - groovy
 
@@ -907,7 +911,7 @@ Haskell:
 Haxe:
   type: programming
   ace_mode: haxe
-  color: "#346d51"
+  color: "#f7941e"
   extensions:
   - .hx
   - .hxsl
@@ -1251,6 +1255,7 @@ Markdown:
   - .md
   - .markdown
   - .mkd
+  - .mkdn
   - .mkdown
   - .ron
 
@@ -1618,6 +1623,13 @@ Prolog:
   - .ecl
   - .pl
 
+Propeller Spin:
+  type: programming
+  lexer: Text only
+  color: "#2b446d"
+  extensions:
+  - .spin
+
 Protocol Buffer:
   type: markup
   aliases:
@@ -1692,6 +1704,8 @@ R:
   extensions:
   - .r
   - .R
+  - .Rd
+  - .rd
   - .rsx
   filenames:
   - .Rprofile
@@ -1836,6 +1850,13 @@ Rust:
   extensions:
   - .rs
 
+SAS:
+  type: programming
+  color: "#1E90FF"
+  lexer: Text only
+  extensions:
+  - .sas
+
 SCSS:
   type: markup
   group: CSS
@@ -1844,7 +1865,7 @@ SCSS:
   - .scss
 
 SQL:
-  type: programming
+  type: data
   ace_mode: sql
   extensions:
   - .sql
@@ -2193,15 +2214,19 @@ XML:
   - .ccxml
   - .clixml
   - .cproject
+  - .csproj
   - .dita
   - .ditamap
   - .ditaval
+  - .filters
+  - .fsproj
   - .glade
   - .grxml
   - .jelly
   - .kml
   - .launch
   - .mxml
+  - .nproj
   - .osm
   - .plist
   - .pluginspec
@@ -2213,6 +2238,7 @@ XML:
   - .scxml
   - .srdf
   - .svg
+  - .targets
   - .tmCommand
   - .tmLanguage
   - .tmPreferences
@@ -2221,6 +2247,8 @@ XML:
   - .tml
   - .ui
   - .urdf
+  - .vbproj
+  - .vcxproj
   - .vxml
   - .wsdl
   - .wxi
