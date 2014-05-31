@@ -293,6 +293,7 @@ C++:
   - .inl
   - .tcc
   - .tpp
+  - .ipp
 
 C-ObjDump:
   type: data
@@ -819,6 +820,9 @@ Groovy:
   color: "#e69f56"
   extensions:
   - .groovy
+  - .grt
+  - .gtpl
+  - .gvy
   interpreters:
   - groovy
 
@@ -907,7 +911,7 @@ Haskell:
 Haxe:
   type: programming
   ace_mode: haxe
-  color: "#346d51"
+  color: "#f7941e"
   extensions:
   - .hx
   - .hxsl
@@ -1059,6 +1063,7 @@ JavaScript:
   - ._js
   - .bones
   - .es6
+  - .frag
   - .jake
   - .jsfl
   - .jsm
@@ -1250,6 +1255,7 @@ Markdown:
   - .md
   - .markdown
   - .mkd
+  - .mkdn
   - .mkdown
   - .ron
 
@@ -1470,6 +1476,14 @@ Org:
   wrap: true
   extensions:
   - .org
+
+Ox:
+  type: programming
+  lexer: Text only
+  extensions:
+  - .ox
+  - .oxh
+  - .oxo
 
 Oxygene:
   type: programming
@@ -1705,6 +1719,8 @@ R:
   extensions:
   - .r
   - .R
+  - .Rd
+  - .rd
   - .rsx
   filenames:
   - .Rprofile
@@ -1786,7 +1802,7 @@ Red:
   extensions:
   - .red
   - .reds
-  
+
 Redcode:
   extensions:
   - .cw
@@ -1849,6 +1865,13 @@ Rust:
   extensions:
   - .rs
 
+SAS:
+  type: programming
+  color: "#1E90FF"
+  lexer: Text only
+  extensions:
+  - .sas
+
 SCSS:
   type: markup
   group: CSS
@@ -1857,7 +1880,7 @@ SCSS:
   - .scss
 
 SQL:
-  type: programming
+  type: data
   ace_mode: sql
   extensions:
   - .sql
@@ -2207,6 +2230,7 @@ XML:
   - .clixml
   - .cproject
   - .csproj
+  - .ct
   - .dita
   - .ditamap
   - .ditaval
