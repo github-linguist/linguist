@@ -131,6 +131,13 @@ module Linguist
           # Return the actual Language object based of the string language name (i.e., first element of `#classify`)
           Language[classified[0]]
         end
+      elsif possible_languages.length == 0
+        data = data.call() if data.respond_to?(:call)
+
+        # Check if there's a shebang line and use that as authoritative
+        if (result = find_by_shebang(data)) && !result.empty?
+          result.first
+        end
       else
         # Simplest and most common case, we can just return the one match based on extension
         possible_languages.first
