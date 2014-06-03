@@ -97,6 +97,7 @@ class TestBlob < Test::Unit::TestCase
   def test_sloc
     assert_equal 2, blob("Ruby/foo.rb").sloc
     assert_equal 3, blob("Text/utf16le-windows.txt").sloc
+    assert_equal 1, blob("Text/iso8859-8-i.txt").sloc
   end
 
   def test_encoding
