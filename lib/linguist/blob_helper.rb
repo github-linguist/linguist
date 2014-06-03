@@ -256,10 +256,16 @@ module Linguist
           # without changing the encoding of `data`, and
           # also--importantly--without having to duplicate many (potentially
           # large) strings.
-          encoded_newlines = ["\r\n", "\r", "\n"].
-            map { |nl| nl.encode(encoding).force_encoding(data.encoding) }
+          begin
+            encoded_newlines = ["\r\n", "\r", "\n"].
+              map { |nl| nl.encode(encoding, "ASCII-8BIT").force_encoding(data.encoding) }
 
-          data.split(Regexp.union(encoded_newlines), -1)
+            data.split(Regexp.union(encoded_newlines), -1)
+          rescue Encoding::ConverterNotFoundError
+            # The data is not splittable in the detected encoding.  Assume it's
+            # one big line.
+            [data]
+          end
         else
           []
         end
