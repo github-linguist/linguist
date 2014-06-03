@@ -130,7 +130,7 @@ module Linguist
       script = script == 'env' ? tokens[1] : script
 
       # "python2.6" -> "python"
-      if script =~ /((?:\d+\.?)+)/
+      if script != 'perl6' && script =~ /((?:\d+\.?)+)/
         script.sub! $1, ''
       end
 
