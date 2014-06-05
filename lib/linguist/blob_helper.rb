@@ -112,6 +112,12 @@ module Linguist
       end
     end
 
+    def ruby_encoding
+      if hash = detect_encoding
+        hash[:ruby_encoding]
+      end
+    end
+
     # Try to guess the encoding
     #
     # Returns: a Hash, with :encoding, :confidence, :type
@@ -258,7 +264,7 @@ module Linguist
           # large) strings.
           begin
             encoded_newlines = ["\r\n", "\r", "\n"].
-              map { |nl| nl.encode(encoding, "ASCII-8BIT").force_encoding(data.encoding) }
+              map { |nl| nl.encode(ruby_encoding, "ASCII-8BIT").force_encoding(data.encoding) }
 
             data.split(Regexp.union(encoded_newlines), -1)
           rescue Encoding::ConverterNotFoundError
