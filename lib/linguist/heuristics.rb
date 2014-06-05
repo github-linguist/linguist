@@ -40,8 +40,8 @@ module Linguist
       if (/@(interface|class|protocol|synchronised|selector|implementation)/.match(data))
         matches << Language["Objective-C"]
       end
-      if (/^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set)>/.match(data) or
-          /^\s*template\s*</.match(data) or /^[^@]class\s+\w+/.match(data) or /^[^@](private|public|protected):$/.match(data))
+      if (/^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>/.match(data) or
+          /^\s*template\s*</.match(data) or /^[^@]class\s+\w+/.match(data) or /^[^@](private|public|protected):$/.match(data) or /std::.+$/.match(data))
         matches << Language["C++"]
       end
       matches
