@@ -100,40 +100,46 @@ module Linguist
     #
     # Returns Language or nil.
     def self.detect(name, data, mode = nil)
-      # A bit of an elegant hack. If the file is executable but extensionless,
-      # append a "magic" extension so it can be classified with other
-      # languages that have shebang scripts.
-      if File.extname(name).empty? && mode && (mode.to_i(8) & 05) == 05
-        name += ".script!"
-      end
+      data = data.call() if data.respond_to?(:call)
 
-      # First try to find languages that match based on filename.
-      possible_languages = find_by_filename(name)
 
-      # If there is more than one possible language with that extension (or no
-      # extension at all, in the case of extensionless scripts), we need to continue
-      # our detection work
-      if possible_languages.length > 1
-        data = data.call() if data.respond_to?(:call)
-        possible_language_names = possible_languages.map(&:name)
-
-        # Don't bother with emptiness
-        if data.nil? || data == ""
-          nil
-        # Check if there's a shebang line and use that as authoritative
-        elsif (result = find_by_shebang(data)) && !result.empty?
-          result.first
-        # No shebang. Still more work to do. Try to find it with our heuristics.
-        elsif (determined = Heuristics.find_by_heuristics(data, possible_language_names)) && !determined.empty?
-          determined.first
-        # Lastly, fall back to the probablistic classifier.
-        elsif classified = Classifier.classify(Samples::DATA, data, possible_language_names ).first
-          # Return the actual Language object based of the string language name (i.e., first element of `#classify`)
-          Language[classified[0]]
-        end
+      if determined = find_by_override(data) and !determined.empty?
+        determined[0]
       else
-        # Simplest and most common case, we can just return the one match based on extension
-        possible_languages.first
+        # A bit of an elegant hack. If the file is executable but extensionless,
+        # append a "magic" extension so it can be classified with other
+        # languages that have shebang scripts.
+        if File.extname(name).empty? && mode && (mode.to_i(8) & 05) == 05
+          name += ".script!"
+        end
+
+        # First try to find languages that match based on filename.
+        possible_languages = find_by_filename(name)
+
+        # If there is more than one possible language with that extension (or no
+        # extension at all, in the case of extensionless scripts), we need to continue
+        # our detection work
+        if possible_languages.length > 1
+          possible_language_names = possible_languages.map(&:name)
+
+          # Don't bother with emptiness
+          if data.nil? || data == ""
+            nil
+          # Check if there's a shebang line and use that as authoritative
+          elsif (result = find_by_shebang(data)) && !result.empty?
+            result.first
+          # No shebang. Still more work to do. Try to find it with our heuristics.
+          elsif (determined = Heuristics.find_by_heuristics(data, possible_language_names)) && !determined.empty?
+            determined.first
+          # Lastly, fall back to the probablistic classifier.
+          elsif classified = Classifier.classify(Samples::DATA, data, possible_language_names ).first
+            # Return the actual Language object based of the string language name (i.e., first element of `#classify`)
+            Language[classified[0]]
+          end
+        else
+          # Simplest and most common case, we can just return the one match based on extension
+          possible_languages.first
+        end
       end
     end
 
@@ -202,6 +208,21 @@ module Linguist
     def self.find_by_shebang(data)
       @interpreter_index[Linguist.interpreter_from_shebang(data)]
     end
+
+    # Public: Look up Languages by override entry.
+    #
+    # data - Array of tokens or String data to analyze.
+    #
+    # Examples
+    #
+    #   Language.find_by_override("...linguist-override:bash...")
+    #   # => [#<Language name="Bash">]
+    #
+    # Returns the matching Language
+    def self.find_by_override(data)
+      @interpreter_index[Linguist.interpreter_from_override(data)]
+    end
+
 
     # Public: Look up Language by its name or lexer.
     #
