@@ -1,0 +1,111 @@
+=pod
+
+=head1 NAME
+
+Catalyst::PSGI - How Catalyst and PSGI work together
+
+=head1 SYNOPSIS
+
+The L<PSGI> specification defines an interface between web servers and
+Perl-based web applications and frameworks. It supports the writing of
+portable applications that can be run using various methods (as a
+standalone server, or using mod_perl, FastCGI, etc.). L<Plack> is an
+implementation of the PSGI specification for running Perl applications.
+
+Catalyst used to contain an entire set of C<< Catalyst::Engine::XXXX >>
+classes to handle various web servers and environments (e.g. CGI,
+FastCGI, mod_perl) etc.
+
+This has been changed in Catalyst 5.9 so that all of that work is done
+by Catalyst implementing the L<PSGI> specification, using L<Plack>'s
+adaptors to implement that functionality.
+
+This means that we can share common code, and share fixes for specific
+web servers.
+
+=head1 I already have an application
+
+If you already have a Catalyst application, then you should be able to
+upgrade to the latest release with little or no trouble (see the notes
+in L<Catalyst::Upgrading> for specifics about your web server
+deployment).
+
+=head1 Writing your own PSGI file.
+
+=head2 What is a .psgi file?
+
+A C<< .psgi >> file lets you control how your application code reference
+is built. Catalyst will automatically handle this for you, but it's
+possible to do it manually by creating a C<myapp.psgi> file in the root
+of your application.
+
+=head2 Why would I want to write my own .psgi file?
+
+Writing your own .psgi file allows you to use the alternate L<plackup> command
+to start your application, and allows you to add classes and extensions
+that implement L<Plack::Middleware>, such as L<Plack::Middleware::ErrorDocument>
+or L<Plack::Middleware::AccessLog>.
+
+The simplest C<.psgi> file for an application called C<TestApp> would be:
+
+    use strict;
+    use warnings;
+    use TestApp;
+
+    my $app = TestApp->psgi_app(@_);
+
+Note that Catalyst will apply a number of middleware components for you
+automatically, and these B<will not> be applied if you manually create a
+psgi file yourself. Details of these components can be found below.
+
+Additional information about psgi files can be found at:
+L<http://search.cpan.org/dist/Plack/lib/Plack.pm#.psgi_files>
+
+=head2 What is in the .psgi file Catalyst generates by default?
+
+Catalyst generates an application which, if the C<using_frontend_proxy>
+setting is on, is wrapped in L<Plack::Middleware::ReverseProxy>, and
+contains some engine-specific fixes for uniform behaviour, as contained
+in:
+
+=over
+
+=item L<Plack::Middleware::LighttpdScriptNameFix>
+
+=item L<Plack::Middleware::IIS6ScriptNameFix>
+
+=back
+
+If you override the default by providing your own C<< .psgi >> file,
+then none of these things will be done automatically for you by the PSGI
+application returned when you call C<< MyApp->psgi_app >>. Thus, if you
+need any of this functionality, you'll need to implement this in your
+C<< .psgi >> file yourself.
+
+An apply_default_middlewares method is supplied to wrap your application
+in the default middlewares if you want this behaviour and you are providing
+your own .psgi file.
+
+This means that the auto-generated (no .psgi file) code looks something
+like this:
+
+    use strict;
+    use warnings;
+    use TestApp;
+
+    my $app = TestApp->apply_default_middlewares(TestApp->psgi_app(@_));
+
+=head1 SEE ALSO
+
+L<Catalyst::Upgrading>, L<Plack>, L<PSGI::FAQ>, L<PSGI>.
+
+=head1 AUTHORS
+
+Catalyst Contributors, see Catalyst.pm
+
+=head1 COPYRIGHT
+
+This library is free software. You can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

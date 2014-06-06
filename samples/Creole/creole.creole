@@ -1,0 +1,47 @@
+= Creole
+
+Creole is a Creole-to-HTML converter for Creole, the lightweight markup
+language (http://wikicreole.org/). Github uses this converter to render *.creole files.
+
+Project page on github:
+
+* http://github.com/minad/creole
+
+Travis-CI:
+
+* https://travis-ci.org/minad/creole
+
+RDOC:
+
+* http://rdoc.info/projects/minad/creole
+
+== INSTALLATION
+
+{{{
+gem install creole
+}}}
+
+== SYNOPSIS
+
+{{{
+require 'creole'
+html = Creole.creolize('== Creole text')
+}}}
+
+== BUGS
+
+If you found a bug, please report it at the Creole project's tracker
+on GitHub:
+
+http://github.com/minad/creole/issues
+
+== AUTHORS
+
+* Lars Christensen (larsch)
+* Daniel Mendler (minad)
+
+== LICENSE
+
+Creole is Copyright (c) 2008 - 2013 Lars Christensen, Daniel Mendler. It is free software, and
+may be redistributed under the terms specified in the README file of
+the Ruby distribution.
