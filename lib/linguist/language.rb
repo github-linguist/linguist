@@ -24,7 +24,6 @@ module Linguist
     @extension_index          = Hash.new { |h,k| h[k] = [] }
     @interpreter_index        = Hash.new { |h,k| h[k] = [] }
     @filename_index           = Hash.new { |h,k| h[k] = [] }
-    @primary_extension_index  = {}
 
     # Valid Languages types
     TYPES = [:data, :markup, :programming, :prose]
@@ -79,12 +78,6 @@ module Linguist
 
         @extension_index[extension] << language
       end
-
-      if @primary_extension_index.key?(language.primary_extension)
-        raise ArgumentError, "Duplicate primary extension: #{language.primary_extension}"
-      end
-
-      @primary_extension_index[language.primary_extension] = language
 
       language.interpreters.each do |interpreter|
         @interpreter_index[interpreter] << language
@@ -191,8 +184,7 @@ module Linguist
     # Returns all matching Languages or [] if none were found.
     def self.find_by_filename(filename)
       basename, extname = File.basename(filename), File.extname(filename)
-      langs = [@primary_extension_index[extname]] +
-              @filename_index[basename] +
+      langs = @filename_index[basename] +
               @extension_index[extname]
       langs.compact.uniq
     end
@@ -299,15 +291,6 @@ module Linguist
       @interpreters = attributes[:interpreters]   || []
       @filenames  = attributes[:filenames]  || []
 
-      unless @primary_extension = attributes[:primary_extension]
-        raise ArgumentError, "#{@name} is missing primary extension"
-      end
-
-      # Prepend primary extension unless its already included
-      if primary_extension && !extensions.include?(primary_extension)
-        @extensions = [primary_extension] + extensions
-      end
-
       # Set popular, and searchable flags
       @popular    = attributes.key?(:popular)    ? attributes[:popular]    : false
       @searchable = attributes.key?(:searchable) ? attributes[:searchable] : true
@@ -395,20 +378,6 @@ module Linguist
     # Returns the extensions Array
     attr_reader :extensions
 
-    # Deprecated: Get primary extension
-    #
-    # Defaults to the first extension but can be overridden
-    # in the languages.yml.
-    #
-    # The primary extension can not be nil. Tests should verify this.
-    #
-    # This attribute is only used by app/helpers/gists_helper.rb for
-    # creating the language dropdown. It really should be using `name`
-    # instead. Would like to drop primary extension.
-    #
-    # Returns the extension String.
-    attr_reader :primary_extension
-
     # Public: Get interpreters
     #
     # Examples
@@ -426,6 +395,27 @@ module Linguist
     #
     # Returns the extensions Array
     attr_reader :filenames
+    
+    # Public: Return all possible extensions for language
+    def all_extensions
+      (extensions + [primary_extension]).uniq
+    end
+
+    # Deprecated: Get primary extension
+    #
+    # Defaults to the first extension but can be overridden
+    # in the languages.yml.
+    #
+    # The primary extension can not be nil. Tests should verify this.
+    #
+    # This method is only used by app/helpers/gists_helper.rb for creating
+    # the language dropdown. It really should be using `name` instead.
+    # Would like to drop primary extension.
+    #
+    # Returns the extension String.
+    def primary_extension
+      extensions.first
+    end
 
     # Public: Get URL escaped name.
     #
@@ -485,7 +475,7 @@ module Linguist
     #
     # Returns html String
     def colorize(text, options = {})
-      lexer.highlight(text, options = {})
+      lexer.highlight(text, options)
     end
 
     # Public: Return name as String representation
@@ -568,9 +558,8 @@ module Linguist
       :group_name        => options['group'],
       :searchable        => options.key?('searchable') ? options['searchable'] : true,
       :search_term       => options['search_term'],
-      :extensions        => options['extensions'].sort,
+      :extensions        => [options['extensions'].first] + options['extensions'][1..-1].sort,
       :interpreters      => options['interpreters'].sort,
-      :primary_extension => options['primary_extension'],
       :filenames         => options['filenames'],
       :popular           => popular.include?(name)
     )
