@@ -114,6 +114,9 @@ class TestBlob < Test::Unit::TestCase
     assert_equal "ISO-2022-KR", blob("Text/ISO-2022-KR.txt").encoding
     assert_equal "binary", blob("Text/ISO-2022-KR.txt").ruby_encoding
     assert_nil blob("Binary/dog.o").encoding
+
+    assert_equal "windows-1252", blob("Text/Visual_Battlers.rb").encoding
+    assert_equal "Windows-1252", blob("Text/Visual_Battlers.rb").ruby_encoding
   end
 
   def test_binary
