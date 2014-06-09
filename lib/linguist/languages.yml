@@ -1903,6 +1903,13 @@ SQL:
   - .udf
   - .viw
 
+STON:
+  type: data
+  group: Smalltalk
+  lexer: JSON
+  extensions:
+  - .ston
+
 Sage:
   type: programming
   lexer: Python
@@ -2040,14 +2047,6 @@ Stata:
   - .mata
   - .matah
   - .sthlp
-
-STON:
-  type: data
-  group: Smalltalk
-  lexer: JSON
-  extensions:
-  - .ston
-
 
 Stylus:
   type: markup
