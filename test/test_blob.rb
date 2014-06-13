@@ -97,15 +97,26 @@ class TestBlob < Test::Unit::TestCase
   def test_sloc
     assert_equal 2, blob("Ruby/foo.rb").sloc
     assert_equal 3, blob("Text/utf16le-windows.txt").sloc
+    assert_equal 1, blob("Text/iso8859-8-i.txt").sloc
   end
 
   def test_encoding
     assert_equal "ISO-8859-2", blob("Text/README").encoding
+    assert_equal "ISO-8859-2", blob("Text/README").ruby_encoding
     assert_equal "ISO-8859-1", blob("Text/dump.sql").encoding
+    assert_equal "ISO-8859-1", blob("Text/dump.sql").ruby_encoding
     assert_equal "UTF-8", blob("Text/foo.txt").encoding
+    assert_equal "UTF-8", blob("Text/foo.txt").ruby_encoding
     assert_equal "UTF-16LE", blob("Text/utf16le.txt").encoding
+    assert_equal "UTF-16LE", blob("Text/utf16le.txt").ruby_encoding
     assert_equal "UTF-16LE", blob("Text/utf16le-windows.txt").encoding
+    assert_equal "UTF-16LE", blob("Text/utf16le-windows.txt").ruby_encoding
+    assert_equal "ISO-2022-KR", blob("Text/ISO-2022-KR.txt").encoding
+    assert_equal "binary", blob("Text/ISO-2022-KR.txt").ruby_encoding
     assert_nil blob("Binary/dog.o").encoding
+
+    assert_equal "windows-1252", blob("Text/Visual_Battlers.rb").encoding
+    assert_equal "Windows-1252", blob("Text/Visual_Battlers.rb").ruby_encoding
   end
 
   def test_binary
@@ -363,6 +374,10 @@ class TestBlob < Test::Unit::TestCase
 
     # NuGet Packages
     assert blob("packages/Modernizr.2.0.6/Content/Scripts/modernizr-2.0.6-development-only.js").vendored?
+    
+    # Html5shiv
+    assert blob("Scripts/html5shiv.js").vendored?
+    assert blob("Scripts/html5shiv.min.js").vendored?
 
     # Test fixtures
     assert blob("test/fixtures/random.rkt").vendored?
