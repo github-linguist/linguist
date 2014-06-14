@@ -1,0 +1,1505 @@
+#!/bin/bash
+
+################################################################################
+## base routines
+##
+
+function list_modules() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Show all modules.
+
+    PARAMETERS:
+        -e|--enabled show enabled modules only
+        -d|--disabled show disabled modules only
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get additional parameters
+    local option=
+    while [ "$1" != "" ]; do
+        case $1 in
+            -e|--enabled)   option="-e"
+                            ;;
+            -d|--disabled)  option="-d"
+                            ;;
+        esac
+        shift
+    done
+
+    _list_modules $option
+}
+
+function print_module_info() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Show module description.
+
+    PARAMETERS:
+        \$1 module name
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local module=${1-mintleaf}
+
+    if [ $(list_modules | grep $module | wc -l) -eq 1 ]; then
+        if [ -f $MINTLEAF_HOME/modules/$module/$module.md ]; then
+            printf "\n"
+            cat $MINTLEAF_HOME/modules/$module/$module.md 2> /dev/null
+            printf "\n"
+        fi
+    else
+        echo "Module does not exist"
+    fi
+}
+
+function list_functions() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Show all available functions for given module.
+
+    PARAMETERS:
+        \$1 module name
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    _list_functions $1
+}
+
+function create_module() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Create module along with its essential files.
+
+    PARAMETERS:
+        \$1 module name
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -ne 1 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local module=$1
+
+    mkdir $MINTLEAF_HOME/modules/$module
+
+    [ ! -f $MINTLEAF_HOME/modules/$module/$module.md ] && cat << EOF >> $MINTLEAF_HOME/modules/$module/$module.md
+$module
+=======
+
+TODO
+EOF
+    [ ! -f $MINTLEAF_HOME/modules/$module/$module.config ] && cat << EOF >> $MINTLEAF_HOME/modules/$module/$module.config
+EOF
+    [ ! -f $MINTLEAF_HOME/modules/$module/$module.install ] && cat << EOF >> $MINTLEAF_HOME/modules/$module/$module.install
+#!/bin/bash
+
+function install_module() {
+
+    echo "TODO"
+}
+EOF
+    [ ! -f $MINTLEAF_HOME/modules/$module/$module.module ] && cat << EOF >> $MINTLEAF_HOME/modules/$module/$module.module
+#!/bin/bash
+EOF
+    [ ! -f $MINTLEAF_HOME/modules/$module/$module.test ] && cat << EOF >> $MINTLEAF_HOME/modules/$module/$module.test
+#!/bin/bash
+
+function test_prerequisites() {
+
+    echo "TODO"
+}
+
+function test_module() {
+
+    assert_prerequisites
+
+    echo "TODO"
+}
+EOF
+    [ ! -f $MINTLEAF_HOME/modules/$module/$module.groovy ] && cat << EOF >> $MINTLEAF_HOME/modules/$module/$module.groovy
+EOF
+}
+
+################################################################################
+## general routines
+##
+
+function func_exists() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Check if function exists.
+
+    PARAMETERS:
+        \$1 function name
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -ne 1 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local func=$1
+
+    declare -f -F $func > /dev/null
+    if [ "$?" == "0" ]; then
+        echo $result_pos
+    else
+        echo $result_neg
+    fi
+}
+
+function usleep() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Sleep in increments of milliseconds.
+
+    PARAMETERS:
+        \$1 milliseconds
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -ne 1 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local ms=$1
+    local sec=$(echo "scale=2; $ms / 1000" | bc)
+
+    perl -e "select(undef,undef,undef,$sec)"
+}
+
+function h2d() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Convert hexadecimal to decimal number.
+
+    PARAMETERS:
+        \$1 hexadecimal number
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -ne 1 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local hex=$1
+
+    hex=$(upper $hex)
+    local dec=$(echo "ibase=16; $hex" | bc)
+    echo $dec
+}
+
+function d2h() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Convert decimal to hexadecimal number.
+
+    PARAMETERS:
+        \$1 decimal number
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -ne 1 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local dec=$1
+
+    local hex=$(echo "ibase=10; obase=16; $dec" | bc)
+    hex=$(lower $hex)
+    echo $hex
+}
+
+function random() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Return random string (A-Za-z0-9) with the given length.
+
+    PARAMETERS:
+        \$1 length
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -ne 1 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local len=$1
+
+    local str=
+    str=</dev/urandom tr -dc A-Za-z0-9 | (head -c $ > /dev/null 2>&1 || head -c $len)
+    echo $str
+}
+
+function trim() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Remove whitespaces from the beginning and the end of a string.
+
+    PARAMETERS:
+        \$1 string
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -ne 1 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local str="$1"
+
+    str=$(sed -e 's/^[[:space:]]*//' <<<"$str")
+    str=$(sed -e 's/[[:space:]]*$//' <<<"$str")
+    echo "$str"
+}
+
+function lower() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Convert string to lower case.
+
+    PARAMETERS:
+        \$1 string
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -ne 1 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local str="$1"
+
+    str=$(echo $str | tr '[:upper:]' '[:lower:]')
+    echo "$str"
+}
+
+function upper() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Convert string to upper case.
+
+    PARAMETERS:
+        \$1 string
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -ne 1 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local str="$1"
+
+    str=$(echo $str | tr '[:lower:]' '[:upper:]')
+    echo "$str"
+}
+
+function str_sanitise() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Sanitise string to meet certain criteria.
+
+    PARAMETERS:
+        \$1 string
+        \$2 character to be used as a replacement
+        --allowed-characters <characters>
+        --max-length <length>
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -lt 1 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local str=$1
+    local char=$2
+
+    # get optional parameters
+    local allowed_characters=
+    local max_length=255
+    if [ "$3" != "" ] && [ "$3" != "--allowed-characters" ]; then
+        len=$3
+    fi
+    while [ "$1" != "" ]; do
+        case $1 in
+            --allowed-characters)   shift; allowed_characters=$1
+                                    ;;
+            --max-length)           shift; max_length=$1
+                                    ;;
+        esac
+        shift
+    done
+
+    # remove unwanted characters
+    local sanitised=$(echo $str | sed "s/[^A-Za-z0-9$allowed_characters]/$char/g")
+    # remove multiple instances of the replacement character
+    sanitised=$(echo $sanitised | sed -r "s/($char)+/$char/g")
+    # limit the length
+    sanitised=$(echo $sanitised | cut -c1-${max_length})
+    # make it lower case
+    echo $sanitised | tr '[:upper:]' '[:lower:]'
+}
+
+function str_substring() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Return substring by removing its prefix and suffix.
+
+    PARAMETERS:
+        \$1 string
+        \$2 prefix
+        \$3 suffix
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -lt 3 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local str=$1
+    local pre=$2
+    local suf=$3
+
+    local str="${str#${str%${pre}*}${pre}}"
+    echo "${str%${suf}*}"
+}
+
+function str_contains() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Check if string contains another string.
+
+    PARAMETERS:
+        \$1 string
+        \$2 search string
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -ne 2 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local str=$1
+    local search=$2
+
+    local count=$(echo "$str" | grep "$search" | wc -l)
+    if [ $count -gt 0 ]; then
+        echo $result_pos
+    else
+        echo $result_neg
+    fi
+}
+
+function str_begins() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Check if string begins with another string.
+
+    PARAMETERS:
+        \$1 string
+        \$2 search string
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -ne 2 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local str=$1
+    local search=$2
+
+    local count=$(echo "$str" | grep "^$search" | wc -l)
+    if [ $count -eq 1 ]; then
+        echo $result_pos
+    else
+        echo $result_neg
+    fi
+}
+
+function str_ends() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Check if string ends with another string.
+
+    PARAMETERS:
+        \$1 string
+        \$2 search string
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -ne 2 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local str=$1
+    local search=$2
+
+    local count=$(echo "$str" | grep "$search$" | wc -l)
+    if [ $count -eq 1 ]; then
+        echo $result_pos
+    else
+        echo $result_neg
+    fi
+}
+
+function str_split_part() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Split string and return part given by the third argument.
+
+    PARAMETERS:
+        \$1 string
+        \$2 separator
+        \$3 part (index starts from 1)
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -ne 3 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local str=$1
+    local separator=$2
+    local part=$3
+
+    echo $(echo $str | awk '{ split($str,a,v1); print a[v2]; }' v1=$separator v2=$part)
+}
+
+function str_compare_ver() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Compare two version strings.
+
+    PARAMETERS:
+        \$1 version
+        \$2 version
+
+    RETURN: -1, 0 or 1 as the first argument is less than, equal to or greater than the second.
+HEREDOC
+)
+
+    if [[ $1 == $2 ]]; then
+        echo 0
+        return
+    fi
+
+    local ver1a=$(echo $1 | grep -oEi '[0-9\.]*' | head -1)
+    local ver1b=$(str_substring $1 $ver1a "")
+    local ver2a=$(echo $2 | grep -oEi '[0-9\.]*' | head -1)
+    local ver2b=$(str_substring $2 $ver2a "")
+
+    local IFS=.
+    local i ver1=($ver1a) ver2=($ver2a)
+
+    # test the 1st part
+    for ((i=${#ver1[@]}; i<${#ver2[@]}; i++)); do
+        ver1[i]=0
+    done
+    for ((i=0; i<${#ver1[@]}; i++)); do
+        if [[ -z ${ver2[i]} ]]; then
+            ver2[i]=0
+        fi
+        if ((10#${ver1[i]} > 10#${ver2[i]})); then
+            echo 1
+            return
+        fi
+        if ((10#${ver1[i]} < 10#${ver2[i]})); then
+            echo -1
+            return
+        fi
+    done
+
+    # test the 2nd part
+    if [ "$ver1b" \< "$ver2b" ]; then
+        echo -1
+        return
+    elif [ "$ver1b" \> "$ver2b" ]; then
+        echo 1
+        return
+    fi
+
+    echo 0
+}
+
+################################################################################
+## file routines
+##
+
+function file_escape_name() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Escape file name using the same way bash does it.
+
+    PARAMETERS:
+        \$1 string
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -lt 1 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local str=$1
+
+    echo $(printf '%q' "$str" | sed s/=/\\\\=/g)
+}
+
+function file_contains() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Check if file contains given string.
+
+    PARAMETERS:
+        \$1 string to search for (regular expression matching multiple lines)
+        \$2 file name
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -ne 2 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local str=$1
+    local file=$2
+
+    local count=$(cat $file | pcregrep -M "$str" | wc -l)
+    if [ $count -gt 0 ]; then
+        echo $result_pos
+    else
+        echo $result_neg
+    fi
+}
+
+function file_replace_str() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Replace string in given file.
+
+    PARAMETERS:
+        \$1 string to search for
+        \$2 new string
+        \$3 file name
+        -m|--multiline
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -lt 3 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local str1=$1
+    local str2=$2
+    local file=$3
+
+    # get optional parameters
+    local multiline="n"
+    while [ "$1" != "" ]; do
+        case $1 in
+            -m|--multiline) shift; multiline="y"
+                            ;;
+        esac
+        shift
+    done
+
+    local tmp_file=~/file_replace_str.$$
+    if [ $multiline == "y" ]; then
+        cat $file | perl -0777 -pe "s/$str1/$str2/igs" > $tmp_file
+    else
+        sed "s/$str1/$str2/g" $file > $tmp_file
+    fi
+    mv $tmp_file $file
+}
+
+function file_remove_str() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Remove string from given file.
+
+    PARAMETERS:
+        \$1 string to remove
+        \$2 file name
+        -m|--multiline
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -lt 2 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local str=$1
+    local file=$2
+
+    # get optional parameters
+    local multiline="n"
+    if [ "$3" == "-m" ] || [ "$3" == "--multiline" ]; then
+        multiline="y"
+    fi
+
+    local tmp_file=~/file_remove_str.$$
+    if [ $multiline == "y" ]; then
+        cat $file | perl -0777 -pe "s/$str//igs" > $tmp_file
+    else
+        str='1h;1!H;${;g;s/'
+        sed -n "$str$1//g;p;}" $file > $tmp_file
+    fi
+    mv $tmp_file $file
+}
+
+function file_download() {
+
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Download file from given URL address.
+
+    PARAMETERS:
+        --url <url>                         URL address of file to download (required).
+        --file <name>                       Name of output file.
+        --cache-dir <dir>                   Cache directory; file name in that directory
+                                            must match the file name given as the parameter.
+        --donwload-directory <directory>    Destination directory where file
+                                            should be placed after download.
+        --size <size>                       Check file size after download.
+        --hash <hash>                       Check file hash after download.
+        --hash-algorithm <algorithm>        Hash algorithm used to check file.
+        --do-not-cache                      Do not cache file locally.
+        --force                             Force to download from given URL address not
+                                            using cached file or an alternative location.
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -lt 4 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # variables
+    local url=
+    local file=
+    local cache_dir=$mintleaf_tmp_dir
+    local download_dir=./
+    local expected_size=0
+    local expected_hash=
+    local hash_algorithm="md5"
+    local do_not_cache=$result_neg
+    local force=$result_neg
+    local current_dir=$(pwd)
+
+    # get parameters
+    while [ "$1" != "" ]; do
+        case $1 in
+            --url)                  shift; url=$1
+                                    ;;
+            --file)                 shift; file=$1
+                                    ;;
+            --cache-dir)            shift; cache_dir=$1
+                                    ;;
+            --download-directory)   shift; download_dir=$1
+                                    ;;
+            --size)                 shift; expected_size=$1
+                                    ;;
+            --hash)                 shift; expected_hash=$1
+                                    ;;
+            --hash-algorithm)       shift; hash_algorithm=$1
+                                    ;;
+            --do-not-cache)         do_not_cache=$result_pos
+                                    ;;
+            --force)                force=$result_pos
+                                    ;;
+        esac
+        shift
+    done
+
+    # file may have already been downloaded
+    if [ $force == $result_neg ] && [ -s $cache_dir/$file ] && [ ! -s $download_dir/$file ]; then
+
+        cp -f $cache_dir/$file $download_dir
+
+    else
+
+        # download from local network
+        # TODO
+
+        # download from custom location
+        # TODO
+
+        # download from given url address
+        if ([ -n $url ] && ([ ! -s $cache_dir/$file ] || [ $force == $result_pos ])); then
+            # try to download
+            wget --tries=1 --connect-timeout=10 $url -O $file
+            # cache file
+            if [ -s $file ]; then
+                mv -f $file $cache_dir
+            fi
+        fi
+
+        # copy file to the download directory
+        if [ -s $cache_dir/$file ] && [ $cache_dir != $download_dir ]; then
+            cp -f $cache_dir/$file $download_dir
+        fi
+
+        # do not cache
+        if [ $do_not_cache == $result_pos ]; then
+            rm -f $cache_dir/$file
+        fi
+
+    fi
+
+    # check file size
+    if [ $expected_size -ne 0 ] && [ -s $download_dir/$file ]; then
+        local size=$(ls -l $download_dir/$file | awk '{ print $5 }')
+        if [ $expected_size -gt $size ]; then
+            rm -f $download_dir/$file
+        fi
+    fi
+
+    # return value
+    if [ -s $download_dir/$file ]; then
+        # check file hash
+        if [ -n "$expected_hash" ]; then
+            file_valid_hash $download_dir/$file $expected_hash $hash_algorithm
+        else
+            echo $result_pos
+        fi
+    else
+        echo $result_neg
+    fi
+
+    cd $current_dir
+}
+
+function file_valid_hash() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Validate hash sum of given file.
+
+    PARAMETERS:
+        \$1 file name
+        \$2 hash sum
+        \$3 algorithm (optional) md5,sha1,sha256,sha384,sha512 (default md5)
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -lt 2 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local file=$1
+    local hash=$2
+    local algorithm=$3
+
+    [ -z "$algorithm" ] && algorithm="md5"
+    local current_hash=$(${algorithm}sum $file | awk '{ print $1 }')
+
+    if [ "$(lower $hash)" == "$(lower $current_hash)" ]; then
+        echo $result_pos
+    else
+        echo $result_neg
+    fi
+}
+
+function dir_find_str() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Search directory for files that contain given string.
+
+    PARAMETERS:
+        \$1 string to search for
+        \$2 directory (optional)
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -lt 1 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local str=$1
+    local dir=$2
+
+    if [ "$dir" == "" ]; then
+        find . -iname "*" | xargs grep -iR "$str" | \
+            sort | uniq
+    else
+        find $dir -iname "*" | xargs grep -iR "$str" | \
+            sort | uniq
+    fi
+}
+
+function dir_replace_str() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Replace string in files in the given directory.
+
+    PARAMETERS:
+        \$1 string
+        \$2 new string
+        \$3 directory (optional)
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -lt 2 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local str1=$1
+    local str2=$2
+    local dir=$3
+    [ "$dir" == "" ] && dir=.
+
+    for file in $(find $dir -type f -name "*"); do
+        file_replace_str "$str1" "$str2" $file
+    done
+}
+
+function dir_remove_str() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Remove string in files in the given directory.
+
+    PARAMETERS:
+        \$1 string
+        \$2 directory (optional)
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -lt 1 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local str=$1
+    local dir=$2
+    [ "$dir" == "" ] && dir=.
+
+    for file in $(find $dir -type f -name "*"); do
+        file_remove_str $str $file
+    done
+}
+
+################################################################################
+## chroot routines
+##
+
+function chroot_dependency_list() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: List dependencies of an executable file.
+
+    PARAMETERS:
+        \$1 executable file
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -ne 1 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local bin=$1
+
+    (
+        local output=$(ldd $bin)
+        for line in $output; do
+            echo $line
+        done
+    ) 2> /dev/null | grep "^/" | sort | uniq
+}
+
+function chroot_dependency_list_all() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: List dependencies of an executable file recursively.
+
+    PARAMETERS:
+        \$1 executable file
+        --cur-depth <level> current depth of recursion (1 by default)
+        --max-depth <level> maximum depth of recursion (3 by default)
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -lt 1 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local bin=$1
+
+    # get optional parameters
+    local cur_depth=1
+    local max_depth=3
+    while [ "$1" != "" ]; do
+        case $1 in
+            --cur-depth)    shift; cur_depth=$1
+                            ;;
+            --max-depth)    shift; max_depth=$1
+                            ;;
+        esac
+        shift
+    done
+
+    (
+        local output=$(chroot_dependency_list $bin)
+        for file in $output; do
+            echo "$file"
+            if [ $cur_depth -lt $max_depth ]; then
+                chroot_dependency_list_all $file --cur-depth $(expr $cur_depth + 1) --max-depth $max_depth
+            fi
+        done
+    ) 2> /dev/null | grep "^/" | sort | uniq
+}
+
+function chroot_dependency_copy() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Copy dependencies of an executable file recursively to chroot directory.
+
+    PARAMETERS:
+        \$1 executable file
+        \$2 chroot directory
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -ne 2 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local bin=$1
+    local dir=$2
+
+    local output=$(chroot_dependency_list_all $bin)
+    for file in $output; do
+        echo "$file"
+        mkdir -p $dir/$(dirname $file)
+        cp $file $dir/$(dirname $file)
+    done
+}
+
+function chroot_mount_dir() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Mount directory in chroot environment.
+
+    PARAMETERS:
+        \$1 directory to mount
+        \$2 directory within chroot directory environment
+        --read-only
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -lt 2 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local dir=$1
+    local chdir=$2
+    local read_only="n"
+    while [ "$1" != "" ]; do
+        case $1 in
+            --read-only)    read_only="y"
+                            ;;
+        esac
+        shift
+    done
+
+    if [ -d $dir ]; then
+        if [ "$(mount -l | grep $chdir | wc -l)" -gt 0 ]; then
+            umount $chdir
+        fi
+        mkdir -p $chdir
+        mount --bind $dir $chdir
+        if [ $read_only == "y" ]; then
+            mount -o remount,ro $chdir 2> /dev/null
+        fi
+    fi
+}
+
+function chroot_create_env() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Create chroot environment.
+
+    PARAMETERS:
+        \$1 chroot directory
+        --user <user> user name to mount their home directory
+        --home-read-only whether user home directory should be mounted as read-only
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -lt 1 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local dir=$1
+
+    # get additional parameters
+    local user=
+    local home_read_only=
+    while [ "$1" != "" ]; do
+        case $1 in
+            --user)             shift; user=$1
+                                ;;
+            --home-read-only)   home_read_only="--read-only"
+                                ;;
+        esac
+        shift
+    done
+
+    [ ! -d $dir ] && mkdir $dir
+    mkdir -p $dir/{bin,dev/pts,etc,home,lib,lib64,proc,root,sbin,tmp,usr/bin,usr/include,usr/lib,usr/lib64,usr/sbin}
+
+    chmod 1777 $dir/tmp
+
+    # /bin
+    chroot_mount_dir /bin $dir/bin --read-only
+    # /dev/pts
+    chroot_mount_dir /dev/pts $dir/dev/pts
+    # /etc
+    chroot_mount_dir /etc $dir/etc --read-only
+    # /lib
+    chroot_mount_dir /lib $dir/lib --read-only
+    # /lib64
+    chroot_mount_dir /lib64 $dir/lib64 --read-only
+    # /proc
+    chroot_mount_dir /proc $dir/proc
+    # /sbin
+    chroot_mount_dir /sbin $dir/sbin --read-only
+    # /usr/bin
+    chroot_mount_dir /usr/bin $dir/usr/bin --read-only
+    # /usr/include
+    chroot_mount_dir /usr/include $dir/usr/include --read-only
+    # /usr/lib
+    chroot_mount_dir /usr/lib $dir/usr/lib --read-only
+    # /usr/lib64
+    chroot_mount_dir /usr/lib64 $dir/usr/lib64 --read-only
+    # /usr/sbin
+    chroot_mount_dir /usr/sbin $dir/usr/sbin --read-only
+
+    rm -f $dir/dev/null
+    mknod -m 666 $dir/dev/null c 1 3
+    rm -f $dir/dev/zero
+    mknod -m 666 $dir/dev/zero c 1 5
+    rm -f $dir/dev/random
+    mknod -m 444 $dir/dev/random c 1 8
+    rm -f $dir/dev/urandom
+    mknod -m 444 $dir/dev/urandom c 1 9
+
+    # user home directory
+    if [ -n "$user" ]; then
+        local home_dir=/home/$user
+        if [ "$user" == "root" ]; then
+            home_dir=/root
+        fi
+        if [ -d $home_dir ]; then
+            chroot_mount_dir $home_dir ${dir}${home_dir} $home_read_only
+        fi
+    fi
+}
+
+function chroot_remove_env() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Remove chroot environment.
+
+    PARAMETERS:
+        \$1 chroot directory
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -ne 1 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local dir=$1
+
+    rm -f $dir/dev/null
+    rm -f $dir/dev/zero
+    rm -f $dir/dev/random
+    rm -f $dir/dev/urandom
+
+    for path in $(mount -l | grep $dir | awk '{ print $3 }'); do
+        umount $path
+    done
+
+    rm -rf $dir/tmp/*
+}
+
+function is_chroot() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Indicates if current environment is a chroot environment.
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    if [ $(stat -c %i /) != 2 ]; then
+        echo $result_pos
+    else
+        echo $result_neg
+    fi
+}
+
+################################################################################
+## user routines
+##
+
+function user_exists() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Check if user exists.
+
+    PARAMETERS:
+        \$1 user
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -ne 1 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local user=$1
+
+    if [ $(grep "^$1:" /etc/passwd | wc -l) == "1" ]; then
+        echo $result_pos
+    else
+        echo $result_neg
+    fi
+}
+
+function group_exists() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Check if group exists.
+
+    PARAMETERS:
+        \$1 group
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -ne 1 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local group=$1
+
+    if [ $(grep "^$group:" /etc/group | wc -l) == "1" ]; then
+        echo $result_pos
+    else
+        echo $result_neg
+    fi
+}
+
+function user_create() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Create a new system user.
+
+    PARAMETERS:
+        \$1 user
+        \$2 group
+        --uid <user id>
+        --gid <group id>
+        --groups <list of groups>
+        --home <home directory>
+        --shell <shell>
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -lt 2 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local user=$1
+    local group=$2
+
+    # get optional parameters
+    local uid="-K UID_MIN=${uid_min} -K UID_MAX=${uid_max}"
+    local gid="-K GID_MIN=${gid_min} -K GID_MAX=${gid_max}"
+    local groups=
+    local home="-d /dev/null"
+    local shell="-s /usr/sbin/nologin"
+    while [ "$1" != "" ]; do
+        case $1 in
+            --uid)      shift; uid="-u ${1}"
+                        ;;
+            --gid)      shift; gid="-g ${1}"
+                        ;;
+            --groups)   shift; groups="-G ${1}"
+                        ;;
+            --home)     shift; home="-d ${1}"
+                        ;;
+            --shell)    shift; shell="-s ${1}"
+                        ;;
+        esac
+        shift
+    done
+
+    groupadd $group $gid
+    useradd $user $uid -g $group $groups $home $shell
+}
+
+function user_delete() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Delete an existing system user.
+
+    PARAMETERS:
+        \$1 user
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -ne 1 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local user=$1
+
+    userdel -f $user > /dev/null 2>&1
+}
+
+################################################################################
+## security routines
+##
+
+function security_gen_cert() {
+
+    # define help
+    local help=$(cat <<HEREDOC
+
+    DESCRIPTION: Generates X.509 certificate.
+
+    PARAMETERS:
+        \$1 certificate name
+        --size <size> size of certificate (default is 2048)
+        --days <days> for how many days certificate remains valid (default is 3650)
+        --dir <dirctory> output dirctory
+HEREDOC
+)
+
+    # check parameters
+    if [ "$1" == "--help" ] || [ $# -lt 1 ]; then
+        echo -e "${help}\n"
+        return
+    fi
+
+    # get parameters
+    local name=$1
+    local size=2048
+    local days=3650
+    local dir=.
+    while [ "$1" != "" ]; do
+        case $1 in
+            --size) shift; size=$1
+                    ;;
+            --days) shift; days=$1
+                    ;;
+            --dir)  shift; dir=$1
+                    ;;
+        esac
+        shift
+    done
+
+    $cmd_openssl req \
+        -new -x509 -nodes -sha1 -newkey rsa:$size -days $days -subj "/O=unknown/OU=unknown/CN=$name" \
+        -keyout $dir/$name.key \
+        -out $dir/$name.crt
+    cat $dir/$name.crt $dir/$name.key > $dir/$name.pem
+    chmod 400 $dir/$name.{crt,key,pem}
+}
