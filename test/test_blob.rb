@@ -374,7 +374,7 @@ class TestBlob < Test::Unit::TestCase
 
     # NuGet Packages
     assert blob("packages/Modernizr.2.0.6/Content/Scripts/modernizr-2.0.6-development-only.js").vendored?
-    
+
     # Html5shiv
     assert blob("Scripts/html5shiv.js").vendored?
     assert blob("Scripts/html5shiv.min.js").vendored?
@@ -399,6 +399,11 @@ class TestBlob < Test::Unit::TestCase
     assert blob("subproject/gradlew").vendored?
     assert blob("subproject/gradlew.bat").vendored?
     assert blob("subproject/gradle/wrapper/gradle-wrapper.properties").vendored?
+
+    # Octicons
+    assert blob("octicons.css").vendored?
+    assert blob("public/octicons.min.css").vendored?
+    assert blob("public/octicons/sprockets-octicons.scss").vendored?
   end
 
   def test_language
