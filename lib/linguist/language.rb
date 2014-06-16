@@ -94,7 +94,7 @@ module Linguist
     #
     # Returns Language or nil.
     def self.detect(blob)
-      name = blob.name
+      name = blob.name.to_s
 
       # A bit of an elegant hack. If the file is executable but extensionless,
       # append a "magic" extension so it can be classified with other
