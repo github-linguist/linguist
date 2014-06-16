@@ -1,4 +1,6 @@
 require 'linguist/file_blob'
+require 'linguist/lazy_blob'
+require 'rugged'
 
 module Linguist
   # A Repository is an abstraction of a Grit::Repo or a basic file
@@ -7,29 +9,15 @@ module Linguist
   # Its primary purpose is for gathering language statistics across
   # the entire project.
   class Repository
-    # Public: Initialize a new Repository from a File directory
-    #
-    # base_path - A path String
-    #
-    # Returns a Repository
-    def self.from_directory(base_path)
-      new Dir["#{base_path}/**/*"].
-        select { |f| File.file?(f) }.
-        map { |path| FileBlob.new(path, base_path) }
-    end
+    attr_reader :repository
 
     # Public: Initialize a new Repository
     #
-    # enum - Enumerator that responds to `each` and
-    #        yields Blob objects
-    #
     # Returns a Repository
-    def initialize(enum)
-      @enum = enum
-      @computed_stats = false
-      @language = @size = nil
-      @sizes = Hash.new { 0 }
-      @file_breakdown = Hash.new { |h,k| h[k] = Array.new }
+    def initialize(repo, sha1, existing_stats = nil)
+      @repository = repo
+      @current_sha1 = sha1
+      @old_sha1, @old_stats = existing_stats if existing_stats
     end
 
     # Public: Returns a breakdown of language stats.
@@ -41,66 +29,90 @@ module Linguist
     #
     # Returns a Hash of Language keys and Integer size values.
     def languages
-      compute_stats
-      @sizes
+      @sizes ||= begin
+        sizes = Hash.new { 0 }
+        file_map.each do |_, (language, size)|
+          sizes[language] += size
+        end
+        sizes
+      end
     end
 
     # Public: Get primary Language of repository.
     #
     # Returns a Language
     def language
-      compute_stats
-      @language
+      @language ||= begin
+        primary = languages.max_by { |(_, size)| size }
+        primary && primary[0]
+      end
     end
 
     # Public: Get the total size of the repository.
     #
     # Returns a byte size Integer
     def size
-      compute_stats
-      @size
+      @size ||= languages.inject(0) { |s,(_,v)| s + v }
     end
 
     # Public: Return the language breakdown of this repository by file
     def breakdown_by_file
-      compute_stats
-      @file_breakdown
+      @file_breakdown ||= begin
+        breakdown = Hash.new { |h,k| h[k] = Array.new }
+        file_map.each do |filename, (language, _)|
+          breakdown[language.name] << filename
+        end
+        breakdown
+      end
+    end
+
+    def incremental_stats(old_sha1, new_sha1, file_map = nil)
+      file_map = file_map ? file_map.dup : {}
+      old_commit = old_sha1 && Rugged::Commit.lookup(repository, old_sha1)
+      new_commit = Rugged::Commit.lookup(repository, new_sha1)
+
+      diff = Rugged::Tree.diff(repository, old_commit, new_commit)
+
+      diff.each_delta do |delta|
+        old = delta.old_file[:path]
+        new = delta.new_file[:path]
+
+        file_map.delete(old)
+        next if delta.binary
+
+        if [:added, :modified].include? delta.status
+          blob = Linguist::LazyBlob.new(repository, delta.new_file[:oid], new, delta.new_file[:mode])
+
+          # Skip vendored or generated blobs
+          next if blob.vendored? || blob.generated? || blob.language.nil?
+
+          # Only include programming languages and acceptable markup languages
+          if blob.language.type == :programming || Language.detectable_markup.include?(blob.language.name)
+            file_map[new] = [blob.language.group, blob.size]
+          end
+        end
+      end
+
+      file_map
+    end
+
+    def load_stats(file)
+      @old_sha1, @old_stats = JSON.load(file)
+    end
+
+    def dump_stats(file)
+      JSON.dump([@current_sha1, file_map], file)
     end
 
     # Internal: Compute language breakdown for each blob in the Repository.
     #
     # Returns nothing
-    def compute_stats
-      return if @computed_stats
-
-      @enum.each do |blob|
-        # Skip files that are likely binary
-        next if blob.likely_binary?
-
-        # Skip vendored or generated blobs
-        next if blob.vendored? || blob.generated? || blob.language.nil?
-
-        # Only include programming languages and acceptable markup languages
-        if blob.language.type == :programming || Language.detectable_markup.include?(blob.language.name)
-
-          # Build up the per-file breakdown stats
-          @file_breakdown[blob.language.group.name] << blob.name
-
-          @sizes[blob.language.group] += blob.size
-        end
-      end
-
-      # Compute total size
-      @size = @sizes.inject(0) { |s,(_,v)| s + v }
-
-      # Get primary language
-      if primary = @sizes.max_by { |(_, size)| size }
-        @language = primary[0]
-      end
-
-      @computed_stats = true
-
-      nil
+    def file_map
+      @file_map ||= if @old_sha1 == @current_sha1
+                      @old_stats
+                    else
+                      incremental_stats(@old_sha1, @current_sha1, @old_stats)
+                    end
     end
   end
 end

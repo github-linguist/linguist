@@ -5,12 +5,9 @@ require 'test/unit'
 class TestRepository < Test::Unit::TestCase
   include Linguist
 
-  def repo(base_path)
-    Repository.from_directory(base_path)
-  end
-
   def linguist_repo
-    repo(File.expand_path("../..", __FILE__))
+    r = Rugged::Repository.new(File.expand_path("../../.git", __FILE__))
+    Linguist::Repository.new(r, '31921838cdc252536ec07668f73d4b64d8022750')
   end
 
   def test_linguist_language
@@ -29,9 +26,5 @@ class TestRepository < Test::Unit::TestCase
     assert linguist_repo.breakdown_by_file.has_key?("Ruby")
     assert linguist_repo.breakdown_by_file["Ruby"].include?("bin/linguist")
     assert linguist_repo.breakdown_by_file["Ruby"].include?("lib/linguist/language.rb")
-  end
-
-  def test_binary_override
-    assert_equal repo(File.expand_path("../../samples/Nimrod", __FILE__)).language, Language["Nimrod"]
   end
 end
