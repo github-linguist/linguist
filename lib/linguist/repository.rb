@@ -31,7 +31,7 @@ module Linguist
     def languages
       @sizes ||= begin
         sizes = Hash.new { 0 }
-        file_map.each do |_, (language, size)|
+        cache.each do |_, (language, size)|
           sizes[language] += size
         end
         sizes
@@ -59,15 +59,15 @@ module Linguist
     def breakdown_by_file
       @file_breakdown ||= begin
         breakdown = Hash.new { |h,k| h[k] = Array.new }
-        file_map.each do |filename, (language, _)|
-          breakdown[language.name] << filename
+        cache.each do |filename, (language, _)|
+          breakdown[language] << filename
         end
         breakdown
       end
     end
 
-    def incremental_stats(old_sha1, new_sha1, file_map = nil)
-      file_map = file_map ? file_map.dup : {}
+    def incremental_stats(old_sha1, new_sha1, cache = nil)
+      file_map = cache ? cache.dup : {}
       old_commit = old_sha1 && Rugged::Commit.lookup(repository, old_sha1)
       new_commit = Rugged::Commit.lookup(repository, new_sha1)
 
@@ -88,7 +88,7 @@ module Linguist
 
           # Only include programming languages and acceptable markup languages
           if blob.language.type == :programming || Language.detectable_markup.include?(blob.language.name)
-            file_map[new] = [blob.language.group, blob.size]
+            file_map[new] = [blob.language.group.name, blob.size]
           end
         end
       end
@@ -96,23 +96,14 @@ module Linguist
       file_map
     end
 
-    def load_stats(file)
-      @old_sha1, @old_stats = JSON.load(file)
-    end
-
-    def dump_stats(file)
-      JSON.dump([@current_sha1, file_map], file)
-    end
-
-    # Internal: Compute language breakdown for each blob in the Repository.
-    #
-    # Returns nothing
-    def file_map
-      @file_map ||= if @old_sha1 == @current_sha1
-                      @old_stats
-                    else
-                      incremental_stats(@old_sha1, @current_sha1, @old_stats)
-                    end
+    def cache
+      @cache ||= begin
+        if @old_sha1 == @current_sha1
+          @old_stats
+        else
+          incremental_stats(@old_sha1, @current_sha1, @old_stats)
+        end
+      end
     end
   end
 end
