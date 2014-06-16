@@ -34,9 +34,9 @@ module Linguist
 
     # Public: Read file permissions
     #
-    # Returns an Int like 0100644
+    # Returns a String like '0100644'
     def mode
-      File.stat(@path).mode
+      File.stat(@path).mode.to_s(8)
     end
 
     # Public: Read file contents.

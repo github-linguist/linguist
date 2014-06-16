@@ -99,7 +99,7 @@ module Linguist
       # A bit of an elegant hack. If the file is executable but extensionless,
       # append a "magic" extension so it can be classified with other
       # languages that have shebang scripts.
-      if File.extname(name).empty? && blob.mode && (blob.mode & 05) == 05
+      if File.extname(name).empty? && blob.mode && (blob.mode.to_i(8) & 05) == 05
         name += ".script!"
       end
 
