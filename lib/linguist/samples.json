@@ -358,6 +358,9 @@
     "Nimrod": [
       ".nim"
     ],
+    "Nix": [
+      ".nix"
+    ],
     "NSIS": [
       ".nsh",
       ".nsi"
@@ -747,8 +750,8 @@
       ".gemrc"
     ]
   },
-  "tokens_total": 636184,
-  "languages_total": 816,
+  "tokens_total": 636372,
+  "languages_total": 817,
   "tokens": {
     "ABAP": {
       "*/**": 1,
@@ -44758,6 +44761,72 @@
     "Nimrod": {
       "echo": 1
     },
+    "Nix": {
+      "{": 8,
+      "stdenv": 1,
+      "fetchurl": 2,
+      "fetchgit": 5,
+      "openssl": 2,
+      "zlib": 2,
+      "pcre": 2,
+      "libxml2": 2,
+      "libxslt": 2,
+      "expat": 2,
+      "rtmp": 4,
+      "false": 4,
+      "fullWebDAV": 3,
+      "syslog": 4,
+      "moreheaders": 3,
+      "...": 1,
+      "}": 8,
+      "let": 1,
+      "version": 2,
+      ";": 32,
+      "mainSrc": 2,
+      "url": 5,
+      "sha256": 5,
+      "-": 12,
+      "ext": 5,
+      "git": 2,
+      "//github.com/arut/nginx": 2,
+      "module.git": 3,
+      "rev": 4,
+      "dav": 2,
+      "https": 2,
+      "//github.com/yaoweibin/nginx_syslog_patch.git": 1,
+      "//github.com/agentzh/headers": 1,
+      "more": 1,
+      "nginx": 1,
+      "in": 1,
+      "stdenv.mkDerivation": 1,
+      "rec": 1,
+      "name": 1,
+      "src": 1,
+      "buildInputs": 1,
+      "[": 5,
+      "]": 5,
+      "+": 10,
+      "stdenv.lib.optional": 5,
+      "patches": 1,
+      "if": 1,
+      "then": 1,
+      "else": 1,
+      "configureFlags": 1,
+      "preConfigure": 1,
+      "export": 1,
+      "NIX_CFLAGS_COMPILE": 1,
+      "postInstall": 1,
+      "mv": 1,
+      "out/sbin": 1,
+      "out/bin": 1,
+      "meta": 1,
+      "description": 1,
+      "maintainers": 1,
+      "stdenv.lib.maintainers.raskin": 1,
+      "platforms": 1,
+      "stdenv.lib.platforms.all": 1,
+      "inherit": 1
+    },
     "NSIS": {
       ";": 39,
       "bigtest.nsi": 1,
@@ -68427,6 +68496,7 @@
     "NetLogo": 243,
     "Nginx": 179,
     "Nimrod": 1,
+    "Nix": 188,
     "NSIS": 725,
     "Nu": 116,
     "Objective-C": 26518,
@@ -68619,6 +68689,7 @@
     "NetLogo": 1,
     "Nginx": 1,
     "Nimrod": 1,
+    "Nix": 1,
     "NSIS": 2,
     "Nu": 2,
     "Objective-C": 19,
@@ -68706,5 +68777,5 @@
     "Zephir": 2,
     "Zimpl": 1
   },
-  "md5": "7403e3e21c597d10462391ab49bb9bf9"
+  "md5": "125a0720c61fe35eff545b8a03732d30"
 }
