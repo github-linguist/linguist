@@ -1,11 +1,11 @@
 require 'linguist/generated'
+require 'linguist/vendored'
 require 'linguist/language'
 
 require 'charlock_holmes'
 require 'escape_utils'
 require 'mime/types'
 require 'pygments'
-require 'yaml'
 
 module Linguist
   # DEPRECATED Avoid mixing into Blob classes. Prefer functional interfaces
@@ -224,19 +224,13 @@ module Linguist
       !large? && text?
     end
 
-    vendored_paths = YAML.load_file(File.expand_path("../vendor.yml", __FILE__))
-    VendoredRegexp = Regexp.new(vendored_paths.join('|'))
-
     # Public: Is the blob in a vendored directory?
     #
     # Vendored files are ignored by language statistics.
     #
-    # See "vendor.yml" for a list of vendored conventions that match
-    # this pattern.
-    #
     # Return true or false
     def vendored?
-      name =~ VendoredRegexp ? true : false
+      @_vendored ||= Vendored.vendored?(name, lambda { data })
     end
 
     # Public: Get each line of data

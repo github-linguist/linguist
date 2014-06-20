@@ -68,7 +68,7 @@ Checking other code into your git repo is a common practice. But this often infl
 Linguist::FileBlob.new("vendor/plugins/foo.rb").vendored? # => true
 ```
 
-See [Linguist::BlobHelper#vendored?](https://github.com/github/linguist/blob/master/lib/linguist/blob_helper.rb) and [lib/linguist/vendor.yml](https://github.com/github/linguist/blob/master/lib/linguist/vendor.yml).
+See [Linguist::Vendored](lib/linguist/vendored.rb), [lib/linguist/vendor.yml](lib/linguist/vendor.yml), and [lib/linguist/vendor_complex.yml](lib/linguist/vendor_complex.yml).
 
 #### Generated file detection
 
