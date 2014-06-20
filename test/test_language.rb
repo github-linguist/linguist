@@ -17,6 +17,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['C'], Language['OpenCL'].lexer
     assert_equal Lexer['C'], Language['XS'].lexer
     assert_equal Lexer['C++'], Language['C++'].lexer
+    assert_equal Lexer['ChaiScript'], Language['ChaiScript'].lexer
     assert_equal Lexer['Coldfusion HTML'], Language['ColdFusion'].lexer
     assert_equal Lexer['Coq'], Language['Coq'].lexer
     assert_equal Lexer['FSharp'], Language['F#'].lexer
@@ -71,6 +72,8 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['C'], Language.find_by_alias('c')
     assert_equal Language['C++'], Language.find_by_alias('c++')
     assert_equal Language['C++'], Language.find_by_alias('cpp')
+    assert_equal Language['ChaiScript'], Language.find_by_alias('Chai')
+    assert_equal Language['ChaiScript'], Language.find_by_alias('chai')
     assert_equal Language['CoffeeScript'], Language.find_by_alias('coffee')
     assert_equal Language['CoffeeScript'], Language.find_by_alias('coffee-script')
     assert_equal Language['ColdFusion'], Language.find_by_alias('cfm')
@@ -248,6 +251,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal [Language['ApacheConf']], Language.find_by_filename('.htaccess')
     assert_equal Language['Nginx'], Language.find_by_filename('nginx.conf').first
     assert_equal ['C', 'C++', 'Objective-C'], Language.find_by_filename('foo.h').map(&:name).sort
+    assert_equal [Language['ChaiScript']], Language.find_by_filename('foo.chai')
     assert_equal [], Language.find_by_filename('rb')
     assert_equal [], Language.find_by_filename('.rb')
     assert_equal [], Language.find_by_filename('.nkt')
@@ -278,7 +282,11 @@ class TestLanguage < Test::Unit::TestCase
       ['Python'] => ["#!/bin/python\n# foo\n# bar\n# baz",
                      "#!/usr/bin/python2.7\n\n\n\n",
                      "#!/usr/bin/python3\n\n\n\n"],
-      ["Common Lisp"] => ["#!/usr/bin/sbcl --script\n\n"]
+      ["Common Lisp"] => ["#!/usr/bin/sbcl --script\n\n"],
+      ['ChaiScript']  => ["#!/usr/bin/env chai\n",
+                          "#!/usr/local/bin/chai\n",
+                          "#!/usr/bin/chai\n"]
+
     }.each do |languages, bodies|
       bodies.each do |body|
         assert_equal([body, languages.map{|l| Language[l]}],
