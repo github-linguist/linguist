@@ -10,7 +10,7 @@
 ## Vendor Conventions ##
 
 # Caches
-- cache/
+- (^|/)cache/
 
 # Dependencies
 - ^[Dd]ependencies/
@@ -27,11 +27,18 @@
 # Node dependencies
 - node_modules/
 
+# Bower Components
+- bower_components/
+
 # Erlang bundles
 - ^rebar$
 
 # Bootstrap minified css and js
-- (^|/)bootstrap([^.]*)(\.min)\.(js|css)$
+- (^|/)bootstrap([^.]*)(\.min)?\.(js|css)$
+
+# Foundation css
+- foundation.min.css
+- foundation.css
 
 # Vendored dependencies
 - thirdparty/
@@ -39,6 +46,9 @@
 
 # Debian packaging
 - ^debian/
+
+# Haxelib projects often contain a neko bytecode file named run.n
+- run.n$
 
 ## Commonly Bundled JavaScript frameworks ##
 
@@ -55,6 +65,9 @@
 - (^|/)effects\.js$
 - (^|/)controls\.js$
 - (^|/)dragdrop\.js$
+
+# Typescript definition files
+- (.*?)\.d\.ts$
 
 # MooTools
 - (^|/)mootools([^.]*)\d+\.\d+.\d+([^.]*)\.js$
@@ -82,6 +95,19 @@
 - (^|/)shCore\.js$
 - (^|/)shLegacy\.js$
 
+# AngularJS
+- (^|/)angular([^.]*)(\.min)?\.js$
+
+# D3.js
+- (^|\/)d3(\.v\d+)?([^.]*)(\.min)?\.js$
+
+# React
+- (^|/)react(-[^.]*)?(\.min)?\.js$
+
+# Modernizr
+- (^|/)modernizr\-\d\.\d+(\.\d+)?(\.min)?\.js$
+- (^|/)modernizr\.custom\.\d+\.js$
+
 ## Python ##
 
 # django
@@ -101,10 +127,18 @@
 # Sparkle
 - (^|/)Sparkle/
 
+## Groovy ##
+
+# Gradle
+- (^|/)gradlew$
+- (^|/)gradlew\.bat$
+- (^|/)gradle/wrapper/
+
 ## .NET ##
 
 # Visual Studio IntelliSense
 - -vsdoc\.js$
+- \.intellisense\.js$
 
 # jQuery validation plugin (MS bundles this with asp.net mvc)
 - (^|/)jquery([^.]*)\.validate(\.unobtrusive)?(\.min)?\.js$
@@ -114,7 +148,7 @@
 - (^|/)[Mm]icrosoft([Mm]vc)?([Aa]jax|[Vv]alidation)(\.debug)?\.js$
 
 # NuGet
-- ^[Pp]ackages/
+- ^[Pp]ackages\/.+\.\d+\/
 
 # ExtJS
 - (^|/)extjs/.*?\.js$
@@ -134,12 +168,16 @@
 - (^|/)extjs/src/
 - (^|/)extjs/welcome/
 
+# Html5shiv
+- (^|/)html5shiv(\.min)?\.js$
+
 # Samples folders
 - ^[Ss]amples/
 
 # LICENSE, README, git config files
 - ^COPYING$
-- ^LICENSE$
+- LICENSE$
+- License$
 - gitattributes$
 - gitignore$
 - gitmodules$
@@ -158,3 +196,15 @@
 
 # .DS_Store's
 - .[Dd][Ss]_[Ss]tore$
+
+# Mercury --use-subdirs
+- Mercury/
+
+# R packages
+- ^vignettes/
+- ^inst/extdata/
+
+# Octicons
+- octicons.css
+- octicons.min.css
+- sprockets-octicons.scss
