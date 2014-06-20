@@ -282,7 +282,7 @@ class TestLanguage < Test::Unit::TestCase
       ['Python'] => ["#!/bin/python\n# foo\n# bar\n# baz",
                      "#!/usr/bin/python2.7\n\n\n\n",
                      "#!/usr/bin/python3\n\n\n\n"],
-      ["Common Lisp"] => ["#!/usr/bin/sbcl --script\n\n"]
+      ["Common Lisp"] => ["#!/usr/bin/sbcl --script\n\n"],
       ['ChaiScript']  => ["#!/usr/bin/env chai\n",
                           "#!/usr/local/bin/chai\n",
                           "#!/usr/bin/chai\n"]
