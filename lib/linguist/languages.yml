@@ -157,6 +157,7 @@ Assembly:
   - nasm
   extensions:
   - .asm
+  - .inc
 
 Augeas:
   type: programming
@@ -998,6 +999,13 @@ Ioke:
   extensions:
   - .ik
 
+Isabelle:
+  type: programming
+  lexer: Text only
+  color: "#fdcd00"
+  extensions:
+  - .thy
+
 J:
   type: programming
   lexer: Text only
@@ -1700,6 +1708,7 @@ Python:
   - .gyp
   - .lmi
   - .pyde
+  - .pyp
   - .pyt
   - .pyw
   - .wsgi
@@ -1905,6 +1914,13 @@ SQL:
   - .udf
   - .viw
 
+STON:
+  type: data
+  group: Smalltalk
+  lexer: JSON
+  extensions:
+  - .ston
+
 Sage:
   type: programming
   lexer: Python
@@ -1997,6 +2013,14 @@ Slash:
   extensions:
   - .sl
 
+Slim:
+  group: HTML
+  type: markup
+  lexer: Slim
+  color: "#ff8877"
+  extensions:
+  - .slim
+
 Smalltalk:
   type: programming
   color: "#596706"
@@ -2059,8 +2083,8 @@ SuperCollider:
 
 Swift:
   type: programming
+  lexer: Swift
   color: "#ffac45"
-  lexer: Text only
   extensions:
   - .swift
 
@@ -2275,6 +2299,7 @@ XML:
   - .launch
   - .mxml
   - .nproj
+  - .nuspec
   - .osm
   - .plist
   - .pluginspec
@@ -2345,6 +2370,17 @@ XSLT:
   extensions:
   - .xslt
   - .xsl
+
+Xojo:
+  type: programming
+  lexer: VB.net
+  extensions:
+  - .xojo_code
+  - .xojo_menu
+  - .xojo_report
+  - .xojo_script
+  - .xojo_toolbar
+  - .xojo_window
 
 Xtend:
   type: programming
