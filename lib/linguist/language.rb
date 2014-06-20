@@ -191,7 +191,7 @@ module Linguist
     # Returns all matching Languages or [] if none were found.
     def self.find_by_filename(filename)
       basename = File.basename(filename)
-      extname = FileBlob.new(filename).extension()
+      extname = FileBlob.new(filename).extension
       langs = @filename_index[basename] +
               @extension_index[extname]
       langs.compact.uniq
