@@ -999,6 +999,13 @@ Ioke:
   extensions:
   - .ik
 
+Isabelle:
+  type: programming
+  lexer: Text only
+  color: "#fdcd00"
+  extensions:
+  - .thy
+
 J:
   type: programming
   lexer: Text only
@@ -1286,6 +1293,8 @@ Mathematica:
   type: programming
   extensions:
   - .mathematica
+  - .m
+  - .nb
   lexer: Text only
 
 Matlab:
@@ -1704,6 +1713,7 @@ Python:
   - .gyp
   - .lmi
   - .pyde
+  - .pyp
   - .pyt
   - .pyw
   - .wsgi
@@ -2294,6 +2304,7 @@ XML:
   - .launch
   - .mxml
   - .nproj
+  - .nuspec
   - .osm
   - .plist
   - .pluginspec
@@ -2364,6 +2375,17 @@ XSLT:
   extensions:
   - .xslt
   - .xsl
+
+Xojo:
+  type: programming
+  lexer: VB.net
+  extensions:
+  - .xojo_code
+  - .xojo_menu
+  - .xojo_report
+  - .xojo_script
+  - .xojo_toolbar
+  - .xojo_window
 
 Xtend:
   type: programming
