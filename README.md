@@ -106,8 +106,50 @@ To update the `samples.json` after adding new files to [`samples/`](https://gith
 
     bundle exec rake samples
 
+### A note on language extensions
+
+Linguist has a number of methods available to it for identifying the language of a particular file. The initial lookup is based upon the extension of the file, possible file extensions are defined in an array called `extensions`. Take a look at this example for example for `Perl`:
+
+```
+Perl:
+  type: programming
+  ace_mode: perl
+  color: "#0298c3"
+  extensions:
+  - .pl
+  - .PL
+  - .perl
+  - .ph
+  - .plx
+  - .pm
+  - .pod
+  - .psgi
+  interpreters:
+  - perl
+```
+Any of the extensions defined are valid but the first in this array should be the most popular.
+
 ### Testing
 
 Sometimes getting the tests running can be too much work, especially if you don't have much Ruby experience. It's okay: be lazy and let our build bot [Travis](http://travis-ci.org/#!/github/linguist) run the tests for you. Just open a pull request and the bot will start cranking away.
 
 Here's our current build status, which is hopefully green: [![Build Status](https://secure.travis-ci.org/github/linguist.png?branch=master)](http://travis-ci.org/github/linguist)
+
+### Releasing
+
+If you are the current maintainer of this gem:
+
+ 0. Create a branch for the release: `git checkout -b cut-release-vxx.xx.xx`
+ 0. Make sure your local dependencies are up to date: `bundle install`
+ 0. Ensure that samples are updated: `bundle exec rake samples`
+ 0. Ensure that tests are green: `bundle exec rake test`
+ 0. Bump gem version in `lib/linguist/version.rb`.  For example, [like this](https://github.com/github/linguist/commit/8d2ea90a5ba3b2fe6e1508b7155aa4632eea2985).
+ 0. Make a PR to github/linguist.  For example, [#1238](https://github.com/github/linguist/pull/1238).
+ 0. Build a local gem: `gem build github-linguist.gemspec`
+ 0. Testing:
+   0. Bump the Gemfile and Gemfile.lock versions for an app which relies on this gem
+   0. Install the new gem locally
+   0. Test behavior locally, branch deploy, whatever needs to happen
+ 0. Merge github/linguist PR
+ 0. Tag and push: `git tag vx.xx.xx; git push --tags`
+ 0. Push to rubygems.org -- `gem push github-linguist-2.10.12.gem`

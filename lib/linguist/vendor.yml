@@ -10,7 +10,7 @@
 ## Vendor Conventions ##
 
 # Caches
-- cache/
+- (^|/)cache/
 
 # Dependencies
 - ^[Dd]ependencies/
@@ -98,6 +98,16 @@
 # AngularJS
 - (^|/)angular([^.]*)(\.min)?\.js$
 
+# D3.js
+- (^|\/)d3(\.v\d+)?([^.]*)(\.min)?\.js$
+
+# React
+- (^|/)react(-[^.]*)?(\.min)?\.js$
+
+# Modernizr
+- (^|/)modernizr\-\d\.\d+(\.\d+)?(\.min)?\.js$
+- (^|/)modernizr\.custom\.\d+\.js$
+
 ## Python ##
 
 # django
@@ -128,6 +138,7 @@
 
 # Visual Studio IntelliSense
 - -vsdoc\.js$
+- \.intellisense\.js$
 
 # jQuery validation plugin (MS bundles this with asp.net mvc)
 - (^|/)jquery([^.]*)\.validate(\.unobtrusive)?(\.min)?\.js$
@@ -137,7 +148,7 @@
 - (^|/)[Mm]icrosoft([Mm]vc)?([Aa]jax|[Vv]alidation)(\.debug)?\.js$
 
 # NuGet
-- ^[Pp]ackages/
+- ^[Pp]ackages\/.+\.\d+\/
 
 # ExtJS
 - (^|/)extjs/.*?\.js$
@@ -156,6 +167,9 @@
 - (^|/)extjs/resources/
 - (^|/)extjs/src/
 - (^|/)extjs/welcome/
+
+# Html5shiv
+- (^|/)html5shiv(\.min)?\.js$
 
 # Samples folders
 - ^[Ss]amples/
@@ -182,3 +196,15 @@
 
 # .DS_Store's
 - .[Dd][Ss]_[Ss]tore$
+
+# Mercury --use-subdirs
+- Mercury/
+
+# R packages
+- ^vignettes/
+- ^inst/extdata/
+
+# Octicons
+- octicons.css
+- octicons.min.css
+- sprockets-octicons.scss
