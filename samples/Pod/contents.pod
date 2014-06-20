@@ -1,0 +1,159 @@
+$Id: contents.pod,v 1.3 2003/05/04 04:05:14 tower Exp $
+
+=begin html
+
+<style = "text/css">
+code { font-family: sans-serif; font-weight:bold; }
+</style>
+
+=end html
+
+=head1 Net::Z3950::AsyncZ
+
+=head2 Intro
+
+Net::Z3950::AsyncZ adds an additional layer of asynchronous support for the Z3950 module through the use
+of multiple forked processes. I hope that users will also find that it provides a convenient
+front end to C<Net::Z3950>.  My initial idea was to write something that
+would provide a convenient means of processing and formatting Z39.50 records--which I
+did, using the C<Z3950> synchronous code.  But I also wanted something that could
+handle queries to large numbers of servers at one session. Working on this part of my
+project, I found that I had trouble with the C<Z3950> asynchronous features
+and so ended up with what I have here.
+
+=begin html
+
+I give a more detailed account in the <A href="AsyncZ.html#apologia"><B>DESCRIPTION</b></a>
+section of <code>AsyncZ.html</code>.
+
+=end html
+
+=pod
+
+I give a more detailed account in in the B<DESCRIPTION> section of C<AsyncZ.pod>.
+
+=cut
+
+=head2 Documentation
+
+=pod
+
+=over 4
+
+=item AsyncZ.pod
+
+This is the starting point--it gives an overview of the AsyncZ module,
+describes the basic mechanics of its asynchronous workings, and details
+the particulars of the objects and methods.  But see
+L</"Examples.pod> for detailed explanations of the sample
+scripts which come with the C<Net::Z3950::AsyncZ> distribution.
+
+=item Options.pod
+
+This document details the various options that can be set to modify
+the behavior of AsyncZ Index
+
+=item Report.pod
+
+Report.pod deals with how records are treated line by line
+and how you can affect the apearance of a record's line by line output
+
+=item Examples.pod
+
+This document goes through the sample scripts that come with the
+C<Net::Z3950::AsyncZ> distribution and annotates them
+in a line-by-line fashion.  It's a basic HOW-TO.
+
+=back
+
+=cut
+
+=begin html
+
+<UL>
+<LI>
+ <A href="AsyncZ.html">AsyncZ.html</a>
+    	<br>This is the starting point--it gives an overview of the AsyncZ module,
+describes the basic mechanics of its asynchronous workings, and details
+the particulars of the objects and methods.  But see
+<a href="#examples">Examples</a> for detailed explanations of the sample
+scripts which come with the <code>Net::Z3950::AsyncZ</code> distribution.
+
+<LI>
+ <A href="Options.html">Options.html</a>
+	<br> This document details the various options that can be set to modify
+the behavior of <code>AsyncZ</code>
+
+<LI>
+ <A href="Report.html">Report.html</a>
+        <br><Code>Report.html</code> deals with how records are treated line by line
+and how you can affect the apearance of a record's line by line output
+
+<LI><A name = "examples"></a>
+ <A href="Examples.html">Examples.html</a>
+This document goes through the sample scripts that come with the
+<code>Net::Z3950::AsyncZ</code> distribution and annotates them
+in a line-by-line fashion.  It's a basic HOW-TO.
+
+</UL>
+
+=end html
+
+=head2 The Modules
+
+=pod
+
+There are more modules than there is documentation. The reason for this
+is that the only module you have full and complete access to is
+C<Net::Z3950::AsyncZ>.  The other modules are either internal to C<Net::AsyncZ>
+or accessed indirectly or in part indirectly.
+
+=cut
+
+=for html
+There are more modules than there is documentation. The reason for this
+is that the only module you have full and complete access to is
+<code>Net::Z3950::AsyncZ</code>.  The other modules are either internal to <code>Net::AsyncZ</code>
+or accessed indirectly or in part indirectly.
+
+=head3  Here are the modules:
+
+=over 4
+
+=item Net::Z3950::AsyncZ
+
+The main module: direct access --documented in
+C<AsyncZ> and C<Options> documentation
+
+=item Net::Z3950::AsyncZ::ErrMsg
+
+User error message handling: indirect access  -- documented in
+C<AsyncZ> documentation
+
+=item Net::Z3950::AsyncZ::Errors
+
+Error handling for debugging: limited access -- documented in
+C<AsyncZ> documentation
+
+=item Net::Z3950::AsyncZ::Report
+
+Module reponsible for fetching and formatting records: limited access -- documented
+
+=item Net::Z3950::AsyncZ::ZLoop
+
+Event loop for child processes: no access -- not documented
+
+=item Net::Z3950::AsyncZ::ZSend
+
+Connection details for child processes: no access -- not documented
+
+=item Net::Z3950::AsyncZ::Options::_params
+
+Options for child processes: direct and indirect access -- documented
+in C<Options> and C<AsyncZ> documentation
+
+=back
+
+=head1 INDEX
+
+
