@@ -103,7 +103,7 @@ module Linguist
       # A bit of an elegant hack. If the file is executable but extensionless,
       # append a "magic" extension so it can be classified with other
       # languages that have shebang scripts.
-      extension = FileBlob.new(name).extension()
+      extension = FileBlob.new(name).extension
       if extension.empty? && mode && (mode.to_i(8) & 05) == 05
         name += ".script!"
       end
@@ -185,7 +185,7 @@ module Linguist
     # Returns all matching Languages or [] if none were found.
     def self.find_by_filename(filename)
       basename = File.basename(filename)
-      extname = FileBlob.new(filename).extension()
+      extname = FileBlob.new(filename).extension
       langs = @filename_index[basename] +
               @extension_index[extname]
       langs.compact.uniq
