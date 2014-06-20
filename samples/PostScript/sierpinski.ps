@@ -1,0 +1,41 @@
+%!PS-Adobe-3.0
+%%Creator: Aaron Puchert
+%%Title: The Sierpinski triangle
+%%Pages: 1
+%%PageOrder: Ascend
+
+%%BeginProlog
+% PAGE SETTINGS
+/pageset {
+  28.3464566 28.3464566 scale    % set cm = 1
+  0.5 0.5 translate
+  0 setlinewidth
+} def
+
+% sierpinski(n) draws a sierpinski triangle of order n
+/sierpinski {
+dup 0 gt {
+  [0.5 0 0 0.5 0 0] concat dup 1 sub sierpinski
+  [1 0 0 1 1 0] concat dup 1 sub sierpinski
+  [1 0 0 1 -1 1] concat dup 1 sub sierpinski
+  [2 0 0 2 0 -1] concat
+} {
+  newpath
+    0 0 moveto
+    1 0 lineto
+    0 1 lineto
+  closepath
+  fill
+} ifelse pop} def
+%%EndProlog
+
+%%BeginSetup
+<< /PageSize [596 843] >> setpagedevice  % A4
+%%EndSetup
+
+%%Page: Test 1
+pageset
+[20 0 10 300 sqrt 0 0] concat
+9 sierpinski
+showpage
+%%EOF
