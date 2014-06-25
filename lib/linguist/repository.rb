@@ -14,10 +14,10 @@ module Linguist
     # Public: Initialize a new Repository
     #
     # Returns a Repository
-    def initialize(repo, sha1, existing_stats = nil)
+    def initialize(repo, commit_oid, existing_stats = nil)
       @repository = repo
-      @current_sha1 = sha1
-      @old_sha1, @old_stats = existing_stats if existing_stats
+      @commit_oid = commit_oid
+      @old_commit_oid, @old_stats = existing_stats if existing_stats
     end
 
     # Public: Returns a breakdown of language stats.
@@ -66,12 +66,12 @@ module Linguist
       end
     end
 
-    def incremental_stats(old_sha1, new_sha1, cache = nil)
+    def compute_stats(old_commit_oid, commit_oid, cache = nil)
       file_map = cache ? cache.dup : {}
-      old_commit = old_sha1 && Rugged::Commit.lookup(repository, old_sha1)
-      new_commit = Rugged::Commit.lookup(repository, new_sha1)
+      old_tree = old_commit_oid && Rugged::Commit.lookup(repository, old_commit_oid).tree
+      new_tree = Rugged::Commit.lookup(repository, commit_oid).tree
 
-      diff = Rugged::Tree.diff(repository, old_commit, new_commit)
+      diff = Rugged::Tree.diff(repository, old_tree, new_tree)
 
       diff.each_delta do |delta|
         old = delta.old_file[:path]
@@ -99,10 +99,10 @@ module Linguist
 
     def cache
       @cache ||= begin
-        if @old_sha1 == @current_sha1
+        if @old_commit_oid == @commit_oid
           @old_stats
         else
-          incremental_stats(@old_sha1, @current_sha1, @old_stats)
+          compute_stats(@old_commit_oid, @commit_oid, @old_stats)
         end
       end
     end

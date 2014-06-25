@@ -3,19 +3,24 @@ require 'linguist/repository'
 require 'test/unit'
 
 class TestRepository < Test::Unit::TestCase
-  include Linguist
+  def rugged_repository
+    @rugged ||= Rugged::Repository.new(File.expand_path("../../.git", __FILE__))
+  end
 
-  def linguist_repo
-    r = Rugged::Repository.new(File.expand_path("../../.git", __FILE__))
-    Linguist::Repository.new(r, '31921838cdc252536ec07668f73d4b64d8022750')
+  def master_oid
+    @master_oid ||= Rugged::Object.rev_parse_oid(rugged_repository, 'master')
+  end
+
+  def linguist_repo(oid = master_oid)
+    Linguist::Repository.new(rugged_repository, oid)
   end
 
   def test_linguist_language
-    # assert_equal Language['Ruby'], linguist_repo.language
+    assert_equal 'Ruby', linguist_repo.language
   end
 
   def test_linguist_languages
-    # assert linguist_repo.languages[Language['Ruby']] > 10_000
+    assert linguist_repo.languages['Ruby'] > 10_000
   end
 
   def test_linguist_size
@@ -26,5 +31,21 @@ class TestRepository < Test::Unit::TestCase
     assert linguist_repo.breakdown_by_file.has_key?("Ruby")
     assert linguist_repo.breakdown_by_file["Ruby"].include?("bin/linguist")
     assert linguist_repo.breakdown_by_file["Ruby"].include?("lib/linguist/language.rb")
+  end
+
+  def test_incremental_stats
+    old_commit = Rugged::Object.rev_parse_oid(rugged_repository, 'v2.0.0')
+    old_repo = linguist_repo(old_commit)
+
+    assert old_repo.languages['Ruby'] > 10_000
+    assert old_repo.size > 30_000
+
+    old_cache = [old_commit, old_repo.cache]
+    new_repo = Linguist::Repository.new(rugged_repository, master_oid, old_cache)
+
+    assert new_repo.languages['Ruby'] > old_repo.languages['Ruby']
+    assert new_repo.size > old_repo.size
+
+    assert_equal linguist_repo.cache, new_repo.cache
   end
 end
