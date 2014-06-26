@@ -1,3 +1,3 @@
 module Linguist
-  VERSION = "2.13.0.github4"
+  VERSION = "3.0.0b0"
 end
