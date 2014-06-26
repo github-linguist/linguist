@@ -92,6 +92,9 @@ module Linguist
 
     # Public: Detects the Language of the blob.
     #
+    # blob - an object that implements the Linguist `Blob` interface;
+    #       see Linguist::LazyBlob and Linguist::FileBlob for examples
+    #
     # Returns Language or nil.
     def self.detect(blob)
       name = blob.name.to_s
