@@ -1,6 +1,7 @@
 require 'linguist/heuristics'
 require 'linguist/language'
 require 'linguist/samples'
+require 'linguist/file_blob'
 
 require 'test/unit'
 
@@ -34,6 +35,12 @@ class TestHeuristcs < Test::Unit::TestCase
     assert_equal Language["C++"], results.first
   end
 
+  def test_detect_still_works_if_nothing_matches
+    blob = Linguist::FileBlob.new(File.join(samples_path, "Objective-C/hello.m"))
+    match = Language.detect(blob)
+    assert_equal Language["Objective-C"], match
+  end
+  
   def test_pl_prolog_by_heuristics
     languages = ["Perl", "Prolog"]
     results = Heuristics.disambiguate_pl(fixture("Prolog/turing.pl"), languages)
