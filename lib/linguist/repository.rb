@@ -1,4 +1,3 @@
-require 'linguist/file_blob'
 require 'linguist/lazy_blob'
 require 'rugged'
 
@@ -11,23 +10,53 @@ module Linguist
   class Repository
     attr_reader :repository
 
-    # Public: Initialize a new Repository
+    # Public: Create a new Repository based on the stats of
+    # an existing one
+    def self.incremental(repo, commit_oid, old_commit_oid, old_stats)
+      repo = self.new(repo, commit_oid)
+      repo.load_existing_stats(old_commit_oid, old_stats)
+      repo
+    end
+
+    # Public: Initialize a new Repository to be analyzed for language
+    # data
+    #
+    # repo - a Rugged::Repository object
+    # commit_oid - the sha1 of the commit that will be analyzed;
+    #              this is usually the master branch
     #
     # Returns a Repository
-    def initialize(repo, commit_oid, existing_stats = nil)
+    def initialize(repo, commit_oid)
       @repository = repo
       @commit_oid = commit_oid
-      @old_commit_oid, @old_stats = existing_stats if existing_stats
+    end
+
+    # Public: Load the results of a previous analysis on this repository
+    # to speed up the new scan.
+    #
+    # The new analysis will be performed incrementally as to only take
+    # into account the file changes since the last time the repository
+    # was scanned
+    #
+    # old_commit_oid - the sha1 of the commit that was previously analyzed
+    # old_stats - the result of the previous analysis, obtained by calling
+    #             Repository#cache on the old repository
+    #
+    # Returns nothing
+    def load_existing_stats(old_commit_oid, old_stats)
+      @old_commit_oid = old_commit_oid
+      @old_stats = old_stats
+      nil
     end
 
     # Public: Returns a breakdown of language stats.
     #
     # Examples
     #
-    #   # => { Language['Ruby'] => 46319,
-    #          Language['JavaScript'] => 258 }
+    #   # => { 'Ruby' => 46319,
+    #          'JavaScript' => 258 }
     #
-    # Returns a Hash of Language keys and Integer size values.
+    # Returns a Hash of language names and Integer size values.
     def languages
       @sizes ||= begin
         sizes = Hash.new { 0 }
@@ -40,7 +69,7 @@ module Linguist
 
     # Public: Get primary Language of repository.
     #
-    # Returns a Language
+    # Returns a language name
     def language
       @language ||= begin
         primary = languages.max_by { |(_, size)| size }
@@ -56,6 +85,8 @@ module Linguist
     end
 
     # Public: Return the language breakdown of this repository by file
+    #
+    # Returns a map of language names => [filenames...]
     def breakdown_by_file
       @file_breakdown ||= begin
         breakdown = Hash.new { |h,k| h[k] = Array.new }
@@ -66,6 +97,23 @@ module Linguist
       end
     end
 
+    # Public: Return the cached results of the analysis
+    #
+    # This is a per-file breakdown that can be passed to other instances
+    # of Linguist::Repository to perform incremental scans
+    #
+    # Returns a map of filename => [language, size]
+    def cache
+      @cache ||= begin
+        if @old_commit_oid == @commit_oid
+          @old_stats
+        else
+          compute_stats(@old_commit_oid, @commit_oid, @old_stats)
+        end
+      end
+    end
+
+    protected
     def compute_stats(old_commit_oid, commit_oid, cache = nil)
       file_map = cache ? cache.dup : {}
       old_tree = old_commit_oid && Rugged::Commit.lookup(repository, old_commit_oid).tree
@@ -95,16 +143,6 @@ module Linguist
       end
 
       file_map
-    end
-
-    def cache
-      @cache ||= begin
-        if @old_commit_oid == @commit_oid
-          @old_stats
-        else
-          compute_stats(@old_commit_oid, @commit_oid, @old_stats)
-        end
-      end
     end
   end
 end

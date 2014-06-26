@@ -40,8 +40,7 @@ class TestRepository < Test::Unit::TestCase
     assert old_repo.languages['Ruby'] > 10_000
     assert old_repo.size > 30_000
 
-    old_cache = [old_commit, old_repo.cache]
-    new_repo = Linguist::Repository.new(rugged_repository, master_oid, old_cache)
+    new_repo = Linguist::Repository.incremental(rugged_repository, master_oid, old_commit, old_repo.cache)
 
     assert new_repo.languages['Ruby'] > old_repo.languages['Ruby']
     assert new_repo.size > old_repo.size
