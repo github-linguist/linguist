@@ -10,6 +10,7 @@ class TestLanguage < Test::Unit::TestCase
 
   def test_lexer
     assert_equal Lexer['ActionScript 3'], Language['ActionScript'].lexer
+    assert_equal Lexer['AspectJ'], Language['AspectJ'].lexer
     assert_equal Lexer['Bash'], Language['Gentoo Ebuild'].lexer
     assert_equal Lexer['Bash'], Language['Gentoo Eclass'].lexer
     assert_equal Lexer['Bash'], Language['Shell'].lexer
@@ -213,7 +214,7 @@ class TestLanguage < Test::Unit::TestCase
   def test_searchable
     assert Language['Ruby'].searchable?
     assert !Language['Gettext Catalog'].searchable?
-    assert !Language['SQL'].searchable?
+    assert Language['SQL'].searchable?
   end
 
   def test_find_by_name
@@ -322,7 +323,7 @@ class TestLanguage < Test::Unit::TestCase
   def test_color
     assert_equal '#701516', Language['Ruby'].color
     assert_equal '#3581ba', Language['Python'].color
-    assert_equal '#f15501', Language['JavaScript'].color
+    assert_equal '#f1e05a', Language['JavaScript'].color
     assert_equal '#31859c', Language['TypeScript'].color
   end
 
@@ -383,6 +384,15 @@ class TestLanguage < Test::Unit::TestCase
   def test_colorize
     assert_equal <<-HTML.chomp, Language['Ruby'].colorize("def foo\n  'foo'\nend\n")
 <div class="highlight"><pre><span class="k">def</span> <span class="nf">foo</span>
+  <span class="s1">&#39;foo&#39;</span>
+<span class="k">end</span>
+</pre></div>
+    HTML
+  end
+
+  def test_colorize_with_options
+    assert_equal <<-HTML.chomp, Language['Ruby'].colorize("def foo\n  'foo'\nend\n", :options => { :cssclass => "highlight highlight-ruby" })
+<div class="highlight highlight-ruby"><pre><span class="k">def</span> <span class="nf">foo</span>
   <span class="s1">&#39;foo&#39;</span>
 <span class="k">end</span>
 </pre></div>
