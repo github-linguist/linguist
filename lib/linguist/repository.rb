@@ -29,6 +29,8 @@ module Linguist
     def initialize(repo, commit_oid)
       @repository = repo
       @commit_oid = commit_oid
+
+      raise TypeError, 'commit_oid must be a commit SHA1' unless commit_oid.is_a?(String)
     end
 
     # Public: Load the results of a previous analysis on this repository
