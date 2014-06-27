@@ -131,8 +131,11 @@ module Linguist
         next if delta.binary
 
         if [:added, :modified].include? delta.status
-          mode = delta.new_file[:mode].to_s(8)
-          blob = Linguist::LazyBlob.new(repository, delta.new_file[:oid], new, mode)
+          # Skip submodules
+          mode = delta.new_file[:mode]
+          next if (mode & 040000) != 0
+
+          blob = Linguist::LazyBlob.new(repository, delta.new_file[:oid], new, mode.to_s(8))
 
           # Skip vendored or generated blobs
           next if blob.vendored? || blob.generated? || blob.language.nil?
