@@ -8,7 +8,7 @@ class TestRepository < Test::Unit::TestCase
   end
 
   def master_oid
-    @master_oid ||= Rugged::Object.rev_parse_oid(rugged_repository, 'master')
+    'd40b4a33deba710e2f494db357c654fbe5d4b419'
   end
 
   def linguist_repo(oid = master_oid)
@@ -34,7 +34,7 @@ class TestRepository < Test::Unit::TestCase
   end
 
   def test_incremental_stats
-    old_commit = Rugged::Object.rev_parse_oid(rugged_repository, 'v2.0.0')
+    old_commit = '3d7364877d6794f6cc2a86b493e893968a597332'
     old_repo = linguist_repo(old_commit)
 
     assert old_repo.languages['Ruby'] > 10_000
