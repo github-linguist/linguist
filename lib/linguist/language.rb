@@ -92,18 +92,17 @@ module Linguist
 
     # Public: Detects the Language of the blob.
     #
-    # name - String filename
-    # data - String blob data. A block also maybe passed in for lazy
-    #        loading. This behavior is deprecated and you should always
-    #        pass in a String.
-    # mode - Optional String mode (defaults to nil)
+    # blob - an object that implements the Linguist `Blob` interface;
+    #       see Linguist::LazyBlob and Linguist::FileBlob for examples
     #
     # Returns Language or nil.
-    def self.detect(name, data, mode = nil)
+    def self.detect(blob)
+      name = blob.name.to_s
+
       # A bit of an elegant hack. If the file is executable but extensionless,
       # append a "magic" extension so it can be classified with other
       # languages that have shebang scripts.
-      if File.extname(name).empty? && mode && (mode.to_i(8) & 05) == 05
+      if File.extname(name).empty? && blob.mode && (blob.mode.to_i(8) & 05) == 05
         name += ".script!"
       end
 
@@ -114,7 +113,7 @@ module Linguist
       # extension at all, in the case of extensionless scripts), we need to continue
       # our detection work
       if possible_languages.length > 1
-        data = data.call() if data.respond_to?(:call)
+        data = blob.data
         possible_language_names = possible_languages.map(&:name)
 
         # Don't bother with emptiness

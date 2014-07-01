@@ -1,4 +1,5 @@
-require 'linguist/file_blob'
+require 'linguist/lazy_blob'
+require 'rugged'
 
 module Linguist
   # A Repository is an abstraction of a Grit::Repo or a basic file
@@ -7,100 +8,146 @@ module Linguist
   # Its primary purpose is for gathering language statistics across
   # the entire project.
   class Repository
-    # Public: Initialize a new Repository from a File directory
-    #
-    # base_path - A path String
-    #
-    # Returns a Repository
-    def self.from_directory(base_path)
-      new Dir["#{base_path}/**/*"].
-        select { |f| File.file?(f) }.
-        map { |path| FileBlob.new(path, base_path) }
+    attr_reader :repository
+
+    # Public: Create a new Repository based on the stats of
+    # an existing one
+    def self.incremental(repo, commit_oid, old_commit_oid, old_stats)
+      repo = self.new(repo, commit_oid)
+      repo.load_existing_stats(old_commit_oid, old_stats)
+      repo
     end
 
-    # Public: Initialize a new Repository
+    # Public: Initialize a new Repository to be analyzed for language
+    # data
     #
-    # enum - Enumerator that responds to `each` and
-    #        yields Blob objects
+    # repo - a Rugged::Repository object
+    # commit_oid - the sha1 of the commit that will be analyzed;
+    #              this is usually the master branch
     #
     # Returns a Repository
-    def initialize(enum)
-      @enum = enum
-      @computed_stats = false
-      @language = @size = nil
-      @sizes = Hash.new { 0 }
-      @file_breakdown = Hash.new { |h,k| h[k] = Array.new }
+    def initialize(repo, commit_oid)
+      @repository = repo
+      @commit_oid = commit_oid
+
+      raise TypeError, 'commit_oid must be a commit SHA1' unless commit_oid.is_a?(String)
+    end
+
+    # Public: Load the results of a previous analysis on this repository
+    # to speed up the new scan.
+    #
+    # The new analysis will be performed incrementally as to only take
+    # into account the file changes since the last time the repository
+    # was scanned
+    #
+    # old_commit_oid - the sha1 of the commit that was previously analyzed
+    # old_stats - the result of the previous analysis, obtained by calling
+    #             Repository#cache on the old repository
+    #
+    # Returns nothing
+    def load_existing_stats(old_commit_oid, old_stats)
+      @old_commit_oid = old_commit_oid
+      @old_stats = old_stats
+      nil
     end
 
     # Public: Returns a breakdown of language stats.
     #
     # Examples
     #
-    #   # => { Language['Ruby'] => 46319,
-    #          Language['JavaScript'] => 258 }
+    #   # => { 'Ruby' => 46319,
+    #          'JavaScript' => 258 }
     #
-    # Returns a Hash of Language keys and Integer size values.
+    # Returns a Hash of language names and Integer size values.
     def languages
-      compute_stats
-      @sizes
+      @sizes ||= begin
+        sizes = Hash.new { 0 }
+        cache.each do |_, (language, size)|
+          sizes[language] += size
+        end
+        sizes
+      end
     end
 
     # Public: Get primary Language of repository.
     #
-    # Returns a Language
+    # Returns a language name
     def language
-      compute_stats
-      @language
+      @language ||= begin
+        primary = languages.max_by { |(_, size)| size }
+        primary && primary[0]
+      end
     end
 
     # Public: Get the total size of the repository.
     #
     # Returns a byte size Integer
     def size
-      compute_stats
-      @size
+      @size ||= languages.inject(0) { |s,(_,v)| s + v }
     end
 
     # Public: Return the language breakdown of this repository by file
+    #
+    # Returns a map of language names => [filenames...]
     def breakdown_by_file
-      compute_stats
-      @file_breakdown
+      @file_breakdown ||= begin
+        breakdown = Hash.new { |h,k| h[k] = Array.new }
+        cache.each do |filename, (language, _)|
+          breakdown[language] << filename
+        end
+        breakdown
+      end
     end
 
-    # Internal: Compute language breakdown for each blob in the Repository.
+    # Public: Return the cached results of the analysis
     #
-    # Returns nothing
-    def compute_stats
-      return if @computed_stats
+    # This is a per-file breakdown that can be passed to other instances
+    # of Linguist::Repository to perform incremental scans
+    #
+    # Returns a map of filename => [language, size]
+    def cache
+      @cache ||= begin
+        if @old_commit_oid == @commit_oid
+          @old_stats
+        else
+          compute_stats(@old_commit_oid, @commit_oid, @old_stats)
+        end
+      end
+    end
 
-      @enum.each do |blob|
-        # Skip files that are likely binary
-        next if blob.likely_binary?
+    protected
+    def compute_stats(old_commit_oid, commit_oid, cache = nil)
+      file_map = cache ? cache.dup : {}
+      old_tree = old_commit_oid && Rugged::Commit.lookup(repository, old_commit_oid).tree
+      new_tree = Rugged::Commit.lookup(repository, commit_oid).tree
 
-        # Skip vendored or generated blobs
-        next if blob.vendored? || blob.generated? || blob.language.nil?
+      diff = Rugged::Tree.diff(repository, old_tree, new_tree)
 
-        # Only include programming languages and acceptable markup languages
-        if blob.language.type == :programming || Language.detectable_markup.include?(blob.language.name)
+      diff.each_delta do |delta|
+        old = delta.old_file[:path]
+        new = delta.new_file[:path]
 
-          # Build up the per-file breakdown stats
-          @file_breakdown[blob.language.group.name] << blob.name
+        file_map.delete(old)
+        next if delta.binary
 
-          @sizes[blob.language.group] += blob.size
+        if [:added, :modified].include? delta.status
+          # Skip submodules
+          mode = delta.new_file[:mode]
+          next if (mode & 040000) != 0
+
+          blob = Linguist::LazyBlob.new(repository, delta.new_file[:oid], new, mode.to_s(8))
+
+          # Skip vendored or generated blobs
+          next if blob.vendored? || blob.generated? || blob.language.nil?
+
+          # Only include programming languages and acceptable markup languages
+          if blob.language.type == :programming || Language.detectable_markup.include?(blob.language.name)
+            file_map[new] = [blob.language.group.name, blob.size]
+          end
         end
       end
 
-      # Compute total size
-      @size = @sizes.inject(0) { |s,(_,v)| s + v }
-
-      # Get primary language
-      if primary = @sizes.max_by { |(_, size)| size }
-        @language = primary[0]
-      end
-
-      @computed_stats = true
-
-      nil
+      file_map
     end
   end
 end

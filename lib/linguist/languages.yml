@@ -89,7 +89,7 @@ Agda:
 
 Alloy:
   type: programming  # 'modeling' would be more appropiate
-  lexer: Text only
+  lexer: Alloy
   color: "#cc5c24"
   extensions:
   - .als
@@ -222,6 +222,8 @@ BlitzBasic:
   - .decls
 
 BlitzMax:
+  type: programming
+  color: "#cd6400"
   extensions:
   - .bmx
 
@@ -1544,6 +1546,8 @@ PHP:
   - .phpt
   filenames:
   - Phakefile
+  interpreters:
+  - php
 
 Pan:
   type: programming
