@@ -28,7 +28,7 @@ module Linguist
     #
     # Returns nothing.
     def self.each(&block)
-      Dir.entries(ROOT).each do |category|
+      Dir.entries(ROOT).sort!.each do |category|
         next if category == '.' || category == '..'
 
         # Skip text and binary for now

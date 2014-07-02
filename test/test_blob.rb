@@ -277,6 +277,10 @@ class TestBlob < Test::Unit::TestCase
 
     # 'thirdparty' directory
     assert blob("thirdparty/lib/main.c").vendored?
+    
+    # 'extern(al)' directory
+    assert blob("extern/util/__init__.py").vendored?
+    assert blob("external/jquery.min.js").vendored?
 
     # C deps
     assert blob("deps/http_parser/http_parser.c").vendored?
