@@ -3,6 +3,9 @@
 # linguist — detect language type for a file, or, given a directory, determine language breakdown
 #     usage: linguist <path> [<--breakdown>]
 
+lib = File.expand_path('../../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+
 require 'linguist/file_blob'
 require 'linguist/repository'
 require 'rugged'
