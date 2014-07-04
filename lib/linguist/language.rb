@@ -92,12 +92,19 @@ module Linguist
 
     # Public: Detects the Language of the blob.
     #
-    # blob - an object that implements the Linguist `Blob` interface;
+    # blob - an object that includes the Linguist `BlobHelper` interface;
     #       see Linguist::LazyBlob and Linguist::FileBlob for examples
     #
     # Returns Language or nil.
     def self.detect(blob)
       name = blob.name.to_s
+
+      # Check if the blob is possibly binary and bail early; this is a cheap
+      # test that uses the extension name to guess a binary binary mime type.
+      #
+      # We'll perform a more comprehensive test later which actually involves
+      # looking for binary characters in the blob
+      return nil if blob.likely_binary?
 
       # A bit of an elegant hack. If the file is executable but extensionless,
       # append a "magic" extension so it can be classified with other
@@ -116,8 +123,8 @@ module Linguist
         data = blob.data
         possible_language_names = possible_languages.map(&:name)
 
-        # Don't bother with emptiness
-        if data.nil? || data == ""
+        # Don't bother with binary contents or an empty file
+        if blob.binary? || data.nil? || data == ""
           nil
         # Check if there's a shebang line and use that as authoritative
         elsif (result = find_by_shebang(data)) && !result.empty?
