@@ -363,6 +363,9 @@ class TestBlob < Test::Unit::TestCase
 
     # NuGet Packages
     assert blob("packages/Modernizr.2.0.6/Content/Scripts/modernizr-2.0.6-development-only.js").vendored?
+    
+    # Cocoapods
+    assert blob('Pods/blah').vendored?
 
     # Test fixtures
     assert blob("test/fixtures/random.rkt").vendored?
