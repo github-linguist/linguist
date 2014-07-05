@@ -89,7 +89,7 @@ Agda:
 
 Alloy:
   type: programming  # 'modeling' would be more appropiate
-  lexer: Text only
+  lexer: Alloy
   color: "#cc5c24"
   extensions:
   - .als
@@ -221,6 +221,8 @@ BlitzBasic:
   - .decls
 
 BlitzMax:
+  type: programming
+  color: "#cd6400"
   extensions:
   - .bmx
 
@@ -293,6 +295,7 @@ C++:
   - .inl
   - .tcc
   - .tpp
+  - .ipp
 
 C-ObjDump:
   type: data
@@ -429,6 +432,14 @@ Common Lisp:
   - clisp
   - ecl
 
+Component Pascal:
+  type: programming
+  lexer: Delphi
+  color: "#b0ce4e"
+  extensions:
+  - .cp
+  - .cps
+
 Coq:
   type: programming
   extensions:
@@ -518,15 +529,6 @@ Dart:
   color: "#98BAD6"
   extensions:
   - .dart
-
-DCPU-16 ASM:
-  type: programming
-  lexer: dasm16
-  extensions:
-  - .dasm16
-  - .dasm
-  aliases:
-  - dasm16
 
 Diff:
   extensions:
@@ -705,6 +707,12 @@ Game Maker Language:
   extensions:
   - .gml
 
+GAMS:
+  type: programming
+  lexer: Text only
+  extensions:
+  - .gms
+
 GAP:
   type: programming
   lexer: Text only
@@ -728,12 +736,14 @@ GLSL:
   - .glsl
   - .fp
   - .frag
+  - .frg
   - .fshader
   - .geom
   - .glslv
   - .gshader
   - .shader
   - .vert
+  - .vrx
   - .vshader
 
 Genshi:
@@ -791,6 +801,12 @@ Gosu:
   extensions:
   - .gs
 
+Grace:
+  type: programming
+  lexer: Text only
+  extensions:
+  - .grace
+
 Grammatical Framework:
   type: programming
   lexer: Haskell
@@ -819,6 +835,9 @@ Groovy:
   color: "#e69f56"
   extensions:
   - .groovy
+  - .grt
+  - .gtpl
+  - .gvy
   interpreters:
   - groovy
 
@@ -907,7 +926,7 @@ Haskell:
 Haxe:
   type: programming
   ace_mode: haxe
-  color: "#346d51"
+  color: "#f7941e"
   extensions:
   - .hx
   - .hxsl
@@ -922,7 +941,7 @@ Hy:
 
 IDL:
   type: programming
-  lexer: Text only
+  lexer: IDL
   color: "#e3592c"
   extensions:
   - .pro
@@ -941,7 +960,7 @@ Inno Setup:
 
 Idris:
   type: programming
-  lexer: Text only
+  lexer: Idris
   extensions:
   - .idr
   - .lidr
@@ -979,6 +998,13 @@ Ioke:
   color: "#078193"
   extensions:
   - .ik
+
+Isabelle:
+  type: programming
+  lexer: Text only
+  color: "#fdcd00"
+  extensions:
+  - .thy
 
 J:
   type: programming
@@ -1059,6 +1085,7 @@ JavaScript:
   - ._js
   - .bones
   - .es6
+  - .frag
   - .jake
   - .jsfl
   - .jsm
@@ -1068,6 +1095,8 @@ JavaScript:
   - .pac
   - .sjs
   - .ssjs
+  - .xsjs
+  - .xsjslib
   filenames:
   - Jakefile
   interpreters:
@@ -1250,6 +1279,7 @@ Markdown:
   - .md
   - .markdown
   - .mkd
+  - .mkdn
   - .mkdown
   - .ron
 
@@ -1265,6 +1295,8 @@ Mathematica:
   type: programming
   extensions:
   - .mathematica
+  - .m
+  - .nb
   lexer: Text only
 
 Matlab:
@@ -1372,6 +1404,19 @@ Nimrod:
   - .nim
   - .nimrod
 
+Nit:
+  type: programming
+  lexer: Text only
+  color: "#0d8921"
+  extensions:
+  - .nit
+
+Nix:
+  type: programming
+  lexer: Nix
+  extensions:
+  - .nix
+
 Nu:
   type: programming
   lexer: Scheme
@@ -1471,6 +1516,14 @@ Org:
   extensions:
   - .org
 
+Ox:
+  type: programming
+  lexer: Text only
+  extensions:
+  - .ox
+  - .oxh
+  - .oxo
+
 Oxygene:
   type: programming
   lexer: Text only
@@ -1499,6 +1552,15 @@ PHP:
   - .phpt
   filenames:
   - Phakefile
+  interpreters:
+  - php
+
+Pan:
+  type: programming
+  lexer: Text only
+  color: '#cc0000'
+  extensions:
+  - .pan
 
 Parrot:
   type: programming
@@ -1566,7 +1628,7 @@ Perl6:
 Pike:
   type: programming
   color: "#066ab2"
-  lexer: C
+  lexer: Pike
   extensions:
   - .pike
   - .pmod
@@ -1663,6 +1725,7 @@ Python:
   - .gyp
   - .lmi
   - .pyde
+  - .pyp
   - .pyt
   - .pyw
   - .wsgi
@@ -1688,6 +1751,12 @@ QML:
   extensions:
   - .qml
 
+QMake:
+  lexer: Text only
+  extensions:
+  - .pro
+  - .pri
+
 R:
   type: programming
   color: "#198ce7"
@@ -1698,6 +1767,8 @@ R:
   extensions:
   - .r
   - .R
+  - .Rd
+  - .rd
   - .rsx
   filenames:
   - .Rprofile
@@ -1779,7 +1850,7 @@ Red:
   extensions:
   - .red
   - .reds
-  
+
 Redcode:
   extensions:
   - .cw
@@ -1825,13 +1896,17 @@ Ruby:
   interpreters:
   - ruby
   filenames:
+  - .pryrc
   - Appraisals
   - Berksfile
   - Buildfile
   - Gemfile
   - Gemfile.lock
   - Guardfile
+  - Jarfile
+  - Mavenfile
   - Podfile
+  - Puppetfile
   - Thorfile
   - Vagrantfile
   - buildfile
@@ -1842,6 +1917,13 @@ Rust:
   extensions:
   - .rs
 
+SAS:
+  type: programming
+  color: "#1E90FF"
+  lexer: Text only
+  extensions:
+  - .sas
+
 SCSS:
   type: markup
   group: CSS
@@ -1850,7 +1932,7 @@ SCSS:
   - .scss
 
 SQL:
-  type: programming
+  type: data
   ace_mode: sql
   extensions:
   - .sql
@@ -1858,6 +1940,13 @@ SQL:
   - .tab
   - .udf
   - .viw
+
+STON:
+  type: data
+  group: Smalltalk
+  lexer: JSON
+  extensions:
+  - .ston
 
 Sage:
   type: programming
@@ -1951,6 +2040,14 @@ Slash:
   extensions:
   - .sl
 
+Slim:
+  group: HTML
+  type: markup
+  lexer: Slim
+  color: "#ff8877"
+  extensions:
+  - .slim
+
 Smalltalk:
   type: programming
   color: "#596706"
@@ -1981,8 +2078,9 @@ Standard ML:
   aliases:
   - sml
   extensions:
-  - .sml
+  - .ML
   - .fun
+  - .sml
 
 Stata:
   type: programming
@@ -2009,6 +2107,13 @@ SuperCollider:
   lexer: Text only
   extensions:
   - .scd
+
+Swift:
+  type: programming
+  lexer: Swift
+  color: "#ffac45"
+  extensions:
+  - .swift
 
 SystemVerilog:
   type: programming
@@ -2118,6 +2223,14 @@ UnrealScript:
   extensions:
   - .uc
 
+VCL:
+  type: programming
+  lexer: Perl
+  ace_mode: perl
+  color: "#0298c3"
+  extensions:
+  - .vcl
+
 VHDL:
   type: programming
   lexer: vhdl
@@ -2199,15 +2312,21 @@ XML:
   - .ccxml
   - .clixml
   - .cproject
+  - .csproj
+  - .ct
   - .dita
   - .ditamap
   - .ditaval
+  - .filters
+  - .fsproj
   - .glade
   - .grxml
   - .jelly
   - .kml
   - .launch
   - .mxml
+  - .nproj
+  - .nuspec
   - .osm
   - .plist
   - .pluginspec
@@ -2219,6 +2338,7 @@ XML:
   - .scxml
   - .srdf
   - .svg
+  - .targets
   - .tmCommand
   - .tmLanguage
   - .tmPreferences
@@ -2227,6 +2347,8 @@ XML:
   - .tml
   - .ui
   - .urdf
+  - .vbproj
+  - .vcxproj
   - .vxml
   - .wsdl
   - .wxi
@@ -2276,6 +2398,17 @@ XSLT:
   - .xslt
   - .xsl
 
+Xojo:
+  type: programming
+  lexer: VB.net
+  extensions:
+  - .xojo_code
+  - .xojo_menu
+  - .xojo_report
+  - .xojo_script
+  - .xojo_toolbar
+  - .xojo_window
+
 Xtend:
   type: programming
   extensions:
@@ -2297,6 +2430,14 @@ Zephir:
   color: "#118f9e"
   extensions:
   - .zep
+
+Zimpl:
+  type: programming
+  lexer: Text only
+  extensions:
+  - .zimpl
+  - .zmpl
+  - .zpl
 
 eC:
   type: programming
@@ -2328,6 +2469,7 @@ mupad:
 nesC:
   type: programming
   color: "#ffce3b"
+  lexer: nesC
   extensions:
   - .nc
 
