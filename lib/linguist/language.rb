@@ -104,7 +104,7 @@ module Linguist
       #
       # We'll perform a more comprehensive test later which actually involves
       # looking for binary characters in the blob
-      return nil if blob.likely_binary?
+      return nil if blob.likely_binary? || blob.binary?
 
       # A bit of an elegant hack. If the file is executable but extensionless,
       # append a "magic" extension so it can be classified with other
