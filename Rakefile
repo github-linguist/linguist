@@ -37,11 +37,14 @@ namespace :benchmark do
     current_branch = `git rev-parse --abbrev-ref HEAD`.strip
 
     # Create tmp branch for reference commit
+    puts "Creating branch tmp_#{reference}"
     git.branch("tmp_#{reference}").checkout
     git.reset_hard(reference)
 
     # RUN BENCHMARK
 
+    # Create tmp branch for compare commit
+    puts "Creating branch tmp_#{compare}"
     git.branch("tmp_#{compare}").checkout
     git.reset_hard(compare)
 
