@@ -78,6 +78,8 @@ namespace :benchmark do
 
   desc "Build benchmark index"
   task :index, [:commit] do |t, args|
+    require 'shellwords'
+
     results = Hash.new
     languages = Dir.glob('samples/*')
 
@@ -87,8 +89,9 @@ namespace :benchmark do
       results[lang] = {}
       files = Dir.glob("#{lang}/*")
       files.each do |file|
+        next unless File.file?(file)
         puts "  #{file}"
-        result = IO::popen("bundle exec linguist #{file} --simple").read
+        result = IO::popen("bundle exec linguist #{Shellwords.escape(file)} --simple").read
         filename = File.basename(file)
         if result.chomp.empty? # No results
           results[lang][filename] = "No language"
