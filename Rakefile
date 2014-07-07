@@ -79,7 +79,7 @@ namespace :benchmark do
   desc "Build benchmark index"
   task :index, [:commit] do |t, args|
     results = Hash.new
-    languages = Dir.glob('benchmark/samples/*')
+    languages = Dir.glob('samples/*')
 
     languages.each do |lang|
       puts ""
