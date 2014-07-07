@@ -81,7 +81,7 @@ namespace :benchmark do
     require 'shellwords'
 
     results = Hash.new
-    languages = Dir.glob('samples/*')
+    languages = Dir.glob('benchmark/samples/*')
 
     languages.each do |lang|
       puts ""
