@@ -124,7 +124,7 @@ module Linguist
         possible_language_names = possible_languages.map(&:name)
 
         # Don't bother with binary contents or an empty file
-        if blob.binary? || data.nil? || data == ""
+        if data.nil? || data == ""
           nil
         # Check if there's a shebang line and use that as authoritative
         elsif (result = find_by_shebang(data)) && !result.empty?
@@ -401,7 +401,7 @@ module Linguist
     #
     # Returns the extensions Array
     attr_reader :filenames
-    
+
     # Public: Return all possible extensions for language
     def all_extensions
       (extensions + [primary_extension]).uniq
