@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'pygments.rb',     '~> 0.6.0'
   s.add_dependency 'rugged',          '~> 0.21.0'
 
+  s.add_development_dependency 'git'
   s.add_development_dependency 'json'
   s.add_development_dependency 'mocha'
   s.add_development_dependency 'rake'
