@@ -17,6 +17,7 @@ end
 
 ARGV.shift
 breakdown = true if ARGV[0] == "--breakdown"
+simple = true if ARGV[0] == "--simple"
 
 if File.directory?(path)
   rugged = Rugged::Repository.new(path)
@@ -47,21 +48,25 @@ elsif File.file?(path)
     'Binary'
   end
 
-  puts "#{blob.name}: #{blob.loc} lines (#{blob.sloc} sloc)"
-  puts "  type:      #{type}"
-  puts "  mime type: #{blob.mime_type}"
-  puts "  language:  #{blob.language}"
+  if simple
+    puts blob.language
+  else
+    puts "#{blob.name}: #{blob.loc} lines (#{blob.sloc} sloc)"
+    puts "  type:      #{type}"
+    puts "  mime type: #{blob.mime_type}"
+    puts "  language:  #{blob.language}"
+    
+    if blob.large?
+      puts "  blob is too large to be shown"
+    end
 
-  if blob.large?
-    puts "  blob is too large to be shown"
-  end
+    if blob.generated?
+      puts "  appears to be generated source code"
+    end
 
-  if blob.generated?
-    puts "  appears to be generated source code"
-  end
-
-  if blob.vendored?
-    puts "  appears to be a vendored file"
+    if blob.vendored?
+      puts "  appears to be a vendored file"
+    end
   end
 else
   abort "usage: linguist <path>"
