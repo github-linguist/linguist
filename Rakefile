@@ -33,6 +33,7 @@ namespace :benchmark do
     puts "Unstaged changes" and return if git.status.changed.any?
 
     # Get the current branch
+    # Would like to get this from the Git gem
     current_branch = `git rev-parse --abbrev-ref HEAD`.strip
 
     # Create tmp branch for reference commit
