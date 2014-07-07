@@ -2,6 +2,7 @@ require 'json'
 require 'rake/clean'
 require 'rake/testtask'
 require 'yaml'
+require 'pry'
 
 task :default => :test
 
@@ -24,6 +25,8 @@ end
 
 namespace :benchmark do
   require 'git'
+  require 'linguist/language'
+
   git = Git.open('.')
 
   desc "Testin'"
@@ -42,6 +45,10 @@ namespace :benchmark do
     git.reset_hard(reference)
 
     # RUN BENCHMARK
+    # Go through benchmark/samples/LANG dirs
+    # For each Language
+
+    Rake::Task["benchmark:index"].execute(:commit => reference)
 
     # Create tmp branch for compare commit
     puts "Creating branch tmp_#{compare}"
@@ -49,6 +56,7 @@ namespace :benchmark do
     git.reset_hard(compare)
 
     # RUN BENCHMARK AGAIN
+    Rake::Task["benchmark:index"].execute(:commit => compare)
 
     git.branch(current_branch).checkout
 
@@ -56,6 +64,29 @@ namespace :benchmark do
     git.branch("tmp_#{reference}").delete
     git.branch("tmp_#{compare}").delete
 
+    # DO COMPARISON...
+  end
+
+  desc "Build benchmark index"
+  task :index, [:commit] do |t, args|
+    results = Hash.new
+    languages = Dir.glob('benchmark/samples/*')
+
+    languages.each do |lang|
+      results[lang] = {}
+      files = Dir.glob("#{lang}/*")
+      files.each do |file|
+        result = IO::popen("bundle exec linguist #{file} --simple").read
+        filename = File.basename(file)
+        if result.chomp.empty? # No results
+          results[lang][filename] = "No language"
+        else
+          results[lang][filename] = result.chomp
+        end
+      end
+    end
+
+    File.open("benchmark/results/#{args[:commit]}_output.json", "w") {|f| f.write(results.to_json) }
   end
 end
 
