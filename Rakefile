@@ -35,7 +35,7 @@ namespace :benchmark do
   task :run do
     reference, compare = ENV['compare'].split('...')
     puts "Comparing #{reference}...#{compare}"
-    abort("Unstaged changes") if git.status.changed.any?
+    abort("Unstaged changes - aborting") if git.status.changed.any?
 
     # Get the current branch
     # Would like to get this from the Git gem
@@ -80,11 +80,12 @@ namespace :benchmark do
     languages = Dir.glob('benchmark/samples/*')
 
     languages.each do |lang|
+      puts ""
       puts "Starting with #{lang}"
       results[lang] = {}
       files = Dir.glob("#{lang}/*")
       files.each do |file|
-        puts file
+        puts "  #{file}"
         result = IO::popen("bundle exec linguist #{file} --simple").read
         filename = File.basename(file)
         if result.chomp.empty? # No results
