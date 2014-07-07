@@ -53,7 +53,8 @@ namespace :benchmark do
     Rake::Task["benchmark:index"].execute(:commit => reference)
 
     # Create tmp branch for compare commit
-    puts "Creating branch tmp_#{compare}"
+    puts ""
+    puts "Creating temporary branch tmp_#{compare}"
     git.branch("tmp_#{compare}").checkout
     git.reset_hard(compare)
 
@@ -71,6 +72,7 @@ namespace :benchmark do
 
     compare_classifications = JSON.parse(File.read("benchmark/results/#{compare}_output.json"))
 
+    puts "Changes between #{reference}...#{compare}"
     puts reference_classifications.deep_diff(compare_classifications)
   end
 
