@@ -26,6 +26,8 @@ end
 namespace :benchmark do
   require 'git'
   require 'linguist/language'
+  require 'linguist/diff'
+  require 'json'
 
   git = Git.open('.')
 
@@ -65,6 +67,11 @@ namespace :benchmark do
     git.branch("tmp_#{compare}").delete
 
     # DO COMPARISON...
+    reference_classifications = JSON.parse(File.read("benchmark/results/#{reference}_output.json"))
+
+    compare_classifications = JSON.parse(File.read("benchmark/results/#{compare}_output.json"))
+
+    puts reference_classifications.deep_diff(compare_classifications)
   end
 
   desc "Build benchmark index"
@@ -73,9 +80,11 @@ namespace :benchmark do
     languages = Dir.glob('benchmark/samples/*')
 
     languages.each do |lang|
+      puts "Starting with #{lang}"
       results[lang] = {}
       files = Dir.glob("#{lang}/*")
       files.each do |file|
+        puts file
         result = IO::popen("bundle exec linguist #{file} --simple").read
         filename = File.basename(file)
         if result.chomp.empty? # No results
