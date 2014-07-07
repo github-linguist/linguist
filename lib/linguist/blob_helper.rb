@@ -313,7 +313,11 @@ module Linguist
     #
     # Returns a Language or nil if none is detected
     def language
-      @language ||= Language.detect(self)
+      if likely_binary? || binary?
+        @language = nil
+      else
+        @language ||= Language.detect(self)
+      end
     end
 
     # Internal: Get the lexer of the blob.
