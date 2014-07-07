@@ -29,8 +29,8 @@ namespace :benchmark do
   desc "Testin'"
   task :run do
     reference, compare = ENV['compare'].split('...')
-    puts "Comparing #{reference}...#{current}"
-    puts "Unstaged changes" and return if git.status.changed.any?
+    puts "Comparing #{reference}...#{compare}"
+    abort("Unstaged changes") if git.status.changed.any?
 
     # Get the current branch
     # Would like to get this from the Git gem
