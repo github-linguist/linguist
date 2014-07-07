@@ -22,6 +22,39 @@ task :build_gem do
   File.delete("lib/linguist/languages.json")
 end
 
+namespace :benchmark do
+  require 'git'
+  git = Git.open('.')
+
+  desc "Testin'"
+  task :run do
+    reference, compare = ENV['compare'].split('...')
+    puts "Comparing #{reference}...#{current}"
+    puts "Unstaged changes" and return if git.status.changed.any?
+
+    # Get the current branch
+    current_branch = `git rev-parse --abbrev-ref HEAD`.strip
+
+    # Create tmp branch for reference commit
+    git.branch("tmp_#{reference}").checkout
+    git.reset_hard(reference)
+
+    # RUN BENCHMARK
+
+    git.branch("tmp_#{compare}").checkout
+    git.reset_hard(compare)
+
+    # RUN BENCHMARK AGAIN
+
+    git.branch(current_branch).checkout
+
+    # CLEAN UP
+    git.branch("tmp_#{reference}").delete
+    git.branch("tmp_#{compare}").delete
+
+  end
+end
+
 namespace :classifier do
   LIMIT = 1_000
 
