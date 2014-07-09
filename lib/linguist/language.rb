@@ -110,7 +110,7 @@ module Linguist
       # append a "magic" extension so it can be classified with other
       # languages that have shebang scripts.
       extension = FileBlob.new(name).extension
-      if extension.empty? && mode && (mode.to_i(8) & 05) == 05
+      if extension.empty? && blob.mode && (blob.mode.to_i(8) & 05) == 05
         name += ".script!"
       end
 
