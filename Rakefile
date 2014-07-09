@@ -112,7 +112,22 @@ namespace :benchmark do
     compare_classifications = JSON.parse(File.read(compare_classifications_file))
 
     puts "Changes between #{reference}...#{compare}"
-    puts reference_classifications.deep_diff(compare_classifications)
+    changes = reference_classifications.deep_diff(compare_classifications)
+
+    if changes.any?
+      changes.each do |lang, files|
+        previous_count = reference_classifications[lang].size
+        summary = changes[lang].inject(Hash.new(0)) do |result, (key, val)|
+          new_lang = val.last
+          result[new_lang] += 1
+          result
+        end
+      end
+
+      puts summary
+    else
+      puts "No changes"
+    end
   end
 end
 
