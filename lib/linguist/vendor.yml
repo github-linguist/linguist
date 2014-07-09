@@ -40,9 +40,13 @@
 - foundation.min.css
 - foundation.css
 
+# Normalize.css
+- normalize.css
+
 # Vendored dependencies
 - thirdparty/
 - vendors?/
+- extern(al)?/
 
 # Debian packaging
 - ^debian/
@@ -123,6 +127,9 @@
 - ^.osx$
 
 ## Obj-C ##
+
+# Cocoapods
+- ^Pods/
 
 # Sparkle
 - (^|/)Sparkle/

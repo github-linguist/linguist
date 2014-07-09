@@ -1,4 +1,6 @@
 before_install: 
+  - git fetch origin master:master
+  - git fetch origin v2.0.0:v2.0.0
   - sudo apt-get install libicu-dev -y
   - gem update --system 2.1.11
 rvm:
