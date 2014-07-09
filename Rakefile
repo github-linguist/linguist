@@ -103,9 +103,13 @@ namespace :benchmark do
   task :results do
     reference, compare = ENV['compare'].split('...')
 
+    reference_classifications_file = "benchmark/results/#{reference}_output.json"
+    compare_classifications_file = "benchmark/results/#{compare}_output.json"
+
     # DO COMPARISON...
-    reference_classifications = JSON.parse(File.read("benchmark/results/#{reference}_output.json"))
-    compare_classifications = JSON.parse(File.read("benchmark/results/#{compare}_output.json"))
+    abort("No result files to compare") unless (File.exist?(reference_classifications_file) && File.exist?(compare_classifications_file))
+    reference_classifications = JSON.parse(File.read(reference_classifications_file))
+    compare_classifications = JSON.parse(File.read(compare_classifications_file))
 
     puts "Changes between #{reference}...#{compare}"
     puts reference_classifications.deep_diff(compare_classifications)
