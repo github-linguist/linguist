@@ -67,13 +67,8 @@ namespace :benchmark do
     git.branch("tmp_#{reference}").delete
     git.branch("tmp_#{compare}").delete
 
-    # DO COMPARISON...
-    reference_classifications = JSON.parse(File.read("benchmark/results/#{reference}_output.json"))
-
-    compare_classifications = JSON.parse(File.read("benchmark/results/#{compare}_output.json"))
-
-    puts "Changes between #{reference}...#{compare}"
-    puts reference_classifications.deep_diff(compare_classifications)
+    # COMPARE AND PRINT RESULTS
+    Rake::Task["benchmark:results"].execute
   end
 
   desc "Build benchmark index"
@@ -102,6 +97,18 @@ namespace :benchmark do
     end
 
     File.open("benchmark/results/#{args[:commit]}_output.json", "w") {|f| f.write(results.to_json) }
+  end
+
+  desc "Compare results"
+  task :results do
+    reference, compare = ENV['compare'].split('...')
+
+    # DO COMPARISON...
+    reference_classifications = JSON.parse(File.read("benchmark/results/#{reference}_output.json"))
+    compare_classifications = JSON.parse(File.read("benchmark/results/#{compare}_output.json"))
+
+    puts "Changes between #{reference}...#{compare}"
+    puts reference_classifications.deep_diff(compare_classifications)
   end
 end
 
