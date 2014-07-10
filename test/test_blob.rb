@@ -140,6 +140,13 @@ class TestBlob < Test::Unit::TestCase
     assert !blob("Perl/script.pl").binary?
   end
 
+  def test_all_binary
+    Samples.each do |sample|
+      blob = blob(sample[:path])
+      assert ! (blob.likely_binary? || blob.binary?), "#{sample[:path]} is a binary file"
+    end
+  end
+
   def test_text
     assert blob("Text/README").text?
     assert blob("Text/dump.sql").text?
@@ -277,7 +284,7 @@ class TestBlob < Test::Unit::TestCase
 
     # 'thirdparty' directory
     assert blob("thirdparty/lib/main.c").vendored?
-    
+
     # 'extern(al)' directory
     assert blob("extern/util/__init__.py").vendored?
     assert blob("external/jquery.min.js").vendored?
@@ -385,7 +392,10 @@ class TestBlob < Test::Unit::TestCase
 
     # NuGet Packages
     assert blob("packages/Modernizr.2.0.6/Content/Scripts/modernizr-2.0.6-development-only.js").vendored?
-    
+
+    # Normalize
+    assert blob("some/asset/path/normalize.css").vendored?
+
     # Cocoapods
     assert blob('Pods/blah').vendored?
 

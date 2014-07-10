@@ -104,12 +104,13 @@ module Linguist
       #
       # We'll perform a more comprehensive test later which actually involves
       # looking for binary characters in the blob
-      return nil if blob.likely_binary?
+      return nil if blob.likely_binary? || blob.binary?
 
       # A bit of an elegant hack. If the file is executable but extensionless,
       # append a "magic" extension so it can be classified with other
       # languages that have shebang scripts.
-      if File.extname(name).empty? && blob.mode && (blob.mode.to_i(8) & 05) == 05
+      extension = FileBlob.new(name).extension
+      if extension.empty? && blob.mode && (blob.mode.to_i(8) & 05) == 05
         name += ".script!"
       end
 
@@ -124,7 +125,7 @@ module Linguist
         possible_language_names = possible_languages.map(&:name)
 
         # Don't bother with binary contents or an empty file
-        if blob.binary? || data.nil? || data == ""
+        if data.nil? || data == ""
           nil
         # Check if there's a shebang line and use that as authoritative
         elsif (result = find_by_shebang(data)) && !result.empty?
@@ -189,7 +190,8 @@ module Linguist
     #
     # Returns all matching Languages or [] if none were found.
     def self.find_by_filename(filename)
-      basename, extname = File.basename(filename), File.extname(filename)
+      basename = File.basename(filename)
+      extname = FileBlob.new(filename).extension
       langs = @filename_index[basename] +
               @extension_index[extname]
       langs.compact.uniq
@@ -401,7 +403,7 @@ module Linguist
     #
     # Returns the extensions Array
     attr_reader :filenames
-    
+
     # Public: Return all possible extensions for language
     def all_extensions
       (extensions + [primary_extension]).uniq
