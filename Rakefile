@@ -86,7 +86,7 @@ namespace :benchmark do
       files.each do |file|
         next unless File.file?(file)
         puts "  #{file}"
-        result = IO::popen("bundle exec linguist #{Shellwords.escape(file)} --simple").read
+        result = %x{bundle exec linguist #{Shellwords.escape(file)} --simple}
         filename = File.basename(file)
         if result.chomp.empty? # No results
           results[lang][filename] = "No language"
