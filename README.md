@@ -152,4 +152,4 @@ If you are the current maintainer of this gem:
    0. Test behavior locally, branch deploy, whatever needs to happen
  0. Merge github/linguist PR
  0. Tag and push: `git tag vx.xx.xx; git push --tags`
- 0. Push to rubygems.org -- `gem push github-linguist-2.10.12.gem`
+ 0. Push to rubygems.org -- `gem push github-linguist-3.0.0.gem`

@@ -89,7 +89,7 @@ Agda:
 
 Alloy:
   type: programming  # 'modeling' would be more appropiate
-  lexer: Text only
+  lexer: Alloy
   color: "#cc5c24"
   extensions:
   - .als
@@ -157,7 +157,6 @@ Assembly:
   - nasm
   extensions:
   - .asm
-  - .inc
 
 Augeas:
   type: programming
@@ -222,6 +221,8 @@ BlitzBasic:
   - .decls
 
 BlitzMax:
+  type: programming
+  color: "#cd6400"
   extensions:
   - .bmx
 
@@ -799,6 +800,12 @@ Gosu:
   color: "#82937f"
   extensions:
   - .gs
+
+Grace:
+  type: programming
+  lexer: Text only
+  extensions:
+  - .grace
 
 Grammatical Framework:
   type: programming
@@ -1397,6 +1404,13 @@ Nimrod:
   - .nim
   - .nimrod
 
+Nit:
+  type: programming
+  lexer: Text only
+  color: "#0d8921"
+  extensions:
+  - .nit
+
 Nix:
   type: programming
   lexer: Nix
@@ -1538,6 +1552,8 @@ PHP:
   - .phpt
   filenames:
   - Phakefile
+  interpreters:
+  - php
 
 Pan:
   type: programming
@@ -1890,6 +1906,7 @@ Ruby:
   - Jarfile
   - Mavenfile
   - Podfile
+  - Puppetfile
   - Thorfile
   - Vagrantfile
   - buildfile

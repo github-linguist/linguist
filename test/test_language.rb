@@ -249,8 +249,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['Nginx'], Language.find_by_filename('nginx.conf').first
     assert_equal ['C', 'C++', 'Objective-C'], Language.find_by_filename('foo.h').map(&:name).sort
     assert_equal [], Language.find_by_filename('rb')
-    assert_equal [], Language.find_by_filename('.rb')
-    assert_equal [], Language.find_by_filename('.nkt')
+    assert_equal [], Language.find_by_filename('.null')
     assert_equal [Language['Shell']], Language.find_by_filename('.bashrc')
     assert_equal [Language['Shell']], Language.find_by_filename('bash_profile')
     assert_equal [Language['Shell']], Language.find_by_filename('.zshrc')

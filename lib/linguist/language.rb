@@ -92,18 +92,25 @@ module Linguist
 
     # Public: Detects the Language of the blob.
     #
-    # name - String filename
-    # data - String blob data. A block also maybe passed in for lazy
-    #        loading. This behavior is deprecated and you should always
-    #        pass in a String.
-    # mode - Optional String mode (defaults to nil)
+    # blob - an object that includes the Linguist `BlobHelper` interface;
+    #       see Linguist::LazyBlob and Linguist::FileBlob for examples
     #
     # Returns Language or nil.
-    def self.detect(name, data, mode = nil)
+    def self.detect(blob)
+      name = blob.name.to_s
+
+      # Check if the blob is possibly binary and bail early; this is a cheap
+      # test that uses the extension name to guess a binary binary mime type.
+      #
+      # We'll perform a more comprehensive test later which actually involves
+      # looking for binary characters in the blob
+      return nil if blob.likely_binary? || blob.binary?
+
       # A bit of an elegant hack. If the file is executable but extensionless,
       # append a "magic" extension so it can be classified with other
       # languages that have shebang scripts.
-      if File.extname(name).empty? && mode && (mode.to_i(8) & 05) == 05
+      extension = FileBlob.new(name).extension
+      if extension.empty? && blob.mode && (blob.mode.to_i(8) & 05) == 05
         name += ".script!"
       end
 
@@ -114,10 +121,10 @@ module Linguist
       # extension at all, in the case of extensionless scripts), we need to continue
       # our detection work
       if possible_languages.length > 1
-        data = data.call() if data.respond_to?(:call)
+        data = blob.data
         possible_language_names = possible_languages.map(&:name)
 
-        # Don't bother with emptiness
+        # Don't bother with binary contents or an empty file
         if data.nil? || data == ""
           nil
         # Check if there's a shebang line and use that as authoritative
@@ -183,7 +190,8 @@ module Linguist
     #
     # Returns all matching Languages or [] if none were found.
     def self.find_by_filename(filename)
-      basename, extname = File.basename(filename), File.extname(filename)
+      basename = File.basename(filename)
+      extname = FileBlob.new(filename).extension
       langs = @filename_index[basename] +
               @extension_index[extname]
       langs.compact.uniq
@@ -395,7 +403,7 @@ module Linguist
     #
     # Returns the extensions Array
     attr_reader :filenames
-    
+
     # Public: Return all possible extensions for language
     def all_extensions
       (extensions + [primary_extension]).uniq
