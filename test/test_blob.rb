@@ -192,9 +192,9 @@ class TestBlob < Test::Unit::TestCase
     assert !blob("Text/README").generated?
 
     # Xcode project files
-    assert blob("XML/MainMenu.xib").generated?
+    assert !blob("XML/MainMenu.xib").generated?
     assert blob("Binary/MainMenu.nib").generated?
-    assert blob("XML/project.pbxproj").generated?
+    assert !blob("XML/project.pbxproj").generated?
 
     # Gemfile.locks
     assert blob("Gemfile.lock").generated?
