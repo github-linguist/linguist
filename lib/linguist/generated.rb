@@ -74,7 +74,7 @@ module Linguist
     #
     # Returns true of false.
     def xcode_file?
-      ['.nib', '.pbxproj', '.xcworkspacedata', '.xcuserstate'].include?(extname)
+      ['.nib', '.xcworkspacedata', '.xcuserstate'].include?(extname)
     end
 
     # Internal: Is the blob minified files?
@@ -256,3 +256,4 @@ module Linguist
     end
   end
 end
+
