@@ -1,0 +1,10 @@
+;;Sample code
+
+;;Defining an variable:
+(def var 1)
+
+;;Defining a function:
+(def fac (\ (num)				;;Functions in LoLi are all Lambda expressions
+	(if (eq? num 0)
+		1
+		(* num (fac (- num 1))))))	;;Recursive call
