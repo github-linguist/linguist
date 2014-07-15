@@ -9,6 +9,7 @@ end
 require 'linguist/classifier'
 require 'linguist/heuristics'
 require 'linguist/samples'
+require 'linguist/file_blob'
 
 module Linguist
   # Language names that are recognizable by GitHub. Defined languages
