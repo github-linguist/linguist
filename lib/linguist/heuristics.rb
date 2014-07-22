@@ -42,7 +42,7 @@ module Linguist
     # Returns an array of Languages or []
     def self.disambiguate_c(data, languages)
       matches = []
-      matches << Language["Objective-C"] if data.include?("i")
+      matches << Language["Objective-C"] if data.include?("@interface")
       matches << Language["C++"] if data.include?("#include <cstdint>")
       matches
     end

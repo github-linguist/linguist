@@ -26,8 +26,6 @@ end
 namespace :benchmark do
   require 'git'
   require 'linguist/language'
-  require 'linguist/diff'
-  require 'json'
 
   git = Git.open('.')
 
@@ -59,6 +57,7 @@ namespace :benchmark do
     git.reset_hard(compare)
 
     # RUN BENCHMARK AGAIN
+    # `rake benchmark:index`
     Rake::Task["benchmark:index"].execute(:commit => compare)
 
     git.branch(current_branch).checkout
@@ -73,7 +72,7 @@ namespace :benchmark do
 
   desc "Build benchmark index"
   task :index, [:commit] do |t, args|
-    require 'shellwords'
+    require 'linguist/language'
 
     results = Hash.new
     languages = Dir.glob('benchmark/samples/*')
@@ -86,12 +85,15 @@ namespace :benchmark do
       files.each do |file|
         next unless File.file?(file)
         puts "  #{file}"
-        result = %x{bundle exec linguist #{Shellwords.escape(file)} --simple}
+
+        blob = Linguist::FileBlob.new(file, Dir.pwd)
+        result = blob.language
+
         filename = File.basename(file)
-        if result.chomp.empty? # No results
+        if result.nil? # No results
           results[lang][filename] = "No language"
         else
-          results[lang][filename] = result.chomp
+          results[lang][filename] = result.name
         end
       end
     end
@@ -101,6 +103,8 @@ namespace :benchmark do
 
   desc "Compare results"
   task :results do
+
+    # `diff -u file1 file2`
     reference, compare = ENV['compare'].split('...')
 
     reference_classifications_file = "benchmark/results/#{reference}_output.json"
