@@ -1,4 +1,4 @@
-class Hash
+module HashDiff
   def deep_diff(b)
     a = self
     (a.keys | b.keys).inject({}) do |diff, k|
@@ -12,4 +12,8 @@ class Hash
       diff
     end
   end
+end
+
+class Hash
+  include HashDiff
 end

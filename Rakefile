@@ -26,6 +26,7 @@ end
 namespace :benchmark do
   require 'git'
   require 'linguist/language'
+  require './lib/linguist/diff'
 
   git = Git.open('.')
 
