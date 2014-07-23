@@ -116,6 +116,32 @@ namespace :benchmark do
     reference_classifications = JSON.parse(File.read(reference_classifications_file))
     compare_classifications = JSON.parse(File.read(compare_classifications_file))
 
+    # Check if samples don't match current classification
+    puts "Potential misclassifications for #{reference}"
+    reference_classifications.each do |lang, files|
+      language_name = lang.split('/').last
+
+      files.each do |name, classification|
+        unless classification == language_name
+          puts "  #{name} is classified as #{classification} but #{language_name} was expected"
+        end
+      end
+    end
+
+    # Check if samples don't match current classification
+    # TODO DRY this up.
+    puts "Potential misclassifications for #{compare}"
+    compare_classifications.each do |lang, files|
+      language_name = lang.split('/').last
+
+      files.each do |name, classification|
+        unless classification == language_name
+          puts "  #{name} is classified as #{classification} but #{language_name} was expected"
+        end
+      end
+    end
+
+    puts ""
     puts "Changes between #{reference}...#{compare}"
     changes = reference_classifications.deep_diff(compare_classifications)
 
@@ -140,7 +166,7 @@ namespace :benchmark do
         end
       end
     else
-      puts "No changes"
+      puts "  No changes"
     end
   end
 end
