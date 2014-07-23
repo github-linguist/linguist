@@ -1,7 +1,7 @@
 module Linguist
   # A collection of simple heuristics that can be used to better analyze languages.
   class Heuristics
-    ACTIVE = true
+    ACTIVE = false
 
     # Public: Given an array of String language names,
     # apply heuristics against the given data and return an array
