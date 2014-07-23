@@ -117,6 +117,7 @@ namespace :benchmark do
     compare_classifications = JSON.parse(File.read(compare_classifications_file))
 
     # Check if samples don't match current classification
+    puts ""
     puts "Potential misclassifications for #{reference}"
     reference_classifications.each do |lang, files|
       language_name = lang.split('/').last
@@ -130,6 +131,7 @@ namespace :benchmark do
 
     # Check if samples don't match current classification
     # TODO DRY this up.
+    puts ""
     puts "Potential misclassifications for #{compare}"
     compare_classifications.each do |lang, files|
       language_name = lang.split('/').last
