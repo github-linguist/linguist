@@ -123,6 +123,8 @@ namespace :benchmark do
       language_name = lang.split('/').last
 
       files.each do |name, classification|
+        # FIXME Don't want to report stuff from these dirs for now
+        next if ['Binary', 'Text'].include?(language_name)
         unless classification == language_name
           puts "  #{name} is classified as #{classification} but #{language_name} was expected"
         end
@@ -137,6 +139,8 @@ namespace :benchmark do
       language_name = lang.split('/').last
 
       files.each do |name, classification|
+        # FIXME Don't want to report stuff from these dirs for now
+        next if ['Binary', 'Text'].include?(language_name)
         unless classification == language_name
           puts "  #{name} is classified as #{classification} but #{language_name} was expected"
         end
