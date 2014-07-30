@@ -430,10 +430,10 @@ class TestBlob < Test::Unit::TestCase
     assert blob("public/octicons/sprockets-octicons.scss").vendored?
 
     # Rails assets
-    assert blob("app/assets/sample.js").vendored?
-    assert blob("lib/assets/sample.min.js").vendored?
-    assert blob("public/assets/sample.css").vendored?
-    assert blob("vendor/assets/sample.min.css").vendored?
+    assert blob("app/assets/javascripts/sample.js").vendored?
+    assert blob("lib/assets/javascripts/sample.min.js").vendored?
+    assert blob("public/assets/stylesheets/sample.css").vendored?
+    assert blob("vendor/assets/images/sample.jpg").vendored?
   end
 
   def test_language
