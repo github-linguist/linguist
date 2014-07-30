@@ -127,7 +127,7 @@ module Linguist
         possible_language_names = possible_languages.map(&:name)
 
         # Don't bother with binary contents or an empty file
-        if data.nil? || data == ""
+        if data.nil?
           nil
         # Check if there's a shebang line and use that as authoritative
         elsif (result = find_by_shebang(data)) && !result.empty?

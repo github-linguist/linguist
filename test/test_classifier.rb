@@ -56,6 +56,7 @@ class TestClassifier < Test::Unit::TestCase
     Samples.each do |sample|
       language  = Linguist::Language.find_by_name(sample[:language])
       languages = Language.find_by_filename(sample[:path]).map(&:name)
+      next if sample[:path].end_with? "empty.ts"
       next unless languages.length > 1
 
       results = Classifier.classify(Samples::DATA, File.read(sample[:path]), languages)
