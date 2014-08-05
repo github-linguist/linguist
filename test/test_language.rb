@@ -32,6 +32,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['Java'], Language['ChucK'].lexer
     assert_equal Lexer['Java'], Language['Java'].lexer
     assert_equal Lexer['JavaScript'], Language['JavaScript'].lexer
+    assert_equal Lexer['Linden Scripting Language'], Language['LSL'].lexer
     assert_equal Lexer['MOOCode'], Language['Moocode'].lexer
     assert_equal Lexer['MuPAD'], Language['mupad'].lexer
     assert_equal Lexer['NASM'], Language['Assembly'].lexer
@@ -92,6 +93,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['Java'], Language.find_by_alias('java')
     assert_equal Language['JavaScript'], Language.find_by_alias('javascript')
     assert_equal Language['JavaScript'], Language.find_by_alias('js')
+    assert_equal Language['Linden Scripting Language'], Language.find_by_alias('lsl')
     assert_equal Language['Literate Haskell'], Language.find_by_alias('lhs')
     assert_equal Language['Literate Haskell'], Language.find_by_alias('literate-haskell')
     assert_equal Language['Objective-C'], Language.find_by_alias('objc')
@@ -185,6 +187,7 @@ class TestLanguage < Test::Unit::TestCase
 
   def test_programming
     assert_equal :programming, Language['JavaScript'].type
+    assert_equal :programming, Language['Linden Scripting Language'].type
     assert_equal :programming, Language['Perl'].type
     assert_equal :programming, Language['PowerShell'].type
     assert_equal :programming, Language['Python'].type
@@ -324,6 +327,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal '#3581ba', Language['Python'].color
     assert_equal '#f1e05a', Language['JavaScript'].color
     assert_equal '#31859c', Language['TypeScript'].color
+    assert_equal '#3d9970', Language['Linden Scripting Language'].color
   end
 
   def test_colors
@@ -337,6 +341,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal 'csharp', Language['C#'].ace_mode
     assert_equal 'css', Language['CSS'].ace_mode
     assert_equal 'javascript', Language['JavaScript'].ace_mode
+    assert_equal 'lsl', Language['Linden Scripting Language'].ace_mode
   end
 
   def test_ace_modes
@@ -350,12 +355,14 @@ class TestLanguage < Test::Unit::TestCase
   end
 
   def test_extensions
+    assert Language['Linden Scripting Language'].extensions.include?('.lsl')
     assert Language['Perl'].extensions.include?('.pl')
     assert Language['Python'].extensions.include?('.py')
     assert Language['Ruby'].extensions.include?('.rb')
   end
 
   def test_primary_extension
+    assert_equal '.lsl', Language['Linden Scripting Language'].primary_extension
     assert_equal '.pl', Language['Perl'].primary_extension
     assert_equal '.py', Language['Python'].primary_extension
     assert_equal '.rb', Language['Ruby'].primary_extension
