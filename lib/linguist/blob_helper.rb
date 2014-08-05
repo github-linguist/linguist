@@ -190,9 +190,9 @@ module Linguist
     # Public: Is the blob safe to colorize?
     #
     # We use Pygments for syntax highlighting blobs. Pygments
-    # can be too slow for very large blobs or for certain 
+    # can be too slow for very large blobs or for certain
     # corner-case blobs.
-    # 
+    #
     # Return true or false
     def safe_to_colorize?
       !large? && text? && !high_ratio_of_long_lines?

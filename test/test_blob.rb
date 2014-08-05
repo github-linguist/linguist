@@ -179,8 +179,14 @@ class TestBlob < Test::Unit::TestCase
     # TypeScript-generated JS
     # TODO
 
+    # Composer generated composer.lock file
+    assert blob("JSON/composer.lock").generated?
+
     # PEG.js-generated parsers
     assert blob("JavaScript/parser.js").generated?
+
+    # Generated PostScript
+    assert !blob("PostScript/sierpinski.ps").generated?
 
     # These examples are too basic to tell
     assert !blob("JavaScript/empty.js").generated?
@@ -204,6 +210,11 @@ class TestBlob < Test::Unit::TestCase
     # Minified CSS
     assert !blob("CSS/bootstrap.css").generated?
     assert blob("CSS/bootstrap.min.css").generated?
+
+    # Generated VCR
+    assert blob("YAML/vcr_cassette.yml").generated?
+
+    assert Linguist::Generated.generated?("node_modules/grunt/lib/grunt.js", nil)
   end
 
   def test_vendored
@@ -215,6 +226,11 @@ class TestBlob < Test::Unit::TestCase
 
     # Node dependencies
     assert blob("node_modules/coffee-script/lib/coffee-script.js").vendored?
+
+    # Bower Components
+    assert blob("bower_components/custom/custom.js").vendored?
+    assert blob("app/bower_components/custom/custom.js").vendored?
+    assert blob("vendor/assets/bower_components/custom/custom.js").vendored?
 
     # Rails vendor/
     assert blob("vendor/plugins/will_paginate/lib/will_paginate.rb").vendored?
@@ -265,7 +281,6 @@ class TestBlob < Test::Unit::TestCase
     assert blob("ui/minified/jquery.effects.blind.min.js").vendored?
     assert blob("ui/minified/jquery.ui.accordion.min.js").vendored?
 
-
     # MooTools
     assert blob("public/javascripts/mootools-core-1.3.2-full-compat.js").vendored?
     assert blob("public/javascripts/mootools-core-1.3.2-full-compat-yc.js").vendored?
@@ -286,6 +301,18 @@ class TestBlob < Test::Unit::TestCase
     assert blob("public/javascripts/tiny_mce.js").vendored?
     assert blob("public/javascripts/tiny_mce_popup.js").vendored?
     assert blob("public/javascripts/tiny_mce_src.js").vendored?
+
+    # AngularJS
+    assert blob("public/javascripts/angular.js").vendored?
+    assert blob("public/javascripts/angular.min.js").vendored?
+
+    # D3.js
+    assert blob("public/javascripts/d3.v3.js").vendored?
+    assert blob("public/javascripts/d3.v3.min.js").vendored?
+
+    # Modernizr
+    assert blob("public/javascripts/modernizr-2.7.1.js").vendored?
+    assert blob("public/javascripts/modernizr.custom.01009.js").vendored?
 
     # Fabric
     assert blob("fabfile.py").vendored?
@@ -318,7 +345,7 @@ class TestBlob < Test::Unit::TestCase
     # Test fixtures
     assert blob("test/fixtures/random.rkt").vendored?
     assert blob("Test/fixtures/random.rkt").vendored?
-    
+
     # Cordova/PhoneGap
     assert blob("cordova.js").vendored?
     assert blob("cordova.min.js").vendored?
@@ -332,6 +359,14 @@ class TestBlob < Test::Unit::TestCase
     assert blob("JavaScript/bootstrap-modal.js").vendored?
     assert blob("JavaScript/bootstrap.min.js").vendored?
     assert blob("JavaScript/bootstrap.js").vendored?
+
+    # Gradle
+    assert blob("gradlew").vendored?
+    assert blob("gradlew.bat").vendored?
+    assert blob("gradle/wrapper/gradle-wrapper.properties").vendored?
+    assert blob("subproject/gradlew").vendored?
+    assert blob("subproject/gradlew.bat").vendored?
+    assert blob("subproject/gradle/wrapper/gradle-wrapper.properties").vendored?
   end
 
   def test_language
