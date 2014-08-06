@@ -25,6 +25,9 @@ module Linguist
         if languages.all? { |l| ["Common Lisp", "OpenCL"].include?(l) }
           result = disambiguate_cl(data, languages)
         end
+        if languages.all? { |l| ["Hack", "PHP"].include?(l) }
+          result = disambiguate_hack(data, languages)
+        end
         return result
       end
     end
@@ -85,6 +88,13 @@ module Linguist
       matches = []
       matches << Language["Rebol"] if /\bRebol\b/i.match(data)
       matches << Language["R"] if data.include?("<-")
+      matches
+    end
+
+    def self.disambiguate_hack(data, languages)
+      matches = []
+      matches << Language["Hack"] if data.include?("<?hh")
+      matches << Language["PHP"] if /<?[^h]/.match(data)
       matches
     end
 
