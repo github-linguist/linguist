@@ -23,58 +23,57 @@ task :build_gem do
   File.delete("lib/linguist/languages.json")
 end
 
+# Want to do: rake benchmark:compare refs=20154eb04...6ed0a05b4
+# If output for 20154eb04 or 6ed0a05b4 doesn't exist then should throw error
+# Classification outputs for each commit need to be generated before the comparison can be done
+# With something like: rake benchmark:generate ref=20154eb04
+
 namespace :benchmark do
   require 'git'
-  require 'linguist/language'
-  require './lib/linguist/diff'
+  benchmark_path = "benchmark/results"
 
   git = Git.open('.')
 
-  desc "Testin'"
-  task :run do
-    reference, compare = ENV['compare'].split('...')
+  desc "Compare outputs"
+  task :compare do
+    reference, compare = ENV['refs'].split('...')
     puts "Comparing #{reference}...#{compare}"
+
+    # Abort if there are uncommitted changes
+    abort("Uncommitted changes -- aborting") if git.status.changed.any?
+
+    [reference, compare].each do |ref|
+      abort("No output file for #{ref}, run 'rake benchmark:generate ref=#{ref}'") unless File.exist?("#{benchmark_path}/#{ref}.json")
+    end
+  end
+
+  desc "Generate classification summary for given ref"
+  task :generate do
+    ref = ENV['ref']
+    abort("Must specify a commit ref, e.g. 'rake benchmark:generate ref=08819f82'") unless ref
     abort("Unstaged changes - aborting") if git.status.changed.any?
 
     # Get the current branch
     # Would like to get this from the Git gem
     current_branch = `git rev-parse --abbrev-ref HEAD`.strip
 
-    # Create tmp branch for reference commit
-    puts "Creating branch tmp_#{reference}"
-    git.branch("tmp_#{reference}").checkout
-    git.reset_hard(reference)
+    puts "Checking out #{ref}"
+    git.checkout(ref)
 
     # RUN BENCHMARK
     # Go through benchmark/samples/LANG dirs
     # For each Language
 
-    Rake::Task["benchmark:index"].execute(:commit => reference)
+    Rake::Task["benchmark:index"].execute(:commit => ref)
 
-    # Create tmp branch for compare commit
-    puts ""
-    puts "Creating temporary branch tmp_#{compare}"
-    git.branch("tmp_#{compare}").checkout
-    git.reset_hard(compare)
-
-    # RUN BENCHMARK AGAIN
-    # `rake benchmark:index`
-    Rake::Task["benchmark:index"].execute(:commit => compare)
-
-    git.branch(current_branch).checkout
-
-    # CLEAN UP
-    git.branch("tmp_#{reference}").delete
-    git.branch("tmp_#{compare}").delete
-
-    # COMPARE AND PRINT RESULTS
-    Rake::Task["benchmark:results"].execute
+    # Checkout original branch
+    git.checkout(current_branch)
   end
 
   desc "Build benchmark index"
   task :index, [:commit] do |t, args|
-    require 'linguist/language'
 
+    require 'linguist/language'
     results = Hash.new
     languages = Dir.glob('benchmark/samples/*')
 
@@ -99,17 +98,18 @@ namespace :benchmark do
       end
     end
 
-    File.open("benchmark/results/#{args[:commit]}_output.json", "w") {|f| f.write(results.to_json) }
+    File.open("benchmark/results/#{args[:commit]}.json", "w") {|f| f.write(results.to_json) }
   end
 
   desc "Compare results"
   task :results do
+    # Deep diffing
+    require './lib/linguist/diff'
 
-    # `diff -u file1 file2`
-    reference, compare = ENV['compare'].split('...')
+    reference, compare = ENV['refs'].split('...')
 
-    reference_classifications_file = "benchmark/results/#{reference}_output.json"
-    compare_classifications_file = "benchmark/results/#{compare}_output.json"
+    reference_classifications_file = "benchmark/results/#{reference}.json"
+    compare_classifications_file = "benchmark/results/#{compare}.json"
 
     # DO COMPARISON...
     abort("No result files to compare") unless (File.exist?(reference_classifications_file) && File.exist?(compare_classifications_file))
