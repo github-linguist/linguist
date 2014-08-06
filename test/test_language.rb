@@ -93,7 +93,6 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['Java'], Language.find_by_alias('java')
     assert_equal Language['JavaScript'], Language.find_by_alias('javascript')
     assert_equal Language['JavaScript'], Language.find_by_alias('js')
-    assert_equal Language['LSL'], Language.find_by_alias('lsl')
     assert_equal Language['Literate Haskell'], Language.find_by_alias('lhs')
     assert_equal Language['Literate Haskell'], Language.find_by_alias('literate-haskell')
     assert_equal Language['Objective-C'], Language.find_by_alias('objc')
