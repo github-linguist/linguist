@@ -169,7 +169,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal 'pot',           Language['Gettext Catalog'].search_term
     assert_equal 'irc',           Language['IRC log'].search_term
     assert_equal 'lhs',           Language['Literate Haskell'].search_term
-    assert_equal 'ruby',          Language['Mirah'].search_term
+    assert_equal 'mirah',         Language['Mirah'].search_term
     assert_equal 'raw',           Language['Raw token data'].search_term
     assert_equal 'bash',          Language['Shell'].search_term
     assert_equal 'vim',           Language['VimL'].search_term

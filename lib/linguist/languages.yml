@@ -321,7 +321,7 @@ CLIPS:
 CMake:
   extensions:
   - .cmake
-  - .cmake.in
+  - .in
   filenames:
   - CMakeLists.txt
 
@@ -388,7 +388,7 @@ Clojure:
   - .cljscm
   - .cljx
   - .hic
-  - .cljs.hl
+  - .hl
   filenames:
   - riemann.config
 
@@ -486,6 +486,12 @@ Cuda:
   extensions:
   - .cu
   - .cuh
+
+Cycript:
+  type: programming
+  lexer: JavaScript
+  extensions:
+  - .cy
 
 Cython:
   type: programming
@@ -865,7 +871,6 @@ HTML:
   extensions:
   - .html
   - .htm
-  - .html.hl
   - .st
   - .xhtml
 
@@ -885,9 +890,7 @@ HTML+ERB:
   - erb
   extensions:
   - .erb
-  - .erb.deface
-  - .html.erb
-  - .html.erb.deface
+  - .deface
 
 HTML+PHP:
   type: markup
@@ -905,17 +908,14 @@ Haml:
   type: markup
   extensions:
   - .haml
-  - .haml.deface
-  - .html.haml.deface
+  - .deface
 
 Handlebars:
   type: markup
-  lexer: Text only
+  lexer: Handlebars
   extensions:
   - .handlebars
   - .hbs
-  - .html.handlebars
-  - .html.hbs
 
 Harbour:
   type: programming
@@ -1353,7 +1353,7 @@ MiniD: # Legacy
 Mirah:
   type: programming
   lexer: Ruby
-  search_term: ruby
+  search_term: mirah
   color: "#c7a938"
   extensions:
   - .druby
