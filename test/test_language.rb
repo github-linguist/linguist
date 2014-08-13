@@ -17,6 +17,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['C'], Language['OpenCL'].lexer
     assert_equal Lexer['C'], Language['XS'].lexer
     assert_equal Lexer['C++'], Language['C++'].lexer
+    assert_equal Lexer['Chapel'], Language['Chapel'].lexer
     assert_equal Lexer['Coldfusion HTML'], Language['ColdFusion'].lexer
     assert_equal Lexer['Coq'], Language['Coq'].lexer
     assert_equal Lexer['FSharp'], Language['F#'].lexer
@@ -71,6 +72,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['C'], Language.find_by_alias('c')
     assert_equal Language['C++'], Language.find_by_alias('c++')
     assert_equal Language['C++'], Language.find_by_alias('cpp')
+    assert_equal Language['Chapel'], Language.find_by_alias('chpl')
     assert_equal Language['CoffeeScript'], Language.find_by_alias('coffee')
     assert_equal Language['CoffeeScript'], Language.find_by_alias('coffee-script')
     assert_equal Language['ColdFusion'], Language.find_by_alias('cfm')
@@ -255,6 +257,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal [Language['Shell']], Language.find_by_filename('.zshrc')
     assert_equal [Language['Clojure']], Language.find_by_filename('riemann.config')
     assert_equal [Language['HTML+Django']], Language.find_by_filename('index.jinja')
+    assert_equal [Language['Chapel']], Language.find_by_filename('examples/hello.chpl')
   end
 
   def test_find_by_shebang
