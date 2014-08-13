@@ -140,6 +140,13 @@ class TestBlob < Test::Unit::TestCase
     assert !blob("Perl/script.pl").binary?
   end
 
+  def test_all_binary
+    Samples.each do |sample|
+      blob = blob(sample[:path])
+      assert ! (blob.likely_binary? || blob.binary?), "#{sample[:path]} is a binary file"
+    end
+  end
+
   def test_text
     assert blob("Text/README").text?
     assert blob("Text/dump.sql").text?
@@ -185,9 +192,9 @@ class TestBlob < Test::Unit::TestCase
     assert !blob("Text/README").generated?
 
     # Xcode project files
-    assert blob("XML/MainMenu.xib").generated?
+    assert !blob("XML/MainMenu.xib").generated?
     assert blob("Binary/MainMenu.nib").generated?
-    assert blob("XML/project.pbxproj").generated?
+    assert !blob("XML/project.pbxproj").generated?
 
     # Gemfile.locks
     assert blob("Gemfile.lock").generated?

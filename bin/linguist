@@ -4,6 +4,7 @@
 #     usage: linguist <path> [<--breakdown>]
 
 require 'linguist/file_blob'
+require 'linguist/language'
 require 'linguist/repository'
 require 'rugged'
 
@@ -30,7 +31,7 @@ if File.directory?(path)
     puts
     file_breakdown = repo.breakdown_by_file
     file_breakdown.each do |lang, files|
-      puts "#{lang}:" 
+      puts "#{lang}:"
       files.each do |file|
         puts file
       end
