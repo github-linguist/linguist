@@ -36,6 +36,10 @@
 # Bootstrap minified css and js
 - (^|/)bootstrap([^.]*)(\.min)?\.(js|css)$
 
+# Font Awesome
+- font-awesome.min.css
+- font-awesome.css
+
 # Foundation css
 - foundation.min.css
 - foundation.css
@@ -46,6 +50,10 @@
 # Bourbon SCSS
 - (^|/)[Bb]ourbon/.*\.css$
 - (^|/)[Bb]ourbon/.*\.scss$
+
+# Animate.css
+- animate.css
+- animate.min.css
 
 # Vendored dependencies
 - thirdparty/
@@ -115,6 +123,10 @@
 # Modernizr
 - (^|/)modernizr\-\d\.\d+(\.\d+)?(\.min)?\.js$
 - (^|/)modernizr\.custom\.\d+\.js$
+
+# Knockout
+- (^|/)knockout-(\d+\.){3}(debug\.)?js$
+- knockout-min.js
 
 ## Python ##
 

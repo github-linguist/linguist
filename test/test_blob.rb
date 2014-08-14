@@ -393,6 +393,10 @@ class TestBlob < Test::Unit::TestCase
     # NuGet Packages
     assert blob("packages/Modernizr.2.0.6/Content/Scripts/modernizr-2.0.6-development-only.js").vendored?
 
+    # Font Awesome
+    assert blob("some/asset/path/font-awesome.min.css").vendored?
+    assert blob("some/asset/path/font-awesome.css").vendored?
+
     # Normalize
     assert blob("some/asset/path/normalize.css").vendored?
 
