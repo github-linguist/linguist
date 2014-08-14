@@ -2,6 +2,7 @@ require 'json'
 require 'rake/clean'
 require 'rake/testtask'
 require 'yaml'
+require 'pry'
 
 task :default => :test
 
@@ -20,6 +21,123 @@ task :build_gem do
   File.write("lib/linguist/languages.json", JSON.dump(languages))
   `gem build github-linguist.gemspec`
   File.delete("lib/linguist/languages.json")
+end
+
+namespace :benchmark do
+  require 'git'
+  require 'linguist/language'
+  require 'linguist/diff'
+  require 'json'
+
+  git = Git.open('.')
+
+  desc "Testin'"
+  task :run do
+    reference, compare = ENV['compare'].split('...')
+    puts "Comparing #{reference}...#{compare}"
+    abort("Unstaged changes - aborting") if git.status.changed.any?
+
+    # Get the current branch
+    # Would like to get this from the Git gem
+    current_branch = `git rev-parse --abbrev-ref HEAD`.strip
+
+    # Create tmp branch for reference commit
+    puts "Creating branch tmp_#{reference}"
+    git.branch("tmp_#{reference}").checkout
+    git.reset_hard(reference)
+
+    # RUN BENCHMARK
+    # Go through benchmark/samples/LANG dirs
+    # For each Language
+
+    Rake::Task["benchmark:index"].execute(:commit => reference)
+
+    # Create tmp branch for compare commit
+    puts ""
+    puts "Creating temporary branch tmp_#{compare}"
+    git.branch("tmp_#{compare}").checkout
+    git.reset_hard(compare)
+
+    # RUN BENCHMARK AGAIN
+    Rake::Task["benchmark:index"].execute(:commit => compare)
+
+    git.branch(current_branch).checkout
+
+    # CLEAN UP
+    git.branch("tmp_#{reference}").delete
+    git.branch("tmp_#{compare}").delete
+
+    # COMPARE AND PRINT RESULTS
+    Rake::Task["benchmark:results"].execute
+  end
+
+  desc "Build benchmark index"
+  task :index, [:commit] do |t, args|
+    require 'shellwords'
+
+    results = Hash.new
+    languages = Dir.glob('benchmark/samples/*')
+
+    languages.each do |lang|
+      puts ""
+      puts "Starting with #{lang}"
+      results[lang] = {}
+      files = Dir.glob("#{lang}/*")
+      files.each do |file|
+        next unless File.file?(file)
+        puts "  #{file}"
+        result = %x{bundle exec linguist #{Shellwords.escape(file)} --simple}
+        filename = File.basename(file)
+        if result.chomp.empty? # No results
+          results[lang][filename] = "No language"
+        else
+          results[lang][filename] = result.chomp
+        end
+      end
+    end
+
+    File.open("benchmark/results/#{args[:commit]}_output.json", "w") {|f| f.write(results.to_json) }
+  end
+
+  desc "Compare results"
+  task :results do
+    reference, compare = ENV['compare'].split('...')
+
+    reference_classifications_file = "benchmark/results/#{reference}_output.json"
+    compare_classifications_file = "benchmark/results/#{compare}_output.json"
+
+    # DO COMPARISON...
+    abort("No result files to compare") unless (File.exist?(reference_classifications_file) && File.exist?(compare_classifications_file))
+    reference_classifications = JSON.parse(File.read(reference_classifications_file))
+    compare_classifications = JSON.parse(File.read(compare_classifications_file))
+
+    puts "Changes between #{reference}...#{compare}"
+    changes = reference_classifications.deep_diff(compare_classifications)
+
+    # Are there any differences in the linguist classification?
+    if changes.any?
+      changes.each do |lang, files|
+        previous_count = reference_classifications[lang].size
+
+        # Count the number of changed classifications (language and number)
+        summary = changes[lang].inject(Hash.new(0)) do |result, (key, val)|
+          new_lang = val.last
+          result[new_lang] += 1
+          result
+        end
+
+        puts "#{lang}"
+
+        # Work out the percentage change
+        summary.each do |new_lang, count|
+          percent = count / previous_count.to_f
+          puts "  #{sprintf("%.2f", percent)}% change to #{new_lang} (count files)"
+        end
+      end
+    else
+      puts "No changes"
+    end
+  end
 end
 
 namespace :classifier do
