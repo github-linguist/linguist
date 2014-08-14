@@ -413,14 +413,27 @@ CoffeeScript:
 
 ColdFusion:
   type: programming
+  group: ColdFusion
   lexer: Coldfusion HTML
   ace_mode: coldfusion
   color: "#ed2cd6"
   search_term: cfm
   aliases:
   - cfm
+  - cfml
   extensions:
   - .cfm
+
+ColdFusion CFC:
+  type: programming
+  group: ColdFusion
+  lexer: Coldfusion CFC
+  ace_mode: coldfusion
+  color: "#ed2cd6"
+  search_term: cfc
+  aliases:
+  - cfc
+  extensions:
   - .cfc
 
 Common Lisp:
