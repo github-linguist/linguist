@@ -417,6 +417,11 @@ class TestBlob < Test::Unit::TestCase
     assert blob("cordova-2.1.0.js").vendored?
     assert blob("cordova-2.1.0.min.js").vendored?
 
+    # Foundation js
+    assert blob("foundation.js").vendored?
+    assert blob("foundation.min.js").vendored?
+    assert blob("foundation.abide.js").vendored?
+
     # Vagrant
     assert blob("Vagrantfile").vendored?
 
