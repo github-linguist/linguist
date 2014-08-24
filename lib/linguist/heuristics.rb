@@ -31,6 +31,9 @@ module Linguist
         if languages.all? { |l| ["Rebol", "R"].include?(l) }
           disambiguate_r(data, languages)
         end
+        if languages.all? { |l| ["Gosu", "JavaScript"].include?(l) }
+          disambiguate_gosu(data, languages)
+        end
       end
     end
 
@@ -80,6 +83,12 @@ module Linguist
       matches = []
       matches << Language["Rebol"] if /\bRebol\b/i.match(data)
       matches << Language["R"] if data.include?("<-")
+      matches
+    end
+
+    def self.disambiguate_gosu(data, languages)
+      matches = []
+      matches << Language["Gosu"] if /^uses java\./.match(data)
       matches
     end
 
