@@ -300,9 +300,19 @@ module Linguist
     #
     # May load Blob#data
     #
-    # Return true or false
+    # Returns true or false
     def generated?
       @_generated ||= Generated.generated?(name, lambda { data })
+    end
+
+    # Public: Is the blob an ignored file?
+    #
+    # Files that match regular expressions defined in '.linguist'
+    # are matched in overrides.rb
+    #
+    # Returns true or false
+    def ignored?
+      @_ignored ||= Overrides.ignored?(name)
     end
 
     # Public: Detects the Language of the blob.
@@ -311,7 +321,13 @@ module Linguist
     #
     # Returns a Language or nil if none is detected
     def language
-      @language ||= Language.detect(self)
+      if @language = Overrides.language_for?(name)
+        @language
+      else
+        @language ||= Language.detect(self)
+      end
+
+      return @language
     end
 
     # Internal: Get the lexer of the blob.
