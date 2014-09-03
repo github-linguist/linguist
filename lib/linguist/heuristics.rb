@@ -1,7 +1,7 @@
 module Linguist
   # A collection of simple heuristics that can be used to better analyze languages.
   class Heuristics
-    ACTIVE = false
+    ACTIVE = true
 
     # Public: Given an array of String language names,
     # apply heuristics against the given data and return an array
@@ -13,7 +13,7 @@ module Linguist
     # Returns an array of Languages or []
     def self.find_by_heuristics(data, languages)
       if active?
-        if languages.all? { |l| ["Objective-C", "C++"].include?(l) }
+        if languages.all? { |l| ["Objective-C", "C++", "C"].include?(l) }
           disambiguate_c(data, languages)
         end
         if languages.all? { |l| ["Perl", "Prolog"].include?(l) }
@@ -40,8 +40,13 @@ module Linguist
     # Returns an array of Languages or []
     def self.disambiguate_c(data, languages)
       matches = []
-      matches << Language["Objective-C"] if data.include?("@interface")
-      matches << Language["C++"] if data.include?("#include <cstdint>")
+      if (/@(interface|class|protocol|property|end|synchronised|selector|implementation)/.match(data))
+        matches << Language["Objective-C"]
+      end
+      if (/^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>/.match(data) or
+          /^\s*template\s*</.match(data) or /^[^@]class\s+\w+/.match(data) or /^[^@](private|public|protected):$/.match(data) or /std::.+$/.match(data))
+        matches << Language["C++"]
+      end
       matches
     end
 
