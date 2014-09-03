@@ -40,7 +40,7 @@ module Linguist
     # Returns an array of Languages or []
     def self.disambiguate_c(data, languages)
       matches = []
-      if (/@(interface|class|protocol|synchronised|selector|implementation)/.match(data))
+      if (/@(interface|class|protocol|property|end|synchronised|selector|implementation)/.match(data))
         matches << Language["Objective-C"]
       end
       if (/^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>/.match(data) or
