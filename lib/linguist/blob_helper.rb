@@ -1,6 +1,4 @@
 require 'linguist/generated'
-require 'linguist/language'
-
 require 'charlock_holmes'
 require 'escape_utils'
 require 'mime/types'

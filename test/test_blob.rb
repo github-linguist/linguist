@@ -192,9 +192,9 @@ class TestBlob < Test::Unit::TestCase
     assert !blob("Text/README").generated?
 
     # Xcode project files
-    assert blob("XML/MainMenu.xib").generated?
+    assert !blob("XML/MainMenu.xib").generated?
     assert blob("Binary/MainMenu.nib").generated?
-    assert blob("XML/project.pbxproj").generated?
+    assert !blob("XML/project.pbxproj").generated?
 
     # Gemfile.locks
     assert blob("Gemfile.lock").generated?
@@ -393,6 +393,10 @@ class TestBlob < Test::Unit::TestCase
     # NuGet Packages
     assert blob("packages/Modernizr.2.0.6/Content/Scripts/modernizr-2.0.6-development-only.js").vendored?
 
+    # Font Awesome
+    assert blob("some/asset/path/font-awesome.min.css").vendored?
+    assert blob("some/asset/path/font-awesome.css").vendored?
+
     # Normalize
     assert blob("some/asset/path/normalize.css").vendored?
 
@@ -412,6 +416,11 @@ class TestBlob < Test::Unit::TestCase
     assert blob("cordova.min.js").vendored?
     assert blob("cordova-2.1.0.js").vendored?
     assert blob("cordova-2.1.0.min.js").vendored?
+
+    # Foundation js
+    assert blob("foundation.js").vendored?
+    assert blob("foundation.min.js").vendored?
+    assert blob("foundation.abide.js").vendored?
 
     # Vagrant
     assert blob("Vagrantfile").vendored?

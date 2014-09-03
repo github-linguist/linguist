@@ -9,6 +9,8 @@ end
 require 'linguist/classifier'
 require 'linguist/heuristics'
 require 'linguist/samples'
+require 'linguist/file_blob'
+require 'linguist/blob_helper'
 
 module Linguist
   # Language names that are recognizable by GitHub. Defined languages
@@ -530,6 +532,7 @@ module Linguist
     if extnames = extensions[name]
       extnames.each do |extname|
         if !options['extensions'].include?(extname)
+          warn "#{name} has a sample with extension (#{extname}) that isn't explicitly defined in languages.yml" unless extname == '.script!'
           options['extensions'] << extname
         end
       end
