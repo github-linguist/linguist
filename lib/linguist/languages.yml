@@ -28,12 +28,28 @@ ABAP:
   extensions:
   - .abap
 
+AGS Script:
+  type: programming
+  lexer: C++
+  color: "#B9D9FF"
+  aliases:
+  - ags
+  extensions:
+  - .asc
+  - .ash
+
 ANTLR:
   type: programming
   color: "#9DC3FF"
   lexer: ANTLR
   extensions:
   - .g4
+
+APL:
+  type: programming
+  color: "#8a0707"
+  extensions:
+  - .apl
 
 ASP:
   type: programming
@@ -260,6 +276,7 @@ C:
   extensions:
   - .c
   - .cats
+  - .h
   - .w
 
 C#:
@@ -288,6 +305,7 @@ C++:
   - .cc
   - .cxx
   - .H
+  - .h
   - .h++
   - .hh
   - .hpp
@@ -346,6 +364,14 @@ Ceylon:
   extensions:
   - .ceylon
 
+Chapel:
+  type: programming
+  color: "#8dc63f"
+  aliases:
+  - chpl
+  extensions:
+  - .chpl
+
 ChucK:
   lexer: Java
   extensions:
@@ -354,9 +380,8 @@ ChucK:
 Cirru:
   type: programming
   color: "#aaaaff"
-  # ace_mode: cirru
-  # lexer: Cirru
-  lexer: Text only
+  ace_mode: cirru
+  lexer: Cirru
   extensions:
   - .cirru
 
@@ -403,14 +428,27 @@ CoffeeScript:
 
 ColdFusion:
   type: programming
+  group: ColdFusion
   lexer: Coldfusion HTML
   ace_mode: coldfusion
   color: "#ed2cd6"
   search_term: cfm
   aliases:
   - cfm
+  - cfml
   extensions:
   - .cfm
+
+ColdFusion CFC:
+  type: programming
+  group: ColdFusion
+  lexer: Coldfusion CFC
+  ace_mode: coldfusion
+  color: "#ed2cd6"
+  search_term: cfc
+  aliases:
+  - cfc
+  extensions:
   - .cfc
 
 Common Lisp:
@@ -444,6 +482,7 @@ Coq:
   type: programming
   extensions:
   - .coq
+  - .v
 
 Cpp-ObjDump:
   type: data
@@ -539,6 +578,7 @@ Dart:
 Diff:
   extensions:
   - .diff
+  - .patch
 
 Dogescript:
   type: programming
@@ -587,7 +627,7 @@ Eagle:
 
 Eiffel:
   type: programming
-  lexer: Text only
+  lexer: Eiffel
   color: "#946d57"
   extensions:
   - .e
@@ -607,7 +647,7 @@ Elm:
 
 Emacs Lisp:
   type: programming
-  lexer: Scheme
+  lexer: Common Lisp
   color: "#c065db"
   aliases:
   - elisp
@@ -618,11 +658,20 @@ Emacs Lisp:
   - .el
   - .emacs
 
+EmberScript:
+  type: programming
+  color: "#f64e3e"
+  lexer: CoffeeScript
+  extensions:
+  - .em
+  - .emberscript
+
 Erlang:
   type: programming
   color: "#0faf8d"
   extensions:
   - .erl
+  - .escript
   - .hrl
 
 F#:
@@ -698,6 +747,7 @@ Forth:
   extensions:
   - .fth
   - .4th
+  - .forth
 
 Frege:
   type: programming
@@ -806,6 +856,9 @@ Gosu:
   color: "#82937f"
   extensions:
   - .gs
+  - .gst
+  - .gsx
+  - .vark
 
 Grace:
   type: programming
@@ -841,6 +894,7 @@ Groovy:
   color: "#e69f56"
   extensions:
   - .groovy
+  - .gradle
   - .grt
   - .gtpl
   - .gvy
@@ -933,7 +987,7 @@ Haxe:
 
 Hy:
   type: programming
-  lexer: Clojure
+  lexer: Hy
   ace_mode: clojure
   color: "#7891b1"
   extensions:
@@ -945,6 +999,13 @@ IDL:
   color: "#e3592c"
   extensions:
   - .pro
+  - .dlm
+
+IGOR Pro:
+  type: programming
+  lexer: Igor
+  extensions:
+  - .ipf
 
 INI:
   type: data
@@ -967,7 +1028,7 @@ Idris:
 
 Inform 7:
   type: programming
-  lexer: Text only
+  lexer: Inform 7
   wrap: true
   extensions:
   - .ni
@@ -1019,6 +1080,7 @@ JSON:
   searchable: false
   extensions:
   - .json
+  - .lock
   - .sublime-keymap
   - .sublime-mousemap
   - .sublime-project
@@ -1140,6 +1202,12 @@ LFE:
 LLVM:
   extensions:
   - .ll
+  
+LabVIEW:
+  type: programming
+  lexer: Text only
+  extensions:
+  - .lvproj
 
 LSL:
   type: programming
@@ -1157,6 +1225,9 @@ Lasso:
   color: "#2584c3"
   extensions:
   - .lasso
+  - .las
+  - .lasso9
+  - .ldml
 
 Latte:
   type: markup
@@ -1235,6 +1306,14 @@ Logtalk:
   - .lgt
   - .logtalk
 
+LookML:
+  type: programming
+  lexer: YAML
+  ace_mode: yaml
+  color: "#652B81"
+  extensions:
+  - .lookml
+
 Lua:
   type: programming
   ace_mode: lua
@@ -1242,6 +1321,7 @@ Lua:
   extensions:
   - .lua
   - .nse
+  - .pd_lua
   - .rbxs
   interpreters:
   - lua
@@ -1307,7 +1387,7 @@ Mathematica:
   - .mathematica
   - .m
   - .nb
-  lexer: Text only
+  lexer: Mathematica
 
 Matlab:
   type: programming
@@ -1387,6 +1467,7 @@ Myghty:
 NSIS:
   extensions:
   - .nsi
+  - .nsh
 
 Nemerle:
   type: programming
@@ -1451,6 +1532,7 @@ OCaml:
   color: "#3be133"
   extensions:
   - .ml
+  - .eliom
   - .eliomi
   - .ml4
   - .mli
@@ -1471,6 +1553,7 @@ Objective-C:
   - objc
   extensions:
   - .m
+  - .h
 
 Objective-C++:
   type: programming
@@ -1502,6 +1585,13 @@ Opa:
   extensions:
   - .opa
 
+Opal:
+  type: programming
+  color: "#f7ede0"
+  lexer: Text only
+  extensions:
+  - .opal
+
 OpenCL:
   type: programming
   group: C
@@ -1518,6 +1608,13 @@ OpenEdge ABL:
   - abl
   extensions:
   - .p
+  - .cls
+
+OpenSCAD:
+  type: programming
+  lexer: Text only
+  extensions:
+  - .scad
 
 Org:
   type: prose
@@ -1556,6 +1653,7 @@ PHP:
   - .php
   - .aw
   - .ctp
+  - .module
   - .php3
   - .php4
   - .php5
@@ -1567,7 +1665,7 @@ PHP:
 
 Pan:
   type: programming
-  lexer: Text only
+  lexer: Pan
   color: '#cc0000'
   extensions:
   - .pan
@@ -1604,6 +1702,7 @@ Pascal:
   extensions:
   - .pas
   - .dfm
+  - .dpr
   - .lpr
 
 Perl:
@@ -1613,12 +1712,15 @@ Perl:
   extensions:
   - .pl
   - .PL
+  - .cgi
+  - .fcgi
   - .perl
   - .ph
   - .plx
   - .pm
   - .pod
   - .psgi
+  - .t
   interpreters:
   - perl
 
@@ -1634,6 +1736,13 @@ Perl6:
   - .p6m
   - .pl6
   - .pm6
+
+PigLatin:
+  type: programming
+  color: "#fcd7de"
+  lexer: Text only
+  extensions:
+  - .pig
 
 Pike:
   type: programming
@@ -1787,7 +1896,7 @@ R:
 
 RDoc:
   type: prose
-  lexer: Text only
+  lexer: Rd
   ace_mode: rdoc
   wrap: true
   extensions:
@@ -1827,6 +1936,7 @@ Racket:
   - .rkt
   - .rktd
   - .rktl
+  - .scrbl
 
 Ragel in Ruby Host:
   type: programming
@@ -1896,7 +2006,10 @@ Ruby:
   - .god
   - .irbrc
   - .mspec
+  - .pluginspec
   - .podspec
+  - .rabl
+  - .rake
   - .rbuild
   - .rbw
   - .rbx
@@ -1941,6 +2054,14 @@ SCSS:
   extensions:
   - .scss
 
+SQF:
+  type: programming
+  color: "#FFCB1F"
+  lexer: C++
+  extensions:
+  - .sqf
+  - .hqf
+
 SQL:
   type: data
   ace_mode: sql
@@ -1970,6 +2091,7 @@ Sass:
   group: CSS
   extensions:
   - .sass
+  - .scss
 
 Scala:
   type: programming
@@ -1977,6 +2099,7 @@ Scala:
   color: "#7dd3b0"
   extensions:
   - .scala
+  - .sbt
   - .sc
 
 Scaml:
@@ -1992,6 +2115,7 @@ Scheme:
   - .scm
   - .sld
   - .sls
+  - .sps
   - .ss
   interpreters:
   - guile
@@ -2003,6 +2127,8 @@ Scilab:
   type: programming
   extensions:
   - .sci
+  - .sce
+  - .tst
 
 Self:
   type: programming
@@ -2022,8 +2148,10 @@ Shell:
   - zsh
   extensions:
   - .sh
+  - .bash
   - .bats
   - .tmux
+  - .zsh
   interpreters:
   - bash
   - sh
@@ -2090,6 +2218,7 @@ Standard ML:
   extensions:
   - .ML
   - .fun
+  - .sig
   - .sml
 
 Stata:
@@ -2170,10 +2299,13 @@ TeX:
   extensions:
   - .tex
   - .aux
+  - .bbx
   - .bib
+  - .cbx
   - .cls
   - .dtx
   - .ins
+  - .lbx
   - .ltx
   - .mkii
   - .mkiv
@@ -2290,6 +2422,7 @@ Visual Basic:
   extensions:
   - .vb
   - .bas
+  - .cls
   - .frm
   - .frx
   - .vba
@@ -2318,6 +2451,7 @@ XML:
   - wsdl
   extensions:
   - .xml
+  - .ant
   - .axml
   - .ccxml
   - .clixml
@@ -2331,6 +2465,7 @@ XML:
   - .fsproj
   - .glade
   - .grxml
+  - .ivy
   - .jelly
   - .kml
   - .launch
