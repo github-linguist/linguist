@@ -1202,12 +1202,6 @@ LFE:
 LLVM:
   extensions:
   - .ll
-  
-LabVIEW:
-  type: programming
-  lexer: Text only
-  extensions:
-  - .lvproj
 
 LSL:
   type: programming
@@ -1218,6 +1212,12 @@ LSL:
   interpreters:
   - lsl
   color: '#3d9970'
+  
+LabVIEW:
+  type: programming
+  lexer: Text only
+  extensions:
+  - .lvproj
 
 Lasso:
   type: programming
