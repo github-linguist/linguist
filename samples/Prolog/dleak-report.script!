@@ -1,0 +1,11 @@
+#!/usr/bin/env swipl
+
+:- set_prolog_flag(verbose, silent).
+:- use_module(dleak).
+
+:- initialization
+	main, halt.
+
+main :-
+	current_prolog_flag(argv, [File]),
+	dleak(File).
