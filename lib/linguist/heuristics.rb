@@ -19,8 +19,21 @@ module Linguist
         if languages.all? { |l| ["ECL", "Prolog"].include?(l) }
           result = disambiguate_ecl(data, languages)
         end
+        if languages.all? { |l| ["Adventure Game Studio", "AsciiDoc"].include?(l) }
+          result = disabiguate_asc(data, languages)
+        end
         return result
       end
+    end
+
+    def self.disabiguate_asc(data, languages)
+      matches = []
+      if (/^(\/\/\s*|\s*((import|export)?\s*(function|int|float|char)\s*((room|repeatedly|on|game)_)?([A-Za-z]+[A-Za-z_0-9]+)\s*[;\(]?))/.match(data))
+        matches << Language["Adventure Game Studio"]
+      elsif (/^\s*([=~\+\-\^]+\s*|\[.*?\]\s*)$|[\+\*\-\=]+/.match(data))
+        matches << Language["AsciiDoc"]
+      end
+      matches
     end
 
     # .h extensions are ambigious between C, C++, and Objective-C.
