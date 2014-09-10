@@ -47,4 +47,18 @@ class TestRepository < Test::Unit::TestCase
 
     assert_equal linguist_repo.cache, new_repo.cache
   end
+
+  def test_git_attributes
+    attr_commit = '525304738ebdb7ab3b7d2bf9a7514cc428faa273'
+    repo = linguist_repo(attr_commit)
+
+    assert repo.breakdown_by_file.has_key?("Java")
+    assert repo.breakdown_by_file["Java"].include?("lib/linguist.rb")
+
+    assert repo.breakdown_by_file.has_key?("Ruby")
+    assert !repo.breakdown_by_file["Ruby"].empty?
+    repo.breakdown_by_file["Ruby"].each do |file|
+      assert !file.start_with?("test/")
+    end
+  end
 end
