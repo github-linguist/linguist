@@ -17,6 +17,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['C'], Language['OpenCL'].lexer
     assert_equal Lexer['C'], Language['XS'].lexer
     assert_equal Lexer['C++'], Language['C++'].lexer
+    assert_equal Lexer['Chapel'], Language['Chapel'].lexer
     assert_equal Lexer['Coldfusion HTML'], Language['ColdFusion'].lexer
     assert_equal Lexer['Coq'], Language['Coq'].lexer
     assert_equal Lexer['FSharp'], Language['F#'].lexer
@@ -32,6 +33,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['Java'], Language['ChucK'].lexer
     assert_equal Lexer['Java'], Language['Java'].lexer
     assert_equal Lexer['JavaScript'], Language['JavaScript'].lexer
+    assert_equal Lexer['LSL'], Language['LSL'].lexer
     assert_equal Lexer['MOOCode'], Language['Moocode'].lexer
     assert_equal Lexer['MuPAD'], Language['mupad'].lexer
     assert_equal Lexer['NASM'], Language['Assembly'].lexer
@@ -45,7 +47,6 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['Ruby'], Language['Mirah'].lexer
     assert_equal Lexer['Ruby'], Language['Ruby'].lexer
     assert_equal Lexer['S'], Language['R'].lexer
-    assert_equal Lexer['Scheme'], Language['Emacs Lisp'].lexer
     assert_equal Lexer['Scheme'], Language['Nu'].lexer
     assert_equal Lexer['Racket'], Language['Racket'].lexer
     assert_equal Lexer['Scheme'], Language['Scheme'].lexer
@@ -71,6 +72,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['C'], Language.find_by_alias('c')
     assert_equal Language['C++'], Language.find_by_alias('c++')
     assert_equal Language['C++'], Language.find_by_alias('cpp')
+    assert_equal Language['Chapel'], Language.find_by_alias('chpl')
     assert_equal Language['CoffeeScript'], Language.find_by_alias('coffee')
     assert_equal Language['CoffeeScript'], Language.find_by_alias('coffee-script')
     assert_equal Language['ColdFusion'], Language.find_by_alias('cfm')
@@ -185,6 +187,7 @@ class TestLanguage < Test::Unit::TestCase
 
   def test_programming
     assert_equal :programming, Language['JavaScript'].type
+    assert_equal :programming, Language['LSL'].type
     assert_equal :programming, Language['Perl'].type
     assert_equal :programming, Language['PowerShell'].type
     assert_equal :programming, Language['Python'].type
@@ -255,6 +258,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal [Language['Shell']], Language.find_by_filename('.zshrc')
     assert_equal [Language['Clojure']], Language.find_by_filename('riemann.config')
     assert_equal [Language['HTML+Django']], Language.find_by_filename('index.jinja')
+    assert_equal [Language['Chapel']], Language.find_by_filename('examples/hello.chpl')
   end
 
   def test_find_by_shebang
@@ -324,6 +328,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal '#3581ba', Language['Python'].color
     assert_equal '#f1e05a', Language['JavaScript'].color
     assert_equal '#31859c', Language['TypeScript'].color
+    assert_equal '#3d9970', Language['LSL'].color
   end
 
   def test_colors
@@ -336,6 +341,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal 'coffee', Language['CoffeeScript'].ace_mode
     assert_equal 'csharp', Language['C#'].ace_mode
     assert_equal 'css', Language['CSS'].ace_mode
+    assert_equal 'lsl', Language['LSL'].ace_mode
     assert_equal 'javascript', Language['JavaScript'].ace_mode
   end
 
@@ -350,6 +356,7 @@ class TestLanguage < Test::Unit::TestCase
   end
 
   def test_extensions
+    assert Language['LSL'].extensions.include?('.lsl')
     assert Language['Perl'].extensions.include?('.pl')
     assert Language['Python'].extensions.include?('.py')
     assert Language['Ruby'].extensions.include?('.rb')

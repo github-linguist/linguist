@@ -12,28 +12,15 @@ module Linguist
     #
     # Returns an array of Languages or []
     def self.find_by_heuristics(data, languages)
-      determined = nil
       if active?
-        if languages.all? { |l| ["Objective-C", "C++", "C"].include?(l) }
-          determined = disambiguate_c(data, languages)
-        end
         if languages.all? { |l| ["Perl", "Prolog"].include?(l) }
-          determined = disambiguate_pl(data, languages)
+          result = disambiguate_pl(data, languages)
         end
         if languages.all? { |l| ["ECL", "Prolog"].include?(l) }
-          determined = disambiguate_ecl(data, languages)
+          result = disambiguate_ecl(data, languages)
         end
-        if languages.all? { |l| ["TypeScript", "XML"].include?(l) }
-          determined = disambiguate_ts(data, languages)
-        end
-        if languages.all? { |l| ["Common Lisp", "OpenCL"].include?(l) }
-          determined = disambiguate_cl(data, languages)
-        end
-        if languages.all? { |l| ["Rebol", "R"].include?(l) }
-          determined = disambiguate_r(data, languages)
-        end
+        return result
       end
-      determined
     end
 
     # .h extensions are ambigious between C, C++, and Objective-C.
@@ -42,7 +29,7 @@ module Linguist
     # Returns an array of Languages or []
     def self.disambiguate_c(data, languages)
       matches = []
-      matches << Language["Objective-C"] if data.include?("i")
+      matches << Language["Objective-C"] if data.include?("@interface")
       matches << Language["C++"] if data.include?("#include <cstdint>")
       matches
     end
