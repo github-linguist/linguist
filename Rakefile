@@ -23,156 +23,57 @@ task :build_gem do
   File.delete("lib/linguist/languages.json")
 end
 
-# Want to do: rake benchmark:compare refs=20154eb04...6ed0a05b4
-# If output for 20154eb04 or 6ed0a05b4 doesn't exist then should throw error
-# Classification outputs for each commit need to be generated before the comparison can be done
-# With something like: rake benchmark:generate ref=20154eb04
-
 namespace :benchmark do
-  require 'git'
   benchmark_path = "benchmark/results"
 
-  git = Git.open('.')
-
-  desc "Compare outputs"
-  task :compare do
-    reference, compare = ENV['refs'].split('...')
-    puts "Comparing #{reference}...#{compare}"
-
-    # Abort if there are uncommitted changes
-    abort("Uncommitted changes -- aborting") if git.status.changed.any?
-
-    [reference, compare].each do |ref|
-      abort("No output file for #{ref}, run 'rake benchmark:generate ref=#{ref}'") unless File.exist?("#{benchmark_path}/#{ref}.json")
-    end
-  end
-
-  desc "Generate classification summary for given ref"
+  # $ rake benchmark:generate CORPUS=path/to/samples
+  desc "Generate results for"
   task :generate do
-    ref = ENV['ref']
-    abort("Must specify a commit ref, e.g. 'rake benchmark:generate ref=08819f82'") unless ref
-    abort("Unstaged changes - aborting") if git.status.changed.any?
-
-    # Get the current branch
-    # Would like to get this from the Git gem
-    current_branch = `git rev-parse --abbrev-ref HEAD`.strip
-
-    puts "Checking out #{ref}"
-    git.checkout(ref)
-
-    # RUN BENCHMARK
-    # Go through benchmark/samples/LANG dirs
-    # For each Language
-
-    Rake::Task["benchmark:index"].execute(:commit => ref)
-
-    # Checkout original branch
-    git.checkout(current_branch)
-  end
-
-  desc "Build benchmark index"
-  task :index, [:commit] do |t, args|
+    ref = `git rev-parse HEAD`.strip[0,8]
+    corpus = File.expand_path(ENV["CORPUS"] || "samples")
 
     require 'linguist/language'
+
     results = Hash.new
-    languages = Dir.glob('benchmark/samples/*')
-
-    languages.each do |lang|
-      puts ""
-      puts "Starting with #{lang}"
-      results[lang] = {}
-      files = Dir.glob("#{lang}/*")
-      files.each do |file|
-        next unless File.file?(file)
-        puts "  #{file}"
-
-        blob = Linguist::FileBlob.new(file, Dir.pwd)
-        result = blob.language
-
-        filename = File.basename(file)
-        if result.nil? # No results
-          results[lang][filename] = "No language"
-        else
-          results[lang][filename] = result.name
-        end
-      end
+    Dir.glob("#{corpus}/**/*").each do |file|
+      next unless File.file?(file)
+      filename = file.gsub("#{corpus}/", "")
+      results[filename] = Linguist::FileBlob.new(file).language
     end
 
-    File.open("benchmark/results/#{args[:commit]}.json", "w") {|f| f.write(results.to_json) }
+    # Ensure results directory exists
+    FileUtils.mkdir_p("benchmark/results")
+
+    # Write results
+    result_filename = "benchmark/results/#{File.basename(corpus)}-#{ref}.json"
+    File.write(result_filename, results.to_json)
+    puts "wrote #{result_filename}"
   end
 
+  # $ rake benchmark:compare REFERENCE=path/to/reference.json CANDIDATE=path/to/candidate.json
   desc "Compare results"
-  task :results do
-    # Deep diffing
-    require './lib/linguist/diff'
+  task :compare do
+    reference_file = ENV["REFERENCE"]
+    candidate_file = ENV["CANDIDATE"]
 
-    reference, compare = ENV['refs'].split('...')
+    reference = JSON.parse(File.read(reference_file))
+    reference_counts = Hash.new(0)
+    reference.each { |filename, language| reference_counts[language] += 1 }
 
-    reference_classifications_file = "benchmark/results/#{reference}.json"
-    compare_classifications_file = "benchmark/results/#{compare}.json"
+    candidate = JSON.parse(File.read(candidate_file))
+    candidate_counts = Hash.new(0)
+    candidate.each { |filename, language| candidate_counts[language] += 1 }
 
-    # DO COMPARISON...
-    abort("No result files to compare") unless (File.exist?(reference_classifications_file) && File.exist?(compare_classifications_file))
-    reference_classifications = JSON.parse(File.read(reference_classifications_file))
-    compare_classifications = JSON.parse(File.read(compare_classifications_file))
+    changes = diff(reference_counts, candidate_counts)
 
-    # Check if samples don't match current classification
-    puts ""
-    puts "Potential misclassifications for #{reference}"
-    reference_classifications.each do |lang, files|
-      language_name = lang.split('/').last
-
-      files.each do |name, classification|
-        # FIXME Don't want to report stuff from these dirs for now
-        next if ['Binary', 'Text'].include?(language_name)
-        unless classification == language_name
-          puts "  #{name} is classified as #{classification} but #{language_name} was expected"
-        end
-      end
-    end
-
-    # Check if samples don't match current classification
-    # TODO DRY this up.
-    puts ""
-    puts "Potential misclassifications for #{compare}"
-    compare_classifications.each do |lang, files|
-      language_name = lang.split('/').last
-
-      files.each do |name, classification|
-        # FIXME Don't want to report stuff from these dirs for now
-        next if ['Binary', 'Text'].include?(language_name)
-        unless classification == language_name
-          puts "  #{name} is classified as #{classification} but #{language_name} was expected"
-        end
-      end
-    end
-
-    puts ""
-    puts "Changes between #{reference}...#{compare}"
-    changes = reference_classifications.deep_diff(compare_classifications)
-
-    # Are there any differences in the linguist classification?
     if changes.any?
-      changes.each do |lang, files|
-        previous_count = reference_classifications[lang].size
-
-        # Count the number of changed classifications (language and number)
-        summary = changes[lang].inject(Hash.new(0)) do |result, (key, val)|
-          new_lang = val.last
-          result[new_lang] += 1
-          result
-        end
-
-        puts "#{lang}"
-
-        # Work out the percentage change
-        summary.each do |new_lang, count|
-          percent = count / previous_count.to_f
-          puts "  #{sprintf("%.2f", percent)}% change to #{new_lang} (count files)"
-        end
+      changes.each do |language, (before, after)|
+        before_percent = 100 * before / reference.size.to_f
+        after_percent = 100 * after / candidate.size.to_f
+        puts "%s changed from %.1f%% to %.1f%%" % [language || 'unknown', before_percent, after_percent]
       end
     else
-      puts "  No changes"
+      puts "No changes"
     end
   end
 end
@@ -224,5 +125,12 @@ namespace :classifier do
         end
       end
     end
+  end
+end
+
+
+def diff(a, b)
+  (a.keys | b.keys).each_with_object({}) do |key, diff|
+    diff[key] = [a[key], b[key]] unless a[key] == b[key]
   end
 end
