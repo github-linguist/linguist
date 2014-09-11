@@ -1,5 +1,4 @@
 require 'linguist/repository'
-
 require 'test/unit'
 
 class TestRepository < Test::Unit::TestCase
@@ -49,6 +48,11 @@ class TestRepository < Test::Unit::TestCase
   end
 
   def test_git_attributes
+    # See https://github.com/github/linguist/blob/525304738ebdb7ab3b7d2bf9a7514cc428faa273/.gitattributes
+    #
+    # It looks like this:
+    # test/*.rb linguist-ignore
+    # lib/linguist.rb linguist-lang=Java
     attr_commit = '525304738ebdb7ab3b7d2bf9a7514cc428faa273'
     repo = linguist_repo(attr_commit)
 
