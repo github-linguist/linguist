@@ -2,6 +2,7 @@ require 'json'
 require 'rake/clean'
 require 'rake/testtask'
 require 'yaml'
+require 'pry'
 
 task :default => :test
 
@@ -20,6 +21,61 @@ task :build_gem do
   File.write("lib/linguist/languages.json", JSON.dump(languages))
   `gem build github-linguist.gemspec`
   File.delete("lib/linguist/languages.json")
+end
+
+namespace :benchmark do
+  benchmark_path = "benchmark/results"
+
+  # $ rake benchmark:generate CORPUS=path/to/samples
+  desc "Generate results for"
+  task :generate do
+    ref = `git rev-parse HEAD`.strip[0,8]
+    corpus = File.expand_path(ENV["CORPUS"] || "samples")
+
+    require 'linguist/language'
+
+    results = Hash.new
+    Dir.glob("#{corpus}/**/*").each do |file|
+      next unless File.file?(file)
+      filename = file.gsub("#{corpus}/", "")
+      results[filename] = Linguist::FileBlob.new(file).language
+    end
+
+    # Ensure results directory exists
+    FileUtils.mkdir_p("benchmark/results")
+
+    # Write results
+    result_filename = "benchmark/results/#{File.basename(corpus)}-#{ref}.json"
+    File.write(result_filename, results.to_json)
+    puts "wrote #{result_filename}"
+  end
+
+  # $ rake benchmark:compare REFERENCE=path/to/reference.json CANDIDATE=path/to/candidate.json
+  desc "Compare results"
+  task :compare do
+    reference_file = ENV["REFERENCE"]
+    candidate_file = ENV["CANDIDATE"]
+
+    reference = JSON.parse(File.read(reference_file))
+    reference_counts = Hash.new(0)
+    reference.each { |filename, language| reference_counts[language] += 1 }
+
+    candidate = JSON.parse(File.read(candidate_file))
+    candidate_counts = Hash.new(0)
+    candidate.each { |filename, language| candidate_counts[language] += 1 }
+
+    changes = diff(reference_counts, candidate_counts)
+
+    if changes.any?
+      changes.each do |language, (before, after)|
+        before_percent = 100 * before / reference.size.to_f
+        after_percent = 100 * after / candidate.size.to_f
+        puts "%s changed from %.1f%% to %.1f%%" % [language || 'unknown', before_percent, after_percent]
+      end
+    else
+      puts "No changes"
+    end
+  end
 end
 
 namespace :classifier do
@@ -69,5 +125,12 @@ namespace :classifier do
         end
       end
     end
+  end
+end
+
+
+def diff(a, b)
+  (a.keys | b.keys).each_with_object({}) do |key, diff|
+    diff[key] = [a[key], b[key]] unless a[key] == b[key]
   end
 end
