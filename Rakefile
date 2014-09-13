@@ -26,10 +26,11 @@ end
 namespace :benchmark do
   benchmark_path = "benchmark/results"
 
-  # $ rake benchmark:generate CORPUS=path/to/samples
+  # $ bundle exec rake benchmark:generate CORPUS=path/to/samples
   desc "Generate results for"
   task :generate do
     ref = `git rev-parse HEAD`.strip[0,8]
+
     corpus = File.expand_path(ENV["CORPUS"] || "samples")
 
     require 'linguist/language'
@@ -45,12 +46,17 @@ namespace :benchmark do
     FileUtils.mkdir_p("benchmark/results")
 
     # Write results
-    result_filename = "benchmark/results/#{File.basename(corpus)}-#{ref}.json"
+    if `git status`.include?('working directory clean')
+      result_filename = "benchmark/results/#{File.basename(corpus)}-#{ref}.json"
+    else
+      result_filename = "benchmark/results/#{File.basename(corpus)}-#{ref}-unstaged.json"
+    end
+
     File.write(result_filename, results.to_json)
     puts "wrote #{result_filename}"
   end
 
-  # $ rake benchmark:compare REFERENCE=path/to/reference.json CANDIDATE=path/to/candidate.json
+  # $ bundle exec rake benchmark:compare REFERENCE=path/to/reference.json CANDIDATE=path/to/candidate.json
   desc "Compare results"
   task :compare do
     reference_file = ENV["REFERENCE"]
