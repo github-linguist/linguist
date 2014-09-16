@@ -16,7 +16,7 @@ task :samples do
   File.open('lib/linguist/samples.json', 'w') { |io| io.write json }
 end
 
-task :build_gem do
+task :build_gem => :samples do
   languages = YAML.load_file("lib/linguist/languages.yml")
   File.write("lib/linguist/languages.json", JSON.dump(languages))
   `gem build github-linguist.gemspec`
