@@ -1,0 +1,31 @@
+<!-- insert_before '[data-hook="buttons"]' -->
+<% if Spree::Config[:enable_fishbowl] %>
+<div class="row">
+  <div class="twelve columns" id="fishbowl_preferences">
+    <fieldset class="no-border-bottom">
+      <legend align="center"><%= t(:fishbowl_settings)%></legend>
+      <% @fishbowl_options.each do |key| %>
+          <div class="field">
+            <%= label_tag(key, t(key.to_s.gsub('fishbowl_', '').to_sym) + ': ') + tag(:br) %>
+            <%= text_field_tag('preferences[' + key.to_s + ']', Spree::Config[key], { :size => 10, :class => 'fullwidth' }) %>
+          </div>
+      <% end %>
+      <div class="field">
+        <%= hidden_field_tag 'preferences[fishbowl_always_fetch_current_inventory]', '0' %>
+        <%= check_box_tag('preferences[fishbowl_always_fetch_current_inventory]', "1", Spree::Config[:fishbowl_always_fetch_current_inventory]) %>
+        <%= t(:always_fetch_current_inventory) %>
+      </div>
+      <% if !@location_groups.empty? %>
+        <div class="field">
+          <%= label_tag(:fishbowl_location_group, t(:location_group) + ': ') + tag(:br) %>
+          <%= select('preferences', 'fishbowl_location_group', @location_groups, { :selected => Spree::Config[:fishbowl_location_group]}, { :class => ['select2', 'fullwidth'] }) %>
+        </div>
+      <% end %>
+    </fieldset>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $('.select2').select2();
+</script>
+<% end %>

@@ -1,5 +1,6 @@
 require 'escape_utils'
 require 'pygments'
+require 'pry'
 require 'yaml'
 begin
   require 'json'
@@ -9,6 +10,8 @@ end
 require 'linguist/classifier'
 require 'linguist/heuristics'
 require 'linguist/samples'
+require 'linguist/file_blob'
+require 'linguist/blob_helper'
 
 module Linguist
   # Language names that are recognizable by GitHub. Defined languages
@@ -92,49 +95,65 @@ module Linguist
 
     # Public: Detects the Language of the blob.
     #
-    # name - String filename
-    # data - String blob data. A block also maybe passed in for lazy
-    #        loading. This behavior is deprecated and you should always
-    #        pass in a String.
-    # mode - Optional String mode (defaults to nil)
+    # blob - an object that includes the Linguist `BlobHelper` interface;
+    #       see Linguist::LazyBlob and Linguist::FileBlob for examples
     #
     # Returns Language or nil.
-    def self.detect(name, data, mode = nil)
+    def self.detect(blob)
+      name = blob.name.to_s
+
+      # Check if the blob is possibly binary and bail early; this is a cheap
+      # test that uses the extension name to guess a binary binary mime type.
+      #
+      # We'll perform a more comprehensive test later which actually involves
+      # looking for binary characters in the blob
+      return nil if blob.likely_binary? || blob.binary?
+
       # A bit of an elegant hack. If the file is executable but extensionless,
       # append a "magic" extension so it can be classified with other
       # languages that have shebang scripts.
-      if File.extname(name).empty? && mode && (mode.to_i(8) & 05) == 05
+      extension = FileBlob.new(name).extension
+      if extension.empty? && blob.mode && (blob.mode.to_i(8) & 05) == 05
         name += ".script!"
       end
 
-      # First try to find languages that match based on filename.
+      # Find languages that match based on filename.
       possible_languages = find_by_filename(name)
 
       if possible_languages.length == 1
+        # Simplest and most common case, we can just return the one match based
+        # on extension
         possible_languages.first
-      # If there is more than one possible language with that extension (or no
-      # extension at all, in the case of extensionless scripts), we need to continue
-      # our detection work
-      else
-        data = data.call() if data.respond_to?(:call)
 
-        # Don't bother with emptiness
+      # If there is more than one possible language with that extension (or no
+      # extension at all, in the case of extensionless scripts), we need to
+      # continue our detection work
+      else
+        # Matches possible_languages.length == 0 || possible_languages.length > 0
+        data = blob.data
+
+        # Don't bother with binary contents or an empty file
         if data.nil? || data == ""
-          nil
+          # No language detected.
+          return nil
+
         # Check if there's a shebang line and use that as authoritative
+        # Note this means we can detect by shebang even if we have no language
+        # matches which is good for some unknown extensions
         elsif (result = find_by_shebang(data)) && !result.empty?
-          result.first
+          return result.first
+
         # More than one language with that extension. We need to make a choice.
         elsif possible_languages.length > 1
           possible_language_names = possible_languages.map(&:name)
 
-          # Try to find it with our heuristics.
+          # First try heuristics.
           if (determined = Heuristics.find_by_heuristics(data, possible_language_names)) && !determined.empty?
-            determined.first
-          # Lastly, fall back to the probablistic classifier.
-          elsif classified = Classifier.classify(Samples::DATA, data, possible_language_names ).first
+            return determined.first
+          # Lastly, fall back to the probabilistic classifier.
+          elsif classified = Classifier.classify(Samples::DATA, data, possible_language_names).first
             # Return the actual Language object based of the string language name (i.e., first element of `#classify`)
-            Language[classified[0]]
+            return Language[classified[0]]
           end
         end
       end
@@ -186,7 +205,8 @@ module Linguist
     #
     # Returns all matching Languages or [] if none were found.
     def self.find_by_filename(filename)
-      basename, extname = File.basename(filename), File.extname(filename)
+      basename = File.basename(filename)
+      extname = FileBlob.new(filename).extension
       langs = @filename_index[basename] +
               @extension_index[extname]
       langs.compact.uniq
@@ -398,7 +418,7 @@ module Linguist
     #
     # Returns the extensions Array
     attr_reader :filenames
-    
+
     # Public: Return all possible extensions for language
     def all_extensions
       (extensions + [primary_extension]).uniq
@@ -525,6 +545,7 @@ module Linguist
     if extnames = extensions[name]
       extnames.each do |extname|
         if !options['extensions'].include?(extname)
+          warn "#{name} has a sample with extension (#{extname}) that isn't explicitly defined in languages.yml" unless extname == '.script!'
           options['extensions'] << extname
         end
       end
