@@ -99,7 +99,7 @@ namespace :classifier do
       next if file_language.nil? || file_language == 'Text'
       begin
         data = open(file_url).read
-        guessed_language, score = Linguist::Classifier.classify(Linguist::Samples::DATA, data).first
+        guessed_language, score = Linguist::Classifier.classify(Linguist::Samples.cache, data).first
 
         total += 1
         guessed_language == file_language ? correct += 1 : incorrect += 1
