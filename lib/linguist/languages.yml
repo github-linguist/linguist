@@ -119,7 +119,7 @@ ApacheConf:
 
 Apex:
   type: programming
-  lexer: Text only
+  lexer: Java
   extensions:
   - .cls
 
@@ -283,7 +283,7 @@ C#:
   type: programming
   ace_mode: csharp
   search_term: csharp
-  color: "#5a25a2"
+  color: "#178600"
   aliases:
   - csharp
   extensions:
@@ -756,6 +756,14 @@ Frege:
   extensions:
   - .fr
 
+G-code:
+  type: data
+  lexer: Text only
+  extensions:
+  - .g
+  - .gco
+  - .gcode
+
 Game Maker Language:
   type: programming
   color: "#8ad353"
@@ -784,6 +792,12 @@ GAS:
   extensions:
   - .s
   - .S
+
+GDScript:
+  type: programming
+  lexer: Text only
+  extensions:
+  - .gd
 
 GLSL:
   group: C
@@ -1792,6 +1806,7 @@ Processing:
 
 Prolog:
   type: programming
+  lexer: Logtalk
   color: "#74283c"
   extensions:
   - .pl

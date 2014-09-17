@@ -23,7 +23,7 @@ module Linguist
       end
     end
 
-    # .h extensions are ambigious between C, C++, and Objective-C.
+    # .h extensions are ambiguous between C, C++, and Objective-C.
     # We want to shortcut look for Objective-C _and_ now C++ too!
     #
     # Returns an array of Languages or []
