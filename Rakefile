@@ -8,6 +8,16 @@ task :default => :test
 
 Rake::TestTask.new
 
+# Extend test task to check for samples
+task :test => :check_samples
+
+desc "Check that we have samples.json generated"
+task :check_samples do
+  unless File.exist?('lib/linguist/samples.json')
+    Rake::Task[:samples].invoke
+  end
+end
+
 task :samples do
   require 'linguist/samples'
   require 'yajl'
@@ -16,7 +26,7 @@ task :samples do
   File.open('lib/linguist/samples.json', 'w') { |io| io.write json }
 end
 
-task :build_gem do
+task :build_gem => :samples do
   languages = YAML.load_file("lib/linguist/languages.yml")
   File.write("lib/linguist/languages.json", JSON.dump(languages))
   `gem build github-linguist.gemspec`
@@ -99,7 +109,7 @@ namespace :classifier do
       next if file_language.nil? || file_language == 'Text'
       begin
         data = open(file_url).read
-        guessed_language, score = Linguist::Classifier.classify(Linguist::Samples::DATA, data).first
+        guessed_language, score = Linguist::Classifier.classify(Linguist::Samples.cache, data).first
 
         total += 1
         guessed_language == file_language ? correct += 1 : incorrect += 1

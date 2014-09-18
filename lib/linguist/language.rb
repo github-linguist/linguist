@@ -136,7 +136,7 @@ module Linguist
         elsif (determined = Heuristics.find_by_heuristics(data, possible_language_names)) && !determined.empty?
           determined.first
         # Lastly, fall back to the probabilistic classifier.
-        elsif classified = Classifier.classify(Samples::DATA, data, possible_language_names).first
+        elsif classified = Classifier.classify(Samples.cache, data, possible_language_names).first
           # Return the actual Language object based of the string language name (i.e., first element of `#classify`)
           Language[classified[0]]
         end
@@ -510,9 +510,9 @@ module Linguist
     end
   end
 
-  extensions = Samples::DATA['extnames']
-  interpreters = Samples::DATA['interpreters']
-  filenames = Samples::DATA['filenames']
+  extensions = Samples.cache['extnames']
+  interpreters = Samples.cache['interpreters']
+  filenames = Samples.cache['filenames']
   popular = YAML.load_file(File.expand_path("../popular.yml", __FILE__))
 
   languages_yml = File.expand_path("../languages.yml", __FILE__)
