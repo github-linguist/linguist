@@ -1,6 +1,5 @@
 require 'escape_utils'
 require 'pygments'
-require 'pry'
 require 'yaml'
 begin
   require 'json'
