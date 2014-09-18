@@ -6,9 +6,10 @@ require 'pry'
 
 task :default => :test
 
-Rake::Task["test"].enhance [:check_samples]
-
 Rake::TestTask.new
+
+# Extend test task to check for samples
+task :test => :check_samples
 
 desc "Check that we have samples.json generated"
 task :check_samples do
