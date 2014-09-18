@@ -6,7 +6,16 @@ require 'pry'
 
 task :default => :test
 
+Rake::Task["test"].enhance [:check_samples]
+
 Rake::TestTask.new
+
+desc "Check that we have samples.json generated"
+task :check_samples do
+  unless File.exist?('lib/linguist/samples.json')
+    Rake::Task[:samples].invoke
+  end
+end
 
 task :samples do
   require 'linguist/samples'
