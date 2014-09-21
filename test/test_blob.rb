@@ -437,6 +437,12 @@ class TestBlob < Test::Unit::TestCase
     assert blob("octicons.css").vendored?
     assert blob("public/octicons.min.css").vendored?
     assert blob("public/octicons/sprockets-octicons.scss").vendored?
+
+    # Typesafe Activator
+    assert blob("activator").vendored?
+    assert blob("activator.bat").vendored?
+    assert blob("subproject/activator").vendored?
+    assert blob("subproject/activator.bat").vendored?
   end
 
   def test_language
