@@ -262,6 +262,10 @@ class TestBlob < Test::Unit::TestCase
 
 
     assert Linguist::Generated.generated?("node_modules/grunt/lib/grunt.js", nil)
+
+    # Godep saved dependencies
+    assert blob("Godeps/Godeps.json").generated?
+    assert blob("Godeps/_workspace/src/github.com/kr/s3/sign.go").generated?
   end
 
   def test_vendored
