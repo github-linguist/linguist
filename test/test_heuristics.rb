@@ -65,6 +65,18 @@ class TestHeuristcs < Test::Unit::TestCase
     assert_equal Language["ECL"], results.first
   end
 
+  def test_st_smalltalk_by_heuristics
+    languages = ["Smalltalk", "StringTemplate"]
+    results = Heuristics.disambiguate_st(fixture("Smalltalk/Dinner.st"), languages)
+    assert_equal Language["Smalltalk"], results.first
+  end
+
+  def test_st_stringtemplate_by_heuristics
+    languages = ["Smalltalk", "StringTemplate"]
+    results = Heuristics.disambiguate_st(fixture("StringTemplate/decl.st"), languages)
+    assert_equal Language["StringTemplate"], results.first
+  end
+
   def test_ts_typescript_by_heuristics
     languages = ["TypeScript", "XML"]
     results = Heuristics.disambiguate_ts(fixture("TypeScript/classes.ts"), languages)

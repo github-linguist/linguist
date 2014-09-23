@@ -48,6 +48,16 @@ module Linguist
       matches
     end
 
+    def self.disambiguate_st(data, languages)
+      matches = []
+      if (data.include?("self"))
+        matches << Language["Smalltalk"]
+      else
+        matches << Language["StringTemplate"]
+      end
+      matches
+    end
+
     def self.disambiguate_ts(data, languages)
       matches = []
       if (data.include?("</translation>"))
