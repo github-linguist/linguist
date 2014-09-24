@@ -1,0 +1,119 @@
+\ProvidesFile{authortitle.cbx}
+[\abx@cbxid]
+
+\ExecuteBibliographyOptions{uniquename,uniquelist,autocite=footnote}
+
+\renewcommand*{\iffinalcitedelim}{\iflastcitekey}
+
+\newbool{cbx:parens}
+
+\newbibmacro*{cite}{%
+  \iffieldundef{shorthand}
+    {\ifnameundef{labelname}
+       {}
+       {\printnames{labelname}%
+        \setunit{\nametitledelim}}%
+     \usebibmacro{cite:title}}%
+    {\usebibmacro{cite:shorthand}}}
+
+\newbibmacro*{citetitle}{%
+  \iffieldundef{shorthand}
+    {\usebibmacro{cite:title}}%
+    {\usebibmacro{cite:shorthand}}}
+
+\newbibmacro*{textcite}{%
+  \ifnameundef{labelname}
+    {}
+    {\printnames{labelname}%
+     \setunit{%
+       \global\booltrue{cbx:parens}%
+       \addspace\bibopenparen}}%
+  \ifnumequal{\value{citecount}}{1}
+    {\usebibmacro{prenote}}
+    {}%
+  \iffieldundef{shorthand}
+    {\usebibmacro{cite:title}}%
+    {\usebibmacro{cite:shorthand}}}
+
+\newbibmacro*{cite:title}{%
+  \printtext[bibhyperref]{%
+    \printfield[citetitle]{labeltitle}}}
+
+\newbibmacro*{cite:shorthand}{%
+  \printtext[bibhyperref]{\printfield{shorthand}}}
+
+\newbibmacro*{textcite:postnote}{%
+  \iffieldundef{postnote}
+    {\ifbool{cbx:parens}
+       {\bibcloseparen}
+       {}}
+    {\ifbool{cbx:parens}
+       {\postnotedelim}
+       {\addspace\bibopenparen}%
+     \printfield{postnote}\bibcloseparen}}
+
+\DeclareCiteCommand{\cite}
+  {\usebibmacro{prenote}}
+  {\usebibmacro{citeindex}%
+   \usebibmacro{cite}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+\DeclareCiteCommand*{\cite}
+  {\usebibmacro{prenote}}
+  {\usebibmacro{citeindex}%
+   \usebibmacro{citetitle}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+\DeclareCiteCommand{\parencite}[\mkbibparens]
+  {\usebibmacro{prenote}}
+  {\usebibmacro{citeindex}%
+   \usebibmacro{cite}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+\DeclareCiteCommand*{\parencite}[\mkbibparens]
+  {\usebibmacro{prenote}}
+  {\usebibmacro{citeindex}%
+   \usebibmacro{citetitle}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+\DeclareCiteCommand{\footcite}[\mkbibfootnote]
+  {\usebibmacro{prenote}}
+  {\usebibmacro{citeindex}%
+   \usebibmacro{cite}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+\DeclareCiteCommand{\footcitetext}[\mkbibfootnotetext]
+  {\usebibmacro{prenote}}
+  {\usebibmacro{citeindex}%
+   \usebibmacro{cite}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+\DeclareCiteCommand{\smartcite}[\iffootnote\mkbibparens\mkbibfootnote]
+  {\usebibmacro{prenote}}
+  {\usebibmacro{citeindex}%
+   \usebibmacro{cite}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+\DeclareCiteCommand{\textcite}
+  {\boolfalse{cbx:parens}}
+  {\usebibmacro{citeindex}%
+   \iffirstcitekey
+     {\setcounter{textcitetotal}{1}}
+     {\stepcounter{textcitetotal}%
+      \textcitedelim}%
+   \usebibmacro{textcite}}
+  {\ifbool{cbx:parens}
+     {\bibcloseparen\global\boolfalse{cbx:parens}}
+     {}}
+  {\usebibmacro{textcite:postnote}}
+
+\DeclareMultiCiteCommand{\textcites}{\textcite}{}
+
+\endinput

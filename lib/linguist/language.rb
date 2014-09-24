@@ -9,6 +9,8 @@ end
 require 'linguist/classifier'
 require 'linguist/heuristics'
 require 'linguist/samples'
+require 'linguist/file_blob'
+require 'linguist/blob_helper'
 
 module Linguist
   # Language names that are recognizable by GitHub. Defined languages
@@ -109,7 +111,8 @@ module Linguist
       # A bit of an elegant hack. If the file is executable but extensionless,
       # append a "magic" extension so it can be classified with other
       # languages that have shebang scripts.
-      if File.extname(name).empty? && blob.mode && (blob.mode.to_i(8) & 05) == 05
+      extension = FileBlob.new(name).extension
+      if extension.empty? && blob.mode && (blob.mode.to_i(8) & 05) == 05
         name += ".script!"
       end
 
@@ -132,8 +135,8 @@ module Linguist
         # No shebang. Still more work to do. Try to find it with our heuristics.
         elsif (determined = Heuristics.find_by_heuristics(data, possible_language_names)) && !determined.empty?
           determined.first
-        # Lastly, fall back to the probablistic classifier.
-        elsif classified = Classifier.classify(Samples::DATA, data, possible_language_names ).first
+        # Lastly, fall back to the probabilistic classifier.
+        elsif classified = Classifier.classify(Samples.cache, data, possible_language_names).first
           # Return the actual Language object based of the string language name (i.e., first element of `#classify`)
           Language[classified[0]]
         end
@@ -189,7 +192,8 @@ module Linguist
     #
     # Returns all matching Languages or [] if none were found.
     def self.find_by_filename(filename)
-      basename, extname = File.basename(filename), File.extname(filename)
+      basename = File.basename(filename)
+      extname = FileBlob.new(filename).extension
       langs = @filename_index[basename] +
               @extension_index[extname]
       langs.compact.uniq
@@ -506,9 +510,9 @@ module Linguist
     end
   end
 
-  extensions = Samples::DATA['extnames']
-  interpreters = Samples::DATA['interpreters']
-  filenames = Samples::DATA['filenames']
+  extensions = Samples.cache['extnames']
+  interpreters = Samples.cache['interpreters']
+  filenames = Samples.cache['filenames']
   popular = YAML.load_file(File.expand_path("../popular.yml", __FILE__))
 
   languages_yml = File.expand_path("../languages.yml", __FILE__)
@@ -528,6 +532,7 @@ module Linguist
     if extnames = extensions[name]
       extnames.each do |extname|
         if !options['extensions'].include?(extname)
+          warn "#{name} has a sample with extension (#{extname}) that isn't explicitly defined in languages.yml" unless extname == '.script!'
           options['extensions'] << extname
         end
       end
