@@ -262,6 +262,10 @@ class TestBlob < Test::Unit::TestCase
 
 
     assert Linguist::Generated.generated?("node_modules/grunt/lib/grunt.js", nil)
+
+    # Godep saved dependencies
+    assert blob("Godeps/Godeps.json").generated?
+    assert blob("Godeps/_workspace/src/github.com/kr/s3/sign.go").generated?
   end
 
   def test_vendored
@@ -278,6 +282,10 @@ class TestBlob < Test::Unit::TestCase
     assert blob("bower_components/custom/custom.js").vendored?
     assert blob("app/bower_components/custom/custom.js").vendored?
     assert blob("vendor/assets/bower_components/custom/custom.js").vendored?
+
+    # Go dependencies
+    assert !blob("Godeps/Godeps.json").vendored?
+    assert blob("Godeps/_workspace/src/github.com/kr/s3/sign.go").vendored?
 
     # Rails vendor/
     assert blob("vendor/plugins/will_paginate/lib/will_paginate.rb").vendored?

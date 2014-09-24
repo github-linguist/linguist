@@ -63,6 +63,7 @@ module Linguist
         generated_jni_header? ||
         composer_lock? ||
         node_modules? ||
+        godeps? ||
         vcr_cassette? ||
         generated_by_zephir?
     end
@@ -229,6 +230,14 @@ module Linguist
     # Returns true or false.
     def node_modules?
       !!name.match(/node_modules\//)
+    end
+
+    # Internal: Is the blob part of Godeps/,
+    # which are not meant for humans in pull requests.
+    #
+    # Returns true or false.
+    def godeps?
+      !!name.match(/Godeps\//)
     end
 
     # Internal: Is the blob a generated php composer lock file?
