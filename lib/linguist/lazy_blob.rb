@@ -47,7 +47,7 @@ module Linguist
 
     def result_for_key(keyname)
       key = git_attributes[keyname]
-      if key == "false"
+      if key == "false" || key.nil?
         return false
       else
         return true

@@ -1,7 +1,7 @@
 require 'linguist/repository'
 require 'linguist/lazy_blob'
 require 'test/unit'
-require 'pry'
+
 class TestRepository < Test::Unit::TestCase
   def rugged_repository
     @rugged ||= Rugged::Repository.new(File.expand_path("../../.git", __FILE__))
@@ -58,7 +58,6 @@ class TestRepository < Test::Unit::TestCase
     # Rakefile linguist-generated
     # test/fixtures/* linguist-vendored=false
 
-
     attr_commit = 'b533b682d5d4012ca42f4fc998b45169ec41fe33'
     repo = linguist_repo(attr_commit)
 
@@ -72,8 +71,15 @@ class TestRepository < Test::Unit::TestCase
 
   def test_linguist_generated?
     attr_commit = 'b533b682d5d4012ca42f4fc998b45169ec41fe33'
+
     file = Linguist::LazyBlob.new(rugged_repository, attr_commit, 'Rakefile')
 
+    git_attrs = { "linguist-language" => nil,
+                  "linguist-vendored" => nil,
+                  "linguist-generated"=> true }
+
+    # TODO: get rid of this (would like this to come from git data)
+    file.stubs(:git_attributes).returns(git_attrs)
 
     # check we're getting the correct assignment back from .gitattributes
     assert file.result_for_key('linguist-generated')
@@ -86,6 +92,13 @@ class TestRepository < Test::Unit::TestCase
   def test_linguist_override_vendored?
     attr_commit = 'b533b682d5d4012ca42f4fc998b45169ec41fe33'
     override_vendored = Linguist::LazyBlob.new(rugged_repository, attr_commit, 'Gemfile')
+
+    git_attrs = { "linguist-language" => nil,
+                  "linguist-vendored" => true,
+                  "linguist-generated"=> nil }
+
+    # TODO: get rid of this (would like this to come from git data)
+    override_vendored.stubs(:git_attributes).returns(git_attrs)
 
     # check we're getting the correct assignment back from .gitattributes
     assert override_vendored.result_for_key('linguist-vendored')
@@ -100,6 +113,13 @@ class TestRepository < Test::Unit::TestCase
 
     # lib/linguist/vendor.yml defines this as vendored.
     override_unvendored = Linguist::LazyBlob.new(rugged_repository, attr_commit, 'test/fixtures/foo.rb')
+
+    git_attrs = { "linguist-language" => nil,
+                  "linguist-vendored" => "false",
+                  "linguist-generated"=> nil }
+
+    # TODO: get rid of this (would like this to come from git data)
+    override_unvendored.stubs(:git_attributes).returns(git_attrs)
 
     # check we're getting the correct assignment back from .gitattributes
     assert !override_unvendored.result_for_key('linguist-vendored')
