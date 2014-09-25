@@ -10,7 +10,7 @@
 ## Vendor Conventions ##
 
 # Caches
-- cache/
+- (^|/)cache/
 
 # Dependencies
 - ^[Dd]ependencies/
@@ -33,16 +33,36 @@
 # Erlang bundles
 - ^rebar$
 
+# Go dependencies
+- Godeps/_workspace/
+
 # Bootstrap minified css and js
 - (^|/)bootstrap([^.]*)(\.min)?\.(js|css)$
+
+# Font Awesome
+- font-awesome.min.css
+- font-awesome.css
 
 # Foundation css
 - foundation.min.css
 - foundation.css
 
+# Normalize.css
+- normalize.css
+
+# Bourbon SCSS
+- (^|/)[Bb]ourbon/.*\.css$
+- (^|/)[Bb]ourbon/.*\.scss$
+
+# Animate.css
+- animate.css
+- animate.min.css
+
 # Vendored dependencies
-- thirdparty/
+- third[-_]?party/
+- 3rd[-_]?party/
 - vendors?/
+- extern(al)?/
 
 # Debian packaging
 - ^debian/
@@ -98,6 +118,20 @@
 # AngularJS
 - (^|/)angular([^.]*)(\.min)?\.js$
 
+# D3.js
+- (^|\/)d3(\.v\d+)?([^.]*)(\.min)?\.js$
+
+# React
+- (^|/)react(-[^.]*)?(\.min)?\.js$
+
+# Modernizr
+- (^|/)modernizr\-\d\.\d+(\.\d+)?(\.min)?\.js$
+- (^|/)modernizr\.custom\.\d+\.js$
+
+# Knockout
+- (^|/)knockout-(\d+\.){3}(debug\.)?js$
+- knockout-min.js
+
 ## Python ##
 
 # django
@@ -114,13 +148,24 @@
 
 ## Obj-C ##
 
+# Cocoapods
+- ^Pods/
+
 # Sparkle
 - (^|/)Sparkle/
+
+## Groovy ##
+
+# Gradle
+- (^|/)gradlew$
+- (^|/)gradlew\.bat$
+- (^|/)gradle/wrapper/
 
 ## .NET ##
 
 # Visual Studio IntelliSense
 - -vsdoc\.js$
+- \.intellisense\.js$
 
 # jQuery validation plugin (MS bundles this with asp.net mvc)
 - (^|/)jquery([^.]*)\.validate(\.unobtrusive)?(\.min)?\.js$
@@ -130,7 +175,7 @@
 - (^|/)[Mm]icrosoft([Mm]vc)?([Aa]jax|[Vv]alidation)(\.debug)?\.js$
 
 # NuGet
-- ^[Pp]ackages/
+- ^[Pp]ackages\/.+\.\d+\/
 
 # ExtJS
 - (^|/)extjs/.*?\.js$
@@ -149,6 +194,9 @@
 - (^|/)extjs/resources/
 - (^|/)extjs/src/
 - (^|/)extjs/welcome/
+
+# Html5shiv
+- (^|/)html5shiv(\.min)?\.js$
 
 # Samples folders
 - ^[Ss]amples/
@@ -170,8 +218,27 @@
 - (^|/)cordova([^.]*)(\.min)?\.js$
 - (^|/)cordova\-\d\.\d(\.\d)?(\.min)?\.js$
 
+# Foundation js
+- foundation(\..*)?\.js$
+
 # Vagrant
 - ^Vagrantfile$
 
 # .DS_Store's
 - .[Dd][Ss]_[Ss]tore$
+
+# Mercury --use-subdirs
+- Mercury/
+
+# R packages
+- ^vignettes/
+- ^inst/extdata/
+
+# Octicons
+- octicons.css
+- octicons.min.css
+- sprockets-octicons.scss
+
+# Typesafe Activator
+- (^|/)activator$
+- (^|/)activator\.bat$

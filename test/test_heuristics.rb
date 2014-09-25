@@ -1,6 +1,7 @@
 require 'linguist/heuristics'
 require 'linguist/language'
 require 'linguist/samples'
+require 'linguist/file_blob'
 
 require 'test/unit'
 
@@ -35,7 +36,8 @@ class TestHeuristcs < Test::Unit::TestCase
   end
 
   def test_detect_still_works_if_nothing_matches
-    match = Language.detect("Hello.m", fixture("Objective-C/hello.m"))
+    blob = Linguist::FileBlob.new(File.join(samples_path, "Objective-C/hello.m"))
+    match = Language.detect(blob)
     assert_equal Language["Objective-C"], match
   end
   

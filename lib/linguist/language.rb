@@ -9,6 +9,8 @@ end
 require 'linguist/classifier'
 require 'linguist/heuristics'
 require 'linguist/samples'
+require 'linguist/file_blob'
+require 'linguist/blob_helper'
 
 module Linguist
   # Language names that are recognizable by GitHub. Defined languages
@@ -24,7 +26,6 @@ module Linguist
     @extension_index          = Hash.new { |h,k| h[k] = [] }
     @interpreter_index        = Hash.new { |h,k| h[k] = [] }
     @filename_index           = Hash.new { |h,k| h[k] = [] }
-    @primary_extension_index  = {}
 
     # Valid Languages types
     TYPES = [:data, :markup, :programming, :prose]
@@ -80,12 +81,6 @@ module Linguist
         @extension_index[extension] << language
       end
 
-      if @primary_extension_index.key?(language.primary_extension)
-        raise ArgumentError, "Duplicate primary extension: #{language.primary_extension}"
-      end
-
-      @primary_extension_index[language.primary_extension] = language
-
       language.interpreters.each do |interpreter|
         @interpreter_index[interpreter] << language
       end
@@ -99,18 +94,25 @@ module Linguist
 
     # Public: Detects the Language of the blob.
     #
-    # name - String filename
-    # data - String blob data. A block also maybe passed in for lazy
-    #        loading. This behavior is deprecated and you should always
-    #        pass in a String.
-    # mode - Optional String mode (defaults to nil)
+    # blob - an object that includes the Linguist `BlobHelper` interface;
+    #       see Linguist::LazyBlob and Linguist::FileBlob for examples
     #
     # Returns Language or nil.
-    def self.detect(name, data, mode = nil)
+    def self.detect(blob)
+      name = blob.name.to_s
+
+      # Check if the blob is possibly binary and bail early; this is a cheap
+      # test that uses the extension name to guess a binary binary mime type.
+      #
+      # We'll perform a more comprehensive test later which actually involves
+      # looking for binary characters in the blob
+      return nil if blob.likely_binary? || blob.binary?
+
       # A bit of an elegant hack. If the file is executable but extensionless,
       # append a "magic" extension so it can be classified with other
       # languages that have shebang scripts.
-      if File.extname(name).empty? && mode && (mode.to_i(8) & 05) == 05
+      extension = FileBlob.new(name).extension
+      if extension.empty? && blob.mode && (blob.mode.to_i(8) & 05) == 05
         name += ".script!"
       end
 
@@ -121,10 +123,10 @@ module Linguist
       # extension at all, in the case of extensionless scripts), we need to continue
       # our detection work
       if possible_languages.length > 1
-        data = data.call() if data.respond_to?(:call)
+        data = blob.data
         possible_language_names = possible_languages.map(&:name)
 
-        # Don't bother with emptiness
+        # Don't bother with binary contents or an empty file
         if data.nil? || data == ""
           nil
         # Check if there's a shebang line and use that as authoritative
@@ -133,8 +135,8 @@ module Linguist
         # No shebang. Still more work to do. Try to find it with our heuristics.
         elsif (determined = Heuristics.find_by_heuristics(data, possible_language_names)) && !determined.empty?
           determined.first
-        # Lastly, fall back to the probablistic classifier.
-        elsif classified = Classifier.classify(Samples::DATA, data, possible_language_names ).first
+        # Lastly, fall back to the probabilistic classifier.
+        elsif classified = Classifier.classify(Samples.cache, data, possible_language_names).first
           # Return the actual Language object based of the string language name (i.e., first element of `#classify`)
           Language[classified[0]]
         end
@@ -190,9 +192,9 @@ module Linguist
     #
     # Returns all matching Languages or [] if none were found.
     def self.find_by_filename(filename)
-      basename, extname = File.basename(filename), File.extname(filename)
-      langs = [@primary_extension_index[extname]] +
-              @filename_index[basename] +
+      basename = File.basename(filename)
+      extname = FileBlob.new(filename).extension
+      langs = @filename_index[basename] +
               @extension_index[extname]
       langs.compact.uniq
     end
@@ -299,15 +301,6 @@ module Linguist
       @interpreters = attributes[:interpreters]   || []
       @filenames  = attributes[:filenames]  || []
 
-      unless @primary_extension = attributes[:primary_extension]
-        raise ArgumentError, "#{@name} is missing primary extension"
-      end
-
-      # Prepend primary extension unless its already included
-      if primary_extension && !extensions.include?(primary_extension)
-        @extensions = [primary_extension] + extensions
-      end
-
       # Set popular, and searchable flags
       @popular    = attributes.key?(:popular)    ? attributes[:popular]    : false
       @searchable = attributes.key?(:searchable) ? attributes[:searchable] : true
@@ -395,20 +388,6 @@ module Linguist
     # Returns the extensions Array
     attr_reader :extensions
 
-    # Deprecated: Get primary extension
-    #
-    # Defaults to the first extension but can be overridden
-    # in the languages.yml.
-    #
-    # The primary extension can not be nil. Tests should verify this.
-    #
-    # This attribute is only used by app/helpers/gists_helper.rb for
-    # creating the language dropdown. It really should be using `name`
-    # instead. Would like to drop primary extension.
-    #
-    # Returns the extension String.
-    attr_reader :primary_extension
-
     # Public: Get interpreters
     #
     # Examples
@@ -426,6 +405,27 @@ module Linguist
     #
     # Returns the extensions Array
     attr_reader :filenames
+
+    # Public: Return all possible extensions for language
+    def all_extensions
+      (extensions + [primary_extension]).uniq
+    end
+
+    # Deprecated: Get primary extension
+    #
+    # Defaults to the first extension but can be overridden
+    # in the languages.yml.
+    #
+    # The primary extension can not be nil. Tests should verify this.
+    #
+    # This method is only used by app/helpers/gists_helper.rb for creating
+    # the language dropdown. It really should be using `name` instead.
+    # Would like to drop primary extension.
+    #
+    # Returns the extension String.
+    def primary_extension
+      extensions.first
+    end
 
     # Public: Get URL escaped name.
     #
@@ -485,7 +485,7 @@ module Linguist
     #
     # Returns html String
     def colorize(text, options = {})
-      lexer.highlight(text, options = {})
+      lexer.highlight(text, options)
     end
 
     # Public: Return name as String representation
@@ -510,9 +510,9 @@ module Linguist
     end
   end
 
-  extensions = Samples::DATA['extnames']
-  interpreters = Samples::DATA['interpreters']
-  filenames = Samples::DATA['filenames']
+  extensions = Samples.cache['extnames']
+  interpreters = Samples.cache['interpreters']
+  filenames = Samples.cache['filenames']
   popular = YAML.load_file(File.expand_path("../popular.yml", __FILE__))
 
   languages_yml = File.expand_path("../languages.yml", __FILE__)
@@ -532,6 +532,7 @@ module Linguist
     if extnames = extensions[name]
       extnames.each do |extname|
         if !options['extensions'].include?(extname)
+          warn "#{name} has a sample with extension (#{extname}) that isn't explicitly defined in languages.yml" unless extname == '.script!'
           options['extensions'] << extname
         end
       end
@@ -568,9 +569,8 @@ module Linguist
       :group_name        => options['group'],
       :searchable        => options.key?('searchable') ? options['searchable'] : true,
       :search_term       => options['search_term'],
-      :extensions        => options['extensions'].sort,
+      :extensions        => [options['extensions'].first] + options['extensions'][1..-1].sort,
       :interpreters      => options['interpreters'].sort,
-      :primary_extension => options['primary_extension'],
       :filenames         => options['filenames'],
       :popular           => popular.include?(name)
     )

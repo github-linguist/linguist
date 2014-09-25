@@ -1,0 +1,61 @@
+
+// HTML Elements
+header {
+    
+    img .logo src='/images/~[currentLogo].png' alt=logo;
+    
+    h4 > 'Bar View'
+    
+    if (currentUser) {
+        
+        .account >
+            a href='/acount' >
+                'Hello, ~[currentUser.username]'
+    }
+}
+
+.view {
+    ul {
+       
+        // Iteration
+        for ((user, index) of users) {
+            
+            li.user data-id='~[user.id]' {
+                
+                // interpolation
+                .name > '~[ user.username ]'
+                
+                // expression
+                .count > '~[: user.level.toFixed(2) ]'
+                
+                // util
+                /* Localization sample
+                 * lastActivity: "Am {0:dd. MM} war der letzte Eintrag"
+                 */
+                .date > '~[ L: "lastActivity",  user.date]'
+            }
+        }
+    }
+    
+    // Component
+    :countdownComponent {
+        input type = text >
+            :dualbind value='number';
+            
+        button x-signal='click: countdownStart' > 'Start';
+        
+        h5 {
+            '~[bind: number]'
+            
+            :animation x-slot='countdownStart' {
+                @model > 'transition | scale(0) > scale(1) | 500ms'
+                @next  > 'background-color | red > blue | 2s linear'
+            }
+        }
+    }
+}
+
+footer > :bazCompo {
+    
+    'Component generated at ~[: $u.format($c.date, "HH-mm") ]'
+}

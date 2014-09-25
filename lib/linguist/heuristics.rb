@@ -1,7 +1,7 @@
 module Linguist
   # A collection of simple heuristics that can be used to better analyze languages.
   class Heuristics
-    ACTIVE = false
+    ACTIVE = true
 
     # Public: Given an array of String language names,
     # apply heuristics against the given data and return an array
@@ -13,28 +13,23 @@ module Linguist
     # Returns an array of Languages or []
     def self.find_by_heuristics(data, languages)
       if active?
-        if languages.all? { |l| ["Objective-C", "C++"].include?(l) }
-          disambiguate_c(data, languages)
-        end
         if languages.all? { |l| ["Perl", "Prolog"].include?(l) }
-          disambiguate_pl(data, languages)
+          result = disambiguate_pl(data, languages)
         end
         if languages.all? { |l| ["ECL", "Prolog"].include?(l) }
-          disambiguate_ecl(data, languages)
+          result = disambiguate_ecl(data, languages)
         end
         if languages.all? { |l| ["IDL", "Prolog"].include?(l) }
-          disambiguate_pro(data, languages)
-        end
-        if languages.all? { |l| ["TypeScript", "XML"].include?(l) }
-          disambiguate_ts(data, languages)
+          result = disambiguate_pro(data, languages)
         end
         if languages.all? { |l| ["Common Lisp", "OpenCL"].include?(l) }
-          disambiguate_cl(data, languages)
+          result = disambiguate_cl(data, languages)
         end
+        return result
       end
     end
 
-    # .h extensions are ambigious between C, C++, and Objective-C.
+    # .h extensions are ambiguous between C, C++, and Objective-C.
     # We want to shortcut look for Objective-C _and_ now C++ too!
     #
     # Returns an array of Languages or []
@@ -83,6 +78,13 @@ module Linguist
       matches = []
       matches << Language["Common Lisp"] if data.include?("(defun ")
       matches << Language["OpenCL"] if /\/\* |\/\/ |^\}/.match(data)
+      matches
+    end
+
+    def self.disambiguate_r(data, languages)
+      matches = []
+      matches << Language["Rebol"] if /\bRebol\b/i.match(data)
+      matches << Language["R"] if data.include?("<-")
       matches
     end
 

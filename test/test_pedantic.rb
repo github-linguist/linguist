@@ -22,10 +22,10 @@ class TestPedantic < Test::Unit::TestCase
     file("languages.yml").lines.each do |line|
       if line =~ /^  extensions:$/
         extensions = []
-      elsif extensions && line =~ /^  - \.(\w+)$/
+      elsif extensions && line =~ /^  - \.([\w-]+)( *#.*)?$/
         extensions << $1
       else
-        assert_sorted extensions if extensions
+        assert_sorted extensions[1..-1] if extensions
         extensions = nil
       end
     end
