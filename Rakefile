@@ -2,10 +2,21 @@ require 'json'
 require 'rake/clean'
 require 'rake/testtask'
 require 'yaml'
+require 'pry'
 
 task :default => :test
 
 Rake::TestTask.new
+
+# Extend test task to check for samples
+task :test => :check_samples
+
+desc "Check that we have samples.json generated"
+task :check_samples do
+  unless File.exist?('lib/linguist/samples.json')
+    Rake::Task[:samples].invoke
+  end
+end
 
 task :samples do
   require 'linguist/samples'
@@ -15,11 +26,72 @@ task :samples do
   File.open('lib/linguist/samples.json', 'w') { |io| io.write json }
 end
 
-task :build_gem do
+task :build_gem => :samples do
   languages = YAML.load_file("lib/linguist/languages.yml")
   File.write("lib/linguist/languages.json", JSON.dump(languages))
   `gem build github-linguist.gemspec`
   File.delete("lib/linguist/languages.json")
+end
+
+namespace :benchmark do
+  benchmark_path = "benchmark/results"
+
+  # $ bundle exec rake benchmark:generate CORPUS=path/to/samples
+  desc "Generate results for"
+  task :generate do
+    ref = `git rev-parse HEAD`.strip[0,8]
+
+    corpus = File.expand_path(ENV["CORPUS"] || "samples")
+
+    require 'linguist/language'
+
+    results = Hash.new
+    Dir.glob("#{corpus}/**/*").each do |file|
+      next unless File.file?(file)
+      filename = file.gsub("#{corpus}/", "")
+      results[filename] = Linguist::FileBlob.new(file).language
+    end
+
+    # Ensure results directory exists
+    FileUtils.mkdir_p("benchmark/results")
+
+    # Write results
+    if `git status`.include?('working directory clean')
+      result_filename = "benchmark/results/#{File.basename(corpus)}-#{ref}.json"
+    else
+      result_filename = "benchmark/results/#{File.basename(corpus)}-#{ref}-unstaged.json"
+    end
+
+    File.write(result_filename, results.to_json)
+    puts "wrote #{result_filename}"
+  end
+
+  # $ bundle exec rake benchmark:compare REFERENCE=path/to/reference.json CANDIDATE=path/to/candidate.json
+  desc "Compare results"
+  task :compare do
+    reference_file = ENV["REFERENCE"]
+    candidate_file = ENV["CANDIDATE"]
+
+    reference = JSON.parse(File.read(reference_file))
+    reference_counts = Hash.new(0)
+    reference.each { |filename, language| reference_counts[language] += 1 }
+
+    candidate = JSON.parse(File.read(candidate_file))
+    candidate_counts = Hash.new(0)
+    candidate.each { |filename, language| candidate_counts[language] += 1 }
+
+    changes = diff(reference_counts, candidate_counts)
+
+    if changes.any?
+      changes.each do |language, (before, after)|
+        before_percent = 100 * before / reference.size.to_f
+        after_percent = 100 * after / candidate.size.to_f
+        puts "%s changed from %.1f%% to %.1f%%" % [language || 'unknown', before_percent, after_percent]
+      end
+    else
+      puts "No changes"
+    end
+  end
 end
 
 namespace :classifier do
@@ -37,7 +109,7 @@ namespace :classifier do
       next if file_language.nil? || file_language == 'Text'
       begin
         data = open(file_url).read
-        guessed_language, score = Linguist::Classifier.classify(Linguist::Samples::DATA, data).first
+        guessed_language, score = Linguist::Classifier.classify(Linguist::Samples.cache, data).first
 
         total += 1
         guessed_language == file_language ? correct += 1 : incorrect += 1
@@ -69,5 +141,12 @@ namespace :classifier do
         end
       end
     end
+  end
+end
+
+
+def diff(a, b)
+  (a.keys | b.keys).each_with_object({}) do |key, diff|
+    diff[key] = [a[key], b[key]] unless a[key] == b[key]
   end
 end
