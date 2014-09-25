@@ -1,7 +1,7 @@
 require 'linguist/blob_helper'
 require 'linguist/language'
 require 'rugged'
-require 'pry'
+
 module Linguist
   class LazyBlob
     GIT_ATTR = ['linguist-language', 'linguist-vendored', 'linguist-generated']
