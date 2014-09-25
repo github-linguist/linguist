@@ -33,16 +33,36 @@
 # Erlang bundles
 - ^rebar$
 
+# Go dependencies
+- Godeps/_workspace/
+
 # Bootstrap minified css and js
 - (^|/)bootstrap([^.]*)(\.min)?\.(js|css)$
+
+# Font Awesome
+- font-awesome.min.css
+- font-awesome.css
 
 # Foundation css
 - foundation.min.css
 - foundation.css
 
+# Normalize.css
+- normalize.css
+
+# Bourbon SCSS
+- (^|/)[Bb]ourbon/.*\.css$
+- (^|/)[Bb]ourbon/.*\.scss$
+
+# Animate.css
+- animate.css
+- animate.min.css
+
 # Vendored dependencies
-- thirdparty/
+- third[-_]?party/
+- 3rd[-_]?party/
 - vendors?/
+- extern(al)?/
 
 # Debian packaging
 - ^debian/
@@ -108,6 +128,10 @@
 - (^|/)modernizr\-\d\.\d+(\.\d+)?(\.min)?\.js$
 - (^|/)modernizr\.custom\.\d+\.js$
 
+# Knockout
+- (^|/)knockout-(\d+\.){3}(debug\.)?js$
+- knockout-min.js
+
 ## Python ##
 
 # django
@@ -123,6 +147,9 @@
 - ^.osx$
 
 ## Obj-C ##
+
+# Cocoapods
+- ^Pods/
 
 # Sparkle
 - (^|/)Sparkle/
@@ -191,6 +218,9 @@
 - (^|/)cordova([^.]*)(\.min)?\.js$
 - (^|/)cordova\-\d\.\d(\.\d)?(\.min)?\.js$
 
+# Foundation js
+- foundation(\..*)?\.js$
+
 # Vagrant
 - ^Vagrantfile$
 
@@ -208,3 +238,7 @@
 - octicons.css
 - octicons.min.css
 - sprockets-octicons.scss
+
+# Typesafe Activator
+- (^|/)activator$
+- (^|/)activator\.bat$

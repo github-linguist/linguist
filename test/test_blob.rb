@@ -140,6 +140,13 @@ class TestBlob < Test::Unit::TestCase
     assert !blob("Perl/script.pl").binary?
   end
 
+  def test_all_binary
+    Samples.each do |sample|
+      blob = blob(sample[:path])
+      assert ! (blob.likely_binary? || blob.binary?), "#{sample[:path]} is a binary file"
+    end
+  end
+
   def test_text
     assert blob("Text/README").text?
     assert blob("Text/dump.sql").text?
@@ -185,9 +192,9 @@ class TestBlob < Test::Unit::TestCase
     assert !blob("Text/README").generated?
 
     # Xcode project files
-    assert blob("XML/MainMenu.xib").generated?
+    assert !blob("XML/MainMenu.xib").generated?
     assert blob("Binary/MainMenu.nib").generated?
-    assert blob("XML/project.pbxproj").generated?
+    assert !blob("XML/project.pbxproj").generated?
 
     # Gemfile.locks
     assert blob("Gemfile.lock").generated?
@@ -255,6 +262,10 @@ class TestBlob < Test::Unit::TestCase
 
 
     assert Linguist::Generated.generated?("node_modules/grunt/lib/grunt.js", nil)
+
+    # Godep saved dependencies
+    assert blob("Godeps/Godeps.json").generated?
+    assert blob("Godeps/_workspace/src/github.com/kr/s3/sign.go").generated?
   end
 
   def test_vendored
@@ -272,11 +283,19 @@ class TestBlob < Test::Unit::TestCase
     assert blob("app/bower_components/custom/custom.js").vendored?
     assert blob("vendor/assets/bower_components/custom/custom.js").vendored?
 
+    # Go dependencies
+    assert !blob("Godeps/Godeps.json").vendored?
+    assert blob("Godeps/_workspace/src/github.com/kr/s3/sign.go").vendored?
+
     # Rails vendor/
     assert blob("vendor/plugins/will_paginate/lib/will_paginate.rb").vendored?
 
     # 'thirdparty' directory
     assert blob("thirdparty/lib/main.c").vendored?
+
+    # 'extern(al)' directory
+    assert blob("extern/util/__init__.py").vendored?
+    assert blob("external/jquery.min.js").vendored?
 
     # C deps
     assert blob("deps/http_parser/http_parser.c").vendored?
@@ -382,6 +401,16 @@ class TestBlob < Test::Unit::TestCase
     # NuGet Packages
     assert blob("packages/Modernizr.2.0.6/Content/Scripts/modernizr-2.0.6-development-only.js").vendored?
 
+    # Font Awesome
+    assert blob("some/asset/path/font-awesome.min.css").vendored?
+    assert blob("some/asset/path/font-awesome.css").vendored?
+
+    # Normalize
+    assert blob("some/asset/path/normalize.css").vendored?
+
+    # Cocoapods
+    assert blob('Pods/blah').vendored?
+
     # Html5shiv
     assert blob("Scripts/html5shiv.js").vendored?
     assert blob("Scripts/html5shiv.min.js").vendored?
@@ -395,6 +424,11 @@ class TestBlob < Test::Unit::TestCase
     assert blob("cordova.min.js").vendored?
     assert blob("cordova-2.1.0.js").vendored?
     assert blob("cordova-2.1.0.min.js").vendored?
+
+    # Foundation js
+    assert blob("foundation.js").vendored?
+    assert blob("foundation.min.js").vendored?
+    assert blob("foundation.abide.js").vendored?
 
     # Vagrant
     assert blob("Vagrantfile").vendored?
@@ -411,6 +445,12 @@ class TestBlob < Test::Unit::TestCase
     assert blob("octicons.css").vendored?
     assert blob("public/octicons.min.css").vendored?
     assert blob("public/octicons/sprockets-octicons.scss").vendored?
+
+    # Typesafe Activator
+    assert blob("activator").vendored?
+    assert blob("activator.bat").vendored?
+    assert blob("subproject/activator").vendored?
+    assert blob("subproject/activator.bat").vendored?
   end
 
   def test_language

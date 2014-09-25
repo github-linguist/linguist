@@ -52,5 +52,20 @@ module Linguist
     def size
       File.size(@path)
     end
+
+    # Public: Get file extension.
+    #
+    # Returns a String.
+    def extension
+      # File.extname returns nil if the filename is an extension.
+      extension = File.extname(name)
+      basename = File.basename(name)
+      # Checks if the filename is an extension.
+      if extension.empty? && basename[0] == "."
+        basename
+      else
+        extension
+      end
+    end
   end
 end
