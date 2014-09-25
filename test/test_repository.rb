@@ -49,14 +49,17 @@ class TestRepository < Test::Unit::TestCase
   end
 
   def test_repo_git_attributes
-    # See https://github.com/github/linguist/blob/3770a90251c8a940367300c9f6f97bb64b369bf8/.gitattributes
+    # See https://github.com/github/linguist/blob/b533b682d5d4012ca42f4fc998b45169ec41fe33/.gitattributes
     #
     # It looks like this:
-    # test/*.rb linguist-vendored
+    # Gemfile linguist-vendored=true
     # lib/linguist.rb linguist-language=Java
-    # lib/linguist/classifier.rb linguist-generated
+    # test/*.rb linguist-language=Java
+    # Rakefile linguist-generated
+    # test/fixtures/* linguist-vendored=false
 
-    attr_commit = '178d4756efb647d5f8607d74fe47a852329d7516'
+
+    attr_commit = 'b533b682d5d4012ca42f4fc998b45169ec41fe33'
     repo = linguist_repo(attr_commit)
 
     assert repo.breakdown_by_file.has_key?("Java")
@@ -64,28 +67,45 @@ class TestRepository < Test::Unit::TestCase
 
     assert repo.breakdown_by_file.has_key?("Ruby")
     assert !repo.breakdown_by_file["Ruby"].empty?
-    repo.breakdown_by_file["Ruby"].each do |file|
-      assert !file.start_with?("test/"), "Failing for #{file}"
-    end
   end
 
-  def test_linguist_generated?
-    attr_commit = '178d4756efb647d5f8607d74fe47a852329d7516'
-    file = Linguist::LazyBlob.new(rugged_repository, attr_commit, 'lib/linguist/classifier.rb')
 
+  def test_linguist_generated?
+    attr_commit = 'b533b682d5d4012ca42f4fc998b45169ec41fe33'
+    file = Linguist::LazyBlob.new(rugged_repository, attr_commit, 'Rakefile')
+
+
+    # check we're getting the correct assignment back from .gitattributes
+    assert file.result_for_key('linguist-generated')
     # overridden in .gitattributes
     assert file.linguist_generated?
     # from lib/linguist/generated.rb
     assert !file.generated?
   end
 
-  def test_linguist_vendored?
-    attr_commit = '178d4756efb647d5f8607d74fe47a852329d7516'
-    file = Linguist::LazyBlob.new(rugged_repository, attr_commit, 'test/test_md5.rb')
+  def test_linguist_override_vendored?
+    attr_commit = 'b533b682d5d4012ca42f4fc998b45169ec41fe33'
+    override_vendored = Linguist::LazyBlob.new(rugged_repository, attr_commit, 'Gemfile')
 
+    # check we're getting the correct assignment back from .gitattributes
+    assert override_vendored.result_for_key('linguist-vendored')
     # overridden .gitattributes
-    assert file.linguist_vendored?
+    assert override_vendored.linguist_vendored?
     # from lib/linguist/vendor.yml
-    assert !file.vendored?
+    assert !override_vendored.vendored?
+  end
+
+  def test_linguist_override_unvendored?
+    attr_commit = 'b533b682d5d4012ca42f4fc998b45169ec41fe33'
+
+    # lib/linguist/vendor.yml defines this as vendored.
+    override_unvendored = Linguist::LazyBlob.new(rugged_repository, attr_commit, 'test/fixtures/foo.rb')
+
+    # check we're getting the correct assignment back from .gitattributes
+    assert !override_unvendored.result_for_key('linguist-vendored')
+    # overridden .gitattributes
+    assert !override_unvendored.linguist_vendored?
+    # from lib/linguist/vendor.yml
+    assert override_unvendored.vendored?
   end
 end

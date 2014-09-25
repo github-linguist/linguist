@@ -1,7 +1,7 @@
 require 'linguist/blob_helper'
 require 'linguist/language'
 require 'rugged'
-
+require 'pry'
 module Linguist
   class LazyBlob
     GIT_ATTR = ['linguist-language', 'linguist-vendored', 'linguist-generated']
@@ -30,11 +30,28 @@ module Linguist
     end
 
     def linguist_vendored?
-      vendored? || !!git_attributes['linguist-vendored']
+      if git_attributes['linguist-vendored']
+        return result_for_key('linguist-vendored')
+      else
+        return vendored?
+      end
     end
 
     def linguist_generated?
-      generated? || !!git_attributes['linguist-generated']
+      if git_attributes['linguist-generated']
+        return result_for_key('linguist-generated')
+      else
+        return generated?
+      end
+    end
+
+    def result_for_key(keyname)
+      key = git_attributes[keyname]
+      if key == "false"
+        return false
+      else
+        return true
+      end
     end
 
     def overriden_language
