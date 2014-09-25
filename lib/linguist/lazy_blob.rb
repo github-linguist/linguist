@@ -4,7 +4,7 @@ require 'rugged'
 
 module Linguist
   class LazyBlob
-    GIT_ATTR = ['linguist-ignore', 'linguist-lang']
+    GIT_ATTR = ['linguist-language', 'linguist-vendored', 'linguist-generated']
     GIT_ATTR_OPTS = { :priority => [:index], :skip_system => true }
     GIT_ATTR_FLAGS = Rugged::Repository::Attributes.parse_opts(GIT_ATTR_OPTS)
 
@@ -29,12 +29,16 @@ module Linguist
         name, GIT_ATTR, GIT_ATTR_FLAGS)
     end
 
-    def ignored?
-      !!git_attributes['linguist-ignore']
+    def linguist_vendored?
+      vendored? || !!git_attributes['linguist-vendored']
+    end
+
+    def linguist_generated?
+      generated? || !!git_attributes['linguist-generated']
     end
 
     def overriden_language
-      if lang = git_attributes['linguist-lang']
+      if lang = git_attributes['linguist-language']
         Language.find_by_name(lang)
       end
     end
