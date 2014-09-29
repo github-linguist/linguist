@@ -2,7 +2,6 @@ require 'json'
 require 'rake/clean'
 require 'rake/testtask'
 require 'yaml'
-require 'pry'
 
 task :default => :test
 
