@@ -53,15 +53,14 @@ module Linguist
         return true
       end
     end
-
-    def overriden_language
-      if lang = git_attributes['linguist-language']
-        Language.find_by_name(lang)
-      end
-    end
-
     def language
-      @language ||= (overriden_language || Language.detect(self))
+      return @language if defined?(@language)
+
+      @language = if lang = git_attributes['linguist-language']
+        Language.find_by_name(lang)
+      else
+        super
+      end
     end
 
     def data
