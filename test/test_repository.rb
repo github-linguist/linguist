@@ -81,8 +81,6 @@ class TestRepository < Test::Unit::TestCase
     # TODO: get rid of this (would like this to come from git data)
     file.stubs(:git_attributes).returns(git_attrs)
 
-    # check we're getting the correct assignment back from .gitattributes
-    assert file.result_for_key('linguist-generated')
     # overridden in .gitattributes
     assert file.generated?
   end
@@ -98,8 +96,6 @@ class TestRepository < Test::Unit::TestCase
     # TODO: get rid of this (would like this to come from git data)
     override_vendored.stubs(:git_attributes).returns(git_attrs)
 
-    # check we're getting the correct assignment back from .gitattributes
-    assert override_vendored.result_for_key('linguist-vendored')
     # overridden .gitattributes
     assert override_vendored.vendored?
   end
@@ -117,8 +113,6 @@ class TestRepository < Test::Unit::TestCase
     # TODO: get rid of this (would like this to come from git data)
     override_unvendored.stubs(:git_attributes).returns(git_attrs)
 
-    # check we're getting the correct assignment back from .gitattributes
-    assert !override_unvendored.result_for_key('linguist-vendored')
     # overridden .gitattributes
     assert !override_unvendored.vendored?
   end
