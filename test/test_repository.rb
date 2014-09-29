@@ -69,7 +69,7 @@ class TestRepository < Test::Unit::TestCase
   end
 
 
-  def test_linguist_generated?
+  def test_linguist_override_generated?
     attr_commit = 'b533b682d5d4012ca42f4fc998b45169ec41fe33'
 
     file = Linguist::LazyBlob.new(rugged_repository, attr_commit, 'Rakefile')
@@ -84,9 +84,7 @@ class TestRepository < Test::Unit::TestCase
     # check we're getting the correct assignment back from .gitattributes
     assert file.result_for_key('linguist-generated')
     # overridden in .gitattributes
-    assert file.linguist_generated?
-    # from lib/linguist/generated.rb
-    assert !file.generated?
+    assert file.generated?
   end
 
   def test_linguist_override_vendored?
@@ -103,9 +101,7 @@ class TestRepository < Test::Unit::TestCase
     # check we're getting the correct assignment back from .gitattributes
     assert override_vendored.result_for_key('linguist-vendored')
     # overridden .gitattributes
-    assert override_vendored.linguist_vendored?
-    # from lib/linguist/vendor.yml
-    assert !override_vendored.vendored?
+    assert override_vendored.vendored?
   end
 
   def test_linguist_override_unvendored?
@@ -124,8 +120,6 @@ class TestRepository < Test::Unit::TestCase
     # check we're getting the correct assignment back from .gitattributes
     assert !override_unvendored.result_for_key('linguist-vendored')
     # overridden .gitattributes
-    assert !override_unvendored.linguist_vendored?
-    # from lib/linguist/vendor.yml
-    assert override_unvendored.vendored?
+    assert !override_unvendored.vendored?
   end
 end

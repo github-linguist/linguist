@@ -142,7 +142,7 @@ module Linguist
           blob = Linguist::LazyBlob.new(repository, delta.new_file[:oid], new, mode.to_s(8))
 
           # Skip vendored or generated blobs
-          next if blob.linguist_vendored? || blob.linguist_generated? || blob.language.nil?
+          next if blob.vendored? || blob.generated? || blob.language.nil?
 
           # Only include programming languages and acceptable markup languages
           if blob.language.type == :programming || Language.detectable_markup.include?(blob.language.name)

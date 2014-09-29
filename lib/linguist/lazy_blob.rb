@@ -29,19 +29,19 @@ module Linguist
         name, GIT_ATTR, GIT_ATTR_FLAGS)
     end
 
-    def linguist_vendored?
+    def vendored?
       if git_attributes['linguist-vendored']
         return result_for_key('linguist-vendored')
       else
-        return vendored?
+        return super
       end
     end
 
-    def linguist_generated?
+    def generated?
       if git_attributes['linguist-generated']
         return result_for_key('linguist-generated')
       else
-        return generated?
+        return super
       end
     end
 
