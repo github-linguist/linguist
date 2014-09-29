@@ -49,7 +49,7 @@ class TestRepository < Test::Unit::TestCase
   end
 
   def test_repo_git_attributes
-    # See https://github.com/github/linguist/blob/7ee006cbcb2d7261f9e648510a684ee9ac64126b/.gitattributes
+    # See https://github.com/github/linguist/blob/351c1cc8fd57340839bdb400d7812332af80e9bd/.gitattributes
     #
     # It looks like this:
     # Gemfile linguist-vendored=true
@@ -58,7 +58,7 @@ class TestRepository < Test::Unit::TestCase
     # Rakefile linguist-generated
     # test/fixtures/* linguist-vendored=false
 
-    attr_commit = '7ee006cbcb2d7261f9e648510a684ee9ac64126b'
+    attr_commit = '351c1cc8fd57340839bdb400d7812332af80e9bd'
     repo = linguist_repo(attr_commit)
 
     assert repo.breakdown_by_file.has_key?("Java")
@@ -69,7 +69,7 @@ class TestRepository < Test::Unit::TestCase
   end
 
   def test_linguist_override_generated?
-    attr_commit = '7ee006cbcb2d7261f9e648510a684ee9ac64126b'
+    attr_commit = '351c1cc8fd57340839bdb400d7812332af80e9bd'
     linguist_repo(attr_commit).read_index
 
     file = Linguist::LazyBlob.new(rugged_repository, attr_commit, 'Rakefile')
@@ -79,7 +79,7 @@ class TestRepository < Test::Unit::TestCase
   end
 
   def test_linguist_override_vendored?
-    attr_commit = '7ee006cbcb2d7261f9e648510a684ee9ac64126b'
+    attr_commit = '351c1cc8fd57340839bdb400d7812332af80e9bd'
     repo = linguist_repo(attr_commit).read_index
 
     override_vendored = Linguist::LazyBlob.new(rugged_repository, attr_commit, 'Gemfile')
@@ -89,7 +89,7 @@ class TestRepository < Test::Unit::TestCase
   end
 
   def test_linguist_override_unvendored?
-    attr_commit = '7ee006cbcb2d7261f9e648510a684ee9ac64126b'
+    attr_commit = '351c1cc8fd57340839bdb400d7812332af80e9bd'
     repo = linguist_repo(attr_commit).read_index
 
     # lib/linguist/vendor.yml defines this as vendored.
