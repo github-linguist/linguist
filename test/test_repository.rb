@@ -68,18 +68,11 @@ class TestRepository < Test::Unit::TestCase
     assert !repo.breakdown_by_file["Ruby"].empty?
   end
 
-
   def test_linguist_override_generated?
     attr_commit = 'b533b682d5d4012ca42f4fc998b45169ec41fe33'
+    linguist_repo(attr_commit).read_index
 
     file = Linguist::LazyBlob.new(rugged_repository, attr_commit, 'Rakefile')
-
-    git_attrs = { "linguist-language" => nil,
-                  "linguist-vendored" => nil,
-                  "linguist-generated"=> true }
-
-    # TODO: get rid of this (would like this to come from git data)
-    file.stubs(:git_attributes).returns(git_attrs)
 
     # overridden in .gitattributes
     assert file.generated?
@@ -87,14 +80,9 @@ class TestRepository < Test::Unit::TestCase
 
   def test_linguist_override_vendored?
     attr_commit = 'b533b682d5d4012ca42f4fc998b45169ec41fe33'
+    repo = linguist_repo(attr_commit).read_index
+
     override_vendored = Linguist::LazyBlob.new(rugged_repository, attr_commit, 'Gemfile')
-
-    git_attrs = { "linguist-language" => nil,
-                  "linguist-vendored" => true,
-                  "linguist-generated"=> nil }
-
-    # TODO: get rid of this (would like this to come from git data)
-    override_vendored.stubs(:git_attributes).returns(git_attrs)
 
     # overridden .gitattributes
     assert override_vendored.vendored?
@@ -102,16 +90,10 @@ class TestRepository < Test::Unit::TestCase
 
   def test_linguist_override_unvendored?
     attr_commit = 'b533b682d5d4012ca42f4fc998b45169ec41fe33'
+    repo = linguist_repo(attr_commit).read_index
 
     # lib/linguist/vendor.yml defines this as vendored.
     override_unvendored = Linguist::LazyBlob.new(rugged_repository, attr_commit, 'test/fixtures/foo.rb')
-
-    git_attrs = { "linguist-language" => nil,
-                  "linguist-vendored" => "false",
-                  "linguist-generated"=> nil }
-
-    # TODO: get rid of this (would like this to come from git data)
-    override_unvendored.stubs(:git_attributes).returns(git_attrs)
 
     # overridden .gitattributes
     assert !override_unvendored.vendored?

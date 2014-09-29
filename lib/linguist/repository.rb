@@ -110,22 +110,30 @@ module Linguist
         if @old_commit_oid == @commit_oid
           @old_stats
         else
-          compute_stats(@old_commit_oid, @commit_oid, @old_stats)
+          compute_stats(@old_commit_oid, @old_stats)
         end
       end
     end
 
+    def read_index
+      attr_index = Rugged::Index.new
+      attr_index.read_tree(current_tree)
+      repository.index = attr_index
+    end
+
+    def current_tree
+      @tree ||= Rugged::Commit.lookup(repository, @commit_oid).tree
+    end
+
     protected
-    def compute_stats(old_commit_oid, commit_oid, cache = nil)
+
+    def compute_stats(old_commit_oid, cache = nil)
       file_map = cache ? cache.dup : {}
       old_tree = old_commit_oid && Rugged::Commit.lookup(repository, old_commit_oid).tree
-      new_tree = Rugged::Commit.lookup(repository, commit_oid).tree
 
-      diff = Rugged::Tree.diff(repository, old_tree, new_tree)
+      read_index
 
-      attr_index = Rugged::Index.new
-      attr_index.read_tree(new_tree)
-      repository.index = attr_index
+      diff = Rugged::Tree.diff(repository, old_tree, current_tree)
 
       diff.each_delta do |delta|
         old = delta.old_file[:path]
