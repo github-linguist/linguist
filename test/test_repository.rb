@@ -1,4 +1,5 @@
 require 'linguist/repository'
+require 'linguist/lazy_blob'
 require 'test/unit'
 
 class TestRepository < Test::Unit::TestCase
@@ -47,13 +48,17 @@ class TestRepository < Test::Unit::TestCase
     assert_equal linguist_repo.cache, new_repo.cache
   end
 
-  def test_git_attributes
-    # See https://github.com/github/linguist/blob/525304738ebdb7ab3b7d2bf9a7514cc428faa273/.gitattributes
+  def test_repo_git_attributes
+    # See https://github.com/github/linguist/blob/7ee006cbcb2d7261f9e648510a684ee9ac64126b/.gitattributes
     #
     # It looks like this:
-    # test/*.rb linguist-ignore
-    # lib/linguist.rb linguist-lang=Java
-    attr_commit = '525304738ebdb7ab3b7d2bf9a7514cc428faa273'
+    # Gemfile linguist-vendored=true
+    # lib/linguist.rb linguist-language=Java
+    # test/*.rb linguist-language=Java
+    # Rakefile linguist-generated
+    # test/fixtures/* linguist-vendored=false
+
+    attr_commit = '7ee006cbcb2d7261f9e648510a684ee9ac64126b'
     repo = linguist_repo(attr_commit)
 
     assert repo.breakdown_by_file.has_key?("Java")
@@ -61,8 +66,36 @@ class TestRepository < Test::Unit::TestCase
 
     assert repo.breakdown_by_file.has_key?("Ruby")
     assert !repo.breakdown_by_file["Ruby"].empty?
-    repo.breakdown_by_file["Ruby"].each do |file|
-      assert !file.start_with?("test/")
-    end
+  end
+
+  def test_linguist_override_generated?
+    attr_commit = '7ee006cbcb2d7261f9e648510a684ee9ac64126b'
+    linguist_repo(attr_commit).read_index
+
+    file = Linguist::LazyBlob.new(rugged_repository, attr_commit, 'Rakefile')
+
+    # overridden in .gitattributes
+    assert file.generated?
+  end
+
+  def test_linguist_override_vendored?
+    attr_commit = '7ee006cbcb2d7261f9e648510a684ee9ac64126b'
+    repo = linguist_repo(attr_commit).read_index
+
+    override_vendored = Linguist::LazyBlob.new(rugged_repository, attr_commit, 'Gemfile')
+
+    # overridden .gitattributes
+    assert override_vendored.vendored?
+  end
+
+  def test_linguist_override_unvendored?
+    attr_commit = '7ee006cbcb2d7261f9e648510a684ee9ac64126b'
+    repo = linguist_repo(attr_commit).read_index
+
+    # lib/linguist/vendor.yml defines this as vendored.
+    override_unvendored = Linguist::LazyBlob.new(rugged_repository, attr_commit, 'test/fixtures/foo.rb')
+
+    # overridden .gitattributes
+    assert !override_unvendored.vendored?
   end
 end
