@@ -29,39 +29,30 @@ module Linguist
         name, GIT_ATTR, GIT_ATTR_FLAGS)
     end
 
-    def linguist_vendored?
-      if git_attributes['linguist-vendored']
-        return result_for_key('linguist-vendored')
+    def vendored?
+      if attr = git_attributes['linguist-vendored']
+        return boolean_attribute(attr)
       else
-        return vendored?
+        return super
       end
     end
 
-    def linguist_generated?
-      if git_attributes['linguist-generated']
-        return result_for_key('linguist-generated')
+    def generated?
+      if attr = git_attributes['linguist-generated']
+        return boolean_attribute(attr)
       else
-        return generated?
-      end
-    end
-
-    def result_for_key(keyname)
-      key = git_attributes[keyname]
-      if key == "false" || key.nil?
-        return false
-      else
-        return true
-      end
-    end
-
-    def overriden_language
-      if lang = git_attributes['linguist-language']
-        Language.find_by_name(lang)
+        return super
       end
     end
 
     def language
-      @language ||= (overriden_language || Language.detect(self))
+      return @language if defined?(@language)
+
+      @language = if lang = git_attributes['linguist-language']
+        Language.find_by_name(lang)
+      else
+        super
+      end
     end
 
     def data
@@ -75,6 +66,12 @@ module Linguist
     end
 
     protected
+
+    # Returns true if the attribute is present and not the string "false".
+    def boolean_attribute(attr)
+      attr != "false"
+    end
+
     def load_blob!
       @data, @size = Rugged::Blob.to_buffer(repository, oid, MAX_SIZE) if @data.nil?
     end
