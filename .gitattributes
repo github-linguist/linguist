@@ -1,2 +1,5 @@
-test/*.rb linguist-ignore
-lib/linguist.rb linguist-lang=Java
+Gemfile linguist-vendored=true
+lib/linguist.rb linguist-language=Java
+test/*.rb linguist-language=Java
+Rakefile linguist-generated
+test/fixtures/* linguist-vendored=false
