@@ -33,6 +33,9 @@
 # Erlang bundles
 - ^rebar$
 
+# Go dependencies
+- Godeps/_workspace/
+
 # Bootstrap minified css and js
 - (^|/)bootstrap([^.]*)(\.min)?\.(js|css)$
 
@@ -235,3 +238,7 @@
 - octicons.css
 - octicons.min.css
 - sprockets-octicons.scss
+
+# Typesafe Activator
+- (^|/)activator$
+- (^|/)activator\.bat$

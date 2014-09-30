@@ -19,6 +19,9 @@ module Linguist
         if languages.all? { |l| ["ECL", "Prolog"].include?(l) }
           result = disambiguate_ecl(data, languages)
         end
+        if languages.all? { |l| ["Common Lisp", "OpenCL"].include?(l) }
+          result = disambiguate_cl(data, languages)
+        end
         return result
       end
     end
