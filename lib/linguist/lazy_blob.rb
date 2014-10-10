@@ -4,7 +4,7 @@ require 'rugged'
 
 module Linguist
   class LazyBlob
-    GIT_ATTR = ['linguist-language', 'linguist-vendored', 'linguist-generated']
+    GIT_ATTR = ['linguist-language', 'linguist-vendored']
     GIT_ATTR_OPTS = { :priority => [:index], :skip_system => true }
     GIT_ATTR_FLAGS = Rugged::Repository::Attributes.parse_opts(GIT_ATTR_OPTS)
 
