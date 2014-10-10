@@ -37,14 +37,6 @@ module Linguist
       end
     end
 
-    def generated?
-      if attr = git_attributes['linguist-generated']
-        return boolean_attribute(attr)
-      else
-        return super
-      end
-    end
-
     def language
       return @language if defined?(@language)
 

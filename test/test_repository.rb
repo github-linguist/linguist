@@ -68,16 +68,6 @@ class TestRepository < Test::Unit::TestCase
     assert !repo.breakdown_by_file["Ruby"].empty?
   end
 
-  def test_linguist_override_generated?
-    attr_commit = '351c1cc8fd57340839bdb400d7812332af80e9bd'
-    linguist_repo(attr_commit).read_index
-
-    file = Linguist::LazyBlob.new(rugged_repository, attr_commit, 'Rakefile')
-
-    # overridden in .gitattributes
-    assert file.generated?
-  end
-
   def test_linguist_override_vendored?
     attr_commit = '351c1cc8fd57340839bdb400d7812332af80e9bd'
     repo = linguist_repo(attr_commit).read_index
