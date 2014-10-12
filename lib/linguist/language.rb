@@ -290,6 +290,16 @@ module Linguist
       @lexer = Pygments::Lexer.find_by_name(attributes[:lexer] || name) ||
         raise(ArgumentError, "#{@name} is missing lexer")
 
+      @tm_scope = attributes[:tm_scope] || begin
+        context = case @type
+                  when :data, :markup, :prose
+                    'text'
+                  when :programming, nil
+                    'source'
+                  end
+        "#{context}.#{@name.downcase}"
+      end
+
       @ace_mode = attributes[:ace_mode]
       @wrap = attributes[:wrap] || false
 
@@ -362,6 +372,11 @@ module Linguist
     #
     # Returns the Lexer
     attr_reader :lexer
+
+    # Public: Get the name of a TextMate-compatible scope
+    #
+    # Returns the scope
+    attr_reader :tm_scope
 
     # Public: Get Ace mode
     #
