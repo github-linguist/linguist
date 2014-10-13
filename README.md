@@ -32,33 +32,56 @@ The Language stats bar that you see on every repository is built by aggregating 
 
 The repository stats API, accessed through `#languages`, can be used on a directory:
 
+***API UPDATE***
+Since [Version 3.0.0](https://github.com/github/linguist/releases/tag/v3.0.0) Linguist requires a git repository (in the form of a [Rugged::Repository](https://github.com/libgit2/rugged#repositories)) to be passed when initializing `Linguist::Repository`.
+
+
 ```ruby
-project = Linguist::Repository.from_directory(".")
-project.language.name  #=> "Ruby"
-project.languages      #=> { "Ruby" => 0.98, "Shell" => 0.02 }
+require 'rugged'
+require 'linguist'
+
+repo = Rugged::Repository.new('.')
+project = Linguist::Repository.new(repo, repo.head.target_id)
+project.language       #=> "Ruby"
+project.languages      #=> { "Ruby" => 119387 }
 ```
 
 These stats are also printed out by the `linguist` binary. You can use the
 `--breakdown` flag, and the binary will also output the breakdown of files by language.
 
-You can try running `linguist` on the `lib/` directory in this repository itself:
+You can try running `linguist` on the root directory in this repository itself:
 
-    $ bundle exec linguist lib/ --breakdown
+    $ bundle exec linguist --breakdown
 
     100.00% Ruby
 
     Ruby:
-    linguist/blob_helper.rb
-    linguist/classifier.rb
-    linguist/file_blob.rb
-    linguist/generated.rb
-    linguist/heuristics.rb
-    linguist/language.rb
-    linguist/md5.rb
-    linguist/repository.rb
-    linguist/samples.rb
-    linguist/tokenizer.rb
-    linguist.rb
+    Gemfile
+    Rakefile
+    bin/linguist
+    github-linguist.gemspec
+    lib/linguist.rb
+    lib/linguist/blob_helper.rb
+    lib/linguist/classifier.rb
+    lib/linguist/file_blob.rb
+    lib/linguist/generated.rb
+    lib/linguist/heuristics.rb
+    lib/linguist/language.rb
+    lib/linguist/lazy_blob.rb
+    lib/linguist/md5.rb
+    lib/linguist/repository.rb
+    lib/linguist/samples.rb
+    lib/linguist/tokenizer.rb
+    lib/linguist/version.rb
+    test/test_blob.rb
+    test/test_classifier.rb
+    test/test_heuristics.rb
+    test/test_language.rb
+    test/test_md5.rb
+    test/test_pedantic.rb
+    test/test_repository.rb
+    test/test_samples.rb
+    test/test_tokenizer.rb
 
 #### Ignore vendored files
 
