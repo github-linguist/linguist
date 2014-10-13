@@ -1,5 +1,5 @@
 require 'linguist/repository'
-
+require 'linguist/lazy_blob'
 require 'test/unit'
 
 class TestRepository < Test::Unit::TestCase
@@ -46,5 +46,46 @@ class TestRepository < Test::Unit::TestCase
     assert new_repo.size > old_repo.size
 
     assert_equal linguist_repo.cache, new_repo.cache
+  end
+
+  def test_repo_git_attributes
+    # See https://github.com/github/linguist/blob/351c1cc8fd57340839bdb400d7812332af80e9bd/.gitattributes
+    #
+    # It looks like this:
+    # Gemfile linguist-vendored=true
+    # lib/linguist.rb linguist-language=Java
+    # test/*.rb linguist-language=Java
+    # Rakefile linguist-generated
+    # test/fixtures/* linguist-vendored=false
+
+    attr_commit = '351c1cc8fd57340839bdb400d7812332af80e9bd'
+    repo = linguist_repo(attr_commit)
+
+    assert repo.breakdown_by_file.has_key?("Java")
+    assert repo.breakdown_by_file["Java"].include?("lib/linguist.rb")
+
+    assert repo.breakdown_by_file.has_key?("Ruby")
+    assert !repo.breakdown_by_file["Ruby"].empty?
+  end
+
+  def test_linguist_override_vendored?
+    attr_commit = '351c1cc8fd57340839bdb400d7812332af80e9bd'
+    repo = linguist_repo(attr_commit).read_index
+
+    override_vendored = Linguist::LazyBlob.new(rugged_repository, attr_commit, 'Gemfile')
+
+    # overridden .gitattributes
+    assert override_vendored.vendored?
+  end
+
+  def test_linguist_override_unvendored?
+    attr_commit = '351c1cc8fd57340839bdb400d7812332af80e9bd'
+    repo = linguist_repo(attr_commit).read_index
+
+    # lib/linguist/vendor.yml defines this as vendored.
+    override_unvendored = Linguist::LazyBlob.new(rugged_repository, attr_commit, 'test/fixtures/foo.rb')
+
+    # overridden .gitattributes
+    assert !override_unvendored.vendored?
   end
 end
