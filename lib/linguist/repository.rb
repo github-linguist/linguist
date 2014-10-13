@@ -123,10 +123,6 @@ module Linguist
 
       diff = Rugged::Tree.diff(repository, old_tree, new_tree)
 
-      attr_index = Rugged::Index.new
-      attr_index.read_tree(new_tree)
-      repository.index = attr_index
-
       diff.each_delta do |delta|
         old = delta.old_file[:path]
         new = delta.new_file[:path]
@@ -142,7 +138,7 @@ module Linguist
           blob = Linguist::LazyBlob.new(repository, delta.new_file[:oid], new, mode.to_s(8))
 
           # Skip vendored or generated blobs
-          next if blob.ignored? || blob.vendored? || blob.generated? || blob.language.nil?
+          next if blob.vendored? || blob.generated? || blob.language.nil?
 
           # Only include programming languages and acceptable markup languages
           if blob.language.type == :programming || Language.detectable_markup.include?(blob.language.name)
