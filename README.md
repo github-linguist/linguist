@@ -33,6 +33,7 @@ The Language stats bar that you see on every repository is built by aggregating 
 The repository stats API, accessed through `#languages`, can be used on a directory:
 
 ***API UPDATE***
+
 Since [Version 3.0.0](https://github.com/github/linguist/releases/tag/v3.0.0) Linguist requires a git repository (in the form of a [Rugged::Repository](https://github.com/libgit2/rugged#repositories)) to be passed when initializing `Linguist::Repository`.
 
 
