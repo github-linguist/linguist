@@ -19,6 +19,9 @@ module Linguist
         if languages.all? { |l| ["ECL", "Prolog"].include?(l) }
           result = disambiguate_ecl(data, languages)
         end
+        if languages.all? { |l| ["IDL", "Prolog"].include?(l) }
+          result = disambiguate_pro(data, languages)
+        end
         if languages.all? { |l| ["Common Lisp", "OpenCL"].include?(l) }
           result = disambiguate_cl(data, languages)
         end
@@ -48,6 +51,16 @@ module Linguist
       matches = []
       matches << Language["Prolog"] if data.include?(":-")
       matches << Language["ECL"] if data.include?(":=")
+      matches
+    end
+
+    def self.disambiguate_pro(data, languages)
+      matches = []
+      if (data.include?(":-"))
+        matches << Language["Prolog"]
+      else
+        matches << Language["IDL"]
+      end
       matches
     end
 
