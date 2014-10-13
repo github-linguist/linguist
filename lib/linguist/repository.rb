@@ -1,6 +1,6 @@
 require 'linguist/lazy_blob'
 require 'rugged'
-require 'pry'
+
 module Linguist
   # A Repository is an abstraction of a Grit::Repo or a basic file
   # system tree. It holds a list of paths pointing to Blobish objects.
