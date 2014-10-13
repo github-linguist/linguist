@@ -69,15 +69,16 @@ class TestRepository < Test::Unit::TestCase
   end
 
   def test_commit_with_git_attributes_data
-    old_commit = '3d7364877d6794f6cc2a86b493e893968a597332'
+    # Before we had any .gitattributes data
+    old_commit = '4a017d9033f91b2776eb85275463f9613cc371ef'
     old_repo = linguist_repo(old_commit)
 
+    # With some .gitattributes data
     attr_commit = '7ee006cbcb2d7261f9e648510a684ee9ac64126b'
+    # It's incremental but should bust the cache
     new_repo = Linguist::Repository.incremental(rugged_repository, attr_commit, old_commit, old_repo.cache)
 
-    Rugged::Tree.expects(:diff).twice
-
-    new_repo.send(:compute_stats, old_commit, old_repo.cache)
+    assert new_repo.breakdown_by_file["Java"].include?("lib/linguist.rb")
   end
 
   def test_linguist_override_vendored?
