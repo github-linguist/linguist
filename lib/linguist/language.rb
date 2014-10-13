@@ -579,6 +579,7 @@ module Linguist
       :type              => options['type'],
       :aliases           => options['aliases'],
       :lexer             => options['lexer'],
+      :tm_scope          => options['tm_scope'],
       :ace_mode          => options['ace_mode'],
       :wrap              => options['wrap'],
       :group_name        => options['group'],
