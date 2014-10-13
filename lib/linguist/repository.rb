@@ -142,9 +142,6 @@ module Linguist
         file_map = cache ? cache.dup : {}
       end
 
-      # TODO - do we need to re-read the index?
-      # read_index
-
       diff.each_delta do |delta|
         old = delta.old_file[:path]
         new = delta.new_file[:path]
