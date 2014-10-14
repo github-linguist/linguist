@@ -321,6 +321,11 @@ module Linguist
       language ? language.lexer : Pygments::Lexer.find_by_name('Text only')
     end
 
+    # Internal: Get the TextMate compatible scope for the blob
+    def tm_scope
+      language && language.tm_scope
+    end
+
     # Public: Highlight syntax of blob
     #
     # options - A Hash of options (defaults to {})
