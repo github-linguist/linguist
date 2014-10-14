@@ -949,6 +949,7 @@ HTML:
 
 HTML+Django:
   type: markup
+  tm_scope: text.html.django
   group: HTML
   lexer: HTML+Django/Jinja
   extensions:
@@ -957,6 +958,7 @@ HTML+Django:
 
 HTML+ERB:
   type: markup
+  tm_scope: text.html.erb
   group: HTML
   lexer: RHTML
   aliases:
@@ -967,6 +969,7 @@ HTML+ERB:
 
 HTML+PHP:
   type: markup
+  tm_scope: text.html.php
   group: HTML
   extensions:
   - .phtml
@@ -1102,6 +1105,7 @@ J:
 
 JSON:
   type: data
+  tm_scope: source.json
   group: JavaScript
   ace_mode: json
   searchable: false
@@ -1293,6 +1297,7 @@ Literate Agda:
 
 Literate CoffeeScript:
   type: programming
+  tm_scope: source.litcoffee
   group: CoffeeScript
   lexer: Text only
   ace_mode: markdown
@@ -1587,6 +1592,7 @@ Objective-C:
 
 Objective-C++:
   type: programming
+  tm_scope: source.objc++
   color: "#4886FC"
   aliases:
   - obj-c++
@@ -2084,6 +2090,7 @@ SAS:
 
 SCSS:
   type: markup
+  tm_scope: source.scss
   group: CSS
   ace_mode: scss
   extensions:
@@ -2124,6 +2131,7 @@ Sage:
 
 Sass:
   type: markup
+  tm_scope: source.sass
   group: CSS
   extensions:
   - .sass
@@ -2598,6 +2606,7 @@ Xtend:
 
 YAML:
   type: data
+  tm_scope: source.yaml
   aliases:
   - yml
   extensions:
