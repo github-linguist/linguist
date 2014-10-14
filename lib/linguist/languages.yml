@@ -83,6 +83,7 @@ ATS:
 ActionScript:
   type: programming
   lexer: ActionScript 3
+  tm_scope: source.actionscript.3
   color: "#e3491a"
   search_term: as3
   aliases:
@@ -282,6 +283,7 @@ C:
 C#:
   type: programming
   ace_mode: csharp
+  tm_scope: source.cs
   search_term: csharp
   color: "#178600"
   aliases:
@@ -411,6 +413,7 @@ Clojure:
 
 CoffeeScript:
   type: programming
+  tm_scope: source.coffee
   ace_mode: coffee
   color: "#244776"
   aliases:
@@ -453,6 +456,7 @@ ColdFusion CFC:
 
 Common Lisp:
   type: programming
+  tm_scope: source.lisp
   color: "#3fb68b"
   aliases:
   - lisp
@@ -648,6 +652,7 @@ Elm:
 Emacs Lisp:
   type: programming
   lexer: Common Lisp
+  tm_scope: source.lisp
   color: "#c065db"
   aliases:
   - elisp
@@ -932,6 +937,7 @@ Groovy Server Pages:
 
 HTML:
   type: markup
+  tm_scope: text.html.basic
   ace_mode: html
   aliases:
   - xhtml
@@ -1158,6 +1164,7 @@ Java Server Pages:
 
 JavaScript:
   type: programming
+  tm_scope: source.js
   ace_mode: javascript
   color: "#f1e05a"
   aliases:
@@ -1569,6 +1576,7 @@ ObjDump:
 
 Objective-C:
   type: programming
+  tm_scope: source.objc
   color: "#438eff"
   aliases:
   - obj-c
@@ -1669,6 +1677,7 @@ PAWN:
 
 PHP:
   type: programming
+  tm_scope: text.html.php
   ace_mode: php
   color: "#4F5D95"
   extensions:
@@ -2089,6 +2098,7 @@ SQF:
 
 SQL:
   type: data
+  tm_scope: source.sql
   ace_mode: sql
   extensions:
   - .sql
