@@ -949,6 +949,7 @@ HTML:
 
 HTML+Django:
   type: markup
+  tm_scope: text.html.django
   group: HTML
   lexer: HTML+Django/Jinja
   extensions:
@@ -957,6 +958,7 @@ HTML+Django:
 
 HTML+ERB:
   type: markup
+  tm_scope: text.html.erb
   group: HTML
   lexer: RHTML
   aliases:
@@ -967,6 +969,7 @@ HTML+ERB:
 
 HTML+PHP:
   type: markup
+  tm_scope: text.html.php
   group: HTML
   extensions:
   - .phtml
