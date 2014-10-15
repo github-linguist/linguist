@@ -403,5 +403,9 @@ class TestLanguage < Test::Unit::TestCase
 <span class="k">end</span>
 </pre></div>
     HTML
+  end  
+  
+  def test_build
+    assert false
   end
 end
