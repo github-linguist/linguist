@@ -165,7 +165,7 @@ If you are the current maintainer of this gem:
  0. Ensure that tests are green: `bundle exec rake test`
  0. Bump gem version in `lib/linguist/version.rb`.  For example, [like this](https://github.com/github/linguist/commit/8d2ea90a5ba3b2fe6e1508b7155aa4632eea2985).
  0. Make a PR to github/linguist.  For example, [#1238](https://github.com/github/linguist/pull/1238).
- 0. Build a local gem: `gem build github-linguist.gemspec`
+ 0. Build a local gem: `bundle exec rake build_gem`
  0. Testing:
    0. Bump the Gemfile and Gemfile.lock versions for an app which relies on this gem
    0. Install the new gem locally
