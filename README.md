@@ -34,7 +34,7 @@ The repository stats API, accessed through `#languages`, can be used on a direct
 
 ***API UPDATE***
 
-Since [Version 3.0.0](https://github.com/github/linguist/releases/tag/v3.0.0) Linguist requires a git repository (in the form of a [Rugged::Repository](https://github.com/libgit2/rugged#repositories)) to be passed when initializing `Linguist::Repository`.
+Since [Version 3.0.0](https://github.com/github/linguist/releases/tag/v3.0.0) Linguist expects a git repository (in the form of a [Rugged::Repository](https://github.com/libgit2/rugged#repositories)) to be passed when initializing `Linguist::Repository`.
 
 
 ```ruby
