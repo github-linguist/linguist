@@ -104,9 +104,72 @@ Linguist::FileBlob.new("underscore.min.js").generated? # => true
 
 See [Linguist::Generated#generated?](https://github.com/github/linguist/blob/master/lib/linguist/generated.rb).
 
+## Overrides
+Linguist now support custom overrides for language definitions and vendored paths. To make use of these you need to add a `.gitattributes` file to your project using the keys `linguist-language` and `linguist-vendored` with the standard git-style path matchers for the files you want to handle this way.
+
+###Language overrides
+
+First let's look at an example of overriding the language returned by Linguist (first without custom `.gitattributes` data):
+
+```
+> cd my-project
+> ls -m1 -a
+.git
+ruby_file.rb
+
+> linguist --breakdown
+100.00% Ruby
+
+Ruby:
+ruby_file.rb
+```
+
+Now the same git repository but with the `.gitattributes` file specifying that all files ending in `.rb` are actually Java:
+
+```
+> cat .gitattributes
+*.rb linguist-language=Java
+
+> linguist --breakdown
+100.00% Java
+
+Java:
+ruby_file.rb
+```
+
+###Custom vendored paths
+
+By default, Linguist treats all of the paths defined in [lib/linguist/vendor.yml](https://github.com/github/linguist/blob/master/lib/linguist/vendor.yml) as vendored and therefore doesn't include them in the language statistics for a repository.
+
+With the new overrides it's possible to both add additional vendored paths and override standard behavior to specify paths as _not_ vendored.
+
+For example, the following repository has a large Javascript file in an unusual path `special-vendored-path`:
+
+```
+> cat .gitattributes
+special-vendored-path/* linguist-vendored=true
+
+> irb
+> require 'linguist'
+> repo = Rugged::Repository.new('.') #to read .gitattributes data we need the git repository
+> sha = repo.head.target_id #current commit
+> blob = Linguist::LazyBlob.new(repo, sha, 'special-vendored-path/massive-js-file.js').vendored?
+=> true
+```
+
+To override standard behavior (i.e. un-vendor a path) the syntax is:
+
+```
+jquery.js linguist-vendored=false
+```
+
+### Feedback please!
+
+The custom overrides are a new feature and we'd love your feedback [here](https://github.com/github/linguist/issues/new?title=Linguist+gitattributes+feedback).
+
 ## Installation
 
-github.com is usually running the latest version of the `github-linguist` gem that is released on [RubyGems.org](http://rubygems.org/gems/github-linguist).
+Github.com is usually running the latest version of the `github-linguist` gem that is released on [RubyGems.org](http://rubygems.org/gems/github-linguist).
 
 But for development you are going to want to checkout out the source. To get it, clone the repo and run [Bundler](http://gembundler.com/) to install its dependencies.
 
