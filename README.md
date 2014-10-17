@@ -148,12 +148,12 @@ For example, the following repository has a large Javascript file in an unusual 
 ```
 > cat .gitattributes
 special-vendored-path/* linguist-vendored=true
-
-> irb
-> require 'linguist'
-> repo = Rugged::Repository.new('.') #to read .gitattributes data we need the git repository
-> sha = repo.head.target_id #current commit
-> blob = Linguist::LazyBlob.new(repo, sha, 'special-vendored-path/massive-js-file.js').vendored?
+```
+```ruby
+require 'linguist'
+repo = Rugged::Repository.new('.') #to read .gitattributes data we need the git repository
+sha = repo.head.target_id #current commit
+blob = Linguist::LazyBlob.new(repo, sha, 'special-vendored-path/massive-js-file.js').vendored?
 => true
 ```
 
