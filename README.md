@@ -104,9 +104,32 @@ Linguist::FileBlob.new("underscore.min.js").generated? # => true
 
 See [Linguist::Generated#generated?](https://github.com/github/linguist/blob/master/lib/linguist/generated.rb).
 
+## Overrides
+
+Linguist supports custom overrides for language definitions and vendored paths. Add a `.gitattributes` file to your project using the keys `linguist-language` and `linguist-vendored` with the standard git-style path matchers for the files you want to override.
+
+```
+$ cat .gitattributes
+*.rb linguist-language=Java
+
+$ linguist --breakdown
+100.00% Java
+
+Java:
+ruby_file.rb
+```
+
+By default, Linguist treats all of the paths defined in [lib/linguist/vendor.yml](https://github.com/github/linguist/blob/master/lib/linguist/vendor.yml) as vendored and therefore doesn't include them in the language statistics for a repository. Use the `linguist-vendored` attribute to vendor or un-vendor paths.
+
+```
+$ cat .gitattributes
+special-vendored-path/* linguist-vendored
+jquery.js linguist-vendored=false
+```
+
 ## Installation
 
-github.com is usually running the latest version of the `github-linguist` gem that is released on [RubyGems.org](http://rubygems.org/gems/github-linguist).
+Github.com is usually running the latest version of the `github-linguist` gem that is released on [RubyGems.org](http://rubygems.org/gems/github-linguist).
 
 But for development you are going to want to checkout out the source. To get it, clone the repo and run [Bundler](http://gembundler.com/) to install its dependencies.
 
