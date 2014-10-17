@@ -16,11 +16,11 @@ class TestSamples < Test::Unit::TestCase
       warn "Samples database is out of date. Run `bundle exec rake samples`."
 
       expected = Tempfile.new('expected.json')
-      expected.write Yajl::Encoder.encode(serialized, :pretty => true)
+      expected.write Yajl.dump(serialized, :pretty => true)
       expected.close
 
       actual = Tempfile.new('actual.json')
-      actual.write Yajl::Encoder.encode(latest, :pretty => true)
+      actual.write Yajl.dump(latest, :pretty => true)
       actual.close
 
       expected.unlink
