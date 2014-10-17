@@ -37,6 +37,8 @@ class TestTokenizer < Test::Unit::TestCase
     assert_equal %w(foo), tokenize("foo\n# Comment")
     assert_equal %w(foo bar), tokenize("foo\n# Comment\nbar")
     assert_equal %w(foo), tokenize("foo\n// Comment")
+    assert_equal %w(foo), tokenize("foo\n-- Comment")
+    assert_equal %w(foo), tokenize("foo\n\" Comment")
     assert_equal %w(foo), tokenize("foo /* Comment */")
     assert_equal %w(foo), tokenize("foo /* \nComment\n */")
     assert_equal %w(foo), tokenize("foo <!-- Comment -->")
