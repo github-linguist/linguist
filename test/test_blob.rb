@@ -250,6 +250,7 @@ class TestBlob < Test::Unit::TestCase
     # Minified CSS
     assert !blob("CSS/bootstrap.css").generated?
     assert blob("CSS/bootstrap.min.css").generated?
+    assert false
 
     # Generated VCR
     assert blob("YAML/vcr_cassette.yml").generated?
