@@ -13,5 +13,5 @@ set +x
 
 mkdir -p ./vendor/gems
 
-bundle install --local --path ./vendor/gems
+bundle install --full-index --local --path ./vendor/gems
 bundle exec rake
