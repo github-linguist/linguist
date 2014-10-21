@@ -1,7 +1,10 @@
 #!/bin/sh
 if [ -d /usr/share/rbenv/shims ]; then
   export PATH=/usr/share/rbenv/shims:$PATH
-  export RBENV_VERSION="2.1.2p95-github"
+  export RBENV_VERSION=2.1.2-github
+  export RUBY_VERSION=2.1.2-github
 fi
+
+echo "Using $(rbenv version)"
 
 bundle exec rake
