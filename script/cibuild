@@ -5,7 +5,10 @@ if [ -d /usr/share/rbenv/shims ]; then
   export RUBY_VERSION=2.1.2-github
 fi
 
-echo "Using $(rbenv version)"
+set -x
+git log -n 1 HEAD | cat
+ruby -v
+bundle -v
+set +x
 
-bundle install
 bundle exec rake
