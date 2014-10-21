@@ -11,5 +11,7 @@ ruby -v
 bundle -v
 set +x
 
-bundle install
+mkdir -p ./vendor/gems
+
+bundle install --local --path ./vendor/gems
 bundle exec rake
