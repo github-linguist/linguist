@@ -8,7 +8,7 @@ class TestSamples < Test::Unit::TestCase
   include Linguist
 
   def test_up_to_date
-    assert serialized = Samples::DATA
+    assert serialized = Samples.cache
     assert latest = Samples.data
 
     # Just warn, it shouldn't scare people off by breaking the build.
@@ -29,7 +29,7 @@ class TestSamples < Test::Unit::TestCase
   end
 
   def test_verify
-    assert data = Samples::DATA
+    assert data = Samples.cache
 
     assert_equal data['languages_total'], data['languages'].inject(0) { |n, (_, c)| n += c }
     assert_equal data['tokens_total'], data['language_tokens'].inject(0) { |n, (_, c)| n += c }
@@ -38,7 +38,7 @@ class TestSamples < Test::Unit::TestCase
 
   # Check that there aren't samples with extensions that aren't explicitly defined in languages.yml
   def test_parity
-    extensions = Samples::DATA['extnames']
+    extensions = Samples.cache['extnames']
     languages_yml = File.expand_path("../../lib/linguist/languages.yml", __FILE__)
     languages = YAML.load_file(languages_yml)
 

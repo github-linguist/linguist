@@ -135,8 +135,8 @@ module Linguist
         # No shebang. Still more work to do. Try to find it with our heuristics.
         elsif (determined = Heuristics.find_by_heuristics(data, possible_language_names)) && !determined.empty?
           determined.first
-        # Lastly, fall back to the probablistic classifier.
-        elsif classified = Classifier.classify(Samples::DATA, data, possible_language_names ).first
+        # Lastly, fall back to the probabilistic classifier.
+        elsif classified = Classifier.classify(Samples.cache, data, possible_language_names).first
           # Return the actual Language object based of the string language name (i.e., first element of `#classify`)
           Language[classified[0]]
         end
@@ -290,6 +290,16 @@ module Linguist
       @lexer = Pygments::Lexer.find_by_name(attributes[:lexer] || name) ||
         raise(ArgumentError, "#{@name} is missing lexer")
 
+      @tm_scope = attributes[:tm_scope] || begin
+        context = case @type
+                  when :data, :markup, :prose
+                    'text'
+                  when :programming, nil
+                    'source'
+                  end
+        "#{context}.#{@name.downcase}"
+      end
+
       @ace_mode = attributes[:ace_mode]
       @wrap = attributes[:wrap] || false
 
@@ -362,6 +372,11 @@ module Linguist
     #
     # Returns the Lexer
     attr_reader :lexer
+
+    # Public: Get the name of a TextMate-compatible scope
+    #
+    # Returns the scope
+    attr_reader :tm_scope
 
     # Public: Get Ace mode
     #
@@ -510,9 +525,9 @@ module Linguist
     end
   end
 
-  extensions = Samples::DATA['extnames']
-  interpreters = Samples::DATA['interpreters']
-  filenames = Samples::DATA['filenames']
+  extensions = Samples.cache['extnames']
+  interpreters = Samples.cache['interpreters']
+  filenames = Samples.cache['filenames']
   popular = YAML.load_file(File.expand_path("../popular.yml", __FILE__))
 
   languages_yml = File.expand_path("../languages.yml", __FILE__)
@@ -564,6 +579,7 @@ module Linguist
       :type              => options['type'],
       :aliases           => options['aliases'],
       :lexer             => options['lexer'],
+      :tm_scope          => options['tm_scope'],
       :ace_mode          => options['ace_mode'],
       :wrap              => options['wrap'],
       :group_name        => options['group'],

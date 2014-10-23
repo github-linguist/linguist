@@ -14,27 +14,25 @@ module Linguist
     def self.find_by_heuristics(data, languages)
       if active?
         if languages.all? { |l| ["Objective-C", "C++", "C"].include?(l) }
-          disambiguate_c(data, languages)
+          result = disambiguate_c(data, languages)
         end
         if languages.all? { |l| ["Perl", "Prolog"].include?(l) }
-          disambiguate_pl(data, languages)
+          result = disambiguate_pl(data, languages)
         end
         if languages.all? { |l| ["ECL", "Prolog"].include?(l) }
-          disambiguate_ecl(data, languages)
+          result = disambiguate_ecl(data, languages)
         end
-        if languages.all? { |l| ["TypeScript", "XML"].include?(l) }
-          disambiguate_ts(data, languages)
+        if languages.all? { |l| ["IDL", "Prolog"].include?(l) }
+          result = disambiguate_pro(data, languages)
         end
         if languages.all? { |l| ["Common Lisp", "OpenCL"].include?(l) }
-          disambiguate_cl(data, languages)
+          result = disambiguate_cl(data, languages)
         end
-        if languages.all? { |l| ["Rebol", "R"].include?(l) }
-          disambiguate_r(data, languages)
-        end
+        return result
       end
     end
 
-    # .h extensions are ambigious between C, C++, and Objective-C.
+    # .h extensions are ambiguous between C, C++, and Objective-C.
     # We want to shortcut look for Objective-C _and_ now C++ too!
     #
     # Returns an array of Languages or []
@@ -61,6 +59,16 @@ module Linguist
       matches = []
       matches << Language["Prolog"] if data.include?(":-")
       matches << Language["ECL"] if data.include?(":=")
+      matches
+    end
+
+    def self.disambiguate_pro(data, languages)
+      matches = []
+      if (data.include?(":-"))
+        matches << Language["Prolog"]
+      else
+        matches << Language["IDL"]
+      end
       matches
     end
 
