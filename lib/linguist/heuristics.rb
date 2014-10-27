@@ -25,6 +25,9 @@ module Linguist
         if languages.all? { |l| ["Common Lisp", "OpenCL"].include?(l) }
           result = disambiguate_cl(data, languages)
         end
+        if languages.all? { |l| ["AsciiDoc", "AGS Script"].include?(l) }
+          result = disambiguate_asc(data, languages)
+        end
         return result
       end
     end
@@ -85,6 +88,12 @@ module Linguist
       matches = []
       matches << Language["Rebol"] if /\bRebol\b/i.match(data)
       matches << Language["R"] if data.include?("<-")
+      matches
+    end
+
+    def self.disambiguate_asc(data, languages)
+      matches = []
+      matches << Language["AsciiDoc"] if /^=+(\s|\n)/.match(data)
       matches
     end
 
