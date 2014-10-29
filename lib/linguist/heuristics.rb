@@ -38,11 +38,11 @@ module Linguist
     # Returns an array of Languages or []
     def self.disambiguate_c(data, languages)
       matches = []
-      if (/@\b(interface|class|protocol|property|end|synchronised|selector|implementation)\b/.match(data))
+      if (/@(interface|class|protocol|property|end|synchronised|selector|implementation)\b/.match(data))
         matches << Language["Objective-C"]
       end
-      if (/^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>/.match(data) or
-          /^\s*template\s*</.match(data) or /^[^@]class\s+\w+/.match(data) or /^[^@](private|public|protected):$/.match(data) or /std::.+$/.match(data))
+      if (/^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>/.match(data) ||
+          /^\s*template\s*</.match(data) || /^[^@]class\s+\w+/.match(data) || /^[^@](private|public|protected):$/.match(data) || /std::.+$/.match(data))
         matches << Language["C++"]
       end
       matches
