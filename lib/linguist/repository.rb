@@ -128,12 +128,19 @@ module Linguist
     protected
 
     def compute_stats(old_commit_oid, cache = nil)
-      file_map = cache ? cache.dup : {}
       old_tree = old_commit_oid && Rugged::Commit.lookup(repository, old_commit_oid).tree
 
       read_index
 
       diff = Rugged::Tree.diff(repository, old_tree, current_tree)
+
+      # Clear file map and fetch full diff if any .gitattributes files are changed
+      if cache && diff.each_delta.any? { |delta| File.basename(delta.new_file[:path]) == ".gitattributes" }
+        diff = Rugged::Tree.diff(repository, old_tree = nil, current_tree)
+        file_map = {}
+      else
+        file_map = cache ? cache.dup : {}
+      end
 
       diff.each_delta do |delta|
         old = delta.old_file[:path]
