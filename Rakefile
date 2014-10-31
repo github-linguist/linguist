@@ -1,3 +1,4 @@
+require 'bundler/setup'
 require 'rake/clean'
 require 'rake/testtask'
 require 'yaml'

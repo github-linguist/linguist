@@ -108,6 +108,8 @@ See [Linguist::Generated#generated?](https://github.com/github/linguist/blob/mas
 
 Linguist supports custom overrides for language definitions and vendored paths. Add a `.gitattributes` file to your project using the keys `linguist-language` and `linguist-vendored` with the standard git-style path matchers for the files you want to override.
 
+Please note that the overrides currently only affect the language statistics for a repository and not the syntax-highlighting of files.
+
 ```
 $ cat .gitattributes
 *.rb linguist-language=Java
