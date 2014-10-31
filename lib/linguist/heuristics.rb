@@ -25,6 +25,9 @@ module Linguist
         if languages.all? { |l| ["Common Lisp", "OpenCL"].include?(l) }
           result = disambiguate_cl(data, languages)
         end
+        if languages.all? { |l| ["M", "Matlab", "Mathematica", "Mercury", "Objective-C"].include?(l) }
+          result = disambiguate_m(data, languages)
+        end
         return result
       end
     end
@@ -85,6 +88,15 @@ module Linguist
       matches = []
       matches << Language["Rebol"] if /\bRebol\b/i.match(data)
       matches << Language["R"] if data.include?("<-")
+      matches
+    end
+
+    def self.disambiguate_m(data, languages)
+      matches = []
+      if (/@(interface|class|protocol|property|end|synchronised|selector|implementation)\b/.match(data))
+        matches << Language["Objective-C"]
+      end
+      # TODO add matchers for "M", "Matlab", "Mathematica", "Mercury"
       matches
     end
 
