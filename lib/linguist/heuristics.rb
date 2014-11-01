@@ -19,6 +19,15 @@ module Linguist
         if languages.all? { |l| ["ECL", "Prolog"].include?(l) }
           result = disambiguate_ecl(data, languages)
         end
+        if languages.all? { |l| ["IDL", "Prolog"].include?(l) }
+          result = disambiguate_pro(data, languages)
+        end
+        if languages.all? { |l| ["Common Lisp", "OpenCL"].include?(l) }
+          result = disambiguate_cl(data, languages)
+        end
+        if languages.all? { |l| ["AsciiDoc", "AGS Script"].include?(l) }
+          result = disambiguate_asc(data, languages)
+        end
         return result
       end
     end
@@ -48,6 +57,16 @@ module Linguist
       matches
     end
 
+    def self.disambiguate_pro(data, languages)
+      matches = []
+      if (data.include?(":-"))
+        matches << Language["Prolog"]
+      else
+        matches << Language["IDL"]
+      end
+      matches
+    end
+
     def self.disambiguate_ts(data, languages)
       matches = []
       if (data.include?("</translation>"))
@@ -69,6 +88,12 @@ module Linguist
       matches = []
       matches << Language["Rebol"] if /\bRebol\b/i.match(data)
       matches << Language["R"] if data.include?("<-")
+      matches
+    end
+
+    def self.disambiguate_asc(data, languages)
+      matches = []
+      matches << Language["AsciiDoc"] if /^=+(\s|\n)/.match(data)
       matches
     end
 

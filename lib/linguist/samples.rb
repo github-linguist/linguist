@@ -1,5 +1,5 @@
 begin
-  require 'json'
+  require 'yajl'
 rescue LoadError
   require 'yaml'
 end
@@ -17,9 +17,11 @@ module Linguist
     PATH = File.expand_path('../samples.json', __FILE__)
 
     # Hash of serialized samples object
-    if File.exist?(PATH)
-      serializer = defined?(JSON) ? JSON : YAML
-      DATA = serializer.load(File.read(PATH))
+    def self.cache
+      @cache ||= begin
+        serializer = defined?(Yajl) ? Yajl : YAML
+        serializer.load(File.read(PATH))
+      end
     end
 
     # Public: Iterate over each sample.
