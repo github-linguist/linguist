@@ -451,6 +451,13 @@ class TestBlob < Test::Unit::TestCase
     assert blob("activator.bat").vendored?
     assert blob("subproject/activator").vendored?
     assert blob("subproject/activator.bat").vendored?
+
+    # Minified css and js
+    assert blob("foo.min.js").vendored?
+    assert blob("foo.min.css").vendored?
+    assert blob("foo-min.js").vendored?
+    assert blob("foo-min.css").vendored?
+    refute blob("abdomin.css").vendored?
   end
 
   def test_language
