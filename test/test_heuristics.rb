@@ -85,34 +85,34 @@ class TestHeuristcs < Test::Unit::TestCase
     end
   end
 
-  def test_objc_m_matlab_heuristics
+  def test_m_heuristics
     languages = ["Objective-C", "M", "Matlab"]
     objc, m, matlab = Language["Objective-C"], Language["M"], Language["Matlab"]
 
-    assert_equal [], Heuristics.disambiguate_objc("", languages)
+    assert_equal [], Heuristics.disambiguate_m("", languages)
 
-    assert_equal [objc], Heuristics.disambiguate_objc("#import", languages)
-    assert_equal [objc, matlab], Heuristics.disambiguate_objc("% #import", languages) #Matlab comment
-    assert_equal [objc, matlab], Heuristics.disambiguate_objc("'#import'", languages) #Matlab string
-    assert_equal [objc, matlab], Heuristics.disambiguate_objc("""
+    assert_equal [objc], Heuristics.disambiguate_m("#import", languages)
+    assert_equal [objc, matlab], Heuristics.disambiguate_m("% #import", languages) #Matlab comment
+    assert_equal [objc, matlab], Heuristics.disambiguate_m("'#import'", languages) #Matlab string
+    assert_equal [objc, matlab], Heuristics.disambiguate_m("""
       %{
         #import
       %}
       """.strip, languages) #Matlab multi-line comment
-    assert_equal [objc, m], Heuristics.disambiguate_objc("; #import", languages) #M comment
-    assert_equal [objc, m], Heuristics.disambiguate_objc('"#import"', languages) #M string
-    assert_equal [objc, m], Heuristics.disambiguate_objc("3#import", languages) #M modulo
+    assert_equal [objc, m], Heuristics.disambiguate_m("; #import", languages) #M comment
+    assert_equal [objc, m], Heuristics.disambiguate_m('"#import"', languages) #M string
+    assert_equal [objc, m], Heuristics.disambiguate_m("3#import", languages) #M modulo
 
-    assert_equal [objc, matlab], Heuristics.disambiguate_objc("@import", languages) #Matlab function handle
-    assert_equal [objc], Heuristics.disambiguate_objc("@import Foundation;", languages)
-    assert_equal [objc, matlab], Heuristics.disambiguate_objc("% @import Foundation;", languages) #Matlab comment
-    assert_equal [objc, matlab], Heuristics.disambiguate_objc("'@import Foundation;'", languages) #Matlab string
-    assert_equal [objc, matlab], Heuristics.disambiguate_objc("""
+    assert_equal [objc, matlab], Heuristics.disambiguate_m("@import", languages) #Matlab function handle
+    assert_equal [objc], Heuristics.disambiguate_m("@import Foundation;", languages)
+    assert_equal [objc, matlab], Heuristics.disambiguate_m("% @import Foundation;", languages) #Matlab comment
+    assert_equal [objc, matlab], Heuristics.disambiguate_m("'@import Foundation;'", languages) #Matlab string
+    assert_equal [objc, matlab], Heuristics.disambiguate_m("""
       %{
         @import Foundation;
       %}
       """.strip, languages) #Matlab multi-line comment
-    assert_equal [objc, m], Heuristics.disambiguate_objc("; @import Foundation;", languages) #M comment
-    assert_equal [objc, m], Heuristics.disambiguate_objc('"@import Foundation;"', languages) #M string
+    assert_equal [objc, m], Heuristics.disambiguate_m("; @import Foundation;", languages) #M comment
+    assert_equal [objc, m], Heuristics.disambiguate_m('"@import Foundation;"', languages) #M string
   end
 end

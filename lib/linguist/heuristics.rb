@@ -29,7 +29,7 @@ module Linguist
           disambiguate_cl(data, languages)
         end
         if languages.all? { |l| ["Objective-C", "M", "Matlab"].include?(l) }
-          disambiguate_objc(data, languages)
+          disambiguate_m(data, languages)
         end
       end
     end
@@ -76,7 +76,7 @@ module Linguist
       matches
     end
 
-    def self.disambiguate_objc(data, languages)
+    def self.disambiguate_m(data, languages)
       matches = []
 
       if /(#import|@import)/.match(data)
