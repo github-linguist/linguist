@@ -1,64 +1,8 @@
 require 'linguist/language'
-
 require 'test/unit'
-require 'pygments'
 
 class TestLanguage < Test::Unit::TestCase
   include Linguist
-
-  Lexer = Pygments::Lexer
-
-  def test_lexer
-    assert_equal Lexer['ActionScript 3'], Language['ActionScript'].lexer
-    assert_equal Lexer['AspectJ'], Language['AspectJ'].lexer
-    assert_equal Lexer['Bash'], Language['Gentoo Ebuild'].lexer
-    assert_equal Lexer['Bash'], Language['Gentoo Eclass'].lexer
-    assert_equal Lexer['Bash'], Language['Shell'].lexer
-    assert_equal Lexer['C'], Language['OpenCL'].lexer
-    assert_equal Lexer['C'], Language['XS'].lexer
-    assert_equal Lexer['C++'], Language['C++'].lexer
-    assert_equal Lexer['Chapel'], Language['Chapel'].lexer
-    assert_equal Lexer['Coldfusion HTML'], Language['ColdFusion'].lexer
-    assert_equal Lexer['Coq'], Language['Coq'].lexer
-    assert_equal Lexer['FSharp'], Language['F#'].lexer
-    assert_equal Lexer['FSharp'], Language['F#'].lexer
-    assert_equal Lexer['Fortran'], Language['FORTRAN'].lexer
-    assert_equal Lexer['Gherkin'], Language['Cucumber'].lexer
-    assert_equal Lexer['Groovy'], Language['Groovy'].lexer
-    assert_equal Lexer['HTML'], Language['HTML'].lexer
-    assert_equal Lexer['HTML+Django/Jinja'], Language['HTML+Django'].lexer
-    assert_equal Lexer['HTML+PHP'], Language['HTML+PHP'].lexer
-    assert_equal Lexer['HTTP'], Language['HTTP'].lexer
-    assert_equal Lexer['JSON'], Language['JSON'].lexer
-    assert_equal Lexer['Java'], Language['ChucK'].lexer
-    assert_equal Lexer['Java'], Language['Java'].lexer
-    assert_equal Lexer['JavaScript'], Language['JavaScript'].lexer
-    assert_equal Lexer['LSL'], Language['LSL'].lexer
-    assert_equal Lexer['MOOCode'], Language['Moocode'].lexer
-    assert_equal Lexer['MuPAD'], Language['mupad'].lexer
-    assert_equal Lexer['NASM'], Language['Assembly'].lexer
-    assert_equal Lexer['OCaml'], Language['OCaml'].lexer
-    assert_equal Lexer['Ooc'], Language['ooc'].lexer
-    assert_equal Lexer['OpenEdge ABL'], Language['OpenEdge ABL'].lexer
-    assert_equal Lexer['REBOL'], Language['Rebol'].lexer
-    assert_equal Lexer['RHTML'], Language['HTML+ERB'].lexer
-    assert_equal Lexer['RHTML'], Language['RHTML'].lexer
-    assert_equal Lexer['Ruby'], Language['Crystal'].lexer
-    assert_equal Lexer['Ruby'], Language['Mirah'].lexer
-    assert_equal Lexer['Ruby'], Language['Ruby'].lexer
-    assert_equal Lexer['S'], Language['R'].lexer
-    assert_equal Lexer['Common Lisp'], Language['Emacs Lisp'].lexer
-    assert_equal Lexer['Scheme'], Language['Nu'].lexer
-    assert_equal Lexer['Racket'], Language['Racket'].lexer
-    assert_equal Lexer['Scheme'], Language['Scheme'].lexer
-    assert_equal Lexer['Standard ML'], Language['Standard ML'].lexer
-    assert_equal Lexer['TeX'], Language['TeX'].lexer
-    assert_equal Lexer['Verilog'], Language['Verilog'].lexer
-    assert_equal Lexer['XSLT'], Language['XSLT'].lexer
-    assert_equal Lexer['aspx-vb'], Language['ASP'].lexer
-    assert_equal Lexer['haXe'], Language['Haxe'].lexer
-    assert_equal Lexer['reStructuredText'], Language['reStructuredText'].lexer
-  end
 
   def test_find_by_alias
     assert_equal Language['ASP'], Language.find_by_alias('asp')
@@ -420,23 +364,5 @@ class TestLanguage < Test::Unit::TestCase
 
   def test_by_type
     assert !Language.by_type(:prose).nil?
-  end
-
-  def test_colorize
-    assert_equal <<-HTML.chomp, Language['Ruby'].colorize("def foo\n  'foo'\nend\n")
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">foo</span>
-  <span class="s1">&#39;foo&#39;</span>
-<span class="k">end</span>
-</pre></div>
-    HTML
-  end
-
-  def test_colorize_with_options
-    assert_equal <<-HTML.chomp, Language['Ruby'].colorize("def foo\n  'foo'\nend\n", :options => { :cssclass => "highlight highlight-ruby" })
-<div class="highlight highlight-ruby"><pre><span class="k">def</span> <span class="nf">foo</span>
-  <span class="s1">&#39;foo&#39;</span>
-<span class="k">end</span>
-</pre></div>
-    HTML
   end
 end
