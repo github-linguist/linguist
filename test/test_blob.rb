@@ -8,8 +8,6 @@ require 'mime/types'
 class TestBlob < Test::Unit::TestCase
   include Linguist
 
-  Lexer = Pygments::Lexer
-
   def setup
     # git blobs are normally loaded as ASCII-8BIT since they may contain data
     # with arbitrary encoding not known ahead of time
@@ -466,10 +464,6 @@ class TestBlob < Test::Unit::TestCase
       assert blob.language, "No language for #{sample[:path]}"
       assert_equal sample[:language], blob.language.name, blob.name
     end
-  end
-
-  def test_lexer
-    assert_equal Lexer['Ruby'], blob("Ruby/foo.rb").lexer
   end
 
   def test_minified_files_not_safe_to_highlight
