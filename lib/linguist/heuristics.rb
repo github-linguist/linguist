@@ -93,10 +93,10 @@ module Linguist
 
     def self.disambiguate_sc(data, languages)
       matches = []
-      if (/\^(this|super)\./.match(data) or /^\s*(\+|\*)\s*\w+\s*{/.match(data) or /^\s*~\w+\s*=\./.match(data))
+      if (/\^(this|super)\./.match(data) || /^\s*(\+|\*)\s*\w+\s*{/.match(data) || /^\s*~\w+\s*=\./.match(data))
         matches << Language["SuperCollider"]
       end
-      if (/^\s*import (scala|java)\./.match(data) or /^\s*val\s+\w+\s*=/.match(data) or /^\s*class\b/.match(data))
+      if (/^\s*import (scala|java)\./.match(data) || /^\s*val\s+\w+\s*=/.match(data) || /^\s*class\b/.match(data))
         matches << Language["Scala"]
       end
       matches
