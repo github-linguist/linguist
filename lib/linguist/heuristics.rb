@@ -28,6 +28,9 @@ module Linguist
         if languages.all? { |l| ["Scala", "SuperCollider"].include?(l) }
           result = disambiguate_sc(data, languages)
         end
+        if languages.all? { |l| ["AsciiDoc", "AGS Script"].include?(l) }
+          result = disambiguate_asc(data, languages)
+        end
         return result
       end
     end
@@ -99,6 +102,12 @@ module Linguist
       if (/^\s*import (scala|java)\./.match(data) || /^\s*val\s+\w+\s*=/.match(data) || /^\s*class\b/.match(data))
         matches << Language["Scala"]
       end
+      matches
+    end
+
+    def self.disambiguate_asc(data, languages)
+      matches = []
+      matches << Language["AsciiDoc"] if /^=+(\s|\n)/.match(data)
       matches
     end
 

@@ -77,6 +77,12 @@ class TestHeuristcs < Test::Unit::TestCase
     assert_equal Language["IDL"], results.first
   end
 
+  def test_asc_asciidoc_by_heuristics
+    languages = ["AGS Script", "AsciiDoc"]
+    results = Heuristics.disambiguate_asc(fixture("AsciiDoc/list.asc"), languages)
+    assert_equal Language["AsciiDoc"], results.first
+  end
+
   def test_ts_typescript_by_heuristics
     languages = ["TypeScript", "XML"]
     results = Heuristics.disambiguate_ts(fixture("TypeScript/classes.ts"), languages)
