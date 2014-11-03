@@ -25,6 +25,9 @@ module Linguist
         if languages.all? { |l| ["Common Lisp", "OpenCL"].include?(l) }
           result = disambiguate_cl(data, languages)
         end
+        if languages.all? { |l| ["Scala", "SuperCollider"].include?(l) }
+          result = disambiguate_sc(data, languages)
+        end
         if languages.all? { |l| ["AsciiDoc", "AGS Script"].include?(l) }
           result = disambiguate_asc(data, languages)
         end
@@ -88,6 +91,17 @@ module Linguist
       matches = []
       matches << Language["Rebol"] if /\bRebol\b/i.match(data)
       matches << Language["R"] if data.include?("<-")
+      matches
+    end
+
+    def self.disambiguate_sc(data, languages)
+      matches = []
+      if (/\^(this|super)\./.match(data) || /^\s*(\+|\*)\s*\w+\s*{/.match(data) || /^\s*~\w+\s*=\./.match(data))
+        matches << Language["SuperCollider"]
+      end
+      if (/^\s*import (scala|java)\./.match(data) || /^\s*val\s+\w+\s*=/.match(data) || /^\s*class\b/.match(data))
+        matches << Language["Scala"]
+      end
       matches
     end
 

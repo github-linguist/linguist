@@ -104,4 +104,16 @@ class TestHeuristcs < Test::Unit::TestCase
       end
     end
   end
+
+  def test_sc_supercollider_by_heuristics
+    languages = ["Scala", "SuperCollider"]
+    results = Heuristics.disambiguate_sc(fixture("SuperCollider/WarpPreset.sc"), languages)
+    assert_equal Language["SuperCollider"], results.first
+  end
+
+  def test_sc_scala_by_heuristics
+    languages = ["Scala", "SuperCollider"]
+    results = Heuristics.disambiguate_sc(fixture("Scala/node11.sc"), languages)
+    assert_equal Language["Scala"], results.first
+  end
 end
