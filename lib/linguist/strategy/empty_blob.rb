@@ -1,8 +1,9 @@
 module Linguist
   module Strategy
+    # Stops detection if the blob contents are empty
     class EmptyBlob
       def self.call(blob, langauges)
-        # Don't bother with binary contents or an empty file
+        # Return empty array to stop detection
         [] if blob.data.nil? || blob.data == ""
       end
     end

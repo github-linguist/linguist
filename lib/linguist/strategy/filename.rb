@@ -1,5 +1,6 @@
 module Linguist
   module Strategy
+    # Detects language based on filename and/or extension
     class Filename
       def self.call(blob, _)
         name = blob.name.to_s
@@ -12,7 +13,6 @@ module Linguist
           name += ".script!"
         end
 
-        # First try to find languages that match based on filename.
         Language.find_by_filename(name)
       end
     end

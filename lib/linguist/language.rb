@@ -115,11 +115,14 @@ module Linguist
       # Check if the blob is possibly binary and bail early.
       return nil if blob.likely_binary? || blob.binary?
 
+      # Call each strategy until 0 or 1 candidates are returned
       STRATEGIES.reduce([]) do |languages, strategy|
         if candidates = strategy.call(blob, languages)
           if candidates.size > 1
+            # More than one candidate was found, return them for the next strategy
             candidates
           else
+            # 1 or 0 candidates, stop trying strategies
             break candidates
           end
         else
