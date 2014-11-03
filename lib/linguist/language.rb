@@ -93,13 +93,13 @@ module Linguist
     end
 
     require 'linguist/strategy/filename'
+    require 'linguist/strategy/empty_blob'
     require 'linguist/strategy/shebang'
     require 'linguist/strategy/classifier'
+
     STRATEGIES = [
       Linguist::Strategy::Filename,
-      # Don't bother with binary contents or an empty file
-      lambda {|blob, langauges| [] if blob.data.nil? || blob.data == "" },
-      # Check if there's a shebang line and use that as authoritative
+      Linguist::Strategy::EmptyBlob,
       Linguist::Strategy::Shebang,
       Linguist::Heuristics,
       Linguist::Strategy::Classifier
