@@ -92,6 +92,8 @@ module Linguist
       language
     end
 
+    require 'linguist/strategy/filename'
+
     # Public: Detects the Language of the blob.
     #
     # blob - an object that includes the Linguist `BlobHelper` interface;
@@ -99,8 +101,6 @@ module Linguist
     #
     # Returns Language or nil.
     def self.detect(blob)
-      name = blob.name.to_s
-
       # Check if the blob is possibly binary and bail early; this is a cheap
       # test that uses the extension name to guess a binary binary mime type.
       #
@@ -108,16 +108,7 @@ module Linguist
       # looking for binary characters in the blob
       return nil if blob.likely_binary? || blob.binary?
 
-      # A bit of an elegant hack. If the file is executable but extensionless,
-      # append a "magic" extension so it can be classified with other
-      # languages that have shebang scripts.
-      extension = FileBlob.new(name).extension
-      if extension.empty? && blob.mode && (blob.mode.to_i(8) & 05) == 05
-        name += ".script!"
-      end
-
-      # First try to find languages that match based on filename.
-      possible_languages = find_by_filename(name)
+      possible_languages = Linguist::Strategy::Filename.new.call(blob)
 
       # If there is more than one possible language with that extension (or no
       # extension at all, in the case of extensionless scripts), we need to continue
