@@ -1,7 +1,7 @@
 module Linguist
   module Strategy
     class Filename
-      def call(blob)
+      def self.call(blob, _)
         name = blob.name.to_s
 
         # A bit of an elegant hack. If the file is executable but extensionless,
@@ -13,7 +13,7 @@ module Linguist
         end
 
         # First try to find languages that match based on filename.
-        possible_languages = Language.find_by_filename(name)
+        Language.find_by_filename(name)
       end
     end
   end

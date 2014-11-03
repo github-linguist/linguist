@@ -93,6 +93,17 @@ module Linguist
     end
 
     require 'linguist/strategy/filename'
+    require 'linguist/strategy/shebang'
+    require 'linguist/strategy/classifier'
+    STRATEGIES = [
+      Linguist::Strategy::Filename,
+      # Don't bother with binary contents or an empty file
+      lambda {|blob, langauges| [] if blob.data.nil? || blob.data == "" },
+      # Check if there's a shebang line and use that as authoritative
+      Linguist::Strategy::Shebang,
+      Linguist::Heuristics,
+      Linguist::Strategy::Classifier
+    ]
 
     # Public: Detects the Language of the blob.
     #
@@ -101,40 +112,20 @@ module Linguist
     #
     # Returns Language or nil.
     def self.detect(blob)
-      # Check if the blob is possibly binary and bail early; this is a cheap
-      # test that uses the extension name to guess a binary binary mime type.
-      #
-      # We'll perform a more comprehensive test later which actually involves
-      # looking for binary characters in the blob
+      # Check if the blob is possibly binary and bail early.
       return nil if blob.likely_binary? || blob.binary?
 
-      possible_languages = Linguist::Strategy::Filename.new.call(blob)
-
-      # If there is more than one possible language with that extension (or no
-      # extension at all, in the case of extensionless scripts), we need to continue
-      # our detection work
-      if possible_languages.length > 1
-        data = blob.data
-        possible_language_names = possible_languages.map(&:name)
-
-        # Don't bother with binary contents or an empty file
-        if data.nil? || data == ""
-          nil
-        # Check if there's a shebang line and use that as authoritative
-        elsif (result = find_by_shebang(data)) && !result.empty?
-          result.first
-        # No shebang. Still more work to do. Try to find it with our heuristics.
-        elsif (determined = Heuristics.find_by_heuristics(data, possible_language_names)) && !determined.empty?
-          determined.first
-        # Lastly, fall back to the probabilistic classifier.
-        elsif classified = Classifier.classify(Samples.cache, data, possible_language_names).first
-          # Return the actual Language object based of the string language name (i.e., first element of `#classify`)
-          Language[classified[0]]
+      STRATEGIES.reduce([]) do |languages, strategy|
+        if candidates = strategy.call(blob, languages)
+          if candidates.size > 1
+            candidates
+          else
+            break candidates
+          end
+        else
+          languages
         end
-      else
-        # Simplest and most common case, we can just return the one match based on extension
-        possible_languages.first
-      end
+      end.first
     end
 
     # Public: Get all Languages

@@ -3,6 +3,10 @@ module Linguist
   class Heuristics
     ACTIVE = true
 
+    def self.call(blob, languages)
+      find_by_heuristics(blob.data, langauges)
+    end
+
     # Public: Given an array of String language names,
     # apply heuristics against the given data and return an array
     # of matching languages, or nil.
