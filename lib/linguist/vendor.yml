@@ -36,9 +36,8 @@
 # Go dependencies
 - Godeps/_workspace/
 
-# Exclude minified JavaScript and CSS
-- \.min\.(js|css)$
-- -min\.js$
+# Minified JavaScript and CSS
+- (\.|-)min\.(js|css)$
 
 # Bootstrap css and js
 - (^|/)bootstrap([^.]*)\.(js|css)$
