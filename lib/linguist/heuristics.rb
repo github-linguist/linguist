@@ -25,9 +25,12 @@ module Linguist
         if languages.all? { |l| ["Common Lisp", "OpenCL"].include?(l) }
           result = disambiguate_cl(data, languages)
         end
+<<<<<<< HEAD
         if languages.all? { |l| ["Scala", "SuperCollider"].include?(l) }
           result = disambiguate_sc(data, languages)
         end
+=======
+>>>>>>> master
         if languages.all? { |l| ["AsciiDoc", "AGS Script"].include?(l) }
           result = disambiguate_asc(data, languages)
         end
