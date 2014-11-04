@@ -2,7 +2,7 @@ require 'escape_utils'
 require 'pygments'
 require 'yaml'
 begin
-  require 'json'
+  require 'yajl'
 rescue LoadError
 end
 
@@ -533,8 +533,8 @@ module Linguist
   languages_yml = File.expand_path("../languages.yml", __FILE__)
   languages_json = File.expand_path("../languages.json", __FILE__)
 
-  if File.exist?(languages_json) && defined?(JSON)
-    languages = JSON.load(File.read(languages_json))
+  if File.exist?(languages_json) && defined?(Yajl)
+    languages = Yajl.load(File.read(languages_json))
   else
     languages = YAML.load_file(languages_yml)
   end

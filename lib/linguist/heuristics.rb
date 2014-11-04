@@ -28,6 +28,12 @@ module Linguist
         if languages.all? { |l| ["Hack", "PHP"].include?(l) }
           result = disambiguate_hack(data, languages)
         end
+        if languages.all? { |l| ["Scala", "SuperCollider"].include?(l) }
+          result = disambiguate_sc(data, languages)
+        end
+        if languages.all? { |l| ["AsciiDoc", "AGS Script"].include?(l) }
+          result = disambiguate_asc(data, languages)
+        end
         return result
       end
     end
@@ -93,8 +99,28 @@ module Linguist
 
     def self.disambiguate_hack(data, languages)
       matches = []
-      matches << Language["Hack"] if data.include?("<?hh")
-      matches << Language["PHP"] if /<?[^h]/.match(data)
+      if data.include?("<?hh")
+        matches << Language["Hack"]
+      elsif /<?[^h]/.match(data)
+        matches << Language["PHP"]
+      end
+      matches
+    end
+
+    def self.disambiguate_sc(data, languages)
+      matches = []
+      if (/\^(this|super)\./.match(data) || /^\s*(\+|\*)\s*\w+\s*{/.match(data) || /^\s*~\w+\s*=\./.match(data))
+        matches << Language["SuperCollider"]
+      end
+      if (/^\s*import (scala|java)\./.match(data) || /^\s*val\s+\w+\s*=/.match(data) || /^\s*class\b/.match(data))
+        matches << Language["Scala"]
+      end
+      matches
+    end
+
+    def self.disambiguate_asc(data, languages)
+      matches = []
+      matches << Language["AsciiDoc"] if /^=+(\s|\n)/.match(data)
       matches
     end
 

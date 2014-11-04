@@ -304,6 +304,14 @@ class TestBlob < Test::Unit::TestCase
     # Debian packaging
     assert blob("debian/cron.d").vendored?
 
+    # Minified JavaScript and CSS
+    assert blob("foo.min.js").vendored?
+    assert blob("foo.min.css").vendored?
+    assert blob("foo-min.js").vendored?
+    assert blob("foo-min.css").vendored?
+    assert !blob("foomin.css").vendored?
+    assert !blob("foo.min.txt").vendored?
+
     # Prototype
     assert !blob("public/javascripts/application.js").vendored?
     assert blob("public/javascripts/prototype.js").vendored?
