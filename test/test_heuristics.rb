@@ -40,25 +40,25 @@ class TestHeuristcs < Test::Unit::TestCase
     match = Language.detect(blob)
     assert_equal Language["Objective-C"], match
   end
-  
+
   def test_pl_prolog_by_heuristics
     languages = ["Perl", "Prolog"]
     results = Heuristics.disambiguate_pl(fixture("Prolog/turing.pl"), languages)
     assert_equal Language["Prolog"], results.first
   end
-  
+
   def test_pl_perl_by_heuristics
     languages = ["Perl", "Prolog"]
     results = Heuristics.disambiguate_pl(fixture("Perl/perl-test.t"), languages)
     assert_equal Language["Perl"], results.first
   end
-  
+
   def test_ecl_prolog_by_heuristics
     languages = ["ECL", "Prolog"]
     results = Heuristics.disambiguate_ecl(fixture("Prolog/or-constraint.ecl"), languages)
     assert_equal Language["Prolog"], results.first
   end
-  
+
   def test_ecl_ecl_by_heuristics
     languages = ["ECL", "Prolog"]
     results = Heuristics.disambiguate_ecl(fixture("ECL/sample.ecl"), languages)
@@ -103,6 +103,12 @@ class TestHeuristcs < Test::Unit::TestCase
         assert_equal Language[language], results.first
       end
     end
+  end
+
+  def test_hack_by_heuristics
+    languages = ["Hack", "PHP"]
+    results = Heuristics.disambiguate_hack(fixture("Hack/funs.php"), languages)
+    assert_equal Language["Hack"], results.first
   end
 
   def test_sc_supercollider_by_heuristics
