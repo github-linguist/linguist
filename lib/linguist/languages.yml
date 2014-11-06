@@ -99,6 +99,7 @@ Ada:
   color: "#02f88c"
   extensions:
   - .adb
+  - .ada
   - .ads
 
 Agda:
@@ -120,6 +121,7 @@ ApacheConf:
   - apache
   extensions:
   - .apacheconf
+  - .conf
   tm_scope: source.apache-config
 
 Apex:
@@ -180,6 +182,7 @@ Assembly:
   - nasm
   extensions:
   - .asm
+  - .ASM
   - .a51
   tm_scope: source.asm.x86
 
@@ -196,6 +199,7 @@ AutoHotkey:
   - ahk
   extensions:
   - .ahk
+  - .ahkl
 
 AutoIt:
   type: programming
@@ -291,6 +295,7 @@ C:
   - .c
   - .cats
   - .h
+  - .idc
   - .w
 
 C#:
@@ -316,19 +321,20 @@ C++:
   extensions:
   - .cpp
   - .C
+  - .CPP
+  - .H
   - .c++
   - .cc
   - .cxx
-  - .H
   - .h
   - .h++
   - .hh
   - .hpp
   - .hxx
   - .inl
+  - .ipp
   - .tcc
   - .tpp
-  - .ipp
 
 C-ObjDump:
   type: data
@@ -364,6 +370,8 @@ COBOL:
   type: programming
   extensions:
   - .cob
+  - .COB
+  - .CPY
   - .cbl
   - .ccp
   - .cobol
@@ -457,6 +465,7 @@ ColdFusion:
   - cfml
   extensions:
   - .cfm
+  - .cfml
   tm_scope: text.html.cfm
 
 ColdFusion CFC:
@@ -512,7 +521,9 @@ Cpp-ObjDump:
   lexer: cpp-objdump
   extensions:
   - .cppobjdump
+  - .c++-objdump
   - .c++objdump
+  - .cpp-objdump
   - .cxx-objdump
   tm_scope: objdump.x86asm
 
@@ -622,6 +633,7 @@ Dylan:
   color: "#3ebc27"
   extensions:
   - .dylan
+  - .dyl
   - .intr
   - .lid
 
@@ -706,6 +718,7 @@ Erlang:
   color: "#0faf8d"
   extensions:
   - .erl
+  - .es
   - .escript
   - .hrl
 
@@ -848,6 +861,7 @@ GLSL:
   - .frag
   - .frg
   - .fshader
+  - .geo
   - .geom
   - .glslv
   - .gshader
@@ -1095,6 +1109,7 @@ INI:
   type: data
   extensions:
   - .ini
+  - .cfg
   - .prefs
   - .properties
   tm_scope: source.ini
@@ -1330,6 +1345,7 @@ Lasso:
   extensions:
   - .lasso
   - .las
+  - .lasso8
   - .lasso9
   - .ldml
   tm_scope: file.lasso
@@ -1408,6 +1424,8 @@ Logos:
   type: programming
   extensions:
   - .xm
+  - .x
+  - .xi
 
 Logtalk:
   type: programming
@@ -1434,6 +1452,7 @@ Lua:
   - .nse
   - .pd_lua
   - .rbxs
+  - .wlua
   interpreters:
   - lua
 
@@ -1501,8 +1520,11 @@ Mathematica:
   type: programming
   extensions:
   - .mathematica
+  - .cdf
   - .m
+  - .ma
   - .nb
+  - .nbp
   lexer: Mathematica
 
 Matlab:
@@ -1995,6 +2017,7 @@ Python:
   - .pyp
   - .pyt
   - .pyw
+  - .tac
   - .wsgi
   - .xpy
   filenames:
@@ -2316,6 +2339,7 @@ Shell:
   - .cgi
   - .command
   - .fcgi
+  - .ksh
   - .tmux
   - .zsh
   interpreters:
@@ -2682,6 +2706,7 @@ XML:
   - .vcxproj
   - .vxml
   - .wsdl
+  - .wsf
   - .wxi
   - .wxl
   - .wxs
