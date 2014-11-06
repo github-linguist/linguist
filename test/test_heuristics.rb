@@ -20,8 +20,8 @@ class TestHeuristcs < Test::Unit::TestCase
     Dir.glob("#{samples_path}/#{language_name}/#{file}")
   end
 
+  # Candidate languages = ["C++", "Objective-C"]
   def test_obj_c_by_heuristics
-    # languages = ["C++", "Objective-C"]
     # Only calling out '.h' filenames as these are the ones causing issues
     all_fixtures("Objective-C", "*.h").each do |fixture|
       results = Heuristics.disambiguate_c(fixture("Objective-C/#{File.basename(fixture)}"))
@@ -29,8 +29,8 @@ class TestHeuristcs < Test::Unit::TestCase
     end
   end
 
+  # Candidate languages = ["C++", "Objective-C"]
   def test_cpp_by_heuristics
-    # languages = ["C++", "Objective-C"]
     results = Heuristics.disambiguate_c(fixture("C++/render_adapter.cpp"))
     assert_equal Language["C++"], results.first
   end
@@ -41,56 +41,56 @@ class TestHeuristcs < Test::Unit::TestCase
     assert_equal Language["Objective-C"], match
   end
 
+  # Candidate languages = ["Perl", "Prolog"]
   def test_pl_prolog_by_heuristics
-    # languages = ["Perl", "Prolog"]
     results = Heuristics.disambiguate_pl(fixture("Prolog/turing.pl"))
     assert_equal Language["Prolog"], results.first
   end
 
+  # Candidate languages = ["Perl", "Prolog"]
   def test_pl_perl_by_heuristics
-    # languages = ["Perl", "Prolog"]
     results = Heuristics.disambiguate_pl(fixture("Perl/perl-test.t"))
     assert_equal Language["Perl"], results.first
   end
 
+  # Candidate languages = ["ECL", "Prolog"]
   def test_ecl_prolog_by_heuristics
-    # languages = ["ECL", "Prolog"]
     results = Heuristics.disambiguate_ecl(fixture("Prolog/or-constraint.ecl"))
     assert_equal Language["Prolog"], results.first
   end
 
+  # Candidate languages = ["ECL", "Prolog"]
   def test_ecl_ecl_by_heuristics
-    # languages = ["ECL", "Prolog"]
     results = Heuristics.disambiguate_ecl(fixture("ECL/sample.ecl"))
     assert_equal Language["ECL"], results.first
   end
 
+  # Candidate languages = ["IDL", "Prolog"]
   def test_pro_prolog_by_heuristics
-    # languages = ["IDL", "Prolog"]
     results = Heuristics.disambiguate_pro(fixture("Prolog/logic-problem.pro"))
     assert_equal Language["Prolog"], results.first
   end
 
+  # Candidate languages = ["IDL", "Prolog"]
   def test_pro_idl_by_heuristics
-    # languages = ["IDL", "Prolog"]
     results = Heuristics.disambiguate_pro(fixture("IDL/mg_acosh.pro"))
     assert_equal Language["IDL"], results.first
   end
 
+  # Candidate languages = ["AGS Script", "AsciiDoc"]
   def test_asc_asciidoc_by_heuristics
-    # languages = ["AGS Script", "AsciiDoc"]
     results = Heuristics.disambiguate_asc(fixture("AsciiDoc/list.asc"))
     assert_equal Language["AsciiDoc"], results.first
   end
 
+  # Candidate languages = ["TypeScript", "XML"]
   def test_ts_typescript_by_heuristics
-    # languages = ["TypeScript", "XML"]
     results = Heuristics.disambiguate_ts(fixture("TypeScript/classes.ts"))
     assert_equal Language["TypeScript"], results.first
   end
 
+  # Candidate languages = ["TypeScript", "XML"]
   def test_ts_xml_by_heuristics
-    # languages = ["TypeScript", "XML"]
     results = Heuristics.disambiguate_ts(fixture("XML/pt_BR.xml"))
     assert_equal Language["XML"], results.first
   end
@@ -105,20 +105,20 @@ class TestHeuristcs < Test::Unit::TestCase
     end
   end
 
+  # Candidate languages = ["Hack", "PHP"]
   def test_hack_by_heuristics
-    # languages = ["Hack", "PHP"]
     results = Heuristics.disambiguate_hack(fixture("Hack/funs.php"))
     assert_equal Language["Hack"], results.first
   end
 
+  # Candidate languages = ["Scala", "SuperCollider"]
   def test_sc_supercollider_by_heuristics
-    # languages = ["Scala", "SuperCollider"]
     results = Heuristics.disambiguate_sc(fixture("SuperCollider/WarpPreset.sc"))
     assert_equal Language["SuperCollider"], results.first
   end
 
+  # Candidate languages = ["Scala", "SuperCollider"]
   def test_sc_scala_by_heuristics
-    # languages = ["Scala", "SuperCollider"]
     results = Heuristics.disambiguate_sc(fixture("Scala/node11.sc"))
     assert_equal Language["Scala"], results.first
   end
