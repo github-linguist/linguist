@@ -90,6 +90,8 @@ ActionScript:
   color: "#e3491a"
   search_term: as3
   aliases:
+  - actionscript 3
+  - actionscript3
   - as3
   extensions:
   - .as
@@ -101,6 +103,8 @@ Ada:
   - .adb
   - .ada
   - .ads
+  aliases:
+  - ada95ada2005
 
 Agda:
   type: programming
@@ -118,6 +122,7 @@ Alloy:
 ApacheConf:
   type: markup
   aliases:
+  - aconf
   - apache
   extensions:
   - .apacheconf
@@ -233,6 +238,9 @@ Batchfile:
   search_term: bat
   aliases:
   - bat
+  - batch
+  - dosbatch
+  - winbatch
   extensions:
   - .bat
   - .cmd
@@ -245,8 +253,10 @@ Befunge:
 BlitzBasic:
   type: programming
   aliases:
-  - blitzplus
+  - b3d
   - blitz3d
+  - blitzplus
+  - bplus
   extensions:
   - .bb
   - .decls
@@ -257,6 +267,8 @@ BlitzMax:
   color: "#cd6400"
   extensions:
   - .bmx
+  aliases:
+  - bmax
 
 Bluespec:
   type: programming
@@ -463,6 +475,7 @@ ColdFusion:
   aliases:
   - cfm
   - cfml
+  - coldfusion html
   extensions:
   - .cfm
   - .cfml
@@ -509,6 +522,9 @@ Component Pascal:
   - .cp
   - .cps
   tm_scope: source.pascal
+  aliases:
+  - delphi
+  - objectpascal
 
 Coq:
   type: programming
@@ -526,6 +542,8 @@ Cpp-ObjDump:
   - .cpp-objdump
   - .cxx-objdump
   tm_scope: objdump.x86asm
+  aliases:
+  - c++-objdumb
 
 Creole:
   type: prose
@@ -547,6 +565,8 @@ Cucumber:
   extensions:
   - .feature
   tm_scope: text.gherkin.feature
+  aliases:
+  - gherkin
 
 Cuda:
   type: programming
@@ -570,6 +590,8 @@ Cython:
   - .pyx
   - .pxd
   - .pxi
+  aliases:
+  - pyrex
 
 D:
   type: programming
@@ -620,6 +642,8 @@ Diff:
   extensions:
   - .diff
   - .patch
+  aliases:
+  - udiff
 
 Dogescript:
   type: programming
@@ -874,6 +898,9 @@ Genshi:
   extensions:
   - .kid
   tm_scope: text.xml.genshi
+  aliases:
+  - xml+genshi
+  - xml+kid
 
 Gentoo Ebuild:
   group: Shell
@@ -969,6 +996,8 @@ Groff:
   - '.6'
   - '.7'
   tm_scope: text.groff
+  aliases:
+  - nroff
 
 Groovy:
   type: programming
@@ -987,6 +1016,7 @@ Groovy Server Pages:
   lexer: Java Server Page
   aliases:
   - gsp
+  - java server page
   extensions:
   - .gsp
   tm_scope: text.html.jsp
@@ -1011,6 +1041,10 @@ HTML+Django:
   extensions:
   - .mustache
   - .jinja
+  aliases:
+  - html+django/jinja
+  - html+jinja
+  - htmldjango
 
 HTML+ERB:
   type: markup
@@ -1090,6 +1124,8 @@ Hy:
   color: "#7891b1"
   extensions:
   - .hy
+  aliases:
+  - hylang
 
 IDL:
   type: programming
@@ -1104,6 +1140,9 @@ IGOR Pro:
   lexer: Igor
   extensions:
   - .ipf
+  aliases:
+  - igor
+  - igorpro
 
 INI:
   type: data
@@ -1113,6 +1152,8 @@ INI:
   - .prefs
   - .properties
   tm_scope: source.ini
+  aliases:
+  - dosini
 
 Inno Setup:
   extensions:
@@ -1134,6 +1175,9 @@ Inform 7:
   - .ni
   - .i7x
   tm_scope: source.inform
+  aliases:
+  - i7
+  - inform7
 
 Inno Setup:
   extensions:
@@ -1145,6 +1189,7 @@ IRC log:
   search_term: irc
   aliases:
   - irc
+  - irc logs
   extensions:
   - .irclog
   - .weechatlog
@@ -1349,6 +1394,8 @@ Lasso:
   - .lasso9
   - .ldml
   tm_scope: file.lasso
+  aliases:
+  - lassoscript
 
 Latte:
   type: markup
@@ -1403,6 +1450,7 @@ Literate Haskell:
   group: Haskell
   search_term: lhs
   aliases:
+  - lhaskell
   - lhs
   extensions:
   - .lhs
@@ -1413,6 +1461,7 @@ LiveScript:
   ace_mode: ls
   color: "#499886"
   aliases:
+  - live-script
   - ls
   extensions:
   - .ls
@@ -1476,7 +1525,9 @@ MTML:
 
 Makefile:
   aliases:
+  - bsdmake
   - make
+  - mf
   extensions:
   - .mak
   - .mk
@@ -1526,6 +1577,8 @@ Mathematica:
   - .nb
   - .nbp
   lexer: Mathematica
+  aliases:
+  - mma
 
 Matlab:
   type: programming
@@ -1632,6 +1685,8 @@ Nginx:
   extensions:
   - .nginxconf
   tm_scope: source.nginx
+  aliases:
+  - nginx configuration file
 
 Nimrod:
   type: programming
@@ -1652,6 +1707,8 @@ Nix:
   lexer: Nix
   extensions:
   - .nix
+  aliases:
+  - nixos
 
 Nu:
   type: programming
@@ -1699,6 +1756,7 @@ Objective-C:
   aliases:
   - obj-c
   - objc
+  - objectivec
   extensions:
   - .m
   - .h
@@ -1710,6 +1768,7 @@ Objective-C++:
   aliases:
   - obj-c++
   - objc++
+  - objectivec++
   extensions:
   - .mm
 
@@ -1718,6 +1777,8 @@ Objective-J:
   color: "#ff0c5a"
   aliases:
   - obj-j
+  - objectivej
+  - objj
   extensions:
   - .j
   - .sj
@@ -1817,6 +1878,8 @@ PHP:
   - Phakefile
   interpreters:
   - php
+  aliases:
+  - inc
 
 Pan:
   type: programming
@@ -1936,6 +1999,8 @@ PostScript:
   - .ps
   - .eps
   tm_scope: source.postscript
+  aliases:
+  - postscr
 
 PowerShell:
   type: programming
@@ -2055,6 +2120,7 @@ R:
   aliases:
   - R
   - Rscript
+  - splus
   extensions:
   - .r
   - .R
@@ -2093,6 +2159,8 @@ RHTML:
   extensions:
   - .rhtml
   tm_scope: text.html.ruby
+  aliases:
+  - html+ruby
 
 RMarkdown:
   type: prose
@@ -2120,6 +2188,9 @@ Ragel in Ruby Host:
   color: "#ff9c2e"
   extensions:
   - .rl
+  aliases:
+  - ragel-rb
+  - ragel-ruby
 
 Raw token data:
   search_term: raw
@@ -2146,6 +2217,8 @@ Red:
   extensions:
   - .red
   - .reds
+  aliases:
+  - red/system
 
 Redcode:
   extensions:
@@ -2354,6 +2427,9 @@ ShellSession:
   lexer: Bash Session
   extensions:
   - .sh-session
+  aliases:
+  - bash session
+  - console
 
 Shen:
   type: programming
@@ -2382,6 +2458,8 @@ Smalltalk:
   color: "#596706"
   extensions:
   - .st
+  aliases:
+  - squeak
 
 Smarty:
   extensions:
@@ -2636,6 +2714,9 @@ Visual Basic:
   - .vbhtml
   - .vbs
   tm_scope: source.vbnet
+  aliases:
+  - vb.net
+  - vbnet
 
 Volt:
     type: programming
