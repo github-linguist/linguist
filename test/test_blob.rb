@@ -229,7 +229,6 @@ class TestBlob < Test::Unit::TestCase
     assert !blob("PostScript/sierpinski.ps").generated?
 
     # These examples are too basic to tell
-    assert !blob("JavaScript/empty.js").generated?
     assert !blob("JavaScript/hello.js").generated?
 
     assert blob("JavaScript/intro-old.js").generated?
