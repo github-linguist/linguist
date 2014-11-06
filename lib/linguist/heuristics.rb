@@ -13,6 +13,8 @@ module Linguist
     # Returns an array of Languages or []
     def self.find_by_heuristics(data, languages)
       if active?
+        result = []
+
         if languages.all? { |l| ["Perl", "Prolog"].include?(l) }
           result = disambiguate_pl(data)
         end
