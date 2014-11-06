@@ -125,6 +125,11 @@ module Linguist
       if possible_languages.length > 1
         data = blob.data
         possible_language_names = possible_languages.map(&:name)
+        heuristic_languages = Heuristics.find_by_heuristics(data, possible_language_names)
+
+        if heuristic_languages.size > 1
+          possible_language_names = heuristic_languages.map(&:name)
+        end
 
         # Don't bother with binary contents or an empty file
         if data.nil? || data == ""
@@ -133,8 +138,8 @@ module Linguist
         elsif (result = find_by_shebang(data)) && !result.empty?
           result.first
         # No shebang. Still more work to do. Try to find it with our heuristics.
-        elsif (determined = Heuristics.find_by_heuristics(data, possible_language_names)) && !determined.empty?
-          determined.first
+        elsif heuristic_languages.size == 1
+          heuristic_languages.first
         # Lastly, fall back to the probabilistic classifier.
         elsif classified = Classifier.classify(Samples.cache, data, possible_language_names).first
           # Return the actual Language object based of the string language name (i.e., first element of `#classify`)
