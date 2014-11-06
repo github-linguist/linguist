@@ -488,4 +488,13 @@ class TestBlob < Test::Unit::TestCase
   def test_colorize_doesnt_blow_up_with_files_with_high_ratio_of_long_lines
     assert_nil blob("JavaScript/steelseries-min.js").colorize
   end
+
+  def test_empty
+    blob = Struct.new(:data) { include Linguist::BlobHelper }
+
+    assert blob.new("").empty?
+    assert blob.new(nil).empty?
+    refute blob.new(" ").empty?
+    refute blob.new("nope").empty?
+  end
 end
