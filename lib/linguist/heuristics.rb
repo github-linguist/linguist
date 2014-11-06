@@ -44,22 +44,31 @@ module Linguist
     # Returns an array of Languages or []
     def self.disambiguate_c(data, languages)
       matches = []
-      matches << Language["Objective-C"] if data.include?("@interface")
-      matches << Language["C++"] if data.include?("#include <cstdint>")
+      if data.include?("@interface")
+        matches << Language["Objective-C"]
+      elsif data.include?("#include <cstdint>")
+        matches << Language["C++"]
+      end
       matches
     end
 
     def self.disambiguate_pl(data, languages)
       matches = []
-      matches << Language["Prolog"] if data.include?(":-")
-      matches << Language["Perl"] if data.include?("use strict")
+      if data.include?("use strict")
+        matches << Language["Perl"]
+      elsif data.include?(":-")
+        matches << Language["Prolog"]
+      end
       matches
     end
 
     def self.disambiguate_ecl(data, languages)
       matches = []
-      matches << Language["Prolog"] if data.include?(":-")
-      matches << Language["ECL"] if data.include?(":=")
+      if data.include?(":-")
+        matches << Language["Prolog"]
+      elsif data.include?(":=")
+        matches << Language["ECL"]
+      end
       matches
     end
 
@@ -85,8 +94,11 @@ module Linguist
 
     def self.disambiguate_cl(data, languages)
       matches = []
-      matches << Language["Common Lisp"] if data.include?("(defun ")
-      matches << Language["OpenCL"] if /\/\* |\/\/ |^\}/.match(data)
+      if data.include?("(defun ")
+        matches << Language["Common Lisp"]
+      elsif /\/\* |\/\/ |^\}/.match(data)
+        matches << Language["OpenCL"]
+      end
       matches
     end
 
