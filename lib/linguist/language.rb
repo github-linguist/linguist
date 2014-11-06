@@ -101,12 +101,8 @@ module Linguist
     def self.detect(blob)
       name = blob.name.to_s
 
-      # Check if the blob is possibly binary and bail early; this is a cheap
-      # test that uses the extension name to guess a binary binary mime type.
-      #
-      # We'll perform a more comprehensive test later which actually involves
-      # looking for binary characters in the blob
-      return nil if blob.likely_binary? || blob.binary?
+      # Bail early if the blob is binary or empty.
+      return nil if blob.likely_binary? || blob.binary? || blob.empty?
 
       # A bit of an elegant hack. If the file is executable but extensionless,
       # append a "magic" extension so it can be classified with other
@@ -131,11 +127,8 @@ module Linguist
           possible_language_names = heuristic_languages.map(&:name)
         end
 
-        # Don't bother with binary contents or an empty file
-        if data.nil? || data == ""
-          nil
         # Check if there's a shebang line and use that as authoritative
-        elsif (result = find_by_shebang(data)) && !result.empty?
+        if (result = find_by_shebang(data)) && !result.empty?
           result.first
         # No shebang. Still more work to do. Try to find it with our heuristics.
         elsif heuristic_languages.size == 1
