@@ -303,6 +303,21 @@ class TestLanguage < Test::Unit::TestCase
     assert_nil Language['defunkt']
   end
 
+  def test_find_ignores_case
+    assert_equal 'AGS Script', Language['ags script'].name
+    assert_equal 'AGS Script', Language['ags sCRIPT'].name
+  end
+
+  def test_find_by_name_ignores_case
+    assert_equal 'AGS Script', Language.find_by_name('ags script').name
+    assert_equal 'AGS Script', Language.find_by_name('ags sCRIPT').name
+  end
+
+  def test_find_by_alias_ignores_case
+    refute_includes Language['AGS Script'].aliases, 'AGS'
+    assert_equal 'AGS Script', Language.find_by_alias('AGS').name
+  end
+
   def test_name
     assert_equal 'Perl',   Language['Perl'].name
     assert_equal 'Python', Language['Python'].name
