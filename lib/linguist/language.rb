@@ -62,7 +62,7 @@ module Linguist
       end
 
       # Language name index
-      @index[language.name] = @name_index[language.name] = language
+      @index[language.name.downcase] = @name_index[language.name.downcase] = language
 
       language.aliases.each do |name|
         # All Language aliases should be unique. Raise if there is a duplicate.
@@ -70,7 +70,7 @@ module Linguist
           raise ArgumentError, "Duplicate alias: #{name}"
         end
 
-        @index[name] = @alias_index[name] = language
+        @index[name.downcase] = @alias_index[name.downcase] = language
       end
 
       language.extensions.each do |extension|
@@ -164,7 +164,7 @@ module Linguist
     #
     # Returns the Language or nil if none was found.
     def self.find_by_name(name)
-      @name_index[name]
+      @name_index[name.downcase]
     end
 
     # Public: Look up Language by one of its aliases.
@@ -178,7 +178,7 @@ module Linguist
     #
     # Returns the Lexer or nil if none was found.
     def self.find_by_alias(name)
-      @alias_index[name]
+      @alias_index[name.downcase]
     end
 
     # Public: Look up Languages by filename.
@@ -227,7 +227,7 @@ module Linguist
     #
     # Returns the Language or nil if none was found.
     def self.[](name)
-      @index[name]
+      @index[name.downcase]
     end
 
     # Public: A List of popular languages
