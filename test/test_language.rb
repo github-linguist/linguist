@@ -241,6 +241,22 @@ class TestLanguage < Test::Unit::TestCase
     end
   end
 
+  def test_find_by_extension
+    assert_equal [], Language.find_by_extension('.factor-rc')
+    assert_equal [], Language.find_by_extension('rb')
+    assert_equal [], Language.find_by_extension('foo.rb')
+    assert_equal [Language['Ruby']], Language.find_by_extension('.rb')
+    assert_equal [Language['M'], Language['Mathematica'], Language['Matlab'], Language['Mercury'], Language['Objective-C']], Language.find_by_extension('.m')
+  end
+
+  def test_find_all_by_extension
+    Language.all.each do |language|
+      language.extensions.each do |extension|
+        assert_include Language.find_by_extension(extension), language
+      end
+    end
+  end
+
   def test_find_by_filename
     assert_equal [Language['Shell']], Language.find_by_filename('PKGBUILD')
     assert_equal [Language['Ruby']], Language.find_by_filename('foo.rb')
