@@ -203,7 +203,7 @@ module Linguist
     #
     # Examples
     #
-    #   Language.find_by_extension('rb')
+    #   Language.find_by_extension('.rb')
     #   # => [#<Language name="Ruby">]
     #
     # Returns all matching Languages or [] if none were found.
