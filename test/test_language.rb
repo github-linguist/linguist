@@ -243,8 +243,8 @@ class TestLanguage < Test::Unit::TestCase
 
   def test_find_by_extension
     assert_equal [], Language.find_by_extension('.factor-rc')
-    assert_equal [], Language.find_by_extension('rb')
     assert_equal [], Language.find_by_extension('foo.rb')
+    assert_equal [Language['Ruby']], Language.find_by_extension('rb')
     assert_equal [Language['Ruby']], Language.find_by_extension('.rb')
     assert_equal [Language['M'], Language['Mathematica'], Language['Matlab'], Language['Mercury'], Language['Objective-C']], Language.find_by_extension('.m')
   end

@@ -206,8 +206,12 @@ module Linguist
     #   Language.find_by_extension('.rb')
     #   # => [#<Language name="Ruby">]
     #
+    #   Language.find_by_extension('rb')
+    #   # => [#<Language name="Ruby">]
+    #
     # Returns all matching Languages or [] if none were found.
     def self.find_by_extension(extname)
+      extname = ".#{extname}" unless extname.start_with?(".")
       @extension_index[extname]
     end
 
