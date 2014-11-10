@@ -40,6 +40,9 @@ module Linguist
         if languages.all? { |l| ["FORTRAN", "Forth"].include?(l) }
           result = disambiguate_f(data)
         end
+        if name.end_with? ".tst" and languages.all? { |l| ["GAP", "Scilab"].include?(l) }
+          result = disambiguate_tst(data)
+        end
         return result
       end
     end
@@ -94,6 +97,16 @@ module Linguist
         matches << Language["XML"]
       else
         matches << Language["TypeScript"]
+      end
+      matches
+    end
+
+    def self.disambiguate_tst(data)
+      matches = []
+      if (data.include?("gap> "))
+        matches << Language["GAP"]
+      else
+        matches << Language["Scilab"]
       end
       matches
     end
