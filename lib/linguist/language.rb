@@ -120,7 +120,7 @@ module Linguist
       if possible_languages.length > 1
         data = blob.data
         possible_language_names = possible_languages.map(&:name)
-        heuristic_languages = Heuristics.find_by_heuristics(data, possible_language_names)
+        heuristic_languages = Heuristics.find_by_heuristics(name, data, possible_language_names)
 
         if heuristic_languages.size > 1
           possible_language_names = heuristic_languages.map(&:name)

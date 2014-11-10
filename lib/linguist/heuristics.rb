@@ -7,11 +7,12 @@ module Linguist
     # apply heuristics against the given data and return an array
     # of matching languages, or nil.
     #
+    # name      - Name of the file the data is coming from.
     # data      - Array of tokens or String data to analyze.
     # languages - Array of language name Strings to restrict to.
     #
     # Returns an array of Languages or []
-    def self.find_by_heuristics(data, languages)
+    def self.find_by_heuristics(name, data, languages)
       if active?
         result = []
 
