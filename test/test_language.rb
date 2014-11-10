@@ -119,6 +119,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['VimL'], Language.find_by_alias('viml')
     assert_equal Language['reStructuredText'], Language.find_by_alias('rst')
     assert_equal Language['YAML'], Language.find_by_alias('yml')
+    assert_nil Language.find_by_alias(nil)
   end
 
   def test_groups
@@ -221,6 +222,7 @@ class TestLanguage < Test::Unit::TestCase
   end
 
   def test_find_by_name
+    assert_nil Language.find_by_name(nil)
     ruby = Language['Ruby']
     assert_equal ruby, Language.find_by_name('Ruby')
   end
@@ -317,6 +319,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal 'C#', Language['c#'].name
     assert_equal 'C#', Language['csharp'].name
     assert_nil Language['defunkt']
+    assert_nil Language[nil]
   end
 
   def test_find_ignores_case
