@@ -194,9 +194,25 @@ module Linguist
     def self.find_by_filename(filename)
       basename = File.basename(filename)
       extname = FileBlob.new(filename).extension
-      langs = @filename_index[basename] +
-              @extension_index[extname]
-      langs.compact.uniq
+      (@filename_index[basename] + find_by_extension(extname)).compact.uniq
+    end
+
+    # Public: Look up Languages by file extension.
+    #
+    # extname - The extension String.
+    #
+    # Examples
+    #
+    #   Language.find_by_extension('.rb')
+    #   # => [#<Language name="Ruby">]
+    #
+    #   Language.find_by_extension('rb')
+    #   # => [#<Language name="Ruby">]
+    #
+    # Returns all matching Languages or [] if none were found.
+    def self.find_by_extension(extname)
+      extname = ".#{extname}" unless extname.start_with?(".")
+      @extension_index[extname]
     end
 
     # Public: Look up Languages by shebang line.
