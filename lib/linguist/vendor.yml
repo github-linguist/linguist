@@ -226,8 +226,8 @@
 # .DS_Store's
 - .[Dd][Ss]_[Ss]tore$
 
-# Mercury --use-subdirs
-- Mercury/
+# Mercury --use(-grade)-subdirs
+- (^|/)Mercury/((c_|err_|java_|cs_|erl_)?date\d?|int\d?|opt|java|csharp|(asm_fast|hlc)(\.[a-z]+)+|module_dep|o|c|class|cs|obj|erl(ang)?|hrl|beam)s?/
 
 # R packages
 - ^vignettes/
