@@ -134,7 +134,7 @@ module Linguist
           result.first
         # No shebang. Still more work to do. Try to find it with our heuristics.
         elsif (determined = Heuristics.find_by_heuristics(data, possible_language_names)) && !determined.empty?
-          determined.first
+          determined.length == 1 ? determined.first : Language[Classifier.classify(Samples.cache, data, possible_language_names.delete_if { |l| !determined.find { |d| d.name == l } }).first[0]]
         # Lastly, fall back to the probabilistic classifier.
         elsif classified = Classifier.classify(Samples.cache, data, possible_language_names).first
           # Return the actual Language object based of the string language name (i.e., first element of `#classify`)
