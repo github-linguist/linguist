@@ -122,4 +122,16 @@ class TestHeuristcs < Test::Unit::TestCase
     results = Heuristics.disambiguate_sc(fixture("Scala/node11.sc"), languages)
     assert_equal Language["Scala"], results.first
   end
+
+  def test_mm_objective_cpp_by_heuristics
+    languages = ["XML", "Objective-C++"]
+    results = Heuristics.disambiguate_mm(fixture("Objective-C++/objsql.mm"), languages)
+    assert_equal Language["Objective-C++"], results.first
+  end
+
+  def test_mm_xml_by_heuristics
+    languages = ["XML", "Objective-C++"]
+    results = Heuristics.disambiguate_mm(fixture("XML/some-ideas.mm"), languages)
+    assert_equal Language["XML"], results.first
+  end
 end
