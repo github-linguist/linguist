@@ -46,7 +46,7 @@ language_scopes = Linguist::Language.all.map(&:tm_scope).to_set
 
 # The set of used scopes is the scopes for each language, plus all the scopes
 # they include, transitively.
-used_scopes = language_scopes + language_scopes.flat_map { |s| transitive_includes(s, includes) }.to_set
+used_scopes = language_scopes + language_scopes.flat_map { |s| transitive_includes(s, includes).to_a }.to_set
 
 unused = yaml.reject { |repo, scopes| scopes.any? { |scope| used_scopes.include?(scope) } }
 
