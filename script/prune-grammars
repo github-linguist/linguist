@@ -10,7 +10,7 @@ def find_includes(json)
   when Hash
     result = []
     if inc = json["include"]
-      result << inc unless inc.start_with?("#", "$")
+      result << inc.split("#", 2).first unless inc.start_with?("#", "$")
     end
     result + json.values.flat_map { |v| find_includes(v) }
   when Array
