@@ -47,6 +47,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Lexer['Ruby'], Language['Mirah'].lexer
     assert_equal Lexer['Ruby'], Language['Ruby'].lexer
     assert_equal Lexer['S'], Language['R'].lexer
+    assert_equal Lexer['Common Lisp'], Language['Emacs Lisp'].lexer
     assert_equal Lexer['Scheme'], Language['Nu'].lexer
     assert_equal Lexer['Racket'], Language['Racket'].lexer
     assert_equal Lexer['Scheme'], Language['Scheme'].lexer
