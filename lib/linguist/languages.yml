@@ -1835,6 +1835,7 @@ Parrot:
 
 Parrot Internal Representation:
   group: Parrot
+  tm_scope: source.parrot.pir
   type: programming
   aliases:
   - pir
@@ -1848,15 +1849,6 @@ Parrot Assembly:
   - pasm
   extensions:
   - .pasm
-
-Parrot IR:
-  group: Parrot
-  type: programming
-  aliases:
-  - pir
-  extensions:
-  - .pir
-  tm_scope: source.parrot.pir
 
 Pascal:
   type: programming
