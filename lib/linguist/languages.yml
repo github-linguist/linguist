@@ -33,6 +33,15 @@ AGS Script:
   - .ash
   tm_scope: source.c++
 
+Ant Build System:
+  type: data
+  tm_scope: text.xml.ant
+  extensions:
+  - .ant.xml
+  filenames:
+  - build.xml
+  - ant.xml
+
 ANTLR:
   type: programming
   color: "#9DC3FF"
@@ -231,6 +240,12 @@ Befunge:
   extensions:
   - .befunge
 
+Bison:
+  type: programming
+  tm_scope: source.bison
+  extensions:
+  - .y
+
 BlitzBasic:
   type: programming
   aliases:
@@ -370,6 +385,12 @@ CSS:
   color: "#563d7c"
   extensions:
   - .css
+
+Cap'n Proto:
+  type: programming
+  tm_scope: source.capnp
+  extensions:
+  - .capnp
 
 Ceylon:
   type: programming
@@ -578,12 +599,6 @@ DM:
   - byond
   tm_scope: source.c++
 
-DOT:
-  type: data
-  extensions:
-  - .dot
-  - .gv
-
 Darcs Patch:
   search_term: dpatch
   aliases:
@@ -604,6 +619,14 @@ Diff:
   - .patch
   aliases:
   - udiff
+
+Dockerfile:
+  type: data
+  tm_scope: source.dockerfile
+  extensions:
+  - .dockerfile
+  filenames:
+  - Dockerfile
 
 Dogescript:
   type: programming
@@ -926,6 +949,14 @@ Graph Modeling Language:
   type: data
   extensions:
   - .gml
+
+Graphviz (DOT):
+  type: data
+  tm_scope: source.dot
+  extensions:
+  - .dot
+  - .DOT
+  - .gv
 
 Groff:
   extensions:
@@ -1491,6 +1522,14 @@ Matlab:
   - .matlab
   - .m
 
+Maven POM:
+  type: data
+  tm_scope: text.xml.pom
+  extensions:
+  - .pom.xml
+  filenames:
+  - pom.xml
+
 Max:
   type: programming
   color: "#ce279c"
@@ -1590,6 +1629,12 @@ Nimrod:
   extensions:
   - .nim
   - .nimrod
+
+Ninja:
+  type: data
+  tm_scope: source.ninja
+  extensions:
+  - .ninja
 
 Nit:
   type: programming
@@ -1785,6 +1830,7 @@ Parrot:
 
 Parrot Internal Representation:
   group: Parrot
+  tm_scope: source.parrot.pir
   type: programming
   aliases:
   - pir
@@ -2273,8 +2319,6 @@ Shell:
   - bash
   - sh
   - zsh
-  filenames:
-  - Dockerfile
 
 ShellSession:
   type: programming
@@ -2449,6 +2493,12 @@ Textile:
   extensions:
   - .textile
 
+Thrift:
+  type: programming
+  tm_scope: source.thrift
+  extensions:
+  - .thrift
+
 Turing:
   type: programming
   color: "#45f715"
@@ -2555,11 +2605,11 @@ Visual Basic:
   - vbnet
 
 Volt:
-    type: programming
-    color: "#0098db"
-    extensions:
-    - .volt
-    tm_scope: source.d
+  type: programming
+  color: "#0098db"
+  extensions:
+  - .volt
+  tm_scope: source.d
 
 XC:
   type: programming
