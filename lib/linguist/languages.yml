@@ -605,6 +605,14 @@ Diff:
   aliases:
   - udiff
 
+Docker File:
+  type: data
+  tm_scope: source.dockerfile
+  extensions:
+  - .dockerfile
+  filenames:
+  - Dockerfile
+
 Dogescript:
   type: programming
   color: "#cca760"
@@ -2273,8 +2281,6 @@ Shell:
   - bash
   - sh
   - zsh
-  filenames:
-  - Dockerfile
 
 ShellSession:
   type: programming
