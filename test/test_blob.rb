@@ -4,12 +4,9 @@ require 'linguist/samples'
 require 'test/unit'
 require 'mocha/setup'
 require 'mime/types'
-require 'pygments'
 
 class TestBlob < Test::Unit::TestCase
   include Linguist
-
-  Lexer = Pygments::Lexer
 
   def setup
     # git blobs are normally loaded as ASCII-8BIT since they may contain data
@@ -469,24 +466,7 @@ class TestBlob < Test::Unit::TestCase
     end
   end
 
-  def test_lexer
-    assert_equal Lexer['Ruby'], blob("Ruby/foo.rb").lexer
-  end
-
-  def test_colorize
-    assert_equal <<-HTML.chomp, blob("Ruby/foo.rb").colorize
-<div class="highlight"><pre><span class="k">module</span> <span class="nn">Foo</span>
-<span class="k">end</span>
-</pre></div>
-    HTML
-  end
-
-  def test_colorize_does_skip_minified_files
-    assert_nil blob("JavaScript/jquery-1.6.1.min.js").colorize
-  end
-
-  # Pygments.rb was taking exceeding long on this particular file
-  def test_colorize_doesnt_blow_up_with_files_with_high_ratio_of_long_lines
-    assert_nil blob("JavaScript/steelseries-min.js").colorize
+  def test_minified_files_not_safe_to_highlight
+    assert !blob("JavaScript/jquery-1.6.1.min.js").safe_to_colorize?
   end
 end

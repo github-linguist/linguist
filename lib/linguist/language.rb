@@ -1,5 +1,4 @@
 require 'escape_utils'
-require 'pygments'
 require 'yaml'
 begin
   require 'yajl'
@@ -302,10 +301,7 @@ module Linguist
       # Set aliases
       @aliases = [default_alias_name] + (attributes[:aliases] || [])
 
-      # Lookup Lexer object
-      @lexer = Pygments::Lexer.find_by_name(attributes[:lexer] || name) ||
-        raise(ArgumentError, "#{@name} is missing lexer")
-
+      # Load the TextMate scope name or try to guess one
       @tm_scope = attributes[:tm_scope] || begin
         context = case @type
                   when :data, :markup, :prose

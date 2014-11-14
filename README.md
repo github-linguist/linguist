@@ -1,12 +1,12 @@
 # Linguist
 
-We use this library at GitHub to detect blob languages, highlight code, ignore binary files, suppress generated files in diffs, and generate language breakdown graphs.
+We use this library at GitHub to detect blob languages, ignore binary files, suppress generated files in diffs, and generate language breakdown graphs.
 
 ## Features
 
 ### Language detection
 
-Linguist defines a list of all languages known to GitHub in a [yaml file](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml). In order for a file to be highlighted, a language and a lexer must be defined there.
+Linguist defines a list of all languages known to GitHub in a [yaml file](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml).
 
 Most languages are detected by their file extension. For disambiguating between files with common extensions, we first apply some common-sense heuristics to pick out obvious languages. After that, we use a
 [statistical
@@ -21,10 +21,6 @@ Linguist::FileBlob.new("bin/linguist").language.name #=> "Ruby"
 ```
 
 See [lib/linguist/language.rb](https://github.com/github/linguist/blob/master/lib/linguist/language.rb) and [lib/linguist/languages.yml](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml).
-
-### Syntax Highlighting
-
-The actual syntax highlighting is handled by our Pygments wrapper, [pygments.rb](https://github.com/tmm1/pygments.rb). It also provides a [Lexer abstraction](https://github.com/tmm1/pygments.rb/blob/master/lib/pygments/lexer.rb) that determines which highlighter should be used on a file.
 
 ### Stats
 
