@@ -8,7 +8,7 @@ require 'tmpdir'
 require 'uri'
 require 'yaml'
 
-GRAMMARS_PATH = File.expand_path("../../../prettylights/grammars", __FILE__)
+GRAMMARS_PATH = File.expand_path("../../grammars", __FILE__)
 SOURCES_FILE = File.expand_path("../../grammars.yml", __FILE__)
 CSONC = File.expand_path("../../node_modules/.bin/csonc", __FILE__)
 
