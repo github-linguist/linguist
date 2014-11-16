@@ -22,6 +22,20 @@ Linguist::FileBlob.new("bin/linguist").language.name #=> "Ruby"
 
 See [lib/linguist/language.rb](https://github.com/github/linguist/blob/master/lib/linguist/language.rb) and [lib/linguist/languages.yml](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml).
 
+### Syntax Highlighting
+
+Syntax highlighting in GitHub is performed using TextMate-compatible grammars. These are the same grammars that TextMate, Sublime Text and Atom use.
+
+Every language in `languages.yml` is mapped to its corresponding TM `scope`. This scope will be used when picking up a grammar for highlighting. **When adding a new language to Linguist, please add its corrsponding scope too (assuming there's an existing TextMate bundle) so syntax highlighting works for it**.
+
+#### I found a bug!
+
+The `grammars.yml` contains the list of all the repositories where we fetch TextMate grammars for highlighting. If you find a bug in the highlighting for any given language, please consult this Grammars list to find the source of the grammar, and submit the bug report upstream.
+
+You can also try to fix the bug yourself and submit a Pull Request. [This piece from TextMate's documentation](http://manual.macromates.com/en/language_grammars) offers a good introduction on how to work with TextMate-compatible grammars.
+
+Once the bug has been fixed upstream, please let us know and we'll pick it up for GitHub.
+
 ### Stats
 
 The Language stats bar that you see on every repository is built by aggregating the languages of each file in that repository. The top language in the graph determines the project's primary language.
