@@ -30,7 +30,7 @@ Every language in `languages.yml` is mapped to its corresponding TM `scope`. Thi
 
 #### I found a bug!
 
-The `grammars.yml` contains the list of all the repositories where we fetch TextMate grammars for highlighting. If you find a bug in the highlighting for any given language, please consult this Grammars list to find the source of the grammar, and submit the bug report upstream.
+The `grammars.yml` file contains the list of all the repositories where we fetch TextMate grammars for highlighting. If you find a bug in the highlighting for any given language, please consult this Grammars list to find the source of the grammar, and submit the bug report upstream.
 
 You can also try to fix the bug yourself and submit a Pull Request. [This piece from TextMate's documentation](http://manual.macromates.com/en/language_grammars) offers a good introduction on how to work with TextMate-compatible grammars.
 
