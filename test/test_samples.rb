@@ -56,7 +56,7 @@ class TestSamples < Test::Unit::TestCase
 
   # If a language extension isn't globally unique then make sure there are samples
   Linguist::Language.all.each do |language|
-    define_method "test_#{language.name}_has_samples_if_necessary" do
+    define_method "test_#{language.name}_has_samples" do
       language.all_extensions.each do |extension|
         assert_samples Language.find_by_filename("foo#{extension}"), "*#{extension}"
       end
@@ -72,8 +72,8 @@ class TestSamples < Test::Unit::TestCase
     # then check that there are examples for that language with the extension
     if language_matches.length > 1
       language_matches.each do |language|
-        assert File.directory?("samples/#{language.name}"), "#{language.name} is missing a samples directory"
-        assert Dir.glob("samples/#{language.name}/#{file_glob}").any?, "#{language.name} is missing samples for #{file_glob}"
+        assert File.directory?("samples/#{language.name}"), "#{language.name} is missing a samples directory. See https://github.com/github/linguist/blob/master/CONTRIBUTING.md"
+        assert Dir.glob("samples/#{language.name}/#{file_glob}").any?, "#{language.name} is missing samples for #{file_glob}. See https://github.com/github/linguist/blob/master/CONTRIBUTING.md"
       end
     end
   end
