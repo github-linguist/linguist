@@ -192,8 +192,8 @@ module Linguist
     # Returns all matching Languages or [] if none were found.
     def self.find_by_filename(filename)
       basename = File.basename(filename)
-      extname = FileBlob.new(filename).extension
-      (@filename_index[basename] + find_by_extension(extname)).compact.uniq
+      exts = FileBlob.new(filename).extensions.map {|extname| find_by_extension(extname)}
+      (@filename_index[basename] + exts.flatten).compact.uniq
     end
 
     # Public: Look up Languages by file extension.
