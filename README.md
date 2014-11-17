@@ -2,6 +2,8 @@
 
 We use this library at GitHub to detect blob languages, ignore binary files, suppress generated files in diffs, and generate language breakdown graphs.
 
+Tips for filing issues and creating pull requests can be found in [`CONTRIBUTING.md`](/CONTRIBUTING.md).
+
 ## Features
 
 ### Language detection
