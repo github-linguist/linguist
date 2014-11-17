@@ -21,7 +21,7 @@ Once the bug has been fixed upstream, please let us know and we'll pick it up fo
 Great! You'll need to:
 
 0. Add an entry for your language to [`languages.yml`][languages].
-0. Add a grammar for your language to [`grammars.yml`][grammars]. Please use `script/download-grammars --add URL` to add the grammar.
+0. Add a grammar for your language to [`grammars.yml`][grammars] by running `script/download-grammars --add URL`. Please only add grammars that have a license that permits redistribution.
 0. Add samples for your language to the [samples directory][samples].
 
 We try only to add languages once they have some usage on GitHub, so please note in-the-wild usage examples in your pull request.
