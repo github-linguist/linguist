@@ -193,8 +193,8 @@ class TestBlob < Test::Unit::TestCase
     assert blob("Binary/MainMenu.nib").generated?
     assert !blob("XML/project.pbxproj").generated?
 
-    # Gemfile.locks
-    assert blob("Gemfile.lock").generated?
+    # Gemfile.lock is NOT generated
+    assert !blob("Gemfile.lock").generated?
 
     # Generated .NET Docfiles
     assert blob("XML/net_docfile.xml").generated?
