@@ -51,8 +51,7 @@ module Linguist
     #
     # Return true or false
     def generated?
-      name == 'Gemfile.lock' ||
-        minified_files? ||
+      minified_files? ||
         compiled_coffeescript? ||
         xcode_file? ||
         generated_parser? ||
