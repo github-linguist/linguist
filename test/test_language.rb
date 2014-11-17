@@ -139,6 +139,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal :programming, Language['Python'].type
     assert_equal :programming, Language['Ruby'].type
     assert_equal :programming, Language['TypeScript'].type
+    assert_equal :programming, Language['Makefile'].type
   end
 
   def test_markup
@@ -157,7 +158,6 @@ class TestLanguage < Test::Unit::TestCase
 
   def test_other
     assert_nil Language['Brainfuck'].type
-    assert_nil Language['Makefile'].type
   end
 
   def test_searchable
