@@ -54,6 +54,15 @@ class TestSamples < Test::Unit::TestCase
     end
   end
 
+  # Linguist doesn't know what to do with nested extensions
+  def test_non_nested_extensions
+    Linguist::Language.all.each do |language|
+      language.all_extensions.each do |extension|
+        assert_match /^\.[^\.]+$/, extension
+      end
+    end
+  end
+
   # If a language extension isn't globally unique then make sure there are samples
   def test_presence
     Linguist::Language.all.each do |language|
