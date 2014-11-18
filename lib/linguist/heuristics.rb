@@ -13,26 +13,28 @@ module Linguist
     # Returns an array of Languages or []
     def self.find_by_heuristics(data, languages)
       if active?
+        result = []
+
         if languages.all? { |l| ["Perl", "Prolog"].include?(l) }
-          result = disambiguate_pl(data, languages)
+          result = disambiguate_pl(data)
         end
         if languages.all? { |l| ["ECL", "Prolog"].include?(l) }
-          result = disambiguate_ecl(data, languages)
+          result = disambiguate_ecl(data)
         end
         if languages.all? { |l| ["IDL", "Prolog"].include?(l) }
-          result = disambiguate_pro(data, languages)
+          result = disambiguate_pro(data)
         end
         if languages.all? { |l| ["Common Lisp", "OpenCL"].include?(l) }
-          result = disambiguate_cl(data, languages)
+          result = disambiguate_cl(data)
         end
         if languages.all? { |l| ["Hack", "PHP"].include?(l) }
-          result = disambiguate_hack(data, languages)
+          result = disambiguate_hack(data)
         end
         if languages.all? { |l| ["Scala", "SuperCollider"].include?(l) }
-          result = disambiguate_sc(data, languages)
+          result = disambiguate_sc(data)
         end
         if languages.all? { |l| ["AsciiDoc", "AGS Script"].include?(l) }
-          result = disambiguate_asc(data, languages)
+          result = disambiguate_asc(data)
         end
         return result
       end
@@ -42,28 +44,37 @@ module Linguist
     # We want to shortcut look for Objective-C _and_ now C++ too!
     #
     # Returns an array of Languages or []
-    def self.disambiguate_c(data, languages)
+    def self.disambiguate_c(data)
       matches = []
-      matches << Language["Objective-C"] if data.include?("@interface")
-      matches << Language["C++"] if data.include?("#include <cstdint>")
+      if data.include?("@interface")
+        matches << Language["Objective-C"]
+      elsif data.include?("#include <cstdint>")
+        matches << Language["C++"]
+      end
       matches
     end
 
-    def self.disambiguate_pl(data, languages)
+    def self.disambiguate_pl(data)
       matches = []
-      matches << Language["Prolog"] if data.include?(":-")
-      matches << Language["Perl"] if data.include?("use strict")
+      if data.include?("use strict")
+        matches << Language["Perl"]
+      elsif data.include?(":-")
+        matches << Language["Prolog"]
+      end
       matches
     end
 
-    def self.disambiguate_ecl(data, languages)
+    def self.disambiguate_ecl(data)
       matches = []
-      matches << Language["Prolog"] if data.include?(":-")
-      matches << Language["ECL"] if data.include?(":=")
+      if data.include?(":-")
+        matches << Language["Prolog"]
+      elsif data.include?(":=")
+        matches << Language["ECL"]
+      end
       matches
     end
 
-    def self.disambiguate_pro(data, languages)
+    def self.disambiguate_pro(data)
       matches = []
       if (data.include?(":-"))
         matches << Language["Prolog"]
@@ -73,7 +84,7 @@ module Linguist
       matches
     end
 
-    def self.disambiguate_ts(data, languages)
+    def self.disambiguate_ts(data)
       matches = []
       if (data.include?("</translation>"))
         matches << Language["XML"]
@@ -83,21 +94,24 @@ module Linguist
       matches
     end
 
-    def self.disambiguate_cl(data, languages)
+    def self.disambiguate_cl(data)
       matches = []
-      matches << Language["Common Lisp"] if data.include?("(defun ")
-      matches << Language["OpenCL"] if /\/\* |\/\/ |^\}/.match(data)
+      if data.include?("(defun ")
+        matches << Language["Common Lisp"]
+      elsif /\/\* |\/\/ |^\}/.match(data)
+        matches << Language["OpenCL"]
+      end
       matches
     end
 
-    def self.disambiguate_r(data, languages)
+    def self.disambiguate_r(data)
       matches = []
       matches << Language["Rebol"] if /\bRebol\b/i.match(data)
       matches << Language["R"] if data.include?("<-")
       matches
     end
 
-    def self.disambiguate_hack(data, languages)
+    def self.disambiguate_hack(data)
       matches = []
       if data.include?("<?hh")
         matches << Language["Hack"]
@@ -107,7 +121,7 @@ module Linguist
       matches
     end
 
-    def self.disambiguate_sc(data, languages)
+    def self.disambiguate_sc(data)
       matches = []
       if (/\^(this|super)\./.match(data) || /^\s*(\+|\*)\s*\w+\s*{/.match(data) || /^\s*~\w+\s*=\./.match(data))
         matches << Language["SuperCollider"]
@@ -118,7 +132,7 @@ module Linguist
       matches
     end
 
-    def self.disambiguate_asc(data, languages)
+    def self.disambiguate_asc(data)
       matches = []
       matches << Language["AsciiDoc"] if /^=+(\s|\n)/.match(data)
       matches

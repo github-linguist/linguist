@@ -24,7 +24,7 @@ Great! You'll need to:
 0. Add a grammar for your language to [`grammars.yml`][grammars] by running `script/download-grammars --add URL`. Please only add grammars that have a license that permits redistribution.
 0. Add samples for your language to the [samples directory][samples].
 
-We try only to add languages once they have some usage on GitHub, so please note in-the-wild usage examples in your pull request.
+We try only to add languages once they have some usage on GitHub, so please note in-the-wild usage examples in your pull request. In most cases we prefer that languages already be in use in hundreds of repositories before supporting them in Linguist.
 
 [grammars]: /grammars.yml
 [languages]: /lib/linguist/languages.yml

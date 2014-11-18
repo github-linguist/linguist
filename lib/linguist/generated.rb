@@ -51,26 +51,25 @@ module Linguist
     #
     # Return true or false
     def generated?
-      name == 'Gemfile.lock' ||
-        minified_files? ||
-        compiled_coffeescript? ||
-        xcode_file? ||
-        generated_parser? ||
-        generated_net_docfile? ||
-        generated_net_designer_file? ||
-        generated_postscript? ||
-        generated_protocol_buffer? ||
-        generated_jni_header? ||
-        composer_lock? ||
-        node_modules? ||
-        godeps? ||
-        vcr_cassette? ||
-        generated_by_zephir?
+      minified_files? ||
+      compiled_coffeescript? ||
+      xcode_file? ||
+      generated_parser? ||
+      generated_net_docfile? ||
+      generated_net_designer_file? ||
+      generated_postscript? ||
+      generated_protocol_buffer? ||
+      generated_jni_header? ||
+      composer_lock? ||
+      node_modules? ||
+      godeps? ||
+      vcr_cassette? ||
+      generated_by_zephir?
     end
 
     # Internal: Is the blob an Xcode file?
     #
-    # Generated if the file extension is an Xcode 
+    # Generated if the file extension is an Xcode
     # file extension.
     #
     # Returns true of false.
@@ -265,4 +264,3 @@ module Linguist
     end
   end
 end
-
