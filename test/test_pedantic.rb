@@ -1,4 +1,4 @@
-require 'test/unit'
+require_relative "./helper"
 
 class TestPedantic < Test::Unit::TestCase
   Lib = File.expand_path("../../lib/linguist", __FILE__)

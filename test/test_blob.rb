@@ -1,9 +1,4 @@
-require 'linguist/file_blob'
-require 'linguist/samples'
-
-require 'test/unit'
-require 'mocha/setup'
-require 'mime/types'
+require_relative "./helper"
 
 class TestBlob < Test::Unit::TestCase
   include Linguist
