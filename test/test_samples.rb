@@ -55,18 +55,26 @@ class TestSamples < Test::Unit::TestCase
   end
 
   # If a language extension isn't globally unique then make sure there are samples
-  def test_presence
-    Linguist::Language.all.each do |language|
-      language.all_extensions.each do |extension|
-        language_matches = Language.find_by_filename("foo#{extension}")
+  Linguist::Language.all.each do |language|
+    define_method "test_#{language.name}_has_samples" do
+      language.extensions.each do |extension|
+        language_matches = Language.find_by_extension(extension)
 
-        # If there is more than one language match for a given extension
-        # then check that there are examples for that language with the extension
+        # Check for samples if more than one language matches the given extension.
         if language_matches.length > 1
-          language_matches.each do |language|
-            assert File.directory?("samples/#{language.name}"), "#{language.name} is missing a samples directory"
-            assert Dir.glob("samples/#{language.name}/*#{extension}").any?, "#{language.name} is missing samples for extension #{extension}"
+          language_matches.each do |match|
+            samples = "samples/#{match.name}/*#{extension}"
+            assert Dir.glob(samples).any?, "Missing samples in #{samples.inspect}. See https://github.com/github/linguist/blob/master/CONTRIBUTING.md"
           end
+        end
+      end
+
+      language.filenames.each do |filename|
+        # Check for samples if more than one language matches the given filename
+        if Language.find_by_filename(filename).size > 1
+          sample = "samples/#{language.name}/filenames/#{filename}"
+          assert File.exists?(sample),
+            "Missing sample in #{sample.inspect}. See https://github.com/github/linguist/blob/master/CONTRIBUTING.md"
         end
       end
     end
