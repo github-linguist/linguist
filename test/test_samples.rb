@@ -64,7 +64,8 @@ class TestSamples < Test::Unit::TestCase
         # then check that there are examples for that language with the extension
         if language_matches.length > 1
           language_matches.each do |language|
-            assert Dir.glob("samples/#{language.name}/*#{extension}").any?, "#{language.name} is missing samples for #{extension}. See https://github.com/github/linguist/blob/master/CONTRIBUTING.md"
+            samples = "samples/#{language.name}/*#{extension}"
+            assert Dir.glob(samples).any?, "Missing samples in #{samples.inspect}. See https://github.com/github/linguist/blob/master/CONTRIBUTING.md"
           end
         end
       end
@@ -75,7 +76,7 @@ class TestSamples < Test::Unit::TestCase
         if Language.find_by_filename(filename).size > 1
           sample = "samples/#{language.name}/filenames/#{filename}"
           assert File.exists?(sample),
-            "Missing sample in #{sample}. See https://github.com/github/linguist/blob/master/CONTRIBUTING.md"
+            "Missing sample in #{sample.inspect}. See https://github.com/github/linguist/blob/master/CONTRIBUTING.md"
         end
       end
     end
