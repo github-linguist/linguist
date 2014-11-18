@@ -413,6 +413,9 @@ module Linguist
     # Returns the extensions Array
     attr_reader :extensions
 
+    # DEPRECATED: Will be removed in 5.x
+    alias_method :all_extensions, :extensions
+
     # Public: Get interpreters
     #
     # Examples
@@ -430,11 +433,6 @@ module Linguist
     #
     # Returns the extensions Array
     attr_reader :filenames
-
-    # Public: Return all possible extensions for language
-    def all_extensions
-      (extensions + [primary_extension]).uniq
-    end
 
     # Deprecated: Get primary extension
     #
