@@ -226,7 +226,6 @@ class TestBlob < Test::Unit::TestCase
     assert !blob("PostScript/sierpinski.ps").generated?
 
     # These examples are too basic to tell
-    assert !blob("JavaScript/empty.js").generated?
     assert !blob("JavaScript/hello.js").generated?
 
     assert blob("JavaScript/intro-old.js").generated?
@@ -468,5 +467,14 @@ class TestBlob < Test::Unit::TestCase
 
   def test_minified_files_not_safe_to_highlight
     assert !blob("JavaScript/jquery-1.6.1.min.js").safe_to_colorize?
+  end
+
+  def test_empty
+    blob = Struct.new(:data) { include Linguist::BlobHelper }
+
+    assert blob.new("").empty?
+    assert blob.new(nil).empty?
+    refute blob.new(" ").empty?
+    refute blob.new("nope").empty?
   end
 end
