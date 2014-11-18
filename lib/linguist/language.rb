@@ -431,11 +431,6 @@ module Linguist
     # Returns the extensions Array
     attr_reader :filenames
 
-    # Public: Return all possible extensions for language
-    def all_extensions
-      (extensions + [primary_extension]).uniq
-    end
-
     # Deprecated: Get primary extension
     #
     # Defaults to the first extension but can be overridden
@@ -593,9 +588,9 @@ module Linguist
       :ace_mode          => options['ace_mode'],
       :wrap              => options['wrap'],
       :group_name        => options['group'],
-      :searchable        => options.key?('searchable') ? options['searchable'] : true,
+      :searchable        => options.fetch('searchable', true),
       :search_term       => options['search_term'],
-      :extensions        => [options['extensions'].first] + options['extensions'][1..-1].sort,
+      :extensions        => Array(options['extensions']),
       :interpreters      => options['interpreters'].sort,
       :filenames         => options['filenames'],
       :popular           => popular.include?(name)

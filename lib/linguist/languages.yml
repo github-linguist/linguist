@@ -33,15 +33,6 @@ AGS Script:
   - .ash
   tm_scope: source.c++
 
-Ant Build System:
-  type: data
-  tm_scope: text.xml.ant
-  extensions:
-  - .ant.xml
-  filenames:
-  - build.xml
-  - ant.xml
-
 ANTLR:
   type: programming
   color: "#9DC3FF"
@@ -116,6 +107,13 @@ Alloy:
   color: "#cc5c24"
   extensions:
   - .als
+
+Ant Build System:
+  type: data
+  tm_scope: text.xml.ant
+  filenames:
+  - ant.xml
+  - build.xml
 
 ApacheConf:
   type: markup
@@ -649,13 +647,6 @@ E:
   extensions:
   - .E
 
-Ecere Projects:
-  type: data
-  group: JavaScript
-  extensions:
-  - .epj
-  tm_scope: source.json
-
 ECL:
   type: programming
   color: "#8a1267"
@@ -670,6 +661,13 @@ Eagle:
   - .sch
   - .brd
   tm_scope: text.xml
+
+Ecere Projects:
+  type: data
+  group: JavaScript
+  extensions:
+  - .epj
+  tm_scope: source.json
 
 Eiffel:
   type: programming
@@ -767,8 +765,8 @@ Factor:
   extensions:
   - .factor
   filenames:
-    - .factor-rc
     - .factor-boot-rc
+    - .factor-rc
 
 Fancy:
   type: programming
@@ -792,6 +790,9 @@ Forth:
   extensions:
   - .fth
   - .4th
+  - .F
+  - .f
+  - .for
   - .forth
   - .frt
 
@@ -808,13 +809,6 @@ G-code:
   - .g
   - .gco
   - .gcode
-
-Game Maker Language:
-  type: programming
-  color: "#8ad353"
-  extensions:
-  - .gml
-  tm_scope: source.js
 
 GAMS:
   type: programming
@@ -859,6 +853,13 @@ GLSL:
   - .vert
   - .vrx
   - .vshader
+
+Game Maker Language:
+  type: programming
+  color: "#8ad353"
+  extensions:
+  - .gml
+  tm_scope: source.js
 
 Genshi:
   extensions:
@@ -1119,9 +1120,14 @@ INI:
   aliases:
   - dosini
 
-Inno Setup:
+IRC log:
+  search_term: irc
+  aliases:
+  - irc
+  - irc logs
   extensions:
-  - .iss
+  - .irclog
+  - .weechatlog
 
 Idris:
   type: programming
@@ -1143,15 +1149,6 @@ Inform 7:
 Inno Setup:
   extensions:
   - .iss
-
-IRC log:
-  search_term: irc
-  aliases:
-  - irc
-  - irc logs
-  extensions:
-  - .irclog
-  - .weechatlog
 
 Io:
   type: programming
@@ -1471,9 +1468,9 @@ Makefile:
   - .mak
   - .mk
   filenames:
-  - makefile
-  - Makefile
   - GNUmakefile
+  - Makefile
+  - makefile
   interpreters:
   - make
 
@@ -1526,8 +1523,6 @@ Matlab:
 Maven POM:
   type: data
   tm_scope: text.xml.pom
-  extensions:
-  - .pom.xml
   filenames:
   - pom.xml
 
@@ -1829,6 +1824,14 @@ Parrot:
   extensions:
   - .parrot # Dummy extension
 
+Parrot Assembly:
+  group: Parrot
+  type: programming
+  aliases:
+  - pasm
+  extensions:
+  - .pasm
+
 Parrot Internal Representation:
   group: Parrot
   tm_scope: source.parrot.pir
@@ -1837,14 +1840,6 @@ Parrot Internal Representation:
   - pir
   extensions:
   - .pir
-
-Parrot Assembly:
-  group: Parrot
-  type: programming
-  aliases:
-  - pasm
-  extensions:
-  - .pasm
 
 Pascal:
   type: programming
@@ -2002,10 +1997,10 @@ Python:
   - .wsgi
   - .xpy
   filenames:
-  - wscript
-  - SConstruct
-  - SConscript
   - BUILD
+  - SConscript
+  - SConstruct
+  - wscript
   interpreters:
   - python
 
@@ -2585,8 +2580,8 @@ VimL:
   filenames:
   - .vimrc
   - _vimrc
-  - vimrc
   - gvimrc
+  - vimrc
 
 Visual Basic:
   type: programming
@@ -2688,12 +2683,12 @@ XML:
   filenames:
   - .classpath
   - .project
+  - Web.Debug.config
+  - Web.Release.config
+  - Web.config
   - build.xml.dist
   - packages.config
   - phpunit.xml.dist
-  - Web.config
-  - Web.Debug.config
-  - Web.Release.config
 
 XProc:
   type: programming
