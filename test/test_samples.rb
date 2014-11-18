@@ -62,8 +62,8 @@ class TestSamples < Test::Unit::TestCase
 
         # Check for samples if more than one language matchs the given extension
         if language_matches.length > 1
-          language_matches.each do |language|
-            samples = "samples/#{language.name}/*#{extension}"
+          language_matches.each do |match|
+            samples = "samples/#{match.name}/*#{extension}"
             assert Dir.glob(samples).any?, "Missing samples in #{samples.inspect}. See https://github.com/github/linguist/blob/master/CONTRIBUTING.md"
           end
         end
