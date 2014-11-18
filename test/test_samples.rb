@@ -79,7 +79,4 @@ class TestSamples < Test::Unit::TestCase
       end
     end
   end
-
-  def assert_samples(language_matches, file_glob)
-  end
 end
