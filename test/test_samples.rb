@@ -58,23 +58,29 @@ class TestSamples < Test::Unit::TestCase
   Linguist::Language.all.each do |language|
     define_method "test_#{language.name}_has_samples" do
       language.all_extensions.each do |extension|
-        assert_samples Language.find_by_filename("foo#{extension}"), "*#{extension}"
+        language_matches = Language.find_by_filename("foo#{extension}")
+
+        # If there is more than one language match for a given extension
+        # then check that there are examples for that language with the extension
+        if language_matches.length > 1
+          language_matches.each do |language|
+            assert Dir.glob("samples/#{language.name}/*#{extension}").any?, "#{language.name} is missing samples for #{extension}. See https://github.com/github/linguist/blob/master/CONTRIBUTING.md"
+          end
+        end
       end
 
       language.filenames.each do |filename|
-        assert_samples Language.find_by_filename(filename), filename
+        # If there is more than one language match for a given filename
+        # then check that there are examples for that language with the extension
+        if Language.find_by_filename(filename).size > 1
+          sample = "samples/#{language.name}/filenames/#{filename}"
+          assert File.exists?(sample),
+            "Missing sample in #{sample}. See https://github.com/github/linguist/blob/master/CONTRIBUTING.md"
+        end
       end
     end
   end
 
   def assert_samples(language_matches, file_glob)
-    # If there is more than one language match for a given extension
-    # then check that there are examples for that language with the extension
-    if language_matches.length > 1
-      language_matches.each do |language|
-        assert File.directory?("samples/#{language.name}"), "#{language.name} is missing a samples directory. See https://github.com/github/linguist/blob/master/CONTRIBUTING.md"
-        assert Dir.glob("samples/#{language.name}/#{file_glob}").any?, "#{language.name} is missing samples for #{file_glob}. See https://github.com/github/linguist/blob/master/CONTRIBUTING.md"
-      end
-    end
   end
 end
