@@ -413,9 +413,6 @@ module Linguist
     # Returns the extensions Array
     attr_reader :extensions
 
-    # DEPRECATED: Will be removed in 5.x
-    alias_method :all_extensions, :extensions
-
     # Public: Get interpreters
     #
     # Examples
