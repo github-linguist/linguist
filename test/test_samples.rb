@@ -79,4 +79,15 @@ class TestSamples < Test::Unit::TestCase
       end
     end
   end
+
+  Dir.glob("samples/**/*").each do |entry|
+    next unless File.file?(entry)
+    language = entry.scan(%r{samples/([^/]+)/})[0][0]
+
+    define_method "test_#{entry}_is_detected_as_#{language}" do
+      file = Linguist::FileBlob.new(entry)
+      assert_equal Linguist::Language[language], Linguist::Language.detect(file)
+    end
+  end
+
 end
