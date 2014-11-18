@@ -60,8 +60,7 @@ class TestSamples < Test::Unit::TestCase
       language.all_extensions.each do |extension|
         language_matches = Language.find_by_filename("foo#{extension}")
 
-        # If there is more than one language match for a given extension
-        # then check that there are examples for that language with the extension
+        # Check for samples if more than one language matchs the given extension
         if language_matches.length > 1
           language_matches.each do |language|
             samples = "samples/#{language.name}/*#{extension}"
@@ -71,8 +70,7 @@ class TestSamples < Test::Unit::TestCase
       end
 
       language.filenames.each do |filename|
-        # If there is more than one language match for a given filename
-        # then check that there are examples for that language with the extension
+        # Check for samples if more than one language matchs the given filename
         if Language.find_by_filename(filename).size > 1
           sample = "samples/#{language.name}/filenames/#{filename}"
           assert File.exists?(sample),
