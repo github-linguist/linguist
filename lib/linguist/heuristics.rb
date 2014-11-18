@@ -34,9 +34,6 @@ module Linguist
         if languages.all? { |l| ["AsciiDoc", "AGS Script"].include?(l) }
           result = disambiguate_asc(data, languages)
         end
-        if languages.all? { |l| ["XML", "Objective-C++"].include?(l) }
-          result = disambiguate_mm(data, languages)
-        end
         return result
       end
     end
@@ -124,16 +121,6 @@ module Linguist
     def self.disambiguate_asc(data, languages)
       matches = []
       matches << Language["AsciiDoc"] if /^=+(\s|\n)/.match(data)
-      matches
-    end
-
-    def self.disambiguate_mm(data, languages)
-      matches = []
-      if /<map version="[^"]+">/.match(data)
-        matches << Language["XML"]
-      else
-        matches << Language["Objective-C++"]
-      end
       matches
     end
 
