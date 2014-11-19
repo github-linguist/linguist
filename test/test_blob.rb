@@ -297,6 +297,9 @@ class TestBlob < Test::Unit::TestCase
     assert blob("deps/http_parser/http_parser.c").vendored?
     assert blob("deps/v8/src/v8.h").vendored?
 
+    # Codemirror deps
+    assert blob("codemirror/mode/blah.js").vendored?
+
     # Debian packaging
     assert blob("debian/cron.d").vendored?
 
