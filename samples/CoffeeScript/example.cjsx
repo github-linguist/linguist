@@ -1,12 +1,12 @@
 ###* @cjsx React.DOM ###
-define 'myProject.myComponent', [
+define 'myProject.ReactExampleComponent', [
   'React'
   'myProject.ExampleStore'
   'myProject.ExampleActions'
   'myProject.ReactExampleTable'
 ], (React, ExampleStore, ExampleActions, ReactExampleTable ) ->
 
-  ReactListDetail = React.createClass
+  ReactExampleComponent = React.createClass
     mixins: [ListenMixin]
 
     getInitialState: ->
