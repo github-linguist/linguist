@@ -34,6 +34,7 @@ class TestSamples < Test::Unit::TestCase
     assert_equal data['languages_total'], data['languages'].inject(0) { |n, (_, c)| n += c }
     assert_equal data['tokens_total'], data['language_tokens'].inject(0) { |n, (_, c)| n += c }
     assert_equal data['tokens_total'], data['tokens'].inject(0) { |n, (_, ts)| n += ts.inject(0) { |m, (_, c)| m += c } }
+    assert !data["interpreters"].empty?
   end
 
   # Check that there aren't samples with extensions that aren't explicitly defined in languages.yml
