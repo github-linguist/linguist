@@ -37,19 +37,24 @@ class TestSamples < Test::Unit::TestCase
     assert !data["interpreters"].empty?
   end
 
-  # Check that there aren't samples with extensions that aren't explicitly defined in languages.yml
-  def test_parity
-    extensions = Samples.cache['extnames']
-    languages_yml = File.expand_path("../../lib/linguist/languages.yml", __FILE__)
-    languages = YAML.load_file(languages_yml)
-
-    languages.each do |name, options|
+  # Check that there aren't samples with extensions or interpreters that
+  # aren't explicitly defined in languages.yml
+  languages_yml = File.expand_path("../../lib/linguist/languages.yml", __FILE__)
+  YAML.load_file(languages_yml).each do |name, options|
+    define_method "test_samples_have_parity_with_languages_yml_for_#{name}" do
       options['extensions'] ||= []
-
-      if extnames = extensions[name]
+      if extnames = Samples.cache['extnames'][name]
         extnames.each do |extname|
           next if extname == '.script!'
           assert options['extensions'].include?(extname), "#{name} has a sample with extension (#{extname}) that isn't explicitly defined in languages.yml"
+        end
+      end
+
+      options['interpreters'] ||= []
+      if interpreters = Samples.cache['interpreters'][name]
+        interpreters.each do |interpreter|
+          # next if extname == '.script!'
+          assert options['interpreters'].include?(interpreter), "#{name} has a sample with an interpreter (#{interpreter}) that isn't explicitly defined in languages.yml"
         end
       end
     end
