@@ -133,10 +133,8 @@ module Linguist
 
       script = script == 'env' ? tokens[1] : script
 
-      # "python2.6" -> "python"
-      if script =~ /((?:\d+\.?)+)/
-        script.sub! $1, ''
-      end
+      # "python2.6" -> "python2"
+      script.sub! $1, '' if script =~ /(\.\d+)$/
 
       # Check for multiline shebang hacks that call `exec`
       if script == 'sh' &&
