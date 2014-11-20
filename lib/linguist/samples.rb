@@ -133,6 +133,9 @@ module Linguist
 
       script = script == 'env' ? tokens[1] : script
 
+      # If script has an invalid shebang, we might get here
+      return unless script
+
       # "python2.6" -> "python2"
       script.sub! $1, '' if script =~ /(\.\d+)$/
 
@@ -141,8 +144,8 @@ module Linguist
         lines[0...5].any? { |l| l.match(/exec (\w+).+\$0.+\$@/) }
         script = $1
       end
-
-      script
+      
+      File.basename(script)
     else
       nil
     end

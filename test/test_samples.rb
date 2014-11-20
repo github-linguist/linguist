@@ -85,4 +85,9 @@ class TestSamples < Test::Unit::TestCase
       end
     end
   end
+
+  def test_shebang
+    assert_equal "crystal", Linguist.interpreter_from_shebang("#!/usr/bin/env bin/crystial")
+    assert_equal "python2", Linguist.interpreter_from_shebang("#!/usr/bin/python2.4")
+  end
 end
