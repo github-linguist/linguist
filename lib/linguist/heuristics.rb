@@ -39,6 +39,9 @@ module Linguist
         if languages.all? { |l| ["FORTRAN", "Forth"].include?(l) }
           result = disambiguate_f(data)
         end
+        if name.end_with? ".tst" and languages.all? { |l| ["GAP", "Scilab"].include?(l) }
+          result = disambiguate_tst(data)
+        end
         return result
       end
     end
@@ -93,6 +96,22 @@ module Linguist
         matches << Language["XML"]
       else
         matches << Language["TypeScript"]
+      end
+      matches
+    end
+
+    # WARNING: The following heuristic is only correct for .tst files.
+    # In particular, the string "gap> " only occurs in GAP .tst files,
+    # but not in other GAP files. Unfortunately, the heuristics code
+    # does not allow us to check the extensions of the original files.
+    # So we just have to hope that Scilab and GAP never collide on
+    # another extension.
+    def self.disambiguate_tst(data)
+      matches = []
+      if (data.include?("gap> "))
+        matches << Language["GAP"]
+      else
+        matches << Language["Scilab"]
       end
       matches
     end
