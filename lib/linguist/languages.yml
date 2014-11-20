@@ -717,6 +717,8 @@ Erlang:
   - .es
   - .escript
   - .hrl
+  interpreters:
+  - escript
 
 F#:
   type: programming
@@ -907,6 +909,8 @@ Gnuplot:
   - .gnuplot
   - .plot
   - .plt
+  interpreters:
+  - gnuplot
 
 Go:
   type: programming
@@ -1161,6 +1165,8 @@ Ioke:
   color: "#078193"
   extensions:
   - .ik
+  interpreters:
+  - ioke
 
 Isabelle:
   type: programming
@@ -1655,6 +1661,8 @@ Nu:
   filenames:
   - Nukefile
   tm_scope: source.scheme
+  interpreters:
+  - nush
 
 NumPy:
   group: Python
@@ -1831,6 +1839,8 @@ Parrot Assembly:
   - pasm
   extensions:
   - .pasm
+  interpreters:
+  - parrot
 
 Parrot Internal Representation:
   group: Parrot
@@ -2023,6 +2033,8 @@ QMake:
   extensions:
   - .pro
   - .pri
+  interpreters:
+  - qmake
 
 R:
   type: programming
@@ -2172,6 +2184,7 @@ Ruby:
   - .watchr
   interpreters:
   - ruby
+  - macruby
   filenames:
   - .pryrc
   - Appraisals
@@ -2257,6 +2270,8 @@ Scala:
   - .scala
   - .sbt
   - .sc
+  interpreters:
+  - scala
 
 Scaml:
   group: HTML
