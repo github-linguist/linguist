@@ -297,6 +297,10 @@ class TestBlob < Test::Unit::TestCase
     assert blob("deps/http_parser/http_parser.c").vendored?
     assert blob("deps/v8/src/v8.h").vendored?
 
+    # Chart.js
+    assert blob("some/vendored/path/Chart.js").vendored?
+    assert !blob("some/vendored/path/chart.js").vendored?
+
     # Codemirror deps
     assert blob("codemirror/mode/blah.js").vendored?
 
