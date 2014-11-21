@@ -132,4 +132,14 @@ class TestHeuristcs < Test::Unit::TestCase
     results = Heuristics.disambiguate_sc(fixture("Scala/node11.sc"))
     assert_equal Language["Scala"], results.first
   end
+
+  def test_fs_by_heuristics
+    languages = ["F#", "Forth", "GLSL"]
+    languages.each do |language|
+      all_fixtures(language).each do |fixture|
+        results = Heuristics.disambiguate_fs(fixture("#{language}/#{File.basename(fixture)}"))
+        assert_equal Language[language], results.first
+      end
+    end
+  end
 end

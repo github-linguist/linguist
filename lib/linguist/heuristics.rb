@@ -1,3 +1,4 @@
+# encoding: utf-8
 module Linguist
   # A collection of simple heuristics that can be used to better analyze languages.
   class Heuristics
@@ -38,6 +39,9 @@ module Linguist
         end
         if languages.all? { |l| ["FORTRAN", "Forth"].include?(l) }
           result = disambiguate_f(data)
+        end
+        if languages.all? { |l| ["F#", "Forth", "GLSL"].include?(l) }
+          result = disambiguate_fs(data)
         end
         return result
       end
@@ -147,6 +151,18 @@ module Linguist
         matches << Language["Forth"]
       elsif /^([c*][^a-z]|      subroutine\s)/i.match(data)
         matches << Language["FORTRAN"]
+      end
+      matches
+    end
+
+    def self.disambiguate_fs(data)
+      matches = []
+      if /^(: |new-device)/.match(data)
+        matches << Language["Forth"]
+      elsif /^(\357\273\277|#light|import|let|module|namespace|open|type)/.match(data)
+        matches << Language["F#"]
+      elsif /^(#include|#pragma|precision|uniform|varying|void)/.match(data)
+        matches << Language["GLSL"]
       end
       matches
     end
