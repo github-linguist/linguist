@@ -12,6 +12,10 @@
 # search_term       - Deprecated: Some languages maybe indexed under a
 #                     different alias. Avoid defining new exceptions.
 # color             - CSS hex color to represent the language.
+# tm_scope          - The TextMate scope that represents this programming
+#                     language. This should match one of the scopes listed in
+#                     the grammars.yml file. Use "none" if there is no grammar
+#                     for this language.
 #
 # Any additions or modifications (even trivial) should have corresponding
 # test change in `test/test_blob.rb`.
