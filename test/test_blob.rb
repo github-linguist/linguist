@@ -299,6 +299,7 @@ class TestBlob < Test::Unit::TestCase
 
     # Chart.js
     assert blob("some/vendored/path/Chart.js").vendored?
+    assert !blob("some/vendored/path/chart.js").vendored?
 
     # Codemirror deps
     assert blob("codemirror/mode/blah.js").vendored?
