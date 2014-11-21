@@ -363,9 +363,9 @@ class TestLanguage < Test::Unit::TestCase
 
   def test_all_languages_have_grammars
     scopes = YAML.load(File.read(File.expand_path("../../grammars.yml", __FILE__))).values.flatten
-    missing = Language.all.reject { |language| language.tm_scope == "NONE" || scopes.include?(language.tm_scope) }
+    missing = Language.all.reject { |language| language.tm_scope == "none" || scopes.include?(language.tm_scope) }
     message = "The following languages' scopes are not listed in grammars.yml. Please add grammars for all new languages.\n"
-    message << "If no grammar exists for a language, mark the language with `tm_scope: NONE` in lib/linguist/languages.yml.\n"
+    message << "If no grammar exists for a language, mark the language with `tm_scope: none` in lib/linguist/languages.yml.\n"
 
     width = missing.map { |language| language.name.length }.max
     message << missing.map { |language| sprintf("%-#{width}s %s", language.name, language.tm_scope) }.sort.join("\n")
