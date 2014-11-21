@@ -1,5 +1,6 @@
 require 'linguist/language'
 require 'test/unit'
+require 'yaml'
 
 class TestLanguage < Test::Unit::TestCase
   include Linguist
@@ -358,5 +359,16 @@ class TestLanguage < Test::Unit::TestCase
 
   def test_by_type
     assert !Language.by_type(:prose).nil?
+  end
+
+  def test_all_languages_have_grammars
+    scopes = YAML.load(File.read(File.expand_path("../../grammars.yml", __FILE__))).values.flatten
+    missing = Language.all.reject { |language| language.tm_scope == "none" || scopes.include?(language.tm_scope) }
+    message = "The following languages' scopes are not listed in grammars.yml. Please add grammars for all new languages.\n"
+    message << "If no grammar exists for a language, mark the language with `tm_scope: none` in lib/linguist/languages.yml.\n"
+
+    width = missing.map { |language| language.name.length }.max
+    message << missing.map { |language| sprintf("%-#{width}s %s", language.name, language.tm_scope) }.sort.join("\n")
+    assert missing.empty?, message
   end
 end
