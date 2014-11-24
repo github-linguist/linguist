@@ -323,11 +323,11 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal 'css', Language['CSS'].ace_mode
     assert_equal 'lsl', Language['LSL'].ace_mode
     assert_equal 'javascript', Language['JavaScript'].ace_mode
+    assert_equal 'none', Language['FORTRAN'].ace_mode
   end
 
   def test_ace_modes
     assert Language.ace_modes.include?(Language['Ruby'])
-    assert !Language.ace_modes.include?(Language['FORTRAN'])
   end
 
   def test_wrap
@@ -376,7 +376,7 @@ class TestLanguage < Test::Unit::TestCase
     ace_github_modes = JSON.parse `curl https://api.github.com/repos/ajaxorg/ace/contents/lib/ace/mode`
     existing_ace_modes = ace_github_modes.map do |ace_github_mode|
       File.basename(ace_github_mode["name"], ".js") if ace_github_mode["name"]  !~ /_highlight_rules|_test|_worker/
-    end.compact.uniq.sort
+    end.compact.uniq.sort.map(&:downcase)
 
     missing = Language.all.reject { |language| language.ace_mode == "none" || existing_ace_modes.include?(language.ace_mode) }
     message = "The following languages do not have an Ace mode listed in languages.yml. Please add an Ace mode for all new languages.\n"
