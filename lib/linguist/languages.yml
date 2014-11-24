@@ -36,6 +36,7 @@ AGS Script:
   - .asc
   - .ash
   tm_scope: source.c++
+  ace_mode: c_cpp
 
 ANTLR:
   type: programming
@@ -78,6 +79,7 @@ ATS:
   - .hats
   - .sats
   tm_scope: source.ocaml
+  ace_mode: ocaml
 
 ActionScript:
   type: programming
@@ -119,6 +121,7 @@ Ant Build System:
   filenames:
   - ant.xml
   - build.xml
+  ace_mode: xml
 
 ApacheConf:
   type: markup
@@ -129,12 +132,14 @@ ApacheConf:
   - .apacheconf
   - .conf
   tm_scope: source.apache-config
+  ace_mode: apache_conf
 
 Apex:
   type: programming
   extensions:
   - .cls
   tm_scope: source.java
+  ace_mode: java
 
 AppleScript:
   type: programming
@@ -159,6 +164,7 @@ Arduino:
   extensions:
   - .ino
   tm_scope: source.c++
+  ace_mode: c_cpp
 
 AsciiDoc:
   type: prose
@@ -188,6 +194,7 @@ Assembly:
   - .ASM
   - .a51
   tm_scope: source.asm.x86
+  ace_mode: assembly_x86
 
 Augeas:
   type: programming
@@ -215,6 +222,7 @@ AutoIt:
   extensions:
   - .au3
   tm_scope: source.autoit.3
+  ace_mode: autohotkey
 
 Awk:
   type: programming
@@ -279,6 +287,7 @@ Bluespec:
   extensions:
   - .bsv
   tm_scope: source.verilog
+  ace_mode: verilog
 
 Boo:
   type: programming
@@ -356,6 +365,7 @@ C-ObjDump:
   extensions:
   - .c-objdump
   tm_scope: objdump.x86asm
+  ace_mode: assembly_x86
 
 C2hs Haskell:
   type: programming
@@ -365,6 +375,7 @@ C2hs Haskell:
   extensions:
   - .chs
   tm_scope: source.haskell
+  ace_mode: haskell
 
 CLIPS:
   type: programming
@@ -419,6 +430,7 @@ ChucK:
   extensions:
   - .ck
   tm_scope: source.java
+  ace_mode: java
 
 Cirru:
   type: programming
@@ -515,6 +527,7 @@ Common Lisp:
   - ccl
   - clisp
   - ecl
+  ace_mode: lisp
 
 Component Pascal:
   type: programming
@@ -526,6 +539,7 @@ Component Pascal:
   aliases:
   - delphi
   - objectpascal
+  ace_mode: pascal
 
 Coq:
   type: programming
@@ -544,6 +558,7 @@ Cpp-ObjDump:
   tm_scope: objdump.x86asm
   aliases:
   - c++-objdumb
+  ace_mode: assembly_x86
 
 Creole:
   type: prose
@@ -572,12 +587,14 @@ Cuda:
   - .cu
   - .cuh
   tm_scope: source.cuda-c++
+  ace_mode: c_cpp
 
 Cycript:
   type: programming
   extensions:
   - .cy
   tm_scope: source.js
+  ace_mode: javascript
 
 Cython:
   type: programming
@@ -601,6 +618,7 @@ D-ObjDump:
   extensions:
   - .d-objdump
   tm_scope: objdump.x86asm
+  ace_mode: assembly_x86
 
 DM:
   type: programming
@@ -610,6 +628,7 @@ DM:
   aliases:
   - byond
   tm_scope: source.c++
+  ace_mode: c_cpp
 
 Darcs Patch:
   search_term: dpatch
@@ -679,6 +698,7 @@ Eagle:
   - .sch
   - .brd
   tm_scope: text.xml
+  ace_mode: xml
 
 Ecere Projects:
   type: data
@@ -686,6 +706,7 @@ Ecere Projects:
   extensions:
   - .epj
   tm_scope: source.json
+  ace_mode: json
 
 Eiffel:
   type: programming
@@ -718,6 +739,7 @@ Emacs Lisp:
   extensions:
   - .el
   - .emacs
+  ace_mode: lisp
 
 EmberScript:
   type: programming
@@ -726,6 +748,7 @@ EmberScript:
   - .em
   - .emberscript
   tm_scope: source.coffee
+  ace_mode: coffee
 
 Erlang:
   type: programming
@@ -821,6 +844,7 @@ Frege:
   extensions:
   - .fr
   tm_scope: source.haskell
+  ace_mode: haskell
 
 G-code:
   type: data
@@ -852,6 +876,7 @@ GAS:
   - .s
   - .S
   tm_scope: source.asm.x86
+  ace_mode: assembly_x86
 
 GDScript:
   type: programming
@@ -883,6 +908,7 @@ Game Maker Language:
   extensions:
   - .gml
   tm_scope: source.js
+  ace_mode: javascript
 
 Genshi:
   extensions:
@@ -891,6 +917,7 @@ Genshi:
   aliases:
   - xml+genshi
   - xml+kid
+  ace_mode: xml
 
 Gentoo Ebuild:
   group: Shell
@@ -920,6 +947,7 @@ Glyph:
   extensions:
   - .glf
   tm_scope: source.tcl
+  ace_mode: tcl
 
 Gnuplot:
   type: programming
@@ -936,6 +964,7 @@ Go:
   color: "#375eab"
   extensions:
   - .go
+  ace_mode: golang
 
 Golo:
   type: programming
@@ -970,6 +999,7 @@ Grammatical Framework:
   searchable: true
   color: "#ff0000"
   tm_scope: source.haskell
+  ace_mode: haskell
 
 Graph Modeling Language:
   type: data
@@ -1019,6 +1049,7 @@ Groovy Server Pages:
   extensions:
   - .gsp
   tm_scope: text.html.jsp
+  ace_mode: jsp
 
 HTML:
   type: markup
@@ -1044,6 +1075,7 @@ HTML+Django:
   - html+django/jinja
   - html+jinja
   - htmldjango
+  ace_mode: django
 
 HTML+ERB:
   type: markup
@@ -1054,6 +1086,7 @@ HTML+ERB:
   extensions:
   - .erb
   - .deface
+  ace_mode: html_ruby
 
 HTML+PHP:
   type: markup
@@ -1061,6 +1094,7 @@ HTML+PHP:
   group: HTML
   extensions:
   - .phtml
+  ace_mode: php
 
 HTTP:
   type: data
@@ -1234,11 +1268,12 @@ JSON5:
   extensions:
   - .json5
   tm_scope: source.js
+  ace_mode: javascript
 
 JSONLD:
   type: data
   group: JavaScript
-  ace_mode: json
+  ace_mode: javascript
   extensions:
   - .jsonld
   tm_scope: source.js
@@ -1272,6 +1307,7 @@ Java Server Pages:
   extensions:
   - .jsp
   tm_scope: text.html.jsp
+  ace_mode: jsp
 
 JavaScript:
   type: programming
@@ -1339,6 +1375,7 @@ LFE:
   color: "#004200"
   group: Erlang
   tm_scope: source.lisp
+  ace_mode: lisp
 
 LLVM:
   extensions:
@@ -1386,6 +1423,7 @@ Latte:
   extensions:
   - .latte
   tm_scope: source.smarty
+  ace_mode: smarty
 
 Less:
   type: markup
@@ -1491,6 +1529,7 @@ M:
   - .mumps
   - .m
   tm_scope: source.lisp
+  ace_mode: lisp
 
 MTML:
   type: markup
@@ -1498,6 +1537,7 @@ MTML:
   extensions:
   - .mtml
   tm_scope: text.html.basic
+  ace_mode: html
 
 Makefile:
   type: programming
@@ -1566,6 +1606,7 @@ Maven POM:
   tm_scope: text.xml.pom
   filenames:
   - pom.xml
+  ace_mode: xml
 
 Max:
   type: programming
@@ -1581,6 +1622,7 @@ Max:
   - .mxt
   - .pat
   tm_scope: source.json
+  ace_mode: json
 
 MediaWiki:
   type: prose
@@ -1597,6 +1639,7 @@ Mercury:
   - .m
   - .moo
   tm_scope: source.prolog
+  ace_mode: prolog
 
 MiniD: # Legacy
   searchable: false
@@ -1614,6 +1657,7 @@ Mirah:
   - .mir
   - .mirah
   tm_scope: source.ruby
+  ace_mode: ruby
 
 Monkey:
   type: programming
@@ -1655,6 +1699,7 @@ NetLogo:
   extensions:
   - .nlogo
   tm_scope: source.lisp
+  ace_mode: lisp
 
 Nginx:
   type: markup
@@ -1702,6 +1747,7 @@ Nu:
   filenames:
   - Nukefile
   tm_scope: source.scheme
+  ace_mode: scheme
 
 NumPy:
   group: Python
@@ -1729,6 +1775,7 @@ ObjDump:
   extensions:
   - .objdump
   tm_scope: objdump.x86asm
+  ace_mode: assembly_x86
 
 Objective-C:
   type: programming
@@ -1741,6 +1788,7 @@ Objective-C:
   extensions:
   - .m
   - .h
+  ace_mode: objectivec
 
 Objective-C++:
   type: programming
@@ -1752,6 +1800,7 @@ Objective-C++:
   - objectivec++
   extensions:
   - .mm
+  ace_mode: objectivec
 
 Objective-J:
   type: programming
@@ -1791,6 +1840,7 @@ OpenCL:
   - .cl
   - .opencl
   tm_scope: source.c
+  ace_mode: c_cpp
 
 OpenEdge ABL:
   type: programming
@@ -1837,6 +1887,7 @@ PAWN:
   extensions:
   - .pwn
   tm_scope: source.c++
+  ace_mode: c_cpp
 
 PHP:
   type: programming
@@ -1941,6 +1992,7 @@ Perl6:
   - .pl6
   - .pm6
   tm_scope: none
+  ace_mode: perl
 
 PigLatin:
   type: programming
@@ -2020,6 +2072,7 @@ Protocol Buffer:
   extensions:
   - .proto
   tm_scope: source.protobuf
+  ace_mode: protobuf
 
 Puppet:
   type: programming
@@ -2042,6 +2095,7 @@ PureScript:
   extensions:
   - .purs
   tm_scope: source.haskell
+  ace_mode: haskell
 
 Python:
   type: programming
@@ -2133,6 +2187,7 @@ RHTML:
   tm_scope: text.html.erb
   aliases:
   - html+ruby
+  ace_mode: html_ruby
 
 RMarkdown:
   type: prose
@@ -2152,6 +2207,7 @@ Racket:
   - .rktl
   - .scrbl
   tm_scope: source.racket
+  ace_mode: lisp
 
 Ragel in Ruby Host:
   type: programming
@@ -2303,6 +2359,7 @@ STON:
   extensions:
   - .ston
   tm_scope: source.json
+  ace_mode: lisp
 
 Sage:
   type: programming
@@ -2310,6 +2367,7 @@ Sage:
   extensions:
   - .sage
   tm_scope: source.python
+  ace_mode: python
 
 Sass:
   type: markup
@@ -2443,6 +2501,7 @@ Squirrel:
   extensions:
   - .nut
   tm_scope: source.c++
+  ace_mode: c_cpp
 
 Standard ML:
   type: programming
@@ -2610,6 +2669,7 @@ UnrealScript:
   extensions:
   - .uc
   tm_scope: source.java
+  ace_mode: java
 
 VCL:
   type: programming
@@ -2683,12 +2743,14 @@ Volt:
   extensions:
   - .volt
   tm_scope: source.d
+  ace_mode: d
 
 XC:
   type: programming
   extensions:
   - .xc
   tm_scope: source.c
+  ace_mode: c_cpp
 
 XML:
   type: markup
@@ -2773,6 +2835,7 @@ XProc:
   - .xpl
   - .xproc
   tm_scope: text.xml
+  ace_mode: xml
 
 XQuery:
   type: programming
@@ -2788,6 +2851,7 @@ XS:
   extensions:
   - .xs
   tm_scope: source.c
+  ace_mode: c_cpp
 
 XSLT:
   type: programming
@@ -2797,6 +2861,7 @@ XSLT:
   - .xslt
   - .xsl
   tm_scope: text.xml.xsl
+  ace_mode: xml
 
 Xojo:
   type: programming
@@ -2831,6 +2896,7 @@ Zephir:
   extensions:
   - .zep
   tm_scope: source.php.zephir
+  ace_mode: php
 
 Zimpl:
   type: programming
