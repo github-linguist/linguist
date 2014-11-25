@@ -2,7 +2,6 @@ require 'linguist/generated'
 require 'charlock_holmes'
 require 'escape_utils'
 require 'mime/types'
-require 'pygments'
 require 'yaml'
 
 module Linguist
@@ -147,6 +146,13 @@ module Linguist
       end
     end
 
+    # Public: Is the blob empty?
+    #
+    # Return true or false
+    def empty?
+      data.nil? || data == ""
+    end
+
     # Public: Is the blob text?
     #
     # Return true or false
@@ -193,19 +199,12 @@ module Linguist
 
     # Public: Is the blob safe to colorize?
     #
-    # We use Pygments for syntax highlighting blobs. Pygments
-    # can be too slow for very large blobs or for certain
-    # corner-case blobs.
-    #
     # Return true or false
     def safe_to_colorize?
       !large? && text? && !high_ratio_of_long_lines?
     end
 
     # Internal: Does the blob have a ratio of long lines?
-    #
-    # These types of files are usually going to make Pygments.rb
-    # angry if we try to colorize them.
     #
     # Return true or false
     def high_ratio_of_long_lines?
@@ -314,28 +313,9 @@ module Linguist
       @language ||= Language.detect(self)
     end
 
-    # Internal: Get the lexer of the blob.
-    #
-    # Returns a Lexer.
-    def lexer
-      language ? language.lexer : Pygments::Lexer.find_by_name('Text only')
-    end
-
     # Internal: Get the TextMate compatible scope for the blob
     def tm_scope
       language && language.tm_scope
-    end
-
-    # Public: Highlight syntax of blob
-    #
-    # options - A Hash of options (defaults to {})
-    #
-    # Returns html String
-    def colorize(options = {})
-      return unless safe_to_colorize?
-      options[:options] ||= {}
-      options[:options][:encoding] ||= encoding
-      lexer.highlight(data, options)
     end
   end
 end

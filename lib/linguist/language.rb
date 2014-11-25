@@ -1,5 +1,4 @@
 require 'escape_utils'
-require 'pygments'
 require 'yaml'
 begin
   require 'yajl'
@@ -62,7 +61,7 @@ module Linguist
       end
 
       # Language name index
-      @index[language.name] = @name_index[language.name] = language
+      @index[language.name.downcase] = @name_index[language.name.downcase] = language
 
       language.aliases.each do |name|
         # All Language aliases should be unique. Raise if there is a duplicate.
@@ -70,7 +69,7 @@ module Linguist
           raise ArgumentError, "Duplicate alias: #{name}"
         end
 
-        @index[name] = @alias_index[name] = language
+        @index[name.downcase] = @alias_index[name.downcase] = language
       end
 
       language.extensions.each do |extension|
@@ -101,12 +100,8 @@ module Linguist
     def self.detect(blob)
       name = blob.name.to_s
 
-      # Check if the blob is possibly binary and bail early; this is a cheap
-      # test that uses the extension name to guess a binary binary mime type.
-      #
-      # We'll perform a more comprehensive test later which actually involves
-      # looking for binary characters in the blob
-      return nil if blob.likely_binary? || blob.binary?
+      # Bail early if the blob is binary or empty.
+      return nil if blob.likely_binary? || blob.binary? || blob.empty?
 
       # A bit of an elegant hack. If the file is executable but extensionless,
       # append a "magic" extension so it can be classified with other
@@ -131,24 +126,26 @@ module Linguist
         # Matches possible_languages.length == 0 || possible_languages.length > 0
         data = blob.data
 
-        # Don't bother with binary contents or an empty file
-        if data.nil? || data == ""
-          # No language detected.
-          return nil
-
         # Check if there's a shebang line and use that as authoritative
-        # Note this means we can detect by shebang even if we have no language
-        # matches which is good for some unknown extensions
-        elsif (result = find_by_shebang(data)) && !result.empty?
+        if (result = find_by_shebang(data)) && !result.empty?
           return result.first
 
         # More than one language with that extension. We need to make a choice.
         elsif possible_languages.length > 1
-          possible_language_names = possible_languages.map(&:name)
 
-          # First try heuristics.
-          if (determined = Heuristics.find_by_heuristics(data, possible_language_names)) && !determined.empty?
-            return determined.first
+          # First try heuristics
+
+          possible_language_names = possible_languages.map(&:name)
+          heuristic_languages = Heuristics.find_by_heuristics(data, possible_language_names)
+
+          # If there are multiple possible languages returned from heuristics
+          # then reduce language candidates for Bayesian classifier here.
+          if heuristic_languages.size > 1
+            possible_language_names = heuristic_languages.map(&:name)
+          end
+
+          if heuristic_languages.size == 1
+            return heuristic_languages.first
           # Lastly, fall back to the probabilistic classifier.
           elsif classified = Classifier.classify(Samples.cache, data, possible_language_names).first
             # Return the actual Language object based of the string language name (i.e., first element of `#classify`)
@@ -176,7 +173,7 @@ module Linguist
     #
     # Returns the Language or nil if none was found.
     def self.find_by_name(name)
-      @name_index[name]
+      name && @name_index[name.downcase]
     end
 
     # Public: Look up Language by one of its aliases.
@@ -190,7 +187,7 @@ module Linguist
     #
     # Returns the Lexer or nil if none was found.
     def self.find_by_alias(name)
-      @alias_index[name]
+      name && @alias_index[name.downcase]
     end
 
     # Public: Look up Languages by filename.
@@ -206,9 +203,25 @@ module Linguist
     def self.find_by_filename(filename)
       basename = File.basename(filename)
       extname = FileBlob.new(filename).extension
-      langs = @filename_index[basename] +
-              @extension_index[extname]
-      langs.compact.uniq
+      (@filename_index[basename] + find_by_extension(extname)).compact.uniq
+    end
+
+    # Public: Look up Languages by file extension.
+    #
+    # extname - The extension String.
+    #
+    # Examples
+    #
+    #   Language.find_by_extension('.rb')
+    #   # => [#<Language name="Ruby">]
+    #
+    #   Language.find_by_extension('rb')
+    #   # => [#<Language name="Ruby">]
+    #
+    # Returns all matching Languages or [] if none were found.
+    def self.find_by_extension(extname)
+      extname = ".#{extname}" unless extname.start_with?(".")
+      @extension_index[extname]
     end
 
     # Public: Look up Languages by shebang line.
@@ -239,7 +252,7 @@ module Linguist
     #
     # Returns the Language or nil if none was found.
     def self.[](name)
-      @index[name]
+      name && @index[name.downcase]
     end
 
     # Public: A List of popular languages
@@ -298,10 +311,7 @@ module Linguist
       # Set aliases
       @aliases = [default_alias_name] + (attributes[:aliases] || [])
 
-      # Lookup Lexer object
-      @lexer = Pygments::Lexer.find_by_name(attributes[:lexer] || name) ||
-        raise(ArgumentError, "#{@name} is missing lexer")
-
+      # Load the TextMate scope name or try to guess one
       @tm_scope = attributes[:tm_scope] || begin
         context = case @type
                   when :data, :markup, :prose
@@ -432,11 +442,6 @@ module Linguist
     #
     # Returns the extensions Array
     attr_reader :filenames
-
-    # Public: Return all possible extensions for language
-    def all_extensions
-      (extensions + [primary_extension]).uniq
-    end
 
     # Deprecated: Get primary extension
     #
@@ -595,9 +600,9 @@ module Linguist
       :ace_mode          => options['ace_mode'],
       :wrap              => options['wrap'],
       :group_name        => options['group'],
-      :searchable        => options.key?('searchable') ? options['searchable'] : true,
+      :searchable        => options.fetch('searchable', true),
       :search_term       => options['search_term'],
-      :extensions        => [options['extensions'].first] + options['extensions'][1..-1].sort,
+      :extensions        => Array(options['extensions']),
       :interpreters      => options['interpreters'].sort,
       :filenames         => options['filenames'],
       :popular           => popular.include?(name)
