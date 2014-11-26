@@ -465,6 +465,25 @@ class TestBlob < Test::Unit::TestCase
       assert blob.language, "No language for #{sample[:path]}"
       assert_equal sample[:language], blob.language.name, blob.name
     end
+
+    # Test language detection for files which shouldn't be used as samples
+    root = File.expand_path('../fixtures', __FILE__)
+    Dir.entries(root).each do |language|
+      next unless File.file?(language)
+
+      # Each directory contains test files of a language
+      dirname = File.join(root, language)
+      Dir.entries(dirname).each do |filename|
+        next unless File.file?(filename)
+        
+        # By default blob search the file in the samples;
+        # thus, we need to give it the absolute path
+        filepath = File.join(dirname, filename)
+        blob = blob(filepath)
+        assert blob.language, "No language for #{filepath}"
+        assert_equal language, blob.language.name, blob.name
+      end
+    end
   end
 
   def test_minified_files_not_safe_to_highlight
