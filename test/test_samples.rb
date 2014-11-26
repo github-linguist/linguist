@@ -1,8 +1,5 @@
-require 'linguist/samples'
-require 'linguist/language'
-require 'tempfile'
-require 'yajl'
-require 'test/unit'
+require_relative "./helper"
+require "tempfile"
 
 class TestSamples < Test::Unit::TestCase
   include Linguist

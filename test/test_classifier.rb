@@ -1,9 +1,4 @@
-require 'linguist/classifier'
-require 'linguist/language'
-require 'linguist/samples'
-require 'linguist/tokenizer'
-
-require 'test/unit'
+require_relative "./helper"
 
 class TestClassifier < Test::Unit::TestCase
   include Linguist

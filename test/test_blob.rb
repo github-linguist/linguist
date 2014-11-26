@@ -1,9 +1,4 @@
-require 'linguist/file_blob'
-require 'linguist/samples'
-
-require 'test/unit'
-require 'mocha/setup'
-require 'mime/types'
+require_relative "./helper"
 
 class TestBlob < Test::Unit::TestCase
   include Linguist
@@ -296,6 +291,10 @@ class TestBlob < Test::Unit::TestCase
     # C deps
     assert blob("deps/http_parser/http_parser.c").vendored?
     assert blob("deps/v8/src/v8.h").vendored?
+
+    # Chart.js
+    assert blob("some/vendored/path/Chart.js").vendored?
+    assert !blob("some/vendored/path/chart.js").vendored?
 
     # Codemirror deps
     assert blob("codemirror/mode/blah.js").vendored?
