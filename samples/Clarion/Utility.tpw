@@ -1,0 +1,16 @@
+#UTILITY(ProcCallTree, 'Output procedure call tree')
+ #CREATE(%Application & '.TRE')
+Procedure Call Tree: for %Application
+#INSERT(%DisplayTree, %FirstProcedure, '', '  ')
+#CLOSE
+#!***********************************************************
+#GROUP(%DisplayTree, %ThisProc, %Level, %NextIndent)
+ #FIX(%Procedure, %ThisProc)
+%Level+-%ThisProc (%ProcedureTemplate)
+ #FOR(%ProcedureCalled)
+   #IF(INSTANCE(%ProcedureCalled) = ITEMS(%ProcedureCalled))
+#INSERT(%DisplayTree, %ProcedureCalled, %Level & %NextIndent, '  ')
+   #ELSE
+#INSERT(%DisplayTree, %ProcedureCalled, %Level & %NextIndent, '| ')
+   #ENDIF
+#ENDFOR
