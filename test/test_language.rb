@@ -221,7 +221,6 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal [Language['Clojure']], Language.find_by_filename('riemann.config')
     assert_equal [Language['HTML+Django']], Language.find_by_filename('index.jinja')
     assert_equal [Language['Chapel']], Language.find_by_filename('examples/hello.chpl')
-    assert_equal [Language['Ant Build System']], Language.find_by_filename('build.ant.xml')
   end
 
   def test_find_by_shebang
