@@ -1,6 +1,4 @@
-require 'linguist/language'
-require 'test/unit'
-require 'yaml'
+require_relative "./helper"
 
 class TestLanguage < Test::Unit::TestCase
   include Linguist
