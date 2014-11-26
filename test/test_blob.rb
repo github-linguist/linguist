@@ -191,10 +191,9 @@ class TestBlob < Test::Unit::TestCase
     # Xcode project files
     assert !blob("XML/MainMenu.xib").generated?
     assert blob("Binary/MainMenu.nib").generated?
-    assert !blob("XML/project.pbxproj").generated?
 
     # Gemfile.lock is NOT generated
-    assert !blob("Gemfile.lock").generated?
+    assert !blob("Ruby/filenames/Gemfile.lock").generated?
 
     # Generated .NET Docfiles
     assert blob("XML/net_docfile.xml").generated?
@@ -258,10 +257,6 @@ class TestBlob < Test::Unit::TestCase
 
 
     assert Linguist::Generated.generated?("node_modules/grunt/lib/grunt.js", nil)
-
-    # Godep saved dependencies
-    assert blob("Godeps/Godeps.json").generated?
-    assert blob("Godeps/_workspace/src/github.com/kr/s3/sign.go").generated?
   end
 
   def test_vendored
