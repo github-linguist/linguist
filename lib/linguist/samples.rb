@@ -52,14 +52,16 @@ module Linguist
               })
             end
           else
+            path = File.join(dirname, filename)
+
             if File.extname(filename) == ""
-              raise "#{File.join(dirname, filename)} is missing an extension, maybe it belongs in filenames/ subdir"
+              raise "#{path} is missing an extension, maybe it belongs in filenames/ subdir"
             end
 
             yield({
-              :path     => File.join(dirname, filename),
+              :path     => path,
               :language => category,
-              :interpreter => File.exist?(filename) ? Linguist.interpreter_from_shebang(File.read(filename)) : nil,
+              :interpreter => Linguist.interpreter_from_shebang(File.read(path)),
               :extname  => File.extname(filename)
             })
           end
@@ -131,18 +133,19 @@ module Linguist
 
       script = script == 'env' ? tokens[1] : script
 
-      # "python2.6" -> "python"
-      if script =~ /((?:\d+\.?)+)/
-        script.sub! $1, ''
-      end
+      # If script has an invalid shebang, we might get here
+      return unless script
+
+      # "python2.6" -> "python2"
+      script.sub! $1, '' if script =~ /(\.\d+)$/
 
       # Check for multiline shebang hacks that call `exec`
       if script == 'sh' &&
         lines[0...5].any? { |l| l.match(/exec (\w+).+\$0.+\$@/) }
         script = $1
       end
-
-      script
+      
+      File.basename(script)
     else
       nil
     end

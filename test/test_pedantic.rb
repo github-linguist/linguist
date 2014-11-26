@@ -1,5 +1,4 @@
-require 'test/unit'
-require 'yaml'
+require_relative "./helper"
 
 class TestPedantic < Test::Unit::TestCase
   filename = File.expand_path("../../lib/linguist/languages.yml", __FILE__)
