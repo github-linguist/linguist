@@ -1,5 +1,6 @@
 require 'linguist/language'
 require 'test/unit'
+require 'yaml'
 
 class TestLanguage < Test::Unit::TestCase
   include Linguist
@@ -139,6 +140,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal :programming, Language['Python'].type
     assert_equal :programming, Language['Ruby'].type
     assert_equal :programming, Language['TypeScript'].type
+    assert_equal :programming, Language['Makefile'].type
   end
 
   def test_markup
@@ -157,7 +159,6 @@ class TestLanguage < Test::Unit::TestCase
 
   def test_other
     assert_nil Language['Brainfuck'].type
-    assert_nil Language['Makefile'].type
   end
 
   def test_searchable
@@ -349,12 +350,6 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal '.coffee', Language['CoffeeScript'].primary_extension
     assert_equal '.t', Language['Turing'].primary_extension
     assert_equal '.ts', Language['TypeScript'].primary_extension
-
-    # This is a nasty requirement, but there's some code in GitHub that
-    # expects this. Really want to drop this.
-    Language.all.each do |language|
-      assert language.primary_extension, "#{language} has no primary extension"
-    end
   end
 
   def test_eql
@@ -364,5 +359,16 @@ class TestLanguage < Test::Unit::TestCase
 
   def test_by_type
     assert !Language.by_type(:prose).nil?
+  end
+
+  def test_all_languages_have_grammars
+    scopes = YAML.load(File.read(File.expand_path("../../grammars.yml", __FILE__))).values.flatten
+    missing = Language.all.reject { |language| language.tm_scope == "none" || scopes.include?(language.tm_scope) }
+    message = "The following languages' scopes are not listed in grammars.yml. Please add grammars for all new languages.\n"
+    message << "If no grammar exists for a language, mark the language with `tm_scope: none` in lib/linguist/languages.yml.\n"
+
+    width = missing.map { |language| language.name.length }.max
+    message << missing.map { |language| sprintf("%-#{width}s %s", language.name, language.tm_scope) }.sort.join("\n")
+    assert missing.empty?, message
   end
 end

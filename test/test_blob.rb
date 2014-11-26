@@ -193,8 +193,8 @@ class TestBlob < Test::Unit::TestCase
     assert blob("Binary/MainMenu.nib").generated?
     assert !blob("XML/project.pbxproj").generated?
 
-    # Gemfile.locks
-    assert blob("Gemfile.lock").generated?
+    # Gemfile.lock is NOT generated
+    assert !blob("Gemfile.lock").generated?
 
     # Generated .NET Docfiles
     assert blob("XML/net_docfile.xml").generated?
@@ -226,7 +226,6 @@ class TestBlob < Test::Unit::TestCase
     assert !blob("PostScript/sierpinski.ps").generated?
 
     # These examples are too basic to tell
-    assert !blob("JavaScript/empty.js").generated?
     assert !blob("JavaScript/hello.js").generated?
 
     assert blob("JavaScript/intro-old.js").generated?
@@ -297,6 +296,13 @@ class TestBlob < Test::Unit::TestCase
     # C deps
     assert blob("deps/http_parser/http_parser.c").vendored?
     assert blob("deps/v8/src/v8.h").vendored?
+
+    # Chart.js
+    assert blob("some/vendored/path/Chart.js").vendored?
+    assert !blob("some/vendored/path/chart.js").vendored?
+
+    # Codemirror deps
+    assert blob("codemirror/mode/blah.js").vendored?
 
     # Debian packaging
     assert blob("debian/cron.d").vendored?
@@ -468,5 +474,14 @@ class TestBlob < Test::Unit::TestCase
 
   def test_minified_files_not_safe_to_highlight
     assert !blob("JavaScript/jquery-1.6.1.min.js").safe_to_colorize?
+  end
+
+  def test_empty
+    blob = Struct.new(:data) { include Linguist::BlobHelper }
+
+    assert blob.new("").empty?
+    assert blob.new(nil).empty?
+    refute blob.new(" ").empty?
+    refute blob.new("nope").empty?
   end
 end

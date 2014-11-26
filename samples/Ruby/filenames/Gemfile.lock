@@ -1,0 +1,42 @@
+PATH
+  remote: .
+  specs:
+    github-linguist (4.0.1)
+      charlock_holmes (~> 0.7.3)
+      escape_utils (~> 1.0.1)
+      mime-types (>= 1.19)
+      rugged (~> 0.22.0b1)
+    github-linguist-grammars (4.0.1)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    charlock_holmes (0.7.3)
+    coderay (1.1.0)
+    escape_utils (1.0.1)
+    metaclass (0.0.4)
+    method_source (0.8.2)
+    mime-types (2.4.3)
+    mocha (1.1.0)
+      metaclass (~> 0.0.1)
+    plist (3.1.0)
+    pry (0.10.1)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
+      slop (~> 3.4)
+    rake (10.3.2)
+    rugged (0.22.0b1)
+    slop (3.6.0)
+    yajl-ruby (1.2.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  github-linguist!
+  github-linguist-grammars!
+  mocha
+  plist (~> 3.1)
+  pry
+  rake
+  yajl-ruby
