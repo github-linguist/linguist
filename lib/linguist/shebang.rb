@@ -2,15 +2,12 @@ module Linguist
   # Check if there's a shebang line and use that as authoritative
   class Shebang
     def self.call(blob, _)
-      Language.find_by_interpreter(new(blob.data).interpreter)
+      Language.find_by_interpreter interpreter(blob.data)
     end
 
-    def initialize(data)
-      @lines = data.lines
-    end
-
-    def interpreter
-      return unless match = /^#! ?(.*)$/.match(@lines.first)
+    def self.interpreter(data)
+      lines = data.lines
+      return unless match = /^#! ?(.*)$/.match(lines.first)
 
       tokens = match[0].split(' ')
       script = tokens.first.split('/').last
@@ -25,7 +22,7 @@ module Linguist
 
       # Check for multiline shebang hacks that call `exec`
       if script == 'sh' &&
-        @lines[0...5].any? { |l| l.match(/exec (\w+).+\$0.+\$@/) }
+        lines[0...5].any? { |l| l.match(/exec (\w+).+\$0.+\$@/) }
         script = $1
       end
 

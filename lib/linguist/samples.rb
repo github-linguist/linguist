@@ -117,7 +117,7 @@ module Linguist
 
   # Used to retrieve the interpreter from the shebang line of a file's data.
   def self.interpreter_from_shebang(data)
-    Shebang.new(data).interpreter
+    Shebang.interpreter(data)
   end
 
 end

@@ -4,7 +4,7 @@ class TestShebang < Test::Unit::TestCase
   include Linguist
 
   def assert_interpreter(interpreter, body)
-    assert_equal interpreter, Shebang.new(body).interpreter
+    assert_equal interpreter, Shebang.interpreter(body)
   end
 
   def test_shebangs
@@ -17,14 +17,14 @@ class TestShebang < Test::Unit::TestCase
     assert_interpreter nil, " #!/usr/sbin/ruby"
     assert_interpreter nil, "\n#!/usr/sbin/ruby"
 
-    assert_interpreter "ruby", "#!/usr/sbin/ruby\n# bar",
-    assert_interpreter "ruby", "#!/usr/bin/ruby\n# foo",
-    assert_interpreter "ruby", "#!/usr/sbin/ruby",
+    assert_interpreter "ruby", "#!/usr/sbin/ruby\n# bar"
+    assert_interpreter "ruby", "#!/usr/bin/ruby\n# foo"
+    assert_interpreter "ruby", "#!/usr/sbin/ruby"
     assert_interpreter "ruby", "#!/usr/sbin/ruby foo bar baz\n"
 
     assert_interpreter "Rscript", "#!/usr/bin/env Rscript\n# example R script\n#\n"
     assert_interpreter "crystal", "#!/usr/bin/env bin/crystal"
-    assert_interpreter "ruby", "#!/usr/bin/env ruby\n# baz",
+    assert_interpreter "ruby", "#!/usr/bin/env ruby\n# baz"
 
     assert_interpreter "bash", "#!/usr/bin/bash\n"
     assert_interpreter "sh", "#!/bin/sh"
