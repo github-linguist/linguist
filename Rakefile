@@ -31,6 +31,12 @@ task :build_gem => :samples do
   File.delete("lib/linguist/languages.json")
 end
 
+task :build_grammars_gem do
+  rm_rf "grammars"
+  sh "script/download-grammars"
+  sh "gem", "build", "github-linguist-grammars.gemspec"
+end
+
 namespace :benchmark do
   benchmark_path = "benchmark/results"
 
