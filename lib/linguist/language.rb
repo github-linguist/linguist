@@ -12,7 +12,6 @@ require 'linguist/file_blob'
 require 'linguist/blob_helper'
 require 'linguist/strategy/filename'
 require 'linguist/strategy/shebang'
-require 'linguist/strategy/classifier'
 
 module Linguist
   # Language names that are recognizable by GitHub. Defined languages
@@ -98,7 +97,7 @@ module Linguist
       Linguist::Strategy::Filename,
       Linguist::Strategy::Shebang,
       Linguist::Heuristics,
-      Linguist::Strategy::Classifier
+      Linguist::Classifier
     ]
 
     # Public: Detects the Language of the blob.
