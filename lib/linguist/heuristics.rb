@@ -4,7 +4,7 @@ module Linguist
     ACTIVE = true
 
     def self.call(blob, languages)
-      find_by_heuristics(blob.data, langauges.map(&:name))
+      find_by_heuristics(blob.data, languages.map(&:name))
     end
 
     # Public: Given an array of String language names,

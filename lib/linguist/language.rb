@@ -10,6 +10,9 @@ require 'linguist/heuristics'
 require 'linguist/samples'
 require 'linguist/file_blob'
 require 'linguist/blob_helper'
+require 'linguist/strategy/filename'
+require 'linguist/strategy/shebang'
+require 'linguist/strategy/classifier'
 
 module Linguist
   # Language names that are recognizable by GitHub. Defined languages
@@ -91,10 +94,6 @@ module Linguist
       language
     end
 
-    require 'linguist/strategy/filename'
-    require 'linguist/strategy/shebang'
-    require 'linguist/strategy/classifier'
-
     STRATEGIES = [
       Linguist::Strategy::Filename,
       Linguist::Strategy::Shebang,
@@ -112,17 +111,16 @@ module Linguist
       # Bail early if the blob is binary or empty.
       return nil if blob.likely_binary? || blob.binary? || blob.empty?
 
-      # Call each strategy until 0 or 1 candidates are returned
+      # Call each strategy until one candidate is returned
       STRATEGIES.reduce([]) do |languages, strategy|
-        if candidates = strategy.call(blob, languages)
-          if candidates.size > 1
-            # More than one candidate was found, return them for the next strategy
-            candidates
-          else
-            # 1 or 0 candidates, stop trying strategies
-            break candidates
-          end
+        candidates = strategy.call(blob, languages)
+        if candidates.size == 1
+          return candidates.first
+        elsif candidates.size > 1
+          # More than one candidate was found, pass them to the next strategy
+          candidates
         else
+          # Strategy couldn't find any candidates, so pass on the original list
           languages
         end
       end.first
