@@ -1,9 +1,4 @@
-require 'linguist/heuristics'
-require 'linguist/language'
-require 'linguist/samples'
-require 'linguist/file_blob'
-
-require 'test/unit'
+require_relative "./helper"
 
 class TestHeuristcs < Test::Unit::TestCase
   include Linguist
