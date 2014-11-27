@@ -147,7 +147,7 @@ module Linguist
     end
 
     disambiguate "LoomScript", "LiveScript" do |data|
-      if /^\s*package[\w\W]*{/.match(data)
+      if /^\s*package\s*[\w\.\/\*\s]*\s*{/.match(data)
         Language["LoomScript"]
       else
         Language["LiveScript"]
