@@ -118,6 +118,14 @@ class TestHeuristcs < Test::Unit::TestCase
     })
   end
 
+  def test_fr_by_heuristics
+    assert_heuristics({
+      "Frege" => all_fixtures("Frege"),
+      "Forth" => all_fixtures("Forth"),
+      "text" => all_fixtures("text")
+    })
+  end
+
   def assert_heuristics(hash)
     candidates = hash.keys.map { |l| Language[l] }
 
