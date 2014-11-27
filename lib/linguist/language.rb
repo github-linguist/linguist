@@ -92,13 +92,11 @@ module Linguist
     end
 
     require 'linguist/strategy/filename'
-    require 'linguist/strategy/empty_blob'
     require 'linguist/strategy/shebang'
     require 'linguist/strategy/classifier'
 
     STRATEGIES = [
       Linguist::Strategy::Filename,
-      Linguist::Strategy::EmptyBlob,
       Linguist::Strategy::Shebang,
       Linguist::Heuristics,
       Linguist::Strategy::Classifier
