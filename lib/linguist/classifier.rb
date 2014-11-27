@@ -6,7 +6,7 @@ module Linguist
     # Public: Use the classifier to detect language of the blob.
     #
     # blob               - An object that quacks like a blob.
-    # possible_languages - Array of
+    # possible_languages - Array of Language objects
     #
     # Examples
     #
@@ -14,7 +14,7 @@ module Linguist
     #     Language["Ruby"], Language["Python"]
     #   ])
     #
-    # Returns an Array of possible lanuages, most probable first.
+    # Returns an Array of Language objects, most probable first.
     def self.call(blob, possible_languages)
       language_names = possible_languages.map(&:name)
       classify(Samples.cache, blob.data, language_names).map do |name, _|
