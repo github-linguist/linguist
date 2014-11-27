@@ -199,18 +199,9 @@ module Linguist
       @extension_index[extname]
     end
 
-    # Public: Look up Languages by shebang line.
-    #
-    # data - Array of tokens or String data to analyze.
-    #
-    # Examples
-    #
-    #   Language.find_by_shebang("#!/bin/bash\ndate;")
-    #   # => [#<Language name="Bash">]
-    #
-    # Returns the matching Language
+    # DEPRECATED
     def self.find_by_shebang(data)
-      @interpreter_index[Linguist.interpreter_from_shebang(data)]
+      @interpreter_index[Shebang.interpreter(data)]
     end
 
     # Public: Look up Languages by interpreter.

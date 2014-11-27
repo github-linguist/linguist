@@ -223,34 +223,21 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal [Language['Chapel']], Language.find_by_filename('examples/hello.chpl')
   end
 
-  def test_find_by_shebang
-    assert_equal 'ruby', Linguist.interpreter_from_shebang("#!/usr/bin/ruby\n# baz")
-    { []         => ["",
-                     "foo",
-                     "#bar",
-                     "#baz",
-                     "///",
-                     "\n\n\n\n\n",
-                     " #!/usr/sbin/ruby",
-                     "\n#!/usr/sbin/ruby"],
-      ['Ruby']   => ["#!/usr/bin/env ruby\n# baz",
-                     "#!/usr/sbin/ruby\n# bar",
-                     "#!/usr/bin/ruby\n# foo",
-                     "#!/usr/sbin/ruby",
-                     "#!/usr/sbin/ruby foo bar baz\n"],
-      ['R']      => ["#!/usr/bin/env Rscript\n# example R script\n#\n"],
-      ['Shell']  => ["#!/usr/bin/bash\n", "#!/bin/sh"],
-      ['Python'] => ["#!/bin/python\n# foo\n# bar\n# baz",
-                     "#!/usr/bin/python2.7\n\n\n\n",
-                     "#!/usr/bin/python3\n\n\n\n"],
-      ["Common Lisp"] => ["#!/usr/bin/sbcl --script\n\n"]
-    }.each do |languages, bodies|
-      bodies.each do |body|
-        assert_equal([body, languages.map{|l| Language[l]}],
-                     [body, Language.find_by_shebang(body)])
-
-      end
+  def test_find_by_interpreter
+    {
+      "ruby" => "Ruby",
+      "Rscript" => "R",
+      "sh" => "Shell",
+      "bash" => "Shell",
+      "python" => "Python",
+      "python2" => "Python",
+      "python3" => "Python",
+      "sbcl" => "Common Lisp"
+    }.each do |interpreter, language|
+      assert_equal [Language[language]], Language.find_by_interpreter(interpreter)
     end
+
+    assert_equal [], Language.find_by_interpreter(nil)
   end
 
   def test_find
