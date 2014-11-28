@@ -1,7 +1,6 @@
 module Linguist
   # A collection of simple heuristics that can be used to better analyze languages.
   class Heuristics
-    ACTIVE = true
 
     # Public: Use heuristics to detect language of the blob.
     #
@@ -29,38 +28,36 @@ module Linguist
     #
     # Returns an array of Languages or []
     def self.find_by_heuristics(data, languages)
-      if active?
-        result = []
+      result = []
 
-        if languages.all? { |l| ["Perl", "Prolog"].include?(l) }
-          result = disambiguate_pl(data)
-        end
-        if languages.all? { |l| ["ECL", "Prolog"].include?(l) }
-          result = disambiguate_ecl(data)
-        end
-        if languages.all? { |l| ["IDL", "Prolog"].include?(l) }
-          result = disambiguate_pro(data)
-        end
-        if languages.all? { |l| ["Common Lisp", "OpenCL"].include?(l) }
-          result = disambiguate_cl(data)
-        end
-        if languages.all? { |l| ["Hack", "PHP"].include?(l) }
-          result = disambiguate_hack(data)
-        end
-        if languages.all? { |l| ["Scala", "SuperCollider"].include?(l) }
-          result = disambiguate_sc(data)
-        end
-        if languages.all? { |l| ["AsciiDoc", "AGS Script"].include?(l) }
-          result = disambiguate_asc(data)
-        end
-        if languages.all? { |l| ["FORTRAN", "Forth"].include?(l) }
-          result = disambiguate_f(data)
-        end
-        if languages.all? { |l| ["F#", "Forth", "GLSL"].include?(l) }
-          result = disambiguate_fs(data)
-        end
-        return result
+      if languages.all? { |l| ["Perl", "Prolog"].include?(l) }
+        result = disambiguate_pl(data)
       end
+      if languages.all? { |l| ["ECL", "Prolog"].include?(l) }
+        result = disambiguate_ecl(data)
+      end
+      if languages.all? { |l| ["IDL", "Prolog"].include?(l) }
+        result = disambiguate_pro(data)
+      end
+      if languages.all? { |l| ["Common Lisp", "OpenCL"].include?(l) }
+        result = disambiguate_cl(data)
+      end
+      if languages.all? { |l| ["Hack", "PHP"].include?(l) }
+        result = disambiguate_hack(data)
+      end
+      if languages.all? { |l| ["Scala", "SuperCollider"].include?(l) }
+        result = disambiguate_sc(data)
+      end
+      if languages.all? { |l| ["AsciiDoc", "AGS Script"].include?(l) }
+        result = disambiguate_asc(data)
+      end
+      if languages.all? { |l| ["FORTRAN", "Forth"].include?(l) }
+        result = disambiguate_f(data)
+      end
+      if languages.all? { |l| ["F#", "Forth", "GLSL"].include?(l) }
+        result = disambiguate_fs(data)
+      end
+      return result
     end
 
     # .h extensions are ambiguous between C, C++, and Objective-C.
