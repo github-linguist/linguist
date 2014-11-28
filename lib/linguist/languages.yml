@@ -506,6 +506,7 @@ CoffeeScript:
   extensions:
   - .coffee
   - ._coffee
+  - .cjsx
   - .cson
   - .iced
   filenames:
@@ -607,6 +608,8 @@ Crystal:
   - .cr
   ace_mode: ruby
   tm_scope: source.ruby
+  interpreters:
+  - crystal
 
 Cucumber:
   extensions:
@@ -806,7 +809,6 @@ Erlang:
   - .es
   - .escript
   - .hrl
-  ace_mode: erlang
 
 F#:
   type: programming
@@ -892,7 +894,6 @@ Forth:
   - .for
   - .forth
   - .frt
-  ace_mode: forth
 
 Frege:
   type: programming
@@ -952,6 +953,7 @@ GLSL:
   - .fp
   - .frag
   - .frg
+  - .fs
   - .fshader
   - .geo
   - .geom
@@ -1022,6 +1024,8 @@ Gnuplot:
   - .gnuplot
   - .plot
   - .plt
+  interpreters:
+  - gnuplot
   ace_mode: none
 
 Go:
@@ -1313,6 +1317,8 @@ Ioke:
   color: "#078193"
   extensions:
   - .ik
+  interpreters:
+  - ioke
   ace_mode: none
 
 Isabelle:
@@ -1868,6 +1874,8 @@ Nu:
   - Nukefile
   tm_scope: source.scheme
   ace_mode: scheme
+  interpreters:
+  - nush
 
 NumPy:
   group: Python
@@ -2072,6 +2080,8 @@ Parrot Assembly:
   - pasm
   extensions:
   - .pasm
+  interpreters:
+  - parrot
   tm_scope: none
   ace_mode: none
 
@@ -2083,6 +2093,8 @@ Parrot Internal Representation:
   - pir
   extensions:
   - .pir
+  interpreters:
+  - parrot
   ace_mode: none
 
 Pascal:
@@ -2127,6 +2139,8 @@ Perl6:
   - .p6m
   - .pl6
   - .pm6
+  interpreters:
+  - perl6
   tm_scope: none
   ace_mode: perl
 
@@ -2197,6 +2211,8 @@ Prolog:
   - .ecl
   - .pro
   - .prolog
+  interpreters:
+  - swipl
   ace_mode: prolog
 
 Propeller Spin:
@@ -2266,6 +2282,8 @@ Python:
   - wscript
   interpreters:
   - python
+  - python2
+  - python3
 
 Python traceback:
   type: data
@@ -2288,6 +2306,8 @@ QMake:
   extensions:
   - .pro
   - .pri
+  interpreters:
+  - qmake
   ace_mode: none
 
 R:
@@ -2453,6 +2473,8 @@ Ruby:
   - .watchr
   interpreters:
   - ruby
+  - macruby
+  - rake
   filenames:
   - .pryrc
   - Appraisals
@@ -2545,6 +2567,8 @@ Scala:
   - .scala
   - .sbt
   - .sc
+  interpreters:
+  - scala
 
 Scaml:
   group: HTML

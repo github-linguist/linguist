@@ -1,9 +1,4 @@
-require 'linguist/heuristics'
-require 'linguist/language'
-require 'linguist/samples'
-require 'linguist/file_blob'
-
-require 'test/unit'
+require_relative "./helper"
 
 class TestHeuristcs < Test::Unit::TestCase
   include Linguist
@@ -131,5 +126,15 @@ class TestHeuristcs < Test::Unit::TestCase
   def test_sc_scala_by_heuristics
     results = Heuristics.disambiguate_sc(fixture("Scala/node11.sc"))
     assert_equal Language["Scala"], results.first
+  end
+
+  def test_fs_by_heuristics
+    languages = ["F#", "Forth", "GLSL"]
+    languages.each do |language|
+      all_fixtures(language).each do |fixture|
+        results = Heuristics.disambiguate_fs(fixture("#{language}/#{File.basename(fixture)}"))
+        assert_equal Language[language], results.first
+      end
+    end
   end
 end

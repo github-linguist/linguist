@@ -1,6 +1,4 @@
-require 'linguist/repository'
-require 'linguist/lazy_blob'
-require 'test/unit'
+require_relative "./helper"
 
 class TestRepository < Test::Unit::TestCase
   def rugged_repository

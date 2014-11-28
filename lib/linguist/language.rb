@@ -106,40 +106,52 @@ module Linguist
       # A bit of an elegant hack. If the file is executable but extensionless,
       # append a "magic" extension so it can be classified with other
       # languages that have shebang scripts.
-      extension = FileBlob.new(name).extension
-      if extension.empty? && blob.mode && (blob.mode.to_i(8) & 05) == 05
+      extensions = FileBlob.new(name).extensions
+      if extensions.empty? && blob.mode && (blob.mode.to_i(8) & 05) == 05
         name += ".script!"
       end
 
-      # First try to find languages that match based on filename.
+      # Find languages that match based on filename.
       possible_languages = find_by_filename(name)
 
-      # If there is more than one possible language with that extension (or no
-      # extension at all, in the case of extensionless scripts), we need to continue
-      # our detection work
-      if possible_languages.length > 1
-        data = blob.data
-        possible_language_names = possible_languages.map(&:name)
-        heuristic_languages = Heuristics.find_by_heuristics(data, possible_language_names)
+      if possible_languages.length == 1
+        # Simplest and most common case, we can just return the one match based
+        # on extension
+        possible_languages.first
 
-        if heuristic_languages.size > 1
-          possible_language_names = heuristic_languages.map(&:name)
-        end
+      # If there is more than one possible language with that extension (or no
+      # extension at all, in the case of extensionless scripts), we need to
+      # continue our detection work
+      else
+        # Matches possible_languages.length == 0 || possible_languages.length > 0
+        data = blob.data
 
         # Check if there's a shebang line and use that as authoritative
         if (result = find_by_shebang(data)) && !result.empty?
-          result.first
-        # No shebang. Still more work to do. Try to find it with our heuristics.
-        elsif heuristic_languages.size == 1
-          heuristic_languages.first
-        # Lastly, fall back to the probabilistic classifier.
-        elsif classified = Classifier.classify(Samples.cache, data, possible_language_names).first
-          # Return the actual Language object based of the string language name (i.e., first element of `#classify`)
-          Language[classified[0]]
+          return result.first
+
+        # More than one language with that extension. We need to make a choice.
+        elsif possible_languages.length > 1
+
+          # First try heuristics
+
+          possible_language_names = possible_languages.map(&:name)
+          heuristic_languages = Heuristics.find_by_heuristics(data, possible_language_names)
+
+          # If there are multiple possible languages returned from heuristics
+          # then reduce language candidates for Bayesian classifier here.
+          if heuristic_languages.size > 1
+            possible_language_names = heuristic_languages.map(&:name)
+          end
+
+          if heuristic_languages.size == 1
+            return heuristic_languages.first
+          # Lastly, fall back to the probabilistic classifier.
+          elsif classified = Classifier.classify(Samples.cache, data, possible_language_names).first
+            # Return the actual Language object based of the string language name (i.e., first element of `#classify`)
+            return Language[classified[0]]
+          end
         end
-      else
-        # Simplest and most common case, we can just return the one match based on extension
-        possible_languages.first
       end
     end
 
@@ -190,8 +202,13 @@ module Linguist
     # Returns all matching Languages or [] if none were found.
     def self.find_by_filename(filename)
       basename = File.basename(filename)
-      extname = FileBlob.new(filename).extension
-      (@filename_index[basename] + find_by_extension(extname)).compact.uniq
+
+      # find the first extension with language definitions
+      extname = FileBlob.new(filename).extensions.detect do |e|
+        !@extension_index[e].empty?
+      end
+
+      (@filename_index[basename] + @extension_index[extname]).compact.uniq
     end
 
     # Public: Look up Languages by file extension.

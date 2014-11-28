@@ -1,9 +1,4 @@
-require 'linguist/file_blob'
-require 'linguist/samples'
-
-require 'test/unit'
-require 'mocha/setup'
-require 'mime/types'
+require_relative "./helper"
 
 class TestBlob < Test::Unit::TestCase
   include Linguist
@@ -469,6 +464,25 @@ class TestBlob < Test::Unit::TestCase
       blob = blob(sample[:path])
       assert blob.language, "No language for #{sample[:path]}"
       assert_equal sample[:language], blob.language.name, blob.name
+    end
+
+    # Test language detection for files which shouldn't be used as samples
+    root = File.expand_path('../fixtures', __FILE__)
+    Dir.entries(root).each do |language|
+      next unless File.file?(language)
+
+      # Each directory contains test files of a language
+      dirname = File.join(root, language)
+      Dir.entries(dirname).each do |filename|
+        next unless File.file?(filename)
+        
+        # By default blob search the file in the samples;
+        # thus, we need to give it the absolute path
+        filepath = File.join(dirname, filename)
+        blob = blob(filepath)
+        assert blob.language, "No language for #{filepath}"
+        assert_equal language, blob.language.name, blob.name
+      end
     end
   end
 
