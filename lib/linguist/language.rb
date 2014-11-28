@@ -10,6 +10,8 @@ require 'linguist/heuristics'
 require 'linguist/samples'
 require 'linguist/file_blob'
 require 'linguist/blob_helper'
+require 'linguist/strategy/filename'
+require 'linguist/strategy/shebang'
 
 module Linguist
   # Language names that are recognizable by GitHub. Defined languages
@@ -91,6 +93,13 @@ module Linguist
       language
     end
 
+    STRATEGIES = [
+      Linguist::Strategy::Filename,
+      Linguist::Strategy::Shebang,
+      Linguist::Heuristics,
+      Linguist::Classifier
+    ]
+
     # Public: Detects the Language of the blob.
     #
     # blob - an object that includes the Linguist `BlobHelper` interface;
@@ -98,49 +107,22 @@ module Linguist
     #
     # Returns Language or nil.
     def self.detect(blob)
-      name = blob.name.to_s
-
       # Bail early if the blob is binary or empty.
       return nil if blob.likely_binary? || blob.binary? || blob.empty?
 
-      # A bit of an elegant hack. If the file is executable but extensionless,
-      # append a "magic" extension so it can be classified with other
-      # languages that have shebang scripts.
-      extension = FileBlob.new(name).extension
-      if extension.empty? && blob.mode && (blob.mode.to_i(8) & 05) == 05
-        name += ".script!"
-      end
-
-      # First try to find languages that match based on filename.
-      possible_languages = find_by_filename(name)
-
-      # If there is more than one possible language with that extension (or no
-      # extension at all, in the case of extensionless scripts), we need to continue
-      # our detection work
-      if possible_languages.length > 1
-        data = blob.data
-        possible_language_names = possible_languages.map(&:name)
-        heuristic_languages = Heuristics.find_by_heuristics(data, possible_language_names)
-
-        if heuristic_languages.size > 1
-          possible_language_names = heuristic_languages.map(&:name)
+      # Call each strategy until one candidate is returned
+      STRATEGIES.reduce([]) do |languages, strategy|
+        candidates = strategy.call(blob, languages)
+        if candidates.size == 1
+          return candidates.first
+        elsif candidates.size > 1
+          # More than one candidate was found, pass them to the next strategy
+          candidates
+        else
+          # Strategy couldn't find any candidates, so pass on the original list
+          languages
         end
-
-        # Check if there's a shebang line and use that as authoritative
-        if (result = find_by_shebang(data)) && !result.empty?
-          result.first
-        # No shebang. Still more work to do. Try to find it with our heuristics.
-        elsif heuristic_languages.size == 1
-          heuristic_languages.first
-        # Lastly, fall back to the probabilistic classifier.
-        elsif classified = Classifier.classify(Samples.cache, data, possible_language_names).first
-          # Return the actual Language object based of the string language name (i.e., first element of `#classify`)
-          Language[classified[0]]
-        end
-      else
-        # Simplest and most common case, we can just return the one match based on extension
-        possible_languages.first
-      end
+      end.first
     end
 
     # Public: Get all Languages
@@ -190,8 +172,13 @@ module Linguist
     # Returns all matching Languages or [] if none were found.
     def self.find_by_filename(filename)
       basename = File.basename(filename)
-      extname = FileBlob.new(filename).extension
-      (@filename_index[basename] + find_by_extension(extname)).compact.uniq
+
+      # find the first extension with language definitions
+      extname = FileBlob.new(filename).extensions.detect do |e|
+        !@extension_index[e].empty?
+      end
+
+      (@filename_index[basename] + @extension_index[extname]).compact.uniq
     end
 
     # Public: Look up Languages by file extension.
