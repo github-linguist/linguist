@@ -374,7 +374,7 @@ class TestLanguage < Test::Unit::TestCase
     ace_fixture_path = File.join('test', 'fixtures', 'ace_modes.json')
     skip("No ace_modes.json file") unless File.exist?(ace_fixture_path)
 
-    ace_github_modes = JSON.parse(File.read(ace_fixture_path))
+    ace_github_modes = Yajl.load(File.read(ace_fixture_path))
     existing_ace_modes = ace_github_modes.map do |ace_github_mode|
       File.basename(ace_github_mode["name"], ".js") if ace_github_mode["name"]  !~ /_highlight_rules|_test|_worker/
     end.compact.uniq.sort.map(&:downcase)
