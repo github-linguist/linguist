@@ -3,7 +3,7 @@
 % - http://en.wikipedia.org/wiki/Oz_(programming_language)
 % The is also a well known book that uses Oz for pedagogical reason :
 % - http://mitpress.mit.edu/books/concepts-techniques-and-models-computer-programming
-% And there are two courses on edX about 'Paradigms of Computer Programming' that also uses Oz for pedagocial reason :
+% And there are two courses on edX about 'Paradigms of Computer Programming' that also uses Oz for pedagogical reason :
 % - https://www.edx.org/node/2751#.VHijtfl5OSo
 % - https://www.edx.org/node/4436#.VHijzfl5OSo
 %
