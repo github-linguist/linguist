@@ -34,7 +34,7 @@ module Linguist
     #
     # Examples
     #
-    #     create "Perl", "Prolog" do |data|
+    #     disambiguate "Perl", "Prolog" do |data|
     #       if data.include?("use strict")
     #         Language["Perl"]
     #       elsif data.include?(":-")
@@ -42,7 +42,7 @@ module Linguist
     #       end
     #     end
     #
-    def self.create(*languages, &heuristic)
+    def self.disambiguate(*languages, &heuristic)
       @heuristics << new(languages, &heuristic)
     end
 
@@ -65,7 +65,7 @@ module Linguist
       @heuristic.call(data)
     end
 
-    create "Perl", "Prolog" do |data|
+    disambiguate "Perl", "Prolog" do |data|
       if data.include?("use strict")
         Language["Perl"]
       elsif data.include?(":-")
@@ -73,7 +73,7 @@ module Linguist
       end
     end
 
-    create "ECL", "Prolog" do |data|
+    disambiguate "ECL", "Prolog" do |data|
       if data.include?(":-")
         Language["Prolog"]
       elsif data.include?(":=")
@@ -81,7 +81,7 @@ module Linguist
       end
     end
 
-    create "IDL", "Prolog" do |data|
+    disambiguate "IDL", "Prolog" do |data|
       if data.include?(":-")
         Language["Prolog"]
       else
@@ -89,7 +89,7 @@ module Linguist
       end
     end
 
-    create "Common Lisp", "OpenCL" do |data|
+    disambiguate "Common Lisp", "OpenCL" do |data|
       if data.include?("(defun ")
         Language["Common Lisp"]
       elsif /\/\* |\/\/ |^\}/.match(data)
@@ -97,7 +97,7 @@ module Linguist
       end
     end
 
-    create "Hack", "PHP" do |data|
+    disambiguate "Hack", "PHP" do |data|
       if data.include?("<?hh")
         Language["Hack"]
       elsif /<?[^h]/.match(data)
@@ -105,7 +105,7 @@ module Linguist
       end
     end
 
-    create "Scala", "SuperCollider" do |data|
+    disambiguate "Scala", "SuperCollider" do |data|
       if /\^(this|super)\./.match(data) || /^\s*(\+|\*)\s*\w+\s*{/.match(data) || /^\s*~\w+\s*=\./.match(data)
         Language["SuperCollider"]
       elsif /^\s*import (scala|java)\./.match(data) || /^\s*val\s+\w+\s*=/.match(data) || /^\s*class\b/.match(data)
@@ -113,11 +113,11 @@ module Linguist
       end
     end
 
-    create "AsciiDoc", "AGS Script" do |data|
+    disambiguate "AsciiDoc", "AGS Script" do |data|
       Language["AsciiDoc"] if /^=+(\s|\n)/.match(data)
     end
 
-    create "FORTRAN", "Forth" do |data|
+    disambiguate "FORTRAN", "Forth" do |data|
       if /^: /.match(data)
         Language["Forth"]
       elsif /^([c*][^a-z]|      subroutine\s)/i.match(data)
@@ -125,7 +125,7 @@ module Linguist
       end
     end
 
-    create "F#", "Forth", "GLSL" do |data|
+    disambiguate "F#", "Forth", "GLSL" do |data|
       if /^(: |new-device)/.match(data)
         Language["Forth"]
       elsif /^(#light|import|let|module|namespace|open|type)/.match(data)
