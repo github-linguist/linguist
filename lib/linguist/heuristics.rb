@@ -12,8 +12,7 @@ module Linguist
     #     Language["Ruby"], Language["Python"]
     #   ])
     #
-    # Returns an Array with one Language if a heuristic matched, or empty if
-    # none matched or were inconclusive.
+    # Returns an Array of languages, or empty if none matched or were inconclusive.
     def self.call(blob, languages)
       data = blob.data
 
