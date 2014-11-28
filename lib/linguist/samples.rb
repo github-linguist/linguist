@@ -115,10 +115,4 @@ module Linguist
       db
     end
   end
-
-  # Used to retrieve the interpreter from the shebang line of a file's data.
-  def self.interpreter_from_shebang(data)
-    Shebang.interpreter(data)
-  end
-
 end
