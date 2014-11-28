@@ -6,6 +6,7 @@ end
 
 require 'linguist/md5'
 require 'linguist/classifier'
+require 'linguist/shebang'
 
 module Linguist
   # Model for accessing classifier training data.
@@ -61,7 +62,7 @@ module Linguist
             yield({
               :path     => path,
               :language => category,
-              :interpreter => Linguist.interpreter_from_shebang(File.read(path)),
+              :interpreter => Shebang.interpreter(File.read(path)),
               :extname  => File.extname(filename)
             })
           end
