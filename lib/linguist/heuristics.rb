@@ -1,7 +1,6 @@
 module Linguist
   # A collection of simple heuristics that can be used to better analyze languages.
   class Heuristics
-
     # Public: Use heuristics to detect language of the blob.
     #
     # blob               - An object that quacks like a blob.
@@ -16,48 +15,105 @@ module Linguist
     # Returns an Array with one Language if a heuristic matched, or empty if
     # none matched or were inconclusive.
     def self.call(blob, languages)
-      find_by_heuristics(blob.data, languages.map(&:name))
+      data = blob.data
+
+      @heuristics.each do |heuristic|
+        if heuristic.matches?(languages)
+          language = heuristic.call(data)
+          return [language] if language
+        end
+      end
+
+      [] # No heuristics matched
     end
 
-    # Public: Given an array of String language names,
-    # apply heuristics against the given data and return an array
-    # of matching languages, or nil.
-    #
-    # data      - Array of tokens or String data to analyze.
-    # languages - Array of language name Strings to restrict to.
-    #
-    # Returns an array of Languages or []
-    def self.find_by_heuristics(data, languages)
-      result = []
+    @heuristics = []
 
-      if languages.all? { |l| ["Perl", "Prolog"].include?(l) }
-        result = disambiguate_pl(data)
+    def self.create(*languages, &heuristic)
+      @heuristics << new(languages, &heuristic)
+    end
+
+    def initialize(languages, &heuristic)
+      @languages = languages
+      @heuristic = heuristic
+    end
+
+    def matches?(candidates)
+      candidates.all? { |l| @languages.include?(l.name) }
+    end
+
+    def call(data)
+      @heuristic.call(data)
+    end
+
+    create "Perl", "Prolog" do |data|
+      if data.include?("use strict")
+        Language["Perl"]
+      elsif data.include?(":-")
+        Language["Prolog"]
       end
-      if languages.all? { |l| ["ECL", "Prolog"].include?(l) }
-        result = disambiguate_ecl(data)
+    end
+
+    create "ECL", "Prolog" do |data|
+      if data.include?(":-")
+        Language["Prolog"]
+      elsif data.include?(":=")
+        Language["ECL"]
       end
-      if languages.all? { |l| ["IDL", "Prolog"].include?(l) }
-        result = disambiguate_pro(data)
+    end
+
+    create "IDL", "Prolog" do |data|
+      if data.include?(":-")
+        Language["Prolog"]
+      else
+        Language["IDL"]
       end
-      if languages.all? { |l| ["Common Lisp", "OpenCL"].include?(l) }
-        result = disambiguate_cl(data)
+    end
+
+    create "Common Lisp", "OpenCL" do |data|
+      if data.include?("(defun ")
+        Language["Common Lisp"]
+      elsif /\/\* |\/\/ |^\}/.match(data)
+        Language["OpenCL"]
       end
-      if languages.all? { |l| ["Hack", "PHP"].include?(l) }
-        result = disambiguate_hack(data)
+    end
+
+    create "Hack", "PHP" do |data|
+      if data.include?("<?hh")
+        Language["Hack"]
+      elsif /<?[^h]/.match(data)
+        Language["PHP"]
       end
-      if languages.all? { |l| ["Scala", "SuperCollider"].include?(l) }
-        result = disambiguate_sc(data)
+    end
+
+    create "Scala", "SuperCollider" do |data|
+      if /\^(this|super)\./.match(data) || /^\s*(\+|\*)\s*\w+\s*{/.match(data) || /^\s*~\w+\s*=\./.match(data)
+        Language["SuperCollider"]
+      elsif /^\s*import (scala|java)\./.match(data) || /^\s*val\s+\w+\s*=/.match(data) || /^\s*class\b/.match(data)
+        Language["Scala"]
       end
-      if languages.all? { |l| ["AsciiDoc", "AGS Script"].include?(l) }
-        result = disambiguate_asc(data)
+    end
+
+    create "AsciiDoc", "AGS Script" do |data|
+      Language["AsciiDoc"] if /^=+(\s|\n)/.match(data)
+    end
+
+    create "FORTRAN", "Forth" do |data|
+      if /^: /.match(data)
+        Language["Forth"]
+      elsif /^([c*][^a-z]|      subroutine\s)/i.match(data)
+        Language["FORTRAN"]
       end
-      if languages.all? { |l| ["FORTRAN", "Forth"].include?(l) }
-        result = disambiguate_f(data)
+    end
+
+    create "F#", "Forth", "GLSL" do |data|
+      if /^(: |new-device)/.match(data)
+        Language["Forth"]
+      elsif /^(#light|import|let|module|namespace|open|type)/.match(data)
+        Language["F#"]
+      elsif /^(#include|#pragma|precision|uniform|varying|void)/.match(data)
+        Language["GLSL"]
       end
-      if languages.all? { |l| ["F#", "Forth", "GLSL"].include?(l) }
-        result = disambiguate_fs(data)
-      end
-      return result
     end
 
     # .h extensions are ambiguous between C, C++, and Objective-C.
@@ -74,52 +130,12 @@ module Linguist
       matches
     end
 
-    def self.disambiguate_pl(data)
-      matches = []
-      if data.include?("use strict")
-        matches << Language["Perl"]
-      elsif data.include?(":-")
-        matches << Language["Prolog"]
-      end
-      matches
-    end
-
-    def self.disambiguate_ecl(data)
-      matches = []
-      if data.include?(":-")
-        matches << Language["Prolog"]
-      elsif data.include?(":=")
-        matches << Language["ECL"]
-      end
-      matches
-    end
-
-    def self.disambiguate_pro(data)
-      matches = []
-      if (data.include?(":-"))
-        matches << Language["Prolog"]
-      else
-        matches << Language["IDL"]
-      end
-      matches
-    end
-
     def self.disambiguate_ts(data)
       matches = []
       if (data.include?("</translation>"))
         matches << Language["XML"]
       else
         matches << Language["TypeScript"]
-      end
-      matches
-    end
-
-    def self.disambiguate_cl(data)
-      matches = []
-      if data.include?("(defun ")
-        matches << Language["Common Lisp"]
-      elsif /\/\* |\/\/ |^\}/.match(data)
-        matches << Language["OpenCL"]
       end
       matches
     end
@@ -131,57 +147,5 @@ module Linguist
       matches
     end
 
-    def self.disambiguate_hack(data)
-      matches = []
-      if data.include?("<?hh")
-        matches << Language["Hack"]
-      elsif /<?[^h]/.match(data)
-        matches << Language["PHP"]
-      end
-      matches
-    end
-
-    def self.disambiguate_sc(data)
-      matches = []
-      if (/\^(this|super)\./.match(data) || /^\s*(\+|\*)\s*\w+\s*{/.match(data) || /^\s*~\w+\s*=\./.match(data))
-        matches << Language["SuperCollider"]
-      end
-      if (/^\s*import (scala|java)\./.match(data) || /^\s*val\s+\w+\s*=/.match(data) || /^\s*class\b/.match(data))
-        matches << Language["Scala"]
-      end
-      matches
-    end
-
-    def self.disambiguate_asc(data)
-      matches = []
-      matches << Language["AsciiDoc"] if /^=+(\s|\n)/.match(data)
-      matches
-    end
-
-    def self.disambiguate_f(data)
-      matches = []
-      if /^: /.match(data)
-        matches << Language["Forth"]
-      elsif /^([c*][^a-z]|      subroutine\s)/i.match(data)
-        matches << Language["FORTRAN"]
-      end
-      matches
-    end
-
-    def self.disambiguate_fs(data)
-      matches = []
-      if /^(: |new-device)/.match(data)
-        matches << Language["Forth"]
-      elsif /^(#light|import|let|module|namespace|open|type)/.match(data)
-        matches << Language["F#"]
-      elsif /^(#include|#pragma|precision|uniform|varying|void)/.match(data)
-        matches << Language["GLSL"]
-      end
-      matches
-    end
-
-    def self.active?
-      !!ACTIVE
-    end
   end
 end
