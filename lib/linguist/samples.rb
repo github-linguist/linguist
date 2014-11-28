@@ -6,6 +6,7 @@ end
 
 require 'linguist/md5'
 require 'linguist/classifier'
+require 'linguist/shebang'
 
 module Linguist
   # Model for accessing classifier training data.
@@ -61,7 +62,7 @@ module Linguist
             yield({
               :path     => path,
               :language => category,
-              :interpreter => Linguist.interpreter_from_shebang(File.read(path)),
+              :interpreter => Shebang.interpreter(File.read(path)),
               :extname  => File.extname(filename)
             })
           end
@@ -114,41 +115,4 @@ module Linguist
       db
     end
   end
-
-  # Used to retrieve the interpreter from the shebang line of a file's
-  # data.
-  def self.interpreter_from_shebang(data)
-    lines = data.lines.to_a
-
-    if lines.any? && (match = lines[0].match(/(.+)\n?/)) && (bang = match[0]) =~ /^#!/
-      bang.sub!(/^#! /, '#!')
-      tokens = bang.split(' ')
-      pieces = tokens.first.split('/')
-
-      if pieces.size > 1
-        script = pieces.last
-      else
-        script = pieces.first.sub('#!', '')
-      end
-
-      script = script == 'env' ? tokens[1] : script
-
-      # If script has an invalid shebang, we might get here
-      return unless script
-
-      # "python2.6" -> "python2"
-      script.sub! $1, '' if script =~ /(\.\d+)$/
-
-      # Check for multiline shebang hacks that call `exec`
-      if script == 'sh' &&
-        lines[0...5].any? { |l| l.match(/exec (\w+).+\$0.+\$@/) }
-        script = $1
-      end
-      
-      File.basename(script)
-    else
-      nil
-    end
-  end
-
 end
