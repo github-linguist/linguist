@@ -36,7 +36,6 @@ class TestSamples < Minitest::Test
 
   def test_ext_or_shebang
     Samples.each do |sample|
-      puts "checking #{sample[:path]}: #{sample[:extname]}"
       if sample[:extname].to_s.empty? && !sample[:filename]
         assert sample[:interpreter], "#{sample[:path]} should have a file extension or a shebang, maybe it belongs in filenames/ subdir"
       end
