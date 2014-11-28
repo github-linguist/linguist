@@ -27,21 +27,40 @@ module Linguist
       [] # No heuristics matched
     end
 
-    @heuristics = []
-
+    # Internal: Define a new heuristic.
+    #
+    # languages - String names of languages to disambiguate.
+    # heuristic - Block which takes data as an argument and returns a Language or nil.
+    #
+    # Examples
+    #
+    #     create "Perl", "Prolog" do |data|
+    #       if data.include?("use strict")
+    #         Language["Perl"]
+    #       elsif data.include?(":-")
+    #         Language["Prolog"]
+    #       end
+    #     end
+    #
     def self.create(*languages, &heuristic)
       @heuristics << new(languages, &heuristic)
     end
 
+    # Internal: Array of defined heuristics
+    @heuristics = []
+
+    # Internal
     def initialize(languages, &heuristic)
       @languages = languages
       @heuristic = heuristic
     end
 
+    # Internal: Check if this heuristic matches the candidate languages.
     def matches?(candidates)
       candidates.all? { |l| @languages.include?(l.name) }
     end
 
+    # Internal: Perform the heuristic
     def call(data)
       @heuristic.call(data)
     end
