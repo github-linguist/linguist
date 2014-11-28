@@ -115,37 +115,5 @@ module Linguist
         Language["GLSL"]
       end
     end
-
-    # .h extensions are ambiguous between C, C++, and Objective-C.
-    # We want to shortcut look for Objective-C _and_ now C++ too!
-    #
-    # Returns an array of Languages or []
-    def self.disambiguate_c(data)
-      matches = []
-      if data.include?("@interface")
-        matches << Language["Objective-C"]
-      elsif data.include?("#include <cstdint>")
-        matches << Language["C++"]
-      end
-      matches
-    end
-
-    def self.disambiguate_ts(data)
-      matches = []
-      if (data.include?("</translation>"))
-        matches << Language["XML"]
-      else
-        matches << Language["TypeScript"]
-      end
-      matches
-    end
-
-    def self.disambiguate_r(data)
-      matches = []
-      matches << Language["Rebol"] if /\bRebol\b/i.match(data)
-      matches << Language["R"] if data.include?("<-")
-      matches
-    end
-
   end
 end

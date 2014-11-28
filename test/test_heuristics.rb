@@ -20,21 +20,6 @@ class TestHeuristcs < Test::Unit::TestCase
     Dir.glob("#{samples_path}/#{language_name}/#{file}")
   end
 
-  # Candidate languages = ["C++", "Objective-C"]
-  def test_obj_c_by_heuristics
-    # Only calling out '.h' filenames as these are the ones causing issues
-    all_fixtures("Objective-C", "*.h").each do |fixture|
-      results = Heuristics.disambiguate_c(fixture("Objective-C/#{File.basename(fixture)}"))
-      assert_equal Language["Objective-C"], results.first
-    end
-  end
-
-  # Candidate languages = ["C++", "Objective-C"]
-  def test_cpp_by_heuristics
-    results = Heuristics.disambiguate_c(fixture("C++/render_adapter.cpp"))
-    assert_equal Language["C++"], results.first
-  end
-
   def test_detect_still_works_if_nothing_matches
     blob = Linguist::FileBlob.new(File.join(samples_path, "Objective-C/hello.m"))
     match = Language.detect(blob)
@@ -77,18 +62,6 @@ class TestHeuristcs < Test::Unit::TestCase
       "AsciiDoc" => "AsciiDoc/list.asc",
       "AGS Script" => nil
     })
-  end
-
-  # Candidate languages = ["TypeScript", "XML"]
-  def test_ts_typescript_by_heuristics
-    results = Heuristics.disambiguate_ts(fixture("TypeScript/classes.ts"))
-    assert_equal Language["TypeScript"], results.first
-  end
-
-  # Candidate languages = ["TypeScript", "XML"]
-  def test_ts_xml_by_heuristics
-    results = Heuristics.disambiguate_ts(fixture("XML/pt_BR.xml"))
-    assert_equal Language["XML"], results.first
   end
 
   def test_cl_by_heuristics
