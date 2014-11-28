@@ -50,16 +50,13 @@ module Linguist
             end
           else
             path = File.join(dirname, filename)
-
-            if File.extname(filename) == ""
-              raise "#{path} is missing an extension, maybe it belongs in filenames/ subdir"
-            end
+            extname = File.extname(filename)
 
             yield({
               :path     => path,
               :language => category,
               :interpreter => Shebang.interpreter(File.read(path)),
-              :extname  => File.extname(filename)
+              :extname  => extname.empty? ? nil : extname
             })
           end
         end
