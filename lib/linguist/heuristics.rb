@@ -3,6 +3,23 @@ module Linguist
   class Heuristics
     ACTIVE = true
 
+    # Public: Use heuristics to detect language of the blob.
+    #
+    # blob               - An object that quacks like a blob.
+    # possible_languages - Array of Language objects
+    #
+    # Examples
+    #
+    #   Heuristics.call(FileBlob.new("path/to/file"), [
+    #     Language["Ruby"], Language["Python"]
+    #   ])
+    #
+    # Returns an Array with one Language if a heuristic matched, or empty if
+    # none matched or were inconclusive.
+    def self.call(blob, languages)
+      find_by_heuristics(blob.data, languages.map(&:name))
+    end
+
     # Public: Given an array of String language names,
     # apply heuristics against the given data and return an array
     # of matching languages, or nil.
