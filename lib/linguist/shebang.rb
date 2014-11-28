@@ -21,7 +21,7 @@ module Linguist
       lines = data.lines
       return unless match = /^#! ?(.*)$/.match(lines.first)
 
-      tokens = match[0].split(' ')
+      tokens = match[1].split(' ')
       script = tokens.first.split('/').last
 
       script = tokens[1] if script == 'env'

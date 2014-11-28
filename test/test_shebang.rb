@@ -32,6 +32,7 @@ class TestShebang < Test::Unit::TestCase
     assert_interpreter "python2", "#!/usr/bin/python2.7\n\n\n\n"
     assert_interpreter "python3", "#!/usr/bin/python3\n\n\n\n"
     assert_interpreter "sbcl", "#!/usr/bin/sbcl --script\n\n"
+    assert_interpreter "perl", "#! perl"
   end
 
 end
