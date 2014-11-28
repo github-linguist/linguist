@@ -18,9 +18,7 @@ module Linguist
       data = blob.data
 
       @heuristics.each do |heuristic|
-        if heuristic.matches?(languages) && result = heuristic.call(data)
-          return Array(result)
-        end
+        return Array(heuristic.call(data)) if heuristic.matches?(languages)
       end
 
       [] # No heuristics matched
