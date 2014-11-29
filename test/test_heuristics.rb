@@ -20,6 +20,22 @@ class TestHeuristcs < Test::Unit::TestCase
     Dir.glob("#{samples_path}/#{language_name}/#{file}")
   end
 
+  # Candidate languages = ["C++", "Objective-C"]
+  def test_obj_c_by_heuristics
+    # Only calling out '.h' filenames as these are the ones causing issues
+    assert_heuristics({
+      "Objective-C" => all_fixtures("Objective-C", "*.h"),
+      "C++" => ["C++/render_adapter.cpp", "C++/ThreadedQueue.h"],
+      "C" => nil
+    })
+  end
+
+  def test_c_by_heuristics
+    languages = [Language["C++"], Language["Objective-C"], Language["C"]]
+    results = Heuristics.call(file_blob("C/ArrowLeft.h"), languages)
+    assert_equal [], results
+  end
+
   def test_detect_still_works_if_nothing_matches
     blob = Linguist::FileBlob.new(File.join(samples_path, "Objective-C/hello.m"))
     match = Language.detect(blob)

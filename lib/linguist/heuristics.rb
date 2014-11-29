@@ -61,6 +61,15 @@ module Linguist
       @heuristic.call(data)
     end
 
+    disambiguate "Objective-C", "C++", "C" do |data|
+      if (/@(interface|class|protocol|property|end|synchronised|selector|implementation)\b/.match(data))
+        Language["Objective-C"]
+      elsif (/^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>/.match(data) ||
+        /^\s*template\s*</.match(data) || /^[^@]class\s+\w+/.match(data) || /^[^@](private|public|protected):$/.match(data) || /std::.+$/.match(data))
+        Language["C++"]
+      end
+    end
+
     disambiguate "Perl", "Prolog" do |data|
       if data.include?("use strict")
         Language["Perl"]
