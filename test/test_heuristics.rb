@@ -52,12 +52,6 @@ class TestHeuristcs < Test::Unit::TestCase
 
   # Candidate languages = ["ECL", "Prolog"]
   def test_ecl_prolog_by_heuristics
-    results = Heuristics.call(file_blob("Prolog/or-constraint.ecl"), [Language["ECL"], Language["Prolog"]])
-    assert_equal [Language["Prolog"]], results
-  end
-
-  # Candidate languages = ["ECL", "Prolog"]
-  def test_ecl_prolog_by_heuristics
     assert_heuristics({
       "ECL" => "ECL/sample.ecl",
       "Prolog" => "Prolog/or-constraint.ecl"
