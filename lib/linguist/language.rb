@@ -11,7 +11,7 @@ require 'linguist/samples'
 require 'linguist/file_blob'
 require 'linguist/blob_helper'
 require 'linguist/strategy/filename'
-require 'linguist/strategy/shebang'
+require 'linguist/shebang'
 
 module Linguist
   # Language names that are recognizable by GitHub. Defined languages
@@ -95,7 +95,7 @@ module Linguist
 
     STRATEGIES = [
       Linguist::Strategy::Filename,
-      Linguist::Strategy::Shebang,
+      Linguist::Shebang,
       Linguist::Heuristics,
       Linguist::Classifier
     ]
@@ -199,19 +199,25 @@ module Linguist
       @extension_index[extname]
     end
 
-    # Public: Look up Languages by shebang line.
+    # DEPRECATED
+    def self.find_by_shebang(data)
+      @interpreter_index[Shebang.interpreter(data)]
+    end
+
+    # Public: Look up Languages by interpreter.
     #
-    # data - Array of tokens or String data to analyze.
+    # interpreter - String of interpreter name
     #
     # Examples
     #
-    #   Language.find_by_shebang("#!/bin/bash\ndate;")
+    #   Language.find_by_interpreter("bash")
     #   # => [#<Language name="Bash">]
     #
     # Returns the matching Language
-    def self.find_by_shebang(data)
-      @interpreter_index[Linguist.interpreter_from_shebang(data)]
+    def self.find_by_interpreter(interpreter)
+      @interpreter_index[interpreter]
     end
+
 
     # Public: Look up Language by its name or lexer.
     #
