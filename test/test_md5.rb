@@ -1,6 +1,4 @@
-require 'linguist/md5'
-
-require 'test/unit'
+require_relative "./helper"
 
 class TestMD5 < Test::Unit::TestCase
   include Linguist
