@@ -1,10 +1,7 @@
 require 'linguist/generated'
-require 'linguist/language'
-
 require 'charlock_holmes'
 require 'escape_utils'
 require 'mime/types'
-require 'pygments'
 require 'yaml'
 
 module Linguist
@@ -112,6 +109,12 @@ module Linguist
       end
     end
 
+    def ruby_encoding
+      if hash = detect_encoding
+        hash[:ruby_encoding]
+      end
+    end
+
     # Try to guess the encoding
     #
     # Returns: a Hash, with :encoding, :confidence, :type
@@ -141,6 +144,13 @@ module Linguist
       else
         detect_encoding[:type] == :binary
       end
+    end
+
+    # Public: Is the blob empty?
+    #
+    # Return true or false
+    def empty?
+      data.nil? || data == ""
     end
 
     # Public: Is the blob text?
@@ -189,19 +199,12 @@ module Linguist
 
     # Public: Is the blob safe to colorize?
     #
-    # We use Pygments for syntax highlighting blobs. Pygments
-    # can be too slow for very large blobs or for certain
-    # corner-case blobs.
-    #
     # Return true or false
     def safe_to_colorize?
       !large? && text? && !high_ratio_of_long_lines?
     end
 
     # Internal: Does the blob have a ratio of long lines?
-    #
-    # These types of files are usually going to make Pygments.rb
-    # angry if we try to colorize them.
     #
     # Return true or false
     def high_ratio_of_long_lines?
@@ -241,7 +244,31 @@ module Linguist
     def lines
       @lines ||=
         if viewable? && data
-          data.split(/\r\n|\r|\n/, -1)
+          # `data` is usually encoded as ASCII-8BIT even when the content has
+          # been detected as a different encoding. However, we are not allowed
+          # to change the encoding of `data` because we've made the implicit
+          # guarantee that each entry in `lines` is encoded the same way as
+          # `data`.
+          #
+          # Instead, we re-encode each possible newline sequence as the
+          # detected encoding, then force them back to the encoding of `data`
+          # (usually a binary encoding like ASCII-8BIT). This means that the
+          # byte sequence will match how newlines are likely encoded in the
+          # file, but we don't have to change the encoding of `data` as far as
+          # Ruby is concerned. This allows us to correctly parse out each line
+          # without changing the encoding of `data`, and
+          # also--importantly--without having to duplicate many (potentially
+          # large) strings.
+          begin
+            encoded_newlines = ["\r\n", "\r", "\n"].
+              map { |nl| nl.encode(ruby_encoding, "ASCII-8BIT").force_encoding(data.encoding) }
+
+            data.split(Regexp.union(encoded_newlines), -1)
+          rescue Encoding::ConverterNotFoundError
+            # The data is not splittable in the detected encoding.  Assume it's
+            # one big line.
+            [data]
+          end
         else
           []
         end
@@ -283,34 +310,12 @@ module Linguist
     #
     # Returns a Language or nil if none is detected
     def language
-      return @language if defined? @language
-
-      if defined?(@data) && @data.is_a?(String)
-        data = @data
-      else
-        data = lambda { (binary_mime_type? || binary?) ? "" : self.data }
-      end
-
-      @language = Language.detect(name.to_s, data, mode)
+      @language ||= Language.detect(self)
     end
 
-    # Internal: Get the lexer of the blob.
-    #
-    # Returns a Lexer.
-    def lexer
-      language ? language.lexer : Pygments::Lexer.find_by_name('Text only')
-    end
-
-    # Public: Highlight syntax of blob
-    #
-    # options - A Hash of options (defaults to {})
-    #
-    # Returns html String
-    def colorize(options = {})
-      return unless safe_to_colorize?
-      options[:options] ||= {}
-      options[:options][:encoding] ||= encoding
-      lexer.highlight(data, options)
+    # Internal: Get the TextMate compatible scope for the blob
+    def tm_scope
+      language && language.tm_scope
     end
   end
 end

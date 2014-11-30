@@ -33,16 +33,36 @@
 # Erlang bundles
 - ^rebar$
 
-# Bootstrap minified css and js
-- (^|/)bootstrap([^.]*)(\.min)?\.(js|css)$
+# Go dependencies
+- Godeps/_workspace/
+
+# Minified JavaScript and CSS
+- (\.|-)min\.(js|css)$
+
+# Bootstrap css and js
+- (^|/)bootstrap([^.]*)\.(js|css)$
+
+# Font Awesome
+- font-awesome.css
 
 # Foundation css
-- foundation.min.css
 - foundation.css
 
+# Normalize.css
+- normalize.css
+
+# Bourbon SCSS
+- (^|/)[Bb]ourbon/.*\.css$
+- (^|/)[Bb]ourbon/.*\.scss$
+
+# Animate.css
+- animate.css
+
 # Vendored dependencies
-- thirdparty/
+- third[-_]?party/
+- 3rd[-_]?party/
 - vendors?/
+- extern(al)?/
 
 # Debian packaging
 - ^debian/
@@ -53,12 +73,12 @@
 ## Commonly Bundled JavaScript frameworks ##
 
 # jQuery
-- (^|/)jquery([^.]*)(\.min)?\.js$
-- (^|/)jquery\-\d\.\d+(\.\d+)?(\.min)?\.js$
+- (^|/)jquery([^.]*)\.js$
+- (^|/)jquery\-\d\.\d+(\.\d+)?\.js$
 
 # jQuery UI
-- (^|/)jquery\-ui(\-\d\.\d+(\.\d+)?)?(\.\w+)?(\.min)?\.(js|css)$
-- (^|/)jquery\.(ui|effects)\.([^.]*)(\.min)?\.(js|css)$
+- (^|/)jquery\-ui(\-\d\.\d+(\.\d+)?)?(\.\w+)?\.(js|css)$
+- (^|/)jquery\.(ui|effects)\.([^.]*)\.(js|css)$
 
 # Prototype
 - (^|/)prototype(.*)\.js$
@@ -90,19 +110,32 @@
 # MathJax
 - (^|/)MathJax/
 
+# Chart.js
+- (^|/)Chart\.js$
+
+# Codemirror
+- (^|/)[Cc]ode[Mm]irror/(lib|mode|theme|addon|keymap)
+
 # SyntaxHighlighter - http://alexgorbatchev.com/
 - (^|/)shBrush([^.]*)\.js$
 - (^|/)shCore\.js$
 - (^|/)shLegacy\.js$
 
 # AngularJS
-- (^|/)angular([^.]*)(\.min)?\.js$
+- (^|/)angular([^.]*)\.js$
 
 # D3.js
-- (^|\/)d3(\.v\d+)?([^.]*)(\.min)?\.js$
+- (^|\/)d3(\.v\d+)?([^.]*)\.js$
 
 # React
-- (^|/)react(-[^.]*)?(\.min)?\.js$
+- (^|/)react(-[^.]*)?\.js$
+
+# Modernizr
+- (^|/)modernizr\-\d\.\d+(\.\d+)?\.js$
+- (^|/)modernizr\.custom\.\d+\.js$
+
+# Knockout
+- (^|/)knockout-(\d+\.){3}(debug\.)?js$
 
 ## Python ##
 
@@ -119,6 +152,9 @@
 - ^.osx$
 
 ## Obj-C ##
+
+# Cocoapods
+- ^Pods/
 
 # Sparkle
 - (^|/)Sparkle/
@@ -137,14 +173,14 @@
 - \.intellisense\.js$
 
 # jQuery validation plugin (MS bundles this with asp.net mvc)
-- (^|/)jquery([^.]*)\.validate(\.unobtrusive)?(\.min)?\.js$
-- (^|/)jquery([^.]*)\.unobtrusive\-ajax(\.min)?\.js$
+- (^|/)jquery([^.]*)\.validate(\.unobtrusive)?\.js$
+- (^|/)jquery([^.]*)\.unobtrusive\-ajax\.js$
 
 # Microsoft Ajax
 - (^|/)[Mm]icrosoft([Mm]vc)?([Aa]jax|[Vv]alidation)(\.debug)?\.js$
 
 # NuGet
-- ^[Pp]ackages/
+- ^[Pp]ackages\/.+\.\d+\/
 
 # ExtJS
 - (^|/)extjs/.*?\.js$
@@ -164,6 +200,9 @@
 - (^|/)extjs/src/
 - (^|/)extjs/welcome/
 
+# Html5shiv
+- (^|/)html5shiv\.js$
+
 # Samples folders
 - ^[Ss]amples/
 
@@ -181,8 +220,11 @@
 - ^[Tt]est/fixtures/
 
 # PhoneGap/Cordova
-- (^|/)cordova([^.]*)(\.min)?\.js$
-- (^|/)cordova\-\d\.\d(\.\d)?(\.min)?\.js$
+- (^|/)cordova([^.]*)\.js$
+- (^|/)cordova\-\d\.\d(\.\d)?\.js$
+
+# Foundation js
+- foundation(\..*)?\.js$
 
 # Vagrant
 - ^Vagrantfile$
@@ -190,5 +232,18 @@
 # .DS_Store's
 - .[Dd][Ss]_[Ss]tore$
 
-# Mercury --use-subdirs
-- Mercury/
+# R packages
+- ^vignettes/
+- ^inst/extdata/
+
+# Octicons
+- octicons.css
+- sprockets-octicons.scss
+
+# Typesafe Activator
+- (^|/)activator$
+- (^|/)activator\.bat$
+
+# ProGuard
+- proguard.pro
+- proguard-rules.pro
