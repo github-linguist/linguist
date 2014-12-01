@@ -141,5 +141,9 @@ module Linguist
         Language["GLSL"]
       end
     end
+
+    disambiguate "Gosu", "JavaScript" do |data|
+      Language["Gosu"] if /^uses java\./.match(data)
+    end    
   end
 end
