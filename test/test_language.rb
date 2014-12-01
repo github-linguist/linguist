@@ -1,63 +1,7 @@
-require 'linguist/language'
-
-require 'test/unit'
-require 'pygments'
+require_relative "./helper"
 
 class TestLanguage < Test::Unit::TestCase
   include Linguist
-
-  Lexer = Pygments::Lexer
-
-  def test_lexer
-    assert_equal Lexer['ActionScript 3'], Language['ActionScript'].lexer
-    assert_equal Lexer['AspectJ'], Language['AspectJ'].lexer
-    assert_equal Lexer['Bash'], Language['Gentoo Ebuild'].lexer
-    assert_equal Lexer['Bash'], Language['Gentoo Eclass'].lexer
-    assert_equal Lexer['Bash'], Language['Shell'].lexer
-    assert_equal Lexer['C'], Language['OpenCL'].lexer
-    assert_equal Lexer['C'], Language['XS'].lexer
-    assert_equal Lexer['C++'], Language['C++'].lexer
-    assert_equal Lexer['Chapel'], Language['Chapel'].lexer
-    assert_equal Lexer['Coldfusion HTML'], Language['ColdFusion'].lexer
-    assert_equal Lexer['Coq'], Language['Coq'].lexer
-    assert_equal Lexer['FSharp'], Language['F#'].lexer
-    assert_equal Lexer['FSharp'], Language['F#'].lexer
-    assert_equal Lexer['Fortran'], Language['FORTRAN'].lexer
-    assert_equal Lexer['Gherkin'], Language['Cucumber'].lexer
-    assert_equal Lexer['Groovy'], Language['Groovy'].lexer
-    assert_equal Lexer['HTML'], Language['HTML'].lexer
-    assert_equal Lexer['HTML+Django/Jinja'], Language['HTML+Django'].lexer
-    assert_equal Lexer['HTML+PHP'], Language['HTML+PHP'].lexer
-    assert_equal Lexer['HTTP'], Language['HTTP'].lexer
-    assert_equal Lexer['JSON'], Language['JSON'].lexer
-    assert_equal Lexer['Java'], Language['ChucK'].lexer
-    assert_equal Lexer['Java'], Language['Java'].lexer
-    assert_equal Lexer['JavaScript'], Language['JavaScript'].lexer
-    assert_equal Lexer['MOOCode'], Language['Moocode'].lexer
-    assert_equal Lexer['MuPAD'], Language['mupad'].lexer
-    assert_equal Lexer['NASM'], Language['Assembly'].lexer
-    assert_equal Lexer['OCaml'], Language['OCaml'].lexer
-    assert_equal Lexer['Ooc'], Language['ooc'].lexer
-    assert_equal Lexer['OpenEdge ABL'], Language['OpenEdge ABL'].lexer
-    assert_equal Lexer['REBOL'], Language['Rebol'].lexer
-    assert_equal Lexer['RHTML'], Language['HTML+ERB'].lexer
-    assert_equal Lexer['RHTML'], Language['RHTML'].lexer
-    assert_equal Lexer['Ruby'], Language['Crystal'].lexer
-    assert_equal Lexer['Ruby'], Language['Mirah'].lexer
-    assert_equal Lexer['Ruby'], Language['Ruby'].lexer
-    assert_equal Lexer['S'], Language['R'].lexer
-    assert_equal Lexer['Scheme'], Language['Emacs Lisp'].lexer
-    assert_equal Lexer['Scheme'], Language['Nu'].lexer
-    assert_equal Lexer['Racket'], Language['Racket'].lexer
-    assert_equal Lexer['Scheme'], Language['Scheme'].lexer
-    assert_equal Lexer['Standard ML'], Language['Standard ML'].lexer
-    assert_equal Lexer['TeX'], Language['TeX'].lexer
-    assert_equal Lexer['Verilog'], Language['Verilog'].lexer
-    assert_equal Lexer['XSLT'], Language['XSLT'].lexer
-    assert_equal Lexer['aspx-vb'], Language['ASP'].lexer
-    assert_equal Lexer['haXe'], Language['Haxe'].lexer
-    assert_equal Lexer['reStructuredText'], Language['reStructuredText'].lexer
-  end
 
   def test_find_by_alias
     assert_equal Language['ASP'], Language.find_by_alias('asp')
@@ -119,6 +63,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['VimL'], Language.find_by_alias('viml')
     assert_equal Language['reStructuredText'], Language.find_by_alias('rst')
     assert_equal Language['YAML'], Language.find_by_alias('yml')
+    assert_nil Language.find_by_alias(nil)
   end
 
   def test_groups
@@ -187,11 +132,13 @@ class TestLanguage < Test::Unit::TestCase
 
   def test_programming
     assert_equal :programming, Language['JavaScript'].type
+    assert_equal :programming, Language['LSL'].type
     assert_equal :programming, Language['Perl'].type
     assert_equal :programming, Language['PowerShell'].type
     assert_equal :programming, Language['Python'].type
     assert_equal :programming, Language['Ruby'].type
     assert_equal :programming, Language['TypeScript'].type
+    assert_equal :programming, Language['Makefile'].type
   end
 
   def test_markup
@@ -210,7 +157,6 @@ class TestLanguage < Test::Unit::TestCase
 
   def test_other
     assert_nil Language['Brainfuck'].type
-    assert_nil Language['Makefile'].type
   end
 
   def test_searchable
@@ -220,6 +166,7 @@ class TestLanguage < Test::Unit::TestCase
   end
 
   def test_find_by_name
+    assert_nil Language.find_by_name(nil)
     ruby = Language['Ruby']
     assert_equal ruby, Language.find_by_name('Ruby')
   end
@@ -236,6 +183,22 @@ class TestLanguage < Test::Unit::TestCase
       language.aliases.each do |name|
         assert_equal language, Language.find_by_alias(name)
         assert_equal language, Language[name]
+      end
+    end
+  end
+
+  def test_find_by_extension
+    assert_equal [], Language.find_by_extension('.factor-rc')
+    assert_equal [], Language.find_by_extension('foo.rb')
+    assert_equal [Language['Ruby']], Language.find_by_extension('rb')
+    assert_equal [Language['Ruby']], Language.find_by_extension('.rb')
+    assert_equal [Language['M'], Language['Mathematica'], Language['Matlab'], Language['Mercury'], Language['Objective-C']], Language.find_by_extension('.m')
+  end
+
+  def test_find_all_by_extension
+    Language.all.each do |language|
+      language.extensions.each do |extension|
+        assert_include Language.find_by_extension(extension), language
       end
     end
   end
@@ -260,34 +223,21 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal [Language['Chapel']], Language.find_by_filename('examples/hello.chpl')
   end
 
-  def test_find_by_shebang
-    assert_equal 'ruby', Linguist.interpreter_from_shebang("#!/usr/bin/ruby\n# baz")
-    { []         => ["",
-                     "foo",
-                     "#bar",
-                     "#baz",
-                     "///",
-                     "\n\n\n\n\n",
-                     " #!/usr/sbin/ruby",
-                     "\n#!/usr/sbin/ruby"],
-      ['Ruby']   => ["#!/usr/bin/env ruby\n# baz",
-                     "#!/usr/sbin/ruby\n# bar",
-                     "#!/usr/bin/ruby\n# foo",
-                     "#!/usr/sbin/ruby",
-                     "#!/usr/sbin/ruby foo bar baz\n"],
-      ['R']      => ["#!/usr/bin/env Rscript\n# example R script\n#\n"],
-      ['Shell']  => ["#!/usr/bin/bash\n", "#!/bin/sh"],
-      ['Python'] => ["#!/bin/python\n# foo\n# bar\n# baz",
-                     "#!/usr/bin/python2.7\n\n\n\n",
-                     "#!/usr/bin/python3\n\n\n\n"],
-      ["Common Lisp"] => ["#!/usr/bin/sbcl --script\n\n"]
-    }.each do |languages, bodies|
-      bodies.each do |body|
-        assert_equal([body, languages.map{|l| Language[l]}],
-                     [body, Language.find_by_shebang(body)])
-
-      end
+  def test_find_by_interpreter
+    {
+      "ruby" => "Ruby",
+      "Rscript" => "R",
+      "sh" => "Shell",
+      "bash" => "Shell",
+      "python" => "Python",
+      "python2" => "Python",
+      "python3" => "Python",
+      "sbcl" => "Common Lisp"
+    }.each do |interpreter, language|
+      assert_equal [Language[language]], Language.find_by_interpreter(interpreter)
     end
+
+    assert_equal [], Language.find_by_interpreter(nil)
   end
 
   def test_find
@@ -300,6 +250,22 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal 'C#', Language['c#'].name
     assert_equal 'C#', Language['csharp'].name
     assert_nil Language['defunkt']
+    assert_nil Language[nil]
+  end
+
+  def test_find_ignores_case
+    assert_equal 'AGS Script', Language['ags script'].name
+    assert_equal 'AGS Script', Language['ags sCRIPT'].name
+  end
+
+  def test_find_by_name_ignores_case
+    assert_equal 'AGS Script', Language.find_by_name('ags script').name
+    assert_equal 'AGS Script', Language.find_by_name('ags sCRIPT').name
+  end
+
+  def test_find_by_alias_ignores_case
+    refute_includes Language['AGS Script'].aliases, 'AGS'
+    assert_equal 'AGS Script', Language.find_by_alias('AGS').name
   end
 
   def test_name
@@ -327,6 +293,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal '#3581ba', Language['Python'].color
     assert_equal '#f1e05a', Language['JavaScript'].color
     assert_equal '#31859c', Language['TypeScript'].color
+    assert_equal '#3d9970', Language['LSL'].color
   end
 
   def test_colors
@@ -339,6 +306,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal 'coffee', Language['CoffeeScript'].ace_mode
     assert_equal 'csharp', Language['C#'].ace_mode
     assert_equal 'css', Language['CSS'].ace_mode
+    assert_equal 'lsl', Language['LSL'].ace_mode
     assert_equal 'javascript', Language['JavaScript'].ace_mode
   end
 
@@ -353,6 +321,7 @@ class TestLanguage < Test::Unit::TestCase
   end
 
   def test_extensions
+    assert Language['LSL'].extensions.include?('.lsl')
     assert Language['Perl'].extensions.include?('.pl')
     assert Language['Python'].extensions.include?('.py')
     assert Language['Ruby'].extensions.include?('.rb')
@@ -366,12 +335,6 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal '.coffee', Language['CoffeeScript'].primary_extension
     assert_equal '.t', Language['Turing'].primary_extension
     assert_equal '.ts', Language['TypeScript'].primary_extension
-
-    # This is a nasty requirement, but there's some code in GitHub that
-    # expects this. Really want to drop this.
-    Language.all.each do |language|
-      assert language.primary_extension, "#{language} has no primary extension"
-    end
   end
 
   def test_eql
@@ -383,21 +346,14 @@ class TestLanguage < Test::Unit::TestCase
     assert !Language.by_type(:prose).nil?
   end
 
-  def test_colorize
-    assert_equal <<-HTML.chomp, Language['Ruby'].colorize("def foo\n  'foo'\nend\n")
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">foo</span>
-  <span class="s1">&#39;foo&#39;</span>
-<span class="k">end</span>
-</pre></div>
-    HTML
-  end
+  def test_all_languages_have_grammars
+    scopes = YAML.load(File.read(File.expand_path("../../grammars.yml", __FILE__))).values.flatten
+    missing = Language.all.reject { |language| language.tm_scope == "none" || scopes.include?(language.tm_scope) }
+    message = "The following languages' scopes are not listed in grammars.yml. Please add grammars for all new languages.\n"
+    message << "If no grammar exists for a language, mark the language with `tm_scope: none` in lib/linguist/languages.yml.\n"
 
-  def test_colorize_with_options
-    assert_equal <<-HTML.chomp, Language['Ruby'].colorize("def foo\n  'foo'\nend\n", :options => { :cssclass => "highlight highlight-ruby" })
-<div class="highlight highlight-ruby"><pre><span class="k">def</span> <span class="nf">foo</span>
-  <span class="s1">&#39;foo&#39;</span>
-<span class="k">end</span>
-</pre></div>
-    HTML
+    width = missing.map { |language| language.name.length }.max
+    message << missing.map { |language| sprintf("%-#{width}s %s", language.name, language.tm_scope) }.sort.join("\n")
+    assert missing.empty?, message
   end
 end
