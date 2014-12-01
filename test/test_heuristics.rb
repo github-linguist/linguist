@@ -123,14 +123,10 @@ class TestHeuristcs < Test::Unit::TestCase
     end
   end
 
-  # Candidate languages = ["LiveScript", "LoomScript"]
-  def test_ls_livescript_by_heuristics
-    results = Heuristics.disambiguate_ls(fixture("LiveScript/hello.ls"))
-    assert_equal Language["LiveScript"], results.first
-  end
-
-  def test_ls_loomscript_by_heuristics
-    results = Heuristics.disambiguate_ls(fixture("LoomScript/HelloWorld.ls"))
-    assert_equal Language["LoomScript"], results.first
+  def test_ls_by_heuristics
+    assert_heuristics({
+      "LiveScript" => "LiveScript/hello.ls",
+      "LoomScript" => "LoomScript/HelloWorld.ls"
+    })
   end
 end
