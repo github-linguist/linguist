@@ -527,6 +527,12 @@ Component Pascal:
   - delphi
   - objectpascal
 
+Cool:
+  type: programming
+  extensions:
+  - .cl
+  tm_scope: source.cool
+
 Coq:
   type: programming
   extensions:
@@ -968,6 +974,12 @@ Grace:
   - .grace
   tm_scope: none
 
+Gradle:
+  type: data
+  extensions:
+  - .gradle
+  tm_scope: source.groovy.gradle
+
 Grammatical Framework:
   type: programming
   aliases:
@@ -1297,6 +1309,7 @@ JavaScript:
   - .bones
   - .es6
   - .frag
+  - .gs
   - .jake
   - .jsb
   - .jsfl
@@ -1603,6 +1616,8 @@ Mercury:
   type: programming
   color: "#abcdef"
   ace_mode: prolog
+  interpreters:
+  - mmi
   extensions:
   - .m
   - .moo
@@ -1842,6 +1857,13 @@ Oxygene:
   extensions:
   - .oxygene
   tm_scope: none
+  
+Oz:
+  type: programming
+  color: "#fcaf3e"
+  extensions:
+  - .oz
+  tm_scope: source.oz
 
 PAWN:
   type: programming
@@ -2129,6 +2151,15 @@ R:
   - .Rprofile
   interpreters:
   - Rscript
+
+RAML:
+  type: data
+  lexer: YAML
+  ace_mode: yaml
+  tm_scope: source.yaml
+  color: "#77d9fb"
+  extensions:
+    - .raml
 
 RDoc:
   type: prose

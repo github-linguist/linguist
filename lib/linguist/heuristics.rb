@@ -94,9 +94,11 @@ module Linguist
       end
     end
 
-    disambiguate "Common Lisp", "OpenCL" do |data|
+    disambiguate "Common Lisp", "OpenCL", "Cool" do |data|
       if data.include?("(defun ")
         Language["Common Lisp"]
+      elsif /^class/x.match(data)
+        Language["Cool"]
       elsif /\/\* |\/\/ |^\}/.match(data)
         Language["OpenCL"]
       end
@@ -139,5 +141,9 @@ module Linguist
         Language["GLSL"]
       end
     end
+
+    disambiguate "Gosu", "JavaScript" do |data|
+      Language["Gosu"] if /^uses java\./.match(data)
+    end    
   end
 end
