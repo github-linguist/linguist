@@ -10,6 +10,8 @@ require 'linguist/heuristics'
 require 'linguist/samples'
 require 'linguist/file_blob'
 require 'linguist/blob_helper'
+require 'linguist/strategy/filename'
+require 'linguist/shebang'
 
 module Linguist
   # Language names that are recognizable by GitHub. Defined languages
@@ -91,6 +93,13 @@ module Linguist
       language
     end
 
+    STRATEGIES = [
+      Linguist::Strategy::Filename,
+      Linguist::Shebang,
+      Linguist::Heuristics,
+      Linguist::Classifier
+    ]
+
     # Public: Detects the Language of the blob.
     #
     # blob - an object that includes the Linguist `BlobHelper` interface;
@@ -98,61 +107,22 @@ module Linguist
     #
     # Returns Language or nil.
     def self.detect(blob)
-      name = blob.name.to_s
-
       # Bail early if the blob is binary or empty.
       return nil if blob.likely_binary? || blob.binary? || blob.empty?
 
-      # A bit of an elegant hack. If the file is executable but extensionless,
-      # append a "magic" extension so it can be classified with other
-      # languages that have shebang scripts.
-      extensions = FileBlob.new(name).extensions
-      if extensions.empty? && blob.mode && (blob.mode.to_i(8) & 05) == 05
-        name += ".script!"
-      end
-
-      # Find languages that match based on filename.
-      possible_languages = find_by_filename(name)
-
-      if possible_languages.length == 1
-        # Simplest and most common case, we can just return the one match based
-        # on extension
-        possible_languages.first
-
-      # If there is more than one possible language with that extension (or no
-      # extension at all, in the case of extensionless scripts), we need to
-      # continue our detection work
-      else
-        # Matches possible_languages.length == 0 || possible_languages.length > 0
-        data = blob.data
-
-        # Check if there's a shebang line and use that as authoritative
-        if (result = find_by_shebang(data)) && !result.empty?
-          return result.first
-
-        # More than one language with that extension. We need to make a choice.
-        elsif possible_languages.length > 1
-
-          # First try heuristics
-
-          possible_language_names = possible_languages.map(&:name)
-          heuristic_languages = Heuristics.find_by_heuristics(data, possible_language_names)
-
-          # If there are multiple possible languages returned from heuristics
-          # then reduce language candidates for Bayesian classifier here.
-          if heuristic_languages.size > 1
-            possible_language_names = heuristic_languages.map(&:name)
-          end
-
-          if heuristic_languages.size == 1
-            return heuristic_languages.first
-          # Lastly, fall back to the probabilistic classifier.
-          elsif classified = Classifier.classify(Samples.cache, data, possible_language_names).first
-            # Return the actual Language object based of the string language name (i.e., first element of `#classify`)
-            return Language[classified[0]]
-          end
+      # Call each strategy until one candidate is returned.
+      STRATEGIES.reduce([]) do |languages, strategy|
+        candidates = strategy.call(blob, languages)
+        if candidates.size == 1
+          return candidates.first
+        elsif candidates.size > 1
+          # More than one candidate was found, pass them to the next strategy.
+          candidates
+        else
+          # No candiates were found, pass on languages from the previous strategy.
+          languages
         end
-      end
+      end.first
     end
 
     # Public: Get all Languages
@@ -229,19 +199,25 @@ module Linguist
       @extension_index[extname]
     end
 
-    # Public: Look up Languages by shebang line.
+    # DEPRECATED
+    def self.find_by_shebang(data)
+      @interpreter_index[Shebang.interpreter(data)]
+    end
+
+    # Public: Look up Languages by interpreter.
     #
-    # data - Array of tokens or String data to analyze.
+    # interpreter - String of interpreter name
     #
     # Examples
     #
-    #   Language.find_by_shebang("#!/bin/bash\ndate;")
+    #   Language.find_by_interpreter("bash")
     #   # => [#<Language name="Bash">]
     #
     # Returns the matching Language
-    def self.find_by_shebang(data)
-      @interpreter_index[Linguist.interpreter_from_shebang(data)]
+    def self.find_by_interpreter(interpreter)
+      @interpreter_index[interpreter]
     end
+
 
     # Public: Look up Language by its name or lexer.
     #
