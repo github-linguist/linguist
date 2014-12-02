@@ -1492,6 +1492,12 @@ LookML:
   - .lookml
   tm_scope: source.yaml
 
+LoomScript:
+  type: programming
+  extensions:
+  - .ls
+  tm_scope: source.loomscript
+
 Lua:
   type: programming
   ace_mode: lua
@@ -1971,14 +1977,17 @@ Perl6:
   type: programming
   color: "#0298c3"
   extensions:
-  - .p6
   - .6pl
   - .6pm
   - .nqp
+  - .p6
   - .p6l
   - .p6m
+  - .pl
   - .pl6
+  - .pm
   - .pm6
+  - .t
   interpreters:
   - perl6
   tm_scope: none
