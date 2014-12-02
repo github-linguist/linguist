@@ -70,8 +70,10 @@ module Linguist
       end
     end
 
-    disambiguate "Perl", "Prolog" do |data|
-      if data.include?("use strict")
+    disambiguate "Perl", "Perl6", "Prolog" do |data|
+      if data.include?("use v6")
+        Language["Perl6"]
+      elsif data.include?("use strict")
         Language["Perl"]
       elsif data.include?(":-")
         Language["Prolog"]
