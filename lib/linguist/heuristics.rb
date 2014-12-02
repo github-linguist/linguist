@@ -146,6 +146,15 @@ module Linguist
 
     disambiguate "Gosu", "JavaScript" do |data|
       Language["Gosu"] if /^uses java\./.match(data)
-    end    
+    end
+
+    disambiguate "LoomScript", "LiveScript" do |data|
+      if /^\s*package\s*[\w\.\/\*\s]*\s*{/.match(data)
+        Language["LoomScript"]
+      else
+        Language["LiveScript"]
+      end
+    end
+
   end
 end

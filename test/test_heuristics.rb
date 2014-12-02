@@ -122,4 +122,11 @@ class TestHeuristcs < Test::Unit::TestCase
       end
     end
   end
+
+  def test_ls_by_heuristics
+    assert_heuristics({
+      "LiveScript" => "LiveScript/hello.ls",
+      "LoomScript" => "LoomScript/HelloWorld.ls"
+    })
+  end
 end
