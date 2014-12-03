@@ -30,6 +30,12 @@ class TestHeuristcs < Test::Unit::TestCase
     })
   end
 
+  def test_heuristics_with_no_matches
+    languages = []
+    results = Heuristics.call(file_blob("JavaScript/namespace.js"), languages)
+    assert_equal [], results
+  end
+
   def test_c_by_heuristics
     languages = [Language["C++"], Language["Objective-C"], Language["C"]]
     results = Heuristics.call(file_blob("C/ArrowLeft.h"), languages)
