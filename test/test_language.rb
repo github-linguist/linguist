@@ -3,6 +3,14 @@ require_relative "./helper"
 class TestLanguage < Test::Unit::TestCase
   include Linguist
 
+  def samples_path
+    File.expand_path("../../samples", __FILE__)
+  end
+
+  def fixture(name)
+    File.read(File.join(samples_path, name))
+  end
+
   def test_find_by_alias
     assert_equal Language['ASP'], Language.find_by_alias('asp')
     assert_equal Language['ASP'], Language.find_by_alias('aspx')
@@ -355,5 +363,13 @@ class TestLanguage < Test::Unit::TestCase
     width = missing.map { |language| language.name.length }.max
     message << missing.map { |language| sprintf("%-#{width}s %s", language.name, language.tm_scope) }.sort.join("\n")
     assert missing.empty?, message
+  end
+
+  def test_detect_on_all_language_samples
+    Samples.each do |sample|
+      blob = Linguist::FileBlob.new(sample[:path])
+      match = Language.detect(blob)
+      assert_equal Language[sample[:language]], match
+    end
   end
 end
