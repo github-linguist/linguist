@@ -13,6 +13,9 @@ set +x
 
 mkdir -p ./vendor/gems
 
+# Clean out any unversioned files
+git clean -fd
+
 bundle install --local --path ./vendor/gems
 bundle exec rake samples
 bundle exec rake
