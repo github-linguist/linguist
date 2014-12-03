@@ -124,7 +124,7 @@ class TestHeuristcs < Test::Unit::TestCase
     hash.each do |language, blobs|
       Array(blobs).each do |blob|
         result = Heuristics.call(file_blob(blob), candidates)
-        assert_equal [Language[language]], result
+        assert_equal [Language[language]], result, "Failed for #{blob}"
       end
     end
   end

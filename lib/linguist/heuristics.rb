@@ -137,9 +137,9 @@ module Linguist
     disambiguate "F#", "Forth", "GLSL" do |data|
       if /^(: |new-device)/.match(data)
         Language["Forth"]
-      elsif /^(#light|import|let|module|namespace|open|type)/.match(data)
+      elsif /^\s*(#light|import|let|module|namespace|open|type)/.match(data)
         Language["F#"]
-      elsif /^(#include|#pragma|precision|uniform|varying|void)/.match(data)
+      elsif /^\s*(#include|#pragma|precision|uniform|varying|void)/.match(data)
         Language["GLSL"]
       end
     end
