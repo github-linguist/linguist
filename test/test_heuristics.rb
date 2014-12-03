@@ -20,8 +20,9 @@ class TestHeuristcs < Test::Unit::TestCase
     Dir.glob("#{samples_path}/#{language_name}/#{file}")
   end
 
-  def test_no_language
-    results = Heuristics.call(file_blob("C++/render_adapter.cpp"), [])
+  def test_no_match
+    language = []
+    results = Heuristics.call(file_blob("JavaScript/namespace.js"), language)
     assert_equal [], results
   end
 
