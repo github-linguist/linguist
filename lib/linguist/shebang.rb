@@ -19,7 +19,7 @@ module Linguist
     # Returns a String or nil
     def self.interpreter(data)
       lines = data.lines
-      return unless match = /^#! ?(.*)$/.match(lines.first)
+      return unless match = /^#! ?(.+)$/.match(lines.first)
 
       tokens = match[1].split(' ')
       script = tokens.first.split('/').last
