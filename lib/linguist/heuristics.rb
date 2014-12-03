@@ -53,7 +53,7 @@ module Linguist
 
     # Internal: Check if this heuristic matches the candidate languages.
     def matches?(candidates)
-      candidates.all? { |l| @languages.include?(l.name) }
+      candidates.any? && candidates.all? { |l| @languages.include?(l.name) }
     end
 
     # Internal: Perform the heuristic
@@ -70,8 +70,10 @@ module Linguist
       end
     end
 
-    disambiguate "Perl", "Prolog" do |data|
-      if data.include?("use strict")
+    disambiguate "Perl", "Perl6", "Prolog" do |data|
+      if data.include?("use v6")
+        Language["Perl6"]
+      elsif data.include?("use strict")
         Language["Perl"]
       elsif data.include?(":-")
         Language["Prolog"]
@@ -144,6 +146,15 @@ module Linguist
 
     disambiguate "Gosu", "JavaScript" do |data|
       Language["Gosu"] if /^uses java\./.match(data)
-    end    
+    end
+
+    disambiguate "LoomScript", "LiveScript" do |data|
+      if /^\s*package\s*[\w\.\/\*\s]*\s*{/.match(data)
+        Language["LoomScript"]
+      else
+        Language["LiveScript"]
+      end
+    end
+
   end
 end
