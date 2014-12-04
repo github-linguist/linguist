@@ -3,9 +3,7 @@ module Linguist
     # Public: Is the blob a generated file?
     #
     # name - String filename
-    # data - String blob data. A block also maybe passed in for lazy
-    #        loading. This behavior is deprecated and you should always
-    #        pass in a String.
+    # data - String blob data.
     #
     # Return true or false
     def self.generated?(name, data)
@@ -19,26 +17,16 @@ module Linguist
     def initialize(name, data)
       @name = name
       @extname = File.extname(name)
-      @_data = data
+      @data = data
     end
 
     attr_reader :name, :extname
-
-    # Lazy load blob data if block was passed in.
-    #
-    # Awful, awful stuff happening here.
-    #
-    # Returns String data.
-    def data
-      @data ||= @_data.respond_to?(:call) ? @_data.call() : @_data
-    end
 
     # Public: Get each line of data
     #
     # Returns an Array of lines
     def lines
-      # TODO: data should be required to be a String, no nils
-      @lines ||= data ? data.split("\n", -1) : []
+      @lines ||= @data ? @data.split("\n", -1) : []
     end
 
     # Internal: Is the blob a generated file?
