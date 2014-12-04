@@ -469,7 +469,7 @@ class TestBlob < Test::Unit::TestCase
     # Test language detection for files which shouldn't be used as samples
     root = File.expand_path('../fixtures', __FILE__)
     Dir.entries(root).each do |language|
-      next if language == '.' || language == '..'
+      next if language == '.' || language == '..' || File.basename(language) == 'ace_modes.json'
 
       # Each directory contains test files of a language
       dirname = File.join(root, language)
