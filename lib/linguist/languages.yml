@@ -308,6 +308,8 @@ C:
   color: "#555"
   extensions:
   - .c
+  - .C
+  - .H
   - .cats
   - .h
   - .idc
@@ -335,9 +337,6 @@ C++:
   - cpp
   extensions:
   - .cpp
-  - .C
-  - .CPP
-  - .H
   - .c++
   - .cc
   - .cxx
@@ -528,6 +527,12 @@ Component Pascal:
   - delphi
   - objectpascal
 
+Cool:
+  type: programming
+  extensions:
+  - .cl
+  tm_scope: source.cool
+
 Coq:
   type: programming
   extensions:
@@ -559,6 +564,8 @@ Crystal:
   - .cr
   ace_mode: ruby
   tm_scope: source.ruby
+  interpreters:
+  - crystal
 
 Cucumber:
   extensions:
@@ -736,6 +743,8 @@ Erlang:
   - .es
   - .escript
   - .hrl
+  interpreters:
+  - escript
 
 F#:
   type: programming
@@ -815,6 +824,7 @@ Forth:
   - .for
   - .forth
   - .frt
+  - .fs
 
 Frege:
   type: programming
@@ -868,6 +878,7 @@ GLSL:
   - .fp
   - .frag
   - .frg
+  - .fs
   - .fshader
   - .geo
   - .geom
@@ -931,6 +942,8 @@ Gnuplot:
   - .gnuplot
   - .plot
   - .plt
+  interpreters:
+  - gnuplot
 
 Go:
   type: programming
@@ -960,6 +973,12 @@ Grace:
   extensions:
   - .grace
   tm_scope: none
+
+Gradle:
+  type: data
+  extensions:
+  - .gradle
+  tm_scope: source.groovy.gradle
 
 Grammatical Framework:
   type: programming
@@ -1196,13 +1215,15 @@ Ioke:
   color: "#078193"
   extensions:
   - .ik
+  interpreters:
+  - ioke
 
 Isabelle:
   type: programming
   color: "#fdcd00"
   extensions:
   - .thy
-  tm_scope: none
+  tm_scope: source.isabelle.theory
 
 J:
   type: programming
@@ -1288,6 +1309,7 @@ JavaScript:
   - .bones
   - .es6
   - .frag
+  - .gs
   - .jake
   - .jsb
   - .jsfl
@@ -1470,6 +1492,12 @@ LookML:
   - .lookml
   tm_scope: source.yaml
 
+LoomScript:
+  type: programming
+  extensions:
+  - .ls
+  tm_scope: source.loomscript
+
 Lua:
   type: programming
   ace_mode: lua
@@ -1594,6 +1622,8 @@ Mercury:
   type: programming
   color: "#abcdef"
   ace_mode: prolog
+  interpreters:
+  - mmi
   extensions:
   - .m
   - .moo
@@ -1687,11 +1717,12 @@ Nit:
 
 Nix:
   type: programming
+  color: "#7070ff"
   extensions:
   - .nix
   aliases:
   - nixos
-  tm_scope: none
+  tm_scope: source.nix
 
 Nu:
   type: programming
@@ -1703,6 +1734,8 @@ Nu:
   filenames:
   - Nukefile
   tm_scope: source.scheme
+  interpreters:
+  - nush
 
 NumPy:
   group: Python
@@ -1832,6 +1865,13 @@ Oxygene:
   - .oxygene
   tm_scope: none
 
+Oz:
+  type: programming
+  color: "#fcaf3e"
+  extensions:
+  - .oz
+  tm_scope: source.oz
+
 PAWN:
   type: programming
   color: "#dbb284"
@@ -1849,7 +1889,6 @@ PHP:
   - .aw
   - .ctp
   - .fcgi
-  - .module
   - .php3
   - .php4
   - .php5
@@ -1889,6 +1928,8 @@ Parrot Assembly:
   - pasm
   extensions:
   - .pasm
+  interpreters:
+  - parrot
   tm_scope: none
 
 Parrot Internal Representation:
@@ -1899,6 +1940,8 @@ Parrot Internal Representation:
   - pir
   extensions:
   - .pir
+  interpreters:
+  - parrot
 
 Pascal:
   type: programming
@@ -1933,14 +1976,19 @@ Perl6:
   type: programming
   color: "#0298c3"
   extensions:
-  - .p6
   - .6pl
   - .6pm
   - .nqp
+  - .p6
   - .p6l
   - .p6m
+  - .pl
   - .pl6
+  - .pm
   - .pm6
+  - .t
+  interpreters:
+  - perl6
   tm_scope: none
 
 PigLatin:
@@ -2005,6 +2053,8 @@ Prolog:
   - .ecl
   - .pro
   - .prolog
+  interpreters:
+  - swipl
 
 Propeller Spin:
   type: programming
@@ -2068,6 +2118,8 @@ Python:
   - wscript
   interpreters:
   - python
+  - python2
+  - python3
 
 Python traceback:
   type: data
@@ -2088,6 +2140,8 @@ QMake:
   extensions:
   - .pro
   - .pri
+  interpreters:
+  - qmake
 
 R:
   type: programming
@@ -2106,6 +2160,15 @@ R:
   - .Rprofile
   interpreters:
   - Rscript
+
+RAML:
+  type: data
+  lexer: YAML
+  ace_mode: yaml
+  tm_scope: source.yaml
+  color: "#77d9fb"
+  extensions:
+    - .raml
 
 RDoc:
   type: prose
@@ -2242,6 +2305,8 @@ Ruby:
   - .watchr
   interpreters:
   - ruby
+  - macruby
+  - rake
   filenames:
   - .pryrc
   - Appraisals
@@ -2318,7 +2383,6 @@ Sass:
   group: CSS
   extensions:
   - .sass
-  - .scss
 
 Scala:
   type: programming
@@ -2328,6 +2392,8 @@ Scala:
   - .scala
   - .sbt
   - .sc
+  interpreters:
+  - scala
 
 Scaml:
   group: HTML
@@ -2718,6 +2784,7 @@ XML:
   - .jelly
   - .kml
   - .launch
+  - .mm
   - .mxml
   - .nproj
   - .nuspec
