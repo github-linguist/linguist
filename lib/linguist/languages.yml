@@ -3159,6 +3159,14 @@ YAML:
   - .yaml
   ace_mode: yaml
 
+YAML+Jinja:
+  type: data
+  tm_scope: source.yaml
+  aliases:
+    - saltstate
+  extensions:
+    - .sls
+
 Zephir:
   type: programming
   color: "#118f9e"
