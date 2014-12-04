@@ -308,11 +308,11 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal 'css', Language['CSS'].ace_mode
     assert_equal 'lsl', Language['LSL'].ace_mode
     assert_equal 'javascript', Language['JavaScript'].ace_mode
+    assert_equal 'none', Language['FORTRAN'].ace_mode
   end
 
   def test_ace_modes
     assert Language.ace_modes.include?(Language['Ruby'])
-    assert !Language.ace_modes.include?(Language['FORTRAN'])
   end
 
   def test_wrap
@@ -354,6 +354,24 @@ class TestLanguage < Test::Unit::TestCase
 
     width = missing.map { |language| language.name.length }.max
     message << missing.map { |language| sprintf("%-#{width}s %s", language.name, language.tm_scope) }.sort.join("\n")
+    assert missing.empty?, message
+  end
+
+  def test_all_languages_have_a_valid_ace_mode
+    ace_fixture_path = File.join('test', 'fixtures', 'ace_modes.json')
+    skip("No ace_modes.json file") unless File.exist?(ace_fixture_path)
+
+    ace_github_modes = Yajl.load(File.read(ace_fixture_path))
+    existing_ace_modes = ace_github_modes.map do |ace_github_mode|
+      File.basename(ace_github_mode["name"], ".js") if ace_github_mode["name"]  !~ /_highlight_rules|_test|_worker/
+    end.compact.uniq.sort.map(&:downcase)
+
+    missing = Language.all.reject { |language| language.ace_mode == "none" || existing_ace_modes.include?(language.ace_mode) }
+    message = "The following languages do not have an Ace mode listed in languages.yml. Please add an Ace mode for all new languages.\n"
+    message << "If no Ace mode exists for a language, mark the language with `ace_mode: none` in lib/linguist/languages.yml.\n"
+
+    width = missing.map { |language| language.name.length }.max
+    message << missing.map { |language| sprintf("%-#{width}s %s", language.name, language.ace_mode) }.sort.join("\n")
     assert missing.empty?, message
   end
 end
