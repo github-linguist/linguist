@@ -156,5 +156,9 @@ module Linguist
       end
     end
 
+    disambiguate "Scheme", "YAML+Jinja" do |data|
+      Language["Scheme"] if /^\(/.match(data)
+    end
+
   end
 end
