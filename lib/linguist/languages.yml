@@ -2602,12 +2602,13 @@ Sage:
 SaltStack:
   type: data
   group: YAML
-  tm_scope: source.yaml.salt
   aliases:
   - saltstate
   - salt
   extensions:
   - .sls
+  tm_scope: source.yaml.salt
+  ace_mode: yaml
 
 Sass:
   type: markup
