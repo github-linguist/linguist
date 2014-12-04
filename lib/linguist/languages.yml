@@ -2377,6 +2377,16 @@ Sage:
   - .sage
   tm_scope: source.python
 
+SaltStack:
+  type: data
+  group: YAML
+  tm_scope: source.yaml.salt
+  aliases:
+  - saltstate
+  - salt
+  extensions:
+  - .sls
+
 Sass:
   type: markup
   tm_scope: source.sass
@@ -2891,7 +2901,6 @@ YAML:
   - .yml
   - .reek
   - .rviz
-  - .sls
   - .yaml
 
 Zephir:
