@@ -1,3 +1,5 @@
+require_relative "./helper"
+
 class TestGenerated < Test::Unit::TestCase
   include Linguist
 
