@@ -308,11 +308,11 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal 'css', Language['CSS'].ace_mode
     assert_equal 'lsl', Language['LSL'].ace_mode
     assert_equal 'javascript', Language['JavaScript'].ace_mode
-    assert_equal 'none', Language['FORTRAN'].ace_mode
   end
 
   def test_ace_modes
     assert Language.ace_modes.include?(Language['Ruby'])
+    assert !Language.ace_modes.include?(Language['FORTRAN'])
   end
 
   def test_wrap
