@@ -480,8 +480,12 @@ class TestBlob < Test::Unit::TestCase
         next unless File.file?(filepath)
 
         blob = blob(filepath)
-        assert blob.language, "No language for #{filepath}"
-        assert_equal language, blob.language.name, blob.name
+        if language == 'Data'
+          assert blob.language.nil?, "A language was found for #{filepath}"
+        else
+          assert blob.language, "No language for #{filepath}"
+          assert_equal language, blob.language.name, blob.name
+        end
       end
     end
   end
