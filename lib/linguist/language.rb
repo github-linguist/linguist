@@ -271,7 +271,7 @@ module Linguist
     #
     # Returns an Array of Languages.
     def self.ace_modes
-      @ace_modes ||= all.select(&:ace_mode).sort_by { |lang| lang.name.downcase }.reject { |h| h.ace_mode == 'none' }
+      @ace_modes ||= all.select(&:ace_mode).sort_by { |lang| lang.name.downcase }
     end
 
     # Internal: Initialize a new Language
