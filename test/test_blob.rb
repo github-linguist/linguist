@@ -1,15 +1,7 @@
-require 'linguist/file_blob'
-require 'linguist/samples'
-
-require 'test/unit'
-require 'mocha/setup'
-require 'mime/types'
-require 'pygments'
+require_relative "./helper"
 
 class TestBlob < Test::Unit::TestCase
   include Linguist
-
-  Lexer = Pygments::Lexer
 
   def setup
     # git blobs are normally loaded as ASCII-8BIT since they may contain data
@@ -196,8 +188,8 @@ class TestBlob < Test::Unit::TestCase
     assert blob("Binary/MainMenu.nib").generated?
     assert !blob("XML/project.pbxproj").generated?
 
-    # Gemfile.locks
-    assert blob("Gemfile.lock").generated?
+    # Gemfile.lock is NOT generated
+    assert !blob("Gemfile.lock").generated?
 
     # Generated .NET Docfiles
     assert blob("XML/net_docfile.xml").generated?
@@ -229,7 +221,6 @@ class TestBlob < Test::Unit::TestCase
     assert !blob("PostScript/sierpinski.ps").generated?
 
     # These examples are too basic to tell
-    assert !blob("JavaScript/empty.js").generated?
     assert !blob("JavaScript/hello.js").generated?
 
     assert blob("JavaScript/intro-old.js").generated?
@@ -301,8 +292,23 @@ class TestBlob < Test::Unit::TestCase
     assert blob("deps/http_parser/http_parser.c").vendored?
     assert blob("deps/v8/src/v8.h").vendored?
 
+    # Chart.js
+    assert blob("some/vendored/path/Chart.js").vendored?
+    assert !blob("some/vendored/path/chart.js").vendored?
+
+    # Codemirror deps
+    assert blob("codemirror/mode/blah.js").vendored?
+
     # Debian packaging
     assert blob("debian/cron.d").vendored?
+
+    # Minified JavaScript and CSS
+    assert blob("foo.min.js").vendored?
+    assert blob("foo.min.css").vendored?
+    assert blob("foo-min.js").vendored?
+    assert blob("foo-min.css").vendored?
+    assert !blob("foomin.css").vendored?
+    assert !blob("foo.min.txt").vendored?
 
     # Prototype
     assert !blob("public/javascripts/application.js").vendored?
@@ -459,26 +465,37 @@ class TestBlob < Test::Unit::TestCase
       assert blob.language, "No language for #{sample[:path]}"
       assert_equal sample[:language], blob.language.name, blob.name
     end
+
+    # Test language detection for files which shouldn't be used as samples
+    root = File.expand_path('../fixtures', __FILE__)
+    Dir.entries(root).each do |language|
+      next if language == '.' || language == '..' || File.basename(language) == 'ace_modes.json'
+
+      # Each directory contains test files of a language
+      dirname = File.join(root, language)
+      Dir.entries(dirname).each do |filename|
+        # By default blob search the file in the samples;
+        # thus, we need to give it the absolute path
+        filepath = File.join(dirname, filename)
+        next unless File.file?(filepath)
+
+        blob = blob(filepath)
+        assert blob.language, "No language for #{filepath}"
+        assert_equal language, blob.language.name, blob.name
+      end
+    end
   end
 
-  def test_lexer
-    assert_equal Lexer['Ruby'], blob("Ruby/foo.rb").lexer
+  def test_minified_files_not_safe_to_highlight
+    assert !blob("JavaScript/jquery-1.6.1.min.js").safe_to_colorize?
   end
 
-  def test_colorize
-    assert_equal <<-HTML.chomp, blob("Ruby/foo.rb").colorize
-<div class="highlight"><pre><span class="k">module</span> <span class="nn">Foo</span>
-<span class="k">end</span>
-</pre></div>
-    HTML
-  end
+  def test_empty
+    blob = Struct.new(:data) { include Linguist::BlobHelper }
 
-  def test_colorize_does_skip_minified_files
-    assert_nil blob("JavaScript/jquery-1.6.1.min.js").colorize
-  end
-
-  # Pygments.rb was taking exceeding long on this particular file
-  def test_colorize_doesnt_blow_up_with_files_with_high_ratio_of_long_lines
-    assert_nil blob("JavaScript/steelseries-min.js").colorize
+    assert blob.new("").empty?
+    assert blob.new(nil).empty?
+    refute blob.new(" ").empty?
+    refute blob.new("nope").empty?
   end
 end
