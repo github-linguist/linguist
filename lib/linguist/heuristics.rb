@@ -165,5 +165,13 @@ module Linguist
         Language["text"]
       end
     end
+
+    disambiguate "TypeScript", "XML" do |data|
+      if data.include?("<TS ")
+        Language["XML"]
+      else
+        Language["TypeScript"]
+      end
+    end
   end
 end
