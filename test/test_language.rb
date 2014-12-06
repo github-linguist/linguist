@@ -367,9 +367,9 @@ class TestLanguage < Test::Unit::TestCase
       File.basename(ace_github_mode["name"], ".js") if ace_github_mode["name"]  !~ /_highlight_rules|_test|_worker/
     end.compact.uniq.sort.map(&:downcase)
 
-    missing = Language.all.reject { |language| language.ace_mode == "none" || existing_ace_modes.include?(language.ace_mode) }
+    missing = Language.all.reject { |language| language.ace_mode == "text" || existing_ace_modes.include?(language.ace_mode) }
     message = "The following languages do not have an Ace mode listed in languages.yml. Please add an Ace mode for all new languages.\n"
-    message << "If no Ace mode exists for a language, mark the language with `ace_mode: none` in lib/linguist/languages.yml.\n"
+    message << "If no Ace mode exists for a language, mark the language with `ace_mode: text` in lib/linguist/languages.yml.\n"
 
     width = missing.map { |language| language.name.length }.max
     message << missing.map { |language| sprintf("%-#{width}s %s", language.name, language.ace_mode) }.sort.join("\n")
