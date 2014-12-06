@@ -545,8 +545,6 @@ Common Lisp:
   type: programming
   tm_scope: source.lisp
   color: "#3fb68b"
-  aliases:
-  - lisp
   extensions:
   - .lisp
   - .asd
@@ -1495,12 +1493,6 @@ LFE:
   tm_scope: source.lisp
   ace_mode: lisp
 
-Lisp:
-  type: programming
-  tm_scope: source.lisp
-  color: "#3fb68b"
-  ace_mode: lisp
-
 LLVM:
   extensions:
   - .ll
@@ -1573,6 +1565,12 @@ Liquid:
   - .liquid
   tm_scope: none
   ace_mode: liquid
+
+Lisp:
+  type: programming
+  tm_scope: source.lisp
+  color: "#3fb68b"
+  ace_mode: lisp
 
 Literate Agda:
   type: programming
@@ -2193,9 +2191,9 @@ Perl6:
 
 PicoLisp:
   type: programming
-  group: Lisp
   tm_scope: source.lisp
   color: "#3fb68b"
+  group: Lisp
   ace_mode: lisp
 
 PigLatin:

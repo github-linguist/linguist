@@ -21,7 +21,7 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['CoffeeScript'], Language.find_by_alias('coffee-script')
     assert_equal Language['ColdFusion'], Language.find_by_alias('cfm')
     assert_equal Language['Common Lisp'], Language.find_by_alias('common-lisp')
-    assert_equal Language['Common Lisp'], Language.find_by_alias('lisp')
+    assert_equal Language['Lisp'], Language.find_by_alias('lisp')
     assert_equal Language['Darcs Patch'], Language.find_by_alias('dpatch')
     assert_equal Language['Dart'], Language.find_by_alias('dart')
     assert_equal Language['Emacs Lisp'], Language.find_by_alias('elisp')
