@@ -165,5 +165,13 @@ module Linguist
         Language["text"]
       end
     end
+
+    disambiguate "BitBake", "BlitzBasic" do |data|
+      if /^\s*; /.match(data) || data.include?("End Function")
+        Language["BlitzBasic"]
+      elsif /^\s*(# |include|require)\b/.match(data)
+        Language["BitBake"]
+      end
+    end
   end
 end
