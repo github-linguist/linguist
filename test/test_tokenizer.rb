@@ -1,6 +1,4 @@
-require 'linguist/tokenizer'
-
-require 'test/unit'
+require_relative "./helper"
 
 class TestTokenizer < Test::Unit::TestCase
   include Linguist
