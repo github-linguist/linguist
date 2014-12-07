@@ -126,6 +126,13 @@ class TestHeuristcs < Test::Unit::TestCase
     })
   end
 
+  def test_lsp_by_heuristics
+    assert_heuristics({
+      "Common Lisp" => all_fixtures("Common Lisp"),
+      "NewLisp" => all_fixtures("NewLisp")
+    })
+  end
+
   def assert_heuristics(hash)
     candidates = hash.keys.map { |l| Language[l] }
 

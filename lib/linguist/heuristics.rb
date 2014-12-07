@@ -165,5 +165,13 @@ module Linguist
         Language["text"]
       end
     end
+
+    disambiguate "Common Lisp", "NewLisp" do |data|
+      if /^\s*\((defun|defactor|in-package|defpackage) /.match(data)
+        Language["Common Lisp"]
+      elsif /^\s*\(define /.match(data)
+        Language["NewLisp"]
+      end
+    end
   end
 end
