@@ -469,16 +469,16 @@ class TestBlob < Test::Unit::TestCase
     # Test language detection for files which shouldn't be used as samples
     root = File.expand_path('../fixtures', __FILE__)
     Dir.entries(root).each do |language|
-      next unless File.file?(language)
+      next if language == '.' || language == '..' || File.basename(language) == 'ace_modes.json'
 
       # Each directory contains test files of a language
       dirname = File.join(root, language)
       Dir.entries(dirname).each do |filename|
-        next unless File.file?(filename)
-        
         # By default blob search the file in the samples;
         # thus, we need to give it the absolute path
         filepath = File.join(dirname, filename)
+        next unless File.file?(filepath)
+
         blob = blob(filepath)
         assert blob.language, "No language for #{filepath}"
         assert_equal language, blob.language.name, blob.name
