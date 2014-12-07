@@ -150,4 +150,11 @@ class TestHeuristcs < Test::Unit::TestCase
       "LoomScript" => "LoomScript/HelloWorld.ls"
     })
   end
+
+  def test_ts_by_heuristics
+    assert_heuristics({
+      "TypeScript" => all_fixtures("TypeScript", "*.ts"),
+      "XML" => all_fixtures("XML", "*.ts")
+    })
+  end
 end

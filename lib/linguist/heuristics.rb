@@ -61,6 +61,14 @@ module Linguist
       @heuristic.call(data)
     end
 
+    disambiguate "BitBake", "BlitzBasic" do |data|
+      if /^\s*; /.match(data) || data.include?("End Function")
+        Language["BlitzBasic"]
+      elsif /^\s*(# |include|require)\b/.match(data)
+        Language["BitBake"]
+      end
+    end
+
     disambiguate "Objective-C", "C++", "C" do |data|
       if (/@(interface|class|protocol|property|end|synchronised|selector|implementation)\b/.match(data))
         Language["Objective-C"]
@@ -156,6 +164,14 @@ module Linguist
       end
     end
 
+    disambiguate "TypeScript", "XML" do |data|
+      if data.include?("<TS ")
+        Language["XML"]
+      else
+        Language["TypeScript"]
+      end
+    end
+
     disambiguate "Frege", "Forth", "text" do |data|
       if /^(: |also |new-device|previous )/.match(data)
         Language["Forth"]
@@ -163,14 +179,6 @@ module Linguist
         Language["Frege"]
       else
         Language["text"]
-      end
-    end
-
-    disambiguate "BitBake", "BlitzBasic" do |data|
-      if /^\s*; /.match(data) || data.include?("End Function")
-        Language["BlitzBasic"]
-      elsif /^\s*(# |include|require)\b/.match(data)
-        Language["BitBake"]
       end
     end
   end
