@@ -155,6 +155,22 @@ module Linguist
         Language["LiveScript"]
       end
     end
+    
+    disambiguate "Common Lisp", "NewLisp" do |data|
+      if /^\s*\((defun|defactor|in-package|defpackage) /.match(data)
+        Language["Common Lisp"]
+      elsif /^\s*\(define /.match(data)
+        Language["NewLisp"]
+      end
+    end
+
+    disambiguate "TypeScript", "XML" do |data|
+      if data.include?("<TS ")
+        Language["XML"]
+      else
+        Language["TypeScript"]
+      end
+    end
 
     disambiguate "Frege", "Forth", "text" do |data|
       if /^(: |also |new-device|previous )/.match(data)
@@ -163,14 +179,6 @@ module Linguist
         Language["Frege"]
       else
         Language["text"]
-      end
-    end
-
-    disambiguate "Common Lisp", "NewLisp" do |data|
-      if /^\s*\((defun|defactor|in-package|defpackage) /.match(data)
-        Language["Common Lisp"]
-      elsif /^\s*\(define /.match(data)
-        Language["NewLisp"]
       end
     end
   end
