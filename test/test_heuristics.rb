@@ -118,6 +118,14 @@ class TestHeuristcs < Test::Unit::TestCase
     })
   end
 
+  def test_fr_by_heuristics
+    assert_heuristics({
+      "Frege" => all_fixtures("Frege"),
+      "Forth" => all_fixtures("Forth"),
+      "text" => all_fixtures("text")
+    })
+  end
+
   def assert_heuristics(hash)
     candidates = hash.keys.map { |l| Language[l] }
 
@@ -133,6 +141,13 @@ class TestHeuristcs < Test::Unit::TestCase
     assert_heuristics({
       "LiveScript" => "LiveScript/hello.ls",
       "LoomScript" => "LoomScript/HelloWorld.ls"
+    })
+  end
+
+  def test_ts_by_heuristics
+    assert_heuristics({
+      "TypeScript" => all_fixtures("TypeScript", "*.ts"),
+      "XML" => all_fixtures("XML", "*.ts")
     })
   end
 end

@@ -156,5 +156,22 @@ module Linguist
       end
     end
 
+    disambiguate "Frege", "Forth", "text" do |data|
+      if /^(: |also |new-device|previous )/.match(data)
+        Language["Forth"]
+      elsif /\s*(import|module|package|data|type) /.match(data)
+        Language["Frege"]
+      else
+        Language["text"]
+      end
+    end
+
+    disambiguate "TypeScript", "XML" do |data|
+      if data.include?("<TS ")
+        Language["XML"]
+      else
+        Language["TypeScript"]
+      end
+    end
   end
 end
