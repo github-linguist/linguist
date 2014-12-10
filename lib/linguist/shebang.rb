@@ -20,18 +20,25 @@ module Linguist
     def self.interpreter(data)
       lines = data.lines
 
+      # First line must start with #!
       return unless match = /^#!(.+)$/.match(lines.first)
 
       tokens = match[1].strip.split(' ')
+
+      # There was nothing after the #!
       return if tokens.empty?
+
+      # Get the name of the interpreter
       script = File.basename(tokens.first)
+
+      # Get next argument if interpreter was /usr/bin/env
       script = tokens[1] if script == 'env'
 
-      # If script has an invalid shebang, we might get here
+      # Interpreter was /usr/bin/env with no arguments
       return unless script
 
       # "python2.6" -> "python2"
-      script.sub! $1, '' if script =~ /(\.\d+)$/
+      script.sub! /(\.\d+)$/, ''
 
       # Check for multiline shebang hacks that call `exec`
       if script == 'sh' &&
