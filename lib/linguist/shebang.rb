@@ -18,12 +18,13 @@ module Linguist
     #
     # Returns a String or nil
     def self.interpreter(data)
-      lines = data.lines
+      shebang = data.lines.first
 
       # First line must start with #!
-      return unless match = /^#!(.+)$/.match(lines.first)
+      return unless shebang && shebang.start_with?("#!")
 
-      tokens = match[1].strip.split(' ')
+      # Get the parts of the shebang without the #!
+      tokens = shebang.sub(/^#!\s*/, '').strip.split(' ')
 
       # There was nothing after the #!
       return if tokens.empty?
@@ -42,7 +43,7 @@ module Linguist
 
       # Check for multiline shebang hacks that call `exec`
       if script == 'sh' &&
-        lines.first(5).any? { |l| l.match(/exec (\w+).+\$0.+\$@/) }
+        data.lines.first(5).any? { |l| l.match(/exec (\w+).+\$0.+\$@/) }
         script = $1
       end
 
