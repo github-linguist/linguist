@@ -19,11 +19,12 @@ module Linguist
     # Returns a String or nil
     def self.interpreter(data)
       lines = data.lines
-      return unless match = /^#! ?(.+)$/.match(lines.first)
 
-      tokens = match[1].split(' ')
-      script = tokens.first.split('/').last
+      return unless match = /^#!(.+)$/.match(lines.first)
 
+      tokens = match[1].strip.split(' ')
+      return if tokens.empty?
+      script = File.basename(tokens.first)
       script = tokens[1] if script == 'env'
 
       # If script has an invalid shebang, we might get here
