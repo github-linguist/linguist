@@ -17,6 +17,7 @@ class TestShebang < Test::Unit::TestCase
     assert_interpreter nil, " #!/usr/sbin/ruby"
     assert_interpreter nil, "\n#!/usr/sbin/ruby"
     assert_interpreter nil, "#!"
+    assert_interpreter nil, "#! "
 
     assert_interpreter "ruby", "#!/usr/sbin/ruby\n# bar"
     assert_interpreter "ruby", "#!/usr/bin/ruby\n# foo"
