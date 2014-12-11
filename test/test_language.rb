@@ -375,4 +375,13 @@ class TestLanguage < Test::Unit::TestCase
     message << missing.map { |language| sprintf("%-#{width}s %s", language.name, language.ace_mode) }.sort.join("\n")
     assert missing.empty?, message
   end
+
+  def test_all_popular_languages_exist
+    popular = YAML.load(File.read(File.expand_path("../../lib/linguist/popular.yml", __FILE__)))
+
+    missing = popular - Language.all.map(&:name)
+    message = "The following languages are listed in lib/linguist/popular.yml but not in lib/linguist/languages.yml.\n"
+    message << missing.sort.join("\n")
+    assert missing.empty?, message
+  end
 end
