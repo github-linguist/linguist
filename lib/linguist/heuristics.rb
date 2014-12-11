@@ -129,7 +129,7 @@ module Linguist
     disambiguate "FORTRAN", "Forth" do |data|
       if /^: /.match(data)
         Language["Forth"]
-      elsif /^([c*][^a-z]|      subroutine\s)/i.match(data)
+      elsif /^([c*][^a-z]|      (subroutine|program)\s|!)/i.match(data)
         Language["FORTRAN"]
       end
     end
@@ -156,5 +156,22 @@ module Linguist
       end
     end
 
+    disambiguate "Frege", "Forth", "text" do |data|
+      if /^(: |also |new-device|previous )/.match(data)
+        Language["Forth"]
+      elsif /\s*(import|module|package|data|type) /.match(data)
+        Language["Frege"]
+      else
+        Language["text"]
+      end
+    end
+
+    disambiguate "TypeScript", "XML" do |data|
+      if data.include?("<TS ")
+        Language["XML"]
+      else
+        Language["TypeScript"]
+      end
+    end
   end
 end
