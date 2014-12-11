@@ -2881,6 +2881,15 @@ Tea:
   tm_scope: source.tea
   ace_mode: text
 
+Text:
+  type: prose
+  wrap: true
+  extensions:
+  - .txt
+  - .fr
+  tm_scope: none
+  ace_mode: text
+
 Textile:
   type: prose
   ace_mode: textile
@@ -3240,15 +3249,6 @@ reStructuredText:
   extensions:
   - .rst
   - .rest
-  ace_mode: text
-
-text:
-  type: prose
-  wrap: true
-  extensions:
-  - .txt
-  - .fr
-  tm_scope: none
   ace_mode: text
 
 wisp:

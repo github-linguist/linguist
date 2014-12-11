@@ -64,7 +64,7 @@ class TestBlob < Test::Unit::TestCase
     assert_equal "attachment; filename=linguist.gem", fixture_blob("Binary/linguist.gem").disposition
     assert_equal "attachment; filename=octocat.ai", fixture_blob("Binary/octocat.ai").disposition
     assert_equal "inline", fixture_blob("Data/README").disposition
-    assert_equal "inline", sample_blob("text/foo.txt").disposition
+    assert_equal "inline", sample_blob("Text/foo.txt").disposition
     assert_equal "inline", sample_blob("Ruby/grit.rb").disposition
     assert_equal "inline", fixture_blob("Binary/octocat.png").disposition
   end
@@ -75,7 +75,7 @@ class TestBlob < Test::Unit::TestCase
 
   def test_lines
     assert_equal ["module Foo", "end", ""], sample_blob("Ruby/foo.rb").lines
-    assert_equal ["line 1", "line 2", ""], sample_blob("text/mac.txt").lines
+    assert_equal ["line 1", "line 2", ""], sample_blob("Text/mac.txt").lines
     assert_equal 475, sample_blob("Emacs Lisp/ess-julia.el").lines.length
   end
 
@@ -104,14 +104,14 @@ class TestBlob < Test::Unit::TestCase
   def test_encoding
     assert_equal "ISO-8859-2", fixture_blob("Data/README").encoding
     assert_equal "ISO-8859-2", fixture_blob("Data/README").ruby_encoding
-    assert_equal "UTF-8", sample_blob("text/foo.txt").encoding
-    assert_equal "UTF-8", sample_blob("text/foo.txt").ruby_encoding
+    assert_equal "UTF-8", sample_blob("Text/foo.txt").encoding
+    assert_equal "UTF-8", sample_blob("Text/foo.txt").ruby_encoding
     assert_equal "UTF-16LE", fixture_blob("Data/utf16le").encoding
     assert_equal "UTF-16LE", fixture_blob("Data/utf16le").ruby_encoding
     assert_equal "UTF-16LE", fixture_blob("Data/utf16le-windows").encoding
     assert_equal "UTF-16LE", fixture_blob("Data/utf16le-windows").ruby_encoding
-    assert_equal "ISO-2022-KR", sample_blob("text/ISO-2022-KR.txt").encoding
-    assert_equal "binary", sample_blob("text/ISO-2022-KR.txt").ruby_encoding
+    assert_equal "ISO-2022-KR", sample_blob("Text/ISO-2022-KR.txt").encoding
+    assert_equal "binary", sample_blob("Text/ISO-2022-KR.txt").ruby_encoding
     assert_nil fixture_blob("Binary/dog.o").encoding
   end
 
