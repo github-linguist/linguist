@@ -64,7 +64,7 @@ class TestBlob < Test::Unit::TestCase
     assert_equal "attachment; filename=linguist.gem", fixture_blob("Binary/linguist.gem").disposition
     assert_equal "attachment; filename=octocat.ai", fixture_blob("Binary/octocat.ai").disposition
     assert_equal "inline", fixture_blob("Data/README").disposition
-    assert_equal "inline", fixture_blob("Data/foo.txt").disposition
+    assert_equal "inline", sample_blob("text/foo.txt").disposition
     assert_equal "inline", sample_blob("Ruby/grit.rb").disposition
     assert_equal "inline", fixture_blob("Binary/octocat.png").disposition
   end
@@ -75,7 +75,7 @@ class TestBlob < Test::Unit::TestCase
 
   def test_lines
     assert_equal ["module Foo", "end", ""], sample_blob("Ruby/foo.rb").lines
-    assert_equal ["line 1", "line 2", ""], fixture_blob("Data/mac.txt").lines
+    assert_equal ["line 1", "line 2", ""], sample_blob("text/mac.txt").lines
     assert_equal 475, sample_blob("Emacs Lisp/ess-julia.el").lines.length
   end
 
@@ -84,7 +84,7 @@ class TestBlob < Test::Unit::TestCase
     # earlier versions of the gem made implicit guarantees that the encoding of
     # each `line` is in the same encoding as the file was originally read (in
     # practice, UTF-8 or ASCII-8BIT)
-    assert_equal Encoding.default_external, fixture_blob("Data/utf16le.txt").lines.first.encoding
+    assert_equal Encoding.default_external, fixture_blob("Data/utf16le").lines.first.encoding
   end
 
   def test_size
@@ -97,21 +97,21 @@ class TestBlob < Test::Unit::TestCase
 
   def test_sloc
     assert_equal 2, sample_blob("Ruby/foo.rb").sloc
-    assert_equal 3, fixture_blob("Data/utf16le-windows.txt").sloc
-    assert_equal 1, fixture_blob("Data/iso8859-8-i.txt").sloc
+    assert_equal 3, fixture_blob("Data/utf16le-windows").sloc
+    assert_equal 1, fixture_blob("Data/iso8859-8-i").sloc
   end
 
   def test_encoding
     assert_equal "ISO-8859-2", fixture_blob("Data/README").encoding
     assert_equal "ISO-8859-2", fixture_blob("Data/README").ruby_encoding
-    assert_equal "UTF-8", fixture_blob("Data/foo.txt").encoding
-    assert_equal "UTF-8", fixture_blob("Data/foo.txt").ruby_encoding
-    assert_equal "UTF-16LE", fixture_blob("Data/utf16le.txt").encoding
-    assert_equal "UTF-16LE", fixture_blob("Data/utf16le.txt").ruby_encoding
-    assert_equal "UTF-16LE", fixture_blob("Data/utf16le-windows.txt").encoding
-    assert_equal "UTF-16LE", fixture_blob("Data/utf16le-windows.txt").ruby_encoding
-    assert_equal "ISO-2022-KR", fixture_blob("Data/ISO-2022-KR.txt").encoding
-    assert_equal "binary", fixture_blob("Data/ISO-2022-KR.txt").ruby_encoding
+    assert_equal "UTF-8", sample_blob("text/foo.txt").encoding
+    assert_equal "UTF-8", sample_blob("text/foo.txt").ruby_encoding
+    assert_equal "UTF-16LE", fixture_blob("Data/utf16le").encoding
+    assert_equal "UTF-16LE", fixture_blob("Data/utf16le").ruby_encoding
+    assert_equal "UTF-16LE", fixture_blob("Data/utf16le-windows").encoding
+    assert_equal "UTF-16LE", fixture_blob("Data/utf16le-windows").ruby_encoding
+    assert_equal "ISO-2022-KR", sample_blob("text/ISO-2022-KR.txt").encoding
+    assert_equal "binary", sample_blob("text/ISO-2022-KR.txt").ruby_encoding
     assert_nil fixture_blob("Binary/dog.o").encoding
   end
 
@@ -131,7 +131,6 @@ class TestBlob < Test::Unit::TestCase
     assert fixture_blob("Binary/octocat.png").binary?
     assert fixture_blob("Binary/zip").binary?
     assert !fixture_blob("Data/README").binary?
-    assert !fixture_blob("Data/file.txt").binary?
     assert !sample_blob("Ruby/foo.rb").binary?
     assert !sample_blob("Perl/script.pl").binary?
   end
@@ -145,7 +144,6 @@ class TestBlob < Test::Unit::TestCase
 
   def test_text
     assert fixture_blob("Data/README").text?
-    assert fixture_blob("Data/file.txt").text?
     assert fixture_blob("Data/md").text?
     assert sample_blob("Shell/script.sh").text?
     assert fixture_blob("Data/txt").text?
