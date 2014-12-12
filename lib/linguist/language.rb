@@ -269,8 +269,12 @@ module Linguist
 
     # Public: A List of languages compatible with Ace.
     #
+    # TODO: Remove this method in a 5.x release. Every language now needs an ace_mode
+    # key, so this function isn't doing anything unique anymore.
+    #
     # Returns an Array of Languages.
     def self.ace_modes
+      warn "This method will be deprecated in a future 5.x release. Every language now has an `ace_mode` set."
       @ace_modes ||= all.select(&:ace_mode).sort_by { |lang| lang.name.downcase }
     end
 
