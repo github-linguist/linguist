@@ -73,7 +73,7 @@ module Linguist
       if (/@(interface|class|protocol|property|end|synchronised|selector|implementation)\b/.match(data))
         Language["Objective-C"]
       elsif (/^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>/.match(data) ||
-        /^\s*template\s*</.match(data) || /^[:blank:]*try/.match(data) || /^[:blank:]*catch\s*\(/.match(data) || /^[:blank:]*(class|namespace)\s+\w+/.match(data) || /^[:blank:]*(private|public|protected):$/.match(data) || /std::\w+/.match(data))
+        /^\s*template\s*</.match(data) || /^[ \t]*try/.match(data) || /^[ \t]*catch\s*\(/.match(data) || /^[ \t]*(class|(using[ \t]+)?namespace)\s+\w+/.match(data) || /^[ \t]*(private|public|protected):$/.match(data) || /std::\w+/.match(data))
         Language["C++"]
       end
     end
