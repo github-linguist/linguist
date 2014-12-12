@@ -122,7 +122,7 @@ class TestHeuristcs < Test::Unit::TestCase
     assert_heuristics({
       "Frege" => all_fixtures("Frege"),
       "Forth" => all_fixtures("Forth"),
-      "text" => all_fixtures("text")
+      "Text" => all_fixtures("Text")
     })
   end
 
