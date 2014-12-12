@@ -126,6 +126,13 @@ class TestHeuristcs < Test::Unit::TestCase
     })
   end
 
+  def test_bb_by_heuristics
+    assert_heuristics({
+      "BitBake" => all_fixtures("BitBake"),
+      "BlitzBasic" => all_fixtures("BlitzBasic")
+    })
+  end
+
   def assert_heuristics(hash)
     candidates = hash.keys.map { |l| Language[l] }
 
