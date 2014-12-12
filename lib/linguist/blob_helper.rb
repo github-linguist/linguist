@@ -1,5 +1,5 @@
 require 'linguist/generated'
-require 'charlock_holmes'
+require 'charlotte'
 require 'escape_utils'
 require 'mime/types'
 require 'yaml'
@@ -104,15 +104,11 @@ module Linguist
     end
 
     def encoding
-      if hash = detect_encoding
-        hash[:encoding]
-      end
+      data.encoding
     end
 
     def ruby_encoding
-      if hash = detect_encoding
-        hash[:ruby_encoding]
-      end
+      data.encoding
     end
 
     # Try to guess the encoding
@@ -121,7 +117,7 @@ module Linguist
     #          this will return nil if an error occurred during detection or
     #          no valid encoding could be found
     def detect_encoding
-      @detect_encoding ||= CharlockHolmes::EncodingDetector.new.detect(data) if data
+      @detect_encoding ||= "UTF-8"
     end
 
     # Public: Is the blob binary?
@@ -135,14 +131,9 @@ module Linguist
       # Treat blank files as text
       elsif data == ""
         false
-
-      # Charlock doesn't know what to think
-      elsif encoding.nil?
-        true
-
-      # If Charlock says its binary
-      else
-        detect_encoding[:type] == :binary
+  
+        else
+        data.encoding == "BINARY"
       end
     end
 
@@ -242,36 +233,7 @@ module Linguist
     #
     # Returns an Array of lines
     def lines
-      @lines ||=
-        if viewable? && data
-          # `data` is usually encoded as ASCII-8BIT even when the content has
-          # been detected as a different encoding. However, we are not allowed
-          # to change the encoding of `data` because we've made the implicit
-          # guarantee that each entry in `lines` is encoded the same way as
-          # `data`.
-          #
-          # Instead, we re-encode each possible newline sequence as the
-          # detected encoding, then force them back to the encoding of `data`
-          # (usually a binary encoding like ASCII-8BIT). This means that the
-          # byte sequence will match how newlines are likely encoded in the
-          # file, but we don't have to change the encoding of `data` as far as
-          # Ruby is concerned. This allows us to correctly parse out each line
-          # without changing the encoding of `data`, and
-          # also--importantly--without having to duplicate many (potentially
-          # large) strings.
-          begin
-            encoded_newlines = ["\r\n", "\r", "\n"].
-              map { |nl| nl.encode(ruby_encoding, "ASCII-8BIT").force_encoding(data.encoding) }
-
-            data.split(Regexp.union(encoded_newlines), -1)
-          rescue Encoding::ConverterNotFoundError
-            # The data is not splittable in the detected encoding.  Assume it's
-            # one big line.
-            [data]
-          end
-        else
-          []
-        end
+      @lines ||= data.lines
     end
 
     # Public: Get number of lines of code
