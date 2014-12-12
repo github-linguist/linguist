@@ -172,13 +172,13 @@ module Linguist
       end
     end
 
-    disambiguate "Frege", "Forth", "text" do |data|
+    disambiguate "Frege", "Forth", "Text" do |data|
       if /^(: |also |new-device|previous )/.match(data)
         Language["Forth"]
       elsif /\s*(import|module|package|data|type) /.match(data)
         Language["Frege"]
       else
-        Language["text"]
+        Language["Text"]
       end
     end
   end
