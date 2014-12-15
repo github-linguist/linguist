@@ -110,6 +110,14 @@ class TestHeuristcs < Test::Unit::TestCase
     })
   end
 
+  # Candidate languages = ["C++", "Component Pascal"]
+  def test_cp_by_heuristics
+    assert_heuristics({
+      "C++" => "C++/main.cp",
+      "Component Pascal" => all_fixtures("Component Pascal")
+    })
+  end
+
   def test_fs_by_heuristics
     assert_heuristics({
       "F#" => all_fixtures("F#"),
