@@ -17,6 +17,8 @@ class TestShebang < Test::Unit::TestCase
     assert_interpreter nil, " #!/usr/sbin/ruby"
     assert_interpreter nil, "\n#!/usr/sbin/ruby"
     assert_interpreter nil, "#!"
+    assert_interpreter nil, "#! "
+    assert_interpreter nil, "#!/usr/bin/env"
 
     assert_interpreter "ruby", "#!/usr/sbin/ruby\n# bar"
     assert_interpreter "ruby", "#!/usr/bin/ruby\n# foo"
@@ -34,6 +36,8 @@ class TestShebang < Test::Unit::TestCase
     assert_interpreter "python3", "#!/usr/bin/python3\n\n\n\n"
     assert_interpreter "sbcl", "#!/usr/bin/sbcl --script\n\n"
     assert_interpreter "perl", "#! perl"
+
+    assert_interpreter "ruby", "#!/bin/sh\n\n\nexec ruby $0 $@"
   end
 
 end

@@ -34,10 +34,6 @@ module Linguist
       Dir.entries(ROOT).sort!.each do |category|
         next if category == '.' || category == '..'
 
-        # Skip text and binary for now
-        # Possibly reconsider this later
-        next if category == 'Text' || category == 'Binary'
-
         dirname = File.join(ROOT, category)
         Dir.entries(dirname).each do |filename|
           next if filename == '.' || filename == '..'

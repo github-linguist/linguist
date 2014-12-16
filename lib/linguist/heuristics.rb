@@ -61,6 +61,14 @@ module Linguist
       @heuristic.call(data)
     end
 
+    disambiguate "BitBake", "BlitzBasic" do |data|
+      if /^\s*; /.match(data) || data.include?("End Function")
+        Language["BlitzBasic"]
+      elsif /^\s*(# |include|require)\b/.match(data)
+        Language["BitBake"]
+      end
+    end
+
     disambiguate "Objective-C", "C++", "C" do |data|
       if (/@(interface|class|protocol|property|end|synchronised|selector|implementation)\b/.match(data))
         Language["Objective-C"]
@@ -129,7 +137,7 @@ module Linguist
     disambiguate "FORTRAN", "Forth" do |data|
       if /^: /.match(data)
         Language["Forth"]
-      elsif /^([c*][^a-z]|      subroutine\s)/i.match(data)
+      elsif /^([c*][^a-z]|      (subroutine|program)\s|!)/i.match(data)
         Language["FORTRAN"]
       end
     end
@@ -155,7 +163,7 @@ module Linguist
         Language["LiveScript"]
       end
     end
-    
+
     disambiguate "Common Lisp", "NewLisp" do |data|
       if /^\s*\((defun|defactor|in-package|defpackage) /.match(data)
         Language["Common Lisp"]
@@ -172,13 +180,13 @@ module Linguist
       end
     end
 
-    disambiguate "Frege", "Forth", "text" do |data|
+    disambiguate "Frege", "Forth", "Text" do |data|
       if /^(: |also |new-device|previous )/.match(data)
         Language["Forth"]
       elsif /\s*(import|module|package|data|type) /.match(data)
         Language["Frege"]
       else
-        Language["text"]
+        Language["Text"]
       end
     end
   end
