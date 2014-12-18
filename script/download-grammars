@@ -14,7 +14,7 @@ CSONC = File.expand_path("../../node_modules/.bin/csonc", __FILE__)
 
 class TarballPackage
   def self.fetch(tmp_dir, url)
-    `curl --silent --location --max-time 10 --output "#{tmp_dir}/archive" "#{url}"`
+    `curl --silent --location --max-time 30 --output "#{tmp_dir}/archive" "#{url}"`
     raise "Failed to fetch GH package: #{url} #{$?.to_s}" unless $?.success?
 
     output = File.join(tmp_dir, 'extracted')
