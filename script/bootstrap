@@ -7,3 +7,6 @@ cd "$(dirname "$0")/.."
 bundle config --local path vendor/gems
 
 bundle check > /dev/null 2>&1 || bundle install
+
+git submodule sync --quiet
+git submodule update --init
