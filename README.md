@@ -141,7 +141,7 @@ But for development you are going to want to checkout out the source. To get it,
 
     git clone https://github.com/github/linguist.git
     cd linguist/
-    bundle install
+    script/bootstrap
 
 To run the tests:
 

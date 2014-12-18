@@ -1,4 +1,7 @@
 #!/bin/sh
+
+set -e
+
 if [ -d /usr/share/rbenv/shims ]; then
   export PATH=/usr/share/rbenv/shims:$PATH
   export RBENV_VERSION=2.1.2-github
@@ -11,11 +14,9 @@ ruby -v
 bundle -v
 set +x
 
-mkdir -p ./vendor/gems
-
 # Clean out any unversioned files
 git clean -fd
 
-bundle install --local --path ./vendor/gems
+script/bootstrap
 bundle exec rake samples
 bundle exec rake
