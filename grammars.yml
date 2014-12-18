@@ -1,81 +1,219 @@
 ---
-http://svn.edgewall.org/repos/genshi/contrib/textmate/Genshi.tmbundle/Syntaxes/Markup%20Template%20%28XML%29.tmLanguage:
-- text.xml.genshi
-http://svn.textmate.org/trunk/Review/Bundles/BlitzMax.tmbundle:
-- source.blitzmax
-http://svn.textmate.org/trunk/Review/Bundles/Cython.tmbundle:
-- source.cython
-http://svn.textmate.org/trunk/Review/Bundles/Forth.tmbundle:
-- source.forth
-http://svn.textmate.org/trunk/Review/Bundles/Parrot.tmbundle:
-- source.parrot.pir
-http://svn.textmate.org/trunk/Review/Bundles/SecondLife%20LSL.tmbundle:
-- source.lsl
-http://svn.textmate.org/trunk/Review/Bundles/VHDL.tmbundle:
-- source.vhdl
-http://svn.textmate.org/trunk/Review/Bundles/XQuery.tmbundle:
-- source.xquery
-https://bitbucket.org/Clams/sublimesystemverilog/get/default.tar.gz:
-- source.systemverilog
-- source.ucfconstraints
-https://fan.googlecode.com/hg-history/Build%201.0.55/adm/tools/textmate/Fan.tmbundle/Syntaxes/Fan.tmLanguage:
-- source.fan
-grammar_sources/sublime_cobol:
-- source.cobol
-grammar_sources/go-tmbundle:
-- source.go
-grammar_sources/PHP-Twig.tmbundle:
-- text.html.twig
-grammar_sources/sublime-cirru:
-- source.cirru
-grammar_sources/Sublime-Logos:
-- source.logos
-grammar_sources/SublimeBrainfuck:
-- source.bf
-grammar_sources/awk-sublime:
-- source.awk
-grammar_sources/Sublime-SQF-Language:
-- source.sqf
-grammar_sources/SCSS.tmbundle:
-- source.scss
-grammar_sources/Sublime-REBOL:
-- source.rebol
-grammar_sources/Sublime-Inform:
-- source.Inform7
-grammar_sources/autoitv3-tmbundle:
-- source.autoit.3
-grammar_sources/Sublime-VimL:
-- source.viml
-grammar_sources/boo-sublime:
-- source.boo
+grammar_sources/Agda.tmbundle:
+- source.agda
+grammar_sources/Alloy.tmbundle:
+- source.alloy
 grammar_sources/ColdFusion:
 - source.cfscript
 - source.cfscript.cfc
 - text.cfml.basic
 - text.html.cfm
+grammar_sources/Docker.tmbundle:
+- source.dockerfile
+grammar_sources/Handlebars:
+- text.html.handlebars
+grammar_sources/Isabelle.tmbundle:
+- source.isabelle.root
+- source.isabelle.theory
+grammar_sources/Julia.tmbundle:
+- source.julia
+grammar_sources/LiveScript.tmbundle:
+- source.livescript
 grammar_sources/NSIS:
 - source.nsis
 grammar_sources/NimLime:
 - source.nimrod
 - source.nimrod_filter
 - source.nimrodcfg
-grammar_sources/gradle.tmbundle:
-- source.groovy.gradle
+grammar_sources/PHP-Twig.tmbundle:
+- text.html.twig
+grammar_sources/RDoc.tmbundle:
+- text.rdoc
+grammar_sources/SCSS.tmbundle:
+- source.scss
+grammar_sources/Scalate.tmbundle:
+- source.scaml
+- text.html.ssp
+grammar_sources/Slash.tmbundle:
+- text.html.slash
+grammar_sources/Stata.tmbundle:
+- source.mata
+- source.stata
+grammar_sources/Sublime-Coq:
+- source.coq
+grammar_sources/Sublime-Inform:
+- source.Inform7
+grammar_sources/Sublime-Lasso:
+- file.lasso
+grammar_sources/Sublime-Logos:
+- source.logos
 grammar_sources/Sublime-Loom:
 - source.loomscript
+grammar_sources/Sublime-QML:
+- source.qml
+grammar_sources/Sublime-REBOL:
+- source.rebol
+grammar_sources/Sublime-SQF-Language:
+- source.sqf
+grammar_sources/Sublime-Text-2-OpenEdge-ABL:
+- source.abl
+grammar_sources/Sublime-VimL:
+- source.viml
+grammar_sources/SublimeBrainfuck:
+- source.bf
+grammar_sources/SublimeXtend:
+- source.xtend
+grammar_sources/Textmate-Gosu-Bundle:
+- source.gosu.2
 grammar_sources/VBDotNetSyntax:
 - source.vbnet
-grammar_sources/cool-tmbundle:
-- source.cool
+grammar_sources/Vala-TMBundle:
+- source.vala
+grammar_sources/abap.tmbundle:
+- source.abap
+grammar_sources/actionscript3-tmbundle:
+- source.actionscript.3
+- text.html.asdoc
+- text.xml.flex-config
 grammar_sources/ada.tmbundle:
 - source.ada
-grammar_sources/ruby.tmbundle:
-- source.ruby
-- text.html.erb
-grammar_sources/Docker.tmbundle:
-- source.dockerfile
+grammar_sources/ant.tmbundle:
+- text.xml.ant
+grammar_sources/antlr.tmbundle:
+- source.antlr
+grammar_sources/apache.tmbundle:
+- source.apache-config
+- source.apache-config.mod_perl
+grammar_sources/applescript.tmbundle:
+- source.applescript
+grammar_sources/asp.tmbundle:
+- source.asp
+- text.html.asp
+grammar_sources/assembly.tmbundle:
+- objdump.x86asm
+- source.x86asm
+grammar_sources/autoitv3-tmbundle:
+- source.autoit.3
+grammar_sources/awk-sublime:
+- source.awk
+grammar_sources/bison.tmbundle:
+- source.bison
+grammar_sources/boo-sublime:
+- source.boo
+grammar_sources/bro-sublime:
+- source.bro
+grammar_sources/c.tmbundle:
+- source.c
+- source.c++
+- source.c.platform
+grammar_sources/capnproto.tmbundle:
+- source.capnp
+grammar_sources/ceylon-sublimetext:
+- module.ceylon
+- source.ceylon
+grammar_sources/chapel-tmbundle:
+- source.chapel
+grammar_sources/cmake.tmbundle:
+- source.cache.cmake
+- source.cmake
+grammar_sources/cool-tmbundle:
+- source.cool
+grammar_sources/cpp-qt.tmbundle:
+- source.c++.qt
+- source.qmake
+grammar_sources/css.tmbundle:
+- source.css
+grammar_sources/cucumber-tmbundle:
+- source.ruby.rspec.cucumber.steps
+- text.gherkin.feature
+grammar_sources/d.tmbundle:
+- source.d
+grammar_sources/dart-sublime-bundle:
+- source.dart
+- source.pubspec
+- text.dart-doccomments
+grammar_sources/diff.tmbundle:
+- source.diff
+grammar_sources/dylan.tmbundle:
+- source.dylan
+- source.lid
+- source.makegen
+grammar_sources/ebundles/Bundles/MSDOS batch file.tmbundle:
+- source.dosbatch
+grammar_sources/eiffel.tmbundle:
+- source.eiffel
+grammar_sources/elixir-tmbundle:
+- source.elixir
+- text.elixir
+- text.html.elixir
+grammar_sources/erlang.tmbundle:
+- source.erlang
+- text.html.erlang.yaws
+grammar_sources/factor:
+- source.factor
+- text.html.factor
+grammar_sources/fancy-tmbundle:
+- source.fancy
+grammar_sources/fish-tmbundle:
+- source.fish
+grammar_sources/fortran.tmbundle:
+- source.fortran
+- source.fortran.modern
+grammar_sources/fsharpbinding:
+- source.fsharp
+grammar_sources/gettext.tmbundle:
+- source.po
+grammar_sources/gnuplot-tmbundle:
+- source.gnuplot
+grammar_sources/go-tmbundle:
+- source.go
+grammar_sources/gradle.tmbundle:
+- source.groovy.gradle
+grammar_sources/graphviz.tmbundle:
+- source.dot
+grammar_sources/groovy.tmbundle:
+- source.groovy
+grammar_sources/haskell.tmbundle:
+- source.haskell
+- text.tex.latex.haskell
+grammar_sources/haxe-sublime-bundle:
+- source.erazor
+- source.haxe.2
+- source.hss.1
+- source.hxml
+- source.nmml
+grammar_sources/html.tmbundle:
+- text.html.basic
+grammar_sources/idl.tmbundle:
+- source.idl
+- source.idl-dlm
+- text.idl-idldoc
+grammar_sources/ini.tmbundle:
+- source.ini
+grammar_sources/io.tmbundle:
+- source.io
+grammar_sources/ioke-outdated:
+- source.ioke
+grammar_sources/jade-tmbundle:
+- source.jade
+- source.pyjade
 grammar_sources/jasmin-sublime:
 - source.jasmin
+grammar_sources/java.tmbundle:
+- source.java
+- source.java-properties
+- text.html.jsp
+- text.junit-test-report
+grammar_sources/javadoc.tmbundle:
+- text.html.javadoc
+grammar_sources/javascript-objective-j.tmbundle:
+- source.js.objj
+grammar_sources/jquery-tmbundle:
+- source.js.jquery
+grammar_sources/json.tmbundle:
+- source.json
+grammar_sources/kotlin-sublime-package:
+- source.Kotlin
 grammar_sources/language-clojure:
 - source.clojure
 grammar_sources/language-coffee-script:
@@ -102,227 +240,6 @@ grammar_sources/language-shellscript:
 - text.shell-session
 grammar_sources/language-yaml:
 - source.yaml
-grammar_sources/sublime-sourcepawn:
-- source.sp
-grammar_sources/Sublime-Lasso:
-- file.lasso
-grammar_sources/chapel-tmbundle:
-- source.chapel
-grammar_sources/sublime-nginx:
-- source.nginx
-grammar_sources/bro-sublime:
-- source.bro
-grammar_sources/sublime_man_page_support:
-- source.man
-- text.groff
-grammar_sources/sublime-MuPAD:
-- source.mupad
-grammar_sources/nesC.tmbundle:
-- source.nesc
-grammar_sources/racket-tmbundle:
-- source.racket
-grammar_sources/haxe-sublime-bundle:
-- source.erazor
-- source.haxe.2
-- source.hss.1
-- source.hxml
-- source.nmml
-grammar_sources/cucumber-tmbundle:
-- source.ruby.rspec.cucumber.steps
-- text.gherkin.feature
-grammar_sources/Handlebars:
-- text.html.handlebars
-grammar_sources/powershell.tmbundle:
-- source.powershell
-grammar_sources/jade-tmbundle:
-- source.jade
-- source.pyjade
-grammar_sources/elixir-tmbundle:
-- source.elixir
-- text.elixir
-- text.html.elixir
-grammar_sources/oz-tmbundle:
-- source.oz
-grammar_sources/ebundles/Bundles/MSDOS batch file.tmbundle:
-- source.dosbatch
-grammar_sources/sublime-glsl:
-- source.essl
-- source.glsl
-grammar_sources/fancy-tmbundle:
-- source.fancy
-grammar_sources/fsharpbinding:
-- source.fsharp
-grammar_sources/monkey.tmbundle:
-- source.monkey
-grammar_sources/dart-sublime-bundle:
-- source.dart
-- source.pubspec
-- text.dart-doccomments
-grammar_sources/sublimetext-cuda-cpp:
-- source.cuda-c++
-grammar_sources/pike-textmate:
-- source.pike
-grammar_sources/ceylon-sublimetext:
-- module.ceylon
-- source.ceylon
-grammar_sources/Sublime-Text-2-OpenEdge-ABL:
-- source.abl
-grammar_sources/sublime-rust:
-- source.rust
-grammar_sources/sublime-befunge:
-- source.befunge
-grammar_sources/RDoc.tmbundle:
-- text.rdoc
-grammar_sources/Textmate-Gosu-Bundle:
-- source.gosu.2
-grammar_sources/jquery-tmbundle:
-- source.js.jquery
-grammar_sources/fish-tmbundle:
-- source.fish
-grammar_sources/sublime-idris:
-- source.idris
-grammar_sources/sublime-better-typescript:
-- source.ts
-grammar_sources/moonscript-tmbundle:
-- source.moonscript
-grammar_sources/Isabelle.tmbundle:
-- source.isabelle.root
-- source.isabelle.theory
-grammar_sources/x86-assembly-textmate-bundle:
-- source.asm.x86
-grammar_sources/Alloy.tmbundle:
-- source.alloy
-grammar_sources/opa.tmbundle:
-- source.opa
-grammar_sources/scala.tmbundle:
-- source.sbt
-- source.scala
-grammar_sources/mako-tmbundle:
-- text.html.mako
-grammar_sources/gnuplot-tmbundle:
-- source.gnuplot
-grammar_sources/idl.tmbundle:
-- source.idl
-- source.idl-dlm
-- text.idl-idldoc
-grammar_sources/protobuf-tmbundle:
-- source.protobuf
-grammar_sources/Sublime-Coq:
-- source.coq
-grammar_sources/Agda.tmbundle:
-- source.agda
-grammar_sources/Julia.tmbundle:
-- source.julia
-grammar_sources/assembly.tmbundle:
-- objdump.x86asm
-- source.x86asm
-grammar_sources/ooc.tmbundle:
-- source.ooc
-grammar_sources/LiveScript.tmbundle:
-- source.livescript
-grammar_sources/sublime-tea:
-- source.tea
-grammar_sources/puppet-textmate-bundle:
-- source.puppet
-grammar_sources/abap.tmbundle:
-- source.abap
-grammar_sources/Scalate.tmbundle:
-- source.scaml
-- text.html.ssp
-grammar_sources/mercury-tmlanguage:
-- source.mercury
-grammar_sources/mathematica-tmbundle:
-- source.mathematica
-grammar_sources/sublime-robot-plugin:
-- text.robot
-grammar_sources/actionscript3-tmbundle:
-- source.actionscript.3
-- text.html.asdoc
-- text.xml.flex-config
-grammar_sources/Sublime-QML:
-- source.qml
-grammar_sources/Slash.tmbundle:
-- text.html.slash
-grammar_sources/factor:
-- source.factor
-- text.html.factor
-grammar_sources/ruby-slim.tmbundle:
-- text.slim
-grammar_sources/SublimeXtend:
-- source.xtend
-grammar_sources/Stata.tmbundle:
-- source.mata
-- source.stata
-grammar_sources/Vala-TMBundle:
-- source.vala
-grammar_sources/sublime-mask:
-- source.mask
-grammar_sources/ant.tmbundle:
-- text.xml.ant
-grammar_sources/antlr.tmbundle:
-- source.antlr
-grammar_sources/apache.tmbundle:
-- source.apache-config
-- source.apache-config.mod_perl
-grammar_sources/applescript.tmbundle:
-- source.applescript
-grammar_sources/asp.tmbundle:
-- source.asp
-- text.html.asp
-grammar_sources/bison.tmbundle:
-- source.bison
-grammar_sources/capnproto.tmbundle:
-- source.capnp
-grammar_sources/cmake.tmbundle:
-- source.cache.cmake
-- source.cmake
-grammar_sources/cpp-qt.tmbundle:
-- source.c++.qt
-- source.qmake
-grammar_sources/css.tmbundle:
-- source.css
-grammar_sources/d.tmbundle:
-- source.d
-grammar_sources/diff.tmbundle:
-- source.diff
-grammar_sources/dylan.tmbundle:
-- source.dylan
-- source.lid
-- source.makegen
-grammar_sources/eiffel.tmbundle:
-- source.eiffel
-grammar_sources/erlang.tmbundle:
-- source.erlang
-- text.html.erlang.yaws
-grammar_sources/fortran.tmbundle:
-- source.fortran
-- source.fortran.modern
-grammar_sources/gettext.tmbundle:
-- source.po
-grammar_sources/graphviz.tmbundle:
-- source.dot
-grammar_sources/groovy.tmbundle:
-- source.groovy
-grammar_sources/haskell.tmbundle:
-- source.haskell
-- text.tex.latex.haskell
-grammar_sources/html.tmbundle:
-- text.html.basic
-grammar_sources/ini.tmbundle:
-- source.ini
-grammar_sources/io.tmbundle:
-- source.io
-grammar_sources/java.tmbundle:
-- source.java
-- source.java-properties
-- text.html.jsp
-- text.junit-test-report
-grammar_sources/javadoc.tmbundle:
-- text.html.javadoc
-grammar_sources/javascript-objective-j.tmbundle:
-- source.js.objj
-grammar_sources/json.tmbundle:
-- source.json
 grammar_sources/latex.tmbundle:
 - text.bibtex
 - text.log.latex
@@ -336,19 +253,33 @@ grammar_sources/lilypond.tmbundle:
 - source.lilypond
 grammar_sources/lisp.tmbundle:
 - source.lisp
+grammar_sources/llvm.tmbundle:
+- source.llvm
 grammar_sources/logtalk.tmbundle:
 - source.logtalk
 grammar_sources/lua.tmbundle:
 - source.lua
 grammar_sources/make.tmbundle:
 - source.makefile
+grammar_sources/mako-tmbundle:
+- text.html.mako
+grammar_sources/mathematica-tmbundle:
+- source.mathematica
 grammar_sources/matlab.tmbundle:
 - source.matlab
 - source.octave
 grammar_sources/maven.tmbundle:
 - text.xml.pom
+grammar_sources/mercury-tmlanguage:
+- source.mercury
+grammar_sources/monkey.tmbundle:
+- source.monkey
+grammar_sources/moonscript-tmbundle:
+- source.moonscript
 grammar_sources/nemerle.tmbundle:
 - source.nemerle
+grammar_sources/nesC.tmbundle:
+- source.nesc
 grammar_sources/ninja.tmbundle:
 - source.ninja
 grammar_sources/objective-c.tmbundle:
@@ -375,18 +306,28 @@ grammar_sources/php-smarty.tmbundle:
 - source.smarty
 grammar_sources/php.tmbundle:
 - text.html.php
+grammar_sources/pike-textmate:
+- source.pike
 grammar_sources/postscript.tmbundle:
 - source.postscript
+grammar_sources/powershell.tmbundle:
+- source.powershell
 grammar_sources/processing.tmbundle:
 - source.processing
 grammar_sources/prolog.tmbundle:
 - source.prolog
+grammar_sources/protobuf-tmbundle:
+- source.protobuf
+grammar_sources/puppet-textmate-bundle:
+- source.puppet
 grammar_sources/python-django.tmbundle:
 - source.python.django
 - text.html.django
 grammar_sources/r.tmbundle:
 - source.r
 - text.tex.latex.rd
+grammar_sources/racket-tmbundle:
+- source.racket
 grammar_sources/restructuredtext.tmbundle:
 - text.restructuredtext
 grammar_sources/ruby-haml.tmbundle:
@@ -397,15 +338,59 @@ grammar_sources/ruby-on-rails-tmbundle:
 - source.ruby.rails.rjs
 - source.sql.ruby
 - text.html.erb.rails
+grammar_sources/ruby-slim.tmbundle:
+- text.slim
+grammar_sources/ruby.tmbundle:
+- source.ruby
+- text.html.erb
+grammar_sources/scala.tmbundle:
+- source.sbt
+- source.scala
 grammar_sources/scheme.tmbundle:
 - source.scheme
 grammar_sources/scilab.tmbundle:
 - source.scilab
+grammar_sources/smalltalk-tmbundle:
+- source.smalltalk
 grammar_sources/sql.tmbundle:
 - source.sql
 grammar_sources/standard-ml.tmbundle:
 - source.cm
 - source.ml
+grammar_sources/sublime-MuPAD:
+- source.mupad
+grammar_sources/sublime-befunge:
+- source.befunge
+grammar_sources/sublime-better-typescript:
+- source.ts
+grammar_sources/sublime-cirru:
+- source.cirru
+grammar_sources/sublime-glsl:
+- source.essl
+- source.glsl
+grammar_sources/sublime-idris:
+- source.idris
+grammar_sources/sublime-mask:
+- source.mask
+grammar_sources/sublime-nginx:
+- source.nginx
+grammar_sources/sublime-nix:
+- source.nix
+grammar_sources/sublime-robot-plugin:
+- text.robot
+grammar_sources/sublime-rust:
+- source.rust
+grammar_sources/sublime-sourcepawn:
+- source.sp
+grammar_sources/sublime-tea:
+- source.tea
+grammar_sources/sublime_cobol:
+- source.cobol
+grammar_sources/sublime_man_page_support:
+- source.man
+- text.groff
+grammar_sources/sublimetext-cuda-cpp:
+- source.cuda-c++
 grammar_sources/swift.tmbundle:
 - source.swift
 grammar_sources/tcl.tmbundle:
@@ -424,22 +409,31 @@ grammar_sources/toml.tmbundle:
 - source.toml
 grammar_sources/verilog.tmbundle:
 - source.verilog
+grammar_sources/x86-assembly-textmate-bundle:
+- source.asm.x86
 grammar_sources/xml.tmbundle:
 - text.xml
 - text.xml.xsl
-grammar_sources/smalltalk-tmbundle:
-- source.smalltalk
-grammar_sources/ioke-outdated:
-- source.ioke
-grammar_sources/kotlin-sublime-package:
-- source.Kotlin
-grammar_sources/c.tmbundle:
-- source.c
-- source.c++
-- source.c.platform
 grammar_sources/zephir-sublime:
 - source.php.zephir
-grammar_sources/llvm.tmbundle:
-- source.llvm
-grammar_sources/sublime-nix:
-- source.nix
+http://svn.edgewall.org/repos/genshi/contrib/textmate/Genshi.tmbundle/Syntaxes/Markup%20Template%20%28XML%29.tmLanguage:
+- text.xml.genshi
+http://svn.textmate.org/trunk/Review/Bundles/BlitzMax.tmbundle:
+- source.blitzmax
+http://svn.textmate.org/trunk/Review/Bundles/Cython.tmbundle:
+- source.cython
+http://svn.textmate.org/trunk/Review/Bundles/Forth.tmbundle:
+- source.forth
+http://svn.textmate.org/trunk/Review/Bundles/Parrot.tmbundle:
+- source.parrot.pir
+http://svn.textmate.org/trunk/Review/Bundles/SecondLife%20LSL.tmbundle:
+- source.lsl
+http://svn.textmate.org/trunk/Review/Bundles/VHDL.tmbundle:
+- source.vhdl
+http://svn.textmate.org/trunk/Review/Bundles/XQuery.tmbundle:
+- source.xquery
+https://bitbucket.org/Clams/sublimesystemverilog/get/default.tar.gz:
+- source.systemverilog
+- source.ucfconstraints
+https://fan.googlecode.com/hg-history/Build%201.0.55/adm/tools/textmate/Fan.tmbundle/Syntaxes/Fan.tmLanguage:
+- source.fan
