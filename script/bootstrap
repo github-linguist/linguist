@@ -4,5 +4,6 @@ set -e
 
 cd "$(dirname "$0")/.."
 
-bundle check --path vendor/gems > /dev/null 2>&1 || \
-    bundle install --local --path vendor/gems
+bundle config --local path vendor/gems
+
+bundle check > /dev/null 2>&1 || bundle install
