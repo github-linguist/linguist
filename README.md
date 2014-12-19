@@ -168,7 +168,7 @@ Perl:
   interpreters:
   - perl
 ```
-Any of the extensions defined are valid but the first in this array should be the most popular.
+Any of the extensions defined are valid but the first in this array should be the most popular. All current languages supported are listed in [languages.yml](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml).
 
 ### Testing
 
