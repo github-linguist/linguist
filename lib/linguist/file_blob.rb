@@ -52,5 +52,26 @@ module Linguist
     def size
       File.size(@path)
     end
+
+    # Public: Get file extension.
+    #
+    # Returns a String.
+    def extension
+      extensions.last || ""
+    end
+
+    # Public: Return an array of the file extensions
+    #
+    #     >> Linguist::FileBlob.new("app/views/things/index.html.erb").extensions
+    #     => [".html.erb", ".erb"]
+    #
+    # Returns an Array
+    def extensions
+      basename, *segments = File.basename(name).split(".")
+
+      segments.map.with_index do |segment, index|
+        "." + segments[index..-1].join(".")
+      end
+    end
   end
 end
