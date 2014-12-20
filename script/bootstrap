@@ -9,5 +9,5 @@ bundle config --local path vendor/gems
 bundle check > /dev/null 2>&1 || bundle install
 
 git submodule init
-git submodule sync --quiet
-script/fast-submodule-update
+git submodule sync
+git submodule status | awk '{print $2}' | xargs -P8 -n1 -t git submodule --quiet update
