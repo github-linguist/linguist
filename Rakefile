@@ -48,7 +48,7 @@ end
 
 task :build_grammars_gem do
   rm_rf "grammars"
-  sh "script/download-grammars"
+  sh "script/convert-grammars"
   sh "gem", "build", "github-linguist-grammars.gemspec"
 end
 
