@@ -7,9 +7,9 @@ Dir.chdir(ROOT)
 
 SUBMODULES = `git config --list --file .gitmodules`.lines.grep(/\.path=/).map { |line| line.chomp.split("=", 2).last }.freeze
 SLOW_SUBMODULES = %w[
-  grammar_sources/factor
-  grammar_sources/fsharpbinding
-  grammar_sources/ioke-outdated
+  vendor/grammars/factor
+  vendor/grammars/fsharpbinding
+  vendor/grammars/ioke-outdated
 ]
 
 class TaskResult < Struct.new(:submodule, :output, :success?); end
