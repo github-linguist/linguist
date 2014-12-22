@@ -21,7 +21,9 @@ Once the bug has been fixed upstream, please let us know and we'll pick it up fo
 Great! You'll need to:
 
 0. Add an entry for your language to [`languages.yml`][languages].
-0. Add a grammar for your language to [`grammars.yml`][grammars] by running `script/download-grammars --add URL`. Please only add grammars that have a license that permits redistribution.
+0. Add a grammar for your language. Please only add grammars that have a license that permits redistribution.
+    0. Add your grammar as a submodule: `git submodule add https://github.com/JaneSmith/MyGrammar vendor/grammars/MyGrammar`.
+    0. Add your grammar to [`grammars.yml`][grammars] by running `script/download-grammars --add vendor/grammars/MyGrammar`.
 0. Add samples for your language to the [samples directory][samples].
 
 We try only to add languages once they have some usage on GitHub, so please note in-the-wild usage examples in your pull request. In most cases we prefer that languages already be in use in hundreds of repositories before supporting them in Linguist.

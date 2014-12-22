@@ -8,21 +8,28 @@ require 'tmpdir'
 require 'uri'
 require 'yaml'
 
-GRAMMARS_PATH = File.expand_path("../../grammars", __FILE__)
-SOURCES_FILE = File.expand_path("../../grammars.yml", __FILE__)
-CSONC = File.expand_path("../../node_modules/.bin/csonc", __FILE__)
+ROOT = File.expand_path("../..", __FILE__)
+GRAMMARS_PATH = File.join(ROOT, "grammars")
+SOURCES_FILE = File.join(ROOT, "grammars.yml")
+CSONC = File.join(ROOT, "node_modules", ".bin", "csonc")
 
-class TarballPackage
-  def self.fetch(tmp_dir, url)
-    `curl --silent --location --max-time 30 --output "#{tmp_dir}/archive" "#{url}"`
-    raise "Failed to fetch GH package: #{url} #{$?.to_s}" unless $?.success?
+class SingleFile
+  def initialize(path)
+    @path = path
+  end
 
-    output = File.join(tmp_dir, 'extracted')
-    Dir.mkdir(output)
-    `tar -C "#{output}" -xf "#{tmp_dir}/archive"`
-    raise "Failed to uncompress tarball: #{tmp_dir}/archive (from #{url}) #{$?.to_s}" unless $?.success?
+  def url
+    @path
+  end
 
-    Dir["#{output}/**/*"].select do |path|
+  def fetch(tmp_dir)
+    [@path]
+  end
+end
+
+class DirectoryPackage
+  def self.fetch(dir)
+    Dir["#{dir}/**/*"].select do |path|
       case File.extname(path.downcase)
       when '.plist'
         path.split('/')[-2] == 'Syntaxes'
@@ -34,6 +41,32 @@ class TarballPackage
         false
       end
     end
+  end
+
+  def initialize(directory)
+    @directory = directory
+  end
+
+  def url
+    @directory
+  end
+
+  def fetch(tmp_dir)
+    self.class.fetch(File.join(ROOT, @directory))
+  end
+end
+
+class TarballPackage
+  def self.fetch(tmp_dir, url)
+    `curl --silent --location --max-time 30 --output "#{tmp_dir}/archive" "#{url}"`
+    raise "Failed to fetch GH package: #{url} #{$?.to_s}" unless $?.success?
+
+    output = File.join(tmp_dir, 'extracted')
+    Dir.mkdir(output)
+    `tar -C "#{output}" -xf "#{tmp_dir}/archive"`
+    raise "Failed to uncompress tarball: #{tmp_dir}/archive (from #{url}) #{$?.to_s}" unless $?.success?
+
+    DirectoryPackage.fetch(output)
   end
 
   attr_reader :url
@@ -116,7 +149,16 @@ def load_grammar(path)
 end
 
 def install_grammar(tmp_dir, source, all_scopes)
-  p = if source.end_with?('.tmLanguage', '.plist')
+  is_url = source.start_with?("http:", "https:")
+  is_single_file = source.end_with?('.tmLanguage', '.plist')
+
+  p = if !is_url
+        if is_single_file
+          SingleFile.new(source)
+        else
+          DirectoryPackage.new(source)
+        end
+      elsif is_single_file
         SingleGrammar.new(source)
       elsif source.start_with?('https://github.com')
         GitHubPackage.new(source)
