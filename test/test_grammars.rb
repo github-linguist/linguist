@@ -23,12 +23,14 @@ class TestGrammars < Test::Unit::TestCase
 
     message = ""
     unless nonexistent_submodules.empty?
-      message << "The following submodules are listed in grammars.yml but don't seem to exist in the repository. Maybe you should remove them from grammars.yml?\n"
+      message << "The following submodules are listed in grammars.yml but don't seem to exist in the repository.\n"
+      message << "Either add them using `git submodule add` or remove them from grammars.yml.\n"
       message << nonexistent_submodules.sort.join("\n")
     end
     unless unlisted_submodules.empty?
       message << "\n" unless message.empty?
-      message << "The following submodules exist in the repository but aren't listed in grammars.yml. Maybe you should add them to grammars.yml?\n"
+      message << "The following submodules exist in the repository but aren't listed in grammars.yml.\n"
+      message << "Either add them to grammars.yml or remove them from the repository using `git rm`.\n"
       message << unlisted_submodules.sort.join("\n")
     end
 
