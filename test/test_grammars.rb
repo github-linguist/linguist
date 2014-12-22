@@ -16,7 +16,7 @@ class TestGrammars < Test::Unit::TestCase
   def test_submodules_are_in_sync
     submodules = `git config --list --file "#{File.join(ROOT, ".gitmodules")}"`.lines.grep(/\.path=/).map { |line| line.chomp.split("=", 2).last }
     # Strip off paths inside the submodule so that just the submodule path remains.
-    listed_submodules = @grammars.keys.grep(/grammar_sources/).map { |source| source[%r{grammar_sources/[^/]+}] }
+    listed_submodules = @grammars.keys.grep(/vendor\/grammars/).map { |source| source[%r{vendor/grammars/[^/]+}] }
 
     nonexistent_submodules = listed_submodules - submodules
     unlisted_submodules = submodules - listed_submodules
