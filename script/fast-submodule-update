@@ -12,7 +12,7 @@ SLOW_SUBMODULES = %w[
   vendor/grammars/ioke-outdated
 ]
 
-class TaskResult < Struct.new(:submodule, :output, :success?); end
+class TaskResult < Struct.new(:submodule, :output, :status); end
 
 def run_process(*args)
   read, write = IO.pipe
@@ -21,12 +21,12 @@ def run_process(*args)
   output = read.read
   read.close
   Process.wait(pid)
-  [output, $?.success?]
+  [output, $?]
 end
 
 def update_submodule(submodule)
-  output, success = run_process("git", "submodule", "update", "--", submodule)
-  TaskResult.new(submodule, output, success)
+  output, status = run_process("git", "submodule", "update", "--", submodule)
+  TaskResult.new(submodule, output, status)
 end
 
 def run_thread(submodules, results)
@@ -58,7 +58,7 @@ end
 success = true
 SUBMODULES.each do
   result = results.pop
-  unless result.success?
+  unless result.status.success?
     success = false
     puts "Error updating #{result.submodule}"
   end
