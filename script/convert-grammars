@@ -2,6 +2,7 @@
 
 require 'json'
 require 'net/http'
+require 'optparse'
 require 'plist'
 require 'set'
 require 'tmpdir'
@@ -12,6 +13,13 @@ ROOT = File.expand_path("../..", __FILE__)
 GRAMMARS_PATH = File.join(ROOT, "grammars")
 SOURCES_FILE = File.join(ROOT, "grammars.yml")
 CSONC = File.join(ROOT, "node_modules", ".bin", "csonc")
+
+$options = {
+  :add => false,
+  :install => true,
+  :output => SOURCES_FILE,
+  :remote => true,
+}
 
 class SingleFile
   def initialize(path)
@@ -148,8 +156,9 @@ def load_grammar(path)
   end
 end
 
-def install_grammar(tmp_dir, source, all_scopes)
+def load_grammars(tmp_dir, source, all_scopes)
   is_url = source.start_with?("http:", "https:")
+  return [] if is_url && !$options[:remote]
   is_single_file = source.end_with?('.tmLanguage', '.plist')
 
   p = if !is_url
@@ -172,9 +181,7 @@ def install_grammar(tmp_dir, source, all_scopes)
 
   raise "Unsupported source: #{source}" unless p
 
-  installed = []
-
-  p.fetch(tmp_dir).each do |path|
+  p.fetch(tmp_dir).map do |path|
     grammar = load_grammar(path)
     scope = grammar['scopeName']
 
@@ -184,9 +191,17 @@ def install_grammar(tmp_dir, source, all_scopes)
       "  Previous package: #{all_scopes[scope]}"
       next
     end
-
-    File.write(File.join(GRAMMARS_PATH, "#{scope}.json"), JSON.pretty_generate(grammar))
     all_scopes[scope] = p.url
+    grammar
+  end
+end
+
+def install_grammars(grammars)
+  installed = []
+
+  grammars.each do |grammar|
+    scope = grammar['scopeName']
+    File.write(File.join(GRAMMARS_PATH, "#{scope}.json"), JSON.pretty_generate(grammar))
     installed << scope
   end
 
@@ -206,7 +221,8 @@ def run_thread(queue, all_scopes)
       dir = "#{tmpdir}/#{index}"
       Dir.mkdir(dir)
 
-      install_grammar(dir, source, all_scopes)
+      grammars = load_grammars(dir, source, all_scopes)
+      install_grammars(grammars) if $options[:install]
     end
   end
 end
@@ -232,9 +248,9 @@ def main(sources)
 
   all_scopes = {}
 
-  if ARGV[0] == '--add'
+  if $options[:add]
     Dir.mktmpdir do |tmpdir|
-      install_grammar(tmpdir, ARGV[1], all_scopes)
+      install_grammar(tmpdir, ARGV[0], all_scopes)
     end
     generate_yaml(all_scopes, sources)
   else
@@ -252,12 +268,36 @@ def main(sources)
   end
 end
 
+OptionParser.new do |opts|
+  opts.banner = "Usage: #{$0} [options]"
+
+  opts.on("--add GRAMMAR", "Add a new grammar. GRAMMAR may be a file path or URL.") do |a|
+    $options[:add] = a
+  end
+
+  opts.on("--[no-]install", "Install grammars into grammars/ directory.") do |i|
+    $options[:install] = i
+  end
+
+  opts.on("--output FILE", "Write output to FILE. Use - for stdout.") do |o|
+    $options[:output] = o == "-" ? $stdout : o
+  end
+
+  opts.on("--[no-]remote", "Download remote grammars.") do |r|
+    $options[:remote] = r
+  end
+end.parse!
+
 sources = File.open(SOURCES_FILE) do |file|
   YAML.load(file)
 end
 
 yaml = main(sources)
 
-File.write(SOURCES_FILE, YAML.dump(yaml))
+if $options[:output].is_a?(IO)
+  $options[:output].write(YAML.dump(yaml))
+else
+  File.write($options[:output], YAML.dump(yaml))
+end
 
 $stderr.puts("Done")

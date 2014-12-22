@@ -36,4 +36,17 @@ class TestGrammars < Minitest::Test
 
     assert nonexistent_submodules.empty? && unlisted_submodules.empty?, message
   end
+
+  def test_local_scopes_are_in_sync
+    actual = YAML.load(`"#{File.join(ROOT, "script", "convert-grammars")}" --output - --no-install --no-remote 2>/dev/null`)
+    assert_predicate $?, :success?
+
+    # We're not checking remote grammars. That can take a long time and make CI
+    # flaky if network conditions are poor.
+    @grammars.delete_if { |k, v| k.start_with?("http:", "https:") }
+
+    @grammars.each do |k, v|
+      assert_equal v, actual[k], "The scopes listed for #{k} in grammars.yml don't match the scopes found in that repository"
+    end
+  end
 end
