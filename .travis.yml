@@ -4,6 +4,8 @@ before_install:
   - git fetch origin test/attributes:test/attributes
   - git fetch origin test/master:test/master
   - sudo apt-get install libicu-dev -y
+  - git submodule init
+  - git submodule sync --quiet
   - script/fast-submodule-update
 rvm:
   - 1.9.3
