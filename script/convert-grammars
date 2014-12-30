@@ -233,7 +233,7 @@ def generate_yaml(all_scopes, base)
     out[value] << key
   end
 
-  yaml = yaml.sort.to_h
+  yaml = Hash[yaml.sort]
   yaml.each { |k, v| v.sort! }
   yaml
 end
