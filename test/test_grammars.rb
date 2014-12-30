@@ -38,7 +38,7 @@ class TestGrammars < Minitest::Test
   end
 
   def test_local_scopes_are_in_sync
-    actual = YAML.load(`"#{File.join(ROOT, "script", "convert-grammars")}" --output - --no-install --no-remote 2>/dev/null`)
+    actual = YAML.load(`"#{File.join(ROOT, "script", "convert-grammars")}" --output - --no-install --no-remote`)
     assert $?.success?, "script/convert-grammars failed"
 
     # We're not checking remote grammars. That can take a long time and make CI
