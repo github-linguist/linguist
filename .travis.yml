@@ -4,7 +4,8 @@ before_install:
   - git fetch origin v2.0.0:v2.0.0
   - git fetch origin test/attributes:test/attributes
   - git fetch origin test/master:test/master
-  - sudo apt-get install libicu-dev -y
+  - script/vendor-deb libicu48 libicu-dev
+  - bundle config build.charlock_holmes --with-icu-include=$(pwd)/vendor/debs/include --with-icu-lib=$(pwd)/vendor/debs/lib
   - git submodule init
   - git submodule sync --quiet
   - script/fast-submodule-update
