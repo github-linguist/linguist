@@ -28,7 +28,7 @@ Great! You'll need to:
 
 We try only to add languages once they have some usage on GitHub, so please note in-the-wild usage examples in your pull request. In most cases we prefer that languages already be in use in hundreds of repositories before supporting them in Linguist.
 
-When adding a new file extension, try to avoid false positives being detected. If the extension is already used by other files, the conflict can usually resolved by adding a heuristic rule in heuristics.rb.
+When adding a new file extension, try to avoid false positives being detected. If the extension is already used by other languages, it may be necessary to add samples for those too.  Hopefully, The samples should provide the classifier with information to resolve the conflict.  As a last resort, a conflict can be resolved by adding a heuristic rule in heuristics.rb.
 
 [grammars]: /grammars.yml
 [languages]: /lib/linguist/languages.yml
