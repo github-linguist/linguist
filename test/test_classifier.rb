@@ -1,6 +1,6 @@
 require_relative "./helper"
 
-class TestClassifier < Test::Unit::TestCase
+class TestClassifier < Minitest::Test
   include Linguist
 
   def samples_path

@@ -1,6 +1,6 @@
 require_relative "./helper"
 
-class TestFileBlob < Test::Unit::TestCase
+class TestFileBlob < Minitest::Test
   def test_extensions
     assert_equal [".gitignore"], Linguist::FileBlob.new(".gitignore").extensions
     assert_equal [".xml"],  Linguist::FileBlob.new("build.xml").extensions

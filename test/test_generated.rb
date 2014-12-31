@@ -1,6 +1,6 @@
 require_relative "./helper"
 
-class TestGenerated < Test::Unit::TestCase
+class TestGenerated < Minitest::Test
   include Linguist
 
   def samples_path
@@ -11,14 +11,16 @@ class TestGenerated < Test::Unit::TestCase
 
   def generated_without_loading_data(name)
     blob = File.join(samples_path, name)
-    assert_nothing_raised(DataLoadedError, "Data was loaded when calling generated? on #{name}") do
+    begin
       Generated.generated?(blob, lambda { raise DataLoadedError.new })
+    rescue DataLoadedError
+      assert false, "Data was loaded when calling generated? on #{name}"
     end
   end
 
   def generated_loading_data(name)
     blob = File.join(samples_path, name)
-    assert_raise(DataLoadedError, "Data wasn't loaded when calling generated? on #{name}") do
+    assert_raises(DataLoadedError, "Data wasn't loaded when calling generated? on #{name}") do
       Generated.generated?(blob, lambda { raise DataLoadedError.new })
     end
   end

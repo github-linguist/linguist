@@ -1,6 +1,6 @@
 require_relative "./helper"
 
-class TestTokenizer < Test::Unit::TestCase
+class TestTokenizer < Minitest::Test
   include Linguist
 
   def samples_path
