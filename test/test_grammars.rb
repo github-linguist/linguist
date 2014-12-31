@@ -1,6 +1,6 @@
 require_relative "./helper"
 
-class TestGrammars < Test::Unit::TestCase
+class TestGrammars < Minitest::Test
   ROOT = File.expand_path("../..", __FILE__)
 
   def setup

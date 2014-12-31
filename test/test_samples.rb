@@ -1,7 +1,7 @@
 require_relative "./helper"
 require "tempfile"
 
-class TestSamples < Test::Unit::TestCase
+class TestSamples < Minitest::Test
   include Linguist
 
   def test_up_to_date
