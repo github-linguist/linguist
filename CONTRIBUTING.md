@@ -26,7 +26,7 @@ Great! You'll need to:
     0. Add your grammar to [`grammars.yml`][grammars] by running `script/download-grammars --add vendor/grammars/MyGrammar`.
 0. Add samples for your language to the [samples directory][samples].
 
-In addition, if your new language defines an extension that's already lised in [`languages.yml`][languages] (such as `.foo`) then sometimes a few more steps will need to be taken:
+In addition, if your new language defines an extension that's already listed in [`languages.yml`][languages] (such as `.foo`) then sometimes a few more steps will need to be taken:
 
 0. Make sure that example `.foo` files are present in the [samples directory][samples] for each language that uses `.foo`. 
 0. Test the performance of the Bayesian classifier with a relatively large number (1000s) of sample `.foo` files. (ping @arfon or @bkeepers to help with this) to ensure we're not misclassifying files.
