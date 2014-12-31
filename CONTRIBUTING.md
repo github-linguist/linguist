@@ -10,7 +10,7 @@ This can usually be solved either by adding a new filename or file name extensio
 
 ### Syntax highlighting looks wrong
 
-Assuming your code is being detected as the right language (see above), in most cases this is due to a bug in the language grammar rather than a bug in Linguist. [`grammars.yml`][grammars] lists all the grammars we use for syntax highlighting on github.com. Find the one corresponding to your code's programming language and submit a bug report upstream.
+Assuming your code is being detected as the right language (see above), in most cases this is due to a bug in the language grammar rather than a bug in Linguist. [`grammars.yml`][grammars] lists all the grammars we use for syntax highlighting on github.com. Find the one corresponding to your code's programming language and submit a bug report upstream. If you can, try to reproduce the highlighting problem in the text editor that the grammar is designed for (TextMate, Sublime Text, or Atom) and include that information in your bug report.
 
 You can also try to fix the bug yourself and submit a Pull Request. [This piece from TextMate's documentation](http://manual.macromates.com/en/language_grammars) offers a good introduction on how to work with TextMate-compatible grammars. You can test grammars using [Lightshow](https://lightshow.githubapp.com).
 
@@ -21,7 +21,9 @@ Once the bug has been fixed upstream, please let us know and we'll pick it up fo
 Great! You'll need to:
 
 0. Add an entry for your language to [`languages.yml`][languages].
-0. Add a grammar for your language to [`grammars.yml`][grammars] by running `script/download-grammars --add URL`. Please only add grammars that have a license that permits redistribution.
+0. Add a grammar for your language. Please only add grammars that have a license that permits redistribution.
+    0. Add your grammar as a submodule: `git submodule add https://github.com/JaneSmith/MyGrammar vendor/grammars/MyGrammar`.
+    0. Add your grammar to [`grammars.yml`][grammars] by running `script/download-grammars --add vendor/grammars/MyGrammar`.
 0. Add samples for your language to the [samples directory][samples].
 
 We try only to add languages once they have some usage on GitHub, so please note in-the-wild usage examples in your pull request. In most cases we prefer that languages already be in use in hundreds of repositories before supporting them in Linguist.
