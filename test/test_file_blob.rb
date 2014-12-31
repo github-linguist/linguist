@@ -1,5 +1,4 @@
-require 'linguist/file_blob'
-require 'test/unit'
+require_relative "./helper"
 
 class TestFileBlob < Test::Unit::TestCase
   def test_extensions
