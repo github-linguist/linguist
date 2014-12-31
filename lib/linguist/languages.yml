@@ -2632,6 +2632,17 @@ Sage:
   tm_scope: source.python
   ace_mode: python
 
+SaltStack:
+  type: data
+  group: YAML
+  aliases:
+  - saltstate
+  - salt
+  extensions:
+  - .sls
+  tm_scope: source.yaml.salt
+  ace_mode: yaml
+
 Sass:
   type: markup
   tm_scope: source.sass
