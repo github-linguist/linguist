@@ -1,6 +1,6 @@
 require_relative "./helper"
 
-class TestPedantic < Test::Unit::TestCase
+class TestPedantic < Minitest::Test
   filename = File.expand_path("../../lib/linguist/languages.yml", __FILE__)
   LANGUAGES = YAML.load(File.read(filename))
   GRAMMARS = YAML.load(File.read(File.expand_path("../../grammars.yml", __FILE__)))

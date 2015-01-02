@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'mime-types',      '>= 1.19'
   s.add_dependency 'rugged',          '~> 0.22.0b4'
 
+  s.add_development_dependency 'minitest', '>= 5.0'
   s.add_development_dependency 'mocha'
   s.add_development_dependency 'pry'
   s.add_development_dependency 'rake'
