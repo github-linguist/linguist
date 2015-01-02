@@ -12,7 +12,7 @@ class TestGenerated < Minitest::Test
   def generated_without_loading_data(name)
     blob = File.join(samples_path, name)
     begin
-      Generated.generated?(blob, lambda { raise DataLoadedError.new })
+      assert Generated.generated?(blob, lambda { raise DataLoadedError.new }), "#{name} was not recognized as a generated file"
     rescue DataLoadedError
       assert false, "Data was loaded when calling generated? on #{name}"
     end
