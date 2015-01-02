@@ -419,7 +419,7 @@ CLIPS:
 CMake:
   extensions:
   - .cmake
-  - .in
+  - .cmake.in
   filenames:
   - CMakeLists.txt
   ace_mode: text
@@ -503,10 +503,10 @@ Clojure:
   - .cl2
   - .cljc
   - .cljs
+  - .cljs.hl
   - .cljscm
   - .cljx
   - .hic
-  - .hl
   filenames:
   - riemann.config
 
@@ -1171,6 +1171,7 @@ HTML:
   extensions:
   - .html
   - .htm
+  - .html.hl
   - .st
   - .xht
   - .xhtml
@@ -1196,7 +1197,8 @@ HTML+ERB:
   - erb
   extensions:
   - .erb
-  - .deface
+  - .erb.deface
+  - .html.erb.deface
   ace_mode: html_ruby
 
 HTML+PHP:
@@ -1227,7 +1229,8 @@ Haml:
   type: markup
   extensions:
   - .haml
-  - .deface
+  - .haml.deface
+  - .html.haml.deface
   ace_mode: haml
 
 Handlebars:
