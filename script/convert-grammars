@@ -44,7 +44,7 @@ class DirectoryPackage
         path.split('/')[-2] == 'Syntaxes'
       when '.tmlanguage'
         true
-      when '.cson'
+      when '.cson', '.json'
         path.split('/')[-2] == 'grammars'
       else
         false
@@ -148,7 +148,7 @@ def load_grammar(path)
   case File.extname(path.downcase)
   when '.plist', '.tmlanguage'
     Plist::parse_xml(path)
-  when '.cson'
+  when '.cson', '.json'
     cson = `"#{CSONC}" "#{path}"`
     raise "Failed to convert CSON grammar '#{path}': #{$?.to_s}" unless $?.success?
     JSON.parse(cson)
