@@ -314,7 +314,7 @@ Bluespec:
   type: programming
   extensions:
   - .bsv
-  tm_scope: source.verilog
+  tm_scope: source.bsv
   ace_mode: verilog
 
 Boo:
@@ -448,6 +448,14 @@ Cap'n Proto:
   extensions:
   - .capnp
   ace_mode: text
+
+CartoCSS:
+  aliases:
+  - Carto
+  extensions:
+  - .mss
+  ace_mode: text
+  tm_scope: none
 
 Ceylon:
   type: programming
@@ -787,9 +795,10 @@ Elixir:
 
 Elm:
   type: programming
+  color: "#60B5CC"
   extensions:
   - .elm
-  tm_scope: source.haskell
+  tm_scope: source.elm
   ace_mode: elm
 
 Emacs Lisp:
@@ -990,8 +999,8 @@ Game Maker Language:
   color: "#8ad353"
   extensions:
   - .gml
-  tm_scope: source.js
-  ace_mode: javascript
+  tm_scope: source.c++
+  ace_mode: c_cpp
 
 Genshi:
   extensions:
@@ -1211,7 +1220,7 @@ Hack:
   extensions:
   - .hh
   - .php
-  tm_scope: none
+  tm_scope: text.html.php
 
 Haml:
   group: HTML
@@ -1412,6 +1421,13 @@ Jade:
   - .jade
   tm_scope: source.jade
   ace_mode: jade
+
+Jasmin:
+  type: programming
+  ace_mode: java
+  extensions:
+  - .j
+  tm_scope: source.jasmin
 
 Java:
   type: programming
@@ -1718,7 +1734,7 @@ Markdown:
   - .mkdn
   - .mkdown
   - .ron
-  tm_scope: text.html.markdown
+  tm_scope: source.gfm
 
 Mask:
   type: markup
@@ -1789,7 +1805,7 @@ Mercury:
   extensions:
   - .m
   - .moo
-  tm_scope: source.prolog
+  tm_scope: source.mercury
   ace_mode: prolog
 
 MiniD: # Legacy
@@ -2306,6 +2322,15 @@ Pure Data:
   tm_scope: none
   ace_mode: text
 
+PureBasic:
+  type: programming
+  color: "#5a6986"
+  extensions:
+  - .pb
+  - .pbi
+  tm_scope: none
+  ace_mode: text
+
 PureScript:
   type: programming
   color: "#bcdc53"
@@ -2569,7 +2594,7 @@ SAS:
   color: "#1E90FF"
   extensions:
   - .sas
-  tm_scope: none
+  tm_scope: source.sas
   ace_mode: text
 
 SCSS:
@@ -2615,6 +2640,17 @@ Sage:
   - .sage
   tm_scope: source.python
   ace_mode: python
+
+SaltStack:
+  type: data
+  group: YAML
+  aliases:
+  - saltstate
+  - salt
+  extensions:
+  - .sls
+  tm_scope: source.yaml.salt
+  ace_mode: yaml
 
 Sass:
   type: markup
@@ -2695,6 +2731,7 @@ Shell:
   - .zsh
   interpreters:
   - bash
+  - rc
   - sh
   - zsh
   ace_mode: sh
@@ -2738,6 +2775,7 @@ Smalltalk:
   color: "#596706"
   extensions:
   - .st
+  - .cs
   aliases:
   - squeak
   ace_mode: text
@@ -3068,6 +3106,7 @@ XML:
   - .dita
   - .ditamap
   - .ditaval
+  - .dll.config
   - .filters
   - .fsproj
   - .glade
@@ -3115,18 +3154,18 @@ XML:
   - .xlf
   - .xliff
   - .xmi
+  - .xml.dist
   - .xsd
   - .xul
   - .zcml
   filenames:
   - .classpath
   - .project
+  - Settings.StyleCop
   - Web.Debug.config
   - Web.Release.config
   - Web.config
-  - build.xml.dist
   - packages.config
-  - phpunit.xml.dist
 
 XProc:
   type: programming
@@ -3232,7 +3271,7 @@ fish:
   group: Shell
   extensions:
   - .fish
-  tm_scope: none
+  tm_scope: source.fish
   ace_mode: text
 
 mupad:

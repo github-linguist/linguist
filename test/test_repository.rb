@@ -1,6 +1,6 @@
 require_relative "./helper"
 
-class TestRepository < Test::Unit::TestCase
+class TestRepository < Minitest::Test
   def rugged_repository
     @rugged ||= Rugged::Repository.new(File.expand_path("../../.git", __FILE__))
   end

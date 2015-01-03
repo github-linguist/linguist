@@ -1,0 +1,149 @@
+#!/bin/rc
+# man - print manual pages
+rfork e
+
+. /sys/man/fonts
+
+cmd=n
+sec=()
+S=/sys/man
+d=0
+
+fn roff {
+	preproc=()
+	postproc=cat
+	x=`{doctype $2}
+	if (~ $1 t) {
+		if(~ $x *grap*)
+			preproc=($preproc grap)
+		if(~ $x *pic*)
+			preproc=($preproc pic)
+		Nflag=-Tutf
+	}
+	if not {
+		Nflag='-N'
+		Lflag='-rL1000i'
+		# setting L changes page length to infinity (sed script removes empty lines)
+		if (grep -s '^\.(2C|sp *[0-9]*\.)' $2)
+			postproc=col
+	}
+	if(~ $x *eqn*)
+		preproc=($preproc eqn)
+	if(~ $x *tbl*)
+		preproc=($preproc tbl)
+	{echo -n $FONTS; cat $2 </dev/null} |
+		switch($#preproc) {
+		case 0
+			troff $Nflag $Lflag -$MAN 
+		case 1
+			$preproc | troff $Nflag $Lflag -$MAN
+		case 2
+			$preproc(1) | $preproc(2) | troff $Nflag $Lflag -$MAN
+		case 3
+			$preproc(1) | $preproc(2) | $preproc(3) |
+				troff $Nflag $Lflag -$MAN
+		case *
+			$preproc(1) | $preproc(2) | $preproc(3) |
+				$preproc(4) | troff $Nflag $Lflag -$MAN
+		} | $postproc
+}
+
+fn page {
+	if(test -d /mnt/wsys/acme)
+		/bin/page -w
+	if not
+		/bin/page
+}
+
+
+search=yes
+while(~ $d 0) {
+	if(~ $#* 0) {
+		echo 'Usage: man [-bntpPSw] [0-9] [0-9] ... name1 name2 ...' >[1=2]
+		exit
+	}
+	if(test -d $S/$1){
+		sec=($sec $1)
+		shift
+	}
+	if not
+		switch($1) {
+		case -b ; cmd=b ; shift
+		case -n ; cmd=n ; shift
+		case -P ; cmd=P ; shift
+		case -p ; cmd=p ; shift
+		case -S ; search=no ; shift
+		case -t ; cmd=t ; shift
+		case -w ; cmd=w ; shift
+		case * ; d=1
+		}
+}
+if(~ $#sec 0) {
+	sec=`{ls -pd $S/[0-9]* }
+}
+ix=$S/$sec/INDEX
+if(~ $#* 1) pat='^'^$1^' '
+if not pat='^('^`{echo $* | sed 's/ /|/g'}^') '
+fils=()
+if(~ $search yes)
+for(i in $S/$sec){
+	if(/bin/test -f $i/INDEX){
+		try=`{grep -i $pat $i/INDEX | sed 's/^[^ ]* //' | sort -u}
+		if(! ~ $#try 0)
+			fils=($fils $i/$try)
+	}
+}
+# bug: should also do following loop if not all pages found
+if(~ $#fils 0) {
+	# nothing in INDEX. try for file of given name
+	for(i) {
+		if(~ $i intro) i=0intro
+		for(n in $sec) {
+			try=`{echo $S/$n/$i | tr A-Z a-z}
+			if (/bin/test -f $try)
+				fils=($fils $try)
+		}
+	}
+	if(~ $#fils 0) {
+		echo 'man: no manual page' >[1=2]
+		exit 'no man'
+	}
+}
+for(i in $fils) {
+	if(! /bin/test -f $i)
+		echo need $i >[1=2]
+	if not {
+		switch($cmd) {
+		case w
+			echo $i
+
+		case t
+			roff t $i
+
+		case p
+			roff t $i | grep -v '^x X html' | proof
+
+		case P
+			roff t $i | page
+
+		case n
+			roff n $i | sed '
+				${
+        			       /^$/p
+				}
+				//N
+				/^\n$/D'
+
+		case b
+			x=`{echo $i | sed 's;/sys/man/(.*)/(.*);\1 \2;'}
+			if(~ $x(2) 0intro) x=($x(1) intro)
+			roff n $i | sed '
+				${
+        			       /^$/p
+				}
+				//N
+				/^\n$/D' |
+			plumb -i -d edit -a 'action=showdata filename=/man/'$x(2)^'('$x(1)^')'
+		}
+	}
+}

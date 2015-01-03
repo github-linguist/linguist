@@ -1,7 +1,7 @@
 require_relative "./helper"
 require "tempfile"
 
-class TestSamples < Test::Unit::TestCase
+class TestSamples < Minitest::Test
   include Linguist
 
   def test_up_to_date
@@ -43,7 +43,7 @@ class TestSamples < Test::Unit::TestCase
       if extnames = Samples.cache['extnames'][name]
         extnames.each do |extname|
           next if extname == '.script!'
-          assert options['extensions'].include?(extname), "#{name} has a sample with extension (#{extname}) that isn't explicitly defined in languages.yml"
+          assert options['extensions'].index { |x| x.end_with? extname }, "#{name} has a sample with extension (#{extname}) that isn't explicitly defined in languages.yml"
         end
       end
 
