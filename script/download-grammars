@@ -150,7 +150,7 @@ end
 
 def install_grammar(tmp_dir, source, all_scopes)
   is_url = source.start_with?("http:", "https:")
-  is_single_file = source.end_with?('.tmLanguage', '.plist')
+  is_single_file = source.downcase.end_with?('.tmlanguage', '.plist') && !File.directory?(source)
 
   p = if !is_url
         if is_single_file
