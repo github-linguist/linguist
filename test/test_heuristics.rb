@@ -133,6 +133,13 @@ class TestHeuristcs < Minitest::Test
     })
   end
 
+  def test_cs_by_heuristics
+    assert_heuristics({
+      "C#" => all_fixtures("C#", "*.cs"),
+      "Smalltalk" => all_fixtures("Smalltalk", "*.cs")
+    })
+  end
+
   def assert_heuristics(hash)
     candidates = hash.keys.map { |l| Language[l] }
 
