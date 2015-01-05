@@ -9,6 +9,7 @@ before_install:
   - git submodule init
   - git submodule sync --quiet
   - script/fast-submodule-update
+install: bundle install --jobs=3 || find . -name mkmf.log | xargs cat
 rvm:
   - 1.9.3
   - 2.0.0
