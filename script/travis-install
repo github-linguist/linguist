@@ -1,0 +1,5 @@
+#!/bin/set
+
+set -ex
+
+bundle install --jobs=3 || find . -name mkmf.log -exec cat {} \;
