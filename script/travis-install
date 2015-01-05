@@ -2,4 +2,4 @@
 
 set -ex
 
-bundle install --jobs=3 || find . -name mkmf.log -exec cat {} \;
+bundle install --jobs=3 --path=vendor/gems || find . -name mkmf.log -exec cat {} \;
