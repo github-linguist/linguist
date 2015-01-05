@@ -5,5 +5,6 @@ set -x
 bundle install --jobs=3 --path=vendor/gems
 result=$?
 cat .bundle/config
+find . -name gem_make.out -exec cat {} \;
 find . -name mkmf.log -exec cat {} \;
 exit $result
