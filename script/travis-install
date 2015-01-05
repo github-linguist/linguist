@@ -3,6 +3,7 @@
 set -x
 
 ruby -r rbconfig -e 'puts RbConfig::CONFIG["libdir"]'
+ruby -r mkmf -e 'puts MakeMakefile::CONFIG["libdir"]'
 bundle install --jobs=3 --path=vendor/gems
 result=$?
 cat .bundle/config
