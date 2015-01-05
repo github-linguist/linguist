@@ -2,6 +2,7 @@
 
 set -x
 
+ruby -r rbconfig -e 'puts RbConfig::CONFIG["libdir"]'
 bundle install --jobs=3 --path=vendor/gems
 result=$?
 cat .bundle/config
