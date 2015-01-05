@@ -1,7 +1,7 @@
 sudo: false
 before_install:
   - script/vendor-deb libicu48 libicu-dev
-  - bundle config --local build.charlock_holmes --with-icu-include=$(pwd)/vendor/debs/include --with-icu-lib=$(pwd)/vendor/debs/lib
+  - bundle config --local build.charlock_holmes --with-icu-dir=$(pwd)/vendor/debs
 install: script/travis-install
 script:
   - git fetch origin master:master
