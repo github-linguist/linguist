@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -ex
+set -x
 
 bundle install --jobs=3 --path=vendor/gems
 result=$?
