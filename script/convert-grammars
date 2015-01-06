@@ -159,15 +159,14 @@ end
 def load_grammars(tmp_dir, source, all_scopes)
   is_url = source.start_with?("http:", "https:")
   return [] if is_url && !$options[:remote]
-  is_single_file = source.end_with?('.tmLanguage', '.plist')
 
   p = if !is_url
-        if is_single_file
-          SingleFile.new(source)
-        else
+        if File.directory?(source)
           DirectoryPackage.new(source)
+        else
+          SingleFile.new(source)
         end
-      elsif is_single_file
+      elsif source.end_with?('.tmLanguage', '.plist')
         SingleGrammar.new(source)
       elsif source.start_with?('https://github.com')
         GitHubPackage.new(source)
