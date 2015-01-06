@@ -47,9 +47,9 @@ vendor/grammars/LiveScript.tmbundle:
 vendor/grammars/NSIS:
 - source.nsis
 vendor/grammars/NimLime:
-- source.nimrod
-- source.nimrod_filter
-- source.nimrodcfg
+- source.nim
+- source.nim_filter
+- source.nimcfg
 vendor/grammars/PHP-Twig.tmbundle:
 - text.html.twig
 vendor/grammars/RDoc.tmbundle:
@@ -259,6 +259,7 @@ vendor/grammars/language-javascript:
 vendor/grammars/language-python:
 - source.python
 - source.regexp.python
+- text.python.console
 - text.python.traceback
 vendor/grammars/language-shellscript:
 - source.shell
