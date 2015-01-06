@@ -14,12 +14,11 @@ class TestGrammars < Minitest::Test
   end
 
   def test_submodules_are_in_sync
-    submodules = `git config --list --file "#{File.join(ROOT, ".gitmodules")}"`.lines.grep(/\.path=/).map { |line| line.chomp.split("=", 2).last }
     # Strip off paths inside the submodule so that just the submodule path remains.
     listed_submodules = @grammars.keys.grep(/vendor\/grammars/).map { |source| source[%r{vendor/grammars/[^/]+}] }
 
-    nonexistent_submodules = listed_submodules - submodules
-    unlisted_submodules = submodules - listed_submodules
+    nonexistent_submodules = listed_submodules - submodule_paths
+    unlisted_submodules = submodule_paths - listed_submodules
 
     message = ""
     unless nonexistent_submodules.empty?
@@ -48,5 +47,11 @@ class TestGrammars < Minitest::Test
     @grammars.each do |k, v|
       assert_equal v, actual[k], "The scopes listed for #{k} in grammars.yml don't match the scopes found in that repository"
     end
+  end
+
+  private
+
+  def submodule_paths
+    @submodule_paths ||= `git config --list --file "#{File.join(ROOT, ".gitmodules")}"`.lines.grep(/\.path=/).map { |line| line.chomp.split("=", 2).last }
   end
 end
