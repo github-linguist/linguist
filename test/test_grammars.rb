@@ -6,7 +6,6 @@ class TestGrammars < Minitest::Test
   # These grammars have no license but have been grandfathered in. New grammars
   # must have a license that allows redistribution.
   UNLICENSED_GRAMMARS_WHITELIST = %w[
-    vendor/grammars/Scalate.tmbundle
     vendor/grammars/Sublime-Lasso
     vendor/grammars/Sublime-REBOL
     vendor/grammars/x86-assembly-textmate-bundle
