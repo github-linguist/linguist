@@ -148,10 +148,12 @@ def load_grammar(path)
   case File.extname(path.downcase)
   when '.plist', '.tmlanguage'
     Plist::parse_xml(path)
-  when '.cson', '.json'
+  when '.cson'
     cson = `"#{CSONC}" "#{path}"`
     raise "Failed to convert CSON grammar '#{path}': #{$?.to_s}" unless $?.success?
     JSON.parse(cson)
+  when '.json'
+    JSON.parse(File.read(path))
   else
     raise "Invalid document type #{path}"
   end
