@@ -298,5 +298,3 @@ if $options[:output].is_a?(IO)
 else
   File.write($options[:output], YAML.dump(yaml))
 end
-
-$stderr.puts("Done")
