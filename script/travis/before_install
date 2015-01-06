@@ -2,10 +2,8 @@
 
 set -ex
 
-git fetch origin master:master
-git fetch origin v2.0.0:v2.0.0
-git fetch origin test/attributes:test/attributes
-git fetch origin test/master:test/master
+# Fetch all commits/refs needed to run our tests.
+git fetch origin master:master v2.0.0:v2.0.0 test/attributes:test/attributes test/master:test/master
 
 script/vendor-deb libicu48 libicu-dev
 if ruby -e 'exit RUBY_VERSION >= "2.0" && RUBY_VERSION < "2.1"'; then
