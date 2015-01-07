@@ -5,6 +5,7 @@ require 'net/http'
 require 'optparse'
 require 'plist'
 require 'set'
+require 'thread'
 require 'tmpdir'
 require 'uri'
 require 'yaml'
@@ -195,7 +196,7 @@ def load_grammars(tmp_dir, source, all_scopes)
   end
 end
 
-def install_grammars(grammars)
+def install_grammars(grammars, path)
   installed = []
 
   grammars.each do |grammar|
@@ -204,7 +205,7 @@ def install_grammars(grammars)
     installed << scope
   end
 
-  $stderr.puts("OK #{p.url} (#{installed.join(', ')})")
+  $stderr.puts("OK #{path} (#{installed.join(', ')})")
 end
 
 def run_thread(queue, all_scopes)
@@ -221,7 +222,7 @@ def run_thread(queue, all_scopes)
       Dir.mkdir(dir)
 
       grammars = load_grammars(dir, source, all_scopes)
-      install_grammars(grammars) if $options[:install]
+      install_grammars(grammars, source) if $options[:install]
     end
   end
 end
