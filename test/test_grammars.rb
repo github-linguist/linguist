@@ -60,10 +60,10 @@ class TestGrammars < Minitest::Test
   def test_submodules_have_licenses
     categories = submodule_paths.group_by do |submodule|
       files = Dir[File.join(ROOT, submodule, "*")]
-      license = files.find { |path| File.basename(path) =~ /\blicense\b/i } || files.find { |path| File.basename(path) =~ /\bcopying\b/i }
+      license = files.find { |path| File.basename(path) =~ /\blicen[cs]e\b/i } || files.find { |path| File.basename(path) =~ /\bcopying\b/i }
       if license.nil?
         if readme = files.find { |path| File.basename(path) =~ /\Areadme\b/i }
-          license = readme if File.read(readme) =~ /\blicense\b/i
+          license = readme if File.read(readme) =~ /\blicen[cs]e\b/i
         end
       end
       if license.nil?
