@@ -44,7 +44,7 @@ class DirectoryPackage
         path.split('/')[-2] == 'Syntaxes'
       when '.tmlanguage'
         true
-      when '.cson'
+      when '.cson', '.json'
         path.split('/')[-2] == 'grammars'
       else
         false
@@ -152,6 +152,8 @@ def load_grammar(path)
     cson = `"#{CSONC}" "#{path}"`
     raise "Failed to convert CSON grammar '#{path}': #{$?.to_s}" unless $?.success?
     JSON.parse(cson)
+  when '.json'
+    JSON.parse(File.read(path))
   else
     raise "Invalid document type #{path}"
   end
