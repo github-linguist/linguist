@@ -42,7 +42,6 @@ module Linguist
     # Returns a String
     attr_reader :path
 
-
     # Public: Read file permissions
     #
     # Returns a String like '100644'
