@@ -450,12 +450,13 @@ Cap'n Proto:
   ace_mode: text
 
 CartoCSS:
+  type: programming
   aliases:
   - Carto
   extensions:
   - .mss
   ace_mode: text
-  tm_scope: none
+  tm_scope: source.css.mss
 
 Ceylon:
   type: programming
@@ -1267,13 +1268,13 @@ Haxe:
 
 Hy:
   type: programming
-  ace_mode: clojure
+  ace_mode: text
   color: "#7891b1"
   extensions:
   - .hy
   aliases:
   - hylang
-  tm_scope: none
+  tm_scope: source.hy
 
 IDL:
   type: programming
@@ -1381,13 +1382,6 @@ JSON:
   extensions:
   - .json
   - .lock
-  - .sublime-keymap
-  - .sublime-mousemap
-  - .sublime-project
-  - .sublime-settings
-  - .sublime-workspace
-  - .sublime_metrics
-  - .sublime_session
   filenames:
   - .jshintrc
   - composer.lock
@@ -1471,6 +1465,19 @@ JavaScript:
   - .pac
   - .sjs
   - .ssjs
+  - .sublime-build
+  - .sublime-commands
+  - .sublime-completions
+  - .sublime-keymap
+  - .sublime-macro
+  - .sublime-menu
+  - .sublime-mousemap
+  - .sublime-project
+  - .sublime-settings
+  - .sublime-theme
+  - .sublime-workspace
+  - .sublime_metrics
+  - .sublime_session
   - .xsjs
   - .xsjslib
   filenames:
@@ -1891,6 +1898,7 @@ Nimrod:
   - .nim
   - .nimrod
   ace_mode: text
+  tm_scope: source.nim
 
 Ninja:
   type: data
@@ -1904,7 +1912,7 @@ Nit:
   color: "#0d8921"
   extensions:
   - .nit
-  tm_scope: none
+  tm_scope: source.nit
   ace_mode: text
 
 Nix:
@@ -2620,6 +2628,8 @@ SQL:
   ace_mode: sql
   extensions:
   - .sql
+  - .cql
+  - .ddl
   - .prc
   - .tab
   - .udf
@@ -3129,6 +3139,8 @@ XML:
   - .rss
   - .scxml
   - .srdf
+  - .stTheme
+  - .sublime-snippet
   - .svg
   - .targets
   - .tmCommand

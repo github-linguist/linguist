@@ -47,9 +47,9 @@ vendor/grammars/LiveScript.tmbundle:
 vendor/grammars/NSIS:
 - source.nsis
 vendor/grammars/NimLime:
-- source.nimrod
-- source.nimrod_filter
-- source.nimrodcfg
+- source.nim
+- source.nim_filter
+- source.nimcfg
 vendor/grammars/PHP-Twig.tmbundle:
 - text.html.twig
 vendor/grammars/RDoc.tmbundle:
@@ -76,6 +76,8 @@ vendor/grammars/Sublime-Logos:
 - source.logos
 vendor/grammars/Sublime-Loom:
 - source.loomscript
+vendor/grammars/Sublime-Nit:
+- source.nit
 vendor/grammars/Sublime-QML:
 - source.qml
 vendor/grammars/Sublime-REBOL:
@@ -138,6 +140,8 @@ vendor/grammars/c.tmbundle:
 - source.c.platform
 vendor/grammars/capnproto.tmbundle:
 - source.capnp
+vendor/grammars/carto-atom:
+- source.css.mss
 vendor/grammars/ceylon-sublimetext:
 - module.ceylon
 - source.ceylon
@@ -255,16 +259,16 @@ vendor/grammars/language-csharp:
 - source.nant-build
 vendor/grammars/language-gfm:
 - source.gfm
+vendor/grammars/language-hy:
+- source.hy
 vendor/grammars/language-javascript:
 - source.js
 - source.js.regexp
 vendor/grammars/language-python:
 - source.python
 - source.regexp.python
+- text.python.console
 - text.python.traceback
-vendor/grammars/language-sass:
-- source.css.scss
-- source.sass
 vendor/grammars/language-shellscript:
 - source.shell
 - text.shell-session
@@ -376,6 +380,8 @@ vendor/grammars/ruby.tmbundle:
 vendor/grammars/sas.tmbundle:
 - source.SASLog
 - source.sas
+vendor/grammars/sass-textmate-bundle:
+- source.sass
 vendor/grammars/scala.tmbundle:
 - source.sbt
 - source.scala

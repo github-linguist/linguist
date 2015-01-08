@@ -23,7 +23,7 @@ Great! You'll need to:
 0. Add an entry for your language to [`languages.yml`][languages].
 0. Add a grammar for your language. Please only add grammars that have a license that permits redistribution.
     0. Add your grammar as a submodule: `git submodule add https://github.com/JaneSmith/MyGrammar vendor/grammars/MyGrammar`.
-    0. Add your grammar to [`grammars.yml`][grammars] by running `script/download-grammars --add vendor/grammars/MyGrammar`.
+    0. Add your grammar to [`grammars.yml`][grammars] by running `script/convert-grammars --add vendor/grammars/MyGrammar`.
 0. Add samples for your language to the [samples directory][samples].
 
 In addition, if your new language defines an extension that's already listed in [`languages.yml`][languages] (such as `.foo`) then sometimes a few more steps will need to be taken:
