@@ -250,9 +250,10 @@ def main(sources)
 
   all_scopes = {}
 
-  if $options[:add]
+  if source = $options[:add]
     Dir.mktmpdir do |tmpdir|
-      install_grammar(tmpdir, ARGV[0], all_scopes)
+      grammars = load_grammars(tmpdir, source, all_scopes)
+      install_grammars(grammars, source) if $options[:install]
     end
     generate_yaml(all_scopes, sources)
   else
