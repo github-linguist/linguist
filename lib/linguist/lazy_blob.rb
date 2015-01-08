@@ -1,7 +1,6 @@
 require 'linguist/blob_helper'
 require 'linguist/language'
 require 'rugged'
-require 'pry'
 
 module Linguist
   class LazyBlob
