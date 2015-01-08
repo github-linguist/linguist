@@ -24,11 +24,20 @@
 #
 # Please keep this list alphabetized. Capitalization comes before lower case.
 
+
 ABAP:
   type: programming
   extensions:
   - .abap
   ace_mode: abap
+  
+About:
+  type: markup
+  ace_mode: markdown
+  color: "#046380"
+  extensions:
+  - .about
+  tm_scope: source.gfm
 
 AGS Script:
   type: programming
@@ -1499,6 +1508,18 @@ KRL:
   - .krl
   tm_scope: none
   ace_mode: text
+
+KievScript:
+  type: programming
+  color: "#2c3e50"
+  extensions:
+  - .k
+  - .kiev
+  - .kievscript
+  - .ks
+  tm_scope: none
+  ace_mode: text
+
 
 Kit:
   type: markup
