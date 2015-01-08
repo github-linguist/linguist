@@ -129,6 +129,8 @@ class TestGrammars < Minitest::Test
       "MIT"
     elsif content.include?("unlicense.org")
       "unlicense"
+    elsif content.include?("http://www.wtfpl.net/txt/copying/")
+      "WTFPL"
     end
   end
 end
