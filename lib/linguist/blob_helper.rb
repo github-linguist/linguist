@@ -301,7 +301,7 @@ module Linguist
     #
     # Return true or false
     def generated?
-      @_generated ||= Generated.generated?(name, lambda { data })
+      @_generated ||= Generated.generated?(path, lambda { data })
     end
 
     # Public: Detects the Language of the blob.

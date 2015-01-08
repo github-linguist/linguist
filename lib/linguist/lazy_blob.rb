@@ -24,6 +24,10 @@ module Linguist
       @mode = mode
     end
 
+    def path
+      name
+    end
+
     def git_attributes
       @git_attributes ||= repository.fetch_attributes(
         name, GIT_ATTR, GIT_ATTR_FLAGS)
