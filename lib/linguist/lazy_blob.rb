@@ -1,6 +1,7 @@
 require 'linguist/blob_helper'
 require 'linguist/language'
 require 'rugged'
+require 'pry'
 
 module Linguist
   class LazyBlob
@@ -14,18 +15,16 @@ module Linguist
 
     attr_reader :repository
     attr_reader :oid
-    attr_reader :name
+    attr_reader :path
     attr_reader :mode
 
-    def initialize(repo, oid, name, mode = nil)
+    alias :name :path
+
+    def initialize(repo, oid, path, mode = nil)
       @repository = repo
       @oid = oid
-      @name = name
+      @path = path
       @mode = mode
-    end
-
-    def path
-      name
     end
 
     def git_attributes
