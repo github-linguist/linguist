@@ -181,5 +181,13 @@ module Linguist
         Language["Text"]
       end
     end
+
+    disambiguate "CMake", "Text" do |data|
+      if /^\s*(add_(custom_|executable|library|subdirectory)|cmake_minimum_required|enable_testing|target_(compile|include|link)_)/i.match(data)
+        Language["CMake"]
+      else
+        Language["Text"]
+      end
+    end
   end
 end
