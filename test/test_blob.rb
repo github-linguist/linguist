@@ -22,14 +22,22 @@ class TestBlob < Minitest::Test
     File.expand_path("../fixtures", __FILE__)
   end
 
-  def sample_blob(name)
+  def sample_blob(name, enforce_relative = false)
     name = File.join(samples_path, name) unless name =~ /^\//
-    FileBlob.new(name, samples_path)
+    if enforce_relative
+      FileBlob.new(name, samples_path)
+    else
+      FileBlob.new(name)
+    end
   end
 
-  def fixture_blob(name)
+  def fixture_blob(name, enforce_relative = false)
     name = File.join(fixtures_path, name) unless name =~ /^\//
-    FileBlob.new(name, fixtures_path)
+    if enforce_relative
+      FileBlob.new(name, fixtures_path)
+    else
+      FileBlob.new(name)
+    end
   end
 
   def script_blob(name)
@@ -251,8 +259,7 @@ class TestBlob < Minitest::Test
     assert sample_blob("Zephir/filenames/exception.zep.php").generated?
     assert !sample_blob("Zephir/Router.zep").generated?
 
-
-    assert Linguist::Generated.generated?("node_modules/grunt/lib/grunt.js", nil)
+    assert sample_blob("node_modules/grunt/lib/grunt.js").generated?
 
     # Godep saved dependencies
     assert sample_blob("Godeps/Godeps.json").generated?
@@ -264,7 +271,7 @@ class TestBlob < Minitest::Test
     assert !sample_blob("ext/extconf.rb").vendored?
 
     # Dependencies
-    assert sample_blob("dependencies/windows/headers/GL/glext.h").vendored?
+    assert sample_blob("dependencies/windows/headers/GL/glext.h", true).vendored?
 
     # Node dependencies
     assert sample_blob("node_modules/coffee-script/lib/coffee-script.js").vendored?
@@ -289,8 +296,10 @@ class TestBlob < Minitest::Test
     assert sample_blob("external/jquery.min.js").vendored?
 
     # C deps
-    assert sample_blob("deps/http_parser/http_parser.c").vendored?
-    assert sample_blob("deps/v8/src/v8.h").vendored?
+    assert sample_blob("deps/http_parser/http_parser.c", true).vendored?
+    assert sample_blob("deps/v8/src/v8.h", true).vendored?
+
+    assert sample_blob("tools/something/else.c", true).vendored?
 
     # Chart.js
     assert sample_blob("some/vendored/path/Chart.js").vendored?
@@ -300,7 +309,10 @@ class TestBlob < Minitest::Test
     assert sample_blob("codemirror/mode/blah.js").vendored?
 
     # Debian packaging
-    assert sample_blob("debian/cron.d").vendored?
+    assert sample_blob("debian/cron.d", true).vendored?
+
+    # Erlang
+    assert sample_blob("rebar", true).vendored?
 
     # Minified JavaScript and CSS
     assert sample_blob("foo.min.js").vendored?
@@ -310,12 +322,18 @@ class TestBlob < Minitest::Test
     assert !sample_blob("foomin.css").vendored?
     assert !sample_blob("foo.min.txt").vendored?
 
+    #.osx
+    assert sample_blob(".osx", true).vendored?
+
     # Prototype
     assert !sample_blob("public/javascripts/application.js").vendored?
     assert sample_blob("public/javascripts/prototype.js").vendored?
     assert sample_blob("public/javascripts/effects.js").vendored?
     assert sample_blob("public/javascripts/controls.js").vendored?
     assert sample_blob("public/javascripts/dragdrop.js").vendored?
+
+    # Samples
+    assert sample_blob("Samples/Ruby/foo.rb", true).vendored?
 
     # jQuery
     assert sample_blob("jquery.js").vendored?
@@ -380,10 +398,10 @@ class TestBlob < Minitest::Test
     assert sample_blob("public/javascripts/modernizr.custom.01009.js").vendored?
 
     # Fabric
-    assert sample_blob("fabfile.py").vendored?
+    assert sample_blob("fabfile.py", true).vendored?
 
     # WAF
-    assert sample_blob("waf").vendored?
+    assert sample_blob("waf", true).vendored?
 
     # Visual Studio IntelliSense
     assert sample_blob("Scripts/jquery-1.7-vsdoc.js").vendored?
@@ -405,7 +423,7 @@ class TestBlob < Minitest::Test
     assert sample_blob("Scripts/jquery.unobtrusive-ajax.min.js").vendored?
 
     # NuGet Packages
-    assert sample_blob("packages/Modernizr.2.0.6/Content/Scripts/modernizr-2.0.6-development-only.js").vendored?
+    assert sample_blob("packages/Modernizr.2.0.6/Content/Scripts/modernizr-2.0.6-development-only.js", true).vendored?
 
     # Font Awesome
     assert sample_blob("some/asset/path/font-awesome.min.css").vendored?
@@ -415,15 +433,15 @@ class TestBlob < Minitest::Test
     assert sample_blob("some/asset/path/normalize.css").vendored?
 
     # Cocoapods
-    assert sample_blob('Pods/blah').vendored?
+    assert sample_blob('Pods/blah', true).vendored?
 
     # Html5shiv
     assert sample_blob("Scripts/html5shiv.js").vendored?
     assert sample_blob("Scripts/html5shiv.min.js").vendored?
 
     # Test fixtures
-    assert sample_blob("test/fixtures/random.rkt").vendored?
-    assert sample_blob("Test/fixtures/random.rkt").vendored?
+    assert sample_blob("test/fixtures/random.rkt", true).vendored?
+    assert sample_blob("Test/fixtures/random.rkt", true).vendored?
 
     # Cordova/PhoneGap
     assert sample_blob("cordova.js").vendored?
@@ -437,7 +455,7 @@ class TestBlob < Minitest::Test
     assert sample_blob("foundation.abide.js").vendored?
 
     # Vagrant
-    assert sample_blob("Vagrantfile").vendored?
+    assert sample_blob("Vagrantfile", true).vendored?
 
     # Gradle
     assert sample_blob("gradlew").vendored?
