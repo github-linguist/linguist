@@ -182,6 +182,7 @@ If you are the current maintainer of this gem:
 
  0. Create a branch for the release: `git checkout -b cut-release-vxx.xx.xx`
  0. Make sure your local dependencies are up to date: `script/bootstrap`
+ 0. If grammar submodules have not been updated recently, update them: `git submodule update --remote && git commit -a`
  0. Ensure that samples are updated: `bundle exec rake samples`
  0. Ensure that tests are green: `bundle exec rake test`
  0. Bump gem version in `lib/linguist/version.rb`.  For example, [like this](https://github.com/github/linguist/commit/8d2ea90a5ba3b2fe6e1508b7155aa4632eea2985).
