@@ -1,4 +1,5 @@
 require 'linguist/blob_helper'
+require 'charlotte'
 
 module Linguist
   # A FileBlob is a wrapper around a File object to make it quack
@@ -43,7 +44,7 @@ module Linguist
     #
     # Returns a String.
     def data
-      File.read(@path)
+      File.binread(@path).autoencode
     end
 
     # Public: Get byte size
