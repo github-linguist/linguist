@@ -14,6 +14,7 @@ module Linguist
     #
     # Returns a FileBlob.
     def initialize(path, base_path = nil)
+      @fullpath = path
       @path = base_path ? path.sub("#{base_path}/", '') : path
     end
 
@@ -35,28 +36,28 @@ module Linguist
     #
     # Returns a String like '100644'
     def mode
-      File.stat(@path).mode.to_s(8)
+      File.stat(@fullpath).mode.to_s(8)
     end
 
     # Public: File name
     #
     # Returns a String
     def name
-      File.basename(path)
+      File.basename(@fullpath)
     end
 
     # Public: Read file contents.
     #
     # Returns a String.
     def data
-      File.read(@path)
+      File.read(@fullpath)
     end
 
     # Public: Get byte size
     #
     # Returns an Integer.
     def size
-      File.size(@path)
+      File.size(@fullpath)
     end
 
     # Public: Get file extension.
@@ -73,7 +74,7 @@ module Linguist
     #
     # Returns an Array
     def extensions
-      basename, *segments = File.basename(path).split(".")
+      basename, *segments = name.split(".")
 
       segments.map.with_index do |segment, index|
         "." + segments[index..-1].join(".")
