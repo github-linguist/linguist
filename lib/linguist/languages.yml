@@ -2613,6 +2613,14 @@ SCSS:
   extensions:
   - .scss
 
+SPARQL:
+  type: data
+  tm_scope: source.sparql
+  ace_mode: text
+  extensions:
+  - .sparql
+  - .rq
+
 SQF:
   type: programming
   color: "#FFCB1F"
@@ -2968,6 +2976,13 @@ Turing:
   - .t
   - .tu
   tm_scope: none
+  ace_mode: text
+
+Turtle:
+  type: data
+  extensions:
+  - .ttl
+  tm_scope: source.turtle
   ace_mode: text
 
 Twig:
