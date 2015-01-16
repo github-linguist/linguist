@@ -51,20 +51,20 @@ module Linguist
     #
     # Return true or false
     def generated?
-      minified_files? ||
-      compiled_coffeescript? ||
       xcode_file? ||
-      generated_parser? ||
-      generated_net_docfile? ||
       generated_net_designer_file? ||
-      generated_postscript? ||
-      generated_protocol_buffer? ||
-      generated_jni_header? ||
       composer_lock? ||
       node_modules? ||
       godeps? ||
-      vcr_cassette? ||
-      generated_by_zephir?
+      generated_by_zephir? ||
+      minified_files? ||
+      compiled_coffeescript? ||
+      generated_parser? ||
+      generated_net_docfile? ||
+      generated_postscript? ||
+      generated_protocol_buffer? ||
+      generated_jni_header? ||
+      vcr_cassette?
     end
 
     # Internal: Is the blob an Xcode file?

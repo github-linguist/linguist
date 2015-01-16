@@ -224,7 +224,7 @@ AutoHotkey:
   extensions:
   - .ahk
   - .ahkl
-  tm_scope: none
+  tm_scope: source.ahk
   ace_mode: autohotkey
 
 AutoIt:
@@ -314,7 +314,7 @@ Bluespec:
   type: programming
   extensions:
   - .bsv
-  tm_scope: source.verilog
+  tm_scope: source.bsv
   ace_mode: verilog
 
 Boo:
@@ -419,7 +419,7 @@ CLIPS:
 CMake:
   extensions:
   - .cmake
-  - .in
+  - .cmake.in
   filenames:
   - CMakeLists.txt
   ace_mode: text
@@ -448,6 +448,15 @@ Cap'n Proto:
   extensions:
   - .capnp
   ace_mode: text
+
+CartoCSS:
+  type: programming
+  aliases:
+  - Carto
+  extensions:
+  - .mss
+  ace_mode: text
+  tm_scope: source.css.mss
 
 Ceylon:
   type: programming
@@ -787,9 +796,10 @@ Elixir:
 
 Elm:
   type: programming
+  color: "#60B5CC"
   extensions:
   - .elm
-  tm_scope: source.haskell
+  tm_scope: source.elm
   ace_mode: elm
 
 Emacs Lisp:
@@ -1202,7 +1212,7 @@ HTTP:
   type: data
   extensions:
   - .http
-  tm_scope: none
+  tm_scope: source.httpspec
   ace_mode: text
 
 Hack:
@@ -1211,7 +1221,7 @@ Hack:
   extensions:
   - .hh
   - .php
-  tm_scope: none
+  tm_scope: text.html.php
 
 Haml:
   group: HTML
@@ -1258,13 +1268,13 @@ Haxe:
 
 Hy:
   type: programming
-  ace_mode: clojure
+  ace_mode: text
   color: "#7891b1"
   extensions:
   - .hy
   aliases:
   - hylang
-  tm_scope: none
+  tm_scope: source.hy
 
 IDL:
   type: programming
@@ -1372,13 +1382,6 @@ JSON:
   extensions:
   - .json
   - .lock
-  - .sublime-keymap
-  - .sublime-mousemap
-  - .sublime-project
-  - .sublime-settings
-  - .sublime-workspace
-  - .sublime_metrics
-  - .sublime_session
   filenames:
   - .jshintrc
   - composer.lock
@@ -1462,6 +1465,19 @@ JavaScript:
   - .pac
   - .sjs
   - .ssjs
+  - .sublime-build
+  - .sublime-commands
+  - .sublime-completions
+  - .sublime-keymap
+  - .sublime-macro
+  - .sublime-menu
+  - .sublime-mousemap
+  - .sublime-project
+  - .sublime-settings
+  - .sublime-theme
+  - .sublime-workspace
+  - .sublime_metrics
+  - .sublime_session
   - .xsjs
   - .xsjslib
   filenames:
@@ -1882,6 +1898,7 @@ Nimrod:
   - .nim
   - .nimrod
   ace_mode: text
+  tm_scope: source.nim
 
 Ninja:
   type: data
@@ -1895,7 +1912,7 @@ Nit:
   color: "#0d8921"
   extensions:
   - .nit
-  tm_scope: none
+  tm_scope: source.nit
   ace_mode: text
 
 Nix:
@@ -2213,6 +2230,8 @@ Pike:
   extensions:
   - .pike
   - .pmod
+  interpreters:
+  - pike
   ace_mode: text
 
 Pod:
@@ -2585,7 +2604,7 @@ SAS:
   color: "#1E90FF"
   extensions:
   - .sas
-  tm_scope: none
+  tm_scope: source.sas
   ace_mode: text
 
 SCSS:
@@ -2595,6 +2614,14 @@ SCSS:
   ace_mode: scss
   extensions:
   - .scss
+
+SPARQL:
+  type: data
+  tm_scope: source.sparql
+  ace_mode: text
+  extensions:
+  - .sparql
+  - .rq
 
 SQF:
   type: programming
@@ -2611,6 +2638,8 @@ SQL:
   ace_mode: sql
   extensions:
   - .sql
+  - .cql
+  - .ddl
   - .prc
   - .tab
   - .udf
@@ -2629,8 +2658,20 @@ Sage:
   group: Python
   extensions:
   - .sage
+  - .sagews
   tm_scope: source.python
   ace_mode: python
+
+SaltStack:
+  type: data
+  group: YAML
+  aliases:
+  - saltstate
+  - salt
+  extensions:
+  - .sls
+  tm_scope: source.yaml.salt
+  ace_mode: yaml
 
 Sass:
   type: markup
@@ -2939,6 +2980,13 @@ Turing:
   tm_scope: none
   ace_mode: text
 
+Turtle:
+  type: data
+  extensions:
+  - .ttl
+  tm_scope: source.turtle
+  ace_mode: text
+
 Twig:
   type: markup
   group: PHP
@@ -3053,6 +3101,14 @@ Volt:
   tm_scope: source.d
   ace_mode: d
 
+Web Ontology Language:
+  type: markup
+  color: "#3994bc"
+  extensions:
+  - .owl
+  tm_scope: text.xml
+  ace_mode: xml
+
 WebIDL:
   type: programming
   extensions:
@@ -3086,8 +3142,10 @@ XML:
   - .dita
   - .ditamap
   - .ditaval
+  - .dll.config
   - .filters
   - .fsproj
+  - .fxml
   - .glade
   - .grxml
   - .ivy
@@ -3108,6 +3166,8 @@ XML:
   - .rss
   - .scxml
   - .srdf
+  - .stTheme
+  - .sublime-snippet
   - .svg
   - .targets
   - .tmCommand
@@ -3133,6 +3193,7 @@ XML:
   - .xlf
   - .xliff
   - .xmi
+  - .xml.dist
   - .xsd
   - .xul
   - .zcml
@@ -3143,9 +3204,7 @@ XML:
   - Web.Debug.config
   - Web.Release.config
   - Web.config
-  - build.xml.dist
   - packages.config
-  - phpunit.xml.dist
 
 XProc:
   type: programming

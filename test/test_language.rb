@@ -1,6 +1,6 @@
 require_relative "./helper"
 
-class TestLanguage < Test::Unit::TestCase
+class TestLanguage < Minitest::Test
   include Linguist
 
   def test_find_by_alias
@@ -198,7 +198,7 @@ class TestLanguage < Test::Unit::TestCase
   def test_find_all_by_extension
     Language.all.each do |language|
       language.extensions.each do |extension|
-        assert_include Language.find_by_extension(extension), language
+        assert_includes Language.find_by_extension(extension), language
       end
     end
   end
@@ -283,7 +283,7 @@ class TestLanguage < Test::Unit::TestCase
   end
 
   def test_error_without_name
-    assert_raise ArgumentError do
+    assert_raises ArgumentError do
       Language.new :name => nil
     end
   end
