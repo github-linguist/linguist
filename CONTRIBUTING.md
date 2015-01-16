@@ -1,8 +1,6 @@
 # Contributing
 
-The majority of contributions won't need to touch any Ruby code at all. Linguist defines a list of all languages known to GitHub in [lib/linguist/languages.yml](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml).
-
-Most languages are detected by their file extension. For disambiguating between files with common extensions, we first apply some common-sense heuristics to pick out obvious languages. After that, we use a [statistical classifier](https://github.com/github/linguist/blob/master/lib/linguist/classifier.rb). This process can help us tell the difference between, for example, `.h` files which could be either C, C++, or Obj-C.
+The majority of contributions won't need to touch any Ruby code at all.
 
 ## Adding a language
 
@@ -25,9 +23,15 @@ In addition, if your new language defines an extension that's already listed in 
 
 Remember, the goal here is to try and avoid false positives!
 
+## Fixing a misclassified language
+
+Most languages are detected by their file extension defined in [languages.yml][languages].  For disambiguating between files with common extensions, linguist applies some [heuristics](/lib/linguist/heuristics.rb) and a [statistical classifier](lib/linguist/classifier.rb). This process can help differentiate between, for example, `.h` files which could be either C, C++, or Obj-C.
+
+Misclassifications can often be solved by either adding a new filename or extension for the language or adding more [samples][samples] to make the classifier smarter.
+
 ## Fixing syntax highlighting
 
-Syntax highlighting in GitHub is performed using TextMate-compatible grammars. These are the same grammars that TextMate, Sublime Text and Atom use. Every language in `languages.yml` is mapped to its corresponding TM `scope`. This scope will be used when picking up a grammar for highlighting.
+Syntax highlighting in GitHub is performed using TextMate-compatible grammars. These are the same grammars that TextMate, Sublime Text and Atom use. Every language in [languages.yml][languages] is mapped to its corresponding TM `scope`. This scope will be used when picking up a grammar for highlighting.
 
 Assuming your code is being detected as the right language (see [Language Detection](#language-detection) above), in most cases this is due to a bug in the language grammar rather than a bug in Linguist. [`grammars.yml`][grammars] lists all the grammars we use for syntax highlighting on github.com. Find the one corresponding to your code's programming language and submit a bug report upstream. If you can, try to reproduce the highlighting problem in the text editor that the grammar is designed for (TextMate, Sublime Text, or Atom) and include that information in your bug report.
 
