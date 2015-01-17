@@ -69,6 +69,14 @@ module Linguist
       end
     end
 
+    disambiguate "C#", "Smalltalk" do |data|
+      if /![\w\s]+methodsFor: /.match(data)
+        Language["Smalltalk"]
+      elsif /^\s*namespace\s*[\w\.]+\s*{/.match(data) || /^\s*\/\//.match(data)
+        Language["C#"]
+      end
+    end
+
     disambiguate "Objective-C", "C++", "C" do |data|
       if (/^[ \t]*@(interface|class|protocol|property|end|synchronised|selector|implementation)\b/.match(data))
         Language["Objective-C"]
