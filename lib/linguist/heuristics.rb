@@ -72,7 +72,7 @@ module Linguist
     disambiguate "C#", "Smalltalk" do |data|
       if /![\w\s]+methodsFor: /.match(data)
         Language["Smalltalk"]
-      elsif /^\s*namespace\s*[\w\.]+\s*{/.match(data) || /^\s*using\s*[\w\.]+\s*;/.match(data)
+      elsif /^\s*namespace\s*[\w\.]+\s*{/.match(data) || /^\s*\/\//.match(data)
         Language["C#"]
       end
     end
