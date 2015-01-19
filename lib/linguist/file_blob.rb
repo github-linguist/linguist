@@ -76,9 +76,13 @@ module Linguist
     def extensions
       basename, *segments = name.split(".")
 
-      segments.map.with_index do |segment, index|
-        "." + segments[index..-1].join(".")
+      segments.map! { |segment| "." + segment }
+
+      combined = segments.map.with_index do |segment, index|
+        segments[index..-1].join
       end
+
+      (combined + segments).uniq
     end
   end
 end

@@ -173,12 +173,11 @@ module Linguist
     def self.find_by_filename(filename)
       basename = File.basename(filename)
 
-      # find the first extension with language definitions
-      extname = FileBlob.new(filename).extensions.detect do |e|
-        !@extension_index[e].empty?
+      exts = FileBlob.new(filename).extensions.map do |e|
+        @extension_index[e]
       end
 
-      (@filename_index[basename] + @extension_index[extname]).compact.uniq
+      (@filename_index[basename] + exts).flatten.compact.uniq
     end
 
     # Public: Look up Languages by file extension.
