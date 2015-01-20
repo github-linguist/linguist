@@ -14,15 +14,13 @@ module Linguist
 
     attr_reader :repository
     attr_reader :oid
-    attr_reader :path
+    attr_reader :name
     attr_reader :mode
 
-    alias :name :path
-
-    def initialize(repo, oid, path, mode = nil)
+    def initialize(repo, oid, name, mode = nil)
       @repository = repo
       @oid = oid
-      @path = path
+      @name = name
       @mode = mode
     end
 

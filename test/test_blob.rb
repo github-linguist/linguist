@@ -251,7 +251,8 @@ class TestBlob < Minitest::Test
     assert sample_blob("Zephir/filenames/exception.zep.php").generated?
     assert !sample_blob("Zephir/Router.zep").generated?
 
-    assert sample_blob("node_modules/grunt/lib/grunt.js").generated?
+
+    assert Linguist::Generated.generated?("node_modules/grunt/lib/grunt.js", nil)
 
     # Godep saved dependencies
     assert sample_blob("Godeps/Godeps.json").generated?
@@ -291,8 +292,6 @@ class TestBlob < Minitest::Test
     assert sample_blob("deps/http_parser/http_parser.c").vendored?
     assert sample_blob("deps/v8/src/v8.h").vendored?
 
-    assert sample_blob("tools/something/else.c").vendored?
-
     # Chart.js
     assert sample_blob("some/vendored/path/Chart.js").vendored?
     assert !sample_blob("some/vendored/path/chart.js").vendored?
@@ -303,9 +302,6 @@ class TestBlob < Minitest::Test
     # Debian packaging
     assert sample_blob("debian/cron.d").vendored?
 
-    # Erlang
-    assert sample_blob("rebar").vendored?
-
     # Minified JavaScript and CSS
     assert sample_blob("foo.min.js").vendored?
     assert sample_blob("foo.min.css").vendored?
@@ -314,18 +310,12 @@ class TestBlob < Minitest::Test
     assert !sample_blob("foomin.css").vendored?
     assert !sample_blob("foo.min.txt").vendored?
 
-    #.osx
-    assert sample_blob(".osx").vendored?
-
     # Prototype
     assert !sample_blob("public/javascripts/application.js").vendored?
     assert sample_blob("public/javascripts/prototype.js").vendored?
     assert sample_blob("public/javascripts/effects.js").vendored?
     assert sample_blob("public/javascripts/controls.js").vendored?
     assert sample_blob("public/javascripts/dragdrop.js").vendored?
-
-    # Samples
-    assert sample_blob("Samples/Ruby/foo.rb").vendored?
 
     # jQuery
     assert sample_blob("jquery.js").vendored?
