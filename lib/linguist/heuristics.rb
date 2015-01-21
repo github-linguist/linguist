@@ -189,5 +189,13 @@ module Linguist
         Language["Text"]
       end
     end
+
+    disambiguate "Mercury", "M" do |data|
+      if data.include?(":- module")
+        Language["Mercury"]
+      else
+        Language["M"]
+      end
+    end
   end
 end
