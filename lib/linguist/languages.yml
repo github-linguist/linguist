@@ -224,7 +224,7 @@ AutoHotkey:
   extensions:
   - .ahk
   - .ahkl
-  tm_scope: none
+  tm_scope: source.ahk
   ace_mode: autohotkey
 
 AutoIt:
@@ -314,7 +314,7 @@ Bluespec:
   type: programming
   extensions:
   - .bsv
-  tm_scope: source.verilog
+  tm_scope: source.bsv
   ace_mode: verilog
 
 Boo:
@@ -419,7 +419,7 @@ CLIPS:
 CMake:
   extensions:
   - .cmake
-  - .in
+  - .cmake.in
   filenames:
   - CMakeLists.txt
   ace_mode: text
@@ -448,6 +448,15 @@ Cap'n Proto:
   extensions:
   - .capnp
   ace_mode: text
+
+CartoCSS:
+  type: programming
+  aliases:
+  - Carto
+  extensions:
+  - .mss
+  ace_mode: text
+  tm_scope: source.css.mss
 
 Ceylon:
   type: programming
@@ -495,10 +504,10 @@ Clojure:
   - .cl2
   - .cljc
   - .cljs
+  - .cljs.hl
   - .cljscm
   - .cljx
   - .hic
-  - .hl
   filenames:
   - riemann.config
 
@@ -787,9 +796,10 @@ Elixir:
 
 Elm:
   type: programming
+  color: "#60B5CC"
   extensions:
   - .elm
-  tm_scope: source.haskell
+  tm_scope: source.elm
   ace_mode: elm
 
 Emacs Lisp:
@@ -941,11 +951,13 @@ GAMS:
 
 GAP:
   type: programming
+  lexer: GAP
   extensions:
   - .g
   - .gap
   - .gd
   - .gi
+  - .tst
   tm_scope: none
   ace_mode: text
 
@@ -990,8 +1002,8 @@ Game Maker Language:
   color: "#8ad353"
   extensions:
   - .gml
-  tm_scope: source.js
-  ace_mode: javascript
+  tm_scope: source.c++
+  ace_mode: c_cpp
 
 Genshi:
   extensions:
@@ -1162,6 +1174,7 @@ HTML:
   extensions:
   - .html
   - .htm
+  - .html.hl
   - .st
   - .xht
   - .xhtml
@@ -1187,7 +1200,7 @@ HTML+ERB:
   - erb
   extensions:
   - .erb
-  - .deface
+  - .erb.deface
   ace_mode: html_ruby
 
 HTML+PHP:
@@ -1202,7 +1215,7 @@ HTTP:
   type: data
   extensions:
   - .http
-  tm_scope: none
+  tm_scope: source.httpspec
   ace_mode: text
 
 Hack:
@@ -1211,14 +1224,14 @@ Hack:
   extensions:
   - .hh
   - .php
-  tm_scope: none
+  tm_scope: text.html.php
 
 Haml:
   group: HTML
   type: markup
   extensions:
   - .haml
-  - .deface
+  - .haml.deface
   ace_mode: haml
 
 Handlebars:
@@ -1258,13 +1271,13 @@ Haxe:
 
 Hy:
   type: programming
-  ace_mode: clojure
+  ace_mode: text
   color: "#7891b1"
   extensions:
   - .hy
   aliases:
   - hylang
-  tm_scope: none
+  tm_scope: source.hy
 
 IDL:
   type: programming
@@ -1372,13 +1385,6 @@ JSON:
   extensions:
   - .json
   - .lock
-  - .sublime-keymap
-  - .sublime-mousemap
-  - .sublime-project
-  - .sublime-settings
-  - .sublime-workspace
-  - .sublime_metrics
-  - .sublime_session
   filenames:
   - .jshintrc
   - composer.lock
@@ -1412,6 +1418,13 @@ Jade:
   - .jade
   tm_scope: source.jade
   ace_mode: jade
+
+Jasmin:
+  type: programming
+  ace_mode: java
+  extensions:
+  - .j
+  tm_scope: source.jasmin
 
 Java:
   type: programming
@@ -1455,6 +1468,19 @@ JavaScript:
   - .pac
   - .sjs
   - .ssjs
+  - .sublime-build
+  - .sublime-commands
+  - .sublime-completions
+  - .sublime-keymap
+  - .sublime-macro
+  - .sublime-menu
+  - .sublime-mousemap
+  - .sublime-project
+  - .sublime-settings
+  - .sublime-theme
+  - .sublime-workspace
+  - .sublime_metrics
+  - .sublime_session
   - .xsjs
   - .xsjslib
   filenames:
@@ -1718,7 +1744,7 @@ Markdown:
   - .mkdn
   - .mkdown
   - .ron
-  tm_scope: text.html.markdown
+  tm_scope: source.gfm
 
 Mask:
   type: markup
@@ -1789,7 +1815,7 @@ Mercury:
   extensions:
   - .m
   - .moo
-  tm_scope: source.prolog
+  tm_scope: source.mercury
   ace_mode: prolog
 
 MiniD: # Legacy
@@ -1888,6 +1914,7 @@ Nimrod:
   - .nim
   - .nimrod
   ace_mode: text
+  tm_scope: source.nim
 
 Ninja:
   type: data
@@ -1901,7 +1928,7 @@ Nit:
   color: "#0d8921"
   extensions:
   - .nit
-  tm_scope: none
+  tm_scope: source.nit
   ace_mode: text
 
 Nix:
@@ -2043,7 +2070,7 @@ OpenSCAD:
   extensions:
   - .scad
   tm_scope: none
-  ace_mode: text
+  ace_mode: scad
 
 Org:
   type: prose
@@ -2200,6 +2227,8 @@ Perl6:
   - .pm
   - .pm6
   - .t
+  filenames:
+  - Rexfile
   interpreters:
   - perl6
   tm_scope: none
@@ -2219,6 +2248,8 @@ Pike:
   extensions:
   - .pike
   - .pmod
+  interpreters:
+  - pike
   ace_mode: text
 
 Pod:
@@ -2316,6 +2347,15 @@ Pure Data:
   color: "#91de79"
   extensions:
   - .pd
+  tm_scope: none
+  ace_mode: text
+
+PureBasic:
+  type: programming
+  color: "#5a6986"
+  extensions:
+  - .pb
+  - .pbi
   tm_scope: none
   ace_mode: text
 
@@ -2582,7 +2622,7 @@ SAS:
   color: "#1E90FF"
   extensions:
   - .sas
-  tm_scope: none
+  tm_scope: source.sas
   ace_mode: text
 
 SCSS:
@@ -2592,6 +2632,14 @@ SCSS:
   ace_mode: scss
   extensions:
   - .scss
+
+SPARQL:
+  type: data
+  tm_scope: source.sparql
+  ace_mode: text
+  extensions:
+  - .sparql
+  - .rq
 
 SQF:
   type: programming
@@ -2608,6 +2656,8 @@ SQL:
   ace_mode: sql
   extensions:
   - .sql
+  - .cql
+  - .ddl
   - .prc
   - .tab
   - .udf
@@ -2618,16 +2668,28 @@ STON:
   group: Smalltalk
   extensions:
   - .ston
-  tm_scope: source.json
-  ace_mode: lisp
+  tm_scope: source.smalltalk
+  ace_mode: text
 
 Sage:
   type: programming
   group: Python
   extensions:
   - .sage
+  - .sagews
   tm_scope: source.python
   ace_mode: python
+
+SaltStack:
+  type: data
+  group: YAML
+  aliases:
+  - saltstate
+  - salt
+  extensions:
+  - .sls
+  tm_scope: source.yaml.salt
+  ace_mode: yaml
 
 Sass:
   type: markup
@@ -2752,6 +2814,7 @@ Smalltalk:
   color: "#596706"
   extensions:
   - .st
+  - .cs
   aliases:
   - squeak
   ace_mode: text
@@ -2935,6 +2998,13 @@ Turing:
   tm_scope: none
   ace_mode: text
 
+Turtle:
+  type: data
+  extensions:
+  - .ttl
+  tm_scope: source.turtle
+  ace_mode: text
+
 Twig:
   type: markup
   group: PHP
@@ -3049,6 +3119,14 @@ Volt:
   tm_scope: source.d
   ace_mode: d
 
+Web Ontology Language:
+  type: markup
+  color: "#3994bc"
+  extensions:
+  - .owl
+  tm_scope: text.xml
+  ace_mode: xml
+
 WebIDL:
   type: programming
   extensions:
@@ -3082,8 +3160,10 @@ XML:
   - .dita
   - .ditamap
   - .ditaval
+  - .dll.config
   - .filters
   - .fsproj
+  - .fxml
   - .glade
   - .grxml
   - .ivy
@@ -3104,6 +3184,8 @@ XML:
   - .rss
   - .scxml
   - .srdf
+  - .stTheme
+  - .sublime-snippet
   - .svg
   - .targets
   - .tmCommand
@@ -3129,18 +3211,18 @@ XML:
   - .xlf
   - .xliff
   - .xmi
+  - .xml.dist
   - .xsd
   - .xul
   - .zcml
   filenames:
   - .classpath
   - .project
+  - Settings.StyleCop
   - Web.Debug.config
   - Web.Release.config
   - Web.config
-  - build.xml.dist
   - packages.config
-  - phpunit.xml.dist
 
 XProc:
   type: programming

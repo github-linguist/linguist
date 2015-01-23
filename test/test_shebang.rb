@@ -1,6 +1,6 @@
 require_relative "./helper"
 
-class TestShebang < Test::Unit::TestCase
+class TestShebang < Minitest::Test
   include Linguist
 
   def assert_interpreter(interpreter, body)

@@ -1,6 +1,6 @@
 require_relative "./helper"
 
-class TestBlob < Test::Unit::TestCase
+class TestBlob < Minitest::Test
   include Linguist
 
   def setup

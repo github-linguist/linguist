@@ -69,11 +69,19 @@ module Linguist
       end
     end
 
+    disambiguate "C#", "Smalltalk" do |data|
+      if /![\w\s]+methodsFor: /.match(data)
+        Language["Smalltalk"]
+      elsif /^\s*namespace\s*[\w\.]+\s*{/.match(data) || /^\s*\/\//.match(data)
+        Language["C#"]
+      end
+    end
+
     disambiguate "Objective-C", "C++", "C" do |data|
-      if (/@(interface|class|protocol|property|end|synchronised|selector|implementation)\b/.match(data))
+      if (/^[ \t]*@(interface|class|protocol|property|end|synchronised|selector|implementation)\b/.match(data))
         Language["Objective-C"]
       elsif (/^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>/.match(data) ||
-        /^\s*template\s*</.match(data) || /^[^@]class\s+\w+/.match(data) || /^[^@](private|public|protected):$/.match(data) || /std::.+$/.match(data))
+        /^\s*template\s*</.match(data) || /^[ \t]*try/.match(data) || /^[ \t]*catch\s*\(/.match(data) || /^[ \t]*(class|(using[ \t]+)?namespace)\s+\w+/.match(data) || /^[ \t]*(private|public|protected):$/.match(data) || /std::\w+/.match(data))
         Language["C++"]
       end
     end
@@ -101,6 +109,15 @@ module Linguist
         Language["Prolog"]
       else
         Language["IDL"]
+      end
+    end
+
+    disambiguate "GAP", "Scilab" do |data|
+      if (data.include?("gap> "))
+        Language["GAP"]
+      # Heads up - we don't usually write heuristics like this (with no regex match)
+      else
+        Language["Scilab"]
       end
     end
 
@@ -183,7 +200,7 @@ module Linguist
     disambiguate "Frege", "Forth", "Text" do |data|
       if /^(: |also |new-device|previous )/.match(data)
         Language["Forth"]
-      elsif /\s*(import|module|package|data|type) /.match(data)
+      elsif /^\s*(import|module|package|data|type) /.match(data)
         Language["Frege"]
       else
         Language["Text"]

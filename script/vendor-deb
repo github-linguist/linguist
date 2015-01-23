@@ -1,0 +1,13 @@
+#!/bin/sh
+
+set -ex
+
+cd "$(dirname "$0")/.."
+
+mkdir -p vendor/apt vendor/debs
+
+(cd vendor/apt && apt-get --assume-yes download "$@")
+
+for deb in vendor/apt/*.deb; do
+  ar p $deb data.tar.gz | tar -vzxC vendor/debs --strip-components=2
+done
