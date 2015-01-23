@@ -504,10 +504,10 @@ Clojure:
   - .cl2
   - .cljc
   - .cljs
+  - .cljs.hl
   - .cljscm
   - .cljx
   - .hic
-  - .hl
   filenames:
   - riemann.config
 
@@ -951,11 +951,13 @@ GAMS:
 
 GAP:
   type: programming
+  lexer: GAP
   extensions:
   - .g
   - .gap
   - .gd
   - .gi
+  - .tst
   tm_scope: none
   ace_mode: text
 
@@ -1172,6 +1174,7 @@ HTML:
   extensions:
   - .html
   - .htm
+  - .html.hl
   - .st
   - .xht
   - .xhtml
@@ -1197,7 +1200,7 @@ HTML+ERB:
   - erb
   extensions:
   - .erb
-  - .deface
+  - .erb.deface
   ace_mode: html_ruby
 
 HTML+PHP:
@@ -1228,7 +1231,7 @@ Haml:
   type: markup
   extensions:
   - .haml
-  - .deface
+  - .haml.deface
   ace_mode: haml
 
 Handlebars:
@@ -2054,7 +2057,7 @@ OpenSCAD:
   extensions:
   - .scad
   tm_scope: none
-  ace_mode: text
+  ace_mode: scad
 
 Org:
   type: prose
@@ -2211,6 +2214,8 @@ Perl6:
   - .pm
   - .pm6
   - .t
+  filenames:
+  - Rexfile
   interpreters:
   - perl6
   tm_scope: none
@@ -2230,6 +2235,8 @@ Pike:
   extensions:
   - .pike
   - .pmod
+  interpreters:
+  - pike
   ace_mode: text
 
 Pod:
@@ -2612,6 +2619,14 @@ SCSS:
   extensions:
   - .scss
 
+SPARQL:
+  type: data
+  tm_scope: source.sparql
+  ace_mode: text
+  extensions:
+  - .sparql
+  - .rq
+
 SQF:
   type: programming
   color: "#FFCB1F"
@@ -2639,14 +2654,15 @@ STON:
   group: Smalltalk
   extensions:
   - .ston
-  tm_scope: source.json
-  ace_mode: lisp
+  tm_scope: source.smalltalk
+  ace_mode: text
 
 Sage:
   type: programming
   group: Python
   extensions:
   - .sage
+  - .sagews
   tm_scope: source.python
   ace_mode: python
 
@@ -2968,6 +2984,13 @@ Turing:
   tm_scope: none
   ace_mode: text
 
+Turtle:
+  type: data
+  extensions:
+  - .ttl
+  tm_scope: source.turtle
+  ace_mode: text
+
 Twig:
   type: markup
   group: PHP
@@ -3082,6 +3105,14 @@ Volt:
   tm_scope: source.d
   ace_mode: d
 
+Web Ontology Language:
+  type: markup
+  color: "#3994bc"
+  extensions:
+  - .owl
+  tm_scope: text.xml
+  ace_mode: xml
+
 WebIDL:
   type: programming
   extensions:
@@ -3118,6 +3149,7 @@ XML:
   - .dll.config
   - .filters
   - .fsproj
+  - .fxml
   - .glade
   - .grxml
   - .ivy

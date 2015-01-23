@@ -69,6 +69,14 @@ module Linguist
       end
     end
 
+    disambiguate "C#", "Smalltalk" do |data|
+      if /![\w\s]+methodsFor: /.match(data)
+        Language["Smalltalk"]
+      elsif /^\s*namespace\s*[\w\.]+\s*{/.match(data) || /^\s*\/\//.match(data)
+        Language["C#"]
+      end
+    end
+
     disambiguate "Objective-C", "C++", "C" do |data|
       if (/^[ \t]*@(interface|class|protocol|property|end|synchronised|selector|implementation)\b/.match(data))
         Language["Objective-C"]
@@ -101,6 +109,15 @@ module Linguist
         Language["Prolog"]
       else
         Language["IDL"]
+      end
+    end
+
+    disambiguate "GAP", "Scilab" do |data|
+      if (data.include?("gap> "))
+        Language["GAP"]
+      # Heads up - we don't usually write heuristics like this (with no regex match)
+      else
+        Language["Scilab"]
       end
     end
 
