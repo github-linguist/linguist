@@ -160,11 +160,17 @@ module Linguist
       end
     end
 
-    disambiguate "M", "Matlab", "Mathematica", "Mercury", "Objective-C" do |data|
-      if (/^[ \t]*@(interface|class|protocol|property|end|synchronised|selector|implementation)\b/.match(data))
+    disambiguate "M", "Mathematica", "Matlab", "Mercury", "Objective-C" do |data|
+      if /^[ \t]*@(interface|class|protocol|property|end|synchronised|selector|implementation)\b/.match(data)
         Language["Objective-C"]
-
-      # TODO add matchers for "M", "Matlab", "Mathematica", "Mercury"
+      elsif data.include?(":- module")
+        Language["Mercury"]
+      elsif /^\s*;/.match(data)
+        Language["M"]
+      elsif /^\s*\(\*/.match(data)
+        Language["Mathematica"]
+      elsif /^\s*%/.match(data)
+        Language["Matlab"]
       end
     end
 
