@@ -1,8 +1,5 @@
-before_install:
-  - git fetch origin master:master
-  - git fetch origin v2.0.0:v2.0.0
-  - git fetch origin test/attributes:test/attributes
-  - sudo apt-get install libicu-dev -y
+sudo: false
+before_install: script/travis/before_install
 rvm:
   - 1.9.3
   - 2.0.0
@@ -10,3 +7,6 @@ rvm:
   - 2.2
 notifications:
   disabled: true
+git:
+  submodules: false
+cache: bundler

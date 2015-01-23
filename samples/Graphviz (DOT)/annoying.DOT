@@ -1,0 +1,50 @@
+/* 
+  Huffman Tree DOT graph.
+
+  DOT Reference :  http://www.graphviz.org/doc/info/lang.html
+                   http://en.wikipedia.org/wiki/DOT_language
+  Timestamp     :  1415989074 
+  Phrase        :  'OH GOD WHY IS LINGUIST SO ANAL ABOUT THIS STUFF'
+
+  Generated on http://huffman.ooz.ie/
+*/
+
+digraph G {
+    edge [label=0];
+    graph [ranksep=0];
+    T [shape=record, label="{{T|4}|000}"];
+    S [shape=record, label="{{S|5}|001}"];
+    SPACE [shape=record, label="{{SPACE|9}|01}"];
+    A [shape=record, label="{{A|3}|1000}"];
+    H [shape=record, label="{{H|3}|1001}"];
+    U [shape=record, label="{{U|3}|1010}"];
+    L [shape=record, label="{{L|2}|10110}"];
+    N [shape=record, label="{{N|2}|10111}"];
+    I [shape=record, label="{{I|4}|1100}"];
+    O [shape=record, label="{{O|4}|1101}"];
+    G [shape=record, label="{{G|2}|11100}"];
+    F [shape=record, label="{{F|2}|11101}"];
+    GF [label=4];
+    W [shape=record, label="{{W|1}|111100}"];
+    Y [shape=record, label="{{Y|1}|111101}"];
+    B [shape=record, label="{{B|1}|111110}"];
+    D [shape=record, label="{{D|1}|111111}"];
+    BD [label=2];
+    WYBD [label=4];
+    GFWYBD [label=8];
+    47 -> 18 -> 9 -> T;
+    29 -> 13 -> 6 -> A;
+    7 -> U;
+    4 -> L;
+    16 -> 8 -> I;
+    GFWYBD -> GF -> G;
+    WYBD -> 2 -> W;
+    BD -> B;9 -> S [label=1];
+    18 -> SPACE [label=1];
+    6 -> H [label=1];
+    13 -> 7 -> 4 -> N [label=1];
+    8 -> O [label=1];
+    GF -> F [label=1];
+    2 -> Y [label=1];
+    47 -> 29 -> 16 -> GFWYBD -> WYBD -> BD -> D [label=1];
+}

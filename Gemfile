@@ -1,3 +1,4 @@
 source 'https://rubygems.org'
-gemspec
-gem 'test-unit', require: false if RUBY_VERSION >= '2.2'
+gemspec :name => "github-linguist"
+gemspec :name => "github-linguist-grammars"
+gem 'byebug' if RUBY_VERSION >= '2.0'

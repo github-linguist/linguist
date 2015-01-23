@@ -57,14 +57,20 @@ module Linguist
     #
     # Returns a String.
     def extension
-      # File.extname returns nil if the filename is an extension.
-      extension = File.extname(name)
-      basename = File.basename(name)
-      # Checks if the filename is an extension.
-      if extension.empty? && basename[0] == "."
-        basename
-      else
-        extension
+      extensions.last || ""
+    end
+
+    # Public: Return an array of the file extensions
+    #
+    #     >> Linguist::FileBlob.new("app/views/things/index.html.erb").extensions
+    #     => [".html.erb", ".erb"]
+    #
+    # Returns an Array
+    def extensions
+      basename, *segments = File.basename(name).split(".")
+
+      segments.map.with_index do |segment, index|
+        "." + segments[index..-1].join(".")
       end
     end
   end

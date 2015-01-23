@@ -1,0 +1,55 @@
+#!/bin/rc
+# 9fs filesystem [mountpoint] - srv & mount filesystem, usually from plan 9
+
+rfork e
+switch($1){
+case ''
+	echo usage: 9fs service '[mountpoint]' >[1=2]
+	exit usage
+case kfs
+	if(! test -f /srv/kfs)
+		disk/kfs
+	mount -c /srv/kfs /n/kfs
+case dump
+	mount /srv/boot /n/dump dump >[2]/dev/null ||
+		mount /srv/boot /n/dump main/archive ||
+		mount /srv/boot /n/dump dump	# again to print error
+case snap
+	mount /srv/boot /n/snap main/snapshot
+case other
+	mount -C /srv/boot /n/other other
+case juke					# ye olde file server
+	srv -q il!jukefs && mount /srv/il!jukefs /n/juke
+case sources
+	srv -nq tcp!sources.cs.bell-labs.com sources /n/sources
+case sourcesdump
+	9fs sources
+	mount -n /srv/sources /n/sourcesdump main/archive
+case sourcessnap
+	9fs sources
+	mount -n /srv/sources /n/sourcessnap main/snapshot
+# arbitrary venti archives
+case vac:*
+	vacfs <{echo $1}
+case *.vac
+	if (test -e $1)
+		score=$1
+	if not if (! ~ $1 /* && test -e $home/lib/vac/$1)
+		score=$home/lib/vac/$1
+	if not if (! ~ $1 /* && test -e /lib/vac/$1)
+		score=/lib/vac/$1
+	if not {
+		echo $0: $1: no such score file >[1=2]
+		exit 'no score file'
+	}
+	vacfs -m /n/`{basename $1 .vac} `{cat $score}
+case wiki
+	srv -m 'net!plan9.bell-labs.com!wiki' wiki /mnt/wiki
+case *
+	switch($#*){
+	case 1
+		srv -m $1
+	case *
+		srv -m $1 $1 $2
+	}
+}
