@@ -32,6 +32,7 @@
 
 # Erlang bundles
 - ^rebar$
+- erlang.mk
 
 # Go dependencies
 - Godeps/_workspace/
@@ -39,24 +40,27 @@
 # Minified JavaScript and CSS
 - (\.|-)min\.(js|css)$
 
+#Stylesheets imported from packages
+- ([^\s]*)import\.(css|less|scss|styl)$
+
 # Bootstrap css and js
-- (^|/)bootstrap([^.]*)\.(js|css)$
+- (^|/)bootstrap([^.]*)\.(js|css|less|scss|styl)$
+- (^|/)custom\.bootstrap([^\s]*)(js|css|less|scss|styl)$
 
 # Font Awesome
-- font-awesome.css
+- (^|/)font-awesome\.(css|less|scss|styl)$
 
 # Foundation css
-- foundation.css
+- (^|/)foundation\.(css|less|scss|styl)$
 
 # Normalize.css
-- normalize.css
+- (^|/)normalize\.(css|less|scss|styl)$
 
-# Bourbon SCSS
-- (^|/)[Bb]ourbon/.*\.css$
-- (^|/)[Bb]ourbon/.*\.scss$
+# Bourbon css
+- (^|/)[Bb]ourbon/.*\.(css|less|scss|styl)$
 
 # Animate.css
-- animate.css
+- (^|/)animate\.(css|less|scss|styl)$
 
 # Vendored dependencies
 - third[-_]?party/
@@ -109,6 +113,9 @@
 
 # MathJax
 - (^|/)MathJax/
+
+# Chart.js
+- (^|/)Chart\.js$
 
 # Codemirror
 - (^|/)[Cc]ode[Mm]irror/(lib|mode|theme|addon|keymap)
@@ -228,9 +235,6 @@
 
 # .DS_Store's
 - .[Dd][Ss]_[Ss]tore$
-
-# Mercury --use-subdirs
-- Mercury/
 
 # R packages
 - ^vignettes/

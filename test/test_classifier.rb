@@ -1,11 +1,6 @@
-require 'linguist/classifier'
-require 'linguist/language'
-require 'linguist/samples'
-require 'linguist/tokenizer'
+require_relative "./helper"
 
-require 'test/unit'
-
-class TestClassifier < Test::Unit::TestCase
+class TestClassifier < Minitest::Test
   include Linguist
 
   def samples_path
