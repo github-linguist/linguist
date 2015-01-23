@@ -112,6 +112,15 @@ module Linguist
       end
     end
 
+    disambiguate "GAP", "Scilab" do |data|
+      if (data.include?("gap> "))
+        Language["GAP"]
+      # Heads up - we don't usually write heuristics like this (with no regex match)
+      else
+        Language["Scilab"]
+      end
+    end
+
     disambiguate "Common Lisp", "OpenCL", "Cool" do |data|
       if data.include?("(defun ")
         Language["Common Lisp"]
