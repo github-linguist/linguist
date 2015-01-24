@@ -12,6 +12,10 @@
 # search_term       - Deprecated: Some languages maybe indexed under a
 #                     different alias. Avoid defining new exceptions.
 # color             - CSS hex color to represent the language.
+# tm_scope          - The TextMate scope that represents this programming
+#                     language. This should match one of the scopes listed in
+#                     the grammars.yml file. Use "none" if there is no grammar
+#                     for this language.
 #
 # Any additions or modifications (even trivial) should have corresponding
 # test change in `test/test_blob.rb`.
@@ -33,15 +37,6 @@ AGS Script:
   - .ash
   tm_scope: source.c++
 
-Ant Build System:
-  type: data
-  tm_scope: text.xml.ant
-  extensions:
-  - .ant.xml
-  filenames:
-  - build.xml
-  - ant.xml
-
 ANTLR:
   type: programming
   color: "#9DC3FF"
@@ -54,6 +49,7 @@ APL:
   extensions:
   - .apl
   - .dyalog
+  tm_scope: none
 
 ASP:
   type: programming
@@ -117,6 +113,13 @@ Alloy:
   extensions:
   - .als
 
+Ant Build System:
+  type: data
+  tm_scope: text.xml.ant
+  filenames:
+  - ant.xml
+  - build.xml
+
 ApacheConf:
   type: markup
   aliases:
@@ -148,6 +151,7 @@ Arc:
   color: "#ca2afe"
   extensions:
   - .arc
+  tm_scope: none
 
 Arduino:
   type: programming
@@ -164,12 +168,14 @@ AsciiDoc:
   - .asciidoc
   - .adoc
   - .asc
+  tm_scope: none
 
 AspectJ:
   type: programming
   color: "#1957b0"
   extensions:
   - .aj
+  tm_scope: none
 
 Assembly:
   type: programming
@@ -187,6 +193,7 @@ Augeas:
   type: programming
   extensions:
   - .aug
+  tm_scope: none
 
 AutoHotkey:
   type: programming
@@ -196,6 +203,7 @@ AutoHotkey:
   extensions:
   - .ahk
   - .ahkl
+  tm_scope: none
 
 AutoIt:
   type: programming
@@ -288,6 +296,7 @@ Brightscript:
   type: programming
   extensions:
   - .brs
+  tm_scope: none
 
 Bro:
   type: programming
@@ -361,6 +370,7 @@ CLIPS:
   type: programming
   extensions:
   - .clp
+  tm_scope: none
 
 CMake:
   extensions:
@@ -423,6 +433,7 @@ Clean:
   extensions:
   - .icl
   - .dcl
+  tm_scope: none
 
 Clojure:
   type: programming
@@ -451,6 +462,7 @@ CoffeeScript:
   extensions:
   - .coffee
   - ._coffee
+  - .cjsx
   - .cson
   - .iced
   filenames:
@@ -539,6 +551,7 @@ Creole:
   wrap: true
   extensions:
   - .creole
+  tm_scope: none
 
 Crystal:
   type: programming
@@ -606,6 +619,7 @@ Darcs Patch:
   extensions:
   - .darcspatch
   - .dpatch
+  tm_scope: none
 
 Dart:
   type: programming
@@ -633,6 +647,7 @@ Dogescript:
   color: "#cca760"
   extensions:
   - .djs
+  tm_scope: none
 
 Dylan:
   type: programming
@@ -648,13 +663,7 @@ E:
   color: "#ccce35"
   extensions:
   - .E
-
-Ecere Projects:
-  type: data
-  group: JavaScript
-  extensions:
-  - .epj
-  tm_scope: source.json
+  tm_scope: none
 
 ECL:
   type: programming
@@ -662,6 +671,7 @@ ECL:
   extensions:
   - .ecl
   - .eclxml
+  tm_scope: none
 
 Eagle:
   type: markup
@@ -670,6 +680,13 @@ Eagle:
   - .sch
   - .brd
   tm_scope: text.xml
+
+Ecere Projects:
+  type: data
+  group: JavaScript
+  extensions:
+  - .epj
+  tm_scope: source.json
 
 Eiffel:
   type: programming
@@ -738,6 +755,7 @@ FLUX:
   extensions:
   - .fx
   - .flux
+  tm_scope: none
 
 FORTRAN:
   type: programming
@@ -767,8 +785,8 @@ Factor:
   extensions:
   - .factor
   filenames:
-    - .factor-rc
     - .factor-boot-rc
+    - .factor-rc
 
 Fancy:
   type: programming
@@ -792,6 +810,9 @@ Forth:
   extensions:
   - .fth
   - .4th
+  - .F
+  - .f
+  - .for
   - .forth
   - .frt
 
@@ -808,18 +829,13 @@ G-code:
   - .g
   - .gco
   - .gcode
-
-Game Maker Language:
-  type: programming
-  color: "#8ad353"
-  extensions:
-  - .gml
-  tm_scope: source.js
+  tm_scope: none
 
 GAMS:
   type: programming
   extensions:
   - .gms
+  tm_scope: none
 
 GAP:
   type: programming
@@ -828,6 +844,7 @@ GAP:
   - .gap
   - .gd
   - .gi
+  tm_scope: none
 
 GAS:
   type: programming
@@ -841,6 +858,7 @@ GDScript:
   type: programming
   extensions:
   - .gd
+  tm_scope: none
 
 GLSL:
   group: C
@@ -859,6 +877,13 @@ GLSL:
   - .vert
   - .vrx
   - .vshader
+
+Game Maker Language:
+  type: programming
+  color: "#8ad353"
+  extensions:
+  - .gml
+  tm_scope: source.js
 
 Genshi:
   extensions:
@@ -918,6 +943,7 @@ Golo:
   color: "#f6a51f"
   extensions:
   - .golo
+  tm_scope: none
 
 Gosu:
   type: programming
@@ -933,6 +959,7 @@ Grace:
   type: programming
   extensions:
   - .grace
+  tm_scope: none
 
 Grammatical Framework:
   type: programming
@@ -949,6 +976,7 @@ Graph Modeling Language:
   type: data
   extensions:
   - .gml
+  tm_scope: none
 
 Graphviz (DOT):
   type: data
@@ -1003,6 +1031,7 @@ HTML:
   - .html
   - .htm
   - .st
+  - .xht
   - .xhtml
 
 HTML+Django:
@@ -1038,6 +1067,7 @@ HTTP:
   type: data
   extensions:
   - .http
+  tm_scope: none
 
 Hack:
   type: programming
@@ -1045,6 +1075,7 @@ Hack:
   extensions:
   - .hh
   - .php
+  tm_scope: none
 
 Haml:
   group: HTML
@@ -1067,6 +1098,7 @@ Harbour:
   color: "#0e60e3"
   extensions:
   - .hb
+  tm_scope: none
 
 Haskell:
   type: programming
@@ -1092,6 +1124,7 @@ Hy:
   - .hy
   aliases:
   - hylang
+  tm_scope: none
 
 IDL:
   type: programming
@@ -1107,6 +1140,7 @@ IGOR Pro:
   aliases:
   - igor
   - igorpro
+  tm_scope: none
 
 INI:
   type: data
@@ -1119,9 +1153,15 @@ INI:
   aliases:
   - dosini
 
-Inno Setup:
+IRC log:
+  search_term: irc
+  aliases:
+  - irc
+  - irc logs
   extensions:
-  - .iss
+  - .irclog
+  - .weechatlog
+  tm_scope: none
 
 Idris:
   type: programming
@@ -1135,7 +1175,7 @@ Inform 7:
   extensions:
   - .ni
   - .i7x
-  tm_scope: source.inform
+  tm_scope: source.Inform7
   aliases:
   - i7
   - inform7
@@ -1143,15 +1183,7 @@ Inform 7:
 Inno Setup:
   extensions:
   - .iss
-
-IRC log:
-  search_term: irc
-  aliases:
-  - irc
-  - irc logs
-  extensions:
-  - .irclog
-  - .weechatlog
+  tm_scope: none
 
 Io:
   type: programming
@@ -1170,11 +1202,13 @@ Isabelle:
   color: "#fdcd00"
   extensions:
   - .thy
+  tm_scope: none
 
 J:
   type: programming
   extensions:
   - .ijs
+  tm_scope: none
 
 JSON:
   type: data
@@ -1282,6 +1316,7 @@ KRL:
   color: "#f5c800"
   extensions:
   - .krl
+  tm_scope: none
 
 Kit:
   type: markup
@@ -1315,6 +1350,7 @@ LOLCODE:
   extensions:
   - .lol
   color: "#cc9900"
+  tm_scope: none
 
 LSL:
   type: programming
@@ -1329,6 +1365,7 @@ LabVIEW:
   type: programming
   extensions:
   - .lvproj
+  tm_scope: none
 
 Lasso:
   type: programming
@@ -1367,12 +1404,14 @@ Liquid:
   type: markup
   extensions:
   - .liquid
+  tm_scope: none
 
 Literate Agda:
   type: programming
   group: Agda
   extensions:
   - .lagda
+  tm_scope: none
 
 Literate CoffeeScript:
   type: programming
@@ -1462,6 +1501,7 @@ MTML:
   tm_scope: text.html.basic
 
 Makefile:
+  type: programming
   aliases:
   - bsdmake
   - make
@@ -1470,9 +1510,9 @@ Makefile:
   - .mak
   - .mk
   filenames:
-  - makefile
-  - Makefile
   - GNUmakefile
+  - Makefile
+  - makefile
   interpreters:
   - make
 
@@ -1525,8 +1565,6 @@ Matlab:
 Maven POM:
   type: data
   tm_scope: text.xml.pom
-  extensions:
-  - .pom.xml
   filenames:
   - pom.xml
 
@@ -1550,6 +1588,7 @@ MediaWiki:
   wrap: true
   extensions:
   - .mediawiki
+  tm_scope: none
 
 Mercury:
   type: programming
@@ -1564,6 +1603,7 @@ MiniD: # Legacy
   searchable: false
   extensions:
   - .minid # Dummy extension
+  tm_scope: none
 
 Mirah:
   type: programming
@@ -1585,6 +1625,7 @@ Moocode:
   type: programming
   extensions:
   - .moo
+  tm_scope: none
 
 MoonScript:
   type: programming
@@ -1596,6 +1637,7 @@ MoonScript:
 Myghty:
   extensions:
   - .myt
+  tm_scope: none
 
 NSIS:
   extensions:
@@ -1641,6 +1683,7 @@ Nit:
   color: "#0d8921"
   extensions:
   - .nit
+  tm_scope: none
 
 Nix:
   type: programming
@@ -1648,6 +1691,7 @@ Nix:
   - .nix
   aliases:
   - nixos
+  tm_scope: none
 
 Nu:
   type: programming
@@ -1666,6 +1710,7 @@ NumPy:
   - .numpy
   - .numpyw
   - .numsc
+  tm_scope: none
 
 OCaml:
   type: programming
@@ -1726,6 +1771,7 @@ Omgrofl:
   extensions:
   - .omgrofl
   color: "#cabbff"
+  tm_scope: none
 
 Opa:
   type: programming
@@ -1737,6 +1783,7 @@ Opal:
   color: "#f7ede0"
   extensions:
   - .opal
+  tm_scope: none
 
 OpenCL:
   type: programming
@@ -1761,12 +1808,14 @@ OpenSCAD:
   type: programming
   extensions:
   - .scad
+  tm_scope: none
 
 Org:
   type: prose
   wrap: true
   extensions:
   - .org
+  tm_scope: none
 
 Ox:
   type: programming
@@ -1774,12 +1823,14 @@ Ox:
   - .ox
   - .oxh
   - .oxo
+  tm_scope: none
 
 Oxygene:
   type: programming
   color: "#5a63a3"
   extensions:
   - .oxygene
+  tm_scope: none
 
 PAWN:
   type: programming
@@ -1815,18 +1866,30 @@ Pan:
   color: '#cc0000'
   extensions:
   - .pan
+  tm_scope: none
 
 Papyrus:
   type: programming
   color: "#6600cc"
   extensions:
   - .psc
+  tm_scope: none
 
 Parrot:
   type: programming
   color: "#f3ca0a"
   extensions:
   - .parrot # Dummy extension
+  tm_scope: none
+
+Parrot Assembly:
+  group: Parrot
+  type: programming
+  aliases:
+  - pasm
+  extensions:
+  - .pasm
+  tm_scope: none
 
 Parrot Internal Representation:
   group: Parrot
@@ -1836,14 +1899,6 @@ Parrot Internal Representation:
   - pir
   extensions:
   - .pir
-
-Parrot Assembly:
-  group: Parrot
-  type: programming
-  aliases:
-  - pasm
-  extensions:
-  - .pasm
 
 Pascal:
   type: programming
@@ -1886,12 +1941,14 @@ Perl6:
   - .p6m
   - .pl6
   - .pm6
+  tm_scope: none
 
 PigLatin:
   type: programming
   color: "#fcd7de"
   extensions:
   - .pig
+  tm_scope: none
 
 Pike:
   type: programming
@@ -1906,12 +1963,14 @@ Pod:
   wrap: true
   extensions:
   - .pod
+  tm_scope: none
 
 PogoScript:
   type: programming
   color: "#d80074"
   extensions:
   - .pogo
+  tm_scope: none
 
 PostScript:
   type: markup
@@ -1952,6 +2011,7 @@ Propeller Spin:
   color: "#2b446d"
   extensions:
   - .spin
+  tm_scope: none
 
 Protocol Buffer:
   type: markup
@@ -1975,6 +2035,7 @@ Pure Data:
   color: "#91de79"
   extensions:
   - .pd
+  tm_scope: none
 
 PureScript:
   type: programming
@@ -2001,10 +2062,10 @@ Python:
   - .wsgi
   - .xpy
   filenames:
-  - wscript
-  - SConstruct
-  - SConscript
   - BUILD
+  - SConscript
+  - SConstruct
+  - wscript
   interpreters:
   - python
 
@@ -2070,7 +2131,7 @@ RHTML:
   group: HTML
   extensions:
   - .rhtml
-  tm_scope: text.html.ruby
+  tm_scope: text.html.erb
   aliases:
   - html+ruby
 
@@ -2081,6 +2142,7 @@ RMarkdown:
   extensions:
   - .rmd
   - .Rmd
+  tm_scope: none
 
 Racket:
   type: programming
@@ -2100,6 +2162,7 @@ Ragel in Ruby Host:
   aliases:
   - ragel-rb
   - ragel-ruby
+  tm_scope: none
 
 Raw token data:
   search_term: raw
@@ -2107,6 +2170,7 @@ Raw token data:
   - raw
   extensions:
   - .raw
+  tm_scope: none
 
 Rebol:
   type: programming
@@ -2126,10 +2190,12 @@ Red:
   - .reds
   aliases:
   - red/system
+  tm_scope: none
 
 Redcode:
   extensions:
   - .cw
+  tm_scope: none
 
 RobotFramework:
   type: programming
@@ -2203,6 +2269,7 @@ SAS:
   color: "#1E90FF"
   extensions:
   - .sas
+  tm_scope: none
 
 SCSS:
   type: markup
@@ -2218,7 +2285,7 @@ SQF:
   extensions:
   - .sqf
   - .hqf
-  tm_scope: source.c++
+  tm_scope: source.sqf
 
 SQL:
   type: data
@@ -2296,6 +2363,7 @@ Self:
   color: "#0579aa"
   extensions:
   - .self
+  tm_scope: none
 
 Shell:
   type: programming
@@ -2334,6 +2402,7 @@ Shen:
   color: "#120F14"
   extensions:
   - .shen
+  tm_scope: none
 
 Slash:
   type: programming
@@ -2404,6 +2473,7 @@ Stylus:
   group: CSS
   extensions:
   - .styl
+  tm_scope: none
 
 SuperCollider:
   type: programming
@@ -2411,6 +2481,7 @@ SuperCollider:
   extensions:
   - .scd
   - .sc
+  tm_scope: none
 
 Swift:
   type: programming
@@ -2436,6 +2507,7 @@ TXL:
   type: programming
   extensions:
   - .txl
+  tm_scope: none
 
 Tcl:
   type: programming
@@ -2492,6 +2564,7 @@ Textile:
   wrap: true
   extensions:
   - .textile
+  tm_scope: none
 
 Thrift:
   type: programming
@@ -2505,6 +2578,7 @@ Turing:
   extensions:
   - .t
   - .tu
+  tm_scope: none
 
 Twig:
   type: markup
@@ -2584,8 +2658,8 @@ VimL:
   filenames:
   - .vimrc
   - _vimrc
-  - vimrc
   - gvimrc
+  - vimrc
 
 Visual Basic:
   type: programming
@@ -2687,12 +2761,12 @@ XML:
   filenames:
   - .classpath
   - .project
+  - Web.Debug.config
+  - Web.Release.config
+  - Web.config
   - build.xml.dist
   - packages.config
   - phpunit.xml.dist
-  - Web.config
-  - Web.Debug.config
-  - Web.Release.config
 
 XProc:
   type: programming
@@ -2765,6 +2839,7 @@ Zimpl:
   - .zimpl
   - .zmpl
   - .zpl
+  tm_scope: none
 
 eC:
   type: programming
@@ -2772,6 +2847,7 @@ eC:
   extensions:
   - .ec
   - .eh
+  tm_scope: none
 
 edn:
   type: data
@@ -2786,6 +2862,7 @@ fish:
   group: Shell
   extensions:
   - .fish
+  tm_scope: none
 
 mupad:
   extensions:
@@ -2826,3 +2903,4 @@ xBase:
   color: "#3a4040"
   extensions:
   - .prg
+  tm_scope: none

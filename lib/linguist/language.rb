@@ -100,12 +100,8 @@ module Linguist
     def self.detect(blob)
       name = blob.name.to_s
 
-      # Check if the blob is possibly binary and bail early; this is a cheap
-      # test that uses the extension name to guess a binary binary mime type.
-      #
-      # We'll perform a more comprehensive test later which actually involves
-      # looking for binary characters in the blob
-      return nil if blob.likely_binary? || blob.binary?
+      # Bail early if the blob is binary or empty.
+      return nil if blob.likely_binary? || blob.binary? || blob.empty?
 
       # A bit of an elegant hack. If the file is executable but extensionless,
       # append a "magic" extension so it can be classified with other
@@ -124,16 +120,18 @@ module Linguist
       if possible_languages.length > 1
         data = blob.data
         possible_language_names = possible_languages.map(&:name)
+        heuristic_languages = Heuristics.find_by_heuristics(data, possible_language_names)
 
-        # Don't bother with binary contents or an empty file
-        if data.nil? || data == ""
-          nil
+        if heuristic_languages.size > 1
+          possible_language_names = heuristic_languages.map(&:name)
+        end
+
         # Check if there's a shebang line and use that as authoritative
-        elsif (result = find_by_shebang(data)) && !result.empty?
+        if (result = find_by_shebang(data)) && !result.empty?
           result.first
         # No shebang. Still more work to do. Try to find it with our heuristics.
-        elsif (determined = Heuristics.find_by_heuristics(data, possible_language_names)) && !determined.empty?
-          determined.first
+        elsif heuristic_languages.size == 1
+          heuristic_languages.first
         # Lastly, fall back to the probabilistic classifier.
         elsif classified = Classifier.classify(Samples.cache, data, possible_language_names).first
           # Return the actual Language object based of the string language name (i.e., first element of `#classify`)
@@ -433,11 +431,6 @@ module Linguist
     # Returns the extensions Array
     attr_reader :filenames
 
-    # Public: Return all possible extensions for language
-    def all_extensions
-      (extensions + [primary_extension]).uniq
-    end
-
     # Deprecated: Get primary extension
     #
     # Defaults to the first extension but can be overridden
@@ -595,9 +588,9 @@ module Linguist
       :ace_mode          => options['ace_mode'],
       :wrap              => options['wrap'],
       :group_name        => options['group'],
-      :searchable        => options.key?('searchable') ? options['searchable'] : true,
+      :searchable        => options.fetch('searchable', true),
       :search_term       => options['search_term'],
-      :extensions        => [options['extensions'].first] + options['extensions'][1..-1].sort,
+      :extensions        => Array(options['extensions']),
       :interpreters      => options['interpreters'].sort,
       :filenames         => options['filenames'],
       :popular           => popular.include?(name)

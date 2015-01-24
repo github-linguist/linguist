@@ -146,6 +146,13 @@ module Linguist
       end
     end
 
+    # Public: Is the blob empty?
+    #
+    # Return true or false
+    def empty?
+      data.nil? || data == ""
+    end
+
     # Public: Is the blob text?
     #
     # Return true or false

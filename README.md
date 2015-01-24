@@ -2,6 +2,8 @@
 
 We use this library at GitHub to detect blob languages, ignore binary files, suppress generated files in diffs, and generate language breakdown graphs.
 
+Tips for filing issues and creating pull requests can be found in [`CONTRIBUTING.md`](/CONTRIBUTING.md).
+
 ## Features
 
 ### Language detection
@@ -26,15 +28,7 @@ See [lib/linguist/language.rb](https://github.com/github/linguist/blob/master/li
 
 Syntax highlighting in GitHub is performed using TextMate-compatible grammars. These are the same grammars that TextMate, Sublime Text and Atom use.
 
-Every language in `languages.yml` is mapped to its corresponding TM `scope`. This scope will be used when picking up a grammar for highlighting. **When adding a new language to Linguist, please add its corrsponding scope too (assuming there's an existing TextMate bundle) so syntax highlighting works for it**.
-
-#### I found a bug!
-
-The `grammars.yml` file contains the list of all the repositories where we fetch TextMate grammars for highlighting. If you find a bug in the highlighting for any given language, please consult this Grammars list to find the source of the grammar, and submit the bug report upstream.
-
-You can also try to fix the bug yourself and submit a Pull Request. [This piece from TextMate's documentation](http://manual.macromates.com/en/language_grammars) offers a good introduction on how to work with TextMate-compatible grammars.
-
-Once the bug has been fixed upstream, please let us know and we'll pick it up for GitHub.
+Every language in `languages.yml` is mapped to its corresponding TM `scope`. This scope will be used when picking up a grammar for highlighting. **When adding a new language to Linguist, please add its corresponding scope too (assuming there's an existing TextMate bundle, Sublime Text package, or Atom package) so syntax highlighting works for it**.
 
 ### Stats
 
@@ -152,14 +146,6 @@ But for development you are going to want to checkout out the source. To get it,
 To run the tests:
 
     bundle exec rake test
-
-## Contributing
-
-The majority of contributions won't need to touch any Ruby code at all. The [master language list](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml) is just a YAML configuration file.
-
-We try to only add languages once they have some usage on GitHub, so please note in-the-wild usage examples in your pull request.
-
-Almost all bug fixes or new language additions should come with some additional code samples. Just drop them under [`samples/`](https://github.com/github/linguist/tree/master/samples) in the correct subdirectory and our test suite will automatically test them. In most cases you shouldn't need to add any new assertions.
 
 ### A note on language extensions
 
