@@ -203,10 +203,16 @@ class TestLanguage < Minitest::Test
 
   def test_find_by_extension
     assert_equal [], Language.find_by_extension('.factor-rc')
-    assert_equal [], Language.find_by_extension('foo.rb')
-    assert_equal [Language['Ruby']], Language.find_by_extension('rb')
-    assert_equal [Language['Ruby']], Language.find_by_extension('.rb')
-    assert_equal [Language['Limbo'], Language['M'], Language['MUF'], Language['Mathematica'], Language['Matlab'], Language['Mercury'], Language['Objective-C']], Language.find_by_extension('.m')
+    assert_equal [Language['Limbo'], Language['M'], Language['MUF'], Language['Mathematica'], Language['Matlab'], Language['Mercury'], Language['Objective-C']], Language.find_by_extension('foo.m')
+    assert_equal [Language['Ruby']], Language.find_by_extension('foo.rb')
+    assert_equal [Language['Ruby']], Language.find_by_extension('foo/bar.rb')
+    assert_equal [Language['Ruby']], Language.find_by_extension('PKGBUILD.rb')
+    assert_equal ['C', 'C++', 'Objective-C'], Language.find_by_extension('foo.h').map(&:name).sort
+    assert_equal [], Language.find_by_extension('rb')
+    assert_equal [], Language.find_by_extension('.null')
+    assert_equal [Language['HTML+Django']], Language.find_by_extension('index.jinja')
+    assert_equal [Language['Chapel']], Language.find_by_extension('examples/hello.chpl')
+    assert_equal [], Language.find_by_filename('F.I.L.E.')
   end
 
   def test_find_all_by_extension
@@ -219,23 +225,17 @@ class TestLanguage < Minitest::Test
 
   def test_find_by_filename
     assert_equal [Language['Shell']], Language.find_by_filename('PKGBUILD')
-    assert_equal [Language['Ruby']], Language.find_by_filename('foo.rb')
-    assert_equal [Language['Ruby']], Language.find_by_filename('foo/bar.rb')
     assert_equal [Language['Ruby']], Language.find_by_filename('Rakefile')
-    assert_equal [Language['Ruby']], Language.find_by_filename('PKGBUILD.rb')
     assert_equal Language['ApacheConf'], Language.find_by_filename('httpd.conf').first
     assert_equal [Language['ApacheConf']], Language.find_by_filename('.htaccess')
     assert_equal Language['Nginx'], Language.find_by_filename('nginx.conf').first
-    assert_equal ['C', 'C++', 'Objective-C'], Language.find_by_filename('foo.h').map(&:name).sort
+    assert_equal [], Language.find_by_filename('foo.rb')
     assert_equal [], Language.find_by_filename('rb')
     assert_equal [], Language.find_by_filename('.null')
     assert_equal [Language['Shell']], Language.find_by_filename('.bashrc')
     assert_equal [Language['Shell']], Language.find_by_filename('bash_profile')
     assert_equal [Language['Shell']], Language.find_by_filename('.zshrc')
     assert_equal [Language['Clojure']], Language.find_by_filename('riemann.config')
-    assert_equal [Language['HTML+Django']], Language.find_by_filename('index.jinja')
-    assert_equal [Language['Chapel']], Language.find_by_filename('examples/hello.chpl')
-    assert_equal [], Language.find_by_filename('F.I.L.E.')
   end
 
   def test_find_by_interpreter

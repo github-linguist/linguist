@@ -60,7 +60,7 @@ class << Linguist
   STRATEGIES = [
     Linguist::Strategy::Modeline,
     Linguist::Shebang,
-    Linguist::Strategy::Filename,
+    Linguist::Strategy::Extension,
     Linguist::Heuristics,
     Linguist::Classifier
   ]
