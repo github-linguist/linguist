@@ -59,6 +59,7 @@ class << Linguist
   # Strategies are called in turn until a single Language is returned.
   STRATEGIES = [
     Linguist::Strategy::Modeline,
+    Linguist::Strategy::Filename,
     Linguist::Shebang,
     Linguist::Strategy::Extension,
     Linguist::Heuristics,
