@@ -155,7 +155,7 @@ module Linguist
     #   Language.find_by_alias('cpp')
     #   # => #<Language name="C++">
     #
-    # Returns the Lexer or nil if none was found.
+    # Returns the Language or nil if none was found.
     def self.find_by_alias(name)
       name && @alias_index[name.downcase]
     end
@@ -219,7 +219,7 @@ module Linguist
     end
 
 
-    # Public: Look up Language by its name or lexer.
+    # Public: Look up Language by its name.
     #
     # name - The String name of the Language
     #
@@ -243,7 +243,7 @@ module Linguist
     #
     # This list is configured in "popular.yml".
     #
-    # Returns an Array of Lexers.
+    # Returns an Array of Languages.
     def self.popular
       @popular ||= all.select(&:popular?).sort_by { |lang| lang.name.downcase }
     end
@@ -255,7 +255,7 @@ module Linguist
     #
     # This list is created from all the languages not listed in "popular.yml".
     #
-    # Returns an Array of Lexers.
+    # Returns an Array of Languages.
     def self.unpopular
       @unpopular ||= all.select(&:unpopular?).sort_by { |lang| lang.name.downcase }
     end
@@ -375,11 +375,6 @@ module Linguist
     # Returns the name String
     attr_reader :search_term
 
-    # Public: Get Lexer
-    #
-    # Returns the Lexer
-    attr_reader :lexer
-
     # Public: Get the name of a TextMate-compatible scope
     #
     # Returns the scope
@@ -495,16 +490,6 @@ module Linguist
       @searchable
     end
 
-    # Public: Highlight syntax of text
-    #
-    # text    - String of code to be highlighted
-    # options - A Hash of options (defaults to {})
-    #
-    # Returns html String
-    def colorize(text, options = {})
-      lexer.highlight(text, options)
-    end
-
     # Public: Return name as String representation
     def to_s
       name
@@ -580,7 +565,6 @@ module Linguist
       :color             => options['color'],
       :type              => options['type'],
       :aliases           => options['aliases'],
-      :lexer             => options['lexer'],
       :tm_scope          => options['tm_scope'],
       :ace_mode          => options['ace_mode'],
       :wrap              => options['wrap'],
