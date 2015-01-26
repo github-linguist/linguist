@@ -3,10 +3,6 @@ require_relative "./helper"
 class TestTokenizer < Minitest::Test
   include Linguist
 
-  def samples_path
-    File.expand_path("../../samples", __FILE__)
-  end
-
   def tokenize(data)
     data = File.read(File.join(samples_path, data.to_s)) if data.is_a?(Symbol)
     Tokenizer.tokenize(data)

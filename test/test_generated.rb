@@ -3,10 +3,6 @@ require_relative "./helper"
 class TestGenerated < Minitest::Test
   include Linguist
 
-  def samples_path
-    File.expand_path("../../samples", __FILE__)
-  end
-
   class DataLoadedError < StandardError; end
 
   def generated_without_loading_data(name)

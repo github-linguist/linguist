@@ -14,24 +14,6 @@ class TestBlob < Minitest::Test
     Encoding.default_external = @original_external
   end
 
-  def samples_path
-    File.expand_path("../../samples", __FILE__)
-  end
-
-  def fixtures_path
-    File.expand_path("../fixtures", __FILE__)
-  end
-
-  def sample_blob(name)
-    name = File.join(samples_path, name) unless name =~ /^\//
-    FileBlob.new(name, samples_path)
-  end
-
-  def fixture_blob(name)
-    name = File.join(fixtures_path, name) unless name =~ /^\//
-    FileBlob.new(name, fixtures_path)
-  end
-
   def script_blob(name)
     blob = sample_blob(name)
     blob.instance_variable_set(:@name, 'script')
