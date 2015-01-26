@@ -181,6 +181,14 @@ module Linguist
       end
     end
 
+    disambiguate "Common Lisp", "NewLisp" do |data|
+      if /^\s*\((defun|in-package|defpackage) /.match(data)
+        Language["Common Lisp"]
+      elsif /^\s*\(define /.match(data)
+        Language["NewLisp"]
+      end
+    end
+
     disambiguate "TypeScript", "XML" do |data|
       if data.include?("<TS ")
         Language["XML"]

@@ -133,6 +133,13 @@ class TestHeuristcs < Minitest::Test
     })
   end
 
+  def test_lsp_by_heuristics
+    assert_heuristics({
+      "Common Lisp" => all_fixtures("Common Lisp"),
+      "NewLisp" => all_fixtures("NewLisp")
+    })
+  end
+
   def test_cs_by_heuristics
     assert_heuristics({
       "C#" => all_fixtures("C#", "*.cs"),
