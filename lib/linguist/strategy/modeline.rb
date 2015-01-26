@@ -23,7 +23,7 @@ module Linguist
       #
       # Returns a String or nil
       def self.modeline(data)
-        data.lines.first(5).any? { |l| l.match(/\W(?:filetype=|ft=|mode:|-\*-)\s*(\w+)/) }
+        data.lines.first(5).any? { |l| l.match(/\W(?:filetype=|ft=|-\*- mode:|-\*-)\s*(\w+)/) }
         lang = $1
       end
     end
