@@ -23,19 +23,21 @@ module Linguist
       #
       # Returns a String or nil
       def self.modeline(data)
-        pattern =  %q{(?:
-                        (-\*- \s* (?:mode:)? \s*) |                  # $1: Emacs
-                        (\/\* \s* vim: \s* set \s* (?:ft|filetype)=) # $2: Vim
-                      )
-                      (\w+)                                          # $3: language
-                      (?:
-                        (?(1)                                        # If $1 matched...
-                          ;?\s* -\*- |                               # then close Emacs syntax
-                          : \s* \*\/                                 # otherwise close Vim syntax
-                        )
-                      )}
+        regex = <<-EOF
+          /(?:
+              (-\*- \s* (?:mode:)? \s*) |                  # $1: Emacs
+              (\/\* \s* vim: \s* set \s* (?:ft|filetype)=) # $2: Vim
+            )
+            (\w+)                                          # $3: language
+            (?:
+              (?(1)                                        # If $1 matched...
+                ;?\s* -\*- |                               # then close Emacs syntax
+                : \s* \*\/                                 # otherwise close Vim syntax
+              )
+            )/x
+        EOF
 
-        data.lines.first(5).any? { |l| l.match(/#{pattern}/x) }
+        data.lines.first(5).any? { |l| l.match(regex) }
         lang = $3
       end
     end
