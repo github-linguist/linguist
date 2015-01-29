@@ -1,6 +1,20 @@
 module Linguist
   module Strategy
     class Modeline
+      Regex = /
+        (?:
+          (-\*- \s* (?:mode:)? \s*) |                  # $1: Emacs
+          (\/\* \s* vim: \s* set \s* (?:ft|filetype)=) # $2: Vim
+        )
+        (\w+)                                          # $3: language
+        (?:
+          (?(1)                                        # If $1 matched...
+            ;?\s* -\*- |                               # then close Emacs syntax
+            : \s* \*\/                                 # otherwise close Vim syntax
+          )
+        )
+      /x
+
       # Public: Detects language based on Vim and Emacs modelines
       #
       # blob               - An object that quacks like a blob.
@@ -23,20 +37,7 @@ module Linguist
       #
       # Returns a String or nil
       def self.modeline(data)
-        regex =
-          /(?:
-              (-\*- \s* (?:mode:)? \s*) |                  # $1: Emacs
-              (\/\* \s* vim: \s* set \s* (?:ft|filetype)=) # $2: Vim
-            )
-            (\w+)                                          # $3: language
-            (?:
-              (?(1)                                        # If $1 matched...
-                ;?\s* -\*- |                               # then close Emacs syntax
-                : \s* \*\/                                 # otherwise close Vim syntax
-              )
-            )/x
-
-        data.lines.first(5).any? { |l| l.match(regex) }
+        data.lines.first(5).any? { |l| l.match(Regex) }
         lang = $3
       end
     end
