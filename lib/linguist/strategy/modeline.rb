@@ -37,7 +37,7 @@ module Linguist
       #
       # Returns a String or nil
       def self.modeline(data)
-        data.lines.first(5).any? { |l| l.match(Regex) }
+        data.match(Regex)
         lang = $3
       end
     end
