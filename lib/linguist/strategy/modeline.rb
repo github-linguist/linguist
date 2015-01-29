@@ -23,7 +23,7 @@ module Linguist
       #
       # Returns a String or nil
       def self.modeline(data)
-        regex = <<-EOF
+        regex =
           /(?:
               (-\*- \s* (?:mode:)? \s*) |                  # $1: Emacs
               (\/\* \s* vim: \s* set \s* (?:ft|filetype)=) # $2: Vim
@@ -35,7 +35,6 @@ module Linguist
                 : \s* \*\/                                 # otherwise close Vim syntax
               )
             )/x
-        EOF
 
         data.lines.first(5).any? { |l| l.match(regex) }
         lang = $3
