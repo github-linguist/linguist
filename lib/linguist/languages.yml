@@ -812,9 +812,11 @@ Emacs Lisp:
   - emacs
   filenames:
   - .emacs
+  - .emacs.desktop
   extensions:
   - .el
   - .emacs
+  - .emacs.desktop
   ace_mode: lisp
 
 EmberScript:
@@ -3303,6 +3305,14 @@ Zimpl:
   - .zmpl
   - .zpl
   tm_scope: none
+  ace_mode: text
+
+desktop:
+  type: data
+  extensions:
+  - .desktop
+  - .desktop.in
+  tm_scope: source.desktop
   ace_mode: text
 
 eC:
