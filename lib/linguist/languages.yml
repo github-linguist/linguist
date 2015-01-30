@@ -61,6 +61,7 @@ ASP:
   type: programming
   color: "#6a40fd"
   search_term: aspx-vb
+  tm_scope: text.html.asp
   aliases:
   - aspx
   - aspx-vb
@@ -956,6 +957,7 @@ GAP:
   - .gap
   - .gd
   - .gi
+  - .tst
   tm_scope: none
   ace_mode: text
 
@@ -1596,7 +1598,7 @@ Liquid:
   type: markup
   extensions:
   - .liquid
-  tm_scope: none
+  tm_scope: text.html.liquid
   ace_mode: liquid
 
 Literate Agda:
@@ -1883,6 +1885,19 @@ NetLogo:
   tm_scope: source.lisp
   ace_mode: lisp
 
+NewLisp:
+  type: programming
+  lexer: NewLisp
+  color: "#eedd66"
+  extensions:
+  - .nl
+  - .lisp
+  - .lsp
+  interpreters:
+  - newlisp
+  tm_scope: source.lisp
+  ace_mode: lisp
+
 Nginx:
   type: markup
   extensions:
@@ -2055,7 +2070,7 @@ OpenSCAD:
   extensions:
   - .scad
   tm_scope: none
-  ace_mode: text
+  ace_mode: scad
 
 Org:
   type: prose
@@ -2426,7 +2441,6 @@ R:
 
 RAML:
   type: data
-  lexer: YAML
   ace_mode: yaml
   tm_scope: source.yaml
   color: "#77d9fb"
