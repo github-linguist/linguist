@@ -89,6 +89,15 @@ module Linguist
       end
     end
 
+    disambiguate "Component Pascal", "C++" do |data|
+      if (/^\s*(MODULE|IMPORT|PROCEDURE)\b/.match(data))
+        Language["Component Pascal"]
+      elsif (/^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>/.match(data) ||
+        /^\s*template\s*</.match(data) || /^[^@]class\s+\w+/.match(data) || /^[^@](private|public|protected):$/.match(data) || /std::.+$/.match(data))
+        Language["C++"]
+      end
+    end
+
     disambiguate "Perl", "Perl6", "Prolog" do |data|
       if data.include?("use v6")
         Language["Perl6"]
