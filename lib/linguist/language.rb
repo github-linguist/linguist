@@ -11,6 +11,7 @@ require 'linguist/samples'
 require 'linguist/file_blob'
 require 'linguist/blob_helper'
 require 'linguist/strategy/filename'
+require 'linguist/strategy/modeline'
 require 'linguist/shebang'
 
 module Linguist
@@ -94,6 +95,7 @@ module Linguist
     end
 
     STRATEGIES = [
+      Linguist::Strategy::Modeline,
       Linguist::Strategy::Filename,
       Linguist::Shebang,
       Linguist::Heuristics,
