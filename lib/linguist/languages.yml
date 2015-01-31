@@ -381,6 +381,7 @@ C++:
   - .cpp
   - .c++
   - .cc
+  - .cp
   - .cxx
   - .h
   - .h++
@@ -1837,6 +1838,13 @@ Mirah:
   - .mirah
   tm_scope: source.ruby
   ace_mode: ruby
+
+Modelica:
+  type: programming
+  extensions:
+  - .mo
+  tm_scope: source.modelica
+  ace_mode: text
 
 Monkey:
   type: programming
