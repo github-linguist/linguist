@@ -1,7 +1,7 @@
 module Linguist
   module Strategy
     class Modeline
-      EmacsModeline = /-\*-\s*(?:mode:)?\s*(\w+);?\s*-\*-/
+      EmacsModeline = /-\*-\s*mode:\s*(\w+);?\s*-\*-/
       VimModeline = /\/\*\s*vim:\s*set\s*(?:ft|filetype)=(\w+):\s*\*\//
 
       # Public: Detects language based on Vim and Emacs modelines
