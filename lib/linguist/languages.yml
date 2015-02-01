@@ -82,10 +82,9 @@ ATS:
   - ats2
   extensions:
   - .dats
-  - .atxt
   - .hats
   - .sats
-  tm_scope: source.ocaml
+  tm_scope: source.ats
   ace_mode: ocaml
 
 ActionScript:
@@ -1241,6 +1240,7 @@ Handlebars:
   type: markup
   aliases:
   - hbs
+  - htmlbars
   extensions:
   - .handlebars
   - .hbs
@@ -1839,6 +1839,13 @@ Mirah:
   - .mirah
   tm_scope: source.ruby
   ace_mode: ruby
+
+Modelica:
+  type: programming
+  extensions:
+  - .mo
+  tm_scope: source.modelica
+  ace_mode: text
 
 Monkey:
   type: programming
