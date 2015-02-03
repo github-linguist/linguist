@@ -1,12 +1,14 @@
 # Linguist
 
-We use this library at GitHub to detect blob languages, highlight code, ignore binary files, suppress generated files in diffs, and generate language breakdown graphs.
+We use this library at GitHub to detect blob languages, ignore binary files, suppress generated files in diffs, and generate language breakdown graphs.
+
+Tips for filing issues and creating pull requests can be found in [`CONTRIBUTING.md`](/CONTRIBUTING.md).
 
 ## Features
 
 ### Language detection
 
-Linguist defines a list of all languages known to GitHub in a [yaml file](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml). In order for a file to be highlighted, a language and a lexer must be defined there.
+Linguist defines a list of all languages known to GitHub in a [yaml file](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml).
 
 Most languages are detected by their file extension. For disambiguating between files with common extensions, we first apply some common-sense heuristics to pick out obvious languages. After that, we use a
 [statistical
@@ -24,7 +26,9 @@ See [lib/linguist/language.rb](https://github.com/github/linguist/blob/master/li
 
 ### Syntax Highlighting
 
-The actual syntax highlighting is handled by our Pygments wrapper, [pygments.rb](https://github.com/tmm1/pygments.rb). It also provides a [Lexer abstraction](https://github.com/tmm1/pygments.rb/blob/master/lib/pygments/lexer.rb) that determines which highlighter should be used on a file.
+Syntax highlighting in GitHub is performed using TextMate-compatible grammars. These are the same grammars that TextMate, Sublime Text and Atom use.
+
+Every language in `languages.yml` is mapped to its corresponding TM `scope`. This scope will be used when picking up a grammar for highlighting. **When adding a new language to Linguist, please add its corresponding scope too (assuming there's an existing TextMate bundle, Sublime Text package, or Atom package) so syntax highlighting works for it**.
 
 ### Stats
 
@@ -32,33 +36,57 @@ The Language stats bar that you see on every repository is built by aggregating 
 
 The repository stats API, accessed through `#languages`, can be used on a directory:
 
+***API UPDATE***
+
+Since [Version 3.0.0](https://github.com/github/linguist/releases/tag/v3.0.0) Linguist expects a git repository (in the form of a [Rugged::Repository](https://github.com/libgit2/rugged#repositories)) to be passed when initializing `Linguist::Repository`.
+
+
 ```ruby
-project = Linguist::Repository.from_directory(".")
-project.language.name  #=> "Ruby"
-project.languages      #=> { "Ruby" => 0.98, "Shell" => 0.02 }
+require 'rugged'
+require 'linguist'
+
+repo = Rugged::Repository.new('.')
+project = Linguist::Repository.new(repo, repo.head.target_id)
+project.language       #=> "Ruby"
+project.languages      #=> { "Ruby" => 119387 }
 ```
 
 These stats are also printed out by the `linguist` binary. You can use the
 `--breakdown` flag, and the binary will also output the breakdown of files by language.
 
-You can try running `linguist` on the `lib/` directory in this repository itself:
+You can try running `linguist` on the root directory in this repository itself:
 
-    $ bundle exec linguist lib/ --breakdown
+    $ bundle exec linguist --breakdown
 
     100.00% Ruby
 
     Ruby:
-    linguist/blob_helper.rb
-    linguist/classifier.rb
-    linguist/file_blob.rb
-    linguist/generated.rb
-    linguist/heuristics.rb
-    linguist/language.rb
-    linguist/md5.rb
-    linguist/repository.rb
-    linguist/samples.rb
-    linguist/tokenizer.rb
-    linguist.rb
+    Gemfile
+    Rakefile
+    bin/linguist
+    github-linguist.gemspec
+    lib/linguist.rb
+    lib/linguist/blob_helper.rb
+    lib/linguist/classifier.rb
+    lib/linguist/file_blob.rb
+    lib/linguist/generated.rb
+    lib/linguist/heuristics.rb
+    lib/linguist/language.rb
+    lib/linguist/lazy_blob.rb
+    lib/linguist/md5.rb
+    lib/linguist/repository.rb
+    lib/linguist/samples.rb
+    lib/linguist/tokenizer.rb
+    lib/linguist/version.rb
+    test/test_blob.rb
+    test/test_classifier.rb
+    test/test_heuristics.rb
+    test/test_language.rb
+    test/test_md5.rb
+    test/test_pedantic.rb
+    test/test_repository.rb
+    test/test_samples.rb
+    test/test_tokenizer.rb
 
 #### Ignore vendored files
 
@@ -80,31 +108,44 @@ Linguist::FileBlob.new("underscore.min.js").generated? # => true
 
 See [Linguist::Generated#generated?](https://github.com/github/linguist/blob/master/lib/linguist/generated.rb).
 
+## Overrides
+
+Linguist supports custom overrides for language definitions and vendored paths. Add a `.gitattributes` file to your project using the keys `linguist-language` and `linguist-vendored` with the standard git-style path matchers for the files you want to override.
+
+Please note that the overrides currently only affect the language statistics for a repository and not the syntax-highlighting of files.
+
+```
+$ cat .gitattributes
+*.rb linguist-language=Java
+
+$ linguist --breakdown
+100.00% Java
+
+Java:
+ruby_file.rb
+```
+
+By default, Linguist treats all of the paths defined in [lib/linguist/vendor.yml](https://github.com/github/linguist/blob/master/lib/linguist/vendor.yml) as vendored and therefore doesn't include them in the language statistics for a repository. Use the `linguist-vendored` attribute to vendor or un-vendor paths.
+
+```
+$ cat .gitattributes
+special-vendored-path/* linguist-vendored
+jquery.js linguist-vendored=false
+```
+
 ## Installation
 
-github.com is usually running the latest version of the `github-linguist` gem that is released on [RubyGems.org](http://rubygems.org/gems/github-linguist).
+Github.com is usually running the latest version of the `github-linguist` gem that is released on [RubyGems.org](http://rubygems.org/gems/github-linguist).
 
 But for development you are going to want to checkout out the source. To get it, clone the repo and run [Bundler](http://gembundler.com/) to install its dependencies.
 
     git clone https://github.com/github/linguist.git
     cd linguist/
-    bundle install
+    script/bootstrap
 
 To run the tests:
 
     bundle exec rake test
-
-## Contributing
-
-The majority of contributions won't need to touch any Ruby code at all. The [master language list](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml) is just a YAML configuration file.
-
-We try to only add languages once they have some usage on GitHub, so please note in-the-wild usage examples in your pull request.
-
-Almost all bug fixes or new language additions should come with some additional code samples. Just drop them under [`samples/`](https://github.com/github/linguist/tree/master/samples) in the correct subdirectory and our test suite will automatically test them. In most cases you shouldn't need to add any new assertions.
-
-To update the `samples.json` after adding new files to [`samples/`](https://github.com/github/linguist/tree/master/samples):
-
-    bundle exec rake samples
 
 ### A note on language extensions
 
@@ -140,12 +181,13 @@ Here's our current build status, which is hopefully green: [![Build Status](http
 If you are the current maintainer of this gem:
 
  0. Create a branch for the release: `git checkout -b cut-release-vxx.xx.xx`
- 0. Make sure your local dependencies are up to date: `bundle install`
+ 0. Make sure your local dependencies are up to date: `script/bootstrap`
+ 0. If grammar submodules have not been updated recently, update them: `git submodule update --remote && git commit -a`
  0. Ensure that samples are updated: `bundle exec rake samples`
  0. Ensure that tests are green: `bundle exec rake test`
  0. Bump gem version in `lib/linguist/version.rb`.  For example, [like this](https://github.com/github/linguist/commit/8d2ea90a5ba3b2fe6e1508b7155aa4632eea2985).
  0. Make a PR to github/linguist.  For example, [#1238](https://github.com/github/linguist/pull/1238).
- 0. Build a local gem: `gem build github-linguist.gemspec`
+ 0. Build a local gem: `bundle exec rake build_gem`
  0. Testing:
    0. Bump the Gemfile and Gemfile.lock versions for an app which relies on this gem
    0. Install the new gem locally

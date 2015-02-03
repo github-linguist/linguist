@@ -1,16 +1,7 @@
-require 'linguist/classifier'
-require 'linguist/language'
-require 'linguist/samples'
-require 'linguist/tokenizer'
+require_relative "./helper"
 
-require 'test/unit'
-
-class TestClassifier < Test::Unit::TestCase
+class TestClassifier < Minitest::Test
   include Linguist
-
-  def samples_path
-    File.expand_path("../../samples", __FILE__)
-  end
 
   def fixture(name)
     File.read(File.join(samples_path, name))
@@ -44,12 +35,12 @@ class TestClassifier < Test::Unit::TestCase
   end
 
   def test_instance_classify_empty
-    results = Classifier.classify(Samples::DATA, "")
+    results = Classifier.classify(Samples.cache, "")
     assert results.first[1] < 0.5, results.first.inspect
   end
 
   def test_instance_classify_nil
-    assert_equal [], Classifier.classify(Samples::DATA, nil)
+    assert_equal [], Classifier.classify(Samples.cache, nil)
   end
 
   def test_classify_ambiguous_languages
@@ -58,7 +49,7 @@ class TestClassifier < Test::Unit::TestCase
       languages = Language.find_by_filename(sample[:path]).map(&:name)
       next unless languages.length > 1
 
-      results = Classifier.classify(Samples::DATA, File.read(sample[:path]), languages)
+      results = Classifier.classify(Samples.cache, File.read(sample[:path]), languages)
       assert_equal language.name, results.first[0], "#{sample[:path]}\n#{results.inspect}"
     end
   end
