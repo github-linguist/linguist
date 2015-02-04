@@ -151,12 +151,15 @@ module Linguist
     end
 
     disambiguate "AsciiDoc", "AGS Script", "Public Key" do |data|
-      if /^=+(\s|\n)/.match(data)
+      if /^[=-]+(\s|\n)|{{[A-Za-z]/.match(data)
         Language["AsciiDoc"]
-      elsif /^((\/\/)|((import|export)\s+)?(function|int|float|char)\s+((room|repeatedly|on|game)_)?([A-Za-z]+[A-Za-z_0-9]+))\s*[;\(]?/.match(data)
+      elsif /^(\/\/.+|((import|export)\s+)?(function|int|float|char)\s+((room|repeatedly|on|game)_)?([A-Za-z]+[A-Za-z_0-9]+)\s*[;\(])/.match(data)
         Language["AGS Script"]
-      else /^-----BEGIN/.match(data)
+      elsif /^-----BEGIN/.match(data)
         Language["Public Key"]
+      else
+        # Plain text can also be AsciiDoc.
+        Language["AsciiDoc"]
       end
     end
 
