@@ -1,1 +1,1 @@
-; -*-Smalltalk-*-
+; -*-mode:Smalltalk-*-
