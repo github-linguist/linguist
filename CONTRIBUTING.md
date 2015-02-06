@@ -1,6 +1,6 @@
 # Contributing
 
-The majority of contributions won't need to touch any Ruby code at all.
+Hi there! We're thrilled that you'd like to contribute to this project. Your help is essential for keeping it great. The majority of contributions won't need to touch any Ruby code at all.
 
 ## Adding a language
 
