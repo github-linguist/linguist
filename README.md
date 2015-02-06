@@ -55,3 +55,44 @@ vim: set ft=cpp:
 Emacs
 -*- mode: php;-*-
 ```
+
+## Usage
+
+Install the gem:
+
+```
+$ gem install github-linguist
+```
+
+Then use it in your application:
+
+```ruby
+require 'rugged'
+require 'linguist'
+
+repo = Rugged::Repository.new('.')
+project = Linguist::Repository.new(repo, repo.head.target_id)
+project.language       #=> "Ruby"
+project.languages      #=> { "Ruby" => 119387 }
+```
+
+These stats are also printed out by the `linguist` executable. You can use the
+`--breakdown` flag, and the binary will also output the breakdown of files by language.
+
+You can try running `linguist` on the root directory in this repository itself:
+
+$ bundle exec linguist --breakdown
+
+100.00% Ruby
+
+Ruby:
+Gemfile
+Rakefile
+bin/linguist
+github-linguist.gemspec
+lib/linguist.rb
+…
+
+## Contributing
+
+Please check out our [contributing guidelines](CONTRIBUTING.md).
