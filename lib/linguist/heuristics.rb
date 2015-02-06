@@ -223,5 +223,30 @@ module Linguist
         Language["Text"]
       end
     end
+    disambiguate "PLSQL", "SQLPL", "PLpgSQL", "SQL" do |data|
+      match = nil 
+      #unique keywords for each language
+      plpgsqlkeywords = [/^\\i\b/i, /begin ?(work|transaction)?;/i , /AS \$\$/i, /RAISE EXCEPTION/i, /LANGUAGE plpgsql\b/i ]
+      plsqlkeywords = [ /pragma\b/i , /constructor\W+function\b/i]
+      #sqlplkeywords = [  ]
+
+      #common keywords that are not SQL
+      plkeywords = [/begin\b/i,/boolean\b/i, /package\b/i,/exception\b/i, /^end;\b/i ]
+
+      re = Regexp.union(plpgsqlkeywords)
+      if data.match(re)
+          match =  Language["PLpgSQL"] 
+      else
+         re = Regexp.union(plsqlkeywords)
+         if data.match(re)
+            match= Language["PLSQL"] 
+         else
+            re = Regexp.union(plkeywords)
+            match= Language["SQL"] if ! data.match(re)
+         end
+      end
+
+      match
+    end
   end
 end
