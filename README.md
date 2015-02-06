@@ -81,6 +81,7 @@ These stats are also printed out by the `linguist` executable. You can use the
 
 You can try running `linguist` on the root directory in this repository itself:
 
+```
 $ bundle exec linguist --breakdown
 
 100.00% Ruby
@@ -92,7 +93,10 @@ bin/linguist
 github-linguist.gemspec
 lib/linguist.rb
 …
+```
 
 ## Contributing
 
 Please check out our [contributing guidelines](CONTRIBUTING.md).
+
+##
