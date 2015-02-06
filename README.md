@@ -22,9 +22,11 @@ The Language stats bar is built by aggregating the languages of each file in tha
 
 ## Overrides
 
-Linguist supports custom overrides for language definitions and vendored paths. Please note that the overrides currently only affect the language statistics for a repository and not the syntax-highlighting of files.
+Linguist supports a number of different custom overrides strategies for language definitions and vendored paths.
 
-Commit a `.gitattributes` file to your project and use standard git-style path matchers for the files you want to override to set `linguist-language` and `linguist-vendored`.
+### Using gitattributes
+
+Add a `.gitattributes` file to your project and use standard git-style path matchers for the files you want to override to set `linguist-language` and `linguist-vendored`.
 
 ```
 $ cat .gitattributes
@@ -39,4 +41,17 @@ Use the `linguist-vendored` attribute to vendor or un-vendor paths.
 $ cat .gitattributes
 special-vendored-path/* linguist-vendored
 jquery.js linguist-vendored=false
+```
+
+### Using Emacs and Vim modelines
+
+Alternatively, you can use Vim and Emacs style modelines to set the language for a single file. Modelines can be placed anywhere within a file and are respected when determining how to syntax-highlight a file on GitHub.com
+
+```
+Vim
+vim: set filetype=prolog:
+vim: set ft=cpp:
+
+Emacs
+-*- mode: php;-*-
 ```

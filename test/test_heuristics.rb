@@ -3,10 +3,6 @@ require_relative "./helper"
 class TestHeuristcs < Minitest::Test
   include Linguist
 
-  def samples_path
-    File.expand_path("../../samples", __FILE__)
-  end
-
   def fixture(name)
     File.read(File.join(samples_path, name))
   end
@@ -130,6 +126,20 @@ class TestHeuristcs < Minitest::Test
     assert_heuristics({
       "BitBake" => all_fixtures("BitBake"),
       "BlitzBasic" => all_fixtures("BlitzBasic")
+    })
+  end
+
+  def test_lsp_by_heuristics
+    assert_heuristics({
+      "Common Lisp" => all_fixtures("Common Lisp"),
+      "NewLisp" => all_fixtures("NewLisp")
+    })
+  end
+
+  def test_cs_by_heuristics
+    assert_heuristics({
+      "C#" => all_fixtures("C#", "*.cs"),
+      "Smalltalk" => all_fixtures("Smalltalk", "*.cs")
     })
   end
 

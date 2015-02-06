@@ -99,7 +99,7 @@ module Linguist
       elsif name.nil?
         "attachment"
       else
-        "attachment; filename=#{EscapeUtils.escape_url(name)}"
+        "attachment; filename=#{EscapeUtils.escape_url(File.basename(name))}"
       end
     end
 
@@ -233,7 +233,7 @@ module Linguist
     #
     # Return true or false
     def vendored?
-      path =~ VendoredRegexp ? true : false
+      name =~ VendoredRegexp ? true : false
     end
 
     # Public: Get each line of data
@@ -301,7 +301,7 @@ module Linguist
     #
     # Return true or false
     def generated?
-      @_generated ||= Generated.generated?(path, lambda { data })
+      @_generated ||= Generated.generated?(name, lambda { data })
     end
 
     # Public: Detects the Language of the blob.
