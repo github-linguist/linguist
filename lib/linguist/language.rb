@@ -80,7 +80,7 @@ module Linguist
           raise ArgumentError, "Extension is missing a '.': #{extension.inspect}"
         end
 
-        @extension_index[extension] << language
+        @extension_index[extension.downcase] << language
       end
 
       language.interpreters.each do |interpreter|
@@ -198,7 +198,7 @@ module Linguist
     # Returns all matching Languages or [] if none were found.
     def self.find_by_extension(extname)
       extname = ".#{extname}" unless extname.start_with?(".")
-      @extension_index[extname]
+      @extension_index[extname.downcase]
     end
 
     # DEPRECATED
@@ -535,8 +535,8 @@ module Linguist
 
     if extnames = extensions[name]
       extnames.each do |extname|
-        if !options['extensions'].index { |x| x.end_with? extname }
-          warn "#{name} has a sample with extension (#{extname}) that isn't explicitly defined in languages.yml" unless extname == '.script!'
+        if !options['extensions'].index { |x| x.downcase.end_with? extname.downcase }
+          warn "#{name} has a sample with extension (#{extname.downcase}) that isn't explicitly defined in languages.yml" unless extname == '.script!'
           options['extensions'] << extname
         end
       end

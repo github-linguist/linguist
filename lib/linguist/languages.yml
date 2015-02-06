@@ -204,7 +204,6 @@ Assembly:
   - nasm
   extensions:
   - .asm
-  - .ASM
   - .a51
   tm_scope: source.asm.x86
   ace_mode: assembly_x86
@@ -349,8 +348,6 @@ C:
   color: "#555"
   extensions:
   - .c
-  - .C
-  - .H
   - .cats
   - .h
   - .idc
@@ -429,8 +426,6 @@ COBOL:
   type: programming
   extensions:
   - .cob
-  - .COB
-  - .CPY
   - .cbl
   - .ccp
   - .cobol
@@ -867,14 +862,6 @@ FORTRAN:
   color: "#4d41b1"
   extensions:
   - .f90
-  - .F
-  - .F03
-  - .F08
-  - .F77
-  - .F90
-  - .F95
-  - .FOR
-  - .FPP
   - .f
   - .f03
   - .f08
@@ -918,9 +905,7 @@ Forth:
   color: "#341708"
   extensions:
   - .fth
-  - .4TH
   - .4th
-  - .F
   - .f
   - .for
   - .forth
@@ -969,7 +954,6 @@ GAS:
   group: Assembly
   extensions:
   - .s
-  - .S
   tm_scope: source.asm.x86
   ace_mode: assembly_x86
 
@@ -1127,7 +1111,6 @@ Graphviz (DOT):
   tm_scope: source.dot
   extensions:
   - .dot
-  - .DOT
   - .gv
   ace_mode: text
 
@@ -2210,7 +2193,6 @@ Perl:
   color: "#0298c3"
   extensions:
   - .pl
-  - .PL
   - .cgi
   - .fcgi
   - .perl
@@ -2442,8 +2424,6 @@ R:
   - splus
   extensions:
   - .r
-  - .R
-  - .Rd
   - .rd
   - .rsx
   filenames:
@@ -2496,7 +2476,6 @@ RMarkdown:
   ace_mode: markdown
   extensions:
   - .rmd
-  - .Rmd
   tm_scope: none
 
 Racket:
@@ -3201,11 +3180,11 @@ XML:
   - .svg
   - .targets
   - .tmCommand
+  - .tml
   - .tmLanguage
   - .tmPreferences
   - .tmSnippet
   - .tmTheme
-  - .tml
   - .ts
   - .ui
   - .urdf
