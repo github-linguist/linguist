@@ -135,6 +135,8 @@ class TestGrammars < Minitest::Test
       "unlicense"
     elsif content.include?("http://www.wtfpl.net/txt/copying/")
       "WTFPL"
+    elsif content.include?("zlib") && content.include?("license") && content.include?("2. Altered source versions must be plainly marked as such")
+      "zlib"
     end
   end
 end
