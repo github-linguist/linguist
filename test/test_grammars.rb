@@ -9,6 +9,7 @@ class TestGrammars < Minitest::Test
     vendor/grammars/Sublime-Lasso
     vendor/grammars/Sublime-REBOL
     vendor/grammars/x86-assembly-textmate-bundle
+    vendor/grammars/oracle.tmbundle
   ].freeze
 
   def setup

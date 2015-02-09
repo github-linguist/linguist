@@ -2145,6 +2145,26 @@ PHP:
   aliases:
   - inc
 
+#Oracle 
+PLSQL:
+  type: programming
+  ace_mode: sql
+  tm_scope: source.plsql.oracle
+  extensions:
+  - .pls
+  - .pkb
+  - .pks
+  - .plb
+  - .sql
+
+#Postgres 
+PLpgSQL:
+  type: programming
+  ace_mode: pgsql
+  tm_scope: source.sql
+  extensions:
+  - .sql
+
 Pan:
   type: programming
   color: '#cc0000'
@@ -2674,6 +2694,15 @@ SQL:
   - .tab
   - .udf
   - .viw
+
+#IBM DB2
+SQLPL:
+  type: programming
+  ace_mode: sql
+  tm_scope: source.sql
+  extensions:
+  - .sql
+  - .db2
 
 STON:
   type: data
