@@ -6,6 +6,8 @@ class TestGrammars < Minitest::Test
   LICENSE_WHITELIST = [
     # This grammar's MIT license is inside a subdirectory.
     "vendor/grammars/SublimePapyrus",
+
+    # This grammar has a nonstandard but acceptable license.
     "vendor/grammars/gap-tmbundle",
 
     # These grammars have no license but have been grandfathered in. New grammars
