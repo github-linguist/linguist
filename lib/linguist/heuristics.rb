@@ -224,29 +224,22 @@ module Linguist
       end
     end
     disambiguate "PLSQL", "SQLPL", "PLpgSQL", "SQL" do |data|
-      match = nil 
-      #unique keywords for each language
-      plpgsqlkeywords = [/^\\i\b/i, /begin ?(work|transaction)?;/i , /AS \$\$/i, /RAISE EXCEPTION/i, /LANGUAGE plpgsql\b/i ]
-      plsqlkeywords = [ /pragma\b/i , /constructor\W+function\b/i]
-      #sqlplkeywords = [  ]
+      #only return value if a definite positive
 
-      #common keywords that are not SQL
-      plkeywords = [/begin\b/i,/boolean\b/i, /package\b/i,/exception\b/i, /^end;\b/i ]
-
-      re = Regexp.union(plpgsqlkeywords)
-      if data.match(re)
-          match =  Language["PLpgSQL"] 
-      else
-         re = Regexp.union(plsqlkeywords)
-         if data.match(re)
-            match= Language["PLSQL"] 
-         else
-            re = Regexp.union(plkeywords)
-            match= Language["SQL"] if ! data.match(re)
-         end
+      if /^\\i\b|AS \$\$|LANGUAGE '+plpgsql'+/i.match(data) || /SECURITY (DEFINER|INVOKER)/i.match(data) || /BEGIN (WORK|TRANSACTION)+;/i.match(data)
+          #postgres
+          Language["PLpgSQL"] 
+      elsif /(alter module)|(language sql)|(begin( NOT)+ atomic)/i.match(data)  || /signal SQLSTATE '[0-9]+'/i.match(data)
+          #ibm db2
+          Language["SQLPL"] 
+      elsif /pragma|\$\$PLSQL_|XMLTYPE|sysdate|systimestamp|\.nextval|connect by|AUTHID (DEFINER|CURRENT_USER)/i.match(data) || /constructor\W+function/i.match(data)
+          #oraclestuff
+          Language["PLSQL"] 
+      elsif ! /begin|boolean|package|exception/i.match(data) 
+          #generic sql
+          Language["SQL"] 
       end
 
-      match
     end
   end
 end
