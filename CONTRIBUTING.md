@@ -35,7 +35,7 @@ Syntax highlighting in GitHub is performed using TextMate-compatible grammars. T
 
 Assuming your code is being detected as the right language, in most cases this is due to a bug in the language grammar rather than a bug in Linguist. [`grammars.yml`][grammars] lists all the grammars we use for syntax highlighting on github.com. Find the one corresponding to your code's programming language and submit a bug report upstream. If you can, try to reproduce the highlighting problem in the text editor that the grammar is designed for (TextMate, Sublime Text, or Atom) and include that information in your bug report.
 
-You can also try to fix the bug yourself and submit a Pull Request. [TextMate's documentation](http://manual.macromates.com/en/language_grammars) offers a good introduction on how to work with TextMate-compatible grammars. You can test grammars using [Lightshow](https://lightshow.githubapp.com).
+You can also try to fix the bug yourself and submit a Pull Request. [TextMate's documentation](http://manual.macromates.com/en/language_grammars) offers a good introduction on how to work with TextMate-compatible grammars. You can test grammars using [Lightshow](https://github-lightshow.herokuapp.com).
 
 Once the bug has been fixed upstream, please let us know and we'll pick it up for GitHub.
 
