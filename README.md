@@ -20,6 +20,8 @@ The Language stats bar is built by aggregating the languages of each file in tha
 0. If the files are being misclassified, search for [open issues][issues] to see if anyone else has already reported the issue. Any information you an add, especially links to public repositories, is helpful.
 0. If there are no reported issues of this misclassification, [open an issue][new-issue] and include a link to the repository or a sample of the code that is being misclassified.
 
+**Please note that the language statistics update after you push changes to your repository.**
+
 ## Overrides
 
 Linguist supports a number of different custom overrides strategies for language definitions and vendored paths.
