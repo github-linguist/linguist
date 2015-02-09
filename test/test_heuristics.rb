@@ -48,7 +48,7 @@ class TestHeuristcs < Minitest::Test
   def test_pl_prolog_perl_by_heuristics
     assert_heuristics({
       "Prolog" => "Prolog/turing.pl",
-      "Perl" => "Perl/perl-test.t",
+      "Perl" => ["Perl/perl-test.t", "Perl/use5.pl"]
     })
   end
 

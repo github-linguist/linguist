@@ -92,7 +92,7 @@ module Linguist
     disambiguate "Perl", "Perl6", "Prolog" do |data|
       if data.include?("use v6")
         Language["Perl6"]
-      elsif data.include?("use strict")
+      elsif data.match(/use strict|use\s+v?5\./)
         Language["Perl"]
       elsif data.include?(":-")
         Language["Prolog"]
