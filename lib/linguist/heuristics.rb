@@ -226,7 +226,7 @@ module Linguist
     disambiguate "PLSQL", "SQLPL", "PLpgSQL", "SQL" do |data|
       #only return value if a definite positive
 
-      if /^\\i\b|AS \$\$|LANGUAGE '+plpgsql'+/i.match(data) || /SECURITY (DEFINER|INVOKER)/i.match(data) || /BEGIN (WORK|TRANSACTION)+;/i.match(data)
+      if /^\\i\b|AS \$\$|LANGUAGE '+plpgsql'+/i.match(data) || /SECURITY (DEFINER|INVOKER)/i.match(data) || /BEGIN( WORK| TRANSACTION)?;/i.match(data)
           #postgres
           Language["PLpgSQL"] 
       elsif /(alter module)|(language sql)|(begin( NOT)+ atomic)/i.match(data)  || /signal SQLSTATE '[0-9]+'/i.match(data)
