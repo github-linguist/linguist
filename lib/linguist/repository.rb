@@ -8,6 +8,8 @@ module Linguist
   # Its primary purpose is for gathering language statistics across
   # the entire project.
   class Repository
+    DETECTABLE_TYPES = [:programming, :markup].freeze
+
     attr_reader :repository
 
     # Public: Create a new Repository based on the stats of
@@ -159,8 +161,7 @@ module Linguist
           # Skip vendored or generated blobs
           next if blob.vendored? || blob.generated? || blob.language.nil?
 
-          # Only include programming languages and acceptable markup languages
-          if blob.language.type == :programming || Language.detectable_markup.include?(blob.language.name)
+          if DETECTABLE_TYPES.include?(blob.language.type)
             file_map[new] = [blob.language.group.name, blob.size]
           end
         end
