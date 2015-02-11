@@ -96,8 +96,8 @@ module Linguist
 
     STRATEGIES = [
       Linguist::Strategy::Modeline,
-      Linguist::Strategy::Filename,
       Linguist::Shebang,
+      Linguist::Strategy::Filename,
       Linguist::Heuristics,
       Linguist::Classifier
     ]
