@@ -159,7 +159,7 @@ module Linguist
           blob = Linguist::LazyBlob.new(repository, delta.new_file[:oid], new, mode.to_s(8))
 
           # Skip vendored or generated blobs
-          next if blob.vendored? || blob.generated? || blob.language.nil?
+          next if blob.vendored? || blob.documentation? || blob.generated? || blob.language.nil?
 
           if DETECTABLE_TYPES.include?(blob.language.type)
             file_map[new] = [blob.language.group.name, blob.size]

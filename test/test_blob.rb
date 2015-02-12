@@ -441,6 +441,38 @@ class TestBlob < Minitest::Test
     assert sample_blob("subproject/activator.bat").vendored?
   end
 
+  def test_documentation
+    assert_predicate fixture_blob("doc/foo.md"), :documentation?
+    assert_predicate fixture_blob("docs/foo.md"), :documentation?
+    refute_predicate fixture_blob("project/doc/foo.md"), :documentation?
+    refute_predicate fixture_blob("project/docs/foo.md"), :documentation?
+
+    assert_predicate fixture_blob("Documentation/foo.md"), :documentation?
+    refute_predicate fixture_blob("project/Documentation/foo.md"), :documentation?
+
+    assert_predicate fixture_blob("README"), :documentation?
+    assert_predicate fixture_blob("README.md"), :documentation?
+    assert_predicate fixture_blob("README.txt"), :documentation?
+    assert_predicate fixture_blob("foo/README"), :documentation?
+
+    assert_predicate fixture_blob("CONTRIBUTING"), :documentation?
+    assert_predicate fixture_blob("CONTRIBUTING.md"), :documentation?
+    assert_predicate fixture_blob("CONTRIBUTING.txt"), :documentation?
+    assert_predicate fixture_blob("foo/CONTRIBUTING"), :documentation?
+
+    assert_predicate fixture_blob("LICENSE"), :documentation?
+    assert_predicate fixture_blob("LICENCE.md"), :documentation?
+    assert_predicate fixture_blob("LICENSE.txt"), :documentation?
+    assert_predicate fixture_blob("foo/LICENSE"), :documentation?
+
+    assert_predicate fixture_blob("COPYING"), :documentation?
+    assert_predicate fixture_blob("COPYING.md"), :documentation?
+    assert_predicate fixture_blob("COPYING.txt"), :documentation?
+    assert_predicate fixture_blob("foo/COPYING"), :documentation?
+
+    refute_predicate fixture_blob("foo.md"), :documentation?
+  end
+
   def test_language
     Samples.each do |sample|
       blob = sample_blob(sample[:path])

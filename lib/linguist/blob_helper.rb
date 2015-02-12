@@ -236,6 +236,21 @@ module Linguist
       name =~ VendoredRegexp ? true : false
     end
 
+    documentation_paths = YAML.load_file(File.expand_path("../documentation.yml", __FILE__))
+    DocumentationRegexp = Regexp.new(documentation_paths.join('|'))
+
+    # Public: Is the blob in a documentation directory?
+    #
+    # Documentation files are ignored by language statistics.
+    #
+    # See "documentation.yml" for a list of documentation conventions that match
+    # this pattern.
+    #
+    # Return true or false
+    def documentation?
+      name =~ DocumentationRegexp ? true : false
+    end
+
     # Public: Get each line of data
     #
     # Requires Blob#data

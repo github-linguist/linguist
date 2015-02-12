@@ -4,7 +4,7 @@ require 'rugged'
 
 module Linguist
   class LazyBlob
-    GIT_ATTR = ['linguist-language', 'linguist-vendored']
+    GIT_ATTR = ['linguist-documentation', 'linguist-language', 'linguist-vendored']
     GIT_ATTR_OPTS = { :priority => [:index], :skip_system => true }
     GIT_ATTR_FLAGS = Rugged::Repository::Attributes.parse_opts(GIT_ATTR_OPTS)
 
@@ -34,6 +34,14 @@ module Linguist
         return boolean_attribute(attr)
       else
         return super
+      end
+    end
+
+    def documentation?
+      if attr = git_attributes['linguist-documentation']
+        boolean_attribute(attr)
+      else
+        super
       end
     end
 
