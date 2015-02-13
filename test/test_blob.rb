@@ -442,10 +442,10 @@ class TestBlob < Minitest::Test
   end
 
   def test_documentation
-    assert_predicate fixture_blob("doc/foo.md"), :documentation?
-    assert_predicate fixture_blob("docs/foo.md"), :documentation?
-    refute_predicate fixture_blob("project/doc/foo.md"), :documentation?
-    refute_predicate fixture_blob("project/docs/foo.md"), :documentation?
+    assert_predicate fixture_blob("doc/foo.html"), :documentation?
+    assert_predicate fixture_blob("docs/foo.html"), :documentation?
+    refute_predicate fixture_blob("project/doc/foo.html"), :documentation?
+    refute_predicate fixture_blob("project/docs/foo.html"), :documentation?
 
     assert_predicate fixture_blob("Documentation/foo.md"), :documentation?
     refute_predicate fixture_blob("project/Documentation/foo.md"), :documentation?
