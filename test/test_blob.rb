@@ -470,6 +470,11 @@ class TestBlob < Minitest::Test
     assert_predicate fixture_blob("COPYING.txt"), :documentation?
     assert_predicate fixture_blob("foo/COPYING"), :documentation?
 
+    assert_predicate fixture_blob("INSTALL"), :documentation?
+    assert_predicate fixture_blob("INSTALL.md"), :documentation?
+    assert_predicate fixture_blob("INSTALL.txt"), :documentation?
+    assert_predicate fixture_blob("foo/INSTALL"), :documentation?
+
     refute_predicate fixture_blob("foo.md"), :documentation?
   end
 
