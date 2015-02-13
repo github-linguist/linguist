@@ -439,6 +439,8 @@ COBOL:
   ace_mode: cobol
 
 CSS:
+  type: markup
+  tm_scope: source.css
   ace_mode: css
   color: "#563d7c"
   extensions:
@@ -1173,6 +1175,7 @@ HTML:
   type: markup
   tm_scope: text.html.basic
   ace_mode: html
+  color: "#e44b23"
   aliases:
   - xhtml
   extensions:
@@ -2684,6 +2687,13 @@ STON:
   tm_scope: source.smalltalk
   ace_mode: text
 
+SVG:
+  type: data
+  extensions:
+  - .svg
+  tm_scope: text.xml
+  ace_mode: xml
+
 Sage:
   type: programming
   group: Python
@@ -3199,7 +3209,6 @@ XML:
   - .srdf
   - .stTheme
   - .sublime-snippet
-  - .svg
   - .targets
   - .tmCommand
   - .tmLanguage

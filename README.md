@@ -26,14 +26,14 @@ Linguist supports a number of different custom overrides strategies for language
 
 ### Using gitattributes
 
-Add a `.gitattributes` file to your project and use standard git-style path matchers for the files you want to override to set `linguist-language` and `linguist-vendored`.
+Add a `.gitattributes` file to your project and use standard git-style path matchers for the files you want to override to set `linguist-documentation`, `linguist-language`, and `linguist-vendored`.
 
 ```
 $ cat .gitattributes
 *.rb linguist-language=Java
 ```
 
-Checking code you didn't write, such as JavaScript libraries, into your git repo is a common practice, but this often inflates your project's language stats and may even cause your project to be labeled as another language. By default, Linguist treats all of the paths defined in [lib/linguist/vendor.yml](https://github.com/github/linguist/blob/master/lib/linguist/vendor.yml) as vendored and therefore doesn't include them in the language statistics for a repository.
+Checking code you didn't write, such as JavaScript libraries, into your git repo is a common practice, but this often inflates your project's language stats and may even cause your project to be labeled as another language. By default, Linguist treats all of the paths defined in [lib/linguist/vendor.yml](https://github.com/github/linguist/blob/master/lib/linguist/vendor.yml) as vendored and therefore doesn't include them in the language statistics for a repository. Vendored files are also hidden by default in diffs on github.com.
 
 Use the `linguist-vendored` attribute to vendor or un-vendor paths.
 
@@ -41,6 +41,16 @@ Use the `linguist-vendored` attribute to vendor or un-vendor paths.
 $ cat .gitattributes
 special-vendored-path/* linguist-vendored
 jquery.js linguist-vendored=false
+```
+
+Similar to vendored files, Linguist excludes documentation files from your project's language stats. (Unlike vendored files, documentation files are displayed in diffs on github.com.) [lib/linguist/documentation.yml](lib/linguist/documentation.yml) lists common documentation paths and excludes them from the language statistics for your repository.
+
+Use the `linguist-documentation` attribute to mark or unmark paths as documentation.
+
+```
+$ cat .gitattributes
+project-docs/* linguist-documentation
+docs/formatter.rb linguist-documentation=false
 ```
 
 ### Using Emacs and Vim modelines

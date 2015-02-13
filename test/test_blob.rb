@@ -441,6 +441,43 @@ class TestBlob < Minitest::Test
     assert sample_blob("subproject/activator.bat").vendored?
   end
 
+  def test_documentation
+    assert_predicate fixture_blob("doc/foo.html"), :documentation?
+    assert_predicate fixture_blob("docs/foo.html"), :documentation?
+    refute_predicate fixture_blob("project/doc/foo.html"), :documentation?
+    refute_predicate fixture_blob("project/docs/foo.html"), :documentation?
+
+    assert_predicate fixture_blob("Documentation/foo.md"), :documentation?
+    refute_predicate fixture_blob("project/Documentation/foo.md"), :documentation?
+
+    assert_predicate fixture_blob("README"), :documentation?
+    assert_predicate fixture_blob("README.md"), :documentation?
+    assert_predicate fixture_blob("README.txt"), :documentation?
+    assert_predicate fixture_blob("foo/README"), :documentation?
+
+    assert_predicate fixture_blob("CONTRIBUTING"), :documentation?
+    assert_predicate fixture_blob("CONTRIBUTING.md"), :documentation?
+    assert_predicate fixture_blob("CONTRIBUTING.txt"), :documentation?
+    assert_predicate fixture_blob("foo/CONTRIBUTING"), :documentation?
+
+    assert_predicate fixture_blob("LICENSE"), :documentation?
+    assert_predicate fixture_blob("LICENCE.md"), :documentation?
+    assert_predicate fixture_blob("LICENSE.txt"), :documentation?
+    assert_predicate fixture_blob("foo/LICENSE"), :documentation?
+
+    assert_predicate fixture_blob("COPYING"), :documentation?
+    assert_predicate fixture_blob("COPYING.md"), :documentation?
+    assert_predicate fixture_blob("COPYING.txt"), :documentation?
+    assert_predicate fixture_blob("foo/COPYING"), :documentation?
+
+    assert_predicate fixture_blob("INSTALL"), :documentation?
+    assert_predicate fixture_blob("INSTALL.md"), :documentation?
+    assert_predicate fixture_blob("INSTALL.txt"), :documentation?
+    assert_predicate fixture_blob("foo/INSTALL"), :documentation?
+
+    refute_predicate fixture_blob("foo.md"), :documentation?
+  end
+
   def test_language
     Samples.each do |sample|
       blob = sample_blob(sample[:path])
@@ -484,5 +521,30 @@ class TestBlob < Minitest::Test
     assert blob.new(nil).empty?
     refute blob.new(" ").empty?
     refute blob.new("nope").empty?
+  end
+
+  def test_include_in_language_stats
+    vendored = sample_blob("bower_components/custom/custom.js")
+    assert_predicate vendored, :vendored?
+    refute_predicate vendored, :include_in_language_stats?
+
+    documentation = fixture_blob("README")
+    assert_predicate documentation, :documentation?
+    refute_predicate documentation, :include_in_language_stats?
+
+    generated = sample_blob("CSS/bootstrap.min.css")
+    assert_predicate generated, :generated?
+    refute_predicate generated, :include_in_language_stats?
+
+    data = sample_blob("Ant Build System/filenames/ant.xml")
+    assert_equal :data, data.language.type
+    refute_predicate data, :include_in_language_stats?
+
+    prose = sample_blob("Markdown/tender.md")
+    assert_equal :prose, prose.language.type
+    refute_predicate prose, :include_in_language_stats?
+
+    included = sample_blob("HTML/pages.html")
+    assert_predicate included, :include_in_language_stats?
   end
 end
