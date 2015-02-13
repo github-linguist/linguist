@@ -332,5 +332,15 @@ module Linguist
     def tm_scope
       language && language.tm_scope
     end
+
+    DETECTABLE_TYPES = [:programming, :markup].freeze
+
+    # Internal: Should this blob be included in repository language statistics?
+    def include_in_language_stats?
+      !vendored? &&
+      !documentation? &&
+      !generated? &&
+      language && DETECTABLE_TYPES.include?(language.type)
+    end
   end
 end

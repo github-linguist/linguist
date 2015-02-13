@@ -8,8 +8,6 @@ module Linguist
   # Its primary purpose is for gathering language statistics across
   # the entire project.
   class Repository
-    DETECTABLE_TYPES = [:programming, :markup].freeze
-
     attr_reader :repository
 
     # Public: Create a new Repository based on the stats of
@@ -158,12 +156,8 @@ module Linguist
 
           blob = Linguist::LazyBlob.new(repository, delta.new_file[:oid], new, mode.to_s(8))
 
-          # Skip vendored or generated blobs
-          next if blob.vendored? || blob.documentation? || blob.generated? || blob.language.nil?
-
-          if DETECTABLE_TYPES.include?(blob.language.type)
-            file_map[new] = [blob.language.group.name, blob.size]
-          end
+          next unless blob.include_in_language_stats?
+          file_map[new] = [blob.language.group.name, blob.size]
         end
       end
 

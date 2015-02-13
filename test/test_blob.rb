@@ -517,4 +517,29 @@ class TestBlob < Minitest::Test
     refute blob.new(" ").empty?
     refute blob.new("nope").empty?
   end
+
+  def test_include_in_language_stats
+    vendored = sample_blob("bower_components/custom/custom.js")
+    assert_predicate vendored, :vendored?
+    refute_predicate vendored, :include_in_language_stats?
+
+    documentation = fixture_blob("README")
+    assert_predicate documentation, :documentation?
+    refute_predicate documentation, :include_in_language_stats?
+
+    generated = sample_blob("CSS/bootstrap.min.css")
+    assert_predicate generated, :generated?
+    refute_predicate generated, :include_in_language_stats?
+
+    data = sample_blob("Ant Build System/filenames/ant.xml")
+    assert_equal :data, data.language.type
+    refute_predicate data, :include_in_language_stats?
+
+    prose = sample_blob("Markdown/tender.md")
+    assert_equal :prose, prose.language.type
+    refute_predicate prose, :include_in_language_stats?
+
+    included = sample_blob("HTML/pages.html")
+    assert_predicate included, :include_in_language_stats?
+  end
 end
