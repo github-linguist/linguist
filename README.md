@@ -109,4 +109,6 @@ lib/linguist.rb
 
 Please check out our [contributing guidelines](CONTRIBUTING.md).
 
-##
+## Maintainers
+
+Linguist is maintained by @arfon and @bkeepers.
