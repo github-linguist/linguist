@@ -1,0 +1,11 @@
+(define (maxsubseq in)
+  (let loop
+    ((_sum 0) (_seq (list)) (maxsum 0) (maxseq (list)) (l in))
+    (if (null? l)
+        (cons maxsum (reverse maxseq))
+        (let* ((x (car l)) (sum (+ _sum x)) (seq (cons x _seq)))
+          (if (> sum 0)
+              (if (> sum maxsum)
+                  (loop sum seq    sum    seq (cdr l))
+                  (loop sum seq maxsum maxseq (cdr l)))
+              (loop 0 (list) maxsum maxseq (cdr l)))))))

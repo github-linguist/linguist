@@ -1,0 +1,17 @@
+(define (number->list num)
+  (do ((num num (quotient num 10))
+       (lst '() (cons (remainder num 10) lst)))
+    ((zero? num) lst)))
+
+(define (happy? num)
+  (let loop ((num num) (seen '()))
+    (cond ((= num 1) #t)
+          ((memv num seen) #f)
+          (else (loop (apply + (map (lambda (x) (* x x)) (number->list num)))
+                      (cons num seen))))))
+
+(display "happy numbers:")
+(let loop ((n 1) (more 8))
+  (cond ((= more 0) (newline))
+        ((happy? n) (display " ") (display n) (loop (+ n 1) (- more 1)))
+        (else (loop (+ n 1) more))))

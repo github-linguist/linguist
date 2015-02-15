@@ -1,0 +1,12 @@
+using System.Console;
+using Nemerle.Collections;
+
+module ArrayCat
+{
+    Main() : void
+    {
+        def arr1 = array[1, 2, 3]; def arr2 = array[4, 5, 6];
+        def arr12 = arr1.Append(arr2);                       // <----
+        foreach (i in arr12) Write($"$i  ");
+    }
+}

@@ -1,0 +1,5 @@
+print("Please enter sleep duration in seconds: ")
+input = int(readline(STDIN))
+println("Sleeping...")
+sleep(input)
+println("Awake!")

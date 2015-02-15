@@ -1,0 +1,8 @@
+y {
+    {dup cons} exch concat dup cons i
+}.
+
+/fac {
+    { {pop zero?} {pop succ} {{dup pred} dip i *} ifte }
+    y
+}.

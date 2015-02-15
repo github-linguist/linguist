@@ -1,0 +1,1 @@
+StringReverse["asdf"]

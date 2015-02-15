@@ -1,0 +1,1 @@
+CreateDialog["Hello world"]

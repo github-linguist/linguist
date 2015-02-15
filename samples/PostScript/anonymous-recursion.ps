@@ -1,0 +1,23 @@
+% primitive recursion
+/pfact {
+  {1} {*} primrec}.
+
+%linear recursion
+/lfact {
+   {dup 0 eq}
+   {pop 1}
+   {dup pred}
+   {*}
+   linrec}.
+
+% general recursion
+/gfact {
+    {0 eq}
+    {succ}
+    {dup pred}
+    {i *}
+    genrec}.
+
+% binary recursion
+/fib {
+    {2 lt} {} {pred dup pred} {+} binrec}.

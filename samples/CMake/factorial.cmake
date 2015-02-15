@@ -1,0 +1,10 @@
+function(factorial var n)
+  set(product 1)
+  foreach(i RANGE 2 ${n})
+    math(EXPR product "${product} * ${i}")
+  endforeach(i)
+  set(${var} ${product} PARENT_SCOPE)
+endfunction(factorial)
+
+factorial(f 12)
+message("12! = ${f}")

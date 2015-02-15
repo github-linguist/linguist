@@ -1,0 +1,1 @@
+io.write("Goodbye, World!")

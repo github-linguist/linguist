@@ -1,0 +1,2 @@
+InitNetwork()
+answer$=Hostname()

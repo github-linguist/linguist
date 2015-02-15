@@ -1,0 +1,3 @@
+while (true) {
+ println 'SPAM'
+}

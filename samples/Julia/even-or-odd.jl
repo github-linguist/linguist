@@ -1,0 +1,1 @@
+iseven(i), isodd(i)

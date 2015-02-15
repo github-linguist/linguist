@@ -1,0 +1,22 @@
+def Foo(n) {
+    mutable value : object = n;
+    fun (i : object) {
+        match(i) {
+            |x is int    => match(value) {
+                                |y is int => value = x + y;
+                                |y is double => value = x + y;
+                            }
+            |x is double => match(value) {
+                                |y is int => value = x + (y :> double);
+                                |y is double => value = x + y;
+                            }
+        }
+        value
+    }
+}
+
+def x = Foo(1);
+def y = Foo(2.2);
+x(5);
+System.Console.WriteLine(x(2.3));
+System.Console.WriteLine(y(3));

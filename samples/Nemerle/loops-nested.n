@@ -1,0 +1,24 @@
+using System;
+using System.Console;
+using Nemerle.Imperative;
+
+module NestedLoops
+{
+    Main() : void
+    {
+        def arr = array(10, 10);
+        def rnd = Random();
+
+        foreach ((i, j) in $[(i, j) | i in [0 .. 9], j in [0 .. 9]])
+            arr[i, j] = rnd.Next(1, 21);
+
+        Finish:
+        {
+            foreach ((i, j) in $[(i, j) | i in [0 .. 9], j in [0 .. 9]])
+            {
+                Write("{0}  ", arr[i, j]);
+                when (arr[i, j] == 20) Finish();
+            }
+        }
+    }
+}

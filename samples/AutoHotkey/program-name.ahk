@@ -1,0 +1,1 @@
+MsgBox, % A_ScriptName

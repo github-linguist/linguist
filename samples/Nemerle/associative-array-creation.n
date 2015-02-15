@@ -1,0 +1,17 @@
+using System;
+using System.Console;
+using Nemerle.Collections;
+
+module AssocArray
+{
+    Main() : void
+    {
+        def hash1 = Hashtable([(1, "one"), (2, "two"), (3, "three")]);
+        def hash2 = Hashtable(3);
+        foreach (e in hash1)
+            hash2[e.Value] = e.Key;
+        WriteLine("Enter 1, 2, or 3:");
+        def entry = int.Parse(ReadLine());
+        WriteLine(hash1[entry]);
+    }
+}

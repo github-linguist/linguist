@@ -1,0 +1,1 @@
+TUPLE: point x y ;

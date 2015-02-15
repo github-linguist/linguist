@@ -1,0 +1,1 @@
+ConsoleError("Goodbye, World!")

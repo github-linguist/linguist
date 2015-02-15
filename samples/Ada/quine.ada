@@ -1,0 +1,1 @@
+with Ada.Text_IO;procedure Self is Q:Character:='"';A:String:="with Ada.Text_IO;procedure Self is Q:Character:='&#39;;A:String:=;begin Ada.Text_IO.Put_Line(A(1..49)&Q&A(50..61)&Q&A&Q&A(62..A'Last));end Self;";begin Ada.Text_IO.Put_Line(A(1..49)&Q&A(50..61)&Q&A&Q&A(62..A'Last));end Self;

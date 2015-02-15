@@ -1,0 +1,1 @@
+ConsoleWrite("Goodbye, World!" & @CRLF)

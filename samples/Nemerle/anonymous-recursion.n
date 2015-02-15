@@ -1,0 +1,30 @@
+using System;
+using System.Console;
+
+module Fib
+{
+    Fib(n : long) : long
+    {
+        def fib(m : long)
+        {
+            |0 => 1
+            |1 => 1
+            |_ => fib(m - 1) + fib(m - 2)
+        }
+
+        match(n)
+        {
+            |n when (n < 0) => throw ArgumentException("Fib() not defined on negative numbers")
+            |_ => fib(n)
+        }
+    }
+
+    Main() : void
+    {
+        foreach (i in [-2 .. 10])
+        {
+            try {WriteLine("{0}", Fib(i));}
+            catch {|e is ArgumentException => WriteLine(e.Message)}
+        }
+    }
+}

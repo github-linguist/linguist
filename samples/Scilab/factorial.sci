@@ -1,0 +1,1 @@
+answer = factorial(N)

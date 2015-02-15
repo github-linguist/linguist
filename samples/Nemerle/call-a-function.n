@@ -1,0 +1,57 @@
+// no arguments
+f()
+
+// fixed arguments
+def f(a, b) { ... } // as an aside, functions defined with 'def' use type inference for parameters and return types
+f(1, 'a')
+
+// optional arguments
+def f(a, b = 0) { ... }
+f("hello")
+f("goodbye", 2)
+f("hey", b = 2) // using the name makes more sense if there's more than one optional argument, obviously
+
+// variable number of arguments
+def f(params args) { ... }
+def g(a, b, params rest) { ... }
+f(1, 2, 3) // arguments should all have the same type or may be coerced to a supertype
+g(1.0, 2, "a", "hello")
+
+// named arguments
+f(a = 'a', b = 0)
+f(b = 0, a = 'a')
+f('a', b = 0) // if mixing named and unnamed args, unnamed must be first and in correct order
+
+// statement context
+if (f(foo) == 42)
+    WriteLine($"$foo is the meaning to life, the universe and everything.")
+else WriteLine($"$foo is meaningless.")
+
+// first class function in an expression
+def a = numList.FoldLeft(f)
+
+// obtaining return value
+def a = f(3)
+
+// distinguishing built-in from user functions
+//   N/A?
+
+// distinguishing subroutines from functions
+//   N/A
+
+// stating whether passed by value or by reference
+//   .NET distinguishes between value types and reference types; if a reference type is passed by reference (using ref or out),
+//   the reference is passed by reference, which would allow a method to modify the object to which the reference refers
+def f(a, ref b) { ... }
+mutable someVar = "hey there" // doesn't make sense to pass immutable value by ref
+f(2, ref someVar)
+def g(a, out b) { ... }
+mutable someOtherVar // if passed by ref using 'out', the variable needn't be initialized
+g(2, out someOtherVar)
+
+// partial application
+def f(a, b) { ... }
+def g = f(2, _)
+def h = f(_, 2)
+def a = g(3) // equivalent to: def a = f(2, 3)
+def b = h(3) // equivalent to: def b = f(3, 2)

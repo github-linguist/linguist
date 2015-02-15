@@ -1,0 +1,13 @@
+using System.Console;
+
+module Beep
+{
+    Main() : void
+    {
+        Write("\a");
+        System.Threading.Thread.Sleep(1000);
+        Beep();
+        System.Threading.Thread.Sleep(1000);
+        Beep(2600, 1000); // limited OS support
+    }
+}

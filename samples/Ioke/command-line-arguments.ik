@@ -1,0 +1,1 @@
+System programArguments each(println)

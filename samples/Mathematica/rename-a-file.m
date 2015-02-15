@@ -1,0 +1,6 @@
+SetDirectory[NotebookDirectory[]]
+RenameFile["input.txt", "output.txt"]
+RenameDirectory["docs", "mydocs"]
+SetDirectory[$RootDirectory]
+RenameFile["input.txt", "output.txt"]
+RenameDirectory["docs", "mydocs"]

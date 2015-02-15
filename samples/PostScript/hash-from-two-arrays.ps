@@ -1,0 +1,6 @@
+% push our arrays
+ [/a /b /c /d /e] [1 2 3 4 5]
+% create a dict with it
+{aload pop} dip let currentdict end
+% show that we have created the hash
+ {= =} forall

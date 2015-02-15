@@ -1,0 +1,15 @@
+(define (^ base exponent)
+  (define (*^ exponent acc)
+    (if (= exponent 0)
+        acc
+        (*^ (- exponent 1) (* acc base))))
+  (*^ exponent 1))
+
+(display (^ 2 3))
+(newline)
+(display (^ (/ 1 2) 3))
+(newline)
+(display (^ 0.5 3))
+(newline)
+(display (^ 2+i 3))
+(newline)

@@ -1,0 +1,20 @@
+(define (factors n)
+  (let facs ((l '()) (d 2) (x n))
+    (cond ((= x 1) (if (null? l) '(1) l))
+	  ((< x (* d d)) (cons x l))
+	  (else (if (= 0 (modulo x d))
+		  (facs (cons d l) d (/ x d))
+		  (facs l (+ 1 d) x))))))
+
+(define (show l)
+  (display (car l))
+  (if (not (null? (cdr l)))
+    (begin
+      (display " × ")
+      (show (cdr l)))
+    (display "\n")))
+
+(do ((i 1 (+ i 1))) (#f)
+  (display i)
+  (display " = ")
+  (show (reverse (factors i))))

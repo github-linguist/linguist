@@ -1,0 +1,20 @@
+using System;
+using System.Console;
+
+module Input
+{
+    Main() : void
+    {
+        Write("Enter a string:");
+        _ = ReadLine()
+
+        mutable entry = 0;
+        mutable numeric = false;
+
+        do
+        {
+            Write("Enter 75000:");
+            numeric = int.TryParse(ReadLine(), out entry);
+        } while ((!numeric) || (entry != 75000))
+    }
+}

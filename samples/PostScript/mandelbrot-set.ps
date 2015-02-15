@@ -1,0 +1,46 @@
+%!PS-Adobe-2.0
+%%BoundingBox: 0 0 300 200
+%%EndComments
+/origstate save def
+/ld {load def} bind def
+/m /moveto ld /g /setgray ld
+/dot { currentpoint 1 0 360 arc fill } bind def
+%%EndProlog
+% param
+/maxiter 200 def
+% complex manipulation
+/complex { 2 array astore } def
+/real { 0 get } def
+/imag { 1 get } def
+/cmul { /a exch def /b exch def
+    a real b real mul
+    a imag b imag mul sub
+    a real b imag mul
+    a imag b real mul add
+    2 array astore
+} def
+/cadd { aload pop 3 -1 roll aload pop
+    3 -1 roll add
+    3 1 roll add exch 2 array astore
+} def
+/cconj { aload pop neg 2 array astore } def
+/cabs2 { dup cconj cmul 0 get} def
+% mandel
+200 100 translate
+-200 1 100 { /x exch def
+  -100 1 100 { /y exch def
+    /z0 0.0 0.0 complex def
+    0 1 maxiter { /iter exch def
+	x 100 div y 100 div complex
+	z0 z0 cmul
+	cadd dup /z0 exch def
+	cabs2 4 gt {exit} if
+    } for
+    iter maxiter div g
+    x y m dot
+  } for
+} for
+%
+showpage
+origstate restore
+%%EOF

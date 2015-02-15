@@ -1,0 +1,1 @@
+RunWait %comspec% /c cls

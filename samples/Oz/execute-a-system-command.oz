@@ -1,0 +1,1 @@
+{OS.system "ls" _}

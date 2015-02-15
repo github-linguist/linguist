@@ -1,0 +1,20 @@
+using System;
+using System.Console;
+using System.Collections;
+
+module ArrayOps
+{
+    Main() : void
+    {
+        def fives = array(10);
+        foreach (i in [1 .. 10]) fives[i - 1] = i * 5;
+        def ten = fives[1];
+        WriteLine($"Ten: $ten");
+
+        def dynamic = ArrayList();
+        dynamic.Add(1);
+        dynamic.Add(3);
+        dynamic[1] = 2;
+        foreach (i in dynamic) Write($"$i\t"); // Nemerle isn't great about displaying arrays, it's better with lists though
+    }
+}

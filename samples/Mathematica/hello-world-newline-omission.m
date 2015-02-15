@@ -1,0 +1,1 @@
+NotebookWrite[EvaluationNotebook[], "Goodbye, World!"]

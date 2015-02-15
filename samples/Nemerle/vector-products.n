@@ -1,0 +1,36 @@
+using System.Console;
+
+module VectorProducts3d
+{
+    Dot(x : int * int * int, y : int * int * int) : int
+    {
+        def (x1, x2, x3) = x;
+        def (y1, y2, y3) = y;
+        (x1 * y1) + (x2 * y2) + (x3 * y3)
+    }
+
+    Cross(x : int * int * int, y : int * int * int) : int * int * int
+    {
+        def (x1, x2, x3) = x;
+        def (y1, y2, y3) = y;
+        ((x2 * y3 - x3 * y2), (x3 * y1 - x1 * y3), (x1 * y2 - x2 * y1))
+    }
+
+    ScalarTriple(a : int * int * int, b : int * int * int, c : int * int * int) : int
+    {
+        Dot(a, Cross(b, c))
+    }
+
+    VectorTriple(a : int * int * int, b : int * int * int, c : int * int * int) : int * int * int
+    {
+        Cross(a, Cross(b, c))
+    }
+
+    Main() : void
+    {
+        def a = (3, 4, 5); def b = (4, 3, 5); def c = (-5, -12, -13);
+        WriteLine(Dot(a, b)); WriteLine(Cross(a, b));
+        WriteLine(ScalarTriple(a, b, c));
+        WriteLine(VectorTriple(a, b, c));
+    }
+}

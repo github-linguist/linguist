@@ -1,0 +1,38 @@
+using System.Console;
+
+namespace RosettaCode
+{
+    abstract class Fruit
+    {
+        abstract public Eat() : void;
+        abstract public Peel() : void;
+
+        virtual public Cut() : void      // an abstract class con contain a mixture of abstract and implemented methods
+        {                                // the virtual keyword allows the method to be overridden by derivative classes
+            WriteLine("Being cut.");
+        }
+    }
+
+    interface IJuiceable
+    {
+        Juice() : void;           // interfaces contain only the signatures of methods
+    }
+
+    class Orange : Fruit, IJuiceable
+    {
+        public override Eat() : void     // implementations of abstract methods need to be marked override
+        {
+            WriteLine("Being eaten.");
+        }
+
+        public override Peel() : void
+        {
+            WriteLine("Being peeled.");
+        }
+
+        public Juice() : void
+        {
+            WriteLine("Being juiced.");
+        }
+    }
+}

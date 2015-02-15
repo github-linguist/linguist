@@ -1,0 +1,28 @@
+using System;
+using Nemerle.Collections;
+using System.Linq;
+using System.Console;
+
+module SeqMax
+{
+    SeqMax[T, U] (this seq : T) : U
+      where T : Seq[U]
+      where U : IComparable
+    {
+        $[s | s in seq].Fold(seq.First(), (x, y) => {if (x.CompareTo(y) > 0) x else y})
+    }
+
+    Main() : void
+    {
+        def numbers = [1, 12, 3, -5, 6, 23];
+        def letters = ['s', 'p', 'a', 'm'];
+
+        // using SeqMax() method (as task says to "create a function")
+        WriteLine($"numbers.SeqMax() = $(numbers.SeqMax())");
+        WriteLine($"letters.SeqMax() = $(letters.SeqMax())");
+
+        // using the already available Max() method
+        WriteLine($"numbers.Max() = $(numbers.Max())");
+        WriteLine($"letters.Max() = $(letters.Max())")
+    }
+}

@@ -1,0 +1,5 @@
+(define x (expt 5 (expt 4 (expt 3 2))))
+(define y (number->string x))
+(define l (string-length y))
+(display (string-append "5**4**3**2 = " (substring y 0 20) "..." (substring y (- l 20) l) " and has " (number->string l) " digits"))
+(newline)

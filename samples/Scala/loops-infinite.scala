@@ -1,0 +1,2 @@
+while (true)
+  println("SPAM")

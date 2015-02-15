@@ -1,0 +1,15 @@
+using System;
+using System.Console;
+
+module RemoveChars
+{
+    Main() : void
+    {
+        def str = "*A string*";
+        def end = str.Remove(str.Length - 1);  // from pos to end
+        def beg = str.Remove(0, 1);            // start pos, # of chars to remove
+        def both = str.Trim(array['*']);       // with Trim() you need to know what char's you're removing
+
+        WriteLine($"$str -> $beg -> $end -> $both");
+    }
+}

@@ -1,0 +1,23 @@
+using System.Console;
+
+module CountSubStrings
+{
+    CountSubStrings(this text : string, target : string) : int
+    {
+        match (target) {
+            |"" => 0
+            |_ => (text.Length - text.Replace(target, "").Length) / target.Length
+        }
+    }
+
+    Main() : void
+    {
+        def text1 = "the three truths";
+        def target1 = "th";
+        def text2 = "ababababab";
+        def target2 = "abab";
+
+        WriteLine($"$target1 occurs $(text1.CountSubStrings(target1)) times in $text1");
+        WriteLine($"$target2 occurs $(text2.CountSubStrings(target2)) times in $text2");
+    }
+}

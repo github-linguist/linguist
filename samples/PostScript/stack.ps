@@ -1,0 +1,11 @@
+% empty? is already defined.
+/push {exch cons}.
+/pop {uncons exch pop}.
+[2 3 4 5 6] 1 push
+= [1 2 3 4 5 6]
+[1 2 3 4 5 6] pop
+=[2 3 4 5 6]
+[2 3 4 5 6] empty?
+=false
+[] empty?
+=true

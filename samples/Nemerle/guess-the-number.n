@@ -1,0 +1,20 @@
+using System;
+using System.Console;
+
+module Guess
+{
+    Main() : void
+    {
+        def rand = Random();
+        def x = rand.Next(1, 11);  // returns 1 <= x < 11
+        mutable guess = 0;
+
+        do
+        {
+            WriteLine("Guess a nnumber between 1 and 10:");
+            guess = Int32.Parse(ReadLine());
+        } while (guess != x);
+
+        WriteLine("Well guessed!");
+    }
+}

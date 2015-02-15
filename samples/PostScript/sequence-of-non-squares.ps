@@ -1,0 +1,10 @@
+/nonsquare { dup sqrt .5 add floor add } def
+/issquare { dup sqrt floor dup mul eq } def
+
+1 1 22 { nonsquare = } for
+
+1 1 1000 {
+        dup nonsquare issquare {
+                (produced a square!) = = exit
+        } if pop
+} for

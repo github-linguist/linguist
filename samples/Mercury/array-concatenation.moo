@@ -1,0 +1,1 @@
+A `append` B = C

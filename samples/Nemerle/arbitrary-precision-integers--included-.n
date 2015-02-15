@@ -1,0 +1,21 @@
+using System.Console;
+using System.Numerics;
+using System.Numerics.BigInteger;
+
+module BigInt
+{
+    Main() : void
+    {
+        def n = Pow(5, Pow(4, Pow(3, 2) :> int) :> int).ToString();
+        def len = n.Length;
+        def first20 = n.Substring(0, 20);
+        def last20 = n.Substring(len - 20, 20);
+
+        assert (first20 == "62060698786608744707", "High order digits are incorrect");
+        assert (last20 == "92256259918212890625", "Low order digits are incorrect");
+        assert (len == 183231, "Result contains wrong number of digits");
+
+        WriteLine("Result: {0} ... {1}", first20, last20);
+        WriteLine($"Length of result: $len digits");
+    }
+}

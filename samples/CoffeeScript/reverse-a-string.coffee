@@ -1,0 +1,1 @@
+"qwerty".split("").reverse().join ""

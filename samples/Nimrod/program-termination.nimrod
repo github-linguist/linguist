@@ -1,0 +1,2 @@
+if problem:
+  quit(QuitFailure)

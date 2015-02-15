@@ -1,0 +1,18 @@
+using System;
+using System.Console;
+using Nemerle;
+
+module StrCopy
+{
+    Main() : void
+    {
+        mutable str1 = "I am not changed";      // str1 is bound to literal
+        def str2 = lazy(str1);                  // str2 will be bound when evaluated
+        def str3 = str1;                        // str3 is bound to value of str1
+        str1 = "I am changed";                  // str1 is bound to new literal
+        Write($"$(str1)\n$(str2)\n$(str3)\n");  // str2 is bound to value of str1
+        // Output: I am changed
+        //         I am changed
+        //         I am not changed
+    }
+}

@@ -1,0 +1,12 @@
+'a'                                              // character literal
+'\n'                                             // also a character literal
+"foo\nbar"                                       // string literal
+@"x\n"                                           // same as "x\\n"
+@"x
+ y"                                              // same as "x\n y"
+@"""Hi!"""                                       // "" replaces \" to escape a literal quote mark
+<#This string type can contain any symbols including "
+and new lines. It does not support escape codes
+like "\n".#>                                     // same as "This string type can contain any symbols including \"\nand new lines. "
+                                                 //       + "It does not\nsupport escape codes\nlike \"\\n\"."
+<#Test <# Inner #> end#>                         // same as "Test <# Inner #> end" (i.e. this string type support recursion.

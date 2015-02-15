@@ -1,0 +1,1 @@
+MedianFilter[img,n]

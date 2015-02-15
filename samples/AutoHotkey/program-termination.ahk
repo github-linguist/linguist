@@ -1,0 +1,2 @@
+If (problem)
+  ExitApp

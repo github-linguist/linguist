@@ -1,0 +1,27 @@
+using System;
+using System.Console;
+
+module Selection
+{
+    public static Sort[T](this a : array[T]) : void
+      where T : IComparable
+    {
+        mutable k = 0;
+        def lastindex = a.Length - 1;
+
+        foreach (i in [0 .. lastindex])
+        {
+            k = i;
+            foreach (j in [i .. lastindex])
+                when (a[j].CompareTo(a[k]) < 0) k = j;
+            a[i] <-> a[k];
+        }
+    }
+
+    Main() : void
+    {
+        def arr = array[6, 2, 8, 3, 9, 4, 7, 3, 9, 1];
+        arr.Sort();
+        foreach (i in arr) Write($"$i  ");
+    }
+}

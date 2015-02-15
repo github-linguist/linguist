@@ -1,0 +1,7 @@
+/square { dup mul } def
+/plus1  { 1 add } def
+/sqPlus1{ square plus1 } def
+
+% if the task really demands we make a function called "compose", well
+/compose { def } def      % so now we can say:
+/sqPlus1 { square plus1 } compose

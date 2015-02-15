@@ -1,0 +1,38 @@
+Needs["Calendar`"];DateFormat[x_]:=DateString[x,{"DayNameShort"," ","DayShort"," ","MonthName"}]
+Map[StringJoin[ToString[#]," Easter: ",DateFormat[EasterSunday[#]],
+", Ascension: ",DateFormat[DaysPlus[EasterSunday[#],39]],
+", Pentecost: ",DateFormat[DaysPlus[EasterSunday[#],49]],
+", Trinity: ",DateFormat[DaysPlus[EasterSunday[#],56]],
+", Corpus: ",DateFormat[DaysPlus[EasterSunday[#],60]]]&
+,Range[400,2100,100]~Join~Range[2010,2020]]
+
+Output
+{400 Easter: Sun 2 April, Ascension: Thu 11 May, Pentecost: Sun 21 May, Trinity: Sun 28 May, Corpus: Thu 1 June,
+ 500 Easter: Sun 4 April, Ascension: Thu 13 May, Pentecost: Sun 23 May, Trinity: Sun 30 May, Corpus: Thu 3 June,
+ 600 Easter: Sun 13 April, Ascension: Thu 22 May, Pentecost: Sun 1 June, Trinity: Sun 8 June, Corpus: Thu 12 June,
+ 700 Easter: Sun 15 April, Ascension: Thu 24 May, Pentecost: Sun 3 June, Trinity: Sun 10 June, Corpus: Thu 14 June,
+ 800 Easter: Sun 23 April, Ascension: Thu 1 June, Pentecost: Sun 11 June, Trinity: Sun 18 June, Corpus: Thu 22 June,
+ 900 Easter: Sun 28 March, Ascension: Thu 6 May, Pentecost: Sun 16 May, Trinity: Sun 23 May, Corpus: Thu 27 May,
+1000 Easter: Sun 30 March, Ascension: Thu 8 May, Pentecost: Sun 18 May, Trinity: Sun 25 May, Corpus: Thu 29 May,
+1100 Easter: Sun 8 April, Ascension: Thu 17 May, Pentecost: Sun 27 May, Trinity: Sun 3 June, Corpus: Thu 7 June,
+1200 Easter: Sun 9 April, Ascension: Thu 18 May, Pentecost: Sun 28 May, Trinity: Sun 4 June, Corpus: Thu 8 June,
+1300 Easter: Sun 18 April, Ascension: Thu 27 May, Pentecost: Sun 6 June, Trinity: Sun 13 June, Corpus: Thu 17 June,
+1400 Easter: Sun 20 April, Ascension: Thu 29 May, Pentecost: Sun 8 June, Trinity: Sun 15 June, Corpus: Thu 19 June,
+1500 Easter: Sun 1 April, Ascension: Thu 10 May, Pentecost: Sun 20 May, Trinity: Sun 27 May, Corpus: Thu 31 May,
+1600 Easter: Sun 2 April, Ascension: Thu 11 May, Pentecost: Sun 21 May, Trinity: Sun 28 May, Corpus: Thu 1 June,
+1700 Easter: Sun 11 April, Ascension: Thu 20 May, Pentecost: Sun 30 May, Trinity: Sun 6 June, Corpus: Thu 10 June,
+1800 Easter: Sun 13 April, Ascension: Thu 22 May, Pentecost: Sun 1 June, Trinity: Sun 8 June, Corpus: Thu 12 June,
+1900 Easter: Sun 15 April, Ascension: Thu 24 May, Pentecost: Sun 3 June, Trinity: Sun 10 June, Corpus: Thu 14 June,
+2000 Easter: Sun 23 April, Ascension: Thu 1 June, Pentecost: Sun 11 June, Trinity: Sun 18 June, Corpus: Thu 22 June,
+2100 Easter: Sun 28 March, Ascension: Thu 6 May, Pentecost: Sun 16 May, Trinity: Sun 23 May, Corpus: Thu 27 May,
+2010 Easter: Sun 4 April, Ascension: Thu 13 May, Pentecost: Sun 23 May, Trinity: Sun 30 May, Corpus: Thu 3 June,
+2011 Easter: Sun 24 April, Ascension: Thu 2 June, Pentecost: Sun 12 June, Trinity: Sun 19 June, Corpus: Thu 23 June,
+2012 Easter: Sun 8 April, Ascension: Thu 17 May, Pentecost: Sun 27 May, Trinity: Sun 3 June, Corpus: Thu 7 June,
+2013 Easter: Sun 31 March, Ascension: Thu 9 May, Pentecost: Sun 19 May, Trinity: Sun 26 May, Corpus: Thu 30 May,
+2014 Easter: Sun 20 April, Ascension: Thu 29 May, Pentecost: Sun 8 June, Trinity: Sun 15 June, Corpus: Thu 19 June,
+2015 Easter: Sun 5 April, Ascension: Thu 14 May, Pentecost: Sun 24 May, Trinity: Sun 31 May, Corpus: Thu 4 June,
+2016 Easter: Sun 27 March, Ascension: Thu 5 May, Pentecost: Sun 15 May, Trinity: Sun 22 May, Corpus: Thu 26 May,
+2017 Easter: Sun 16 April, Ascension: Thu 25 May, Pentecost: Sun 4 June, Trinity: Sun 11 June, Corpus: Thu 15 June,
+2018 Easter: Sun 1 April, Ascension: Thu 10 May, Pentecost: Sun 20 May, Trinity: Sun 27 May, Corpus: Thu 31 May,
+2019 Easter: Sun 21 April, Ascension: Thu 30 May, Pentecost: Sun 9 June, Trinity: Sun 16 June, Corpus: Thu 20 June,
+2020 Easter: Sun 12 April, Ascension: Thu 21 May, Pentecost: Sun 31 May, Trinity: Sun 7 June, Corpus: Thu 11 June}

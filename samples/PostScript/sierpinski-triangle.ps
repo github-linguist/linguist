@@ -1,0 +1,15 @@
+%!PS-Adobe-3.0
+%%BoundingBox 0 0 300 300
+
+/F { 1 0 rlineto } def
+/+ { 120 rotate } def
+/- {-120 rotate } def
+/v {.5 .5 scale } def
+/^ { 2  2 scale } def
+/!0{ dup 1 sub dup -1 eq not } def
+
+/X { !0 { v X + F - X - F + X ^ } { F } ifelse pop } def
+
+0 1 8 { 300 300 scale 0 1 12 div moveto
+        X + F + F fill showpage         } for
+%%EOF

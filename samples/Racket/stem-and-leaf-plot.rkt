@@ -1,0 +1,10 @@
+#lang racket
+(define (show-stem+leaf data)
+  (define xs (sort data <))
+  (for ([stem (add1 (floor (/ (last xs) 10)))])
+    (printf "~a|" (~a #:width 2 #:align 'right stem))
+    (for ([i xs])
+      (define-values [q r] (quotient/remainder i 10))
+      (when (= q stem) (printf " ~a" r)))
+    (newline)))
+(show-stem+leaf (sequence->list (in-producer read eof)))

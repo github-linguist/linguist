@@ -1,0 +1,1 @@
+lines <- readLines("file.txt")

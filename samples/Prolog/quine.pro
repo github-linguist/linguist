@@ -1,0 +1,2 @@
+quine :-
+	listing(quine).

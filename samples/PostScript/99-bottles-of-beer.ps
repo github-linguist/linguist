@@ -1,0 +1,37 @@
+%!PS
+/Helvetica findfont 9 scalefont setfont
+
+/printBeer {
+    dup
+    20 string cvs show
+    ( bottle) show
+    1 ne
+    { (s) show } if
+    ( of beer) show
+} def
+
+/printVerse {
+    dup
+    dup
+    dup
+    7 mul
+    50 add
+    /yPos exch def
+    15 yPos moveto
+    printBeer
+    ( on the wall, ) show
+    printBeer
+    (. ) show
+    (Take one down, pass it around, ) show
+    1 sub
+    printBeer
+    ( on the wall. ) show
+} def
+
+/song {
+    100 -1 1 { printVerse } for
+} def
+
+song
+showpage
+%%EOF

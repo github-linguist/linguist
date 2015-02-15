@@ -1,0 +1,39 @@
+HAI 1.3
+
+I HAS A plane ITZ A BUKKIT
+IM IN YR init UPPIN YR i TIL BOTH SAEM i AN 10000
+    plane HAS A SRS i ITZ FAIL
+IM OUTTA YR init
+
+I HAS A x ITZ 50, I HAS A y ITZ 50
+I HAS A dir ITZ 0, I HAS A pos, I HAS A cell
+
+BTW, WE PURRTIND WE HAS A 2D STRUKSHUR FUR EZ AKSESS
+IM IN YR walker
+    pos R SUM OF PRODUKT OF y AN 100 AN x
+    cell R NOT plane'Z SRS pos
+    plane'Z SRS pos R cell
+    dir R MOD OF SUM OF dir AN SUM OF 5 AN PRODUKT OF cell AN 2 AN 4
+
+    dir, WTF?
+    OMG 0, x R  SUM OF x AN 1, GTFO
+    OMG 1, y R DIFF OF y AN 1, GTFO
+    OMG 2, x R DIFF OF x AN 1, GTFO
+    OMG 3, y R  SUM OF y AN 1, GTFO
+    OIC
+
+    BTW, CHEKIN TEH ANTZ BOUNDZ
+    WON OF BOTH SAEM x AN -1 AN BOTH SAEM x AN 100, O RLY?, YA RLY, GTFO, OIC
+    WON OF BOTH SAEM y AN -1 AN BOTH SAEM y AN 100, O RLY?, YA RLY, GTFO, OIC
+IM OUTTA YR walker
+
+IM IN YR printer UPPIN YR cell TIL BOTH SAEM cell AN 10000
+    plane'Z SRS cell, O RLY?
+        YA RLY, VISIBLE "#"!
+        NO WAI, VISIBLE "."!
+    OIC
+
+    NOT MOD OF SUM OF cell AN 1 AN 100, O RLY?, YA RLY, VISIBLE "", OIC
+IM OUTTA YR printer BTW, UR OUTTA CYAN
+
+KTHXBYE

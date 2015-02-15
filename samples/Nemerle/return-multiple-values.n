@@ -1,0 +1,23 @@
+using System;
+using System.Console;
+using Nemerle.Assertions;
+
+module MultReturn
+{
+    MinMax[T] (ls : list[T]) : T * T
+      where T : IComparable
+      requires ls.Length > 0 otherwise throw ArgumentException("An empty list has no extreme values.")
+    {
+        def greaterOf(a, b) { if (a.CompareTo(b) > 0) a else b }
+        def lesserOf(a, b)  { if (a.CompareTo(b) < 0) a else b }
+
+        (ls.FoldLeft(ls.Head, lesserOf), ls.FoldLeft(ls.Head, greaterOf)) // packing tuple
+    }
+
+    Main() : void
+    {
+        def nums = [1, 34, 12, -5, 4, 0];
+        def (min, max) = MinMax(nums);                                   // unpacking tuple
+        WriteLine($"Min of nums = $min; max of nums = $max");
+    }
+}

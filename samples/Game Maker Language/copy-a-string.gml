@@ -1,0 +1,2 @@
+src = "string";
+dest = src;

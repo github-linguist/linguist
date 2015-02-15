@@ -1,0 +1,18 @@
+(define (root number degree tolerance)
+  (define (good-enough? next guess)
+    (< (abs (- next guess)) tolerance))
+  (define (improve guess)
+    (/ (+ (* (- degree 1) guess) (/ number (expt guess (- degree 1)))) degree))
+  (define (*root guess)
+    (let ((next (improve guess)))
+      (if (good-enough? next guess)
+          guess
+          (*root next))))
+  (*root 1.0))
+
+(display (root (expt 2 10) 10 0.1))
+(newline)
+(display (root (expt 2 10) 10 0.01))
+(newline)
+(display (root (expt 2 10) 10 0.001))
+(newline)

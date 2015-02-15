@@ -1,0 +1,13 @@
+def i = 255;
+def j = 2;
+
+WriteLine($"$i and $j is $(i & j)");
+WriteLine($"$i or $j is $(i | j)");
+WriteLine($"$i xor $j is $(i ^ j)");
+WriteLine($"not $i is $(~i)");
+WriteLine($"$i lshift $j is $(i << j)");
+WriteLine($"$i arshift $j is $(i >> j)");          // When the left operand of the >> operator is of a signed integral type,
+                                                   // the operator performs an arithmetic shift right
+WriteLine($"$(i :> uint) rshift $j is $(c >> j)"); // When the left operand of the >> operator is of an unsigned integral type,
+                                                   // the operator performs a logical shift right
+// there are no rotation operators in Nemerle, but you could define your own w/ a macro if you really wanted it

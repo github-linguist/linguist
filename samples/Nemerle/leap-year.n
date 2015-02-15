@@ -1,0 +1,37 @@
+using System;
+using System.Console;
+using Nemerle.Assertions;
+using Nemerle.Imperative;
+
+module LeapYear
+{
+    IsLeapYear(year : int) : bool
+      requires year >= 1582 otherwise throw ArgumentOutOfRangeException("year must be in Gregorian calendar.")
+      // without the contract enforcement would work for proleptic Gregorian Calendar
+      // in that case we might still want to require year > 0
+    {
+        when (year % 400 == 0) return true;
+        when (year % 100 == 0) return false;
+        when (year % 4   == 0) return true;
+        false
+
+
+    }
+
+    Main() : void
+    {
+        WriteLine("2000 is a leap year: {0}", IsLeapYear(2000));
+        WriteLine("2100 is a leap year: {0}", IsLeapYear(2100));
+        try {
+            WriteLine("1500 is a leap year: {0}", IsLeapYear(1500));
+        }
+        catch {
+            |e is ArgumentOutOfRangeException => WriteLine(e.Message)
+        }
+        WriteLine("1500 is a leap year: {0}", DateTime.IsLeapYear(1500)); // is false, indicating use of proleptic
+                                                                          // Gregorian calendar rather than reverting to
+                                                                          // Julian calendar
+        WriteLine("{0} is a leap year: {1}", DateTime.Now.Year,
+                                             DateTime.IsLeapYear(DateTime.Now.Year));
+    }
+}

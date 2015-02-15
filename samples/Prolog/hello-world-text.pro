@@ -1,0 +1,1 @@
+:- write('Goodbye, World!'), nl.

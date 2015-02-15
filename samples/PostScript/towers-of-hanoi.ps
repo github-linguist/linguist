@@ -1,0 +1,48 @@
+%!PS-Adobe-3.0
+%%BoundingBox: 0 0 300 300
+
+/plate {
+        exch 100 mul 50 add exch th mul 10 add moveto
+        dup s mul neg 2 div 0 rmoveto
+        dup s mul 0 rlineto
+        0 th rlineto
+        s neg mul 0 rlineto
+        closepath gsave .5 setgray fill grestore 0 setgray stroke
+} def
+
+/drawtower {
+        0 1 2 { /x exch def /y 0 def
+                tower x get {
+                        dup 0 gt { x y plate /y y 1 add def } {pop} ifelse
+                } forall
+        } for showpage
+} def
+
+/apop { [ exch aload pop /last exch def ] last } def
+/apush{ [ 3 1 roll aload pop counttomark -1 roll ] } def
+
+/hanoi {
+        0 dict begin /from /mid /to /h 5 -1 2 { -1 roll def } for
+        h 1 eq {
+                tower from get apop tower to get apush
+                tower to 3 -1 roll put
+                tower from 3 -1 roll put
+                drawtower
+        } {
+                /h h 1 sub def
+                from to mid h hanoi
+                from mid to 1 hanoi
+                mid from to h hanoi
+        } ifelse
+        end
+} def
+
+
+/n 12 def
+/s 90 n div def
+/th 180 n div def
+/tower [ [n 1 add -1 2 { } for ] [] [] ] def
+
+drawtower 0 1 2 n hanoi
+
+%%EOF

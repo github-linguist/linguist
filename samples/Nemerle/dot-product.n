@@ -1,0 +1,17 @@
+using System;
+using System.Console;
+using Nemerle.Collections.NCollectionsExtensions;
+
+module DotProduct
+{
+    DotProduct(x : array[int], y : array[int]) : int
+    {
+        $[(a * b)|(a, b) in ZipLazy(x, y)].FoldLeft(0, _+_);
+    }
+
+    Main() : void
+    {
+        def arr1 = array[1, 3, -5]; def arr2 = array[4, -2, -1];
+        WriteLine(DotProduct(arr1, arr2));
+    }
+}

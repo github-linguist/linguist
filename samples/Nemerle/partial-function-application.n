@@ -1,0 +1,45 @@
+using System;
+using System.Console;
+
+module Partial
+{
+    fs[T] (f : T -> T, s : list[T]) : list[T]
+    {
+        $[f(x)| x in s]
+    }
+
+    f1 (x : int) : int
+    {
+        x * 2
+    }
+
+    f2 (x : int) : int
+    {
+        x * x
+    }
+
+    curry[T, U, V] (f : T * U -> V, x : T) : U -> V
+    {
+        f(x, _)
+    }
+
+    // curryr() isn't actually used in this task, I just include it for symmetry
+    curryr[T, U, V] (f : T * U -> V, x : U) : T -> V
+    {
+        f(_, x)
+    }
+
+    Main() : void
+    {
+        def fsf1 = curry(fs, f1);
+        def fsf2 = curry(fs, f2);
+        def test1 = $[0 .. 3];
+        def test2 = $[x | x in [2 .. 8], x % 2 == 0];
+
+        WriteLine (fsf1(test1));
+        WriteLine (fsf1(test2));
+        WriteLine (fsf2(test1));
+        WriteLine (fsf2(test2));
+
+    }
+}

@@ -1,0 +1,13 @@
+using System.Text;
+using System.Net.Sockets;
+
+module Program
+{
+    Main() : void
+    {
+        def sock = Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        sock.Connect("127.0.0.1", 1000);
+        _ = sock.Send(Encoding.ASCII.GetBytes("Hell, world!"));
+        sock.Close();
+    }
+}

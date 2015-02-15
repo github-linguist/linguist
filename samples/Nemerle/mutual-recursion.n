@@ -1,0 +1,24 @@
+using System;
+using System.Console;
+
+module Hofstadter
+{
+    F(n : int) : int
+    {
+        |0 => 1
+        |_ => n - M(F(n - 1))
+    }
+
+    M(n : int) : int
+    {
+        |0 => 0
+        |_ => n - F(M(n - 1))
+    }
+
+    Main() : void
+    {
+        foreach (n in [0 .. 20]) Write("{0} ", F(n));
+        WriteLine();
+        foreach (n in [0 .. 20]) Write("{0} ", M(n));
+    }
+}

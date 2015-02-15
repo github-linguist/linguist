@@ -1,0 +1,14 @@
+using System;
+using System.Console;
+using Nemerle.Utility.NString;
+
+module Tokenize
+{
+    Main() : void
+    {
+        def cswords = "Hello,How,Are,You,Today";
+        WriteLine(Concat(".", $[s | s in cswords.Split(',')]));
+        // Split() produces an array while Concat() consumes a list
+        // a quick in place list comprehension takes care of that
+    }
+}

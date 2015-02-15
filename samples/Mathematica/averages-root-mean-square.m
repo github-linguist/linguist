@@ -1,0 +1,1 @@
+RootMeanSquare@Range[10]

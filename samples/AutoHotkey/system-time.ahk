@@ -1,0 +1,2 @@
+FormatTime, t
+MsgBox,% t

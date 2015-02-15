@@ -1,0 +1,23 @@
+// define a new exception
+class MyException : Exception
+{
+    ...
+}
+
+// throw an exception
+Foo() : void
+{
+    throw MyException();
+}
+
+// catching exceptions
+try {
+    Foo();
+}
+catch { // catch block uses pattern matching syntax
+    |e is MyException => ... // handle exception
+    |_ => throw e // rethrow unhandled exception
+}
+finally {
+    ... // code executes whether or not exception was thrown
+}

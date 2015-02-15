@@ -1,0 +1,19 @@
+using System.IO;
+using System.Console;
+
+module EmptyDirectory
+{
+    IsDirectoryEmpty(dir : string) : bool
+    {
+        Directory.GetFileSystemEntries(dir).Length == 0
+    }
+
+    Main(args : array[string]) : void
+    {
+        foreach (dir in args) {
+            when (Directory.Exists(dir)) {
+                WriteLine("{0} {1} empty.", dir, if (IsDirectoryEmpty(dir))  "is" else "is not");
+            }
+        }
+    }
+}

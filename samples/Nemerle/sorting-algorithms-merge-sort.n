@@ -1,0 +1,48 @@
+using System;
+using System.Console;
+using Nemerle.Collections;
+
+module Mergesort
+{
+    MergeSort[TEnu, TItem] (sort_me : TEnu) : list[TItem]
+      where TEnu  : Seq[TItem]
+      where TItem : IComparable
+    {
+        def split(xs) {
+            def loop (zs, xs, ys) {
+                |(x::y::zs, xs, ys) => loop(zs, x::xs, y::ys)
+                |(x::[], xs, ys) => (x::xs, ys)
+                |([], xs, ys) => (xs, ys)
+            }
+
+            loop(xs, [], [])
+        }
+
+        def merge(xs, ys) {
+            def loop(res, xs, ys) {
+                |(res, [], []) => res.Reverse()
+                |(res, x::xs, []) => loop(x::res, xs, [])
+                |(res, [], y::ys) => loop(y::res, [], ys)
+                |(res, x::xs, y::ys) => if (x.CompareTo(y) < 0) loop(x::res, xs, y::ys)
+                                        else loop(y::res, x::xs, ys)
+            }
+            loop ([], xs, ys)
+        }
+
+        def ms(xs) {
+            |[] => []
+            |[x] => [x]
+            |_ => { def (left, right) = split(xs); merge(ms(left), ms(right)) }
+        }
+
+        ms(sort_me.NToList())
+    }
+
+    Main() : void
+    {
+        def test1 = MergeSort([1, 5, 9, 2, 7, 8, 4, 6, 3]);
+        def test2 = MergeSort(array['a', 't', 'w', 'f', 'c', 'y', 'l']);
+        WriteLine(test1);
+        WriteLine(test2);
+    }
+}

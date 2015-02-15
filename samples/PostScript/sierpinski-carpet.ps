@@ -1,0 +1,20 @@
+%!PS-Adobe-3.0
+%%BoundingBox 0 0 300 300
+
+/r { moveto 0 -1 1 0 0 1 3 { rlineto } repeat closepath fill } def
+/serp { gsave
+        3 1 roll translate
+        1 3 div dup scale
+        1 1 r
+        dup 1 sub dup 0 eq not {
+                0 0 0 1 0 2 1 0 1 2 2 0 2 1 2 2 17 -1 roll 8 { serp } repeat
+        } if pop
+        grestore
+} def
+
+300 300 scale 0 0 r 1 setgray
+
+0 0 5 serp
+
+pop showpage
+%%EOF

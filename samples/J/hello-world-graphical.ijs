@@ -1,0 +1,1 @@
+wdinfo'Goodbye, World!'

@@ -1,0 +1,1 @@
+main = putStr "Goodbye, world"

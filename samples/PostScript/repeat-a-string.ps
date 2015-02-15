@@ -1,0 +1,19 @@
+% the comments show the stack content after the line was executed
+% where rcount is the repeat count, "o" is for orignal,
+% "f" is for final, and iter is the for loop variable
+%
+% usage: rcount ostring times -> fstring
+
+/times {
+  dup length dup    % rcount ostring olength olength
+  4 3 roll          % ostring olength olength rcount
+  mul dup string    % ostring olength flength fstring
+  4 1 roll          % fstring ostring olength flength
+  1 sub 0 3 1 roll  % fstring ostring 0 olength flength_minus_one
+  {                 % fstring ostring iter
+    1 index 3 index % fstring ostring iter ostring fstring
+    3 1 roll        % fstring ostring fstring iter ostring
+    putinterval     % fstring ostring
+  } for
+  pop               % fstring
+} def

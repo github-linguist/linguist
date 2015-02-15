@@ -1,0 +1,2 @@
+tmp = OpenWrite[]
+Close[tmp]

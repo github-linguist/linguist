@@ -1,0 +1,1 @@
+set hname [info hostname]

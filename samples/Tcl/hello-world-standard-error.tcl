@@ -1,0 +1,1 @@
+puts stderr "Goodbye, World!"

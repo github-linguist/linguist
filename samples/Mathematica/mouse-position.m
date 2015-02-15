@@ -1,0 +1,1 @@
+MousePosition["WindowAbsolute"]

@@ -1,0 +1,110 @@
+%!PS-Adobe-3.0
+%%BoundingBox: 0 0 300 300
+
+/s { 300 n div } def
+/l { rlineto } def
+
+% draws a square
+/bx { s mul exch s mul moveto s 0 l 0 s l s neg 0 l 0 s neg l } def
+
+% draws checker board
+/xbd {  1 setgray
+        0 0 moveto 300 0 l 0 300 l -300 0 l fill
+        .7 1 .6 setrgbcolor
+        0 1 n1 { dup 2 mod 2 n1 { 1 index bx fill } for pop } for
+        0 setgray
+} def
+
+/ar1 { [ exch { 0 } repeat ] } def
+/ar2 { [ exch dup { dup ar1 exch } repeat pop ] } def
+
+/neighbors {
+        -1  2 0
+         1  2 0
+         2  1 0
+         2 -1 0
+         1 -2 0
+        -1 -2 0
+        -2 -1 0
+        -2  1 0
+        %24 x y add 3 mul roll
+} def
+
+/func { 0 dict begin mark } def
+/var { counttomark -1 1 { 2 add -1 roll def } for cleartomark } def
+
+% x y can_goto -> bool
+/can_goto {
+        func /x /y var
+        x 0     ge
+        x n     lt
+        y 0     ge
+        y n     lt
+        and and and {
+                occupied x get y get 0 eq
+        } { false } ifelse
+        end
+} def
+
+% x y num_access -> number of cells reachable from (x,y)
+/num_access {
+        func /x /y var
+        /count 0 def
+        x y can_goto {
+                neighbors
+                8 { pop y add exch x add exch can_goto {
+                                /count count 1 add def
+                        } if
+                } repeat
+                count 0 gt { count } { 9 } ifelse
+        } { 10 } ifelse
+        end
+} def
+
+% a circle
+/marker { x s mul y s mul s 20 div 0 360 arc fill } def
+
+% n solve -> draws board of size n x n, calcs path and draws it
+/solve {
+        func /n var
+        /n1 n 1 sub def
+
+        /c false def
+
+        8 n div setlinewidth
+        gsave
+
+        0 1 n1 { /x exch def c not {
+        0 1 n1 {
+                /occupied n ar2 def
+                c not {
+                        /c true def
+                        /y exch def
+                        grestore xbd gsave
+                        s 2 div dup translate
+                        n n mul 2 sub -1 0 { /iter exch def
+                                c {
+                                0 setgray marker x s mul y s mul moveto
+                                occupied x get y 1 put
+                                neighbors
+                                8 { pop y add exch x add exch 2 copy num_access 24 3 roll } repeat
+                                7 { dup 4 index lt { 6 3 roll } if pop pop pop } repeat
+
+                                9 ge iter 0 gt and { /c false def } if
+                                /y exch def
+                                /x exch def
+                                .2 setgray x s mul y s mul lineto stroke
+                        } if } for
+                        % to be nice, draw box at final position
+                        .5 0 0 setrgbcolor marker
+                        y .5 sub x .5 sub bx 1 setlinewidth stroke
+                        stroke
+                } if
+        } for } if } for showpage
+        grestore
+        end
+} def
+
+3 1 100 { solve } for
+
+%%EOF

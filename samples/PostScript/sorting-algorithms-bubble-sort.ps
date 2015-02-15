@@ -1,0 +1,21 @@
+/bubblesort{
+/x exch def
+/temp x x length 1 sub get def
+/i x length 1 sub def
+/j i 1 sub def
+
+x length 1 sub{
+i 1 sub{
+x j 1 sub get x j get lt
+{
+/temp x j 1 sub get def
+x j 1 sub x j get put
+x j temp put
+}if
+/j j 1 sub def
+}repeat
+/i i 1 sub def
+/j i 1 sub def
+}repeat
+x pstack
+}def

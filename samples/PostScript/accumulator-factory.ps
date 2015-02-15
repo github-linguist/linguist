@@ -1,0 +1,17 @@
+/mk-acc  {             % accumulator generator
+  {0 add 0 0 2 index put}
+  7 array copy
+  dup 0 4 -1 roll put
+  dup dup 2 exch put
+  cvx
+}  def
+
+% Examples (= is a printing command in PostScript):
+/a 1 mk-acc def        % create accumulator #1, name it a
+5 a =                  % add 5 to 1, print it
+10 mk-acc              % create accumulator #2, leave it anonymous on the stack
+2.71 a =               % add 2.71 to 6, print it
+dup 3.14 exch exec =   % add 3.14 to 10, print it
+dup 100 exch exec =    % add 100 to 13.14, print it
+12 a =                 % add 12 to 8.71, print it
+                       % accumulator #2 is still available on the stack

@@ -1,0 +1,17 @@
+using System;
+using System.Console;
+using System.Math;
+
+module Composition
+{
+    Compose[T](f : T -> T, g : T -> T, x : T) : T
+    {
+        f(g(x))
+    }
+
+    Main() : void
+    {
+        def SinAsin = Compose(Sin, Asin, _);
+        WriteLine(SinAsin(0.5));
+    }
+}

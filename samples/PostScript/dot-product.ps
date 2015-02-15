@@ -1,0 +1,17 @@
+/dotproduct{
+/x exch def
+/y exch def
+/sum 0 def
+/i 0 def
+x length y length eq %Check if both arrays have the same length
+{
+x length{
+/sum x i get y i get mul sum add def
+/i i 1 add def
+}repeat
+sum ==
+}
+{
+-1 ==
+}ifelse
+}def

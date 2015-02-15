@@ -1,0 +1,30 @@
+data one;
+   wtpanacea=0.3;    wtichor=0.2;    wtgold=2.0;
+   volpanacea=0.025; volichor=0.015; volgold=0.002;
+   valpanacea=3000;  valichor=1800;  valgold=2500;
+   maxwt=25; maxvol=0.25;
+
+   /* we can prune the possible selections */
+   maxpanacea = floor(min(maxwt/wtpanacea, maxvol/volpanacea));
+   maxichor = floor(min(maxwt/wtichor, maxvol/volichor));
+   maxgold = floor(min(maxwt/wtgold, maxvol/volgold));
+   do i1 = 0 to maxpanacea;
+      do i2 = 0 to maxichor;
+         do i3 = 0 to maxgold;
+            panacea = i1; ichor=i2; gold=i3; output;
+         end;
+      end;
+   end;
+run;
+data one; set one;
+   vals = valpanacea*panacea + valichor*ichor + valgold*gold;
+   totalweight = wtpanacea*panacea + wtichor*ichor + wtgold*gold;
+   totalvolume = volpanacea*panacea + volichor*ichor + volgold*gold;
+   if (totalweight le maxwt) and (totalvolume le maxvol);
+run;
+proc sort data=one;
+   by descending vals;
+run;
+proc print data=one (obs=4);
+   var panacea ichor gold vals;
+run;

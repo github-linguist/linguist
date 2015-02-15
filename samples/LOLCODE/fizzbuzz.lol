@@ -1,0 +1,18 @@
+HAI 1.3
+
+IM IN YR fizz UPPIN YR i TIL BOTH SAEM i AN 100
+    I HAS A i ITZ SUM OF i AN 1 BTW, ALL LUPZ START AT 0 :/
+    I HAS A mod3 ITZ NOT MOD OF i AN 3
+    I HAS A mod5 ITZ NOT MOD OF i AN 5
+
+    mod3, O RLY?, YA RLY, VISIBLE "Fizz"!, OIC
+    mod5, O RLY?, YA RLY, VISIBLE "Buzz"!, OIC
+
+    NOT EITHER OF mod3 AN mod5, O RLY?
+        YA RLY, VISIBLE i!
+    OIC
+
+    VISIBLE ""
+IM OUTTA YR fizz
+
+KTHXBYE

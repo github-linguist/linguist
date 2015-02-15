@@ -1,0 +1,23 @@
+using System;
+using System.Console;
+using Nemerle.Collections.NList;
+
+module Quicksort
+{
+    Qsort[T] (x : list[T]) : list[T]
+      where T : IComparable
+    {
+        |[]    => []
+        |x::xs => Qsort($[y|y in xs, (y.CompareTo(x) < 0)]) + [x] + Qsort($[y|y in xs, (y.CompareTo(x) > 0)])
+    }
+
+    Main() : void
+    {
+        def empty = [];
+        def single = [2];
+        def several = [2, 6, 1, 7, 3, 9, 4];
+        WriteLine(Qsort(empty));
+        WriteLine(Qsort(single));
+        WriteLine(Qsort(several));
+    }
+}

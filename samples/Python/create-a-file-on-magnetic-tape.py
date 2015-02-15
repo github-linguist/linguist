@@ -1,0 +1,3 @@
+>>> with open('/dev/tape', 'w') as t: t.write('Hi Tape!\n')
+...
+>>>

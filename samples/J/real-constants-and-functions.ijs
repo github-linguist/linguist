@@ -1,0 +1,14 @@
+e =. 1x1   NB. Euler's number, specified as a numeric literal.
+e =. ^ 1   NB. Euler's number, computed by exponentiation.
+pi=. 1p1   NB. pi, specified as a numeric literal.
+pi=. o.1   NB. pi, computed trigonometrically.
+magnitude_of_x   =. |x
+floor_of_x       =. <.x
+ceiling_of_x     =. >.x
+natural_log_of_x =. ^.x
+base_x_log_of_y  =. x^.y
+x_squared        =. *:x     NB. special form
+x_squared        =. x^2     NB. exponential form
+square_root_of_x =. %:x     NB. special form
+square_root_of_x =. x^0.5   NB. exponential form
+x_to_the_y_power =. x^y

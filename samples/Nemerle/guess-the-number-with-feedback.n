@@ -1,0 +1,27 @@
+using System;
+using System.Console;
+
+module GuessHints
+{
+    Main() : void
+    {
+        def     rand   = Random();
+        def     secret = rand.Next(1, 101);
+        mutable guess  = 0;
+
+        def GetGuess() : int {Int32.Parse(ReadLine())}
+
+        WriteLine("Guess a number between 1 and 100:");
+
+        do
+        {
+            guess = GetGuess();
+            match(guess.CompareTo(secret))
+            {
+                |(-1) => WriteLine("Too low! Guess again:")
+                |1    => WriteLine("Too high! Guess again:")
+                |0    => WriteLine("Well guessed!")
+            }
+        } while (guess != secret)
+    }
+}

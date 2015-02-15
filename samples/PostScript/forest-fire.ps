@@ -1,0 +1,64 @@
+%!PS-Adobe-3.0
+%%BoundingBox: 0 0 400 400
+
+/size 400 def
+
+/rand1 { rand 2147483647 div } def
+
+/m { moveto } bind def
+/l { rlineto} bind def
+/drawforest {
+        0 1 n 1 sub { /y exch def
+        0 1 n 1 sub { /x exch def
+                forest x get y get dup 0 eq { pop } {
+                        1 eq { 0 1 0 } { 1 0 0 } ifelse setrgbcolor
+                        x c mul y c mul m
+                        c 0 l 0 c l c neg 0 l closepath fill
+                } ifelse
+        } for
+        } for
+} def
+
+/r1n { dup 0 ge exch n lt and } def
+
+/neighbors { /y exch def /x exch def /cnt 0 def
+        [
+        y 1 sub 1 y 1 add { /y1 exch def
+                y1 r1n {
+                        x 1 sub 1 x 1 add { /x1 exch def
+                                x1 r1n { forest x1 get y1 get } if
+                        } for
+                } if
+        } for]
+} def
+
+/iter {
+        /nf [ n {[ n {0} repeat]} repeat ] def
+        0 1 n 1 sub { /x exch def
+        0 1 n 1 sub { /y exch def
+                nf x get y
+                forest x get y get dup
+                0 eq { pop rand1 treeprob le {1}{0} ifelse
+                } {
+                        1 eq {  /fire false def
+                                x y neighbors {
+                                        -1 eq { /fire true def } if
+                                } forall
+                                fire {-1}{
+                                        rand1 burnprob lt {-1}{1} ifelse
+                                } ifelse
+                        }{0} ifelse
+                } ifelse
+                put
+        } for } for
+        /forest nf def
+} def
+
+/n 200 def
+/treeprob .05 def
+/burnprob .0001 def
+/c size n div def
+/forest [ n {[ n { rand1 treeprob le {1}{0} ifelse } repeat]} repeat ] def
+
+1000 { drawforest showpage iter } repeat
+%%EOF

@@ -1,0 +1,1 @@
+ConsoleWriteError("Goodbye, World!" & @CRLF)

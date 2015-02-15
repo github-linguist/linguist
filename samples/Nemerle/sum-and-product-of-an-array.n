@@ -1,0 +1,30 @@
+using System;
+using System.Console;
+using System.Collections.Generic;
+using Nemerle.Collections;
+
+module SumProd
+{
+    Sum[T] (nums : T) : int
+      where T : IEnumerable[int]
+    {
+        nums.FoldLeft(0, _+_)
+    }
+
+    Product[T] (nums : T) : int
+      where T : IEnumerable[int]
+    {
+        nums.FoldLeft(1, _*_)
+    }
+
+    Main() : void
+    {
+        def arr = array[1, 2, 3, 4, 5];
+        def lis = [1, 2, 3, 4, 5];
+
+        def suml = Sum(lis);
+        def proda = Product(arr);
+
+        WriteLine("Sum is: {0}\tProduct is: {1}", suml, proda);
+    }
+}

@@ -1,0 +1,32 @@
+%!PS
+
+/sierp { % level ax ay bx by cx cy
+    6 cpy triangle
+    sierpr
+} bind def
+
+/sierpr {
+    12 cpy
+    10 -4 2 {
+        5 1 roll exch 4 -1 roll
+        add 0.5 mul 3 1 roll
+        add 0.5 mul 3 -1 roll
+        2 roll
+    } for       % l a b c bc ac ab
+    13 -1 roll dup 0 gt {
+        1 sub
+        dup 4 cpy 18 -2 roll sierpr
+        dup 7 index 7 index 2 cpy 16 -2 roll sierpr
+        9 3 roll 1 index 1 index 2 cpy 13 4 roll sierpr
+    } { 13 -6 roll 7 { pop } repeat } ifelse
+    triangle
+} bind def
+
+/cpy { { 5 index } repeat } bind def
+
+/triangle {
+    newpath moveto lineto lineto closepath stroke
+} bind def
+
+6 50 100 550 100 300 533 sierp
+showpage

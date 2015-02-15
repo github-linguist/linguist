@@ -1,0 +1,12 @@
+#lang racket
+(define (stooge-sort xs [i 0] [j (- (vector-length xs) 1)])
+  (define (x i) (vector-ref xs i))
+  (define (x! i v) (vector-set! xs i v))
+  (define (swap! i j) (define t (x i)) (x! i (x j)) (x! j t))
+  (when (> (x i) (x j)) (swap! i j))
+  (when (> (- j i) 1)
+    (define t (quotient (+ j (- i) 1) 3))
+    (stooge-sort xs i (- j t))
+    (stooge-sort xs (+ i t) j)
+    (stooge-sort xs i (- j t)))
+  xs)

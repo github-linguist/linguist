@@ -1,0 +1,35 @@
+(define split
+  (lambda (str char skip count)
+    (let ((len (string-length str)))
+      (let loop ((index skip)
+                 (last-index 0)
+                 (result '()))
+        (if (= index len)
+            (reverse (cons (substring str last-index) result))
+            (if (eq? char (string-ref str index))
+                (loop (if (= count (+ 2 (length result)))
+                          len
+                          (+ index 1))
+                      (+ index 1)
+                      (cons char (cons (substring str last-index index)
+                                       result)))
+                (loop (+ index 1)
+                      last-index
+                      result)))))))
+
+(define range-expand
+  (lambda (str)
+    (for-each
+     (lambda (token)
+       (if (char? token)
+           (display token)
+           (let ((range (split token #\- 1 2)))
+             (if (null? (cdr range))
+                 (display (car range))
+                 (do ((count (string->number (list-ref range 0)) (+ 1 count))
+                      (high (string->number (list-ref range 2))))
+                     ((= count high) (display high))
+                   (display count)
+                   (display ","))))))
+     (split str #\, 0 0))
+    (newline)))

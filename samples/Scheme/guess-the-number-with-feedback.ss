@@ -1,0 +1,18 @@
+(define maximum 5)
+(define minimum -5)
+(define number (+ (random (- (+ maximum 1) minimum)) minimum))
+
+(display "Pick a number from ")
+(display minimum)
+(display " through ")
+(display maximum)
+(display ".\n> ")
+(do ((guess (read) (read))) ((eq? guess number))
+        (if (or (>= guess maximum) (< guess minimum))
+                (display "Out of range!\n> ")
+                (begin
+                        (if (> guess number)
+                                (display "Too high!\n> "))
+                        (if (< guess number)
+                                (display "Too low!\n> ")))))
+(display "Correct!\n")

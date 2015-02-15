@@ -1,0 +1,4 @@
+def things = ["Apple", "Banana", "Coconut"];
+
+foreach (thing in things) WriteLine(thing.ToLower());
+foreach (i in [5, 10 .. 100]) Write($"$i\t");

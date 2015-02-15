@@ -1,0 +1,20 @@
+using System;
+using System.Console;
+
+module Substrings
+{
+    Main() : void
+    {
+        string s = "0123456789";
+        def n = 3;
+        def m = 2;
+        def c = '3';
+        def z = "345";
+
+        WriteLine(s.Substring(n, m));
+        WriteLine(s.Substring(n, s.Length - n));
+        WriteLine(s.Substring(0, s.Length - 1));
+        WriteLine(s.Substring(s.IndexOf(c,0,s.Length), m));
+        WriteLine(s.Substring(s.IndexOf(z, 0, s.Length), m));
+    }
+}

@@ -1,0 +1,10 @@
+(define (swap vec i j)
+  (let ([tmp (vector-ref vec i)])
+    (vector-set! vec i (vector-ref vec j))
+    (vector-set! vec j tmp)))
+
+(define (shuffle vec)
+  (for ((i (in-range (- (vector-length vec) 1) 0 -1)))
+    (let ((r (random i)))
+      (swap vec i r)))
+  vec)

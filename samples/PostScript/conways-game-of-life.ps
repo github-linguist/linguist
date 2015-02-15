@@ -1,0 +1,49 @@
+%!PS-Adobe-3.0
+%%BoundingBox: 0 0 400 400
+
+/size 400 def
+
+realtime srand
+/rand1 { rand 2147483647 div } def
+
+/m { moveto } bind def
+/l { rlineto} bind def
+/drawboard {
+        0 1 n 1 sub { /y exch def
+        0 1 n 1 sub { /x exch def
+                board x get y get 1 eq {
+                        x c mul y c mul m
+                        c 0 l 0 c l c neg 0 l
+                        closepath fill
+                } if
+        } for } for
+} def
+
+/r1n { dup 0 lt { n add } if dup n ge { n sub } if } def
+/neighbors { /y exch def /x exch def 0
+        y 1 sub 1 y 1 add { r1n /y1 exch def
+        x 1 sub 1 x 1 add { r1n /x1 exch def
+                board x1 get y1 get add
+        } for } for
+        board x get y get sub
+} def
+
+/iter {
+        /board
+        [0 1 n 1 sub { /x exch def
+        [0 1 n 1 sub { /y exch def
+                x y neighbors
+                board x get y get
+                0 eq    { 3 eq {1}{0} ifelse }
+                        { dup 2 eq exch 3 eq or {1}{0} ifelse } ifelse
+        } for ]
+        } for ] def
+} def
+
+/n 200 def
+/initprob .15 def
+/c size n div def
+/board [ n {[ n { rand1 initprob le {1}{0} ifelse } repeat]} repeat ] def
+
+1000 { drawboard showpage iter } repeat
+%%EOF

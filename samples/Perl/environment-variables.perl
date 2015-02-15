@@ -1,0 +1,1 @@
+print $ENV{HOME}, "\n";

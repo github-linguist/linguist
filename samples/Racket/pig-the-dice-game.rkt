@@ -1,0 +1,28 @@
+#lang racket
+
+(define (pig-the-dice #:print? [print? #t] . players)
+  (define prn (if print? (λ xs (apply printf xs) (flush-output)) void))
+  (define names (for/list ([p players] [n (in-naturals 1)]) n))
+  (define points (for/list ([p players]) (box 0)))
+  (with-handlers ([(negate exn?) identity])
+    (for ([nm (in-cycle names)] [tp (in-cycle points)] [pl (in-cycle players)])
+      (prn (string-join (for/list ([n names] [p points])
+                          (format "Player ~a, ~a points" n (unbox p)))
+                        "; " #:before-first "Status: " #:after-last ".\n"))
+      (let turn ([p 0] [n 0])
+        (prn "Player ~a, round #~a, [R]oll or [P]ass? " nm (+ 1 n))
+        (define roll? (pl (unbox tp) p n))
+        (unless (eq? pl human) (prn "~a\n" (if roll? 'R 'P)))
+        (if (not roll?) (set-box! tp (+ (unbox tp) p))
+            (let ([r (+ 1 (random 6))])
+              (prn "  Dice roll: ~s => " r)
+              (if (= r 1) (prn "turn lost\n")
+                  (let ([p (+ p r)]) (prn "~a points\n" p) (turn p (+ 1 n)))))))
+      (prn "--------------------\n")
+      (when (<= 100 (unbox tp)) (prn "Player ~a wins!\n" nm) (raise nm)))))
+
+(define (human total-points turn-points round#)
+  (case (string->symbol (car (regexp-match #px"[A-Za-z]?" (read-line))))
+    [(R r) #t] [(P p) #f] [else (human total-points turn-points round#)]))
+
+(pig-the-dice #:print? #t human human)

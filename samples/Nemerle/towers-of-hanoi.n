@@ -1,0 +1,20 @@
+using System;
+using System.Console;
+
+module Towers
+{
+    Hanoi(n : int, from = 1, to = 3, via = 2) : void
+    {
+        when (n > 0)
+        {
+            Hanoi(n - 1, from, via, to);
+            WriteLine("Move disk from peg {0} to peg {1}", from, to);
+            Hanoi(n - 1, via, to, from);
+        }
+    }
+
+    Main() : void
+    {
+        Hanoi(4)
+    }
+}

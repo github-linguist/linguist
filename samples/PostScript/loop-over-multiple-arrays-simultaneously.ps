@@ -1,0 +1,10 @@
+% transpose is defined in initlib like this.
+/transpose {
+    [ exch {
+        { {empty? exch pop} map all?} {pop exit} ift
+        [ exch {} {uncons {exch cons} dip exch} fold counttomark 1 roll] uncons
+    } loop ] {reverse} map
+}.
+
+% using it.
+[[/a /b /c] [/A /B /C] [1 2 3]] transpose

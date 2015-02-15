@@ -1,0 +1,16 @@
+(define (insert x lst)
+  (if (null? lst)
+      (list x)
+      (let ((y (car lst))
+            (ys (cdr lst)))
+        (if (<= x y)
+            (cons x lst)
+            (cons y (insert x ys))))))
+
+(define (insertion-sort lst)
+  (if (null? lst)
+      '()
+      (insert (car lst)
+              (insertion-sort (cdr lst)))))
+
+(insertion-sort '(6 8 5 9 3 2 1 4 7))

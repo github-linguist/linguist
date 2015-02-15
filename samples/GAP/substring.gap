@@ -1,0 +1,4 @@
+LETTERS;
+# "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+LETTERS{[5 .. 10]};
+# "EFGHIJ"

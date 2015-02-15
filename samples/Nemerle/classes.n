@@ -1,0 +1,19 @@
+public class MyClass
+{
+    public this() { }  // the constructor in Nemerle is always named 'this'
+
+    public MyVariable : int
+    {
+        get;
+        set;
+    }
+
+    public MyMethod() : void
+    {
+    }
+
+}
+
+def myInstance = MyClass();                                           // no 'new' keyword needed
+myInstance.MyVariable = 42;                                           // set MyVariable
+System.Console.WriteLine($"My variable is $(myInstance.MyVariable)")  // get MyVariable
