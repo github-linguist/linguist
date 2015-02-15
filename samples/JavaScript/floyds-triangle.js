@@ -1,4 +1,4 @@
-#!/usr/bin/env js
+#!/usr/bin/env node
 
 function main() {
     print('Floyd 5:');

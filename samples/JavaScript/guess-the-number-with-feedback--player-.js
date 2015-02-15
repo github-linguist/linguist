@@ -1,4 +1,4 @@
-#!/usr/bin/env js
+#!/usr/bin/env node
 
 var DONE = RIGHT = 0, HIGH = 1, LOW = -1;
 

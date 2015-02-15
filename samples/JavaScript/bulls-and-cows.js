@@ -1,4 +1,4 @@
-#!/usr/bin/env js
+#!/usr/bin/env node
 
 function main() {
     var len = 4;
