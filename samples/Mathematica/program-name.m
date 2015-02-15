@@ -1,5 +1,3 @@
-#!/usr/bin/env MathKernel -script
-
 ScriptName[] = Piecewise[
 	{
 		{"Interpreted", Position[$CommandLine, "-script", 1] == {}}
