@@ -206,6 +206,7 @@ Assembly:
   - .asm
   - .ASM
   - .a51
+  - .nasm
   tm_scope: source.asm.x86
   ace_mode: assembly_x86
 
@@ -438,6 +439,8 @@ COBOL:
   ace_mode: cobol
 
 CSS:
+  type: markup
+  tm_scope: source.css
   ace_mode: css
   color: "#563d7c"
   extensions:
@@ -918,6 +921,7 @@ Forth:
   color: "#341708"
   extensions:
   - .fth
+  - .4TH
   - .4th
   - .F
   - .f
@@ -942,7 +946,7 @@ G-code:
   - .g
   - .gco
   - .gcode
-  tm_scope: none
+  tm_scope: source.gcode
   ace_mode: gcode
 
 GAMS:
@@ -960,7 +964,7 @@ GAP:
   - .gd
   - .gi
   - .tst
-  tm_scope: none
+  tm_scope: source.gap
   ace_mode: text
 
 GAS:
@@ -1092,7 +1096,7 @@ Grace:
   type: programming
   extensions:
   - .grace
-  tm_scope: none
+  tm_scope: source.grace
   ace_mode: text
 
 Gradle:
@@ -1171,6 +1175,7 @@ HTML:
   type: markup
   tm_scope: text.html.basic
   ace_mode: html
+  color: "#e44b23"
   aliases:
   - xhtml
   extensions:
@@ -1345,7 +1350,7 @@ Inform 7:
 Inno Setup:
   extensions:
   - .iss
-  tm_scope: none
+  tm_scope: source.inno
   ace_mode: text
 
 Io:
@@ -1806,7 +1811,7 @@ MediaWiki:
   wrap: true
   extensions:
   - .mediawiki
-  tm_scope: none
+  tm_scope: text.html.mediawiki
   ace_mode: text
 
 Mercury:
@@ -2051,7 +2056,7 @@ Opal:
   color: "#f7ede0"
   extensions:
   - .opal
-  tm_scope: none
+  tm_scope: source.opal
   ace_mode: text
 
 OpenCL:
@@ -2096,7 +2101,7 @@ Ox:
   - .ox
   - .oxh
   - .oxo
-  tm_scope: none
+  tm_scope: source.ox
   ace_mode: text
 
 Oxygene:
@@ -2157,7 +2162,7 @@ Papyrus:
   color: "#6600cc"
   extensions:
   - .psc
-  tm_scope: none
+  tm_scope: source.papyrus
   ace_mode: text
 
 Parrot:
@@ -2275,7 +2280,7 @@ PogoScript:
   color: "#d80074"
   extensions:
   - .pogo
-  tm_scope: none
+  tm_scope: source.pogoscript
   ace_mode: text
 
 PostScript:
@@ -2322,7 +2327,7 @@ Propeller Spin:
   color: "#2b446d"
   extensions:
   - .spin
-  tm_scope: none
+  tm_scope: source.spin
   ace_mode: text
 
 Protocol Buffer:
@@ -2682,6 +2687,13 @@ STON:
   tm_scope: source.smalltalk
   ace_mode: text
 
+SVG:
+  type: data
+  extensions:
+  - .svg
+  tm_scope: text.xml
+  ace_mode: xml
+
 Sage:
   type: programming
   group: Python
@@ -2921,7 +2933,7 @@ TXL:
   type: programming
   extensions:
   - .txl
-  tm_scope: none
+  tm_scope: source.txl
   ace_mode: text
 
 Tcl:
@@ -3197,7 +3209,6 @@ XML:
   - .srdf
   - .stTheme
   - .sublime-snippet
-  - .svg
   - .targets
   - .tmCommand
   - .tmLanguage
@@ -3331,7 +3342,7 @@ eC:
   extensions:
   - .ec
   - .eh
-  tm_scope: none
+  tm_scope: source.c.ec
   ace_mode: text
 
 edn:

@@ -1,0 +1,57 @@
+#! /bin/sh
+#
+# Builds and installs liblua5.1 for the cross toolchain.
+# Executed by build-uqm-dependencies.chroot
+
+# Include our common functions
+. /usr/lib/crossbuild/crossbuild.subr
+
+# envvar LIBLUA51_URL
+#
+# Specifies the URL of the liblua5.1 source tarball you want to use.
+export LIBLUA51_URL="http://www.lua.org/ftp/lua-5.1.5.tar.gz"
+
+# envvar INSTALL_TOP
+#
+# This determines where lua's makefiles install everything (we don't want to use
+# /usr/local!).
+export INSTALL_TOP="/usr/${HOST_TRIPLET}"
+
+# envvar TO_BIN
+#
+# Names of the binary files to install (that's right, lua's makefiles don't
+# determine this automatically, and since we end up with files named according
+# to Windows conventions the install chokes without these)
+export TO_BIN="lua.exe luac.exe"
+
+# envvar TO_LIB
+#
+# Names of the libraries to install, see TO_BIN
+export TO_LIB="liblua.a lua51.dll"
+
+
+# liblua5.1 uses custom makefiles and does not natively support cross-building.
+# However, with our cross toolchain in its PATH it successfully builds the mingw
+# target.
+export PATH=/usr/${HOST_TRIPLET}/bin:${PATH}
+
+echo "*************************************************************************"
+echo "--- BEGIN: crossbuild_liblua5.1 ---"
+
+get_tarball "liblua5.1" "${LIBLUA51_URL}" gz
+
+cd ${SRC_ROOT_DIR}/liblua5.1/*
+
+if [ -f Makefile ]; then
+  make clean
+  make --environment-overrides mingw install
+
+
+else
+  echo "crossbuild_liblua5.1 failed: Could not find Makefile"
+  echo "(is the liblua5.1 source tarball sane?)"
+  exit 1
+fi
+
+echo "--- END: crossbuild_liblua5.1 ---"
+echo "*************************************************************************"

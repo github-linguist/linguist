@@ -92,7 +92,7 @@ module Linguist
     disambiguate "Perl", "Perl6", "Prolog" do |data|
       if data.include?("use v6")
         Language["Perl6"]
-      elsif data.include?("use strict")
+      elsif data.match(/use strict|use\s+v?5\./)
         Language["Perl"]
       elsif data.include?(":-")
         Language["Prolog"]
@@ -163,7 +163,7 @@ module Linguist
     disambiguate "FORTRAN", "Forth" do |data|
       if /^: /.match(data)
         Language["Forth"]
-      elsif /^([c*][^a-z]|      (subroutine|program)\s|!)/i.match(data)
+      elsif /^([c*][^a-z]|      (subroutine|program)\s|\s*!)/i.match(data)
         Language["FORTRAN"]
       end
     end
