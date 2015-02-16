@@ -150,8 +150,14 @@ module Linguist
       end
     end
 
-    disambiguate "AsciiDoc", "AGS Script" do |data|
-      Language["AsciiDoc"] if /^=+(\s|\n)/.match(data)
+    disambiguate "AsciiDoc", "AGS Script", "Public Key" do |data|
+      if /^[=-]+(\s|\n)|{{[A-Za-z]/.match(data)
+        Language["AsciiDoc"]
+      elsif /^(\/\/.+|((import|export)\s+)?(function|int|float|char)\s+((room|repeatedly|on|game)_)?([A-Za-z]+[A-Za-z_0-9]+)\s*[;\(])/.match(data)
+        Language["AGS Script"]
+      elsif /^-----BEGIN/.match(data)
+        Language["Public Key"]
+      end
     end
 
     disambiguate "FORTRAN", "Forth" do |data|

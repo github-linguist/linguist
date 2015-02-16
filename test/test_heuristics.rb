@@ -68,11 +68,12 @@ class TestHeuristcs < Minitest::Test
     })
   end
 
-  # Candidate languages = ["AGS Script", "AsciiDoc"]
-  def test_asc_asciidoc_by_heuristics
+  # Candidate languages = ["AGS Script", "AsciiDoc", "Public Key"]
+  def test_asc_by_heuristics
     assert_heuristics({
       "AsciiDoc" => "AsciiDoc/list.asc",
-      "AGS Script" => nil
+      "AGS Script" => "AGS Script/GlobalScript.asc",
+      "Public Key" => "Public Key/sunCert.asc"
     })
   end
 
