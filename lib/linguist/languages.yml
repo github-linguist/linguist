@@ -704,6 +704,15 @@ DM:
   tm_scope: source.c++
   ace_mode: c_cpp
 
+DTrace:
+  type: programming
+  extensions:
+  - .d
+  interpreters:
+  - dtrace
+  tm_scope: source.c
+  ace_mode: c_cpp
+
 Darcs Patch:
   type: programming
   search_term: dpatch
@@ -1753,6 +1762,7 @@ Makefile:
   - mf
   extensions:
   - .mak
+  - .d
   - .mk
   filenames:
   - GNUmakefile
