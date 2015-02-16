@@ -157,9 +157,6 @@ module Linguist
         Language["AGS Script"]
       elsif /^-----BEGIN/.match(data)
         Language["Public Key"]
-      else
-        # Plain text can also be AsciiDoc.
-        Language["AsciiDoc"]
       end
     end
 
