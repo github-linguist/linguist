@@ -1,6 +1,6 @@
 require_relative "./helper"
 
-class TestBlob < Test::Unit::TestCase
+class TestBlob < Minitest::Test
   include Linguist
 
   def setup
@@ -14,60 +14,51 @@ class TestBlob < Test::Unit::TestCase
     Encoding.default_external = @original_external
   end
 
-  def samples_path
-    File.expand_path("../../samples", __FILE__)
-  end
-
-  def blob(name)
-    name = File.join(samples_path, name) unless name =~ /^\//
-    FileBlob.new(name, samples_path)
-  end
-
   def script_blob(name)
-    blob = blob(name)
+    blob = sample_blob(name)
     blob.instance_variable_set(:@name, 'script')
     blob
   end
 
   def test_name
-    assert_equal "foo.rb", blob("foo.rb").name
+    assert_equal "foo.rb", sample_blob("foo.rb").name
   end
 
   def test_mime_type
-    assert_equal "application/postscript", blob("Binary/octocat.ai").mime_type
-    assert_equal "application/x-ruby", blob("Ruby/grit.rb").mime_type
-    assert_equal "application/x-sh", blob("Shell/script.sh").mime_type
-    assert_equal "application/xml", blob("XML/bar.xml").mime_type
-    assert_equal "audio/ogg", blob("Binary/foo.ogg").mime_type
-    assert_equal "text/plain", blob("Text/README").mime_type
+    assert_equal "application/postscript", fixture_blob("Binary/octocat.ai").mime_type
+    assert_equal "application/x-ruby", sample_blob("Ruby/grit.rb").mime_type
+    assert_equal "application/x-sh", sample_blob("Shell/script.sh").mime_type
+    assert_equal "application/xml", sample_blob("XML/bar.xml").mime_type
+    assert_equal "audio/ogg", fixture_blob("Binary/foo.ogg").mime_type
+    assert_equal "text/plain", fixture_blob("Data/README").mime_type
   end
 
   def test_content_type
-    assert_equal "application/pdf", blob("Binary/foo.pdf").content_type
-    assert_equal "audio/ogg", blob("Binary/foo.ogg").content_type
-    assert_equal "image/png", blob("Binary/foo.png").content_type
-    assert_equal "text/plain; charset=iso-8859-2", blob("Text/README").content_type
+    assert_equal "application/pdf", fixture_blob("Binary/foo.pdf").content_type
+    assert_equal "audio/ogg", fixture_blob("Binary/foo.ogg").content_type
+    assert_equal "image/png", fixture_blob("Binary/foo.png").content_type
+    assert_equal "text/plain; charset=iso-8859-2", fixture_blob("Data/README").content_type
   end
 
   def test_disposition
-    assert_equal "attachment; filename=foo+bar.jar", blob("Binary/foo bar.jar").disposition
-    assert_equal "attachment; filename=foo.bin", blob("Binary/foo.bin").disposition
-    assert_equal "attachment; filename=linguist.gem", blob("Binary/linguist.gem").disposition
-    assert_equal "attachment; filename=octocat.ai", blob("Binary/octocat.ai").disposition
-    assert_equal "inline", blob("Text/README").disposition
-    assert_equal "inline", blob("Text/foo.txt").disposition
-    assert_equal "inline", blob("Ruby/grit.rb").disposition
-    assert_equal "inline", blob("Binary/octocat.png").disposition
+    assert_equal "attachment; filename=foo+bar.jar", fixture_blob("Binary/foo bar.jar").disposition
+    assert_equal "attachment; filename=foo.bin", fixture_blob("Binary/foo.bin").disposition
+    assert_equal "attachment; filename=linguist.gem", fixture_blob("Binary/linguist.gem").disposition
+    assert_equal "attachment; filename=octocat.ai", fixture_blob("Binary/octocat.ai").disposition
+    assert_equal "inline", fixture_blob("Data/README").disposition
+    assert_equal "inline", sample_blob("Text/foo.txt").disposition
+    assert_equal "inline", sample_blob("Ruby/grit.rb").disposition
+    assert_equal "inline", fixture_blob("Binary/octocat.png").disposition
   end
 
   def test_data
-    assert_equal "module Foo\nend\n", blob("Ruby/foo.rb").data
+    assert_equal "module Foo\nend\n", sample_blob("Ruby/foo.rb").data
   end
 
   def test_lines
-    assert_equal ["module Foo", "end", ""], blob("Ruby/foo.rb").lines
-    assert_equal ["line 1", "line 2", ""], blob("Text/mac.txt").lines
-    assert_equal 475, blob("Emacs Lisp/ess-julia.el").lines.length
+    assert_equal ["module Foo", "end", ""], sample_blob("Ruby/foo.rb").lines
+    assert_equal ["line 1", "line 2", ""], sample_blob("Text/mac.txt").lines
+    assert_equal 475, sample_blob("Emacs Lisp/ess-julia.el").lines.length
   end
 
   def test_lines_maintains_original_encoding
@@ -75,135 +66,126 @@ class TestBlob < Test::Unit::TestCase
     # earlier versions of the gem made implicit guarantees that the encoding of
     # each `line` is in the same encoding as the file was originally read (in
     # practice, UTF-8 or ASCII-8BIT)
-    assert_equal Encoding.default_external, blob("Text/utf16le.txt").lines.first.encoding
+    assert_equal Encoding.default_external, fixture_blob("Data/utf16le").lines.first.encoding
   end
 
   def test_size
-    assert_equal 15, blob("Ruby/foo.rb").size
+    assert_equal 15, sample_blob("Ruby/foo.rb").size
   end
 
   def test_loc
-    assert_equal 3, blob("Ruby/foo.rb").loc
+    assert_equal 3, sample_blob("Ruby/foo.rb").loc
   end
 
   def test_sloc
-    assert_equal 2, blob("Ruby/foo.rb").sloc
-    assert_equal 3, blob("Text/utf16le-windows.txt").sloc
-    assert_equal 1, blob("Text/iso8859-8-i.txt").sloc
+    assert_equal 2, sample_blob("Ruby/foo.rb").sloc
+    assert_equal 3, fixture_blob("Data/utf16le-windows").sloc
+    assert_equal 1, fixture_blob("Data/iso8859-8-i").sloc
   end
 
   def test_encoding
-    assert_equal "ISO-8859-2", blob("Text/README").encoding
-    assert_equal "ISO-8859-2", blob("Text/README").ruby_encoding
-    assert_equal "ISO-8859-1", blob("Text/dump.sql").encoding
-    assert_equal "ISO-8859-1", blob("Text/dump.sql").ruby_encoding
-    assert_equal "UTF-8", blob("Text/foo.txt").encoding
-    assert_equal "UTF-8", blob("Text/foo.txt").ruby_encoding
-    assert_equal "UTF-16LE", blob("Text/utf16le.txt").encoding
-    assert_equal "UTF-16LE", blob("Text/utf16le.txt").ruby_encoding
-    assert_equal "UTF-16LE", blob("Text/utf16le-windows.txt").encoding
-    assert_equal "UTF-16LE", blob("Text/utf16le-windows.txt").ruby_encoding
-    assert_equal "ISO-2022-KR", blob("Text/ISO-2022-KR.txt").encoding
-    assert_equal "binary", blob("Text/ISO-2022-KR.txt").ruby_encoding
-    assert_nil blob("Binary/dog.o").encoding
-
-    assert_equal "windows-1252", blob("Text/Visual_Battlers.rb").encoding
-    assert_equal "Windows-1252", blob("Text/Visual_Battlers.rb").ruby_encoding
+    assert_equal "ISO-8859-2", fixture_blob("Data/README").encoding
+    assert_equal "ISO-8859-2", fixture_blob("Data/README").ruby_encoding
+    assert_equal "UTF-8", sample_blob("Text/foo.txt").encoding
+    assert_equal "UTF-8", sample_blob("Text/foo.txt").ruby_encoding
+    assert_equal "UTF-16LE", fixture_blob("Data/utf16le").encoding
+    assert_equal "UTF-16LE", fixture_blob("Data/utf16le").ruby_encoding
+    assert_equal "UTF-16LE", fixture_blob("Data/utf16le-windows").encoding
+    assert_equal "UTF-16LE", fixture_blob("Data/utf16le-windows").ruby_encoding
+    assert_equal "ISO-2022-KR", sample_blob("Text/ISO-2022-KR.txt").encoding
+    assert_equal "binary", sample_blob("Text/ISO-2022-KR.txt").ruby_encoding
+    assert_nil fixture_blob("Binary/dog.o").encoding
   end
 
   def test_binary
     # Large blobs aren't loaded
-    large_blob = blob("git.exe")
+    large_blob = sample_blob("git.exe")
     large_blob.instance_eval do
       def data; end
     end
     assert large_blob.binary?
 
-    assert blob("Binary/git.deb").binary?
-    assert blob("Binary/git.exe").binary?
-    assert blob("Binary/hello.pbc").binary?
-    assert blob("Binary/linguist.gem").binary?
-    assert blob("Binary/octocat.ai").binary?
-    assert blob("Binary/octocat.png").binary?
-    assert blob("Binary/zip").binary?
-    assert !blob("Text/README").binary?
-    assert !blob("Text/file.txt").binary?
-    assert !blob("Ruby/foo.rb").binary?
-    assert !blob("Perl/script.pl").binary?
+    assert fixture_blob("Binary/git.deb").binary?
+    assert fixture_blob("Binary/git.exe").binary?
+    assert fixture_blob("Binary/hello.pbc").binary?
+    assert fixture_blob("Binary/linguist.gem").binary?
+    assert fixture_blob("Binary/octocat.ai").binary?
+    assert fixture_blob("Binary/octocat.png").binary?
+    assert fixture_blob("Binary/zip").binary?
+    assert !fixture_blob("Data/README").binary?
+    assert !sample_blob("Ruby/foo.rb").binary?
+    assert !sample_blob("Perl/script.pl").binary?
   end
 
   def test_all_binary
     Samples.each do |sample|
-      blob = blob(sample[:path])
+      blob = sample_blob(sample[:path])
       assert ! (blob.likely_binary? || blob.binary?), "#{sample[:path]} is a binary file"
     end
   end
 
   def test_text
-    assert blob("Text/README").text?
-    assert blob("Text/dump.sql").text?
-    assert blob("Text/file.json").text?
-    assert blob("Text/file.txt").text?
-    assert blob("Text/md").text?
-    assert blob("Shell/script.sh").text?
-    assert blob("Text/txt").text?
+    assert fixture_blob("Data/README").text?
+    assert fixture_blob("Data/md").text?
+    assert sample_blob("Shell/script.sh").text?
+    assert fixture_blob("Data/txt").text?
   end
 
   def test_image
-    assert blob("Binary/octocat.gif").image?
-    assert blob("Binary/octocat.jpeg").image?
-    assert blob("Binary/octocat.jpg").image?
-    assert blob("Binary/octocat.png").image?
-    assert !blob("Binary/octocat.ai").image?
-    assert !blob("Binary/octocat.psd").image?
+    assert fixture_blob("Binary/octocat.gif").image?
+    assert fixture_blob("Binary/octocat.jpeg").image?
+    assert fixture_blob("Binary/octocat.jpg").image?
+    assert fixture_blob("Binary/octocat.png").image?
+    assert !fixture_blob("Binary/octocat.ai").image?
+    assert !fixture_blob("Binary/octocat.psd").image?
   end
 
   def test_solid
-    assert blob("Binary/cube.stl").solid?
-    assert blob("Text/cube.stl").solid?
+    assert fixture_blob("Binary/cube.stl").solid?
+    assert fixture_blob("Data/cube.stl").solid?
   end
 
   def test_csv
-    assert blob("Text/cars.csv").csv?
+    assert fixture_blob("Data/cars.csv").csv?
   end
 
   def test_pdf
-    assert blob("Binary/foo.pdf").pdf?
+    assert fixture_blob("Binary/foo.pdf").pdf?
   end
 
   def test_viewable
-    assert blob("Text/README").viewable?
-    assert blob("Ruby/foo.rb").viewable?
-    assert blob("Perl/script.pl").viewable?
-    assert !blob("Binary/linguist.gem").viewable?
-    assert !blob("Binary/octocat.ai").viewable?
-    assert !blob("Binary/octocat.png").viewable?
+    assert fixture_blob("Data/README").viewable?
+    assert sample_blob("Ruby/foo.rb").viewable?
+    assert sample_blob("Perl/script.pl").viewable?
+    assert !fixture_blob("Binary/linguist.gem").viewable?
+    assert !fixture_blob("Binary/octocat.ai").viewable?
+    assert !fixture_blob("Binary/octocat.png").viewable?
   end
 
   def test_generated
-    assert !blob("Text/README").generated?
+    assert !fixture_blob("Data/README").generated?
 
     # Xcode project files
-    assert !blob("XML/MainMenu.xib").generated?
-    assert blob("Binary/MainMenu.nib").generated?
-    assert !blob("XML/project.pbxproj").generated?
+    assert !sample_blob("XML/MainMenu.xib").generated?
+    assert fixture_blob("Binary/MainMenu.nib").generated?
+    assert !sample_blob("XML/project.pbxproj").generated?
 
     # Gemfile.lock is NOT generated
-    assert !blob("Gemfile.lock").generated?
+    assert !sample_blob("Gemfile.lock").generated?
 
     # Generated .NET Docfiles
-    assert blob("XML/net_docfile.xml").generated?
+    assert sample_blob("XML/net_docfile.xml").generated?
 
     # Long line
-    assert !blob("JavaScript/uglify.js").generated?
+    assert !sample_blob("JavaScript/uglify.js").generated?
 
     # Inlined JS, but mostly code
-    assert !blob("JavaScript/json2_backbone.js").generated?
+    assert !sample_blob("JavaScript/json2_backbone.js").generated?
 
     # Minified JS
-    assert !blob("JavaScript/jquery-1.6.1.js").generated?
-    assert blob("JavaScript/jquery-1.6.1.min.js").generated?
-    assert blob("JavaScript/jquery-1.4.2.min.js").generated?
+    assert !sample_blob("JavaScript/jquery-1.6.1.js").generated?
+    assert sample_blob("JavaScript/jquery-1.6.1.min.js").generated?
+    assert sample_blob("JavaScript/jquery-1.4.2.min.js").generated?
 
     # CoffeeScript-generated JS
     # TODO
@@ -212,256 +194,293 @@ class TestBlob < Test::Unit::TestCase
     # TODO
 
     # Composer generated composer.lock file
-    assert blob("JSON/composer.lock").generated?
+    assert sample_blob("JSON/composer.lock").generated?
 
     # PEG.js-generated parsers
-    assert blob("JavaScript/parser.js").generated?
+    assert sample_blob("JavaScript/parser.js").generated?
 
     # Generated PostScript
-    assert !blob("PostScript/sierpinski.ps").generated?
+    assert !sample_blob("PostScript/sierpinski.ps").generated?
 
     # These examples are too basic to tell
-    assert !blob("JavaScript/hello.js").generated?
+    assert !sample_blob("JavaScript/hello.js").generated?
 
-    assert blob("JavaScript/intro-old.js").generated?
-    assert blob("JavaScript/classes-old.js").generated?
+    assert sample_blob("JavaScript/intro-old.js").generated?
+    assert sample_blob("JavaScript/classes-old.js").generated?
 
-    assert blob("JavaScript/intro.js").generated?
-    assert blob("JavaScript/classes.js").generated?
+    assert sample_blob("JavaScript/intro.js").generated?
+    assert sample_blob("JavaScript/classes.js").generated?
 
     # Protocol Buffer generated code
-    assert blob("C++/protocol-buffer.pb.h").generated?
-    assert blob("C++/protocol-buffer.pb.cc").generated?
-    assert blob("Java/ProtocolBuffer.java").generated?
-    assert blob("Python/protocol_buffer_pb2.py").generated?
+    assert sample_blob("C++/protocol-buffer.pb.h").generated?
+    assert sample_blob("C++/protocol-buffer.pb.cc").generated?
+    assert sample_blob("Java/ProtocolBuffer.java").generated?
+    assert sample_blob("Python/protocol_buffer_pb2.py").generated?
 
     # Generated JNI
-    assert blob("C/jni_layer.h").generated?
+    assert sample_blob("C/jni_layer.h").generated?
 
     # Minified CSS
-    assert !blob("CSS/bootstrap.css").generated?
-    assert blob("CSS/bootstrap.min.css").generated?
+    assert !sample_blob("CSS/bootstrap.css").generated?
+    assert sample_blob("CSS/bootstrap.min.css").generated?
 
     # Generated VCR
-    assert blob("YAML/vcr_cassette.yml").generated?
+    assert sample_blob("YAML/vcr_cassette.yml").generated?
 
     # Generated by Zephir
-    assert blob("Zephir/filenames/exception.zep.c").generated?
-    assert blob("Zephir/filenames/exception.zep.h").generated?
-    assert blob("Zephir/filenames/exception.zep.php").generated?
-    assert !blob("Zephir/Router.zep").generated?
+    assert sample_blob("Zephir/filenames/exception.zep.c").generated?
+    assert sample_blob("Zephir/filenames/exception.zep.h").generated?
+    assert sample_blob("Zephir/filenames/exception.zep.php").generated?
+    assert !sample_blob("Zephir/Router.zep").generated?
 
 
     assert Linguist::Generated.generated?("node_modules/grunt/lib/grunt.js", nil)
 
     # Godep saved dependencies
-    assert blob("Godeps/Godeps.json").generated?
-    assert blob("Godeps/_workspace/src/github.com/kr/s3/sign.go").generated?
+    assert sample_blob("Godeps/Godeps.json").generated?
+    assert sample_blob("Godeps/_workspace/src/github.com/kr/s3/sign.go").generated?
   end
 
   def test_vendored
-    assert !blob("Text/README").vendored?
-    assert !blob("ext/extconf.rb").vendored?
+    assert !fixture_blob("Data/README").vendored?
+    assert !sample_blob("ext/extconf.rb").vendored?
 
     # Dependencies
-    assert blob("dependencies/windows/headers/GL/glext.h").vendored?
+    assert sample_blob("dependencies/windows/headers/GL/glext.h").vendored?
 
     # Node dependencies
-    assert blob("node_modules/coffee-script/lib/coffee-script.js").vendored?
+    assert sample_blob("node_modules/coffee-script/lib/coffee-script.js").vendored?
 
     # Bower Components
-    assert blob("bower_components/custom/custom.js").vendored?
-    assert blob("app/bower_components/custom/custom.js").vendored?
-    assert blob("vendor/assets/bower_components/custom/custom.js").vendored?
+    assert sample_blob("bower_components/custom/custom.js").vendored?
+    assert sample_blob("app/bower_components/custom/custom.js").vendored?
+    assert sample_blob("vendor/assets/bower_components/custom/custom.js").vendored?
 
     # Go dependencies
-    assert !blob("Godeps/Godeps.json").vendored?
-    assert blob("Godeps/_workspace/src/github.com/kr/s3/sign.go").vendored?
+    assert !sample_blob("Godeps/Godeps.json").vendored?
+    assert sample_blob("Godeps/_workspace/src/github.com/kr/s3/sign.go").vendored?
 
     # Rails vendor/
-    assert blob("vendor/plugins/will_paginate/lib/will_paginate.rb").vendored?
+    assert sample_blob("vendor/plugins/will_paginate/lib/will_paginate.rb").vendored?
 
     # 'thirdparty' directory
-    assert blob("thirdparty/lib/main.c").vendored?
+    assert sample_blob("thirdparty/lib/main.c").vendored?
 
     # 'extern(al)' directory
-    assert blob("extern/util/__init__.py").vendored?
-    assert blob("external/jquery.min.js").vendored?
+    assert sample_blob("extern/util/__init__.py").vendored?
+    assert sample_blob("external/jquery.min.js").vendored?
 
     # C deps
-    assert blob("deps/http_parser/http_parser.c").vendored?
-    assert blob("deps/v8/src/v8.h").vendored?
+    assert sample_blob("deps/http_parser/http_parser.c").vendored?
+    assert sample_blob("deps/v8/src/v8.h").vendored?
 
     # Chart.js
-    assert blob("some/vendored/path/Chart.js").vendored?
-    assert !blob("some/vendored/path/chart.js").vendored?
+    assert sample_blob("some/vendored/path/Chart.js").vendored?
+    assert !sample_blob("some/vendored/path/chart.js").vendored?
 
     # Codemirror deps
-    assert blob("codemirror/mode/blah.js").vendored?
+    assert sample_blob("codemirror/mode/blah.js").vendored?
 
     # Debian packaging
-    assert blob("debian/cron.d").vendored?
+    assert sample_blob("debian/cron.d").vendored?
 
     # Minified JavaScript and CSS
-    assert blob("foo.min.js").vendored?
-    assert blob("foo.min.css").vendored?
-    assert blob("foo-min.js").vendored?
-    assert blob("foo-min.css").vendored?
-    assert !blob("foomin.css").vendored?
-    assert !blob("foo.min.txt").vendored?
+    assert sample_blob("foo.min.js").vendored?
+    assert sample_blob("foo.min.css").vendored?
+    assert sample_blob("foo-min.js").vendored?
+    assert sample_blob("foo-min.css").vendored?
+    assert !sample_blob("foomin.css").vendored?
+    assert !sample_blob("foo.min.txt").vendored?
 
     # Prototype
-    assert !blob("public/javascripts/application.js").vendored?
-    assert blob("public/javascripts/prototype.js").vendored?
-    assert blob("public/javascripts/effects.js").vendored?
-    assert blob("public/javascripts/controls.js").vendored?
-    assert blob("public/javascripts/dragdrop.js").vendored?
+    assert !sample_blob("public/javascripts/application.js").vendored?
+    assert sample_blob("public/javascripts/prototype.js").vendored?
+    assert sample_blob("public/javascripts/effects.js").vendored?
+    assert sample_blob("public/javascripts/controls.js").vendored?
+    assert sample_blob("public/javascripts/dragdrop.js").vendored?
 
     # jQuery
-    assert blob("jquery.js").vendored?
-    assert blob("public/javascripts/jquery.js").vendored?
-    assert blob("public/javascripts/jquery.min.js").vendored?
-    assert blob("public/javascripts/jquery-1.7.js").vendored?
-    assert blob("public/javascripts/jquery-1.7.min.js").vendored?
-    assert blob("public/javascripts/jquery-1.5.2.js").vendored?
-    assert blob("public/javascripts/jquery-1.6.1.js").vendored?
-    assert blob("public/javascripts/jquery-1.6.1.min.js").vendored?
-    assert blob("public/javascripts/jquery-1.10.1.js").vendored?
-    assert blob("public/javascripts/jquery-1.10.1.min.js").vendored?
-    assert !blob("public/javascripts/jquery.github.menu.js").vendored?
+    assert sample_blob("jquery.js").vendored?
+    assert sample_blob("public/javascripts/jquery.js").vendored?
+    assert sample_blob("public/javascripts/jquery.min.js").vendored?
+    assert sample_blob("public/javascripts/jquery-1.7.js").vendored?
+    assert sample_blob("public/javascripts/jquery-1.7.min.js").vendored?
+    assert sample_blob("public/javascripts/jquery-1.5.2.js").vendored?
+    assert sample_blob("public/javascripts/jquery-1.6.1.js").vendored?
+    assert sample_blob("public/javascripts/jquery-1.6.1.min.js").vendored?
+    assert sample_blob("public/javascripts/jquery-1.10.1.js").vendored?
+    assert sample_blob("public/javascripts/jquery-1.10.1.min.js").vendored?
+    assert !sample_blob("public/javascripts/jquery.github.menu.js").vendored?
 
     # jQuery UI
-    assert blob("themes/ui-lightness/jquery-ui.css").vendored?
-    assert blob("themes/ui-lightness/jquery-ui-1.8.22.custom.css").vendored?
-    assert blob("themes/ui-lightness/jquery.ui.accordion.css").vendored?
-    assert blob("ui/i18n/jquery.ui.datepicker-ar.js").vendored?
-    assert blob("ui/i18n/jquery-ui-i18n.js").vendored?
-    assert blob("ui/jquery.effects.blind.js").vendored?
-    assert blob("ui/jquery-ui-1.8.22.custom.js").vendored?
-    assert blob("ui/jquery-ui-1.8.22.custom.min.js").vendored?
-    assert blob("ui/jquery-ui-1.8.22.js").vendored?
-    assert blob("ui/jquery-ui-1.8.js").vendored?
-    assert blob("ui/jquery-ui.min.js").vendored?
-    assert blob("ui/jquery.ui.accordion.js").vendored?
-    assert blob("ui/minified/jquery.effects.blind.min.js").vendored?
-    assert blob("ui/minified/jquery.ui.accordion.min.js").vendored?
+    assert sample_blob("themes/ui-lightness/jquery-ui.css").vendored?
+    assert sample_blob("themes/ui-lightness/jquery-ui-1.8.22.custom.css").vendored?
+    assert sample_blob("themes/ui-lightness/jquery.ui.accordion.css").vendored?
+    assert sample_blob("ui/i18n/jquery.ui.datepicker-ar.js").vendored?
+    assert sample_blob("ui/i18n/jquery-ui-i18n.js").vendored?
+    assert sample_blob("ui/jquery.effects.blind.js").vendored?
+    assert sample_blob("ui/jquery-ui-1.8.22.custom.js").vendored?
+    assert sample_blob("ui/jquery-ui-1.8.22.custom.min.js").vendored?
+    assert sample_blob("ui/jquery-ui-1.8.22.js").vendored?
+    assert sample_blob("ui/jquery-ui-1.8.js").vendored?
+    assert sample_blob("ui/jquery-ui.min.js").vendored?
+    assert sample_blob("ui/jquery.ui.accordion.js").vendored?
+    assert sample_blob("ui/minified/jquery.effects.blind.min.js").vendored?
+    assert sample_blob("ui/minified/jquery.ui.accordion.min.js").vendored?
 
     # MooTools
-    assert blob("public/javascripts/mootools-core-1.3.2-full-compat.js").vendored?
-    assert blob("public/javascripts/mootools-core-1.3.2-full-compat-yc.js").vendored?
+    assert sample_blob("public/javascripts/mootools-core-1.3.2-full-compat.js").vendored?
+    assert sample_blob("public/javascripts/mootools-core-1.3.2-full-compat-yc.js").vendored?
 
     # Dojo
-    assert blob("public/javascripts/dojo.js").vendored?
+    assert sample_blob("public/javascripts/dojo.js").vendored?
 
     # MochiKit
-    assert blob("public/javascripts/MochiKit.js").vendored?
+    assert sample_blob("public/javascripts/MochiKit.js").vendored?
 
     # YUI
-    assert blob("public/javascripts/yahoo-dom-event.js").vendored?
-    assert blob("public/javascripts/yahoo-min.js").vendored?
-    assert blob("public/javascripts/yuiloader-dom-event.js").vendored?
+    assert sample_blob("public/javascripts/yahoo-dom-event.js").vendored?
+    assert sample_blob("public/javascripts/yahoo-min.js").vendored?
+    assert sample_blob("public/javascripts/yuiloader-dom-event.js").vendored?
 
     # WYS editors
-    assert blob("public/javascripts/ckeditor.js").vendored?
-    assert blob("public/javascripts/tiny_mce.js").vendored?
-    assert blob("public/javascripts/tiny_mce_popup.js").vendored?
-    assert blob("public/javascripts/tiny_mce_src.js").vendored?
+    assert sample_blob("public/javascripts/ckeditor.js").vendored?
+    assert sample_blob("public/javascripts/tiny_mce.js").vendored?
+    assert sample_blob("public/javascripts/tiny_mce_popup.js").vendored?
+    assert sample_blob("public/javascripts/tiny_mce_src.js").vendored?
 
     # AngularJS
-    assert blob("public/javascripts/angular.js").vendored?
-    assert blob("public/javascripts/angular.min.js").vendored?
+    assert sample_blob("public/javascripts/angular.js").vendored?
+    assert sample_blob("public/javascripts/angular.min.js").vendored?
 
     # D3.js
-    assert blob("public/javascripts/d3.v3.js").vendored?
-    assert blob("public/javascripts/d3.v3.min.js").vendored?
+    assert sample_blob("public/javascripts/d3.v3.js").vendored?
+    assert sample_blob("public/javascripts/d3.v3.min.js").vendored?
 
     # Modernizr
-    assert blob("public/javascripts/modernizr-2.7.1.js").vendored?
-    assert blob("public/javascripts/modernizr.custom.01009.js").vendored?
+    assert sample_blob("public/javascripts/modernizr-2.7.1.js").vendored?
+    assert sample_blob("public/javascripts/modernizr.custom.01009.js").vendored?
 
     # Fabric
-    assert blob("fabfile.py").vendored?
+    assert sample_blob("fabfile.py").vendored?
 
     # WAF
-    assert blob("waf").vendored?
+    assert sample_blob("waf").vendored?
 
     # Visual Studio IntelliSense
-    assert blob("Scripts/jquery-1.7-vsdoc.js").vendored?
+    assert sample_blob("Scripts/jquery-1.7-vsdoc.js").vendored?
 
     # Microsoft Ajax
-    assert blob("Scripts/MicrosoftAjax.debug.js").vendored?
-    assert blob("Scripts/MicrosoftAjax.js").vendored?
-    assert blob("Scripts/MicrosoftMvcAjax.debug.js").vendored?
-    assert blob("Scripts/MicrosoftMvcAjax.js").vendored?
-    assert blob("Scripts/MicrosoftMvcValidation.debug.js").vendored?
-    assert blob("Scripts/MicrosoftMvcValidation.js").vendored?
+    assert sample_blob("Scripts/MicrosoftAjax.debug.js").vendored?
+    assert sample_blob("Scripts/MicrosoftAjax.js").vendored?
+    assert sample_blob("Scripts/MicrosoftMvcAjax.debug.js").vendored?
+    assert sample_blob("Scripts/MicrosoftMvcAjax.js").vendored?
+    assert sample_blob("Scripts/MicrosoftMvcValidation.debug.js").vendored?
+    assert sample_blob("Scripts/MicrosoftMvcValidation.js").vendored?
 
     # jQuery validation plugin (MS bundles this with asp.net mvc)
-    assert blob("Scripts/jquery.validate.js").vendored?
-    assert blob("Scripts/jquery.validate.min.js").vendored?
-    assert blob("Scripts/jquery.validate.unobtrusive.js").vendored?
-    assert blob("Scripts/jquery.validate.unobtrusive.min.js").vendored?
-    assert blob("Scripts/jquery.unobtrusive-ajax.js").vendored?
-    assert blob("Scripts/jquery.unobtrusive-ajax.min.js").vendored?
+    assert sample_blob("Scripts/jquery.validate.js").vendored?
+    assert sample_blob("Scripts/jquery.validate.min.js").vendored?
+    assert sample_blob("Scripts/jquery.validate.unobtrusive.js").vendored?
+    assert sample_blob("Scripts/jquery.validate.unobtrusive.min.js").vendored?
+    assert sample_blob("Scripts/jquery.unobtrusive-ajax.js").vendored?
+    assert sample_blob("Scripts/jquery.unobtrusive-ajax.min.js").vendored?
 
     # NuGet Packages
-    assert blob("packages/Modernizr.2.0.6/Content/Scripts/modernizr-2.0.6-development-only.js").vendored?
+    assert sample_blob("packages/Modernizr.2.0.6/Content/Scripts/modernizr-2.0.6-development-only.js").vendored?
 
     # Font Awesome
-    assert blob("some/asset/path/font-awesome.min.css").vendored?
-    assert blob("some/asset/path/font-awesome.css").vendored?
+    assert sample_blob("some/asset/path/font-awesome.min.css").vendored?
+    assert sample_blob("some/asset/path/font-awesome.css").vendored?
 
     # Normalize
-    assert blob("some/asset/path/normalize.css").vendored?
+    assert sample_blob("some/asset/path/normalize.css").vendored?
 
     # Cocoapods
-    assert blob('Pods/blah').vendored?
+    assert sample_blob('Pods/blah').vendored?
 
     # Html5shiv
-    assert blob("Scripts/html5shiv.js").vendored?
-    assert blob("Scripts/html5shiv.min.js").vendored?
+    assert sample_blob("Scripts/html5shiv.js").vendored?
+    assert sample_blob("Scripts/html5shiv.min.js").vendored?
 
     # Test fixtures
-    assert blob("test/fixtures/random.rkt").vendored?
-    assert blob("Test/fixtures/random.rkt").vendored?
+    assert sample_blob("test/fixtures/random.rkt").vendored?
+    assert sample_blob("Test/fixtures/random.rkt").vendored?
 
     # Cordova/PhoneGap
-    assert blob("cordova.js").vendored?
-    assert blob("cordova.min.js").vendored?
-    assert blob("cordova-2.1.0.js").vendored?
-    assert blob("cordova-2.1.0.min.js").vendored?
+    assert sample_blob("cordova.js").vendored?
+    assert sample_blob("cordova.min.js").vendored?
+    assert sample_blob("cordova-2.1.0.js").vendored?
+    assert sample_blob("cordova-2.1.0.min.js").vendored?
 
     # Foundation js
-    assert blob("foundation.js").vendored?
-    assert blob("foundation.min.js").vendored?
-    assert blob("foundation.abide.js").vendored?
+    assert sample_blob("foundation.js").vendored?
+    assert sample_blob("foundation.min.js").vendored?
+    assert sample_blob("foundation.abide.js").vendored?
 
     # Vagrant
-    assert blob("Vagrantfile").vendored?
+    assert sample_blob("Vagrantfile").vendored?
 
     # Gradle
-    assert blob("gradlew").vendored?
-    assert blob("gradlew.bat").vendored?
-    assert blob("gradle/wrapper/gradle-wrapper.properties").vendored?
-    assert blob("subproject/gradlew").vendored?
-    assert blob("subproject/gradlew.bat").vendored?
-    assert blob("subproject/gradle/wrapper/gradle-wrapper.properties").vendored?
+    assert sample_blob("gradlew").vendored?
+    assert sample_blob("gradlew.bat").vendored?
+    assert sample_blob("gradle/wrapper/gradle-wrapper.properties").vendored?
+    assert sample_blob("subproject/gradlew").vendored?
+    assert sample_blob("subproject/gradlew.bat").vendored?
+    assert sample_blob("subproject/gradle/wrapper/gradle-wrapper.properties").vendored?
 
     # Octicons
-    assert blob("octicons.css").vendored?
-    assert blob("public/octicons.min.css").vendored?
-    assert blob("public/octicons/sprockets-octicons.scss").vendored?
+    assert sample_blob("octicons.css").vendored?
+    assert sample_blob("public/octicons.min.css").vendored?
+    assert sample_blob("public/octicons/sprockets-octicons.scss").vendored?
 
     # Typesafe Activator
-    assert blob("activator").vendored?
-    assert blob("activator.bat").vendored?
-    assert blob("subproject/activator").vendored?
-    assert blob("subproject/activator.bat").vendored?
+    assert sample_blob("activator").vendored?
+    assert sample_blob("activator.bat").vendored?
+    assert sample_blob("subproject/activator").vendored?
+    assert sample_blob("subproject/activator.bat").vendored?
+  end
+
+  def test_documentation
+    assert_predicate fixture_blob("doc/foo.html"), :documentation?
+    assert_predicate fixture_blob("docs/foo.html"), :documentation?
+    refute_predicate fixture_blob("project/doc/foo.html"), :documentation?
+    refute_predicate fixture_blob("project/docs/foo.html"), :documentation?
+
+    assert_predicate fixture_blob("Documentation/foo.md"), :documentation?
+    refute_predicate fixture_blob("project/Documentation/foo.md"), :documentation?
+
+    assert_predicate fixture_blob("README"), :documentation?
+    assert_predicate fixture_blob("README.md"), :documentation?
+    assert_predicate fixture_blob("README.txt"), :documentation?
+    assert_predicate fixture_blob("foo/README"), :documentation?
+
+    assert_predicate fixture_blob("CONTRIBUTING"), :documentation?
+    assert_predicate fixture_blob("CONTRIBUTING.md"), :documentation?
+    assert_predicate fixture_blob("CONTRIBUTING.txt"), :documentation?
+    assert_predicate fixture_blob("foo/CONTRIBUTING"), :documentation?
+
+    assert_predicate fixture_blob("LICENSE"), :documentation?
+    assert_predicate fixture_blob("LICENCE.md"), :documentation?
+    assert_predicate fixture_blob("LICENSE.txt"), :documentation?
+    assert_predicate fixture_blob("foo/LICENSE"), :documentation?
+
+    assert_predicate fixture_blob("COPYING"), :documentation?
+    assert_predicate fixture_blob("COPYING.md"), :documentation?
+    assert_predicate fixture_blob("COPYING.txt"), :documentation?
+    assert_predicate fixture_blob("foo/COPYING"), :documentation?
+
+    assert_predicate fixture_blob("INSTALL"), :documentation?
+    assert_predicate fixture_blob("INSTALL.md"), :documentation?
+    assert_predicate fixture_blob("INSTALL.txt"), :documentation?
+    assert_predicate fixture_blob("foo/INSTALL"), :documentation?
+
+    refute_predicate fixture_blob("foo.md"), :documentation?
   end
 
   def test_language
     Samples.each do |sample|
-      blob = blob(sample[:path])
+      blob = sample_blob(sample[:path])
       assert blob.language, "No language for #{sample[:path]}"
       assert_equal sample[:language], blob.language.name, blob.name
     end
@@ -469,25 +488,30 @@ class TestBlob < Test::Unit::TestCase
     # Test language detection for files which shouldn't be used as samples
     root = File.expand_path('../fixtures', __FILE__)
     Dir.entries(root).each do |language|
-      next unless File.file?(language)
+      next if language == '.' || language == '..' || language == 'Binary' ||
+              File.basename(language) == 'ace_modes.json'
 
       # Each directory contains test files of a language
       dirname = File.join(root, language)
       Dir.entries(dirname).each do |filename|
-        next unless File.file?(filename)
-        
         # By default blob search the file in the samples;
         # thus, we need to give it the absolute path
         filepath = File.join(dirname, filename)
-        blob = blob(filepath)
-        assert blob.language, "No language for #{filepath}"
-        assert_equal language, blob.language.name, blob.name
+        next unless File.file?(filepath)
+
+        blob = fixture_blob(filepath)
+        if language == 'Data'
+          assert blob.language.nil?, "A language was found for #{filepath}"
+        else
+          assert blob.language, "No language for #{filepath}"
+          assert_equal language, blob.language.name, blob.name
+        end
       end
     end
   end
 
   def test_minified_files_not_safe_to_highlight
-    assert !blob("JavaScript/jquery-1.6.1.min.js").safe_to_colorize?
+    assert !sample_blob("JavaScript/jquery-1.6.1.min.js").safe_to_colorize?
   end
 
   def test_empty
@@ -497,5 +521,30 @@ class TestBlob < Test::Unit::TestCase
     assert blob.new(nil).empty?
     refute blob.new(" ").empty?
     refute blob.new("nope").empty?
+  end
+
+  def test_include_in_language_stats
+    vendored = sample_blob("bower_components/custom/custom.js")
+    assert_predicate vendored, :vendored?
+    refute_predicate vendored, :include_in_language_stats?
+
+    documentation = fixture_blob("README")
+    assert_predicate documentation, :documentation?
+    refute_predicate documentation, :include_in_language_stats?
+
+    generated = sample_blob("CSS/bootstrap.min.css")
+    assert_predicate generated, :generated?
+    refute_predicate generated, :include_in_language_stats?
+
+    data = sample_blob("Ant Build System/filenames/ant.xml")
+    assert_equal :data, data.language.type
+    refute_predicate data, :include_in_language_stats?
+
+    prose = sample_blob("Markdown/tender.md")
+    assert_equal :prose, prose.language.type
+    refute_predicate prose, :include_in_language_stats?
+
+    included = sample_blob("HTML/pages.html")
+    assert_predicate included, :include_in_language_stats?
   end
 end
