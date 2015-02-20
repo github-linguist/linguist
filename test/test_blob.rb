@@ -452,6 +452,9 @@ class TestBlob < Minitest::Test
     refute_predicate fixture_blob("project/Documentation/foo.md"), :documentation?
     refute_predicate fixture_blob("project/documentation/foo.md"), :documentation?
 
+    assert_predicate fixture_blob("javadoc/foo.html"), :documentation?
+    assert_predicate fixture_blob("project/javadoc/foo.html"), :documentation?
+
     assert_predicate fixture_blob("man/foo.html"), :documentation?
     refute_predicate fixture_blob("project/man/foo.html"), :documentation?
 
