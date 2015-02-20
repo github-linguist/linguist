@@ -25,6 +25,10 @@ class TestTokenizer < Minitest::Test
     assert_equal %w(add \( \)), tokenize('add(123, 456)')
     assert_equal %w(|), tokenize('0x01 | 0x10')
     assert_equal %w(*), tokenize('500.42 * 1.0')
+    assert_equal %w(), tokenize('1.23e-04')
+    assert_equal %w(), tokenize('1.0f')
+    assert_equal %w(), tokenize('1234ULL')
+    assert_equal %w(G1 X55 Y5 F2000), tokenize('G1 X55 Y5 F2000')
   end
 
   def test_skip_comments
