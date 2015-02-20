@@ -439,6 +439,9 @@ class TestBlob < Minitest::Test
     assert sample_blob("activator.bat").vendored?
     assert sample_blob("subproject/activator").vendored?
     assert sample_blob("subproject/activator.bat").vendored?
+
+    assert_predicate fixture_blob(".google_apis/bar.jar"), :vendored?
+    assert_predicate fixture_blob("foo/.google_apis/bar.jar"), :vendored?
   end
 
   def test_documentation
