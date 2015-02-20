@@ -439,6 +439,9 @@ class TestBlob < Minitest::Test
     assert sample_blob("activator.bat").vendored?
     assert sample_blob("subproject/activator").vendored?
     assert sample_blob("subproject/activator.bat").vendored?
+
+    assert_predicate fixture_blob(".google_apis/bar.jar"), :vendored?
+    assert_predicate fixture_blob("foo/.google_apis/bar.jar"), :vendored?
   end
 
   def test_documentation
@@ -448,7 +451,15 @@ class TestBlob < Minitest::Test
     refute_predicate fixture_blob("project/docs/foo.html"), :documentation?
 
     assert_predicate fixture_blob("Documentation/foo.md"), :documentation?
-    refute_predicate fixture_blob("project/Documentation/foo.md"), :documentation?
+    assert_predicate fixture_blob("documentation/foo.md"), :documentation?
+    assert_predicate fixture_blob("project/Documentation/foo.md"), :documentation?
+    assert_predicate fixture_blob("project/documentation/foo.md"), :documentation?
+
+    assert_predicate fixture_blob("javadoc/foo.html"), :documentation?
+    assert_predicate fixture_blob("project/javadoc/foo.html"), :documentation?
+
+    assert_predicate fixture_blob("man/foo.html"), :documentation?
+    refute_predicate fixture_blob("project/man/foo.html"), :documentation?
 
     assert_predicate fixture_blob("README"), :documentation?
     assert_predicate fixture_blob("README.md"), :documentation?
