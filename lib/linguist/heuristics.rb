@@ -178,11 +178,13 @@ module Linguist
       end
     end
 
-    disambiguate "M", "Mathematica", "Matlab", "Mercury", "Objective-C" do |data|
+    disambiguate "M", "MUF", "Mathematica", "Matlab", "Mercury", "Objective-C" do |data|
       if ObjectiveCRegex.match(data)
         Language["Objective-C"]
       elsif data.include?(":- module")
         Language["Mercury"]
+      elsif /^: /.match(data)
+        Language["MUF"]
       elsif /^\s*;/.match(data)
         Language["M"]
       elsif /^\s*\(\*/.match(data)
