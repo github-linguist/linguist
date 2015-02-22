@@ -107,10 +107,14 @@ module Linguist
       end
     end
 
-    disambiguate "IDL", "Prolog" do |data|
+    disambiguate "IDL", "Prolog", "INI", "QMake" do |data|
       if data.include?(":-")
         Language["Prolog"]
-      else
+      elsif data.include?("last_client=")
+        Language["INI"]
+      elsif data.include?("HEADERS") && data.include?("SOURCES")
+        Language["QMake"]
+      elsif /^\s*function[ \w,]+$/.match(data)
         Language["IDL"]
       end
     end
