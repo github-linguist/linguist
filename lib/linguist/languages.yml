@@ -271,6 +271,7 @@ Batchfile:
   ace_mode: batchfile
 
 Befunge:
+  type: programming
   extensions:
   - .befunge
   ace_mode: text
@@ -326,6 +327,7 @@ Boo:
   ace_mode: text
 
 Brainfuck:
+  type: programming
   extensions:
   - .b
   - .bf
@@ -419,6 +421,7 @@ CLIPS:
   ace_mode: text
 
 CMake:
+  type: programming
   extensions:
   - .cmake
   - .cmake.in
@@ -478,6 +481,7 @@ Chapel:
   ace_mode: text
 
 ChucK:
+  type: programming
   extensions:
   - .ck
   tm_scope: source.java
@@ -639,6 +643,7 @@ Crystal:
   - crystal
 
 Cucumber:
+  type: programming
   extensions:
   - .feature
   tm_scope: text.gherkin.feature
@@ -698,6 +703,7 @@ DM:
   ace_mode: c_cpp
 
 Darcs Patch:
+  type: programming
   search_term: dpatch
   aliases:
   - dpatch
@@ -715,6 +721,7 @@ Dart:
   ace_mode: dart
 
 Diff:
+  type: programming
   extensions:
   - .diff
   - .patch
@@ -1012,6 +1019,7 @@ Game Maker Language:
   ace_mode: c_cpp
 
 Genshi:
+  type: programming
   extensions:
   - .kid
   tm_scope: text.xml.genshi
@@ -1021,6 +1029,7 @@ Genshi:
   ace_mode: xml
 
 Gentoo Ebuild:
+  type: programming
   group: Shell
   extensions:
   - .ebuild
@@ -1028,6 +1037,7 @@ Gentoo Ebuild:
   ace_mode: sh
 
 Gentoo Eclass:
+  type: programming
   group: Shell
   extensions:
   - .eclass
@@ -1035,6 +1045,7 @@ Gentoo Eclass:
   ace_mode: sh
 
 Gettext Catalog:
+  type: programming
   search_term: pot
   searchable: false
   aliases:
@@ -1135,6 +1146,7 @@ Graphviz (DOT):
   ace_mode: text
 
 Groff:
+  type: programming
   extensions:
   - .man
   - '.1'
@@ -1162,6 +1174,7 @@ Groovy:
   - groovy
 
 Groovy Server Pages:
+  type: programming
   group: Groovy
   aliases:
   - gsp
@@ -1318,6 +1331,7 @@ INI:
   ace_mode: ini
 
 IRC log:
+  type: data
   search_term: irc
   aliases:
   - irc
@@ -1348,6 +1362,7 @@ Inform 7:
   ace_mode: text
 
 Inno Setup:
+  type: programming
   extensions:
   - .iss
   tm_scope: source.inno
@@ -1442,6 +1457,7 @@ Java:
   - .java
 
 Java Server Pages:
+  type: programming
   group: Java
   search_term: jsp
   aliases:
@@ -1537,6 +1553,7 @@ LFE:
   ace_mode: lisp
 
 LLVM:
+  type: programming
   extensions:
   - .ll
   ace_mode: text
@@ -1597,6 +1614,7 @@ Less:
   ace_mode: less
 
 LilyPond:
+  type: programming
   extensions:
   - .ly
   - .ily
@@ -1735,6 +1753,7 @@ Makefile:
   ace_mode: makefile
 
 Mako:
+  type: programming
   extensions:
   - .mako
   - .mao
@@ -1827,6 +1846,7 @@ Mercury:
   ace_mode: prolog
 
 MiniD: # Legacy
+  type: programming
   searchable: false
   extensions:
   - .minid # Dummy extension
@@ -1874,12 +1894,14 @@ MoonScript:
   ace_mode: text
 
 Myghty:
+  type: programming
   extensions:
   - .myt
   tm_scope: none
   ace_mode: text
 
 NSIS:
+  type: programming
   extensions:
   - .nsi
   - .nsh
@@ -1971,6 +1993,7 @@ Nu:
   - nush
 
 NumPy:
+  type: programming
   group: Python
   extensions:
   - .numpy
@@ -2430,6 +2453,7 @@ QML:
   ace_mode: text
 
 QMake:
+  type: programming
   extensions:
   - .pro
   - .pri
@@ -2526,6 +2550,7 @@ Ragel in Ruby Host:
   ace_mode: text
 
 Raw token data:
+  type: data
   search_term: raw
   aliases:
   - raw
@@ -2557,6 +2582,7 @@ Red:
   ace_mode: text
 
 Redcode:
+  type: programming
   extensions:
   - .cw
   tm_scope: none
@@ -2843,6 +2869,7 @@ Smalltalk:
   ace_mode: text
 
 Smarty:
+  type: programming
   extensions:
   - .tpl
   ace_mode: smarty
@@ -3266,6 +3293,7 @@ XQuery:
   ace_mode: xquery
 
 XS:
+  type: programming
   extensions:
   - .xs
   tm_scope: source.c
@@ -3362,6 +3390,7 @@ fish:
   ace_mode: text
 
 mupad:
+  type: programming
   extensions:
   - .mu
   ace_mode: text
