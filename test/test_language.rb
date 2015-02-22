@@ -155,10 +155,6 @@ class TestLanguage < Minitest::Test
     assert_equal :prose, Language['Org'].type
   end
 
-  def test_other
-    assert_nil Language['Brainfuck'].type
-  end
-
   def test_searchable
     assert Language['Ruby'].searchable?
     assert !Language['Gettext Catalog'].searchable?
