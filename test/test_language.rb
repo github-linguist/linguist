@@ -356,10 +356,10 @@ class TestLanguage < Minitest::Test
 
   def test_all_languages_have_type
     missing = Language.all.select { |language| language.type.nil? }
-    message = "The following languages' types are not listed in grammars.yml. Please add types for all new languages.\n"
+    message = "The following languages do not have a type listed in grammars.yml. Please add types for all new languages.\n"
 
     width = missing.map { |language| language.name.length }.max
-    message << missing.map { |language| sprintf("%-#{width}s %s", language.name, language.tm_scope) }.sort.join("\n")
+    message << missing.map { |language| sprintf("%-#{width}s", language.name) }.sort.join("\n")
     assert missing.empty?, message
   end
 
