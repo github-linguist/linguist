@@ -61,6 +61,9 @@ module Linguist
       @heuristic.call(data)
     end
 
+    # Common heuristics
+    ObjectiveCRegex = /^[ \t]*@(interface|class|protocol|property|end|synchronised|selector|implementation)\b/
+
     disambiguate "BitBake", "BlitzBasic" do |data|
       if /^\s*; /.match(data) || data.include?("End Function")
         Language["BlitzBasic"]
@@ -78,7 +81,7 @@ module Linguist
     end
 
     disambiguate "Objective-C", "C++", "C" do |data|
-      if (/^[ \t]*@(interface|class|protocol|property|end|synchronised|selector|implementation)\b/.match(data))
+      if ObjectiveCRegex.match(data)
         Language["Objective-C"]
       elsif (/^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>/.match(data) ||
         /^\s*template\s*</.match(data) || /^[ \t]*try/.match(data) || /^[ \t]*catch\s*\(/.match(data) || /^[ \t]*(class|(using[ \t]+)?namespace)\s+\w+/.match(data) || /^[ \t]*(private|public|protected):$/.match(data) || /std::\w+/.match(data))
@@ -89,7 +92,7 @@ module Linguist
     disambiguate "Perl", "Perl6", "Prolog" do |data|
       if data.include?("use v6")
         Language["Perl6"]
-      elsif data.include?("use strict")
+      elsif data.match(/use strict|use\s+v?5\./)
         Language["Perl"]
       elsif data.include?(":-")
         Language["Prolog"]
@@ -109,6 +112,15 @@ module Linguist
         Language["Prolog"]
       else
         Language["IDL"]
+      end
+    end
+
+    disambiguate "GAP", "Scilab" do |data|
+      if (data.include?("gap> "))
+        Language["GAP"]
+      # Heads up - we don't usually write heuristics like this (with no regex match)
+      else
+        Language["Scilab"]
       end
     end
 
@@ -138,14 +150,20 @@ module Linguist
       end
     end
 
-    disambiguate "AsciiDoc", "AGS Script" do |data|
-      Language["AsciiDoc"] if /^=+(\s|\n)/.match(data)
+    disambiguate "AsciiDoc", "AGS Script", "Public Key" do |data|
+      if /^[=-]+(\s|\n)|{{[A-Za-z]/.match(data)
+        Language["AsciiDoc"]
+      elsif /^(\/\/.+|((import|export)\s+)?(function|int|float|char)\s+((room|repeatedly|on|game)_)?([A-Za-z]+[A-Za-z_0-9]+)\s*[;\(])/.match(data)
+        Language["AGS Script"]
+      elsif /^-----BEGIN/.match(data)
+        Language["Public Key"]
+      end
     end
 
     disambiguate "FORTRAN", "Forth" do |data|
       if /^: /.match(data)
         Language["Forth"]
-      elsif /^([c*][^a-z]|      (subroutine|program)\s|!)/i.match(data)
+      elsif /^([c*][^a-z]|      (subroutine|program)\s|\s*!)/i.match(data)
         Language["FORTRAN"]
       end
     end
@@ -160,6 +178,20 @@ module Linguist
       end
     end
 
+    disambiguate "M", "Mathematica", "Matlab", "Mercury", "Objective-C" do |data|
+      if ObjectiveCRegex.match(data)
+        Language["Objective-C"]
+      elsif data.include?(":- module")
+        Language["Mercury"]
+      elsif /^\s*;/.match(data)
+        Language["M"]
+      elsif /^\s*\(\*/.match(data)
+        Language["Mathematica"]
+      elsif /^\s*%/.match(data)
+        Language["Matlab"]
+      end
+    end
+
     disambiguate "Gosu", "JavaScript" do |data|
       Language["Gosu"] if /^uses java\./.match(data)
     end
@@ -169,6 +201,14 @@ module Linguist
         Language["LoomScript"]
       else
         Language["LiveScript"]
+      end
+    end
+
+    disambiguate "Common Lisp", "NewLisp" do |data|
+      if /^\s*\((defun|in-package|defpackage) /.match(data)
+        Language["Common Lisp"]
+      elsif /^\s*\(define /.match(data)
+        Language["NewLisp"]
       end
     end
 

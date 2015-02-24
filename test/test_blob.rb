@@ -14,24 +14,6 @@ class TestBlob < Minitest::Test
     Encoding.default_external = @original_external
   end
 
-  def samples_path
-    File.expand_path("../../samples", __FILE__)
-  end
-
-  def fixtures_path
-    File.expand_path("../fixtures", __FILE__)
-  end
-
-  def sample_blob(name)
-    name = File.join(samples_path, name) unless name =~ /^\//
-    FileBlob.new(name, samples_path)
-  end
-
-  def fixture_blob(name)
-    name = File.join(fixtures_path, name) unless name =~ /^\//
-    FileBlob.new(name, fixtures_path)
-  end
-
   def script_blob(name)
     blob = sample_blob(name)
     blob.instance_variable_set(:@name, 'script')
@@ -234,6 +216,7 @@ class TestBlob < Minitest::Test
     assert sample_blob("C++/protocol-buffer.pb.cc").generated?
     assert sample_blob("Java/ProtocolBuffer.java").generated?
     assert sample_blob("Python/protocol_buffer_pb2.py").generated?
+    assert sample_blob("Go/api.pb.go").generated?
 
     # Generated JNI
     assert sample_blob("C/jni_layer.h").generated?
@@ -467,6 +450,54 @@ class TestBlob < Minitest::Test
     assert sample_blob("activator.bat").vendored?
     assert sample_blob("subproject/activator").vendored?
     assert sample_blob("subproject/activator.bat").vendored?
+
+    assert_predicate fixture_blob(".google_apis/bar.jar"), :vendored?
+    assert_predicate fixture_blob("foo/.google_apis/bar.jar"), :vendored?
+  end
+
+  def test_documentation
+    assert_predicate fixture_blob("doc/foo.html"), :documentation?
+    assert_predicate fixture_blob("docs/foo.html"), :documentation?
+    refute_predicate fixture_blob("project/doc/foo.html"), :documentation?
+    refute_predicate fixture_blob("project/docs/foo.html"), :documentation?
+
+    assert_predicate fixture_blob("Documentation/foo.md"), :documentation?
+    assert_predicate fixture_blob("documentation/foo.md"), :documentation?
+    assert_predicate fixture_blob("project/Documentation/foo.md"), :documentation?
+    assert_predicate fixture_blob("project/documentation/foo.md"), :documentation?
+
+    assert_predicate fixture_blob("javadoc/foo.html"), :documentation?
+    assert_predicate fixture_blob("project/javadoc/foo.html"), :documentation?
+
+    assert_predicate fixture_blob("man/foo.html"), :documentation?
+    refute_predicate fixture_blob("project/man/foo.html"), :documentation?
+
+    assert_predicate fixture_blob("README"), :documentation?
+    assert_predicate fixture_blob("README.md"), :documentation?
+    assert_predicate fixture_blob("README.txt"), :documentation?
+    assert_predicate fixture_blob("foo/README"), :documentation?
+
+    assert_predicate fixture_blob("CONTRIBUTING"), :documentation?
+    assert_predicate fixture_blob("CONTRIBUTING.md"), :documentation?
+    assert_predicate fixture_blob("CONTRIBUTING.txt"), :documentation?
+    assert_predicate fixture_blob("foo/CONTRIBUTING"), :documentation?
+
+    assert_predicate fixture_blob("LICENSE"), :documentation?
+    assert_predicate fixture_blob("LICENCE.md"), :documentation?
+    assert_predicate fixture_blob("LICENSE.txt"), :documentation?
+    assert_predicate fixture_blob("foo/LICENSE"), :documentation?
+
+    assert_predicate fixture_blob("COPYING"), :documentation?
+    assert_predicate fixture_blob("COPYING.md"), :documentation?
+    assert_predicate fixture_blob("COPYING.txt"), :documentation?
+    assert_predicate fixture_blob("foo/COPYING"), :documentation?
+
+    assert_predicate fixture_blob("INSTALL"), :documentation?
+    assert_predicate fixture_blob("INSTALL.md"), :documentation?
+    assert_predicate fixture_blob("INSTALL.txt"), :documentation?
+    assert_predicate fixture_blob("foo/INSTALL"), :documentation?
+
+    refute_predicate fixture_blob("foo.md"), :documentation?
   end
 
   def test_language
@@ -512,5 +543,30 @@ class TestBlob < Minitest::Test
     assert blob.new(nil).empty?
     refute blob.new(" ").empty?
     refute blob.new("nope").empty?
+  end
+
+  def test_include_in_language_stats
+    vendored = sample_blob("bower_components/custom/custom.js")
+    assert_predicate vendored, :vendored?
+    refute_predicate vendored, :include_in_language_stats?
+
+    documentation = fixture_blob("README")
+    assert_predicate documentation, :documentation?
+    refute_predicate documentation, :include_in_language_stats?
+
+    generated = sample_blob("CSS/bootstrap.min.css")
+    assert_predicate generated, :generated?
+    refute_predicate generated, :include_in_language_stats?
+
+    data = sample_blob("Ant Build System/filenames/ant.xml")
+    assert_equal :data, data.language.type
+    refute_predicate data, :include_in_language_stats?
+
+    prose = sample_blob("Markdown/tender.md")
+    assert_equal :prose, prose.language.type
+    refute_predicate prose, :include_in_language_stats?
+
+    included = sample_blob("HTML/pages.html")
+    assert_predicate included, :include_in_language_stats?
   end
 end

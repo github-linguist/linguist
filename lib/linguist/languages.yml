@@ -54,13 +54,14 @@ APL:
   extensions:
   - .apl
   - .dyalog
-  tm_scope: none
+  tm_scope: source.apl
   ace_mode: text
 
 ASP:
   type: programming
   color: "#6a40fd"
   search_term: aspx-vb
+  tm_scope: text.html.asp
   aliases:
   - aspx
   - aspx-vb
@@ -81,10 +82,9 @@ ATS:
   - ats2
   extensions:
   - .dats
-  - .atxt
   - .hats
   - .sats
-  tm_scope: source.ocaml
+  tm_scope: source.ats
   ace_mode: ocaml
 
 ActionScript:
@@ -186,7 +186,7 @@ AsciiDoc:
   - .asciidoc
   - .adoc
   - .asc
-  tm_scope: none
+  tm_scope: text.html.asciidoc
 
 AspectJ:
   type: programming
@@ -198,7 +198,7 @@ AspectJ:
 
 Assembly:
   type: programming
-  color: "#a67219"
+  color: "#6E4C13"
   search_term: nasm
   aliases:
   - nasm
@@ -206,6 +206,7 @@ Assembly:
   - .asm
   - .ASM
   - .a51
+  - .nasm
   tm_scope: source.asm.x86
   ace_mode: assembly_x86
 
@@ -335,7 +336,7 @@ Brightscript:
   type: programming
   extensions:
   - .brs
-  tm_scope: none
+  tm_scope: source.brightscript
   ace_mode: text
 
 Bro:
@@ -355,6 +356,8 @@ C:
   - .h
   - .idc
   - .w
+  interpreters:
+  - tcc
   ace_mode: c_cpp
 
 C#:
@@ -381,6 +384,7 @@ C++:
   - .cpp
   - .c++
   - .cc
+  - .cp
   - .cxx
   - .h
   - .h++
@@ -413,7 +417,7 @@ CLIPS:
   type: programming
   extensions:
   - .clp
-  tm_scope: none
+  tm_scope: source.clips
   ace_mode: text
 
 CMake:
@@ -437,6 +441,8 @@ COBOL:
   ace_mode: cobol
 
 CSS:
+  type: markup
+  tm_scope: source.css
   ace_mode: css
   color: "#563d7c"
   extensions:
@@ -622,7 +628,7 @@ Creole:
   wrap: true
   extensions:
   - .creole
-  tm_scope: none
+  tm_scope: text.html.creole
   ace_mode: text
 
 Crystal:
@@ -811,9 +817,11 @@ Emacs Lisp:
   - emacs
   filenames:
   - .emacs
+  - .emacs.desktop
   extensions:
   - .el
   - .emacs
+  - .emacs.desktop
   ace_mode: lisp
 
 EmberScript:
@@ -915,6 +923,7 @@ Forth:
   color: "#341708"
   extensions:
   - .fth
+  - .4TH
   - .4th
   - .F
   - .f
@@ -939,7 +948,7 @@ G-code:
   - .g
   - .gco
   - .gcode
-  tm_scope: none
+  tm_scope: source.gcode
   ace_mode: gcode
 
 GAMS:
@@ -956,7 +965,8 @@ GAP:
   - .gap
   - .gd
   - .gi
-  tm_scope: none
+  - .tst
+  tm_scope: source.gap
   ace_mode: text
 
 GAS:
@@ -972,7 +982,7 @@ GDScript:
   type: programming
   extensions:
   - .gd
-  tm_scope: none
+  tm_scope: source.gdscript
   ace_mode: text
 
 GLSL:
@@ -1070,7 +1080,7 @@ Golo:
   color: "#f6a51f"
   extensions:
   - .golo
-  tm_scope: none
+  tm_scope: source.golo
   ace_mode: text
 
 Gosu:
@@ -1088,7 +1098,7 @@ Grace:
   type: programming
   extensions:
   - .grace
-  tm_scope: none
+  tm_scope: source.grace
   ace_mode: text
 
 Gradle:
@@ -1167,6 +1177,7 @@ HTML:
   type: markup
   tm_scope: text.html.basic
   ace_mode: html
+  color: "#e44b23"
   aliases:
   - xhtml
   extensions:
@@ -1236,6 +1247,7 @@ Handlebars:
   type: markup
   aliases:
   - hbs
+  - htmlbars
   extensions:
   - .handlebars
   - .hbs
@@ -1340,7 +1352,7 @@ Inform 7:
 Inno Setup:
   extensions:
   - .iss
-  tm_scope: none
+  tm_scope: source.inno
   ace_mode: text
 
 Io:
@@ -1369,9 +1381,10 @@ Isabelle:
 
 J:
   type: programming
+  color: "#2d8abd"
   extensions:
   - .ijs
-  tm_scope: none
+  tm_scope: source.j
   ace_mode: text
 
 JSON:
@@ -1596,7 +1609,7 @@ Liquid:
   type: markup
   extensions:
   - .liquid
-  tm_scope: none
+  tm_scope: text.html.liquid
   ace_mode: liquid
 
 Literate Agda:
@@ -1801,7 +1814,7 @@ MediaWiki:
   wrap: true
   extensions:
   - .mediawiki
-  tm_scope: none
+  tm_scope: text.html.mediawiki
   ace_mode: text
 
 Mercury:
@@ -1834,6 +1847,13 @@ Mirah:
   - .mirah
   tm_scope: source.ruby
   ace_mode: ruby
+
+Modelica:
+  type: programming
+  extensions:
+  - .mo
+  tm_scope: source.modelica
+  ace_mode: text
 
 Monkey:
   type: programming
@@ -1880,6 +1900,19 @@ NetLogo:
   color: "#ff2b2b"
   extensions:
   - .nlogo
+  tm_scope: source.lisp
+  ace_mode: lisp
+
+NewLisp:
+  type: programming
+  lexer: NewLisp
+  color: "#eedd66"
+  extensions:
+  - .nl
+  - .lisp
+  - .lsp
+  interpreters:
+  - newlisp
   tm_scope: source.lisp
   ace_mode: lisp
 
@@ -2026,7 +2059,7 @@ Opal:
   color: "#f7ede0"
   extensions:
   - .opal
-  tm_scope: none
+  tm_scope: source.opal
   ace_mode: text
 
 OpenCL:
@@ -2055,7 +2088,7 @@ OpenSCAD:
   extensions:
   - .scad
   tm_scope: none
-  ace_mode: text
+  ace_mode: scad
 
 Org:
   type: prose
@@ -2071,7 +2104,7 @@ Ox:
   - .ox
   - .oxh
   - .oxo
-  tm_scope: none
+  tm_scope: source.ox
   ace_mode: text
 
 Oxygene:
@@ -2132,7 +2165,7 @@ Papyrus:
   color: "#6600cc"
   extensions:
   - .psc
-  tm_scope: none
+  tm_scope: source.papyrus
   ace_mode: text
 
 Parrot:
@@ -2224,7 +2257,7 @@ PigLatin:
   color: "#fcd7de"
   extensions:
   - .pig
-  tm_scope: none
+  tm_scope: source.pig_latin
   ace_mode: text
 
 Pike:
@@ -2250,7 +2283,7 @@ PogoScript:
   color: "#d80074"
   extensions:
   - .pogo
-  tm_scope: none
+  tm_scope: source.pogoscript
   ace_mode: text
 
 PostScript:
@@ -2297,7 +2330,7 @@ Propeller Spin:
   color: "#2b446d"
   extensions:
   - .spin
-  tm_scope: none
+  tm_scope: source.spin
   ace_mode: text
 
 Protocol Buffer:
@@ -2379,6 +2412,8 @@ Python:
   - python
   - python2
   - python3
+  aliases:
+  - rusthon
 
 Python traceback:
   type: data
@@ -2426,7 +2461,6 @@ R:
 
 RAML:
   type: data
-  lexer: YAML
   ace_mode: yaml
   tm_scope: source.yaml
   color: "#77d9fb"
@@ -2656,6 +2690,13 @@ STON:
   tm_scope: source.smalltalk
   ace_mode: text
 
+SVG:
+  type: data
+  extensions:
+  - .svg
+  tm_scope: text.xml
+  ace_mode: xml
+
 Sage:
   type: programming
   group: Python
@@ -2856,7 +2897,7 @@ Stylus:
   group: CSS
   extensions:
   - .styl
-  tm_scope: none
+  tm_scope: source.stylus
   ace_mode: stylus
 
 SuperCollider:
@@ -2895,7 +2936,7 @@ TXL:
   type: programming
   extensions:
   - .txl
-  tm_scope: none
+  tm_scope: source.txl
   ace_mode: text
 
 Tcl:
@@ -3127,7 +3168,7 @@ XC:
   ace_mode: c_cpp
 
 XML:
-  type: markup
+  type: data
   ace_mode: xml
   aliases:
   - rss
@@ -3171,7 +3212,6 @@ XML:
   - .srdf
   - .stTheme
   - .sublime-snippet
-  - .svg
   - .targets
   - .tmCommand
   - .tmLanguage
@@ -3291,13 +3331,21 @@ Zimpl:
   tm_scope: none
   ace_mode: text
 
+desktop:
+  type: data
+  extensions:
+  - .desktop
+  - .desktop.in
+  tm_scope: source.desktop
+  ace_mode: text
+
 eC:
   type: programming
   search_term: ec
   extensions:
   - .ec
   - .eh
-  tm_scope: none
+  tm_scope: source.c.ec
   ace_mode: text
 
 edn:
