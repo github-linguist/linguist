@@ -155,10 +155,6 @@ class TestLanguage < Minitest::Test
     assert_equal :prose, Language['Org'].type
   end
 
-  def test_other
-    assert_nil Language['Brainfuck'].type
-  end
-
   def test_searchable
     assert Language['Ruby'].searchable?
     assert !Language['Gettext Catalog'].searchable?
@@ -355,6 +351,15 @@ class TestLanguage < Minitest::Test
 
     width = missing.map { |language| language.name.length }.max
     message << missing.map { |language| sprintf("%-#{width}s %s", language.name, language.tm_scope) }.sort.join("\n")
+    assert missing.empty?, message
+  end
+
+  def test_all_languages_have_type
+    missing = Language.all.select { |language| language.type.nil? }
+    message = "The following languages do not have a type listed in grammars.yml. Please add types for all new languages.\n"
+
+    width = missing.map { |language| language.name.length }.max
+    message << missing.map { |language| sprintf("%-#{width}s", language.name) }.sort.join("\n")
     assert missing.empty?, message
   end
 
