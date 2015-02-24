@@ -248,7 +248,7 @@ module Linguist
     #
     # Return true or false
     def documentation?
-      name =~ DocumentationRegexp ? true : false
+      path =~ DocumentationRegexp ? true : false
     end
 
     # Public: Get each line of data
