@@ -49,7 +49,7 @@ module Linguist
       return @language if defined?(@language)
 
       @language = if lang = git_attributes['linguist-language']
-        Language.find_by_name(lang)
+        Language.find_by_alias(lang)
       else
         super
       end
