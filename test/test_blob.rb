@@ -216,6 +216,7 @@ class TestBlob < Minitest::Test
     assert sample_blob("C++/protocol-buffer.pb.cc").generated?
     assert sample_blob("Java/ProtocolBuffer.java").generated?
     assert sample_blob("Python/protocol_buffer_pb2.py").generated?
+    assert sample_blob("Go/api.pb.go").generated?
 
     # Generated JNI
     assert sample_blob("C/jni_layer.h").generated?
