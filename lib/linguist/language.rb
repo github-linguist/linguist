@@ -105,19 +105,21 @@ module Linguist
       # Bail early if the blob is binary or empty.
       return nil if blob.likely_binary? || blob.binary? || blob.empty?
 
-      # Call each strategy until one candidate is returned.
-      STRATEGIES.reduce([]) do |languages, strategy|
-        candidates = strategy.call(blob, languages)
-        if candidates.size == 1
-          return candidates.first
-        elsif candidates.size > 1
-          # More than one candidate was found, pass them to the next strategy.
-          candidates
-        else
-          # No candiates were found, pass on languages from the previous strategy.
-          languages
-        end
-      end.first
+      Linguist.instrument("linguist.detection") do
+        # Call each strategy until one candidate is returned.
+        STRATEGIES.reduce([]) do |languages, strategy|
+          candidates = strategy.call(blob, languages)
+          if candidates.size == 1
+            return candidates.first
+          elsif candidates.size > 1
+            # More than one candidate was found, pass them to the next strategy.
+            candidates
+          else
+            # No candiates were found, pass on languages from the previous strategy.
+            languages
+          end
+        end.first
+      end
     end
 
     # Public: Get all Languages
