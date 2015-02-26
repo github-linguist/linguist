@@ -107,18 +107,27 @@ module Linguist
 
       Linguist.instrument("linguist.detection") do
         # Call each strategy until one candidate is returned.
-        STRATEGIES.reduce([]) do |languages, strategy|
-          candidates = strategy.call(blob, languages)
+        languages = []
+        strategy = nil
+
+        STRATEGIES.each do |strategy|
+          candidates = Linguist.instrument("linguist.strategy", :blob => blob, :strategy => strategy, :candidates => languages) do
+            strategy.call(blob, languages)
+          end
           if candidates.size == 1
-            return candidates.first
+            languages = candidates
+            break
           elsif candidates.size > 1
             # More than one candidate was found, pass them to the next strategy.
-            candidates
+            languages = candidates
           else
-            # No candiates were found, pass on languages from the previous strategy.
-            languages
+            # No candidates, try the next strategy
           end
-        end.first
+        end
+
+        Linguist.instrument("linguist.detected", :blob => blob, :strategy => strategy, :language => languages.first) do
+          languages.first
+        end
       end
     end
 

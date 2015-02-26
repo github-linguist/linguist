@@ -16,11 +16,9 @@ module Linguist
     #
     # Returns an Array of Language objects, most probable first.
     def self.call(blob, possible_languages)
-      Linguist.instrument("linguist.bayesian_classification") do
-        language_names = possible_languages.map(&:name)
-        classify(Samples.cache, blob.data, language_names).map do |name, _|
-          Language[name] # Return the actual Language objects
-        end
+      language_names = possible_languages.map(&:name)
+      classify(Samples.cache, blob.data, language_names).map do |name, _|
+        Language[name] # Return the actual Language objects
       end
     end
 
