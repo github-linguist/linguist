@@ -186,7 +186,7 @@ AsciiDoc:
   - .asciidoc
   - .adoc
   - .asc
-  tm_scope: none
+  tm_scope: text.html.asciidoc
 
 AspectJ:
   type: programming
@@ -198,7 +198,7 @@ AspectJ:
 
 Assembly:
   type: programming
-  color: "#a67219"
+  color: "#6E4C13"
   search_term: nasm
   aliases:
   - nasm
@@ -206,6 +206,7 @@ Assembly:
   - .asm
   - .ASM
   - .a51
+  - .nasm
   tm_scope: source.asm.x86
   ace_mode: assembly_x86
 
@@ -270,6 +271,7 @@ Batchfile:
   ace_mode: batchfile
 
 Befunge:
+  type: programming
   extensions:
   - .befunge
   ace_mode: text
@@ -325,6 +327,7 @@ Boo:
   ace_mode: text
 
 Brainfuck:
+  type: programming
   extensions:
   - .b
   - .bf
@@ -335,7 +338,7 @@ Brightscript:
   type: programming
   extensions:
   - .brs
-  tm_scope: none
+  tm_scope: source.brightscript
   ace_mode: text
 
 Bro:
@@ -355,6 +358,8 @@ C:
   - .h
   - .idc
   - .w
+  interpreters:
+  - tcc
   ace_mode: c_cpp
 
 C#:
@@ -418,6 +423,7 @@ CLIPS:
   ace_mode: text
 
 CMake:
+  type: programming
   extensions:
   - .cmake
   - .cmake.in
@@ -438,6 +444,8 @@ COBOL:
   ace_mode: cobol
 
 CSS:
+  type: markup
+  tm_scope: source.css
   ace_mode: css
   color: "#563d7c"
   extensions:
@@ -475,6 +483,7 @@ Chapel:
   ace_mode: text
 
 ChucK:
+  type: programming
   extensions:
   - .ck
   tm_scope: source.java
@@ -636,6 +645,7 @@ Crystal:
   - crystal
 
 Cucumber:
+  type: programming
   extensions:
   - .feature
   tm_scope: text.gherkin.feature
@@ -694,7 +704,17 @@ DM:
   tm_scope: source.c++
   ace_mode: c_cpp
 
+DTrace:
+  type: programming
+  extensions:
+  - .d
+  interpreters:
+  - dtrace
+  tm_scope: source.c
+  ace_mode: c_cpp
+
 Darcs Patch:
+  type: programming
   search_term: dpatch
   aliases:
   - dpatch
@@ -712,6 +732,7 @@ Dart:
   ace_mode: dart
 
 Diff:
+  type: programming
   extensions:
   - .diff
   - .patch
@@ -961,7 +982,7 @@ GAP:
   - .gd
   - .gi
   - .tst
-  tm_scope: none
+  tm_scope: source.gap
   ace_mode: text
 
 GAS:
@@ -1009,6 +1030,7 @@ Game Maker Language:
   ace_mode: c_cpp
 
 Genshi:
+  type: programming
   extensions:
   - .kid
   tm_scope: text.xml.genshi
@@ -1018,6 +1040,7 @@ Genshi:
   ace_mode: xml
 
 Gentoo Ebuild:
+  type: programming
   group: Shell
   extensions:
   - .ebuild
@@ -1025,6 +1048,7 @@ Gentoo Ebuild:
   ace_mode: sh
 
 Gentoo Eclass:
+  type: programming
   group: Shell
   extensions:
   - .eclass
@@ -1032,6 +1056,7 @@ Gentoo Eclass:
   ace_mode: sh
 
 Gettext Catalog:
+  type: programming
   search_term: pot
   searchable: false
   aliases:
@@ -1132,6 +1157,7 @@ Graphviz (DOT):
   ace_mode: text
 
 Groff:
+  type: programming
   extensions:
   - .man
   - '.1'
@@ -1159,6 +1185,7 @@ Groovy:
   - groovy
 
 Groovy Server Pages:
+  type: programming
   group: Groovy
   aliases:
   - gsp
@@ -1172,6 +1199,7 @@ HTML:
   type: markup
   tm_scope: text.html.basic
   ace_mode: html
+  color: "#e44b23"
   aliases:
   - xhtml
   extensions:
@@ -1307,6 +1335,7 @@ INI:
   - .ini
   - .cfg
   - .prefs
+  - .pro
   - .properties
   tm_scope: source.ini
   aliases:
@@ -1314,6 +1343,7 @@ INI:
   ace_mode: ini
 
 IRC log:
+  type: data
   search_term: irc
   aliases:
   - irc
@@ -1344,6 +1374,7 @@ Inform 7:
   ace_mode: text
 
 Inno Setup:
+  type: programming
   extensions:
   - .iss
   tm_scope: source.inno
@@ -1375,6 +1406,7 @@ Isabelle:
 
 J:
   type: programming
+  color: "#2d8abd"
   extensions:
   - .ijs
   tm_scope: source.j
@@ -1438,6 +1470,7 @@ Java:
   - .java
 
 Java Server Pages:
+  type: programming
   group: Java
   search_term: jsp
   aliases:
@@ -1533,6 +1566,7 @@ LFE:
   ace_mode: lisp
 
 LLVM:
+  type: programming
   extensions:
   - .ll
   ace_mode: text
@@ -1584,6 +1618,13 @@ Latte:
   tm_scope: source.smarty
   ace_mode: smarty
 
+Lean:
+  type: programming
+  extensions:
+  - .lean
+  - .hlean
+  ace_mode: lean
+
 Less:
   type: markup
   group: CSS
@@ -1593,6 +1634,7 @@ Less:
   ace_mode: less
 
 LilyPond:
+  type: programming
   extensions:
   - .ly
   - .ily
@@ -1713,6 +1755,15 @@ MTML:
   tm_scope: text.html.basic
   ace_mode: html
 
+MUF:
+  type: programming
+  group: Forth
+  extensions:
+  - .muf
+  - .m
+  tm_scope: none
+  ace_mode: forth
+
 Makefile:
   type: programming
   aliases:
@@ -1721,6 +1772,7 @@ Makefile:
   - mf
   extensions:
   - .mak
+  - .d
   - .mk
   filenames:
   - GNUmakefile
@@ -1731,6 +1783,7 @@ Makefile:
   ace_mode: makefile
 
 Mako:
+  type: programming
   extensions:
   - .mako
   - .mao
@@ -1767,6 +1820,8 @@ Mathematica:
   - .ma
   - .nb
   - .nbp
+  - .wl
+  - .wlt
   aliases:
   - mma
   ace_mode: text
@@ -1823,6 +1878,7 @@ Mercury:
   ace_mode: prolog
 
 MiniD: # Legacy
+  type: programming
   searchable: false
   extensions:
   - .minid # Dummy extension
@@ -1870,12 +1926,14 @@ MoonScript:
   ace_mode: text
 
 Myghty:
+  type: programming
   extensions:
   - .myt
   tm_scope: none
   ace_mode: text
 
 NSIS:
+  type: programming
   extensions:
   - .nsi
   - .nsh
@@ -1967,6 +2025,7 @@ Nu:
   - nush
 
 NumPy:
+  type: programming
   group: Python
   extensions:
   - .numpy
@@ -2052,7 +2111,7 @@ Opal:
   color: "#f7ede0"
   extensions:
   - .opal
-  tm_scope: none
+  tm_scope: source.opal
   ace_mode: text
 
 OpenCL:
@@ -2080,7 +2139,7 @@ OpenSCAD:
   type: programming
   extensions:
   - .scad
-  tm_scope: none
+  tm_scope: source.scad
   ace_mode: scad
 
 Org:
@@ -2178,7 +2237,7 @@ Papyrus:
   color: "#6600cc"
   extensions:
   - .psc
-  tm_scope: none
+  tm_scope: source.papyrus
   ace_mode: text
 
 Parrot:
@@ -2270,7 +2329,7 @@ PigLatin:
   color: "#fcd7de"
   extensions:
   - .pig
-  tm_scope: none
+  tm_scope: source.pig_latin
   ace_mode: text
 
 Pike:
@@ -2296,7 +2355,7 @@ PogoScript:
   color: "#d80074"
   extensions:
   - .pogo
-  tm_scope: none
+  tm_scope: source.pogoscript
   ace_mode: text
 
 PostScript:
@@ -2343,7 +2402,7 @@ Propeller Spin:
   color: "#2b446d"
   extensions:
   - .spin
-  tm_scope: none
+  tm_scope: source.spin
   ace_mode: text
 
 Protocol Buffer:
@@ -2446,6 +2505,7 @@ QML:
   ace_mode: text
 
 QMake:
+  type: programming
   extensions:
   - .pro
   - .pri
@@ -2542,6 +2602,7 @@ Ragel in Ruby Host:
   ace_mode: text
 
 Raw token data:
+  type: data
   search_term: raw
   aliases:
   - raw
@@ -2573,6 +2634,7 @@ Red:
   ace_mode: text
 
 Redcode:
+  type: programming
   extensions:
   - .cw
   tm_scope: none
@@ -2711,6 +2773,13 @@ STON:
   - .ston
   tm_scope: source.smalltalk
   ace_mode: text
+
+SVG:
+  type: data
+  extensions:
+  - .svg
+  tm_scope: text.xml
+  ace_mode: xml
 
 Sage:
   type: programming
@@ -2861,6 +2930,7 @@ Smalltalk:
   ace_mode: text
 
 Smarty:
+  type: programming
   extensions:
   - .tpl
   ace_mode: smarty
@@ -2912,7 +2982,7 @@ Stylus:
   group: CSS
   extensions:
   - .styl
-  tm_scope: none
+  tm_scope: source.stylus
   ace_mode: stylus
 
 SuperCollider:
@@ -3083,11 +3153,11 @@ UnrealScript:
 
 VCL:
   type: programming
-  ace_mode: perl
   color: "#0298c3"
   extensions:
   - .vcl
-  tm_scope: source.perl
+  tm_scope: source.varnish.vcl
+  ace_mode: text
 
 VHDL:
   type: programming
@@ -3183,7 +3253,7 @@ XC:
   ace_mode: c_cpp
 
 XML:
-  type: markup
+  type: data
   ace_mode: xml
   aliases:
   - rss
@@ -3227,7 +3297,6 @@ XML:
   - .srdf
   - .stTheme
   - .sublime-snippet
-  - .svg
   - .targets
   - .tmCommand
   - .tmLanguage
@@ -3285,6 +3354,7 @@ XQuery:
   ace_mode: xquery
 
 XS:
+  type: programming
   extensions:
   - .xs
   tm_scope: source.c
@@ -3381,6 +3451,7 @@ fish:
   ace_mode: text
 
 mupad:
+  type: programming
   extensions:
   - .mu
   ace_mode: text

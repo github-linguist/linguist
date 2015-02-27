@@ -32,13 +32,6 @@ module Linguist
     # Valid Languages types
     TYPES = [:data, :markup, :programming, :prose]
 
-    # Names of non-programming languages that we will still detect
-    #
-    # Returns an array
-    def self.detectable_markup
-      ["CSS", "Less", "Sass", "SCSS", "Stylus", "TeX"]
-    end
-
     # Detect languages by a specific type
     #
     # type - A symbol that exists within TYPES
@@ -96,8 +89,8 @@ module Linguist
 
     STRATEGIES = [
       Linguist::Strategy::Modeline,
-      Linguist::Strategy::Filename,
       Linguist::Shebang,
+      Linguist::Strategy::Filename,
       Linguist::Heuristics,
       Linguist::Classifier
     ]

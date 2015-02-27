@@ -236,6 +236,21 @@ module Linguist
       name =~ VendoredRegexp ? true : false
     end
 
+    documentation_paths = YAML.load_file(File.expand_path("../documentation.yml", __FILE__))
+    DocumentationRegexp = Regexp.new(documentation_paths.join('|'))
+
+    # Public: Is the blob in a documentation directory?
+    #
+    # Documentation files are ignored by language statistics.
+    #
+    # See "documentation.yml" for a list of documentation conventions that match
+    # this pattern.
+    #
+    # Return true or false
+    def documentation?
+      name =~ DocumentationRegexp ? true : false
+    end
+
     # Public: Get each line of data
     #
     # Requires Blob#data
@@ -316,6 +331,16 @@ module Linguist
     # Internal: Get the TextMate compatible scope for the blob
     def tm_scope
       language && language.tm_scope
+    end
+
+    DETECTABLE_TYPES = [:programming, :markup].freeze
+
+    # Internal: Should this blob be included in repository language statistics?
+    def include_in_language_stats?
+      !vendored? &&
+      !documentation? &&
+      !generated? &&
+      language && DETECTABLE_TYPES.include?(language.type)
     end
   end
 end

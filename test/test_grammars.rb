@@ -3,13 +3,19 @@ require_relative "./helper"
 class TestGrammars < Minitest::Test
   ROOT = File.expand_path("../..", __FILE__)
 
-  # These grammars have no license but have been grandfathered in. New grammars
-  # must have a license that allows redistribution.
-  UNLICENSED_GRAMMARS_WHITELIST = %w[
-    vendor/grammars/Sublime-Lasso
-    vendor/grammars/Sublime-REBOL
-    vendor/grammars/x86-assembly-textmate-bundle
-    vendor/grammars/oracle.tmbundle
+  LICENSE_WHITELIST = [
+    # This grammar's MIT license is inside a subdirectory.
+    "vendor/grammars/SublimePapyrus",
+
+    # This grammar has a nonstandard but acceptable license.
+    "vendor/grammars/gap-tmbundle",
+
+    # These grammars have no license but have been grandfathered in. New grammars
+    # must have a license that allows redistribution.
+    "vendor/grammars/Sublime-Lasso",
+    "vendor/grammars/Sublime-REBOL",
+    "vendor/grammars/x86-assembly-textmate-bundle",
+    "vendor/grammars/oracle.tmbundle"
   ].freeze
 
   def setup
@@ -78,9 +84,9 @@ class TestGrammars < Minitest::Test
 
     unlicensed = categories[:unlicensed] || []
     unrecognized = categories[:unrecognized] || []
-    disallowed_unlicensed = unlicensed - UNLICENSED_GRAMMARS_WHITELIST
-    disallowed_unrecognized = unrecognized - UNLICENSED_GRAMMARS_WHITELIST
-    extra_whitelist_entries = UNLICENSED_GRAMMARS_WHITELIST - (unlicensed | unrecognized)
+    disallowed_unlicensed = unlicensed - LICENSE_WHITELIST
+    disallowed_unrecognized = unrecognized - LICENSE_WHITELIST
+    extra_whitelist_entries = LICENSE_WHITELIST - (unlicensed | unrecognized)
 
     message = ""
     if disallowed_unlicensed.any?
@@ -94,7 +100,7 @@ class TestGrammars < Minitest::Test
     end
     if extra_whitelist_entries.any?
       message << "\n\n" unless message.empty?
-      message << "The following grammar submodules are listed in UNLICENSED_GRAMMARS_WHITELIST but either have a license (yay!)\n"
+      message << "The following grammar submodules are listed in LICENSE_WHITELIST but either have a license (yay!)\n"
       message << "or have been removed from the repository. Please remove them from the whitelist.\n"
       message << extra_whitelist_entries.sort.join("\n")
     end
@@ -132,6 +138,8 @@ class TestGrammars < Minitest::Test
       "unlicense"
     elsif content.include?("http://www.wtfpl.net/txt/copying/")
       "WTFPL"
+    elsif content.include?("zlib") && content.include?("license") && content.include?("2. Altered source versions must be plainly marked as such")
+      "zlib"
     end
   end
 end

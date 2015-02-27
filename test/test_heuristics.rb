@@ -48,7 +48,7 @@ class TestHeuristcs < Minitest::Test
   def test_pl_prolog_perl_by_heuristics
     assert_heuristics({
       "Prolog" => "Prolog/turing.pl",
-      "Perl" => "Perl/perl-test.t",
+      "Perl" => ["Perl/perl-test.t", "Perl/use5.pl"]
     })
   end
 
@@ -60,19 +60,22 @@ class TestHeuristcs < Minitest::Test
     })
   end
 
-  # Candidate languages = ["IDL", "Prolog"]
-  def test_pro_prolog_idl_by_heuristics
+  # Candidate languages = ["IDL", "Prolog", "QMake", "INI"]
+  def test_pro_by_heuristics
     assert_heuristics({
-      "Prolog" => "Prolog/logic-problem.pro",
-      "IDL" => "IDL/mg_acosh.pro"
+      "Prolog" => all_fixtures("Prolog", "*.pro"),
+      "IDL" => all_fixtures("IDL", "*.pro"),
+      "INI" => all_fixtures("INI", "*.pro"),
+      "QMake" => all_fixtures("QMake", "*.pro")
     })
   end
 
-  # Candidate languages = ["AGS Script", "AsciiDoc"]
-  def test_asc_asciidoc_by_heuristics
+  # Candidate languages = ["AGS Script", "AsciiDoc", "Public Key"]
+  def test_asc_by_heuristics
     assert_heuristics({
       "AsciiDoc" => "AsciiDoc/list.asc",
-      "AGS Script" => nil
+      "AGS Script" => "AGS Script/GlobalScript.asc",
+      "Public Key" => "Public Key/sunCert.asc"
     })
   end
 
