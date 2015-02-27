@@ -712,6 +712,15 @@ DM:
   tm_scope: source.c++
   ace_mode: c_cpp
 
+DTrace:
+  type: programming
+  extensions:
+  - .d
+  interpreters:
+  - dtrace
+  tm_scope: source.c
+  ace_mode: c_cpp
+
 Darcs Patch:
   type: programming
   search_term: dpatch
@@ -1334,6 +1343,7 @@ INI:
   - .ini
   - .cfg
   - .prefs
+  - .pro
   - .properties
   tm_scope: source.ini
   aliases:
@@ -1753,6 +1763,15 @@ MTML:
   tm_scope: text.html.basic
   ace_mode: html
 
+MUF:
+  type: programming
+  group: Forth
+  extensions:
+  - .muf
+  - .m
+  tm_scope: none
+  ace_mode: forth
+
 Makefile:
   type: programming
   aliases:
@@ -1761,6 +1780,7 @@ Makefile:
   - mf
   extensions:
   - .mak
+  - .d
   - .mk
   filenames:
   - GNUmakefile
@@ -1808,6 +1828,8 @@ Mathematica:
   - .ma
   - .nb
   - .nbp
+  - .wl
+  - .wlt
   aliases:
   - mma
   ace_mode: text
@@ -2125,7 +2147,7 @@ OpenSCAD:
   type: programming
   extensions:
   - .scad
-  tm_scope: none
+  tm_scope: source.scad
   ace_mode: scad
 
 Org:
@@ -3110,11 +3132,11 @@ UnrealScript:
 
 VCL:
   type: programming
-  ace_mode: perl
   color: "#0298c3"
   extensions:
   - .vcl
-  tm_scope: source.perl
+  tm_scope: source.varnish.vcl
+  ace_mode: text
 
 VHDL:
   type: programming

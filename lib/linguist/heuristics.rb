@@ -107,10 +107,14 @@ module Linguist
       end
     end
 
-    disambiguate "IDL", "Prolog" do |data|
+    disambiguate "IDL", "Prolog", "INI", "QMake" do |data|
       if data.include?(":-")
         Language["Prolog"]
-      else
+      elsif data.include?("last_client=")
+        Language["INI"]
+      elsif data.include?("HEADERS") && data.include?("SOURCES")
+        Language["QMake"]
+      elsif /^\s*function[ \w,]+$/.match(data)
         Language["IDL"]
       end
     end
@@ -178,11 +182,13 @@ module Linguist
       end
     end
 
-    disambiguate "M", "Mathematica", "Matlab", "Mercury", "Objective-C" do |data|
+    disambiguate "M", "MUF", "Mathematica", "Matlab", "Mercury", "Objective-C" do |data|
       if ObjectiveCRegex.match(data)
         Language["Objective-C"]
       elsif data.include?(":- module")
         Language["Mercury"]
+      elsif /^: /.match(data)
+        Language["MUF"]
       elsif /^\s*;/.match(data)
         Language["M"]
       elsif /^\s*\(\*/.match(data)
@@ -227,6 +233,16 @@ module Linguist
         Language["Frege"]
       else
         Language["Text"]
+      end
+    end
+
+    disambiguate "D", "DTrace", "Makefile" do |data|
+      if /^module /.match(data)
+        Language["D"]
+      elsif /^((dtrace:::)?BEGIN|provider |#pragma (D (option|attributes)|ident)\s)/.match(data)
+        Language["DTrace"]
+      elsif /(\/.*:( .* \\)$| : \\$|^ : |: \\$)/.match(data)
+        Language["Makefile"]
       end
     end
   end
