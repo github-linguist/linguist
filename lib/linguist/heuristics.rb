@@ -229,5 +229,15 @@ module Linguist
         Language["Text"]
       end
     end
+
+    disambiguate "D", "DTrace", "Makefile" do |data|
+      if /^module /.match(data)
+        Language["D"]
+      elsif /^((dtrace:::)?BEGIN|provider |#pragma (D (option|attributes)|ident)\s)/.match(data)
+        Language["DTrace"]
+      elsif /(\/.*:( .* \\)$| : \\$|^ : |: \\$)/.match(data)
+        Language["Makefile"]
+      end
+    end
   end
 end
