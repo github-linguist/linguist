@@ -236,6 +236,22 @@ module Linguist
       end
     end
 
+    disambiguate "PLSQL", "SQLPL", "PLpgSQL", "SQL" do |data|
+      if /^\\i\b|AS \$\$|LANGUAGE '+plpgsql'+/i.match(data) || /SECURITY (DEFINER|INVOKER)/i.match(data) || /BEGIN( WORK| TRANSACTION)?;/i.match(data)
+        #Postgres
+        Language["PLpgSQL"]
+      elsif /(alter module)|(language sql)|(begin( NOT)+ atomic)/i.match(data)  || /signal SQLSTATE '[0-9]+'/i.match(data)
+        #IBM db2
+        Language["SQLPL"]
+      elsif /pragma|\$\$PLSQL_|XMLTYPE|sysdate|systimestamp|\.nextval|connect by|AUTHID (DEFINER|CURRENT_USER)/i.match(data) || /constructor\W+function/i.match(data)
+        #Oracle
+        Language["PLSQL"]
+      elsif ! /begin|boolean|package|exception/i.match(data)
+        #Generic SQL
+        Language["SQL"]
+      end
+    end
+
     disambiguate "D", "DTrace", "Makefile" do |data|
       if /^module /.match(data)
         Language["D"]
