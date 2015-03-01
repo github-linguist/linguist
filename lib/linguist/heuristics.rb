@@ -33,7 +33,7 @@ module Linguist
     #     disambiguate "Perl", "Prolog" do |data|
     #       if data.include?("use strict")
     #         Language["Perl"]
-    #       elsif data.include?(":-")
+    #       elsif /^[^#]+:-/.match(data)
     #         Language["Prolog"]
     #       end
     #     end
@@ -94,13 +94,13 @@ module Linguist
         Language["Perl6"]
       elsif data.match(/use strict|use\s+v?5\./)
         Language["Perl"]
-      elsif data.include?(":-")
+      elsif /^[^#]+:-/.match(data)
         Language["Prolog"]
       end
     end
 
     disambiguate "ECL", "Prolog" do |data|
-      if data.include?(":-")
+      if /^[^#]+:-/.match(data)
         Language["Prolog"]
       elsif data.include?(":=")
         Language["ECL"]
@@ -108,7 +108,7 @@ module Linguist
     end
 
     disambiguate "IDL", "Prolog", "INI", "QMake" do |data|
-      if data.include?(":-")
+      if /^[^#]+:-/.match(data)
         Language["Prolog"]
       elsif data.include?("last_client=")
         Language["INI"]

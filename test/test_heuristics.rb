@@ -47,8 +47,10 @@ class TestHeuristcs < Minitest::Test
   # Candidate languages = ["Perl", "Prolog"]
   def test_pl_prolog_perl_by_heuristics
     assert_heuristics({
-      "Prolog" => "Prolog/turing.pl",
-      "Perl" => ["Perl/perl-test.t", "Perl/use5.pl"]
+      "Prolog" => all_fixtures("Prolog/*.pl"),
+      "Perl" => all_fixtures("Perl/*.pl"),
+      "Perl" => ["Perl/perl-test.t"],
+      "Perl6" => all_fixtures("Perl6/*.pl")
     })
   end
 
