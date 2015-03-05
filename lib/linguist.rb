@@ -14,7 +14,7 @@ class << Linguist
     if instrumenter
       instrumenter.instrument(*args, &bk)
     else
-      yield
+      yield if block_given?
     end
   end
 end
