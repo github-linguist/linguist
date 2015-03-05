@@ -105,7 +105,7 @@ module Linguist
       # Bail early if the blob is binary or empty.
       return nil if blob.likely_binary? || blob.binary? || blob.empty?
 
-      Linguist.instrument("linguist.detection") do
+      Linguist.instrument("linguist.detection", :blob => blob) do
         # Call each strategy until one candidate is returned.
         languages = []
         strategy = nil
