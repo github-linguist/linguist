@@ -14,7 +14,7 @@ class TestInstrumentation < Minitest::Test
 
     def instrument(name, *args)
       @events << Event.new(name, args)
-      yield
+      yield if block_given?
     end
   end
 
