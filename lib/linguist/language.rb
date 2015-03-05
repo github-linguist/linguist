@@ -125,9 +125,9 @@ module Linguist
           end
         end
 
-        Linguist.instrument("linguist.detected", :blob => blob, :strategy => strategy, :language => languages.first) do
-          languages.first
-        end
+        Linguist.instrument("linguist.detected", :blob => blob, :strategy => strategy, :language => languages.first)
+
+        languages.first
       end
     end
 
