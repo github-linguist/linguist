@@ -108,9 +108,10 @@ module Linguist
       Linguist.instrument("linguist.detection", :blob => blob) do
         # Call each strategy until one candidate is returned.
         languages = []
-        strategy = nil
+        returning_strategy = nil
 
         STRATEGIES.each do |strategy|
+          returning_strategy = strategy
           candidates = Linguist.instrument("linguist.strategy", :blob => blob, :strategy => strategy, :candidates => languages) do
             strategy.call(blob, languages)
           end
@@ -125,7 +126,7 @@ module Linguist
           end
         end
 
-        Linguist.instrument("linguist.detected", :blob => blob, :strategy => strategy, :language => languages.first)
+        Linguist.instrument("linguist.detected", :blob => blob, :strategy => returning_strategy, :language => languages.first)
 
         languages.first
       end

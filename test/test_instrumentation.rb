@@ -38,7 +38,13 @@ class TestInstrumentation < Minitest::Test
     blob = fixture_blob("Data/Modelines/ruby")
     Language.detect(blob)
 
+    detect_event = Linguist.instrumenter.events.last
+    detect_event_payload = detect_event[:args].first
+
     assert_equal 3, Linguist.instrumenter.events.size
-    assert_equal "linguist.detected", Linguist.instrumenter.events.last.name
+    assert_equal "linguist.detected", detect_event.name
+    assert_equal Language['Ruby'], detect_event_payload[:language]
+    assert_equal blob, detect_event_payload[:blob]
+    assert_equal Linguist::Strategy::Modeline, detect_event_payload[:strategy]
   end
 end
