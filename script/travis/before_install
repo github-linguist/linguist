@@ -5,7 +5,7 @@ set -ex
 # Fetch all commits/refs needed to run our tests.
 git fetch origin master:master v2.0.0:v2.0.0 test/attributes:test/attributes test/master:test/master
 
-script/vendor-deb libicu48 libicu-dev
+script/vendor-deb libicu52 libicu-dev
 if ruby -e 'exit RUBY_VERSION >= "2.0" && RUBY_VERSION < "2.1"'; then
   # Workaround for https://bugs.ruby-lang.org/issues/8074. We can't use this
   # solution on all versions of Ruby due to
