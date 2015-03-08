@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <title>Linguist Colors</title>
+    <script src="scripts/js-yaml.min.js"></script>
+    <script src="scripts/jquery.min.js"></script>
+    <style>
+      body {
+        font-family: "Heletica Neue", Helvetica, sans-serif;
+        font-size: 13px;
+      }
+
+      #languages {
+        list-style: none;
+      }
+
+      #languages li {
+        width: 180px;
+        float: left;
+        text-align: center;
+        padding: 0.5em 0;
+        margin: 0.25em;
+        font-weight: bold;
+        border-bottom: 12px solid #ccc;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    </style>
+  </head>
+  <body>
+    <ul id="languages"></ul>
+
+    <script type="text/javascript">
+      var $list = $("#languages");
+
+      $.get("https://rawgit.com/github/linguist/master/lib/linguist/languages.yml", function(data) {
+        var languages = jsyaml.safeLoad(data);
+
+        for(var language in languages) {
+          attrs = languages[language];
+          $list.append('<li style="border-bottom-color:' + attrs.color + '">' + language + '</li>');
+        }
+      });
+
+    </script>
+  </body>
+</html>
