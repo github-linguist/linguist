@@ -356,7 +356,7 @@ Bro:
 
 C:
   type: programming
-  color: "#555"
+  color: "#555555"
   extensions:
   - .c
   - .cats
@@ -994,7 +994,6 @@ GDScript:
   ace_mode: text
 
 GLSL:
-  group: C
   type: programming
   extensions:
   - .glsl
@@ -1048,7 +1047,7 @@ Gentoo Eclass:
   ace_mode: sh
 
 Gettext Catalog:
-  type: programming
+  type: prose
   search_term: pot
   searchable: false
   aliases:
@@ -2668,6 +2667,7 @@ Ruby:
   - .gemspec
   - .god
   - .irbrc
+  - .jbuilder
   - .mspec
   - .pluginspec
   - .podspec
