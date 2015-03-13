@@ -26,7 +26,7 @@ Linguist supports a number of different custom overrides strategies for language
 
 ### Using gitattributes
 
-Add a `.gitattributes` file to your project and use standard git-style path matchers for the files you want to override to set `linguist-documentation`, `linguist-language`, and `linguist-vendored`.
+Add a `.gitattributes` file to your project and use standard git-style path matchers for the files you want to override to set `linguist-documentation`, `linguist-language`, and `linguist-vendored`. `.gitattributes` will be used to determine language statistics, but will not be used to syntax highlight files. To manually set syntax highlighting, use [Vim or Emacs modelines](#using-emacs-and-vim-modelines).
 
 ```
 $ cat .gitattributes

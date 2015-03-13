@@ -43,7 +43,7 @@ class TestSamples < Minitest::Test
       if extnames = Samples.cache['extnames'][name]
         extnames.each do |extname|
           next if extname == '.script!'
-          assert options['extensions'].index { |x| x.end_with? extname }, "#{name} has a sample with extension (#{extname}) that isn't explicitly defined in languages.yml"
+          assert options['extensions'].index { |x| x.downcase.end_with? extname.downcase }, "#{name} has a sample with extension (#{extname.downcase}) that isn't explicitly defined in languages.yml"
         end
       end
 
@@ -67,7 +67,7 @@ class TestSamples < Minitest::Test
         if language_matches.length > 1
           language_matches.each do |match|
             samples = "samples/#{match.name}/*#{extension}"
-            assert Dir.glob(samples).any?, "Missing samples in #{samples.inspect}. See https://github.com/github/linguist/blob/master/CONTRIBUTING.md"
+            assert Dir.glob(samples, File::FNM_CASEFOLD).any?, "Missing samples in #{samples.inspect}. See https://github.com/github/linguist/blob/master/CONTRIBUTING.md"
           end
         end
       end
