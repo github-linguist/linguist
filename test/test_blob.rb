@@ -239,6 +239,10 @@ class TestBlob < Minitest::Test
     # Godep saved dependencies
     assert sample_blob("Godeps/Godeps.json").generated?
     assert sample_blob("Godeps/_workspace/src/github.com/kr/s3/sign.go").generated?
+
+    # Cython-generated C/C++
+    assert sample_blob("C/sgd_fast.c").generated?
+    assert sample_blob("C++/wrapper_inner.cpp").generated?
   end
 
   def test_vendored
