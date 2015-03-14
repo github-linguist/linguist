@@ -18,6 +18,8 @@
 #                     language. This should match one of the scopes listed in
 #                     the grammars.yml file. Use "none" if there is no grammar
 #                     for this language.
+# group             - Name of the parent language. Languages in a group are counted
+#                     in the statistics as the parent language.
 #
 # Any additions or modifications (even trivial) should have corresponding
 # test change in `test/test_blob.rb`.
@@ -356,7 +358,7 @@ Bro:
 
 C:
   type: programming
-  color: "#555"
+  color: "#555555"
   extensions:
   - .c
   - .cats
@@ -2283,6 +2285,7 @@ Pascal:
 
 Perl:
   type: programming
+  tm_scope: source.perl
   ace_mode: perl
   color: "#0298c3"
   extensions:
@@ -2318,7 +2321,7 @@ Perl6:
   - Rexfile
   interpreters:
   - perl6
-  tm_scope: none
+  tm_scope: source.perl.6
   ace_mode: perl
 
 PigLatin:
@@ -2937,6 +2940,7 @@ SourcePawn:
   - sourcemod
   extensions:
   - .sp
+  - .sma
   tm_scope: source.sp
   ace_mode: text
 
