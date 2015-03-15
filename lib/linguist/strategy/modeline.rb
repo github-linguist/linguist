@@ -22,7 +22,7 @@ module Linguist
       #
       # Returns a String or nil
       def self.modeline(data)
-        match = data.match(EmacsModeline) | data.match(VimModeline)
+        match = data.match(EmacsModeline) || data.match(VimModeline)
         match[1] if match
       end
     end
