@@ -71,6 +71,20 @@ module Linguist
         Language["BitBake"]
       end
     end
+    
+    # disambiguity support for OCaml and Standard ML 
+    # -> is very common in Ocaml
+    # => is very common in StandardMl 
+    # using some other reserved words which are used in each language respectively
+    disambiguate "OCaml,Standard ML" do |data|
+    OcamlRegex = /->|assert|class|external|functor|match|mutable|struct|try|inherit|module|virtual/
+    StandardMLRegex = /=>|abstype|datatype|handle|infixr|nonfix|withtype|local|andalso|orelese/
+    if OcamlRegex.match(data)
+      Language["OCaml"]
+      elsif (StandardMLRegex.match(data))
+        Language["Standard ML"]
+      end
+    end
 
     disambiguate "C#", "Smalltalk" do |data|
       if /![\w\s]+methodsFor: /.match(data)
