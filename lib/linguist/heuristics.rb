@@ -172,13 +172,15 @@ module Linguist
       end
     end
 
-    disambiguate "F#", "Forth", "GLSL" do |data|
+    disambiguate "F#", "Forth", "GLSL", "Filterscript" do |data|
       if /^(: |new-device)/.match(data)
         Language["Forth"]
       elsif /^\s*(#light|import|let|module|namespace|open|type)/.match(data)
         Language["F#"]
-      elsif /^\s*(#include|#pragma|precision|uniform|varying|void)/.match(data)
+      elsif /^\s*(#version|precision|uniform|varying|vec[234])/.match(data)
         Language["GLSL"]
+      elsif /#include|#pragma\s+(rs|version)|__attribute__/.match(data)
+        Language["Filterscript"]
       end
     end
 
@@ -278,5 +280,12 @@ module Linguist
       end
     end
 
+    disambiguate "Rust", "RenderScript" do |data|
+      if data.include?("^(use |fn |mod |pub |macro_rules|impl|#!?\[)")
+        Language["Rust"]
+      elsif /#include|#pragma\s+(rs|version)|__attribute__/.match(data)
+        Language["RenderScript"]
+      end
+    end
   end
 end
