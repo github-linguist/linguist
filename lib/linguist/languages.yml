@@ -718,7 +718,7 @@ DTrace:
   ace_mode: c_cpp
 
 Darcs Patch:
-  type: programming
+  type: data
   search_term: dpatch
   aliases:
   - dpatch
@@ -736,13 +736,14 @@ Dart:
   ace_mode: dart
 
 Diff:
-  type: programming
+  type: data
   color: "#88dddd"
   extensions:
   - .diff
   - .patch
   aliases:
   - udiff
+  tm_scope: source.diff
   ace_mode: diff
 
 Dockerfile:
@@ -1156,7 +1157,7 @@ Graphviz (DOT):
   ace_mode: text
 
 Groff:
-  type: programming
+  type: markup
   extensions:
   - .man
   - '.1'
