@@ -13,6 +13,7 @@ class TestModelines < Minitest::Test
     assert_modeline Language["Prolog"], fixture_blob("Data/Modelines/not_perl.pl")
     assert_modeline Language["Smalltalk"], fixture_blob("Data/Modelines/example_smalltalk.md")
     assert_modeline Language["PHP"], fixture_blob("Data/Modelines/iamphp.inc")
+    assert_modeline Language["Emacs Lisp"], fixture_blob("Data/Modelines/emacs-lisp")
   end
 
   def test_modeline_languages
@@ -21,5 +22,6 @@ class TestModelines < Minitest::Test
     assert_equal Language["Prolog"], fixture_blob("Data/Modelines/not_perl.pl").language
     assert_equal Language["Smalltalk"], fixture_blob("Data/Modelines/example_smalltalk.md").language
     assert_equal Language["PHP"], fixture_blob("Data/Modelines/iamphp.inc").language
+    assert_equal Language["Emacs Lisp"], fixture_blob("Data/Modelines/emacs-lisp").language
   end
 end
