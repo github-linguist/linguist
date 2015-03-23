@@ -145,10 +145,6 @@ class TestBlob < Minitest::Test
     assert fixture_blob("Data/cube.stl").solid?
   end
 
-  def test_csv
-    assert fixture_blob("Data/cars.csv").csv?
-  end
-
   def test_pdf
     assert fixture_blob("Binary/foo.pdf").pdf?
   end
