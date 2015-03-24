@@ -711,6 +711,8 @@ DM:
 
 DTrace:
   type: programming
+  aliases:
+  - dtrace-script
   extensions:
   - .d
   interpreters:
@@ -2612,6 +2614,8 @@ Racket:
   - .rktd
   - .rktl
   - .scrbl
+  interpreters:
+  - racket
   tm_scope: source.racket
   ace_mode: lisp
 
@@ -2646,6 +2650,7 @@ Rebol:
   - .r3
   - .rebol
   ace_mode: text
+  tm_scope: source.rebol
 
 Red:
   type: programming
@@ -2655,7 +2660,7 @@ Red:
   - .reds
   aliases:
   - red/system
-  tm_scope: none
+  tm_scope: source.red
   ace_mode: text
 
 Redcode:
@@ -2865,7 +2870,6 @@ Scheme:
   - .ss
   interpreters:
   - guile
-  - racket
   - bigloo
   - chicken
   ace_mode: scheme
@@ -3326,6 +3330,7 @@ XML:
   - .rss
   - .scxml
   - .srdf
+  - .storyboard
   - .stTheme
   - .sublime-snippet
   - .targets
@@ -3349,6 +3354,7 @@ XML:
   - .x3d
   - .xacro
   - .xaml
+  - .xib
   - .xlf
   - .xliff
   - .xmi
