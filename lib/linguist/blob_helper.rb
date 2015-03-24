@@ -99,7 +99,7 @@ module Linguist
       elsif name.nil?
         "attachment"
       else
-        "attachment; filename=#{EscapeUtils.escape_url(File.basename(name))}"
+        "attachment; filename=#{EscapeUtils.escape_url(name)}"
       end
     end
 
@@ -233,7 +233,7 @@ module Linguist
     #
     # Return true or false
     def vendored?
-      name =~ VendoredRegexp ? true : false
+      path =~ VendoredRegexp ? true : false
     end
 
     documentation_paths = YAML.load_file(File.expand_path("../documentation.yml", __FILE__))
@@ -248,7 +248,7 @@ module Linguist
     #
     # Return true or false
     def documentation?
-      name =~ DocumentationRegexp ? true : false
+      path =~ DocumentationRegexp ? true : false
     end
 
     # Public: Get each line of data
@@ -316,7 +316,7 @@ module Linguist
     #
     # Return true or false
     def generated?
-      @_generated ||= Generated.generated?(name, lambda { data })
+      @_generated ||= Generated.generated?(path, lambda { data })
     end
 
     # Public: Detects the Language of the blob.

@@ -13,7 +13,6 @@ class TestGrammars < Minitest::Test
     # These grammars have no license but have been grandfathered in. New grammars
     # must have a license that allows redistribution.
     "vendor/grammars/Sublime-Lasso",
-    "vendor/grammars/Sublime-REBOL",
     "vendor/grammars/x86-assembly-textmate-bundle"
   ].freeze
 

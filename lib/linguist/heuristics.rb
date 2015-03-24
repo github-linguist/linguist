@@ -164,7 +164,7 @@ module Linguist
       end
     end
 
-    disambiguate "FORTRAN", "Forth" do |data|
+    disambiguate "FORTRAN", "Forth", "Formatted" do |data|
       if /^: /.match(data)
         Language["Forth"]
       elsif /^([c*][^a-z]|      (subroutine|program)\s|\s*!)/i.match(data)
@@ -261,5 +261,22 @@ module Linguist
         Language["Makefile"]
       end
     end
+
+    disambiguate "OCaml", "Standard ML" do |data|
+      if /module|let rec |match\s+(\S+\s)+with/.match(data)
+        Language["OCaml"]
+      elsif /=> |case\s+(\S+\s)+of/.match(data)
+        Language["Standard ML"]
+      end
+    end
+
+    disambiguate "NL", "NewLisp" do |data|
+      if /^g3 /.match(data)
+        Language["NL"]
+      else
+        Language["NewLisp"]
+      end
+    end
+
   end
 end

@@ -18,6 +18,8 @@
 #                     language. This should match one of the scopes listed in
 #                     the grammars.yml file. Use "none" if there is no grammar
 #                     for this language.
+# group             - Name of the parent language. Languages in a group are counted
+#                     in the statistics as the parent language.
 #
 # Any additions or modifications (even trivial) should have corresponding
 # test change in `test/test_blob.rb`.
@@ -148,7 +150,6 @@ ApacheConf:
   - apache
   extensions:
   - .apacheconf
-  - .conf
   tm_scope: source.apache-config
   ace_mode: apache_conf
 
@@ -514,6 +515,7 @@ Clojure:
   color: "#db5855"
   extensions:
   - .clj
+  - .boot
   - .cl2
   - .cljc
   - .cljs
@@ -709,6 +711,8 @@ DM:
 
 DTrace:
   type: programming
+  aliases:
+  - dtrace-script
   extensions:
   - .d
   interpreters:
@@ -717,7 +721,7 @@ DTrace:
   ace_mode: c_cpp
 
 Darcs Patch:
-  type: programming
+  type: data
   search_term: dpatch
   aliases:
   - dpatch
@@ -735,12 +739,14 @@ Dart:
   ace_mode: dart
 
 Diff:
-  type: programming
+  type: data
+  color: "#88dddd"
   extensions:
   - .diff
   - .patch
   aliases:
   - udiff
+  tm_scope: source.diff
   ace_mode: diff
 
 Dockerfile:
@@ -927,6 +933,13 @@ Fantom:
   extensions:
   - .fan
   tm_scope: source.fan
+  ace_mode: text
+
+Formatted:
+  type: data
+  extensions:
+  - .for
+  tm_scope: none
   ace_mode: text
 
 Forth:
@@ -1147,7 +1160,7 @@ Graphviz (DOT):
   ace_mode: text
 
 Groff:
-  type: programming
+  type: markup
   extensions:
   - .man
   - '.1'
@@ -1257,6 +1270,7 @@ Haml:
 
 Handlebars:
   type: markup
+  color: "#01a9d6"
   aliases:
   - hbs
   - htmlbars
@@ -2201,7 +2215,7 @@ PHP:
   aliases:
   - inc
 
-#Oracle 
+#Oracle
 PLSQL:
   type: programming
   ace_mode: sql
@@ -2211,9 +2225,10 @@ PLSQL:
   - .pkb
   - .pks
   - .plb
+  - .plsql
   - .sql
 
-#Postgres 
+#Postgres
 PLpgSQL:
   type: programming
   ace_mode: pgsql
@@ -2282,6 +2297,7 @@ Pascal:
 
 Perl:
   type: programming
+  tm_scope: source.perl
   ace_mode: perl
   color: "#0298c3"
   extensions:
@@ -2317,7 +2333,7 @@ Perl6:
   - Rexfile
   interpreters:
   - perl6
-  tm_scope: none
+  tm_scope: source.perl.6
   ace_mode: perl
 
 PigLatin:
@@ -2614,6 +2630,7 @@ Rebol:
   - .r3
   - .rebol
   ace_mode: text
+  tm_scope: source.rebol
 
 Red:
   type: programming
@@ -2623,7 +2640,7 @@ Red:
   - .reds
   aliases:
   - red/system
-  tm_scope: none
+  tm_scope: source.red
   ace_mode: text
 
 Redcode:
@@ -3192,12 +3209,15 @@ VimL:
   search_term: vim
   aliases:
   - vim
+  - nvim
   extensions:
   - .vim
   filenames:
+  - .nvimrc
   - .vimrc
   - _vimrc
   - gvimrc
+  - nvimrc
   - vimrc
   ace_mode: text
 
