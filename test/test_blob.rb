@@ -457,6 +457,9 @@ class TestBlob < Minitest::Test
 
     assert_predicate fixture_blob(".google_apis/bar.jar"), :vendored?
     assert_predicate fixture_blob("foo/.google_apis/bar.jar"), :vendored?
+
+    # Vagrant
+    assert sample_blob("puphpet/file.pp").vendored?
   end
 
   def test_documentation
