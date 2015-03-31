@@ -421,6 +421,7 @@ class TestBlob < Minitest::Test
     # Test fixtures
     assert sample_blob("test/fixtures/random.rkt").vendored?
     assert sample_blob("Test/fixtures/random.rkt").vendored?
+    assert sample_blob("tests/fixtures/random.rkt").vendored?
 
     # Cordova/PhoneGap
     assert sample_blob("cordova.js").vendored?
