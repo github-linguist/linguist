@@ -1,0 +1,23 @@
+# Documentation files and directories are excluded from language
+# statistics.
+#
+# Lines in this file are Regexps that are matched against the file
+# pathname.
+#
+# Please add additional test coverage to
+# `test/test_blob.rb#test_documentation` if you make any changes.
+
+## Documentation directories ##
+
+- ^docs?/
+- (^|/)[Dd]ocumentation/
+- (^|/)javadoc/
+- ^man/
+
+## Documentation files ##
+
+- (^|/)CONTRIBUTING(\.|$)
+- (^|/)COPYING(\.|$)
+- (^|/)INSTALL(\.|$)
+- (^|/)LICEN[CS]E(\.|$)
+- (^|/)README(\.|$)

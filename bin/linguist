@@ -2,10 +2,8 @@
 
 # linguist — detect language type for a file, or, given a directory, determine language breakdown
 #     usage: linguist <path> [<--breakdown>]
-
-require 'linguist/file_blob'
-require 'linguist/language'
-require 'linguist/repository'
+#
+require 'linguist'
 require 'rugged'
 
 path = ARGV[0] || Dir.pwd
