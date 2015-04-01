@@ -459,6 +459,10 @@ class TestBlob < Minitest::Test
     assert_predicate fixture_blob(".google_apis/bar.jar"), :vendored?
     assert_predicate fixture_blob("foo/.google_apis/bar.jar"), :vendored?
 
+    # Sphinx docs
+    assert sample_blob("docs/_build/asset.doc").vendored?
+    assert sample_blob("docs/theme/file.css").vendored?
+    
     # Vagrant
     assert sample_blob("puphpet/file.pp").vendored?
   end
