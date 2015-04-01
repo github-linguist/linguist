@@ -5,7 +5,7 @@ class TestColorThreshold < Minitest::Test
 
   def test_color_threshold
     langs_with_colors = Language.all.reject { |language| language.color.nil? }
-    cp = ColorProximity.new(20, langs_with_colors.map(&:color))
+    cp = ColorProximity.new(10, langs_with_colors.map(&:color))
     failing_threshold = []
     langs_with_colors.each do |lang|
       state = cp.within_threshold?(lang.color[1..-1])
