@@ -23,23 +23,29 @@ module Linguist
       # First line must start with #!
       return unless shebang && shebang.start_with?("#!")
 
-      # Get the parts of the shebang without the #!
-      tokens = shebang.sub(/^#!\s*/, '').strip.split(' ')
+      s = StringScanner.new(shebang)
 
       # There was nothing after the #!
-      return if tokens.empty?
+      return unless path = s.scan(/^#!\s*\S+/)
 
-      # Get the name of the interpreter
-      script = File.basename(tokens.first)
+      # Keep going
+      script = path.split('/').last
 
-      # Get next argument if interpreter was /usr/bin/env
-      script = tokens[1] if script == 'env'
+      # if /usr/bin/env type shebang then walk the string
+      if script == 'env'
+        s.scan(/\s+/)
+        s.scan(/.*=[^\s]+\s+/) # skip over variable arguments e.g. foo=bar
+        script = s.scan(/\S+/)
+      end
 
       # Interpreter was /usr/bin/env with no arguments
       return unless script
 
       # "python2.6" -> "python2"
       script.sub! /(\.\d+)$/, ''
+
+      # #! perl -> perl
+      script.sub! /^#!\s*/, ''
 
       # Check for multiline shebang hacks that call `exec`
       if script == 'sh' &&
