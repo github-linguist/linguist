@@ -188,7 +188,7 @@ class TestLanguage < Minitest::Test
     assert_equal [], Language.find_by_extension('foo.rb')
     assert_equal [Language['Ruby']], Language.find_by_extension('rb')
     assert_equal [Language['Ruby']], Language.find_by_extension('.rb')
-    assert_equal [Language['M'], Language['MUF'], Language['Mathematica'], Language['Matlab'], Language['Mercury'], Language['Objective-C']], Language.find_by_extension('.m')
+    assert_equal [Language['Limbo'], Language['M'], Language['MUF'], Language['Mathematica'], Language['Matlab'], Language['Mercury'], Language['Objective-C']], Language.find_by_extension('.m')
   end
 
   def test_find_all_by_extension
