@@ -4,7 +4,7 @@ class TestColorProximity < Minitest::Test
   include Linguist
 
   def cut_hash(color)
-    color[1..-1]
+    color[1..-1] if color.start_with?('#')
   end
 
   def test_color_proximity
@@ -16,7 +16,7 @@ class TestColorProximity < Minitest::Test
         "- #{lang} (#{lang.color}) is too close to #{state.last}"
       end
     end.compact
-    message = "The following languages have failing color thresholds. Please modify the hex color.\n#{failing_threshold.join("\n")}"
+    message = "The following #{failing_threshold.length} languages have failing color thresholds. Please modify the hex color.\n#{failing_threshold.join("\n")}"
 
     assert failing_threshold.empty?, message
   end
