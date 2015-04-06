@@ -1,13 +1,13 @@
 require_relative "./helper"
 
-class TestColorThreshold < Minitest::Test
+class TestColorProximity < Minitest::Test
   include Linguist
 
   def cut_hash(color)
     color[1..-1]
   end
 
-  def test_color_threshold
+  def test_color_proximity
     langs_with_colors = Language.all.reject { |language| language.color.nil? }
     cp = ColorProximity.new(0.02, langs_with_colors.map { |lang| cut_hash(lang.color) })
     failing_threshold = langs_with_colors.map do |lang|
