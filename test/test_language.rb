@@ -286,9 +286,9 @@ class TestLanguage < Minitest::Test
 
   def test_color
     assert_equal '#701516', Language['Ruby'].color
-    assert_equal '#3581ba', Language['Python'].color
+    assert_equal '#3572A5', Language['Python'].color
     assert_equal '#f1e05a', Language['JavaScript'].color
-    assert_equal '#31859c', Language['TypeScript'].color
+    assert_equal '#2b7489', Language['TypeScript'].color
     assert_equal '#3d9970', Language['LSL'].color
   end
 
