@@ -222,6 +222,15 @@ module Linguist
       end
     end
 
+    disambiguate "Text", "NewLisp" do |data|
+      if /^\s*\(define /.match(data)
+        Language["NewLisp"]
+      else
+        Language["Text"]
+      end
+    end
+
+
     disambiguate "TypeScript", "XML" do |data|
       if data.include?("<TS ")
         Language["XML"]
