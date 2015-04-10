@@ -129,7 +129,7 @@ module Linguist
     end
 
     disambiguate "Common Lisp", "OpenCL", "Cool" do |data|
-      if data.include?("(defun ")
+      if /^\s*\((defun|in-package|defpackage) /i.match(data)
         Language["Common Lisp"]
       elsif /^class/x.match(data)
         Language["Cool"]
@@ -215,7 +215,7 @@ module Linguist
     end
 
     disambiguate "Common Lisp", "NewLisp" do |data|
-      if /^\s*\((defun|in-package|defpackage) /.match(data)
+      if /^\s*\((defun|in-package|defpackage) /i.match(data)
         Language["Common Lisp"]
       elsif /^\s*\(define /.match(data)
         Language["NewLisp"]
