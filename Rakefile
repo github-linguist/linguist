@@ -1,15 +1,16 @@
-require 'json'
+require 'bundler/setup'
 require 'rake/clean'
 require 'rake/testtask'
 require 'yaml'
-require 'pry'
+require 'yajl'
+require 'open-uri'
 
 task :default => :test
 
 Rake::TestTask.new
 
-# Extend test task to check for samples
-task :test => :check_samples
+# Extend test task to check for samples and fetch latest Ace modes
+task :test => [:check_samples, :fetch_ace_modes]
 
 desc "Check that we have samples.json generated"
 task :check_samples do
@@ -18,19 +19,37 @@ task :check_samples do
   end
 end
 
+desc "Fetch the latest Ace modes from its GitHub repository"
+task :fetch_ace_modes do
+  ACE_FIXTURE_PATH = File.join('test', 'fixtures', 'ace_modes.json')
+
+  File.delete(ACE_FIXTURE_PATH) if File.exist?(ACE_FIXTURE_PATH)
+
+  begin
+    ace_github_modes = open("https://api.github.com/repos/ajaxorg/ace/contents/lib/ace/mode").read
+    File.write(ACE_FIXTURE_PATH, ace_github_modes)
+  rescue OpenURI::HTTPError, SocketError
+      # no internet? no problem.
+  end
+end
+
 task :samples do
   require 'linguist/samples'
-  require 'yajl'
-  data = Linguist::Samples.data
-  json = Yajl::Encoder.encode(data, :pretty => true)
-  File.open('lib/linguist/samples.json', 'w') { |io| io.write json }
+  json = Yajl.dump(Linguist::Samples.data, :pretty => true)
+  File.write 'lib/linguist/samples.json', json
 end
 
 task :build_gem => :samples do
   languages = YAML.load_file("lib/linguist/languages.yml")
-  File.write("lib/linguist/languages.json", JSON.dump(languages))
+  File.write("lib/linguist/languages.json", Yajl.dump(languages))
   `gem build github-linguist.gemspec`
   File.delete("lib/linguist/languages.json")
+end
+
+task :build_grammars_gem do
+  rm_rf "grammars"
+  sh "script/convert-grammars"
+  sh "gem", "build", "github-linguist-grammars.gemspec"
 end
 
 namespace :benchmark do
@@ -72,11 +91,11 @@ namespace :benchmark do
     reference_file = ENV["REFERENCE"]
     candidate_file = ENV["CANDIDATE"]
 
-    reference = JSON.parse(File.read(reference_file))
+    reference = Yajl.load(File.read(reference_file))
     reference_counts = Hash.new(0)
     reference.each { |filename, language| reference_counts[language] += 1 }
 
-    candidate = JSON.parse(File.read(candidate_file))
+    candidate = Yajl.load(File.read(candidate_file))
     candidate_counts = Hash.new(0)
     candidate.each { |filename, language| candidate_counts[language] += 1 }
 
@@ -126,14 +145,12 @@ namespace :classifier do
 
   def each_public_gist
     require 'open-uri'
-    require 'json'
-
     url = "https://api.github.com/gists/public"
 
     loop do
       resp = open(url)
       url = resp.meta['link'][/<([^>]+)>; rel="next"/, 1]
-      gists = JSON.parse(resp.read)
+      gists = Yajl.load(resp.read)
 
       for gist in gists
         for filename, attrs in gist['files']

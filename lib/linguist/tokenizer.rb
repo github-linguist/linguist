@@ -22,8 +22,10 @@ module Linguist
     # Start state on token, ignore anything till the next newline
     SINGLE_LINE_COMMENTS = [
       '//', # C
+      '--', # Ada, Haskell, AppleScript
       '#',  # Ruby
       '%',  # Tex
+      '"',  # Vim
     ]
 
     # Start state on opening token, ignore anything until the closing
@@ -33,7 +35,8 @@ module Linguist
       ['<!--', '-->'], # XML
       ['{-', '-}'],    # Haskell
       ['(*', '*)'],    # Coq
-      ['"""', '"""']   # Python
+      ['"""', '"""'],  # Python
+      ["'''", "'''"]   # Python
     ]
 
     START_SINGLE_LINE_COMMENT =  Regexp.compile(SINGLE_LINE_COMMENTS.map { |c|
@@ -129,6 +132,9 @@ module Linguist
     #   extract_shebang("#!/usr/bin/env node")
     #   # => "node"
     #
+    #   extract_shebang("#!/usr/bin/env A=B foo=bar awk -f")
+    #   # => "awk"
+    #
     # Returns String token or nil it couldn't be parsed.
     def extract_shebang(data)
       s = StringScanner.new(data)
@@ -137,6 +143,7 @@ module Linguist
         script = path.split('/').last
         if script == 'env'
           s.scan(/\s+/)
+          s.scan(/.*=[^\s]+\s+/)
           script = s.scan(/\S+/)
         end
         script = script[/[^\d]+/, 0] if script

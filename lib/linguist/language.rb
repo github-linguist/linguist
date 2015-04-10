@@ -1,8 +1,7 @@
 require 'escape_utils'
-require 'pygments'
 require 'yaml'
 begin
-  require 'json'
+  require 'yajl'
 rescue LoadError
 end
 
@@ -11,6 +10,9 @@ require 'linguist/heuristics'
 require 'linguist/samples'
 require 'linguist/file_blob'
 require 'linguist/blob_helper'
+require 'linguist/strategy/filename'
+require 'linguist/strategy/modeline'
+require 'linguist/shebang'
 
 module Linguist
   # Language names that are recognizable by GitHub. Defined languages
@@ -29,13 +31,6 @@ module Linguist
 
     # Valid Languages types
     TYPES = [:data, :markup, :programming, :prose]
-
-    # Names of non-programming languages that we will still detect
-    #
-    # Returns an array
-    def self.detectable_markup
-      ["CSS", "Less", "Sass", "SCSS", "Stylus", "TeX"]
-    end
 
     # Detect languages by a specific type
     #
@@ -62,7 +57,7 @@ module Linguist
       end
 
       # Language name index
-      @index[language.name] = @name_index[language.name] = language
+      @index[language.name.downcase] = @name_index[language.name.downcase] = language
 
       language.aliases.each do |name|
         # All Language aliases should be unique. Raise if there is a duplicate.
@@ -70,7 +65,7 @@ module Linguist
           raise ArgumentError, "Duplicate alias: #{name}"
         end
 
-        @index[name] = @alias_index[name] = language
+        @index[name.downcase] = @alias_index[name.downcase] = language
       end
 
       language.extensions.each do |extension|
@@ -78,7 +73,7 @@ module Linguist
           raise ArgumentError, "Extension is missing a '.': #{extension.inspect}"
         end
 
-        @extension_index[extension] << language
+        @extension_index[extension.downcase] << language
       end
 
       language.interpreters.each do |interpreter|
@@ -92,6 +87,14 @@ module Linguist
       language
     end
 
+    STRATEGIES = [
+      Linguist::Strategy::Modeline,
+      Linguist::Shebang,
+      Linguist::Strategy::Filename,
+      Linguist::Heuristics,
+      Linguist::Classifier
+    ]
+
     # Public: Detects the Language of the blob.
     #
     # blob - an object that includes the Linguist `BlobHelper` interface;
@@ -99,50 +102,33 @@ module Linguist
     #
     # Returns Language or nil.
     def self.detect(blob)
-      name = blob.name.to_s
+      # Bail early if the blob is binary or empty.
+      return nil if blob.likely_binary? || blob.binary? || blob.empty?
 
-      # Check if the blob is possibly binary and bail early; this is a cheap
-      # test that uses the extension name to guess a binary binary mime type.
-      #
-      # We'll perform a more comprehensive test later which actually involves
-      # looking for binary characters in the blob
-      return nil if blob.likely_binary? || blob.binary?
+      Linguist.instrument("linguist.detection", :blob => blob) do
+        # Call each strategy until one candidate is returned.
+        languages = []
+        returning_strategy = nil
 
-      # A bit of an elegant hack. If the file is executable but extensionless,
-      # append a "magic" extension so it can be classified with other
-      # languages that have shebang scripts.
-      extension = FileBlob.new(name).extension
-      if extension.empty? && blob.mode && (blob.mode.to_i(8) & 05) == 05
-        name += ".script!"
-      end
-
-      # First try to find languages that match based on filename.
-      possible_languages = find_by_filename(name)
-
-      # If there is more than one possible language with that extension (or no
-      # extension at all, in the case of extensionless scripts), we need to continue
-      # our detection work
-      if possible_languages.length > 1
-        data = blob.data
-        possible_language_names = possible_languages.map(&:name)
-
-        # Don't bother with binary contents or an empty file
-        if data.nil? || data == ""
-          nil
-        # Check if there's a shebang line and use that as authoritative
-        elsif (result = find_by_shebang(data)) && !result.empty?
-          result.first
-        # No shebang. Still more work to do. Try to find it with our heuristics.
-        elsif (determined = Heuristics.find_by_heuristics(data, possible_language_names)) && !determined.empty?
-          determined.first
-        # Lastly, fall back to the probabilistic classifier.
-        elsif classified = Classifier.classify(Samples.cache, data, possible_language_names).first
-          # Return the actual Language object based of the string language name (i.e., first element of `#classify`)
-          Language[classified[0]]
+        STRATEGIES.each do |strategy|
+          returning_strategy = strategy
+          candidates = Linguist.instrument("linguist.strategy", :blob => blob, :strategy => strategy, :candidates => languages) do
+            strategy.call(blob, languages)
+          end
+          if candidates.size == 1
+            languages = candidates
+            break
+          elsif candidates.size > 1
+            # More than one candidate was found, pass them to the next strategy.
+            languages = candidates
+          else
+            # No candidates, try the next strategy
+          end
         end
-      else
-        # Simplest and most common case, we can just return the one match based on extension
-        possible_languages.first
+
+        Linguist.instrument("linguist.detected", :blob => blob, :strategy => returning_strategy, :language => languages.first)
+
+        languages.first
       end
     end
 
@@ -164,7 +150,7 @@ module Linguist
     #
     # Returns the Language or nil if none was found.
     def self.find_by_name(name)
-      @name_index[name]
+      name && @name_index[name.downcase]
     end
 
     # Public: Look up Language by one of its aliases.
@@ -176,9 +162,9 @@ module Linguist
     #   Language.find_by_alias('cpp')
     #   # => #<Language name="C++">
     #
-    # Returns the Lexer or nil if none was found.
+    # Returns the Language or nil if none was found.
     def self.find_by_alias(name)
-      @alias_index[name]
+      name && @alias_index[name.downcase]
     end
 
     # Public: Look up Languages by filename.
@@ -193,27 +179,54 @@ module Linguist
     # Returns all matching Languages or [] if none were found.
     def self.find_by_filename(filename)
       basename = File.basename(filename)
-      extname = FileBlob.new(filename).extension
-      langs = @filename_index[basename] +
-              @extension_index[extname]
-      langs.compact.uniq
+
+      # find the first extension with language definitions
+      extname = FileBlob.new(filename).extensions.detect do |e|
+        !@extension_index[e].empty?
+      end
+
+      (@filename_index[basename] + @extension_index[extname]).compact.uniq
     end
 
-    # Public: Look up Languages by shebang line.
+    # Public: Look up Languages by file extension.
     #
-    # data - Array of tokens or String data to analyze.
+    # extname - The extension String.
     #
     # Examples
     #
-    #   Language.find_by_shebang("#!/bin/bash\ndate;")
+    #   Language.find_by_extension('.rb')
+    #   # => [#<Language name="Ruby">]
+    #
+    #   Language.find_by_extension('rb')
+    #   # => [#<Language name="Ruby">]
+    #
+    # Returns all matching Languages or [] if none were found.
+    def self.find_by_extension(extname)
+      extname = ".#{extname}" unless extname.start_with?(".")
+      @extension_index[extname.downcase]
+    end
+
+    # DEPRECATED
+    def self.find_by_shebang(data)
+      @interpreter_index[Shebang.interpreter(data)]
+    end
+
+    # Public: Look up Languages by interpreter.
+    #
+    # interpreter - String of interpreter name
+    #
+    # Examples
+    #
+    #   Language.find_by_interpreter("bash")
     #   # => [#<Language name="Bash">]
     #
     # Returns the matching Language
-    def self.find_by_shebang(data)
-      @interpreter_index[Linguist.interpreter_from_shebang(data)]
+    def self.find_by_interpreter(interpreter)
+      @interpreter_index[interpreter]
     end
 
-    # Public: Look up Language by its name or lexer.
+
+    # Public: Look up Language by its name.
     #
     # name - The String name of the Language
     #
@@ -227,7 +240,7 @@ module Linguist
     #
     # Returns the Language or nil if none was found.
     def self.[](name)
-      @index[name]
+      name && @index[name.downcase]
     end
 
     # Public: A List of popular languages
@@ -237,7 +250,7 @@ module Linguist
     #
     # This list is configured in "popular.yml".
     #
-    # Returns an Array of Lexers.
+    # Returns an Array of Languages.
     def self.popular
       @popular ||= all.select(&:popular?).sort_by { |lang| lang.name.downcase }
     end
@@ -249,7 +262,7 @@ module Linguist
     #
     # This list is created from all the languages not listed in "popular.yml".
     #
-    # Returns an Array of Lexers.
+    # Returns an Array of Languages.
     def self.unpopular
       @unpopular ||= all.select(&:unpopular?).sort_by { |lang| lang.name.downcase }
     end
@@ -263,8 +276,12 @@ module Linguist
 
     # Public: A List of languages compatible with Ace.
     #
+    # TODO: Remove this method in a 5.x release. Every language now needs an ace_mode
+    # key, so this function isn't doing anything unique anymore.
+    #
     # Returns an Array of Languages.
     def self.ace_modes
+      warn "This method will be deprecated in a future 5.x release. Every language now has an `ace_mode` set."
       @ace_modes ||= all.select(&:ace_mode).sort_by { |lang| lang.name.downcase }
     end
 
@@ -286,9 +303,16 @@ module Linguist
       # Set aliases
       @aliases = [default_alias_name] + (attributes[:aliases] || [])
 
-      # Lookup Lexer object
-      @lexer = Pygments::Lexer.find_by_name(attributes[:lexer] || name) ||
-        raise(ArgumentError, "#{@name} is missing lexer")
+      # Load the TextMate scope name or try to guess one
+      @tm_scope = attributes[:tm_scope] || begin
+        context = case @type
+                  when :data, :markup, :prose
+                    'text'
+                  when :programming, nil
+                    'source'
+                  end
+        "#{context}.#{@name.downcase}"
+      end
 
       @ace_mode = attributes[:ace_mode]
       @wrap = attributes[:wrap] || false
@@ -358,10 +382,10 @@ module Linguist
     # Returns the name String
     attr_reader :search_term
 
-    # Public: Get Lexer
+    # Public: Get the name of a TextMate-compatible scope
     #
-    # Returns the Lexer
-    attr_reader :lexer
+    # Returns the scope
+    attr_reader :tm_scope
 
     # Public: Get Ace mode
     #
@@ -405,11 +429,6 @@ module Linguist
     #
     # Returns the extensions Array
     attr_reader :filenames
-
-    # Public: Return all possible extensions for language
-    def all_extensions
-      (extensions + [primary_extension]).uniq
-    end
 
     # Deprecated: Get primary extension
     #
@@ -478,16 +497,6 @@ module Linguist
       @searchable
     end
 
-    # Public: Highlight syntax of text
-    #
-    # text    - String of code to be highlighted
-    # options - A Hash of options (defaults to {})
-    #
-    # Returns html String
-    def colorize(text, options = {})
-      lexer.highlight(text, options)
-    end
-
     # Public: Return name as String representation
     def to_s
       name
@@ -518,8 +527,8 @@ module Linguist
   languages_yml = File.expand_path("../languages.yml", __FILE__)
   languages_json = File.expand_path("../languages.json", __FILE__)
 
-  if File.exist?(languages_json) && defined?(JSON)
-    languages = JSON.load(File.read(languages_json))
+  if File.exist?(languages_json) && defined?(Yajl)
+    languages = Yajl.load(File.read(languages_json))
   else
     languages = YAML.load_file(languages_yml)
   end
@@ -531,8 +540,8 @@ module Linguist
 
     if extnames = extensions[name]
       extnames.each do |extname|
-        if !options['extensions'].include?(extname)
-          warn "#{name} has a sample with extension (#{extname}) that isn't explicitly defined in languages.yml" unless extname == '.script!'
+        if !options['extensions'].index { |x| x.downcase.end_with? extname.downcase }
+          warn "#{name} has a sample with extension (#{extname.downcase}) that isn't explicitly defined in languages.yml" unless extname == '.script!'
           options['extensions'] << extname
         end
       end
@@ -563,13 +572,13 @@ module Linguist
       :color             => options['color'],
       :type              => options['type'],
       :aliases           => options['aliases'],
-      :lexer             => options['lexer'],
+      :tm_scope          => options['tm_scope'],
       :ace_mode          => options['ace_mode'],
       :wrap              => options['wrap'],
       :group_name        => options['group'],
-      :searchable        => options.key?('searchable') ? options['searchable'] : true,
+      :searchable        => options.fetch('searchable', true),
       :search_term       => options['search_term'],
-      :extensions        => [options['extensions'].first] + options['extensions'][1..-1].sort,
+      :extensions        => Array(options['extensions']),
       :interpreters      => options['interpreters'].sort,
       :filenames         => options['filenames'],
       :popular           => popular.include?(name)

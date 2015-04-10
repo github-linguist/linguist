@@ -1,0 +1,22 @@
+#!/bin/sh
+
+set -e
+
+if [ -d /usr/share/rbenv/shims ]; then
+  export PATH=/usr/share/rbenv/shims:$PATH
+  export RBENV_VERSION=2.1.2-github
+  export RUBY_VERSION=2.1.2-github
+fi
+
+set -x
+git log -n 1 HEAD | cat
+ruby -v
+bundle -v
+set +x
+
+# Clean out any unversioned files
+git clean -fd
+
+script/bootstrap
+bundle exec rake samples
+bundle exec rake
