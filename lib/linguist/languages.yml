@@ -710,6 +710,15 @@ D-ObjDump:
   tm_scope: objdump.x86asm
   ace_mode: assembly_x86
 
+DIGITAL Command Language:
+  type: programming
+  aliases:
+  - dcl
+  extensions:
+  - .com
+  tm_scope: none
+  ace_mode: text
+
 DM:
   type: programming
   color: "#447265"
@@ -1957,6 +1966,17 @@ Modelica:
   extensions:
   - .mo
   tm_scope: source.modelica
+  ace_mode: text
+
+Module Management System:
+  type: programming
+  extensions:
+  - .mms
+  - .mmk
+  filenames:
+  - descrip.mmk
+  - descrip.mms
+  tm_scope: none
   ace_mode: text
 
 Monkey:
