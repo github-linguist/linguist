@@ -23,6 +23,15 @@ module Linguist
       [] # No heuristics matched
     end
 
+    # Public: Do we have a heuristic for these candidate languages?
+    #
+    # languages - Array of Language objects
+    #
+    # Returns true if there are matching heuristics or nil
+    def self.defined_for?(languages)
+      @heuristics.select { |h| h.matches?(languages) }.any?
+    end
+
     # Internal: Define a new heuristic.
     #
     # languages - String names of languages to disambiguate.
