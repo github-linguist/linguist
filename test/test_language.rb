@@ -79,7 +79,6 @@ class TestLanguage < Minitest::Test
     assert_equal Language['Java'], Language['Java Server Pages'].group
     assert_equal Language['Python'], Language['Cython'].group
     assert_equal Language['Python'], Language['NumPy'].group
-    assert_equal Language['Shell'], Language['Batchfile'].group
     assert_equal Language['Shell'], Language['Gentoo Ebuild'].group
     assert_equal Language['Shell'], Language['Gentoo Eclass'].group
     assert_equal Language['Shell'], Language['Tcsh'].group
