@@ -216,6 +216,7 @@ class TestBlob < Minitest::Test
     assert sample_blob("C++/protocol-buffer.pb.cc").generated?
     assert sample_blob("Java/ProtocolBuffer.java").generated?
     assert sample_blob("Python/protocol_buffer_pb2.py").generated?
+    assert sample_blob("Go/api.pb.go").generated?
 
     # Generated JNI
     assert sample_blob("C/jni_layer.h").generated?
@@ -233,12 +234,15 @@ class TestBlob < Minitest::Test
     assert sample_blob("Zephir/filenames/exception.zep.php").generated?
     assert !sample_blob("Zephir/Router.zep").generated?
 
-
-    assert Linguist::Generated.generated?("node_modules/grunt/lib/grunt.js", nil)
+    assert sample_blob("node_modules/grunt/lib/grunt.js").generated?
 
     # Godep saved dependencies
     assert sample_blob("Godeps/Godeps.json").generated?
     assert sample_blob("Godeps/_workspace/src/github.com/kr/s3/sign.go").generated?
+
+    # Cython-generated C/C++
+    assert sample_blob("C/sgd_fast.c").generated?
+    assert sample_blob("C++/wrapper_inner.cpp").generated?
   end
 
   def test_vendored
@@ -274,6 +278,8 @@ class TestBlob < Minitest::Test
     assert sample_blob("deps/http_parser/http_parser.c").vendored?
     assert sample_blob("deps/v8/src/v8.h").vendored?
 
+    assert sample_blob("tools/something/else.c").vendored?
+
     # Chart.js
     assert sample_blob("some/vendored/path/Chart.js").vendored?
     assert !sample_blob("some/vendored/path/chart.js").vendored?
@@ -284,6 +290,9 @@ class TestBlob < Minitest::Test
     # Debian packaging
     assert sample_blob("debian/cron.d").vendored?
 
+    # Erlang
+    assert sample_blob("rebar").vendored?
+
     # Minified JavaScript and CSS
     assert sample_blob("foo.min.js").vendored?
     assert sample_blob("foo.min.css").vendored?
@@ -292,12 +301,18 @@ class TestBlob < Minitest::Test
     assert !sample_blob("foomin.css").vendored?
     assert !sample_blob("foo.min.txt").vendored?
 
+    #.osx
+    assert sample_blob(".osx").vendored?
+
     # Prototype
     assert !sample_blob("public/javascripts/application.js").vendored?
     assert sample_blob("public/javascripts/prototype.js").vendored?
     assert sample_blob("public/javascripts/effects.js").vendored?
     assert sample_blob("public/javascripts/controls.js").vendored?
     assert sample_blob("public/javascripts/dragdrop.js").vendored?
+
+    # Samples
+    assert sample_blob("Samples/Ruby/foo.rb").vendored?
 
     # jQuery
     assert sample_blob("jquery.js").vendored?
@@ -406,6 +421,7 @@ class TestBlob < Minitest::Test
     # Test fixtures
     assert sample_blob("test/fixtures/random.rkt").vendored?
     assert sample_blob("Test/fixtures/random.rkt").vendored?
+    assert sample_blob("tests/fixtures/random.rkt").vendored?
 
     # Cordova/PhoneGap
     assert sample_blob("cordova.js").vendored?
@@ -439,6 +455,16 @@ class TestBlob < Minitest::Test
     assert sample_blob("activator.bat").vendored?
     assert sample_blob("subproject/activator").vendored?
     assert sample_blob("subproject/activator.bat").vendored?
+
+    assert_predicate fixture_blob(".google_apis/bar.jar"), :vendored?
+    assert_predicate fixture_blob("foo/.google_apis/bar.jar"), :vendored?
+
+    # Sphinx docs
+    assert sample_blob("docs/_build/asset.doc").vendored?
+    assert sample_blob("docs/theme/file.css").vendored?
+    
+    # Vagrant
+    assert sample_blob("puphpet/file.pp").vendored?
   end
 
   def test_documentation
@@ -448,7 +474,15 @@ class TestBlob < Minitest::Test
     refute_predicate fixture_blob("project/docs/foo.html"), :documentation?
 
     assert_predicate fixture_blob("Documentation/foo.md"), :documentation?
-    refute_predicate fixture_blob("project/Documentation/foo.md"), :documentation?
+    assert_predicate fixture_blob("documentation/foo.md"), :documentation?
+    assert_predicate fixture_blob("project/Documentation/foo.md"), :documentation?
+    assert_predicate fixture_blob("project/documentation/foo.md"), :documentation?
+
+    assert_predicate fixture_blob("javadoc/foo.html"), :documentation?
+    assert_predicate fixture_blob("project/javadoc/foo.html"), :documentation?
+
+    assert_predicate fixture_blob("man/foo.html"), :documentation?
+    refute_predicate fixture_blob("project/man/foo.html"), :documentation?
 
     assert_predicate fixture_blob("README"), :documentation?
     assert_predicate fixture_blob("README.md"), :documentation?

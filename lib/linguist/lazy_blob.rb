@@ -14,13 +14,15 @@ module Linguist
 
     attr_reader :repository
     attr_reader :oid
-    attr_reader :name
+    attr_reader :path
     attr_reader :mode
 
-    def initialize(repo, oid, name, mode = nil)
+    alias :name :path
+
+    def initialize(repo, oid, path, mode = nil)
       @repository = repo
       @oid = oid
-      @name = name
+      @path = path
       @mode = mode
     end
 
@@ -49,7 +51,7 @@ module Linguist
       return @language if defined?(@language)
 
       @language = if lang = git_attributes['linguist-language']
-        Language.find_by_name(lang)
+        Language.find_by_alias(lang)
       else
         super
       end

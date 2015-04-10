@@ -24,6 +24,9 @@
 - (^|/)config.guess$
 - (^|/)config.sub$
 
+# Linters
+- cpplint.py
+
 # Node dependencies
 - node_modules/
 
@@ -143,6 +146,9 @@
 
 ## Python ##
 
+# Sphinx
+- (^|/)docs?/_?(build|themes?|templates?|static)/
+
 # django
 - (^|/)admin_media/
 
@@ -221,7 +227,7 @@
 - ^readme$
 
 # Test fixtures
-- ^[Tt]est/fixtures/
+- ^[Tt]ests?/fixtures/
 
 # PhoneGap/Cordova
 - (^|/)cordova([^.]*)\.js$
@@ -233,7 +239,7 @@
 # Vagrant
 - ^Vagrantfile$
 
-# .DS_Store's
+# .DS_Stores
 - .[Dd][Ss]_[Ss]tore$
 
 # R packages
@@ -251,3 +257,9 @@
 # ProGuard
 - proguard.pro
 - proguard-rules.pro
+
+# PuPHPet
+- ^puphpet/
+
+# Android Google APIs
+- (^|/)\.google_apis/

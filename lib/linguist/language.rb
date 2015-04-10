@@ -73,7 +73,7 @@ module Linguist
           raise ArgumentError, "Extension is missing a '.': #{extension.inspect}"
         end
 
-        @extension_index[extension] << language
+        @extension_index[extension.downcase] << language
       end
 
       language.interpreters.each do |interpreter|
@@ -105,19 +105,31 @@ module Linguist
       # Bail early if the blob is binary or empty.
       return nil if blob.likely_binary? || blob.binary? || blob.empty?
 
-      # Call each strategy until one candidate is returned.
-      STRATEGIES.reduce([]) do |languages, strategy|
-        candidates = strategy.call(blob, languages)
-        if candidates.size == 1
-          return candidates.first
-        elsif candidates.size > 1
-          # More than one candidate was found, pass them to the next strategy.
-          candidates
-        else
-          # No candiates were found, pass on languages from the previous strategy.
-          languages
+      Linguist.instrument("linguist.detection", :blob => blob) do
+        # Call each strategy until one candidate is returned.
+        languages = []
+        returning_strategy = nil
+
+        STRATEGIES.each do |strategy|
+          returning_strategy = strategy
+          candidates = Linguist.instrument("linguist.strategy", :blob => blob, :strategy => strategy, :candidates => languages) do
+            strategy.call(blob, languages)
+          end
+          if candidates.size == 1
+            languages = candidates
+            break
+          elsif candidates.size > 1
+            # More than one candidate was found, pass them to the next strategy.
+            languages = candidates
+          else
+            # No candidates, try the next strategy
+          end
         end
-      end.first
+
+        Linguist.instrument("linguist.detected", :blob => blob, :strategy => returning_strategy, :language => languages.first)
+
+        languages.first
+      end
     end
 
     # Public: Get all Languages
@@ -191,7 +203,7 @@ module Linguist
     # Returns all matching Languages or [] if none were found.
     def self.find_by_extension(extname)
       extname = ".#{extname}" unless extname.start_with?(".")
-      @extension_index[extname]
+      @extension_index[extname.downcase]
     end
 
     # DEPRECATED
@@ -528,8 +540,8 @@ module Linguist
 
     if extnames = extensions[name]
       extnames.each do |extname|
-        if !options['extensions'].index { |x| x.end_with? extname }
-          warn "#{name} has a sample with extension (#{extname}) that isn't explicitly defined in languages.yml" unless extname == '.script!'
+        if !options['extensions'].index { |x| x.downcase.end_with? extname.downcase }
+          warn "#{name} has a sample with extension (#{extname.downcase}) that isn't explicitly defined in languages.yml" unless extname == '.script!'
           options['extensions'] << extname
         end
       end
