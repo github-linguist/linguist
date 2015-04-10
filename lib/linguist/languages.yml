@@ -712,12 +712,12 @@ D-ObjDump:
 
 DIGITAL Command Language:
   type: programming
-  lexer: Text only
-  search_term: dcl
   aliases:
   - dcl
   extensions:
   - .com
+  tm_scope: none
+  ace_mode: text
 
 DM:
   type: programming
@@ -1970,14 +1970,14 @@ Modelica:
 
 Module Management System:
   type: programming
-  lexer: Text only
-  search_term: mms
   extensions:
   - .mms
   - .mmk
   filenames:
-  - descrip.mms
   - descrip.mmk
+  - descrip.mms
+  tm_scope: none
+  ace_mode: text
 
 Monkey:
   type: programming
