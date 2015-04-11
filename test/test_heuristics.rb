@@ -3,10 +3,6 @@ require_relative "./helper"
 class TestHeuristcs < Minitest::Test
   include Linguist
 
-  def samples_path
-    File.expand_path("../../samples", __FILE__)
-  end
-
   def fixture(name)
     File.read(File.join(samples_path, name))
   end
@@ -51,8 +47,10 @@ class TestHeuristcs < Minitest::Test
   # Candidate languages = ["Perl", "Prolog"]
   def test_pl_prolog_perl_by_heuristics
     assert_heuristics({
-      "Prolog" => "Prolog/turing.pl",
-      "Perl" => "Perl/perl-test.t",
+      "Prolog" => all_fixtures("Prolog/*.pl"),
+      "Perl" => all_fixtures("Perl/*.pl"),
+      "Perl" => ["Perl/perl-test.t"],
+      "Perl6" => all_fixtures("Perl6/*.pl")
     })
   end
 
@@ -64,19 +62,22 @@ class TestHeuristcs < Minitest::Test
     })
   end
 
-  # Candidate languages = ["IDL", "Prolog"]
-  def test_pro_prolog_idl_by_heuristics
+  # Candidate languages = ["IDL", "Prolog", "QMake", "INI"]
+  def test_pro_by_heuristics
     assert_heuristics({
-      "Prolog" => "Prolog/logic-problem.pro",
-      "IDL" => "IDL/mg_acosh.pro"
+      "Prolog" => all_fixtures("Prolog", "*.pro"),
+      "IDL" => all_fixtures("IDL", "*.pro"),
+      "INI" => all_fixtures("INI", "*.pro"),
+      "QMake" => all_fixtures("QMake", "*.pro")
     })
   end
 
-  # Candidate languages = ["AGS Script", "AsciiDoc"]
-  def test_asc_asciidoc_by_heuristics
+  # Candidate languages = ["AGS Script", "AsciiDoc", "Public Key"]
+  def test_asc_by_heuristics
     assert_heuristics({
       "AsciiDoc" => "AsciiDoc/list.asc",
-      "AGS Script" => nil
+      "AGS Script" => "AGS Script/GlobalScript.asc",
+      "Public Key" => "Public Key/sunCert.asc"
     })
   end
 
@@ -130,6 +131,13 @@ class TestHeuristcs < Minitest::Test
     assert_heuristics({
       "BitBake" => all_fixtures("BitBake"),
       "BlitzBasic" => all_fixtures("BlitzBasic")
+    })
+  end
+
+  def test_lsp_by_heuristics
+    assert_heuristics({
+      "Common Lisp" => all_fixtures("Common Lisp"),
+      "NewLisp" => all_fixtures("NewLisp")
     })
   end
 

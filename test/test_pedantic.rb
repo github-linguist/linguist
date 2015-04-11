@@ -12,7 +12,7 @@ class TestPedantic < Minitest::Test
   def test_extensions_are_sorted
     LANGUAGES.each do |name, language|
       extensions = language['extensions']
-      assert_sorted extensions[1..-1] if extensions && extensions.size > 1
+      assert_sorted extensions[1..-1].map(&:downcase) if extensions && extensions.size > 1
     end
   end
 
