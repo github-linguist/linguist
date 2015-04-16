@@ -275,7 +275,7 @@ module Linguist
     end
 
     disambiguate "NL", "NewLisp" do |data|
-      if /^g3 /.match(data)
+      if /^(b|g)[0-9]+ /.match(data)
         Language["NL"]
       else
         Language["NewLisp"]
