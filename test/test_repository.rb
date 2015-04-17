@@ -1,6 +1,6 @@
 require_relative "./helper"
 
-class TestRepository < Test::Unit::TestCase
+class TestRepository < Minitest::Test
   def rugged_repository
     @rugged ||= Rugged::Repository.new(File.expand_path("../../.git", __FILE__))
   end
@@ -98,5 +98,17 @@ class TestRepository < Test::Unit::TestCase
 
     # overridden .gitattributes
     assert !override_unvendored.vendored?
+  end
+
+  def test_linguist_override_documentation?
+    attr_commit = "d4c8fb8a28e91f97a7e53428a365c0abbac36d3d"
+    repo = linguist_repo(attr_commit).read_index
+
+    readme = Linguist::LazyBlob.new(rugged_repository, attr_commit, "README.md")
+    arduino = Linguist::LazyBlob.new(rugged_repository, attr_commit, "samples/Arduino/hello.ino")
+
+    # overridden by .gitattributes
+    refute_predicate readme, :documentation?
+    assert_predicate arduino, :documentation?
   end
 end

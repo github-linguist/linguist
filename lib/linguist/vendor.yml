@@ -24,6 +24,9 @@
 - (^|/)config.guess$
 - (^|/)config.sub$
 
+# Linters
+- cpplint.py
+
 # Node dependencies
 - node_modules/
 
@@ -32,6 +35,7 @@
 
 # Erlang bundles
 - ^rebar$
+- erlang.mk
 
 # Go dependencies
 - Godeps/_workspace/
@@ -39,24 +43,27 @@
 # Minified JavaScript and CSS
 - (\.|-)min\.(js|css)$
 
+# Stylesheets imported from packages
+- ([^\s]*)import\.(css|less|scss|styl)$
+
 # Bootstrap css and js
-- (^|/)bootstrap([^.]*)\.(js|css)$
+- (^|/)bootstrap([^.]*)\.(js|css|less|scss|styl)$
+- (^|/)custom\.bootstrap([^\s]*)(js|css|less|scss|styl)$
 
 # Font Awesome
-- font-awesome.css
+- (^|/)font-awesome\.(css|less|scss|styl)$
 
 # Foundation css
-- foundation.css
+- (^|/)foundation\.(css|less|scss|styl)$
 
 # Normalize.css
-- normalize.css
+- (^|/)normalize\.(css|less|scss|styl)$
 
-# Bourbon SCSS
-- (^|/)[Bb]ourbon/.*\.css$
-- (^|/)[Bb]ourbon/.*\.scss$
+# Bourbon css
+- (^|/)[Bb]ourbon/.*\.(css|less|scss|styl)$
 
 # Animate.css
-- animate.css
+- (^|/)animate\.(css|less|scss|styl)$
 
 # Vendored dependencies
 - third[-_]?party/
@@ -139,6 +146,9 @@
 
 ## Python ##
 
+# Sphinx
+- (^|/)docs?/_?(build|themes?|templates?|static)/
+
 # django
 - (^|/)admin_media/
 
@@ -217,7 +227,7 @@
 - ^readme$
 
 # Test fixtures
-- ^[Tt]est/fixtures/
+- ^[Tt]ests?/fixtures/
 
 # PhoneGap/Cordova
 - (^|/)cordova([^.]*)\.js$
@@ -229,11 +239,8 @@
 # Vagrant
 - ^Vagrantfile$
 
-# .DS_Store's
+# .DS_Stores
 - .[Dd][Ss]_[Ss]tore$
-
-# Mercury --use-subdirs
-- Mercury/
 
 # R packages
 - ^vignettes/
@@ -250,3 +257,9 @@
 # ProGuard
 - proguard.pro
 - proguard-rules.pro
+
+# PuPHPet
+- ^puphpet/
+
+# Android Google APIs
+- (^|/)\.google_apis/

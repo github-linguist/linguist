@@ -99,7 +99,7 @@ module Linguist
       elsif name.nil?
         "attachment"
       else
-        "attachment; filename=#{EscapeUtils.escape_url(File.basename(name))}"
+        "attachment; filename=#{EscapeUtils.escape_url(name)}"
       end
     end
 
@@ -233,7 +233,22 @@ module Linguist
     #
     # Return true or false
     def vendored?
-      name =~ VendoredRegexp ? true : false
+      path =~ VendoredRegexp ? true : false
+    end
+
+    documentation_paths = YAML.load_file(File.expand_path("../documentation.yml", __FILE__))
+    DocumentationRegexp = Regexp.new(documentation_paths.join('|'))
+
+    # Public: Is the blob in a documentation directory?
+    #
+    # Documentation files are ignored by language statistics.
+    #
+    # See "documentation.yml" for a list of documentation conventions that match
+    # this pattern.
+    #
+    # Return true or false
+    def documentation?
+      path =~ DocumentationRegexp ? true : false
     end
 
     # Public: Get each line of data
@@ -301,7 +316,7 @@ module Linguist
     #
     # Return true or false
     def generated?
-      @_generated ||= Generated.generated?(name, lambda { data })
+      @_generated ||= Generated.generated?(path, lambda { data })
     end
 
     # Public: Detects the Language of the blob.
@@ -316,6 +331,16 @@ module Linguist
     # Internal: Get the TextMate compatible scope for the blob
     def tm_scope
       language && language.tm_scope
+    end
+
+    DETECTABLE_TYPES = [:programming, :markup].freeze
+
+    # Internal: Should this blob be included in repository language statistics?
+    def include_in_language_stats?
+      !vendored? &&
+      !documentation? &&
+      !generated? &&
+      language && DETECTABLE_TYPES.include?(language.type)
     end
   end
 end

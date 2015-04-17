@@ -3,18 +3,33 @@ require 'rake/clean'
 require 'rake/testtask'
 require 'yaml'
 require 'yajl'
+require 'open-uri'
 
 task :default => :test
 
 Rake::TestTask.new
 
-# Extend test task to check for samples
-task :test => :check_samples
+# Extend test task to check for samples and fetch latest Ace modes
+task :test => [:check_samples, :fetch_ace_modes]
 
 desc "Check that we have samples.json generated"
 task :check_samples do
   unless File.exist?('lib/linguist/samples.json')
     Rake::Task[:samples].invoke
+  end
+end
+
+desc "Fetch the latest Ace modes from its GitHub repository"
+task :fetch_ace_modes do
+  ACE_FIXTURE_PATH = File.join('test', 'fixtures', 'ace_modes.json')
+
+  File.delete(ACE_FIXTURE_PATH) if File.exist?(ACE_FIXTURE_PATH)
+
+  begin
+    ace_github_modes = open("https://api.github.com/repos/ajaxorg/ace/contents/lib/ace/mode").read
+    File.write(ACE_FIXTURE_PATH, ace_github_modes)
+  rescue OpenURI::HTTPError, SocketError
+      # no internet? no problem.
   end
 end
 
@@ -33,7 +48,7 @@ end
 
 task :build_grammars_gem do
   rm_rf "grammars"
-  sh "script/download-grammars"
+  sh "script/convert-grammars"
   sh "gem", "build", "github-linguist-grammars.gemspec"
 end
 

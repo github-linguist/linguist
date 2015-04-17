@@ -1,6 +1,6 @@
 require_relative "./helper"
 
-class TestLanguage < Test::Unit::TestCase
+class TestLanguage < Minitest::Test
   include Linguist
 
   def test_find_by_alias
@@ -79,7 +79,6 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['Java'], Language['Java Server Pages'].group
     assert_equal Language['Python'], Language['Cython'].group
     assert_equal Language['Python'], Language['NumPy'].group
-    assert_equal Language['Shell'], Language['Batchfile'].group
     assert_equal Language['Shell'], Language['Gentoo Ebuild'].group
     assert_equal Language['Shell'], Language['Gentoo Eclass'].group
     assert_equal Language['Shell'], Language['Tcsh'].group
@@ -155,10 +154,6 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal :prose, Language['Org'].type
   end
 
-  def test_other
-    assert_nil Language['Brainfuck'].type
-  end
-
   def test_searchable
     assert Language['Ruby'].searchable?
     assert !Language['Gettext Catalog'].searchable?
@@ -192,13 +187,13 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal [], Language.find_by_extension('foo.rb')
     assert_equal [Language['Ruby']], Language.find_by_extension('rb')
     assert_equal [Language['Ruby']], Language.find_by_extension('.rb')
-    assert_equal [Language['M'], Language['Mathematica'], Language['Matlab'], Language['Mercury'], Language['Objective-C']], Language.find_by_extension('.m')
+    assert_equal [Language['Limbo'], Language['M'], Language['MUF'], Language['Mathematica'], Language['Matlab'], Language['Mercury'], Language['Objective-C']], Language.find_by_extension('.m')
   end
 
   def test_find_all_by_extension
     Language.all.each do |language|
       language.extensions.each do |extension|
-        assert_include Language.find_by_extension(extension), language
+        assert_includes Language.find_by_extension(extension), language
       end
     end
   end
@@ -223,34 +218,21 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal [Language['Chapel']], Language.find_by_filename('examples/hello.chpl')
   end
 
-  def test_find_by_shebang
-    assert_equal 'ruby', Linguist.interpreter_from_shebang("#!/usr/bin/ruby\n# baz")
-    { []         => ["",
-                     "foo",
-                     "#bar",
-                     "#baz",
-                     "///",
-                     "\n\n\n\n\n",
-                     " #!/usr/sbin/ruby",
-                     "\n#!/usr/sbin/ruby"],
-      ['Ruby']   => ["#!/usr/bin/env ruby\n# baz",
-                     "#!/usr/sbin/ruby\n# bar",
-                     "#!/usr/bin/ruby\n# foo",
-                     "#!/usr/sbin/ruby",
-                     "#!/usr/sbin/ruby foo bar baz\n"],
-      ['R']      => ["#!/usr/bin/env Rscript\n# example R script\n#\n"],
-      ['Shell']  => ["#!/usr/bin/bash\n", "#!/bin/sh"],
-      ['Python'] => ["#!/bin/python\n# foo\n# bar\n# baz",
-                     "#!/usr/bin/python2.7\n\n\n\n",
-                     "#!/usr/bin/python3\n\n\n\n"],
-      ["Common Lisp"] => ["#!/usr/bin/sbcl --script\n\n"]
-    }.each do |languages, bodies|
-      bodies.each do |body|
-        assert_equal([body, languages.map{|l| Language[l]}],
-                     [body, Language.find_by_shebang(body)])
-
-      end
+  def test_find_by_interpreter
+    {
+      "ruby" => "Ruby",
+      "Rscript" => "R",
+      "sh" => "Shell",
+      "bash" => "Shell",
+      "python" => "Python",
+      "python2" => "Python",
+      "python3" => "Python",
+      "sbcl" => "Common Lisp"
+    }.each do |interpreter, language|
+      assert_equal [Language[language]], Language.find_by_interpreter(interpreter)
     end
+
+    assert_equal [], Language.find_by_interpreter(nil)
   end
 
   def test_find
@@ -296,16 +278,16 @@ class TestLanguage < Test::Unit::TestCase
   end
 
   def test_error_without_name
-    assert_raise ArgumentError do
+    assert_raises ArgumentError do
       Language.new :name => nil
     end
   end
 
   def test_color
     assert_equal '#701516', Language['Ruby'].color
-    assert_equal '#3581ba', Language['Python'].color
+    assert_equal '#3572A5', Language['Python'].color
     assert_equal '#f1e05a', Language['JavaScript'].color
-    assert_equal '#31859c', Language['TypeScript'].color
+    assert_equal '#2b7489', Language['TypeScript'].color
     assert_equal '#3d9970', Language['LSL'].color
   end
 
@@ -321,11 +303,12 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal 'css', Language['CSS'].ace_mode
     assert_equal 'lsl', Language['LSL'].ace_mode
     assert_equal 'javascript', Language['JavaScript'].ace_mode
+    assert_equal 'text', Language['FORTRAN'].ace_mode
   end
 
   def test_ace_modes
     assert Language.ace_modes.include?(Language['Ruby'])
-    assert !Language.ace_modes.include?(Language['FORTRAN'])
+    assert Language.ace_modes.include?(Language['FORTRAN'])
   end
 
   def test_wrap
@@ -367,6 +350,42 @@ class TestLanguage < Test::Unit::TestCase
 
     width = missing.map { |language| language.name.length }.max
     message << missing.map { |language| sprintf("%-#{width}s %s", language.name, language.tm_scope) }.sort.join("\n")
+    assert missing.empty?, message
+  end
+
+  def test_all_languages_have_type
+    missing = Language.all.select { |language| language.type.nil? }
+    message = "The following languages do not have a type listed in grammars.yml. Please add types for all new languages.\n"
+
+    width = missing.map { |language| language.name.length }.max
+    message << missing.map { |language| sprintf("%-#{width}s", language.name) }.sort.join("\n")
+    assert missing.empty?, message
+  end
+
+  def test_all_languages_have_a_valid_ace_mode
+    ace_fixture_path = File.join('test', 'fixtures', 'ace_modes.json')
+    skip("No ace_modes.json file") unless File.exist?(ace_fixture_path)
+
+    ace_github_modes = Yajl.load(File.read(ace_fixture_path))
+    existing_ace_modes = ace_github_modes.map do |ace_github_mode|
+      File.basename(ace_github_mode["name"], ".js") if ace_github_mode["name"]  !~ /_highlight_rules|_test|_worker/
+    end.compact.uniq.sort.map(&:downcase)
+
+    missing = Language.all.reject { |language| language.ace_mode == "text" || existing_ace_modes.include?(language.ace_mode) }
+    message = "The following languages do not have an Ace mode listed in languages.yml. Please add an Ace mode for all new languages.\n"
+    message << "If no Ace mode exists for a language, mark the language with `ace_mode: text` in lib/linguist/languages.yml.\n"
+
+    width = missing.map { |language| language.name.length }.max
+    message << missing.map { |language| sprintf("%-#{width}s %s", language.name, language.ace_mode) }.sort.join("\n")
+    assert missing.empty?, message
+  end
+
+  def test_all_popular_languages_exist
+    popular = YAML.load(File.read(File.expand_path("../../lib/linguist/popular.yml", __FILE__)))
+
+    missing = popular - Language.all.map(&:name)
+    message = "The following languages are listed in lib/linguist/popular.yml but not in lib/linguist/languages.yml.\n"
+    message << missing.sort.join("\n")
     assert missing.empty?, message
   end
 end
