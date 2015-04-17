@@ -40,7 +40,7 @@ class TestHeuristcs < Minitest::Test
 
   def test_detect_still_works_if_nothing_matches
     blob = Linguist::FileBlob.new(File.join(samples_path, "Objective-C/hello.m"))
-    match = Language.detect(blob)
+    match = Linguist.detect(blob)
     assert_equal Language["Objective-C"], match
   end
 
