@@ -243,6 +243,9 @@ class TestBlob < Minitest::Test
     # Cython-generated C/C++
     assert sample_blob("C/sgd_fast.c").generated?
     assert sample_blob("C++/wrapper_inner.cpp").generated?
+
+    # KiCAD module files
+    assert fixture_blob("Generated/ABM8G.mod").generated?
   end
 
   def test_vendored
@@ -536,6 +539,8 @@ class TestBlob < Minitest::Test
         blob = fixture_blob(filepath)
         if language == 'Data'
           assert blob.language.nil?, "A language was found for #{filepath}"
+        elsif language == 'Generated'
+          assert blob.generated?, "#{filepath} is not a generated file"
         else
           assert blob.language, "No language for #{filepath}"
           assert_equal language, blob.language.name, blob.name
