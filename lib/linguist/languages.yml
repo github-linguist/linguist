@@ -49,6 +49,7 @@ AMPL:
   color: "#E6EFBB"
   extensions:
   - .ampl
+  - .mod
   tm_scope: source.ampl
   ace_mode: text
 
@@ -1703,6 +1704,13 @@ Limbo:
   tm_scope: none
   ace_mode: text
 
+Linux Kernel Module:
+  type: data
+  extensions:
+  - .mod
+  tm_scope: none
+  ace_mode: text
+
 Liquid:
   type: markup
   extensions:
@@ -1966,6 +1974,13 @@ Modelica:
   extensions:
   - .mo
   tm_scope: source.modelica
+  ace_mode: text
+
+Modula-2:
+  type: programming
+  extensions:
+  - .mod
+  tm_scope: none
   ace_mode: text
 
 Module Management System:
@@ -3405,6 +3420,7 @@ XML:
   - .kml
   - .launch
   - .mm
+  - .mod
   - .mxml
   - .nproj
   - .nuspec
