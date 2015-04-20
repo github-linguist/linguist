@@ -78,7 +78,7 @@ module Linguist
     #
     # Returns true of false.
     def xcode_file?
-      ['.nib', '.xcworkspacedata', '.xcuserstate'].include?(extname)
+      ['.nib', '.pbxproj', '.xcworkspacedata', '.xcuserstate'].include?(extname)
     end
 
     # Internal: Is the blob minified files?
@@ -179,11 +179,11 @@ module Linguist
     def generated_net_designer_file?
       name.downcase =~ /\.designer\.cs$/
     end
-    
+
     # Internal: Is this a codegen file for Specflow feature file?
     #
     # Visual Studio's SpecFlow extension generates *.feature.cs files
-    # from *.feature files, they are not meant to be consumed by humans. 
+    # from *.feature files, they are not meant to be consumed by humans.
     # Let's hide them.
     #
     # Returns true or false

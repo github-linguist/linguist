@@ -168,7 +168,7 @@ class TestBlob < Minitest::Test
     # Xcode project files
     assert !sample_blob("XML/MainMenu.xib").generated?
     assert fixture_blob("Binary/MainMenu.nib").generated?
-    assert !sample_blob("XML/project.pbxproj").generated?
+    assert sample_blob("XML/project.pbxproj").generated?
 
     # Gemfile.lock is NOT generated
     assert !sample_blob("Gemfile.lock").generated?
@@ -462,7 +462,7 @@ class TestBlob < Minitest::Test
     # Sphinx docs
     assert sample_blob("docs/_build/asset.doc").vendored?
     assert sample_blob("docs/theme/file.css").vendored?
-    
+
     # Vagrant
     assert sample_blob("puphpet/file.pp").vendored?
   end

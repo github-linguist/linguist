@@ -40,6 +40,7 @@ class TestGenerated < Minitest::Test
     generated_sample_without_loading_data("Binary/MainMenu.nib")
     generated_sample_without_loading_data("Dummy/foo.xcworkspacedata")
     generated_sample_without_loading_data("Dummy/foo.xcuserstate")
+    generated_sample_without_loading_data("FlappySwift/FlappyBird.xcodeproj/project.pbxproj")
 
     # .NET designer file
     generated_sample_without_loading_data("Dummu/foo.designer.cs")
