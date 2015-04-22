@@ -61,9 +61,6 @@ module Linguist
       @heuristic.call(data)
     end
 
-    # Common heuristics
-    ObjectiveCRegex = /\#(include|import|define)/
-
     disambiguate "BitBake", "BlitzBasic" do |data|
       if /^\s*; /.match(data) || data.include?("End Function")
         Language["BlitzBasic"]
@@ -81,7 +78,7 @@ module Linguist
     end
 
     disambiguate "Objective-C", "C++", "C" do |data|
-      if ObjectiveCRegex.match(data)
+      if /^[ \t]*@(interface|class|protocol|property|end|synchronised|selector|implementation)\b/.match(data)
         Language["Objective-C"]
       elsif (/^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>/.match(data) ||
         /^\s*template\s*</.match(data) || /^[ \t]*try/.match(data) || /^[ \t]*catch\s*\(/.match(data) || /^[ \t]*(class|(using[ \t]+)?namespace)\s+\w+/.match(data) || /^[ \t]*(private|public|protected):$/.match(data) || /std::\w+/.match(data))
@@ -185,7 +182,7 @@ module Linguist
     end
 
     disambiguate "Limbo", "M", "MUF", "Mathematica", "Matlab", "Mercury", "Objective-C" do |data|
-      if ObjectiveCRegex.match(data)
+      if /\#(include|import|define)/.match(data)
         Language["Objective-C"]
       elsif data.include?(":- module")
         Language["Mercury"]
