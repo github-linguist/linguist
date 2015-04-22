@@ -1704,6 +1704,16 @@ Limbo:
   tm_scope: none
   ace_mode: text
 
+Linker Script:
+  type: data
+  extensions:
+  - .ld
+  - .lds
+  filenames:
+  - ld.script
+  tm_scope: none
+  ace_mode: text
+
 Linux Kernel Module:
   type: data
   extensions:
@@ -2921,8 +2931,8 @@ Sage:
   ace_mode: python
 
 SaltStack:
-  type: data
-  group: YAML
+  type: programming
+  color: "#646464"
   aliases:
   - saltstate
   - salt
