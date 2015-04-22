@@ -28,7 +28,7 @@ Whereas for AsciiDoc, this might be:
 
     [source,javascript]
 
-Below is a comprehensive list of of the language codes necessary for syntax highlighting a code block:
+Below is a comprehensive list of of the language codes necessary for syntax highlighting a code block. Generally speaking, the slugified version of a language name, as well as any of its extensions, defined the language code.
 
 | Languages | Codes
 |-----------|-------
