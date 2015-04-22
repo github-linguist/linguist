@@ -62,7 +62,7 @@ module Linguist
     end
 
     # Common heuristics
-    ObjectiveCRegex = /^[ \t]*@(interface|class|protocol|property|end|synchronised|selector|implementation)\b/
+    ObjectiveCRegex = /\#(include|import|define)/
 
     disambiguate "BitBake", "BlitzBasic" do |data|
       if /^\s*; /.match(data) || data.include?("End Function")
