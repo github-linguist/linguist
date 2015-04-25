@@ -169,7 +169,7 @@ module Linguist
       end
     end
 
-    disambiguate "FORTRAN", "Forth", "Formatted" do |data|
+    disambiguate "FORTRAN", "Forth" do |data|
       if /^: /.match(data)
         "Forth"
       elsif /^([c*][^a-z]|      (subroutine|program)\s|\s*!)/i.match(data)
