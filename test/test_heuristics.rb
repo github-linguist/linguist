@@ -16,6 +16,15 @@ class TestHeuristcs < Minitest::Test
     Dir.glob("#{samples_path}/#{language_name}/#{file}")
   end
 
+  def test_matches
+    h = Heuristics.new(["A", "B"])
+    assert h.matches?(["A", "B"])
+    assert h.matches?(["B", "A"])
+    assert h.matches?(["A", "B", "C"])
+
+    refute h.matches?(["B", "C"]), "All candidates must be included."
+  end
+
   def test_no_match
     language = []
     results = Heuristics.call(file_blob("JavaScript/namespace.js"), language)
@@ -84,7 +93,8 @@ class TestHeuristcs < Minitest::Test
   def test_cl_by_heuristics
     assert_heuristics({
       "Common Lisp" => all_fixtures("Common Lisp"),
-      "OpenCL" => all_fixtures("OpenCL")
+      "OpenCL" => all_fixtures("OpenCL"),
+      "Cool" => all_fixtures("Cool")
     })
   end
 
@@ -115,7 +125,8 @@ class TestHeuristcs < Minitest::Test
     assert_heuristics({
       "F#" => all_fixtures("F#"),
       "Forth" => all_fixtures("Forth"),
-      "GLSL" => all_fixtures("GLSL")
+      "GLSL" => all_fixtures("GLSL"),
+      "Filterscript" => all_fixtures("Filterscript")
     })
   end
 

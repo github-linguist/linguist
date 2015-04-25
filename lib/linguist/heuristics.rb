@@ -55,8 +55,10 @@ module Linguist
     end
 
     # Internal: Check if this heuristic matches the candidate languages.
+    #
+    # A heuristic will match if it is a subset of the candidate languages.
     def matches?(candidates)
-      candidates.any? && candidates.all? { |l| @languages.include?(l) }
+      @languages.all? { |l| candidates.include?(l) }
     end
 
     # Internal: Perform the heuristic
