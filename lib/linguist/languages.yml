@@ -769,6 +769,11 @@ Diff:
   tm_scope: source.diff
   ace_mode: diff
 
+DNS zone:
+  type: programming
+  extensions:
+  - .zone
+
 Dockerfile:
   type: data
   tm_scope: source.dockerfile
@@ -3633,8 +3638,3 @@ xBase:
   - .prg
   tm_scope: none
   ace_mode: text
-
-zone:
-  type: programming
-  extensions:
-  - .zone
