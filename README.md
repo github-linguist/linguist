@@ -35,7 +35,7 @@ $ cat .gitattributes
 
 Checking code you didn't write, such as JavaScript libraries, into your git repo is a common practice, but this often inflates your project's language stats and may even cause your project to be labeled as another language. By default, Linguist treats all of the paths defined in [lib/linguist/vendor.yml](https://github.com/github/linguist/blob/master/lib/linguist/vendor.yml) as vendored and therefore doesn't include them in the language statistics for a repository. Vendored files are also hidden by default in diffs on github.com.
 
-Use the `linguist-vendored` attribute to vendor or un-vendor paths.
+Use the `linguist-vendored` attribute to vendor or un-vendor paths. Please note, overriding the vendored (or un-vendored) status of a file only affects the language statistics for the repository and not the behavior in diffs on github.com.
 
 ```
 $ cat .gitattributes

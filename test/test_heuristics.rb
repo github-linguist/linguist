@@ -77,7 +77,7 @@ class TestHeuristcs < Minitest::Test
     assert_heuristics({
       "AsciiDoc" => "AsciiDoc/list.asc",
       "AGS Script" => "AGS Script/GlobalScript.asc",
-      "Public Key" => "Public Key/sunCert.asc"
+      "Public Key" => all_fixtures("Public Key", "*.asc")
     })
   end
 

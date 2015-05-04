@@ -38,6 +38,7 @@ class TestShebang < Minitest::Test
     assert_interpreter "perl", "#! perl"
 
     assert_interpreter "ruby", "#!/bin/sh\n\n\nexec ruby $0 $@"
-  end
 
+    assert_interpreter "sh", "#! /usr/bin/env A=003 B=149 C=150 D=xzd E=base64 F=tar G=gz H=head I=tail sh"
+  end
 end

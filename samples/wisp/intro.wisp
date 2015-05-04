@@ -258,7 +258,7 @@ My name is wisp!"
 ;; evaluating the reference to the value of the corresponding variable.
 foo
 
-;; If you wish to refer to the literal symbol, rather then reference you
+;; If you wish to refer to the literal symbol, rather than reference you
 ;; could use
 (quote foo)
 ;; or more usually

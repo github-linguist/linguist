@@ -79,7 +79,6 @@ class TestLanguage < Minitest::Test
     assert_equal Language['Java'], Language['Java Server Pages'].group
     assert_equal Language['Python'], Language['Cython'].group
     assert_equal Language['Python'], Language['NumPy'].group
-    assert_equal Language['Shell'], Language['Batchfile'].group
     assert_equal Language['Shell'], Language['Gentoo Ebuild'].group
     assert_equal Language['Shell'], Language['Gentoo Eclass'].group
     assert_equal Language['Shell'], Language['Tcsh'].group
@@ -188,7 +187,7 @@ class TestLanguage < Minitest::Test
     assert_equal [], Language.find_by_extension('foo.rb')
     assert_equal [Language['Ruby']], Language.find_by_extension('rb')
     assert_equal [Language['Ruby']], Language.find_by_extension('.rb')
-    assert_equal [Language['M'], Language['MUF'], Language['Mathematica'], Language['Matlab'], Language['Mercury'], Language['Objective-C']], Language.find_by_extension('.m')
+    assert_equal [Language['Limbo'], Language['M'], Language['MUF'], Language['Mathematica'], Language['Matlab'], Language['Mercury'], Language['Objective-C']], Language.find_by_extension('.m')
   end
 
   def test_find_all_by_extension
@@ -286,9 +285,9 @@ class TestLanguage < Minitest::Test
 
   def test_color
     assert_equal '#701516', Language['Ruby'].color
-    assert_equal '#3581ba', Language['Python'].color
+    assert_equal '#3572A5', Language['Python'].color
     assert_equal '#f1e05a', Language['JavaScript'].color
-    assert_equal '#31859c', Language['TypeScript'].color
+    assert_equal '#2b7489', Language['TypeScript'].color
     assert_equal '#3d9970', Language['LSL'].color
   end
 

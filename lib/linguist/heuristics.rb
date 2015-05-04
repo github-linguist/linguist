@@ -129,7 +129,7 @@ module Linguist
     end
 
     disambiguate "Common Lisp", "OpenCL", "Cool" do |data|
-      if data.include?("(defun ")
+      if /^\s*\((defun|in-package|defpackage) /i.match(data)
         Language["Common Lisp"]
       elsif /^class/x.match(data)
         Language["Cool"]
@@ -155,16 +155,16 @@ module Linguist
     end
 
     disambiguate "AsciiDoc", "AGS Script", "Public Key" do |data|
-      if /^[=-]+(\s|\n)|{{[A-Za-z]/.match(data)
+      if /^(----[- ]BEGIN|ssh-(rsa|dss)) /.match(data)
+        Language["Public Key"]
+      elsif /^[=-]+(\s|\n)|{{[A-Za-z]/.match(data)
         Language["AsciiDoc"]
       elsif /^(\/\/.+|((import|export)\s+)?(function|int|float|char)\s+((room|repeatedly|on|game)_)?([A-Za-z]+[A-Za-z_0-9]+)\s*[;\(])/.match(data)
         Language["AGS Script"]
-      elsif /^-----BEGIN/.match(data)
-        Language["Public Key"]
       end
     end
 
-    disambiguate "FORTRAN", "Forth" do |data|
+    disambiguate "FORTRAN", "Forth", "Formatted" do |data|
       if /^: /.match(data)
         Language["Forth"]
       elsif /^([c*][^a-z]|      (subroutine|program)\s|\s*!)/i.match(data)
@@ -172,17 +172,19 @@ module Linguist
       end
     end
 
-    disambiguate "F#", "Forth", "GLSL" do |data|
+    disambiguate "F#", "Forth", "GLSL", "Filterscript" do |data|
       if /^(: |new-device)/.match(data)
         Language["Forth"]
       elsif /^\s*(#light|import|let|module|namespace|open|type)/.match(data)
         Language["F#"]
-      elsif /^\s*(#include|#pragma|precision|uniform|varying|void)/.match(data)
+      elsif /^\s*(#version|precision|uniform|varying|vec[234])/.match(data)
         Language["GLSL"]
+      elsif /#include|#pragma\s+(rs|version)|__attribute__/.match(data)
+        Language["Filterscript"]
       end
     end
 
-    disambiguate "M", "MUF", "Mathematica", "Matlab", "Mercury", "Objective-C" do |data|
+    disambiguate "Limbo", "M", "MUF", "Mathematica", "Matlab", "Mercury", "Objective-C" do |data|
       if ObjectiveCRegex.match(data)
         Language["Objective-C"]
       elsif data.include?(":- module")
@@ -195,6 +197,8 @@ module Linguist
         Language["Mathematica"]
       elsif /^\s*%/.match(data)
         Language["Matlab"]
+      elsif /^\w+\s*:\s*module\s*{/.match(data)
+        Language["Limbo"]
       end
     end
 
@@ -211,7 +215,7 @@ module Linguist
     end
 
     disambiguate "Common Lisp", "NewLisp" do |data|
-      if /^\s*\((defun|in-package|defpackage) /.match(data)
+      if /^\s*\((defun|in-package|defpackage) /i.match(data)
         Language["Common Lisp"]
       elsif /^\s*\(define /.match(data)
         Language["NewLisp"]
@@ -259,6 +263,30 @@ module Linguist
         Language["DTrace"]
       elsif /(\/.*:( .* \\)$| : \\$|^ : |: \\$)/.match(data)
         Language["Makefile"]
+      end
+    end
+
+    disambiguate "OCaml", "Standard ML" do |data|
+      if /(^\s*module)|let rec |match\s+(\S+\s)+with/.match(data)
+        Language["OCaml"]
+      elsif /=> |case\s+(\S+\s)+of/.match(data)
+        Language["Standard ML"]
+      end
+    end
+
+    disambiguate "NL", "NewLisp" do |data|
+      if /^(b|g)[0-9]+ /.match(data)
+        Language["NL"]
+      else
+        Language["NewLisp"]
+      end
+    end
+
+    disambiguate "Rust", "RenderScript" do |data|
+      if data.include?("^(use |fn |mod |pub |macro_rules|impl|#!?\[)")
+        Language["Rust"]
+      elsif /#include|#pragma\s+(rs|version)|__attribute__/.match(data)
+        Language["RenderScript"]
       end
     end
   end
