@@ -299,5 +299,13 @@ module Linguist
         Language["Groff"]
       end
     end
+
+    disambiguate "Groff", "Nemerle" do |data|
+      if /^[.']/.match(data)
+        Language["Groff"]
+      elsif /^(module|namespace|using)\s/.match(data)
+        Language["Nemerle"]
+      end
+    end
   end
 end
