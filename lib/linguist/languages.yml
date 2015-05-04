@@ -60,6 +60,14 @@ ANTLR:
   - .g4
   ace_mode: text
 
+API Blueprint:
+  type: markup
+  color: "#2ACCA8"
+  ace_mode: markdown
+  extensions:
+  - .apib
+  tm_scope: text.html.markdown.source.gfm.apib
+
 APL:
   type: programming
   color: "#5A8164"
@@ -1350,6 +1358,13 @@ Hy:
   - hylang
   tm_scope: source.hy
 
+HyPhy:
+  type: programming
+  ace_mode: text
+  extensions:
+  - .bf
+  tm_scope: none
+  
 IDL:
   type: programming
   color: "#a3522f"
