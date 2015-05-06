@@ -53,16 +53,18 @@ project-docs/* linguist-documentation
 docs/formatter.rb linguist-documentation=false
 ```
 
-### Using Emacs and Vim modelines
+### Using Emacs or Vim modelines
 
-Alternatively, you can use Vim and Emacs style modelines to set the language for a single file. Modelines can be placed anywhere within a file and are respected when determining how to syntax-highlight a file on GitHub.com
+Alternatively, you can use Vim or Emacs style modelines to set the language for a single file. Modelines can be placed anywhere within a file and are respected when determining how to syntax-highlight a file on GitHub.com
 
+##### Vim
 ```
-Vim
 vim: set filetype=prolog:
 vim: set ft=cpp:
+```
 
-Emacs
+##### Emacs
+```
 -*- mode: php;-*-
 ```
 
