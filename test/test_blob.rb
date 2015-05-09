@@ -245,7 +245,7 @@ class TestBlob < Minitest::Test
     assert sample_blob("C++/wrapper_inner.cpp").generated?
 
     # Unity3D-generated metadata
-    assert sample_blob("Unity3D Metadata/Tiles.meta").generated?
+    assert sample_blob("Unity3D Asset/Tiles.meta").generated?
   end
 
   def test_vendored
