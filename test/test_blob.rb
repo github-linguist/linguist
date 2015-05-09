@@ -243,6 +243,9 @@ class TestBlob < Minitest::Test
     # Cython-generated C/C++
     assert sample_blob("C/sgd_fast.c").generated?
     assert sample_blob("C++/wrapper_inner.cpp").generated?
+
+    # Unity3D-generated metadata
+    assert sample_blob("Unity3D Metadata/Tiles.meta").generated?
   end
 
   def test_vendored
