@@ -295,9 +295,10 @@ Befunge:
 
 Bison:
   type: programming
+  group: Yacc
   tm_scope: source.bison
   extensions:
-  - .y
+  - .bison
   ace_mode: text
 
 BitBake:
@@ -3580,6 +3581,15 @@ YAML:
   - .rviz
   - .yaml
   ace_mode: yaml
+
+Yacc:
+  type: programming
+  extensions:
+  - .y
+  - .yacc
+  - .yy
+  tm_scope: source.bison
+  ace_mode: text
 
 Zephir:
   type: programming
