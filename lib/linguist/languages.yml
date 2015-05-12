@@ -1468,6 +1468,7 @@ J:
 JFlex:
   type: programming
   color: "#DBCA00"
+  group: Lex
   extensions:
   - .flex
   - .jflex
@@ -1702,6 +1703,17 @@ Less:
   - .less
   tm_scope: source.css.less
   ace_mode: less
+
+Lex:
+  type: programming
+  color: "#DBCA00"
+  aliases:
+  - flex
+  extensions:
+  - .l
+  - .lex
+  tm_scope: none
+  ace_mode: text
 
 LilyPond:
   type: programming
