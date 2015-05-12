@@ -164,7 +164,11 @@ module Linguist
     #
     # Return true or false
     def image?
-      ['.png', '.jpg', '.jpeg', '.gif'].include?(extname.downcase)
+      if binary?
+        ['.png', '.jpg', '.jpeg', '.gif'].include?(extname.downcase)
+      else
+        ['.svg'].include?(extname.downcase)
+      end
     end
 
     # Public: Is the blob a supported 3D model format?
