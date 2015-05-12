@@ -13,7 +13,8 @@ class TestHeuristcs < Minitest::Test
   end
 
   def all_fixtures(language_name, file="*")
-    Dir.glob("#{samples_path}/#{language_name}/#{file}")
+    Dir.glob("#{samples_path}/#{language_name}/#{file}") -
+      ["#{samples_path}/#{language_name}/filenames"]
   end
 
   def test_no_match
