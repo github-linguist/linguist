@@ -136,6 +136,7 @@ class TestBlob < Minitest::Test
     assert fixture_blob("Binary/octocat.jpeg").image?
     assert fixture_blob("Binary/octocat.jpg").image?
     assert fixture_blob("Binary/octocat.png").image?
+    assert fixture_blob("SVG/test.svg").image?
     assert !fixture_blob("Binary/octocat.ai").image?
     assert !fixture_blob("Binary/octocat.psd").image?
   end
@@ -523,7 +524,8 @@ class TestBlob < Minitest::Test
     root = File.expand_path('../fixtures', __FILE__)
     Dir.entries(root).each do |language|
       next if language == '.' || language == '..' || language == 'Binary' ||
-              File.basename(language) == 'ace_modes.json'
+              File.basename(language) == 'ace_modes.json' ||
+              language == 'SVG'
 
       # Each directory contains test files of a language
       dirname = File.join(root, language)
