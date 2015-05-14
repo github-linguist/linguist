@@ -219,6 +219,7 @@ class TestBlob < Minitest::Test
     assert sample_blob("Go/api.pb.go").generated?
 
     # Apache Thrift generated code
+    assert sample_blob("Python/gen-py-linguist-thrift.py").generated?
     assert sample_blob("Go/gen-go-linguist-thrift.go").generated?
     assert sample_blob("Java/gen-java-linguist-thrift.java").generated?
     assert sample_blob("JavaScript/gen-js-linguist-thrift.js").generated?
