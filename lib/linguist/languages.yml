@@ -1363,7 +1363,7 @@ HyPhy:
   extensions:
   - .bf
   tm_scope: none
-  
+
 IDL:
   type: programming
   color: "#a3522f"
@@ -1685,7 +1685,7 @@ Latte:
   group: HTML
   extensions:
   - .latte
-  tm_scope: source.smarty
+  tm_scope: text.html.smarty
   ace_mode: smarty
 
 Lean:
@@ -3077,6 +3077,7 @@ Smarty:
   extensions:
   - .tpl
   ace_mode: smarty
+  tm_scope: text.html.smarty
 
 SourcePawn:
   type: programming
