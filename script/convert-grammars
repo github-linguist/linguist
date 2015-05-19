@@ -188,9 +188,11 @@ def load_grammars(tmp_dir, source, all_scopes)
     scope = grammar['scopeName']
 
     if all_scopes.key?(scope)
-      $stderr.puts "WARN: Duplicated scope #{scope}\n" +
-        "  Current package: #{p.url}\n" +
-      "  Previous package: #{all_scopes[scope]}"
+      unless all_scopes[scope] == p.url
+        $stderr.puts "WARN: Duplicated scope #{scope}\n" +
+          "  Current package: #{p.url}\n" +
+          "  Previous package: #{all_scopes[scope]}"
+      end
       next
     end
     all_scopes[scope] = p.url
