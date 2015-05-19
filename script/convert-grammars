@@ -195,7 +195,7 @@ def load_grammars(tmp_dir, source, all_scopes)
     end
     all_scopes[scope] = p.url
     grammar
-  end
+  end.compact
 end
 
 def install_grammars(grammars, path)
