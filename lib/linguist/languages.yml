@@ -160,6 +160,7 @@ ApacheConf:
   - apache
   extensions:
   - .apacheconf
+  - .vhost
   tm_scope: source.apache-config
   ace_mode: apache_conf
 
@@ -2096,6 +2097,9 @@ Nginx:
   type: markup
   extensions:
   - .nginxconf
+  - .vhost
+  filenames:
+  - nginx.conf
   tm_scope: source.nginx
   aliases:
   - nginx configuration file
