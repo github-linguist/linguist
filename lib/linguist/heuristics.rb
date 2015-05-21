@@ -289,5 +289,15 @@ module Linguist
         Language["RenderScript"]
       end
     end
+
+    disambiguate "Common Lisp", "Lex", "Groff" do |data|
+      if data.include?("(def(un|macro)\s")
+        Language["Common Lisp"]
+      elsif /^(%[%{}]xs|<.*>)/.match(data)
+        Language["Lex"]
+      elsif /^\.[a-z][a-z](\s|$)/.match(data)
+        Language["Groff"]
+      end
+    end
   end
 end

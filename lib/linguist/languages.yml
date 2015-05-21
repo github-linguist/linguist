@@ -296,9 +296,10 @@ Befunge:
 
 Bison:
   type: programming
+  group: Yacc
   tm_scope: source.bison
   extensions:
-  - .y
+  - .bison
   ace_mode: text
 
 BitBake:
@@ -601,6 +602,7 @@ Common Lisp:
   - .lisp
   - .asd
   - .cl
+  - .l
   - .lsp
   - .ny
   - .podsl
@@ -1213,6 +1215,7 @@ Groff:
   - '.5'
   - '.6'
   - '.7'
+  - .l
   tm_scope: text.groff
   aliases:
   - nroff
@@ -1469,6 +1472,7 @@ J:
 JFlex:
   type: programming
   color: "#DBCA00"
+  group: Lex
   extensions:
   - .flex
   - .jflex
@@ -1703,6 +1707,17 @@ Less:
   - .less
   tm_scope: source.css.less
   ace_mode: less
+
+Lex:
+  type: programming
+  color: "#DBCA00"
+  aliases:
+  - flex
+  extensions:
+  - .l
+  - .lex
+  tm_scope: none
+  ace_mode: text
 
 LilyPond:
   type: programming
@@ -3573,6 +3588,15 @@ YAML:
   - .rviz
   - .yaml
   ace_mode: yaml
+
+Yacc:
+  type: programming
+  extensions:
+  - .y
+  - .yacc
+  - .yy
+  tm_scope: source.bison
+  ace_mode: text
 
 Zephir:
   type: programming
