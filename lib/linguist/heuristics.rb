@@ -296,11 +296,11 @@ module Linguist
 
     disambiguate "Common Lisp", "Lex", "Groff" do |data|
       if data.include?("(def(un|macro)\s")
-        Language["Common Lisp"]
+        "Common Lisp"
       elsif /^(%[%{}]xs|<.*>)/.match(data)
-        Language["Lex"]
+        "Lex"
       elsif /^\.[a-z][a-z](\s|$)/.match(data)
-        Language["Groff"]
+        "Groff"
       end
     end
   end
