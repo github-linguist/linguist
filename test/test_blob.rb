@@ -422,6 +422,9 @@ class TestBlob < Minitest::Test
     # Normalize
     assert sample_blob("some/asset/path/normalize.css").vendored?
 
+    # Carthage
+    assert sample_blob('Carthage/blah').vendored?
+
     # Cocoapods
     assert sample_blob('Pods/blah').vendored?
 
@@ -473,7 +476,7 @@ class TestBlob < Minitest::Test
     # Sphinx docs
     assert sample_blob("docs/_build/asset.doc").vendored?
     assert sample_blob("docs/theme/file.css").vendored?
-    
+
     # Vagrant
     assert sample_blob("puphpet/file.pp").vendored?
   end
