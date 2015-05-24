@@ -66,5 +66,8 @@ class TestGenerated < Minitest::Test
     generated_fixture_without_loading_data("Data/bootstrap.css.map")
     generated_fixture_loading_data("Data/sourcemap.v3.map")
     generated_fixture_loading_data("Data/sourcemap.v1.map")
+
+    # Specflow
+    generated_fixture_without_loading_data("Features/BindingCulture.feature.cs")
   end
 end
