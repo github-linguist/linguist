@@ -295,7 +295,7 @@ module Linguist
         Language["Common Lisp"]
       elsif /^(%[%{}]xs|<.*>)/.match(data)
         Language["Lex"]
-      elsif /^\.[a-z][a-z](\s|$)/.match(data)
+      elsif /^\.[a-z][a-z](\s|$)/i.match(data)
         Language["Groff"]
       end
     end
@@ -305,6 +305,14 @@ module Linguist
         Language["Groff"]
       elsif /^(module|namespace|using)\s/.match(data)
         Language["Nemerle"]
+      end
+    end
+
+    disambiguate "GAS", "Groff" do |data|
+      if /^[.'][a-z][a-z](\s|$)/i.match(data)
+        Language["Groff"]
+      elsif /((^|\s)move?[. ])|\.(include|globa?l)\s/.match(data)
+        Language["GAS"]
       end
     end
   end
