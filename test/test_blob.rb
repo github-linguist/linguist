@@ -217,6 +217,7 @@ class TestBlob < Minitest::Test
     assert sample_blob("Java/ProtocolBuffer.java").generated?
     assert sample_blob("Python/protocol_buffer_pb2.py").generated?
     assert sample_blob("Go/api.pb.go").generated?
+    assert sample_blob("Go/embedded.go").generated?
 
     # Apache Thrift generated code
     assert sample_blob("Python/gen-py-linguist-thrift.py").generated?
