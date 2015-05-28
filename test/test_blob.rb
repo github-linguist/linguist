@@ -473,7 +473,7 @@ class TestBlob < Minitest::Test
     # Sphinx docs
     assert sample_blob("docs/_build/asset.doc").vendored?
     assert sample_blob("docs/theme/file.css").vendored?
-    
+
     # Vagrant
     assert sample_blob("puphpet/file.pp").vendored?
   end
