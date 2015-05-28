@@ -283,7 +283,7 @@ module Linguist
     end
 
     disambiguate "Rust", "RenderScript" do |data|
-      if data.include?("^(use |fn |mod |pub |macro_rules|impl|#!?\[)")
+      if /^(use |fn |mod |pub |macro_rules|impl|#!?\[)/.match(data)
         Language["Rust"]
       elsif /#include|#pragma\s+(rs|version)|__attribute__/.match(data)
         Language["RenderScript"]
