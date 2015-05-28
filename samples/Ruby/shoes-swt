@@ -1,0 +1,11 @@
+#!/usr/bin/env jruby
+lib_directory = File.expand_path('../../lib', __FILE__)
+$LOAD_PATH << lib_directory
+
+if File.exist?("Gemfile")
+  require "bundler/setup"
+  Bundler.require
+end
+
+require 'shoes/ui/cli'
+Shoes::CLI.new("swt").run ARGV
