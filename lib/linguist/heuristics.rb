@@ -299,5 +299,15 @@ module Linguist
         Language["Groff"]
       end
     end
+
+    disambiguate "DIGITAL Command Language", "Nginx", "Zone File" do |data|
+      if /goto|gosub|endif/i.match(data)
+        Language["DIGITAL Command Language"]
+      elsif /server_name/.match(data)
+        Language["Nginx"]
+      elsif /soa/i.match(data)
+        Language["Zone File"]
+      end
+    end
   end
 end
