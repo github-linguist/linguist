@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core">
+ 
+ 
+  <xp:span style="font-weight:bold;font-size:18pt">UserID</xp:span>
+  <xp:span style="font-weight:bold;font-size:18pt"> Login</xp:span>
+  <xp:br></xp:br>
+ 
+  <xp:table>
+    <xp:tr>
+      <xp:td>
+        <xp:inputText id="userName1" style="width:275.0px"
+          required="true" value="#{TestLoginJavaBean.userName}"
+          disableClientSideValidation="true">
+        </xp:inputText>
+      </xp:td>
+      <xp:td>
+        <xp:label value="#{TestLoginJavaBean.message}" id="errMessage"
+          style="width:124.0px;color:rgb(117,11,11);font-weight:bold"></xp:label>
+      </xp:td>
+    </xp:tr>
+    <xp:tr>
+      <xp:td>
+        <xp:button value="Login" id="button1">
+          <xp:eventHandler event="onclick" submit="true"
+            refreshMode="complete" immediate="false" save="true" id="eventHandler1">
+            <xp:this.action><![CDATA[#{javascript:TestLoginJavaBean.doLoginUser()}]]></xp:this.action>
+          </xp:eventHandler>
+        </xp:button>
+      </xp:td>
+      <xp:td></xp:td>
+    </xp:tr>
+  </xp:table>
+  <xp:this.navigationRules>
+    <xp:navigationRule outcome="xsp-success" viewId="/xpwelcome.xsp"></xp:navigationRule>
+  </xp:this.navigationRules>
+ 
+</xp:view>
