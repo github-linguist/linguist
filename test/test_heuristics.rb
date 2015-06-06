@@ -22,20 +22,25 @@ class TestHeuristcs < Minitest::Test
     assert_equal [], results
   end
 
+  def assert_heuristics(hash)
+    candidates = hash.keys.map { |l| Language[l] }
+
+    hash.each do |language, blobs|
+      Array(blobs).each do |blob|
+        result = Heuristics.call(file_blob(blob), candidates)
+        assert_equal [Language[language]], result, "Failed for #{blob}"
+      end
+    end
+  end
+
   # Candidate languages = ["C++", "Objective-C"]
   def test_obj_c_by_heuristics
     # Only calling out '.h' filenames as these are the ones causing issues
     assert_heuristics({
       "Objective-C" => all_fixtures("Objective-C", "*.h"),
-      "C++" => ["C++/render_adapter.cpp", "C++/ThreadedQueue.h"],
+      "C++" => ["C++/scanner.h", "C++/qscicommand.h", "C++/v8.h", "C++/gdsdbreader.h"],
       "C" => nil
     })
-  end
-
-  def test_c_by_heuristics
-    languages = [Language["C++"], Language["Objective-C"], Language["C"]]
-    results = Heuristics.call(file_blob("C/ArrowLeft.h"), languages)
-    assert_equal [], results
   end
 
   def test_detect_still_works_if_nothing_matches
@@ -47,17 +52,17 @@ class TestHeuristcs < Minitest::Test
   # Candidate languages = ["Perl", "Prolog"]
   def test_pl_prolog_perl_by_heuristics
     assert_heuristics({
-      "Prolog" => all_fixtures("Prolog/*.pl"),
-      "Perl" => all_fixtures("Perl/*.pl") + ["Perl/perl-test.t"],
-      "Perl6" => all_fixtures("Perl6/*.pl")
+      "Prolog" => all_fixtures("Prolog", "*.pl"),
+      "Perl" => all_fixtures("Perl", "*.pl"),
+      "Perl6" => all_fixtures("Perl6", "*.pl")
     })
   end
 
   # Candidate languages = ["ECL", "Prolog"]
   def test_ecl_prolog_by_heuristics
     assert_heuristics({
-      "ECL" => "ECL/sample.ecl",
-      "Prolog" => "Prolog/or-constraint.ecl"
+      "ECL" => all_fixtures("ECL", "*.ecl"),
+      "Prolog" => all_fixtures("Prolog", "*.ecl")
     })
   end
 
@@ -74,69 +79,69 @@ class TestHeuristcs < Minitest::Test
   # Candidate languages = ["AGS Script", "AsciiDoc", "Public Key"]
   def test_asc_by_heuristics
     assert_heuristics({
-      "AsciiDoc" => "AsciiDoc/list.asc",
-      "AGS Script" => "AGS Script/GlobalScript.asc",
+      "AsciiDoc" => all_fixtures("AsciiDoc", "*.asc"),
+      "AGS Script" => all_fixtures("AGS Script", "*.asc"),
       "Public Key" => all_fixtures("Public Key", "*.asc")
     })
   end
 
   def test_cl_by_heuristics
     assert_heuristics({
-      "Common Lisp" => all_fixtures("Common Lisp"),
-      "OpenCL" => all_fixtures("OpenCL")
+      "Common Lisp" => all_fixtures("Common Lisp", "*.cl"),
+      "OpenCL" => all_fixtures("OpenCL", "*.cl")
     })
   end
 
   def test_f_by_heuristics
     assert_heuristics({
-      "FORTRAN" => all_fixtures("FORTRAN"),
-      "Forth" => all_fixtures("Forth")
+      "FORTRAN" => all_fixtures("FORTRAN", "*.f") + all_fixtures("FORTRAN", "*.for"),
+      "Forth" => all_fixtures("Forth", "*.f") + all_fixtures("Forth", "*.for")
     })
   end
 
   # Candidate languages = ["Hack", "PHP"]
   def test_hack_by_heuristics
     assert_heuristics({
-      "Hack" => "Hack/funs.php",
-      "PHP" => "PHP/Model.php"
+      "Hack" => all_fixtures("Hack", "*.php"),
+      "PHP" => all_fixtures("PHP", "*.php")
     })
   end
 
   # Candidate languages = ["Scala", "SuperCollider"]
   def test_sc_supercollider_scala_by_heuristics
     assert_heuristics({
-      "SuperCollider" => "SuperCollider/WarpPreset.sc",
-      "Scala" => "Scala/node11.sc"
+      "SuperCollider" => all_fixtures("SuperCollider", "*.sc"),
+      "Scala" => all_fixtures("Scala", "*.sc")
     })
   end
 
   def test_fs_by_heuristics
     assert_heuristics({
-      "F#" => all_fixtures("F#"),
-      "Forth" => all_fixtures("Forth"),
-      "GLSL" => all_fixtures("GLSL")
+      "F#" => all_fixtures("F#", "*.fs"),
+      "Forth" => all_fixtures("Forth", "*.fs"),
+      "GLSL" => all_fixtures("GLSL", "*.fs")
     })
   end
 
   def test_fr_by_heuristics
     assert_heuristics({
-      "Frege" => all_fixtures("Frege"),
-      "Forth" => all_fixtures("Forth"),
-      "Text" => all_fixtures("Text")
+      "Frege" => all_fixtures("Frege", "*.fr"),
+      "Forth" => all_fixtures("Forth", "*.fr"),
+      "Text" => all_fixtures("Text", "*.fr")
     })
   end
 
   def test_bb_by_heuristics
     assert_heuristics({
-      "BitBake" => all_fixtures("BitBake"),
-      "BlitzBasic" => all_fixtures("BlitzBasic")
+      "BitBake" => all_fixtures("BitBake", "*.bb"),
+      "BlitzBasic" => all_fixtures("BlitzBasic", "*.bb")
     })
   end
 
   def test_lsp_by_heuristics
     assert_heuristics({
-      "Common Lisp" => all_fixtures("Common Lisp"),
-      "NewLisp" => all_fixtures("NewLisp")
+      "Common Lisp" => all_fixtures("Common Lisp", "*.lsp") + all_fixtures("Common Lisp", "*.lisp"),
+      "NewLisp" => all_fixtures("NewLisp", "*.lsp") + all_fixtures("NewLisp", "*.lisp")
     })
   end
 
@@ -147,21 +152,10 @@ class TestHeuristcs < Minitest::Test
     })
   end
 
-  def assert_heuristics(hash)
-    candidates = hash.keys.map { |l| Language[l] }
-
-    hash.each do |language, blobs|
-      Array(blobs).each do |blob|
-        result = Heuristics.call(file_blob(blob), candidates)
-        assert_equal [Language[language]], result, "Failed for #{blob}"
-      end
-    end
-  end
-
   def test_ls_by_heuristics
     assert_heuristics({
-      "LiveScript" => "LiveScript/hello.ls",
-      "LoomScript" => "LoomScript/HelloWorld.ls"
+      "LiveScript" => all_fixtures("LiveScript", "*.ls"),
+      "LoomScript" => all_fixtures("LoomScript", "*.ls")
     })
   end
 
