@@ -49,12 +49,20 @@ class TestHeuristcs < Minitest::Test
     assert_equal Language["Objective-C"], match
   end
 
-  # Candidate languages = ["Perl", "Prolog"]
+  # Candidate languages = ["Perl", "Perl6", "Prolog"]
   def test_pl_prolog_perl_by_heuristics
     assert_heuristics({
       "Prolog" => all_fixtures("Prolog", "*.pl"),
-      "Perl" => all_fixtures("Perl", "*.pl"),
+      "Perl" => ["Perl/oo1.pl", "Perl/oo2.pl", "Perl/oo3.pl", "Perl/fib.pl", "Perl/use5.pl"],
       "Perl6" => all_fixtures("Perl6", "*.pl")
+    })
+  end
+
+  # Candidate languages = ["Perl", "Perl6"]
+  def test_pm_perl_by_heuristics
+    assert_heuristics({
+      "Perl" => all_fixtures("Perl", "*.pm"),
+      "Perl6" => all_fixtures("Perl6", "*.pm")
     })
   end
 

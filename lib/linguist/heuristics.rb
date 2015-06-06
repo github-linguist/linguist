@@ -93,12 +93,20 @@ module Linguist
     end
 
     disambiguate ".pl" do |data|
-      if data.include?("use v6")
+      if /^(use v6|(my )?class|module)/.match(data)
         Language["Perl6"]
-      elsif data.match(/use strict|use\s+v?5\./)
+      elsif /use strict|use\s+v?5\./.match(data)
         Language["Perl"]
       elsif /^[^#]+:-/.match(data)
         Language["Prolog"]
+      end
+    end
+
+    disambiguate ".pm" do |data|
+      if /^(use v6|(my )?class|module)/.match(data)
+        Language["Perl6"]
+      elsif /use strict|use\s+v?5\./.match(data)
+        Language["Perl"]
       end
     end
 
