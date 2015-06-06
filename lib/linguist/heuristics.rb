@@ -41,22 +41,22 @@ module Linguist
     #       end
     #     end
     #
-    def self.disambiguate(extension, &heuristic)
-      @heuristics << new(extension, &heuristic)
+    def self.disambiguate(*extensions, &heuristic)
+      @heuristics << new(extensions, &heuristic)
     end
 
     # Internal: Array of defined heuristics
     @heuristics = []
 
     # Internal
-    def initialize(extension, &heuristic)
-      @extension = extension
+    def initialize(extensions, &heuristic)
+      @extensions = extensions
       @heuristic = heuristic
     end
 
     # Internal: Check if this heuristic matches the candidate languages.
     def matches?(filename)
-      filename.end_with?(@extension)
+      @extensions.any? { |ext| filename.end_with?(ext) }
     end
 
     # Internal: Perform the heuristic
@@ -167,7 +167,7 @@ module Linguist
       end
     end
 
-    disambiguate ".for" do |data|
+    disambiguate ".for", ".f" do |data|
       if /^: /.match(data)
         Language["Forth"]
       elsif /^([c*][^a-z]|      (subroutine|program)\s|\s*!)/i.match(data)
@@ -217,7 +217,7 @@ module Linguist
       end
     end
 
-    disambiguate ".lisp" do |data|
+    disambiguate ".lsp", ".lisp" do |data|
       if /^\s*\((defun|in-package|defpackage) /i.match(data)
         Language["Common Lisp"]
       elsif /^\s*\(define /.match(data)
