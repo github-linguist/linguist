@@ -283,10 +283,10 @@ module Linguist
     end
 
     disambiguate "Rust", "RenderScript" do |data|
-      if /^(use |fn |mod |pub |macro_rules|impl|#!?\[)/.match(data)
-        Language["Rust"]
-      elsif /#include|#pragma\s+(rs|version)|__attribute__/.match(data)
+      if /^#pragma\s+version/.match(data)
         Language["RenderScript"]
+      else
+        Language["Rust"]
       end
     end
 
