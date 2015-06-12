@@ -2114,6 +2114,7 @@ Nginx:
   type: markup
   extensions:
   - .nginxconf
+  - .com
   - .vhost
   filenames:
   - nginx.conf
@@ -3708,5 +3709,15 @@ xBase:
   color: "#403a40"
   extensions:
   - .prg
+  tm_scope: none
+  ace_mode: text
+
+Zone File:
+  type: data
+  extensions:
+  - .zone
+  - .arpa
+  - .db
+  - .com
   tm_scope: none
   ace_mode: text
