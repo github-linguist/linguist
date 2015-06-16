@@ -290,13 +290,15 @@ module Linguist
       end
     end
 
-    disambiguate "Common Lisp", "Lex", "Groff" do |data|
-      if data.include?("(def(un|macro)\s")
+    disambiguate "Common Lisp", "Lex", "Groff", "PicoLisp" do |data|
+      if /\(def(un|macro)\s/.match(data)
         Language["Common Lisp"]
       elsif /^(%[%{}]xs|<.*>)/.match(data)
         Language["Lex"]
       elsif /^\.[a-z][a-z](\s|$)/i.match(data)
         Language["Groff"]
+      elsif /^\((de|class|rel|code|data|must)\s/.match(data)
+        Language["PicoLisp"]
       end
     end
 
