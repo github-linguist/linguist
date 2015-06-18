@@ -169,6 +169,8 @@ vendor/grammars/asp.tmbundle:
 vendor/grammars/assembly.tmbundle:
 - objdump.x86asm
 - source.x86asm
+vendor/grammars/atom-fsharp/:
+- source.fsharp
 vendor/grammars/atom-salt:
 - source.python.salt
 - source.yaml.salt
@@ -215,6 +217,7 @@ vendor/grammars/d.tmbundle:
 vendor/grammars/dart-sublime-bundle:
 - source.dart
 - source.pubspec
+- text.dart-analysis-output
 - text.dart-doccomments
 vendor/grammars/desktop.tmbundle:
 - source.desktop
@@ -247,8 +250,6 @@ vendor/grammars/fish-tmbundle:
 vendor/grammars/fortran.tmbundle:
 - source.fortran
 - source.fortran.modern
-vendor/grammars/fsharpbinding:
-- source.fsharp
 vendor/grammars/gap-tmbundle/:
 - source.gap
 vendor/grammars/gettext.tmbundle:
@@ -320,6 +321,9 @@ vendor/grammars/language-hy:
 vendor/grammars/language-javascript:
 - source.js
 - source.js.regexp
+vendor/grammars/language-jsoniq/:
+- source.jq
+- source.xq
 vendor/grammars/language-python:
 - source.python
 - source.regexp.python
