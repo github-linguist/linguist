@@ -22,7 +22,7 @@ In addition, if this extension is already listed in [`languages.yml`][languages]
 
 ## Adding a language
 
-We try only to add languages once they have some usage on GitHub. In most cases we prefer that languages be in use in hundreds of repositories before supporting them in Linguist.
+We try only to add languages once they have some usage on GitHub. In most cases we prefer that each new file extension be in use in hundreds of repositories before supporting them in Linguist.
 
 To add support for a new language:
 
