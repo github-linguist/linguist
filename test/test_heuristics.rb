@@ -48,8 +48,7 @@ class TestHeuristcs < Minitest::Test
   def test_pl_prolog_perl_by_heuristics
     assert_heuristics({
       "Prolog" => all_fixtures("Prolog/*.pl"),
-      "Perl" => all_fixtures("Perl/*.pl"),
-      "Perl" => ["Perl/perl-test.t"],
+      "Perl" => all_fixtures("Perl/*.pl") + ["Perl/perl-test.t"],
       "Perl6" => all_fixtures("Perl6/*.pl")
     })
   end

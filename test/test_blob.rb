@@ -217,6 +217,15 @@ class TestBlob < Minitest::Test
     assert sample_blob("Java/ProtocolBuffer.java").generated?
     assert sample_blob("Python/protocol_buffer_pb2.py").generated?
     assert sample_blob("Go/api.pb.go").generated?
+    assert sample_blob("Go/embedded.go").generated?
+
+    # Apache Thrift generated code
+    assert sample_blob("Python/gen-py-linguist-thrift.py").generated?
+    assert sample_blob("Go/gen-go-linguist-thrift.go").generated?
+    assert sample_blob("Java/gen-java-linguist-thrift.java").generated?
+    assert sample_blob("JavaScript/gen-js-linguist-thrift.js").generated?
+    assert sample_blob("Ruby/gen-rb-linguist-thrift.rb").generated?
+    assert sample_blob("Objective-C/gen-cocoa-linguist-thrift.m").generated?
 
     # Generated JNI
     assert sample_blob("C/jni_layer.h").generated?
@@ -243,6 +252,9 @@ class TestBlob < Minitest::Test
     # Cython-generated C/C++
     assert sample_blob("C/sgd_fast.c").generated?
     assert sample_blob("C++/wrapper_inner.cpp").generated?
+
+    # Unity3D-generated metadata
+    assert sample_blob("Unity3D Asset/Tiles.meta").generated?
   end
 
   def test_vendored
@@ -411,6 +423,9 @@ class TestBlob < Minitest::Test
     # Normalize
     assert sample_blob("some/asset/path/normalize.css").vendored?
 
+    # Carthage
+    assert sample_blob('Carthage/blah').vendored?
+
     # Cocoapods
     assert sample_blob('Pods/blah').vendored?
 
@@ -462,7 +477,7 @@ class TestBlob < Minitest::Test
     # Sphinx docs
     assert sample_blob("docs/_build/asset.doc").vendored?
     assert sample_blob("docs/theme/file.css").vendored?
-    
+
     # Vagrant
     assert sample_blob("puphpet/file.pp").vendored?
   end
