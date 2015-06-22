@@ -22,6 +22,17 @@ class TestHeuristcs < Minitest::Test
     assert_equal [], results
   end
 
+  def assert_heuristics(hash)
+    candidates = hash.keys.map { |l| Language[l] }
+
+    hash.each do |language, blobs|
+      Array(blobs).each do |blob|
+        result = Heuristics.call(file_blob(blob), candidates)
+        assert_equal [Language[language]], result, "Failed for #{blob}"
+      end
+    end
+  end
+
   # Candidate languages = ["C++", "Objective-C"]
   def test_obj_c_by_heuristics
     # Only calling out '.h' filenames as these are the ones causing issues
@@ -147,17 +158,6 @@ class TestHeuristcs < Minitest::Test
     })
   end
 
-  def assert_heuristics(hash)
-    candidates = hash.keys.map { |l| Language[l] }
-
-    hash.each do |language, blobs|
-      Array(blobs).each do |blob|
-        result = Heuristics.call(file_blob(blob), candidates)
-        assert_equal [Language[language]], result, "Failed for #{blob}"
-      end
-    end
-  end
-
   def test_ls_by_heuristics
     assert_heuristics({
       "LiveScript" => "LiveScript/hello.ls",
@@ -170,5 +170,21 @@ class TestHeuristcs < Minitest::Test
       "TypeScript" => all_fixtures("TypeScript", "*.ts"),
       "XML" => all_fixtures("XML", "*.ts")
     })
+  end
+
+  def output_languages(languages)
+    languages.map { |l| l.name }.join(", ")
+  end
+
+  # If a language extension isn't globally unique then check if we have a heuristic
+  Linguist::Language.all.each do |language|
+    define_method "test_#{language.name}_has_adequate_heuristics" do
+      language.extensions.each do |extension|
+        languages = Language.find_by_extension(extension)
+        next if extension == ".script!" || languages.size == 1
+
+        assert Heuristics.defined_for?(languages), "No heuristic for #{extension} and #{output_languages(languages)}"
+      end
+    end
   end
 end
