@@ -279,6 +279,9 @@ class TestBlob < Minitest::Test
     # Rails vendor/
     assert sample_blob("vendor/plugins/will_paginate/lib/will_paginate.rb").vendored?
 
+    # Vendor/
+    assert sample_blob("Vendor/my_great_file.h").vendored?
+
     # 'thirdparty' directory
     assert sample_blob("thirdparty/lib/main.c").vendored?
 
@@ -480,6 +483,12 @@ class TestBlob < Minitest::Test
 
     # Vagrant
     assert sample_blob("puphpet/file.pp").vendored?
+
+    # Fabric.io
+    assert sample_blob("Fabric.framework/Fabric.h").vendored?
+
+    # Crashlytics
+    assert sample_blob("Crashlytics.framework/Crashlytics.h").vendored?
   end
 
   def test_documentation
