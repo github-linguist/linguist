@@ -2919,6 +2919,25 @@ SCSS:
   extensions:
   - .scss
 
+SMT:
+  type: programming
+  extensions:
+  - .smt2
+  - .smt
+  interpreters:
+  - boolector
+  - cvc4
+  - mathsat5
+  - opensmt
+  - smtinterpol
+  - smt-rat
+  - stp
+  - verit
+  - yices2
+  - z3
+  tm_scope: source.smt
+  ace_mode: text
+
 SPARQL:
   type: data
   tm_scope: source.sparql
@@ -3134,24 +3153,6 @@ Smarty:
   - .tpl
   ace_mode: smarty
   tm_scope: text.html.smarty
-
-SMT:
-  type: programming
-  extensions:
-  - .smt2
-  - .smt
-  interpreters:
-  - boolector
-  - cvc4
-  - mathsat5
-  - opensmt
-  - smtinterpol
-  - smt-rat
-  - stp
-  - verit
-  - yices2
-  - z3
-  tm_scope: source.smt
 
 SourcePawn:
   type: programming
