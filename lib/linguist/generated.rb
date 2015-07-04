@@ -341,6 +341,7 @@ module Linguist
       return false unless lines.count > 1
       return lines[0].include?("PCBNEW-LibModule-V") || 
               lines[0].include?("GFORTRAN module version '")
+    end
 
     # Internal: Is this a metadata file from Unity3D?
     #
