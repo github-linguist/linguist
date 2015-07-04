@@ -161,6 +161,7 @@ ApacheConf:
   - apache
   extensions:
   - .apacheconf
+  - .vhost
   tm_scope: source.apache-config
   ace_mode: apache_conf
 
@@ -296,9 +297,10 @@ Befunge:
 
 Bison:
   type: programming
+  group: Yacc
   tm_scope: source.bison
   extensions:
-  - .y
+  - .bison
   ace_mode: text
 
 BitBake:
@@ -601,6 +603,7 @@ Common Lisp:
   - .lisp
   - .asd
   - .cl
+  - .l
   - .lsp
   - .ny
   - .podsl
@@ -1039,6 +1042,7 @@ GAS:
   group: Assembly
   extensions:
   - .s
+  - .ms
   tm_scope: source.asm.x86
   ace_mode: assembly_x86
 
@@ -1207,12 +1211,26 @@ Groff:
   extensions:
   - .man
   - '.1'
+  - .1in
+  - .1m
+  - .1x
   - '.2'
   - '.3'
+  - .3in
+  - .3m
+  - .3qt
+  - .3x
   - '.4'
   - '.5'
   - '.6'
   - '.7'
+  - '.8'
+  - '.9'
+  - .l
+  - .ms
+  - .n
+  - .rno
+  - .roff
   tm_scope: text.groff
   aliases:
   - nroff
@@ -1342,7 +1360,7 @@ Haskell:
 Haxe:
   type: programming
   ace_mode: haxe
-  color: "#f7941e"
+  color: "#df7900"
   extensions:
   - .hx
   - .hxsl
@@ -1364,7 +1382,7 @@ HyPhy:
   extensions:
   - .bf
   tm_scope: none
-  
+
 IDL:
   type: programming
   color: "#a3522f"
@@ -1458,6 +1476,14 @@ Isabelle:
   tm_scope: source.isabelle.theory
   ace_mode: text
 
+Isabelle ROOT:
+  type: programming
+  group: Isabelle
+  filenames:
+  - ROOT
+  tm_scope: source.isabelle.root
+  ace_mode: text
+
 J:
   type: programming
   color: "#9EEDFF"
@@ -1469,6 +1495,7 @@ J:
 JFlex:
   type: programming
   color: "#DBCA00"
+  group: Lex
   extensions:
   - .flex
   - .jflex
@@ -1504,11 +1531,12 @@ JSONLD:
   tm_scope: source.js
 
 JSONiq:
+  color: "#40d47e"
   type: programming
   ace_mode: jsoniq
   extensions:
   - .jq
-  tm_scope: source.xquery
+  tm_scope: source.jq
 
 Jade:
   group: HTML
@@ -1619,7 +1647,7 @@ Kit:
 
 Kotlin:
   type: programming
-  color: "#EA4DFA"
+  color: "#F18E33"
   extensions:
   - .kt
   - .ktm
@@ -1686,7 +1714,7 @@ Latte:
   group: HTML
   extensions:
   - .latte
-  tm_scope: source.smarty
+  tm_scope: text.html.smarty
   ace_mode: smarty
 
 Lean:
@@ -1703,6 +1731,17 @@ Less:
   - .less
   tm_scope: source.css.less
   ace_mode: less
+
+Lex:
+  type: programming
+  color: "#DBCA00"
+  aliases:
+  - flex
+  extensions:
+  - .l
+  - .lex
+  tm_scope: none
+  ace_mode: text
 
 LilyPond:
   type: programming
@@ -1873,6 +1912,7 @@ Makefile:
   - .mk
   filenames:
   - GNUmakefile
+  - Kbuild
   - Makefile
   - makefile
   interpreters:
@@ -2111,6 +2151,9 @@ Nginx:
   type: markup
   extensions:
   - .nginxconf
+  - .vhost
+  filenames:
+  - nginx.conf
   tm_scope: source.nginx
   aliases:
   - nginx configuration file
@@ -2435,6 +2478,7 @@ Perl:
   color: "#0298c3"
   extensions:
   - .pl
+  - .al
   - .cgi
   - .fcgi
   - .perl
@@ -2468,6 +2512,16 @@ Perl6:
   - perl6
   tm_scope: source.perl.6
   ace_mode: perl
+
+PicoLisp:
+  type: programming
+  extensions:
+  - .l
+  interpreters:
+  - picolisp
+  - pil
+  tm_scope: source.lisp
+  ace_mode: lisp
 
 PigLatin:
   type: programming
@@ -2646,6 +2700,7 @@ QML:
   color: "#44a51c"
   extensions:
   - .qml
+  - .qbs
   tm_scope: source.qml
   ace_mode: text
 
@@ -2736,7 +2791,7 @@ Racket:
 
 Ragel in Ruby Host:
   type: programming
-  color: "#e17600"
+  color: "#9d5200"
   extensions:
   - .rl
   aliases:
@@ -2843,11 +2898,15 @@ Ruby:
   - ruby
   - macruby
   - rake
+  - jruby
+  - rbx
   filenames:
   - .pryrc
   - Appraisals
   - Berksfile
   - Buildfile
+  - Deliverfile
+  - Fastfile
   - Gemfile
   - Gemfile.lock
   - Guardfile
@@ -2855,6 +2914,7 @@ Ruby:
   - Mavenfile
   - Podfile
   - Puppetfile
+  - Snapfile
   - Thorfile
   - Vagrantfile
   - buildfile
@@ -2881,6 +2941,25 @@ SCSS:
   ace_mode: scss
   extensions:
   - .scss
+
+SMT:
+  type: programming
+  extensions:
+  - .smt2
+  - .smt
+  interpreters:
+  - boolector
+  - cvc4
+  - mathsat5
+  - opensmt
+  - smtinterpol
+  - smt-rat
+  - stp
+  - verit
+  - yices2
+  - z3
+  tm_scope: source.smt
+  ace_mode: text
 
 SPARQL:
   type: data
@@ -3074,6 +3153,13 @@ Slim:
   - .slim
   ace_mode: text
 
+Smali:
+  type: programming
+  extensions:
+  - .smali
+  ace_mode: text
+  tm_scope: source.smali
+
 Smalltalk:
   type: programming
   color: "#596706"
@@ -3089,6 +3175,7 @@ Smarty:
   extensions:
   - .tpl
   ace_mode: smarty
+  tm_scope: text.html.smarty
 
 SourcePawn:
   type: programming
@@ -3277,7 +3364,7 @@ Turtle:
 
 Twig:
   type: markup
-  group: PHP
+  group: HTML
   extensions:
   - .twig
   tm_scope: text.html.twig
@@ -3301,6 +3388,19 @@ Unified Parallel C:
   extensions:
   - .upc
   tm_scope: source.c
+
+Unity3D Asset:
+  type: data
+  ace_mode: yaml
+  color: "#ab69a1"
+  extensions:
+  - .anim
+  - .asset
+  - .mat
+  - .meta
+  - .prefab
+  - .unity
+  tm_scope: source.yaml
 
 UnrealScript:
   type: programming
@@ -3439,11 +3539,14 @@ XML:
   - .fsproj
   - .fxml
   - .glade
+  - .gml
   - .grxml
+  - .iml
   - .ivy
   - .jelly
   - .kml
   - .launch
+  - .mdpolicy
   - .mm
   - .mod
   - .mxml
@@ -3519,6 +3622,7 @@ XQuery:
   - .xqm
   - .xqy
   ace_mode: xquery
+  tm_scope: source.xq
 
 XS:
   type: programming
@@ -3566,6 +3670,15 @@ YAML:
   - .rviz
   - .yaml
   ace_mode: yaml
+
+Yacc:
+  type: programming
+  extensions:
+  - .y
+  - .yacc
+  - .yy
+  tm_scope: source.bison
+  ace_mode: text
 
 Zephir:
   type: programming

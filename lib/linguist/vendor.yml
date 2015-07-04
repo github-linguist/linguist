@@ -70,6 +70,7 @@
 - 3rd[-_]?party/
 - vendors?/
 - extern(al)?/
+- (^|/)[Vv]+endor/
 
 # Debian packaging
 - ^debian/
@@ -163,11 +164,21 @@
 
 ## Obj-C ##
 
+# Carthage
+- ^Carthage/
+
 # Cocoapods
 - ^Pods/
 
 # Sparkle
 - (^|/)Sparkle/
+
+# Crashlytics
+- Crashlytics.framework/
+
+# Fabric
+- Fabric.framework/
+
 
 ## Groovy ##
 

@@ -293,10 +293,38 @@ module Linguist
     end
 
     disambiguate "Rust", "RenderScript" do |data|
-      if data.include?("^(use |fn |mod |pub |macro_rules|impl|#!?\[)")
+      if /^(use |fn |mod |pub |macro_rules|impl|#!?\[)/.match(data)
         Language["Rust"]
       elsif /#include|#pragma\s+(rs|version)|__attribute__/.match(data)
         Language["RenderScript"]
+      end
+    end
+
+    disambiguate "Common Lisp", "Lex", "Groff", "PicoLisp" do |data|
+      if /\(def(un|macro)\s/.match(data)
+        Language["Common Lisp"]
+      elsif /^(%[%{}]xs|<.*>)/.match(data)
+        Language["Lex"]
+      elsif /^\.[a-z][a-z](\s|$)/i.match(data)
+        Language["Groff"]
+      elsif /^\((de|class|rel|code|data|must)\s/.match(data)
+        Language["PicoLisp"]
+      end
+    end
+
+    disambiguate "Groff", "Nemerle" do |data|
+      if /^[.']/.match(data)
+        Language["Groff"]
+      elsif /^(module|namespace|using)\s/.match(data)
+        Language["Nemerle"]
+      end
+    end
+
+    disambiguate "GAS", "Groff" do |data|
+      if /^[.'][a-z][a-z](\s|$)/i.match(data)
+        Language["Groff"]
+      elsif /((^|\s)move?[. ])|\.(include|globa?l)\s/.match(data)
+        Language["GAS"]
       end
     end
   end
