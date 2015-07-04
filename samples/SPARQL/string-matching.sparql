@@ -1,0 +1,40 @@
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT DISTINCT ?s ?label
+WHERE {
+  SERVICE <http://api.finto.fi/sparql>
+  {
+    SELECT DISTINCT ?s ?label ?plabel ?alabel ?hlabel (GROUP_CONCAT(DISTINCT STR(?type)) as ?types)
+    WHERE {
+      GRAPH <http://www.yso.fi/onto/kauno/>
+      {
+      ?s rdf:type <http://www.w3.org/2004/02/skos/core#Concept>
+      {
+       ?s rdf:type ?type .
+       ?s ?prop ?match .
+       FILTER (
+        strstarts(lcase(str(?match)), "test") && !(?match != ?label && strstarts(lcase(str(?label)), "test"))
+       )
+       OPTIONAL {
+        ?s skos:prefLabel ?label .
+        FILTER (langMatches(lang(?label), "en"))
+       }
+       OPTIONAL { # in case previous OPTIONAL block gives no labels
+         ?s ?prop ?match .
+         ?s skos:prefLabel ?label .
+         FILTER (langMatches(lang(?label), lang(?match))) }
+      }
+      FILTER NOT EXISTS { ?s owl:deprecated true }
+     }
+     BIND(IF(?prop = skos:prefLabel && ?match != ?label, ?match, "") as ?plabel)
+     BIND(IF(?prop = skos:altLabel, ?match, "") as ?alabel)
+     BIND(IF(?prop = skos:hiddenLabel, ?match, "") as ?hlabel)
+     VALUES (?prop) { (skos:prefLabel) (skos:altLabel) (skos:hiddenLabel) }
+    }
+    GROUP BY ?match ?s ?label ?plabel ?alabel ?hlabel ?prop
+    ORDER BY lcase(str(?match)) lang(?match)
+    LIMIT 10
+  }
+}

@@ -1,6 +1,6 @@
 require_relative "./helper"
 
-class TestLanguage < Test::Unit::TestCase
+class TestLanguage < Minitest::Test
   include Linguist
 
   def test_find_by_alias
@@ -79,7 +79,6 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal Language['Java'], Language['Java Server Pages'].group
     assert_equal Language['Python'], Language['Cython'].group
     assert_equal Language['Python'], Language['NumPy'].group
-    assert_equal Language['Shell'], Language['Batchfile'].group
     assert_equal Language['Shell'], Language['Gentoo Ebuild'].group
     assert_equal Language['Shell'], Language['Gentoo Eclass'].group
     assert_equal Language['Shell'], Language['Tcsh'].group
@@ -155,10 +154,6 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal :prose, Language['Org'].type
   end
 
-  def test_other
-    assert_nil Language['Brainfuck'].type
-  end
-
   def test_searchable
     assert Language['Ruby'].searchable?
     assert !Language['Gettext Catalog'].searchable?
@@ -192,13 +187,13 @@ class TestLanguage < Test::Unit::TestCase
     assert_equal [], Language.find_by_extension('foo.rb')
     assert_equal [Language['Ruby']], Language.find_by_extension('rb')
     assert_equal [Language['Ruby']], Language.find_by_extension('.rb')
-    assert_equal [Language['M'], Language['Mathematica'], Language['Matlab'], Language['Mercury'], Language['Objective-C']], Language.find_by_extension('.m')
+    assert_equal [Language['Limbo'], Language['M'], Language['MUF'], Language['Mathematica'], Language['Matlab'], Language['Mercury'], Language['Objective-C']], Language.find_by_extension('.m')
   end
 
   def test_find_all_by_extension
     Language.all.each do |language|
       language.extensions.each do |extension|
-        assert_include Language.find_by_extension(extension), language
+        assert_includes Language.find_by_extension(extension), language
       end
     end
   end
@@ -283,16 +278,16 @@ class TestLanguage < Test::Unit::TestCase
   end
 
   def test_error_without_name
-    assert_raise ArgumentError do
+    assert_raises ArgumentError do
       Language.new :name => nil
     end
   end
 
   def test_color
     assert_equal '#701516', Language['Ruby'].color
-    assert_equal '#3581ba', Language['Python'].color
+    assert_equal '#3572A5', Language['Python'].color
     assert_equal '#f1e05a', Language['JavaScript'].color
-    assert_equal '#31859c', Language['TypeScript'].color
+    assert_equal '#2b7489', Language['TypeScript'].color
     assert_equal '#3d9970', Language['LSL'].color
   end
 
@@ -355,6 +350,15 @@ class TestLanguage < Test::Unit::TestCase
 
     width = missing.map { |language| language.name.length }.max
     message << missing.map { |language| sprintf("%-#{width}s %s", language.name, language.tm_scope) }.sort.join("\n")
+    assert missing.empty?, message
+  end
+
+  def test_all_languages_have_type
+    missing = Language.all.select { |language| language.type.nil? }
+    message = "The following languages do not have a type listed in grammars.yml. Please add types for all new languages.\n"
+
+    width = missing.map { |language| language.name.length }.max
+    message << missing.map { |language| sprintf("%-#{width}s", language.name) }.sort.join("\n")
     assert missing.empty?, message
   end
 

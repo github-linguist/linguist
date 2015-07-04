@@ -1,6 +1,6 @@
 require_relative "./helper"
 
-class TestPedantic < Test::Unit::TestCase
+class TestPedantic < Minitest::Test
   filename = File.expand_path("../../lib/linguist/languages.yml", __FILE__)
   LANGUAGES = YAML.load(File.read(filename))
   GRAMMARS = YAML.load(File.read(File.expand_path("../../grammars.yml", __FILE__)))
@@ -12,7 +12,7 @@ class TestPedantic < Test::Unit::TestCase
   def test_extensions_are_sorted
     LANGUAGES.each do |name, language|
       extensions = language['extensions']
-      assert_sorted extensions[1..-1] if extensions && extensions.size > 1
+      assert_sorted extensions[1..-1].map(&:downcase) if extensions && extensions.size > 1
     end
   end
 

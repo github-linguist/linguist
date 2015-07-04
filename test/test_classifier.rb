@@ -1,11 +1,7 @@
 require_relative "./helper"
 
-class TestClassifier < Test::Unit::TestCase
+class TestClassifier < Minitest::Test
   include Linguist
-
-  def samples_path
-    File.expand_path("../../samples", __FILE__)
-  end
 
   def fixture(name)
     File.read(File.join(samples_path, name))

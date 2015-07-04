@@ -1,7 +1,7 @@
 require_relative "./helper"
 require "tempfile"
 
-class TestSamples < Test::Unit::TestCase
+class TestSamples < Minitest::Test
   include Linguist
 
   def test_up_to_date
@@ -34,6 +34,14 @@ class TestSamples < Test::Unit::TestCase
     assert !data["interpreters"].empty?
   end
 
+  def test_ext_or_shebang
+    Samples.each do |sample|
+      if sample[:extname].to_s.empty? && !sample[:filename]
+        assert sample[:interpreter], "#{sample[:path]} should have a file extension or a shebang, maybe it belongs in filenames/ subdir"
+      end
+    end
+  end
+
   # Check that there aren't samples with extensions or interpreters that
   # aren't explicitly defined in languages.yml
   languages_yml = File.expand_path("../../lib/linguist/languages.yml", __FILE__)
@@ -42,16 +50,15 @@ class TestSamples < Test::Unit::TestCase
       options['extensions'] ||= []
       if extnames = Samples.cache['extnames'][name]
         extnames.each do |extname|
-          next if extname == '.script!'
-          assert options['extensions'].include?(extname), "#{name} has a sample with extension (#{extname}) that isn't explicitly defined in languages.yml"
+          assert options['extensions'].index { |x| x.downcase.end_with? extname.downcase }, "#{name} has a sample with extension (#{extname.downcase}) that isn't explicitly defined in languages.yml"
         end
       end
 
       options['interpreters'] ||= []
       if interpreters = Samples.cache['interpreters'][name]
         interpreters.each do |interpreter|
-          # next if extname == '.script!'
-          assert options['interpreters'].include?(interpreter), "#{name} has a sample with an interpreter (#{interpreter}) that isn't explicitly defined in languages.yml"
+          assert options['interpreters'].include?(interpreter),
+            "#{name} has a sample with an interpreter (#{interpreter}) that isn't explicitly defined in languages.yml"
         end
       end
     end
@@ -67,7 +74,7 @@ class TestSamples < Test::Unit::TestCase
         if language_matches.length > 1
           language_matches.each do |match|
             samples = "samples/#{match.name}/*#{extension}"
-            assert Dir.glob(samples).any?, "Missing samples in #{samples.inspect}. See https://github.com/github/linguist/blob/master/CONTRIBUTING.md"
+            assert Dir.glob(samples, File::FNM_CASEFOLD).any?, "Missing samples in #{samples.inspect}. See https://github.com/github/linguist/blob/master/CONTRIBUTING.md"
           end
         end
       end

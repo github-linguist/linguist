@@ -1,11 +1,7 @@
 require_relative "./helper"
 
-class TestTokenizer < Test::Unit::TestCase
+class TestTokenizer < Minitest::Test
   include Linguist
-
-  def samples_path
-    File.expand_path("../../samples", __FILE__)
-  end
 
   def tokenize(data)
     data = File.read(File.join(samples_path, data.to_s)) if data.is_a?(Symbol)
@@ -35,12 +31,16 @@ class TestTokenizer < Test::Unit::TestCase
     assert_equal %w(foo), tokenize("foo\n# Comment")
     assert_equal %w(foo bar), tokenize("foo\n# Comment\nbar")
     assert_equal %w(foo), tokenize("foo\n// Comment")
+    assert_equal %w(foo), tokenize("foo\n-- Comment")
+    assert_equal %w(foo), tokenize("foo\n\" Comment")
     assert_equal %w(foo), tokenize("foo /* Comment */")
     assert_equal %w(foo), tokenize("foo /* \nComment\n */")
     assert_equal %w(foo), tokenize("foo <!-- Comment -->")
     assert_equal %w(foo), tokenize("foo {- Comment -}")
     assert_equal %w(foo), tokenize("foo (* Comment *)")
     assert_equal %w(%), tokenize("2 % 10\n% Comment")
+    assert_equal %w(foo bar), tokenize("foo\n\"\"\"\nComment\n\"\"\"\nbar")
+    assert_equal %w(foo bar), tokenize("foo\n'''\nComment\n'''\nbar")
   end
 
   def test_sgml_tags
@@ -84,16 +84,16 @@ class TestTokenizer < Test::Unit::TestCase
   end
 
   def test_shebang
-    assert_equal "SHEBANG#!sh", tokenize(:"Shell/sh.script!")[0]
-    assert_equal "SHEBANG#!bash", tokenize(:"Shell/bash.script!")[0]
-    assert_equal "SHEBANG#!zsh", tokenize(:"Shell/zsh.script!")[0]
-    assert_equal "SHEBANG#!perl", tokenize(:"Perl/perl.script!")[0]
-    assert_equal "SHEBANG#!python", tokenize(:"Python/python.script!")[0]
-    assert_equal "SHEBANG#!ruby", tokenize(:"Ruby/ruby.script!")[0]
-    assert_equal "SHEBANG#!ruby", tokenize(:"Ruby/ruby2.script!")[0]
-    assert_equal "SHEBANG#!node", tokenize(:"JavaScript/js.script!")[0]
-    assert_equal "SHEBANG#!php", tokenize(:"PHP/php.script!")[0]
-    assert_equal "SHEBANG#!escript", tokenize(:"Erlang/factorial.script!")[0]
+    assert_equal "SHEBANG#!sh", tokenize(:"Shell/sh")[0]
+    assert_equal "SHEBANG#!bash", tokenize(:"Shell/bash")[0]
+    assert_equal "SHEBANG#!zsh", tokenize(:"Shell/zsh")[0]
+    assert_equal "SHEBANG#!perl", tokenize(:"Perl/perl")[0]
+    assert_equal "SHEBANG#!python", tokenize(:"Python/python")[0]
+    assert_equal "SHEBANG#!ruby", tokenize(:"Ruby/ruby")[0]
+    assert_equal "SHEBANG#!ruby", tokenize(:"Ruby/ruby2")[0]
+    assert_equal "SHEBANG#!node", tokenize(:"JavaScript/js")[0]
+    assert_equal "SHEBANG#!php", tokenize(:"PHP/php")[0]
+    assert_equal "SHEBANG#!escript", tokenize(:"Erlang/factorial")[0]
     assert_equal "echo", tokenize(:"Shell/invalid-shebang.sh")[0]
   end
 

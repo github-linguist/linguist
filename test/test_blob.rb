@@ -1,6 +1,6 @@
 require_relative "./helper"
 
-class TestBlob < Test::Unit::TestCase
+class TestBlob < Minitest::Test
   include Linguist
 
   def setup
@@ -12,24 +12,6 @@ class TestBlob < Test::Unit::TestCase
 
   def teardown
     Encoding.default_external = @original_external
-  end
-
-  def samples_path
-    File.expand_path("../../samples", __FILE__)
-  end
-
-  def fixtures_path
-    File.expand_path("../fixtures", __FILE__)
-  end
-
-  def sample_blob(name)
-    name = File.join(samples_path, name) unless name =~ /^\//
-    FileBlob.new(name, samples_path)
-  end
-
-  def fixture_blob(name)
-    name = File.join(fixtures_path, name) unless name =~ /^\//
-    FileBlob.new(name, fixtures_path)
   end
 
   def script_blob(name)
@@ -234,6 +216,16 @@ class TestBlob < Test::Unit::TestCase
     assert sample_blob("C++/protocol-buffer.pb.cc").generated?
     assert sample_blob("Java/ProtocolBuffer.java").generated?
     assert sample_blob("Python/protocol_buffer_pb2.py").generated?
+    assert sample_blob("Go/api.pb.go").generated?
+    assert sample_blob("Go/embedded.go").generated?
+
+    # Apache Thrift generated code
+    assert sample_blob("Python/gen-py-linguist-thrift.py").generated?
+    assert sample_blob("Go/gen-go-linguist-thrift.go").generated?
+    assert sample_blob("Java/gen-java-linguist-thrift.java").generated?
+    assert sample_blob("JavaScript/gen-js-linguist-thrift.js").generated?
+    assert sample_blob("Ruby/gen-rb-linguist-thrift.rb").generated?
+    assert sample_blob("Objective-C/gen-cocoa-linguist-thrift.m").generated?
 
     # Generated JNI
     assert sample_blob("C/jni_layer.h").generated?
@@ -251,12 +243,18 @@ class TestBlob < Test::Unit::TestCase
     assert sample_blob("Zephir/filenames/exception.zep.php").generated?
     assert !sample_blob("Zephir/Router.zep").generated?
 
-
-    assert Linguist::Generated.generated?("node_modules/grunt/lib/grunt.js", nil)
+    assert sample_blob("node_modules/grunt/lib/grunt.js").generated?
 
     # Godep saved dependencies
     assert sample_blob("Godeps/Godeps.json").generated?
     assert sample_blob("Godeps/_workspace/src/github.com/kr/s3/sign.go").generated?
+
+    # Cython-generated C/C++
+    assert sample_blob("C/sgd_fast.c").generated?
+    assert sample_blob("C++/wrapper_inner.cpp").generated?
+
+    # Unity3D-generated metadata
+    assert sample_blob("Unity3D Asset/Tiles.meta").generated?
   end
 
   def test_vendored
@@ -281,6 +279,9 @@ class TestBlob < Test::Unit::TestCase
     # Rails vendor/
     assert sample_blob("vendor/plugins/will_paginate/lib/will_paginate.rb").vendored?
 
+    # Vendor/
+    assert sample_blob("Vendor/my_great_file.h").vendored?
+
     # 'thirdparty' directory
     assert sample_blob("thirdparty/lib/main.c").vendored?
 
@@ -292,6 +293,8 @@ class TestBlob < Test::Unit::TestCase
     assert sample_blob("deps/http_parser/http_parser.c").vendored?
     assert sample_blob("deps/v8/src/v8.h").vendored?
 
+    assert sample_blob("tools/something/else.c").vendored?
+
     # Chart.js
     assert sample_blob("some/vendored/path/Chart.js").vendored?
     assert !sample_blob("some/vendored/path/chart.js").vendored?
@@ -302,6 +305,9 @@ class TestBlob < Test::Unit::TestCase
     # Debian packaging
     assert sample_blob("debian/cron.d").vendored?
 
+    # Erlang
+    assert sample_blob("rebar").vendored?
+
     # Minified JavaScript and CSS
     assert sample_blob("foo.min.js").vendored?
     assert sample_blob("foo.min.css").vendored?
@@ -310,12 +316,18 @@ class TestBlob < Test::Unit::TestCase
     assert !sample_blob("foomin.css").vendored?
     assert !sample_blob("foo.min.txt").vendored?
 
+    #.osx
+    assert sample_blob(".osx").vendored?
+
     # Prototype
     assert !sample_blob("public/javascripts/application.js").vendored?
     assert sample_blob("public/javascripts/prototype.js").vendored?
     assert sample_blob("public/javascripts/effects.js").vendored?
     assert sample_blob("public/javascripts/controls.js").vendored?
     assert sample_blob("public/javascripts/dragdrop.js").vendored?
+
+    # Samples
+    assert sample_blob("Samples/Ruby/foo.rb").vendored?
 
     # jQuery
     assert sample_blob("jquery.js").vendored?
@@ -414,6 +426,9 @@ class TestBlob < Test::Unit::TestCase
     # Normalize
     assert sample_blob("some/asset/path/normalize.css").vendored?
 
+    # Carthage
+    assert sample_blob('Carthage/blah').vendored?
+
     # Cocoapods
     assert sample_blob('Pods/blah').vendored?
 
@@ -424,6 +439,7 @@ class TestBlob < Test::Unit::TestCase
     # Test fixtures
     assert sample_blob("test/fixtures/random.rkt").vendored?
     assert sample_blob("Test/fixtures/random.rkt").vendored?
+    assert sample_blob("tests/fixtures/random.rkt").vendored?
 
     # Cordova/PhoneGap
     assert sample_blob("cordova.js").vendored?
@@ -457,6 +473,67 @@ class TestBlob < Test::Unit::TestCase
     assert sample_blob("activator.bat").vendored?
     assert sample_blob("subproject/activator").vendored?
     assert sample_blob("subproject/activator.bat").vendored?
+
+    assert_predicate fixture_blob(".google_apis/bar.jar"), :vendored?
+    assert_predicate fixture_blob("foo/.google_apis/bar.jar"), :vendored?
+
+    # Sphinx docs
+    assert sample_blob("docs/_build/asset.doc").vendored?
+    assert sample_blob("docs/theme/file.css").vendored?
+
+    # Vagrant
+    assert sample_blob("puphpet/file.pp").vendored?
+
+    # Fabric.io
+    assert sample_blob("Fabric.framework/Fabric.h").vendored?
+
+    # Crashlytics
+    assert sample_blob("Crashlytics.framework/Crashlytics.h").vendored?
+  end
+
+  def test_documentation
+    assert_predicate fixture_blob("doc/foo.html"), :documentation?
+    assert_predicate fixture_blob("docs/foo.html"), :documentation?
+    refute_predicate fixture_blob("project/doc/foo.html"), :documentation?
+    refute_predicate fixture_blob("project/docs/foo.html"), :documentation?
+
+    assert_predicate fixture_blob("Documentation/foo.md"), :documentation?
+    assert_predicate fixture_blob("documentation/foo.md"), :documentation?
+    assert_predicate fixture_blob("project/Documentation/foo.md"), :documentation?
+    assert_predicate fixture_blob("project/documentation/foo.md"), :documentation?
+
+    assert_predicate fixture_blob("javadoc/foo.html"), :documentation?
+    assert_predicate fixture_blob("project/javadoc/foo.html"), :documentation?
+
+    assert_predicate fixture_blob("man/foo.html"), :documentation?
+    refute_predicate fixture_blob("project/man/foo.html"), :documentation?
+
+    assert_predicate fixture_blob("README"), :documentation?
+    assert_predicate fixture_blob("README.md"), :documentation?
+    assert_predicate fixture_blob("README.txt"), :documentation?
+    assert_predicate fixture_blob("foo/README"), :documentation?
+
+    assert_predicate fixture_blob("CONTRIBUTING"), :documentation?
+    assert_predicate fixture_blob("CONTRIBUTING.md"), :documentation?
+    assert_predicate fixture_blob("CONTRIBUTING.txt"), :documentation?
+    assert_predicate fixture_blob("foo/CONTRIBUTING"), :documentation?
+
+    assert_predicate fixture_blob("LICENSE"), :documentation?
+    assert_predicate fixture_blob("LICENCE.md"), :documentation?
+    assert_predicate fixture_blob("LICENSE.txt"), :documentation?
+    assert_predicate fixture_blob("foo/LICENSE"), :documentation?
+
+    assert_predicate fixture_blob("COPYING"), :documentation?
+    assert_predicate fixture_blob("COPYING.md"), :documentation?
+    assert_predicate fixture_blob("COPYING.txt"), :documentation?
+    assert_predicate fixture_blob("foo/COPYING"), :documentation?
+
+    assert_predicate fixture_blob("INSTALL"), :documentation?
+    assert_predicate fixture_blob("INSTALL.md"), :documentation?
+    assert_predicate fixture_blob("INSTALL.txt"), :documentation?
+    assert_predicate fixture_blob("foo/INSTALL"), :documentation?
+
+    refute_predicate fixture_blob("foo.md"), :documentation?
   end
 
   def test_language
@@ -502,5 +579,30 @@ class TestBlob < Test::Unit::TestCase
     assert blob.new(nil).empty?
     refute blob.new(" ").empty?
     refute blob.new("nope").empty?
+  end
+
+  def test_include_in_language_stats
+    vendored = sample_blob("bower_components/custom/custom.js")
+    assert_predicate vendored, :vendored?
+    refute_predicate vendored, :include_in_language_stats?
+
+    documentation = fixture_blob("README")
+    assert_predicate documentation, :documentation?
+    refute_predicate documentation, :include_in_language_stats?
+
+    generated = sample_blob("CSS/bootstrap.min.css")
+    assert_predicate generated, :generated?
+    refute_predicate generated, :include_in_language_stats?
+
+    data = sample_blob("Ant Build System/filenames/ant.xml")
+    assert_equal :data, data.language.type
+    refute_predicate data, :include_in_language_stats?
+
+    prose = sample_blob("Markdown/tender.md")
+    assert_equal :prose, prose.language.type
+    refute_predicate prose, :include_in_language_stats?
+
+    included = sample_blob("HTML/pages.html")
+    assert_predicate included, :include_in_language_stats?
   end
 end
