@@ -1,4 +1,5 @@
 use Test::Base;
+use Test::More;
 
 __DATA__
 === Strict Test
