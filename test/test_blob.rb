@@ -560,6 +560,8 @@ class TestBlob < Minitest::Test
         blob = fixture_blob(filepath)
         if language == 'Data'
           assert blob.language.nil?, "A language was found for #{filepath}"
+        elsif language == 'Generated'
+          assert blob.generated?, "#{filepath} is not a generated file"
         else
           assert blob.language, "No language for #{filepath}"
           assert_equal language, blob.language.name, blob.name
