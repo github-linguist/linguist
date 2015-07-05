@@ -279,6 +279,9 @@ class TestBlob < Minitest::Test
     # Rails vendor/
     assert sample_blob("vendor/plugins/will_paginate/lib/will_paginate.rb").vendored?
 
+    # Vendor/
+    assert sample_blob("Vendor/my_great_file.h").vendored?
+
     # 'thirdparty' directory
     assert sample_blob("thirdparty/lib/main.c").vendored?
 
@@ -480,6 +483,12 @@ class TestBlob < Minitest::Test
 
     # Vagrant
     assert sample_blob("puphpet/file.pp").vendored?
+
+    # Fabric.io
+    assert sample_blob("Fabric.framework/Fabric.h").vendored?
+
+    # Crashlytics
+    assert sample_blob("Crashlytics.framework/Crashlytics.h").vendored?
   end
 
   def test_documentation
@@ -551,6 +560,8 @@ class TestBlob < Minitest::Test
         blob = fixture_blob(filepath)
         if language == 'Data'
           assert blob.language.nil?, "A language was found for #{filepath}"
+        elsif language == 'Generated'
+          assert blob.generated?, "#{filepath} is not a generated file"
         else
           assert blob.language, "No language for #{filepath}"
           assert_equal language, blob.language.name, blob.name

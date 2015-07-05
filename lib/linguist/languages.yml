@@ -49,6 +49,7 @@ AMPL:
   color: "#E6EFBB"
   extensions:
   - .ampl
+  - .mod
   tm_scope: source.ampl
   ace_mode: text
 
@@ -1478,6 +1479,14 @@ Isabelle:
   tm_scope: source.isabelle.theory
   ace_mode: text
 
+Isabelle ROOT:
+  type: programming
+  group: Isabelle
+  filenames:
+  - ROOT
+  tm_scope: source.isabelle.root
+  ace_mode: text
+
 J:
   type: programming
   color: "#9EEDFF"
@@ -1762,6 +1771,13 @@ Linker Script:
   tm_scope: none
   ace_mode: text
 
+Linux Kernel Module:
+  type: data
+  extensions:
+  - .mod
+  tm_scope: none
+  ace_mode: text
+
 Liquid:
   type: markup
   extensions:
@@ -2026,6 +2042,13 @@ Modelica:
   extensions:
   - .mo
   tm_scope: source.modelica
+  ace_mode: text
+
+Modula-2:
+  type: programming
+  extensions:
+  - .mod
+  tm_scope: source.modula2
   ace_mode: text
 
 Module Management System:
@@ -2924,6 +2947,25 @@ SCSS:
   extensions:
   - .scss
 
+SMT:
+  type: programming
+  extensions:
+  - .smt2
+  - .smt
+  interpreters:
+  - boolector
+  - cvc4
+  - mathsat5
+  - opensmt
+  - smtinterpol
+  - smt-rat
+  - stp
+  - verit
+  - yices2
+  - z3
+  tm_scope: source.smt
+  ace_mode: text
+
 SPARQL:
   type: data
   tm_scope: source.sparql
@@ -3513,6 +3555,7 @@ XML:
   - .launch
   - .mdpolicy
   - .mm
+  - .mod
   - .mxml
   - .nproj
   - .nuspec

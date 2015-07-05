@@ -150,9 +150,10 @@ module Linguist
         next if delta.binary
 
         if [:added, :modified].include? delta.status
-          # Skip submodules
+          # Skip submodules and symlinks
           mode = delta.new_file[:mode]
-          next if (mode & 040000) != 0
+          mode_format = (mode & 0170000)
+          next if mode_format == 0120000 || mode_format == 040000 || mode_format == 0160000
 
           blob = Linguist::LazyBlob.new(repository, delta.new_file[:oid], new, mode.to_s(8))
 
