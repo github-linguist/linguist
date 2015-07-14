@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view
+	xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xc="http://www.ibm.com/xsp/custom">
+	<xp:this.data>
+		<xp:dominoView
+			var="houses"
+			viewName="houses" />
+	</xp:this.data>
+	<xc:navbar />
+	<xp:div
+		id="uiContainer"
+		styleClass="container">
+		<div
+			class="row">
+			<div
+				class="col-md-6">
+				<div
+					class="panel panel-default">
+					<div
+						class="panel-heading">
+						<h3
+							class="panel-title">
+							<xp:text
+								value="House Details" />
+						</h3>
+					</div>
+					<div
+						class="panel-body">
+						<xp:form>
+							<xp:this.attrs>
+								<xp:attr
+									name="role"
+									value="form" />
+							</xp:this.attrs>
+							<div
+								class="form-group">
+								<xp:label
+									for="name"
+									value="Name" />
+								<xp:inputText
+									id="name"
+									value="#{gotHouse.name}" />
+							</div>
+							<div
+								class="form-group">
+								<xp:label
+									for="description"
+									value="Description" />
+								<xp:inputTextarea
+									id="description"
+									value="#{gotHouse.description}" >
+									<xp:this.attrs>
+										<xp:attr
+											name="rows"
+											value="5">
+										</xp:attr>
+									</xp:this.attrs>
+								</xp:inputTextarea>
+							</div>
+							<div
+								class="form-group">
+								<xp:label
+									for="coatOfArms"
+									value="Coat of Arms" />
+								<xp:inputText
+									id="coatOfArms"
+									value="#{gotHouse.coatOfArms}" />
+							</div>
+							<div
+								class="form-group">
+								<xp:label
+									for="words"
+									value="Words" />
+								<xp:inputText
+									id="words"
+									value="#{gotHouse.words}" />
+							</div>
+							<div
+								class="form-group">
+								<xp:label
+									for="seat"
+									value="Seat" />
+								<xp:inputText
+									id="seat"
+									value="#{gotHouse.seat}" />
+							</div>
+							<div
+								class="form-group">
+								<xp:label
+									for="currentLord"
+									value="Current Lord" />
+								<xp:inputText
+									id="currentLord"
+									value="#{gotHouse.currentLord}" />
+							</div>
+							<div
+								class="form-group">
+								<xp:label
+									for="region"
+									value="Region" />
+								<xp:inputText
+									id="region"
+									value="#{gotHouse.region}" />
+							</div>
+							<div
+								class="form-group">
+								<xp:label
+									for="title"
+									value="Title" />
+								<xp:inputText
+									id="title"
+									value="#{gotHouse.title}" />
+							</div>
+							<div
+								class="form-group">
+								<xp:label
+									for="heir"
+									value="Heir" />
+								<xp:inputText
+									id="heir"
+									value="#{gotHouse.heir}" />
+							</div>
+							<div
+								class="form-group">
+								<xp:label
+									for="overlord"
+									value="Overlord" />
+								<xp:inputText
+									id="overlord"
+									value="#{gotHouse.overlord}" />
+							</div>
+							<xp:button
+								id="buttonSaveGotHouse"
+								styleClass="pull-right btn-success"
+								value=" Save"
+								rendered="#{gotHouse.editMode}">
+								<xp:eventHandler
+									event="onclick"
+									refreshMode="partial"
+									refreshId="uiContainer"
+									submit="false">
+									<xp:this.action>
+										<xp:actionGroup>
+											<xp:executeScript
+												script="#{gotHouse.save}">
+											</xp:executeScript>
+											<xp:openPage
+												name="/index.xsp">
+											</xp:openPage>
+										</xp:actionGroup>
+									</xp:this.action>
+								</xp:eventHandler>
+								<i
+									class="fa fa-lg fa-save" />
+							</xp:button>
+							<xp:button
+								id="buttonEditGotHouse"
+								styleClass="pull-right btn-default"
+								value=" Edit"
+								rendered="#{!gotHouse.editMode}">
+								<xp:eventHandler
+									event="onclick"
+									action="#{gotHouse.edit}"
+									refreshMode="partial"
+									refreshId="uiContainer" />
+								<i
+									class="fa fa-lg fa-pencil" />
+							</xp:button>
+						</xp:form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</xp:div>
+</xp:view>

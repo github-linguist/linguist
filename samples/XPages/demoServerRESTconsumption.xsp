@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view
+	xmlns:xp="http://www.ibm.com/xsp/core">
+	<xp:this.beforePageLoad><![CDATA[#{javascript://import Java package
+importPackage(co.3edesign.eric.restful);
+ 
+var urlStr = "http://ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=5&q=";
+urlStr += "http://www.npr.org/rss/rss.php?id=1001";
+var myStuff:JsonObject = CustRestConsumer.GetMyRestData(urlStr);
+ 
+viewScope.myResp = fromJson(myStuff);}]]></xp:this.beforePageLoad>
+	<xp:dataTable
+		id="dataTable1"
+		rows="30"
+		var="rowData"
+		indexVar="rowCount">
+		<xp:this.value><![CDATA[#{javascript:var obj = viewScope.get("myResp");
+return obj.responseData.feed.entries;}]]></xp:this.value>
+		<xp:column
+			id="column1">
+			<xp:this.facets>
+				<xp:panel
+					xp:key="header"
+					tagName="h1">
+					<xp:link
+						escape="true"
+						id="link1">
+						<xp:this.text><![CDATA[#{javascript:var obj = viewScope.get("myResp");
+	return obj.title;}]]></xp:this.text>
+						<xp:this.value><![CDATA[#{javascript:var obj = viewScope.get("myResp");
+	return obj.link;}]]></xp:this.value>
+					</xp:link>
+				</xp:panel>
+			</xp:this.facets>
+		</xp:column>
+		<xp:column
+			id="column2">
+			<xp:panel
+				tagName="h3">
+				<xp:link
+					escape="true"
+					id="link2"
+					text="#{javascript:rowData.title}"
+					value="#{javascript:rowData.link}">
+				</xp:link>
+			</xp:panel>
+			<xp:br></xp:br>
+			<xp:text
+				escape="false"
+				id="computedField2"
+				value="#{javascript:rowData.content}">
+			</xp:text>
+			<xp:br></xp:br>
+		</xp:column>
+		<xp:column
+			id="column3">
+			<xp:text
+				escape="true"
+				id="computedField3"
+				value="#{javascript:rowData.publishedDate}">
+			</xp:text>
+		</xp:column>
+	</xp:dataTable>
+</xp:view>
