@@ -2374,14 +2374,6 @@ Oz:
   tm_scope: source.oz
   ace_mode: text
 
-PAWN:
-  type: programming
-  color: "#dbb284"
-  extensions:
-  - .pwn
-  tm_scope: source.c++
-  ace_mode: c_cpp
-
 PHP:
   type: programming
   tm_scope: text.html.php
@@ -2484,6 +2476,14 @@ Pascal:
   - .lpr
   - .pp
   ace_mode: pascal
+
+Pawn:
+  type: programming
+  color: "#dbb284"
+  extensions:
+  - .pwn
+  tm_scope: source.pawn
+  ace_mode: text
 
 Perl:
   type: programming
