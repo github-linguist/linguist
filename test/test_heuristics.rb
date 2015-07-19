@@ -122,7 +122,7 @@ class TestHeuristcs < Minitest::Test
     assert_heuristics({
       "Frege" => all_fixtures("Frege"),
       "Forth" => all_fixtures("Forth"),
-      "Text" => all_fixtures("Text")
+      "Text" => all_fixtures("Text", "*.fr")
     })
   end
 
