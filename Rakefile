@@ -62,7 +62,7 @@ namespace :benchmark do
 
     corpus = File.expand_path(ENV["CORPUS"] || "samples")
 
-    require 'linguist/language'
+    require 'linguist'
 
     results = Hash.new
     Dir.glob("#{corpus}/**/*").each do |file|

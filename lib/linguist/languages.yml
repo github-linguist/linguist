@@ -226,6 +226,7 @@ Assembly:
   extensions:
   - .asm
   - .a51
+  - .inc
   - .nasm
   tm_scope: source.asm.x86
   ace_mode: assembly_x86
@@ -412,6 +413,7 @@ C++:
   - .hh
   - .hpp
   - .hxx
+  - .inc
   - .inl
   - .ipp
   - .tcc
@@ -668,7 +670,7 @@ Crystal:
   extensions:
   - .cr
   ace_mode: ruby
-  tm_scope: source.ruby
+  tm_scope: source.crystal
   interpreters:
   - crystal
 
@@ -1270,6 +1272,7 @@ HTML:
   - .html
   - .htm
   - .html.hl
+  - .inc
   - .st
   - .xht
   - .xhtml
@@ -1346,7 +1349,7 @@ Harbour:
   color: "#0e60e3"
   extensions:
   - .hb
-  tm_scope: none
+  tm_scope: source.harbour
   ace_mode: text
 
 Haskell:
@@ -1635,6 +1638,7 @@ KiCad:
   type: programming
   extensions:
   - .sch
+  - .kicad_pcb
   tm_scope: none
   ace_mode: text
 
@@ -2087,6 +2091,14 @@ Myghty:
   tm_scope: none
   ace_mode: text
 
+NCL:
+  type: programming
+  color: #28431f
+  extensions:
+  - .ncl
+  tm_scope: source.ncl
+  ace_mode: text
+
 NL:
   type: data
   extensions:
@@ -2380,6 +2392,7 @@ PHP:
   - .aw
   - .ctp
   - .fcgi
+  - .inc
   - .php3
   - .php4
   - .php5
@@ -2467,6 +2480,7 @@ Pascal:
   - .pas
   - .dfm
   - .dpr
+  - .inc
   - .lpr
   - .pp
   ace_mode: pascal
@@ -2986,6 +3000,7 @@ SQL:
   - .sql
   - .cql
   - .ddl
+  - .inc
   - .prc
   - .tab
   - .udf
@@ -3184,6 +3199,7 @@ SourcePawn:
   - sourcemod
   extensions:
   - .sp
+  - .inc
   - .sma
   tm_scope: source.sp
   ace_mode: text
@@ -3328,6 +3344,7 @@ Text:
   extensions:
   - .txt
   - .fr
+  - .ncl
   tm_scope: none
   ace_mode: text
 
@@ -3775,5 +3792,6 @@ xBase:
   color: "#403a40"
   extensions:
   - .prg
-  tm_scope: none
+  - .ch
+  tm_scope: source.harbour
   ace_mode: text

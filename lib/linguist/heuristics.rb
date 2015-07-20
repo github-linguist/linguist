@@ -295,6 +295,12 @@ module Linguist
       end
     end
 
+    disambiguate ".ncl" do |data|
+      if data.include?("THE_TITLE")
+        Language["Text"]
+      end
+    end
+
     disambiguate ".nl" do |data|
       if /^(b|g)[0-9]+ /.match(data)
         Language["NL"]
