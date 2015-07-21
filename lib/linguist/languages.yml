@@ -1349,7 +1349,7 @@ Harbour:
   color: "#0e60e3"
   extensions:
   - .hb
-  tm_scope: none
+  tm_scope: source.harbour
   ace_mode: text
 
 Haskell:
@@ -2091,6 +2091,14 @@ Myghty:
   tm_scope: none
   ace_mode: text
 
+NCL:
+  type: programming
+  color: #28431f
+  extensions:
+  - .ncl
+  tm_scope: source.ncl
+  ace_mode: text
+
 NL:
   type: data
   extensions:
@@ -2659,7 +2667,7 @@ PureScript:
   color: "#1D222D"
   extensions:
   - .purs
-  tm_scope: source.haskell
+  tm_scope: source.purescript
   ace_mode: haskell
 
 Python:
@@ -3336,6 +3344,7 @@ Text:
   extensions:
   - .txt
   - .fr
+  - .ncl
   tm_scope: none
   ace_mode: text
 
@@ -3784,5 +3793,5 @@ xBase:
   extensions:
   - .prg
   - .ch
-  tm_scope: none
+  tm_scope: source.harbour
   ace_mode: text

@@ -1,7 +1,10 @@
 # Contributing
 
-Hi there! We're thrilled that you'd like to contribute to this project. Your help is essential for keeping it great. The majority of contributions won't need to touch any Ruby code at all.
+[code-of-conduct]: http://todogroup.org/opencodeofconduct/#Linguist/opensource@github.com
 
+Hi there! We're thrilled that you'd like to contribute to this project. Your help is essential for keeping it great. This project adheres to the [Open Code of Conduct][code-of-conduct]. By participating, you are expected to uphold this code.
+
+The majority of contributions won't need to touch any Ruby code at all.
 
 ## Adding an extension to a language
 
@@ -55,7 +58,7 @@ Syntax highlighting in GitHub is performed using TextMate-compatible grammars. T
 
 Assuming your code is being detected as the right language, in most cases this is due to a bug in the language grammar rather than a bug in Linguist. [`grammars.yml`][grammars] lists all the grammars we use for syntax highlighting on github.com. Find the one corresponding to your code's programming language and submit a bug report upstream. If you can, try to reproduce the highlighting problem in the text editor that the grammar is designed for (TextMate, Sublime Text, or Atom) and include that information in your bug report.
 
-You can also try to fix the bug yourself and submit a Pull Request. [TextMate's documentation](http://manual.macromates.com/en/language_grammars) offers a good introduction on how to work with TextMate-compatible grammars. You can test grammars using [Lightshow](https://github-lightshow.herokuapp.com).
+You can also try to fix the bug yourself and submit a Pull Request. [TextMate's documentation](https://manual.macromates.com/en/language_grammars) offers a good introduction on how to work with TextMate-compatible grammars. You can test grammars using [Lightshow](https://github-lightshow.herokuapp.com).
 
 Once the bug has been fixed upstream, we'll pick it up for GitHub in the next release of Linguist.
 
@@ -71,9 +74,9 @@ To run the tests:
 
     bundle exec rake test
 
-Sometimes getting the tests running can be too much work, especially if you don't have much Ruby experience. It's okay: be lazy and let our build bot [Travis](http://travis-ci.org/#!/github/linguist) run the tests for you. Just open a pull request and the bot will start cranking away.
+Sometimes getting the tests running can be too much work, especially if you don't have much Ruby experience. It's okay: be lazy and let our build bot [Travis](https://travis-ci.org/#!/github/linguist) run the tests for you. Just open a pull request and the bot will start cranking away.
 
-Here's our current build status: [![Build Status](https://secure.travis-ci.org/github/linguist.png?branch=master)](http://travis-ci.org/github/linguist)
+Here's our current build status: [![Build Status](https://api.travis-ci.org/github/linguist.svg?branch=master)](https://travis-ci.org/github/linguist)
 
 
 ## Releasing

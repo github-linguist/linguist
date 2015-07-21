@@ -513,6 +513,21 @@ class TestBlob < Minitest::Test
     assert_predicate fixture_blob("README.txt"), :documentation?
     assert_predicate fixture_blob("foo/README"), :documentation?
 
+    assert_predicate fixture_blob("CHANGE"), :documentation?
+    assert_predicate fixture_blob("CHANGE.md"), :documentation?
+    assert_predicate fixture_blob("CHANGE.txt"), :documentation?
+    assert_predicate fixture_blob("foo/CHANGE"), :documentation?
+    
+    assert_predicate fixture_blob("CHANGELOG"), :documentation?
+    assert_predicate fixture_blob("CHANGELOG.md"), :documentation?
+    assert_predicate fixture_blob("CHANGELOG.txt"), :documentation?
+    assert_predicate fixture_blob("foo/CHANGELOG"), :documentation?
+
+    assert_predicate fixture_blob("CHANGES"), :documentation?
+    assert_predicate fixture_blob("CHANGES.md"), :documentation?
+    assert_predicate fixture_blob("CHANGES.txt"), :documentation?
+    assert_predicate fixture_blob("foo/CHANGES"), :documentation?    
+    
     assert_predicate fixture_blob("CONTRIBUTING"), :documentation?
     assert_predicate fixture_blob("CONTRIBUTING.md"), :documentation?
     assert_predicate fixture_blob("CONTRIBUTING.txt"), :documentation?
