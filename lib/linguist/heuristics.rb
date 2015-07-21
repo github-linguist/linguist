@@ -333,5 +333,11 @@ module Linguist
         Language["GAS"]
       end
     end
+
+    disambiguate "xBase", "Charity" do |data|
+      if /^\s*#\s*(if|ifdef|ifndef|define|command|xcommand|translate|xtranslate|include|pragma|undef)\b/i.match(data)
+        Language["xBase"]
+      end
+    end
   end
 end

@@ -22,6 +22,17 @@ class TestHeuristcs < Minitest::Test
     assert_equal [], results
   end
 
+  def assert_heuristics(hash)
+    candidates = hash.keys.map { |l| Language[l] }
+
+    hash.each do |language, blobs|
+      Array(blobs).each do |blob|
+        result = Heuristics.call(file_blob(blob), candidates)
+        assert_equal [Language[language]], result, "Failed for #{blob}"
+      end
+    end
+  end
+
   # Candidate languages = ["C++", "Objective-C"]
   def test_obj_c_by_heuristics
     # Only calling out '.h' filenames as these are the ones causing issues
@@ -147,17 +158,6 @@ class TestHeuristcs < Minitest::Test
     })
   end
 
-  def assert_heuristics(hash)
-    candidates = hash.keys.map { |l| Language[l] }
-
-    hash.each do |language, blobs|
-      Array(blobs).each do |blob|
-        result = Heuristics.call(file_blob(blob), candidates)
-        assert_equal [Language[language]], result, "Failed for #{blob}"
-      end
-    end
-  end
-
   def test_ls_by_heuristics
     assert_heuristics({
       "LiveScript" => "LiveScript/hello.ls",
@@ -169,6 +169,12 @@ class TestHeuristcs < Minitest::Test
     assert_heuristics({
       "TypeScript" => all_fixtures("TypeScript", "*.ts"),
       "XML" => all_fixtures("XML", "*.ts")
+    })
+  end
+
+  def test_ch_by_heuristics
+    assert_heuristics({
+      "xBase" => all_fixtures("xBase")
     })
   end
 end
