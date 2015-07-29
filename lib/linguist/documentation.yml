@@ -7,11 +7,16 @@
 # Please add additional test coverage to
 # `test/test_blob.rb#test_documentation` if you make any changes.
 
-## Documentation Conventions ##
+## Documentation directories ##
 
 - ^docs?/
-- ^Documentation/
+- (^|/)[Dd]ocumentation/
+- (^|/)javadoc/
+- ^man/
 
+## Documentation files ##
+
+- (^|/)CHANGE(S|LOG)?(\.|$)
 - (^|/)CONTRIBUTING(\.|$)
 - (^|/)COPYING(\.|$)
 - (^|/)INSTALL(\.|$)

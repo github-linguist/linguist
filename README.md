@@ -26,7 +26,7 @@ Linguist supports a number of different custom overrides strategies for language
 
 ### Using gitattributes
 
-Add a `.gitattributes` file to your project and use standard git-style path matchers for the files you want to override to set `linguist-documentation`, `linguist-language`, and `linguist-vendored`.
+Add a `.gitattributes` file to your project and use standard git-style path matchers for the files you want to override to set `linguist-documentation`, `linguist-language`, and `linguist-vendored`. `.gitattributes` will be used to determine language statistics, but will not be used to syntax highlight files. To manually set syntax highlighting, use [Vim or Emacs modelines](#using-emacs-or-vim-modelines).
 
 ```
 $ cat .gitattributes
@@ -35,7 +35,7 @@ $ cat .gitattributes
 
 Checking code you didn't write, such as JavaScript libraries, into your git repo is a common practice, but this often inflates your project's language stats and may even cause your project to be labeled as another language. By default, Linguist treats all of the paths defined in [lib/linguist/vendor.yml](https://github.com/github/linguist/blob/master/lib/linguist/vendor.yml) as vendored and therefore doesn't include them in the language statistics for a repository. Vendored files are also hidden by default in diffs on github.com.
 
-Use the `linguist-vendored` attribute to vendor or un-vendor paths.
+Use the `linguist-vendored` attribute to vendor or un-vendor paths. Please note, overriding the vendored (or un-vendored) status of a file only affects the language statistics for the repository and not the behavior in diffs on github.com.
 
 ```
 $ cat .gitattributes
@@ -53,16 +53,18 @@ project-docs/* linguist-documentation
 docs/formatter.rb linguist-documentation=false
 ```
 
-### Using Emacs and Vim modelines
+### Using Emacs or Vim modelines
 
-Alternatively, you can use Vim and Emacs style modelines to set the language for a single file. Modelines can be placed anywhere within a file and are respected when determining how to syntax-highlight a file on GitHub.com
+Alternatively, you can use Vim or Emacs style modelines to set the language for a single file. Modelines can be placed anywhere within a file and are respected when determining how to syntax-highlight a file on GitHub.com
 
+##### Vim
 ```
-Vim
 vim: set filetype=prolog:
 vim: set ft=cpp:
+```
 
-Emacs
+##### Emacs
+```
 -*- mode: php;-*-
 ```
 
