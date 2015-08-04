@@ -56,7 +56,7 @@ module Linguist
 
     # Internal: Check if this heuristic matches the candidate languages.
     def matches?(filename)
-      @extensions.any? { |ext| filename.end_with?(ext) }
+      @extensions.any? { |ext| filename.downcase.end_with?(ext) }
     end
 
     # Internal: Perform the heuristic
@@ -351,7 +351,7 @@ module Linguist
       end
     end
 
-    disambiguate ".r", ".R" do |data|
+    disambiguate ".r" do |data|
       if /\bRebol\b/i.match(data)
         Language["Rebol"]
       elsif data.include?("<-")
