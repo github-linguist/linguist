@@ -350,5 +350,13 @@ module Linguist
         Language["xBase"]
       end
     end
+
+    disambiguate ".r", ".R" do |data|
+      if /\bRebol\b/i.match(data)
+        Language["Rebol"]
+      elsif data.include?("<-")
+        Language["R"]
+      end
+    end
   end
 end
