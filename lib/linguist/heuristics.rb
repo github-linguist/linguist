@@ -329,7 +329,7 @@ module Linguist
       end
     end
 
-    disambiguate "Groff", "Nemerle" do |data|
+    disambiguate ".n" do |data|
       if /^[.']/.match(data)
         Language["Groff"]
       elsif /^(module|namespace|using)\s/.match(data)
@@ -337,7 +337,7 @@ module Linguist
       end
     end
 
-    disambiguate "GAS", "Groff" do |data|
+    disambiguate ".ms" do |data|
       if /^[.'][a-z][a-z](\s|$)/i.match(data)
         Language["Groff"]
       elsif /((^|\s)move?[. ])|\.(include|globa?l)\s/.match(data)
@@ -345,7 +345,7 @@ module Linguist
       end
     end
 
-    disambiguate "xBase", "Charity" do |data|
+    disambiguate ".ch" do |data|
       if /^\s*#\s*(if|ifdef|ifndef|define|command|xcommand|translate|xtranslate|include|pragma|undef)\b/i.match(data)
         Language["xBase"]
       end

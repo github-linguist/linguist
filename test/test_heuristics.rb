@@ -176,7 +176,7 @@ class TestHeuristcs < Minitest::Test
 
   def test_ch_by_heuristics
     assert_heuristics({
-      "xBase" => all_fixtures("xBase")
+      "xBase" => all_fixtures("xBase", ".ch")
     })
   end
 end
