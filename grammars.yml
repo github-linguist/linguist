@@ -85,6 +85,8 @@ vendor/grammars/Racket:
 - source.racket
 vendor/grammars/SCSS.tmbundle:
 - source.scss
+vendor/grammars/SMT.tmbundle:
+- source.smt
 vendor/grammars/Scalate.tmbundle:
 - source.scaml
 - text.html.ssp
@@ -107,6 +109,8 @@ vendor/grammars/Sublime-Logos:
 - source.logos
 vendor/grammars/Sublime-Loom:
 - source.loomscript
+vendor/grammars/Sublime-Modula-2/:
+- source.modula2
 vendor/grammars/Sublime-Nit:
 - source.nit
 vendor/grammars/Sublime-QML:
@@ -119,6 +123,7 @@ vendor/grammars/Sublime-SQF-Language:
 - source.sqf
 vendor/grammars/Sublime-Text-2-OpenEdge-ABL:
 - source.abl
+- text.html.abl
 vendor/grammars/Sublime-VimL:
 - source.viml
 vendor/grammars/SublimeBrainfuck:
@@ -156,6 +161,9 @@ vendor/grammars/antlr.tmbundle:
 vendor/grammars/apache.tmbundle:
 - source.apache-config
 - source.apache-config.mod_perl
+vendor/grammars/api-blueprint-sublime-plugin/:
+- text.html.markdown.source.gfm.apib
+- text.html.markdown.source.gfm.mson
 vendor/grammars/applescript.tmbundle:
 - source.applescript
 vendor/grammars/asciidoc.tmbundle/:
@@ -166,6 +174,10 @@ vendor/grammars/asp.tmbundle:
 vendor/grammars/assembly.tmbundle:
 - objdump.x86asm
 - source.x86asm
+vendor/grammars/atom-fsharp/:
+- source.fsharp
+vendor/grammars/atom-language-purescript/:
+- source.purescript
 vendor/grammars/atom-salt:
 - source.python.salt
 - source.yaml.salt
@@ -212,6 +224,7 @@ vendor/grammars/d.tmbundle:
 vendor/grammars/dart-sublime-bundle:
 - source.dart
 - source.pubspec
+- text.dart-analysis-output
 - text.dart-doccomments
 vendor/grammars/desktop.tmbundle:
 - source.desktop
@@ -244,8 +257,6 @@ vendor/grammars/fish-tmbundle:
 vendor/grammars/fortran.tmbundle:
 - source.fortran
 - source.fortran.modern
-vendor/grammars/fsharpbinding:
-- source.fsharp
 vendor/grammars/gap-tmbundle/:
 - source.gap
 vendor/grammars/gettext.tmbundle:
@@ -293,14 +304,10 @@ vendor/grammars/java.tmbundle:
 - source.java-properties
 - text.html.jsp
 - text.junit-test-report
-vendor/grammars/javadoc.tmbundle:
-- text.html.javadoc
 vendor/grammars/javascript-objective-j.tmbundle:
 - source.js.objj
 vendor/grammars/jflex.tmbundle:
 - source.jflex
-vendor/grammars/jquery-tmbundle:
-- source.js.jquery
 vendor/grammars/json.tmbundle:
 - source.json
 vendor/grammars/kotlin-sublime-package:
@@ -310,7 +317,10 @@ vendor/grammars/language-clojure:
 vendor/grammars/language-coffee-script:
 - source.coffee
 - source.litcoffee
+vendor/grammars/language-crystal:
+- source.crystal
 vendor/grammars/language-csharp:
+- source.cake
 - source.cs
 - source.csx
 - source.nant-build
@@ -321,6 +331,11 @@ vendor/grammars/language-hy:
 vendor/grammars/language-javascript:
 - source.js
 - source.js.regexp
+vendor/grammars/language-jsoniq/:
+- source.jq
+- source.xq
+vendor/grammars/language-ncl:
+- source.ncl
 vendor/grammars/language-python:
 - source.python
 - source.regexp.python
@@ -329,6 +344,8 @@ vendor/grammars/language-python:
 vendor/grammars/language-shellscript:
 - source.shell
 - text.shell-session
+vendor/grammars/language-xbase:
+- source.harbour
 vendor/grammars/language-yaml:
 - source.yaml
 vendor/grammars/latex.tmbundle:
@@ -403,7 +420,7 @@ vendor/grammars/perl.tmbundle/:
 - source.perl
 - source.perl.6
 vendor/grammars/php-smarty.tmbundle:
-- source.smarty
+- text.html.smarty
 vendor/grammars/php.tmbundle:
 - text.html.php
 vendor/grammars/pike-textmate:
@@ -430,20 +447,14 @@ vendor/grammars/restructuredtext.tmbundle:
 - text.restructuredtext
 vendor/grammars/ruby-haml.tmbundle:
 - text.haml
-vendor/grammars/ruby-on-rails-tmbundle:
-- source.js.erb.rails
-- source.ruby.rails
-- source.ruby.rails.rjs
-- source.sql.ruby
-- text.html.erb.rails
 vendor/grammars/ruby-slim.tmbundle:
 - text.slim
 vendor/grammars/ruby.tmbundle:
 - source.ruby
 - text.html.erb
 vendor/grammars/sas.tmbundle:
-- source.SASLog
 - source.sas
+- source.sas_log
 vendor/grammars/sass-textmate-bundle:
 - source.sass
 vendor/grammars/scala.tmbundle:
@@ -453,6 +464,8 @@ vendor/grammars/scheme.tmbundle:
 - source.scheme
 vendor/grammars/scilab.tmbundle:
 - source.scilab
+vendor/grammars/smali-sublime/smali.tmLanguage:
+- source.smali
 vendor/grammars/smalltalk-tmbundle:
 - source.smalltalk
 vendor/grammars/sql.tmbundle:
@@ -523,13 +536,6 @@ vendor/grammars/swift.tmbundle:
 vendor/grammars/tcl.tmbundle:
 - source.tcl
 - text.html.tcl
-vendor/grammars/text.tmbundle:
-- text.plain
-vendor/grammars/textile.tmbundle:
-- text.html.textile
-vendor/grammars/textmate.tmbundle:
-- source.regexp.oniguruma
-- source.tm-properties
 vendor/grammars/thrift.tmbundle:
 - source.thrift
 vendor/grammars/toml.tmbundle:
@@ -539,6 +545,8 @@ vendor/grammars/turtle.tmbundle:
 - source.turtle
 vendor/grammars/verilog.tmbundle:
 - source.verilog
+vendor/grammars/vue-syntax-highlight:
+- text.html.vue
 vendor/grammars/x86-assembly-textmate-bundle:
 - source.asm.x86
 vendor/grammars/xc.tmbundle/:

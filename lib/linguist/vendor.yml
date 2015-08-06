@@ -70,6 +70,7 @@
 - 3rd[-_]?party/
 - vendors?/
 - extern(al)?/
+- (^|/)[Vv]+endor/
 
 # Debian packaging
 - ^debian/
@@ -121,7 +122,7 @@
 - (^|/)Chart\.js$
 
 # Codemirror
-- (^|/)[Cc]ode[Mm]irror/(lib|mode|theme|addon|keymap)
+- (^|/)[Cc]ode[Mm]irror/(lib|mode|theme|addon|keymap|demo)
 
 # SyntaxHighlighter - http://alexgorbatchev.com/
 - (^|/)shBrush([^.]*)\.js$
@@ -163,11 +164,21 @@
 
 ## Obj-C ##
 
+# Carthage
+- ^Carthage/
+
 # Cocoapods
 - ^Pods/
 
 # Sparkle
 - (^|/)Sparkle/
+
+# Crashlytics
+- Crashlytics.framework/
+
+# Fabric
+- Fabric.framework/
+
 
 ## Groovy ##
 

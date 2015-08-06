@@ -217,6 +217,15 @@ class TestBlob < Minitest::Test
     assert sample_blob("Java/ProtocolBuffer.java").generated?
     assert sample_blob("Python/protocol_buffer_pb2.py").generated?
     assert sample_blob("Go/api.pb.go").generated?
+    assert sample_blob("Go/embedded.go").generated?
+
+    # Apache Thrift generated code
+    assert sample_blob("Python/gen-py-linguist-thrift.py").generated?
+    assert sample_blob("Go/gen-go-linguist-thrift.go").generated?
+    assert sample_blob("Java/gen-java-linguist-thrift.java").generated?
+    assert sample_blob("JavaScript/gen-js-linguist-thrift.js").generated?
+    assert sample_blob("Ruby/gen-rb-linguist-thrift.rb").generated?
+    assert sample_blob("Objective-C/gen-cocoa-linguist-thrift.m").generated?
 
     # Generated JNI
     assert sample_blob("C/jni_layer.h").generated?
@@ -243,6 +252,9 @@ class TestBlob < Minitest::Test
     # Cython-generated C/C++
     assert sample_blob("C/sgd_fast.c").generated?
     assert sample_blob("C++/wrapper_inner.cpp").generated?
+
+    # Unity3D-generated metadata
+    assert sample_blob("Unity3D Asset/Tiles.meta").generated?
   end
 
   def test_vendored
@@ -266,6 +278,9 @@ class TestBlob < Minitest::Test
 
     # Rails vendor/
     assert sample_blob("vendor/plugins/will_paginate/lib/will_paginate.rb").vendored?
+
+    # Vendor/
+    assert sample_blob("Vendor/my_great_file.h").vendored?
 
     # 'thirdparty' directory
     assert sample_blob("thirdparty/lib/main.c").vendored?
@@ -411,6 +426,9 @@ class TestBlob < Minitest::Test
     # Normalize
     assert sample_blob("some/asset/path/normalize.css").vendored?
 
+    # Carthage
+    assert sample_blob('Carthage/blah').vendored?
+
     # Cocoapods
     assert sample_blob('Pods/blah').vendored?
 
@@ -462,9 +480,15 @@ class TestBlob < Minitest::Test
     # Sphinx docs
     assert sample_blob("docs/_build/asset.doc").vendored?
     assert sample_blob("docs/theme/file.css").vendored?
-    
+
     # Vagrant
     assert sample_blob("puphpet/file.pp").vendored?
+
+    # Fabric.io
+    assert sample_blob("Fabric.framework/Fabric.h").vendored?
+
+    # Crashlytics
+    assert sample_blob("Crashlytics.framework/Crashlytics.h").vendored?
   end
 
   def test_documentation
@@ -489,6 +513,21 @@ class TestBlob < Minitest::Test
     assert_predicate fixture_blob("README.txt"), :documentation?
     assert_predicate fixture_blob("foo/README"), :documentation?
 
+    assert_predicate fixture_blob("CHANGE"), :documentation?
+    assert_predicate fixture_blob("CHANGE.md"), :documentation?
+    assert_predicate fixture_blob("CHANGE.txt"), :documentation?
+    assert_predicate fixture_blob("foo/CHANGE"), :documentation?
+    
+    assert_predicate fixture_blob("CHANGELOG"), :documentation?
+    assert_predicate fixture_blob("CHANGELOG.md"), :documentation?
+    assert_predicate fixture_blob("CHANGELOG.txt"), :documentation?
+    assert_predicate fixture_blob("foo/CHANGELOG"), :documentation?
+
+    assert_predicate fixture_blob("CHANGES"), :documentation?
+    assert_predicate fixture_blob("CHANGES.md"), :documentation?
+    assert_predicate fixture_blob("CHANGES.txt"), :documentation?
+    assert_predicate fixture_blob("foo/CHANGES"), :documentation?    
+    
     assert_predicate fixture_blob("CONTRIBUTING"), :documentation?
     assert_predicate fixture_blob("CONTRIBUTING.md"), :documentation?
     assert_predicate fixture_blob("CONTRIBUTING.txt"), :documentation?
@@ -536,6 +575,8 @@ class TestBlob < Minitest::Test
         blob = fixture_blob(filepath)
         if language == 'Data'
           assert blob.language.nil?, "A language was found for #{filepath}"
+        elsif language == 'Generated'
+          assert blob.generated?, "#{filepath} is not a generated file"
         else
           assert blob.language, "No language for #{filepath}"
           assert_equal language, blob.language.name, blob.name
