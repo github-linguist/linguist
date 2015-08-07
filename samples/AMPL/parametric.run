@@ -1,0 +1,70 @@
+# Copyright 2009, 2011, 2012 Hans Pirnay
+# All Rights Reserved.
+# This code is published under the Eclipse Public License.
+#
+# Date   : 2010-10-04
+
+reset;
+
+# ---------------------------------
+# Set parameter values here
+# ---------------------------------
+#
+param nominal_eta1 := 5.0;
+param perturbed_eta1 := 4.5;
+
+param nominal_eta2 := 1;
+param perturbed_eta2 := 1;
+#
+# ---------------------------------
+#
+
+# declare AMPL suffixes for sIPOPT code
+suffix sens_state_0, IN;
+suffix sens_state_1, IN;
+suffix sens_state_value_1, IN;
+suffix sens_sol_state_1, OUT;
+suffix sens_init_constr, IN;
+
+option presolve 0;
+
+# turn presolve off so no variables / equations are eliminated
+# by AMPL
+option solver ipopt_sens;
+
+# set run_sens to yes
+#option ipopt_options 'run_sens yes n_sens_steps=1 sens_boundcheck no';
+option ipopt_options 'run_sens yes sens_boundcheck no';
+
+model parametric.mod;
+
+# sIPOPT data
+let eta1.sens_state_0 := 1;
+let eta1.sens_state_1 := 1;
+let eta1.sens_state_value_1 := perturbed_eta1;
+let eta2.sens_state_0 := 2;
+let eta2.sens_state_1 := 2;
+let eta2.sens_state_value_1 := perturbed_eta2;
+
+let consteta1.sens_init_constr := 1;
+let consteta2.sens_init_constr := 1;
+
+solve;
+print "";
+print "Sensitivity without bound checking";
+print "";
+print "Nominal Solution:";
+display x1, x2, x3, eta1, eta2;
+print "Estimation of Perturbed Solution with sIPOPT:";
+display x1.sens_sol_state_1, x2.sens_sol_state_1, x3.sens_sol_state_1, eta1.sens_sol_state_1, eta2.sens_sol_state_1;
+
+option ipopt_options 'run_sens yes sens_boundcheck yes';
+solve;
+
+print "";
+print "Sensitivity with bound checking";
+print "";
+print "Nominal Solution:";
+display x1, x2, x3, eta1, eta2;
+print "Estimation of Perturbed Solution with sIPOPT:";
+display x1.sens_sol_state_1, x2.sens_sol_state_1, x3.sens_sol_state_1, eta1.sens_sol_state_1, eta2.sens_sol_state_1;

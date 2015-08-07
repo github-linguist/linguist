@@ -1,0 +1,75 @@
+#!/bin/bash
+# build executables for each platform
+
+. jsbuild.path
+
+# command line parsing
+if [ $# != 2 ]
+then
+  echo "Usage: jsdist.run OSARCH PROG"
+  exit 1
+fi
+OSARCH="$1"
+PROG="$2"
+
+# parse skeleton/arch
+OS=`echo $OSARCH | awk -F _ '{ print $1 }'`
+ARCH=`echo $OSARCH | awk -F _ '{ print $2 }'`
+
+# program specific substitutions
+MESSAGE=""
+SUBMIT=""
+case $PROG in
+  jsim )
+     RUNSKEL=$JSIMSRC/$OS/jsrun.skel
+     CLASS=JSim.gui.GLaunch
+     MESSAGE="echo Starting JSim ..."
+     if [ "$OS" != "win32" ]
+     then
+       SUBMIT="\&"
+     fi
+     ;;
+  jsbatch )
+     RUNSKEL=$JSIMSRC/$OS/jsrun.skel
+     CLASS=JSim.text.Batch
+     ;;
+  jsserver )
+     RUNSKEL=$JSIMSRC/$OS/jsrun.skel
+     CLASS=JSim.rserver.RSAdmin
+     ;;
+  jsfim)
+     RUNSKEL=$JSIMSRC/$OS/jsrun.skel
+     CLASS=JSim.text.FimMain
+     ;;
+  jscompile_c )
+     RUNSKEL=$JSIMSRC/unix/bin/$PROG
+     ;;
+  jsxwrap )
+     RUNSKEL="$JSIMSRC/$OS/jsrun.skel $JSIMSRC/unix/bin/$PROG"
+     CLASS=JSim.text.JSXWrap
+     ;;
+  * )
+     echo "Unknown program $PROG"
+     exit 1
+esac
+
+for f in $RUNSKEL
+do
+  if [ ! -r $f ]
+  then
+    echo "Skeleton $f not found"
+    exit 1
+  fi
+done
+
+cat $RUNSKEL |\
+  sed -e "s/JSOSARCH/$OSARCH/g" |\
+  sed -e "s/JSOS/$OS/g" |\
+  sed -e "s/JSARCH/$ARCH/g" |\
+  sed -e "s/JSCLASS/$CLASS/g" |\
+  sed -e "s/JSSUBMIT/$SUBMIT/g" |\
+  sed -e "s/JSMESSAGE/$MESSAGE/g" |\
+  cat
+
+  
+  
