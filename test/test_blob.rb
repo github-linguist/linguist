@@ -514,6 +514,8 @@ class TestBlob < Minitest::Test
     assert_predicate fixture_blob("README"), :documentation?
     assert_predicate fixture_blob("README.md"), :documentation?
     assert_predicate fixture_blob("README.txt"), :documentation?
+    assert_predicate fixture_blob("Readme"), :documentation?
+    assert_predicate fixture_blob("readme"), :documentation?
     assert_predicate fixture_blob("foo/README"), :documentation?
 
     assert_predicate fixture_blob("CHANGE"), :documentation?
@@ -541,6 +543,7 @@ class TestBlob < Minitest::Test
 
     assert_predicate fixture_blob("LICENSE"), :documentation?
     assert_predicate fixture_blob("LICENCE.md"), :documentation?
+    assert_predicate fixture_blob("License.txt"), :documentation?
     assert_predicate fixture_blob("LICENSE.txt"), :documentation?
     assert_predicate fixture_blob("foo/LICENSE"), :documentation?
 
