@@ -308,6 +308,12 @@ class TestBlob < Minitest::Test
     # Erlang
     assert sample_blob("rebar").vendored?
 
+    # git config files
+
+    assert_predicate fixture_blob("some/path/.gitattributes"), :vendored?
+    assert_predicate fixture_blob(".gitignore"), :vendored?
+    assert_predicate fixture_blob("special/path/.gitmodules"), :vendored?
+
     # Minified JavaScript and CSS
     assert sample_blob("foo.min.js").vendored?
     assert sample_blob("foo.min.css").vendored?
@@ -325,9 +331,6 @@ class TestBlob < Minitest::Test
     assert sample_blob("public/javascripts/effects.js").vendored?
     assert sample_blob("public/javascripts/controls.js").vendored?
     assert sample_blob("public/javascripts/dragdrop.js").vendored?
-
-    # Samples
-    assert sample_blob("Samples/Ruby/foo.rb").vendored?
 
     # jQuery
     assert sample_blob("jquery.js").vendored?
@@ -511,13 +514,15 @@ class TestBlob < Minitest::Test
     assert_predicate fixture_blob("README"), :documentation?
     assert_predicate fixture_blob("README.md"), :documentation?
     assert_predicate fixture_blob("README.txt"), :documentation?
+    assert_predicate fixture_blob("Readme"), :documentation?
+    assert_predicate fixture_blob("readme"), :documentation?
     assert_predicate fixture_blob("foo/README"), :documentation?
 
     assert_predicate fixture_blob("CHANGE"), :documentation?
     assert_predicate fixture_blob("CHANGE.md"), :documentation?
     assert_predicate fixture_blob("CHANGE.txt"), :documentation?
     assert_predicate fixture_blob("foo/CHANGE"), :documentation?
-    
+
     assert_predicate fixture_blob("CHANGELOG"), :documentation?
     assert_predicate fixture_blob("CHANGELOG.md"), :documentation?
     assert_predicate fixture_blob("CHANGELOG.txt"), :documentation?
@@ -526,15 +531,19 @@ class TestBlob < Minitest::Test
     assert_predicate fixture_blob("CHANGES"), :documentation?
     assert_predicate fixture_blob("CHANGES.md"), :documentation?
     assert_predicate fixture_blob("CHANGES.txt"), :documentation?
-    assert_predicate fixture_blob("foo/CHANGES"), :documentation?    
-    
+    assert_predicate fixture_blob("foo/CHANGES"), :documentation?
+
     assert_predicate fixture_blob("CONTRIBUTING"), :documentation?
     assert_predicate fixture_blob("CONTRIBUTING.md"), :documentation?
     assert_predicate fixture_blob("CONTRIBUTING.txt"), :documentation?
     assert_predicate fixture_blob("foo/CONTRIBUTING"), :documentation?
 
+    assert_predicate fixture_blob("examples/some-file.pl"), :documentation?
+    assert_predicate fixture_blob("Examples/some-example-file.rb"), :documentation?
+
     assert_predicate fixture_blob("LICENSE"), :documentation?
     assert_predicate fixture_blob("LICENCE.md"), :documentation?
+    assert_predicate fixture_blob("License.txt"), :documentation?
     assert_predicate fixture_blob("LICENSE.txt"), :documentation?
     assert_predicate fixture_blob("foo/LICENSE"), :documentation?
 
@@ -549,6 +558,11 @@ class TestBlob < Minitest::Test
     assert_predicate fixture_blob("foo/INSTALL"), :documentation?
 
     refute_predicate fixture_blob("foo.md"), :documentation?
+
+    # Samples
+    assert sample_blob("Samples/Ruby/foo.rb").documentation?
+
+    assert_predicate fixture_blob("INSTALL.txt"), :documentation?
   end
 
   def test_language
