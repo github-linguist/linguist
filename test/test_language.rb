@@ -275,6 +275,12 @@ class TestLanguage < Minitest::Test
     assert_equal Language['Rust'], Language.find_by_alias('rust,no_run')
   end
 
+  def test_doesnt_blow_up_with_blank_lookup
+    assert_equal nil, Language.find_by_alias('')
+    assert_equal nil, Language.find_by_name(nil)
+    assert_equal nil, Language[""]
+  end
+
   def test_name
     assert_equal 'Perl',   Language['Perl'].name
     assert_equal 'Python', Language['Python'].name
