@@ -242,6 +242,7 @@ module Linguist
     #
     # Returns the Language or nil if none was found.
     def self.[](name)
+      return nil if name.to_s.empty?
       name && (@index[name.downcase] || @index[name.split(',').first.downcase])
     end
 
