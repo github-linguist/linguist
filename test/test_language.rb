@@ -278,6 +278,7 @@ class TestLanguage < Minitest::Test
   def test_doesnt_blow_up_with_blank_lookup
     assert_equal nil, Language.find_by_alias('')
     assert_equal nil, Language.find_by_name(nil)
+    assert_equal nil, Language[""]
   end
 
   def test_name
