@@ -790,6 +790,13 @@ Diff:
   tm_scope: source.diff
   ace_mode: diff
 
+DNS zone:
+  type: data
+  extensions:
+  - .zone
+  tm_scope: text.zone
+  ace_mode: text
+
 Dockerfile:
   type: data
   tm_scope: source.dockerfile
