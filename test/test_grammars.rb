@@ -132,6 +132,12 @@ class TestGrammars < Minitest::Test
       "BSD"
     elsif content.include?("Permission is hereby granted") || content =~ /\bMIT\b/
       "MIT"
+    elsif content.include?("Mozilla Public License")
+      if content.include?("version 2.0")
+        "MPLv2.0"
+      elsif content.include?("version 1.1")
+        "MPLv1.1"
+      end
     elsif content.include?("unlicense.org")
       "unlicense"
     elsif content.include?("http://www.wtfpl.net/txt/copying/")
