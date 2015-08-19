@@ -96,7 +96,7 @@ module Linguist
           end
 
         # Skip number literals
-        elsif s.scan(/(0x)?\d(\d|\.)*/)
+        elsif s.scan(/(0x\h(\h|\.)*|\d(\d|\.)*)([uU][lL]{0,2}|([eE][-+]\d*)?[fFlL]*)/)
 
         # SGML style brackets
         elsif token = s.scan(/<[^\s<>][^<>]*>/)

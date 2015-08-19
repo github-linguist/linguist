@@ -263,6 +263,24 @@ class TestLanguage < Minitest::Test
     assert_equal 'AGS Script', Language.find_by_alias('AGS').name
   end
 
+  def test_find_ignores_comma
+    assert_equal 'Rust', Language['rust,no_run'].name
+  end
+
+  def test_find_by_name_ignores_comma
+    assert_equal Language['Rust'], Language.find_by_name('rust,no_run')
+  end
+
+  def test_find_by_alias_ignores_comma
+    assert_equal Language['Rust'], Language.find_by_alias('rust,no_run')
+  end
+
+  def test_doesnt_blow_up_with_blank_lookup
+    assert_equal nil, Language.find_by_alias('')
+    assert_equal nil, Language.find_by_name(nil)
+    assert_equal nil, Language[""]
+  end
+
   def test_name
     assert_equal 'Perl',   Language['Perl'].name
     assert_equal 'Python', Language['Python'].name

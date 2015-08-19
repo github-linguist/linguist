@@ -1,0 +1,12 @@
+$TTL 3d
+@ IN SOA root.localhost. root.sneaky.net. (
+    2015042907 ; serial
+    3d         ; refresh
+    1h         ; retry
+    12d        ; expire
+    2h         ; negative response TTL
+  )
+  IN NS root.localhost.
+  IN NS localhost. ; secondary name server is preferably externally maintained
+
+www IN A 3.141.59.26

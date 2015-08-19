@@ -123,6 +123,7 @@ vendor/grammars/Sublime-SQF-Language:
 - source.sqf
 vendor/grammars/Sublime-Text-2-OpenEdge-ABL:
 - source.abl
+- text.html.abl
 vendor/grammars/Sublime-VimL:
 - source.viml
 vendor/grammars/SublimeBrainfuck:
@@ -175,6 +176,8 @@ vendor/grammars/assembly.tmbundle:
 - source.x86asm
 vendor/grammars/atom-fsharp/:
 - source.fsharp
+vendor/grammars/atom-language-purescript/:
+- source.purescript
 vendor/grammars/atom-salt:
 - source.python.salt
 - source.yaml.salt
@@ -317,6 +320,7 @@ vendor/grammars/language-coffee-script:
 vendor/grammars/language-crystal:
 - source.crystal
 vendor/grammars/language-csharp:
+- source.cake
 - source.cs
 - source.csx
 - source.nant-build
@@ -327,9 +331,12 @@ vendor/grammars/language-hy:
 vendor/grammars/language-javascript:
 - source.js
 - source.js.regexp
+- source.js.regexp.replacement
 vendor/grammars/language-jsoniq/:
 - source.jq
 - source.xq
+vendor/grammars/language-ncl:
+- source.ncl
 vendor/grammars/language-python:
 - source.python
 - source.regexp.python
@@ -338,6 +345,8 @@ vendor/grammars/language-python:
 vendor/grammars/language-shellscript:
 - source.shell
 - text.shell-session
+vendor/grammars/language-xbase:
+- source.harbour
 vendor/grammars/language-yaml:
 - source.yaml
 vendor/grammars/latex.tmbundle:
@@ -462,6 +471,8 @@ vendor/grammars/smalltalk-tmbundle:
 - source.smalltalk
 vendor/grammars/sql.tmbundle:
 - source.sql
+vendor/grammars/st2-zonefile:
+- text.zone_file
 vendor/grammars/standard-ml.tmbundle:
 - source.cm
 - source.ml
@@ -469,6 +480,8 @@ vendor/grammars/sublime-MuPAD:
 - source.mupad
 vendor/grammars/sublime-apl/:
 - source.apl
+vendor/grammars/sublime-aspectj/:
+- source.aspectj
 vendor/grammars/sublime-befunge:
 - source.befunge
 vendor/grammars/sublime-better-typescript:
@@ -537,6 +550,8 @@ vendor/grammars/turtle.tmbundle:
 - source.turtle
 vendor/grammars/verilog.tmbundle:
 - source.verilog
+vendor/grammars/vue-syntax-highlight:
+- text.html.vue
 vendor/grammars/x86-assembly-textmate-bundle:
 - source.asm.x86
 vendor/grammars/xc.tmbundle/:

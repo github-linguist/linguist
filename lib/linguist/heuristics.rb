@@ -13,11 +13,14 @@ module Linguist
     #   ])
     #
     # Returns an Array of languages, or empty if none matched or were inconclusive.
-    def self.call(blob, languages)
+    def self.call(blob, candidates)
       data = blob.data
 
       @heuristics.each do |heuristic|
-        return Array(heuristic.call(data)) if heuristic.matches?(languages)
+        if heuristic.matches?(blob.name)
+          languages = Array(heuristic.call(data))
+          return languages if languages.any? || languages.all? { |l| candidates.include?(l) }
+        end
       end
 
       [] # No heuristics matched
@@ -38,22 +41,22 @@ module Linguist
     #       end
     #     end
     #
-    def self.disambiguate(*languages, &heuristic)
-      @heuristics << new(languages, &heuristic)
+    def self.disambiguate(*extensions, &heuristic)
+      @heuristics << new(extensions, &heuristic)
     end
 
     # Internal: Array of defined heuristics
     @heuristics = []
 
     # Internal
-    def initialize(languages, &heuristic)
-      @languages = languages
+    def initialize(extensions, &heuristic)
+      @extensions = extensions
       @heuristic = heuristic
     end
 
     # Internal: Check if this heuristic matches the candidate languages.
-    def matches?(candidates)
-      candidates.any? && candidates.all? { |l| @languages.include?(l.name) }
+    def matches?(filename)
+      @extensions.any? { |ext| filename.downcase.end_with?(ext) }
     end
 
     # Internal: Perform the heuristic
@@ -64,7 +67,7 @@ module Linguist
     # Common heuristics
     ObjectiveCRegex = /^[ \t]*@(interface|class|protocol|property|end|synchronised|selector|implementation)\b/
 
-    disambiguate "BitBake", "BlitzBasic" do |data|
+    disambiguate ".bb" do |data|
       if /^\s*; /.match(data) || data.include?("End Function")
         Language["BlitzBasic"]
       elsif /^\s*(# |include|require)\b/.match(data)
@@ -72,7 +75,7 @@ module Linguist
       end
     end
 
-    disambiguate "C#", "Smalltalk" do |data|
+    disambiguate ".cs" do |data|
       if /![\w\s]+methodsFor: /.match(data)
         Language["Smalltalk"]
       elsif /^\s*namespace\s*[\w\.]+\s*{/.match(data) || /^\s*\/\//.match(data)
@@ -80,7 +83,7 @@ module Linguist
       end
     end
 
-    disambiguate "Objective-C", "C++", "C" do |data|
+    disambiguate ".h" do |data|
       if ObjectiveCRegex.match(data)
         Language["Objective-C"]
       elsif (/^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>/.match(data) ||
@@ -89,17 +92,25 @@ module Linguist
       end
     end
 
-    disambiguate "Perl", "Perl6", "Prolog" do |data|
-      if data.include?("use v6")
+    disambiguate ".pl" do |data|
+      if /^(use v6|(my )?class|module)/.match(data)
         Language["Perl6"]
-      elsif data.match(/use strict|use\s+v?5\./)
+      elsif /use strict|use\s+v?5\./.match(data)
         Language["Perl"]
       elsif /^[^#]+:-/.match(data)
         Language["Prolog"]
       end
     end
 
-    disambiguate "ECL", "Prolog" do |data|
+    disambiguate ".pm" do |data|
+      if /^(use v6|(my )?class|module)/.match(data)
+        Language["Perl6"]
+      elsif /use strict|use\s+v?5\./.match(data)
+        Language["Perl"]
+      end
+    end
+
+    disambiguate ".ecl" do |data|
       if /^[^#]+:-/.match(data)
         Language["Prolog"]
       elsif data.include?(":=")
@@ -107,7 +118,7 @@ module Linguist
       end
     end
 
-    disambiguate "IDL", "Prolog", "INI", "QMake" do |data|
+    disambiguate ".pro" do |data|
       if /^[^#]+:-/.match(data)
         Language["Prolog"]
       elsif data.include?("last_client=")
@@ -119,7 +130,7 @@ module Linguist
       end
     end
 
-    disambiguate "GAP", "Scilab" do |data|
+    disambiguate ".tst" do |data|
       if (data.include?("gap> "))
         Language["GAP"]
       # Heads up - we don't usually write heuristics like this (with no regex match)
@@ -128,7 +139,7 @@ module Linguist
       end
     end
 
-    disambiguate "Common Lisp", "OpenCL", "Cool" do |data|
+    disambiguate ".cl" do |data|
       if /^\s*\((defun|in-package|defpackage) /i.match(data)
         Language["Common Lisp"]
       elsif /^class/x.match(data)
@@ -138,7 +149,7 @@ module Linguist
       end
     end
 
-    disambiguate "Hack", "PHP" do |data|
+    disambiguate ".php" do |data|
       if data.include?("<?hh")
         Language["Hack"]
       elsif /<?[^h]/.match(data)
@@ -146,7 +157,7 @@ module Linguist
       end
     end
 
-    disambiguate "Scala", "SuperCollider" do |data|
+    disambiguate ".sc" do |data|
       if /\^(this|super)\./.match(data) || /^\s*(\+|\*)\s*\w+\s*{/.match(data) || /^\s*~\w+\s*=\./.match(data)
         Language["SuperCollider"]
       elsif /^\s*import (scala|java)\./.match(data) || /^\s*val\s+\w+\s*=/.match(data) || /^\s*class\b/.match(data)
@@ -154,7 +165,7 @@ module Linguist
       end
     end
 
-    disambiguate "AsciiDoc", "AGS Script", "Public Key" do |data|
+    disambiguate ".asc" do |data|
       if /^(----[- ]BEGIN|ssh-(rsa|dss)) /.match(data)
         Language["Public Key"]
       elsif /^[=-]+(\s|\n)|{{[A-Za-z]/.match(data)
@@ -164,7 +175,7 @@ module Linguist
       end
     end
 
-    disambiguate "FORTRAN", "Forth", "Formatted" do |data|
+    disambiguate ".for", ".f" do |data|
       if /^: /.match(data)
         Language["Forth"]
       elsif /^([c*][^a-z]|      (subroutine|program)\s|\s*!)/i.match(data)
@@ -172,7 +183,7 @@ module Linguist
       end
     end
 
-    disambiguate "F#", "Forth", "GLSL", "Filterscript" do |data|
+    disambiguate ".fs" do |data|
       if /^(: |new-device)/.match(data)
         Language["Forth"]
       elsif /^\s*(#light|import|let|module|namespace|open|type)/.match(data)
@@ -184,7 +195,7 @@ module Linguist
       end
     end
 
-    disambiguate "Limbo", "M", "MUF", "Mathematica", "Matlab", "Mercury", "Objective-C" do |data|
+    disambiguate ".m" do |data|
       if ObjectiveCRegex.match(data)
         Language["Objective-C"]
       elsif data.include?(":- module")
@@ -202,11 +213,11 @@ module Linguist
       end
     end
 
-    disambiguate "Gosu", "JavaScript" do |data|
+    disambiguate ".gs" do |data|
       Language["Gosu"] if /^uses java\./.match(data)
     end
 
-    disambiguate "LoomScript", "LiveScript" do |data|
+    disambiguate ".ls" do |data|
       if /^\s*package\s*[\w\.\/\*\s]*\s*{/.match(data)
         Language["LoomScript"]
       else
@@ -214,7 +225,7 @@ module Linguist
       end
     end
 
-    disambiguate "Common Lisp", "NewLisp" do |data|
+    disambiguate ".lsp", ".lisp" do |data|
       if /^\s*\((defun|in-package|defpackage) /i.match(data)
         Language["Common Lisp"]
       elsif /^\s*\(define /.match(data)
@@ -222,7 +233,7 @@ module Linguist
       end
     end
 
-    disambiguate "TypeScript", "XML" do |data|
+    disambiguate ".ts" do |data|
       if data.include?("<TS ")
         Language["XML"]
       else
@@ -230,7 +241,7 @@ module Linguist
       end
     end
 
-    disambiguate "Frege", "Forth", "Text" do |data|
+    disambiguate ".fr" do |data|
       if /^(: |also |new-device|previous )/.match(data)
         Language["Forth"]
       elsif /^\s*(import|module|package|data|type) /.match(data)
@@ -240,7 +251,7 @@ module Linguist
       end
     end
 
-    disambiguate "PLSQL", "SQLPL", "PLpgSQL", "SQL" do |data|
+    disambiguate ".sql" do |data|
       if /^\\i\b|AS \$\$|LANGUAGE '+plpgsql'+/i.match(data) || /SECURITY (DEFINER|INVOKER)/i.match(data) || /BEGIN( WORK| TRANSACTION)?;/i.match(data)
         #Postgres
         Language["PLpgSQL"]
@@ -256,7 +267,7 @@ module Linguist
       end
     end
 
-    disambiguate "D", "DTrace", "Makefile" do |data|
+    disambiguate ".d" do |data|
       if /^module /.match(data)
         Language["D"]
       elsif /^((dtrace:::)?BEGIN|provider |#pragma (D (option|attributes)|ident)\s)/.match(data)
@@ -266,7 +277,7 @@ module Linguist
       end
     end
 
-    disambiguate "OCaml", "Standard ML" do |data|
+    disambiguate ".ml" do |data|
       if /(^\s*module)|let rec |match\s+(\S+\s)+with/.match(data)
         Language["OCaml"]
       elsif /=> |case\s+(\S+\s)+of/.match(data)
@@ -274,7 +285,7 @@ module Linguist
       end
     end
 
-    disambiguate "XML", "Modula-2", "Linux Kernel Module", "AMPL" do |data|
+    disambiguate ".mod" do |data|
       if data.include?('<!ENTITY ')
         Language["XML"]
       elsif /MODULE\s\w+\s*;/i.match(data) || /^\s*END \w+;$/i.match(data)
@@ -284,7 +295,13 @@ module Linguist
       end
     end
 
-    disambiguate "NL", "NewLisp" do |data|
+    disambiguate ".ncl" do |data|
+      if data.include?("THE_TITLE")
+        Language["Text"]
+      end
+    end
+
+    disambiguate ".nl" do |data|
       if /^(b|g)[0-9]+ /.match(data)
         Language["NL"]
       else
@@ -292,7 +309,7 @@ module Linguist
       end
     end
 
-    disambiguate "Rust", "RenderScript" do |data|
+    disambiguate ".rs" do |data|
       if /^(use |fn |mod |pub |macro_rules|impl|#!?\[)/.match(data)
         Language["Rust"]
       elsif /#include|#pragma\s+(rs|version)|__attribute__/.match(data)
@@ -300,7 +317,7 @@ module Linguist
       end
     end
 
-    disambiguate "Common Lisp", "Lex", "Groff", "PicoLisp" do |data|
+    disambiguate ".l" do |data|
       if /\(def(un|macro)\s/.match(data)
         Language["Common Lisp"]
       elsif /^(%[%{}]xs|<.*>)/.match(data)
@@ -312,7 +329,7 @@ module Linguist
       end
     end
 
-    disambiguate "Groff", "Nemerle" do |data|
+    disambiguate ".n" do |data|
       if /^[.']/.match(data)
         Language["Groff"]
       elsif /^(module|namespace|using)\s/.match(data)
@@ -320,11 +337,25 @@ module Linguist
       end
     end
 
-    disambiguate "GAS", "Groff" do |data|
+    disambiguate ".ms" do |data|
       if /^[.'][a-z][a-z](\s|$)/i.match(data)
         Language["Groff"]
       elsif /((^|\s)move?[. ])|\.(include|globa?l)\s/.match(data)
         Language["GAS"]
+      end
+    end
+
+    disambiguate ".ch" do |data|
+      if /^\s*#\s*(if|ifdef|ifndef|define|command|xcommand|translate|xtranslate|include|pragma|undef)\b/i.match(data)
+        Language["xBase"]
+      end
+    end
+
+    disambiguate ".r" do |data|
+      if /\bRebol\b/i.match(data)
+        Language["Rebol"]
+      elsif data.include?("<-")
+        Language["R"]
       end
     end
   end

@@ -214,7 +214,7 @@ AspectJ:
   color: "#a957b0"
   extensions:
   - .aj
-  tm_scope: none
+  tm_scope: source.aspectj
   ace_mode: text
 
 Assembly:
@@ -501,6 +501,13 @@ Chapel:
   - .chpl
   ace_mode: text
 
+Charity:
+  type: programming
+  extensions:
+    - .ch
+  tm_scope: none
+  ace_mode: text
+
 ChucK:
   type: programming
   extensions:
@@ -609,6 +616,7 @@ Common Lisp:
   - .lsp
   - .ny
   - .podsl
+  - .sexp
   interpreters:
   - lisp
   - sbcl
@@ -742,6 +750,14 @@ DM:
   - byond
   tm_scope: source.c++
   ace_mode: c_cpp
+
+DNS Zone:
+  type: data
+  extensions:
+  - .zone
+  - .arpa
+  tm_scope: text.zone_file
+  ace_mode: text
 
 DTrace:
   type: programming
@@ -1261,6 +1277,14 @@ Groovy Server Pages:
   tm_scope: text.html.jsp
   ace_mode: jsp
 
+HCL:
+  type: programming
+  extensions:
+    - .hcl
+    - .tf
+  ace_mode: ruby
+  tm_scope: source.ruby
+
 HTML:
   type: markup
   tm_scope: text.html.basic
@@ -1349,7 +1373,7 @@ Harbour:
   color: "#0e60e3"
   extensions:
   - .hb
-  tm_scope: none
+  tm_scope: source.harbour
   ace_mode: text
 
 Haskell:
@@ -1695,8 +1719,8 @@ LabVIEW:
   type: programming
   extensions:
   - .lvproj
-  tm_scope: none
-  ace_mode: text
+  tm_scope: text.xml
+  ace_mode: xml
 
 Lasso:
   type: programming
@@ -1918,6 +1942,7 @@ Makefile:
   - GNUmakefile
   - Kbuild
   - Makefile
+  - Makefile.inc
   - makefile
   interpreters:
   - make
@@ -2089,6 +2114,14 @@ Myghty:
   extensions:
   - .myt
   tm_scope: none
+  ace_mode: text
+
+NCL:
+  type: programming
+  color: #28431f
+  extensions:
+  - .ncl
+  tm_scope: source.ncl
   ace_mode: text
 
 NL:
@@ -2630,7 +2663,7 @@ Public Key:
 
 Puppet:
   type: programming
-  color: "#332A77"
+  color: "#302B6D"
   extensions:
   - .pp
   filenames:
@@ -2659,7 +2692,7 @@ PureScript:
   color: "#1D222D"
   extensions:
   - .purs
-  tm_scope: source.haskell
+  tm_scope: source.purescript
   ace_mode: haskell
 
 Python:
@@ -2910,6 +2943,7 @@ Ruby:
   - .pryrc
   - Appraisals
   - Berksfile
+  - Brewfile
   - Buildfile
   - Deliverfile
   - Fastfile
@@ -3158,6 +3192,7 @@ Slim:
   color: "#ff8f77"
   extensions:
   - .slim
+  tm_scope: text.slim
   ace_mode: text
 
 Smali:
@@ -3336,6 +3371,7 @@ Text:
   extensions:
   - .txt
   - .fr
+  - .ncl
   tm_scope: none
   ace_mode: text
 
@@ -3500,6 +3536,14 @@ Volt:
   tm_scope: source.d
   ace_mode: d
 
+Vue:
+  type: markup
+  color: "#2c3e50"
+  extensions:
+  - .vue
+  tm_scope: text.html.vue
+  ace_mode: html
+
 Web Ontology Language:
   type: markup
   color: "#9cc9dd"
@@ -3612,6 +3656,14 @@ XML:
   - Web.config
   - packages.config
 
+XPages:
+  type: programming
+  extensions:
+  - .xsp-config
+  - .xsp.metadata
+  tm_scope: none
+  ace_mode: xml
+
 XProc:
   type: programming
   extensions:
@@ -3676,7 +3728,9 @@ YAML:
   - .yml
   - .reek
   - .rviz
+  - .syntax
   - .yaml
+  - .yaml-tmlanguage
   ace_mode: yaml
 
 Yacc:
@@ -3781,7 +3835,13 @@ wisp:
 xBase:
   type: programming
   color: "#403a40"
+  aliases:
+  - advpl
+  - clipper
+  - foxpro
   extensions:
   - .prg
-  tm_scope: none
+  - .ch
+  - .prw
+  tm_scope: source.harbour
   ace_mode: text
