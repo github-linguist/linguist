@@ -112,7 +112,7 @@ module Linguist
 
     disambiguate ".ecl" do |data|
       if /^[^#]+:-/.match(data)
-        Language["Prolog"]
+        Language["ECLiPSe"]
       elsif data.include?(":=")
         Language["ECL"]
       end

@@ -66,11 +66,11 @@ class TestHeuristcs < Minitest::Test
     })
   end
 
-  # Candidate languages = ["ECL", "Prolog"]
-  def test_ecl_prolog_by_heuristics
+  # Candidate languages = ["ECL", "ECLiPSe"]
+  def test_ecl_by_heuristics
     assert_heuristics({
       "ECL" => all_fixtures("ECL", "*.ecl"),
-      "Prolog" => all_fixtures("Prolog", "*.ecl")
+      "ECLiPSe" => all_fixtures("ECLiPSe", "*.ecl")
     })
   end
 
