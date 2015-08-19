@@ -1,11 +1,11 @@
 require 'linguist/blob_helper'
-require 'linguist/memory_blob'
+require 'linguist/blob'
 
 module Linguist
   # A FileBlob is a wrapper around a File object to make it quack
   # like a Grit::Blob. It provides the basic interface: `name`,
   # `data`, `path` and `size`.
-  class FileBlob < MemoryBlob
+  class FileBlob < Blob
     include BlobHelper
 
     # Public: Initialize a new FileBlob from a path

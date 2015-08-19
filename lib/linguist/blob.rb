@@ -4,7 +4,7 @@ module Linguist
   # A MemoryBlob is a wrapper around the content of a file to make it quack
   # like a Grit::Blob. It provides the basic interface: `name`,
   # `data`, `path` and `size`.
-  class MemoryBlob
+  class Blob
     include BlobHelper
 
     # Public: Initialize a new MemoryBlob.
