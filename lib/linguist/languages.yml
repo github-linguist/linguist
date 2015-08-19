@@ -214,7 +214,7 @@ AspectJ:
   color: "#a957b0"
   extensions:
   - .aj
-  tm_scope: none
+  tm_scope: source.aspectj
   ace_mode: text
 
 Assembly:
@@ -616,6 +616,7 @@ Common Lisp:
   - .lsp
   - .ny
   - .podsl
+  - .sexp
   interpreters:
   - lisp
   - sbcl
@@ -1718,8 +1719,8 @@ LabVIEW:
   type: programming
   extensions:
   - .lvproj
-  tm_scope: none
-  ace_mode: text
+  tm_scope: text.xml
+  ace_mode: xml
 
 Lasso:
   type: programming
