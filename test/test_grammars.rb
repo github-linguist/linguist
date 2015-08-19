@@ -3,17 +3,34 @@ require_relative "./helper"
 class TestGrammars < Minitest::Test
   ROOT = File.expand_path("../..", __FILE__)
 
-  LICENSE_WHITELIST = [
+  PROJECT_WHITELIST = [
     # This grammar's MIT license is inside a subdirectory.
     "vendor/grammars/SublimePapyrus",
 
     # This grammar has a nonstandard but acceptable license.
     "vendor/grammars/gap-tmbundle",
+    "vendor/grammars/factor",
 
     # These grammars have no license but have been grandfathered in. New grammars
     # must have a license that allows redistribution.
     "vendor/grammars/Sublime-Lasso",
     "vendor/grammars/x86-assembly-textmate-bundle"
+  ].freeze
+
+  # List of allowed SPDX license names
+  LICENSE_WHITELIST = %w[
+    apache-2.0
+    bsd-2-clause
+    bsd-3-clause
+    cc-by-sa-3.0
+    gpl-2.0
+    gpl-3.0
+    lgpl-3.0
+    mit
+    textmate
+    unlicense
+    wtfpl
+    zlib
   ].freeze
 
   def setup
@@ -63,47 +80,35 @@ class TestGrammars < Minitest::Test
   end
 
   def test_submodules_have_licenses
-    categories = submodule_paths.group_by do |submodule|
-      files = Dir[File.join(ROOT, submodule, "*")]
-      license = files.find { |path| File.basename(path) =~ /\b(un)?licen[cs]e\b/i } || files.find { |path| File.basename(path) =~ /\bcopying\b/i }
-      if license.nil?
-        if readme = files.find { |path| File.basename(path) =~ /\Areadme\b/i }
-          license = readme if File.read(readme) =~ /\blicen[cs]e\b/i
-        end
-      end
-      if license.nil?
-        :unlicensed
-      elsif classify_license(license)
-        :licensed
+    submodule_licenses.each do |submodule, license|
+      next if PROJECT_WHITELIST.include?(submodule)
+
+      license_file = Licensee::Project.new(submodule).license_file
+      submodule_name = submodule.split("/").last
+
+      if license_file
+        assert license, "Submodule #{submodule_name} contains an unrecognized license. Please update #{__FILE__} to recognize the license"
       else
-        :unrecognized
+        assert license, "Submodule #{submodule_name} is unlicensed. All grammars must have a license that permits redistribution"
       end
+
+      assert LICENSE_WHITELIST.include?(license), "Submodule #{submodule_name} is licensed under the #{license} license"
     end
 
-    unlicensed = categories[:unlicensed] || []
-    unrecognized = categories[:unrecognized] || []
-    disallowed_unlicensed = unlicensed - LICENSE_WHITELIST
-    disallowed_unrecognized = unrecognized - LICENSE_WHITELIST
-    extra_whitelist_entries = LICENSE_WHITELIST - (unlicensed | unrecognized)
+    unlicensed   = submodule_licenses.select { |k,v| v.nil? }
+    unrecognized = submodule_licenses.select { |k,v| v.nil? && Licensee::Project.new(k).license_file}
+    licensed     = submodule_licenses.reject { |k,v| v.nil? }
+    unapproved   = licensed.reject { |k,v| LICENSE_WHITELIST.include?(v) }
+    extra_whitelist_entries = PROJECT_WHITELIST - unlicensed.keys - unrecognized.keys
+    assert unapproved.empty?
 
-    message = ""
-    if disallowed_unlicensed.any?
-      message << "The following grammar submodules don't seem to have a license. All grammars must have a license that permits redistribution.\n"
-      message << disallowed_unlicensed.sort.join("\n")
-    end
-    if disallowed_unrecognized.any?
-      message << "\n\n" unless message.empty?
-      message << "The following grammar submodules have an unrecognized license. Please update #{__FILE__} to recognize the license.\n"
-      message << disallowed_unrecognized.sort.join("\n")
-    end
-    if extra_whitelist_entries.any?
-      message << "\n\n" unless message.empty?
-      message << "The following grammar submodules are listed in LICENSE_WHITELIST but either have a license (yay!)\n"
-      message << "or have been removed from the repository. Please remove them from the whitelist.\n"
-      message << extra_whitelist_entries.sort.join("\n")
-    end
+    extra_whitelist_entries.each do |submodule|
+      license = submodule_licenses[submodule]
+      submodule_name = submodule.split("/").last
 
-    assert disallowed_unlicensed.empty? && disallowed_unrecognized.empty? && extra_whitelist_entries.empty?, message
+      assert_equal nil, license, "Submodule #{submodule_name} is listed in PROJECT_WHITELIST but has a license"
+      assert Dir.exists?(submodule), "Submodule #{submodule_name} is listed in PROJECT_WHITELIST but doesn't appear to be part of the project"
+    end
   end
 
   private
@@ -112,30 +117,61 @@ class TestGrammars < Minitest::Test
     @submodule_paths ||= `git config --list --file "#{File.join(ROOT, ".gitmodules")}"`.lines.grep(/\.path=/).map { |line| line.chomp.split("=", 2).last }
   end
 
+  # Returns a hash of submodules in the form of submodule_path => license
+  def submodule_licenses
+    @submodule_licenses = begin
+      submodules = {}
+      submodule_paths.each { |submodule| submodules[submodule] = submodule_license(submodule) }
+      submodules
+    end
+  end
+
+  # Given the path to a submodule, return its SPDX-compliant license key
+  def submodule_license(submodule)
+    # Prefer Licensee to detect a submodule's license
+    project = Licensee::Project.new(submodule)
+    return project.license.key if project.license
+
+    # We know a license file exists, but Licensee wasn't able to detect the license,
+    # Let's try our own more permissive regex method
+    if project.license_file
+      path = File.expand_path project.license_file.path, submodule
+      license = classify_license(path)
+      return license if license
+    end
+
+    # Neither Licensee nor our own regex was able to detect the license, lets check the readme
+    files = Dir[File.join(ROOT, submodule, "*")]
+    if readme = files.find { |path| File.basename(path) =~ /\Areadme\b/i }
+      classify_license(readme)
+    end
+  end
+
   def classify_license(path)
     content = File.read(path)
+    return unless content =~ /\blicen[cs]e\b/i
     if content.include?("Apache License") && content.include?("2.0")
-      "Apache 2.0"
+      "apache-2.0"
     elsif content.include?("GNU") && content =~ /general/i && content =~ /public/i
       if content =~ /version 2/i
-        "GPLv2"
+        "gpl-2.0"
       elsif content =~ /version 3/i
-        "GPLv3"
+        "gpl-3.0"
       end
     elsif content.include?("GPL") && content.include?("http://www.gnu.org/licenses/gpl.html")
-      "GPLv3"
-    elsif content.include?("Creative Commons")
-      "CC"
+      "gpl-3.0"
+    elsif content.include?("Creative Commons Attribution-Share Alike 3.0")
+      "cc-by-sa-3.0"
     elsif content.include?("tidy-license.txt") || content.include?("If not otherwise specified (see below)")
       "textmate"
     elsif content =~ /^\s*[*-]\s+Redistribution/ || content.include?("Redistributions of source code")
-      "BSD"
+      "bsd"
     elsif content.include?("Permission is hereby granted") || content =~ /\bMIT\b/
-      "MIT"
+      "mit"
     elsif content.include?("unlicense.org")
       "unlicense"
     elsif content.include?("http://www.wtfpl.net/txt/copying/")
-      "WTFPL"
+      "wtfpl"
     elsif content.include?("zlib") && content.include?("license") && content.include?("2. Altered source versions must be plainly marked as such")
       "zlib"
     end
