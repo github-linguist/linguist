@@ -65,7 +65,7 @@ module Linguist
     end
 
     # Common heuristics
-    ObjectiveCRegex = /^[ \t]*@(interface|class|protocol|property|end|synchronized|selector|implementation)\b/
+    ObjectiveCRegex = /^\s*(@(interface|class|protocol|property|end|synchronised|selector|implementation)\b|#import\s+.+\.h[">])/
 
     disambiguate ".asc" do |data|
       if /^(----[- ]BEGIN|ssh-(rsa|dss)) /.match(data)
