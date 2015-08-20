@@ -33,7 +33,7 @@ module Linguist
     #
     # Examples
     #
-    #     disambiguate "Perl", "Prolog" do |data|
+    #     disambiguate ".pm" do |data|
     #       if data.include?("use strict")
     #         Language["Perl"]
     #       elsif /^[^#]+:-/.match(data)
@@ -102,7 +102,7 @@ module Linguist
       end
     end
 
-    disambiguate ".pm" do |data|
+    disambiguate ".pm", ".t" do |data|
       if /^(use v6|(my )?class|module)/.match(data)
         Language["Perl6"]
       elsif /use strict|use\s+v?5\./.match(data)
@@ -112,7 +112,7 @@ module Linguist
 
     disambiguate ".ecl" do |data|
       if /^[^#]+:-/.match(data)
-        Language["Prolog"]
+        Language["ECLiPSe"]
       elsif data.include?(":=")
         Language["ECL"]
       end

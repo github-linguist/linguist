@@ -843,6 +843,14 @@ ECL:
   tm_scope: none
   ace_mode: text
 
+ECLiPSe:
+  type: programming
+  group: prolog
+  extensions:
+  - .ecl
+  tm_scope: source.prolog.eclipse
+  ace_mode: prolog
+
 Eagle:
   type: markup
   color: "#814C05"
@@ -2628,11 +2636,11 @@ Prolog:
   color: "#74283c"
   extensions:
   - .pl
-  - .ecl
   - .pro
   - .prolog
   interpreters:
   - swipl
+  tm_scope: source.prolog
   ace_mode: prolog
 
 Propeller Spin:
@@ -2813,7 +2821,7 @@ RMarkdown:
   ace_mode: markdown
   extensions:
   - .rmd
-  tm_scope: none
+  tm_scope: source.gfm
 
 Racket:
   type: programming

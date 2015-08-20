@@ -27,6 +27,7 @@ class TestGrammars < Minitest::Test
     gpl-3.0
     lgpl-3.0
     mit
+    mpl-2.0
     textmate
     unlicense
     wtfpl
