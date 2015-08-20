@@ -79,36 +79,32 @@ class TestGrammars < Minitest::Test
     end
   end
 
+  def test_submodules_have_recognized_licenses
+    unrecognized = submodule_licenses.select { |k,v| v.nil? && Licensee::Project.new(k).license_file }
+    unrecognized.reject! { |k,v| PROJECT_WHITELIST.include?(k) }
+    assert_equal Hash.new, unrecognized, "The following submodules have unrecognized licenses:\n* #{unrecognized.keys.join("\n* ")}"
+  end
+
   def test_submodules_have_licenses
-    submodule_licenses.each do |submodule, license|
-      next if PROJECT_WHITELIST.include?(submodule)
+    unlicensed = submodule_licenses.select { |k,v| v.nil? }.reject { |k,v| PROJECT_WHITELIST.include?(k) }
+    assert_equal Hash.new, unlicensed, "The following submodules don't have licenses:\n* #{unlicensed.keys.join("\n* ")}"
+  end
 
-      license_file = Licensee::Project.new(submodule).license_file
-      submodule_name = submodule.split("/").last
+  def test_submodules_have_approved_licenses
+    unapproved = submodule_licenses.reject { |k,v| LICENSE_WHITELIST.include?(v) || PROJECT_WHITELIST.include?(k) }.map { |k,v| "#{k}: #{v}"}
+    assert_equal [], unapproved, "The following submodules have unapproved licenses:\n* #{unapproved.join("\n* ")}"
+  end
 
-      if license_file
-        assert license, "Submodule #{submodule_name} contains an unrecognized license. Please update #{__FILE__} to recognize the license"
-      else
-        assert license, "Submodule #{submodule_name} is unlicensed. All grammars must have a license that permits redistribution"
-      end
+  def test_submodules_whitelist_has_no_extra_entries
+    extra_whitelist_entries = PROJECT_WHITELIST - submodule_licenses.select { |k,v| v.nil? }.keys
+    not_present = extra_whitelist_entries.reject { |k,v| Dir.exists?(k) }
+    licensed = extra_whitelist_entries.select { |k,v| submodule_licenses[k] }
 
-      assert LICENSE_WHITELIST.include?(license), "Submodule #{submodule_name} is licensed under the #{license} license"
-    end
+    msg = "The following whitelisted submodules don't appear to be part of the project:\n* #{not_present.join("\n* ")}"
+    assert_equal [], not_present, msg
 
-    unlicensed   = submodule_licenses.select { |k,v| v.nil? }
-    unrecognized = submodule_licenses.select { |k,v| v.nil? && Licensee::Project.new(k).license_file}
-    licensed     = submodule_licenses.reject { |k,v| v.nil? }
-    unapproved   = licensed.reject { |k,v| LICENSE_WHITELIST.include?(v) }
-    extra_whitelist_entries = PROJECT_WHITELIST - unlicensed.keys - unrecognized.keys
-    assert unapproved.empty?
-
-    extra_whitelist_entries.each do |submodule|
-      license = submodule_licenses[submodule]
-      submodule_name = submodule.split("/").last
-
-      assert_equal nil, license, "Submodule #{submodule_name} is listed in PROJECT_WHITELIST but has a license"
-      assert Dir.exists?(submodule), "Submodule #{submodule_name} is listed in PROJECT_WHITELIST but doesn't appear to be part of the project"
-    end
+    msg = "The following whitelisted submodules actually have licenses and don't need to be whitelisted:\n* #{licensed.join("\n* ")}"
+    assert_equal [], licensed, msg
   end
 
   private
@@ -119,7 +115,7 @@ class TestGrammars < Minitest::Test
 
   # Returns a hash of submodules in the form of submodule_path => license
   def submodule_licenses
-    @submodule_licenses = begin
+    @@submodule_licenses ||= begin
       submodules = {}
       submodule_paths.each { |submodule| submodules[submodule] = submodule_license(submodule) }
       submodules
@@ -164,12 +160,8 @@ class TestGrammars < Minitest::Test
       "cc-by-sa-3.0"
     elsif content.include?("tidy-license.txt") || content.include?("If not otherwise specified (see below)")
       "textmate"
-    elsif content =~ /^\s*[*-]\s+Redistribution/ || content.include?("Redistributions of source code")
-      "bsd"
     elsif content.include?("Permission is hereby granted") || content =~ /\bMIT\b/
       "mit"
-    elsif content.include?("unlicense.org")
-      "unlicense"
     elsif content.include?("http://www.wtfpl.net/txt/copying/")
       "wtfpl"
     elsif content.include?("zlib") && content.include?("license") && content.include?("2. Altered source versions must be plainly marked as such")
