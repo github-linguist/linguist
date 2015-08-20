@@ -136,7 +136,7 @@ class TestGrammars < Minitest::Test
       return license if license
     end
 
-    # Neither Licensee nor our own regex was able to detect the license, lets check the readme
+    # Neither Licensee nor our own regex was able to detect the license, let's check the readme
     files = Dir[File.join(ROOT, submodule, "*")]
     if readme = files.find { |path| File.basename(path) =~ /\Areadme\b/i }
       classify_license(readme)
