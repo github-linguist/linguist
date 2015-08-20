@@ -66,6 +66,16 @@ class TestHeuristcs < Minitest::Test
     })
   end
 
+  # Candidate languages = ["Perl", "Perl6"]
+  def test_t_perl_by_heuristics
+    assert_heuristics({
+      "Perl" => all_fixtures("Perl", "*.t"),
+      "Perl6" => ["Perl6/01-dash-uppercase-i.t", "Perl6/01-parse.t", "Perl6/advent2009-day16.t",
+                  "Perl6/basic-open.t", "Perl6/calendar.t", "Perl6/for.t", "Perl6/hash.t",
+                  "Perl6/listquote-whitespace.t"]
+    })
+  end
+
   # Candidate languages = ["ECL", "ECLiPSe"]
   def test_ecl_by_heuristics
     assert_heuristics({
