@@ -3,6 +3,7 @@ require "minitest/autorun"
 require "mocha/setup"
 require "linguist"
 require 'color-proximity'
+require 'licensee'
 
 def fixtures_path
   File.expand_path("../fixtures", __FILE__)
