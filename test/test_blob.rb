@@ -301,6 +301,7 @@ class TestBlob < Minitest::Test
 
     # Codemirror deps
     assert sample_blob("codemirror/mode/blah.js").vendored?
+    assert sample_blob("codemirror/5.0/mode/blah.js").vendored?
 
     # Debian packaging
     assert sample_blob("debian/cron.d").vendored?
