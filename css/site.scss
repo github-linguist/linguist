@@ -2,6 +2,9 @@
 # Hey Jekyll, convert this please.
 ---
 
+$grid-width: 230px;
+$grid-gutter: 20px;
+
 body {
   background-color: #fafafa;
 }
@@ -33,16 +36,25 @@ header {
   }
 }
 
+.search {
+  display: inline-block;
+  margin-left: 3em;
+
+  input {
+    width: $grid-width;
+  }
+}
+
 #languages {
   list-style: none;
   margin: 3em 0;
 }
 
 .language {
-  width: 230px;
+  width: $grid-width;
   float: left;
   padding: 1em;
-  margin: 0 20px 20px 0;
+  margin: 0 $grid-gutter $grid-gutter 0;
   border: 1px solid #eee;
   border-radius: 3px;
   border-bottom: 5px solid #ccc;

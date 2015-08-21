@@ -9,12 +9,16 @@
     <script src="vendor/bower/jquery/dist/jquery.min.js"></script>
     <script src="vendor/bower/js-yaml/dist/js-yaml.min.js"></script>
     <script src="vendor/bower/mustache/mustache.min.js"></script>
+    <script src="vendor/bower/fuse/src/fuse.min.js"></script>
     <script src="js/site.js"></script>
   </head>
   <body>
     <header>
       <div class="container">
-        <h1><a href="/"><span class="mega-octicon octicon-logo-github"></span> Linguist</href></h1>
+        <h1><a href="/"><span class="mega-octicon octicon-logo-github"></span> Linguist</a></h1>
+        <div class="search">
+          <input class="js-search-field js-autofocus" type="text" placeholder="Search languages…">
+        </div>
         <nav>
           <a href="https://github.com/github/linguist"><span class="mega-octicon octicon-mark-github"></span></a>
         </nav>
@@ -26,7 +30,7 @@
     </div>
 
     <script id="template" type="text/html">
-      <li class="language" style="border-bottom-color: {{color}}">
+      <li class="language" style="border-bottom-color: {{color}}" data-language="{{name}}">
         <h2 class="language-name">{{name}}</h2>
 
         {{#octicon}}
@@ -38,6 +42,28 @@
             <li>{{.}}</li>
           {{/extensions}}
         </ul>
+
+        <!--
+        <ul class="aliases">
+          {{#aliases}}
+            <li>{{.}}</li>
+          {{/aliases}}
+        </ul>
+
+        <ul class="interpreters">
+          {{#interpreters}}
+            <li>{{.}}</li>
+          {{/interpreters}}
+        </ul>
+
+        {{#tm_scope}}
+          <div>tm_scope: {{tm_scope}}</div>
+        {{/tm_scope}}
+
+        {{#search_term}}
+          <div>search term: {{search_term}}</div>
+        {{/search_term}}
+        -->
       </li>
     </script>
   </body>
