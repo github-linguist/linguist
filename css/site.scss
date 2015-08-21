@@ -38,7 +38,6 @@ header {
 
 .search {
   display: inline-block;
-  margin-left: 3em;
 
   input {
     width: $grid-width;
@@ -48,6 +47,7 @@ header {
 #languages {
   list-style: none;
   margin: 3em 0;
+  margin-right: -$grid-gutter;
 }
 
 .language {
@@ -61,10 +61,6 @@ header {
   position: relative;
   color: #999;
   background: #fff;
-
-  &:nth-child(4n) {
-    margin-right: 0;
-  }
 }
 
 .language-name {
