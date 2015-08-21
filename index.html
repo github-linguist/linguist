@@ -3,41 +3,151 @@
     <title>Linguist Colors</title>
     <script src="scripts/js-yaml.min.js"></script>
     <script src="scripts/jquery.min.js"></script>
+    <script src="bower_components/mustache/mustache.min.js"></script>
+
+    <link rel="stylesheet" href="bower_components/primer-css/css/primer.css">
+    <link rel="stylesheet" href="bower_components/octicons/octicons/octicons.css">
+
     <style>
       body {
         font-family: "Heletica Neue", Helvetica, sans-serif;
         font-size: 13px;
+        background-color: #fafafa;
+      }
+
+      header {
+        background: #fff;
+        overflow: hidden;
+        padding: 1em 0;
+      }
+
+      header h1 {
+        float: left;
+        font-family: "Helvetica Neue", Helvetica, sans-serif;
+        font-weight: 200;
+        margin: 0;
+      }
+      header h1 .mega-octicon {
+        position: relative;
+        top: 2px;
+      }
+
+      header nav {
+        float: right;
+      }
+
+      header a {
+        color: #000;
+      }
+
+      header a:hover {
+        text-decoration: none;
       }
 
       #languages {
         list-style: none;
+        margin: 3em 0;
       }
 
-      #languages li {
-        width: 180px;
+      .language {
+        width: 230px;
         float: left;
-        text-align: center;
-        padding: 0.5em 0;
-        margin: 0.25em;
-        font-weight: bold;
-        border-bottom: 12px solid #ccc;
+        padding: 1em;
+        margin: 0 20px 20px 0;
+        border: 1px solid #eee;
+        border-radius: 3px;
+        border-bottom: 5px solid #ccc;
+        position: relative;
+        color: #999;
+      }
+
+      .language:nth-child(4n) {
+        margin-right: 0;
+      }
+
+      .language-name {
+          color: #000;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          margin: 0 30px 0 0; /* octicon */
+      }
+
+      .language-type {
+        color: #aaa;
+        position: absolute;
+        top: 1em;
+        right: 1em;
+      }
+
+      .extensions {
+        padding: 0;
         white-space: nowrap;
+        overflow: hidden;
         text-overflow: ellipsis;
+      }
+
+      .extensions li {
+        display: inline;
+      }
+
+      .extensions li:after {
+        content: ", "
+      }
+
+      .extensions li:last-child:after {
+        content: "";
       }
     </style>
   </head>
   <body>
-    <ul id="languages"></ul>
+    <header>
+      <div class="container">
+        <h1><a href="/"><span class="mega-octicon octicon-logo-github"></span> Linguist</href></h1>
+        <nav>
+          <a href="https://github.com/github/linguist"><span class="mega-octicon octicon-mark-github"></span></a>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container">
+      <ul id="languages"></ul>
+    </div>
+
+    <script id="template" type="text/html">
+      <li class="language" style="border-bottom-color: {{color}}">
+        <h2 class="language-name">{{name}}</h2>
+
+        {{#octicon}}
+          <span class="language-type octicon octicon-{{octicon}}" title="{{type}}"></span>
+        {{/octicon}}
+
+        <ul class="extensions">
+          {{#extensions}}
+            <li>{{.}}</li>
+          {{/extensions}}
+        </ul>
+      </li>
+    </script>
 
     <script type="text/javascript">
       var $list = $("#languages");
+      template = $("#template").text();
+
+      var octiconMapping = {
+        programming: "file-binary",
+        data: "database",
+        markup: "file-code",
+        prose: "file-text"
+      };
 
       $.get("https://rawgit.com/github/linguist/master/lib/linguist/languages.yml", function(data) {
         var languages = jsyaml.safeLoad(data);
-
         for(var language in languages) {
-          attrs = languages[language];
-          $list.append('<li style="border-bottom-color:' + attrs.color + '">' + language + '</li>');
+          var attrs = languages[language]
+          attrs.name = language;
+          attrs.octicon = octiconMapping[attrs.type];
+          $list.append(Mustache.render(template, attrs));
         }
       });
 
