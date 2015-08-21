@@ -31,12 +31,12 @@ $ ->
     filter = $(this).val()
 
     if filter == ""
-      $list.children().addClass('visible')
+      $list.children().show()
       return
 
-    $list.children().removeClass('visible')
+    $list.children().hide()
 
     for language in fuse.search(filter)
-      $list.children('[data-language="' + language.name + '"]').addClass('visible')
+      $list.children('[data-language="' + language.name + '"]').show()
 
   $('.js-autofocus').focus()
