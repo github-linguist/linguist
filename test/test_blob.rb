@@ -362,6 +362,26 @@ class TestBlob < Minitest::Test
     assert sample_blob("ui/minified/jquery.effects.blind.min.js").vendored?
     assert sample_blob("ui/minified/jquery.ui.accordion.min.js").vendored?
 
+    # jQuery Gantt
+    assert sample_blob("web-app/jquery-gantt/js/jquery.fn.gantt.js").vendored?
+
+    # jQuery fancyBox
+    assert sample_blob("web-app/fancybox/jquery.fancybox.js").vendored?
+
+    # Fuel UX
+    assert sample_blob("web-app/fuelux/js/fuelux.js").vendored?
+
+    # jQuery File Upload
+    assert sample_blob("fileupload-9.0.0/jquery.fileupload-process.js").vendored?
+
+    # Slick
+    assert sample_blob("web-app/slickgrid/controls/slick.columnpicker.js").vendored?
+
+    # Leaflet plugins
+    assert sample_blob("leaflet-plugins/Leaflet.Coordinates-0.5.0.src.js").vendored?
+    assert sample_blob("leaflet-plugins/leaflet.draw-src.js").vendored?
+    assert sample_blob("leaflet-plugins/leaflet.spin.js").vendored?
+
     # MooTools
     assert sample_blob("public/javascripts/mootools-core-1.3.2-full-compat.js").vendored?
     assert sample_blob("public/javascripts/mootools-core-1.3.2-full-compat-yc.js").vendored?
