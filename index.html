@@ -5,6 +5,7 @@
     <script src="vendor/bower/jquery/dist/jquery.min.js"></script>
     <script src="vendor/bower/js-yaml/dist/js-yaml.min.js"></script>
     <script src="vendor/bower/mustache/mustache.min.js"></script>
+    <script src="js/site.js"></script>
 
     <link rel="stylesheet" href="vendor/bower/primer-css/css/primer.css">
     <link rel="stylesheet" href="vendor/bower/octicons/octicons/octicons.css">
@@ -38,29 +39,6 @@
           {{/extensions}}
         </ul>
       </li>
-    </script>
-
-    <script type="text/javascript">
-      var $list = $("#languages");
-      template = $("#template").text();
-
-      var octiconMapping = {
-        programming: "file-binary",
-        data: "database",
-        markup: "file-code",
-        prose: "file-text"
-      };
-
-      $.get("https://rawgit.com/github/linguist/master/lib/linguist/languages.yml", function(data) {
-        var languages = jsyaml.safeLoad(data);
-        for(var language in languages) {
-          var attrs = languages[language]
-          attrs.name = language;
-          attrs.octicon = octiconMapping[attrs.type];
-          $list.append(Mustache.render(template, attrs));
-        }
-      });
-
     </script>
   </body>
 </html>
