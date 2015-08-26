@@ -83,12 +83,16 @@ class TestGrammars < Minitest::Test
   def test_submodules_have_recognized_licenses
     unrecognized = submodule_licenses.select { |k,v| v.nil? && Licensee::Project.new(k).license_file }
     unrecognized.reject! { |k,v| PROJECT_WHITELIST.include?(k) }
-    assert_equal Hash.new, unrecognized, "The following submodules have unrecognized licenses:\n* #{unrecognized.keys.join("\n* ")}"
+    message = "The following submodules have unrecognized licenses:\n* #{unrecognized.keys.join("\n* ")}\n"
+    message << "Please ensure that the project's LICENSE file contains the full text of the license."
+    assert_equal Hash.new, unrecognized, message
   end
 
   def test_submodules_have_licenses
     unlicensed = submodule_licenses.select { |k,v| v.nil? }.reject { |k,v| PROJECT_WHITELIST.include?(k) }
-    assert_equal Hash.new, unlicensed, "The following submodules don't have licenses:\n* #{unlicensed.keys.join("\n* ")}"
+    message = "The following submodules don't have licenses:\n* #{unlicensed.keys.join("\n* ")}\n"
+    message << "Please ensure that the project has a LICENSE file, and that the LICENSE file contains the full text of the license."
+    assert_equal Hash.new, unlicensed, message
   end
 
   def test_submodules_have_approved_licenses
