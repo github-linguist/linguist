@@ -97,7 +97,9 @@ class TestGrammars < Minitest::Test
 
   def test_submodules_have_approved_licenses
     unapproved = submodule_licenses.reject { |k,v| LICENSE_WHITELIST.include?(v) || PROJECT_WHITELIST.include?(k) }.map { |k,v| "#{k}: #{v}"}
-    assert_equal [], unapproved, "The following submodules have unapproved licenses:\n* #{unapproved.join("\n* ")}"
+    message = "The following submodules have unapproved licenses:\n* #{unapproved.join("\n* ")}\n"
+    message << "The license must be added to the LICENSE_WHITELIST in /test/test_grammars.rb once approved."
+    assert_equal [], unapproved, message
   end
 
   def test_submodules_whitelist_has_no_extra_entries
