@@ -65,7 +65,7 @@ module Linguist
     end
 
     # Common heuristics
-    ObjectiveCRegex = /^[ \t]*@(interface|class|protocol|property|end|synchronised|selector|implementation)\b/
+    ObjectiveCRegex = /^[ \t]*@(interface|class|protocol|property|end|synchronized|selector|implementation)\b/
 
     disambiguate ".bb" do |data|
       if /^\s*; /.match(data) || data.include?("End Function")
