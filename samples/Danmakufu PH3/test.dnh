@@ -1,0 +1,55 @@
+#TouhouDanmakufu[Package]
+#ScriptVersion[3]
+#Title["Timing test"]
+ 
+let array = [];
+let val = 0;
+ 
+function writeN(n) {
+        if (!n) {return;}
+        array = [];
+        writeN(truncate(n / 2));
+        if (n % 2) {array = array ~ [rand(0, 1)];}
+        array = array ~ array;
+}
+ 
+task time {
+        let start = GetPackageTime;
+        yield;
+        WriteLog(IntToString(GetPackageTime - start) ~ " ms");
+}
+ 
+@Initialize {
+        main;
+}
+ 
+@MainLoop {yield;}
+ 
+function testN(n) {
+        writeN(n);
+        WriteLog("Testing with " ~ IntToString(n) ~ " elements");
+        WriteLog("Access at start");
+        let se = 0;
+        let ee = n - 1;
+        time;
+        loop (1000000) {
+                val = array[se];
+        }
+        yield;
+        WriteLog("Access at end");
+        time;
+        loop (1000000) {
+                val = array[ee];
+        }
+        yield;
+}
+ 
+task main {
+        loop (60) {yield;}
+        testN(100);
+        testN(1000);
+        testN(10000);
+        testN(100000);
+        testN(1000000);
+        ClosePackage;
+}
