@@ -513,6 +513,11 @@ class TestBlob < Minitest::Test
 
     # Crashlytics
     assert sample_blob("Crashlytics.framework/Crashlytics.h").vendored?
+    
+    # Xcode
+    assert sample_blob("myapp/My Template.xctemplate/___FILEBASENAME___.h").vendored?
+    assert sample_blob("myapp/My Images.xcassets/some/stuff.imageset/Contents.json").vendored?
+    assert !sample_blob("myapp/MyData.json").vendored?
   end
 
   def test_documentation
