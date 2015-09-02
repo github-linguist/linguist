@@ -1,0 +1,169 @@
+.#  ===========================================================================
+.#  Generate benchmarks skeletons
+.#
+.#   Generates a skeleton for a new benchmark.
+.#   See project.xml for instructions on how to specify a benchmark.
+.#
+.#  This script will generate the following files:
+.#      * bench/bench.h - Header file for all benchmarks with common functionality
+.#      * bench/$(bench.name) - Skeleton for new benchmark.
+.#  ===========================================================================
+.-
+.-
+.if count (bench) > 0
+.-
+.-  Build the header file for all benchmarks.
+.-
+.   if !file.exists ("bench")
+.       directory.create ("bench")
+.   endif
+.   output "bench/bench.h"
+/*
+$(project.GENERATED_WARNING_HEADER:)
+*/
+/*  =========================================================================
+      bench.h -  Benchmarking header file, contains common functionality to
+                 measure time, run the benchmark and caluculate results.
+
+.   for project.license
+    $(string.trim (license.):block                                         )
+.   endfor
+    =========================================================================
+*/
+
+#ifndef BENCH_H
+#define BENCH_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#define MICRO_IN_SEC 1000000.00
+#define SEC_IN_MIN 60
+
+typedef struct {
+    long N; // N for each run
+    long R; // runs
+    int64_t start;
+    int64_t end;
+} bench_t;
+
+static void
+s_bench_start (bench_t *self)
+{
+    self->start = zclock_usecs ();
+}
+
+static void
+s_bench_stop (bench_t *self)
+{
+    self->end = zclock_usecs ();
+}
+
+static double
+s_bench_iteration_speed (bench_t *self)
+{
+    return (self->N * self->R) / ((self->end - self->start) / MICRO_IN_SEC);
+}
+
+static double
+s_bench_duration (bench_t *self)
+{
+    return (self->end - self->start) / MICRO_IN_SEC;
+}
+
+static void
+s_bench_print_summary (bench_t *self)
+{
+    printf ("%ld runs, ", self->R);
+    printf ("%ld iterations each run, ", self->N);
+    printf ("finished in %lf seconds\\n", s_bench_duration (self));
+    printf ("%.2f i/sec\\n", s_bench_iteration_speed (self) );
+}
+
+#define MEASURE(B) \\
+        bench_t B; B.N = 1; B.R = 1; \\
+        printf("Measuring " #B "...\\n"); \\
+        s_bench_start(&B);
+
+#define END_MEASURE(B) \\
+        s_bench_stop(&B);
+
+#define BENCHMARK(B) \\
+        printf("Benchmarking " #B "...\\n"); \\
+        bench_t B; B.N = 5000000; B.R = 3; \\
+        s_bench_start(&B); \\
+        for (int _r = 0; _r < B.R ; _r++ ) { \\
+            for (int _i = 0; _i < B.N ; _i++ ) {
+
+#define END_BENCHMARK(B) \\
+            } \\
+        } \\
+        s_bench_stop(&B);
+
+#define BENCHMARK_SUMMARY(B) s_bench_print_summary(&B);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
+/*
+$(project.GENERATED_WARNING_HEADER:)
+*/
+.close
+.endif
+.-
+.-  Build the benchmark skeleton.
+.-
+.for bench
+.if !file.exists ("bench/$(bench.name).c")
+.echo "Generating bench/$(bench.name).c..."
+.   output "bench/$(bench.name).c"
+/*  =========================================================================
+    $(bench.name) - $(bench.?'':)
+
+.   for project.license
+    $(string.trim (license.):block                                         )
+.   endfor
+    =========================================================================
+*/
+
+/*
+@header
+    $(bench.name) - $(bench.?'':)
+@discuss
+@end
+*/
+
+#include "../include/$(project.name).h"
+.   if (project.has_private_classes)
+#include "$(project.prefix)_classes.h"
+.   endif
+#include "bench.h"
+
+int
+main ()
+{
+    printf ("Run benchmarks for $(bench.name):\n");
+    //  TODO: Prepare benchmark
+
+    //  Measure the execution of a code block
+    //  The code block is executed once.
+    MEASURE (measure_name)
+    //  TODO: Insert a code block to be measured
+    END_MEASURE (measure_name)
+    BENCHMARK_SUMMARY(measure_name);
+
+    //  Benchmark the execution of a code block
+    //  The code block is executed 5 mio. times with 3 iterations.
+    BENCHMARK (benchmark_name)
+    //  TODO: Insert a code block to be benchmarked
+    END_BENCHMARK (benchmark_name)
+    BENCHMARK_SUMMARY(benchmark_name);
+
+    return 0;
+}
+
+.endif
+.endfor

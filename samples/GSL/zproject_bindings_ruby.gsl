@@ -1,0 +1,425 @@
+.#  Only build bindings if there is at least one API model
+.if count (class, defined (class.api))
+.template 0
+#  Generate minimal Ruby language bindings.
+#  These are not meant to be idiomatic, but to provide a minimal platform
+#  of FFI function bindings on which to base idiomatic Ruby classes.
+#
+#  This is a code generator built using the iMatix GSL code generation
+#  language. See https://github.com/imatix/gsl for details. This script
+#  is licensed under MIT/X11.
+#
+if !file.exists ("bindings/ruby/lib/$(project.name:c)/ffi")
+   directory.create("bindings/ruby/lib/$(project.name:c)/ffi")
+endif
+
+if !file.exists ("bindings/ruby/spec")
+   directory.create("bindings/ruby/spec")
+endif
+
+project.RubyName = "$(project.name:Pascal)"
+
+for class where defined (class.api)
+    class.ruby_require = string.replace (class.c_name, "$(project.name)_|")
+    class.RubyName = "$(class.ruby_require:Pascal)"
+endfor
+
+function resolve_ruby_container (container)
+    # Defaults
+    my.container.ruby_ffi_type = "pointer"
+    my.container.ruby_name = "$(my.container.name:c)"
+    if my.container.ruby_name = "_"
+        my.container.ruby_name = "result"
+    endif
+    # Fix if the name matches a Ruby keyword. This list is not exhaustive,
+    # so more keywords should be added as they become a problem.
+    if regexp.match ("^(self|alias)$", my.container.ruby_name)
+        my.container.ruby_name += "_"
+    endif
+    
+    # All C types should be transformed to a type name recognized by FFI.
+    # To handle more C types, add support for them here.
+    if defined (my.container.variadic)
+        my.container.ruby_ffi_type = "varargs"
+    elsif my.container.c_type = "void"
+        my.container.ruby_ffi_type = "void"
+    elsif my.container.c_type = "size_t"
+        my.container.ruby_ffi_type = "size_t"
+        my.container.ruby_coerce_arg = "Integer($(my.container.ruby_name:))"
+    elsif my.container.c_type = "int"
+        my.container.ruby_ffi_type = "int"
+        my.container.ruby_coerce_arg = "Integer($(my.container.ruby_name:))"
+    elsif my.container.c_type = "float"
+        my.container.ruby_ffi_type = "float"
+        my.container.ruby_coerce_arg = "Float($(my.container.ruby_name:))"
+    elsif my.container.c_type = "double"
+        my.container.ruby_ffi_type = "double"
+        my.container.ruby_coerce_arg = "Float($(my.container.ruby_name:))"
+    elsif my.container.c_type = "bool"
+        my.container.ruby_ffi_type = "bool"
+        my.container.ruby_coerce_arg = "!(0==$(my.container.ruby_name:)||!$(my.container.ruby_name:)) # boolean"
+    elsif my.container.c_type = "const char *"
+        my.container.ruby_ffi_type = "string"
+        my.container.ruby_coerce_arg = "String($(my.container.ruby_name:))"
+    elsif count (project.class, defined (class.RubyName) & (my.container.type = class.c_name))
+        for project.class where (defined (class.RubyName) & (my.container.type = class.c_name))
+            if my.container.by_reference
+                if defined (my.container.destructor_self)
+                    my.container.ruby_coerce_arg = "__ptr_give_ref"
+                else
+                    my.container.ruby_coerce_arg = "$(my.container.ruby_name:).__ptr_give_ref"
+                endif
+            else
+                my.container.ruby_coerce_arg = "$(my.container.ruby_name:).__ptr if $(my.container.ruby_name:)"
+                my.container.ruby_coerce_ret = "$(class.RubyName:).__new $(my.container.ruby_name:), "
+                if my.container.fresh
+                    my.container.ruby_coerce_ret += "true"
+                else
+                    my.container.ruby_coerce_ret += "false"
+                endif
+            endif
+        endfor
+    endif
+endfunction
+
+function resolve_ruby_method (method)
+    my.method.ruby_name = "$(my.method.name:c)"
+    for my.method.argument
+        resolve_ruby_container (argument)
+    endfor
+    for my.method.return as ret
+        resolve_ruby_container (ret)
+    endfor
+    
+    # The line that attaches the function to the project's FFI module
+    my.method.ruby_ffi_attach = "attach_function :$(class.c_name)_$(method.c_name:), ["
+    if !my.method.singleton
+        my.method.ruby_ffi_attach += ":pointer"
+        if count (my.method.argument)
+            my.method.ruby_ffi_attach += ", "
+        endif
+    endif
+    for my.method.argument
+        my.method.ruby_ffi_attach += ":$(argument.ruby_ffi_type)"
+        if !last ()
+            my.method.ruby_ffi_attach += ", "
+        endif
+    endfor
+    my.method.ruby_ffi_attach += "], :$(method->return.ruby_ffi_type), **opts"
+    
+    # The first line of the method definition
+    my.method.ruby_def_line = "def "
+    if my.method.singleton & !defined (my.method.is_destructor)
+        my.method.ruby_def_line += "self."
+    endif
+    my.method.ruby_def_line += "$(method.c_name:)"
+    for my.method.argument
+        if !(defined (my.method.is_destructor) & first ())
+            my.method.ruby_def_line += " $(argument.ruby_name)"
+            if !last ()
+                my.method.ruby_def_line += ","
+            endif
+        endif
+    endfor
+    
+    # The arguments passed to the inner method call
+    my.method.ruby_args_pass = ""
+    if !my.method.singleton
+        my.method.ruby_args_pass += " @ptr"
+        if count (my.method.argument)
+            my.method.ruby_args_pass += ","
+        endif
+    endif
+    for my.method.argument
+        my.method.ruby_args_pass += " $(argument.ruby_name)"
+        if !last ()
+            my.method.ruby_args_pass += ","
+        endif
+    endfor
+endfunction
+
+function resolve_ruby_class (class)
+    for my.class.constructor as method
+        resolve_ruby_method (method)
+    endfor
+    for my.class.destructor as method
+        resolve_ruby_method (method)
+    endfor
+    for my.class.method
+        resolve_ruby_method (method)
+    endfor
+    for my.class.callback_type as method
+        resolve_ruby_method (method)
+    endfor
+endfunction
+
+for class where defined (class.api)
+    resolve_ruby_class (class)
+endfor
+
+.endtemplate
+.#
+.echo "Generating bindings/ruby/lib/$(project.name:c)/ffi/version.rb..."
+.output "bindings/ruby/lib/$(project.name:c)/ffi/version.rb"
+$(project.GENERATED_WARNING_HEADER:)
+
+module $(project.RubyName:)
+  module FFI
+    VERSION = '$(project->version.major).$(project->version.minor).$(project->version.patch)'
+  end
+end
+
+$(project.GENERATED_WARNING_HEADER:)
+.#
+.echo "Generating bindings/ruby/lib/$(project.name:c)/ffi.rb..."
+.output "bindings/ruby/lib/$(project.name:c)/ffi.rb"
+$(project.GENERATED_WARNING_HEADER:)
+
+require 'ffi'
+
+require_relative 'ffi/version'
+
+
+module $(project.RubyName:)
+  module FFI
+    extend ::FFI::Library
+    
+    def self.available?
+      @available
+    end
+    
+    begin
+      lib_name = '$(project.libname)'
+      lib_paths = ['/usr/local/lib', '/opt/local/lib', '/usr/lib64']
+        \.map { |path| "#{path}/#{lib_name}.#{::FFI::Platform::LIBSUFFIX}" }
+      ffi_lib lib_paths + [lib_name]
+      @available = true
+    rescue LoadError
+      warn ""
+      warn "WARNING: ::$(project.RubyName:)::FFI is not available without $(project.libname)."
+      warn ""
+      @available = false
+    end
+    
+    if available?
+      opts = {
+        blocking: true  # only necessary on MRI to deal with the GIL.
+      }
+.for class where defined (class.api)
+      
+.for constructor as method
+      $(method.ruby_ffi_attach)
+.endfor
+.for destructor as method
+      $(method.ruby_ffi_attach)
+.endfor
+.for method
+      $(method.ruby_ffi_attach)
+.endfor
+      
+      require_relative 'ffi/$(class.ruby_require:)'
+.endfor
+    end
+  end
+end
+
+$(project.GENERATED_WARNING_HEADER:)
+.#
+.for class where defined (class.api)
+.echo "Generating bindings/ruby/lib/$(project.name:c)/ffi/$(class.ruby_require:).rb..."
+.output "bindings/ruby/lib/$(project.name:c)/ffi/$(class.ruby_require:).rb"
+$(project.GENERATED_WARNING_HEADER:)
+
+module $(project.RubyName:)
+  module FFI
+    
+    # $(class.description:no,block)
+    class $(class.RubyName:)
+      class DestroyedError < RuntimeError; end
+      
+      # Boilerplate for self pointer, initializer, and finalizer
+      class << self
+        alias :__new :new
+      end
+      def initialize ptr, finalize=true
+        @ptr = ptr
+        if @ptr.null?
+          @ptr = nil # Remove null pointers so we don't have to test for them.
+        elsif finalize
+          @finalizer = self.class.send :create_finalizer_for, @ptr
+          ObjectSpace.define_finalizer self, @finalizer
+        end
+      end
+.for class.destructor where count (destructor.argument) = 1
+.if first ()
+.class.has_ruby_finalizer = 1
+      def self.create_finalizer_for ptr
+        Proc.new do
+          ptr_ptr = ::FFI::MemoryPointer.new :pointer
+          ptr_ptr.write_pointer ptr
+          ::$(project.RubyName:)::FFI.$(class.c_name)_$(destructor.c_name) ptr_ptr
+        end
+      end
+.endif
+.endfor
+.if !defined (class.has_ruby_finalizer)
+      def self.create_finalizer_for ptr
+        Proc.new do
+          "WARNING: "\\
+          "Objects of type #{self} cannot be destroyed implicitly. "\\
+          "Please call the correct destroy method with the relevant arguments."
+        end
+      end
+.endif
+      def null?
+        !@ptr or ptr.null?
+      end
+      # Return internal pointer
+      def __ptr
+        raise DestroyedError unless @ptr
+        @ptr
+      end
+      # So external Libraries can just pass the Object to a FFI function which expects a :pointer
+      alias_method :to_ptr, :__ptr
+      # Nullify internal pointer and return pointer pointer
+      def __ptr_give_ref
+        raise DestroyedError unless @ptr
+        ptr_ptr = ::FFI::MemoryPointer.new :pointer
+        ptr_ptr.write_pointer @ptr
+        ObjectSpace.undefine_finalizer self if @finalizer
+        @finalizer = nil
+        @ptr = nil
+        ptr_ptr
+      end
+.for callback_type
+      
+      # Create a new callback of the following type:
+      # $(callback_type.description:no,block)
+      #     $(c_callback_typedef (callback_type):no,block)
+      #
+      # WARNING: If your Ruby code doesn't retain a reference to the
+      #   FFI::Function object after passing it to a C function call,
+      #   it may be garbage collected while C still holds the pointer,
+      #   potentially resulting in a segmentation fault.
+      def self.$(callback_type.name)
+        ::FFI::Function.new :$(callback_type->return.ruby_ffi_type), [\
+.   for callback_type.argument
+:$(argument.ruby_ffi_type)\
+.       if !last ()
+, \
+.       endif
+.   endfor
+], blocking: true do \|\
+.   for callback_type.argument
+$(argument.ruby_name)\
+.       if !last ()
+, \
+.       endif
+.   endfor
+\|
+.   for callback_type.argument where defined (argument.ruby_coerce_ret)
+          $(argument.ruby_name) = $(argument.ruby_coerce_ret:)
+.   endfor
+          yield \
+.   for callback_type.argument
+$(argument.ruby_name)\
+.       if !last ()
+, \
+.       endif
+.   endfor
+
+        end
+      end
+.endfor
+.for constructor as method
+      
+      # $(method.description:no,block)
+      $(method.ruby_def_line)
+.for method.argument where defined (argument.ruby_coerce_arg)
+        $(argument.ruby_name:) = $(argument.ruby_coerce_arg:)
+.endfor
+        ptr = ::$(project.RubyName:)::FFI.$(class.c_name:)_$(method.c_name:)$(method.ruby_args_pass:)
+        
+        __new ptr
+      end
+.endfor
+.for destructor as method
+      
+      # $(method.description:no,block)
+      $(method.ruby_def_line)
+        return unless @ptr
+.for method.argument where defined (argument.ruby_coerce_arg)
+        $(argument.ruby_name:) = $(argument.ruby_coerce_arg:)
+.endfor
+        result = ::$(project.RubyName:)::FFI.$(class.c_name:)_$(method.c_name:)$(method.ruby_args_pass:)
+.if defined (method->return.ruby_coerce_ret)
+        result = $(method->return.ruby_coerce_ret:)
+.endif
+        result
+      end
+.endfor
+.for method
+      
+      # $(method.description:no,block)
+      $(method.ruby_def_line)
+.if !method.singleton
+        raise DestroyedError unless @ptr
+.endif
+.for method.argument where defined (argument.ruby_coerce_arg)
+        $(argument.ruby_name:) = $(argument.ruby_coerce_arg:)
+.endfor
+        result = ::$(project.RubyName:)::FFI.$(class.c_name:)_$(method.c_name:)$(method.ruby_args_pass:)
+.if defined (method->return.ruby_coerce_ret)
+        result = $(method->return.ruby_coerce_ret:)
+.endif
+        result
+      end
+.endfor
+    end
+    
+  end
+end
+
+$(project.GENERATED_WARNING_HEADER:)
+.endfor
+.#
+.if !file.exists ("bindings/ruby/Rakefile")
+.output "bindings/ruby/Rakefile"
+.echo "Generating bindings/ruby/Rakefile..."
+
+require 'rspec/core/rake_task'
+
+task :default => :test
+
+# Run tests.
+RSpec::Core::RakeTask.new :test do |c|
+end
+.endif
+.#
+.if !file.exists ("bindings/ruby/spec/spec_helper.rb")
+.output "bindings/ruby/spec/spec_helper.rb"
+.echo "Generating bindings/ruby/spec/spec_helper.rb..."
+
+require '$(project.name)/ffi'
+
+RSpec.configure do |c|
+  # Enable 'should' syntax
+  c.expect_with(:rspec) { |c| c.syntax = [:should, :expect] }
+  c.mock_with(:rspec)   { |c| c.syntax = [:should, :expect] }
+end
+.endif
+.#
+.output "bindings/ruby/spec/ffi_spec.rb"
+.echo "Generating bindings/ruby/spec/ffi_spec.rb..."
+$(project.GENERATED_WARNING_HEADER:)
+
+require 'spec_helper'
+
+describe ::$(project.RubyName:)::FFI do
+  it { should be }
+end
+
+$(project.GENERATED_WARNING_HEADER:)
+.#
+.endif
+.#

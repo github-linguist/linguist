@@ -1,0 +1,314 @@
+.#  ===========================================================================
+.#  Generate czmq actor header/source skeletons
+.#
+.#   Generates a skeleton for a new czmq actor actor. Will not overwrite
+.#   existing files.
+.#   See project.xml for instructions on how to specify an actor.
+.#
+.#  This script will generate the following files:
+.#      * (include|src)$(actor.c_name).h - public/private header file for actors
+.#      * src/$(actor.c_name).c - source code file for actors
+.#  ===========================================================================
+.-
+.-  Resolve missing or implicit details
+.-
+.template 0
+
+function resolve_actor (actor)
+   my.actor.c_name ?= "$(actor.name:c)"
+   my.actor.description ?= "$(string.trim (actor.?""):left)"
+   my.actor.actordir ?= "include"
+   my.actor.private ?= "0"
+
+   my.class = XML.new ("class")
+   my.class.name ?= my.actor.name
+   my.class.private ?= my.actor.private
+   my.class.c_name ?= my.actor.c_name
+   my.class.classdir ?= my.actor.actordir
+   my.class.description ?= my.actor.description
+   move my.class to project
+endfunction
+
+for actor
+    resolve_actor (actor)
+endfor
+
+.endtemplate
+.-
+.-  Build the header file for an actor
+.-
+.if !file.exists ("include")
+.   directory.create ("include")
+.endif
+.for actor
+.   if actor.private ?= 1
+.       actor.actordir = "src"
+.   endif
+.header_file = "$(actor.actordir)/$(actor.c_name).h"
+.if !file.exists (header_file)
+.echo "Generating $(header_file)..."
+.   output header_file
+/*  =========================================================================
+    $(actor.c_name) - $(string.trim (actor.?''):no,left)
+
+.   for project.license
+    $(string.trim (license.):block                                         )
+.   endfor
+    =========================================================================
+*/
+
+#ifndef $(ACTOR.C_NAME)_H_INCLUDED
+#define $(ACTOR.C_NAME)_H_INCLUDED
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+.   if actor.c_name = project.name
+//  Include the library file with typdefs, public includes and public constants
+#include "$(actor.c_name)_library.h"
+
+.   endif
+.   if actor.private ?= 1
+typedef struct _$(actor.c_name)_t $(actor.c_name)_t;
+.   endif
+
+//  @interface
+//  Create new $(actor.c_name) actor instance.
+//  @TODO: Describe the purpose of this actor!
+//
+//      zactor_t *$(actor.c_name) = zactor_new ($(actor.c_name), NULL);
+//
+//  Destroy $(actor.c_name) instance.
+//
+//      zactor_destroy (&$(actor.c_name));
+//
+//  Enable verbose logging of commands and activity:
+//
+//      zstr_send ($(actor.c_name), "VERBOSE");
+//      zsock_wait ($(actor.c_name));
+//
+//  Start $(actor.c_name) actor.
+//
+//      zstr_sendx ($(actor.c_name), "START", NULL);
+//      zsock_wait ($(actor.c_name));
+//
+//  Stop $(actor.c_name) actor.
+//
+//      zstr_sendx ($(actor.c_name), "STOP", NULL);
+//      zsock_wait ($(actor.c_name));
+//
+//  This is the $(actor.c_name) constructor as a zactor_fn;
+$(PROJECT.PREFIX)_EXPORT void
+    $(actor.c_name)_actor (zsock_t *pipe, void *args);
+
+//  Self test of this actor
+$(PROJECT.PREFIX)_EXPORT void
+    $(actor.c_name)_test (bool verbose);
+//  @end
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
+.close
+.endif
+.-
+.-  Build the source file for a actor
+.-
+.if !file.exists ("src")
+.   directory.create ("src")
+.endif
+.source_file = "src/$(actor.c_name).c"
+.if !file.exists (source_file)
+.echo "Generating $(source_file)..."
+.   output source_file
+/*  =========================================================================
+    $(actor.c_name) - $(actor.?'':)
+
+.   for project.license
+    $(string.trim (license.):block                                         )
+.   endfor
+    =========================================================================
+*/
+
+/*
+@header
+    $(actor.c_name) - $(actor.?'':)
+@discuss
+@end
+*/
+
+#include "../include/$(project.name).h"
+.   if (project.has_private_classes)
+#include "$(project.prefix)_classes.h"
+.   endif
+
+.   if actor.private ?= 0
+typedef struct _$(actor.c_name)_t $(actor.c_name)_t;
+.   endif
+
+//  Structure of our actor
+
+struct _$(actor.c_name)_t {
+    zsock_t *pipe;              //  Actor command pipe
+    zpoller_t *poller;          //  Socket poller
+    bool terminated;            //  Did caller ask us to quit?
+    bool verbose;               //  Verbose logging enabled?
+    //  TODO: Declare properties
+};
+
+
+//  --------------------------------------------------------------------------
+//  Create a new $(actor.c_name).
+
+static $(actor.c_name)_t *
+$(actor.c_name)_new (zsock_t *pipe, void *args)
+{
+    $(actor.c_name)_t *self = ($(actor.c_name)_t *) zmalloc (sizeof ($(actor.c_name)_t));
+    assert (self);
+
+    self->pipe = pipe;
+    self->terminated = false;
+    self->poller = zpoller_new (self->pipe, NULL);
+
+    //  TODO: Initialize properties
+
+    return self;
+}
+
+
+//  --------------------------------------------------------------------------
+//  Destroy the $(actor.c_name).
+
+static void
+$(actor.c_name)_destroy ($(actor.c_name)_t **self_p)
+{
+    assert (self_p);
+    if (*self_p) {
+        $(actor.c_name)_t *self = *self_p;
+
+        //  TODO: Free actor properties
+
+        //  Free object itself
+        zpoller_destroy (&self->poller);
+        free (self);
+        *self_p = NULL;
+    }
+}
+
+
+//  Start this actor. Return a value greater or equal to zero if initialization
+//  was successful. Otherwise -1.
+
+static int
+$(actor.c_name)_start ($(actor.c_name)_t *self)
+{
+    assert (self);
+
+    //  TODO: Add startup actions
+
+    return 0;
+}
+
+
+//  Stop this actor. Return a value greater or equal to zero if initialization
+//  was successful. Otherwise -1.
+
+static int
+$(actor.c_name)_stop ($(actor.c_name)_t *self)
+{
+    assert (self);
+
+    //  TODO: Add shutdown actions
+
+    return 0;
+}
+
+
+//  Here we handle incomming message from the node
+
+static void
+$(actor.c_name)_recv_api ($(actor.c_name)_t *self)
+{
+//  Get the whole message of the pipe in one go
+    zmsg_t *request = zmsg_recv (self->pipe);
+    if (!request)
+       return;        //  Interrupted
+
+    char *command = zmsg_popstr (request);
+    if (streq (command, "START"))
+        zsock_signal (self->pipe, $(actor.c_name)_start (self));
+    else
+    if (streq (command, "STOP"))
+        zsock_signal (self->pipe, $(actor.c_name)_stop (self));
+    else
+    if (streq (command, "VERBOSE")) {
+        self->verbose = true;
+        zsock_signal (self->pipe, 0);
+    }
+    else
+    if (streq (command, "$TERM"))
+        //  The $TERM command is send by zactor_destroy() method
+        self->terminated = true;
+    else {
+        zsys_error ("invalid command '%s'", command);
+        assert (false);
+    }
+}
+
+
+//  --------------------------------------------------------------------------
+//  This is the actor which runs in its own thread.
+
+void
+$(actor.c_name)_actor (zsock_t *pipe, void *args)
+{
+    $(actor.c_name)_t * self = $(actor.c_name)_new (pipe, args);
+    if (!self)
+        return;          //  Interrupted
+
+    //  Signal actor successfully initiated
+    zsock_signal (self->pipe, 0);
+
+    while (!self->terminated) {
+       zsock_t *which = (zsock_t *) zpoller_wait (self->poller, 0);
+       if (which == self->pipe)
+          $(actor.c_name)_recv_api (self);
+       //  Add other sockets when you need them.
+    }
+
+    $(actor.c_name)_destroy (&self);
+}
+
+
+//  --------------------------------------------------------------------------
+//  Self test of this actor.
+
+void
+$(actor.c_name)_test (bool verbose)
+{
+    printf (" * $(actor.c_name): ");
+
+    int rc = 0;
+    //  @selftest
+    //  Simple create/destroy test
+    zactor_t *$(actor.c_name) = zactor_new ($(actor.c_name)_actor, NULL);
+
+    zstr_send ($(actor.c_name), "START");
+    rc = zsock_wait ($(actor.c_name));             //  Wait until actor started
+    assert (rc == 0);
+
+    zstr_send ($(actor.c_name), "STOP");
+    rc = zsock_wait ($(actor.c_name));             //  Wait until actor stopped
+    assert (rc == 0);
+
+    zactor_destroy (&$(actor.c_name));
+    //  @end
+
+    printf ("OK\\n");
+}
+.close
+.endif
+.endfor

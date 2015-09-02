@@ -1,0 +1,39 @@
+.#  Generate Android makefile for project
+.#
+.#  This is a code generator built using the iMatix GSL code generation
+.#  language. See https://github.com/imatix/gsl for details. This script
+.#  is licensed under MIT/X11.
+.#
+.echo "Generating builds/android/Android.mk..."
+.if !file.exists ("builds/android")
+.   directory.create("builds/android")
+.endif    
+.output "builds/android/Android.mk"
+$(project.GENERATED_WARNING_HEADER:)
+
+BASE_PATH := $\(call my-dir)
+APP_PLATFORM = android-10
+
+LOCAL_PATH := $\(BASE_PATH)
+
+#   Info for libzmq
+
+include $\(CLEAR_VARS)
+LOCAL_MODULE := zmq
+LOCAL_SRC_FILES := libzmq.so
+include $\(PREBUILT_SHARED_LIBRARY)
+
+#   Build $(project.name)
+
+include $\(CLEAR_VARS)
+LOCAL_MODULE := $(project.name:c)
+LOCAL_C_INCLUDES := ../../include $\(LIBZMQ)/include
+LOCAL_SRC_FILES :=\
+.for class
+ $(name:c).c\
+.endfor
+
+LOCAL_SHARED_LIBRARIES := zmq
+include $\(BUILD_SHARED_LIBRARY)
+
+$(project.GENERATED_WARNING_HEADER:)

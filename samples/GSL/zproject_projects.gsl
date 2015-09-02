@@ -1,0 +1,58 @@
+.template 0
+#  ===========================================================================
+#  Resolve standard CLASS projects
+#
+#  ===========================================================================
+
+function resolve_project_dependency (use)
+    my.known_projects = XML.load_file ("zproject_known_projects.xml")
+    
+    # Use known values to fill in gaps if it is a known project
+    for my.known_projects.use as known where known.project = my.use.project
+        my.use.repository  ?= known.repository?
+        my.use.test        ?= known.test?
+        my.use.cmake_name  ?= known.cmake_name?
+        my.use.includename ?= known.includename?
+        my.use.prefix      ?= known.prefix?
+        
+        # Copy known implied dependencies into this dependency
+        for known.use as implied_use
+            if !count (my.use.use, use.project = implied_use.project)
+                move implied_use to my.use as use
+            endif
+        endfor
+    endfor
+    
+    # Use reasonable fallback values to fill in any remaining gaps
+    my.use.prefix ?= my.use.project
+    my.use.linkname ?= my.use.prefix
+    my.use.includename ?= my.use.prefix
+    my.use.libname ?= "lib" + my.use.linkname
+    my.use.cmake_name ?= "$(my.use.project:Pascal)"
+    
+    # For values with no reasonable fallback, print error
+    if  !defined (my.use.repository) | \
+        !defined (my.use.test)
+        echo "Unknown project for <use project = \"$(my.use.project)\"/>.  " +\
+            "Please add $(my.use.project) to zproject_known_projects.xml " +\
+            "or add the missing properties to the <use> model locally."
+    endif
+    
+    # Calculate all non-model values from model values
+    my.use.min_version = "$(min_major?'0').$(min_minor?'0').$(min_patch?'0')"
+    
+    # Copy all dependencies implied by this one into the project
+    for my.use.use as implied_use
+        if !count (project.use, use.project = implied_use.project)
+            move implied_use before my.use as use
+            implied_use.implied = "1"
+            resolve_project_dependency (implied_use)
+        endif
+    endfor
+endfunction
+
+for use
+    resolve_project_dependency (use)
+endfor
+
+.endtemplate

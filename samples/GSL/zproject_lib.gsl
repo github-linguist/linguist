@@ -1,0 +1,39 @@
+.#  Generate libtool library file
+.#
+.#  This is a code generator built using the iMatix GSL code generation
+.#  language. See https://github.com/imatix/gsl for details. This script
+.#  is licensed under MIT/X11.
+.#
+.if (count (class) > 0)
+.echo "Generating src/$(project.libname).pc.in..."
+.output "src/$(project.libname).pc.in"
+$(project.GENERATED_WARNING_HEADER:)
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: $(project.libname)
+Description: $(project.description:)
+Version: @VERSION@
+
+.if count (use)
+Requires:\
+.   for use
+$(use.libname)\
+.       if (use.min_version <> '0.0.0')
+ >= $(use.min_version)\
+.       endif
+.       if !last()
+ \
+.       endif
+.   endfor
+
+.endif
+
+Libs: -L${libdir} -l$(project.linkname)
+Cflags: -I${includedir}
+
+$(project.GENERATED_WARNING_HEADER:)
+.endif

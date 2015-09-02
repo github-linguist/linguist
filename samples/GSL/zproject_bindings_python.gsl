@@ -1,0 +1,413 @@
+.template 0
+#  Only build bindings if there is at least one API model
+if count (class, defined (class.api))
+
+#  Generate minimal Python language bindings.
+#  These are not meant to be idiomatic, but to provide a minimal platform
+#  of FFI function bindings on which to base idiomatic Python classes.
+#
+#  This is a code generator built using the iMatix GSL code generation
+#  language. See https://github.com/imatix/gsl for details. This script
+#  is licensed under MIT/X11.
+#
+
+if !file.exists ("bindings/python/")
+   directory.create("bindings/python/")
+endif
+
+function python_register_import (lib, class)
+    if count (project->python_types.import, import.lib = my.lib) = 0
+        new project->python_types.import
+            import.lib = my.lib
+        endnew
+    endif
+endfunction
+
+function python_register_type (container, struct, pointer)
+    my.fresh_bool = my.container.fresh ?? "True" ? "False"
+
+    # First we need to determine whether we're 'importing' this type via
+    # class declarations under the 'use' node.
+    for project.use
+        for use.class where class.name = my.container.type
+            my.externlib = use.project
+            last
+        endfor
+    endfor
+    if defined (my.externlib)
+        # We have found this class is imported via the use declaration, we
+        # don't do anything other than coerce to/from it.  This currently
+        # relies on users distributing bindings from dependency projects
+        # manually.
+        python_register_import(my.externlib, my.container.type)
+        my.container.python_type = "$(my.externlib:c).$(my.container.type:c,no)_p"
+        my.container.python_return = "$(my.externlib:c).$(my.container.type:Pascal)(<>, $(my.fresh_bool:))"
+    else
+        # No import found - register the type for local declaration.
+        if count(project->python_types.type, type.name = my.struct) = 0
+            new project->python_types.type
+                type.name = my.struct
+                type.pointer = my.pointer
+            endnew
+        endif
+        my.container.python_type = my.pointer
+        for project.class where defined (class.api) & class.name = my.container.type
+            my.container.python_return = "$(my.container.type:Pascal)(<>, $(my.fresh_bool:))"
+        endfor
+    endif
+endfunction
+
+function resolve_python_container (container)
+    my.container.python_name = "$(my.container.name:c)"
+    if my.container.python_name = "_"
+        my.container.python_name = "result"
+    endif
+
+    if defined (my.container.variadic)
+        my.container.python_type = "" # ctypes doesn't explictly state variadic signatures, so we just leave it off
+    elsif defined (my.container.is_enum)
+        my.container.python_type = "c_int"
+        my.container.python_coerce = "$(my.container.enum_class:Pascal).$(my.container.enum_name:Pascal)[<>]"
+        my.container.python_return = "$(my.container.enum_class:Pascal).$(my.container.enum_name:Pascal)_out[<>]"
+    elsif my.container.type = "nothing"
+        my.container.python_type = "None"
+    elsif my.container.type = "anything"
+        my.container.python_type = "c_void_p"
+        my.container.python_return = "c_void_p(<>)"
+    elsif my.container.type = "boolean"
+        my.container.python_type = "c_bool"
+    elsif my.container.type = "byte"
+        my.container.python_type = "c_ubyte"
+    elsif my.container.type = "integer" | my.container.type = "file_size" | my.container.type = "time"
+        my.container.python_type = "c_int"
+    elsif my.container.type = "size"
+        my.container.python_type = "c_size_t"
+    elsif my.container.type = "real"
+        my.container.python_type = "c_float"
+    elsif my.container.type = "buffer"
+        my.container.python_type = "POINTER(c_byte)"
+    elsif my.container.type = "FILE"
+        python_register_type(my.container, "FILE", "FILE_p")
+        my.container.python_coerce = "coerce_py_file(<>)"
+        my.container.python_return = "return_py_file(<>)"
+        project->python_types.uses_py_file = 1
+    elsif my.container.type = "string" | my.container.type = "format"
+        if defined (my.container.fresh) & my.container.fresh = 1
+            my.container.python_type = "POINTER(c_char)" # No auto-conversion to string please - we need to free the memory.
+            my.container.python_return = "return_fresh_string(<>)"
+            project->python_types.uses_fresh_string = 1
+        else
+            my.container.python_type = "c_char_p"
+        endif
+    elsif my.container.callback
+        my.container.python_type = my.container.type
+    else
+        python_register_type(my.container, "$(my.container.type:c,no)_t", "$(my.container.type:c,no)_p")
+    endif
+
+    if my.container.by_reference
+        my.container.python_coerce = "byref($(my.container.python_type:).from_param(<>))"
+        my.container.python_type = "POINTER($(my.container.python_type:))"
+    endif
+endfunction
+
+function resolve_python_method (method)
+    my.method.python_name = "$(my.method.name:c)"
+    if regexp.match ("^(is|from)$", my.method.python_name) # matches keyword
+        my.method.python_name += "_"
+    endif
+    for my.method.argument where !defined (argument.variadic)
+        resolve_python_container (argument)
+    endfor
+    for my.method.return as ret
+        resolve_python_container (ret)
+    endfor
+endfunction
+
+function resolve_python_class (class)
+    for my.class.callback_type as method
+        resolve_python_method (method)
+    endfor
+    for my.class.constructor as method
+        resolve_python_method (method)
+    endfor
+    for my.class.destructor as method
+        resolve_python_method (method)
+    endfor
+    for my.class.method
+        resolve_python_method (method)
+    endfor
+endfunction
+
+function python_method_annotation(method)
+    fn = "lib.$(class.name:c)_$(method.name:c)"
+    for my.method.return
+        restype = return.python_type
+    endfor
+    argtypes = "["
+    if !my.method.singleton
+        argtypes += "$(class.name:c)_p"
+        if count (my.method.argument, !defined (argument.variadic))
+            argtypes += ", "
+        endif
+    endif
+    for my.method.argument where !defined (argument.variadic)
+        argtypes += argument.python_type
+        if !last(argument)
+            argtypes += ", "
+        endif
+    endfor
+    argtypes += "]"
+>$(fn:).restype = $(restype:)
+>$(fn:).argtypes = $(argtypes:)
+endfunction
+
+function python_callback_create(cb)
+    result = ""
+    for my.cb.return
+        result += return.python_type
+    endfor
+    for my.cb.argument where !defined (argument.variadic)
+        result += ", "
+        result += argument.python_type
+    endfor
+    return "CFUNCTYPE($(result:))"
+endfunction
+
+function python_method_definition(method)
+    if my.method.singleton
+        argnames = ""
+        callargs = ""
+    else
+        argnames = "self"
+        callargs = "self._as_parameter_"
+        if count (my.method.argument)
+            argnames += ", "
+            callargs += ", "
+        endif
+    endif
+
+    for my.method.argument
+        if defined (argument.variadic)
+            argnames += "*args"
+            callargs += "*args"
+        else
+            argnames += "$(argument.name:c)"
+            if defined (argument.python_coerce)
+                callargs += string.search_replace(argument.python_coerce, "<>", "$(argument.name:c)")
+            else
+                callargs += "$(argument.name:c)"
+            endif
+        endif
+
+        if !last (argument)
+            argnames += ", "
+            callargs += ", "
+        endif
+    endfor
+
+    call = "lib.$(class.name:c)_$(my.method.name:c)($(callargs:))"
+    if defined (my.method->return.python_return)
+        call = string.search_replace(my.method->return.python_return, "<>", call)
+    endif
+
+    if my.method.singleton
+>    @staticmethod
+    endif
+>    def $(my.method.python_name:c)($(argnames)):
+>        """$(my.method.description:no)"""
+>        return $(call:)
+>
+endfunction
+
+# Container for UDTs used by this module
+new python_types
+endnew 
+
+for class where defined (class.api)
+    resolve_python_class (class)
+endfor
+
+echo "Generating bindings/python/$(project.name:c).py"
+output "bindings/python/$(project.name:c).py"
+>$(project.GENERATED_WARNING_HEADER:)
+>
+>from __future__ import print_function
+>import os, sys
+>from ctypes import *
+>from ctypes.util import find_library
+for project->python_types.import
+>import $(import.lib)
+endfor
+>
+
+# libc only loaded if we use it
+if defined (project->python_types.uses_fresh_string)
+># load libc to access free, etc.
+>libcpath = find_library("c")
+>if not libcpath:
+>    raise ImportError("Unable to find libc")
+>libc = cdll.LoadLibrary(libcpath)
+>libc.free.argtypes = [c_void_p]
+>libc.free.restype = None
+>
+>def return_fresh_string(char_p):
+>    s = string_at(char_p)
+>    libc.free(char_p)
+>    return s
+>
+endif
+
+># $(project.name:c)
+>try:
+>    # If LD_LIBRARY_PATH or your OSs equivalent is set, this is the only way to
+>    # load the library.  If we use find_library below, we get the wrong result.
+>    if os.name == 'posix':
+>        if sys.platform == 'darwin':
+>            lib = cdll.LoadLibrary('$(project.libname).$(project->version.major).dylib')
+>        else:
+>            lib = cdll.LoadLibrary("$(project.libname).so.$(project->version.major)")
+>    elif os.name == 'nt':
+>        lib = cdll.LoadLibrary('$(project.libname).dll')
+>except OSError:
+>    libpath = find_library("$(project.name)")
+>    if not libpath:
+>        raise ImportError("Unable to find $(project.libname)")
+>    lib = cdll.LoadLibrary(libpath)
+>
+
+for project->python_types.type
+>class $(type.name:)(Structure):
+>    pass # Empty - only for type checking
+>$(type.pointer:) = POINTER($(type.name:))
+>
+endfor
+
+if defined (project->python_types.uses_py_file)
+>PyFile_FromFile_close_cb = CFUNCTYPE(c_int, FILE_p)
+>PyFile_FromFile = pythonapi.PyFile_FromFile
+>PyFile_FromFile.restype = py_object
+>PyFile_FromFile.argtypes = [FILE_p,
+>                            c_char_p,
+>                            c_char_p,
+>                            PyFile_FromFile_close_cb]
+>def return_py_file(c_file):
+>    return PyFile_FromFile(c_file, "", "r+", PyFile_FromFile_close_cb())
+>
+>PyFile_AsFile = pythonapi.PyFile_AsFile
+>PyFile_AsFile.restype = FILE_p
+>PyFile_AsFile.argtypes = [py_object]
+>def coerce_py_file(obj):
+>    if isinstance(obj, FILE_p):
+>        return obj
+>    else:
+>        return PyFile_AsFile(obj)
+>
+endif
+
+for class where defined (class.api)
+>
+># $(class.name)
+    for callback_type as type
+>$(class.name:c)_$(type.name:c) = $(python_callback_create(type))
+    endfor
+
+    for constructor as method
+        python_method_annotation(method)
+    endfor
+
+    for destructor as method
+        python_method_annotation(method)
+    endfor
+
+    for method
+        python_method_annotation(method)
+    endfor
+
+>
+>class $(class.name:Pascal)(object):
+>    """$(class.description:no)"""
+    for enum
+>
+>    $(enum.name:Pascal) = {
+        for enum.constant
+>        '$(constant.name)': $(constant.value),
+        endfor
+>    }
+>
+>    $(enum.name:Pascal)_out = {
+        for enum.constant
+>         $(constant.value): '$(constant.name)',
+        endfor
+>    }
+    endfor
+>
+
+    for constant
+>    $(CONSTANT.NAME) = $(constant.value)\
+        if defined(constant.description)
+> # $(constant.description:no)
+        else
+>
+        endif
+    endfor
+
+    for constructor as method
+        callargs = ""
+        for method.argument
+            if defined (argument.variadic)
+                callargs += "*args[index()-1:]"
+            elsif defined (argument.python_coerce)
+                callargs += string.search_replace(argument.python_coerce, "<>", "args[$(index()-1)]")
+            else
+                callargs += "args[$(index()-1)]"
+            endif
+
+            if !last (argument)
+                callargs += ", "
+            endif
+        endfor
+
+>    def __init__(self, *args):
+>        """$(method.description:no)"""
+>        if len(args) == 2 and type(args[0]) is c_void_p and isinstance(args[1], bool):
+>            self._as_parameter_ = cast(args[0], $(class.name:c)_p) # Conversion from raw type to binding
+>            self.allow_destruct = args[1] # This is a 'fresh' value, owned by us
+>        elif len(args) == 2 and type(args[0]) is $(class.name:c)_p and isinstance(args[1], bool):
+>            self._as_parameter_ = args[0] # Conversion from raw type to binding
+>            self.allow_destruct = args[1] # This is a 'fresh' value, owned by us
+>        else:
+>            assert(len(args) == $(count (method.argument)))
+>            self._as_parameter_ = lib.$(class.name:c)_$(method.name)($(callargs:)) # Creation of new raw type
+>            self.allow_destruct = True
+>
+    endfor
+
+    for destructor as method
+>    def __del__(self):
+>        """$(method.description:no)"""
+>        if self.allow_destruct:
+>            lib.$(class.name:c)_$(method.name)(byref(self._as_parameter_))
+>
+    endfor
+
+>    def __bool__(self):
+>        "Determine whether the object is valid by converting to boolean" # Python 3
+>        return self._as_parameter_.__bool__()
+>
+>    def __nonzero__(self):
+>        "Determine whether the object is valid by converting to boolean" # Python 2
+>        return self._as_parameter_.__nonzero__()
+>
+
+    for method
+        python_method_definition(method)
+    endfor
+endfor
+
+
+>$(project.GENERATED_WARNING_HEADER:)
+
+endif
+
+.endtemplate

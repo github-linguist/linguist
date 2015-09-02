@@ -1,0 +1,456 @@
+.#  ===========================================================================
+.#  Generate class header/source skeletons
+.#
+.#   Generates a skeleton for a new class. Will not overwrite existing files.
+.#   See project.xml for instructions on how to specify a class.
+.#
+.#  This script will generate the following files:
+.#      * include/$(project.name).h - public project header (once)
+.#      * src/$(project.prefix)_selftest.c - selftest class
+.#      * src/$(project.prefix)_classes.h - private project header
+.#      * (include|src)$(class.c_name).h - public/private header file for classes
+.#      * src/$(class.c_name).c - source code file for classes
+.#  ===========================================================================
+.#
+.#   Resolve XML includes
+.#
+.if (count (class) > 0)
+.#
+.#  Build the project header file
+.#
+.if !file.exists ("include")
+.   directory.create ("include")
+.endif
+.if !file.exists ("include/$(project.name).h") & count (class, class.name = project.name) = 0
+.echo "Generating project header include/$(project.name).h..."
+.   output "include/$(project.name).h"
+/*  =========================================================================
+    $(project.name) - $(project.description?'':)
+
+.   for project.license
+    $(string.trim (license.):block                                         )
+.   endfor
+    =========================================================================
+*/
+
+#ifndef $(PROJECT.NAME)_H_INCLUDED
+#define $(PROJECT.NAME)_H_INCLUDED
+
+//  Include the project library file
+#include "$(project.prefix)_library.h"
+
+//  Add your own public definitions here, if you need them
+
+#endif
+.endif
+.output "include/$(project.prefix)_library.h"
+/*  =========================================================================
+    $(project.name) - $(PROJECT.NAME) wrapper
+
+.       for project.license
+    $(string.trim (license.):block                                         )
+.       endfor
+
+$(project.GENERATED_WARNING_HEADER:)
+    =========================================================================
+*/
+
+#ifndef $(project.prefix)_library_H_INCLUDED
+#define $(project.prefix)_library_H_INCLUDED
+
+//  Set up environment for the application
+.if file.exists ("include/$(project.prelude)")
+#include "$(project.prelude)"
+.endif
+
+//  External dependencies
+.for use where !defined (implied)
+#include <$(use.includename).h>
+.endfor
+
+//  $(PROJECT.NAME) version macros for compile-time API detection
+
+#define $(PROJECT.NAME)_VERSION_MAJOR $(project->version.major)
+#define $(PROJECT.NAME)_VERSION_MINOR $(project->version.minor)
+#define $(PROJECT.NAME)_VERSION_PATCH $(project->version.patch)
+
+#define $(PROJECT.NAME)_MAKE_VERSION(major, minor, patch) \\
+    ((major) * 10000 + (minor) * 100 + (patch))
+#define $(PROJECT.NAME)_VERSION \\
+    $(PROJECT.NAME)_MAKE_VERSION($(PROJECT.NAME)_VERSION_MAJOR, $(PROJECT.NAME)_VERSION_MINOR, $(PROJECT.NAME)_VERSION_PATCH)
+
+#if defined (__WINDOWS__)
+#   if defined $(PROJECT.LIBNAME)_STATIC
+#       define $(PROJECT.PREFIX)_EXPORT
+#   elif defined $(PROJECT.LIBNAME)_EXPORTS
+#       define $(PROJECT.PREFIX)_EXPORT __declspec(dllexport)
+#   else
+#       define $(PROJECT.PREFIX)_EXPORT __declspec(dllimport)
+#   endif
+#else
+#   define $(PROJECT.PREFIX)_EXPORT
+#endif
+
+//  Opaque class structures to allow forward references
+.for project.class where !defined (class.private)
+typedef struct _$(class.c_name)_t $(class.c_name)_t;
+#define $(CLASS.C_NAME)_T_DEFINED
+.endfor
+
+.for constant where !defined (constant.private)
+.   if first ()
+//  Public constants
+.   endif
+#define $(CONSTANT.NAME)\t$(constant.value) //  $(constant.?'')
+.endfor
+
+//  Public API classes
+.for header where !defined (header.private)
+#include "$(header.name).h"
+.endfor
+.for class where !defined (class.private) & class.c_name <> "$(project.name)"
+#include "$(class.c_name).h"
+.endfor
+
+#endif
+/*
+$(project.GENERATED_WARNING_HEADER:)
+*/
+.#
+.#  Build the project selftest file
+.#
+.echo "Generating src/$(project.prefix)_selftest.c..."
+.output "src/$(project.prefix)_selftest.c"
+/*  =========================================================================
+    $(project.prefix)_selftest.c - run selftests
+
+    Runs all selftests.
+
+    -------------------------------------------------------------------------
+.   for project.license
+    $(string.trim (license.):block                                         )
+.   endfor
+
+$(project.GENERATED_WARNING_HEADER:)
+    =========================================================================
+*/
+
+#include "$(project.prefix)_classes.h"
+
+int
+main (int argc, char *argv [])
+{
+    bool verbose;
+    if (argc == 2 && streq (argv [1], "-v"))
+        verbose = true;
+    else
+        verbose = false;
+
+    printf ("Running $(project.name) selftests...\\n");
+
+.for class
+    $(class.c_name)_test (verbose);
+.endfor
+
+    printf ("Tests passed OK\\n");
+    return 0;
+}
+/*
+$(project.GENERATED_WARNING_HEADER:)
+*/
+.-
+.-  Build the classes header for private header files and constants
+.-
+.echo "Generating src/$(project.prefix)_classes.h..."
+.output "src/$(project.prefix)_classes.h"
+/*  =========================================================================
+    $(project.prefix)_classes - private header file
+
+.   for project.license
+    $(string.trim (license.):block                                         )
+.   endfor
+$(project.GENERATED_WARNING_HEADER:)
+    =========================================================================
+*/
+
+#ifndef $(PROJECT.PREFIX)_CLASSES_H_INCLUDED
+#define $(PROJECT.PREFIX)_CLASSES_H_INCLUDED
+
+//  External API
+#include "../include/$(project.name).h"
+
+//  Internal API
+.for class where defined (class.private)
+#include "$(class.c_name).h"
+.endfor
+.for header where defined (header.private)
+#include "$(header.name).h"
+.endfor
+
+.for constant where defined (constant.private)
+.   if first ()
+//  Private constants
+.   endif
+#define $(CONSTANT.NAME)\t$(constant.value) //  $(constant.?'')
+.endfor
+#endif
+.-
+.-  Build the header file for a class
+.-
+.for class
+.   if class.private ?= 1
+.       class.classdir = "src"
+.   endif
+.header_file = "$(class.classdir)/$(class.c_name).h"
+.if !file.exists (header_file)
+.echo "Generating $(header_file)..."
+.   output header_file
+/*  =========================================================================
+    $(class.c_name) - $(string.trim (class.?''):no,left)
+
+.   for project.license
+    $(string.trim (license.):block                                         )
+.   endfor
+    =========================================================================
+*/
+
+#ifndef $(CLASS.C_NAME)_H_INCLUDED
+#define $(CLASS.C_NAME)_H_INCLUDED
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+.   if class.c_name = project.name
+//  Include the library file with typdefs, public includes and public constants
+#include "$(class.c_name)_library.h"
+
+.   endif
+.   if class.private ?= 1
+typedef struct _$(class.c_name)_t $(class.c_name)_t;
+.   endif
+
+//  @interface
+//  Create a new $(class.c_name)
+$(PROJECT.PREFIX)_EXPORT $(class.c_name)_t *
+    $(class.c_name)_new (void);
+
+//  Destroy the $(class.c_name)
+$(PROJECT.PREFIX)_EXPORT void
+    $(class.c_name)_destroy ($(class.c_name)_t **self_p);
+
+//  Print properties of object
+$(PROJECT.PREFIX)_EXPORT void
+    $(class.c_name)_print ($(class.c_name)_t *self);
+
+//  Self test of this class
+$(PROJECT.PREFIX)_EXPORT void
+    $(class.c_name)_test (bool verbose);
+//  @end
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
+.close # If there is an API defined, then the file must be written so we can find and rewrite the @interface section
+.endif
+.-
+.-  Build the source file for a class
+.-
+.source_file = "src/$(class.c_name).c"
+.if !file.exists (source_file)
+.echo "Generating $(source_file)..."
+.   output source_file
+.if !defined (class.api)
+.   resolve_c_class(class)
+.endif
+/*  =========================================================================
+    $(class.c_name) - $(class.?'':)
+
+.   for project.license
+    $(string.trim (license.):block                                         )
+.   endfor
+    =========================================================================
+*/
+
+/*
+@header
+    $(class.c_name) - $(class.?'':)
+@discuss
+@end
+*/
+
+#include "../include/$(project.name).h"
+.   if (project.has_private_classes)
+#include "$(project.prefix)_classes.h"
+.   endif
+
+//  Structure of our class
+
+struct _$(class.c_name)_t {
+    //  TODO: Declare properties
+};
+
+.for class.constructor as method
+
+//  --------------------------------------------------------------------------
+//  $(method.description:no,block)
+
+$(c_method_declaration (method, 1):)
+{
+    $(class.c_name)_t *self = ($(class.c_name)_t *) zmalloc (sizeof ($(class.c_name)_t));
+    assert (self);
+
+    //  TODO: Initialize properties
+
+    return self;
+}
+.endfor
+.for class.destructor as method
+
+//  --------------------------------------------------------------------------
+//  $(method.description:no,block)
+
+$(c_method_declaration (method, 1):)
+{
+    assert (self_p);
+    if (*self_p) {
+        $(class.c_name)_t *self = *self_p;
+
+        //  TODO: Free class properties
+
+        //  Free object itself
+        free (self);
+        *self_p = NULL;
+    }
+}
+.endfor
+
+.for class.method where !(method.name = "test")
+
+//  --------------------------------------------------------------------------
+//  $(method.description:no,block)
+
+$(c_method_declaration (method, 1):)
+{
+    assert (self);
+}
+.endfor
+
+.for class.method where method.name = "test"
+
+//  --------------------------------------------------------------------------
+//  $(method.description:no,block)
+
+$(c_method_declaration (method, 1):)
+{
+    printf (" * $(class.c_name): ");
+
+    //  @selftest
+    //  Simple create/destroy test
+    $(class.c_name)_t *self = $(class.c_name)_new ();
+    assert (self);
+    $(class.c_name)_destroy (&self);
+    //  @end
+
+    printf ("OK\\n");
+}
+.endfor
+.endif
+.-
+.-  Regenerate the @interface for the class if it has an api model
+.-
+.if defined (class.api)
+.echo "Regenerating @interface in $(header_file)..."
+.template 0
+
+    # Open the header_file for reading
+    handle = file.open (header_file, "ra")
+    current_loc = "prefix"
+    error = # undefined
+    HEADER_FILE_PREFIX = "" # All lines preceding the @interface line
+    HEADER_FILE_SUFFIX = "" # All lines following the @end line
+
+    # Read each line from the file and pull out the prefix and suffix blocks
+    while defined (handle)
+        this_line = handle.read (error)? ""
+
+        if defined (error)
+            handle.close ()
+            handle = # undefined
+        elsif current_loc = "prefix"
+            if regexp.match ("//\\s*@interface", this_line)
+                current_loc = "interface"
+            elsif regexp.match ("//\\s*@warning", this_line)
+                # ignore the warning line - do not copy it
+            else
+                HEADER_FILE_PREFIX += this_line
+            endif
+        elsif current_loc = "interface"
+            if regexp.match ("//\\s*@end", this_line)
+                current_loc = "suffix"
+            endif
+        elsif current_loc = "suffix"
+            HEADER_FILE_SUFFIX += this_line
+        endif
+    endwhile
+.endtemplate
+.# Now output the file with stored prefix, generated interface, and stored suffix
+.output header_file
+$(HEADER_FILE_PREFIX:)\
+//  @warning THE FOLLOWING @INTERFACE BLOCK IS AUTO-GENERATED BY ZPROJECT!
+//  @warning Please edit the model at "$(class.api)" to make changes.
+//  @interface\
+.for class.constant
+.   if first ()
+
+.   endif
+#define $(CLASS.NAME:c)_$(NAME:c) $(value)  // $(constant.description:no,block)
+.endfor
+.-
+.for class.enum
+
+typedef enum {
+.  for enum.constant
+.    if last()
+.        post = ""
+.    else
+.        post = ","
+.    endif
+    $(CLASS.NAME:c)_$(CONSTANT.NAME:c) = $(value)$(post)
+.  endfor
+} $(class.name:c)_$(enum.name:c)_t;
+.endfor
+.-
+.for class.callback_type
+
+// $(callback_type.description:no,block)
+$(c_callback_typedef (callback_type))
+.endfor
+.-
+.for class.constructor as method
+
+//  $(method.description:no,block)
+$(c_method_declaration (method):)
+.endfor
+.-
+.for class.destructor as method
+
+//  $(method.description:no,block)
+$(c_method_declaration (method):)
+.endfor
+.-
+.for class.method
+
+//  $(method.description:no,block)
+.if method->return.fresh
+//  The caller is responsible for destroying the return value when finished with it.
+.endif
+$(c_method_declaration (method):)
+.endfor
+//  @end
+$(HEADER_FILE_SUFFIX:)\
+.endif
+.endfor
+.endif

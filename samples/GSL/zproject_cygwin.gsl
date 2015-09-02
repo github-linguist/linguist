@@ -1,0 +1,40 @@
+.#  Generate cygwin makefile for project
+.#
+.#  This is a code generator built using the iMatix GSL code generation
+.#  language. See https://github.com/imatix/gsl for details. This script
+.#  is licensed under MIT/X11.
+.#
+.echo "Generating builds/cygwin/Makefile.cygwin..."
+.if !file.exists ('builds/cygwin')
+.   directory.create('builds/cygwin')
+.endif    
+.output "builds/cygwin/Makefile.cygwin"
+$(project.GENERATED_WARNING_HEADER:)
+
+CC=gcc
+# replace the following with wherever you have installed libzmq
+PREFIX=/usr/local
+INCDIR=-I$\(PREFIX)/include -I.
+LIBDIR=-L$\(PREFIX)/lib
+CFLAGS=-Wall -Os -g -D$(PROJECT.LIBNAME)_EXPORTS $\(INCDIR)
+
+OBJS =\
+.for class
+ $(name:c).o\
+.endfor
+
+%.o: ../../src/%.c
+	$\(CC) -c -o $@ $< $\(CFLAGS)
+
+all: $(project.libname).dll $(project.prefix)_selftest.exe
+
+$(project.libname).dll: $\(OBJS)
+	$\(CC) -shared -o $@ $\(OBJS) -Wl,--out-implib,$@.a $\(LIBDIR) -lzmq -luuid
+
+# the test functions are not exported into the DLL
+$(project.prefix)_selftest.exe: $(project.prefix)_selftest.o $\(OBJS)
+	$\(CC) -o $@ $^ $\(LIBDIR) -lzmq -luuid
+clean:
+	del *.o *.a *.dll *.exe
+
+$(project.GENERATED_WARNING_HEADER:)

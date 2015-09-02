@@ -1,0 +1,341 @@
+.#  Generate VC++ project file for project
+.#
+.#  This is a code generator built using the iMatix GSL code generation
+.#  language. See https://github.com/imatix/gsl for details. This script
+.#  is licensed under MIT/X11.
+.#
+.if !file.exists ('builds/msvc/vs2008/$(project.name:c)')
+.   directory.create('builds/msvc/vs2008/$(project.name:c)')
+.endif
+.echo "Generating builds/msvc/vs2008/$(project.name:c)/$(project.name:c).sln..."
+.output "builds/msvc/vs2008/$(project.name:c)/$(project.name:c).sln"
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "$(project.name:c)", "$(project.name:c)\\$(project.name:c).vcproj", "{0C4A2E28-8C9E-4B27-85D9-BB679AD84AC7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "$(project.name:c)_selftest", "$(project.name:c)_selftest\\$(project.name:c)_selftest.vcproj", "{A5497C4B-1CD1-4779-9458-2CF7908E7E26}"
+EndProject
+Global
+    GlobalSection(SolutionConfigurationPlatforms) = preSolution
+        Debug|Win32 = Debug|Win32
+        Debug|x64 = Debug|x64
+        DebugDLL|Win32 = DebugDLL|Win32
+        DebugDLL|x64 = DebugDLL|x64
+        Release|Win32 = Release|Win32
+        Release|x64 = Release|x64
+        ReleaseDLL|Win32 = ReleaseDLL|Win32
+        ReleaseDLL|x64 = ReleaseDLL|x64
+        RelWithDebInfo|Win32 = RelWithDebInfo|Win32
+        RelWithDebInfo|x64 = RelWithDebInfo|x64
+    EndGlobalSection
+    GlobalSection(ProjectConfigurationPlatforms) = postSolution
+        {0C4A2E28-8C9E-4B27-85D9-BB679AD84AC7}.Debug|Win32.ActiveCfg = Debug|Win32
+        {0C4A2E28-8C9E-4B27-85D9-BB679AD84AC7}.Debug|Win32.Build.0 = Debug|Win32
+        {0C4A2E28-8C9E-4B27-85D9-BB679AD84AC7}.Debug|x64.ActiveCfg = Debug|x64
+        {0C4A2E28-8C9E-4B27-85D9-BB679AD84AC7}.Debug|x64.Build.0 = Debug|x64
+        {0C4A2E28-8C9E-4B27-85D9-BB679AD84AC7}.DebugDLL|Win32.ActiveCfg = DebugDLL|Win32
+        {0C4A2E28-8C9E-4B27-85D9-BB679AD84AC7}.DebugDLL|Win32.Build.0 = DebugDLL|Win32
+        {0C4A2E28-8C9E-4B27-85D9-BB679AD84AC7}.DebugDLL|x64.ActiveCfg = DebugDLL|x64
+        {0C4A2E28-8C9E-4B27-85D9-BB679AD84AC7}.DebugDLL|x64.Build.0 = DebugDLL|x64
+        {0C4A2E28-8C9E-4B27-85D9-BB679AD84AC7}.Release|Win32.ActiveCfg = Release|Win32
+        {0C4A2E28-8C9E-4B27-85D9-BB679AD84AC7}.Release|Win32.Build.0 = Release|Win32
+        {0C4A2E28-8C9E-4B27-85D9-BB679AD84AC7}.Release|x64.ActiveCfg = Release|x64
+        {0C4A2E28-8C9E-4B27-85D9-BB679AD84AC7}.Release|x64.Build.0 = Release|x64
+        {0C4A2E28-8C9E-4B27-85D9-BB679AD84AC7}.ReleaseDLL|Win32.ActiveCfg = ReleaseDLL|Win32
+        {0C4A2E28-8C9E-4B27-85D9-BB679AD84AC7}.ReleaseDLL|Win32.Build.0 = ReleaseDLL|Win32
+        {0C4A2E28-8C9E-4B27-85D9-BB679AD84AC7}.ReleaseDLL|x64.ActiveCfg = ReleaseDLL|x64
+        {0C4A2E28-8C9E-4B27-85D9-BB679AD84AC7}.ReleaseDLL|x64.Build.0 = ReleaseDLL|x64
+        {0C4A2E28-8C9E-4B27-85D9-BB679AD84AC7}.RelWithDebInfo|Win32.ActiveCfg = RelWithDebInfo|Win32
+        {0C4A2E28-8C9E-4B27-85D9-BB679AD84AC7}.RelWithDebInfo|Win32.Build.0 = RelWithDebInfo|Win32
+        {0C4A2E28-8C9E-4B27-85D9-BB679AD84AC7}.RelWithDebInfo|x64.ActiveCfg = RelWithDebInfo|x64
+        {0C4A2E28-8C9E-4B27-85D9-BB679AD84AC7}.RelWithDebInfo|x64.Build.0 = RelWithDebInfo|x64
+        {A5497C4B-1CD1-4779-9458-2CF7908E7E26}.Debug|Win32.ActiveCfg = Debug|Win32
+        {A5497C4B-1CD1-4779-9458-2CF7908E7E26}.Debug|Win32.Build.0 = Debug|Win32
+        {A5497C4B-1CD1-4779-9458-2CF7908E7E26}.Debug|x64.ActiveCfg = Debug|x64
+        {A5497C4B-1CD1-4779-9458-2CF7908E7E26}.Debug|x64.Build.0 = Debug|x64
+        {A5497C4B-1CD1-4779-9458-2CF7908E7E26}.DebugDLL|Win32.ActiveCfg = DebugDLL|Win32
+        {A5497C4B-1CD1-4779-9458-2CF7908E7E26}.DebugDLL|Win32.Build.0 = DebugDLL|Win32
+        {A5497C4B-1CD1-4779-9458-2CF7908E7E26}.DebugDLL|x64.ActiveCfg = DebugDLL|x64
+        {A5497C4B-1CD1-4779-9458-2CF7908E7E26}.DebugDLL|x64.Build.0 = DebugDLL|x64
+        {A5497C4B-1CD1-4779-9458-2CF7908E7E26}.Release|Win32.ActiveCfg = Release|Win32
+        {A5497C4B-1CD1-4779-9458-2CF7908E7E26}.Release|Win32.Build.0 = Release|Win32
+        {A5497C4B-1CD1-4779-9458-2CF7908E7E26}.Release|x64.ActiveCfg = Release|x64
+        {A5497C4B-1CD1-4779-9458-2CF7908E7E26}.Release|x64.Build.0 = Release|x64
+        {A5497C4B-1CD1-4779-9458-2CF7908E7E26}.ReleaseDLL|Win32.ActiveCfg = ReleaseDLL|Win32
+        {A5497C4B-1CD1-4779-9458-2CF7908E7E26}.ReleaseDLL|Win32.Build.0 = ReleaseDLL|Win32
+        {A5497C4B-1CD1-4779-9458-2CF7908E7E26}.ReleaseDLL|x64.ActiveCfg = ReleaseDLL|x64
+        {A5497C4B-1CD1-4779-9458-2CF7908E7E26}.ReleaseDLL|x64.Build.0 = ReleaseDLL|x64
+        {A5497C4B-1CD1-4779-9458-2CF7908E7E26}.RelWithDebInfo|Win32.ActiveCfg = RelWithDebInfo|Win32
+        {A5497C4B-1CD1-4779-9458-2CF7908E7E26}.RelWithDebInfo|Win32.Build.0 = RelWithDebInfo|Win32
+        {A5497C4B-1CD1-4779-9458-2CF7908E7E26}.RelWithDebInfo|x64.ActiveCfg = RelWithDebInfo|x64
+        {A5497C4B-1CD1-4779-9458-2CF7908E7E26}.RelWithDebInfo|x64.Build.0 = RelWithDebInfo|x64
+    EndGlobalSection
+    GlobalSection(SolutionProperties) = preSolution
+        HideSolutionNode = FALSE
+    EndGlobalSection
+EndGlobal
+.#
+.echo "Generating builds/msvc/vs2008/$(project.name:c)/$(project.name:c).vcproj..."
+.output "builds/msvc/vs2008/$(project.name:c)/$(project.name:c).vcproj"
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+$(project.GENERATED_WARNING_HEADER:)
+-->
+<VisualStudioProject ProjectType="Visual C++" Version="9.00" Name="$(project.name:c)" ProjectGUID="{0C4A2E28-8C9E-4B27-85D9-BB679AD84AC7}" RootNamespace="$(project.name:c)" TargetFrameworkVersion="0">
+  <Platforms>
+    <Platform Name="Win32" />
+    <Platform Name="x64" />
+  </Platforms>
+  <ToolFiles />
+  <Configurations>
+    <Configuration Name="Release|Win32" OutputDirectory="$\(PlatformName)\\$\(ConfigurationName)" IntermediateDirectory="$\(PlatformName)\\$\(ConfigurationName)" ConfigurationType="4" InheritedPropertySheets="$\(VCInstallDir)VCProjectDefaults\\UpgradeFromVC60.vsprops" UseOfMFC="0" ATLMinimizesCRunTimeLibraryUsage="false" CharacterSet="2">
+      <Tool Name="VCPreBuildEventTool" />
+      <Tool Name="VCCustomBuildTool" />
+      <Tool Name="VCXMLDataGeneratorTool" />
+      <Tool Name="VCWebServiceProxyGeneratorTool" />
+      <Tool Name="VCMIDLTool" />
+      <Tool Name="VCCLCompilerTool" Optimization="2" InlineFunctionExpansion="1" AdditionalIncludeDirectories="..\\..\\..\\..\\include;..\\..\\..\\..\\..\\libzmq\\include" PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;BASE_THREADSAFE" StringPooling="true" RuntimeLibrary="0" EnableFunctionLevelLinking="true" PrecompiledHeaderFile="./$(project.name:c).pch" AssemblerListingLocation="./" ObjectFile="./" ProgramDataBaseFileName="./" WarningLevel="3" SuppressStartupBanner="true" />
+      <Tool Name="VCManagedResourceCompilerTool" />
+      <Tool Name="VCResourceCompilerTool" PreprocessorDefinitions="NDEBUG" Culture="2060" />
+      <Tool Name="VCPreLinkEventTool" />
+      <Tool Name="VCLibrarianTool" OutputFile=".\\$(project.name:c).lib" SuppressStartupBanner="true" />
+      <Tool Name="VCALinkTool" />
+      <Tool Name="VCXDCMakeTool" />
+      <Tool Name="VCBscMakeTool" SuppressStartupBanner="true" OutputFile="./$(project.name:c).bsc" />
+      <Tool Name="VCFxCopTool" />
+      <Tool Name="VCPostBuildEventTool" />
+    </Configuration>
+    <Configuration Name="Release|x64" OutputDirectory="$\(PlatformName)\\$\(ConfigurationName)" IntermediateDirectory="$\(PlatformName)\\$\(ConfigurationName)" ConfigurationType="4" InheritedPropertySheets="$\(VCInstallDir)VCProjectDefaults\\UpgradeFromVC60.vsprops" UseOfMFC="0" ATLMinimizesCRunTimeLibraryUsage="false" CharacterSet="2">
+      <Tool Name="VCPreBuildEventTool" />
+      <Tool Name="VCCustomBuildTool" />
+      <Tool Name="VCXMLDataGeneratorTool" />
+      <Tool Name="VCWebServiceProxyGeneratorTool" />
+      <Tool Name="VCMIDLTool" TargetEnvironment="3" />
+      <Tool Name="VCCLCompilerTool" Optimization="2" InlineFunctionExpansion="1" AdditionalIncludeDirectories="..\\..\\..\\..\\include;..\\..\\..\\..\\..\\libzmq\\include" PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;BASE_THREADSAFE" StringPooling="true" RuntimeLibrary="0" EnableFunctionLevelLinking="true" PrecompiledHeaderFile="./$(project.name:c).pch" AssemblerListingLocation="./" ObjectFile="./" ProgramDataBaseFileName="./" WarningLevel="3" SuppressStartupBanner="true" />
+      <Tool Name="VCManagedResourceCompilerTool" />
+      <Tool Name="VCResourceCompilerTool" PreprocessorDefinitions="NDEBUG" Culture="2060" />
+      <Tool Name="VCPreLinkEventTool" />
+      <Tool Name="VCLibrarianTool" OutputFile=".\\$(project.name:c).lib" SuppressStartupBanner="true" />
+      <Tool Name="VCALinkTool" />
+      <Tool Name="VCXDCMakeTool" />
+      <Tool Name="VCBscMakeTool" SuppressStartupBanner="true" OutputFile="./$(project.name:c).bsc" />
+      <Tool Name="VCFxCopTool" />
+      <Tool Name="VCPostBuildEventTool" />
+    </Configuration>
+    <Configuration Name="Debug|Win32" OutputDirectory="$\(PlatformName)\\$\(ConfigurationName)" IntermediateDirectory="$\(PlatformName)\\$\(ConfigurationName)" ConfigurationType="4" InheritedPropertySheets="$\(VCInstallDir)VCProjectDefaults\\UpgradeFromVC60.vsprops" UseOfMFC="0" ATLMinimizesCRunTimeLibraryUsage="false" CharacterSet="2">
+      <Tool Name="VCPreBuildEventTool" />
+      <Tool Name="VCCustomBuildTool" />
+      <Tool Name="VCXMLDataGeneratorTool" />
+      <Tool Name="VCWebServiceProxyGeneratorTool" />
+      <Tool Name="VCMIDLTool" />
+      <Tool Name="VCCLCompilerTool" Optimization="0" AdditionalIncludeDirectories="..\\..\\..\\..\\include;..\\..\\..\\..\\..\\libzmq\\include" PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;BASE_THREADSAFE" MinimalRebuild="false" BasicRuntimeChecks="3" RuntimeLibrary="1" PrecompiledHeaderFile="./$(project.name:c).pch" AssemblerListingLocation="./" ObjectFile="./" ProgramDataBaseFileName="./" WarningLevel="3" SuppressStartupBanner="true" DebugInformationFormat="1" />
+      <Tool Name="VCManagedResourceCompilerTool" />
+      <Tool Name="VCResourceCompilerTool" PreprocessorDefinitions="_DEBUG" Culture="2060" />
+      <Tool Name="VCPreLinkEventTool" />
+      <Tool Name="VCLibrarianTool" OutputFile=".\\$(project.name:c).lib" SuppressStartupBanner="true" />
+      <Tool Name="VCALinkTool" />
+      <Tool Name="VCXDCMakeTool" />
+      <Tool Name="VCBscMakeTool" SuppressStartupBanner="true" OutputFile="./$(project.name:c).bsc" />
+      <Tool Name="VCFxCopTool" />
+      <Tool Name="VCPostBuildEventTool" />
+    </Configuration>
+    <Configuration Name="Debug|x64" OutputDirectory="$\(PlatformName)\\$\(ConfigurationName)" IntermediateDirectory="$\(PlatformName)\\$\(ConfigurationName)" ConfigurationType="4" InheritedPropertySheets="$\(VCInstallDir)VCProjectDefaults\\UpgradeFromVC60.vsprops" UseOfMFC="0" ATLMinimizesCRunTimeLibraryUsage="false" CharacterSet="2">
+      <Tool Name="VCPreBuildEventTool" />
+      <Tool Name="VCCustomBuildTool" />
+      <Tool Name="VCXMLDataGeneratorTool" />
+      <Tool Name="VCWebServiceProxyGeneratorTool" />
+      <Tool Name="VCMIDLTool" TargetEnvironment="3" />
+      <Tool Name="VCCLCompilerTool" Optimization="0" AdditionalIncludeDirectories="..\\..\\..\\..\\include;..\\..\\..\\..\\..\\libzmq\\include" PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;BASE_THREADSAFE" MinimalRebuild="false" BasicRuntimeChecks="3" RuntimeLibrary="1" PrecompiledHeaderFile="./$(project.name:c).pch" AssemblerListingLocation="./" ObjectFile="./" ProgramDataBaseFileName="./" WarningLevel="3" SuppressStartupBanner="true" DebugInformationFormat="1" />
+      <Tool Name="VCManagedResourceCompilerTool" />
+      <Tool Name="VCResourceCompilerTool" PreprocessorDefinitions="_DEBUG" Culture="2060" />
+      <Tool Name="VCPreLinkEventTool" />
+      <Tool Name="VCLibrarianTool" OutputFile=".\\$(project.name:c).lib" SuppressStartupBanner="true" />
+      <Tool Name="VCALinkTool" />
+      <Tool Name="VCXDCMakeTool" />
+      <Tool Name="VCBscMakeTool" SuppressStartupBanner="true" OutputFile="./$(project.name:c).bsc" />
+      <Tool Name="VCFxCopTool" />
+      <Tool Name="VCPostBuildEventTool" />
+    </Configuration>
+    <Configuration Name="DebugDLL|Win32" OutputDirectory="$\(PlatformName)\\$\(ConfigurationName)" IntermediateDirectory="$\(PlatformName)\\$\(ConfigurationName)" ConfigurationType="2" InheritedPropertySheets="$\(VCInstallDir)VCProjectDefaults\\UpgradeFromVC60.vsprops" UseOfMFC="0" ATLMinimizesCRunTimeLibraryUsage="false" CharacterSet="2">
+      <Tool Name="VCPreBuildEventTool" />
+      <Tool Name="VCCustomBuildTool" />
+      <Tool Name="VCXMLDataGeneratorTool" />
+      <Tool Name="VCWebServiceProxyGeneratorTool" />
+      <Tool Name="VCMIDLTool" />
+      <Tool Name="VCCLCompilerTool" Optimization="0" AdditionalIncludeDirectories="..\\..\\..\\..\\include;..\\..\\..\\..\\..\\libzmq\\include" PreprocessorDefinitions="LIB$(PROJECT.NAME:c)_EXPORTS;_WIN32;WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;BASE_THREADSAFE" MinimalRebuild="false" BasicRuntimeChecks="3" RuntimeLibrary="3" PrecompiledHeaderFile="./$(project.name:c).pch" AssemblerListingLocation="./" ObjectFile="./" ProgramDataBaseFileName="./" WarningLevel="3" SuppressStartupBanner="true" DebugInformationFormat="1" />
+      <Tool Name="VCManagedResourceCompilerTool" />
+      <Tool Name="VCResourceCompilerTool" PreprocessorDefinitions="_DEBUG" Culture="2060" />
+      <Tool Name="VCPreLinkEventTool" />
+      <Tool Name="VCLinkerTool" AdditionalDependencies="libzmq.lib Ws2_32.lib Iphlpapi.lib" AdditionalLibraryDirectories="..\\..\\..\\..\\..\\libzmq\\lib\\" />
+      <Tool Name="VCALinkTool" />
+      <Tool Name="VCManifestTool" />
+      <Tool Name="VCXDCMakeTool" />
+      <Tool Name="VCBscMakeTool" SuppressStartupBanner="true" OutputFile="./$(project.name:c).bsc" />
+      <Tool Name="VCFxCopTool" />
+      <Tool Name="VCAppVerifierTool" />
+      <Tool Name="VCPostBuildEventTool" />
+    </Configuration>
+    <Configuration Name="DebugDLL|x64" OutputDirectory="$\(PlatformName)\\$\(ConfigurationName)" IntermediateDirectory="$\(PlatformName)\\$\(ConfigurationName)" ConfigurationType="2" InheritedPropertySheets="$\(VCInstallDir)VCProjectDefaults\\UpgradeFromVC60.vsprops" UseOfMFC="0" ATLMinimizesCRunTimeLibraryUsage="false" CharacterSet="2">
+      <Tool Name="VCPreBuildEventTool" />
+      <Tool Name="VCCustomBuildTool" />
+      <Tool Name="VCXMLDataGeneratorTool" />
+      <Tool Name="VCWebServiceProxyGeneratorTool" />
+      <Tool Name="VCMIDLTool" TargetEnvironment="3" />
+      <Tool Name="VCCLCompilerTool" Optimization="0" AdditionalIncludeDirectories="..\\..\\..\\..\\include;..\\..\\..\\..\\..\\libzmq\\include" PreprocessorDefinitions="LIB$(PROJECT.NAME:c)_EXPORTS;_WIN32;WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;BASE_THREADSAFE" MinimalRebuild="false" BasicRuntimeChecks="3" RuntimeLibrary="3" PrecompiledHeaderFile="./$(project.name:c).pch" AssemblerListingLocation="./" ObjectFile="./" ProgramDataBaseFileName="./" WarningLevel="3" SuppressStartupBanner="true" DebugInformationFormat="1" />
+      <Tool Name="VCManagedResourceCompilerTool" />
+      <Tool Name="VCResourceCompilerTool" PreprocessorDefinitions="_DEBUG" Culture="2060" />
+      <Tool Name="VCPreLinkEventTool" />
+      <Tool Name="VCLinkerTool" AdditionalDependencies="libzmq.lib Ws2_32.lib Iphlpapi.lib" AdditionalLibraryDirectories="..\\..\\..\\..\\..\\libzmq\\lib\\x64;..\\..\\..\\..\\..\\libzmq\\lib" TargetMachine="17" />
+      <Tool Name="VCALinkTool" />
+      <Tool Name="VCManifestTool" />
+      <Tool Name="VCXDCMakeTool" />
+      <Tool Name="VCBscMakeTool" SuppressStartupBanner="true" OutputFile="./$(project.name:c).bsc" />
+      <Tool Name="VCFxCopTool" />
+      <Tool Name="VCAppVerifierTool" />
+      <Tool Name="VCPostBuildEventTool" />
+    </Configuration>
+    <Configuration Name="ReleaseDLL|Win32" OutputDirectory="$\(PlatformName)\\$\(ConfigurationName)" IntermediateDirectory="$\(PlatformName)\\$\(ConfigurationName)" ConfigurationType="2" InheritedPropertySheets="$\(VCInstallDir)VCProjectDefaults\\UpgradeFromVC60.vsprops" UseOfMFC="0" ATLMinimizesCRunTimeLibraryUsage="false" CharacterSet="2">
+      <Tool Name="VCPreBuildEventTool" />
+      <Tool Name="VCCustomBuildTool" />
+      <Tool Name="VCXMLDataGeneratorTool" />
+      <Tool Name="VCWebServiceProxyGeneratorTool" />
+      <Tool Name="VCMIDLTool" />
+      <Tool Name="VCCLCompilerTool" Optimization="2" InlineFunctionExpansion="1" AdditionalIncludeDirectories="..\\..\\..\\..\\include;..\\..\\..\\..\\..\\libzmq\\include" PreprocessorDefinitions="LIB$(PROJECT.NAME:c)_EXPORTS;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;BASE_THREADSAFE" StringPooling="true" RuntimeLibrary="2" EnableFunctionLevelLinking="true" PrecompiledHeaderFile="./$(project.name:c).pch" AssemblerListingLocation="./" ObjectFile="./" ProgramDataBaseFileName="./" WarningLevel="3" SuppressStartupBanner="true" />
+      <Tool Name="VCManagedResourceCompilerTool" />
+      <Tool Name="VCResourceCompilerTool" PreprocessorDefinitions="NDEBUG" Culture="2060" />
+      <Tool Name="VCPreLinkEventTool" />
+      <Tool Name="VCLinkerTool" AdditionalDependencies="libzmq.lib Ws2_32.lib Iphlpapi.lib" AdditionalLibraryDirectories="..\\..\\..\\..\\..\\libzmq\\lib\\" />
+      <Tool Name="VCALinkTool" />
+      <Tool Name="VCManifestTool" />
+      <Tool Name="VCXDCMakeTool" />
+      <Tool Name="VCBscMakeTool" SuppressStartupBanner="true" OutputFile="./$(project.name:c).bsc" />
+      <Tool Name="VCFxCopTool" />
+      <Tool Name="VCAppVerifierTool" />
+      <Tool Name="VCPostBuildEventTool" />
+    </Configuration>
+    <Configuration Name="ReleaseDLL|x64" OutputDirectory="$\(PlatformName)\\$\(ConfigurationName)" IntermediateDirectory="$\(PlatformName)\\$\(ConfigurationName)" ConfigurationType="2" InheritedPropertySheets="$\(VCInstallDir)VCProjectDefaults\\UpgradeFromVC60.vsprops" UseOfMFC="0" ATLMinimizesCRunTimeLibraryUsage="false" CharacterSet="2">
+      <Tool Name="VCPreBuildEventTool" />
+      <Tool Name="VCCustomBuildTool" />
+      <Tool Name="VCXMLDataGeneratorTool" />
+      <Tool Name="VCWebServiceProxyGeneratorTool" />
+      <Tool Name="VCMIDLTool" TargetEnvironment="3" />
+      <Tool Name="VCCLCompilerTool" Optimization="2" InlineFunctionExpansion="1" AdditionalIncludeDirectories="..\\..\\..\\..\\include;..\\..\\..\\..\\..\\libzmq\\include" PreprocessorDefinitions="LIB$(PROJECT.NAME:c)_EXPORTS;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;BASE_THREADSAFE" StringPooling="true" RuntimeLibrary="2" EnableFunctionLevelLinking="true" PrecompiledHeaderFile="./$(project.name:c).pch" AssemblerListingLocation="./" ObjectFile="./" ProgramDataBaseFileName="./" WarningLevel="3" SuppressStartupBanner="true" />
+      <Tool Name="VCManagedResourceCompilerTool" />
+      <Tool Name="VCResourceCompilerTool" PreprocessorDefinitions="NDEBUG" Culture="2060" />
+      <Tool Name="VCPreLinkEventTool" />
+      <Tool Name="VCLinkerTool" AdditionalDependencies="libzmq.lib Ws2_32.lib Iphlpapi.lib" AdditionalLibraryDirectories="..\\..\\..\\..\\..\\libzmq\\lib\\x64;..\\..\\..\\..\\..\\libzmq\\lib" GenerateDebugInformation="false" TargetMachine="17" />
+      <Tool Name="VCALinkTool" />
+      <Tool Name="VCManifestTool" />
+      <Tool Name="VCXDCMakeTool" />
+      <Tool Name="VCBscMakeTool" SuppressStartupBanner="true" OutputFile="./$(project.name:c).bsc" />
+      <Tool Name="VCFxCopTool" />
+      <Tool Name="VCAppVerifierTool" />
+      <Tool Name="VCPostBuildEventTool" />
+    </Configuration>
+    <Configuration Name="RelWithDebInfo|Win32" OutputDirectory="$\(ConfigurationName)\\$\(ConfigurationName)" IntermediateDirectory="$\(ConfigurationName)\\$\(ConfigurationName)" ConfigurationType="2" InheritedPropertySheets="$\(VCInstallDir)VCProjectDefaults\\UpgradeFromVC60.vsprops" UseOfMFC="0" ATLMinimizesCRunTimeLibraryUsage="false" CharacterSet="2">
+      <Tool Name="VCPreBuildEventTool" />
+      <Tool Name="VCCustomBuildTool" />
+      <Tool Name="VCXMLDataGeneratorTool" />
+      <Tool Name="VCWebServiceProxyGeneratorTool" />
+      <Tool Name="VCMIDLTool" />
+      <Tool Name="VCCLCompilerTool" Optimization="2" InlineFunctionExpansion="1" AdditionalIncludeDirectories="..\\..\\..\\..\\include;..\\..\\..\\..\\..\\libzmq\\include" PreprocessorDefinitions="LIB$(PROJECT.NAME:c)_EXPORTS;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;BASE_THREADSAFE" StringPooling="true" RuntimeLibrary="2" EnableFunctionLevelLinking="true" PrecompiledHeaderFile="./$(project.name:c).pch" AssemblerListingLocation="./" ObjectFile="./" ProgramDataBaseFileName="./" WarningLevel="3" SuppressStartupBanner="true" />
+      <Tool Name="VCManagedResourceCompilerTool" />
+      <Tool Name="VCResourceCompilerTool" PreprocessorDefinitions="NDEBUG" Culture="2060" />
+      <Tool Name="VCPreLinkEventTool" />
+      <Tool Name="VCLinkerTool" AdditionalDependencies="libzmq.lib Ws2_32.lib Iphlpapi.lib" AdditionalLibraryDirectories="..\\..\\..\\..\\..\\libzmq\\lib\\" GenerateDebugInformation="true" />
+      <Tool Name="VCALinkTool" />
+      <Tool Name="VCManifestTool" />
+      <Tool Name="VCXDCMakeTool" />
+      <Tool Name="VCBscMakeTool" SuppressStartupBanner="true" OutputFile="./$(project.name:c).bsc" />
+      <Tool Name="VCFxCopTool" />
+      <Tool Name="VCAppVerifierTool" />
+      <Tool Name="VCPostBuildEventTool" />
+    </Configuration>
+    <Configuration Name="RelWithDebInfo|x64" OutputDirectory="$\(PlatformName)\\$\(ConfigurationName)" IntermediateDirectory="$\(PlatformName)\\$\(ConfigurationName)" ConfigurationType="2" InheritedPropertySheets="$\(VCInstallDir)VCProjectDefaults\\UpgradeFromVC60.vsprops" UseOfMFC="0" ATLMinimizesCRunTimeLibraryUsage="false" CharacterSet="2">
+      <Tool Name="VCPreBuildEventTool" />
+      <Tool Name="VCCustomBuildTool" />
+      <Tool Name="VCXMLDataGeneratorTool" />
+      <Tool Name="VCWebServiceProxyGeneratorTool" />
+      <Tool Name="VCMIDLTool" TargetEnvironment="3" />
+      <Tool Name="VCCLCompilerTool" Optimization="2" InlineFunctionExpansion="1" AdditionalIncludeDirectories="..\\..\\..\\..\\include;..\\..\\..\\..\\..\\libzmq\\include" PreprocessorDefinitions="LIB$(PROJECT.NAME:c)_EXPORTS;WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;BASE_THREADSAFE" StringPooling="true" RuntimeLibrary="2" EnableFunctionLevelLinking="true" PrecompiledHeaderFile="./$(project.name:c).pch" AssemblerListingLocation="./" ObjectFile="./" ProgramDataBaseFileName="./" WarningLevel="3" SuppressStartupBanner="true" />
+      <Tool Name="VCManagedResourceCompilerTool" />
+      <Tool Name="VCResourceCompilerTool" PreprocessorDefinitions="NDEBUG" Culture="2060" />
+      <Tool Name="VCPreLinkEventTool" />
+      <Tool Name="VCLinkerTool" AdditionalDependencies="libzmq.lib Ws2_32.lib Iphlpapi.lib" AdditionalLibraryDirectories="..\\..\\..\\..\\..\\libzmq\\lib\\x64;..\\..\\..\\..\\..\\libzmq\\lib" GenerateDebugInformation="true" TargetMachine="17" />
+      <Tool Name="VCALinkTool" />
+      <Tool Name="VCManifestTool" />
+      <Tool Name="VCXDCMakeTool" />
+      <Tool Name="VCBscMakeTool" SuppressStartupBanner="true" OutputFile="./$(project.name:c).bsc" />
+      <Tool Name="VCFxCopTool" />
+      <Tool Name="VCAppVerifierTool" />
+      <Tool Name="VCPostBuildEventTool" />
+    </Configuration>
+  </Configurations>
+  <References />
+  <Files>
+    <Filter Name="Source Files" Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
+.for class
+      <File RelativePath="..\\..\\..\\..\\src\\$(name:c).c">
+        <FileConfiguration Name="Release|Win32">
+          <Tool Name="VCCLCompilerTool" CompileAs="2" />
+        </FileConfiguration>
+        <FileConfiguration Name="Release|x64">
+          <Tool Name="VCCLCompilerTool" CompileAs="2" />
+        </FileConfiguration>
+        <FileConfiguration Name="Debug|Win32">
+          <Tool Name="VCCLCompilerTool" CompileAs="2" />
+        </FileConfiguration>
+        <FileConfiguration Name="Debug|x64">
+          <Tool Name="VCCLCompilerTool" CompileAs="2" />
+        </FileConfiguration>
+        <FileConfiguration Name="DebugDLL|Win32">
+          <Tool Name="VCCLCompilerTool" CompileAs="2" />
+        </FileConfiguration>
+        <FileConfiguration Name="DebugDLL|x64">
+          <Tool Name="VCCLCompilerTool" CompileAs="2" />
+        </FileConfiguration>
+        <FileConfiguration Name="ReleaseDLL|Win32">
+          <Tool Name="VCCLCompilerTool" CompileAs="2" />
+        </FileConfiguration>
+        <FileConfiguration Name="ReleaseDLL|x64">
+          <Tool Name="VCCLCompilerTool" CompileAs="2" />
+        </FileConfiguration>
+        <FileConfiguration Name="RelWithDebInfo|Win32">
+          <Tool Name="VCCLCompilerTool" CompileAs="2" />
+        </FileConfiguration>
+        <FileConfiguration Name="RelWithDebInfo|x64">
+          <Tool Name="VCCLCompilerTool" CompileAs="2" />
+        </FileConfiguration>
+      </File>
+.endfor
+    </Filter>
+    <Filter Name="Header Files">
+      <File RelativePath="..\\..\\..\\..\\builds\\msvc\\platform.h" />
+.for class
+.   if class.private ?= 1
+.       class.classdir = "src"
+.   else
+.       class.classdir = "include"
+.   endif
+      <File RelativePath="..\\..\\..\\..\\$(classdir)\\$(name:c).h" />
+.endfor
+      <File RelativePath="..\\..\\..\\..\\include\\$(project.prefix)_library.h" />
+.if file.exists ("include/$(project.prelude)")
+      <File RelativePath="..\\..\\..\\..\\include\\$(project.prelude)" />
+.endif
+.if count (class, class.name = project.name) = 0
+      <File RelativePath="..\\..\\..\\..\\include\\$(project.name:c).h" />
+.endif
+.for header where !defined (header.private)
+      <File RelativePath="..\\..\\..\\..\\include\\$(name:c).h" />
+.endfor
+.for extra
+      <File RelativePath="..\\..\\..\\..\\src\\$(name)" />
+.endfor
+    </Filter>
+  </Files>
+  <Globals />
+  <!--
+$(project.GENERATED_WARNING_HEADER:)
+-->
+</VisualStudioProject>
