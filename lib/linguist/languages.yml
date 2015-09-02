@@ -1545,7 +1545,9 @@ JSON:
   searchable: false
   extensions:
   - .json
+  - .geojson
   - .lock
+  - .topojson
   filenames:
   - .jshintrc
   - composer.lock
@@ -2127,7 +2129,7 @@ Myghty:
 
 NCL:
   type: programming
-  color: #28431f
+  color: "#28431f"
   extensions:
   - .ncl
   tm_scope: source.ncl
