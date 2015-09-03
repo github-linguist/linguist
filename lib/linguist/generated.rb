@@ -56,6 +56,7 @@ module Linguist
       generated_net_specflow_feature_file? ||
       composer_lock? ||
       node_modules? ||
+      go_vendor? ||
       godeps? ||
       generated_by_zephir? ||
       minified_files? ||
@@ -278,6 +279,14 @@ module Linguist
     # Returns true or false.
     def node_modules?
       !!name.match(/node_modules\//)
+    end
+
+    # Internal: Is the blob part of the Go vendor/ tree,
+    # not meant for humans in pull requests.
+    #
+    # Returns true or false.
+    def go_vendor?
+      !!name.match(/vendor\//)
     end
 
     # Internal: Is the blob part of Godeps/,

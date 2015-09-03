@@ -245,6 +245,10 @@ class TestBlob < Minitest::Test
 
     assert sample_blob("node_modules/grunt/lib/grunt.js").generated?
 
+    # Go vendored dependencies
+    assert sample_blob("vendor/vendor.json").generated?
+    assert sample_blob("vendor/github.com/kr/s3/sign.go").generated?
+
     # Godep saved dependencies
     assert sample_blob("Godeps/Godeps.json").generated?
     assert sample_blob("Godeps/_workspace/src/github.com/kr/s3/sign.go").generated?
