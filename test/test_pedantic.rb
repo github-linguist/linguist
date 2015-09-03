@@ -32,6 +32,18 @@ class TestPedantic < Minitest::Test
     end
   end
 
+  def test_heuristics_are_sorted
+    file = File.expand_path("../../lib/linguist/heuristics.rb", __FILE__)
+    heuristics = open(file).each.grep(/^ *disambiguate/)
+    assert_sorted heuristics
+  end
+
+  def test_heuristics_tests_are_sorted
+    file = File.expand_path("../test_heuristics.rb", __FILE__)
+    tests = open(file).each.grep(/^ *def test_[a-z_]+_by_heuristics/)
+    assert_sorted tests
+  end
+
   def assert_sorted(list)
     list.each_cons(2) do |previous, item|
       flunk "#{previous} should come after #{item}" if previous > item

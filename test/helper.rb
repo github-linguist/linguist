@@ -4,6 +4,7 @@ require "mocha/setup"
 require "linguist"
 require 'color-proximity'
 require "linguist/blob"
+require 'licensee'
 
 def fixtures_path
   File.expand_path("../fixtures", __FILE__)

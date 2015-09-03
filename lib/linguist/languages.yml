@@ -843,6 +843,14 @@ ECL:
   tm_scope: none
   ace_mode: text
 
+ECLiPSe:
+  type: programming
+  group: prolog
+  extensions:
+  - .ecl
+  tm_scope: source.prolog.eclipse
+  ace_mode: prolog
+
 Eagle:
   type: markup
   color: "#814C05"
@@ -1537,7 +1545,9 @@ JSON:
   searchable: false
   extensions:
   - .json
+  - .geojson
   - .lock
+  - .topojson
   filenames:
   - .jshintrc
   - composer.lock
@@ -1711,6 +1721,7 @@ LSL:
   ace_mode: lsl
   extensions:
   - .lsl
+  - .lslp
   interpreters:
   - lsl
   color: '#3d9970'
@@ -2118,7 +2129,7 @@ Myghty:
 
 NCL:
   type: programming
-  color: #28431f
+  color: "#28431f"
   extensions:
   - .ncl
   tm_scope: source.ncl
@@ -2434,6 +2445,7 @@ PLSQL:
   type: programming
   ace_mode: sql
   tm_scope: source.plsql.oracle
+  color: "#dad8d8"
   extensions:
   - .pls
   - .pkb
@@ -2628,11 +2640,11 @@ Prolog:
   color: "#74283c"
   extensions:
   - .pl
-  - .ecl
   - .pro
   - .prolog
   interpreters:
   - swipl
+  tm_scope: source.prolog
   ace_mode: prolog
 
 Propeller Spin:
@@ -2770,7 +2782,7 @@ R:
   ace_mode: r
 
 RAML:
-  type: data
+  type: markup
   ace_mode: yaml
   tm_scope: source.yaml
   color: "#77d9fb"
@@ -2813,7 +2825,7 @@ RMarkdown:
   ace_mode: markdown
   extensions:
   - .rmd
-  tm_scope: none
+  tm_scope: source.gfm
 
 Racket:
   type: programming
@@ -3559,6 +3571,16 @@ WebIDL:
   tm_scope: source.webidl
   ace_mode: text
 
+X10:
+  type: programming
+  aliases:
+  - xten
+  ace_mode: text
+  extensions:
+  - .x10
+  color: "#4B6BEF"
+  tm_scope: source.x10
+
 XC:
   type: programming
   color: "#99DA07"
@@ -3596,6 +3618,7 @@ XML:
   - .iml
   - .ivy
   - .jelly
+  - .jsproj
   - .kml
   - .launch
   - .mdpolicy
