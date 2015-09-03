@@ -111,4 +111,14 @@ class TestRepository < Minitest::Test
     refute_predicate readme, :documentation?
     assert_predicate arduino, :documentation?
   end
+
+  def test_linguist_override_generated?
+    attr_commit = "351c1cc8fd57340839bdb400d7812332af80e9bd"
+    repo = linguist_repo(attr_commit).read_index
+
+    rakefile = Linguist::LazyBlob.new(rugged_repository, attr_commit, "Rakefile")
+
+    # overridden .gitattributes
+    assert rakefile.generated?
+  end
 end
