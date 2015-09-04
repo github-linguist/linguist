@@ -157,8 +157,11 @@ module Linguist
 
           blob = Linguist::LazyBlob.new(repository, delta.new_file[:oid], new, mode.to_s(8))
 
-          next unless blob.include_in_language_stats?
-          file_map[new] = [blob.language.group.name, blob.size]
+          if blob.include_in_language_stats?
+            file_map[new] = [blob.language.group.name, blob.size]
+          end
+
+          blob.cleanup!
         end
       end
 
