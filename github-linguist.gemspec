@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.license  = "MIT"
 
   s.files = Dir['lib/**/*'] - ['lib/linguist/grammars.rb']
-  s.executables << 'linguist'
+  s.executables = ['linguist', 'git-linguist']
 
   s.add_dependency 'charlock_holmes', '~> 0.7.3'
   s.add_dependency 'escape_utils',    '~> 1.1.0'
