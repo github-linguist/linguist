@@ -13,7 +13,8 @@ See [Troubleshooting](#troubleshooting) and [`CONTRIBUTING.md`](/CONTRIBUTING.md
 
 ![language stats bar](https://cloud.githubusercontent.com/assets/173/5562290/48e24654-8ddf-11e4-8fe7-735b0ce3a0d3.png)
 
-The Language stats bar is built by aggregating the languages of each file in that repository. If it is reporting a language that you don't expect:
+The Language stats bar displays languages percentages for the files in the repository. The percentages are calculated based on the bytes of code for each language as reported by the [List Languages](https://developer.github.com/v3/repos/#list-languages) API. If the bar is reporting a language that you don't expect:
+
 
 0. Click on the name of the language in the stats bar to see a list of the files that are identified as that language.
 0. If you see files that you didn't write, consider moving the files into one of the [paths for vendored  code](/lib/linguist/vendor.yml), or use the [manual overrides](#overrides) feature to ignore them.
