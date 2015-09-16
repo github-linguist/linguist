@@ -8,20 +8,19 @@ require 'tmpdir'
 require 'zlib'
 
 class GitLinguist
-  attr_reader :repo_path
-  attr_reader :commit_oid
-  attr_reader :incremental
-
   def initialize(path, commit_oid, incremental = true)
     @repo_path = path
-    @commit_oid = commit_oid || rugged.head.target_id
+    @commit_oid = commit_oid
     @incremental = incremental
   end
 
   def linguist
-    repo = Linguist::Repository.new(rugged, commit_oid)
+    if @commit_oid.nil?
+      raise "git-linguist must be called with a specific commit OID to perform language computation"
+    end
+    repo = Linguist::Repository.new(rugged, @commit_oid)
 
-    if incremental && stats = load_language_stats
+    if @incremental && stats = load_language_stats
       old_commit_oid, old_stats = stats
 
       # A cache with NULL oid means that we want to froze
@@ -33,19 +32,19 @@ class GitLinguist
 
     result = yield repo
 
-    save_language_stats(commit_oid, repo.cache)
+    save_language_stats(@commit_oid, repo.cache)
     result
   end
 
   def load_language_stats
-    version, commit_oid, stats = load_cache
-    if version == LANGUAGE_STATS_CACHE_VERSION && commit_oid && stats
-      [commit_oid, stats]
+    version, oid, stats = load_cache
+    if version == LANGUAGE_STATS_CACHE_VERSION && oid && stats
+      [oid, stats]
     end
   end
 
-  def save_language_stats(commit_oid, stats)
-    cache = [LANGUAGE_STATS_CACHE_VERSION, commit_oid, stats]
+  def save_language_stats(oid, stats)
+    cache = [LANGUAGE_STATS_CACHE_VERSION, oid, stats]
     write_cache(cache)
   end
 
@@ -64,11 +63,11 @@ class GitLinguist
   LANGUAGE_STATS_CACHE_VERSION = "v3:#{Linguist::VERSION}"
 
   def rugged
-    @rugged ||= Rugged::Repository.bare(repo_path)
+    @rugged ||= Rugged::Repository.bare(@repo_path)
   end
 
   def cache_file
-    File.join(repo_path, LANGUAGE_STATS_CACHE)
+    File.join(@repo_path, LANGUAGE_STATS_CACHE)
   end
 
   def write_cache(object)
