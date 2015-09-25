@@ -96,24 +96,18 @@ end
 def git_linguist(args)
   incremental = true
   commit = nil
-  git_dir = nil
 
   parser = OptionParser.new do |opts|
     opts.banner = "Usage: git-linguist [OPTIONS] stats|breakdown|dump-cache|clear|disable"
 
     opts.on("-f", "--force", "Force a full rescan") { incremental = false }
-    opts.on("--git-dir=DIR", "Path to the git repository") { |v| git_dir = v }
     opts.on("--commit=COMMIT", "Commit to index") { |v| commit = v}
   end
 
   parser.parse!(args)
 
-  git_dir ||= begin
-    pwd = Dir.pwd
-    dotgit = File.join(pwd, ".git")
-    File.directory?(dotgit) ? dotgit : pwd
-  end
-
+  git_dir = `git rev-parse --git-dir`.strip
+  raise "git-linguist must be ran in a Git repository" unless $?.success?
   wrapper = GitLinguist.new(git_dir, commit, incremental)
 
   case args.pop
