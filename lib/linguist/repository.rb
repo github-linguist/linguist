@@ -126,12 +126,13 @@ module Linguist
     end
 
     protected
+    MAX_TREE_SIZE = 100_000
 
     def compute_stats(old_commit_oid, cache = nil)
+      return {} if current_tree.count_recursive(MAX_TREE_SIZE) >= MAX_TREE_SIZE
+
       old_tree = old_commit_oid && Rugged::Commit.lookup(repository, old_commit_oid).tree
-
       read_index
-
       diff = Rugged::Tree.diff(repository, old_tree, current_tree)
 
       # Clear file map and fetch full diff if any .gitattributes files are changed
