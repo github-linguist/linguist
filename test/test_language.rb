@@ -217,6 +217,7 @@ class TestLanguage < Minitest::Test
     assert_equal [Language['Clojure']], Language.find_by_filename('riemann.config')
     assert_equal [Language['HTML+Django']], Language.find_by_filename('index.jinja')
     assert_equal [Language['Chapel']], Language.find_by_filename('examples/hello.chpl')
+    assert_includes Language.find_by_filename("index.html.fr"), Language["HTML"]
   end
 
   def test_find_by_interpreter
