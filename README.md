@@ -1,41 +1,82 @@
 # Linguist
 
-We use this library at GitHub to detect blob languages, highlight code, ignore binary files, suppress generated files in diffs, and generate language breakdown graphs.
+[issues]: https://github.com/github/linguist/issues
+[new-issue]: https://github.com/github/linguist/issues/new
 
-## Features
+This library is used on GitHub.com to detect blob languages, ignore binary or vendored files, suppress generated files in diffs, and generate language breakdown graphs.
 
-### Language detection
+See [Troubleshooting](#troubleshooting) and [`CONTRIBUTING.md`](/CONTRIBUTING.md) before filing an issue or creating a pull request.
 
-Linguist defines a list of all languages known to GitHub in a [yaml file](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml). In order for a file to be highlighted, a language and a lexer must be defined there.
+## Troubleshooting
 
-Most languages are detected by their file extension. For disambiguating between files with common extensions, we first apply some common-sense heuristics to pick out obvious languages. After that, we use a
-[statistical
-classifier](https://github.com/github/linguist/blob/master/lib/linguist/classifier.rb).
-This process can help us tell the difference between, for example, `.h` files which could be either C, C++, or Obj-C.
+### My repository is detected as the wrong language
 
-```ruby
+![language stats bar](https://cloud.githubusercontent.com/assets/173/5562290/48e24654-8ddf-11e4-8fe7-735b0ce3a0d3.png)
 
-Linguist::FileBlob.new("lib/linguist.rb").language.name #=> "Ruby"
+The Language stats bar displays languages percentages for the files in the repository. The percentages are calculated based on the bytes of code for each language as reported by the [List Languages](https://developer.github.com/v3/repos/#list-languages) API. If the bar is reporting a language that you don't expect:
 
-Linguist::FileBlob.new("bin/linguist").language.name #=> "Ruby"
+0. Click on the name of the language in the stats bar to see a list of the files that are identified as that language.
+0. If you see files that you didn't write, consider moving the files into one of the [paths for vendored  code](/lib/linguist/vendor.yml), or use the [manual overrides](#overrides) feature to ignore them.
+0. If the files are being misclassified, search for [open issues][issues] to see if anyone else has already reported the issue. Any information you an add, especially links to public repositories, is helpful.
+0. If there are no reported issues of this misclassification, [open an issue][new-issue] and include a link to the repository or a sample of the code that is being misclassified.
+
+## Overrides
+
+Linguist supports a number of different custom overrides strategies for language definitions and vendored paths.
+
+### Using gitattributes
+
+Add a `.gitattributes` file to your project and use standard git-style path matchers for the files you want to override to set `linguist-documentation`, `linguist-language`, and `linguist-vendored`. `.gitattributes` will be used to determine language statistics, but will not be used to syntax highlight files. To manually set syntax highlighting, use [Vim or Emacs modelines](#using-emacs-or-vim-modelines).
+
+```
+$ cat .gitattributes
+*.rb linguist-language=Java
 ```
 
-See [lib/linguist/language.rb](https://github.com/github/linguist/blob/master/lib/linguist/language.rb) and [lib/linguist/languages.yml](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml).
+Checking code you didn't write, such as JavaScript libraries, into your git repo is a common practice, but this often inflates your project's language stats and may even cause your project to be labeled as another language. By default, Linguist treats all of the paths defined in [lib/linguist/vendor.yml](https://github.com/github/linguist/blob/master/lib/linguist/vendor.yml) as vendored and therefore doesn't include them in the language statistics for a repository. Vendored files are also hidden by default in diffs on github.com.
 
-### Syntax Highlighting
+Use the `linguist-vendored` attribute to vendor or un-vendor paths. Please note, overriding the vendored (or un-vendored) status of a file only affects the language statistics for the repository and not the behavior in diffs on github.com.
 
-The actual syntax highlighting is handled by our Pygments wrapper, [pygments.rb](https://github.com/tmm1/pygments.rb). It also provides a [Lexer abstraction](https://github.com/tmm1/pygments.rb/blob/master/lib/pygments/lexer.rb) that determines which highlighter should be used on a file.
+```
+$ cat .gitattributes
+special-vendored-path/* linguist-vendored
+jquery.js linguist-vendored=false
+```
 
-### Stats
+Similar to vendored files, Linguist excludes documentation files from your project's language stats. (Unlike vendored files, documentation files are displayed in diffs on github.com.) [lib/linguist/documentation.yml](lib/linguist/documentation.yml) lists common documentation paths and excludes them from the language statistics for your repository.
 
-The Language stats bar that you see on every repository is built by aggregating the languages of each file in that repository. The top language in the graph determines the project's primary language.
+Use the `linguist-documentation` attribute to mark or unmark paths as documentation.
 
-The repository stats API, accessed through `#languages`, can be used on a directory:
+```
+$ cat .gitattributes
+project-docs/* linguist-documentation
+docs/formatter.rb linguist-documentation=false
+```
 
-***API UPDATE***
+### Using Emacs or Vim modelines
 
-Since [Version 3.0.0](https://github.com/github/linguist/releases/tag/v3.0.0) Linguist expects a git repository (in the form of a [Rugged::Repository](https://github.com/libgit2/rugged#repositories)) to be passed when initializing `Linguist::Repository`.
+Alternatively, you can use Vim or Emacs style modelines to set the language for a single file. Modelines can be placed anywhere within a file and are respected when determining how to syntax-highlight a file on GitHub.com
 
+##### Vim
+```
+vim: set filetype=prolog:
+vim: set ft=cpp:
+```
+
+##### Emacs
+```
+-*- mode: php;-*-
+```
+
+## Usage
+
+Install the gem:
+
+```
+$ gem install github-linguist
+```
+
+Then use it in your application:
 
 ```ruby
 require 'rugged'
@@ -47,152 +88,27 @@ project.language       #=> "Ruby"
 project.languages      #=> { "Ruby" => 119387 }
 ```
 
-These stats are also printed out by the `linguist` binary. You can use the
+These stats are also printed out by the `linguist` executable. You can use the
 `--breakdown` flag, and the binary will also output the breakdown of files by language.
 
 You can try running `linguist` on the root directory in this repository itself:
 
-    $ bundle exec linguist --breakdown
-
-    100.00% Ruby
-
-    Ruby:
-    Gemfile
-    Rakefile
-    bin/linguist
-    github-linguist.gemspec
-    lib/linguist.rb
-    lib/linguist/blob_helper.rb
-    lib/linguist/classifier.rb
-    lib/linguist/file_blob.rb
-    lib/linguist/generated.rb
-    lib/linguist/heuristics.rb
-    lib/linguist/language.rb
-    lib/linguist/lazy_blob.rb
-    lib/linguist/md5.rb
-    lib/linguist/repository.rb
-    lib/linguist/samples.rb
-    lib/linguist/tokenizer.rb
-    lib/linguist/version.rb
-    test/test_blob.rb
-    test/test_classifier.rb
-    test/test_heuristics.rb
-    test/test_language.rb
-    test/test_md5.rb
-    test/test_pedantic.rb
-    test/test_repository.rb
-    test/test_samples.rb
-    test/test_tokenizer.rb
-
-#### Ignore vendored files
-
-Checking other code into your git repo is a common practice. But this often inflates your project's language stats and may even cause your project to be labeled as another language. We are able to identify some of these files and directories and exclude them.
-
-```ruby
-Linguist::FileBlob.new("vendor/plugins/foo.rb").vendored? # => true
 ```
+$ bundle exec linguist --breakdown
 
-See [Linguist::BlobHelper#vendored?](https://github.com/github/linguist/blob/master/lib/linguist/blob_helper.rb) and [lib/linguist/vendor.yml](https://github.com/github/linguist/blob/master/lib/linguist/vendor.yml).
+100.00% Ruby
 
-#### Generated file detection
-
-Not all plain text files are true source files. Generated files like minified js and compiled CoffeeScript can be detected and excluded from language stats. As an extra bonus, these files are suppressed in diffs.
-
-```ruby
-Linguist::FileBlob.new("underscore.min.js").generated? # => true
+Ruby:
+Gemfile
+Rakefile
+bin/linguist
+github-linguist.gemspec
+lib/linguist.rb
+…
 ```
-
-See [Linguist::Generated#generated?](https://github.com/github/linguist/blob/master/lib/linguist/generated.rb).
-
-## Overrides
-
-Linguist supports custom overrides for language definitions and vendored paths. Add a `.gitattributes` file to your project using the keys `linguist-language` and `linguist-vendored` with the standard git-style path matchers for the files you want to override.
-
-```
-$ cat .gitattributes
-*.rb linguist-language=Java
-
-$ linguist --breakdown
-100.00% Java
-
-Java:
-ruby_file.rb
-```
-
-By default, Linguist treats all of the paths defined in [lib/linguist/vendor.yml](https://github.com/github/linguist/blob/master/lib/linguist/vendor.yml) as vendored and therefore doesn't include them in the language statistics for a repository. Use the `linguist-vendored` attribute to vendor or un-vendor paths.
-
-```
-$ cat .gitattributes
-special-vendored-path/* linguist-vendored
-jquery.js linguist-vendored=false
-```
-
-## Installation
-
-Github.com is usually running the latest version of the `github-linguist` gem that is released on [RubyGems.org](http://rubygems.org/gems/github-linguist).
-
-But for development you are going to want to checkout out the source. To get it, clone the repo and run [Bundler](http://gembundler.com/) to install its dependencies.
-
-    git clone https://github.com/github/linguist.git
-    cd linguist/
-    bundle install
-
-To run the tests:
-
-    bundle exec rake test
 
 ## Contributing
 
-The majority of contributions won't need to touch any Ruby code at all. The [master language list](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml) is just a YAML configuration file.
+Please check out our [contributing guidelines](CONTRIBUTING.md).
 
-We try to only add languages once they have some usage on GitHub, so please note in-the-wild usage examples in your pull request.
-
-Almost all bug fixes or new language additions should come with some additional code samples. Just drop them under [`samples/`](https://github.com/github/linguist/tree/master/samples) in the correct subdirectory and our test suite will automatically test them. In most cases you shouldn't need to add any new assertions.
-
-### A note on language extensions
-
-Linguist has a number of methods available to it for identifying the language of a particular file. The initial lookup is based upon the extension of the file, possible file extensions are defined in an array called `extensions`. Take a look at this example for example for `Perl`:
-
-```
-Perl:
-  type: programming
-  ace_mode: perl
-  color: "#0298c3"
-  extensions:
-  - .pl
-  - .PL
-  - .perl
-  - .ph
-  - .plx
-  - .pm
-  - .pod
-  - .psgi
-  interpreters:
-  - perl
-```
-Any of the extensions defined are valid but the first in this array should be the most popular.
-
-### Testing
-
-Sometimes getting the tests running can be too much work, especially if you don't have much Ruby experience. It's okay: be lazy and let our build bot [Travis](http://travis-ci.org/#!/github/linguist) run the tests for you. Just open a pull request and the bot will start cranking away.
-
-Here's our current build status, which is hopefully green: [![Build Status](https://secure.travis-ci.org/github/linguist.png?branch=master)](http://travis-ci.org/github/linguist)
-
-### Releasing
-
-If you are the current maintainer of this gem:
-
- 0. Create a branch for the release: `git checkout -b cut-release-vxx.xx.xx`
- 0. Make sure your local dependencies are up to date: `bundle install`
- 0. Ensure that samples are updated: `bundle exec rake samples`
- 0. Ensure that tests are green: `bundle exec rake test`
- 0. Bump gem version in `lib/linguist/version.rb`.  For example, [like this](https://github.com/github/linguist/commit/8d2ea90a5ba3b2fe6e1508b7155aa4632eea2985).
- 0. Make a PR to github/linguist.  For example, [#1238](https://github.com/github/linguist/pull/1238).
- 0. Build a local gem: `bundle exec rake build_gem`
- 0. Testing:
-   0. Bump the Gemfile and Gemfile.lock versions for an app which relies on this gem
-   0. Install the new gem locally
-   0. Test behavior locally, branch deploy, whatever needs to happen
- 0. Merge github/linguist PR
- 0. Tag and push: `git tag vx.xx.xx; git push --tags`
- 0. Push to rubygems.org -- `gem push github-linguist-3.0.0.gem`
+##

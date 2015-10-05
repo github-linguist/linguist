@@ -24,6 +24,9 @@
 - (^|/)config.guess$
 - (^|/)config.sub$
 
+# Linters
+- cpplint.py
+
 # Node dependencies
 - node_modules/
 
@@ -32,37 +35,42 @@
 
 # Erlang bundles
 - ^rebar$
+- erlang.mk
 
 # Go dependencies
 - Godeps/_workspace/
 
-# Bootstrap minified css and js
-- (^|/)bootstrap([^.]*)(\.min)?\.(js|css)$
+# Minified JavaScript and CSS
+- (\.|-)min\.(js|css)$
+
+# Stylesheets imported from packages
+- ([^\s]*)import\.(css|less|scss|styl)$
+
+# Bootstrap css and js
+- (^|/)bootstrap([^.]*)\.(js|css|less|scss|styl)$
+- (^|/)custom\.bootstrap([^\s]*)(js|css|less|scss|styl)$
 
 # Font Awesome
-- font-awesome.min.css
-- font-awesome.css
+- (^|/)font-awesome\.(css|less|scss|styl)$
 
 # Foundation css
-- foundation.min.css
-- foundation.css
+- (^|/)foundation\.(css|less|scss|styl)$
 
 # Normalize.css
-- normalize.css
+- (^|/)normalize\.(css|less|scss|styl)$
 
-# Bourbon SCSS
-- (^|/)[Bb]ourbon/.*\.css$
-- (^|/)[Bb]ourbon/.*\.scss$
+# Bourbon css
+- (^|/)[Bb]ourbon/.*\.(css|less|scss|styl)$
 
 # Animate.css
-- animate.css
-- animate.min.css
+- (^|/)animate\.(css|less|scss|styl)$
 
 # Vendored dependencies
 - third[-_]?party/
 - 3rd[-_]?party/
 - vendors?/
 - extern(al)?/
+- (^|/)[Vv]+endor/
 
 # Debian packaging
 - ^debian/
@@ -70,15 +78,46 @@
 # Haxelib projects often contain a neko bytecode file named run.n
 - run.n$
 
+# Bootstrap Datepicker
+- bootstrap-datepicker/
+
 ## Commonly Bundled JavaScript frameworks ##
 
 # jQuery
-- (^|/)jquery([^.]*)(\.min)?\.js$
-- (^|/)jquery\-\d\.\d+(\.\d+)?(\.min)?\.js$
+- (^|/)jquery([^.]*)\.js$
+- (^|/)jquery\-\d\.\d+(\.\d+)?\.js$
 
 # jQuery UI
-- (^|/)jquery\-ui(\-\d\.\d+(\.\d+)?)?(\.\w+)?(\.min)?\.(js|css)$
-- (^|/)jquery\.(ui|effects)\.([^.]*)(\.min)?\.(js|css)$
+- (^|/)jquery\-ui(\-\d\.\d+(\.\d+)?)?(\.\w+)?\.(js|css)$
+- (^|/)jquery\.(ui|effects)\.([^.]*)\.(js|css)$
+
+# jQuery Gantt
+- jquery.fn.gantt.js
+
+# jQuery fancyBox
+- jquery.fancybox.js
+
+# Fuel UX
+- fuelux.js
+
+# jQuery File Upload
+- (^|/)jquery\.fileupload(-\w+)?\.js$
+
+# Slick
+- (^|/)slick\.\w+.js$
+
+# Leaflet plugins
+- (^|/)Leaflet\.Coordinates-\d+\.\d+\.\d+\.src\.js$
+- leaflet.draw-src.js
+- leaflet.draw.css
+- Control.FullScreen.css
+- Control.FullScreen.js
+- leaflet.spin.js
+- wicket-leaflet.js
+
+# Sublime Text workspace files
+- .sublime-project
+- .sublime-workspace
 
 # Prototype
 - (^|/)prototype(.*)\.js$
@@ -110,29 +149,37 @@
 # MathJax
 - (^|/)MathJax/
 
+# Chart.js
+- (^|/)Chart\.js$
+
+# Codemirror
+- (^|/)[Cc]ode[Mm]irror/(\d+\.\d+/)?(lib|mode|theme|addon|keymap|demo)
+
 # SyntaxHighlighter - http://alexgorbatchev.com/
 - (^|/)shBrush([^.]*)\.js$
 - (^|/)shCore\.js$
 - (^|/)shLegacy\.js$
 
 # AngularJS
-- (^|/)angular([^.]*)(\.min)?\.js$
+- (^|/)angular([^.]*)\.js$
 
 # D3.js
-- (^|\/)d3(\.v\d+)?([^.]*)(\.min)?\.js$
+- (^|\/)d3(\.v\d+)?([^.]*)\.js$
 
 # React
-- (^|/)react(-[^.]*)?(\.min)?\.js$
+- (^|/)react(-[^.]*)?\.js$
 
 # Modernizr
-- (^|/)modernizr\-\d\.\d+(\.\d+)?(\.min)?\.js$
+- (^|/)modernizr\-\d\.\d+(\.\d+)?\.js$
 - (^|/)modernizr\.custom\.\d+\.js$
 
 # Knockout
 - (^|/)knockout-(\d+\.){3}(debug\.)?js$
-- knockout-min.js
 
 ## Python ##
+
+# Sphinx
+- (^|/)docs?/_?(build|themes?|templates?|static)/
 
 # django
 - (^|/)admin_media/
@@ -148,11 +195,30 @@
 
 ## Obj-C ##
 
+# Xcode
+
+- \.xctemplate/
+- \.imageset/
+
+# Carthage
+- ^Carthage/
+
 # Cocoapods
 - ^Pods/
 
 # Sparkle
 - (^|/)Sparkle/
+
+# Crashlytics
+- Crashlytics.framework/
+
+# Fabric
+- Fabric.framework/
+
+# git config files
+- gitattributes$
+- gitignore$
+- gitmodules$
 
 ## Groovy ##
 
@@ -168,8 +234,8 @@
 - \.intellisense\.js$
 
 # jQuery validation plugin (MS bundles this with asp.net mvc)
-- (^|/)jquery([^.]*)\.validate(\.unobtrusive)?(\.min)?\.js$
-- (^|/)jquery([^.]*)\.unobtrusive\-ajax(\.min)?\.js$
+- (^|/)jquery([^.]*)\.validate(\.unobtrusive)?\.js$
+- (^|/)jquery([^.]*)\.unobtrusive\-ajax\.js$
 
 # Microsoft Ajax
 - (^|/)[Mm]icrosoft([Mm]vc)?([Aa]jax|[Vv]alidation)(\.debug)?\.js$
@@ -196,27 +262,15 @@
 - (^|/)extjs/welcome/
 
 # Html5shiv
-- (^|/)html5shiv(\.min)?\.js$
-
-# Samples folders
-- ^[Ss]amples/
-
-# LICENSE, README, git config files
-- ^COPYING$
-- LICENSE$
-- License$
-- gitattributes$
-- gitignore$
-- gitmodules$
-- ^README$
-- ^readme$
+- (^|/)html5shiv\.js$
 
 # Test fixtures
-- ^[Tt]est/fixtures/
+- ^[Tt]ests?/fixtures/
+- ^[Ss]pecs?/fixtures/
 
 # PhoneGap/Cordova
-- (^|/)cordova([^.]*)(\.min)?\.js$
-- (^|/)cordova\-\d\.\d(\.\d)?(\.min)?\.js$
+- (^|/)cordova([^.]*)\.js$
+- (^|/)cordova\-\d\.\d(\.\d)?\.js$
 
 # Foundation js
 - foundation(\..*)?\.js$
@@ -224,11 +278,8 @@
 # Vagrant
 - ^Vagrantfile$
 
-# .DS_Store's
+# .DS_Stores
 - .[Dd][Ss]_[Ss]tore$
-
-# Mercury --use-subdirs
-- Mercury/
 
 # R packages
 - ^vignettes/
@@ -236,9 +287,18 @@
 
 # Octicons
 - octicons.css
-- octicons.min.css
 - sprockets-octicons.scss
 
 # Typesafe Activator
 - (^|/)activator$
 - (^|/)activator\.bat$
+
+# ProGuard
+- proguard.pro
+- proguard-rules.pro
+
+# PuPHPet
+- ^puphpet/
+
+# Android Google APIs
+- (^|/)\.google_apis/

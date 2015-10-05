@@ -1,0 +1,137 @@
+#!/usr/bin/env ruby
+
+require 'linguist'
+require 'rugged'
+require 'optparse'
+require 'json'
+require 'tmpdir'
+require 'zlib'
+
+class GitLinguist
+  def initialize(path, commit_oid, incremental = true)
+    @repo_path = path
+    @commit_oid = commit_oid
+    @incremental = incremental
+  end
+
+  def linguist
+    if @commit_oid.nil?
+      raise "git-linguist must be called with a specific commit OID to perform language computation"
+    end
+    repo = Linguist::Repository.new(rugged, @commit_oid)
+
+    if @incremental && stats = load_language_stats
+      old_commit_oid, old_stats = stats
+
+      # A cache with NULL oid means that we want to froze
+      # these language stats in place and stop computing
+      # them (for performance reasons)
+      return old_stats if old_commit_oid == NULL_OID
+      repo.load_existing_stats(old_commit_oid, old_stats)
+    end
+
+    result = yield repo
+
+    save_language_stats(@commit_oid, repo.cache)
+    result
+  end
+
+  def load_language_stats
+    version, oid, stats = load_cache
+    if version == LANGUAGE_STATS_CACHE_VERSION && oid && stats
+      [oid, stats]
+    end
+  end
+
+  def save_language_stats(oid, stats)
+    cache = [LANGUAGE_STATS_CACHE_VERSION, oid, stats]
+    write_cache(cache)
+  end
+
+  def clear_language_stats
+    File.unlink(cache_file)
+  end
+
+  def disable_language_stats
+    save_language_stats(NULL_OID, {})
+  end
+
+  protected
+  NULL_OID = ("0" * 40).freeze
+
+  LANGUAGE_STATS_CACHE = 'language-stats.cache'
+  LANGUAGE_STATS_CACHE_VERSION = "v3:#{Linguist::VERSION}"
+
+  def rugged
+    @rugged ||= Rugged::Repository.bare(@repo_path)
+  end
+
+  def cache_file
+    File.join(@repo_path, LANGUAGE_STATS_CACHE)
+  end
+
+  def write_cache(object)
+    return unless File.directory? @repo_path
+
+    begin
+      tmp_path = Dir::Tmpname.make_tmpname(cache_file, nil)
+      File.open(tmp_path, "wb") do |f|
+        marshal = Marshal.dump(object)
+        f.write(Zlib::Deflate.deflate(marshal))
+      end
+
+      File.rename(tmp_path, cache_file)
+    rescue => e
+      (File.unlink(tmp_path) rescue nil)
+      raise e
+    end
+  end
+
+  def load_cache
+    marshal = File.open(cache_file, "rb") { |f| Zlib::Inflate.inflate(f.read) }
+    Marshal.load(marshal)
+  rescue SystemCallError, ::Zlib::DataError, ::Zlib::BufError, TypeError
+    nil
+  end
+end
+
+
+def git_linguist(args)
+  incremental = true
+  commit = nil
+
+  parser = OptionParser.new do |opts|
+    opts.banner = "Usage: git-linguist [OPTIONS] stats|breakdown|dump-cache|clear|disable"
+
+    opts.on("-f", "--force", "Force a full rescan") { incremental = false }
+    opts.on("--commit=COMMIT", "Commit to index") { |v| commit = v}
+  end
+
+  parser.parse!(args)
+
+  git_dir = `git rev-parse --git-dir`.strip
+  raise "git-linguist must be ran in a Git repository" unless $?.success?
+  wrapper = GitLinguist.new(git_dir, commit, incremental)
+
+  case args.pop
+  when "stats"
+    wrapper.linguist do |linguist|
+      puts JSON.dump(linguist.languages)
+    end
+  when "breakdown"
+    wrapper.linguist do |linguist|
+      puts JSON.dump(linguist.breakdown_by_file)
+    end
+  when "dump-cache"
+    puts JSON.dump(wrapper.load_language_stats)
+  when "clear"
+    wrapper.clear_language_stats
+  when "disable"
+    wrapper.disable_language_stats
+  else
+    $stderr.print(parser.help)
+    exit 1
+  end
+end
+
+git_linguist(ARGV)

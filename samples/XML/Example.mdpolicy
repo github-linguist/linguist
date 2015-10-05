@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PolicySet name="Example.mdpolicy">
+  <TextStylePolicy inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/x-csharp">
+    <FileWidth>120</FileWidth>
+    <TabsToSpaces>False</TabsToSpaces>
+    <NoTabsAfterNonTabs>True</NoTabsAfterNonTabs>
+  </TextStylePolicy>
+  <DotNetNamingPolicy>
+    <DirectoryNamespaceAssociation>None</DirectoryNamespaceAssociation>
+    <ResourceNamePolicy>FileFormatDefault</ResourceNamePolicy>
+  </DotNetNamingPolicy>
+</PolicySet>
