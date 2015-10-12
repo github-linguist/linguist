@@ -17,7 +17,7 @@ The Language stats bar displays languages percentages for the files in the repos
 
 0. Click on the name of the language in the stats bar to see a list of the files that are identified as that language.
 0. If you see files that you didn't write, consider moving the files into one of the [paths for vendored  code](/lib/linguist/vendor.yml), or use the [manual overrides](#overrides) feature to ignore them.
-0. If the files are being misclassified, search for [open issues][issues] to see if anyone else has already reported the issue. Any information you an add, especially links to public repositories, is helpful.
+0. If the files are being misclassified, search for [open issues][issues] to see if anyone else has already reported the issue. Any information you can add, especially links to public repositories, is helpful.
 0. If there are no reported issues of this misclassification, [open an issue][new-issue] and include a link to the repository or a sample of the code that is being misclassified.
 
 ## Overrides
