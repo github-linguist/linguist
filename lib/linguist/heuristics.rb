@@ -56,7 +56,8 @@ module Linguist
 
     # Internal: Check if this heuristic matches the candidate languages.
     def matches?(filename)
-      @extensions.any? { |ext| filename.downcase.end_with?(ext) }
+      filename = filename.downcase
+      @extensions.any? { |ext| filename.end_with?(ext) }
     end
 
     # Internal: Perform the heuristic
@@ -65,7 +66,7 @@ module Linguist
     end
 
     # Common heuristics
-    ObjectiveCRegex = /^[ \t]*@(interface|class|protocol|property|end|synchronized|selector|implementation)\b/
+    ObjectiveCRegex = /^\s*(@(interface|class|protocol|property|end|synchronised|selector|implementation)\b|#import\s+.+\.h[">])/
 
     disambiguate ".asc" do |data|
       if /^(----[- ]BEGIN|ssh-(rsa|dss)) /.match(data)
