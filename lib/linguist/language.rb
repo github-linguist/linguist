@@ -87,14 +87,6 @@ module Linguist
       language
     end
 
-    STRATEGIES = [
-      Linguist::Strategy::Modeline,
-      Linguist::Shebang,
-      Linguist::Strategy::Filename,
-      Linguist::Heuristics,
-      Linguist::Classifier
-    ]
-
     # Public: Detects the Language of the blob.
     #
     # blob - an object that includes the Linguist `BlobHelper` interface;
@@ -102,34 +94,8 @@ module Linguist
     #
     # Returns Language or nil.
     def self.detect(blob)
-      # Bail early if the blob is binary or empty.
-      return nil if blob.likely_binary? || blob.binary? || blob.empty?
-
-      Linguist.instrument("linguist.detection", :blob => blob) do
-        # Call each strategy until one candidate is returned.
-        languages = []
-        returning_strategy = nil
-
-        STRATEGIES.each do |strategy|
-          returning_strategy = strategy
-          candidates = Linguist.instrument("linguist.strategy", :blob => blob, :strategy => strategy, :candidates => languages) do
-            strategy.call(blob, languages)
-          end
-          if candidates.size == 1
-            languages = candidates
-            break
-          elsif candidates.size > 1
-            # More than one candidate was found, pass them to the next strategy.
-            languages = candidates
-          else
-            # No candidates, try the next strategy
-          end
-        end
-
-        Linguist.instrument("linguist.detected", :blob => blob, :strategy => returning_strategy, :language => languages.first)
-
-        languages.first
-      end
+      warn "[DEPRECATED] `Linguist::Language.detect` is deprecated. Use `Linguist.detect`. #{caller[0]}"
+      Linguist.detect(blob)
     end
 
     # Public: Get all Languages
