@@ -21,6 +21,7 @@
         </ul>
     </#if>
 
+    <#-- This is a FreeMarker comment -->
     <@currentTime />
 </@layout.page>
 
