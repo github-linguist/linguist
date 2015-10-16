@@ -9,7 +9,6 @@ class TestGrammars < Minitest::Test
 
     # This grammar has a nonstandard but acceptable license.
     "vendor/grammars/gap-tmbundle",
-    "vendor/grammars/factor",
 
     # These grammars have no license but have been grandfathered in. New grammars
     # must have a license that allows redistribution.
