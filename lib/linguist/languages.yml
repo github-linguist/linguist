@@ -1037,6 +1037,16 @@ Frege:
   tm_scope: source.haskell
   ace_mode: haskell
 
+FreeMarker:
+  type: programming
+  color: "#0050b2"
+  aliases:
+  - ftl
+  extensions:
+  - .ftl
+  tm_scope: text.html.ftl
+  ace_mode: ftl
+
 G-code:
   type: data
   extensions:
@@ -1322,6 +1332,16 @@ HTML+Django:
   - html+jinja
   - htmldjango
   ace_mode: django
+
+HTML+EEX:
+  type: markup
+  tm_scope: text.html.eex
+  group: HTML
+  aliases:
+  - eex
+  extensions:
+  - .eex
+  ace_mode: html_eex
 
 HTML+ERB:
   type: markup
@@ -2063,6 +2083,14 @@ Mercury:
   tm_scope: source.mercury
   ace_mode: prolog
 
+Metal:
+  type: programming
+  color: "#8f14e9"
+  extensions:
+  - .metal
+  tm_scope: source.c++
+  ace_mode: c_cpp
+
 MiniD: # Legacy
   type: programming
   searchable: false
@@ -2441,6 +2469,7 @@ PHP:
   - .php3
   - .php4
   - .php5
+  - .phps
   - .phpt
   filenames:
   - Phakefile

@@ -218,6 +218,9 @@ class TestBlob < Minitest::Test
 
     # Unity3D-generated metadata
     assert sample_blob_memory("Unity3D Asset/Tiles.meta").generated?
+
+    # Racc-generated Ruby
+    assert sample_blob_memory("Ruby/racc.rb").generated?
   end
 
   def test_vendored
