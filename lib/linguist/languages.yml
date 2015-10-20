@@ -1029,14 +1029,6 @@ Forth:
   - .fs
   ace_mode: forth
 
-Frege:
-  type: programming
-  color: "#00cafe"
-  extensions:
-  - .fr
-  tm_scope: source.haskell
-  ace_mode: haskell
-
 FreeMarker:
   type: programming
   color: "#0050b2"
@@ -1046,6 +1038,14 @@ FreeMarker:
   - .ftl
   tm_scope: text.html.ftl
   ace_mode: ftl
+
+Frege:
+  type: programming
+  color: "#00cafe"
+  extensions:
+  - .fr
+  tm_scope: source.haskell
+  ace_mode: haskell
 
 G-code:
   type: data
@@ -1335,13 +1335,13 @@ HTML+Django:
 
 HTML+EEX:
   type: markup
-  tm_scope: text.html.eex
+  tm_scope: text.html.elixir
   group: HTML
   aliases:
   - eex
   extensions:
   - .eex
-  ace_mode: html_eex
+  ace_mode: text
 
 HTML+ERB:
   type: markup
@@ -1352,7 +1352,7 @@ HTML+ERB:
   extensions:
   - .erb
   - .erb.deface
-  ace_mode: html_ruby
+  ace_mode: text
 
 HTML+PHP:
   type: markup
