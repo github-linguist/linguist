@@ -1,13 +1,13 @@
 require 'linguist/blob_helper'
 
 module Linguist
-  # A MemoryBlob is a wrapper around the content of a file to make it quack
+  # A Blob is a wrapper around the content of a file to make it quack
   # like a Grit::Blob. It provides the basic interface: `name`,
   # `data`, `path` and `size`.
   class Blob
     include BlobHelper
 
-    # Public: Initialize a new MemoryBlob.
+    # Public: Initialize a new Blob.
     #
     # path    - A path String (does not necessarily exists on the file system).
     # content - Content of the file.
@@ -22,7 +22,7 @@ module Linguist
     #
     # Examples
     #
-    #   MemoryBlob.new("/path/to/linguist/lib/linguist.rb", "").path
+    #   Blob.new("/path/to/linguist/lib/linguist.rb", "").path
     #   # =>  "/path/to/linguist/lib/linguist.rb"
     #
     # Returns a String
