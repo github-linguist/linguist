@@ -1029,6 +1029,16 @@ Forth:
   - .fs
   ace_mode: forth
 
+FreeMarker:
+  type: programming
+  color: "#0050b2"
+  aliases:
+  - ftl
+  extensions:
+  - .ftl
+  tm_scope: text.html.ftl
+  ace_mode: ftl
+
 Frege:
   type: programming
   color: "#00cafe"
@@ -1323,6 +1333,16 @@ HTML+Django:
   - htmldjango
   ace_mode: django
 
+HTML+EEX:
+  type: markup
+  tm_scope: text.html.elixir
+  group: HTML
+  aliases:
+  - eex
+  extensions:
+  - .eex
+  ace_mode: text
+
 HTML+ERB:
   type: markup
   tm_scope: text.html.erb
@@ -1332,7 +1352,7 @@ HTML+ERB:
   extensions:
   - .erb
   - .erb.deface
-  ace_mode: html_ruby
+  ace_mode: text
 
 HTML+PHP:
   type: markup
@@ -2062,6 +2082,14 @@ Mercury:
   - .moo
   tm_scope: source.mercury
   ace_mode: prolog
+
+Metal:
+  type: programming
+  color: "#8f14e9"
+  extensions:
+  - .metal
+  tm_scope: source.c++
+  ace_mode: c_cpp
 
 MiniD: # Legacy
   type: programming
