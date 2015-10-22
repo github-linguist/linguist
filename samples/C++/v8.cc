@@ -173,7 +173,7 @@ uint32_t V8::Random(Context* context) {
 
 
 // Used internally by the JIT and memory allocator for security
-// purposes. So, we keep a different state to prevent informations
+// purposes. So, we keep a different state to prevent information
 // leaks that could be used in an exploit.
 uint32_t V8::RandomPrivate(Isolate* isolate) {
   ASSERT(isolate == Isolate::Current());
