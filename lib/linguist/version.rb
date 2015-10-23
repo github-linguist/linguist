@@ -1,3 +1,3 @@
 module Linguist
-  VERSION = "3.4.0"
+  VERSION = "4.5.4"
 end

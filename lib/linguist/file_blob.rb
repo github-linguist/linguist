@@ -3,7 +3,7 @@ require 'linguist/blob_helper'
 module Linguist
   # A FileBlob is a wrapper around a File object to make it quack
   # like a Grit::Blob. It provides the basic interface: `name`,
-  # `data`, and `size`.
+  # `data`, `path` and `size`.
   class FileBlob
     include BlobHelper
 
@@ -14,57 +14,70 @@ module Linguist
     #
     # Returns a FileBlob.
     def initialize(path, base_path = nil)
-      @path = path
-      @name = base_path ? path.sub("#{base_path}/", '') : path
+      @fullpath = path
+      @path = base_path ? path.sub("#{base_path}/", '') : path
     end
 
     # Public: Filename
     #
     # Examples
     #
-    #   FileBlob.new("/path/to/linguist/lib/linguist.rb").name
+    #   FileBlob.new("/path/to/linguist/lib/linguist.rb").path
     #   # =>  "/path/to/linguist/lib/linguist.rb"
     #
     #   FileBlob.new("/path/to/linguist/lib/linguist.rb",
-    #                "/path/to/linguist").name
+    #                "/path/to/linguist").path
     #   # =>  "lib/linguist.rb"
     #
     # Returns a String
-    attr_reader :name
+    attr_reader :path
 
     # Public: Read file permissions
     #
     # Returns a String like '100644'
     def mode
-      File.stat(@path).mode.to_s(8)
+      File.stat(@fullpath).mode.to_s(8)
+    end
+
+    # Public: File name
+    #
+    # Returns a String
+    def name
+      File.basename(@fullpath)
     end
 
     # Public: Read file contents.
     #
     # Returns a String.
     def data
-      File.read(@path)
+      File.read(@fullpath)
     end
 
     # Public: Get byte size
     #
     # Returns an Integer.
     def size
-      File.size(@path)
+      File.size(@fullpath)
     end
 
     # Public: Get file extension.
     #
     # Returns a String.
     def extension
-      # File.extname returns nil if the filename is an extension.
-      extension = File.extname(name)
-      basename = File.basename(name)
-      # Checks if the filename is an extension.
-      if extension.empty? && basename[0] == "."
-        basename
-      else
-        extension
+      extensions.last || ""
+    end
+
+    # Public: Return an array of the file extensions
+    #
+    #     >> Linguist::FileBlob.new("app/views/things/index.html.erb").extensions
+    #     => [".html.erb", ".erb"]
+    #
+    # Returns an Array
+    def extensions
+      basename, *segments = name.downcase.split(".")
+
+      segments.map.with_index do |segment, index|
+        "." + segments[index..-1].join(".")
       end
     end
   end
