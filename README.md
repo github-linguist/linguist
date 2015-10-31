@@ -5,7 +5,44 @@
 
 This library is used on GitHub.com to detect blob languages, ignore binary or vendored files, suppress generated files in diffs, and generate language breakdown graphs.
 
-See [Troubleshooting](#troubleshooting) and [`CONTRIBUTING.md`](/CONTRIBUTING.md) before filing an issue or creating a pull request.
+See [Troubleshooting](#troubleshooting) and
+[`CONTRIBUTING.md`](/CONTRIBUTING.md) before filing an issue or
+creating a pull request.
+
+## Install
+
+You might want to install this very version from GitHub or to test
+your local changes locally. You will need to install some
+prerrequisite libraries first. Run:
+
+	sudo apt-get install cmake
+
+which is required to install `rugged`
+
+Then
+
+	bundle install
+
+to install all dependencies and finally
+
+	rake samples
+
+to generate `samples.json` file, which is needed for checking out
+samples. Then you can simply run
+
+	bundle exec linguist --breakdown
+
+to check the languages on the repository itself, or
+
+	bundle exec git-linguist --commit=362d300cb021f11fe1c66f69b7f1bb0c246f01b0 breakdown
+
+to get a breakdown in JSON format of an specific commit.
+
+Try it too in some other directory, for instance:
+
+	bundle exec linguist ../../CPAN/Algorithm-Evolutionary
+
+
 
 ## Troubleshooting
 
