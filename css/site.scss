@@ -1,0 +1,100 @@
+---
+# Hey Jekyll, convert this please.
+---
+
+$grid-width: 230px;
+$grid-gutter: 20px;
+
+body {
+  background-color: #fafafa;
+}
+
+header {
+  background: #fff;
+  overflow: hidden;
+  padding: 1em 0;
+
+  h1 {
+    float: left;
+    font-family: "Helvetica Neue", Helvetica, sans-serif;
+    font-weight: 200;
+    margin: 0;
+    width: $grid-width + $grid-gutter;
+  }
+  h1 .mega-octicon {
+    position: relative;
+    top: 2px;
+  }
+
+  nav {
+    float: right;
+  }
+
+  a {
+    color: #000;
+
+    &:hover { text-decoration: none; }
+  }
+}
+
+.search {
+  display: inline-block;
+
+  input {
+    width: $grid-width;
+  }
+}
+
+#languages {
+  list-style: none;
+  margin: 3em 0;
+  margin-right: -$grid-gutter;
+}
+
+.language {
+  width: $grid-width;
+  float: left;
+  padding: 1em;
+  margin: 0 $grid-gutter $grid-gutter 0;
+  border: 1px solid #eee;
+  border-radius: 3px;
+  border-bottom: 5px solid #ccc;
+  position: relative;
+  color: #999;
+  background: #fff;
+}
+
+.language-name {
+    color: #000;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin: 0 30px 0 0; /* octicon */
+}
+
+.language-type {
+  color: #aaa;
+  position: absolute;
+  top: 1em;
+  right: 1em;
+}
+
+.extensions {
+  padding: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 1.4em;
+
+  li {
+    display: inline;
+  }
+
+  li:after {
+    content: ", "
+  }
+
+  li:last-child:after {
+    content: "";
+  }
+}

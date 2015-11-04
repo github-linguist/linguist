@@ -1,46 +1,70 @@
 <html>
   <head>
+    <meta charset="utf-8">
     <title>Linguist Colors</title>
-    <script src="scripts/js-yaml.min.js"></script>
-    <script src="scripts/jquery.min.js"></script>
-    <style>
-      body {
-        font-family: "Heletica Neue", Helvetica, sans-serif;
-        font-size: 13px;
-      }
+    <link rel="stylesheet" href="vendor/bower/primer-css/css/primer.css">
+    <link rel="stylesheet" href="vendor/bower/octicons/octicons/octicons.css">
+    <link rel="stylesheet" href="css/site.css">
 
-      #languages {
-        list-style: none;
-      }
-
-      #languages li {
-        width: 180px;
-        float: left;
-        text-align: center;
-        padding: 0.5em 0;
-        margin: 0.25em;
-        font-weight: bold;
-        border-bottom: 12px solid #ccc;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-      }
-    </style>
+    <script src="vendor/bower/jquery/dist/jquery.min.js"></script>
+    <script src="vendor/bower/js-yaml/dist/js-yaml.min.js"></script>
+    <script src="vendor/bower/mustache/mustache.min.js"></script>
+    <script src="vendor/bower/fuse/src/fuse.min.js"></script>
+    <script src="js/site.js"></script>
   </head>
   <body>
-    <ul id="languages"></ul>
+    <header>
+      <div class="container">
+        <h1><a href="/"><span class="mega-octicon octicon-logo-github"></span> Linguist</a></h1>
+        <div class="search">
+          <input class="js-search-field js-autofocus" type="text" placeholder="Search languages…">
+        </div>
+        <nav>
+          <a href="https://github.com/github/linguist"><span class="mega-octicon octicon-mark-github"></span></a>
+        </nav>
+      </div>
+    </header>
 
-    <script type="text/javascript">
-      var $list = $("#languages");
+    <div class="container">
+      <ul id="languages"></ul>
+    </div>
 
-      $.get("https://rawgit.com/github/linguist/master/lib/linguist/languages.yml", function(data) {
-        var languages = jsyaml.safeLoad(data);
+    <script id="template" type="text/html">
+      <li class="language" style="border-bottom-color: {{color}}" data-language="{{name}}">
+        <h2 class="language-name">{{name}}</h2>
 
-        for(var language in languages) {
-          attrs = languages[language];
-          $list.append('<li style="border-bottom-color:' + attrs.color + '">' + language + '</li>');
-        }
-      });
+        {{#octicon}}
+          <span class="language-type octicon octicon-{{octicon}}" title="{{type}}"></span>
+        {{/octicon}}
 
+        <ul class="extensions">
+          {{#extensions}}
+            <li>{{.}}</li>
+          {{/extensions}}
+        </ul>
+
+        <!--
+        <ul class="aliases">
+          {{#aliases}}
+            <li>{{.}}</li>
+          {{/aliases}}
+        </ul>
+
+        <ul class="interpreters">
+          {{#interpreters}}
+            <li>{{.}}</li>
+          {{/interpreters}}
+        </ul>
+
+        {{#tm_scope}}
+          <div>tm_scope: {{tm_scope}}</div>
+        {{/tm_scope}}
+
+        {{#search_term}}
+          <div>search term: {{search_term}}</div>
+        {{/search_term}}
+        -->
+      </li>
     </script>
   </body>
 </html>
