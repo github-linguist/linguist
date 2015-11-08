@@ -3336,9 +3336,12 @@ SuperCollider:
   type: programming
   color: "#46390b"
   extensions:
-  - .scd
   - .sc
-  tm_scope: none
+  - .scd
+  interpreters:
+  - sclang
+  - scsynth
+  tm_scope: source.supercollider
   ace_mode: text
 
 Swift:
