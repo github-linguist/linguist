@@ -9,7 +9,6 @@ class TestGrammars < Minitest::Test
 
     # This grammar has a nonstandard but acceptable license.
     "vendor/grammars/gap-tmbundle",
-    "vendor/grammars/factor",
 
     # These grammars have no license but have been grandfathered in. New grammars
     # must have a license that allows redistribution.
@@ -81,7 +80,7 @@ class TestGrammars < Minitest::Test
   end
 
   def test_submodules_have_recognized_licenses
-    unrecognized = submodule_licenses.select { |k,v| v.nil? && Licensee::Project.new(k).license_file }
+    unrecognized = submodule_licenses.select { |k,v| v.nil? && Licensee::FSProject.new(k).license_file }
     unrecognized.reject! { |k,v| PROJECT_WHITELIST.include?(k) }
     message = "The following submodules have unrecognized licenses:\n* #{unrecognized.keys.join("\n* ")}\n"
     message << "Please ensure that the project's LICENSE file contains the full text of the license."
@@ -132,7 +131,7 @@ class TestGrammars < Minitest::Test
   # Given the path to a submodule, return its SPDX-compliant license key
   def submodule_license(submodule)
     # Prefer Licensee to detect a submodule's license
-    project = Licensee::Project.new(submodule)
+    project = Licensee::FSProject.new(submodule)
     return project.license.key if project.license
 
     # We know a license file exists, but Licensee wasn't able to detect the license,
