@@ -1013,6 +1013,7 @@ Formatted:
   type: data
   extensions:
   - .for
+  - .eam.fs
   tm_scope: none
   ace_mode: text
 
@@ -1612,7 +1613,7 @@ Jade:
   type: markup
   extensions:
   - .jade
-  tm_scope: source.jade
+  tm_scope: text.jade
   ace_mode: jade
 
 Jasmin:
@@ -1657,6 +1658,7 @@ JavaScript:
   - .gs
   - .jake
   - .jsb
+  - .jscad
   - .jsfl
   - .jsm
   - .jss
@@ -2606,6 +2608,13 @@ Perl6:
   tm_scope: source.perl.6
   ace_mode: perl
 
+Pickle:
+  type: data
+  extensions:
+  - .pkl
+  tm_scope: none
+  ace_mode: text
+
 PicoLisp:
   type: programming
   extensions:
@@ -2648,6 +2657,13 @@ PogoScript:
   extensions:
   - .pogo
   tm_scope: source.pogoscript
+  ace_mode: text
+
+Pony:
+  type: programming
+  extensions:
+  - .pony
+  tm_scope: source.pony
   ace_mode: text
 
 PostScript:
@@ -3141,7 +3157,7 @@ Sass:
 Scala:
   type: programming
   ace_mode: scala
-  color: "#7dd3b0"
+  color: "#DC322F"
   extensions:
   - .scala
   - .sbt
@@ -3330,9 +3346,12 @@ SuperCollider:
   type: programming
   color: "#46390b"
   extensions:
-  - .scd
   - .sc
-  tm_scope: none
+  - .scd
+  interpreters:
+  - sclang
+  - scsynth
+  tm_scope: source.supercollider
   ace_mode: text
 
 Swift:
@@ -3646,6 +3665,7 @@ XML:
   - .ccxml
   - .clixml
   - .cproject
+  - .csl
   - .csproj
   - .ct
   - .dita

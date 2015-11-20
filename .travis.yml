@@ -1,3 +1,10 @@
+language: ruby
+sudo: false
+addons:
+  apt:
+    packages:
+    - libicu-dev
+    - libicu48
 before_install: script/travis/before_install
 rvm:
   - 2.0.0
