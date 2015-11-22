@@ -37,7 +37,7 @@ Assuming your code is being detected as the right language, in most cases this i
 
 You can also try to fix the bug yourself and submit a Pull Request. [TextMate's documentation](http://manual.macromates.com/en/language_grammars) offers a good introduction on how to work with TextMate-compatible grammars. You can test grammars using [Lightshow](https://github-lightshow.herokuapp.com).
 
-Once the bug has been fixed upstream, please let us know and we'll pick it up for GitHub.
+Once the bug has been fixed upstream, we'll pick it up for GitHub in the next release of Linguist.
 
 ## Testing
 

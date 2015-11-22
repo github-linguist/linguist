@@ -138,7 +138,7 @@ module Linguist
     end
 
     disambiguate "Common Lisp", "OpenCL", "Cool" do |data|
-      if data.include?("(defun ")
+      if /^\s*\((defun|in-package|defpackage) /i.match(data)
         Language["Common Lisp"]
       elsif /^class/x.match(data)
         Language["Cool"]
@@ -164,12 +164,12 @@ module Linguist
     end
 
     disambiguate "AsciiDoc", "AGS Script", "Public Key" do |data|
-      if /^[=-]+(\s|\n)|{{[A-Za-z]/.match(data)
+      if /^(----[- ]BEGIN|ssh-(rsa|dss)) /.match(data)
+        Language["Public Key"]
+      elsif /^[=-]+(\s|\n)|{{[A-Za-z]/.match(data)
         Language["AsciiDoc"]
       elsif /^(\/\/.+|((import|export)\s+)?(function|int|float|char)\s+((room|repeatedly|on|game)_)?([A-Za-z]+[A-Za-z_0-9]+)\s*[;\(])/.match(data)
         Language["AGS Script"]
-      elsif /^-----BEGIN/.match(data)
-        Language["Public Key"]
       end
     end
 
@@ -193,7 +193,7 @@ module Linguist
       end
     end
 
-    disambiguate "M", "MUF", "Mathematica", "Matlab", "Mercury", "Objective-C" do |data|
+    disambiguate "Limbo", "M", "MUF", "Mathematica", "Matlab", "Mercury", "Objective-C" do |data|
       if ObjectiveCRegex.match(data)
         Language["Objective-C"]
       elsif data.include?(":- module")
@@ -206,6 +206,8 @@ module Linguist
         Language["Mathematica"]
       elsif /^\s*%/.match(data)
         Language["Matlab"]
+      elsif /^\w+\s*:\s*module\s*{/.match(data)
+        Language["Limbo"]
       end
     end
 
@@ -222,7 +224,7 @@ module Linguist
     end
 
     disambiguate "Common Lisp", "NewLisp" do |data|
-      if /^\s*\((defun|in-package|defpackage) /.match(data)
+      if /^\s*\((defun|in-package|defpackage) /i.match(data)
         Language["Common Lisp"]
       elsif /^\s*\(define /.match(data)
         Language["NewLisp"]
@@ -274,7 +276,7 @@ module Linguist
     end
 
     disambiguate "OCaml", "Standard ML" do |data|
-      if /module|let rec |match\s+(\S+\s)+with/.match(data)
+      if /(^\s*module)|let rec |match\s+(\S+\s)+with/.match(data)
         Language["OCaml"]
       elsif /=> |case\s+(\S+\s)+of/.match(data)
         Language["Standard ML"]
@@ -282,7 +284,7 @@ module Linguist
     end
 
     disambiguate "NL", "NewLisp" do |data|
-      if /^g3 /.match(data)
+      if /^(b|g)[0-9]+ /.match(data)
         Language["NL"]
       else
         Language["NewLisp"]

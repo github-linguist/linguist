@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+
+require 'yaml'
+
+ROOT = File.expand_path("../..", __FILE__)
+LANGUAGES_PATH = File.join(ROOT, "lib", "linguist", "languages.yml")
+LANGUAGES_FILE = YAML.load_file(LANGUAGES_PATH)
+
+puts "| Languages | Codes"
+puts "|-----------|-------"
+LANGUAGES_FILE.each_pair do |language, data|
+  name = language.tr(' ', '-').downcase
+  extensions = (data['extensions'] || [])
+  if !extensions.empty?
+    extensions.map! { |e| e.tr('.', '') } # remove starting "."
+    extensions.delete(name) # remove extensions matching name
+    extensions = extensions.join(', ') # stringify
+  elsif extensions == name
+    extensions = ''
+  end
+  words = extensions.empty? ? name : "#{name}, #{extensions}"
+  puts "| #{language} | #{words}"
+end
