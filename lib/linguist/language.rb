@@ -88,9 +88,9 @@ module Linguist
     end
 
     STRATEGIES = [
+      Linguist::Strategy::Filename,
       Linguist::Strategy::Modeline,
       Linguist::Shebang,
-      Linguist::Strategy::Filename,
       Linguist::Heuristics,
       Linguist::Classifier
     ]
