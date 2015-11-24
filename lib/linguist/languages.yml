@@ -1561,7 +1561,14 @@ JFlex:
   - .flex
   - .jflex
   tm_scope: source.jflex
-  ace_mode: text
+  ace_mode: text  
+ 
+JScript:
+  type: programming
+  color: "#21E916"
+  extensions:
+  - .sj
+  tm_scope: none
 
 JSON:
   type: data
@@ -2170,6 +2177,12 @@ Myghty:
   tm_scope: none
   ace_mode: text
 
+NameMapping:
+  type: programming
+  extensions:
+  - .tcNM
+  tm_scope: none
+  
 NCL:
   type: programming
   color: "#28431f"
@@ -3406,6 +3419,28 @@ Tcsh:
   tm_scope: source.shell
   ace_mode: sh
 
+TestComplete:
+  type: data
+  extensions:
+  - .tcScript
+  - .pjs  
+  - .mds
+  - .tcAX
+  - .tcStore
+  - .tcBTable
+  - .bak
+  - .tcLS
+  - .tcVis
+  - .mht
+  - .tcCfgExtender
+  - .tcDB
+  - .tcLog
+  - .tcLogs
+  - .tcTA
+  - .dbt
+  tm_scope: none
+  ace_mode: text
+  
 TeX:
   type: markup
   color: "#3D6117"
