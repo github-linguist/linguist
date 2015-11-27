@@ -238,8 +238,10 @@ module Linguist
     disambiguate ".ms" do |data|
       if /^[.'][a-z][a-z](\s|$)/i.match(data)
         Language["Groff"]
-      elsif /((^|\s)move?[. ])|\.(include|globa?l)\s/.match(data)
+      elsif /(?<!\S)\.(include|globa?l)\s/.match(data) || /(?<!\/\*)(\A|\n)\s*\.[A-Za-z]/.match(data.gsub(/"([^\\"]|\\.)*"|'([^\\']|\\.)*'|\\\s*(?:--.*)?\n/, ""))
         Language["GAS"]
+      else
+        Language["MAXScript"]
       end
     end
 
