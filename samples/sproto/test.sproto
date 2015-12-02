@@ -1,0 +1,26 @@
+
+# This is a comment.
+
+.Person {	# . means a user defined type
+    name 0 : string	# string is a build-in type.
+    id 1 : integer
+    email 2 : string
+
+    .PhoneNumber {	# user defined type can be nest.
+        number 0 : string
+        type 1 : integer
+    }
+
+    phone 3 : *PhoneNumber	# *PhoneNumber means an array of PhoneNumber.
+}
+
+.AddressBook {
+    person 0 : *Person(id)	# (id) is optional, means Person.id is main index.
+}
+
+foobar 1 {	# define a new protocol (for RPC used) with tag 1
+    request Person	# Associate the type Person with foobar.request
+    response {	# define the foobar.response type
+        ok 0 : boolean
+    }
+}
