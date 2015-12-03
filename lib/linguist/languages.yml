@@ -393,6 +393,7 @@ C#:
   - csharp
   extensions:
   - .cs
+  - .cake
   - .cshtml
   - .csx
 
@@ -568,6 +569,7 @@ CoffeeScript:
   extensions:
   - .coffee
   - ._coffee
+  - .cake
   - .cjsx
   - .cson
   - .iced
@@ -720,7 +722,7 @@ Cython:
 
 D:
   type: programming
-  color: "#fcd46d"
+  color: "#ba595e"
   extensions:
   - .d
   - .di
@@ -885,6 +887,8 @@ Elixir:
   ace_mode: elixir
   filenames:
   - mix.lock
+  interpreters:
+  - elixir
 
 Elm:
   type: programming
@@ -1012,6 +1016,7 @@ Formatted:
   type: data
   extensions:
   - .for
+  - .eam.fs
   tm_scope: none
   ace_mode: text
 
@@ -1028,6 +1033,16 @@ Forth:
   - .frt
   - .fs
   ace_mode: forth
+
+FreeMarker:
+  type: programming
+  color: "#0050b2"
+  aliases:
+  - ftl
+  extensions:
+  - .ftl
+  tm_scope: text.html.ftl
+  ace_mode: ftl
 
 Frege:
   type: programming
@@ -1318,10 +1333,21 @@ HTML+Django:
   - .mustache
   - .jinja
   aliases:
+  - django
   - html+django/jinja
   - html+jinja
   - htmldjango
   ace_mode: django
+
+HTML+EEX:
+  type: markup
+  tm_scope: text.html.elixir
+  group: HTML
+  aliases:
+  - eex
+  extensions:
+  - .eex
+  ace_mode: text
 
 HTML+ERB:
   type: markup
@@ -1332,7 +1358,7 @@ HTML+ERB:
   extensions:
   - .erb
   - .erb.deface
-  ace_mode: html_ruby
+  ace_mode: text
 
 HTML+PHP:
   type: markup
@@ -1590,7 +1616,7 @@ Jade:
   type: markup
   extensions:
   - .jade
-  tm_scope: source.jade
+  tm_scope: text.jade
   ace_mode: jade
 
 Jasmin:
@@ -1635,6 +1661,7 @@ JavaScript:
   - .gs
   - .jake
   - .jsb
+  - .jscad
   - .jsfl
   - .jsm
   - .jss
@@ -1681,6 +1708,7 @@ KiCad:
   type: programming
   extensions:
   - .sch
+  - .brd
   - .kicad_pcb
   tm_scope: none
   ace_mode: text
@@ -2015,6 +2043,8 @@ Mathematica:
 Matlab:
   type: programming
   color: "#bb92ac"
+  aliases:
+  - octave
   extensions:
   - .matlab
   - .m
@@ -2062,6 +2092,14 @@ Mercury:
   - .moo
   tm_scope: source.mercury
   ace_mode: prolog
+
+Metal:
+  type: programming
+  color: "#8f14e9"
+  extensions:
+  - .metal
+  tm_scope: source.c++
+  ace_mode: c_cpp
 
 MiniD: # Legacy
   type: programming
@@ -2441,6 +2479,7 @@ PHP:
   - .php3
   - .php4
   - .php5
+  - .phps
   - .phpt
   filenames:
   - Phakefile
@@ -2457,6 +2496,7 @@ PLSQL:
   color: "#dad8d8"
   extensions:
   - .pls
+  - .pck
   - .pkb
   - .pks
   - .plb
@@ -2573,6 +2613,13 @@ Perl6:
   tm_scope: source.perl.6
   ace_mode: perl
 
+Pickle:
+  type: data
+  extensions:
+  - .pkl
+  tm_scope: none
+  ace_mode: text
+
 PicoLisp:
   type: programming
   extensions:
@@ -2615,6 +2662,13 @@ PogoScript:
   extensions:
   - .pogo
   tm_scope: source.pogoscript
+  ace_mode: text
+
+Pony:
+  type: programming
+  extensions:
+  - .pony
+  tm_scope: source.pony
   ace_mode: text
 
 PostScript:
@@ -3108,7 +3162,7 @@ Sass:
 Scala:
   type: programming
   ace_mode: scala
-  color: "#7dd3b0"
+  color: "#DC322F"
   extensions:
   - .scala
   - .sbt
@@ -3297,9 +3351,12 @@ SuperCollider:
   type: programming
   color: "#46390b"
   extensions:
-  - .scd
   - .sc
-  tm_scope: none
+  - .scd
+  interpreters:
+  - sclang
+  - scsynth
+  tm_scope: source.supercollider
   ace_mode: text
 
 Swift:
@@ -3442,6 +3499,7 @@ TypeScript:
   - ts
   extensions:
   - .ts
+  - .tsx
   tm_scope: source.ts
   ace_mode: typescript
 
@@ -3623,6 +3681,7 @@ XML:
   - .ccxml
   - .clixml
   - .cproject
+  - .csl
   - .csproj
   - .ct
   - .dita
@@ -3669,6 +3728,7 @@ XML:
   - .tmSnippet
   - .tmTheme
   - .ts
+  - .tsx
   - .ui
   - .urdf
   - .vbproj
