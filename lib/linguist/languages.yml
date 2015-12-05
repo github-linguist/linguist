@@ -1694,6 +1694,17 @@ Julia:
   color: "#a270ba"
   ace_mode: julia
 
+ Jupyter Notebook:
+  type: programming
+  ace_mode: json
+  color: "#F37626"
+  extensions:
+  - .ipynb
+  filenames:
+  - Notebook
+  aliases:
+  - IPython Notebook
+
 KRL:
   type: programming
   color: "#28431f"
@@ -2783,7 +2794,6 @@ Python:
   - .tac
   - .wsgi
   - .xpy
-  - .ipynb
   filenames:
   - BUILD
   - SConscript
