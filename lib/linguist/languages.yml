@@ -142,7 +142,7 @@ Agda:
 
 Alloy:
   type: programming  # 'modeling' would be more appropiate
-  color: "#cc5c24"
+  color: "#64C800"
   extensions:
   - .als
   ace_mode: text
@@ -1695,6 +1695,18 @@ Julia:
   - .jl
   color: "#a270ba"
   ace_mode: julia
+
+Jupyter Notebook:
+  type: markup
+  ace_mode: json
+  tm_scope: source.json
+  color: "#DA5B0B"
+  extensions:
+  - .ipynb
+  filenames:
+  - Notebook
+  aliases:
+  - IPython Notebook
 
 KRL:
   type: programming
