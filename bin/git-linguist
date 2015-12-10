@@ -50,6 +50,7 @@ class GitLinguist
 
   def clear_language_stats
     File.unlink(cache_file)
+  rescue Errno::ENOENT
   end
 
   def disable_language_stats
