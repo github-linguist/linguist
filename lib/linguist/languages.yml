@@ -2983,14 +2983,6 @@ Redcode:
   tm_scope: none
   ace_mode: text
 
-RenderScript:
-  type: programming
-  extensions:
-  - .rs
-  - .rsh
-  tm_scope: none
-  ace_mode: text
-
 Ren'Py:
   type: programming
   group: Python
@@ -3001,6 +2993,14 @@ Ren'Py:
   - .rpy
   tm_scope: source.renpy
   ace_mode: python
+
+RenderScript:
+  type: programming
+  extensions:
+  - .rs
+  - .rsh
+  tm_scope: none
+  ace_mode: text
 
 RobotFramework:
   type: programming
