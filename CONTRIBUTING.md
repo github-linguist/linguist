@@ -15,7 +15,7 @@ prerrequisite libraries first. Run:
 
 	sudo apt-get install cmake
 
-which is required to install `rugged`
+which is required to install `rugged`.
 
 Then
 
@@ -34,9 +34,9 @@ to check the languages on the repository itself, or
 
 	bundle exec git-linguist --commit=362d300cb021f11fe1c66f69b7f1bb0c246f01b0 breakdown
 
-to get a breakdown in JSON format of an specific commit.
+to get a breakdown in JSON format for an specific commit.
 
-Try it too in some other directory, for instance:
+You can try it too in some other directory this way:
 
 	bundle exec linguist ../../CPAN/Algorithm-Evolutionary
 
