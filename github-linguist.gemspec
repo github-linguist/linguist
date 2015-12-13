@@ -24,6 +24,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rake'
   s.add_development_dependency 'yajl-ruby'
   s.add_development_dependency 'color-proximity', '~> 0.2.1'
-  s.add_development_dependency 'licensee', '~> 4.7.4'
+  s.add_development_dependency 'licensee', '6.0.0b1'
 
 end

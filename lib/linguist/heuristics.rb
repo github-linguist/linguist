@@ -131,7 +131,7 @@ module Linguist
     disambiguate ".for", ".f" do |data|
       if /^: /.match(data)
         Language["Forth"]
-      elsif /^([c*][^a-z]|      (subroutine|program)\s|\s*!)/i.match(data)
+      elsif /^([c*][^abd-z]|      (subroutine|program|end)\s|\s*!)/i.match(data)
         Language["FORTRAN"]
       end
     end
@@ -238,8 +238,10 @@ module Linguist
     disambiguate ".ms" do |data|
       if /^[.'][a-z][a-z](\s|$)/i.match(data)
         Language["Groff"]
-      elsif /((^|\s)move?[. ])|\.(include|globa?l)\s/.match(data)
+      elsif /(?<!\S)\.(include|globa?l)\s/.match(data) || /(?<!\/\*)(\A|\n)\s*\.[A-Za-z]/.match(data.gsub(/"([^\\"]|\\.)*"|'([^\\']|\\.)*'|\\\s*(?:--.*)?\n/, ""))
         Language["GAS"]
+      else
+        Language["MAXScript"]
       end
     end
 
