@@ -86,7 +86,7 @@ module Linguist
     protected
 
     # Returns true if the attribute is present and not the string "false".
-    def boolean_attribute(attrbute)
+    def boolean_attribute(attribute)
       attribute != "false"
     end
 
