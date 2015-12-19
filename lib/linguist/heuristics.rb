@@ -275,8 +275,9 @@ module Linguist
       end
     end
 
+    perl5_vs_6_re = /^\s*(use v6|(my )?class |module )/ # Suggested by Paul Chaignon
     disambiguate ".pl" do |data|
-      if /^(use v6|(my )?class|module)/.match(data)
+      if perl5_vs_6_re.match(data) 
         Language["Perl6"]
       elsif /use strict|use\s+v?5\./.match(data)
         Language["Perl"]
@@ -286,7 +287,7 @@ module Linguist
     end
 
     disambiguate ".pm", ".t" do |data|
-      if /^(use v6|(my )?class|module)/.match(data)
+      if perl5_vs_6_re.match(data)
         Language["Perl6"]
       elsif /use strict|use\s+v?5\./.match(data)
         Language["Perl"]

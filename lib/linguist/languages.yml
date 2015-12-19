@@ -2605,6 +2605,8 @@ Perl:
   type: programming
   tm_scope: source.perl
   ace_mode: perl
+  aliases:
+  - cperl
   color: "#0298c3"
   extensions:
   - .pl
@@ -2618,6 +2620,10 @@ Perl:
   - .pod
   - .psgi
   - .t
+  filenames:
+  - Makefile.PL
+  - Rexfile
+  - cpanfile
   interpreters:
   - perl
 
@@ -2636,8 +2642,6 @@ Perl6:
   - .pm
   - .pm6
   - .t
-  filenames:
-  - Rexfile
   interpreters:
   - perl6
   tm_scope: source.perl.6

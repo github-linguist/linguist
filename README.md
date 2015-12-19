@@ -3,9 +3,11 @@
 [issues]: https://github.com/github/linguist/issues
 [new-issue]: https://github.com/github/linguist/issues/new
 
-This library is used on GitHub.com to detect blob languages, ignore binary or vendored files, suppress generated files in diffs, and generate language breakdown graphs.
+This library is used on github.com to detect blob languages, ignore binary or vendored files, suppress generated files in diffs, and generate language breakdown graphs.
 
-See [Troubleshooting](#troubleshooting) and [`CONTRIBUTING.md`](/CONTRIBUTING.md) before filing an issue or creating a pull request.
+See [Troubleshooting](#troubleshooting) and
+[`CONTRIBUTING.md`](/CONTRIBUTING.md) before filing an issue or
+creating a pull request.
 
 ## Troubleshooting
 
@@ -55,7 +57,7 @@ docs/formatter.rb linguist-documentation=false
 
 ### Using Emacs or Vim modelines
 
-Alternatively, you can use Vim or Emacs style modelines to set the language for a single file. Modelines can be placed anywhere within a file and are respected when determining how to syntax-highlight a file on GitHub.com
+Alternatively, you can use Vim or Emacs style modelines to set the language for a single file. Modelines can be placed anywhere within a file and are respected when determining how to syntax-highlight a file on github.com
 
 ##### Vim
 ```

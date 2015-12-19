@@ -4,7 +4,42 @@
 
 Hi there! We're thrilled that you'd like to contribute to this project. Your help is essential for keeping it great. This project adheres to the [Open Code of Conduct][code-of-conduct]. By participating, you are expected to uphold this code.
 
-The majority of contributions won't need to touch any Ruby code at all.
+The majority of contributions won't need to touch any Ruby code at
+all.
+
+## Installation how to
+
+You might want to get Linguist running in order to test locally whatever
+changes you might be doing to it. You will need to install some
+prerrequisite libraries first. Run:
+
+	sudo apt-get install cmake
+
+which is required to install `rugged`.
+
+Then
+
+	bundle install
+
+to install all dependencies and finally
+
+	rake samples
+
+to generate `samples.json` file, which is needed for checking out
+samples. Then you can simply run
+
+	bundle exec linguist --breakdown
+
+to check the languages on the repository itself, or
+
+	bundle exec git-linguist --commit=362d300cb021f11fe1c66f69b7f1bb0c246f01b0 breakdown
+
+to get a breakdown in JSON format for an specific commit.
+
+You can try it too in some other directory this way:
+
+	bundle exec linguist ../../CPAN/Algorithm-Evolutionary
+
 
 ## Adding an extension to a language
 
