@@ -276,20 +276,20 @@ module Linguist
     end
 
     disambiguate ".pl" do |data|
-      if /^(use v6|(my )?class|module)/.match(data)
-        Language["Perl6"]
+      if /^[^#]+:-/.match(data)
+        Language["Prolog"]
       elsif /use strict|use\s+v?5\./.match(data)
         Language["Perl"]
-      elsif /^[^#]+:-/.match(data)
-        Language["Prolog"]
+      elsif /^(use v6|(my )?class|module)/.match(data)
+        Language["Perl6"]
       end
     end
 
     disambiguate ".pm", ".t" do |data|
-      if /^(use v6|(my )?class|module)/.match(data)
-        Language["Perl6"]
-      elsif /use strict|use\s+v?5\./.match(data)
+      if /use strict|use\s+v?5\./.match(data)
         Language["Perl"]
+      elsif /^(use v6|(my )?class|module)/.match(data)
+        Language["Perl6"]
       end
     end
 
