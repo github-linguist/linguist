@@ -1477,6 +1477,7 @@ INI:
   extensions:
   - .ini
   - .cfg
+  - .lektorproject
   - .prefs
   - .pro
   - .properties
@@ -1819,6 +1820,14 @@ Lean:
   - .lean
   - .hlean
   ace_mode: lean
+
+Lektor:
+  type: prose
+  ace_mode: markdown
+  wrap: true
+  extensions:
+  - .lr
+  tm_scope: source.gfm
 
 Less:
   type: markup
