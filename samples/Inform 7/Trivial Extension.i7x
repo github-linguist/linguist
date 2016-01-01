@@ -45,7 +45,7 @@ To say /em -- running on:
 
 Include (-
 
-! Inform 6 comments start with ! marks and run to the end of the line.
+! Inform 6 comments start with a ! mark and run to the end of the line.
 Global cowcount;
 
 [ inform6func arg;
