@@ -69,5 +69,6 @@ Everything after the "---- DOCUMENTATION ----" line is documentation, so it shou
 However, tab-indented lines are sample Inform code within the documentation:
 
 	Horns are a kind of thing. Every cow has horns.
+	say "Moo[if the noun is purple] indigo[end if]."
 
 So we need to allow for that.
