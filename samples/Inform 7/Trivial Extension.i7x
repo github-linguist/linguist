@@ -55,7 +55,7 @@ Global cowcount;
 
 Object i6cow
 	with name 'cow' 'animal',
-	with description "It looks like a cow.";
+	with description "It looks like a cow.",
 	has animate scenery;
 
 -) after "Global Variables" in "Output.i6t".
