@@ -30,7 +30,7 @@ Chapter IV - not for release
 
 section foobar
 
-[A line beginning "Volume" that does not have blank lines before and after it is *not* a header line. So the following is part of section foobar:]
+[A line beginning "Volume" that does not have blank lines before and after it is *not* a header line. So the following should all be part of section foobar. Sadly, the "Volume is..." line gets colored as a header, because Atom's regexp model can't recognize "thing with blank lines before and after"!]
 
 Measure is a kind of value.
 Volume is a measure. Length is a measure.
