@@ -12,7 +12,7 @@ module Linguist
     # path    - A path String (does not necessarily exists on the file system).
     # content - Content of the file.
     #
-    # Returns a FileBlob.
+    # Returns a Blob.
     def initialize(path, content)
       @path = path
       @content = content
@@ -58,7 +58,7 @@ module Linguist
 
     # Public: Return an array of the file extensions
     #
-    #     >> Linguist::FileBlob.new("app/views/things/index.html.erb").extensions
+    #     >> Linguist::Blob.new("app/views/things/index.html.erb").extensions
     #     => [".html.erb", ".erb"]
     #
     # Returns an Array

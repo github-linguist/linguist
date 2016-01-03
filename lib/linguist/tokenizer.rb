@@ -86,13 +86,13 @@ module Linguist
           if s.peek(1) == "\""
             s.getch
           else
-            s.skip_until(/[^\\]"/)
+            s.skip_until(/(?<!\\)"/)
           end
         elsif s.scan(/'/)
           if s.peek(1) == "'"
             s.getch
           else
-            s.skip_until(/[^\\]'/)
+            s.skip_until(/(?<!\\)'/)
           end
 
         # Skip number literals

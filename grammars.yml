@@ -142,6 +142,8 @@ vendor/grammars/TXL/:
 - source.txl
 vendor/grammars/Textmate-Gosu-Bundle:
 - source.gosu.2
+vendor/grammars/UrWeb-Language-Definition:
+- source.ur
 vendor/grammars/VBDotNetSyntax:
 - source.vbnet
 vendor/grammars/Vala-TMBundle:
@@ -181,9 +183,12 @@ vendor/grammars/assembly.tmbundle:
 vendor/grammars/atom-fsharp/:
 - source.fsharp
 - source.fsharp.fsi
+- source.fsharp.fsl
 - source.fsharp.fsx
 vendor/grammars/atom-language-purescript/:
 - source.purescript
+vendor/grammars/atom-language-stan/:
+- source.stan
 vendor/grammars/atom-salt:
 - source.python.salt
 - source.yaml.salt
@@ -301,8 +306,8 @@ vendor/grammars/io.tmbundle:
 vendor/grammars/ioke-outdated:
 - source.ioke
 vendor/grammars/jade-tmbundle:
-- source.jade
 - source.pyjade
+- text.jade
 vendor/grammars/jasmin-sublime:
 - source.jasmin
 vendor/grammars/java.tmbundle:
@@ -321,6 +326,8 @@ vendor/grammars/kotlin-sublime-package:
 vendor/grammars/language-babel/:
 - source.js.jsx
 - source.regexp.babel
+vendor/grammars/language-click/:
+- source.click
 vendor/grammars/language-clojure:
 - source.clojure
 vendor/grammars/language-coffee-script:
@@ -344,6 +351,8 @@ vendor/grammars/language-javascript:
 vendor/grammars/language-jsoniq/:
 - source.jq
 - source.xq
+vendor/grammars/language-maxscript:
+- source.maxscript
 vendor/grammars/language-ncl:
 - source.ncl
 vendor/grammars/MagicPython:
@@ -352,9 +361,13 @@ vendor/grammars/language-python:
 - source.regexp.python
 - text.python.console
 - text.python.traceback
+vendor/grammars/language-renpy:
+- source.renpy
 vendor/grammars/language-shellscript:
 - source.shell
 - text.shell-session
+vendor/grammars/language-supercollider:
+- source.supercollider
 vendor/grammars/language-xbase:
 - source.harbour
 vendor/grammars/language-yaml:
@@ -515,6 +528,8 @@ vendor/grammars/sublime-nix:
 vendor/grammars/sublime-opal/:
 - source.opal
 - source.opalsysdefs
+vendor/grammars/sublime-pony:
+- source.pony
 vendor/grammars/sublime-robot-plugin:
 - text.robot
 vendor/grammars/sublime-rust:

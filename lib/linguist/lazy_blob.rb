@@ -86,8 +86,8 @@ module Linguist
     protected
 
     # Returns true if the attribute is present and not the string "false".
-    def boolean_attribute(attr)
-      attr != "false"
+    def boolean_attribute(attribute)
+      attribute != "false"
     end
 
     def load_blob!
