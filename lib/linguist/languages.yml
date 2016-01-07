@@ -2108,6 +2108,7 @@ MediaWiki:
   wrap: true
   extensions:
   - .mediawiki
+  - .wiki
   tm_scope: text.html.mediawiki
   ace_mode: text
 
@@ -3355,6 +3356,14 @@ Squirrel:
   tm_scope: source.c++
   ace_mode: c_cpp
 
+Stan:
+  type: programming
+  color: "#b2011d"
+  extensions:
+  - .stan
+  ace_mode: text
+  tm_scope: source.stan
+
 Standard ML:
   type: programming
   color: "#dc566d"
@@ -3966,6 +3975,8 @@ reStructuredText:
   extensions:
   - .rst
   - .rest
+  - .rest.txt
+  - .rst.txt
   ace_mode: text
 
 wisp:

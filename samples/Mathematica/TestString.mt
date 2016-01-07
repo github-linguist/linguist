@@ -1,1 +1,1 @@
-Test[1"a" <> "b", "ab", TestID -> "Concat \"a\" and \"b\""]
+Test["a" <> "b", "ab", TestID -> "Concat \"a\" and \"b\""]
