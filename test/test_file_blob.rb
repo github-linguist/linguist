@@ -217,7 +217,7 @@ class TestBlob < Minitest::Test
     assert sample_blob("JavaScript/intro.js").generated?
     assert sample_blob("JavaScript/classes.js").generated?
 
-    # Protocol Buffer generated code
+    # Protocol Buffers generated code
     assert sample_blob("C++/protocol-buffer.pb.h").generated?
     assert sample_blob("C++/protocol-buffer.pb.cc").generated?
     assert sample_blob("Java/ProtocolBuffer.java").generated?
