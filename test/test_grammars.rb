@@ -113,6 +113,20 @@ class TestGrammars < Minitest::Test
     assert_equal [], licensed, msg
   end
 
+  def test_submodules_use_https_links
+    File.open(".gitmodules", "r") do |fh|
+      ssh_submodules = []
+      fh.each_line do |line|
+        if matches = line.match(/url = (git@.*)/)
+          submodule_link = matches.captures[0]
+          ssh_submodules.push(submodule_link)
+        end
+      end
+      msg = "The following submodules don't have an HTTPS link:\n* #{ssh_submodules.join("\n* ")}"
+      assert_equal [], ssh_submodules, msg
+    end
+  end
+
   private
 
   def submodule_paths
