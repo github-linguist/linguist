@@ -155,6 +155,14 @@ class TestHeuristcs < Minitest::Test
     })
   end
 
+  # Candidate languages = ["Pod", "Perl"]
+  def test_pod_by_heuristics
+    assert_heuristics({
+      "Perl" => all_fixtures("Perl", "*.pod"),
+      "Pod" => all_fixtures("Pod", "*.pod")
+    })
+  end
+
   # Candidate languages = ["IDL", "Prolog", "QMake", "INI"]
   def test_pro_by_heuristics
     assert_heuristics({
