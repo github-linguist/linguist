@@ -35,6 +35,7 @@ module Linguist
         next if category == '.' || category == '..'
 
         dirname = File.join(ROOT, category)
+        next unless File.directory?(dirname)
         Dir.entries(dirname).each do |filename|
           next if filename == '.' || filename == '..'
 

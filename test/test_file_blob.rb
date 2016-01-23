@@ -171,11 +171,6 @@ class TestBlob < Minitest::Test
   def test_generated
     assert !fixture_blob("Data/README").generated?
 
-    # Xcode project files
-    assert !sample_blob("XML/MainMenu.xib").generated?
-    assert fixture_blob("Binary/MainMenu.nib").generated?
-    assert !sample_blob("XML/project.pbxproj").generated?
-
     # Gemfile.lock is NOT generated
     assert !sample_blob("Gemfile.lock").generated?
 
