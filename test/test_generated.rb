@@ -69,5 +69,11 @@ class TestGenerated < Minitest::Test
 
     # Specflow
     generated_fixture_without_loading_data("Features/BindingCulture.feature.cs")
+
+    # JFlex
+    generated_sample_loading_data("Java/JFlexLexer.java")
+
+    # GrammarKit
+    generated_sample_loading_data("Java/GrammarKit.java")
   end
 end
