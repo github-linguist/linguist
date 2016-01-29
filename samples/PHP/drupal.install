@@ -1,0 +1,45 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the php module.
+ */
+
+/**
+ * Implements hook_enable().
+ */
+function php_enable() {
+  $format_exists = (bool) db_query_range('SELECT 1 FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'PHP code'))->fetchField();
+  // Add a PHP code text format, if it does not exist. Do this only for the
+  // first install (or if the format has been manually deleted) as there is no
+  // reliable method to identify the format in an uninstall hook or in
+  // subsequent clean installs.
+  if (!$format_exists) {
+    $php_format = array(
+      'format' => 'php_code',
+      'name' => 'PHP code',
+      // 'Plain text' format is installed with a weight of 10 by default. Use a
+      // higher weight here to ensure that this format will not be the default
+      // format for anyone.
+      'weight' => 11,
+      'filters' => array(
+        // Enable the PHP evaluator filter.
+        'php_code' => array(
+          'weight' => 0,
+          'status' => 1,
+        ),
+      ),
+    );
+    $php_format = (object) $php_format;
+    filter_format_save($php_format);
+
+    drupal_set_message(t('A <a href="@php-code">PHP code</a> text format has been created.', array('@php-code' => url('admin/config/content/formats/' . $php_format->format))));
+  }
+}
+
+/**
+ * Implements hook_disable().
+ */
+function php_disable() {
+  drupal_set_message(t('The PHP module has been disabled. Any existing content that was using the PHP filter will now be visible in plain text. This might pose a security risk by exposing sensitive information, if any, used in the PHP code.'));
+}
