@@ -1,0 +1,1 @@
+C = terralib.includec("stdarg.h")
