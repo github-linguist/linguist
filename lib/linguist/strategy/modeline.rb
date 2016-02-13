@@ -5,12 +5,12 @@ module Linguist
 
       # First form vim modeline
       # [text]{white}{vi:|vim:|ex:}[white]{options}
-      # ex: 'vim: syntax=perl'
+      # ex: 'vim: syntax=ruby'
       VIM_MODELINE_1 = /(?:vim|vi|ex):\s*(?:ft|filetype|syntax)=(\w+)\s?/i
 
       # Second form vim modeline (compatible with some versions of Vi)
       # [text]{white}{vi:|vim:|Vim:|ex:}[white]se[t] {options}:[text]
-      # ex: 'vim set syntax=perl:'
+      # ex: 'vim set syntax=ruby:'
       VIM_MODELINE_2 = /(?:vim|vi|Vim|ex):\s*se(?:t)?.*\s(?:ft|filetype|syntax)=(\w+)\s?.*:/i
 
       MODELINES = [EMACS_MODELINE, VIM_MODELINE_1, VIM_MODELINE_2]
