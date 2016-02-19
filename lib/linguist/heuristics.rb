@@ -56,7 +56,8 @@ module Linguist
 
     # Internal: Check if this heuristic matches the candidate languages.
     def matches?(filename)
-      @extensions.any? { |ext| filename.downcase.end_with?(ext) }
+      filename = filename.downcase
+      @extensions.any? { |ext| filename.end_with?(ext) }
     end
 
     # Internal: Perform the heuristic
@@ -65,7 +66,7 @@ module Linguist
     end
 
     # Common heuristics
-    ObjectiveCRegex = /^[ \t]*@(interface|class|protocol|property|end|synchronized|selector|implementation)\b/
+    ObjectiveCRegex = /^\s*(@(interface|class|protocol|property|end|synchronised|selector|implementation)\b|#import\s+.+\.h[">])/
 
     disambiguate ".asc" do |data|
       if /^(----[- ]BEGIN|ssh-(rsa|dss)) /.match(data)
@@ -130,7 +131,7 @@ module Linguist
     disambiguate ".for", ".f" do |data|
       if /^: /.match(data)
         Language["Forth"]
-      elsif /^([c*][^a-z]|      (subroutine|program)\s|\s*!)/i.match(data)
+      elsif /^([c*][^abd-z]|      (subroutine|program|end)\s|\s*!)/i.match(data)
         Language["FORTRAN"]
       end
     end
@@ -237,8 +238,10 @@ module Linguist
     disambiguate ".ms" do |data|
       if /^[.'][a-z][a-z](\s|$)/i.match(data)
         Language["Groff"]
-      elsif /((^|\s)move?[. ])|\.(include|globa?l)\s/.match(data)
+      elsif /(?<!\S)\.(include|globa?l)\s/.match(data) || /(?<!\/\*)(\A|\n)\s*\.[A-Za-z]/.match(data.gsub(/"([^\\"]|\\.)*"|'([^\\']|\\.)*'|\\\s*(?:--.*)?\n/, ""))
         Language["GAS"]
+      else
+        Language["MAXScript"]
       end
     end
 
@@ -273,19 +276,27 @@ module Linguist
     end
 
     disambiguate ".pl" do |data|
-      if /^(use v6|(my )?class|module)/.match(data)
-        Language["Perl6"]
+      if /^[^#]+:-/.match(data)
+        Language["Prolog"]
       elsif /use strict|use\s+v?5\./.match(data)
         Language["Perl"]
-      elsif /^[^#]+:-/.match(data)
-        Language["Prolog"]
+      elsif /^(use v6|(my )?class|module)/.match(data)
+        Language["Perl6"]
       end
     end
 
     disambiguate ".pm", ".t" do |data|
-      if /^(use v6|(my )?class|module)/.match(data)
+      if /use strict|use\s+v?5\./.match(data)
+        Language["Perl"]
+      elsif /^(use v6|(my )?class|module)/.match(data)
         Language["Perl6"]
-      elsif /use strict|use\s+v?5\./.match(data)
+      end
+    end
+
+    disambiguate ".pod" do |data|
+      if /^=\w+$/.match(data)
+        Language["Pod"]
+      else
         Language["Perl"]
       end
     end

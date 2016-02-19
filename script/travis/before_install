@@ -5,18 +5,6 @@ set -ex
 # Fetch all commits/refs needed to run our tests.
 git fetch origin master:master v2.0.0:v2.0.0 test/attributes:test/attributes test/master:test/master
 
-sudo apt-get update
-
-script/vendor-deb libicu48 libicu-dev
-if ruby -e 'exit RUBY_VERSION >= "2.0" && RUBY_VERSION < "2.1"'; then
-  # Workaround for https://bugs.ruby-lang.org/issues/8074. We can't use this
-  # solution on all versions of Ruby due to
-  # https://github.com/bundler/bundler/pull/3338.
-  bundle config build.charlock_holmes --with-icu-include=$(pwd)/vendor/debs/include --with-icu-lib=$(pwd)/vendor/debs/lib
-else
-  bundle config build.charlock_holmes --with-icu-dir=$(pwd)/vendor/debs
-fi
-
 # Replace SSH links to submodules by HTTPS links.
 sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
 

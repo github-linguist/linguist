@@ -13,8 +13,8 @@ class << Linguist
   def instrument(*args, &bk)
     if instrumenter
       instrumenter.instrument(*args, &bk)
-    else
-      yield if block_given?
+    elsif block_given?
+      yield
     end
   end
 end

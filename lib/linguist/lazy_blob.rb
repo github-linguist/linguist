@@ -79,11 +79,15 @@ module Linguist
       @size
     end
 
+    def cleanup!
+      @data.clear if @data
+    end
+
     protected
 
     # Returns true if the attribute is present and not the string "false".
-    def boolean_attribute(attr)
-      attr != "false"
+    def boolean_attribute(attribute)
+      attribute != "false"
     end
 
     def load_blob!
