@@ -286,7 +286,9 @@ module Linguist
     #
     # Returns true or false.
     def go_vendor?
-      !!name.match(/vendor\//)
+      return false unless extname == '.go'
+
+      !!name.match(/\Avendor\//)
     end
 
     # Internal: Is the blob part of Godeps/,
