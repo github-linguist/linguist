@@ -69,6 +69,9 @@ vendor/grammars/Lean.tmbundle:
 - source.lean
 vendor/grammars/LiveScript.tmbundle:
 - source.livescript
+vendor/grammars/MagicPython:
+- source.python
+- source.regexp.python
 vendor/grammars/Modelica/:
 - source.modelica
 vendor/grammars/NSIS:
@@ -103,8 +106,6 @@ vendor/grammars/Sublime-Coq:
 - source.coq
 vendor/grammars/Sublime-HTTP:
 - source.httpspec
-vendor/grammars/Sublime-Inform:
-- source.Inform7
 vendor/grammars/Sublime-Lasso:
 - file.lasso
 vendor/grammars/Sublime-Logos:
@@ -187,6 +188,8 @@ vendor/grammars/atom-fsharp/:
 - source.fsharp.fsx
 vendor/grammars/atom-language-purescript/:
 - source.purescript
+vendor/grammars/atom-language-stan/:
+- source.stan
 vendor/grammars/atom-salt:
 - source.python.salt
 - source.yaml.salt
@@ -342,6 +345,8 @@ vendor/grammars/language-gfm:
 - source.gfm
 vendor/grammars/language-hy:
 - source.hy
+vendor/grammars/language-inform7:
+- source.inform7
 vendor/grammars/language-javascript:
 - source.js
 - source.js.regexp
@@ -349,13 +354,13 @@ vendor/grammars/language-javascript:
 vendor/grammars/language-jsoniq/:
 - source.jq
 - source.xq
+vendor/grammars/language-less/:
+- source.css.less
 vendor/grammars/language-maxscript:
 - source.maxscript
 vendor/grammars/language-ncl:
 - source.ncl
 vendor/grammars/language-python:
-- source.python
-- source.regexp.python
 - text.python.console
 - text.python.traceback
 vendor/grammars/language-renpy:
@@ -369,6 +374,8 @@ vendor/grammars/language-xbase:
 - source.harbour
 vendor/grammars/language-yaml:
 - source.yaml
+vendor/grammars/language-yang/:
+- source.yang
 vendor/grammars/latex.tmbundle:
 - text.bibtex
 - text.log.latex
@@ -376,8 +383,6 @@ vendor/grammars/latex.tmbundle:
 - text.tex.latex
 - text.tex.latex.beamer
 - text.tex.latex.memoir
-vendor/grammars/less.tmbundle:
-- source.css.less
 vendor/grammars/lilypond.tmbundle:
 - source.lilypond
 vendor/grammars/liquid.tmbundle:
@@ -440,6 +445,10 @@ vendor/grammars/pascal.tmbundle:
 vendor/grammars/perl.tmbundle/:
 - source.perl
 - source.perl.6
+vendor/grammars/perl6fe:
+- source.meta-info
+- source.perl6fe
+- source.regexp.perl6fe
 vendor/grammars/php-smarty.tmbundle:
 - text.html.smarty
 vendor/grammars/php.tmbundle:
