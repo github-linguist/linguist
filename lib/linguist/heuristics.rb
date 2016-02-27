@@ -293,6 +293,14 @@ module Linguist
       end
     end
 
+    disambiguate ".pod" do |data|
+      if /^=\w+$/.match(data)
+        Language["Pod"]
+      else
+        Language["Perl"]
+      end
+    end
+
     disambiguate ".pro" do |data|
       if /^[^#]+:-/.match(data)
         Language["Prolog"]
