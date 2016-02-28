@@ -322,7 +322,7 @@ module Linguist
     end
 
     disambiguate ".rpy" do |data|
-      if /(^(import|from)[\s\S])/m.match(data)
+        if /(^(import|from|class|def)[\s\S])/m.match(data)
         Language["Python"]
     else
         Language["Ren'Py"]
