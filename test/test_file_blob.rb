@@ -522,6 +522,9 @@ class TestBlob < Minitest::Test
     assert sample_blob("myapp/My Template.xctemplate/___FILEBASENAME___.h").vendored?
     assert sample_blob("myapp/My Images.xcassets/some/stuff.imageset/Contents.json").vendored?
     assert !sample_blob("myapp/MyData.json").vendored?
+
+    # Jenkins
+    assert sample_blob("Jenkinsfile").vendored?
   end
 
   def test_documentation
