@@ -11,6 +11,7 @@ require 'linguist/samples'
 require 'linguist/file_blob'
 require 'linguist/blob_helper'
 require 'linguist/strategy/filename'
+require 'linguist/strategy/gitattributes'
 require 'linguist/strategy/modeline'
 require 'linguist/shebang'
 
@@ -89,6 +90,7 @@ module Linguist
 
     STRATEGIES = [
       Linguist::Strategy::Modeline,
+      Linguist::Strategy::Gitattributes,
       Linguist::Shebang,
       Linguist::Strategy::Filename,
       Linguist::Heuristics,
