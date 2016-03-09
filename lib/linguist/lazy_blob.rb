@@ -4,7 +4,11 @@ require 'rugged'
 
 module Linguist
   class LazyBlob
-    GIT_ATTR = ['linguist-documentation', 'linguist-language', 'linguist-vendored']
+    GIT_ATTR = ['linguist-documentation',
+                'linguist-language',
+                'linguist-vendored',
+                'linguist-generated']
+
     GIT_ATTR_OPTS = { :priority => [:index], :skip_system => true }
     GIT_ATTR_FLAGS = Rugged::Repository::Attributes.parse_opts(GIT_ATTR_OPTS)
 
@@ -31,17 +35,25 @@ module Linguist
         name, GIT_ATTR, GIT_ATTR_FLAGS)
     end
 
-    def vendored?
-      if attr = git_attributes['linguist-vendored']
-        return boolean_attribute(attr)
-      else
-        return super
-      end
-    end
-
     def documentation?
       if attr = git_attributes['linguist-documentation']
         boolean_attribute(attr)
+      else
+        super
+      end
+    end
+
+    def generated?
+      if attr = git_attributes['linguist-generated']
+        boolean_attribute(attr)
+      else
+        super
+      end
+    end
+
+    def vendored?
+      if attr = git_attributes['linguist-vendored']
+        return boolean_attribute(attr)
       else
         super
       end
@@ -67,11 +79,15 @@ module Linguist
       @size
     end
 
+    def cleanup!
+      @data.clear if @data
+    end
+
     protected
 
     # Returns true if the attribute is present and not the string "false".
-    def boolean_attribute(attr)
-      attr != "false"
+    def boolean_attribute(attribute)
+      attribute != "false"
     end
 
     def load_blob!

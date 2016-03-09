@@ -85,6 +85,9 @@
 # Haxelib projects often contain a neko bytecode file named run.n
 - run.n$
 
+# Bootstrap Datepicker
+- bootstrap-datepicker/
+
 ## Commonly Bundled JavaScript frameworks ##
 
 # jQuery
@@ -94,6 +97,34 @@
 # jQuery UI
 - (^|/)jquery\-ui(\-\d\.\d+(\.\d+)?)?(\.\w+)?\.(js|css)$
 - (^|/)jquery\.(ui|effects)\.([^.]*)\.(js|css)$
+
+# jQuery Gantt
+- jquery.fn.gantt.js
+
+# jQuery fancyBox
+- jquery.fancybox.(js|css)
+
+# Fuel UX
+- fuelux.js
+
+# jQuery File Upload
+- (^|/)jquery\.fileupload(-\w+)?\.js$
+
+# Slick
+- (^|/)slick\.\w+.js$
+
+# Leaflet plugins
+- (^|/)Leaflet\.Coordinates-\d+\.\d+\.\d+\.src\.js$
+- leaflet.draw-src.js
+- leaflet.draw.css
+- Control.FullScreen.css
+- Control.FullScreen.js
+- leaflet.spin.js
+- wicket-leaflet.js
+
+# Sublime Text workspace files
+- .sublime-project
+- .sublime-workspace
 
 # Prototype
 - (^|/)prototype(.*)\.js$
@@ -129,7 +160,7 @@
 - (^|/)Chart\.js$
 
 # Codemirror
-- (^|/)[Cc]ode[Mm]irror/(lib|mode|theme|addon|keymap|demo)
+- (^|/)[Cc]ode[Mm]irror/(\d+\.\d+/)?(lib|mode|theme|addon|keymap|demo)
 
 # SyntaxHighlighter - http://alexgorbatchev.com/
 - (^|/)shBrush([^.]*)\.js$
@@ -170,6 +201,11 @@
 - ^.osx$
 
 ## Obj-C ##
+
+# Xcode
+
+- \.xctemplate/
+- \.imageset/
 
 # Carthage
 - ^Carthage/
@@ -237,6 +273,7 @@
 
 # Test fixtures
 - ^[Tt]ests?/fixtures/
+- ^[Ss]pecs?/fixtures/
 
 # PhoneGap/Cordova
 - (^|/)cordova([^.]*)\.js$
@@ -272,3 +309,6 @@
 
 # Android Google APIs
 - (^|/)\.google_apis/
+
+# Jenkins Pipeline
+- ^Jenkinsfile$
