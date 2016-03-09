@@ -9,10 +9,10 @@ class TestPedantic < Minitest::Test
     assert_sorted LANGUAGES.keys
   end
 
-  def test_extensions_are_sorted
+  def test_nonprimary_extensions_are_sorted
     LANGUAGES.each do |name, language|
       extensions = language['extensions']
-      assert_sorted extensions[1..-1] if extensions && extensions.size > 1
+      assert_sorted extensions[1..-1].map(&:downcase) if extensions && extensions.size > 1
     end
   end
 
@@ -30,6 +30,18 @@ class TestPedantic < Minitest::Test
     GRAMMARS.values.each do |scopes|
       assert_sorted scopes
     end
+  end
+
+  def test_heuristics_are_sorted
+    file = File.expand_path("../../lib/linguist/heuristics.rb", __FILE__)
+    heuristics = open(file).each.grep(/^ *disambiguate/)
+    assert_sorted heuristics
+  end
+
+  def test_heuristics_tests_are_sorted
+    file = File.expand_path("../test_heuristics.rb", __FILE__)
+    tests = open(file).each.grep(/^ *def test_[a-z_]+_by_heuristics/)
+    assert_sorted tests
   end
 
   def assert_sorted(list)

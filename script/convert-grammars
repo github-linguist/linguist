@@ -188,14 +188,16 @@ def load_grammars(tmp_dir, source, all_scopes)
     scope = grammar['scopeName']
 
     if all_scopes.key?(scope)
-      $stderr.puts "WARN: Duplicated scope #{scope}\n" +
-        "  Current package: #{p.url}\n" +
-      "  Previous package: #{all_scopes[scope]}"
+      unless all_scopes[scope] == p.url
+        $stderr.puts "WARN: Duplicated scope #{scope}\n" +
+          "  Current package: #{p.url}\n" +
+          "  Previous package: #{all_scopes[scope]}"
+      end
       next
     end
     all_scopes[scope] = p.url
     grammar
-  end
+  end.compact
 end
 
 def install_grammars(grammars, path)
@@ -250,9 +252,10 @@ def main(sources)
 
   all_scopes = {}
 
-  if $options[:add]
+  if source = $options[:add]
     Dir.mktmpdir do |tmpdir|
-      install_grammar(tmpdir, ARGV[0], all_scopes)
+      grammars = load_grammars(tmpdir, source, all_scopes)
+      install_grammars(grammars, source) if $options[:install]
     end
     generate_yaml(all_scopes, sources)
   else

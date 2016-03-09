@@ -7,3 +7,15 @@ require 'linguist/repository'
 require 'linguist/samples'
 require 'linguist/shebang'
 require 'linguist/version'
+
+class << Linguist
+  attr_accessor :instrumenter
+
+  def instrument(*args, &bk)
+    if instrumenter
+      instrumenter.instrument(*args, &bk)
+    elsif block_given?
+      yield
+    end
+  end
+end
