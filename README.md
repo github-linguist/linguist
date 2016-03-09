@@ -194,3 +194,11 @@ If you are the current maintainer of this gem:
  0. Merge github/linguist PR
  0. Tag and push: `git tag vx.xx.xx; git push --tags`
  0. Push to rubygems.org -- `gem push github-linguist-3.0.0.gem`
+
+## License
+
+The language grammars included in this gem are covered by their repositories'
+respective licenses. `grammars.yml` specifies the repository for each grammar.
+
+All other files are covered by the MIT license, see `LICENSE`.
+
