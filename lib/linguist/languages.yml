@@ -2007,6 +2007,25 @@ M:
   tm_scope: source.lisp
   ace_mode: lisp
 
+M4:
+  type: programming
+  extensions:
+  - .m4
+  tm_scope: none
+  ace_mode: text
+
+M4Sugar:
+  type: programming
+  group: M4
+  aliases:
+  - autoconf
+  extensions:
+  - .m4
+  filenames:
+  - configure.ac
+  tm_scope: none
+  ace_mode: text
+
 MAXScript:
   type: programming
   color: "#00a6a6"
