@@ -321,6 +321,14 @@ module Linguist
       end
     end
 
+    disambiguate ".rpy" do |data|
+      if /(^(import|from|class|def)[\s\S])/m.match(data)
+        Language["Python"]
+      else
+        Language["Ren'Py"]
+      end
+    end
+
     disambiguate ".rs" do |data|
       if /^(use |fn |mod |pub |macro_rules|impl|#!?\[)/.match(data)
         Language["Rust"]

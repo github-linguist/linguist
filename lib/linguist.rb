@@ -1,5 +1,6 @@
 require 'linguist/blob_helper'
 require 'linguist/generated'
+require 'linguist/grammars'
 require 'linguist/heuristics'
 require 'linguist/language'
 require 'linguist/repository'

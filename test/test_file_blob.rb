@@ -152,7 +152,7 @@ class TestBlob < Minitest::Test
   end
 
   def test_csv
-    assert fixture_blob("Data/cars.csv").csv?
+    assert sample_blob("CSV/cars.csv").csv?
   end
 
   def test_pdf
@@ -522,6 +522,9 @@ class TestBlob < Minitest::Test
     assert sample_blob("myapp/My Template.xctemplate/___FILEBASENAME___.h").vendored?
     assert sample_blob("myapp/My Images.xcassets/some/stuff.imageset/Contents.json").vendored?
     assert !sample_blob("myapp/MyData.json").vendored?
+
+    # Jenkins
+    assert sample_blob("Jenkinsfile").vendored?
   end
 
   def test_documentation

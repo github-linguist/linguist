@@ -475,6 +475,13 @@ CSS:
   extensions:
   - .css
 
+CSV:
+  type: data
+  ace_mode: text
+  tm_scope: none
+  extensions:
+  - .csv
+
 Cap'n Proto:
   type: programming
   tm_scope: source.capnp
@@ -1283,6 +1290,7 @@ Groff:
   - '.8'
   - '.9'
   - .l
+  - .me
   - .ms
   - .n
   - .rno
@@ -1303,6 +1311,8 @@ Groovy:
   - .gvy
   interpreters:
   - groovy
+  filenames:
+  - Jenkinsfile
 
 Groovy Server Pages:
   type: programming
@@ -1322,6 +1332,16 @@ HCL:
     - .tf
   ace_mode: ruby
   tm_scope: source.ruby
+
+HLSL:
+  type: programming
+  extensions:
+    - .hlsl
+    - .fx
+    - .fxh
+    - .hlsli
+  ace_mode: text
+  tm_scope: none
 
 HTML:
   type: markup
@@ -1988,6 +2008,25 @@ M:
   tm_scope: source.lisp
   ace_mode: lisp
 
+M4:
+  type: programming
+  extensions:
+  - .m4
+  tm_scope: none
+  ace_mode: text
+
+M4Sugar:
+  type: programming
+  group: M4
+  aliases:
+  - autoconf
+  extensions:
+  - .m4
+  filenames:
+  - configure.ac
+  tm_scope: none
+  ace_mode: text
+
 MAXScript:
   type: programming
   color: "#00a6a6"
@@ -2029,6 +2068,8 @@ Makefile:
   - GNUmakefile
   - Kbuild
   - Makefile
+  - Makefile.am
+  - Makefile.in
   - Makefile.inc
   - makefile
   interpreters:
@@ -2555,6 +2596,16 @@ PLpgSQL:
   extensions:
   - .sql
 
+POV-Ray SDL:
+  type: programming
+  aliases:
+  - pov-ray
+  - povray
+  extensions:
+  - .pov
+  - .inc
+  ace_mode: text
+
 Pan:
   type: programming
   color: '#cc0000'
@@ -2654,7 +2705,7 @@ Perl6:
   - Rexfile
   interpreters:
   - perl6
-  tm_scope: source.perl.6
+  tm_scope: source.perl6fe
   ace_mode: perl
 
 Pickle:
@@ -2749,8 +2800,10 @@ Prolog:
   - .pl
   - .pro
   - .prolog
+  - .yap
   interpreters:
   - swipl
+  - yap
   tm_scope: source.prolog
   ace_mode: prolog
 
@@ -2820,6 +2873,7 @@ Python:
   color: "#3572A5"
   extensions:
   - .py
+  - .bzl
   - .cgi
   - .fcgi
   - .gyp
@@ -2828,10 +2882,12 @@ Python:
   - .pyp
   - .pyt
   - .pyw
+  - .rpy
   - .tac
   - .wsgi
   - .xpy
   filenames:
+  - BUCK
   - BUILD
   - SConscript
   - SConstruct
@@ -3001,7 +3057,6 @@ Redcode:
 
 Ren'Py:
   type: programming
-  group: Python
   aliases:
   - renpy
   color: "#ff7f7f"
@@ -3274,6 +3329,7 @@ Shell:
   color: "#89e051"
   aliases:
   - sh
+  - shell-script
   - bash
   - zsh
   extensions:
@@ -3284,6 +3340,7 @@ Shell:
   - .command
   - .fcgi
   - .ksh
+  - .sh.in
   - .tmux
   - .tool
   - .zsh
@@ -3526,7 +3583,20 @@ Text:
   extensions:
   - .txt
   - .fr
+  - .nb
   - .ncl
+  - .no
+  filenames:
+  - COPYING
+  - INSTALL
+  - LICENSE
+  - NEWS
+  - README.me
+  - click.me
+  - delete.me
+  - keep.me
+  - read.me
+  - test.me
   tm_scope: none
   ace_mode: text
 
@@ -3600,6 +3670,13 @@ Unity3D Asset:
   - .prefab
   - .unity
   tm_scope: source.yaml
+
+Uno:
+  type: programming
+  extensions:
+  - .uno
+  ace_mode: csharp
+  tm_scope: source.cs
 
 UnrealScript:
   type: programming
@@ -3807,6 +3884,7 @@ XML:
   - .tsx
   - .ui
   - .urdf
+  - .ux
   - .vbproj
   - .vcxproj
   - .vxml
@@ -3823,6 +3901,7 @@ XML:
   - .xliff
   - .xmi
   - .xml.dist
+  - .xproj
   - .xsd
   - .xul
   - .zcml
@@ -3908,10 +3987,18 @@ YAML:
   - .yml
   - .reek
   - .rviz
+  - .sublime-syntax
   - .syntax
   - .yaml
   - .yaml-tmlanguage
   ace_mode: yaml
+
+YANG:
+  type: data
+  extensions:
+  - .yang
+  tm_scope: source.yang
+  ace_mode: text
 
 Yacc:
   type: programming
