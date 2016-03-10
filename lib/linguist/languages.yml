@@ -1336,9 +1336,9 @@ HCL:
 HLSL:
   type: programming
   extensions:
+    - .hlsl
     - .fx
     - .fxh
-    - .hlsl
     - .hlsli
   ace_mode: text
   tm_scope: none
@@ -3573,7 +3573,9 @@ Text:
   extensions:
   - .txt
   - .fr
+  - .nb
   - .ncl
+  - .no
   filenames:
   - COPYING
   - INSTALL
@@ -3975,6 +3977,7 @@ YAML:
   - .yml
   - .reek
   - .rviz
+  - .sublime-syntax
   - .syntax
   - .yaml
   - .yaml-tmlanguage
