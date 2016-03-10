@@ -313,6 +313,14 @@ module Linguist
       end
     end
 
+    disambiguate ".props" do |data|
+      if /^(\s*)(<Project|<Import|<Property|<?xml|xmlns)/i.match(data)
+        Language["XML"]
+      elsif /\w+\s*=\s*/i.match(data)
+        Language["INI"]
+      end
+    end
+
     disambiguate ".r" do |data|
       if /\bRebol\b/i.match(data)
         Language["Rebol"]
