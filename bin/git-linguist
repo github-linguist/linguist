@@ -111,7 +111,7 @@ def git_linguist(args)
   parser.parse!(args)
 
   git_dir = `git rev-parse --git-dir`.strip
-  raise "git-linguist must be ran in a Git repository" unless $?.success?
+  raise "git-linguist must be ran in a Git repository (#{Dir.pwd})" unless $?.success?
   wrapper = GitLinguist.new(git_dir, commit, incremental)
 
   case args.pop
