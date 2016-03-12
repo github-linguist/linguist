@@ -189,6 +189,16 @@ class TestHeuristcs < Minitest::Test
     })
   end
 
+  # Candidate languages = ["SQL", "PLpgSQL", "SQLPL", "PLSQL"]
+  def test_sql_by_heuristics
+    assert_heuristics({
+      "SQL" => ["SQL/create_stuff.sql", "SQL/db.sql", "SQL/dual.sql"],
+      "PLpgSQL" => all_fixtures("PLpgSQL", "*.sql"),
+      "SQLPL" => ["SQLPL/trigger.sql"],
+      "PLSQL" => all_fixtures("PLSQL", "*.sql")
+    })
+  end
+
   # Candidate languages = ["Perl", "Perl6"]
   def test_t_perl_by_heuristics
     assert_heuristics({
