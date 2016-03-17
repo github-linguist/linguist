@@ -12,7 +12,7 @@ We try only to add new extensions once they have some usage on GitHub. In most c
 
 To add support for a new extension:
 
-0. Add your extension to the language entry in [`languages.yml`][languages].
+0. Add your extension to the language entry in [`languages.yml`][languages], keeping the extensions in alphabetical order.
 0. Add at least one sample for your extension to the [samples directory][samples] in the correct subdirectory.
 0. Open a pull request, linking to a [GitHub search result](https://github.com/search?utf8=%E2%9C%93&q=extension%3Aboot+NOT+nothack&type=Code&ref=searchresults) showing in-the-wild usage.
 

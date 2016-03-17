@@ -28,7 +28,7 @@ class TestInstrumentation < Minitest::Test
 
   def test_detection_instrumentation_with_binary_blob
     binary_blob = fixture_blob("Binary/octocat.ai")
-    Language.detect(binary_blob)
+    Linguist.detect(binary_blob)
 
     # Shouldn't instrument this (as it's binary)
     assert_equal 0, Linguist.instrumenter.events.size
@@ -36,7 +36,7 @@ class TestInstrumentation < Minitest::Test
 
   def test_modeline_instrumentation
     blob = fixture_blob("Data/Modelines/ruby")
-    Language.detect(blob)
+    Linguist.detect(blob)
 
     detect_event = Linguist.instrumenter.events.last
     detect_event_payload = detect_event[:args].first
