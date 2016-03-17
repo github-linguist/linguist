@@ -1,0 +1,323 @@
+.template 0
+
+# Resolve filename for each class api (undefined if the file is not found)
+for project.class
+    if defined (class.api)
+        if !file.exists (class.api)
+            echo "Could not read API file '$(class.api)' for '$(class.name)'"
+            class.api = # undefined
+        endif
+    else
+        if file.exists ("api/$(class.name:c).xml")
+            class.api = "api/$(class.name:c).xml"
+        endif
+    endif
+endfor
+
+# Replace each class item with the class model from its api file (if any)
+for project.class where defined (class.api)
+    echo "Processing $(class.api)..."
+    new_class = XML.load_file (class.api)
+    if !defined (new_class)
+        echo "Error loading api file: $(class.api): $(xml.error?)"
+        class.api = # undefined
+    else
+        new_class.api = class.api
+        move new_class after class
+        delete class
+    endif
+endfor
+
+# Resolve missing or implicit details in a C argument or return
+function resolve_c_container (container)
+    my.container.name ?= "_"
+    my.container.c_name ?= "$(my.container.name:c)"
+    my.container.by_reference ?= "0"
+    my.container.by_reference = conv.number (my.container.by_reference)
+    my.container.callback ?= "0"
+    my.container.callback = conv.number (my.container.callback)
+    my.container.fresh ?= "0"
+    my.container.fresh = conv.number (my.container.fresh)
+    my.container.is_format ?= 0
+    
+    my.container.type ?= "nothing"
+    if defined (my.container.c_type)
+        return
+    endif
+    
+    my.type = my.container.type
+    my.c_type = ""
+    my.stars = ""
+    
+    if my.type = ""
+        my.c_type = "void"
+    elsif my.type = "nothing"
+        my.c_type = "void"
+    elsif my.type = "anything"
+        my.c_type = "void"
+        my.stars += "*"
+    elsif my.type = "byte"
+        my.c_type = "byte"
+    elsif my.type = "integer"
+        my.c_type = "int"
+    elsif my.type = "size"
+        my.c_type = "size_t"
+    elsif my.type = "real"
+        my.c_type = "float"
+    elsif my.type = "boolean"
+        my.c_type = "bool"
+    elsif my.type = "file_size"
+        my.c_type = "off_t"
+    elsif my.type = "time"
+        my.c_type = "time_t"
+    elsif my.type = "FILE"
+        my.c_type = "FILE"
+        my.stars += "*"
+    elsif my.type = "va_list"
+        my.c_type = "va_list"
+    elsif my.type = "string"
+        my.c_type = "char"
+        my.stars += "*"
+        my.container.constant ?= !my.container.fresh
+    elsif my.type = "format"
+        my.c_type = "char"
+        my.stars += "*"
+        my.container.constant ?= 1
+        my.container.is_format = 1
+    elsif my.type = "buffer"
+        my.c_type = "byte"
+        my.stars += "*"
+        my.container.constant ?= !my.container.fresh
+    elsif my.container.callback
+        my.c_type = "$(my.type:c)"
+    elsif string.prefix(my.container.type, ":") = "enum"
+        my.container.is_enum = 1
+        my.class_sep = string.locate (my.container.type, ".")
+        my.container.enum_class = string.substr (my.container.type, 5, my.class_sep-1)
+        my.container.enum_name = string.substr (my.container.type, my.class_sep+1)
+        my.c_type = "$(my.container.enum_class:c)_$(my.container.enum_name:c)_t"
+    else
+        my.c_type = "$(my.type:c)_t"
+        my.stars += "*"
+    endif
+    
+    if my.container.by_reference
+        my.stars += "*"
+    endif
+    
+    my.container.constant ?= "0"
+    my.container.constant ?= conv.number (my.container.constant)
+    if my.container.constant
+        my.c_type = "const " + my.c_type
+    endif
+    
+    if string.length (my.stars)
+        my.c_type += (" " + my.stars)
+    endif
+    
+    my.container.c_type = my.c_type
+endfunction
+
+# Resolve missing or implicit details in a C method model
+function resolve_c_method (method, default_description)
+    my.method.c_name ?= "$(my.method.name:c)"
+    my.method.description ?= "$(string.trim (my.method.?my.default_description):left)"
+    my.method.singleton ?= "0"
+    my.method.singleton = conv.number (my.method.singleton)
+    
+    if !count (my.method.return)
+        new return to my.method as ret
+        endnew
+    endif
+
+    for my.method.argument as obj
+        resolve_c_container (obj)
+        if obj.is_format
+            new argument to my.method as fmtargs
+                fmtargs.variadic = 1
+                resolve_c_container (fmtargs) # won't be included in current loop, so resolve now.
+            endnew
+        endif
+    endfor
+    for my.method.return as obj
+        resolve_c_container (obj)
+    endfor
+
+endfunction
+
+# Resolve missing or implicit details in a C class model
+function resolve_c_class (class)
+    my.class.c_name ?= "$(my.class.name:c)"
+    my.class.description ?= "$(string.trim (my.class.?""):left)"
+    
+    # Implicit constructor
+    if !count (my.class.constructor)
+        new constructor to my.class
+        endnew
+    endif
+
+    # Implicit destructor
+    if !count (my.class.destructor)
+        new destructor to my.class
+        endnew
+    endif
+
+    # Implicit print method after the destructor
+    if !count (my.class.method, method.name = "print")
+        new method to my.class after my.class->destructor
+            method.name = "print"
+            method.description = "Print properties of the $(my.class.name:) object."
+        endnew
+    endif
+
+    # Implicit test method at the end of the list
+    if !count (my.class.method, method.name = "test")
+        new method to my.class
+            method.name = "test"
+            method.singleton = "1"
+            method.description = "Self test of this class."
+            new argument to method
+                argument.name = "verbose"
+                argument.type = "boolean"
+            endnew
+        endnew
+    endif
+
+    # Delete methods marked with exclude attribute
+    for my.class.constructor as method where defined (method.exclude)
+        delete method
+    endfor
+    for my.class.destructor as method where defined (method.exclude)
+        delete method
+    endfor
+    for my.class.method where defined (method.exclude)
+        delete method
+    endfor
+
+    # Resolve details of each method
+    for my.class.callback_type as method
+        resolve_c_method (method, "")
+    endfor
+    for my.class.method
+        resolve_c_method (method, "")
+    endfor
+    for my.class.constructor as method
+        method.name ?= "new"
+        method.singleton = "1"
+        method.is_constructor = 1
+        # Add a new return value to the first slot - the created object
+        new return to method as ret
+            ret.type = my.class.c_name
+            move ret before method->return # Move to first slot 
+        endnew
+        resolve_c_method (method, "Create a new $(my.class.c_name).")
+    endfor
+    for my.class.destructor as method
+        method.name ?= "destroy"
+        method.singleton = "1"
+        method.is_destructor = 1
+        # Add a new argument to the first slot - the object to be destroyed
+        new argument to method as arg
+            arg.type = my.class.c_name
+            arg.name = "self_p"
+            arg.by_reference = "1"
+            arg.destructor_self = "1"
+            move arg before method->argument # Move to first slot 
+        endnew
+        resolve_c_method (method, "Destroy the $(my.class.c_name).")
+    endfor
+    
+    # Resolve details of each constant
+    for my.class.constant
+        if defined (constant.type) & (constant.type = 'string')
+            constant.value = '"' + constant.value + '"'
+        endif
+        constant.description ?= "$(string.trim (constant.?""):left)"
+        resolve_c_container (constant)
+    endfor
+endfunction
+
+# Resolve C-related properties of the class api models here because
+# higher-level language bindings will depend on them.
+for project.class
+    if defined (class.api)
+        resolve_c_class (class)
+    else
+        class.c_name = "$(class.name:c)"
+    endif
+endfor
+
+# Construct the string for a method declaration in a C header
+function c_method_declaration (method, implementation_style)
+    my.implementation_style ?= 0
+    my.format_index = -1
+    my.current_argument_index = 0
+    out = ""
+    if !my.implementation_style
+        out += "$(PROJECT.PREFIX)_EXPORT "
+    endif
+    out += "$(my.method->return.c_type:)\n"
+    if !my.implementation_style
+        out += "    "
+    endif
+    out += "$(class.c_name)_$(my.method.c_name) ("
+    if !my.method.singleton
+        if defined (my.method.polymorphic)
+            out += "void *self"
+        else
+            out += "$(class.c_name)_t *self"
+        endif
+        my.current_argument_index += 1
+        if count (my.method.argument)
+            out += ", "
+        endif
+    endif
+    for my.method.argument
+        if argument.is_format
+            # Next argument is the format list
+            my.format_index = my.current_argument_index + 1
+        endif
+        if defined (argument.variadic)
+            out += "..."
+        else
+            out += argument.c_type?""
+            if !regexp.match ("\\*$", argument.c_type?"")
+                out += " "
+            endif
+            out += argument.c_name?""
+            if !last ()
+                out += ", "
+            endif
+        endif
+        my.current_argument_index += 1
+    endfor
+    out += ")"
+    if my.format_index >= 0
+        out += " CHECK_PRINTF (" + (my.format_index) + ")"
+    endif
+    if !my.implementation_style
+        out += ";"
+    endif
+    return out
+endfunction
+
+# Construct the string for a callback typedef in a C header
+function c_callback_typedef (method)
+    out = "typedef $(my.method->return.c_type:) "
+    out += "($(class.c_name)_$(my.method.c_name)) ("
+    out += "\n    "
+    for my.method.argument
+        out += argument.c_type?""
+        if !regexp.match ("\\*$", argument.c_type?"")
+            out += " "
+        endif
+        out += argument.c_name?""
+        if !last ()
+            out += ", "
+        endif
+    endfor
+    out += ");"
+    return out
+endfunction
+
+.endtemplate

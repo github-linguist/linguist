@@ -1,0 +1,180 @@
+.#  Generate CMake project file for project
+.#
+.#  This is a code generator built using the iMatix GSL code generation
+.#  language. See https://github.com/imatix/gsl for details. This script
+.#  is licensed under MIT/X11.
+.#
+.echo "Generating CMakeLists.txt..."
+.output "CMakeLists.txt"
+$(project.GENERATED_WARNING_HEADER:)
+
+########################################################################
+# Project setup
+########################################################################
+cmake_minimum_required(VERSION 2.8)
+project($(project.name))
+enable_language(C)
+enable_testing()
+
+set(SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+set(BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}")
+
+########################################################################
+# determine version
+########################################################################
+foreach(which MAJOR MINOR PATCH)
+    file(STRINGS "${SOURCE_DIR}/include/$(project.prefix)_library.h" $(PROJECT.NAME)_VERSION_STRING REGEX "#define $(PROJECT.NAME)_VERSION_${which}")
+    string(REGEX MATCH "#define $(PROJECT.NAME)_VERSION_${which} ([0-9_]+)" $(PROJECT.NAME)_REGEX_MATCH "${$(PROJECT.NAME)_VERSION_STRING}")
+    if (NOT $(PROJECT.NAME)_REGEX_MATCH)
+        message(FATAL_ERROR "failed to parse $(PROJECT.NAME)_VERSION_${which} from $(project.name).h")
+    endif()
+    set($(PROJECT.NAME)_${which}_VERSION ${CMAKE_MATCH_1})
+endforeach(which)
+
+set($(PROJECT.NAME)_VERSION ${$(PROJECT.NAME)_MAJOR_VERSION}.${$(PROJECT.NAME)_MINOR_VERSION}.${$(PROJECT.NAME)_PATCH_VERSION})
+
+########################################################################
+# platform.h
+########################################################################
+include(CheckIncludeFile)
+CHECK_INCLUDE_FILE("linux/wireless.h" HAVE_LINUX_WIRELESS_H)
+CHECK_INCLUDE_FILE("net/if_media.h" HAVE_NET_IF_MEDIA_H)
+
+include(CheckFunctionExists)
+CHECK_FUNCTION_EXISTS("getifaddrs" HAVE_GETIFADDRS)
+CHECK_FUNCTION_EXISTS("freeifaddrs" HAVE_FREEIFADDRS)
+
+include(CheckIncludeFiles)
+check_include_files("sys/socket.h;net/if.h" HAVE_NET_IF_H)
+if (NOT HAVE_NET_IF_H)
+    CHECK_INCLUDE_FILE("net/if.h" HAVE_NET_IF_H)
+endif()
+
+file(WRITE "${BINARY_DIR}/platform.h.in" "
+#cmakedefine HAVE_LINUX_WIRELESS_H
+#cmakedefine HAVE_NET_IF_H
+#cmakedefine HAVE_NET_IF_MEDIA_H
+#cmakedefine HAVE_GETIFADDRS
+#cmakedefine HAVE_FREEIFADDRS
+")
+
+configure_file("${BINARY_DIR}/platform.h.in" "${BINARY_DIR}/platform.h")
+
+#The MSVC C compiler is too out of date,
+#so the sources have to be compiled as c++
+if (MSVC)
+    enable_language(CXX)
+    file(GLOB sources "${SOURCE_DIR}/src/*.c")
+    set_source_files_properties(${sources} PROPERTIES LANGUAGE CXX)
+    set(MORE_LIBRARIES ws2_32 Rpcrt4 Iphlpapi)
+endif()
+
+# required libraries for mingw
+if (MINGW)
+    set(MORE_LIBRARIES -lws2_32 -lrpcrt4 -liphlpapi)
+endif()
+
+# required libraries for cygwin
+if (CYGWIN)
+    set(MORE_LIBRARIES -luuid)
+endif()
+
+list(APPEND CMAKE_MODULE_PATH "${SOURCE_DIR}")
+.for use
+
+########################################################################
+# $(USE.PROJECT) dependency
+########################################################################
+find_package($(use.cmake_name:) REQUIRED)
+include_directories(${$(USE.CMAKE_NAME)_INCLUDE_DIRS})
+list(APPEND MORE_LIBRARIES ${$(USE.CMAKE_NAME)_LIBRARIES})
+.endfor
+
+########################################################################
+# includes
+########################################################################
+set ($(project.name)_headers
+    include/$(project.prefix)_library.h
+.if file.exists ("include/$(project.prelude)")
+    include/$(project.prelude)
+.endif
+.if count (class, class.name = project.name) = 0
+    include/$(project.name:c).h
+.endif
+.for header where !defined (header.private)
+    include/$(name:c).h
+.endfor
+.for class
+.   if class.private ?= 1
+.       class.classdir = "src"
+.   else
+.       class.classdir = "include"
+.   endif
+    $(classdir)/$(name:c).h
+.endfor
+.for extra
+    src/$(name)
+.endfor
+)
+source_group ("Header Files" FILES ${$(project.name)_headers})
+install(FILES ${$(project.name)_headers} DESTINATION include)
+
+########################################################################
+# library
+########################################################################
+include_directories("${BINARY_DIR}" "${SOURCE_DIR}/include")
+set ($(project.name)_sources
+.for class
+    src/$(name:c).c
+.endfor
+)
+source_group ("Source Files" FILES ${$(project.name)_sources})
+if (NOT DEFINED BUILD_SHARED_LIBS)
+    SET(BUILD_SHARED_LIBS ON)
+endif()
+add_library($(project.name) ${$(project.name)_sources})
+set_target_properties($(project.name) PROPERTIES DEFINE_SYMBOL "$(PROJECT.LIBNAME)_EXPORTS")
+target_link_libraries($(project.name) ${ZEROMQ_LIBRARIES} ${MORE_LIBRARIES})
+
+install(TARGETS $(project.name)
+    LIBRARY DESTINATION "lib${LIB_SUFFIX}" # .so file
+    ARCHIVE DESTINATION "lib${LIB_SUFFIX}" # .lib file
+    RUNTIME DESTINATION bin              # .dll file
+)
+.if file.exists ("src/CMakeLists-local.txt")
+
+include(${CMAKE_CURRENT_SOURCE_DIR}/src/CMakeLists-local.txt) # Optional project-local hook
+.endif
+
+########################################################################
+# pkgconfig
+########################################################################
+set(VERSION "${$(PROJECT.NAME)_VERSION}")
+set(prefix "${CMAKE_INSTALL_PREFIX}")
+set(exec_prefix "\\${prefix}")
+set(libdir "\\${prefix}/lib${LIB_SUFFIX}")
+set(includedir "\\${prefix}/include")
+configure_file(
+    "${SOURCE_DIR}/src/$(project.libname).pc.in"
+    "${BINARY_DIR}/$(project.libname).pc"
+@ONLY)
+
+install(
+    FILES "${BINARY_DIR}/$(project.libname).pc"
+    DESTINATION "lib${LIB_SUFFIX}/pkgconfig"
+)
+
+########################################################################
+# tests
+########################################################################
+add_executable($(project.prefix)_selftest "${SOURCE_DIR}/src/$(project.prefix)_selftest.c")
+target_link_libraries($(project.prefix)_selftest $(project.name) ${ZEROMQ_LIBRARIES})
+add_test($(project.prefix)_selftest $(project.prefix)_selftest)
+
+########################################################################
+# summary
+########################################################################
+message(STATUS "version: ${$(PROJECT.NAME)_VERSION}")
+message(STATUS "install: ${CMAKE_INSTALL_PREFIX}")
+
+$(project.GENERATED_WARNING_HEADER:)

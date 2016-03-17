@@ -1,0 +1,62 @@
+.#  Generate continuous integration test files
+.#
+.#  This is a code generator built using the iMatix GSL code generation
+.#  language. See https://github.com/imatix/gsl for details. This script
+.#  is licensed under MIT/X11.
+.#
+.if !file.exists (".travis.yml")
+.echo "Generating .travis.yml..."
+.output ".travis.yml"
+# Travis CI script
+language: c
+
+os:
+- linux
+- osx
+
+sudo: false
+
+env:
+- BUILD_TYPE=default
+- BUILD_TYPE=qt-android
+
+before_install:
+- if [ $TRAVIS_OS_NAME == "osx" ] ; then brew update; brew install binutils ; fi
+
+# Build and check this project according to the BUILD_TYPE
+script: ./ci_build.sh
+.
+.# Don't want to generate ci_build.sh if travis config exists,
+.# as the existing travis config may not use ci_build.sh at all.
+.if !file.exists ("ci_build.sh")
+.echo "Generating ci_build.sh..."
+.output "ci_build.sh"
+#!/usr/bin/env bash
+
+set -x
+
+if [ $BUILD_TYPE == "default" ]; then
+    mkdir tmp
+    BUILD_PREFIX=$PWD/tmp
+
+    CONFIG_OPTS=()
+    CONFIG_OPTS+=("CFLAGS=-I${BUILD_PREFIX}/include")
+    CONFIG_OPTS+=("CPPFLAGS=-I${BUILD_PREFIX}/include")
+    CONFIG_OPTS+=("CXXFLAGS=-I${BUILD_PREFIX}/include")
+    CONFIG_OPTS+=("LDFLAGS=-L${BUILD_PREFIX}/lib")
+    CONFIG_OPTS+=("PKG_CONFIG_PATH=${BUILD_PREFIX}/lib/pkgconfig")
+    CONFIG_OPTS+=("--prefix=${BUILD_PREFIX}")
+
+    # Clone and build dependencies
+.for use
+    git clone $(use.repository) $(use.project)
+    ( cd $(use.project) && ./autogen.sh && ./configure "${CONFIG_OPTS[@]}" && make check && make install ) || exit 1
+
+.endfor
+    # Build and check this project
+    ( ./autogen.sh && ./configure "${CONFIG_OPTS[@]}" && make && make check && make memcheck && make install ) || exit 1
+else
+    cd ./builds/${BUILD_TYPE} && ./ci_build.sh
+fi
+.endif # !file.exists ("ci_build.sh")
+.endif # !file.exists (".travis.yml")

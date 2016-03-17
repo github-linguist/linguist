@@ -1,0 +1,169 @@
+.#  ===========================================================================
+.#  Generate documentation make files for project
+.#
+.#  This is a code generator built using the iMatix GSL code generation
+.#  language. See https://github.com/imatix/gsl for details. This script
+.#  is licensed under MIT/X11.
+.#
+.#  This script will generate the following files:
+.#      * doc/Makefile.am
+.#      * doc/asciidoc.conf
+.#      * doc/$(project.name:c).txt (once)
+.#  ===========================================================================
+.if !file.exists ("doc")
+.   directory.create ("doc")
+.endif    
+.echo "Generating doc/Makefile.am..."
+.output "doc/Makefile.am"
+$(project.GENERATED_WARNING_HEADER:)
+.project.manpage = "$(project.name:c).7"
+.man3 = ""
+.for project.class where private?0 = 0
+.   man3 += " $(name:c).3"
+.   if class.name = project.name
+.       project.manpage = ""
+.   endif
+.endfor
+.man1 = ""
+.for project.main where private?0 = 0
+.   man1 += " $(name:c).1"
+.   if main.name = project.name
+.       project.manpage = ""
+.   endif
+.endfor
+MAN1 =$(man1)
+MAN3 =$(man3)
+MAN7 = $(project.manpage)
+MAN_DOC = $\(MAN1) $\(MAN3) $\(MAN7)
+
+MAN_TXT = $\(MAN1:%.1=%.txt)
+MAN_TXT += $\(MAN3:%.3=%.txt)
+MAN_TXT += $\(MAN7:%.7=%.txt)
+
+EXTRA_DIST = asciidoc.conf $\(MAN_TXT)
+
+if INSTALL_MAN
+dist_man_MANS = $\(MAN_DOC)
+endif
+
+if BUILD_DOC
+MAINTAINERCLEANFILES = $\(MAN_DOC)
+
+dist-hook : $\(MAN_DOC)
+
+SUFFIXES=.txt .xml .1 .3 .7
+
+\.txt.xml:
+\tasciidoc -d manpage -b docbook -f $\(srcdir)/asciidoc.conf \\
+        -a$(project.name:c)_version=@PACKAGE_VERSION@ -o$@ $<
+\.xml.1:
+\txmlto man $<
+\.xml.3:
+\txmlto man $<
+\.xml.7:
+\txmlto man $<
+
+.for project.class where private?0 = 0
+$(name:c).txt:
+\tzproject_mkman $@
+.endfor
+.for project.main where private?0 = 0
+$(name:c).txt:
+\tzproject_mkman $@
+.endfor
+clean:
+\trm -f *.1 *.3
+\tzproject_mkman \
+.for project.class where private?0 = 0
+$(name:c) \
+.endfor
+.for project.main where private?0 = 0
+$(name:c) \
+.endfor
+
+endif
+$(project.GENERATED_WARNING_HEADER:)
+.echo "Generating doc/asciidoc.conf..."
+.output "doc/asciidoc.conf"
+$(project.GENERATED_WARNING_HEADER:)
+[paradef-default]
+literal-style=template="literalparagraph"
+
+[macros]
+(?su)[\\\\]?(?P<name>link$(project.name:c)):(?P<target>\\S*?)\\[(?P<attrlist>.*?)\\]=
+
+ifdef::backend-docbook[]
+[link$(project.name:c)-inlinemacro]
+{0%{target}}
+{0#<citerefentry>}
+{0#<refentrytitle>{target}</refentrytitle><manvolnum>{0}</manvolnum>}
+{0#</citerefentry>}
+endif::backend-docbook[]
+
+ifdef::backend-xhtml11[]
+[link$(project.name:c)-inlinemacro]
+<a href="{target}.html">{target}{0?({0})}</a>
+endif::backend-xhtml11[]
+
+ifdef::doctype-manpage[]
+ifdef::backend-docbook[]
+[header]
+template::[header-declarations]
+<refentry>
+<refmeta>
+<refentrytitle>{mantitle}</refentrytitle>
+<manvolnum>{manvolnum}</manvolnum>
+<refmiscinfo class="source">$(project.name:Pascal)</refmiscinfo>
+<refmiscinfo class="version">{$(project.name:c)_version}</refmiscinfo>
+<refmiscinfo class="manual">$(project.name:Pascal) Manual</refmiscinfo>
+</refmeta>
+<refnamediv>
+  <refname>{manname}</refname>
+  <refpurpose>{manpurpose}</refpurpose>
+</refnamediv>
+[footer]
+<refsect1 id="_authors">
+<title>AUTHORS</title>
+<simpara>The $(project.name) manual was written by the authors in the AUTHORS file.</simpara>
+</refsect1>
+<refsect1 id="_resources">
+<title>RESOURCES</title>
+<simpara>Main web site: <ulink url=""></ulink></simpara>
+<simpara>Report bugs to the email &lt;<ulink url="mailto:$(project.email)">$(project.email)</ulink>&gt;</simpara>
+</refsect1>
+<refsect1 id="_copyright">
+<title>COPYRIGHT</title>
+<simpara>$(project->license.) <literal>LICENSE</literal> included with the $(project.name) distribution.</simpara>
+</refsect1>
+</refentry>
+endif::backend-docbook[]
+endif::doctype-manpage[]
+.if !file.exists ("doc/$(project.name:c).txt")
+.echo "Generating doc/$(project.name:c).txt..."
+.output "doc/$(project.name:c).txt"
+Name(7)
+=======
+
+
+NAME
+----
+$(project.name:c) - $(project.description:)
+
+
+SYNOPSIS
+--------
+----
+#include <$(project.name:c).h>
+
+cc ['flags'] 'files' -l$(project.linkname) ['libraries']
+----
+
+
+DESCRIPTION
+-----------
+
+Classes
+~~~~~~~
+
+Something.
+.endif

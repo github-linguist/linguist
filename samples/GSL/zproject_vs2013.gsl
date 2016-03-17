@@ -1,0 +1,305 @@
+.#  Generate VC++ project file for project
+.#
+.#  This is a code generator built using the iMatix GSL code generation
+.#  language. See https://github.com/imatix/gsl for details. This script
+.#  is licensed under MIT/X11.
+.#
+.echo "Generating builds/msvc/vs2013/$(project.name:c)/$(project.name:c).vcxproj..."
+.if !file.exists ("builds/msvc/vs2013/$(project.name:c)")
+.   directory.create("builds/msvc/vs2013/$(project.name:c)")
+.endif    
+.output "builds/msvc/vs2013/$(project.name:c)/$(project.name:c).vcxproj"
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+$(project.GENERATED_WARNING_HEADER:)
+-->
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{0C4A2E28-8C9E-4B27-85D9-BB679AD84AC7}</ProjectGuid>
+    <ProjectName>$(project.name:c)</ProjectName>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="DebugDLL|Win32">
+      <Configuration>DebugDLL</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseDLL|Win32">
+      <Configuration>ReleaseDLL</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugDLL|x64">
+      <Configuration>DebugDLL</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseDLL|x64">
+      <Configuration>ReleaseDLL</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugLTCG|Win32">
+      <Configuration>DebugLTCG</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseLTCG|Win32">
+      <Configuration>ReleaseLTCG</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugLTCG|x64">
+      <Configuration>DebugLTCG</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseLTCG|x64">
+      <Configuration>ReleaseLTCG</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugLIB|Win32">
+      <Configuration>DebugLIB</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseLIB|Win32">
+      <Configuration>ReleaseLIB</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugLIB|x64">
+      <Configuration>DebugLIB</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseLIB|x64">
+      <Configuration>ReleaseLIB</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType Condition="$\(Configuration.IndexOf('DLL')) == -1">StaticLibrary</ConfigurationType>
+    <ConfigurationType Condition="$\(Configuration.IndexOf('DLL')) != -1">DynamicLibrary</ConfigurationType>
+  </PropertyGroup>
+  <Import Project="$\(VCTargetsPath)\\Microsoft.Cpp.Default.props" />
+  <Import Project="$\(VCTargetsPath)\\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$\(ProjectDir)..\\..\\properties\\$\(Configuration).props" />
+    <Import Project="$\(ProjectDir)..\\..\\properties\\Output.props" />
+    <Import Project="$\(ProjectDir)$\(ProjectName).props" />
+  </ImportGroup>
+  <ItemGroup>
+    <ClInclude Include="..\\..\\..\\..\\builds\\msvc\\platform.h" />
+    <ClInclude Include="..\\..\\resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\\..\\..\\..\\include\\$(project.prefix)_library.h" />
+.if file.exists ("include/$(project.prelude)")
+    <ClInclude Include="..\\..\\..\\..\\include\\$(project.prelude)" />
+.endif
+.if count (class, class.name = project.name) = 0
+    <ClInclude Include="..\\..\\..\\..\\include\\$(project.name:c).h" />
+.endif
+.for header where !defined (header.private)
+    <ClInclude Include="..\\..\\..\\..\\include\\$(name:c).h" />
+.endfor
+.for extra
+    <ClInclude Include="..\\..\\..\\..\\src\\$(name)" />
+.endfor
+  </ItemGroup>
+  <ItemGroup>
+.for class
+    <ClCompile Include="..\\..\\..\\..\\src\\$(name:c).c">
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+.endfor
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\\..\\$(project.name:c).rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\\..\\..\\..\\packaging\\nuget\\package.bat" />
+    <None Include="..\\..\\..\\..\\packaging\\nuget\\package.config" />
+    <None Include="..\\..\\..\\..\\packaging\\nuget\\package.gsl" />
+    <None Include="..\\..\\..\\..\\packaging\\nuget\\package.nuspec" />
+    <None Include="..\\..\\..\\..\\packaging\\nuget\\package.targets" />
+    <None Include="..\\..\\..\\..\\packaging\\nuget\\package.xml" />
+  </ItemGroup>
+  <Import Project="$\(VCTargetsPath)\\Microsoft.Cpp.targets" />
+  <!--
+$(project.GENERATED_WARNING_HEADER:)
+  -->
+</Project>
+.echo "Generating builds/msvc/vs2013/$(project.name:c)/$(project.name:c).vcxproj.filters..."
+.output "builds/msvc/vs2013/$(project.name:c)/$(project.name:c).vcxproj.filters"
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+$(project.GENERATED_WARNING_HEADER:)
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+.for class
+    <ClCompile Include="..\\..\\..\\..\\src\\$(name:c).c">
+      <Filter>src</Filter>
+    </ClCompile>
+.endfor
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\\..\\..\\..\\include\\$(project.prefix)_library.h">
+      <Filter>include</Filter>
+    </ClInclude>
+.if file.exists ("include/$(project.prelude)")
+    <ClInclude Include="..\\..\\..\\..\\include\\$(project.prelude)">
+      <Filter>include</Filter>
+    </ClInclude>
+.endif
+.if count (class, class.name = project.name) = 0
+    <ClInclude Include="..\\..\\..\\..\\include\\$(project.name:c).h">
+      <Filter>include</Filter>
+    </ClInclude>
+.endif
+.for header where !defined (header.private)
+    <ClInclude Include="..\\..\\..\\..\\include\\$(name:c).h">
+      <Filter>include</Filter>
+    </ClInclude>
+.endfor
+.for extra
+    <ClInclude Include="..\\..\\..\\..\\src\\$(name)">
+      <Filter>src</Filter>
+    </ClInclude>
+.endfor
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\\..\\..\\..\\builds\\msvc\\platform.h">
+      <Filter>src\\include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\\..\\resource.h">
+      <Filter>resource</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\\..\\$(project.name:c).rc">
+      <Filter>resource</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{48f852d3-9723-4499-bf1a-35c0234b8ba9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{95e5d24a-57a2-429a-a1f1-304165f2e3da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\\include">
+      <UniqueIdentifier>{d0c837b5-cb58-4b82-b9bf-38727c7b25bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resource">
+      <UniqueIdentifier>{48e93f8c-156c-4379-a901-4b5ad39a4eac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="packaging">
+      <UniqueIdentifier>{04a473ca-1d88-4e12-9190-8d9cc20efd74}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\\..\\..\\..\\packaging\\nuget\\package.bat">
+      <Filter>packaging</Filter>
+    </None>
+    <None Include="..\\..\\..\\..\\packaging\\nuget\\package.config">
+      <Filter>packaging</Filter>
+    </None>
+    <None Include="..\\..\\..\\..\\packaging\\nuget\\package.gsl">
+      <Filter>packaging</Filter>
+    </None>
+    <None Include="..\\..\\..\\..\\packaging\\nuget\\package.nuspec">
+      <Filter>packaging</Filter>
+    </None>
+    <None Include="..\\..\\..\\..\\packaging\\nuget\\package.targets">
+      <Filter>packaging</Filter>
+    </None>
+    <None Include="..\\..\\..\\..\\packaging\\nuget\\package.xml">
+      <Filter>packaging</Filter>
+    </None>
+  </ItemGroup>
+<!--
+$(project.GENERATED_WARNING_HEADER:)
+-->
+</Project>
+.echo "Generating builds/msvc/vs2013/$(project.prefix)_selftest/$(project.prefix)_selftest.vcxproj..."
+.if !file.exists ("builds/msvc/vs2013/$(project.prefix)_selftest")
+.   directory.create("builds/msvc/vs2013/$(project.prefix)_selftest")
+.endif    
+.output "builds/msvc/vs2013/$(project.prefix)_selftest/$(project.prefix)_selftest.vcxproj"
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+$(project.GENERATED_WARNING_HEADER:)
+-->
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{A5497C4B-1CD1-4779-9458-2CF7908E7E26}</ProjectGuid>
+    <ProjectName>$(project.prefix)_selftest</ProjectName>
+    <PlatformToolset>v120</PlatformToolset>
+    <ConfigurationType>Application</ConfigurationType>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="DebugDEXE|Win32">
+      <Configuration>DebugDEXE</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseDEXE|Win32">
+      <Configuration>ReleaseDEXE</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugDEXE|x64">
+      <Configuration>DebugDEXE</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseDEXE|x64">
+      <Configuration>ReleaseDEXE</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugLEXE|Win32">
+      <Configuration>DebugLEXE</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseLEXE|Win32">
+      <Configuration>ReleaseLEXE</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugLEXE|x64">
+      <Configuration>DebugLEXE</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseLEXE|x64">
+      <Configuration>ReleaseLEXE</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugSEXE|Win32">
+      <Configuration>DebugSEXE</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseSEXE|Win32">
+      <Configuration>ReleaseSEXE</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugSEXE|x64">
+      <Configuration>DebugSEXE</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseSEXE|x64">
+      <Configuration>ReleaseSEXE</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <Import Project="$\(VCTargetsPath)\\Microsoft.Cpp.Default.props" />
+  <Import Project="$\(VCTargetsPath)\\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$\(ProjectDir)..\\..\\properties\\$\(Configuration).props" />
+    <Import Project="$\(ProjectDir)..\\..\\properties\\Output.props" />
+    <Import Project="$\(ProjectDir)$\(ProjectName).props" />
+  </ImportGroup>
+  <ItemGroup>
+    <ClCompile Include="..\\..\\..\\..\\src\\$(project.prefix)_selftest.c" />
+  </ItemGroup>
+    <ItemGroup>
+    <ProjectReference Include="..\\$(project.name:c)\\$(project.name:c).vcxproj">
+      <Project>{0C4A2E28-8C9E-4B27-85D9-BB679AD84AC7}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$\(VCTargetsPath)\\Microsoft.Cpp.targets" />
+<!--
+$(project.GENERATED_WARNING_HEADER:)
+-->
+</Project>

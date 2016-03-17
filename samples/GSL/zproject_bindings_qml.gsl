@@ -1,0 +1,686 @@
+.#  Only build bindings if there is at least one API model
+.if count (class, defined (class.api))
+.template 0
+#  Generate minimal QML language bindings.
+#  These are not meant to be idiomatic, but to provide a minimal platform
+#  on which to base declarative, idiomatic types that are written in pure QML.
+#  The C++ end of these basic bindings is auto-generated to stay in sync with
+#  the model, but the idiomatic bindings in QML are to be maintained by hand.
+#
+#  This is a code generator built using the iMatix GSL code generation
+#  language. See https://github.com/imatix/gsl for details. This script
+#  is licensed under MIT/X11.
+#
+if !file.exists ("bindings/qml/src")
+   directory.create("bindings/qml/src")
+endif
+
+if !file.exists ("bindings/qml/src/qml")
+   directory.create("bindings/qml/src/qml")
+endif
+
+if !file.exists ("bindings/qml/test")
+   directory.create("bindings/qml/test")
+endif
+
+project.QmlName = "Qml$(project.name:Pascal)"
+project.qml_soname = "qml_$(project.name:c)"
+   directory.create("bindings/qml/src")
+
+for class where defined (class.api)
+    class.QmlName = "Qml$(class.c_name:Pascal)"
+endfor
+
+function resolve_qml_container (container)
+    my.container.qmlName = "$(my.container.name:camel)"
+    my.container.qmlArgType = my.container.c_type
+    my.container.qmlArgPass = my.container.qmlName
+    my.container.qmlReturnType = my.container.c_type
+    my.container.qmlReturnPre = "return "
+    my.container.qmlReturnPost = ""
+    
+    # All incoming and outgoing types must be known the QML engine.
+    # If extra work needs to be done to convert to/from the QML-known types,
+    # that work must be defined here.  Define the strategies for each model 
+    # type that is acceptable, and it will be generated into the right place.
+    # Add handling for more types to expand what is possible to wrap.
+    if my.container.c_type = "void"
+        my.container.qmlReturnPre = ""
+    elsif my.container.type = "string" & !my.container.by_reference & !my.container.fresh
+        my.container.qmlArgType = "const QString &"
+        my.container.qmlArgPass = my.container.qmlName + ".toUtf8().data()"
+        my.container.qmlReturnType = "const QString"
+        my.container.qmlReturnPre = "return QString ("
+        my.container.qmlReturnPost = ")"
+    elsif my.container.type = "string"
+        my.container.qmlArgType = "QString"
+        my.container.qmlArgPass = my.container.qmlName + ".toUtf8().data()"
+        my.container.qmlReturnType = "QString"
+        my.container.qmlReturnPre = "char *retStr_ = "
+        my.container.qmlReturnPost = ";\n" + \
+        "    QString retQStr_ = QString (retStr_);\n" + \
+        "    free (retStr_);\n" + \
+        "    return retQStr_"
+    elsif my.container.type = "format"
+        my.container.qmlArgType = "const QString &"
+        my.container.qmlArgPass = "\"%s\", " + my.container.qmlName + ".toUtf8().data()" # Pass as string format argument, to avoid escaping problems.
+        my.container.qmlReturnType = "const QString"
+        my.container.qmlReturnPre = "return QString ("
+        my.container.qmlReturnPost = ")"
+    elsif my.container.type = "json" # from the jansson library, as a string
+        my.container.qmlArgType = "const QString &"
+        my.container.qmlArgPass = "json_loads (" + my.container.qmlName + ".toUtf8().data(), 0, NULL)"
+        my.container.qmlReturnType = "const QString"
+        my.container.qmlReturnPre = "char *retStr_ = json_dumps ("
+        my.container.qmlReturnPost = ", JSON_ENCODE_ANY);\n" + \
+        "    QString retQStr_ = QString (retStr_);\n" + \
+        "    free (retStr_);\n" + \
+        "    return retQStr_"
+    elsif count (project.class, defined (class.QmlName) & (my.container.type = class.c_name))
+        for project.class where (defined (class.QmlName) & (my.container.type = class.c_name))
+            my.container.qmlArgType = "$(class.QmlName) *"
+            my.container.qmlArgPass = my.container.qmlName + "->self"
+            my.container.qmlReturnPre = "$(class.QmlName) *retQ_ = new $(class.QmlName) ();\n" + \
+            "    retQ_->self = "
+            my.container.qmlReturnPost = ";\n" + \
+            "    return retQ_"
+            my.container.qmlReturnType = "$(class.QmlName) *"
+            if my.container.by_reference
+                my.container.qmlArgPass = "&" + my.container.qmlArgPass
+                my.container.qmlReturnPre = my.container.qmlReturnPre + "*"
+            endif
+        endfor
+    endif
+endfunction
+
+# A function for constructing the string for a string of arguments in a QML C header
+function qml_method_arguments (method)
+    my.problematic = 0
+    my.out = ""
+    for my.method.argument where !defined (argument.variadic)
+        resolve_qml_container (argument)
+        if !(defined (my.method.is_destructor) & first ())
+            my.out += argument.qmlArgType
+            if !regexp.match ("[\\*&]$", argument.qmlArgType?"")
+                my.out += " "
+            endif
+            my.out += argument.qmlName
+        endif
+        if !last ()
+            my.out += ", "
+        endif
+    endfor
+    if my.problematic
+        my.out = "ERROR"
+    endif
+    return my.out
+endfunction
+
+# A function for constructing the string for a return type in a QML C header
+function qml_method_return_type (method)
+    resolve_qml_container (my.method->return)
+    my.out = "$(my.method->return.qmlReturnType)"
+    if !regexp.match ("[\\*&]$", my.method->return.qmlReturnType?"")
+        my.out += " "
+    endif
+    return my.out
+endfunction
+
+# A function for constructing the string for a method signature in QML C++ file
+function qml_method_signature (method, in_header)
+    my.problematic = 0
+    my.out = qml_method_return_type (my.method)
+    if !my.in_header
+        my.out += "$(class.QmlName:)"
+        if my.method.singleton
+            my.out += "Attached"
+        endif
+        my.out += "::"
+    endif
+    
+    if defined (method.is_constructor)
+        my.out += "$(string.replace (method.name, "new|construct"):camel)"
+    elsif defined (method.is_destructor)
+        my.out += "$(string.replace (method.name, "destroy|destruct"):camel)"
+    else
+        my.out += "$(my.method.name:camel)"
+    endif
+    my.out += " ("
+    
+    if defined (method.is_destructor)
+        my.out += "$(class.QmlName) *qmlSelf"
+        if !(qml_method_arguments (method) = "")
+            my.out += ", "
+        endif
+    endif
+    my.args = qml_method_arguments (my.method)
+    if my.args = "ERROR"
+        my.problematic = 1
+    else
+        my.out += my.args
+    endif
+    my.out += ")"
+    
+    if my.problematic
+        my.out = # undefined
+    endif
+    return my.out
+endfunction
+
+.endtemplate
+.#
+.echo "Generating bindings/qml/src/$(project.qml_soname:)_plugin.h..."
+.output "bindings/qml/src/$(project.qml_soname:)_plugin.h"
+/*
+$(project.GENERATED_WARNING_HEADER:)
+*/
+
+#ifndef $(PROJECT.QML_SONAME)_PLUGIN_H
+#define $(PROJECT.QML_SONAME)_PLUGIN_H
+
+#include <QQmlExtensionPlugin>
+#include <qqml.h>
+
+.for class where defined (class.api)
+class $(class.QmlName:);
+class $(class.QmlName:)Attached;
+.endfor
+
+.for class where defined (class.api)
+#include "$(class.QmlName:).h"
+.endfor
+
+class $(project.QmlName)Plugin : public QQmlExtensionPlugin
+{
+    Q_OBJECT
+    Q_PLUGIN_METADATA (IID "org.qt-project.Qt.QQmlExtensionInterface")
+    
+public:
+    void registerTypes (const char *uri)
+    {
+.for class where defined (class.api)
+        qmlRegisterType<$(class.QmlName:)> (uri, 1, 0, "$(class.QmlName:)");
+        qmlRegisterType<$(class.QmlName:)Attached>();
+.endfor
+    };
+};
+
+#endif
+
+/*
+$(project.GENERATED_WARNING_HEADER:)
+*/
+.#
+.for class where defined (class.api)
+.echo "Generating bindings/qml/src/$(class.QmlName:).cpp..."
+.output "bindings/qml/src/$(class.QmlName:).cpp"
+/*
+$(project.GENERATED_WARNING_HEADER:)
+*/
+
+#include "$(class.QmlName:).h"
+
+.for class.method where !method.singleton & defined (qml_method_signature (method, 0))
+
+///
+//  $(method.description:no,block)
+$(qml_method_signature (method, 0)) {
+    $(method->return.qmlReturnPre)$(class.c_name:)_$(method.c_name) (self\
+.   if count (method.argument)
+, \
+.   endif
+.   for method.argument where !defined (argument.variadic)
+$(argument.qmlArgPass)\
+.       if !last ()
+, \
+.       endif
+.   endfor
+)$(method->return.qmlReturnPost);
+};
+.endfor
+
+
+QObject* $(class.QmlName:)::qmlAttachedProperties(QObject* object) {
+    return new $(class.QmlName:)Attached(object);
+}
+
+.for class.method where method.singleton & defined (qml_method_signature (method, 0))
+
+///
+//  $(method.description:no,block)
+$(qml_method_signature (method, 0)) {
+    $(method->return.qmlReturnPre)$(class.c_name:)_$(method.c_name) (\
+.   for method.argument where !defined (argument.variadic)
+$(argument.qmlArgPass)\
+.       if !last ()
+, \
+.       endif
+.   endfor
+)$(method->return.qmlReturnPost);
+};
+.endfor
+.for class.constructor as method where defined (qml_method_signature (method, 0))
+
+///
+//  $(method.description:no,block)
+$(qml_method_signature (method, 0)) {
+    $(class.QmlName:) *qmlSelf = new $(class.QmlName:) ();
+    qmlSelf->self = $(class.c_name:)_$(method.c_name) (\
+.   for method.argument where !defined (argument.variadic)
+$(argument.qmlArgPass)\
+.       if !last ()
+, \
+.       endif
+.   endfor
+);
+    return qmlSelf;
+};
+.endfor
+.for class.destructor as method where defined (qml_method_signature (method, 0))
+
+///
+//  $(method.description:no,block)
+$(qml_method_signature (method, 0)) {
+    $(method->return.qmlReturnPre)$(class.c_name:)_$(method.c_name) (&qmlSelf->self\
+.       if count (method.argument) > 1
+, \
+.       endif
+.   for method.argument where !defined (argument.variadic)
+.       if !first ()
+$(argument.qmlArgPass)\
+.       endif
+.       if !last ()
+, \
+.       endif
+.   endfor
+)$(method->return.qmlReturnPost);
+};
+.endfor
+
+/*
+$(project.GENERATED_WARNING_HEADER:)
+*/
+.#
+.echo "Generating bindings/qml/src/$(class.QmlName:).h..."
+.output "bindings/qml/src/$(class.QmlName:).h"
+/*
+$(project.GENERATED_WARNING_HEADER:)
+*/
+
+#ifndef QML_$(CLASS.C_NAME)_H
+#define QML_$(CLASS.C_NAME)_H
+
+#include <QtQml>
+
+#include <$(project.name).h>
+#include "$(project.qml_soname:)_plugin.h"
+
+
+class $(class.QmlName:) : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(bool isNULL READ isNULL)
+    
+public:
+    $(class.c_name:)_t *self;
+    
+    $(class.QmlName:)() { self = NULL; }
+    bool isNULL() { return self == NULL; }
+    
+    static QObject* qmlAttachedProperties(QObject* object); // defined in $(class.QmlName:).cpp
+    
+public slots:\
+.for class.method where !method.singleton & defined (qml_method_signature (method, 1))
+
+    //  $(method.description:no,block)
+    $(qml_method_signature (method, 1));
+.endfor
+};
+
+class $(class.QmlName:)Attached : public QObject
+{
+    Q_OBJECT
+    QObject* m_attached;
+    
+public:
+    $(class.QmlName:)Attached (QObject* attached) {
+        Q_UNUSED (attached);
+    };
+    
+public slots:\
+.for class.method where method.singleton & defined (qml_method_signature (method, 1))
+
+    //  $(method.description:no,block)
+    $(qml_method_signature (method, 1));
+.endfor
+.for class.constructor as method where defined (qml_method_signature (method, 1))
+
+    //  $(method.description:no,block)
+    $(qml_method_signature (method, 1));
+.endfor
+.for class.destructor as method where defined (qml_method_signature (method, 1))
+
+    //  $(method.description:no,block)
+    $(qml_method_signature (method, 1));
+.endfor
+};
+
+
+QML_DECLARE_TYPEINFO($(class.QmlName:), QML_HAS_ATTACHED_PROPERTIES)
+
+#endif
+/*
+$(project.GENERATED_WARNING_HEADER:)
+*/
+.endfor
+.#
+.if !file.exists ("bindings/qml/test/tst_$(project.QmlName).qml")
+.echo "Generating bindings/qml/test/tst_$(project.QmlName).qml..."
+.output "bindings/qml/test/tst_$(project.QmlName).qml"
+
+import QtTest 1.0
+import QtQuick 2.1
+
+import $(project.QmlName) 1.0
+
+
+TestCase {
+  id: test
+  name: "$(project.QmlName)"
+  
+  function test_it() {
+    verify(true)
+  }
+}
+
+.endif
+.#
+.if !file.exists ("bindings/qml/.gitignore")
+.echo "Generating bindings/qml/.gitignore..."
+.output "bindings/qml/.gitignore"
+build/
+.endif
+.#
+.if !file.exists ("bindings/qml/src/qmldir")
+.echo "Generating bindings/qml/src/qmldir..."
+.output "bindings/qml/src/qmldir"
+module $(project.QmlName:)
+plugin $(project.qml_soname:)
+.endif
+.#
+.echo "Generating bindings/qml/$(project.qml_soname:)_bindings.pro..."
+.output "bindings/qml/$(project.qml_soname:)_bindings.pro"
+$(project.GENERATED_WARNING_HEADER:)
+
+TEMPLATE = lib
+
+CONFIG += plugin
+QT += qml quick
+
+TARGET = $$qtLibraryTarget($(project.qml_soname:))
+uri = $(project.QmlName:)
+
+DESTDIR   = $$[QT_INSTALL_QML]/$$replace(uri, \\., /)
+SRCDIR    = $$PWD/src
+BUILDDIR  = $$PWD/build/native
+
+android {
+  # Use a default value assuming the $(project.name) project sits outside this one
+  isEmpty($(PROJECT.NAME)_ROOT) {
+    $(PROJECT.NAME)_ROOT = $$clean_path($$PWD/../..)
+  }
+  !exists($$$(PROJECT.NAME)_ROOT) {
+    error(The $(PROJECT.NAME)_ROOT directory does not exist: $$$(PROJECT.NAME)_ROOT)
+  }
+  # Build the $(project.name) library for android unless it is already built
+  !system(bash $$$(PROJECT.NAME)_ROOT/builds/qt-android/build.sh) {
+    error(Failed to build the $(project.name) C library with $$$(PROJECT.NAME)_ROOT/builds/qt-android/build.sh)
+  }
+  
+  VENDOR_PREFIX = $$$(PROJECT.NAME)_ROOT/builds/qt-android/prefix/$\(TOOLCHAIN_NAME)
+  BUILDDIR  = $$PWD/build/$\(TOOLCHAIN_NAME)
+  QMAKE_LIBDIR += $$VENDOR_PREFIX/lib
+  QMAKE_INCDIR += $$VENDOR_PREFIX/include
+}
+
+LIBS += -l$(project.linkname)
+
+HEADERS += \\
+  $$SRCDIR/$(project.qml_soname:)_plugin.h \\
+.for class where defined (class.api)
+  $$SRCDIR/$(class.QmlName).h \
+.   if !last ()
+\\
+.   endif
+.endfor
+
+
+SOURCES += \\
+.for class where defined (class.api)
+  $$SRCDIR/$(class.QmlName).cpp \
+.   if !last ()
+\\
+.   endif
+.endfor
+
+
+OBJECTS_DIR = $$BUILDDIR/.obj
+MOC_DIR     = $$BUILDDIR/.moc
+RCC_DIR     = $$BUILDDIR/.rcc
+UI_DIR      = $$BUILDDIR/.ui
+
+target.path  = $$DESTDIR
+qmldir.files = $$PWD/qmldir
+qmldir.path  = $$DESTDIR
+
+OTHER_FILES += $$SRCDIR/qmldir \\
+               $$SRCDIR/qml/*
+#*/
+
+INSTALLS    += target qmldir
+
+# Copy the qmldir file to the same folder as the plugin binary
+QMAKE_POST_LINK += \\
+  $$QMAKE_COPY $$replace($$list($$quote($$SRCDIR/qmldir) $$DESTDIR), /, $$QMAKE_DIR_SEP)
+
+# Copy the dependency shared libraries to the plugin folder (on android only)
+android {
+  QMAKE_POST_LINK += \\
+  && $$QMAKE_COPY $$replace($$list($$quote($$VENDOR_PREFIX/lib/*.so)  $$DESTDIR), /, $$QMAKE_DIR_SEP)
+}
+#*/
+
+# Copy the qml implementation directory to the plugin folder
+copyqml.commands = $\(COPY_DIR) $$SRCDIR/qml $$DESTDIR
+first.depends = $\(first) copyqml
+export(first.depends)
+export(copyqml.commands)
+QMAKE_EXTRA_TARGETS += first copyqml
+
+$(project.GENERATED_WARNING_HEADER:)
+.#
+.output "bindings/qml/Rakefile"
+.echo "Generating bindings/qml/Rakefile..."
+$(project.GENERATED_WARNING_HEADER:)
+
+require 'qt/commander'
+
+task :default => :test
+
+task :android do
+  Qt::Commander::Creator.profiles.select(&:android?).each do |profile|
+    profile.toolchain.env do
+      system "#{profile.version.qmake} *.pro -spec android-g++" and
+      system "make"
+    end
+  end
+end
+
+task :install do
+  system "qmake *.pro && make"
+end
+
+task :test => :install do
+  system "qmltestrunner"
+end
+
+task :clean do
+  `make clean && rm Makefile`
+end
+
+$(project.GENERATED_WARNING_HEADER:)
+.#
+.echo "Generating bindings/qml/README.md..."
+.output "bindings/qml/README.md"
+```
+$(project.GENERATED_WARNING_HEADER:)
+```
+# $(project.qml_soname:)
+
+QML bindings for creating UI applications using the "$(project.name)" C library.
+
+## Setting up a Build Environment
+
+The following is intended to be a complete guide to setting up a build 
+environment that can build for Android (as well as your desktop, although 
+that part is considerably easier). To that end, if you encounter parts 
+where steps are missing or unclear, please file an issue or pull request 
+about it so that others might learn from your research.
+
+Eventually, we'd like to remove some of these steps where possible to make 
+this process simpler. If you have ideas about removing or simplifying steps, 
+please file an issue or pull request so that others might be saved some complexity.
+
+### C Library Dependencies
+
+If you are building for Android, you can skip this step, as the necessary 
+dependencies are automatically pulled down and built by the `vendor/build` 
+scripts. If you are developing and testing on your desktop, you will need 
+a local installation of the $(project.name) library to link against and include.
+
+### Ruby
+
+You will need an installation of 
+[Ruby 1.9 or greater](https://www.ruby-lang.org/en/downloads/) 
+to run some of the build scripts. In the future, this requirement may be 
+eliminated and replaced by "pure" shell scripts with no Ruby dependency.
+
+On Linux, you can get Ruby from your package manager. On OSX, use 
+[brew](http://brew.sh/). If you are already a Ruby developer and have an 
+existing system to manage your Rubies, use what you are comfortable with.
+
+Once Ruby is installed, you will need the 
+[qt-commander](https://github.com/jemc/qt-commander) gem, a utility package 
+for parsing the Qt Creator IDE configuration files to pull out key information 
+for building projects and project dependencies from the command line without 
+the IDE. You will also need the [rake](https://github.com/jimweirich/rake) 
+gem, a task automation package with usage similiar to the `make` command. 
+You can install both using the `gem` command:
+```
+gem install rake
+gem install qt-commander
+```
+
+### Qt 5
+
+You will need [Qt 5](http://www.qt.io/download-open-source/) and a 
+fully-functioning environment for Qt that can build and deploy to Android.
+
+Qt features [a guide for Android](http://qt-project.org/doc/qt-5/android-support.html) 
+but here are a few tips to get you started:
+
+* You will need the Android [SDK](https://developer.android.com/sdk/index.html) 
+and [NDK](https://developer.android.com/tools/sdk/ndk/index.html). 
+Install them to any path you like, but you will eventually need to point 
+the Qt Creator IDE to them.
+* You will need Java 7 - JRE and JDK, and 'ant'. You can usually get 
+these through your package manager.
+* You don't need the Eclipse IDE or bundle - all work is done from the 
+command line or through the Qt Creator IDE.
+
+At the end of this setup, you should be able to use the Qt Creator IDE to 
+build and deploy an out-of-the-box simple 'Hello World' app for QML.
+
+To ready your device for deployment:
+
+* Be sure your Android device has 
+[developer options enabled](http://developer.android.com/tools/device.html#developer-device-options).
+* Run the adb server with a privileged user (`sudo adb start-server`). 
+If you previously tried to run adb with an unprivileged user, you'll need 
+to stop the old adb server first (`sudo adb kill-server`). You will need 
+the `adb` binary from the Android development kit in your `$PATH`.
+* Connect your device via USB and set it to "USB Debugging Mode".
+* Run `adb devices` to make sure your device is detected and ready.
+
+To create the temporary project:
+
+* Click `File`->`New File or Project...`
+* Choose `Applications`/`Qt Quick Application`
+* Enter a name and location for the temporary project
+* Choose the latest "Qt Quick Component Set"
+* Select the relevant kits you want to be able to deploy with (this should 
+include the Android kit(s) that you set up earlier)
+* Choose a version control system to use (if you like)
+* Finish the creation wizard
+
+Once you have a project to deploy:
+
+* In the lower-left corner of the IDE (above the build icons), 
+select from the drop-down menu the Android kit that matches the 
+architectureof your connected device.
+* Click the "Run" button (just below the kit menu) to deploy.
+* Watch the bottom output pane of the IDE; it will show output from 
+the build and packaging process, transfer the file, then show in a 
+different tab output from the program execution as it runs on your device.
+
+## Build tasks
+
+### Install Locally and Run Tests
+```
+rake test
+```
+
+Use this command when developing and testing the library. A copy of the 
+$(project.name:) library is installed locally where Qt can find it for 
+running desktop applications that use the library, and tests are run.
+
+You will need to have the $(project.name:) C library built and installed on your machine.
+
+### Install Locally for Android
+```
+rake android
+```
+
+Use this command to install a copy of the library locally where Qt can find 
+it later for bundling into an application you are deploying to Android. 
+The build will repeat for each android kit you have configured in the Qt 
+Creator IDE so that the installed library is available for all kits.
+
+In order to build for android, the $(project.qml_soname:) needs access to 
+a qt-android build of the $(project.name:) library and all its dependencies. 
+This can be done one of two ways:
+
+1. Clone the $(project.name:) library and all its dependencies from source 
+into the same folder. If all project repos are side-by-side in the same 
+"workspace" folder (as is typical for many users' workflows), they can 
+detect eachother automatically and build in a chain when you run 
+`rake android` in the $(project.qml_soname:) folder.
+2. Manually export the `$(PROJECT.NAME)_ROOT` environment variable as the path 
+to the $(project.name:) source code root. Do the same for any other projects 
+that you are prompted for when you run `rake android`. When all environment 
+variables are resolved, they will build in a chain.
+
+For all of the zeromq libraries in the dependencies, the source code will 
+be copied to a temporary directory for building, but installed to the 
+`$\(XXX_ROOT)/builds/qt-android/prefix/$\(TOOLCHAIN_NAME)` directory within 
+the original source tree. If you need to run builds for individual projects, 
+use the `$\(XXX_ROOT)/builds/qt-android/prefix/build.sh` command. The build 
+script will skip itself if it was already installed to 
+`$\(XXX_ROOT)/builds/qt-android/prefix/$\(TOOLCHAIN_NAME)`, so at times you 
+may need to delete that directory to trigger a clean build.
+
+```
+$(project.GENERATED_WARNING_HEADER:)
+```
+.endif
+.#

@@ -1,0 +1,28 @@
+.#  Generate various files for development tools
+.#
+.#  This is a code generator built using the iMatix GSL code generation
+.#  language. See https://github.com/imatix/gsl for details. This script
+.#  is licensed under MIT/X11.
+.#
+.if !file.exists ("src")
+.   directory.create("src")
+.endif
+.#
+.if !file.exists ("src/.valgrind.supp")
+.echo "Generating src/.valgrind.supp..."
+.output "src/.valgrind.supp"
+{
+   <socketcall_sendto>
+   Memcheck:Param
+   socketcall.sendto(msg)
+   fun:send
+   ...
+}
+{
+   <socketcall_sendto>
+   Memcheck:Param
+   socketcall.send(msg)
+   fun:send
+   ...
+}
+.endif

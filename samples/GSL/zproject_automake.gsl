@@ -1,0 +1,316 @@
+.#  ===========================================================================
+.#  Generate automake files for project
+.#
+.#  This is a code generator built using the iMatix GSL code generation
+.#  language. See https://github.com/imatix/gsl for details. This script
+.#  is licensed under MIT/X11.
+.#
+.#  This script will generate the following files:
+.#      * Makefile.am
+.#      * src/Makemodule.am
+.#      * bench/Makemodule.am
+.#  ===========================================================================
+.echo "Generating Makefile.am..."
+.output "Makefile.am"
+$(project.GENERATED_WARNING_HEADER:)
+
+ACLOCAL_AMFLAGS = -I config
+
+AM_CPPFLAGS = \\
+.for use
+    \${$(use.project)_CFLAGS} \\
+.endfor
+    -I\$(srcdir)/include
+
+.if count (use) > 0
+project_libs = \\
+.else
+project_libs =
+.endif
+.for use
+.   if last()
+    \${$(use.project)_LIBS}
+.   else
+    \${$(use.project)_LIBS} \\
+.   endif
+.endfor
+
+SUBDIRS =
+DIST_SUBDIRS =
+.if count (class) > 0
+SUBDIRS += doc
+DIST_SUBDIRS += doc
+.endif
+
+lib_LTLIBRARIES =
+bin_PROGRAMS =
+noinst_PROGRAMS =
+check_PROGRAMS =
+noinst_LTLIBRARIES =
+TESTS =
+
+EXTRA_DIST = \\
+.for extra
+    src/$(extra.name) \\
+.endfor
+.for class where defined (class.private)
+    src/$(name:c).h \\
+.endfor
+    src/$(project.prefix)_classes.h \\
+.if file.exists ("LICENSE")
+    LICENSE \\
+.endif
+.if file.exists ("README.txt")
+    README.txt \\
+.endif
+.if file.exists ("README.md")
+    README.md \\
+.endif
+.if file.exists ("CONTRIBUTING.md")
+    CONTRIBUTING.md \\
+.endif
+    version.sh
+
+include \$(srcdir)/src/Makemodule.am
+.if file.exists ("src/Makemodule-local.am")
+include \$(srcdir)/src/Makemodule-local.am # Optional project-local hook
+.endif
+.if count (bench) > 0
+include \$(srcdir)/bench/Makemodule.am
+.endif
+
+$(project.GENERATED_WARNING_HEADER:)
+.if !file.exists ("src")
+.   directory.create ("src")
+.endif
+.echo "Generating src/Makemodule.am..."
+.output "src/Makemodule.am"
+$(project.GENERATED_WARNING_HEADER:)
+.if (count (class) > 0)
+program_libs = \\
+.if count (use) > 0
+    src/$(project.libname).la \\
+    ${project_libs}
+.else
+    src/$(project.libname).la
+.endif
+
+# Programs need to link the c++ runtime if everything was compiled statically.
+if !ENABLE_SHARED
+program_libs += -lstdc++
+endif
+
+lib_LTLIBRARIES += src/$(project.libname).la
+
+pkgconfig_DATA = src/$(project.libname).pc
+
+include_HEADERS = \\
+.if file.exists ("include/$(project.prelude)")
+    include/$(project.prelude) \\
+.endif
+.if count (class, class.name = project.name) = 0
+    include/$(project.name:c).h \\
+.endif
+.for header where !defined (header.private)
+    include/$(name:c).h \\
+.endfor
+.for class where !defined (class.private)
+.   class.classdir = "include"
+    $(classdir)/$(name:c).h \\
+.endfor
+    include/$(project.prefix)_library.h
+
+src_$(project.libname)_la_SOURCES = \\
+.for class
+    src/$(name:c).c \\
+.endfor
+.for extra
+    src/$(name) \\
+.endfor
+    src/platform.h
+
+src_$(project.libname)_la_CPPFLAGS = ${AM_CPPFLAGS}
+
+src_$(project.libname)_la_LDFLAGS = \\
+    -version-info @LTVER@ \\
+    \$(LIBTOOL_EXTRA_LDFLAGS)
+
+if ON_MINGW
+src_$(project.libname)_la_LDFLAGS += \\
+    -no-undefined \\
+    -avoid-version
+endif
+
+if ON_CYGWIN
+src_$(project.libname)_la_LDFLAGS += \\
+    -no-undefined \\
+    -avoid-version
+endif
+
+src_$(project.libname)_la_LIBADD = ${project_libs}
+
+.for project.main
+if WITH_$(NAME:c)
+.   if main.private ?= 1
+noinst_PROGRAMS += src/$(main.name)
+.   else
+bin_PROGRAMS += src/$(main.name)
+.   endif
+src_$(main.name)_CPPFLAGS = ${AM_CPPFLAGS}
+src_$(main.name)_LDADD = ${program_libs}
+src_$(name:c)_SOURCES = src/$(name:c).c
+.   if main.service ?= 1
+src_$(main.name)_configdir = \$(sysconfdir)/$(project.name)
+src_$(main.name)_config_DATA = src/$(main.name).cfg
+src_$(main.name)_servicedir = @prefix@/lib/systemd/system
+src_$(main.name)_service_DATA = src/$(main.name).service
+.   endif
+endif
+.endfor
+check_PROGRAMS += src/$(project.prefix)_selftest
+src_$(project.prefix)_selftest_CPPFLAGS = \${src_$(project.libname)_la_CPPFLAGS}
+src_$(project.prefix)_selftest_LDADD = ${program_libs}
+src_$(project.prefix)_selftest_SOURCES = src/$(project.prefix)_selftest.c
+.else
+.endif
+
+.for bin
+.   if first()
+# Install data into /usr/local/bin
+$(project.name)dir = @bindir@
+$(project.name)_SCRIPTS = \\
+.   endif
+.   if !last()
+    $(bin.name) \\
+.   else
+    $(bin.name)
+.   endif
+.endfor
+
+.if (count (class) > 0)
+# define custom target for all products of /src
+src: src/$(project.libname).la src/$(project.prefix)_selftest
+.endif
+.for model
+.   if first ()
+
+# Produce generated code from models in the src directory
+code:
+.   endif
+.   if defined (model.script)
+\tcd $\(srcdir)/src; gsl -topdir:.. -script:$(script:) \
+. for model.param
+-$(param.name):$(param.value) \
+. endfor
+-q $(name:c).xml
+.   else
+\tcd $\(srcdir)/src; gsl -q $(name:c).xml
+.   endif
+.endfor
+
+check-local: src/$(project.prefix)_selftest
+\t$\(LIBTOOL) --mode=execute $\(srcdir)/src/$(project.prefix)_selftest
+
+check-verbose: src/$(project.prefix)_selftest
+\t$\(LIBTOOL) --mode=execute $\(srcdir)/src/$(project.prefix)_selftest -v
+
+# Run the selftest binary under valgrind to check for memory leaks
+memcheck: src/$(project.prefix)_selftest
+\t$\(LIBTOOL) --mode=execute valgrind --tool=memcheck \\
+\t\t--leak-check=full --show-reachable=yes --error-exitcode=1 \\
+\t\t--suppressions=$\(srcdir)/src/.valgrind.supp \\
+\t\t$\(srcdir)/src/$(project.prefix)_selftest
+
+# Run the selftest binary under valgrind to check for performance leaks
+callcheck: src/$(project.prefix)_selftest
+\t$\(LIBTOOL) --mode=execute valgrind --tool=callgrind \\
+\t\t$\(srcdir)/src/$(project.prefix)_selftest
+
+# Run the selftest binary under gdb for debugging
+debug: src/$(project.prefix)_selftest
+\t$\(LIBTOOL) --mode=execute gdb -q \\
+\t\t$\(srcdir)/src/$(project.prefix)_selftest
+
+# Run the selftest binary with verbose switch for tracing
+animate: src/$(project.prefix)_selftest
+\t$\(LIBTOOL) --mode=execute $\(srcdir)/src/$(project.prefix)_selftest -v
+
+$(project.GENERATED_WARNING_HEADER:)
+.#
+.#  Generate infrastructure for services
+.for project.main where main.service ?= 1
+.   if !file.exists ("src/$(main.name).cfg")
+.       echo "Generating src/$(main.name).cfg..."
+.       output "src/$(main.name).cfg"
+#   $(main.name) configuration
+
+server
+    timeout = 10000     #   Client connection timeout, msec
+    background = 0      #   Run as background process
+    workdir = .         #   Working directory for daemon
+    verbose = 0         #   Do verbose logging of activity?
+.   endif
+.   output "src/$(main.name).service.in"
+.   echo "Generating src/$(main.name).service.in..."
+[Unit]
+Description=$(main.name) service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=@prefix@/bin/$(main.name) @sysconfdir@/@PACKAGE@/$(main.name).cfg
+
+[Install]
+WantedBy=multi-user.target
+.endfor
+.close
+.-
+.-  Generate the Makemodule.am for the benchmarks
+.-
+.if count (bench) > 0
+.if !file.exists ("bench")
+.   directory.create ("bench")
+.endif
+.echo "Generating bench/Makemodule.am..."
+.output "bench/Makemodule.am"
+$(project.GENERATED_WARNING_HEADER:)
+
+benchmark_progs = \\
+.for bench
+.   if !last()
+    bench/$(bench.name) \\
+.   else
+    bench/$(bench.name)
+.   endif
+.endfor
+
+.for bench
+noinst_PROGRAMS += bench/$(bench.name)
+bench_$(bench.name)_CPPFLAGS = ${AM_CPPFLAGS}
+bench_$(bench.name)_LDADD = ${program_libs}
+bench_$(bench.name)_SOURCES = bench/$(bench.name).c
+
+.endfor
+# Run the benchmark binaries
+\.PHONY: bench
+bench: \$(benchmark_progs)
+\tfor f in \$^; do \$(LIBTOOL) --mode=execute \$(srcdir)/\$\$f; done
+
+# Run the selftest binary under valgrind to check for memory leaks
+bench-memcheck: \$(benchmark_progs)
+\tfor f in \$^; do \\
+\t\t$\(LIBTOOL) --mode=execute valgrind --tool=memcheck \\
+\t\t\t--leak-check=full --show-reachable=yes --error-exitcode=1 \\
+\t\t\t--suppressions=$\(srcdir)/src/.valgrind.supp \\
+\t\t\t$\(srcdir)/\$\$f; \\
+\tdone
+
+# Run the selftest binary under valgrind to check for performance leaks
+bench-callcheck: \$(benchmark_progs)
+\tfor f in \$^; do \\
+\t\t$\(LIBTOOL) --mode=execute valgrind --tool=callgrind \\
+\t\t\t$\(srcdir)/\$\$f; \\
+\tdone
+
+$(project.GENERATED_WARNING_HEADER:)
+.endif

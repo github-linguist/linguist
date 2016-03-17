@@ -1,0 +1,431 @@
+.#  Generate qt-android build system files
+.#
+.#  This is a code generator built using the iMatix GSL code generation
+.#  language. See https://github.com/imatix/gsl for details. This script
+.#  is licensed under MIT/X11.
+.#
+.if !file.exists ("builds/qt-android")
+.   directory.create("builds/qt-android")
+.endif
+.#
+.echo "Generating builds/qt-android/build.sh..."
+.output "builds/qt-android/build.sh"
+#!/usr/bin/env bash
+$(project.GENERATED_WARNING_HEADER:)
+
+# Use directory of current script as the build directory and working directory
+cd "\$( dirname "${BASH_SOURCE[0]}" )"
+ANDROID_BUILD_DIR="\$(pwd)"
+
+# Get access to android_build functions and variables
+source ${ANDROID_BUILD_DIR}/android_build_helper.sh
+
+# Choose a C++ standard library implementation from the ndk
+ANDROID_BUILD_CXXSTL="gnustl_shared_48"
+
+# Set up android build environment and set ANDROID_BUILD_OPTS array
+android_build_env
+android_build_opts
+
+# Use a temporary build directory
+cache="/tmp/android_build/${TOOLCHAIN_NAME}"
+rm -rf "${cache}"
+mkdir -p "${cache}"
+
+# Check for environment variable to clear the prefix and do a clean build
+if [[ $ANDROID_BUILD_CLEAN ]]; then
+    echo "Doing a clean build (removing previous build and depedencies)..."
+    rm -rf "${ANDROID_BUILD_PREFIX}"/*
+fi
+
+.for use where !defined (use.implied)
+##
+# Make sure $(use.project) is built and copy the prefix
+
+(android_build_verify_so "$(use.libname).so" &> /dev/null) || {
+    # Use a default value assuming the $(use.project) project sits alongside this one
+    test -z "$$(USE.PROJECT)_ROOT" && $(USE.PROJECT)_ROOT="\$(cd ../../../$(use.project) && pwd)"
+    
+    if [ ! -d "$$(USE.PROJECT)_ROOT" ]; then
+        echo "The $(USE.PROJECT)_ROOT directory does not exist"
+        echo "  ${$(USE.PROJECT)_ROOT}"
+        exit 1
+    fi
+    
+    (bash ${$(USE.PROJECT)_ROOT}/builds/qt-android/build.sh) || exit 1
+    UPSTREAM_PREFIX=${$(USE.PROJECT)_ROOT}/builds/qt-android/prefix/${TOOLCHAIN_NAME}
+    cp -r ${UPSTREAM_PREFIX}/* ${ANDROID_BUILD_PREFIX}
+}
+
+.endfor
+##
+# Build $(project.name) from local source
+
+(android_build_verify_so "$(project.libname).so"\
+.for use where !defined (use.implied)
+ "$(use.libname).so"\
+.endfor
+ &> /dev/null) || {
+    rm -rf "${cache}/$(project.name)"
+    (cp -r ../.. "${cache}/$(project.name)" && cd "${cache}/$(project.name)" \\
+        && make clean && rm configure config.status)
+    rm 
+    
+    export LIBTOOL_EXTRA_LDFLAGS='-avoid-version'
+    
+    (cd "${cache}/$(project.name)" && ./autogen.sh \\
+        && ./configure "${ANDROID_BUILD_OPTS[@]}" \\
+        && make \\
+        && make install) || exit 1
+}
+
+##
+# Verify shared libraries in prefix
+
+.for use
+android_build_verify_so "$(use.libname).so"
+.endfor
+android_build_verify_so "$(project.libname).so"\
+.for use where !defined (use.implied)
+ "$(use.libname).so"\
+.endfor
+
+
+$(project.GENERATED_WARNING_HEADER:)
+.#
+.echo "Generating builds/qt-android/ci_build.sh..."
+.output "builds/qt-android/ci_build.sh"
+#!/usr/bin/env bash
+$(project.GENERATED_WARNING_HEADER:)
+
+NDK_VER=android-ndk-r10e
+
+if [ $TRAVIS_OS_NAME == "linux" ]
+then
+    NDK_PLATFORM=linux-x86_64
+elif [ $TRAVIS_OS_NAME == "osx" ]
+then
+    NDK_PLATFORM=darwin-x86_64
+else
+    echo "Unsupported platform $TRAVIS_OS_NAME"
+    exit 1
+fi
+
+export FILENAME=$NDK_VER-$NDK_PLATFORM.bin
+
+(cd '/tmp' \\
+    && wget http://dl.google.com/android/ndk/$FILENAME \\
+    && chmod a+x $FILENAME \\
+    && ./$FILENAME &> /dev/null ) || exit 1
+unset FILENAME
+
+export ANDROID_NDK_ROOT="/tmp/$NDK_VER"
+export TOOLCHAIN_PATH="$ANDROID_NDK_ROOT/toolchains/arm-linux-androideabi-4.8/prebuilt/$NDK_PLATFORM/bin"
+export TOOLCHAIN_NAME="arm-linux-androideabi-4.8"
+export TOOLCHAIN_HOST="arm-linux-androideabi"
+export TOOLCHAIN_ARCH="arm"
+
+.for use
+export $(USE.PROJECT)_ROOT="/tmp/$(use.project)"
+git clone $(use.repository) $$(USE.PROJECT)_ROOT
+
+.endfor
+source ./build.sh
+
+$(project.GENERATED_WARNING_HEADER:)
+.#
+.echo "Generating builds/qt-android/android_build_helper.sh..."
+.output "builds/qt-android/android_build_helper.sh"
+#!/usr/bin/env bash
+$(project.GENERATED_WARNING_HEADER:)
+.literal << .endliteral
+#
+# Courtesy of Joe Eli McIlvain; original code at:
+# https://github.com/jemc/android_build_helper
+#   android_build_helper.sh
+#
+# The following is a helper script for setting up android builds for
+# "native" libraries maintained with an autotools build system.
+# It merely helps to create the proper cross-compile environment.
+# It makes no attempt to wrap the library or make it accessible to Java code;
+# the intention is to make the bare library available to other "native" code.
+#
+# To get the latest version of this script, please download from:
+#   https://github.com/jemc/android_build_helper
+#
+# You are free to modify and redistribute this script, but if you add
+# improvements, please consider submitting a pull request or patch to the
+# aforementioned upstream repository for the benefit of other users.
+#
+# This script is provided with no express or implied warranties.
+#
+
+# Get directory of current script (if not already set)
+# This directory is also the basis for the build directories the get created.
+if [ -z "$ANDROID_BUILD_DIR" ]; then
+    ANDROID_BUILD_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+fi
+
+# Set up a variable to hold the global failure reasons, separated by newlines
+# (Empty string indicates no failure)
+ANDROID_BUILD_FAIL=()
+
+function android_build_check_fail {
+    if [ ! ${#ANDROID_BUILD_FAIL[@]} -eq 0 ]; then
+        echo "Android build failed for the following reasons:"
+        for reason in "${ANDROID_BUILD_FAIL[@]}"; do
+            local formatted_reason="  ${reason}"
+            echo "${formatted_reason}"
+        done
+        exit 1
+    fi
+}
+
+function android_build_env {
+    ##
+    # Check that necessary environment variables are set
+    
+    if [ -z "$ANDROID_NDK_ROOT" ]; then
+        ANDROID_BUILD_FAIL+=("Please set the ANDROID_NDK_ROOT environment variable")
+        ANDROID_BUILD_FAIL+=("  (eg. \"/home/user/android/android-ndk-r9d\")")
+    fi
+    
+    if [ -z "$TOOLCHAIN_PATH" ]; then
+        ANDROID_BUILD_FAIL+=("Please set the TOOLCHAIN_PATH environment variable")
+        ANDROID_BUILD_FAIL+=("  (eg. \"/home/user/android/android-ndk-r9d/toolchains/arm-linux-androideabi-4.8/prebuilt/linux-x86_64/bin\")")
+    fi
+    
+    if [ -z "$TOOLCHAIN_NAME" ]; then
+        ANDROID_BUILD_FAIL+=("Please set the TOOLCHAIN_NAME environment variable")
+        ANDROID_BUILD_FAIL+=("  (eg. \"arm-linux-androideabi-4.8\")")
+    fi
+    
+    if [ -z "$TOOLCHAIN_HOST" ]; then
+        ANDROID_BUILD_FAIL+=("Please set the TOOLCHAIN_HOST environment variable")
+        ANDROID_BUILD_FAIL+=("  (eg. \"arm-linux-androideabi\")")
+    fi
+    
+    if [ -z "$TOOLCHAIN_ARCH" ]; then
+        ANDROID_BUILD_FAIL+=("Please set the TOOLCHAIN_ARCH environment variable")
+        ANDROID_BUILD_FAIL+=("  (eg. \"arm\")")
+    fi
+    
+    android_build_check_fail
+    
+    ##
+    # Check that directories given by environment variables exist
+    
+    if [ ! -d "$ANDROID_NDK_ROOT" ]; then
+        ANDROID_BUILD_FAIL+=("The ANDROID_NDK_ROOT directory does not exist")
+        ANDROID_BUILD_FAIL+=("  ${ANDROID_NDK_ROOT}")
+    fi
+    
+    if [ ! -d "$TOOLCHAIN_PATH" ]; then
+        ANDROID_BUILD_FAIL+=("The TOOLCHAIN_PATH directory does not exist")
+        ANDROID_BUILD_FAIL+=("  ${TOOLCHAIN_PATH}")
+    fi
+    
+    ##
+    # Set up some local variables and check them
+    
+    ANDROID_BUILD_SYSROOT="${ANDROID_NDK_ROOT}/platforms/android-9/arch-${TOOLCHAIN_ARCH}"
+    
+    if [ ! -d "$ANDROID_BUILD_SYSROOT" ]; then
+        ANDROID_BUILD_FAIL+=("The ANDROID_BUILD_SYSROOT directory does not exist")
+        ANDROID_BUILD_FAIL+=("  ${ANDROID_BUILD_SYSROOT}")
+    fi
+    
+    ANDROID_BUILD_PREFIX="${ANDROID_BUILD_DIR}/prefix/${TOOLCHAIN_NAME}"
+    
+    mkdir -p "$ANDROID_BUILD_PREFIX" || {
+        ANDROID_BUILD_FAIL+=("Failed to make ANDROID_BUILD_PREFIX directory")
+        ANDROID_BUILD_FAIL+=("  ${ANDROID_BUILD_PREFIX}")
+    }
+    
+    android_build_check_fail
+}
+
+function _android_build_opts_process_binaries {
+    local CPP="${TOOLCHAIN_PATH}/${TOOLCHAIN_HOST}-cpp"
+    local CC="${TOOLCHAIN_PATH}/${TOOLCHAIN_HOST}-gcc"
+    local CXX="${TOOLCHAIN_PATH}/${TOOLCHAIN_HOST}-g++"
+    local LD="${TOOLCHAIN_PATH}/${TOOLCHAIN_HOST}-ld"
+    local AS="${TOOLCHAIN_PATH}/${TOOLCHAIN_HOST}-as"
+    local AR="${TOOLCHAIN_PATH}/${TOOLCHAIN_HOST}-ar"
+    local RANLIB="${TOOLCHAIN_PATH}/${TOOLCHAIN_HOST}-ranlib"
+    
+    if [ ! -x "${CPP}" ]; then
+        ANDROID_BUILD_FAIL+=("The CPP binary does not exist or is not executable")
+        ANDROID_BUILD_FAIL+=("  ${CPP}")
+    fi
+    
+    if [ ! -x "${CC}" ]; then
+        ANDROID_BUILD_FAIL+=("The CC binary does not exist or is not executable")
+        ANDROID_BUILD_FAIL+=("  ${CC}")
+    fi
+    
+    if [ ! -x "${CXX}" ]; then
+        ANDROID_BUILD_FAIL+=("The CXX binary does not exist or is not executable")
+        ANDROID_BUILD_FAIL+=("  ${CXX}")
+    fi
+    
+    if [ ! -x "${LD}" ]; then
+        ANDROID_BUILD_FAIL+=("The LD binary does not exist or is not executable")
+        ANDROID_BUILD_FAIL+=("  ${LD}")
+    fi
+    
+    if [ ! -x "${AS}" ]; then
+        ANDROID_BUILD_FAIL+=("The AS binary does not exist or is not executable")
+        ANDROID_BUILD_FAIL+=("  ${AS}")
+    fi
+    
+    if [ ! -x "${AR}" ]; then
+        ANDROID_BUILD_FAIL+=("The AR binary does not exist or is not executable")
+        ANDROID_BUILD_FAIL+=("  ${AR}")
+    fi
+    
+    if [ ! -x "${RANLIB}" ]; then
+        ANDROID_BUILD_FAIL+=("The RANLIB binary does not exist or is not executable")
+        ANDROID_BUILD_FAIL+=("  ${RANLIB}")
+    fi
+    
+    ANDROID_BUILD_OPTS+=("CPP=${CPP}")
+    ANDROID_BUILD_OPTS+=("CC=${CC}")
+    ANDROID_BUILD_OPTS+=("CXX=${CXX}")
+    ANDROID_BUILD_OPTS+=("LD=${LD}")
+    ANDROID_BUILD_OPTS+=("AS=${AS}")
+    ANDROID_BUILD_OPTS+=("AR=${AR}")
+    ANDROID_BUILD_OPTS+=("RANLIB=${RANLIB}")
+    
+    android_build_check_fail
+}
+
+function _android_build_opts_process_cxx_stl {
+    case "${ANDROID_BUILD_CXXSTL}" in
+    stlport_static)
+        LIBS+=" -lstlport_static"
+        CPPFLAGS+=" -I${ANDROID_NDK_ROOT}/sources/cxx-stl/stlport/stlport"
+        case "${TOOLCHAIN_ARCH}" in
+        arm)
+            LDFLAGS+=" -L${ANDROID_NDK_ROOT}/sources/cxx-stl/stlport/libs/armeabi"
+        ;;
+        x86)
+            LDFLAGS+=" -L${ANDROID_NDK_ROOT}/sources/cxx-stl/stlport/libs/x86"
+        ;;
+        mips)
+            LDFLAGS+=" -L${ANDROID_NDK_ROOT}/sources/cxx-stl/stlport/libs/mips"
+        ;;
+        *)
+            ANDROID_BUILD_FAIL+=("Unknown combination for ANDROID_BUILD_CXXSTL and TOOLCHAIN_ARCH")
+            ANDROID_BUILD_FAIL+=("  ${ANDROID_BUILD_CXXSTL}")
+            ANDROID_BUILD_FAIL+=("  ${TOOLCHAIN_ARCH}")
+        ;;
+        esac
+    ;;
+    gnustl_shared_48)
+        LIBS+=" -lgnustl_shared"
+        CPPFLAGS+=" -I${ANDROID_NDK_ROOT}/sources/cxx-stl/gnu-libstdc++/4.8/include"
+        case "${TOOLCHAIN_ARCH}" in
+        arm)
+            LDFLAGS+=" -L${ANDROID_NDK_ROOT}/sources/cxx-stl/gnu-libstdc++/4.8/libs/armeabi"
+            CPPFLAGS+=" -I${ANDROID_NDK_ROOT}/sources/cxx-stl/gnu-libstdc++/4.8/libs/armeabi/include"
+        ;;
+        x86)
+            LDFLAGS+=" -L${ANDROID_NDK_ROOT}/sources/cxx-stl/gnu-libstdc++/4.8/libs/x86"
+            CPPFLAGS+=" -I${ANDROID_NDK_ROOT}/sources/cxx-stl/gnu-libstdc++/4.8/libs/x86/include"
+        ;;
+        mips)
+            LDFLAGS+=" -L${ANDROID_NDK_ROOT}/sources/cxx-stl/gnu-libstdc++/4.8/libs/mips"
+            CPPFLAGS+=" -I${ANDROID_NDK_ROOT}/sources/cxx-stl/gnu-libstdc++/4.8/libs/mips/include"
+        ;;
+        *)
+            ANDROID_BUILD_FAIL+=("Unknown combination for ANDROID_BUILD_CXXSTL and TOOLCHAIN_ARCH")
+            ANDROID_BUILD_FAIL+=("  ${ANDROID_BUILD_CXXSTL}")
+            ANDROID_BUILD_FAIL+=("  ${TOOLCHAIN_ARCH}")
+        ;;
+        esac
+    ;;
+    '');;
+    *)
+        ANDROID_BUILD_FAIL+=("Unknown value for ANDROID_BUILD_CXXSTL")
+        ANDROID_BUILD_FAIL+=("  ${ANDROID_BUILD_CXXSTL}")
+    ;;
+    esac
+}
+
+# Set the ANDROID_BUILD_OPTS variable to a bash array of configure options
+function android_build_opts {
+    ANDROID_BUILD_OPTS=()
+    
+    local CFLAGS="--sysroot=${ANDROID_BUILD_SYSROOT} -I${ANDROID_BUILD_PREFIX}/include"
+    local CPPFLAGS="--sysroot=${ANDROID_BUILD_SYSROOT} -I${ANDROID_BUILD_PREFIX}/include"
+    local CXXFLAGS="--sysroot=${ANDROID_BUILD_SYSROOT} -I${ANDROID_BUILD_PREFIX}/include"
+    local LDFLAGS="-L${ANDROID_BUILD_PREFIX}/lib"
+    local LIBS="-lc -lgcc -ldl"
+    
+    _android_build_opts_process_binaries
+    _android_build_opts_process_cxx_stl
+    
+    ANDROID_BUILD_OPTS+=("CFLAGS=${CFLAGS} ${ANDROID_BUILD_EXTRA_CFLAGS}")
+    ANDROID_BUILD_OPTS+=("CPPFLAGS=${CPPFLAGS} ${ANDROID_BUILD_EXTRA_CPPFLAGS}")
+    ANDROID_BUILD_OPTS+=("CXXFLAGS=${CXXFLAGS} ${ANDROID_BUILD_EXTRA_CXXFLAGS}")
+    ANDROID_BUILD_OPTS+=("LDFLAGS=${LDFLAGS} ${ANDROID_BUILD_EXTRA_LDFLAGS}")
+    ANDROID_BUILD_OPTS+=("LIBS=${LIBS} ${ANDROID_BUILD_EXTRA_LIBS}")
+    
+    ANDROID_BUILD_OPTS+=("PKG_CONFIG_PATH=${ANDROID_BUILD_PREFIX}/lib/pkgconfig")
+    ANDROID_BUILD_OPTS+=("--host=${TOOLCHAIN_HOST}")
+    ANDROID_BUILD_OPTS+=("--prefix=${ANDROID_BUILD_PREFIX}")
+    
+    android_build_check_fail
+}
+
+# Parse readelf output to verify the correct linking of libraries.
+#   The first argument should be the soname of the newly built library.
+#   The rest of the arguments should be the sonames of dependencies.
+#   All sonames should be unversioned for android (no trailing numbers).
+function android_build_verify_so {
+    local soname="$1"
+    shift # Get rid of first argument - the rest represent dependencies
+    
+    local sofile="${ANDROID_BUILD_PREFIX}/lib/${soname}"
+    if [ ! -f "${sofile}" ]; then
+        ANDROID_BUILD_FAIL+=("Found no library named ${soname}")
+        ANDROID_BUILD_FAIL+=("  ${sofile}")
+    fi
+    android_build_check_fail
+    
+    if command -v readelf >/dev/null 2>&1 ; then
+        local readelf_bin="readelf"
+    elif command -v greadelf >/dev/null 2>&1 ; then
+        local readelf_bin="greadelf"
+    else
+        ANDROID_BUILD_FAIL+=("Could not find [g]readelf")
+    fi
+    android_build_check_fail
+
+    local elfoutput=$($readelf_bin -d ${sofile})
+    
+    local soname_regexp='soname: \[([[:alnum:]\.]+)\]'
+    if [[ $elfoutput =~ $soname_regexp ]]; then
+        local parsed_soname="${BASH_REMATCH[1]}"
+        if [ "${parsed_soname}" != "${soname}" ]; then
+            ANDROID_BUILD_FAIL+=("Actual soname of library ${soname} is incorrect (or versioned):")
+            ANDROID_BUILD_FAIL+=("  ${parsed_soname}")
+        fi
+    else
+        ANDROID_BUILD_FAIL+=("Failed to meaningfully parse readelf output for library ${soname}:")
+        ANDROID_BUILD_FAIL+=("  ${elfoutput}")
+    fi
+    
+    for dep_soname do
+        if [[ $elfoutput != *"library: [${dep_soname}]"* ]]; then
+            ANDROID_BUILD_FAIL+=("Library ${soname} was expected to be linked to library with soname:")
+            ANDROID_BUILD_FAIL+=("  ${dep_soname}")
+        fi
+    done
+    
+    android_build_check_fail
+}
+
+.endliteral
+$(project.GENERATED_WARNING_HEADER:)
