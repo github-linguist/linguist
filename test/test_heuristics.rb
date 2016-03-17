@@ -36,7 +36,7 @@ class TestHeuristcs < Minitest::Test
 
   def test_detect_still_works_if_nothing_matches
     blob = Linguist::FileBlob.new(File.join(samples_path, "Objective-C/hello.m"))
-    match = Language.detect(blob)
+    match = Linguist.detect(blob)
     assert_equal Language["Objective-C"], match
   end
 
@@ -186,6 +186,16 @@ class TestHeuristcs < Minitest::Test
     assert_heuristics({
       "SuperCollider" => all_fixtures("SuperCollider", "*.sc"),
       "Scala" => all_fixtures("Scala", "*.sc")
+    })
+  end
+
+  # Candidate languages = ["SQL", "PLpgSQL", "SQLPL", "PLSQL"]
+  def test_sql_by_heuristics
+    assert_heuristics({
+      "SQL" => ["SQL/create_stuff.sql", "SQL/db.sql", "SQL/dual.sql"],
+      "PLpgSQL" => all_fixtures("PLpgSQL", "*.sql"),
+      "SQLPL" => ["SQLPL/trigger.sql"],
+      "PLSQL" => all_fixtures("PLSQL", "*.sql")
     })
   end
 

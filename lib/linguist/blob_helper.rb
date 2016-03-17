@@ -6,7 +6,7 @@ require 'yaml'
 
 module Linguist
   # DEPRECATED Avoid mixing into Blob classes. Prefer functional interfaces
-  # like `Language.detect` over `Blob#language`. Functions are much easier to
+  # like `Linguist.detect` over `Blob#language`. Functions are much easier to
   # cache and compose.
   #
   # Avoid adding additional bloat to this module.
@@ -325,7 +325,7 @@ module Linguist
     #
     # Returns a Language or nil if none is detected
     def language
-      @language ||= Language.detect(self)
+      @language ||= Linguist.detect(self)
     end
 
     # Internal: Get the TextMate compatible scope for the blob

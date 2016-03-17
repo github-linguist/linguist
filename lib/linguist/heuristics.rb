@@ -313,6 +313,14 @@ module Linguist
       end
     end
 
+    disambiguate ".props" do |data|
+      if /^(\s*)(<Project|<Import|<Property|<?xml|xmlns)/i.match(data)
+        Language["XML"]
+      elsif /\w+\s*=\s*/i.match(data)
+        Language["INI"]
+      end
+    end
+
     disambiguate ".r" do |data|
       if /\bRebol\b/i.match(data)
         Language["Rebol"]
@@ -346,7 +354,7 @@ module Linguist
     end
 
     disambiguate ".sql" do |data|
-      if /^\\i\b|AS \$\$|LANGUAGE '+plpgsql'+/i.match(data) || /SECURITY (DEFINER|INVOKER)/i.match(data) || /BEGIN( WORK| TRANSACTION)?;/i.match(data)
+      if /^\\i\b|AS \$\$|LANGUAGE '?plpgsql'?/i.match(data) || /SECURITY (DEFINER|INVOKER)/i.match(data) || /BEGIN( WORK| TRANSACTION)?;/i.match(data)
         #Postgres
         Language["PLpgSQL"]
       elsif /(alter module)|(language sql)|(begin( NOT)+ atomic)/i.match(data)  || /signal SQLSTATE '[0-9]+'/i.match(data)
