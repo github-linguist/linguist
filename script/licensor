@@ -3,9 +3,9 @@
 # TODO: push these changes to licensor gem
 
 require "bundler/setup"
-require "licensor/cli"
+require "licensed/cli"
 
-module Licensor
+module Licensed
   module Source
     class Filesystem
       attr_reader :type
@@ -22,7 +22,7 @@ module Licensor
       def dependencies
         Dir.glob(@glob).map do |directory|
           puts "caching #{directory}"
-          Licensor::Dependency.new(directory, {
+          Licensed::Dependency.new(directory, {
             "type" => type,
             "name" => File.basename(directory)
           })
@@ -32,12 +32,12 @@ module Licensor
   end
 end
 
-source = Licensor::Source::Filesystem.new("vendor/grammars/*/", type: "grammar")
-config = Licensor::Configuration.new
+source = Licensed::Source::Filesystem.new("vendor/grammars/*/", type: "grammar")
+config = Licensed::Configuration.new
 config.sources << source
 
 if ARGV[0] == "verify"
-  Licensor::Command::Verify.new(config).run
+  Licensed::Command::Verify.new(config).run
 else
-  Licensor::Command::Cache.new(config).run(force: true)
+  Licensed::Command::Cache.new(config).run(force: true)
 end
