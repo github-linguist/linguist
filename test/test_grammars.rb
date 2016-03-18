@@ -103,7 +103,7 @@ class TestGrammars < Minitest::Test
 
   def test_submodules_whitelist_has_no_extra_entries
     extra_whitelist_entries = PROJECT_WHITELIST - submodule_licenses.select { |k,v| v.nil? }.keys
-    not_present = extra_whitelist_entries.reject { |k,v| Dir.exists?(k) }
+    not_present = extra_whitelist_entries.reject { |k,v| Dir.exist?(k) }
     licensed = extra_whitelist_entries.select { |k,v| submodule_licenses[k] }
 
     msg = "The following whitelisted submodules don't appear to be part of the project:\n* #{not_present.join("\n* ")}"
