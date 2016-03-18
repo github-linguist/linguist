@@ -83,7 +83,7 @@ class TestSamples < Minitest::Test
         # Check for samples if more than one language matches the given filename
         if Language.find_by_filename(filename).size > 1
           sample = "samples/#{language.name}/filenames/#{filename}"
-          assert File.exists?(sample),
+          assert File.exist?(sample),
             "Missing sample in #{sample.inspect}. See https://github.com/github/linguist/blob/master/CONTRIBUTING.md"
         end
       end

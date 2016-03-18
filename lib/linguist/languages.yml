@@ -105,7 +105,7 @@ ATS:
   - .dats
   - .hats
   - .sats
-  tm_scope: source.ats
+  tm_scope: none
   ace_mode: ocaml
 
 ActionScript:
@@ -230,7 +230,7 @@ Assembly:
   - .a51
   - .inc
   - .nasm
-  tm_scope: source.asm.x86
+  tm_scope: none
   ace_mode: assembly_x86
 
 Augeas:
@@ -260,7 +260,7 @@ AutoIt:
   - AutoItScript
   extensions:
   - .au3
-  tm_scope: source.autoit.3
+  tm_scope: none
   ace_mode: autohotkey
 
 Awk:
@@ -350,6 +350,7 @@ Boo:
   extensions:
   - .boo
   ace_mode: text
+  tm_scope: none
 
 Brainfuck:
   type: programming
@@ -428,7 +429,7 @@ C-ObjDump:
   type: data
   extensions:
   - .c-objdump
-  tm_scope: objdump.x86asm
+  tm_scope: none
   ace_mode: assembly_x86
 
 C2hs Haskell:
@@ -445,7 +446,7 @@ CLIPS:
   type: programming
   extensions:
   - .clp
-  tm_scope: source.clips
+  tm_scope: none
   ace_mode: text
 
 CMake:
@@ -680,7 +681,7 @@ Cpp-ObjDump:
   - .c++objdump
   - .cpp-objdump
   - .cxx-objdump
-  tm_scope: objdump.x86asm
+  tm_scope: none
   aliases:
   - c++-objdumb
   ace_mode: assembly_x86
@@ -690,7 +691,7 @@ Creole:
   wrap: true
   extensions:
   - .creole
-  tm_scope: text.html.creole
+  tm_scope: none
   ace_mode: text
 
 Crystal:
@@ -752,7 +753,7 @@ D-ObjDump:
   type: data
   extensions:
   - .d-objdump
-  tm_scope: objdump.x86asm
+  tm_scope: none
   ace_mode: assembly_x86
 
 DIGITAL Command Language:
@@ -1106,14 +1107,14 @@ GAS:
   extensions:
   - .s
   - .ms
-  tm_scope: source.asm.x86
+  tm_scope: none
   ace_mode: assembly_x86
 
 GDScript:
   type: programming
   extensions:
   - .gd
-  tm_scope: source.gdscript
+  tm_scope: none
   ace_mode: text
 
 GLSL:
@@ -1232,7 +1233,7 @@ Grace:
   type: programming
   extensions:
   - .grace
-  tm_scope: source.grace
+  tm_scope: none
   ace_mode: text
 
 Gradle:
@@ -1531,6 +1532,7 @@ Idris:
   - .idr
   - .lidr
   ace_mode: text
+  tm_scope: none
 
 Inform 7:
   type: programming
@@ -1548,7 +1550,7 @@ Inno Setup:
   type: programming
   extensions:
   - .iss
-  tm_scope: source.inno
+  tm_scope: none
   ace_mode: text
 
 Io:
@@ -1961,6 +1963,7 @@ Logos:
   - .x
   - .xi
   ace_mode: text
+  tm_scope: none
 
 Logtalk:
   type: programming
@@ -2234,6 +2237,7 @@ Monkey:
   extensions:
   - .monkey
   ace_mode: text
+  tm_scope: none
 
 Moocode:
   type: programming
@@ -2369,7 +2373,7 @@ Nix:
   - .nix
   aliases:
   - nixos
-  tm_scope: source.nix
+  tm_scope: none
   ace_mode: nix
 
 Nu:
@@ -2418,7 +2422,7 @@ ObjDump:
   type: data
   extensions:
   - .objdump
-  tm_scope: objdump.x86asm
+  tm_scope: none
   ace_mode: assembly_x86
 
 Objective-C:
@@ -2506,7 +2510,7 @@ OpenSCAD:
   type: programming
   extensions:
   - .scad
-  tm_scope: source.scad
+  tm_scope: none
   ace_mode: scad
 
 Org:
@@ -2578,7 +2582,7 @@ PHP:
 PLSQL:
   type: programming
   ace_mode: sql
-  tm_scope: source.plsql.oracle
+  tm_scope: none
   color: "#dad8d8"
   extensions:
   - .pls
@@ -2620,7 +2624,7 @@ Papyrus:
   color: "#6600cc"
   extensions:
   - .psc
-  tm_scope: source.papyrus
+  tm_scope: source.papyrus.skyrim
   ace_mode: text
 
 Parrot:
@@ -2731,7 +2735,7 @@ PigLatin:
   color: "#fcd7de"
   extensions:
   - .pig
-  tm_scope: source.pig_latin
+  tm_scope: none
   ace_mode: text
 
 Pike:
@@ -2842,6 +2846,7 @@ Puppet:
   filenames:
   - Modulefile
   ace_mode: text
+  tm_scope: none
 
 Pure Data:
   type: programming
@@ -3420,7 +3425,7 @@ SourcePawn:
   - .sp
   - .inc
   - .sma
-  tm_scope: source.sp
+  tm_scope: none
   ace_mode: text
 
 Squirrel:
@@ -4074,6 +4079,7 @@ nesC:
   extensions:
   - .nc
   ace_mode: text
+  tm_scope: none
 
 ooc:
   type: programming
