@@ -230,7 +230,7 @@ Assembly:
   - .a51
   - .inc
   - .nasm
-  tm_scope: source.asm.x86
+  tm_scope: none
   ace_mode: assembly_x86
 
 Augeas:
@@ -429,7 +429,7 @@ C-ObjDump:
   type: data
   extensions:
   - .c-objdump
-  tm_scope: objdump.x86asm
+  tm_scope: none
   ace_mode: assembly_x86
 
 C2hs Haskell:
@@ -681,7 +681,7 @@ Cpp-ObjDump:
   - .c++objdump
   - .cpp-objdump
   - .cxx-objdump
-  tm_scope: objdump.x86asm
+  tm_scope: none
   aliases:
   - c++-objdumb
   ace_mode: assembly_x86
@@ -753,7 +753,7 @@ D-ObjDump:
   type: data
   extensions:
   - .d-objdump
-  tm_scope: objdump.x86asm
+  tm_scope: none
   ace_mode: assembly_x86
 
 DIGITAL Command Language:
@@ -1107,7 +1107,7 @@ GAS:
   extensions:
   - .s
   - .ms
-  tm_scope: source.asm.x86
+  tm_scope: none
   ace_mode: assembly_x86
 
 GDScript:
@@ -2420,7 +2420,7 @@ ObjDump:
   type: data
   extensions:
   - .objdump
-  tm_scope: objdump.x86asm
+  tm_scope: none
   ace_mode: assembly_x86
 
 Objective-C:
