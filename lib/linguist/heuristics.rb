@@ -131,7 +131,7 @@ module Linguist
     disambiguate ".for", ".f" do |data|
       if /^: /.match(data)
         Language["Forth"]
-      elsif /^([c*][^a-z]|      (subroutine|program)\s|\s*!)/i.match(data)
+      elsif /^([c*][^abd-z]|      (subroutine|program|end)\s|\s*!)/i.match(data)
         Language["FORTRAN"]
       end
     end
@@ -238,8 +238,10 @@ module Linguist
     disambiguate ".ms" do |data|
       if /^[.'][a-z][a-z](\s|$)/i.match(data)
         Language["Groff"]
-      elsif /((^|\s)move?[. ])|\.(include|globa?l)\s/.match(data)
+      elsif /(?<!\S)\.(include|globa?l)\s/.match(data) || /(?<!\/\*)(\A|\n)\s*\.[A-Za-z]/.match(data.gsub(/"([^\\"]|\\.)*"|'([^\\']|\\.)*'|\\\s*(?:--.*)?\n/, ""))
         Language["GAS"]
+      else
+        Language["MAXScript"]
       end
     end
 
@@ -274,19 +276,27 @@ module Linguist
     end
 
     disambiguate ".pl" do |data|
-      if /^(use v6|(my )?class|module)/.match(data)
-        Language["Perl6"]
+      if /^[^#]+:-/.match(data)
+        Language["Prolog"]
       elsif /use strict|use\s+v?5\./.match(data)
         Language["Perl"]
-      elsif /^[^#]+:-/.match(data)
-        Language["Prolog"]
+      elsif /^(use v6|(my )?class|module)/.match(data)
+        Language["Perl6"]
       end
     end
 
     disambiguate ".pm", ".t" do |data|
-      if /^(use v6|(my )?class|module)/.match(data)
+      if /use strict|use\s+v?5\./.match(data)
+        Language["Perl"]
+      elsif /^(use v6|(my )?class|module)/.match(data)
         Language["Perl6"]
-      elsif /use strict|use\s+v?5\./.match(data)
+      end
+    end
+
+    disambiguate ".pod" do |data|
+      if /^=\w+$/.match(data)
+        Language["Pod"]
+      else
         Language["Perl"]
       end
     end
@@ -303,11 +313,27 @@ module Linguist
       end
     end
 
+    disambiguate ".props" do |data|
+      if /^(\s*)(<Project|<Import|<Property|<?xml|xmlns)/i.match(data)
+        Language["XML"]
+      elsif /\w+\s*=\s*/i.match(data)
+        Language["INI"]
+      end
+    end
+
     disambiguate ".r" do |data|
       if /\bRebol\b/i.match(data)
         Language["Rebol"]
       elsif data.include?("<-")
         Language["R"]
+      end
+    end
+
+    disambiguate ".rpy" do |data|
+      if /(^(import|from|class|def)[\s\S])/m.match(data)
+        Language["Python"]
+      else
+        Language["Ren'Py"]
       end
     end
 
@@ -328,7 +354,7 @@ module Linguist
     end
 
     disambiguate ".sql" do |data|
-      if /^\\i\b|AS \$\$|LANGUAGE '+plpgsql'+/i.match(data) || /SECURITY (DEFINER|INVOKER)/i.match(data) || /BEGIN( WORK| TRANSACTION)?;/i.match(data)
+      if /^\\i\b|AS \$\$|LANGUAGE '?plpgsql'?/i.match(data) || /SECURITY (DEFINER|INVOKER)/i.match(data) || /BEGIN( WORK| TRANSACTION)?;/i.match(data)
         #Postgres
         Language["PLpgSQL"]
       elsif /(alter module)|(language sql)|(begin( NOT)+ atomic)/i.match(data)  || /signal SQLSTATE '[0-9]+'/i.match(data)

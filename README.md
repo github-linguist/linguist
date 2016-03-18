@@ -33,9 +33,9 @@ $ cat .gitattributes
 *.rb linguist-language=Java
 ```
 
-Checking code you didn't write, such as JavaScript libraries, into your git repo is a common practice, but this often inflates your project's language stats and may even cause your project to be labeled as another language. By default, Linguist treats all of the paths defined in [lib/linguist/vendor.yml](https://github.com/github/linguist/blob/master/lib/linguist/vendor.yml) as vendored and therefore doesn't include them in the language statistics for a repository. Vendored files are also hidden by default in diffs on github.com.
+Checking code you didn't write, such as JavaScript libraries, into your git repo is a common practice, but this often inflates your project's language stats and may even cause your project to be labeled as another language. By default, Linguist treats all of the paths defined in [lib/linguist/vendor.yml](https://github.com/github/linguist/blob/master/lib/linguist/vendor.yml) as vendored and therefore doesn't include them in the language statistics for a repository.
 
-Use the `linguist-vendored` attribute to vendor or un-vendor paths. Please note, overriding the vendored (or un-vendored) status of a file only affects the language statistics for the repository and not the behavior in diffs on github.com.
+Use the `linguist-vendored` attribute to vendor or un-vendor paths.
 
 ```
 $ cat .gitattributes
@@ -59,6 +59,9 @@ Alternatively, you can use Vim or Emacs style modelines to set the language for 
 
 ##### Vim
 ```
+# Some examples of various styles:
+vim: syntax=java
+vim: set syntax=ruby:
 vim: set filetype=prolog:
 vim: set ft=cpp:
 ```
@@ -111,4 +114,9 @@ lib/linguist.rb
 
 Please check out our [contributing guidelines](CONTRIBUTING.md).
 
-##
+## License
+
+The language grammars included in this gem are covered by their repositories'
+respective licenses. `grammars.yml` specifies the repository for each grammar.
+
+All other files are covered by the MIT license, see `LICENSE`.

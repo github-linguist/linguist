@@ -13,7 +13,8 @@ class TestHeuristcs < Minitest::Test
   end
 
   def all_fixtures(language_name, file="*")
-    Dir.glob("#{samples_path}/#{language_name}/#{file}")
+    Dir.glob("#{samples_path}/#{language_name}/#{file}") -
+      ["#{samples_path}/#{language_name}/filenames"]
   end
 
   def test_no_match
@@ -35,7 +36,7 @@ class TestHeuristcs < Minitest::Test
 
   def test_detect_still_works_if_nothing_matches
     blob = Linguist::FileBlob.new(File.join(samples_path, "Objective-C/hello.m"))
-    match = Language.detect(blob)
+    match = Linguist.detect(blob)
     assert_equal Language["Objective-C"], match
   end
 
@@ -155,6 +156,14 @@ class TestHeuristcs < Minitest::Test
     })
   end
 
+  # Candidate languages = ["Pod", "Perl"]
+  def test_pod_by_heuristics
+    assert_heuristics({
+      "Perl" => all_fixtures("Perl", "*.pod"),
+      "Pod" => all_fixtures("Pod", "*.pod")
+    })
+  end
+
   # Candidate languages = ["IDL", "Prolog", "QMake", "INI"]
   def test_pro_by_heuristics
     assert_heuristics({
@@ -177,6 +186,16 @@ class TestHeuristcs < Minitest::Test
     assert_heuristics({
       "SuperCollider" => all_fixtures("SuperCollider", "*.sc"),
       "Scala" => all_fixtures("Scala", "*.sc")
+    })
+  end
+
+  # Candidate languages = ["SQL", "PLpgSQL", "SQLPL", "PLSQL"]
+  def test_sql_by_heuristics
+    assert_heuristics({
+      "SQL" => ["SQL/create_stuff.sql", "SQL/db.sql", "SQL/dual.sql"],
+      "PLpgSQL" => all_fixtures("PLpgSQL", "*.sql"),
+      "SQLPL" => ["SQLPL/trigger.sql"],
+      "PLSQL" => all_fixtures("PLSQL", "*.sql")
     })
   end
 
