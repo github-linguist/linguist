@@ -7,7 +7,7 @@ class TestGrammars < Minitest::Test
   PROJECT_WHITELIST = [
     # Dual MIT and GPL license
     "vendor/grammars/language-csharp",
-
+    "vendor/grammars/sublimeassembly"
   ].freeze
 
   # List of allowed SPDX license names
