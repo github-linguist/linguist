@@ -429,7 +429,7 @@ C-ObjDump:
   type: data
   extensions:
   - .c-objdump
-  tm_scope: none
+  tm_scope: objdump.x86asm
   ace_mode: assembly_x86
 
 C2hs Haskell:
@@ -681,7 +681,7 @@ Cpp-ObjDump:
   - .c++objdump
   - .cpp-objdump
   - .cxx-objdump
-  tm_scope: none
+  tm_scope: objdump.x86asm
   aliases:
   - c++-objdumb
   ace_mode: assembly_x86
@@ -753,7 +753,7 @@ D-ObjDump:
   type: data
   extensions:
   - .d-objdump
-  tm_scope: none
+  tm_scope: objdump.x86asm
   ace_mode: assembly_x86
 
 DIGITAL Command Language:
@@ -2422,7 +2422,7 @@ ObjDump:
   type: data
   extensions:
   - .objdump
-  tm_scope: none
+  tm_scope: objdump.x86asm
   ace_mode: assembly_x86
 
 Objective-C:
