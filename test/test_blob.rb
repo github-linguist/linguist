@@ -132,7 +132,7 @@ class TestBlob < Minitest::Test
   end
 
   def test_csv
-    assert fixture_blob_memory("Data/cars.csv").csv?
+    assert sample_blob_memory("CSV/cars.csv").csv?
   end
 
   def test_pdf

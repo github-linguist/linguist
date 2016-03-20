@@ -42,10 +42,10 @@ module Linguist
       return unless script
 
       # "python2.6" -> "python2"
-      script.sub! /(\.\d+)$/, ''
+      script.sub!(/(\.\d+)$/, '')
 
       # #! perl -> perl
-      script.sub! /^#!\s*/, ''
+      script.sub!(/^#!\s*/, '')
 
       # Check for multiline shebang hacks that call `exec`
       if script == 'sh' &&
