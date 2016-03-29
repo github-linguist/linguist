@@ -119,4 +119,3 @@ execute_overlay([{copy, In, Out} | Rest], Vars, BaseDir, TargetDir) ->
 
 exit_code(ExitCode) ->
     erlang:halt(ExitCode, [{flush, true}]).
-

@@ -127,6 +127,14 @@ module Linguist
         Language["ECL"]
       end
     end
+    
+    disambiguate ".es" do |data|
+      if /^\s*(?:%%|main\s*\(.*?\)\s*->)/.match(data)
+        Language["Erlang"]
+      elsif /(?:\/\/|("|')use strict\1|export\s+default\s|\/\*.*?\*\/)/m.match(data)
+        Language["JavaScript"]
+      end
+    end
 
     disambiguate ".for", ".f" do |data|
       if /^: /.match(data)
