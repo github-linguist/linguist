@@ -1,0 +1,25 @@
+TYPE=gemstones
+GEM=amethyst bloodstone citrine emerald garnet jade lapis-lazuli moonstone opal perl ruby sapphire topaz unakite variscite wernerite xanthite yttrotitanite zincostaurolite
+
+all:G:
+	cd /sys/log
+	gem=`{date|sed 's/(^[^ ]*) .*/\1/'}
+	for(i in $GEM){
+		if(test -e $i){
+			mv $i $i.$gem
+		}
+		rm -f $i
+		> $i
+		cp $i $0
+	}
+	for(i in $GEMS){
+		if(test -e $i){
+			cp $i $i.$gem
+		}
+		rm -f $i
+	}
+
+polish:GS:
+	for(i in $GEMS){
+		usr/bin/polish /tmp/gemstone/$i /tmp/gemstone/$i &
+	}
