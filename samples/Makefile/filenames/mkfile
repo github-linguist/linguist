@@ -1,0 +1,9 @@
+GREETINGS=hello gday bonjour hola ola kaixo tag hoi konnichiwa nihao dobredan namaste salaam
+
+all:V:
+	mk greet.^($GREETINGS)
+	for(i in $GREETINGS)
+		mk $i
+
+greet.%: text-folder
+	/n/$printer $stem >[2=1]
