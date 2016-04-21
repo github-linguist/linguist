@@ -91,6 +91,13 @@ class TestHeuristcs < Minitest::Test
     })
   end
 
+  def test_eslintrc_by_heuristics
+    assert_heuristics({
+      "JSON" => ["JSON/filenames/.eslintrc"],
+      "YAML" => ["YAML/filenames/.eslintrc"]
+    })
+  end
+
   def test_f_by_heuristics
     assert_heuristics({
       "FORTRAN" => all_fixtures("FORTRAN", "*.f") + all_fixtures("FORTRAN", "*.for"),
