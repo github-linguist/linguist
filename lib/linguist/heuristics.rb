@@ -376,6 +376,14 @@ module Linguist
         Language["SQL"]
       end
     end
+    
+    disambiguate ".toc" do |data|
+      if /^##/.match(data)
+        Language["World of Warcraft Addon Data"]
+      elsif /^\\contentsline/.match(data)
+        Language["TeX"]
+      end
+    end
 
     disambiguate ".ts" do |data|
       if data.include?("<TS ")
