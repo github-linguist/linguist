@@ -86,6 +86,14 @@ module Linguist
       end
     end
 
+    disambiguate ".builds" do |data|
+      if /^(\s*)(<Project|<Import|<Property|<?xml|xmlns)/i.match(data)
+        Language["XML"]
+      else
+        Language["Text"]
+      end
+    end
+
     disambiguate ".ch" do |data|
       if /^\s*#\s*(if|ifdef|ifndef|define|command|xcommand|translate|xtranslate|include|pragma|undef)\b/i.match(data)
         Language["xBase"]
