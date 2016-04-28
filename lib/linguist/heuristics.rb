@@ -380,7 +380,7 @@ module Linguist
     disambiguate ".toc" do |data|
       if /^## |@no-lib-strip@/.match(data)
         Language["World of Warcraft Addon Data"]
-      elsif /^\\contentsline/.match(data)
+      elsif /^\\(contentsline|defcounter|beamer|boolfalse)/.match(data)
         Language["TeX"]
       end
     end
