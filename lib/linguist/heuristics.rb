@@ -378,7 +378,7 @@ module Linguist
     end
     
     disambiguate ".toc" do |data|
-      if /^##/.match(data)
+      if /^##|@no-lib-strip@/.match(data)
         Language["World of Warcraft Addon Data"]
       elsif /^\\contentsline/.match(data)
         Language["TeX"]
