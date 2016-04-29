@@ -1,0 +1,14 @@
+class HelloWorld
+
+	method main requires ()
+		print.out "Hello World"
+		
+		string str = getString()
+		printString(str)
+		
+	method printString requires (string str)
+		print.out str
+	
+	method getString requires () returns string
+		return "Hello"
+		
