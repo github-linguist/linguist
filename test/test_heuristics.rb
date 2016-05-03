@@ -122,6 +122,12 @@ class TestHeuristcs < Minitest::Test
     })
   end
 
+  def test_inc_by_heuristics
+    assert_heuristics({
+      "PHP" => all_fixtures("PHP", "*.inc")
+    })
+  end
+
   def test_ls_by_heuristics
     assert_heuristics({
       "LiveScript" => all_fixtures("LiveScript", "*.ls"),
