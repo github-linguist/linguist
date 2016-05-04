@@ -17,6 +17,7 @@ class TestGenerated < Minitest::Test
     assert_raises(DataLoadedError, "Data wasn't loaded when calling generated? on #{blob}") do
       Generated.generated?(blob, lambda { raise DataLoadedError.new })
     end
+    assert Generated.generated?(blob, lambda { IO.read(blob) }), "#{blob} was not recognized as a generated file"
   end
 
   def generated_fixture_without_loading_data(name)
