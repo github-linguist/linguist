@@ -187,6 +187,12 @@ module Linguist
       end
     end
 
+    disambiguate ".inc" do |data|
+      if /^<\?(?:php)?/.match(data)
+        Language["PHP"]
+      end
+    end
+
     disambiguate ".l" do |data|
       if /\(def(un|macro)\s/.match(data)
         Language["Common Lisp"]
