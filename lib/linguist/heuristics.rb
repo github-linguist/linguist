@@ -144,6 +144,14 @@ module Linguist
       end
     end
 
+    disambiguate ".eslintrc" do |data|
+      if /^{/.match(data)
+        Language["JSON"]
+      else
+        Language["YAML"]
+      end
+    end
+
     disambiguate ".for", ".f" do |data|
       if /^: /.match(data)
         Language["Forth"]
