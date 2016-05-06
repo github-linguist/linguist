@@ -36,7 +36,7 @@ class TestGenerated < Minitest::Test
     generated_loading_data(File.join(samples_path, name))
   end
 
-  def test_check_generated
+  def test_check_generated    
     # Xcode project files
     generated_sample_without_loading_data("Binary/MainMenu.nib")
     generated_sample_without_loading_data("Dummy/foo.xcworkspacedata")
