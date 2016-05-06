@@ -15,6 +15,7 @@ class TestGrammars < Minitest::Test
     apache-2.0
     bsd-2-clause
     bsd-3-clause
+    isc
     mit
     mpl-2.0
     public

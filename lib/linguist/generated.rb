@@ -59,6 +59,7 @@ module Linguist
       godeps? ||
       generated_by_zephir? ||
       minified_files? ||
+      has_source_map? ||
       source_map? ||
       compiled_coffeescript? ||
       generated_parser? ||
@@ -102,6 +103,21 @@ module Linguist
       else
         false
       end
+    end
+
+    # Internal: Does the blob contain a source map reference?
+    #
+    # We assume that if one of the last 2 lines starts with a source map
+    # reference, then the current file was generated from other files.
+    # 
+    # We use the last 2 lines because the last line might be empty.
+    # 
+    # We only handle JavaScript, no CSS support yet.
+    # 
+    # Returns true or false.
+    def has_source_map?
+      return false unless extname.downcase == '.js'
+      lines.last(2).any? { |line| line.start_with?('//# sourceMappingURL') }
     end
 
     # Internal: Is the blob a generated source map?

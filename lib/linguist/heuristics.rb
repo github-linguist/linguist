@@ -86,6 +86,14 @@ module Linguist
       end
     end
 
+    disambiguate ".builds" do |data|
+      if /^(\s*)(<Project|<Import|<Property|<?xml|xmlns)/i.match(data)
+        Language["XML"]
+      else
+        Language["Text"]
+      end
+    end
+
     disambiguate ".ch" do |data|
       if /^\s*#\s*(if|ifdef|ifndef|define|command|xcommand|translate|xtranslate|include|pragma|undef)\b/i.match(data)
         Language["xBase"]
@@ -125,6 +133,14 @@ module Linguist
         Language["ECLiPSe"]
       elsif data.include?(":=")
         Language["ECL"]
+      end
+    end
+    
+    disambiguate ".es" do |data|
+      if /^\s*(?:%%|main\s*\(.*?\)\s*->)/.match(data)
+        Language["Erlang"]
+      elsif /(?:\/\/|("|')use strict\1|export\s+default\s|\/\*.*?\*\/)/m.match(data)
+        Language["JavaScript"]
       end
     end
 
@@ -168,6 +184,12 @@ module Linguist
       elsif (/^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>/.match(data) ||
         /^\s*template\s*</.match(data) || /^[ \t]*try/.match(data) || /^[ \t]*catch\s*\(/.match(data) || /^[ \t]*(class|(using[ \t]+)?namespace)\s+\w+/.match(data) || /^[ \t]*(private|public|protected):$/.match(data) || /std::\w+/.match(data))
         Language["C++"]
+      end
+    end
+
+    disambiguate ".inc" do |data|
+      if /^<\?(?:php)?/.match(data)
+        Language["PHP"]
       end
     end
 
@@ -366,6 +388,14 @@ module Linguist
       elsif ! /begin|boolean|package|exception/i.match(data)
         #Generic SQL
         Language["SQL"]
+      end
+    end
+    
+    disambiguate ".toc" do |data|
+      if /^## |@no-lib-strip@/.match(data)
+        Language["World of Warcraft Addon Data"]
+      elsif /^\\(contentsline|defcounter|beamer|boolfalse)/.match(data)
+        Language["TeX"]
       end
     end
 

@@ -83,6 +83,13 @@ class TestHeuristcs < Minitest::Test
       "ECLiPSe" => all_fixtures("ECLiPSe", "*.ecl")
     })
   end
+  
+  def test_es_by_heuristics
+    assert_heuristics({
+      "Erlang" => all_fixtures("Erlang", "*.es"),
+      "JavaScript" => all_fixtures("JavaScript", "*.es")
+    })
+  end
 
   def test_f_by_heuristics
     assert_heuristics({
@@ -112,6 +119,12 @@ class TestHeuristcs < Minitest::Test
     assert_heuristics({
       "Hack" => all_fixtures("Hack", "*.php"),
       "PHP" => all_fixtures("PHP", "*.php")
+    })
+  end
+
+  def test_inc_by_heuristics
+    assert_heuristics({
+      "PHP" => all_fixtures("PHP", "*.inc")
     })
   end
 

@@ -15,6 +15,10 @@ module Linguist
 
       MODELINES = [EMACS_MODELINE, VIM_MODELINE_1, VIM_MODELINE_2]
 
+      # Scope of the search for modelines
+      # Number of lines to check at the beginning and at the end of the file
+      SEARCH_SCOPE = 5
+
       # Public: Detects language based on Vim and Emacs modelines
       #
       # blob               - An object that quacks like a blob.
@@ -26,7 +30,9 @@ module Linguist
       # Returns an Array with one Language if the blob has a Vim or Emacs modeline
       # that matches a Language name or alias. Returns an empty array if no match.
       def self.call(blob, _ = nil)
-        Array(Language.find_by_alias(modeline(blob.data)))
+        header = blob.lines.first(SEARCH_SCOPE).join("\n")
+        footer = blob.lines.last(SEARCH_SCOPE).join("\n")
+        Array(Language.find_by_alias(modeline(header + footer)))
       end
 
       # Public: Get the modeline from the first n-lines of the file
