@@ -31,6 +31,7 @@ class TestModelines < Minitest::Test
     assert_modeline Language["Prolog"], fixture_blob("Data/Modelines/not_perl.pl")
     assert_modeline Language["Smalltalk"], fixture_blob("Data/Modelines/example_smalltalk.md")
     assert_modeline Language["PHP"], fixture_blob("Data/Modelines/iamphp.inc")
+    assert_modeline nil, sample_blob("C/main.c")
   end
 
   def test_modeline_languages

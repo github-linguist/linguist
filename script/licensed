@@ -36,8 +36,11 @@ source = Licensed::Source::Filesystem.new("vendor/grammars/*/", type: "grammar")
 config = Licensed::Configuration.new
 config.sources << source
 
-if ARGV[0] == "verify"
-  Licensed::Command::Verify.new(config).run
+command = if ARGV[0] == "verify"
+  Licensed::Command::Verify.new(config)
 else
-  Licensed::Command::Cache.new(config).run(force: true)
+  Licensed::Command::Cache.new(config)
 end
+
+command.run
+exit command.success?

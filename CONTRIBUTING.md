@@ -33,6 +33,7 @@ To add support for a new language:
 0. Add a grammar for your language. Please only add grammars that have a license that permits redistribution.
   0. Add your grammar as a submodule: `git submodule add https://github.com/JaneSmith/MyGrammar vendor/grammars/MyGrammar`.
   0. Add your grammar to [`grammars.yml`][grammars] by running `script/convert-grammars --add vendor/grammars/MyGrammar`.
+  0. Download the license for the grammar: `script/licensed`. Be careful to only commit the file for the new grammar, as this script may update licenses for other grammars as well.
 0. Add samples for your language to the [samples directory][samples] in the correct subdirectory.
 0. Open a pull request, linking to a [GitHub search result](https://github.com/search?utf8=%E2%9C%93&q=extension%3Aboot+NOT+nothack&type=Code&ref=searchresults) showing in-the-wild usage.
 

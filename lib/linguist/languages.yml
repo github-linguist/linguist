@@ -147,6 +147,17 @@ Alloy:
   - .als
   ace_mode: text
 
+Alpine Abuild:
+  type: programming
+  group: Shell
+  aliases:
+  - abuild
+  - apkbuild
+  filenames:
+  - APKBUILD
+  tm_scope: source.shell
+  ace_mode: sh
+
 Ant Build System:
   type: data
   tm_scope: text.xml.ant
@@ -260,7 +271,7 @@ AutoIt:
   - AutoItScript
   extensions:
   - .au3
-  tm_scope: none
+  tm_scope: source.autoit
   ace_mode: autohotkey
 
 Awk:
@@ -948,6 +959,7 @@ Erlang:
   color: "#B83998"
   extensions:
   - .erl
+  - .app.src
   - .es
   - .escript
   - .hrl
@@ -1125,6 +1137,7 @@ GLSL:
   - .frag
   - .frg
   - .fs
+  - .fsh
   - .fshader
   - .geo
   - .geom
@@ -1133,6 +1146,7 @@ GLSL:
   - .shader
   - .vert
   - .vrx
+  - .vsh
   - .vshader
   ace_mode: glsl
 
@@ -1260,6 +1274,14 @@ Graph Modeling Language:
   extensions:
   - .gml
   tm_scope: none
+  ace_mode: text
+
+GraphQL:
+  type: data
+  extensions:
+    - .graphql
+  color: "#E535AB"
+  tm_scope: source.graphql
   ace_mode: text
 
 Graphviz (DOT):
@@ -1612,11 +1634,14 @@ JSON:
   extensions:
   - .json
   - .geojson
+  - .JSON-tmLanguage
   - .lock
   - .topojson
   filenames:
+  - .arcconfig
   - .jshintrc
   - composer.lock
+  - mcmod.info
 
 JSON5:
   type: data
@@ -2070,10 +2095,12 @@ Makefile:
   - .mk
   - .mkfile
   filenames:
+  - BSDmakefile
   - GNUmakefile
   - Kbuild
   - Makefile
   - Makefile.am
+  - Makefile.frag
   - Makefile.in
   - Makefile.inc
   - makefile
@@ -2508,6 +2535,16 @@ OpenEdge ABL:
   - .cls
   tm_scope: source.abl
   ace_mode: text
+
+OpenRC runscript:
+  type: programming
+  group: Shell
+  aliases:
+  - openrc
+  interpreters:
+  - openrc-run
+  tm_scope: source.shell
+  ace_mode: sh
 
 OpenSCAD:
   type: programming
@@ -3353,6 +3390,13 @@ Shell:
   - .tmux
   - .tool
   - .zsh
+  filenames:
+  - .bash_history
+  - .bash_logout
+  - .bash_profile
+  - .bashrc
+  - PKGBUILD
+  - gradlew
   interpreters:
   - bash
   - rc
@@ -3508,6 +3552,13 @@ SystemVerilog:
   - .vh
   ace_mode: verilog
 
+TLA:
+  type: programming
+  extensions:
+  - .tla
+  tm_scope: source.tla
+  ace_mode: text
+
 TOML:
   type: data
   extensions:
@@ -3580,7 +3631,6 @@ Terra:
   - .t
   color: "#00004c"
   ace_mode: lua
-  group: Lua
   interpreters:
   - lua
 
@@ -3811,6 +3861,14 @@ WebIDL:
   tm_scope: source.webidl
   ace_mode: text
 
+World of Warcraft Addon Data:
+  type: data
+  color: "#e0b330"
+  extensions:
+  - .toc
+  tm_scope: source.toc
+  ace_mode: text
+
 X10:
   type: programming
   aliases:
@@ -3840,6 +3898,7 @@ XML:
   - .xml
   - .ant
   - .axml
+  - .builds
   - .ccxml
   - .clixml
   - .cproject
@@ -3871,6 +3930,7 @@ XML:
   - .nuspec
   - .odd
   - .osm
+  - .pkgproj
   - .plist
   - .pluginspec
   - .props
@@ -3878,8 +3938,10 @@ XML:
   - .psc1
   - .pt
   - .rdf
+  - .resx
   - .rss
   - .scxml
+  - .sfproj
   - .srdf
   - .storyboard
   - .stTheme
