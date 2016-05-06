@@ -19,7 +19,7 @@ class TestFileBlob < Minitest::Test
     blob.instance_variable_set(:@name, 'script')
     blob
   end
-  
+
   def test_extensions
     assert_equal [".gitignore"], Linguist::FileBlob.new(".gitignore").extensions
     assert_equal [".xml"],  Linguist::FileBlob.new("build.xml").extensions
@@ -312,11 +312,13 @@ class TestFileBlob < Minitest::Test
     # Debian packaging
     assert sample_blob("debian/cron.d").vendored?
 
+    # Django env
+    assert sample_blob("env/foo.py").vendored?
+
     # Erlang
     assert sample_blob("rebar").vendored?
 
     # git config files
-
     assert_predicate fixture_blob("some/path/.gitattributes"), :vendored?
     assert_predicate fixture_blob(".gitignore"), :vendored?
     assert_predicate fixture_blob("special/path/.gitmodules"), :vendored?
