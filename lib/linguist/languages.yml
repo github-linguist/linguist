@@ -715,6 +715,36 @@ Crystal:
   interpreters:
   - crystal
 
+Csound:
+  type: programming
+  aliases:
+  - csound-orc
+  extensions:
+  - .orc
+  - .udo
+  tm_scope: source.csound
+  ace_mode: text
+
+Csound Document:
+  type: programming
+  aliases:
+  - csound-csd
+  - csound-document
+  extensions:
+  - .csd
+  tm_scope: source.csound-document
+  ace_mode: text
+
+Csound Score:
+  type: programming
+  aliases:
+  - csound-sco
+  - csound-score
+  extensions:
+  - .sco
+  tm_scope: source.csound-score
+  ace_mode: text
+
 Cucumber:
   type: programming
   extensions:
