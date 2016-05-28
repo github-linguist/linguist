@@ -1,0 +1,33 @@
+;; Author(s) - names
+;; Version - version
+;; Description - description
+module moduleName(typeParameters) (
+
+    ;; Primitives.
+	priv integer = 0
+    priv decimal = 3.141592654
+    priv string = "foo"
+    priv character = 'c'
+    priv boolean = false
+
+    ;; Generic structure.
+    priv struct person(p_name, p_age, p_gender) (
+        name = p_name
+        age = p_age
+        gender = p_gender
+    )
+
+	;; Generic function that returns `nil`.
+	func functionNil(args) (
+		cast args -> int
+        args += 1
+	)
+
+    ;; Genreic function that returns a number.
+    func functionReturn(args) (
+        cast args -> int
+        args += 1
+        return args
+    )
+
+)
