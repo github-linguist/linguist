@@ -1,0 +1,60 @@
+;; Author(s) - Finn Rayment
+;; Version - 1.0
+;; Description - Lists wrap primitive arrays into basic data structures which
+;;               allow for simplified array manipulation. Lists are dynamic
+;;               and contain no 'constraints' as to how big they can be.
+module list(t) (
+
+    ;; Array. Contains a list of values.
+    priv array = t[]
+	;; Size of the list.
+	priv size = 0
+
+	;; Returns the value located at 'index' from 'array'.
+	func get(index) (
+		cast index -> int
+        if (index > size) (return)
+		return array[index]
+	)
+
+	;; Adds a value to the list at the bottom. (Index-wise)
+	func add(type) (
+		cast type -> t
+		array += t
+        size += 1
+	)
+
+    ;; Checks weather or not the specified value currently exists in the list.
+    func contains(value) (
+        cast value -> t
+        for ((i = 0) < size) (
+            if (array[i] == value) (
+                return true
+            )
+            i += 1
+        )
+        return false
+    )
+
+	;; Removes the value located at the specified index from the array.
+    ;; If it doesn't exist, it will not be removed, instead ignored.
+	func remove(index) (
+		cast index -> int
+		newarray = t[]
+		removed = false
+		for ((i = 0) < size) (
+			if (i != index) (
+    			newarray += array[i]
+			)
+			i += 1
+		)
+		array = newarray
+		if (index < size) (size -= 1)
+	)
+
+	;; Returns the size of the 'array' list.
+	func size() (
+		return size
+	)
+
+)

@@ -1,0 +1,40 @@
+'.source.jazz':
+    # Blocks.
+    'module name(generics) ( … )':
+        'prefix': 'module'
+        'body': 'module ${1:name}(${2:generics}) (\n\t$3\n)'
+        'description': 'Generic module block.'
+    'struct name(args) ( … )':
+        'prefix': 'struct'
+        'body': 'struct ${1:name}(${2:args}) (\n\t$3\n)'
+        'description': 'Generic struct block.'
+    'func name(args) ( … )':
+        'prefix': 'func'
+        'body': 'func ${1:name}(${2:args}) (\n\t$3\n)'
+        'description': 'Generic function block.'
+    'for ((definition) condition) ( … )':
+        'prefix': 'for'
+        'body': 'for ((${1:definition}) ${2:condition}) (\n\t$3\n)'
+        'description': 'Generic for-loop.'
+    # Utilities.
+    'cast object -> object':
+        'prefix': 'cast'
+        'body': 'cast ${1:object} -> ${2:object}'
+        'description': 'Cast object to another type.'
+    'keyword name -> object':
+        'prefix': 'key'
+        'body': 'keyword ${1:name} -> ${2:object}'
+        'description': 'Create keyword from another object.'
+    'return object':
+        'prefix': 'return'
+        'body': 'return ${1:object}'
+        'description': 'Return an object from a function.'
+    'variable = value':
+        'prefix': 'var'
+        'body': '${1:variable} = ${2:value}'
+        'description': 'Generic variable definition.'
+    # Other.
+    'func main(args) ( … )':
+        'prefix': 'main'
+        'body': 'func main(args) (\n\t$1\n)'
+        'description': 'Main function for runtime.'

@@ -1,0 +1,18 @@
+module fibonacci() (
+
+    func run(times) (
+        a = 1
+        b = 1
+        for ((i = 0) < times) (
+            if (a > b) (
+                b += a
+                print b
+            ) else (
+                a += b
+                print a
+            )
+            i += 1
+        )
+    )
+
+)
