@@ -722,6 +722,34 @@ Crystal:
   interpreters:
   - crystal
 
+Csound:
+  type: programming
+  aliases:
+  - csound-orc
+  extensions:
+  - .orc
+  - .udo
+  tm_scope: source.csound
+  ace_mode: text
+
+Csound Document:
+  type: programming
+  aliases:
+  - csound-csd
+  extensions:
+  - .csd
+  tm_scope: source.csound-document
+  ace_mode: text
+
+Csound Score:
+  type: programming
+  aliases:
+  - csound-sco
+  extensions:
+  - .sco
+  tm_scope: source.csound-score
+  ace_mode: text
+
 Cucumber:
   type: programming
   extensions:
@@ -2131,6 +2159,7 @@ Makefile:
   - Makefile.in
   - Makefile.inc
   - makefile
+  - makefile.sco
   - mkfile
   interpreters:
   - make
