@@ -1,0 +1,39 @@
+;; Author(s) - Finn Rayment
+;; Version - 1.0
+;; Description - Assertions allow for objects to be compared in a forceful
+;;               manner when it should be assured that the object is equal to
+;;               another.
+static module assert() (
+
+    ;; Import list module.
+    use list
+
+    ;; Throws an assertion error and forces the program to quit.
+    priv func fail(base, compare) (
+        err "Assertion failed comparing " + base " to " + compare + "."
+        exit 1
+    )
+
+    ;; Asserts a single object by comparing it to another.
+    func assert(base, compare) (
+        if (base == compare) (
+            return true
+        )
+        fail(base, compare)
+    )
+
+    ;; Asserts an array to a single object by iterating through all the items
+    ;; and comparing each of them.
+    func assertArray(array, compare) (
+        cast array -> list(?)
+        for ((i = 0) < array.size()) (
+            obj = array.get(i)
+            if (obj != compare) (
+                fail(obj, compare)
+            )
+            i += 1
+        )
+        return true
+    )
+
+)

@@ -1,0 +1,87 @@
+;; Author(s) - Finn Rayment
+;; Version - 1.0
+;; Description - Maps are an 'associative array' data structure which plot
+;;               entries containing 'keys' which correspond to a 'value'.
+;;               Each map only has one instance of a 'key', while they house
+;;               unlimited instances of 'values'.
+module map(k, v) (
+
+	;; Structure providing entries for the map.
+	;; Contains basic 'key' and 'value' objects.
+	priv struct map_entry(k, v) (
+		key = k
+		value = v
+	)
+
+	;; Map table. Contains 'keys' corresponding to 'values'.
+	priv entries = map_entry(k, v)[]
+	;; Size of 'entries' array.
+	priv size = 0
+
+	;; Returns a value from 'entries' if it contains 'key'. Otherwise, it will
+	;; return 'nil'.
+	func get(key) (
+		cast key -> k
+		for ((i = 0) < size) (
+			if (entries[i].key == key) (
+				return entries[i].value
+			)
+			i += 1
+		)
+	)
+
+	;; Maps a value to the specified key in the table. If the key doesn't
+	;; already exist, it will be created.
+	func put(key, value) (
+		cast key -> k
+		cast value -> v
+		insert = true
+		for ((i = 0) < size) (
+			if (entries[i].key == key) (
+				entries[i].value = value
+				insert = false
+			)
+		 	i += 1
+		)
+		if (insert) (
+			entries += map_entry(key, value)
+			size += 1
+		)
+	)
+
+	;; Checks weather or not the specified key currently exists in the map.
+	func contains(key) (
+		for ((i = 0) < size) (
+			if (entries[i].key == key) (
+				return true
+			)
+			i += 1
+		)
+		return false
+	)
+
+	;; Removes a mapping from the table. If it doesn't exist, it will not be
+	;; removed, instead ignored.
+	func remove(key) (
+		cast key -> k
+		newentries = map_entry(k, v)[]
+		removed = false
+		for ((i = 0) < size) (
+			if (entries[i].key != key) (
+				newentries += entries[i]
+			) else (
+				removed = true
+			)
+			i += 1
+		)
+		entries = newentries
+		if (removed) (size -= 1)
+	)
+
+	;; Returns the size of the 'entries' map.
+	;; This is measured in 'keys', not 'values'.
+	func size() (
+		return size
+	)
+
+)

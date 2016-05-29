@@ -1439,7 +1439,7 @@ HTML+Django:
   - html+jinja
   - htmldjango
   ace_mode: django
-  
+
 HTML+ECR:
   type: markup
   tm_scope: text.html.ecr
@@ -1807,6 +1807,15 @@ JavaScript:
   - Jakefile
   interpreters:
   - node
+
+Jazz:
+  type: programming
+  ace_mode: text
+  tm_scope: source.jazz
+  extensions:
+  - .jazz
+  - .jaz
+  color: "#15776a"
 
 Julia:
   type: programming
