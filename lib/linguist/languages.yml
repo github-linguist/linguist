@@ -1808,20 +1808,21 @@ JavaScript:
   interpreters:
   - node
 
+Jazz:
+  type: programming
+  ace_mode: jazz
+  tm_scope: source.jazz
+  extensions:
+  - .jazz
+  - .jaz
+  color: "#30b997"
+
 Julia:
   type: programming
   extensions:
   - .jl
   color: "#a270ba"
   ace_mode: julia
-
-Jazz:
-  type: programming
-  tm_scope: source.jazz
-  extensions:
-  - .jazz
-  color: "#36b3b5"
-  ace_mode: jazz
 
 Jupyter Notebook:
   type: markup
