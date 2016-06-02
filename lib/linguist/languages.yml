@@ -75,6 +75,10 @@ APL:
   extensions:
   - .apl
   - .dyalog
+  interpreters:
+  - apl
+  - aplx
+  - dyalog
   tm_scope: source.apl
   ace_mode: text
 
@@ -701,7 +705,7 @@ Cpp-ObjDump:
   - .cxx-objdump
   tm_scope: objdump.x86asm
   aliases:
-  - c++-objdumb
+  - c++-objdump
   ace_mode: assembly_x86
 
 Creole:
@@ -1666,6 +1670,8 @@ J:
   color: "#9EEDFF"
   extensions:
   - .ijs
+  interpreters:
+  - jconsole
   tm_scope: source.j
   ace_mode: text
 
@@ -2471,7 +2477,7 @@ Nu:
   - .nu
   filenames:
   - Nukefile
-  tm_scope: source.scheme
+  tm_scope: source.nu
   ace_mode: scheme
   interpreters:
   - nush
