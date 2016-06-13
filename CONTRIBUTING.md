@@ -4,6 +4,13 @@ Hi there! We're thrilled that you'd like to contribute to this project. Your hel
 
 The majority of contributions won't need to touch any Ruby code at all.
 
+## Maintainers
+
+Linguist is maintained by GitHub staff (@arfon & @bkeepers) and our community volunteers @larsbrinkhoff and @pchaigno :sparkles:. As Linguist is a production dependency for GitHub we have a couple of workflow restrictions:
+
+- Anyone with commit rights can merge Pull Requests provided that there is a :+1: from a GitHub member of staff
+- Releases are made by GitHub staff (https://github.com/github/linguist/blob/master/CONTRIBUTING.md#releasing) so that we can ensure GitHub.com always stays up to date with the latest release of Linguist
+
 ## Adding an extension to a language
 
 We try only to add new extensions once they have some usage on GitHub. In most cases we prefer that extensions be in use in hundreds of repositories before supporting them in Linguist.
