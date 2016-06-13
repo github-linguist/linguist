@@ -36,7 +36,7 @@ class TestGenerated < Minitest::Test
     generated_loading_data(File.join(samples_path, name))
   end
 
-  def test_check_generated    
+  def test_check_generated
     # Xcode project files
     generated_sample_without_loading_data("Binary/MainMenu.nib")
     generated_sample_without_loading_data("Dummy/foo.xcworkspacedata")
@@ -50,6 +50,9 @@ class TestGenerated < Minitest::Test
 
     # Node modules
     generated_sample_without_loading_data("Dummy/node_modules/foo.js")
+
+    # npm shrinkwrap file
+    generated_sample_without_loading_data("Dummy/npm-shrinkwrap.json")
 
     # Godep saved dependencies
     generated_sample_without_loading_data("Godeps/Godeps.json")
