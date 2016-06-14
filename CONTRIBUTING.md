@@ -88,7 +88,7 @@ Linguist is maintained with :heart: by:
 As Linguist is a production dependency for GitHub we have a couple of workflow restrictions:
 
 - Anyone with commit rights can merge Pull Requests provided that there is a :+1: from a GitHub member of staff
-- Releases so that we can ensure GitHub.com always stays up to date with the latest release of Linguist and there are no regressions in production.
+- Releases are performed by GitHub staff so we can ensure GitHub.com always stays up to date with the latest release of Linguist and there are no regressions in production.
 
 ### Releasing
 
