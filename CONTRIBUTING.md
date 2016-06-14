@@ -4,13 +4,6 @@ Hi there! We're thrilled that you'd like to contribute to this project. Your hel
 
 The majority of contributions won't need to touch any Ruby code at all.
 
-## Maintainers
-
-Linguist is maintained by GitHub staff (@arfon & @bkeepers) and our community volunteers @larsbrinkhoff and @pchaigno :sparkles:. As Linguist is a production dependency for GitHub we have a couple of workflow restrictions:
-
-- Anyone with commit rights can merge Pull Requests provided that there is a :+1: from a GitHub member of staff
-- Releases are made by GitHub staff (https://github.com/github/linguist/blob/master/CONTRIBUTING.md#releasing) so that we can ensure GitHub.com always stays up to date with the latest release of Linguist
-
 ## Adding an extension to a language
 
 We try only to add new extensions once they have some usage on GitHub. In most cases we prefer that extensions be in use in hundreds of repositories before supporting them in Linguist.
@@ -84,8 +77,20 @@ Sometimes getting the tests running can be too much work, especially if you don'
 
 Here's our current build status: [![Build Status](https://api.travis-ci.org/github/linguist.svg?branch=master)](https://travis-ci.org/github/linguist)
 
+## Maintainers
 
-## Releasing
+Linguist is maintained with :heart: by:
+
+- @arfon (GitHub Staff)
+- @larsbrinkhoff
+- @pchaigno
+ 
+As Linguist is a production dependency for GitHub we have a couple of workflow restrictions:
+
+- Anyone with commit rights can merge Pull Requests provided that there is a :+1: from a GitHub member of staff
+- Releases so that we can ensure GitHub.com always stays up to date with the latest release of Linguist and there are no regressions in production.
+
+### Releasing
 
 If you are the current maintainer of this gem:
 
