@@ -411,6 +411,10 @@ class TestFileBlob < Minitest::Test
     assert sample_blob("public/javascripts/tiny_mce_popup.js").vendored?
     assert sample_blob("public/javascripts/tiny_mce_src.js").vendored?
 
+    # Ace Editor
+    assert sample_blob("ace-builds/src/ace.js").vendored?
+    assert sample_blob("static/project/ace-builds/src/ace.js").vendored?
+
     # AngularJS
     assert sample_blob("public/javascripts/angular.js").vendored?
     assert sample_blob("public/javascripts/angular.min.js").vendored?
