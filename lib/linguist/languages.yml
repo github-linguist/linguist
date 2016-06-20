@@ -3336,6 +3336,14 @@ SQLPL:
   - .sql
   - .db2
 
+SRecode Template:
+  type: markup
+  color: "#348a34"
+  tm_scope: source.lisp
+  ace_mode: lisp
+  extensions:
+  - .srt
+
 STON:
   type: data
   group: Smalltalk
@@ -3584,6 +3592,13 @@ Stylus:
   - .styl
   tm_scope: source.stylus
   ace_mode: stylus
+
+SubRip Text:
+  type: data
+  extensions:
+  - .srt
+  ace_mode: text
+  tm_scope: text.srt
 
 SuperCollider:
   type: programming
