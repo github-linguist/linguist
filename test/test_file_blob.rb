@@ -417,11 +417,15 @@ class TestFileBlob < Minitest::Test
 
     # Fontello.css
     assert sample_blob("fontello.css").vendored?
-    assert sample_blob("Fontello.css").vendored?
-    assert sample_blob("assets/fontello.css").vendored?
-    assert sample_blob("assets/Fontello.css").vendored?
+    assert sample_blob("fontello-ie7.css").vendored?
+    assert sample_blob("fontello-codes.css").vendored?
+    assert sample_blob("fontello-codes-ie7.css").vendored?
+    assert sample_blob("fontello-embedded.css").vendored?
     assert sample_blob("assets/css/fontello.css").vendored?
-    assert sample_blob("assets/css/Fontello.css").vendored?
+    assert sample_blob("assets/css/fontello-ie7.css").vendored?
+    assert sample_blob("assets/css/fontello-codes.css").vendored?
+    assert sample_blob("assets/css/fontello-codes-ie7.css").vendored?
+    assert sample_blob("assets/css/fontello-embedded.css").vendored?
 
     # AngularJS
     assert sample_blob("public/javascripts/angular.js").vendored?
