@@ -415,6 +415,18 @@ class TestFileBlob < Minitest::Test
     assert sample_blob("ace-builds/src/ace.js").vendored?
     assert sample_blob("static/project/ace-builds/src/ace.js").vendored?
 
+    # Fontello CSS files
+    assert sample_blob("fontello.css").vendored?
+    assert sample_blob("fontello-ie7.css").vendored?
+    assert sample_blob("fontello-codes.css").vendored?
+    assert sample_blob("fontello-codes-ie7.css").vendored?
+    assert sample_blob("fontello-embedded.css").vendored?
+    assert sample_blob("assets/css/fontello.css").vendored?
+    assert sample_blob("assets/css/fontello-ie7.css").vendored?
+    assert sample_blob("assets/css/fontello-codes.css").vendored?
+    assert sample_blob("assets/css/fontello-codes-ie7.css").vendored?
+    assert sample_blob("assets/css/fontello-embedded.css").vendored?
+
     # AngularJS
     assert sample_blob("public/javascripts/angular.js").vendored?
     assert sample_blob("public/javascripts/angular.min.js").vendored?
