@@ -1,0 +1,21 @@
+#!/usr/bin/env i4s
+
+#intuicio 4.0;
+#stack 8k;
+#memory 16k;
+#entry @Main;
+#pointersize 32;
+#import from [IO:print] routine print(format:*i8, ...):;
+
+export synchronized routine multiply(a:i32, b:i32):i32
+<result:i32>
+{
+	call @print("Hello module!\n":*i8);
+	mul void $a $b => $result;
+	ret $result;
+};
+
+routine Main():i32
+{
+	ret 0:i32;
+};

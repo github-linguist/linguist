@@ -1,0 +1,24 @@
+#!/usr/bin/env i4s
+
+#intuicio 4.0;
+
+// routine with VARG feature.
+synchronized routine sum(...):i32
+<result:i32, temp:i32, next:i32>
+{
+	mov void 0:i32 => $result;
+	// store VARG list stating position.
+	vargs => $next;
+test:
+	// if position is 0, then return result,
+	jif $next %read %return;
+read:
+	// otherwise get VARG value.
+	vargr $next => $temp $next;
+	// and add to result.
+	add void $result $temp => $result;
+	// then go back to position testing.
+	goto %test;
+return:
+	ret $result;
+};
