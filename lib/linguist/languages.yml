@@ -42,7 +42,7 @@ AGS Script:
   extensions:
   - .asc
   - .ash
-  tm_scope: source.c++
+  tm_scope: source.cpp
   ace_mode: c_cpp
 
 AMPL:
@@ -213,7 +213,7 @@ Arduino:
   color: "#bd79d1"
   extensions:
   - .ino
-  tm_scope: source.c++
+  tm_scope: source.cpp
   ace_mode: c_cpp
 
 AsciiDoc:
@@ -418,6 +418,7 @@ C#:
 
 C++:
   type: programming
+  tm_scope: source.cpp
   ace_mode: c_cpp
   search_term: cpp
   color: "#f34b7d"
@@ -1203,7 +1204,7 @@ Game Maker Language:
   color: "#8fb200"
   extensions:
   - .gml
-  tm_scope: source.c++
+  tm_scope: source.cpp
   ace_mode: c_cpp
 
 Genshi:
@@ -2276,7 +2277,7 @@ Metal:
   color: "#8f14e9"
   extensions:
   - .metal
-  tm_scope: source.c++
+  tm_scope: source.cpp
   ace_mode: c_cpp
 
 MiniD: # Legacy
@@ -2532,12 +2533,12 @@ Objective-C:
 
 Objective-C++:
   type: programming
-  tm_scope: source.objc++
+  tm_scope: source.objcpp
   color: "#6866fb"
   aliases:
-  - obj-c++
-  - objc++
-  - objectivec++
+  - obj-cpp
+  - objcpp
+  - objectivecpp
   extensions:
   - .mm
   ace_mode: objectivec
@@ -3550,7 +3551,7 @@ Squirrel:
   color: "#800000"
   extensions:
   - .nut
-  tm_scope: source.c++
+  tm_scope: source.cpp
   ace_mode: c_cpp
 
 Stan:
