@@ -860,6 +860,8 @@ Dart:
   color: "#00B4AB"
   extensions:
   - .dart
+  interpreters:
+  - dart
   ace_mode: dart
 
 Diff:
@@ -904,6 +906,8 @@ E:
   color: "#ccce35"
   extensions:
   - .E
+  interpreters:
+  - rune
   tm_scope: none
   ace_mode: text
 
@@ -1536,6 +1540,8 @@ Haskell:
   extensions:
   - .hs
   - .hsc
+  interpreters:
+  - runhaskell
   ace_mode: haskell
 
 Haxe:
@@ -1639,6 +1645,8 @@ Io:
   color: "#a9188d"
   extensions:
   - .io
+  interpreters:
+  - io
   ace_mode: io
 
 Ioke:
@@ -2508,6 +2516,7 @@ OCaml:
   interpreters:
   - ocaml
   - ocamlrun
+  - ocamlscript
   tm_scope: source.ocaml
 
 ObjDump:
@@ -2772,6 +2781,8 @@ Pascal:
   - .lpr
   - .pascal
   - .pp
+  interpreters:
+  - instantfpc
   ace_mode: pascal
 
 Perl:
