@@ -1,0 +1,129 @@
+#!/usr/bin/env i4s
+
+#intuicio 4.0; // intuicio assembly header with version.
+#stack 8k; // application stack size in bytes.
+#memory 16k; // application memory limit.
+#entry @Main; // entry point (name of routine that will be called first).
+#pointersize 32; // tell compiler how many bits in size is pointer.
+//#import from ? struct Hello;
+#import from [IO:print] routine print(format:*i8, ...):; // import routine from native module.
+#import from "std.i4s" routine sum(...):i32; // import routine from file.
+#import from [module:multiply] routine multiply(a:i32, b:i32):i32; // import routine from script module.
+#import from [IO:file_exists] routine file_exists(path:*i8):i32;
+#import from [IO:file_open] routine file_open(path:*i8, mode:*i8):*i32;
+#import from [IO:file_close] routine file_close(handle:*i32):;
+#import from [IO:file_size] routine file_size(handle:*i32):i32;
+#import from [IO:file_read_all] routine file_read_all(handle:*i32, buffer:*i8, size:i32):i32;
+#import from [IO:file_write_all] routine file_write_all(handle:*i32, buffer:*i8, size:i32):i32;
+#import from "arithmetics.i4s" routine arithmetics():;
+
+// global variables.
+<
+	g_accum:i32,
+	m_AsyncLoop:*i32
+>;
+
+// define structure:
+struct Person
+{
+	age:i32;
+	weight:f32;
+	name:*i8;
+};
+
+routine Person_Constructor(this:*Person, age:i32, weight:f32, name:*i8):
+{
+	mov void $age => $this->$age;
+	mov void $weight => $this->$weight;
+	mov void $name => $this->$name;
+	ret void; // if we want to return without value, use void as value pointer.
+};
+
+routine Person_Destructor(this:*Person):
+{
+	mov void 0:i32 => $this->$age;
+	mov void 0.0:f32 => $this->$weight;
+	mov void null => $this->$name;
+};
+
+export routine CreatePerson(age:i32, weight:f32, name:*i8):*Person
+<result:*Person>
+{
+	new Person 1:i32 => $result;
+	call @Person_Constructor($result, $age, $weight, $name);
+	ret $result;
+};
+
+export routine DestroyPerson(ptr:*Person):
+{
+	jif $ptr %success %failure;
+success:
+	call @Person_Destructor($ptr);
+	del $ptr;
+failure:
+};
+
+synchronized routine AsyncReadFile(path:*i8):
+<file:*i32, buffer:*i8, v:i32>
+{
+	call @print("=== AsyncFileRead: Start\n":*i8);
+	call @print("File path: ${*}\n":*i8, $path);
+	call @file_open($path, "r+":*i8) => $file;
+	call @print("File handle: ${i32}\n":*i8, $file);
+	call @file_size($file) => $v;
+	call @print("File size: ${i32}\n":*i8, $v);
+	new i8 $v => $buffer;
+	call @file_read_all($file, $buffer, $v) => $v;
+	call @print("File contents:\n${*}\n":*i8, $buffer);
+}
+[{
+	call @file_close($file);
+	del $buffer;
+	call @print("=== AsyncFileRead: Stop\n":*i8);
+}];
+
+// example of routine `synchronized` feature done by direct lock/unlock operations.
+routine Accum(v:i32):
+{
+	lock $m_AsyncLoop;
+	add void $v $g_accum => $g_accum;
+	unlock $m_AsyncLoop;
+};
+
+// routine name with arguments and returned value type declaration.
+routine Main():i32
+// routine variables declaration.
+<pA:*Person, pB:*Person, v:i32, thread:i32, at0:i32, at1:i32>
+// routine prologue and body:
+{
+	call @CreatePerson(20:i32, 60.75:f32, "John":*i8) => $pA;
+	call @CreatePerson(18:i32, 51.5:f32, "Emilly":*i8) => $pB;
+	add void $pA->$age $pB->$age => $v;
+	jif $v %success %return;
+success: // label that marks jump space used in jif operation
+	sub void $pA->$age $pB->$age => $v;
+	call @sum($v, $pA->$age, $pB->$age) => $v;
+	goto %return;
+return:
+	call @print("Sum of ages is: ${i32}\n":*i8, $v);
+	call @multiply($pA->$age, $pB->$age) => $v;
+	call @print("Mul of ages is: ${i32}\n":*i8, $v);
+	async @AsyncReadFile("std.i4s":*i8) => $thread;
+	call @print("Async call for AsyncFileRead() on thread: ${i32}\n":*i8, $thread);
+	mtxc => $m_AsyncLoop;
+	mov void 0:i32 => $g_accum;
+	async @Accum(15:i32) => $at0;
+	async @Accum(-3:i32) => $at1;
+	join $at0;
+	join $at1;
+	call @print("Accum is: ${i32}\n":*i8, $g_accum);
+	ret 0:i32;
+}
+// routine epilogue: instructions stored here will be always executed on exit from routine.
+[{
+	call @DestroyPerson($pA);
+	call @DestroyPerson($pB);
+	join $thread;
+	mtxd $m_AsyncLoop;
+	call @arithmetics();
+}];

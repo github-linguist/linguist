@@ -1,0 +1,389 @@
+#!/usr/bin/env i4s
+
+#intuicio 4.0;
+#stack 8k;
+#memory 16k;
+#entry @Main;
+#pointersize 32;
+
+#import from [IO:print] routine print(format:*i8, ...):;
+
+routine Add():
+<i8:i8, i16:i16, i32:i32, i64:i64, u8:u8, u16:u16, u32:u32, u64:u64, f32:f32, f64:f64>
+{
+	call @print("=== ADD ===\n":*i8);
+	add void 5:i8 -3:i8 => $i8;
+	call @print("i8: ${i8}\n":*i8, $i8);
+	add void 5:i16 -3:i16 => $i16;
+	call @print("i16: ${i16}\n":*i8, $i16);
+	add void 5:i32 -3:i32 => $i32;
+	call @print("i32: ${i32}\n":*i8, $i32);
+	add void 5:i64 -3:i64 => $i64;
+	call @print("i64: ${i64}\n":*i8, $i64);
+	add void 5:u8 3:u8 => $u8;
+	call @print("u8: ${u8}\n":*i8, $u8);
+	add void 5:u16 3:u16 => $u16;
+	call @print("u16: ${u16}\n":*i8, $u16);
+	add void 5:u32 3:u32 => $u32;
+	call @print("u32: ${u32}\n":*i8, $u32);
+	add void 5:u64 3:u64 => $u64;
+	call @print("u64: ${u64}\n":*i8, $u64);
+	add void 5.0:f32 3.0:f32 => $f32;
+	call @print("f32: ${f32}\n":*i8, $f32);
+	add void 5.0:f64 3.0:f64 => $f64;
+	call @print("f64: ${f64}\n":*i8, $f64);
+};
+
+routine Sub():
+<i8:i8, i16:i16, i32:i32, i64:i64, u8:u8, u16:u16, u32:u32, u64:u64, f32:f32, f64:f64>
+{
+	call @print("=== SUB ===\n":*i8);
+	sub void 5:i8 -3:i8 => $i8;
+	call @print("i8: ${i8}\n":*i8, $i8);
+	sub void 5:i16 -3:i16 => $i16;
+	call @print("i16: ${i16}\n":*i8, $i16);
+	sub void 5:i32 -3:i32 => $i32;
+	call @print("i32: ${i32}\n":*i8, $i32);
+	sub void 5:i64 -3:i64 => $i64;
+	call @print("i64: ${i64}\n":*i8, $i64);
+	sub void 5:u8 3:u8 => $u8;
+	call @print("u8: ${u8}\n":*i8, $u8);
+	sub void 5:u16 3:u16 => $u16;
+	call @print("u16: ${u16}\n":*i8, $u16);
+	sub void 5:u32 3:u32 => $u32;
+	call @print("u32: ${u32}\n":*i8, $u32);
+	sub void 5:u64 3:u64 => $u64;
+	call @print("u64: ${u64}\n":*i8, $u64);
+	sub void 5.0:f32 3.0:f32 => $f32;
+	call @print("f32: ${f32}\n":*i8, $f32);
+	sub void 5.0:f64 3.0:f64 => $f64;
+	call @print("f64: ${f64}\n":*i8, $f64);
+};
+
+routine Mul():
+<i8:i8, i16:i16, i32:i32, i64:i64, u8:u8, u16:u16, u32:u32, u64:u64, f32:f32, f64:f64>
+{
+	call @print("=== MUL ===\n":*i8);
+	mul void 5:i8 -3:i8 => $i8;
+	call @print("i8: ${i8}\n":*i8, $i8);
+	mul void 5:i16 -3:i16 => $i16;
+	call @print("i16: ${i16}\n":*i8, $i16);
+	mul void 5:i32 -3:i32 => $i32;
+	call @print("i32: ${i32}\n":*i8, $i32);
+	mul void 5:i64 -3:i64 => $i64;
+	call @print("i64: ${i64}\n":*i8, $i64);
+	mul void 5:u8 3:u8 => $u8;
+	call @print("u8: ${u8}\n":*i8, $u8);
+	mul void 5:u16 3:u16 => $u16;
+	call @print("u16: ${u16}\n":*i8, $u16);
+	mul void 5:u32 3:u32 => $u32;
+	call @print("u32: ${u32}\n":*i8, $u32);
+	mul void 5:u64 3:u64 => $u64;
+	call @print("u64: ${u64}\n":*i8, $u64);
+	mul void 5.0:f32 3.0:f32 => $f32;
+	call @print("f32: ${f32}\n":*i8, $f32);
+	mul void 5.0:f64 3.0:f64 => $f64;
+	call @print("f64: ${f64}\n":*i8, $f64);
+};
+
+routine Div():
+<i8:i8, i16:i16, i32:i32, i64:i64, u8:u8, u16:u16, u32:u32, u64:u64, f32:f32, f64:f64>
+{
+	call @print("=== DIV ===\n":*i8);
+	div void 5:i8 -3:i8 => $i8;
+	call @print("i8: ${i8}\n":*i8, $i8);
+	div void 5:i16 -3:i16 => $i16;
+	call @print("i16: ${i16}\n":*i8, $i16);
+	div void 5:i32 -3:i32 => $i32;
+	call @print("i32: ${i32}\n":*i8, $i32);
+	div void 5:i64 -3:i64 => $i64;
+	call @print("i64: ${i64}\n":*i8, $i64);
+	div void 5:u8 3:u8 => $u8;
+	call @print("u8: ${u8}\n":*i8, $u8);
+	div void 5:u16 3:u16 => $u16;
+	call @print("u16: ${u16}\n":*i8, $u16);
+	div void 5:u32 3:u32 => $u32;
+	call @print("u32: ${u32}\n":*i8, $u32);
+	div void 5:u64 3:u64 => $u64;
+	call @print("u64: ${u64}\n":*i8, $u64);
+	div void 5.0:f32 3.0:f32 => $f32;
+	call @print("f32: ${f32}\n":*i8, $f32);
+	div void 5.0:f64 3.0:f64 => $f64;
+	call @print("f64: ${f64}\n":*i8, $f64);
+};
+
+routine And():
+<i8:i8, i16:i16, i32:i32, i64:i64, u8:u8, u16:u16, u32:u32, u64:u64, f32:f32, f64:f64>
+{
+	call @print("=== AND ===\n":*i8);
+	and void 5:i8 -3:i8 => $i8;
+	call @print("i8: ${i8}\n":*i8, $i8);
+	and void 5:i16 -3:i16 => $i16;
+	call @print("i16: ${i16}\n":*i8, $i16);
+	and void 5:i32 -3:i32 => $i32;
+	call @print("i32: ${i32}\n":*i8, $i32);
+	and void 5:i64 -3:i64 => $i64;
+	call @print("i64: ${i64}\n":*i8, $i64);
+	and void 5:u8 3:u8 => $u8;
+	call @print("u8: ${u8}\n":*i8, $u8);
+	and void 5:u16 3:u16 => $u16;
+	call @print("u16: ${u16}\n":*i8, $u16);
+	and void 5:u32 3:u32 => $u32;
+	call @print("u32: ${u32}\n":*i8, $u32);
+	and void 5:u64 3:u64 => $u64;
+	call @print("u64: ${u64}\n":*i8, $u64);
+};
+
+routine Or():
+<i8:i8, i16:i16, i32:i32, i64:i64, u8:u8, u16:u16, u32:u32, u64:u64, f32:f32, f64:f64>
+{
+	call @print("=== OR ===\n":*i8);
+	or void 5:i8 -3:i8 => $i8;
+	call @print("i8: ${i8}\n":*i8, $i8);
+	or void 5:i16 -3:i16 => $i16;
+	call @print("i16: ${i16}\n":*i8, $i16);
+	or void 5:i32 -3:i32 => $i32;
+	call @print("i32: ${i32}\n":*i8, $i32);
+	or void 5:i64 -3:i64 => $i64;
+	call @print("i64: ${i64}\n":*i8, $i64);
+	or void 5:u8 3:u8 => $u8;
+	call @print("u8: ${u8}\n":*i8, $u8);
+	or void 5:u16 3:u16 => $u16;
+	call @print("u16: ${u16}\n":*i8, $u16);
+	or void 5:u32 3:u32 => $u32;
+	call @print("u32: ${u32}\n":*i8, $u32);
+	or void 5:u64 3:u64 => $u64;
+	call @print("u64: ${u64}\n":*i8, $u64);
+};
+
+routine Xor():
+<i8:i8, i16:i16, i32:i32, i64:i64, u8:u8, u16:u16, u32:u32, u64:u64, f32:f32, f64:f64>
+{
+	call @print("=== XOR ===\n":*i8);
+	xor void 5:i8 -3:i8 => $i8;
+	call @print("i8: ${i8}\n":*i8, $i8);
+	xor void 5:i16 -3:i16 => $i16;
+	call @print("i16: ${i16}\n":*i8, $i16);
+	xor void 5:i32 -3:i32 => $i32;
+	call @print("i32: ${i32}\n":*i8, $i32);
+	xor void 5:i64 -3:i64 => $i64;
+	call @print("i64: ${i64}\n":*i8, $i64);
+	xor void 5:u8 3:u8 => $u8;
+	call @print("u8: ${u8}\n":*i8, $u8);
+	xor void 5:u16 3:u16 => $u16;
+	call @print("u16: ${u16}\n":*i8, $u16);
+	xor void 5:u32 3:u32 => $u32;
+	call @print("u32: ${u32}\n":*i8, $u32);
+	xor void 5:u64 3:u64 => $u64;
+	call @print("u64: ${u64}\n":*i8, $u64);
+};
+
+routine Lsh():
+<i8:i8, i16:i16, i32:i32, i64:i64, u8:u8, u16:u16, u32:u32, u64:u64, f32:f32, f64:f64>
+{
+	call @print("=== LSH ===\n":*i8);
+	lsh void 5:i8 -3:i8 => $i8;
+	call @print("i8: ${i8}\n":*i8, $i8);
+	lsh void 5:i16 -3:i16 => $i16;
+	call @print("i16: ${i16}\n":*i8, $i16);
+	lsh void 5:i32 -3:i32 => $i32;
+	call @print("i32: ${i32}\n":*i8, $i32);
+	lsh void 5:i64 -3:i64 => $i64;
+	call @print("i64: ${i64}\n":*i8, $i64);
+	lsh void 5:u8 3:u8 => $u8;
+	call @print("u8: ${u8}\n":*i8, $u8);
+	lsh void 5:u16 3:u16 => $u16;
+	call @print("u16: ${u16}\n":*i8, $u16);
+	lsh void 5:u32 3:u32 => $u32;
+	call @print("u32: ${u32}\n":*i8, $u32);
+	lsh void 5:u64 3:u64 => $u64;
+	call @print("u64: ${u64}\n":*i8, $u64);
+};
+
+routine Rsh():
+<i8:i8, i16:i16, i32:i32, i64:i64, u8:u8, u16:u16, u32:u32, u64:u64, f32:f32, f64:f64>
+{
+	call @print("=== RSH ===\n":*i8);
+	rsh void 5:i8 -3:i8 => $i8;
+	call @print("i8: ${i8}\n":*i8, $i8);
+	rsh void 5:i16 -3:i16 => $i16;
+	call @print("i16: ${i16}\n":*i8, $i16);
+	rsh void 5:i32 -3:i32 => $i32;
+	call @print("i32: ${i32}\n":*i8, $i32);
+	rsh void 5:i64 -3:i64 => $i64;
+	call @print("i64: ${i64}\n":*i8, $i64);
+	rsh void 5:u8 3:u8 => $u8;
+	call @print("u8: ${u8}\n":*i8, $u8);
+	rsh void 5:u16 3:u16 => $u16;
+	call @print("u16: ${u16}\n":*i8, $u16);
+	rsh void 5:u32 3:u32 => $u32;
+	call @print("u32: ${u32}\n":*i8, $u32);
+	rsh void 5:u64 3:u64 => $u64;
+	call @print("u64: ${u64}\n":*i8, $u64);
+};
+
+routine Eq():
+<i8:i8, i16:i16, i32:i32, i64:i64, u8:u8, u16:u16, u32:u32, u64:u64, f32:f32, f64:f64>
+{
+	call @print("=== EQ ===\n":*i8);
+	call @print("--- false ---\n":*i8);
+	eq void 5:i8 -3:i8 => $i8;
+	call @print("i8: ${i8}\n":*i8, $i8);
+	eq void 5:i16 -3:i16 => $i16;
+	call @print("i16: ${i16}\n":*i8, $i16);
+	eq void 5:i32 -3:i32 => $i32;
+	call @print("i32: ${i32}\n":*i8, $i32);
+	eq void 5:i64 -3:i64 => $i64;
+	call @print("i64: ${i64}\n":*i8, $i64);
+	eq void 5:u8 3:u8 => $u8;
+	call @print("u8: ${u8}\n":*i8, $u8);
+	eq void 5:u16 3:u16 => $u16;
+	call @print("u16: ${u16}\n":*i8, $u16);
+	eq void 5:u32 3:u32 => $u32;
+	call @print("u32: ${u32}\n":*i8, $u32);
+	eq void 5:u64 3:u64 => $u64;
+	call @print("u64: ${u64}\n":*i8, $u64);
+	eq void 5.0:f32 3.0:f32 => $f32;
+	call @print("f32: ${f32}\n":*i8, $f32);
+	eq void 5.0:f64 3.0:f64 => $f64;
+	call @print("f64: ${f64}\n":*i8, $f64);
+	call @print("--- true ---\n":*i8);
+	eq void 5:i8 5:i8 => $i8;
+	call @print("i8: ${i8}\n":*i8, $i8);
+	eq void 5:i16 5:i16 => $i16;
+	call @print("i16: ${i16}\n":*i8, $i16);
+	eq void 5:i32 5:i32 => $i32;
+	call @print("i32: ${i32}\n":*i8, $i32);
+	eq void 5:i64 5:i64 => $i64;
+	call @print("i64: ${i64}\n":*i8, $i64);
+	eq void 5:u8 5:u8 => $u8;
+	call @print("u8: ${u8}\n":*i8, $u8);
+	eq void 5:u16 5:u16 => $u16;
+	call @print("u16: ${u16}\n":*i8, $u16);
+	eq void 5:u32 5:u32 => $u32;
+	call @print("u32: ${u32}\n":*i8, $u32);
+	eq void 5:u64 5:u64 => $u64;
+	call @print("u64: ${u64}\n":*i8, $u64);
+	eq void 5.0:f32 5.0:f32 => $f32;
+	call @print("f32: ${f32}\n":*i8, $f32);
+	eq void 5.0:f64 5.0:f64 => $f64;
+	call @print("f64: ${f64}\n":*i8, $f64);
+};
+
+routine Ls():
+<i8:i8, i16:i16, i32:i32, i64:i64, u8:u8, u16:u16, u32:u32, u64:u64, f32:f32, f64:f64>
+{
+	call @print("=== LS ===\n":*i8);
+	call @print("--- false ---\n":*i8);
+	ls void 5:i8 -3:i8 => $i8;
+	call @print("i8: ${i8}\n":*i8, $i8);
+	ls void 5:i16 -3:i16 => $i16;
+	call @print("i16: ${i16}\n":*i8, $i16);
+	ls void 5:i32 -3:i32 => $i32;
+	call @print("i32: ${i32}\n":*i8, $i32);
+	ls void 5:i64 -3:i64 => $i64;
+	call @print("i64: ${i64}\n":*i8, $i64);
+	ls void 5:u8 3:u8 => $u8;
+	call @print("u8: ${u8}\n":*i8, $u8);
+	ls void 5:u16 3:u16 => $u16;
+	call @print("u16: ${u16}\n":*i8, $u16);
+	ls void 5:u32 3:u32 => $u32;
+	call @print("u32: ${u32}\n":*i8, $u32);
+	ls void 5:u64 3:u64 => $u64;
+	call @print("u64: ${u64}\n":*i8, $u64);
+	ls void 5.0:f32 -3.0:f32 => $f32;
+	call @print("f32: ${f32}\n":*i8, $f32);
+	ls void 5.0:f64 3.0:f64 => $f64;
+	call @print("f64: ${f64}\n":*i8, $f64);
+	call @print("--- true ---\n":*i8);
+	ls void -5:i8 3:i8 => $i8;
+	call @print("i8: ${i8}\n":*i8, $i8);
+	ls void -5:i16 3:i16 => $i16;
+	call @print("i16: ${i16}\n":*i8, $i16);
+	ls void -5:i32 3:i32 => $i32;
+	call @print("i32: ${i32}\n":*i8, $i32);
+	ls void -5:i64 3:i64 => $i64;
+	call @print("i64: ${i64}\n":*i8, $i64);
+	ls void 3:u8 5:u8 => $u8;
+	call @print("u8: ${u8}\n":*i8, $u8);
+	ls void 3:u16 5:u16 => $u16;
+	call @print("u16: ${u16}\n":*i8, $u16);
+	ls void 3:u32 5:u32 => $u32;
+	call @print("u32: ${u32}\n":*i8, $u32);
+	ls void 3:u64 5:u64 => $u64;
+	call @print("u64: ${u64}\n":*i8, $u64);
+	ls void -5.0:f32 3.0:f32 => $f32;
+	call @print("f32: ${f32}\n":*i8, $f32);
+	ls void -5.0:f64 3.0:f64 => $f64;
+	call @print("f64: ${f64}\n":*i8, $f64);
+};
+
+routine Gt():
+<i8:i8, i16:i16, i32:i32, i64:i64, u8:u8, u16:u16, u32:u32, u64:u64, f32:f32, f64:f64>
+{
+	call @print("=== GT ===\n":*i8);
+	call @print("--- true ---\n":*i8);
+	ls void -5:i8 3:i8 => $i8;
+	call @print("i8: ${i8}\n":*i8, $i8);
+	ls void -5:i16 3:i16 => $i16;
+	call @print("i16: ${i16}\n":*i8, $i16);
+	ls void -5:i32 3:i32 => $i32;
+	call @print("i32: ${i32}\n":*i8, $i32);
+	ls void -5:i64 3:i64 => $i64;
+	call @print("i64: ${i64}\n":*i8, $i64);
+	ls void 3:u8 5:u8 => $u8;
+	call @print("u8: ${u8}\n":*i8, $u8);
+	ls void 3:u16 5:u16 => $u16;
+	call @print("u16: ${u16}\n":*i8, $u16);
+	ls void 3:u32 5:u32 => $u32;
+	call @print("u32: ${u32}\n":*i8, $u32);
+	ls void 3:u64 5:u64 => $u64;
+	call @print("u64: ${u64}\n":*i8, $u64);
+	ls void -5.0:f32 3.0:f32 => $f32;
+	call @print("f32: ${f32}\n":*i8, $f32);
+	ls void -5.0:f64 3.0:f64 => $f64;
+	call @print("f64: ${f64}\n":*i8, $f64);
+	call @print("--- false ---\n":*i8);
+	ls void 5:i8 -3:i8 => $i8;
+	call @print("i8: ${i8}\n":*i8, $i8);
+	ls void 5:i16 -3:i16 => $i16;
+	call @print("i16: ${i16}\n":*i8, $i16);
+	ls void 5:i32 -3:i32 => $i32;
+	call @print("i32: ${i32}\n":*i8, $i32);
+	ls void 5:i64 -3:i64 => $i64;
+	call @print("i64: ${i64}\n":*i8, $i64);
+	ls void 5:u8 3:u8 => $u8;
+	call @print("u8: ${u8}\n":*i8, $u8);
+	ls void 5:u16 3:u16 => $u16;
+	call @print("u16: ${u16}\n":*i8, $u16);
+	ls void 5:u32 3:u32 => $u32;
+	call @print("u32: ${u32}\n":*i8, $u32);
+	ls void 5:u64 3:u64 => $u64;
+	call @print("u64: ${u64}\n":*i8, $u64);
+	ls void 5.0:f32 -3.0:f32 => $f32;
+	call @print("f32: ${f32}\n":*i8, $f32);
+	ls void 5.0:f64 3.0:f64 => $f64;
+	call @print("f64: ${f64}\n":*i8, $f64);
+};
+
+routine arithmetics():
+{
+	call @Add();
+	call @Sub();
+	call @Mul();
+	call @Div();
+	call @And();
+	call @Or();
+	call @Xor();
+	call @Lsh();
+	call @Rsh();
+	call @Eq();
+	call @Ls();
+	call @Gt();
+};
+
+routine Main():i32
+{
+	call @arithmetics();
+	ret 0:i32;
+};
