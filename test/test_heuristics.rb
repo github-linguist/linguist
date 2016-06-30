@@ -147,7 +147,7 @@ class TestHeuristcs < Minitest::Test
     # Only calling out '.h' filenames as these are the ones causing issues
     assert_heuristics({
       "Objective-C" => all_fixtures("Objective-C", "*.h"),
-      "C++" => ["C++/scanner.h", "C++/v8.h", "C++/gdsdbreader.h"],
+      "C++" => ["C++/scanner.h", "C++/protocol-buffer.pb.h", "C++/v8.h", "C++/gdsdbreader.h"],
       "C" => nil
     })
   end
