@@ -1,0 +1,6 @@
+var powerController = [SBPowerDownController sharedInstance]
+var powerDownView = powerController->_powerDownView
+var actionSlider = powerDownView->_actionSlider
+var knobView = actionSlider->_knobView
+var subviewCache = knobView->_subviewCache
+var imageView = [subviewCache objectAtIndex: 0]
