@@ -1,4 +1,3 @@
-#! /usr/bin/env factor
 USING: kernel calendar calendar.format io io.encodings.utf8 io.files
 sequences command-line namespaces ;
 
