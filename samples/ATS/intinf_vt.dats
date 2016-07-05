@@ -1,5 +1,3 @@
-// Source: https://github.com/githwxi/ATS-Postiats-contrib/blob/04a984d9c08c1831f7dda8a05ce356db01f81850/contrib/libats-/hwxi/intinf/DATS/intinf_vt.dats
-
 (***********************************************************************)
 (*                                                                     *)
 (*                         ATS/contrib/atshwxi                         *)
@@ -27,6 +25,8 @@
 ** FROM OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 ** IN THE SOFTWARE.
 *)
+
+// Source: https://github.com/githwxi/ATS-Postiats-contrib/blob/04a984d9c08c1831f7dda8a05ce356db01f81850/contrib/libats-/hwxi/intinf/DATS/intinf_vt.dats
 
 (* ****** ****** *)
 //
