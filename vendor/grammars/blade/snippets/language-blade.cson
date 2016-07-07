@@ -1,0 +1,158 @@
+'.text.html.php.blade':
+  '{{-- comment --}}':
+    'prefix': 'com'
+    'body': '{{-- $1 --}}$0'
+  '{{ $message }}':
+    'prefix': 'echo'
+    'body': '{{ ${1:$var} }}$0'
+  '{{{ $message }}}':
+    'prefix': 'echoh'
+    'body': '{{{ ${1:$var} }}}$0'
+  '{!! $message !!}':
+    'prefix': 'raw'
+    'body': '{!! ${1:$var} !!}$0'
+  '@else':
+    'prefix': 'else'
+    'body': '@else'
+  '@append':
+    'prefix': 'append'
+    'body': '@append'
+  '@overwrite':
+    'prefix': 'overwrite'
+    'body': '@overwrite'
+  '@show':
+    'prefix': 'show'
+    'body': '@show'
+  '@stop':
+    'prefix': 'stop'
+    'body': '@stop'
+  '@parent':
+    'prefix': 'parent'
+    'body': '@parent'
+  '@elseif(…)':
+    'prefix': 'elseif'
+    'body': '@elseif(${1:$condition})$0'
+  '@foreach(…) … @endforeach':
+    'prefix': 'foreach'
+    'body': '@foreach($${1:variable} as $${2:key}${3: => $${4:value}})\n\t${0}\n@endforeach'
+  '@if(…) … @else … @endif':
+    'prefix': 'ifelse'
+    'body': '@if(${1:$condition})\n\t$2\n@else\n\t$0\n@endif'
+  '@if(…) … @endif':
+    'prefix': 'if'
+    'body': '@if(${1:$condition})\n\t$0\n@endif'
+  '@choice(\'language.line\', 1)':
+    'prefix': 'choice'
+    'body': '@choice(\'${1:category.line}\', ${2:1})$0'
+  '@each(\'view\', $data, \'iterator\', \'empty\')':
+    'prefix': 'each'
+    'body': '@each(\'${1:view}\', ${2:$data}, \'${3:iterator}\', \'${4:empty}\')$0'
+  '@extends(\'view\')':
+    'prefix': 'extends'
+    'body': '@extends(\'${1:view}\')$0'
+  '@for …':
+    'prefix': 'for'
+    'body': '@for($${1:i}=${2:0}; $${1:i} < $3; $${1:i}++)\n\t${0}\n@endfor'
+  '@forelse(…) … @empty … @endforelse':
+    'prefix': 'forelse'
+    'body': '@forelse($${1:variable} as $${2:key}${3: => $${4:value}})\n\t${0}\n@empty\n\t\n@endforelse'
+  '@include(\'view\')':
+    'prefix': 'include'
+    'body': '@include(\'${1:view}\')$0'
+  '@lang(\'language.line\')':
+    'prefix': 'lang'
+    'body': '@lang(\'${1:category.line}\')$0'
+  '@push(\'name\') … @endpush':
+    'prefix': 'push'
+    'body': '@push(\'${1:name}\')\n\t$0\n@endpush'
+  '@section(\'name\') … @endsection':
+    'prefix': 'section'
+    'body': '@section(\'${1:name}\')\n\t$0\n@endsection'
+  '@stack(\'name\')':
+    'prefix': 'stack'
+    'body': '@stack(\'${1:name}\')'
+  '@unless(…) … @endunless':
+    'prefix': 'unless'
+    'body': '@unless(${1:$condition})\n\t$0\n@endunless'
+  '@while …':
+    'prefix': 'while'
+    'body': '@while(${1:$condition})\n\t$0\n@endwhile'
+  '@yield(\'section\')':
+    'prefix': 'yield'
+    'body': '@yield(\'${1:section}\')$0'
+  # The following snippets are identical to the ones above with the exception that the prefix includes the @-symbol.
+  # This solves the edge case where for instance typing @if<TAB> will result in expanding to @@if... but should
+  # resolve to @if... instead.
+  #
+  # In order to not overwrite the completions above, all of them have a space appended to the key of the completion.
+  #
+  # We shouldn't be doing this once https://github.com/atom/snippets/issues/107 is solved.
+  '@else ':
+    'prefix': '@else'
+    'body': '@else'
+  '@append ':
+    'prefix': '@append'
+    'body': '@append'
+  '@overwrite ':
+    'prefix': '@overwrite'
+    'body': '@overwrite'
+  '@show ':
+    'prefix': '@show'
+    'body': '@show'
+  '@stop ':
+    'prefix': '@stop'
+    'body': '@stop'
+  '@parent ':
+    'prefix': '@parent'
+    'body': '@parent'
+  '@elseif(…) ':
+    'prefix': '@elseif'
+    'body': '@elseif(${1:$condition})$0'
+  '@foreach(…) … @endforeach ':
+    'prefix': '@foreach'
+    'body': '@foreach($${1:variable} as $${2:key}${3: => $${4:value}})\n\t${0}\n@endforeach'
+  '@if(…) … @else … @endif ':
+    'prefix': '@ifelse'
+    'body': '@if(${1:$condition})\n\t$2\n@else\n\t$0\n@endif'
+  '@if(…) … @endif ':
+    'prefix': '@if'
+    'body': '@if(${1:$condition})\n\t$0\n@endif'
+  '@choice(\'language.line\', 1) ':
+    'prefix': '@choice'
+    'body': '@choice(\'${1:category.line}\', ${2:1})$0'
+  '@each(\'view\', $data, \'iterator\', \'empty\') ':
+    'prefix': '@each'
+    'body': '@each(\'${1:view}\', ${2:$data}, \'${3:iterator}\', \'${4:empty}\')$0'
+  '@extends(\'view\') ':
+    'prefix': '@extends'
+    'body': '@extends(\'${1:view}\')$0'
+  '@for … ':
+    'prefix': '@for'
+    'body': '@for($${1:i}=${2:0}; $${1:i} < $3; $${1:i}++)\n\t${0}\n@endfor'
+  '@forelse(…) … @empty … @endforelse ':
+    'prefix': '@forelse'
+    'body': '@forelse($${1:variable} as $${2:key}${3: => $${4:value}})\n\t${0}\n@empty\n\t\n@endforelse'
+  '@include(\'view\') ':
+    'prefix': '@include'
+    'body': '@include(\'${1:view}\')$0'
+  '@lang(\'language.line\') ':
+    'prefix': '@lang'
+    'body': '@lang(\'${1:category.line}\')$0'
+  '@push(\'name\') … @endpush ':
+    'prefix': '@push'
+    'body': '@push(\'${1:name}\')\n\t$0\n@endpush'
+  '@section(\'name\') … @endsection ':
+    'prefix': '@section'
+    'body': '@section(\'${1:name}\')\n\t$0\n@endsection'
+  '@stack(\'name\') ':
+    'prefix': '@stack'
+    'body': '@stack(\'${1:name}\')'
+  '@unless(…) … @endunless ':
+    'prefix': '@unless'
+    'body': '@unless(${1:$condition})\n\t$0\n@endunless'
+  '@while … ':
+    'prefix': '@while'
+    'body': '@while(${1:$condition})\n\t$0\n@endwhile'
+  '@yield(\'section\') ':
+    'prefix': '@yield'
+    'body': '@yield(\'${1:section}\')$0'
