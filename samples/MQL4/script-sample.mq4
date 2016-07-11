@@ -1,5 +1,5 @@
 //+------------------------------------------------------------------+
-//|                                             indicator-sample.mq4 |
+//|                                                script-sample.mq4 |
 //|                                   Copyright 2016, Andrey Osorgin |
 //+------------------------------------------------------------------+
 //|                     The MIT License (MIT)                        |
@@ -30,32 +30,22 @@
 //+------------------------------------------------------------------+
 #property version   "1.00"
 #property strict
+#property script_show_inputs
 
-#property indicator_chart_window
-#property indicator_plots 0
+input int StopLoss=100; //Stop Loss
+input int TakeProfit=100; //Take Profit
 //+------------------------------------------------------------------+
-//| Custom indicator initialization function                         |
+//| Script program start function                                    |
 //+------------------------------------------------------------------+
-void OnInit(void)
+void OnStart()
   {
- //---
-   }
-//+------------------------------------------------------------------+
-//| Bears Power                                                      |
-//+------------------------------------------------------------------+
-int OnCalculate(const int rates_total,
-                const int prev_calculated,
-                const datetime &time[],
-                const double &open[],
-                const double &high[],
-                const double &low[],
-                const double &close[],
-                const long &tick_volume[],
-                const long &volume[],
-                const int &spread[])
-  {
-  Print("The number of bars on the current chart: ",iBars(Symbol(),Period()));
+   double minstoplevel=MarketInfo(Symbol(),MODE_STOPLEVEL);
+   Print("Minimum Stop Level=",minstoplevel," points");
 //---
-   return(rates_total);
+   double sl=NormalizeDouble(Bid-StopLoss*Point,Digits);
+   double tp=NormalizeDouble(Ask+TakeProfit*Point,Digits);
+//---
+   int result=OrderSend(Symbol(),OP_BUY,0.01,Ask,1,sl,tp,"Test",0,0,clrNONE);
+   Print("Success? ",result);
   }
 //+------------------------------------------------------------------+
