@@ -1,5 +1,5 @@
 //+------------------------------------------------------------------+
-//|                                             indicator-sample.mq5 |
+//|                                                script-sample.mq5 |
 //|                                   Copyright 2016, Andrey Osorgin |
 //+------------------------------------------------------------------+
 //|                     The MIT License (MIT)                        |
@@ -29,36 +29,28 @@
 //| https://opensource.org/licenses/MIT                              |
 //+------------------------------------------------------------------+
 #property version   "1.00"
+#property script_show_inputs
 
-#property indicator_chart_window
-#property indicator_plots   0
+#include <Trade\Trade.mqh>
+
+input int StopLoss=100; // Stop Loss
+input int TakeProfit=100; // Take Profit
 //+------------------------------------------------------------------+
-//| Custom indicator initialization function                         |
+//| Script program start function                                    |
 //+------------------------------------------------------------------+
-int OnInit()
+void OnStart()
   {
+   CTrade trade;
 //---
-   return(INIT_SUCCEEDED);
-  }
-//+------------------------------------------------------------------+
-//| Custom indicator iteration function                              |
-//+------------------------------------------------------------------+
-int OnCalculate(const int rates_total,
-                const int prev_calculated,
-                const datetime &time[],
-                const double &open[],
-                const double &high[],
-                const double &low[],
-                const double &close[],
-                const long &tick_volume[],
-                const long &volume[],
-                const int &spread[])
-  {
+   long stoplevel=SymbolInfoInteger(Symbol(),SYMBOL_TRADE_STOPS_LEVEL);
+   Print("Minimum stop level is: ",stoplevel);
+   double ask=SymbolInfoDouble(Symbol(),SYMBOL_ASK);
+   double bid=SymbolInfoDouble(Symbol(),SYMBOL_BID);
+   double sl = NormalizeDouble(bid - StopLoss*Point(),Digits());
+   double tp = NormalizeDouble(ask + TakeProfit*Point(),Digits());
 //---
-   int bars=Bars(Symbol(),0);
-   Print("Bars = ",bars,", rates_total = ",rates_total,",  prev_calculated = ",prev_calculated);
-   Print("time[0] = ",time[0]," time[rates_total-1] = ",time[rates_total-1]);
-//--- return value of prev_calculated for next call
-   return(rates_total);
+   bool result=trade.Buy(0.01,Symbol(),ask,sl,tp,"test");
+//---
+   Print("Success? ",result);
   }
 //+------------------------------------------------------------------+
