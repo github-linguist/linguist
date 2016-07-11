@@ -15,5 +15,7 @@
         <li>{{ $bar }}</li>
         @endforeach
     </ul>
+
+    {!! $raw_content !!}
 </body>
 </html>
