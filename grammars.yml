@@ -200,10 +200,6 @@ vendor/grammars/boo/:
 - source.boo
 vendor/grammars/bro-sublime:
 - source.bro
-vendor/grammars/c.tmbundle:
-- source.c
-- source.c++
-- source.c.platform
 vendor/grammars/capnproto.tmbundle:
 - source.capnp
 vendor/grammars/carto-atom:
@@ -223,8 +219,6 @@ vendor/grammars/cpp-qt.tmbundle:
 - source.qmake
 vendor/grammars/creole/:
 - text.html.creole
-vendor/grammars/css.tmbundle:
-- source.css
 vendor/grammars/cucumber-tmbundle:
 - source.ruby.rspec.cucumber.steps
 - text.gherkin.feature
@@ -295,8 +289,6 @@ vendor/grammars/haxe-sublime-bundle:
 - source.hss.1
 - source.hxml
 - source.nmml
-vendor/grammars/html.tmbundle:
-- text.html.basic
 vendor/grammars/idl.tmbundle:
 - source.idl
 - source.idl-dlm
@@ -314,17 +306,10 @@ vendor/grammars/jade-tmbundle:
 - text.jade
 vendor/grammars/jasmin-sublime:
 - source.jasmin
-vendor/grammars/java.tmbundle:
-- source.java
-- source.java-properties
-- text.html.jsp
-- text.junit-test-report
 vendor/grammars/javascript-objective-j.tmbundle:
 - source.js.objj
 vendor/grammars/jflex.tmbundle:
 - source.jflex
-vendor/grammars/json.tmbundle:
-- source.json
 vendor/grammars/kotlin-sublime-package:
 - source.Kotlin
 vendor/grammars/language-apl:
@@ -332,6 +317,9 @@ vendor/grammars/language-apl:
 vendor/grammars/language-babel/:
 - source.js.jsx
 - source.regexp.babel
+vendor/grammars/language-c:
+- source.c
+- source.cpp
 vendor/grammars/language-click/:
 - source.click
 vendor/grammars/language-clojure:
@@ -351,27 +339,49 @@ vendor/grammars/language-csound:
 - source.csound
 - source.csound-document
 - source.csound-score
+vendor/grammars/language-css:
+- source.css
 vendor/grammars/language-gfm:
 - source.gfm
 vendor/grammars/language-graphql:
 - source.graphql
+vendor/grammars/language-html:
+- text.html.basic
 vendor/grammars/language-hy:
 - source.hy
 vendor/grammars/language-inform7:
 - source.inform7
+vendor/grammars/language-java:
+- source.java
+- source.java-properties
+- text.html.jsp
+- text.junit-test-report
 vendor/grammars/language-javascript:
 - source.js
 - source.js.regexp
 - source.js.regexp.replacement
+vendor/grammars/language-json:
+- source.json
 vendor/grammars/language-jsoniq/:
 - source.jq
 - source.xq
 vendor/grammars/language-less/:
 - source.css.less
+vendor/grammars/language-make:
+- source.makefile
 vendor/grammars/language-maxscript:
 - source.maxscript
 vendor/grammars/language-ncl:
 - source.ncl
+vendor/grammars/language-objective-c:
+- source.objc
+- source.objcpp
+- source.strings
+vendor/grammars/language-perl:
+- source.perl
+- source.perl6
+vendor/grammars/language-php:
+- text.html.php
 vendor/grammars/language-povray:
 - source.pov-ray sdl
 vendor/grammars/language-python:
@@ -384,10 +394,14 @@ vendor/grammars/language-restructuredtext:
 vendor/grammars/language-shellscript:
 - source.shell
 - text.shell-session
+vendor/grammars/language-sql:
+- source.sql
 vendor/grammars/language-supercollider:
 - source.supercollider
 vendor/grammars/language-toc-wow:
 - source.toc
+vendor/grammars/language-toml:
+- source.toml
 vendor/grammars/language-turing:
 - source.turing
 vendor/grammars/language-wavefront:
@@ -395,6 +409,9 @@ vendor/grammars/language-wavefront:
 - source.wavefront.obj
 vendor/grammars/language-xbase:
 - source.harbour
+vendor/grammars/language-xml:
+- text.xml
+- text.xml.xsl
 vendor/grammars/language-yaml:
 - source.yaml
 vendor/grammars/language-yang/:
@@ -420,8 +437,6 @@ vendor/grammars/logtalk.tmbundle:
 - source.logtalk
 vendor/grammars/lua.tmbundle:
 - source.lua
-vendor/grammars/make.tmbundle:
-- source.makefile
 vendor/grammars/mako-tmbundle:
 - text.html.mako
 vendor/grammars/mathematica-tmbundle:
@@ -449,11 +464,6 @@ vendor/grammars/nix:
 - source.nix
 vendor/grammars/nu.tmbundle:
 - source.nu
-vendor/grammars/objective-c.tmbundle:
-- source.objc
-- source.objc++
-- source.objc.platform
-- source.strings
 vendor/grammars/ocaml.tmbundle:
 - source.camlp4.ocaml
 - source.ocaml
@@ -469,17 +479,12 @@ vendor/grammars/pascal.tmbundle:
 - source.pascal
 vendor/grammars/pawn-sublime-language/:
 - source.pawn
-vendor/grammars/perl.tmbundle/:
-- source.perl
-- source.perl.6
 vendor/grammars/perl6fe:
 - source.meta-info
 - source.perl6fe
 - source.regexp.perl6fe
 vendor/grammars/php-smarty.tmbundle:
 - text.html.smarty
-vendor/grammars/php.tmbundle:
-- text.html.php
 vendor/grammars/pig-latin/:
 - source.pig_latin
 vendor/grammars/pike-textmate:
@@ -523,8 +528,6 @@ vendor/grammars/smalltalk-tmbundle:
 - source.smalltalk
 vendor/grammars/sourcepawn/:
 - source.sp
-vendor/grammars/sql.tmbundle:
-- source.sql
 vendor/grammars/st2-zonefile:
 - text.zone_file
 vendor/grammars/standard-ml.tmbundle:
@@ -601,8 +604,6 @@ vendor/grammars/tcl.tmbundle:
 - text.html.tcl
 vendor/grammars/thrift.tmbundle:
 - source.thrift
-vendor/grammars/toml.tmbundle:
-- source.toml
 vendor/grammars/turtle.tmbundle:
 - source.sparql
 - source.turtle
@@ -612,8 +613,5 @@ vendor/grammars/vue-syntax-highlight:
 - text.html.vue
 vendor/grammars/xc.tmbundle/:
 - source.xc
-vendor/grammars/xml.tmbundle:
-- text.xml
-- text.xml.xsl
 vendor/grammars/zephir-sublime:
 - source.php.zephir
