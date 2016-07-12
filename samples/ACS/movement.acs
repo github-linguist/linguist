@@ -1,0 +1,75 @@
+#library "movement"
+#include "zcommon.acs"
+
+int leanleft = 0;
+int leanright = 0;
+int x;
+int y;
+int z;
+int PlayerInput;
+
+Script "LeanLeft" (void)
+{
+	if (!leanleft && !leanright) {
+		x = GetActorX(0);
+		y = GetActorY(0);
+		z = GetActorZ(0);
+		int angle = GetActorAngle(0);
+		ChangeActorRoll(0, 0.99, TRUE);
+		delay(1);
+		SetActorPosition(0, x + cos (angle + 0.25) * 24, y + sin (angle + 0.25) * 24, z, 0);
+		ChangeActorRoll(0, 0.97, TRUE);
+		SetPlayerProperty(0, 1, PROP_FROZEN);
+		SetPlayerProperty(0, 1, PROP_FLY);
+		leanleft = 1;
+		leanright = 0;
+	}
+	delay(1);
+}
+
+Script "LeanRight" (void)
+{
+	if (!leanleft && !leanright) {
+		x = GetActorX(0);
+		y = GetActorY(0);
+		z = GetActorZ(0);
+		int angle = GetActorAngle(0);
+		ChangeActorRoll(0, 0.01, TRUE);
+		delay(1);
+		SetActorPosition(0, x + cos (angle + 0.75) * 24, y + sin (angle + 0.75) * 24, z, 0);
+		ChangeActorRoll(0, 0.03, TRUE);
+		SetPlayerProperty(0, 1, PROP_FROZEN);
+		SetPlayerProperty(0, 1, PROP_FLY);
+		leanright = 1;
+		leanleft = 0;
+	}
+	delay(1);
+}
+
+Script "UnLean" (void)
+{
+	SetPlayerProperty(0, 0, PROP_FROZEN);
+	SetPlayerProperty(0, 0, PROP_FLY);
+	ChangeActorRoll(0, 1.0, TRUE);
+	SetActorPosition(0, x, y, z, 0);
+	leanleft = 0;
+	leanright = 0;
+}
+
+Script "SetPlayerSpeed" ENTER
+{
+	while(1) {
+		PlayerInput = GetPlayerInput(-1, INPUT_BUTTONS);
+		if ((PlayerInput & BT_SPEED) && (GetPlayerInput(-1, MODINPUT_FORWARDMOVE) > 0) && !(PlayerInput & BT_CROUCH)) {
+			GiveInventory("IsSprinting", 1);
+			SetActorProperty(0, APROP_SPEED, 1.8);
+		} else if (CheckInventory("Weapon_Zoomed")) {
+			TakeInventory("IsSprinting", 1);
+			SetActorProperty(0, APROP_SPEED, 0.5);
+		} else {
+			TakeInventory("IsSprinting", 1);
+			SetActorProperty(0, APROP_SPEED, 1.0);
+		}
+		delay(2);
+	}
+}
