@@ -41,7 +41,7 @@ void OnInit(void)
  //---
    }
 //+------------------------------------------------------------------+
-//| Bears Power                                                      |
+//| Custom indicator iteration function                              |
 //+------------------------------------------------------------------+
 int OnCalculate(const int rates_total,
                 const int prev_calculated,
