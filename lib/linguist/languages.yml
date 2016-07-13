@@ -339,6 +339,15 @@ BitBake:
   - .bb
   ace_mode: text
 
+Blade:
+  type: markup
+  group: HTML
+  extensions:
+    - .blade
+    - .blade.php
+  tm_scope: text.html.php.blade
+  ace_mode: text
+
 BlitzBasic:
   type: programming
   aliases:
