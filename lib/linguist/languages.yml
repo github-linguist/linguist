@@ -188,6 +188,15 @@ Apex:
   tm_scope: source.java
   ace_mode: java
 
+Apollo Guidance Computer:
+  type: programming
+  color: "#0B3D91"
+  group: Assembly
+  extensions:
+  - .agc
+  tm_scope: source.agc
+  ace_mode: assembly_x86
+
 AppleScript:
   type: programming
   aliases:
@@ -328,6 +337,15 @@ BitBake:
   tm_scope: none
   extensions:
   - .bb
+  ace_mode: text
+
+Blade:
+  type: markup
+  group: HTML
+  extensions:
+    - .blade
+    - .blade.php
+  tm_scope: text.html.php.blade
   ace_mode: text
 
 BlitzBasic:
@@ -1182,6 +1200,13 @@ GAS:
   tm_scope: source.assembly
   ace_mode: assembly_x86
 
+GCC Machine Description:
+  type: programming
+  extensions:
+  - .md
+  tm_scope: source.lisp
+  ace_mode: lisp
+
 GDScript:
   type: programming
   extensions:
@@ -1340,7 +1365,6 @@ GraphQL:
   type: data
   extensions:
     - .graphql
-  color: "#E535AB"
   tm_scope: source.graphql
   ace_mode: text
 
@@ -2207,7 +2231,6 @@ Markdown:
   - .mkdown
   - .ron
   tm_scope: source.gfm
-  color: "#083FA1"
 
 Mask:
   type: markup
@@ -3087,7 +3110,6 @@ RDoc:
   extensions:
   - .rdoc
   tm_scope: text.rdoc
-  color: "#8E84BF"
 
 REALbasic:
   type: programming
@@ -3978,7 +4000,6 @@ WebIDL:
 
 World of Warcraft Addon Data:
   type: data
-  color: "#e0b330"
   extensions:
   - .toc
   tm_scope: source.toc
@@ -4288,7 +4309,6 @@ reStructuredText:
   - .rest.txt
   - .rst.txt
   ace_mode: text
-  color: "#B3BCBC"
 
 wisp:
   type: programming

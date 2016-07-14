@@ -239,6 +239,14 @@ module Linguist
       end
     end
 
+    disambiguate ".md" do |data|
+      if /^[-a-z0-9=#!\*\[|]/i.match(data)
+        Language["Markdown"]
+      elsif /^(;;|\(define_)/.match(data)
+        Language["GCC machine description"]
+      end
+    end
+
     disambiguate ".ml" do |data|
       if /(^\s*module)|let rec |match\s+(\S+\s)+with/.match(data)
         Language["OCaml"]
