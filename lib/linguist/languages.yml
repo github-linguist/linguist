@@ -75,6 +75,10 @@ APL:
   extensions:
   - .apl
   - .dyalog
+  interpreters:
+  - apl
+  - aplx
+  - dyalog
   tm_scope: source.apl
   ace_mode: text
 
@@ -147,6 +151,17 @@ Alloy:
   - .als
   ace_mode: text
 
+Alpine Abuild:
+  type: programming
+  group: Shell
+  aliases:
+  - abuild
+  - apkbuild
+  filenames:
+  - APKBUILD
+  tm_scope: source.shell
+  ace_mode: sh
+
 Ant Build System:
   type: data
   tm_scope: text.xml.ant
@@ -172,6 +187,15 @@ Apex:
   - .cls
   tm_scope: source.java
   ace_mode: java
+
+Apollo Guidance Computer:
+  type: programming
+  color: "#0B3D91"
+  group: Assembly
+  extensions:
+  - .agc
+  tm_scope: source.agc
+  ace_mode: assembly_x86
 
 AppleScript:
   type: programming
@@ -260,7 +284,7 @@ AutoIt:
   - AutoItScript
   extensions:
   - .au3
-  tm_scope: none
+  tm_scope: source.autoit
   ace_mode: autohotkey
 
 Awk:
@@ -313,6 +337,15 @@ BitBake:
   tm_scope: none
   extensions:
   - .bb
+  ace_mode: text
+
+Blade:
+  type: markup
+  group: HTML
+  extensions:
+    - .blade
+    - .blade.php
+  tm_scope: text.html.php.blade
   ace_mode: text
 
 BlitzBasic:
@@ -446,7 +479,7 @@ CLIPS:
   type: programming
   extensions:
   - .clp
-  tm_scope: none
+  tm_scope: source.clips
   ace_mode: text
 
 CMake:
@@ -467,6 +500,13 @@ COBOL:
   - .cobol
   - .cpy
   ace_mode: cobol
+
+COLLADA:
+  type: data
+  extensions:
+  - .dae
+  tm_scope: text.xml
+  ace_mode: xml
 
 CSS:
   type: markup
@@ -549,7 +589,7 @@ Clean:
   extensions:
   - .icl
   - .dcl
-  tm_scope: none
+  tm_scope: source.clean
   ace_mode: text
 
 Click:
@@ -683,7 +723,7 @@ Cpp-ObjDump:
   - .cxx-objdump
   tm_scope: objdump.x86asm
   aliases:
-  - c++-objdumb
+  - c++-objdump
   ace_mode: assembly_x86
 
 Creole:
@@ -691,7 +731,7 @@ Creole:
   wrap: true
   extensions:
   - .creole
-  tm_scope: none
+  tm_scope: text.html.creole
   ace_mode: text
 
 Crystal:
@@ -703,6 +743,34 @@ Crystal:
   tm_scope: source.crystal
   interpreters:
   - crystal
+
+Csound:
+  type: programming
+  aliases:
+  - csound-orc
+  extensions:
+  - .orc
+  - .udo
+  tm_scope: source.csound
+  ace_mode: text
+
+Csound Document:
+  type: programming
+  aliases:
+  - csound-csd
+  extensions:
+  - .csd
+  tm_scope: source.csound-document
+  ace_mode: text
+
+Csound Score:
+  type: programming
+  aliases:
+  - csound-sco
+  extensions:
+  - .sco
+  tm_scope: source.csound-score
+  ace_mode: text
 
 Cucumber:
   type: programming
@@ -810,6 +878,8 @@ Dart:
   color: "#00B4AB"
   extensions:
   - .dart
+  interpreters:
+  - dart
   ace_mode: dart
 
 Diff:
@@ -854,6 +924,8 @@ E:
   color: "#ccce35"
   extensions:
   - .E
+  interpreters:
+  - rune
   tm_scope: none
   ace_mode: text
 
@@ -873,6 +945,23 @@ ECLiPSe:
   - .ecl
   tm_scope: source.prolog.eclipse
   ace_mode: prolog
+
+EJS:
+  type: markup
+  color: "#a91e50"
+  group: HTML
+  extensions:
+  - .ejs
+  tm_scope: text.html.js
+  ace_mode: ejs
+
+EQ:
+  type: programming
+  color: "#a78649"
+  extensions:
+  - .eq
+  tm_scope: source.cs
+  ace_mode: csharp
 
 Eagle:
   type: markup
@@ -948,6 +1037,7 @@ Erlang:
   color: "#B83998"
   extensions:
   - .erl
+  - .app.src
   - .es
   - .escript
   - .hrl
@@ -1023,7 +1113,7 @@ Fantom:
   color: "#dbded5"
   extensions:
   - .fan
-  tm_scope: source.fan
+  tm_scope: none
   ace_mode: text
 
 Filterscript:
@@ -1107,8 +1197,23 @@ GAS:
   extensions:
   - .s
   - .ms
-  tm_scope: none
+  tm_scope: source.assembly
   ace_mode: assembly_x86
+
+GCC Machine Description:
+  type: programming
+  extensions:
+  - .md
+  tm_scope: source.lisp
+  ace_mode: lisp
+
+GDB:
+  type: programming
+  extensions:
+  - .gdb
+  - .gdbinit
+  tm_scope: source.gdb
+  ace_mode: text
 
 GDScript:
   type: programming
@@ -1125,6 +1230,7 @@ GLSL:
   - .frag
   - .frg
   - .fs
+  - .fsh
   - .fshader
   - .geo
   - .geom
@@ -1133,6 +1239,7 @@ GLSL:
   - .shader
   - .vert
   - .vrx
+  - .vsh
   - .vshader
   ace_mode: glsl
 
@@ -1262,6 +1369,13 @@ Graph Modeling Language:
   tm_scope: none
   ace_mode: text
 
+GraphQL:
+  type: data
+  extensions:
+    - .graphql
+  tm_scope: source.graphql
+  ace_mode: text
+
 Graphviz (DOT):
   type: data
   tm_scope: source.dot
@@ -1272,6 +1386,7 @@ Graphviz (DOT):
 
 Groff:
   type: markup
+  color: "#ecdebe"
   extensions:
   - .man
   - '.1'
@@ -1374,6 +1489,16 @@ HTML+Django:
   - htmldjango
   ace_mode: django
 
+HTML+ECR:
+  type: markup
+  tm_scope: text.html.ecr
+  group: HTML
+  aliases:
+  - ecr
+  extensions:
+  - .ecr
+  ace_mode: text
+
 HTML+EEX:
   type: markup
   tm_scope: text.html.elixir
@@ -1455,6 +1580,8 @@ Haskell:
   extensions:
   - .hs
   - .hsc
+  interpreters:
+  - runhaskell
   ace_mode: haskell
 
 Haxe:
@@ -1558,6 +1685,8 @@ Io:
   color: "#a9188d"
   extensions:
   - .io
+  interpreters:
+  - io
   ace_mode: io
 
 Ioke:
@@ -1590,6 +1719,8 @@ J:
   color: "#9EEDFF"
   extensions:
   - .ijs
+  interpreters:
+  - jconsole
   tm_scope: source.j
   ace_mode: text
 
@@ -1612,11 +1743,13 @@ JSON:
   extensions:
   - .json
   - .geojson
-  - .lock
+  - .JSON-tmLanguage
   - .topojson
   filenames:
+  - .arcconfig
   - .jshintrc
   - composer.lock
+  - mcmod.info
 
 JSON5:
   type: data
@@ -1654,6 +1787,7 @@ Jade:
   type: markup
   extensions:
   - .jade
+  - .pug
   tm_scope: text.jade
   ace_mode: jade
 
@@ -1850,7 +1984,7 @@ Lean:
   extensions:
   - .lean
   - .hlean
-  ace_mode: lean
+  ace_mode: text
 
 Less:
   type: markup
@@ -2068,14 +2202,19 @@ Makefile:
   - .mak
   - .d
   - .mk
+  - .mkfile
   filenames:
+  - BSDmakefile
   - GNUmakefile
   - Kbuild
   - Makefile
   - Makefile.am
+  - Makefile.frag
   - Makefile.in
   - Makefile.inc
   - makefile
+  - makefile.sco
+  - mkfile
   interpreters:
   - make
   ace_mode: makefile
@@ -2100,7 +2239,6 @@ Markdown:
   - .mkdown
   - .ron
   tm_scope: source.gfm
-  color: "#083FA1"
 
 Mask:
   type: markup
@@ -2386,7 +2524,7 @@ Nu:
   - .nu
   filenames:
   - Nukefile
-  tm_scope: source.scheme
+  tm_scope: source.nu
   ace_mode: scheme
   interpreters:
   - nush
@@ -2417,6 +2555,7 @@ OCaml:
   interpreters:
   - ocaml
   - ocamlrun
+  - ocamlscript
   tm_scope: source.ocaml
 
 ObjDump:
@@ -2506,6 +2645,16 @@ OpenEdge ABL:
   - .cls
   tm_scope: source.abl
   ace_mode: text
+
+OpenRC runscript:
+  type: programming
+  group: Shell
+  aliases:
+  - openrc
+  interpreters:
+  - openrc-run
+  tm_scope: source.shell
+  ace_mode: sh
 
 OpenSCAD:
   type: programming
@@ -2669,7 +2818,10 @@ Pascal:
   - .dpr
   - .inc
   - .lpr
+  - .pascal
   - .pp
+  interpreters:
+  - instantfpc
   ace_mode: pascal
 
 Perl:
@@ -2966,7 +3118,6 @@ RDoc:
   extensions:
   - .rdoc
   tm_scope: text.rdoc
-  color: "#8E84BF"
 
 REALbasic:
   type: programming
@@ -3246,6 +3397,14 @@ SQLPL:
   - .sql
   - .db2
 
+SRecode Template:
+  type: markup
+  color: "#348a34"
+  tm_scope: source.lisp
+  ace_mode: lisp
+  extensions:
+  - .srt
+
 STON:
   type: data
   group: Smalltalk
@@ -3322,6 +3481,9 @@ Scheme:
   - guile
   - bigloo
   - chicken
+  - csi
+  - gosh
+  - r6rs
   ace_mode: scheme
 
 Scilab:
@@ -3361,6 +3523,13 @@ Shell:
   - .tmux
   - .tool
   - .zsh
+  filenames:
+  - .bash_history
+  - .bash_logout
+  - .bash_profile
+  - .bashrc
+  - PKGBUILD
+  - gradlew
   interpreters:
   - bash
   - rc
@@ -3488,6 +3657,13 @@ Stylus:
   tm_scope: source.stylus
   ace_mode: stylus
 
+SubRip Text:
+  type: data
+  extensions:
+  - .srt
+  ace_mode: text
+  tm_scope: text.srt
+
 SuperCollider:
   type: programming
   color: "#46390b"
@@ -3515,6 +3691,13 @@ SystemVerilog:
   - .svh
   - .vh
   ace_mode: verilog
+
+TLA:
+  type: programming
+  extensions:
+  - .tla
+  tm_scope: source.tla
+  ace_mode: text
 
 TOML:
   type: data
@@ -3588,7 +3771,6 @@ Terra:
   - .t
   color: "#00004c"
   ace_mode: lua
-  group: Lua
   interpreters:
   - lua
 
@@ -3608,6 +3790,7 @@ Text:
   - INSTALL
   - LICENSE
   - NEWS
+  - README.1ST
   - README.me
   - click.me
   - delete.me
@@ -3634,11 +3817,11 @@ Thrift:
 
 Turing:
   type: programming
-  color: "#45f715"
+  color: "#cf142b"
   extensions:
   - .t
   - .tu
-  tm_scope: none
+  tm_scope: source.turing
   ace_mode: text
 
 Turtle:
@@ -3804,6 +3987,20 @@ Vue:
   tm_scope: text.html.vue
   ace_mode: html
 
+Wavefront Material:
+  type: data
+  extensions:
+  - .mtl
+  tm_scope: source.wavefront.mtl
+  ace_mode: text
+
+Wavefront Object:
+  type: data
+  extensions:
+  - .obj
+  tm_scope: source.wavefront.obj
+  ace_mode: text
+
 Web Ontology Language:
   type: markup
   color: "#9cc9dd"
@@ -3817,6 +4014,13 @@ WebIDL:
   extensions:
   - .webidl
   tm_scope: source.webidl
+  ace_mode: text
+
+World of Warcraft Addon Data:
+  type: data
+  extensions:
+  - .toc
+  tm_scope: source.toc
   ace_mode: text
 
 X10:
@@ -3848,6 +4052,7 @@ XML:
   - .xml
   - .ant
   - .axml
+  - .builds
   - .ccxml
   - .clixml
   - .cproject
@@ -3879,6 +4084,7 @@ XML:
   - .nuspec
   - .odd
   - .osm
+  - .pkgproj
   - .plist
   - .pluginspec
   - .props
@@ -3886,8 +4092,10 @@ XML:
   - .psc1
   - .pt
   - .rdf
+  - .resx
   - .rss
   - .scxml
+  - .sfproj
   - .srdf
   - .storyboard
   - .stTheme
@@ -4079,6 +4287,8 @@ edn:
 fish:
   type: programming
   group: Shell
+  interpreters:
+  - fish
   extensions:
   - .fish
   tm_scope: source.fish
@@ -4117,7 +4327,6 @@ reStructuredText:
   - .rest.txt
   - .rst.txt
   ace_mode: text
-  color: "#B3BCBC"
 
 wisp:
   type: programming

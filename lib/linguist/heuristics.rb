@@ -86,6 +86,14 @@ module Linguist
       end
     end
 
+    disambiguate ".builds" do |data|
+      if /^(\s*)(<Project|<Import|<Property|<?xml|xmlns)/i.match(data)
+        Language["XML"]
+      else
+        Language["Text"]
+      end
+    end
+
     disambiguate ".ch" do |data|
       if /^\s*#\s*(if|ifdef|ifndef|define|command|xcommand|translate|xtranslate|include|pragma|undef)\b/i.match(data)
         Language["xBase"]
@@ -179,6 +187,12 @@ module Linguist
       end
     end
 
+    disambiguate ".inc" do |data|
+      if /^<\?(?:php)?/.match(data)
+        Language["PHP"]
+      end
+    end
+
     disambiguate ".l" do |data|
       if /\(def(un|macro)\s/.match(data)
         Language["Common Lisp"]
@@ -222,6 +236,14 @@ module Linguist
         Language["Matlab"]
       elsif /^\w+\s*:\s*module\s*{/.match(data)
         Language["Limbo"]
+      end
+    end
+
+    disambiguate ".md" do |data|
+      if /^[-a-z0-9=#!\*\[|]/i.match(data)
+        Language["Markdown"]
+      elsif /^(;;|\(define_)/.match(data)
+        Language["GCC machine description"]
       end
     end
 
@@ -368,7 +390,7 @@ module Linguist
       elsif /(alter module)|(language sql)|(begin( NOT)+ atomic)/i.match(data)  || /signal SQLSTATE '[0-9]+'/i.match(data)
         #IBM db2
         Language["SQLPL"]
-      elsif /pragma|\$\$PLSQL_|XMLTYPE|sysdate|systimestamp|\.nextval|connect by|AUTHID (DEFINER|CURRENT_USER)/i.match(data) || /constructor\W+function/i.match(data)
+      elsif /\$\$PLSQL_|XMLTYPE|sysdate|systimestamp|\.nextval|connect by|AUTHID (DEFINER|CURRENT_USER)/i.match(data) || /constructor\W+function/i.match(data)
         #Oracle
         Language["PLSQL"]
       elsif ! /begin|boolean|package|exception/i.match(data)
@@ -376,9 +398,31 @@ module Linguist
         Language["SQL"]
       end
     end
+    
+    disambiguate ".srt" do |data|
+      if /^(\d{2}:\d{2}:\d{2},\d{3})\s*(-->)\s*(\d{2}:\d{2}:\d{2},\d{3})$/.match(data)
+        Language["SubRip Text"]
+      end
+    end
+    
+    disambiguate ".t" do |data|
+      if /^\s*%|^\s*var\s+\w+\s*:\s*\w+/.match(data)
+        Language["Turing"]
+      elsif /^\s*use\s+v6\s*;/.match(data)
+        Language["Perl6"]
+      end
+    end
+    
+    disambiguate ".toc" do |data|
+      if /^## |@no-lib-strip@/.match(data)
+        Language["World of Warcraft Addon Data"]
+      elsif /^\\(contentsline|defcounter|beamer|boolfalse)/.match(data)
+        Language["TeX"]
+      end
+    end
 
     disambiguate ".ts" do |data|
-      if data.include?("<TS ")
+      if data.include?("</TS>")
         Language["XML"]
       else
         Language["TypeScript"]

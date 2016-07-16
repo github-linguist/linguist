@@ -1,8 +1,6 @@
 # Contributing
 
-[code-of-conduct]: http://todogroup.org/opencodeofconduct/#Linguist/opensource@github.com
-
-Hi there! We're thrilled that you'd like to contribute to this project. Your help is essential for keeping it great. This project adheres to the [Open Code of Conduct][code-of-conduct]. By participating, you are expected to uphold this code.
+Hi there! We're thrilled that you'd like to contribute to this project. Your help is essential for keeping it great. This project adheres to the [Contributor Covenant Code of Conduct](http://contributor-covenant.org/). By participating, you are expected to uphold this code.
 
 The majority of contributions won't need to touch any Ruby code at all.
 
@@ -33,6 +31,7 @@ To add support for a new language:
 0. Add a grammar for your language. Please only add grammars that have a license that permits redistribution.
   0. Add your grammar as a submodule: `git submodule add https://github.com/JaneSmith/MyGrammar vendor/grammars/MyGrammar`.
   0. Add your grammar to [`grammars.yml`][grammars] by running `script/convert-grammars --add vendor/grammars/MyGrammar`.
+  0. Download the license for the grammar: `script/licensed`. Be careful to only commit the file for the new grammar, as this script may update licenses for other grammars as well.
 0. Add samples for your language to the [samples directory][samples] in the correct subdirectory.
 0. Open a pull request, linking to a [GitHub search result](https://github.com/search?utf8=%E2%9C%93&q=extension%3Aboot+NOT+nothack&type=Code&ref=searchresults) showing in-the-wild usage.
 
@@ -78,8 +77,20 @@ Sometimes getting the tests running can be too much work, especially if you don'
 
 Here's our current build status: [![Build Status](https://api.travis-ci.org/github/linguist.svg?branch=master)](https://travis-ci.org/github/linguist)
 
+## Maintainers
 
-## Releasing
+Linguist is maintained with :heart: by:
+
+- @arfon (GitHub Staff)
+- @larsbrinkhoff
+- @pchaigno
+ 
+As Linguist is a production dependency for GitHub we have a couple of workflow restrictions:
+
+- Anyone with commit rights can merge Pull Requests provided that there is a :+1: from a GitHub member of staff
+- Releases are performed by GitHub staff so we can ensure GitHub.com always stays up to date with the latest release of Linguist and there are no regressions in production.
+
+### Releasing
 
 If you are the current maintainer of this gem:
 

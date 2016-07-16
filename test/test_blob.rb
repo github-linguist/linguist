@@ -166,7 +166,7 @@ class TestBlob < Minitest::Test
     assert sample_blob_memory("JavaScript/jquery-1.4.2.min.js").generated?
 
     # Composer generated composer.lock file
-    assert sample_blob_memory("JSON/composer.lock").generated?
+    assert sample_blob_memory("JSON/filenames/composer.lock").generated?
 
     # PEG.js-generated parsers
     assert sample_blob_memory("JavaScript/parser.js").generated?

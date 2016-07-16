@@ -21,7 +21,7 @@ module Linguist
     def self.cache
       @cache ||= begin
         serializer = defined?(Yajl) ? Yajl : YAML
-        serializer.load(File.read(PATH))
+        serializer.load(File.read(PATH, encoding: 'utf-8'))
       end
     end
 

@@ -56,9 +56,11 @@ module Linguist
       generated_net_specflow_feature_file? ||
       composer_lock? ||
       node_modules? ||
+      npm_shrinkwrap? ||
       godeps? ||
       generated_by_zephir? ||
       minified_files? ||
+      has_source_map? ||
       source_map? ||
       compiled_coffeescript? ||
       generated_parser? ||
@@ -102,6 +104,21 @@ module Linguist
       else
         false
       end
+    end
+
+    # Internal: Does the blob contain a source map reference?
+    #
+    # We assume that if one of the last 2 lines starts with a source map
+    # reference, then the current file was generated from other files.
+    #
+    # We use the last 2 lines because the last line might be empty.
+    #
+    # We only handle JavaScript, no CSS support yet.
+    #
+    # Returns true or false.
+    def has_source_map?
+      return false unless extname.downcase == '.js'
+      lines.last(2).any? { |line| line.start_with?('//# sourceMappingURL') }
     end
 
     # Internal: Is the blob a generated source map?
@@ -287,6 +304,13 @@ module Linguist
       !!name.match(/node_modules\//)
     end
 
+    # Internal: Is the blob a generated npm shrinkwrap file.
+    #
+    # Returns true or false.
+    def npm_shrinkwrap?
+      !!name.match(/npm-shrinkwrap\.json/)
+    end
+
     # Internal: Is the blob part of Godeps/,
     # which are not meant for humans in pull requests.
     #
@@ -339,14 +363,14 @@ module Linguist
     # on the first line.
     #
     # GFortran module files contain:
-    # GFORTRAN module version 'x' created from 
+    # GFORTRAN module version 'x' created from
     # on the first line.
     #
     # Return true of false
     def generated_module?
       return false unless extname == '.mod'
       return false unless lines.count > 1
-      return lines[0].include?("PCBNEW-LibModule-V") || 
+      return lines[0].include?("PCBNEW-LibModule-V") ||
               lines[0].include?("GFORTRAN module version '")
     end
 

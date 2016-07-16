@@ -122,6 +122,12 @@ class TestHeuristcs < Minitest::Test
     })
   end
 
+  def test_inc_by_heuristics
+    assert_heuristics({
+      "PHP" => all_fixtures("PHP", "*.inc")
+    })
+  end
+
   def test_ls_by_heuristics
     assert_heuristics({
       "LiveScript" => all_fixtures("LiveScript", "*.ls"),
@@ -141,7 +147,7 @@ class TestHeuristcs < Minitest::Test
     # Only calling out '.h' filenames as these are the ones causing issues
     assert_heuristics({
       "Objective-C" => all_fixtures("Objective-C", "*.h"),
-      "C++" => ["C++/scanner.h", "C++/qscicommand.h", "C++/v8.h", "C++/gdsdbreader.h"],
+      "C++" => ["C++/scanner.h", "C++/protocol-buffer.pb.h", "C++/v8.h", "C++/gdsdbreader.h"],
       "C" => nil
     })
   end
