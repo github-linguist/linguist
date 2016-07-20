@@ -359,6 +359,14 @@ module Linguist
       end
     end
 
+    disambiguate ".rno" do |data|
+      if /^\.!|^\.end lit(?:eral)?\b/i.match(data)
+        Language["RUNOFF"]
+      elsif /^\.\\" /.match(data)
+        Language["Groff"]
+      end
+    end
+
     disambiguate ".rpy" do |data|
       if /(^(import|from|class|def)\s)/m.match(data)
         Language["Python"]
