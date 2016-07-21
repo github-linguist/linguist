@@ -40,16 +40,12 @@ task :samples do
 end
 
 task :build_gem => :samples do
+  rm_rf "grammars"
+  sh "script/convert-grammars"
   languages = YAML.load_file("lib/linguist/languages.yml")
   File.write("lib/linguist/languages.json", Yajl.dump(languages))
   `gem build github-linguist.gemspec`
   File.delete("lib/linguist/languages.json")
-end
-
-task :build_grammars_gem do
-  rm_rf "grammars"
-  sh "script/convert-grammars"
-  sh "gem", "build", "github-linguist-grammars.gemspec"
 end
 
 namespace :benchmark do
@@ -62,7 +58,7 @@ namespace :benchmark do
 
     corpus = File.expand_path(ENV["CORPUS"] || "samples")
 
-    require 'linguist/language'
+    require 'linguist'
 
     results = Hash.new
     Dir.glob("#{corpus}/**/*").each do |file|

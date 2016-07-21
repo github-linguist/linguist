@@ -1,6 +1,3 @@
-# Note: This file is included in the github-linguist-grammars gem, not the
-# github-linguist gem.
-
 module Linguist
   module Grammars
     # Get the path to the directory containing the language grammar JSON files.

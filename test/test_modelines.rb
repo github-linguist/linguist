@@ -9,6 +9,14 @@ class TestModelines < Minitest::Test
 
   def test_modeline_strategy
     assert_modeline Language["Ruby"], fixture_blob("Data/Modelines/ruby")
+    assert_modeline Language["Ruby"], fixture_blob("Data/Modelines/ruby2")
+    assert_modeline Language["Ruby"], fixture_blob("Data/Modelines/ruby3")
+    assert_modeline Language["Ruby"], fixture_blob("Data/Modelines/ruby4")
+    assert_modeline Language["Ruby"], fixture_blob("Data/Modelines/ruby5")
+    assert_modeline Language["Ruby"], fixture_blob("Data/Modelines/ruby6")
+    assert_modeline Language["Ruby"], fixture_blob("Data/Modelines/ruby7")
+    assert_modeline Language["Ruby"], fixture_blob("Data/Modelines/ruby8")
+    assert_modeline Language["Ruby"], fixture_blob("Data/Modelines/ruby9")
     assert_modeline Language["C++"], fixture_blob("Data/Modelines/seeplusplus")
     assert_modeline Language["C++"], fixture_blob("Data/Modelines/seeplusplusEmacs1")
     assert_modeline Language["C++"], fixture_blob("Data/Modelines/seeplusplusEmacs2")
@@ -23,10 +31,13 @@ class TestModelines < Minitest::Test
     assert_modeline Language["Prolog"], fixture_blob("Data/Modelines/not_perl.pl")
     assert_modeline Language["Smalltalk"], fixture_blob("Data/Modelines/example_smalltalk.md")
     assert_modeline Language["PHP"], fixture_blob("Data/Modelines/iamphp.inc")
+    assert_modeline nil, sample_blob("C/main.c")
   end
 
   def test_modeline_languages
     assert_equal Language["Ruby"], fixture_blob("Data/Modelines/ruby").language
+    assert_equal Language["Ruby"], fixture_blob("Data/Modelines/ruby2").language
+    assert_equal Language["Ruby"], fixture_blob("Data/Modelines/ruby3").language
     assert_equal Language["C++"], fixture_blob("Data/Modelines/seeplusplus").language
     assert_equal Language["C++"], fixture_blob("Data/Modelines/seeplusplusEmacs1").language
     assert_equal Language["C++"], fixture_blob("Data/Modelines/seeplusplusEmacs2").language

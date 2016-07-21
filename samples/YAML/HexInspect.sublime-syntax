@@ -1,0 +1,29 @@
+%YAML 1.2
+---
+# http://www.sublimetext.com/docs/3/syntax.html
+name: Hex Inspect
+file_extensions: []
+hidden: true
+scope: source.inspect
+contexts:
+  main:
+    - match: '([\w\-]+)\s*(:)\s*'
+      captures:
+        1: support.function.key.inspect
+        2: support.function.punctuation.inspect
+      push:
+        - meta_scope: item.inspect
+        - match: '([\d\-\w]+)'
+          captures:
+            1: data.inspect
+          pop: true
+    - match: '^(\s*[\w\-\s]+)\s*(:)\s*'
+      captures:
+        1: keyword.title.inspect
+        2: keyword.title-punctuation.inspect
+      push:
+        - meta_scope: item.inspect
+        - match: $
+          pop: true
+        - match: '[\w\s]+'
+          scope: title-info.inspect

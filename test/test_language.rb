@@ -57,6 +57,7 @@ class TestLanguage < Minitest::Test
     assert_equal Language['Shell'], Language.find_by_alias('sh')
     assert_equal Language['Shell'], Language.find_by_alias('shell')
     assert_equal Language['Shell'], Language.find_by_alias('zsh')
+    assert_equal Language['SuperCollider'], Language.find_by_alias('supercollider')
     assert_equal Language['TeX'], Language.find_by_alias('tex')
     assert_equal Language['TypeScript'], Language.find_by_alias('ts')
     assert_equal Language['VimL'], Language.find_by_alias('vim')
@@ -119,6 +120,7 @@ class TestLanguage < Minitest::Test
     assert_equal 'vim',           Language['VimL'].search_term
     assert_equal 'jsp',           Language['Java Server Pages'].search_term
     assert_equal 'rst',           Language['reStructuredText'].search_term
+    assert_equal 'supercollider', Language['SuperCollider'].search_term
   end
 
   def test_popular
@@ -138,6 +140,7 @@ class TestLanguage < Minitest::Test
     assert_equal :programming, Language['Ruby'].type
     assert_equal :programming, Language['TypeScript'].type
     assert_equal :programming, Language['Makefile'].type
+    assert_equal :programming, Language['SuperCollider'].type
   end
 
   def test_markup
@@ -227,7 +230,8 @@ class TestLanguage < Minitest::Test
       "python" => "Python",
       "python2" => "Python",
       "python3" => "Python",
-      "sbcl" => "Common Lisp"
+      "sbcl" => "Common Lisp",
+      "sclang" => "SuperCollider"
     }.each do |interpreter, language|
       assert_equal [Language[language]], Language.find_by_interpreter(interpreter)
     end
@@ -261,6 +265,24 @@ class TestLanguage < Minitest::Test
   def test_find_by_alias_ignores_case
     refute_includes Language['AGS Script'].aliases, 'AGS'
     assert_equal 'AGS Script', Language.find_by_alias('AGS').name
+  end
+
+  def test_find_ignores_comma
+    assert_equal 'Rust', Language['rust,no_run'].name
+  end
+
+  def test_find_by_name_ignores_comma
+    assert_equal Language['Rust'], Language.find_by_name('rust,no_run')
+  end
+
+  def test_find_by_alias_ignores_comma
+    assert_equal Language['Rust'], Language.find_by_alias('rust,no_run')
+  end
+
+  def test_doesnt_blow_up_with_blank_lookup
+    assert_equal nil, Language.find_by_alias('')
+    assert_equal nil, Language.find_by_name(nil)
+    assert_equal nil, Language[""]
   end
 
   def test_name
@@ -321,6 +343,7 @@ class TestLanguage < Minitest::Test
     assert Language['Perl'].extensions.include?('.pl')
     assert Language['Python'].extensions.include?('.py')
     assert Language['Ruby'].extensions.include?('.rb')
+    assert Language['SuperCollider'].extensions.include?('.scd')
   end
 
   def test_primary_extension
@@ -331,6 +354,7 @@ class TestLanguage < Minitest::Test
     assert_equal '.coffee', Language['CoffeeScript'].primary_extension
     assert_equal '.t', Language['Turing'].primary_extension
     assert_equal '.ts', Language['TypeScript'].primary_extension
+    assert_equal '.sc', Language['SuperCollider'].primary_extension
   end
 
   def test_eql

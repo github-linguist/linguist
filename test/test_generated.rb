@@ -17,6 +17,7 @@ class TestGenerated < Minitest::Test
     assert_raises(DataLoadedError, "Data wasn't loaded when calling generated? on #{blob}") do
       Generated.generated?(blob, lambda { raise DataLoadedError.new })
     end
+    assert Generated.generated?(blob, lambda { IO.read(blob) }), "#{blob} was not recognized as a generated file"
   end
 
   def generated_fixture_without_loading_data(name)
@@ -50,6 +51,9 @@ class TestGenerated < Minitest::Test
     # Node modules
     generated_sample_without_loading_data("Dummy/node_modules/foo.js")
 
+    # npm shrinkwrap file
+    generated_sample_without_loading_data("Dummy/npm-shrinkwrap.json")
+
     # Godep saved dependencies
     generated_sample_without_loading_data("Godeps/Godeps.json")
     generated_sample_without_loading_data("Godeps/_workspace/src/github.com/kr/s3/sign.go")
@@ -62,6 +66,9 @@ class TestGenerated < Minitest::Test
     # Minified files
     generated_sample_loading_data("JavaScript/jquery-1.6.1.min.js")
 
+    # JS files with source map reference
+    generated_sample_loading_data("JavaScript/namespace.js")
+
     # Source Map
     generated_fixture_without_loading_data("Data/bootstrap.css.map")
     generated_fixture_loading_data("Data/sourcemap.v3.map")
@@ -69,5 +76,11 @@ class TestGenerated < Minitest::Test
 
     # Specflow
     generated_fixture_without_loading_data("Features/BindingCulture.feature.cs")
+
+    # JFlex
+    generated_sample_loading_data("Java/JFlexLexer.java")
+
+    # GrammarKit
+    generated_sample_loading_data("Java/GrammarKit.java")
   end
 end
