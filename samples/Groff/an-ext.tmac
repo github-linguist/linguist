@@ -1,0 +1,215 @@
+.\" -*- nroff -*-
+.\"
+.\" an-ext.tmac
+.\"
+.\" Copyright (C) 2007-2014  Free Software Foundation, Inc.
+.\"
+.\" Written by Eric S. Raymond <esr@thyrsus.com>
+.\"            Werner Lemberg <wl@gnu.org>
+.\"
+.\" You may freely use, modify and/or distribute this file.
+.\"
+.\" The code below provides extension macros for the `man' macro package.
+.\" Care has been taken to make the code portable; groff extensions are
+.\" properly hidden so that all troff implementations can use it without
+.\" changes.
+.\"
+.\" With groff, this file is sourced by the `man' macro package itself.
+.\" Man page authors who are concerned about portability might add the
+.\" used macros directly to the prologue of the man page(s).
+.
+.
+.\" Convention: Auxiliary macros and registers start with `m' followed
+.\"             by an uppercase letter or digit.
+.
+.
+.\" Protect against being sourced twice.
+.nr mX +1
+.if \n(mX>1 \
+.  nx
+.
+.\" Check whether we are using grohtml.
+.nr mH 0
+.if \n(.g \
+.  if '\*(.T'html' \
+.    nr mH 1
+.
+.
+.\" Map mono-width fonts to standard fonts for groff's TTY device.
+.if n \{\
+.  do ftr CR R
+.  do ftr CI I
+.  do ftr CB B
+.\}
+.
+.\" groff has glyph entities for angle brackets.
+.ie \n(.g \{\
+.  ds la \(la\"
+.  ds ra \(ra\"
+.\}
+.el \{\
+.  ds la <\"
+.  ds ra >\"
+.  \" groff's man macros control hyphenation with this register.
+.  nr HY 1
+.\}
+.
+.nr mS 0
+.
+.
+.\" Declare start of command synopsis.  Sets up hanging indentation.
+.de SY
+.  ie !\\n(mS \{\
+.    nh
+.    nr mS 1
+.    nr mA \\n(.j
+.    ad l
+.    nr mI \\n(.i
+.  \}
+.  el \{\
+.    br
+.    ns
+.  \}
+.
+.  nr mT \w'\fB\\$1\fP\ '
+.  HP \\n(mTu
+.  B "\\$1"
+..
+.
+.
+.\" End of command synopsis.  Restores adjustment.
+.de YS
+.  in \\n(mIu
+.  ad \\n(mA
+.  hy \\n(HY
+.  nr mS 0
+..
+.
+.
+.\" Declare optional option.
+.de OP
+.  ie \\n(.$-1 \
+.    RI "[\fB\\$1\fP" "\ \\$2" "]"
+.  el \
+.    RB "[" "\\$1" "]"
+..
+.
+.
+.\" Start URL.
+.de UR
+.  ds m1 \\$1\"
+.  nh
+.  if \\n(mH \{\
+.    \" Start diversion in a new environment.
+.    do ev URL-div
+.    do di URL-div
+.  \}
+..
+.
+.
+.\" End URL.
+.de UE
+.  ie \\n(mH \{\
+.    br
+.    di
+.    ev
+.
+.    \" Has there been one or more input lines for the link text?
+.    ie \\n(dn \{\
+.      do HTML-NS "<a href=""\\*(m1"">"
+.      \" Yes, strip off final newline of diversion and emit it.
+.      do chop URL-div
+.      do URL-div
+\c
+.      do HTML-NS </a>
+.    \}
+.    el \
+.      do HTML-NS "<a href=""\\*(m1"">\\*(m1</a>"
+\&\\$*\"
+.  \}
+.  el \
+\\*(la\\*(m1\\*(ra\\$*\"
+.
+.  hy \\n(HY
+..
+.
+.
+.\" Start email address.
+.de MT
+.  ds m1 \\$1\"
+.  nh
+.  if \\n(mH \{\
+.    \" Start diversion in a new environment.
+.    do ev URL-div
+.    do di URL-div
+.  \}
+..
+.
+.
+.\" End email address.
+.de ME
+.  ie \\n(mH \{\
+.    br
+.    di
+.    ev
+.
+.    \" Has there been one or more input lines for the link text?
+.    ie \\n(dn \{\
+.      do HTML-NS "<a href=""mailto:\\*(m1"">"
+.      \" Yes, strip off final newline of diversion and emit it.
+.      do chop URL-div
+.      do URL-div
+\c
+.      do HTML-NS </a>
+.    \}
+.    el \
+.      do HTML-NS "<a href=""mailto:\\*(m1"">\\*(m1</a>"
+\&\\$*\"
+.  \}
+.  el \
+\\*(la\\*(m1\\*(ra\\$*\"
+.
+.  hy \\n(HY
+..
+.
+.
+.\" Continuation line for .TP header.
+.de TQ
+.  br
+.  ns
+.  TP \\$1\" no doublequotes around argument!
+..
+.
+.
+.\" Start example.
+.de EX
+.  do ds mF \\n[.fam]
+.  nr mE \\n(.f
+.  nf
+.  nh
+.  do fam C
+.  ft CW
+..
+.
+.
+.\" End example.
+.de EE
+.  do fam \\*(mF
+.  ft \\n(mE
+.  fi
+.  hy \\n(HY
+..
+.
+.
+.\" Start display.
+.de DS
+.  \" XXX to be written
+..
+.
+.
+.\" End display.
+.de DE
+.  \" XXX to be written
+..
+.
+.\" EOF

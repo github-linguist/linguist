@@ -1411,9 +1411,14 @@ Groff:
   - .n
   - .rno
   - .roff
-  tm_scope: text.groff
+  - .tmac
+  filenames:
+  - mmn
+  - mmt
+  tm_scope: text.roff
   aliases:
   - nroff
+  - troff
   ace_mode: text
 
 Groovy:
@@ -3170,6 +3175,15 @@ RMarkdown:
   extensions:
   - .rmd
   tm_scope: source.gfm
+
+RUNOFF:
+  type: markup
+  color: "#665a4e"
+  extensions:
+  - .rnh
+  - .rno
+  tm_scope: text.runoff
+  ace_mode: text
 
 Racket:
   type: programming
