@@ -1,0 +1,81 @@
+#!/bin/sh
+# -*- tcl -*-
+# The next line is executed by /bin/sh, but not tcl \
+exec tclsh "$0" ${1+"$@"}
+
+package require Expect
+
+
+# weather - Expect script to get the weather (courtesy University of Michigan)
+# Don Libes
+# Version 1.10
+
+# local weather is retrieved if no argument
+# argument is the National Weather Service designation for an area
+# I.e., WBC = Washington DC (oh yeah, that's obvious)
+
+# Notes from Larry Virden <lvirden@yahoo.com> about the new host,
+# rainmaker.wunderground.com: "[the] new site requires the
+# machine doing the request be located in reverse dns lookup
+# or it refuses to provide data."  This appears to be a blind error
+# condition on the part of rainmaker.
+
+exp_version -exit 5.0
+
+if {$argc>0} {set code $argv} else {set code "WBC"}
+
+proc timedout {} {
+	send_user "Weather server timed out.  Try again later when weather server is not so busy.\n"
+	exit 1
+}
+
+set timeout 60
+
+set env(TERM) vt100	;# actual value doesn't matter, just has to be set
+
+spawn telnet rainmaker.wunderground.com 3000
+while {1} {
+	expect timeout {
+		send_user "failed to contact weather server\n"
+		exit
+	} "Press Return to continue*" {
+               # this prompt used sometimes, eg, upon opening connection
+               send "\r"
+	} "Press Return for menu*" {
+               # this prompt used sometimes, eg, upon opening connection
+               send "\r"
+	} "M to display main menu*" {
+		# sometimes ask this if there is a weather watch in effect
+		send "M\r"
+	} "Change scrolling to screen*Selection:" {
+		break
+	} eof {
+		send_user "failed to telnet to weather server\n"
+		exit
+	}
+}
+send "C\r"
+expect timeout timedout "Selection:"
+send "4\r"
+expect timeout timedout "Selection:"
+send "1\r"
+expect timeout timedout "Selection:"
+send "1\r"
+expect timeout timedout "city code:"
+send "$code\r"
+expect $code		;# discard this
+
+while {1} {
+	expect timeout {
+		timedout
+	} "Press Return to continue*:*" {
+		send "\r"
+	} "Press Return to display statement, M for menu:*" {
+		send "\r"
+	} -re "(.*)CITY FORECAST MENU.*Selection:" {
+		break
+	}
+}
+
+send "X\r"
+expect
