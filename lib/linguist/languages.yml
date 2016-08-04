@@ -2242,6 +2242,7 @@ Markdown:
   - .mkd
   - .mkdn
   - .mkdown
+  - .md.txt
   - .ron
   tm_scope: source.gfm
 
@@ -2667,6 +2668,16 @@ OpenSCAD:
   - .scad
   tm_scope: none
   ace_mode: scad
+
+OpenType Font Feature:
+  type: programming
+  aliases:
+  - AFDKO
+  extensions:
+  - .fea
+  #- .otl
+  tm_scope: none
+  ace_mode: text
 
 Org:
   type: prose
@@ -3635,6 +3646,13 @@ SourcePawn:
   tm_scope: source.sp
   ace_mode: text
 
+Spline Font Data:
+  type: programming
+  extensions:
+  - .sfd
+  tm_scope: source.yaml
+  ace_mode: yaml
+
 Squirrel:
   type: programming
   color: "#800000"
@@ -3808,12 +3826,14 @@ Text:
   - fundamental
   extensions:
   - .txt
+  - .text
   - .fr
   - .nb
   - .ncl
   - .no
   filenames:
   - COPYING
+  - FONTLOG
   - INSTALL
   - LICENSE
   - NEWS
