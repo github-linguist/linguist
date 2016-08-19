@@ -28,7 +28,7 @@ We try only to add languages once they have some usage on GitHub. In most cases 
 To add support for a new language:
 
 0. Add an entry for your language to [`languages.yml`][languages].
-0. Add a grammar for your language. Please only add grammars that have a license that permits redistribution.
+0. Add a grammar for your language. Please only add grammars that have [one of these licenses](https://github.com/github/linguist/blob/257425141d4e2a5232786bf0b13c901ada075f93/vendor/licenses/config.yml#L2-L11).
   0. Add your grammar as a submodule: `git submodule add https://github.com/JaneSmith/MyGrammar vendor/grammars/MyGrammar`.
   0. Add your grammar to [`grammars.yml`][grammars] by running `script/convert-grammars --add vendor/grammars/MyGrammar`.
   0. Download the license for the grammar: `script/licensed`. Be careful to only commit the file for the new grammar, as this script may update licenses for other grammars as well.
