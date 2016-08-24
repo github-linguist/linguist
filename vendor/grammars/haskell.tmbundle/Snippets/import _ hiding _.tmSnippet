@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>content</key>
+	<string>import ${1:Module}${2/.+/ hiding (/}${2:function}${2/.+/)/}$0</string>
+	<key>name</key>
+	<string>import … hiding …</string>
+	<key>scope</key>
+	<string>source.haskell</string>
+	<key>tabTrigger</key>
+	<string>imph</string>
+	<key>uuid</key>
+	<string>1BA6898C-E8C4-44C9-98F4-4823608FEFD1</string>
+</dict>
+</plist>

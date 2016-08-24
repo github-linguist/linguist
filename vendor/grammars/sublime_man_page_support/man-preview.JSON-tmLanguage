@@ -1,0 +1,32 @@
+{ "name": "Man Page Preview",
+  "scopeName": "source.man",
+  "fileTypes": ["man"],
+  "uuid": "f3ff3e8d-4f68-432c-af44-e00d6e15c81a",
+  "patterns": [
+    {
+      "name": "string.source.man",
+      "match": "^(man\\((\\d+)\\))(.+)(man\\((\\d+)\\).*)$",
+      "captures": {
+          "0": { "name": "string.source.man" },
+          "2": { "name": "constant.source.man" },
+          "3": { "name": "keyword.source.man" },
+          "5": { "name": "constant.source.man" }
+      }
+    },
+    {
+      "name": "string.source.man",
+      "match": "^(\\d\\.\\d(\\.\\d)?)(.+)(man\\((\\d+)\\).*)$",
+      "captures": {
+          "1": { "name": "constant.source.man" },
+          "2": { "name": "storage.source.man" },
+          "3": { "name": "keyword.source.man" },
+          "4": { "name": "string.source.man" },
+          "5": { "name": "constant.source.man" }
+      }
+    },
+    {
+      "name": "keyword.source.man",
+      "match": "^[A-Z][A-Z\\s]+\\s$"
+    }
+  ]
+}

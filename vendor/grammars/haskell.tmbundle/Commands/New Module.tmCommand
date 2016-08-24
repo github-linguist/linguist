@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>#!/bin/bash
+
+NAME=${TM_FILENAME%.hs}
+if [[ -z "$NAME" ]]; then
+	NAME="Main"
+fi
+
+cat &lt;&lt;SNIPPET
+module \${1:$NAME} \${2/.+/(
+	/m}\${2:function}\${2/.+/
+) /m}where
+\$0
+SNIPPET</string>
+	<key>input</key>
+	<string>none</string>
+	<key>name</key>
+	<string>module …</string>
+	<key>output</key>
+	<string>insertAsSnippet</string>
+	<key>scope</key>
+	<string>source.haskell</string>
+	<key>tabTrigger</key>
+	<string>mod</string>
+	<key>uuid</key>
+	<string>156D0588-A61A-4419-9C71-6E47320A4DA5</string>
+</dict>
+</plist>

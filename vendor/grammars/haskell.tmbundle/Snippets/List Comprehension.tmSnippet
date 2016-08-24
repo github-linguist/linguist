@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>content</key>
+	<string>[ ${1:expression} | ${2:name} &lt;- ${3:expression}${4/.+/, /}${4:condition} </string>
+	<key>name</key>
+	<string>List Comprehension</string>
+	<key>scope</key>
+	<string>source.haskell constant.language.nil</string>
+	<key>tabTrigger</key>
+	<string>[</string>
+	<key>uuid</key>
+	<string>C721BD84-71FA-423F-8460-2CED4954137F</string>
+</dict>
+</plist>
