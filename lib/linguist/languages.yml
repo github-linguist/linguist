@@ -526,6 +526,15 @@ COLLADA:
   tm_scope: text.xml
   ace_mode: xml
 
+CSON:
+  type: data
+  group: CoffeeScript
+  tm_scope: source.coffee
+  ace_mode: coffee
+  searchable: false
+  extensions:
+  - .cson
+
 CSS:
   type: markup
   tm_scope: source.css
@@ -648,7 +657,6 @@ CoffeeScript:
   - ._coffee
   - .cake
   - .cjsx
-  - .cson
   - .iced
   filenames:
   - Cakefile
