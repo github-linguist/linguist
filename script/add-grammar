@@ -37,13 +37,19 @@ def parse_submodule(name)
 	path
 end
 
+# Print debugging feedback to STDOUT if running with --verbose
+def log(msg)
+	puts msg if $verbose
+end
+
+
+
 usage = """Usage:
   #{$0} [--replace grammar] url
 Examples:
   #{$0} https://github.com/Alhadis/language-roff
   #{$0} --replace sublime-apl https://github.com/Alhadis/language-apl
 """
-
 
 $replace = nil
 $verbose = false
@@ -67,19 +73,21 @@ unless $url
 	exit 1;
 end
 
-
 # Ensure the given URL is an HTTPS link
-parts = parse_url $url
-https = "https://#{parts[:host]}/#{parts[:user]}/#{parts[:repo]}"
-path  = "vendor/grammars/#{parts[:repo]}"
-repl  = parse_submodule($replace) if $replace
+parts    = parse_url $url
+https    = "https://#{parts[:host]}/#{parts[:user]}/#{parts[:repo]}"
+repo_new = "vendor/grammars/#{parts[:repo]}"
+repo_old = parse_submodule($replace) if $replace
 
-if $verbose
-	puts "Adding grammar"
-	puts "\tFrom:      #{https}"
-	puts "\tInto:      #{path}"
-	puts "\tReplacing: #{repl}" if repl
-	puts "\nRegistering submodule..."
+if repo_old
+	log "Deregistering: #{repo_old}"
+	`git submodule deinit #{repo_old}`
+	`git rm -rf #{repo_old}`
 end
 
-#`git submodule add #{https} #{path}`
+log "Registering new submodule: #{repo_new}"
+`git submodule add -f #{https} #{repo_new}`
+`script/convert-grammars --add #{repo_new}`
+
+log "Confirming license"
+`script/licensed --module "#{repo_new}"`
