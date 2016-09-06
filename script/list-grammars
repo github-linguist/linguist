@@ -93,8 +93,17 @@ class GrammarList
 
 		markdown
 	end
+	
+	
+	# Update the file displaying the reader-friendly list of grammar repos
+	def update_readme
+		readme = "#{ROOT}/vendor/README.md"
+		preamble = File.read(readme).match(/\A.+?<!--.+?-->\n/ms)
+		list = self.to_markdown
+		File.write(readme, preamble.to_s + list)
+	end
 end
 
 
 list = GrammarList.new
-puts list.to_markdown()
+puts list.update_readme()
