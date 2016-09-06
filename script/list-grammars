@@ -1,0 +1,69 @@
+#!/usr/bin/env ruby
+
+require "linguist"
+require "json"
+require "yaml"
+
+root = File.expand_path "../../", __FILE__
+
+language_names = Linguist::Language.all.map(&:name).sort { |a, b| a.downcase() <=> b.downcase() }
+
+
+# Shorten a repository URL
+def shorten(url)
+	if url =~ /^https?:\/\/(?:www\.)?github\.com\/([^\/]+\/[^\/]+)/i
+		$1
+	elsif url =~ /^https?:\/\/(?:www\.)?(bitbucket|gitlab)\.(?:com|org)\/([^\/]+\/[^\/]+)/i
+		"#{$1.downcase()}:#{$2}"
+	else
+		url.replace(/^https?:\/\/(?:www\.)?/i, "")
+	end
+end
+
+# Load .gitmodules
+submodules = {}
+submodule_file = File.read("#{root}/.gitmodules")
+pattern = /^\[submodule\s*"([^"]+)"\]$\n((?:^(?!\[).+(?:\n|$))+)/is
+submodule_file.scan(pattern) do |id, attr|
+	submod = {}
+	submod[:path]  = $1 if attr =~ /^\s*path\s*=\s*(.+)$/
+	submod[:url]   = $1 if attr =~ /^\s*url\s*=\s*(.+)$/
+	submod[:url].gsub!(/\.git$/, "")
+	submod[:short] = shorten(submod[:url])
+	submodules["#{id}"] = submod
+end
+
+# Load grammars.yml
+submodules_by_scope = {}
+grammars = YAML.load_file("#{root}/grammars.yml")
+grammars.each do |path, scopes|
+	scopes.each { |scope| submodules_by_scope[scope] = path }
+end
+
+
+# Markdown: Generate grammar list
+markdown = ""
+language_names.each do |item|
+	lang  = Linguist::Language["#{item}"]
+	scope = lang.tm_scope
+	next if scope == "none"
+	path = submodules_by_scope[scope] || scope
+	case path
+	when "https://bitbucket.org/Clams/sublimesystemverilog/get/default.tar.gz"
+		short_url = "bitbucket:Clams/sublimesystemverilog"
+		long_url  = "https://bitbucket.org/Clams/sublimesystemverilog"
+	when "http://svn.edgewall.org/repos/genshi/contrib/textmate/Genshi.tmbundle/Syntaxes/Markup%20Template%20%28XML%29.tmLanguage"
+		short_url = "genshi.edgewall.org/query"
+		long_url  = "https://genshi.edgewall.org/query"
+	when "vendor/grammars/oz-tmbundle/Syntaxes/Oz.tmLanguage"
+		short_url = "eregon/oz-tmbundle"
+		long_url  = "https://github.com/eregon/oz-tmbundle"
+	else
+		submodule = submodules[submodules_by_scope[scope]]
+		short_url = submodule[:short]
+		long_url  = submodule[:url]
+	end
+	markdown += "- **#{item}:** [#{short_url}](#{long_url})\n"
+end
+
+puts markdown
