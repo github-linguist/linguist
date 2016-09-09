@@ -73,8 +73,8 @@ module Linguist
     #
     # Returns sorted Array of result pairs. Each pair contains the
     # String language name and a Float score.
-    def self.classify(db, tokens, languages = nil)
-      languages ||= db['languages'].keys
+    def self.classify(db, tokens, languages = [])
+      languages = db['languages'].keys if languages.empty?
       new(db).classify(tokens, languages)
     end
 
