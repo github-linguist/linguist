@@ -144,10 +144,22 @@ module Linguist
       end
     end
 
-    disambiguate ".for", ".f" do |data|
+    fortran_rx = /^([c*][^abd-z]|      (subroutine|program|end)\s|\s*!)/i
+
+    disambiguate ".f" do |data|
       if /^: /.match(data)
         Language["Forth"]
-      elsif /^([c*][^abd-z]|      (subroutine|program|end)\s|\s*!)/i.match(data)
+      elsif data.include?("flowop")
+        Language["Filebench WML"]
+      elsif fortran_rx.match(data)
+        Language["FORTRAN"]
+      end
+    end
+
+    disambiguate ".for" do |data|
+      if /^: /.match(data)
+        Language["Forth"]
+      elsif fortran_rx.match(data)
         Language["FORTRAN"]
       end
     end
