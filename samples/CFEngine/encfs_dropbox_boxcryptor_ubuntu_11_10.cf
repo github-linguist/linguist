@@ -1,0 +1,317 @@
+body common control {
+
+    bundlesequence  => {
+                        "main",
+                        };
+
+    inputs          => {
+                        "cfengine_stdlib.cf",
+                        };
+}
+
+bundle agent main {
+# Setup encfs on one of your dropbox folders for use with boxcryptor
+    vars:
+        "settings[user]"      string => "user";
+        "settings[group]"     string => "group";
+        "settings[encfs]"     string => "/home/user/Dropbox/encfs";
+        "settings[mount]"     string => "/home/user/Documents/Safe";
+        "settings[password]"  string => "supersecret";
+
+    methods:
+        "required_software" 
+            usebundle   => install_boxcryptor,
+            action      => if_elapsed("360"),
+            comment     => "Install software to work with boxcryptor, but only
+                            verify and try once every 6 hours";
+
+        "encfs" 
+            usebundle => encfs_init_boxcryptor("main.settings"),
+            comment   => "If no encfs is found, initalize one compatible with boxcryptor";
+
+        "encfs" 
+            usebundle => encfs_mounted("main.settings"),
+            comment => "Ensure the encfs is mounted somewhere we can write to it";
+}
+
+bundle agent install_boxcryptor{
+# This is just a meta to make sure the deps for boxcryptor are all installed
+
+    packages:
+        ubuntu::
+            "python-pexpect"
+                package_policy  => "add",
+                package_method  => apt,
+                comment         => "python-expect is needed for the custom 
+                                    scripts to initalize and mount encfs";
+
+    methods:
+        # would be nice to find a dropbox fuse implimentation that works so we
+        # dont have to rely on the nautilus dropbox plugin and thus be able to 
+        # this on a headless machine
+        #"dropbox"    usebundle => install_dropfuse;
+        "dropbox" 
+            usebundle => install_dropbox;
+
+        "encryption" 
+            usebundle => install_encfs;
+}
+
+bundle agent encfs_init_boxcryptor(config){
+
+ vars:
+    "temp_script"
+        string => "/tmp/init_boxcryptor_encfs.py";
+
+    "init_boxcryptor_encfs_template" 
+        comment => "boxcryptor only supports a subset of encfs options, 
+                    this script initalizes an encfs filesystem with those \
+                    options. Its an interactive process so we needed expect.",
+        string => "#!/usr/bin/env python
+# encoding: utf-8
+
+import pexpect
+import sys
+
+child = pexpect.spawn('encfs $($(config)[encfs]) $($(config)[mount])')
+child.logfile = sys.stdout
+child.expect('>')
+child.sendline('x')
+child.expect('The following cipher algorithms are available')
+child.sendline('1')
+child.expect('Selected key size')
+child.sendline('256')
+child.expect('filesystem block size')
+child.sendline('1024')
+child.expect('The following filename encoding algorithms are available')
+child.sendline('3')
+child.expect('Enable filename initialization vector chaining')
+child.sendline('n')
+child.expect('Enable per-file initialization vectors')
+child.sendline('n')
+child.expect('Enable block authentication code headers')
+child.sendline('n')
+child.expect('Add random bytes to each block header')
+child.sendline('0')
+child.expect('Enable file-hole pass-through')
+child.sendline('y')
+child.expect('New Encfs Password')
+child.sendline('$($(config)[password])')
+child.expect('Verify Encfs Password')
+child.sendline('$($(config)[password])')
+child.expect(pexpect.EOF, timeout=None)
+child.close()
+sys.exit(child.exitstatus)";
+
+    classes:
+        "encfs_exists" 
+            expression  => fileexists("$($(config)[encfs])/.encfs6.xml"),
+            comment     => "Determine if there is an existing encfs";
+        "mount_exists"  
+            expression  => isdir("$($(config)[mount])"),
+            comment     => "Make sure there is a place to mount the encfs";
+ 
+ files:
+   !encfs_exists::
+        "$($(config)[mount])/."
+            create => "true",
+            perms => mog("700", "$($(config)[user])", "$($(config)[group])"),
+            comment => "Make sure that there is a place to mount the encfs";
+
+        "$(temp_script)"
+            create => "true",
+            perms => mog("700", "$($(config)[user])", "$($(config)[group])"),
+            edit_line => append_if_no_line("$(init_boxcryptor_encfs_template)"),
+            edit_defaults => empty,
+            classes => if_repaired("script_installed"),
+            comment => "If no encfs filesystem is found place the initalization script
+                        so we can execute it.";
+
+    encfs_exists::
+        "$(temp_script)"
+            delete => tidy,
+            classes => if_repaired("performed_cleanup"),
+            comment => "Delete the temporary initalization script if an encfs already exists";
+
+    commands:
+        !(encfs_exists|initalized_boxcryptor_encfs)::
+            "$(temp_script)",
+                contain => setuidgid_silent("$($(config)[user])", "$($(config)[group])"),
+                classes => "initalized_boxcryptor_encfs",
+                comment => "If no encfs is detected and we havent yet successfully initalized
+                            one fire the expect script to do so.";
+
+    reports:
+
+        script_installed::
+            "boxcryptor_initalize: I installed a script to do my work";
+
+        initalized_boxcryptor_encfs::
+            "boxcryptor_initalize: I couldn't find an existing encfs at $($(config)[encfs]) so I initalized one";
+
+        performed_cleanup::
+            "boxcryptor_initalize: I cleaned up after myself";
+
+
+}
+
+bundle agent encfs_mounted(config){
+    vars:
+    "temp_script"
+        comment => "Mounting an encfs filesystem requires a password, this script uses expect so we can supply one interactively",
+        string => "/tmp/mount_encfs.py";
+
+        "mount_encfs_tpl" string => "#!/usr/bin/env python
+# encoding: utf-8
+
+import pexpect
+import sys
+
+child = pexpect.spawn('/usr/bin/encfs $($(config)[encfs]) $($(config)[mount])')
+
+child.logfile = sys.stdout
+child.expect('EncFS Password')
+child.sendline('$($(config)[password])')
+child.expect(pexpect.EOF, timeout=None)
+child.close()
+sys.exit(child.exitstatus)";
+
+    classes:
+        "encfs_mounted" 
+            expression  => returnszero("/bin/grep --silent -P ^encfs\\s$($(config)[mount]) /etc/mtab", "noshell"),
+            comment     => "Determine if the encfs filesystem is currently mounted or not"; 
+
+    files:
+        !encfs_mounted::
+            "$(temp_script)"
+                create          => "true",
+                perms           => mog("700", "$($(config)[user])", "$($(config)[group])"),
+                edit_line       => append_if_no_line("$(mount_encfs_tpl)"),
+                edit_defaults   => empty,
+                classes         => if_repaired("placed_script"),
+                comment         => "If we dont detect that our desired encfs filesystem is mounted
+                                    drop the expect script in place. We use the expect script
+                                    because we need to provide a password";
+
+        encfs_mounted::
+            "$(temp_script)"
+                delete  => tidy,
+                classes => if_repaired("performed_cleanup"),
+                comment => "If the encfs filesystem is mounted we have no need for the mount script to be in place, delete it";
+
+    commands:
+        !encfs_mounted::
+            "$(temp_script)",
+                contain => setuidgid_silent("$($(config)[user])", "$($(config)[group])"),
+                classes => if_else("repaired_mount", "failed_repair_mount"),
+                comment => "If the enfcs filesystem is not mounted execute our mount script";
+
+    reports:
+        placed_script::
+            "boxcryptor_mounted: I installed a script";
+
+        repaired_mount::
+            "boxcryptor_mounted: $($(config)[encfs]) was not mounted on $($(config)[mount]), but we fixed it";
+
+        performed_cleanup::
+            "boxcryptor_mounted: I cleaned up aftermyself";
+
+        !encfs_mounted.failed_repair_mount::
+            "boxcryptor_mounted: I dunno what happened, but I couldnt mount the encfs volume check your settings!";
+
+        !repaired_mount.encfs_mounted::
+            "boxcryptor_mounted: Everything was as expected";
+ 
+}
+
+
+
+
+bundle agent install_dropbox{
+    vars:
+        ubuntu::
+            "packages"  slist => { "nautilus-dropbox" };
+
+    packages:
+        ubuntu::
+            "$(packages)"
+                package_policy  => "add",
+                package_method  => apt,
+                comment         => "Install dropbox packages with apt";
+
+}
+
+bundle agent install_encfs {
+# Install encfs
+    vars:
+        ubuntu::
+            "packages" slist => { "encfs", "fuse-utils" };
+ 
+    packages:
+        ubuntu::
+            "$(packages)"
+                package_policy  => "add",
+                package_method  => apt,
+                comment         => "Install encfs with apt";
+    
+}
+
+###########################################################################
+#                               body parts                                #
+###########################################################################
+
+body contain setuidgid_silent(x,y){
+    exec_owner => "$(x)";
+    exec_group => "$(y)";
+    no_output => "true";
+}
+
+
+
+###########################################################################
+#                            Not really useful                            #
+###########################################################################
+# I couldnt get dropfuse to work, nor did I try very hard
+bundle agent install_dropfuse{
+    vars:
+        "dropfuse_src" 
+            string => "https://raw.github.com/arekzb/dropfuse/master/dropfuse.py",
+            comment => "Location to get dropfuse binary from since its not packaged";
+
+        "dropfuse_bin"
+            string  => "/usr/local/bin/dropfuse.py",
+            comment => "Location to install the dropfuse library";
+    
+        ubuntu::
+            # TODO: find out if fuse-utils is really required for this
+            "packages" 
+                slist   => { "fuse-utils", "python-fuse" },
+                comment => "Packages required";
+
+    files:
+        "$(dropfuse_bin)"
+            perms       => mog("755", "root", "root"),
+            ifvarclass  => "dropfuse_installed",
+            comment     => "If dropfuse is installed ensure that 
+                            it is executable";
+    packages:
+        ubuntu::
+            "$(packages)"
+                package_policy => "add",
+                package_method => apt, 
+                comment        => "Install the selected package with apt if
+                                   its not installed";
+    classes:
+        "dropfuse_installed" 
+            expression  => fileexists("$(dropfuse_bin)"),
+            comment     => "Determine if the dropfuse binary is installed";
+
+    commands:
+        !dropfuse_installed::
+            "/usr/bin/wget $(dropfuse_src) -O $(dropfuse_bin)",
+            comment => "Install the dropfuse binary, its not currently 
+                        packaged so just get it from the authors github account";
+
+}
+
+
