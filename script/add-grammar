@@ -86,6 +86,7 @@ end
 
 log "Registering new submodule: #{repo_new}"
 `git submodule add -f #{https} #{repo_new}`
+exit 1 if $?.exitstatus > 0
 `script/convert-grammars --add #{repo_new}`
 
 log "Confirming license"
