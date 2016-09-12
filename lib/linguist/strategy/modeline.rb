@@ -10,7 +10,7 @@ module Linguist
           vi
           (?:m[<=>]?\d+|m)? # Version-specific modeline
           |
-          (?!^)\s
+          [\t\x20] # `ex:` requires whitespace, because "ex:" might be short for "example:"
           ex
         )
 
