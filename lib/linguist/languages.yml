@@ -331,7 +331,7 @@ Batchfile:
   extensions:
   - .bat
   - .cmd
-  tm_scope: source.dosbatch
+  tm_scope: source.batchfile
   ace_mode: batchfile
   color: "#C1F12E"
 
@@ -1132,6 +1132,13 @@ Fantom:
   color: "#dbded5"
   extensions:
   - .fan
+  tm_scope: none
+  ace_mode: text
+
+Filebench WML:
+  type: programming
+  extensions:
+  - .f
   tm_scope: none
   ace_mode: text
 
@@ -3078,6 +3085,7 @@ Python:
   - .pyt
   - .pyw
   - .rpy
+  - .spec
   - .tac
   - .wsgi
   - .xpy
@@ -3195,6 +3203,15 @@ RMarkdown:
   extensions:
   - .rmd
   tm_scope: source.gfm
+
+RPM Spec:
+  type: data
+  tm_scope: source.rpm-spec
+  extensions:
+  - .spec
+  aliases:
+  - specfile
+  ace_mode: text
 
 RUNOFF:
   type: markup
@@ -3331,6 +3348,7 @@ Ruby:
   - .rbx
   - .ru
   - .ruby
+  - .spec
   - .thor
   - .watchr
   interpreters:
