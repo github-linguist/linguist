@@ -18,6 +18,8 @@ class TestModelines < Minitest::Test
     assert_modeline Language["Ruby"], fixture_blob("Data/Modelines/ruby8")
     assert_modeline Language["Ruby"], fixture_blob("Data/Modelines/ruby9")
     assert_modeline Language["Ruby"], fixture_blob("Data/Modelines/ruby10")
+    assert_modeline Language["Ruby"], fixture_blob("Data/Modelines/ruby11")
+    assert_modeline Language["Ruby"], fixture_blob("Data/Modelines/ruby12")
     assert_modeline Language["C++"], fixture_blob("Data/Modelines/seeplusplus")
     assert_modeline Language["C++"], fixture_blob("Data/Modelines/seeplusplusEmacs1")
     assert_modeline Language["C++"], fixture_blob("Data/Modelines/seeplusplusEmacs2")
