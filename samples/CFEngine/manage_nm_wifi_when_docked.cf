@@ -1,0 +1,49 @@
+bundle agent manage_wifi_when_docked
+# Example policy to detect when workstation is docked (check lsusb output)
+# When docked disable wifi, when undocked enable wifi
+{
+vars:
+    "lsusb"       string => "/usr/bin/lsusb";
+    "known_docks" slist  => { "17ef:100a Lenovo ThinkPad Mini Dock Plus Series 3" };
+    "nmcli"       string => "/usr/bin/nmcli";
+
+classes:
+    "am_docked"
+      comment    => "Define class if a known dock is listed in the lsusb output",
+      handle     => "manage_wifi_when_docked_classes_am_docked",
+      expression => regcmp(".*$(known_docks).*", execresult("$(lsusb)", "noshell"));
+
+    "nm_wifi_disabled"
+      comment    => "Define a class if wifi is currently disabled",
+      handle     => "manage_wifi_when_docked_classes_nm_wifi_disabled",
+      expression => regcmp(".*disabled$", execresult("$(nmcli) nm wifi", "noshell"));
+
+commands:
+    am_docked.!nm_wifi_disabled::
+      "/usr/bin/nmcli"
+        comment => "Wifi is kind of silly to use while docked (unless you have a good reason)",
+        handle  => "manage_wifi_when_docked_commands_disable",
+        args    => "nm wifi off",
+        classes => if_repaired("disabled_wifi");
+
+    !am_docked.nm_wifi_disabled::
+      "/usr/bin/nmcli"
+        comment => "If we arent docked and wifi is disabled, we probably want to re-enable wifi",
+        handle  => "manage_wifi_when_docked_commands_disable",
+        args    => "nm wifi on",
+        classes => if_repaired("re_enabled_wifi");
+
+
+reports:
+  (inform_mode|verbose_mode).am_docked::
+    "I am docked";
+
+  (inform_mode|verbose_mode).nm_wifi_disabled::
+    "I detected that WIFI is disabled";
+
+  (inform_mode|verbose_mode).disabled_wifi::
+    "I disabled wifi";
+
+  (inform_mode|verbose_mode).re_enabled_wifi::
+    "I re-enabled wifi";
+}
