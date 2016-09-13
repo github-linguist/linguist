@@ -77,6 +77,12 @@ class TestLanguage < Minitest::Test
     assert_equal 421, Language['xBase'].language_id
   end
 
+  def test_find_by_id
+    assert_equal Language['Elixir'], Language.find_by_id(100)
+    assert_equal Language['Ruby'], Language.find_by_id(326)
+    assert_equal Language['xBase'], Language.find_by_id(421)
+  end
+
   def test_groups
     # Test a couple identity cases
     assert_equal Language['Perl'], Language['Perl'].group
