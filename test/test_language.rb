@@ -410,6 +410,14 @@ class TestLanguage < Minitest::Test
     assert missing.empty?, message
   end
 
+  def test_all_language_id_are_unique
+    duplicates = Language.all.group_by{ |language| language.language_id }.select { |k, v| v.size > 1 }.map(&:first)
+
+    message = "The following language_id are used several times in languages.yml. Please use script/set-language-ids --update as per the contribution guidelines.\n"
+    duplicates.each { |language_id| message << "#{language_id}\n" }
+    assert duplicates.empty?, message
+  end
+
   def test_all_languages_have_a_valid_ace_mode
     ace_fixture_path = File.join('test', 'fixtures', 'ace_modes.json')
     skip("No ace_modes.json file") unless File.exist?(ace_fixture_path)
