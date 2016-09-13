@@ -386,6 +386,14 @@ class TestLanguage < Minitest::Test
     assert missing.empty?, message
   end
 
+  def test_all_languages_have_a_language_id_set
+    missing = Language.all.select { |language| language.language_id.nil? }
+
+    message = "The following languages do not have a language_id listed in languages.yml. Please add language_id fields for all new languages.\n"
+    missing.each { |language| message << "#{language.name}\n" }
+    assert missing.empty?, message
+  end
+
   def test_all_languages_have_a_valid_ace_mode
     ace_fixture_path = File.join('test', 'fixtures', 'ace_modes.json')
     skip("No ace_modes.json file") unless File.exist?(ace_fixture_path)

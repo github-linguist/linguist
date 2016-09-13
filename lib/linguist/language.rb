@@ -289,6 +289,9 @@ module Linguist
       # Set legacy search term
       @search_term = attributes[:search_term] || default_alias_name
 
+      # Set the language_id 
+      @language_id = attributes[:language_id]
+
       # Set extensions or default to [].
       @extensions = attributes[:extensions] || []
       @interpreters = attributes[:interpreters]   || []
@@ -350,6 +353,17 @@ module Linguist
     #
     # Returns the name String
     attr_reader :search_term
+
+    # Public: Get language_id (used in GitHub search)
+    #
+    # Examples
+    #
+    #   # => "1"
+    #   # => "2"
+    #   # => "3"
+    #
+    # Returns the integer language_id
+    attr_reader :language_id
 
     # Public: Get the name of a TextMate-compatible scope
     #
@@ -547,6 +561,7 @@ module Linguist
       :group_name        => options['group'],
       :searchable        => options.fetch('searchable', true),
       :search_term       => options['search_term'],
+      :language_id       => options['language_id'],
       :extensions        => Array(options['extensions']),
       :interpreters      => options['interpreters'].sort,
       :filenames         => options['filenames'],
