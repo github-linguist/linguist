@@ -67,6 +67,16 @@ class TestLanguage < Minitest::Test
     assert_nil Language.find_by_alias(nil)
   end
 
+  # Note these are set by script/set-language-ids. If these tests fail then someone
+  # has changed the language_id fields set in languages.yml which is almost certainly
+  # not what you want to happen (these fields are used in GitHub's search indexes)
+  def test_language_ids
+    assert_equal 4, Language['ANTLR'].language_id
+    assert_equal 54, Language['Ceylon'].language_id
+    assert_equal 326, Language['Ruby'].language_id
+    assert_equal 421, Language['xBase'].language_id
+  end
+
   def test_groups
     # Test a couple identity cases
     assert_equal Language['Perl'], Language['Perl'].group
