@@ -202,6 +202,8 @@ module Linguist
     disambiguate ".inc" do |data|
       if /^<\?(?:php)?/.match(data)
         Language["PHP"]
+      elsif /^\s*#(declare|local|macro|while)\s/.match(data)
+        Language["POV-Ray SDL"]
       end
     end
 
