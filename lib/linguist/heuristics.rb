@@ -144,7 +144,7 @@ module Linguist
       end
     end
 
-    fortran_rx = /^([c*][^abd-z]|      (subroutine|program|end)\s|\s*!)/i
+    fortran_rx = /^([c*][^abd-z]|      (subroutine|program|end|data)\s|\s*!)/i
 
     disambiguate ".f" do |data|
       if /^: /.match(data)
