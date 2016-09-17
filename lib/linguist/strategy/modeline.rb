@@ -1,7 +1,36 @@
 module Linguist
   module Strategy
     class Modeline
-      EMACS_MODELINE = /-\*-\s*(?:(?!mode)[\w-]+\s*:\s*(?:[\w+-]+)\s*;?\s*)*(?:mode\s*:)?\s*([\w+-]+)\s*(?:;\s*(?!mode)[\w-]+\s*:\s*[\w+-]+\s*)*;?\s*-\*-/i
+      EMACS_MODELINE = /
+        -\*-
+        (?:
+          # Short form: `-*- ruby -*-`
+          \s* (?= [^:;\s]+ \s* -\*-)
+          |
+          # Longer form: `-*- foo:bar; mode: ruby; -*-`
+          (?:
+            .*?       # Preceding variables: `-*- foo:bar bar:baz;`
+            [;\s]     # Which are delimited by spaces or semicolons
+            |
+            (?<=-\*-) # Not preceded by anything: `-*-mode:ruby-*-`
+          )
+          mode        # Major mode indicator
+          \s*:\s*     # Allow whitespace around colon: `mode : ruby`
+        )
+        ([^:;\s]+)    # Name of mode
+
+        # Ensure the mode is terminated correctly
+        (?=
+          # Followed by semicolon or whitespace
+          [\s;]
+          |
+          # Touching the ending sequence: `ruby-*-`
+          (?<![-*])   # Don't allow stuff like `ruby--*-` to match; it'll invalidate the mode
+          -\*-        # Emacs has no problems reading `ruby --*-`, however.
+        )
+        .*?           # Anything between a cleanly-terminated mode and the ending -*-
+        -\*-
+      /xi
 
       # First form vim modeline
       # [text]{white}{vi:|vim:|ex:}[white]{options}
