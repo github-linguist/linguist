@@ -67,6 +67,22 @@ class TestLanguage < Minitest::Test
     assert_nil Language.find_by_alias(nil)
   end
 
+  # Note these are set by script/set-language-ids. If these tests fail then someone
+  # has changed the language_id fields set in languages.yml which is almost certainly
+  # not what you want to happen (these fields are used in GitHub's search indexes)
+  def test_language_ids
+    assert_equal 4, Language['ANTLR'].language_id
+    assert_equal 54, Language['Ceylon'].language_id
+    assert_equal 326, Language['Ruby'].language_id
+    assert_equal 421, Language['xBase'].language_id
+  end
+
+  def test_find_by_id
+    assert_equal Language['Elixir'], Language.find_by_id(100)
+    assert_equal Language['Ruby'], Language.find_by_id(326)
+    assert_equal Language['xBase'], Language.find_by_id(421)
+  end
+
   def test_groups
     # Test a couple identity cases
     assert_equal Language['Perl'], Language['Perl'].group
@@ -384,6 +400,22 @@ class TestLanguage < Minitest::Test
     width = missing.map { |language| language.name.length }.max
     message << missing.map { |language| sprintf("%-#{width}s", language.name) }.sort.join("\n")
     assert missing.empty?, message
+  end
+
+  def test_all_languages_have_a_language_id_set
+    missing = Language.all.select { |language| language.language_id.nil? }
+
+    message = "The following languages do not have a language_id listed in languages.yml. Please add language_id fields for all new languages.\n"
+    missing.each { |language| message << "#{language.name}\n" }
+    assert missing.empty?, message
+  end
+
+  def test_all_language_id_are_unique
+    duplicates = Language.all.group_by{ |language| language.language_id }.select { |k, v| v.size > 1 }.map(&:first)
+
+    message = "The following language_id are used several times in languages.yml. Please use script/set-language-ids --update as per the contribution guidelines.\n"
+    duplicates.each { |language_id| message << "#{language_id}\n" }
+    assert duplicates.empty?, message
   end
 
   def test_all_languages_have_a_valid_ace_mode

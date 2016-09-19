@@ -20,10 +20,11 @@ module Linguist
   #
   # Languages are defined in `lib/linguist/languages.yml`.
   class Language
-    @languages       = []
-    @index           = {}
-    @name_index      = {}
-    @alias_index     = {}
+    @languages          = []
+    @index              = {}
+    @name_index         = {}
+    @alias_index        = {}
+    @language_id_index  = {}
 
     @extension_index          = Hash.new { |h,k| h[k] = [] }
     @interpreter_index        = Hash.new { |h,k| h[k] = [] }
@@ -83,6 +84,8 @@ module Linguist
       language.filenames.each do |filename|
         @filename_index[filename] << language
       end
+
+      @language_id_index[language.language_id] = language
 
       language
     end
@@ -193,6 +196,19 @@ module Linguist
       @interpreter_index[interpreter]
     end
 
+    # Public: Look up Languages by its language_id.
+    #
+    # language_id - Integer of language_id
+    #
+    # Examples
+    #
+    #   Language.find_by_id(100)
+    #   # => [#<Language name="Elixir">]
+    #
+    # Returns the matching Language
+    def self.find_by_id(language_id)
+      @language_id_index[language_id.to_i]
+    end
 
     # Public: Look up Language by its name.
     #
@@ -289,6 +305,9 @@ module Linguist
       # Set legacy search term
       @search_term = attributes[:search_term] || default_alias_name
 
+      # Set the language_id 
+      @language_id = attributes[:language_id]
+
       # Set extensions or default to [].
       @extensions = attributes[:extensions] || []
       @interpreters = attributes[:interpreters]   || []
@@ -350,6 +369,17 @@ module Linguist
     #
     # Returns the name String
     attr_reader :search_term
+
+    # Public: Get language_id (used in GitHub search)
+    #
+    # Examples
+    #
+    #   # => "1"
+    #   # => "2"
+    #   # => "3"
+    #
+    # Returns the integer language_id
+    attr_reader :language_id
 
     # Public: Get the name of a TextMate-compatible scope
     #
@@ -547,6 +577,7 @@ module Linguist
       :group_name        => options['group'],
       :searchable        => options.fetch('searchable', true),
       :search_term       => options['search_term'],
+      :language_id       => options['language_id'],
       :extensions        => Array(options['extensions']),
       :interpreters      => options['interpreters'].sort,
       :filenames         => options['filenames'],
