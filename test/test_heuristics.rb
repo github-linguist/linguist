@@ -122,9 +122,12 @@ class TestHeuristcs < Minitest::Test
     })
   end
 
+  # Candidate languages = ["Assembly", "C++", "HTML", "PAWN", "PHP",
+  #                        "POV-Ray SDL", "Pascal", "SQL", "SourcePawn"]
   def test_inc_by_heuristics
     assert_heuristics({
-      "PHP" => all_fixtures("PHP", "*.inc")
+      "PHP" => all_fixtures("PHP", "*.inc"),
+      "POV-Ray SDL" => all_fixtures("POV-Ray SDL", "*.inc")
     })
   end
 
