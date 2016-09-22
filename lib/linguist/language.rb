@@ -585,6 +585,7 @@ module Linguist
       :aliases           => options['aliases'],
       :tm_scope          => options['tm_scope'],
       :ace_mode          => options['ace_mode'],
+      :codemirror_mode   => options['codemirror_mode'],
       :wrap              => options['wrap'],
       :group_name        => options['group'],
       :searchable        => options.fetch('searchable', true),

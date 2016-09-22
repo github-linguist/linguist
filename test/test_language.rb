@@ -349,6 +349,10 @@ class TestLanguage < Minitest::Test
     assert Language.ace_modes.include?(Language['FORTRAN'])
   end
 
+  def test_codemirror_mode
+    assert_equal 'clike', Language['C++'].codemirror_mode
+  end
+
   def test_wrap
     assert_equal false, Language['C'].wrap
     assert_equal true, Language['Markdown'].wrap
