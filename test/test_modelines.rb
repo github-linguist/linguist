@@ -30,6 +30,9 @@ class TestModelines < Minitest::Test
     assert_modeline Language["C++"], fixture_blob("Data/Modelines/seeplusplusEmacs7")
     assert_modeline Language["C++"], fixture_blob("Data/Modelines/seeplusplusEmacs8")
     assert_modeline Language["C++"], fixture_blob("Data/Modelines/seeplusplusEmacs9")
+    assert_modeline Language["C++"], fixture_blob("Data/Modelines/seeplusplusEmacs10")
+    assert_modeline Language["C++"], fixture_blob("Data/Modelines/seeplusplusEmacs11")
+    assert_modeline Language["C++"], fixture_blob("Data/Modelines/seeplusplusEmacs12")
     assert_modeline Language["Text"], fixture_blob("Data/Modelines/fundamentalEmacs.c")
     assert_modeline Language["Prolog"], fixture_blob("Data/Modelines/not_perl.pl")
     assert_modeline Language["Smalltalk"], fixture_blob("Data/Modelines/example_smalltalk.md")
@@ -53,6 +56,9 @@ class TestModelines < Minitest::Test
     assert_equal Language["C++"], fixture_blob("Data/Modelines/seeplusplusEmacs7").language
     assert_equal Language["C++"], fixture_blob("Data/Modelines/seeplusplusEmacs8").language
     assert_equal Language["C++"], fixture_blob("Data/Modelines/seeplusplusEmacs9").language
+    assert_equal Language["C++"], fixture_blob("Data/Modelines/seeplusplusEmacs10").language
+    assert_equal Language["C++"], fixture_blob("Data/Modelines/seeplusplusEmacs11").language
+    assert_equal Language["C++"], fixture_blob("Data/Modelines/seeplusplusEmacs12").language
     assert_equal Language["Text"], fixture_blob("Data/Modelines/fundamentalEmacs.c").language
     assert_equal Language["Prolog"], fixture_blob("Data/Modelines/not_perl.pl").language
     assert_equal Language["Smalltalk"], fixture_blob("Data/Modelines/example_smalltalk.md").language
