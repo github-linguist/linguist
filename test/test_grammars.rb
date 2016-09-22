@@ -5,7 +5,9 @@ class TestGrammars < Minitest::Test
 
   # List of projects that are allowed without licenses
   PROJECT_WHITELIST = [
-    # Dual MIT and GPL license
+    "vendor/grammars/factor",
+    "vendor/grammars/go-tmbundle",
+    "vendor/grammars/jflex.tmbundle",
     "vendor/grammars/language-csharp",
     "vendor/grammars/sublimeassembly"
   ].freeze
