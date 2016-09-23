@@ -234,8 +234,6 @@ Apollo Guidance Computer:
   - ".agc"
   tm_scope: source.agc
   ace_mode: assembly_x86
-  codemirror_mode: gas
-  codemirror_mime_mode: text/x-gas
   language_id: 18
 AppleScript:
   type: programming
@@ -298,8 +296,6 @@ Assembly:
   - ".nasm"
   tm_scope: source.assembly
   ace_mode: assembly_x86
-  codemirror_mode: gas
-  codemirror_mime_mode: text/x-gas
   language_id: 24
 Augeas:
   type: programming
@@ -516,8 +512,6 @@ C-ObjDump:
   - ".c-objdump"
   tm_scope: objdump.x86asm
   ace_mode: assembly_x86
-  codemirror_mode: gas
-  codemirror_mime_mode: text/x-gas
   language_id: 44
 C2hs Haskell:
   type: programming
@@ -568,7 +562,7 @@ COLLADA:
   tm_scope: text.xml
   ace_mode: xml
   codemirror_mode: xml
-  codemirror_mime_mode: text/x-xml
+  codemirror_mime_mode: text/xml
   language_id: 49
 CSS:
   type: markup
@@ -799,8 +793,6 @@ Cpp-ObjDump:
   aliases:
   - c++-objdump
   ace_mode: assembly_x86
-  codemirror_mode: gas
-  codemirror_mime_mode: text/x-gas
   language_id: 70
 Creole:
   type: prose
@@ -909,8 +901,6 @@ D-ObjDump:
   - ".d-objdump"
   tm_scope: objdump.x86asm
   ace_mode: assembly_x86
-  codemirror_mode: gas
-  codemirror_mime_mode: text/x-gas
   language_id: 81
 DIGITAL Command Language:
   type: programming
@@ -972,7 +962,7 @@ Dart:
   - dart
   ace_mode: dart
   codemirror_mode: dart
-  codemirror_mime_mode: text/x-dart
+  codemirror_mime_mode: application/dart
   language_id: 87
 Diff:
   type: data
@@ -1337,8 +1327,6 @@ GAS:
   - ".ms"
   tm_scope: source.assembly
   ace_mode: assembly_x86
-  codemirror_mode: gas
-  codemirror_mime_mode: text/x-gas
   language_id: 120
 GCC Machine Description:
   type: programming
@@ -1632,7 +1620,7 @@ HTML:
   type: markup
   tm_scope: text.html.basic
   ace_mode: html
-  codemirror_mode: htmlembedded
+  codemirror_mode: htmlmixed
   codemirror_mime_mode: text/html
   color: "#e44b23"
   aliases:
@@ -1671,7 +1659,7 @@ HTML+ECR:
   extensions:
   - ".ecr"
   ace_mode: text
-  codemirror_mode: htmlembedded
+  codemirror_mode: htmlmixed
   codemirror_mime_mode: text/html
   language_id: 148
 HTML+EEX:
@@ -1683,7 +1671,7 @@ HTML+EEX:
   extensions:
   - ".eex"
   ace_mode: text
-  codemirror_mode: htmlembedded
+  codemirror_mode: htmlmixed
   codemirror_mime_mode: text/html
   language_id: 149
 HTML+ERB:
@@ -1752,7 +1740,6 @@ Handlebars:
   - ".hbs"
   tm_scope: text.html.handlebars
   ace_mode: handlebars
-  codemirror_mode: handlebars
   language_id: 155
 Harbour:
   type: programming
@@ -1962,8 +1949,6 @@ JSONLD:
   type: data
   group: JavaScript
   ace_mode: javascript
-  codemirror_mode: javascript
-  codemirror_mime_mode: application/ld+json
   extensions:
   - ".jsonld"
   tm_scope: source.js
@@ -1985,6 +1970,7 @@ JSX:
   - ".jsx"
   tm_scope: source.js.jsx
   ace_mode: javascript
+  codemirror_mode: jsx
   codemirror_mime_mode: text/jsx
   language_id: 178
 Jade:
@@ -2118,7 +2104,7 @@ KiCad:
 Kit:
   type: markup
   ace_mode: html
-  codemirror_mode: htmlembedded
+  codemirror_mode: htmlmixed
   codemirror_mime_mode: text/html
   extensions:
   - ".kit"
@@ -2419,7 +2405,7 @@ MTML:
   - ".mtml"
   tm_scope: text.html.basic
   ace_mode: html
-  codemirror_mode: htmlembedded
+  codemirror_mode: htmlmixed
   codemirror_mime_mode: text/html
   language_id: 218
 MUF:
@@ -2474,7 +2460,7 @@ Mako:
 Markdown:
   type: prose
   ace_mode: markdown
-  codemirror_mode: markdown
+  codemirror_mode: gfm
   codemirror_mime_mode: text/x-gfm
   wrap: true
   extensions:
@@ -2837,8 +2823,6 @@ ObjDump:
   - ".objdump"
   tm_scope: objdump.x86asm
   ace_mode: assembly_x86
-  codemirror_mode: gas
-  codemirror_mime_mode: text/x-gas
   language_id: 256
 Objective-C:
   type: programming
@@ -3247,7 +3231,7 @@ PowerShell:
   type: programming
   ace_mode: powershell
   codemirror_mode: powershell
-  codemirror_mime_mode: text/x-powershell
+  codemirror_mime_mode: application/x-powershell
   aliases:
   - posh
   extensions:
@@ -3482,7 +3466,7 @@ RMarkdown:
   type: prose
   wrap: true
   ace_mode: markdown
-  codemirror_mode: markdown
+  codemirror_mode: gfm
   codemirror_mime_mode: text/x-gfm
   extensions:
   - ".rmd"
@@ -4048,7 +4032,6 @@ Stylus:
   - ".styl"
   tm_scope: source.stylus
   ace_mode: stylus
-  codemirror_mode: stylus
   language_id: 359
 SubRip Text:
   type: data
@@ -4263,7 +4246,7 @@ TypeScript:
   tm_scope: source.ts
   ace_mode: typescript
   codemirror_mode: javascript
-  codemirror_mime_mode: text/x-typescript
+  codemirror_mime_mode: application/typescript
   language_id: 378
 Unified Parallel C:
   type: programming
@@ -4418,7 +4401,6 @@ Vue:
   - ".vue"
   tm_scope: text.html.vue
   ace_mode: html
-  codemirror_mode: vue
   language_id: 391
 Wavefront Material:
   type: data
