@@ -302,6 +302,7 @@ module Linguist
 
       @ace_mode = attributes[:ace_mode]
       @codemirror_mode = attributes[:codemirror_mode]
+      @codemirror_mime_type = attributes[:codemirror_mime_type]
       @wrap = attributes[:wrap] || false
 
       # Set legacy search term
@@ -399,7 +400,10 @@ module Linguist
     # Returns a String name or nil
     attr_reader :ace_mode
 
-    # Public: Get Codemirror mode
+    # Public: Get CodeMirror mode
+    #
+    # Maps to a directory in the `mode/` source code.
+    #   https://github.com/codemirror/CodeMirror/tree/master/mode
     #
     # Examples
     #
@@ -409,6 +413,17 @@ module Linguist
     #
     # Returns a String name or nil
     attr_reader :codemirror_mode
+
+    # Public: Get CodeMirror MIME type mode
+    #
+    # Examples
+    #
+    #  # => "nil"
+    #  # => "text/x-javascript"
+    #  # => "text/x-csrc"
+    #
+    # Returns a String name or nil
+    attr_reader :codemirror_mime_type
 
     # Public: Should language lines be wrapped
     #
@@ -587,6 +602,7 @@ module Linguist
       :tm_scope          => options['tm_scope'],
       :ace_mode          => options['ace_mode'],
       :codemirror_mode   => options['codemirror_mode'],
+      :codemirror_mime_type => options['codemirror_mime_type'],
       :wrap              => options['wrap'],
       :group_name        => options['group'],
       :searchable        => options.fetch('searchable', true),
