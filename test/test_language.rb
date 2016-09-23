@@ -350,7 +350,7 @@ class TestLanguage < Minitest::Test
   end
 
   def test_codemirror_mode
-    assert_equal 'clike', Language['C++'].codemirror_mode
+    assert_equal 'text/x-c++src', Language['C++'].codemirror_mode
   end
 
   def test_wrap

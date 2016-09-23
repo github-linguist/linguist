@@ -398,13 +398,13 @@ module Linguist
     # Returns a String name or nil
     attr_reader :ace_mode
 
-    # Public: Get Codemirror mode
+    # Public: Get Codemirror mode (as expressed by a mimetype)
     #
     # Examples
     #
     #  # => "nil"
-    #  # => "javascript"
-    #  # => "clike"
+    #  # => "text/x-javascript"
+    #  # => "text/x-csrc"
     #
     # Returns a String name or nil
     attr_reader :codemirror_mode
