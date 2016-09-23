@@ -352,7 +352,17 @@ class TestLanguage < Minitest::Test
   end
 
   def test_codemirror_mode
-    assert_equal 'text/x-c++src', Language['C++'].codemirror_mode
+    assert_equal 'ruby', Language['Ruby'].codemirror_mode
+    assert_equal 'javascript', Language['JavaScript'].codemirror_mode
+    assert_equal 'clike', Language['C'].codemirror_mode
+    assert_equal 'clike', Language['C++'].codemirror_mode
+  end
+
+  def test_codemirror_mime_mode
+    assert_equal 'text/x-ruby', Language['Ruby'].codemirror_mime_mode
+    assert_equal 'text/javascript', Language['JavaScript'].codemirror_mime_mode
+    assert_equal 'text/x-csrc', Language['C'].codemirror_mime_mode
+    assert_equal 'text/x-c++src', Language['C++'].codemirror_mime_mode
   end
 
   def test_wrap
