@@ -267,6 +267,7 @@ module Linguist
     # Returns an Array of Languages.
     def self.ace_modes
       warn "This method will be deprecated in a future 5.x release. Every language now has an `ace_mode` set."
+      warn caller
       @ace_modes ||= all.select(&:ace_mode).sort_by { |lang| lang.name.downcase }
     end
 
@@ -306,7 +307,7 @@ module Linguist
       # Set legacy search term
       @search_term = attributes[:search_term] || default_alias_name
 
-      # Set the language_id 
+      # Set the language_id
       @language_id = attributes[:language_id]
 
       # Set extensions or default to [].

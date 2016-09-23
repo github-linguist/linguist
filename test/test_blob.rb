@@ -3,14 +3,6 @@ require_relative "./helper"
 class TestBlob < Minitest::Test
   include Linguist
 
-  def silence_warnings
-    original_verbosity = $VERBOSE
-    $VERBOSE = nil
-    yield
-  ensure
-    $VERBOSE = original_verbosity
-  end
-
   def setup
     silence_warnings do
       # git blobs are normally loaded as ASCII-8BIT since they may contain data
