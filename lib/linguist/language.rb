@@ -399,7 +399,7 @@ module Linguist
     # Returns a String name or nil
     attr_reader :ace_mode
 
-    # Public: Get Codemirror mode (as expressed by a mimetype)
+    # Public: Get CodeMirror mode (as expressed by a mimetype)
     #
     # Examples
     #

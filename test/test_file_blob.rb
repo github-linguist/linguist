@@ -317,7 +317,7 @@ class TestFileBlob < Minitest::Test
     assert sample_blob("some/vendored/path/Chart.js").vendored?
     assert !sample_blob("some/vendored/path/chart.js").vendored?
 
-    # Codemirror deps
+    # CodeMirror deps
     assert sample_blob("codemirror/mode/blah.js").vendored?
     assert sample_blob("codemirror/5.0/mode/blah.js").vendored?
 
