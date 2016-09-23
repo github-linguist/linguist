@@ -154,7 +154,7 @@ class TestGrammars < Minitest::Test
 
     # Neither Licensee nor our own regex was able to detect the license, let's check the readme
     files = Dir[File.join(ROOT, submodule, "*")]
-    if readme = files.find { |path| File.basename(path) =~ /\Areadme\b/i }
+    if readme = files.find { |file| File.basename(file) =~ /\Areadme\b/i }
       classify_license(readme)
     end
   end
