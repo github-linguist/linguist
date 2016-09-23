@@ -126,7 +126,7 @@ class TestGrammars < Minitest::Test
   private
 
   def submodule_paths
-    @submodule_paths ||= `git config --list --file "#{File.join(ROOT, ".gitmodules")}"`.lines.grep(/\.path=/).map { |line| line.chomp.split("=", 2).last }
+    @submodule_paths ||= `git config --list --file "#{File.join(ROOT, ".gitmodules")}"`.lines.grep(/\.path=/).map { |line| line.chomp.split("=", 2).last }.reject { |path| path =~ /CodeMirror/ }
   end
 
   # Returns a hash of submodules in the form of submodule_path => license

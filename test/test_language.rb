@@ -358,11 +358,11 @@ class TestLanguage < Minitest::Test
     assert_equal 'clike', Language['C++'].codemirror_mode
   end
 
-  def test_codemirror_mime_mode
-    assert_equal 'text/x-ruby', Language['Ruby'].codemirror_mime_mode
-    assert_equal 'text/javascript', Language['JavaScript'].codemirror_mime_mode
-    assert_equal 'text/x-csrc', Language['C'].codemirror_mime_mode
-    assert_equal 'text/x-c++src', Language['C++'].codemirror_mime_mode
+  def test_codemirror_mime_type
+    assert_equal 'text/x-ruby', Language['Ruby'].codemirror_mime_type
+    assert_equal 'text/javascript', Language['JavaScript'].codemirror_mime_type
+    assert_equal 'text/x-csrc', Language['C'].codemirror_mime_type
+    assert_equal 'text/x-c++src', Language['C++'].codemirror_mime_type
   end
 
   def test_wrap
@@ -454,9 +454,9 @@ class TestLanguage < Minitest::Test
 
   def test_codemirror_modes_present
     Language.all.each do |language|
-      if language.codemirror_mode || language.codemirror_mime_mode
+      if language.codemirror_mode || language.codemirror_mime_type
         assert language.codemirror_mode, "#{language.inspect} missing CodeMirror mode"
-        assert language.codemirror_mime_mode, "#{language.inspect} missing CodeMirror MIME mode"
+        assert language.codemirror_mime_type, "#{language.inspect} missing CodeMirror MIME mode"
       end
     end
   end
@@ -472,17 +472,17 @@ class TestLanguage < Minitest::Test
   def test_codemirror_mode_and_mime_defined_by_meta_mapping
     meta = File.read(File.expand_path("../../vendor/CodeMirror/mode/meta.js", __FILE__))
     Language.all.each do |language|
-      next unless language.codemirror_mode && language.codemirror_mime_mode
-      assert meta.match(/^.+#{Regexp.escape(language.codemirror_mime_mode)}.+#{Regexp.escape(language.codemirror_mode)}.+$/), "#{language.inspect}: #{language.codemirror_mime_mode} not defined under #{language.codemirror_mode}"
+      next unless language.codemirror_mode && language.codemirror_mime_type
+      assert meta.match(/^.+#{Regexp.escape(language.codemirror_mime_type)}.+#{Regexp.escape(language.codemirror_mode)}.+$/), "#{language.inspect}: #{language.codemirror_mime_type} not defined under #{language.codemirror_mode}"
     end
   end
 
   def test_codemirror_mime_declared_in_mode_file
     Language.all.each do |language|
-      next unless language.codemirror_mode && language.codemirror_mime_mode
+      next unless language.codemirror_mode && language.codemirror_mime_type
       filename = File.expand_path("../../vendor/CodeMirror/mode/#{language.codemirror_mode}/#{language.codemirror_mode}.js", __FILE__)
       assert File.exist?(filename), "#{filename} does not exist"
-      assert File.read(filename).match(language.codemirror_mime_mode), "#{language.inspect}: #{language.codemirror_mime_mode} not defined in #{filename}"
+      assert File.read(filename).match(language.codemirror_mime_type), "#{language.inspect}: #{language.codemirror_mime_type} not defined in #{filename}"
     end
   end
 
