@@ -452,6 +452,14 @@ class TestLanguage < Minitest::Test
     assert missing.empty?, message
   end
 
+  def test_valid_codemirror_mode
+    Language.all.each do |language|
+      if mode = language.codemirror_mode
+        assert File.exist?(File.expand_path("../../vendor/CodeMirror/mode/#{mode}", __FILE__)), "#{mode} isn't a valid CodeMirror mode"
+      end
+    end
+  end
+
   def test_all_popular_languages_exist
     popular = YAML.load(File.read(File.expand_path("../../lib/linguist/popular.yml", __FILE__)))
 

@@ -402,6 +402,9 @@ module Linguist
 
     # Public: Get CodeMirror mode
     #
+    # Maps to a directory in the `mode/` source code.
+    #   https://github.com/codemirror/CodeMirror/tree/master/mode
+    #
     # Examples
     #
     #  # => "nil"
