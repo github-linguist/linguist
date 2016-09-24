@@ -11,6 +11,8 @@ header = <<-EOF
 # ace_mode          - A String name of the Ace Mode used for highlighting whenever
 #                     a file is edited. This must match one of the filenames in http://git.io/3XO_Cg.
 #                     Use "text" if a mode does not exist.
+# codemirror_mode   - A String name of the CodeMirror Mode used for highlighting whenever a file is edited.
+#                     This must match a mode from https://git.io/vi9Fx
 # wrap              - Boolean wrap to enable line wrapping (default: false)
 # extensions        - An Array of associated extensions (the first one is
 #                     considered the primary extension, the others should be
@@ -20,7 +22,7 @@ header = <<-EOF
 # search_term       - Deprecated: Some languages may be indexed under a
 #                     different alias. Avoid defining new exceptions.
 # language_id       - Integer used as a language-name-independent indexed field so that we can rename
-#                     languages in Linguist without reindexing all the code on GitHub. Must not be 
+#                     languages in Linguist without reindexing all the code on GitHub. Must not be
 #                     changed for existing languages without the explicit permission of GitHub staff.
 # color             - CSS hex color to represent the language.
 # tm_scope          - The TextMate scope that represents this programming
