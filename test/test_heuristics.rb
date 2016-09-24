@@ -151,13 +151,14 @@ class TestHeuristcs < Minitest::Test
 
   def test_m_by_heuristics
     assert_heuristics({
-      "Objective-C" => all_fixtures("Objective-C", "*.m"),
+      "Objective-C" => all_fixtures("Objective-C", "*.m") - all_fixtures("Objective-C", "cocoa_monitor.m"),
       "Mercury" => all_fixtures("Mercury", "*.m"),
       "MUF" => all_fixtures("MUF", "*.m"),
       "M" => all_fixtures("M", "MDB.m"),
       "Mathematica" => all_fixtures("Mathematica", "*.m") - all_fixtures("Mathematica", "Problem12.m"),
       "Matlab" => all_fixtures("Matlab", "create_ieee_paper_plots.m"),
-      "Limbo" => all_fixtures("Limbo", "*.m")
+      "Limbo" => all_fixtures("Limbo", "*.m"),
+      nil => ["Objective-C/cocoa_monitor.m"]
     })
   end
 

@@ -244,7 +244,7 @@ module Linguist
         Language["MUF"]
       elsif /^\s*;/.match(data)
         Language["M"]
-      elsif /^\s*\(\*/.match(data)
+      elsif /\*\)$/.match(data)
         Language["Mathematica"]
       elsif /^\s*%/.match(data)
         Language["Matlab"]
