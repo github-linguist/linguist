@@ -145,6 +145,18 @@ class TestHeuristcs < Minitest::Test
     })
   end
 
+  def test_m_by_heuristics
+    assert_heuristics({
+      "Objective-C" => all_fixtures("Objective-C", "*.m"),
+      "Mercury" => all_fixtures("Mercury", "*.m"),
+      "MUF" => all_fixtures("MUF", "*.m"),
+      "M" => all_fixtures("M", "MDB.m"),
+      "Mathematica" => all_fixtures("Mathematica", "*.m") - all_fixtures("Mathematica", "Problem12.m"),
+      "Matlab" => all_fixtures("Matlab", "create_ieee_paper_plots.m"),
+      "Limbo" => all_fixtures("Limbo", "*.m")
+    })
+  end
+
   # Candidate languages = ["C++", "Objective-C"]
   def test_obj_c_by_heuristics
     # Only calling out '.h' filenames as these are the ones causing issues
