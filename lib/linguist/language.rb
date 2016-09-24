@@ -561,6 +561,8 @@ module Linguist
   end
 
   languages.each do |name, options|
+    next if name == 'NEXT_LANGUAGE_ID'
+
     options['extensions'] ||= []
     options['interpreters'] ||= []
     options['filenames'] ||= []

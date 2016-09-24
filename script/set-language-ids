@@ -49,8 +49,12 @@ if generated
 
   languages = YAML.load(File.read("lib/linguist/languages.yml"))
   languages.each do |name, vals|
-    vals.merge!('language_id' => language_index)
-    language_index += 1
+    if name == 'NEXT_LANGUAGE_ID'
+      languages.size
+    else
+      vals.merge!('language_id' => language_index)
+      language_index += 1
+    end
   end
 
   File.write("lib/linguist/languages.yml", header + YAML.dump(languages))
@@ -59,21 +63,20 @@ elsif update
   languages = YAML.load(File.read("lib/linguist/languages.yml"))
 
   # First grab the maximum language_id
-  language_ids = []
-  languages.each { |name, vals| language_ids << vals['language_id'] if vals.has_key?('language_id')}
-  max_language_id = language_ids.max
+  max_language_id = languages['NEXT_LANGUAGE_ID']
   puts "Current maximum language_id is #{max_language_id}"
 
   missing_count = 0
   language_index = max_language_id
 
   languages.each do |name, vals|
-    unless vals.has_key?('language_id')
+    unless name == 'NEXT_LANGUAGE_ID' || vals.has_key?('language_id')
+      vals.merge!('language_id' => language_index)
       language_index += 1
       missing_count += 1
-      vals.merge!('language_id' => language_index)
     end
   end
+  languages['NEXT_LANGUAGE_ID'] = language_index
 
   File.write("lib/linguist/languages.yml", header + YAML.dump(languages))
   puts "Updated language_id attributes for #{missing_count} languages"

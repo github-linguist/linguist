@@ -46,6 +46,8 @@ class TestSamples < Minitest::Test
   # aren't explicitly defined in languages.yml
   languages_yml = File.expand_path("../../lib/linguist/languages.yml", __FILE__)
   YAML.load_file(languages_yml).each do |name, options|
+    next if name == 'NEXT_LANGUAGE_ID'
+
     define_method "test_samples_have_parity_with_languages_yml_for_#{name}" do
       options['extensions'] ||= []
       if extnames = Samples.cache['extnames'][name]
