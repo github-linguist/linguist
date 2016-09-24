@@ -29,7 +29,11 @@ class TestHeuristcs < Minitest::Test
     hash.each do |language, blobs|
       Array(blobs).each do |blob|
         result = Heuristics.call(file_blob(blob), candidates)
-        assert_equal [Language[language]], result, "Failed for #{blob}"
+        if language.nil?
+          assert_equal [], result, "Failed for #{blob}"
+        else
+          assert_equal [Language[language]], result, "Failed for #{blob}"
+        end
       end
     end
   end
