@@ -5,12 +5,14 @@ class TestGrammars < Minitest::Test
 
   # List of projects that are allowed without licenses
   PROJECT_WHITELIST = [
-    "vendor/grammars/factor",
-    "vendor/grammars/go-tmbundle",
-    "vendor/grammars/jflex.tmbundle",
     "vendor/grammars/language-csharp",
-    "vendor/grammars/language-viml",
     "vendor/grammars/sublimeassembly"
+  ].freeze
+
+  HASH_WHITELIST = [
+    "ebae2d87e06d3acef075d049fcfc8958c0364863", # go-tmbundle
+    "ff21db2554d69d78b2220db5615b16bbba0788d3", # factor
+    "b9a7428fd036eed8503995e06e989180c276b17d"  # jflex.tmbundle
   ].freeze
 
   # List of allowed SPDX license names
@@ -90,7 +92,10 @@ class TestGrammars < Minitest::Test
   end
 
   def test_submodules_have_approved_licenses
-    unapproved = submodule_licenses.reject { |k,v| LICENSE_WHITELIST.include?(v) || PROJECT_WHITELIST.include?(k) }.map { |k,v| "#{k}: #{v}"}
+    unapproved = submodule_licenses.reject { |k,v| LICENSE_WHITELIST.include?(v) ||
+                                                   PROJECT_WHITELIST.include?(k) ||
+                                                   HASH_WHITELIST.include?(v) }
+                                   .map { |k,v| "#{k}: #{v}"}
     message = "The following submodules have unapproved licenses:\n* #{unapproved.join("\n* ")}\n"
     message << "The license must be added to the LICENSE_WHITELIST in /test/test_grammars.rb once approved."
     assert_equal [], unapproved, message
@@ -139,6 +144,7 @@ class TestGrammars < Minitest::Test
   end
 
   # Given the path to a submodule, return its SPDX-compliant license key
+  # If the license is unrecognized, return its hash
   def submodule_license(submodule)
     # Prefer Licensee to detect a submodule's license
     project = Licensee::FSProject.new(submodule, detect_readme: true)
@@ -155,7 +161,16 @@ class TestGrammars < Minitest::Test
     # Neither Licensee nor our own regex was able to detect the license, let's check the readme
     files = Dir[File.join(ROOT, submodule, "*")]
     if readme = files.find { |file| File.basename(file) =~ /\Areadme\b/i }
-      classify_license(readme)
+      license = classify_license(readme)
+      return license if license
+    end
+
+    # We know a license exists, but no method was able to recognize it.
+    # We return the license hash in this case, to uniquely identify it.
+    if project.license_file
+      return project.license_file.hash
+    elsif project.readme
+      return project.readme.hash
     end
   end
 
