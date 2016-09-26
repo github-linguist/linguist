@@ -141,7 +141,7 @@ class TestGrammars < Minitest::Test
   # Given the path to a submodule, return its SPDX-compliant license key
   def submodule_license(submodule)
     # Prefer Licensee to detect a submodule's license
-    project = Licensee::FSProject.new(submodule)
+    project = Licensee::FSProject.new(submodule, detect_readme: true)
     return project.license.key if project.license
 
     # We know a license file exists, but Licensee wasn't able to detect the license,
