@@ -9,7 +9,6 @@ class TestGrammars < Minitest::Test
     "vendor/grammars/go-tmbundle",
     "vendor/grammars/jflex.tmbundle",
     "vendor/grammars/language-csharp",
-    "vendor/grammars/language-viml",
     "vendor/grammars/sublimeassembly"
   ].freeze
 
