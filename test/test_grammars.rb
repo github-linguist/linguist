@@ -134,6 +134,21 @@ class TestGrammars < Minitest::Test
     assert_equal [], unapproved, message
   end
 
+  def test_whitelisted_submodules_dont_have_licenses
+    licensed = submodule_licenses.reject { |k,v| v.nil? }.select { |k,v| PROJECT_WHITELIST.include?(k) }
+    message = "The following whitelisted submodules have a license:\n* #{licensed.keys.join("\n* ")}\n"
+    message << "Please remove them from the project whitelist."
+    assert_equal Hash.new, licensed, message
+  end
+
+  def test_whitelisted_hashes_dont_have_licenses
+    used_hashes = submodule_licenses.values.reject { |v| v.nil? || LICENSE_WHITELIST.include?(v) }
+    unused_hashes = HASH_WHITELIST - used_hashes
+    message = "The following whitelisted license hashes are unused:\n* #{unused_hashes.join("\n* ")}\n"
+    message << "Please remove them from the hash whitelist."
+    assert_equal Array.new, unused_hashes, message
+  end
+
   def test_submodules_whitelist_has_no_extra_entries
     skip("Need to work out how to handle dual-licensed entities")
     extra_whitelist_entries = PROJECT_WHITELIST - submodule_licenses.select { |k,v| v.nil? }.keys
