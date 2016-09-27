@@ -5,11 +5,9 @@ class TestGrammars < Minitest::Test
 
   # List of projects that are allowed without licenses
   PROJECT_WHITELIST = [
-    "vendor/grammars/sublimeassembly",
     "vendor/grammars/Sublime-Lasso",
     "vendor/grammars/ant.tmbundle",
     "vendor/grammars/sublime-spintools",
-    "vendor/grammars/SublimeGDB",
     "vendor/grammars/blitzmax"
   ].freeze
 
@@ -44,7 +42,6 @@ class TestGrammars < Minitest::Test
     "8ccf886749c32fb7e65d4d1316a7ed0479c93dc9", # language-less
     "2f03492b52d7dd83b4e7472f01b87c6121e5b1a4", # monkey
     "9d8b5626cfe00f3c8a076173913c3b0312b5b122", # ejs-tmbundle
-    "5977a55c75bb4612004451a56b0b4c22d9d3311d", # language-graphql
     "bdab9fdc21e6790b479ccb5945b78bc0f6ce2493"  # language-blade
   ].freeze
 
