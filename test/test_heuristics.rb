@@ -162,6 +162,13 @@ class TestHeuristcs < Minitest::Test
     })
   end
 
+  def test_md_by_heuristics
+    assert_heuristics({
+      "Markdown" => all_fixtures("Markdown", "*.md"),
+      "GCC machine description" => all_fixtures("GCC machine description", "*.md")
+    })
+  end
+
   # Candidate languages = ["C++", "Objective-C"]
   def test_obj_c_by_heuristics
     # Only calling out '.h' filenames as these are the ones causing issues
