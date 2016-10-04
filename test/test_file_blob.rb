@@ -267,6 +267,16 @@ class TestFileBlob < Minitest::Test
     assert sample_blob("Godeps/Godeps.json").generated?
     assert sample_blob("Godeps/_workspace/src/github.com/kr/s3/sign.go").generated?
 
+    # Vendored dependencies
+    assert sample_blob("vendor/github.com/golang/snappy/snappy.go").generated?
+    assert sample_blob("vendors/manifest").generated?
+    assert sample_blob("cmd/app/vendor/github.com/kr/s3/sign.go").generated?
+    assert sample_blob("third-party/manifest").generated?
+    assert sample_blob("thirdparty/manifest").generated?
+    assert sample_blob("3rd_party/manifest").generated?
+    assert sample_blob("external/manifest").generated?
+    assert sample_blob("extern/manifest").generated?
+
     # Cython-generated C/C++
     assert sample_blob("C/sgd_fast.c").generated?
     assert sample_blob("C++/wrapper_inner.cpp").generated?
