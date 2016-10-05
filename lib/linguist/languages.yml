@@ -19,7 +19,7 @@
 # language_id       - Integer used as a language-name-independent indexed field so that we can rename
 #                     languages in Linguist without reindexing all the code on GitHub. Must not be
 #                     changed for existing languages without the explicit permission of GitHub staff.
-# color             - CSS hex color to represent the language.
+# color             - CSS hex color to represent the language. Only used if type is "programming" or "prose"
 # tm_scope          - The TextMate scope that represents this programming
 #                     language. This should match one of the scopes listed in
 #                     the grammars.yml file. Use "none" if there is no grammar
