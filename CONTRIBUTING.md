@@ -30,6 +30,7 @@ To add support for a new language:
 0. Add an entry for your language to [`languages.yml`][languages].
 0. Add a grammar for your language: `script/add-grammar https://github.com/JaneSmith/MyGrammar` Please only add grammars that have [one of these licenses][licenses].
 0. Add samples for your language to the [samples directory][samples] in the correct subdirectory.
+0. Add a `language_id` for your language. See `script/set-language-ids` for more information. **You should only ever need to run `script/set-language-ids --update`. Anything other than this risks breaking GitHub search :cry:**
 0. Open a pull request, linking to a [GitHub search result](https://github.com/search?utf8=%E2%9C%93&q=extension%3Aboot+NOT+nothack&type=Code&ref=searchresults) showing in-the-wild usage.
 
 In addition, if your new language defines an extension that's already listed in [`languages.yml`][languages] (such as `.foo`) then sometimes a few more steps will need to be taken:
@@ -81,7 +82,7 @@ Linguist is maintained with :heart: by:
 - **@arfon** (GitHub Staff)
 - **@larsbrinkhoff**
 - **@pchaigno**
- 
+
 As Linguist is a production dependency for GitHub we have a couple of workflow restrictions:
 
 - Anyone with commit rights can merge Pull Requests provided that there is a :+1: from a GitHub member of staff
