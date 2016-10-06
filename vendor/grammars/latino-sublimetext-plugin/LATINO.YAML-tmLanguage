@@ -1,0 +1,112 @@
+# [PackageDev] target_format: plist, ext: tmLanguage
+---
+name: Latino
+scopeName: source.lat
+fileTypes: [lat]
+uuid: c7474ef1-5518-47f6-aa31-97ca8bd9cc60
+
+patterns:
+#                   INICIO COMENTARIOS Y COMILLAS
+- comment: Comentarios
+  name: comment.line.number-sign.lat
+  match: (#).*$\n?
+  captures:
+    "1": {name: comment.line.number-sign.lat }
+
+- comment: Comillas 
+  name: string.quoted.double.lat
+  begin: '"'
+  end: '"'
+  captures:
+    '1': {name: string.quoted.double.lat}
+
+- comment: Comillas 
+  name: string.quoted.single.lat
+  begin: "'"
+  end: "'"
+  captures:
+    '1': {name: string.quoted.single.lat}
+
+#                   INICIO CONSTANTES
+- comment: Constantes 
+  name: support.constant.lat
+  match: '\b([A-Z]|[A-Z] )+\b'
+  captures:
+    '1': {name: support.constant.lat}
+
+- comment: Constantes Numericas. LOS NUMEROS
+  name: constant.numeric.lat
+  match: '\b(\d+)\b'
+  captures:
+    '1': {name: support.other.lat}
+
+- comment: Constantes Logicas
+  name: constant.language.lat
+  match: '\b(verdadero|falso)\b'
+  captures:
+    '1': {name: constant.language.lat}
+
+#                   INICIO SENTENCIAS DE CONTROL
+- comment: Sentencias de control
+  name: keyword.control.lat
+  match: '\b(si|sino|fin|mientras|desde|hasta|elegir|caso|defecto|hacer|cuando|retorno|romper|defecto|salto)\b'
+  captures:
+    '1': {name: keyword.control.lat}
+
+
+#                   INICIO TIPOS DE DATOS Y OPERADORES
+- comment: Tipo de datos
+  name: meta.type.lat
+  match: '\b(logico|entero|decimal|caracter|cadena)'
+  captures:
+    '1': {name: support.type.lat}
+- comment: Operadores
+  name: meta.type.lat
+  match: '(\+|\-|\*|\/|\%|\&|(?:==)|(?:\:)|(?:!=)|(?:>=)|(?:<=)|\<|\>|\=|\.|\|)'
+  captures:
+    '1': {name: keyword.operator.lat}
+
+#                   INICIO CLASES
+- comment: Clases
+  name: meta.class.lat #entity.type.class.lat
+  match: '(clase)'
+  captures:
+    '1': {name: storage.type.class.lat}
+
+- comment: Clases Propiedades
+  name: meta.class.lat #meta.property-name.lat
+  match: '(propiedad|constructor|esta)'
+  captures:
+    '1': {name: storage.modifier.lat} #storage.modifier.lat
+
+#                   INICIO FUNCIONES
+- comment: Funcion
+  name: meta.function.lat
+  match: '(funcion)'
+  captures:
+    '1': {name: storage.type.function.lat}
+
+- comment: Funciones Nombres
+  name: meta.function.lat
+  match: '([a-zA-Z]+[a-zA-Z0-9_]|[a-zA-Z]+[a-zA-Z0-9_] )\(+' #'([a-zA-Z]+[a-zA-Z0-9_]+)\(+'
+  captures:
+    '1': {name: entity.name.function.lat}
+
+- comment: Funciones Parametros Varios
+  name: meta.function.lat
+  match: '([a-zA-Z]+[a-zA-Z0-9_]), (?=logico|entero|decimal|caracter|cadena)'
+  captures:
+    '1': {name: variable.parameter.function.lat}
+
+- comment: Funciones Parametro Unico
+  name: meta.function.lat
+  match: '([a-zA-Z]+[a-zA-Z0-9_])\)'
+  captures:
+    '1': {name: variable.parameter.function.lat}
+
+- comment: Funciones Parametro Unico Letra
+  name: meta.function.lat
+  match: '([a-zA-Z])\)'
+  captures:
+    '1': {name: variable.parameter.function.lat}
+...

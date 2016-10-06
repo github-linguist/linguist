@@ -1,0 +1,133 @@
+escribir("------------------------------------------------------")
+escribir("----------------Funciones de cadena-------------------")
+escribir("------------------------------------------------------\n")
+lorem = "Lorem ipsum dolor sit amet, consectetur adipisicing elit,"
+escribir("------------------------------------------------------")
+escribir("cadena original:")
+escribir(lorem) #1: Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+#se concatena con .
+escribir("------------------------------------------------------")
+escribir("concatenar:")
+lorem = lorem . "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+escribir(lorem) #2: Lorem ipsum dolor sit amet, consectetur adipisicing elit,sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+#comparar regresa un numero negativo si
+#la cadena 1 es menor a la cadena 2
+#0 si son iguales y positivo si es mayor
+escribir("------------------------------------------------------")
+escribir("comparar:")
+lugar = "México"
+escribir(lorem)
+si(comparar(lorem, lugar) == 0)
+  escribir("lorem es igual que: " . lugar)
+sino
+  escribir("lorem es diferente de: " . lugar)
+fin
+#lorem es diferente de lugar
+escribir("------------------------------------------------------")
+escribir("contiene:")
+#contiene, regresa verdadero o falso
+escribir("lorem contiene 'ipsum'? " . contiene(lorem, "ipsum"))
+
+ipsum = lorem
+escribir("------------------------------------------------------")
+escribir("termina con:")
+#termina_con regresa verdadero si una cadena termina con la palabra enviada
+escribir("ipsum termina con 'aliqua'?" . termina_con(ipsum, "aliqua"))
+escribir(ipsum)
+
+escribir("------------------------------------------------------")
+escribir("indice:")
+#indice regresa la posicion en la que se encuentra una palabra empezando con la posicion 0
+escribir("se encontro la palabra 'amet' en la posicion: " . indice(lorem, 'amet'))
+
+escribir("------------------------------------------------------")
+escribir("insertar:")
+#insertar, inserta una cadena nueva en la posicion especificada
+escribir(lorem)
+test = insertar(lorem, " amore ", 22)
+escribir(test)
+
+escribir("------------------------------------------------------")
+escribir("ultimo indice:")
+#ultimo indice, regresa la ultima posicion de una palabra dentro de una cadena
+escribir("la ultima posicion en que se encuentra 'do' es: " . ultimo_indice(lorem, "do"))
+
+escribir("------------------------------------------------------")
+escribir("rellenar izquierda:")
+#rellenar izquierda, rellena los lugares faltantes con el valor especificado "0"
+formateado = rellenar_izquierda("35", 10, "0")
+escribir(formateado)
+
+escribir("------------------------------------------------------")
+escribir("rellenar derecha:")
+#rellenar derecha, rellena los lugares faltantes con el valor especificado " "
+formateado = rellenar_derecha("35", 10, "0")
+escribir(formateado)
+
+escribir("------------------------------------------------------")
+escribir("eliminar:")
+#eliminar, elimina una subcadena de la cadena principal
+escribir(lorem)
+escribir(eliminar(lorem, "amet"))
+
+escribir("------------------------------------------------------")
+escribir("esta vacia:")
+#esta_vacia, regresa verdadero si la cadena esta vacia
+vacia = ""
+escribir(vacia)
+escribir("esta vacia? " . esta_vacia(vacia))
+
+escribir("------------------------------------------------------")
+escribir("longitud:")
+#longitu, regresa la lingitud de una cadena
+escribir("la longitu de lorem es: " . longitud(lorem))
+
+escribir("------------------------------------------------------")
+escribir("reemplazar:")
+#reemplazar, sustituye una cadena por otra en una cadena
+escribir(reemplazar(formateado, "0", "-"))
+
+escribir("------------------------------------------------------")
+escribir("empieza con:")
+#empieza_con, regresa verdadero si una cadena empieza con otra cadena
+#sensible a mayusculas
+escribir(lorem)
+escribir("lorem empieza con 'Lorem'? " . empieza_con(lorem, 'Lorem'))
+
+escribir("------------------------------------------------------")
+escribir("minusculas:")
+#minusculas, contiene en minusculas una cadena
+escribir(lorem)
+escribir(minusculas(lorem))
+
+escribir("------------------------------------------------------")
+escribir("mayusculas:")
+#mayusculas, contiene en mayusculas una cadena
+escribir(lorem)
+escribir(mayusculas(lorem))
+
+escribir("------------------------------------------------------")
+escribir("quitar espacios:")
+#quitar espacios
+con_espacios = '     palabra con espacios      '
+escribir(con_espacios)
+escribir(quitar_espacios('     palabra con espacios      ') . ".")
+
+escribir("------------------------------------------------------")
+escribir("es_numerico:")
+#quitar espacios
+numero = "1234.134"
+escribir("es numerico: " . es_numerico(numero))
+
+escribir("------------------------------------------------------")
+escribir("es_alfanumerico:")
+#quitar espacios
+alfa = "variable1"
+escribir("es numerico: " . es_numerico(alfa))
+
+#se puede acceder a un elemento de la cadena ya que es un arreglo de caracteres
+str = "hola mundo"
+escribir(str[0])
+str[4] = "-"
+escribir(str)

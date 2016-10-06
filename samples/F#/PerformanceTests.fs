@@ -1,4 +1,4 @@
-﻿namespace Nessos.FsPickler.Tests
+namespace Nessos.FsPickler.Tests
 
     open System
     open System.Collections.Generic

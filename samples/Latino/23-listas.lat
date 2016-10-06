@@ -1,0 +1,166 @@
+#Crear una lista es tan sencillo como indicar entre corchetes y separados por comas
+#los valores que queremos incluir en la lista.
+numeros = [1, 2, 3, 4, 5]
+vacia = []
+
+#Podemos acceder a cada uno de los elementos de la lista escribiendo el nombre de
+#la lista e indicando el índice del elemento entre corchetes.
+#Ten en cuenta que el índice del primer elemento de la lista es 0:
+escribir(numeros[1])
+#salida: 2
+
+#También podemos utilizar este operador para modificar un elemento de la lista si lo
+#colocamos en la parte izquierda de una asignación:
+numeros[0] = 99
+escribir(numeros)
+#salida:  [99, 2, 3, 4, 5]
+
+#agrega un elemento a la lista
+agregar(numeros, 6)
+escribir(numeros)
+#salida:  [99, 2, 3, 4, 5, 6]
+
+#se valida que el valor este en el rango del numero de elementos
+#escribir(numeros[-1])
+#salida: Indice fuera de rango
+#escribir(numeros[5])
+#salida: Indice fuera de rango
+
+#listas multiples
+m = [[1,2,3],
+     ['a', 'b', 'c'],
+     ['alpha', 'beta', 'gamma']]
+
+escribir(m)
+
+escribir("--------------------------------------------------------------------")
+escribir("Ejemplo de listas")
+escribir("--------------------------------------------------------------------")
+
+lst = [123, 'xyz', 'zara', 'abc']
+escribir("Lista inicial: " . lst)
+lst->agregar(2009)  #agregar(aList, 2009)
+agregar(lst, "ultimo elemento")
+escribir("Lista actualizada: " . lst)
+lst[0] = 321
+escribir("Lista actualizada: " . lst)
+escribir("Lista en 1: " . lst[1])
+#escribir("Longitud: " . longitud(lst))
+escribir("Longitud: " . lst->longitud())
+list1 = [123, 'xyz']
+list2 = ['456', 'abc']
+list3 = [456, 'abc', 786]
+list4 = ['123', 'xyz']
+escribir(list1)
+escribir(list2)
+escribir(list3)
+escribir(list4)
+escribir(comparar(list1, list2))
+escribir(list2->comparar(list1))
+escribir(comparar(list2, list3))
+escribir(comparar(list1, list4))
+escribir(comparar(list1, [123, 'xyz']))
+list1->extender(list2)
+escribir(list1)
+extender(list3, list4)
+escribir(list3)
+escribir(list3->indice(786))
+list3->insertar("xxx", 0) #inicio
+escribir(list3)
+list3->insertar("zzz", 6) #fin
+escribir(list3)
+list3->insertar("yyy", 3) #en medio
+escribir(list3)
+list3->eliminar(786)
+escribir(list3)
+list3->eliminar('123')
+escribir(list3)
+list3->eliminar('aaa')
+escribir(list3)
+list3->eliminar_indice(0)
+escribir(list3)
+list3->eliminar_indice(4)
+escribir(list3)
+#list3->eliminar_indice(4)   #indice fuera de rango
+list5 = list3->invertir()
+escribir(list5)
+escribir(comparar(['123', 'xyz'], [123, 'xyz']))
+escribir(list1)
+escribir(comparar(list1, [123, 'xyz']))
+
+escribir("--------------------------------------------------------------------")
+escribir("Ejemplo de matrices con listas")
+escribir("--------------------------------------------------------------------")
+m1 = [[1,2,3],
+     [4,5,6],
+     [7,8,9]]
+
+m2 = [[9,8,7],
+     [6,5,4],
+     [3,2,1]]
+
+escribir("Matriz m1: ")
+escribir(m1)
+escribir("Matriz m2: ")
+escribir(m2)
+
+escribir("Elemento m1[0]: " . m1[0])
+escribir("Elemento m1[1][1]: " . m1[1][1])
+
+m1[0] = [3, 2, 1]
+escribir("Se cambia m1[0]: ")
+escribir(m1)
+
+m1[1][1] = 25
+escribir("Se cambia m1[1][1]: ")
+escribir(m1)
+
+m1[0] = m2[1]
+escribir("Se cambia m1[0]: ")
+escribir(m1)
+
+m1[1][1] = m2[1][1] * 100
+escribir("Se cambia m1[1][1]: ")
+escribir(m1)
+escribir("m2 no se modifico: ")
+escribir(m2)
+
+
+escribir("--------------------------------------------------------------------")
+escribir("Ejemplo de matrices multidimensionales")
+escribir("--------------------------------------------------------------------")
+mm = [[[1,2,3,7],
+     [4,5,6,7],
+     [7,8,9,7]],
+     [[1,2,3,7],
+     [4,5,7,7],
+     [7,8,9,7]],
+     [[1,2,3,7],
+     [4,5,6,7],
+     [7,8,9,7]]]
+
+i = 0
+j = 1
+k = 2
+escribir(mm)
+escribir("mm en i:")
+escribir(mm[i])
+escribir("mm en i, j:")
+escribir(mm[i][j])
+escribir("mm en i, j ,k:")
+escribir(mm[i][j][k])
+
+
+escribir("--------------------------------------------------------------------")
+escribir("Iterar sobre una lista / matriz")
+escribir("--------------------------------------------------------------------")
+desde (i=0; i < list1->longitud(); i++)
+  escribir("lista en " . i . " es: " . list1[i])
+fin
+
+#Para recorrer una matriz se anidan dos ciclos desde
+desde (i=0; i < longitud(m1); i++)  # longitud(m1) = 3 ya que es una lista que a su vez contiene 3 listas
+  desde (j=0; j < m1[0]->longitud(); j++) #aqui tomamos la longitud del primer elemento es decir la lista interna
+    escribir("lista en " . i . ", " . j . " es: " . m1[i][j])
+  fin
+fin

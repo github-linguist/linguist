@@ -1,4 +1,4 @@
-﻿#Использовать "../libs/oscript-library/src/v8runner"
+#Использовать "../libs/oscript-library/src/v8runner"
 #Использовать "../libs/oscript-library/src/tempfiles"
 
 Перем Лог;

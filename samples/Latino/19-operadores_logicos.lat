@@ -1,0 +1,66 @@
+#operadores logicos en Latino
+v = verdadero
+f = falso
+
+#&& y (and) logico
+escribir("&& y (and) logico")
+escribir("falso y falso: " . f && f)
+escribir("verdadero y falso: " . v && f)
+escribir("falso y verdadero: " . f && v)
+escribir("verdadero y verdadero: " . v && v)
+
+#|| o (or) logico
+escribir("=============================")
+escribir("|| o (or) logico")
+escribir("falso o falso: " . f || f)
+escribir("verdadero o falso: " . v || f)
+escribir("falso o verdadero: " . f || v)
+escribir("verdadero o verdadero: " . v || v)
+
+#! negacion
+escribir("=============================")
+escribir("! negacion")
+escribir("no falso: " . !f)
+escribir("no verdadero: " . !v)
+
+
+#operadores logicos por corto circuito
+escribir("----- y logico (&&)")
+x = verdadero && "str"
+escribir("x: " . x)   #str
+
+x = "1" && ""
+escribir("x: " . x)   #
+
+x = falso && "str"
+escribir("x: " . x)   #falso
+
+x = falso && ""
+escribir("x: " . x)   #falso
+
+escribir("----- o logico (||)")
+x = verdadero || "str"
+escribir("x: " . x)   #verdadero
+
+x = "1" || ""
+escribir("x: " . x)   #1
+
+x = falso || "str"
+escribir("x: " . x)   #str
+
+x = falso || ""
+escribir("x: " . x)   #
+
+escribir("cambio de tipos de dato a booleanos")
+#cambio de tipos de dato a booleanos
+#x=0 #0 y 0.0 es considerado falso cualquier otro valor numerico es verdadero
+#x = -2  #-2 es verdadero
+#x = "2"  #se convierte la cadena "2" a numerico quedando 2  y es verdadero
+#x="" #la cadena vacia "" o "0" o "falso" o "false" es considerada falso cualquier otro valor es verdadero
+x = []  #una lista vacia es considerada falso
+escribir("x: " . x)
+si(x)
+    escribir("es verdadero")
+sino
+    escribir("es falso")
+fin

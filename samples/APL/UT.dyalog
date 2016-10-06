@@ -1,4 +1,4 @@
-﻿:NameSpace UT
+:NameSpace UT
 
     sac ← 0
     expect_orig ← expect ← ⎕NS⍬

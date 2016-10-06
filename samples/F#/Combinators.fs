@@ -1,4 +1,4 @@
-﻿namespace Nessos.FsPickler.Combinators
+namespace Nessos.FsPickler.Combinators
 
     open Nessos.FsPickler
     open Nessos.FsPickler.Json

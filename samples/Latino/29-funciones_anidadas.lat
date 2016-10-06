@@ -1,0 +1,16 @@
+funcion algo (a,b)
+  x=a*b   #x=6
+  funcion inner_fun (c,d)
+    #c=6, d=36
+    retorno c*c+d*d   #36+1296 = 1332
+  fin
+  inner_fun(x, x*x)
+fin
+
+x=algo(2,3)
+escribir("x = " . x) #1332
+
+/* error inner_fun no definida en este contexto
+y=inner_fun(1,2)
+escribir("y" . y)
+*/

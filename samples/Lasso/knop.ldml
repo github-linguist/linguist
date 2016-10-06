@@ -1,4 +1,4 @@
-﻿[/* 
+[/* 
 
 	On-Demand library for namespace knop
 	Namespace file built date 2012-06-10 02:05:30 by http://knop8/buildnamespace.lasso
