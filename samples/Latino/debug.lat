@@ -1,0 +1,15 @@
+/*
+Para debuguear en visual studio:
+Menu propiedades del proyecto-> Debugging -> Command Arguments. Agregar
+$(SolutionDir)..\ejemplos\debug.lat
+*/
+
+url = "https://raw.githubusercontent.com/yagop/node-telegram-bot-api/master/package.json"
+str = peticion(url)
+escribir(str)
+jsn = json_decodificar(str)
+escribir("jsn: " .  jsn)
+/*
+d = 1.5
+escribir(d)
+*/

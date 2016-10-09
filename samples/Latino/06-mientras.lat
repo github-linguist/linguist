@@ -1,0 +1,20 @@
+escribir("------------------------------")
+escribir("---condicion con parentesis---")
+escribir("------------------------------")
+i = 0
+mientras (i < 10)
+    si (i == 5)
+        escribir("cinco")
+    sino
+        escribir(i)
+    fin
+    i = i + 1
+fin
+escribir("------------------------------")
+escribir("---condicion sin parentesis---")
+escribir("------------------------------")
+i = 0
+mientras i < 10
+    escribir(i)
+    i++     #esto es lo mismo que i = i + 1
+fin

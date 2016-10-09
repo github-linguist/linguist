@@ -1,0 +1,13 @@
+funcion algo (a)
+  #contexto local
+  a=15
+  escribir("local a:" . a)
+  retorno 10
+fin
+
+#contexto global
+a=20
+escribir("global a:" . a)
+x=algo(a)
+escribir("global a:" . a)
+escribir("global x:" . x)

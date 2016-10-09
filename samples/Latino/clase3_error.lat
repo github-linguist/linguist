@@ -1,0 +1,25 @@
+#herencia
+clase Bocho : Auto
+    #propiedades
+    propiedad cadena Serie
+    propiedad cadena Placas
+
+    #propiedades privadas
+    propiedad cadena Pasajeros
+
+    #constructor
+    constructor (entero serie)
+        esta.Serie = serie
+    fin
+
+    #funciones sobrecargadas
+    funcion Encender()
+        #retorno
+    fin
+
+    #funcion Encender(logico l, cadena = "empty")
+        si (l)
+            #codigo
+        fin
+    #fin
+fin

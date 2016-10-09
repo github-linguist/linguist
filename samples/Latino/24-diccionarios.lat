@@ -1,0 +1,50 @@
+dic = { "Chilindrina": "Maria Antonieta de las Nieves",
+     "El chavo del 8": "Roberto Gomez Bolaños",
+     "Tres patines": "Leopoldo Fernandez" }
+
+#mandamos a consola el diccionario o podemos obtener su representacion en cadena
+str = dic->cadena()
+escribir(str)
+
+#cambiamos un elemento
+dic["Chilindrina"] = "Maria Antonieta"
+escribir("")
+escribir(dic)
+
+#cambiamos un elemento que no existe, "lo inserta"
+dic["CH"] = "Chapulin Colorado"
+escribir("")
+escribir(dic)
+
+dic["CH"] = "Chapulin C."
+escribir(dic->CH)
+
+#obtenemos la longitud del diccionario
+escribir("Num de elementos: " . dic->longitud())
+
+#ejemplo de request de la api de telegram
+true = verdadero
+false = falso
+dic = {"ok":true,
+       "result":[
+          {"update_id":710556635,
+            "message":{"message_id":130,
+                       "from":{"id":269610735,"first_name":"Primitivo","last_name":"Roman"},
+                       "chat":{"id":269610735,"first_name":"Primitivo","last_name":"Roman","type":"private"},
+                       "date":1474906910,
+                       "text":"esto es una prueba print (\"hola mundo\")",
+                       "entities":[{"type":"code","offset":19,"length":20}]}}]}
+
+
+#escribir(dic->ok)
+#escribir(dic->result)
+#escribir(dic->result[0])
+#escribir(dic->result[0]->message)
+escribir(dic->result[0]->message->text)
+
+/*
+#obtenemos el valor de un elemento que no existe
+escribir("")
+ch = dic["CH2"] #Error: Linea 25, 10: No se encontro la llave 'CH2' en el diccionario.
+escribir(ch)
+*/
