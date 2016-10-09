@@ -1,0 +1,49 @@
+#valor logico directo
+si(verdadero)
+    escribir("es verdadero")
+fin
+
+#asignado a una variable, tambien se acepta la palabra clave "cierto"
+escribir("---------------------------------------------------------------------")
+escribir("se agrega la palabra clave cierto para referirse a un valor verdadero")
+escribir("---------------------------------------------------------------------")
+b = cierto
+si b
+    escribir("cierto tambien es verdadero")
+fin
+escribir("---------------------------------------------------------------------")
+
+#si-sino
+b = falso
+si(b)
+    escribir("verdad")
+sino
+    escribir("falsedad")
+fin
+
+#si anidado
+i = 10
+si(i == 0)
+    escribir(0)
+sino
+    si(i > 0)
+        escribir(1)
+    sino
+        escribir(-1)
+    fin
+fin
+
+si(verdadero)
+    escribir("hola latino")
+fin
+
+escribir("----------------------------------------------------")
+escribir("condicion sin parentesis permitida")
+escribir("----------------------------------------------------")
+num = 10
+si num < 0
+    escribir("es negativo")
+sino
+    escribir("es positivo")
+fin
+escribir("----------------------------------------------------")

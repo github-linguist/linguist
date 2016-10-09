@@ -1,0 +1,9 @@
+str = '{"ok":true,"result":[{"update_id":558904697, "message":{"message_id":4507,"from":{"id":189041244,"first_name":"Bruno Ric (K)","username":"Jarriz"},"chat":{"id":189041244,"first_name":"Bruno Ric (K)","username":"Jarriz","type":"private"},"date":1475275449,"text":"+\u20ac+#+(#(#(#\\^"}}]}'
+#convierte una cadena json a un objeto latino
+dic = json_decodificar(str)
+escribir("dic: " . dic)
+#accedo a un valor del objeto
+escribir("dic->result[0]->message->text: " . dic->result[0]->message->text)
+#convierte un objeto latino a una cadena json
+str = json_codificar(dic)
+escribir("str: " . str)

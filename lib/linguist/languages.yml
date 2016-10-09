@@ -10,14 +10,14 @@
 #                     This must match a mode from https://git.io/vi9Fx
 # wrap              - Boolean wrap to enable line wrapping (default: false)
 # extensions        - An Array of associated extensions (the first one is
-#                     considered the primary extension, the others should be
+#                     considered the primary extension, the others should be 
 #                     listed alphabetically)
 # interpreters      - An Array of associated interpreters
 # searchable        - Boolean flag to enable searching (defaults to true)
 # search_term       - Deprecated: Some languages may be indexed under a
 #                     different alias. Avoid defining new exceptions.
 # language_id       - Integer used as a language-name-independent indexed field so that we can rename
-#                     languages in Linguist without reindexing all the code on GitHub. Must not be
+#                     languages in Linguist without reindexing all the code on GitHub. Must not be 
 #                     changed for existing languages without the explicit permission of GitHub staff.
 # color             - CSS hex color to represent the language. Only used if type is "programming" or "prose"
 # tm_scope          - The TextMate scope that represents this programming
@@ -4790,3 +4790,10 @@ xBase:
   tm_scope: source.harbour
   ace_mode: text
   language_id: 421
+Latino:
+  type: programming
+  color: "#94B0C7"
+  extensions:
+  - ".lat"
+  ace_mode: text
+  language_id: 422

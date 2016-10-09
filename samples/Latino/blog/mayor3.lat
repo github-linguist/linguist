@@ -1,0 +1,22 @@
+#calcula el mayor de tres numeros
+#leer los 3 numeros por teclado con la funcion leer()
+escribir("ingresa el primer numero:")
+a=leer()
+escribir("ingresa el segundo numero:")
+b=leer()
+escribir("ingresa el tercer numero:")
+c=leer()
+
+#aqui almacenaremos el numero mayor
+si a > b
+    max = a
+sino 
+    si b > c
+        max = b
+    sino
+        max = c
+    fin
+fin
+#mostrar el resultado a consola con la funcion escribir()
+escribir("el mayor es: " . max)
+
