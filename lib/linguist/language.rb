@@ -267,6 +267,7 @@ module Linguist
     # Returns an Array of Languages.
     def self.ace_modes
       warn "This method will be deprecated in a future 5.x release. Every language now has an `ace_mode` set."
+      warn caller
       @ace_modes ||= all.select(&:ace_mode).sort_by { |lang| lang.name.downcase }
     end
 
@@ -300,12 +301,14 @@ module Linguist
       end
 
       @ace_mode = attributes[:ace_mode]
+      @codemirror_mode = attributes[:codemirror_mode]
+      @codemirror_mime_type = attributes[:codemirror_mime_type]
       @wrap = attributes[:wrap] || false
 
       # Set legacy search term
       @search_term = attributes[:search_term] || default_alias_name
 
-      # Set the language_id 
+      # Set the language_id
       @language_id = attributes[:language_id]
 
       # Set extensions or default to [].
@@ -396,6 +399,31 @@ module Linguist
     #
     # Returns a String name or nil
     attr_reader :ace_mode
+
+    # Public: Get CodeMirror mode
+    #
+    # Maps to a directory in the `mode/` source code.
+    #   https://github.com/codemirror/CodeMirror/tree/master/mode
+    #
+    # Examples
+    #
+    #  # => "nil"
+    #  # => "javascript"
+    #  # => "clike"
+    #
+    # Returns a String name or nil
+    attr_reader :codemirror_mode
+
+    # Public: Get CodeMirror MIME type mode
+    #
+    # Examples
+    #
+    #  # => "nil"
+    #  # => "text/x-javascript"
+    #  # => "text/x-csrc"
+    #
+    # Returns a String name or nil
+    attr_reader :codemirror_mime_type
 
     # Public: Should language lines be wrapped
     #
@@ -573,6 +601,8 @@ module Linguist
       :aliases           => options['aliases'],
       :tm_scope          => options['tm_scope'],
       :ace_mode          => options['ace_mode'],
+      :codemirror_mode   => options['codemirror_mode'],
+      :codemirror_mime_type => options['codemirror_mime_type'],
       :wrap              => options['wrap'],
       :group_name        => options['group'],
       :searchable        => options.fetch('searchable', true),

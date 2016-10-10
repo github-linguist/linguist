@@ -345,8 +345,24 @@ class TestLanguage < Minitest::Test
   end
 
   def test_ace_modes
-    assert Language.ace_modes.include?(Language['Ruby'])
-    assert Language.ace_modes.include?(Language['FORTRAN'])
+    silence_warnings do
+      assert Language.ace_modes.include?(Language['Ruby'])
+      assert Language.ace_modes.include?(Language['FORTRAN'])
+    end
+  end
+
+  def test_codemirror_mode
+    assert_equal 'ruby', Language['Ruby'].codemirror_mode
+    assert_equal 'javascript', Language['JavaScript'].codemirror_mode
+    assert_equal 'clike', Language['C'].codemirror_mode
+    assert_equal 'clike', Language['C++'].codemirror_mode
+  end
+
+  def test_codemirror_mime_type
+    assert_equal 'text/x-ruby', Language['Ruby'].codemirror_mime_type
+    assert_equal 'text/javascript', Language['JavaScript'].codemirror_mime_type
+    assert_equal 'text/x-csrc', Language['C'].codemirror_mime_type
+    assert_equal 'text/x-c++src', Language['C++'].codemirror_mime_type
   end
 
   def test_wrap
@@ -436,6 +452,40 @@ class TestLanguage < Minitest::Test
     assert missing.empty?, message
   end
 
+  def test_codemirror_modes_present
+    Language.all.each do |language|
+      if language.codemirror_mode || language.codemirror_mime_type
+        assert language.codemirror_mode, "#{language.inspect} missing CodeMirror mode"
+        assert language.codemirror_mime_type, "#{language.inspect} missing CodeMirror MIME mode"
+      end
+    end
+  end
+
+  def test_valid_codemirror_mode
+    Language.all.each do |language|
+      if mode = language.codemirror_mode
+        assert File.exist?(File.expand_path("../../vendor/CodeMirror/mode/#{mode}", __FILE__)), "#{mode} isn't a valid CodeMirror mode"
+      end
+    end
+  end
+
+  def test_codemirror_mode_and_mime_defined_by_meta_mapping
+    meta = File.read(File.expand_path("../../vendor/CodeMirror/mode/meta.js", __FILE__))
+    Language.all.each do |language|
+      next unless language.codemirror_mode && language.codemirror_mime_type
+      assert meta.match(/^.+#{Regexp.escape(language.codemirror_mime_type)}.+#{Regexp.escape(language.codemirror_mode)}.+$/), "#{language.inspect}: #{language.codemirror_mime_type} not defined under #{language.codemirror_mode}"
+    end
+  end
+
+  def test_codemirror_mime_declared_in_mode_file
+    Language.all.each do |language|
+      next unless language.codemirror_mode && language.codemirror_mime_type
+      filename = File.expand_path("../../vendor/CodeMirror/mode/#{language.codemirror_mode}/#{language.codemirror_mode}.js", __FILE__)
+      assert File.exist?(filename), "#{filename} does not exist"
+      assert File.read(filename).match(language.codemirror_mime_type), "#{language.inspect}: #{language.codemirror_mime_type} not defined in #{filename}"
+    end
+  end
+
   def test_all_popular_languages_exist
     popular = YAML.load(File.read(File.expand_path("../../lib/linguist/popular.yml", __FILE__)))
 
@@ -443,5 +493,12 @@ class TestLanguage < Minitest::Test
     message = "The following languages are listed in lib/linguist/popular.yml but not in lib/linguist/languages.yml.\n"
     message << missing.sort.join("\n")
     assert missing.empty?, message
+  end
+
+  def test_no_unused_colours
+    Language.all.each do |language|
+      next unless language.type == :data || language.type == :prose
+      assert !language.color, "Unused colour assigned to #{language.name}"
+    end
   end
 end
