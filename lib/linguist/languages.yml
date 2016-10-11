@@ -1187,23 +1187,6 @@ FLUX:
   tm_scope: none
   ace_mode: text
   language_id: 106
-FORTRAN:
-  type: programming
-  color: "#4d41b1"
-  extensions:
-  - ".f90"
-  - ".f"
-  - ".f03"
-  - ".f08"
-  - ".f77"
-  - ".f95"
-  - ".for"
-  - ".fpp"
-  tm_scope: source.fortran.modern
-  ace_mode: text
-  codemirror_mode: fortran
-  codemirror_mime_type: text/x-fortran
-  language_id: 107
 Factor:
   type: programming
   color: "#636746"
@@ -1273,6 +1256,23 @@ Forth:
   codemirror_mode: forth
   codemirror_mime_type: text/x-forth
   language_id: 114
+Fortran:
+  type: programming
+  color: "#4d41b1"
+  extensions:
+  - ".f90"
+  - ".f"
+  - ".f03"
+  - ".f08"
+  - ".f77"
+  - ".f95"
+  - ".for"
+  - ".fpp"
+  tm_scope: source.fortran.modern
+  ace_mode: text
+  codemirror_mode: fortran
+  codemirror_mime_type: text/x-fortran
+  language_id: 107
 FreeMarker:
   type: programming
   color: "#0050b2"
