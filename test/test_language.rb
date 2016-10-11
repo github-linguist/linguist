@@ -90,7 +90,7 @@ class TestLanguage < Minitest::Test
     assert_equal Language['Ruby'], Language['Ruby'].group
 
     # Test a few special groups
-    assert_equal Language['Assembly'], Language['GAS'].group
+    assert_equal Language['Assembly'], Language['Unix Assembly'].group
     assert_equal Language['C'], Language['OpenCL'].group
     assert_equal Language['Haskell'], Language['Literate Haskell'].group
     assert_equal Language['Java'], Language['Java Server Pages'].group
