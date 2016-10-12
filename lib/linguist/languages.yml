@@ -563,6 +563,17 @@ COLLADA:
   codemirror_mode: xml
   codemirror_mime_type: text/xml
   language_id: 49
+CSON:
+  type: data
+  group: CoffeeScript
+  tm_scope: source.coffee
+  ace_mode: coffee
+  codemirror_mode: coffeescript
+  codemirror_mime_type: text/x-coffeescript
+  searchable: false
+  extensions:
+  - ".cson"
+  language_id: 424
 CSS:
   type: markup
   tm_scope: source.css
@@ -693,7 +704,6 @@ CoffeeScript:
   - "._coffee"
   - ".cake"
   - ".cjsx"
-  - ".cson"
   - ".iced"
   filenames:
   - Cakefile
