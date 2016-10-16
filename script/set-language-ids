@@ -36,21 +36,23 @@ header = <<-EOF
 # Please keep this list alphabetized. Capitalization comes before lowercase.
 
 EOF
+require 'digest'
 
 generated = true if ARGV[0] == "--force"
 update = true if ARGV[0] == "--update"
+
+def generate_language_id(language)
+  Digest::SHA256.hexdigest(language).to_i(16) % (2**30 - 1)
+end
 
 if generated
   puts "You're regenerating all of the language_id attributes for all Linguist "
   puts "languages defined in languages.yml. This is almost certainly NOT what"
   puts "you meant to do!"
 
-  language_index = 0
-
   languages = YAML.load(File.read("lib/linguist/languages.yml"))
   languages.each do |name, vals|
-    vals.merge!('language_id' => language_index)
-    language_index += 1
+    vals.merge!('language_id' => generate_language_id(name))
   end
 
   File.write("lib/linguist/languages.yml", header + YAML.dump(languages))
@@ -58,20 +60,12 @@ elsif update
   puts "Adding new language_id attributes to languages.yml that don't have one set"
   languages = YAML.load(File.read("lib/linguist/languages.yml"))
 
-  # First grab the maximum language_id
-  language_ids = []
-  languages.each { |name, vals| language_ids << vals['language_id'] if vals.has_key?('language_id')}
-  max_language_id = language_ids.max
-  puts "Current maximum language_id is #{max_language_id}"
-
   missing_count = 0
-  language_index = max_language_id
 
   languages.each do |name, vals|
     unless vals.has_key?('language_id')
-      language_index += 1
       missing_count += 1
-      vals.merge!('language_id' => language_index)
+      vals.merge!('language_id' => generate_language_id(name))
     end
   end
 
