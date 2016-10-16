@@ -426,6 +426,14 @@ class TestLanguage < Minitest::Test
     assert missing.empty?, message
   end
 
+  def test_all_languages_have_a_valid_id
+    invalid = Language.all.select { |language| language.language_id < 0 || language.language_id >= (2**31 - 1) }
+
+    message = "The following languages do not have a valid language_id. Please use script/set-language-ids --update as per the contribution guidelines.\n"
+    invalid.each { |language| message << "#{language.name}\n" }
+    assert invalid.empty?, message
+  end
+
   def test_all_language_id_are_unique
     duplicates = Language.all.group_by{ |language| language.language_id }.select { |k, v| v.size > 1 }.map(&:first)
 
