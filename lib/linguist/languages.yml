@@ -19,7 +19,7 @@
 # language_id       - Integer used as a language-name-independent indexed field so that we can rename
 #                     languages in Linguist without reindexing all the code on GitHub. Must not be
 #                     changed for existing languages without the explicit permission of GitHub staff.
-# color             - CSS hex color to represent the language.
+# color             - CSS hex color to represent the language. Only used if type is "programming" or "prose"
 # tm_scope          - The TextMate scope that represents this programming
 #                     language. This should match one of the scopes listed in
 #                     the grammars.yml file. Use "none" if there is no grammar
@@ -103,7 +103,6 @@ APL:
   language_id: 6
 ASN.1:
   type: data
-  color: "#aeead0"
   extensions:
   - ".asn"
   - ".asn1"
@@ -228,7 +227,6 @@ Apex:
   language_id: 17
 Apollo Guidance Computer:
   type: programming
-  color: "#0B3D91"
   group: Assembly
   extensions:
   - ".agc"
@@ -370,7 +368,6 @@ Bison:
   extensions:
   - ".bison"
   ace_mode: text
-  color: "#6A463F"
   language_id: 31
 BitBake:
   type: programming
@@ -564,6 +561,17 @@ COLLADA:
   codemirror_mode: xml
   codemirror_mime_type: text/xml
   language_id: 49
+CSON:
+  type: data
+  group: CoffeeScript
+  tm_scope: source.coffee
+  ace_mode: coffee
+  codemirror_mode: coffeescript
+  codemirror_mime_type: text/x-coffeescript
+  searchable: false
+  extensions:
+  - ".cson"
+  language_id: 424
 CSS:
   type: markup
   tm_scope: source.css
@@ -694,7 +702,6 @@ CoffeeScript:
   - "._coffee"
   - ".cake"
   - ".cjsx"
-  - ".cson"
   - ".iced"
   filenames:
   - Cakefile
@@ -703,7 +710,6 @@ CoffeeScript:
   language_id: 63
 ColdFusion:
   type: programming
-  group: ColdFusion
   ace_mode: coldfusion
   color: "#ed2cd6"
   search_term: cfm
@@ -720,7 +726,6 @@ ColdFusion CFC:
   type: programming
   group: ColdFusion
   ace_mode: coldfusion
-  color: "#ed2cd6"
   search_term: cfc
   aliases:
   - cfc
@@ -1038,7 +1043,6 @@ ECLiPSe:
   language_id: 94
 EJS:
   type: markup
-  color: "#a91e50"
   group: HTML
   extensions:
   - ".ejs"
@@ -1726,11 +1730,9 @@ Haml:
   ace_mode: haml
   codemirror_mode: haml
   codemirror_mime_type: text/x-haml
-  color: "#ECE2A9"
   language_id: 154
 Handlebars:
   type: markup
-  color: "#01a9d6"
   group: HTML
   aliases:
   - hbs
@@ -1909,7 +1911,6 @@ J:
   language_id: 172
 JFlex:
   type: programming
-  color: "#DBCA00"
   group: Lex
   extensions:
   - ".flex"
@@ -2041,19 +2042,6 @@ JavaScript:
   - ".pac"
   - ".sjs"
   - ".ssjs"
-  - ".sublime-build"
-  - ".sublime-commands"
-  - ".sublime-completions"
-  - ".sublime-keymap"
-  - ".sublime-macro"
-  - ".sublime-menu"
-  - ".sublime-mousemap"
-  - ".sublime-project"
-  - ".sublime-settings"
-  - ".sublime-theme"
-  - ".sublime-workspace"
-  - ".sublime_metrics"
-  - ".sublime_session"
   - ".xsjs"
   - ".xsjslib"
   filenames:
@@ -2126,7 +2114,6 @@ LFE:
   type: programming
   extensions:
   - ".lfe"
-  color: "#004200"
   group: Erlang
   tm_scope: source.lisp
   ace_mode: lisp
@@ -2183,7 +2170,6 @@ Lasso:
   language_id: 195
 Latte:
   type: markup
-  color: "#A8FF97"
   group: HTML
   extensions:
   - ".latte"
@@ -2208,7 +2194,6 @@ Less:
   ace_mode: less
   codemirror_mode: css
   codemirror_mime_type: text/css
-  color: "#A1D9A1"
   language_id: 198
 Lex:
   type: programming
@@ -2429,6 +2414,7 @@ Makefile:
   extensions:
   - ".mak"
   - ".d"
+  - ".make"
   - ".mk"
   - ".mkfile"
   filenames:
@@ -2795,7 +2781,6 @@ NumPy:
   ace_mode: text
   codemirror_mode: python
   codemirror_mime_type: text/x-python
-  color: "#9C8AF9"
   language_id: 254
 OCaml:
   type: programming
@@ -3679,7 +3664,6 @@ SCSS:
   codemirror_mime_type: text/x-scss
   extensions:
   - ".scss"
-  color: "#CF649A"
   language_id: 329
 SMT:
   type: programming
@@ -3805,7 +3789,6 @@ Sass:
   ace_mode: sass
   codemirror_mode: sass
   codemirror_mime_type: text/x-sass
-  color: "#CF649A"
   language_id: 340
 Scala:
   type: programming
@@ -3932,7 +3915,6 @@ Slash:
 Slim:
   group: HTML
   type: markup
-  color: "#ff8f77"
   extensions:
   - ".slim"
   tm_scope: text.slim
@@ -4040,6 +4022,28 @@ SubRip Text:
   ace_mode: text
   tm_scope: text.srt
   language_id: 360
+Sublime Text Config:
+  type: data
+  group: JSON
+  tm_scope: source.js
+  ace_mode: javascript
+  codemirror_mode: javascript
+  codemirror_mime_type: text/javascript
+  extensions:
+  - ".sublime-build"
+  - ".sublime-commands"
+  - ".sublime-completions"
+  - ".sublime-keymap"
+  - ".sublime-macro"
+  - ".sublime-menu"
+  - ".sublime-mousemap"
+  - ".sublime-project"
+  - ".sublime-settings"
+  - ".sublime-theme"
+  - ".sublime-workspace"
+  - ".sublime_metrics"
+  - ".sublime_session"
+  language_id: 423
 SuperCollider:
   type: programming
   color: "#46390b"
@@ -4072,6 +4076,17 @@ SystemVerilog:
   codemirror_mode: verilog
   codemirror_mime_type: text/x-systemverilog
   language_id: 363
+TI Program:
+  type: programming
+  ace_mode: text
+  color: "#A0AA87"
+  extensions:
+  - ".8xp"
+  - ".8xk"
+  - ".8xk.txt"
+  - ".8xp.txt"
+  language_id: 422
+  tm_scope: none
 TLA:
   type: programming
   extensions:
@@ -4254,7 +4269,6 @@ Unified Parallel C:
   ace_mode: c_cpp
   codemirror_mode: clike
   codemirror_mime_type: text/x-csrc
-  color: "#4e3617"
   extensions:
   - ".upc"
   tm_scope: source.c
