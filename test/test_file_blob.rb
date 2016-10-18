@@ -628,6 +628,11 @@ class TestFileBlob < Minitest::Test
     assert_predicate fixture_blob("INSTALL.txt"), :documentation?
   end
 
+  def test_test
+    assert_predicate fixture_blob("test/foo.html"), :test?
+    assert_predicate fixture_blob("tests/foo.html"), :test?
+  end
+
   def test_language
     Samples.each do |sample|
       blob = sample_blob(sample[:path])
