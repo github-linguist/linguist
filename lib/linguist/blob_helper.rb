@@ -251,6 +251,21 @@ module Linguist
       path =~ DocumentationRegexp ? true : false
     end
 
+    test_paths = YAML.load_file(File.expand_path("../test.yml", __FILE__))
+    TestRegexp = Regexp.new(test_paths.join('|'))
+
+    # Public: Is the blob in a test directory?
+    #
+    # Test files are ignored by language statistics.
+    #
+    # See "test.yml" for a list of test conventions that match
+    # this pattern.
+    #
+    # Return true or false
+    def test?
+      path =~ TestRegexp ? true : false
+    end
+
     # Public: Get each line of data
     #
     # Requires Blob#data
@@ -339,6 +354,7 @@ module Linguist
     def include_in_language_stats?
       !vendored? &&
       !documentation? &&
+      !test? &&
       !generated? &&
       language && DETECTABLE_TYPES.include?(language.type)
     end
