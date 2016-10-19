@@ -503,3 +503,47 @@ class TestLanguage < Minitest::Test
     end
   end
 end
+
+
+*****************************************************************************************************************
+
+   -  py35 create:: /home/scrutinizer/build/.tox/py35/installed:: cffi==1.8.3,
+   -  coverpage==4.2, coverall==1.1, docopt==0.6.2,
+   -  idna==2.1.1:
+   -  necache==1.0.0, mock==1.0.1, nose==1.3.7, passlib==1.6.5, pyasn1==0.1.9, pycparser==2.1.4, python-systend==0.0.9, python3-memcached==1.51, redis==2.10.5, requests==2.11.1, six=py35 create:: /hone/scrutinizer/build/.tox/py35
+     -  GLOB sdist-make:: /home/scrutinizer/build/setup.py
+     -  py26 create:: /home/scrutinizer/build/.tox/py26/installdeps:: -r/home/scrutinizer/build/.tox/py27 #1/test/utils/tox/requirements.txt/py26 insta /home/scrutinizer/build/.tox/dist/ansible-2.2.0.zip
+      -  py26 installed:: ansible==2.2.0, cffi==1.83, coverage==4.2, coveralls==1.1, cryptograph
+      -    y==1.5.2, docopt==0.6.2, enum34==1.1.6, idna==2.1, ipaddress==1.0.17, Jinja2==2.8, 
+      -  linca 
+       -  che==1.0.0, MarkupSate==0.23, mock==1.0.1, nose==1.3.7, paramiko==2.0.2, passlib==1.6.5, pyasn1==0.1.9, pycparser2.14, pycrypto==2.6.1, python-memcached==1.58, python-system
+       -   d==0.0.9, pyYAML==3.12, redis==2.10.5, requests==2.11.1, six==1.10.0, traceback
+      -  2==1.4.0, unittest2==1.1.0, py26 runtests::PYTHONHASHSEED='2912,568671'
+        -  py26 runtests:: command[0] || python --version python2.6.7
+        -  py26 runtests:: command[1] || python -m compileall -fq -x test/samples lib test cont 
+       -   rib
+       -  pay26 runtests:: commands[2] || make tests
+       -  test ascii_stdout (units.module_utils, basic test_run_command.TestAnsible Modules Run
+      -  PYTHONPATH=./lib nosetests -d -w test/units -y-v --with-coverage --cover-eval. TestsateEval=foo_bar_baz-package=ansi 
+           -  blé --cover-branches
+        -  test_display_galaxy_info (units.cli.test_galaxy.TestGalaxy) ...
+        -  test_display_min (units.cli.test_galaxy.TestGalaxy) ...
+        -  test_execute_remove (units.cli.test_galaxy.TestGalaxy) ...
+        -  Flag --ignore-errors tests that GalaxyCLI exists with the error specified unless the 
+        -  --ignore-errors flag is used...
+       -  VMWARE
+        -  bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --clean
+         -  # Parsing 'Gemfile':: foo.bar
+        -  loading.Gemspec:: foo.bar.baz /home/scrutinizer/build/foo.bar.gemspec::10::
+        -  tlDENTIFIER_keyword_do or '{'no'}'
+       -  S.version=foo.bar::Version::STRING::Gem::foo::Gem:: -v ruby from/home/scrutinizer/build/Gemfile::6foo.bar
+         -  Bundler_Gemspec::foo.bar
+        -  @0072016
+          -  https://apps.facebook.com
+         -  https://developers.facebook.com
+          foo.gradle@gmail.com
+          -  https://iOS-SDK.com
+         -  https://my-android-sdk-app.com
+         -  https://my-PHP-app.com
+          October 18, 2016
+           21:24:15PST
