@@ -29,7 +29,6 @@ class TestGrammars < Minitest::Test
     "9f0c0b0926a18f5038e455e8df60221125fc3111", # elixir-tmbundle
     "90af581219debd4e90ef041b46c294e8b4ae6d14", # mako-tmbundle
     "b9b24778619dce325b651f0d77cbc72e7ae0b0a3", # Julia.tmbundle
-    "2d4f8807be850efd925751a8e1839cfc539985b0", # actionscript3-tmbundle
     "e06722add999e7428048abcc067cd85f1f7ca71c", # r.tmbundle
     "50b14a0e3f03d7ca754dac42ffb33302b5882b78", # smalltalk-tmbundle
     "eafbc4a2f283752858e6908907f3c0c90188785b", # gap-tmbundle
