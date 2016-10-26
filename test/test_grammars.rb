@@ -40,7 +40,6 @@ class TestGrammars < Minitest::Test
     "c9118c370411f2f049c746c0fd096554e877aea2", # perl6fe
     "8ccf886749c32fb7e65d4d1316a7ed0479c93dc9", # language-less
     "2f03492b52d7dd83b4e7472f01b87c6121e5b1a4", # monkey
-    "9d8b5626cfe00f3c8a076173913c3b0312b5b122", # ejs-tmbundle
     "bdab9fdc21e6790b479ccb5945b78bc0f6ce2493"  # language-blade
   ].freeze
 
