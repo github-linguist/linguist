@@ -13,7 +13,8 @@ class TestHeuristcs < Minitest::Test
   end
 
   def all_fixtures(language_name, file="*")
-    Dir.glob("#{samples_path}/#{language_name}/#{file}")
+    Dir.glob("#{samples_path}/#{language_name}/#{file}") -
+      ["#{samples_path}/#{language_name}/filenames"]
   end
 
   def test_no_match
@@ -28,14 +29,18 @@ class TestHeuristcs < Minitest::Test
     hash.each do |language, blobs|
       Array(blobs).each do |blob|
         result = Heuristics.call(file_blob(blob), candidates)
-        assert_equal [Language[language]], result, "Failed for #{blob}"
+        if language.nil?
+          assert_equal [], result, "Failed for #{blob}"
+        else
+          assert_equal [Language[language]], result, "Failed for #{blob}"
+        end
       end
     end
   end
 
   def test_detect_still_works_if_nothing_matches
     blob = Linguist::FileBlob.new(File.join(samples_path, "Objective-C/hello.m"))
-    match = Language.detect(blob)
+    match = Linguist.detect(blob)
     assert_equal Language["Objective-C"], match
   end
 
@@ -82,6 +87,13 @@ class TestHeuristcs < Minitest::Test
       "ECLiPSe" => all_fixtures("ECLiPSe", "*.ecl")
     })
   end
+  
+  def test_es_by_heuristics
+    assert_heuristics({
+      "Erlang" => all_fixtures("Erlang", "*.es"),
+      "JavaScript" => all_fixtures("JavaScript", "*.es")
+    })
+  end
 
   def test_f_by_heuristics
     assert_heuristics({
@@ -114,6 +126,15 @@ class TestHeuristcs < Minitest::Test
     })
   end
 
+  # Candidate languages = ["Assembly", "C++", "HTML", "PAWN", "PHP",
+  #                        "POV-Ray SDL", "Pascal", "SQL", "SourcePawn"]
+  def test_inc_by_heuristics
+    assert_heuristics({
+      "PHP" => all_fixtures("PHP", "*.inc"),
+      "POV-Ray SDL" => all_fixtures("POV-Ray SDL", "*.inc")
+    })
+  end
+
   def test_ls_by_heuristics
     assert_heuristics({
       "LiveScript" => all_fixtures("LiveScript", "*.ls"),
@@ -128,12 +149,32 @@ class TestHeuristcs < Minitest::Test
     })
   end
 
+  def test_m_by_heuristics
+    assert_heuristics({
+      "Objective-C" => all_fixtures("Objective-C", "*.m") - all_fixtures("Objective-C", "cocoa_monitor.m"),
+      "Mercury" => all_fixtures("Mercury", "*.m"),
+      "MUF" => all_fixtures("MUF", "*.m"),
+      "M" => all_fixtures("M", "MDB.m"),
+      "Mathematica" => all_fixtures("Mathematica", "*.m") - all_fixtures("Mathematica", "Problem12.m"),
+      "Matlab" => all_fixtures("Matlab", "create_ieee_paper_plots.m"),
+      "Limbo" => all_fixtures("Limbo", "*.m"),
+      nil => ["Objective-C/cocoa_monitor.m"]
+    })
+  end
+
+  def test_md_by_heuristics
+    assert_heuristics({
+      "Markdown" => all_fixtures("Markdown", "*.md"),
+      "GCC machine description" => all_fixtures("GCC machine description", "*.md")
+    })
+  end
+
   # Candidate languages = ["C++", "Objective-C"]
   def test_obj_c_by_heuristics
     # Only calling out '.h' filenames as these are the ones causing issues
     assert_heuristics({
       "Objective-C" => all_fixtures("Objective-C", "*.h"),
-      "C++" => ["C++/scanner.h", "C++/qscicommand.h", "C++/v8.h", "C++/gdsdbreader.h"],
+      "C++" => ["C++/scanner.h", "C++/protocol-buffer.pb.h", "C++/v8.h", "C++/gdsdbreader.h"],
       "C" => nil
     })
   end
@@ -185,6 +226,16 @@ class TestHeuristcs < Minitest::Test
     assert_heuristics({
       "SuperCollider" => all_fixtures("SuperCollider", "*.sc"),
       "Scala" => all_fixtures("Scala", "*.sc")
+    })
+  end
+
+  # Candidate languages = ["SQL", "PLpgSQL", "SQLPL", "PLSQL"]
+  def test_sql_by_heuristics
+    assert_heuristics({
+      "SQL" => ["SQL/create_stuff.sql", "SQL/db.sql", "SQL/dual.sql"],
+      "PLpgSQL" => all_fixtures("PLpgSQL", "*.sql"),
+      "SQLPL" => ["SQLPL/trigger.sql"],
+      "PLSQL" => all_fixtures("PLSQL", "*.sql")
     })
   end
 

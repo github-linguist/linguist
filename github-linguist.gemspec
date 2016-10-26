@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.homepage = "https://github.com/github/linguist"
   s.license  = "MIT"
 
-  s.files = Dir['lib/**/*'] - ['lib/linguist/grammars.rb'] + ['LICENSE']
+  s.files = Dir['lib/**/*'] + Dir['grammars/*'] + ['LICENSE']
   s.executables = ['linguist', 'git-linguist']
 
   s.add_dependency 'charlock_holmes', '~> 0.7.3'
@@ -20,10 +20,12 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'minitest', '>= 5.0'
   s.add_development_dependency 'mocha'
+  s.add_development_dependency 'plist', '~>3.1'
   s.add_development_dependency 'pry'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'yajl-ruby'
   s.add_development_dependency 'color-proximity', '~> 0.2.1'
-  s.add_development_dependency 'licensee', '6.0.0b1'
+  s.add_development_dependency 'licensed'
+  s.add_development_dependency 'licensee', '>= 8.6.0'
 
 end

@@ -43,7 +43,7 @@ special-vendored-path/* linguist-vendored
 jquery.js linguist-vendored=false
 ```
 
-Similar to vendored files, Linguist excludes documentation files from your project's language stats. (Unlike vendored files, documentation files are displayed in diffs on github.com.) [lib/linguist/documentation.yml](lib/linguist/documentation.yml) lists common documentation paths and excludes them from the language statistics for your repository.
+Just like vendored files, Linguist excludes documentation files from your project's language stats. [lib/linguist/documentation.yml](lib/linguist/documentation.yml) lists common documentation paths and excludes them from the language statistics for your repository.
 
 Use the `linguist-documentation` attribute to mark or unmark paths as documentation.
 
@@ -52,6 +52,16 @@ $ cat .gitattributes
 project-docs/* linguist-documentation
 docs/formatter.rb linguist-documentation=false
 ```
+
+#### Generated file detection
+
+Not all plain text files are true source files. Generated files like minified js and compiled CoffeeScript can be detected and excluded from language stats. As an added bonus, unlike vendored and documentation files, these files are suppressed in diffs.
+
+```ruby
+Linguist::FileBlob.new("underscore.min.js").generated? # => true
+```
+
+See [Linguist::Generated#generated?](https://github.com/github/linguist/blob/master/lib/linguist/generated.rb).
 
 ### Using Emacs or Vim modelines
 
@@ -114,4 +124,9 @@ lib/linguist.rb
 
 Please check out our [contributing guidelines](CONTRIBUTING.md).
 
-##
+## License
+
+The language grammars included in this gem are covered by their repositories'
+respective licenses. `grammars.yml` specifies the repository for each grammar.
+
+All other files are covered by the MIT license, see `LICENSE`.

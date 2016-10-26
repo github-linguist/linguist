@@ -1422,6 +1422,3 @@ init:
 #     hide text with dissolve
 #
 #     return
-
-
-Return to the tutorial.

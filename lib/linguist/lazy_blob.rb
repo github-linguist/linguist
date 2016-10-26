@@ -28,6 +28,7 @@ module Linguist
       @oid = oid
       @path = path
       @mode = mode
+      @data = nil
     end
 
     def git_attributes

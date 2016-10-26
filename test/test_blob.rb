@@ -4,14 +4,18 @@ class TestBlob < Minitest::Test
   include Linguist
 
   def setup
-    # git blobs are normally loaded as ASCII-8BIT since they may contain data
-    # with arbitrary encoding not known ahead of time
-    @original_external = Encoding.default_external
-    Encoding.default_external = Encoding.find("ASCII-8BIT")
+    silence_warnings do
+      # git blobs are normally loaded as ASCII-8BIT since they may contain data
+      # with arbitrary encoding not known ahead of time
+      @original_external = Encoding.default_external
+      Encoding.default_external = Encoding.find("ASCII-8BIT")
+    end
   end
 
   def teardown
-    Encoding.default_external = @original_external
+    silence_warnings do
+      Encoding.default_external = @original_external
+    end
   end
 
   def script_blob(name)
@@ -132,7 +136,7 @@ class TestBlob < Minitest::Test
   end
 
   def test_csv
-    assert fixture_blob_memory("Data/cars.csv").csv?
+    assert sample_blob_memory("CSV/cars.csv").csv?
   end
 
   def test_pdf
@@ -166,7 +170,7 @@ class TestBlob < Minitest::Test
     assert sample_blob_memory("JavaScript/jquery-1.4.2.min.js").generated?
 
     # Composer generated composer.lock file
-    assert sample_blob_memory("JSON/composer.lock").generated?
+    assert sample_blob_memory("JSON/filenames/composer.lock").generated?
 
     # PEG.js-generated parsers
     assert sample_blob_memory("JavaScript/parser.js").generated?

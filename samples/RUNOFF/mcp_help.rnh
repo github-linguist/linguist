@@ -1,0 +1,1773 @@
+.!++
+.!
+.! Copyright (c) 2008, Matthew Madison.
+.! Copyright (c) 2012, Endless Software Solutions.
+.! 
+.! All rights reserved.
+.! 
+.! Redistribution and use in source and binary forms, with or without
+.! modification, are permitted provided that the following conditions
+.! are met:
+.! 
+.!     * Redistributions of source code must retain the above
+.!       copyright notice, this list of conditions and the following
+.!       disclaimer.
+.!     * Redistributions in binary form must reproduce the above
+.!       copyright notice, this list of conditions and the following
+.!       disclaimer in the documentation and/or other materials provided
+.!       with the distribution.
+.!     * Neither the name of the copyright owner nor the names of any
+.!       other contributors may be used to endorse or promote products
+.!       derived from this software without specific prior written
+.!       permission.
+.! 
+.! THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+.! "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+.! LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+.! A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+.! OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+.! SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+.! LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+.! DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+.! THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+.! (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+.! OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+.!
+.! NAME:	    MCP_HELP.RNH
+.!
+.! ABSTRACT: MCP help file.
+.!
+.! FACILITY: MX Control Program
+.!
+.! DESCRIPTION:
+.!
+.!   This is the RUNOFF source for the help library for MCP.
+.!   To create the help library, use the following commands:
+.!
+.!   	$ RUNOFF MCP_HELP.RNH
+.!   	$ LIB/CREATE/HELP MCP_HELPLIB MCP_HELP
+.!
+.! MODIFICATION HISTORY:
+.!
+.!   30-SEP-1990    V1.3    Madison 	Update for MX V1.3.
+.!   04-OCT-1990    V1.3-1  Madison	Further file server-related changes.
+.!   05-DEC-1990    V2.1    Madison	Add SET JNET.
+.!   10-DEC-1990    V2.1-1  Madison	New qualifiers for DEFINE LIST.
+.!   12-DEC-1990    V2.1-2  Madison	One more DEFINE LIST qualifier.
+.!   11-FEB-1991    V2.2    Madison	Various new command options.
+.!   27-MAR-1991    V2.2-1  Madison	Mention SHUT SMTP.
+.!   07-NOV-1991    T2.4    Madison	New commands.
+.!   11-NOV-1991    T2.4-1  Madison	Forgot QUEUE SHOW. SET JNET/LENIENT. REVIEW.
+.!   05-DEC-1991    V3.0    Madison	SHOW VERSION.
+.!   03-JAN-1992    V3.0-1  Madison	DEFINE LIST/REPLY_TO wasn't correct.
+.!   14-FEB-1992    V3.1    Madison 	SET JNET/USERNAME.
+.!   05-MAR-1992    V3.1-1  Madison 	SHUTDOWN, RESET changes.  STATUS.
+.!   13-MAR-1992    V3.1-2  Madison 	Forgot SET X25_SMTP.
+.!   15-FEB-1993    V3.2    Goatley     DEFINE LIST/FILE changes, fix typos.
+.!   19-MAR-1993    V3.3    Goatley	DEFINE LIST/PRIVATE, QUEUE SHOW/BRIEF.
+.!   16-APR-1993    V3.3-1  Goatley	SET LOCAL/MULTIPLE_FROM.
+.!    7-AUG-1993    V3.4    Goatley     Fix missing double "_" in qualifiers.
+.!   29-AUG-1993    V3.4-1  Goatley	SET LOCAL/MM_DELIVER.
+.!   17-DEC-1993    V3.4-2  Goatley	DEFINE LIST/STRIP=OTHER, SET LOCAL/CC.
+.!   10-JAN-1994    V3.4-3  Goatley     DEF LIST/CASE, - Q RECLAIM, + Q SYNCH.
+.!   16-FEB-1994    V4.0    Goatley     QUEUE CREATE, QUEUE EXTEND.
+.!   10-DEC-1995    V4.2    Goatley	/NODE, /DIGEST.
+.!    7-OCT-1996    V4.3    Goatley	SPAWN.
+.!  14-JAN-1997	    V4.4    Madison 	SET MLF.
+.!  17-FEB-1997	    V4.5    Madison 	DEFINE/MODIFY/REMOVE/SHOW REJECTION.
+.!  02-APR-1997	    V4.6    Madison 	LOCAL_DOMAIN, SMTP/RELAY, LIST/RECIP/HIDE.
+.!  13-APR-1997	    V4.6-1  Madison 	SET MLF/DELAY_DAYS.
+.!   2-MAY-1997	    V4.7    Goatley     Added DEF LIST/XHEADERS, /LIST_HEADERS, /HOSTNAME
+.!   5-MAY-1997	    V4.7-1  Goatley	Added DEF LIST/SETTINGS.
+.!   4-AUG-1997	    V4.7-2  Goatley     Add REJECTION to SHOW.
+.!   8-SEP-1997	    V4.7-2  Goatley     Add multiple addrs to DEFINE ALIAS.
+.!   3-OCT-1997	    V4.7-3  Goatley     Add /CC_POST_ERRORS, /SUBJECT_PREFIX.
+.!  05-OCT-1997	    V4.7-4  Madison 	Removed REJECTION due to inclusion of REJMAN utility;
+.!  	    	    	    	    	added SET SMTP/VALIDATE_SENDER_DOMAIN.
+.!  29-OCT-1997	    V4.7-5  Goatley     Fix /LIST_HEADERS description.
+.!  21-NOV-1997	    V4.7-6  Goatley	Add /QP_DECODE to SET LOCAL.
+.!  19-APR-1998	    V4.7-7  Madison 	Add SET LOCAL/DISABLE_EXQUOTA; remove /MM_DELIVER.
+.!  24-APR-1998	    V4.8    Madison 	Add SET SMTP/RBL, SET ROUTER/ACC.
+.!  15-JUN-1998	    V4.9    Madison 	Add INSIDE_NETWORK_ADDRESS settings.
+.!  26-JUN-1998	    V4.9-1  Madison 	Add /RELAY_ALLOWED to DEFINE INSIDE.
+.!  03-AUG-1998	    V4.9-2  Madison 	REMOVE INSIDE_NETWORK_ADDRESS was missing.
+.!  15-AUG-1998	    V4.9-3  Madison 	Document /RBL_CHECK=domain-name; add MODIFY INSIDE.
+.!  27-AUG-1998	    V4.9-4  Madison 	New HOLDING_QUEUE paths.
+.!  30-JAN-2000	    V4.9-5  Madison 	More holding queues.
+.!  25-NOV-2000	    V4.9-6  Madison 	list ignore flags; remove Jnet support; set local/long.
+.!  22-DEC-2000	    V4.10   Madison 	SHOW LIST/BRIEF.
+.!  13-JAN-2001	    V4.11   Madison 	QUEUE SELECT.
+.!  14-FEB-2002     V4.12   Madison     SET SMTP/[NO]PERCENT, regex, QUEUE DUMP.
+.!  03-Feb-2008     V5.0    Madison     Cleanup of obsolete keywords.
+.!  12-Mar-2012     V5.1    Sneddon	SET SMTP/[NO]TLS.
+.!--
+.P0
+.AP
+.LM1
+.RM70
+.I-1
+1 @
+ @
+ You can create MCP command files and execute them with the "@"
+(input-indirection) function.
+.NJ
+ Format:
+ @ file-spec
+.J
+ You can use the command SHOW/OUTPUT=file/COMMAND ALL to create a command
+file out of the current MX configuration, edit it outside of MCP, and then
+load in the commands with @file to create a new MX configuration.
+.I-1
+1 ADD
+ See the help text for ADD USER.
+.I-1
+2 USER
+ ADD USER adds a username and password to the authentication database
+used by the SMTP server.
+.NJ
+ Format:
+ ADD USER username
+.J
+ A username may be up to 16 characters in length, and are case-sensitive.
+Use quotation marks to specify a username that contains lower-case letters.
+.I-1
+3 Qualifiers
+.I-1
+/PASSWORD
+ /PASSWORD=password-text
+ Specifies a password for this username.  The password may be up to 64
+characters in length, and may contain any characters.  To specify lower case
+letters or blanks in the password, surround it with quotation marks.
+ If this qualifier is omitted, a default password, "PASSWORD", is assigned
+to the username.
+.I-1
+1 CREATE
+ See the help text for CREATE USER__DATABASE__FILE.
+.I-1
+2 USER__DATABASE__FILE
+ The CREATE USER__DATABASE_FILE command creates an empty file for the SMTP
+authentication database.  This database is used in conjunction with the
+CRAM-MD5 authentication extension (see SET SMTP/AUTHENTICATION).
+.NJ
+ Format:
+ CREATE USER__DATABASE__FILE [file-spec]
+.J
+ If a file-spec is omitted, a new (empty) version of MX__DIR:MX__USERAUTH__DB.DAT, the
+standard location for the SMTP authentication database, is created.  In general,
+this command is used only once, to create the initial database for population using
+the ADD USER command.
+.I-1
+1 DEFINE
+ The DEFINE command is used to add new alias and path entries,
+new rewrite-rules, mailing lists, and file servers, as well as identify
+privileged users.
+.I-1
+2 ALIAS
+ DEFINE ALIAS adds a new alias definition to the alias list.  The
+new alias always goes at the end of the list.
+.NJ
+ Format:
+ DEFINE ALIAS alias real-address[,...]
+.J
+ Real-address must be a full address, not just a username.  Alias
+matching is case-insensitive.  If case is important in the substitution,
+place quotation marks around real-address.
+ The maximum size of the real-address (including all addresses, if multiple
+real-addresses are specified) is 255 characters.
+.I-1
+2 FILE__SERVER
+ DEFINE FILE__SERVER is used to create a file server.
+.NJ
+ Format:
+ DEFINE FILE__SERVER name
+.J
+ The name given must be 32 characters or less in length, and should not
+be the same as an existing username or mailing list.
+.I-1
+3 Qualifiers
+.I-1
+/BEGIN__SEND__PERIOD
+ /BEGIN__SEND__PERIOD=hh:mm
+ This qualifier identifies the hour of the day when the off-peak sending
+period begins.  It is only meaningful when a delay threshold is specified.
+The default send period begins at 17:00.
+.I-1
+/DELAY__THRESHOLD
+ /DELAY__THRESHOLD=size
+ /NODELAY__THRESHOLD
+ This qualifier identifies the largest size, in bytes, that a file service
+response can be to be sent during prime time.  Responses exceeding that size
+are delayed until the off-peak sending period.  /NODELAY__THRESHOLD lets
+responses  of any size be sent at any time.  Omitting "size" sets a default
+size of 16,384 bytes.
+.I-1
+/DESCRIPTION
+ /DESCRIPTION=text
+ /NODESCRIPTION (default)
+ The /DESCRIPTION qualifier defines a brief description for the file server.
+This description is added to the file server address in the
+X-FileServer header on outgoing file server messages.
+.I-1
+/END__SEND__PERIOD
+ /END__SEND__PERIOD=hh:mm
+ This qualifier identifies the hour of the day when the off-peak sending
+period ends.  It is only meaningful when a delay threshold is specified.
+The default send period ends at 09:00.
+.I-1
+/HOST__LIMIT
+ /[NO]HOST__LIMIT=n
+ This qualifier specifies a daily per-host byte count limit on requests
+to the file server.  If a requested file's size plus the current byte
+count exceeds the daily limit, the file is not sent.  This limit is
+kept on a per-host basis.
+.I-1
+/MAILING__LIST
+ /[NO]MAILING__LIST=list-name
+ This qualifier specifies that only those users who subscribe to the
+specified mailing list (which must be a list on the local system) may
+have access to the file server.
+.I-1
+/MANAGER
+ /MANAGER=address
+ The /MANAGER qualifier identifies the address to which file service management
+requests are forwarded (when sent to user {file-server-username}-Mgr).
+If omitted, Postmaster on the local system is used.
+.I-1
+/ROOT
+ /ROOT=root-spec
+ The /ROOT qualifier identifies the root for the file server.  Root-spec
+must be a rooted logical name or a device and root directory specification.
+.I-1
+/SERVER__LIMIT
+ /[NO]SERVER__LIMIT=n
+ This qualifier specifies a daily server byte count limit on requests
+to the file server.  If a requested file's size plus the current byte
+count exceeds the daily limit, the file is not sent.  This limit applies
+to all requests to the server.
+.I-1
+/USER__LIMIT
+ /[NO]USER__LIMIT=n
+ This qualifier specifies a daily per-user byte count limit on requests
+to the file server.  If a requested file's size plus the current byte
+count exceeds the daily limit, the file is not sent.  This limit is
+kept on a per-destination-user basis.
+.I-1
+2 INSIDE__NETWORK__ADDRESS
+ The DEFINE INSIDE__NETWORK__ADDRESS command establishes an IP address or
+network that is in one of the local domains, is permitted to use your SMTP
+server as a relay, or to reject a particular host or network from being
+considered as part of your local domain.
+.NJ
+ Format:
+ DEFINE INSIDE__NETWORK__ADDRESS ip-address
+.J
+ Inside network address definitions are only used with the SMTP server
+is set to disallow relays with SET SMTP/NORELAY__ALLOWED.  When at least
+one inside address is defined, messages coming in via SMTP are allowed
+to have recipients outside of the local domain(s) only if the sending
+system's IP address is on the inside network address list.
+ By default, the SMTP server will still reject a message that contains
+non-local addresses for both the sender and the receiver, even from
+hosts on the inside network address list.  You can ease that restriction
+with the /RELAY__ALLOWED qualifier.
+.I-1
+3 ip-address
+ IP address, in dotted-decimal form, of the host or network.  If this is
+a network address, you must also specify the /NETMASK qualifier.
+.I-1
+3 Qualifiers
+.I-1
+/NETMASK
+ /NETMASK=ip-netmask
+ Specifies the network mask to be applied to the address, in dotted-decimal
+form.  The default is 255.255.255.255, which indicates that the IP address
+is for a host, not a network.
+.I-1
+/REJECT
+ /REJECT
+ /NOREJECT (default)
+ Indicates whether relay is to be rejected from the specified
+host or network.  This qualifier can be used to reject SMTP relay
+from particular hosts or subnetworks that are below a parent network
+that is already on the inside network address list.
+.I-1
+/RELAY__ALLOWED
+ /RELAY__ALLOWED
+ /NORELAY__ALLOWED (default)
+ Indicates that the host(s) should be allowed full relay permission; that
+is, messages sent from the host(s) are allowed to contain non-local addresses
+for both sender and receiver.
+ This qualifier is useful when your system is acting as a central mail hub,
+and there are hosts on your local network that automatically forward messages
+for their local users to hosts outside your domain via an alias.  When such
+messages are sent back to your system (as the mail hub), they will contain
+non-local addresses for both the sender and the recipient.
+.I-1
+2 LIST
+ The DEFINE LIST command is used to create a mailing list.
+.NJ
+ Format:
+ DEFINE LIST listname
+.J
+ DEFINE LIST creates three addresses on the local system: the mailing list
+itself, a control address (listname-REQUEST), and a sender address
+(listname-SENDER).
+.I-1
+3 Qualifiers
+.I-1
+/ADD__MESSAGE
+ /ADD__MESSAGE=fspec
+ /NOADD__MESSAGE (default)
+ The /ADD__MESSAGE qualifier is used to specify a file whose contents
+are to be sent when a user subscribes to the list.  If you omit
+the device and directory parts of the file specification, they default
+to MX__MLIST__DIR.  If you omit the file type, it defaults to TXT.
+ If no add message is specified, the system default add message, contained
+in file MX__MLIST__DIR:MLIST__ADD__MESSAGE.TXT, is used.
+.I-1
+/ARCHIVE
+ /ARCHIVE=fspec
+ /NOARCHIVE (default)
+ The /ARCHIVE qualifier  is used to establish a file into which mailing list
+messages are archived.  You may specify just parts of a file specification,
+to allow the following defaults to take effect:
+.NJ
+ Device, directory: MX__MLIST__DIR:
+ File name: same as mailing list name
+ File type: yyyy-mm (four-digit year, a hyphen, two-digit month)
+.J
+ This setup allows for easy monthly disposal of the mailing list archives.
+.I-1
+/CASE__SENSITIVE
+ /CASE__SENSITIVE (default)
+ /NOCASE__SENSITIVE
+ Enables or disables case-sensitivity with regard to mailing list
+subscribers.  By default, MX treats the left-hand side of subscriber
+addresses in a case-sensitive manner with regard to SIGNOFF and SET
+commands.  If a list is defined /NOCASE__SENSITIVE, then the case of
+subscriber addresses will be ignored.
+.I-1
+/CC__POST__ERRORS
+ /CC__POST__ERRORS
+ /NOCC__POST__ERRORS (default)
+ Enables or disables copying mailing post failure messages to the /ERRORS__TO
+address.  By default, if a message cannot be forwarded to a list, an error
+message is sent back to the sender of the message.  If /CC__POST__ERRORS
+is set, those error messages are also sent to the /ERRORS__TO address.
+This lets the list owner see attempted posts from non-subscribers and other
+posting failures.
+.I-1
+/CONFIRMATION__MESSAGE
+ /CONFIRMATION__MESSAGE=fspec
+ /NOCONFIRMATION__MESSAGE (default)
+ The /CONFIRMATION__MESSAGE qualifier is used to specify a file whose contents
+are to be sent when the mailing list processor requests confirmation of
+a subscription request (see DEFINE LIST /REQUEST__CONFIRMATION).  If you omit
+the device and directory parts of the file specification, they default
+to MX__MLIST__DIR.  If you omit the file type, it defaults to TXT.
+ If the NO form is specified, the system default confirmation message, contained
+in file MX__MLIST__DIR:MLIST__CONFIRM__MESSAGE.TXT, is used.
+.I-1
+/DESCRIPTION
+ /DESCRIPTION=text
+ /NODESCRIPTION (default)
+ The /DESCRIPTION qualifier defines a brief description for the
+mailing list. This description is added to the mailing list address in the
+X-Listname header on outgoing mailing list messages.
+.I-1
+/DIGEST
+ /DIGEST
+ /NODIGEST (default)
+ The /DIGEST qualifier enables or disables the support for digest subscribers
+for the given mailing list.
+.I-1
+/ERRORS__TO
+ /ERRORS__TO=address
+ This qualifier identifies the address that messages sent to the
+listname-SENDER sending address (which are usually delivery error messages)
+are sent.  If omitted, the first owner specified with /OWNER will be
+used.
+.I-1
+/FORWARD__MESSAGE
+ /FORWARD__MESSAGE=fspec
+ /NOFORWARD__MESSAGE (default)
+ The /FORWARD__MESSAGE qualifier is used to specify a file whose contents
+are to be sent when the list is set to no E (enroll) access for WORLD and
+a user attempts to subscribe to the list.  The message should inform the
+user that the subscription request was forwarded to the mailing list's
+owner.  If you omit the device and
+directory parts of the file specification, they default to MX__MLIST__DIR. 
+If you omit the file type, it defaults to TXT.
+ If no forward-to-owner message is specified, the system default message,
+contained in file MX__MLIST__DIR:MLIST__FORWARD__MESSAGE.TXT, is used.
+.I-1
+/HIDE__ERRORS__TO
+ /HIDE__ERRORS__TO (default)
+ /NOHIDE__ERRORS__TO
+ The /HIDE__ERRORS__TO qualifier instructs MLF to hide the error-returns
+address in outbound messages to the mailing list, even when the return
+address is specified with /ERRORS__TO. When /HIDE__ERRORS__TO is set on
+a list, MLF uses the automatically-created owner-{listname} alias as
+the envelope FROM and Errors-To address in outbound list messages.
+This is the default setting.
+ If you have set up a special address or alias for receiving mailing
+list-related error messages, and the address can be externally visible,
+you should specify that address with the /ERRORS__TO qualifier and
+specify /NOHIDE__ERRORS__TO to have the address you specify
+appear in the envelope FROM and Errors-To headers.
+.I-1
+/HOSTNAME
+ /HOSTNAME=hostname
+ /NOHOSTNAME (default)
+ The /HOSTNAME qualifier instructs MLF to use the supplied hostname
+for all addresses generated by MLF for the mailing list.  The supplied
+hostname is used instead of the actual running host's name.
+ For example, specifying /HOSTNAME="YYZ.COM" will cause all MLF-generated
+mailing list addresses to include "@YYZ.COM" instead of the actual host name.
+It is assumed that MX has been properly configured to handle mail addressed
+using the supplied hostname (i.e., that MX records for YYZ.COM point to
+the node running MX, and that it recognizes that YYZ.COM is a LOCAL path,
+etc.).
+.I-1
+/IGNORE
+ /IGNORE=(keyword[=value],...)
+ The /IGNORE qualifier instructs MLF to ignore postings to the mailing list
+if they match the specified criteria.  The criteria keywords are
+MISSING__LIST__ADDRESS and JUNK__MAIL.  These keywords are negatable.  By default,
+no postings are ignored.
+ Specifying the MISSING__LIST__ADDRESS criterion causes MLF to ignore
+postings to the list that do not explicitly include the list's address in either
+the To: or CC: header of the message.  This keyword does not take a value.
+ Specifying the JUNK__MAIL criterion causes MLF to ignore postings that
+contain the X-Junk-Mail-Rating: header that is inserted by the heuristic
+junk-mail filter in the SMTP server.  This keyword takes a value: LOW,
+MEDIUM, or HIGH, corresponding to the confidence level of the likelihood
+that the message is junk mail, as entered in the
+X-Junk-Mail-Rating: header by the SMTP server.  Only those messages with
+the specified or higher rating are ignored; i.e., if MEDIUM is specified
+as the keyword value, only those messages with MEDIUM or HIGH ratings are
+ignored.
+ 
+.I-1
+/LIST__HEADERS
+ /LIST__HEADERS=(keyword=value[,...])
+ /NOLIST__HEADERS (default)
+ The /LIST__HEADERS qualifier instructs MLF to include or omit special
+List-* headers that provide URLs for subscribing to a list,
+unsubscribing from a list, and getting help for that list.
+ There are three valid keywords: SUBSCRIBE, UNSUBSCRIBE, and HELP.
+All three accept values that are used in the creation of the actual headers,
+which will be added to each message posted to the mailing list.  However,
+only HELP requires a value.  If the value is omitted for SUBSCRIBE and
+UNSUBSCRIBE, the proper URLs for those actions will be automatically generated
+by MLF.
+ Clients that support these headers (both X-List-* and List-*) will provide
+click buttons to perform the specified actions (usually "mailto" URLs).
+.I-1
+/MAXIMUM__MESSAGE__SIZE
+ /MAXIMUM__MESSAGE__SIZE=size-in-Kbytes
+ /NOMAXIMUM__MESSAGE__SIZE (default)
+ Specifies a limit on the size of a message posted to the list, expressed
+in kilobytes.  Messages with contents (excluding headers) that exceed the
+specified limit are rejected and returned to sender.
+ Specifying zero as the value is identical to specifying /NOMAXIMUM__MESSAGE__SIZE.
+.I-1
+/NOTIFY
+ /NOTIFY=(type,...)
+ /NONOTIFY (default)
+ Specifies that the owner(s) of the mailing list should be sent a
+notification message for control transactions.  Valid type keywords are
+ALL (for all transaction types), ADD, REMOVE, REQUEST, and SET.
+ By default, no owner notifications are sent.
+.I-1
+/OWNER
+ /OWNER=(address[,...])
+ The /OWNER qualifier identifies the address(es) of the owner(s) of the
+mailing list.  Messages coming to the mailing list or the listname-REQUEST
+control address will be granted OWNER access to the mailing list.
+.I-1
+/PRIVATE
+ /PRIVATE
+ /NOPRIVATE (default)
+ The /PRIVATE qualifier is used prevent a list from being displayed in
+response to a LIST command sent to ListServ.  The list protection mask
+is not affected by this qualifier.
+.I-1
+/PROTECTION
+ /PROTECTION=(class:code[,...])
+ This qualifier allows you to grant or deny certain types of access to
+various users.  The protection code is of the same form as a normal VMS
+file protection specification.
+ "Class" can be one of SYSTEM, OWNER, GROUP, or WORLD.  The SYSTEM class
+includes only those addresses identified as system users with DEFINE
+SYSTEM__USERS. The OWNER class includes only the owners of the mailing list.
+The GROUP class consists of the subscribers of the mailing list.  The WORLD
+class consists of those addresses that are not subscribers of the mailing
+list.
+ "Code" can consist of the letters R,W,E, and D.  R (Read or Review) access
+allows the user to request a listing of the addresses on the mailing list
+with the REVIEW command.  W (Write) access allows the user to send a message
+to the mailing list.  E (Execute) access allows the user to use the automatic
+subscription facility to subscribe to the mailing list (meaningful only for
+the WORLD class, of course).  D (Delete) access allows the user to use the
+automatic subscription facility to sign off the mailing list (meaningful only
+for the GROUP class).
+ If E access is denied to WORLD, subscription requests are forwarded to the
+mailing list owner(s).  If D access is denied to GROUP, signoff requests
+are forwarded to the mailing list owner(s).
+ Note that protection codes are checked just like VMS protection codes,
+so that you cannot grant some kind of access to WORLD and exclude that
+access from GROUP, SYSTEM, or OWNER.  Also, SYSTEM and OWNER classes are
+granted CONTROL access implicitly (just as with VMS file protection), which
+allows them to add and remove other users from the mailing list.
+.I-1
+/RECIPIENT__MAXIMUM
+ /RECIPIENT__MAXIMUM=DEFAULT (default)
+ /RECIPEIENT__MAXIMUM=count
+ /NORECIPIENT__MAXIMUM
+ The /RECIPIENT__MAXIMUM qualifier controls how the mailing list
+processor sets the maximum number of recipients per outbound message
+for the list.  The default setting is DEFAULT, which causes the
+mailing list processor to set the maximum number based on the
+SET MLF/RECIPIENT__MAXIMUM setting.  You may override the SET MLF
+default by specifying a number, or by specifying /NORECIPIENT__MAXIMUM,
+which prevents MLF from breaking up long lists of recipients into
+smaller chunks for this list.
+.I-1
+/REMOVE__MESSAGE
+ /REMOVE__MESSAGE=fspec
+ /NOREMOVE__MESSAGE (default)
+ The /REMOVE__MESSAGE qualifier is used to specify a file whose contents
+are to be sent when a user signs off of the list.  If you omit
+the device and directory parts of the file specification, they default
+to MX__MLIST__DIR.  If you omit the file type, it defaults to TXT.
+ If no removal message is specified, the system default removal message,
+contained in file MX__MLIST__DIR:MLIST__REMOVE__MESSAGE.TXT, is used.
+.I-1
+/REPLY__TO
+ /REPLY__TO=(kwd[,...])
+ Specifies how the mailing list processor should handle Reply-To headers.
+Available reply-to types are SENDER and LIST, which may be combined.
+The default is
+SENDER, which prevents the mailing list processor from modifying the headers.
+If LIST is specified, a Reply-To header is added to list messages to re-direct
+replies to the mailing list, eliminating any existing Reply-To header in the
+original message.  If LIST and SENDER are both specified, a Reply-To header
+containing both the mailing list address and the original Reply-To address
+is added to list messages (using the From address if no Reply-To header
+existed in the original message).
+.I-1
+/REQUEST__CONFIRMATION
+ /REQUEST__CONFIRMATION[=INTERVAL=delta-time]
+ /NOREQUEST__CONFIRMATION (default)
+ The /REQUEST__CONFIRMATION qualifier is used to specify whether or not
+the mailing list processor should request confirmation of a subscription
+request from a user being added to a list via the SUBSCRIBE or ADD list
+processor command.  By default, confirmations are not requested.
+ You can control the length of time that the mailing list processor will
+wait for a subscription request to be confirmed by specifying the INTERVAL
+keyword and a VMS delta-time string for its value.  If not specified,
+the default confirmation interval is 3 days.
+.I-1
+/RETURN__ADDRESS
+ /RETURN__ADDRESS=address
+ /NORETURN__ADDRESS (default)
+ The /RETURN__ADDRESS qualifier is used to specify an alternate address
+that is to be used as
+the Reply-To address when /REPLY__TO=LIST is specified.
+This qualifier is most useful when multiple lists should have a common
+return address.  For example, it can be used to redirect replies to a
+"-Digest" list back to the non-digest address.
+.I-1
+/SETTINGS
+ /SETTINGS=(keyword[,...])
+ /SETTINGS=DEFAULT  (default)
+ The /SETTINGS qualifier is used to override the default subscriber settings
+for a list.  The valid keywords are MAIL, REPRO, CONCEAL, DIGEST, POST, and
+their "NO" forms.
+ A special keyword, DEFAULT, can be used to reset the settings
+to the MLF default for a mailing list.  The default settings for a list
+are MAIL, REPRO, NOCONCEAL, NODIGEST, and POST.
+.I-1
+/STRIP__HEADERS
+ /STRIP__HEADERS=(RECEIVED[,OTHER])
+ /STRIP__HEADERS=(NORECEIVED,NOOTHER) (default)
+ The /STRIP__HEADERS qualifier is used to strip certain RFC822 headers from
+messages posted to a mailing list.  Currently, only the keywords RECEIVED and
+OTHER (and NORECEIVED and NOOTHER) are supported.
+ When /STRIP__HEADERS=RECEIVED is set, the "Received:" headers are stripped from
+the incoming message before it is mailed out to the list subscribers, thereby
+reducing the total number of "Received:" headers in the final message.  This is
+especially beneficial to BITNET hosts because there can be a substantial number
+of "Received:" headers added to a message that must pass through one or more
+Internet/BITNET gateways.
+ When /STRIP__HEADERS=OTHER is set, all "other" headers are stripped from
+the incoming message before it is mailed out.  "Other" headers are any headers
+not listed under HELP SET LOCAL/HEADERS.  This includes return-receipt
+headers, X-400 headers, etc.
+.I-1
+/SUBJECT__PREFIX
+ /SUBJECT__PREFIX="string"
+ /NOSUBJECT__PREFIX (default)
+ Enables or disables the addition of a prefix to the Subject line of
+messages posted to the list.  By default, no prefix is added.  When
+the list is set to /REPLY__TO=(SENDER), a short prefix string may be
+supplied to help subscribers recognize mailing list messages.  The
+given string is bracketed by square brackets ([]) when it is prefixed
+to the subject lines.  The maximum length for the prefix string is 32
+characters.  Prefix strings should be kept short to avoid generating
+extremely long subject lines.
+.I-1
+/TEXT__ONLY
+ /TEXT__ONLY
+ /NOTEXT__ONLY (default)
+ The /TEXT__ONLY qualifier is used to specify whether or not the
+mailing list processor should accept only those messages with plain
+text content.  By default, any content type is accepted for list postings.
+.I-1
+/XHEADERS
+ /XHEADERS=("string"[,...])
+ /NOXHEADERS (default)
+ The /XHEADERS qualifier can be used to add additional site-specific headers
+to mailing list posts.  For example, you can use /XHEADERS to add additional
+non-standard "X-List-" headers such as "X-List-Archives".  The format of the
+header string is: "Keyword: text".  For example, "Precedence: Bulk", which
+is a non-standard header used by some mailers.
+ Extreme care should be taken when adding additional headers to mailing lists
+to ensure that duplicate headers or improperly formatted headers
+(those that don't comply with RFC 822) aren't added to mailing list posts.
+.I-1
+2 LOCAL__DOMAIN
+ The DEFINE LOCAL__DOMAIN command adds a domain name or pattern
+to the list of recognized "local" domains considered by the SMTP
+server when determining relay rejection.
+.NJ
+ Format:
+ DEFINE LOCAL__DOMAIN domain-name-or-pattern
+.J
+ The LOCAL__DOMAIN list is only used when the SMTP server is set
+to reject "relayed" SMTP messages with SET SMTP/NORELAY__ALLOWED.
+ A "relayed" message is one that originates on a remote system and
+is sent to another remote recipient, using your system as an
+intermediate relay.
+ When the SMTP server is set /NORELAY__ALLOWED, it checks the
+envelope FROM and TO addresses, and if neither is local, refuses
+to deliver the message.  By default, any host in your local domain
+(based on your TCP/IP host name and your MX host name) is considered
+"local".  You may use this command to add other hosts or domains
+to this list.
+.I-1
+3 Parameter
+ domain-name-or-pattern
+ Either a fully-qualified domain name of a single host, or a VMS-style
+wildcard pattern.  Host names in envelope addresses that match the
+specified name or pattern will be considered local by the relay
+checker.
+.I-1
+2 PATH
+ The DEFINE PATH command is used to map a domain to a delivery path.
+.NJ
+ Format:
+ DEFINE PATH domain-pat path-name
+.J
+.I-1
+3 Qualifiers
+.I-1
+/ROUTE
+ /ROUTE=host-name
+
+ Specifies the name of a host through which messages matching the domain
+pattern should be routed.
+.I-1
+3 domain-pat
+ This can be a specific domain name or a pattern containing wildcards to
+match a domain name.  For example: "specific.host.EDU", "*.BITNET".
+.I-1
+3 path-name
+ This is one of DECNET__SMTP, HOLDING__QUEUE=n, LOCAL, SITE, SMTP.
+You MUST have at least one LOCAL path defined; other paths will depend on the
+network transports you have installed.  For the HOLDING__QUEUE path, you must
+specify an integer from 1 to 32 for "n".
+.I-1
+2 REWRITE__RULE
+ The DEFINE REWRITE__RULE command establishes an address rewriting rule to
+be used by the Router.
+.NJ
+ Format:
+ DEFINE REWRITE__RULE  old-addr  new-addr
+.J
+ When the router rewrites an address, it tries each rewrite rule, in the
+order you define them, until one matches.  It then applies the one rule
+to that address.
+.I-1
+3 Qualifiers
+.I-1
+/REGEX
+ /REGEX
+ Specifies use of regular-expression matching and substitution instead
+of substitution variables.
+.I-1
+3 old-addr
+ The address-specification to be rewritten.  All addresses must conform
+to RFC821 and therefore will always contain a leading and closing angle
+bracket.  To create a substitution variable, surround the variable with
+curly braces.  Matching is done from right to left.  Substitution variables
+match all characters.
+ Example: <{user}@{host}.CSNET>
+ Substitution variables are not used with regular-expression matching
+(when /REGEX is specified); instead, use subexpressions enclosed in
+parentheses.
+.I-1
+3 new-addr
+ The resulting address pattern.  Substitution variables created in the
+old-addr specification can be used here.
+ Example: <@relay.cs.net:{user}@{host}.CSNET>
+ When using regular-expression matching, replacements are specified
+with a backslash followed by a single digit (1 through 9), representing
+the 1st through the 9th matching subexpression.
+.I-1
+2 SYSTEM__USERS
+ The DEFINE SYSTEM__USERS command identifies addresses that the mailing list
+processor should treat as SYSTEM-class users for protection purposes.
+.NJ
+ Format:
+ DEFINE SYSTEM__USERS address[,...]
+.I-1
+1 EXIT
+ The EXIT command leaves MCP.  If you were using MCP to edit an existing
+MX configuration, a new version of the configuration file is saved before
+MCP exits.  If the configuration file name is unknown, you are prompted
+for a file name before exiting.
+.I-1
+1 HELP
+ The HELP command displays information on MCP commands.
+.I-1
+1 MODIFY
+ The MODIFY command is used to change definitions of mailing lists, aliases,
+paths, etc.  The following MODIFY commands are supported, and take the same
+qualifiers as their DEFINE counterparts (see the help information on DEFINE
+for more information):
+.NJ
+ MODIFY ALIAS  alias
+ MODIFY FILE__SERVER  fsrv-name
+ MODIFY INSIDE__NETWORK__ADDRESS  ip-address
+ MODIFY LIST  list-name
+ MODIFY PATH  domain-pattern
+ MODIFY REWRITE__RULE  lhs
+.J
+ The MODIFY USER command is documented here.
+.I-1
+2 USER
+ The MODIFY USER command is used to set a new password for a username in the
+SMTP authentication database.
+.NJ
+ Format:
+ MODIFY USER username
+.J
+ Usernames may be up to 16 characters in length, and are case-sensitive.
+.I-1
+3 Qualifiers
+.I-1
+/PASSWORD
+ /PASSWORD=password-text
+ Specifies a password for this username.  The password may be up to 64
+characters in length, and may contain any characters.  To specify lower case
+letters or blanks in the password, surround it with quotation marks.
+ If this qualifier is omitted, a default password, "PASSWORD", is assigned
+to the username.
+
+.I-1
+1 QUIT
+ Quits out of MCP without saving the configuration.  If you have changed
+the configuration, QUIT will ask for confirmation before exiting.
+.I-1
+1 REMOVE
+ The REMOVE command is used to remove an alias, mailing list, path, or
+rewrite rule from the configuration.  The following REMOVE commands
+are supported:
+.NJ
+ REMOVE ALIAS  alias
+ REMOVE FILE__SERVER  fsrv-name
+ REMOVE INSIDE__NETWORK__ADDRESS  ip-address
+ REMOVE LIST  listname
+ REMOVE LOCAL__DOMAIN domain-name-or-pattern
+ REMOVE PATH  domain-spec
+ REMOVE REWRITE__RULE  old-addr
+.J
+ The REMOVE INSIDE__NETWORK__ADDRESS command also takes a qualifier,
+/NETMASK.  The combination of the IP address and the netmask must
+match the combination in the inside address list.
+ The REMOVE USER command is documented here.
+.J
+ The MODIFY USER command is documented here.
+.I-1
+2 USER
+ The REMOVE USER command removes a username from the
+SMTP authentication database.
+.NJ
+ Format:
+ REMOVE USER username
+.J
+ Usernames may be up to 16 characters in length, and are case-sensitive.
+.I-1
+1 QUEUE
+ The QUEUE suite of commands is used to control the system message queue.
+.I-1
+2 CANCEL
+ Cancels one or more messages.
+.NJ
+ Format:
+ QUEUE CANCEL [entry-number,...]
+.J
+ If you cancel the main entry for a message, all entries related to that
+message will also be cancelled.  If no entry numbers are specified, the
+entries selected by the last QUEUE SELECT command are cancelled.
+.I-1
+3 Qualifiers
+.I-1
+/LOG
+ /LOG
+ /NOLOG (default)
+ Displays a log message for each successful operation.
+.I-1
+2 COMPRESS
+ Shrinks the message queue file by creating a new file and renumbering
+all the existing entries in the file.
+.NJ
+ Format:
+ QUEUE COMPRESS/LOG
+.J
+.I-1
+3 Qualifiers
+.I-1
+/MAXIMUM__ENTRIES
+ /MAXIMUM__ENTRIES=number-of-entries
+ Specifies the maximum number of queue entries to be allowed.  MX will not
+allow more entries to be added to the queue than the specified value.
+MCP QUEUE EXTEND can be used to increase the number of allowed entries.
+ The size of the queue file in blocks is equal to the maximum number of
+entries, plus 10 blocks plus whatever is added for the disk cluster.
+.I-1
+/LOG
+ /LOG
+ /NOLOG (default)
+ Displays a log message for each successful operation.
+.I-1
+2 CREATE
+ Creates a new, empty, MX message queue control file.
+.NJ
+ Format:
+ QUEUE CREATE [filespec]
+.J
+.I-1
+3 Parameters
+ filespec
+ Name of the queue control file to be created.  If omitted, the
+default name, MX_FLQ_DIR:MX_SYSTEM_QUEUE.FLQ_CTL, is used.
+.I-1
+3 Qualifiers
+.I-1
+/MAXIMUM__ENTRIES
+ /MAXIMUM__ENTRIES=number-of-entries
+ Specifies the maximum number of queue entries to be allowed for the queue.
+The message queue will be extended to allow the specified number of entries.
+ The size of the queue file in blocks is equal to the maximum number of
+entries, plus 10 blocks plus whatever is added for the disk cluster.
+.I-1
+2 DUMP
+ Dumps an enqueued message to a set of files suitable for modifying
+recipient addresses and requeuing with MX_SITE_IN.
+.NJ
+ Format:
+ QUEUE DUMP entry-number
+.J
+.I-1
+3 Qualifiers
+.I-1
+/CANCEL
+ /CANCEL (default)
+ /NOCANCEL
+ By default, MCP cancels the queue entry for the dumped message.
+Specify /NOCANCEL to keep the dumped entry in the queue.
+.I-1
+/OUTPUT
+ /OUTPUT=file-spec
+ Specifies the location for the three output files generated by
+this command.  By default, the files are written to the current
+default directory with the filename for the message text and recipient
+files as ENTRY_n and the filename for the command procedure as
+REQUEUE_n (where "n" is the entry number).
+ Do not specify a file type or version in the file specification;
+QUEUE DUMP always uses the file types .MSG__TEXT, .RECIPIENTS, and .COM for 
+the message text, recipient, and command procedure files, respectively.
+.I-1
+3 Parameter
+ entry-number
+ Queue entry number for the message to be dumped.  The queue entry
+must be in READY or IN-PROGRESS state.
+ QUEUE DUMP creates three output files for the message: one
+containing the message text, one containing the list of recipients,
+and a command procedure for invoking MX_SITE_IN to requeue the
+message.
+.I-1
+2 EXTEND
+ Extends the existing message queue file to allow more entries to be in
+the queue at any given time.
+.NJ
+ Format:
+ QUEUE EXTEND
+.J
+.I-1
+3 Qualifiers
+.I-1
+/MAXIMUM__ENTRIES
+ /MAXIMUM__ENTRIES=number-of-entries
+ Specifies the maximum number of queue entries to be allowed.  MX will not
+allow more entries to be added to the queue than the specified value.
+MCP QUEUE EXTEND can be used to increase the number of allowed entries.
+ The size of the queue file in blocks is equal to the maximum number of
+entries, plus 10 blocks plus whatever is added for the disk cluster.
+.I-1
+2 HOLD
+ Places one or more queue entries on hold.
+.NJ
+ Format:
+ QUEUE HOLD [entry-number,...]
+.J
+ This command places the specified queue entry or entries on hold,
+so they will not be processed.  Use the QUEUE READY command to release
+the entries for processing.  If no entry numbers are specified, the
+entries selected by the last QUEUE SELECT command are held.
+.I-1
+2 PURGE
+ Purges the message queue of all finished and cancelled entries.
+.NJ
+ Format:
+ QUEUE PURGE
+.J
+ The Router process automatically purges the queue of finished and cancelled
+entries, periodically.  This command can be used to force an immediate
+purge of the queue.
+.I-1
+3 Qualifiers
+.I-1
+/LOG
+ /LOG
+ /NOLOG (default)
+ Displays a log message for each entry purged from the queue.
+.I-1
+2 READY
+ Readies one or more queue entries for processing.
+.NJ
+ Format:
+ QUEUE READY [entry-number,...]
+.J
+ This command can be used to ready a destination-specific entry or the main
+entry for a message (in which case all previous destination-specific entries
+are automatically cancelled).  If no entry numbers are specified, the queue
+entries selected by the last QUEUE SELECT command are readied.
+.I-1
+3 Qualifiers
+.I-1
+/AFTER
+ /AFTER=date-time
+ Specifies a date and time after which the entry should be processed. If
+not specified, the entry is readied for immediate processing.
+.I-1
+/FINAL
+ /FINAL
+ /NOFINAL (default)
+ Sets the error count for all recipients associated with this entry
+to 32767.  This causes the delivery agent to process the entry
+only once for each recipient.
+.I-1
+/LOG
+ /LOG
+ /NOLOG (default)
+ Displays a log message for each successful operation.
+.I-1
+2 SELECT
+ Selects queue entries.
+.NJ
+ Format:
+ QUEUE SELECT
+.J
+ This command builds a list of queue entries based on selection
+criteria that you specify with qualifiers on the command.  Subsequent
+QUEUE CANCEL, HOLD, and READY commands will use this selection list
+by default if you do not specify entry numbers on those commands.
+ You can display the selected entries with the QUEUE SHOW/SELECTED
+command.
+.I-1
+3 Qualifiers
+.I-1
+/BEFORE
+ /BEFORE[=time]
+ Selects only those entries dated before the specified time.   You can
+specify time as an absolute time, a combination of absolute and delta
+times, or as one of the following keywords: TODAY (default), TOMORROW,
+or YESTERDAY. Specify one of the following qualifiers with the /BEFORE
+qualifier to indicate the time attribute to be used as the basis for
+selection: /CREATED (default), /DELAY, /EXPIRE, or /MODIFIED.
+.I-1
+/CREATED
+ /CREATED
+ Modifies the time value specified with the /BEFORE or the /SINCE
+qualifier. The /CREATED qualifier selects entries based on their
+dates of creation. 
+.I-1
+/DELAY
+ /DELAY
+ Modifies the time value specified with the /BEFORE or the /SINCE
+qualifier. The /DELAY qualifier selects entries based on their
+delay dates.
+.I-1
+/DESTINATION__AGENT
+ /DESTINATION__AGENT=agent
+ Selects only those entries that are to be or have been processed by the
+specified MX agent.  Valid keywords are: ROUTER, MLF, LOCAL, SMTP, SITE,
+DNSMTP, and HOLDING__QUEUE=n (where n ranges from 1 to 32,
+the maximum number of holding queues).  HOLD1 through HOLD8 are obsolte,
+but still supported for backward compatibility with prior versions of MX.
+This qualifier is most useful when used with /BRIEF.
+.I-1
+/EXPIRE
+ /EXPIRE
+ Modifies the time value specified with the /BEFORE or the /SINCE
+qualifier. The /EXPIRE qualifier selects entries based on their
+dates of expiration. 
+.I-1
+/HELD
+ /HELD
+ Selects only those entries that are in USER-HOLD or OPER-HOLD state.
+.I-1
+/IN__PROGRESS
+ /IN__PROGRESS
+ Selects only entries marked as being in-progress (INPROG).
+.I-1
+/MODIFIED
+ /MODIFIED
+ Modifies the time value specified with the /BEFORE or the /SINCE
+qualifier. The /MODIFIED qualifier selects entries based on their
+dates of modification. 
+.I-1
+/ORIGIN__AGENT
+ /ORIGIN__AGENT=agent
+ Selects only those entries that were entered into the queue by the
+specified MX agent.  Valid keywords are: LOCAL, SMTP, SITE,
+MAIL, and DNSMTP.
+.I-1
+/SINCE
+ /SINCE[=time]
+ Selects only those entries dated after the specified time.   You can
+specify time as an absolute time, a combination of absolute and delta
+times, or as one of the following keywords: TODAY (default), TOMORROW,
+or YESTERDAY. Specify one of the following qualifiers with the /SINCE
+qualifier to indicate the time attribute to be used as the basis for
+selection: /CREATED (default), /DELAY, /EXPIRE, or /MODIFIED.
+.I-1
+/WAITING
+ /WAITING
+ Selects only those entries that are waiting for processing.
+.I-1
+2 SHOW
+ Displays queue entries.
+.NJ
+ Format:
+ QUEUE SHOW [entry-number,...]
+.J
+ With no qualifiers, QUEUE SHOW gives a brief display for each active
+(READY or IN-PROGRESS) queue entry.
+.I-1
+3 Qualifiers
+.I-1
+/ALL
+ /ALL
+ Causes the display of all queue entries, including those that have been
+finished or cancelled.
+.I-1
+/BEFORE
+ /BEFORE[=time]
+ Selects only those entries dated before the specified time.   You can
+specify time as an absolute time, a combination of absolute and delta
+times, or as one of the following keywords: TODAY (default), TOMORROW,
+or YESTERDAY. Specify one of the following qualifiers with the /BEFORE
+qualifier to indicate the time attribute to be used as the basis for
+selection: /CREATED (default), /DELAY, /EXPIRE, or /MODIFIED.
+.I-1
+/BRIEF
+ /BRIEF
+ Causes a brief display of all queue entries, including those that have
+been finished or cancelled.  The information displayed
+is taken only from the MX queue file and includes the target MX process
+for each entry.
+.I-1
+/CREATED
+ /CREATED
+ Modifies the time value specified with the /BEFORE or the /SINCE
+qualifier. The /CREATED qualifier selects entries based on their
+dates of creation. 
+.I-1
+/DATE
+ /DATE
+ Causes the creation and modification dates to be displayed for each queue
+entry.
+.I-1
+/DELAY
+ /DELAY
+ Modifies the time value specified with the /BEFORE or the /SINCE
+qualifier. The /DELAY qualifier selects entries based on their
+delay dates.
+.I-1
+/DESTINATION__AGENT
+ /DESTINATION__AGENT=agent
+ Selects only those entries that are to be or have been processed by the
+specified MX agent.  Valid keywords are: ROUTER, MLF, LOCAL, SMTP, SITE,
+DNSMTP, and HOLDING__QUEUE=n (where n ranges from 1 to 32,
+the maximum number of holding queues).  HOLD1 through HOLD8 are obsolte,
+but still supported for backward compatibility with prior versions of MX.
+This qualifier is most useful when used with /BRIEF.
+.I-1
+/EXPIRE
+ /EXPIRE
+ Modifies the time value specified with the /BEFORE or the /SINCE
+qualifier. The /EXPIRE qualifier selects entries based on their
+dates of expiration. 
+.I-1
+/FULL
+ /FULL
+ Provides a more detailed display of each queue entry.
+.I-1
+/HELD
+ /HELD
+ Selects only those entries that are in USER-HOLD or OPER-HOLD state.
+.I-1
+/IN__PROGRESS
+ /IN__PROGRESS
+ Displays only entries marked as being in-progress (INPROG).
+.I-1
+/MODIFIED
+ /MODIFIED
+ Modifies the time value specified with the /BEFORE or the /SINCE
+qualifier. The /MODIFIED qualifier selects entries based on their
+dates of modification. 
+.I-1
+/ORIGIN__AGENT
+ /ORIGIN__AGENT=agent
+ Selects only those entries that were entered into the queue by the
+specified MX agent.  Valid keywords are: LOCAL, SMTP, SITE,
+MAIL, and DNSMTP.
+.I-1
+/OUTPUT
+ /OUTPUT=file-spec
+ Directs the output of the command to the specified file.
+.I-1
+/SELECTED
+ /SELECTED
+ Displays the entries that were selected by the last QUEUE SELECT
+command.
+.I-1
+/SINCE
+ /SINCE[=time]
+ Selects only those entries dated after the specified time.   You can
+specify time as an absolute time, a combination of absolute and delta
+times, or as one of the following keywords: TODAY (default), TOMORROW,
+or YESTERDAY. Specify one of the following qualifiers with the /SINCE
+qualifier to indicate the time attribute to be used as the basis for
+selection: /CREATED (default), /DELAY, /EXPIRE, or /MODIFIED.
+.I-1
+/WAITING
+ /WAITING
+ Causes only those entries that are waiting for processing to be displayed.
+.I-1
+2 STATISTICS
+ Displays statistics concerning the number of entries in the MX message queue.
+.NJ
+ Format:
+ QUEUE STATISTICS
+.J
+.I-1
+2 SYNCHRONIZE
+ Synchronizes the message queue bitmap with the actual entries in the queue.
+.NJ
+ Format:
+ QUEUE SYNCHRONIZE
+.J
+.I-1
+3 Qualifiers
+.I-1
+/LOG
+ /LOG
+ Displays a log message about the synchronization.
+.I-1
+/RESET
+ /RESET
+ Resets the "Highest entry used" counter displayed by QUEUE
+STATISTICS.  By default, the counter is not reset.
+.I-1
+1 RESET
+ Sends a reset signal to one or more MX delivery agent processes, causing
+them to reload their configuration information.
+.NJ
+ Format:
+ RESET [agent,...]
+.J
+ Accepted agent names are: DECNET__SMTP, LOCAL, MLF, ROUTER, SITE,
+SMTP, and SMTP__SERVER.
+If omitted, all agents are reset.
+.I-1
+2 Qualifiers
+.I-1
+/ACCOUNTING
+ /ACCOUNTING
+ Causes a new accounting file to be opened, for those agents supporting
+accounting (DECNET__SMTP, LOCAL, MLF, ROUTER, and SMTP).
+No reloading of configuration occurs when RESET/ACCOUNTING is used.
+.I-1
+/CLUSTER
+ /CLUSTER
+ Causes the reset to affect agents cluster-wide; this is the default
+behavior.  Use the /NODE qualifier to restrict the reset action to
+specific nodes in the cluster.
+.I-1
+/NODE
+ /NODE[=(node[,...])]
+ Causes the specified agent resets to occur only on the specified nodes.
+If no node names are specified, the local node is used by default.
+.I-1
+1 REVIEW
+ Displays the subscribers of a locally-managed mailing list.
+.NJ
+ Format:
+ REVIEW list-name
+.J
+.I-1
+2 Qualifier
+.I-1
+/OUTPUT
+ /OUTPUT=file-spec
+ Directs the output of the REVIEW command to the specified file.
+.I-1
+1 SAVE
+ Saves the current MX configuration to a file.  To be used by the Router
+and other processing agents, the file must be called MX__CONFIG.MXCFG and
+reside in the MX__DIR directory.  Alternatively, you can define the system-wide
+logical name MX__CONFIG (in exec mode) to point to the real location of the
+MX configuration file to be used by the processing agents.
+.NJ
+ Format:
+ SAVE file-spec
+.J
+.I-1
+1 SET
+ The SET command sets flags for use by some of the delivery agents.
+.NJ
+ Format:
+ SET  option
+.J
+.I-1
+2 DECNET__SMTP
+ The SET DECNET__SMTP command sets flags for use by the SMTP-over-DECnet
+delivery agent.
+.NJ
+ Format:
+ SET DECNET__SMTP
+.I-1
+3 Qualifiers
+.I-1
+/ACCOUNTING
+ /ACCOUNTING
+ /NOACCOUNTING  (default)
+.J
+ Controls whether accounting records are written by the delivery agent.
+If enabled, accounting records are written to the file MX__DNSMTP__ACC
+(with a default directory of MX__DNSMTP__DIR: and a default type of DAT).
+.I-1
+/MAXIMUM__RETRIES
+ /MAXIMUM__RETRIES=n
+ Specifies the maximum number of times the DECnet-SMTP agent should
+try to deliver a message if the message cannot be delivered (due to
+network failure).  The default is 96.
+.I-1
+/RETRY__INTERVAL
+ /RETRY__INTERVAL=hh:mm:ss
+ Specifies the minimum amount of time that should elapse between attempts
+to deliver a message.  The default is 00:30:00 (30 minutes).
+.I-1
+2 LOCAL
+ The SET LOCAL command sets flags for use by the local delivery agent.
+.NJ
+ Format:
+ SET LOCAL
+.I-1
+3 Qualifiers
+.I-1
+/ACCOUNTING
+ /ACCOUNTING
+ /NOACCOUNTING  (default)
+.J
+ Controls whether accounting records are written by the delivery agent.
+If enabled, accounting records are written to the file MX__LOCAL__ACC
+(with a default directory of MX__LOCAL__DIR: and a default type of DAT).
+.I-1
+/CC__POSTMASTER
+ /CC__POSTMASTER
+ /NOCC__POSTMASTER
+ Specifies whether or not error messages resulting from LOCAL delivery
+errors are mailed to the local POSTMASTER, in addition to the original
+message sender.
+.I-1
+/DISABLE__EXQUOTA
+ /DISABLE__EXQUOTA[=[NO]FATAL]
+ /NODISABLE__EXQUOTA
+ Specifies whether the EXQUOTA privilege should be disabled during
+local delivery attempts.  By default, EXQUOTA remains enabled during
+local message delivery.  Specifying /DISABLE__EXQUOTA=FATAL causes messages
+that exceed the recipient's diskquota to be returned to sender immediately,
+rather than going through normal retry procedures.
+.I-1
+/HEADERS
+ /HEADERS=(TOP:([NO]hdrname[,...]),BOTTOM:([NO]hdrname[,...]))
+.J
+ Controls the placement of message headers in local delivery of messages.
+Any or all headers may be placed at the top and/or bottom of the message,
+or not added to the message at all.  Valid values for hdrname are:
+.i+10;ALL
+.i+10;BCC
+.i+10;CC
+.i+10;DATE
+.i+10;ENCRYPTED
+.i+10;FROM
+.i+10;IN__REPLY__TO
+.i+10;KEYWORDS
+.i+10;MESSAGE__ID
+.i+10;OTHER
+.i+10;RECEIVED
+.i+10;REFERENCES
+.i+10;REPLY__TO
+.i+10;RESENT__BCC
+.i+10;RESENT__CC
+.i+10;RESENT__DATE
+.i+10;RESENT__FROM
+.i+10;RESENT__MESSAGE__ID
+.i+10;RESENT__REPLY__TO
+.i+10;RESENT__SENDER
+.i+10;RESENT__TO
+.i+10;RETURN__PATH
+.i+10;SENDER
+.i+10;SUBJECT
+.i+10;TO
+ The hdrname keywords may be negated.  ALL specifies all headers;
+NOALL specifies no headers.  OTHER specifies all headers with a header
+name not matching one of the other keywords.
+.I-1
+/LONG__LINES
+ /LONG__LINES
+ /NOLONG__LINES (default)
+ Specifies that lines exceeding the MAIL-11 255 character maximum
+should not be wrapped during delivery to what appears to be a
+local user.  This setting is disabled by default, so lines exceeding
+the maximum length get wrapped at the nearest whitespace character
+to the limit (if there are any).  Enabling this
+setting could cause mail delivery via VMS MAIL's DECnet support to
+fail when MX cannot determine that a recipient is a DECnet
+address.
+.I-1
+/MAXIMUM__RETRIES
+ /MAXIMUM__RETRIES=n
+ Specifies the maximum number of times the local delivery agent should
+try to deliver a message if the message cannot be delivered (due to
+DECnet outage or locked mail file).  The default is 96.
+.I-1
+/MULTIPLE__FROM
+ /MULTIPLE__FROM (default)
+ /NOMULTIPLE__FROM
+ Controls whether or not the VMS Mail ``From:'' line on incoming
+messages can contain multiple return addresses.  By default, if an
+RFC822 From: or Reply-To: line contains more than one address, as many
+of those addresses as will fit are included on the VMS Mail ``From:''
+line (up to 255 characters).  Specifying /NOMULTIPLE__FROM limits the
+``From:'' line to a single address.
+.I-1
+/OMIT__RESENT__HEADERS
+ /OMIT__RESENT_HEADERS
+ /NOOMIT__RESENT_HEADERS (default)
+ Specifies that MX forwarding using VMS Mail SET FORWARD should
+omit the Resent- headers MX normally uses to detect forwarding loops.
+This setting is disabled by default, and should only be enabled if
+users' mail clients have trouble interpreting Resent- headers.
+.I-1
+/QP__DECODE
+ /QP__DECODE
+ /NOQP__DECODE
+ Specifies whether or not incoming MIME quoted-printable messages are
+automatically decoded by MX Local before delivery through VMS Mail.  By
+default, such messages are decoded.  If your users read their mail via
+POP or IMAP, you might want to disable the decoding to let the users'
+browsers do the decoding.
+.I-1
+/RETRY__INTERVAL
+ /RETRY__INTERVAL=hh:mm:ss
+ Specifies the minimum amount of time that should elapse between attempts
+to deliver a message.  The default is 00:30:00 (30 minutes).
+.I-1
+2 MLF
+ The SET MLF command sets global parameters for the MLF
+Mailing List/File Server agent.
+.NJ
+ Format:
+ SET MLF [qualifiers]
+.I-1
+3 Qualifiers
+.I-1
+/DELAY__DAYS
+ /DELAY__DAYS=(dow[,...])
+ /NODELAY__DAYS
+ Sets the days of the week on which all file servers'
+delayed-send threshold should be honored.  Defaults
+to all days of the week.
+.I-1
+/RECIPIENT__MAXIMUM
+ /RECIPIENT__MAXIMUM=number
+ /NORECIPIENT__MAXIMUM
+ Sets the maximum number of recipients per message generated
+by the MLF agent.  If your MLF agent services large mailing
+lists with many remote subscribers, you may want to use this
+setting to limit the number of recipients per message generated
+by MLF.  This will break up the distribution to the mailing list
+into smaller chunks, allowing for more parallelism in delivery.
+ Setting too small a value, however, could create a lengthy backlog
+in your MX message queue, depending on the number of subscribers
+on your mailing list(s) and the number of messages the list receives
+each day.
+ The default is /NORECIPIENT__MAXIMUM, which forces each incoming
+mailing list message to be forwarded as just one outbound message.
+.I-1
+2 ROUTER
+ The SET ROUTER command sets flags for use by the Router.
+.NJ
+ Format:
+ SET ROUTER [qualifiers]
+.I-1
+3 Qualifiers
+.I-1
+/ACCOUNTING
+ /ACCOUNTING
+ /NOACCOUNTING  (default)
+.J
+ Controls whether accounting records are written by the Rourter.
+If enabled, accounting records are written to the file MX__ROUTER__ACC
+(with a default directory of MX__ROUTER__DIR: and a default type of DAT).
+ One accounting record is written for each recipient of each routed message,
+either successful or unsuccessful.
+.I-1
+/OMIT__VMSMAIL__SENDER
+ /OMIT__VMSMAIL__SENDER
+ /NOOMIT__VMSMAIL__SENDER (D)
+ Enables or disables the omission of the Sender: header for messages
+sent from VMS Mail.  Needed by some sites to work with other mailers that
+don't adhere to RFC822.
+.I-1
+/PERCENT__HACK
+ /PERCENT__HACK (D)
+ /NOPERCENT__HACK
+ Specify /NOPERCENT__HACK when you want to disable the automatic resolution
+of percent-hacked addresses.  It is enabled by default, and automatically
+translates addresses of the form "user%host@localhost" to "user@host".
+Percent-hack resolution may need to be disabled when you need to pass
+MX mail through the VMS Mail interface and into another mail system.
+.I-1
+2 SITE
+ The SET SITE command sets flags for use by the SITE delivery agent.
+.NJ
+ Format:
+ SET SITE
+.I-1
+3 Qualifiers
+.I-1
+/MAXIMUM__RETRIES
+ /MAXIMUM__RETRIES=n
+ Specifies the maximum number of times the SITE agent should
+try to deliver a message if the message cannot be delivered (due to
+network failure).  The default is 96.
+.I-1
+/RETRY__INTERVAL
+ /RETRY__INTERVAL=hh:mm:ss
+ Specifies the minimum amount of time that should elapse between attempts
+to deliver a message.  The default is 00:30:00 (30 minutes).
+.I-1
+2 SMTP
+ The SET SMTP command sets flags for use by the SMTP delivery agent
+and SMTP server.
+.NJ
+ Format:
+ SET SMTP
+.I-1
+3 Qualifiers
+.I-1
+/ACCOUNTING
+ /ACCOUNTING
+ /NOACCOUNTING  (default)
+.J
+ Controls whether accounting records are written by the delivery agent.
+If enabled, accounting records are written to the file MX__SMTP__ACC
+(with a default directory of MX__SMTP__DIR: and a default type of DAT).
+.I-1
+/AUTHENTICATION
+ /AUTHENTICATION=(type,...)
+ /NOAUTHENTICATION (default)
+.J
+ Enables or disables the authentication extension in the SMTP server.
+The "type" keyword can be CRAM__MD5, which enables the use of MX's
+private authentication database (see CREATE USER__DATABASE__FILE),
+or PLAIN, which enables the use of the VMS user authorization file.
+ Specifying /NOAUTHENTICATION disables the authentication completely.
+.I-1
+/DEFAULT__ROUTER
+ /DEFAULT__ROUTER=domain-name
+ Specifies the name of a host through which all SMTP-bound mail should
+be sent if a host name lookup fails.
+.I-1
+/DNS__RETRIES
+ /DNS__RETRIES=n
+ Specifies the maximum number of attempts to deliver a message when the
+host name in a destination address cannot be resolved.  The default is
+12.
+.I-1
+/MAXIMUM__RETRIES
+ /MAXIMUM__RETRIES=n
+ Specifies the maximum number of times the SMTP agent should
+try to deliver a message if the message cannot be delivered (due to
+network failure).  The default is 96.
+.I-1
+/PERCENT__HACK
+ /PERCENT__HACK (D)
+ /NOPERCENT__HACK
+ Specify /NOPERCENT__HACK when you want to reject any addresses containing
+a percent-sign in the username portion of the address.  Such addresses
+are accepted by default.  Disabling the percent hack may be necessary to
+prevent other sites from using this feature to relay e-mail through your
+system.
+.I-1
+/RBL__CHECK
+ /RBL__CHECK[=(domain-name,...)]
+ /NORBL__CHECK (default)
+ Specifies whether the SMTP server should check to see if a
+system connecting to it is on an Internet Realtime Blackhole List (RBL).
+RBL checking is disabled by default.
+ You must specify one or more domain names as values for this qualifier;
+consult your RBL provider for information on the domain names to use.
+.I-1
+/RELAY__ALLOWED
+ /RELAY__ALLOWED (default)
+ /NORELAY__ALLOWED
+ Specifies whether the SMTP server will allow messages to be relayed
+through your system from one outside system to another.  This is
+allowed by default.  If you disable the relay function with
+/NORELAY__ALLOWED, you may also need to tell MX which domains
+it should consider "local" for the purposes of this check.  See
+the DEFINE LOCAL__DOMAIN command for more information.
+.I-1
+/RETRY__INTERVAL
+ /RETRY__INTERVAL=hh:mm:ss
+ Specifies the minimum amount of time that should elapse between attempts
+to deliver a message.  The default is 00:30:00 (30 minutes).
+.I-1
+/TLS
+ /TLS
+ /NOTLS  (default)
+.J
+ Controls whether SMTP_SERVER advertises and supports the STARTTLS
+ESMTP command documented in RFC3207.
+.I-1
+/VALIDATE__SENDER__DOMAIN
+ /[NO]VALIDATE__SENDER__DOMAIN
+ Enables or disables a check in the SMTP server on whether the
+domain name appearing in an SMTP MAIL FROM command appears in the Domain Name System.
+When enabled, a message from a sender whose domain name is invalid is
+rejected.  This setting is disabled by default.
+.I-1
+/VERIFY__ALLOWED
+ /[NO]VERIFY__ALLOWED
+ Enables or disables the processing of VRFY commands by the SMTP server.
+By default, VRFY is enabled.  System administrators concerned about
+network security should specify /NOVERIFY__ALLOWED to disable the VRFY
+command in the SMTP server.
+.I-1
+1 SHOW
+ The SHOW command displays all or part of the MX configuration.
+.NJ
+ Format:
+ SHOW ALIASES [pattern]
+ SHOW CONFIGURATION__FILE
+ SHOW DECNET__SMTP
+ SHOW FILE__SERVER [pattern]
+ SHOW LISTS [pattern]
+ SHOW LOCAL
+ SHOW LOCAL__DOMAINS
+ SHOW PATHS [pattern]
+ SHOW REWRITE__RULES [pattern]
+ SHOW ROUTER
+ SHOW SITE
+ SHOW SMTP
+ SHOW SYSTEM__USERS
+ SHOW USERS [pattern]
+ SHOW VERSION
+ SHOW ALL
+.J
+ Those commands taking a pattern will display all entries matching the specified
+pattern, which defaults to "*".  SHOW ALL displays all of the configuration
+information.
+.I-1
+2 Qualifiers
+.I-1
+/BRIEF
+ /BRIEF
+ The /BRIEF qualifier causes SHOW to display information in an
+abbreviated format.  Only SHOW LISTS has a brief display; for all
+other commands, the brief and full displays are identical.
+.I-1
+/COMMAND
+ /COMMAND
+ /NOCOMMAND (default)
+ The /COMMAND qualifier causes the SHOW output to be formatted as MCP
+commands, which could be executed later to reconstruct the configuration.
+By default, the configuration information is displayed in a more
+eye-pleasing and descriptive format.
+.I-1
+/FULL
+ /FULL (default)
+ The /FULL qualifier causes SHOW to display information in its
+normal, full format.  Only SHOW LISTS has a brief display; for all
+other commands, the brief and full displays are identical.
+.I-1
+/OUTPUT
+ /OUTPUT=file-spec
+ The /OUTPUT qualifier can be used to direct the SHOW output into a file.
+When used with the /COMMAND qualifier, SHOW/OUTPUT can be used to create
+a command file that can be edited and then read back in with the "@"
+input-indirection function to create a new configuration file from scratch.
+.I-1
+1 SHUTDOWN
+ Sends a shutdown signal to one or more MX delivery agent processes, causing
+them to exit cleanly.
+.NJ
+ Format:
+ SHUTDOWN [agent,...]
+.J
+ Accepted agent names are: DECNET__SMTP, LOCAL, MLF, ROUTER, SITE,
+SMTP, SMTP__SERVER, and HOLDING__QUEUE=n (where n ranges
+from 1 to 32, the maximum number of holding queues).  HOLD1 through HOLD8 are
+obsolete but still supported for backward compatibility with prior versions
+of MX.
+If omitted, all agents are shut down.
+.I-1
+2 Qualifiers
+.I-1
+/CLUSTER
+ /CLUSTER
+ Causes the specified agent shutdowns to occur cluster-wide.  By default,
+SHUTDOWN affects only agents on the local node.
+.I-1
+/NODE
+ /NODE[=(node[,...])]
+ Causes the specified agent shutdowns to occur only on the specified nodes.
+If no node names are specified, only agents on the local node are affected.
+.I-1
+/WAIT
+ /WAIT
+ /NOWAIT (default)
+ Waits for the specified agent to exit before returning (up to 30 seconds).
+.I-1
+1 STATUS
+ Displays the status of one or more MX agent processes.
+.NJ
+ Format:
+ STATUS [agent,...]
+.J
+ Accepted agent names are: DECNET__SMTP, LOCAL, MLF, ROUTER, SITE,
+SMTP, SMTP__SERVER, and HOLDING__QUEUE=n (where n ranges
+from 1 to 32, the maximum number of holding queues).  HOLD1 through HOLD8 are
+obsolete but still supported for backward compatibility with prior versions
+of MX.
+If omitted, status of all running agent processes is displayed.  For each
+process, the process ID, node name (on VMScluster systems), process name,
+and agent type are displayed.
+.I-1
+2 Qualifier
+.I-1
+/NODE
+ /NODE=(node[,...])
+ Causes the display of only those specified agents running on the specified
+nodes.
+.!
+.I-1
+1 SPAWN
+ SPAWN is used to create a subprocess and transfer control to it.
+.NJ
+ Format:
+ SPAWN [command]
+.J
+.I-1
+2 Parameter
+ command
+ Specifies a command line to be executed within the spawned subprocess. 
+If a command is given, then the spawned process will be deleted after
+that command is executed.
+.I-1
+2 Examples
+.LITERAL
+   1.  prompt> SPAWN DIRECTORY
+       [Output of the DIRECTORY command]
+          .
+          .
+          .
+       prompt>
+
+     The command above demonstrates spawning a subprocess to execute
+     a particular command.
+
+   2.  prompt> SPAWN
+       sub_prompt>  dir
+          .
+          .
+          .
+
+     The spawned process created above will stick around until it
+     is explictly deleted (or its parent process is deleted). Once
+     you SPAWN a subprocess, you can transfer control between it and
+     program by using the DCL and program ATTACH commands.
+.END LITERAL
+.!
+.I-1
+1 ATTACH
+ ATTACH is used to transfer control to another process in the current
+process tree.
+.NJ
+ Format:
+ ATTACH [process]
+.J
+.I-1
+2 Parameter
+ process
+ Specifies the process name of the process to which to attach.  Not
+required if one of the ATTACH qualifiers is used.
+.I-1
+2 Qualifiers
+.I-1
+/IDENTIFICATION
+ /IDENTIFICATION=pid
+ Specifies the PID of the process to which to attach.
+.I-1
+/PARENT
+ /PARENT
+ Transfers control to the parent process of the process running MCP.
+Returns an error if MCP is not running in a subprocess.
+.I-1
+2 Examples
+.LITERAL
+     MCP> ATTACH GOATHUNTER_1
+
+     The command above demonstrates attaching to the subprocess
+     named "GOATHUNTER_1".
+.END LITERAL
