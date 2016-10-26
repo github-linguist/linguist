@@ -79,7 +79,7 @@ Here's our current build status: [![Build Status](https://api.travis-ci.org/gith
 
 Linguist is maintained with :heart: by:
 
-- **@arfon** (GitHub Staff)
+- **@arfon**
 - **@larsbrinkhoff**
 - **@pchaigno**
 
