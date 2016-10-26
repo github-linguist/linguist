@@ -497,7 +497,8 @@ class TestLanguage < Minitest::Test
 
   def test_no_unused_colours
     Language.all.each do |language|
-      next unless language.type == :data || language.type == :prose
+      next unless language.type == :data || language.type == :prose ||
+        language.group.to_s != language.name
       assert !language.color, "Unused colour assigned to #{language.name}"
     end
   end

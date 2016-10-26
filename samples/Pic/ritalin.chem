@@ -1,0 +1,15 @@
+.\" RITALIN: Methylphenidate Hydrochloride
+.cstart
+.ps 15
+size 15
+	R1: ring double 1,2 3,4 5,6 pointing up
+	bond 60 length .35 from R1.V2 ; BP
+	bond 120 length .35 from BP
+	R2: ring pointing up put N at 1
+	H above R2
+	bond up  length .35 from BP ; BP
+	bond -60 length .35 from BP ; O
+	bond up
+	double bond 60 length .35 from BP ; O
+.ps 10
+.cend
