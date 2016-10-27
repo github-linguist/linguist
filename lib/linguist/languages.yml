@@ -2669,14 +2669,16 @@ OpenSCAD:
   tm_scope: none
   ace_mode: scad
 
-OpenType Font Feature:
-  type: markup
+Opentype feature:
+  type: data
   aliases:
   - AFDKO
   extensions:
   - .fea
-  #- .otl
-  tm_scope: none
+  #- .otl (rare)
+  #interpreters:
+  #- makeotf
+  tm_scope: source.opentype
   ace_mode: text
 
 Org:
@@ -3650,7 +3652,7 @@ Spline Font Data:
   type: data
   extensions:
   - .sfd
-  tm_scope: source.yaml
+  tm_scope: text.sfd
   ace_mode: yaml
 
 Squirrel:
