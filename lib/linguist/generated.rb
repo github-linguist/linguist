@@ -310,9 +310,7 @@ module Linguist
     #
     # Returns true or false.
     def go_vendor?
-      return false unless extname == '.go'
-
-      !!name.match(/\Avendor\//)
+      !!name.match(/vendor\/((?!-)[-0-9A-Za-z]+(?<!-)\.)+(com|edu|gov|in|me|net|org|fm|io)/)
     end
 
     # Internal: Is the blob a generated npm shrinkwrap file.
