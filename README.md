@@ -20,6 +20,12 @@ The Language stats bar displays languages percentages for the files in the repos
 0. If the files are being misclassified, search for [open issues][issues] to see if anyone else has already reported the issue. Any information you can add, especially links to public repositories, is helpful.
 0. If there are no reported issues of this misclassification, [open an issue][new-issue] and include a link to the repository or a sample of the code that is being misclassified.
 
+### There's a problem with the syntax highlighting of a file
+
+Linguist detects the language of a file but the actual syntax-highlighting is powered by a set of language grammars which are included in this project as a set of submodules. [This README](https://github.com/github/linguist/blob/master/vendor/README.md) lists all of these grammars together with their location. 
+
+If you experience an issue with the syntax-highlighting on GitHub **please report the issue on the upstream grammar repository and not here.** Grammars are updated everytime we build the Linguist gem and so upstream bug fixes will be automatically incorporated as they are fixed.
+
 ## Overrides
 
 Linguist supports a number of different custom overrides strategies for language definitions and vendored paths.
