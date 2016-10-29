@@ -8,7 +8,7 @@ ROOT = File.expand_path("../../", __FILE__)
 # Break a repository URL into its separate components
 def parse_url(input)
   hosts = "github\.com|bitbucket\.org|gitlab\.com"
-  
+
   # HTTPS/HTTP link pointing to recognised hosts
   if input =~ /^(?:https?:\/\/)?(?:[^.@]+@)?(?:www\.)?(#{hosts})\/([^\/]+)\/([^\/]+)/i
     { host: $1.downcase(), user: $2, repo: $3.sub(/\.git$/, "") }
@@ -91,3 +91,6 @@ exit 1 if $?.exitstatus > 0
 
 log "Confirming license"
 `script/licensed --module "#{repo_new}"`
+
+log "Updating grammar documentation in vendor/REAEDME.md"
+`script list-grammars`
