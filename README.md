@@ -22,9 +22,9 @@ The Language stats bar displays languages percentages for the files in the repos
 
 ### There's a problem with the syntax highlighting of a file
 
-Linguist detects the language of a file but the actual syntax-highlighting is powered by a set of language grammars which are included in this project as a set of submodules. [This README](https://github.com/github/linguist/blob/master/vendor/README.md) lists all of these grammars together with their location. 
+Linguist detects the language of a file but the actual syntax-highlighting is powered by a set of language grammars which are included in this project as a set of submodules [which may be found here](https://github.com/github/linguist/blob/master/vendor/README.md).
 
-If you experience an issue with the syntax-highlighting on GitHub **please report the issue on the upstream grammar repository and not here.** Grammars are updated everytime we build the Linguist gem and so upstream bug fixes will be automatically incorporated as they are fixed.
+If you experience an issue with the syntax-highlighting on GitHub, **please report the issue to the upstream grammar repository, not here.** Grammars are updated every time we build the Linguist gem and so upstream bug fixes are automatically incorporated as they are fixed.
 
 ## Overrides
 
