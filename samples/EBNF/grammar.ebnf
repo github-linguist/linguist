@@ -1,0 +1,24 @@
+(*
+  Source:  https://github.com/sunjay/lion
+  License: MIT
+*)
+
+Statement = ( NamedFunction | AnonymousFunction | Assignment | Expr ) , "\n" ;
+Expr = AnonymousFunction | Term | "(" , Expr , ")" ,
+    { AnonymousFunction | Term | "(" , Expr , ")" } ;
+
+Assignment = Symbol , "=" , Expr ;
+
+AnonymousFunction = "\" , FunctionRHS ;
+NamedFunction = Symbol , FunctionRHS ;
+
+FunctionRHS = FunctionParams , "=" , FunctionBody ;
+FunctionParams = FunctionParam , { FunctionParam } ;
+FunctionParam = Term ;
+FunctionBody = Expr ;
+
+Term = Symbol | Number | SingleWordString ;
+SingleWordString = '"' , Symbol , '"' ;
+(* Symbol is a collection of valid symbol characters, not defined here *)
+(* Number is a valid numeric literal *)
+
