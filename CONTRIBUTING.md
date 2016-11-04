@@ -81,7 +81,11 @@ Linguist is maintained with :heart: by:
 
 - **@Alhadis**
 - **@arfon**
+- **@brandonblack** (GitHub staff)
 - **@larsbrinkhoff**
+- **@lildude** (GitHub staff)
+- **@lizzhale** (GitHub staff)
+- **@mikemcquaid** (GitHub staff)
 - **@pchaigno**
 
 As Linguist is a production dependency for GitHub we have a couple of workflow restrictions:
