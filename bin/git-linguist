@@ -23,7 +23,7 @@ class GitLinguist
     if @incremental && stats = load_language_stats
       old_commit_oid, old_stats = stats
 
-      # A cache with NULL oid means that we want to froze
+      # A cache with NULL oid means that we want to freeze
       # these language stats in place and stop computing
       # them (for performance reasons)
       return old_stats if old_commit_oid == NULL_OID
@@ -111,7 +111,7 @@ def git_linguist(args)
   parser.parse!(args)
 
   git_dir = `git rev-parse --git-dir`.strip
-  raise "git-linguist must be ran in a Git repository (#{Dir.pwd})" unless $?.success?
+  raise "git-linguist must be run in a Git repository (#{Dir.pwd})" unless $?.success?
   wrapper = GitLinguist.new(git_dir, commit, incremental)
 
   case args.pop
