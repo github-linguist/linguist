@@ -202,6 +202,7 @@ class TestBlob < Minitest::Test
     assert sample_blob_memory("JavaScript/gen-js-linguist-thrift.js").generated?
     assert sample_blob_memory("Ruby/gen-rb-linguist-thrift.rb").generated?
     assert sample_blob_memory("Objective-C/gen-cocoa-linguist-thrift.m").generated?
+    assert sample_blob_memory("PHP/ThriftGenerated.php").generated?
 
     # Generated JNI
     assert sample_blob_memory("C/jni_layer.h").generated?
