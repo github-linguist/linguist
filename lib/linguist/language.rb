@@ -20,10 +20,11 @@ module Linguist
   #
   # Languages are defined in `lib/linguist/languages.yml`.
   class Language
-    @languages       = []
-    @index           = {}
-    @name_index      = {}
-    @alias_index     = {}
+    @languages          = []
+    @index              = {}
+    @name_index         = {}
+    @alias_index        = {}
+    @language_id_index  = {}
 
     @extension_index          = Hash.new { |h,k| h[k] = [] }
     @interpreter_index        = Hash.new { |h,k| h[k] = [] }
@@ -83,6 +84,8 @@ module Linguist
       language.filenames.each do |filename|
         @filename_index[filename] << language
       end
+
+      @language_id_index[language.language_id] = language
 
       language
     end
@@ -193,6 +196,19 @@ module Linguist
       @interpreter_index[interpreter]
     end
 
+    # Public: Look up Languages by its language_id.
+    #
+    # language_id - Integer of language_id
+    #
+    # Examples
+    #
+    #   Language.find_by_id(100)
+    #   # => [#<Language name="Elixir">]
+    #
+    # Returns the matching Language
+    def self.find_by_id(language_id)
+      @language_id_index[language_id.to_i]
+    end
 
     # Public: Look up Language by its name.
     #
@@ -251,6 +267,7 @@ module Linguist
     # Returns an Array of Languages.
     def self.ace_modes
       warn "This method will be deprecated in a future 5.x release. Every language now has an `ace_mode` set."
+      warn caller
       @ace_modes ||= all.select(&:ace_mode).sort_by { |lang| lang.name.downcase }
     end
 
@@ -284,10 +301,15 @@ module Linguist
       end
 
       @ace_mode = attributes[:ace_mode]
+      @codemirror_mode = attributes[:codemirror_mode]
+      @codemirror_mime_type = attributes[:codemirror_mime_type]
       @wrap = attributes[:wrap] || false
 
       # Set legacy search term
       @search_term = attributes[:search_term] || default_alias_name
+
+      # Set the language_id
+      @language_id = attributes[:language_id]
 
       # Set extensions or default to [].
       @extensions = attributes[:extensions] || []
@@ -351,6 +373,17 @@ module Linguist
     # Returns the name String
     attr_reader :search_term
 
+    # Public: Get language_id (used in GitHub search)
+    #
+    # Examples
+    #
+    #   # => "1"
+    #   # => "2"
+    #   # => "3"
+    #
+    # Returns the integer language_id
+    attr_reader :language_id
+
     # Public: Get the name of a TextMate-compatible scope
     #
     # Returns the scope
@@ -366,6 +399,31 @@ module Linguist
     #
     # Returns a String name or nil
     attr_reader :ace_mode
+
+    # Public: Get CodeMirror mode
+    #
+    # Maps to a directory in the `mode/` source code.
+    #   https://github.com/codemirror/CodeMirror/tree/master/mode
+    #
+    # Examples
+    #
+    #  # => "nil"
+    #  # => "javascript"
+    #  # => "clike"
+    #
+    # Returns a String name or nil
+    attr_reader :codemirror_mode
+
+    # Public: Get CodeMirror MIME type mode
+    #
+    # Examples
+    #
+    #  # => "nil"
+    #  # => "text/x-javascript"
+    #  # => "text/x-csrc"
+    #
+    # Returns a String name or nil
+    attr_reader :codemirror_mime_type
 
     # Public: Should language lines be wrapped
     #
@@ -543,10 +601,13 @@ module Linguist
       :aliases           => options['aliases'],
       :tm_scope          => options['tm_scope'],
       :ace_mode          => options['ace_mode'],
+      :codemirror_mode   => options['codemirror_mode'],
+      :codemirror_mime_type => options['codemirror_mime_type'],
       :wrap              => options['wrap'],
       :group_name        => options['group'],
       :searchable        => options.fetch('searchable', true),
       :search_term       => options['search_term'],
+      :language_id       => options['language_id'],
       :extensions        => Array(options['extensions']),
       :interpreters      => options['interpreters'].sort,
       :filenames         => options['filenames'],
