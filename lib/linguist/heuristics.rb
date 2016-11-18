@@ -144,22 +144,10 @@ module Linguist
       end
     end
 
-    fortran_rx = /^([c*][^abd-z]|      (subroutine|program|end|data)\s|\s*!)/i
-
-    disambiguate ".f" do |data|
+    disambiguate ".for", ".f" do |data|
       if /^: /.match(data)
         Language["Forth"]
-      elsif data.include?("flowop")
-        Language["Filebench WML"]
-      elsif fortran_rx.match(data)
-        Language["FORTRAN"]
-      end
-    end
-
-    disambiguate ".for" do |data|
-      if /^: /.match(data)
-        Language["Forth"]
-      elsif fortran_rx.match(data)
+      elsif /^([c*][^abd-z]|      (subroutine|program|end)\s|\s*!)/i.match(data)
         Language["FORTRAN"]
       end
     end
@@ -202,8 +190,6 @@ module Linguist
     disambiguate ".inc" do |data|
       if /^<\?(?:php)?/.match(data)
         Language["PHP"]
-      elsif /^\s*#(declare|local|macro|while)\s/.match(data)
-        Language["POV-Ray SDL"]
       end
     end
 
@@ -244,7 +230,7 @@ module Linguist
         Language["MUF"]
       elsif /^\s*;/.match(data)
         Language["M"]
-      elsif /\*\)$/.match(data)
+      elsif /^\s*\(\*/.match(data)
         Language["Mathematica"]
       elsif /^\s*%/.match(data)
         Language["Matlab"]
@@ -254,7 +240,7 @@ module Linguist
     end
 
     disambiguate ".md" do |data|
-      if /(^[-a-z0-9=#!\*\[|])|<\//i.match(data) || data.empty?
+      if /^[-a-z0-9=#!\*\[|]/i.match(data)
         Language["Markdown"]
       elsif /^(;;|\(define_)/.match(data)
         Language["GCC machine description"]
@@ -368,7 +354,7 @@ module Linguist
     disambiguate ".r" do |data|
       if /\bRebol\b/i.match(data)
         Language["Rebol"]
-      elsif /<-|^\s*#/.match(data)
+      elsif data.include?("<-")
         Language["R"]
       end
     end
@@ -444,7 +430,7 @@ module Linguist
     end
 
     disambiguate ".ts" do |data|
-      if data.include?("<TS")
+      if data.include?("</TS>")
         Language["XML"]
       else
         Language["TypeScript"]

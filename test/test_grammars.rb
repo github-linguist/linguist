@@ -5,42 +5,9 @@ class TestGrammars < Minitest::Test
 
   # List of projects that are allowed without licenses
   PROJECT_WHITELIST = [
-    "vendor/grammars/Sublime-Lasso",
-    "vendor/grammars/ant.tmbundle",
-    "vendor/grammars/sublime-spintools",
-    "vendor/grammars/blitzmax"
-  ].freeze
-
-  HASH_WHITELIST = [
-    "bc12b3b4917eab9aedb87ec1305c2a4376e34fd1", # TextMate bundles
-    "16c4748566b3dd996594af0410a1875b22d3a2b3", # language-yaml and atom-salt
-    "ebae2d87e06d3acef075d049fcfc8958c0364863", # go-tmbundle
-    "ff21db2554d69d78b2220db5615b16bbba0788d3", # factor
-    "b9a7428fd036eed8503995e06e989180c276b17d", # jflex.tmbundle
-    "da39a3ee5e6b4b0d3255bfef95601890afd80709", # SCSS.tmbundle
-    "5f772ff20ddf3dbac1ec9b6a98c5aa50ace555b2", # gradle.tmbundle
-    "b5432a1e1055de7eeede2dddf91e009480651fd6", # jasmin-sublime
-    "74143c4d2a5649eb179105afcb37f466558c22ce", # language-clojure
-    "760471435f5ab0b9dc99a628203cd8f9156d28ce", # language-coffee-script
-    "330e6d465e26bdd232aafcd3f5dba6a1d098a20e", # language-csharp
-    "70fb557a431891c2d634c33fa7367feab5066fd6", # language-javascript
-    "e0528c23cd967f999e058f1408ccb5b7237daaba", # language-python
-    "8653305b358375d0fced85dc24793b99919b11ef", # language-shellscript
-    "9f0c0b0926a18f5038e455e8df60221125fc3111", # elixir-tmbundle
-    "90af581219debd4e90ef041b46c294e8b4ae6d14", # mako-tmbundle
-    "b9b24778619dce325b651f0d77cbc72e7ae0b0a3", # Julia.tmbundle
-    "e06722add999e7428048abcc067cd85f1f7ca71c", # r.tmbundle
-    "50b14a0e3f03d7ca754dac42ffb33302b5882b78", # smalltalk-tmbundle
-    "eafbc4a2f283752858e6908907f3c0c90188785b", # gap-tmbundle
-    "1faa3a44cac6070f22384332434af37dfaaf2f70", # Stylus
-    "c87e7e574fca543941650e5b0a144b44c02c55d8", # language-crystal
-    "c78ec142ac3126cf639cfd67bd646ed8226d8b74", # atom-language-purescript
-    "341d7f66806fc41d081133d6e51ade856352e056", # FreeMarker.tmbundle
-    "15a394f6bc43400946570b299aee8ae264a1e3ff", # language-renpy
-    "c9118c370411f2f049c746c0fd096554e877aea2", # perl6fe
-    "8ccf886749c32fb7e65d4d1316a7ed0479c93dc9", # language-less
-    "2f03492b52d7dd83b4e7472f01b87c6121e5b1a4", # monkey
-    "bdab9fdc21e6790b479ccb5945b78bc0f6ce2493"  # language-blade
+    # Dual MIT and GPL license
+    "vendor/grammars/language-csharp",
+    "vendor/grammars/sublimeassembly"
   ].freeze
 
   # List of allowed SPDX license names
@@ -120,28 +87,10 @@ class TestGrammars < Minitest::Test
   end
 
   def test_submodules_have_approved_licenses
-    unapproved = submodule_licenses.reject { |k,v| LICENSE_WHITELIST.include?(v) ||
-                                                   PROJECT_WHITELIST.include?(k) ||
-                                                   HASH_WHITELIST.include?(v) }
-                                   .map { |k,v| "#{k}: #{v}"}
+    unapproved = submodule_licenses.reject { |k,v| LICENSE_WHITELIST.include?(v) || PROJECT_WHITELIST.include?(k) }.map { |k,v| "#{k}: #{v}"}
     message = "The following submodules have unapproved licenses:\n* #{unapproved.join("\n* ")}\n"
     message << "The license must be added to the LICENSE_WHITELIST in /test/test_grammars.rb once approved."
     assert_equal [], unapproved, message
-  end
-
-  def test_whitelisted_submodules_dont_have_licenses
-    licensed = submodule_licenses.reject { |k,v| v.nil? }.select { |k,v| PROJECT_WHITELIST.include?(k) }
-    message = "The following whitelisted submodules have a license:\n* #{licensed.keys.join("\n* ")}\n"
-    message << "Please remove them from the project whitelist."
-    assert_equal Hash.new, licensed, message
-  end
-
-  def test_whitelisted_hashes_dont_have_licenses
-    used_hashes = submodule_licenses.values.reject { |v| v.nil? || LICENSE_WHITELIST.include?(v) }
-    unused_hashes = HASH_WHITELIST - used_hashes
-    message = "The following whitelisted license hashes are unused:\n* #{unused_hashes.join("\n* ")}\n"
-    message << "Please remove them from the hash whitelist."
-    assert_equal Array.new, unused_hashes, message
   end
 
   def test_submodules_whitelist_has_no_extra_entries
@@ -174,7 +123,7 @@ class TestGrammars < Minitest::Test
   private
 
   def submodule_paths
-    @submodule_paths ||= `git config --list --file "#{File.join(ROOT, ".gitmodules")}"`.lines.grep(/\.path=/).map { |line| line.chomp.split("=", 2).last }.reject { |path| path =~ /CodeMirror/ }
+    @submodule_paths ||= `git config --list --file "#{File.join(ROOT, ".gitmodules")}"`.lines.grep(/\.path=/).map { |line| line.chomp.split("=", 2).last }
   end
 
   # Returns a hash of submodules in the form of submodule_path => license
@@ -187,18 +136,51 @@ class TestGrammars < Minitest::Test
   end
 
   # Given the path to a submodule, return its SPDX-compliant license key
-  # If the license is unrecognized, return its hash
   def submodule_license(submodule)
     # Prefer Licensee to detect a submodule's license
-    project = Licensee::FSProject.new(submodule, detect_readme: true)
+    project = Licensee::FSProject.new(submodule)
     return project.license.key if project.license
 
-    # We know a license exists, but no method was able to recognize it.
-    # We return the license hash in this case, to uniquely identify it.
+    # We know a license file exists, but Licensee wasn't able to detect the license,
+    # Let's try our own more permissive regex method
     if project.license_file
-      return project.license_file.hash
-    elsif project.readme
-      return project.readme.hash
+      path = File.expand_path project.license_file.path, submodule
+      license = classify_license(path)
+      return license if license
+    end
+
+    # Neither Licensee nor our own regex was able to detect the license, let's check the readme
+    files = Dir[File.join(ROOT, submodule, "*")]
+    if readme = files.find { |path| File.basename(path) =~ /\Areadme\b/i }
+      classify_license(readme)
+    end
+  end
+
+  def classify_license(path)
+    content = File.read(path)
+    return unless content =~ /\blicen[cs]e\b/i
+    if content.include?("Apache License") && content.include?("2.0")
+      "apache-2.0"
+    elsif content.include?("GNU") && content =~ /general/i && content =~ /public/i
+      if content =~ /version 2/i
+        "gpl-2.0"
+      elsif content =~ /version 3/i
+        "gpl-3.0"
+      end
+    elsif content.include?("GPL") && content.include?("http://www.gnu.org/licenses/gpl.html")
+      "gpl-3.0"
+    elsif content.include?("Creative Commons Attribution-Share Alike 3.0")
+      "cc-by-sa-3.0"
+    elsif content.include?("tidy-license.txt") || content.include?("If not otherwise specified (see below)") || content.include?("Permission to copy, use, modify, sell and distribute this")
+      "textmate"
+    elsif content.include?("Permission is hereby granted") || content =~ /\bMIT\b/
+      "mit"
+    elsif content.include?("This package is provided as-is and is placed in the Public Domain")
+      "public"
+    elsif content.include?("http://www.wtfpl.net/txt/copying/")
+      "wtfpl"
+    elsif content.include?("zlib") && content.include?("license") && content.include?("2. Altered source versions must be plainly marked as such")
+      "zlib"
     end
   end
 end

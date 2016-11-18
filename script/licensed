@@ -4,7 +4,6 @@
 
 require "bundler/setup"
 require "licensed/cli"
-require "optparse"
 
 module Licensed
   module Source
@@ -33,14 +32,7 @@ module Licensed
   end
 end
 
-module_path = nil
-OptionParser.new do |opts|
-  opts.on("-mPATH", "--module=PATH", "Cache license file for specific grammar") do |p|
-    module_path = p
-  end
-end.parse!
-
-source = Licensed::Source::Filesystem.new(module_path || "vendor/grammars/*/", type: "grammar")
+source = Licensed::Source::Filesystem.new("vendor/grammars/*/", type: "grammar")
 config = Licensed::Configuration.new
 config.sources << source
 
@@ -51,5 +43,4 @@ else
 end
 
 command.run
-`git checkout -- vendor/licenses/grammar/` if module_path
 exit command.success?
