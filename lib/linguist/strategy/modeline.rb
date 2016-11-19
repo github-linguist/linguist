@@ -1,19 +1,98 @@
 module Linguist
   module Strategy
     class Modeline
-      EMACS_MODELINE = /-\*-\s*(?:(?!mode)[\w-]+\s*:\s*(?:[\w+-]+)\s*;?\s*)*(?:mode\s*:)?\s*([\w+-]+)\s*(?:;\s*(?!mode)[\w-]+\s*:\s*[\w+-]+\s*)*;?\s*-\*-/i
+      EMACS_MODELINE = /
+        -\*-
+        (?:
+          # Short form: `-*- ruby -*-`
+          \s* (?= [^:;\s]+ \s* -\*-)
+          |
+          # Longer form: `-*- foo:bar; mode: ruby; -*-`
+          (?:
+            .*?       # Preceding variables: `-*- foo:bar bar:baz;`
+            [;\s]     # Which are delimited by spaces or semicolons
+            |
+            (?<=-\*-) # Not preceded by anything: `-*-mode:ruby-*-`
+          )
+          mode        # Major mode indicator
+          \s*:\s*     # Allow whitespace around colon: `mode : ruby`
+        )
+        ([^:;\s]+)    # Name of mode
 
-      # First form vim modeline
-      # [text]{white}{vi:|vim:|ex:}[white]{options}
-      # ex: 'vim: syntax=ruby'
-      VIM_MODELINE_1 = /(?:vim|vi|ex):\s*(?:ft|filetype|syntax)=(\w+)\s?/i
+        # Ensure the mode is terminated correctly
+        (?=
+          # Followed by semicolon or whitespace
+          [\s;]
+          |
+          # Touching the ending sequence: `ruby-*-`
+          (?<![-*])   # Don't allow stuff like `ruby--*-` to match; it'll invalidate the mode
+          -\*-        # Emacs has no problems reading `ruby --*-`, however.
+        )
+        .*?           # Anything between a cleanly-terminated mode and the ending -*-
+        -\*-
+      /xi
 
-      # Second form vim modeline (compatible with some versions of Vi)
-      # [text]{white}{vi:|vim:|Vim:|ex:}[white]se[t] {options}:[text]
-      # ex: 'vim set syntax=ruby:'
-      VIM_MODELINE_2 = /(?:vim|vi|Vim|ex):\s*se(?:t)?.*\s(?:ft|filetype|syntax)=(\w+)\s?.*:/i
+      VIM_MODELINE   = /
 
-      MODELINES = [EMACS_MODELINE, VIM_MODELINE_1, VIM_MODELINE_2]
+        # Start modeline. Could be `vim:`, `vi:` or `ex:`
+        (?:
+          (?:\s|^)
+          vi
+          (?:m[<=>]?\d+|m)? # Version-specific modeline
+          |
+          [\t\x20] # `ex:` requires whitespace, because "ex:" might be short for "example:"
+          ex
+        )
+
+        # If the option-list begins with `set ` or `se `, it indicates an alternative
+        # modeline syntax partly-compatible with older versions of Vi. Here, the colon
+        # serves as a terminator for an option sequence, delimited by whitespace.
+        (?=
+          # So we have to ensure the modeline ends with a colon
+          : (?=\s* set? \s [^\n:]+ :) |
+
+          # Otherwise, it isn't valid syntax and should be ignored
+          : (?!\s* set? \s)
+        )
+
+        # Possible (unrelated) `option=value` pairs to skip past
+        (?:
+          # Option separator. Vim uses whitespace or colons to separate options (except if
+          # the alternate "vim: set " form is used, where only whitespace is used)
+          (?:
+            \s
+            |
+            \s* : \s* # Note that whitespace around colons is accepted too:
+          )           # vim: noai :  ft=ruby:noexpandtab
+
+          # Option's name. All recognised Vim options have an alphanumeric form.
+          \w*
+
+          # Possible value. Not every option takes an argument.
+          (?:
+            # Whitespace between name and value is allowed: `vim: ft   =ruby`
+            \s*=
+
+            # Option's value. Might be blank; `vim: ft= ` says "use no filetype".
+            (?:
+              [^\\\s] # Beware of escaped characters: titlestring=\ ft=ruby
+              |       # will be read by Vim as { titlestring: " ft=ruby" }.
+              \\.
+            )*
+          )?
+        )*
+
+        # The actual filetype declaration
+        [\s:] (?:filetype|ft|syntax) \s*=
+
+        # Language's name
+        (\w+)
+
+        # Ensure it's followed by a legal separator
+        (?=\s|:|$)
+      /xi
+
+      MODELINES = [EMACS_MODELINE, VIM_MODELINE]
 
       # Scope of the search for modelines
       # Number of lines to check at the beginning and at the end of the file
