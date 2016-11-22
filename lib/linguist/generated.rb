@@ -52,6 +52,7 @@ module Linguist
     # Return true or false
     def generated?
       xcode_file? ||
+      bitcode_symbolmap? ||
       generated_net_designer_file? ||
       generated_net_specflow_feature_file? ||
       composer_lock? ||
@@ -85,9 +86,19 @@ module Linguist
     # Generated if the file extension is an Xcode
     # file extension.
     #
-    # Returns true of false.
+    # Returns true or false.
     def xcode_file?
       ['.nib', '.xcworkspacedata', '.xcuserstate'].include?(extname)
+    end
+
+    # Internal: Is the blob bitcode symbol map?
+    #
+    # Generated if the file extension is a bitcode
+    # symbol map.
+    #
+    # Returns true or false.
+    def bitcode_symbolmap?
+      return extname.downcase == '.bcsymbolmap'
     end
 
     # Internal: Is the blob minified files?
