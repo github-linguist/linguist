@@ -2,7 +2,7 @@ require_relative "./helper"
 
 class TestPedantic < Minitest::Test
   filename = File.expand_path("../../lib/linguist/languages.yml", __FILE__)
-  LANGUAGES = YAML.load(File.read(filename))
+  LANGUAGES = YAML.load(File.read(filename)).reject!{ |name| name == 'NEXT_LANGUAGE_ID' }
   GRAMMARS = YAML.load(File.read(File.expand_path("../../grammars.yml", __FILE__)))
 
   def test_language_names_are_sorted

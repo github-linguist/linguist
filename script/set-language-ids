@@ -11,6 +11,8 @@ header = <<-EOF
 # ace_mode          - A String name of the Ace Mode used for highlighting whenever
 #                     a file is edited. This must match one of the filenames in http://git.io/3XO_Cg.
 #                     Use "text" if a mode does not exist.
+# codemirror_mode   - A String name of the CodeMirror Mode used for highlighting whenever a file is edited.
+#                     This must match a mode from https://git.io/vi9Fx
 # wrap              - Boolean wrap to enable line wrapping (default: false)
 # extensions        - An Array of associated extensions (the first one is
 #                     considered the primary extension, the others should be
@@ -20,7 +22,7 @@ header = <<-EOF
 # search_term       - Deprecated: Some languages may be indexed under a
 #                     different alias. Avoid defining new exceptions.
 # language_id       - Integer used as a language-name-independent indexed field so that we can rename
-#                     languages in Linguist without reindexing all the code on GitHub. Must not be 
+#                     languages in Linguist without reindexing all the code on GitHub. Must not be
 #                     changed for existing languages without the explicit permission of GitHub staff.
 # color             - CSS hex color to represent the language.
 # tm_scope          - The TextMate scope that represents this programming
@@ -49,8 +51,12 @@ if generated
 
   languages = YAML.load(File.read("lib/linguist/languages.yml"))
   languages.each do |name, vals|
-    vals.merge!('language_id' => language_index)
-    language_index += 1
+    if name == 'NEXT_LANGUAGE_ID'
+      languages.size
+    else
+      vals.merge!('language_id' => language_index)
+      language_index += 1
+    end
   end
 
   File.write("lib/linguist/languages.yml", header + YAML.dump(languages))
@@ -59,21 +65,20 @@ elsif update
   languages = YAML.load(File.read("lib/linguist/languages.yml"))
 
   # First grab the maximum language_id
-  language_ids = []
-  languages.each { |name, vals| language_ids << vals['language_id'] if vals.has_key?('language_id')}
-  max_language_id = language_ids.max
+  max_language_id = languages['NEXT_LANGUAGE_ID']
   puts "Current maximum language_id is #{max_language_id}"
 
   missing_count = 0
   language_index = max_language_id
 
   languages.each do |name, vals|
-    unless vals.has_key?('language_id')
+    unless name == 'NEXT_LANGUAGE_ID' || vals.has_key?('language_id')
+      vals.merge!('language_id' => language_index)
       language_index += 1
       missing_count += 1
-      vals.merge!('language_id' => language_index)
     end
   end
+  languages['NEXT_LANGUAGE_ID'] = language_index
 
   File.write("lib/linguist/languages.yml", header + YAML.dump(languages))
   puts "Updated language_id attributes for #{missing_count} languages"
