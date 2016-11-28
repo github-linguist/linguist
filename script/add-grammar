@@ -93,4 +93,4 @@ log "Confirming license"
 `script/licensed --module "#{repo_new}"`
 
 log "Updating grammar documentation in vendor/REAEDME.md"
-`script list-grammars`
+`script/list-grammars`
