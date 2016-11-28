@@ -5,15 +5,15 @@ require "json"
 require "yaml"
 
 class GrammarList
-  
+
   ROOT = File.expand_path "../../", __FILE__
-  
+
   def initialize
     @submodules     = load_submodules()
     @sources        = load_sources()
     @language_names = load_languages()
   end
-  
+
   # Load .gitmodules
   def load_submodules
     submodules = {}
@@ -29,14 +29,14 @@ class GrammarList
     end
     submodules
   end
-  
+
   # Grab the name of each language, sorted case-insensitively
   def load_languages
     Linguist::Language.all.map(&:name).sort do |a, b|
       a.downcase() <=> b.downcase()
     end
   end
-  
+
   # Load grammars.yml
   def load_sources
     sources = {}
@@ -46,7 +46,7 @@ class GrammarList
     end
     sources
   end
-  
+
   # Shorten a repository URL
   def shorten(url)
     if url =~ /^https?:\/\/(?:www\.)?github\.com\/([^\/]+\/[^\/]+)/i
@@ -57,7 +57,7 @@ class GrammarList
       url.replace(/^https?:\/\/(?:www\.)?/i, "")
     end
   end
-  
+
   # Markdown: Generate grammar list
   def to_markdown
     markdown = ""
@@ -87,7 +87,7 @@ class GrammarList
 
     markdown
   end
-  
+
   # Update the file displaying the reader-friendly list of grammar repos
   def update_readme
     readme = "#{ROOT}/vendor/README.md"
