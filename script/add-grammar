@@ -95,4 +95,5 @@ log "Confirming license"
 `script/licensed --module "#{repo_new}"`
 
 log "Updating grammar documentation in vendor/REAEDME.md"
+`bundle exec rake samples`
 `script/list-grammars`
