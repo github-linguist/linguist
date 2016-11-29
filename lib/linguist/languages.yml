@@ -1659,13 +1659,16 @@ HTML+Django:
   tm_scope: text.html.django
   group: HTML
   extensions:
-  - ".mustache"
   - ".jinja"
+  - ".mustache"
+  - ".njk"
   aliases:
   - django
   - html+django/jinja
   - html+jinja
   - htmldjango
+  - njk
+  - nunjucks
   ace_mode: django
   codemirror_mode: django
   codemirror_mime_type: text/x-django
