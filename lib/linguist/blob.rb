@@ -63,7 +63,7 @@ module Linguist
     #
     # Returns an Array
     def extensions
-      _, *segments = name.downcase.split(".")
+      _, *segments = name.downcase.split(".", -1)
 
       segments.map.with_index do |segment, index|
         "." + segments[index..-1].join(".")
