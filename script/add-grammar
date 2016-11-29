@@ -78,6 +78,8 @@ https    = "https://#{parts[:host]}/#{parts[:user]}/#{parts[:repo]}"
 repo_new = "vendor/grammars/#{parts[:repo]}"
 repo_old = parse_submodule($replace) if $replace
 
+Dir.chdir(ROOT)
+
 if repo_old
   log "Deregistering: #{repo_old}"
   `git submodule deinit #{repo_old}`
@@ -93,4 +95,5 @@ log "Confirming license"
 `script/licensed --module "#{repo_new}"`
 
 log "Updating grammar documentation in vendor/REAEDME.md"
-`script list-grammars`
+`bundle exec rake samples`
+`script/list-grammars`
