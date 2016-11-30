@@ -84,6 +84,7 @@ if repo_old
   log "Deregistering: #{repo_old}"
   `git submodule deinit #{repo_old}`
   `git rm -rf #{repo_old}`
+  `script/convert-grammars`
 end
 
 log "Registering new submodule: #{repo_new}"
