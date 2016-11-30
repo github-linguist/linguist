@@ -224,7 +224,6 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **NewLisp:** [textmate/lisp.tmbundle](https://github.com/textmate/lisp.tmbundle)
 - **Nginx:** [brandonwamboldt/sublime-nginx](https://github.com/brandonwamboldt/sublime-nginx)
 - **Nimrod:** [Varriount/NimLime](https://github.com/Varriount/NimLime)
-- **Ninja:** [textmate/ninja.tmbundle](https://github.com/textmate/ninja.tmbundle)
 - **Nit:** [R4PaSs/Sublime-Nit](https://github.com/R4PaSs/Sublime-Nit)
 - **Nix:** [wmertens/sublime-nix](https://github.com/wmertens/sublime-nix)
 - **NSIS:** [github-linguist/NSIS](https://github.com/github-linguist/NSIS)
