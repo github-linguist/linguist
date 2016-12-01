@@ -93,7 +93,11 @@ exit 1 if $?.exitstatus > 0
 `script/convert-grammars --add #{repo_new}`
 
 log "Confirming license"
-`script/licensed --module "#{repo_new}"`
+if repo_old
+  `script/licensed`
+else
+  `script/licensed --module "#{repo_new}"`
+end
 
 log "Updating grammar documentation in vendor/REAEDME.md"
 `bundle exec rake samples`
