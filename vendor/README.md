@@ -138,7 +138,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Groovy:** [textmate/groovy.tmbundle](https://github.com/textmate/groovy.tmbundle)
 - **Groovy Server Pages:** [textmate/java.tmbundle](https://github.com/textmate/java.tmbundle)
 - **Hack:** [textmate/php.tmbundle](https://github.com/textmate/php.tmbundle)
-- **Haml:** [textmate/ruby-haml.tmbundle](https://github.com/textmate/ruby-haml.tmbundle)
+- **Haml:** [ezekg/language-haml](https://github.com/ezekg/language-haml)
 - **Handlebars:** [daaain/Handlebars](https://github.com/daaain/Handlebars)
 - **Harbour:** [hernad/atom-language-harbour](https://github.com/hernad/atom-language-harbour)
 - **Haskell:** [atom-haskell/language-haskell](https://github.com/atom-haskell/language-haskell)
