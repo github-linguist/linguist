@@ -345,13 +345,6 @@ class TestLanguage < Minitest::Test
     assert_equal 'text', Language['FORTRAN'].ace_mode
   end
 
-  def test_ace_modes
-    silence_warnings do
-      assert Language.ace_modes.include?(Language['Ruby'])
-      assert Language.ace_modes.include?(Language['FORTRAN'])
-    end
-  end
-
   def test_codemirror_mode
     assert_equal 'ruby', Language['Ruby'].codemirror_mode
     assert_equal 'javascript', Language['JavaScript'].codemirror_mode
