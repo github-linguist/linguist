@@ -334,17 +334,6 @@ module Linguist
     # Returns an Array of String names
     attr_reader :aliases
 
-    # Deprecated: Get code search term
-    #
-    # Examples
-    #
-    #   # => "ruby"
-    #   # => "python"
-    #   # => "perl"
-    #
-    # Returns the name String
-    attr_reader :search_term
-
     # Public: Get language_id (used in GitHub search)
     #
     # Examples

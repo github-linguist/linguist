@@ -21,8 +21,6 @@ header = <<-EOF
 #                     listed alphabetically)
 # interpreters      - An Array of associated interpreters
 # searchable        - Boolean flag to enable searching (defaults to true)
-# search_term       - Deprecated: Some languages may be indexed under a
-#                     different alias. Avoid defining new exceptions.
 # language_id       - Integer used as a language-name-independent indexed field so that we can rename
 #                     languages in Linguist without reindexing all the code on GitHub. Must not be
 #                     changed for existing languages without the explicit permission of GitHub staff.

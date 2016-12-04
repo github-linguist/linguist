@@ -14,8 +14,6 @@
 #                     listed alphabetically)
 # interpreters      - An Array of associated interpreters
 # searchable        - Boolean flag to enable searching (defaults to true)
-# search_term       - Deprecated: Some languages may be indexed under a
-#                     different alias. Avoid defining new exceptions.
 # language_id       - Integer used as a language-name-independent indexed field so that we can rename
 #                     languages in Linguist without reindexing all the code on GitHub. Must not be
 #                     changed for existing languages without the explicit permission of GitHub staff.
@@ -121,7 +119,6 @@ ASN.1:
 ASP:
   type: programming
   color: "#6a40fd"
-  search_term: aspx-vb
   tm_scope: text.html.asp
   aliases:
   - aspx
@@ -154,7 +151,6 @@ ActionScript:
   type: programming
   tm_scope: source.actionscript.3
   color: "#882B0F"
-  search_term: as3
   aliases:
   - actionscript 3
   - actionscript3
@@ -291,7 +287,6 @@ AspectJ:
 Assembly:
   type: programming
   color: "#6E4C13"
-  search_term: nasm
   aliases:
   - nasm
   extensions:
@@ -349,7 +344,6 @@ Awk:
   language_id: 28
 Batchfile:
   type: programming
-  search_term: bat
   aliases:
   - bat
   - batch
@@ -474,7 +468,6 @@ C#:
   codemirror_mode: clike
   codemirror_mime_type: text/x-csharp
   tm_scope: source.cs
-  search_term: csharp
   color: "#178600"
   aliases:
   - csharp
@@ -489,7 +482,6 @@ C++:
   ace_mode: c_cpp
   codemirror_mode: clike
   codemirror_mime_type: text/x-c++src
-  search_term: cpp
   color: "#f34b7d"
   aliases:
   - cpp
@@ -719,7 +711,6 @@ ColdFusion:
   type: programming
   ace_mode: coldfusion
   color: "#ed2cd6"
-  search_term: cfm
   aliases:
   - cfm
   - cfml
@@ -733,7 +724,6 @@ ColdFusion CFC:
   type: programming
   group: ColdFusion
   ace_mode: coldfusion
-  search_term: cfc
   aliases:
   - cfc
   extensions:
@@ -956,7 +946,6 @@ DTrace:
   language_id: 85
 Darcs Patch:
   type: data
-  search_term: dpatch
   aliases:
   - dpatch
   extensions:
@@ -1187,7 +1176,6 @@ Erlang:
 F#:
   type: programming
   color: "#b845fc"
-  search_term: fsharp
   aliases:
   - fsharp
   extensions:
@@ -1437,7 +1425,6 @@ Gentoo Eclass:
   language_id: 128
 Gettext Catalog:
   type: prose
-  search_term: pot
   searchable: false
   aliases:
   - pot
@@ -1847,7 +1834,6 @@ INI:
   language_id: 163
 IRC log:
   type: data
-  search_term: irc
   aliases:
   - irc
   - irc logs
@@ -2025,7 +2011,6 @@ Java:
 Java Server Pages:
   type: programming
   group: Java
-  search_term: jsp
   aliases:
   - jsp
   extensions:
@@ -2282,7 +2267,6 @@ Literate CoffeeScript:
   group: CoffeeScript
   ace_mode: text
   wrap: true
-  search_term: litcoffee
   aliases:
   - litcoffee
   extensions:
@@ -2291,7 +2275,6 @@ Literate CoffeeScript:
 Literate Haskell:
   type: programming
   group: Haskell
-  search_term: lhs
   aliases:
   - lhaskell
   - lhs
@@ -2553,7 +2536,6 @@ Max:
   aliases:
   - max/msp
   - maxmsp
-  search_term: max/msp
   extensions:
   - ".maxpat"
   - ".maxhelp"
@@ -2605,7 +2587,6 @@ MiniD:
   language_id: 231
 Mirah:
   type: programming
-  search_term: mirah
   color: "#c7a938"
   extensions:
   - ".druby"
@@ -3571,7 +3552,6 @@ Ragel in Ruby Host:
   language_id: 317
 Raw token data:
   type: data
-  search_term: raw
   aliases:
   - raw
   extensions:
@@ -3918,7 +3898,6 @@ Self:
   language_id: 345
 Shell:
   type: programming
-  search_term: bash
   color: "#89e051"
   aliases:
   - sh
@@ -4431,7 +4410,6 @@ Verilog:
 VimL:
   type: programming
   color: "#199f4b"
-  search_term: vim
   tm_scope: source.viml
   aliases:
   - vim
@@ -4787,7 +4765,6 @@ desktop:
 eC:
   type: programming
   color: "#913960"
-  search_term: ec
   extensions:
   - ".ec"
   - ".eh"
@@ -4837,7 +4814,6 @@ ooc:
 reStructuredText:
   type: prose
   wrap: true
-  search_term: rst
   aliases:
   - rst
   extensions:
