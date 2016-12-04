@@ -90,17 +90,6 @@ module Linguist
       language
     end
 
-    # Public: Detects the Language of the blob.
-    #
-    # blob - an object that includes the Linguist `BlobHelper` interface;
-    #       see Linguist::LazyBlob and Linguist::FileBlob for examples
-    #
-    # Returns Language or nil.
-    def self.detect(blob)
-      warn "[DEPRECATED] `Linguist::Language.detect` is deprecated. Use `Linguist.detect`. #{caller[0]}"
-      Linguist.detect(blob)
-    end
-
     # Public: Get all Languages
     #
     # Returns an Array of Languages
