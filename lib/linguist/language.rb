@@ -177,11 +177,6 @@ module Linguist
       @extension_index[extname.downcase]
     end
 
-    # DEPRECATED
-    def self.find_by_shebang(data)
-      @interpreter_index[Shebang.interpreter(data)]
-    end
-
     # Public: Look up Languages by interpreter.
     #
     # interpreter - String of interpreter name
