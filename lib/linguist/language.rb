@@ -440,22 +440,6 @@ module Linguist
     # Returns the extensions Array
     attr_reader :filenames
 
-    # Deprecated: Get primary extension
-    #
-    # Defaults to the first extension but can be overridden
-    # in the languages.yml.
-    #
-    # The primary extension can not be nil. Tests should verify this.
-    #
-    # This method is only used by app/helpers/gists_helper.rb for creating
-    # the language dropdown. It really should be using `name` instead.
-    # Would like to drop primary extension.
-    #
-    # Returns the extension String.
-    def primary_extension
-      extensions.first
-    end
-
     # Public: Get URL escaped name.
     #
     # Examples

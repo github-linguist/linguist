@@ -372,17 +372,6 @@ class TestLanguage < Minitest::Test
     assert Language['SuperCollider'].extensions.include?('.scd')
   end
 
-  def test_primary_extension
-    assert_equal '.pl', Language['Perl'].primary_extension
-    assert_equal '.py', Language['Python'].primary_extension
-    assert_equal '.rb', Language['Ruby'].primary_extension
-    assert_equal '.js', Language['JavaScript'].primary_extension
-    assert_equal '.coffee', Language['CoffeeScript'].primary_extension
-    assert_equal '.t', Language['Turing'].primary_extension
-    assert_equal '.ts', Language['TypeScript'].primary_extension
-    assert_equal '.sc', Language['SuperCollider'].primary_extension
-  end
-
   def test_eql
     assert Language['Ruby'].eql?(Language['Ruby'])
     assert !Language['Ruby'].eql?(Language['Python'])
