@@ -1,0 +1,40 @@
+GmESSI.loadMshFile("Soil_Block.msh")
+
+#2 2 "Base_Surface"
+#2 3 "Top_Surface"
+#3 1 "Soil"
+
+// My new model
+[Model_Name{"Soil_Block"}]
+
+[Add_All_Node{ unit:= m, nof_dofs:= 3}]
+
+// Adding Material
+[Add_Linear_elastic_isotropic_3d_LT{material_no:= 1, mass_density:= 2000*kg/m^3, elastic_modulus:= 200*MPa, poisson_ratio:= 0.2}]
+[Add_8NodeBrick{Physical_Group#Soil, material_no:= 1}]
+#[Vary_Linear_elastic_isotropic_3d_LT{Physical_Group#1,[Add_8NodeBrickLT{}],1600+10*(10-z)\ 0 \kg/m^3, 20e9+10e8*(10-z)\-8\Pa , 0.3}]
+
+// Applying Fixities
+[Fix{Physical_Group#Base_Surface, all}]
+
+[Include{"Soil_Block_geometry.fei"}]
+
+[Add_New_Loading_Stage{"Stage1_Surface_Loading"}]
+
+#[Add_8NodeBrick_SurfaceLoad{Physical_Group#1,Physical_Group#3,10*Pa}]
+[Add_Node_Load_Linear{Physical_Group#Top_Surface, direction:= Fz, magnitude:= -10*kN}]
+
+#[Vary_8NodeBrick_SurfaceLoad{ Physical_Group#1, Physical_Group#3 , magnitude:= {1};10*(abs(x)+abs(y)+abs(z))\ 0 \ Pa}]
+
+[Include{"Soil_Block_load.fei"}]
+
+[Comment{Starting the simulation}] 
+
+[Define_Algorithm{With_no_convergence_check}]
+[Define_Solver_UMFPack{}]
+[Define_Load_Factor_increament{1}]
+[Simulate_Steps_Using_Static_Algorithm{10}]
+#[Write_Data{ Physical_Group#Top_Surface,filename:= SurfaceLoad}]
+[Bye{}] 
+
+
