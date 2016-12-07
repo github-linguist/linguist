@@ -1,0 +1,28 @@
+// ESSI Test Suite
+// ---------------------------------------------------------------------
+
+
+model name "elastic_beam";
+//new loading stage "eigen_analysis";
+
+
+// Nodal  Coordinates
+add node No 1  at (0*m, 0*m ,  0*m) with 6 dofs;      
+add node No 2  at (0*m, 0*m ,  1*m) with 6 dofs;
+
+
+add mass to node # 2 mx = 1.0*kg my = 1.0*kg mz = 1.0*kg Imx = 0.0*kg*m^2 Imy = 0.0*kg*m^2 Imz = 0.0*kg*m^2;
+
+
+// Elements
+add element # 1 type beam_elastic with nodes (1, 2) cross_section=1.0*m^2 elastic_modulus=1.0*N/m^2 shear_modulus=1.0*N/m^2 torsion_Jx=1.0*m^4 bending_Iy=1.0*m^4 bending_Iz=1.0*m^4 mass_density=0.0*kg/m^3 xz_plane_vector = (-1, 0, 0) joint_1_offset = (0.0*m, 0.0*m, 0.0*m) joint_2_offset = (0.0*m, 0.0*m, 0.0*m);
+
+
+// Constrains
+fix node No 1 dofs all;
+
+
+simulate using eigen algorithm number_of_modes = 3;
+
+
+bye;

@@ -19,7 +19,7 @@
 # language_id       - Integer used as a language-name-independent indexed field so that we can rename
 #                     languages in Linguist without reindexing all the code on GitHub. Must not be
 #                     changed for existing languages without the explicit permission of GitHub staff.
-# color             - CSS hex color to represent the language. Only used if type is "programming" or "prose"
+# color             - CSS hex color to represent the language. Only used if type is "programming" or "prose".
 # tm_scope          - The TextMate scope that represents this programming
 #                     language. This should match one of the scopes listed in
 #                     the grammars.yml file. Use "none" if there is no grammar
@@ -1163,6 +1163,14 @@ EmberScript:
   codemirror_mode: coffeescript
   codemirror_mime_type: text/x-coffeescript
   language_id: 103
+ESSI:
+  type: programming
+  extensions:
+  - ".fei"
+  - ".essi"
+  tm_scope: source.fei
+  ace_mode: text
+  language_id: 219205140
 Erlang:
   type: programming
   color: "#B83998"
@@ -1457,6 +1465,21 @@ Glyph:
   codemirror_mode: tcl
   codemirror_mime_type: text/x-tcl
   language_id: 130
+Gmessi:
+  type: programming
+  ace_mode: text
+  extensions:
+  - ".gmessi"
+  tm_scope: source.gmESSI
+  language_id: 118998396
+Gmsh:
+  type: programming
+  ace_mode: text
+  extensions:
+  - ".geo"
+  - ".msh"
+  tm_scope: source.gmsh
+  language_id: 761903251
 Gnuplot:
   type: programming
   color: "#f0a9f0"
