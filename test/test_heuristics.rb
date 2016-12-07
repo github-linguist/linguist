@@ -73,6 +73,15 @@ class TestHeuristcs < Minitest::Test
     })
   end
 
+  def test_cls_by_heuristics
+    assert_heuristics({
+      "TeX" => all_fixtures("TeX", "*.cls"),
+      nil => all_fixtures("Apex", "*.cls"),
+      nil => all_fixtures("OpenEdge ABL", "*.cls"),
+      nil => all_fixtures("Visual Basic", "*.cls"),
+    })
+  end
+
   def test_cs_by_heuristics
     assert_heuristics({
       "C#" => all_fixtures("C#", "*.cs"),
