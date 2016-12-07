@@ -1141,9 +1141,9 @@ Emacs Lisp:
   - ".gnus"
   - ".spacemacs"
   - ".viper"
-  - "Project.ede"
-  - "_emacs"
-  - "abbrev_defs"
+  - Project.ede
+  - _emacs
+  - abbrev_defs
   extensions:
   - ".el"
   - ".emacs"
@@ -1473,6 +1473,8 @@ Gnuplot:
 Go:
   type: programming
   color: "#375eab"
+  aliases:
+  - golang
   extensions:
   - ".go"
   ace_mode: golang
@@ -1659,13 +1661,16 @@ HTML+Django:
   tm_scope: text.html.django
   group: HTML
   extensions:
-  - ".mustache"
   - ".jinja"
+  - ".mustache"
+  - ".njk"
   aliases:
   - django
   - html+django/jinja
   - html+jinja
   - htmldjango
+  - njk
+  - nunjucks
   ace_mode: django
   codemirror_mode: django
   codemirror_mime_type: text/x-django
@@ -1959,6 +1964,8 @@ JSON5:
   type: data
   extensions:
   - ".json5"
+  filenames:
+  - ".babelrc"
   tm_scope: source.js
   ace_mode: javascript
   codemirror_mode: javascript
@@ -2953,6 +2960,15 @@ OpenSCAD:
   - ".scad"
   tm_scope: none
   ace_mode: scad
+  language_id: 431
+OpenType Feature File:
+  type: data
+  aliases:
+  - AFDKO
+  extensions:
+  - ".fea"
+  tm_scope: source.opentype
+  ace_mode: text
   language_id: 266
 Org:
   type: prose
@@ -3172,7 +3188,7 @@ Perl6:
 Pic:
   type: markup
   group: Groff
-  tm_scope: "source.pic"
+  tm_scope: source.pic
   extensions:
   - ".pic"
   - ".chem"
@@ -3694,6 +3710,7 @@ Ruby:
   - Berksfile
   - Brewfile
   - Buildfile
+  - Dangerfile
   - Deliverfile
   - Fastfile
   - Gemfile
@@ -4034,6 +4051,13 @@ SourcePawn:
   - ".sma"
   tm_scope: source.sp
   ace_mode: text
+  language_id: 432
+Spline Font Database:
+  type: data
+  extensions:
+  - ".sfd"
+  tm_scope: text.sfd
+  ace_mode: yaml
   language_id: 354
 Squirrel:
   type: programming
@@ -4265,6 +4289,7 @@ Text:
   - ".no"
   filenames:
   - COPYING
+  - FONTLOG
   - INSTALL
   - LICENSE
   - NEWS

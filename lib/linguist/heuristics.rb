@@ -110,6 +110,12 @@ module Linguist
       end
     end
 
+    disambiguate ".cls" do |data|
+      if /\\\w+{/.match(data)
+        Language["TeX"]
+      end
+    end
+
     disambiguate ".cs" do |data|
       if /![\w\s]+methodsFor: /.match(data)
         Language["Smalltalk"]

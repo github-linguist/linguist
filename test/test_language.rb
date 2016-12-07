@@ -235,6 +235,7 @@ class TestLanguage < Minitest::Test
     assert_equal [Language['Clojure']], Language.find_by_filename('riemann.config')
     assert_equal [Language['HTML+Django']], Language.find_by_filename('index.jinja')
     assert_equal [Language['Chapel']], Language.find_by_filename('examples/hello.chpl')
+    assert_equal [], Language.find_by_filename('F.I.L.E.')
   end
 
   def test_find_by_interpreter
@@ -424,6 +425,14 @@ class TestLanguage < Minitest::Test
     message = "The following languages do not have a language_id listed in languages.yml. Please add language_id fields for all new languages.\n"
     missing.each { |language| message << "#{language.name}\n" }
     assert missing.empty?, message
+  end
+
+  def test_all_languages_have_a_valid_id
+    invalid = Language.all.select { |language| language.language_id < 0 || language.language_id >= (2**31 - 1) }
+
+    message = "The following languages do not have a valid language_id. Please use script/set-language-ids --update as per the contribution guidelines.\n"
+    invalid.each { |language| message << "#{language.name}\n" }
+    assert invalid.empty?, message
   end
 
   def test_all_language_id_are_unique

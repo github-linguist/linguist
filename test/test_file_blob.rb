@@ -294,6 +294,8 @@ class TestFileBlob < Minitest::Test
     assert !sample_blob("Godeps/Godeps.json").vendored?
     assert sample_blob("Godeps/_workspace/src/github.com/kr/s3/sign.go").vendored?
 
+    assert sample_blob(".indent.pro").vendored?
+
     # Rails vendor/
     assert sample_blob("vendor/plugins/will_paginate/lib/will_paginate.rb").vendored?
 

@@ -362,10 +362,17 @@ vendor/grammars/language-csound:
 - source.csound-score
 vendor/grammars/language-emacs-lisp:
 - source.emacs.lisp
+vendor/grammars/language-fontforge:
+- source.fontforge
+- source.opentype
+- text.sfd
 vendor/grammars/language-gfm:
 - source.gfm
 vendor/grammars/language-graphql:
 - source.graphql
+vendor/grammars/language-haml:
+- text.haml
+- text.hamlc
 vendor/grammars/language-haskell:
 - hint.haskell
 - hint.message.haskell
@@ -393,6 +400,8 @@ vendor/grammars/language-maxscript:
 - source.maxscript
 vendor/grammars/language-ncl:
 - source.ncl
+vendor/grammars/language-ninja:
+- source.ninja
 vendor/grammars/language-povray:
 - source.pov-ray sdl
 vendor/grammars/language-python:
@@ -474,8 +483,6 @@ vendor/grammars/nemerle.tmbundle:
 - source.nemerle
 vendor/grammars/nesC:
 - source.nesc
-vendor/grammars/ninja.tmbundle:
-- source.ninja
 vendor/grammars/nix:
 - source.nix
 vendor/grammars/nu.tmbundle:
@@ -533,8 +540,6 @@ vendor/grammars/r.tmbundle:
 - text.tex.latex.rd
 vendor/grammars/rascal-syntax-highlighting:
 - source.rascal
-vendor/grammars/ruby-haml.tmbundle:
-- text.haml
 vendor/grammars/ruby-slim.tmbundle:
 - text.slim
 vendor/grammars/ruby.tmbundle:
@@ -655,7 +660,5 @@ vendor/grammars/xc.tmbundle:
 vendor/grammars/xml.tmbundle:
 - text.xml
 - text.xml.xsl
-vendor/grammars/xquery:
-- source.xquery
 vendor/grammars/zephir-sublime:
 - source.php.zephir
