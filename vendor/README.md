@@ -249,7 +249,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Pascal:** [textmate/pascal.tmbundle](https://github.com/textmate/pascal.tmbundle)
 - **PAWN:** [Southclaw/pawn-sublime-language](https://github.com/Southclaw/pawn-sublime-language)
 - **Perl:** [textmate/perl.tmbundle](https://github.com/textmate/perl.tmbundle)
-- **Perl6:** [MadcapJake/language-perl6fe](https://github.com/MadcapJake/language-perl6fe)
+- **Perl6:** [perl6/atom-language-perl6](https://github.com/perl6/atom-language-perl6)
 - **PHP:** [textmate/php.tmbundle](https://github.com/textmate/php.tmbundle)
 - **Pic:** [Alhadis/language-roff](https://github.com/Alhadis/language-roff)
 - **PicoLisp:** [textmate/lisp.tmbundle](https://github.com/textmate/lisp.tmbundle)
