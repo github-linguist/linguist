@@ -141,7 +141,7 @@ module Linguist
         Language["ECL"]
       end
     end
-    
+
     disambiguate ".es" do |data|
       if /^\s*(?:%%|main\s*\(.*?\)\s*->)/.match(data)
         Language["Erlang"]
@@ -344,8 +344,14 @@ module Linguist
     end
 
     disambiguate ".pod" do |data|
-      if /^=\w+$/.match(data)
-        Language["Pod"]
+      if /^\s*=\w+$/.match(data)
+        if /^=pod|=cut/.match(data)
+          Language["Pod"]
+        elsif /^\s*=begin pod/.match(data)
+          Language=["Perl6"]
+        else
+          Language["Pod"]
+        end
       else
         Language["Perl"]
       end
@@ -426,13 +432,13 @@ module Linguist
         Language["SQL"]
       end
     end
-    
+
     disambiguate ".srt" do |data|
       if /^(\d{2}:\d{2}:\d{2},\d{3})\s*(-->)\s*(\d{2}:\d{2}:\d{2},\d{3})$/.match(data)
         Language["SubRip Text"]
       end
     end
-    
+
     disambiguate ".t" do |data|
       if /^\s*%|^\s*var\s+\w+\s*:\s*\w+/.match(data)
         Language["Turing"]
@@ -440,7 +446,7 @@ module Linguist
         Language["Perl6"]
       end
     end
-    
+
     disambiguate ".toc" do |data|
       if /^## |@no-lib-strip@/.match(data)
         Language["World of Warcraft Addon Data"]
