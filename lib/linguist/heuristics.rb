@@ -348,7 +348,7 @@ module Linguist
         if /^=pod|=cut/.match(data)
           Language["Pod"]
         elsif /^\s*=begin pod/.match(data)
-          Language=["Perl6"]
+          Language["Perl6"]
         else
           Language["Pod"]
         end
