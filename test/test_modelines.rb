@@ -4,11 +4,7 @@ class TestModelines < Minitest::Test
   include Linguist
 
   def assert_modeline(language, blob)
-    if language.nil?
-      assert_nil Linguist::Strategy::Modeline.call(blob).first
-    else
-      assert_equal language, Linguist::Strategy::Modeline.call(blob).first
-    end
+    assert_equal language, Linguist::Strategy::Modeline.call(blob).first
   end
 
   def test_modeline_strategy

@@ -27,4 +27,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'color-proximity', '~> 0.2.1'
   s.add_development_dependency 'licensed'
   s.add_development_dependency 'licensee', '>= 8.6.0'
+
 end

@@ -4,11 +4,7 @@ class TestShebang < Minitest::Test
   include Linguist
 
   def assert_interpreter(interpreter, body)
-    if interpreter.nil?
-      assert_nil Shebang.interpreter(body)
-    else
-      assert_equal interpreter, Shebang.interpreter(body)
-    end
+    assert_equal interpreter, Shebang.interpreter(body)
   end
 
   def test_shebangs
