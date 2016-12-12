@@ -11,6 +11,7 @@ require 'linguist/samples'
 require 'linguist/file_blob'
 require 'linguist/blob_helper'
 require 'linguist/strategy/filename'
+require 'linguist/strategy/extension'
 require 'linguist/strategy/modeline'
 require 'linguist/shebang'
 
@@ -129,41 +130,46 @@ module Linguist
 
     # Public: Look up Languages by filename.
     #
+    # The behaviour of this method recently changed.
+    # See the second example below.
+    #
     # filename - The path String.
     #
     # Examples
     #
+    #   Language.find_by_filename('Cakefile')
+    #   # => [#<Language name="CoffeeScript">]
     #   Language.find_by_filename('foo.rb')
-    #   # => [#<Language name="Ruby">]
+    #   # => []
     #
     # Returns all matching Languages or [] if none were found.
     def self.find_by_filename(filename)
       basename = File.basename(filename)
-
-      # find the first extension with language definitions
-      extname = FileBlob.new(filename).extensions.detect do |e|
-        !@extension_index[e].empty?
-      end
-
-      (@filename_index[basename] + @extension_index[extname]).compact.uniq
+      @filename_index[basename]
     end
 
     # Public: Look up Languages by file extension.
     #
-    # extname - The extension String.
+    # The behaviour of this method recently changed.
+    # See the second example below.
+    #
+    # filename - The path String.
     #
     # Examples
     #
-    #   Language.find_by_extension('.rb')
+    #   Language.find_by_extension('dummy.rb')
     #   # => [#<Language name="Ruby">]
-    #
     #   Language.find_by_extension('rb')
-    #   # => [#<Language name="Ruby">]
+    #   # => []
     #
     # Returns all matching Languages or [] if none were found.
-    def self.find_by_extension(extname)
-      extname = ".#{extname}" unless extname.start_with?(".")
-      @extension_index[extname.downcase]
+    def self.find_by_extension(filename)
+      # find the first extension with language definitions
+      extname = FileBlob.new(filename.downcase).extensions.detect do |e|
+        !@extension_index[e].empty?
+      end
+
+      @extension_index[extname]
     end
 
     # Public: Look up Languages by interpreter.
