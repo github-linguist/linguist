@@ -90,17 +90,6 @@ module Linguist
       language
     end
 
-    # Public: Detects the Language of the blob.
-    #
-    # blob - an object that includes the Linguist `BlobHelper` interface;
-    #       see Linguist::LazyBlob and Linguist::FileBlob for examples
-    #
-    # Returns Language or nil.
-    def self.detect(blob)
-      warn "[DEPRECATED] `Linguist::Language.detect` is deprecated. Use `Linguist.detect`. #{caller[0]}"
-      Linguist.detect(blob)
-    end
-
     # Public: Get all Languages
     #
     # Returns an Array of Languages
@@ -175,11 +164,6 @@ module Linguist
     def self.find_by_extension(extname)
       extname = ".#{extname}" unless extname.start_with?(".")
       @extension_index[extname.downcase]
-    end
-
-    # DEPRECATED
-    def self.find_by_shebang(data)
-      @interpreter_index[Shebang.interpreter(data)]
     end
 
     # Public: Look up Languages by interpreter.
@@ -257,18 +241,6 @@ module Linguist
     # Returns an Array of Languages.
     def self.colors
       @colors ||= all.select(&:color).sort_by { |lang| lang.name.downcase }
-    end
-
-    # Public: A List of languages compatible with Ace.
-    #
-    # TODO: Remove this method in a 5.x release. Every language now needs an ace_mode
-    # key, so this function isn't doing anything unique anymore.
-    #
-    # Returns an Array of Languages.
-    def self.ace_modes
-      warn "This method will be deprecated in a future 5.x release. Every language now has an `ace_mode` set."
-      warn caller
-      @ace_modes ||= all.select(&:ace_mode).sort_by { |lang| lang.name.downcase }
     end
 
     # Internal: Initialize a new Language
@@ -362,17 +334,6 @@ module Linguist
     # Returns an Array of String names
     attr_reader :aliases
 
-    # Deprecated: Get code search term
-    #
-    # Examples
-    #
-    #   # => "ruby"
-    #   # => "python"
-    #   # => "perl"
-    #
-    # Returns the name String
-    attr_reader :search_term
-
     # Public: Get language_id (used in GitHub search)
     #
     # Examples
@@ -456,22 +417,6 @@ module Linguist
     #
     # Returns the extensions Array
     attr_reader :filenames
-
-    # Deprecated: Get primary extension
-    #
-    # Defaults to the first extension but can be overridden
-    # in the languages.yml.
-    #
-    # The primary extension can not be nil. Tests should verify this.
-    #
-    # This method is only used by app/helpers/gists_helper.rb for creating
-    # the language dropdown. It really should be using `name` instead.
-    # Would like to drop primary extension.
-    #
-    # Returns the extension String.
-    def primary_extension
-      extensions.first
-    end
 
     # Public: Get URL escaped name.
     #

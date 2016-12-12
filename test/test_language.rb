@@ -106,39 +106,6 @@ class TestLanguage < Minitest::Test
     end
   end
 
-  # Used for code search indexing. Changing any of these values may
-  # require reindexing repositories.
-  def test_search_term
-    assert_equal 'perl',        Language['Perl'].search_term
-    assert_equal 'python',      Language['Python'].search_term
-    assert_equal 'ruby',        Language['Ruby'].search_term
-    assert_equal 'common-lisp', Language['Common Lisp'].search_term
-    assert_equal 'html+erb',    Language['HTML+ERB'].search_term
-    assert_equal 'max/msp',     Language['Max'].search_term
-    assert_equal 'puppet',      Language['Puppet'].search_term
-    assert_equal 'pure-data',   Language['Pure Data'].search_term
-
-    assert_equal 'aspx-vb',       Language['ASP'].search_term
-    assert_equal 'as3',           Language['ActionScript'].search_term
-    assert_equal 'nasm',          Language['Assembly'].search_term
-    assert_equal 'bat',           Language['Batchfile'].search_term
-    assert_equal 'csharp',        Language['C#'].search_term
-    assert_equal 'cpp',           Language['C++'].search_term
-    assert_equal 'cfm',           Language['ColdFusion'].search_term
-    assert_equal 'dpatch',        Language['Darcs Patch'].search_term
-    assert_equal 'fsharp',        Language['F#'].search_term
-    assert_equal 'pot',           Language['Gettext Catalog'].search_term
-    assert_equal 'irc',           Language['IRC log'].search_term
-    assert_equal 'lhs',           Language['Literate Haskell'].search_term
-    assert_equal 'mirah',         Language['Mirah'].search_term
-    assert_equal 'raw',           Language['Raw token data'].search_term
-    assert_equal 'bash',          Language['Shell'].search_term
-    assert_equal 'vim',           Language['VimL'].search_term
-    assert_equal 'jsp',           Language['Java Server Pages'].search_term
-    assert_equal 'rst',           Language['reStructuredText'].search_term
-    assert_equal 'supercollider', Language['SuperCollider'].search_term
-  end
-
   def test_popular
     assert Language['Ruby'].popular?
     assert Language['Perl'].popular?
@@ -345,13 +312,6 @@ class TestLanguage < Minitest::Test
     assert_equal 'text', Language['FORTRAN'].ace_mode
   end
 
-  def test_ace_modes
-    silence_warnings do
-      assert Language.ace_modes.include?(Language['Ruby'])
-      assert Language.ace_modes.include?(Language['FORTRAN'])
-    end
-  end
-
   def test_codemirror_mode
     assert_equal 'ruby', Language['Ruby'].codemirror_mode
     assert_equal 'javascript', Language['JavaScript'].codemirror_mode
@@ -377,17 +337,6 @@ class TestLanguage < Minitest::Test
     assert Language['Python'].extensions.include?('.py')
     assert Language['Ruby'].extensions.include?('.rb')
     assert Language['SuperCollider'].extensions.include?('.scd')
-  end
-
-  def test_primary_extension
-    assert_equal '.pl', Language['Perl'].primary_extension
-    assert_equal '.py', Language['Python'].primary_extension
-    assert_equal '.rb', Language['Ruby'].primary_extension
-    assert_equal '.js', Language['JavaScript'].primary_extension
-    assert_equal '.coffee', Language['CoffeeScript'].primary_extension
-    assert_equal '.t', Language['Turing'].primary_extension
-    assert_equal '.ts', Language['TypeScript'].primary_extension
-    assert_equal '.sc', Language['SuperCollider'].primary_extension
   end
 
   def test_eql
