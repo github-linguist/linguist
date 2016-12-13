@@ -844,16 +844,6 @@ Csound Score:
   tm_scope: source.csound-score
   ace_mode: text
   language_id: 75
-Cucumber:
-  type: programming
-  extensions:
-  - ".feature"
-  tm_scope: text.gherkin.feature
-  aliases:
-  - gherkin
-  ace_mode: text
-  color: "#5B2063"
-  language_id: 76
 Cuda:
   type: programming
   extensions:
@@ -1196,23 +1186,6 @@ FLUX:
   tm_scope: none
   ace_mode: text
   language_id: 106
-FORTRAN:
-  type: programming
-  color: "#4d41b1"
-  extensions:
-  - ".f90"
-  - ".f"
-  - ".f03"
-  - ".f08"
-  - ".f77"
-  - ".f95"
-  - ".for"
-  - ".fpp"
-  tm_scope: source.fortran.modern
-  ace_mode: text
-  codemirror_mode: fortran
-  codemirror_mime_type: text/x-fortran
-  language_id: 107
 Factor:
   type: programming
   color: "#636746"
@@ -1282,6 +1255,23 @@ Forth:
   codemirror_mode: forth
   codemirror_mime_type: text/x-forth
   language_id: 114
+Fortran:
+  type: programming
+  color: "#4d41b1"
+  extensions:
+  - ".f90"
+  - ".f"
+  - ".f03"
+  - ".f08"
+  - ".f77"
+  - ".f95"
+  - ".for"
+  - ".fpp"
+  tm_scope: source.fortran.modern
+  ace_mode: text
+  codemirror_mode: fortran
+  codemirror_mime_type: text/x-fortran
+  language_id: 107
 FreeMarker:
   type: programming
   color: "#0050b2"
@@ -1327,15 +1317,6 @@ GAP:
   tm_scope: source.gap
   ace_mode: text
   language_id: 119
-GAS:
-  type: programming
-  group: Assembly
-  extensions:
-  - ".s"
-  - ".ms"
-  tm_scope: source.assembly
-  ace_mode: assembly_x86
-  language_id: 120
 GCC Machine Description:
   type: programming
   extensions:
@@ -1446,6 +1427,16 @@ Gettext Catalog:
   tm_scope: source.po
   ace_mode: text
   language_id: 129
+Gherkin:
+  type: programming
+  extensions:
+  - ".feature"
+  tm_scope: text.gherkin.feature
+  aliases:
+  - cucumber
+  ace_mode: text
+  color: "#5B2063"
+  language_id: 76
 Glyph:
   type: programming
   color: "#e4cc98"
@@ -1549,45 +1540,6 @@ Graphviz (DOT):
   - ".gv"
   ace_mode: text
   language_id: 140
-Groff:
-  type: markup
-  color: "#ecdebe"
-  extensions:
-  - ".man"
-  - ".1"
-  - ".1in"
-  - ".1m"
-  - ".1x"
-  - ".2"
-  - ".3"
-  - ".3in"
-  - ".3m"
-  - ".3qt"
-  - ".3x"
-  - ".4"
-  - ".5"
-  - ".6"
-  - ".7"
-  - ".8"
-  - ".9"
-  - ".l"
-  - ".me"
-  - ".ms"
-  - ".n"
-  - ".rno"
-  - ".roff"
-  - ".tmac"
-  filenames:
-  - mmn
-  - mmt
-  tm_scope: text.roff
-  aliases:
-  - nroff
-  - troff
-  ace_mode: text
-  codemirror_mode: troff
-  codemirror_mime_type: text/troff
-  language_id: 141
 Groovy:
   type: programming
   ace_mode: groovy
@@ -1997,17 +1949,6 @@ JSX:
   codemirror_mode: jsx
   codemirror_mime_type: text/jsx
   language_id: 178
-Jade:
-  group: HTML
-  type: markup
-  extensions:
-  - ".jade"
-  - ".pug"
-  tm_scope: text.jade
-  ace_mode: jade
-  codemirror_mode: pug
-  codemirror_mime_type: text/x-pug
-  language_id: 179
 Jasmin:
   type: programming
   ace_mode: java
@@ -2759,7 +2700,7 @@ Nginx:
   codemirror_mime_type: text/x-nginx-conf
   color: "#9469E9"
   language_id: 248
-Nimrod:
+Nim:
   type: programming
   color: "#37775b"
   extensions:
@@ -3336,6 +3277,17 @@ Public Key:
   codemirror_mode: asciiarmor
   codemirror_mime_type: application/pgp
   language_id: 298
+Pug:
+  group: HTML
+  type: markup
+  extensions:
+  - ".jade"
+  - ".pug"
+  tm_scope: text.jade
+  ace_mode: jade
+  codemirror_mode: pug
+  codemirror_mime_type: text/x-pug
+  language_id: 179
 Puppet:
   type: programming
   color: "#302B6D"
@@ -3568,7 +3520,7 @@ Racket:
   tm_scope: source.racket
   ace_mode: lisp
   language_id: 316
-Ragel in Ruby Host:
+Ragel:
   type: programming
   color: "#9d5200"
   extensions:
@@ -3651,6 +3603,44 @@ RobotFramework:
   tm_scope: text.robot
   ace_mode: text
   language_id: 324
+Roff:
+  type: markup
+  color: "#ecdebe"
+  extensions:
+  - ".man"
+  - ".1"
+  - ".1in"
+  - ".1m"
+  - ".1x"
+  - ".2"
+  - ".3"
+  - ".3in"
+  - ".3m"
+  - ".3qt"
+  - ".3x"
+  - ".4"
+  - ".5"
+  - ".6"
+  - ".7"
+  - ".8"
+  - ".9"
+  - ".l"
+  - ".me"
+  - ".ms"
+  - ".n"
+  - ".rno"
+  - ".roff"
+  - ".tmac"
+  filenames:
+  - mmn
+  - mmt
+  tm_scope: text.roff
+  aliases:
+  - nroff
+  ace_mode: text
+  codemirror_mode: troff
+  codemirror_mime_type: text/troff
+  language_id: 141
 Rouge:
   type: programming
   ace_mode: clojure
@@ -4380,6 +4370,15 @@ Unity3D Asset:
   - ".unity"
   tm_scope: source.yaml
   language_id: 380
+Unix Assembly:
+  type: programming
+  group: Assembly
+  extensions:
+  - ".s"
+  - ".ms"
+  tm_scope: source.assembly
+  ace_mode: assembly_x86
+  language_id: 120
 Uno:
   type: programming
   extensions:
@@ -4452,12 +4451,13 @@ Verilog:
   codemirror_mode: verilog
   codemirror_mime_type: text/x-verilog
   language_id: 387
-VimL:
+Vim script:
   type: programming
   color: "#199f4b"
   tm_scope: source.viml
   aliases:
   - vim
+  - viml
   - nvim
   extensions:
   - ".vim"
