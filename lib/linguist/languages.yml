@@ -4835,6 +4835,17 @@ fish:
   tm_scope: source.fish
   ace_mode: text
   language_id: 415
+k:
+  type: programming
+  color: "#3F3F3F"
+  extensions:
+  - ".k"
+  interpreters:
+  - q
+  tm_scope: none
+  ace_mode: text
+  group: kdb
+  language_id: 422 
 mupad:
   type: programming
   extensions:
@@ -4856,6 +4867,17 @@ ooc:
   - ".ooc"
   ace_mode: text
   language_id: 418
+q:
+  type: programming
+  color: "#3F3F3F"
+  extensions:
+  - ".q"
+  interpreters:
+  - q
+  tm_scope: none
+  ace_mode: text
+  language_id: 423
+  group: kdb
 reStructuredText:
   type: prose
   wrap: true
