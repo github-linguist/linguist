@@ -142,7 +142,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Harbour:** [hernad/atom-language-harbour](https://github.com/hernad/atom-language-harbour)
 - **Haskell:** [atom-haskell/language-haskell](https://github.com/atom-haskell/language-haskell)
 - **Haxe:** [clemos/haxe-sublime-bundle](https://github.com/clemos/haxe-sublime-bundle)
-- **HCL:** [aroben/ruby.tmbundle](https://github.com/aroben/ruby.tmbundle)
+- **HCL:** [alexlouden/Terraform.tmLanguage](https://github.com/alexlouden/Terraform.tmLanguage)
 - **HTML:** [textmate/html.tmbundle](https://github.com/textmate/html.tmbundle)
 - **HTML+Django:** [textmate/python-django.tmbundle](https://github.com/textmate/python-django.tmbundle)
 - **HTML+ECR:** [atom-crystal/language-crystal](https://github.com/atom-crystal/language-crystal)
