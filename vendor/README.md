@@ -361,6 +361,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **X10:** [x10-lang/x10-highlighting](https://github.com/x10-lang/x10-highlighting)
 - **xBase:** [hernad/atom-language-harbour](https://github.com/hernad/atom-language-harbour)
 - **XC:** [graymalkin/xc.tmbundle](https://github.com/graymalkin/xc.tmbundle)
+- **XCompose:** [samcv/language-xcompose](https://github.com/samcv/language-xcompose)
 - **XML:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)
 - **Xojo:** [angryant0007/VBDotNetSyntax](https://github.com/angryant0007/VBDotNetSyntax)
 - **XProc:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)
