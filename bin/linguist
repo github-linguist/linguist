@@ -1,18 +1,22 @@
 #!/usr/bin/env ruby
 
-# linguist — detect language type for a file, or, given a directory, determine language breakdown
-#     usage: linguist <path> [<--breakdown>]
-#
+$LOAD_PATH[0, 0] = File.join(File.dirname(__FILE__), '..', 'lib')
+
 require 'linguist'
 require 'rugged'
 require 'json'
+require 'optparse'
 
 path = ARGV[0] || Dir.pwd
 
-# special case if not given a directory but still given the --breakdown option
+# special case if not given a directory
+# but still given the --breakdown or --json options/
 if path == "--breakdown"
   path = Dir.pwd
   breakdown = true
+elsif path == "--json"
+  path = Dir.pwd
+  json_breakdown = true
 end
 
 ARGV.shift
@@ -69,5 +73,12 @@ elsif File.file?(path)
     puts "  appears to be a vendored file"
   end
 else
-  abort "usage: linguist <path>"
+  abort <<-HELP
+  Linguist v#{Linguist::VERSION}
+  Detect language type for a file, or, given a directory, determine language breakdown.
+
+  Usage: linguist <path>
+         linguist <path> [--breakdown] [--json]
+         linguist [--breakdown] [--json]
+  HELP
 end
