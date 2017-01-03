@@ -499,6 +499,7 @@ C++:
   - ".inc"
   - ".inl"
   - ".ipp"
+  - ".re"
   - ".tcc"
   - ".tpp"
   language_id: 43
@@ -1754,7 +1755,7 @@ Hy:
   - ".hy"
   aliases:
   - hylang
-  tm_scope: source.hy
+  tm_scope: none
   language_id: 159
 HyPhy:
   type: programming
@@ -3548,6 +3549,19 @@ Raw token data:
   tm_scope: none
   ace_mode: text
   language_id: 318
+Reason:
+  type: programming
+  group: OCaml
+  ace_mode: rust
+  codemirror_mode: rust
+  codemirror_mime_type: text/x-rustsrc
+  extensions:
+  - ".re"
+  - ".rei"
+  interpreters:
+  - ocaml
+  tm_scope: source.reason
+  language_id: 869538413
 Rebol:
   type: programming
   color: "#358a5b"
@@ -3790,6 +3804,7 @@ SQL:
   - ".cql"
   - ".ddl"
   - ".inc"
+  - ".mysql"
   - ".prc"
   - ".tab"
   - ".udf"
@@ -4276,10 +4291,13 @@ Text:
   - COPYING
   - FONTLOG
   - INSTALL
+  - INSTALL.mysql
   - LICENSE
+  - LICENSE.mysql
   - NEWS
   - README.1ST
   - README.me
+  - README.mysql
   - click.me
   - delete.me
   - keep.me
@@ -4566,6 +4584,15 @@ XC:
   codemirror_mode: clike
   codemirror_mime_type: text/x-csrc
   language_id: 398
+XCompose:
+  type: data
+  filenames:
+  - ".XCompose"
+  - "XCompose"
+  - "xcompose"
+  tm_scope: 'config.xcompose'
+  ace_mode: text
+  language_id: 225167241
 XML:
   type: data
   ace_mode: xml
@@ -4759,6 +4786,7 @@ YAML:
   - ".syntax"
   - ".yaml"
   - ".yaml-tmlanguage"
+  - ".yml.mysql"
   filenames:
   - ".clang-format"
   ace_mode: yaml
