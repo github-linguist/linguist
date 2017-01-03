@@ -109,6 +109,7 @@ project.languages      #=> { "Ruby" => 119387 }
 
 These stats are also printed out by the `linguist` executable. You can use the
 `--breakdown` flag, and the binary will also output the breakdown of files by language.
+If you use the `--loc` flag, it will print out the lines of code by language.
 
 You can try running `linguist` on the root directory in this repository itself:
 
@@ -124,6 +125,10 @@ bin/linguist
 github-linguist.gemspec
 lib/linguist.rb
 …
+
+$ bundle exec linguist --loc
+Ruby: 204865
+Shell: 910
 ```
 
 ## Contributing

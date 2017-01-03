@@ -6,6 +6,7 @@ require 'linguist/language'
 require 'linguist/repository'
 require 'linguist/samples'
 require 'linguist/shebang'
+require 'linguist/presenters'
 require 'linguist/version'
 
 class << Linguist
