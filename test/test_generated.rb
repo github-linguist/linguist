@@ -87,5 +87,8 @@ class TestGenerated < Minitest::Test
 
     # GrammarKit
     generated_sample_loading_data("Java/GrammarKit.java")
+
+    # roxygen2
+    generated_sample_loading_data("R/import.Rd")
   end
 end
