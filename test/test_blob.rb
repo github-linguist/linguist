@@ -187,6 +187,9 @@ class TestBlob < Minitest::Test
     assert sample_blob_memory("JavaScript/intro.js").generated?
     assert sample_blob_memory("JavaScript/classes.js").generated?
 
+    assert sample_blob_memory("JavaScript/ccalc-lex.js").generated?
+    assert sample_blob_memory("JavaScript/ccalc-parse.js").generated?
+
     # Protocol Buffer generated code
     assert sample_blob_memory("C++/protocol-buffer.pb.h").generated?
     assert sample_blob_memory("C++/protocol-buffer.pb.cc").generated?
