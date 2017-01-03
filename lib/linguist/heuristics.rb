@@ -326,7 +326,7 @@ module Linguist
     end
 
     disambiguate ".pl" do |data|
-      if /^[^#]+:-/.match(data)
+      if /^[^#]*:-/.match(data)
         Language["Prolog"]
       elsif /use strict|use\s+v?5\./.match(data)
         Language["Perl"]
