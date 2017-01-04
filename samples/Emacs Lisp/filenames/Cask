@@ -1,0 +1,8 @@
+(package "cask-example" "1.2.3" "Example package for Emacs Cask")
+(source gnu)
+(source "melpa" "https://melpa.org/packages/")
+
+(package-file "cask-example.el")
+
+(development
+ (depends-on "dash"))
