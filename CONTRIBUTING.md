@@ -28,7 +28,7 @@ We try only to add languages once they have some usage on GitHub. In most cases 
 To add support for a new language:
 
 0. Add an entry for your language to [`languages.yml`][languages]. Omit the `language_id` field for now.
-0. Add a grammar for your language: `script/add-grammar https://github.com/JaneSmith/MyGrammar` and download its license: `script/licensed`. Please only add grammars that have [one of these licenses][licenses].
+0. Add a grammar for your language: `script/add-grammar https://github.com/JaneSmith/MyGrammar`. Please only add grammars that have [one of these licenses][licenses].
 0. Add samples for your language to the [samples directory][samples] in the correct subdirectory.
 0. Add a `language_id` for your language using `script/set-language-ids`. **You should only ever need to run `script/set-language-ids --update`. Anything other than this risks breaking GitHub search :cry:**
 0. Open a pull request, linking to a [GitHub search result](https://github.com/search?utf8=%E2%9C%93&q=extension%3Aboot+NOT+nothack&type=Code&ref=searchresults) showing in-the-wild usage.
