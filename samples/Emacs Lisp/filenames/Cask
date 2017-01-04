@@ -1,8 +1,9 @@
-(package "cask-example" "1.2.3" "Example package for Emacs Cask")
-(source gnu)
+(package "composer" "0.0.7" "Interface to PHP Composer")
 (source "melpa" "https://melpa.org/packages/")
 
-(package-file "cask-example.el")
+(package-file "composer.el")
 
-(development
- (depends-on "dash"))
+(depends-on "f")
+(depends-on "s")
+(depends-on "request")
+(depends-on "seq")
