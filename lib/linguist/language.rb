@@ -215,7 +215,14 @@ module Linguist
     # Returns the Language or nil if none was found.
     def self.[](name)
       return nil if name.to_s.empty?
-      name && (@index[name.downcase] || @index[name.split(',').first.downcase])
+
+      lang = @index[name.downcase]
+      return lang if lang
+
+      name = name.split(',').first
+      return nil if name.to_s.empty?
+
+      @index[name.downcase]
     end
 
     # Public: A List of popular languages
