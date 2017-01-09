@@ -265,7 +265,7 @@ module Linguist
       @color = attributes[:color]
 
       # Set aliases
-      @aliases = [default_alias_name] + (attributes[:aliases] || [])
+      @aliases = [default_alias] + (attributes[:aliases] || [])
 
       # Load the TextMate scope name or try to guess one
       @tm_scope = attributes[:tm_scope] || begin
@@ -282,9 +282,6 @@ module Linguist
       @codemirror_mode = attributes[:codemirror_mode]
       @codemirror_mime_type = attributes[:codemirror_mime_type]
       @wrap = attributes[:wrap] || false
-
-      # Set legacy search term
-      @search_term = attributes[:search_term] || default_alias_name
 
       # Set the language_id
       @language_id = attributes[:language_id]
@@ -437,12 +434,13 @@ module Linguist
       EscapeUtils.escape_url(name).gsub('+', '%20')
     end
 
-    # Internal: Get default alias name
+    # Public: Get default alias name
     #
     # Returns the alias name String
-    def default_alias_name
+    def default_alias
       name.downcase.gsub(/\s/, '-')
     end
+    alias_method :default_alias_name, :default_alias
 
     # Public: Get Language group
     #
@@ -557,7 +555,6 @@ module Linguist
       :wrap              => options['wrap'],
       :group_name        => options['group'],
       :searchable        => options.fetch('searchable', true),
-      :search_term       => options['search_term'],
       :language_id       => options['language_id'],
       :extensions        => Array(options['extensions']),
       :interpreters      => options['interpreters'].sort,
