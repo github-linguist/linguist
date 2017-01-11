@@ -41,7 +41,8 @@ class TestGrammars < Minitest::Test
     "241e5ddbb4423d792216783e9f668bd670b026e4", # ant.tmbundle
     "bdab9fdc21e6790b479ccb5945b78bc0f6ce2493", # language-blade
     "81711c69aa40135de7266c88b2f6ab28dbc1d81e", # atom-language-perl6
-    "808e27f5e44167113198d277f47926c5d482eac8" # atom-language-rust
+    "808e27f5e44167113198d277f47926c5d482eac8", # atom-language-rust
+    "304be6184f7f344d44a1d13bddf511019624fd22", # language-css
   ].freeze
 
   # List of allowed SPDX license names
