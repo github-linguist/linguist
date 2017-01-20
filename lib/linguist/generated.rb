@@ -58,6 +58,7 @@ module Linguist
       node_modules? ||
       go_vendor? ||
       npm_shrinkwrap? ||
+      yarn_lock? ||
       godeps? ||
       generated_by_zephir? ||
       minified_files? ||
@@ -330,6 +331,13 @@ module Linguist
     # Returns true or false.
     def npm_shrinkwrap?
       !!name.match(/npm-shrinkwrap\.json/)
+    end
+
+    # Internal: Is the blob a generated php yarn lock file?
+    #
+    # Returns true or false.
+    def yarn_lock?
+      !!name.match(/yarn\.lock/)
     end
 
     # Internal: Is the blob part of Godeps/,
