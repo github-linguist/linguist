@@ -485,6 +485,7 @@ module Linguist
     #
     # Returns true or false.
     def generated_yarn_lock?
+      return false unless extname == '.lock'
       return false unless lines.count > 2
       return lines[1].include?("yarn lockfile")
     end
