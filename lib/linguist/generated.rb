@@ -58,7 +58,6 @@ module Linguist
       node_modules? ||
       go_vendor? ||
       npm_shrinkwrap? ||
-      yarn_lock? ||
       godeps? ||
       generated_by_zephir? ||
       minified_files? ||
@@ -81,7 +80,8 @@ module Linguist
       generated_jflex? ||
       generated_grammarkit? ||
       generated_roxygen2? ||
-      generated_jison?
+      generated_jison? ||
+      yarn_lock?
     end
 
     # Internal: Is the blob an Xcode file?
