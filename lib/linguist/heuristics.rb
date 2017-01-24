@@ -278,7 +278,7 @@ module Linguist
     disambiguate ".mod" do |data|
       if data.include?('<!ENTITY ')
         Language["XML"]
-      elsif /MODULE\s\w+\s*;/i.match(data) || /^\s*END \w+;$/i.match(data)
+      elsif /^\s*MODULE [\w\.]+;/i.match(data) || /^\s*END [\w\.]+;/i.match(data)
         Language["Modula-2"]
       else
         [Language["Linux Kernel Module"], Language["AMPL"]]
