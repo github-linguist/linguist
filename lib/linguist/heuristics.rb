@@ -260,7 +260,7 @@ module Linguist
     end
 
     disambiguate ".md" do |data|
-      if /(^[-a-z0-9=#!\*\[|])|<\//i.match(data) || data.empty?
+      if /(^[-a-z0-9=#!\*\[|>])|<\//i.match(data) || data.empty?
         Language["Markdown"]
       elsif /^(;;|\(define_)/.match(data)
         Language["GCC machine description"]
