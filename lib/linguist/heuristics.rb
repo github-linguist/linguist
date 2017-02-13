@@ -260,7 +260,7 @@ module Linguist
     end
 
     disambiguate ".md" do |data|
-      if /(^[-a-z0-9=#!\*\[|])|<\//i.match(data) || data.empty?
+      if /(^[-a-z0-9=#!\*\[|>])|<\//i.match(data) || data.empty?
         Language["Markdown"]
       elsif /^(;;|\(define_)/.match(data)
         Language["GCC machine description"]
@@ -278,7 +278,7 @@ module Linguist
     disambiguate ".mod" do |data|
       if data.include?('<!ENTITY ')
         Language["XML"]
-      elsif /MODULE\s\w+\s*;/i.match(data) || /^\s*END \w+;$/i.match(data)
+      elsif /^\s*MODULE [\w\.]+;/i.match(data) || /^\s*END [\w\.]+;/i.match(data)
         Language["Modula-2"]
       else
         [Language["Linux Kernel Module"], Language["AMPL"]]

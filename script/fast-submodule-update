@@ -51,7 +51,7 @@ SUBMODULES.partition { |submodule| SLOW_SUBMODULES.include?(submodule) }.flatten
   submodules.push(submodule)
 end
 
-8.times do
+(ARGV.first || 8).to_i.times do
   Thread.new { run_thread(submodules, results) }
 end
 

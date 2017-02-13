@@ -1156,6 +1156,7 @@ Erlang:
   - ".xrl"
   - ".yrl"
   filenames:
+  - Emakefile
   - rebar.config
   - rebar.config.lock
   - rebar.lock
@@ -1605,7 +1606,7 @@ HTML:
   ace_mode: html
   codemirror_mode: htmlmixed
   codemirror_mime_type: text/html
-  color: "#e44b23"
+  color: "#e34c26"
   aliases:
   - xhtml
   extensions:
@@ -2291,6 +2292,8 @@ LookML:
   color: "#652B81"
   extensions:
   - ".lookml"
+  - ".model.lkml"
+  - ".view.lkml"
   tm_scope: source.yaml
   language_id: 211
 LoomScript:
@@ -3226,6 +3229,7 @@ PowerBuilder:
   language_id: 292
 PowerShell:
   type: programming
+  color: "#012456"
   ace_mode: powershell
   codemirror_mode: powershell
   codemirror_mime_type: application/x-powershell
@@ -3601,6 +3605,17 @@ Redcode:
   tm_scope: none
   ace_mode: text
   language_id: 321
+Regular Expression:
+  type: data
+  extensions:
+  - ".regexp"
+  - ".regex"
+  aliases:
+  - regexp
+  - regex
+  ace_mode: text
+  tm_scope: source.regexp
+  language_id: 363378884
 Ren'Py:
   type: programming
   aliases:
@@ -4298,6 +4313,7 @@ Text:
   - ".no"
   filenames:
   - COPYING
+  - COPYRIGHT.regex
   - FONTLOG
   - INSTALL
   - INSTALL.mysql
@@ -4597,9 +4613,9 @@ XCompose:
   type: data
   filenames:
   - ".XCompose"
-  - "XCompose"
-  - "xcompose"
-  tm_scope: 'config.xcompose'
+  - XCompose
+  - xcompose
+  tm_scope: config.xcompose
   ace_mode: text
   language_id: 225167241
 XML:
