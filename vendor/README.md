@@ -240,6 +240,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **OpenType Feature File:** [Alhadis/language-fontforge](https://github.com/Alhadis/language-fontforge)
 - **Ox:** [andreashetland/sublime-text-ox](https://github.com/andreashetland/sublime-text-ox)
 - **Oz:** [eregon/oz-tmbundle](https://github.com/eregon/oz-tmbundle)
+- **P4:** [TakeshiTseng/atom-language-p4](https://github.com/TakeshiTseng/atom-language-p4)
 - **Papyrus:** [Kapiainen/SublimePapyrus](https://github.com/Kapiainen/SublimePapyrus)
 - **Parrot Internal Representation:** [textmate/parrot.tmbundle](https://github.com/textmate/parrot.tmbundle)
 - **Pascal:** [textmate/pascal.tmbundle](https://github.com/textmate/pascal.tmbundle)
