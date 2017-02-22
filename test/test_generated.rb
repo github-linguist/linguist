@@ -79,6 +79,9 @@ class TestGenerated < Minitest::Test
     generated_fixture_loading_data("Data/sourcemap.v3.map")
     generated_fixture_loading_data("Data/sourcemap.v1.map")
 
+    # Yarn locfile
+    generated_fixture_loading_data("Data/yarn.lock")
+
     # Specflow
     generated_fixture_without_loading_data("Features/BindingCulture.feature.cs")
 
@@ -87,5 +90,8 @@ class TestGenerated < Minitest::Test
 
     # GrammarKit
     generated_sample_loading_data("Java/GrammarKit.java")
+
+    # roxygen2
+    generated_sample_loading_data("R/import.Rd")
   end
 end

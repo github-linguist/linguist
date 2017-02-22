@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+$LOAD_PATH[0, 0] = File.join(File.dirname(__FILE__), '..', 'lib')
+
 require 'linguist'
 require 'rugged'
 require 'optparse'
@@ -102,10 +104,16 @@ def git_linguist(args)
   commit = nil
 
   parser = OptionParser.new do |opts|
-    opts.banner = "Usage: git-linguist [OPTIONS] stats|breakdown|dump-cache|clear|disable"
+    opts.banner = <<-HELP
+    Linguist v#{Linguist::VERSION}
+    Detect language type and determine language breakdown for a given Git repository.
+
+    Usage:
+    git-linguist [OPTIONS] stats|breakdown|dump-cache|clear|disable"
+    HELP
 
     opts.on("-f", "--force", "Force a full rescan") { incremental = false }
-    opts.on("--commit=COMMIT", "Commit to index") { |v| commit = v}
+    opts.on("-c", "--commit=COMMIT", "Commit to index") { |v| commit = v}
   end
 
   parser.parse!(args)

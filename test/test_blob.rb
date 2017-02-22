@@ -187,6 +187,9 @@ class TestBlob < Minitest::Test
     assert sample_blob_memory("JavaScript/intro.js").generated?
     assert sample_blob_memory("JavaScript/classes.js").generated?
 
+    assert sample_blob_memory("JavaScript/ccalc-lex.js").generated?
+    assert sample_blob_memory("JavaScript/ccalc-parse.js").generated?
+
     # Protocol Buffer generated code
     assert sample_blob_memory("C++/protocol-buffer.pb.h").generated?
     assert sample_blob_memory("C++/protocol-buffer.pb.cc").generated?
@@ -194,6 +197,7 @@ class TestBlob < Minitest::Test
     assert sample_blob_memory("Python/protocol_buffer_pb2.py").generated?
     assert sample_blob_memory("Go/api.pb.go").generated?
     assert sample_blob_memory("Go/embedded.go").generated?
+    assert sample_blob_memory("JavaScript/proto.js").generated?
 
     # Apache Thrift generated code
     assert sample_blob_memory("Python/gen-py-linguist-thrift.py").generated?

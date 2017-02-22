@@ -1121,6 +1121,7 @@ Emacs Lisp:
   - ".gnus"
   - ".spacemacs"
   - ".viper"
+  - Cask
   - Project.ede
   - _emacs
   - abbrev_defs
@@ -1155,6 +1156,7 @@ Erlang:
   - ".xrl"
   - ".yrl"
   filenames:
+  - Emakefile
   - rebar.config
   - rebar.config.lock
   - rebar.lock
@@ -1385,6 +1387,14 @@ Game Maker Language:
   codemirror_mode: clike
   codemirror_mime_type: text/x-c++src
   language_id: 125
+Genie:
+  type: programming
+  ace_mode: text
+  extensions:
+  - ".gs"
+  color: "#fb855d"
+  tm_scope: none
+  language_id: 792408528
 Genshi:
   type: programming
   extensions:
@@ -1578,7 +1588,7 @@ HCL:
   ace_mode: ruby
   codemirror_mode: ruby
   codemirror_mime_type: text/x-ruby
-  tm_scope: source.ruby
+  tm_scope: source.terraform
   language_id: 144
 HLSL:
   type: programming
@@ -1588,7 +1598,7 @@ HLSL:
   - ".fxh"
   - ".hlsli"
   ace_mode: text
-  tm_scope: none
+  tm_scope: source.hlsl
   language_id: 145
 HTML:
   type: markup
@@ -1596,7 +1606,7 @@ HTML:
   ace_mode: html
   codemirror_mode: htmlmixed
   codemirror_mime_type: text/html
-  color: "#e44b23"
+  color: "#e34c26"
   aliases:
   - xhtml
   extensions:
@@ -2282,6 +2292,8 @@ LookML:
   color: "#652B81"
   extensions:
   - ".lookml"
+  - ".model.lkml"
+  - ".view.lkml"
   tm_scope: source.yaml
   language_id: 211
 LoomScript:
@@ -2525,6 +2537,15 @@ Mercury:
   - ".moo"
   tm_scope: source.mercury
   language_id: 229
+Meson:
+  type: programming
+  color: "#007800"
+  filenames:
+  - meson.build
+  - meson_options.txt
+  tm_scope: source.meson
+  ace_mode: text
+  language_id: 799141244
 Metal:
   type: programming
   color: "#8f14e9"
@@ -2956,6 +2977,14 @@ Oz:
   codemirror_mode: oz
   codemirror_mime_type: text/x-oz
   language_id: 270
+P4:
+  type: programming
+  color: "#7055b5"
+  extensions:
+  - ".p4"
+  tm_scope: source.p4
+  ace_mode: text
+  language_id: 348895984
 PAWN:
   type: programming
   color: "#dbb284"
@@ -3233,6 +3262,7 @@ PowerBuilder:
   language_id: 292
 PowerShell:
   type: programming
+  color: "#012456"
   ace_mode: powershell
   codemirror_mode: powershell
   codemirror_mime_type: application/x-powershell
@@ -3608,6 +3638,17 @@ Redcode:
   tm_scope: none
   ace_mode: text
   language_id: 321
+Regular Expression:
+  type: data
+  extensions:
+  - ".regexp"
+  - ".regex"
+  aliases:
+  - regexp
+  - regex
+  ace_mode: text
+  tm_scope: source.regexp
+  language_id: 363378884
 Ren'Py:
   type: programming
   aliases:
@@ -4305,6 +4346,7 @@ Text:
   - ".no"
   filenames:
   - COPYING
+  - COPYRIGHT.regex
   - FONTLOG
   - INSTALL
   - INSTALL.mysql
@@ -4600,6 +4642,15 @@ XC:
   codemirror_mode: clike
   codemirror_mime_type: text/x-csrc
   language_id: 398
+XCompose:
+  type: data
+  filenames:
+  - ".XCompose"
+  - XCompose
+  - xcompose
+  tm_scope: config.xcompose
+  ace_mode: text
+  language_id: 225167241
 XML:
   type: data
   ace_mode: xml

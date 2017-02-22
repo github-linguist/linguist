@@ -21,7 +21,7 @@ class TestGrammars < Minitest::Test
     "b5432a1e1055de7eeede2dddf91e009480651fd6", # jasmin-sublime
     "74143c4d2a5649eb179105afcb37f466558c22ce", # language-clojure
     "760471435f5ab0b9dc99a628203cd8f9156d28ce", # language-coffee-script
-    "330e6d465e26bdd232aafcd3f5dba6a1d098a20e", # language-csharp
+    "94fbd554ec1837fb7c508fd7425326639c3f4103", # language-csharp
     "70fb557a431891c2d634c33fa7367feab5066fd6", # language-javascript
     "e0528c23cd967f999e058f1408ccb5b7237daaba", # language-python
     "8653305b358375d0fced85dc24793b99919b11ef", # language-shellscript
@@ -36,11 +36,13 @@ class TestGrammars < Minitest::Test
     "c78ec142ac3126cf639cfd67bd646ed8226d8b74", # atom-language-purescript
     "341d7f66806fc41d081133d6e51ade856352e056", # FreeMarker.tmbundle
     "15a394f6bc43400946570b299aee8ae264a1e3ff", # language-renpy
-    "c9118c370411f2f049c746c0fd096554e877aea2", # perl6fe
     "8ccf886749c32fb7e65d4d1316a7ed0479c93dc9", # language-less
     "2f03492b52d7dd83b4e7472f01b87c6121e5b1a4", # monkey
     "241e5ddbb4423d792216783e9f668bd670b026e4", # ant.tmbundle
-    "bdab9fdc21e6790b479ccb5945b78bc0f6ce2493"  # language-blade
+    "bdab9fdc21e6790b479ccb5945b78bc0f6ce2493", # language-blade
+    "81711c69aa40135de7266c88b2f6ab28dbc1d81e", # atom-language-perl6
+    "808e27f5e44167113198d277f47926c5d482eac8", # atom-language-rust
+    "304be6184f7f344d44a1d13bddf511019624fd22", # language-css
   ].freeze
 
   # List of allowed SPDX license names

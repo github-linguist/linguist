@@ -460,4 +460,8 @@ class TestLanguage < Minitest::Test
       assert !language.color, "Unused colour assigned to #{language.name}"
     end
   end
+
+  def test_non_crash_on_comma
+    assert_nil Language[',']
+  end
 end
