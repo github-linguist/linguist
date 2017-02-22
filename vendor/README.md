@@ -169,7 +169,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **JSONiq:** [wcandillon/language-jsoniq](https://github.com/wcandillon/language-jsoniq)
 - **JSONLD:** [atom/language-javascript](https://github.com/atom/language-javascript)
 - **JSX:** [github-linguist/language-babel](https://github.com/github-linguist/language-babel)
-- **Julia:** [nanoant/Julia.tmbundle](https://github.com/nanoant/Julia.tmbundle)
+- **Julia:** [JuliaEditorSupport/Julia.tmbundle](https://github.com/JuliaEditorSupport/Julia.tmbundle)
 - **Jupyter Notebook:** [textmate/json.tmbundle](https://github.com/textmate/json.tmbundle)
 - **Kit:** [textmate/html.tmbundle](https://github.com/textmate/html.tmbundle)
 - **Kotlin:** [vkostyukov/kotlin-sublime-package](https://github.com/vkostyukov/kotlin-sublime-package)
