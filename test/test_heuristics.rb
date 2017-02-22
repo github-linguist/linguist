@@ -264,4 +264,11 @@ class TestHeuristcs < Minitest::Test
       "XML" => all_fixtures("XML", "*.ts")
     })
   end
+
+  def test_tsx_by_heuristics
+    assert_heuristics({
+      "TypeScript" => all_fixtures("TypeScript", "*.tsx"),
+      "XML" => all_fixtures("XML", "*.tsx")
+    })
+  end
 end
