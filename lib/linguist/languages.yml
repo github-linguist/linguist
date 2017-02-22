@@ -1588,7 +1588,7 @@ HCL:
   ace_mode: ruby
   codemirror_mode: ruby
   codemirror_mime_type: text/x-ruby
-  tm_scope: source.ruby
+  tm_scope: source.terraform
   language_id: 144
 HLSL:
   type: programming
@@ -1598,7 +1598,7 @@ HLSL:
   - ".fxh"
   - ".hlsli"
   ace_mode: text
-  tm_scope: none
+  tm_scope: source.hlsl
   language_id: 145
 HTML:
   type: markup
@@ -2537,6 +2537,15 @@ Mercury:
   - ".moo"
   tm_scope: source.mercury
   language_id: 229
+Meson:
+  type: programming
+  color: "#007800"
+  filenames:
+  - meson.build
+  - meson_options.txt
+  tm_scope: source.meson
+  ace_mode: text
+  language_id: 799141244
 Metal:
   type: programming
   color: "#8f14e9"
