@@ -53,4 +53,8 @@ class TestClassifier < Minitest::Test
       assert_equal language.name, results.first[0], "#{sample[:path]}\n#{results.inspect}"
     end
   end
+
+  def test_classify_empty_languages
+    assert_equal [], Classifier.classify(Samples.cache, fixture("Ruby/foo.rb"), [])
+  end
 end
