@@ -465,5 +465,13 @@ module Linguist
         Language["Scilab"]
       end
     end
+
+    disambiguate ".tsx" do |data|
+      if /^\s*(import.+(from\s+|require\()['"]react|\/\/\/\s*<reference\s)/.match(data)
+        Language["TypeScript"]
+      elsif /^\s*<\?xml\s+version/i.match(data)
+        Language["XML"]
+      end
+    end
   end
 end
