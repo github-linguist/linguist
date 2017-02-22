@@ -1,17 +1,29 @@
 require_relative "./helper"
 
-class TestBlob < Minitest::Test
+class TestFileBlob < Minitest::Test
   include Linguist
 
+  def silence_warnings
+    original_verbosity = $VERBOSE
+    $VERBOSE = nil
+    yield
+  ensure
+    $VERBOSE = original_verbosity
+  end
+
   def setup
-    # git blobs are normally loaded as ASCII-8BIT since they may contain data
-    # with arbitrary encoding not known ahead of time
-    @original_external = Encoding.default_external
-    Encoding.default_external = Encoding.find("ASCII-8BIT")
+    silence_warnings do
+      # git blobs are normally loaded as ASCII-8BIT since they may contain data
+      # with arbitrary encoding not known ahead of time
+      @original_external = Encoding.default_external
+      Encoding.default_external = Encoding.find("ASCII-8BIT")
+    end
   end
 
   def teardown
-    Encoding.default_external = @original_external
+    silence_warnings do
+      Encoding.default_external = @original_external
+    end
   end
 
   def script_blob(name)
@@ -19,7 +31,7 @@ class TestBlob < Minitest::Test
     blob.instance_variable_set(:@name, 'script')
     blob
   end
-  
+
   def test_extensions
     assert_equal [".gitignore"], Linguist::FileBlob.new(".gitignore").extensions
     assert_equal [".xml"],  Linguist::FileBlob.new("build.xml").extensions
@@ -152,7 +164,7 @@ class TestBlob < Minitest::Test
   end
 
   def test_csv
-    assert fixture_blob("Data/cars.csv").csv?
+    assert sample_blob("CSV/cars.csv").csv?
   end
 
   def test_pdf
@@ -282,6 +294,8 @@ class TestBlob < Minitest::Test
     assert !sample_blob("Godeps/Godeps.json").vendored?
     assert sample_blob("Godeps/_workspace/src/github.com/kr/s3/sign.go").vendored?
 
+    assert sample_blob(".indent.pro").vendored?
+
     # Rails vendor/
     assert sample_blob("vendor/plugins/will_paginate/lib/will_paginate.rb").vendored?
 
@@ -305,18 +319,20 @@ class TestBlob < Minitest::Test
     assert sample_blob("some/vendored/path/Chart.js").vendored?
     assert !sample_blob("some/vendored/path/chart.js").vendored?
 
-    # Codemirror deps
+    # CodeMirror deps
     assert sample_blob("codemirror/mode/blah.js").vendored?
     assert sample_blob("codemirror/5.0/mode/blah.js").vendored?
 
     # Debian packaging
     assert sample_blob("debian/cron.d").vendored?
 
+    # Django env
+    assert sample_blob("env/foo.py").vendored?
+
     # Erlang
     assert sample_blob("rebar").vendored?
 
     # git config files
-
     assert_predicate fixture_blob("some/path/.gitattributes"), :vendored?
     assert_predicate fixture_blob(".gitignore"), :vendored?
     assert_predicate fixture_blob("special/path/.gitmodules"), :vendored?
@@ -408,6 +424,22 @@ class TestBlob < Minitest::Test
     assert sample_blob("public/javascripts/tiny_mce.js").vendored?
     assert sample_blob("public/javascripts/tiny_mce_popup.js").vendored?
     assert sample_blob("public/javascripts/tiny_mce_src.js").vendored?
+
+    # Ace Editor
+    assert sample_blob("ace-builds/src/ace.js").vendored?
+    assert sample_blob("static/project/ace-builds/src/ace.js").vendored?
+
+    # Fontello CSS files
+    assert sample_blob("fontello.css").vendored?
+    assert sample_blob("fontello-ie7.css").vendored?
+    assert sample_blob("fontello-codes.css").vendored?
+    assert sample_blob("fontello-codes-ie7.css").vendored?
+    assert sample_blob("fontello-embedded.css").vendored?
+    assert sample_blob("assets/css/fontello.css").vendored?
+    assert sample_blob("assets/css/fontello-ie7.css").vendored?
+    assert sample_blob("assets/css/fontello-codes.css").vendored?
+    assert sample_blob("assets/css/fontello-codes-ie7.css").vendored?
+    assert sample_blob("assets/css/fontello-embedded.css").vendored?
 
     # AngularJS
     assert sample_blob("public/javascripts/angular.js").vendored?
@@ -522,6 +554,9 @@ class TestBlob < Minitest::Test
     assert sample_blob("myapp/My Template.xctemplate/___FILEBASENAME___.h").vendored?
     assert sample_blob("myapp/My Images.xcassets/some/stuff.imageset/Contents.json").vendored?
     assert !sample_blob("myapp/MyData.json").vendored?
+
+    # Jenkins
+    assert sample_blob("Jenkinsfile").vendored?
   end
 
   def test_documentation

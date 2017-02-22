@@ -28,6 +28,7 @@ module Linguist
       @oid = oid
       @path = path
       @mode = mode
+      @data = nil
     end
 
     def git_attributes
@@ -86,8 +87,8 @@ module Linguist
     protected
 
     # Returns true if the attribute is present and not the string "false".
-    def boolean_attribute(attr)
-      attr != "false"
+    def boolean_attribute(attribute)
+      attribute != "false"
     end
 
     def load_blob!

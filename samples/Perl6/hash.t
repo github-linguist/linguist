@@ -12,7 +12,6 @@ unless EVAL 'EVAL("1", :lang<perl5>)' {
 die unless
 EVAL(q/
 package My::Hash;
-use strict;
 
 sub new {
     my ($class, $ref) = @_;

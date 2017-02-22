@@ -1,9 +1,10 @@
 module Linguist
   module Strategy
-    # Detects language based on filename and/or extension
+    # Detects language based on filename
     class Filename
       def self.call(blob, _)
-        Language.find_by_filename(blob.name.to_s)
+        name = blob.name.to_s
+        Language.find_by_filename(name)
       end
     end
   end

@@ -1,0 +1,78 @@
+#!/usr/bin/env ruby
+
+require 'bundler/setup'
+require 'yaml'
+require 'pry'
+
+header = <<-EOF
+# Defines all Languages known to GitHub.
+#
+# type              - Either data, programming, markup, prose, or nil
+# aliases           - An Array of additional aliases (implicitly
+#                     includes name.downcase)
+# ace_mode          - A String name of the Ace Mode used for highlighting whenever
+#                     a file is edited. This must match one of the filenames in http://git.io/3XO_Cg.
+#                     Use "text" if a mode does not exist.
+# codemirror_mode   - A String name of the CodeMirror Mode used for highlighting whenever a file is edited.
+#                     This must match a mode from https://git.io/vi9Fx
+# wrap              - Boolean wrap to enable line wrapping (default: false)
+# extensions        - An Array of associated extensions (the first one is
+#                     considered the primary extension, the others should be
+#                     listed alphabetically)
+# interpreters      - An Array of associated interpreters
+# searchable        - Boolean flag to enable searching (defaults to true)
+# language_id       - Integer used as a language-name-independent indexed field so that we can rename
+#                     languages in Linguist without reindexing all the code on GitHub. Must not be
+#                     changed for existing languages without the explicit permission of GitHub staff.
+# color             - CSS hex color to represent the language. Only used if type is "programming" or "prose".
+# tm_scope          - The TextMate scope that represents this programming
+#                     language. This should match one of the scopes listed in
+#                     the grammars.yml file. Use "none" if there is no grammar
+#                     for this language.
+# group             - Name of the parent language. Languages in a group are counted
+#                     in the statistics as the parent language.
+#
+# Any additions or modifications (even trivial) should have corresponding
+# test changes in `test/test_blob.rb`.
+#
+# Please keep this list alphabetized. Capitalization comes before lowercase.
+
+EOF
+require 'digest'
+
+generated = true if ARGV[0] == "--force"
+update = true if ARGV[0] == "--update"
+
+def generate_language_id(language)
+  Digest::SHA256.hexdigest(language).to_i(16) % (2**30 - 1)
+end
+
+if generated
+  puts "You're regenerating all of the language_id attributes for all Linguist "
+  puts "languages defined in languages.yml. This is almost certainly NOT what"
+  puts "you meant to do!"
+
+  languages = YAML.load(File.read("lib/linguist/languages.yml"))
+  languages.each do |name, vals|
+    vals.merge!('language_id' => generate_language_id(name))
+  end
+
+  File.write("lib/linguist/languages.yml", header + YAML.dump(languages))
+elsif update
+  puts "Adding new language_id attributes to languages.yml that don't have one set"
+  languages = YAML.load(File.read("lib/linguist/languages.yml"))
+
+  missing_count = 0
+
+  languages.each do |name, vals|
+    unless vals.has_key?('language_id')
+      missing_count += 1
+      vals.merge!('language_id' => generate_language_id(name))
+    end
+  end
+
+  File.write("lib/linguist/languages.yml", header + YAML.dump(languages))
+  puts "Updated language_id attributes for #{missing_count} languages"
+else
+  puts "Whatever you want me to do, I can't figure it out. Giving up..."
+end

@@ -1,0 +1,123 @@
+{
+	"name": "Git Commit Message",
+	"scopeName": "text.git-commit",
+	"fileTypes": [
+		"COMMIT_EDITMSG"
+	],
+	"patterns": [
+		{
+			"name": "comment.line.number-sign.git-commit-message",
+			"begin": "^#",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.comment.git-commit-message"
+				}
+			},
+			"end": "$",
+			"patterns": [
+				{
+					"name": "comment.line.on-branch.git-commit-message",
+					"match": "(?:On branch )([^ ]+)",
+					"captures": {
+						"1": {
+							"name": "support.function.branch.git-commit-message"
+						}
+					}
+				},
+				{
+					"name": "comment.line.on-branch.git-commit-message",
+					"match": "Your branch .* '([^ ']+)'",
+					"captures": {
+						"1": {
+							"name": "support.function.branch.git-commit-message"
+						}
+					}
+				},
+				{
+					"name": "comment.line.untracked.git-commit-message",
+					"begin": " Untracked files:",
+					"beginCaptures": {
+						"0": {
+							"name": "entity.definition.untracked.git-commit-message"
+						}
+					},
+					"end": "^#$",
+					"patterns": [
+						{
+							"name": "comment.line.untracked-file.git-commit-message",
+							"match": "\t(.*)$",
+							"captures": {
+								"1": {
+									"name": "support.function.file-status.git-commit-message"
+								},
+								"2": {
+									"name": "constant.character.branch.git-commit-message"
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "comment.line.discarded.git-commit-message",
+					"begin": " Change(?:s not staged for commit|d but not updated):",
+					"beginCaptures": {
+						"0": {
+							"name": "entity.definition.discarded.git-commit-message"
+						}
+					},
+					"end": "^#$",
+					"patterns": [
+						{
+							"name": "comment.line.discarded.git-commit-message",
+							"match": "\t([^:]+):(.*)$",
+							"captures": {
+								"1": {
+									"name": "support.function.file-status.git-commit-message"
+								},
+								"2": {
+									"name": "constant.character.branch.git-commit-message"
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "comment.line.selected.git-commit-message",
+					"begin": " Changes to be committed:",
+					"beginCaptures": {
+						"0": {
+							"name": "entity.definition.selected.git-commit-message"
+						}
+					},
+					"end": "^#$",
+					"patterns": [
+						{
+							"name": "comment.line.selected.git-commit-message",
+							"match": "\t([^:]+):(.*)$",
+							"captures": {
+								"1": {
+									"name": "support.function.file-status.git-commit-message"
+								},
+								"2": {
+									"name": "constant.character.branch.git-commit-message"
+								}
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "meta.diff.git-commit",
+			"comment": "diff at the end of the commit message when using commit -v, or viewing a log. End pattern is just something to be never matched so that the meta continues untill the end of the file.",
+			"begin": "diff\\ \\-\\-git",
+			"end": "(?=xxxxxx)123457",
+			"patterns": [
+				{
+					"include": "source.diff"
+				}
+			]
+		}
+	],
+	"uuid": "de3fb2fc-e564-4a31-9813-5ee26967c5c8"
+}

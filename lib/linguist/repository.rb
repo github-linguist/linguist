@@ -30,6 +30,9 @@ module Linguist
       @repository = repo
       @commit_oid = commit_oid
 
+      @old_commit_oid = nil
+      @old_stats = nil
+
       raise TypeError, 'commit_oid must be a commit SHA1' unless commit_oid.is_a?(String)
     end
 

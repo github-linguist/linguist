@@ -86,6 +86,14 @@ module Linguist
       end
     end
 
+    disambiguate ".builds" do |data|
+      if /^(\s*)(<Project|<Import|<Property|<?xml|xmlns)/i.match(data)
+        Language["XML"]
+      else
+        Language["Text"]
+      end
+    end
+
     disambiguate ".ch" do |data|
       if /^\s*#\s*(if|ifdef|ifndef|define|command|xcommand|translate|xtranslate|include|pragma|undef)\b/i.match(data)
         Language["xBase"]
@@ -99,6 +107,12 @@ module Linguist
         Language["Cool"]
       elsif /\/\* |\/\/ |^\}/.match(data)
         Language["OpenCL"]
+      end
+    end
+
+    disambiguate ".cls" do |data|
+      if /\\\w+{/.match(data)
+        Language["TeX"]
       end
     end
 
@@ -127,11 +141,31 @@ module Linguist
         Language["ECL"]
       end
     end
+    
+    disambiguate ".es" do |data|
+      if /^\s*(?:%%|main\s*\(.*?\)\s*->)/.match(data)
+        Language["Erlang"]
+      elsif /(?:\/\/|("|')use strict\1|export\s+default\s|\/\*.*?\*\/)/m.match(data)
+        Language["JavaScript"]
+      end
+    end
 
-    disambiguate ".for", ".f" do |data|
+    fortran_rx = /^([c*][^abd-z]|      (subroutine|program|end|data)\s|\s*!)/i
+
+    disambiguate ".f" do |data|
       if /^: /.match(data)
         Language["Forth"]
-      elsif /^([c*][^abd-z]|      (subroutine|program|end)\s|\s*!)/i.match(data)
+      elsif data.include?("flowop")
+        Language["Filebench WML"]
+      elsif fortran_rx.match(data)
+        Language["FORTRAN"]
+      end
+    end
+
+    disambiguate ".for" do |data|
+      if /^: /.match(data)
+        Language["Forth"]
+      elsif fortran_rx.match(data)
         Language["FORTRAN"]
       end
     end
@@ -168,6 +202,14 @@ module Linguist
       elsif (/^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>/.match(data) ||
         /^\s*template\s*</.match(data) || /^[ \t]*try/.match(data) || /^[ \t]*catch\s*\(/.match(data) || /^[ \t]*(class|(using[ \t]+)?namespace)\s+\w+/.match(data) || /^[ \t]*(private|public|protected):$/.match(data) || /std::\w+/.match(data))
         Language["C++"]
+      end
+    end
+
+    disambiguate ".inc" do |data|
+      if /^<\?(?:php)?/.match(data)
+        Language["PHP"]
+      elsif /^\s*#(declare|local|macro|while)\s/.match(data)
+        Language["POV-Ray SDL"]
       end
     end
 
@@ -208,12 +250,20 @@ module Linguist
         Language["MUF"]
       elsif /^\s*;/.match(data)
         Language["M"]
-      elsif /^\s*\(\*/.match(data)
+      elsif /\*\)$/.match(data)
         Language["Mathematica"]
       elsif /^\s*%/.match(data)
         Language["Matlab"]
       elsif /^\w+\s*:\s*module\s*{/.match(data)
         Language["Limbo"]
+      end
+    end
+
+    disambiguate ".md" do |data|
+      if /(^[-a-z0-9=#!\*\[|>])|<\//i.match(data) || data.empty?
+        Language["Markdown"]
+      elsif /^(;;|\(define_)/.match(data)
+        Language["GCC machine description"]
       end
     end
 
@@ -228,7 +278,7 @@ module Linguist
     disambiguate ".mod" do |data|
       if data.include?('<!ENTITY ')
         Language["XML"]
-      elsif /MODULE\s\w+\s*;/i.match(data) || /^\s*END \w+;$/i.match(data)
+      elsif /^\s*MODULE [\w\.]+;/i.match(data) || /^\s*END [\w\.]+;/i.match(data)
         Language["Modula-2"]
       else
         [Language["Linux Kernel Module"], Language["AMPL"]]
@@ -238,8 +288,10 @@ module Linguist
     disambiguate ".ms" do |data|
       if /^[.'][a-z][a-z](\s|$)/i.match(data)
         Language["Groff"]
-      elsif /((^|\s)move?[. ])|\.(include|globa?l)\s/.match(data)
+      elsif /(?<!\S)\.(include|globa?l)\s/.match(data) || /(?<!\/\*)(\A|\n)\s*\.[A-Za-z]/.match(data.gsub(/"([^\\"]|\\.)*"|'([^\\']|\\.)*'|\\\s*(?:--.*)?\n/, ""))
         Language["GAS"]
+      else
+        Language["MAXScript"]
       end
     end
 
@@ -274,19 +326,27 @@ module Linguist
     end
 
     disambiguate ".pl" do |data|
-      if /^(use v6|(my )?class|module)/.match(data)
-        Language["Perl6"]
+      if /^[^#]*:-/.match(data)
+        Language["Prolog"]
       elsif /use strict|use\s+v?5\./.match(data)
         Language["Perl"]
-      elsif /^[^#]+:-/.match(data)
-        Language["Prolog"]
+      elsif /^(use v6|(my )?class|module)/.match(data)
+        Language["Perl6"]
       end
     end
 
     disambiguate ".pm", ".t" do |data|
-      if /^(use v6|(my )?class|module)/.match(data)
+      if /use strict|use\s+v?5\./.match(data)
+        Language["Perl"]
+      elsif /^(use v6|(my )?class|module)/.match(data)
         Language["Perl6"]
-      elsif /use strict|use\s+v?5\./.match(data)
+      end
+    end
+
+    disambiguate ".pod" do |data|
+      if /^=\w+$/.match(data)
+        Language["Pod"]
+      else
         Language["Perl"]
       end
     end
@@ -303,11 +363,35 @@ module Linguist
       end
     end
 
+    disambiguate ".props" do |data|
+      if /^(\s*)(<Project|<Import|<Property|<?xml|xmlns)/i.match(data)
+        Language["XML"]
+      elsif /\w+\s*=\s*/i.match(data)
+        Language["INI"]
+      end
+    end
+
     disambiguate ".r" do |data|
       if /\bRebol\b/i.match(data)
         Language["Rebol"]
-      elsif data.include?("<-")
+      elsif /<-|^\s*#/.match(data)
         Language["R"]
+      end
+    end
+
+    disambiguate ".rno" do |data|
+      if /^\.!|^\.end lit(?:eral)?\b/i.match(data)
+        Language["RUNOFF"]
+      elsif /^\.\\" /.match(data)
+        Language["Groff"]
+      end
+    end
+
+    disambiguate ".rpy" do |data|
+      if /(^(import|from|class|def)\s)/m.match(data)
+        Language["Python"]
+      else
+        Language["Ren'Py"]
       end
     end
 
@@ -328,13 +412,13 @@ module Linguist
     end
 
     disambiguate ".sql" do |data|
-      if /^\\i\b|AS \$\$|LANGUAGE '+plpgsql'+/i.match(data) || /SECURITY (DEFINER|INVOKER)/i.match(data) || /BEGIN( WORK| TRANSACTION)?;/i.match(data)
+      if /^\\i\b|AS \$\$|LANGUAGE '?plpgsql'?/i.match(data) || /SECURITY (DEFINER|INVOKER)/i.match(data) || /BEGIN( WORK| TRANSACTION)?;/i.match(data)
         #Postgres
         Language["PLpgSQL"]
       elsif /(alter module)|(language sql)|(begin( NOT)+ atomic)/i.match(data)  || /signal SQLSTATE '[0-9]+'/i.match(data)
         #IBM db2
         Language["SQLPL"]
-      elsif /pragma|\$\$PLSQL_|XMLTYPE|sysdate|systimestamp|\.nextval|connect by|AUTHID (DEFINER|CURRENT_USER)/i.match(data) || /constructor\W+function/i.match(data)
+      elsif /\$\$PLSQL_|XMLTYPE|sysdate|systimestamp|\.nextval|connect by|AUTHID (DEFINER|CURRENT_USER)/i.match(data) || /constructor\W+function/i.match(data)
         #Oracle
         Language["PLSQL"]
       elsif ! /begin|boolean|package|exception/i.match(data)
@@ -342,9 +426,31 @@ module Linguist
         Language["SQL"]
       end
     end
+    
+    disambiguate ".srt" do |data|
+      if /^(\d{2}:\d{2}:\d{2},\d{3})\s*(-->)\s*(\d{2}:\d{2}:\d{2},\d{3})$/.match(data)
+        Language["SubRip Text"]
+      end
+    end
+    
+    disambiguate ".t" do |data|
+      if /^\s*%|^\s*var\s+\w+\s*:\s*\w+/.match(data)
+        Language["Turing"]
+      elsif /^\s*use\s+v6\s*;/.match(data)
+        Language["Perl6"]
+      end
+    end
+    
+    disambiguate ".toc" do |data|
+      if /^## |@no-lib-strip@/.match(data)
+        Language["World of Warcraft Addon Data"]
+      elsif /^\\(contentsline|defcounter|beamer|boolfalse)/.match(data)
+        Language["TeX"]
+      end
+    end
 
     disambiguate ".ts" do |data|
-      if data.include?("<TS ")
+      if data.include?("<TS")
         Language["XML"]
       else
         Language["TypeScript"]
@@ -357,6 +463,14 @@ module Linguist
       # Heads up - we don't usually write heuristics like this (with no regex match)
       else
         Language["Scilab"]
+      end
+    end
+
+    disambiguate ".tsx" do |data|
+      if /^\s*(import.+(from\s+|require\()['"]react|\/\/\/\s*<reference\s)/.match(data)
+        Language["TypeScript"]
+      elsif /^\s*<\?xml\s+version/i.match(data)
+        Language["XML"]
       end
     end
   end
