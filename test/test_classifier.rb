@@ -46,7 +46,7 @@ class TestClassifier < Minitest::Test
   def test_classify_ambiguous_languages
     Samples.each do |sample|
       language  = Linguist::Language.find_by_name(sample[:language])
-      languages = Language.find_by_filename(sample[:path]).map(&:name)
+      languages = Language.find_by_extension(sample[:path]).map(&:name)
       next unless languages.length > 1
 
       results = Classifier.classify(Samples.cache, File.read(sample[:path]), languages)
