@@ -239,6 +239,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **OpenCL:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **OpenEdge ABL:** [jfairbank/Sublime-Text-2-OpenEdge-ABL](https://github.com/jfairbank/Sublime-Text-2-OpenEdge-ABL)
 - **OpenRC runscript:** [atom/language-shellscript](https://github.com/atom/language-shellscript)
+- **OpenSCAD:** [tbuser/openscad.tmbundle](https://github.com/tbuser/openscad.tmbundle)
 - **OpenType Feature File:** [Alhadis/language-fontforge](https://github.com/Alhadis/language-fontforge)
 - **Ox:** [andreashetland/sublime-text-ox](https://github.com/andreashetland/sublime-text-ox)
 - **Oz:** [eregon/oz-tmbundle](https://github.com/eregon/oz-tmbundle)
