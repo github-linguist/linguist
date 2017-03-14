@@ -13,7 +13,6 @@ class TestGrammars < Minitest::Test
   HASH_WHITELIST = [
     "bc12b3b4917eab9aedb87ec1305c2a4376e34fd1", # TextMate bundles
     "16c4748566b3dd996594af0410a1875b22d3a2b3", # language-yaml and atom-salt
-    "ebae2d87e06d3acef075d049fcfc8958c0364863", # go-tmbundle
     "ff21db2554d69d78b2220db5615b16bbba0788d3", # factor
     "b4381ebae3235e91aaf5ccab1e8e94e9ad4faef4", # jflex.tmbundle
     "da39a3ee5e6b4b0d3255bfef95601890afd80709", # SCSS.tmbundle
@@ -22,7 +21,6 @@ class TestGrammars < Minitest::Test
     "60e1fe192238a032341d5dd3cd80535459fc84e4", # language-coffee-script
     "94fbd554ec1837fb7c508fd7425326639c3f4103", # language-csharp
     "70fb557a431891c2d634c33fa7367feab5066fd6", # language-javascript
-    "e0528c23cd967f999e058f1408ccb5b7237daaba", # language-python
     "8653305b358375d0fced85dc24793b99919b11ef", # language-shellscript
     "9f0c0b0926a18f5038e455e8df60221125fc3111", # elixir-tmbundle
     "a4dadb2374282098c5b8b14df308906f5347d79a", # mako-tmbundle
@@ -42,16 +40,10 @@ class TestGrammars < Minitest::Test
     "c9118c370411f2f049c746c0fd096554e877aea2", # atom-language-perl6
     "15a502335012f27f8a5991139298edb87a6e467d", # atom-language-rust
     "304be6184f7f344d44a1d13bddf511019624fd22", # language-css
-    "437a5288fec1cfe57fccf1065702cbf8c1b2dd3b", # PHP-Twig.tmbundle
-    "5a99f728b5d7a216138dbb52f29337858eb3fadf", # SublimeBrainfuck
     "8c538244ba88ef9902a4faf11a2b9acec46f2a4e", # sublime-nginx
-    "4c585ff8dede0e3422b48c1a08af8d3a2520a0aa", # dart-sublime-bundle
-    "1955ed00933a17ac6195425a3b2f7f13ac35a251", # Isabelle.tmbundle
     "82c356d6ecb143a8a20e1658b0d6a2d77ea8126f", # idl.tmbundle
-    "a685013dbb5bf3f03da76bc9a787daa6d63a1207", # Agda.tmbundle
     "9dafd4e2a79cb13a6793b93877a254bc4d351e74", # sublime-text-ox
     "8e111741d97ba2e27b3d18a309d426b4a37e604f", # sublime-varnish
-    "a20ba4269977bd5d9b7178605fb7c80b1ed7af12", # SublimeEthereum
   ].freeze
 
   # List of allowed SPDX license names
