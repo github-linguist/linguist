@@ -1,21 +1,33 @@
 language: ruby
 sudo: false
+
 addons:
   apt:
     packages:
     - libicu-dev
     - libicu48
+
 before_install: script/travis/before_install
+
 script:
   - bundle exec rake
   - script/licensed verify
+
 rvm:
   - 2.1
   - 2.2
   - 2.3.3
   - 2.4.0
+
+matrix:
+  allow_failures:
+  - rvm: 2.4.0
+
 notifications:
   disabled: true
+
 git:
   submodules: false
+  depth: 3
+
 cache: bundler
