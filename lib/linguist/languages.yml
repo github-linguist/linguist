@@ -2456,6 +2456,8 @@ Mako:
   language_id: 221
 Markdown:
   type: prose
+  aliases:
+  - pandoc
   ace_mode: markdown
   codemirror_mode: gfm
   codemirror_mime_type: text/x-gfm
@@ -2930,7 +2932,7 @@ OpenSCAD:
   type: programming
   extensions:
   - ".scad"
-  tm_scope: none
+  tm_scope: source.scad
   ace_mode: scad
   language_id: 266
 OpenType Feature File:
@@ -4730,6 +4732,7 @@ XML:
   - ".vcxproj"
   - ".vssettings"
   - ".vxml"
+  - ".wixproj"
   - ".wsdl"
   - ".wsf"
   - ".wxi"
