@@ -32,7 +32,7 @@ Linguist supports a number of different custom overrides strategies for language
 
 ### Using gitattributes
 
-Add a `.gitattributes` file to your project and use standard git-style path matchers for the files you want to override to set `linguist-documentation`, `linguist-language`, and `linguist-vendored`. `.gitattributes` will be used to determine language statistics, but will not be used to syntax highlight files. To manually set syntax highlighting, use [Vim or Emacs modelines](#using-emacs-or-vim-modelines).
+Add a `.gitattributes` file to your project and use standard git-style path matchers for the files you want to override to set `linguist-documentation`, `linguist-language`, and `linguist-vendored`. `.gitattributes` will be used to determine language statistics and will be used to syntax highlight files. You can also manually set syntax highlighting using [Vim or Emacs modelines](#using-emacs-or-vim-modelines).
 
 ```
 $ cat .gitattributes
@@ -71,7 +71,7 @@ See [Linguist::Generated#generated?](https://github.com/github/linguist/blob/mas
 
 ### Using Emacs or Vim modelines
 
-Alternatively, you can use Vim or Emacs style modelines to set the language for a single file. Modelines can be placed anywhere within a file and are respected when determining how to syntax-highlight a file on GitHub.com
+If you do not want to use `.gitattributes` to override the syntax highlighting used on GitHub.com, you can use Vim or Emacs style modelines to set the language for a single file. Modelines can be placed anywhere within a file and are respected when determining how to syntax-highlight a file on GitHub.com
 
 ##### Vim
 ```
