@@ -3,6 +3,7 @@
 [issues]: https://github.com/github/linguist/issues
 [new-issue]: https://github.com/github/linguist/issues/new
 
+C
 This library is used on GitHub.com to detect blob languages, ignore binary or vendored files, suppress generated files in diffs, and generate language breakdown graphs.
 
 See [Troubleshooting](#troubleshooting) and [`CONTRIBUTING.md`](/CONTRIBUTING.md) before filing an issue or creating a pull request.
