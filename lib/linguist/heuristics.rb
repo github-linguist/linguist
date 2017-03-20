@@ -264,6 +264,8 @@ module Linguist
         Language["Markdown"]
       elsif /^(;;|\(define_)/.match(data)
         Language["GCC machine description"]
+      else
+        Language["Markdown"]
       end
     end
 

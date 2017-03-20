@@ -15,9 +15,9 @@ class << Linguist
   #       see Linguist::LazyBlob and Linguist::FileBlob for examples
   #
   # Returns Language or nil.
-  def detect(blob)
+  def detect(blob, allow_empty: false)
     # Bail early if the blob is binary or empty.
-    return nil if blob.likely_binary? || blob.binary? || blob.empty?
+    return nil if blob.likely_binary? || blob.binary? || (!allow_empty && blob.empty?)
 
     Linguist.instrument("linguist.detection", :blob => blob) do
       # Call each strategy until one candidate is returned.
