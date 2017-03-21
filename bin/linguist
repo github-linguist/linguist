@@ -17,20 +17,48 @@ if path == "--breakdown"
 elsif path == "--json"
   path = Dir.pwd
   json_breakdown = true
+elsif path == "-b"
+  path = Dir.pwd
+  bytes = true
 end
 
 ARGV.shift
 breakdown = true if ARGV[0] == "--breakdown"
 json_breakdown = true if ARGV[0] == "--json"
+bytes = true if ARGV[0] == "-b"
+
+ARGV.shift
+bytes = true if ARGV[0] == "-b"
 
 if File.directory?(path)
   rugged = Rugged::Repository.new(path)
   repo = Linguist::Repository.new(rugged, rugged.head.target_id)
   if !json_breakdown
     repo.languages.sort_by { |_, size| size }.reverse.each do |language, size|
-      percentage = ((size / repo.size.to_f) * 100)
-      percentage = sprintf '%.2f' % percentage
-      puts "%-7s %s" % ["#{percentage}%", language]
+      if !bytes
+        percentage = ((size / repo.size.to_f) * 100)
+        percentage = sprintf '%.2f' % percentage
+        puts "%7s %s" % ["#{percentage}%", language]
+      else
+        size = size.to_f
+        if size < 1024
+          unit = "B"
+        elsif size >=1024 && size < 1048575
+          unit = "K"
+          size /= 1024.0
+        elsif size >= 1048576 && size < 1073741824
+          unit = "M"
+          size /= 1048576.0
+        elsif size >= 1073741824 && size < 1099511627776
+          unit = "G"
+          size /= 1073741824.0
+        else
+          unit = "T"
+          size /= 1099511627776.0
+        end
+        ds = sprintf '%.2f' % size
+        puts "%8s %s" % ["#{ds}#{unit}", language]
+      end
     end
   end
   if breakdown
@@ -77,8 +105,10 @@ else
   Linguist v#{Linguist::VERSION}
   Detect language type for a file, or, given a directory, determine language breakdown.
 
-  Usage: linguist <path>
-         linguist <path> [--breakdown] [--json]
-         linguist [--breakdown] [--json]
+  Usage: linguist [path] [--breakdown] [--json] [-b]
+  [path] is the path to the git repository.
+  [--breakdown] lists the files in tabular form.
+  [--json] dumps data in JSON format
+  [-b] displays file size with unit, depending on the file size.
   HELP
 end
