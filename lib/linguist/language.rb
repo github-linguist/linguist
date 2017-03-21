@@ -11,6 +11,7 @@ require 'linguist/samples'
 require 'linguist/file_blob'
 require 'linguist/blob_helper'
 require 'linguist/strategy/filename'
+require 'linguist/strategy/extension'
 require 'linguist/strategy/modeline'
 require 'linguist/shebang'
 
@@ -20,10 +21,11 @@ module Linguist
   #
   # Languages are defined in `lib/linguist/languages.yml`.
   class Language
-    @languages       = []
-    @index           = {}
-    @name_index      = {}
-    @alias_index     = {}
+    @languages          = []
+    @index              = {}
+    @name_index         = {}
+    @alias_index        = {}
+    @language_id_index  = {}
 
     @extension_index          = Hash.new { |h,k| h[k] = [] }
     @interpreter_index        = Hash.new { |h,k| h[k] = [] }
@@ -84,18 +86,9 @@ module Linguist
         @filename_index[filename] << language
       end
 
-      language
-    end
+      @language_id_index[language.language_id] = language
 
-    # Public: Detects the Language of the blob.
-    #
-    # blob - an object that includes the Linguist `BlobHelper` interface;
-    #       see Linguist::LazyBlob and Linguist::FileBlob for examples
-    #
-    # Returns Language or nil.
-    def self.detect(blob)
-      warn "[DEPRECATED] `Linguist::Language.detect` is deprecated. Use `Linguist.detect`. #{caller[0]}"
-      Linguist.detect(blob)
+      language
     end
 
     # Public: Get all Languages
@@ -137,46 +130,46 @@ module Linguist
 
     # Public: Look up Languages by filename.
     #
+    # The behaviour of this method recently changed.
+    # See the second example below.
+    #
     # filename - The path String.
     #
     # Examples
     #
+    #   Language.find_by_filename('Cakefile')
+    #   # => [#<Language name="CoffeeScript">]
     #   Language.find_by_filename('foo.rb')
-    #   # => [#<Language name="Ruby">]
+    #   # => []
     #
     # Returns all matching Languages or [] if none were found.
     def self.find_by_filename(filename)
       basename = File.basename(filename)
-
-      # find the first extension with language definitions
-      extname = FileBlob.new(filename).extensions.detect do |e|
-        !@extension_index[e].empty?
-      end
-
-      (@filename_index[basename] + @extension_index[extname]).compact.uniq
+      @filename_index[basename]
     end
 
     # Public: Look up Languages by file extension.
     #
-    # extname - The extension String.
+    # The behaviour of this method recently changed.
+    # See the second example below.
+    #
+    # filename - The path String.
     #
     # Examples
     #
-    #   Language.find_by_extension('.rb')
+    #   Language.find_by_extension('dummy.rb')
     #   # => [#<Language name="Ruby">]
-    #
     #   Language.find_by_extension('rb')
-    #   # => [#<Language name="Ruby">]
+    #   # => []
     #
     # Returns all matching Languages or [] if none were found.
-    def self.find_by_extension(extname)
-      extname = ".#{extname}" unless extname.start_with?(".")
-      @extension_index[extname.downcase]
-    end
+    def self.find_by_extension(filename)
+      # find the first extension with language definitions
+      extname = FileBlob.new(filename.downcase).extensions.detect do |e|
+        !@extension_index[e].empty?
+      end
 
-    # DEPRECATED
-    def self.find_by_shebang(data)
-      @interpreter_index[Shebang.interpreter(data)]
+      @extension_index[extname]
     end
 
     # Public: Look up Languages by interpreter.
@@ -193,6 +186,19 @@ module Linguist
       @interpreter_index[interpreter]
     end
 
+    # Public: Look up Languages by its language_id.
+    #
+    # language_id - Integer of language_id
+    #
+    # Examples
+    #
+    #   Language.find_by_id(100)
+    #   # => [#<Language name="Elixir">]
+    #
+    # Returns the matching Language
+    def self.find_by_id(language_id)
+      @language_id_index[language_id.to_i]
+    end
 
     # Public: Look up Language by its name.
     #
@@ -209,7 +215,14 @@ module Linguist
     # Returns the Language or nil if none was found.
     def self.[](name)
       return nil if name.to_s.empty?
-      name && (@index[name.downcase] || @index[name.split(',').first.downcase])
+
+      lang = @index[name.downcase]
+      return lang if lang
+
+      name = name.split(',').first
+      return nil if name.to_s.empty?
+
+      @index[name.downcase]
     end
 
     # Public: A List of popular languages
@@ -243,17 +256,6 @@ module Linguist
       @colors ||= all.select(&:color).sort_by { |lang| lang.name.downcase }
     end
 
-    # Public: A List of languages compatible with Ace.
-    #
-    # TODO: Remove this method in a 5.x release. Every language now needs an ace_mode
-    # key, so this function isn't doing anything unique anymore.
-    #
-    # Returns an Array of Languages.
-    def self.ace_modes
-      warn "This method will be deprecated in a future 5.x release. Every language now has an `ace_mode` set."
-      @ace_modes ||= all.select(&:ace_mode).sort_by { |lang| lang.name.downcase }
-    end
-
     # Internal: Initialize a new Language
     #
     # attributes - A hash of attributes
@@ -270,7 +272,7 @@ module Linguist
       @color = attributes[:color]
 
       # Set aliases
-      @aliases = [default_alias_name] + (attributes[:aliases] || [])
+      @aliases = [default_alias] + (attributes[:aliases] || [])
 
       # Load the TextMate scope name or try to guess one
       @tm_scope = attributes[:tm_scope] || begin
@@ -284,10 +286,12 @@ module Linguist
       end
 
       @ace_mode = attributes[:ace_mode]
+      @codemirror_mode = attributes[:codemirror_mode]
+      @codemirror_mime_type = attributes[:codemirror_mime_type]
       @wrap = attributes[:wrap] || false
 
-      # Set legacy search term
-      @search_term = attributes[:search_term] || default_alias_name
+      # Set the language_id
+      @language_id = attributes[:language_id]
 
       # Set extensions or default to [].
       @extensions = attributes[:extensions] || []
@@ -340,16 +344,16 @@ module Linguist
     # Returns an Array of String names
     attr_reader :aliases
 
-    # Deprecated: Get code search term
+    # Public: Get language_id (used in GitHub search)
     #
     # Examples
     #
-    #   # => "ruby"
-    #   # => "python"
-    #   # => "perl"
+    #   # => "1"
+    #   # => "2"
+    #   # => "3"
     #
-    # Returns the name String
-    attr_reader :search_term
+    # Returns the integer language_id
+    attr_reader :language_id
 
     # Public: Get the name of a TextMate-compatible scope
     #
@@ -366,6 +370,31 @@ module Linguist
     #
     # Returns a String name or nil
     attr_reader :ace_mode
+
+    # Public: Get CodeMirror mode
+    #
+    # Maps to a directory in the `mode/` source code.
+    #   https://github.com/codemirror/CodeMirror/tree/master/mode
+    #
+    # Examples
+    #
+    #  # => "nil"
+    #  # => "javascript"
+    #  # => "clike"
+    #
+    # Returns a String name or nil
+    attr_reader :codemirror_mode
+
+    # Public: Get CodeMirror MIME type mode
+    #
+    # Examples
+    #
+    #  # => "nil"
+    #  # => "text/x-javascript"
+    #  # => "text/x-csrc"
+    #
+    # Returns a String name or nil
+    attr_reader :codemirror_mime_type
 
     # Public: Should language lines be wrapped
     #
@@ -399,22 +428,6 @@ module Linguist
     # Returns the extensions Array
     attr_reader :filenames
 
-    # Deprecated: Get primary extension
-    #
-    # Defaults to the first extension but can be overridden
-    # in the languages.yml.
-    #
-    # The primary extension can not be nil. Tests should verify this.
-    #
-    # This method is only used by app/helpers/gists_helper.rb for creating
-    # the language dropdown. It really should be using `name` instead.
-    # Would like to drop primary extension.
-    #
-    # Returns the extension String.
-    def primary_extension
-      extensions.first
-    end
-
     # Public: Get URL escaped name.
     #
     # Examples
@@ -428,12 +441,13 @@ module Linguist
       EscapeUtils.escape_url(name).gsub('+', '%20')
     end
 
-    # Internal: Get default alias name
+    # Public: Get default alias name
     #
     # Returns the alias name String
-    def default_alias_name
+    def default_alias
       name.downcase.gsub(/\s/, '-')
     end
+    alias_method :default_alias_name, :default_alias
 
     # Public: Get Language group
     #
@@ -543,10 +557,12 @@ module Linguist
       :aliases           => options['aliases'],
       :tm_scope          => options['tm_scope'],
       :ace_mode          => options['ace_mode'],
+      :codemirror_mode   => options['codemirror_mode'],
+      :codemirror_mime_type => options['codemirror_mime_type'],
       :wrap              => options['wrap'],
       :group_name        => options['group'],
       :searchable        => options.fetch('searchable', true),
-      :search_term       => options['search_term'],
+      :language_id       => options['language_id'],
       :extensions        => Array(options['extensions']),
       :interpreters      => options['interpreters'].sort,
       :filenames         => options['filenames'],

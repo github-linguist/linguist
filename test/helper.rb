@@ -35,3 +35,11 @@ def sample_blob_memory(name)
   content = File.read(filepath)
   Linguist::Blob.new(name, content)
 end
+
+def silence_warnings
+  original_verbosity = $VERBOSE
+  $VERBOSE = nil
+  yield
+ensure
+  $VERBOSE = original_verbosity
+end

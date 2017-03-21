@@ -1,0 +1,57 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+ <modelVersion>4.0.0</modelVersion>
+<groupId>awilbur.personal</groupId>
+ <artifactId>hudsel</artifactId>
+ <version>1.0-SNAPSHOT</version>
+ <packaging>jar</packaging>
+<name>hudsel</name>
+<properties>
+ <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+ <skipTests>false</skipTests>
+ </properties>
+<dependencies>
+ <!-- Adding TestNG for unit test support -->
+ <dependency>
+ <groupId>org.testng</groupId>
+ <artifactId>testng</artifactId>
+ <version>6.8</version>
+ </dependency>
+ <!-- Adding Selenium dependency -->
+ <dependency>
+ <groupId>org.seleniumhq.selenium</groupId>
+ <artifactId>selenium-server</artifactId>
+ <version>2.41.0</version>
+ </dependency>
+ </dependencies>
+ <build>
+ <plugins>
+ <!-- using the compiler plug-in to specify that this project is to be compiled with JDK 1.6 -->
+ <!-- This is needed so that we get the JDK annotation support that was introduced recently -->
+ <plugin>
+ <groupId>org.apache.maven.plugins</groupId>
+ <artifactId>maven-compiler-plugin</artifactId>
+ <configuration>
+ <source>1.6</source>
+ <target>1.6</target>
+ </configuration>
+ </plugin>
+ <plugin>
+ <groupId>org.apache.maven.plugins</groupId>
+ <artifactId>maven-surefire-plugin</artifactId>
+ <version>2.6</version>
+ <configuration>
+ <!-- You can specify a specific testng.xml file here <suiteXmlFiles>
+ <suiteXmlFile>src/test/resources/testng-sample.xml</suiteXmlFile> </suiteXmlFiles> -->
+ <!-- Or dynamically with something like '-DsuiteXmlFile=src/test/resources/testng-sample.xml' -->
+ <suiteXmlFiles>
+ <suiteXmlFile>${suiteXmlFile}</suiteXmlFile>
+ </suiteXmlFiles>
+ <!-- Build with '-DskipTests=true' to bypass test execution @ build time Default: false -->
+ <skipTests>${skipTests}</skipTests>
+ <testFailureIgnore>true</testFailureIgnore>
+ </configuration>
+ </plugin>
+ </plugins>
+ </build>
+ </project>

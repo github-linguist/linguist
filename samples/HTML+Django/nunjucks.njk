@@ -1,0 +1,48 @@
+{% from "forms.html" import label as description %}
+
+
+{% macro field(name, value='', type='text') %}
+    <div class="field">
+        <input type="{{ type }}" name="{{ name }}"
+                value="{{ value | escape }}" />
+    </div>
+{% endmacro %}
+
+<html>
+<head>
+    {% extends "head.html" %}
+</head>
+<body>
+{% if horse %}
+    Chuck Norris once kicked a horse in the chin. Its descendants are known today as Giraffes.
+{% elif optimus %}
+    Chuck Norris once urinated in a semi truck's gas tank as a joke....that truck is now known as Optimus Prime.
+{% else %}
+    Chuck Norris threw a grenade and killed 50 people, then the grenade exploded.
+{% endif %}
+
+{% block left %}
+    This is the left side!
+{% endblock %}
+
+{% block right %}
+    This is the right side!
+{% endblock %}
+
+{{ description('Username') }}
+{{ field('user') }}
+{{ field('pass', type='password') }}
+
+<h1>Posts</h1>
+<ul>
+    {% for item in items %}
+        <li>{{ item.title }}</li>
+    {% else %}
+        <li>This would display if the 'item' collection were empty</li>
+    {% endfor %}
+</ul>
+
+{# Don't escape foo #}
+{{ foo | safe }}
+</body>
+</html>

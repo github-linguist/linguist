@@ -15,6 +15,9 @@
 # Dependencies
 - ^[Dd]ependencies/
 
+# Distributions
+- (^|/)dist/
+
 # C deps
 #  https://github.com/joyent/node
 - ^deps/
@@ -46,6 +49,9 @@
 
 # Go dependencies
 - Godeps/_workspace/
+
+# GNU indent profiles
+- .indent.pro
 
 # Minified JavaScript and CSS
 - (\.|-)min\.(js|css)$
@@ -165,7 +171,7 @@
 # Chart.js
 - (^|/)Chart\.js$
 
-# Codemirror
+# CodeMirror
 - (^|/)[Cc]ode[Mm]irror/(\d+\.\d+/)?(lib|mode|theme|addon|keymap|demo)
 
 # SyntaxHighlighter - http://alexgorbatchev.com/
@@ -228,6 +234,15 @@
 
 # Fabric
 - Fabric.framework/
+
+# BuddyBuild
+- BuddyBuildSDK.framework/
+
+# Realm
+- Realm.framework
+
+# RealmSwift
+- RealmSwift.framework
 
 # git config files
 - gitattributes$

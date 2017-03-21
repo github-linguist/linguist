@@ -20,13 +20,19 @@ The Language stats bar displays languages percentages for the files in the repos
 0. If the files are being misclassified, search for [open issues][issues] to see if anyone else has already reported the issue. Any information you can add, especially links to public repositories, is helpful.
 0. If there are no reported issues of this misclassification, [open an issue][new-issue] and include a link to the repository or a sample of the code that is being misclassified.
 
+### There's a problem with the syntax highlighting of a file
+
+Linguist detects the language of a file but the actual syntax-highlighting is powered by a set of language grammars which are included in this project as a set of submodules [and may be found here](https://github.com/github/linguist/blob/master/vendor/README.md).
+
+If you experience an issue with the syntax-highlighting on GitHub, **please report the issue to the upstream grammar repository, not here.** Grammars are updated every time we build the Linguist gem and so upstream bug fixes are automatically incorporated as they are fixed.
+
 ## Overrides
 
 Linguist supports a number of different custom overrides strategies for language definitions and vendored paths.
 
 ### Using gitattributes
 
-Add a `.gitattributes` file to your project and use standard git-style path matchers for the files you want to override to set `linguist-documentation`, `linguist-language`, and `linguist-vendored`. `.gitattributes` will be used to determine language statistics, but will not be used to syntax highlight files. To manually set syntax highlighting, use [Vim or Emacs modelines](#using-emacs-or-vim-modelines).
+Add a `.gitattributes` file to your project and use standard git-style path matchers for the files you want to override to set `linguist-documentation`, `linguist-language`, and `linguist-vendored`. `.gitattributes` will be used to determine language statistics and will be used to syntax highlight files. You can also manually set syntax highlighting using [Vim or Emacs modelines](#using-emacs-or-vim-modelines).
 
 ```
 $ cat .gitattributes
@@ -65,7 +71,7 @@ See [Linguist::Generated#generated?](https://github.com/github/linguist/blob/mas
 
 ### Using Emacs or Vim modelines
 
-Alternatively, you can use Vim or Emacs style modelines to set the language for a single file. Modelines can be placed anywhere within a file and are respected when determining how to syntax-highlight a file on GitHub.com
+If you do not want to use `.gitattributes` to override the syntax highlighting used on GitHub.com, you can use Vim or Emacs style modelines to set the language for a single file. Modelines can be placed anywhere within a file and are respected when determining how to syntax-highlight a file on GitHub.com
 
 ##### Vim
 ```
