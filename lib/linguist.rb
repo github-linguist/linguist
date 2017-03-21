@@ -74,7 +74,7 @@ class << Linguist
   #       end
   #     end
   #
-  #     Linguist.instrumenter = CustomInstrumenter
+  #     Linguist.instrumenter = CustomInstrumenter.new
   #
   # The instrumenter must conform to the `ActiveSupport::Notifications`
   # interface, which defines `#instrument` and accepts:
