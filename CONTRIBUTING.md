@@ -80,12 +80,14 @@ Here's our current build status: [![Build Status](https://api.travis-ci.org/gith
 Linguist is maintained with :heart: by:
 
 - **@Alhadis**
-- **@brandonblack** (GitHub staff)
+- **@BenEddy** (GitHub staff)
+- **@Caged** (GitHub staff)
+- **@grantr** (GitHub staff)
 - **@larsbrinkhoff**
 - **@lildude** (GitHub staff)
-- **@lizzhale** (GitHub staff)
-- **@mikemcquaid** (GitHub staff)
 - **@pchaigno**
+- **@rafer** (GitHub staff)
+- **@shreyasjoshis** (GitHub staff)
 
 As Linguist is a production dependency for GitHub we have a couple of workflow restrictions:
 
