@@ -346,7 +346,7 @@ module Linguist
     end
 
     disambiguate ".pod" do |data|
-      if /^=\w+$/.match(data)
+      if /^=\w+\b/.match(data)
         Language["Pod"]
       else
         Language["Perl"]
