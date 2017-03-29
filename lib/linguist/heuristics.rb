@@ -435,14 +435,6 @@ module Linguist
       end
     end
     
-    disambiguate ".t" do |data|
-      if /^\s*%|^\s*var\s+\w+\s*:\s*\w+/.match(data)
-        Language["Turing"]
-      elsif /^\s*use\s+v6\s*;/.match(data)
-        Language["Perl6"]
-      end
-    end
-    
     disambiguate ".toc" do |data|
       if /^## |@no-lib-strip@/.match(data)
         Language["World of Warcraft Addon Data"]
