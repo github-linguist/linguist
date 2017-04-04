@@ -1,0 +1,280 @@
+#define XRES 640
+#define YRES 480
+
+use Structures:  all;
+use SDLdisplay:  all;
+use StdIO:       all;
+
+/***********************************************************
+ *
+ * Here are our Mandelbrot functions. They are responsible
+ * for generating the right values for each point in the
+ * complex plane.
+ *
+**/
+
+
+/*
+ * at first, the escape iterations.
+ * this is the simplest way to generate the Mandelbrot Set.
+ */
+
+inline
+int calc_escit( complex z, int maxdepth )
+{
+  i = 0;
+  z0 = z;
+
+  while( ( real(z)*real(z) + imag(z)*imag(z) <= tod( 4 ) )
+      && ( i < maxdepth ) )
+  {
+    z = z*z + z0;
+    i++;
+  }
+
+  return( i );
+}
+
+
+/*
+ * as a second way, we can estimate the distance to the
+ * next element of the Mandelbrot set.
+ */
+
+inline
+double calc_distes( complex z, int maxdepth )
+{
+  i = 0;
+  z0 = z;
+  dz = toc(0,0);
+  z2 = toc(0,0);
+
+  do
+  {
+    z2 = z*z + z0;
+    dz = toc(2)*z*dz + toc(1);
+    z = z2;
+    i++;
+  }
+  while( ( real(z)*real(z) + imag(z)*imag(z) <= tod( 4 ) )
+     && ( i < maxdepth ) );
+
+  mz  = Math::sqrt( real(z)*real(z) + imag(z)*imag(z) );
+  mdz = Math::sqrt( real(dz)*real(dz) + imag(dz)*imag(dz) );
+  res = Math::log( mz*mz ) * mz/mdz;
+
+  return( res );
+}
+
+
+/***********************************************************
+ *
+ * this little function converts a hsb-color to rgb.
+ * the hue-values are not correctly converted; this is less bad.
+ */
+
+color hsb2rgb( int h_in , int s_in, int b_in )
+{
+  col = black( );
+
+  if ( b_in == 0 )
+    col = black( );
+  else if ( b_in == 100 && s_in == 0 )
+    col = white( );
+  else if ( s_in == 0 )
+    col = newColor( b_in, b_in, b_in );
+  else
+  {
+    h = tod( h_in ) / 60d;
+    s = tod( s_in ) / 100d;
+    b = tod( b_in ) / 100d;
+
+    i = toi( h ) % 6;
+    f = h - tod( i );
+
+    if ( ( i % 2 ) == 0 )
+      f = 1d - f;
+
+    m = b * ( 1d - s );
+    n = b * ( 1d - s * f );
+
+    b = toi( b * 255d );
+    m = toi( m * 255d );
+    n = toi( n * 255d );
+
+    /*
+     * usual conversion
+
+    if ( 0 == i )
+      col = newColor( b, n, m );
+    else if ( 1 == i )
+      col = newColor( n, b, m );
+    else if ( 2 == i )
+      col = newColor( m, b, n );
+    else if ( 3 == i )
+      col = newColor( m, n, b );
+    else if ( 4 == i )
+      col = newColor( n, m, b );
+    else if ( 5 == i )
+      col = newColor( b, m, n );
+
+     * the color below results in some greenish-blue color
+    **/
+
+    col = newColor( m, n, b );
+  }
+
+  return( col );
+}
+
+
+/***********************************************************
+ *
+ * functions for generating the final mandelbrot-image
+ */
+
+/*
+ * at first, the basic calculating function
+ */
+
+inline
+color conv( complex z, double zoom )
+{
+
+  depth = toi( Math::sqrt( Math::sqrt( zoom ) ) * 100d );
+
+
+
+  /*
+   * calculate the escape iterations and the distance estimation
+   */
+
+  escit = calc_escit( z, depth );
+  distes = calc_distes( z, depth );
+
+  /*
+   * adjust the values for our escape iterations
+   * and for the distance estimator.
+   */
+
+  if ( escit == depth )
+    escit = 0;
+  else
+  {
+    escit = escit * 360;
+    escit = escit / depth;
+  }
+
+  distes = tod(0) - ( ( tod(100) / Math::sqrt( tod( depth ) ) ) *
+                      Math::log( distes ) );
+
+
+  /*
+   * generate some true colors!
+   */
+
+
+  if ( escit == 0 ) col = black( );
+  else              col = hsb2rgb( toi(distes), 100, escit );
+
+
+  return( col );
+}
+
+
+
+/*
+ * this function calls conv for all array-elements in order
+ * to generate the colors. Here we achieve our bonus if we
+ * have parallel processing available.
+ */
+
+
+inline
+int mandelbrot( double xmin, double xmax, double ymin,
+                double zoom, SDLdisplay &disp )
+{
+  step_size = (xmax - xmin) / tod(XRES);
+  ymax = step_size * tod(YRES) +ymin;
+
+
+#ifdef PROPAGATE
+  res, disp = with
+  {
+    ( . <= [y,x] <= . )
+    {
+      z = toc( tod(x) * step_size + xmin, ymax - tod(y) * step_size );
+
+      col = conv( z, zoom );
+      drawPixel( disp, [y,x], col );
+    } : ( 1, disp );
+  } : ( genarray( [YRES,XRES], 0 ), propagate( disp ) );
+#else
+ res = with
+  {
+    ( . <= [y,x] <= . )
+    {
+      z = toc( tod(x) * step_size + xmin, ymax - tod(y) * step_size );
+
+      col = conv( z, zoom );
+    } : ( col);
+  } : ( genarray( [YRES,XRES], red() ));
+  for( i=0; i< YRES; i++) {
+    for( j=0; j< XRES; j++) {
+      drawPixel( disp, [i,j], res[[i,j]] );
+    }
+  }
+#endif
+
+  return(0);
+}
+
+
+
+/*
+ * The main function. Here we take care of the pictures we want to generate
+ * and the display to draw them on.
+ */
+
+
+int main()
+{
+  a = [             -0.7d,          -0.87591d,          -0.759856d,
+               -0.743030d,        -0.7435669d,        -0.74364990d,
+             -0.74364085d,      -0.743643135d,      -0.7436447860d,
+          -0.74364409961d,    -0.74364386269d,    -0.743643900055d,
+        -0.7436438885706d, -0.74364388717342d, -0.743643887037151d];
+
+  b = [                0d,           0.20464d,           0.125547d,
+                0.126433d,         0.1314023d,         0.13188204d,
+              0.13182733d,       0.131825963d,       0.1318252536d,
+           0.13182604688d,     0.13182590271d,     0.131825890901d,
+         0.1318259043124d,  0.13182590425182d,  0.131825904205330d];
+
+  d = [           3.0769d,           0.53184d,           0.051579d,
+                0.016110d,         0.0022878d,         0.00073801d,
+              0.00012068d,       0.000014628d,       0.0000029336d,
+           0.00000066208d,     0.00000013526d,     0.000000049304d,
+         0.0000000041493d,  0.00000000059849d,  0.000000000051299d];
+
+  zoom = [           1.0d,            5.7854d,             59.654d,
+                  190.99d,            1344.9d,             4169.2d,
+                   25497d,            210350d,            1048800d,
+                 4647300d,          22748000d,           62407000d,
+               741550000d,        5141100000d,        59980000000d];
+
+  xmins = a - 0.5d * d;
+  xmaxs = a + 0.5d * d;
+  ymins = b - 0.5d * d;
+
+  disp = initDisplay( [YRES,XRES]);
+
+  for( i=0; i<shape(zoom)[[0]]; i++)
+  {
+    a = mandelbrot( xmins[[i]], xmaxs[[i]], ymins[[i]], zoom[[i]], disp );
+  }
+
+  destroyDisplay( disp);
+
+  return( 0 );
+}
