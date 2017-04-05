@@ -126,6 +126,3 @@ func int B_AssessEnemy()
 	B_Attack (self, other, AR_GuildEnemy, 0);
 	return TRUE;
 };
-
-
-	
