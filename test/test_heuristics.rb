@@ -178,6 +178,13 @@ class TestHeuristcs < Minitest::Test
     })
   end
 
+  def test_ms_by_heuristics
+    assert_heuristics({
+      "Unix Assembly" => all_fixtures("Unix Assembly", "*.ms"),
+      "MAXScript" => all_fixtures("MAXScript", "*.ms")
+    })
+  end
+
   # Candidate languages = ["C++", "Objective-C"]
   def test_obj_c_by_heuristics
     # Only calling out '.h' filenames as these are the ones causing issues
