@@ -144,6 +144,15 @@ class TestHeuristcs < Minitest::Test
     })
   end
 
+  def test_l_by_heuristics
+    assert_heuristics({
+      "Common Lisp" => all_fixtures("Common Lisp", "*.l"),
+      "Lex" => all_fixtures("Lex", "*.l"),
+      "Roff" => all_fixtures("Roff", "*.l"),
+      "PicoLisp" => all_fixtures("PicoLisp", "*.l")
+    })
+  end
+
   def test_ls_by_heuristics
     assert_heuristics({
       "LiveScript" => all_fixtures("LiveScript", "*.ls"),
@@ -180,8 +189,16 @@ class TestHeuristcs < Minitest::Test
 
   def test_ms_by_heuristics
     assert_heuristics({
+      "Roff" => all_fixtures("Roff", "*.ms"),
       "Unix Assembly" => all_fixtures("Unix Assembly", "*.ms"),
       "MAXScript" => all_fixtures("MAXScript", "*.ms")
+    })
+  end
+
+  def test_n_by_heuristics
+    assert_heuristics({
+      "Roff" => all_fixtures("Roff", "*.n"),
+      "Nemerle" => all_fixtures("Nemerle", "*.n")
     })
   end
 
@@ -234,6 +251,13 @@ class TestHeuristcs < Minitest::Test
     assert_heuristics({
       "R" => all_fixtures("R", "*.r") + all_fixtures("R", "*.R"),
       "Rebol" => all_fixtures("Rebol", "*.r")
+    })
+  end
+
+  def test_rno_by_heuristics
+    assert_heuristics({
+      "RUNOFF" => all_fixtures("RUNOFF", "*.rno"),
+      "Roff" => all_fixtures("Roff", "*.rno")
     })
   end
 

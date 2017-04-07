@@ -226,7 +226,7 @@ module Linguist
       elsif /^(%[%{}]xs|<.*>)/.match(data)
         Language["Lex"]
       elsif /^\.[a-z][a-z](\s|$)/i.match(data)
-        Language["Groff"]
+        Language["Roff"]
       elsif /^\((de|class|rel|code|data|must)\s/.match(data)
         Language["PicoLisp"]
       end
@@ -296,7 +296,7 @@ module Linguist
 
     disambiguate ".ms" do |data|
       if /^[.'][a-z][a-z](\s|$)/i.match(data)
-        Language["Groff"]
+        Language["Roff"]
       elsif /(?<!\S)\.(include|globa?l)\s/.match(data) || /(?<!\/\*)(\A|\n)\s*\.[A-Za-z]/.match(data.gsub(/"([^\\"]|\\.)*"|'([^\\']|\\.)*'|\\\s*(?:--.*)?\n/, ""))
         Language["Unix Assembly"]
       else
@@ -306,7 +306,7 @@ module Linguist
 
     disambiguate ".n" do |data|
       if /^[.']/.match(data)
-        Language["Groff"]
+        Language["Roff"]
       elsif /^(module|namespace|using)\s/.match(data)
         Language["Nemerle"]
       end
@@ -392,7 +392,7 @@ module Linguist
       if /^\.!|^\.end lit(?:eral)?\b/i.match(data)
         Language["RUNOFF"]
       elsif /^\.\\" /.match(data)
-        Language["Groff"]
+        Language["Roff"]
       end
     end
 
