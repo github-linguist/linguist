@@ -106,7 +106,7 @@ class TestHeuristcs < Minitest::Test
 
   def test_f_by_heuristics
     assert_heuristics({
-      "FORTRAN" => all_fixtures("FORTRAN", "*.f") + all_fixtures("FORTRAN", "*.for"),
+      "Fortran" => all_fixtures("Fortran", "*.f") + all_fixtures("Fortran", "*.for"),
       "Forth" => all_fixtures("Forth", "*.f") + all_fixtures("Forth", "*.for")
     })
   end

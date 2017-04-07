@@ -165,7 +165,7 @@ module Linguist
       elsif data.include?("flowop")
         Language["Filebench WML"]
       elsif fortran_rx.match(data)
-        Language["FORTRAN"]
+        Language["Fortran"]
       end
     end
 
@@ -173,7 +173,7 @@ module Linguist
       if /^: /.match(data)
         Language["Forth"]
       elsif fortran_rx.match(data)
-        Language["FORTRAN"]
+        Language["Fortran"]
       end
     end
 
