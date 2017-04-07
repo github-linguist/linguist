@@ -270,7 +270,7 @@ module Linguist
       if /(^[-a-z0-9=#!\*\[|>])|<\//i.match(data) || data.empty?
         Language["Markdown"]
       elsif /^(;;|\(define_)/.match(data)
-        Language["GCC machine description"]
+        Language["GCC Machine Description"]
       else
         Language["Markdown"]
       end

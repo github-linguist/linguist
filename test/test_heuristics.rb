@@ -183,7 +183,7 @@ class TestHeuristcs < Minitest::Test
   def test_md_by_heuristics
     assert_heuristics({
       "Markdown" => all_fixtures("Markdown", "*.md"),
-      "GCC machine description" => all_fixtures("GCC machine description", "*.md")
+      "GCC Machine Description" => all_fixtures("GCC Machine Description", "*.md")
     })
   end
 
