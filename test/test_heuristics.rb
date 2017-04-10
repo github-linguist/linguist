@@ -273,7 +273,9 @@ class TestHeuristcs < Minitest::Test
   def test_sol_by_heuristics
     assert_heuristics({
       "Eagle" => all_fixtures("Eagle", "*.sol"),
-      "Solidity" => all_fixtures("Solidity", "*.sol")
+      "Solidity" => all_fixtures("Solidity", "*.sol"),
+      nil => all_fixtures("Eagle", "Solidity/*.sol"),
+      nil => all_fixtures("Solidity", "Eagle/*.sol")
     })
   end
 
