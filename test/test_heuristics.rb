@@ -269,6 +269,14 @@ class TestHeuristcs < Minitest::Test
     })
   end
 
+  # Candidate languages = ["Eagle", "Solidity"]
+  def test_sol_by_heuristics
+    assert_heuristics({
+      "Eagle" => all_fixtures("Eagle", "*.sol"),
+      "Solidity" => all_fixtures("Solidity", "*.sol")
+    })
+  end
+
   # Candidate languages = ["SQL", "PLpgSQL", "SQLPL", "PLSQL"]
   def test_sql_by_heuristics
     assert_heuristics({
