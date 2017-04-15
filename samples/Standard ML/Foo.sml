@@ -1,75 +1,87 @@
+structure LazyBase :> LAZY_BASE =
+struct
+  type 'a lazy = unit -> 'a
 
-structure LazyBase:> LAZY_BASE =
-   struct
-      type 'a lazy = unit -> 'a
+  exception Undefined
 
-      exception Undefined
+  fun delay f = f
+  fun force f = f ()
 
-      fun delay f = f
+  val undefined =
+      fn () => raise Undefined
+end
 
-      fun force f = f()
 
-      val undefined = fn () => raise Undefined
-   end
+structure LazyMemoBase :> LAZY_BASE =
+struct
+  datatype 'a susp = NotYet of unit -> 'a
+                   | Done of 'a
 
-structure LazyMemoBase:> LAZY_BASE =
-   struct 
+  type 'a lazy = unit -> 'a susp ref
 
-      datatype 'a susp = NotYet of unit -> 'a
-                       | Done of 'a
+  exception Undefined
 
-      type 'a lazy = unit -> 'a susp ref
+  fun delay f =
+      let
+          val r = ref (NotYet f)
+      in
+          fn () => r
+      end
 
-      exception Undefined
+  fun force f =
+      case f () of
+        ref (Done x)         => x
+      | r as ref (NotYet f') =>
+        let
+            val a = f' ()
+        in
+            r := Done a;
+            a
+        end
 
-      fun delay f = 
-          let 
-             val r = ref (NotYet f)
-          in
-             fn () => r
-          end
+  val undefined =
+      fn () => raise Undefined
+end
 
-      fun force f = 
-          case f() of
-             ref (Done x) => x
-           | r as ref (NotYet f') =>
-             let
-                val a = f'()
-             in
-                r := Done a
-              ; a
-             end
 
-      val undefined = fn () => raise Undefined
-   end
+functor LazyFn (B: LAZY_BASE) : LAZY' =
+struct
+  open B
 
-functor LazyFn(B: LAZY_BASE): LAZY' =
-   struct
+  fun inject x =
+      delay (fn () => x)
 
-      open B
+  fun isUndefined x =
+      ( ignore (force x)
+      ; false
+      )
+      handle Undefined =>
+        true
 
-      fun inject x = delay (fn () => x)
+  fun toString f x =
+      if isUndefined x
+      then "_|_"
+      else f (force x)
 
-      fun isUndefined x =
-          (ignore (force x)
-         ; false)
-          handle Undefined => true
-                              
-      fun toString f x = if isUndefined x then "_|_" else f (force x)
+  fun eqBy p (x,y) =
+      p (force x,force y)
 
-      fun eqBy p (x,y) = p(force x,force y)
-      fun eq (x,y) = eqBy op= (x,y)
-      fun compare p (x,y) = p(force x,force y)
+  fun eq (x,y) =
+      eqBy op = (x,y)
 
-      structure Ops = 
-         struct 
-            val ! = force
-            val ? = inject
-         end
+  fun compare p (x,y) =
+      p (force x, force y)
 
-      fun map f x = delay (fn () => f (force x))
+  structure Ops =
+  struct
+    val ! = force
+    val ? = inject
+  end
 
-   end
+  fun map f x =
+      delay (fn () => f (force x))
+end
 
-structure Lazy' = LazyFn(LazyBase)
-structure LazyMemo = LazyFn(LazyMemoBase)
+
+structure Lazy'    = LazyFn (LazyBase)
+structure LazyMemo = LazyFn (LazyMemoBase)
