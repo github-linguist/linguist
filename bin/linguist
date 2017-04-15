@@ -8,6 +8,7 @@ require 'json'
 require 'optparse'
 
 path = ARGV[0] || Dir.pwd
+$global_path = path
 
 # special case if not given a directory
 # but still given the --breakdown or --json options/

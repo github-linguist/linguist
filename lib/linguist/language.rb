@@ -85,6 +85,17 @@ module Linguist
       language.filenames.each do |filename|
         @filename_index[filename] << language
       end
+      # An ugly hack to detect C as the language
+      # If there is foo.h, check for foo.c, and return C if true
+      if File.extname(name) == ".h"
+        if($global_path != nil)
+          filepath = $global_path + "/" + File.dirname(name) + "/" \
+                       + File.basename(name, ".h") + ".c"
+          if File.exists?(filepath)
+            return Language["C"]
+          end
+        end
+      end
 
       @language_id_index[language.language_id] = language
 
