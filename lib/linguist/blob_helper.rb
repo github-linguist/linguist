@@ -174,6 +174,13 @@ module Linguist
       extname.downcase == '.stl'
     end
 
+    # Public: Is the blob a supported map format?
+    #
+    # Return true or false
+    def mappable?
+      extname.downcase == '.geojson'
+    end
+
     # Public: Is this blob a CSV file?
     #
     # Return true or false
