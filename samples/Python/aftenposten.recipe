@@ -1,0 +1,57 @@
+# -*- python -*-
+from calibre.web.feeds.news import BasicNewsRecipe
+
+class AftenpostenSb(BasicNewsRecipe):
+     title          = u'Aftenposten.no'
+     __author__     = 'sb'
+     description    = 'Norske nyheter'
+     language = 'no'
+     publication_type = 'newspaper'
+     oldest_article = 1
+     max_articles_per_feed = 100
+     no_stylesheets = True
+     keep_only_tags = [ dict(name='h1', attrs={'class':'articleTitle '}),
+                        dict(name='div', attrs={'id':'articleTop'}),
+                        dict(name='div', attrs={'id':'articleBody'}),
+                        dict(name='p', attrs={'class':'leadText '}),
+                        dict(name='div', attrs={'class':'group publishInfo'}),
+                        dict(name='div', attrs={'class':'group publishInfo meninger'}),
+                        dict(name='div', attrs={'class':'slideShowItemContainer'}),
+                        dict(name='div', attrs={'class':'bodyText widget storyContent'}),
+                        dict(name='div', attrs={'class':'bodyText widget storyContent bodyText'}) ]
+
+     remove_tags    = [ dict(name='div', attrs={'class':'services'}),
+                        dict(name='div', attrs={'class':'span4 pull1 left relationArticle'}),
+                        dict(name='div', attrs={'class':'span4 pull1 left expandParent relationArticle noPrint animate'}),
+                        dict(name='div', attrs={'class':'playerWrapper'}),
+                        dict(name='div', attrs={'class':'addthis_toolbox widget pageTools addThisPlain widget-editable viziwyg-section-622 inpage-widget-6906834 noPrint'}) ]
+
+     feeds          = [(u'Innenriks', u'http://www.aftenposten.no/rss/?kat=nyheter_iriks&img=w780c169'),
+                       (u'Verden', u'http://www.aftenposten.no/rss/?kat=nyheter_uriks&img=w780c169'),
+                       (u'Kultur', u'http://www.aftenposten.no/rss/?kat=kul_und&img=w780c169'),
+                       (u'Økonomi', u'http://www.aftenposten.no/rss/?kat=okonomi&img=w780c169'),
+                       (u'Meninger', u'http://www.aftenposten.no/rss/?kat=meninger&img=w780c169'),
+                       (u'Sport', u'http://www.aftenposten.no/rss/?kat=nyheter_sport&img=w780c169'),
+                       (u'Motorsport', u'http://www.aftenposten.no/rss/?kat=nyheter_sport_ol&img=w780c169') ]
+
+     extra_css = '\
+.leadText { display: inline-block; font-size: 16px; font-weight: 700; line-height: 1.22; } \
+.publishInfo { border-bottom: 2px solid #7C7B7B; border-top: 2px solid #7C7B7B; margin-bottom: 15px; padding: 5px 4px; font-size: 14px; line-height: 1.4; } \
+.bylineTag { border-right: 1px solid #E4E3DC; float: left; font-family: "publicoHeadlineWeb", "Cambria", "Times", "Times New Roman", serif; font-size: 30px; font-weight: 700; margin-right: 5px; padding-right: 5px; position: relative; z-index: 2; } \
+.byline .fn { text-transform: capitalize; } \
+.dateline .prefix { font-size: 9px; } .f-bold { font-weight: 700; } \
+.caption { font-size: 12px; font-weight: 700; } \
+.credits { font-size: 10px; font-weight: 700; margin-top: 6px; } \
+.mediaContainer .media .description { font-size: 14px; font-weight: 700; line-height: 16px; } \
+.mediaContainer .media .description { font-size: 12px; line-height: 16px; padding: 10px; display: block; font-family: "Arial", "Helvetica", sans-serif; } \
+#articleBody #byline { border-bottom: 1px solid #E2E2E2; border-top: 1px solid #E2E2E2; padding: 8px 0px; font-size: 13px; line-height: 20px; font-family: "Arial", "Helvetica", sans-serif; } \
+#articleBody #byline .authors { font-size: 14px; font-weight: 700; letter-spacing: -1px; line-height: 20px; } \
+'
+
+     preprocess_regexps = [
+          (re.compile(ur'\u2006'), lambda match: ' '),
+     ]
+
+     def get_cover_url(self):
+         url = 'http://static.buyandread.com/thumbnail/aftenposten_morgen/aftenposten_morgen.jpg'
+         return url

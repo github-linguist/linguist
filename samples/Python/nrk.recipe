@@ -1,0 +1,62 @@
+# -*- python -*-
+from calibre.web.feeds.news import BasicNewsRecipe
+
+class Nrk(BasicNewsRecipe):
+     title          = u'nrk.no'
+     __author__     = 'sb'
+     description    = 'Norske nyheter'
+     publication_type = 'newspaper'
+     language = 'no'
+     oldest_article = 1
+     max_articles_per_feed = 100
+     no_stylesheets = True
+     keep_only_tags = [ dict(name='div', attrs={'class':'intro-element-article'}),
+                        dict(name='div', attrs={'class':'article-info'}),
+                        dict(name='div', attrs={'class':'article'}),
+                        dict(name='article', attrs={'class':'article widget rich cf'}),
+                        dict(name='article', attrs={'class':'teaser widget rich js-realtime emphasis-low bulletin'}),
+                        dict(name='article', attrs={'class':'teaser widget rich js-realtime emphasis-medium bulletin'}),
+                        dict(name='article', attrs={'class':'teaser widget rich js-realtime emphasis-high bulletin'}),
+                        dict(name='noscript') ]
+
+     remove_tags    = [ dict(name='ul', attrs={'class':'article-tools'}),
+                        dict(name='div', attrs={'id':'share-article'}),
+                        dict(name='div', attrs={'class':'thumbnails'}),
+                        dict(name='div', attrs={'class':'g50 col fr s6 sl9 sl12 sl18 image-reference'}),
+                        dict(name='div', attrs={'class':'g50 col fl s6 sl9 sl12 sl18 quote-reference'}),
+                        dict(name='div', attrs={'class':'g50 col fr s6 sl9 sl12 sl18 quote-reference'}),
+                        dict(name='div', attrs={'class':'g33 col s6 sl9 sl12 sl18 stack fr cf'}),
+                        dict(name='div', attrs={'class':'bulletin-sharing'}),
+                        dict(name='img', attrs={'class':'js-img'}),
+                        dict(name='span', attrs={'class':'bulletin-pitch'}),
+                        dict(name='span', attrs={'class':'nextgroup'}) ]
+
+     feeds          = [(u'NRK Nyheter', u'http://www.nrk.no/nyheiter/siste.rss'),
+                       (u'Norge', u'http://www.nrk.no/norge/siste.rss'),
+                       (u'NRK Østlandssendingen', u'http://www.nrk.no/ostlandssendingen/siste.rss'),
+                       (u'NRK Nordland', u'http://www.nrk.no/nordland/siste.rss'),
+                       (u'Verden', u'http://www.nrk.no/verden/siste.rss'),
+                       (u'Økonomi', u'http://www.nrk.no/nyheiter/okonomi/siste.rss'),
+                       (u'Sport', u'http://www.nrksport.no/siste.rss'),
+                       (u'Yr.no: værnyheter', u'http://www.yr.no/toppsaker.rss'),
+                       (u'Kultur og underholdning', u'http://www.nrk.no/kultur-og-underholdning/siste.rss'),
+                       (u'Helse, forbruk og livsstil', u'http://www.nrk.no/helse-forbruk-og-livsstil/siste.rss'),
+                       (u'Vitenskap og teknologi', u'http://www.nrk.no/vitenskap-og-teknologi/siste.rss'),
+                       (u'Musikk', u'http://www.nrk.no/liste.rss?contentId=1.814122')]
+
+     extra_css = '\
+body.nas .intro-element-article p, body.nas .article p { line-height: 1.5; } \
+.img-center p, .img-left p, .img-right p, .img-center address, .img-left address, .img-right address, .article .img-center p, .article .img-left p, .article .img-right p, .article .img-center address, .article .img-left address, .article .img-right address, .video p { background-color: #E8E8E8; color: #000000; font-size: 10px; font-weight: 400; margin: 0px; padding: 4px; } \
+ul.byline li address span, ul.byline li address a { color: #777777; display: block; font-style: normal; font-weight: 700; line-height: 12px; text-transform: uppercase; } \
+.image figcaption { background-color: #E5E5E5; color: #333333; font-size: 0.8em; font-weight: 400; line-height: 1.4; padding: 0px 9px; } \
+.image figcaption p { font-family: "Helvetica Neue", "Arial", sans-serif; margin: 7px 0px; color: #333333; font-size: 0.8em; font-weight: 400; line-height: 1.4; } \
+* { background-color: transparent; font-family: "Verdana", "Arial", "Helvetica", sans-serif; margin: 0px; padding: 0px; text-align: left; } \
+.bulletin-title { margin: 13px 16px 0px; font-size: 14px; font-weight: 700; text-transform: uppercase; } \
+.bulletin-text p { font-size: 14px; line-height: 1.36em; } \
+'
+     def image_url_processor(self, baseurl, url):
+          return url.replace('http://gfx.nrk.no//', 'http://gfx.nrk.no/')
+
+     def get_cover_url(self):
+         url = 'file:///tmp/nrk.jpg'
+         return url
