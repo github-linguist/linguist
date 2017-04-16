@@ -60,6 +60,7 @@ elsif File.file?(path)
   puts "  type:      #{type}"
   puts "  mime type: #{blob.mime_type}"
   puts "  language:  #{blob.language}"
+  puts "  mime type:  #{blob.language}"
 
   if blob.large?
     puts "  blob is too large to be shown"
