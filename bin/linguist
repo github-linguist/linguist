@@ -47,7 +47,16 @@ if File.directory?(path)
     puts JSON.dump(repo.breakdown_by_file)
   end
 elsif File.file?(path)
-  blob = Linguist::FileBlob.new(path, Dir.pwd)
+  if (ARGV[0])
+    base = ARGV[0]
+    rugged = Rugged::Repository.new(base)
+    relpath = path.sub("#{base}/", '')
+    oid = rugged.blob_at(rugged.head.target_id, relpath).oid
+    blob = Linguist::LazyBlob.new(rugged, oid, path)
+  else
+    blob = Linguist::FileBlob.new(path, Dir.pwd)
+  end
+
   type = if blob.text?
     'Text'
   elsif blob.image?
