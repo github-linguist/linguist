@@ -272,6 +272,10 @@
 # NuGet
 - ^[Pp]ackages\/.+\.\d+\/
 
+# Globalize NuGet package. Ignore the 350 javascript files containing culture settings
+- (^|/)globalize/cultures/globalize.culture.*.js$
+
+
 # ExtJS
 - (^|/)extjs/.*?\.js$
 - (^|/)extjs/.*?\.xml$
