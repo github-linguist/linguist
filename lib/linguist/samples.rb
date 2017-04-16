@@ -35,11 +35,11 @@ module Linguist
         next if category == '.' || category == '..'
 
         dirname = File.join(ROOT, category)
-        Dir.entries(dirname).each do |filename|
+        Dir.entries(dirname).sort!.each do |filename|
           next if filename == '.' || filename == '..'
 
           if filename == 'filenames'
-            Dir.entries(File.join(dirname, filename)).each do |subfilename|
+            Dir.entries(File.join(dirname, filename)).sort!.each do |subfilename|
               next if subfilename == '.' || subfilename == '..'
 
               yield({

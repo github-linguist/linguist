@@ -45,7 +45,7 @@ module Linguist
       db['language_tokens'] ||= {}
       db['languages'] ||= {}
 
-      tokens.each do |token|
+      tokens.sort!.each do |token|
         db['tokens'][language] ||= {}
         db['tokens'][language][token] ||= 0
         db['tokens'][language][token] += 1
