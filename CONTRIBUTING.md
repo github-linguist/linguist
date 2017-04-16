@@ -114,6 +114,8 @@ If you are the current maintainer of this gem:
 0. Tag and push: `git tag vx.xx.xx; git push --tags`
 0. Push to rubygems.org -- `gem push github-linguist-3.0.0.gem`
 
+When adding a new file extension, try to avoid false positives being detected. If the extension is already used by other languages, it may be necessary to add samples for those too.  Hopefully, The samples should provide the classifier with information to resolve the conflict.  As a last resort, a conflict can be resolved by adding a heuristic rule in heuristics.rb.
+
 [grammars]: /grammars.yml
 [languages]: /lib/linguist/languages.yml
 [licenses]: https://github.com/github/linguist/blob/257425141d4e2a5232786bf0b13c901ada075f93/vendor/licenses/config.yml#L2-L11
