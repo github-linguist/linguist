@@ -461,6 +461,8 @@ module Linguist
     disambiguate ".ts" do |data|
       if data.include?("<TS")
         Language["XML"]
+      elsif /\AG/.match(data)
+	    # MPEG transport stream (.ts) starts with 'G'
       else
         Language["TypeScript"]
       end
