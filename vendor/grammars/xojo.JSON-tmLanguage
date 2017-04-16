@@ -1,0 +1,217 @@
+: "XOJO",
+  "scopeName": "source.xojo",
+  "fileTypes": ["vb"],
+  "patterns": [
+  	{ "include": "#singleLineComment" },
+  	{ "include": "#region" },
+	{ "include": "#quotedString" },
+	{ "include": "#compilerOption" },
+	{ "include": "#importDefinition" },
+	{ "include": "#numericConstant" },
+	{ "include": "#characterOperator" },
+	{ "include": "#lineContinuationOperator" },
+	{ "include": "#wordOperator" },
+	{ "include": "#languageContants" },
+	{ "include": "#compilerDirectives" },
+  	{ "include": "#supportTypes" },
+  	{ "include": "#suportFunctions" },
+  	{ "include": "#linqKeywords" },
+	{ "include": "#languageVariable" },
+	{ "include": "#namespaceDefinition" },
+	{ "include": "#moduleDefinition" },
+	{ "include": "#interfaceDefinition" },
+  	{ "include": "#classDefinition" },
+  	{ "include": "#functionDefinition" },
+  	{ "include": "#lambdaDefinition" },
+  	{ "include": "#propertyDefinition" },
+  	{ "include": "#propertyGetSet" },
+	{ "include": "#definitionEnd" },
+	{ "include": "#storageModifiers" },
+	{ "include": "#inheritanceModifiers" },
+	{ "include": "#controlKeywords" },
+	{ "include": "#modifierKeywords" },
+	{ "include": "#vbFunctions" }
+  ],
+  "repository": {
+  	"singleLineComment": {
+		"name": "comment.line.singlequote.xojo",
+		"match": "'.*$",
+		"comment": "single quote comment"
+	},
+	"region":{
+		"name": "meta.region.source.xojo",
+		"begin": "^\\s*((?i:#region))",
+		"beginCaptures": {
+			"1": { "name": "keyword.directive.xojo" }
+		},
+		"patterns": [
+			{ "include": "$self" }
+		],
+		"end": "^\\s*((?i:#end region))",
+		"endCaptures": {
+			"1": { "name": "keyword.directive.xojo" }
+		}
+	},
+  	"quotedString": {
+	    "name": "string.quoted.double.xojo",
+		"match": "(\")([^\"]|\"\")*(\")"
+    },
+    "compilerOption": {
+    	"match" :"(?i:^\\s*(option)\\s*(strict|infer|explicit|compare)\\s*(on|off|binary|text))",
+    	"captures": {
+    	    "1": { "name": "keyword.other.compiler-option.xojo" },
+    	    "2": { "name": "support.constant.compiler-option.xojo" },
+    	    "3": { "name": "constant.language.option-value.xojo" }
+    	}
+	},
+	"importDefinition":{
+		"match": "(?i:^\\s*(imports)\\s*([a-zA-Z_]\\w*\\s*=)?\\s*([a-zA-Z_]\\w*\\.?)+)",
+		"captures": {
+		    "1": { "name": "keyword.other.xojo" },
+		    "2": { "name": "variable.other.namespace-alias.xojo" }
+		}
+	},
+    "numericConstant": {
+		"match": "\\b(-?\\d+(\\.?\\d?)*)",
+		"name": "constant.numeric.xojo"
+	},
+	"characterOperator":{
+		"match": "(\\.|\\+=|\\+|\\*=|\\*|\\\\=|\\\\|/=|/|=|-=|-|<|<=|>|>=|&=|&|\\^|\\^=|>>=|>>|<<=|<<|:=)",
+		"name": "keyword.operator.xojo"
+	},
+	"lineContinuationOperator":{
+		"match": "\\w*\\b(\\_)$",
+		"name": "keyword.operator.xojo"
+	},
+	"wordOperator":{
+		"match": "(?i:\\b(mod|not|and|andalso|or|orelse|in|is|isnot|xor|out)\\b)",
+		"name": "keyword.operator.xojo"
+	},
+	"languageContants":{
+		"match": "((?i:true|false|nothing))",
+		"name": "constant.language.xojo"
+	},
+	"compilerDirectives":{
+		"name": "keyword.directive.xojo",
+		"match": "^\\s*(?i:#if|#else|#elseif|#endif|#const|#externalsource|#end|#end externalsource)\\s+"
+	},
+	"supportTypes":{
+		"name": "support.type.xojo",
+		"match": "(?i:\\b(integer|decimal|double|single|date|long|short|char|string|byte|date|boolean|delegate|event|enum|sbyte|uinteger|ulong|ushort|const|object|global|paramarray)\\b)"
+	},
+	"suportFunctions":{
+		"name": "support.function.xojo",
+		"match": "(?i:\\b(new|addressof|addhandler|removehandler|throw|typeof|like|call|synclock)\\b)"
+	},
+	"languageVariable":{
+		"match": "\\b((?i:Me|MyBase|MyClass))\\.",
+		"name": "keyword.other.xojo"
+	},
+	"namespaceDefinition":{
+		"name": "meta.namespace.xojo",
+		"match": "\\b((?i:namespace))\\s+([a-zA-Z_]\\w*)\\s*",
+		"captures": {
+			"1": { "name": "storage.type.namespace.xojo" },
+			"2": { "name": "entity.name.type.namespace.xojo" }
+		}
+	},
+	"moduleDefinition":{
+		"name": "meta.module.xojo",
+		"match": "(?i:\\b(module)\\s+([a-zA-Z_]\\w*)\\s*)",
+		"captures": {
+		    "1": { "name": "storage.type.module.xojo" },
+		    "2": { "name": "entity.name.type.module.xojo" }
+		}
+	},
+	"interfaceDefinition":{
+		"name": "meta.interface.xojo",
+		"match": "(?i:\\b(interface)\\s+([a-zA-Z_]\\w*)\\s*)",
+		"captures": {
+		  	"1": { "name": "storage.type.interface.xojo" },
+			"2": { "name": "entity.name.type.interface.xojo" }
+		}
+	},
+	"classDefinition":{
+		"name": "meta.class.xojo",
+		"match": "(?i:\\b(class)\\s+([a-zA-Z_]\\w*)\\s*)",
+		"captures": {
+			"1": { "name": "storage.type.class.xojo" },
+			"2": { "name": "entity.name.type.class.xojo" }
+		}
+	},
+	"propertyDefinition":{
+		"name": "meta.property.xojo",
+		"begin": "(?i:\\b(property)\\s+([a-zA-Z_]\\w*)\\s*(\\()?)",
+		"beginCaptures":{
+			"1": { "name": "storage.type.property.xojo" },
+			"2": { "name": "entity.name.type.property.xojo" },
+		    "3": { "name": "punctuation.definition.parameters.property.xojo" }
+		},
+		"patterns": [
+			{ "include": "#modifierKeywords" },
+			{ "include": "#supportTypes" }
+		],
+		"end": "(\\))?\\s*",
+		"endCaptures": {
+		    "1": { "name": "punctuation.definition.parameters.property.xojo" }
+		}
+	},
+	"propertyGetSet":{
+		"name": "keyword.other.property.accessor.xojo",
+		"match": "(?i:^\\s*(protected friend|protected|friend|private)?\\s+(get|set)\\s*\\(?\\b)"
+	},
+	"functionDefinition": {
+		"name": "meta.function.xojo",
+		"begin": "(?i:\\b(function|sub)\\s+([a-zA-Z_]\\w*)\\s*(\\()?)",
+		"beginCaptures": {
+			"1": { "name": "support.type.function.xojo" },
+		    "2": { "name": "entity.name.function.xojo" },
+		    "3": { "name": "meta.parameters.xojo"},
+		    "4": { "name": "punctuation.definition.parameters.xojo" }
+		},
+		"patterns": [
+			{ "include": "#modifierKeywords" },
+			{ "include": "#supportTypes" }
+		],
+		"end": "(\\))?\\s*",
+		"endCaptures": {
+		    "1": { "name": "punctuation.definition.parameters.xojo" }
+		}
+	},
+	"definitionEnd":{
+	   "match": "(?i:^\\s*(end)\\s+(function|sub|class|namespace|module|interface|property|addhandler|enum|event|operator|raiseevent|removehandler|select|structure|synclock))",
+	   "name": "keyword.control.end-definition.xojo"
+	},
+	"lambdaDefinition":{
+		"match": "(?i:function|sub)",
+		"name": "support.type.lambda.xojo"
+	},
+	"inheritanceModifiers":{
+		"name": "storage.modifier.inheritance.xojo",
+		"match": "(?i:overloads|overrides|overridable|notoverridable|mustoverride|mustoverride overrides|notoverridable overrides|overloads overrides|mustinherit|notinheritable)"
+	},
+  	"storageModifiers":{
+  		"name": "storage.modifier.access.xojo",
+		"match": "\\b(?i:dim|public|private|protected friend|protected|friend|shadows|static|shared|readonly|default|partial|readonly|writeonly|erase|redim|lib)\\b"
+   	},
+   	"linqKeywords":{
+   		"name": "keyword.control.linq.xojo",
+   		"match": "(?i:\\b(from|aggregate|select|where|order by|join|groupp by|into|group join|equals|let|distinct|skip|skip while|take|take while)\\b)"
+	},
+	"controlKeywords":{
+		"name": "keyword.control.xojo",
+		"match": "(?i:\\b(If|Then|Else|ElseIf|Else If|End If|While|End While|For|End For|To|Each|Case|Select|End Select|Return|Continue|Do|Until|Loop|Wend|Next|End With|With|Exit Do|Exit For|Exit Function|Exit Property|Exit Sub|IIf|Step|GoTo|Try|Catch|Finally|End Try|Using|RaiseEvent|Stop|On Error|Resume|Async|Await|Yield)\\b)"
+	},
+	"modifierKeywords":{
+		"name": "keyword.modifier.xojo",
+		"match": "\\b(?i:As|byval|byref|optional|handles|inherits|implements|withevents|end set|end get|of|alias|declare|widening|narrowing|ansi|assembly|auto|iterator|key|unicode)\\s+"
+	},
+	"vbFunctions":{
+		"match": "\\b((?i:CBool|CByte|CChar|CDate|CDbl|CDec|Char|CInt|CLng|CObj|CSByte|CShort|CSng|CStr|CType|CUInt|CULng|CUShort|DirectCast|GetType|TryCast|GetXmlNamespace))\\(",
+		"captures": {
+		    "1": { "name": "support.function.xojo" }
+		}
+	}
+  },
+  "uuid": "975d5447-0eb5-444c-a471-5934193ca1ea"
+}
