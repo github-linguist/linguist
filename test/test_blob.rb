@@ -245,7 +245,9 @@ class TestBlob < Minitest::Test
     Samples.each do |sample|
       blob = sample_blob_memory(sample[:path])
       assert blob.language, "No language for #{sample[:path]}"
-      assert_equal sample[:language], blob.language.name, blob.name
+      names = [blob.language.name] + blob.language.aliases
+      assert names.include?(sample[:language]),
+             "#{blob.name}: Expected #{names} to include #{sample[:language]}"
     end
 
     # Test language detection for files which shouldn't be used as samples

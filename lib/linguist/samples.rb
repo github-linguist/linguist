@@ -75,7 +75,8 @@ module Linguist
       db['filenames'] = {}
 
       each do |sample|
-        language_name = sample[:language]
+        language = Language[sample[:language]]
+        language_name = language ? language.name : sample[:language]
 
         if sample[:extname]
           db['extnames'][language_name] ||= []
