@@ -1,5 +1,7 @@
 # Linguist
 
+[![Join the chat at https://gitter.im/github/linguist](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/github/linguist?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [issues]: https://github.com/github/linguist/issues
 [new-issue]: https://github.com/github/linguist/issues/new
 
