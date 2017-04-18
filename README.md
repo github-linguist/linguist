@@ -1,5 +1,6 @@
 # Linguist
 
+[![Build Status](https://travis-ci.org/github/linguist.svg)](https://travis-ci.org/github/linguist)
 [issues]: https://github.com/github/linguist/issues
 [new-issue]: https://github.com/github/linguist/issues/new
 
