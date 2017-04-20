@@ -1,4 +1,4 @@
-﻿namespace Nessos.FsPickler.Json
+namespace Nessos.FsPickler.Json
 
     open System
     open System.Collections.Generic

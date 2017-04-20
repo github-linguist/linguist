@@ -1,4 +1,4 @@
-﻿Module Module1
+Module Module1
 
   Sub Main()
     Console.Out.WriteLine("Hello, I am a little sample application to test GitHub's Linguist module.")

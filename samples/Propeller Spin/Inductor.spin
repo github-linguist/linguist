@@ -1,4 +1,4 @@
-﻿{{
+{{
 *****************************************
 * Inductive Sensor Demo v1.0            *
 * Author: Beau Schwabe                  *

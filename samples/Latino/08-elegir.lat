@@ -1,0 +1,70 @@
+#test para sentencia elegir
+c = 'y'
+
+##erro construccion elegir
+#elegir(c)
+#fin
+##Error: Linea 11, 1: error de sintaxis, FIN inesperado
+
+##solo default
+elegir(c)
+defecto:
+     escribir("default")
+fin
+#salida: default
+
+## un solo caso
+elegir(c)
+caso 'y':
+    escribir("c vale y")
+fin
+#salida: c vale y
+
+## multiples casos sin opcion defecto
+elegir(c)
+caso 'x':
+    escribir("c vale x")
+caso 'y':
+    escribir("c vale y")
+caso 'z':
+    escribir("c vale z")
+fin
+#salida: c vale y
+
+## multiples casos con opcion defecto
+elegir(c)
+caso 'x':
+    escribir("c vale x")
+caso 'a':
+    escribir("c vale a")
+caso 'z':
+    escribir("c vale z")
+defecto:
+    escribir("default")
+fin
+#salida: default
+
+#con opcion defecto enteros
+i = 2
+elegir(i)
+  caso 0:
+      escribir("i vale 0")
+  caso 1:
+      escribir("i vale 1")
+  caso 2:
+      escribir("i vale 2")
+  defecto:
+      escribir("i vale 100")
+fin
+#salida: i vale 2
+
+#switch con cadenas
+elegir("hola")
+  caso 1:   #no hay error si se pone otro tipo de dato
+       escribir("1")
+  caso "hola":
+       escribir("hola mundo")
+  caso "dos":
+       escribir(2)
+fin
+#salida hola mundo

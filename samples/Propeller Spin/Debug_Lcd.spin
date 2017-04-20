@@ -1,4 +1,4 @@
-﻿''****************************************
+''****************************************
 ''*  Debug_Lcd v1.2                      *
 ''*  Authors: Jon Williams, Jeff Martin  *
 ''*  Copyright (c) 2006 Parallax, Inc.   *
