@@ -2,7 +2,7 @@
 #
 # type              - Either data, programming, markup, prose, or nil
 # aliases           - An Array of additional aliases (implicitly
-#                     includes name.downcase)
+#                     includes name.downcase.split(' ').join('-'))
 # ace_mode          - A String name of the Ace Mode used for highlighting whenever
 #                     a file is edited. This must match one of the filenames in http://git.io/3XO_Cg.
 #                     Use "text" if a mode does not exist.
