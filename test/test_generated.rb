@@ -79,11 +79,8 @@ class TestGenerated < Minitest::Test
     generated_fixture_loading_data("Data/sourcemap.v3.map")
     generated_fixture_loading_data("Data/sourcemap.v1.map")
 
-    # Yarn lockfile
+    # Yarn locfile
     generated_fixture_loading_data("Data/yarn.lock")
-
-    # Jest snapshot test
-    generated_fixture_loading_data("Data/Jest.js.snap")
 
     # Specflow
     generated_fixture_without_loading_data("Features/BindingCulture.feature.cs")
