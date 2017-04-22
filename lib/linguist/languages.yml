@@ -1594,6 +1594,7 @@ HLSL:
   type: programming
   extensions:
   - ".hlsl"
+  - ".cginc"
   - ".fx"
   - ".fxh"
   - ".hlsli"
@@ -2023,6 +2024,22 @@ JavaScript:
   interpreters:
   - node
   language_id: 183
+Jison:
+  type: programming
+  group: Yacc
+  extensions:
+  - ".jison"
+  tm_scope: source.jison
+  ace_mode: text
+  language_id: 284531423
+Jison Lex:
+  type: programming
+  group: Lex
+  extensions:
+  - ".jisonlex"
+  tm_scope: source.jisonlex
+  ace_mode: text
+  language_id: 406395330
 Julia:
   type: programming
   extensions:
@@ -2440,6 +2457,8 @@ Mako:
   language_id: 221
 Markdown:
   type: prose
+  aliases:
+  - pandoc
   ace_mode: markdown
   codemirror_mode: gfm
   codemirror_mime_type: text/x-gfm
@@ -2447,12 +2466,27 @@ Markdown:
   extensions:
   - ".md"
   - ".markdown"
+  - ".mdown"
+  - ".mdwn"
   - ".mkd"
   - ".mkdn"
   - ".mkdown"
   - ".ron"
+  - ".workbook"
   tm_scope: source.gfm
   language_id: 222
+Marko:
+  group: HTML
+  type: markup
+  tm_scope: text.marko
+  extensions:
+  - ".marko"
+  aliases:
+  - markojs
+  ace_mode: text
+  codemirror_mode: htmlmixed
+  codemirror_mime_type: text/html
+  language_id: 932782397
 Mask:
   type: markup
   color: "#f97732"
@@ -2914,7 +2948,7 @@ OpenSCAD:
   type: programming
   extensions:
   - ".scad"
-  tm_scope: none
+  tm_scope: source.scad
   ace_mode: scad
   language_id: 266
 OpenType Feature File:
@@ -3382,6 +3416,7 @@ Python:
   - ".lmi"
   - ".py3"
   - ".pyde"
+  - ".pyi"
   - ".pyp"
   - ".pyt"
   - ".pyw"
@@ -3730,10 +3765,10 @@ Ruby:
   extensions:
   - ".rb"
   - ".builder"
+  - ".eye"
   - ".fcgi"
   - ".gemspec"
   - ".god"
-  - ".irbrc"
   - ".jbuilder"
   - ".mspec"
   - ".pluginspec"
@@ -3755,6 +3790,7 @@ Ruby:
   - jruby
   - rbx
   filenames:
+  - ".irbrc"
   - ".pryrc"
   - Appraisals
   - Berksfile
@@ -3770,6 +3806,7 @@ Ruby:
   - Mavenfile
   - Podfile
   - Puppetfile
+  - Rakefile
   - Snapfile
   - Thorfile
   - Vagrantfile
@@ -3988,6 +4025,13 @@ Self:
   tm_scope: none
   ace_mode: text
   language_id: 345
+ShaderLab:
+  type: programming
+  extensions:
+  - ".shader"
+  ace_mode: text
+  tm_scope: source.shaderlab
+  language_id: 664257356
 Shell:
   type: programming
   color: "#89e051"
@@ -4720,8 +4764,11 @@ XML:
   - ".ux"
   - ".vbproj"
   - ".vcxproj"
+  - ".vsixmanifest"
   - ".vssettings"
+  - ".vstemplate"
   - ".vxml"
+  - ".wixproj"
   - ".wsdl"
   - ".wsf"
   - ".wxi"

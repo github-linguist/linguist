@@ -13,36 +13,37 @@ class TestGrammars < Minitest::Test
   HASH_WHITELIST = [
     "bc12b3b4917eab9aedb87ec1305c2a4376e34fd1", # TextMate bundles
     "16c4748566b3dd996594af0410a1875b22d3a2b3", # language-yaml and atom-salt
-    "ebae2d87e06d3acef075d049fcfc8958c0364863", # go-tmbundle
     "ff21db2554d69d78b2220db5615b16bbba0788d3", # factor
-    "b9a7428fd036eed8503995e06e989180c276b17d", # jflex.tmbundle
+    "b4381ebae3235e91aaf5ccab1e8e94e9ad4faef4", # jflex.tmbundle
     "da39a3ee5e6b4b0d3255bfef95601890afd80709", # SCSS.tmbundle
-    "5f772ff20ddf3dbac1ec9b6a98c5aa50ace555b2", # gradle.tmbundle
     "b5432a1e1055de7eeede2dddf91e009480651fd6", # jasmin-sublime
-    "74143c4d2a5649eb179105afcb37f466558c22ce", # language-clojure
-    "760471435f5ab0b9dc99a628203cd8f9156d28ce", # language-coffee-script
+    "170b35df61879139b88379a8f1bfd86289c13599", # language-clojure
+    "60e1fe192238a032341d5dd3cd80535459fc84e4", # language-coffee-script
     "94fbd554ec1837fb7c508fd7425326639c3f4103", # language-csharp
     "70fb557a431891c2d634c33fa7367feab5066fd6", # language-javascript
-    "e0528c23cd967f999e058f1408ccb5b7237daaba", # language-python
     "8653305b358375d0fced85dc24793b99919b11ef", # language-shellscript
     "9f0c0b0926a18f5038e455e8df60221125fc3111", # elixir-tmbundle
-    "90af581219debd4e90ef041b46c294e8b4ae6d14", # mako-tmbundle
+    "a4dadb2374282098c5b8b14df308906f5347d79a", # mako-tmbundle
     "b9b24778619dce325b651f0d77cbc72e7ae0b0a3", # Julia.tmbundle
     "e06722add999e7428048abcc067cd85f1f7ca71c", # r.tmbundle
     "50b14a0e3f03d7ca754dac42ffb33302b5882b78", # smalltalk-tmbundle
     "eafbc4a2f283752858e6908907f3c0c90188785b", # gap-tmbundle
-    "1faa3a44cac6070f22384332434af37dfaaf2f70", # Stylus
+    "22b3bf41b9e3e8c22357ee12265f149d68aae60a", # Stylus
     "c87e7e574fca543941650e5b0a144b44c02c55d8", # language-crystal
-    "c78ec142ac3126cf639cfd67bd646ed8226d8b74", # atom-language-purescript
-    "341d7f66806fc41d081133d6e51ade856352e056", # FreeMarker.tmbundle
+    "ace112feb693358db2970d0805f6894b745e14b5", # atom-language-purescript
+    "a626362e3efd030c1d97c0faf422cf8c2dfaea54", # FreeMarker.tmbundle
     "15a394f6bc43400946570b299aee8ae264a1e3ff", # language-renpy
-    "8ccf886749c32fb7e65d4d1316a7ed0479c93dc9", # language-less
+    "74bb588102e8f332970a0fcabe36299e0806f130", # language-less
     "2f03492b52d7dd83b4e7472f01b87c6121e5b1a4", # monkey
-    "241e5ddbb4423d792216783e9f668bd670b026e4", # ant.tmbundle
+    "784da5ce445892bc3e26beeb6a4402bbc5ca997e", # ant.tmbundle
     "bdab9fdc21e6790b479ccb5945b78bc0f6ce2493", # language-blade
-    "81711c69aa40135de7266c88b2f6ab28dbc1d81e", # atom-language-perl6
-    "808e27f5e44167113198d277f47926c5d482eac8", # atom-language-rust
+    "c9118c370411f2f049c746c0fd096554e877aea2", # atom-language-perl6
+    "15a502335012f27f8a5991139298edb87a6e467d", # atom-language-rust
     "304be6184f7f344d44a1d13bddf511019624fd22", # language-css
+    "8c538244ba88ef9902a4faf11a2b9acec46f2a4e", # sublime-nginx
+    "82c356d6ecb143a8a20e1658b0d6a2d77ea8126f", # idl.tmbundle
+    "9dafd4e2a79cb13a6793b93877a254bc4d351e74", # sublime-text-ox
+    "8e111741d97ba2e27b3d18a309d426b4a37e604f", # sublime-varnish
   ].freeze
 
   # List of allowed SPDX license names

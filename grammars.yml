@@ -56,6 +56,8 @@ vendor/grammars/MQL5-sublime:
 vendor/grammars/MagicPython:
 - source.python
 - source.regexp.python
+- text.python.console
+- text.python.traceback
 vendor/grammars/Modelica:
 - source.modelica
 vendor/grammars/NSIS:
@@ -182,6 +184,7 @@ vendor/grammars/atom-language-1c-bsl:
 - source.sdbl
 vendor/grammars/atom-language-clean:
 - source.clean
+- source.gfm.clean
 vendor/grammars/atom-language-p4:
 - source.p4
 vendor/grammars/atom-language-perl6:
@@ -224,7 +227,6 @@ vendor/grammars/capnproto.tmbundle:
 vendor/grammars/carto-atom:
 - source.css.mss
 vendor/grammars/ceylon-sublimetext:
-- module.ceylon
 - source.ceylon
 vendor/grammars/chapel-tmbundle:
 - source.chapel
@@ -403,6 +405,11 @@ vendor/grammars/language-javascript:
 - source.js
 - source.js.regexp
 - source.js.regexp.replacement
+- source.jsdoc
+vendor/grammars/language-jison:
+- source.jison
+- source.jisonlex
+- source.jisonlex-injection
 vendor/grammars/language-jsoniq:
 - source.jq
 - source.xq
@@ -418,18 +425,16 @@ vendor/grammars/language-ninja:
 - source.ninja
 vendor/grammars/language-povray:
 - source.pov-ray sdl
-vendor/grammars/language-python:
-- text.python.console
-- text.python.traceback
 vendor/grammars/language-regexp:
 - source.regexp
-- source.regexp.comment
 - source.regexp.extended
 vendor/grammars/language-renpy:
 - source.renpy
 vendor/grammars/language-restructuredtext:
 - text.restructuredtext
 vendor/grammars/language-roff:
+- source.ditroff
+- source.ditroff.desc
 - source.ideal
 - source.pic
 - text.roff
@@ -484,6 +489,8 @@ vendor/grammars/make.tmbundle:
 - source.makefile
 vendor/grammars/mako-tmbundle:
 - text.html.mako
+vendor/grammars/marko-tmbundle:
+- text.marko
 vendor/grammars/mathematica-tmbundle:
 - source.mathematica
 vendor/grammars/matlab.tmbundle:
@@ -521,6 +528,8 @@ vendor/grammars/ooc.tmbundle:
 - source.ooc
 vendor/grammars/opa.tmbundle:
 - source.opa
+vendor/grammars/openscad.tmbundle:
+- source.scad
 vendor/grammars/oz-tmbundle/Syntaxes/Oz.tmLanguage:
 - source.oz
 vendor/grammars/parrot:

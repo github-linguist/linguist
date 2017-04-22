@@ -125,11 +125,18 @@ module Linguist
     end
 
     disambiguate ".d" do |data|
-      if /^module /.match(data)
+      # see http://dlang.org/spec/grammar
+      # ModuleDeclaration | ImportDeclaration | FuncDeclaration | unittest
+      if /^module\s+[\w.]*\s*;|import\s+[\w\s,.:]*;|\w+\s+\w+\s*\(.*\)(?:\(.*\))?\s*{[^}]*}|unittest\s*(?:\(.*\))?\s*{[^}]*}/.match(data)
         Language["D"]
-      elsif /^((dtrace:::)?BEGIN|provider |#pragma (D (option|attributes)|ident)\s)/.match(data)
+      # see http://dtrace.org/guide/chp-prog.html, http://dtrace.org/guide/chp-profile.html, http://dtrace.org/guide/chp-opt.html
+      elsif /^(\w+:\w*:\w*:\w*|BEGIN|END|provider\s+|(tick|profile)-\w+\s+{[^}]*}|#pragma\s+D\s+(option|attributes|depends_on)\s|#pragma\s+ident\s)/.match(data)
         Language["DTrace"]
-      elsif /(\/.*:( .* \\)$| : \\$|^ : |: \\$)/.match(data)
+      # path/target : dependency \
+      # target : \
+      #  : dependency
+      # path/file.ext1 : some/path/../file.ext2
+      elsif /([\/\\].*:\s+.*\s\\$|: \\$|^ : |^[\w\s\/\\.]+\w+\.\w+\s*:\s+[\w\s\/\\.]+\w+\.\w+)/.match(data)
         Language["Makefile"]
       end
     end
@@ -264,6 +271,8 @@ module Linguist
         Language["Markdown"]
       elsif /^(;;|\(define_)/.match(data)
         Language["GCC machine description"]
+      else
+        Language["Markdown"]
       end
     end
 
@@ -289,7 +298,7 @@ module Linguist
       if /^[.'][a-z][a-z](\s|$)/i.match(data)
         Language["Groff"]
       elsif /(?<!\S)\.(include|globa?l)\s/.match(data) || /(?<!\/\*)(\A|\n)\s*\.[A-Za-z]/.match(data.gsub(/"([^\\"]|\\.)*"|'([^\\']|\\.)*'|\\\s*(?:--.*)?\n/, ""))
-        Language["GAS"]
+        Language["Unix Assembly"]
       else
         Language["MAXScript"]
       end
@@ -344,7 +353,7 @@ module Linguist
     end
 
     disambiguate ".pod" do |data|
-      if /^=\w+$/.match(data)
+      if /^=\w+\b/.match(data)
         Language["Pod"]
       else
         Language["Perl"]

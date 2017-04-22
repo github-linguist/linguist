@@ -75,7 +75,7 @@ elsif File.file?(path)
 else
   abort <<-HELP
   Linguist v#{Linguist::VERSION}
-  Detect language type for a file, or, given a directory, determine language breakdown.
+  Detect language type for a file, or, given a repository, determine language breakdown.
 
   Usage: linguist <path>
          linguist <path> [--breakdown] [--json]
