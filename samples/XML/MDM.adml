@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--  (c) 2016 Microsoft Corporation  -->
+<policyDefinitionResources xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" revision="1.0" schemaVersion="1.0" xmlns="http://schemas.microsoft.com/GroupPolicy/2006/07/PolicyDefinitions">
+  <displayName>enter display name here</displayName>
+  <description>enter description here</description>
+  <resources>
+    <stringTable>
+      <string id="MDM">MDM</string>
+      <string id="MDM_MDM_DisplayName">Disable MDM Enrollment</string>
+      <string id="MDM_MDM_Help">This policy setting specifies whether Mobile Device Management (MDM) Enrollment is allowed. When MDM is enabled, it allows the user to have the computer remotely managed by a MDM Server.  
+
+If you do not configure this policy setting, MDM Enrollment will be enabled. 
+
+If you enable this policy setting, MDM Enrollment will be disabled for all users. It will not unenroll existing MDM enrollments.
+
+If you disable this policy setting, MDM Enrollment will be enabled for all users.
+</string>
+    </stringTable>
+  </resources>
+</policyDefinitionResources>
