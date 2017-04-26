@@ -165,7 +165,7 @@ module Linguist
       elsif data.include?("flowop")
         Language["Filebench WML"]
       elsif fortran_rx.match(data)
-        Language["FORTRAN"]
+        Language["Fortran"]
       end
     end
 
@@ -173,7 +173,7 @@ module Linguist
       if /^: /.match(data)
         Language["Forth"]
       elsif fortran_rx.match(data)
-        Language["FORTRAN"]
+        Language["Fortran"]
       end
     end
 
@@ -226,7 +226,7 @@ module Linguist
       elsif /^(%[%{}]xs|<.*>)/.match(data)
         Language["Lex"]
       elsif /^\.[a-z][a-z](\s|$)/i.match(data)
-        Language["Groff"]
+        Language["Roff"]
       elsif /^\((de|class|rel|code|data|must)\s/.match(data)
         Language["PicoLisp"]
       end
@@ -270,7 +270,7 @@ module Linguist
       if /(^[-a-z0-9=#!\*\[|>])|<\//i.match(data) || data.empty?
         Language["Markdown"]
       elsif /^(;;|\(define_)/.match(data)
-        Language["GCC machine description"]
+        Language["GCC Machine Description"]
       else
         Language["Markdown"]
       end
@@ -296,7 +296,7 @@ module Linguist
 
     disambiguate ".ms" do |data|
       if /^[.'][a-z][a-z](\s|$)/i.match(data)
-        Language["Groff"]
+        Language["Roff"]
       elsif /(?<!\S)\.(include|globa?l)\s/.match(data) || /(?<!\/\*)(\A|\n)\s*\.[A-Za-z]/.match(data.gsub(/"([^\\"]|\\.)*"|'([^\\']|\\.)*'|\\\s*(?:--.*)?\n/, ""))
         Language["Unix Assembly"]
       else
@@ -306,7 +306,7 @@ module Linguist
 
     disambiguate ".n" do |data|
       if /^[.']/.match(data)
-        Language["Groff"]
+        Language["Roff"]
       elsif /^(module|namespace|using)\s/.match(data)
         Language["Nemerle"]
       end
@@ -392,7 +392,7 @@ module Linguist
       if /^\.!|^\.end lit(?:eral)?\b/i.match(data)
         Language["RUNOFF"]
       elsif /^\.\\" /.match(data)
-        Language["Groff"]
+        Language["Roff"]
       end
     end
 
