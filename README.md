@@ -15,10 +15,10 @@ See [Troubleshooting](#troubleshooting) and [`CONTRIBUTING.md`](/CONTRIBUTING.md
 
 The Language stats bar displays languages percentages for the files in the repository. The percentages are calculated based on the bytes of code for each language as reported by the [List Languages](https://developer.github.com/v3/repos/#list-languages) API. If the bar is reporting a language that you don't expect:
 
-0. Click on the name of the language in the stats bar to see a list of the files that are identified as that language.
-0. If you see files that you didn't write, consider moving the files into one of the [paths for vendored  code](/lib/linguist/vendor.yml), or use the [manual overrides](#overrides) feature to ignore them.
-0. If the files are being misclassified, search for [open issues][issues] to see if anyone else has already reported the issue. Any information you can add, especially links to public repositories, is helpful.
-0. If there are no reported issues of this misclassification, [open an issue][new-issue] and include a link to the repository or a sample of the code that is being misclassified.
+1. Click on the name of the language in the stats bar to see a list of the files that are identified as that language.
+1. If you see files that you didn't write, consider moving the files into one of the [paths for vendored  code](/lib/linguist/vendor.yml), or use the [manual overrides](#overrides) feature to ignore them.
+1. If the files are being misclassified, search for [open issues][issues] to see if anyone else has already reported the issue. Any information you can add, especially links to public repositories, is helpful.
+1. If there are no reported issues of this misclassification, [open an issue][new-issue] and include a link to the repository or a sample of the code that is being misclassified.
 
 ### There's a problem with the syntax highlighting of a file
 

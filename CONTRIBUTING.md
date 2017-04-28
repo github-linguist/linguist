@@ -10,15 +10,15 @@ We try only to add new extensions once they have some usage on GitHub. In most c
 
 To add support for a new extension:
 
-0. Add your extension to the language entry in [`languages.yml`][languages], keeping the extensions in alphabetical order.
-0. Add at least one sample for your extension to the [samples directory][samples] in the correct subdirectory.
-0. Open a pull request, linking to a [GitHub search result](https://github.com/search?utf8=%E2%9C%93&q=extension%3Aboot+NOT+nothack&type=Code&ref=searchresults) showing in-the-wild usage.
+1. Add your extension to the language entry in [`languages.yml`][languages], keeping the extensions in alphabetical order.
+1. Add at least one sample for your extension to the [samples directory][samples] in the correct subdirectory.
+1. Open a pull request, linking to a [GitHub search result](https://github.com/search?utf8=%E2%9C%93&q=extension%3Aboot+NOT+nothack&type=Code&ref=searchresults) showing in-the-wild usage.
 
 In addition, if this extension is already listed in [`languages.yml`][languages] then sometimes a few more steps will need to be taken:
 
-0. Make sure that example `.yourextension` files are present in the [samples directory][samples] for each language that uses `.yourextension`.
-0. Test the performance of the Bayesian classifier with a relatively large number (1000s) of sample `.yourextension` files. (ping **@bkeepers** to help with this) to ensure we're not misclassifying files.
-0. If the Bayesian classifier does a bad job with the sample `.yourextension` files then a [heuristic](https://github.com/github/linguist/blob/master/lib/linguist/heuristics.rb) may need to be written to help.
+1. Make sure that example `.yourextension` files are present in the [samples directory][samples] for each language that uses `.yourextension`.
+1. Test the performance of the Bayesian classifier with a relatively large number (1000s) of sample `.yourextension` files. (ping **@bkeepers** to help with this) to ensure we're not misclassifying files.
+1. If the Bayesian classifier does a bad job with the sample `.yourextension` files then a [heuristic](https://github.com/github/linguist/blob/master/lib/linguist/heuristics.rb) may need to be written to help.
 
 
 ## Adding a language
@@ -27,17 +27,17 @@ We try only to add languages once they have some usage on GitHub. In most cases 
 
 To add support for a new language:
 
-0. Add an entry for your language to [`languages.yml`][languages]. Omit the `language_id` field for now.
-0. Add a grammar for your language: `script/add-grammar https://github.com/JaneSmith/MyGrammar`. Please only add grammars that have [one of these licenses][licenses].
-0. Add samples for your language to the [samples directory][samples] in the correct subdirectory.
-0. Add a `language_id` for your language using `script/set-language-ids`. **You should only ever need to run `script/set-language-ids --update`. Anything other than this risks breaking GitHub search :cry:**
-0. Open a pull request, linking to a [GitHub search result](https://github.com/search?utf8=%E2%9C%93&q=extension%3Aboot+NOT+nothack&type=Code&ref=searchresults) showing in-the-wild usage.
+1. Add an entry for your language to [`languages.yml`][languages]. Omit the `language_id` field for now.
+1. Add a grammar for your language: `script/add-grammar https://github.com/JaneSmith/MyGrammar`. Please only add grammars that have [one of these licenses][licenses].
+1. Add samples for your language to the [samples directory][samples] in the correct subdirectory.
+1. Add a `language_id` for your language using `script/set-language-ids`. **You should only ever need to run `script/set-language-ids --update`. Anything other than this risks breaking GitHub search :cry:**
+1. Open a pull request, linking to a [GitHub search result](https://github.com/search?utf8=%E2%9C%93&q=extension%3Aboot+NOT+nothack&type=Code&ref=searchresults) showing in-the-wild usage.
 
 In addition, if your new language defines an extension that's already listed in [`languages.yml`][languages] (such as `.foo`) then sometimes a few more steps will need to be taken:
 
-0. Make sure that example `.foo` files are present in the [samples directory][samples] for each language that uses `.foo`.
-0. Test the performance of the Bayesian classifier with a relatively large number (1000s) of sample `.foo` files. (ping **@bkeepers** to help with this) to ensure we're not misclassifying files.
-0. If the Bayesian classifier does a bad job with the sample `.foo` files then a [heuristic](https://github.com/github/linguist/blob/master/lib/linguist/heuristics.rb) may need to be written to help.
+1. Make sure that example `.foo` files are present in the [samples directory][samples] for each language that uses `.foo`.
+1. Test the performance of the Bayesian classifier with a relatively large number (1000s) of sample `.foo` files. (ping **@bkeepers** to help with this) to ensure we're not misclassifying files.
+1. If the Bayesian classifier does a bad job with the sample `.foo` files then a [heuristic](https://github.com/github/linguist/blob/master/lib/linguist/heuristics.rb) may need to be written to help.
 
 Remember, the goal here is to try and avoid false positives!
 
@@ -98,21 +98,21 @@ As Linguist is a production dependency for GitHub we have a couple of workflow r
 
 If you are the current maintainer of this gem:
 
-0. Create a branch for the release: `git checkout -b cut-release-vxx.xx.xx`
-0. Make sure your local dependencies are up to date: `script/bootstrap`
-0. If grammar submodules have not been updated recently, update them: `git submodule update --remote && git commit -a`
-0. Ensure that samples are updated: `bundle exec rake samples`
-0. Ensure that tests are green: `bundle exec rake test`
-0. Bump gem version in `lib/linguist/version.rb`, [like this](https://github.com/github/linguist/commit/8d2ea90a5ba3b2fe6e1508b7155aa4632eea2985).
-0. Make a PR to github/linguist, [like this](https://github.com/github/linguist/pull/1238).
-0. Build a local gem: `bundle exec rake build_gem`
-0. Test the gem:
-  0. Bump the Gemfile and Gemfile.lock versions for an app which relies on this gem
-  0. Install the new gem locally
-  0. Test behavior locally, branch deploy, whatever needs to happen
-0. Merge github/linguist PR
-0. Tag and push: `git tag vx.xx.xx; git push --tags`
-0. Push to rubygems.org -- `gem push github-linguist-3.0.0.gem`
+1. Create a branch for the release: `git checkout -b cut-release-vxx.xx.xx`
+1. Make sure your local dependencies are up to date: `script/bootstrap`
+1. If grammar submodules have not been updated recently, update them: `git submodule update --remote && git commit -a`
+1. Ensure that samples are updated: `bundle exec rake samples`
+1. Ensure that tests are green: `bundle exec rake test`
+1. Bump gem version in `lib/linguist/version.rb`, [like this](https://github.com/github/linguist/commit/8d2ea90a5ba3b2fe6e1508b7155aa4632eea2985).
+1. Make a PR to github/linguist, [like this](https://github.com/github/linguist/pull/1238).
+1. Build a local gem: `bundle exec rake build_gem`
+1. Test the gem:
+  1. Bump the Gemfile and Gemfile.lock versions for an app which relies on this gem
+  1. Install the new gem locally
+  1. Test behavior locally, branch deploy, whatever needs to happen
+1. Merge github/linguist PR
+1. Tag and push: `git tag vx.xx.xx; git push --tags`
+1. Push to rubygems.org -- `gem push github-linguist-3.0.0.gem`
 
 [grammars]: /grammars.yml
 [languages]: /lib/linguist/languages.yml
