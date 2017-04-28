@@ -68,6 +68,20 @@ module Linguist
     # Common heuristics
     ObjectiveCRegex = /^\s*(@(interface|class|protocol|property|end|synchronised|selector|implementation)\b|#import\s+.+\.h[">])/
 
+
+    CPPRegexType0 = /^\s*#.*include.*<(stdint|cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream).*>/
+    CPPRegexType1 = /^\s*template\s*</
+    CPPRegexType2 = /^[ \t]*try/
+    CPPRegexType3 = /^[ \t]*catch\s*\(/
+    CPPRegexType4 = /^[ \t]*(class|(using[ \t]+)?namespace)\s+\w+/
+    CPPRegexType5 = /^[ \t]*(private|public|protected):$/
+    CPPRegexType6 = /std::\w+/
+    CPPRegexType7 = /^class\s+/
+    CPPRegexType8 = /^namespace\s+/
+    CPPRegexType9 = /.*#ifdef.*__cplusplus.*/
+    CPPRegexType10 = /^struct\s+/
+    CPPRegexType11 = /.*namespace\s+/
+
     disambiguate ".asc" do |data|
       if /^(----[- ]BEGIN|ssh-(rsa|dss)) /.match(data)
         Language["Public Key"]
@@ -148,7 +162,7 @@ module Linguist
         Language["ECL"]
       end
     end
-    
+
     disambiguate ".es" do |data|
       if /^\s*(?:%%|main\s*\(.*?\)\s*->)/.match(data)
         Language["Erlang"]
@@ -206,9 +220,15 @@ module Linguist
     disambiguate ".h" do |data|
       if ObjectiveCRegex.match(data)
         Language["Objective-C"]
-      elsif (/^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>/.match(data) ||
-        /^\s*template\s*</.match(data) || /^[ \t]*try/.match(data) || /^[ \t]*catch\s*\(/.match(data) || /^[ \t]*(class|(using[ \t]+)?namespace)\s+\w+/.match(data) || /^[ \t]*(private|public|protected):$/.match(data) || /std::\w+/.match(data))
-        Language["C++"]
+      elsif ((CPPRegexType0.match(data) || CPPRegexType1.match(data) || CPPRegexType2.match(data) || CPPRegexType3.match(data)  || CPPRegexType4.match(data) ||
+              CPPRegexType5.match(data) || CPPRegexType6.match(data)) ||CPPRegexType7.match(data) || CPPRegexType8.match(data)) && CPPRegexType9.match(data) == nil
+         if CPPRegexType10.match(data) && CPPRegexType11.match(data) == nil
+            Language["C"]
+         else
+           Language["C++"]
+         end
+      else
+        Language["C"]
       end
     end
 
@@ -435,13 +455,13 @@ module Linguist
         Language["SQL"]
       end
     end
-    
+
     disambiguate ".srt" do |data|
       if /^(\d{2}:\d{2}:\d{2},\d{3})\s*(-->)\s*(\d{2}:\d{2}:\d{2},\d{3})$/.match(data)
         Language["SubRip Text"]
       end
     end
-    
+
     disambiguate ".t" do |data|
       if /^\s*%|^\s*var\s+\w+\s*:\s*\w+/.match(data)
         Language["Turing"]
@@ -449,7 +469,7 @@ module Linguist
         Language["Perl6"]
       end
     end
-    
+
     disambiguate ".toc" do |data|
       if /^## |@no-lib-strip@/.match(data)
         Language["World of Warcraft Addon Data"]
