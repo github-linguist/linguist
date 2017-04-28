@@ -32,12 +32,14 @@ Linguist supports a number of different custom overrides strategies for language
 
 ### Using gitattributes
 
-Add a `.gitattributes` file to your project and use standard git-style path matchers for the files you want to override to set `linguist-documentation`, `linguist-language`, and `linguist-vendored`. `.gitattributes` will be used to determine language statistics and will be used to syntax highlight files. You can also manually set syntax highlighting using [Vim or Emacs modelines](#using-emacs-or-vim-modelines).
+Add a `.gitattributes` file to your project and use standard git-style path matchers for the files you want to override to set `linguist-documentation`, `linguist-language`, `linguist-vendored`, and `linguist-generated`. `.gitattributes` will be used to determine language statistics and will be used to syntax highlight files. You can also manually set syntax highlighting using [Vim or Emacs modelines](#using-emacs-or-vim-modelines).
 
 ```
 $ cat .gitattributes
 *.rb linguist-language=Java
 ```
+
+#### Vendored code
 
 Checking code you didn't write, such as JavaScript libraries, into your git repo is a common practice, but this often inflates your project's language stats and may even cause your project to be labeled as another language. By default, Linguist treats all of the paths defined in [lib/linguist/vendor.yml](https://github.com/github/linguist/blob/master/lib/linguist/vendor.yml) as vendored and therefore doesn't include them in the language statistics for a repository.
 
@@ -49,6 +51,8 @@ special-vendored-path/* linguist-vendored
 jquery.js linguist-vendored=false
 ```
 
+#### Documentation
+
 Just like vendored files, Linguist excludes documentation files from your project's language stats. [lib/linguist/documentation.yml](lib/linguist/documentation.yml) lists common documentation paths and excludes them from the language statistics for your repository.
 
 Use the `linguist-documentation` attribute to mark or unmark paths as documentation.
@@ -59,15 +63,14 @@ project-docs/* linguist-documentation
 docs/formatter.rb linguist-documentation=false
 ```
 
-#### Generated file detection
+#### Generated code
 
 Not all plain text files are true source files. Generated files like minified js and compiled CoffeeScript can be detected and excluded from language stats. As an added bonus, unlike vendored and documentation files, these files are suppressed in diffs.
 
-```ruby
-Linguist::FileBlob.new("underscore.min.js").generated? # => true
 ```
-
-See [Linguist::Generated#generated?](https://github.com/github/linguist/blob/master/lib/linguist/generated.rb).
+$ cat .gitattributes
+Api.elm linguist-generated=true
+```
 
 ### Using Emacs or Vim modelines
 
