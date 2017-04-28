@@ -69,7 +69,7 @@ Not all plain text files are true source files. Generated files like minified js
 
 ```
 $ cat .gitattributes
-**/Api.elm linguist-generated=true
+Api.elm linguist-generated=true
 ```
 
 ### Using Emacs or Vim modelines
