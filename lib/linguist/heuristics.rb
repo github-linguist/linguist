@@ -204,34 +204,34 @@ module Linguist
     end
 
     disambiguate ".h" do |data|
-      # Before adding a new regex try to verify if your new search pattern fits inside some previous one.
-      # Tip: The variable names are meaningful.
-      CPPCommonIncludes = /^\s*#.*include.*<(stdint|cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream).*>/ unless const_defined?(:CPPCommonIncludes)
-      CPPTemplateDecl = /^\s*template\s*</ unless const_defined?(:CPPTemplateDecl)
-      CPPTryStmt = /^[ \t]*try/ unless const_defined?(:CPPTryStmt)
-      CPPCatchStmt = /^[ \t]*catch\s*\(/ unless const_defined?(:CPPCatchStmt)
-      CPPClassRefOrUsingNamespace = /^[ \t]*(class|(using[ \t]+)?namespace)\s+\w+/ unless const_defined?(:CPPClassRefOrUsingNamespace)
-      CPPClassAccessModifiers = /^[ \t]*(private|public|protected):$/ unless const_defined?(:CPPClassAccessModifiers)
-      CPPStdNamespaceRef = /std::\w+/ unless const_defined?(:CPPStdNamespaceRef)
-      CPPClassDecl = /^class\s+/ unless const_defined?(:CPPClassDecl)
-      CPPNamespaceImpl = /^namespace\s+/ unless const_defined?(:CPPNamespaceImpl)
-      CCodeWithCPPCompat = /.*#ifdef.*__cplusplus.*/ unless const_defined?(:CCodeWithCPPCompat)
-      CStructDecl = /^struct\s+/ unless const_defined?(:CStructDecl)
-      CPPSomeNamespaceRef = /.*namespace\s+/ unless const_defined?(:CPPSomeNamespaceRef)
+     CPPRegex = /
+  ^ \s*
+  (?: template \s* <
+    | \#.*include.*<
+      (stdint|cstdint|string|vector|map|list
+      |array|bitset|queue|stack|forward_list
+      |unordered_(map|set)|(i|o|io)stream).*>
+    )
+  |
+  ^ [\x20\t]*
+  (?: try \b
+    | catch \s *\(
+    | ( class
+      | namespace
+      | using \h+ namespace
+      )
+      \s+ \w+
+    | (private|public|protected) :$
+    )
+  | std::\w+
+  | .*\#ifdef.*__cplusplus.*
+  | ^struct\s+
+/xi unless const_defined?(:CPPRegex)
 
       if ObjectiveCRegex.match(data)
         Language["Objective-C"]
-      # (1) With any CPP relevant symbol and without "#ifdef __cplusplus" directive it really seems to a CPP header file, then -> (2)... Otherwise -> (3)
-      elsif ((CPPCommonIncludes.match(data) || CPPTemplateDecl.match(data) || CPPTryStmt.match(data) || CPPCatchStmt.match(data) ||
-              CPPClassRefOrUsingNamespace.match(data) || CPPClassAccessModifiers.match(data) || CPPStdNamespaceRef.match(data)) ||
-              CPPClassDecl.match(data) || CPPNamespaceImpl.match(data)) && CCodeWithCPPCompat.match(data) == nil
-         # (2) However with a struct declaration and without a namespace reference let's assume it as C otherwise it is really CPP.
-         if CStructDecl.match(data) && CPPSomeNamespaceRef.match(data) == nil
-            Language["C"]
-         else
+      elsif CPPRegex.match(data)
            Language["C++"]
-         end
-      # (3) Without any CPP relevant symbol or still with any CPP relevant symbol but also with a "#ifdef __cplusplus" directive (!) it is C for sure.
       else
         Language["C"]
       end
