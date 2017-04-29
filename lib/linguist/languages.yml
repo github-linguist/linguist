@@ -1060,8 +1060,9 @@ Eagle:
   type: markup
   color: "#814C05"
   extensions:
-  - ".sch"
   - ".brd"
+  - ".sch"
+  - ".sol"
   tm_scope: text.xml
   ace_mode: xml
   codemirror_mode: xml
@@ -4147,6 +4148,13 @@ Smarty:
   codemirror_mime_type: text/x-smarty
   tm_scope: text.html.smarty
   language_id: 353
+Solidity:
+  type: programming
+  ace_mode: text
+  extensions:
+  - ".sol"
+  tm_scope: source.solidity
+  language_id: 237469032
 SourcePawn:
   type: programming
   color: "#5c7611"

@@ -115,8 +115,6 @@ vendor/grammars/SublimeBrainfuck:
 - source.bf
 vendor/grammars/SublimeClarion:
 - source.clarion
-vendor/grammars/SublimeEthereum:
-- source.solidity
 vendor/grammars/SublimeGDB/:
 - source.disasm
 - source.gdb
@@ -377,6 +375,12 @@ vendor/grammars/language-css:
 - source.css
 vendor/grammars/language-emacs-lisp:
 - source.emacs.lisp
+vendor/grammars/language-ethereum:
+- source.regexp.serpent
+- source.serpent
+- source.solidity
+- text.serpent.console
+- text.serpent.traceback
 vendor/grammars/language-fontforge:
 - source.fontforge
 - source.opentype

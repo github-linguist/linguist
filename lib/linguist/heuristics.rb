@@ -420,6 +420,14 @@ module Linguist
       end
     end
 
+    disambiguate ".sol" do |data|
+      if /^pragma solidity/.match(data)
+        Language["Solidity"]
+      elsif /M02\*$/.match(data)
+        Language["Eagle"]
+      end
+    end
+
     disambiguate ".sql" do |data|
       if /^\\i\b|AS \$\$|LANGUAGE '?plpgsql'?/i.match(data) || /SECURITY (DEFINER|INVOKER)/i.match(data) || /BEGIN( WORK| TRANSACTION)?;/i.match(data)
         #Postgres
