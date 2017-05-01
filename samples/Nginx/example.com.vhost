@@ -1,0 +1,242 @@
+# Move the www people to no-www
+server {
+  listen 80;
+  server_name www.example.com;
+  return 301 $scheme://example.com$request_uri;
+}
+
+server {
+  listen 80;
+  listen 443 ssl;
+  server_name example.com;
+
+  # Certs sent to the client in SERVER HELLO are concatenated in ssl_certificate
+  ssl_certificate /srv/www/example.com/ssl/example.com.crt;
+  ssl_certificate_key /srv/www/example.com/ssl/example.com.key;
+  
+  # Allow multiple connections to use the same key data
+  ssl_session_timeout 5m;
+  ssl_session_cache shared:SSL:50m;
+  
+  # Diffie-Hellman parameter for DHE ciphersuites, recommended 2048 bits
+  ssl_dhparam /etc/ssl/certs/dhparam.pem;
+
+  # Intermediate configuration. tweak to your needs
+  ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+  include snippets/ssl_ciphers_intermediate.conf;
+  ssl_prefer_server_ciphers on;
+
+  # HSTS (ngx_http_headers_module is required) (15768000 seconds = 6 months)
+  #add_header Strict-Transport-Security max-age=15768000;
+
+  # OCSP Stapling - fetch OCSP records from URL in ssl_certificate and cache them
+  ssl_stapling on;
+  ssl_stapling_verify on;
+
+  # Verify chain of trust of OCSP response using Root CA and Intermediate certs
+  ssl_trusted_certificate /srv/www/example.com/ssl/unified-ssl.crt;
+  resolver 8.8.8.8 8.8.4.4;
+  resolver_timeout 10s;
+
+  root /srv/www/example.com/htdocs;
+  index index.php index.html index.htm;
+  charset UTF-8;
+  autoindex off;
+  
+  # Deny access based on HTTP method (set in HTTP level)
+  if ($bad_method = 1) {
+    return 444;
+  }
+
+  # Show "Not Found" 404 errors in place of "Forbidden" 403 errors, because
+  # forbidden errors allow attackers potential insight into your server's
+  # layout and contents
+  error_page 403 = 404;
+
+  # It's always good to set logs, note however you cannot turn off the error log
+  # setting error_log off; will simply create a file called 'off'.
+  access_log /var/log/nginx/example.com.access.log;
+  error_log /var/log/nginx/example.com.error.log;
+
+  # Add trailing slash to */wp-admin requests.
+  rewrite /wp-admin$ $scheme://$host$uri/ permanent;
+
+  location / {
+    # This try_files directive is used to enable pretty, SEO-friendly URLs
+    # and permalinks for Wordpress. Leave it *off* to start with, and then
+    # turn it on once you've gotten Wordpress configured!
+    try_files $uri $uri/ /index.php?$args;
+  }
+
+  # Option to create password protected directory
+  # http://www.howtoforge.com/basic-http-authentication-with-nginx
+  # location /admin {
+  #   auth_basic "Administrator Login";
+  #   auth_basic_user_file /var/www/domain.com/admin/.htpasswd;
+  # }
+
+  # Do not log access to these to keep the logs cleaner
+  location = /favicon.ico {
+    log_not_found off;
+    access_log off;
+  }
+
+  location = /apple-touch-icon.png {
+    log_not_found off;
+    access_log off;
+  }
+
+  location = /apple-touch-icon-precomposed.png {
+    log_not_found off;
+    access_log off;
+  }
+
+  # This block will catch static file requests, such as images, css, js
+  # The ?: prefix is a 'non-capturing' mark, meaning we do not require
+  # the pattern to be captured into $1 which should help improve performance
+  location ~* \.(?:3gp|gif|jpg|jpe?g|png|ico|wmv|avi|asf|asx|mpg|mpeg|mp4|pls|mp3|mid|wav|swf|flv|html|htm|txt|js|css|exe|zip|tar|rar|gz|tgz|bz2|uha|7z|doc|docx|xls|xlsx|pdf|iso|woff)$ {
+    # Some basic cache-control for static files to be sent to the browser
+    expires max;
+    add_header Pragma public;
+    add_header Cache-Control "public, must-revalidate, proxy-revalidate";
+  }
+
+  # Deny all attempts to access hidden files such as .htaccess, .htpasswd, .DS_Store (Mac).
+  # Keep logging the requests to parse later (or to pass to firewall utilities such as fail2ban)
+  location ~ /\. {
+    access_log off;
+    log_not_found off;
+    deny all;
+  }
+
+  location ~ ~$ {
+    access_log off;
+    log_not_found off;
+    deny all;
+  }
+
+  # Common deny or internal locations, to help prevent access to areas of
+  # the site that should not be public
+  location ~* wp-admin/includes {
+    deny all;
+  }
+
+  location ~* wp-includes/theme-compat/ {
+    deny all;
+  }
+
+  location ~* wp-includes/js/tinymce/langs/.*\.php {
+    deny all;
+  }
+
+  location /wp-content/ {
+    internal;
+  }
+
+  # Deny access to any files with a .php extension in the uploads directory
+  # Works in sub-directory installs and also in multisite network
+  # Keep logging the requests to parse later (or to pass to firewall utilities such as fail2ban)
+  location ~* /(?:uploads|files)/.*\.php$ {
+    deny all;
+  }
+
+  # Make sure these get through, esp with dynamic WP sitmap plugin
+  location = /robots.txt {
+    try_files $uri /index.php;
+  }
+
+  location = /sitemap.xml {
+    try_files $uri /index.php;
+  }
+
+  location = /sitemap.xml.gz {
+    try_files $uri /index.php;
+  }
+
+  # Fix for Firefox issue with cross site font icons
+  location ~* \.(eot|otf|ttf|woff)$ {
+    add_header Access-Control-Allow-Origin *;
+  }
+
+  # Redirect server error pages to the static page /50x.html
+  # Make sure 50x.html exists at that location
+  error_page 500 502 503 504 /50x.html;
+    location = /50x.html {
+    root /usr/share/nginx/html;
+    }
+
+  # Cache everything by default
+  set $skip_cache 0;
+
+  # POST requests and urls with a query string should always go to PHP
+  if ($request_method = POST) {
+    set $skip_cache 1;
+  }
+  if ($query_string != "") {
+    set $skip_cache 1;
+  }
+
+  # Don't cache uris containing the following segments
+  if ($request_uri ~* "/wp-admin/|/xmlrpc.php|wp-.*.php|/feed/|index.php|sitemap(_index)?.xml") {
+    set $skip_cache 1;
+  }
+
+  # Don't use the cache for logged in users or recent commenters
+  if ($http_cookie ~* "comment_author|wordpress_[a-f0-9]+|wp-postpass|wordpress_no_cache|wordpress_logged_in") {
+    set $skip_cache 1;
+  }
+
+  # Pass all .php files onto a php-fpm/php-fcgi server.
+  location ~ [^/]\.php(/|$) {
+    # regex to split $uri to $fastcgi_script_name and $fastcgi_path
+    fastcgi_split_path_info ^(.+\.php)(/.+)$;
+
+    # Check that the PHP script exists before passing it
+    try_files $fastcgi_script_name =404;
+
+    # Bypass the fact that try_files resets $fastcgi_path_info
+    # see: http://trac.nginx.org/nginx/ticket/321
+    set $path_info $fastcgi_path_info;
+    fastcgi_param PATH_INFO $path_info;
+
+    fastcgi_pass unix:/var/run/example.com.sock;
+    fastcgi_index index.php;
+    # Uncomment if site is HTTPS
+    #fastcgi_param HTTPS on;
+    include fastcgi.conf;
+    
+    fastcgi_cache_bypass $skip_cache;
+    fastcgi_no_cache $skip_cache;
+
+    fastcgi_cache WORDPRESS;
+    fastcgi_cache_valid  60m;
+  }
+
+  location ~ /purge(/.*) {
+    fastcgi_cache_purge WORDPRESS "$scheme$request_method$host$1";
+  }
+
+  # Use this block if PHPMyAdmin is enabled for this domain
+  location /phpmyadmin {
+    root /usr/share/;
+    index index.php index.html index.htm;
+
+    location ~ ^/phpmyadmin/(.+\.php)$ {
+      try_files $uri =404;
+      root /usr/share/;
+      fastcgi_pass unix:/var/run/example.com.sock;
+      fastcgi_index index.php;
+      include fastcgi.conf;
+    }
+
+    location ~* ^/phpmyadmin/(.+\.(jpg|jpeg|gif|css|png|js|ico|html|xml|txt))$ {
+      root /usr/share/;
+    }
+  }
+
+  location /phpMyAdmin {
+    rewrite ^/* /phpmyadmin last;
+  }
+  # End PHPMyAdmin block
+
+} # End of server block.

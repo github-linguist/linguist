@@ -1,2 +1,3 @@
 source 'https://rubygems.org'
-gemspec
+gemspec :name => "github-linguist"
+gem 'byebug' if RUBY_VERSION >= '2.0'

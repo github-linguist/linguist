@@ -1,0 +1,70 @@
+# Contributor: Natanael Copa <ncopa@alpinelinux.org>
+# Maintainer: Natanael Copa <ncopa@alpinelinux.org>
+pkgname=abuild
+pkgver=2.27.0
+_ver=${pkgver%_git*}
+pkgrel=0
+pkgdesc="Script to build Alpine Packages"
+url="http://git.alpinelinux.org/cgit/abuild/"
+arch="all"
+license="GPL2"
+depends="fakeroot sudo pax-utils openssl apk-tools>=2.0.7-r1 libc-utils
+	attr tar pkgconf patch"
+if [ "$CBUILD" = "$CHOST" ]; then
+	depends="$depends curl"
+fi
+makedepends_build="pkgconfig"
+makedepends_host="openssl-dev"
+makedepends="$makedepends_host $makedepends_build"
+install="$pkgname.pre-install $pkgname.pre-upgrade"
+subpackages="apkbuild-cpan:cpan apkbuild-gem-resolver:gems"
+options="suid"
+pkggroups="abuild"
+source="http://dev.alpinelinux.org/archive/abuild/abuild-$_ver.tar.xz
+	"
+
+_builddir="$srcdir/$pkgname-$_ver"
+prepare() {
+	cd "$_builddir"
+	for i in $source; do
+		case $i in
+		*.patch)
+			msg "Applying $i"
+			patch -p1 -i "$srcdir"/$i || return 1
+			;;
+		esac
+	done
+	sed -i -e "/^CHOST=/s/=.*/=$CHOST/" abuild.conf
+}
+
+build() {
+	cd "$_builddir"
+	make || return 1
+}
+
+package() {
+	cd "$_builddir"
+	make install DESTDIR="$pkgdir" || return 1
+	install -m 644 abuild.conf "$pkgdir"/etc/abuild.conf || return 1
+	install -d -m 775 -g abuild "$pkgdir"/var/cache/distfiles || return 1
+}
+
+cpan() {
+	pkgdesc="Script to generate perl APKBUILD from CPAN"
+	depends="perl perl-libwww perl-json"
+	arch="noarch"
+	mkdir -p "$subpkgdir"/usr/bin
+	mv "$pkgdir"/usr/bin/apkbuild-cpan "$subpkgdir"/usr/bin/
+}
+
+gems() {
+	pkgdesc="APKBUILD dependency resolver for RubyGems"
+	depends="ruby ruby-augeas"
+	arch="noarch"
+	mkdir -p "$subpkgdir"/usr/bin
+	mv "$pkgdir"/usr/bin/apkbuild-gem-resolver "$subpkgdir"/usr/bin/
+}
+
+md5sums="c67e4c971c54b4d550e16db3ba331f96  abuild-2.27.0.tar.xz"
+sha256sums="c8db017e3dd168edb20ceeb91971535cf66b8c95f29d3288f88ac755bffc60e5  abuild-2.27.0.tar.xz"
+sha512sums="98e1da4e47f3ab68700b3bc992c83e103f770f3196e433788ee74145f57cd33e5239c87f0a7a15f7266840d5bad893fc8c0d4c826d663df53deaee2678c56984  abuild-2.27.0.tar.xz"

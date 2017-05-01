@@ -1,0 +1,57 @@
+<App Theme="Basic">
+	<DockPanel>
+		<TopFrameBackground Dock="Top" />
+		<Panel>
+			<Rectangle ux:Name="newLayoutMaster" Width="50" Height="50" Color="#8889" Alignment="TopLeft" Margin="20,50"/>
+			<StackPanel Alignment="Top">
+				<TextInput PlaceholderText="Click me to show the keyboard" Alignment="Center">
+					<WhileKeyboardVisible>
+						<Move Target="rect3" RelativeTo="Keyboard" Y="-1" Duration="0.5" />
+					</WhileKeyboardVisible>
+				</TextInput>
+				<Button Text="Click me" Alignment="Center">
+					<WhilePressed>
+						<Move Target="rect1" RelativeTo="Size" Y="-1" Duration="0.5" />
+						<Move Target="rect2" RelativeTo="ParentSize" Y="-1" Duration="0.5" />
+						<Move Target="rect5" RelativeTo="Size" RelativeNode="relativeNode" Y="-1" Duration="0.5" />
+					</WhilePressed>
+				</Button>
+				<Switch>
+					<WhileTrue>
+						<Change rect4.LayoutMaster="newLayoutMaster" />
+					</WhileTrue>
+				</Switch>
+			</StackPanel>
+			<Rectangle ux:Name="relativeNode" Height="400" Width="50" Color="#bbf" Alignment="BottomRight">
+				<VerticalText Alignment="Center" Width="200">relativeNode</VerticalText>
+			</Rectangle>
+
+			<Text ux:Class="VerticalText" TransformOrigin="Center" Alignment="Bottom" TextColor="#000">
+				<Rotation Degrees="-90" />
+			</Text>
+
+			<Grid ColumnCount="5" Rows="3*,1*" Color="#ddd" Width="80%" Height="100%" Alignment="BottomLeft">
+				<VerticalText Width="200">RelativeTo="Size"</VerticalText>
+				<VerticalText Width="200">RelativeTo="ParentSize"</VerticalText>
+				<VerticalText Width="200">RelativeTo="Keyboard"</VerticalText>
+				<VerticalText Width="200">RelativeTo="PositionChange"</VerticalText>
+				<VerticalText Width="200">RelativeNode="relativeNode"</VerticalText>
+
+
+
+				<Rectangle ux:Name="rect1" Width="50" Height="50" Color="#f00" Alignment="Bottom"/>
+				<Rectangle ux:Name="rect2" Width="50" Height="50" Color="#0f0" Alignment="Bottom"/>
+				<Rectangle ux:Name="rect3" Width="50" Height="50" Color="#00f" Alignment="Bottom"/>
+				<Panel Alignment="Bottom" Width="50" Height="50">
+					<Rectangle ux:Name="rect4" Width="50" Height="50" Color="#0ff" LayoutMaster="layoutMaster">
+						<LayoutAnimation>
+							<Move RelativeTo="PositionChange" X="1" Y="1" Duration="0.5" />
+						</LayoutAnimation>
+					</Rectangle>
+					<Rectangle ux:Name="layoutMaster" Width="50" Height="50"/>
+				</Panel>
+				<Rectangle ux:Name="rect5" Width="50" Height="50" Color="#f0f" Alignment="Bottom"/>
+			</Grid>
+		</Panel>
+	</DockPanel>
+</App>

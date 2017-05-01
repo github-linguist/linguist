@@ -1,0 +1,13 @@
+#!/bin/sh
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+bundle config --local path vendor/gems
+
+bundle check > /dev/null 2>&1 || bundle install
+
+git submodule init
+git submodule sync --quiet
+script/fast-submodule-update

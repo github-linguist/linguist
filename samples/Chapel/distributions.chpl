@@ -59,6 +59,34 @@ forall ba in BA do
   ba = here.id;
 
 //
+// The 'hasSingleLocalSubdomain' method on arrays will return true if the 
+// index set for a locale can be represented by a single domain.
+//
+if !BA.hasSingleLocalSubdomain() then
+  halt("For a Block distribution, the index set per locale should be \
+      represented by a single domain");
+
+//
+// If the distribution's subdomains can be represented as single subdomain,
+// we can use the 'localSubdomain' method to get the index set for the 
+// current locale.
+//
+// Below, we'll use the index set to confirm that the array elements have the 
+// correct locale id.
+//
+
+for L in Locales {
+  on L {
+    const indices = BA.localSubdomain();
+    for i in indices {
+      if BA[i] != L.id then
+        halt("Error: incorrect locale id");
+    }
+  }
+}
+
+
+//
 // Output the Block-distributed array to visually see how the elements
 // are partitioned across the locales.
 //
@@ -104,6 +132,14 @@ writeln("Block Array Index Map");
 writeln(BA2);
 writeln();
 
+//
+// We can use the 'targetLocales' method available on an array to get the
+// locales array used as targets.
+//
+for (L, ML) in zip(BA2.targetLocales(), MyLocales) do
+  if L != ML then
+    halt("Error: BA2.targetLocales() should equal MyLocales");
+
 
 
 //
@@ -126,6 +162,18 @@ writeln("Cyclic Array Index Map");
 writeln(CA);
 writeln();
 
+//
+// The domain returned by 'localSubdomain' need not be a dense block, as is
+// the case for the Cyclic Distribution.
+//
+on Locales[0] {
+  const indices = CA.localSubdomain();
+  for i in indices {
+    if CA[i] != 0 then
+      halt("Error: Cyclic array values on Locale 0 should be zero");
+  }
+}
+
 
 //
 // Next, we'll declare a Block-Cyclic distribution.  These
@@ -134,7 +182,7 @@ writeln();
 // of indices.  Thus, the BlockCyclic distribution is parameterized
 // by a starting index (as with Cyclic) and a block size (per
 // dimension) specifying how large the chunks to be dealt out are.
-// 
+//
 const BlkCycSpace = Space dmapped BlockCyclic(startIdx=Space.low, 
                                               blocksize=(2, 3));
 var BCA: [BlkCycSpace] int;
@@ -145,6 +193,46 @@ forall bca in BCA do
 writeln("Block-Cyclic Array Index Map");
 writeln(BCA);
 writeln();
+
+//
+// A locale's index set for a Block-Cyclic distribution cannot be represented
+// by a single subdomain.
+//
+if BCA.hasSingleLocalSubdomain() then
+  halt("A Block-Cyclic index set cannot be represented by a single subdomain");
+
+//
+// If the local index set cannot be represented by a single subdomain, 
+// we can use the 'localSubdomains' iterator to yield a number of domains
+// that represent the whole index set.
+//
+// Let's write a function that will use 'localSubdomains' to verify the 
+// correctness of the array values.
+//
+
+proc verifyID(Data: []) {
+  for L in Locales {
+    on L {
+      for indices in Data.localSubdomains() {
+        for i in indices {
+          if Data[i] != L.id then
+            halt("Error: incorrect locale id");
+        }
+      }
+    }
+  }
+}
+verifyID(BCA);
+
+//
+// The 'localSubdomains' iterator is also available on distributions that
+// can represent a locale's index set with a single domain. This allows us to
+// write more general code that will work for all distributions.
+//
+// This means that we can call the 'verifyID' function on any array, like the
+// 'BA' array from earlier.
+//
+verifyID(BA);
 
 
 //
