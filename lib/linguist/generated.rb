@@ -57,7 +57,7 @@ module Linguist
       composer_lock? ||
       node_modules? ||
       go_vendor? ||
-      npm_shrinkwrap? ||
+      npm_shrinkwrap_or_package_lock? ||
       godeps? ||
       generated_by_zephir? ||
       minified_files? ||
@@ -326,11 +326,11 @@ module Linguist
       !!name.match(/vendor\/((?!-)[-0-9A-Za-z]+(?<!-)\.)+(com|edu|gov|in|me|net|org|fm|io)/)
     end
 
-    # Internal: Is the blob a generated npm shrinkwrap file?
+    # Internal: Is the blob a generated npm shrinkwrap or package lock file?
     #
     # Returns true or false.
-    def npm_shrinkwrap?
-      !!name.match(/npm-shrinkwrap\.json/)
+    def npm_shrinkwrap_or_package_lock?
+      name.match(/npm-shrinkwrap\.json/) || name.match(/package-lock\.json/)
     end
 
     # Internal: Is the blob part of Godeps/,
