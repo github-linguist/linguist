@@ -42,6 +42,9 @@ class TestGenerated < Minitest::Test
     generated_sample_without_loading_data("Dummy/foo.xcworkspacedata")
     generated_sample_without_loading_data("Dummy/foo.xcuserstate")
 
+    # Bitcode symbol map
+    generated_sample_without_loading_data("Dummy/1234-5678-01234.bcsymbolmap")
+
     # Go-specific vendored paths
     generated_sample_without_loading_data("go/vendor/github.com/foo.go")
     generated_sample_without_loading_data("go/vendor/golang.org/src/foo.c")
