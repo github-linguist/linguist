@@ -58,6 +58,7 @@ class TestGenerated < Minitest::Test
 
     # npm shrinkwrap file
     generated_sample_without_loading_data("Dummy/npm-shrinkwrap.json")
+    generated_sample_without_loading_data("Dummy/package-lock.json")
 
     # Godep saved dependencies
     generated_sample_without_loading_data("Godeps/Godeps.json")
