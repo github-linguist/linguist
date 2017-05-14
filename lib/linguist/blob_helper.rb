@@ -67,7 +67,14 @@ module Linguist
     #
     # Return true or false
     def likely_binary?
-      binary_mime_type? && !Language.find_by_filename(name)
+      if binary_mime_type?
+        true
+      else
+        ascii = 0
+        total = 0
+        data.each_byte{|c| total += 1; ascii +=1 if c >= 128 or c == 0}
+        ascii.to_f / total.to_f > 0.33 ? true : false
+      end
     end
 
     # Public: Get the Content-Type header value
