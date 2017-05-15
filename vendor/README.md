@@ -309,6 +309,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **SCSS:** [MarioRicalde/SCSS.tmbundle](https://github.com/MarioRicalde/SCSS.tmbundle)
 - **Shell:** [atom/language-shellscript](https://github.com/atom/language-shellscript)
 - **ShellSession:** [atom/language-shellscript](https://github.com/atom/language-shellscript)
+- **Shen** [rkoeninger/sublime-shen](https://github.com/rkoeninger/sublime-shen)
 - **Slash:** [slash-lang/Slash.tmbundle](https://github.com/slash-lang/Slash.tmbundle)
 - **Slim:** [slim-template/ruby-slim.tmbundle](https://github.com/slim-template/ruby-slim.tmbundle)
 - **Smali:** [ShaneWilton/sublime-smali](https://github.com/ShaneWilton/sublime-smali)
