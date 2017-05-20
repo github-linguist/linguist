@@ -192,8 +192,8 @@ reload = function (module) {
     module_path = module_path(module)
     module_name = module_name(module)
     rm(list = module_path, envir = .loaded_modules)
-    #' @TODO Once we have `attach`, need also to take care of the search path
-    #' and whatnot.
+    # TODO: Once we have `attach`, need also to take care of the search path
+    # and whatnot.
     mod_ns = do_import(module_name, module_path)
     module_parent = parent.frame()
     mod_env = exhibit_namespace(mod_ns, module_ref, module_parent)
