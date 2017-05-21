@@ -59,6 +59,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Click:** [stenverbois/language-click](https://github.com/stenverbois/language-click)
 - **CLIPS:** [psicomante/CLIPS-sublime](https://github.com/psicomante/CLIPS-sublime)
 - **Clojure:** [atom/language-clojure](https://github.com/atom/language-clojure)
+- **Closure Templates:** [mthadley/language-closure-templates](https://github.com/mthadley/language-closure-templates)
 - **CMake:** [textmate/cmake.tmbundle](https://github.com/textmate/cmake.tmbundle)
 - **COBOL:** [bitbucket:bitlang/sublime_cobol](https://bitbucket.org/bitlang/sublime_cobol)
 - **CoffeeScript:** [atom/language-coffee-script](https://github.com/atom/language-coffee-script)
