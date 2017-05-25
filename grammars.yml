@@ -100,6 +100,8 @@ vendor/grammars/Sublime-Modula-2:
 - source.modula2
 vendor/grammars/Sublime-Nit:
 - source.nit
+vendor/grammars/Sublime-Pep8/:
+- source.pep8
 vendor/grammars/Sublime-QML:
 - source.qml
 vendor/grammars/Sublime-REBOL:
@@ -184,7 +186,7 @@ vendor/grammars/atom-language-1c-bsl:
 - source.sdbl
 vendor/grammars/atom-language-clean:
 - source.clean
-- source.gfm.clean
+- text.restructuredtext.clean
 vendor/grammars/atom-language-p4:
 - source.p4
 vendor/grammars/atom-language-perl6:
@@ -247,11 +249,9 @@ vendor/grammars/cython:
 - source.cython
 vendor/grammars/d.tmbundle:
 - source.d
-vendor/grammars/dart-sublime-bundle:
+vendor/grammars/dartlang:
 - source.dart
-- source.pubspec
-- text.dart-analysis-output
-- text.dart-doccomments
+- source.yaml-ext
 vendor/grammars/desktop.tmbundle:
 - source.desktop
 vendor/grammars/diff.tmbundle:
@@ -358,6 +358,8 @@ vendor/grammars/language-click:
 - source.click
 vendor/grammars/language-clojure:
 - source.clojure
+vendor/grammars/language-closure-templates:
+- text.html.soy
 vendor/grammars/language-coffee-script:
 - source.coffee
 - source.litcoffee
@@ -641,6 +643,8 @@ vendor/grammars/sublime-rexx:
 - source.rexx
 vendor/grammars/sublime-robot-plugin:
 - text.robot
+vendor/grammars/sublime-shen:
+- source.shen
 vendor/grammars/sublime-spintools:
 - source.regexp.spin
 - source.spin
