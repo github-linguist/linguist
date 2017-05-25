@@ -17,7 +17,7 @@ class TestMD5 < Minitest::Test
 
   def test_hexdigest_integer
     # Ruby 2.4.0 merged Bignum and Fixnum into Integer which means we get different digests
-    if RUBY_VERSION >= "2.4.0"
+    if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new("2.4.0")
       assert_equal "eb70b9dc51f70acc91b4d984ef81570e", MD5.hexdigest(1)
       assert_equal "41f415a79361937c28fff32c2c6d056d", MD5.hexdigest(2)
     else
@@ -45,7 +45,7 @@ class TestMD5 < Minitest::Test
   def test_hexdigest_array
     assert_equal "4410ec34d9e6c1a68100ca0ce033fb17", MD5.hexdigest([])
     # Ruby 2.4.0 merged Bignum and Fixnum into Integer which means we get different digests
-    if RUBY_VERSION >= "2.4.0"
+    if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new("2.4.0")
       assert_equal "7c6285c53bb82c9b58c0c28329f8d8f4", MD5.hexdigest([1])
       assert_equal "fdfbe9b65f652acb927b50ccba9f3270", MD5.hexdigest([1, 2])
       assert_equal "ba631f6acc179689c45be854705c08c9", MD5.hexdigest([1, 2, 3])
@@ -61,7 +61,7 @@ class TestMD5 < Minitest::Test
   def test_hexdigest_hash
     assert_equal "fae8a9257e154175da4193dbf6552ef6", MD5.hexdigest({})
     # Ruby 2.4.0 merged Bignum and Fixnum into Integer which means we get different digests
-    if RUBY_VERSION >= "2.4.0"
+    if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new("2.4.0")
       assert_equal "edfd4aed358b4d346b7eb7adf0fd21d1", MD5.hexdigest({:a => 1})
       assert_equal "39bb725ffe02392759e0a075001e6119", MD5.hexdigest({:b => 2})
     else
