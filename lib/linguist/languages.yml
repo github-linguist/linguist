@@ -455,7 +455,6 @@ C:
   - ".cats"
   - ".h"
   - ".idc"
-  - ".w"
   interpreters:
   - tcc
   ace_mode: c_cpp
@@ -589,6 +588,13 @@ CSV:
   extensions:
   - ".csv"
   language_id: 51
+CWeb:
+  type: programming
+  extensions:
+  - ".w"
+  tm_scope: none
+  ace_mode: text
+  language_id: 657332628
 Cap'n Proto:
   type: programming
   tm_scope: source.capnp
