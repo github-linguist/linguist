@@ -484,5 +484,14 @@ module Linguist
         Language["XML"]
       end
     end
+
+    disambiguate ".w" do |data|
+      if (data.include?("&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS C-Win"))
+        Language["OpenEdge ABL"]
+      elsif /^@(<|\w+\.)/.match(data)
+        Language["CWeb"]
+      end
+    end
+
   end
 end
