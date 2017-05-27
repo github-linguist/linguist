@@ -2469,6 +2469,7 @@ Makefile:
   - Makefile.frag
   - Makefile.in
   - Makefile.inc
+  - Makefile.wat
   - makefile
   - makefile.sco
   - mkfile
@@ -4684,6 +4685,20 @@ Web Ontology Language:
   tm_scope: text.xml
   ace_mode: xml
   language_id: 394
+WebAssembly:
+  type: programming
+  color: "#04133b"
+  extensions:
+  - ".wast"
+  - ".wat"
+  aliases:
+  - wast
+  - wasm
+  tm_scope: source.webassembly
+  ace_mode: lisp
+  codemirror_mode: commonlisp
+  codemirror_mime_type: text/x-common-lisp
+  language_id: 956556503
 WebIDL:
   type: programming
   extensions:
