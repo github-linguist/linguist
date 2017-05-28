@@ -1,0 +1,12 @@
+# Test files and directories are excluded from language
+# statistics.
+#
+# Lines in this file are Regexps that are matched against the file
+# pathname.
+#
+# Please add additional test coverage to
+# `test/test_file_blob.rb#test_test` if you make any changes.
+
+## Test directories ##
+
+- ^tests?/

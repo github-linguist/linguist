@@ -5,6 +5,7 @@ require 'rugged'
 module Linguist
   class LazyBlob
     GIT_ATTR = ['linguist-documentation',
+                'linguist-test',
                 'linguist-language',
                 'linguist-vendored',
                 'linguist-generated']
@@ -38,6 +39,14 @@ module Linguist
 
     def documentation?
       if attr = git_attributes['linguist-documentation']
+        boolean_attribute(attr)
+      else
+        super
+      end
+    end
+
+    def test?
+      if attr = git_attributes['linguist-test']
         boolean_attribute(attr)
       else
         super
