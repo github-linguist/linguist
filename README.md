@@ -115,7 +115,7 @@ These stats are also printed out by the `linguist` executable. You can use the
 
 You can try running `linguist` on the root directory in this repository itself:
 
-```
+```sh
 $ bundle exec linguist --breakdown
 
 100.00% Ruby
