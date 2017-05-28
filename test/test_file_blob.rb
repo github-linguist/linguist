@@ -147,6 +147,8 @@ class TestFileBlob < Minitest::Test
     assert fixture_blob("Data/md").text?
     assert sample_blob("Shell/script.sh").text?
     assert fixture_blob("Data/txt").text?
+    assert sample_blob("RTF/simple.rtf").text?
+    assert sample_blob("RTF/complicated.rtf").text?
   end
 
   def test_image

@@ -133,6 +133,7 @@ class TestLanguage < Minitest::Test
 
   def test_data
     assert_equal :data, Language['YAML'].type
+    assert_equal :data, Language['RTF'].type
   end
 
   def test_prose
