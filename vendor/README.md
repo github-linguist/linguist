@@ -370,6 +370,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Wavefront Material:** [Alhadis/language-wavefront](https://github.com/Alhadis/language-wavefront)
 - **Wavefront Object:** [Alhadis/language-wavefront](https://github.com/Alhadis/language-wavefront)
 - **Web Ontology Language:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)
+- **WebAssembly:** [Alhadis/language-webassembly](https://github.com/Alhadis/language-webassembly)
 - **WebIDL:** [andik/IDL-Syntax](https://github.com/andik/IDL-Syntax)
 - **wisp:** [atom/language-clojure](https://github.com/atom/language-clojure)
 - **World of Warcraft Addon Data:** [nebularg/language-toc-wow](https://github.com/nebularg/language-toc-wow)
