@@ -351,6 +351,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Turtle:** [peta/turtle.tmbundle](https://github.com/peta/turtle.tmbundle)
 - **Twig:** [Anomareh/PHP-Twig.tmbundle](https://github.com/Anomareh/PHP-Twig.tmbundle)
 - **TXL:** [MikeHoffert/Sublime-Text-TXL-syntax](https://github.com/MikeHoffert/Sublime-Text-TXL-syntax)
+- **Type Language:** [goodmind/language-typelanguage](https://github.com/goodmind/language-typelanguage)
 - **TypeScript:** [Microsoft/TypeScript-Sublime-Plugin](https://github.com/Microsoft/TypeScript-Sublime-Plugin)
 - **Unified Parallel C:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **Unity3D Asset:** [atom/language-yaml](https://github.com/atom/language-yaml)
