@@ -78,6 +78,7 @@ namespace :benchmark do
       result_filename = "benchmark/results/#{File.basename(corpus)}-#{ref}-unstaged.json"
     end
 
+    require 'json'
     File.write(result_filename, results.to_json)
     puts "wrote #{result_filename}"
   end
