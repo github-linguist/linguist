@@ -59,6 +59,7 @@ module Linguist
       go_vendor? ||
       npm_shrinkwrap_or_package_lock? ||
       godeps? ||
+      vendor? ||
       generated_by_zephir? ||
       minified_files? ||
       has_source_map? ||
@@ -339,6 +340,13 @@ module Linguist
     # Returns true or false.
     def godeps?
       !!name.match(/Godeps\//)
+    end
+
+    # Internal: Is the blob vendored third-party code?
+    #
+    # Returns true or false.
+    def vendor?
+      !!name.match(/(vendors?|(thi|3)rd[-_]?party|extern(al)?)\//)
     end
 
     # Internal: Is the blob a generated php composer lock file?
