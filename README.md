@@ -139,3 +139,4 @@ The language grammars included in this gem are covered by their repositories'
 respective licenses. `grammars.yml` specifies the repository for each grammar.
 
 All other files are covered by the MIT license, see `LICENSE`.
+
