@@ -71,7 +71,7 @@ To run Linguist from the cloned repository, you will need to generate the code s
 
     bundle exec rake samples
 
-Run this command each time a [samples][samples] has been modified.
+Run this command each time a [sample][samples] has been modified.
 
 To run Linguist from the cloned repository:
 
