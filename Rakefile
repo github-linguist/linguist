@@ -4,6 +4,7 @@ require 'rake/testtask'
 require 'yaml'
 require 'yajl'
 require 'open-uri'
+require 'json'
 
 task :default => :test
 

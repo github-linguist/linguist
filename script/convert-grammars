@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require 'bundler/setup'
 require 'json'
 require 'net/http'
 require 'optparse'
@@ -42,7 +43,7 @@ class DirectoryPackage
       case File.extname(path.downcase)
       when '.plist'
         path.split('/')[-2] == 'Syntaxes'
-      when '.tmlanguage'
+      when '.tmlanguage', '.yaml-tmlanguage'
         true
       when '.cson', '.json'
         path.split('/')[-2] == 'grammars'
@@ -114,7 +115,7 @@ class SVNPackage
   def fetch(tmp_dir)
     `svn export -q "#{url}/Syntaxes" "#{tmp_dir}/Syntaxes"`
     raise "Failed to export SVN repository: #{url}: #{$?.to_s}" unless $?.success?
-    Dir["#{tmp_dir}/Syntaxes/*.{plist,tmLanguage,tmlanguage}"]
+    Dir["#{tmp_dir}/Syntaxes/*.{plist,tmLanguage,tmlanguage,YAML-tmLanguage}"]
   end
 end
 
@@ -148,6 +149,17 @@ def load_grammar(path)
   case File.extname(path.downcase)
   when '.plist', '.tmlanguage'
     Plist::parse_xml(path)
+  when '.yaml-tmlanguage'
+    content = File.read(path)
+    # Attempt to parse YAML file even if it has a YAML 1.2 header
+    if content.lines[0] =~ /^%YAML[ :]1\.2/
+      content = content.lines[1..-1].join
+    end
+    begin
+      YAML.load(content)
+    rescue Psych::SyntaxError => e
+      $stderr.puts "Failed to parse YAML grammar '#{path}'"
+    end
   when '.cson'
     cson = `"#{CSONC}" "#{path}"`
     raise "Failed to convert CSON grammar '#{path}': #{$?.to_s}" unless $?.success?
@@ -162,6 +174,7 @@ end
 def load_grammars(tmp_dir, source, all_scopes)
   is_url = source.start_with?("http:", "https:")
   return [] if is_url && !$options[:remote]
+  return [] if !is_url && !File.exist?(source)
 
   p = if !is_url
         if File.directory?(source)
@@ -169,7 +182,7 @@ def load_grammars(tmp_dir, source, all_scopes)
         else
           SingleFile.new(source)
         end
-      elsif source.end_with?('.tmLanguage', '.plist')
+      elsif source.end_with?('.tmLanguage', '.plist', '.YAML-tmLanguage')
         SingleGrammar.new(source)
       elsif source.start_with?('https://github.com')
         GitHubPackage.new(source)
@@ -185,7 +198,7 @@ def load_grammars(tmp_dir, source, all_scopes)
 
   p.fetch(tmp_dir).map do |path|
     grammar = load_grammar(path)
-    scope = grammar['scopeName']
+    scope = grammar['scopeName'] || grammar['scope']
 
     if all_scopes.key?(scope)
       unless all_scopes[scope] == p.url
@@ -204,7 +217,7 @@ def install_grammars(grammars, path)
   installed = []
 
   grammars.each do |grammar|
-    scope = grammar['scopeName']
+    scope = grammar['scopeName'] || grammar['scope']
     File.write(File.join(GRAMMARS_PATH, "#{scope}.json"), JSON.pretty_generate(grammar))
     installed << scope
   end

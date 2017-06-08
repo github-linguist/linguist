@@ -1,0 +1,45 @@
+;;; linguist.srt --- Template for linguist-example-mode
+
+;; Not copyrighted whatsoever.
+;;
+;; GPL can bite my shiny metal ass.
+;;
+;; GitHub:   1
+;; Stallman: 0
+
+set mode "default"
+
+set comment_start ";"
+
+set LICENSE "It's public domain, baby. This was written for the sole
+purpose of the format's inclusion and recognition by GitHub Linguist.
+This block of multiline text was added because every other .srt file
+I could find was GPL-licensed and had long-winded copyright blobs in
+the file's header. Also, check out my sick line-wrapping abilities."
+
+set DOLLAR "$"
+
+context file
+
+
+template license
+----
+{{LICENSE:srecode-comment-prefix}}
+----
+
+
+template filecomment :file :user :time
+----
+{{comment_start}} {{FILENAME}} --- {{^}}
+{{comment_prefix}} YUO WAN GPL?
+{{comment_prefix}} 
+{{comment_prefix}} Copyright (C) {{YEAR}} {{?AUTHOR}}
+{{comment_prefix}}
+{{comment_prefix}} TUO BAD
+{{comment_prefix}} WE EXPAT PEOPLE
+{{comment_prefix}} {{EXPLETIVE}} YOU!
+{{>:copyright}}
+{{comment_end}}
+----
+
+;; end

@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+$LOAD_PATH[0, 0] = File.join(File.dirname(__FILE__), '..', 'lib')
+
 require 'linguist'
 require 'rugged'
 require 'optparse'
@@ -23,7 +25,7 @@ class GitLinguist
     if @incremental && stats = load_language_stats
       old_commit_oid, old_stats = stats
 
-      # A cache with NULL oid means that we want to froze
+      # A cache with NULL oid means that we want to freeze
       # these language stats in place and stop computing
       # them (for performance reasons)
       return old_stats if old_commit_oid == NULL_OID
@@ -102,16 +104,22 @@ def git_linguist(args)
   commit = nil
 
   parser = OptionParser.new do |opts|
-    opts.banner = "Usage: git-linguist [OPTIONS] stats|breakdown|dump-cache|clear|disable"
+    opts.banner = <<-HELP
+    Linguist v#{Linguist::VERSION}
+    Detect language type and determine language breakdown for a given Git repository.
+
+    Usage:
+    git-linguist [OPTIONS] stats|breakdown|dump-cache|clear|disable"
+    HELP
 
     opts.on("-f", "--force", "Force a full rescan") { incremental = false }
-    opts.on("--commit=COMMIT", "Commit to index") { |v| commit = v}
+    opts.on("-c", "--commit=COMMIT", "Commit to index") { |v| commit = v}
   end
 
   parser.parse!(args)
 
   git_dir = `git rev-parse --git-dir`.strip
-  raise "git-linguist must be ran in a Git repository (#{Dir.pwd})" unless $?.success?
+  raise "git-linguist must be run in a Git repository (#{Dir.pwd})" unless $?.success?
   wrapper = GitLinguist.new(git_dir, commit, incremental)
 
   case args.pop

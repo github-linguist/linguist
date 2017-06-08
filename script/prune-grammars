@@ -1,9 +1,12 @@
 #!/usr/bin/env ruby
 
+require "bundler/setup"
 require "json"
 require "linguist"
 require "set"
 require "yaml"
+
+ROOT = File.expand_path("../../", __FILE__)
 
 def find_includes(json)
   case json
@@ -32,7 +35,7 @@ def transitive_includes(scope, includes)
 end
 
 includes = {}
-Dir["grammars/*.json"].each do |path|
+Dir[File.join(ROOT, "grammars/*.json")].each do |path|
   scope = File.basename(path).sub(/\.json/, '')
   json = JSON.load(File.read(path))
   incs = find_includes(json)
@@ -41,7 +44,7 @@ Dir["grammars/*.json"].each do |path|
   includes[scope] += incs
 end
 
-yaml = YAML.load(File.read("grammars.yml"))
+yaml = YAML.load(File.read(File.join(ROOT, "grammars.yml")))
 language_scopes = Linguist::Language.all.map(&:tm_scope).to_set
 
 # The set of used scopes is the scopes for each language, plus all the scopes
@@ -54,4 +57,4 @@ puts "Unused grammar repos"
 puts unused.map { |repo, scopes| sprintf("%-100s %s", repo, scopes.join(", ")) }.sort.join("\n")
 
 yaml.delete_if { |k| unused.key?(k) }
-File.write("grammars.yml", YAML.dump(yaml))
+File.write(File.join(ROOT, "grammars.yml"), YAML.dump(yaml))

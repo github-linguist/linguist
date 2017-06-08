@@ -17,6 +17,7 @@ class TestGenerated < Minitest::Test
     assert_raises(DataLoadedError, "Data wasn't loaded when calling generated? on #{blob}") do
       Generated.generated?(blob, lambda { raise DataLoadedError.new })
     end
+    assert Generated.generated?(blob, lambda { IO.read(blob) }), "#{blob} was not recognized as a generated file"
   end
 
   def generated_fixture_without_loading_data(name)
@@ -41,6 +42,11 @@ class TestGenerated < Minitest::Test
     generated_sample_without_loading_data("Dummy/foo.xcworkspacedata")
     generated_sample_without_loading_data("Dummy/foo.xcuserstate")
 
+    # Go-specific vendored paths
+    generated_sample_without_loading_data("go/vendor/github.com/foo.go")
+    generated_sample_without_loading_data("go/vendor/golang.org/src/foo.c")
+    generated_sample_without_loading_data("go/vendor/gopkg.in/some/nested/path/foo.go")
+
     # .NET designer file
     generated_sample_without_loading_data("Dummu/foo.designer.cs")
 
@@ -49,6 +55,10 @@ class TestGenerated < Minitest::Test
 
     # Node modules
     generated_sample_without_loading_data("Dummy/node_modules/foo.js")
+
+    # npm shrinkwrap file
+    generated_sample_without_loading_data("Dummy/npm-shrinkwrap.json")
+    generated_sample_without_loading_data("Dummy/package-lock.json")
 
     # Godep saved dependencies
     generated_sample_without_loading_data("Godeps/Godeps.json")
@@ -62,10 +72,16 @@ class TestGenerated < Minitest::Test
     # Minified files
     generated_sample_loading_data("JavaScript/jquery-1.6.1.min.js")
 
+    # JS files with source map reference
+    generated_sample_loading_data("JavaScript/namespace.js")
+
     # Source Map
     generated_fixture_without_loading_data("Data/bootstrap.css.map")
     generated_fixture_loading_data("Data/sourcemap.v3.map")
     generated_fixture_loading_data("Data/sourcemap.v1.map")
+
+    # Yarn locfile
+    generated_fixture_loading_data("Data/yarn.lock")
 
     # Specflow
     generated_fixture_without_loading_data("Features/BindingCulture.feature.cs")
@@ -75,5 +91,8 @@ class TestGenerated < Minitest::Test
 
     # GrammarKit
     generated_sample_loading_data("Java/GrammarKit.java")
+
+    # roxygen2
+    generated_sample_loading_data("R/import.Rd")
   end
 end

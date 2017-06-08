@@ -60,11 +60,27 @@ class TestLanguage < Minitest::Test
     assert_equal Language['SuperCollider'], Language.find_by_alias('supercollider')
     assert_equal Language['TeX'], Language.find_by_alias('tex')
     assert_equal Language['TypeScript'], Language.find_by_alias('ts')
-    assert_equal Language['VimL'], Language.find_by_alias('vim')
-    assert_equal Language['VimL'], Language.find_by_alias('viml')
+    assert_equal Language['Vim script'], Language.find_by_alias('vim')
+    assert_equal Language['Vim script'], Language.find_by_alias('viml')
     assert_equal Language['reStructuredText'], Language.find_by_alias('rst')
     assert_equal Language['YAML'], Language.find_by_alias('yml')
     assert_nil Language.find_by_alias(nil)
+  end
+
+  # Note these are set by script/set-language-ids. If these tests fail then someone
+  # has changed the language_id fields set in languages.yml which is almost certainly
+  # not what you want to happen (these fields are used in GitHub's search indexes)
+  def test_language_ids
+    assert_equal 4, Language['ANTLR'].language_id
+    assert_equal 54, Language['Ceylon'].language_id
+    assert_equal 326, Language['Ruby'].language_id
+    assert_equal 421, Language['xBase'].language_id
+  end
+
+  def test_find_by_id
+    assert_equal Language['Elixir'], Language.find_by_id(100)
+    assert_equal Language['Ruby'], Language.find_by_id(326)
+    assert_equal Language['xBase'], Language.find_by_id(421)
   end
 
   def test_groups
@@ -74,7 +90,7 @@ class TestLanguage < Minitest::Test
     assert_equal Language['Ruby'], Language['Ruby'].group
 
     # Test a few special groups
-    assert_equal Language['Assembly'], Language['GAS'].group
+    assert_equal Language['Assembly'], Language['Unix Assembly'].group
     assert_equal Language['C'], Language['OpenCL'].group
     assert_equal Language['Haskell'], Language['Literate Haskell'].group
     assert_equal Language['Java'], Language['Java Server Pages'].group
@@ -88,39 +104,6 @@ class TestLanguage < Minitest::Test
     Language.all.each do |language|
       assert language.group, "#{language} has no group"
     end
-  end
-
-  # Used for code search indexing. Changing any of these values may
-  # require reindexing repositories.
-  def test_search_term
-    assert_equal 'perl',        Language['Perl'].search_term
-    assert_equal 'python',      Language['Python'].search_term
-    assert_equal 'ruby',        Language['Ruby'].search_term
-    assert_equal 'common-lisp', Language['Common Lisp'].search_term
-    assert_equal 'html+erb',    Language['HTML+ERB'].search_term
-    assert_equal 'max/msp',     Language['Max'].search_term
-    assert_equal 'puppet',      Language['Puppet'].search_term
-    assert_equal 'pure-data',   Language['Pure Data'].search_term
-
-    assert_equal 'aspx-vb',       Language['ASP'].search_term
-    assert_equal 'as3',           Language['ActionScript'].search_term
-    assert_equal 'nasm',          Language['Assembly'].search_term
-    assert_equal 'bat',           Language['Batchfile'].search_term
-    assert_equal 'csharp',        Language['C#'].search_term
-    assert_equal 'cpp',           Language['C++'].search_term
-    assert_equal 'cfm',           Language['ColdFusion'].search_term
-    assert_equal 'dpatch',        Language['Darcs Patch'].search_term
-    assert_equal 'fsharp',        Language['F#'].search_term
-    assert_equal 'pot',           Language['Gettext Catalog'].search_term
-    assert_equal 'irc',           Language['IRC log'].search_term
-    assert_equal 'lhs',           Language['Literate Haskell'].search_term
-    assert_equal 'mirah',         Language['Mirah'].search_term
-    assert_equal 'raw',           Language['Raw token data'].search_term
-    assert_equal 'bash',          Language['Shell'].search_term
-    assert_equal 'vim',           Language['VimL'].search_term
-    assert_equal 'jsp',           Language['Java Server Pages'].search_term
-    assert_equal 'rst',           Language['reStructuredText'].search_term
-    assert_equal 'supercollider', Language['SuperCollider'].search_term
   end
 
   def test_popular
@@ -187,10 +170,16 @@ class TestLanguage < Minitest::Test
 
   def test_find_by_extension
     assert_equal [], Language.find_by_extension('.factor-rc')
-    assert_equal [], Language.find_by_extension('foo.rb')
-    assert_equal [Language['Ruby']], Language.find_by_extension('rb')
-    assert_equal [Language['Ruby']], Language.find_by_extension('.rb')
-    assert_equal [Language['Limbo'], Language['M'], Language['MUF'], Language['Mathematica'], Language['Matlab'], Language['Mercury'], Language['Objective-C']], Language.find_by_extension('.m')
+    assert_equal [Language['Limbo'], Language['M'], Language['MUF'], Language['Mathematica'], Language['Matlab'], Language['Mercury'], Language['Objective-C']], Language.find_by_extension('foo.m')
+    assert_equal [Language['Ruby']], Language.find_by_extension('foo.rb')
+    assert_equal [Language['Ruby']], Language.find_by_extension('foo/bar.rb')
+    assert_equal [Language['Ruby']], Language.find_by_extension('PKGBUILD.rb')
+    assert_equal ['C', 'C++', 'Objective-C'], Language.find_by_extension('foo.h').map(&:name).sort
+    assert_equal [], Language.find_by_extension('rb')
+    assert_equal [], Language.find_by_extension('.null')
+    assert_equal [Language['HTML+Django']], Language.find_by_extension('index.jinja')
+    assert_equal [Language['Chapel']], Language.find_by_extension('examples/hello.chpl')
+    assert_equal [], Language.find_by_filename('F.I.L.E.')
   end
 
   def test_find_all_by_extension
@@ -203,22 +192,17 @@ class TestLanguage < Minitest::Test
 
   def test_find_by_filename
     assert_equal [Language['Shell']], Language.find_by_filename('PKGBUILD')
-    assert_equal [Language['Ruby']], Language.find_by_filename('foo.rb')
-    assert_equal [Language['Ruby']], Language.find_by_filename('foo/bar.rb')
     assert_equal [Language['Ruby']], Language.find_by_filename('Rakefile')
-    assert_equal [Language['Ruby']], Language.find_by_filename('PKGBUILD.rb')
     assert_equal Language['ApacheConf'], Language.find_by_filename('httpd.conf').first
     assert_equal [Language['ApacheConf']], Language.find_by_filename('.htaccess')
     assert_equal Language['Nginx'], Language.find_by_filename('nginx.conf').first
-    assert_equal ['C', 'C++', 'Objective-C'], Language.find_by_filename('foo.h').map(&:name).sort
+    assert_equal [], Language.find_by_filename('foo.rb')
     assert_equal [], Language.find_by_filename('rb')
     assert_equal [], Language.find_by_filename('.null')
     assert_equal [Language['Shell']], Language.find_by_filename('.bashrc')
     assert_equal [Language['Shell']], Language.find_by_filename('bash_profile')
     assert_equal [Language['Shell']], Language.find_by_filename('.zshrc')
     assert_equal [Language['Clojure']], Language.find_by_filename('riemann.config')
-    assert_equal [Language['HTML+Django']], Language.find_by_filename('index.jinja')
-    assert_equal [Language['Chapel']], Language.find_by_filename('examples/hello.chpl')
   end
 
   def test_find_by_interpreter
@@ -280,9 +264,9 @@ class TestLanguage < Minitest::Test
   end
 
   def test_doesnt_blow_up_with_blank_lookup
-    assert_equal nil, Language.find_by_alias('')
-    assert_equal nil, Language.find_by_name(nil)
-    assert_equal nil, Language[""]
+    assert_nil Language.find_by_alias('')
+    assert_nil Language.find_by_name(nil)
+    assert_nil Language[""]
   end
 
   def test_name
@@ -328,9 +312,18 @@ class TestLanguage < Minitest::Test
     assert_equal 'text', Language['FORTRAN'].ace_mode
   end
 
-  def test_ace_modes
-    assert Language.ace_modes.include?(Language['Ruby'])
-    assert Language.ace_modes.include?(Language['FORTRAN'])
+  def test_codemirror_mode
+    assert_equal 'ruby', Language['Ruby'].codemirror_mode
+    assert_equal 'javascript', Language['JavaScript'].codemirror_mode
+    assert_equal 'clike', Language['C'].codemirror_mode
+    assert_equal 'clike', Language['C++'].codemirror_mode
+  end
+
+  def test_codemirror_mime_type
+    assert_equal 'text/x-ruby', Language['Ruby'].codemirror_mime_type
+    assert_equal 'text/javascript', Language['JavaScript'].codemirror_mime_type
+    assert_equal 'text/x-csrc', Language['C'].codemirror_mime_type
+    assert_equal 'text/x-c++src', Language['C++'].codemirror_mime_type
   end
 
   def test_wrap
@@ -344,17 +337,6 @@ class TestLanguage < Minitest::Test
     assert Language['Python'].extensions.include?('.py')
     assert Language['Ruby'].extensions.include?('.rb')
     assert Language['SuperCollider'].extensions.include?('.scd')
-  end
-
-  def test_primary_extension
-    assert_equal '.pl', Language['Perl'].primary_extension
-    assert_equal '.py', Language['Python'].primary_extension
-    assert_equal '.rb', Language['Ruby'].primary_extension
-    assert_equal '.js', Language['JavaScript'].primary_extension
-    assert_equal '.coffee', Language['CoffeeScript'].primary_extension
-    assert_equal '.t', Language['Turing'].primary_extension
-    assert_equal '.ts', Language['TypeScript'].primary_extension
-    assert_equal '.sc', Language['SuperCollider'].primary_extension
   end
 
   def test_eql
@@ -386,6 +368,30 @@ class TestLanguage < Minitest::Test
     assert missing.empty?, message
   end
 
+  def test_all_languages_have_a_language_id_set
+    missing = Language.all.select { |language| language.language_id.nil? }
+
+    message = "The following languages do not have a language_id listed in languages.yml. Please add language_id fields for all new languages.\n"
+    missing.each { |language| message << "#{language.name}\n" }
+    assert missing.empty?, message
+  end
+
+  def test_all_languages_have_a_valid_id
+    invalid = Language.all.select { |language| language.language_id < 0 || language.language_id >= (2**31 - 1) }
+
+    message = "The following languages do not have a valid language_id. Please use script/set-language-ids --update as per the contribution guidelines.\n"
+    invalid.each { |language| message << "#{language.name}\n" }
+    assert invalid.empty?, message
+  end
+
+  def test_all_language_id_are_unique
+    duplicates = Language.all.group_by{ |language| language.language_id }.select { |k, v| v.size > 1 }.map(&:first)
+
+    message = "The following language_id are used several times in languages.yml. Please use script/set-language-ids --update as per the contribution guidelines.\n"
+    duplicates.each { |language_id| message << "#{language_id}\n" }
+    assert duplicates.empty?, message
+  end
+
   def test_all_languages_have_a_valid_ace_mode
     ace_fixture_path = File.join('test', 'fixtures', 'ace_modes.json')
     skip("No ace_modes.json file") unless File.exist?(ace_fixture_path)
@@ -404,6 +410,40 @@ class TestLanguage < Minitest::Test
     assert missing.empty?, message
   end
 
+  def test_codemirror_modes_present
+    Language.all.each do |language|
+      if language.codemirror_mode || language.codemirror_mime_type
+        assert language.codemirror_mode, "#{language.inspect} missing CodeMirror mode"
+        assert language.codemirror_mime_type, "#{language.inspect} missing CodeMirror MIME mode"
+      end
+    end
+  end
+
+  def test_valid_codemirror_mode
+    Language.all.each do |language|
+      if mode = language.codemirror_mode
+        assert File.exist?(File.expand_path("../../vendor/CodeMirror/mode/#{mode}", __FILE__)), "#{mode} isn't a valid CodeMirror mode"
+      end
+    end
+  end
+
+  def test_codemirror_mode_and_mime_defined_by_meta_mapping
+    meta = File.read(File.expand_path("../../vendor/CodeMirror/mode/meta.js", __FILE__))
+    Language.all.each do |language|
+      next unless language.codemirror_mode && language.codemirror_mime_type
+      assert meta.match(/^.+#{Regexp.escape(language.codemirror_mime_type)}.+#{Regexp.escape(language.codemirror_mode)}.+$/), "#{language.inspect}: #{language.codemirror_mime_type} not defined under #{language.codemirror_mode}"
+    end
+  end
+
+  def test_codemirror_mime_declared_in_mode_file
+    Language.all.each do |language|
+      next unless language.codemirror_mode && language.codemirror_mime_type
+      filename = File.expand_path("../../vendor/CodeMirror/mode/#{language.codemirror_mode}/#{language.codemirror_mode}.js", __FILE__)
+      assert File.exist?(filename), "#{filename} does not exist"
+      assert File.read(filename).match(language.codemirror_mime_type), "#{language.inspect}: #{language.codemirror_mime_type} not defined in #{filename}"
+    end
+  end
+
   def test_all_popular_languages_exist
     popular = YAML.load(File.read(File.expand_path("../../lib/linguist/popular.yml", __FILE__)))
 
@@ -411,5 +451,17 @@ class TestLanguage < Minitest::Test
     message = "The following languages are listed in lib/linguist/popular.yml but not in lib/linguist/languages.yml.\n"
     message << missing.sort.join("\n")
     assert missing.empty?, message
+  end
+
+  def test_no_unused_colours
+    Language.all.each do |language|
+      next unless language.type == :data || language.type == :prose ||
+        language.group.to_s != language.name
+      assert !language.color, "Unused colour assigned to #{language.name}"
+    end
+  end
+
+  def test_non_crash_on_comma
+    assert_nil Language[',']
   end
 end
