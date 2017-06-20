@@ -340,13 +340,13 @@ module Linguist
       elsif /use strict|use\s+v?5\./.match(data)
         Language["Perl"]
       elsif /^(use v6|(my )?class|module)/.match(data)
-        Language["Perl6"]
+        Language["Perl 6"]
       end
     end
 
     disambiguate ".pm" do |data|
       if /^\s*(?:use\s+v6\s*;|(?:\bmy\s+)?class|module)\b/.match(data)
-        Language["Perl6"]
+        Language["Perl 6"]
       elsif /\buse\s+(?:strict\b|v?5\.)/.match(data)
         Language["Perl"]
       end
@@ -446,7 +446,7 @@ module Linguist
       if /^\s*%[ \t]+|^\s*var\s+\w+\s*:=\s*\w+/.match(data)
         Language["Turing"]
       elsif /^\s*(?:use\s+v6\s*;|\bmodule\b|\b(?:my\s+)?class\b)/.match(data)
-        Language["Perl6"]
+        Language["Perl 6"]
       elsif /\buse\s+(?:strict\b|v?5\.)/.match(data)
         Language["Perl"]
       end
