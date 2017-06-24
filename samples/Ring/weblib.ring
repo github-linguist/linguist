@@ -1,5 +1,3 @@
-#!c:\ring\bin\ring.exe -cgi
-
 # Sample : Using the Web Library
 
 Load "weblib.ring"
