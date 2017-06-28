@@ -1,6 +1,6 @@
 /* CarbonOS System/Kernel
- * Copyright 2015-2017 David Aylaian, No Rights Reserved
- * Licensed under the Unlicense: http://unlicense.org
+ * Copyright 2015-2017 David Aylaian
+ * Licensed under Apache 2.0: https://github.com/DavidAylaian/CarbonOS/blob/master/LICENSE.md
  */
 
 #ifndef ASM_H
