@@ -1,6 +1,6 @@
 /* CarbonOS System/Kernel
- * Copyright 2015-2017 David Aylaian
- * Licensed under GitHub CLA: https://cla.github.com/agreement
+ * Copyright 2015-2017 David Aylaian, No Rights Reserved
+ * Licensed under the Unlicense: http://unlicense.org
  */
 
 #ifndef ASM_H
