@@ -176,6 +176,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **JSX:** [github-linguist/language-babel](https://github.com/github-linguist/language-babel)
 - **Julia:** [JuliaEditorSupport/Julia.tmbundle](https://github.com/JuliaEditorSupport/Julia.tmbundle)
 - **Jupyter Notebook:** [textmate/json.tmbundle](https://github.com/textmate/json.tmbundle)
+- **K Framework:** [traiansf/language-k](https://github.com/traiansf/language-k)
 - **Kit:** [textmate/html.tmbundle](https://github.com/textmate/html.tmbundle)
 - **Kotlin:** [vkostyukov/kotlin-sublime-package](https://github.com/vkostyukov/kotlin-sublime-package)
 - **LabVIEW:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)
