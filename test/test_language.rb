@@ -63,6 +63,7 @@ class TestLanguage < Minitest::Test
     assert_equal Language['Vim script'], Language.find_by_alias('vim')
     assert_equal Language['Vim script'], Language.find_by_alias('viml')
     assert_equal Language['reStructuredText'], Language.find_by_alias('rst')
+    assert_equal Language['XPM'], Language.find_by_alias('xpm')
     assert_equal Language['YAML'], Language.find_by_alias('yml')
     assert_nil Language.find_by_alias(nil)
   end

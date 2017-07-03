@@ -349,6 +349,8 @@ module Linguist
         Language["Perl 6"]
       elsif /\buse\s+(?:strict\b|v?5\.)/.match(data)
         Language["Perl"]
+      elsif /^\s*\/\* XPM \*\//.match(data)
+        Language["XPM"]
       end
     end
 

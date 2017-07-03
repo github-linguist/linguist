@@ -221,11 +221,12 @@ class TestHeuristcs < Minitest::Test
     })
   end
 
-  # Candidate languages = ["Perl", "Perl 6"]
-  def test_pm_perl_by_heuristics
+  # Candidate languages = ["Perl", "Perl 6", "XPM"]
+  def test_pm_by_heuristics
     assert_heuristics({
       "Perl" => all_fixtures("Perl", "*.pm"),
-      "Perl 6" => all_fixtures("Perl 6", "*.pm")
+      "Perl 6" => all_fixtures("Perl 6", "*.pm"),
+      "XPM" => all_fixtures("XPM", "*.pm")
     })
   end
 
