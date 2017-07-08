@@ -1,0 +1,18 @@
+(*!m2iso*) (* Copyright (c) 2017 Modula-2 Software Foundation *)
+
+DEFINITION MODULE Newline;
+
+(* Newline mode management *)
+
+TYPE Mode = ( LF, CR, CRLF );
+
+
+PROCEDURE SetMode ( mode : Mode );
+(* Sets the default newline mode. *)
+
+
+PROCEDURE mode ( ) : Mode;
+(* Returns the default newline mode. *)
+
+
+END Newline.
