@@ -67,6 +67,16 @@ For development you are going to want to checkout out the source. To get it, clo
     cd linguist/
     script/bootstrap
 
+To run Linguist from the cloned repository, you will need to generate the code samples first:
+
+    bundle exec rake samples
+
+Run this command each time a [sample][samples] has been modified.
+
+To run Linguist from the cloned repository:
+
+    bundle exec bin/linguist --breakdown
+
 To run the tests:
 
     bundle exec rake test

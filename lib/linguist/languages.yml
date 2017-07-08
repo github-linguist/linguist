@@ -1084,6 +1084,16 @@ Eagle:
   codemirror_mode: xml
   codemirror_mime_type: text/xml
   language_id: 97
+Easybuild:
+  type: data
+  group: Python
+  ace_mode: python
+  codemirror_mode: python
+  codemirror_mime_type: text/x-python
+  tm_scope: source.python
+  extensions:
+  - ".eb"
+  language_id: 342840477
 Ecere Projects:
   type: data
   group: JavaScript
@@ -1231,10 +1241,10 @@ Fancy:
   language_id: 109
 Fantom:
   type: programming
-  color: "#dbded5"
+  color: "#14253c"
   extensions:
   - ".fan"
-  tm_scope: none
+  tm_scope: source.fan
   ace_mode: text
   language_id: 110
 Filebench WML:
@@ -3129,7 +3139,7 @@ Pan:
   color: "#cc0000"
   extensions:
   - ".pan"
-  tm_scope: none
+  tm_scope: source.pan
   ace_mode: text
   language_id: 276
 Papyrus:
@@ -3216,10 +3226,12 @@ Perl:
   - ".pod"
   - ".psgi"
   - ".t"
+  filenames:
+  - cpanfile
   interpreters:
   - perl
   language_id: 282
-Perl6:
+Perl 6:
   type: programming
   color: "#0000fb"
   extensions:
@@ -3745,6 +3757,14 @@ RenderScript:
   tm_scope: none
   ace_mode: text
   language_id: 323
+Ring:
+  type: programming
+  color: "#0e60e3"
+  extensions:
+  - .ring
+  tm_scope: source.ring
+  ace_mode: text
+  language_id: 431  
 RobotFramework:
   type: programming
   extensions:
@@ -4861,6 +4881,7 @@ XML:
   - ".xml.dist"
   - ".xproj"
   - ".xsd"
+  - ".xspec"
   - ".xul"
   - ".zcml"
   filenames:
