@@ -26,3 +26,7 @@ END mode;
 BEGIN
   defaultMode := LF
 END Newline.
+
+(* License Exception:
+   This file has been relicensed to the Linguist project under MIT license
+   terms for use with Linguist. For other uses the LGPL 2.1 license applies. *)
