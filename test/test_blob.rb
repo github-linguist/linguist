@@ -238,6 +238,7 @@ class TestBlob < Minitest::Test
 
     # protobuf/grpc-plugin C++
     assert sample_blob_memory("C++/hello.grpc.pb.h").generated?
+    assert sample_blob_memory("C++/grpc.pb.cc").generated?
   end
 
   def test_vendored
