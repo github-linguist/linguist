@@ -6,7 +6,6 @@ class TestGrammars < Minitest::Test
   # List of projects that are allowed without licenses
   PROJECT_WHITELIST = [
     "vendor/grammars/Sublime-Lasso",
-    "vendor/grammars/sublime-spintools",
     "vendor/grammars/blitzmax"
   ].freeze
 
