@@ -171,6 +171,18 @@ Ada:
   - ada2005
   ace_mode: ada
   language_id: 11
+Adobe Font Metrics:
+  type: data
+  tm_scope: source.afm
+  extensions:
+  - ".afm"
+  aliases:
+  - acfm
+  - adobe composite font metrics
+  - adobe multiple font metrics
+  - amfm
+  ace_mode: text
+  language_id: 147198098
 Agda:
   type: programming
   color: "#315665"
@@ -3752,10 +3764,10 @@ Ring:
   type: programming
   color: "#0e60e3"
   extensions:
-  - .ring
+  - ".ring"
   tm_scope: source.ring
   ace_mode: text
-  language_id: 431  
+  language_id: 431
 RobotFramework:
   type: programming
   extensions:
