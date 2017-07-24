@@ -258,10 +258,12 @@ module Linguist
       # Most generators write their version number, while human authors' or companies'
       # names don't contain numbers. So look if the line contains digits. Also
       # look for some special cases without version numbers.
-      return creator =~ /[0-9]/ ||
-        creator.include?("mpage") ||
-        creator.include?("draw") ||
-        creator.include?("ImageMagick")
+      return true if creator =~ /[0-9]|draw|mpage|ImageMagick|inkscape|MATLAB/ ||
+        creator =~ /PCBNEW|pnmtops|\(Unknown\)|Serif Affinity|Filterimage -tops/
+
+      # EAGLE doesn't include a version number when it generates PostScript.
+      # However, it does prepend its name to the document's "%%Title" field.
+      !!creator.include?("EAGLE") and lines[0..4].find {|line| line =~ /^%%Title: EAGLE Drawing /}
     end
 
     def generated_go?
