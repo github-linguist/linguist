@@ -244,7 +244,11 @@ module Linguist
     #
     # Returns true or false.
     def generated_postscript?
-      return false unless ['.ps', '.eps'].include? extname
+      return false unless ['.ps', '.eps', '.pfa'].include? extname
+
+      # Type 1 and Type 42 fonts converted to PostScript are stored as hex-encoded byte streams; these
+      # streams are always preceded the `eexec` operator (if Type 1), or the `/sfnts` key (if Type 42).
+      return true if data =~ /(\n|\r\n|\r)\s*(?:currentfile eexec\s+|\/sfnts\s+\[\1<)\h{8,}\1/
 
       # We analyze the "%%Creator:" comment, which contains the author/generator
       # of the file. If there is one, it should be in one of the first few lines.
