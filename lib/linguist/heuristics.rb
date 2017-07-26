@@ -18,8 +18,7 @@ module Linguist
 
       @heuristics.each do |heuristic|
         if heuristic.matches?(blob.name)
-          languages = Array(heuristic.call(data))
-          return languages if languages.any? || languages.all? { |l| candidates.include?(l) }
+          return Array(heuristic.call(data))
         end
       end
 
