@@ -7,13 +7,12 @@ module Linguist
   # It strips any data strings or comments and preserves significant
   # language symbols.
   class Tokenizer
-    # Public: Extract tokens from data
+    # Public: Extract tokens from data. Data must be valid UTF-8.
     #
     # data - String to tokenize
     #
     # Returns Array of token Strings.
     def self.tokenize(data)
-      data = data.encode('UTF-8', 'UTF-8', :invalid => :replace)
       new.extract_tokens(data)
     end
 

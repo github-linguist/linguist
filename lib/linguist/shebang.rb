@@ -11,7 +11,7 @@ module Linguist
     # Returns an Array with one Language if the blob has a shebang with a valid
     # interpreter, or empty if there is no shebang.
     def self.call(blob, _ = nil)
-      Language.find_by_interpreter interpreter(blob.data)
+      Language.find_by_interpreter interpreter(blob.utf8_data)
     end
 
     # Public: Get the interpreter from the shebang
