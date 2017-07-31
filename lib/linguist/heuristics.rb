@@ -27,8 +27,8 @@ module Linguist
 
     # Internal: Define a new heuristic.
     #
-    # extensions - String names of file extensions and languages to
-    #              disambiguate.
+    # exts_and_langs - String names of file extensions and languages to
+    #                  disambiguate.
     # heuristic - Block which takes data as an argument and returns a Language or nil.
     #
     # Examples
@@ -41,16 +41,16 @@ module Linguist
     #       end
     #     end
     #
-    def self.disambiguate(*extensions, &heuristic)
-      @heuristics << new(extensions, &heuristic)
+    def self.disambiguate(*exts_and_langs, &heuristic)
+      @heuristics << new(exts_and_langs, &heuristic)
     end
 
     # Internal: Array of defined heuristics
     @heuristics = []
 
     # Internal
-    def initialize(extensions, &heuristic)
-      @extensions, @candidates = extensions.partition {|e| e =~ /\A\./}
+    def initialize(exts_and_langs, &heuristic)
+      @exts_and_langs, @candidates = exts_and_langs.partition {|e| e =~ /\A\./}
       @heuristic = heuristic
     end
 
@@ -59,7 +59,7 @@ module Linguist
     def matches?(filename, candidates)
       filename = filename.downcase
       candidates = candidates.compact.map(&:name)
-      @extensions.any? { |ext| filename.end_with?(ext) } ||
+      @exts_and_langs.any? { |ext| filename.end_with?(ext) } ||
         (candidates.any? &&
          (@candidates - candidates == [] &&
           candidates - @candidates == []))
