@@ -113,4 +113,8 @@ class TestTokenizer < Minitest::Test
     assert_equal %w(module Foo end), tokenize(:"Ruby/foo.rb")
     assert_equal %w(task default do puts end), tokenize(:"Ruby/filenames/Rakefile")
   end
+
+  def test_utf8_tokens
+    assert_equal %w(Функция الكون), tokenize(:"Функция الكون".to_s)
+  end
 end

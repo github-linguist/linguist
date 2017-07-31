@@ -107,7 +107,7 @@ module Linguist
           tokens << token
 
         # Regular token
-        elsif token = s.scan(/[\w\.@#\/\*]+/)
+        elsif token = s.scan(/[[[:alnum:]]_\.@#\/\*]+/)
           tokens << token
 
         # Common operators
