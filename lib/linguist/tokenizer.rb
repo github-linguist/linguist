@@ -13,6 +13,7 @@ module Linguist
     #
     # Returns Array of token Strings.
     def self.tokenize(data)
+      data = data.encode('UTF-8', 'UTF-8', :invalid => :replace)
       new.extract_tokens(data)
     end
 
