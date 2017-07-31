@@ -114,7 +114,4 @@ class TestTokenizer < Minitest::Test
     assert_equal %w(task default do puts end), tokenize(:"Ruby/filenames/Rakefile")
   end
 
-  def test_invalid_utf8
-    assert_equal %w(foo bar), tokenize("foo \xB5\xB8 bar".to_s)
-  end
 end
