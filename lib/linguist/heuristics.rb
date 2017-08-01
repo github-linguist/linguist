@@ -17,9 +17,8 @@ module Linguist
       data = blob.data
 
       @heuristics.each do |heuristic|
-        if heuristic.matches?(blob.name)
-          languages = Array(heuristic.call(data))
-          return languages if languages.any? || languages.all? { |l| candidates.include?(l) }
+        if heuristic.matches?(blob.name, candidates)
+          return Array(heuristic.call(data))
         end
       end
 
@@ -28,7 +27,8 @@ module Linguist
 
     # Internal: Define a new heuristic.
     #
-    # languages - String names of languages to disambiguate.
+    # exts_and_langs - String names of file extensions and languages to
+    #                  disambiguate.
     # heuristic - Block which takes data as an argument and returns a Language or nil.
     #
     # Examples
@@ -41,23 +41,28 @@ module Linguist
     #       end
     #     end
     #
-    def self.disambiguate(*extensions, &heuristic)
-      @heuristics << new(extensions, &heuristic)
+    def self.disambiguate(*exts_and_langs, &heuristic)
+      @heuristics << new(exts_and_langs, &heuristic)
     end
 
     # Internal: Array of defined heuristics
     @heuristics = []
 
     # Internal
-    def initialize(extensions, &heuristic)
-      @extensions = extensions
+    def initialize(exts_and_langs, &heuristic)
+      @exts_and_langs, @candidates = exts_and_langs.partition {|e| e =~ /\A\./}
       @heuristic = heuristic
     end
 
-    # Internal: Check if this heuristic matches the candidate languages.
-    def matches?(filename)
+    # Internal: Check if this heuristic matches the candidate filenames or
+    # languages.
+    def matches?(filename, candidates)
       filename = filename.downcase
-      @extensions.any? { |ext| filename.end_with?(ext) }
+      candidates = candidates.compact.map(&:name)
+      @exts_and_langs.any? { |ext| filename.end_with?(ext) } ||
+        (candidates.any? &&
+         (@candidates - candidates == [] &&
+          candidates - @candidates == []))
     end
 
     # Internal: Perform the heuristic
@@ -354,7 +359,7 @@ module Linguist
       end
     end
 
-    disambiguate ".pod" do |data|
+    disambiguate ".pod", "Pod", "Perl" do |data|
       if /^=\w+\b/.match(data)
         Language["Pod"]
       else
