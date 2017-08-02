@@ -270,6 +270,12 @@ class TestLanguage < Minitest::Test
     assert_nil Language[""]
   end
 
+  def test_does_not_blow_up_with_non_string_lookup
+    assert_nil Language.find_by_alias(true)
+    assert_nil Language.find_by_name(true)
+    assert_nil Language[true]
+  end
+
   def test_name
     assert_equal 'Perl',   Language['Perl'].name
     assert_equal 'Python', Language['Python'].name
