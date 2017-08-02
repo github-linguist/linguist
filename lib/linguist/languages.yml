@@ -3300,6 +3300,8 @@ Pod:
   wrap: true
   extensions:
   - ".pod"
+  interpreters:
+  - perl
   tm_scope: none
   language_id: 288
 PogoScript:
@@ -3323,6 +3325,7 @@ PostScript:
   extensions:
   - ".ps"
   - ".eps"
+  - ".pfa"
   tm_scope: source.postscript
   aliases:
   - postscr
