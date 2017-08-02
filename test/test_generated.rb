@@ -94,5 +94,8 @@ class TestGenerated < Minitest::Test
 
     # roxygen2
     generated_sample_loading_data("R/import.Rd")
+
+    # PostScript
+    generated_sample_loading_data("PostScript/lambda.pfa")
   end
 end
