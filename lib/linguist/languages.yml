@@ -209,7 +209,7 @@ Ant Build System:
   codemirror_mime_type: application/xml
   language_id: 15
 ApacheConf:
-  type: markup
+  type: data
   aliases:
   - aconf
   - apache
@@ -1074,8 +1074,7 @@ EQ:
   codemirror_mime_type: text/x-csharp
   language_id: 96
 Eagle:
-  type: markup
-  color: "#814C05"
+  type: data
   extensions:
   - ".sch"
   - ".brd"
@@ -2807,7 +2806,7 @@ NewLisp:
   codemirror_mime_type: text/x-common-lisp
   language_id: 247
 Nginx:
-  type: markup
+  type: data
   extensions:
   - ".nginxconf"
   - ".vhost"
@@ -2819,7 +2818,6 @@ Nginx:
   ace_mode: text
   codemirror_mode: nginx
   codemirror_mime_type: text/x-nginx-conf
-  color: "#9469E9"
   language_id: 248
 Nim:
   type: programming
@@ -4738,8 +4736,7 @@ Wavefront Object:
   ace_mode: text
   language_id: 393
 Web Ontology Language:
-  type: markup
-  color: "#9cc9dd"
+  type: data
   extensions:
   - ".owl"
   tm_scope: text.xml
@@ -4926,11 +4923,11 @@ XPM:
   tm_scope: source.c
   language_id: 781846279
 XPages:
-  type: programming
+  type: data
   extensions:
   - ".xsp-config"
   - ".xsp.metadata"
-  tm_scope: none
+  tm_scope: text.xml
   ace_mode: xml
   codemirror_mode: xml
   codemirror_mime_type: text/xml
