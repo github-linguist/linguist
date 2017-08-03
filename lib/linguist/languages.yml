@@ -781,9 +781,6 @@ Component Pascal:
   - ".cp"
   - ".cps"
   tm_scope: source.pascal
-  aliases:
-  - delphi
-  - objectpascal
   ace_mode: pascal
   codemirror_mode: pascal
   codemirror_mime_type: text/x-pascal
@@ -3199,12 +3196,19 @@ Parrot Internal Representation:
 Pascal:
   type: programming
   color: "#E3F171"
+  aliases:
+  - delphi
+  - objectpascal
   extensions:
   - ".pas"
   - ".dfm"
   - ".dpr"
+  - ".dproj"
+  - ".dpk"
   - ".inc"
   - ".lpr"
+  - ".lpk"
+  - ".lpi"
   - ".pascal"
   - ".pp"
   interpreters:
