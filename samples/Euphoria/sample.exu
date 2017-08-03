@@ -1,0 +1,20 @@
+-- Sample of Euphoria Source code --
+include std/io.e
+constant CONSOLE = 1,
+         KEYBOARD = 0,
+         $
+
+public function prompt_string(sequence prompt)
+    object answer
+
+    puts(CONSOLE, prompt)
+    answer = gets(KEYBOARD)
+    puts(CONSOLE, "\n")
+    if sequence(answer) and length(answer) > 0 then
+        return answer[1..$-1] -- trim the trailing end-of-line character
+    else
+        return ""
+    end if
+end function
+
+writefln("You entered '[]'", { prompt_string("Enter your name: ")})
