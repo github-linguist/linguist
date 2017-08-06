@@ -109,7 +109,7 @@ module Linguist
     #
     # Returns the Language or nil if none was found.
     def self.find_by_name(name)
-      return nil if name.to_s.empty?
+      return nil if !name.is_a?(String) || name.to_s.empty?
       name && (@name_index[name.downcase] || @name_index[name.split(',').first.downcase])
     end
 
@@ -124,7 +124,7 @@ module Linguist
     #
     # Returns the Language or nil if none was found.
     def self.find_by_alias(name)
-      return nil if name.to_s.empty?
+      return nil if !name.is_a?(String) || name.to_s.empty?
       name && (@alias_index[name.downcase] || @alias_index[name.split(',').first.downcase])
     end
 
@@ -214,7 +214,7 @@ module Linguist
     #
     # Returns the Language or nil if none was found.
     def self.[](name)
-      return nil if name.to_s.empty?
+      return nil if !name.is_a?(String) || name.to_s.empty?
 
       lang = @index[name.downcase]
       return lang if lang

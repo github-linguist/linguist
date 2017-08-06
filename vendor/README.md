@@ -291,7 +291,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Rascal:** [usethesource/rascal-syntax-highlighting](https://github.com/usethesource/rascal-syntax-highlighting)
 - **RDoc:** [joshaven/RDoc.tmbundle](https://github.com/joshaven/RDoc.tmbundle)
 - **REALbasic:** [angryant0007/VBDotNetSyntax](https://github.com/angryant0007/VBDotNetSyntax)
-- **Reason:** [chenglou/sublime-reason](https://github.com/chenglou/sublime-reason)
+- **Reason:** [reasonml-editor/language-reason](https://github.com/reasonml-editor/language-reason)
 - **Rebol:** [Oldes/Sublime-REBOL](https://github.com/Oldes/Sublime-REBOL)
 - **Red:** [Oldes/Sublime-Red](https://github.com/Oldes/Sublime-Red)
 - **Regular Expression:** [Alhadis/language-regexp](https://github.com/Alhadis/language-regexp)

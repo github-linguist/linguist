@@ -1457,6 +1457,29 @@ Gentoo Eclass:
   codemirror_mode: shell
   codemirror_mime_type: text/x-sh
   language_id: 128
+Gerber Image:
+  type: data
+  aliases:
+  - rs-274x
+  extensions:
+  - ".gbr"
+  - ".gbl"
+  - ".gbo"
+  - ".gbp"
+  - ".gbs"
+  - ".gko"
+  - ".gpb"
+  - ".gpt"
+  - ".gtl"
+  - ".gto"
+  - ".gtp"
+  - ".gts"
+  interpreters:
+  - "gerbv"
+  - "gerbview"
+  tm_scope: source.gerber
+  ace_mode: text
+  language_id: 404627610
 Gettext Catalog:
   type: prose
   searchable: false
@@ -3347,6 +3370,7 @@ PostScript:
   extensions:
   - ".ps"
   - ".eps"
+  - ".pfa"
   tm_scope: source.postscript
   aliases:
   - postscr
