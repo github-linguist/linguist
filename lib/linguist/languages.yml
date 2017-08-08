@@ -2149,15 +2149,37 @@ KRL:
   tm_scope: none
   ace_mode: text
   language_id: 186
-KiCad:
-  type: programming
+KiCad Board:
+  type: data
+  extensions:
+  - ".brd"
+  tm_scope: source.pcb.board
+  ace_mode: text
+  language_id: 140848857
+KiCad Layout:
+  type: data
+  aliases:
+  - pcbnew
+  extensions:
+  - ".kicad_pcb"
+  - ".kicad_mod"
+  - ".kicad_wks"
+  filenames:
+  - fp-lib-table
+  tm_scope: source.pcb.sexp
+  ace_mode: lisp
+  codemirror_mode: commonlisp
+  codemirror_mime_type: text/x-common-lisp
+  language_id: 187
+KiCad Schematic:
+  type: data
+  aliases:
+  - eeschema schematic
   extensions:
   - ".sch"
-  - ".brd"
-  - ".kicad_pcb"
-  tm_scope: none
+  tm_scope: source.pcb.schematic
   ace_mode: text
-  language_id: 187
+  language_id: 622447435
 Kit:
   type: markup
   ace_mode: html
@@ -4094,6 +4116,7 @@ Scheme:
   color: "#1e4aec"
   extensions:
   - ".scm"
+  - ".sch"
   - ".sld"
   - ".sls"
   - ".sps"
