@@ -2,8 +2,7 @@
 #
 # type              - Either data, programming, markup, prose, or nil
 # aliases           - An Array of additional aliases (implicitly
-#                     includes the lowercase name with spaces replaced
-#                     by dashes)
+#                     includes name.downcase)
 # ace_mode          - A String name of the Ace Mode used for highlighting whenever
 #                     a file is edited. This must match one of the filenames in http://git.io/3XO_Cg.
 #                     Use "text" if a mode does not exist.
@@ -172,6 +171,18 @@ Ada:
   - ada2005
   ace_mode: ada
   language_id: 11
+Adobe Font Metrics:
+  type: data
+  tm_scope: source.afm
+  extensions:
+  - ".afm"
+  aliases:
+  - acfm
+  - adobe composite font metrics
+  - adobe multiple font metrics
+  - amfm
+  ace_mode: text
+  language_id: 147198098
 Agda:
   type: programming
   color: "#315665"
@@ -456,7 +467,6 @@ C:
   - ".cats"
   - ".h"
   - ".idc"
-  - ".w"
   interpreters:
   - tcc
   ace_mode: c_cpp
@@ -590,6 +600,13 @@ CSV:
   extensions:
   - ".csv"
   language_id: 51
+CWeb:
+  type: programming
+  extensions:
+  - ".w"
+  tm_scope: none
+  ace_mode: text
+  language_id: 657332628
 Cap'n Proto:
   type: programming
   tm_scope: source.capnp
@@ -688,6 +705,18 @@ Clojure:
   filenames:
   - riemann.config
   language_id: 62
+Closure Templates:
+  type: markup
+  group: HTML
+  ace_mode: soy_template
+  codemirror_mode: soy
+  codemirror_mime_type: text/x-soy
+  alias:
+  - soy
+  extensions:
+  - ".soy"
+  tm_scope: text.html.soy
+  language_id: 357046146
 CoffeeScript:
   type: programming
   tm_scope: source.coffee
@@ -1067,6 +1096,16 @@ Eagle:
   codemirror_mode: xml
   codemirror_mime_type: text/xml
   language_id: 97
+Easybuild:
+  type: data
+  group: Python
+  ace_mode: python
+  codemirror_mode: python
+  codemirror_mime_type: text/x-python
+  tm_scope: source.python
+  extensions:
+  - ".eb"
+  language_id: 342840477
 Ecere Projects:
   type: data
   group: JavaScript
@@ -1214,10 +1253,10 @@ Fancy:
   language_id: 109
 Fantom:
   type: programming
-  color: "#dbded5"
+  color: "#14253c"
   extensions:
   - ".fan"
-  tm_scope: none
+  tm_scope: source.fan
   ace_mode: text
   language_id: 110
 Filebench WML:
@@ -1360,6 +1399,8 @@ GLSL:
   - ".glslv"
   - ".gshader"
   - ".shader"
+  - ".tesc"
+  - ".tese"
   - ".vert"
   - ".vrx"
   - ".vsh"
@@ -1428,6 +1469,29 @@ Gentoo Eclass:
   codemirror_mode: shell
   codemirror_mime_type: text/x-sh
   language_id: 128
+Gerber Image:
+  type: data
+  aliases:
+  - rs-274x
+  extensions:
+  - ".gbr"
+  - ".gbl"
+  - ".gbo"
+  - ".gbp"
+  - ".gbs"
+  - ".gko"
+  - ".gpb"
+  - ".gpt"
+  - ".gtl"
+  - ".gto"
+  - ".gtp"
+  - ".gts"
+  interpreters:
+  - "gerbv"
+  - "gerbview"
+  tm_scope: source.gerber
+  ace_mode: text
+  language_id: 404627610
 Gettext Catalog:
   type: prose
   searchable: false
@@ -1738,7 +1802,7 @@ Harbour:
   language_id: 156
 Haskell:
   type: programming
-  color: "#29b544"
+  color: "#5e5086"
   extensions:
   - ".hs"
   - ".hsc"
@@ -2085,15 +2149,37 @@ KRL:
   tm_scope: none
   ace_mode: text
   language_id: 186
-KiCad:
-  type: programming
+KiCad Board:
+  type: data
+  extensions:
+  - ".brd"
+  tm_scope: source.pcb.board
+  ace_mode: text
+  language_id: 140848857
+KiCad Layout:
+  type: data
+  aliases:
+  - pcbnew
+  extensions:
+  - ".kicad_pcb"
+  - ".kicad_mod"
+  - ".kicad_wks"
+  filenames:
+  - fp-lib-table
+  tm_scope: source.pcb.sexp
+  ace_mode: lisp
+  codemirror_mode: commonlisp
+  codemirror_mime_type: text/x-common-lisp
+  language_id: 187
+KiCad Schematic:
+  type: data
+  aliases:
+  - eeschema schematic
   extensions:
   - ".sch"
-  - ".brd"
-  - ".kicad_pcb"
-  tm_scope: none
+  tm_scope: source.pcb.schematic
   ace_mode: text
-  language_id: 187
+  language_id: 622447435
 Kit:
   type: markup
   ace_mode: html
@@ -2450,6 +2536,7 @@ Makefile:
   - Makefile.frag
   - Makefile.in
   - Makefile.inc
+  - Makefile.wat
   - makefile
   - makefile.sco
   - mkfile
@@ -3100,7 +3187,7 @@ Pan:
   color: "#cc0000"
   extensions:
   - ".pan"
-  tm_scope: none
+  tm_scope: source.pan
   ace_mode: text
   language_id: 276
 Papyrus:
@@ -3160,6 +3247,14 @@ Pascal:
   codemirror_mode: pascal
   codemirror_mime_type: text/x-pascal
   language_id: 281
+Pep8:
+  type: programming
+  color: "#C76F5B"
+  extensions:
+  - ".pep"
+  ace_mode: text
+  tm_scope: source.pep8
+  language_id: 840372442
 Perl:
   type: programming
   tm_scope: source.perl
@@ -3179,10 +3274,12 @@ Perl:
   - ".pod"
   - ".psgi"
   - ".t"
+  filenames:
+  - cpanfile
   interpreters:
   - perl
   language_id: 282
-Perl6:
+Perl 6:
   type: programming
   color: "#0000fb"
   extensions:
@@ -3260,6 +3357,8 @@ Pod:
   wrap: true
   extensions:
   - ".pod"
+  interpreters:
+  - perl
   tm_scope: none
   language_id: 288
 PogoScript:
@@ -3283,6 +3382,7 @@ PostScript:
   extensions:
   - ".ps"
   - ".eps"
+  - ".pfa"
   tm_scope: source.postscript
   aliases:
   - postscr
@@ -3708,6 +3808,14 @@ RenderScript:
   tm_scope: none
   ace_mode: text
   language_id: 323
+Ring:
+  type: programming
+  color: "#0e60e3"
+  extensions:
+  - ".ring"
+  tm_scope: source.ring
+  ace_mode: text
+  language_id: 431
 RobotFramework:
   type: programming
   extensions:
@@ -3740,6 +3848,7 @@ Roff:
   - ".me"
   - ".ms"
   - ".n"
+  - ".nr"
   - ".rno"
   - ".roff"
   - ".tmac"
@@ -4007,6 +4116,7 @@ Scheme:
   color: "#1e4aec"
   extensions:
   - ".scm"
+  - ".sch"
   - ".sld"
   - ".sls"
   - ".sps"
@@ -4073,7 +4183,12 @@ Shell:
   - PKGBUILD
   - gradlew
   interpreters:
+  - ash
   - bash
+  - dash
+  - ksh
+  - mksh
+  - pdksh
   - rc
   - sh
   - zsh
@@ -4098,7 +4213,7 @@ Shen:
   color: "#120F14"
   extensions:
   - ".shen"
-  tm_scope: none
+  tm_scope: source.shen
   ace_mode: text
   language_id: 348
 Slash:
@@ -4459,6 +4574,15 @@ Twig:
   codemirror_mode: twig
   codemirror_mime_type: text/x-twig
   language_id: 377
+Type Language:
+  type: data
+  aliases:
+  - tl
+  extensions:
+  - ".tl"
+  tm_scope: source.tl
+  ace_mode: text
+  language_id: 632765617
 TypeScript:
   type: programming
   color: "#2b7489"
@@ -4656,6 +4780,20 @@ Web Ontology Language:
   tm_scope: text.xml
   ace_mode: xml
   language_id: 394
+WebAssembly:
+  type: programming
+  color: "#04133b"
+  extensions:
+  - ".wast"
+  - ".wat"
+  aliases:
+  - wast
+  - wasm
+  tm_scope: source.webassembly
+  ace_mode: lisp
+  codemirror_mode: commonlisp
+  codemirror_mime_type: text/x-common-lisp
+  language_id: 956556503
 WebIDL:
   type: programming
   extensions:
@@ -4800,6 +4938,7 @@ XML:
   - ".xml.dist"
   - ".xproj"
   - ".xsd"
+  - ".xspec"
   - ".xul"
   - ".zcml"
   filenames:
@@ -4813,6 +4952,14 @@ XML:
   - Web.config
   - packages.config
   language_id: 399
+XPM:
+  type: data
+  extensions:
+  - ".xpm"
+  - ".pm"
+  ace_mode: c_cpp
+  tm_scope: source.c
+  language_id: 781846279
 XPages:
   type: programming
   extensions:

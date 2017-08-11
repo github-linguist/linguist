@@ -235,6 +235,10 @@ class TestBlob < Minitest::Test
 
     # Racc-generated Ruby
     assert sample_blob_memory("Ruby/racc.rb").generated?
+
+    # protobuf/grpc-plugin C++
+    assert sample_blob_memory("C++/hello.grpc.pb.h").generated?
+    assert sample_blob_memory("C++/grpc.pb.cc").generated?
   end
 
   def test_vendored

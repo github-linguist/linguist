@@ -63,6 +63,7 @@ class TestLanguage < Minitest::Test
     assert_equal Language['Vim script'], Language.find_by_alias('vim')
     assert_equal Language['Vim script'], Language.find_by_alias('viml')
     assert_equal Language['reStructuredText'], Language.find_by_alias('rst')
+    assert_equal Language['XPM'], Language.find_by_alias('xpm')
     assert_equal Language['YAML'], Language.find_by_alias('yml')
     assert_nil Language.find_by_alias(nil)
   end
@@ -267,6 +268,12 @@ class TestLanguage < Minitest::Test
     assert_nil Language.find_by_alias('')
     assert_nil Language.find_by_name(nil)
     assert_nil Language[""]
+  end
+
+  def test_does_not_blow_up_with_non_string_lookup
+    assert_nil Language.find_by_alias(true)
+    assert_nil Language.find_by_name(true)
+    assert_nil Language[true]
   end
 
   def test_name

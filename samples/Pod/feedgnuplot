@@ -1,0 +1,2074 @@
+#!/usr/bin/perl
+
+package feedgnuplot; # for the metacpan indexer
+
+use strict;
+use warnings;
+use Getopt::Long;
+use Time::HiRes qw( usleep gettimeofday tv_interval );
+use IO::Handle;
+use IO::Select;
+use List::Util qw( first );
+use List::MoreUtils 'any';
+use Scalar::Util qw( looks_like_number );
+use Text::ParseWords; # for shellwords
+use Pod::Usage;
+use Time::Piece;
+
+my $VERSION = 1.44;
+
+my %options;
+interpretCommandline();
+
+# list containing the plot data. Each element is a hashref of parameters.
+# $curve->{datastring} is a string of all the data in this curve that can be
+# sent directly to gnuplot. $curve->{datastring_meta} is a hashref {domain =>
+# ..., offset_start => ...}. offset_start represents a position in the
+# datastring where this particular data element begins. As the data is culled
+# with --xlen, the offsets are preserved by using $curve->{datastring_offset} to
+# represent the offset IN THE ORIGINAL STRING of the current start of the
+# datastring
+my @curves = ();
+
+# list mapping curve names to their indices in the @curves list
+my %curveIndices = ();
+
+# Whether any new data has arrived since the last replot
+my $haveNewData;
+
+# when the last replot happened
+my $last_replot_time = [gettimeofday];
+
+# whether the previous replot was timer based
+my $last_replot_is_from_timer = 1;
+my $this_replot_is_from_timer;
+
+
+
+
+
+
+
+
+sub getRangeSize
+{
+    my ($id) = @_;
+
+    # I'd like to use //, but I guess some people are still on perl 5.8
+    return
+      exists $options{rangesize_hash}{$id} ?
+      $options{rangesize_hash}{$id} :
+      $options{rangesize_default};
+}
+
+sub interpretCommandline
+{
+  # if I'm using a self-plotting data file with a #! line, then $ARGV[0] will contain ALL of the
+  # options and $ARGV[1] will contain the data file to plot. In this case I need to split $ARGV[0] so
+  # that GetOptions() can parse it correctly. On the other hand, if I'm plotting normally (not with
+  # #!)  a file with spaces in the filename, I don't want to split the filename. Hopefully this logic
+  # takes care of both those cases.
+  if (exists $ARGV[0] && !-r $ARGV[0])
+  {
+    unshift @ARGV, shellwords shift @ARGV;
+  }
+
+  # everything off by default:
+  # do not stream in the data by default
+  # point plotting by default.
+  # no monotonicity checks by default
+  # normal histograms by default
+  $options{ maxcurves } = 100;
+  $options{ histstyle}  = 'freq';
+
+  # Previously I was using 'legend=s%' and 'curvestyle=s%' for curve addressing. This had cleaner
+  # syntax, but disregarded the order of the given options. This resulted in arbitrarily ordered
+  # curves. I thus make parse these into lists, and then also make hashes, for later use
+
+  # needed for these to be parsed into an array-ref, these default to []
+  $options{legend}     = [];
+  $options{curvestyle} = [];
+  $options{style}      = [];
+  $options{histogram}  = [];
+  $options{y2}         = [];
+  $options{extracmds}  = [];
+  $options{set}        = [];
+  $options{unset}      = [];
+  $options{equation}   = [];
+
+  $options{curvestyleall} = '';
+  $options{styleall}      = '';
+  $options{with}          = '';
+
+  $options{rangesize} = [];
+
+  GetOptions(\%options, 'stream:s', 'domain!', 'dataid!', '3d!', 'colormap!', 'lines!', 'points!',
+             'circles', 'legend=s{2}', 'autolegend!', 'xlabel=s', 'ylabel=s', 'y2label=s', 'zlabel=s',
+             'title=s', 'xlen=f', 'ymin=f', 'ymax=f', 'xmin=s', 'xmax=s', 'y2min=f', 'y2max=f',
+             'zmin=f', 'zmax=f', 'y2=s@',
+             'style=s{2}', 'curvestyle=s{2}', 'curvestyleall=s', 'styleall=s', 'with=s', 'extracmds=s@', 'set=s@', 'unset=s@',
+             'square!', 'square_xy!', 'hardcopy=s', 'maxcurves=i', 'monotonic!', 'timefmt=s',
+             'equation=s@',
+             'image=s',
+             'histogram=s@', 'binwidth=f', 'histstyle=s',
+             'terminal=s',
+             'rangesize=s{2}', 'rangesizeall=i', 'extraValuesPerPoint=i',
+             'help', 'dump', 'exit', 'version',
+             'geometry=s') or exit 1;
+
+  # handle various cmdline-option errors
+  if ( $options{help} )
+  {
+    pod2usage( -exitval => 0,
+               -verbose => 1, # synopsis and args
+               -output  => \*STDOUT );
+  }
+
+  if( $options{version} )
+  {
+    print "feedgnuplot version $VERSION\n";
+    exit 0;
+  }
+
+  # --style and --curvestyle are synonyms, as are --styleall and
+  # --curvestyleall, so fill that in
+  if( $options{styleall} )
+  {
+    if($options{curvestyleall} ) { $options{curvestyleall} .= " $options{styleall}"; }
+    else                         { $options{curvestyleall}  =   $options{styleall};  }
+    delete $options{styleall};
+  }
+
+  push @{$options{curvestyle}}, @{$options{style}};
+  delete $options{style};
+
+  if( $options{curvestyleall} && $options{with} )
+  {
+    print STDERR "--curvestyleall and --with are mutually exclusive. Please just use one.\n";
+    exit -1;
+  }
+  if( $options{with} )
+  {
+    $options{curvestyleall} = "with $options{with}";
+    delete $options{with};
+  }
+
+
+  # expand options that are given as comma-separated lists
+  for my $listkey (qw(histogram y2))
+  {
+    @{$options{$listkey}} = map split('\s*,\s*', $_), @{$options{$listkey}}
+      if defined $options{$listkey};
+  }
+  for my $listkey (qw(curvestyle rangesize))
+  {
+      next unless defined $options{$listkey};
+      my @in = @{$options{$listkey}};
+      my $N = @in / 2;
+      my @out;
+      for my $i (0..$N-1)
+      {
+          my $key   = $in[2*$i];
+          my $value = $in[2*$i + 1];
+          for my $key_new (split('\s*,\s*', $key))
+          {
+              push @out, $key_new, $value;
+          }
+      }
+
+      @{$options{$listkey}} = @out;
+  }
+
+
+  # If we're plotting histograms, then set the default histogram options for
+  # each histogram curve
+  #
+  # Apply this to plain (non-cumulative) histograms
+  if( !$options{curvestyleall} && $options{histstyle} =~ /freq|fnorm/ )
+  {
+      for my $hist_curve(@{$options{histogram}})
+      {
+          # If we don't specify any options specifically for this histogram, use
+          # the defaults: filled boxes with borders
+          if( !any { $options{curvestyle}[$_*2] eq $hist_curve } 0..(@{$options{curvestyle}}/2 - 1) )
+          {
+              push @{$options{curvestyle}}, ($hist_curve, 'with boxes fill solid border lt -1');
+          }
+      }
+  }
+
+  # --legend and --curvestyle options are conceptually hashes, but are parsed as
+  # arrays in order to preserve the ordering. I parse both of these into hashes
+  # because those are useful to have later. After this I can access individual
+  # legends with $options{legend_hash}{curveid}
+  for my $listkey (qw(legend curvestyle rangesize))
+  {
+    $options{"${listkey}_hash"} = {};
+
+    my $n = scalar @{$options{$listkey}}/2;
+    foreach my $idx (0..$n-1)
+    {
+      $options{"${listkey}_hash"}{$options{$listkey}[$idx*2]} = $options{$listkey}[$idx*2 + 1];
+    }
+  }
+
+  if ( defined $options{hardcopy} && defined $options{stream} )
+  {
+    print STDERR "--stream doesn't make sense together with --hardcopy\n";
+    exit -1;
+  }
+
+  if ( defined $options{rangesizeall} && defined $options{extraValuesPerPoint} )
+  {
+    print STDERR "Only one of --rangesizeall and --extraValuesPerPoint may be given\n";
+    exit -1;
+  }
+
+
+  # I now set up the rangesize to always be
+  #
+  #   $options{rangesize_hash}{$id} // $options{rangesize_default}
+  #
+  # which is available as getRangeSize($id)
+  if ( $options{rangesizeall} )
+  {
+      $options{rangesize_default} = $options{rangesizeall};
+  }
+  else
+  {
+      $options{rangesize_default} = 1;
+
+      $options{rangesize_default} += $options{extraValuesPerPoint} if ($options{extraValuesPerPoint});
+      $options{rangesize_default}++                                if ($options{colormap});
+      $options{rangesize_default}++                                if ($options{circles} );
+  }
+
+
+  # parse stream option. Allowed only numbers >= 0 or 'trigger'. After this code
+  # $options{stream} is
+  #  -1 for triggered replotting
+  #  >0 for timed replotting
+  #  undef if not streaming
+  #
+  #  Note that '0' is not allowed, so !$options{stream} will do the expected
+  #  thing
+  if(defined $options{stream})
+  {
+    # if no streaming period is given, default to 1Hz.
+    $options{stream} = 1 if $options{stream} eq '';
+
+    if( !looks_like_number $options{stream} )
+    {
+      if($options{stream} eq 'trigger')
+      {
+        $options{stream} = 0;
+      }
+      else
+      {
+        print STDERR "--stream can only take in values >=0 or 'trigger'\n";
+        exit -1;
+      }
+    }
+
+    if ( $options{stream} == 0 )
+    {
+      $options{stream} = -1;
+    }
+    elsif ( $options{stream} <= 0)
+    {
+      print STDERR "--stream can only take in values >=0 or 'trigger'\n";
+      exit -1;
+    }
+  }
+
+  if ($options{colormap})
+  {
+    # colormap styles all curves with palette. Seems like there should be a way to do this with a
+    # global setting, but I can't get that to work
+    $options{curvestyleall} .= ' palette';
+  }
+
+  if ( defined $options{binwidth} && !@{$options{histogram}} )
+  {
+    print STDERR "--binwidth doesn't make sense without any histograms\n";
+    exit -1;
+  }
+
+
+  if ( $options{'3d'} )
+  {
+    if ( !$options{domain} )
+    {
+      print STDERR "--3d only makes sense with --domain\n";
+      exit -1;
+    }
+
+    if ( $options{timefmt} )
+    {
+      print STDERR "--3d makes no sense with --timefmt\n";
+      exit -1;
+    }
+
+    if ( defined $options{y2min} || defined $options{y2max} || @{$options{y2}} )
+    {
+      print STDERR "--3d does not make sense with --y2...\n";
+      exit -1;
+    }
+
+    if ( defined $options{xlen} )
+    {
+      print STDERR "--3d does not make sense with --xlen\n";
+      exit -1;
+    }
+
+    if ( defined $options{monotonic} )
+    {
+      print STDERR "--3d does not make sense with --monotonic\n";
+      exit -1;
+    }
+
+    if ( @{$options{histogram}} )
+    {
+      print STDERR "--3d does not make sense with histograms\n";
+      exit -1;
+    }
+
+    if ( defined $options{circles} )
+    {
+      print STDERR "--3d does not make sense with circles (gnuplot doesn't support this)\n";
+      exit -1;
+    }
+  }
+  else
+  {
+    if ( $options{timefmt} && !$options{domain} )
+    {
+      print STDERR "--timefmt makes sense only with --domain\n";
+      exit -1;
+    }
+
+    if(!$options{colormap})
+    {
+      if ( defined $options{zmin} || defined $options{zmax} || defined $options{zlabel} )
+      {
+        print STDERR "--zmin/zmax/zlabel only makes sense with --3d or --colormap\n";
+        exit -1;
+      }
+    }
+
+    if ( defined $options{square_xy} )
+    {
+      print STDERR "--square_xy only makes sense with --3d\n";
+      exit -1;
+    }
+
+    for my $hist_curve(@{$options{histogram}})
+    {
+        my $hist_dim = getRangeSize($hist_curve);
+        if( $hist_dim != 1 )
+        {
+            print STDERR "I only support 1D histograms, but curve '$hist_curve' has '$hist_dim'-D data\n";
+            exit -1;
+        }
+    }
+  }
+
+  if(defined $options{xlen} && !$options{stream} )
+  {
+    print STDERR "--xlen does not make sense without --stream\n";
+    exit -1;
+  }
+
+  if($options{stream} && defined $options{xlen} &&
+     ( defined $options{xmin} || defined $options{xmax}) &&
+    !defined $options{histogram})
+  {
+    print STDERR "With --stream and --xlen the X bounds are set, so neither --xmin nor --xmax make sense\n";
+    exit -1;
+  }
+
+  # --xlen implies an order to the data, so I force monotonicity
+  $options{monotonic} = 1 if defined $options{xlen};
+
+  if( $options{histstyle} !~ /freq|cum|uniq|cnorm|fnorm/ )
+  {
+    print STDERR "unknown histstyle. Allowed are 'freq...', 'fnorm...', 'cum...', 'uniq...', 'cnorm...'\n";
+    exit -1;
+  }
+
+  # deal with timefmt
+  if ( $options{timefmt} )
+  {
+    # I need to compute a regex to match the time field and I need to count how
+    # many whilespace-separated fields there are.
+
+    # strip leading and trailing whitespace
+    $options{timefmt} =~ s/^\s*//;
+    $options{timefmt} =~ s/\s*$//;
+
+    my $Nfields = () = split /\s+/, $options{timefmt}, -1;
+    $options{timefmt_Ncols} = $Nfields;
+
+    # make sure --xlen is an integer. With a timefmt xlen goes through strptime
+    # and strftime, and those are integer-only
+    if( defined $options{xlen} )
+    {
+      if( $options{xlen} - int($options{xlen}) )
+      {
+        print STDERR "When streaming --xlen MUST be an integer. Rounding up to the nearest second\n";
+        $options{xlen} = 1 + int($options{xlen});
+      }
+    }
+  }
+
+  # deal with --image. I just fill in --equation, and reverse the y extents if
+  # none are explicitly given
+  if( defined $options{image} )
+  {
+      # images generally have the origin at the top-left instead of the
+      # bottom-left, so given nothing else, I flip the y axis
+      if( !defined $options{ymin} && !defined $options{ymax} &&
+          ! any { /^ *yrange\b/ } @{$options{set}} )
+      {
+          push @{$options{set}}, "yrange [:] reverse";
+      }
+
+      if ( ! -r $options{image} )
+      {
+          die "Couldn't read image '$options{image}'";
+      }
+
+      unshift @{$options{equation}}, qq{"$options{image}" binary filetype=auto flipy with rgbimage};
+      delete $options{image};
+  }
+}
+
+sub getGnuplotVersion
+{
+  open(GNUPLOT_VERSION, 'gnuplot --version |') or die "Couldn't run gnuplot";
+  my ($gnuplotVersion) = <GNUPLOT_VERSION> =~ /gnuplot\s*(\d*\.\d*)/;
+  if (!$gnuplotVersion)
+  {
+    print STDERR "Couldn't find the version of gnuplot. Does it work? Trying anyway...\n";
+    $gnuplotVersion = 0;
+  }
+  close(GNUPLOT_VERSION);
+
+  return $gnuplotVersion;
+}
+
+sub sendRangeCommand
+{
+  my ($name, $min, $max) = @_;
+
+  return unless defined $min || defined $max;
+
+  if( defined $min )
+  { $min = "\"$min\""; }
+  else
+  { $min = ''; }
+
+  if( defined $max )
+  { $max = "\"$max\""; }
+  else
+  { $max = ''; }
+
+  my $cmd = "set $name [$min:$max]\n";
+  print PIPE $cmd;
+}
+
+sub makeDomainNumeric
+{
+  my ($domain0) = @_;
+
+  if ( $options{timefmt} )
+  {
+    my $timepiece = Time::Piece->strptime( $domain0, $options{timefmt} )
+      or die "Couldn't parse time format. String '$domain0' doesn't fit format '$options{timefmt}'";
+
+    return $timepiece->epoch();
+  }
+
+  return $domain0;
+}
+
+
+my $prev_timed_replot_time = [gettimeofday];
+my $pipe_in;
+my $selector;
+my $line_number = 0;
+my $is_stdin = !@ARGV; # read stdin only if no data files given on the cmdline
+sub openNextFile
+{
+    my $fd;
+    if($is_stdin)
+    {
+        $fd = IO::Handle->new();
+        $fd->fdopen(fileno(STDIN), "r") or die "Couldn't open STDIN";
+    }
+    else
+    {
+        my $filename = shift @ARGV;
+        $fd = IO::File->new($filename, "r") or die "Couldn't open file '$filename'";
+    }
+
+    my $selector = IO::Select->new( $fd );
+    return ($fd, $selector);
+}
+sub getNextLine
+{
+    sub getline_internal
+    {
+        while(1)
+        {
+            my $line = $pipe_in->getline();
+            if( !$is_stdin && !defined $line && $pipe_in->eof() && @ARGV)
+            {
+                # I got to the end of one file, so open the next one (which I'm
+                # sure exists)
+                ($pipe_in, $selector) = openNextFile();
+                next;
+            }
+            return $line;
+        }
+    }
+
+
+
+
+
+    if( !defined $pipe_in )
+    {
+        ($pipe_in, $selector) = openNextFile();
+    }
+
+    while(1)
+    {
+        $this_replot_is_from_timer = undef;
+
+        # if we're not streaming, or we're doing triggered-only replotting, simply
+        # do a blocking read
+        if (! $options{stream} || $options{stream} < 0)
+        {
+            $line_number++;
+            return getline_internal();
+        }
+
+
+        my $now = [gettimeofday];
+        my $time_remaining = $options{stream} - tv_interval($prev_timed_replot_time, $now);
+
+        if ( $time_remaining < 0 )
+        {
+            $prev_timed_replot_time = $now;
+            $this_replot_is_from_timer = 1;
+            return 'replot';
+        }
+
+        if ($selector->can_read($time_remaining))
+        {
+            $line_number++;
+            return getline_internal();
+        }
+    }
+}
+
+sub mainThread
+{
+    local *PIPE;
+    my $dopersist = '';
+
+    if( getGnuplotVersion() >= 4.3 && # --persist not available before this
+
+        # --persist is needed for the "half-alive" state (see documentation for
+        # --exit). This state is only used with these options:
+        !$options{stream} && $options{exit})
+    {
+      $dopersist = '--persist';
+    }
+
+    # We trap SIGINT to kill the data input, but keep the plot up. see
+    # documentation for --exit
+    if ($options{stream} && !$options{exit})
+    {
+        $SIG{INT} = sub
+        {
+            print STDERR "$0 received SIGINT. Send again to quit\n";
+            $SIG{INT} = undef;
+        };
+    }
+
+
+
+
+    if(exists $options{dump})
+    {
+      *PIPE = *STDOUT;
+    }
+    else
+    {
+      my $geometry = defined $options{geometry} ?
+        "-geometry $options{geometry}" : '';
+      open PIPE, "|gnuplot $geometry $dopersist" or die "Can't initialize gnuplot\n";
+    }
+    autoflush PIPE 1;
+
+    my $outputfile;
+    my $outputfileType;
+    if( defined $options{hardcopy})
+    {
+      $outputfile = $options{hardcopy};
+      if( $outputfile =~ /^[^|]                       # starts with anything other than |
+                          .*                          # stuff in the middle
+                          \.(eps|ps|pdf|png|svg)$/ix) # ends with a known extension
+      {
+        $outputfileType = lc $1;
+      }
+
+      my %terminalOpts =
+      ( eps  => 'postscript noenhanced solid color enhanced eps',
+        ps   => 'postscript noenhanced solid color landscape 12',
+        pdf  => 'pdfcairo noenhanced solid color font ",12" size 11in,8.5in',
+        png  => 'png noenhanced size 1280,1024',
+        svg  => 'svg noenhanced');
+
+      if( !defined $options{terminal} &&
+           defined $outputfileType    &&
+           $terminalOpts{$outputfileType} )
+      {
+        $options{terminal} = $terminalOpts{$outputfileType};
+      }
+
+      die "Asked to plot to file '$outputfile', but I don't know which terminal to use, and no --terminal given"
+        unless $options{terminal};
+    }
+    print PIPE "set terminal $options{terminal}\n" if $options{terminal};
+    print PIPE "set output \"$outputfile\"\n"      if $outputfile;
+
+    # set up plotting style
+    my $style = '';
+    if($options{lines})  { $style .= 'lines';}
+    if($options{points}) { $style .= 'points';}
+    if($options{circles})
+    {
+      $options{curvestyleall} = "with circles $options{curvestyleall}";
+    }
+
+    print PIPE "set style data $style\n" if $style;
+    print PIPE "set grid\n";
+
+    print(PIPE "set xlabel  \"$options{xlabel }\"\n") if defined $options{xlabel};
+    print(PIPE "set ylabel  \"$options{ylabel }\"\n") if defined $options{ylabel};
+    print(PIPE "set zlabel  \"$options{zlabel }\"\n") if defined $options{zlabel};
+    print(PIPE "set y2label \"$options{y2label}\"\n") if defined $options{y2label};
+    print(PIPE "set title   \"$options{title  }\"\n") if defined $options{title};
+
+    if($options{square})
+    {
+      # set a square aspect ratio. Gnuplot does this differently for 2D and 3D plots
+      if(! $options{'3d'})
+      {
+        print(PIPE "set size ratio -1\n");
+      }
+      else
+      {
+        print(PIPE "set view equal xyz\n");
+      }
+    }
+
+    if($options{square_xy})
+    {
+      print(PIPE "set view equal xy\n");
+    }
+
+    # For the specified values, set the legend entries to 'title "blah blah"'
+    if(@{$options{legend}})
+    {
+      # @{$options{legend}} is a list where consecutive pairs are (curveID,
+      # legend). I use $options{legend} here instead of $options{legend_hash}
+      # because I create a new curve when I see a new one, and the hash is
+      # unordered, thus messing up the ordering
+      my $n = scalar @{$options{legend}}/2;
+      foreach my $idx (0..$n-1)
+      {
+        setCurveLabel($options{legend}[$idx*2    ],
+                      $options{legend}[$idx*2 + 1]);
+      }
+    }
+
+    # add the extra curve options
+    if(@{$options{curvestyle}})
+    {
+      # @{$options{curvestyle}} is a list where consecutive pairs are (curveID,
+      # style).
+      my $n = scalar @{$options{curvestyle}}/2;
+      foreach my $idx (0..$n-1)
+      {
+        addCurveOption($options{curvestyle}[$idx*2    ],
+                       $options{curvestyle}[$idx*2 + 1]);
+      }
+    }
+
+    # For the values requested to be printed on the y2 axis, set that
+    addCurveOption($_, 'axes x1y2') foreach (@{$options{y2}});
+
+    # timefmt
+    if( $options{timefmt} )
+    {
+      print(PIPE "set timefmt '$options{timefmt}'\n");
+      print(PIPE "set xdata time\n");
+    }
+
+    # add the extra global options
+    print(PIPE "$_\n")       foreach (@{$options{extracmds}});
+    print(PIPE "set $_\n")   foreach (@{$options{set}});
+    print(PIPE "unset $_\n") foreach (@{$options{unset}});
+
+    # set up histograms
+    $options{binwidth} ||= 1;   # if no binwidth given, set it to 1
+    print PIPE
+      "set boxwidth $options{binwidth}\n" .
+      "histbin(x) = $options{binwidth} * floor(0.5 + x/$options{binwidth})\n";
+
+    setCurveAsHistogram( $_ ) foreach (@{$options{histogram}});
+
+    if(@{$options{y2}})
+    {
+      print PIPE "set ytics nomirror\n";
+      print PIPE "set y2tics\n";
+      # if any of the ranges are given, set the range
+      sendRangeCommand( "y2range", $options{y2min}, $options{y2max} );
+    }
+
+    # if any of the ranges are given, set the range
+    sendRangeCommand( "xrange",  $options{xmin}, $options{xmax} );
+    sendRangeCommand( "yrange",  $options{ymin}, $options{ymax} );
+    sendRangeCommand( "zrange",  $options{zmin}, $options{zmax} );
+    sendRangeCommand( "cbrange", $options{zmin}, $options{zmax} ) if($options{colormap});
+
+
+
+
+    # latest domain variable present in our data
+    my $latestX;
+
+    # The domain of the current point
+    my @domain;
+
+    # The x-axis domain represented as a number. This is exactly the same as
+    # $domain[0] unless the x-axis domain uses a timefmt. Then this is the
+    # number of seconds since the UNIX epoch.
+    my $domain0_numeric;
+
+    while( defined ($_ = getNextLine()) )
+    {
+      next if /^#/o;
+
+      if( $options{stream} )
+      {
+        if(/^clear/o )
+        {
+          clearCurves();
+          next;
+        }
+
+        if(/^replot/o )
+        {
+          replot( $domain0_numeric );
+          next;
+        }
+
+        last if /^exit/o;
+      }
+
+      # parse the incoming data lines. The format is
+      # x id0 dat0 id1 dat1 ....
+      # where idX is the ID of the curve that datX corresponds to
+      #
+      # $options{domain} indicates whether the initial 'x' is given or not (if not, the line
+      # number is used)
+      # $options{dataid} indicates whether idX is given or not (if not, the point order in the
+      # line is used)
+      # 3d plots require $options{domain}, and dictate "x y" for the domain instead of just "x"
+
+      my @fields = split;
+
+      if($options{domain})
+      {
+        if( $options{timefmt} )
+        {
+            # no point if doing anything unless I have at least the domain and
+            # 1 piece of data
+            next if @fields < $options{timefmt_Ncols}+1;
+
+            $domain[0] = join (' ', splice( @fields, 0, $options{timefmt_Ncols}) );
+            $domain0_numeric = makeDomainNumeric( $domain[0] );
+        }
+        elsif(!$options{'3d'})
+        {
+            # no point if doing anything unless I have at least the domain and
+            # 1 piece of data
+            next if @fields < 1+1;
+
+            $domain[0] = $domain0_numeric = shift @fields;
+        }
+        else
+        {
+            # no point if doing anything unless I have at least the domain and
+            # 1 piece of data
+            next if @fields < 2+1;
+
+            @domain = splice(@fields, 0, 2);
+        }
+
+        if( $options{monotonic} )
+        {
+          if( defined $latestX && $domain0_numeric < $latestX )
+          {
+            # the x-coordinate of the new point is in the past, so I wipe out
+            # all the data and start anew. Before I wipe the old data, I
+            # replot the old data
+            replot( $domain0_numeric );
+            clearCurves();
+            $latestX = undef;
+          }
+          else
+          { $latestX = $domain0_numeric; }
+        }
+      }
+      else
+      {
+        $domain[0] = $line_number;
+        $domain0_numeric = makeDomainNumeric( $domain[0] );
+      }
+
+      my $id = -1;
+
+      while(@fields)
+      {
+          if($options{dataid}) { $id = shift @fields; }
+          else                 { $id++;               }
+
+          my $rangesize = getRangeSize($id);
+          last if @fields < $rangesize;
+
+          pushPoint(getCurve($id),
+                    join(' ',
+                         @domain,
+                         splice( @fields, 0, $rangesize ) ) . "\n",
+                    $domain0_numeric);
+      }
+    }
+
+    # finished reading in all. Plot what we have
+    plotStoredData() unless $options{stream} && $options{exit};
+
+    if ( defined $options{hardcopy})
+    {
+      print PIPE "set output\n";
+
+      # sleep until the plot file exists, and it is closed. Sometimes the output
+      # is still being written at this point. If the output filename starts with
+      # '|', gnuplot pipes the output to that process, instead of writing to a
+      # file. In that case I don't make sure the file exists, since there IS no
+      # file
+      if( $options{hardcopy} !~ /^\|/ )
+      {
+        usleep(100_000) until -e $outputfile;
+        usleep(100_000) until(system("fuser -s \"$outputfile\""));
+      }
+
+      print "Wrote output to $outputfile\n";
+      return;
+    }
+
+    # data exhausted. If we're killed now, then we should peacefully die.
+    if($options{stream} && !$options{exit})
+    {
+        print STDERR "Input data exhausted\n";
+        $SIG{INT} = undef;
+    }
+
+    # we persist gnuplot, so we shouldn't need this sleep. However, once
+    # gnuplot exits, but the persistent window sticks around, you can no
+    # longer interactively zoom the plot. So we still sleep
+    sleep(100000000) unless $options{dump} || $options{exit};
+}
+
+sub pruneOldData
+{
+  my ($oldestx) = @_;
+
+  foreach my $curve (@curves)
+  {
+    next unless $curve->{datastring};
+
+    my $meta = $curve->{datastring_meta};
+
+    my $firstInWindow = first {$meta->[$_]{domain} >= $oldestx} 0..$#$meta;
+    if ( !defined $firstInWindow )
+    {
+      # everything is too old. Clear out all the data
+      $curve->{datastring}        = '';
+      $curve->{datastring_meta}   = [];
+      $curve->{datastring_offset} = 0;
+    }
+    elsif ( $firstInWindow >= 2 )
+    {
+      # clear out everything that's too old, except for one point. This point
+      # will be off the plot, but if we're plotting lines there will be a
+      # connecting line to it. Some of the line will be visible
+      substr( $curve->{datastring}, 0,
+              $meta->[$firstInWindow-1]{offset_start} - $curve->{datastring_offset},
+              '' );
+      $curve->{datastring_offset} = $meta->[$firstInWindow-1]{offset_start};
+    }
+  }
+}
+
+sub plotStoredData
+{
+  # get the options for those curves that havse any data
+  my @nonemptyCurves = grep { $_->{datastring} } @curves;
+  my @extraopts = map {$_->{options}} @nonemptyCurves;
+
+  my $body = join('', map { "$_," } @{$options{equation}});
+  $body .= join(', ' , map({ "'-' $_" } @extraopts) );
+
+  if($options{'3d'}) { print PIPE "splot $body\n"; }
+  else               { print PIPE  "plot $body\n"; }
+
+  foreach my $curve (@nonemptyCurves)
+  {
+    print PIPE $curve->{datastring};
+    print PIPE "e\n";
+  }
+}
+
+sub updateCurveOptions
+{
+  # generates the 'options' string for a curve, based on its legend title and its other options
+  # These could be integrated into a single string, but that raises an issue in the no-title
+  # case. When no title is specified, gnuplot will still add a legend entry with an unhelpful '-'
+  # label. Thus I explicitly do 'notitle' for that case
+
+  my ($curve, $id) = @_;
+
+  # use the given title, unless we're generating a legend automatically. Given titles
+  # override autolegend
+  my $title;
+  if(defined $curve->{title})
+  { $title = $curve->{title}; }
+  elsif( $options{autolegend} )
+  { $title = $id; }
+
+  my $titleoption = defined $title ? "title \"$title\"" : "notitle";
+  my $histoptions = $curve->{histoptions} || '';
+
+  my $usingoptions = '';
+  if( $options{timefmt} )
+  {
+      # with --timefmt I need an explicit 'using' specification. I specify the
+      # columns as 1:2:3..... I need the right number of columns (this is given
+      # as 1 + rangesize). I also need to start the range at the first column
+      # past the timefmt
+
+      my @rest = map {$_ + $options{timefmt_Ncols}} (1..getRangeSize($id));
+
+      $usingoptions = "using 1:" . join(':', @rest);
+  }
+
+  $curve->{options} = "$histoptions $usingoptions $titleoption $curve->{extraoptions} $options{curvestyleall}";
+}
+
+sub getCurve
+{
+  # This function returns the curve corresponding to a particular label, creating a new curve if
+  # necessary
+
+  if(scalar @curves >= $options{maxcurves})
+  {
+    print STDERR "Tried to exceed the --maxcurves setting.\n";
+    print STDERR "Invoke with a higher --maxcurves limit if you really want to do this.\n";
+    exit -1;
+  }
+
+  my ($id) = @_;
+
+  if( !exists $curveIndices{$id} )
+  {
+    push @curves, {extraoptions      => ' ',
+                   datastring        => '',
+                   datastring_meta   => [],
+                   datastring_offset => 0}; # push a curve with no data and no options
+    $curveIndices{$id} =  $#curves;
+
+    updateCurveOptions($curves[$#curves], $id);
+
+
+    # --xlen has a meaning if we're not plotting histograms at all or if we're
+    # plotting ONLY histograms. If we're doing both at the same time, there's no
+    # consistent way to assign meaning to xlen
+    if ( defined $options{xlen} &&
+
+         # have at least some histograms
+         @{$options{histogram}} &&
+
+         # there are more curves than histogram curves, i.e. there're some
+         # non-histogram curves
+         @curves > @{$options{histogram}} ) {
+        print STDERR "--xlen only makes sense when plotting ONLY histograms or ONLY NON-histograms\n";
+        exit -1;
+    }
+  }
+  return $curves[$curveIndices{$id}];
+}
+
+sub addCurveOption
+{
+  my ($id, $str) = @_;
+
+  my $curve = getCurve($id);
+  $curve->{extraoptions} .= "$str ";
+  updateCurveOptions($curve, $id);
+}
+
+sub setCurveLabel
+{
+  my ($id, $str) = @_;
+
+  my $curve = getCurve($id);
+  $curve->{title} = $str;
+  updateCurveOptions($curve, $id);
+}
+
+sub setCurveAsHistogram
+{
+  my ($id, $str) = @_;
+
+  my $curve = getCurve($id);
+
+  # With histograms I have 2d plots with rangesize=1. I thus give gnuplot two
+  # values for each point: a domain and a range. For histograms I ignore the
+  # domain, so I get the statistics of the 2nd column: $2
+  $curve->{histoptions} = 'using (histbin($2)):(1.0) smooth ' . $options{histstyle};
+
+  updateCurveOptions($curve, $id);
+}
+
+# remove all the curve data
+sub clearCurves
+{
+  foreach my $curve(@curves)
+  {
+    $curve->{datastring}        = '';
+    $curve->{datastring_meta}   = [];
+    $curve->{datastring_offset} = 0;
+  }
+}
+
+sub replot
+{
+  return unless $haveNewData;
+  $haveNewData = undef;
+
+  return if !$options{stream};
+
+
+  # The logic involving domain rollover replotting due to --monotonic is a bit
+  # tricky. I want this:
+
+  # if( domain rolls over slowly )
+  # {
+  #   should update on a timer;
+  #   when the domain rolls over, --monotonic should force a replot
+  # }
+  # if( domain rolls over quickly )
+  # {
+  #   should update when the domain rolls over,
+  #     at most as quickly as the timer indicates
+  # }
+
+
+  my ($domain0_numeric) = @_;
+
+  my $now = [gettimeofday];
+
+  if( # If there is no replot timer at all, replot at any indication
+      $options{stream} < 0 ||
+
+      # if the last replot was timer-based, but this one isn't, force a replot.
+      # This makes sure that a replot happens for a domain rollover shortly
+      # after a timer replot
+      !$this_replot_is_from_timer && $last_replot_is_from_timer ||
+
+      # if enough time has elapsed since the last replot, it's ok to replot
+      tv_interval ( $last_replot_time, $now ) > 0.8*$options{stream} )
+  {
+    # ok, then. We really need to replot
+    if ( defined $options{xlen} )
+    {
+      # we have an --xlen, so we need to clean out the old data
+      pruneOldData( $domain0_numeric - $options{xlen} );
+
+      my ($xmin, $xmax) = ($domain0_numeric - $options{xlen}, $domain0_numeric);
+      if ( defined $options{timefmt} )
+      {
+        # if we're using a timefmt, I need to convert my xmin range from
+        # seconds-since-the-epoch BACK to the timefmt. Sheesh
+        ($xmin, $xmax) = map {Time::Piece->strptime( $_, '%s' )->strftime( $options{timefmt} ) } ($xmin, $xmax);
+      }
+
+      # if we have any histograms, then I'm not really visualizing the domain at
+      # all, and I don't set the range.
+      sendRangeCommand( "xrange", $xmin, $xmax )
+        unless @{$options{histogram}};
+    }
+
+    plotStoredData();
+
+
+    # update replot state
+    $last_replot_time          = $now;
+    $last_replot_is_from_timer = $this_replot_is_from_timer;
+  }
+}
+
+# function to add a point to the plot. Assumes that the curve indexed by $idx already exists
+sub pushPoint
+{
+  my ($curve, $datastring, $domain0_numeric) = @_;
+
+  push @{$curve->{datastring_meta}}, { offset_start => length( $curve->{datastring} ) + $curve->{datastring_offset},
+                                       domain       => $domain0_numeric };
+  $curve->{datastring} .= $datastring;
+
+  $haveNewData = 1;
+}
+
+
+mainThread();
+
+
+=head1 NAME
+
+feedgnuplot - General purpose pipe-oriented plotting tool
+
+=head1 SYNOPSIS
+
+Simple plotting of piped data:
+
+ $ seq 5 | awk '{print 2*$1, $1*$1}'
+ 2 1
+ 4 4
+ 6 9
+ 8 16
+ 10 25
+
+ $ seq 5 | awk '{print 2*$1, $1*$1}' |
+   feedgnuplot --lines --points --legend 0 "data 0" --title "Test plot" --y2 1
+               --terminal 'dumb 80,40' --exit
+
+                                  Test plot
+
+  10 ++------+--------+-------+-------+-------+--------+-------+------*A 25
+     +       +        +       +       +       +        +       +    **#+
+     |       :        :       :       :       :        : data 0+**A*** |
+     |       :        :       :       :       :        :       :** #   |
+   9 ++.......................................................**.##....|
+     |       :        :       :       :       :        :    ** :#      |
+     |       :        :       :       :       :        :  **   #       |
+     |       :        :       :       :       :        :**   ##:      ++ 20
+   8 ++................................................A....#..........|
+     |       :        :       :       :       :      **:   #   :       |
+     |       :        :       :       :       :    **  : ##    :       |
+     |       :        :       :       :       :  **    :#      :       |
+     |       :        :       :       :       :**      B       :       |
+   7 ++......................................**......##................|
+     |       :        :       :       :    ** :    ##  :       :      ++ 15
+     |       :        :       :       :  **   :   #    :       :       |
+     |       :        :       :       :**     : ##     :       :       |
+   6 ++..............................*A.......##.......................|
+     |       :        :       :    ** :     ##:        :       :       |
+     |       :        :       :  **   :    #  :        :       :       |
+     |       :        :       :**     :  ##   :        :       :      ++ 10
+   5 ++......................**........##..............................|
+     |       :        :    ** :      #B       :        :       :       |
+     |       :        :  **   :    ## :       :        :       :       |
+     |       :        :**     :  ##   :       :        :       :       |
+   4 ++...............A.......###......................................|
+     |       :      **:     ##:       :       :        :       :       |
+     |       :    **  :   ##  :       :       :        :       :      ++ 5
+     |       :  **    : ##    :       :       :        :       :       |
+     |       :**    ##B#      :       :       :        :       :       |
+   3 ++.....**..####...................................................|
+     |    **####      :       :       :       :        :       :       |
+     |  **## :        :       :       :       :        :       :       |
+     B**     +        +       +       +       +        +       +       +
+   2 A+------+--------+-------+-------+-------+--------+-------+------++ 0
+     1      1.5       2      2.5      3      3.5       4      4.5      5
+
+
+Simple real-time plotting example: plot how much data is received on the wlan0
+network interface in bytes/second (uses bash, awk and Linux):
+
+ $ while true; do sleep 1; cat /proc/net/dev; done |
+   gawk '/wlan0/ {if(b) {print $2-b; fflush()} b=$2}' |
+   feedgnuplot --lines --stream --xlen 10 --ylabel 'Bytes/sec' --xlabel seconds
+
+=head1 DESCRIPTION
+
+This is a flexible, command-line-oriented frontend to Gnuplot. It creates
+plots from data coming in on STDIN or given in a filename passed on the
+commandline. Various data representations are supported, as is hardcopy
+output and streaming display of live data. A simple example:
+
+ $ seq 5 | awk '{print 2*$1, $1*$1}' | feedgnuplot
+
+You should see a plot with two curves. The C<awk> command generates some data to
+plot and the C<feedgnuplot> reads it in from STDIN and generates the plot. The
+C<awk> invocation is just an example; more interesting things would be plotted
+in normal usage. No commandline-options are required for the most basic
+plotting. Input parsing is flexible; every line need not have the same number of
+points. New curves will be created as needed.
+
+The most commonly used functionality of gnuplot is supported directly by the
+script. Anything not directly supported can still be done with options such as
+C<--set>, C<--extracmds> C<--style>, etc. Arbitrary gnuplot commands can be
+passed in with C<--extracmds>. For example, to turn off the grid, you can pass
+in C<--extracmds 'unset grid'>. Commands C<--set> and C<--unset> exists to
+provide nicer syntax, so this is equivalent to passing C<--unset grid>. As many
+of these options as needed can be passed in. To add arbitrary curve styles, use
+C<--style curveID extrastyle>. Pass these more than once to affect more than one
+curve.
+
+To apply an extra style to I<all> the curves that lack an explicit C<--style>,
+pass in C<--styleall extrastyle>. In the most common case, the extra style is
+C<with something>. To support this more simply, you can pass in C<--with
+something> instead of C<--styleall 'with something'>. C<--styleall> and
+C<--with> are mutually exclusive. Furthermore any curve-specific C<--style>
+overrides the global C<--styleall> or C<--with> setting.
+
+=head2 Data formats
+
+By default, each value present in the incoming data represents a distinct data
+point, as demonstrated in the original example above (we had 10 numbers in the
+input and 10 points in the plot). If requested, the script supports more
+sophisticated interpretation of input data
+
+=head3 Domain selection
+
+If C<--domain> is passed in, the first value on each line of input is
+interpreted as the I<X>-value for the rest of the data on that line. Without
+C<--domain> the I<X>-value is the line number, and the first value on a line is
+a plain data point like the others. Default is C<--nodomain>. Thus the original
+example above produces 2 curves, with B<1,2,3,4,5> as the I<X>-values. If we run
+the same command with C<--domain>:
+
+ $ seq 5 | awk '{print 2*$1, $1*$1}' | feedgnuplot --domain
+
+we get only 1 curve, with B<2,4,6,8,10> as the I<X>-values. As many points as
+desired can appear on a single line, but all points on a line are associated
+with the I<X>-value at the start of that line.
+
+=head3 Curve indexing
+
+By default, each column represents a separate curve. This is fine unless sparse
+data is to be plotted. With the C<--dataid> option, each point is represented by
+2 values: a string identifying the curve, and the value itself. If we add
+C<--dataid> to the original example:
+
+ $ seq 5 | awk '{print 2*$1, $1*$1}' | feedgnuplot --dataid --autolegend
+
+we get 5 different curves with one point in each. The first column, as produced
+by C<awk>, is B<2,4,6,8,10>. These are interpreted as the IDs of the curves to
+be plotted. The C<--autolegend> option adds a legend using the given IDs to
+label the curves. The IDs need not be numbers; generic strings are accepted. As
+many points as desired can appear on a single line. C<--domain> can be used in
+conjunction with C<--dataid>.
+
+=head3 Multi-value style support
+
+Depending on how gnuplot is plotting the data, more than one value may be needed
+to represent the range of a single point. Basic 2D plots have 2 numbers
+representing each point: 1 domain and 1 range. But if plotting with
+C<--circles>, for instance, then there's an extra range value: the radius. A
+similar situation exists with C<--colormap> where each point contains the
+position I<and> the color. There are other gnuplot styles that require more data
+(such as error bars), but none of these are directly supported by the script.
+They can still be used, however, by specifying the specific style with
+C<--style>, and specifying how many values are needed for each point with
+C<--rangesizeall> or C<--rangesize> or C<--extraValuesPerPoint>. Those options
+that specify the range size are required I<only> for styles not explicitly
+supported by feedgnuplot; supported styles do the right thing automatically.
+
+More examples: if making a 2d plot of y error bars where gnuplot expects a
+(x,y,ydelta) tuple for each point, you want C<--rangesizeall 2> because you have
+one domain value (x) and 2 range values (y,ydelta). Gnuplot can also plot
+lopsided y errorbars by giving a tuple (x,y,ylow,yhigh). This is similar as
+before, but you want C<--rangesizeall 3> instead.
+
+
+=head3 3D data
+
+To plot 3D data, pass in C<--3d>. C<--domain> MUST be given when plotting 3D
+data to avoid domain ambiguity. If 3D data is being plotted, there are by
+definition 2 domain values instead of one (I<Z> as a function of I<X> and I<Y>
+instead of I<Y> as a function of I<X>). Thus the first 2 values on each line are
+interpreted as the domain instead of just 1. The rest of the processing happens
+the same way as before.
+
+=head3 Time/date data
+
+If the input data domain is a time/date, this can be interpreted with
+C<--timefmt>. This option takes a single argument: the format to use to parse
+the data. The format is documented in 'set timefmt' in gnuplot, although the
+common flags that C<strftime> understands are generally supported. The backslash
+sequences in the format are I<not> supported, so if you want a tab, put in a tab
+instead of \t. Whitespace in the format I<is> supported. When this flag is
+given, some other options act a little bit differently:
+
+=over
+
+=item
+
+C<--xlen> is an I<integer> in seconds
+
+=item
+
+C<--xmin> and C<--xmax> I<must> use the format passed in to C<--timefmt>
+
+=back
+
+Using this option changes both the way the input is parsed I<and> the way the
+x-axis tics are labelled. Gnuplot tries to be intelligent in this labelling, but
+it doesn't always do what the user wants. The labelling can be controlled with
+the gnuplot C<set format> command, which takes the same type of format string as
+C<--timefmt>. Example:
+
+ $ sar 1 -1 |
+   awk '$1 ~ /..:..:../ && $8 ~/^[0-9\.]*$/ {print $1,$8; fflush()}' |
+   feedgnuplot --stream --domain
+                --lines --timefmt '%H:%M:%S'
+                --set 'format x "%H:%M:%S"'
+
+This plots the 'idle' CPU consumption against time.
+
+Note that while gnuplot supports the time/date on any axis, I<feedgnuplot>
+currently supports it I<only> as the x-axis domain. This may change in the
+future.
+
+=head2 Real-time streaming data
+
+To plot real-time data, pass in the C<--stream [refreshperiod]> option. Data
+will then be plotted as it is received. The plot will be updated every
+C<refreshperiod> seconds. If the period isn't specified, a 1Hz refresh rate is
+used. To refresh at specific intervals indicated by the data, set the
+refreshperiod to 0 or to 'trigger'. The plot will then I<only> be refreshed when
+a data line 'replot' is received. This 'replot' command works in both triggered
+and timed modes, but in triggered mode, it's the only way to replot. Look in
+L</"Special data commands"> for more information.
+
+To plot only the most recent data (instead of I<all> the data), C<--xlen
+windowsize> can be given. This will create an constantly-updating, scrolling
+view of the recent past. C<windowsize> should be replaced by the desired length
+of the domain window to plot, in domain units (passed-in values if C<--domain>
+or line numbers otherwise). If the domain is a time/date via C<--timefmt>, then
+C<windowsize> is and I<integer> in seconds. If we're plotting a histogram, then
+C<--xlen> causes a histogram over a moving window to be computed. The subtlely
+here is that with a histogram you don't actually I<see> the domain since only
+the range is analyzed. But the domain is still there, and can be utilized with
+C<--xlen>. With C<--xlen> we can plot I<only> histograms or I<only>
+I<non>-histograms.
+
+=head3 Special data commands
+
+If we are reading streaming data, the input stream can contain special commands
+in addition to the raw data. Feedgnuplot looks for these at the start of every
+input line. If a command is detected, the rest of the line is discarded. These
+commands are
+
+=over
+
+=item C<replot>
+
+This command refreshes the plot right now, instead of waiting for the next
+refresh time indicated by the timer. This command works in addition to the timed
+refresh, as indicated by C<--stream [refreshperiod]>.
+
+=item C<clear>
+
+This command clears out the current data in the plot. The plotting process
+continues, however, to any data following the C<clear>.
+
+=item C<exit>
+
+This command causes feedgnuplot to exit.
+
+=back
+
+=head2 Hardcopy output
+
+The script is able to produce hardcopy output with C<--hardcopy outputfile>. The
+output type can be inferred from the filename, if B<.ps>, B<.eps>, B<.pdf>,
+B<.svg> or B<.png> is requested. If any other file type is requested,
+C<--terminal> I<must> be passed in to tell gnuplot how to make the plot. If
+C<--terminal> is passed in, then the C<--hardcopy> argument only provides the
+output filename.
+
+=head2 Self-plotting data files
+
+This script can be used to enable self-plotting data files. There are 2 ways of
+doing this: with a shebang (#!) or with inline perl data.
+
+=head3 Self-plotting data with a #!
+
+A self-plotting, executable data file C<data> is formatted as
+
+ $ cat data
+ #!/usr/bin/feedgnuplot --lines --points
+ 2 1
+ 4 4
+ 6 9
+ 8 16
+ 10 25
+ 12 36
+ 14 49
+ 16 64
+ 18 81
+ 20 100
+ 22 121
+ 24 144
+ 26 169
+ 28 196
+ 30 225
+
+This is the shebang (#!) line followed by the data, formatted as before. The
+data file can be plotted simply with
+
+ $ ./data
+
+The caveats here are that on Linux the whole #! line is limited to 127
+characters and that the full path to feedgnuplot must be given. The 127
+character limit is a serious limitation, but this can likely be resolved with a
+kernel patch. I have only tried on Linux 2.6.
+
+=head3 Self-plotting data with perl inline data
+
+Perl supports storing data and code in the same file. This can also be used to
+create self-plotting files:
+
+ $ cat plotdata.pl
+ #!/usr/bin/perl
+ use strict;
+ use warnings;
+
+ open PLOT, "| feedgnuplot --lines --points" or die "Couldn't open plotting pipe";
+ while( <DATA> )
+ {
+   my @xy = split;
+   print PLOT "@xy\n";
+ }
+ __DATA__
+ 2 1
+ 4 4
+ 6 9
+ 8 16
+ 10 25
+ 12 36
+ 14 49
+ 16 64
+ 18 81
+ 20 100
+ 22 121
+ 24 144
+ 26 169
+ 28 196
+ 30 225
+
+This is especially useful if the logged data is not in a format directly
+supported by feedgnuplot. Raw data can be stored after the __DATA__ directive,
+with a small perl script to manipulate the data into a useable format and send
+it to the plotter.
+
+=head1 ARGUMENTS
+
+=over
+
+=item
+
+--C<[no]domain>
+
+If enabled, the first element of each line is the domain variable. If not, the
+point index is used
+
+=item
+
+--C<[no]dataid>
+
+If enabled, each data point is preceded by the ID of the data set that point
+corresponds to. This ID is interpreted as a string, NOT as just a number. If not
+enabled, the order of the point is used.
+
+As an example, if line 3 of the input is "0 9 1 20" then
+
+=over
+
+=item
+
+C<--nodomain --nodataid> would parse the 4 numbers as points in 4 different
+curves at x=3
+
+=item
+
+C<--domain --nodataid> would parse the 4 numbers as points in 3 different
+curves at x=0. Here, 0 is the x-variable and 9,1,20 are the data values
+
+=item
+
+C<--nodomain --dataid> would parse the 4 numbers as points in 2 different
+curves at x=3. Here 0 and 1 are the data IDs and 9 and 20 are the
+data values
+
+=item
+
+C<--domain --dataid> would parse the 4 numbers as a single point at
+x=0. Here 9 is the data ID and 1 is the data value. 20 is an extra
+value, so it is ignored. If another value followed 20, we'd get another
+point in curve ID 20
+
+=back
+
+=item
+
+C<--[no]3d>
+
+Do [not] plot in 3D. This only makes sense with C<--domain>. Each domain here is
+an (x,y) tuple
+
+=item
+
+--C<timefmt [format]>
+
+Interpret the X data as a time/date, parsed with the given format
+
+=item
+
+C<--colormap>
+
+Show a colormapped xy plot. Requires extra data for the color. zmin/zmax can be
+used to set the extents of the colors. Automatically sets the C<--rangesize>.
+
+=item
+
+C<--stream [period]>
+
+Plot the data as it comes in, in realtime. If period is given, replot every
+period seconds. If no period is given, replot at 1Hz. If the period is given as
+0 or 'trigger', replot I<only> when the incoming data dictates this. See the
+L</"Real-time streaming data"> section of the man page.
+
+=item
+
+C<--[no]lines>
+
+Do [not] draw lines to connect consecutive points
+
+=item
+
+C<--[no]points>
+
+Do [not] draw points
+
+=item
+
+C<--circles>
+
+Plot with circles. This requires a radius be specified for each point.
+Automatically sets the C<--rangesize>. C<Not> supported for 3d plots.
+
+=item
+
+C<--title xxx>
+
+Set the title of the plot
+
+=item
+
+C<--legend curveID legend>
+
+Set the label for a curve plot. Use this option multiple times for multiple
+curves. With C<--dataid>, curveID is the ID. Otherwise, it's the index of the
+curve, starting at 0
+
+=item
+
+C<--autolegend>
+
+Use the curve IDs for the legend. Titles given with C<--legend> override these
+
+=item
+
+C<--xlen xxx>
+
+When using C<--stream>, sets the size of the x-window to plot. Omit this or set
+it to 0 to plot ALL the data. Does not make sense with 3d plots. Implies
+C<--monotonic>. If we're plotting a histogram, then C<--xlen> causes a histogram
+over a moving window to be computed. The subtlely here is that with a histogram
+you don't actually I<see> the domain since only the range is analyzed. But the
+domain is still there, and can be utilized with C<--xlen>. With C<--xlen> we can
+plot I<only> histograms or I<only> I<non>-histograms.
+
+
+=item
+
+C<--xmin/xmax/ymin/ymax/y2min/y2max/zmin/zmax xxx>
+
+Set the range for the given axis. These x-axis bounds are ignored in a streaming
+plot. The y2-axis bound do not apply in 3d plots. The z-axis bounds apply
+I<only> to 3d plots or colormaps.
+
+=item
+
+C<--xlabel/ylabel/y2label/zlabel xxx>
+
+Label the given axis. The y2-axis label does not apply to 3d plots while the
+z-axis label applies I<only> to 3d plots.
+
+=item
+
+C<--y2 xxx>
+
+Plot the data specified by this curve ID on the y2 axis. Without C<--dataid>,
+the ID is just an ordered 0-based index. Does not apply to 3d plots. Can be
+passed multiple times, or passed a comma-separated list. By default the y2-axis
+curves look the same as the y-axis ones. I.e. the viewer of the resulting plot
+has to be told which is which via an axes label, legend, etc. Prior to version
+1.25 of feedgnuplot the curves plotted on the y2 axis were drawn with a thicker
+line. This is no longer the case, but that behavior can be brought back by
+passing something like
+
+ --y2 curveid --style curveid 'linewidth 3'
+
+=item
+
+C<--histogram curveID>
+
+Set up a this specific curve to plot a histogram. The bin width is given with
+the C<--binwidth> option (assumed 1.0 if omitted). If a drawing style is not
+specified for this curve (C<--curvestyle>) or all curves (C<--with>,
+C<--curvestyleall>) then the default histogram style is set: filled boxes with
+borders. This is what the user generally wants. This works with C<--domain>
+and/or C<--stream>, but in those cases the x-value is used I<only> to cull old
+data because of C<--xlen> or C<--monotonic>. I.e. the domain values are I<not>
+drawn in any way. Can be passed multiple times, or passed a comma- separated
+list
+
+=item
+
+C<--binwidth width>
+
+The width of bins when making histograms. This setting applies to ALL histograms
+in the plot. Defaults to 1.0 if not given.
+
+=item
+
+C<--histstyle style>
+
+Normally, histograms are generated with the 'smooth frequency' gnuplot style.
+C<--histstyle> can be used to select different C<smooth> settings (see the
+gnuplot C<help smooth> page for more info). Allowed values are 'frequency' (the
+default), 'fnormal' (available in very recent gnuplots), 'unique', 'cumulative'
+and 'cnormal'. 'fnormal' is a normalized histogram. 'unique' indicates whether a
+bin has at least one item in it: instead of counting the items, it'll always
+report 0 or 1. 'cumulative' is the integral of the 'frequency' histogram.
+'cnormal' is like 'cumulative', but rescaled to end up at 1.0.
+
+=item
+
+C<--style curveID style>
+
+Additional styles per curve. With C<--dataid>, curveID is the ID. Otherwise,
+it's the index of the curve, starting at 0. curveID can be a comma-separated
+list of IDs to which the given style should apply. Use this option multiple
+times for multiple curves. C<--styleall> does I<not> apply to curves that have a
+C<--style>.
+
+=item
+
+C<--curvestyle curveID>
+
+Synonym for C<--style>
+
+=item
+
+C<--styleall xxx>
+
+Additional styles for all curves that have no C<--style>. This is overridden by
+any applicable C<--style>. Exclusive with C<--with>.
+
+=item
+
+C<--curvestyleall xxx>
+
+Synonym for C<--styleall>
+
+=item
+
+C<--with xxx>
+
+Same as C<--styleall>, but prefixed with "with". Thus
+
+ --with boxes
+
+is equivalent to
+
+ --styleall 'with boxes'
+
+Exclusive with C<--styleall>.
+
+=item
+
+C<--extracmds xxx>
+
+Additional commands to pass on to gnuplot verbatim. These could contain extra
+global styles for instance. Can be passed multiple times.
+
+=item
+
+C<--set xxx>
+
+Additional 'set' commands to pass on to gnuplot verbatim. C<--set 'a b c'> will
+result in gnuplot seeing a C<set a b c> command. Can be passed multiple times.
+
+=item
+
+C<--unset xxx>
+
+Additional 'unset' commands to pass on to gnuplot verbatim. C<--unset 'a b c'>
+will result in gnuplot seeing a C<unset a b c> command. Can be passed multiple
+times.
+
+=item
+
+C<--image filename>
+
+Overlays the data on top of a raster image given in C<filename>. This is passed
+through to gnuplot via C<--equation>, and is not interpreted by C<feedgnuplot>
+other than checking for existence. Usually images have their origin at the
+top-left corner, while plots have it in the bottom-left corner instead. Thus if
+the y-axis extents are not specified (C<--ymin>, C<--ymax>, C<--set 'yrange
+...'>) this option will also flip around the y axis to make the image appear
+properly. Since this option is just a passthrough to gnuplot, finer control can
+be achieved by passing in C<--equation> and C<--set yrange ...> directly.
+
+C<--equation xxx>
+
+Gnuplot can plot both data and symbolic equations. C<feedgnuplot> generally
+plots data, but with this option can plot symbolic equations I<also>. This is
+generally intended to augment data plots, since for equation-only plots you
+don't need C<feedgnuplot>. C<--equation> can be passed multiple times for
+multiple equations. The given strings are passed to gnuplot directly without any
+thing added or removed, so styling and such should be applied in the string. A
+basic example:
+
+ seq 100 | awk '{print $1/10, $1/100}' |
+   feedgnuplot --with 'lines lw 3' --domain --ymax 1
+               --equation 'sin(x)/x' --equation 'cos(x)/x with lines lw 4'
+
+Here I plot the incoming data (points along a line) with the given style (a line
+with thickness 3), I<and> I plot two damped sinusoids on the same plot. The
+sinusoids are not affected by C<feedgnuplot> styling, so their styles are set
+separately, as in this example. More complicated example:
+
+ seq 360 | perl -nE '$th=$_/360 * 3.14*2; $c=cos($th); $s=sin($th); say "$c $s"' |
+   feedgnuplot --domain --square
+               --set parametric --set "trange [0:2*3.14]" --equation "sin(t),cos(t)"
+
+Here the data I generate is points along the unit circle. I plot these as
+points, and I I<also> plot a true circle as a parametric equation.
+
+=item
+
+C<--square>
+
+Plot data with aspect ratio 1. For 3D plots, this controls the aspect ratio for
+all 3 axes
+
+=item
+
+C<--square_xy>
+
+For 3D plots, set square aspect ratio for ONLY the x,y axes
+
+=item
+
+C<--hardcopy xxx>
+
+If not streaming, output to a file specified here. Format inferred from
+filename, unless specified by C<--terminal>. If C<--terminal> is given,
+C<--hardcopy> sets I<only> the output filename.
+
+=item
+
+C<--terminal xxx>
+
+String passed to 'set terminal'. No attempts are made to validate this.
+C<--hardcopy> sets this to some sensible defaults if C<--hardcopy> is set to a
+filename ending in C<.png>, C<.pdf>, C<.ps>, C<.eps> or C<.svg>. If any other
+file type is desired, use both C<--hardcopy> and C<--terminal>
+
+=item
+
+C<--maxcurves xxx>
+
+The maximum allowed number of curves. This is 100 by default, but can be reset
+with this option. This exists purely to prevent perl from allocating all of the
+system's memory when reading bogus data
+
+=item
+
+C<--monotonic>
+
+If C<--domain> is given, checks to make sure that the x- coordinate in the input
+data is monotonically increasing. If a given x-variable is in the past, all data
+currently cached for this curve is purged. Without C<--monotonic>, all data is
+kept. Does not make sense with 3d plots. No C<--monotonic> by default. The data is
+replotted before being purged
+
+=item
+
+C<--rangesize curveID xxx>
+
+The options C<--rangesizeall>, C<--rangesize> and C<--extraValuesPerPoint> set
+the number of values are needed to represent each point being plotted (see
+L</"Multi-value style support"> above). These options are I<only> needed if
+unknown styles are used, with C<--styleall> or C<--with> for instance.
+
+C<--rangesize> is used to set how many values are needed to represent the range
+of a point for a particular curve. This overrides any defaults that may exist
+for this curve only.
+
+With C<--dataid>, curveID is the ID. Otherwise, it's the index of the curve,
+starting at 0. curveID can be a comma-separated list of IDs to which the given
+rangesize should apply.
+
+=item
+
+C<--rangesizeall xxx>
+
+Like C<--rangesize>, but applies to I<all> the curves.
+
+C<--extraValuesPerPoint xxx>
+
+Like C<--rangesizeall>, but instead of overriding the default, adds to it. For
+example, if plotting non-lopsided y errorbars gnuplot wants (x,y,ydelta) tuples.
+These can be specified both with C<--rangesizeall 2> (because there are 2 range
+values) or C<--extraValuesPerPoint 1> (because there's 1 more value than usual).
+
+This option is I<only> needed if unknown styles are used, with C<--styleall> or
+C<--with> for instance.
+
+=item
+
+C<--dump>
+
+Instead of printing to gnuplot, print to STDOUT. Very useful for debugging. It
+is possible to send the output produced this way to gnuplot directly.
+
+=item
+
+C<--exit>
+
+This controls what happens when the input data is exhausted, or when some part
+of the C<feedgnuplot> pipeline is killed. This option does different things
+depending on whether C<--stream> is active, so read this closely.
+
+With interactive gnuplot terminals (qt, x11, wxt), the plot windows live in a
+separate process from the main C<gnuplot> process. It is thus possible for the
+main C<gnuplot> process to exit, while leaving the plot windows up (a caveat is
+that such decapitated windows aren't interactive). There are 3 possible states
+of the polotting pipeline:
+
+=over
+
+=item Alive: C<feedgnuplot>, C<gnuplot> alive, plot window process alive, no
+shell prompt (shell busy with C<feedgnuplot>)
+
+=item Half-alive: C<feedgnuplot>, C<gnuplot> dead, plot window process alive
+(but non-interactive), shell prompt available
+
+=item Dead: C<feedgnuplot>, C<gnuplot> dead, plot window process dead, shell
+prompt available
+
+=back
+
+The possibilities are:
+
+=over
+
+=item No C<--stream>, all data read in
+
+=over
+
+=item no C<--exit> (default)
+
+Alive. Need to Ctrl-C to get back into the shell
+
+=item C<--exit>
+
+Half-alive. Non-interactive prompt up, and the shell accepts new commands.
+Without C<--stream> the goal is to show a plot, so a Dead state would not be
+useful.
+
+=back
+
+=item C<--stream>, all data read in or the C<feedgnuplot> process terminated
+
+=over
+
+=item no C<--exit> (default)
+
+Alive. Need to Ctrl-C to get back into the shell. This means that when making
+live plots, the first Ctrl-C kills the data feeding process, but leaves the
+final plot up for inspection. A second Ctrl-C kills feedgnuplot as well.
+
+=item C<--exit>
+
+Dead. No plot is shown, and the shell accepts new commands. With C<--stream> the
+goal is to show a plot as the data comes in, which we have been doing. Now that
+we're done, we can clean up everything.
+
+=back
+
+=back
+
+Note that one usually invokes C<feedgnuplot> as a part of a shell pipeline:
+
+ $ write_data | feedgnuplot
+
+If the user terminates this pipeline with ^C, then I<all> the processes in the
+pipeline receive SIGINT. This normally kills C<feedgnuplot> and all its
+C<gnuplot> children, and we let this happen unless C<--stream> and no C<--exit>.
+If C<--stream> and no C<--exit>, then we ignore the first ^C. The data feeder
+dies, and we behave as if the input data was exhausted. A second ^C kills us
+also.
+
+=item
+
+C<--geometry>
+
+If using X11, specifies the size, position of the plot window
+
+=item
+
+C<--version>
+
+Print the version and exit
+
+=back
+
+=head1 RECIPES
+
+=head2 Basic plotting of piped data
+
+ $ seq 5 | awk '{print 2*$1, $1*$1}'
+ 2 1
+ 4 4
+ 6 9
+ 8 16
+ 10 25
+
+ $ seq 5 | awk '{print 2*$1, $1*$1}' |
+   feedgnuplot --lines --points --legend 0 "data 0" --title "Test plot" --y2 1
+
+=head2 Realtime plot of network throughput
+
+Looks at wlan0 on Linux.
+
+ $ while true; do sleep 1; cat /proc/net/dev; done |
+   gawk '/wlan0/ {if(b) {print $2-b; fflush()} b=$2}' |
+   feedgnuplot --lines --stream --xlen 10 --ylabel 'Bytes/sec' --xlabel seconds
+
+=head2 Realtime plot of battery charge in respect to time
+
+Uses the result of the C<acpi> command.
+
+ $ while true; do acpi; sleep 15; done |
+   perl -nE 'BEGIN{ $| = 1; } /([0-9]*)%/; say join(" ", time(), $1);' |
+   feedgnuplot --stream --ymin 0 --ymax 100 --lines --domain --xlabel 'Time' --timefmt '%s' --ylabel "Battery charge (%)"
+
+=head2 Realtime plot of temperatures in an IBM Thinkpad
+
+Uses C</proc/acpi/ibm/thermal>, which reports temperatures at various locations
+in a Thinkpad.
+
+ $ while true; do cat /proc/acpi/ibm/thermal | awk '{$1=""; print}' ; sleep 1; done |
+   feedgnuplot --stream --xlen 100 --lines --autolegend --ymax 100 --ymin 20 --ylabel 'Temperature (deg C)'
+
+=head2 Plotting a histogram of file sizes in a directory, granular to 10MB
+
+ $ ls -l | awk '{print $5/1e6}' |
+   feedgnuplot --histogram 0
+     --binwidth 10
+     --ymin 0 --xlabel 'File size (MB)' --ylabel Frequency
+
+=head2 Plotting a live histogram of the ping round-trip times for the past 20 seconds
+
+ $ ping -A -D 8.8.8.8 |
+   perl -anE 'BEGIN { $| = 1; }
+              $F[0] =~ s/[\[\]]//g or next;
+              $F[7] =~ s/.*=//g    or next;
+              say "$F[0] $F[7]"' |
+   feedgnuplot --stream --domain --histogram 0 --binwidth 10 \
+               --xlabel 'Ping round-trip time (s)'  \
+               --ylabel Frequency --xlen 20
+
+=head2 Plotting points on top of an existing image
+
+This can be done with C<--image>:
+
+ $ < features_xy.data
+   feedgnuplot --points --domain --image "image.png"
+
+or with C<--equation>:
+
+ $ < features_xy.data
+   feedgnuplot --points --domain
+     --equation '"image.png" binary filetype=auto flipy with rgbimage'
+     --set 'yrange [:] reverse'
+
+The C<--image> invocation is a convenience wrapper for the C<--equation>
+version. Finer control is available with C<--equation>.
+
+
+Here an existing image is given to gnuplot verbatim, and data to plot on top of
+it is interpreted by feedgnuplot as usual. C<flipy> is useful here because
+usually the y axis points up, but when looking at images, this is usually
+reversed: the origin is the top-left pixel.
+
+=head1 ACKNOWLEDGEMENT
+
+This program is originally based on the driveGnuPlots.pl script from
+Thanassis Tsiodras. It is available from his site at
+L<http://users.softlab.ece.ntua.gr/~ttsiod/gnuplotStreaming.html>
+
+=head1 REPOSITORY
+
+L<https://github.com/dkogan/feedgnuplot>
+
+=head1 AUTHOR
+
+Dima Kogan, C<< <dima@secretsauce.net> >>
+
+=head1 LICENSE AND COPYRIGHT
+
+Copyright 2011-2012 Dima Kogan.
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of either: the GNU General Public License as published
+by the Free Software Foundation; or the Artistic License.
+
+See http://dev.perl.org/licenses/ for more information.
+
+=cut
