@@ -1,0 +1,63 @@
+package io.sarl.demos.basic.helloworld
+
+import io.sarl.core.AgentKilled
+import io.sarl.core.AgentSpawned
+import io.sarl.core.ContextJoined
+import io.sarl.core.ContextLeft
+import io.sarl.core.Destroy
+import io.sarl.core.Initialize
+import io.sarl.core.Lifecycle
+import io.sarl.core.Logging
+import io.sarl.core.MemberJoined
+import io.sarl.core.MemberLeft
+import io.sarl.core.Schedules
+
+/*
+ * A "Hello World" Agent.
+ */
+agent HelloAgent {
+	uses Lifecycle, Schedules, Logging
+
+	/* Print "Hello World" when spawned and wait 2 seconds to kill itself */
+	on Initialize {
+		info("Hello World!")
+		in(2000) [killMe]
+	}
+
+	/* Event trigger before agent dies, Print "Goodbye World" before dying */
+	on Destroy {
+		/* the Destroy event is automatically  */
+		info("Goodbye World!")
+	}
+
+	/* Event trigger when an agent of the level joins a shared context, sent to agent of the same level*/
+	on ContextJoined {
+		info("ContextJoined, contextID:" + occurrence.holonContextID + " SpaceID: " + occurrence.defaultSpaceID)
+	}
+	
+	/* Event trigger when an agent of the level leaves a shared context, sent to agent of the same level */
+	on ContextLeft {
+		info("ContextLeft, contextID:" + occurrence.holonContextID)
+	}
+	
+	/* Event trigger when an agent joins one of our shared super-holons, sent to all members of the considered super-holon */
+	on MemberJoined {
+		info("MemberJoined, agentID:" + occurrence.agentID)
+	}
+	
+	/* Event trigger when an agent leaves one of our shared super-holons, sent to all members of the considered super-holon */
+	on MemberLeft {
+		info("MemberLeft, agentID:" + occurrence.agentID)
+	}
+
+	/* A new agent has been spawn in our context */
+	on AgentSpawned {
+		info("AgentSpawned, agentID:" + occurrence.agentID + " AgentType: " + occurrence.agentType)
+	}
+	
+	/* An agent has been killed in our context */
+	on AgentKilled {
+		info("AgentKilled, agentID:" + occurrence.agentID)	
+	}
+}
+

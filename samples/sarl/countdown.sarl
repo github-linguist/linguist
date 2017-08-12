@@ -1,0 +1,36 @@
+package io.sarl.demos.basic.countdown
+
+import io.sarl.core.Destroy
+import io.sarl.core.Initialize
+import io.sarl.core.Lifecycle
+import io.sarl.core.Logging
+import io.sarl.core.Schedules
+import java.util.concurrent.atomic.AtomicInteger
+
+event Element
+
+agent CountDownAgent {
+	uses Lifecycle, Schedules, Logging
+
+	val counter = new AtomicInteger(5)
+
+	on Initialize {
+		info("Initialize")
+
+		every(2000) [ /* Decrement counter every 2 sec until v = 0, then kill itself*/
+			var v = counter.decrementAndGet;
+			info("Counter=" + v)
+			if (v <= 0) {
+				killMe
+			}
+		]
+
+	
+	}
+
+	on Destroy {
+		info("Goodbye World!")
+	}
+
+}
+
