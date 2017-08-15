@@ -175,7 +175,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **JSON5:** [atom/language-javascript](https://github.com/atom/language-javascript)
 - **JSONiq:** [wcandillon/language-jsoniq](https://github.com/wcandillon/language-jsoniq)
 - **JSONLD:** [atom/language-javascript](https://github.com/atom/language-javascript)
-- **JSX:** [github-linguist/language-babel](https://github.com/github-linguist/language-babel)
+- **JSX:** [atom/language-javascript](https://github.com/atom/language-javascript)
 - **Julia:** [JuliaEditorSupport/Julia.tmbundle](https://github.com/JuliaEditorSupport/Julia.tmbundle)
 - **Jupyter Notebook:** [textmate/json.tmbundle](https://github.com/textmate/json.tmbundle)
 - **KiCad Board:** [Alhadis/language-pcb](https://github.com/Alhadis/language-pcb)
