@@ -1486,8 +1486,8 @@ Gerber Image:
   - ".gtp"
   - ".gts"
   interpreters:
-  - "gerbv"
-  - "gerbview"
+  - gerbv
+  - gerbview
   tm_scope: source.gerber
   ace_mode: text
   language_id: 404627610
@@ -5155,6 +5155,14 @@ reStructuredText:
   codemirror_mode: rst
   codemirror_mime_type: text/x-rst
   language_id: 419
+wollok:
+  type: programming
+  color: "#a23738"
+  extensions:
+  - ".wlk"
+  ace_mode: text
+  tm_scope: source.solidity
+  language_id: 310424407
 wisp:
   type: programming
   ace_mode: clojure
