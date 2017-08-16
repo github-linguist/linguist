@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.files = Dir['lib/**/*'] + Dir['grammars/*'] + ['LICENSE']
   s.executables = ['linguist', 'git-linguist']
 
-  s.add_dependency 'charlock_holmes', '~> 0.7.3'
+  s.add_dependency 'charlock_holmes', '~> 0.7.5'
   s.add_dependency 'escape_utils',    '~> 1.1.0'
   s.add_dependency 'mime-types',      '>= 1.19'
   s.add_dependency 'rugged',          '>= 0.25.1'
