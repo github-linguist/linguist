@@ -1,0 +1,72 @@
+package io.sarl.demos.basic.behaviors
+
+import io.sarl.core.Behaviors
+import io.sarl.core.Destroy
+import io.sarl.core.Initialize
+import io.sarl.core.Lifecycle
+import io.sarl.core.Logging
+
+/*
+ * Declaration of a simple Factorial event with two internal variables
+ */
+event Factorial {
+	var number : Long
+	var value : Long
+} 
+
+/*
+ * Declaration of a simple BehaviorInitialize event without any data
+ */
+event BehaviorInitialize {}
+
+/*
+ * Declaration of a new behavior
+ */
+behavior FactorialBehavior {
+	uses Lifecycle, Behaviors, Logging /* the list of capacities used by this behavior */
+	
+	var upto : Long = 5l /* A behavior attribute */
+	
+	on BehaviorInitialize {
+		this.upto  = new Long(16) 
+		info("Received Calculate for " + this.upto)   
+		wake(new Factorial => [ number = 0l ; value = 1l ]) /* Wake function send a new factorial event within the internal context of an agent (could be listen by the agent itself, its collections of behaviors and its sub-members) */		
+	}
+	
+	on Factorial [ occurrence.number < upto ] {
+		wake(new Factorial => [ number = increment(occurrence.number) ; value = occurrence.value * (increment(occurrence.number)) ])
+	}
+	
+	on Factorial [occurrence.number == upto] {
+		info("Factorial of " + upto + " is " + occurrence.value)
+		
+		killMe
+	}
+	
+	def increment(nb: Long) : Long {
+		return nb+1
+	}
+}
+
+/*
+ * A simple agent executing/adopting a externally defined behavior.
+ */
+agent BehaviorPlayer {
+	
+	uses Behaviors
+	
+	var myFactorialBehavior : FactorialBehavior
+
+	  
+	on Initialize {		
+		myFactorialBehavior = new FactorialBehavior(this) /* instantiation of the previously declared behavior */
+		registerBehavior(myFactorialBehavior); /* registration of this behavior as one of the agent's behaviors */
+		wake(new BehaviorInitialize) /* send the BehaviorInitialize event in the agent internal context */
+	}
+	
+	on Destroy {
+		unregisterBehavior(myFactorialBehavior); /* WARNING: never forget to unregister a behavior before dying */
+	} 	
+
+}
+
