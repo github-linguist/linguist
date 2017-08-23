@@ -90,7 +90,7 @@ class TestGrammars < Minitest::Test
       message << unlisted_submodules.sort.join("\n")
     end
 
-    assert nonexistent_submodules.empty? && unlisted_submodules.empty?, message
+    assert nonexistent_submodules.empty? && unlisted_submodules.empty?, message.sub(/\.\Z/, "")
   end
 
   def test_local_scopes_are_in_sync
@@ -116,14 +116,14 @@ class TestGrammars < Minitest::Test
     unrecognized = submodule_licenses.select { |k,v| v.nil? && Licensee::FSProject.new(k).license_file }
     unrecognized.reject! { |k,v| PROJECT_WHITELIST.include?(k) }
     message = "The following submodules have unrecognized licenses:\n* #{unrecognized.keys.join("\n* ")}\n"
-    message << "Please ensure that the project's LICENSE file contains the full text of the license."
+    message << "Please ensure that the project's LICENSE file contains the full text of the license"
     assert_equal Hash.new, unrecognized, message
   end
 
   def test_submodules_have_licenses
     unlicensed = submodule_licenses.select { |k,v| v.nil? }.reject { |k,v| PROJECT_WHITELIST.include?(k) }
     message = "The following submodules don't have licenses:\n* #{unlicensed.keys.join("\n* ")}\n"
-    message << "Please ensure that the project has a LICENSE file, and that the LICENSE file contains the full text of the license."
+    message << "Please ensure that the project has a LICENSE file, and that the LICENSE file contains the full text of the license"
     assert_equal Hash.new, unlicensed, message
   end
 
@@ -133,14 +133,14 @@ class TestGrammars < Minitest::Test
                                                    HASH_WHITELIST.include?(v) }
                                    .map { |k,v| "#{k}: #{v}"}
     message = "The following submodules have unapproved licenses:\n* #{unapproved.join("\n* ")}\n"
-    message << "The license must be added to the LICENSE_WHITELIST in /test/test_grammars.rb once approved."
+    message << "The license must be added to the LICENSE_WHITELIST in /test/test_grammars.rb once approved"
     assert_equal [], unapproved, message
   end
 
   def test_whitelisted_submodules_dont_have_licenses
     licensed = submodule_licenses.reject { |k,v| v.nil? }.select { |k,v| PROJECT_WHITELIST.include?(k) }
     message = "The following whitelisted submodules have a license:\n* #{licensed.keys.join("\n* ")}\n"
-    message << "Please remove them from the project whitelist."
+    message << "Please remove them from the project whitelist"
     assert_equal Hash.new, licensed, message
   end
 
@@ -148,7 +148,7 @@ class TestGrammars < Minitest::Test
     used_hashes = submodule_licenses.values.reject { |v| v.nil? || LICENSE_WHITELIST.include?(v) }
     unused_hashes = HASH_WHITELIST - used_hashes
     message = "The following whitelisted license hashes are unused:\n* #{unused_hashes.join("\n* ")}\n"
-    message << "Please remove them from the hash whitelist."
+    message << "Please remove them from the hash whitelist"
     assert_equal Array.new, unused_hashes, message
   end
 
