@@ -106,6 +106,12 @@ class TestGrammars < Minitest::Test
     end
   end
 
+  def test_readme_file_is_in_sync
+    current_data = File.read("#{ROOT}/vendor/README.md").to_s.sub(/\A.+?<!--.+?-->\n/ms, "")
+    updated_data = `script/list-grammars --print`
+    assert_equal current_data, updated_data, "Grammar list is out-of-date. Run `script/list-grammars`"
+  end
+
   def test_submodules_have_recognized_licenses
     unrecognized = submodule_licenses.select { |k,v| v.nil? && Licensee::FSProject.new(k).license_file }
     unrecognized.reject! { |k,v| PROJECT_WHITELIST.include?(k) }
