@@ -56,9 +56,7 @@ module Linguist
       generated_net_specflow_feature_file? ||
       composer_lock? ||
       node_modules? ||
-      go_vendor? ||
       npm_shrinkwrap_or_package_lock? ||
-      godeps? ||
       generated_by_zephir? ||
       minified_files? ||
       has_source_map? ||
@@ -329,27 +327,11 @@ module Linguist
       !!name.match(/node_modules\//)
     end
 
-    # Internal: Is the blob part of the Go vendor/ tree,
-    # not meant for humans in pull requests.
-    #
-    # Returns true or false.
-    def go_vendor?
-      !!name.match(/vendor\/((?!-)[-0-9A-Za-z]+(?<!-)\.)+(com|edu|gov|in|me|net|org|fm|io)/)
-    end
-
     # Internal: Is the blob a generated npm shrinkwrap or package lock file?
     #
     # Returns true or false.
     def npm_shrinkwrap_or_package_lock?
       name.match(/npm-shrinkwrap\.json/) || name.match(/package-lock\.json/)
-    end
-
-    # Internal: Is the blob part of Godeps/,
-    # which are not meant for humans in pull requests.
-    #
-    # Returns true or false.
-    def godeps?
-      !!name.match(/Godeps\//)
     end
 
     # Internal: Is the blob a generated php composer lock file?
