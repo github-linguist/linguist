@@ -85,6 +85,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **D:** [textmate/d.tmbundle](https://github.com/textmate/d.tmbundle)
 - **D-ObjDump:** [nanoant/assembly.tmbundle](https://github.com/nanoant/assembly.tmbundle)
 - **Dart:** [dart-atom/dartlang](https://github.com/dart-atom/dartlang)
+- **DataWeave:** [mulesoft-labs/data-weave-tmLanguage](https://github.com/mulesoft-labs/data-weave-tmLanguage)
 - **desktop:** [Mailaender/desktop.tmbundle](https://github.com/Mailaender/desktop.tmbundle)
 - **Diff:** [textmate/diff.tmbundle](https://github.com/textmate/diff.tmbundle)
 - **DM:** [PJB3005/atomic-dreams](https://github.com/PJB3005/atomic-dreams)
