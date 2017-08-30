@@ -275,6 +275,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Pony:** [CausalityLtd/sublime-pony](https://github.com/CausalityLtd/sublime-pony)
 - **PostScript:** [textmate/postscript.tmbundle](https://github.com/textmate/postscript.tmbundle)
 - **POV-Ray SDL:** [c-lipka/language-povray](https://github.com/c-lipka/language-povray)
+- **PowerQuery:** [mattmasson/powerquery-language](https://github.com/mattmasson/powerquery-language)
 - **PowerShell:** [SublimeText/PowerShell](https://github.com/SublimeText/PowerShell)
 - **Processing:** [textmate/processing.tmbundle](https://github.com/textmate/processing.tmbundle)
 - **Prolog:** [alnkpa/sublimeprolog](https://github.com/alnkpa/sublimeprolog)
