@@ -307,5 +307,8 @@ class TestBlob < Minitest::Test
 
     included = sample_blob_memory("HTML/pages.html")
     assert_predicate included, :include_in_language_stats?
+
+    detectable = sample_blob_memory("KiCad Layout/simonShield.kicad_pcb")
+    assert_predicate detectable, :include_in_language_stats?
   end
 end

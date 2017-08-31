@@ -33,6 +33,7 @@ module Linguist
 
     # Valid Languages types
     TYPES = [:data, :markup, :programming, :prose]
+    DETECTABLE_TYPES = [:programming, :markup].freeze
 
     # Detect languages by a specific type
     #
@@ -295,9 +296,10 @@ module Linguist
       @interpreters = attributes[:interpreters]   || []
       @filenames  = attributes[:filenames]  || []
 
-      # Set popular, and searchable flags
+      # Set popular, searchable and detectable flags
       @popular    = attributes.key?(:popular)    ? attributes[:popular]    : false
       @searchable = attributes.key?(:searchable) ? attributes[:searchable] : true
+      @detectable = attributes.key?(:detectable) ? attributes[:detectable] : false
 
       # If group name is set, save the name so we can lazy load it later
       if attributes[:group_name]
@@ -477,6 +479,15 @@ module Linguist
       @searchable
     end
 
+    # Public: Is it detectable?
+    #
+    # Detectable languages will by include in the language stats.
+    #
+    # Returns true or false
+    def detectable?
+      @detectable || DETECTABLE_TYPES.include?(self.type)
+    end
+
     # Public: Return name as String representation
     def to_s
       name
@@ -559,6 +570,7 @@ module Linguist
       :wrap              => options['wrap'],
       :group_name        => options['group'],
       :searchable        => options.fetch('searchable', true),
+      :detectable        => options.fetch('detectable', false),
       :language_id       => options['language_id'],
       :extensions        => Array(options['extensions']),
       :interpreters      => options['interpreters'].sort,
