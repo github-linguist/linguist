@@ -121,4 +121,16 @@ class TestRepository < Minitest::Test
     # overridden .gitattributes
     assert rakefile.generated?
   end
+
+  def test_linguist_override_detectable?
+    attr_commit = "7af53039a2d18d90d8d49e14b2091d4e437166bb"
+    linguist_repo(attr_commit).read_index
+
+    markdown = Linguist::LazyBlob.new(rugged_repository, attr_commit, "samples/Markdown/tender.md")
+    html = Linguist::LazyBlob.new(rugged_repository, attr_commit, "samples/HTML/pages.html")
+
+    # overridden .gitattributes
+    assert_predicate markdown, :detectable?
+    refute_predicate html, :detectable?
+  end
 end
