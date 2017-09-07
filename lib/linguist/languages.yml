@@ -2149,13 +2149,6 @@ KRL:
   tm_scope: none
   ace_mode: text
   language_id: 186
-KiCad Board:
-  type: data
-  extensions:
-  - ".brd"
-  tm_scope: source.pcb.board
-  ace_mode: text
-  language_id: 140848857
 KiCad Layout:
   type: data
   aliases:
@@ -2171,6 +2164,13 @@ KiCad Layout:
   codemirror_mode: commonlisp
   codemirror_mime_type: text/x-common-lisp
   language_id: 187
+KiCad Legacy Layout:
+  type: data
+  extensions:
+  - ".brd"
+  tm_scope: source.pcb.board
+  ace_mode: text
+  language_id: 140848857
 KiCad Schematic:
   type: data
   aliases:
