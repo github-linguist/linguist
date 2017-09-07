@@ -988,6 +988,14 @@ Dart:
   codemirror_mode: dart
   codemirror_mime_type: application/dart
   language_id: 87
+DataWeave:
+  type: programming
+  color: "#003a52"
+  extensions:
+  - ".dwl"
+  ace_mode: text
+  tm_scope: source.data-weave
+  language_id: 974514097
 Diff:
   type: data
   extensions:
@@ -1488,8 +1496,8 @@ Gerber Image:
   - ".gtp"
   - ".gts"
   interpreters:
-  - "gerbv"
-  - "gerbview"
+  - gerbv
+  - gerbview
   tm_scope: source.gerber
   ace_mode: text
   language_id: 404627610
