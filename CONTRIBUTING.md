@@ -4,9 +4,9 @@ Hi there! We're thrilled that you'd like to contribute to this project. Your hel
 
 The majority of contributions won't need to touch any Ruby code at all.
 
-## Adding an extension to a language
+> Note: We try only to add new extensions once they have some usage on GitHub. In most cases we prefer that extensions be in use in hundreds of repositories before supporting them in Linguist.
 
-We try only to add new extensions once they have some usage on GitHub. In most cases we prefer that extensions be in use in hundreds of repositories before supporting them in Linguist.
+## Adding an extension to a language
 
 To add support for a new extension:
 
@@ -22,8 +22,6 @@ In addition, if this extension is already listed in [`languages.yml`][languages]
 
 
 ## Adding a language
-
-We try only to add languages once they have some usage on GitHub. In most cases we prefer that each new file extension be in use in hundreds of repositories before supporting them in Linguist.
 
 To add support for a new language:
 
