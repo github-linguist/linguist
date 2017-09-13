@@ -9,7 +9,7 @@ class TestColorProximity < Minitest::Test
 
   def test_color_proximity
     langs_with_colors = Language.all.reject { |language| language.color.nil? }
-    cp = ColorProximity.new(0.03, langs_with_colors.map { |lang| cut_hash(lang.color) })
+    cp = ColorProximity.new(0.02, langs_with_colors.map { |lang| cut_hash(lang.color) })
     failing_threshold = langs_with_colors.map do |lang|
       state = cp.past_threshold?(cut_hash(lang.color))
       if !state.first && lang.color != "##{state.last.first}"
