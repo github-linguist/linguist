@@ -1486,8 +1486,8 @@ Gerber Image:
   - ".gtp"
   - ".gts"
   interpreters:
-  - "gerbv"
-  - "gerbview"
+  - gerbv
+  - gerbview
   tm_scope: source.gerber
   ace_mode: text
   language_id: 404627610
@@ -3578,6 +3578,14 @@ Python traceback:
   tm_scope: text.python.traceback
   ace_mode: text
   language_id: 304
+Q:
+  type: programming
+  color: "#0070CD"
+  extensions:
+  - ".q"
+  tm_scope: source.q
+  ace_mode: text
+  language_id: 13035146
 QML:
   type: programming
   color: "#44a51c"
