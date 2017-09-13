@@ -625,8 +625,10 @@ CartoCSS:
   language_id: 53
 Ceylon:
   type: programming
+  color: "#dfa535"
   extensions:
   - ".ceylon"
+  tm_scope: source.ceylon
   ace_mode: text
   language_id: 54
 Chapel:
@@ -986,6 +988,14 @@ Dart:
   codemirror_mode: dart
   codemirror_mime_type: application/dart
   language_id: 87
+DataWeave:
+  type: programming
+  color: "#003a52"
+  extensions:
+  - ".dwl"
+  ace_mode: text
+  tm_scope: source.data-weave
+  language_id: 974514097
 Diff:
   type: data
   extensions:
@@ -1604,6 +1614,7 @@ GraphQL:
   type: data
   extensions:
   - ".graphql"
+  - ".gql"
   tm_scope: source.graphql
   ace_mode: text
   language_id: 139
@@ -2077,6 +2088,7 @@ JavaScript:
   - ".jsfl"
   - ".jsm"
   - ".jss"
+  - ".mjs"
   - ".njs"
   - ".pac"
   - ".sjs"
@@ -2148,13 +2160,6 @@ KRL:
   tm_scope: none
   ace_mode: text
   language_id: 186
-KiCad Board:
-  type: data
-  extensions:
-  - ".brd"
-  tm_scope: source.pcb.board
-  ace_mode: text
-  language_id: 140848857
 KiCad Layout:
   type: data
   aliases:
@@ -2170,6 +2175,13 @@ KiCad Layout:
   codemirror_mode: commonlisp
   codemirror_mime_type: text/x-common-lisp
   language_id: 187
+KiCad Legacy Layout:
+  type: data
+  extensions:
+  - ".brd"
+  tm_scope: source.pcb.board
+  ace_mode: text
+  language_id: 140848857
 KiCad Schematic:
   type: data
   aliases:
@@ -2613,7 +2625,7 @@ Mathematica:
   language_id: 224
 Matlab:
   type: programming
-  color: "#bb92ac"
+  color: "#e16737"
   aliases:
   - octave
   extensions:
@@ -2740,6 +2752,7 @@ Monkey:
   type: programming
   extensions:
   - ".monkey"
+  - ".monkey2"
   ace_mode: text
   tm_scope: source.monkey
   language_id: 236
@@ -4868,12 +4881,16 @@ XML:
   - ".ant"
   - ".axml"
   - ".builds"
+  - ".ccproj"
   - ".ccxml"
   - ".clixml"
   - ".cproject"
+  - ".cscfg"
+  - ".csdef"
   - ".csl"
   - ".csproj"
   - ".ct"
+  - ".depproj"
   - ".dita"
   - ".ditamap"
   - ".ditaval"
@@ -4896,6 +4913,7 @@ XML:
   - ".mm"
   - ".mod"
   - ".mxml"
+  - ".ndproj"
   - ".nproj"
   - ".nuspec"
   - ".odd"
@@ -4903,6 +4921,7 @@ XML:
   - ".pkgproj"
   - ".plist"
   - ".pluginspec"
+  - ".proj"
   - ".props"
   - ".ps1xml"
   - ".psc1"
@@ -4913,6 +4932,7 @@ XML:
   - ".sch"
   - ".scxml"
   - ".sfproj"
+  - ".shproj"
   - ".srdf"
   - ".storyboard"
   - ".stTheme"
@@ -5063,6 +5083,7 @@ YAML:
   - ".yml.mysql"
   filenames:
   - ".clang-format"
+  - ".clang-tidy"
   ace_mode: yaml
   codemirror_mode: yaml
   codemirror_mime_type: text/x-yaml
