@@ -14,8 +14,6 @@
 #                     listed alphabetically)
 # interpreters      - An Array of associated interpreters
 # searchable        - Boolean flag to enable searching (defaults to true)
-# detectable        - Boolean flag to include language in language stats (defaults to true for programming
-#                     and markup types, false for other types)
 # language_id       - Integer used as a language-name-independent indexed field so that we can rename
 #                     languages in Linguist without reindexing all the code on GitHub. Must not be
 #                     changed for existing languages without the explicit permission of GitHub staff.
@@ -1122,7 +1120,6 @@ EQ:
   language_id: 96
 Eagle:
   type: data
-  detectable: true
   extensions:
   - ".sch"
   - ".brd"
@@ -2200,7 +2197,6 @@ KRL:
   language_id: 186
 KiCad Layout:
   type: data
-  detectable: true
   aliases:
   - pcbnew
   extensions:
@@ -2223,7 +2219,6 @@ KiCad Legacy Layout:
   language_id: 140848857
 KiCad Schematic:
   type: data
-  detectable: true
   aliases:
   - eeschema schematic
   extensions:
