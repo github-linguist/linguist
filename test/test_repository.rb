@@ -123,7 +123,7 @@ class TestRepository < Minitest::Test
   end
 
   def test_linguist_override_detectable?
-    attr_commit = "7af53039a2d18d90d8d49e14b2091d4e437166bb"
+    attr_commit = "8f86998866f6f2c8aa14e0dd430e61fd25cff720"
     linguist_repo(attr_commit).read_index
 
     markdown = Linguist::LazyBlob.new(rugged_repository, attr_commit, "samples/Markdown/tender.md")
