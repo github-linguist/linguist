@@ -354,6 +354,14 @@ Awk:
   - nawk
   ace_mode: text
   language_id: 28
+Ballerina:
+  type: programming
+  extensions:
+  - ".bal"
+  tm_scope: source.ballerina
+  ace_mode: text
+  color: "#FF5000"
+  language_id: 720859680
 Batchfile:
   type: programming
   aliases:
@@ -857,7 +865,7 @@ Csound:
   - ".orc"
   - ".udo"
   tm_scope: source.csound
-  ace_mode: text
+  ace_mode: csound_orchestra
   language_id: 73
 Csound Document:
   type: programming
@@ -866,7 +874,7 @@ Csound Document:
   extensions:
   - ".csd"
   tm_scope: source.csound-document
-  ace_mode: text
+  ace_mode: csound_document
   language_id: 74
 Csound Score:
   type: programming
@@ -875,7 +883,7 @@ Csound Score:
   extensions:
   - ".sco"
   tm_scope: source.csound-score
-  ace_mode: text
+  ace_mode: csound_score
   language_id: 75
 Cuda:
   type: programming
@@ -1878,6 +1886,8 @@ INI:
   - ".prefs"
   - ".pro"
   - ".properties"
+  filenames:
+  - buildozer.spec
   tm_scope: source.ini
   aliases:
   - dosini
@@ -4913,6 +4923,7 @@ XML:
   - ".mm"
   - ".mod"
   - ".mxml"
+  - ".natvis"
   - ".ndproj"
   - ".nproj"
   - ".nuspec"

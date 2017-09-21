@@ -33,6 +33,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **AutoHotkey:** [ahkscript/SublimeAutoHotkey](https://github.com/ahkscript/SublimeAutoHotkey)
 - **AutoIt:** [AutoIt/SublimeAutoItScript](https://github.com/AutoIt/SublimeAutoItScript)
 - **Awk:** [github-linguist/awk-sublime](https://github.com/github-linguist/awk-sublime)
+- **Ballerina:** [ballerinalang/plugin-vscode](https://github.com/ballerinalang/plugin-vscode)
 - **Batchfile:** [mmims/language-batchfile](https://github.com/mmims/language-batchfile)
 - **Befunge:** [johanasplund/sublime-befunge](https://github.com/johanasplund/sublime-befunge)
 - **Bison:** [textmate/bison.tmbundle](https://github.com/textmate/bison.tmbundle)
