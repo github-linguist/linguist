@@ -126,10 +126,10 @@ class TestRepository < Minitest::Test
     attr_commit = "8f86998866f6f2c8aa14e0dd430e61fd25cff720"
     linguist_repo(attr_commit).read_index
 
+    # markdown is overridden by .gitattributes to be detectable, html to not be detectable
     markdown = Linguist::LazyBlob.new(rugged_repository, attr_commit, "samples/Markdown/tender.md")
     html = Linguist::LazyBlob.new(rugged_repository, attr_commit, "samples/HTML/pages.html")
 
-    # overridden .gitattributes
     assert_predicate markdown, :detectable?
     refute_predicate html, :detectable?
   end

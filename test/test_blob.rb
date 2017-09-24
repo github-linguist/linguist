@@ -307,5 +307,13 @@ class TestBlob < Minitest::Test
 
     included = sample_blob_memory("HTML/pages.html")
     assert_predicate included, :include_in_language_stats?
+
+    # Test detectable override (i.e by .gitattributes)
+
+    def prose.detectable?; true end
+    assert_predicate prose, :include_in_language_stats?
+
+    def included.detectable?; false end
+    refute_predicate included, :include_in_language_stats?
   end
 end
