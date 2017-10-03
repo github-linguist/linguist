@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'rugged',          '>= 0.25.1'
 
   s.add_development_dependency 'minitest', '>= 5.0'
+  s.add_development_dependency 'rake-compiler', '~> 0.9'
   s.add_development_dependency 'mocha'
   s.add_development_dependency 'plist', '~>3.1'
   s.add_development_dependency 'pry'

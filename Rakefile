@@ -1,6 +1,7 @@
 require 'bundler/setup'
 require 'rake/clean'
 require 'rake/testtask'
+require 'rake/extensiontask'
 require 'yaml'
 require 'yajl'
 require 'open-uri'
@@ -9,6 +10,12 @@ require 'json'
 task :default => :test
 
 Rake::TestTask.new
+
+gem_spec = Gem::Specification.load('github-linguist.gemspec')
+
+Rake::ExtensionTask.new('linguist', gem_spec) do |ext|
+  ext.lib_dir = File.join('lib', 'linguist')
+end
 
 # Extend test task to check for samples and fetch latest Ace modes
 task :test => [:check_samples, :fetch_ace_modes]

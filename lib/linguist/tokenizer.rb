@@ -57,7 +57,7 @@ module Linguist
     #   # => ['printf', '(', ')']
     #
     # Returns Array of token Strings.
-    def extract_tokens(data)
+    def extract_tokens!(data)
       s = StringScanner.new(data)
 
       tokens = []
