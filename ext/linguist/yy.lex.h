@@ -207,6 +207,12 @@ extern char *yytext;
 #ifdef YY_HEADER_EXPORT_START_CONDITIONS
 #define INITIAL 0
 #define sgml 1
+#define c_comment 2
+#define xml_comment 3
+#define haskell_comment 4
+#define ocaml_comment 5
+#define python_dcomment 6
+#define python_scomment 7
 
 #endif
 
@@ -310,9 +316,9 @@ extern int yylex (void);
 #undef YY_DECL
 #endif
 
-#line 54 "tokenizer.l"
+#line 70 "tokenizer.l"
 
 
-#line 317 "yy.lex.h"
+#line 323 "yy.lex.h"
 #undef yyIN_HEADER
 #endif /* yyHEADER_H */

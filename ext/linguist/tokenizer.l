@@ -6,7 +6,7 @@
 %}
 
 %option never-interactive
-%x sgml
+%x sgml c_comment xml_comment haskell_comment ocaml_comment python_dcomment python_scomment
 
 %%
 
@@ -35,6 +35,22 @@
   }
 
 ^[ \t]*(\/\/|--|\#[^!]|%|\").*  { /* nothing */ }
+
+"/*"                            { BEGIN(c_comment); }
+"<!--"                          { BEGIN(xml_comment); }
+"{-"                            { BEGIN(haskell_comment); }
+"(*"                            { BEGIN(ocaml_comment); }
+"\"\"\""                        { BEGIN(python_dcomment); }
+"'''"                           { BEGIN(python_scomment); }
+
+<c_comment,xml_comment,haskell_comment,ocaml_comment,python_dcomment,python_scomment>.|\n { /* nothing */ }
+<c_comment>"*/"                 { BEGIN(INITIAL); }
+<xml_comment>"-->"              { BEGIN(INITIAL); }
+<haskell_comment>"-}"           { BEGIN(INITIAL); }
+<ocaml_comment>"*)"             { BEGIN(INITIAL); }
+<python_dcomment>"\"\"\""       { BEGIN(INITIAL); }
+<python_scomment>"'''"          { BEGIN(INITIAL); }
+
 \"\"|''                         { /* nothing */ }
 \"                              { eat_until_unescaped('"'); }
 '                               { eat_until_unescaped('\''); }
