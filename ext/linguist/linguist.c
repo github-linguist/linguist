@@ -22,6 +22,11 @@ static VALUE rb_tokenizer_extract_tokens(VALUE self, VALUE rb_data) {
 		if (r == 1) {
 			rb_ary_push(ary, rb_str_new2(tokenizer_token));
 			free(tokenizer_token);
+		} else if (r == 2) {
+			VALUE s = rb_str_new2("SHEBANG#!");
+			rb_str_cat2(s, tokenizer_token);
+			rb_ary_push(ary, s);
+			free(tokenizer_token);
 		}
 	}
 

@@ -1813,7 +1813,7 @@ YY_RULE_SETUP
     tokenizer_token = strdup(off);
 
     eat_until_eol();
-    return 1;
+    return 2;
   }
 	YY_BREAK
 case 2:
@@ -1828,7 +1828,7 @@ YY_RULE_SETUP
     tokenizer_token = strdup(off);
 
     eat_until_eol();
-    return 1;
+    return 2;
   }
 	YY_BREAK
 case 3:

@@ -18,7 +18,7 @@
     tokenizer_token = strdup(off);
 
     eat_until_eol();
-    return 1;
+    return 2;
   }
 
 ^#![ \t]*[[:alpha:]\/]+ {
@@ -30,7 +30,7 @@
     tokenizer_token = strdup(off);
 
     eat_until_eol();
-    return 1;
+    return 2;
   }
 
 ^[ \t]*(\/\/|--|\#[^!]|%|\").* { /* nothing */ }
