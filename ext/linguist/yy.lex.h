@@ -206,6 +206,7 @@ extern char *yytext;
 
 #ifdef YY_HEADER_EXPORT_START_CONDITIONS
 #define INITIAL 0
+#define sgml 1
 
 #endif
 
@@ -309,9 +310,9 @@ extern int yylex (void);
 #undef YY_DECL
 #endif
 
-#line 48 "tokenizer.l"
+#line 54 "tokenizer.l"
 
 
-#line 316 "yy.lex.h"
+#line 317 "yy.lex.h"
 #undef yyIN_HEADER
 #endif /* yyHEADER_H */

@@ -27,6 +27,11 @@ static VALUE rb_tokenizer_extract_tokens(VALUE self, VALUE rb_data) {
 			rb_str_cat2(s, tokenizer_token);
 			rb_ary_push(ary, s);
 			free(tokenizer_token);
+		} else if (r == 3) {
+			VALUE s = rb_str_new2(tokenizer_token);
+			rb_str_cat2(s, ">");
+			rb_ary_push(ary, s);
+			free(tokenizer_token);
 		}
 	}
 

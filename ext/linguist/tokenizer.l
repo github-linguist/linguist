@@ -6,6 +6,7 @@
 %}
 
 %option never-interactive
+%x sgml
 
 %%
 
@@ -33,17 +34,22 @@
     return 2;
   }
 
-^[ \t]*(\/\/|--|\#[^!]|%|\").* { /* nothing */ }
-\"\"|''                        { /* nothing */ }
-\"                             { eat_until_unescaped('"'); }
-'                              { eat_until_unescaped('\''); }
+^[ \t]*(\/\/|--|\#[^!]|%|\").*  { /* nothing */ }
+\"\"|''                         { /* nothing */ }
+\"                              { eat_until_unescaped('"'); }
+'                               { eat_until_unescaped('\''); }
 (0x[0-9a-fA-F]([0-9a-fA-F]|\.)*|[0-9]([0-9]|\.)*)([uU][lL]{0,2}|([eE][-+][0-9]*)?[fFlL]*) { /* nothing */ }
-
-;|\{|\}|\(|\)|\[|\]           { tokenizer_token = strdup(yytext); return 1; }
-[[:alnum:].@#/*]+             { tokenizer_token = strdup(yytext); return 1; }
-\<\<?|\+|\-|\*|\/|%|&&?|\|\|? { tokenizer_token = strdup(yytext); return 1; }
-.                             { /* nothing */ }
-\n                            { /* nothing */ }
+\<[^ \t<>]+                     { tokenizer_token = strdup(yytext); BEGIN(sgml); return 3; }
+<sgml>[[:alnum:]]+=/\"          { tokenizer_token = strdup(yytext); input(); eat_until_unescaped('"'); return 1; }
+<sgml>[[:alnum:]]+=/'           { tokenizer_token = strdup(yytext); input(); eat_until_unescaped('\''); return 1; }
+<sgml>[[:alnum:]]+=[[:alnum:]]* { tokenizer_token = strdup(yytext); *(strchr(tokenizer_token, '=') + 1) = 0; return 1; }
+<sgml>[[:alnum:]]+              { tokenizer_token = strdup(yytext); return 1; }
+<sgml>\>                        { BEGIN(INITIAL); }
+<sgml>.|\n                      { /* nothing */ }
+;|\{|\}|\(|\)|\[|\]             { tokenizer_token = strdup(yytext); return 1; }
+[[:alnum:].@#/*]+               { tokenizer_token = strdup(yytext); return 1; }
+\<\<?|\+|\-|\*|\/|%|&&?|\|\|?   { tokenizer_token = strdup(yytext); return 1; }
+.|\n                            { /* nothing */ }
 
 %%
 
