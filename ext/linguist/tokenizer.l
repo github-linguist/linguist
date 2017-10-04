@@ -1,87 +1,121 @@
 %{
-  char *tokenizer_token;
 
-  static void eat_until_eol();
-  static void eat_until_unescaped(char q);
+#include "linguist.h"
+char *tokenizer_token;
+enum tokenizer_type tokenizer_type;
+
+#define feed_token(token, type) do { \
+    tokenizer_token = (token); \
+    tokenizer_type = (type); \
+  } while (0)
+
+#define eat_until_eol() do { \
+    int c; \
+    while ((c = input(yyscanner)) != '\n' && c != EOF); \
+    if (c == EOF) \
+      yyterminate(); \
+  } while (0)
+
+#define eat_until_unescaped(q) do { \
+    int c; \
+    while ((c = input(yyscanner)) != EOF) { \
+      if (c == '\n') \
+        break; \
+      if (c == '\\') { \
+        c = input(yyscanner); \
+        if (c == EOF) \
+          yyterminate(); \
+      } else if (c == q) \
+        break; \
+    } \
+    if (c == EOF) \
+      yyterminate(); \
+  } while (0)
+
 %}
 
-%option never-interactive
+%option never-interactive yywrap reentrant nounput warn nodefault header-file="yy.lex.h"
 %x sgml c_comment xml_comment haskell_comment ocaml_comment python_dcomment python_scomment
 
 %%
 
-^#![ \t]*([[:alnum:]\/]*\/)?env([ \t]+([^ \t=]*=[^ \t]*))*[ \t]+[[:alpha:]]+ {
+^#![ \t]*([[:alnum:]_\/]*\/)?env([ \t]+([^ \t=]*=[^ \t]*))*[ \t]+[[:alpha:]_]+ {
     const char *off = strrchr(yytext, ' ');
     if (!off)
       off = yytext;
     else
       ++off;
-    tokenizer_token = strdup(off);
-
+    feed_token(strdup(off), SHEBANG_TOKEN);
     eat_until_eol();
-    return 2;
+    return 1;
   }
 
-^#![ \t]*[[:alpha:]\/]+ {
+^#![ \t]*[[:alpha:]_\/]+ {
     const char *off = strrchr(yytext, '/');
     if (!off)
       off = yytext;
     else
       ++off;
-    tokenizer_token = strdup(off);
-
-    eat_until_eol();
-    return 2;
+    if (strcmp(off, "env") == 0) {
+      eat_until_eol();
+    } else {
+      feed_token(strdup(off), SHEBANG_TOKEN);
+      eat_until_eol();
+      return 1;
+    }
   }
 
-^[ \t]*(\/\/|--|\#[^!]|%|\").*  { /* nothing */ }
+^[ \t]*(\/\/|--|\#|%|\")" ".*   { /* nothing */ }
 
-"/*"                            { BEGIN(c_comment); }
-"<!--"                          { BEGIN(xml_comment); }
-"{-"                            { BEGIN(haskell_comment); }
-"(*"                            { BEGIN(ocaml_comment); }
-"\"\"\""                        { BEGIN(python_dcomment); }
-"'''"                           { BEGIN(python_scomment); }
+"/*"                              { BEGIN(c_comment); }
+  /* See below for xml_comment start. */
+"{-"                              { BEGIN(haskell_comment); }
+"(*"                              { BEGIN(ocaml_comment); }
+"\"\"\""                          { BEGIN(python_dcomment); }
+"'''"                             { BEGIN(python_scomment); }
 
 <c_comment,xml_comment,haskell_comment,ocaml_comment,python_dcomment,python_scomment>.|\n { /* nothing */ }
-<c_comment>"*/"                 { BEGIN(INITIAL); }
-<xml_comment>"-->"              { BEGIN(INITIAL); }
-<haskell_comment>"-}"           { BEGIN(INITIAL); }
-<ocaml_comment>"*)"             { BEGIN(INITIAL); }
-<python_dcomment>"\"\"\""       { BEGIN(INITIAL); }
-<python_scomment>"'''"          { BEGIN(INITIAL); }
+<c_comment>"*/"                   { BEGIN(INITIAL); }
+<xml_comment>"-->"                { BEGIN(INITIAL); }
+<haskell_comment>"-}"             { BEGIN(INITIAL); }
+<ocaml_comment>"*)"               { BEGIN(INITIAL); }
+<python_dcomment>"\"\"\""         { BEGIN(INITIAL); }
+<python_scomment>"'''"            { BEGIN(INITIAL); }
 
-\"\"|''                         { /* nothing */ }
-\"                              { eat_until_unescaped('"'); }
-'                               { eat_until_unescaped('\''); }
+\"\"|''                           { /* nothing */ }
+\"                                { eat_until_unescaped('"'); }
+'                                 { eat_until_unescaped('\''); }
 (0x[0-9a-fA-F]([0-9a-fA-F]|\.)*|[0-9]([0-9]|\.)*)([uU][lL]{0,2}|([eE][-+][0-9]*)?[fFlL]*) { /* nothing */ }
-\<[^ \t<>]+                     { tokenizer_token = strdup(yytext); BEGIN(sgml); return 3; }
-<sgml>[[:alnum:]]+=/\"          { tokenizer_token = strdup(yytext); input(); eat_until_unescaped('"'); return 1; }
-<sgml>[[:alnum:]]+=/'           { tokenizer_token = strdup(yytext); input(); eat_until_unescaped('\''); return 1; }
-<sgml>[[:alnum:]]+=[[:alnum:]]* { tokenizer_token = strdup(yytext); *(strchr(tokenizer_token, '=') + 1) = 0; return 1; }
-<sgml>[[:alnum:]]+              { tokenizer_token = strdup(yytext); return 1; }
-<sgml>\>                        { BEGIN(INITIAL); }
-<sgml>.|\n                      { /* nothing */ }
-;|\{|\}|\(|\)|\[|\]             { tokenizer_token = strdup(yytext); return 1; }
-[[:alnum:].@#/*]+               { tokenizer_token = strdup(yytext); return 1; }
-\<\<?|\+|\-|\*|\/|%|&&?|\|\|?   { tokenizer_token = strdup(yytext); return 1; }
-.|\n                            { /* nothing */ }
+\<[^ \t\n\r<>]+/>|" "[^<>\n]{0,2048}>               {
+    if (strcmp(yytext, "<!--") == 0) {
+     BEGIN(xml_comment);
+    } else {
+      feed_token(strdup(yytext), SGML_TOKEN);
+      BEGIN(sgml);
+      return 1;
+    }
+  }
+<sgml>[[:alnum:]_]+=/\"           { feed_token(strdup(yytext), REGULAR_TOKEN); input(yyscanner); eat_until_unescaped('"'); return 1; }
+<sgml>[[:alnum:]_]+=/'            { feed_token(strdup(yytext), REGULAR_TOKEN); input(yyscanner); eat_until_unescaped('\''); return 1; }
+<sgml>[[:alnum:]_]+=[[:alnum:]_]* { feed_token(strdup(yytext), REGULAR_TOKEN); *(strchr(tokenizer_token, '=') + 1) = 0; return 1; }
+<sgml>[[:alnum:]_]+               { feed_token(strdup(yytext), REGULAR_TOKEN); return 1; }
+<sgml>\>                          { BEGIN(INITIAL); }
+<sgml>.|\n                        { /* nothing */ }
+;|\{|\}|\(|\)|\[|\]               { feed_token(strdup(yytext), REGULAR_TOKEN); return 1; }
+[[:alnum:]_.@#/*]+                {
+    if (strncmp(yytext, "/*", 2) == 0) {
+      if (strlen(yytext) >= 4 && strcmp(yytext + strlen(yytext) - 2, "*/") == 0) {
+        /* nothing */
+      } else {
+        BEGIN(c_comment);
+      }
+    } else {
+      feed_token(strdup(yytext), REGULAR_TOKEN);
+      return 1;
+    }
+  }
+\<\<?|\+|\-|\*|\/|%|&&?|\|\|?     { feed_token(strdup(yytext), REGULAR_TOKEN); return 1; }
+.|\n                              { /* nothing */ }
 
 %%
 
-static void eat_until_eol() {
-  int c;
-  while ((c = input()) != '\n' && c != EOF);
-}
-
-static void eat_until_unescaped(char q) {
-  int c;
-  while ((c = input()) != EOF) {
-    if (c == '\\') {
-      c = input();
-      if (c == EOF)
-        return;
-    } else if (c == q)
-      return;
-  }
-}
