@@ -4,7 +4,7 @@ package foobar
 {
 	import flash.display.MovieClip;
 
-	public class Bar
+	class Bar
 	{
 		public function getNumber():Number
 		{
@@ -12,7 +12,7 @@ package foobar
 		}
 	}
 
-	public class Foo extends Bar
+	class Foo extends Bar
 	{
 		private var ourNumber:Number = 25;
 
@@ -22,7 +22,7 @@ package foobar
 		}
 	}
 
-	public class Main extends MovieClip
+	class Main extends MovieClip
 	{
 		public function Main()
 		{
