@@ -18,7 +18,7 @@ Rake::ExtensionTask.new('linguist', gem_spec) do |ext|
 end
 
 # Extend test task to check for samples and fetch latest Ace modes
-task :test => [:check_samples, :fetch_ace_modes]
+task :test => [:compile, :check_samples, :fetch_ace_modes]
 
 desc "Check that we have samples.json generated"
 task :check_samples do
