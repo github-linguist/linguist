@@ -47,6 +47,18 @@ task :samples do
   File.write 'lib/linguist/samples.json', json
 end
 
+FLEX_MIN_VER = [2, 5, 39]
+task :flex do
+  if `flex -V` !~ /^flex (\d+)\.(\d+)\.(\d+)/
+    fail "flex not detected"
+  end
+  maj, min, rev = $1.to_i, $2.to_i, $3.to_i
+  if maj < FLEX_MIN_VER[0] || (maj == FLEX_MIN_VER[0] && (min < FLEX_MIN_VER[1] || (min == FLEX_MIN_VER[1] && rev < FLEX_MIN_VER[2])))
+    fail "building linguist's lexer requires at least flex #{FLEX_MIN_VER.join(".")}"
+  end
+  system "cd ext/linguist && flex tokenizer.l"
+end
+
 task :build_gem => :samples do
   rm_rf "grammars"
   sh "script/convert-grammars"
