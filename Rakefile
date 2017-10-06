@@ -41,7 +41,7 @@ task :fetch_ace_modes do
   end
 end
 
-task :samples do
+task :samples => :compile do
   require 'linguist/samples'
   json = Yajl.dump(Linguist::Samples.data, :pretty => true)
   File.write 'lib/linguist/samples.json', json

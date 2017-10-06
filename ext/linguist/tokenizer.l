@@ -1,12 +1,10 @@
 %{
 
 #include "linguist.h"
-char *tokenizer_token;
-enum tokenizer_type tokenizer_type;
 
-#define feed_token(token, type) do { \
-    tokenizer_token = (token); \
-    tokenizer_type = (type); \
+#define feed_token(tok, typ) do { \
+    yyextra->token = (tok); \
+    yyextra->type = (typ); \
   } while (0)
 
 #define eat_until_eol() do { \
@@ -34,7 +32,7 @@ enum tokenizer_type tokenizer_type;
 
 %}
 
-%option never-interactive yywrap reentrant nounput warn nodefault header-file="yy.lex.h"
+%option never-interactive yywrap reentrant nounput warn nodefault header-file="yy.lex.h" extra-type="struct tokenizer_extra *"
 %x sgml c_comment xml_comment haskell_comment ocaml_comment python_dcomment python_scomment
 
 %%
@@ -97,7 +95,7 @@ enum tokenizer_type tokenizer_type;
   }
 <sgml>[[:alnum:]_]+=/\"           { feed_token(strdup(yytext), REGULAR_TOKEN); input(yyscanner); eat_until_unescaped('"'); return 1; }
 <sgml>[[:alnum:]_]+=/'            { feed_token(strdup(yytext), REGULAR_TOKEN); input(yyscanner); eat_until_unescaped('\''); return 1; }
-<sgml>[[:alnum:]_]+=[[:alnum:]_]* { feed_token(strdup(yytext), REGULAR_TOKEN); *(strchr(tokenizer_token, '=') + 1) = 0; return 1; }
+<sgml>[[:alnum:]_]+=[[:alnum:]_]* { feed_token(strdup(yytext), REGULAR_TOKEN); *(strchr(yyextra->token, '=') + 1) = 0; return 1; }
 <sgml>[[:alnum:]_]+               { feed_token(strdup(yytext), REGULAR_TOKEN); return 1; }
 <sgml>\>                          { BEGIN(INITIAL); }
 <sgml>.|\n                        { /* nothing */ }

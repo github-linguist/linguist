@@ -1,6 +1,6 @@
 #include "ruby.h"
-#include "yy.lex.h"
 #include "linguist.h"
+#include "yy.lex.h"
 
 int yywrap(yyscan_t yyscanner) {
 	return 1;
@@ -9,6 +9,7 @@ int yywrap(yyscan_t yyscanner) {
 static VALUE rb_tokenizer_extract_tokens(VALUE self, VALUE rb_data) {
 	YY_BUFFER_STATE buf;
 	yyscan_t scanner;
+	struct tokenizer_extra extra;
 	VALUE ary, s;
 	long len;
 	int r;
@@ -19,32 +20,32 @@ static VALUE rb_tokenizer_extract_tokens(VALUE self, VALUE rb_data) {
 	if (len > 100000)
 		len = 100000;
 
-	yylex_init(&scanner);
-	buf = yy_scan_bytes(RSTRING_PTR(rb_data), len, scanner);
+	yylex_init_extra(&extra, &scanner);
+	buf = yy_scan_bytes(RSTRING_PTR(rb_data), (int) len, scanner);
 
 	ary = rb_ary_new();
 	do {
-		tokenizer_type = NO_ACTION;
-		tokenizer_token = NULL;
+		extra.type = NO_ACTION;
+		extra.token = NULL;
 		r = yylex(scanner);
-		switch (tokenizer_type) {
+		switch (extra.type) {
 		case NO_ACTION:
 			break;
 		case REGULAR_TOKEN:
-			rb_ary_push(ary, rb_str_new2(tokenizer_token));
-			free(tokenizer_token);
+			rb_ary_push(ary, rb_str_new2(extra.token));
+			free(extra.token);
 			break;
 		case SHEBANG_TOKEN:
 			s = rb_str_new2("SHEBANG#!");
-			rb_str_cat2(s, tokenizer_token);
+			rb_str_cat2(s, extra.token);
 			rb_ary_push(ary, s);
-			free(tokenizer_token);
+			free(extra.token);
 			break;
 		case SGML_TOKEN:
-			s = rb_str_new2(tokenizer_token);
+			s = rb_str_new2(extra.token);
 			rb_str_cat2(s, ">");
 			rb_ary_push(ary, s);
-			free(tokenizer_token);
+			free(extra.token);
 			break;
 		}
 	} while (r);
