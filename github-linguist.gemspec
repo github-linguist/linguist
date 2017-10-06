@@ -10,8 +10,9 @@ Gem::Specification.new do |s|
   s.homepage = "https://github.com/github/linguist"
   s.license  = "MIT"
 
-  s.files = Dir['lib/**/*'] + Dir['grammars/*'] + ['LICENSE']
+  s.files = Dir['lib/**/*'] + Dir['ext/**/*'] + Dir['grammars/*'] + ['LICENSE']
   s.executables = ['linguist', 'git-linguist']
+  s.extensions = ['ext/linguist/extconf.rb']
 
   s.add_dependency 'charlock_holmes', '~> 0.7.5'
   s.add_dependency 'escape_utils',    '~> 1.1.0'
