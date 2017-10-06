@@ -32,7 +32,7 @@
 
 %}
 
-%option never-interactive yywrap reentrant nounput warn nodefault header-file="yy.lex.h" extra-type="struct tokenizer_extra *"
+%option never-interactive yywrap reentrant nounput warn nodefault header-file="lex.linguist_yy.h" extra-type="struct tokenizer_extra *" prefix="linguist_yy"
 %x sgml c_comment xml_comment haskell_comment ocaml_comment python_dcomment python_scomment
 
 %%

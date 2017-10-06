@@ -1,8 +1,8 @@
 #include "ruby.h"
 #include "linguist.h"
-#include "yy.lex.h"
+#include "lex.linguist_yy.h"
 
-int yywrap(yyscan_t yyscanner) {
+int linguist_yywrap(yyscan_t yyscanner) {
 	return 1;
 }
 
@@ -20,14 +20,14 @@ static VALUE rb_tokenizer_extract_tokens(VALUE self, VALUE rb_data) {
 	if (len > 100000)
 		len = 100000;
 
-	yylex_init_extra(&extra, &scanner);
-	buf = yy_scan_bytes(RSTRING_PTR(rb_data), (int) len, scanner);
+	linguist_yylex_init_extra(&extra, &scanner);
+	buf = linguist_yy_scan_bytes(RSTRING_PTR(rb_data), (int) len, scanner);
 
 	ary = rb_ary_new();
 	do {
 		extra.type = NO_ACTION;
 		extra.token = NULL;
-		r = yylex(scanner);
+		r = linguist_yylex(scanner);
 		switch (extra.type) {
 		case NO_ACTION:
 			break;
@@ -50,8 +50,8 @@ static VALUE rb_tokenizer_extract_tokens(VALUE self, VALUE rb_data) {
 		}
 	} while (r);
 
-	yy_delete_buffer(buf, scanner);
-	yylex_destroy(scanner);
+	linguist_yy_delete_buffer(buf, scanner);
+	linguist_yylex_destroy(scanner);
 
 	return ary;
 }
