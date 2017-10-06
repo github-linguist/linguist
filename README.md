@@ -15,10 +15,23 @@ See [Troubleshooting](#troubleshooting) and [`CONTRIBUTING.md`](/CONTRIBUTING.md
 
 The Language stats bar displays languages percentages for the files in the repository. The percentages are calculated based on the bytes of code for each language as reported by the [List Languages](https://developer.github.com/v3/repos/#list-languages) API. If the bar is reporting a language that you don't expect:
 
-1. Click on the name of the language in the stats bar to see a list of the files that are identified as that language.
-1. If you see files that you didn't write, consider moving the files into one of the [paths for vendored  code](/lib/linguist/vendor.yml), or use the [manual overrides](#overrides) feature to ignore them.
+1. Click on the name of the language in the stats bar to see a list of the files that are identified as that language. Keep in mind the [code search restrictions](https://help.github.com/articles/searching-code/#considerations-for-code-search) may result in files identified in the language statistics not appearing in the search results.
+1. If you see files that you didn't write in the search results, consider moving the files into one of the [paths for vendored code](/lib/linguist/vendor.yml), or use the [manual overrides](#overrides) feature to ignore them.
 1. If the files are being misclassified, search for [open issues][issues] to see if anyone else has already reported the issue. Any information you can add, especially links to public repositories, is helpful.
 1. If there are no reported issues of this misclassification, [open an issue][new-issue] and include a link to the repository or a sample of the code that is being misclassified.
+
+### My repository isn't showing my language
+
+Linguist does not include [vendored code](#vendored-code), [documentation](#documentation), or `data` languages (as defined by the `type` attribute in [`languages.yml`](/lib/linguist/languages.yml)) when calculating the repository language statistics. You can  
+
+If the language statistics bar is not showing your language at all, it could be for a few reasons:
+
+1. Linguist doesn't know about your language, see .
+1. The extension you have chosen is not associated with your language in [languages.yml](/lib/linguist/languages.yml).
+1. Your language is classified as a `data` language in [languages.yml](/lib/linguist/languages.yml).
+1. Linguist has detected your files are either [vendored]((/lib/linguist/vendor.yml)), [generated](/lib/linguist/generated.rb) or [documentation](/lib/linguist/documentation.yml).
+
+If Linguist doesn't know about language or the extension you're using, consider [contributing](/CONTRIBUTING.md) to Linguist by opening a pull request to add support for your language or extension. For everything else, you can use a the [manual overrides](#overrides) feature to tell Linguist to include your files in the language statistics.
 
 ### There's a problem with the syntax highlighting of a file
 
