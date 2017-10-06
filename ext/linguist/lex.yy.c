@@ -6562,12 +6562,10 @@ goto find_rule; \
 #line 2 "tokenizer.l"
 
 #include "linguist.h"
-char *tokenizer_token;
-enum tokenizer_type tokenizer_type;
 
-#define feed_token(token, type) do { \
-    tokenizer_token = (token); \
-    tokenizer_type = (type); \
+#define feed_token(tok, typ) do { \
+    yyextra->token = (tok); \
+    yyextra->type = (typ); \
   } while (0)
 
 #define eat_until_eol() do { \
@@ -6594,7 +6592,7 @@ enum tokenizer_type tokenizer_type;
   } while (0)
 
 
-#line 6598 "lex.yy.c"
+#line 6596 "lex.yy.c"
 
 #define INITIAL 0
 #define sgml 1
@@ -6613,9 +6611,7 @@ enum tokenizer_type tokenizer_type;
 #include <unistd.h>
 #endif
 
-#ifndef YY_EXTRA_TYPE
-#define YY_EXTRA_TYPE void *
-#endif
+#define YY_EXTRA_TYPE struct tokenizer_extra *
 
 /* Holds the entire state of the reentrant scanner. */
 struct yyguts_t
@@ -6876,10 +6872,10 @@ YY_DECL
 		}
 
 	{
-#line 40 "tokenizer.l"
+#line 38 "tokenizer.l"
 
 
-#line 6883 "lex.yy.c"
+#line 6879 "lex.yy.c"
 
 	while ( 1 )		/* loops until end-of-file is reached */
 		{
@@ -6963,7 +6959,7 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 42 "tokenizer.l"
+#line 40 "tokenizer.l"
 {
     const char *off = strrchr(yytext, ' ');
     if (!off)
@@ -6977,7 +6973,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 53 "tokenizer.l"
+#line 51 "tokenizer.l"
 {
     const char *off = strrchr(yytext, '/');
     if (!off)
@@ -6995,94 +6991,94 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 68 "tokenizer.l"
+#line 66 "tokenizer.l"
 { /* nothing */ }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 70 "tokenizer.l"
+#line 68 "tokenizer.l"
 { BEGIN(c_comment); }
 	YY_BREAK
 /* See below for xml_comment start. */
 case 5:
 YY_RULE_SETUP
-#line 72 "tokenizer.l"
+#line 70 "tokenizer.l"
 { BEGIN(haskell_comment); }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 73 "tokenizer.l"
+#line 71 "tokenizer.l"
 { BEGIN(ocaml_comment); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 74 "tokenizer.l"
+#line 72 "tokenizer.l"
 { BEGIN(python_dcomment); }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 75 "tokenizer.l"
+#line 73 "tokenizer.l"
 { BEGIN(python_scomment); }
 	YY_BREAK
 case 9:
 /* rule 9 can match eol */
 YY_RULE_SETUP
-#line 77 "tokenizer.l"
+#line 75 "tokenizer.l"
 { /* nothing */ }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 78 "tokenizer.l"
+#line 76 "tokenizer.l"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 79 "tokenizer.l"
+#line 77 "tokenizer.l"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 80 "tokenizer.l"
+#line 78 "tokenizer.l"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 81 "tokenizer.l"
+#line 79 "tokenizer.l"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 82 "tokenizer.l"
+#line 80 "tokenizer.l"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 83 "tokenizer.l"
+#line 81 "tokenizer.l"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 85 "tokenizer.l"
+#line 83 "tokenizer.l"
 { /* nothing */ }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 86 "tokenizer.l"
+#line 84 "tokenizer.l"
 { eat_until_unescaped('"'); }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 87 "tokenizer.l"
+#line 85 "tokenizer.l"
 { eat_until_unescaped('\''); }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 88 "tokenizer.l"
+#line 86 "tokenizer.l"
 { /* nothing */ }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 89 "tokenizer.l"
+#line 87 "tokenizer.l"
 {
     if (strcmp(yytext, "<!--") == 0) {
      BEGIN(xml_comment);
@@ -7098,7 +7094,7 @@ case 21:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 98 "tokenizer.l"
+#line 96 "tokenizer.l"
 { feed_token(strdup(yytext), REGULAR_TOKEN); input(yyscanner); eat_until_unescaped('"'); return 1; }
 	YY_BREAK
 case 22:
@@ -7106,38 +7102,38 @@ case 22:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 99 "tokenizer.l"
+#line 97 "tokenizer.l"
 { feed_token(strdup(yytext), REGULAR_TOKEN); input(yyscanner); eat_until_unescaped('\''); return 1; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 100 "tokenizer.l"
-{ feed_token(strdup(yytext), REGULAR_TOKEN); *(strchr(tokenizer_token, '=') + 1) = 0; return 1; }
+#line 98 "tokenizer.l"
+{ feed_token(strdup(yytext), REGULAR_TOKEN); *(strchr(yyextra->token, '=') + 1) = 0; return 1; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 101 "tokenizer.l"
+#line 99 "tokenizer.l"
 { feed_token(strdup(yytext), REGULAR_TOKEN); return 1; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 102 "tokenizer.l"
+#line 100 "tokenizer.l"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case 26:
 /* rule 26 can match eol */
 YY_RULE_SETUP
-#line 103 "tokenizer.l"
+#line 101 "tokenizer.l"
 { /* nothing */ }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 104 "tokenizer.l"
+#line 102 "tokenizer.l"
 { feed_token(strdup(yytext), REGULAR_TOKEN); return 1; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 105 "tokenizer.l"
+#line 103 "tokenizer.l"
 {
     if (strncmp(yytext, "/*", 2) == 0) {
       if (strlen(yytext) >= 4 && strcmp(yytext + strlen(yytext) - 2, "*/") == 0) {
@@ -7153,21 +7149,21 @@ YY_RULE_SETUP
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 117 "tokenizer.l"
+#line 115 "tokenizer.l"
 { feed_token(strdup(yytext), REGULAR_TOKEN); return 1; }
 	YY_BREAK
 case 30:
 /* rule 30 can match eol */
 YY_RULE_SETUP
-#line 118 "tokenizer.l"
+#line 116 "tokenizer.l"
 { /* nothing */ }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 120 "tokenizer.l"
+#line 118 "tokenizer.l"
 YY_FATAL_ERROR( "flex scanner jammed" );
 	YY_BREAK
-#line 7171 "lex.yy.c"
+#line 7167 "lex.yy.c"
 			case YY_STATE_EOF(INITIAL):
 			case YY_STATE_EOF(sgml):
 			case YY_STATE_EOF(c_comment):
@@ -8266,7 +8262,7 @@ void yyfree (void * ptr , yyscan_t yyscanner)
 
 #define YYTABLES_NAME "yytables"
 
-#line 119 "tokenizer.l"
+#line 117 "tokenizer.l"
 
 
 

@@ -242,9 +242,7 @@ void yyfree (void * ,yyscan_t yyscanner );
 #include <unistd.h>
 #endif
 
-#ifndef YY_EXTRA_TYPE
-#define YY_EXTRA_TYPE void *
-#endif
+#define YY_EXTRA_TYPE struct tokenizer_extra *
 
 int yylex_init (yyscan_t* scanner);
 
@@ -347,9 +345,9 @@ extern int yylex (yyscan_t yyscanner);
 #undef YY_DECL
 #endif
 
-#line 119 "tokenizer.l"
+#line 117 "tokenizer.l"
 
 
-#line 354 "yy.lex.h"
+#line 352 "yy.lex.h"
 #undef yyIN_HEADER
 #endif /* yyHEADER_H */
