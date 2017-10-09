@@ -306,7 +306,13 @@ module Linguist
     end
 
     def last_lines(n)
-      return lines[-n..-1] if @lines
+      if @lines
+        if n >= @lines.length
+          @lines
+        else
+          lines[-n..-1]
+        end
+      end
       return [] unless viewable? && data
 
       no_eol = true
