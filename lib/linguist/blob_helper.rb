@@ -295,7 +295,7 @@ module Linguist
 
     def first_lines(n)
       return lines[0...n] if @lines
-      return unless viewable? && data
+      return [] unless viewable? && data
 
       i, c = 0, 0
       while c < n && j = data.index(encoded_newlines_re, i)
@@ -307,7 +307,7 @@ module Linguist
 
     def last_lines(n)
       return lines[-n..-1] if @lines
-      return unless viewable? && data
+      return [] unless viewable? && data
 
       no_eol = true
       i, c = data.length, 0
