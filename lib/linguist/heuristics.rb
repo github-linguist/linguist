@@ -74,6 +74,14 @@ module Linguist
 
     # Common heuristics
     ObjectiveCRegex = /^\s*(@(interface|class|protocol|property|end|synchronised|selector|implementation)\b|#import\s+.+\.h[">])/
+    CPlusPlusRegex = Regexp.union(
+        /^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>/,
+        /^\s*template\s*</,
+        /^[ \t]*try/,
+        /^[ \t]*catch\s*\(/,
+        /^[ \t]*(class|(using[ \t]+)?namespace)\s+\w+/,
+        /^[ \t]*(private|public|protected):$/,
+        /std::\w+/)
 
     disambiguate ".asc" do |data|
       if /^(----[- ]BEGIN|ssh-(rsa|dss)) /.match(data)
@@ -213,8 +221,7 @@ module Linguist
     disambiguate ".h" do |data|
       if ObjectiveCRegex.match(data)
         Language["Objective-C"]
-      elsif (/^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>/.match(data) ||
-        /^\s*template\s*</.match(data) || /^[ \t]*try/.match(data) || /^[ \t]*catch\s*\(/.match(data) || /^[ \t]*(class|(using[ \t]+)?namespace)\s+\w+/.match(data) || /^[ \t]*(private|public|protected):$/.match(data) || /std::\w+/.match(data))
+      elsif CPlusPlusRegex.match(data)
         Language["C++"]
       end
     end
