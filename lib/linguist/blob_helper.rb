@@ -275,10 +275,8 @@ module Linguist
           # also--importantly--without having to duplicate many (potentially
           # large) strings.
           begin
-            encoded_newlines = ["\r\n", "\r", "\n"].
-              map { |nl| nl.encode(ruby_encoding, "ASCII-8BIT").force_encoding(data.encoding) }
-
-            data.split(Regexp.union(encoded_newlines), -1)
+            
+            data.split(encoded_newlines_re, -1)
           rescue Encoding::ConverterNotFoundError
             # The data is not splittable in the detected encoding.  Assume it's
             # one big line.
@@ -287,6 +285,44 @@ module Linguist
         else
           []
         end
+    end
+
+    def encoded_newlines_re
+      @encoded_newlines_re ||= Regexp.union(["\r\n", "\r", "\n"].
+                                              map { |nl| nl.encode(ruby_encoding, "ASCII-8BIT").force_encoding(data.encoding) })
+
+    end
+
+    def first_lines(n)
+      return lines[0...n] if @lines
+      return unless viewable? && data
+
+      i, c = 0, 0
+      while c < n && j = data.index(encoded_newlines_re, i)
+        i = j + $&.length
+        c += 1
+      end
+      data[0...i].split(encoded_newlines_re, -1)
+    end
+
+    def last_lines(n)
+      return lines[-n..-1] if @lines
+      return unless viewable? && data
+
+      no_eol = true
+      i, c = data.length, 0
+      while c < n && j = data.rindex(encoded_newlines_re, i - 1)
+        if c == 0 && j + $&.length == i
+          no_eol = false
+          n += 1
+        end
+        i = j
+        k = j + $&.length
+        c += 1
+      end
+      r = data[k..-1].split(encoded_newlines_re, -1)
+      r.pop if !no_eol
+      r
     end
 
     # Public: Get number of lines of code

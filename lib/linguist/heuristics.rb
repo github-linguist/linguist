@@ -1,6 +1,8 @@
 module Linguist
   # A collection of simple heuristics that can be used to better analyze languages.
   class Heuristics
+    HEURISTICS_CONSIDER_BYTES = 50 * 1024
+
     # Public: Use heuristics to detect language of the blob.
     #
     # blob               - An object that quacks like a blob.
@@ -14,7 +16,7 @@ module Linguist
     #
     # Returns an Array of languages, or empty if none matched or were inconclusive.
     def self.call(blob, candidates)
-      data = blob.data
+      data = blob.data[0...HEURISTICS_CONSIDER_BYTES]
 
       @heuristics.each do |heuristic|
         if heuristic.matches?(blob.name, candidates)
