@@ -17,7 +17,7 @@ To add support for a new extension:
 In addition, if this extension is already listed in [`languages.yml`][languages] then sometimes a few more steps will need to be taken:
 
 1. Make sure that example `.yourextension` files are present in the [samples directory][samples] for each language that uses `.yourextension`.
-1. Test the performance of the Bayesian classifier with a relatively large number (1000s) of sample `.yourextension` files. (ping **@bkeepers** to help with this) to ensure we're not misclassifying files.
+1. Test the performance of the Bayesian classifier with a relatively large number (1000s) of sample `.yourextension` files. (ping **@lildude** to help with this) to ensure we're not misclassifying files.
 1. If the Bayesian classifier does a bad job with the sample `.yourextension` files then a [heuristic](https://github.com/github/linguist/blob/master/lib/linguist/heuristics.rb) may need to be written to help.
 
 
@@ -36,7 +36,7 @@ To add support for a new language:
 In addition, if your new language defines an extension that's already listed in [`languages.yml`][languages] (such as `.foo`) then sometimes a few more steps will need to be taken:
 
 1. Make sure that example `.foo` files are present in the [samples directory][samples] for each language that uses `.foo`.
-1. Test the performance of the Bayesian classifier with a relatively large number (1000s) of sample `.foo` files. (ping **@bkeepers** to help with this) to ensure we're not misclassifying files.
+1. Test the performance of the Bayesian classifier with a relatively large number (1000s) of sample `.foo` files. (ping **@lildude** to help with this) to ensure we're not misclassifying files.
 1. If the Bayesian classifier does a bad job with the sample `.foo` files then a [heuristic](https://github.com/github/linguist/blob/master/lib/linguist/heuristics.rb) may need to be written to help.
 
 Remember, the goal here is to try and avoid false positives!
