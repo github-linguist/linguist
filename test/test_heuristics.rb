@@ -44,6 +44,13 @@ class TestHeuristcs < Minitest::Test
     assert_equal Language["Objective-C"], match
   end
 
+  def test_as_by_heuristics
+    assert_heuristics({
+      "ActionScript" => all_fixtures("ActionScript", "*.as"),
+      "AngelScript" => all_fixtures("AngelScript", "*.as")
+    })
+  end
+
   # Candidate languages = ["AGS Script", "AsciiDoc", "Public Key"]
   def test_asc_by_heuristics
     assert_heuristics({
