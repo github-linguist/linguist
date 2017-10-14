@@ -486,7 +486,7 @@ module Linguist
     end
   
     disambiguate ".w" do |data|
-      if (data.include?("&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS C-Win"))
+      if (data.include?("&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS"))
         Language["OpenEdge ABL"]
       elsif /^@(<|\w+\.)/.match(data)
         Language["CWeb"]
