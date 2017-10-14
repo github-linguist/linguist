@@ -381,6 +381,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Vue:** [vuejs/vue-syntax-highlight](https://github.com/vuejs/vue-syntax-highlight)
 - **Wavefront Material:** [Alhadis/language-wavefront](https://github.com/Alhadis/language-wavefront)
 - **Wavefront Object:** [Alhadis/language-wavefront](https://github.com/Alhadis/language-wavefront)
+- **wdl:** [broadinstitute/wdl-sublime-syntax-highlighter](https://github.com/broadinstitute/wdl-sublime-syntax-highlighter)
 - **Web Ontology Language:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)
 - **WebAssembly:** [Alhadis/language-webassembly](https://github.com/Alhadis/language-webassembly)
 - **WebIDL:** [andik/IDL-Syntax](https://github.com/andik/IDL-Syntax)
