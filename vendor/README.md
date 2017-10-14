@@ -15,6 +15,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Alloy:** [macekond/Alloy.tmbundle](https://github.com/macekond/Alloy.tmbundle)
 - **Alpine Abuild:** [atom/language-shellscript](https://github.com/atom/language-shellscript)
 - **AMPL:** [ampl/sublime-ampl](https://github.com/ampl/sublime-ampl)
+- **AngelScript:** [wronex/sublime-angelscript](https://github.com/wronex/sublime-angelscript)
 - **Ant Build System:** [textmate/ant.tmbundle](https://github.com/textmate/ant.tmbundle)
 - **ANTLR:** [textmate/antlr.tmbundle](https://github.com/textmate/antlr.tmbundle)
 - **ApacheConf:** [textmate/apache.tmbundle](https://github.com/textmate/apache.tmbundle)
