@@ -1,6 +1,6 @@
 require_relative "./helper"
 
-class TestHeuristcs < Minitest::Test
+class TestHeuristics < Minitest::Test
   include Linguist
 
   def fixture(name)
@@ -234,14 +234,6 @@ class TestHeuristcs < Minitest::Test
       "Perl" => all_fixtures("Perl", "*.pm"),
       "Perl 6" => all_fixtures("Perl 6", "*.pm"),
       "XPM" => all_fixtures("XPM", "*.pm")
-    })
-  end
-
-  # Candidate languages = ["Pod", "Perl"]
-  def test_pod_by_heuristics
-    assert_heuristics({
-      "Perl" => all_fixtures("Perl", "*.pod"),
-      "Pod" => all_fixtures("Pod", "*.pod")
     })
   end
 
