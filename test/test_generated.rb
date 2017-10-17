@@ -42,6 +42,12 @@ class TestGenerated < Minitest::Test
     generated_sample_without_loading_data("Dummy/foo.xcworkspacedata")
     generated_sample_without_loading_data("Dummy/foo.xcuserstate")
 
+    # Cocoapods
+    generated_sample_without_loading_data("Dummy/Pods/Pods.xcodeproj")
+    generated_sample_without_loading_data("Dummy/Pods/SwiftDependency/foo.swift")
+    generated_sample_without_loading_data("Dummy/Pods/ObjCDependency/foo.h")
+    generated_sample_without_loading_data("Dummy/Pods/ObjCDependency/foo.m")
+
     # Go-specific vendored paths
     generated_sample_without_loading_data("go/vendor/github.com/foo.go")
     generated_sample_without_loading_data("go/vendor/golang.org/src/foo.c")
