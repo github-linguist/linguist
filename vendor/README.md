@@ -65,6 +65,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Closure Templates:** [mthadley/language-closure-templates](https://github.com/mthadley/language-closure-templates)
 - **CMake:** [textmate/cmake.tmbundle](https://github.com/textmate/cmake.tmbundle)
 - **COBOL:** [bitbucket:bitlang/sublime_cobol](https://bitbucket.org/bitlang/sublime_cobol)
+- **Coconut:** [MagicStack/MagicPython](https://github.com/MagicStack/MagicPython)
 - **CoffeeScript:** [atom/language-coffee-script](https://github.com/atom/language-coffee-script)
 - **ColdFusion:** [SublimeText/ColdFusion](https://github.com/SublimeText/ColdFusion)
 - **ColdFusion CFC:** [SublimeText/ColdFusion](https://github.com/SublimeText/ColdFusion)
