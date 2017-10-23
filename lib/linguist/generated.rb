@@ -515,7 +515,7 @@ module Linguist
     #
     # Return true or false
     def generated_jest_snap?
-      name.include?("__snapshots__") && name.end_with?(".snap")
+      name.end_with?(".snap") && name.include?("__snapshots__")
     end
   end
 end
