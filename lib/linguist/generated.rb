@@ -60,6 +60,7 @@ module Linguist
       npm_shrinkwrap_or_package_lock? ||
       godeps? ||
       generated_by_zephir? ||
+      generated_jest_snap? ||
       minified_files? ||
       has_source_map? ||
       source_map? ||
@@ -82,8 +83,7 @@ module Linguist
       generated_roxygen2? ||
       generated_jison? ||
       generated_yarn_lock? ||
-      generated_grpc_cpp? ||
-      generated_jest_snap?
+      generated_grpc_cpp?
     end
 
     # Internal: Is the blob an Xcode file?
