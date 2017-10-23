@@ -358,10 +358,10 @@ module Linguist
     end
 
     disambiguate ".pm" do |data|
-      if /^\s*(?:use\s+v6\s*;|(?:\bmy\s+)?class|module)\b/.match(data)
-        Language["Perl 6"]
-      elsif /\buse\s+(?:strict\b|v?5\.)/.match(data)
+      if /\buse\s+(?:strict\b|v?5\.)/.match(data)
         Language["Perl"]
+      elsif /^\s*(?:use\s+v6\s*;|(?:\bmy\s+)?class|module)\b/.match(data)
+        Language["Perl 6"]
       elsif /^\s*\/\* XPM \*\//.match(data)
         Language["XPM"]
       end
