@@ -118,6 +118,8 @@ module Linguist
       #
       # Returns a String or nil
       def self.modeline(data)
+        data = data.encode("UTF-8", "binary", :invalid => :replace, :undef => :replace, :replace => " ")
+        data = data.force_encoding("UTF-8")
         match = MODELINES.map { |regex| data.match(regex) }.reject(&:nil?).first
         match[1] if match
       end

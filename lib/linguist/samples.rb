@@ -100,6 +100,8 @@ module Linguist
         end
 
         data = File.read(sample[:path])
+        data.encode!("UTF-8", "binary", :invalid => :replace, :undef => :replace, :replace => " ")
+        data = data.force_encoding("UTF-8")
         Classifier.train!(db, language_name, data)
       end
 

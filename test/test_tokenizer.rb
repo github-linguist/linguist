@@ -113,4 +113,5 @@ class TestTokenizer < Minitest::Test
     assert_equal %w(module Foo end), tokenize(:"Ruby/foo.rb")
     assert_equal %w(task default do puts end), tokenize(:"Ruby/filenames/Rakefile")
   end
+
 end

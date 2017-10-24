@@ -52,7 +52,10 @@ class TestClassifier < Minitest::Test
       languages = Language.find_by_extension(sample[:path]).map(&:name)
       next if languages.length <= 1
 
-      results = Classifier.classify(Samples.cache, File.read(sample[:path]), languages)
+      data = File.read(sample[:path])
+      data = data.encode("UTF-8", "binary", :invalid => :replace, :undef => :replace, :replace => " ")
+      data = data.force_encoding("UTF-8")
+      results = Classifier.classify(Samples.cache, data, languages)
       assert_equal language.name, results.first[0], "#{sample[:path]}\n#{results.inspect}"
     end
   end

@@ -7,7 +7,7 @@ module Linguist
   # It strips any data strings or comments and preserves significant
   # language symbols.
   class Tokenizer
-    # Public: Extract tokens from data
+    # Public: Extract tokens from data. Data must be valid UTF-8.
     #
     # data - String to tokenize
     #

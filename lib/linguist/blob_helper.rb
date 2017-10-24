@@ -146,6 +146,11 @@ module Linguist
       end
     end
 
+    def utf8_data
+      clean_data = data.encode("UTF-8", "binary", :invalid => :replace, :undef => :replace, :replace => " ")
+      clean_data.force_encoding("UTF-8")
+    end
+
     # Public: Is the blob empty?
     #
     # Return true or false
