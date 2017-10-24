@@ -161,7 +161,7 @@ module Linguist
         Language["ECL"]
       end
     end
-    
+
     disambiguate ".es" do |data|
       if /^\s*(?:%%|main\s*\(.*?\)\s*->)/.match(data)
         Language["Erlang"]
@@ -217,11 +217,36 @@ module Linguist
     end
 
     disambiguate ".h" do |data|
+     CPPRegex = /
+  ^ \s*
+  (?: template \s* <
+    | \#.*include.*<
+      (stdint|cstdint|string|vector|map|list
+      |array|bitset|queue|stack|forward_list
+      |unordered_(map|set)|(i|o|io)stream).*>
+    )
+  |
+  ^ [\x20\t]*
+  (?: try \b
+    | catch \s *\(
+    | ( class
+      | namespace
+      | using \h+ namespace
+      )
+      \s+ \w+
+    | (private|public|protected) :$
+    )
+  | std::\w+
+  | .*\#ifdef.*__cplusplus.*
+  | ^struct\s+
+/xi unless const_defined?(:CPPRegex)
+
       if ObjectiveCRegex.match(data)
         Language["Objective-C"]
-      elsif (/^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>/.match(data) ||
-        /^\s*template\s*</.match(data) || /^[ \t]*try/.match(data) || /^[ \t]*catch\s*\(/.match(data) || /^[ \t]*(class|(using[ \t]+)?namespace)\s+\w+/.match(data) || /^[ \t]*(private|public|protected):$/.match(data) || /std::\w+/.match(data))
-        Language["C++"]
+      elsif CPPRegex.match(data)
+           Language["C++"]
+      else
+        Language["C"]
       end
     end
 
@@ -442,13 +467,13 @@ module Linguist
         Language["SQL"]
       end
     end
-    
+
     disambiguate ".srt" do |data|
       if /^(\d{2}:\d{2}:\d{2},\d{3})\s*(-->)\s*(\d{2}:\d{2}:\d{2},\d{3})$/.match(data)
         Language["SubRip Text"]
       end
     end
-    
+
     disambiguate ".t" do |data|
       if /^\s*%[ \t]+|^\s*var\s+\w+\s*:=\s*\w+/.match(data)
         Language["Turing"]
@@ -458,7 +483,7 @@ module Linguist
         Language["Perl"]
       end
     end
-    
+
     disambiguate ".toc" do |data|
       if /^## |@no-lib-strip@/.match(data)
         Language["World of Warcraft Addon Data"]
