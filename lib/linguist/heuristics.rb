@@ -73,6 +73,14 @@ module Linguist
     # Common heuristics
     ObjectiveCRegex = /^\s*(@(interface|class|protocol|property|end|synchronised|selector|implementation)\b|#import\s+.+\.h[">])/
 
+    disambiguate ".as" do |data|
+      if /^\s*(package\s+[a-z0-9_\.]+|import\s+[a-zA-Z0-9_\.]+;|class\s+[A-Za-z0-9_]+\s+extends\s+[A-Za-z0-9_]+)/.match(data)
+        Language["ActionScript"]
+      else
+        Language["AngelScript"]
+      end
+    end
+
     disambiguate ".asc" do |data|
       if /^(----[- ]BEGIN|ssh-(rsa|dss)) /.match(data)
         Language["Public Key"]
@@ -350,20 +358,12 @@ module Linguist
     end
 
     disambiguate ".pm" do |data|
-      if /^\s*(?:use\s+v6\s*;|(?:\bmy\s+)?class|module)\b/.match(data)
-        Language["Perl 6"]
-      elsif /\buse\s+(?:strict\b|v?5\.)/.match(data)
+      if /\buse\s+(?:strict\b|v?5\.)/.match(data)
         Language["Perl"]
+      elsif /^\s*(?:use\s+v6\s*;|(?:\bmy\s+)?class|module)\b/.match(data)
+        Language["Perl 6"]
       elsif /^\s*\/\* XPM \*\//.match(data)
         Language["XPM"]
-      end
-    end
-
-    disambiguate ".pod", "Pod", "Perl" do |data|
-      if /^=\w+\b/.match(data)
-        Language["Pod"]
-      else
-        Language["Perl"]
       end
     end
 
@@ -491,5 +491,14 @@ module Linguist
         Language["XML"]
       end
     end
+  
+    disambiguate ".w" do |data|
+      if (data.include?("&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS"))
+        Language["OpenEdge ABL"]
+      elsif /^@(<|\w+\.)/.match(data)
+        Language["CWeb"]
+      end
+    end
+  
   end
 end

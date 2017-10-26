@@ -138,6 +138,11 @@ vendor/grammars/Terraform.tmLanguage:
 - source.terraform
 vendor/grammars/Textmate-Gosu-Bundle:
 - source.gosu.2
+vendor/grammars/TypeScript-TmLanguage:
+- source.ts
+- source.tsx
+- text.error-list
+- text.find-refs
 vendor/grammars/UrWeb-Language-Definition:
 - source.ur
 vendor/grammars/VBDotNetSyntax:
@@ -398,6 +403,7 @@ vendor/grammars/language-haml:
 - text.haml
 - text.hamlc
 vendor/grammars/language-haskell:
+- annotation.liquidhaskell.haskell
 - hint.haskell
 - hint.message.haskell
 - hint.type.haskell
@@ -405,6 +411,7 @@ vendor/grammars/language-haskell:
 - source.cabal
 - source.haskell
 - source.hsc2hs
+- source.hsig
 - text.tex.latex.haskell
 vendor/grammars/language-inform7:
 - source.inform7
@@ -463,6 +470,10 @@ vendor/grammars/language-roff:
 vendor/grammars/language-rpm-spec:
 - source.changelogs.rpm-spec
 - source.rpm-spec
+vendor/grammars/language-ruby:
+- source.ruby
+- source.ruby.gemfile
+- text.html.erb
 vendor/grammars/language-shellscript:
 - source.shell
 - text.shell-session
@@ -594,9 +605,6 @@ vendor/grammars/rascal-syntax-highlighting:
 - source.rascal
 vendor/grammars/ruby-slim.tmbundle:
 - text.slim
-vendor/grammars/ruby.tmbundle:
-- source.ruby
-- text.html.erb
 vendor/grammars/sas.tmbundle:
 - source.SASLog
 - source.sas
@@ -631,6 +639,8 @@ vendor/grammars/standard-ml.tmbundle:
 - source.ml
 vendor/grammars/sublime-MuPAD:
 - source.mupad
+vendor/grammars/sublime-angelscript:
+- source.angelscript
 vendor/grammars/sublime-aspectj:
 - source.aspectj
 vendor/grammars/sublime-autoit:
@@ -679,11 +689,6 @@ vendor/grammars/sublime-terra:
 - source.terra
 vendor/grammars/sublime-text-ox:
 - source.ox
-vendor/grammars/sublime-typescript:
-- source.ts
-- source.tsx
-- text.error-list
-- text.find-refs
 vendor/grammars/sublime-varnish:
 - source.varnish.vcl
 vendor/grammars/sublime_cobol:
@@ -716,6 +721,8 @@ vendor/grammars/vhdl:
 - source.vhdl
 vendor/grammars/vue-syntax-highlight:
 - text.html.vue
+vendor/grammars/wdl-sublime-syntax-highlighter:
+- source.wdl
 vendor/grammars/xc.tmbundle:
 - source.xc
 vendor/grammars/xml.tmbundle:
