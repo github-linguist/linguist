@@ -101,6 +101,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **eC:** [ecere/ec.tmbundle](https://github.com/ecere/ec.tmbundle)
 - **Ecere Projects:** [textmate/json.tmbundle](https://github.com/textmate/json.tmbundle)
 - **ECLiPSe:** [alnkpa/sublimeprolog](https://github.com/alnkpa/sublimeprolog)
+- **Edje Data Collection:** [textmate/json.tmbundle](https://github.com/textmate/json.tmbundle)
 - **edn:** [atom/language-clojure](https://github.com/atom/language-clojure)
 - **Eiffel:** [textmate/eiffel.tmbundle](https://github.com/textmate/eiffel.tmbundle)
 - **EJS:** [gregory-m/ejs-tmbundle](https://github.com/gregory-m/ejs-tmbundle)
