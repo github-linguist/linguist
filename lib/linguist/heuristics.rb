@@ -450,12 +450,12 @@ module Linguist
     end
     
     disambiguate ".t" do |data|
-      if /^\s*%[ \t]+|^\s*var\s+\w+\s*:=\s*\w+/.match(data)
-        Language["Turing"]
-      elsif /^\s*(?:use\s+v6\s*;|\bmodule\b|\b(?:my\s+)?class\b)/.match(data)
+      if /^\s*(?:use\s+v6\s*;|\bmodule\b|\b(?:my\s+)?class\b)/.match(data)
         Language["Perl 6"]
       elsif /\buse\s+(?:strict\b|v?5\.)/.match(data)
         Language["Perl"]
+      elsif /^\s*%[ \t]+|^\s*var\s+\w+\s*:=\s*\w+/.match(data)
+        Language["Turing"]
       end
     end
     
