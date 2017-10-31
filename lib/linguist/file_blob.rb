@@ -23,21 +23,21 @@ module Linguist
     #
     # Returns a String like '100644'
     def mode
-      File.stat(@fullpath).mode.to_s(8)
+      @mode ||= File.stat(@fullpath).mode.to_s(8)
     end
 
     # Public: Read file contents.
     #
     # Returns a String.
     def data
-      File.read(@fullpath)
+      @data ||= File.read(@fullpath)
     end
 
     # Public: Get byte size
     #
     # Returns an Integer.
     def size
-      File.size(@fullpath)
+      @size ||= File.size(@fullpath)
     end
   end
 end

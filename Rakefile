@@ -1,6 +1,7 @@
 require 'bundler/setup'
 require 'rake/clean'
 require 'rake/testtask'
+require 'rake/extensiontask'
 require 'yaml'
 require 'yajl'
 require 'open-uri'
@@ -10,8 +11,14 @@ task :default => :test
 
 Rake::TestTask.new
 
+gem_spec = Gem::Specification.load('github-linguist.gemspec')
+
+Rake::ExtensionTask.new('linguist', gem_spec) do |ext|
+  ext.lib_dir = File.join('lib', 'linguist')
+end
+
 # Extend test task to check for samples and fetch latest Ace modes
-task :test => [:check_samples, :fetch_ace_modes]
+task :test => [:compile, :check_samples, :fetch_ace_modes]
 
 desc "Check that we have samples.json generated"
 task :check_samples do
@@ -34,10 +41,22 @@ task :fetch_ace_modes do
   end
 end
 
-task :samples do
+task :samples => :compile do
   require 'linguist/samples'
   json = Yajl.dump(Linguist::Samples.data, :pretty => true)
   File.write 'lib/linguist/samples.json', json
+end
+
+FLEX_MIN_VER = [2, 5, 39]
+task :flex do
+  if `flex -V` !~ /^flex (\d+)\.(\d+)\.(\d+)/
+    fail "flex not detected"
+  end
+  maj, min, rev = $1.to_i, $2.to_i, $3.to_i
+  if maj < FLEX_MIN_VER[0] || (maj == FLEX_MIN_VER[0] && (min < FLEX_MIN_VER[1] || (min == FLEX_MIN_VER[1] && rev < FLEX_MIN_VER[2])))
+    fail "building linguist's lexer requires at least flex #{FLEX_MIN_VER.join(".")}"
+  end
+  system "cd ext/linguist && flex tokenizer.l"
 end
 
 task :build_gem => :samples do
