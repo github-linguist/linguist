@@ -210,6 +210,17 @@ Alpine Abuild:
   codemirror_mode: shell
   codemirror_mime_type: text/x-sh
   language_id: 14
+AngelScript:
+  type: programming
+  color: "#C7D7DC"
+  extensions:
+  - ".as"
+  - ".angelscript"
+  tm_scope: source.angelscript
+  ace_mode: text
+  codemirror_mode: clike
+  codemirror_mime_type: text/x-c++src
+  language_id: 389477596
 Ant Build System:
   type: data
   tm_scope: text.xml.ant
@@ -3058,6 +3069,7 @@ OpenEdge ABL:
   extensions:
   - ".p"
   - ".cls"
+  - ".w"
   tm_scope: source.abl
   ace_mode: text
   language_id: 264
@@ -3301,7 +3313,6 @@ Perl:
   - ".ph"
   - ".plx"
   - ".pm"
-  - ".pod"
   - ".psgi"
   - ".t"
   filenames:
@@ -4689,8 +4700,8 @@ UrWeb:
   ace_mode: text
   language_id: 383
 VCL:
-  group: Perl
   type: programming
+  color: "#0298c3"
   extensions:
   - ".vcl"
   tm_scope: source.varnish.vcl
@@ -5196,6 +5207,14 @@ reStructuredText:
   codemirror_mode: rst
   codemirror_mime_type: text/x-rst
   language_id: 419
+wdl:
+  type: programming
+  color: "#42f1f4"
+  extensions:
+  - ".wdl"
+  tm_scope: source.wdl
+  ace_mode: text
+  language_id: 374521672
 wisp:
   type: programming
   ace_mode: clojure

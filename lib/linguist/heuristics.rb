@@ -1,6 +1,8 @@
 module Linguist
   # A collection of simple heuristics that can be used to better analyze languages.
   class Heuristics
+    HEURISTICS_CONSIDER_BYTES = 50 * 1024
+
     # Public: Use heuristics to detect language of the blob.
     #
     # blob               - An object that quacks like a blob.
@@ -14,7 +16,7 @@ module Linguist
     #
     # Returns an Array of languages, or empty if none matched or were inconclusive.
     def self.call(blob, candidates)
-      data = blob.data
+      data = blob.data[0...HEURISTICS_CONSIDER_BYTES]
 
       @heuristics.each do |heuristic|
         if heuristic.matches?(blob.name, candidates)
@@ -72,6 +74,22 @@ module Linguist
 
     # Common heuristics
     ObjectiveCRegex = /^\s*(@(interface|class|protocol|property|end|synchronised|selector|implementation)\b|#import\s+.+\.h[">])/
+    CPlusPlusRegex = Regexp.union(
+        /^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>/,
+        /^\s*template\s*</,
+        /^[ \t]*try/,
+        /^[ \t]*catch\s*\(/,
+        /^[ \t]*(class|(using[ \t]+)?namespace)\s+\w+/,
+        /^[ \t]*(private|public|protected):$/,
+        /std::\w+/)
+
+    disambiguate ".as" do |data|
+      if /^\s*(package\s+[a-z0-9_\.]+|import\s+[a-zA-Z0-9_\.]+;|class\s+[A-Za-z0-9_]+\s+extends\s+[A-Za-z0-9_]+)/.match(data)
+        Language["ActionScript"]
+      else
+        Language["AngelScript"]
+      end
+    end
 
     disambiguate ".asc" do |data|
       if /^(----[- ]BEGIN|ssh-(rsa|dss)) /.match(data)
@@ -211,8 +229,7 @@ module Linguist
     disambiguate ".h" do |data|
       if ObjectiveCRegex.match(data)
         Language["Objective-C"]
-      elsif (/^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>/.match(data) ||
-        /^\s*template\s*</.match(data) || /^[ \t]*try/.match(data) || /^[ \t]*catch\s*\(/.match(data) || /^[ \t]*(class|(using[ \t]+)?namespace)\s+\w+/.match(data) || /^[ \t]*(private|public|protected):$/.match(data) || /std::\w+/.match(data))
+      elsif CPlusPlusRegex.match(data)
         Language["C++"]
       end
     end
@@ -350,20 +367,12 @@ module Linguist
     end
 
     disambiguate ".pm" do |data|
-      if /^\s*(?:use\s+v6\s*;|(?:\bmy\s+)?class|module)\b/.match(data)
-        Language["Perl 6"]
-      elsif /\buse\s+(?:strict\b|v?5\.)/.match(data)
+      if /\buse\s+(?:strict\b|v?5\.)/.match(data)
         Language["Perl"]
+      elsif /^\s*(?:use\s+v6\s*;|(?:\bmy\s+)?class|module)\b/.match(data)
+        Language["Perl 6"]
       elsif /^\s*\/\* XPM \*\//.match(data)
         Language["XPM"]
-      end
-    end
-
-    disambiguate ".pod", "Pod", "Perl" do |data|
-      if /^=\w+\b/.match(data)
-        Language["Pod"]
-      else
-        Language["Perl"]
       end
     end
 
@@ -491,5 +500,14 @@ module Linguist
         Language["XML"]
       end
     end
+  
+    disambiguate ".w" do |data|
+      if (data.include?("&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS"))
+        Language["OpenEdge ABL"]
+      elsif /^@(<|\w+\.)/.match(data)
+        Language["CWeb"]
+      end
+    end
+  
   end
 end
