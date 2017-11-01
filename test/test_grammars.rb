@@ -43,6 +43,7 @@ class TestGrammars < Minitest::Test
     "82c356d6ecb143a8a20e1658b0d6a2d77ea8126f", # idl.tmbundle
     "9dafd4e2a79cb13a6793b93877a254bc4d351e74", # sublime-text-ox
     "8e111741d97ba2e27b3d18a309d426b4a37e604f", # sublime-varnish
+    "23d2538e33ce62d58abda2c039364b92f64ea6bc", # sublime-angelscript
   ].freeze
 
   # List of allowed SPDX license names
