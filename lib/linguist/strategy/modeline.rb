@@ -109,8 +109,8 @@ module Linguist
       # Returns an Array with one Language if the blob has a Vim or Emacs modeline
       # that matches a Language name or alias. Returns an empty array if no match.
       def self.call(blob, _ = nil)
-        header = blob.lines.first(SEARCH_SCOPE).join("\n")
-        footer = blob.lines.last(SEARCH_SCOPE).join("\n")
+        header = blob.first_lines(SEARCH_SCOPE).join("\n")
+        footer = blob.last_lines(SEARCH_SCOPE).join("\n")
         Array(Language.find_by_alias(modeline(header + footer)))
       end
 

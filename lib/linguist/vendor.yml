@@ -81,6 +81,9 @@
 # Animate.css
 - (^|/)animate\.(css|less|scss|styl)$
 
+# Select2
+- (^|/)select2/.*\.(css|scss|js)$
+
 # Vendored dependencies
 - third[-_]?party/
 - 3rd[-_]?party/
@@ -118,6 +121,15 @@
 
 # jQuery File Upload
 - (^|/)jquery\.fileupload(-\w+)?\.js$
+
+# jQuery dataTables
+- jquery.dataTables.js
+
+# bootboxjs
+- bootbox.js
+
+# pdf-worker
+- pdf.worker.js
 
 # Slick
 - (^|/)slick\.\w+.js$
