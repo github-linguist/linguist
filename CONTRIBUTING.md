@@ -44,20 +44,25 @@ Remember, the goal here is to try and avoid false positives!
 
 ## Fixing a misclassified language
 
-Most languages are detected by their file extension defined in [languages.yml][languages].  For disambiguating between files with common extensions, linguist applies some [heuristics](/lib/linguist/heuristics.rb) and a [statistical classifier](lib/linguist/classifier.rb). This process can help differentiate between, for example, `.h` files which could be either C, C++, or Obj-C.
+Most languages are detected by their file extension defined in [`languages.yml`][languages].  For disambiguating between files with common extensions, linguist applies some [heuristics](/lib/linguist/heuristics.rb) and a [statistical classifier](lib/linguist/classifier.rb). This process can help differentiate between, for example, `.h` files which could be either C, C++, or Obj-C.
 
 Misclassifications can often be solved by either adding a new filename or extension for the language or adding more [samples][samples] to make the classifier smarter.
 
 
 ## Fixing syntax highlighting
 
-Syntax highlighting in GitHub is performed using TextMate-compatible grammars. These are the same grammars that TextMate, Sublime Text and Atom use. Every language in [languages.yml][languages] is mapped to its corresponding TM `scope`. This scope will be used when picking up a grammar for highlighting.
+Syntax highlighting in GitHub is performed using TextMate-compatible grammars. These are the same grammars that TextMate, Sublime Text and Atom use. Every language in [`languages.yml`][languages] is mapped to its corresponding TM `scope`. This scope will be used when picking up a grammar for highlighting.
 
 Assuming your code is being detected as the right language, in most cases this is due to a bug in the language grammar rather than a bug in Linguist. [`grammars.yml`][grammars] lists all the grammars we use for syntax highlighting on github.com. Find the one corresponding to your code's programming language and submit a bug report upstream. If you can, try to reproduce the highlighting problem in the text editor that the grammar is designed for (TextMate, Sublime Text, or Atom) and include that information in your bug report.
 
 You can also try to fix the bug yourself and submit a Pull Request. [TextMate's documentation](https://manual.macromates.com/en/language_grammars) offers a good introduction on how to work with TextMate-compatible grammars. You can test grammars using [Lightshow](https://github-lightshow.herokuapp.com).
 
 Once the bug has been fixed upstream, we'll pick it up for GitHub in the next release of Linguist.
+
+
+## Changing the source of a grammar used for syntax highlighting
+
+
 
 ## Testing
 
@@ -66,6 +71,8 @@ For development you are going to want to checkout out the source. To get it, clo
     git clone https://github.com/github/linguist.git
     cd linguist/
     script/bootstrap
+
+    Note: Linguist uses the [`charlock_holmes`](https://github.com/brianmario/charlock_holmes) character encoding detecting library which in turn uses [ICU](http://site.icu-project.org/). Accordingly, you may need to install ICU (`brew install icu4c` or `apt-get install libicu-dev`) in your development environment first.
 
 To run Linguist from the cloned repository, you will need to generate the code samples first:
 
@@ -101,7 +108,7 @@ Linguist is maintained with :heart: by:
 
 As Linguist is a production dependency for GitHub we have a couple of workflow restrictions:
 
-- Anyone with commit rights can merge Pull Requests provided that there is a :+1: from a GitHub member of staff
+- Anyone with commit rights can merge Pull Requests provided that there is a :+1: from a GitHub member of staff.
 - Releases are performed by GitHub staff so we can ensure GitHub.com always stays up to date with the latest release of Linguist and there are no regressions in production.
 
 ### Releasing
