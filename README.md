@@ -1,16 +1,8 @@
 # Linguist
-
+dhckdjdsdhasjbknvxc
+jvknsdalfdbl,
+knkdafs;dbdm,s
 [issues]: https://github.com/github/linguist/issues
-[new-issue]: https://github.com/github/linguist/issues/new
-
-This library is used on GitHub.com to detect blob languages, ignore binary or vendored files, suppress generated files in diffs, and generate language breakdown graphs.
-
-See [Troubleshooting](#troubleshooting) and [`CONTRIBUTING.md`](/CONTRIBUTING.md) before filing an issue or creating a pull request.
-
-## Troubleshooting
-
-### My repository is detected as the wrong language
-
 ![language stats bar](https://cloud.githubusercontent.com/assets/173/5562290/48e24654-8ddf-11e4-8fe7-735b0ce3a0d3.png)
 
 The Language stats bar displays languages percentages for the files in the repository. The percentages are calculated based on the bytes of code for each language as reported by the [List Languages](https://developer.github.com/v3/repos/#list-languages) API. If the bar is reporting a language that you don't expect:
