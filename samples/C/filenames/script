@@ -1,0 +1,2310 @@
+#!/usr/bin/tcc -run -lm
+//
+// ZyklonB scripting plugin, using a custom stack-based language
+//
+// Copyright 2014 Přemysl Janouch.  All rights reserved.
+// See the file LICENSE for licensing information.
+//
+// Just compile this file as usual (sans #!) if you don't feel like using TCC.
+// It is a very basic and portable C99 application.  It's not supposed to be
+// very sophisticated, for it'd get extremely big.
+//
+// The main influences of the language were Factor and Joy, stripped of all
+// even barely complex stuff.  In its current state, it's only really useful as
+// a calculator but it's got great potential for extending.
+//
+// If you don't like something, just change it; this is just an experiment.
+//
+// NOTE: it is relatively easy to abuse.  Be careful.
+//
+
+#define _XOPEN_SOURCE 500
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#include <errno.h>
+#include <stdarg.h>
+#include <assert.h>
+#include <time.h>
+#include <stdbool.h>
+#include <strings.h>
+#include <math.h>
+
+#define ADDRESS_SPACE_LIMIT (100 * 1024 * 1024)
+#include <sys/resource.h>
+
+#if defined __GNUC__
+#define ATTRIBUTE_PRINTF(x, y) __attribute__ ((format (printf, x, y)))
+#else // ! __GNUC__
+#define ATTRIBUTE_PRINTF(x, y)
+#endif // ! __GNUC__
+
+#define N_ELEMENTS(a) (sizeof (a) / sizeof ((a)[0]))
+
+// --- Utilities ---------------------------------------------------------------
+
+static char *strdup_printf (const char *format, ...) ATTRIBUTE_PRINTF (1, 2);
+
+static char *
+strdup_vprintf (const char *format, va_list ap)
+{
+	va_list aq;
+	va_copy (aq, ap);
+	int size = vsnprintf (NULL, 0, format, aq);
+	va_end (aq);
+	if (size < 0)
+		return NULL;
+
+	char buf[size + 1];
+	size = vsnprintf (buf, sizeof buf, format, ap);
+	if (size < 0)
+		return NULL;
+
+	return strdup (buf);
+}
+
+static char *
+strdup_printf (const char *format, ...)
+{
+	va_list ap;
+	va_start (ap, format);
+	char *result = strdup_vprintf (format, ap);
+	va_end (ap);
+	return result;
+}
+
+// --- Generic buffer ----------------------------------------------------------
+
+struct buffer
+{
+	char *s;                            ///< Buffer data
+	size_t alloc;                       ///< Number of bytes allocated
+	size_t len;                         ///< Number of bytes used
+	bool memory_failure;                ///< Memory allocation failed
+};
+
+#define BUFFER_INITIALIZER { NULL, 0, 0, false }
+
+static bool
+buffer_append (struct buffer *self, const void *s, size_t n)
+{
+	if (self->memory_failure)
+		return false;
+
+	if (!self->s)
+		self->s = malloc (self->alloc = 8);
+	while (self->len + n > self->alloc)
+		self->s = realloc (self->s, self->alloc <<= 1);
+
+	if (!self->s)
+	{
+		self->memory_failure = true;
+		return false;
+	}
+
+	memcpy (self->s + self->len, s, n);
+	self->len += n;
+	return true;
+}
+
+inline static bool
+buffer_append_c (struct buffer *self, char c)
+{
+	return buffer_append (self, &c, 1);
+}
+
+// --- Data types --------------------------------------------------------------
+
+enum item_type
+{
+	ITEM_STRING,
+	ITEM_WORD,
+	ITEM_INTEGER,
+	ITEM_FLOAT,
+	ITEM_LIST
+};
+
+struct item
+{
+#define ITEM_HEADER                                                            \
+	enum item_type type;                /**< The type of this object        */ \
+	struct item *next;                  /**< Next item on the list/stack    */
+
+	ITEM_HEADER
+};
+
+struct item_string
+{
+	ITEM_HEADER
+	size_t len;                         ///< Length of the string (sans '\0')
+	char value[];                       ///< The null-terminated string value
+};
+
+#define get_string(item)                                                       \
+	(assert ((item)->type == ITEM_STRING),                                     \
+	 ((struct item_string *)(item))->value)
+
+/// It looks like a string but it doesn't quack like a string
+#define item_word item_string
+
+#define get_word(item)                                                         \
+	(assert ((item)->type == ITEM_WORD),                                       \
+	 ((struct item_word *)(item))->value)
+
+struct item_integer
+{
+	ITEM_HEADER
+	long long value;                    ///< The integer value
+};
+
+#define get_integer(item)                                                      \
+	(assert ((item)->type == ITEM_INTEGER),                                    \
+	 ((struct item_integer *)(item))->value)
+
+struct item_float
+{
+	ITEM_HEADER
+	long double value;                  ///< The floating point value
+};
+
+#define get_float(item)                                                        \
+	(assert ((item)->type == ITEM_FLOAT),                                      \
+	 ((struct item_float *)(item))->value)
+
+struct item_list
+{
+	ITEM_HEADER
+	struct item *head;                  ///< The head of the list
+};
+
+#define get_list(item)                                                         \
+	(assert ((item)->type == ITEM_LIST),                                       \
+	 ((struct item_list *)(item))->head)
+
+#define set_list(item, head_)                                                  \
+	(assert ((item)->type == ITEM_LIST),                                       \
+	 item_free_list (((struct item_list *)(item))->head),                      \
+	 ((struct item_list *)(item))->head = (head_))
+
+const char *
+item_type_to_str (enum item_type type)
+{
+	switch (type)
+	{
+	case ITEM_STRING:   return "string";
+	case ITEM_WORD:     return "word";
+	case ITEM_INTEGER:  return "integer";
+	case ITEM_FLOAT:    return "float";
+	case ITEM_LIST:     return "list";
+	}
+	abort ();
+}
+
+// --- Item management ---------------------------------------------------------
+
+static void item_free_list (struct item *);
+static struct item *new_clone_list (const struct item *);
+
+static void
+item_free (struct item *item)
+{
+	if (item->type == ITEM_LIST)
+		item_free_list (get_list (item));
+	free (item);
+}
+
+static void
+item_free_list (struct item *item)
+{
+	while (item)
+	{
+		struct item *link = item;
+		item = item->next;
+		item_free (link);
+	}
+}
+
+static struct item *
+new_clone (const struct item *item)
+{
+	size_t size;
+	switch (item->type)
+	{
+	case ITEM_STRING:
+	case ITEM_WORD:
+	{
+		const struct item_string *x = (const struct item_string *) item;
+		size = sizeof *x + x->len + 1;
+		break;
+	}
+	case ITEM_INTEGER:  size = sizeof (struct item_integer);  break;
+	case ITEM_FLOAT:    size = sizeof (struct item_float);    break;
+	case ITEM_LIST:     size = sizeof (struct item_list);     break;
+	}
+
+	struct item *clone = malloc (size);
+	if (!clone)
+		return NULL;
+
+	memcpy (clone, item, size);
+	if (item->type == ITEM_LIST)
+	{
+		struct item_list *x = (struct item_list *) clone;
+		if (x->head && !(x->head = new_clone_list (x->head)))
+		{
+			free (clone);
+			return NULL;
+		}
+	}
+	clone->next = NULL;
+	return clone;
+}
+
+static struct item *
+new_clone_list (const struct item *item)
+{
+	struct item *head = NULL, *clone;
+	for (struct item **out = &head; item; item = item->next)
+	{
+		if (!(clone = *out = new_clone (item)))
+		{
+			item_free_list (head);
+			return NULL;
+		}
+		clone->next = NULL;
+		out = &clone->next;
+	}
+	return head;
+}
+
+static struct item *
+new_string (const char *s, ssize_t len)
+{
+	if (len < 0)
+		len = strlen (s);
+
+	struct item_string *item = calloc (1, sizeof *item + len + 1);
+	if (!item)
+		return NULL;
+
+	item->type = ITEM_STRING;
+	item->len = len;
+	memcpy (item->value, s, len);
+	item->value[len] = '\0';
+	return (struct item *) item;
+}
+
+static struct item *
+new_word (const char *s, ssize_t len)
+{
+	struct item *item = new_string (s, len);
+	if (!item)
+		return NULL;
+
+	item->type = ITEM_WORD;
+	return item;
+}
+
+static struct item *
+new_integer (long long value)
+{
+	struct item_integer *item = calloc (1, sizeof *item);
+	if (!item)
+		return NULL;
+
+	item->type = ITEM_INTEGER;
+	item->value = value;
+	return (struct item *) item;
+}
+
+static struct item *
+new_float (long double value)
+{
+	struct item_float *item = calloc (1, sizeof *item);
+	if (!item)
+		return NULL;
+
+	item->type = ITEM_FLOAT;
+	item->value = value;
+	return (struct item *) item;
+}
+
+static struct item *
+new_list (struct item *head)
+{
+	struct item_list *item = calloc (1, sizeof *item);
+	if (!item)
+		return NULL;
+
+	item->type = ITEM_LIST;
+	item->head = head;
+	return (struct item *) item;
+}
+
+// --- Parsing -----------------------------------------------------------------
+
+#define PARSE_ERROR_TABLE(XX)                                                  \
+	XX( OK,                  NULL                                  )           \
+	XX( EOF,                 "unexpected end of input"             )           \
+	XX( INVALID_HEXA_ESCAPE, "invalid hexadecimal escape sequence" )           \
+	XX( INVALID_ESCAPE,      "unrecognized escape sequence"        )           \
+	XX( MEMORY,              "memory allocation failure"           )           \
+	XX( FLOAT_RANGE,         "floating point value out of range"   )           \
+	XX( INTEGER_RANGE,       "integer out of range"                )           \
+	XX( INVALID_INPUT,       "invalid input"                       )           \
+	XX( UNEXPECTED_INPUT,    "unexpected input"                    )
+
+enum tokenizer_error
+{
+#define XX(x, y) PARSE_ERROR_ ## x,
+	PARSE_ERROR_TABLE (XX)
+#undef XX
+	PARSE_ERROR_COUNT
+};
+
+struct tokenizer
+{
+	const char *cursor;
+	enum tokenizer_error error;
+};
+
+static bool
+decode_hexa_escape (struct tokenizer *self, struct buffer *buf)
+{
+	int i;
+	char c, code = 0;
+
+	for (i = 0; i < 2; i++)
+	{
+		c = tolower (*self->cursor);
+		if (c >= '0' && c <= '9')
+			code = (code << 4) | (c - '0');
+		else if (c >= 'a' && c <= 'f')
+			code = (code << 4) | (c - 'a' + 10);
+		else
+			break;
+
+		self->cursor++;
+	}
+
+	if (!i)
+		return false;
+
+	buffer_append_c (buf, code);
+	return true;
+}
+
+static bool
+decode_octal_escape (struct tokenizer *self, struct buffer *buf)
+{
+	int i;
+	char c, code = 0;
+
+	for (i = 0; i < 3; i++)
+	{
+		c = *self->cursor;
+		if (c < '0' || c > '7')
+			break;
+
+		code = (code << 3) | (c - '0');
+		self->cursor++;
+	}
+
+	if (!i)
+		return false;
+
+	buffer_append_c (buf, code);
+	return true;
+}
+
+static bool
+decode_escape_sequence (struct tokenizer *self, struct buffer *buf)
+{
+	// Support some basic escape sequences from the C language
+	char c;
+	switch ((c = *self->cursor))
+	{
+	case '\0':
+		self->error = PARSE_ERROR_EOF;
+		return false;
+	case 'x':
+	case 'X':
+		self->cursor++;
+		if (decode_hexa_escape (self, buf))
+			return true;
+
+		self->error = PARSE_ERROR_INVALID_HEXA_ESCAPE;
+		return false;
+	default:
+		if (decode_octal_escape (self, buf))
+			return true;
+
+		self->cursor++;
+		const char *from = "abfnrtv\"\\", *to = "\a\b\f\n\r\t\v\"\\", *x;
+		if ((x = strchr (from, c)))
+		{
+			buffer_append_c (buf, to[x - from]);
+			return true;
+		}
+
+		self->error = PARSE_ERROR_INVALID_ESCAPE;
+		return false;
+	}
+}
+
+static struct item *
+parse_string (struct tokenizer *self)
+{
+	struct buffer buf = BUFFER_INITIALIZER;
+	struct item *item = NULL;
+	char c;
+
+	while (true)
+	switch ((c = *self->cursor++))
+	{
+	case '\0':
+		self->cursor--;
+		self->error = PARSE_ERROR_EOF;
+		goto end;
+	case '"':
+		if (buf.memory_failure
+		 || !(item = new_string (buf.s, buf.len)))
+			self->error = PARSE_ERROR_MEMORY;
+		goto end;
+	case '\\':
+		if (decode_escape_sequence (self, &buf))
+			break;
+		goto end;
+	default:
+		buffer_append_c (&buf, c);
+	}
+
+end:
+	free (buf.s);
+	return item;
+}
+
+static struct item *
+try_parse_number (struct tokenizer *self)
+{
+	// These two standard library functions can digest a lot of various inputs,
+	// including NaN and +/- infinity.  That may get a bit confusing.
+	char *float_end;
+	errno = 0;
+	long double float_value = strtold (self->cursor, &float_end);
+	int float_errno = errno;
+
+	char *int_end;
+	errno = 0;
+	long long int_value = strtoll (self->cursor, &int_end, 10);
+	int int_errno = errno;
+
+	// If they both fail, then this is most probably not a number.
+	if (float_end == int_end && float_end == self->cursor)
+		return NULL;
+
+	// Only use the floating point result if it parses more characters:
+	struct item *item;
+	if (float_end > int_end)
+	{
+		if (float_errno == ERANGE)
+		{
+			self->error = PARSE_ERROR_FLOAT_RANGE;
+			return NULL;
+		}
+		self->cursor = float_end;
+		if (!(item = new_float (float_value)))
+			self->error = PARSE_ERROR_MEMORY;
+		return item;
+	}
+	else
+	{
+		if (int_errno == ERANGE)
+		{
+			self->error = PARSE_ERROR_INTEGER_RANGE;
+			return NULL;
+		}
+		self->cursor = int_end;
+		if (!(item = new_integer (int_value)))
+			self->error = PARSE_ERROR_MEMORY;
+		return item;
+	}
+}
+
+static struct item *
+parse_word (struct tokenizer *self)
+{
+	struct buffer buf = BUFFER_INITIALIZER;
+	struct item *item = NULL;
+	char c;
+
+	// Here we accept almost anything that doesn't break the grammar
+	while (!strchr (" []\"", (c = *self->cursor++)) && (unsigned char) c > ' ')
+		buffer_append_c (&buf, c);
+	self->cursor--;
+
+	if (buf.memory_failure)
+		self->error = PARSE_ERROR_MEMORY;
+	else if (!buf.len)
+		self->error = PARSE_ERROR_INVALID_INPUT;
+	else if (!(item = new_word (buf.s, buf.len)))
+		self->error = PARSE_ERROR_MEMORY;
+
+	free (buf.s);
+	return item;
+}
+
+static struct item *parse_item_list (struct tokenizer *);
+
+static struct item *
+parse_list (struct tokenizer *self)
+{
+	struct item *list = parse_item_list (self);
+	if (self->error)
+	{
+		assert (list == NULL);
+		return NULL;
+	}
+	if (!*self->cursor)
+	{
+		self->error = PARSE_ERROR_EOF;
+		item_free_list (list);
+		return NULL;
+	}
+	assert (*self->cursor == ']');
+	self->cursor++;
+	return new_list (list);
+}
+
+static struct item *
+parse_item (struct tokenizer *self)
+{
+	char c;
+	switch ((c = *self->cursor++))
+	{
+	case '[':  return parse_list (self);
+	case '"':  return parse_string (self);
+	default:;
+	}
+
+	self->cursor--;
+	struct item *item = try_parse_number (self);
+	if (!item && !self->error)
+		item = parse_word (self);
+	return item;
+}
+
+static struct item *
+parse_item_list (struct tokenizer *self)
+{
+	struct item *head = NULL;
+	struct item **tail = &head;
+
+	char c;
+	bool expected = true;
+	while ((c = *self->cursor) && c != ']')
+	{
+		if (isspace (c))
+		{
+			self->cursor++;
+			expected = true;
+			continue;
+		}
+		else if (!expected)
+		{
+			self->error = PARSE_ERROR_UNEXPECTED_INPUT;
+			goto fail;
+		}
+
+		if (!(*tail = parse_item (self)))
+			goto fail;
+		tail = &(*tail)->next;
+		expected = false;
+	}
+	return head;
+
+fail:
+	item_free_list (head);
+	return NULL;
+}
+
+static struct item *
+parse (const char *s, const char **error)
+{
+	struct tokenizer self = { .cursor = s, .error = PARSE_ERROR_OK };
+	struct item *list = parse_item_list (&self);
+	if (!self.error && *self.cursor != '\0')
+	{
+		self.error = PARSE_ERROR_UNEXPECTED_INPUT;
+		item_free_list (list);
+		list = NULL;
+	}
+
+#define XX(x, y) y,
+	static const char *strings[PARSE_ERROR_COUNT] =
+		{ PARSE_ERROR_TABLE (XX) };
+#undef XX
+
+	static char error_buf[128];
+	if (self.error && error)
+	{
+		snprintf (error_buf, sizeof error_buf, "at character %d: %s",
+			(int) (self.cursor - s) + 1, strings[self.error]);
+		*error = error_buf;
+	}
+	return list;
+}
+
+// --- Runtime -----------------------------------------------------------------
+
+// TODO: try to think of a _simple_ way to do preemptive multitasking
+
+struct context
+{
+	struct item *stack;                 ///< The current top of the stack
+	size_t stack_size;                  ///< Number of items on the stack
+
+	size_t reduction_count;             ///< # of function calls so far
+	size_t reduction_limit;             ///< The hard limit on function calls
+
+	char *error;                        ///< Error information
+	bool error_is_fatal;                ///< Whether the error can be catched
+	bool memory_failure;                ///< Memory allocation failure
+
+	void *user_data;                    ///< User data
+};
+
+/// Internal handler for a function
+typedef bool (*handler_fn) (struct context *);
+
+struct fn
+{
+	struct fn *next;                    ///< The next link in the chain
+
+	handler_fn handler;                 ///< Internal C handler, or NULL
+	struct item *script;                ///< Alternatively runtime code
+	char name[];                        ///< The name of the function
+};
+
+struct fn *g_functions;                 ///< Maps words to functions
+
+static void
+context_init (struct context *ctx)
+{
+	ctx->stack = NULL;
+	ctx->stack_size = 0;
+
+	ctx->reduction_count = 0;
+	ctx->reduction_limit = 2000;
+
+	ctx->error = NULL;
+	ctx->error_is_fatal = false;
+	ctx->memory_failure = false;
+
+	ctx->user_data = NULL;
+}
+
+static void
+context_free (struct context *ctx)
+{
+	item_free_list (ctx->stack);
+	ctx->stack = NULL;
+
+	free (ctx->error);
+	ctx->error = NULL;
+}
+
+static bool
+set_error (struct context *ctx, const char *format, ...)
+{
+	free (ctx->error);
+
+	va_list ap;
+	va_start (ap, format);
+	ctx->error = strdup_vprintf (format, ap);
+	va_end (ap);
+
+	if (!ctx->error)
+		ctx->memory_failure = true;
+	return false;
+}
+
+static bool
+push (struct context *ctx, struct item *item)
+{
+	// The `item' is typically a result from new_<type>(), thus when it is null,
+	// that function must have failed.  This is a shortcut for convenience.
+	if (!item)
+	{
+		ctx->memory_failure = true;
+		return false;
+	}
+
+	assert (item->next == NULL);
+	item->next = ctx->stack;
+	ctx->stack = item;
+	ctx->stack_size++;
+	return true;
+}
+
+static bool
+bump_reductions (struct context *ctx)
+{
+	if (++ctx->reduction_count >= ctx->reduction_limit)
+	{
+		ctx->error_is_fatal = true;
+		return set_error (ctx, "reduction limit reached");
+	}
+	return true;
+}
+
+static bool execute (struct context *, struct item *);
+
+static bool
+call_function (struct context *ctx, const char *name)
+{
+	struct fn *iter;
+	for (iter = g_functions; iter; iter = iter->next)
+		if (!strcmp (name, iter->name))
+			goto found;
+	return set_error (ctx, "unknown function: %s", name);
+
+found:
+	if (!bump_reductions (ctx))
+		return false;
+
+	if (iter->handler
+		? iter->handler (ctx)
+		: execute (ctx, iter->script))
+		return true;
+
+	// In this case, `error' is NULL
+	if (ctx->memory_failure)
+		return false;
+
+	// This creates some form of a stack trace
+	char *tmp = ctx->error;
+	ctx->error = NULL;
+	set_error (ctx, "%s -> %s", name, tmp);
+	free (tmp);
+	return false;
+}
+
+static void
+free_function (struct fn *fn)
+{
+	item_free_list (fn->script);
+	free (fn);
+}
+
+static void
+unregister_function (const char *name)
+{
+	for (struct fn **iter = &g_functions; *iter; iter = &(*iter)->next)
+		if (!strcmp ((*iter)->name, name))
+		{
+			struct fn *tmp = *iter;
+			*iter = tmp->next;
+			free_function (tmp);
+			break;
+		}
+}
+
+static struct fn *
+prepend_new_fn (const char *name)
+{
+	struct fn *fn = calloc (1, sizeof *fn + strlen (name) + 1);
+	if (!fn)
+		return NULL;
+
+	strcpy (fn->name, name);
+	fn->next = g_functions;
+	return g_functions = fn;
+}
+
+static bool
+register_handler (const char *name, handler_fn handler)
+{
+	unregister_function (name);
+	struct fn *fn = prepend_new_fn (name);
+	if (!fn)
+		return false;
+	fn->handler = handler;
+	return true;
+}
+
+static bool
+register_script (const char *name, struct item *script)
+{
+	unregister_function (name);
+	struct fn *fn = prepend_new_fn (name);
+	if (!fn)
+		return false;
+	fn->script = script;
+	return true;
+}
+
+static bool
+execute (struct context *ctx, struct item *script)
+{
+	for (; script; script = script->next)
+	{
+		if (script->type != ITEM_WORD)
+		{
+			if (!bump_reductions (ctx)
+			 || !push (ctx, new_clone (script)))
+				return false;
+		}
+		else if (!call_function (ctx, get_word (script)))
+			return false;
+	}
+	return true;
+}
+
+// --- Runtime library ---------------------------------------------------------
+
+#define defn(name) static bool name (struct context *ctx)
+
+#define check_stack(n)                                                         \
+	if (ctx->stack_size < n) {                                                 \
+		set_error (ctx, "stack underflow");                                    \
+		return 0;                                                              \
+	}
+
+inline static bool
+check_stack_safe (struct context *ctx, size_t n)
+{
+	check_stack (n);
+	return true;
+}
+
+static bool
+check_type (struct context *ctx, const void *item_, enum item_type type)
+{
+	const struct item *item = item_;
+	if (item->type == type)
+		return true;
+
+	return set_error (ctx, "invalid type: expected `%s', got `%s'",
+		item_type_to_str (type), item_type_to_str (item->type));
+}
+
+static struct item *
+pop (struct context *ctx)
+{
+	check_stack (1);
+	struct item *top = ctx->stack;
+	ctx->stack = top->next;
+	top->next = NULL;
+	ctx->stack_size--;
+	return top;
+}
+
+// - - Types - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+#define defn_is_type(name, item_type)                                          \
+	defn (fn_is_##name) {                                                      \
+		check_stack (1);                                                       \
+		struct item *top = pop (ctx);                                          \
+		push (ctx, new_integer (top->type == (item_type)));                    \
+		item_free (top);                                                       \
+		return true;                                                           \
+	}
+
+defn_is_type (string,  ITEM_STRING)
+defn_is_type (word,    ITEM_WORD)
+defn_is_type (integer, ITEM_INTEGER)
+defn_is_type (float,   ITEM_FLOAT)
+defn_is_type (list,    ITEM_LIST)
+
+defn (fn_to_string)
+{
+	check_stack (1);
+	struct item *item = pop (ctx);
+	char *value;
+
+	switch (item->type)
+	{
+	case ITEM_WORD:
+		item->type = ITEM_STRING;
+	case ITEM_STRING:
+		return push (ctx, item);
+
+	case ITEM_FLOAT:
+		value = strdup_printf ("%Lf", get_float (item));
+		break;
+	case ITEM_INTEGER:
+		value = strdup_printf ("%lld", get_integer (item));
+		break;
+
+	default:
+		set_error (ctx, "cannot convert `%s' to `%s'",
+			item_type_to_str (item->type), item_type_to_str (ITEM_STRING));
+		item_free (item);
+		return false;
+	}
+
+	item_free (item);
+	if (!value)
+	{
+		ctx->memory_failure = true;
+		return false;
+	}
+
+	item = new_string (value, -1);
+	free (value);
+	return push (ctx, item);
+}
+
+defn (fn_to_integer)
+{
+	check_stack (1);
+	struct item *item = pop (ctx);
+	long long value;
+
+	switch (item->type)
+	{
+	case ITEM_INTEGER:
+		return push (ctx, item);
+	case ITEM_FLOAT:
+		value = get_float (item);
+		break;
+
+	case ITEM_STRING:
+	{
+		char *end;
+		const char *s = get_string (item);
+		value = strtoll (s, &end, 10);
+		if (end != s && *s == '\0')
+			break;
+
+		item_free (item);
+		return set_error (ctx, "integer conversion error");
+	}
+
+	default:
+		set_error (ctx, "cannot convert `%s' to `%s'",
+			item_type_to_str (item->type), item_type_to_str (ITEM_INTEGER));
+		item_free (item);
+		return false;
+	}
+
+	item_free (item);
+	return push (ctx, new_integer (value));
+}
+
+defn (fn_to_float)
+{
+	check_stack (1);
+	struct item *item = pop (ctx);
+	long double value;
+
+	switch (item->type)
+	{
+	case ITEM_FLOAT:
+		return push (ctx, item);
+	case ITEM_INTEGER:
+		value = get_integer (item);
+		break;
+
+	case ITEM_STRING:
+	{
+		char *end;
+		const char *s = get_string (item);
+		value = strtold (s, &end);
+		if (end != s && *s == '\0')
+			break;
+
+		item_free (item);
+		return set_error (ctx, "float conversion error");
+	}
+
+	default:
+		set_error (ctx, "cannot convert `%s' to `%s'",
+			item_type_to_str (item->type), item_type_to_str (ITEM_FLOAT));
+		item_free (item);
+		return false;
+	}
+
+	item_free (item);
+	return push (ctx, new_float (value));
+}
+
+// - - Miscellaneous - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+defn (fn_length)
+{
+	check_stack (1);
+	struct item *item = pop (ctx);
+	bool success = true;
+	switch (item->type)
+	{
+	case ITEM_STRING:
+		success = push (ctx, new_integer (((struct item_string *) item)->len));
+		break;
+	case ITEM_LIST:
+	{
+		long long length = 0;
+		struct item *iter;
+		for (iter = get_list (item); iter; iter = iter->next)
+			length++;
+		success = push (ctx, new_integer (length));
+		break;
+	}
+	default:
+		success = set_error (ctx, "invalid type");
+	}
+	item_free (item);
+	return success;
+}
+
+// - - Stack operations  - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+defn (fn_dup)
+{
+	check_stack (1);
+	return push (ctx, new_clone (ctx->stack));
+}
+
+defn (fn_drop)
+{
+	check_stack (1);
+	item_free (pop (ctx));
+	return true;
+}
+
+defn (fn_swap)
+{
+	check_stack (2);
+	struct item *second = pop (ctx), *first = pop (ctx);
+	return push (ctx, second) && push (ctx, first);
+}
+
+defn (fn_call)
+{
+	check_stack (1);
+	struct item *script = pop (ctx);
+	bool success = check_type (ctx, script, ITEM_LIST)
+		&& execute (ctx, get_list (script));
+	item_free (script);
+	return success;
+}
+
+defn (fn_dip)
+{
+	check_stack (2);
+	struct item *script = pop (ctx);
+	struct item *item   = pop (ctx);
+	bool success = check_type (ctx, script, ITEM_LIST)
+		&& execute (ctx, get_list (script));
+	item_free (script);
+	if (!success)
+	{
+		item_free (item);
+		return false;
+	}
+	return push (ctx, item);
+}
+
+defn (fn_unit)
+{
+	check_stack (1);
+	struct item *item = pop (ctx);
+	return push (ctx, new_list (item));
+}
+
+defn (fn_cons)
+{
+	check_stack (2);
+	struct item *list = pop (ctx);
+	struct item *item = pop (ctx);
+	if (!check_type (ctx, list, ITEM_LIST))
+	{
+		item_free (list);
+		item_free (item);
+		return false;
+	}
+	item->next = get_list (list);
+	((struct item_list *) list)->head = item;
+	return push (ctx, list);
+}
+
+defn (fn_cat)
+{
+	check_stack (2);
+	struct item *scnd = pop (ctx);
+	struct item *frst = pop (ctx);
+	if (!check_type (ctx, frst, ITEM_LIST)
+	 || !check_type (ctx, scnd, ITEM_LIST))
+	{
+		item_free (frst);
+		item_free (scnd);
+		return false;
+	}
+
+	// XXX: we shouldn't have to do this in O(n)
+	struct item **tail = &((struct item_list *) frst)->head;
+	while (*tail)
+		tail = &(*tail)->next;
+	*tail = get_list (scnd);
+
+	((struct item_list *) scnd)->head = NULL;
+	item_free (scnd);
+	return push (ctx, frst);
+}
+
+defn (fn_uncons)
+{
+	check_stack (1);
+	struct item *list = pop (ctx);
+	if (!check_type (ctx, list, ITEM_LIST))
+		goto fail;
+	struct item *first = get_list (list);
+	if (!first)
+	{
+		set_error (ctx, "list is empty");
+		goto fail;
+	}
+	((struct item_list *) list)->head = first->next;
+	first->next = NULL;
+	return push (ctx, first) && push (ctx, list);
+fail:
+	item_free (list);
+	return false;
+}
+
+// - - Logical - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+static bool
+to_boolean (struct context *ctx, struct item *item, bool *ok)
+{
+	switch (item->type)
+	{
+	case ITEM_STRING:
+		return *get_string (item) != '\0';
+	case ITEM_INTEGER:
+		return get_integer (item) != 0;
+	case ITEM_FLOAT:
+		return get_float   (item) != 0.;
+	default:
+		return (*ok = set_error (ctx, "cannot convert `%s' to boolean",
+			item_type_to_str (item->type)));
+	}
+}
+
+defn (fn_not)
+{
+	check_stack (1);
+	struct item *item = pop (ctx);
+	bool ok = true;
+	bool result = !to_boolean (ctx, item, &ok);
+	item_free (item);
+	return ok && push (ctx, new_integer (result));
+}
+
+defn (fn_and)
+{
+	check_stack (2);
+	struct item *op1 = pop (ctx);
+	struct item *op2 = pop (ctx);
+	bool ok = true;
+	bool result = to_boolean (ctx, op1, &ok) && to_boolean (ctx, op2, &ok);
+	item_free (op1);
+	item_free (op2);
+	return ok && push (ctx, new_integer (result));
+}
+
+defn (fn_or)
+{
+	check_stack (2);
+	struct item *op1 = pop (ctx);
+	struct item *op2 = pop (ctx);
+	bool ok = true;
+	bool result = to_boolean (ctx, op1, &ok)
+		|| !ok || to_boolean (ctx, op2, &ok);
+	item_free (op1);
+	item_free (op2);
+	return ok && push (ctx, new_integer (result));
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+defn (fn_if)
+{
+	check_stack (3);
+	struct item *else_ = pop (ctx);
+	struct item *then_ = pop (ctx);
+	struct item *cond_ = pop (ctx);
+
+	bool ok = true;
+	bool condition = to_boolean (ctx, cond_, &ok);
+	item_free (cond_);
+
+	bool success = false;
+	if (ok
+	 && check_type (ctx, then_, ITEM_LIST)
+	 && check_type (ctx, else_, ITEM_LIST))
+		success = execute (ctx, condition
+			? get_list (then_)
+			: get_list (else_));
+
+	item_free (then_);
+	item_free (else_);
+	return success;
+}
+
+defn (fn_try)
+{
+	check_stack (2);
+	struct item *catch   = pop (ctx);
+	struct item *try     = pop (ctx);
+	bool success = false;
+	if (!check_type (ctx, try,     ITEM_LIST)
+	 || !check_type (ctx, catch,   ITEM_LIST))
+		goto fail;
+
+	if (!execute (ctx, get_list (try)))
+	{
+		if (ctx->memory_failure || ctx->error_is_fatal)
+			goto fail;
+
+		success = push (ctx, new_string (ctx->error, -1));
+		free (ctx->error);
+		ctx->error = NULL;
+
+		if (success)
+			success = execute (ctx, get_list (catch));
+	}
+
+fail:
+	item_free (try);
+	item_free (catch);
+	return success;
+}
+
+defn (fn_map)
+{
+	check_stack (2);
+	struct item *fn   = pop (ctx);
+	struct item *list = pop (ctx);
+	if (!check_type (ctx, fn,   ITEM_LIST)
+	 || !check_type (ctx, list, ITEM_LIST))
+	{
+		item_free (fn);
+		item_free (list);
+		return false;
+	}
+
+	bool success = false;
+	struct item *result = NULL, **tail = &result;
+	for (struct item *iter = get_list (list); iter; iter = iter->next)
+	{
+		if (!push (ctx, new_clone (iter))
+		 || !execute (ctx, get_list (fn))
+		 || !check_stack_safe (ctx, 1))
+			goto fail;
+
+		struct item *item = pop (ctx);
+		*tail = item;
+		tail = &item->next;
+	}
+	success = true;
+
+fail:
+	set_list (list, result);
+	item_free (fn);
+	if (!success)
+	{
+		item_free (list);
+		return false;
+	}
+	return push (ctx, list);
+}
+
+defn (fn_filter)
+{
+	check_stack (2);
+	struct item *fn   = pop (ctx);
+	struct item *list = pop (ctx);
+	if (!check_type (ctx, fn,   ITEM_LIST)
+	 || !check_type (ctx, list, ITEM_LIST))
+	{
+		item_free (fn);
+		item_free (list);
+		return false;
+	}
+
+	bool success = false;
+	bool ok = true;
+	struct item *result = NULL, **tail = &result;
+	for (struct item *iter = get_list (list); iter; iter = iter->next)
+	{
+		if (!push (ctx, new_clone (iter))
+		 || !execute (ctx, get_list (fn))
+		 || !check_stack_safe (ctx, 1))
+			goto fail;
+
+		struct item *item = pop (ctx);
+		bool survived = to_boolean (ctx, item, &ok);
+		item_free (item);
+		if (!ok)
+			goto fail;
+		if (!survived)
+			continue;
+
+		if (!(item = new_clone (iter)))
+			goto fail;
+		*tail = item;
+		tail = &item->next;
+	}
+	success = true;
+
+fail:
+	set_list (list, result);
+	item_free (fn);
+	if (!success)
+	{
+		item_free (list);
+		return false;
+	}
+	return push (ctx, list);
+}
+
+defn (fn_fold)
+{
+	check_stack (3);
+	struct item *op   = pop (ctx);
+	struct item *null = pop (ctx);
+	struct item *list = pop (ctx);
+	bool success = false;
+	if (!check_type (ctx, op,   ITEM_LIST)
+	 || !check_type (ctx, list, ITEM_LIST))
+	{
+		item_free (null);
+		goto fail;
+	}
+
+	push (ctx, null);
+	for (struct item *iter = get_list (list); iter; iter = iter->next)
+		if (!push (ctx, new_clone (iter))
+		 || !execute (ctx, get_list (op)))
+			goto fail;
+	success = true;
+
+fail:
+	item_free (op);
+	item_free (list);
+	return success;
+}
+
+defn (fn_each)
+{
+	check_stack (2);
+	struct item *op   = pop (ctx);
+	struct item *list = pop (ctx);
+	bool success = false;
+	if (!check_type (ctx, op,   ITEM_LIST)
+	 || !check_type (ctx, list, ITEM_LIST))
+		goto fail;
+
+	for (struct item *iter = get_list (list); iter; iter = iter->next)
+		if (!push (ctx, new_clone (iter))
+		 || !execute (ctx, get_list (op)))
+			goto fail;
+	success = true;
+
+fail:
+	item_free (op);
+	item_free (list);
+	return success;
+}
+
+// - - Arithmetic  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+// XXX: why not a `struct item_string *` argument?
+static bool
+push_repeated_string (struct context *ctx, struct item *op1, struct item *op2)
+{
+	struct item_string  *string = (struct item_string  *) op1;
+	struct item_integer *repeat = (struct item_integer *) op2;
+	assert (string->type == ITEM_STRING);
+	assert (repeat->type == ITEM_INTEGER);
+
+	if (repeat->value < 0)
+		return set_error (ctx, "cannot multiply a string by a negative value");
+
+	char *buf = NULL;
+	size_t len = string->len * repeat->value;
+	if (len < string->len && repeat->value != 0)
+		goto allocation_fail;
+
+	buf = malloc (len);
+	if (!buf)
+		goto allocation_fail;
+
+	for (size_t i = 0; i < len; i += string->len)
+		memcpy (buf + i, string->value, string->len);
+	struct item *item = new_string (buf, len);
+	free (buf);
+	return push (ctx, item);
+
+allocation_fail:
+	ctx->memory_failure = true;
+	return false;
+}
+
+defn (fn_times)
+{
+	check_stack (2);
+	struct item *op2 = pop (ctx);
+	struct item *op1 = pop (ctx);
+
+	bool ok;
+	if      (op1->type == ITEM_INTEGER && op2->type == ITEM_INTEGER)
+		ok = push (ctx, new_integer (get_integer (op1) * get_integer (op2)));
+	else if (op1->type == ITEM_INTEGER && op2->type == ITEM_FLOAT)
+		ok = push (ctx, new_float   (get_integer (op1) * get_float   (op2)));
+	else if (op1->type == ITEM_FLOAT   && op2->type == ITEM_FLOAT)
+		ok = push (ctx, new_float   (get_float   (op1) * get_float   (op2)));
+	else if (op1->type == ITEM_FLOAT   && op2->type == ITEM_INTEGER)
+		ok = push (ctx, new_float   (get_float   (op1) * get_integer (op2)));
+	else if (op1->type == ITEM_INTEGER && op2->type == ITEM_STRING)
+		ok = push_repeated_string (ctx, op2, op1);
+	else if (op1->type == ITEM_STRING  && op2->type == ITEM_INTEGER)
+		ok = push_repeated_string (ctx, op1, op2);
+	else
+		ok = set_error (ctx, "cannot multiply `%s' and `%s'",
+			item_type_to_str (op1->type), item_type_to_str (op2->type));
+
+	item_free (op1);
+	item_free (op2);
+	return ok;
+}
+
+defn (fn_pow)
+{
+	check_stack (2);
+	struct item *op2 = pop (ctx);
+	struct item *op1 = pop (ctx);
+
+	bool ok;
+	if      (op1->type == ITEM_INTEGER && op2->type == ITEM_INTEGER)
+		// TODO: implement this properly, outputting an integer
+		ok = push (ctx, new_float (powl (get_integer (op1), get_integer (op2))));
+	else if (op1->type == ITEM_INTEGER && op2->type == ITEM_FLOAT)
+		ok = push (ctx, new_float (powl (get_integer (op1), get_float   (op2))));
+	else if (op1->type == ITEM_FLOAT   && op2->type == ITEM_FLOAT)
+		ok = push (ctx, new_float (powl (get_float   (op1), get_float   (op2))));
+	else if (op1->type == ITEM_FLOAT   && op2->type == ITEM_INTEGER)
+		ok = push (ctx, new_float (powl (get_float   (op1), get_integer (op2))));
+	else
+		ok = set_error (ctx, "cannot exponentiate `%s' and `%s'",
+			item_type_to_str (op1->type), item_type_to_str (op2->type));
+
+	item_free (op1);
+	item_free (op2);
+	return ok;
+}
+
+defn (fn_div)
+{
+	check_stack (2);
+	struct item *op2 = pop (ctx);
+	struct item *op1 = pop (ctx);
+
+	bool ok;
+	if (op1->type == ITEM_INTEGER && op2->type == ITEM_INTEGER)
+	{
+		if (get_integer (op2) == 0)
+			ok = set_error (ctx, "division by zero");
+		else
+			ok = push (ctx, new_integer (get_integer (op1) / get_integer (op2)));
+	}
+	else if (op1->type == ITEM_INTEGER && op2->type == ITEM_FLOAT)
+		ok = push (ctx, new_float (get_integer (op1) / get_float   (op2)));
+	else if (op1->type == ITEM_FLOAT   && op2->type == ITEM_FLOAT)
+		ok = push (ctx, new_float (get_float   (op1) / get_float   (op2)));
+	else if (op1->type == ITEM_FLOAT   && op2->type == ITEM_INTEGER)
+		ok = push (ctx, new_float (get_float   (op1) / get_integer (op2)));
+	else
+		ok = set_error (ctx, "cannot divide `%s' and `%s'",
+			item_type_to_str (op1->type), item_type_to_str (op2->type));
+
+	item_free (op1);
+	item_free (op2);
+	return ok;
+}
+
+defn (fn_mod)
+{
+	check_stack (2);
+	struct item *op2 = pop (ctx);
+	struct item *op1 = pop (ctx);
+
+	bool ok;
+	if (op1->type == ITEM_INTEGER && op2->type == ITEM_INTEGER)
+	{
+		if (get_integer (op2) == 0)
+			ok = set_error (ctx, "division by zero");
+		else
+			ok = push (ctx, new_integer (get_integer (op1) % get_integer (op2)));
+	}
+	else if (op1->type == ITEM_INTEGER && op2->type == ITEM_FLOAT)
+		ok = push (ctx, new_float (fmodl (get_integer (op1), get_float   (op2))));
+	else if (op1->type == ITEM_FLOAT   && op2->type == ITEM_FLOAT)
+		ok = push (ctx, new_float (fmodl (get_float   (op1), get_float   (op2))));
+	else if (op1->type == ITEM_FLOAT   && op2->type == ITEM_INTEGER)
+		ok = push (ctx, new_float (fmodl (get_float   (op1), get_integer (op2))));
+	else
+		ok = set_error (ctx, "cannot divide `%s' and `%s'",
+			item_type_to_str (op1->type), item_type_to_str (op2->type));
+
+	item_free (op1);
+	item_free (op2);
+	return ok;
+}
+
+static bool
+push_concatenated_string (struct context *ctx,
+	struct item *op1, struct item *op2)
+{
+	struct item_string *s1 = (struct item_string *) op1;
+	struct item_string *s2 = (struct item_string *) op2;
+	assert (s1->type == ITEM_STRING);
+	assert (s2->type == ITEM_STRING);
+
+	char *buf = NULL;
+	size_t len = s1->len + s2->len;
+	if (len < s1->len || len < s2->len)
+		goto allocation_fail;
+
+	buf = malloc (len);
+	if (!buf)
+		goto allocation_fail;
+
+	memcpy (buf,           s1->value, s1->len);
+	memcpy (buf + s1->len, s2->value, s2->len);
+	struct item *item = new_string (buf, len);
+	free (buf);
+	return push (ctx, item);
+
+allocation_fail:
+	ctx->memory_failure = true;
+	return false;
+
+}
+
+defn (fn_plus)
+{
+	check_stack (2);
+	struct item *op2 = pop (ctx);
+	struct item *op1 = pop (ctx);
+
+	bool ok;
+	if      (op1->type == ITEM_INTEGER && op2->type == ITEM_INTEGER)
+		ok = push (ctx, new_integer (get_integer (op1) + get_integer (op2)));
+	else if (op1->type == ITEM_INTEGER && op2->type == ITEM_FLOAT)
+		ok = push (ctx, new_float   (get_integer (op1) + get_float   (op2)));
+	else if (op1->type == ITEM_FLOAT   && op2->type == ITEM_FLOAT)
+		ok = push (ctx, new_float   (get_float   (op1) + get_float   (op2)));
+	else if (op1->type == ITEM_FLOAT   && op2->type == ITEM_INTEGER)
+		ok = push (ctx, new_float   (get_float   (op1) + get_integer (op2)));
+	else if (op1->type == ITEM_STRING  && op2->type == ITEM_STRING)
+		ok = push_concatenated_string (ctx, op1, op2);
+	else
+		ok = set_error (ctx, "cannot add `%s' and `%s'",
+			item_type_to_str (op1->type), item_type_to_str (op2->type));
+
+	item_free (op1);
+	item_free (op2);
+	return ok;
+}
+
+defn (fn_minus)
+{
+	check_stack (2);
+	struct item *op2 = pop (ctx);
+	struct item *op1 = pop (ctx);
+
+	bool ok;
+	if      (op1->type == ITEM_INTEGER && op2->type == ITEM_INTEGER)
+		ok = push (ctx, new_integer (get_integer (op1) - get_integer (op2)));
+	else if (op1->type == ITEM_INTEGER && op2->type == ITEM_FLOAT)
+		ok = push (ctx, new_float   (get_integer (op1) - get_float   (op2)));
+	else if (op1->type == ITEM_FLOAT   && op2->type == ITEM_FLOAT)
+		ok = push (ctx, new_float   (get_float   (op1) - get_float   (op2)));
+	else if (op1->type == ITEM_FLOAT   && op2->type == ITEM_INTEGER)
+		ok = push (ctx, new_float   (get_float   (op1) - get_integer (op2)));
+	else
+		ok = set_error (ctx, "cannot subtract `%s' and `%s'",
+			item_type_to_str (op1->type), item_type_to_str (op2->type));
+
+	item_free (op1);
+	item_free (op2);
+	return ok;
+}
+
+// - - Comparison  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+static int
+compare_strings (struct item_string *s1, struct item_string *s2)
+{
+	// XXX: not entirely correct wrt. null bytes
+	size_t len = (s1->len < s2->len ? s1->len : s2->len) + 1;
+	return memcmp (s1->value, s2->value, len);
+}
+
+static bool compare_lists (struct item *, struct item *);
+
+static bool
+compare_list_items (struct item *op1, struct item *op2)
+{
+	if (op1->type != op2->type)
+		return false;
+
+	switch (op1->type)
+	{
+	case ITEM_STRING:
+	case ITEM_WORD:
+		return !compare_strings ((struct item_string *) op1,
+			(struct item_string *) op2);
+	case ITEM_FLOAT:
+		return get_float (op1) == get_float (op2);
+	case ITEM_INTEGER:
+		return get_integer (op1) == get_integer (op2);
+	case ITEM_LIST:
+		return compare_lists (get_list (op1), get_list (op2));
+	}
+	abort ();
+}
+
+static bool
+compare_lists (struct item *op1, struct item *op2)
+{
+	while (op1 && op2)
+	{
+		if (!compare_list_items (op1, op2))
+			return false;
+
+		op1 = op1->next;
+		op2 = op2->next;
+	}
+	return !op1 && !op2;
+}
+
+defn (fn_eq)
+{
+	check_stack (2);
+	struct item *op2 = pop (ctx);
+	struct item *op1 = pop (ctx);
+
+	bool ok;
+	if      (op1->type == ITEM_INTEGER && op2->type == ITEM_INTEGER)
+		ok = push (ctx, new_integer (get_integer (op1) == get_integer (op2)));
+	else if (op1->type == ITEM_INTEGER && op2->type == ITEM_FLOAT)
+		ok = push (ctx, new_integer (get_integer (op1) == get_float   (op2)));
+	else if (op1->type == ITEM_FLOAT   && op2->type == ITEM_FLOAT)
+		ok = push (ctx, new_integer (get_float   (op1) == get_float   (op2)));
+	else if (op1->type == ITEM_FLOAT   && op2->type == ITEM_INTEGER)
+		ok = push (ctx, new_integer (get_float   (op1) == get_integer (op2)));
+	else if (op1->type == ITEM_LIST    && op2->type == ITEM_LIST)
+		ok = push (ctx, new_integer (compare_lists
+			(get_list (op1), get_list (op2))));
+	else if (op1->type == ITEM_STRING  && op2->type == ITEM_STRING)
+		ok = push (ctx, new_integer (compare_strings
+			((struct item_string *)(op1), (struct item_string *)(op2)) == 0));
+	else
+		ok = set_error (ctx, "cannot compare `%s' and `%s'",
+			item_type_to_str (op1->type), item_type_to_str (op2->type));
+
+	item_free (op1);
+	item_free (op2);
+	return ok;
+}
+
+defn (fn_lt)
+{
+	check_stack (2);
+	struct item *op2 = pop (ctx);
+	struct item *op1 = pop (ctx);
+
+	bool ok;
+	if      (op1->type == ITEM_INTEGER && op2->type == ITEM_INTEGER)
+		ok = push (ctx, new_integer (get_integer (op1) < get_integer (op2)));
+	else if (op1->type == ITEM_INTEGER && op2->type == ITEM_FLOAT)
+		ok = push (ctx, new_integer (get_integer (op1) < get_float   (op2)));
+	else if (op1->type == ITEM_FLOAT   && op2->type == ITEM_FLOAT)
+		ok = push (ctx, new_integer (get_float   (op1) < get_float   (op2)));
+	else if (op1->type == ITEM_FLOAT   && op2->type == ITEM_INTEGER)
+		ok = push (ctx, new_integer (get_float   (op1) < get_integer (op2)));
+	else if (op1->type == ITEM_STRING  && op2->type == ITEM_STRING)
+		ok = push (ctx, new_integer (compare_strings
+			((struct item_string *)(op1), (struct item_string *)(op2)) < 0));
+	else
+		ok = set_error (ctx, "cannot compare `%s' and `%s'",
+			item_type_to_str (op1->type), item_type_to_str (op2->type));
+
+	item_free (op1);
+	item_free (op2);
+	return ok;
+}
+
+// - - Utilities - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+defn (fn_rand)
+{
+	return push (ctx, new_float ((long double) rand ()
+		/ ((long double) RAND_MAX + 1)));
+}
+
+defn (fn_time)
+{
+	return push (ctx, new_integer (time (NULL)));
+}
+
+// XXX: this is a bit too constrained; combines strftime() with gmtime()
+defn (fn_strftime)
+{
+	check_stack (2);
+	struct item *format = pop (ctx);
+	struct item *time_  = pop (ctx);
+	bool success = false;
+	if (!check_type (ctx, time_,  ITEM_INTEGER)
+	 || !check_type (ctx, format, ITEM_STRING))
+		goto fail;
+
+	if (get_integer (time_) < 0)
+	{
+		set_error (ctx, "invalid time value");
+		goto fail;
+	}
+
+	char buf[128];
+	time_t time__ = get_integer (time_);
+	struct tm tm;
+	gmtime_r (&time__, &tm);
+	buf[strftime (buf, sizeof buf, get_string (format), &tm)] = '\0';
+	success = push (ctx, new_string (buf, -1));
+
+fail:
+	item_free (time_);
+	item_free (format);
+	return success;
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+static void item_list_to_str (const struct item *, struct buffer *);
+
+static void
+string_to_str (const struct item_string *string, struct buffer *buf)
+{
+	buffer_append_c (buf, '"');
+	for (size_t i = 0; i < string->len; i++)
+	{
+		char c = string->value[i];
+		if      (c == '\n')  buffer_append (buf, "\\n", 2);
+		else if (c == '\r')  buffer_append (buf, "\\r", 2);
+		else if (c == '\t')  buffer_append (buf, "\\t", 2);
+		else if (!isprint (c))
+		{
+			char tmp[8];
+			snprintf (tmp, sizeof tmp, "\\x%02x", (unsigned char) c);
+			buffer_append (buf, tmp, strlen (tmp));
+		}
+		else if (c == '\\')  buffer_append (buf, "\\\\", 2);
+		else if (c == '"')   buffer_append (buf, "\\\"", 2);
+		else                 buffer_append_c (buf, c);
+	}
+	buffer_append_c (buf, '"');
+}
+
+static void
+item_to_str (const struct item *item, struct buffer *buf)
+{
+	switch (item->type)
+	{
+		char *x;
+	case ITEM_STRING:
+		string_to_str ((struct item_string *) item, buf);
+		break;
+	case ITEM_WORD:
+	{
+		struct item_word *word = (struct item_word *) item;
+		buffer_append (buf, word->value, word->len);
+		break;
+	}
+	case ITEM_INTEGER:
+		if (!(x = strdup_printf ("%lld", get_integer (item))))
+			goto alloc_failure;
+		buffer_append (buf, x, strlen (x));
+		free (x);
+		break;
+	case ITEM_FLOAT:
+		if (!(x = strdup_printf ("%Lf", get_float (item))))
+			goto alloc_failure;
+		buffer_append (buf, x, strlen (x));
+		free (x);
+		break;
+	case ITEM_LIST:
+		buffer_append_c (buf, '[');
+		item_list_to_str (get_list (item), buf);
+		buffer_append_c (buf, ']');
+		break;
+	}
+	return;
+
+alloc_failure:
+	// This is a bit hackish but it simplifies stuff
+	buf->memory_failure = true;
+	free (buf->s);
+	buf->s = NULL;
+}
+
+static void
+item_list_to_str (const struct item *script, struct buffer *buf)
+{
+	if (!script)
+		return;
+
+	item_to_str (script, buf);
+	while ((script = script->next))
+	{
+		buffer_append_c (buf, ' ');
+		item_to_str (script, buf);
+	}
+}
+
+// --- IRC protocol ------------------------------------------------------------
+
+struct message
+{
+	char *prefix;                       ///< Message prefix
+	char *command;                      ///< IRC command
+	char *params[16];                   ///< Command parameters (0-terminated)
+	size_t n_params;                    ///< Number of parameters present
+};
+
+inline static char *
+cut_word (char **s)
+{
+	char *start = *s, *end = *s + strcspn (*s, " ");
+	*s = end + strspn (end, " ");
+	*end = '\0';
+	return start;
+}
+
+static bool
+parse_message (char *s, struct message *msg)
+{
+	memset (msg, 0, sizeof *msg);
+
+	// Ignore IRC 3.2 message tags, if present
+	if (*s == '@')
+	{
+		s += strcspn (s, " ");
+		s += strspn (s, " ");
+	}
+
+	// Prefix
+	if (*s == ':')
+		msg->prefix = cut_word (&s) + 1;
+
+	// Command
+	if (!*(msg->command = cut_word (&s)))
+		return false;
+
+	// Parameters
+	while (*s)
+	{
+		size_t n = msg->n_params++;
+		if (msg->n_params >= N_ELEMENTS (msg->params))
+			return false;
+		if (*s == ':')
+		{
+			msg->params[n] = ++s;
+			break;
+		}
+		msg->params[n] = cut_word (&s);
+	}
+	return true;
+}
+
+static struct message *
+read_message (void)
+{
+	static bool discard = false;
+	static char buf[1025];
+	static struct message msg;
+
+	bool discard_this;
+	do
+	{
+		if (!fgets (buf, sizeof buf, stdin))
+			return NULL;
+		size_t len = strlen (buf);
+
+		// Just to be on the safe side, if the line overflows our buffer,
+		// ignore everything up until the next line.
+		discard_this = discard;
+		if (len >= 2 && !strcmp (buf + len - 2, "\r\n"))
+		{
+			buf[len -= 2] = '\0';
+			discard = false;
+		}
+		else
+			discard = true;
+	}
+	// Invalid messages are silently ignored
+	while (discard_this || !parse_message (buf, &msg));
+	return &msg;
+}
+
+// --- Interfacing with the bot ------------------------------------------------
+
+#define BOT_PRINT "ZYKLONB print :script: "
+
+static const char *
+get_config (const char *key)
+{
+	printf ("ZYKLONB get_config :%s\r\n", key);
+	struct message *msg = read_message ();
+	if (!msg || msg->n_params <= 0)
+		exit (EXIT_FAILURE);
+	return msg->params[0];
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+// TODO: implement more functions; try to avoid writing them in C
+
+static bool
+init_runtime_library_scripts (void)
+{
+	bool ok = true;
+
+	// It's much cheaper (and more fun) to define functions in terms of other
+	// ones.  The "unit tests" serve a secondary purpose of showing the usage.
+	struct script
+	{
+		const char *name;               ///< Name of the function
+		const char *definition;         ///< The defining script
+		const char *unit_test;          ///< Trivial unit test, must return 1
+	}
+	scripts[] =
+	{
+		{ "nip",     "swap drop",                    "1 2 nip 2 ="            },
+		{ "over",    "[dup] dip swap",               "1 2 over nip nip 1 ="   },
+		{ "swons",   "swap cons",                    "[2] 1 swons [1 2] ="    },
+		{ "first",   "uncons drop",                  "[1 2 3] first 1 ="      },
+		{ "rest",    "uncons swap drop",             "[1 2 3] rest [2 3] ="   },
+		{ "reverse", "[] swap [swap cons] each",     "[1 2] reverse [2 1] ="  },
+		{ "curry",   "cons",                         "1 2 [+] curry call 3 =" },
+
+		{ "xor",     "not swap not + 1 =",           "1 1 xor 0 ="            },
+		{ "min",     "over over < [drop] [nip] if",  "1 2 min 1 ="            },
+		{ "max",     "over over > [drop] [nip] if",  "1 2 max 2 ="            },
+
+		{ "all?",    "[and] cat 1 swap fold",        "[3 4 5] [> 3] all? 0 =" },
+		{ "any?",    "[or] cat 0 swap fold",         "[3 4 5] [> 3] any? 1 =" },
+
+		{ ">",       "swap <",                       "1 2 > 0 ="              },
+		{ "!=",      "= not",                        "1 2 != 1 ="             },
+		{ "<=",      "> not",                        "1 2 <= 1 ="             },
+		{ ">=",      "< not",                        "1 2 >= 0 ="             },
+
+		// XXX: this is a bit crazy and does not work with an empty list
+		{ "join",   "[uncons] dip swap [[dup] dip swap [+ +] dip] each drop",
+		  "[1 2 3] [>string] map \" -> \" join \"1 -> 2 -> 3\" ="             },
+	};
+
+	for (size_t i = 0; i < N_ELEMENTS (scripts); i++)
+	{
+		const char *error = NULL;
+		struct item *script = parse (scripts[i].definition, &error);
+		if (error)
+		{
+			printf (BOT_PRINT "error parsing internal script `%s': %s\r\n",
+				scripts[i].definition, error);
+			ok = false;
+		}
+		else
+			ok &= register_script (scripts[i].name, script);
+	}
+
+	struct context ctx;
+	for (size_t i = 0; i < N_ELEMENTS (scripts); i++)
+	{
+		const char *error = NULL;
+		struct item *script = parse (scripts[i].unit_test, &error);
+		if (error)
+		{
+			printf (BOT_PRINT "error parsing unit test for `%s': %s\r\n",
+				scripts[i].name, error);
+			ok = false;
+			continue;
+		}
+		context_init (&ctx);
+		execute (&ctx, script);
+		item_free_list (script);
+
+		const char *failure = NULL;
+		if (ctx.memory_failure)
+			failure = "memory allocation failure";
+		else if (ctx.error)
+			failure = ctx.error;
+		else if (ctx.stack_size != 1)
+			failure = "too many results on the stack";
+		else if (ctx.stack->type != ITEM_INTEGER)
+			failure = "result is not an integer";
+		else if (get_integer (ctx.stack) != 1)
+			failure = "wrong test result";
+		if (failure)
+		{
+			printf (BOT_PRINT "error executing unit test for `%s': %s\r\n",
+				scripts[i].name, failure);
+			ok = false;
+		}
+		context_free (&ctx);
+	}
+	return ok;
+}
+
+static bool
+init_runtime_library (void)
+{
+	bool ok = true;
+
+	// Type detection
+	ok &= register_handler ("string?",  fn_is_string);
+	ok &= register_handler ("word?",    fn_is_word);
+	ok &= register_handler ("integer?", fn_is_integer);
+	ok &= register_handler ("float?",   fn_is_float);
+	ok &= register_handler ("list?",    fn_is_list);
+
+	// Type conversion
+	ok &= register_handler (">string",  fn_to_string);
+	ok &= register_handler (">integer", fn_to_integer);
+	ok &= register_handler (">float",   fn_to_float);
+
+	// Miscellaneous
+	ok &= register_handler ("length",   fn_length);
+
+	// Basic stack manipulation
+	ok &= register_handler ("dup",      fn_dup);
+	ok &= register_handler ("drop",     fn_drop);
+	ok &= register_handler ("swap",     fn_swap);
+
+	// Calling stuff
+	ok &= register_handler ("call",     fn_call);
+	ok &= register_handler ("dip",      fn_dip);
+
+	// Control flow
+	ok &= register_handler ("if",       fn_if);
+	ok &= register_handler ("try",      fn_try);
+
+	// List processing
+	ok &= register_handler ("map",      fn_map);
+	ok &= register_handler ("filter",   fn_filter);
+	ok &= register_handler ("fold",     fn_fold);
+	ok &= register_handler ("each",     fn_each);
+
+	// List manipulation
+	ok &= register_handler ("unit",     fn_unit);
+	ok &= register_handler ("cons",     fn_cons);
+	ok &= register_handler ("cat",      fn_cat);
+	ok &= register_handler ("uncons",   fn_uncons);
+
+	// Arithmetic operations
+	ok &= register_handler ("+",        fn_plus);
+	ok &= register_handler ("-",        fn_minus);
+	ok &= register_handler ("*",        fn_times);
+	ok &= register_handler ("^",        fn_pow);
+	ok &= register_handler ("/",        fn_div);
+	ok &= register_handler ("%",        fn_mod);
+
+	// Comparison
+	ok &= register_handler ("=",        fn_eq);
+	ok &= register_handler ("<",        fn_lt);
+
+	// Logical operations
+	ok &= register_handler ("not",      fn_not);
+	ok &= register_handler ("and",      fn_and);
+	ok &= register_handler ("or",       fn_or);
+
+	// Utilities
+	ok &= register_handler ("rand",     fn_rand);
+	ok &= register_handler ("time",     fn_time);
+	ok &= register_handler ("strftime", fn_strftime);
+
+	ok &= init_runtime_library_scripts ();
+	return ok;
+}
+
+static void
+free_runtime_library (void)
+{
+	struct fn *next, *iter;
+	for (iter = g_functions; iter; iter = next)
+	{
+		next = iter->next;
+		free_function (iter);
+	}
+}
+
+// --- Function database -------------------------------------------------------
+
+// TODO: a global variable storing the various procedures (db)
+// XXX: defining procedures would ideally need some kind of an ACL
+
+static void
+read_db (void)
+{
+	// TODO
+}
+
+static void
+write_db (void)
+{
+	// TODO
+}
+
+// --- Main --------------------------------------------------------------------
+
+static char *g_prefix;
+
+struct user_info
+{
+	char *ctx;                          ///< Context: channel or user
+	char *ctx_quote;                    ///< Reply quotation
+};
+
+defn (fn_dot)
+{
+	check_stack (1);
+	struct item *item = pop (ctx);
+	struct user_info *info = ctx->user_data;
+
+	struct buffer buf = BUFFER_INITIALIZER;
+	item_to_str (item, &buf);
+	item_free (item);
+	buffer_append_c (&buf, '\0');
+	if (buf.memory_failure)
+	{
+		ctx->memory_failure = true;
+		return false;
+	}
+
+	if (buf.len > 255)
+		buf.s[255] = '\0';
+
+	printf ("PRIVMSG %s :%s%s\r\n", info->ctx, info->ctx_quote, buf.s);
+	free (buf.s);
+	return true;
+}
+
+static void
+process_message (struct message *msg)
+{
+	if (!msg->prefix
+	 || strcasecmp (msg->command, "PRIVMSG")
+	 || msg->n_params < 2)
+		return;
+	char *line = msg->params[1];
+
+	// Filter out only our commands
+	size_t prefix_len = strlen (g_prefix);
+	if (strncmp (line, g_prefix, prefix_len))
+		return;
+	line += prefix_len;
+
+	char *command = cut_word (&line);
+	if (strcasecmp (command, "script"))
+		return;
+
+	// Retrieve information on how to respond back
+	char *msg_ctx = msg->prefix, *x;
+	if ((x = strchr (msg_ctx, '!')))
+		*x = '\0';
+
+	char *msg_ctx_quote;
+	if (strchr ("#+&!", *msg->params[0]))
+	{
+		msg_ctx_quote = strdup_printf ("%s: ", msg_ctx);
+		msg_ctx = msg->params[0];
+	}
+	else
+		msg_ctx_quote = strdup ("");
+
+	if (!msg_ctx_quote)
+	{
+		printf (BOT_PRINT "%s\r\n", "memory allocation failure");
+		return;
+	}
+
+	struct user_info info;
+	info.ctx = msg_ctx;
+	info.ctx_quote = msg_ctx_quote;
+
+	// Finally parse and execute the macro
+	const char *error = NULL;
+	struct item *script = parse (line, &error);
+	if (error)
+	{
+		printf ("PRIVMSG %s :%s%s: %s\r\n",
+			msg_ctx, msg_ctx_quote, "parse error", error);
+		goto end;
+	}
+
+	struct context ctx;
+	context_init (&ctx);
+	ctx.user_data = &info;
+	execute (&ctx, script);
+	item_free_list (script);
+
+	const char *failure = NULL;
+	if (ctx.memory_failure)
+		failure = "memory allocation failure";
+	else if (ctx.error)
+		failure = ctx.error;
+	if (failure)
+		printf ("PRIVMSG %s :%s%s: %s\r\n",
+			msg_ctx, msg_ctx_quote, "runtime error", failure);
+	context_free (&ctx);
+end:
+	free (msg_ctx_quote);
+}
+
+int
+main (int argc, char *argv[])
+{
+	freopen (NULL, "rb", stdin);   setvbuf (stdin,  NULL, _IOLBF, BUFSIZ);
+	freopen (NULL, "wb", stdout);  setvbuf (stdout, NULL, _IOLBF, BUFSIZ);
+
+	struct rlimit limit =
+	{
+		.rlim_cur = ADDRESS_SPACE_LIMIT,
+		.rlim_max = ADDRESS_SPACE_LIMIT
+	};
+
+	// Lower the memory limits to something sensible to prevent abuse
+	(void) setrlimit (RLIMIT_AS, &limit);
+
+	read_db ();
+	if (!init_runtime_library ()
+	 || !register_handler (".", fn_dot))
+		printf (BOT_PRINT "%s\r\n", "runtime library initialization failed");
+
+	g_prefix = strdup (get_config ("prefix"));
+	printf ("ZYKLONB register\r\n");
+	struct message *msg;
+	while ((msg = read_message ()))
+		process_message (msg);
+
+	free_runtime_library ();
+	free (g_prefix);
+	return 0;
+}
+

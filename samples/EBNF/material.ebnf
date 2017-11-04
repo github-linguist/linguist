@@ -1,0 +1,40 @@
+(*
+  Source:  https://github.com/io7m/jsom0
+  License: ISC
+*)
+
+name =
+  "name" , string , ";" ;
+
+diffuse =
+  "diffuse" , real , real , real , ";" ;
+
+ambient =
+  "ambient" , real , real , real , ";" ;
+
+specular =
+  "specular" , real , real , real , real , ";" ;
+
+shininess =
+  "shininess" , real , ";" ;
+
+alpha =
+  "alpha" , real , ";" ;
+
+mapping =
+  "map_chrome" | "map_uv" ;
+
+texture =
+  "texture" , string , real , mapping , ";" ;
+
+material =
+  "material" , ";" ,
+    name ,
+    diffuse ,
+    ambient ,
+    specular ,
+    shininess ,
+    alpha ,
+    [ texture ] ,
+  "end" , ";" ;
+

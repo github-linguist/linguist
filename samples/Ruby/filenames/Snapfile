@@ -1,0 +1,26 @@
+
+# Download the latest screenshot information from the CMS
+app_id = Dir.pwd.split("/")[-2].to_i
+File.write("./screenshots.json", open("https://...amazonaws.com/1.0/#{app_id}/....json").read) rescue nil
+
+
+# A list of devices you want to take the screenshots from
+devices([
+  "iPhone 6",
+  "iPhone 6 Plus",
+  "iPhone 5",
+  "iPhone 4s"
+])
+
+languages([
+  'de-DE'
+])
+
+# Where should the resulting screenshots be stored?
+screenshots_path "./screenshots"
+
+# JavaScript UIAutomation file
+js_file './snapshot.js'
+
+# The name of the project's scheme
+scheme 'Release'

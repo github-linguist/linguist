@@ -292,14 +292,14 @@ proc main() {
     LagrangeLeapFrog();
 
     if debug {
-      //      deprint("[[ Forces ]]", fx, fy, fz);
+      deprintatomic("[[ Forces ]]", fx, fy, fz);
       deprint("[[ Positions ]]", x, y, z);
       deprint("[[ p, e, q ]]", p, e, q);
     }
     if showProgress then
-      writeln("time = ", format("%e", time), ", dt=", format("%e", deltatime),
-              if doTiming then ", elapsed = " + (getCurrentTime()-iterTime) 
-                          else "");
+      writef("time = %er, dt=%er, %s", time, deltatime,
+             if doTiming then ", elapsed = " + (getCurrentTime()-iterTime) +"\n"
+                         else "\n");
   }
   if (cycle == maxcycles) {
     writeln("Stopped early due to reaching maxnumsteps");
@@ -314,12 +314,10 @@ proc main() {
   if printCoords {
     var outfile = open("coords.out", iomode.cw);
     var writer = outfile.writer();
-    var fmtstr = if debug then "%1.9e" else "%1.4e";
-    for i in Nodes {
-      writer.writeln(format(fmtstr, x[i]), " ", 
-                     format(fmtstr, y[i]), " ", 
-                     format(fmtstr, z[i]));
-    }
+    var fmtstr = if debug then "%1.9re %1.9er %1.9er\n" 
+                          else "%1.4er %1.4er %1.4er\n";
+    for i in Nodes do
+      writer.writef(fmtstr, x[i], y[i], z[i]);
     writer.close();
     outfile.close();
   }
@@ -479,7 +477,7 @@ inline proc localizeNeighborNodes(eli: index(Elems),
                                   y: [] real, ref y_local: 8*real,
                                   z: [] real, ref z_local: 8*real) {
 
-  for param i in 1..nodesPerElem {
+  for i in 1..nodesPerElem {
     const noi = elemToNode[eli][i];
 
     x_local[i] = x[noi];
@@ -670,7 +668,7 @@ proc SumElemStressesToNodeForces(b_x: 8*real, b_y: 8*real, b_z: 8*real,
                                  ref fx: 8*real,
                                  ref fy: 8*real,
                                  ref fz: 8*real) {
-  for param i in 1..8 {
+  for i in 1..8 {
     fx[i] = -(stress_xx * b_x[i]);
     fy[i] = -(stress_yy * b_y[i]);
     fz[i] = -(stress_zz * b_z[i]);
@@ -725,17 +723,17 @@ inline proc CalcElemFBHourglassForce(xd: 8*real, yd: 8*real, zd: 8*real,
   var hx, hy, hz: 4*real;
 
   // reduction
-  for param i in 1..4 {
-    for param j in 1..8 {
+  for i in 1..4 {
+    for j in 1..8 {
       hx[i] += hourgam[j][i] * xd[j];
       hy[i] += hourgam[j][i] * yd[j];
       hz[i] += hourgam[j][i] * zd[j];
     }
   }
 
-  for param i in 1..8 {
+  for i in 1..8 {
     var shx, shy, shz: real;
-    for param j in 1..4 {
+    for j in 1..4 {
       shx += hourgam[i][j] * hx[j];
       shy += hourgam[i][j] * hy[j];
       shz += hourgam[i][j] * hz[j];
@@ -1088,16 +1086,16 @@ proc CalcFBHourglassForceForElems(determ, x8n, y8n, z8n, dvdx, dvdy, dvdz) {
 
     /* TODO: Can we enable this local block? */
     // local {
-      for param i in 1..4 {
+      for i in 1..4 {
         var hourmodx, hourmody, hourmodz: real;
         // reduction
-        for param j in 1..8 {
+        for j in 1..8 {
           hourmodx += x8n[eli][j] * gammaCoef[i][j];
           hourmody += y8n[eli][j] * gammaCoef[i][j];
           hourmodz += z8n[eli][j] * gammaCoef[i][j];
         }
 
-        for param j in 1..8 {
+        for j in 1..8 {
           hourgam[j][i] = gammaCoef[i][j] - volinv * 
             (dvdx[eli][j] * hourmodx +
              dvdy[eli][j] * hourmody +
@@ -1221,7 +1219,7 @@ proc CalcKinematicsForElems(dxx, dyy, dzz, const dt: real) {
       arealg[k] = CalcElemCharacteristicLength(x_local, y_local, z_local,
                                                volume);
 
-      for param i in 1..8 {
+      for i in 1..8 {
         x_local[i] -= dt2 * xd_local[i];
         y_local[i] -= dt2 * yd_local[i];
         z_local[i] -= dt2 * zd_local[i];
@@ -1669,7 +1667,7 @@ proc CalcSoundSpeedForElems(vnewc, rho0:real, enewc, pnewc, pbvc, bvc) {
 
 
 iter elemToNodes(elem) {
-  for param i in 1..nodesPerElem do
+  for i in 1..nodesPerElem do
     yield elemToNode[elem][i];
 }
                                  
@@ -1679,14 +1677,19 @@ iter elemToNodesTuple(e) {
 }
 
 
-proc deprint(title:string, x:[?D] real, y:[D]real, z:[D]real) {
+proc deprint(title:string, x:[?D] real, y:[D] real, z:[D] real) {
   writeln(title);
-  for i in D {
-    writeln(format("%3d", i), ": ", 
-            format("%3.4e", x[i]), " ", 
-            format("%3.4e", y[i]), " ", 
-            format("%3.4e", z[i]));
-  }
+  for i in D do
+    writef("%3i: %3.4er %3.4er %3.4er\n", 
+           if use3DRepresentation then idx3DTo1D(i, D.dim(1).size) else i, 
+           x[i], y[i], z[i]);
 }
 
 
+proc deprintatomic(title:string, x:[?D] atomic real, y:[] atomic real, z:[] atomic real) {
+  writeln(title);
+  for i in D do
+    writef("%3i: %3.4er %3.4er %3.4er\n", 
+           if use3DRepresentation then idx3DTo1D(i, D.dim(1).size) else i, 
+           x[i].peek(), y[i].peek(), z[i].peek());
+}
