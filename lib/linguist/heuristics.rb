@@ -477,7 +477,7 @@ module Linguist
     end
 
     disambiguate ".ts" do |data|
-      if data.include?("<TS")
+      if /<TS\b/.match(data)
         Language["XML"]
       else
         Language["TypeScript"]
