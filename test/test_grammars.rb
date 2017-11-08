@@ -199,15 +199,21 @@ class TestGrammars < Minitest::Test
   # If the license is unrecognized, return its hash
   def submodule_license(submodule)
     # Prefer Licensee to detect a submodule's license
-    project = Licensee::Projects::FSProject.new(submodule, detect_readme: true)
-    return project.license.key if project.license
+    project = Licensee.project(submodule, detect_packages: true, detect_readme: true)
+    return project.license.key if project.license && project.licenses.length == 1
+
+    # If we have more than one, return the one that isn't other, if exists
+    if project.licenses.length > 1
+      first_non_other = project.matched_files.select { |f| f.license && !f.license.other? }.first.license
+      return first_non_other.key unless first_non_other.nil?
+    end
 
     # We know a license exists, but no method was able to recognize it.
     # We return the license hash in this case, to uniquely identify it.
     if project.license_file
-      return project.license_file.hash
+      return project.license_file.content_hash
     elsif project.readme
-      return project.readme.hash
+      return project.readme.content_hash
     end
   end
 end
