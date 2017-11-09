@@ -1,8 +1,6 @@
 module Linguist
   # A collection of simple heuristics that can be used to better analyze languages.
   class Heuristics
-    HEURISTICS_CONSIDER_BYTES = 50 * 1024
-
     # Public: Use heuristics to detect language of the blob.
     #
     # blob               - An object that quacks like a blob.
@@ -16,7 +14,7 @@ module Linguist
     #
     # Returns an Array of languages, or empty if none matched or were inconclusive.
     def self.call(blob, candidates)
-      data = blob.data[0...HEURISTICS_CONSIDER_BYTES]
+      data = blob.data
 
       @heuristics.each do |heuristic|
         if heuristic.matches?(blob.name, candidates)
@@ -74,14 +72,6 @@ module Linguist
 
     # Common heuristics
     ObjectiveCRegex = /^\s*(@(interface|class|protocol|property|end|synchronised|selector|implementation)\b|#import\s+.+\.h[">])/
-    CPlusPlusRegex = Regexp.union(
-        /^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>/,
-        /^\s*template\s*</,
-        /^[ \t]*try/,
-        /^[ \t]*catch\s*\(/,
-        /^[ \t]*(class|(using[ \t]+)?namespace)\s+\w+/,
-        /^[ \t]*(private|public|protected):$/,
-        /std::\w+/)
 
     disambiguate ".as" do |data|
       if /^\s*(package\s+[a-z0-9_\.]+|import\s+[a-zA-Z0-9_\.]+;|class\s+[A-Za-z0-9_]+\s+extends\s+[A-Za-z0-9_]+)/.match(data)
@@ -229,7 +219,8 @@ module Linguist
     disambiguate ".h" do |data|
       if ObjectiveCRegex.match(data)
         Language["Objective-C"]
-      elsif CPlusPlusRegex.match(data)
+      elsif (/^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>/.match(data) ||
+        /^\s*template\s*</.match(data) || /^[ \t]*try/.match(data) || /^[ \t]*catch\s*\(/.match(data) || /^[ \t]*(class|(using[ \t]+)?namespace)\s+\w+/.match(data) || /^[ \t]*(private|public|protected):$/.match(data) || /std::\w+/.match(data))
         Language["C++"]
       end
     end
