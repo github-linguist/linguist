@@ -23,7 +23,6 @@ class TestGrammars < Minitest::Test
     "8653305b358375d0fced85dc24793b99919b11ef", # language-shellscript
     "9f0c0b0926a18f5038e455e8df60221125fc3111", # elixir-tmbundle
     "a4dadb2374282098c5b8b14df308906f5347d79a", # mako-tmbundle
-    "b9b24778619dce325b651f0d77cbc72e7ae0b0a3", # Julia.tmbundle
     "e06722add999e7428048abcc067cd85f1f7ca71c", # r.tmbundle
     "50b14a0e3f03d7ca754dac42ffb33302b5882b78", # smalltalk-tmbundle
     "eafbc4a2f283752858e6908907f3c0c90188785b", # gap-tmbundle
@@ -44,6 +43,7 @@ class TestGrammars < Minitest::Test
     "9dafd4e2a79cb13a6793b93877a254bc4d351e74", # sublime-text-ox
     "8e111741d97ba2e27b3d18a309d426b4a37e604f", # sublime-varnish
     "23d2538e33ce62d58abda2c039364b92f64ea6bc", # sublime-angelscript
+    "53714285caad3c480ebd248c490509695d10404b", # atom-language-julia
   ].freeze
 
   # List of allowed SPDX license names
