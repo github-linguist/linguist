@@ -9,25 +9,25 @@
 
 #define eat_until_eol() do { \
     int c; \
-    while ((c = input(yyscanner)) != '\n' && c != EOF); \
-    if (c == EOF) \
-      yyterminate(); \
+    while ((c = input(yyscanner)) != '\n' && c != EOF && c); \
+    if (c == EOF || !c) \
+      return 0; \
   } while (0)
 
 #define eat_until_unescaped(q) do { \
     int c; \
-    while ((c = input(yyscanner)) != EOF) { \
+    while ((c = input(yyscanner)) != EOF && c) { \
       if (c == '\n') \
         break; \
       if (c == '\\') { \
         c = input(yyscanner); \
-        if (c == EOF) \
-          yyterminate(); \
+        if (c == EOF || !c) \
+          return 0; \
       } else if (c == q) \
         break; \
     } \
-    if (c == EOF) \
-      yyterminate(); \
+    if (c == EOF || !c) \
+      return 0; \
   } while (0)
 
 %}
@@ -84,7 +84,7 @@
 \"                                { eat_until_unescaped('"'); }
 '                                 { eat_until_unescaped('\''); }
 (0x[0-9a-fA-F]([0-9a-fA-F]|\.)*|[0-9]([0-9]|\.)*)([uU][lL]{0,2}|([eE][-+][0-9]*)?[fFlL]*) { /* nothing */ }
-\<[^ \t\n\r<>]+/>|" "[^<>\n]{0,2048}>               {
+\<[[:alnum:]_!./?-]+              {
     if (strcmp(yytext, "<!--") == 0) {
      BEGIN(xml_comment);
     } else {
@@ -93,8 +93,8 @@
       return 1;
     }
   }
-<sgml>[[:alnum:]_]+=/\"           { feed_token(strdup(yytext), REGULAR_TOKEN); input(yyscanner); eat_until_unescaped('"'); return 1; }
-<sgml>[[:alnum:]_]+=/'            { feed_token(strdup(yytext), REGULAR_TOKEN); input(yyscanner); eat_until_unescaped('\''); return 1; }
+<sgml>[[:alnum:]_]+=\"            { feed_token(strndup(yytext, strlen(yytext) - 1), REGULAR_TOKEN); eat_until_unescaped('"'); return 1; }
+<sgml>[[:alnum:]_]+='             { feed_token(strndup(yytext, strlen(yytext) - 1), REGULAR_TOKEN); eat_until_unescaped('\''); return 1; }
 <sgml>[[:alnum:]_]+=[[:alnum:]_]* { feed_token(strdup(yytext), REGULAR_TOKEN); *(strchr(yyextra->token, '=') + 1) = 0; return 1; }
 <sgml>[[:alnum:]_]+               { feed_token(strdup(yytext), REGULAR_TOKEN); return 1; }
 <sgml>\>                          { BEGIN(INITIAL); }
