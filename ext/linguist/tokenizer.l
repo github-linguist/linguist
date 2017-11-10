@@ -9,25 +9,25 @@
 
 #define eat_until_eol() do { \
     int c; \
-    while ((c = input(yyscanner)) != '\n' && c != EOF); \
-    if (c == EOF) \
-      yyterminate(); \
+    while ((c = input(yyscanner)) != '\n' && c != EOF && c); \
+    if (c == EOF || !c) \
+      return 0; \
   } while (0)
 
 #define eat_until_unescaped(q) do { \
     int c; \
-    while ((c = input(yyscanner)) != EOF) { \
+    while ((c = input(yyscanner)) != EOF && c) { \
       if (c == '\n') \
         break; \
       if (c == '\\') { \
         c = input(yyscanner); \
-        if (c == EOF) \
-          yyterminate(); \
+        if (c == EOF || !c) \
+          return 0; \
       } else if (c == q) \
         break; \
     } \
-    if (c == EOF) \
-      yyterminate(); \
+    if (c == EOF || !c) \
+      return 0; \
   } while (0)
 
 %}

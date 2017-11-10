@@ -8,7 +8,7 @@
 #define FLEX_SCANNER
 #define YY_FLEX_MAJOR_VERSION 2
 #define YY_FLEX_MINOR_VERSION 5
-#define YY_FLEX_SUBMINOR_VERSION 39
+#define YY_FLEX_SUBMINOR_VERSION 35
 #if YY_FLEX_SUBMINOR_VERSION > 0
 #define FLEX_BETA
 #endif
@@ -46,6 +46,7 @@ typedef int16_t flex_int16_t;
 typedef uint16_t flex_uint16_t;
 typedef int32_t flex_int32_t;
 typedef uint32_t flex_uint32_t;
+typedef uint64_t flex_uint64_t;
 #else
 typedef signed char flex_int8_t;
 typedef short int flex_int16_t;
@@ -53,6 +54,7 @@ typedef int flex_int32_t;
 typedef unsigned char flex_uint8_t; 
 typedef unsigned short int flex_uint16_t;
 typedef unsigned int flex_uint32_t;
+#endif /* ! C99 */
 
 /* Limits of integral types. */
 #ifndef INT8_MIN
@@ -82,8 +84,6 @@ typedef unsigned int flex_uint32_t;
 #ifndef UINT32_MAX
 #define UINT32_MAX             (4294967295U)
 #endif
-
-#endif /* ! C99 */
 
 #endif /* ! FLEXINT_H */
 
@@ -158,15 +158,7 @@ typedef void* yyscan_t;
 
 /* Size of default input buffer. */
 #ifndef YY_BUF_SIZE
-#ifdef __ia64__
-/* On IA-64, the buffer size is 16k, not 8k.
- * Moreover, YY_BUF_SIZE is 2*YY_READ_BUF_SIZE in the general case.
- * Ditto for the __ia64__ case accordingly.
- */
-#define YY_BUF_SIZE 32768
-#else
 #define YY_BUF_SIZE 16384
-#endif /* __ia64__ */
 #endif
 
 /* The state buf must be large enough to hold one state per character in the main buffer.
@@ -188,7 +180,6 @@ typedef size_t yy_size_t;
 #define EOB_ACT_LAST_MATCH 2
 
     #define YY_LESS_LINENO(n)
-    #define YY_LINENO_REWIND_TO(ptr)
     
 /* Return all but the first "n" matched characters back to the input stream. */
 #define yyless(n) \
@@ -350,7 +341,7 @@ static void yy_fatal_error (yyconst char msg[] ,yyscan_t yyscanner );
  */
 #define YY_DO_BEFORE_ACTION \
 	yyg->yytext_ptr = yy_bp; \
-	yyleng = (size_t) (yy_cp - yy_bp); \
+	yyleng = (yy_size_t) (yy_cp - yy_bp); \
 	yyg->yy_hold_char = *yy_cp; \
 	*yy_cp = '\0'; \
 	yyg->yy_c_buf_p = yy_cp;
@@ -6570,29 +6561,29 @@ goto find_rule; \
 
 #define eat_until_eol() do { \
     int c; \
-    while ((c = input(yyscanner)) != '\n' && c != EOF); \
-    if (c == EOF) \
-      yyterminate(); \
+    while ((c = input(yyscanner)) != '\n' && c != EOF && c); \
+    if (c == EOF || !c) \
+      return 0; \
   } while (0)
 
 #define eat_until_unescaped(q) do { \
     int c; \
-    while ((c = input(yyscanner)) != EOF) { \
+    while ((c = input(yyscanner)) != EOF && c) { \
       if (c == '\n') \
         break; \
       if (c == '\\') { \
         c = input(yyscanner); \
-        if (c == EOF) \
-          yyterminate(); \
+        if (c == EOF || !c) \
+          return 0; \
       } else if (c == q) \
         break; \
     } \
-    if (c == EOF) \
-      yyterminate(); \
+    if (c == EOF || !c) \
+      return 0; \
   } while (0)
 
 
-#line 6596 "lex.linguist_yy.c"
+#line 6587 "lex.linguist_yy.c"
 
 #define INITIAL 0
 #define sgml 1
@@ -6693,10 +6684,6 @@ int linguist_yyget_lineno (yyscan_t yyscanner );
 
 void linguist_yyset_lineno (int line_number ,yyscan_t yyscanner );
 
-int linguist_yyget_column  (yyscan_t yyscanner );
-
-void linguist_yyset_column (int column_no ,yyscan_t yyscanner );
-
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
  */
@@ -6729,12 +6716,7 @@ static int input (yyscan_t yyscanner );
 
 /* Amount of stuff to slurp up with each read. */
 #ifndef YY_READ_BUF_SIZE
-#ifdef __ia64__
-/* On IA-64, the buffer size is 16k, not 8k */
-#define YY_READ_BUF_SIZE 16384
-#else
 #define YY_READ_BUF_SIZE 8192
-#endif /* __ia64__ */
 #endif
 
 /* Copy whatever the last rule matched to the standard output. */
@@ -6742,7 +6724,7 @@ static int input (yyscan_t yyscanner );
 /* This used to be an fputs(), but since the string might contain NUL's,
  * we now use fwrite().
  */
-#define ECHO do { if (fwrite( yytext, yyleng, 1, yyout )) {} } while (0)
+#define ECHO fwrite( yytext, yyleng, 1, yyout )
 #endif
 
 /* Gets input and stuffs it into "buf".  number of characters read, or YY_NULL,
@@ -6753,7 +6735,7 @@ static int input (yyscan_t yyscanner );
 	if ( YY_CURRENT_BUFFER_LVALUE->yy_is_interactive ) \
 		{ \
 		int c = '*'; \
-		int n; \
+		yy_size_t n; \
 		for ( n = 0; n < max_size && \
 			     (c = getc( yyin )) != EOF && c != '\n'; ++n ) \
 			buf[n] = (char) c; \
@@ -6766,7 +6748,7 @@ static int input (yyscan_t yyscanner );
 	else \
 		{ \
 		errno=0; \
-		while ( (result = fread(buf, 1, (yy_size_t) max_size, yyin)) == 0 && ferror(yyin)) \
+		while ( (result = fread(buf, 1, max_size, yyin))==0 && ferror(yyin)) \
 			{ \
 			if( errno != EINTR) \
 				{ \
@@ -6839,6 +6821,11 @@ YY_DECL
 	register int yy_act;
     struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 
+#line 38 "tokenizer.l"
+
+
+#line 6828 "lex.linguist_yy.c"
+
 	if ( !yyg->yy_init )
 		{
 		yyg->yy_init = 1;
@@ -6871,12 +6858,6 @@ YY_DECL
 		linguist_yy_load_buffer_state(yyscanner );
 		}
 
-	{
-#line 38 "tokenizer.l"
-
-
-#line 6879 "lex.linguist_yy.c"
-
 	while ( 1 )		/* loops until end-of-file is reached */
 		{
 		yy_cp = yyg->yy_c_buf_p;
@@ -6898,7 +6879,7 @@ YY_DECL
 yy_match:
 		do
 			{
-			register YY_CHAR yy_c = yy_ec[YY_SC_TO_UI(*yy_cp)] ;
+			register YY_CHAR yy_c = yy_ec[YY_SC_TO_UI(*yy_cp)];
 			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 				{
 				yy_current_state = (int) yy_def[yy_current_state];
@@ -6914,6 +6895,7 @@ yy_match:
 yy_find_action:
 		yy_current_state = *--yyg->yy_state_ptr;
 		yyg->yy_lp = yy_accept[yy_current_state];
+goto find_rule; /* Shut up GCC warning -Wall */
 find_rule: /* we branch to this label when backing up */
 		for ( ; ; ) /* until we find what rule we matched */
 			{
@@ -7163,7 +7145,7 @@ YY_RULE_SETUP
 #line 118 "tokenizer.l"
 YY_FATAL_ERROR( "flex scanner jammed" );
 	YY_BREAK
-#line 7167 "lex.linguist_yy.c"
+#line 7149 "lex.linguist_yy.c"
 			case YY_STATE_EOF(INITIAL):
 			case YY_STATE_EOF(sgml):
 			case YY_STATE_EOF(c_comment):
@@ -7301,7 +7283,6 @@ YY_FATAL_ERROR( "flex scanner jammed" );
 			"fatal flex scanner internal error--no action found" );
 	} /* end of action switch */
 		} /* end of scanning one token */
-	} /* end of user's declarations */
 } /* end of linguist_yylex */
 
 /* yy_get_next_buffer - try to read in a new buffer
@@ -7358,7 +7339,7 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 
 	else
 		{
-			int num_to_read =
+			yy_size_t num_to_read =
 			YY_CURRENT_BUFFER_LVALUE->yy_buf_size - number_to_move - 1;
 
 		while ( num_to_read <= 0 )
@@ -7467,7 +7448,6 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 	if ( ! yy_is_jam )
 		*yyg->yy_state_ptr++ = yy_current_state;
 
-	(void)yyg;
 	return yy_is_jam ? 0 : yy_current_state;
 }
 
@@ -7520,7 +7500,7 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 				case EOB_ACT_END_OF_FILE:
 					{
 					if ( linguist_yywrap(yyscanner ) )
-						return EOF;
+						return 0;
 
 					if ( ! yyg->yy_did_buffer_switch_on_eof )
 						YY_NEW_FILE;
@@ -7871,8 +7851,8 @@ YY_BUFFER_STATE linguist_yy_scan_string (yyconst char * yystr , yyscan_t yyscann
 
 /** Setup the input buffer state to scan the given bytes. The next call to linguist_yylex() will
  * scan from a @e copy of @a bytes.
- * @param yybytes the byte buffer to scan
- * @param _yybytes_len the number of bytes in the buffer pointed to by @a bytes.
+ * @param bytes the byte buffer to scan
+ * @param len the number of bytes in the buffer pointed to by @a bytes.
  * @param yyscanner The scanner object.
  * @return the newly allocated buffer state object.
  */
@@ -7880,8 +7860,7 @@ YY_BUFFER_STATE linguist_yy_scan_bytes  (yyconst char * yybytes, yy_size_t  _yyb
 {
 	YY_BUFFER_STATE b;
 	char *buf;
-	yy_size_t n;
-	yy_size_t i;
+	yy_size_t n, i;
     
 	/* Get memory for full buffer, including space for trailing EOB's. */
 	n = _yybytes_len + 2;
@@ -8027,7 +8006,7 @@ void linguist_yyset_lineno (int  line_number , yyscan_t yyscanner)
 
         /* lineno is only valid if an input buffer exists. */
         if (! YY_CURRENT_BUFFER )
-           YY_FATAL_ERROR( "linguist_yyset_lineno called with no buffer" );
+           yy_fatal_error( "linguist_yyset_lineno called with no buffer" , yyscanner); 
     
     yylineno = line_number;
 }
@@ -8042,7 +8021,7 @@ void linguist_yyset_column (int  column_no , yyscan_t yyscanner)
 
         /* column is only valid if an input buffer exists. */
         if (! YY_CURRENT_BUFFER )
-           YY_FATAL_ERROR( "linguist_yyset_column called with no buffer" );
+           yy_fatal_error( "linguist_yyset_column called with no buffer" , yyscanner); 
     
     yycolumn = column_no;
 }
@@ -8262,7 +8241,7 @@ void linguist_yyfree (void * ptr , yyscan_t yyscanner)
 
 #define YYTABLES_NAME "yytables"
 
-#line 117 "tokenizer.l"
+#line 118 "tokenizer.l"
 
 
 
