@@ -84,7 +84,7 @@
 \"                                { eat_until_unescaped('"'); }
 '                                 { eat_until_unescaped('\''); }
 (0x[0-9a-fA-F]([0-9a-fA-F]|\.)*|[0-9]([0-9]|\.)*)([uU][lL]{0,2}|([eE][-+][0-9]*)?[fFlL]*) { /* nothing */ }
-\<[^ \t\n\r<>]+/>|" "[^<>\n]{0,2048}>               {
+\<[[:alnum:]_!./?-]+              {
     if (strcmp(yytext, "<!--") == 0) {
      BEGIN(xml_comment);
     } else {
