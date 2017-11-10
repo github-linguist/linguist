@@ -93,8 +93,8 @@
       return 1;
     }
   }
-<sgml>[[:alnum:]_]+=/\"           { feed_token(strdup(yytext), REGULAR_TOKEN); input(yyscanner); eat_until_unescaped('"'); return 1; }
-<sgml>[[:alnum:]_]+=/'            { feed_token(strdup(yytext), REGULAR_TOKEN); input(yyscanner); eat_until_unescaped('\''); return 1; }
+<sgml>[[:alnum:]_]+=\"            { feed_token(strndup(yytext, strlen(yytext) - 1), REGULAR_TOKEN); eat_until_unescaped('"'); return 1; }
+<sgml>[[:alnum:]_]+='             { feed_token(strndup(yytext, strlen(yytext) - 1), REGULAR_TOKEN); eat_until_unescaped('\''); return 1; }
 <sgml>[[:alnum:]_]+=[[:alnum:]_]* { feed_token(strdup(yytext), REGULAR_TOKEN); *(strchr(yyextra->token, '=') + 1) = 0; return 1; }
 <sgml>[[:alnum:]_]+               { feed_token(strdup(yytext), REGULAR_TOKEN); return 1; }
 <sgml>\>                          { BEGIN(INITIAL); }

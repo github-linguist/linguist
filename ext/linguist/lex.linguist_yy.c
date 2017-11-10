@@ -7072,20 +7072,14 @@ YY_RULE_SETUP
   }
 	YY_BREAK
 case 21:
-*yy_cp = yyg->yy_hold_char; /* undo effects of setting up yytext */
-yyg->yy_c_buf_p = yy_cp -= 1;
-YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
 #line 96 "tokenizer.l"
-{ feed_token(strdup(yytext), REGULAR_TOKEN); input(yyscanner); eat_until_unescaped('"'); return 1; }
+{ feed_token(strndup(yytext, strlen(yytext) - 1), REGULAR_TOKEN); eat_until_unescaped('"'); return 1; }
 	YY_BREAK
 case 22:
-*yy_cp = yyg->yy_hold_char; /* undo effects of setting up yytext */
-yyg->yy_c_buf_p = yy_cp -= 1;
-YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
 #line 97 "tokenizer.l"
-{ feed_token(strdup(yytext), REGULAR_TOKEN); input(yyscanner); eat_until_unescaped('\''); return 1; }
+{ feed_token(strndup(yytext, strlen(yytext) - 1), REGULAR_TOKEN); eat_until_unescaped('\''); return 1; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
@@ -7145,7 +7139,7 @@ YY_RULE_SETUP
 #line 118 "tokenizer.l"
 YY_FATAL_ERROR( "flex scanner jammed" );
 	YY_BREAK
-#line 7149 "lex.linguist_yy.c"
+#line 7143 "lex.linguist_yy.c"
 			case YY_STATE_EOF(INITIAL):
 			case YY_STATE_EOF(sgml):
 			case YY_STATE_EOF(c_comment):
