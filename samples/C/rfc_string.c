@@ -1849,7 +1849,7 @@ char i_rfString_Replace(RF_String* thisstr,void* sstrP,void* rstrP,const uint32_
     }
     else if( rstr->byteLength < sstr->byteLength) // replace string is smaller than the removed one
     {
-        // get the differenc in byte length of removed substring and replace string
+        // get the difference in byte length of removed substring and replace string
         diff = sstr->byteLength-rstr->byteLength;
 
         // now replace all the substrings one by one

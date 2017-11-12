@@ -6,7 +6,7 @@
 
 ;; ## wisp data structures
 
-;; 1. nil - is just like js undefined with a differenc that it's
+;; 1. nil - is just like js undefined with a difference that it's
 ;;    not something can be defined. In fact it's just a shortcut for
 ;;    void(0) in JS.
 nil ;; => void(0)
