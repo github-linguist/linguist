@@ -7339,7 +7339,7 @@ define_type: 'user',
 //	-prototype;
 
 	local: 'version'='2009-09-18',
-		'descripion'='Custom type to handle user identification and authentication';
+		'description'='Custom type to handle user identification and authentication';
 
 /*
 
