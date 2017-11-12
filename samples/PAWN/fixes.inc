@@ -5762,7 +5762,7 @@ native BAD_GetPlayerMenu(playerid) = GetPlayerMenu;
 					{
 						SetPlayerArmedWeapon(playerid, 0);
 						#if FIX_GetPlayerWeapon
-							// This is the first cross-dependednt fix.
+							// This is the first cross-dependent fix.
 							#if FIXES_Single
 								FIXES_gsPlayerWeapon[playerid] = 0;
 							#else
