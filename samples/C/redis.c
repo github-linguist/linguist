@@ -879,7 +879,7 @@ int serverCron(struct aeEventLoop *eventLoop, long long id, void *clientData) {
         }
     }
 
-    /* We don't want to resize the hash tables while a bacground saving
+    /* We don't want to resize the hash tables while a background saving
      * is in progress: the saving child is created using fork() that is
      * implemented with a copy-on-write semantic in most modern systems, so
      * if we resize the HT while there is the saving child at work actually
