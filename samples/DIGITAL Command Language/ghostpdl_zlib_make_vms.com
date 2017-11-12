@@ -16,7 +16,7 @@ $! 0.04 20100110 Add new gzclose, gzlib, gzread, gzwrite
 $! 0.05 20100221 Exchange zlibdefs.h by zconf.h.in
 $! 0.06 20120111 Fix missing amiss_err, update zconf_h.in, fix new exmples
 $!               subdir path, update module search in makefile.in
-$! 0.07 20120115 Triggered by work done by Alexey Chupahin completly redesigned
+$! 0.07 20120115 Triggered by work done by Alexey Chupahin completely redesigned
 $!               shared image creation
 $! 0.08 20120219 Make it work on VAX again, pre-load missing symbols to shared
 $!               image
