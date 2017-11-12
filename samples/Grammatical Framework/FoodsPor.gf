@@ -56,7 +56,7 @@ concrete FoodsPor of Foods = open Prelude in {
       adjUtil : Str -> Str -> QualityT = \util,uteis ->
         mkAdj util util uteis uteis ;
 
-      -- smart paradigm for adjcetives
+      -- smart paradigm for adjectives
       mkAdjReg : Str -> QualityT = \a -> case last a of {
       	"o" => adjSozinho a ;
         "e" => adjUtil a (a + "s")
