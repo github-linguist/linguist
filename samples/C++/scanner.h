@@ -317,7 +317,7 @@ class Scanner {
 
   typedef unibrow::Utf8InputBuffer<1024> Utf8Decoder;
 
-  explicit Scanner(UnicodeCache* scanner_contants);
+  explicit Scanner(UnicodeCache* scanner_constants);
 
   void Initialize(Utf16CharacterStream* source);
 
