@@ -338,7 +338,7 @@ foo
 
 ;; Not all of the macros can be expressed via templating, but all of the
 ;; language is available at hand to assemble macro expanded form.
-;; For instance let's define macro to ease functional chanining popular
+;; For instance let's define macro to ease functional chaining popular
 ;; in JS but usually expressed via method chaining. For example following
 ;; API is pioneered by jQuery is very common in JS:
 ;;
