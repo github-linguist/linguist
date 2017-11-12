@@ -562,7 +562,7 @@ i_DECLIMEX_ uint32_t rfString_GetChar(void* thisstr,uint32_t c);
 // @param thisstr The string whose byte position code point we need. @inhtype{String,StringX}
 // @param bytepos The byte position of the string from where to get the code point.
 // @warning If this is out of bounds then nothing can detect it and at best it will cause a SEG FAULT.
-//                 Moreover no check to see if this is not a continutation byte is made. All the checks must have been made before calling the function.
+//                 Moreover no check to see if this is not a continuation byte is made. All the checks must have been made before calling the function.
 // @return Returns the code point of the byte position as an uint32_t
 // @endinternal
 i_DECLIMEX_ uint32_t rfString_BytePosToCodePoint(void* thisstr,uint32_t bytepos);
@@ -574,13 +574,13 @@ i_DECLIMEX_ uint32_t rfString_BytePosToCodePoint(void* thisstr,uint32_t bytepos)
 //
 // @isinherited{StringX}
 // This is an internal function, there is no need to use it. It attempts to retrieve character position from a byte position. If the byte
-// position is a continutation byte and does not constitute the start of a character then depending on the option the function will find
+// position is a continuation byte and does not constitute the start of a character then depending on the option the function will find
 // either the next character or the previous character position from this byte position
 //
 // @warning DO NOT use this function unless you know what you are doing
 // @param thisstr The string whose byte position code point we need. @inhtype{String,StringX}
 // @param bytepos The byte position of the string from where to get the character position
-// @param before A boolean flag denoting the behaviour in case this byte position is a continutation byte. If @c before is true then
+// @param before A boolean flag denoting the behaviour in case this byte position is a continuation byte. If @c before is true then
 // the function will retrieve the first character position before the byte. If it is false, it will retrieve the first character position
 // after the continuation byte.
 // @endinternal
