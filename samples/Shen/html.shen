@@ -30,7 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *** Commentary:
 
 The standard lisp-to-html conversion tool suite.  Follows some of
-the convertions of Clojure's hiccup.
+the conversions of Clojure's hiccup.
 
   an example...
 
