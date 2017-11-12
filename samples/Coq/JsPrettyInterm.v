@@ -731,7 +731,7 @@ with ext_stat :=
   | stat_return_1 : (specret value) -> ext_stat (* The expression have been executed. *)
 
   | stat_try_1 : out -> option (string*stat) -> option stat -> ext_stat (* The try block has been executed. *)
-  | stat_try_2 : out -> lexical_env -> stat -> option stat -> ext_stat (* The catch block is actived and will be executed. *)
+  | stat_try_2 : out -> lexical_env -> stat -> option stat -> ext_stat (* The catch block is active and will be executed. *)
   | stat_try_3 : out -> option stat -> ext_stat (* The try catch block has been executed:  there only stay an optional finally. *)
   | stat_try_4 : res -> option stat -> ext_stat (* The try catch block has been executed:  there only stay an optional finally. *)
   | stat_try_5 : res -> out -> ext_stat (* The finally has been executed. *)
