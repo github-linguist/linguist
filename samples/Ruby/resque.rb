@@ -53,7 +53,7 @@ module Resque
   end
 
   # Encapsulation of encode/decode. Overwrite this to use it across Resque.
-  # This defaults to MultiJson for backwards compatibilty.
+  # This defaults to MultiJson for backwards compatibility.
   def coder
     @coder ||= MultiJsonCoder.new
   end

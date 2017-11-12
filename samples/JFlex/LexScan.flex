@@ -590,7 +590,7 @@ DottedVersion =  [1-9][0-9]*(\.[0-9]+){0,2}
   "~~"    { return symbol(SYMMETRICDIFFERENCE); }
   "\\u{"  { yybegin(CHARCLASS_CODEPOINT); }
 
-  // this is a hack to keep JLex compatibilty with char class
+  // this is a hack to keep JLex compatibility with char class
   // expressions like [+-]
   "-]"    { yypushback(1); yycolumn--; return symbol(CHAR, (int)'-'); }
 
