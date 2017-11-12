@@ -1984,7 +1984,7 @@ JK_STATIC_INLINE void jk_cache_age(JKParseState *parseState) {
 //
 // The hash table is a linear C array of JKTokenCacheItem.  The terms "item" and "bucket" are synonymous with the index in to the cache array, i.e. cache.items[bucket].
 //
-// Items in the cache have an age associated with them.  An items age is incremented using saturating unsigned arithmetic and decremeted using unsigned right shifts.
+// Items in the cache have an age associated with them.  An items age is incremented using saturating unsigned arithmetic and decremented using unsigned right shifts.
 // Thus, an items age is managed using an AIMD policy- additive increase, multiplicative decrease.  All age calculations and manipulations are branchless.
 // The primitive C type MUST be unsigned.  It is currently a "char", which allows (at a minimum and in practice) 8 bits.
 //
