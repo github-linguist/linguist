@@ -630,7 +630,7 @@ defaultproperties
      U2WeaponDescText(27)="What weapon should be replaced with the Crowd Pleaser Shotgun. By default it's the Link Gun. It does not replace it in vehicle matches."
      U2WeaponDescText(28)="Enable the Field Generator? If enabled, you start with one."
      U2WeaponDescText(29)="Enable the Proximity Sensor? If enabled, you start with one."
-     U2WeaponDescText(30)="This number controls how powerful all weapons are. By deafult the firepower is set to 55% of the original in order to compensate for the fact that players in UT2004 don't have shields or damage filtering."
+     U2WeaponDescText(30)="This number controls how powerful all weapons are. By default the firepower is set to 55% of the original in order to compensate for the fact that players in UT2004 don't have shields or damage filtering."
      U2WeaponDescText(31)="If checked, the Shield Reward mutator produces Unreal II shield pickups."
      U2WeaponDescText(32)="Choose between no white overlay, overlay depending on the player's view (XMP style) and overlay depending on the distance from the player (default, foolproof)."
      //FirePowerMode=4

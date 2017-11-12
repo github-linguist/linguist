@@ -6451,7 +6451,7 @@ Make it possible to use external URL for -url (make sure there is no / before ht
 			// we haven't found a valid location, we must resort to a default page
 			if: self -> 'default' != '' && self -> pathmap >>  self -> 'default';
 				#path = self -> 'default';
-				#dotrace ? (self -> 'debug_trace') -> (insert: tag_name + ': use defalt location ' #path);
+				#dotrace ? (self -> 'debug_trace') -> (insert: tag_name + ': use default location ' #path);
 			else;
 				// use first page as default, if it exists
 				iterate(self -> 'navitems', local('navitem'));
