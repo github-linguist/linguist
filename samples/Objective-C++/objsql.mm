@@ -1213,7 +1213,7 @@ void ooArcRetain( id value ) {
  Bind a record to a view containing elements which are to display values from the record.
  The ivar number is selected by the subview's tag value and it's ".text" property if set to
  the value returned record value "stringValue" for the ivar. Supports images stored as
- NSData objects, UISwitches bound to boolean valuea and UITextField for alll other values.
+ NSData objects, UISwitches bound to boolean valuea and UITextField for all other values.
  */
 
 + (void)bindRecord:(id)record toView:(OOView *)view delegate:(id)delegate {
