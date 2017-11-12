@@ -138,7 +138,7 @@ My name is wisp!"
 
 
 
-;; Compbining expressions - In wisp is everything is an expression, but
+;; Combining expressions - In wisp is everything is an expression, but
 ;; sometimes one might want to combine multiple expressions into one,
 ;; usually for the purpose of evaluating expressions that have
 ;; side-effects
