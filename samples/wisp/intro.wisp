@@ -45,7 +45,7 @@ My name is wisp!"
 
 
 ;; 8. Maps - Maps are hash maps, plain JS objects. Note that unlike
-;;    in clojure keys can not be of arbitary types.
+;;    in clojure keys can not be of arbitrary types.
 { "foo" bar :beep-bop "bop" 1 2 }
 ;;    Commas are optional but can come handy for separating key value
 ;;    pairs.
