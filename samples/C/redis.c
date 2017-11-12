@@ -807,7 +807,7 @@ void clientsCron(void) {
  * - Update some statistic.
  * - Incremental rehashing of the DBs hash tables.
  * - Triggering BGSAVE / AOF rewrite, and handling of terminated children.
- * - Clients timeout of differnet kinds.
+ * - Clients timeout of different kinds.
  * - Replication reconnection.
  * - Many more...
  *
