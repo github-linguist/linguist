@@ -25,7 +25,7 @@ oldCS                        &CSTRING
     ! Only grow the internal string if the result of the cat will be larger than the string currently is.
     ! The reason for the "+2" is because this is used in the string slicing outside this IF. Without this matching +2 there is potential for an out of bounds slice which would be bad!
 
-    ! Save a temporary copy of the old string so we can us it in the concatination after we have grown it!
+    ! Save a temporary copy of the old string so we can us it in the concatenation after we have grown it!
     oldCS &= New(CSTRING(SELF.strLength+1))
     oldCS = SELF.CS
     Dispose(SELF.CS)
