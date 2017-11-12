@@ -17,7 +17,7 @@ import x10.compiler.Inline;
 /**
  * This is a sample program illustrating how to use
  * X10's array classes.  It also illustrates the use
- * of foreach to acheive intra-place parallelism.
+ * of foreach to achieve intra-place parallelism.
  *
  * The program solves a set of 2D partial differential
  * equations by iteratively applying a 5-point stencil
