@@ -17,7 +17,7 @@
 # makefile for OpenVMS VAX and Alpha using MMK
 #
 # Please contact Jim Dunham (dunham@omtool.com) if you have questions.
-# Addapted for MMK by Jouk Jansen (joukj@hrem.stm.tudelft.nl)
+# Adapted for MMK by Jouk Jansen (joukj@hrem.stm.tudelft.nl)
 # Support for VAX C on OpenVMS was removed in release 6.01 by Aladdin:
 # DEC C is now used on both VAX and Alpha platforms.
 #
