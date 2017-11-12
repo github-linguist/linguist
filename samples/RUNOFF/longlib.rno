@@ -112,7 +112,7 @@ be left out of the final library.  The largest FORTRAN-77 incompatibilities
 (outside of the Ramtek packages) occur when treating ~character ~string data
 (see notes below).
 .p
-The auxilary, MASTER, and 3d plotting routines are FORTRAN-77 compatible
+The auxiliary, MASTER, and 3d plotting routines are FORTRAN-77 compatible
 with a few minor exceptions (e.g. ~INTEGER*2 is used to save space 
 and some routine names exceed 6 characters).  These exceptions
 are noted in the source code file headers.
@@ -595,7 +595,7 @@ device xxx1:, etc.
 ~Color plotting is done on the Ramtek using the previously loaded color table.
 The LONGLIB "color" is the color table index.
 The default Ramtek color table index is 255.  The main LONGLIB package
-uses only vector plotting.  However, auxilary routines have been included
+uses only vector plotting.  However, auxiliary routines have been included
 which permit writing image mode data to the Ramtek (or REF) and for
 color table manipulation (see RMWRITEWORD or RMWRITECOL).
 .x RMWRITEWORD
@@ -705,7 +705,7 @@ Source code may be found in the following files:
 .lit
 
 LONGLIB.FOR (device dependent routines)
-AUXLIB.FOR (auxilary device independent routines)
+AUXLIB.FOR (auxiliary device independent routines)
 MLIB.FOR (MASTER routines)
 MLIB2.FOR (more MASTER routines)
 HIDELIB.FOR (3-d hidden line routines)
@@ -821,7 +821,7 @@ For the user interested in obtaining very simple plots of curves without
 being concerned with the details of LONGLIB, the ~MASTER routines provide
 the most simple approach.  Greater control of the output plot can
 be obtained by customizing user version of MASTER-like routines from
-the auxilary routines.
+the auxiliary routines.
 
 .hl2 Simple MASTER Routine Example
 .p
@@ -858,7 +858,7 @@ C METAFILE IS ALWAYS PRODUCED.
 
 .hl2 Lower Level Routines
 .p
-An example of using the auxilary routines of LONGLIB library from
+An example of using the auxiliary routines of LONGLIB library from
 ~FORTRAN is illustrated below.
 An example for using this library from ~C follows.
 .p
@@ -3180,7 +3180,7 @@ entered into the SKETCH list prior to the last call.  They will not
 "hide" any other lines but can be hidden by planes.  The SKETCH
 routine can be set to plot both visible and invisible lines.
 ~PLT3DH does not use SKETCH.  Lines plotted with PLT3DH will always
-be visible.  The auxilary routines (NUM3DH, AXIS3DH, and SYM3DH)
+be visible.  The auxiliary routines (NUM3DH, AXIS3DH, and SYM3DH)
 have options to either use ~SKETCH or PLT3DH.
 .p
 For an example of the use of the ~INIT3DH package see the ~EXAMP3DH

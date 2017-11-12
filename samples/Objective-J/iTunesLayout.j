@@ -8,7 +8,7 @@
 
 - (void)applicationDidFinishLaunching:(CPNotification)aNotification
 {
-    // The end result of this layout will be the kind of master/detail/auxilliary view
+    // The end result of this layout will be the kind of master/detail/auxiliary view
     // found in iTunes, Mail, and many other apps.
 
     var theWindow = [[CPWindow alloc] initWithContentRect:CGRectMakeZero() styleMask:CPBorderlessBridgeWindowMask],
