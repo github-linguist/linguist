@@ -295,7 +295,7 @@ module vga (
     .csrm_dat_i (csrm_dat_i)
   );
 
-  // Continous assignments
+  // Continuous assignments
   assign wb_dat_o  = wb_tga_i ? conf_wb_dat_o : mem_wb_dat_o;
   assign wb_ack_o  = wb_tga_i ? conf_wb_ack_o : mem_wb_ack_o;
   assign stb       = wb_stb_i & wb_cyc_i;
