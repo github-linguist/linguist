@@ -5325,7 +5325,7 @@
 		      (const_int 2)))
    (set_attr "skip" "yes")])
 
-;; Equality comparisons of a contigous group of bits with zero will be
+;; Equality comparisons of a contiguous group of bits with zero will be
 ;; written using zero_extract rather than the equivalent AND operations.
 (define_insn "test_extract_skip"
   [(set (pc)
