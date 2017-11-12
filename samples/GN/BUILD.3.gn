@@ -443,7 +443,7 @@ config("compiler") {
       cflags += [ "-flto=thin" ]
       ldflags += [ "-flto=thin" ]
 
-      # Limit the parallelism to avoid too agressive competition between
+      # Limit the parallelism to avoid too aggressive competition between
       # linker jobs. This is still suboptimal to a potential dynamic
       # resource allocation scheme, but should be good enough.
       if (use_lld) {
