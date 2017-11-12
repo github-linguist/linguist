@@ -70,7 +70,7 @@ concrete FoodsPor of Foods = open Prelude in {
 	  KindT : Type = {s : Number => Str ; g : Gender} ;
 
 	  noun : Str -> Str -> Gender -> KindT =
-	    \animal,animais,gen -> {s = table {Sg => animal ; Pl => animais} ; g = gen } ;
+	    \animal,animals,gen -> {s = table {Sg => animal ; Pl => animals} ; g = gen } ;
 
 	  regNoun : Str -> Gender -> KindT =
 	    \carro,gen -> noun carro (carro + "s") gen ;
