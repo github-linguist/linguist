@@ -29,7 +29,7 @@ function Update-ZLocation([string]$path)
 
 
 #
-# Tab complention.
+# Tab completion.
 #
 if (Test-Path Function:\TabExpansion) {
     Rename-Item Function:\TabExpansion PreZTabExpansion
