@@ -49,7 +49,7 @@ namespace Whitedrop {
 		Entity& operator=(const Entity ent);
 
 		/**
-		 * @brief destrctor
+		 * @brief destructor
 		 * @details
 		 */
 		virtual ~Entity(void);
