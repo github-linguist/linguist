@@ -198,7 +198,7 @@ Extraction Inline Fappli_IEEE.Bdiv Fappli_IEEE_bits.b64_div.
 Set Extraction AccessOpaque.
 
 (* These parameters are implementation-dependant according to the spec.
-   I've chosed some very simple values, but we could choose another thing for them. *)
+   I've chosen some very simple values, but we could choose another thing for them. *)
 Extract Constant object_prealloc_global_proto => "(Coq_value_prim Coq_prim_null)".
 Extract Constant object_prealloc_global_class => "(
   let rec aux s = function
