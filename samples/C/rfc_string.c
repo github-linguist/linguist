@@ -1605,7 +1605,7 @@ void i_rfString_KeepOnly(void* thisstrP,void* keepstrP)
             // we use that here to determine the current byteIndex_ of the string in the iteration and move the string backs
             memmove(thisstr->bytes+byteIndex_,thisstr->bytes+byteIndex_+charBLength,thisstr->byteLength-byteIndex_+charBLength);
             thisstr->byteLength-=charBLength;
-            continue;// by contiuing here we make sure that the current string position won't be moved to assure that we also check the newly move characters
+            continue;// by continuing here we make sure that the current string position won't be moved to assure that we also check the newly move characters
         }
     rfString_Iterate_End(i)
     // before returning free the keep string's character array
