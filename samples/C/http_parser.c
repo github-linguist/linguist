@@ -1671,7 +1671,7 @@ size_t http_parser_execute (http_parser *parser,
             && parser->content_length != ULLONG_MAX);
 
         /* The difference between advancing content_length and p is because
-         * the latter will automaticaly advance on the next loop iteration.
+         * the latter will automatically advance on the next loop iteration.
          * Further, if content_length ends up at 0, we want to see the last
          * byte again for our message complete callback.
          */
