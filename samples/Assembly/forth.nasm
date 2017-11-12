@@ -34,7 +34,7 @@
 	%define PAGE_SIZE 4096
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
-; some NASM codeing macros
+; some NASM coding macros
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 	%macro loopstart 0
