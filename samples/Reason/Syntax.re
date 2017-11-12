@@ -414,7 +414,7 @@ let blah arg =>
   /* Comment before Bar */
   | /* Comment between bar/pattern */ Red _ => 1
   /* Comment Before non-first bar */
-  | /* Comment betwen bar/pattern */ Black _ => 0
+  | /* Comment between bar/pattern */ Black _ => 0
   | Green _ => 0
   };
 

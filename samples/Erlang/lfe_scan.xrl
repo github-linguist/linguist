@@ -158,7 +158,7 @@ symbol_token(Cs, L) ->
 
 %% base_token(Chars, Base, Line) -> Integer.
 %%  Convert a string of Base characters into a number. We only allow
-%%  base betqeen 2 and 36, and an optional sign character first.
+%%  base between 2 and 36, and an optional sign character first.
 
 base_token(_, B, _) when B < 2; B > 36 ->
     {error,"illegal number base"};
