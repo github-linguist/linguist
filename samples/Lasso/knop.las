@@ -706,7 +706,7 @@ CHANGE NOTES
 2008-05-28	JS	->getrecord now works with integer keyvalues (oops)
 2008-05-27	JS	->get returns a new datatype knop_databaserow 
 2008-05-27	JS	Added ->size and ->get so a database object can be iterated. When iterating each row is returned as an array of field values. 
-2008-05-27	JS	Addedd ->nextrecord that increments the recordpointer each time it is called until the last record in the found set is reached. Returns true as long as there are more records. Useful in a while loop - see example below
+2008-05-27	JS	Added ->nextrecord that increments the recordpointer each time it is called until the last record in the found set is reached. Returns true as long as there are more records. Useful in a while loop - see example below
 2008-05-27	JS	Implemented record pointer 'current_record'. The record pointer is reset for each new query. 
 2008-05-27	JS	->field: added -recordindex to get data from any record in the current found set
 2008-05-27	JS	Added ->_unknowntag as shortcut to field
@@ -4385,7 +4385,7 @@ CHANGE NOTES
 2008-05-14	JS	->renderfooter (and ->renderhtml): added -numbered as option to get google style numbered pagination links. Render the grid with -numbered (defaults to show 6 page number links plus the far ends) or -numbered=10 or another number. 
 2008-05-13	JS	Added ->renderlisting which is now part of ->renderhtml for more flexibility
 2008-02-25	JS	->renderheader and ->renderfooter calls nav -> url with -getargs 
-2008-01-22	JS	->renderheader, ->renderfooter, ->renderhtml: addded -autoparams to nav -> url used in links since url was changed to default to no autoparams. 
+2008-01-22	JS	->renderheader, ->renderfooter, ->renderhtml: added -autoparams to nav -> url used in links since url was changed to default to no autoparams. 
 2008-01-22	JS	->renderheader, ->renderfooter, ->renderhtml: improved support for param based navigation method  in links, cleaned up linking to use nav -> url instead of self -> urlparams when nav is available
 2008-01-22	JC	->quicksearch: Changed wordseparators so that \r and \n aren't placed as \r\n, otherwise they are treated as a single character by ->split. 
 2007-12-11	JS	Added documentation as -description to most member tags, to be used by the new ->help tag
@@ -4433,7 +4433,7 @@ CHANGE NOTES
 2007-01-22	JS	Adjustments to highlighting and "(redigera)"-link for records with empty values in the linked field
 2007-01-19	JS	Added href titles to sort links and prevnext links
 2007-01-19	JS	Corrected sortparams when no sortfield is specified
-2007-01-19	JS	Addded go to first page, go to last page in footer
+2007-01-19	JS	Added go to first page, go to last page in footer
 2007-01-19	JS	Added member tag page_skiprecords to help correcting out of bounds page numbers
 2007-01-19	JS	Added member tag lastpage
 2007-01-18	JS	Support for highlighting of affected record after edit or update (class name "highlight")
@@ -7973,7 +7973,7 @@ TODO: ->help: add output option to format for Google Code Wiki
 2008-05-14	JS	->renderfooter (and ->renderhtml): added -numbered as option to get google style numbered pagination links. Render the grid with -numbered (defaults to show 6 page number links plus the far ends) or -numbered=10 or another number. 
 2008-05-13	JS	Added ->renderlisting which is now part of ->renderhtml for more flexibility
 2008-02-25	JS	->renderheader and ->renderfooter calls nav -> url with -getargs 
-2008-01-22	JS	->renderheader, ->renderfooter, ->renderhtml: addded -autoparams to nav -> url used in links since url was changed to default to no autoparams. 
+2008-01-22	JS	->renderheader, ->renderfooter, ->renderhtml: added -autoparams to nav -> url used in links since url was changed to default to no autoparams. 
 2008-01-22	JS	->renderheader, ->renderfooter, ->renderhtml: improved support for param based navigation method  in links, cleaned up linking to use nav -> url instead of self -> urlparams when nav is available
 2008-01-22	JC	->quicksearch: Changed wordseparators so that \\r and \\n aren\'t placed as \\r\\n, otherwise they are treated as a single character by ->split. 
 2007-12-11	JS	Added documentation as -description to most member tags, to be used by the new ->help tag
@@ -8021,7 +8021,7 @@ TODO: ->help: add output option to format for Google Code Wiki
 2007-01-22	JS	Adjustments to highlighting and "(redigera)"-link for records with empty values in the linked field
 2007-01-19	JS	Added href titles to sort links and prevnext links
 2007-01-19	JS	Corrected sortparams when no sortfield is specified
-2007-01-19	JS	Addded go to first page, go to last page in footer
+2007-01-19	JS	Added go to first page, go to last page in footer
 2007-01-19	JS	Added member tag page_skiprecords to help correcting out of bounds page numbers
 2007-01-19	JS	Added member tag lastpage
 2007-01-18	JS	Support for highlighting of affected record after edit or update (class name "highlight")
@@ -8060,7 +8060,7 @@ Change ->addfield to ->insert and make ->addfield deprecated
 2008-05-28	JS	->getrecord now works with integer keyvalues (oops)
 2008-05-27	JS	->get returns a new datatype knop_databaserow 
 2008-05-27	JS	Added ->size and ->get so a database object can be iterated. When iterating each row is returned as an array of field values. 
-2008-05-27	JS	Addedd ->nextrecord that increments the recordpointer each time it is called until the last record in the found set is reached. Returns true as long as there are more records. Useful in a while loop - see example below
+2008-05-27	JS	Added ->nextrecord that increments the recordpointer each time it is called until the last record in the found set is reached. Returns true as long as there are more records. Useful in a while loop - see example below
 2008-05-27	JS	Implemented record pointer \'current_record\'. The record pointer is reset for each new query. 
 2008-05-27	JS	->field: added -recordindex to get data from any record in the current found set
 2008-05-27	JS	Added ->_unknowntag as shortcut to field
