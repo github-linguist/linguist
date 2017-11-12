@@ -98,7 +98,7 @@ size = size of all vertices +            all vertices stored in Vertices dict
 
 (datatype graph
   Vertices : dictionary;
-     Edges : dictoinary;
+     Edges : dictionary;
   ===================
   (vector symbol Vertices Edges);)
 
