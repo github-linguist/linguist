@@ -108,7 +108,7 @@ Global worstCase:worst.List<String[]>
 Global string1:String = "Hello world"
 Global string2$ = "Hello world"
 
-' escape characers in strings
+' escape characters in strings
 Global string3 := "Hello~zWorld"
 Global string4 := "~qHello World~q"
 Global string5 := "~tIndented~n"
