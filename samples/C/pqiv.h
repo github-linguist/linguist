@@ -150,7 +150,7 @@ GInputStream *image_loader_stream_file(file_t *file, GError **error_pointer);
 // forwarded unaltered.
 BOSNode *load_images_handle_parameter_add_file(load_images_state_t state, file_t *file);
 
-// Load all data from an input stream into memory, conveinience function
+// Load all data from an input stream into memory, convenience function
 GBytes *g_input_stream_read_completely(GInputStream *input_stream, GCancellable *cancellable, GError **error_pointer);
 
 // Free a file
