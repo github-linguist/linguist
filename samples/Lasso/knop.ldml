@@ -2132,7 +2132,7 @@ CHANGE NOTES
 2007-01-25	JS	Added -required to ->oncreate (and a few more from ->setformat)
 2007-01-23	JS	Autogenerates id for the form itself
 2007-01-23	JS	Added ->getbutton to return the button that was clicked when submitting a form (cancel, add, save, delete)
-2007-01-23	JS	Added auto conversion of options left hand pair member to string, to make comparsions work reliably. Integer zeros don't compare nicely to strings. 
+2007-01-23	JS	Added auto conversion of options left hand pair member to string, to make comparisons work reliably. Integer zeros don't compare nicely to strings. 
 2007-01-23	JS	Added support for submit-on-enter prevention: specify -entersubmitblock at oncreate
 2007-01-19	JS	Addes renderform: -legend to be able to group form fields at render time
 2007-01-19	JS	added support for -optgroup in -options for select. Also works for radio and checkbox. Specify empty -optgroup to close optgroup in select without starting a new, or to add extra linebreak between checkboxes/radio buttons. 
@@ -3343,7 +3343,7 @@ Option for -> renderhtml to output without html encoding
 						if: #option -> type != 'pair';
 							#option = (pair: #option = #option);
 						/if;
-						// name must be string to make sure comparsions work
+						// name must be string to make sure comparisons work
 						(#option -> name) = (string: #option -> name);
 					/iterate;
 				/if;
@@ -4096,7 +4096,7 @@ Option for -> renderhtml to output without html encoding
 					if: #option -> type != 'pair';
 						#option = (pair: #option = #option);
 					/if;
-					// name must be string to make sure comparsions work
+					// name must be string to make sure comparisons work
 					(#option -> name) = (string: #option -> name);
 				/iterate;
 			/if;
@@ -7629,7 +7629,7 @@ Permissions can be read, create, update, delete, or application specific (for ex
 				(self -> '_debug_trace') -> (insert: tag_name + ': ' + 'Searching user db, ' (#db -> found_count) + ' found ' + (#db -> error_msg) + ' ' + (#db -> action_statement));
 				if: #db -> found_count == 1
 					&& #db -> (field: (self -> 'userfield')) == #username; // double check the username
-					// one match, continue by checking the password with case sensitive comparsion
+					// one match, continue by checking the password with case sensitive comparison
 					if: (self -> 'encrypt') && (self -> 'saltfield') -> size;
 						// use encryption with salt
 						(self -> '_debug_trace') -> (insert: tag_name + ': ' + 'Checking password with salted encryption');
@@ -8280,7 +8280,7 @@ Examples
 2007-01-25	JS	Added -required to ->oncreate (and a few more from ->setformat)
 2007-01-23	JS	Autogenerates id for the form itself
 2007-01-23	JS	Added ->getbutton to return the button that was clicked when submitting a form (cancel, add, save, delete)
-2007-01-23	JS	Added auto conversion of options left hand pair member to string, to make comparsions work reliably. Integer zeros don\'t compare nicely to strings. 
+2007-01-23	JS	Added auto conversion of options left hand pair member to string, to make comparisons work reliably. Integer zeros don\'t compare nicely to strings. 
 2007-01-23	JS	Added support for submit-on-enter prevention: specify -entersubmitblock at oncreate
 2007-01-19	JS	Addes renderform: -legend to be able to group form fields at render time
 2007-01-19	JS	added support for -optgroup in -options for select. Also works for radio and checkbox. Specify empty -optgroup to close optgroup in select without starting a new, or to add extra linebreak between checkboxes/radio buttons. 

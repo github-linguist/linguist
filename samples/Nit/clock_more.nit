@@ -22,7 +22,7 @@ redef class Clock
 	# Clock are now comparable
 	super Comparable
 
-	# Comparaison of a clock make only sense with an other clock
+	# Comparison of a clock make only sense with an other clock
 	redef type OTHER: Clock
 
 	redef fun <(o)

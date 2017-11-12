@@ -1126,7 +1126,7 @@ _lsyscall:
 	defword_end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; single precision comparision words
+; single precision comparison words
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 	defword "=", 0, WORD_EQ, WORD_INLINE_COMMA
@@ -1411,7 +1411,7 @@ _lsyscall:
 	defword_end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; double precision comparision words
+; double precision comparison words
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 	defword "d0=", 0, WORD_DZEQ, WORD_INLINE_COMMA
