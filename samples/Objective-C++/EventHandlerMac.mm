@@ -246,7 +246,7 @@ bool EventHandler::passMouseDownEventToWidget(Widget* pWidget)
     // page while an AppKit control is tracking the mouse can cause a crash.
 
     // FIXME: In theory, WebCore now tolerates tear-down while tracking the
-    // mouse. We should confirm that, and then remove the deferrsLoading
+    // mouse. We should confirm that, and then remove the defersLoading
     // hack entirely.
 
     bool wasDeferringLoading = page->defersLoading();
