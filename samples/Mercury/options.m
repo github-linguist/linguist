@@ -4389,7 +4389,7 @@ options_help_compilation_model -->
 %       "--no-profile-deep-coverage-branch-disj",
 %       "\tDisable coverage points at the beginning of disjunction branches.",
 
-%       I beleive these options are broken - pbone.
+%       I believe these options are broken - pbone.
 %       "Switches to tune the coverage profiling pass, useful for ",
 %       "debugging.",
 %
