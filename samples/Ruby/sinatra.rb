@@ -123,7 +123,7 @@ module Sinatra
   end
 
   # Behaves exactly like Rack::CommonLogger with the notable exception that it does nothing,
-  # if another CommonLogger is already in the middleware chane.
+  # if another CommonLogger is already in the middleware chain.
   class CommonLogger < Rack::CommonLogger
     def call(env)
       env['sinatra.commonlogger'] ? @app.call(env) : super
