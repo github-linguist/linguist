@@ -507,7 +507,7 @@ global class LanguageUtils {
 ,'th'=>'Thais'
 ,'tr'=>'Turks'
 ,'zh_cn'=>'Chinese (Simplified)'
-,'zh_tw'=>'Chinees (traditioneel)'
+,'zh_tw'=>'Chinese (traditioneel)'
 }
 ,'pl'=> new Map<String,String>{
 'cs'=>'Czeski'
