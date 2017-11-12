@@ -147,7 +147,7 @@ define aslocal
 end
 
 document aslocal 
-Print local variables of the currently selected AS stack frame, if debuging information present.
+Print local variables of the currently selected AS stack frame, if debugging information present.
 Information may be incorrect if not at a debugger safepoint.
 With no argument, print all the local variables.
 With a numeric argument print the specific local variable (gdb will store value in history 
