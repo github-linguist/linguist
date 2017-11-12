@@ -155,7 +155,7 @@ class HTTPConnection(object):
     """Handles a connection to an HTTP client, executing HTTP requests.
 
     We parse HTTP headers and bodies, and execute the request callback
-    until the HTTP conection is closed.
+    until the HTTP connection is closed.
     """
     def __init__(self, stream, address, request_callback, no_keep_alive=False,
                  xheaders=False):
