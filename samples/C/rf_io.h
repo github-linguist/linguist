@@ -628,7 +628,7 @@ i_DECLIMEX_ int32_t rfFback_UTF16LE(FILE* f,uint32_t *c);
 // @param f The file stream
 // @param c Returns the character we moved back to as a unicode codepoint
 // @return Returns either the number of bytes moved backwards for success (either @c 4, @c 3, @c 2 or @c 1) or one of the following errors:
-// + @c RE_UTF8_INVALID_SEQUENCE: If during moving bacwards in the file unexpected UTF-8 bytes were found
+// + @c RE_UTF8_INVALID_SEQUENCE: If during moving backwards in the file unexpected UTF-8 bytes were found
 // + @c RE_FILE_POS_OVERFLOW: If during trying to read the current file's position it can't be represented by the system
 // + @c RE_FILE_BAD: If The file descriptor is corrupt/illegal
 // + @c RE_FILE_NOTFILE: If the file descriptor is not a file but something else. e.g. socket.
