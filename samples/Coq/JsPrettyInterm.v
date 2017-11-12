@@ -1746,7 +1746,7 @@ Inductive make_delete_event : state -> object_loc -> prop_name -> event -> Prop 
 (** ** Implementation Defined Object *)
 
 (** As stated in Section 2 of the ECMAScript specification, an
-  implementation can provide additionnal properties not described in
+  implementation can provide additional properties not described in
   the specification. **)
 
 (** As we are only describing the core of JavaScrip here, this
