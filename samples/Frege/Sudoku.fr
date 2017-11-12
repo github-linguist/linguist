@@ -356,7 +356,7 @@ chain board paths = [ solution a (head cs) (reverse cs) |
 chainContra board paths = [ solution a (reverse pro) (reverse contra) |
         (a, css) <- paths,          -- FOR ALL assumptions "a" with list of conlusions "css"
         (pro, contra) <- take 1 [ (pro, contra) |
-            pro <- (uniqBy (using head) . sortBy (comparing head)) css,                 -- FOR ALL conslusion chains "pro"
+            pro <- (uniqBy (using head) . sortBy (comparing head)) css,                 -- FOR ALL conclusion chains "pro"
             c = head pro,               -- LET "c" BE the final conclusion
             contra <- take 1 (filter ((contradicts c) . head) css)   -- THE FIRST conclusion that contradicts c
         ]
