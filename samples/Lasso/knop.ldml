@@ -2241,7 +2241,7 @@ Option for -> renderhtml to output without html encoding
 	
 
 	define_tag: 'oncreate', -description='Parameters:\n\
-			-formaction (optional) The action atribute in the form html tag\n\
+			-formaction (optional) The action attribute in the form html tag\n\
 			-action (optional) Deprecated synonym to -formaction\n\
 			-method (optional) Defaults to post\n\
 			-name (optional)\n\
