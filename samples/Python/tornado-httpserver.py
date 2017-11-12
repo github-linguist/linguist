@@ -88,7 +88,7 @@ class HTTPServer(TCPServer):
     argument with the arguments required for the `ssl.wrap_socket` method,
     including "certfile" and "keyfile"::
 
-       HTTPServer(applicaton, ssl_options={
+       HTTPServer(application, ssl_options={
            "certfile": os.path.join(data_dir, "mydomain.crt"),
            "keyfile": os.path.join(data_dir, "mydomain.key"),
        })
