@@ -1313,7 +1313,7 @@ my class X::DateTime::TimezoneClash does X::Temporal {
 my class X::DateTime::InvalidDeltaUnit does X::Temporal {
     has $.unit;
     method message() {
-        "Cannnot use unit $.unit with Date.delta";
+        "Cannot use unit $.unit with Date.delta";
     }
 }
 
