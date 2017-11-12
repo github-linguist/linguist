@@ -829,7 +829,7 @@ with ext_spec :=
   | spec_string_get_own_prop_5 : string -> (specret int) -> ext_spec
   | spec_string_get_own_prop_6 : string -> int -> int -> ext_spec
 
-  (* Argumenst for Function.prototype.apply *)
+  (* Arguments for Function.prototype.apply *)
 
   | spec_function_proto_apply_get_args   : object_loc -> int -> int -> ext_spec
   | spec_function_proto_apply_get_args_1 : object_loc -> int -> int -> out -> ext_spec
