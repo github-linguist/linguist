@@ -6,7 +6,7 @@
 // Modified: 3/20/2012
 //
 // Counter based debounce circuit originally written for EC551 (back
-// in the day) and then modified (i.e. chagned entirely) into 3 always
+// in the day) and then modified (i.e. changed entirely) into 3 always
 // block format. This debouncer generates a signal that goes high for
 // 1 clock cycle after the clock sees an asserted value on the button
 // line. This action is then disabled until the counter hits a
