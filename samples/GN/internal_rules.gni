@@ -1266,7 +1266,7 @@ if (enable_java_templates) {
   #   native_lib_placeholders: List of placeholder filenames to add to the apk
   #     (optional).
   #   native_libs: List of native libraries.
-  #   native_libs_filearg: @FileArg() of additionaly native libraries.
+  #   native_libs_filearg: @FileArg() of additionally native libraries.
   #   write_asset_list: Adds an extra file to the assets, which contains a list of
   #     all other asset files.
   template("package_apk") {
