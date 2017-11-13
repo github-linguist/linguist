@@ -44,7 +44,7 @@ class Player extends Entity {
 	{
 		base.constructor("Player",entityname)
 	}
-	function DoDomething()
+	function DoSomething()
 	{
 		::print("something");
 	}
