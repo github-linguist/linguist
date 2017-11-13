@@ -2195,7 +2195,7 @@ make_fake_resume_map([Var | Vars], !ResumeMap) :-
 
 :- type region_commit_stack_frame
     --->    region_commit_stack_frame(
-                % The id of the region commit stack frame, which is emdedded
+                % The id of the region commit stack frame, which is embedded
                 % in the current procedure's stack frame, and whose layout is:
 
                 % saved region_commit_stack_pointer
