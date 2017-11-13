@@ -1,6 +1,6 @@
 /**--------------------------------------------------------------------------**\
 					====================================
-					 y_testing - Run unit tests easilly 
+					 y_testing - Run unit tests easily 
 					====================================
 Description:
 	Runs any functions named as tests when the Testing_Run function is called.
