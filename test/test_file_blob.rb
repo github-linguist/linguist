@@ -491,9 +491,6 @@ class TestFileBlob < Minitest::Test
     # Carthage
     assert sample_blob('Carthage/blah').vendored?
 
-    # Cocoapods
-    assert sample_blob('Pods/blah').vendored?
-
     # Html5shiv
     assert sample_blob("Scripts/html5shiv.js").vendored?
     assert sample_blob("Scripts/html5shiv.min.js").vendored?
