@@ -73,7 +73,6 @@ module Linguist
     end
 
     # Common heuristics
-    ObjectiveCRegex = /^\s*(@(interface|class|protocol|property|end|synchronised|selector|implementation)\b|#import\s+.+\.h[">])/
     CPlusPlusRegex = Regexp.union(
         /^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>/,
         /^\s*template\s*</,
@@ -82,6 +81,9 @@ module Linguist
         /^[ \t]*(class|(using[ \t]+)?namespace)\s+\w+/,
         /^[ \t]*(private|public|protected):$/,
         /std::\w+/)
+    ObjectiveCRegex = /^\s*(@(interface|class|protocol|property|end|synchronised|selector|implementation)\b|#import\s+.+\.h[">])/
+    Perl5Regex = /\buse\s+(?:strict\b|v?5\.)/
+    Perl6Regex = /^\s*(?:use\s+v6\b|\bmodule\b|\b(?:my\s+)?class\b)/
 
     disambiguate ".as" do |data|
       if /^\s*(package\s+[a-z0-9_\.]+|import\s+[a-zA-Z0-9_\.]+;|class\s+[A-Za-z0-9_]+\s+extends\s+[A-Za-z0-9_]+)/.match(data)
@@ -359,17 +361,17 @@ module Linguist
     disambiguate ".pl" do |data|
       if /^[^#]*:-/.match(data)
         Language["Prolog"]
-      elsif /use strict|use\s+v?5\./.match(data)
+      elsif Perl5Regex.match(data)
         Language["Perl"]
-      elsif /^(use v6|(my )?class|module)/.match(data)
+      elsif Perl6Regex.match(data)
         Language["Perl 6"]
       end
     end
 
     disambiguate ".pm" do |data|
-      if /\buse\s+(?:strict\b|v?5\.)/.match(data)
+      if Perl5Regex.match(data)
         Language["Perl"]
-      elsif /^\s*(?:use\s+v6\s*;|(?:\bmy\s+)?class|module)\b/.match(data)
+      elsif Perl6Regex.match(data)
         Language["Perl 6"]
       elsif /^\s*\/\* XPM \*\//.match(data)
         Language["XPM"]
@@ -459,9 +461,9 @@ module Linguist
     end
     
     disambiguate ".t" do |data|
-      if /\buse\s+(?:strict\b|v?5\.)/.match(data)
+      if Perl5Regex.match(data)
         Language["Perl"]
-      elsif /^\s*(?:use\s+v6\s*;|\bmodule\b|\b(?:my\s+)?class\b)/.match(data)
+      elsif Perl6Regex.match(data)
         Language["Perl 6"]
       elsif /^\s*%[ \t]+|^\s*var\s+\w+\s*:=\s*\w+/.match(data)
         Language["Turing"]
