@@ -45,8 +45,6 @@ vendor/grammars/Isabelle.tmbundle:
 - source.isabelle.theory
 vendor/grammars/JSyntax:
 - source.j
-vendor/grammars/Julia.tmbundle:
-- source.julia
 vendor/grammars/Lean.tmbundle:
 - source.lean
 vendor/grammars/LiveScript.tmbundle:
@@ -192,6 +190,9 @@ vendor/grammars/atom-language-1c-bsl:
 vendor/grammars/atom-language-clean:
 - source.clean
 - text.restructuredtext.clean
+vendor/grammars/atom-language-julia:
+- source.julia
+- source.julia.console
 vendor/grammars/atom-language-p4:
 - source.p4
 vendor/grammars/atom-language-perl6:
@@ -386,6 +387,8 @@ vendor/grammars/language-csound:
 - source.csound-score
 vendor/grammars/language-css:
 - source.css
+vendor/grammars/language-cwl:
+- source.cwl
 vendor/grammars/language-emacs-lisp:
 - source.emacs.lisp
 vendor/grammars/language-fontforge:
@@ -500,6 +503,8 @@ vendor/grammars/language-yaml:
 - source.yaml
 vendor/grammars/language-yang:
 - source.yang
+vendor/grammars/language-yara:
+- source.yara
 vendor/grammars/latex.tmbundle:
 - text.bibtex
 - text.log.latex
