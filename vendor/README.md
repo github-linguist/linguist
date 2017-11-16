@@ -406,4 +406,5 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Yacc:** [textmate/bison.tmbundle](https://github.com/textmate/bison.tmbundle)
 - **YAML:** [atom/language-yaml](https://github.com/atom/language-yaml)
 - **YANG:** [DzonyKalafut/language-yang](https://github.com/DzonyKalafut/language-yang)
+- **YARA:** [blacktop/language-yara](https://github.com/blacktop/language-yara)
 - **Zephir:** [phalcon/zephir-sublime](https://github.com/phalcon/zephir-sublime)
