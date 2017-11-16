@@ -70,6 +70,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **ColdFusion CFC:** [SublimeText/ColdFusion](https://github.com/SublimeText/ColdFusion)
 - **COLLADA:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)
 - **Common Lisp:** [textmate/lisp.tmbundle](https://github.com/textmate/lisp.tmbundle)
+- **Common Workflow Language:** [manabuishii/language-cwl](https://github.com/manabuishii/language-cwl)
 - **Component Pascal:** [textmate/pascal.tmbundle](https://github.com/textmate/pascal.tmbundle)
 - **Cool:** [anunayk/cool-tmbundle](https://github.com/anunayk/cool-tmbundle)
 - **Coq:** [mkolosick/Sublime-Coq](https://github.com/mkolosick/Sublime-Coq)
