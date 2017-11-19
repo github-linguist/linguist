@@ -388,7 +388,7 @@ i_DECLIMEX_ int32_t rfFgets_UTF8(char* buff,uint32_t num,FILE* f,char* eof);
 // bytes if the return value is positive. You can see how much by checking the return value.
 //
 // You shall need to provide an integer at @c c to contain either the decoded Unicode
-// codepoint or the UTF-8 endoced byte depending on the value of the @c cp argument.
+// codepoint or the UTF-8 encoded byte depending on the value of the @c cp argument.
 //
 // @param f A valid FILE descriptor from which to read the bytes
 // @param c Pass an int that will receive either the unicode code point value or
