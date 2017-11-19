@@ -2777,7 +2777,7 @@ Option for -> renderhtml to output without html encoding
 		self -> 'tagtime'=integer: #timer; // cast to integer to trigger onconvert and to "stop timer"
 	/define_tag;
 
-	define_tag: 'clearfields', -description='Emtpies all form field values';
+	define_tag: 'clearfields', -description='Empties all form field values';
 		local: 'timer'=knop_timer; 
 		iterate: (self -> 'fields'), (local: 'fieldpair');
 			if: (self -> 'exceptionfieldtypes') !>> #fieldpair -> value -> (find: 'type');
