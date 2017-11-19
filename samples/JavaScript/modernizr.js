@@ -744,7 +744,7 @@ window.Modernizr = (function( window, document, undefined ) {
 
     // Also in iOS5 Private Browsing mode, attempting to use localStorage.setItem
     // will throw the exception:
-    //   QUOTA_EXCEEDED_ERRROR DOM Exception 22.
+    //   QUOTA_EXCEEDED_ERROR DOM Exception 22.
     // Peculiarly, getItem and removeItem calls do not throw.
 
     // Because we are forced to try/catch this, we'll go aggressive.
