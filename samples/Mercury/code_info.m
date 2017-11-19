@@ -1936,7 +1936,7 @@ undo_disj_hijack(HijackInfo, Code, !CI) :-
                 lval
             ).
 
-prepare_for_ite_hijack(CondCodeModel, MaybeEmbeddedFrameId, HijackInfo, Code,
+prepare_for_ite_hijack(CondCodeModel, MaybeEmbededFrameId, HijackInfo, Code,
         !CI) :-
     get_fail_info(!.CI, FailInfo),
     FailInfo = fail_info(_, ResumeKnown, CurfrMaxfr, CondEnv, Allow),
@@ -1946,8 +1946,8 @@ prepare_for_ite_hijack(CondCodeModel, MaybeEmbeddedFrameId, HijackInfo, Code,
         ( CondCodeModel = model_det
         ; CondCodeModel = model_semi
         ),
-        expect(unify(MaybeEmbeddedFrameId, no), $module, $pred,
-            "MaybeEmbeddedFrameId in model_semi"),
+        expect(unify(MaybeEmbededFrameId, no), $module, $pred,
+            "MaybeEmbededFrameId in model_semi"),
         HijackType = ite_no_hijack,
         Code = singleton(
             llds_instr(comment("ite no hijack"), "")
@@ -1958,7 +1958,7 @@ prepare_for_ite_hijack(CondCodeModel, MaybeEmbeddedFrameId, HijackInfo, Code,
         (
             ( Allow = not_allowed
             ; CondEnv = inside_non_condition
-            ; MaybeEmbeddedFrameId = yes(_)
+            ; MaybeEmbededFrameId = yes(_)
             )
         ->
             acquire_temp_slot(slot_lval(maxfr), non_persistent_temp_slot,
@@ -1969,7 +1969,7 @@ prepare_for_ite_hijack(CondCodeModel, MaybeEmbeddedFrameId, HijackInfo, Code,
                 llds_instr(assign(MaxfrSlot, lval(maxfr)), "prepare for ite")
             ),
             (
-                MaybeEmbeddedFrameId = yes(EmbeddedFrameId),
+                MaybeEmbededFrameId = yes(EmbededFrameId),
                 % Note that this slot is intentionally not released anywhere.
                 acquire_temp_slot(slot_success_record, persistent_temp_slot,
                     SuccessRecordSlot, !CI),
@@ -1979,9 +1979,9 @@ prepare_for_ite_hijack(CondCodeModel, MaybeEmbeddedFrameId, HijackInfo, Code,
                         "record no success of the condition yes")
                 ),
                 MaybeRegionInfo =
-                    yes(ite_region_info(EmbeddedFrameId, SuccessRecordSlot))
+                    yes(ite_region_info(EmbededFrameId, SuccessRecordSlot))
             ;
-                MaybeEmbeddedFrameId = no,
+                MaybeEmbededFrameId = no,
                 InitSuccessCode = empty,
                 MaybeRegionInfo = no
             ),
@@ -2066,7 +2066,7 @@ ite_enter_then(HijackInfo, ITEResumePoint, ThenCode, ElseCode, !CI) :-
             )
         ;
             MaybeRegionInfo = yes(RegionInfo),
-            RegionInfo = ite_region_info(EmbeddedStackFrameId,
+            RegionInfo = ite_region_info(EmbededStackFrameId,
                 SuccessRecordSlot),
             % XXX replace do_fail with ref to ResumePoint stack label
             resume_point_stack_addr(ITEResumePoint, ITEStackResumeCodeAddr),
@@ -2085,7 +2085,7 @@ ite_enter_then(HijackInfo, ITEResumePoint, ThenCode, ElseCode, !CI) :-
                     code_label(AfterRegionOp)),
                     "jump around if the condition never succeeded"),
                 llds_instr(use_and_maybe_pop_region_frame(
-                    region_ite_nondet_cond_fail, EmbeddedStackFrameId),
+                    region_ite_nondet_cond_fail, EmbededStackFrameId),
                     "cleanup after the post-success failure of the condition"),
                 llds_instr(goto(do_fail),
                     "the condition succeeded, so don't execute else branch"),
@@ -2555,15 +2555,15 @@ maybe_save_region_commit_frame(AddRegionOps, _ForwardLiveVarsBeforeGoal,
             Items = list.duplicate(FrameSize, slot_region_commit),
             acquire_several_temp_slots(Items, non_persistent_temp_slot,
                 StackVars, MainStackId, FirstSlotNum, LastSlotNum, !CI),
-            EmbeddedStackFrame = embedded_stack_frame_id(MainStackId,
+            EmbededStackFrame = embedded_stack_frame_id(MainStackId,
                 FirstSlotNum, LastSlotNum),
             FirstSavedRegionAddr = first_nonfixed_embedded_slot_addr(
-                EmbeddedStackFrame, FixedSize),
+                EmbededStackFrame, FixedSize),
             acquire_reg(reg_r, NumRegLval, !CI),
             acquire_reg(reg_r, AddrRegLval, !CI),
             PushInitCode = from_list([
                 llds_instr(
-                    push_region_frame(region_stack_commit, EmbeddedStackFrame),
+                    push_region_frame(region_stack_commit, EmbededStackFrame),
                     "Save stack pointer of embedded region commit stack"),
                 llds_instr(
                     assign(NumRegLval, const(llconst_int(0))),
@@ -2574,18 +2574,18 @@ maybe_save_region_commit_frame(AddRegionOps, _ForwardLiveVarsBeforeGoal,
                     " region slot")
             ]),
             save_unprotected_live_regions(NumRegLval, AddrRegLval,
-                EmbeddedStackFrame, RemovedRegionVarList, FillCode, !CI),
+                EmbededStackFrame, RemovedRegionVarList, FillCode, !CI),
             SetCode = singleton(
                 llds_instr(
                     region_set_fixed_slot(region_set_commit_num_entries,
-                        EmbeddedStackFrame, lval(NumRegLval)),
+                        EmbededStackFrame, lval(NumRegLval)),
                     "Store the number of unprotected live regions")
             ),
             release_reg(NumRegLval, !CI),
             release_reg(AddrRegLval, !CI),
 
             RegionCommitFrameInfo =
-                region_commit_stack_frame(EmbeddedStackFrame, StackVars),
+                region_commit_stack_frame(EmbededStackFrame, StackVars),
             MaybeRegionCommitFrameInfo = yes(RegionCommitFrameInfo),
 
             Code = PushInitCode ++ FillCode ++ SetCode
@@ -2597,17 +2597,17 @@ maybe_save_region_commit_frame(AddRegionOps, _ForwardLiveVarsBeforeGoal,
     code_info::in, code_info::out) is det.
 
 save_unprotected_live_regions(_, _, _, [], empty, !CI).
-save_unprotected_live_regions(NumLval, AddrLval, EmbeddedStackFrame,
+save_unprotected_live_regions(NumLval, AddrLval, EmbededStackFrame,
         [RegionVar | RegionVars], Code ++ Codes, !CI) :-
     produce_variable(RegionVar, ProduceVarCode, RegionVarRval, !CI),
     SaveCode = singleton(
         llds_instr(
-            region_fill_frame(region_fill_commit, EmbeddedStackFrame,
+            region_fill_frame(region_fill_commit, EmbededStackFrame,
                 RegionVarRval, NumLval, AddrLval),
             "Save the region in the commit stack frame if it is unprotected")
     ),
     Code = ProduceVarCode ++ SaveCode,
-    save_unprotected_live_regions(NumLval, AddrLval, EmbeddedStackFrame,
+    save_unprotected_live_regions(NumLval, AddrLval, EmbededStackFrame,
         RegionVars, Codes, !CI).
 
 :- pred maybe_restore_region_commit_frame(maybe(region_commit_stack_frame)::in,
@@ -2621,18 +2621,18 @@ maybe_restore_region_commit_frame(MaybeRegionCommitFrameInfo,
         FailureCode = empty
     ;
         MaybeRegionCommitFrameInfo = yes(RegionCommitFrameInfo),
-        RegionCommitFrameInfo = region_commit_stack_frame(EmbeddedStackFrame,
+        RegionCommitFrameInfo = region_commit_stack_frame(EmbededStackFrame,
             StackVars),
         SuccessCode = singleton(
             llds_instr(
                 use_and_maybe_pop_region_frame(region_commit_success,
-                    EmbeddedStackFrame),
+                    EmbededStackFrame),
                 "Destroy removed regions protected by cut away disjunctions")
         ),
         FailureCode = singleton(
             llds_instr(
                 use_and_maybe_pop_region_frame(region_commit_failure,
-                    EmbeddedStackFrame),
+                    EmbededStackFrame),
                 "Undo the creation of the commit frame")
         ),
         release_several_temp_slots(StackVars, non_persistent_temp_slot, !CI)

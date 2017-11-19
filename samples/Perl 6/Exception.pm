@@ -838,7 +838,7 @@ my class X::Role::Initialization is Exception {
     method message() { "Can only supply an initialization value for a role if it has a single public attribute, but this is not the case for '{$.role.^name}'" }
 }
 
-my class X::Syntax::Comment::Embedded does X::Syntax {
+my class X::Syntax::Comment::Embeded does X::Syntax {
     method message() { "Opening bracket required for #` comment" }
 }
 

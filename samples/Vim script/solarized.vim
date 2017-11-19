@@ -961,7 +961,7 @@ exe "hi! pandocNonBreakingSpace"         . s:fg_red   .s:bg_none  .s:fmt_revr
 hi! link pandocEscapedCharacter          pandocEscapePair
 hi! link pandocLineBreak                 pandocEscapePair
 
-" Embedded Code
+" Embeded Code
 " ---------------------------------------------------------------------
 exe "hi! pandocMetadataDelim"            .s:fg_base01 .s:bg_none   .s:fmt_none
 exe "hi! pandocMetadata"                 .s:fg_blue   .s:bg_none   .s:fmt_none

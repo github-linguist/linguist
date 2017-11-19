@@ -67,7 +67,7 @@ gap> # really should be using Ngs or Cgs is using Igs incorrectly.
 gap> # For example, direct products could return *invalid* embeddings:
 gap> D := DirectProduct(G, G);
 Pcp-group with orders [ 2, 2, 2, 2, 3, 2, 2, 2, 2, 3 ]
-gap> hom:=Embedding(D,1);;
+gap> hom:=Embeding(D,1);;
 gap> mapi:=MappingGeneratorsImages(hom);;
 gap> GroupHomomorphismByImages(Source(hom),Range(hom),mapi[1],mapi[2]) <> fail;
 true

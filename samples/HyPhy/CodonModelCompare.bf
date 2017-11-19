@@ -856,7 +856,7 @@ if (MPI_NODE_COUNT>1)
 	OPTIMIZE_SUMMATION_ORDER = 1;
 }
 
-function checkEmbedding (_m1, _m2)
+function checkEmbeding (_m1, _m2)
 {
 	for (r=0; r<6; r=r+1)
 	{
@@ -912,7 +912,7 @@ if (rejectCount<202)
 						{
 							modelString2 = modelString2 + resultCache [v3][v4];
 						}	
-						if (checkEmbedding (modelString, modelString2))
+						if (checkEmbeding (modelString, modelString2))
 						{
 							fprintf (stdout,"H: (", modelString,") A: (", modelString2, "). ");
 							done = 0;
