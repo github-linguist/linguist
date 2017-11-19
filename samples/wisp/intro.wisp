@@ -61,7 +61,7 @@ My name is wisp!"
 
 ;; # Conventions
 ;; Wisp puts a lot of effort in making naming conventions transparent,
-;; by encouraning lisp conventions and then translating them to equivalent
+;; by encouraging lisp conventions and then translating them to equivalent
 ;; JS conventions:
 
 (dash-delimited)   ;; => dashDelimited
