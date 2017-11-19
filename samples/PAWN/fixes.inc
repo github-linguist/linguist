@@ -723,7 +723,7 @@
  * No comments beyond the end of column 80 (where the line in "PAWNO" is).
  * 
  * If a bug is fixed in some version of the server it can be conditionally
- *     included here.  This is done by checking for the existance of a native
+ *     included here.  This is done by checking for the existence of a native
  *     function introduced in the same server version.  For example
  *     "TogglePlayerControllable" was fixed in 0.3eRC6, the same time as the
  *     "SetObjectMaterial" native was introduced, thus the inclusion becomes:
