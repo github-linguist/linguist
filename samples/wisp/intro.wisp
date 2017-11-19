@@ -279,7 +279,7 @@ foo
   (if condition nil body))
 
 ;; Although following code will log "should not print" anyway, since
-;; function arguments are exectued before function is called.
+;; function arguments are executed before function is called.
 (unless-fn true (console.log "should not print"))
 
 ;; Macros solve this problem, because they do not evaluate their arguments
