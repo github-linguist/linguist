@@ -41,7 +41,7 @@
          ((> ,var ,end))
       ,@body)))
 ; 2-1. More concise implementations with the 'parameter list destructuring' and
-; '&body' synonym, it also emits more friendly messages on incorrent input.
+; '&body' synonym, it also emits more friendly messages on incorrect input.
 (defmacro do-primes ((var start end) &body body)
   `(do ((,var (next-prime (- ,start 1)) (next-prime ,var)))
        ((> ,var ,end))
