@@ -128,7 +128,7 @@ type noParensNeededWhenInTuple =
 
 type myTypeDef 'a = list 'a;
 
-type instatiatedTypeDef = myTypeDef int => int;
+type instantiatedTypeDef = myTypeDef int => int;
 
 /* Test a type attribute for good measure */
 /* We should clean up all of the attribute tagging eventually, but for now,
