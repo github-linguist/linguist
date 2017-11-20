@@ -2312,7 +2312,7 @@ Option for -> renderhtml to output without html encoding
 		local_defined('database') ? (self -> 'database') = @#database;
 
 		if: !(local_defined: 'formaction') && (local_defined: 'action');
-			// keep support for old -action insead of -formaction
+			// keep support for old -action instead of -formaction
 			(self -> 'debug_trace') -> insert('*** DEPRECATION WARNING *** ' + tag_name + ' -action parameter is deprecated, use -formaction instead ');
 			(self -> 'formaction') = @#action;
 		/if;
@@ -5933,7 +5933,7 @@ CHANGE NOTES
 2008-01-23	JS	->url: Added -autoparams that is required to enable the automatic passing of action_params that begin with "-" (this reverts the default behavior to match the the old)
 2008-01-22	JS	->url: GET params that begin with "-" are sent as parameters on links. -path, -sort, -desc, -q are explicitly excluded from nav links in renderhtml. 
 2008-01-22	JS	When using param based navigation, navigation links now use much cleaner /?path/to/page/ style links instead of /?-path=path/to/page/
-2008-01-22	JS	->getlocation: when navmethod is param, the path can now be sent as unnamed parameter insetad of -path parameter (such as /?path/to/page/). 
+2008-01-22	JS	->getlocation: when navmethod is param, the path can now be sent as unnamed parameter instead of -path parameter (such as /?path/to/page/). 
 2008-01-04	JS	->renderbreadcrumb: added flag -plain to output breadcrumb without html
 2008-01-04	JS	->renderbreadcrumb: added flag -skipcurrent to not include the current location in the output
 2008-01-04	JS	->insert: -template can now be specified also for individual nav items. Use the form #link##label##current##/link##children#. 
@@ -7857,7 +7857,7 @@ Permissions can be read, create, update, delete, or application specific (for ex
 2008-01-23	JS	->url: Added -autoparams that is required to enable the automatic passing of action_params that begin with "-" (this reverts the default behavior to match the the old)
 2008-01-22	JS	->url: GET params that begin with "-" are sent as parameters on links. -path, -sort, -desc, -q are explicitly excluded from nav links in renderhtml. 
 2008-01-22	JS	When using param based navigation, navigation links now use much cleaner /?path/to/page/ style links instead of /?-path=path/to/page/
-2008-01-22	JS	->getlocation: when navmethod is param, the path can now be sent as unnamed parameter insetad of -path parameter (such as /?path/to/page/). 
+2008-01-22	JS	->getlocation: when navmethod is param, the path can now be sent as unnamed parameter instead of -path parameter (such as /?path/to/page/). 
 2008-01-04	JS	->renderbreadcrumb: added flag -plain to output breadcrumb without html
 2008-01-04	JS	->renderbreadcrumb: added flag -skipcurrent to not include the current location in the output
 2008-01-04	JS	->insert: -template can now be specified also for individual nav items. Use the form #link##label##current##/link##children#. 
