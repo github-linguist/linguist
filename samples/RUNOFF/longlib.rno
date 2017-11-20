@@ -632,7 +632,7 @@ of horizontal or vertical lines of bytes (see RMWRITEWORD, for example).
 When the plot package is closed (by a call to PLOTND) the user will be
 prompted to output the internal BYTE array to a specific
 device (a graphics terminal, a metafile, or a special REF file).  To
-avoid the interative prompt, the user can call ~REFDIS  (with its appropriate
+avoid the interactive prompt, the user can call ~REFDIS  (with its appropriate
 arguments) prior to the ~PLOTND call.  This will disable the prompts.
 See REFDIS for additional details.
 .p
@@ -7404,7 +7404,7 @@ CALL PAUSEP
 .hl1 SUBROUTINE RAMCLOSE
 .p
 ~RAMCLOSE closes and deassigns the ~Ramtek channel and deallocates the device.
-When the ~REF routines are used, it interatively prompts for the output
+When the ~REF routines are used, it interactively prompts for the output
 device and option.  ~REFDIS called prior to RAMCLOSE disables the prompting
 in the REF package.  Note that RAMCLOSE is call by ~PLOTRM when a
 PLOTND or PLOTRM(0.,0.,11) is called.
