@@ -2168,7 +2168,7 @@ Add -path as parameter for oncreate so the form action can be set with less conf
 Fix actionpath reference so it updates properly when altering the value (not possible?)
 Should loadfields load "-" params?
 Unsavedwarning made optional, does not seem to work properly now?
-More flexible error hightlighting
+More flexible error highlighting
 Move templates to a member tag to be make it easier to subclass (Douglas Burchard)
 Add "button". <button></button>. Subtypes are submit, reset and button. How to specify the subtype? (Douglas Burchard)
 Change ->addfield to ->insert and make ->addfield deprecated
@@ -5039,7 +5039,7 @@ Change ->addfield to ->insert and make ->addfield deprecated
 				/if;
 				#classarray=array;
 				if:  #affectedrecord_keyvalue == (field: #keyfield) && (field: #keyfield) != '';
-					// hightlight affected row
+					// highlight affected row
 					#classarray -> (insert: 'highlight');
 				else;
 					(#record_loop_count - 1)  % 2 == 0 ? #classarray -> (insert: 'even');
@@ -8316,7 +8316,7 @@ Add -path as parameter for oncreate so the form action can be set with less conf
 Fix actionpath reference so it updates properly when altering the value (not possible?)
 Should loadfields load "-" params?
 Unsavedwarning made optional, does not seem to work properly now?
-More flexible error hightlighting
+More flexible error highlighting
 Move templates to a member tag to be make it easier to subclass (Douglas Burchard)
 Add "button". <button></button>. Subtypes are submit, reset and button. How to specify the subtype? (Douglas Burchard)
 Change ->addfield to ->insert and make ->addfield deprecated
