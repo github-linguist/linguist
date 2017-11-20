@@ -169,7 +169,7 @@ My name is wisp!"
 ;; Wisp functions can also contain documentation and some metadata.
 ;; Note: Docstring and metadata is not presented in compiled JS yet,
 ;; but in a future it will compile to comments associated with function.
-(fn incerement
+(fn increment
   "Returns a number one greater than given."
   {:added "1.0"}
   [x] (+ x 1))
