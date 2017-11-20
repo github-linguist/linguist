@@ -341,7 +341,7 @@ replace(subject,pattern,subst,first,last,options,locale,mlimit,reclimit)
 	d global^pcre(.subst,"\\(?:(?<ref>(?:\d+|\\))|{(?<ref>[^}]+)})",.backref,,"ovector|dupnames")
 	;
 	s options=$g(options)_"|ovector"
-	; silently remove "NAMED_ONLY" and "GROUPPED" options
+	; silently remove "NAMED_ONLY" and "GROUPED" options
 	f i=1:1:$l(options,"|") d
 	. s o=$zco($p(options,"|",i),"u")
 	. s:o="NAMED_ONLY"!(o="GROUPED") $p(options,"|",i)=""
