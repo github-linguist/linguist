@@ -19,7 +19,7 @@
 module extern_methods
 
 redef enum Int
-	# Returns self'th fibonnaci number
+	# Returns self'th fibonacci number
 	# implemented here in C for optimization purposes
 	fun fib : Int import fib `{
 		if ( recv < 2 )
