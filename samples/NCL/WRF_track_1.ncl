@@ -66,7 +66,7 @@ begin
     slp1d     = ndtooned(slp2d)
     smin(ifs) = minind(slp1d)
 
-; Convert the index for 1-D array back to the indeces for 2-D array.
+; Convert the index for 1-D array back to the indices for 2-D array.
     minij     = ind_resolve(ind(slp1d.eq.min(slp2d)),dims)
     imin(ifs) = minij(0,0)
     jmin(ifs) = minij(0,1)

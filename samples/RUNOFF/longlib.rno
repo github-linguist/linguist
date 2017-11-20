@@ -4644,11 +4644,11 @@ left to right along the plot bottom.  The y axis is plotted
 as a vertical displacement offset by the z axis value.  The z axis appears
 to point out of the screen.  The contour plot is plotted below the surface
 with a user-specified vertical spacing.  The contour plot plane is plotted
-paralell to the z=0 plane of the surface with the (i,j) indicies of the
+paralell to the z=0 plane of the surface with the (i,j) indices of the
 surface and contour plot aligned vertically.  The user may specify a
 "path" using "pen" motions.  The path is plotted as a curve along the
 surface and the contour plot plane with vertical lines at the corresponding
-indicies.  No hidden line removal is used for the path.  The path permits
+indices.  No hidden line removal is used for the path.  The path permits
 the user to specify a cut plane to enhance the interpretation of the
 plot.  The path is specified as a sequence of pen motion commands and
 index points of the form,
@@ -4672,9 +4672,9 @@ Path commands are interpreted according to:
        ______________    ___________________________
 
             0             end of path specification
-                           (indicies ignored)
-            3             start path at these indicies
-            2             continue path though indicies
+                           (indices ignored)
+            3             start path at these indices
+            2             continue path though indices
 
 .end lit
 The path specificiation should start with a path command of 3
@@ -7816,7 +7816,7 @@ x,y   (R): arrays of x,y points
 n     (I): number of points
            < 0 : ie,ibe,ite arrays not used
            > 0 : ie,ibe,ite arrays used (normal)
-nt    (I): array of indicies of triangulated points t(nzz,3)
+nt    (I): array of indices of triangulated points t(nzz,3)
            corner 1 of triangle K = (x,y) = (x(t(K,1),y(t(K,1)))
            corner 2 of triangle K = (x,y) = (x(t(K,2),y(t(K,2)))
            corner 3 of triangle K = (x,y) = (x(t(K,3),y(t(K,3)))
@@ -7827,11 +7827,11 @@ ni    (I): dimension of i,j arrays (ni>=n)
 l     (I): number of edges in ie,ibe,ite
 nz    (I): dimension of ie,ibe,ite array (>3*n)
 note: these arrays only needed if n>0
-ie    (I): array of indicies of each triangle edge ie(nz,2)
+ie    (I): array of indices of each triangle edge ie(nz,2)
 ibe   (I): edge flag array dimensioned ibe(nz)
            = 0 for interior edge
            = 1 if ie is a boundary edge
-ite   (I): array of indicies of the neighbor edges of
+ite   (I): array of indices of the neighbor edges of
            each triangle, dimensioned ite(nz,4)
 .end lit
 
