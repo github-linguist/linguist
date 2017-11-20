@@ -271,7 +271,7 @@ foo
 '(a b)
 
 ;; Wisp doesn’t have `unless` special form or a macro, but it's trivial
-;; to implement it via macro. Although let's try implemting it as a
+;; to implement it via macro. Although let's try implementing it as a
 ;; function to understand a use case for macro!
 
 ;; We want to execute body unless condition is `true`.
