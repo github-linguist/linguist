@@ -1255,8 +1255,8 @@ window.Modernizr = (function( window, document, undefined ) {
     // Modernizr.prefixed() returns the prefixed or nonprefixed property name variant of your input
     // Modernizr.prefixed('boxSizing') // 'MozBoxSizing'
 
-    // Properties must be passed as dom-style camelcase, rather than `box-sizing` hypentated style.
-    // Return values will also be the camelCase variant, if you need to translate that to hypenated style use:
+    // Properties must be passed as dom-style camelcase, rather than `box-sizing` hyphenated style.
+    // Return values will also be the camelCase variant, if you need to translate that to hyphenated style use:
     //
     //     str.replace(/([A-Z])/g, function(str,m1){ return '-' + m1.toLowerCase(); }).replace(/^ms-/,'-ms-');
 
