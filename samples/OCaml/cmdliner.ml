@@ -338,7 +338,7 @@ module Manpage = struct
     pr ppf ".\\\" Pipe this output to groff -man -Tutf8 | less@\n\
             .\\\"@\n\
             .TH \"%s\" %d \"%s\" \"%s\" \"%s\"@\n\
-            .\\\" Disable hyphenantion and ragged-right@\n\
+            .\\\" Disable hyphenation and ragged-right@\n\
             .nh@\n\
       .ad l\
       %a@?"
