@@ -36,7 +36,7 @@ E_cin=E+Omega(x_0,y_0,mu);
 px_0=vx_0-y_0;
 py_0=vy_0+x_0;
 
-% Inizializing
+% Initializing
 x_T=zeros(n,n);
 y_T=zeros(n,n);
 px_T=zeros(n,n);

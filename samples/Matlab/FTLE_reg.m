@@ -32,7 +32,7 @@ vy_0=sqrt(2*E+2.*Omega(x_0,y_0,mu)-vx_0.^2);
 % Kinetic energy computation
 E_cin=E+Omega(x_0,y_0,mu);
 
-% Inizializing
+% Initializing
 x_T=zeros(n,n);
 y_T=zeros(n,n);
 vx_T=zeros(n,n);
