@@ -389,7 +389,7 @@ forth_start:
 	loopend					; and loop till QUIT takes over
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; a few case insensative string operations
+; a few case insensitive string operations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 	%macro to_lower 1
