@@ -891,7 +891,7 @@ let x = [
 let x = [
   (butWeWillPrint: int),
   (themAsSpaceSeparated: float),
-  (toInfluenceYour: int, developmentHabbits: int)
+  (toInfluenceYour: int, developmentHabits: int)
 ];
 
 let newRecord = {
@@ -937,7 +937,7 @@ let newRecord = {
     heresAFunctionWithNamedArgs argOne::i: annotatedResult
   ),
   soAsToInstill: 0,
-  developmentHabbits: 1
+  developmentHabits: 1
 };
 
 [@@@thisIsAThing];
