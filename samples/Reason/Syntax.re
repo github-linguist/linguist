@@ -418,7 +418,7 @@ let blah arg =>
   | Green _ => 0
   };
 
-/* Any function that pattern matches a multicase match is interpretted as a
+/* Any function that pattern matches a multicase match is interpreted as a
  * single arg that is then matched on. Instead of the above `blah` example:*/
 let blah =
   fun
