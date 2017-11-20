@@ -321,7 +321,7 @@ foo
 `(foo ~bar ~@bazs)
 
 
-;; For expmale built-in `defn` macro can be defined expressed with
+;; For example built-in `defn` macro can be defined expressed with
 ;; simple template macro. That's more or less how built-in `defn`
 ;; macro is implemented.
 (defmacro define-fn
