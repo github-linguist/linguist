@@ -2488,7 +2488,7 @@ let scan_conf = function
       info "%s %s" (blue_s "Using scanned config file:") f;
       realpath f
     | _   -> error "There is more than one config.ml in the current working directory.\n\
-                    Please specify one explictly on the command-line."
+                    Please specify one explicitly on the command-line."
 
 let load file =
   reset ();

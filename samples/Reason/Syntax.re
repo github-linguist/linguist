@@ -809,19 +809,19 @@ let resAnnotated = named a::a b::b;
 let resAnnotated: ty = named a::a b;
 
 /*S: Explicitly passed optionals are a nice way to say "use the default value"*/
-let explictlyPassed =
+let explicitlyPassed =
   myOptional a::?None b::?None;
 
 /*T: Annotating the return value of the entire function call */
-let explictlyPassedAnnotated: int =
+let explicitlyPassedAnnotated: int =
   myOptional a::?None b::?None;
 
 /*U: Explicitly passing optional with identifier expression */
 let a = None;
 
-let explictlyPassed = myOptional a::?a b::?None;
+let explicitlyPassed = myOptional a::?a b::?None;
 
-let explictlyPassedAnnotated: int =
+let explicitlyPassedAnnotated: int =
   myOptional a::?a b::?None;
 
 let nestedLet = {

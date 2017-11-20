@@ -5508,7 +5508,7 @@ CHANGE NOTES
 2008-09-11	JS	->_unknowntag: added missing support for -language
 2008-01-22	JS	->getstring: corrected the fallback behavior when a current language has been set 
 2008-01-07	JS	Removed instance variable browserlanguage due to problems with transient storage. The browserlanguage is cached on page level so it's no loss in reality. 
-2007-12-12	JS	Added page level storage of currentlanguage, so all knop_lang instances defaults to the same language once one of them have set a language explictly, but only if the other knop_lang instances don't have a language set explicitly. 
+2007-12-12	JS	Added page level storage of currentlanguage, so all knop_lang instances defaults to the same language once one of them have set a language explicitly, but only if the other knop_lang instances don't have a language set explicitly. 
 2007-12-12	JS	Added page level caching of browser language (stores the value in $_knop_data map)
 2007-12-06	JS	Moved -> help to knop_base
 2007-12-06	JS	Added ->description to all member tags. 
@@ -8152,7 +8152,7 @@ Add support for role based permisions
 2008-09-11	JS	->_unknowntag: added missing support for -language
 2008-01-22	JS	->getstring: corrected the fallback behavior when a current language has been set 
 2008-01-07	JS	Removed instance variable browserlanguage due to problems with transient storage. The browserlanguage is cached on page level so it\'s no loss in reality. 
-2007-12-12	JS	Added page level storage of currentlanguage, so all knop_lang instances defaults to the same language once one of them have set a language explictly, but only if the other knop_lang instances don\'t have a language set explicitly. 
+2007-12-12	JS	Added page level storage of currentlanguage, so all knop_lang instances defaults to the same language once one of them have set a language explicitly, but only if the other knop_lang instances don\'t have a language set explicitly. 
 2007-12-12	JS	Added page level caching of browser language (stores the value in $_knop_data map)
 2007-12-06	JS	Moved -> help to knop_base
 2007-12-06	JS	Added ->description to all member tags. 
