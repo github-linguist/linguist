@@ -1484,7 +1484,7 @@ void call(redisClient *c, int flags) {
     long long dirty, start = ustime(), duration;
 
     /* Sent the command to clients in MONITOR mode, only if the commands are
-     * not geneated from reading an AOF. */
+     * not generated from reading an AOF. */
     if (listLength(server.monitors) && !server.loading)
         replicationFeedMonitors(c,server.monitors,c->db->id,c->argv,c->argc);
 
