@@ -2431,14 +2431,14 @@ xtskip_l3:
 	POPDSP ebx
 	test eax, eax
 	jz tryasnumber
-	jle nonimediate
+	jle nonimmediate
 executeword:
 	mov eax, ebx
 	POPDSP ebx
 	jmp eax
-nonimediate:
+nonimmediate:
 	mov eax, [var_WORD_STATE]
-	test eax, eax				; are we in imedeate mode ?
+	test eax, eax				; are we in immediate mode ?
 	jz executeword
 	jmp WORD_COMPILE_COMMA		; compile xt
 tryasnumber:

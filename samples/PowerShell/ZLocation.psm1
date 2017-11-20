@@ -16,7 +16,7 @@ function Update-ZLocation([string]$path)
         Time = [datetime]::Now
     }
 
-    # populate folder immidiatly after the first cd
+    # populate folder immediately after the first cd
     Add-ZWeight $path 0
 }
 
