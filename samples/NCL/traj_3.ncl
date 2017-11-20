@@ -29,7 +29,7 @@ begin
 
   xyres = True
   xyres@gsnFrame     = False      ; don't advance the frame
-  xyres@gsnDraw      = False      ; don't draw indivdual plots
+  xyres@gsnDraw      = False      ; don't draw individual plots
   xyres@tmXTBorderOn = False      ; don't draw top axis
   xyres@tmXBBorderOn = False      ; don't draw bottom axis
   xyres@tmYRBorderOn = False      ; don't draw right axis
