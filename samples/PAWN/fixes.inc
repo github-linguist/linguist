@@ -3333,7 +3333,7 @@ public OnGameModeInit()
 	
 	#if FIXES_Single
 		// Check this really IS the only script running.  Properties reset when
-		// a gamemode restarts, so we don't have to worry about filterscipts
+		// a gamemode restarts, so we don't have to worry about filterscripts
 		// detecting themselves.
 		if (FIXES_gsSettings & e_FIXES_SETTINGS_SECOND_USE)
 		{
