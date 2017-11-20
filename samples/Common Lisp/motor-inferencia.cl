@@ -451,13 +451,13 @@ ____________________________________________________________________________|#
   (and (consp term) (eql (first term) '?=)))
 
 
-(defun in-fact-list? (expresion)
-  (some #'(lambda(x) (equal x expresion)) *fact-list*))
+(defun in-fact-list? (expression)
+  (some #'(lambda(x) (equal x expression)) *fact-list*))
                      
-(defun not-in-fact-list? (expresion)
-  (if (eq (car expresion) 'NOT)
-      (in-fact-list? (second expresion))
-    (in-fact-list? (list 'NOT expresion))))
+(defun not-in-fact-list? (expression)
+  (if (eq (car expression) 'NOT)
+      (in-fact-list? (second expression))
+    (in-fact-list? (list 'NOT expression))))
 
 
 ;; add-fact:
