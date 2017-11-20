@@ -53,7 +53,7 @@ CStringClass.Str PROCEDURE  (STRING pStr) !,*CSTRING, PROC   ! Declare Procedure
   CODE
   IF Len(pStr) > SELF.newStrSize
     ! Only Dispose/New the internal string if the new one requires it.
-    ! This might be slightly innefficient in terms of memory usage when the string gets smaller
+    ! This might be slightly inefficient in terms of memory usage when the string gets smaller
     ! But it is _vasty_ better for performance when the string gets added to a lot.
     Dispose(SELF.CS)
     SELF.newStrSize = Len(pStr) + 1 + SELF.bufferSize
