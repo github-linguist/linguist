@@ -25,7 +25,7 @@ let myContext = defaultContext():
   }):
   define("exit", |this, result| {
     require(result >= 3, "wrong value")
-    println("goobye")
+    println("goodbye")
     return result
   }):
   define("catcher", |this, e| {
