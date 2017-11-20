@@ -104,7 +104,7 @@ protected:
    RegexTree        *m_tree;
    RunnerReference *m_runnerref;      // cached runner
    ReplacementReference*m_replref;    // cached parsed replacement pattern
-   RegexCode        *m_code;          // if interpreted, this is the code for RegexIntepreter
+   RegexCode        *m_code;          // if interpreted, this is the code for RegexInterpreter
    bool              m_refsInitialized;// Default is false
    static            LinkedList<CachedCodeEntry*>m_livecode;// the cached of code that are currently loaded
    static int        m_cacheSize;     // Default is 15
