@@ -265,7 +265,7 @@ HDC = Handle (ado_Palette)
 // Get the object's dimensions
 GetClientRect (HDC, DC_RECT)
 
-// let's resize the grandient rectangle if border is displayed
+// let's resize the gradient rectangle if border is displayed
 IF ib_displayborder THEN
 	// Initialize the vertices
 	Corner[1].X = DC_RECT.Left +1 
@@ -392,7 +392,7 @@ HDC = Handle (ado_Palette)
 // Get the object's dimensions
 GetClientRect (HDC, DC_RECT)
 
-// let's resize the grandient rectangle if border is displayed
+// let's resize the gradient rectangle if border is displayed
 choose case ai_style
 	case 2
 	IF ab_border THEN
