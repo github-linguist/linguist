@@ -139,7 +139,7 @@ let s:terms_italic=[
             \"rxvt",
             \"gnome-terminal"
             \]
-" For reference only, terminals are known to be incomptible.
+" For reference only, terminals are known to be incompatible.
 " Terminals that are in neither list need to be tested.
 let s:terms_noitalic=[
             \"iTerm.app",
