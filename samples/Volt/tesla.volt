@@ -16,7 +16,7 @@ int main()
 {
 	auto cmdGroup = new CmdGroup();
 	bool printOk = true;
-	bool printImprovments = true;
+	bool printImprovements = true;
 	bool printFailing = true;
 	bool printRegressions = true;
 	string compiler = getEnv("VOLT");
@@ -50,7 +50,7 @@ int main()
 			passed++;
 			improved += cast(int)!ret.hasPassed;
 
-			if (!ret.hasPassed && printImprovments) {
+			if (!ret.hasPassed && printImprovements) {
 				printf("%s: %s, improved!\n".ptr, ret.test.ptr, ret.msg.ptr);
 			} else if (printOk) {
 				printf("%s: %s\n".ptr, ret.test.ptr, ret.msg.ptr);
