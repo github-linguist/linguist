@@ -21,7 +21,7 @@ PossiblyNonzeroQ::usage="Returns True if and only if its argument is not definit
 
 
 (* ::Subsection:: *)
-(*Implimentation*)
+(*Implementation*)
 
 
 Begin["`Private`"];
@@ -74,7 +74,7 @@ SymbolOrNumberQ::usage="Returns True if argument is a number of has head 'Symbol
 
 
 (* ::Subsection:: *)
-(*Implimentation*)
+(*Implementation*)
 
 
 Begin["`Private`"];

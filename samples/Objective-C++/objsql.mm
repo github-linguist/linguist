@@ -1,5 +1,5 @@
 /*
- *  objsql.m - implementaion simple persistence layer using objcpp.h
+ *  objsql.m - implementation simple persistence layer using objcpp.h
  *  ========
  *
  *  Created by John Holdsworth on 01/04/2009.
