@@ -28,7 +28,7 @@ InstallMethod( SomeProperty,
 ##
 #F  SomeGlobalFunction( )
 ##
-##  A global variadic funfion.
+##  A global variadic function.
 ##
 InstallGlobalFunction( SomeGlobalFunction, function( arg )
     if Length( arg ) = 3 then
