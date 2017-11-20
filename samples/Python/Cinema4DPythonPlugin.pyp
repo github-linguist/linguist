@@ -13,7 +13,7 @@
 #
 # The XPAT plugin provides tools for aligning nodes in the Cinema 4D
 # XPresso Editor, improving readability of complex XPresso set-ups
-# immensively.
+# immensely.
 #
 # Requirements:
 # - MAXON Cinema 4D R13+
