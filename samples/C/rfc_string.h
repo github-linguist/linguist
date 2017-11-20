@@ -1425,7 +1425,7 @@ i_DECLIMEX_ int32_t rfString_Append_fUTF32(RF_String* str,FILE* f,char endianess
 // + @c RE_INTERRUPT: Writting failed due to a system interrupt
 // + @c RE_FILE_IO: Writting failed because of a physical I/O error
 // + @c RE_FILE_NOSPACE: Writting failed because the device containing the file had no free space
-// + @c RE_FILE_NOT_FILE: Writting failed because the given file descriptor @c f is either non existen or not a file
+// + @c RE_FILE_NOT_FILE: Writting failed because the given file descriptor @c f is either non existent or not a file
 #if defined(RF_IAMHERE_FOR_DOXYGEN)
     i_DECLIMEX_ int32_t rfString_Fwrite(void* s,FILE* f,char encoding);
 #else
