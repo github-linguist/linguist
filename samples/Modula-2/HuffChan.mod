@@ -17,7 +17,7 @@ TYPE
 
   smbT = RECORD			(* Huffman's tree *)
     ch			: CHAR;
-    n			: CARDINAL; (* frequncy of char ch *)
+    n			: CARDINAL; (* frequency of char ch *)
     left,right,next	: smbTp;
   END;
 
@@ -29,7 +29,7 @@ TYPE
   lclDataT = RECORD	(* channel's local data *)
     tRoot 	: smbTp;
     htbl	: ARRAY [0..255] OF tblT;     (* code -> bit sequence table *)
-    ftbl  	: ARRAY [0..255] OF CARDINAL; (* frequncey table *)
+    ftbl  	: ARRAY [0..255] OF CARDINAL; (* frequency table *)
     wBf,rb1,rb2	: CARDINAL;
     wbc,rbc,smc	: INTEGER;
     chid	: IOChan.ChanId;
