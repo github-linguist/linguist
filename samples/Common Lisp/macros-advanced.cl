@@ -64,7 +64,7 @@
 ;   c. use `gensym` at macro expansion time to create variable names used in the
 ;      expansion
 ;
-; Appendix I. Macro-writting macros, 'with-gensyms', to guranttee that rule c
+; Appendix I. Macro-writting macros, 'with-gensyms', to guarantee that rule c
 ; gets observed.
 ; Example usage of `with-gensyms`
 (defmacro do-primes-a ((var start end) &body body)
