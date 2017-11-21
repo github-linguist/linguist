@@ -12,3 +12,5 @@ WORKDIR /go/src/github.com/github/linguist/tools/grammars
 COPY . .
 
 RUN go install ./cmd/grammar-compiler
+
+ENTRYPOINT ["grammar-compiler"]

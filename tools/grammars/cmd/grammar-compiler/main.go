@@ -344,18 +344,17 @@ func ConvertProto(ext string, data []byte) (*grammar.Rule, []string, error) {
 	return &out, filterUnusedKeys(md.Unused), nil
 }
 
-type job struct {
-	src    string
-	scopes []string
-}
-
 type Converter struct {
-	Root string
+	root string
+
+	grammars    map[string][]string
+	newGrammars map[string][]string
+	modified    bool
 
 	errors   []error
 	progress *pb.ProgressBar
 	wg       sync.WaitGroup
-	queue    chan job
+	queue    chan string
 	library  grammar.Library
 	mu       sync.Mutex
 }
@@ -365,16 +364,80 @@ func (conv *Converter) NewLoader(src string) Loader {
 		return &urlLoader{src, make(map[string][]string)}
 	}
 
-	src = path.Join(conv.Root, src)
+	src = path.Join(conv.root, src)
 	return &fsLoader{src, make(map[string][]string)}
 }
 
-func compareScopes(src string, found []*grammar.Rule, expected []string) (errors []error) {
+func (conv *Converter) work() {
+	for source := range conv.queue {
+		var errors []error
+		var scopes []string
+
+		loader := conv.NewLoader(source)
+
+		rules, err := loader.Load()
+		if err != nil {
+			errors = append(errors, err)
+			continue
+		}
+
+		for file, keys := range loader.UnknownKeys() {
+			if len(keys) > 0 {
+				errors = append(errors, &UnknownKeysError{keys, file})
+			}
+		}
+
+		conv.mu.Lock()
+		for _, r := range rules {
+			conv.library.Grammars[r.ScopeName] = r
+			scopes = append(scopes, r.ScopeName)
+		}
+		conv.errors = append(conv.errors, errors...)
+		conv.newGrammars[source] = scopes
+		conv.mu.Unlock()
+
+		conv.progress.Increment()
+	}
+
+	conv.wg.Done()
+}
+
+func (conv *Converter) AddGrammar(source string) error {
+	if _, ok := conv.grammars[source]; ok {
+		// replace scopes
+		conv.grammars[source] = nil
+	}
+
+	loader := conv.NewLoader(source)
+	rules, err := loader.Load()
+	if err != nil {
+		return err
+	}
+	if len(rules) == 0 {
+		return fmt.Errorf("source '%s' contains no grammar files", source)
+	}
+
+	var scopes []string
+	for _, r := range rules {
+		scopes = append(scopes, r.ScopeName)
+	}
+	conv.grammars[source] = scopes
+	conv.modified = true
+
+	fmt.Printf("OK! added grammar source '%s'\n", source)
+	for _, scope := range scopes {
+		fmt.Printf("\tnew scope: %s\n", scope)
+	}
+
+	return nil
+}
+
+func compareScopes(src string, expected []string, found []string) (errors []error) {
 	foundM := make(map[string]bool)
 	expectM := make(map[string]bool)
 
 	for _, v := range found {
-		foundM[v.ScopeName] = true
+		foundM[v] = true
 	}
 	for _, v := range expected {
 		expectM[v] = true
@@ -392,131 +455,46 @@ func compareScopes(src string, found []*grammar.Rule, expected []string) (errors
 	return
 }
 
-func (conv *Converter) work() {
-	var errors []error
-	grammars := make(map[string]*grammar.Rule)
-
-	for j := range conv.queue {
-		loader := conv.NewLoader(j.src)
-
-		rules, err := loader.Load()
-		if err != nil {
-			errors = append(errors, err)
-			continue
-		}
-
-		for _, r := range rules {
-			grammars[r.ScopeName] = r
-		}
-
-		for src, keys := range loader.UnknownKeys() {
-			if len(keys) > 0 {
-				errors = append(errors, &UnknownKeysError{keys, src})
-			}
-		}
-
-		errors = append(errors, compareScopes(j.src, rules, j.scopes)...)
-		conv.progress.Increment()
+func (conv *Converter) compareGrammarLists() {
+	for source, expected := range conv.grammars {
+		found := conv.newGrammars[source]
+		errors := compareScopes(source, expected, found)
+		conv.errors = append(conv.errors, errors...)
 	}
-
-	conv.mu.Lock()
-	conv.errors = append(conv.errors, errors...)
-	for scope, rule := range grammars {
-		conv.library.Grammars[scope] = rule
-	}
-	conv.mu.Unlock()
-
-	conv.wg.Done()
 }
 
-func countScopes(grammars map[string][]string) (count int) {
-	for _, v := range grammars {
-		count += len(v)
-	}
-	return
-}
-
-func (conv *Converter) readGrammarYML() (grammars map[string][]string, err error) {
-	var yml []byte
-
-	yml, err = ioutil.ReadFile(path.Join(conv.Root, "grammars.yml"))
-	if err != nil {
-		return
-	}
-
-	err = yaml.Unmarshal(yml, &grammars)
-	return
-}
-
-func (conv *Converter) AddGrammar(source string) error {
-	grammars, err := conv.readGrammarYML()
-	if err != nil {
-		return err
-	}
-
-	if _, ok := grammars[source]; ok {
-		// replace scopes
-		grammars[source] = nil
-	}
-
-	loader := conv.NewLoader(source)
-	rules, err := loader.Load()
-	if err != nil {
-		return err
-	}
-
-	var scopes []string
-	for _, r := range rules {
-		scopes = append(scopes, r.ScopeName)
-	}
-	grammars[source] = scopes
-
-	outyml, err := yaml.Marshal(grammars)
-	if err != nil {
-		return err
-	}
-
-	ymlpath := path.Join(conv.Root, "grammars.yml")
-	if err := ioutil.WriteFile(ymlpath, outyml, 0666); err != nil {
-		return err
-	}
-
-	fmt.Printf("OK! added grammar source '%s' to grammars.yml\n", source)
-	for _, scope := range scopes {
-		fmt.Printf("\tnew scope: %s\n", scope)
-	}
-
-	return nil
-}
-
-func (conv *Converter) ConvertGrammars() error {
-	grammars, err := conv.readGrammarYML()
-	if err != nil {
-		return err
-	}
-
-	conv.progress = pb.New(len(grammars))
+func (conv *Converter) ConvertGrammars(update bool) error {
+	conv.progress = pb.New(len(conv.grammars))
 	conv.progress.Start()
 
+	conv.newGrammars = make(map[string][]string)
 	conv.library.Grammars = make(map[string]*grammar.Rule)
-	conv.queue = make(chan job, 128)
+	conv.queue = make(chan string, 128)
 
 	for i := 0; i < runtime.NumCPU(); i++ {
 		conv.wg.Add(1)
 		go conv.work()
 	}
 
-	for src, scopes := range grammars {
-		conv.queue <- job{src, scopes}
+	for src := range conv.grammars {
+		conv.queue <- src
 	}
 
 	close(conv.queue)
 	conv.wg.Wait()
 	conv.resolveIncludes()
 
+	if update {
+		conv.grammars = conv.newGrammars
+		conv.modified = true
+	} else {
+		conv.compareGrammarLists()
+	}
+
 	done := fmt.Sprintf("done! %d scopes converted from %d grammars (%d errors)\n",
-		len(conv.library.Grammars), len(grammars), len(conv.errors))
+		len(conv.library.Grammars), len(conv.grammars), len(conv.errors))
 	conv.progress.FinishPrint(done)
+
 	return nil
 }
 
@@ -613,45 +591,95 @@ func (conv *Converter) resolveIncludes() {
 	}
 }
 
+func (conv *Converter) WriteGrammarList() error {
+	if !conv.modified {
+		return nil
+	}
+
+	outyml, err := yaml.Marshal(conv.grammars)
+	if err != nil {
+		return err
+	}
+
+	ymlpath := path.Join(conv.root, "grammars.yml")
+	return ioutil.WriteFile(ymlpath, outyml, 0666)
+}
+
 func (conv *Converter) Report() {
 	for _, err := range conv.errors {
 		fmt.Printf("- %s\n\n", err)
 	}
 }
 
+func NewConverter(root string) (*Converter, error) {
+	yml, err := ioutil.ReadFile(path.Join(root, "grammars.yml"))
+	if err != nil {
+		return nil, err
+	}
+
+	conv := &Converter{root: root}
+
+	if err := yaml.Unmarshal(yml, &conv.grammars); err != nil {
+		return nil, err
+	}
+
+	return conv, nil
+}
+
 var linguistRoot = flag.String("linguist", "", "path to Linguist installation")
 var protoOut = flag.String("proto", "", "dump Protobuf library")
 var jsonOut = flag.String("json", "", "dump JSON output")
+var addGrammar = flag.String("add", "", "add a new grammar source")
+var updateList = flag.Bool("update", false, "update grammars.yml instead of verifying its contents")
+
+func fatal(err error) {
+	fmt.Fprintf(os.Stderr, "FATAL: %s\n", err)
+	os.Exit(1)
+}
 
 func main() {
 	flag.Parse()
 
 	if _, err := exec.LookPath("csonc"); err != nil {
-		panic(err)
+		fatal(err)
 	}
 
 	if *linguistRoot == "" {
-		ex, err := os.Executable()
+		cwd, err := os.Getwd()
 		if err != nil {
-			panic(err)
+			fatal(err)
 		}
-		*linguistRoot = path.Join(filepath.Dir(ex), "../../")
+		*linguistRoot = cwd
 	}
 
-	conv := Converter{Root: *linguistRoot}
-	if err := conv.ConvertGrammars(); err != nil {
-		panic(err)
+	conv, err := NewConverter(*linguistRoot)
+	if err != nil {
+		fatal(err)
+	}
+
+	if *addGrammar != "" {
+		if err := conv.AddGrammar(*addGrammar); err != nil {
+			fatal(err)
+		}
+	}
+
+	if err := conv.ConvertGrammars(*updateList); err != nil {
+		fatal(err)
+	}
+
+	if err := conv.WriteGrammarList(); err != nil {
+		fatal(err)
 	}
 
 	if *protoOut != "" {
 		if err := conv.WriteProto(*protoOut); err != nil {
-			panic(err)
+			fatal(err)
 		}
 	}
 
 	if *jsonOut != "" {
 		if err := conv.WriteJSON(*jsonOut); err != nil {
-			panic(err)
+			fatal(err)
 		}
 	}
 
