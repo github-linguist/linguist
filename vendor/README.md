@@ -169,7 +169,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Ioke:** [vic/ioke-outdated](https://github.com/vic/ioke-outdated)
 - **Isabelle:** [lsf37/Isabelle.tmbundle](https://github.com/lsf37/Isabelle.tmbundle)
 - **Isabelle ROOT:** [lsf37/Isabelle.tmbundle](https://github.com/lsf37/Isabelle.tmbundle)
-- **J:** [bcj/JSyntax](https://github.com/bcj/JSyntax)
+- **J:** [tikkanz/JSyntax](https://github.com/tikkanz/JSyntax)
 - **Jasmin:** [atmarksharp/jasmin-sublime](https://github.com/atmarksharp/jasmin-sublime)
 - **Java:** [textmate/java.tmbundle](https://github.com/textmate/java.tmbundle)
 - **Java Server Pages:** [textmate/java.tmbundle](https://github.com/textmate/java.tmbundle)

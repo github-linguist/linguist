@@ -16,6 +16,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"runtime"
+	"sort"
 	"strings"
 	"sync"
 
@@ -100,14 +101,18 @@ func (err *UnknownKeysError) Error() string {
 	return fmt.Sprintf("unknown keys in grammar\n\tfile: %s\n\tkeys: %+v", err.Source, err.Keys)
 }
 
+type Loaded struct {
+	source      string
+	rule        *grammar.Rule
+	unknownKeys []string
+}
+
 type Loader interface {
-	Load() ([]*grammar.Rule, error)
-	UnknownKeys() map[string][]string
+	Load(map[string]Loaded) error
 }
 
 type fsLoader struct {
-	path    string
-	unknown map[string][]string
+	path string
 }
 
 func isValidGrammar(path string, info os.FileInfo) bool {
@@ -141,50 +146,45 @@ func (l *fsLoader) findGrammars() (files []string, err error) {
 	return
 }
 
-func (l *fsLoader) Load() (files []*grammar.Rule, err error) {
+func (l *fsLoader) Load(loaded map[string]Loaded) error {
 	grammars, err := l.findGrammars()
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	var rules []*grammar.Rule
 	for _, path := range grammars {
 		data, err := ioutil.ReadFile(path)
 		if err != nil {
-			return nil, err
+			return err
 		}
 
 		rule, unknown, err := ConvertProto(filepath.Ext(path), data)
 		if err != nil {
-			return nil, &ConversionError{err, path}
+			return &ConversionError{err, path}
 		}
 
-		rules = append(rules, rule)
-		l.unknown[path] = unknown
+		if _, ok := loaded[rule.ScopeName]; ok {
+			continue
+		}
+
+		loaded[rule.ScopeName] = Loaded{path, rule, unknown}
 	}
 
-	return rules, nil
-}
-
-func (l *fsLoader) UnknownKeys() map[string][]string {
-	return l.unknown
+	return nil
 }
 
 type urlLoader struct {
-	url     string
-	unknown map[string][]string
+	url string
 }
 
-func (l *urlLoader) loadTarball(r io.Reader) ([]*grammar.Rule, error) {
+func (l *urlLoader) loadTarball(r io.Reader, loaded map[string]Loaded) error {
 	gzf, err := gzip.NewReader(r)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer gzf.Close()
 
-	var rules []*grammar.Rule
 	tarReader := tar.NewReader(gzf)
-
 	for true {
 		header, err := tarReader.Next()
 
@@ -193,57 +193,56 @@ func (l *urlLoader) loadTarball(r io.Reader) ([]*grammar.Rule, error) {
 		}
 
 		if err != nil {
-			return nil, err
+			return err
 		}
 
 		if isValidGrammar(header.Name, header.FileInfo()) {
 			data, err := ioutil.ReadAll(tarReader)
 			if err != nil {
-				return nil, err
+				return err
 			}
 
 			ext := filepath.Ext(header.Name)
 			rule, uk, err := ConvertProto(ext, data)
 			if err != nil {
-				return nil, &ConversionError{err, header.Name}
+				return &ConversionError{err, header.Name}
 			}
 
-			rules = append(rules, rule)
-			l.unknown[header.Name] = uk
+			if _, ok := loaded[rule.ScopeName]; ok {
+				continue
+			}
+
+			loaded[rule.ScopeName] = Loaded{header.Name, rule, uk}
 		}
 	}
 
-	return rules, nil
+	return nil
 }
 
-func (l *urlLoader) Load() ([]*grammar.Rule, error) {
+func (l *urlLoader) Load(loaded map[string]Loaded) error {
 	res, err := http.Get(l.url)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer res.Body.Close()
 
 	if strings.HasSuffix(l.url, ".tar.gz") {
-		return l.loadTarball(res.Body)
+		return l.loadTarball(res.Body, loaded)
 	}
 
 	data, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	ext := filepath.Ext(l.url)
 	rule, unknown, err := ConvertProto(ext, data)
 	if err != nil {
-		return nil, &ConversionError{err, l.url}
+		return &ConversionError{err, l.url}
 	}
 
-	l.unknown[l.url] = unknown
-	return []*grammar.Rule{rule}, nil
-}
-
-func (l *urlLoader) UnknownKeys() map[string][]string {
-	return l.unknown
+	loaded[rule.ScopeName] = Loaded{l.url, rule, unknown}
+	return nil
 }
 
 func ConvertCSON(data []byte) ([]byte, error) {
@@ -361,43 +360,54 @@ type Converter struct {
 
 func (conv *Converter) NewLoader(src string) Loader {
 	if strings.HasPrefix(src, "http://") || strings.HasPrefix(src, "https://") {
-		return &urlLoader{src, make(map[string][]string)}
+		return &urlLoader{src}
 	}
 
 	src = path.Join(conv.root, src)
-	return &fsLoader{src, make(map[string][]string)}
+	return &fsLoader{src}
 }
 
 func (conv *Converter) work() {
+	var (
+		localErrors []error
+		localScopes = make(map[string][]string)
+		localRules  = make(map[string]*grammar.Rule)
+	)
+
 	for source := range conv.queue {
-		var errors []error
-		var scopes []string
-
 		loader := conv.NewLoader(source)
+		rules := make(map[string]Loaded)
 
-		rules, err := loader.Load()
+		err := loader.Load(rules)
 		if err != nil {
-			errors = append(errors, err)
+			localErrors = append(localErrors, err)
 			continue
 		}
 
-		for file, keys := range loader.UnknownKeys() {
-			if len(keys) > 0 {
-				errors = append(errors, &UnknownKeysError{keys, file})
+		var scopes []string
+		for scope, l := range rules {
+			if len(l.unknownKeys) > 0 {
+				localErrors = append(localErrors, &UnknownKeysError{l.unknownKeys, l.source})
 			}
+			scopes = append(scopes, scope)
+			localRules[scope] = l.rule
 		}
 
-		conv.mu.Lock()
-		for _, r := range rules {
-			conv.library.Grammars[r.ScopeName] = r
-			scopes = append(scopes, r.ScopeName)
-		}
-		conv.errors = append(conv.errors, errors...)
-		conv.newGrammars[source] = scopes
-		conv.mu.Unlock()
+		sort.Strings(scopes)
+		localScopes[source] = scopes
 
 		conv.progress.Increment()
 	}
+
+	conv.mu.Lock()
+	for source, scopes := range localScopes {
+		conv.newGrammars[source] = scopes
+	}
+	for scope, rule := range localRules {
+		conv.library.Grammars[scope] = rule
+	}
+	conv.errors = append(conv.errors, localErrors...)
+	conv.mu.Unlock()
 
 	conv.wg.Done()
 }
@@ -409,7 +419,9 @@ func (conv *Converter) AddGrammar(source string) error {
 	}
 
 	loader := conv.NewLoader(source)
-	rules, err := loader.Load()
+	rules := make(map[string]Loaded)
+
+	err := loader.Load(rules)
 	if err != nil {
 		return err
 	}
@@ -418,9 +430,10 @@ func (conv *Converter) AddGrammar(source string) error {
 	}
 
 	var scopes []string
-	for _, r := range rules {
-		scopes = append(scopes, r.ScopeName)
+	for scope := range rules {
+		scopes = append(scopes, scope)
 	}
+	sort.Strings(scopes)
 	conv.grammars[source] = scopes
 	conv.modified = true
 
