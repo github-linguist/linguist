@@ -19,11 +19,11 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/github/linguist/tools/grammars/progress"
 	grammar "github.com/github/linguist/tools/grammars/proto"
 	"github.com/golang/protobuf/proto"
 	"github.com/groob/plist"
 	"github.com/mitchellh/mapstructure"
+	"gopkg.in/cheggaaa/pb.v1"
 	"gopkg.in/yaml.v2"
 )
 
@@ -353,7 +353,7 @@ type Converter struct {
 	Root string
 
 	errors   []error
-	progress *progress.ProgressBar
+	progress *pb.ProgressBar
 	wg       sync.WaitGroup
 	queue    chan job
 	library  grammar.Library
@@ -416,7 +416,7 @@ func (conv *Converter) work() {
 		}
 
 		errors = append(errors, compareScopes(j.src, rules, j.scopes)...)
-		conv.progress.Update(len(rules))
+		conv.progress.Increment()
 	}
 
 	conv.mu.Lock()
@@ -495,13 +495,9 @@ func (conv *Converter) ConvertGrammars() error {
 		return err
 	}
 
-	scopeCount := countScopes(grammars)
-	progress, err := progress.NewProgressBar(scopeCount)
-	if err != nil {
-		return err
-	}
+	conv.progress = pb.New(len(grammars))
+	conv.progress.Start()
 
-	conv.progress = progress
 	conv.library.Grammars = make(map[string]*grammar.Rule)
 	conv.queue = make(chan job, 128)
 
@@ -516,9 +512,11 @@ func (conv *Converter) ConvertGrammars() error {
 
 	close(conv.queue)
 	conv.wg.Wait()
-	conv.progress.Done()
-
 	conv.resolveIncludes()
+
+	done := fmt.Sprintf("done! %d scopes converted from %d grammars (%d errors)\n",
+		len(conv.library.Grammars), len(grammars), len(conv.errors))
+	conv.progress.FinishPrint(done)
 	return nil
 }
 
@@ -616,9 +614,6 @@ func (conv *Converter) resolveIncludes() {
 }
 
 func (conv *Converter) Report() {
-	fmt.Printf("done! %d scopes converted (%d errors)\n",
-		len(conv.library.Grammars), len(conv.errors))
-
 	for _, err := range conv.errors {
 		fmt.Printf("- %s\n\n", err)
 	}

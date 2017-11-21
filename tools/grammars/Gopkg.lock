@@ -14,10 +14,22 @@
   revision = "7b367e0aa692e62a223e823f3288c0c00f519a36"
 
 [[projects]]
+  name = "github.com/mattn/go-runewidth"
+  packages = ["."]
+  revision = "9e777a8366cce605130a531d2cd6363d07ad7317"
+  version = "v0.0.2"
+
+[[projects]]
   branch = "master"
   name = "github.com/mitchellh/mapstructure"
   packages = ["."]
   revision = "06020f85339e21b2478f756a78e295255ffa4d6a"
+
+[[projects]]
+  name = "gopkg.in/cheggaaa/pb.v1"
+  packages = ["."]
+  revision = "657164d0228d6bebe316fdf725c69f131a50fb10"
+  version = "v1.0.18"
 
 [[projects]]
   branch = "v2"
@@ -28,6 +40,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "cef809a91f96462115e837ccd28b4b660e40e7c85cdc3fb457613312ab64c113"
+  inputs-digest = "eb10157687c05a542025c119a5280abe429e29141bde70dd437d48668f181861"
   solver-name = "gps-cdcl"
   solver-version = 1
