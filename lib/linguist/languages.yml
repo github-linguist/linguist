@@ -1160,7 +1160,7 @@ Ecere Projects:
 Edje Data Collection:
   type: data
   extensions:
-   - ".edc"
+  - ".edc"
   tm_scope: source.json
   ace_mode: json
   codemirror_mode: javascript
@@ -3440,6 +3440,14 @@ Pony:
   tm_scope: source.pony
   ace_mode: text
   language_id: 290
+PostCSS:
+  type: markup
+  tm_scope: source.postcss
+  group: CSS
+  extensions:
+  - ".pcss"
+  ace_mode: text
+  language_id: 262764437
 PostScript:
   type: markup
   color: "#da291c"
@@ -4427,6 +4435,14 @@ Sublime Text Config:
   - ".sublime_metrics"
   - ".sublime_session"
   language_id: 423
+SugarSS:
+  type: markup
+  tm_scope: source.css.postcss.sugarss
+  group: CSS
+  extensions:
+  - ".sss"
+  ace_mode: text
+  language_id: 826404698
 SuperCollider:
   type: programming
   color: "#46390b"
