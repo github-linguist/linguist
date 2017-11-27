@@ -2331,7 +2331,7 @@ xtskip_l3:
 	defword_end
 
 ;;;;;;;;;;;;;;;;;;;;;;
-; input parseing words
+; input parsing words
 ;;;;;;;;;;;;;;;;;;;;;;
 
 	defword "parse-name", 0, WORD_PARSENAME, WORD_CALL_COMMA
