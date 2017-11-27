@@ -42,7 +42,7 @@ function bicycle = bicycle_state_space(bicycle, speed, varargin)
 S = dbstack('-completenames');
 [CURRENT_DIRECTORY, ~, ~] = fileparts(S(1).file);
 
-% load the paramaters
+% load the parameters
 par = par_text_to_struct([CURRENT_DIRECTORY filesep 'parameters' ...
     filesep bicycle 'Par.txt']);
 

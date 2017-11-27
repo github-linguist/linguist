@@ -105,7 +105,7 @@ component extends="coldbox.system.orm.hibernate.VirtualEntityService" singleton{
 	}
 
 	/**
-	* Searches published content with cool paramters, remember published content only
+	* Searches published content with cool parameters, remember published content only
 	* @searchTerm.hint The search term to search
 	* @max.hint The maximum number of records to paginate
 	* @offset.hint The offset in the pagination

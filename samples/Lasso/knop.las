@@ -5912,7 +5912,7 @@ CHANGE NOTES
 2010-11-17	JC	Fixed bug so that session links no longer gets added to urls by the nav -> url tag.
 2010-11-17	JC	Fixed a bug that would not convert local params to an array under certain situations
 2009-09-18	JS	Syntax adjustments for Lasso 9
-2009-09-04	JS	->linkparams: Multiple paramaters with the same name (typically checkboxes) are now passed properly
+2009-09-04	JS	->linkparams: Multiple parameters with the same name (typically checkboxes) are now passed properly
 2009-05-06	JS	->directorytree considers _include folders as part of the Knop directory structure. nav->include('_include/myfile.inc') will first look for _include/myfile.inc and if not found it will look for _knop/_include/myfile.inc 
 2009-05-05	JS	->include looks for a specified file also inside a _knop folder, if the file does not exist at the specified location
 2009-02-09	JS	->filename: Casting path and actionpath to string
@@ -7836,7 +7836,7 @@ Permissions can be read, create, update, delete, or application specific (for ex
 		local('output'=string, 'changenotes'=map('knop_nav'='2010-11-17	JC	Fixed bug so that session links no longer gets added to urls by the nav -> url tag.
 2010-11-17	JC	Fixed a bug that would not convert local params to an array under certain situations
 2009-09-18	JS	Syntax adjustments for Lasso 9
-2009-09-04	JS	->linkparams: Multiple paramaters with the same name (typically checkboxes) are now passed properly
+2009-09-04	JS	->linkparams: Multiple parameters with the same name (typically checkboxes) are now passed properly
 2009-05-06	JS	->directorytree considers _include folders as part of the Knop directory structure. nav->include(\'_include/myfile.inc\') will first look for _include/myfile.inc and if not found it will look for _knop/_include/myfile.inc 
 2009-05-05	JS	->include looks for a specified file also inside a _knop folder, if the file does not exist at the specified location
 2009-02-09	JS	->filename: Casting path and actionpath to string
