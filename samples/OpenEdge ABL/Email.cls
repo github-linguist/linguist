@@ -428,7 +428,7 @@ CLASS email.Email  USE-WIDGET-POOL:
             END. /* FOR EACH ttReplyToRecipients ... */
         END. /* IF TEMP-TABLE ttReplyToRecipients:HAS-RECORDS */
         ELSE DO:
-            /* Write reply-to using sender addresses if reply-to addresses not manually overriddden */
+            /* Write reply-to using sender addresses if reply-to addresses not manually overridden */
             FOR EACH ttSenders
               BREAK BY ttSenders.cEmailAddress:
                 IF ttSenders.cRealName NE ? THEN

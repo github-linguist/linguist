@@ -1839,7 +1839,7 @@ static double __pyx_f_7sklearn_12linear_model_8sgd_fast_12LossFunction_loss(CYTH
   __Pyx_RefNannySetupContext("loss", 0);
   /* Check if called by wrapper */
   if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overriden in Python */
+  /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
     __pyx_t_1 = PyObject_GetAttr(((PyObject *)__pyx_v_self), __pyx_n_s__loss); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 49; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
@@ -2010,7 +2010,7 @@ static double __pyx_f_7sklearn_12linear_model_8sgd_fast_12LossFunction_dloss(CYT
   __Pyx_RefNannySetupContext("dloss", 0);
   /* Check if called by wrapper */
   if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overriden in Python */
+  /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
     __pyx_t_1 = PyObject_GetAttr(((PyObject *)__pyx_v_self), __pyx_n_s__dloss); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 66; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
@@ -2181,7 +2181,7 @@ static double __pyx_f_7sklearn_12linear_model_8sgd_fast_10Regression_loss(CYTHON
   __Pyx_RefNannySetupContext("loss", 0);
   /* Check if called by wrapper */
   if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overriden in Python */
+  /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
     __pyx_t_1 = PyObject_GetAttr(((PyObject *)__pyx_v_self), __pyx_n_s__loss); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 87; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
@@ -2351,7 +2351,7 @@ static double __pyx_f_7sklearn_12linear_model_8sgd_fast_10Regression_dloss(CYTHO
   __Pyx_RefNannySetupContext("dloss", 0);
   /* Check if called by wrapper */
   if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overriden in Python */
+  /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
     __pyx_t_1 = PyObject_GetAttr(((PyObject *)__pyx_v_self), __pyx_n_s__dloss); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 90; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
@@ -2521,7 +2521,7 @@ static double __pyx_f_7sklearn_12linear_model_8sgd_fast_14Classification_loss(CY
   __Pyx_RefNannySetupContext("loss", 0);
   /* Check if called by wrapper */
   if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overriden in Python */
+  /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
     __pyx_t_1 = PyObject_GetAttr(((PyObject *)__pyx_v_self), __pyx_n_s__loss); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 97; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
@@ -2691,7 +2691,7 @@ static double __pyx_f_7sklearn_12linear_model_8sgd_fast_14Classification_dloss(C
   __Pyx_RefNannySetupContext("dloss", 0);
   /* Check if called by wrapper */
   if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overriden in Python */
+  /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
     __pyx_t_1 = PyObject_GetAttr(((PyObject *)__pyx_v_self), __pyx_n_s__dloss); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 100; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
@@ -2863,7 +2863,7 @@ static double __pyx_f_7sklearn_12linear_model_8sgd_fast_13ModifiedHuber_loss(CYT
   __Pyx_RefNannySetupContext("loss", 0);
   /* Check if called by wrapper */
   if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overriden in Python */
+  /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
     __pyx_t_1 = PyObject_GetAttr(((PyObject *)__pyx_v_self), __pyx_n_s__loss); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 112; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
@@ -3088,7 +3088,7 @@ static double __pyx_f_7sklearn_12linear_model_8sgd_fast_13ModifiedHuber_dloss(CY
   __Pyx_RefNannySetupContext("dloss", 0);
   /* Check if called by wrapper */
   if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overriden in Python */
+  /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
     __pyx_t_1 = PyObject_GetAttr(((PyObject *)__pyx_v_self), __pyx_n_s__dloss); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 121; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
@@ -3455,7 +3455,7 @@ static double __pyx_f_7sklearn_12linear_model_8sgd_fast_5Hinge_loss(struct __pyx
   __Pyx_RefNannySetupContext("loss", 0);
   /* Check if called by wrapper */
   if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overriden in Python */
+  /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
     __pyx_t_1 = PyObject_GetAttr(((PyObject *)__pyx_v_self), __pyx_n_s__loss); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 150; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
@@ -3656,7 +3656,7 @@ static double __pyx_f_7sklearn_12linear_model_8sgd_fast_5Hinge_dloss(struct __py
   __Pyx_RefNannySetupContext("dloss", 0);
   /* Check if called by wrapper */
   if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overriden in Python */
+  /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
     __pyx_t_1 = PyObject_GetAttr(((PyObject *)__pyx_v_self), __pyx_n_s__dloss); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 156; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
@@ -4008,7 +4008,7 @@ static double __pyx_f_7sklearn_12linear_model_8sgd_fast_12SquaredHinge_loss(stru
   __Pyx_RefNannySetupContext("loss", 0);
   /* Check if called by wrapper */
   if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overriden in Python */
+  /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
     __pyx_t_1 = PyObject_GetAttr(((PyObject *)__pyx_v_self), __pyx_n_s__loss); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 182; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
@@ -4209,7 +4209,7 @@ static double __pyx_f_7sklearn_12linear_model_8sgd_fast_12SquaredHinge_dloss(str
   __Pyx_RefNannySetupContext("dloss", 0);
   /* Check if called by wrapper */
   if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overriden in Python */
+  /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
     __pyx_t_1 = PyObject_GetAttr(((PyObject *)__pyx_v_self), __pyx_n_s__dloss); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 188; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
@@ -4479,7 +4479,7 @@ static double __pyx_f_7sklearn_12linear_model_8sgd_fast_3Log_loss(CYTHON_UNUSED 
   __Pyx_RefNannySetupContext("loss", 0);
   /* Check if called by wrapper */
   if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overriden in Python */
+  /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
     __pyx_t_1 = PyObject_GetAttr(((PyObject *)__pyx_v_self), __pyx_n_s__loss); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 201; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
@@ -4703,7 +4703,7 @@ static double __pyx_f_7sklearn_12linear_model_8sgd_fast_3Log_dloss(CYTHON_UNUSED
   __Pyx_RefNannySetupContext("dloss", 0);
   /* Check if called by wrapper */
   if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overriden in Python */
+  /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
     __pyx_t_1 = PyObject_GetAttr(((PyObject *)__pyx_v_self), __pyx_n_s__dloss); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 210; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
@@ -4985,7 +4985,7 @@ static double __pyx_f_7sklearn_12linear_model_8sgd_fast_11SquaredLoss_loss(CYTHO
   __Pyx_RefNannySetupContext("loss", 0);
   /* Check if called by wrapper */
   if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overriden in Python */
+  /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
     __pyx_t_1 = PyObject_GetAttr(((PyObject *)__pyx_v_self), __pyx_n_s__loss); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 225; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
@@ -5152,7 +5152,7 @@ static double __pyx_f_7sklearn_12linear_model_8sgd_fast_11SquaredLoss_dloss(CYTH
   __Pyx_RefNannySetupContext("dloss", 0);
   /* Check if called by wrapper */
   if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overriden in Python */
+  /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
     __pyx_t_1 = PyObject_GetAttr(((PyObject *)__pyx_v_self), __pyx_n_s__dloss); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 228; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
@@ -5456,7 +5456,7 @@ static double __pyx_f_7sklearn_12linear_model_8sgd_fast_5Huber_loss(struct __pyx
   __Pyx_RefNannySetupContext("loss", 0);
   /* Check if called by wrapper */
   if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overriden in Python */
+  /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
     __pyx_t_1 = PyObject_GetAttr(((PyObject *)__pyx_v_self), __pyx_n_s__loss); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 249; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
@@ -5669,7 +5669,7 @@ static double __pyx_f_7sklearn_12linear_model_8sgd_fast_5Huber_dloss(struct __py
   __Pyx_RefNannySetupContext("dloss", 0);
   /* Check if called by wrapper */
   if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overriden in Python */
+  /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
     __pyx_t_1 = PyObject_GetAttr(((PyObject *)__pyx_v_self), __pyx_n_s__dloss); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 257; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
@@ -6045,7 +6045,7 @@ static double __pyx_f_7sklearn_12linear_model_8sgd_fast_18EpsilonInsensitive_los
   __Pyx_RefNannySetupContext("loss", 0);
   /* Check if called by wrapper */
   if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overriden in Python */
+  /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
     __pyx_t_1 = PyObject_GetAttr(((PyObject *)__pyx_v_self), __pyx_n_s__loss); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 282; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
@@ -6227,7 +6227,7 @@ static double __pyx_f_7sklearn_12linear_model_8sgd_fast_18EpsilonInsensitive_dlo
   __Pyx_RefNannySetupContext("dloss", 0);
   /* Check if called by wrapper */
   if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overriden in Python */
+  /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
     __pyx_t_1 = PyObject_GetAttr(((PyObject *)__pyx_v_self), __pyx_n_s__dloss); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 286; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
@@ -6585,7 +6585,7 @@ static double __pyx_f_7sklearn_12linear_model_8sgd_fast_25SquaredEpsilonInsensit
   __Pyx_RefNannySetupContext("loss", 0);
   /* Check if called by wrapper */
   if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overriden in Python */
+  /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
     __pyx_t_1 = PyObject_GetAttr(((PyObject *)__pyx_v_self), __pyx_n_s__loss); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 309; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
@@ -6768,7 +6768,7 @@ static double __pyx_f_7sklearn_12linear_model_8sgd_fast_25SquaredEpsilonInsensit
   __Pyx_RefNannySetupContext("dloss", 0);
   /* Check if called by wrapper */
   if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overriden in Python */
+  /* Check if overridden in Python */
   else if (unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0)) {
     __pyx_t_1 = PyObject_GetAttr(((PyObject *)__pyx_v_self), __pyx_n_s__dloss); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 313; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
