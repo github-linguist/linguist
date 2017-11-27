@@ -99,7 +99,7 @@ struct redisCommand *commandTable;
  * m: may increase memory usage once called. Don't allow if out of memory.
  * a: admin command, like SAVE or SHUTDOWN.
  * p: Pub/Sub related command.
- * f: force replication of this command, regarless of server.dirty.
+ * f: force replication of this command, regardless of server.dirty.
  * s: command not allowed in scripts.
  * R: random command. Command is not deterministic, that is, the same command
  *    with the same arguments, with the same key space, may have different
