@@ -180,7 +180,7 @@ RF_String* i_rfString_CreateLocal1(const char* s,...)
     ret = rfLMS_Push(RF_LMS,sizeof(RF_String));
     if(ret == 0)
     {
-        LOG_ERROR("Memory allocation from the Local Memory Stack failed. Insufficient local memory stack space. Consider compiling the library with bigger stack space. Quitting proccess...",
+        LOG_ERROR("Memory allocation from the Local Memory Stack failed. Insufficient local memory stack space. Consider compiling the library with bigger stack space. Quitting process...",
                   RE_LOCALMEMSTACK_INSUFFICIENT);
         exit(RE_LOCALMEMSTACK_INSUFFICIENT);
     }
@@ -191,7 +191,7 @@ RF_String* i_rfString_CreateLocal1(const char* s,...)
     ret->bytes = rfLMS_Push(RF_LMS,ret->byteLength+1);
     if(ret->bytes == 0)
     {
-        LOG_ERROR("Memory allocation from the Local Memory Stack failed. Insufficient local memory stack space. Consider compiling the library with bigger stack space. Quitting proccess...",
+        LOG_ERROR("Memory allocation from the Local Memory Stack failed. Insufficient local memory stack space. Consider compiling the library with bigger stack space. Quitting process...",
                   RE_LOCALMEMSTACK_INSUFFICIENT);
         exit(RE_LOCALMEMSTACK_INSUFFICIENT);
     }
@@ -299,7 +299,7 @@ RF_String* i_NVrfString_CreateLocal(const char* s)
     ret = rfLMS_Push(RF_LMS,sizeof(RF_String));
     if(ret == 0)
     {
-        LOG_ERROR("Memory allocation from the Local Memory Stack failed during string allocation. Insufficient local memory stack space. Consider compiling the library with bigger stack space. Quitting proccess...",
+        LOG_ERROR("Memory allocation from the Local Memory Stack failed during string allocation. Insufficient local memory stack space. Consider compiling the library with bigger stack space. Quitting process...",
                   RE_LOCALMEMSTACK_INSUFFICIENT);
         exit(RE_LOCALMEMSTACK_INSUFFICIENT);
     }
@@ -309,7 +309,7 @@ RF_String* i_NVrfString_CreateLocal(const char* s)
     ret->bytes = rfLMS_Push(RF_LMS,ret->byteLength+1);
     if(ret->bytes == 0)
     {
-        LOG_ERROR("Memory allocation from the Local Memory Stack failed during string allocation. Insufficient local memory stack space. Consider compiling the library with bigger stack space. Quitting proccess...",
+        LOG_ERROR("Memory allocation from the Local Memory Stack failed during string allocation. Insufficient local memory stack space. Consider compiling the library with bigger stack space. Quitting process...",
                   RE_LOCALMEMSTACK_INSUFFICIENT);
         exit(RE_LOCALMEMSTACK_INSUFFICIENT);
     }
