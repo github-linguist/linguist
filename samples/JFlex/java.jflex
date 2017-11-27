@@ -8,7 +8,7 @@
 
 /* Java 1.2 language lexer specification */
 
-/* Use together with unicode.flex for Unicode preprocesssing */
+/* Use together with unicode.flex for Unicode preprocessing */
 /* and java12.cup for a Java 1.2 parser                      */
 
 /* Note that this lexer specification is not tuned for speed.
