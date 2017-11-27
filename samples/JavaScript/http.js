@@ -1485,7 +1485,7 @@ ClientRequest.prototype.onSocket = function(socket) {
     parser.incoming = null;
     socket._httpMessage = req;
 
-    // Setup "drain" propogation.
+    // Setup "drain" propagation.
     httpSocketSetup(socket);
 
     // Propagate headers limit from request object to parser
