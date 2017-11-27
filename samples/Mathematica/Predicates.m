@@ -44,9 +44,9 @@ End[];
 (*Documentation*)
 
 
-AnyQ::usage="Given a predicate and a list, retuns True if and only if that predicate is True for at least one element of the list.";
+AnyQ::usage="Given a predicate and a list, returns True if and only if that predicate is True for at least one element of the list.";
 AnyElementQ::usage="Returns True if cond matches any element of L.";
-AllQ::usage="Given a predicate and a list, retuns True if and only if that predicate is True for all elements of the list.";
+AllQ::usage="Given a predicate and a list, returns True if and only if that predicate is True for all elements of the list.";
 AllElementQ::usage="Returns True if cond matches any element of L.";
 
 

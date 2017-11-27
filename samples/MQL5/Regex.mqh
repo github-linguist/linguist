@@ -305,7 +305,7 @@ public:
    //+------------------------------------------------------------------+
    static TimeSpan InitDefaultMatchTimeout()
      {
-      //--- retrun result
+      //--- return result
       return (FallbackDefaultMatchTimeout);
      }
    //+------------------------------------------------------------------+
@@ -1095,7 +1095,7 @@ public:
             //--- If we find an entry in the cache, move it to the head at the same time. 
             m_livecode.Remove(current);
             m_livecode.AddFirst(current);
-            //--- retrun result
+            //--- return result
             return (current.Value());
            }
         }
@@ -1256,7 +1256,7 @@ public:
    //+------------------------------------------------------------------+
    RunnerReference *RunnerRef()
      {
-      //--- reurn runnerref
+      //--- return runnerref
       return (m_runnerref);
      }
    //+------------------------------------------------------------------+
@@ -1296,7 +1296,7 @@ public:
    //+------------------------------------------------------------------+
    int CapSize()
      {
-      //--- retrun capsize
+      //--- return capsize
       return (m_capsize);
      }
    //+------------------------------------------------------------------+
