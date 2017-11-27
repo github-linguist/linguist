@@ -1528,7 +1528,7 @@ void i_rfString_Prepend(RF_String* thisstr,void* otherP)
     memcpy(thisstr->bytes,other->bytes,other->byteLength);
 }
 
-// Removes all of the specifed string occurences from this String matching case or not, DOES NOT reallocate buffer size.
+// Removes all of the specified string occurences from this String matching case or not, DOES NOT reallocate buffer size.
 char i_rfString_Remove(void* thisstrP,void* rstrP,uint32_t* numberP,const char* optionsP)
 {
     RF_String* thisstr = (RF_String*)thisstrP;

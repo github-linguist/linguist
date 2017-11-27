@@ -19,7 +19,7 @@
     (when (not p) (return))))
 ; `next-prime` return the next prime bigger than the specified number
 (defun next-prime (n)
-  "return the next prime bigger than the speicified number"
+  "return the next prime bigger than the specified number"
   (do ((i (1+ n) (1+ i)))
       ((primep i) i)))
 ;
