@@ -262,7 +262,7 @@ if (has("gui_running") && g:solarized_degrade == 0)
 elseif (has("gui_running") && g:solarized_degrade == 1)
     " These colors are identical to the 256 color mode. They may be viewed
     " while in gui mode via "let g:solarized_degrade=1", though this is not
-    " recommened and is for testing only.
+    " recommended and is for testing only.
     let s:vmode       = "gui"
     let s:base03      = "#1c1c1c"
     let s:base02      = "#262626"
