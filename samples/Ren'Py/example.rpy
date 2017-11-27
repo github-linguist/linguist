@@ -1308,7 +1308,7 @@ label demonstrate:
                 show eileen concerned
                 e "It looks like you picked Lucy."
 
-                # Eileen is being a bit possesive here. :-P
+                # Eileen is being a bit possessive here. :-P
                 if date:
                     e "You can forget about Saturday."
                     $ date = False
