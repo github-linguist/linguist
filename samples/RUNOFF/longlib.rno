@@ -1192,7 +1192,7 @@ n    (I): number of characters in the string s
           < 0 : axis labelling on negative side (clockwise)
  (100's digit)    = 0 : coordinate line, ticks and labels drawn
                   = 1 : line and ticks only--no labeling
- (1000's digit)   = 0 : numeric labels paralel to axis line
+ (1000's digit)   = 0 : numeric labels parallel to axis line
                   = 1 : numeric labels orthogonal to axis line
  (10000's digit)  = 0 : additional optional parameters ignored
                   = 1 : additional optional parameters used
@@ -1245,7 +1245,7 @@ n    (I): number of characters in the string
           < 0 : axis labelling on negative side (clockwise)
  (100's digit)    = 0 : coordinate line, ticks and labels drawn
                   = 1 : line and ticks only--no labeling
- (1000's digit)   = 0 : numeric labels paralel to axis line
+ (1000's digit)   = 0 : numeric labels parallel to axis line
                   = 1 : numeric labels orthogonal to axis line
  (10000's digit)  = 0 : optional parameters ignored
                   = 1 : optional parameters used
@@ -1308,7 +1308,7 @@ n    (I): number of characters in the string
           < 0 : axis labelling on negative side (clockwise)
  (100's digit)    = 0 : coordinate line, ticks and labels drawn
                   = 1 : line and ticks only--no labeling
- (1000's digit)   = 0 : numeric labels paralel to axis line
+ (1000's digit)   = 0 : numeric labels parallel to axis line
                   = 1 : numeric labels orthogonal to axis line
  (100000's digit) = 0 : color list ignored
                   = 1 : color list used
@@ -1731,7 +1731,7 @@ n     (I): number of characters in string
            < 0 :  label on negative side
  (100's digit)   = 0 : coordinate line, ticks and labels drawn
                  = 1 : line and ticks only--no labeling
- (1000's digit)  = 0 : numeric labels paralel to axis line
+ (1000's digit)  = 0 : numeric labels parallel to axis line
                  = 1 : numeric labels orthogonal to axis line
  (10000's digit) = 0 : color list ignored
                  = 1 : color list used
@@ -4630,7 +4630,7 @@ CALL CVAX3D(d,ndx,ndz,nx,nz,a,b,xh,yh,zh,iflag,
 .x 2-d surface plot
 ~CVAX3DX plots a 3-d surface with hidden lines removed using ~PLT3D to
 produce a mesh surface or ~HLT3D to produce a 2-d histogram with an optional
-contour plot made ~GCONTR and plotted on a plane paralell to the surface
+contour plot made ~GCONTR and plotted on a plane parallel to the surface
 plane.  Axes and a back panel can be optionally plotted.  Optionally,
 a path surface may be plotted which connects the surface and contour plots
 over a users specified path.  The 3d surface is plotted in a manner similar
@@ -4644,7 +4644,7 @@ left to right along the plot bottom.  The y axis is plotted
 as a vertical displacement offset by the z axis value.  The z axis appears
 to point out of the screen.  The contour plot is plotted below the surface
 with a user-specified vertical spacing.  The contour plot plane is plotted
-paralell to the z=0 plane of the surface with the (i,j) indices of the
+parallel to the z=0 plane of the surface with the (i,j) indices of the
 surface and contour plot aligned vertically.  The user may specify a
 "path" using "pen" motions.  The path is plotted as a curve along the
 surface and the contour plot plane with vertical lines at the corresponding
@@ -6926,7 +6926,7 @@ ic     (I): color array (required if 1's digit of iflag=2)
 .pg
 .hl 1 SUBROUTINE VAX3D
 .p
-VAX3D plots a 3-d surface by plotting 2-d slices of the surface paralel
+VAX3D plots a 3-d surface by plotting 2-d slices of the surface parallel
 to the x-z plane with hidden line removal.  See VAX3DX.
 ~VAX3D calls VAX3DX using default axis parameters to simplify calling
 procedure.

@@ -118,7 +118,7 @@ $   endif
 $!
 $   if f$trnlnm("libxml").eqs.""
 $   then
-$     ! look for globals.h in a directory installed paralle to this one
+$     ! look for globals.h in a directory installed parallel to this one
 $     on error then continue
 $     globfile = f$search("[--...]globals.h")
 $     if globfile.eqs.""
