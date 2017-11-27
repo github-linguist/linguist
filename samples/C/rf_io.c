@@ -1131,7 +1131,7 @@ int32_t rfFback_UTF16BE(FILE* f,uint32_t *c)
         cc[0] = v1;
         return 2;
     }
-    // else invald sequence
+    // else invalid sequence
     LOG_ERROR("While reading bytes backwards in a Big Endian UTF-16 file stream the encountered byte had an illegal value",RE_UTF16_INVALID_SEQUENCE);
     return RE_UTF16_INVALID_SEQUENCE;
 }
@@ -1198,7 +1198,7 @@ int32_t rfFback_UTF16LE(FILE* f,uint32_t *c)
         cc[0] = v1;
         return 2;
     }
-    // else invald sequence
+    // else invalid sequence
     LOG_ERROR("While reading bytes backwards in a Little Endian UTF-16 file stream the encountered byte had an illegal value",RE_UTF16_INVALID_SEQUENCE);
     return RE_UTF16_INVALID_SEQUENCE;
 }

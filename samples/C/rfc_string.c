@@ -570,7 +570,7 @@ char rfString_Init_UTF16(RF_String* str,const char* s,char endianess)
                 if(rfUTF16_Decode(s,&characterLength,codepoints) == false)
                 {
                     free(codepoints);
-                    LOG_ERROR("String initialization failed due to invalide UTF-16 sequence",RE_STRING_INIT_FAILURE);
+                    LOG_ERROR("String initialization failed due to invalid UTF-16 sequence",RE_STRING_INIT_FAILURE);
                     return false;
                 }
             }
@@ -579,7 +579,7 @@ char rfString_Init_UTF16(RF_String* str,const char* s,char endianess)
                 if(rfUTF16_Decode_swap(s,&characterLength,codepoints) == false)
                 {
                     free(codepoints);
-                    LOG_ERROR("String initialization failed due to invalide UTF-16 sequence",RE_STRING_INIT_FAILURE);
+                    LOG_ERROR("String initialization failed due to invalid UTF-16 sequence",RE_STRING_INIT_FAILURE);
                     return false;
                 }
             }
