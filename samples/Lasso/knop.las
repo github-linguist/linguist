@@ -407,7 +407,7 @@ CHANGE NOTES
 2007-12-06	JS	Changed ->help to improve the self-documentation. It will now always return an up to date list of member tags and parameter. 
 2007-11-05	JS	Added var name to trace output
 2007-06-17	JS	Added ->tagtime (was in nav earlier)
-2007-06-13	JS	Added -> varname to be able to retreive the name of the page variable that a type instance is stored in.
+2007-06-13	JS	Added -> varname to be able to retrieve the name of the page variable that a type instance is stored in.
 2007-06-13	JS	Added -> xhtml to automatically sense if an xhtml doctype exists in the current page buffer. The result is cached in a page variable for performance. 
 				This is for internal use for member tags that output html. 
 2007-06-13	JS	Introduced page variable $_knop_data for general page level storage and caching, common between different knop objects. 
@@ -7939,7 +7939,7 @@ Make it possible to use external URL for -url (make sure there is no / before ht
 2007-12-06	JS	Changed ->help to improve the self-documentation. It will now always return an up to date list of member tags and parameter. 
 2007-11-05	JS	Added var name to trace output
 2007-06-17	JS	Added ->tagtime (was in nav earlier)
-2007-06-13	JS	Added -> varname to be able to retreive the name of the page variable that a type instance is stored in.
+2007-06-13	JS	Added -> varname to be able to retrieve the name of the page variable that a type instance is stored in.
 2007-06-13	JS	Added -> xhtml to automatically sense if an xhtml doctype exists in the current page buffer. The result is cached in a page variable for performance. 
 				This is for internal use for member tags that output html. 
 2007-06-13	JS	Introduced page variable $_knop_data for general page level storage and caching, common between different knop objects. 

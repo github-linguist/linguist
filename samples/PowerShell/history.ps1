@@ -45,7 +45,7 @@ function Search-History()
 {
     <#
     .SYNOPSIS
-        Retrive and filter history based on query
+        Retrieve and filter history based on query
     .DESCRIPTION
     .PARAMETER Name
     .EXAMPLE
