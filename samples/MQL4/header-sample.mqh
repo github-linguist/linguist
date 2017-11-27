@@ -41,7 +41,7 @@ private:
 public:
                      CSomeObject(void): m_someproperty(0) {}
                     ~CSomeObject(void)                    {}
-   void              SetName(int n){m_someproperty=n;}// sets somepropery
+   void              SetName(int n){m_someproperty=n;}// sets someproperty
    int               GetName(){return(m_someproperty);} // returns someproperty
   };
 //+------------------------------------------------------------------+
