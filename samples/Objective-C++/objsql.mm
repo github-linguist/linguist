@@ -18,7 +18,7 @@
  *  it in Xcode and open it's "Info". To enable mixed compilation,
  *  for the file's "File Type" select: "sourcecode.cpp.objcpp".
  *
- *  For bugs or ommisions please email objcpp@johnholdsworth.com
+ *  For bugs or omissions please email objcpp@johnholdsworth.com
  *
  *  Home page for updates and docs: http://objcpp.johnholdsworth.com
  *
