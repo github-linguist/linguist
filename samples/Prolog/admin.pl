@@ -694,7 +694,7 @@ user_logout(_Request) :-
 			     'has timed out.'])
 			]).
 
-%%	attribute_decl(+Param, -DeclObtions) is semidet.
+%%	attribute_decl(+Param, -DeclOptions) is semidet.
 %
 %	Provide   reusable   parameter   declarations   for   calls   to
 %	http_parameters/3.
