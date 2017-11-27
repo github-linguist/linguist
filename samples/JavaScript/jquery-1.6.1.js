@@ -798,7 +798,7 @@ jQuery.extend({
 		return proxy;
 	},
 
-	// Mutifunctional method to get and set values to a collection
+	// Multifunctional method to get and set values to a collection
 	// The value/s can be optionally by executed if its a function
 	access: function( elems, key, value, exec, fn, pass ) {
 		var length = elems.length;
