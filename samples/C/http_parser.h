@@ -59,7 +59,7 @@ typedef int ssize_t;
 #endif
 
 
-/* Maximium header size allowed */
+/* Maximum header size allowed */
 #define HTTP_MAX_HEADER_SIZE (80*1024)
 
 
