@@ -482,8 +482,8 @@ allow(Access, on) -->
 allow(_Access, off) --> !,
 	[].
 
-pterm(read,  read(_Repositiory, _Action)).
-pterm(write, write(_Repositiory, _Action)).
+pterm(read,  read(_Repository, _Action)).
+pterm(write, write(_Repository, _Action)).
 pterm(admin, admin(_Action)).
 
 

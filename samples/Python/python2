@@ -22,7 +22,7 @@ def main():
 	for gitDirectory in gitDirectories:
 		os.chdir(gitDirectory)
 		printDelimiter()
-		print 'Current respository location:', os.getcwd()
+		print 'Current repository location:', os.getcwd()
 		os.system(command)
 
 	printDelimiter()
