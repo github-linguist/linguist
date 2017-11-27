@@ -1,7 +1,7 @@
 compute(miles,gallons)
  quit miles/gallons
 
-computepesimist(miles,gallons)
+computepessimist(miles,gallons)
  quit miles/(gallons+1)
 
 computeoptimist(miles,gallons)

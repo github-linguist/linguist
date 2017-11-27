@@ -8,8 +8,8 @@ start ; exercise
  write "model = ",^car("model"),!
  write "mileage = ",@^car("mileage")@(150,4),!
 
- write !,"Pesimist computation",!
- set ^car("mileage")="$$computepesimist^mileage"
+ write !,"Pessimist computation",!
+ set ^car("mileage")="$$computepessimist^mileage"
  write "make = ",^car("make"),!
  write "model = ",^car("model"),!
  write "mileage = ",@^car("mileage")@(150,4),!
