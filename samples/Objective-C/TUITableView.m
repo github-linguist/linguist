@@ -1133,7 +1133,7 @@ static NSInteger SortCells(TUITableViewCell *a, TUITableViewCell *b, void *ctx)
 
 - (BOOL)performKeyAction:(NSEvent *)event
 {
-	// no selection or selected cell not visible and this is not repeative key press
+	// no selection or selected cell not visible and this is not repetitive key press
 	BOOL noCurrentSelection = (_selectedIndexPath == nil || ([self cellForRowAtIndexPath:_selectedIndexPath] == nil && ![event isARepeat]));;
 	
 	typedef TUIFastIndexPath * (^TUITableViewCalculateNextIndexPathBlock)(TUIFastIndexPath *lastIndexPath);
