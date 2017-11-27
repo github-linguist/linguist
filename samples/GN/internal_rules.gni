@@ -774,7 +774,7 @@ if (enable_java_templates) {
       }
       if (defined(invoker.proguard_jar_path)) {
         # We assume that if we are using a different ProGuard, this new version
-        # can handle the 'dangerous' optimizaions.
+        # can handle the 'dangerous' optimizations.
         args += [ "--enable-dangerous-optimizations" ]
       }
     }
