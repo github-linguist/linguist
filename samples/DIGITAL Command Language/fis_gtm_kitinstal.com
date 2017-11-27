@@ -30,9 +30,9 @@ $ GTM$VMS_VERSION :== 072	! Minimum VMS version required
 $ ALPHA = (f$getsyi("arch_name") .eqs. "Alpha")
 $ IF ALPHA
 $  THEN
-$   GTM$DISK_SPACE == 28000	! Minumum disk space on system disk required
+$   GTM$DISK_SPACE == 28000	! Minimum disk space on system disk required
 $  ELSE
-$   GTM$DISK_SPACE == 16000	! Minumum disk space on system disk required
+$   GTM$DISK_SPACE == 16000	! Minimum disk space on system disk required
 $ ENDIF
 $ IF F$ELEMENT(0,",",VMI$VMS_VERSION) .EQS. "RELEASED"
 $  THEN
