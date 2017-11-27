@@ -92,7 +92,7 @@ for (i=0;i<ds_list_size(item_list);i+=1) //Go through the list of menu items
 
 
     draw_set_color(background)
-    //draw_rectangle(xx,yy+(height*i),xx+width,yy+(height),false) //Draw the rectange for this one, we're doing this so we can add cool effects to each of them
+    //draw_rectangle(xx,yy+(height*i),xx+width,yy+(height),false) //Draw the rectangle for this one, we're doing this so we can add cool effects to each of them
     draw_set_color(foreground)
     
     if ds_list_find_value(item_list,i)="|s"
