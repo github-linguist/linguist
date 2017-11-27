@@ -176,7 +176,7 @@ module Resque
   # start and count should be integer and can be used for pagination.
   # start is the item to begin, count is how many items to return.
   #
-  # To get the 3rd page of a 30 item, paginatied list one would use:
+  # To get the 3rd page of a 30 item, paginated list one would use:
   #   Resque.peek('my_list', 59, 30)
   def peek(queue, start = 0, count = 1)
     queue(queue).slice start, count
