@@ -50,7 +50,7 @@ float inverse_f(float r)
     }
     
     float t;
-    // Now find the nehgbouring elements
+    // Now find the neighbouring elements
     // only iterate to 46 since we will need
     // 47 as i+1
     for(int i=0; i < 47; i++) {
