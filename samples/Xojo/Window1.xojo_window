@@ -22,7 +22,7 @@ Begin Window Window1
    MinimizeButton  =   True
    MinWidth        =   64
    Placement       =   0
-   Resizeable      =   True
+   Resizable      =   True
    Title           =   "Sample App"
    Visible         =   True
    Width           =   600
@@ -266,7 +266,7 @@ End
 		#tag EndEnumValues
 	#tag EndViewProperty
 	#tag ViewProperty
-		Name="Resizeable"
+		Name="Resizable"
 		Visible=true
 		Group="Appearance"
 		InitialValue="True"
