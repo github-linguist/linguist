@@ -362,7 +362,7 @@ curra:		.BLOCK 2
 ; Sum of the values
 tmpsum:		.BLOCK 2
 
-; Muliplies two ints
+; Multiplies two ints
 ;
 ; Parameters:
 ; Register A : Left part of the multiplication
