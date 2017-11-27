@@ -4241,7 +4241,7 @@ See CNT3DX for parameter description.
 contoured by plotting slices through the surface parallel to the x-z plane
 of the surface which have the same y value.  The input consists of a 2
 dimensional grid of y values.  For each contour level the input array
-is scanned cell-by-cell.  A segment of the contour is determined by linearily
+is scanned cell-by-cell.  A segment of the contour is determined by linearly
 interpolating the edges of the square formed by 4 adjacent points (a cell).
 For example, if the current contour value is 1, and y(1,1)=0, y(1,2)=2,
 y(2,2)=3, and y(1,2)=4, a contour line is assumed to exist for this
@@ -4391,7 +4391,7 @@ l     (I): contour linetype list
 three dimensions.  It uses INIT3dH
 The input consists of a list of triplets of a surface
 value.  The triplets are triangulated using ~TRIANGC and contours
-determined by linearily interpolating the edges of the triangles.
+determined by linearly interpolating the edges of the triangles.
 The contour values may be uniformly spaced between the starting
 and end values or from a list.  Other than color, the
 sequence of plotting (min to max), and line typing of various contour
@@ -4497,7 +4497,7 @@ dyr   (R): returned value of scale factor (ymax-ymin)/ylen
 ~CNTRPLT plots a contour plot of a uniformly sampled 2-d input
 array.  The input consists of a 2 dimensional grid of y values.  For each
 contour level the array is scanned cell by cell.
-A contour segment is determined by linearily interpolating the edges of the
+A contour segment is determined by linearly interpolating the edges of the
 square formed by 4 adjacent points (a cell).  For example, if the current
 contour value is 1, and y(1,1)=0, y(1,2)=2, y(2,2)=3, and y(1,2)=4,
 a contour line is assumed to exist for this cell as shown:
@@ -5007,7 +5007,7 @@ ic     (I): color list (required if 1's digit of iflag=2)
 ~LCNTR plots a contour plot of a uniformly sampled 2-d input array.
 LCNTR is similar to CNTRPLT but permits hardware line types.
 The input consists of a 2 dimensional grid of v values.  A
-contour is determined by linearily interpolating the edges of the square
+contour is determined by linearly interpolating the edges of the square
 formed by 4 adjacent points (see CNTRPLT).  LCNTR connects the line segments
 of constant contour before plotting and can optionally label the contour lines
 with alphabetic codes or the numerical value of the contour.
