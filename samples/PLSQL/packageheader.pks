@@ -2,7 +2,7 @@ CREATE OR REPLACE PACKAGE linguistpackage
 AUTHID DEFINER
 AS
   /*
-  * Package:     linguist pacakage
+  * Package:     linguist package
   * Purpose:     a sample PLSQL file for linguist to work with
   *
   * Date:        03/03/2014
