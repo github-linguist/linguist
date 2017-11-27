@@ -19,7 +19,7 @@
 START:
 	MOV	A,#11111110b
 	SETB	IT0	; Set External Interrupt 0 to be falling edge triggered
-	SETB	EX0	; Enable External Interrut 0
+	SETB	EX0	; Enable External Interrupt 0
 	SETB	EA	; Enable Interrupt
 LEFT:			
 	CJNE	A,#01111111b,LOOP1
