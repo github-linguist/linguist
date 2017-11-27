@@ -1256,7 +1256,7 @@ int32_t i_rfString_Count(void* str,void* sstr2,const char* optionsP)
     return n;
 }
 
-// Tokenizes the given string. Separates it into @c tokensN depending on how many substrings can be created from the @c sep separatior and stores them
+// Tokenizes the given string. Separates it into @c tokensN depending on how many substrings can be created from the @c sep separator and stores them
 // into the Array of RF_String* that should be passed to the function
 i_DECLIMEX_ char rfString_Tokenize(void* str,char* sep,uint32_t* tokensN,RF_String** tokens)
 {

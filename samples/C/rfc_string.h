@@ -755,7 +755,7 @@ i_DECLIMEX_ int32_t i_rfString_Count(void* thisstr,void* sstr,const char* option
 // @brief Tokenizes the given string
 //
 // @isinherited{StringX}
-// Separates it into @c tokensN depending on how many substrings can be created from the @c sep separatior and stores them
+// Separates it into @c tokensN depending on how many substrings can be created from the @c sep separator and stores them
 // into the Array of RF_String* that should be passed to the function. The array gets initialized inside the function and
 // <b>has to be freed explicitly</b> later by thg user. Also each String inside the array has to be Deinitialized too.
 // Here is an example usage:
