@@ -1290,7 +1290,7 @@ proc ApplyMaterialPropertiesForElems() {
     if eosvmin != 0.0 && vc < eosvmin then vc = eosvmin;
     if eosvmax != 0.0 && vc > eosvmax then vc = eosvmax;
     if vc <= 0.0 {
-      writeln("Volume error (in ApplyMaterialProperiesForElems).");
+      writeln("Volume error (in ApplyMaterialPropertiesForElems).");
       exit(1);
     }
   }
