@@ -831,7 +831,7 @@ below.  For more detailed examples see the following sections.
 This example plots a
 damped sine wave on both the terminal screen, the Ramtek (in color),
 and the LONGLIB metafile.
-The master routine ~PLOTSC handles all graphics intialization and
+The master routine ~PLOTSC handles all graphics initialization and
 closing.  (See the chapter on MASTER routines for additional details).
 .TP 16
 .lit
@@ -1541,7 +1541,7 @@ before plotting calls are issued by the user program.  FRAME should
 normally be called only once in a program.  MASTER routines optionally
 handle the FRAME call.
 .p
-FRAME intializes the graphics output device packages.  The FORTRAN
+FRAME initializes the graphics output device packages.  The FORTRAN
 unit number used for the LONGLIB metafile can be specified.  Normally,
 unit 3 is used.  If unit 0 is specified, FRAME will prompt the user
 for a yes/no response to create a metafile.  A negative unit number
@@ -1560,7 +1560,7 @@ a screen device to use.  The screen devices may then be selected using
 a character code.
 A reply of "?" will list the available options.
 .p
-FRAME also intializes the origin and scale factor for plotting.
+FRAME also initializes the origin and scale factor for plotting.
 The default origin on the ~terminal and the ~Ramtek is the lower
 left of screen (0.,0.).  The
 X axis runs horizontally, while the Y axis runs vertically.  The
