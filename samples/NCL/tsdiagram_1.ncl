@@ -92,7 +92,7 @@ begin
   ydata = tdata_ba
   xdata = sdata_ba
 
-;============== compute potenial density (PD), using rho_mwjf
+;============== compute potential density (PD), using rho_mwjf
 ;
 ; for potential density, depth = 0. (i.e. density as if brought to surface)
 ;
