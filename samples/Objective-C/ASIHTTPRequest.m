@@ -168,7 +168,7 @@ static NSOperationQueue *sharedQueue = nil;
 
 + (void)performInvocation:(NSInvocation *)invocation onTarget:(id *)target releasingObject:(id)objectToRelease;
 + (void)hideNetworkActivityIndicatorAfterDelay;
-+ (void)hideNetworkActivityIndicatorIfNeeeded;
++ (void)hideNetworkActivityIndicatorIfNeeded;
 + (void)runRequests;
 
 // Handling Proxy autodetection and PAC file downloads
@@ -4748,10 +4748,10 @@ static NSOperationQueue *sharedQueue = nil;
 /* Always called on main thread */
 + (void)hideNetworkActivityIndicatorAfterDelay
 {
-	[self performSelector:@selector(hideNetworkActivityIndicatorIfNeeeded) withObject:nil afterDelay:0.5];
+	[self performSelector:@selector(hideNetworkActivityIndicatorIfNeeded) withObject:nil afterDelay:0.5];
 }
 
-+ (void)hideNetworkActivityIndicatorIfNeeeded
++ (void)hideNetworkActivityIndicatorIfNeeded
 {
 	[connectionsLock lock];
 	if (runningRequestCount == 0) {
