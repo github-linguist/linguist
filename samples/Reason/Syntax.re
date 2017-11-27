@@ -336,7 +336,7 @@ let printPerson (p: person) => {
 };
 
 /* let dontParseMeBro x y:int = x = y;*/
-/* With this unification, anywhere eyou see `= fun` you can just ommit it */
+/* With this unification, anywhere eyou see `= fun` you can just omit it */
 let blah a => a; /* Done */
 
 let blah a => a; /* Done (almost) */
