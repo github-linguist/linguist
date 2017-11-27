@@ -384,7 +384,7 @@ StyledWriter::writeArrayValue( const Value &value )
       pushValue( "[]" );
    else
    {
-      bool isArrayMultiLine = isMultineArray( value );
+      bool isArrayMultiLine = isMultilineArray( value );
       if ( isArrayMultiLine )
       {
          writeWithIndent( "[" );
@@ -430,7 +430,7 @@ StyledWriter::writeArrayValue( const Value &value )
 
 
 bool 
-StyledWriter::isMultineArray( const Value &value )
+StyledWriter::isMultilineArray( const Value &value )
 {
    int size = value.size();
    bool isMultiLine = size*3 >= rightMargin_ ;
@@ -660,7 +660,7 @@ StyledStreamWriter::writeArrayValue( const Value &value )
       pushValue( "[]" );
    else
    {
-      bool isArrayMultiLine = isMultineArray( value );
+      bool isArrayMultiLine = isMultilineArray( value );
       if ( isArrayMultiLine )
       {
          writeWithIndent( "[" );
@@ -706,7 +706,7 @@ StyledStreamWriter::writeArrayValue( const Value &value )
 
 
 bool 
-StyledStreamWriter::isMultineArray( const Value &value )
+StyledStreamWriter::isMultilineArray( const Value &value )
 {
    int size = value.size();
    bool isMultiLine = size*3 >= rightMargin_ ;
