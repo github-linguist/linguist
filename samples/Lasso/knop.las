@@ -796,7 +796,7 @@ datetime_create and datetime_mod, and also user_create and user_mod.
 		'current_record'=integer,		// index of the current record to get field values from a specific record
 		'field_names_map'=map,
 		'resultset_count_map'=map;		// resultset_count stored for each inlinename 
-	// these vars have directly corresponding Lasso tags so they can be set programatically
+	// these vars have directly corresponding Lasso tags so they can be set programmatically
 	local: 'searchresultvars'=(array: 'action_statement', 'found_count', 'shown_first', 
 		'shown_last', 'shown_count', 'field_names', 'records_array', 'maxrecords_value', 'skiprecords_value');
 	iterate: #searchresultvars, (local: 'resultvar');
