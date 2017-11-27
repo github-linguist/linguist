@@ -5938,7 +5938,7 @@ CHANGE NOTES
 2008-01-04	JS	->renderbreadcrumb: added flag -skipcurrent to not include the current location in the output
 2008-01-04	JS	->insert: -template can now be specified also for individual nav items. Use the form #link##label##current##/link##children#. 
 2008-01-04	JS	->renderhtml: changed #title# to #label# in template for clarity, for example #link##label##current##/link##children# (#title# will remain supported)
-2008-01-04	JS	Added #current# as placeholder for template, to specify where the current marker should occurr. If not specified in the template, the current marker appears immediately after the label.
+2008-01-04	JS	Added #current# as placeholder for template, to specify where the current marker should occur. If not specified in the template, the current marker appears immediately after the label.
 2007-12-12	JS	->include now logs processing time for the include to debug trace
 2007-12-11	JS	Added documentation as -description to most member tags, to be used by the new ->help tag
 2007-12-11	JS	Moved ->help to knop_base
@@ -7862,7 +7862,7 @@ Permissions can be read, create, update, delete, or application specific (for ex
 2008-01-04	JS	->renderbreadcrumb: added flag -skipcurrent to not include the current location in the output
 2008-01-04	JS	->insert: -template can now be specified also for individual nav items. Use the form #link##label##current##/link##children#. 
 2008-01-04	JS	->renderhtml: changed #title# to #label# in template for clarity, for example #link##label##current##/link##children# (#title# will remain supported)
-2008-01-04	JS	Added #current# as placeholder for template, to specify where the current marker should occurr. If not specified in the template, the current marker appears immediately after the label.
+2008-01-04	JS	Added #current# as placeholder for template, to specify where the current marker should occur. If not specified in the template, the current marker appears immediately after the label.
 2007-12-12	JS	->include now logs processing time for the include to debug trace
 2007-12-11	JS	Added documentation as -description to most member tags, to be used by the new ->help tag
 2007-12-11	JS	Moved ->help to knop_base
