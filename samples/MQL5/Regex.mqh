@@ -930,7 +930,7 @@ public:
       return Replace(in, evaluator, count, UseOptionR() ? StringLen(in) : 0);
      }
    //+------------------------------------------------------------------+
-   //| Replaces all occurrences of the (previouly defined) "pattern"    |
+   //| Replaces all occurrences of the (previously defined) "pattern"    |
    //| with the recent "replacement" pattern, starting at the character |
    //| position "startat."                                              |
    //+------------------------------------------------------------------+
