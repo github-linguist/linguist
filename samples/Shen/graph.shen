@@ -108,7 +108,7 @@ size = size of all vertices +            all vertices stored in Vertices dict
                  vertex-partition bipartite?
                  \* included from the sequence library\ *\
                  take drop take-while drop-while range flatten
-                 filter complement seperate zip indexed reduce
+                 filter complement separate zip indexed reduce
                  mapcon partition partition-with unique frequencies
                  shuffle pick remove-first interpose subset?
                  cartesian-product

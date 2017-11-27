@@ -2338,7 +2338,7 @@ jQuery.fn.extend({
 					classNames = value.split( rspace );
 
 				while ( (className = classNames[ i++ ]) ) {
-					// check each className given, space seperated list
+					// check each className given, space separated list
 					state = isBool ? state : !self.hasClass( className );
 					self[ state ? "addClass" : "removeClass" ]( className );
 				}
