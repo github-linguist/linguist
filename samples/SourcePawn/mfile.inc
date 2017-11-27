@@ -11,9 +11,9 @@
 #define _mfile_included
 
 //Defines
-#define MAX_LINE_SIZE 80 //Max lenght of one line in file
-#define MAX_KEY_SIZE 50 //Max lenght of key in line (to =)
-#define MAX_VALUE_SIZE 50 //Max lenght of value in line (past =)
+#define MAX_LINE_SIZE 80 //Max length of one line in file
+#define MAX_KEY_SIZE 50 //Max length of key in line (to =)
+#define MAX_VALUE_SIZE 50 //Max length of value in line (past =)
 #define TMP_FILE "tmpfile.txt"
 
 //Natives

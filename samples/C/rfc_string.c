@@ -759,7 +759,7 @@ RF_String* i_rfString_Create_nc(const char* s,...)
     RF_MALLOC(ret,sizeof(RF_String));
     // get  the formatted string
     READ_VSNPRINTF_ARGS(s,s,0);
-    // get the lengt of the byte buffer
+    // get the length of the byte buffer
     ret->byteLength = bytesWritten;
 
     // now that we know the length we can allocate the buffer and copy the bytes
