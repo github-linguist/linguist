@@ -202,7 +202,7 @@ i_DECLIMEX_ int32_t rfFReadLine_UTF32LE(FILE* f,char** utf8,uint32_t* byteLength
 // http://msdn.microsoft.com/en-us/library/ktss1a9b.aspx
 //
 // @param[in] buff A buffer to be filled with the contents of the file. Should be of size at least @c num+7
-// @param[in] num The maximum number of bytes to read from within the file NOT including the null terminating character(which in itelf is 4 bytes). Should be a multiple of 4
+// @param[in] num The maximum number of bytes to read from within the file NOT including the null terminating character(which in itself is 4 bytes). Should be a multiple of 4
 // @param[in] f A valid FILE descriptor from which to read the bytes
 // @param[out] eof Pass a reference to a char to receive a true/false value for whether EOF has been reached.
 // @return Returns the actual number of bytes read or an error if there was a problem.
@@ -241,7 +241,7 @@ i_DECLIMEX_ int32_t rfFgets_UTF32BE(char* buff,uint32_t num,FILE* f,char* eof);
 // http://msdn.microsoft.com/en-us/library/ktss1a9b.aspx
 //
 // @param[in] buff A buffer to be filled with the contents of the file. Should be of size at least @c num+7
-// @param[in] num The maximum number of bytes to read from within the file NOT including the null terminating character(which in itelf is 4 bytes). Should be a multiple of 4
+// @param[in] num The maximum number of bytes to read from within the file NOT including the null terminating character(which in itself is 4 bytes). Should be a multiple of 4
 // @param[in] f A valid FILE descriptor from which to read the bytes
 // @param[out] eof Pass a reference to a char to receive a true/false value for whether EOF has been reached.
 // @return Returns the actual number of bytes read or an error if there was a problem.
@@ -281,7 +281,7 @@ i_DECLIMEX_ int32_t rfFgets_UTF32LE(char* buff,uint32_t num,FILE* f,char* eof);
 // http://msdn.microsoft.com/en-us/library/ktss1a9b.aspx
 //
 // @param[in] buff A buffer to be filled with the contents of the file. Should be of size at least @c num+5
-// @param[in] num The maximum number of bytes to read from within the file NOT including the null terminating character(which in itelf is 2 bytes). Should be a multiple of 2
+// @param[in] num The maximum number of bytes to read from within the file NOT including the null terminating character(which in itself is 2 bytes). Should be a multiple of 2
 // @param[in] f A valid FILE descriptor from which to read the bytes
 // @param[out] eof Pass a reference to a char to receive a true/false value for whether EOF has been reached.
 // @return Returns the actual number of bytes read or an error if there was a problem.
@@ -320,7 +320,7 @@ i_DECLIMEX_ int32_t rfFgets_UTF16BE(char* buff,uint32_t num,FILE* f,char* eof);
 // http://msdn.microsoft.com/en-us/library/ktss1a9b.aspx
 //
 // @param[in] buff A buffer to be filled with the contents of the file. Should be of size at least @c num+2
-// @param[in] num The maximum number of bytes to read from within the file NOT including the null terminating character(which in itelf is 2 bytes). Should be a multiple of 2
+// @param[in] num The maximum number of bytes to read from within the file NOT including the null terminating character(which in itself is 2 bytes). Should be a multiple of 2
 // @param[in] f A valid FILE descriptor from which to read the bytes
 // @param[out] eof Pass a reference to a char to receive a true/false value for whether EOF has been reached.
 // @return Returns the actual number of bytes read or an error if there was a problem.
@@ -360,7 +360,7 @@ i_DECLIMEX_ int32_t rfFgets_UTF16LE(char* buff,uint32_t num,FILE* f,char* eof);
 // http://msdn.microsoft.com/en-us/library/ktss1a9b.aspx
 //
 // @param[in] buff A buffer to be filled with the contents of the file. Should of size at least @c num+4
-// @param[in] num The maximum number of bytes to read from within the file NOT including the null terminating character(which in itelf is 1 byte)
+// @param[in] num The maximum number of bytes to read from within the file NOT including the null terminating character(which in itself is 1 byte)
 // @param[in] f A valid FILE descriptor from which to read the bytes
 // @param[out] eof Pass a reference to a char to receive a true/false value for whether EOF has been reached.
 // @return Returns the actual number of bytes read or an error if there was a problem.
