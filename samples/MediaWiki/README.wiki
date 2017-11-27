@@ -606,7 +606,7 @@ The directive sets the types and sizes of caches to store the SSL sessions.
 The cache types are:
 
 * off -- Hard off: nginx says explicitly to a client that sessions can not reused.
-* none -- Soft off: nginx says to a client that session can be resued, but nginx actually never reuses them. This is workaround for some mail clients as ssl_session_cache may be used in mail proxy as well as in HTTP server.
+* none -- Soft off: nginx says to a client that session can be reused, but nginx actually never reuses them. This is workaround for some mail clients as ssl_session_cache may be used in mail proxy as well as in HTTP server.
 * builtin -- the OpenSSL builtin cache, is used inside one worker process only. The cache size is assigned in the number of the sessions. Note: there appears to be a memory fragmentation issue using this method, please take that into consideration when using this. See "References" below.
 * shared -- the cache is shared between all worker processes. The size of the cache is assigned in bytes: 1 MB cache can contain roughly 4000 sessions. Each shared cache must be given an arbitrary name. A shared cache with a given name can be used in several virtual hosts.
 It's possible to use both types of cache &mdash; builtin and shared &mdash; simultaneously, for example:
