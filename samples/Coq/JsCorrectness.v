@@ -465,7 +465,7 @@ Proof.
   branch 3. inverts* E.
 Admitted. (*faster*)
 
-(* TODO: misssing
+(* TODO: missing
     if_normal_continue_or_break *)
 
 Definition if_break_post (K : _ -> _ -> result) o o1 :=
