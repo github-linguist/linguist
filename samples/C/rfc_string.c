@@ -1515,7 +1515,7 @@ void i_rfString_Prepend(RF_String* thisstr,void* otherP)
     RF_String* other = (RF_String*)otherP;
     uint32_t size;
     int32_t i;// is not unsigned since it goes to -1 in the loop
-    // keeep the original byte size of the string
+    // keep the original byte size of the string
     size = thisstr->byteLength;
     // calculate the new lengths
     thisstr->byteLength += other->byteLength;
