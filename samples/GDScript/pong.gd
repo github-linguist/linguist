@@ -21,7 +21,7 @@ func _process(delta):
 	var left_rect = Rect2( get_node("left").get_pos() - pad_size*0.5, pad_size )
 	var right_rect = Rect2( get_node("right").get_pos() - pad_size*0.5, pad_size )
 	
-	#integrate new ball postion
+	#integrate new ball position
 	ball_pos+=direction*ball_speed*delta
 	
 	#flip when touching roof or floor
