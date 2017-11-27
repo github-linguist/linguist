@@ -83,7 +83,7 @@ My name is wisp!"
 
 ;; There are some functions in wisp that are special, in a sence that
 ;; they compile to JS expressions & can not be passed around as regular
-;; functions. JS operators are represteted in wisp as special forms
+;; functions. JS operators are represented in wisp as special forms
 
 ;; Arithmetic forms - Wisp comes with special form for arithmetic
 ;; operations.
