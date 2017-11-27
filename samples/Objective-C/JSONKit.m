@@ -558,7 +558,7 @@ static NSUInteger        _JKDictionaryCapacityForCount(NSUInteger count);
 static JKDictionary     *_JKDictionaryCreate(id *keys, NSUInteger *keyHashes, id *objects, NSUInteger count, BOOL mutableCollection);
 static JKHashTableEntry *_JKDictionaryHashEntry(JKDictionary *dictionary);
 static NSUInteger        _JKDictionaryCapacity(JKDictionary *dictionary);
-static void              _JKDictionaryResizeIfNeccessary(JKDictionary *dictionary);
+static void              _JKDictionaryResizeIfNecessary(JKDictionary *dictionary);
 static void              _JKDictionaryRemoveObjectWithEntry(JKDictionary *dictionary, JKHashTableEntry *entry);
 static void              _JKDictionaryAddObject(JKDictionary *dictionary, NSUInteger keyHash, id key, id object);
 static JKHashTableEntry *_JKDictionaryHashTableEntryForKey(JKDictionary *dictionary, id aKey);
@@ -901,7 +901,7 @@ static NSUInteger _JKDictionaryCapacityForCount(NSUInteger count) {
   return(jk_dictionaryCapacities[bottom]);
 }
 
-static void _JKDictionaryResizeIfNeccessary(JKDictionary *dictionary) {
+static void _JKDictionaryResizeIfNecessary(JKDictionary *dictionary) {
   NSCParameterAssert((dictionary != NULL) && (dictionary->entry != NULL) && (dictionary->count <= dictionary->capacity));
 
   NSUInteger capacityForCount = 0UL;
@@ -1070,7 +1070,7 @@ static JKHashTableEntry *_JKDictionaryHashTableEntryForKey(JKDictionary *diction
   if(aKey      == NULL) { [NSException raise:NSInvalidArgumentException       format:@"*** -[%@ %@]: attempt to insert nil key",                NSStringFromClass([self class]), NSStringFromSelector(_cmd)];       }
   if(anObject  == NULL) { [NSException raise:NSInvalidArgumentException       format:@"*** -[%@ %@]: attempt to insert nil value (key: %@)",    NSStringFromClass([self class]), NSStringFromSelector(_cmd), aKey]; }
   
-  _JKDictionaryResizeIfNeccessary(self);
+  _JKDictionaryResizeIfNecessary(self);
 #ifndef __clang_analyzer__
   aKey     = [aKey     copy];   // Why on earth would clang complain that this -copy "might leak", 
   anObject = [anObject retain]; // but this -retain doesn't!?
