@@ -589,7 +589,7 @@ func (m *EndTransactionResponse) GetCommitWait() int64 {
 
 // A ReapQueueRequest is arguments to the ReapQueue() method. It
 // specifies the recipient inbox key to which messages are waiting
-// to be reapted and also the maximum number of results to return.
+// to be reaped and also the maximum number of results to return.
 type ReapQueueRequest struct {
 	RequestHeader `protobuf:"bytes,1,opt,name=header,embedded=header" json:"header"`
 	// Maximum results to return; must be > 0.
