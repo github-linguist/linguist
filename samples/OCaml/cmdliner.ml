@@ -516,7 +516,7 @@ module Help = struct
       in
       List.sort rev_compare (List.fold_left add_cmd [] ei.choices)
 
-  let text ei =                  (* man that code is particulary unreadable. *)
+  let text ei =                  (* man that code is particularly unreadable. *)
     let rec merge_items acc to_insert mark il = function
     | `S s as sec :: ts ->
         let acc = List.rev_append to_insert acc in
