@@ -11,6 +11,8 @@ RUN npm install -g season
 WORKDIR /go/src/github.com/github/linguist/tools/grammars
 COPY . .
 
+RUN go get -u github.com/golang/dep/cmd/dep
+RUN dep ensure
 RUN go install ./cmd/grammar-compiler
 
 ENTRYPOINT ["grammar-compiler"]
