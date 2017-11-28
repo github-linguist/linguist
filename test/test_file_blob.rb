@@ -192,6 +192,13 @@ class TestFileBlob < Minitest::Test
     assert sample_blob('Pods/blah').generated?
     assert !sample_blob('My-Pods/blah').generated?
 
+    # Carthage
+    assert sample_blob('Carthage/Build/blah').generated?
+    assert !sample_blob('Carthage/blah').generated?
+    assert !sample_blob('Carthage/Checkout/blah').generated?
+    assert !sample_blob('My-Carthage/Build/blah').generated?
+    assert !sample_blob('My-Carthage/Build/blah').generated?
+
     # Gemfile.lock is NOT generated
     assert !sample_blob("Gemfile.lock").generated?
 
