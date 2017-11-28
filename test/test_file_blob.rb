@@ -313,8 +313,6 @@ class TestFileBlob < Minitest::Test
     assert sample_blob("deps/http_parser/http_parser.c").vendored?
     assert sample_blob("deps/v8/src/v8.h").vendored?
 
-    assert sample_blob("tools/something/else.c").vendored?
-
     # Chart.js
     assert sample_blob("some/vendored/path/Chart.js").vendored?
     assert !sample_blob("some/vendored/path/chart.js").vendored?
