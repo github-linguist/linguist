@@ -188,6 +188,10 @@ class TestFileBlob < Minitest::Test
     assert fixture_blob("Binary/MainMenu.nib").generated?
     assert !sample_blob("XML/project.pbxproj").generated?
 
+    # Cocoapods
+    assert sample_blob('Pods/blah').generated?
+    assert !sample_blob('My-Pods/blah').generated?
+
     # Gemfile.lock is NOT generated
     assert !sample_blob("Gemfile.lock").generated?
 
@@ -488,9 +492,6 @@ class TestFileBlob < Minitest::Test
 
     # Carthage
     assert sample_blob('Carthage/blah').vendored?
-
-    # Cocoapods
-    assert sample_blob('Pods/blah').vendored?
 
     # Html5shiv
     assert sample_blob("Scripts/html5shiv.js").vendored?
