@@ -214,7 +214,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Marko:** [marko-js/marko-tmbundle](https://github.com/marko-js/marko-tmbundle)
 - **Mask:** [tenbits/sublime-mask](https://github.com/tenbits/sublime-mask)
 - **Mathematica:** [shadanan/mathematica-tmbundle](https://github.com/shadanan/mathematica-tmbundle)
-- **Matlab:** [textmate/matlab.tmbundle](https://github.com/textmate/matlab.tmbundle)
+- **Matlab:** [mathworks/MATLAB-Language-grammar](https://github.com/mathworks/MATLAB-Language-grammar)
 - **Maven POM:** [textmate/maven.tmbundle](https://github.com/textmate/maven.tmbundle)
 - **Max:** [textmate/json.tmbundle](https://github.com/textmate/json.tmbundle)
 - **MAXScript:** [Alhadis/language-maxscript](https://github.com/Alhadis/language-maxscript)
