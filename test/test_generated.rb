@@ -43,6 +43,10 @@ class TestGenerated < Minitest::Test
     generated_sample_without_loading_data("Dummy/foo.xcuserstate")
 
     # Cocoapods
+    generated_sample_without_loading_data("Pods/Pods.xcodeproj")
+    generated_sample_without_loading_data("Pods/SwiftDependency/foo.swift")
+    generated_sample_without_loading_data("Pods/ObjCDependency/foo.h")
+    generated_sample_without_loading_data("Pods/ObjCDependency/foo.m")
     generated_sample_without_loading_data("Dummy/Pods/Pods.xcodeproj")
     generated_sample_without_loading_data("Dummy/Pods/SwiftDependency/foo.swift")
     generated_sample_without_loading_data("Dummy/Pods/ObjCDependency/foo.h")
