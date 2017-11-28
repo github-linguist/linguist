@@ -100,7 +100,7 @@ module Linguist
     #
     # Returns true or false.
     def cocoapods?
-      !!name.match(/Pods\//)
+      !!name.match(/(^Pods|\/Pods)\//)
     end
 
     # Internal: Is the blob minified files?
