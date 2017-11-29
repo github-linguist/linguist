@@ -58,7 +58,7 @@ instance sem Exp where
 		phi (Var v)     = read v
 		phi (Op op x y) = x >>= \v1. y >>= return o (operator op v1)
 
-// semantics of statments
+// semantics of statements
 // NOTE: while will always return 0, as it might not even be executed
 instance sem Stm where
 	sem x = cata phi x where
