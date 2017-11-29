@@ -1219,7 +1219,7 @@ config("no_size_t_to_int_warning") {
 # Some code presumes that pointers to structures/objects are compatible
 # regardless of whether what they point to is already known to be valid.
 # gcc 4.9 and earlier had no way of suppressing this warning without
-# supressing the rest of them.  Here we centralize the identification of
+# suppressing the rest of them.  Here we centralize the identification of
 # the gcc 4.9 toolchains.
 config("no_incompatible_pointer_warnings") {
   cflags = []
