@@ -244,7 +244,7 @@ sub parse_perfdata {
       }
 
       ## Check if rrd-archive is writable
-      if( ! -w $rrdarchive_filename) {					## check wheter RRD-archive exists
+      if( ! -w $rrdarchive_filename) {					## check whether RRD-archive exists
         debug( 1, "!!ERROR: RRD-archive '".$rrdarchive_filename."' does not exist or is not writable by effective UID."); abort();
       }
 
