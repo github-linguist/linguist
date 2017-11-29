@@ -23,7 +23,7 @@
   (do ((i (1+ n) (1+ i)))
       ((primep i) i)))
 ;
-; The recommended procedures to writting a new macro are as follows:
+; The recommended procedures to writing a new macro are as follows:
 ; 1. Write a sample call to the macro and the code it should expand into
 (do-primes (p 0 19)
   (format t "~d " p))
@@ -64,11 +64,11 @@
 ;   c. use `gensym` at macro expansion time to create variable names used in the
 ;      expansion
 ;
-; Appendix I. Macro-writting macros, 'with-gensyms', to guarantee that rule c
+; Appendix I. Macro-writing macros, 'with-gensyms', to guarantee that rule c
 ; gets observed.
 ; Example usage of `with-gensyms`
 (defmacro do-primes-a ((var start end) &body body)
-  "do-primes implementation with macro-writting macro 'with-gensyms'"
+  "do-primes implementation with macro-writing macro 'with-gensyms'"
   (with-gensyms (end-value-name)
     `(do ((,var (next-prime (- ,start 1)) (next-prime ,var))
           (,end-value-name ,end))

@@ -1417,15 +1417,15 @@ i_DECLIMEX_ int32_t rfString_Append_fUTF32(RF_String* str,FILE* f,char endianess
 // + @c RF_UTF16_LE: For Unicode UTF-16 encoding in Little Endian endianess
 // + @c RF_UTF32_BE: For Unicode UTF-32 encoding in Big Endian endianess
 // + @c RF_UTF32_LE: For Unicode UTF-32 encoding in Little Endian endianess
-// @return Returns @c RF_SUCCESS for successful writting and error otherwise. Possible errors are:
+// @return Returns @c RF_SUCCESS for successful writing and error otherwise. Possible errors are:
 // + @c RE_FILE_WRITE: There was an unknown write error
 // + @c RE_FILE_WRITE_BLOCK: The write failed because the file was occupied by another thread and the no block flag was set
 // + @c RE_FILE_BAD: The file descriptor @c f was corrupt
 // + @c RE_FILE_TOOBIG: The file's size exceeds the system limiti
-// + @c RE_INTERRUPT: Writting failed due to a system interrupt
-// + @c RE_FILE_IO: Writting failed because of a physical I/O error
-// + @c RE_FILE_NOSPACE: Writting failed because the device containing the file had no free space
-// + @c RE_FILE_NOT_FILE: Writting failed because the given file descriptor @c f is either non existent or not a file
+// + @c RE_INTERRUPT: Writing failed due to a system interrupt
+// + @c RE_FILE_IO: Writing failed because of a physical I/O error
+// + @c RE_FILE_NOSPACE: Writing failed because the device containing the file had no free space
+// + @c RE_FILE_NOT_FILE: Writing failed because the given file descriptor @c f is either non existent or not a file
 #if defined(RF_IAMHERE_FOR_DOXYGEN)
     i_DECLIMEX_ int32_t rfString_Fwrite(void* s,FILE* f,char encoding);
 #else

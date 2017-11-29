@@ -2341,7 +2341,7 @@ int32_t i_rfString_Fwrite(void* sP,FILE* f,char* encodingP)
         break;
     }
     // if we get here it means an error, and we log it with the macro
-    i_WRITE_CHECK(f,"Writting a string to a file")
+    i_WRITE_CHECK(f,"Writing a string to a file")
     return RE_FILE_WRITE;
 }
 
