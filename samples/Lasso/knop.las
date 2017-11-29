@@ -5561,7 +5561,7 @@ Examples
 			Parameters: \n\
 			-default (optional) Default language. \n\
 			-fallback (optional) If specified, falls back to default language if key is missing. \n\
-			-debug (optional flag) If specified, missing strings will be output using the key surrpunded by asterisks',
+			-debug (optional flag) If specified, missing strings will be output using the key surrounded by asterisks',
 		-optional='default',	
 		-optional='fallback',
 		-optional='debug';
