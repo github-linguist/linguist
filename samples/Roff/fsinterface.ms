@@ -75,7 +75,7 @@ and incompatible with the others.
 Each of them addresses somewhat different design goals.
 Each was based on a different starting version of
 .UX ,
-targetted a different set of filesystems with varying characteristics,
+targeted a different set of filesystems with varying characteristics,
 and uses a different set of primitive operations provided by the filesystem.
 The current study compares the various filesystem interfaces.
 Criteria for comparison include generality, completeness, robustness,
@@ -147,7 +147,7 @@ system by Digital [Rodriguez86].
 There are numerous differences among these designs.
 The differences may be understood from the varying philosophies
 and design goals of the groups involved, from the systems under which
-the implementations were done, and from the filesystems originally targetted
+the implementations were done, and from the filesystems originally targeted
 by the designs.
 These differences are summarized in the following sections
 within the limitations of the published specifications.
