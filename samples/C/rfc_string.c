@@ -36,7 +36,7 @@
 
 /*-------------------------------------------------------------------------Methods to create an RF_String-------------------------------------------------------------------------------*/
 
-// Allocates and returns a string with the given characters a refu string with the given characters. Given characters have to be in UTF-8. A check for valide sequence of bytes is performed.
+// Allocates and returns a string with the given characters a refu string with the given characters. Given characters have to be in UTF-8. A check for valid sequence of bytes is performed.
 #ifndef RF_OPTION_DEFAULT_ARGUMENTS
 RF_String* rfString_Create(const char* s,...)
 #else
@@ -335,7 +335,7 @@ cleanup:
 
 
 
-// Initializes a string with the given characters. Given characters have to be in UTF-8. A check for valide sequence of bytes is performed.<b>Can't be used with RF_StringX</b>
+// Initializes a string with the given characters. Given characters have to be in UTF-8. A check for valid sequence of bytes is performed.<b>Can't be used with RF_StringX</b>
 #ifndef RF_OPTION_DEFAULT_ARGUMENTS
 char rfString_Init(RF_String* str,const char* s,...)
 #else

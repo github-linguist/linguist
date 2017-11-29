@@ -155,7 +155,7 @@ i_DECLIMEX_ RF_String* i_NVrfString_CreateLocal(const char* s);
 // @brief Initializes a string with the given characters.
 //
 // @notinherited{StringX}
-// Given characters have to be in UTF-8. A check for valide sequence of bytes is performed.
+// Given characters have to be in UTF-8. A check for valid sequence of bytes is performed.
 // @param str The string to initialize
 // @param s The sequence of bytes for the characters in UTF-8 (the default).Can also follow a printf-like format which will be formatted with
 // the variables that follow it. A check to see if it is a valid UTF-8 sequence is performed
@@ -1244,8 +1244,8 @@ i_DECLIMEX_ char i_rfString_Replace(RF_String* thisstr,void* sstr,void* rstr,con
 // @notinherited{StringX}
 // Read the file stream @c f until either a newline character or the EOF is reached and saves it as an RF_String
 // The file's encoding must be UTF-8.If for some reason (like EOF reached) no string can be read then null is returned
-// Given file character stream must be encoded in UTF-8. A check for valide sequence of bytes is performed.
-// @param f A valid and open file pointer in read mode from which to read the string. The file's encoding must be UTF-8.A check for valide sequence of bytes is performed.
+// Given file character stream must be encoded in UTF-8. A check for valid sequence of bytes is performed.
+// @param f A valid and open file pointer in read mode from which to read the string. The file's encoding must be UTF-8.A check for valid sequence of bytes is performed.
 // @param[out] eof Pass a pointer to a char to receive a true or false value in case the end of file was reached with this initialization
 // @return The initialized string or null pointer in case of failure to read the file, or unexpected data (non-UTF8 encoded string)
 i_DECLIMEX_ RF_String* rfString_Create_fUTF8(FILE* f, char* eof);
@@ -1255,9 +1255,9 @@ i_DECLIMEX_ RF_String* rfString_Create_fUTF8(FILE* f, char* eof);
 // @notinherited{StringX}
 // Read the file stream @c f until either a newline character or the EOF is reached and saves it as an RF_String
 // The file's encoding must be UTF-8.If for some reason (like EOF reached) no string can be read then null is returned
-// Given file character stream must be encoded in UTF-8. A check for valide sequence of bytes is performed.
+// Given file character stream must be encoded in UTF-8. A check for valid sequence of bytes is performed.
 // @param str The extended string to initialize
-// @param f A valid and open file pointer in read mode from which to read the string. The file's encoding must be UTF-8.A check for valide sequence of bytes is performed.
+// @param f A valid and open file pointer in read mode from which to read the string. The file's encoding must be UTF-8.A check for valid sequence of bytes is performed.
 // @param[out] eof Pass a pointer to a char to receive a true or false value in case the end of file was reached with this initialization
 // @return Returns either a positive number for successful initialization that represents the bytes read from the file.
 // If there was a problem an error is returned. Possible errors are any of those that @ref rfFReadLine_UTF8() can produce.
@@ -1269,9 +1269,9 @@ i_DECLIMEX_ int32_t rfString_Init_fUTF8(RF_String* str,FILE* f, char* eof);
 // @notinherited{StringX}
 // Read the file stream @c f until either a newline character or the EOF is reached and assigns it to an RF_StringX
 // The file's encoding must be UTF-8.If for some reason (like EOF reached) no string can be read then null is returned
-// Given file character stream must be encoded in UTF-8. A check for valide sequence of bytes is performed.
+// Given file character stream must be encoded in UTF-8. A check for valid sequence of bytes is performed.
 // @param str The extended string to assign to
-// @param f A valid and open file pointer in read mode from which to read the string. The file's encoding must be UTF-8.A check for valide sequence of bytes is performed.
+// @param f A valid and open file pointer in read mode from which to read the string. The file's encoding must be UTF-8.A check for valid sequence of bytes is performed.
 // @param[out] eof Pass a pointer to a char to receive a true or false value in case the end of file was reached with this assignment
 // @return Returns either a positive number for successful assignment that represents the bytes read from the file.
 // If there was a problem an error is returned. Possible errors are any of those that @ref rfFReadLine_UTF8() can produce.
@@ -1284,7 +1284,7 @@ i_DECLIMEX_ int32_t rfString_Assign_fUTF8(RF_String* str,FILE* f, char* eof);
 // The file's encoding must be UTF-8.If for some reason (like EOF reached) no string can be read then null is returned
 // Given file character stream must be encoded in UTF-8. A check for valid sequence of bytes is performed.
 // @param str The extended string to append to
-// @param f A valid and open file pointer in read mode from which to read the string. The file's encoding must be UTF-8.A check for valide sequence of bytes is performed.
+// @param f A valid and open file pointer in read mode from which to read the string. The file's encoding must be UTF-8.A check for valid sequence of bytes is performed.
 // @param[out] eof Pass a pointer to a char to receive a true or false value in case the end of file was reached with this appending
 // @return Returns either a positive number for successful appending that represents the bytes read from the file.
 // If there was a problem an error is returned. Possible errors are any of those that @ref rfFReadLine_UTF8() can produce.
