@@ -513,7 +513,7 @@ _lsyscall:
 ; XT_COMPILE	The xt compile field offset.
 ; XT_SIZE		The xt size offset.
 ; SYS_*			The numeric codes of various syscalls.
-; O_*			Various sycall flags/modes.
+; O_*			Various syscall flags/modes.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 	defconst "version", 0, WORD_VERSION, VERSION_NUM
