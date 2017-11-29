@@ -710,7 +710,7 @@ CHANGE NOTES
 2008-05-27	JS	Implemented record pointer 'current_record'. The record pointer is reset for each new query. 
 2008-05-27	JS	->field: added -recordindex to get data from any record in the current found set
 2008-05-27	JS	Added ->_unknowntag as shortcut to field
-2008-05-26	JS	Removed onassign since it causes touble
+2008-05-26	JS	Removed onassign since it causes trouble
 2008-05-26	JS	Extended field_names to return the field names for any specified table, return field names also for db objects that have never been used for a database query and optionally return field types
 2008-01-29	JS	->getrecord now supports -sql. Make sure that the SQL statement includes the relevant keyfield (and lockfield if locking is used). 
 2008-01-10	JS	->capturesearchvars: error_code and error_msg was mysteriously not set after database operations that caused errors. 
@@ -8064,7 +8064,7 @@ Change ->addfield to ->insert and make ->addfield deprecated
 2008-05-27	JS	Implemented record pointer \'current_record\'. The record pointer is reset for each new query. 
 2008-05-27	JS	->field: added -recordindex to get data from any record in the current found set
 2008-05-27	JS	Added ->_unknowntag as shortcut to field
-2008-05-26	JS	Removed onassign since it causes touble
+2008-05-26	JS	Removed onassign since it causes trouble
 2008-05-26	JS	Extended field_names to return the field names for any specified table, return field names also for db objects that have never been used for a database query and optionally return field types
 2008-01-29	JS	->getrecord now supports -sql. Make sure that the SQL statement includes the relevant keyfield (and lockfield if locking is used). 
 2008-01-10	JS	->capturesearchvars: error_code and error_msg was mysteriously not set after database operations that caused errors. 
