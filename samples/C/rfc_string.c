@@ -1568,7 +1568,7 @@ char i_rfString_Remove(void* thisstrP,void* rstrP,uint32_t* numberP,const char* 
         if(occurences == number)
             break;
     }while(bytePos != RF_FAILURE);
-    // succcess
+    // success
     return true;
 }
 
