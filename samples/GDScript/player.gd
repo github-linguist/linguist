@@ -26,7 +26,7 @@ var keep_jump_inertia = true
 var air_idle_deaccel = false
 var accel=19.0
 var deaccel=14.0
-var sharp_turn_threshhold = 140
+var sharp_turn_threshold = 140
 
 var max_speed=3.1
 var on_floor = false
@@ -119,7 +119,7 @@ func _integrate_forces( state ):
 	
 	if (onfloor):
 
-		var sharp_turn = hspeed > 0.1 and rad2deg(acos(target_dir.dot(hdir))) > sharp_turn_threshhold
+		var sharp_turn = hspeed > 0.1 and rad2deg(acos(target_dir.dot(hdir))) > sharp_turn_threshold
 
 		if (dir.length()>0.1 and !sharp_turn) :
 			if (hspeed > 0.001) :
