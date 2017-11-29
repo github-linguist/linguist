@@ -17,7 +17,7 @@ class EquilateralTriangle: NamedShape {
     }
 
     override func simpleDescription() -> String {
-        return "An equilateral triagle with sides of length \(sideLength)."
+        return "An equilateral triangle with sides of length \(sideLength)."
     }
 }
 var triangle = EquilateralTriangle(sideLength: 3.1, name: "a triangle")
