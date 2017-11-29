@@ -490,7 +490,7 @@ i_DECLIMEX_ int32_t rfFgetc_UTF16LE(FILE* f,uint32_t *c,char cp);
 // @param c Pass an int that will receive either the unicode code point value or
 // the UTF16 bytes depending on the value of the @c cp flag
 // If @c false the int passed at @c c will contain the value of the read bytes in UTF-16 without any decoding
-// @return Returns either @c RF_SUCCESS for succesfull readin or one of the following errors:
+// @return Returns either @c RF_SUCCESS for successful readin or one of the following errors:
 // + @c RE_FILE_EOF: The end of file has been found while reading.
 // + @c RE_FILE_READ: If during reading the file there was an unknown read error
 // + @c RE_FILE_READ_BLOCK: If the read operation failed due to the file descriptor being occupied by another thread
@@ -514,7 +514,7 @@ i_DECLIMEX_ int32_t rfFgetc_UTF32LE(FILE* f,uint32_t *c);
 // @param c Pass an int that will receive either the unicode code point value or
 // the UTF16 bytes depending on the value of the @c cp flag
 // If @c false the int passed at @c c will contain the value of the read bytes in UTF-16 without any decoding
-// @return Returns either @c RF_SUCCESS for succesfull readin or one of the following errors:
+// @return Returns either @c RF_SUCCESS for successful readin or one of the following errors:
 // + @c RE_FILE_EOF: The end of file has been found while reading.
 // + @c RE_FILE_READ: If during reading the file there was an unknown read error
 // + @c RE_FILE_READ_BLOCK: If the read operation failed due to the file descriptor being occupied by another thread

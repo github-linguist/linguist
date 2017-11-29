@@ -260,7 +260,7 @@ stock Testing_Test(bool:x, str[] = "", va_args<>)
 <param name="&fails">Number of tests which failed.</param>
 <param name="buffer[33]">The name of the first test which failed.</param>
 <returns>
-	Wether all tests were sucessful or not.
+	Wether all tests were successful or not.
 </returns>
 <remarks>
 	-
@@ -343,7 +343,7 @@ stock bool:Testing_Run(&tests, &fails, lastfail[33] = "", bool:p = false)
 <param name="&fails">Number of tests which failed.</param>
 <param name="buffer[33]">The name of the first test which failed.</param>
 <returns>
-	Wether all tests were sucessful or not.
+	Wether all tests were successful or not.
 </returns>
 <remarks>
 	-
