@@ -677,7 +677,7 @@ char rfString_Init_UTF32(RF_String* str,const char* s)
 void i_rfString_Assign(RF_String* dest,void* sourceP)
 {
     RF_String* source = (RF_String*)sourceP;
-    // only if the new string value won't fit in the buffer reallocate the buffer (let's avoid unecessary reallocs)
+    // only if the new string value won't fit in the buffer reallocate the buffer (let's avoid unnecessary reallocs)
     if(source->byteLength > dest->byteLength)
     {
         RF_REALLOC(dest->bytes,char,source->byteLength+1);
