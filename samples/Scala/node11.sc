@@ -47,7 +47,7 @@ object node11 {
    * each block contains one collectCoins and
    * one buyTreasure. If either call fails, the whole iteration does not fail,
    * because we are catching exceptions (with flatMap) in this implementation.
-   * Note that these blocks execute synchrounsly.
+   * Note that these blocks execute synchronously.
    */
   (0 to 4 toList).foreach(i =>block(i))           //> Iteration: 0
                                                   //| Iteration: 1
