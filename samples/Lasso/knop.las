@@ -5455,7 +5455,7 @@ Change ->addfield to ->insert and make ->addfield deprecated
 	
 	define_tag: 'page_skiprecords', -description='Converts current page value to a skiprecords value to use in a search. \n\
 			Parameters:\n\
-			-maxrecords (required integer) Needed to be able to do the calculation. Maxrecords_value can not be taken from the database object since taht value is not available until aftetr performing the search',
+			-maxrecords (required integer) Needed to be able to do the calculation. Maxrecords_value can not be taken from the database object since that value is not available until aftetr performing the search',
 		-required='maxrecords', -type='integer'; // TODO: maxrecords_value can be taken from the database object so should not be required
 		return: ((self -> 'page') - 1) * #maxrecords;
 	/define_tag;
