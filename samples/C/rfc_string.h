@@ -538,7 +538,7 @@ i_DECLIMEX_ uint32_t* rfString_ToUTF32(RF_String* s,uint32_t*length);
 //
 // @isinherited{StringX}
 // @param s The string whose number of characters to find. @inhtype{String,StringX}
-// @return Returns the length of the sting in characters, not including the null termintion character
+// @return Returns the length of the sting in characters, not including the null termination character
 i_DECLIMEX_ uint32_t rfString_Length(void * s);
 
 // @memberof RF_String
