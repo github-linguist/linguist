@@ -86,7 +86,7 @@ typedef struct RF_String
 
 
 // @memberof RF_String
-// @brief Create a termporary String from a String literal
+// @brief Create a temporary String from a String literal
 //
 // A macro to be used only inside a function call that accepts an @ref RF_String to create a Temporary RF_String*
 // that will be used by the function. This macro accepts from 1 to N arguments.
