@@ -65,7 +65,7 @@ struct WeaponInfo
     var class<Ammo> ReplacedAmmoPickupClass; //GE: Generated from ReplacedWeaponClassName.
 
     var class<Weapon> WeaponClass; //GE: This is the weapon we are going to put inside the world.
-    var string WeaponPickupClassName; //GE: Generated from WeponClass.
+    var string WeaponPickupClassName; //GE: Generated from WeaponClass.
     var string AmmoPickupClassName; //GE: Generated from WeaponClass.
     var bool bEnabled; //GE: Structs can't be defaultproperty'd, thus we still require bConfigUseU2WeaponX
     var bool bIsVehicle; //GE: This indicates that the weapon spawns a vehicle (deployable turrets). These only work in vehicle gametypes, duh.
