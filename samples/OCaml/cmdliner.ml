@@ -654,7 +654,7 @@ end
 
 (* Command lines. A command line stores pre-parsed information about
    the command line's arguments in a more structured way. Given the
-   [arg_info] values mentionned in a term and Sys.argv (whithout exec
+   [arg_info] values mentionned in a term and Sys.argv (without exec
    name) we parse the command line into a map of [arg_info] values to
    [arg] values. This map is used by the term's closures to retrieve
    and convert command line arguments (see the Arg module). *)
