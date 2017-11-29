@@ -74,8 +74,8 @@ L:
 
             'Inserted Compiling code 
             Dim r As Integer
-            Dim Varioblelocal? As Integer = Integer.MaxValue
-            Dim Varioblelocal0? As Guid = New Guid(r.ToString())
+            Dim Variablelocal? As Integer = Integer.MaxValue
+            Dim Variablelocal0? As Guid = New Guid(r.ToString())
 
             Dim привет = local
             Dim мир = local
