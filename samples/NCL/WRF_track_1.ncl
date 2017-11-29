@@ -1,5 +1,5 @@
 ;********************************************************
-; Plot storm stracks from wrfout files.
+; Plot storm tracks from wrfout files.
 ;********************************************************
 ;
 ; JUN-18-2005 
