@@ -14,6 +14,7 @@ var protoOut = flag.String("proto", "", "dump Protobuf library")
 var jsonOut = flag.String("json", "", "dump JSON output")
 var addGrammar = flag.String("add", "", "add a new grammar source")
 var updateList = flag.Bool("update", false, "update grammars.yml instead of verifying its contents")
+var report = flag.String("report", "", "write report to file")
 
 func fatal(err error) {
 	fmt.Fprintf(os.Stderr, "FATAL: %s\n", err)
@@ -66,5 +67,14 @@ func main() {
 		}
 	}
 
-	conv.Report()
+	if *report == "" {
+		conv.Report(os.Stderr)
+	} else {
+		f, err := os.Create(*report)
+		if err != nil {
+			fatal(err)
+		}
+		conv.Report(f)
+		f.Close()
+	}
 }

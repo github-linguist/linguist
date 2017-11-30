@@ -3,6 +3,7 @@ package compiler
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"path"
@@ -87,6 +88,7 @@ func (conv *Converter) ScopeMap() map[string]*Repository {
 func (conv *Converter) ConvertGrammars(update bool) error {
 	conv.Loaded = make(map[string]*Repository)
 	conv.queue = make(chan string, 128)
+
 	conv.progress = pb.New(len(conv.grammars))
 	conv.progress.Start()
 
@@ -188,7 +190,7 @@ func (conv *Converter) WriteGrammarList() error {
 	return ioutil.WriteFile(ymlpath, outyml, 0666)
 }
 
-func (conv *Converter) Report() {
+func (conv *Converter) Report(w io.Writer) {
 	var failed []*Repository
 	for _, repo := range conv.Loaded {
 		if len(repo.Errors) > 0 {
@@ -201,11 +203,11 @@ func (conv *Converter) Report() {
 	})
 
 	for _, repo := range failed {
-		fmt.Printf("- %s (%d errors)\n", repo, len(repo.Errors))
-		for i, err := range repo.Errors {
-			fmt.Printf("    %d. %s\n", i+1, err)
+		fmt.Fprintf(w, "- [ ] %s (%d errors)\n", repo, len(repo.Errors))
+		for _, err := range repo.Errors {
+			fmt.Fprintf(w, "    - [ ] %s\n", err)
 		}
-		fmt.Printf("\n")
+		fmt.Fprintf(w, "\n")
 	}
 }
 

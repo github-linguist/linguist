@@ -14,9 +14,9 @@ import (
 
 func RegexPP(re string) string {
 	if len(re) > 32 {
-		re = fmt.Sprintf("`%s`...", re[:32])
+		re = fmt.Sprintf("\"`%s`...\"", re[:32])
 	} else {
-		re = fmt.Sprintf("`%s`", re)
+		re = fmt.Sprintf("\"`%s`\"", re)
 	}
 	return strings.Replace(re, "\n", "", -1)
 }
