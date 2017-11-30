@@ -29,7 +29,7 @@ RUN go get -u github.com/golang/dep/cmd/dep
 WORKDIR /go/src/github.com/github/linguist/tools/grammars
 COPY . .
 
-# RUN dep ensure
+RUN dep ensure
 RUN go install ./cmd/grammar-compiler
 
 ENTRYPOINT ["grammar-compiler"]

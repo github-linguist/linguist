@@ -11,13 +11,14 @@ import (
 )
 
 type urlLoader struct {
-	url string
+	*Repository
 }
 
-func (l *urlLoader) loadTarball(r io.Reader, loaded map[string]Loaded) error {
+func (l *urlLoader) loadTarball(r io.Reader) {
 	gzf, err := gzip.NewReader(r)
 	if err != nil {
-		return err
+		l.Fail(err)
+		return
 	}
 	defer gzf.Close()
 
@@ -25,59 +26,68 @@ func (l *urlLoader) loadTarball(r io.Reader, loaded map[string]Loaded) error {
 	for true {
 		header, err := tarReader.Next()
 
-		if err == io.EOF {
-			break
-		}
-
 		if err != nil {
-			return err
+			if err != io.EOF {
+				l.Fail(err)
+			}
+			return
 		}
 
 		if isValidGrammar(header.Name, header.FileInfo()) {
 			data, err := ioutil.ReadAll(tarReader)
 			if err != nil {
-				return err
+				l.Fail(err)
+				return
 			}
 
 			ext := filepath.Ext(header.Name)
-			rule, uk, err := ConvertProto(ext, data)
+			rule, unknown, err := ConvertProto(ext, data)
 			if err != nil {
-				return &ConversionError{err, header.Name}
-			}
-
-			if _, ok := loaded[rule.ScopeName]; ok {
+				l.Fail(&ConversionError{header.Name, err})
 				continue
 			}
 
-			loaded[rule.ScopeName] = Loaded{header.Name, rule, uk}
+			if _, ok := l.Files[rule.ScopeName]; ok {
+				continue
+			}
+
+			l.AddFile(header.Name, rule, unknown)
 		}
 	}
-
-	return nil
 }
 
-func (l *urlLoader) Load(loaded map[string]Loaded) error {
-	res, err := http.Get(l.url)
+func (l *urlLoader) load() {
+	res, err := http.Get(l.Source)
 	if err != nil {
-		return err
+		l.Fail(err)
+		return
 	}
 	defer res.Body.Close()
 
-	if strings.HasSuffix(l.url, ".tar.gz") {
-		return l.loadTarball(res.Body, loaded)
+	if strings.HasSuffix(l.Source, ".tar.gz") {
+		l.loadTarball(res.Body)
+		return
 	}
 
 	data, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return err
+		l.Fail(err)
+		return
 	}
 
-	ext := filepath.Ext(l.url)
+	ext := filepath.Ext(l.Source)
+	filename := filepath.Base(l.Source)
 	rule, unknown, err := ConvertProto(ext, data)
 	if err != nil {
-		return &ConversionError{err, l.url}
+		l.Fail(&ConversionError{filename, err})
+		return
 	}
 
-	loaded[rule.ScopeName] = Loaded{l.url, rule, unknown}
-	return nil
+	l.AddFile(filename, rule, unknown)
+}
+
+func LoadFromURL(src string) *Repository {
+	loader := urlLoader{newRepository(src)}
+	loader.load()
+	return loader.Repository
 }

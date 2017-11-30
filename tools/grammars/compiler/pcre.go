@@ -53,7 +53,9 @@ func CheckPCRE(re string) (string, error) {
 		return "", nil
 	}
 	if len(re) > 32*1024 {
-		return "", fmt.Errorf("regex: definition too long (%d bytes)", len(re))
+		return "", fmt.Errorf(
+			"regex %s: definition too long (%d bytes)",
+			pcre.RegexPP(re), len(re))
 	}
 
 	re, hasBackRefs = fixRegex(re)

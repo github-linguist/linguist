@@ -20,143 +20,75 @@ import (
 type Converter struct {
 	root string
 
-	grammars    map[string][]string
-	newGrammars map[string][]string
-	modified    bool
+	modified bool
+	grammars map[string][]string
+	Loaded   map[string]*Repository
 
-	errors   []error
 	progress *pb.ProgressBar
 	wg       sync.WaitGroup
 	queue    chan string
-	library  grammar.Library
 	mu       sync.Mutex
 }
 
-func (conv *Converter) NewLoader(src string) Loader {
+func (conv *Converter) Load(src string) *Repository {
 	if strings.HasPrefix(src, "http://") || strings.HasPrefix(src, "https://") {
-		return &urlLoader{src}
+		return LoadFromURL(src)
 	}
-
-	src = path.Join(conv.root, src)
-	return &fsLoader{src}
+	return LoadFromFilesystem(conv.root, src)
 }
 
 func (conv *Converter) work() {
-	var (
-		localErrors []error
-		localScopes = make(map[string][]string)
-		localRules  = make(map[string]*grammar.Rule)
-	)
-
 	for source := range conv.queue {
-		loader := conv.NewLoader(source)
-		rules := make(map[string]Loaded)
+		repo := conv.Load(source)
 
-		err := loader.Load(rules)
-		if err != nil {
-			localErrors = append(localErrors, err)
-			continue
-		}
-
-		var scopes []string
-		for scope, l := range rules {
-			if len(l.unknownKeys) > 0 {
-				localErrors = append(localErrors, &UnknownKeysError{l.unknownKeys, l.source})
-			}
-			scopes = append(scopes, scope)
-			localRules[scope] = l.rule
-		}
-
-		sort.Strings(scopes)
-		localScopes[source] = scopes
+		conv.mu.Lock()
+		conv.Loaded[source] = repo
+		conv.mu.Unlock()
 
 		conv.progress.Increment()
 	}
-
-	conv.mu.Lock()
-	for source, scopes := range localScopes {
-		conv.newGrammars[source] = scopes
-	}
-	for scope, rule := range localRules {
-		conv.library.Grammars[scope] = rule
-	}
-	conv.errors = append(conv.errors, localErrors...)
-	conv.mu.Unlock()
 
 	conv.wg.Done()
 }
 
 func (conv *Converter) AddGrammar(source string) error {
-	if _, ok := conv.grammars[source]; ok {
-		// replace scopes
-		conv.grammars[source] = nil
-	}
-
-	loader := conv.NewLoader(source)
-	rules := make(map[string]Loaded)
-
-	err := loader.Load(rules)
-	if err != nil {
-		return err
-	}
-	if len(rules) == 0 {
+	repo := conv.Load(source)
+	if len(repo.Files) == 0 {
 		return fmt.Errorf("source '%s' contains no grammar files", source)
 	}
 
-	var scopes []string
-	for scope := range rules {
-		scopes = append(scopes, scope)
-	}
-	sort.Strings(scopes)
-	conv.grammars[source] = scopes
+	conv.grammars[source] = repo.Scopes()
 	conv.modified = true
 
 	fmt.Printf("OK! added grammar source '%s'\n", source)
-	for _, scope := range scopes {
+	for scope := range repo.Files {
 		fmt.Printf("\tnew scope: %s\n", scope)
 	}
 
 	return nil
 }
 
-func compareScopes(src string, expected []string, found []string) (errors []error) {
-	foundM := make(map[string]bool)
-	expectM := make(map[string]bool)
+func (conv *Converter) ScopeMap() map[string]*Repository {
+	allScopes := make(map[string]*Repository)
 
-	for _, v := range found {
-		foundM[v] = true
-	}
-	for _, v := range expected {
-		expectM[v] = true
-	}
-	for scope := range foundM {
-		if !expectM[scope] {
-			errors = append(errors, &UnexpectedScopeError{scope, src})
+	for _, repo := range conv.Loaded {
+		for scope := range repo.Files {
+			if original := allScopes[scope]; original != nil {
+				repo.Fail(&DuplicateScopeError{original, scope})
+			} else {
+				allScopes[scope] = repo
+			}
 		}
 	}
-	for scope := range expectM {
-		if !foundM[scope] {
-			errors = append(errors, &MissingScopeError{scope, src})
-		}
-	}
-	return
-}
 
-func (conv *Converter) compareGrammarLists() {
-	for source, expected := range conv.grammars {
-		found := conv.newGrammars[source]
-		errors := compareScopes(source, expected, found)
-		conv.errors = append(conv.errors, errors...)
-	}
+	return allScopes
 }
 
 func (conv *Converter) ConvertGrammars(update bool) error {
+	conv.Loaded = make(map[string]*Repository)
+	conv.queue = make(chan string, 128)
 	conv.progress = pb.New(len(conv.grammars))
 	conv.progress.Start()
-
-	conv.newGrammars = make(map[string][]string)
-	conv.library.Grammars = make(map[string]*grammar.Rule)
-	conv.queue = make(chan string, 128)
 
 	for i := 0; i < runtime.NumCPU(); i++ {
 		conv.wg.Add(1)
@@ -169,24 +101,43 @@ func (conv *Converter) ConvertGrammars(update bool) error {
 
 	close(conv.queue)
 	conv.wg.Wait()
-	conv.walkGrammars()
+
+	done := fmt.Sprintf("done! processed %d grammars\n", len(conv.Loaded))
+	conv.progress.FinishPrint(done)
 
 	if update {
-		conv.grammars = conv.newGrammars
+		conv.grammars = make(map[string][]string)
 		conv.modified = true
-	} else {
-		conv.compareGrammarLists()
 	}
 
-	done := fmt.Sprintf("done! %d scopes converted from %d grammars (%d errors)\n",
-		len(conv.library.Grammars), len(conv.grammars), len(conv.errors))
-	conv.progress.FinishPrint(done)
+	knownScopes := conv.ScopeMap()
+
+	for source, repo := range conv.Loaded {
+		repo.FixRules(knownScopes)
+
+		if update {
+			conv.grammars[source] = repo.Scopes()
+		} else {
+			expected := conv.grammars[source]
+			repo.CompareScopes(expected)
+		}
+	}
 
 	return nil
 }
 
 func (conv *Converter) WriteProto(path string) error {
-	pb, err := proto.Marshal(&conv.library)
+	library := grammar.Library{
+		Grammars: make(map[string]*grammar.Rule),
+	}
+
+	for _, repo := range conv.Loaded {
+		for scope, file := range repo.Files {
+			library.Grammars[scope] = file.Rule
+		}
+	}
+
+	pb, err := proto.Marshal(&library)
 	if err != nil {
 		return err
 	}
@@ -211,86 +162,16 @@ func (conv *Converter) WriteJSON(rulePath string) error {
 		return err
 	}
 
-	for scope, rule := range conv.library.Grammars {
-		p := path.Join(rulePath, scope+".json")
-		if err := conv.writeJSONFile(p, rule); err != nil {
-			return err
+	for _, repo := range conv.Loaded {
+		for scope, file := range repo.Files {
+			p := path.Join(rulePath, scope+".json")
+			if err := conv.writeJSONFile(p, file.Rule); err != nil {
+				return err
+			}
 		}
 	}
 
 	return nil
-}
-
-func (conv *Converter) checkInclude(scope string, missing map[string]bool, rule *grammar.Rule) {
-	include := rule.Include
-
-	if include == "" || include[0] == '#' || include[0] == '$' {
-		return
-	}
-
-	if alias, ok := GrammarAliases[include]; ok {
-		rule.Include = alias
-		return
-	}
-
-	include = strings.Split(include, "#")[0]
-	_, ok := conv.library.Grammars[include]
-	if !ok {
-		if !missing[include] {
-			missing[include] = true
-			conv.errors = append(conv.errors, &MissingIncludeError{include, scope})
-		}
-		rule.Include = ""
-	}
-}
-
-func (conv *Converter) checkRegexps(scope string, rule *grammar.Rule) {
-	check := func(re string) string {
-		re2, err := CheckPCRE(re)
-		if err != nil {
-			conv.errors = append(conv.errors, &InvalidRegexError{err, scope})
-		}
-		return re2
-	}
-
-	rule.Match = check(rule.Match)
-	rule.Begin = check(rule.Begin)
-	rule.While = check(rule.While)
-	rule.End = check(rule.End)
-}
-
-func (conv *Converter) walkRule(scope string, missing map[string]bool, rule *grammar.Rule) {
-	conv.checkInclude(scope, missing, rule)
-	conv.checkRegexps(scope, rule)
-
-	for _, rule := range rule.Patterns {
-		conv.walkRule(scope, missing, rule)
-	}
-	for _, rule := range rule.Captures {
-		conv.walkRule(scope, missing, rule)
-	}
-	for _, rule := range rule.BeginCaptures {
-		conv.walkRule(scope, missing, rule)
-	}
-	for _, rule := range rule.WhileCaptures {
-		conv.walkRule(scope, missing, rule)
-	}
-	for _, rule := range rule.EndCaptures {
-		conv.walkRule(scope, missing, rule)
-	}
-	for _, rule := range rule.Repository {
-		conv.walkRule(scope, missing, rule)
-	}
-	for _, rule := range rule.Injections {
-		conv.walkRule(scope, missing, rule)
-	}
-}
-
-func (conv *Converter) walkGrammars() {
-	for scope, rule := range conv.library.Grammars {
-		missing := make(map[string]bool)
-		conv.walkRule(scope, missing, rule)
-	}
 }
 
 func (conv *Converter) WriteGrammarList() error {
@@ -308,8 +189,23 @@ func (conv *Converter) WriteGrammarList() error {
 }
 
 func (conv *Converter) Report() {
-	for _, err := range conv.errors {
-		fmt.Printf("- %s\n\n", err)
+	var failed []*Repository
+	for _, repo := range conv.Loaded {
+		if len(repo.Errors) > 0 {
+			failed = append(failed, repo)
+		}
+	}
+
+	sort.Slice(failed, func(i, j int) bool {
+		return failed[i].Source < failed[j].Source
+	})
+
+	for _, repo := range failed {
+		fmt.Printf("- %s (%d errors)\n", repo, len(repo.Errors))
+		for i, err := range repo.Errors {
+			fmt.Printf("    %d. %s\n", i+1, err)
+		}
+		fmt.Printf("\n")
 	}
 }
 

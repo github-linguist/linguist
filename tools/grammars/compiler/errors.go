@@ -1,57 +1,85 @@
 package compiler
 
 import "fmt"
+import "strings"
 
 type ConversionError struct {
-	Conv   error
-	Source string
+	Path string
+	Err  error
 }
 
 func (err *ConversionError) Error() string {
-	return fmt.Sprintf("conversion failed\n\tfile: %s\n\terror: %s", err.Source, err.Conv)
+	return fmt.Sprintf(
+		"Grammar conversion failed. File `%s` failed to parse: %s",
+		err.Path, err.Err)
+}
+
+type DuplicateScopeError struct {
+	Original  *Repository
+	Duplicate string
+}
+
+func (err *DuplicateScopeError) Error() string {
+	return fmt.Sprintf(
+		"Duplicate scope in repository: scope `%s` was already defined in %s",
+		err.Duplicate, err.Original)
 }
 
 type MissingScopeError struct {
-	Scope  string
-	Source string
+	Scope string
 }
 
 func (err *MissingScopeError) Error() string {
-	return fmt.Sprintf("missing scope in grammar bundle: '%s' was expected\n\tfile: %s", err.Scope, err.Source)
+	return fmt.Sprintf(
+		"Missing scope in repository: `%s` is listed in grammars.yml but cannot be found",
+		err.Scope)
 }
 
 type UnexpectedScopeError struct {
-	Scope  string
-	Source string
+	File  *LoadedFile
+	Scope string
 }
 
 func (err *UnexpectedScopeError) Error() string {
-	return fmt.Sprintf("unexpected scope in grammar bundle: '%s'\n\tfile: %s", err.Scope, err.Source)
+	return fmt.Sprintf(
+		"Unexpected scope in repository: `%s` declared in %s was not listed in grammars.yml",
+		err.Scope, err.File)
 }
 
 type MissingIncludeError struct {
+	File    *LoadedFile
 	Include string
-	Source  string
 }
 
 func (err *MissingIncludeError) Error() string {
-	return fmt.Sprintf("scope '%s' cannot be found in library\n\tincluded from grammar: %s", err.Include, err.Source)
+	return fmt.Sprintf(
+		"Missing include in grammar: %s attempts to include `%s` but the scope cannot be found",
+		err.File, err.Include)
 }
 
 type UnknownKeysError struct {
-	Keys   []string
-	Source string
+	File *LoadedFile
+	Keys []string
 }
 
 func (err *UnknownKeysError) Error() string {
-	return fmt.Sprintf("unknown keys in grammar\n\tfile: %s\n\tkeys: %+v", err.Source, err.Keys)
+	var keys []string
+	for _, k := range err.Keys {
+		keys = append(keys, fmt.Sprintf("`%s`", k))
+	}
+
+	return fmt.Sprintf(
+		"Unknown keys in grammar: %s contains invalid keys (%s)",
+		err.File, strings.Join(keys, ", "))
 }
 
 type InvalidRegexError struct {
-	RegexError error
-	Source     string
+	File *LoadedFile
+	Err  error
 }
 
 func (err *InvalidRegexError) Error() string {
-	return fmt.Sprintf("invalid regex in grammar %s\n\t%s", err.Source, err.RegexError)
+	return fmt.Sprintf(
+		"Invalid regex in grammar: %s contains a malformed regex (%s)",
+		err.File, err.Err)
 }

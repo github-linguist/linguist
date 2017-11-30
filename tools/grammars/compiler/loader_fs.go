@@ -3,15 +3,19 @@ package compiler
 import (
 	"io/ioutil"
 	"os"
+	"os/exec"
+	"path"
 	"path/filepath"
+	"strings"
 )
 
 type fsLoader struct {
-	path string
+	*Repository
+	abspath string
 }
 
 func (l *fsLoader) findGrammars() (files []string, err error) {
-	err = filepath.Walk(l.path,
+	err = filepath.Walk(l.abspath,
 		func(path string, info os.FileInfo, err error) error {
 			if err == nil && isValidGrammar(path, info) {
 				files = append(files, path)
@@ -21,29 +25,56 @@ func (l *fsLoader) findGrammars() (files []string, err error) {
 	return
 }
 
-func (l *fsLoader) Load(loaded map[string]Loaded) error {
+func (l *fsLoader) load() {
 	grammars, err := l.findGrammars()
 	if err != nil {
-		return err
+		l.Fail(err)
+		return
 	}
 
 	for _, path := range grammars {
 		data, err := ioutil.ReadFile(path)
 		if err != nil {
-			return err
+			l.Fail(err)
+			continue
+		}
+
+		if rel, err := filepath.Rel(l.abspath, path); err == nil {
+			path = rel
 		}
 
 		rule, unknown, err := ConvertProto(filepath.Ext(path), data)
 		if err != nil {
-			return &ConversionError{err, path}
-		}
-
-		if _, ok := loaded[rule.ScopeName]; ok {
+			l.Fail(&ConversionError{path, err})
 			continue
 		}
 
-		loaded[rule.ScopeName] = Loaded{path, rule, unknown}
+		if _, ok := l.Files[rule.ScopeName]; ok {
+			continue
+		}
+
+		l.AddFile(path, rule, unknown)
+	}
+}
+
+func gitRemoteName(path string) (string, error) {
+	remote, err := exec.Command("git", "-C", path, "remote", "get-url", "origin").Output()
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSpace(string(remote)), nil
+}
+
+func LoadFromFilesystem(root, src string) *Repository {
+	loader := fsLoader{
+		Repository: newRepository(src),
+		abspath:    path.Join(root, src),
+	}
+	loader.load()
+
+	if ups, err := gitRemoteName(loader.abspath); err == nil {
+		loader.Repository.Upstream = ups
 	}
 
-	return nil
+	return loader.Repository
 }
