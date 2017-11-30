@@ -11,13 +11,13 @@ type HanoiRequest: void{
   .sid?: string
 }
 
-type HanoiReponse: void {
+type HanoiResponse: void {
   .move?: string
 }
 
 interface LocalOperations{
   RequestResponse:
-    hanoiSolver( HanoiRequest )( HanoiReponse )
+    hanoiSolver( HanoiRequest )( HanoiResponse )
 }
 
 interface ExternalOperations{

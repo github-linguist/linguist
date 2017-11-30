@@ -14,7 +14,7 @@ Shader "Hidden/Post FX/Fog"
         #include "UnityCG.cginc"
         #include "Common.cginc"
 
-        #define SKYBOX_THREASHOLD_VALUE 0.9999
+        #define SKYBOX_THRESHOLD_VALUE 0.9999
 
         struct Varyings
         {
@@ -76,7 +76,7 @@ Shader "Hidden/Post FX/Fog"
 
             float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv);
             depth = Linear01Depth(depth);
-            float skybox = depth < SKYBOX_THREASHOLD_VALUE;
+            float skybox = depth < SKYBOX_THRESHOLD_VALUE;
             float dist = ComputeDistance(depth) - _Start;
             half fog = 1.0 - ComputeFog(dist);
 

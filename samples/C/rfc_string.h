@@ -86,7 +86,7 @@ typedef struct RF_String
 
 
 // @memberof RF_String
-// @brief Create a termporary String from a String literal
+// @brief Create a temporary String from a String literal
 //
 // A macro to be used only inside a function call that accepts an @ref RF_String to create a Temporary RF_String*
 // that will be used by the function. This macro accepts from 1 to N arguments.
@@ -155,7 +155,7 @@ i_DECLIMEX_ RF_String* i_NVrfString_CreateLocal(const char* s);
 // @brief Initializes a string with the given characters.
 //
 // @notinherited{StringX}
-// Given characters have to be in UTF-8. A check for valide sequence of bytes is performed.
+// Given characters have to be in UTF-8. A check for valid sequence of bytes is performed.
 // @param str The string to initialize
 // @param s The sequence of bytes for the characters in UTF-8 (the default).Can also follow a printf-like format which will be formatted with
 // the variables that follow it. A check to see if it is a valid UTF-8 sequence is performed
@@ -287,7 +287,7 @@ i_DECLIMEX_ RF_String* rfString_Create_UTF16(const char* s,char endianess);
 // @param s The sequence of bytes for the characters in UTF-16.
 // @param endianess A flag that determined in what endianess the sequence of UTF-16 bytes is in. Possible values here is
 // @c RF_LITTLE_ENDIAN and @c RF_BIG_ENDIAN.
-// @return Returns true for succesfull initialization and false otherwise due to invalid utf-16 sequence or illegal endianess value
+// @return Returns true for successful initialization and false otherwise due to invalid utf-16 sequence or illegal endianess value
 i_DECLIMEX_ char rfString_Init_UTF16(RF_String* str,const char* s,char endianess);
 
 // @memberof RF_String
@@ -335,7 +335,7 @@ i_DECLIMEX_ void i_rfString_Assign(RF_String* dest,void* source);
 // @notinherited{StringX}
 // @param thisstr The string to assign to
 // @param character The unicode character codepoint to assign to the String
-// @return Returns @c true for succesfull assignment and @c false if the given @c character was not a valid unicode codepoint
+// @return Returns @c true for successful assignment and @c false if the given @c character was not a valid unicode codepoint
 i_DECLIMEX_ char rfString_Assign_char(RF_String* thisstr,uint32_t character);
 
 // @}
@@ -538,7 +538,7 @@ i_DECLIMEX_ uint32_t* rfString_ToUTF32(RF_String* s,uint32_t*length);
 //
 // @isinherited{StringX}
 // @param s The string whose number of characters to find. @inhtype{String,StringX}
-// @return Returns the length of the sting in characters, not including the null termintion character
+// @return Returns the length of the sting in characters, not including the null termination character
 i_DECLIMEX_ uint32_t rfString_Length(void * s);
 
 // @memberof RF_String
@@ -562,7 +562,7 @@ i_DECLIMEX_ uint32_t rfString_GetChar(void* thisstr,uint32_t c);
 // @param thisstr The string whose byte position code point we need. @inhtype{String,StringX}
 // @param bytepos The byte position of the string from where to get the code point.
 // @warning If this is out of bounds then nothing can detect it and at best it will cause a SEG FAULT.
-//                 Moreover no check to see if this is not a continutation byte is made. All the checks must have been made before calling the function.
+//                 Moreover no check to see if this is not a continuation byte is made. All the checks must have been made before calling the function.
 // @return Returns the code point of the byte position as an uint32_t
 // @endinternal
 i_DECLIMEX_ uint32_t rfString_BytePosToCodePoint(void* thisstr,uint32_t bytepos);
@@ -574,13 +574,13 @@ i_DECLIMEX_ uint32_t rfString_BytePosToCodePoint(void* thisstr,uint32_t bytepos)
 //
 // @isinherited{StringX}
 // This is an internal function, there is no need to use it. It attempts to retrieve character position from a byte position. If the byte
-// position is a continutation byte and does not constitute the start of a character then depending on the option the function will find
+// position is a continuation byte and does not constitute the start of a character then depending on the option the function will find
 // either the next character or the previous character position from this byte position
 //
 // @warning DO NOT use this function unless you know what you are doing
 // @param thisstr The string whose byte position code point we need. @inhtype{String,StringX}
 // @param bytepos The byte position of the string from where to get the character position
-// @param before A boolean flag denoting the behaviour in case this byte position is a continutation byte. If @c before is true then
+// @param before A boolean flag denoting the behaviour in case this byte position is a continuation byte. If @c before is true then
 // the function will retrieve the first character position before the byte. If it is false, it will retrieve the first character position
 // after the continuation byte.
 // @endinternal
@@ -646,7 +646,7 @@ i_DECLIMEX_ int32_t i_rfString_Find(const void* thisstr,const void* sstr,const c
 // The parameter string must contains only numbers. If it contains anything else the function fails.
 // @param thisstr The string whose integer value to return. @inhtype{String,StringX}
 // @param[out] v A refence to an integer that will return the float value
-// @return Returns true in case of succesfull conversion or false if no integer was represented by the string
+// @return Returns true in case of successful conversion or false if no integer was represented by the string
 i_DECLIMEX_ char rfString_ToInt(void* thisstr,int32_t* v);
 
 // @memberof RF_String
@@ -656,7 +656,7 @@ i_DECLIMEX_ char rfString_ToInt(void* thisstr,int32_t* v);
 // The parameter string must contain only a number. If it contains anything else the function fails.
 // @param thisstr The string whose floating point value to return. @inhtype{String,StringX}
 // @param[out] f A refence to a double that will return the floating point number value
-// @return Returns RF_SUCCESS in case of succesfull conversion or error if there was failure. Possible errors are:
+// @return Returns RF_SUCCESS in case of successful conversion or error if there was failure. Possible errors are:
 // + @c RE_STRING_TOFLOAT: There was a conversion error. The string probably does not represent a float
 // + @c RE_STRING_TOFLOAT_RANGE: The represented floating point number is of a range bigger than what can be
 // represented by the system
@@ -755,7 +755,7 @@ i_DECLIMEX_ int32_t i_rfString_Count(void* thisstr,void* sstr,const char* option
 // @brief Tokenizes the given string
 //
 // @isinherited{StringX}
-// Separates it into @c tokensN depending on how many substrings can be created from the @c sep separatior and stores them
+// Separates it into @c tokensN depending on how many substrings can be created from the @c sep separator and stores them
 // into the Array of RF_String* that should be passed to the function. The array gets initialized inside the function and
 // <b>has to be freed explicitly</b> later by thg user. Also each String inside the array has to be Deinitialized too.
 // Here is an example usage:
@@ -1131,7 +1131,7 @@ i_DECLIMEX_ char rfString_PruneEnd(void* thisstr,uint32_t n);
 // @param thisstr The string to prune from. @inhtype{String,StringX}
 // @param p The position to remove the characters from. Must be a positive integer. Indexing starts from zero.
 // @param n The number of characters to remove from the position and back.Must be a positive integer.
-// @return Returns true in case of succesfull removal and false in any other case.
+// @return Returns true in case of successful removal and false in any other case.
 i_DECLIMEX_ char rfString_PruneMiddleB(void* thisstr,uint32_t p,uint32_t n);
 // @memberof RF_String
 // @brief Removes characters from one point of the string to another going forward
@@ -1141,7 +1141,7 @@ i_DECLIMEX_ char rfString_PruneMiddleB(void* thisstr,uint32_t p,uint32_t n);
 // @param thisstr The string to prune from. @inhtype{String,StringX}
 // @param p The position to remove the characters from. Must be a positive integer. Indexing starts from zero.
 // @param n The number of characters to remove from the position and on. Must be a positive integer.
-// @return Returns true in case of succesfull removal and false in any other case.
+// @return Returns true in case of successful removal and false in any other case.
 i_DECLIMEX_ char rfString_PruneMiddleF(void* thisstr,uint32_t p,uint32_t n);
 
 
@@ -1244,8 +1244,8 @@ i_DECLIMEX_ char i_rfString_Replace(RF_String* thisstr,void* sstr,void* rstr,con
 // @notinherited{StringX}
 // Read the file stream @c f until either a newline character or the EOF is reached and saves it as an RF_String
 // The file's encoding must be UTF-8.If for some reason (like EOF reached) no string can be read then null is returned
-// Given file character stream must be encoded in UTF-8. A check for valide sequence of bytes is performed.
-// @param f A valid and open file pointer in read mode from which to read the string. The file's encoding must be UTF-8.A check for valide sequence of bytes is performed.
+// Given file character stream must be encoded in UTF-8. A check for valid sequence of bytes is performed.
+// @param f A valid and open file pointer in read mode from which to read the string. The file's encoding must be UTF-8.A check for valid sequence of bytes is performed.
 // @param[out] eof Pass a pointer to a char to receive a true or false value in case the end of file was reached with this initialization
 // @return The initialized string or null pointer in case of failure to read the file, or unexpected data (non-UTF8 encoded string)
 i_DECLIMEX_ RF_String* rfString_Create_fUTF8(FILE* f, char* eof);
@@ -1255,11 +1255,11 @@ i_DECLIMEX_ RF_String* rfString_Create_fUTF8(FILE* f, char* eof);
 // @notinherited{StringX}
 // Read the file stream @c f until either a newline character or the EOF is reached and saves it as an RF_String
 // The file's encoding must be UTF-8.If for some reason (like EOF reached) no string can be read then null is returned
-// Given file character stream must be encoded in UTF-8. A check for valide sequence of bytes is performed.
+// Given file character stream must be encoded in UTF-8. A check for valid sequence of bytes is performed.
 // @param str The extended string to initialize
-// @param f A valid and open file pointer in read mode from which to read the string. The file's encoding must be UTF-8.A check for valide sequence of bytes is performed.
+// @param f A valid and open file pointer in read mode from which to read the string. The file's encoding must be UTF-8.A check for valid sequence of bytes is performed.
 // @param[out] eof Pass a pointer to a char to receive a true or false value in case the end of file was reached with this initialization
-// @return Returns either a positive number for succesfull initialization that represents the bytes read from the file.
+// @return Returns either a positive number for successful initialization that represents the bytes read from the file.
 // If there was a problem an error is returned. Possible errors are any of those that @ref rfFReadLine_UTF8() can produce.
 i_DECLIMEX_ int32_t rfString_Init_fUTF8(RF_String* str,FILE* f, char* eof);
 
@@ -1269,11 +1269,11 @@ i_DECLIMEX_ int32_t rfString_Init_fUTF8(RF_String* str,FILE* f, char* eof);
 // @notinherited{StringX}
 // Read the file stream @c f until either a newline character or the EOF is reached and assigns it to an RF_StringX
 // The file's encoding must be UTF-8.If for some reason (like EOF reached) no string can be read then null is returned
-// Given file character stream must be encoded in UTF-8. A check for valide sequence of bytes is performed.
+// Given file character stream must be encoded in UTF-8. A check for valid sequence of bytes is performed.
 // @param str The extended string to assign to
-// @param f A valid and open file pointer in read mode from which to read the string. The file's encoding must be UTF-8.A check for valide sequence of bytes is performed.
+// @param f A valid and open file pointer in read mode from which to read the string. The file's encoding must be UTF-8.A check for valid sequence of bytes is performed.
 // @param[out] eof Pass a pointer to a char to receive a true or false value in case the end of file was reached with this assignment
-// @return Returns either a positive number for succesfull assignment that represents the bytes read from the file.
+// @return Returns either a positive number for successful assignment that represents the bytes read from the file.
 // If there was a problem an error is returned. Possible errors are any of those that @ref rfFReadLine_UTF8() can produce.
 i_DECLIMEX_ int32_t rfString_Assign_fUTF8(RF_String* str,FILE* f, char* eof);
 // @memberof RF_String
@@ -1284,9 +1284,9 @@ i_DECLIMEX_ int32_t rfString_Assign_fUTF8(RF_String* str,FILE* f, char* eof);
 // The file's encoding must be UTF-8.If for some reason (like EOF reached) no string can be read then null is returned
 // Given file character stream must be encoded in UTF-8. A check for valid sequence of bytes is performed.
 // @param str The extended string to append to
-// @param f A valid and open file pointer in read mode from which to read the string. The file's encoding must be UTF-8.A check for valide sequence of bytes is performed.
+// @param f A valid and open file pointer in read mode from which to read the string. The file's encoding must be UTF-8.A check for valid sequence of bytes is performed.
 // @param[out] eof Pass a pointer to a char to receive a true or false value in case the end of file was reached with this appending
-// @return Returns either a positive number for succesfull appending that represents the bytes read from the file.
+// @return Returns either a positive number for successful appending that represents the bytes read from the file.
 // If there was a problem an error is returned. Possible errors are any of those that @ref rfFReadLine_UTF8() can produce.
 i_DECLIMEX_ int32_t rfString_Append_fUTF8(RF_String* str,FILE* f, char* eof);
 
@@ -1314,7 +1314,7 @@ i_DECLIMEX_ RF_String* rfString_Create_fUTF16(FILE* f, char endianess,char* eof)
 // @param endianess A flag that determines in what endianess the UTF-16 file is encoded in. Possible values here are
 // @c RF_LITTLE_ENDIAN and @c RF_BIG_ENDIAN.
 // @param[out] eof Pass a pointer to a char to receive a true or false value in case the end of file was reached with this initialization
-// @return Returns either a positive number for succesfull initialization that represents the bytes read from the file.
+// @return Returns either a positive number for successful initialization that represents the bytes read from the file.
 // If there was a problem an error is returned. Possible errors are any of those that @ref rfFReadLine_UTF16LE() can produce.
 i_DECLIMEX_ int32_t rfString_Init_fUTF16(RF_String* str,FILE* f, char endianess,char* eof);
 
@@ -1329,7 +1329,7 @@ i_DECLIMEX_ int32_t rfString_Init_fUTF16(RF_String* str,FILE* f, char endianess,
 // @param endianess A flag that determines in what endianess the UTF-16 file is encoded in. Possible values here are
 // @c RF_LITTLE_ENDIAN and @c RF_BIG_ENDIAN.
 // @param[out] eof Pass a pointer to a char to receive a true or false value in case the end of file was reached with this appending
-// @return Returns either a positive number for succesfull appending that represents the bytes read from the file.
+// @return Returns either a positive number for successful appending that represents the bytes read from the file.
 // If there was a problem an error is returned. Possible errors are any of those that @ref rfFReadLine_UTF16LE() can produce.
 i_DECLIMEX_ int32_t rfString_Append_fUTF16(RF_String* str,FILE* f, char endianess,char* eof);
 // @memberof RF_String
@@ -1343,7 +1343,7 @@ i_DECLIMEX_ int32_t rfString_Append_fUTF16(RF_String* str,FILE* f, char endianes
 // @param endianess A flag that determines in what endianess the UTF-16 file is encoded in. Possible values here are
 // @c RF_LITTLE_ENDIAN and @c RF_BIG_ENDIAN.
 // @param[out] eof Pass a pointer to a char to receive a true or false value in case the end of file was reached with this assignment
-// @return Returns either a positive number for succesfull assignment that represents the bytes read from the file.
+// @return Returns either a positive number for successful assignment that represents the bytes read from the file.
 // If there was a problem an error is returned. Possible errors are any of those that @ref rfFReadLine_UTF16LE() can produce.
 i_DECLIMEX_ int32_t rfString_Assign_fUTF16(RF_String* str,FILE* f, char endianess,char* eof);
 
@@ -1371,7 +1371,7 @@ i_DECLIMEX_ RF_String* rfString_Create_fUTF32(FILE* f,char endianess, char* eof)
 // @param endianess A flag that determines in what endianess the UTF-32 file is encoded in. Possible values here are
 // @c RF_LITTLE_ENDIAN and @c RF_BIG_ENDIAN.
 // @param[out] eof Pass a pointer to a char to receive a true or false value in case the end of file was reached with this initialization
-// @return Returns either a positive number for succesfull initialization that represents the bytes read from the file.
+// @return Returns either a positive number for successful initialization that represents the bytes read from the file.
 // If there was a problem an error is returned. Possible errors are any of those that @ref rfFReadLine_UTF32LE() can produce.
 i_DECLIMEX_ int32_t rfString_Init_fUTF32(RF_String* str,FILE* f,char endianess, char* eof);
 // @memberof RF_String
@@ -1385,7 +1385,7 @@ i_DECLIMEX_ int32_t rfString_Init_fUTF32(RF_String* str,FILE* f,char endianess, 
 // @param endianess A flag that determines in what endianess the UTF-32 file is encoded in. Possible values here are
 // @c RF_LITTLE_ENDIAN and @c RF_BIG_ENDIAN.
 // @param[out] eof Pass a pointer to a char to receive a true or false value in case the end of file was reached with this assignment
-// @return Returns either a positive number for succesfull assignment that represents the bytes read from the file.
+// @return Returns either a positive number for successful assignment that represents the bytes read from the file.
 // If there was a problem an error is returned. Possible errors are any of those that @ref rfFReadLine_UTF32LE() can produce.
 i_DECLIMEX_ int32_t rfString_Assign_fUTF32(RF_String* str,FILE* f,char endianess, char* eof);
 // @memberof RF_String
@@ -1399,7 +1399,7 @@ i_DECLIMEX_ int32_t rfString_Assign_fUTF32(RF_String* str,FILE* f,char endianess
 // @param endianess A flag that determines in what endianess the UTF-32 file is encoded in. Possible values here are
 // @c RF_LITTLE_ENDIAN and @c RF_BIG_ENDIAN.
 // @param[out] eof Pass a pointer to a char to receive a true or false value in case the end of file was reached with this appending
-// @return Returns either a positive number for succesfull appending that represents the bytes read from the file.
+// @return Returns either a positive number for successful appending that represents the bytes read from the file.
 // If there was a problem an error is returned. Possible errors are any of those that @ref rfFReadLine_UTF32LE() can produce.
 i_DECLIMEX_ int32_t rfString_Append_fUTF32(RF_String* str,FILE* f,char endianess, char* eof);
 
@@ -1417,15 +1417,15 @@ i_DECLIMEX_ int32_t rfString_Append_fUTF32(RF_String* str,FILE* f,char endianess
 // + @c RF_UTF16_LE: For Unicode UTF-16 encoding in Little Endian endianess
 // + @c RF_UTF32_BE: For Unicode UTF-32 encoding in Big Endian endianess
 // + @c RF_UTF32_LE: For Unicode UTF-32 encoding in Little Endian endianess
-// @return Returns @c RF_SUCCESS for succesfull writting and error otherwise. Possible errors are:
+// @return Returns @c RF_SUCCESS for successful writing and error otherwise. Possible errors are:
 // + @c RE_FILE_WRITE: There was an unknown write error
 // + @c RE_FILE_WRITE_BLOCK: The write failed because the file was occupied by another thread and the no block flag was set
 // + @c RE_FILE_BAD: The file descriptor @c f was corrupt
 // + @c RE_FILE_TOOBIG: The file's size exceeds the system limiti
-// + @c RE_INTERRUPT: Writting failed due to a system interrupt
-// + @c RE_FILE_IO: Writting failed because of a physical I/O error
-// + @c RE_FILE_NOSPACE: Writting failed because the device containing the file had no free space
-// + @c RE_FILE_NOT_FILE: Writting failed because the given file descriptor @c f is either non existen or not a file
+// + @c RE_INTERRUPT: Writing failed due to a system interrupt
+// + @c RE_FILE_IO: Writing failed because of a physical I/O error
+// + @c RE_FILE_NOSPACE: Writing failed because the device containing the file had no free space
+// + @c RE_FILE_NOT_FILE: Writing failed because the given file descriptor @c f is either non existent or not a file
 #if defined(RF_IAMHERE_FOR_DOXYGEN)
     i_DECLIMEX_ int32_t rfString_Fwrite(void* s,FILE* f,char encoding);
 #else

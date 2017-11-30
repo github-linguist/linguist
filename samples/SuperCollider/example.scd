@@ -6,7 +6,7 @@ s.boot;
 // SC as system for sound synthesis and sound processing
 
 
-// patching synth moduls by writing synth defs:
+// patching synth modules by writing synth defs:
 
 (
 SynthDef("mod", {

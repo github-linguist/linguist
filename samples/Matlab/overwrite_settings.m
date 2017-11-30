@@ -12,7 +12,7 @@ function settings = overwrite_settings(defaultSettings, overrideSettings)
 % Returns
 % -------
 % settings : structure
-%   A stucture containing the overrideSettings and any defaults that weren't
+%   A structure containing the overrideSettings and any defaults that weren't
 %   supplied in the overrideSettings.
 
 % add the default options if not specified by the user

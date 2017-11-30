@@ -48,7 +48,7 @@ require_all 'jekyll/tags'
 module Jekyll
   VERSION = '0.11.2'
 
-  # Default options. Overriden by values in _config.yml or command-line opts.
+  # Default options. Overridden by values in _config.yml or command-line opts.
   # (Strings rather symbols used for compatability with YAML).
   DEFAULTS = {
     'safe'          => false,

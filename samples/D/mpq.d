@@ -40,7 +40,7 @@ const LIBMPQ_ERROR_SEEK			= -3;	/* lseek error on file. */
 const LIBMPQ_ERROR_READ			= -4;	/* read error on file. */
 const LIBMPQ_ERROR_WRITE		= -5;	/* write error on file. */
 const LIBMPQ_ERROR_MALLOC		= -6;	/* memory allocation error. */
-const LIBMPQ_ERROR_FORMAT		= -7;	/* format errror. */
+const LIBMPQ_ERROR_FORMAT		= -7;	/* format error. */
 const LIBMPQ_ERROR_NOT_INITIALIZED	= -8;	/* init() wasn't called. */
 const LIBMPQ_ERROR_SIZE			= -9;	/* buffer size is to small. */
 const LIBMPQ_ERROR_EXIST		= -10;	/* file or block does not exist in archive. */
@@ -94,7 +94,7 @@ class MPQException : Exception {
 		"read error on file",
 		"write error on file",
 		"memory allocation error",
-		"format errror",
+		"format error",
 		"init() wasn't called",
 		"buffer size is to small",
 		"file or block does not exist in archive",

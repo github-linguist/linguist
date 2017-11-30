@@ -338,7 +338,7 @@ module Manpage = struct
     pr ppf ".\\\" Pipe this output to groff -man -Tutf8 | less@\n\
             .\\\"@\n\
             .TH \"%s\" %d \"%s\" \"%s\" \"%s\"@\n\
-            .\\\" Disable hyphenantion and ragged-right@\n\
+            .\\\" Disable hyphenation and ragged-right@\n\
             .nh@\n\
       .ad l\
       %a@?"
@@ -516,7 +516,7 @@ module Help = struct
       in
       List.sort rev_compare (List.fold_left add_cmd [] ei.choices)
 
-  let text ei =                  (* man that code is particulary unreadable. *)
+  let text ei =                  (* man that code is particularly unreadable. *)
     let rec merge_items acc to_insert mark il = function
     | `S s as sec :: ts ->
         let acc = List.rev_append to_insert acc in
@@ -654,7 +654,7 @@ end
 
 (* Command lines. A command line stores pre-parsed information about
    the command line's arguments in a more structured way. Given the
-   [arg_info] values mentionned in a term and Sys.argv (whithout exec
+   [arg_info] values mentionned in a term and Sys.argv (without exec
    name) we parse the command line into a map of [arg_info] values to
    [arg] values. This map is used by the term's closures to retrieve
    and convert command line arguments (see the Arg module). *)

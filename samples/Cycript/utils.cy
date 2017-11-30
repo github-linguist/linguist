@@ -225,7 +225,7 @@
 			type = utils.exec("@encode(" + type + ")");
 		}
 		
-		// (const) char * has "infinite" preceision
+		// (const) char * has "infinite" precision
 		if(type.toString().slice(-1) === "*") {
 			return utils.sizeof(@encode(void *));
 		}

@@ -414,7 +414,7 @@ Statement = Transformer {
     _, exp, conds = unpack node
     exp_name = NameProxy "exp"
 
-    -- convert switch conds into if statment conds
+    -- convert switch conds into if statement conds
     convert_cond = (cond) ->
       t, case_exps, body = unpack cond
       out = {}

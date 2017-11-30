@@ -731,7 +731,7 @@ with ext_stat :=
   | stat_return_1 : (specret value) -> ext_stat (* The expression have been executed. *)
 
   | stat_try_1 : out -> option (string*stat) -> option stat -> ext_stat (* The try block has been executed. *)
-  | stat_try_2 : out -> lexical_env -> stat -> option stat -> ext_stat (* The catch block is actived and will be executed. *)
+  | stat_try_2 : out -> lexical_env -> stat -> option stat -> ext_stat (* The catch block is active and will be executed. *)
   | stat_try_3 : out -> option stat -> ext_stat (* The try catch block has been executed:  there only stay an optional finally. *)
   | stat_try_4 : res -> option stat -> ext_stat (* The try catch block has been executed:  there only stay an optional finally. *)
   | stat_try_5 : res -> out -> ext_stat (* The finally has been executed. *)
@@ -829,7 +829,7 @@ with ext_spec :=
   | spec_string_get_own_prop_5 : string -> (specret int) -> ext_spec
   | spec_string_get_own_prop_6 : string -> int -> int -> ext_spec
 
-  (* Argumenst for Function.prototype.apply *)
+  (* Arguments for Function.prototype.apply *)
 
   | spec_function_proto_apply_get_args   : object_loc -> int -> int -> ext_spec
   | spec_function_proto_apply_get_args_1 : object_loc -> int -> int -> out -> ext_spec
@@ -1746,7 +1746,7 @@ Inductive make_delete_event : state -> object_loc -> prop_name -> event -> Prop 
 (** ** Implementation Defined Object *)
 
 (** As stated in Section 2 of the ECMAScript specification, an
-  implementation can provide additionnal properties not described in
+  implementation can provide additional properties not described in
   the specification. **)
 
 (** As we are only describing the core of JavaScrip here, this

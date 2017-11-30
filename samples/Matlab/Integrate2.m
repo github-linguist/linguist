@@ -15,7 +15,7 @@ vx_T=zeros(nx,ny,nvx,ne);
 vy_T=zeros(nx,ny,nvx,ne);
 e_T=zeros(nx,ny,nvx,ne);
 delta_e=zeros(nx,ny,nvx,ne);
-%% Look for phisically meaningful points
+%% Look for physically meaningful points
 filter=zeros(nx,ny,nvx,ne);  %0=meaningless point 1=meaningful point
 useful=ones(nx,ny,nvx,ne);
 %% Integrate only useful points

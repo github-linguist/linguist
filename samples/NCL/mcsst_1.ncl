@@ -38,7 +38,7 @@ begin
   end if
   sst  = new((/1024,2048/),"float")            ; create float var
   sst  = tmp*xslope+yint                       ; convert to float
-  delete(tmp)                                  ; delete unecessary array
+  delete(tmp)                                  ; delete unnecessary array
 ;***************************************
 ; assign missing values. The original missing value was zero, but since it was
 ; not assigned in NCL, it was not recognized. The new missing values are 

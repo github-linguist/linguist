@@ -25,7 +25,7 @@ sub test_lines(@lines) {
     is $count, 3, 'Read three lines with while !$hanlde.eof';
 }
 
-# test that we can interate over $fh.lines
+# test that we can iterate over $fh.lines
 {
     my $fh =  open('t/spec/S16-io/test-data');
 

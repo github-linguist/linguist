@@ -73,7 +73,7 @@ begin
   res@mpRightCornerLatF     = lat2d(nlat-1,mlon-1)
   res@mpRightCornerLonF     = lon2d(nlat-1,mlon-1)
 
-  res@mpCenterLonF          = f->LoV          ; set center logitude         
+  res@mpCenterLonF          = f->LoV          ; set center longitude         
                                     
   if (projection.eq."LambertConformal") then    
       res@mpLambertParallel1F   = f->Latin1    

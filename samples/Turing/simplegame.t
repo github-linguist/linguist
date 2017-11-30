@@ -508,7 +508,7 @@ body proc game
 		end if
 	    end if
 	end for
-	%Verticle Detection
+	%Vertical Detection
 	for i : 1 .. 36 by 6
 	    if (x (i) = x (i + 1) and x (i) = x (i + 2) and x (i) = x (i + 3) and x (i) = 1) then
 		scoreY := scoreY + 1

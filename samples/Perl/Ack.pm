@@ -583,7 +583,7 @@ sub is_searchable {
 
 Returns a regex object based on a string and command-line options.
 
-Dies when the regex $str is undefinied (i.e. not given on command line).
+Dies when the regex $str is undefined (i.e. not given on command line).
 
 =cut
 

@@ -67,12 +67,12 @@ session "HOL-Hahn_Banach" in Hahn_Banach = HOL +
     theorem is one of the fundamental theorems of functional analysis. It is a
     conclusion of Zorn's lemma.
 
-    Two different formaulations of the theorem are presented, one for general
+    Two different formulations of the theorem are presented, one for general
     real vectorspaces and its application to normed vectorspaces.
 
-    The theorem says, that every continous linearform, defined on arbitrary
+    The theorem says, that every continuous linearform, defined on arbitrary
     subspaces (not only one-dimensional subspaces), can be extended to a
-    continous linearform on the whole vectorspace.
+    continuous linearform on the whole vectorspace.
   *}
   options [document_graph]
   theories Hahn_Banach
@@ -419,7 +419,7 @@ session "HOL-Proofs-Lambda" in "Proofs/Lambda" = "HOL-Proofs" +
   description {*
     Lambda Calculus in de Bruijn's Notation.
 
-    This session defines lambda-calculus terms with de Bruijn indixes and
+    This session defines lambda-calculus terms with de Bruijn indices and
     proves confluence of beta, eta and beta+eta.
 
     The paper "More Church-Rosser Proofs (in Isabelle/HOL)" describes the whole

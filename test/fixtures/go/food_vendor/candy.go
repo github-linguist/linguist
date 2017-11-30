@@ -1,1 +1,1 @@
-// empty file for testing that paths with vendor in them don't get ingored
+// empty file for testing that paths with vendor in them don't get ignored

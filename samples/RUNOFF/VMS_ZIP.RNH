@@ -138,7 +138,7 @@ Large Archives and Zip64
 Where the operating system and C run-time support allow, Zip 3.0 and
 UnZip 6.0 (and later versions) support large files (input and archive),
 using the Zip64 extensions to the original .ZIP file format.  On VMS,
-this genarally means non-VAX systems with VMS V7.2 or later (perhaps
+this generally means non-VAX systems with VMS V7.2 or later (perhaps
 requiring a C RTL ECO before VMS V7.3-2).
 .sk
 Zip automatically uses the Zip64 extensions when a file larger than 2 GB
@@ -791,7 +791,7 @@ included in the archive.  For example:
 $ zip -rt 12071991 infamy [.FOO]*.*
 .sk
 will add all the files in [.FOO] and its subdirectories that were last
-modified on December 7, 1991, or later to the achive infamy.zip.  Dates
+modified on December 7, 1991, or later to the achieve infamy.zip.  Dates
 can be in format mmddyyyy or yyyy-mm-dd.
 .sk
 Also, files can be explicitly excluded using the -x option:
@@ -959,7 +959,7 @@ directory entries are added to an archive, so that their attributes can
 be saved in the archive.  When an archive is created using -D, UnZip
 will still create directories as needed (subject to user control), but
 they will get the default attributes (date-time, permissions, ...) on
-the destination system, rather than their original atributes.
+the destination system, rather than their original attributes.
 .sk;.literal
 -MM  --must-match
 .end literal;.br
@@ -1322,7 +1322,7 @@ VMS File Attributes
 -V  --VMS-portable
 -VV --VMS-specific
 .end literal;.br
-The -V and -VV options cause Zip to store VMS file atributes (such as
+The -V and -VV options cause Zip to store VMS file attributes (such as
 file organization, record format, carriage control, and so on) in
 VMS-specific "extra fields" in an archive along with the usual data. 
 These extra fields are ignored on non-VMS systems, but on a VMS system,

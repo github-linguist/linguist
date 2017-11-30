@@ -1,5 +1,5 @@
 /* ============================================================
- * This code is part of the "apex-lang" open source project avaiable at:
+ * This code is part of the "apex-lang" open source project available at:
  * 
  *      http://code.google.com/p/apex-lang/
  *
@@ -507,7 +507,7 @@ global class LanguageUtils {
 ,'th'=>'Thais'
 ,'tr'=>'Turks'
 ,'zh_cn'=>'Chinese (Simplified)'
-,'zh_tw'=>'Chinees (traditioneel)'
+,'zh_tw'=>'Chinese (traditioneel)'
 }
 ,'pl'=> new Map<String,String>{
 'cs'=>'Czeski'

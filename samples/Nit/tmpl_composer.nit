@@ -23,7 +23,7 @@ class TmplComposers
 	# Short list of composers
 	var composers = new Array[TmplComposer]
 
-	# Detailled list of composers
+	# Detailed list of composers
 	var composer_details = new Array[TmplComposerDetail]
 
 	# Add a composer in both lists
@@ -60,7 +60,7 @@ class TmplComposer
 	redef fun rendering do add "- {name}\n"
 end
 
-# A composer in the detailled list of composers
+# A composer in the detailed list of composers
 class TmplComposerDetail
 	super Template
 

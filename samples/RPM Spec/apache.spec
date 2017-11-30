@@ -474,14 +474,14 @@ fi
 * Wed Nov 16 2011 Sérgio Basto <sergio@serjux.com>
 - build for F16
 - mp1+perl5.14.diff (mod_perl1 + perl5.14)
-- many improvents.
+- many improvements.
 
 * Sat Oct 29 2011 Sérgio Basto <sergio@serjux.com>
 - mock build add many buildrequires
-- many improvemts on confs 
+- many improvements on confs 
 
 * Tue Oct 16 2007 Sérgio Basto <sergio@serjux.com>
-- UNDROPPED CONFIGURATION COMPLETELY: rpm it suposed do all alone.
+- UNDROPPED CONFIGURATION COMPLETELY: rpm it supposed do all alone.
 - rename httpd to http13 to work independently of apache 2.2
 - add patch to Makefile.tmp, resolve all problems at once
 - change server port number to run out of the box.

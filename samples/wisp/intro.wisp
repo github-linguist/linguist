@@ -6,7 +6,7 @@
 
 ;; ## wisp data structures
 
-;; 1. nil - is just like js undefined with a differenc that it's
+;; 1. nil - is just like js undefined with a difference that it's
 ;;    not something can be defined. In fact it's just a shortcut for
 ;;    void(0) in JS.
 nil ;; => void(0)
@@ -45,7 +45,7 @@ My name is wisp!"
 
 
 ;; 8. Maps - Maps are hash maps, plain JS objects. Note that unlike
-;;    in clojure keys can not be of arbitary types.
+;;    in clojure keys can not be of arbitrary types.
 { "foo" bar :beep-bop "bop" 1 2 }
 ;;    Commas are optional but can come handy for separating key value
 ;;    pairs.
@@ -61,7 +61,7 @@ My name is wisp!"
 
 ;; # Conventions
 ;; Wisp puts a lot of effort in making naming conventions transparent,
-;; by encouraning lisp conventions and then translating them to equivalent
+;; by encouraging lisp conventions and then translating them to equivalent
 ;; JS conventions:
 
 (dash-delimited)   ;; => dashDelimited
@@ -83,7 +83,7 @@ My name is wisp!"
 
 ;; There are some functions in wisp that are special, in a sence that
 ;; they compile to JS expressions & can not be passed around as regular
-;; functions. JS operators are represteted in wisp as special forms
+;; functions. JS operators are represented in wisp as special forms
 
 ;; Arithmetic forms - Wisp comes with special form for arithmetic
 ;; operations.
@@ -138,8 +138,8 @@ My name is wisp!"
 
 
 
-;; Compbining expressions - In wisp is everything is an expression, but
-;; sometimes one might want to compbine multiple expressions into one,
+;; Combining expressions - In wisp is everything is an expression, but
+;; sometimes one might want to combine multiple expressions into one,
 ;; usually for the purpose of evaluating expressions that have
 ;; side-effects
 (do
@@ -169,7 +169,7 @@ My name is wisp!"
 ;; Wisp functions can also contain documentation and some metadata.
 ;; Note: Docstring and metadata is not presented in compiled JS yet,
 ;; but in a future it will compile to comments associated with function.
-(fn incerement
+(fn increment
   "Returns a number one greater than given."
   {:added "1.0"}
   [x] (+ x 1))
@@ -271,7 +271,7 @@ foo
 '(a b)
 
 ;; Wisp doesn’t have `unless` special form or a macro, but it's trivial
-;; to implement it via macro. Although let's try implemting it as a
+;; to implement it via macro. Although let's try implementing it as a
 ;; function to understand a use case for macro!
 
 ;; We want to execute body unless condition is `true`.
@@ -279,7 +279,7 @@ foo
   (if condition nil body))
 
 ;; Although following code will log "should not print" anyway, since
-;; function arguments are exectued before function is called.
+;; function arguments are executed before function is called.
 (unless-fn true (console.log "should not print"))
 
 ;; Macros solve this problem, because they do not evaluate their arguments
@@ -321,8 +321,8 @@ foo
 `(foo ~bar ~@bazs)
 
 
-;; For expmale build-in `defn` macro can be defined expressed with
-;; simple template macro. That's more or less how build-in `defn`
+;; For example built-in `defn` macro can be defined expressed with
+;; simple template macro. That's more or less how built-in `defn`
 ;; macro is implemented.
 (defmacro define-fn
   [name & body]
@@ -338,7 +338,7 @@ foo
 
 ;; Not all of the macros can be expressed via templating, but all of the
 ;; language is available at hand to assemble macro expanded form.
-;; For instance let's define macro to ease functional chanining popular
+;; For instance let's define macro to ease functional chaining popular
 ;; in JS but usually expressed via method chaining. For example following
 ;; API is pioneered by jQuery is very common in JS:
 ;;

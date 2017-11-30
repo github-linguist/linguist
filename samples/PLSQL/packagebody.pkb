@@ -1,7 +1,7 @@
 CREATE OR REPLACE PACKAGE BODY linguistpackage
 AS
   /*
-  * Package:     linguist pacakage body
+  * Package:     linguist package body
   * Purpose:     a sample PLSQL file for linguist to work with
   *
   * Date:        03/03/2014

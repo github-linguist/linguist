@@ -79,7 +79,7 @@ PDS = ,HAVE_PDS
 
 # If you are still using the DECWindows XUI interface, uncomment the
 # next line.  This will help stop the "window creep" problem with this
-# window mananager
+# window manager
 .ifdef DEC_XUI
 XUI = ,HAVE_XUI
 .endif

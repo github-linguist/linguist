@@ -54,7 +54,7 @@ var/list/NullList = null
 	number = rand(1, 99)
 
 /datum/entity/unit/myFunction()
-	world.log << "Unit has overriden and called myFunction"
+	world.log << "Unit has overridden and called myFunction"
 
 // Global Function
 /proc/ReverseList(var/list/input)

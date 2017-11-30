@@ -16,7 +16,7 @@ function Update-ZLocation([string]$path)
         Time = [datetime]::Now
     }
 
-    # populate folder immidiatly after the first cd
+    # populate folder immediately after the first cd
     Add-ZWeight $path 0
 }
 
@@ -29,7 +29,7 @@ function Update-ZLocation([string]$path)
 
 
 #
-# Tab complention.
+# Tab completion.
 #
 if (Test-Path Function:\TabExpansion) {
     Rename-Item Function:\TabExpansion PreZTabExpansion

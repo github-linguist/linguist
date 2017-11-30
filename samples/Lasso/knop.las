@@ -407,7 +407,7 @@ CHANGE NOTES
 2007-12-06	JS	Changed ->help to improve the self-documentation. It will now always return an up to date list of member tags and parameter. 
 2007-11-05	JS	Added var name to trace output
 2007-06-17	JS	Added ->tagtime (was in nav earlier)
-2007-06-13	JS	Added -> varname to be able to retreive the name of the page variable that a type instance is stored in.
+2007-06-13	JS	Added -> varname to be able to retrieve the name of the page variable that a type instance is stored in.
 2007-06-13	JS	Added -> xhtml to automatically sense if an xhtml doctype exists in the current page buffer. The result is cached in a page variable for performance. 
 				This is for internal use for member tags that output html. 
 2007-06-13	JS	Introduced page variable $_knop_data for general page level storage and caching, common between different knop objects. 
@@ -706,11 +706,11 @@ CHANGE NOTES
 2008-05-28	JS	->getrecord now works with integer keyvalues (oops)
 2008-05-27	JS	->get returns a new datatype knop_databaserow 
 2008-05-27	JS	Added ->size and ->get so a database object can be iterated. When iterating each row is returned as an array of field values. 
-2008-05-27	JS	Addedd ->nextrecord that increments the recordpointer each time it is called until the last record in the found set is reached. Returns true as long as there are more records. Useful in a while loop - see example below
+2008-05-27	JS	Added ->nextrecord that increments the recordpointer each time it is called until the last record in the found set is reached. Returns true as long as there are more records. Useful in a while loop - see example below
 2008-05-27	JS	Implemented record pointer 'current_record'. The record pointer is reset for each new query. 
 2008-05-27	JS	->field: added -recordindex to get data from any record in the current found set
 2008-05-27	JS	Added ->_unknowntag as shortcut to field
-2008-05-26	JS	Removed onassign since it causes touble
+2008-05-26	JS	Removed onassign since it causes trouble
 2008-05-26	JS	Extended field_names to return the field names for any specified table, return field names also for db objects that have never been used for a database query and optionally return field types
 2008-01-29	JS	->getrecord now supports -sql. Make sure that the SQL statement includes the relevant keyfield (and lockfield if locking is used). 
 2008-01-10	JS	->capturesearchvars: error_code and error_msg was mysteriously not set after database operations that caused errors. 
@@ -796,7 +796,7 @@ datetime_create and datetime_mod, and also user_create and user_mod.
 		'current_record'=integer,		// index of the current record to get field values from a specific record
 		'field_names_map'=map,
 		'resultset_count_map'=map;		// resultset_count stored for each inlinename 
-	// these vars have directly corresponding Lasso tags so they can be set programatically
+	// these vars have directly corresponding Lasso tags so they can be set programmatically
 	local: 'searchresultvars'=(array: 'action_statement', 'found_count', 'shown_first', 
 		'shown_last', 'shown_count', 'field_names', 'records_array', 'maxrecords_value', 'skiprecords_value');
 	iterate: #searchresultvars, (local: 'resultvar');
@@ -1688,7 +1688,7 @@ datetime_create and datetime_mod, and also user_create and user_mod.
 			&& #recordindex <= (self -> 'records_array') -> size);
 			// return specific record
 			if(#index==1);
-				// return first ocurrence of field name through the index map - this is faster
+				// return first occurrence of field name through the index map - this is faster
 				return(self -> 'records_array' -> get(#recordindex) -> get(self -> 'field_names_map' -> find(#fieldname)));
 			else;
 				// return another occurrence of the field - this is slightly slower
@@ -1907,7 +1907,7 @@ CHANGE NOTES
 			&& #recordindex <= (self -> 'records_array') -> size);
 			// return specific record
 			if(#index==1);
-				// return first ocurrence of field name through the index map - this is faster
+				// return first occurrence of field name through the index map - this is faster
 				return(self -> 'records_array' -> get(#recordindex) -> get(self -> 'field_names_map' -> find(#fieldname)));
 			else;
 				// return another occurrence of the field - this is slightly slower
@@ -2132,7 +2132,7 @@ CHANGE NOTES
 2007-01-25	JS	Added -required to ->oncreate (and a few more from ->setformat)
 2007-01-23	JS	Autogenerates id for the form itself
 2007-01-23	JS	Added ->getbutton to return the button that was clicked when submitting a form (cancel, add, save, delete)
-2007-01-23	JS	Added auto conversion of options left hand pair member to string, to make comparsions work reliably. Integer zeros don't compare nicely to strings. 
+2007-01-23	JS	Added auto conversion of options left hand pair member to string, to make comparisons work reliably. Integer zeros don't compare nicely to strings. 
 2007-01-23	JS	Added support for submit-on-enter prevention: specify -entersubmitblock at oncreate
 2007-01-19	JS	Addes renderform: -legend to be able to group form fields at render time
 2007-01-19	JS	added support for -optgroup in -options for select. Also works for radio and checkbox. Specify empty -optgroup to close optgroup in select without starting a new, or to add extra linebreak between checkboxes/radio buttons. 
@@ -2168,13 +2168,13 @@ Add -path as parameter for oncreate so the form action can be set with less conf
 Fix actionpath reference so it updates properly when altering the value (not possible?)
 Should loadfields load "-" params?
 Unsavedwarning made optional, does not seem to work properly now?
-More flexible error hightlighting
+More flexible error highlighting
 Move templates to a member tag to be make it easier to subclass (Douglas Burchard)
 Add "button". <button></button>. Subtypes are submit, reset and button. How to specify the subtype? (Douglas Burchard)
 Change ->addfield to ->insert and make ->addfield deprecated
 There is no src for input type image!
 Add ->size and ->get so the form object can be iterated
-Add -skipemtpy to to ->renderhtml
+Add -skipempty to to ->renderhtml
 Option for -> renderhtml to output without html encoding
 ->renderhtml should never html encode fields of type html
 
@@ -2241,7 +2241,7 @@ Option for -> renderhtml to output without html encoding
 	
 
 	define_tag: 'oncreate', -description='Parameters:\n\
-			-formaction (optional) The action atribute in the form html tag\n\
+			-formaction (optional) The action attribute in the form html tag\n\
 			-action (optional) Deprecated synonym to -formaction\n\
 			-method (optional) Defaults to post\n\
 			-name (optional)\n\
@@ -2312,7 +2312,7 @@ Option for -> renderhtml to output without html encoding
 		local_defined('database') ? (self -> 'database') = @#database;
 
 		if: !(local_defined: 'formaction') && (local_defined: 'action');
-			// keep support for old -action insead of -formaction
+			// keep support for old -action instead of -formaction
 			(self -> 'debug_trace') -> insert('*** DEPRECATION WARNING *** ' + tag_name + ' -action parameter is deprecated, use -formaction instead ');
 			(self -> 'formaction') = @#action;
 		/if;
@@ -2387,11 +2387,11 @@ Option for -> renderhtml to output without html encoding
 	
 	define_tag: 'addfield', -description='Inserts a form element in the form. \n\
 			Parameters:\n\
-			-type (required) Supported types are listed in form -> \'validfieldtypes_array\'. Also custom field types addbuton, savebutton or deletebutton are supported (translated to submit buttons with predefined names). \
+			-type (required) Supported types are listed in form -> \'validfieldtypes_array\'. Also custom field types addbutton, savebutton or deletebutton are supported (translated to submit buttons with predefined names). \
 			For the field types html, fieldset and legend use -value to specify the data to display for these fields. A legend field automatically creates a fieldset (closes any previously open fieldsets). Use fieldset with -value=false to close a fieldset without opening a new one. \n\
-			-name (optional) Required for all input types except addbuton, savebutton, deletebutton, fieldset, legend and html\n\
+			-name (optional) Required for all input types except addbutton, savebutton, deletebutton, fieldset, legend and html\n\
 			-id (optional) id for the html object, will be autogenerated if not specified\n\
-			-dbfield (optional) Corresponding database field name (name is used if dbfield is not specified), or null/emtpy string if ignore this field for database\n\
+			-dbfield (optional) Corresponding database field name (name is used if dbfield is not specified), or null/empty string if ignore this field for database\n\
 			-value (optional) Initial value for the field\n\
 			-hint (optional) Optional gray hint text to show in empty text field\n\
             -options (optional) For select, checkbox and radio, must be array, set or series. For select, the array can contain -optgroup=label to create an optiongroup. \n\ 
@@ -2777,7 +2777,7 @@ Option for -> renderhtml to output without html encoding
 		self -> 'tagtime'=integer: #timer; // cast to integer to trigger onconvert and to "stop timer"
 	/define_tag;
 
-	define_tag: 'clearfields', -description='Emtpies all form field values';
+	define_tag: 'clearfields', -description='Empties all form field values';
 		local: 'timer'=knop_timer; 
 		iterate: (self -> 'fields'), (local: 'fieldpair');
 			if: (self -> 'exceptionfieldtypes') !>> #fieldpair -> value -> (find: 'type');
@@ -2873,7 +2873,7 @@ Option for -> renderhtml to output without html encoding
 
 
 	define_tag: 'errors', -description='Returns an array with fields that have input errors, or empty array if no errors or form has not been validated';
-		// returns an array with fields that have input errors, or emtpy array if no errors or form has not been validated
+		// returns an array with fields that have input errors, or empty array if no errors or form has not been validated
 		if: (self -> 'errors') == null;
 			return: array;
 		else;
@@ -3343,7 +3343,7 @@ Option for -> renderhtml to output without html encoding
 						if: #option -> type != 'pair';
 							#option = (pair: #option = #option);
 						/if;
-						// name must be string to make sure comparsions work
+						// name must be string to make sure comparisons work
 						(#option -> name) = (string: #option -> name);
 					/iterate;
 				/if;
@@ -4096,7 +4096,7 @@ Option for -> renderhtml to output without html encoding
 					if: #option -> type != 'pair';
 						#option = (pair: #option = #option);
 					/if;
-					// name must be string to make sure comparsions work
+					// name must be string to make sure comparisons work
 					(#option -> name) = (string: #option -> name);
 				/iterate;
 			/if;
@@ -4385,7 +4385,7 @@ CHANGE NOTES
 2008-05-14	JS	->renderfooter (and ->renderhtml): added -numbered as option to get google style numbered pagination links. Render the grid with -numbered (defaults to show 6 page number links plus the far ends) or -numbered=10 or another number. 
 2008-05-13	JS	Added ->renderlisting which is now part of ->renderhtml for more flexibility
 2008-02-25	JS	->renderheader and ->renderfooter calls nav -> url with -getargs 
-2008-01-22	JS	->renderheader, ->renderfooter, ->renderhtml: addded -autoparams to nav -> url used in links since url was changed to default to no autoparams. 
+2008-01-22	JS	->renderheader, ->renderfooter, ->renderhtml: added -autoparams to nav -> url used in links since url was changed to default to no autoparams. 
 2008-01-22	JS	->renderheader, ->renderfooter, ->renderhtml: improved support for param based navigation method  in links, cleaned up linking to use nav -> url instead of self -> urlparams when nav is available
 2008-01-22	JC	->quicksearch: Changed wordseparators so that \r and \n aren't placed as \r\n, otherwise they are treated as a single character by ->split. 
 2007-12-11	JS	Added documentation as -description to most member tags, to be used by the new ->help tag
@@ -4433,7 +4433,7 @@ CHANGE NOTES
 2007-01-22	JS	Adjustments to highlighting and "(redigera)"-link for records with empty values in the linked field
 2007-01-19	JS	Added href titles to sort links and prevnext links
 2007-01-19	JS	Corrected sortparams when no sortfield is specified
-2007-01-19	JS	Addded go to first page, go to last page in footer
+2007-01-19	JS	Added go to first page, go to last page in footer
 2007-01-19	JS	Added member tag page_skiprecords to help correcting out of bounds page numbers
 2007-01-19	JS	Added member tag lastpage
 2007-01-18	JS	Support for highlighting of affected record after edit or update (class name "highlight")
@@ -5039,7 +5039,7 @@ Change ->addfield to ->insert and make ->addfield deprecated
 				/if;
 				#classarray=array;
 				if:  #affectedrecord_keyvalue == (field: #keyfield) && (field: #keyfield) != '';
-					// hightlight affected row
+					// highlight affected row
 					#classarray -> (insert: 'highlight');
 				else;
 					(#record_loop_count - 1)  % 2 == 0 ? #classarray -> (insert: 'even');
@@ -5453,9 +5453,9 @@ Change ->addfield to ->insert and make ->addfield deprecated
 		/if;
 	/define_tag;
 	
-	define_tag: 'page_skiprecords', -description='Converts curent page value to a skiprecords value to use in a search. \n\
+	define_tag: 'page_skiprecords', -description='Converts current page value to a skiprecords value to use in a search. \n\
 			Parameters:\n\
-			-maxrecords (required integer) Needed to be able to do the calculation. Maxrecords_value can not be taken from the database object since taht value is not available until aftetr performing the search',
+			-maxrecords (required integer) Needed to be able to do the calculation. Maxrecords_value can not be taken from the database object since that value is not available until aftetr performing the search',
 		-required='maxrecords', -type='integer'; // TODO: maxrecords_value can be taken from the database object so should not be required
 		return: ((self -> 'page') - 1) * #maxrecords;
 	/define_tag;
@@ -5508,7 +5508,7 @@ CHANGE NOTES
 2008-09-11	JS	->_unknowntag: added missing support for -language
 2008-01-22	JS	->getstring: corrected the fallback behavior when a current language has been set 
 2008-01-07	JS	Removed instance variable browserlanguage due to problems with transient storage. The browserlanguage is cached on page level so it's no loss in reality. 
-2007-12-12	JS	Added page level storage of currentlanguage, so all knop_lang instances defaults to the same language once one of them have set a language explictly, but only if the other knop_lang instances don't have a language set explicitly. 
+2007-12-12	JS	Added page level storage of currentlanguage, so all knop_lang instances defaults to the same language once one of them have set a language explicitly, but only if the other knop_lang instances don't have a language set explicitly. 
 2007-12-12	JS	Added page level caching of browser language (stores the value in $_knop_data map)
 2007-12-06	JS	Moved -> help to knop_base
 2007-12-06	JS	Added ->description to all member tags. 
@@ -5561,7 +5561,7 @@ Examples
 			Parameters: \n\
 			-default (optional) Default language. \n\
 			-fallback (optional) If specified, falls back to default language if key is missing. \n\
-			-debug (optional flag) If specified, missing strings will be output using the key surrpunded by asterisks',
+			-debug (optional flag) If specified, missing strings will be output using the key surrounded by asterisks',
 		-optional='default',	
 		-optional='fallback',
 		-optional='debug';
@@ -5912,7 +5912,7 @@ CHANGE NOTES
 2010-11-17	JC	Fixed bug so that session links no longer gets added to urls by the nav -> url tag.
 2010-11-17	JC	Fixed a bug that would not convert local params to an array under certain situations
 2009-09-18	JS	Syntax adjustments for Lasso 9
-2009-09-04	JS	->linkparams: Multiple paramaters with the same name (typically checkboxes) are now passed properly
+2009-09-04	JS	->linkparams: Multiple parameters with the same name (typically checkboxes) are now passed properly
 2009-05-06	JS	->directorytree considers _include folders as part of the Knop directory structure. nav->include('_include/myfile.inc') will first look for _include/myfile.inc and if not found it will look for _knop/_include/myfile.inc 
 2009-05-05	JS	->include looks for a specified file also inside a _knop folder, if the file does not exist at the specified location
 2009-02-09	JS	->filename: Casting path and actionpath to string
@@ -5933,12 +5933,12 @@ CHANGE NOTES
 2008-01-23	JS	->url: Added -autoparams that is required to enable the automatic passing of action_params that begin with "-" (this reverts the default behavior to match the the old)
 2008-01-22	JS	->url: GET params that begin with "-" are sent as parameters on links. -path, -sort, -desc, -q are explicitly excluded from nav links in renderhtml. 
 2008-01-22	JS	When using param based navigation, navigation links now use much cleaner /?path/to/page/ style links instead of /?-path=path/to/page/
-2008-01-22	JS	->getlocation: when navmethod is param, the path can now be sent as unnamed parameter insetad of -path parameter (such as /?path/to/page/). 
+2008-01-22	JS	->getlocation: when navmethod is param, the path can now be sent as unnamed parameter instead of -path parameter (such as /?path/to/page/). 
 2008-01-04	JS	->renderbreadcrumb: added flag -plain to output breadcrumb without html
 2008-01-04	JS	->renderbreadcrumb: added flag -skipcurrent to not include the current location in the output
 2008-01-04	JS	->insert: -template can now be specified also for individual nav items. Use the form #link##label##current##/link##children#. 
 2008-01-04	JS	->renderhtml: changed #title# to #label# in template for clarity, for example #link##label##current##/link##children# (#title# will remain supported)
-2008-01-04	JS	Added #current# as placeholder for template, to specify where the current marker should occurr. If not specified in the template, the current marker appears immediately after the label.
+2008-01-04	JS	Added #current# as placeholder for template, to specify where the current marker should occur. If not specified in the template, the current marker appears immediately after the label.
 2007-12-12	JS	->include now logs processing time for the include to debug trace
 2007-12-11	JS	Added documentation as -description to most member tags, to be used by the new ->help tag
 2007-12-11	JS	Moved ->help to knop_base
@@ -6451,7 +6451,7 @@ Make it possible to use external URL for -url (make sure there is no / before ht
 			// we haven't found a valid location, we must resort to a default page
 			if: self -> 'default' != '' && self -> pathmap >>  self -> 'default';
 				#path = self -> 'default';
-				#dotrace ? (self -> 'debug_trace') -> (insert: tag_name + ': use defalt location ' #path);
+				#dotrace ? (self -> 'debug_trace') -> (insert: tag_name + ': use default location ' #path);
 			else;
 				// use first page as default, if it exists
 				iterate(self -> 'navitems', local('navitem'));
@@ -7016,7 +7016,7 @@ Make it possible to use external URL for -url (make sure there is no / before ht
 		return: @#url;
 	/define_tag;
 	
-	define_tag: 'filename', -description='Returns the full path to the specified type of precissing file for the current navigation. \n\
+	define_tag: 'filename', -description='Returns the full path to the specified type of processing file for the current navigation. \n\
 			Parameters:\n\
 			-type (required) lib, act, cnt, cfg, actcfg',
 		-required='type',
@@ -7339,7 +7339,7 @@ define_type: 'user',
 //	-prototype;
 
 	local: 'version'='2009-09-18',
-		'descripion'='Custom type to handle user identification and authentication';
+		'description'='Custom type to handle user identification and authentication';
 
 /*
 
@@ -7369,7 +7369,7 @@ CHANGE NOTES
 Make it possible for knop_user to work independently of a knop_database object by creating a custom user lookup - see http://listsearch.com/Lasso/Thread/index.lasso?20528
 userdb reference is brooken, probably when stored in session. Can this be fixed?
 Make client_fingerprint configurable by specifying a compound expression at oncreate
-Add support for role based permisions
+Add support for role based permissions
 
 */
 
@@ -7629,7 +7629,7 @@ Permissions can be read, create, update, delete, or application specific (for ex
 				(self -> '_debug_trace') -> (insert: tag_name + ': ' + 'Searching user db, ' (#db -> found_count) + ' found ' + (#db -> error_msg) + ' ' + (#db -> action_statement));
 				if: #db -> found_count == 1
 					&& #db -> (field: (self -> 'userfield')) == #username; // double check the username
-					// one match, continue by checking the password with case sensitive comparsion
+					// one match, continue by checking the password with case sensitive comparison
 					if: (self -> 'encrypt') && (self -> 'saltfield') -> size;
 						// use encryption with salt
 						(self -> '_debug_trace') -> (insert: tag_name + ': ' + 'Checking password with salted encryption');
@@ -7836,7 +7836,7 @@ Permissions can be read, create, update, delete, or application specific (for ex
 		local('output'=string, 'changenotes'=map('knop_nav'='2010-11-17	JC	Fixed bug so that session links no longer gets added to urls by the nav -> url tag.
 2010-11-17	JC	Fixed a bug that would not convert local params to an array under certain situations
 2009-09-18	JS	Syntax adjustments for Lasso 9
-2009-09-04	JS	->linkparams: Multiple paramaters with the same name (typically checkboxes) are now passed properly
+2009-09-04	JS	->linkparams: Multiple parameters with the same name (typically checkboxes) are now passed properly
 2009-05-06	JS	->directorytree considers _include folders as part of the Knop directory structure. nav->include(\'_include/myfile.inc\') will first look for _include/myfile.inc and if not found it will look for _knop/_include/myfile.inc 
 2009-05-05	JS	->include looks for a specified file also inside a _knop folder, if the file does not exist at the specified location
 2009-02-09	JS	->filename: Casting path and actionpath to string
@@ -7857,12 +7857,12 @@ Permissions can be read, create, update, delete, or application specific (for ex
 2008-01-23	JS	->url: Added -autoparams that is required to enable the automatic passing of action_params that begin with "-" (this reverts the default behavior to match the the old)
 2008-01-22	JS	->url: GET params that begin with "-" are sent as parameters on links. -path, -sort, -desc, -q are explicitly excluded from nav links in renderhtml. 
 2008-01-22	JS	When using param based navigation, navigation links now use much cleaner /?path/to/page/ style links instead of /?-path=path/to/page/
-2008-01-22	JS	->getlocation: when navmethod is param, the path can now be sent as unnamed parameter insetad of -path parameter (such as /?path/to/page/). 
+2008-01-22	JS	->getlocation: when navmethod is param, the path can now be sent as unnamed parameter instead of -path parameter (such as /?path/to/page/). 
 2008-01-04	JS	->renderbreadcrumb: added flag -plain to output breadcrumb without html
 2008-01-04	JS	->renderbreadcrumb: added flag -skipcurrent to not include the current location in the output
 2008-01-04	JS	->insert: -template can now be specified also for individual nav items. Use the form #link##label##current##/link##children#. 
 2008-01-04	JS	->renderhtml: changed #title# to #label# in template for clarity, for example #link##label##current##/link##children# (#title# will remain supported)
-2008-01-04	JS	Added #current# as placeholder for template, to specify where the current marker should occurr. If not specified in the template, the current marker appears immediately after the label.
+2008-01-04	JS	Added #current# as placeholder for template, to specify where the current marker should occur. If not specified in the template, the current marker appears immediately after the label.
 2007-12-12	JS	->include now logs processing time for the include to debug trace
 2007-12-11	JS	Added documentation as -description to most member tags, to be used by the new ->help tag
 2007-12-11	JS	Moved ->help to knop_base
@@ -7939,7 +7939,7 @@ Make it possible to use external URL for -url (make sure there is no / before ht
 2007-12-06	JS	Changed ->help to improve the self-documentation. It will now always return an up to date list of member tags and parameter. 
 2007-11-05	JS	Added var name to trace output
 2007-06-17	JS	Added ->tagtime (was in nav earlier)
-2007-06-13	JS	Added -> varname to be able to retreive the name of the page variable that a type instance is stored in.
+2007-06-13	JS	Added -> varname to be able to retrieve the name of the page variable that a type instance is stored in.
 2007-06-13	JS	Added -> xhtml to automatically sense if an xhtml doctype exists in the current page buffer. The result is cached in a page variable for performance. 
 				This is for internal use for member tags that output html. 
 2007-06-13	JS	Introduced page variable $_knop_data for general page level storage and caching, common between different knop objects. 
@@ -7973,7 +7973,7 @@ TODO: ->help: add output option to format for Google Code Wiki
 2008-05-14	JS	->renderfooter (and ->renderhtml): added -numbered as option to get google style numbered pagination links. Render the grid with -numbered (defaults to show 6 page number links plus the far ends) or -numbered=10 or another number. 
 2008-05-13	JS	Added ->renderlisting which is now part of ->renderhtml for more flexibility
 2008-02-25	JS	->renderheader and ->renderfooter calls nav -> url with -getargs 
-2008-01-22	JS	->renderheader, ->renderfooter, ->renderhtml: addded -autoparams to nav -> url used in links since url was changed to default to no autoparams. 
+2008-01-22	JS	->renderheader, ->renderfooter, ->renderhtml: added -autoparams to nav -> url used in links since url was changed to default to no autoparams. 
 2008-01-22	JS	->renderheader, ->renderfooter, ->renderhtml: improved support for param based navigation method  in links, cleaned up linking to use nav -> url instead of self -> urlparams when nav is available
 2008-01-22	JC	->quicksearch: Changed wordseparators so that \\r and \\n aren\'t placed as \\r\\n, otherwise they are treated as a single character by ->split. 
 2007-12-11	JS	Added documentation as -description to most member tags, to be used by the new ->help tag
@@ -8021,7 +8021,7 @@ TODO: ->help: add output option to format for Google Code Wiki
 2007-01-22	JS	Adjustments to highlighting and "(redigera)"-link for records with empty values in the linked field
 2007-01-19	JS	Added href titles to sort links and prevnext links
 2007-01-19	JS	Corrected sortparams when no sortfield is specified
-2007-01-19	JS	Addded go to first page, go to last page in footer
+2007-01-19	JS	Added go to first page, go to last page in footer
 2007-01-19	JS	Added member tag page_skiprecords to help correcting out of bounds page numbers
 2007-01-19	JS	Added member tag lastpage
 2007-01-18	JS	Support for highlighting of affected record after edit or update (class name "highlight")
@@ -8060,11 +8060,11 @@ Change ->addfield to ->insert and make ->addfield deprecated
 2008-05-28	JS	->getrecord now works with integer keyvalues (oops)
 2008-05-27	JS	->get returns a new datatype knop_databaserow 
 2008-05-27	JS	Added ->size and ->get so a database object can be iterated. When iterating each row is returned as an array of field values. 
-2008-05-27	JS	Addedd ->nextrecord that increments the recordpointer each time it is called until the last record in the found set is reached. Returns true as long as there are more records. Useful in a while loop - see example below
+2008-05-27	JS	Added ->nextrecord that increments the recordpointer each time it is called until the last record in the found set is reached. Returns true as long as there are more records. Useful in a while loop - see example below
 2008-05-27	JS	Implemented record pointer \'current_record\'. The record pointer is reset for each new query. 
 2008-05-27	JS	->field: added -recordindex to get data from any record in the current found set
 2008-05-27	JS	Added ->_unknowntag as shortcut to field
-2008-05-26	JS	Removed onassign since it causes touble
+2008-05-26	JS	Removed onassign since it causes trouble
 2008-05-26	JS	Extended field_names to return the field names for any specified table, return field names also for db objects that have never been used for a database query and optionally return field types
 2008-01-29	JS	->getrecord now supports -sql. Make sure that the SQL statement includes the relevant keyfield (and lockfield if locking is used). 
 2008-01-10	JS	->capturesearchvars: error_code and error_msg was mysteriously not set after database operations that caused errors. 
@@ -8139,7 +8139,7 @@ datetime_create and datetime_mod, and also user_create and user_mod.
 Make it possible for knop_user to work independently of a knop_database object by creating a custom user lookup - see http://listsearch.com/Lasso/Thread/index.lasso?20528
 userdb reference is brooken, probably when stored in session. Can this be fixed?
 Make client_fingerprint configurable by specifying a compound expression at oncreate
-Add support for role based permisions
+Add support for role based permissions
 
 ','knop_lang'='2010-12-29	JS	->getstring: make sure we only try to do replacement in strings or bytes
 2010-05-27	JS	getstring now works also with empty -replace value
@@ -8152,7 +8152,7 @@ Add support for role based permisions
 2008-09-11	JS	->_unknowntag: added missing support for -language
 2008-01-22	JS	->getstring: corrected the fallback behavior when a current language has been set 
 2008-01-07	JS	Removed instance variable browserlanguage due to problems with transient storage. The browserlanguage is cached on page level so it\'s no loss in reality. 
-2007-12-12	JS	Added page level storage of currentlanguage, so all knop_lang instances defaults to the same language once one of them have set a language explictly, but only if the other knop_lang instances don\'t have a language set explicitly. 
+2007-12-12	JS	Added page level storage of currentlanguage, so all knop_lang instances defaults to the same language once one of them have set a language explicitly, but only if the other knop_lang instances don\'t have a language set explicitly. 
 2007-12-12	JS	Added page level caching of browser language (stores the value in $_knop_data map)
 2007-12-06	JS	Moved -> help to knop_base
 2007-12-06	JS	Added ->description to all member tags. 
@@ -8280,7 +8280,7 @@ Examples
 2007-01-25	JS	Added -required to ->oncreate (and a few more from ->setformat)
 2007-01-23	JS	Autogenerates id for the form itself
 2007-01-23	JS	Added ->getbutton to return the button that was clicked when submitting a form (cancel, add, save, delete)
-2007-01-23	JS	Added auto conversion of options left hand pair member to string, to make comparsions work reliably. Integer zeros don\'t compare nicely to strings. 
+2007-01-23	JS	Added auto conversion of options left hand pair member to string, to make comparisons work reliably. Integer zeros don\'t compare nicely to strings. 
 2007-01-23	JS	Added support for submit-on-enter prevention: specify -entersubmitblock at oncreate
 2007-01-19	JS	Addes renderform: -legend to be able to group form fields at render time
 2007-01-19	JS	added support for -optgroup in -options for select. Also works for radio and checkbox. Specify empty -optgroup to close optgroup in select without starting a new, or to add extra linebreak between checkboxes/radio buttons. 
@@ -8316,13 +8316,13 @@ Add -path as parameter for oncreate so the form action can be set with less conf
 Fix actionpath reference so it updates properly when altering the value (not possible?)
 Should loadfields load "-" params?
 Unsavedwarning made optional, does not seem to work properly now?
-More flexible error hightlighting
+More flexible error highlighting
 Move templates to a member tag to be make it easier to subclass (Douglas Burchard)
 Add "button". <button></button>. Subtypes are submit, reset and button. How to specify the subtype? (Douglas Burchard)
 Change ->addfield to ->insert and make ->addfield deprecated
 There is no src for input type image!
 Add ->size and ->get so the form object can be iterated
-Add -skipemtpy to to ->renderhtml
+Add -skipempty to to ->renderhtml
 Option for -> renderhtml to output without html encoding
 ->renderhtml should never html encode fields of type html
 

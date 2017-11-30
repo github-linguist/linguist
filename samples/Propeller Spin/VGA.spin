@@ -156,7 +156,7 @@ bcolor                  waitvid hv,#0
 blank_hsync             mov     vscl,_hf                'hsync, do invisible front porch pixels
                         waitvid hv,#0
 
-                        mov     vscl,_hs                'do invisble sync pixels
+                        mov     vscl,_hs                'do invisible sync pixels
                         xor     hv,#%10
                         waitvid hv,#0
 

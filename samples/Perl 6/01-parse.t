@@ -162,7 +162,7 @@ my @n =
     Q<<["Illegal backslash escape: \x15"]>>,
     Q<<[\naked]>>,
     Q<<["Illegal backslash escape: \017"]>>,
-# skipped: wo don't implement no stinkin' aritifical limits.
+# skipped: wo don't implement no stinkin' artificial limits.
 #    Q<<[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[["Too deep"]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]>>,
     Q<<{"Missing colon" null}>>,
     Q<<["Unclosed array">>,

@@ -16,7 +16,7 @@ export MANPATH=/usr/local/man:/usr/share/man
 if [ ${TERM} == 'network' ];then echo -n
         export TERM='vt100'
                 # not 'nsterm' because if its 'network' we're
-                # probly not in Terminal.app
+                # probably not in Terminal.app
 fi
 # Set $COLORTERM, all this does is trick *some* apps into
 # using color in the terminal, which should happen anyway.

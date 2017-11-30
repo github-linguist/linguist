@@ -465,7 +465,7 @@ Proof.
   branch 3. inverts* E.
 Admitted. (*faster*)
 
-(* TODO: misssing
+(* TODO: missing
     if_normal_continue_or_break *)
 
 Definition if_break_post (K : _ -> _ -> result) o o1 :=
@@ -2116,7 +2116,7 @@ Proof.
 Qed.
 
 (************************************************************)
-(* Treatement of [spec_expr_get_value_conv] *)
+(* Treatment of [spec_expr_get_value_conv] *)
 
 Definition if_spec_ter_post_bool (K:state->bool->result) o (y:specret value) :=
      (y = specret_out o /\ abort o)

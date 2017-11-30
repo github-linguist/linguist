@@ -2,7 +2,7 @@ module monadicSemantics
 
 import StdEnv, StdGeneric, GenMap, GenHylo
 
-/* For fun I implemented the recursive datastructre Exp and Stm as fixpoints
+/* For fun I implemented the recursive datastructure Exp and Stm as fixpoints
    This helps us define recursive functions on them (only a little bit though)
    However deriving gMap for Fix did not works out of the box
    I had to remove some uniqueness typing in GenMap and GenHylo */
@@ -58,7 +58,7 @@ instance sem Exp where
 		phi (Var v)     = read v
 		phi (Op op x y) = x >>= \v1. y >>= return o (operator op v1)
 
-// semantics of statments
+// semantics of statements
 // NOTE: while will always return 0, as it might not even be executed
 instance sem Stm where
 	sem x = cata phi x where

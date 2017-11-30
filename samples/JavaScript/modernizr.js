@@ -744,7 +744,7 @@ window.Modernizr = (function( window, document, undefined ) {
 
     // Also in iOS5 Private Browsing mode, attempting to use localStorage.setItem
     // will throw the exception:
-    //   QUOTA_EXCEEDED_ERRROR DOM Exception 22.
+    //   QUOTA_EXCEEDED_ERROR DOM Exception 22.
     // Peculiarly, getItem and removeItem calls do not throw.
 
     // Because we are forced to try/catch this, we'll go aggressive.
@@ -887,7 +887,7 @@ window.Modernizr = (function( window, document, undefined ) {
                       bool = inputElem.checkValidity && inputElem.checkValidity() === false;
 
                     } else {
-                      // If the upgraded input compontent rejects the :) text, we got a winner
+                      // If the upgraded input component rejects the :) text, we got a winner
                       bool = inputElem.value != smile;
                     }
                 }
@@ -1255,8 +1255,8 @@ window.Modernizr = (function( window, document, undefined ) {
     // Modernizr.prefixed() returns the prefixed or nonprefixed property name variant of your input
     // Modernizr.prefixed('boxSizing') // 'MozBoxSizing'
 
-    // Properties must be passed as dom-style camelcase, rather than `box-sizing` hypentated style.
-    // Return values will also be the camelCase variant, if you need to translate that to hypenated style use:
+    // Properties must be passed as dom-style camelcase, rather than `box-sizing` hyphenated style.
+    // Return values will also be the camelCase variant, if you need to translate that to hyphenated style use:
     //
     //     str.replace(/([A-Z])/g, function(str,m1){ return '-' + m1.toLowerCase(); }).replace(/^ms-/,'-ms-');
 

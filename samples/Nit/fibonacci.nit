@@ -32,7 +32,7 @@ end
 # Print usage and exit.
 fun usage
 do
-	print "Usage: fibonnaci <integer>" 
+	print "Usage: fibonacci <integer>" 
 	exit 0 
 end
 

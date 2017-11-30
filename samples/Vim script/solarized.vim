@@ -139,7 +139,7 @@ let s:terms_italic=[
             \"rxvt",
             \"gnome-terminal"
             \]
-" For reference only, terminals are known to be incomptible.
+" For reference only, terminals are known to be incompatible.
 " Terminals that are in neither list need to be tested.
 let s:terms_noitalic=[
             \"iTerm.app",
@@ -262,7 +262,7 @@ if (has("gui_running") && g:solarized_degrade == 0)
 elseif (has("gui_running") && g:solarized_degrade == 1)
     " These colors are identical to the 256 color mode. They may be viewed
     " while in gui mode via "let g:solarized_degrade=1", though this is not
-    " recommened and is for testing only.
+    " recommended and is for testing only.
     let s:vmode       = "gui"
     let s:base03      = "#1c1c1c"
     let s:base02      = "#262626"
@@ -961,7 +961,7 @@ exe "hi! pandocNonBreakingSpace"         . s:fg_red   .s:bg_none  .s:fmt_revr
 hi! link pandocEscapedCharacter          pandocEscapePair
 hi! link pandocLineBreak                 pandocEscapePair
 
-" Embedded Code
+" Embeded Code
 " ---------------------------------------------------------------------
 exe "hi! pandocMetadataDelim"            .s:fg_base01 .s:bg_none   .s:fmt_none
 exe "hi! pandocMetadata"                 .s:fg_blue   .s:bg_none   .s:fmt_none

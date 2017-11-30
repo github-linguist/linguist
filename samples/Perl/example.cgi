@@ -244,7 +244,7 @@ sub parse_perfdata {
       }
 
       ## Check if rrd-archive is writable
-      if( ! -w $rrdarchive_filename) {					## check wheter RRD-archive exists
+      if( ! -w $rrdarchive_filename) {					## check whether RRD-archive exists
         debug( 1, "!!ERROR: RRD-archive '".$rrdarchive_filename."' does not exist or is not writable by effective UID."); abort();
       }
 
@@ -358,7 +358,7 @@ sub read_config {
       }
       foreach my $r (@regexes) {
          if( $r !~ m/^(output|perfdata):(\w+):\/(.*)\/$/) {
-           debug( 1, "!!ERROR: Value-regex should be formatted as 'output:dsaname:/regex/' or 'perfdata:dsaname:/regex/' depending on in which field to extract the data. The value should be within parantheses in the regex. Config-line $line_counter.");
+           debug( 1, "!!ERROR: Value-regex should be formatted as 'output:dsaname:/regex/' or 'perfdata:dsaname:/regex/' depending on in which field to extract the data. The value should be within parentheses in the regex. Config-line $line_counter.");
            abort();
          } else {
            my( $regex_what, $dsa_name, $regex) = ( $1, $2, $3);

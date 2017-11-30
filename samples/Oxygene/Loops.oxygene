@@ -43,9 +43,9 @@
     <Compile Include="Program.pas" />
     <Content Include="Properties\App.ico" />
     <Compile Include="Properties\AssemblyInfo.pas" />
-    <EmbeddResource Include="Properties\Resources.resx">
+    <EmbedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-    </EmbeddResource>
+    </EmbedResource>
     <Compile Include="Properties\Resources.Designer.pas" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

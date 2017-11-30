@@ -414,7 +414,7 @@ let guess_encoding d =                  (* guess encoding and start decoder. *)
 (* Character post-processors. Used for BOM handling, newline
    normalization and position tracking. The [pp_remove_bom] is only
    used for the first character to remove a possible initial BOM and
-   handle UTF-16 endianness recognition. *)
+   handle UTF-16 endianess recognition. *)
 
 let nline d = d.col <- 0; d.line <- d.line + 1                   (* inlined. *)
 let ncol d = d.col <- d.col + 1                                  (* inlined. *)

@@ -32,7 +32,7 @@ skip_output:
 
 output_next:
 
-# Switch arm->thumb to output next chacter.
+# Switch arm->thumb to output next character.
 # At this point r4 must point to the next character to output.
 
 	adr r0, into_thumb + 1

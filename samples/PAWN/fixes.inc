@@ -723,7 +723,7 @@
  * No comments beyond the end of column 80 (where the line in "PAWNO" is).
  * 
  * If a bug is fixed in some version of the server it can be conditionally
- *     included here.  This is done by checking for the existance of a native
+ *     included here.  This is done by checking for the existence of a native
  *     function introduced in the same server version.  For example
  *     "TogglePlayerControllable" was fixed in 0.3eRC6, the same time as the
  *     "SetObjectMaterial" native was introduced, thus the inclusion becomes:
@@ -1756,7 +1756,7 @@ enum e_FIXES_SETTINGS (<<= 1)
  */
 #define _FIXES_IS_PLAYER_CONNECTED(%0) (_FIXES_IN_RANGE((%0), 0, MAX_PLAYERS) && IsPlayerConnected((%0)))
 
-// These varaibles are NOT pre-processor dependent as they are stock.  It's just
+// These variables are NOT pre-processor dependent as they are stock.  It's just
 // simpler than trying to figure out when or if a semi-colon is needed.
 #if !FIX_FILTERSCRIPT
 static
@@ -3333,7 +3333,7 @@ public OnGameModeInit()
 	
 	#if FIXES_Single
 		// Check this really IS the only script running.  Properties reset when
-		// a gamemode restarts, so we don't have to worry about filterscipts
+		// a gamemode restarts, so we don't have to worry about filterscripts
 		// detecting themselves.
 		if (FIXES_gsSettings & e_FIXES_SETTINGS_SECOND_USE)
 		{
@@ -5762,7 +5762,7 @@ native BAD_GetPlayerMenu(playerid) = GetPlayerMenu;
 					{
 						SetPlayerArmedWeapon(playerid, 0);
 						#if FIX_GetPlayerWeapon
-							// This is the first cross-dependednt fix.
+							// This is the first cross-dependent fix.
 							#if FIXES_Single
 								FIXES_gsPlayerWeapon[playerid] = 0;
 							#else

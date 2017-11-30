@@ -313,7 +313,7 @@ var SliderToolbarItemIdentifier = "SliderToolbarItemIdentifier",
 
 @end
 
-// This class displays a single photo collection inside our list of photo collecitions
+// This class displays a single photo collection inside our list of photo collections
 
 @implementation PhotosListCell : CPView
 {

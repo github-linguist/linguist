@@ -112,7 +112,7 @@ End Function
 
 '******************************************************
 '** Display the gird screen and wait for events from 
-'** the screen. The screen will show retreiving while
+'** the screen. The screen will show retrieving while
 '** we fetch and parse the feeds for the show posters
 '******************************************************
 Function showGridScreen(screen As Object, gridstyle as string) As string

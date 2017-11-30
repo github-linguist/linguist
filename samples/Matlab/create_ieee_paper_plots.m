@@ -4,7 +4,7 @@ function create_ieee_paper_plots(data, rollData)
 % Parameters
 % ----------
 % data : structure
-%   A structure contating the data from generate_data.m for all of the bicycles
+%   A structure containing the data from generate_data.m for all of the bicycles
 %   and speeds for the IEEE paper.
 % rollData : structure
 %   The data for a single bicycle at a single speed with roll torque as the

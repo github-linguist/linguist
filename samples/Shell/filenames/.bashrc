@@ -39,7 +39,7 @@
 # Bash Completion... Cannibalised from bash_completion 20030929
 # Completion defaults... Yes, its long...
 # Basically this sets up many useful defaults for command completion, these
-#  should probly be built into bash. Use bash_completions itself if you want
+#  should probably be built into bash. Use bash_completions itself if you want
 #  more functionality and don't mind the hacks it uses.
  complete -f -X '!*.?(t)bz2' bunzip2 bzcat bzcmp bzdiff bzegrep bzfgrep bzgrep
  complete -f -X '!*.@(zip|ZIP|jar|JAR|exe|EXE|pk3|war|wsz|ear|zargo|xpi)' unzip zipinfo

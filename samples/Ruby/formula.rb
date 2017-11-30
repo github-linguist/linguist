@@ -127,7 +127,7 @@ class Formula
   def plist_path; prefix+(plist_name+'.plist') end
 
   # Use the @spec_to_use to detect the download strategy.
-  # Can be overriden to force a custom download strategy
+  # Can be overridden to force a custom download strategy
   def download_strategy
     @spec_to_use.download_strategy
   end

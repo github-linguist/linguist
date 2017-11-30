@@ -7,7 +7,7 @@
  *  the GNU General Public License as published by the Free Software
  *  Foundation; either version 3, or (at your option) any later version.
  *
- *  Zet is distrubuted in the hope that it will be useful, but WITHOUT
+ *  Zet is distributed in the hope that it will be useful, but WITHOUT
  *  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
  *  or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public
  *  License for more details.
@@ -295,7 +295,7 @@ module vga (
     .csrm_dat_i (csrm_dat_i)
   );
 
-  // Continous assignments
+  // Continuous assignments
   assign wb_dat_o  = wb_tga_i ? conf_wb_dat_o : mem_wb_dat_o;
   assign wb_ack_o  = wb_tga_i ? conf_wb_ack_o : mem_wb_ack_o;
   assign stb       = wb_stb_i & wb_cyc_i;

@@ -112,13 +112,13 @@ be left out of the final library.  The largest FORTRAN-77 incompatibilities
 (outside of the Ramtek packages) occur when treating ~character ~string data
 (see notes below).
 .p
-The auxilary, MASTER, and 3d plotting routines are FORTRAN-77 compatible
+The auxiliary, MASTER, and 3d plotting routines are FORTRAN-77 compatible
 with a few minor exceptions (e.g. ~INTEGER*2 is used to save space 
 and some routine names exceed 6 characters).  These exceptions
 are noted in the source code file headers.
 Routines in ~RAMLIB and ~REFLIB tend to be very machine specific
 and may require extensive modification for use on other machines.
-Unless specificially stated, integers are all assumed to be the standard
+Unless specifically stated, integers are all assumed to be the standard
 default machine length.  On the ~VAX this is INTEGER*4.  A 2's complement
 representation is assumed for negative integers when specifying the
 line type bit pattern (various routines and programs) and in storing the
@@ -127,7 +127,7 @@ pen motion data in the routines SYMBOL, SYM3D, and SYM3DH.
 .p
 Some machine dependent constructs are used in the library for detection
 of missing (and/or default) parameters (mainly in SYMBOL, NUMBER,
-and AXIS ROUTINES).  These can easily be modifed and/or adapted for
+and AXIS ROUTINES).  These can easily be modified and/or adapted for
 other machines.
 .p
 Note that when a subroutine is called with a Hollerith constant,
@@ -220,7 +220,7 @@ terminal.
 .p
 A command file, LONGLOC:CLEAR.COM,
 has been provided which, when executed, will clear the screen of a VT100
-equipped with a ~Selanar card and set the ~VT100 into text mode.  A simliar
+equipped with a ~Selanar card and set the ~VT100 into text mode.  A similar
 routine for a ~VT125 (TCLEAR.COM) and a VT220 (VCLEAR.COM) is also provided.
 These reset the graphics mode back to terminal mode and clear the screens.
 The are very helpful during program development.
@@ -254,7 +254,7 @@ in the 4010 operation mode.
 A ~VT100 upgraded with the DEC upgrage package to a VT125 has two
 modes used by the LONGLIB library: the normal terminal mode, and the
 Tektronix 4010 graphics mode.  Both text and graphics can be displayed
-on the same screen but independently manipulated by swithing between
+on the same screen but independently manipulated by switching between
 modes.
 Running the ~TCLEAR command file will reset the mode back to terminal.
 
@@ -543,7 +543,7 @@ is OUT.LIS.
 .hl 2 Plotting the LONGLIB Metafile to a Screen Device
 .p
 A program ~REPLOT has been provided which will read the LONGLIB ~metafile
-created by an eariler program and plot the file to a screen
+created by an earlier program and plot the file to a screen
 device (terminal or Ramtek).  This program may be run from DCL in the
 VAX environment by:
 .lit
@@ -589,13 +589,13 @@ other machines.
 ~Ramtek display drivers expects the logical name "RM" be assigned to Ramtek
 device (example: assign RMA0: RM:).
 When the Ramtek device supports multiple diplays, interaction between the
-displays complicates matters.  To distiguish between different displays on
+displays complicates matters.  To distinguish between different displays on
 the same device it is suggested that the 0th device be named xxx0:, second
 device xxx1:, etc. 
 ~Color plotting is done on the Ramtek using the previously loaded color table.
 The LONGLIB "color" is the color table index.
 The default Ramtek color table index is 255.  The main LONGLIB package
-uses only vector plotting.  However, auxilary routines have been included
+uses only vector plotting.  However, auxiliary routines have been included
 which permit writing image mode data to the Ramtek (or REF) and for
 color table manipulation (see RMWRITEWORD or RMWRITECOL).
 .x RMWRITEWORD
@@ -632,7 +632,7 @@ of horizontal or vertical lines of bytes (see RMWRITEWORD, for example).
 When the plot package is closed (by a call to PLOTND) the user will be
 prompted to output the internal BYTE array to a specific
 device (a graphics terminal, a metafile, or a special REF file).  To
-avoid the interative prompt, the user can call ~REFDIS  (with its appropriate
+avoid the interactive prompt, the user can call ~REFDIS  (with its appropriate
 arguments) prior to the ~PLOTND call.  This will disable the prompts.
 See REFDIS for additional details.
 .p
@@ -659,7 +659,7 @@ faster run times by using the VAX paging utility and downloadable fonts.
 .p
 When outputing the byte array data to a terminal or printer history file,
 the array is converted to a series of horizontal vectors.   As the array
-scanned left to right, top to bottom, all ajacent pixels of the same color
+scanned left to right, top to bottom, all adjacent pixels of the same color
 are combined into a single vector.  When a pixel of a different color is
 encountered the vector is output.  Pixels of color "0" (background) are
 not output.
@@ -705,7 +705,7 @@ Source code may be found in the following files:
 .lit
 
 LONGLIB.FOR (device dependent routines)
-AUXLIB.FOR (auxilary device independent routines)
+AUXLIB.FOR (auxiliary device independent routines)
 MLIB.FOR (MASTER routines)
 MLIB2.FOR (more MASTER routines)
 HIDELIB.FOR (3-d hidden line routines)
@@ -790,7 +790,7 @@ The shareable image library is designed to be upwardly compatible.
 .p
 LONGLIB is very powerful graphics package for line-graphics.
 Unfortunately,
-the desire to maintain compatibility with earilier LONGLIB versions
+the desire to maintain compatibility with earlier LONGLIB versions
 has resulted in less than optimal design decisions.  There are, however,
 some incompatibilities with earlier versions of LONGLIB; notably
 the color array used in AXIS, AXIS2, and AXIS, the working space
@@ -821,7 +821,7 @@ For the user interested in obtaining very simple plots of curves without
 being concerned with the details of LONGLIB, the ~MASTER routines provide
 the most simple approach.  Greater control of the output plot can
 be obtained by customizing user version of MASTER-like routines from
-the auxilary routines.
+the auxiliary routines.
 
 .hl2 Simple MASTER Routine Example
 .p
@@ -831,7 +831,7 @@ below.  For more detailed examples see the following sections.
 This example plots a
 damped sine wave on both the terminal screen, the Ramtek (in color),
 and the LONGLIB metafile.
-The master routine ~PLOTSC handles all graphics intialization and
+The master routine ~PLOTSC handles all graphics initialization and
 closing.  (See the chapter on MASTER routines for additional details).
 .TP 16
 .lit
@@ -858,7 +858,7 @@ C METAFILE IS ALWAYS PRODUCED.
 
 .hl2 Lower Level Routines
 .p
-An example of using the auxilary routines of LONGLIB library from
+An example of using the auxiliary routines of LONGLIB library from
 ~FORTRAN is illustrated below.
 An example for using this library from ~C follows.
 .p
@@ -1192,7 +1192,7 @@ n    (I): number of characters in the string s
           < 0 : axis labelling on negative side (clockwise)
  (100's digit)    = 0 : coordinate line, ticks and labels drawn
                   = 1 : line and ticks only--no labeling
- (1000's digit)   = 0 : numeric labels paralel to axis line
+ (1000's digit)   = 0 : numeric labels parallel to axis line
                   = 1 : numeric labels orthogonal to axis line
  (10000's digit)  = 0 : additional optional parameters ignored
                   = 1 : additional optional parameters used
@@ -1245,7 +1245,7 @@ n    (I): number of characters in the string
           < 0 : axis labelling on negative side (clockwise)
  (100's digit)    = 0 : coordinate line, ticks and labels drawn
                   = 1 : line and ticks only--no labeling
- (1000's digit)   = 0 : numeric labels paralel to axis line
+ (1000's digit)   = 0 : numeric labels parallel to axis line
                   = 1 : numeric labels orthogonal to axis line
  (10000's digit)  = 0 : optional parameters ignored
                   = 1 : optional parameters used
@@ -1258,7 +1258,7 @@ al   (R): length of axis in plot units (real number, integer-valued)
 a    (R): angle at which the axis is to be drawn
 xm   (R): value of first marking on the axis
 dx   (R): increment for the axis markings
-(NOTE: the following optional paramters are needed only if
+(NOTE: the following optional parameters are needed only if
       the magnitude of n is > 10000)
 nm   (I): number of minor tick marks between major ticks,
            if not specified, 0 is used
@@ -1268,7 +1268,7 @@ ml   (I): number of labeled major tick marks, if not specified
            then one major tick per inch is used
           < 0 use following additional optional parameters used
           > 0 use following additional parameters ignored
-(NOTE: the following optional paramters are needed only if
+(NOTE: the following optional parameters are needed only if
       the magnitude of n is > 10000 and ml < 0)
 ts   (R): character size of title and numbers, if not
            specified, 0.15 is used
@@ -1308,7 +1308,7 @@ n    (I): number of characters in the string
           < 0 : axis labelling on negative side (clockwise)
  (100's digit)    = 0 : coordinate line, ticks and labels drawn
                   = 1 : line and ticks only--no labeling
- (1000's digit)   = 0 : numeric labels paralel to axis line
+ (1000's digit)   = 0 : numeric labels parallel to axis line
                   = 1 : numeric labels orthogonal to axis line
  (100000's digit) = 0 : color list ignored
                   = 1 : color list used
@@ -1541,7 +1541,7 @@ before plotting calls are issued by the user program.  FRAME should
 normally be called only once in a program.  MASTER routines optionally
 handle the FRAME call.
 .p
-FRAME intializes the graphics output device packages.  The FORTRAN
+FRAME initializes the graphics output device packages.  The FORTRAN
 unit number used for the LONGLIB metafile can be specified.  Normally,
 unit 3 is used.  If unit 0 is specified, FRAME will prompt the user
 for a yes/no response to create a metafile.  A negative unit number
@@ -1560,10 +1560,10 @@ a screen device to use.  The screen devices may then be selected using
 a character code.
 A reply of "?" will list the available options.
 .p
-FRAME also intializes the origin and scale factor for plotting.
+FRAME also initializes the origin and scale factor for plotting.
 The default origin on the ~terminal and the ~Ramtek is the lower
 left of screen (0.,0.).  The
-X axis runs horzontally, while the Y axis runs vertically.  The
+X axis runs horizontally, while the Y axis runs vertically.  The
 default origin on the printer is the upper left corner of page.
 The X axis runs vertically down page, while the Y axis runs
 horizontally across the page.
@@ -1624,7 +1624,7 @@ nx,ny (I): number of grids in x and y direction
 .x PLT3D
 .x 2-d surface plotting
 ~HLT3D plots a 2 dimensional array to produce a 2-d histogram similar
-to PLT3D.  Hidden lines are supressed.
+to PLT3D.  Hidden lines are suppressed.
 Transformation from the array indices (i,j) to (x,y,z) is:
 .lit
 
@@ -1731,7 +1731,7 @@ n     (I): number of characters in string
            < 0 :  label on negative side
  (100's digit)   = 0 : coordinate line, ticks and labels drawn
                  = 1 : line and ticks only--no labeling
- (1000's digit)  = 0 : numeric labels paralel to axis line
+ (1000's digit)  = 0 : numeric labels parallel to axis line
                  = 1 : numeric labels orthogonal to axis line
  (10000's digit) = 0 : color list ignored
                  = 1 : color list used
@@ -1887,7 +1887,7 @@ n     (I): number of points in x,y arrays
 ns    (I): number of smoothing passes (normally 0)
 h     (R): x axis plotting offset (normally 0).  Setting h <> 0
              and n=0 permits replotting last curve, shifted right
-             the specifed amount.
+             the specified amount.
 s     (R): approximate interval between interpolated points on
              curve.  Actual interval is internally computed.
              If s<0 pre-interpolation to 2*n-1 points is done.
@@ -2102,7 +2102,7 @@ CALL PLOTND
 .p
 ~PLOTS initializes the LONGLIB graphics package via a call to FRAME.
 PLOTS provides compatibility with existing CALCOMP or PLOTS-10 compatible
-code.  It simply calls ~FRAME with argurments which cause FRAME to prompt
+code.  It simply calls ~FRAME with arguments which cause FRAME to prompt
 for optional usage of the Longlib meta file output and a graphics
 screen.  For new code use FRAME.
 .lit
@@ -2245,7 +2245,7 @@ dr    (R): scale factor
 .x 2-d surface plotting
 ~PLT3D plots a 2 dimensional array as a surface scribed with a
 linear grid parallel to the x and y axes, i.e., a mesh.
-Hidden lines are supressed.
+Hidden lines are suppressed.
 Transformation from the array indices (i,j) to (x,y,z) is:
 .lit
 
@@ -2396,7 +2396,7 @@ made.  RESPL calls ~PRESPL (metafile restore), ~RRESPL
 which can be independently used if desired.  If the stack is empty,
 no restore occurs.  (NOTE: graphics devices must be in the graphics
 mode when this routine is executed).  When using PRESPL, RRESPL, or VRESPL
-a pen up operation should be executed imediately prior to the call. 
+a pen up operation should be executed immediately prior to the call. 
 .lit
 
 CALL RESPL
@@ -2498,7 +2498,7 @@ values are "smoothed" so that numeric labels appear "nice" when labeled at
 xm and at one inch increments.
 The smoothed numbers are taken from the set of values 1,2,4,5,8 * 10n
 that equals or is smaller than the true value.  SCALE is useful
-in determaning the scale factors for LINE.  It is used extensively
+in determining the scale factors for LINE.  It is used extensively
 in the MASTER routines.  SCALE is not very intelligent and does not
 always make good choices.  SCALE selects xm and dx so that the plotted
 x values may be computed using the following formula such that if
@@ -2578,9 +2578,9 @@ t     (R): angle of shading lines in degrees
 w     (R): working array dimensioned at least 3*n
 ma    (R): line type of shading
             => 0 : line type (see NEWPEN)
-xm    (R): minmum scale factor for x (see LINE)
+xm    (R): minimum scale factor for x (see LINE)
 dx    (R): x increment scale factor
-ym    (R): minmum scale factor for y
+ym    (R): minimum scale factor for y
 dy    (R): y increment scale factor
 .end lit
 
@@ -2835,7 +2835,7 @@ fac (R): new conversion factor for coordinate values
 the plotting line for subsequent plotting on the terminal screen device.
 It may be called separately to change only the terminal line type.
 Metafile and Ramtek and terminal output device line types may be changed 
-separatly using PPEN and RMPEN, respectively.  While the terminal output
+separately using PPEN and RMPEN, respectively.  While the terminal output
 device driver supports line types in hardware, line widths are supported in
 software by outputing multiple single-width lines offset by one pixel.
 Line type scale factors (the length of the linetype
@@ -2990,7 +2990,7 @@ The family of routines used with ~INIT3D include:
 drawn by PLOT3D.
 .els
 .p
-The ~INIT3D family of 3-d plotting routines are desiged to plot
+The ~INIT3D family of 3-d plotting routines are designed to plot
 wireframe line plots with no hidden line removal.  Memory requirements
 are modest and plotting is more rapid than for the ~INIT3DH routines.
 For an example of the use of the INIT3D package see the ~EXAMP3D
@@ -3154,7 +3154,7 @@ x,y   (R): (returned) screen coordinates of last point
 .hl1 INIT3DH Routines
 .p
 The family of plotting routines included in the hidden line 3-d
-packge INIT3DH include:
+package INIT3DH include:
 .s1
 .ls0
 .le;PLT3DH  -- the central visible line plot routine for INIT3DH
@@ -3180,7 +3180,7 @@ entered into the SKETCH list prior to the last call.  They will not
 "hide" any other lines but can be hidden by planes.  The SKETCH
 routine can be set to plot both visible and invisible lines.
 ~PLT3DH does not use SKETCH.  Lines plotted with PLT3DH will always
-be visible.  The auxilary routines (NUM3DH, AXIS3DH, and SYM3DH)
+be visible.  The auxiliary routines (NUM3DH, AXIS3DH, and SYM3DH)
 have options to either use ~SKETCH or PLT3DH.
 .p
 For an example of the use of the ~INIT3DH package see the ~EXAMP3DH
@@ -3219,7 +3219,7 @@ The angles ya,ro,pi are defined as the sequence of rotations ya-ro-pi
 (yaw, roll, and pitch)
 where ya is the angle or rotation about the z axis (positive is
 from x to y).  ro is the angle of rotation about the x axis
-(positive is from y to z). pi is the angle of roation about the y
+(positive is from y to z). pi is the angle of rotation about the y
 axis (positive is from z to x).
 .lit
 
@@ -3229,7 +3229,7 @@ x,y,z    (R): coordinates of relative origin
 ya,ro,pi (R): yaw, roll, pitch angles (Eulerian) in degrees
               (see above for angle definitions)
 zom      (R): relative scale factor
-ds       (R): viewing distance (9999. = infinity or no pespective)
+ds       (R): viewing distance (9999. = infinity or no perspective)
 mne,mnh  (I): maximum number of edges and holes on one polygon
 .end lit
 
@@ -3292,7 +3292,7 @@ i     (I): hidden line option flag
 CALL CUBE (x1,x2,y1,y2,z1,z2,i,h)
 
 x1,y1,z1 (R): corner of cube
-x2,y2,z2 (R): oposite corner of "cube" from corner 1
+x2,y2,z2 (R): opposite corner of "cube" from corner 1
 i        (I): SKETCH flag for last SKETCH call in routine
               Note: (returned) value is the SKETCH return
 h        (L): hide flag
@@ -3332,7 +3332,7 @@ i     (I): hidden line option flag
 ~PLT3DH is a routine which operates in a similar as PLOT but in 3-d.
 It is, however, independent of PLOT3D.  A relative ~origin is
 maintained (separate from the PLOT routine parameters) which is
-initalized by INIT3DH.  PLT3DH calls PLOT after transforming (x,y,z).
+initialized by INIT3DH.  PLT3DH calls PLOT after transforming (x,y,z).
 PLT3DH is also independent of the ~SKETCH routine.  Lines plotted with
 PLT3DH are always completely visible.
 To use the hidden line removal SKETCH must be used.
@@ -3373,7 +3373,7 @@ The maximum number of edges of a polygon is 160.
 .p
 Note that SKETCH requires a large working area in a named ~COMMON area
 described in INIT3DH.  Note SKETCH will fail if the memory limits are
-exceeded.  For the most part an error flag will be set.  Ocassionally,
+exceeded.  For the most part an error flag will be set.  Occasionally,
 the scene will be corrupted when the memory limits are exceeded without
 the error flag being set.
 .lit
@@ -3490,9 +3490,9 @@ ry  (R): resolution of screen in y direction (returned)
 ~CURLOCATE produces a simulated "x" cursor mark on the screen graphics
 device (~Ramtek or ~terminal device)
 When only the metafile is initialized a call to CURLOCATE is a dummy call.
-The terminal takes precidence over the Ramtek when both are in use.
+The terminal takes precedence over the Ramtek when both are in use.
 Erasure of cursor on requires the correct location where it was first plotted.
-CURLOCATE uses the ~XOR capbility of graphics terminal to place and
+CURLOCATE uses the ~XOR capability of graphics terminal to place and
 remove the cursor.  If the terminal has neither erase or XOR capability,
 the graphics cursor can not be erased without clearing the entire screen.
 If the (x,y) position is off the screen, the cursor will be located on 
@@ -3655,7 +3655,7 @@ A data file (EARTH.DAT) which contains a ~map of the land/ocean interface
 and a set of routines to access this data has been included in the LONGLIB
 graphics library.  The data file (of unknown origin) contains a list of
 latitudes and longitudes of the land/ocean edges at about a 10 km resolution.
-It is only a geographic map and does not contain political boundries.
+It is only a geographic map and does not contain political boundaries.
 Although imperfect, it is more than adequate for map drawing, etc.
 Due to the high resolution, the EARTH.DAT file contains a lot of pen
 motions, requiring a long plotting time.
@@ -3673,7 +3673,7 @@ Routines using the land outline file include those for plotting on
 uses the ~INIT3D and ~PLOT3D 3d graphics package.  It will plot the
 entire earth map with the option of either a spherical earth or
 an ellipsoidal earth.  The radius may be specified.  The transformation
-from a latitude/longitude pair (a,b) in radians on the earth's suface to the
+from a latitude/longitude pair (a,b) in radians on the earth's surface to the
 3d plotting vector v is:
 .lit
 
@@ -3826,7 +3826,7 @@ See the source code for ~LNDSEA function for additional information.
 .p
 ~BITMAP plots a land area by testing each point of the area using LNDSEA.
 The plotting area is segmented into (nx X ny) regions.  Each point is tested
-for the presence of land/sea.  For each resolutoin line of latitude,
+for the presence of land/sea.  For each resolution line of latitude,
 a horizontal line is drawn through all points that are land (or sea as desired).
 A linear projection is used.  The latitude
 and longitude are assumed to be a linear grid on a flat surface.
@@ -3912,7 +3912,7 @@ MASTER subroutines always return the terminal to the text mode after call.
 When color options are enabled, the color marked "(return)" is
 the color in current use after call.
 .p
-Note: when passing varables ~ASCII strings do not use ~VAX ~FORTRAN 
+Note: when passing variables ~ASCII strings do not use ~VAX ~FORTRAN 
 ~CHARACTER data type.  Use ~BYTE data type arrays or use %REF(). See
 the comments under the section on machine dependency and the introduction
 to the plot routine section.
@@ -4152,7 +4152,7 @@ iflag (I): option flag
    (1's digit)  = 1 : color array not used
                 = 2 : color array used
    (10's)       = 0 : bar chart with vertical bars
-                = 1 : bar chart with horzontal bars
+                = 1 : bar chart with horizontal bars
                 = 2 : multiple line chart
    (100's)      = 0 : Ask which screen device to use
                <> 0 : Screen Device Number (see FRAME)
@@ -4163,7 +4163,7 @@ ylen  (R): length of vertical axis
 bm,bx (R): minimum and maximum values to be shown on chart
            note: if bx=bm, values computed from b array will be used
 f     (R): format for numeric labels on axis (see NUMBER)
-nd    (I): number of divsions of bar length axis
+nd    (I): number of divisions of bar length axis
            < 0 : division lines shown on chart
            = 0 : no division lines or numeric labels
            > 0 : division lines shown
@@ -4211,7 +4211,7 @@ ic    (I): color array (used only if mod(|iflag|,10)=2)
             c(1) : t title color (return)
             c(2) : bt title color
             c(3) : lt title color
-            c(4) : axis numberic label colors
+            c(4) : axis numeric label colors
             c(5) : sl label color
             c(6) : bl label color
             c(7) : segment 1 color
@@ -4241,7 +4241,7 @@ See CNT3DX for parameter description.
 contoured by plotting slices through the surface parallel to the x-z plane
 of the surface which have the same y value.  The input consists of a 2
 dimensional grid of y values.  For each contour level the input array
-is scanned cell-by-cell.  A segment of the contour is determined by linearily
+is scanned cell-by-cell.  A segment of the contour is determined by linearly
 interpolating the edges of the square formed by 4 adjacent points (a cell).
 For example, if the current contour value is 1, and y(1,1)=0, y(1,2)=2,
 y(2,2)=3, and y(1,2)=4, a contour line is assumed to exist for this
@@ -4312,7 +4312,7 @@ iflag (I): option flag
            = 0 : close LONGLIB--no plot produced
            > 0 : close LONGLIB after plotting
 (magnitude)  >10000: do not initialize LONGLIB before plotting
-   (1's digit) = 1 : ignor color and line type arrays
+   (1's digit) = 1 : ignore color and line type arrays
                  2 : use color array but not line type array
                  3 : ignore color array, use line type array
                  4 : use color and line type arrays
@@ -4391,7 +4391,7 @@ l     (I): contour linetype list
 three dimensions.  It uses INIT3dH
 The input consists of a list of triplets of a surface
 value.  The triplets are triangulated using ~TRIANGC and contours
-determined by linearily interpolating the edges of the triangles.
+determined by linearly interpolating the edges of the triangles.
 The contour values may be uniformly spaced between the starting
 and end values or from a list.  Other than color, the
 sequence of plotting (min to max), and line typing of various contour
@@ -4497,7 +4497,7 @@ dyr   (R): returned value of scale factor (ymax-ymin)/ylen
 ~CNTRPLT plots a contour plot of a uniformly sampled 2-d input
 array.  The input consists of a 2 dimensional grid of y values.  For each
 contour level the array is scanned cell by cell.
-A contour segment is determined by linearily interpolating the edges of the
+A contour segment is determined by linearly interpolating the edges of the
 square formed by 4 adjacent points (a cell).  For example, if the current
 contour value is 1, and y(1,1)=0, y(1,2)=2, y(2,2)=3, and y(1,2)=4,
 a contour line is assumed to exist for this cell as shown:
@@ -4630,7 +4630,7 @@ CALL CVAX3D(d,ndx,ndz,nx,nz,a,b,xh,yh,zh,iflag,
 .x 2-d surface plot
 ~CVAX3DX plots a 3-d surface with hidden lines removed using ~PLT3D to
 produce a mesh surface or ~HLT3D to produce a 2-d histogram with an optional
-contour plot made ~GCONTR and plotted on a plane paralell to the surface
+contour plot made ~GCONTR and plotted on a plane parallel to the surface
 plane.  Axes and a back panel can be optionally plotted.  Optionally,
 a path surface may be plotted which connects the surface and contour plots
 over a users specified path.  The 3d surface is plotted in a manner similar
@@ -4644,11 +4644,11 @@ left to right along the plot bottom.  The y axis is plotted
 as a vertical displacement offset by the z axis value.  The z axis appears
 to point out of the screen.  The contour plot is plotted below the surface
 with a user-specified vertical spacing.  The contour plot plane is plotted
-paralell to the z=0 plane of the surface with the (i,j) indicies of the
+parallel to the z=0 plane of the surface with the (i,j) indices of the
 surface and contour plot aligned vertically.  The user may specify a
 "path" using "pen" motions.  The path is plotted as a curve along the
 surface and the contour plot plane with vertical lines at the corresponding
-indicies.  No hidden line removal is used for the path.  The path permits
+indices.  No hidden line removal is used for the path.  The path permits
 the user to specify a cut plane to enhance the interpretation of the
 plot.  The path is specified as a sequence of pen motion commands and
 index points of the form,
@@ -4672,12 +4672,12 @@ Path commands are interpreted according to:
        ______________    ___________________________
 
             0             end of path specification
-                           (indicies ignored)
-            3             start path at these indicies
-            2             continue path though indicies
+                           (indices ignored)
+            3             start path at these indices
+            2             continue path though indices
 
 .end lit
-The path specificiation should start with a path command of 3
+The path specification should start with a path command of 3
 and end with 0.  Note that several paths can be specified by
 using several path command 3's.
 .P
@@ -4712,7 +4712,7 @@ iflag    (I): option flag
  (1's digit)   = 2 : use color array (need all parameters)
                = 1 : do not use color array
  (10's digit)  = 0 : plot surface as a mesh (PLT3D)
-               = 1 : plot surface as 2-d historgram (HLT3D)
+               = 1 : plot surface as 2-d histogram (HLT3D)
  (100's digit) = 0 : Ask which screen device to use
               <> 0 : Screen Device Number (see FRAME)
 iax   (I): axis format control
@@ -4754,7 +4754,7 @@ il    (I): array of line types dimensioned il(iabs(nc)+2)
              ...   (solid line type on return)
 ip    (I): path specification array (see notes above)
            if ip(1) = 0, remainder of array ignored
-(NOTE: following optional axis paramters are used only if
+(NOTE: following optional axis parameters are used only if
        iax<0 or mod(iflag,10)=1)
 xt    (B): title of x axis (width)
 nxt   (I): number of characters in xt
@@ -5007,7 +5007,7 @@ ic     (I): color list (required if 1's digit of iflag=2)
 ~LCNTR plots a contour plot of a uniformly sampled 2-d input array.
 LCNTR is similar to CNTRPLT but permits hardware line types.
 The input consists of a 2 dimensional grid of v values.  A
-contour is determined by linearily interpolating the edges of the square
+contour is determined by linearly interpolating the edges of the square
 formed by 4 adjacent points (see CNTRPLT).  LCNTR connects the line segments
 of constant contour before plotting and can optionally label the contour lines
 with alphabetic codes or the numerical value of the contour.
@@ -5154,7 +5154,7 @@ nc    (I): array of string lengths dimensioned nc(3+ndl)
             ...       ...
 .end lit
 .p
-The array elements of the option array f are interpretted according
+The array elements of the option array f are interpreted according
 to the following table.  Some parameters have default values (shown
 in square brackets).  These are used when the input value is zero.
 A simple plot may be produced by setting all the elements of f to
@@ -5234,13 +5234,13 @@ of line/simple examples (if selected) and input text.
 .p
 The optional error bar specification, when non-zero, changes
 interpretation of lines.  The first line (and every third line)
-conidered a "center" line.  The second line specifies the relative
+considered a "center" line.  The second line specifies the relative
 error (to be added to the first line) used for plotting the tops
 of the error bars.  The third line is used similarily to locate
 the bottoms of the error bars.  When the error bar specification
 is negative the center line points are marked with a special "x"
 (in addition to any other option).  The absolution value of the
-specifiation determines the type of error bar according to the
+specification determines the type of error bar according to the
 following table.
 .tp10
 .lit
@@ -5350,7 +5350,7 @@ iax   (I): axis format control
               = 2 : Plot smoothed values for Y axis
  (10's digit) = 0 : Use default axis type
               = 1 : Use input AXIS2-type axis parameters
-(NOTE: the following optional paramters are used only if
+(NOTE: the following optional parameters are used only if
          iax < 0 or mod(iflag,10)=1)
 xt    (B): title of x axis (width)
 nxt   (I): number of characters in xt
@@ -5490,7 +5490,7 @@ iax   (I): axis format control
                = 1 : Use input AXIS3 parameters
  (100's digit) = 0 : Do not plot backplane
                = 1 : Plot backplane
-(NOTE: following optional axis paramters are used only if
+(NOTE: following optional axis parameters are used only if
        iax<0 or mod(iflag,10)=1)
 xt    (B): title of x axis (width)
 nxt   (I): number of characters in xt
@@ -6926,7 +6926,7 @@ ic     (I): color array (required if 1's digit of iflag=2)
 .pg
 .hl 1 SUBROUTINE VAX3D
 .p
-VAX3D plots a 3-d surface by plotting 2-d slices of the surface paralel
+VAX3D plots a 3-d surface by plotting 2-d slices of the surface parallel
 to the x-z plane with hidden line removal.  See VAX3DX.
 ~VAX3D calls VAX3DX using default axis parameters to simplify calling
 procedure.
@@ -6945,7 +6945,7 @@ See VAX3DX for parameter description.
 ~VAX3DX is a simple 3-d surface plotting routine.  A 3-d surface is
 plotted by plotting slices through the surface which are parallel to
 the x-y plane.  The y value of the surface at the intersection
-of the slice plane and the y value plotted.  Hidden lines are supressed,
+of the slice plane and the y value plotted.  Hidden lines are suppressed,
 giving the illusion of a 3 dimensional surface.  The height of plotted
 surface relative to its y axis value is calibrated to x and z axis.  No
 perspective is used.  Options exist to varying the plotting angle and 
@@ -6958,7 +6958,7 @@ to point into the screen.  This, with the hidden line removal, gives the
 illusion of depth.
 .P
 VAX3DX contains an internal working storage arrays dimensioned sufficiently
-large for most sufaces.  However, for very complex surfaces, the working
+large for most surfaces.  However, for very complex surfaces, the working
 storage buffer length may be exceeded.  In this case
 an error message is written to the terminal and the routine terminated.
 .lit
@@ -7002,7 +7002,7 @@ iax   (I): axis format control
  (10's digit) = 0 : Use default axis type
               = 1 : Use input AXIS2-type axis parameters
                      (nmx, nnx, mlx, tsx, ndx, etc.)
-(NOTE: the following optional paramters are used if iax < 0 
+(NOTE: the following optional parameters are used if iax < 0 
        or mod(iflag,10)=1)
 xt    (B): title of x axis (width)
 nxt   (I): number of characters in xt
@@ -7270,7 +7270,7 @@ i       (I): color and line type flag
              = 1 color array used
              = 2 line type array used
              = 3 color and line type array used
-ic      (I): color list for each contour (only requied for i>0)
+ic      (I): color list for each contour (only required for i>0)
 l       (I): line type list for contours (required only for i>1)
 .end lit
 
@@ -7391,7 +7391,7 @@ CALL PAUSE
 .hl1 SUBROUTINE PAUSEP
 .x INXTCHR
 .p
-~PAUSEP prompts terminal for a keystroke to continue.  Includes appriate
+~PAUSEP prompts terminal for a keystroke to continue.  Includes appropriate
 ~CTERM calls to prompt in text mode then returns terminal to plot mode.
 Uses INXTCHR.
 .lit
@@ -7404,7 +7404,7 @@ CALL PAUSEP
 .hl1 SUBROUTINE RAMCLOSE
 .p
 ~RAMCLOSE closes and deassigns the ~Ramtek channel and deallocates the device.
-When the ~REF routines are used, it interatively prompts for the output
+When the ~REF routines are used, it interactively prompts for the output
 device and option.  ~REFDIS called prior to RAMCLOSE disables the prompting
 in the REF package.  Note that RAMCLOSE is call by ~PLOTRM when a
 PLOTND or PLOTRM(0.,0.,11) is called.
@@ -7805,7 +7805,7 @@ iw  (I): width
 
 .hl1 SUBROUTINE TRIANGC
 .p
-~TRIANGC triangulates a set of (x,y) points such that the boundry is a
+~TRIANGC triangulates a set of (x,y) points such that the boundary is a
 convex polygon.  This routine is an adaption of ~COSMIC routine ARC-11441.
 Used by some MASTER routines.
 .lit
@@ -7816,7 +7816,7 @@ x,y   (R): arrays of x,y points
 n     (I): number of points
            < 0 : ie,ibe,ite arrays not used
            > 0 : ie,ibe,ite arrays used (normal)
-nt    (I): array of indicies of triangulated points t(nzz,3)
+nt    (I): array of indices of triangulated points t(nzz,3)
            corner 1 of triangle K = (x,y) = (x(t(K,1),y(t(K,1)))
            corner 2 of triangle K = (x,y) = (x(t(K,2),y(t(K,2)))
            corner 3 of triangle K = (x,y) = (x(t(K,3),y(t(K,3)))
@@ -7827,11 +7827,11 @@ ni    (I): dimension of i,j arrays (ni>=n)
 l     (I): number of edges in ie,ibe,ite
 nz    (I): dimension of ie,ibe,ite array (>3*n)
 note: these arrays only needed if n>0
-ie    (I): array of indicies of each triangle edge ie(nz,2)
+ie    (I): array of indices of each triangle edge ie(nz,2)
 ibe   (I): edge flag array dimensioned ibe(nz)
            = 0 for interior edge
-           = 1 if ie is a boundry edge
-ite   (I): array of indicies of the neighbor edges of
+           = 1 if ie is a boundary edge
+ite   (I): array of indices of the neighbor edges of
            each triangle, dimensioned ite(nz,4)
 .end lit
 
@@ -7855,7 +7855,7 @@ value (R) : desired element value (see n)
 This chapter lists the LONGLIB graphics library subroutine names as well
 as the subroutines (outside of the standard FORTRAN routines) called by
 each subroutine.  The calling routines (excluding MASTER routines) are
-indicated as well.  An asterick
+indicated as well.  An asterisk
 indicates that the routine is documented in the documentation and may
 called by the user.
 
@@ -8534,7 +8534,7 @@ FACTOR, PLOTND
 .hl 1 Common Block Names
 .p
 The following is a list of all the named common block used internally
-by the LONGLIB graphics library.  Those marked with an asterick are documented
+by the LONGLIB graphics library.  Those marked with an asterisk are documented
 under the first listed routine.
 and are designed to be accessable to the user.  Those
 unmarked are for internal use only and may change at later revisions.
@@ -8604,7 +8604,7 @@ succeeding pages.  A listing of SYMBOLS follows the tables.
 .p
 The program ~LINETYPE was to create a table of the available line types,
 widths, and colors for each plotting device. These are shown on the
-succeding pages.  A listing of LINETYPE follows the tables.
+succeeding pages.  A listing of LINETYPE follows the tables.
 
 .pg
 .hl1 MASTER Routine Output Examples

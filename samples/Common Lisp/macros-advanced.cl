@@ -19,11 +19,11 @@
     (when (not p) (return))))
 ; `next-prime` return the next prime bigger than the specified number
 (defun next-prime (n)
-  "return the next prime bigger than the speicified number"
+  "return the next prime bigger than the specified number"
   (do ((i (1+ n) (1+ i)))
       ((primep i) i)))
 ;
-; The recommended procedures to writting a new macro are as follows:
+; The recommended procedures to writing a new macro are as follows:
 ; 1. Write a sample call to the macro and the code it should expand into
 (do-primes (p 0 19)
   (format t "~d " p))
@@ -41,7 +41,7 @@
          ((> ,var ,end))
       ,@body)))
 ; 2-1. More concise implementations with the 'parameter list destructuring' and
-; '&body' synonym, it also emits more friendly messages on incorrent input.
+; '&body' synonym, it also emits more friendly messages on incorrect input.
 (defmacro do-primes ((var start end) &body body)
   `(do ((,var (next-prime (- ,start 1)) (next-prime ,var)))
        ((> ,var ,end))
@@ -64,11 +64,11 @@
 ;   c. use `gensym` at macro expansion time to create variable names used in the
 ;      expansion
 ;
-; Appendix I. Macro-writting macros, 'with-gensyms', to guranttee that rule c
+; Appendix I. Macro-writing macros, 'with-gensyms', to guarantee that rule c
 ; gets observed.
 ; Example usage of `with-gensyms`
 (defmacro do-primes-a ((var start end) &body body)
-  "do-primes implementation with macro-writting macro 'with-gensyms'"
+  "do-primes implementation with macro-writing macro 'with-gensyms'"
   (with-gensyms (end-value-name)
     `(do ((,var (next-prime (- ,start 1)) (next-prime ,var))
           (,end-value-name ,end))

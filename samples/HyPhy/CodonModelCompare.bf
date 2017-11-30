@@ -584,7 +584,7 @@ function printModelMatrix (modelString)
 					 "| G | ", mstrConv[1], "*t | " , mstrConv[3], "*t |  *  | ", mstrConv[5], "*t |\n",
 					 sep,
 					 "| T | ", mstrConv[2], "*t | " , mstrConv[4], "*t | ", mstrConv[5], "*t |  *  |\n",
-					 sep, "\nt = synRate for synonymous substitutions, and t=R*synRate for non-synonumous ones.\n");
+					 sep, "\nt = synRate for synonymous substitutions, and t=R*synRate for non-synonymous ones.\n");
 						 
 	return 1;
 }
@@ -615,7 +615,7 @@ if (modelType > 0)
 
 ChoiceList (branchLengths,"Estimate Branch Lengths",1,SKIP_NONE,
 			"Every Time","Branch lengths are reestimated for every model.",
-			"Once","Branch lenghts obtained from the nucleotide GTR model and reused for subsequent models."
+			"Once","Branch lengths obtained from the nucleotide GTR model and reused for subsequent models."
 	       );
 
 if (branchLengths<0)
@@ -856,7 +856,7 @@ if (MPI_NODE_COUNT>1)
 	OPTIMIZE_SUMMATION_ORDER = 1;
 }
 
-function checkEmbedding (_m1, _m2)
+function checkEmbeding (_m1, _m2)
 {
 	for (r=0; r<6; r=r+1)
 	{
@@ -912,7 +912,7 @@ if (rejectCount<202)
 						{
 							modelString2 = modelString2 + resultCache [v3][v4];
 						}	
-						if (checkEmbedding (modelString, modelString2))
+						if (checkEmbeding (modelString, modelString2))
 						{
 							fprintf (stdout,"H: (", modelString,") A: (", modelString2, "). ");
 							done = 0;

@@ -102,7 +102,7 @@ camera {
   direction   y
   sky         z
   up          z
-  right x*image_width/image_height // keep propotions with any aspect ratio
+  right x*image_width/image_height // keep proportions with any aspect ratio
   look_at     <5, 4.3, 0.9>
   angle       36
 }
@@ -113,7 +113,7 @@ camera {                          // table detail camera
   direction   y
   sky         z
   up          z
-  right x*image_width/image_height // keep propotions with any aspect ratio
+  right x*image_width/image_height // keep proportions with any aspect ratio
   look_at     <3.3,2.52,0.5>
   angle       30
 }

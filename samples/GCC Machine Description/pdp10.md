@@ -1718,7 +1718,7 @@
 ;; Special version using SKIPA to load a full-word constant.  This may
 ;; be beneficial on processors with a cache.  Note the 'x' constraint
 ;; on alternative 7.  Reload can fall back on the last alternative if
-;; instisting on moving to register 0.
+;; insisting on moving to register 0.
 (define_insn "*movsi_cache"
   [(set (match_operand:SI 0 "reg_or_mem_operand" "=r,r,r,r,r,r,r,x,m,m,m,r")
 	;; ADDRESS: the S constraint allows a symbol.
@@ -5325,7 +5325,7 @@
 		      (const_int 2)))
    (set_attr "skip" "yes")])
 
-;; Equality comparisons of a contigous group of bits with zero will be
+;; Equality comparisons of a contiguous group of bits with zero will be
 ;; written using zero_extract rather than the equivalent AND operations.
 (define_insn "test_extract_skip"
   [(set (pc)

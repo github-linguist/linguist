@@ -5,7 +5,7 @@
 ; - The sum of the anti-diagonal must be the same as the sum of the diagonal
 ; - The sum of each column must be the same as the sum of the diagonal
 ;
-; If any column, row, or anti-diagonal does not follow the aformented rules,
+; If any column, row, or anti-diagonal does not follow the aforementioned rules,
 ; the program will output its number to stdout.
 ;
 ; Columns are identified by a negative digit, ranging from -1 to -n
@@ -362,7 +362,7 @@ curra:		.BLOCK 2
 ; Sum of the values
 tmpsum:		.BLOCK 2
 
-; Muliplies two ints
+; Multiplies two ints
 ;
 ; Parameters:
 ; Register A : Left part of the multiplication

@@ -392,8 +392,8 @@ fun makeOptions {usage} =
             reportAnnotation (s, flag,
                               Control.Elaborate.processEnabled (s, true))))
        end,
-       (Expert, "error-threshhold", " <n>", "error threshhold (20)",
-        intRef errorThreshhold),
+       (Expert, "error-threshold", " <n>", "error threshold (20)",
+        intRef errorThreshold),
        (Expert, "emit-main", " {true|false}", "emit main() startup function",
         boolRef emitMain),
        (Expert, "expert", " {false|true}", "enable expert status",

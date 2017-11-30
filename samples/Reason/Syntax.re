@@ -128,7 +128,7 @@ type noParensNeededWhenInTuple =
 
 type myTypeDef 'a = list 'a;
 
-type instatiatedTypeDef = myTypeDef int => int;
+type instantiatedTypeDef = myTypeDef int => int;
 
 /* Test a type attribute for good measure */
 /* We should clean up all of the attribute tagging eventually, but for now,
@@ -336,7 +336,7 @@ let printPerson (p: person) => {
 };
 
 /* let dontParseMeBro x y:int = x = y;*/
-/* With this unification, anywhere eyou see `= fun` you can just ommit it */
+/* With this unification, anywhere eyou see `= fun` you can just omit it */
 let blah a => a; /* Done */
 
 let blah a => a; /* Done (almost) */
@@ -414,11 +414,11 @@ let blah arg =>
   /* Comment before Bar */
   | /* Comment between bar/pattern */ Red _ => 1
   /* Comment Before non-first bar */
-  | /* Comment betwen bar/pattern */ Black _ => 0
+  | /* Comment between bar/pattern */ Black _ => 0
   | Green _ => 0
   };
 
-/* Any function that pattern matches a multicase match is interpretted as a
+/* Any function that pattern matches a multicase match is interpreted as a
  * single arg that is then matched on. Instead of the above `blah` example:*/
 let blah =
   fun
@@ -809,19 +809,19 @@ let resAnnotated = named a::a b::b;
 let resAnnotated: ty = named a::a b;
 
 /*S: Explicitly passed optionals are a nice way to say "use the default value"*/
-let explictlyPassed =
+let explicitlyPassed =
   myOptional a::?None b::?None;
 
 /*T: Annotating the return value of the entire function call */
-let explictlyPassedAnnotated: int =
+let explicitlyPassedAnnotated: int =
   myOptional a::?None b::?None;
 
 /*U: Explicitly passing optional with identifier expression */
 let a = None;
 
-let explictlyPassed = myOptional a::?a b::?None;
+let explicitlyPassed = myOptional a::?a b::?None;
 
-let explictlyPassedAnnotated: int =
+let explicitlyPassedAnnotated: int =
   myOptional a::?a b::?None;
 
 let nestedLet = {
@@ -891,7 +891,7 @@ let x = [
 let x = [
   (butWeWillPrint: int),
   (themAsSpaceSeparated: float),
-  (toInfluenceYour: int, developmentHabbits: int)
+  (toInfluenceYour: int, developmentHabits: int)
 ];
 
 let newRecord = {
@@ -937,7 +937,7 @@ let newRecord = {
     heresAFunctionWithNamedArgs argOne::i: annotatedResult
   ),
   soAsToInstill: 0,
-  developmentHabbits: 1
+  developmentHabits: 1
 };
 
 [@@@thisIsAThing];

@@ -367,7 +367,7 @@ const FOLD_TEMPLATE = function*(path) {
     path.type === 'TemplateLiteral'
   ) {
     let updated = false;
-    for (let i = 0; i < path.node.exressions.length; i++) {
+    for (let i = 0; i < path.node.expressions.length; i++) {
       if (IS_CONSTEXPR(path.node.expressions[i])) {
         //let 
       }

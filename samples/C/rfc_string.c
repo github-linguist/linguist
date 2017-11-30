@@ -36,7 +36,7 @@
 
 /*-------------------------------------------------------------------------Methods to create an RF_String-------------------------------------------------------------------------------*/
 
-// Allocates and returns a string with the given characters a refu string with the given characters. Given characters have to be in UTF-8. A check for valide sequence of bytes is performed.
+// Allocates and returns a string with the given characters a refu string with the given characters. Given characters have to be in UTF-8. A check for valid sequence of bytes is performed.
 #ifndef RF_OPTION_DEFAULT_ARGUMENTS
 RF_String* rfString_Create(const char* s,...)
 #else
@@ -180,7 +180,7 @@ RF_String* i_rfString_CreateLocal1(const char* s,...)
     ret = rfLMS_Push(RF_LMS,sizeof(RF_String));
     if(ret == 0)
     {
-        LOG_ERROR("Memory allocation from the Local Memory Stack failed. Insufficient local memory stack space. Consider compiling the library with bigger stack space. Quitting proccess...",
+        LOG_ERROR("Memory allocation from the Local Memory Stack failed. Insufficient local memory stack space. Consider compiling the library with bigger stack space. Quitting process...",
                   RE_LOCALMEMSTACK_INSUFFICIENT);
         exit(RE_LOCALMEMSTACK_INSUFFICIENT);
     }
@@ -191,7 +191,7 @@ RF_String* i_rfString_CreateLocal1(const char* s,...)
     ret->bytes = rfLMS_Push(RF_LMS,ret->byteLength+1);
     if(ret->bytes == 0)
     {
-        LOG_ERROR("Memory allocation from the Local Memory Stack failed. Insufficient local memory stack space. Consider compiling the library with bigger stack space. Quitting proccess...",
+        LOG_ERROR("Memory allocation from the Local Memory Stack failed. Insufficient local memory stack space. Consider compiling the library with bigger stack space. Quitting process...",
                   RE_LOCALMEMSTACK_INSUFFICIENT);
         exit(RE_LOCALMEMSTACK_INSUFFICIENT);
     }
@@ -299,7 +299,7 @@ RF_String* i_NVrfString_CreateLocal(const char* s)
     ret = rfLMS_Push(RF_LMS,sizeof(RF_String));
     if(ret == 0)
     {
-        LOG_ERROR("Memory allocation from the Local Memory Stack failed during string allocation. Insufficient local memory stack space. Consider compiling the library with bigger stack space. Quitting proccess...",
+        LOG_ERROR("Memory allocation from the Local Memory Stack failed during string allocation. Insufficient local memory stack space. Consider compiling the library with bigger stack space. Quitting process...",
                   RE_LOCALMEMSTACK_INSUFFICIENT);
         exit(RE_LOCALMEMSTACK_INSUFFICIENT);
     }
@@ -309,7 +309,7 @@ RF_String* i_NVrfString_CreateLocal(const char* s)
     ret->bytes = rfLMS_Push(RF_LMS,ret->byteLength+1);
     if(ret->bytes == 0)
     {
-        LOG_ERROR("Memory allocation from the Local Memory Stack failed during string allocation. Insufficient local memory stack space. Consider compiling the library with bigger stack space. Quitting proccess...",
+        LOG_ERROR("Memory allocation from the Local Memory Stack failed during string allocation. Insufficient local memory stack space. Consider compiling the library with bigger stack space. Quitting process...",
                   RE_LOCALMEMSTACK_INSUFFICIENT);
         exit(RE_LOCALMEMSTACK_INSUFFICIENT);
     }
@@ -335,7 +335,7 @@ cleanup:
 
 
 
-// Initializes a string with the given characters. Given characters have to be in UTF-8. A check for valide sequence of bytes is performed.<b>Can't be used with RF_StringX</b>
+// Initializes a string with the given characters. Given characters have to be in UTF-8. A check for valid sequence of bytes is performed.<b>Can't be used with RF_StringX</b>
 #ifndef RF_OPTION_DEFAULT_ARGUMENTS
 char rfString_Init(RF_String* str,const char* s,...)
 #else
@@ -570,7 +570,7 @@ char rfString_Init_UTF16(RF_String* str,const char* s,char endianess)
                 if(rfUTF16_Decode(s,&characterLength,codepoints) == false)
                 {
                     free(codepoints);
-                    LOG_ERROR("String initialization failed due to invalide UTF-16 sequence",RE_STRING_INIT_FAILURE);
+                    LOG_ERROR("String initialization failed due to invalid UTF-16 sequence",RE_STRING_INIT_FAILURE);
                     return false;
                 }
             }
@@ -579,7 +579,7 @@ char rfString_Init_UTF16(RF_String* str,const char* s,char endianess)
                 if(rfUTF16_Decode_swap(s,&characterLength,codepoints) == false)
                 {
                     free(codepoints);
-                    LOG_ERROR("String initialization failed due to invalide UTF-16 sequence",RE_STRING_INIT_FAILURE);
+                    LOG_ERROR("String initialization failed due to invalid UTF-16 sequence",RE_STRING_INIT_FAILURE);
                     return false;
                 }
             }
@@ -677,7 +677,7 @@ char rfString_Init_UTF32(RF_String* str,const char* s)
 void i_rfString_Assign(RF_String* dest,void* sourceP)
 {
     RF_String* source = (RF_String*)sourceP;
-    // only if the new string value won't fit in the buffer reallocate the buffer (let's avoid unecessary reallocs)
+    // only if the new string value won't fit in the buffer reallocate the buffer (let's avoid unnecessary reallocs)
     if(source->byteLength > dest->byteLength)
     {
         RF_REALLOC(dest->bytes,char,source->byteLength+1);
@@ -759,7 +759,7 @@ RF_String* i_rfString_Create_nc(const char* s,...)
     RF_MALLOC(ret,sizeof(RF_String));
     // get  the formatted string
     READ_VSNPRINTF_ARGS(s,s,0);
-    // get the lengt of the byte buffer
+    // get the length of the byte buffer
     ret->byteLength = bytesWritten;
 
     // now that we know the length we can allocate the buffer and copy the bytes
@@ -1256,7 +1256,7 @@ int32_t i_rfString_Count(void* str,void* sstr2,const char* optionsP)
     return n;
 }
 
-// Tokenizes the given string. Separates it into @c tokensN depending on how many substrings can be created from the @c sep separatior and stores them
+// Tokenizes the given string. Separates it into @c tokensN depending on how many substrings can be created from the @c sep separator and stores them
 // into the Array of RF_String* that should be passed to the function
 i_DECLIMEX_ char rfString_Tokenize(void* str,char* sep,uint32_t* tokensN,RF_String** tokens)
 {
@@ -1515,7 +1515,7 @@ void i_rfString_Prepend(RF_String* thisstr,void* otherP)
     RF_String* other = (RF_String*)otherP;
     uint32_t size;
     int32_t i;// is not unsigned since it goes to -1 in the loop
-    // keeep the original byte size of the string
+    // keep the original byte size of the string
     size = thisstr->byteLength;
     // calculate the new lengths
     thisstr->byteLength += other->byteLength;
@@ -1528,7 +1528,7 @@ void i_rfString_Prepend(RF_String* thisstr,void* otherP)
     memcpy(thisstr->bytes,other->bytes,other->byteLength);
 }
 
-// Removes all of the specifed string occurences from this String matching case or not, DOES NOT reallocate buffer size.
+// Removes all of the specified string occurences from this String matching case or not, DOES NOT reallocate buffer size.
 char i_rfString_Remove(void* thisstrP,void* rstrP,uint32_t* numberP,const char* optionsP)
 {
     RF_String* thisstr = (RF_String*)thisstrP;
@@ -1568,7 +1568,7 @@ char i_rfString_Remove(void* thisstrP,void* rstrP,uint32_t* numberP,const char* 
         if(occurences == number)
             break;
     }while(bytePos != RF_FAILURE);
-    // succcess
+    // success
     return true;
 }
 
@@ -1605,7 +1605,7 @@ void i_rfString_KeepOnly(void* thisstrP,void* keepstrP)
             // we use that here to determine the current byteIndex_ of the string in the iteration and move the string backs
             memmove(thisstr->bytes+byteIndex_,thisstr->bytes+byteIndex_+charBLength,thisstr->byteLength-byteIndex_+charBLength);
             thisstr->byteLength-=charBLength;
-            continue;// by contiuing here we make sure that the current string position won't be moved to assure that we also check the newly move characters
+            continue;// by continuing here we make sure that the current string position won't be moved to assure that we also check the newly move characters
         }
     rfString_Iterate_End(i)
     // before returning free the keep string's character array
@@ -1849,7 +1849,7 @@ char i_rfString_Replace(RF_String* thisstr,void* sstrP,void* rstrP,const uint32_
     }
     else if( rstr->byteLength < sstr->byteLength) // replace string is smaller than the removed one
     {
-        // get the differenc in byte length of removed substring and replace string
+        // get the difference in byte length of removed substring and replace string
         diff = sstr->byteLength-rstr->byteLength;
 
         // now replace all the substrings one by one
@@ -2341,7 +2341,7 @@ int32_t i_rfString_Fwrite(void* sP,FILE* f,char* encodingP)
         break;
     }
     // if we get here it means an error, and we log it with the macro
-    i_WRITE_CHECK(f,"Writting a string to a file")
+    i_WRITE_CHECK(f,"Writing a string to a file")
     return RE_FILE_WRITE;
 }
 

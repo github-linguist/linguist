@@ -16,7 +16,7 @@
  * well-known optimizations such as using insertion sort
  * once the partitions get small.  This is only intended
  * as a simple example of an array-based program that 
- * combines a recirsive divide and conquer algorithm 
+ * combines a recursive divide and conquer algorithm 
  * with async and finish, not as a highly efficient 
  * sorting procedure..
  */

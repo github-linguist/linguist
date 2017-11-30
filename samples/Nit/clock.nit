@@ -21,7 +21,7 @@ module clock
 class Clock
 	# total number of minutes from 0 to 719
 	var total_minutes: Int
-	# Note: only the read acces is public, the write access is private.
+	# Note: only the read access is public, the write access is private.
 
 	# number of minutes in the current hour (from 0 to 59)
 	fun minutes: Int do return self.total_minutes % 60

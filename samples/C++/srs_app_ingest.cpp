@@ -368,7 +368,7 @@ int SrsIngester::initialize_ffmpeg(SrsFFMPEG* ffmpeg, SrsConfDirective* vhost, S
     std::string input_type = _srs_config->get_ingest_input_type(ingest);
     if (input_type.empty()) {
         ret = ERROR_ENCODER_NO_INPUT;
-        srs_trace("empty intput type, ingest=%s. ret=%d", ingest->arg0().c_str(), ret);
+        srs_trace("empty input type, ingest=%s. ret=%d", ingest->arg0().c_str(), ret);
         return ret;
     }
 
@@ -376,7 +376,7 @@ int SrsIngester::initialize_ffmpeg(SrsFFMPEG* ffmpeg, SrsConfDirective* vhost, S
         std::string input_url = _srs_config->get_ingest_input_url(ingest);
         if (input_url.empty()) {
             ret = ERROR_ENCODER_NO_INPUT;
-            srs_trace("empty intput url, ingest=%s. ret=%d", ingest->arg0().c_str(), ret);
+            srs_trace("empty input url, ingest=%s. ret=%d", ingest->arg0().c_str(), ret);
             return ret;
         }
         
@@ -390,7 +390,7 @@ int SrsIngester::initialize_ffmpeg(SrsFFMPEG* ffmpeg, SrsConfDirective* vhost, S
         std::string input_url = _srs_config->get_ingest_input_url(ingest);
         if (input_url.empty()) {
             ret = ERROR_ENCODER_NO_INPUT;
-            srs_trace("empty intput url, ingest=%s. ret=%d", ingest->arg0().c_str(), ret);
+            srs_trace("empty input url, ingest=%s. ret=%d", ingest->arg0().c_str(), ret);
             return ret;
         }
         

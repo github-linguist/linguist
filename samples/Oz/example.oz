@@ -40,7 +40,7 @@ fun {Prime N}
   end
 end
 
-% Reverse a list using cells and for loop (instead of recursivity)
+% Reverse a list using cells and for loop (instead of recursively)
 fun {Reverse L}
   local RevList in
     RevList = {NewCell nil}

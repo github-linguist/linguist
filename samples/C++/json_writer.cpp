@@ -210,7 +210,7 @@ Writer::~Writer()
 // //////////////////////////////////////////////////////////////////
 
 FastWriter::FastWriter()
-   : yamlCompatiblityEnabled_( false )
+   : yamlCompatibilityEnabled_( false )
 {
 }
 
@@ -218,7 +218,7 @@ FastWriter::FastWriter()
 void 
 FastWriter::enableYAMLCompatibility()
 {
-   yamlCompatiblityEnabled_ = true;
+   yamlCompatibilityEnabled_ = true;
 }
 
 
@@ -280,7 +280,7 @@ FastWriter::writeValue( const Value &value )
             if ( it != members.begin() )
                document_ += ",";
             document_ += valueToQuotedString( name.c_str() );
-            document_ += yamlCompatiblityEnabled_ ? ": " 
+            document_ += yamlCompatibilityEnabled_ ? ": " 
                                                   : ":";
             writeValue( value[name] );
          }
@@ -384,7 +384,7 @@ StyledWriter::writeArrayValue( const Value &value )
       pushValue( "[]" );
    else
    {
-      bool isArrayMultiLine = isMultineArray( value );
+      bool isArrayMultiLine = isMultilineArray( value );
       if ( isArrayMultiLine )
       {
          writeWithIndent( "[" );
@@ -430,7 +430,7 @@ StyledWriter::writeArrayValue( const Value &value )
 
 
 bool 
-StyledWriter::isMultineArray( const Value &value )
+StyledWriter::isMultilineArray( const Value &value )
 {
    int size = value.size();
    bool isMultiLine = size*3 >= rightMargin_ ;
@@ -660,7 +660,7 @@ StyledStreamWriter::writeArrayValue( const Value &value )
       pushValue( "[]" );
    else
    {
-      bool isArrayMultiLine = isMultineArray( value );
+      bool isArrayMultiLine = isMultilineArray( value );
       if ( isArrayMultiLine )
       {
          writeWithIndent( "[" );
@@ -706,7 +706,7 @@ StyledStreamWriter::writeArrayValue( const Value &value )
 
 
 bool 
-StyledStreamWriter::isMultineArray( const Value &value )
+StyledStreamWriter::isMultilineArray( const Value &value )
 {
    int size = value.size();
    bool isMultiLine = size*3 >= rightMargin_ ;

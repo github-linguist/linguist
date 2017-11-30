@@ -8,7 +8,7 @@ describe Spira::Types::Any do
 
   # this spec is going to be necessarily loose.  The 'Any' type is defined to
   # use RDF.rb's automatic RDF Literal boxing and unboxing, which may or may
-  # not change between verions.
+  # not change between versions.
   #
   context "when serializing" do
     it "should serialize literals to RDF Literals" do

@@ -348,7 +348,7 @@ writeln();
 
 //
 // The following example creates a dimensional distribution that
-// replicates over 2 locales (when available) in the first dimemsion
+// replicates over 2 locales (when available) in the first dimension
 // and distributes using block-cyclic distribution in the second dimension.
 // The example computes nl1 and nl2 and reshapes MyLocales correspondingly.
 //

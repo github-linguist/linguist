@@ -17,10 +17,10 @@
 # This sample has been implemented to show you how simple is it to play 
 # with native callbacks (C) through an high level with NIT program.
 
-module callback_chimpanze
+module callback_chimpanzee
 import callback_monkey
 
-class Chimpanze
+class Chimpanzee
 	super MonkeyActionCallable
 
 	fun create
@@ -41,5 +41,5 @@ class Chimpanze
 	end
 end
 
-var m = new Chimpanze
+var m = new Chimpanzee
 m.create

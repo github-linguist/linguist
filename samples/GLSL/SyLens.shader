@@ -33,7 +33,7 @@ float inverse_f(float r)
 {
     
     // Build a lookup table on the radius, as a fixed-size table.
-    // We will use a vec3 since we will store the multipled number in the Z coordinate.
+    // We will use a vec3 since we will store the multiplied number in the Z coordinate.
     // So to recap: x will be the radius, y will be the f(x) distortion, and Z will be x * y;
     vec3[48] lut;
     
@@ -50,7 +50,7 @@ float inverse_f(float r)
     }
     
     float t;
-    // Now find the nehgbouring elements
+    // Now find the neighbouring elements
     // only iterate to 46 since we will need
     // 47 as i+1
     for(int i=0; i < 47; i++) {

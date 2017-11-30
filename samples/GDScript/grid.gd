@@ -204,7 +204,7 @@ func setup(w,h):
 	
 
 func _ready():
-	# Initalization here
+	# Initialization here
 
 	setup(10,20)
 	score_label = get_node("../score")

@@ -21,7 +21,7 @@ PossiblyNonzeroQ::usage="Returns True if and only if its argument is not definit
 
 
 (* ::Subsection:: *)
-(*Implimentation*)
+(*Implementation*)
 
 
 Begin["`Private`"];
@@ -44,9 +44,9 @@ End[];
 (*Documentation*)
 
 
-AnyQ::usage="Given a predicate and a list, retuns True if and only if that predicate is True for at least one element of the list.";
+AnyQ::usage="Given a predicate and a list, returns True if and only if that predicate is True for at least one element of the list.";
 AnyElementQ::usage="Returns True if cond matches any element of L.";
-AllQ::usage="Given a predicate and a list, retuns True if and only if that predicate is True for all elements of the list.";
+AllQ::usage="Given a predicate and a list, returns True if and only if that predicate is True for all elements of the list.";
 AllElementQ::usage="Returns True if cond matches any element of L.";
 
 
@@ -74,7 +74,7 @@ SymbolOrNumberQ::usage="Returns True if argument is a number of has head 'Symbol
 
 
 (* ::Subsection:: *)
-(*Implimentation*)
+(*Implementation*)
 
 
 Begin["`Private`"];

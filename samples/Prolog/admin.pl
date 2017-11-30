@@ -482,8 +482,8 @@ allow(Access, on) -->
 allow(_Access, off) --> !,
 	[].
 
-pterm(read,  read(_Repositiory, _Action)).
-pterm(write, write(_Repositiory, _Action)).
+pterm(read,  read(_Repository, _Action)).
+pterm(write, write(_Repository, _Action)).
 pterm(admin, admin(_Action)).
 
 
@@ -694,7 +694,7 @@ user_logout(_Request) :-
 			     'has timed out.'])
 			]).
 
-%%	attribute_decl(+Param, -DeclObtions) is semidet.
+%%	attribute_decl(+Param, -DeclOptions) is semidet.
 %
 %	Provide   reusable   parameter   declarations   for   calls   to
 %	http_parameters/3.

@@ -74,8 +74,8 @@ L:
 
             'Inserted Compiling code 
             Dim r As Integer
-            Dim Varioblelocal? As Integer = Integer.MaxValue
-            Dim Varioblelocal0? As Guid = New Guid(r.ToString())
+            Dim Variablelocal? As Integer = Integer.MaxValue
+            Dim Variablelocal0? As Guid = New Guid(r.ToString())
 
             Dim привет = local
             Dim мир = local
@@ -954,7 +954,7 @@ End Module
 Class Customer
     Public Property name As String = "Default"
     Public AGe As Integer
-    Public Postion As String
+    Public Position As String
     Public Level As Integer = 0
     Public Property age2 As Integer
 End Class
@@ -1046,12 +1046,12 @@ Class FooGen(Of t)
 
             Dim x As New Customer With {.name = "Test",
                                         .AGe = 30,
-                                        .Level = 1, .Postion = "SDET"}
+                                        .Level = 1, .Position = "SDET"}
 
 
             Dim x2 As New Customer With {.name = "Test",
                                         .AGe = 30,
-                                        .Level = 1, .Postion = "SDET",
+                                        .Level = 1, .Position = "SDET",
                                          .age2 = .AGe}
 
         End Sub

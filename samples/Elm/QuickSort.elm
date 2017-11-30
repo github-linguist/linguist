@@ -25,7 +25,7 @@ QuickSort works as follows:
 Note that choosing a bad pivot can have bad effects. Take a sorted list with
 N elements. The pivot will always be the lowest member, meaning that it does
 not divide the list very evenly. The list of lessers has 0 elements
-and the list of greaters has N-1 elemens. This means qsort will be called
+and the list of greaters has N-1 elements. This means qsort will be called
 N times, each call looking through the entire list. This means, in the worst
 case, QuickSort will make N^2 comparisons.
 

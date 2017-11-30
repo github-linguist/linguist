@@ -25,7 +25,7 @@ oldCS                        &CSTRING
     ! Only grow the internal string if the result of the cat will be larger than the string currently is.
     ! The reason for the "+2" is because this is used in the string slicing outside this IF. Without this matching +2 there is potential for an out of bounds slice which would be bad!
 
-    ! Save a temporary copy of the old string so we can us it in the concatination after we have grown it!
+    ! Save a temporary copy of the old string so we can us it in the concatenation after we have grown it!
     oldCS &= New(CSTRING(SELF.strLength+1))
     oldCS = SELF.CS
     Dispose(SELF.CS)
@@ -53,7 +53,7 @@ CStringClass.Str PROCEDURE  (STRING pStr) !,*CSTRING, PROC   ! Declare Procedure
   CODE
   IF Len(pStr) > SELF.newStrSize
     ! Only Dispose/New the internal string if the new one requires it.
-    ! This might be slightly innefficient in terms of memory usage when the string gets smaller
+    ! This might be slightly inefficient in terms of memory usage when the string gets smaller
     ! But it is _vasty_ better for performance when the string gets added to a lot.
     Dispose(SELF.CS)
     SELF.newStrSize = Len(pStr) + 1 + SELF.bufferSize

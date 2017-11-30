@@ -1,7 +1,7 @@
 /* ============================================================
  * Contributor: Caleb Sidel
  * 
- * This code is part of the "apex-lang" open source project avaiable at:
+ * This code is part of the "apex-lang" open source project available at:
  * 
  *      http://code.google.com/p/apex-lang/
  *

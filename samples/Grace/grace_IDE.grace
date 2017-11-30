@@ -121,7 +121,7 @@ runButton.on "clicked" do {
     def sIter = gtk.text_iter
     def eIter = gtk.text_iter
 
-    // Set one at the beggining and one at the end of the text
+    // Set one at the beginning and one at the end of the text
     cur_page.buffer.get_iter_at_offset(sIter, 0)
     cur_page.buffer.get_iter_at_offset(eIter, -1)
 
@@ -214,7 +214,7 @@ saveButton.on "clicked" do {
         def sIter = gtk.text_iter
         def eIter = gtk.text_iter
 
-        // Set one at the beggining and one at the end of the text
+        // Set one at the beginning and one at the end of the text
         cur_page.buffer.get_iter_at_offset(sIter, 0)
         cur_page.buffer.get_iter_at_offset(eIter, -1)
 

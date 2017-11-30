@@ -104,7 +104,7 @@ protected:
    RegexTree        *m_tree;
    RunnerReference *m_runnerref;      // cached runner
    ReplacementReference*m_replref;    // cached parsed replacement pattern
-   RegexCode        *m_code;          // if interpreted, this is the code for RegexIntepreter
+   RegexCode        *m_code;          // if interpreted, this is the code for RegexInterpreter
    bool              m_refsInitialized;// Default is false
    static            LinkedList<CachedCodeEntry*>m_livecode;// the cached of code that are currently loaded
    static int        m_cacheSize;     // Default is 15
@@ -305,7 +305,7 @@ public:
    //+------------------------------------------------------------------+
    static TimeSpan InitDefaultMatchTimeout()
      {
-      //--- retrun result
+      //--- return result
       return (FallbackDefaultMatchTimeout);
      }
    //+------------------------------------------------------------------+
@@ -490,7 +490,7 @@ public:
         }
      }
    //+------------------------------------------------------------------+
-   //| Given a group number, maps it to a group name. Note that nubmered|
+   //| Given a group number, maps it to a group name. Note that numbered|
    //| groups automatically get a group name that is the decimal string |
    //| equivalent of its number.                                        |
    //+------------------------------------------------------------------+
@@ -528,7 +528,7 @@ public:
         }
      }
    //+------------------------------------------------------------------+
-   //| Given a group name, maps it to a group number. Note that nubmered|
+   //| Given a group name, maps it to a group number. Note that numbered|
    //| groups automatically get a group name that is the decimal string |   
    //| equivalent of its number.                                        |
    //|                                                                  |
@@ -930,7 +930,7 @@ public:
       return Replace(in, evaluator, count, UseOptionR() ? StringLen(in) : 0);
      }
    //+------------------------------------------------------------------+
-   //| Replaces all occurrences of the (previouly defined) "pattern"    |
+   //| Replaces all occurrences of the (previously defined) "pattern"    |
    //| with the recent "replacement" pattern, starting at the character |
    //| position "startat."                                              |
    //+------------------------------------------------------------------+
@@ -1095,7 +1095,7 @@ public:
             //--- If we find an entry in the cache, move it to the head at the same time. 
             m_livecode.Remove(current);
             m_livecode.AddFirst(current);
-            //--- retrun result
+            //--- return result
             return (current.Value());
            }
         }
@@ -1256,7 +1256,7 @@ public:
    //+------------------------------------------------------------------+
    RunnerReference *RunnerRef()
      {
-      //--- reurn runnerref
+      //--- return runnerref
       return (m_runnerref);
      }
    //+------------------------------------------------------------------+
@@ -1296,7 +1296,7 @@ public:
    //+------------------------------------------------------------------+
    int CapSize()
      {
-      //--- retrun capsize
+      //--- return capsize
       return (m_capsize);
      }
    //+------------------------------------------------------------------+

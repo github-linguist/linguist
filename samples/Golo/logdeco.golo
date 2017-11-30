@@ -15,7 +15,7 @@ function foo = |a| {
     println("foo got a " + a)
 }
 
-@log1("I'am a bar")
+@log1("I'm a bar")
 function bar = |a| -> 2*a
 
 let sayHello = log1("Hello")

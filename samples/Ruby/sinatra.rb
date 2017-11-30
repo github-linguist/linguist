@@ -123,7 +123,7 @@ module Sinatra
   end
 
   # Behaves exactly like Rack::CommonLogger with the notable exception that it does nothing,
-  # if another CommonLogger is already in the middleware chane.
+  # if another CommonLogger is already in the middleware chain.
   class CommonLogger < Rack::CommonLogger
     def call(env)
       env['sinatra.commonlogger'] ? @app.call(env) : super
@@ -1117,7 +1117,7 @@ module Sinatra
         template name, &block
       end
 
-      # Load embeded templates from the file; uses the caller's __FILE__
+      # Load embedded templates from the file; uses the caller's __FILE__
       # when no file is specified.
       def inline_templates=(file=nil)
         file = (file.nil? || file == true) ? (caller_files.first || File.expand_path($0)) : file

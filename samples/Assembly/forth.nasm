@@ -34,7 +34,7 @@
 	%define PAGE_SIZE 4096
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
-; some NASM codeing macros
+; some NASM coding macros
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 	%macro loopstart 0
@@ -389,7 +389,7 @@ forth_start:
 	loopend					; and loop till QUIT takes over
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; a few case insensative string operations
+; a few case insensitive string operations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 	%macro to_lower 1
@@ -513,7 +513,7 @@ _lsyscall:
 ; XT_COMPILE	The xt compile field offset.
 ; XT_SIZE		The xt size offset.
 ; SYS_*			The numeric codes of various syscalls.
-; O_*			Various sycall flags/modes.
+; O_*			Various syscall flags/modes.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 	defconst "version", 0, WORD_VERSION, VERSION_NUM
@@ -1126,7 +1126,7 @@ _lsyscall:
 	defword_end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; single precision comparision words
+; single precision comparison words
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 	defword "=", 0, WORD_EQ, WORD_INLINE_COMMA
@@ -1411,7 +1411,7 @@ _lsyscall:
 	defword_end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; double precision comparision words
+; double precision comparison words
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 	defword "d0=", 0, WORD_DZEQ, WORD_INLINE_COMMA
@@ -2331,7 +2331,7 @@ xtskip_l3:
 	defword_end
 
 ;;;;;;;;;;;;;;;;;;;;;;
-; input parseing words
+; input parsing words
 ;;;;;;;;;;;;;;;;;;;;;;
 
 	defword "parse-name", 0, WORD_PARSENAME, WORD_CALL_COMMA
@@ -2431,14 +2431,14 @@ xtskip_l3:
 	POPDSP ebx
 	test eax, eax
 	jz tryasnumber
-	jle nonimediate
+	jle nonimmediate
 executeword:
 	mov eax, ebx
 	POPDSP ebx
 	jmp eax
-nonimediate:
+nonimmediate:
 	mov eax, [var_WORD_STATE]
-	test eax, eax				; are we in imedeate mode ?
+	test eax, eax				; are we in immediate mode ?
 	jz executeword
 	jmp WORD_COMPILE_COMMA		; compile xt
 tryasnumber:

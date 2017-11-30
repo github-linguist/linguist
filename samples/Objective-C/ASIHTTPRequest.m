@@ -168,7 +168,7 @@ static NSOperationQueue *sharedQueue = nil;
 
 + (void)performInvocation:(NSInvocation *)invocation onTarget:(id *)target releasingObject:(id)objectToRelease;
 + (void)hideNetworkActivityIndicatorAfterDelay;
-+ (void)hideNetworkActivityIndicatorIfNeeeded;
++ (void)hideNetworkActivityIndicatorIfNeeded;
 + (void)runRequests;
 
 // Handling Proxy autodetection and PAC file downloads
@@ -3271,13 +3271,13 @@ static NSOperationQueue *sharedQueue = nil;
 	if ([[self class] isBandwidthThrottled]) {
 		[bandwidthThrottlingLock lock];
 		if (maxBandwidthPerSecond > 0) {
-			long long maxiumumSize  = (long long)maxBandwidthPerSecond-(long long)bandwidthUsedInLastSecond;
-			if (maxiumumSize < 0) {
+			long long maximumSize  = (long long)maxBandwidthPerSecond-(long long)bandwidthUsedInLastSecond;
+			if (maximumSize < 0) {
 				// We aren't supposed to read any more data right now, but we'll read a single byte anyway so the CFNetwork's buffer isn't full
 				bufferSize = 1;
-			} else if (maxiumumSize/4 < bufferSize) {
+			} else if (maximumSize/4 < bufferSize) {
 				// We were going to fetch more data that we should be allowed, so we'll reduce the size of our read
-				bufferSize = maxiumumSize/4;
+				bufferSize = maximumSize/4;
 			}
 		}
 		if (bufferSize < 1) {
@@ -4748,10 +4748,10 @@ static NSOperationQueue *sharedQueue = nil;
 /* Always called on main thread */
 + (void)hideNetworkActivityIndicatorAfterDelay
 {
-	[self performSelector:@selector(hideNetworkActivityIndicatorIfNeeeded) withObject:nil afterDelay:0.5];
+	[self performSelector:@selector(hideNetworkActivityIndicatorIfNeeded) withObject:nil afterDelay:0.5];
 }
 
-+ (void)hideNetworkActivityIndicatorIfNeeeded
++ (void)hideNetworkActivityIndicatorIfNeeded
 {
 	[connectionsLock lock];
 	if (runningRequestCount == 0) {

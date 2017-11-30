@@ -1485,7 +1485,7 @@ ClientRequest.prototype.onSocket = function(socket) {
     parser.incoming = null;
     socket._httpMessage = req;
 
-    // Setup "drain" propogation.
+    // Setup "drain" propagation.
     httpSocketSetup(socket);
 
     // Propagate headers limit from request object to parser
@@ -1747,7 +1747,7 @@ function connectionListener(socket) {
     }
 
     // When we're finished writing the response, check if this is the last
-    // respose, if so destroy the socket.
+    // response, if so destroy the socket.
     res.on('finish', function() {
       // Usually the first incoming element should be our request.  it may
       // be that in the case abortIncoming() was called that the incoming

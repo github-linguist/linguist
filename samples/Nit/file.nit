@@ -724,7 +724,7 @@ extern class FileStat `{ struct stat * `}
 	# Returns the size
 	fun size: Int is extern "file_FileStat_FileStat_size_0"
 
-	# Returns true if it is a regular file (not a device file, pipe, sockect, ...)
+	# Returns true if it is a regular file (not a device file, pipe, socket, ...)
 	fun is_reg: Bool `{ return S_ISREG(recv->st_mode); `}
 	# Returns true if it is a directory
 	fun is_dir: Bool `{ return S_ISDIR(recv->st_mode); `}

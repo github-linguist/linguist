@@ -23,7 +23,7 @@ THE SOFTWARE.*/
 /////////////////////////////////////////
 //Height is the height of 1 box
 //Menu syntax:
-//  |s = seperator (Bug: if |s is placed next to a |n an extra menu item would be added)
+//  |s = separator (Bug: if |s is placed next to a |n an extra menu item would be added)
 //  |n = new item
 var str, background, foreground,xx,yy, width, height;
 str = " "+argument0 //A hacky thing so that it draws the first item properly, I should probably properly fix this later
@@ -91,12 +91,12 @@ for (i=0;i<ds_list_size(item_list);i+=1) //Go through the list of menu items
 
 
     draw_set_color(background)
-    //draw_rectangle(xx,yy+(height*i),xx+width,yy+(height),false) //Draw the rectange for this one, we're doing this so we can add cool effects to each of them
+    //draw_rectangle(xx,yy+(height*i),xx+width,yy+(height),false) //Draw the rectangle for this one, we're doing this so we can add cool effects to each of them
     draw_set_color(foreground)
     
     if ds_list_find_value(item_list,i)="|s"
     {  
-        draw_line(xx+hpadding,yy+((height*(i+0.5))/2)+vpadding,xx+width,yy+((height*(i+0.5))/2)+vpadding) //Draw the seperator
+        draw_line(xx+hpadding,yy+((height*(i+0.5))/2)+vpadding,xx+width,yy+((height*(i+0.5))/2)+vpadding) //Draw the separator
     }
     else
     {

@@ -76,7 +76,7 @@ Note, You can't use the same listening port with HTTP modules.
 
 = Directives =
 
-== ngx_tcp_moodule ==
+== ngx_tcp_module ==
 
 === tcp ===
 
@@ -89,7 +89,7 @@ Note, You can't use the same listening port with HTTP modules.
 '''description:''' All the tcp related directives are contained in the tcp block.
 
 
-'''ngx_tcp_core_moodule'''
+'''ngx_tcp_core_module'''
 
 === server ===
 
@@ -388,7 +388,7 @@ The table field meanings are:
 
 === proxy_connect_timeout ===
 
-'''syntax:''' ''proxy_connect_timeout miliseconds''
+'''syntax:''' ''proxy_connect_timeout milliseconds''
 
 '''default:''' ''60000''
 
@@ -398,7 +398,7 @@ The table field meanings are:
 
 === proxy_read_timeout ===
 
-'''syntax:''' ''proxy_read_timeout miliseconds''
+'''syntax:''' ''proxy_read_timeout milliseconds''
 
 '''default:''' ''60000''
 
@@ -408,7 +408,7 @@ The table field meanings are:
 
 === proxy_send_timeout ===
 
-'''syntax:''' ''proxy_send_timeout miliseconds''
+'''syntax:''' ''proxy_send_timeout milliseconds''
 
 '''default:''' ''60000''
 
@@ -441,7 +441,7 @@ The table field meanings are:
 
 === websocket_connect_timeout ===
 
-'''syntax:''' ''websocket_connect_timeout miliseconds''
+'''syntax:''' ''websocket_connect_timeout milliseconds''
 
 '''default:''' ''60000''
 
@@ -451,17 +451,17 @@ The table field meanings are:
 
 === websocket_read_timeout ===
 
-'''syntax:''' ''websocket_read_timeout miliseconds''
+'''syntax:''' ''websocket_read_timeout milliseconds''
 
 '''default:''' ''60000''
 
 '''context:''' ''tcp, server''
 
-'''description:''' set the timeout value of reading from backends. Your timeout will be the minimum of this and the *timeout* parameter, so if you want a long timeout for your websockets, make sure to set both paramaters.
+'''description:''' set the timeout value of reading from backends. Your timeout will be the minimum of this and the *timeout* parameter, so if you want a long timeout for your websockets, make sure to set both parameters.
 
 === websocket_send_timeout ===
 
-'''syntax:''' ''websocket_send_timeout miliseconds''
+'''syntax:''' ''websocket_send_timeout milliseconds''
 
 '''default:''' ''60000''
 
@@ -472,7 +472,7 @@ The table field meanings are:
 
 == ngx_tcp_ssl_module ==
 
-The default config file includes this ngx_tcp_ssl_module. If you want to just compile nginx without ngx_tcp_ssl_module, copy the ngx_tcp_proxy_module/config_without_ssl to ngx_tcp_proxy_module/config,  reconfigrure and compile nginx.
+The default config file includes this ngx_tcp_ssl_module. If you want to just compile nginx without ngx_tcp_ssl_module, copy the ngx_tcp_proxy_module/config_without_ssl to ngx_tcp_proxy_module/config,  reconfigure and compile nginx.
 
 === ssl ===
 
@@ -606,7 +606,7 @@ The directive sets the types and sizes of caches to store the SSL sessions.
 The cache types are:
 
 * off -- Hard off: nginx says explicitly to a client that sessions can not reused.
-* none -- Soft off: nginx says to a client that session can be resued, but nginx actually never reuses them. This is workaround for some mail clients as ssl_session_cache may be used in mail proxy as well as in HTTP server.
+* none -- Soft off: nginx says to a client that session can be reused, but nginx actually never reuses them. This is workaround for some mail clients as ssl_session_cache may be used in mail proxy as well as in HTTP server.
 * builtin -- the OpenSSL builtin cache, is used inside one worker process only. The cache size is assigned in the number of the sessions. Note: there appears to be a memory fragmentation issue using this method, please take that into consideration when using this. See "References" below.
 * shared -- the cache is shared between all worker processes. The size of the cache is assigned in bytes: 1 MB cache can contain roughly 4000 sessions. Each shared cache must be given an arbitrary name. A shared cache with a given name can be used in several virtual hosts.
 It's possible to use both types of cache &mdash; builtin and shared &mdash; simultaneously, for example:

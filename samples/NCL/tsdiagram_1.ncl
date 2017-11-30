@@ -1,7 +1,7 @@
 ; Read potential temp (TEMP), salinity (SALT)
 ; Compute potential density (PD) for specified range PD(t,s)
 ; (use ncl function based on Yeager's algorithm for rho computation)
-; Assumes annual and zonally avgeraged input data set (i.e, one time slice)
+; Assumes annual and zonally averaged input data set (i.e, one time slice)
 ; Used K.Lindsay's "za" for zonal avg -- already binned into basins
 ; Plots temp vs salt (scatter plot), pd overlay
 
@@ -92,7 +92,7 @@ begin
   ydata = tdata_ba
   xdata = sdata_ba
 
-;============== compute potenial density (PD), using rho_mwjf
+;============== compute potential density (PD), using rho_mwjf
 ;
 ; for potential density, depth = 0. (i.e. density as if brought to surface)
 ;

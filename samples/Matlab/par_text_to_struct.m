@@ -6,7 +6,7 @@ function par = par_text_to_struct(pathToFile)
 % ----------
 % pathToFile : string
 %   Path to a text file containing the benchmark parameters for a single
-%   bicycle. The parameters should be on seperate lines and take this form:
+%   bicycle. The parameters should be on separate lines and take this form:
 %
 %   c = 0.08+/-0.01
 %   lam = 0.31

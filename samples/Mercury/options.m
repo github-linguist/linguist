@@ -4389,7 +4389,7 @@ options_help_compilation_model -->
 %       "--no-profile-deep-coverage-branch-disj",
 %       "\tDisable coverage points at the beginning of disjunction branches.",
 
-%       I beleive these options are broken - pbone.
+%       I believe these options are broken - pbone.
 %       "Switches to tune the coverage profiling pass, useful for ",
 %       "debugging.",
 %
@@ -4474,7 +4474,7 @@ options_help_compilation_model -->
         % RBMM is undocumented since it is still experimental.
         % should also document rbmmd rbmmp rbmmdp
         %"--use-regions\t\t(grade modifier: `.rbmm')",
-        %"\tEnable support for region-based memory managment."
+        %"\tEnable support for region-based memory management."
         %"--use-alloc-regions",
         %"\tCompute and use the exact set of regions",
         %"\t that may be allocated into by a call."

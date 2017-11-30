@@ -1,5 +1,5 @@
 /*
- *  objsql.m - implementaion simple persistence layer using objcpp.h
+ *  objsql.m - implementation simple persistence layer using objcpp.h
  *  ========
  *
  *  Created by John Holdsworth on 01/04/2009.
@@ -18,7 +18,7 @@
  *  it in Xcode and open it's "Info". To enable mixed compilation,
  *  for the file's "File Type" select: "sourcecode.cpp.objcpp".
  *
- *  For bugs or ommisions please email objcpp@johnholdsworth.com
+ *  For bugs or omissions please email objcpp@johnholdsworth.com
  *
  *  Home page for updates and docs: http://objcpp.johnholdsworth.com
  *
@@ -1213,7 +1213,7 @@ void ooArcRetain( id value ) {
  Bind a record to a view containing elements which are to display values from the record.
  The ivar number is selected by the subview's tag value and it's ".text" property if set to
  the value returned record value "stringValue" for the ivar. Supports images stored as
- NSData objects, UISwitches bound to boolean valuea and UITextField for alll other values.
+ NSData objects, UISwitches bound to boolean valuea and UITextField for all other values.
  */
 
 + (void)bindRecord:(id)record toView:(OOView *)view delegate:(id)delegate {

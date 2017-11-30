@@ -78,7 +78,7 @@ lvar check-obj-addr
    
 : colon-err ( d s -- )
    swap unparseobj
-   " has an unnecesary ':' at the start of its "
+   " has an unnecessary ':' at the start of its "
    strcat swap strcat
    " message." strcat .tell
 ;
