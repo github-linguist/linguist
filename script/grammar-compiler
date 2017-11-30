@@ -1,0 +1,12 @@
+#!/bin/sh
+
+set -e
+cd "$(dirname "$0")/.."
+
+image="linguist/grammar-compiler:latest"
+mkdir -p grammars
+
+exec docker run --rm \
+    -u $(id -u $USER):$(id -g $USER) \
+    -v $PWD:/src/linguist \
+    -w /src/linguist -ti $image "$@"
