@@ -2,6 +2,9 @@
 #include "linguist.h"
 #include "lex.linguist_yy.h"
 
+// Anything longer is unlikely to be useful.
+#define MAX_TOKEN_LEN 64
+
 int linguist_yywrap(yyscan_t yyscanner) {
 	return 1;
 }
@@ -32,19 +35,27 @@ static VALUE rb_tokenizer_extract_tokens(VALUE self, VALUE rb_data) {
 		case NO_ACTION:
 			break;
 		case REGULAR_TOKEN:
-			rb_ary_push(ary, rb_str_new2(extra.token));
+			len = strlen(extra.token);
+			if (len <= MAX_TOKEN_LEN)
+				rb_ary_push(ary, rb_str_new(extra.token, len));
 			free(extra.token);
 			break;
 		case SHEBANG_TOKEN:
-			s = rb_str_new2("SHEBANG#!");
-			rb_str_cat2(s, extra.token);
-			rb_ary_push(ary, s);
+			len = strlen(extra.token);
+			if (len <= MAX_TOKEN_LEN) {
+				s = rb_str_new2("SHEBANG#!");
+				rb_str_cat(s, extra.token, len);
+				rb_ary_push(ary, s);
+			}
 			free(extra.token);
 			break;
 		case SGML_TOKEN:
-			s = rb_str_new2(extra.token);
-			rb_str_cat2(s, ">");
-			rb_ary_push(ary, s);
+			len = strlen(extra.token);
+			if (len <= MAX_TOKEN_LEN) {
+				s = rb_str_new(extra.token, len);
+				rb_str_cat2(s, ">");
+				rb_ary_push(ary, s);
+			}
 			free(extra.token);
 			break;
 		}
