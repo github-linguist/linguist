@@ -35,6 +35,10 @@
 # Linters
 - cpplint.py
 
+# JS packet-manager vendor files (npm, yarn)
+- (^|/)package-lock\.json$
+- (^|/)yarn\.lock$
+
 # Node dependencies
 - node_modules/
 
