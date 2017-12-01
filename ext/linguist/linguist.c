@@ -3,7 +3,7 @@
 #include "lex.linguist_yy.h"
 
 // Anything longer is unlikely to be useful.
-#define MAX_TOKEN_LEN 64
+#define MAX_TOKEN_LEN 32
 
 int linguist_yywrap(yyscan_t yyscanner) {
 	return 1;
