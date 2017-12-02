@@ -279,16 +279,6 @@ Arc:
   tm_scope: none
   ace_mode: text
   language_id: 20
-Arduino:
-  type: programming
-  color: "#bd79d1"
-  extensions:
-  - ".ino"
-  tm_scope: source.c++
-  ace_mode: c_cpp
-  codemirror_mode: clike
-  codemirror_mime_type: text/x-c++src
-  language_id: 21
 AsciiDoc:
   type: prose
   ace_mode: asciidoc
@@ -532,6 +522,7 @@ C++:
   - ".re"
   - ".tcc"
   - ".tpp"
+  - ".ino"
   language_id: 43
 C-ObjDump:
   type: data
