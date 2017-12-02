@@ -379,7 +379,7 @@ module Linguist
     end
 
     disambiguate ".pro" do |data|
-      if /^[^#]+:-/.match(data)
+      if /^[^\[#]+:-/.match(data)
         Language["Prolog"]
       elsif data.include?("last_client=")
         Language["INI"]
