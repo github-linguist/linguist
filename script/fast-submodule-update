@@ -1,0 +1,67 @@
+#!/usr/bin/env ruby
+
+require "thread"
+
+ROOT = File.expand_path("../..", __FILE__).freeze
+Dir.chdir(ROOT)
+
+SUBMODULES = `git config --list --file .gitmodules`.lines.grep(/\.path=/).map { |line| line.chomp.split("=", 2).last }.freeze
+SLOW_SUBMODULES = %w[
+  vendor/grammars/factor
+  vendor/grammars/fsharpbinding
+  vendor/grammars/ioke-outdated
+]
+
+class TaskResult < Struct.new(:submodule, :output, :status); end
+
+def run_process(*args)
+  read, write = IO.pipe
+  pid = Process.spawn(*args, in: :close, out: write, err: [:child, :out])
+  write.close
+  output = read.read
+  read.close
+  Process.wait(pid)
+  [output, $?]
+end
+
+def update_submodule(submodule)
+  output, status = run_process("git", "submodule", "update", "--", submodule)
+  TaskResult.new(submodule, output, status)
+end
+
+def run_thread(submodules, results)
+  loop do
+    begin
+      submodule = submodules.pop(true)
+    rescue ThreadError
+      # The queue is empty.
+      break
+    end
+
+    results.push(update_submodule(submodule))
+  end
+end
+
+submodules = Queue.new
+results = Queue.new
+
+# Update the slow submodules first so they can update in the background while
+# the fast ones run.
+SUBMODULES.partition { |submodule| SLOW_SUBMODULES.include?(submodule) }.flatten.each do |submodule|
+  submodules.push(submodule)
+end
+
+(ARGV.first || 8).to_i.times do
+  Thread.new { run_thread(submodules, results) }
+end
+
+success = true
+SUBMODULES.each do
+  result = results.pop
+  unless result.status.success?
+    success = false
+    puts "Error updating #{result.submodule}"
+  end
+  puts result.output if result.output =~ /\S/
+end
+exit success ? 0 : 1

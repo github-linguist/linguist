@@ -2,12 +2,11 @@ require 'linguist/generated'
 require 'charlock_holmes'
 require 'escape_utils'
 require 'mime/types'
-require 'pygments'
 require 'yaml'
 
 module Linguist
   # DEPRECATED Avoid mixing into Blob classes. Prefer functional interfaces
-  # like `Language.detect` over `Blob#language`. Functions are much easier to
+  # like `Linguist.detect` over `Blob#language`. Functions are much easier to
   # cache and compose.
   #
   # Avoid adding additional bloat to this module.
@@ -100,7 +99,7 @@ module Linguist
       elsif name.nil?
         "attachment"
       else
-        "attachment; filename=#{EscapeUtils.escape_url(File.basename(name))}"
+        "attachment; filename=#{EscapeUtils.escape_url(name)}"
       end
     end
 
@@ -145,6 +144,13 @@ module Linguist
       else
         detect_encoding[:type] == :binary
       end
+    end
+
+    # Public: Is the blob empty?
+    #
+    # Return true or false
+    def empty?
+      data.nil? || data == ""
     end
 
     # Public: Is the blob text?
@@ -193,19 +199,12 @@ module Linguist
 
     # Public: Is the blob safe to colorize?
     #
-    # We use Pygments for syntax highlighting blobs. Pygments
-    # can be too slow for very large blobs or for certain
-    # corner-case blobs.
-    #
     # Return true or false
     def safe_to_colorize?
       !large? && text? && !high_ratio_of_long_lines?
     end
 
     # Internal: Does the blob have a ratio of long lines?
-    #
-    # These types of files are usually going to make Pygments.rb
-    # angry if we try to colorize them.
     #
     # Return true or false
     def high_ratio_of_long_lines?
@@ -234,7 +233,22 @@ module Linguist
     #
     # Return true or false
     def vendored?
-      name =~ VendoredRegexp ? true : false
+      path =~ VendoredRegexp ? true : false
+    end
+
+    documentation_paths = YAML.load_file(File.expand_path("../documentation.yml", __FILE__))
+    DocumentationRegexp = Regexp.new(documentation_paths.join('|'))
+
+    # Public: Is the blob in a documentation directory?
+    #
+    # Documentation files are ignored by language statistics.
+    #
+    # See "documentation.yml" for a list of documentation conventions that match
+    # this pattern.
+    #
+    # Return true or false
+    def documentation?
+      path =~ DocumentationRegexp ? true : false
     end
 
     # Public: Get each line of data
@@ -261,10 +275,8 @@ module Linguist
           # also--importantly--without having to duplicate many (potentially
           # large) strings.
           begin
-            encoded_newlines = ["\r\n", "\r", "\n"].
-              map { |nl| nl.encode(ruby_encoding, "ASCII-8BIT").force_encoding(data.encoding) }
-
-            data.split(Regexp.union(encoded_newlines), -1)
+            
+            data.split(encoded_newlines_re, -1)
           rescue Encoding::ConverterNotFoundError
             # The data is not splittable in the detected encoding.  Assume it's
             # one big line.
@@ -273,6 +285,51 @@ module Linguist
         else
           []
         end
+    end
+
+    def encoded_newlines_re
+      @encoded_newlines_re ||= Regexp.union(["\r\n", "\r", "\n"].
+                                              map { |nl| nl.encode(ruby_encoding, "ASCII-8BIT").force_encoding(data.encoding) })
+
+    end
+
+    def first_lines(n)
+      return lines[0...n] if defined? @lines
+      return [] unless viewable? && data
+
+      i, c = 0, 0
+      while c < n && j = data.index(encoded_newlines_re, i)
+        i = j + $&.length
+        c += 1
+      end
+      data[0...i].split(encoded_newlines_re, -1)
+    end
+
+    def last_lines(n)
+      if defined? @lines
+        if n >= @lines.length
+          @lines
+        else
+          lines[-n..-1]
+        end
+      end
+      return [] unless viewable? && data
+
+      no_eol = true
+      i, c = data.length, 0
+      k = i
+      while c < n && j = data.rindex(encoded_newlines_re, i - 1)
+        if c == 0 && j + $&.length == i
+          no_eol = false
+          n += 1
+        end
+        i = j
+        k = j + $&.length
+        c += 1
+      end
+      r = data[k..-1].split(encoded_newlines_re, -1)
+      r.pop if !no_eol
+      r
     end
 
     # Public: Get number of lines of code
@@ -302,7 +359,7 @@ module Linguist
     #
     # Return true or false
     def generated?
-      @_generated ||= Generated.generated?(name, lambda { data })
+      @_generated ||= Generated.generated?(path, lambda { data })
     end
 
     # Public: Detects the Language of the blob.
@@ -311,26 +368,22 @@ module Linguist
     #
     # Returns a Language or nil if none is detected
     def language
-      @language ||= Language.detect(self)
+      @language ||= Linguist.detect(self)
     end
 
-    # Internal: Get the lexer of the blob.
-    #
-    # Returns a Lexer.
-    def lexer
-      language ? language.lexer : Pygments::Lexer.find_by_name('Text only')
+    # Internal: Get the TextMate compatible scope for the blob
+    def tm_scope
+      language && language.tm_scope
     end
 
-    # Public: Highlight syntax of blob
-    #
-    # options - A Hash of options (defaults to {})
-    #
-    # Returns html String
-    def colorize(options = {})
-      return unless safe_to_colorize?
-      options[:options] ||= {}
-      options[:options][:encoding] ||= encoding
-      lexer.highlight(data, options)
+    DETECTABLE_TYPES = [:programming, :markup].freeze
+
+    # Internal: Should this blob be included in repository language statistics?
+    def include_in_language_stats?
+      !vendored? &&
+      !documentation? &&
+      !generated? &&
+      language && DETECTABLE_TYPES.include?(language.type)
     end
   end
 end

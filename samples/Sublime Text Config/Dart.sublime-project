@@ -1,0 +1,40 @@
+{
+	"folders":
+	[
+		{
+			"follow_symlinks": true,
+			"path": "."
+		}
+	],
+
+	"SublimeLinter":
+	{
+		"@python": 3.4
+	},
+
+	"build_systems":
+	[
+		{
+			"name": "Run",
+			"shell_cmd": "\"$project_path/scripts/build.sh\"",
+			"windows":
+			{
+				"shell_cmd": "powershell -noninteractive -file \"$project_path\\build.ps1\""
+			},
+			"working_dir": "${project_path}",
+
+			"variants": [
+				{
+					"name": "Dart: Test (All)",
+					"target": "run_dart_tests",
+				},
+
+				{
+					"name": "Dart: Test (This File Only)",
+					"target": "run_dart_tests",
+					"active_file_only": true
+				}
+			]
+		}
+	]
+}

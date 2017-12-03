@@ -10,17 +10,23 @@ Gem::Specification.new do |s|
   s.homepage = "https://github.com/github/linguist"
   s.license  = "MIT"
 
-  s.files = Dir['lib/**/*']
-  s.executables << 'linguist'
+  s.files = Dir['lib/**/*'] + Dir['ext/**/*'] + Dir['grammars/*'] + ['LICENSE']
+  s.executables = ['linguist', 'git-linguist']
+  s.extensions = ['ext/linguist/extconf.rb']
 
-  s.add_dependency 'charlock_holmes', '~> 0.7.3'
-  s.add_dependency 'escape_utils',    '~> 1.0.1'
-  s.add_dependency 'mime-types',      '~> 1.19'
-  s.add_dependency 'pygments.rb',     '~> 0.6.0'
-  s.add_dependency 'rugged',          '~> 0.21.0'
+  s.add_dependency 'charlock_holmes', '~> 0.7.5'
+  s.add_dependency 'escape_utils',    '~> 1.1.0'
+  s.add_dependency 'mime-types',      '>= 1.19'
+  s.add_dependency 'rugged',          '>= 0.25.1'
 
-  s.add_development_dependency 'json'
+  s.add_development_dependency 'minitest', '>= 5.0'
+  s.add_development_dependency 'rake-compiler', '~> 0.9'
   s.add_development_dependency 'mocha'
+  s.add_development_dependency 'plist', '~>3.1'
+  s.add_development_dependency 'pry'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'yajl-ruby'
+  s.add_development_dependency 'color-proximity', '~> 0.2.1'
+  s.add_development_dependency 'licensed'
+  s.add_development_dependency 'licensee', '~> 8.8.0'
 end

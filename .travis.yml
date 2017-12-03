@@ -1,11 +1,32 @@
-before_install: 
-  - git fetch origin master:master
-  - git fetch origin v2.0.0:v2.0.0
-  - sudo apt-get install libicu-dev -y
-  - gem update --system 2.1.11
+language: ruby
+sudo: false
+
+addons:
+  apt:
+    packages:
+    - libicu-dev
+    - libicu48
+
+before_install: script/travis/before_install
+
+script:
+  - bundle exec rake
+  - script/licensed verify
+
 rvm:
-  - 1.9.3
-  - 2.0.0
-  - 2.1.1
+  - 2.1
+  - 2.2
+  - 2.3.3
+  - 2.4.0
+
 notifications:
   disabled: true
+
+git:
+  submodules: false
+  depth: 3
+
+cache: bundler
+dist: precise
+
+bundler_args: --without debug
