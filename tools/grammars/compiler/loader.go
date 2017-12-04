@@ -81,7 +81,7 @@ func (repo *Repository) CompareScopes(scopes []string) {
 	}
 }
 
-func (repo *Repository) FixRules(knownScopes map[string]*Repository) {
+func (repo *Repository) FixRules(knownScopes map[string]bool) {
 	for _, file := range repo.Files {
 		w := walker{
 			File:    file,

@@ -3,7 +3,6 @@ package compiler
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"os"
 	"path"
@@ -52,6 +51,16 @@ func (conv *Converter) work() {
 	conv.wg.Done()
 }
 
+func (conv *Converter) tmpScopes() map[string]bool {
+	scopes := make(map[string]bool)
+	for _, ary := range conv.grammars {
+		for _, s := range ary {
+			scopes[s] = true
+		}
+	}
+	return scopes
+}
+
 func (conv *Converter) AddGrammar(source string) error {
 	repo := conv.Load(source)
 	if len(repo.Files) == 0 {
@@ -61,17 +70,30 @@ func (conv *Converter) AddGrammar(source string) error {
 	conv.grammars[source] = repo.Scopes()
 	conv.modified = true
 
+	knownScopes := conv.tmpScopes()
+	repo.FixRules(knownScopes)
+
+	if len(repo.Errors) > 0 {
+		fmt.Fprintf(os.Stderr, "The new grammar %s contains %d errors:\n",
+			repo, len(repo.Errors))
+		for _, err := range repo.Errors {
+			fmt.Fprintf(os.Stderr, "    - %s\n", err)
+		}
+		fmt.Fprintf(os.Stderr, "\n")
+		return fmt.Errorf("failed to compile the given grammar")
+	}
+
 	fmt.Printf("OK! added grammar source '%s'\n", source)
 	for scope := range repo.Files {
 		fmt.Printf("\tnew scope: %s\n", scope)
 	}
-
 	return nil
 }
 
-func (conv *Converter) ScopeMap() map[string]*Repository {
+func (conv *Converter) AllScopes() map[string]bool {
+	// Map from scope -> Repository first to error check
+	// possible duplicates
 	allScopes := make(map[string]*Repository)
-
 	for _, repo := range conv.Loaded {
 		for scope := range repo.Files {
 			if original := allScopes[scope]; original != nil {
@@ -82,7 +104,12 @@ func (conv *Converter) ScopeMap() map[string]*Repository {
 		}
 	}
 
-	return allScopes
+	// Convert to scope -> bool
+	scopes := make(map[string]bool)
+	for s := range allScopes {
+		scopes[s] = true
+	}
+	return scopes
 }
 
 func (conv *Converter) ConvertGrammars(update bool) error {
@@ -112,7 +139,7 @@ func (conv *Converter) ConvertGrammars(update bool) error {
 		conv.modified = true
 	}
 
-	knownScopes := conv.ScopeMap()
+	knownScopes := conv.AllScopes()
 
 	for source, repo := range conv.Loaded {
 		repo.FixRules(knownScopes)
@@ -190,7 +217,7 @@ func (conv *Converter) WriteGrammarList() error {
 	return ioutil.WriteFile(ymlpath, outyml, 0666)
 }
 
-func (conv *Converter) Report(w io.Writer) {
+func (conv *Converter) Report() error {
 	var failed []*Repository
 	for _, repo := range conv.Loaded {
 		if len(repo.Errors) > 0 {
@@ -202,13 +229,20 @@ func (conv *Converter) Report(w io.Writer) {
 		return failed[i].Source < failed[j].Source
 	})
 
+	total := 0
 	for _, repo := range failed {
-		fmt.Fprintf(w, "- [ ] %s (%d errors)\n", repo, len(repo.Errors))
+		fmt.Fprintf(os.Stderr, "- [ ] %s (%d errors)\n", repo, len(repo.Errors))
 		for _, err := range repo.Errors {
-			fmt.Fprintf(w, "    - [ ] %s\n", err)
+			fmt.Fprintf(os.Stderr, "    - [ ] %s\n", err)
 		}
-		fmt.Fprintf(w, "\n")
+		fmt.Fprintf(os.Stderr, "\n")
+		total += len(repo.Errors)
 	}
+
+	if total > 0 {
+		return fmt.Errorf("the grammar library contains %d errors", total)
+	}
+	return nil
 }
 
 func NewConverter(root string) (*Converter, error) {

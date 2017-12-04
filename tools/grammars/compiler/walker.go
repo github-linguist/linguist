@@ -19,7 +19,7 @@ func (w *walker) checkInclude(rule *grammar.Rule) {
 	}
 
 	include = strings.Split(include, "#")[0]
-	_, ok := w.Known[include]
+	ok := w.Known[include]
 	if !ok {
 		if !w.Missing[include] {
 			w.Missing[include] = true
@@ -73,7 +73,7 @@ func (w *walker) walk(rule *grammar.Rule) {
 
 type walker struct {
 	File    *LoadedFile
-	Known   map[string]*Repository
+	Known   map[string]bool
 	Missing map[string]bool
 	Errors  []error
 }
