@@ -9,4 +9,4 @@ mkdir -p grammars
 exec docker run --rm \
     -u $(id -u $USER):$(id -g $USER) \
     -v $PWD:/src/linguist \
-    -w /src/linguist -ti $image "$@"
+    -w /src/linguist $image "$@"

@@ -26,6 +26,12 @@
   revision = "06020f85339e21b2478f756a78e295255ffa4d6a"
 
 [[projects]]
+  name = "github.com/urfave/cli"
+  packages = ["."]
+  revision = "cfb38830724cc34fedffe9a2a29fb54fa9169cd1"
+  version = "v1.20.0"
+
+[[projects]]
   name = "gopkg.in/cheggaaa/pb.v1"
   packages = ["."]
   revision = "657164d0228d6bebe316fdf725c69f131a50fb10"
@@ -40,6 +46,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "eb10157687c05a542025c119a5280abe429e29141bde70dd437d48668f181861"
+  inputs-digest = "ba2e3150d728692b49e3e2d652b6ea23db82777c340e0c432cd4af6f0eef9f55"
   solver-name = "gps-cdcl"
   solver-version = 1
