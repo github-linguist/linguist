@@ -56,7 +56,7 @@ end
 
 task :build_gem => :samples do
   rm_rf "grammars"
-  sh "script/grammar-compiler update"
+  sh "script/grammar-compiler compile -o grammars"
   languages = YAML.load_file("lib/linguist/languages.yml")
   File.write("lib/linguist/languages.json", Yajl.dump(languages))
   `gem build github-linguist.gemspec`
