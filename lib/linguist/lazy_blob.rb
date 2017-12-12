@@ -80,6 +80,11 @@ module Linguist
       @size
     end
 
+    def symlink?
+      # We don't create LazyBlobs for symlinks.
+      false
+    end
+
     def cleanup!
       @data.clear if @data
     end
