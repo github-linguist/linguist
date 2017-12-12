@@ -16,6 +16,8 @@ module Linguist
     #
     # Returns an Array of languages, or empty if none matched or were inconclusive.
     def self.call(blob, candidates)
+      return [] if blob.symlink?
+
       data = blob.data[0...HEURISTICS_CONSIDER_BYTES]
 
       @heuristics.each do |heuristic|
