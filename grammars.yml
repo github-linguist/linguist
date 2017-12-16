@@ -1,4 +1,3 @@
----
 https://bitbucket.org/Clams/sublimesystemverilog/get/default.tar.gz:
 - source.systemverilog
 - source.ucfconstraints
@@ -45,8 +44,6 @@ vendor/grammars/Isabelle.tmbundle:
 - source.isabelle.theory
 vendor/grammars/JSyntax:
 - source.j
-vendor/grammars/Julia.tmbundle:
-- source.julia
 vendor/grammars/Lean.tmbundle:
 - source.lean
 vendor/grammars/LiveScript.tmbundle:
@@ -130,6 +127,9 @@ vendor/grammars/SublimePuppet:
 - source.puppet
 vendor/grammars/SublimeXtend:
 - source.xtend
+vendor/grammars/Syntax-highlighting-for-PostCSS:
+- source.css.postcss.sugarss
+- source.postcss
 vendor/grammars/TLA:
 - source.tla
 vendor/grammars/TXL:
@@ -192,6 +192,9 @@ vendor/grammars/atom-language-1c-bsl:
 vendor/grammars/atom-language-clean:
 - source.clean
 - text.restructuredtext.clean
+vendor/grammars/atom-language-julia:
+- source.julia
+- source.julia.console
 vendor/grammars/atom-language-p4:
 - source.p4
 vendor/grammars/atom-language-perl6:
@@ -340,6 +343,8 @@ vendor/grammars/java.tmbundle:
 - source.java-properties
 - text.html.jsp
 - text.junit-test-report
+vendor/grammars/javadoc.tmbundle:
+- text.html.javadoc
 vendor/grammars/javascript-objective-j.tmbundle:
 - source.js.objj
 vendor/grammars/jflex.tmbundle:
@@ -386,6 +391,8 @@ vendor/grammars/language-csound:
 - source.csound-score
 vendor/grammars/language-css:
 - source.css
+vendor/grammars/language-cwl:
+- source.cwl
 vendor/grammars/language-emacs-lisp:
 - source.emacs.lisp
 vendor/grammars/language-fontforge:
@@ -500,6 +507,8 @@ vendor/grammars/language-yaml:
 - source.yaml
 vendor/grammars/language-yang:
 - source.yang
+vendor/grammars/language-yara:
+- source.yara
 vendor/grammars/latex.tmbundle:
 - text.bibtex
 - text.log.latex
@@ -566,7 +575,7 @@ vendor/grammars/opa.tmbundle:
 - source.opa
 vendor/grammars/openscad.tmbundle:
 - source.scad
-vendor/grammars/oz-tmbundle/Syntaxes/Oz.tmLanguage:
+vendor/grammars/oz-tmbundle:
 - source.oz
 vendor/grammars/parrot:
 - source.parrot.pir

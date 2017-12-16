@@ -18,6 +18,8 @@ module Linguist
     #
     # Returns an Array of Language objects, most probable first.
     def self.call(blob, possible_languages)
+      return [] if blob.symlink?
+
       language_names = possible_languages.map(&:name)
       classify(Samples.cache, blob.data[0...CLASSIFIER_CONSIDER_BYTES], language_names).map do |name, _|
         Language[name] # Return the actual Language objects
