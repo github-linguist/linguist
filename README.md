@@ -22,11 +22,13 @@ If an [explicit language override](#using-gitattributes) has been used, that lan
 - heuristics,
 - naïve Bayesian classification
 
-The results of this analysis is used to produce the language stats bar.
+The results of this analysis is used to produce the language stats bar which displays the languages percentages for the files in the repository. The percentages are calculated based on the bytes of code for each language as reported by the [List Languages](https://developer.github.com/v3/repos/#list-languages) API.
 
 ![language stats bar](https://cloud.githubusercontent.com/assets/173/5562290/48e24654-8ddf-11e4-8fe7-735b0ce3a0d3.png)
 
-The stats bar displays languages percentages for the files in the repository. The percentages are calculated based on the bytes of code for each language as reported by the [List Languages](https://developer.github.com/v3/repos/#list-languages) API.
+### How Linguist works on GitHub.com
+
+When you push changes to a repository on GitHub.com, a low priority background job is enqueued to analyze your repository as explained above. The results of this analysis are cached for the lifetime of your repository and are only updated when the repository is updated. As this analysis is performed by a low priority background job, it can take a while, particularly during busy periods, for your language statistics bar to reflect your changes.
 
 
 ## Usage
@@ -93,6 +95,8 @@ If the language stats bar is reporting a language that you don't expect:
 1. If the files are misclassified, search for [open issues][issues] to see if anyone else has already reported the issue. Any information you can add, especially links to public repositories, is helpful. You can also use the [manual overrides](#overrides) feature to correctly classify them in your repository.
 1. If there are no reported issues of this misclassification, [open an issue][new-issue] and include a link to the repository or a sample of the code that is being misclassified.
 
+Keep in mind that the repository language stats are only [updated when you push changes](#how-linguist-works-on-github-com), and the results are cached for the lifetime of your repository. If you have not made any changes to your repository in a while, you may find pushing another change will correct the stats.
+
 ### My repository isn't showing my language
 
 Linguist does not consider [vendored code](#vendored-code), [generated code](#generated-code), [documentation](#documentation), or `data` and `prose` languages (as defined by the `type` attribute in [`languages.yml`](/lib/linguist/languages.yml)) when calculating the repository language statistics.
@@ -103,7 +107,7 @@ If the language statistics bar is not showing your language at all, it could be 
 1. The extension you have chosen is not associated with your language in [`languages.yml`](/lib/linguist/languages.yml).
 1. All the files in your repository fall into one of the categories listed above that Linguist excludes by default.
 
-If Linguist doesn't know about the language or the extension you're using, consider [contributing](/CONTRIBUTING.md) to Linguist by opening a pull request to add support for your language or extension. For everything else, you can use the [manual overrides](#overrides) feature to tell Linguist to include your files in the language statistics.
+If Linguist doesn't know about the language or the extension you're using, consider [contributing](CONTRIBUTING.md) to Linguist by opening a pull request to add support for your language or extension. For everything else, you can use the [manual overrides](#overrides) feature to tell Linguist to include your files in the language statistics.
 
 ### There's a problem with the syntax highlighting of a file
 
