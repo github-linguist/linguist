@@ -13,7 +13,7 @@ Linguist takes the list of languages it knows from [`languages.yml`](/lib/lingui
 
 Linguist starts by going through all the files in a repository and excludes all files that it determines to be binary data, [vendored code](#vendored-code), [generated code](#generated-code), [documentation](#documentation), or are defined as `data` or `prose` languages, whilst taking into account any [overrides](#overrides).
 
-If an [explicit language override](using-gitattributes) has been used, that language is used for the matching files. The language of each remaining file is then determined using the following strategies, in order, with each step either identifying the precise language or reducing the number of likely languages passed down to the next strategy:
+If an [explicit language override](#using-gitattributes) has been used, that language is used for the matching files. The language of each remaining file is then determined using the following strategies, in order, with each step either identifying the precise language or reducing the number of likely languages passed down to the next strategy:
 
 - Vim or Emacs modeline,
 - commonly used filename,
@@ -151,7 +151,9 @@ docs/formatter.rb linguist-documentation=false
 
 #### Generated code
 
-Not all plain text files are true source files. Generated files like minified JavaScript and compiled CoffeeScript can be detected and excluded from language stats. As an added bonus, unlike vendored and documentation files, these files are suppressed in diffs.
+Not all plain text files are true source files. Generated files like minified JavaScript and compiled CoffeeScript can be detected and excluded from language stats. As an added bonus, unlike vendored and documentation files, these files are suppressed in diffs. [`generated.rb`](/lib/linguist/generated.rb) lists common generated paths and excludes them from the language statistics of your repository.
+
+Use the `linguist-generated` attribute to mark or unmark paths as generated.
 
 ```
 $ cat .gitattributes
@@ -185,6 +187,6 @@ Please check out our [contributing guidelines](CONTRIBUTING.md).
 ## License
 
 The language grammars included in this gem are covered by their repositories'
-respective licenses. [`/vendor/README.md`](/vendor/README.md) lists the repository for each grammar.
+respective licenses. [`vendor/README.md`](/vendor/README.md) lists the repository for each grammar.
 
 All other files are covered by the MIT license, see `LICENSE`.
