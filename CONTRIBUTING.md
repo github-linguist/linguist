@@ -6,7 +6,7 @@ The majority of contributions won't need to touch any Ruby code at all.
 
 ## Getting started
 
-Before you can start contributing to Linguist, you'll need to set up your environment first. Clone the repo and `script/bootstrap` to install its dependencies.
+Before you can start contributing to Linguist, you'll need to set up your environment first. Clone the repo and run `script/bootstrap` to install its dependencies.
 
     git clone https://github.com/github/linguist.git
     cd linguist/
