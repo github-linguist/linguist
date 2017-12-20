@@ -34,8 +34,8 @@ We try only to add new extensions once they have some usage on GitHub. In most c
 
 To add support for a new extension:
 
-1. Add your extension to the language entry in [`languages.yml`][languages], keeping the extensions in alphabetical order, with the exception of the primary extension; the primary extension should be first.
-1. Add at least one sample for your extension to the [samples directory][samples] in the correct subdirectory. We'd prefer this sample to be an example of real-world code showing common usage. The more representative of the structure of the language, the better.
+1. Add your extension to the language entry in [`languages.yml`][languages], keeping the extensions in alphabetical and case-sensitive (uppercase before lowercase) order, with the exception of the primary extension; the primary extension should be first.
+1. Add at least one sample for your extension to the [samples directory][samples] in the correct subdirectory. We'd prefer examples of real-world code showing common usage. The more representative of the structure of the language, the better.
 1. Open a pull request, linking to a [GitHub search result](https://github.com/search?utf8=%E2%9C%93&q=extension%3Aboot+NOT+nothack&type=Code&ref=searchresults) showing in-the-wild usage.  
   If you are adding a sample, please state clearly the license covering the code in the sample, and if possible, link to the original source of the sample.
 
@@ -54,13 +54,13 @@ To add support for a new language:
 
 1. Add an entry for your language to [`languages.yml`][languages]. Omit the `language_id` field for now.
 1. Add a syntax-highlighting grammar for your language using: `script/add-grammar https://github.com/JaneSmith/MyGrammar`  
-  This command will analyze the grammar and, if no problems are found, add it to the repository. If problems are found, please report these problems to the grammar maintainer as you will not be able to add the grammar if problems are found.  
+  This command will analyze the grammar and, if no problems are found, add it to the repository. If problems are found, please report them to the grammar maintainer as you will not be able to add the grammar if problems are found.  
   **Please only add grammars that have [one of these licenses][licenses].**
 1. Add samples for your language to the [samples directory][samples] in the correct subdirectory.
 1. Add a `language_id` for your language using `script/set-language-ids`.  
   **You should only ever need to run `script/set-language-ids --update`. Anything other than this risks breaking GitHub search :cry:**
-1. Open a pull request, linking to a [GitHub search result](https://github.com/search?utf8=%E2%9C%93&q=extension%3Aboot+NOT+nothack&type=Code&ref=searchresults) showing in-the-wild usage.  
-  Please state clearly the license covering the code in the samples, and if possible, link to the original source of the samples.
+1. Open a pull request, linking to a [GitHub search results](https://github.com/search?utf8=%E2%9C%93&q=extension%3Aboot+NOT+nothack&type=Code&ref=searchresults) showing in-the-wild usage.  
+  Please state clearly the license covering the code in the samples. Link directly to the original source if possible.
 
 In addition, if your new language defines an extension that's already listed in [`languages.yml`][languages] (such as `.foo`) then sometimes a few more steps will need to be taken:
 
@@ -131,7 +131,7 @@ Linguist is maintained with :heart: by:
 
 As Linguist is a production dependency for GitHub we have a couple of workflow restrictions:
 
-- Anyone with commit rights can merge Pull Requests provided that there is a :+1: from a GitHub member of staff.
+- Anyone with commit rights can merge Pull Requests provided that there is a :+1: from a GitHub staff member.
 - Releases are performed by GitHub staff so we can ensure GitHub.com always stays up to date with the latest release of Linguist and there are no regressions in production.
 
 ### Releasing
