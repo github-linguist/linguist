@@ -1,0 +1,9 @@
+Gemfile linguist-vendored=true
+lib/linguist.rb linguist-language=Java
+test/*.rb linguist-language=Java
+Rakefile linguist-generated
+test/fixtures/* linguist-vendored=false
+README.md linguist-documentation=false
+samples/Arduino/* linguist-documentation
+samples/Markdown/*.md linguist-detectable=true
+samples/HTML/*.html linguist-detectable=false
