@@ -63,7 +63,7 @@ A repository's languages stats can also be assessed from the command line using 
 
 You can try running `linguist` on the root directory in this repository itself:
 
-```
+```console
 $ bundle exec bin/linguist --breakdown
 68.57%  Ruby
 22.90%  C
