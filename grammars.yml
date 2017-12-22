@@ -1,4 +1,3 @@
----
 https://bitbucket.org/Clams/sublimesystemverilog/get/default.tar.gz:
 - source.systemverilog
 - source.ucfconstraints
@@ -45,8 +44,6 @@ vendor/grammars/Isabelle.tmbundle:
 - source.isabelle.theory
 vendor/grammars/JSyntax:
 - source.j
-vendor/grammars/Julia.tmbundle:
-- source.julia
 vendor/grammars/Lean.tmbundle:
 - source.lean
 vendor/grammars/LiveScript.tmbundle:
@@ -130,6 +127,9 @@ vendor/grammars/SublimePuppet:
 - source.puppet
 vendor/grammars/SublimeXtend:
 - source.xtend
+vendor/grammars/Syntax-highlighting-for-PostCSS:
+- source.css.postcss.sugarss
+- source.postcss
 vendor/grammars/TLA:
 - source.tla
 vendor/grammars/TXL:
@@ -138,6 +138,11 @@ vendor/grammars/Terraform.tmLanguage:
 - source.terraform
 vendor/grammars/Textmate-Gosu-Bundle:
 - source.gosu.2
+vendor/grammars/TypeScript-TmLanguage:
+- source.ts
+- source.tsx
+- text.error-list
+- text.find-refs
 vendor/grammars/UrWeb-Language-Definition:
 - source.ur
 vendor/grammars/VBDotNetSyntax:
@@ -187,6 +192,9 @@ vendor/grammars/atom-language-1c-bsl:
 vendor/grammars/atom-language-clean:
 - source.clean
 - text.restructuredtext.clean
+vendor/grammars/atom-language-julia:
+- source.julia
+- source.julia.console
 vendor/grammars/atom-language-p4:
 - source.p4
 vendor/grammars/atom-language-perl6:
@@ -335,6 +343,8 @@ vendor/grammars/java.tmbundle:
 - source.java-properties
 - text.html.jsp
 - text.junit-test-report
+vendor/grammars/javadoc.tmbundle:
+- text.html.javadoc
 vendor/grammars/javascript-objective-j.tmbundle:
 - source.js.objj
 vendor/grammars/jflex.tmbundle:
@@ -381,6 +391,8 @@ vendor/grammars/language-csound:
 - source.csound-score
 vendor/grammars/language-css:
 - source.css
+vendor/grammars/language-cwl:
+- source.cwl
 vendor/grammars/language-emacs-lisp:
 - source.emacs.lisp
 vendor/grammars/language-fontforge:
@@ -398,6 +410,7 @@ vendor/grammars/language-haml:
 - text.haml
 - text.hamlc
 vendor/grammars/language-haskell:
+- annotation.liquidhaskell.haskell
 - hint.haskell
 - hint.message.haskell
 - hint.type.haskell
@@ -405,6 +418,7 @@ vendor/grammars/language-haskell:
 - source.cabal
 - source.haskell
 - source.hsc2hs
+- source.hsig
 - text.tex.latex.haskell
 vendor/grammars/language-inform7:
 - source.inform7
@@ -463,6 +477,10 @@ vendor/grammars/language-roff:
 vendor/grammars/language-rpm-spec:
 - source.changelogs.rpm-spec
 - source.rpm-spec
+vendor/grammars/language-ruby:
+- source.ruby
+- source.ruby.gemfile
+- text.html.erb
 vendor/grammars/language-shellscript:
 - source.shell
 - text.shell-session
@@ -489,6 +507,8 @@ vendor/grammars/language-yaml:
 - source.yaml
 vendor/grammars/language-yang:
 - source.yang
+vendor/grammars/language-yara:
+- source.yara
 vendor/grammars/latex.tmbundle:
 - text.bibtex
 - text.log.latex
@@ -555,7 +575,7 @@ vendor/grammars/opa.tmbundle:
 - source.opa
 vendor/grammars/openscad.tmbundle:
 - source.scad
-vendor/grammars/oz-tmbundle/Syntaxes/Oz.tmLanguage:
+vendor/grammars/oz-tmbundle:
 - source.oz
 vendor/grammars/parrot:
 - source.parrot.pir
@@ -592,9 +612,6 @@ vendor/grammars/rascal-syntax-highlighting:
 - source.rascal
 vendor/grammars/ruby-slim.tmbundle:
 - text.slim
-vendor/grammars/ruby.tmbundle:
-- source.ruby
-- text.html.erb
 vendor/grammars/sas.tmbundle:
 - source.SASLog
 - source.sas
@@ -629,6 +646,8 @@ vendor/grammars/standard-ml.tmbundle:
 - source.ml
 vendor/grammars/sublime-MuPAD:
 - source.mupad
+vendor/grammars/sublime-angelscript:
+- source.angelscript
 vendor/grammars/sublime-aspectj:
 - source.aspectj
 vendor/grammars/sublime-autoit:
@@ -677,11 +696,6 @@ vendor/grammars/sublime-terra:
 - source.terra
 vendor/grammars/sublime-text-ox:
 - source.ox
-vendor/grammars/sublime-typescript:
-- source.ts
-- source.tsx
-- text.error-list
-- text.find-refs
 vendor/grammars/sublime-varnish:
 - source.varnish.vcl
 vendor/grammars/sublime_cobol:
@@ -714,6 +728,8 @@ vendor/grammars/vhdl:
 - source.vhdl
 vendor/grammars/vue-syntax-highlight:
 - text.html.vue
+vendor/grammars/wdl-sublime-syntax-highlighter:
+- source.wdl
 vendor/grammars/xc.tmbundle:
 - source.xc
 vendor/grammars/xml.tmbundle:

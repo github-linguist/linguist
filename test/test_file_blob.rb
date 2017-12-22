@@ -188,6 +188,17 @@ class TestFileBlob < Minitest::Test
     assert fixture_blob("Binary/MainMenu.nib").generated?
     assert !sample_blob("XML/project.pbxproj").generated?
 
+    # Cocoapods
+    assert sample_blob('Pods/blah').generated?
+    assert !sample_blob('My-Pods/blah').generated?
+
+    # Carthage
+    assert sample_blob('Carthage/Build/blah').generated?
+    assert !sample_blob('Carthage/blah').generated?
+    assert !sample_blob('Carthage/Checkout/blah').generated?
+    assert !sample_blob('My-Carthage/Build/blah').generated?
+    assert !sample_blob('My-Carthage/Build/blah').generated?
+
     # Gemfile.lock is NOT generated
     assert !sample_blob("Gemfile.lock").generated?
 
@@ -312,8 +323,6 @@ class TestFileBlob < Minitest::Test
     # C deps
     assert sample_blob("deps/http_parser/http_parser.c").vendored?
     assert sample_blob("deps/v8/src/v8.h").vendored?
-
-    assert sample_blob("tools/something/else.c").vendored?
 
     # Chart.js
     assert sample_blob("some/vendored/path/Chart.js").vendored?
@@ -490,9 +499,9 @@ class TestFileBlob < Minitest::Test
 
     # Carthage
     assert sample_blob('Carthage/blah').vendored?
-
-    # Cocoapods
-    assert sample_blob('Pods/blah').vendored?
+    assert sample_blob('iOS/Carthage/blah').vendored?
+    assert !sample_blob('My-Carthage/blah').vendored?
+    assert !sample_blob('iOS/My-Carthage/blah').vendored?
 
     # Html5shiv
     assert sample_blob("Scripts/html5shiv.js").vendored?

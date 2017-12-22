@@ -52,6 +52,8 @@ module Linguist
     # Return true or false
     def generated?
       xcode_file? ||
+      cocoapods? ||
+      carthage_build? ||
       generated_net_designer_file? ||
       generated_net_specflow_feature_file? ||
       composer_lock? ||
@@ -93,6 +95,20 @@ module Linguist
     # Returns true of false.
     def xcode_file?
       ['.nib', '.xcworkspacedata', '.xcuserstate'].include?(extname)
+    end
+
+    # Internal: Is the blob part of Pods/, which contains dependencies not meant for humans in pull requests.
+    #
+    # Returns true or false.
+    def cocoapods?
+      !!name.match(/(^Pods|\/Pods)\//)
+    end
+
+    # Internal: Is the blob part of Carthage/Build/, which contains dependencies not meant for humans in pull requests.
+    #
+    # Returns true or false.
+    def carthage_build?
+      !!name.match(/(^|\/)Carthage\/Build\//)
     end
 
     # Internal: Is the blob minified files?

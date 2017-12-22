@@ -110,7 +110,7 @@ module Linguist
     # Returns the Language or nil if none was found.
     def self.find_by_name(name)
       return nil if !name.is_a?(String) || name.to_s.empty?
-      name && (@name_index[name.downcase] || @name_index[name.split(',').first.downcase])
+      name && (@name_index[name.downcase] || @name_index[name.split(',', 2).first.downcase])
     end
 
     # Public: Look up Language by one of its aliases.
@@ -125,7 +125,7 @@ module Linguist
     # Returns the Language or nil if none was found.
     def self.find_by_alias(name)
       return nil if !name.is_a?(String) || name.to_s.empty?
-      name && (@alias_index[name.downcase] || @alias_index[name.split(',').first.downcase])
+      name && (@alias_index[name.downcase] || @alias_index[name.split(',', 2).first.downcase])
     end
 
     # Public: Look up Languages by filename.
@@ -219,10 +219,7 @@ module Linguist
       lang = @index[name.downcase]
       return lang if lang
 
-      name = name.split(',').first
-      return nil if name.to_s.empty?
-
-      @index[name.downcase]
+      @index[name.split(',', 2).first.downcase]
     end
 
     # Public: A List of popular languages
