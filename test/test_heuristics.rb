@@ -13,8 +13,9 @@ class TestHeuristics < Minitest::Test
   end
 
   def all_fixtures(language_name, file="*")
-    Dir.glob("#{samples_path}/#{language_name}/#{file}") -
-      ["#{samples_path}/#{language_name}/filenames"]
+    fixs = Dir.glob("#{samples_path}/#{language_name}/#{file}") -
+           ["#{samples_path}/#{language_name}/filenames"]
+    fixs.reject { |f| File.symlink?(f) }
   end
 
   def test_no_match
