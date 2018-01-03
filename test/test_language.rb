@@ -470,5 +470,7 @@ class TestLanguage < Minitest::Test
 
   def test_non_crash_on_comma
     assert_nil Language[',']
+    assert_nil Language.find_by_name(',')
+    assert_nil Language.find_by_alias(',')
   end
 end

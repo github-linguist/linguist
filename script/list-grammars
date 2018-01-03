@@ -99,4 +99,8 @@ class GrammarList
 end
 
 list = GrammarList.new
-list.update_readme()
+if ARGV.include? "--print"
+  puts list.to_markdown
+else
+  list.update_readme
+end

@@ -19,9 +19,7 @@
 - (^|/)dist/
 
 # C deps
-#  https://github.com/joyent/node
 - ^deps/
-- ^tools/
 - (^|/)configure$
 - (^|/)config.guess$
 - (^|/)config.sub$
@@ -65,6 +63,7 @@
 
 # Font Awesome
 - (^|/)font-awesome\.(css|less|scss|styl)$
+- (^|/)font-awesome/.*\.(css|less|scss|styl)$
 
 # Foundation css
 - (^|/)foundation\.(css|less|scss|styl)$
@@ -80,6 +79,9 @@
 
 # Animate.css
 - (^|/)animate\.(css|less|scss|styl)$
+
+# Select2
+- (^|/)select2/.*\.(css|scss|js)$
 
 # Vendored dependencies
 - third[-_]?party/
@@ -119,6 +121,15 @@
 # jQuery File Upload
 - (^|/)jquery\.fileupload(-\w+)?\.js$
 
+# jQuery dataTables
+- jquery.dataTables.js
+
+# bootboxjs
+- bootbox.js
+
+# pdf-worker
+- pdf.worker.js
+
 # Slick
 - (^|/)slick\.\w+.js$
 
@@ -134,6 +145,9 @@
 # Sublime Text workspace files
 - .sublime-project
 - .sublime-workspace
+
+# VS Code workspace files
+- .vscode
 
 # Prototype
 - (^|/)prototype(.*)\.js$
@@ -191,6 +205,9 @@
 # React
 - (^|/)react(-[^.]*)?\.js$
 
+# flow-typed
+- (^|/)flow-typed/.*\.js$
+
 # Modernizr
 - (^|/)modernizr\-\d\.\d+(\.\d+)?\.js$
 - (^|/)modernizr\.custom\.\d+\.js$
@@ -224,10 +241,7 @@
 - \.imageset/
 
 # Carthage
-- ^Carthage/
-
-# Cocoapods
-- ^Pods/
+- (^|/)Carthage/
 
 # Sparkle
 - (^|/)Sparkle/
