@@ -14,7 +14,7 @@ class TestHeuristics < Minitest::Test
 
   def all_fixtures(language_name, file="*")
     fixs = Dir.glob("#{samples_path}/#{language_name}/#{file}") -
-           ["#{samples_path}/#{language_name}/filenames"]
+             ["#{samples_path}/#{language_name}/filenames"]
     fixs.reject { |f| File.symlink?(f) }
   end
 
@@ -22,6 +22,10 @@ class TestHeuristics < Minitest::Test
     language = []
     results = Heuristics.call(file_blob("JavaScript/namespace.js"), language)
     assert_equal [], results
+  end
+
+  def test_symlink_empty
+    assert_equal [], Heuristics.call(file_blob("Markdown/symlink.md"), [Language["Markdown"]])
   end
 
   def assert_heuristics(hash)
