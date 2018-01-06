@@ -9,8 +9,8 @@
 - [ ] **I am adding a new extension to an existing language.**
   - [ ] The new extension is used in hundreds of repositories on GitHub.com
     - Search results for each extension:
-      <!-- Replace FOOBAR with the new extension. Repeat for each extension added. -->
-      - https://github.com/search?utf8=%E2%9C%93&q=extension%3AFOOBAR+NOT+nothack&type=Code&ref=searchresults
+      <!-- Replace FOOBAR with the new extension, and KEYWORDS with keywords unique to the language. Repeat for each extension added. -->
+      - https://github.com/search?utf8=%E2%9C%93&q=extension%3AFOOBAR+KEYWORDS+NOT+nothack&type=Code&ref=searchresults
   - [ ] I have included a real-world usage sample for all extensions added in this PR:
     - Sample source(s):
       - [URL to each sample source, if applicable]
@@ -20,8 +20,8 @@
 - [ ] **I am adding a new language.**
   - [ ] The extension of the new language is used in hundreds of repositories on GitHub.com.
     - Search results for each extension:
-      <!-- Replace FOOBAR with the new extension. Repeat for each extension added. -->
-      -  https://github.com/search?utf8=%E2%9C%93&q=extension%3AFOOBAR+NOT+nothack&type=Code&ref=searchresults
+      <!-- Replace FOOBAR with the new extension, and KEYWORDS with keywords unique to the language. Repeat for each extension added. -->
+      -  https://github.com/search?utf8=%E2%9C%93&q=extension%3AFOOBAR+KEYWORDS+NOT+nothack&type=Code&ref=searchresults
   - [ ] I have included a real-world usage sample for all extensions added in this PR:
     - Sample source(s):
       - [URL to each sample source, if applicable]
@@ -30,13 +30,15 @@
   - [ ] I have included a change to the heuristics to distinguish my language from others using the same extension.
 
 - [ ] **I am fixing a misclassified language**
-  - [ ] I have included a sample for all extensions added in this PR:
+  - [ ] I have included a new sample for the misclassified language:
     - Sample source(s):
       - [URL to each sample source, if applicable]
     - Sample license(s):
   - [ ] I have included a change to the heuristics to distinguish my language from others using the same extension.
 
 - [ ] **I am changing the source of a syntax highlighting grammar**
+  <!-- Update the Lightshow URL below to show the new grammar in action. -->
+  - https://github-lightshow.herokuapp.com/
 
 - [ ] **I am adding new or changing current functionality**
   - [ ] I have added or updated the tests for the new or changed functionality.
