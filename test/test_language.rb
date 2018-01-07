@@ -473,4 +473,10 @@ class TestLanguage < Minitest::Test
     assert_nil Language.find_by_name(',')
     assert_nil Language.find_by_alias(',')
   end
+
+  def test_detect_prefers_markdown_for_md
+    blob = Linguist::FileBlob.new(File.join(samples_path, "Markdown/symlink.md"))
+    match = Linguist.detect(blob)
+    assert_equal Language["Markdown"], match
+  end
 end
