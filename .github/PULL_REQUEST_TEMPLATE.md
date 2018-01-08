@@ -37,8 +37,9 @@
   - [ ] I have included a change to the heuristics to distinguish my language from others using the same extension.
 
 - [ ] **I am changing the source of a syntax highlighting grammar**
-  <!-- Update the Lightshow URL below to show the new grammar in action. -->
-  - https://github-lightshow.herokuapp.com/
+  <!-- Update the Lightshow URLs below to show the new and old grammars in action. -->
+  - Old: https://github-lightshow.herokuapp.com/
+  - New: https://github-lightshow.herokuapp.com/
 
 - [ ] **I am adding new or changing current functionality**
   - [ ] I have added or updated the tests for the new or changed functionality.
