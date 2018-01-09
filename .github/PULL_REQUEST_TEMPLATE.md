@@ -42,4 +42,5 @@
   - New: https://github-lightshow.herokuapp.com/
 
 - [ ] **I am adding new or changing current functionality**
+  <!-- This includes modifying the vendor, documentation, and generated lists. -->
   - [ ] I have added or updated the tests for the new or changed functionality.
