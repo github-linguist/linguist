@@ -239,6 +239,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **NetLinx+ERB:** [amclain/sublime-netlinx](https://github.com/amclain/sublime-netlinx)
 - **NetLogo:** [textmate/lisp.tmbundle](https://github.com/textmate/lisp.tmbundle)
 - **NewLisp:** [textmate/lisp.tmbundle](https://github.com/textmate/lisp.tmbundle)
+- **Nextflow:** [nextflow-io/atom-language-nextflow](https://github.com/nextflow-io/atom-language-nextflow)
 - **Nginx:** [brandonwamboldt/sublime-nginx](https://github.com/brandonwamboldt/sublime-nginx)
 - **Nim:** [Varriount/NimLime](https://github.com/Varriount/NimLime)
 - **Ninja:** [khyo/language-ninja](https://github.com/khyo/language-ninja)
