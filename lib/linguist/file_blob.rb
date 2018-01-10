@@ -27,7 +27,7 @@ module Linguist
     end
 
     def symlink?
-      return @symlink if !@symlink.nil?
+      return @symlink if defined? @symlink
       @symlink = (File.symlink?(@fullpath) rescue false)
     end
 
