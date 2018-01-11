@@ -115,5 +115,8 @@ class TestGenerated < Minitest::Test
 
     # PostScript
     generated_sample_loading_data("PostScript/lambda.pfa")
+
+    # Jest snap
+    generated_fixture_without_loading_data("Data/__snapshots__/Button.ios.js.snap")
   end
 end
