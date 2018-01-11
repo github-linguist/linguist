@@ -24,7 +24,6 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **APL:** [Alhadis/language-apl](https://github.com/Alhadis/language-apl)
 - **Apollo Guidance Computer:** [Alhadis/language-agc](https://github.com/Alhadis/language-agc)
 - **AppleScript:** [textmate/applescript.tmbundle](https://github.com/textmate/applescript.tmbundle)
-- **Arduino:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **AsciiDoc:** [zuckschwerdt/asciidoc.tmbundle](https://github.com/zuckschwerdt/asciidoc.tmbundle)
 - **ASN.1:** [ajLangley12/language-asn1](https://github.com/ajLangley12/language-asn1)
 - **ASP:** [textmate/asp.tmbundle](https://github.com/textmate/asp.tmbundle)
