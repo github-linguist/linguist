@@ -336,6 +336,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Smalltalk:** [tomas-stefano/smalltalk-tmbundle](https://github.com/tomas-stefano/smalltalk-tmbundle)
 - **Smarty:** [textmate/php-smarty.tmbundle](https://github.com/textmate/php-smarty.tmbundle)
 - **SMT:** [SRI-CSL/SMT.tmbundle](https://github.com/SRI-CSL/SMT.tmbundle)
+- **Solidity:** [davidhq/SublimeEthereum](https://github.com/davidhq/SublimeEthereum)
 - **SourcePawn:** [github-linguist/sublime-sourcepawn](https://github.com/github-linguist/sublime-sourcepawn)
 - **SPARQL:** [peta/turtle.tmbundle](https://github.com/peta/turtle.tmbundle)
 - **Spline Font Database:** [Alhadis/language-fontforge](https://github.com/Alhadis/language-fontforge)
