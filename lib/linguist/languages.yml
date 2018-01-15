@@ -279,16 +279,6 @@ Arc:
   tm_scope: none
   ace_mode: text
   language_id: 20
-Arduino:
-  type: programming
-  color: "#bd79d1"
-  extensions:
-  - ".ino"
-  tm_scope: source.c++
-  ace_mode: c_cpp
-  codemirror_mode: clike
-  codemirror_mime_type: text/x-c++src
-  language_id: 21
 AsciiDoc:
   type: prose
   ace_mode: asciidoc
@@ -528,6 +518,7 @@ C++:
   - ".hxx"
   - ".inc"
   - ".inl"
+  - ".ino"
   - ".ipp"
   - ".re"
   - ".tcc"
@@ -1701,6 +1692,7 @@ HCL:
   extensions:
   - ".hcl"
   - ".tf"
+  - ".tfvars"
   ace_mode: ruby
   codemirror_mode: ruby
   codemirror_mime_type: text/x-ruby
@@ -2905,6 +2897,18 @@ NewLisp:
   codemirror_mode: commonlisp
   codemirror_mime_type: text/x-common-lisp
   language_id: 247
+Nextflow:
+  type: programming
+  ace_mode: groovy
+  tm_scope: source.nextflow
+  color: "#3ac486"
+  extensions:
+  - ".nf"
+  filenames:
+  - "nextflow.config"  
+  interpreters:
+  - nextflow
+  language_id: 506780613
 Nginx:
   type: data
   extensions:
@@ -3361,6 +3365,8 @@ Perl 6:
   filenames:
   - Rexfile
   interpreters:
+  - perl6
+  aliases:
   - perl6
   tm_scope: source.perl6fe
   ace_mode: perl
@@ -4170,6 +4176,7 @@ Scala:
   color: "#c22d40"
   extensions:
   - ".scala"
+  - ".kojo"  
   - ".sbt"
   - ".sc"
   interpreters:
@@ -4334,6 +4341,12 @@ Smarty:
   codemirror_mime_type: text/x-smarty
   tm_scope: text.html.smarty
   language_id: 353
+Solidity:
+  type: programming
+  color: "#AA6746"
+  ace_mode: text
+  tm_scope: source.solidity
+  language_id: 237469032
 SourcePawn:
   type: programming
   color: "#5c7611"
