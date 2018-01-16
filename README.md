@@ -164,6 +164,21 @@ $ cat .gitattributes
 Api.elm linguist-generated=true
 ```
 
+#### Detectable
+
+Currently there are 4 different language types: data, programming, markup, prose or nill. When a language is not considered a programming, markup or prose language it is typically classified as data. Recently there have been a lot of changes to languages that have been incorrectly classified as programming or markup languages. E.g KiCad files used to be classified as programming language (PR #3743), Eagle files used to be classified as markup (PR #3751), ...
+
+By default only programming languages are "detected", i.e counted towards a repository's language statistics. In some repositories it might be preferable to include some other files in the language statistics. In other cases source files that are not vendored, documentation or generated code might want to be be excluded from the language statistics.
+
+Use the `linguist-detectable` attribute to mark or unmark paths as detectable.
+
+```
+$ cat .gitattributes
+*.kicad_pcb linguist-detectable=true
+*.sch linguist-detectable=true
+tools/export_bom.py linguist-detectable=false
+```
+
 ### Using Emacs or Vim modelines
 
 If you do not want to use `.gitattributes` to override the syntax highlighting used on GitHub.com, you can use Vim or Emacs style modelines to set the language for a single file. Modelines can be placed anywhere within a file and are respected when determining how to syntax-highlight a file on GitHub.com
