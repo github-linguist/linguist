@@ -1,0 +1,34 @@
+object Form1: TForm1
+  Left = 256
+  Height = 301
+  Top = 122
+  Width = 586
+  Caption = 'Simple example'
+  ClientHeight = 301
+  ClientWidth = 586
+  LCLVersion = '1.6.4.0'
+  object ButtonImport: TButton
+    Left = 400
+    Height = 32
+    Top = 7
+    Width = 96
+    Caption = 'OFX Reader'
+    OnClick = ButtonImportClick
+    TabOrder = 0
+  end
+  object Path: TEdit
+    Left = 24
+    Height = 23
+    Top = 15
+    Width = 368
+    TabOrder = 1
+    Text = '..\..\..\ofx-files\bank.ofx'
+  end
+  object Memo1: TMemo
+    Left = 8
+    Height = 241
+    Top = 47
+    Width = 571
+    TabOrder = 2
+  end
+end

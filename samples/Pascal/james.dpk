@@ -1,0 +1,55 @@
+package james;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  xmlrtl,
+  dbrtl,
+  IndySystem,
+  IndyProtocols,
+  IndyCore;
+
+contains
+  james.crypto.md5.clss in '..\src\james.crypto.md5.clss.pas',
+  james.crypto.md5.delphi in '..\src\james.crypto.md5.delphi.pas',
+  james.data.clss in '..\src\james.data.clss.pas',
+  james.data in '..\src\james.data.pas',
+  james.data.stream.clss in '..\src\james.data.stream.clss.pas',
+  james.format.base64.clss in '..\src\james.format.base64.clss.pas',
+  james.format.xml.clss in '..\src\james.format.xml.clss.pas',
+  james.io.clss in '..\src\james.io.clss.pas',
+  james.io in '..\src\james.io.pas',
+  james.log.clss in '..\src\james.log.clss.pas',
+  james.log in '..\src\james.log.pas',
+  james.functions in '..\src\james.functions.pas',
+  james.functions.clss in '..\src\james.functions.clss.pas',
+  james.data.constraints in '..\src\james.data.constraints.pas',
+  james.data.constraints.clss in '..\src\james.data.constraints.clss.pas';
+
+end.
