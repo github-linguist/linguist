@@ -226,6 +226,12 @@ module Linguist
       end
     end
 
+    disambiguate ".gd" do |data|
+      if /^((extends\s+(([A-Za-z]\w+)|(['"]\S[\s\w+.\-\\\/:@]+\S['"](\s*\.\s*[A-Za-z]\S*)?))\s*($|[;#]))|(class\s+[A-Za-z]\w*))/m.match(data)
+        Language["GDScript"]
+      end
+    end
+
     disambiguate ".gs" do |data|
       Language["Gosu"] if /^uses java\./.match(data)
     end
