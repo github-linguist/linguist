@@ -152,6 +152,8 @@ If you are the current maintainer of this gem:
   1. Test behavior locally, branch deploy, whatever needs to happen
 1. Merge github/linguist PR
 1. Tag and push: `git tag vx.xx.xx; git push --tags`
+1. Create a GitHub release with the pushed tag (https://github.com/github/linguist/releases/new)
+1. Build a grammars tarball (`./script/build-grammars-tarball`) and attach it to the GitHub release
 1. Push to rubygems.org -- `gem push github-linguist-3.0.0.gem`
 
 [grammars]: /vendor/README.md
