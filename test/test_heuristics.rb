@@ -139,6 +139,14 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  # Candidate languages = ["Genie", "GLSL", "Gosu", "JavaScript"]
+  def test_gs_by_heuristics
+    assert_heuristics({
+      "GLSL" => all_fixtures("GLSL", "*.gs"),
+      "Gosu" => all_fixtures("Gosu", "*.gs"),
+    })
+  end
+
   # Candidate languages = ["Hack", "PHP"]
   def test_hack_by_heuristics
     assert_heuristics({

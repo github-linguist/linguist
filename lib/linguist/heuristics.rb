@@ -227,7 +227,11 @@ module Linguist
     end
 
     disambiguate ".gs" do |data|
-      Language["Gosu"] if /^uses java\./.match(data)
+      if /^#version \d+\b/.match(data)
+        Language["GLSL"]
+      elsif /^uses java\./.match(data)
+        Language["Gosu"]
+      end
     end
 
     disambiguate ".h" do |data|
