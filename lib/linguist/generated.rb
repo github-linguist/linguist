@@ -346,7 +346,7 @@ module Linguist
     #
     # Returns true or false.
     def go_vendor?
-      !!name.match(/vendor\/((?!-)[-0-9A-Za-z]+(?<!-)\.)+(com|edu|gov|in|me|net|org|fm|io)/)
+      !!name.match(/vendor\/((?!-)[-0-9A-Za-z]+(?<!-)\.)+(com|edu|gov|in|me|net|org|fm|io|tv)/)
     end
 
     # Internal: Is the blob a generated npm shrinkwrap or package lock file?
