@@ -313,6 +313,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **RobotFramework:** [shellderp/sublime-robot-plugin](https://github.com/shellderp/sublime-robot-plugin)
 - **Roff:** [Alhadis/language-roff](https://github.com/Alhadis/language-roff)
 - **Rouge:** [atom/language-clojure](https://github.com/atom/language-clojure)
+- **RPC:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **RPM Spec:** [waveclaw/language-rpm-spec](https://github.com/waveclaw/language-rpm-spec)
 - **Ruby:** [atom/language-ruby](https://github.com/atom/language-ruby)
 - **RUNOFF:** [Alhadis/language-roff](https://github.com/Alhadis/language-roff)
