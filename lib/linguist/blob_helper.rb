@@ -383,7 +383,10 @@ module Linguist
       !vendored? &&
       !documentation? &&
       !generated? &&
-      language && DETECTABLE_TYPES.include?(language.type)
+      language && ( defined?(detectable?) && !detectable?.nil? ?
+        detectable? :
+        DETECTABLE_TYPES.include?(language.type)
+      )
     end
   end
 end
