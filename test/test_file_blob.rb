@@ -192,6 +192,13 @@ class TestFileBlob < Minitest::Test
     assert sample_blob('Pods/blah').generated?
     assert !sample_blob('My-Pods/blah').generated?
 
+    # Carthage
+    assert sample_blob('Carthage/Build/blah').generated?
+    assert !sample_blob('Carthage/blah').generated?
+    assert !sample_blob('Carthage/Checkout/blah').generated?
+    assert !sample_blob('My-Carthage/Build/blah').generated?
+    assert !sample_blob('My-Carthage/Build/blah').generated?
+
     # Gemfile.lock is NOT generated
     assert !sample_blob("Gemfile.lock").generated?
 
@@ -492,6 +499,9 @@ class TestFileBlob < Minitest::Test
 
     # Carthage
     assert sample_blob('Carthage/blah').vendored?
+    assert sample_blob('iOS/Carthage/blah').vendored?
+    assert !sample_blob('My-Carthage/blah').vendored?
+    assert !sample_blob('iOS/My-Carthage/blah').vendored?
 
     # Html5shiv
     assert sample_blob("Scripts/html5shiv.js").vendored?

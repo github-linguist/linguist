@@ -26,6 +26,11 @@ module Linguist
       @mode ||= File.stat(@fullpath).mode.to_s(8)
     end
 
+    def symlink?
+      return @symlink if defined? @symlink
+      @symlink = (File.symlink?(@fullpath) rescue false)
+    end
+
     # Public: Read file contents.
     #
     # Returns a String.

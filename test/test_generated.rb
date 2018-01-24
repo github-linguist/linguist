@@ -52,6 +52,14 @@ class TestGenerated < Minitest::Test
     generated_sample_without_loading_data("Dummy/Pods/ObjCDependency/foo.h")
     generated_sample_without_loading_data("Dummy/Pods/ObjCDependency/foo.m")
 
+    # Carthage
+    generated_sample_without_loading_data("Carthage/Build/.Dependency.version")
+    generated_sample_without_loading_data("Carthage/Build/iOS/Dependency.framework")
+    generated_sample_without_loading_data("Carthage/Build/Mac/Dependency.framework")
+    generated_sample_without_loading_data("src/Carthage/Build/.Dependency.version")
+    generated_sample_without_loading_data("src/Carthage/Build/iOS/Dependency.framework")
+    generated_sample_without_loading_data("src/Carthage/Build/Mac/Dependency.framework")
+
     # Go-specific vendored paths
     generated_sample_without_loading_data("go/vendor/github.com/foo.go")
     generated_sample_without_loading_data("go/vendor/golang.org/src/foo.c")
