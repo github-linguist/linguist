@@ -513,5 +513,13 @@ module Linguist
       end
     end
   
+    disambiguate ".x" do |data|
+      if /\b(program|version)\s+\w+\s*{|\bunion\s+\w+\s+switch\s*\(/.match(data)
+        Language["RPC"]
+      elsif /^%(end|ctor|hook|group)\b/.match(data)
+        Language["Logos"]
+      end
+    end
+
   end
 end
