@@ -1,16 +1,13 @@
 FROM golang:1.9.2
 
-RUN apt-get update
-RUN apt-get upgrade -y
-RUN apt-get install -y curl gnupg
+WORKDIR /go/src/github.com/github/linguist/tools/grammars
 
-RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
-RUN apt-get install -y nodejs
-RUN npm install -g season
-
-RUN apt-get install -y cmake
-RUN cd /tmp && git clone https://github.com/vmg/pcre
-RUN mkdir -p /tmp/pcre/build && cd /tmp/pcre/build && \
+RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - && \
+	apt-get update && \
+	apt-get install -y nodejs cmake && \
+	npm install -g season && \
+	cd /tmp && git clone https://github.com/vmg/pcre && \
+	mkdir -p /tmp/pcre/build && cd /tmp/pcre/build && \
 	cmake .. \
 		-DPCRE_SUPPORT_JIT=ON \
 		-DPCRE_SUPPORT_UTF=ON \
@@ -22,14 +19,12 @@ RUN mkdir -p /tmp/pcre/build && cd /tmp/pcre/build && \
 		-DPCRE_BUILD_PCREGREP=OFF \
 		-DPCRE_BUILD_TESTS=OFF \
 		-G "Unix Makefiles" && \
-    make && make install
-RUN rm -rf /tmp/pcre
+    make && make install && \
+	rm -rf /tmp/pcre && \
+	cd /go && go get -u github.com/golang/dep/cmd/dep && \
+	rm -rf /var/lib/apt/lists/*
 
-RUN go get -u github.com/golang/dep/cmd/dep
-WORKDIR /go/src/github.com/github/linguist/tools/grammars
 COPY . .
-
-RUN dep ensure
-RUN go install ./cmd/grammar-compiler
+RUN dep ensure && go install ./cmd/grammar-compiler
 
 ENTRYPOINT ["grammar-compiler"]
