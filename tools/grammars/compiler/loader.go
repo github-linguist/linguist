@@ -108,6 +108,11 @@ func isValidGrammar(path string, info os.FileInfo) bool {
 		return false
 	}
 
+	// Tree-Sitter grammars are not supported
+	if strings.HasPrefix(filepath.Base(path), "tree-sitter-") {
+		return false
+	}
+
 	dir := filepath.Dir(path)
 	ext := filepath.Ext(path)
 
