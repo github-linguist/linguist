@@ -2906,7 +2906,7 @@ Nextflow:
   extensions:
   - ".nf"
   filenames:
-  - "nextflow.config"  
+  - nextflow.config
   interpreters:
   - nextflow
   language_id: 506780613
@@ -4188,7 +4188,7 @@ Scala:
   color: "#c22d40"
   extensions:
   - ".scala"
-  - ".kojo"  
+  - ".kojo"
   - ".sbt"
   - ".sc"
   interpreters:
@@ -4860,9 +4860,15 @@ Vue:
   color: "#2c3e50"
   extensions:
   - ".vue"
-  tm_scope: text.html.vue
+  tm_scope: source.vue
   ace_mode: html
   language_id: 391
+Vue Template:
+  type: markup
+  color: "#2c3e50"
+  tm_scope: text.html.vue-html
+  ace_mode: html
+  language_id: 8536085
 Wavefront Material:
   type: data
   extensions:
