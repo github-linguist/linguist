@@ -75,6 +75,7 @@ module Linguist
     end
 
     # Common heuristics
+    CRegex = /^\s*#\s*include <(stdlib|stdio|stdarg|stdbool|stdint|stddef|setjmp|errno)\.h>/
     CPlusPlusRegex = Regexp.union(
         /^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>/,
         /^\s*template\s*</,
@@ -231,7 +232,9 @@ module Linguist
     end
 
     disambiguate ".h" do |data|
-      if ObjectiveCRegex.match(data)
+      if CRegex.match(data)
+        Language["C"]
+      elsif ObjectiveCRegex.match(data)
         Language["Objective-C"]
       elsif CPlusPlusRegex.match(data)
         Language["C++"]
