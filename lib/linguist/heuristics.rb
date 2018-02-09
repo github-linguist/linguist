@@ -78,7 +78,7 @@ module Linguist
     CRegex = Regexp.union(
         /^(char|double|short|int|long|float|unsigned|void)*\w\s*\w\s*\(\s*void\s*\)/,
         /^(\w|\s|\*)*restrict/,
-        /^(char|short|int|long|float|unsigned)*\s+\w+\s*\[\]\s*;/
+        /^(char|short|int|long|float|unsigned)\s+\w+\s*\[\]\s*;/
       )
     CPlusPlusRegex = Regexp.union(
         /^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>/,
