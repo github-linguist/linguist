@@ -1,0 +1,139 @@
+# text = Esse equilíbrio era tido como pré-condição para o sucesso do plano econômico.
+# source = CETENFolha n=5 cad=Brasil sec=pol sem=94b
+# sent_id = CF5-1
+# id = 24
+1	Esse	esse	DET	<dem>|DET|M|S|@>N	Gender=Masc|Number=Sing|PronType=Dem	2	det	_	_
+2	equilíbrio	equilíbrio	NOUN	<np-def>|N|M|S|@SUBJ>	Gender=Masc|Number=Sing	4	nsubj:pass	_	_
+3	era	ser	AUX	<aux>|V|IMPF|3S|IND|@FS-STA	Mood=Ind|Number=Sing|Person=3|Tense=Imp|VerbForm=Fin	4	aux:pass	_	_
+4	tido	ter	VERB	<pass>|<mv>|V|PCP|M|S|@ICL-AUX<	Gender=Masc|Number=Sing|VerbForm=Part|Voice=Pass	0	root	_	_
+5	como	como	ADP	PRP|@<SC	_	6	case	_	_
+6	pré-condição	pré-condição	NOUN	<np-idf>|N|F|S|@P<	Gender=Fem|Number=Sing	4	xcomp	_	_
+7	para	para	ADP	PRP|@N<	_	9	case	_	_
+8	o	o	DET	<artd>|ART|M|S|@>N	Definite=Def|Gender=Masc|Number=Sing|PronType=Art	9	det	_	_
+9	sucesso	sucesso	NOUN	<np-def>|N|M|S|@P<	Gender=Masc|Number=Sing	6	nmod	_	_
+10-11	do	_	_	_	_	_	_	_	_
+10	de	de	ADP	<sam->|PRP|@N<	_	12	case	_	_
+11	o	o	DET	<-sam>|<artd>|ART|M|S|@>N	Definite=Def|Gender=Masc|Number=Sing|PronType=Art	12	det	_	_
+12	plano	plano	NOUN	<np-def>|N|M|S|@P<	Gender=Masc|Number=Sing	9	nmod	_	_
+13	econômico	econômico	ADJ	ADJ|M|S|@N<	Gender=Masc|Number=Sing	12	amod	_	ChangedBy=Issue165|SpaceAfter=No
+14	.	.	PUNCT	PU|@PU	_	4	punct	_	_
+
+# text = Parte dos recursos para a formação do FSE foi deslocado do orçamento da saúde e educação.
+# source = CETENFolha n=5 cad=Brasil sec=pol sem=94b
+# sent_id = CF5-2
+# id = 25
+# d2d = cc(saúde,e) -> cc(educação,e)  #106
+1	Parte	parte	NOUN	<np-idf>|N|F|S|@SUBJ>	Gender=Fem|Number=Sing	12	nsubj:pass	_	_
+2-3	dos	_	_	_	_	_	_	_	_
+2	de	de	ADP	PRP|@N<ARG	_	4	case	_	_
+3	os	o	DET	<-sam>|<artd>|ART|M|P|@>N	Definite=Def|Gender=Masc|Number=Plur|PronType=Art	4	det	_	_
+4	recursos	recurso	NOUN	<np-def>|N|M|P|@P<	Gender=Masc|Number=Plur	1	nmod	_	_
+5	para	para	ADP	PRP|@N<	_	7	case	_	_
+6	a	o	DET	<artd>|ART|F|S|@>N	Definite=Def|Gender=Fem|Number=Sing|PronType=Art	7	det	_	_
+7	formação	formação	NOUN	<np-def>|N|F|S|@P<	Gender=Fem|Number=Sing	4	nmod	_	_
+8-9	do	_	_	_	_	_	_	_	_
+8	de	de	ADP	<sam->|PRP|@N<	_	10	case	_	_
+9	o	o	DET	<-sam>|<artd>|ART|M|S|@>N	Definite=Def|Gender=Masc|Number=Sing|PronType=Art	10	det	_	_
+10	FSE	FSE	PROPN	PROP|M|S|@P<	Gender=Masc|Number=Sing	7	nmod	_	_
+11	foi	ser	AUX	<aux>|V|PS|3S|IND|@FS-STA	Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin	12	aux:pass	_	_
+12	deslocado	deslocar	VERB	<pass>|<mv>|V|PCP|M|S|@ICL-AUX<	Gender=Masc|Number=Sing|VerbForm=Part|Voice=Pass	0	root	_	_
+13-14	do	_	_	_	_	_	_	_	_
+13	de	de	ADP	<sam->|PRP|@<PIV	_	15	case	_	_
+14	o	o	DET	<-sam>|<artd>|ART|M|S|@>N	Definite=Def|Gender=Masc|Number=Sing|PronType=Art	15	det	_	_
+15	orçamento	orçamento	NOUN	<np-def>|N|M|S|@P<	Gender=Masc|Number=Sing	12	obl	_	_
+16-17	da	_	_	_	_	_	_	_	_
+16	de	de	ADP	<sam->|PRP|@N<	_	18	case	_	_
+17	a	o	DET	<-sam>|<artd>|ART|F|S|@>N	Definite=Def|Gender=Fem|Number=Sing|PronType=Art	18	det	_	_
+18	saúde	saúde	NOUN	<first-cjt>|<np-def>|N|F|S|@P<	Gender=Fem|Number=Sing	15	nmod	_	_
+19	e	e	CCONJ	KC|@CO	_	20	cc	_	d2d:#106
+20	educação	educação	NOUN	<cjt>|<np-idf>|N|F|S|@P<	Gender=Fem|Number=Sing	18	conj	_	ChangedBy=Issue165|SpaceAfter=No
+21	.	.	PUNCT	PU|@PU	_	12	punct	_	_
+
+# text = Na época, o então ministro da Fazenda, Fernando Henrique Cardoso, fez um pronunciamento em cadeia nacional para anunciar a intenção do governo de destinar o FSE a investimentos sociais.
+# source = CETENFolha n=5 cad=Brasil sec=pol sem=94b
+# sent_id = CF5-3
+# id = 26
+1-2	Na	_	_	_	_	_	_	_	_
+1	Em	em	ADP	<sam->|PRP|@ADVL>	_	3	case	_	_
+2	a	o	DET	<-sam>|<artd>|ART|F|S|@>N	Definite=Def|Gender=Fem|Number=Sing|PronType=Art	3	det	_	_
+3	época	época	NOUN	<np-def>|N|F|S|@P<	Gender=Fem|Number=Sing	16	obl	_	ChangedBy=Issue137|ChangedBy=Issue165|SpaceAfter=No
+4	,	,	PUNCT	PU|@PU	_	3	punct	_	_
+5	o	o	DET	<artd>|ART|M|S|@>N	Definite=Def|Gender=Masc|Number=Sing|PronType=Art	7	det	_	_
+6	então	então	ADJ	ADJ|M|S|@>N	Gender=Masc|Number=Sing	7	amod	_	_
+7	ministro	ministro	NOUN	<np-def>|N|M|S|@SUBJ>	Gender=Masc|Number=Sing	16	nsubj	_	MWE=ministro_da_Fazenda
+8-9	da	_	_	_	_	_	_	_	_
+8	de	de	ADP	<sam->|PRP|@N<	_	10	case	_	_
+9	a	o	DET	<artd>|<-sam>|DET|F|S|@>N	Definite=Def|Gender=Fem|Number=Sing|PronType=Art	10	det	_	_
+10	Fazenda	fazenda	NOUN	N|@P<	_	7	nmod	_	ChangedBy=Issue165|SpaceAfter=No
+11	,	,	PUNCT	PU|@PU	_	12	punct	_	_
+12	Fernando	Fernando	PROPN	_	Gender=Masc|Number=Sing	7	appos	_	ChangedBy=Issue119|MWE=Fernando_Henrique_Cardoso|MWEPOS=PROPN
+13	Henrique	Henrique	PROPN	_	Number=Sing	12	flat:name	_	ChangedBy=Issue119
+14	Cardoso	Cardoso	PROPN	_	Number=Sing	12	flat:name	_	ChangedBy=Issue119|ChangedBy=Issue165|SpaceAfter=No
+15	,	,	PUNCT	PU|@PU	_	12	punct	_	_
+16	fez	fazer	VERB	<mv>|V|PS|3S|IND|@FS-STA	Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin	0	root	_	_
+17	um	um	DET	<arti>|ART|M|S|@>N	Definite=Ind|Gender=Masc|Number=Sing|PronType=Art	23	det	_	_
+18	pronunciamento	pronunciamento	NOUN	<np-idf>|N|M|S|@<ACC	Gender=Masc|Number=Sing	16	obj	_	_
+19	em	em	ADP	PRP|@<ACC	_	20	case	_	_
+20	cadeia	cadeia	NOUN	<np-idf>|N|F|S|@P<	Gender=Fem|Number=Sing	16	obl	_	_
+21	nacional	nacional	ADJ	ADJ|M|S|@N<	Gender=Masc|Number=Sing	20	amod	_	_
+22	para	para	ADP	PRP|@<ACC	_	23	obj	_	_
+23	anunciar	anunciar	VERB	<mv>|V|INF|@ICL-P<	VerbForm=Inf	16	dep	_	_
+24	a	o	DET	<artd>|ART|F|S|@>N	Definite=Def|Gender=Fem|Number=Sing|PronType=Art	25	det	_	_
+25	intenção	intenção	NOUN	<np-def>|N|F|S|@<ACC	Gender=Fem|Number=Sing	23	obj	_	_
+26-27	do	_	_	_	_	_	_	_	_
+26	de	de	ADP	<sam->|PRP|@N<	_	28	case	_	_
+27	o	o	DET	<-sam>|<artd>|ART|M|S|@>N	Definite=Def|Gender=Masc|Number=Sing|PronType=Art	28	det	_	_
+28	governo	governo	NOUN	<np-def>|N|M|S|@P<	Gender=Masc|Number=Sing	25	nmod	_	_
+29	de	de	ADP	PRP|@N<ARG	_	30	mark	_	_
+30	destinar	destinar	VERB	<mv>|V|INF|@ICL-P<	VerbForm=Inf	25	acl	_	_
+31	o	o	DET	<artd>|ART|M|S|@>N	Definite=Def|Gender=Masc|Number=Sing|PronType=Art	32	det	_	_
+32	FSE	FSE	PROPN	PROP|M|S|@<ACC	Gender=Masc|Number=Sing	30	obj	_	_
+33	a	a	ADP	PRP|@<PIV	_	34	case	_	_
+34	investimentos	investimento	NOUN	<np-idf>|N|M|P|@P<	Gender=Masc|Number=Plur	30	obl	_	_
+35	sociais	social	ADJ	ADJ|M|P|@N<	Gender=Masc|Number=Plur	34	amod	_	ChangedBy=Issue165|SpaceAfter=No
+36	.	.	PUNCT	PU|@PU	_	16	punct	_	_
+
+# text = O assessor de imprensa do Ministério da Fazenda, Sérgio Danese, disse ontem que o ministro da Fazenda, Rubens Ricúpero não iria comentar o assunto porque não tinha informações suficientes.
+# source = CETENFolha n=5 cad=Brasil sec=pol sem=94b
+# sent_id = CF5-4
+# id = 27
+1	O	o	DET	<artd>|ART|M|S|@>N	Definite=Def|Gender=Masc|Number=Sing|PronType=Art	2	det	_	_
+2	assessor	assessor	NOUN	<np-def>|N|M|S|@SUBJ>	Gender=Masc|Number=Sing	15	nsubj	_	_
+3	de	de	ADP	PRP|@N<	_	4	case	_	_
+4	imprensa	imprensa	NOUN	<np-idf>|N|F|S|@P<	Gender=Fem|Number=Sing	2	nmod	_	_
+5-6	do	_	_	_	_	_	_	_	_
+5	de	de	ADP	<sam->|PRP|@N<	_	7	case	_	_
+6	o	o	DET	<-sam>|<artd>|ART|M|S|@>N	Definite=Def|Gender=Masc|Number=Sing|PronType=Art	7	det	_	_
+7	Ministério	Ministério	PROPN	PROP|M|S|@P<	Gender=Masc|Number=Sing	4	nmod	_	MWE=Ministério_da_Fazenda
+8-9	da	_	_	_	_	_	_	_	_
+8	de	de	ADP	<sam->|PRP|@N<	_	10	case	_	_
+9	a	o	DET	<artd>|<-sam>|DET|F|S|@>N	Definite=Def|Gender=Fem|Number=Sing|PronType=Art	10	det	_	_
+10	Fazenda	Fazenda	PROPN	PROP|@P<	Number=Sing	7	nmod	_	ChangedBy=Issue165|SpaceAfter=No
+11	,	,	PUNCT	PU|@PU	_	12	punct	_	_
+12	Sérgio	Sérgio	PROPN	_	Gender=Masc|Number=Sing	2	appos	_	ChangedBy=Issue119|MWE=Sérgio_Danese|MWEPOS=PROPN
+13	Danese	Danese	PROPN	_	Number=Sing	12	flat:name	_	ChangedBy=Issue119|ChangedBy=Issue165|SpaceAfter=No
+14	,	,	PUNCT	PU|@PU	_	12	punct	_	_
+15	disse	dizer	VERB	<mv>|V|PS|3S|IND|@FS-STA	Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin	0	root	_	_
+16	ontem	ontem	ADV	ADV|@<ADVL	_	15	advmod	_	_
+17	que	que	SCONJ	KS|@SUB	_	28	mark	_	_
+18	o	o	DET	<artd>|ART|M|S|@>N	Definite=Def|Gender=Masc|Number=Sing|PronType=Art	19	det	_	_
+19	ministro	ministro	NOUN	<np-def>|N|M|S|@SUBJ>	Gender=Masc|Number=Sing	28	nsubj	_	MWE=ministro_da_Fazenda
+20-21	da	_	_	_	_	_	_	_	_
+20	de	de	ADP	<sam->|PRP|@N<	_	22	case	_	_
+21	a	o	DET	<artd>|<-sam>|DET|F|S|@>N	Definite=Def|Gender=Fem|Number=Sing|PronType=Art	22	det	_	_
+22	Fazenda	fazenda	NOUN	N|@P<	_	19	nmod	_	ChangedBy=Issue165|SpaceAfter=No
+23	,	,	PUNCT	PU|@PU	_	28	punct	_	_
+24	Rubens	Rubens	PROPN	_	Gender=Masc|Number=Sing	19	appos	_	ChangedBy=Issue119|MWE=Rubens_Ricúpero|MWEPOS=PROPN
+25	Ricúpero	Ricúpero	PROPN	_	Number=Sing	24	flat:name	_	ChangedBy=Issue119
+26	não	não	ADV	_	Polarity=Neg	28	advmod	_	_
+27	iria	ir	AUX	<aux>|V|COND|3S|@FS-<ACC	Mood=Cnd|Number=Sing|Person=3|VerbForm=Fin	28	aux	_	_
+28	comentar	comentar	VERB	<mv>|V|INF|@ICL-AUX<	VerbForm=Inf	15	ccomp	_	_
+29	o	o	DET	<artd>|ART|M|S|@>N	Definite=Def|Gender=Masc|Number=Sing|PronType=Art	30	det	_	_
+30	assunto	assunto	NOUN	<np-def>|N|M|S|@<ACC	Gender=Masc|Number=Sing	28	obj	_	_
+31	porque	porque	SCONJ	KS|@SUB	_	33	mark	_	_
+32	não	não	ADV	_	Polarity=Neg	33	advmod	_	_
+33	tinha	ter	VERB	<mv>|V|IMPF|3S|IND|@FS-<ADVL	Mood=Ind|Number=Sing|Person=3|Tense=Imp|VerbForm=Fin	28	advcl	_	_
+34	informações	informação	NOUN	<np-idf>|N|F|P|@<ACC	Gender=Fem|Number=Plur	33	obj	_	_
+35	suficientes	suficiente	ADJ	<quant>|ADJ|F|P|@N<	Gender=Fem|Number=Plur	34	amod	_	ChangedBy=Issue165|SpaceAfter=No
+36	.	.	PUNCT	PU|@PU	_	15	punct	_	_
+
