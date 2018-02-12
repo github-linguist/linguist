@@ -537,7 +537,9 @@ module Linguist
     def generated_dart?
       return false unless extname == '.dart'
       return false unless lines.count > 1
-      return lines[0].include?("GENERATED CODE - DO NOT MODIFY")
+      genStatement = lines[0].include?("Generated code. Do not modify.")
+      getStatementCaps = lines[1].include?("GENERATED CODE - DO NOT MODIFY")
+      return genStatement || getStatementCaps
     end
   end
 end
