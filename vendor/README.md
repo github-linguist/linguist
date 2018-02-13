@@ -115,6 +115,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Fancy:** [fancy-lang/fancy-tmbundle](https://github.com/fancy-lang/fancy-tmbundle)
 - **Fantom:** [rkoeninger/sublime-fantom](https://github.com/rkoeninger/sublime-fantom)
 - **fish:** [l15n/fish-tmbundle](https://github.com/l15n/fish-tmbundle)
+- **FloScript:** [DAppDevConsulting/floscript.tmbundle](https://github.com/DAppDevConsulting/floscript.tmbundle)
 - **Forth:** [textmate/forth.tmbundle](https://github.com/textmate/forth.tmbundle)
 - **Fortran:** [textmate/fortran.tmbundle](https://github.com/textmate/fortran.tmbundle)
 - **FreeMarker:** [freemarker/FreeMarker.tmbundle](https://github.com/freemarker/FreeMarker.tmbundle)

@@ -1316,6 +1316,12 @@ Filterscript:
   tm_scope: none
   ace_mode: text
   language_id: 112
+FloScript:
+  type: programming
+  extensions:
+  - ".flo"
+  ace_mode: text
+  language_id: 82353483
 Formatted:
   type: data
   extensions:
@@ -2906,7 +2912,7 @@ Nextflow:
   extensions:
   - ".nf"
   filenames:
-  - "nextflow.config"  
+  - nextflow.config
   interpreters:
   - nextflow
   language_id: 506780613
