@@ -132,7 +132,7 @@ module Linguist
     MAX_TREE_SIZE = 100_000
 
     def compute_stats(old_commit_oid, cache = nil)
-      return {} if current_tree.count_recursive(MAX_TREE_SIZE) >= MAX_TREE_SIZE
+      raise "Your repo tree size exceeds the MAX_LIMIT" if current_tree.count_recursive(MAX_TREE_SIZE) >= MAX_TREE_SIZE
 
       old_tree = old_commit_oid && Rugged::Commit.lookup(repository, old_commit_oid).tree
       read_index
