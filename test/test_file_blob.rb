@@ -534,6 +534,14 @@ class TestFileBlob < Minitest::Test
     assert sample_blob("subproject/gradlew.bat").vendored?
     assert sample_blob("subproject/gradle/wrapper/gradle-wrapper.properties").vendored?
 
+    # Maven
+    assert sample_blob("mvnw").vendored?
+    assert sample_blob("mvnw.cmd").vendored?
+    assert sample_blob(".mvn/wrapper/maven-wrapper.properties").vendored?
+    assert sample_blob("subproject/mvnw").vendored?
+    assert sample_blob("subproject/mvnw.cmd").vendored?
+    assert sample_blob("subproject/.mvn/wrapper/maven-wrapper.properties").vendored?
+
     # Octicons
     assert sample_blob("octicons.css").vendored?
     assert sample_blob("public/octicons.min.css").vendored?
