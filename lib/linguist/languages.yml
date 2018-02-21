@@ -730,6 +730,17 @@ Closure Templates:
   - ".soy"
   tm_scope: text.html.soy
   language_id: 357046146
+CoNLL-U:
+  type: data
+  extensions:
+  - ".conllu"
+  - ".conll"
+  tm_scope: text.conllu
+  ace_mode: text
+  aliases:
+  - CoNLL
+  - CoNLL-X
+  language_id: 421026389
 CoffeeScript:
   type: programming
   tm_scope: source.coffee
@@ -2907,7 +2918,7 @@ Nextflow:
   extensions:
   - ".nf"
   filenames:
-  - "nextflow.config"  
+  - nextflow.config
   interpreters:
   - nextflow
   language_id: 506780613
@@ -4190,7 +4201,7 @@ Scala:
   color: "#c22d40"
   extensions:
   - ".scala"
-  - ".kojo"  
+  - ".kojo"
   - ".sbt"
   - ".sc"
   interpreters:

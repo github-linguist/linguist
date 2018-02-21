@@ -71,6 +71,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Common Lisp:** [textmate/lisp.tmbundle](https://github.com/textmate/lisp.tmbundle)
 - **Common Workflow Language:** [manabuishii/language-cwl](https://github.com/manabuishii/language-cwl)
 - **Component Pascal:** [textmate/pascal.tmbundle](https://github.com/textmate/pascal.tmbundle)
+- **CoNLL-U:** [odanoburu/conllu-linguist-grammar](https://github.com/odanoburu/conllu-linguist-grammar)
 - **Cool:** [anunayk/cool-tmbundle](https://github.com/anunayk/cool-tmbundle)
 - **Coq:** [mkolosick/Sublime-Coq](https://github.com/mkolosick/Sublime-Coq)
 - **Cpp-ObjDump:** [nanoant/assembly.tmbundle](https://github.com/nanoant/assembly.tmbundle)
