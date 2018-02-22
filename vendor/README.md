@@ -322,7 +322,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **SaltStack:** [saltstack/atom-salt](https://github.com/saltstack/atom-salt)
 - **SAS:** [rpardee/sas.tmbundle](https://github.com/rpardee/sas.tmbundle)
 - **Sass:** [nathos/sass-textmate-bundle](https://github.com/nathos/sass-textmate-bundle)
-- **Scala:** [mads379/scala.tmbundle](https://github.com/mads379/scala.tmbundle)
+- **Scala:** [scala/vscode-scala-syntax](https://github.com/scala/vscode-scala-syntax)
 - **Scaml:** [scalate/Scalate.tmbundle](https://github.com/scalate/Scalate.tmbundle)
 - **Scheme:** [textmate/scheme.tmbundle](https://github.com/textmate/scheme.tmbundle)
 - **Scilab:** [textmate/scilab.tmbundle](https://github.com/textmate/scilab.tmbundle)
