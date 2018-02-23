@@ -41,7 +41,7 @@ OptionParser.new do |opts|
 end.parse!
 
 source = Licensed::Source::Filesystem.new(module_path || "#{File.expand_path("../", File.dirname(__FILE__))}/vendor/grammars/*/", type: "grammar")
-config = Licensed::Configuration.new
+config = Licensed::Configuration.load_from(File.expand_path("../vendor/licenses/config.yml", File.dirname(__FILE__)))
 config.sources << source
 
 command = if ARGV[0] == "status"
