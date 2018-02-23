@@ -44,8 +44,8 @@ source = Licensed::Source::Filesystem.new(module_path || "#{File.expand_path("..
 config = Licensed::Configuration.new
 config.sources << source
 
-command = if ARGV[0] == "verify"
-  Licensed::Command::Verify.new(config)
+command = if ARGV[0] == "status"
+  Licensed::Command::Status.new(config)
 else
   Licensed::Command::Cache.new(config)
 end
