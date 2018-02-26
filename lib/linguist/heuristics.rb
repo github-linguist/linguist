@@ -105,6 +105,12 @@ module Linguist
       end
     end
 
+    disambiguate ".auradoc" do |data|
+      if /\<.*aura:documentation.*\>.*/.match(data)
+        Language["Lightning Component"]
+      end
+    end
+
     disambiguate ".bb" do |data|
       if /^\s*; /.match(data) || data.include?("End Function")
         Language["BlitzBasic"]
@@ -149,24 +155,6 @@ module Linguist
       end
     end
 
-    disambiguate ".auradoc" do |data|
-      if /\<.*aura:documentation.*\>.*/.match(data)
-        Language["Lightning Component"]
-      end
-    end
-
-    disambiguate ".evt" do |data|
-      if /\<.*aura:event.*\>.*/.match(data)
-        Language["Lightning Component"]
-      end
-    end
-
-    disambiguate ".design" do |data|
-      if /\<.*design:component.*\>.*/.match(data)
-        Language["Lightning Component"]
-      end
-    end
-
     disambiguate ".cs" do |data|
       if /![\w\s]+methodsFor: /.match(data)
         Language["Smalltalk"]
@@ -192,6 +180,12 @@ module Linguist
       end
     end
 
+    disambiguate ".design" do |data|
+      if /\<.*design:component.*\>.*/.match(data)
+        Language["Lightning Component"]
+      end
+    end
+
     disambiguate ".ecl" do |data|
       if /^[^#]+:-/.match(data)
         Language["ECLiPSe"]
@@ -205,6 +199,12 @@ module Linguist
         Language["Erlang"]
       elsif /(?:\/\/|("|')use strict\1|export\s+default\s|\/\*.*?\*\/)/m.match(data)
         Language["JavaScript"]
+      end
+    end
+
+    disambiguate ".evt" do |data|
+      if /\<.*aura:event.*\>.*/.match(data)
+        Language["Lightning Component"]
       end
     end
 
