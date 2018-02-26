@@ -149,6 +149,12 @@ module Linguist
       end
     end
 
+    disambiguate ".auradoc" do |data|
+      if /\<.*aura:documentation.*\>.*/.match(data)
+        Language["Lightning Component"]
+      end
+    end
+
     disambiguate ".evt" do |data|
       if /\<.*aura:event.*\>.*/.match(data)
         Language["Lightning Component"]
