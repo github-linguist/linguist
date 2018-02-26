@@ -149,6 +149,18 @@ module Linguist
       end
     end
 
+    disambiguate ".evt" do |data|
+      if /\<.*aura:event.*\>.*/.match(data)
+        Language["Lightning Component"]
+      end
+    end
+
+    disambiguate ".design" do |data|
+      if /\<.*design:component.*\>.*/.match(data)
+        Language["Lightning Component"]
+      end
+    end
+
     disambiguate ".cs" do |data|
       if /![\w\s]+methodsFor: /.match(data)
         Language["Smalltalk"]
