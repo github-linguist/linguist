@@ -144,7 +144,7 @@ module Linguist
     end
 
     disambiguate ".cmp" do |data|
-      if /\<aura:component\>.*/.match(data)
+      if /\<.*aura:component.*\>.*/.match(data)
         Language["Lightning Component"]
       end
     end
