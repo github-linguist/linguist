@@ -131,7 +131,7 @@ $ cat .gitattributes
 *.rb linguist-language=Java
 ```
 
-Note that, when using Linguist locally, `.gitattributes` must be committed again each time it is modified for Linguist to take it into account. Also note that Linguist requires that you match files and not directories in `.gitattributes`. You might need to use wildcards to match files deeper than top-level ones.
+Note that, when using Linguist locally, `.gitattributes` must be committed again each time it is modified for Linguist to take it into account. Also note that you might need to use wildcards to match files deeper than top-level ones.
 
 ```
 $ cat .gitattributes
