@@ -44,6 +44,11 @@ class TestPedantic < Minitest::Test
     assert_sorted tests
   end
 
+  def test_submodules_are_sorted
+    system(File.expand_path("../../script/sort-submodules", __FILE__) + " -t")
+    assert $?.success?
+  end
+
   def assert_sorted(list)
     list.each_cons(2) do |previous, item|
       flunk "#{previous} should come after #{item}" if previous > item
