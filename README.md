@@ -131,6 +131,12 @@ $ cat .gitattributes
 *.rb linguist-language=Java
 ```
 
+Note that, when using Linguist locally, `.gitattributes` must be committed again each time it is modified for Linguist to take it into account. Also note that `.gitattributes` patterns are not equivalent to `.gitignore` ones. You may need to use wildcards to match files in subdirectories:
+
+```$ cat .gitattributes
+**/build/* linguist-vendored
+```
+
 #### Vendored code
 
 Checking code you didn't write, such as JavaScript libraries, into your git repo is a common practice, but this often inflates your project's language stats and may even cause your project to be labeled as another language. By default, Linguist treats all of the paths defined in [`vendor.yml`](/lib/linguist/vendor.yml) as vendored and therefore doesn't include them in the language statistics for a repository.
