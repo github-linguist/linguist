@@ -518,6 +518,8 @@ module Linguist
         Language["RPC"]
       elsif /^%(end|ctor|hook|group)\b/.match(data)
         Language["Logos"]
+      elsif /OUTPUT_ARCH\(|OUTPUT_FORMAT\(|SECTIONS/.match(data)
+        Language["Linker Script"]
       end
     end
 

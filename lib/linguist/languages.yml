@@ -730,6 +730,17 @@ Closure Templates:
   - ".soy"
   tm_scope: text.html.soy
   language_id: 357046146
+CoNLL-U:
+  type: data
+  extensions:
+  - ".conllu"
+  - ".conll"
+  tm_scope: text.conllu
+  ace_mode: text
+  aliases:
+  - CoNLL
+  - CoNLL-X
+  language_id: 421026389
 CoffeeScript:
   type: programming
   tm_scope: source.coffee
@@ -2365,6 +2376,7 @@ Linker Script:
   extensions:
   - ".ld"
   - ".lds"
+  - ".x"
   filenames:
   - ld.script
   tm_scope: none
@@ -3632,6 +3644,7 @@ Python:
   - python3
   aliases:
   - rusthon
+  - python3
   language_id: 303
 Python console:
   type: programming

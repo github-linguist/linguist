@@ -222,7 +222,7 @@ module Linguist
     #
     # Returns true or false
     def generated_net_designer_file?
-      name.downcase =~ /\.designer\.cs$/
+      name.downcase =~ /\.designer\.(cs|vb)$/
     end
 
     # Internal: Is this a codegen file for Specflow feature file?
