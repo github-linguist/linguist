@@ -2036,12 +2036,23 @@ JSON:
   searchable: false
   extensions:
   - ".json"
+  - ".avsc"
   - ".geojson"
+  - ".gltf"
   - ".JSON-tmLanguage"
+  - ".jsonl"
+  - ".tfstate"
+  - ".tfstate.backup"
   - ".topojson"
+  - ".webapp"
+  - ".webmanifest"
   filenames:
   - ".arcconfig"
+  - ".htmlhintrc"
+  - ".jscsrc"
   - ".jshintrc"
+  - ".tern-config"
+  - ".tern-project"
   - composer.lock
   - mcmod.info
   language_id: 174
@@ -2051,6 +2062,7 @@ JSON5:
   - ".json5"
   filenames:
   - ".babelrc"
+  - ".jslintrc"
   tm_scope: source.js
   ace_mode: javascript
   codemirror_mode: javascript
