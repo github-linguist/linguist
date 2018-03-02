@@ -112,4 +112,5 @@ end
 
 log "Updating grammar documentation in vendor/README.md"
 command('bundle', 'exec', 'rake', 'samples')
+command('script/sort-submodules')
 command('script/list-grammars')
