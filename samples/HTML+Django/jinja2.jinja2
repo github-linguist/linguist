@@ -1,3 +1,4 @@
+{# Samples from http://jinja.pocoo.org/docs/2.10/templates/ #}
 {% extends layout_template if layout_template is defined else 'master.jinja2' %}
 
 <title>{% block title %}{% endblock %}</title>
@@ -7,6 +8,8 @@
         .important { color: #336699; }
     </style>
 {% endblock head %}
+
+<h1>Samples from <a href="http://jinja.pocoo.org/docs/2.10/templates/">Jinja</a></h1>
 
 <ul>
 {% for user in users %}
