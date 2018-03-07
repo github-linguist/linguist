@@ -1,0 +1,14 @@
+with "gtkada.gpr";
+
+project Example is
+
+   for Languages use ("Ada");
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj";
+   for Main use ("main");
+
+   package Compiler is
+      for Default_Switches ("Ada") use ("-gnat12");
+   end Compiler;
+end Life;
+
