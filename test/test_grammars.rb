@@ -26,7 +26,6 @@ class TestGrammars < Minitest::Test
     "7821982b18bc35d6925cc16ece68d9c71f1fbba3", # moonscript-tmbundle
     "c235154dbf7864612ac0d337ef5fe79a586b061a", # PHP-Twig.tmbundle
     "0c216b112f3a4e6d5848128504d8378d8c7eee00", # r.tmbundle
-    "44ae3474f0d3d037984c7e8d52adc4d3eb39a200", # RDoc.tmbundle
     "da39a3ee5e6b4b0d3255bfef95601890afd80709", # SCSS.tmbundle
     "68539730d3cde34355f429f2267e265c1e030912", # smalltalk-tmbundle
     "4b5f67a54532ca6e49ba44cd135a510a74712e07", # Stylus
