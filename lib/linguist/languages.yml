@@ -301,6 +301,7 @@ Assembly:
   type: programming
   color: "#6E4C13"
   aliases:
+  - asm
   - nasm
   extensions:
   - ".asm"
@@ -729,6 +730,17 @@ Closure Templates:
   - ".soy"
   tm_scope: text.html.soy
   language_id: 357046146
+CoNLL-U:
+  type: data
+  extensions:
+  - ".conllu"
+  - ".conll"
+  tm_scope: text.conllu
+  ace_mode: text
+  aliases:
+  - CoNLL
+  - CoNLL-X
+  language_id: 421026389
 CoffeeScript:
   type: programming
   tm_scope: source.coffee
@@ -1733,6 +1745,7 @@ HTML+Django:
   group: HTML
   extensions:
   - ".jinja"
+  - ".jinja2"
   - ".mustache"
   - ".njk"
   aliases:
@@ -2024,12 +2037,23 @@ JSON:
   searchable: false
   extensions:
   - ".json"
+  - ".avsc"
   - ".geojson"
+  - ".gltf"
   - ".JSON-tmLanguage"
+  - ".jsonl"
+  - ".tfstate"
+  - ".tfstate.backup"
   - ".topojson"
+  - ".webapp"
+  - ".webmanifest"
   filenames:
   - ".arcconfig"
+  - ".htmlhintrc"
+  - ".jscsrc"
   - ".jshintrc"
+  - ".tern-config"
+  - ".tern-project"
   - composer.lock
   - mcmod.info
   language_id: 174
@@ -2039,6 +2063,7 @@ JSON5:
   - ".json5"
   filenames:
   - ".babelrc"
+  - ".jslintrc"
   tm_scope: source.js
   ace_mode: javascript
   codemirror_mode: javascript
@@ -2364,6 +2389,7 @@ Linker Script:
   extensions:
   - ".ld"
   - ".lds"
+  - ".x"
   filenames:
   - ld.script
   tm_scope: none
@@ -2905,7 +2931,7 @@ Nextflow:
   extensions:
   - ".nf"
   filenames:
-  - "nextflow.config"  
+  - nextflow.config
   interpreters:
   - nextflow
   language_id: 506780613
@@ -3631,6 +3657,7 @@ Python:
   - python3
   aliases:
   - rusthon
+  - python3
   language_id: 303
 Python console:
   type: programming
@@ -3753,6 +3780,17 @@ RMarkdown:
   - ".rmd"
   tm_scope: source.gfm
   language_id: 313
+RPC:
+  type: programming
+  aliases:
+  - rpcgen
+  - oncrpc
+  - xdr
+  ace_mode: c_cpp
+  extensions:
+  - ".x"
+  tm_scope: source.c
+  language_id: 1031374237
 RPM Spec:
   type: data
   tm_scope: source.rpm-spec
@@ -4176,7 +4214,7 @@ Scala:
   color: "#c22d40"
   extensions:
   - ".scala"
-  - ".kojo"  
+  - ".kojo"
   - ".sbt"
   - ".sc"
   interpreters:

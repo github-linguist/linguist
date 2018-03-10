@@ -513,5 +513,15 @@ module Linguist
       end
     end
   
+    disambiguate ".x" do |data|
+      if /\b(program|version)\s+\w+\s*{|\bunion\s+\w+\s+switch\s*\(/.match(data)
+        Language["RPC"]
+      elsif /^%(end|ctor|hook|group)\b/.match(data)
+        Language["Logos"]
+      elsif /OUTPUT_ARCH\(|OUTPUT_FORMAT\(|SECTIONS/.match(data)
+        Language["Linker Script"]
+      end
+    end
+
   end
 end

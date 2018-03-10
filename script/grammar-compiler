@@ -6,6 +6,8 @@ cd "$(dirname "$0")/.."
 image="linguist/grammar-compiler:latest"
 mkdir -p grammars
 
+docker pull $image
+
 exec docker run --rm \
     -u $(id -u $USER):$(id -g $USER) \
     -v $PWD:/src/linguist \

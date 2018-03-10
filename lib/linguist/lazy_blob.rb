@@ -7,7 +7,8 @@ module Linguist
     GIT_ATTR = ['linguist-documentation',
                 'linguist-language',
                 'linguist-vendored',
-                'linguist-generated']
+                'linguist-generated',
+                'linguist-detectable']
 
     GIT_ATTR_OPTS = { :priority => [:index], :skip_system => true }
     GIT_ATTR_FLAGS = Rugged::Repository::Attributes.parse_opts(GIT_ATTR_OPTS)
@@ -67,6 +68,14 @@ module Linguist
         Language.find_by_alias(lang)
       else
         super
+      end
+    end
+
+    def detectable?
+      if attr = git_attributes['linguist-detectable']
+        return boolean_attribute(attr)
+      else
+        nil
       end
     end
 

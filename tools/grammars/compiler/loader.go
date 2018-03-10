@@ -108,6 +108,11 @@ func isValidGrammar(path string, info os.FileInfo) bool {
 		return false
 	}
 
+	// Tree-Sitter grammars are not supported
+	if strings.HasPrefix(filepath.Base(path), "tree-sitter-") {
+		return false
+	}
+
 	dir := filepath.Dir(path)
 	ext := filepath.Ext(path)
 
@@ -117,7 +122,7 @@ func isValidGrammar(path string, info os.FileInfo) bool {
 	case ".tmlanguage", ".yaml-tmlanguage":
 		return true
 	case ".cson", ".json":
-		return strings.HasSuffix(dir, "/grammars")
+		return strings.HasSuffix(dir, "/grammars") || strings.HasSuffix(dir, "/syntaxes")
 	default:
 		return false
 	}

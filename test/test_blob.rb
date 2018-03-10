@@ -307,5 +307,36 @@ class TestBlob < Minitest::Test
 
     included = sample_blob_memory("HTML/pages.html")
     assert_predicate included, :include_in_language_stats?
+
+    # Test detectable override (i.e by .gitattributes)
+
+    def prose.detectable?; true end
+    assert_predicate prose, :include_in_language_stats?
+
+    included_not_detectable = included.clone()
+    def included_not_detectable.detectable?; false end
+    refute_predicate included_not_detectable, :include_in_language_stats?
+
+    # Test not included if vendored, documentation or generated overridden
+    # even if detectable
+
+    included_vendored = included.clone()
+    def included_vendored.vendored?; true end
+    refute_predicate included_vendored, :include_in_language_stats?
+    def included_vendored.detectable?; true end
+    refute_predicate included_vendored, :include_in_language_stats?
+
+    included_documentation = included.clone()
+    def included_documentation.documentation?; true end
+    refute_predicate included_documentation, :include_in_language_stats?
+    def included_documentation.detectable?; true end
+    refute_predicate included_documentation, :include_in_language_stats?
+
+    included_generated = included.clone()
+    def included_generated.generated?; true end
+    refute_predicate included_generated, :include_in_language_stats?
+    def included_generated.detectable?; true end
+    refute_predicate included_generated, :include_in_language_stats?
+
   end
 end

@@ -1,5 +1,7 @@
 # Linguist
 
+[![Build Status](https://travis-ci.org/github/linguist.svg?branch=master)](https://travis-ci.org/github/linguist)
+
 [issues]: https://github.com/github/linguist/issues
 [new-issue]: https://github.com/github/linguist/issues/new
 
@@ -95,7 +97,7 @@ If the language stats bar is reporting a language that you don't expect:
 1. If the files are misclassified, search for [open issues][issues] to see if anyone else has already reported the issue. Any information you can add, especially links to public repositories, is helpful. You can also use the [manual overrides](#overrides) feature to correctly classify them in your repository.
 1. If there are no reported issues of this misclassification, [open an issue][new-issue] and include a link to the repository or a sample of the code that is being misclassified.
 
-Keep in mind that the repository language stats are only [updated when you push changes](#how-linguist-works-on-github-com), and the results are cached for the lifetime of your repository. If you have not made any changes to your repository in a while, you may find pushing another change will correct the stats.
+Keep in mind that the repository language stats are only [updated when you push changes](#how-linguist-works-on-githubcom), and the results are cached for the lifetime of your repository. If you have not made any changes to your repository in a while, you may find pushing another change will correct the stats.
 
 ### My repository isn't showing my language
 
@@ -122,7 +124,7 @@ Linguist supports a number of different custom override strategies for language 
 
 ### Using gitattributes
 
-Add a `.gitattributes` file to your project and use standard git-style path matchers for the files you want to override using the `linguist-documentation`, `linguist-language`, `linguist-vendored`, and `linguist-generated` attributes. `.gitattributes` will be used to determine language statistics and will be used to syntax highlight files. You can also manually set syntax highlighting using [Vim or Emacs modelines](#using-emacs-or-vim-modelines).
+Add a `.gitattributes` file to your project and use standard git-style path matchers for the files you want to override using the `linguist-documentation`, `linguist-language`, `linguist-vendored`, `linguist-generated`  and `linguist-detectable` attributes. `.gitattributes` will be used to determine language statistics and will be used to syntax highlight files. You can also manually set syntax highlighting using [Vim or Emacs modelines](#using-emacs-or-vim-modelines).
 
 ```
 $ cat .gitattributes
@@ -162,6 +164,19 @@ Use the `linguist-generated` attribute to mark or unmark paths as generated.
 ```
 $ cat .gitattributes
 Api.elm linguist-generated=true
+```
+
+#### Detectable
+
+Only programming languages are included in the language statistics. Languages of a different type (as defined in [`languages.yml`](/lib/linguist/languages.yml)) are not "detectable" causing them not to be included in the language statistics.
+
+Use the `linguist-detectable` attribute to mark or unmark paths as detectable.
+
+```
+$ cat .gitattributes
+*.kicad_pcb linguist-detectable=true
+*.sch linguist-detectable=true
+tools/export_bom.py linguist-detectable=false
 ```
 
 ### Using Emacs or Vim modelines

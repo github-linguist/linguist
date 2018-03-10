@@ -145,7 +145,10 @@ func (conv *Converter) ConvertGrammars(update bool) error {
 		repo.FixRules(knownScopes)
 
 		if update {
-			conv.grammars[source] = repo.Scopes()
+			scopes := repo.Scopes()
+			if len(scopes) > 0 {
+				conv.grammars[source] = scopes
+			}
 		} else {
 			expected := conv.grammars[source]
 			repo.CompareScopes(expected)
