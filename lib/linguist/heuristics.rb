@@ -76,9 +76,9 @@ module Linguist
 
     # Common heuristics
     CRegex = Regexp.union(
-        /^(char|double|short|int|long|float|unsigned|void)\w+\s*\(\s*void\s*\)/,
+        /\b(char|double|short|int|long|float|unsigned|void)\s+\w+\s*\(\s*void\s*\)/,
         /\([\s\w\*]+restrict\s+/,
-        /^(char|short|int|long|float|unsigned)\s+\w+\s*\[\]\s*;/
+        /\b(char|short|int|long|float|unsigned)\s+\w+\s*\[\]\s*;/
       )
     CPlusPlusRegex = Regexp.union(
         /^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>/,
