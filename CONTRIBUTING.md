@@ -13,11 +13,8 @@ all.
 
 You might want to get Linguist running in order to test locally whatever
 changes you might be doing to it. You will need to install some
-prerrequisite libraries first. Run:
-
-	sudo apt-get install cmake
-
-which is required to install `rugged`.
+prerrequisite libraries
+first. [Install CMake](https://cmake.org/install/) which is required to install `rugged`.
 
 Then
 
