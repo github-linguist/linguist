@@ -6,15 +6,11 @@ Contributions to this project are [released](https://help.github.com/articles/gi
 
 This project adheres to the [Contributor Covenant Code of Conduct](http://contributor-covenant.org/). By participating, you are expected to uphold this code.
 
-The majority of contributions won't need to touch any Ruby code at
-all.
+The majority of contributions won't need to touch any Ruby code at all.
 
 ## Getting started
 
-Before you can start contributing to Linguist, you'll need to set up
-your environment first. [Install CMake](https://cmake.org/install/)
-which is required to install `rugged` and then clone the repo and run
-`script/bootstrap` to install its dependencies. 
+Before you can start contributing to Linguist, you'll need to set up your environment first. Clone the repo and run `script/bootstrap` to install its dependencies.
 
     git clone https://github.com/github/linguist.git
     cd linguist/
