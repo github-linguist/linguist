@@ -47,10 +47,17 @@ class TestClassifier < Minitest::Test
     Samples.each do |sample|
       language  = Linguist::Language.find_by_name(sample[:language])
       languages = Language.find_by_filename(sample[:path]).map(&:name)
-      next unless languages.length > 1
+      next if languages.length == 1
+
+      languages = Language.find_by_extension(sample[:path]).map(&:name)
+      next if languages.length <= 1
 
       results = Classifier.classify(Samples.cache, File.read(sample[:path]), languages)
       assert_equal language.name, results.first[0], "#{sample[:path]}\n#{results.inspect}"
     end
+  end
+
+  def test_classify_empty_languages
+    assert_equal [], Classifier.classify(Samples.cache, fixture("Ruby/foo.rb"), [])
   end
 end

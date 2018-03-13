@@ -81,7 +81,7 @@ class TestRepository < Minitest::Test
 
   def test_linguist_override_vendored?
     attr_commit = '351c1cc8fd57340839bdb400d7812332af80e9bd'
-    repo = linguist_repo(attr_commit).read_index
+    linguist_repo(attr_commit).read_index
 
     override_vendored = Linguist::LazyBlob.new(rugged_repository, attr_commit, 'Gemfile')
 
@@ -91,7 +91,7 @@ class TestRepository < Minitest::Test
 
   def test_linguist_override_unvendored?
     attr_commit = '351c1cc8fd57340839bdb400d7812332af80e9bd'
-    repo = linguist_repo(attr_commit).read_index
+    linguist_repo(attr_commit).read_index
 
     # lib/linguist/vendor.yml defines this as vendored.
     override_unvendored = Linguist::LazyBlob.new(rugged_repository, attr_commit, 'test/fixtures/foo.rb')
@@ -102,7 +102,7 @@ class TestRepository < Minitest::Test
 
   def test_linguist_override_documentation?
     attr_commit = "d4c8fb8a28e91f97a7e53428a365c0abbac36d3d"
-    repo = linguist_repo(attr_commit).read_index
+    linguist_repo(attr_commit).read_index
 
     readme = Linguist::LazyBlob.new(rugged_repository, attr_commit, "README.md")
     arduino = Linguist::LazyBlob.new(rugged_repository, attr_commit, "samples/Arduino/hello.ino")
@@ -114,11 +114,23 @@ class TestRepository < Minitest::Test
 
   def test_linguist_override_generated?
     attr_commit = "351c1cc8fd57340839bdb400d7812332af80e9bd"
-    repo = linguist_repo(attr_commit).read_index
+    linguist_repo(attr_commit).read_index
 
     rakefile = Linguist::LazyBlob.new(rugged_repository, attr_commit, "Rakefile")
 
     # overridden .gitattributes
     assert rakefile.generated?
+  end
+
+  def test_linguist_override_detectable?
+    attr_commit = "8f86998866f6f2c8aa14e0dd430e61fd25cff720"
+    linguist_repo(attr_commit).read_index
+
+    # markdown is overridden by .gitattributes to be detectable, html to not be detectable
+    markdown = Linguist::LazyBlob.new(rugged_repository, attr_commit, "samples/Markdown/tender.md")
+    html = Linguist::LazyBlob.new(rugged_repository, attr_commit, "samples/HTML/pages.html")
+
+    assert_predicate markdown, :detectable?
+    refute_predicate html, :detectable?
   end
 end

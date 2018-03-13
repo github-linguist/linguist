@@ -1,0 +1,106 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+require "linguist"
+require "json"
+require "yaml"
+
+class GrammarList
+
+  ROOT = File.expand_path "../../", __FILE__
+
+  def initialize
+    @submodules     = load_submodules()
+    @sources        = load_sources()
+    @language_names = load_languages()
+  end
+
+  # Load .gitmodules
+  def load_submodules
+    submodules = {}
+    submodule_file = File.read("#{ROOT}/.gitmodules")
+    pattern = /^\[submodule\s*"([^"]+)"\]$\n((?:^(?!\[).+(?:\n|$))+)/is
+    submodule_file.scan(pattern) do |id, attr|
+      submod = {}
+      submod[:path]  = $1 if attr =~ /^\s*path\s*=\s*(.+)$/
+      submod[:url]   = $1 if attr =~ /^\s*url\s*=\s*(.+)$/
+      submod[:url].gsub!(/\.git$/, "")
+      submod[:short] = shorten(submod[:url])
+      submodules["#{id}"] = submod
+    end
+    submodules
+  end
+
+  # Grab the name of each language, sorted case-insensitively
+  def load_languages
+    Linguist::Language.all.map(&:name).sort do |a, b|
+      a.downcase() <=> b.downcase()
+    end
+  end
+
+  # Load grammars.yml
+  def load_sources
+    sources = {}
+    grammars = YAML.load_file("#{ROOT}/grammars.yml")
+    grammars.each do |path, scopes|
+      scopes.each { |scope| sources[scope] = path }
+    end
+    sources
+  end
+
+  # Shorten a repository URL
+  def shorten(url)
+    if url =~ /^https?:\/\/(?:www\.)?github\.com\/([^\/]+\/[^\/]+)/i
+      $1
+    elsif url =~ /^https?:\/\/(?:www\.)?(bitbucket|gitlab)\.(?:com|org)\/([^\/]+\/[^\/]+)/i
+      "#{$1.downcase()}:#{$2}"
+    else
+      url.replace(/^https?:\/\/(?:www\.)?/i, "")
+    end
+  end
+
+  # Markdown: Generate grammar list
+  def to_markdown
+    markdown = ""
+    @language_names.each do |item|
+      lang  = Linguist::Language["#{item}"]
+      scope = lang.tm_scope
+      next if scope == "none"
+      path  = @sources[scope] || scope
+      case path
+      when "https://bitbucket.org/Clams/sublimesystemverilog/get/default.tar.gz"
+        short_url = "bitbucket:Clams/sublimesystemverilog"
+        long_url  = "https://bitbucket.org/Clams/sublimesystemverilog"
+      when "https://svn.edgewall.org/repos/genshi/contrib/textmate/Genshi.tmbundle/Syntaxes/Markup%20Template%20%28XML%29.tmLanguage"
+        short_url = "genshi.edgewall.org/query"
+        long_url  = "https://genshi.edgewall.org/query"
+      when "vendor/grammars/oz-tmbundle/Syntaxes/Oz.tmLanguage"
+        short_url = "eregon/oz-tmbundle"
+        long_url  = "https://github.com/eregon/oz-tmbundle"
+      else
+        submodule = @submodules[@sources[scope].chomp("/")]
+        next unless submodule
+        short_url = submodule[:short]
+        long_url  = submodule[:url]
+      end
+      markdown += "- **#{item}:** [#{short_url}](#{long_url})\n"
+    end
+
+    markdown
+  end
+
+  # Update the file displaying the reader-friendly list of grammar repos
+  def update_readme
+    readme = "#{ROOT}/vendor/README.md"
+    preamble = File.read(readme).match(/\A.+?<!--.+?-->\n/ms)
+    list = self.to_markdown
+    File.write(readme, preamble.to_s + list)
+  end
+end
+
+list = GrammarList.new
+if ARGV.include? "--print"
+  puts list.to_markdown
+else
+  list.update_readme
+end

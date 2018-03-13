@@ -7,7 +7,8 @@ module Linguist
     GIT_ATTR = ['linguist-documentation',
                 'linguist-language',
                 'linguist-vendored',
-                'linguist-generated']
+                'linguist-generated',
+                'linguist-detectable']
 
     GIT_ATTR_OPTS = { :priority => [:index], :skip_system => true }
     GIT_ATTR_FLAGS = Rugged::Repository::Attributes.parse_opts(GIT_ATTR_OPTS)
@@ -28,6 +29,7 @@ module Linguist
       @oid = oid
       @path = path
       @mode = mode
+      @data = nil
     end
 
     def git_attributes
@@ -69,6 +71,14 @@ module Linguist
       end
     end
 
+    def detectable?
+      if attr = git_attributes['linguist-detectable']
+        return boolean_attribute(attr)
+      else
+        nil
+      end
+    end
+
     def data
       load_blob!
       @data
@@ -79,6 +89,11 @@ module Linguist
       @size
     end
 
+    def symlink?
+      # We don't create LazyBlobs for symlinks.
+      false
+    end
+
     def cleanup!
       @data.clear if @data
     end
@@ -86,8 +101,8 @@ module Linguist
     protected
 
     # Returns true if the attribute is present and not the string "false".
-    def boolean_attribute(attr)
-      attr != "false"
+    def boolean_attribute(attribute)
+      attribute != "false"
     end
 
     def load_blob!

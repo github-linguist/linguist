@@ -11,6 +11,8 @@ module Linguist
     # Returns an Array with one Language if the blob has a shebang with a valid
     # interpreter, or empty if there is no shebang.
     def self.call(blob, _ = nil)
+      return [] if blob.symlink?
+
       Language.find_by_interpreter interpreter(blob.data)
     end
 
@@ -42,10 +44,10 @@ module Linguist
       return unless script
 
       # "python2.6" -> "python2"
-      script.sub! /(\.\d+)$/, ''
+      script.sub!(/(\.\d+)$/, '')
 
       # #! perl -> perl
-      script.sub! /^#!\s*/, ''
+      script.sub!(/^#!\s*/, '')
 
       # Check for multiline shebang hacks that call `exec`
       if script == 'sh' &&

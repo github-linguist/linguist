@@ -2,7 +2,7 @@ require File.expand_path('../lib/linguist/version', __FILE__)
 
 Gem::Specification.new do |s|
   s.name    = 'github-linguist'
-  s.version = Linguist::VERSION
+  s.version = ENV['GEM_VERSION'] || Linguist::VERSION
   s.summary = "GitHub Language detection"
   s.description = 'We use this library at GitHub to detect blob languages, highlight code, ignore binary files, suppress generated files in diffs, and generate language breakdown graphs.'
 
@@ -10,20 +10,23 @@ Gem::Specification.new do |s|
   s.homepage = "https://github.com/github/linguist"
   s.license  = "MIT"
 
-  s.files = Dir['lib/**/*'] - ['lib/linguist/grammars.rb'] + ['LICENSE']
+  s.files = Dir['lib/**/*'] + Dir['ext/**/*'] + Dir['grammars/*'] + ['LICENSE']
   s.executables = ['linguist', 'git-linguist']
+  s.extensions = ['ext/linguist/extconf.rb']
 
-  s.add_dependency 'charlock_holmes', '~> 0.7.3'
-  s.add_dependency 'escape_utils',    '~> 1.1.0'
+  s.add_dependency 'charlock_holmes', '~> 0.7.5'
+  s.add_dependency 'escape_utils',    '~> 1.2.0'
   s.add_dependency 'mime-types',      '>= 1.19'
-  s.add_dependency 'rugged',          '>= 0.23.0b'
+  s.add_dependency 'rugged',          '>= 0.25.1'
 
   s.add_development_dependency 'minitest', '>= 5.0'
+  s.add_development_dependency 'rake-compiler', '~> 0.9'
   s.add_development_dependency 'mocha'
+  s.add_development_dependency 'plist', '~>3.1'
   s.add_development_dependency 'pry'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'yajl-ruby'
   s.add_development_dependency 'color-proximity', '~> 0.2.1'
-  s.add_development_dependency 'licensee', '6.0.0b1'
-
+  s.add_development_dependency 'licensed'
+  s.add_development_dependency 'licensee', '~> 8.8.0'
 end

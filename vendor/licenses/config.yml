@@ -1,0 +1,28 @@
+whitelist:
+  - apache-2.0
+  - bsd-2-clause
+  - bsd-3-clause
+  - isc
+  - mit
+  - mpl-2.0
+  - ncsa
+  - permissive
+  - unlicense
+  - wtfpl
+  - zlib
+
+# These dependencies are explicitly ignored
+ignored:
+  rubygem:
+    - bundler
+
+# These dependencies have been reviewed and approved.
+reviewed:
+  rubygem:
+    - mime-types
+  grammar:
+    - Sublime-Lasso
+
+sources:
+  npm: false
+  rubygem: false
