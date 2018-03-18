@@ -1,0 +1,14 @@
+// https://github.com/rchain/rchain/tree/master/rholang/examples (MIT License)
+
+new helloAgain in {
+  contract helloAgain(_) = {
+    new chan in {
+      chan("Hello again, world!") |
+      for (text <- chan) {
+        text.display("\n")
+      }
+    }
+  } |
+  helloAgain(Nil) |
+  helloAgain(Nil)
+}

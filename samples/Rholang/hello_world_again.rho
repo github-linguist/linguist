@@ -1,0 +1,17 @@
+// https://github.com/rchain/rchain/tree/master/rholang/examples (MIT License)
+
+// A simple HelloWorld contract demonstrating a contract being rerun
+
+new helloworld in {
+    contract helloworld( world ) = {
+        for( msg <- world ) {
+            print(msg)
+        }
+    } |
+    new world, world2 in {
+        helloworld!(world) |
+        world!("Hello World") |
+        helloworld!(world2) |
+        world2!("Hello World again")
+    }
+}

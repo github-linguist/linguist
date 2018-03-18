@@ -1,0 +1,56 @@
+// https://github.com/rchain/rchain/tree/master/rholang/examples (MIT License)
+
+new MakeCoatCheck in {
+    contract MakeCoatCheck(ret) = {
+        new port, mapStore in {
+            mapStore(Map()) |
+            ret(port) |
+            contract port (method, ack, arg1, arg2) = {
+                match method with
+                "new" => {
+                    for (map <- mapStore) {
+                        new ticket in {
+                            map.insert(ticket, arg1) |
+                            mapStore(map) |
+                            ack(ticket)
+                        }
+                    }
+                }
+                "get" => {
+                    for (map <- mapStore) {
+                        mapStore(map) |
+                        ack(map.get(arg1))
+                    }
+                }
+                "set" => {
+                    for (map <- mapStore) {
+                        map.insert(arg1, arg2) |
+                        mapStore(map) |
+                        ack(Nil)
+                    }
+                }
+            }
+        }
+    } |
+
+    // Usage
+    new ret in {
+        MakeCoatCheck(ret) |
+        for (cc <- ret) {
+            // Creates new cell with initial value 0
+            cc("new", ret, 0, Nil) |
+            for (ticket <- ret) {
+                // Sets the cell to 1
+                cc("set", ret, ticket, 1) |
+                for (ack <- ret) {
+                    // Reads the value
+                    cc("get", ret, ticket, Nil) |
+                    for (storedValue <- ret) {
+                        // Prints 1
+                        storedValue.display("\n")
+                    }
+                }
+            }
+        }
+    }
+}

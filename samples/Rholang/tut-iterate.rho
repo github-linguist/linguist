@@ -1,0 +1,41 @@
+// https://github.com/rchain/rchain/tree/master/rholang/examples (MIT License)
+
+new channel, iterate in {
+    contract iterate(list, channel) = {
+        new ack, right in {
+            channel(ack) |
+            for (_ <- ack) {
+                contract right(pair) = {
+                    match pair with [i, limit] => {
+                        channel([list.nth(i), i < limit]) |
+                        for (_ <- ack) {
+                            match i + 1 < limit with true => { right([i + 1, limit]) }
+                        }
+                    }
+                } |
+                right([0, list.size()])
+            }
+        }
+    } |
+    // Invoke the iterator contract on channel
+    iterate([4,5,6], channel) |
+
+    // Interacts with the iterator
+    for (ack <- channel) {
+        ack(Nil) |
+        new left in {
+            contract left(_) = {
+                for (pair <- channel) {
+                    match pair with [v, keepGoing] => {
+                        v.display("\n") |
+                        match keepGoing with true => {
+                            ack(Nil) |
+                            left(Nil)
+                        }
+                    }
+                }
+            } |
+            left(Nil)
+        }
+    }
+}

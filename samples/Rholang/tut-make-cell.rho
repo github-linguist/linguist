@@ -1,0 +1,39 @@
+// https://github.com/rchain/rchain/tree/master/rholang/examples (MIT License)
+
+new MakeCell in {
+  // Makes a single cell in which you can store values
+  contract MakeCell(init, get, set) = {
+    new valueStore in {
+      valueStore(init) |
+      contract get(ack) = {
+        for(value <- valueStore) {
+          valueStore(value) | ack(value)
+        }
+      } |
+      contract set(pair) = {
+        for(_ <- valueStore) {
+          match pair with [newValue, ack] => {
+            valueStore(newValue) | ack(Nil)
+          }
+        }
+      }
+    }
+  } |
+  // Cell usage.
+  new myGet, mySet in {
+    MakeCell(123, myGet, mySet) |
+    new ack in {
+      myGet(ack) |
+      for (result <- ack) {
+        result.display("\n") |
+        mySet([456, ack]) |
+        for (_ <- ack) {
+          myGet(ack) |
+          for (result <- ack) {
+            result.display("\n")
+          }
+        }
+      }
+    }
+  }
+}
