@@ -189,7 +189,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **KiCad Legacy Layout:** [Alhadis/language-pcb](https://github.com/Alhadis/language-pcb)
 - **KiCad Schematic:** [Alhadis/language-pcb](https://github.com/Alhadis/language-pcb)
 - **Kit:** [textmate/html.tmbundle](https://github.com/textmate/html.tmbundle)
-- **Kotlin:** [vkostyukov/kotlin-sublime-package](https://github.com/vkostyukov/kotlin-sublime-package)
+- **Kotlin:** [nishtahir/language-kotlin](https://github.com/nishtahir/language-kotlin)
 - **LabVIEW:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)
 - **Lasso:** [bfad/Sublime-Lasso](https://github.com/bfad/Sublime-Lasso)
 - **Latte:** [textmate/php-smarty.tmbundle](https://github.com/textmate/php-smarty.tmbundle)
