@@ -5,7 +5,7 @@ addons:
   apt:
     packages:
     - libicu-dev
-    - libicu48
+    - libicu52
 
 before_install: script/travis/before_install
 
@@ -14,10 +14,9 @@ script:
   - script/licensed verify
 
 rvm:
-  - 2.1
-  - 2.2
   - 2.3.3
   - 2.4.0
+  - 2.5.0
 
 notifications:
   disabled: true
@@ -27,6 +26,6 @@ git:
   depth: 3
 
 cache: bundler
-dist: precise
+dist: trusty
 
 bundler_args: --without debug
