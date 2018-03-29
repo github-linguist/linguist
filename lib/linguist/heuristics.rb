@@ -400,6 +400,14 @@ module Linguist
       end
     end
 
+    disambiguate ".q" do |data|
+      if /[A-Z\.][\w\d\.]*:{/i.match(data) || /(^|\n)\\(cd?|d|l|p|ts?) /.match(data)
+        Language["q"]
+      elsif /SELECT\s+[\w*,]+\s+FROM/i.match(data) || /(CREATE|ALTER|DROP)\s(DATABASE|SCHEMA|TABLE)/i.match(data)
+        Language["HiveQL"]
+      end
+    end
+
     disambiguate ".r" do |data|
       if /\bRebol\b/i.match(data)
         Language["Rebol"]
