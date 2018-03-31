@@ -221,6 +221,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **MediaWiki:** [textmate/mediawiki.tmbundle](https://github.com/textmate/mediawiki.tmbundle)
 - **Mercury:** [sebgod/mercury-tmlanguage](https://github.com/sebgod/mercury-tmlanguage)
 - **Meson:** [TingPing/language-meson](https://github.com/TingPing/language-meson)
+- **Meta Programming System:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)
 - **Metal:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **Mirah:** [atom/language-ruby](https://github.com/atom/language-ruby)
 - **Modelica:** [BorisChumichev/modelicaSublimeTextPackage](https://github.com/BorisChumichev/modelicaSublimeTextPackage)
