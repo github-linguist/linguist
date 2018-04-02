@@ -35,10 +35,13 @@ class TestHeuristics < Minitest::Test
       Array(blobs).each do |blob|
         result = Heuristics.call(file_blob(blob), candidates)
         if language.nil?
-          assert_equal [], result, "Failed for #{blob}"
+          expected = []
+        elsif language.is_a?(Array)
+          expected = language.map{ |l| Language[l] }
         else
-          assert_equal [Language[language]], result, "Failed for #{blob}"
+          expected = [Language[language]]
         end
+        assert_equal expected, result, "Failed for #{blob}"
       end
     end
   end
@@ -246,7 +249,9 @@ class TestHeuristics < Minitest::Test
   def test_mod_by_heuristics
     assert_heuristics({
       "Modula-2" => all_fixtures("Modula-2", "*.mod"),
-      "XML" => all_fixtures("XML", "*.mod")
+      "XML" => all_fixtures("XML", "*.mod"),
+      ["Linux Kernel Module", "AMPL"] => all_fixtures("Linux Kernel Module", "*.mod"),
+      ["Linux Kernel Module", "AMPL"] => all_fixtures("AMPL", "*.mod"),
     })
   end
 
