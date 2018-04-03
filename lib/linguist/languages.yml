@@ -1445,6 +1445,9 @@ GLSL:
   type: programming
   extensions:
   - ".glsl"
+  # .comp disabled because of too many conflicts that we are not
+  # able to disambiguate yet.
+  # - ".comp"
   - ".fp"
   - ".frag"
   - ".frg"
@@ -1453,7 +1456,9 @@ GLSL:
   - ".fshader"
   - ".geo"
   - ".geom"
+  - ".glslf"
   - ".glslv"
+  - ".gs"
   - ".gshader"
   - ".shader"
   - ".tesc"

@@ -7,9 +7,13 @@ class TestHeuristics < Minitest::Test
     File.read(File.join(samples_path, name))
   end
 
-  def file_blob(name)
+  def file_blob(name, alt_name=nil)
     path = File.exist?(name) ? name : File.join(samples_path, name)
-    FileBlob.new(path)
+    blob = FileBlob.new(path)
+    if !alt_name.nil?
+      blob.instance_variable_set("@path", alt_name)
+    end
+    blob
   end
 
   def all_fixtures(language_name, file="*")
@@ -28,12 +32,12 @@ class TestHeuristics < Minitest::Test
     assert_equal [], Heuristics.call(file_blob("Markdown/symlink.md"), [Language["Markdown"]])
   end
 
-  def assert_heuristics(hash)
+  def assert_heuristics(hash, alt_name=nil)
     candidates = hash.keys.map { |l| Language[l] }
 
     hash.each do |language, blobs|
       Array(blobs).each do |blob|
-        result = Heuristics.call(file_blob(blob), candidates)
+        result = Heuristics.call(file_blob(blob, alt_name), candidates)
         if language.nil?
           assert_equal [], result, "Failed for #{blob}"
         else
@@ -137,6 +141,17 @@ class TestHeuristics < Minitest::Test
       "Forth" => all_fixtures("Forth", "*.fs"),
       "GLSL" => all_fixtures("GLSL", "*.fs")
     })
+  end
+
+  # Candidate languages = ["Genie", "GLSL", "Gosu", "JavaScript"]
+  def test_gs_by_heuristics
+    assert_heuristics({
+      "GLSL" => all_fixtures("GLSL", "*.gs"),
+      "Gosu" => all_fixtures("Gosu", "*.gs"),
+    })
+    assert_heuristics({
+      nil => all_fixtures("Genie", "*.gs") + all_fixtures("JavaScript", "*.gs")
+    }, alt_name="test.gs")
   end
 
   # Candidate languages = ["Hack", "PHP"]
