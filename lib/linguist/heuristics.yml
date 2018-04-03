@@ -169,6 +169,8 @@ disambiguations:
   - language: Game Maker Language
 - extensions: ['.gs']
   rules:
+  - language: GLSL
+    pattern: '^#version\s+[0-9]+\b'
   - language: Gosu
     pattern: '^uses java\.'
 - extensions: ['.h']
