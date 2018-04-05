@@ -239,6 +239,10 @@ ApacheConf:
   extensions:
   - ".apacheconf"
   - ".vhost"
+  filenames:
+  - ".htaccess"
+  - apache2.conf
+  - httpd.conf
   tm_scope: source.apache-config
   ace_mode: apache_conf
   language_id: 16
@@ -730,6 +734,17 @@ Closure Templates:
   - ".soy"
   tm_scope: text.html.soy
   language_id: 357046146
+CoNLL-U:
+  type: data
+  extensions:
+  - ".conllu"
+  - ".conll"
+  tm_scope: text.conllu
+  ace_mode: text
+  aliases:
+  - CoNLL
+  - CoNLL-X
+  language_id: 421026389
 CoffeeScript:
   type: programming
   tm_scope: source.coffee
@@ -1456,6 +1471,8 @@ GN:
   - ".gni"
   interpreters:
   - gn
+  filenames:
+  - ".gn"
   tm_scope: source.gn
   ace_mode: python
   codemirror_mode: python
@@ -1734,6 +1751,7 @@ HTML+Django:
   group: HTML
   extensions:
   - ".jinja"
+  - ".jinja2"
   - ".mustache"
   - ".njk"
   aliases:
@@ -1913,6 +1931,8 @@ INI:
   - ".pro"
   - ".properties"
   filenames:
+  - ".editorconfig"
+  - ".gitconfig"
   - buildozer.spec
   tm_scope: source.ini
   aliases:
@@ -2025,12 +2045,23 @@ JSON:
   searchable: false
   extensions:
   - ".json"
+  - ".avsc"
   - ".geojson"
+  - ".gltf"
   - ".JSON-tmLanguage"
+  - ".jsonl"
+  - ".tfstate"
+  - ".tfstate.backup"
   - ".topojson"
+  - ".webapp"
+  - ".webmanifest"
   filenames:
   - ".arcconfig"
+  - ".htmlhintrc"
+  - ".jscsrc"
   - ".jshintrc"
+  - ".tern-config"
+  - ".tern-project"
   - composer.lock
   - mcmod.info
   language_id: 174
@@ -2040,6 +2071,7 @@ JSON5:
   - ".json5"
   filenames:
   - ".babelrc"
+  - ".jslintrc"
   tm_scope: source.js
   ace_mode: javascript
   codemirror_mode: javascript
@@ -2244,7 +2276,7 @@ Kotlin:
   - ".kt"
   - ".ktm"
   - ".kts"
-  tm_scope: source.Kotlin
+  tm_scope: source.kotlin
   ace_mode: text
   codemirror_mode: clike
   codemirror_mime_type: text/x-kotlin
@@ -2477,6 +2509,7 @@ Lua:
   - ".lua"
   - ".fcgi"
   - ".nse"
+  - ".p8"
   - ".pd_lua"
   - ".rbxs"
   - ".wlua"
@@ -2907,7 +2940,7 @@ Nextflow:
   extensions:
   - ".nf"
   filenames:
-  - "nextflow.config"  
+  - nextflow.config
   interpreters:
   - nextflow
   language_id: 506780613
@@ -3201,6 +3234,7 @@ PHP:
   - ".phps"
   - ".phpt"
   filenames:
+  - ".php"
   - ".php_cs"
   - ".php_cs.dist"
   - Phakefile
@@ -3345,6 +3379,7 @@ Perl:
   - ".psgi"
   - ".t"
   filenames:
+  - ack
   - cpanfile
   interpreters:
   - perl
@@ -3684,6 +3719,7 @@ R:
   - ".rsx"
   filenames:
   - ".Rprofile"
+  - expr-dist
   interpreters:
   - Rscript
   ace_mode: r
@@ -4010,6 +4046,7 @@ Ruby:
   - Berksfile
   - Brewfile
   - Buildfile
+  - Capfile
   - Dangerfile
   - Deliverfile
   - Fastfile
@@ -4190,7 +4227,7 @@ Scala:
   color: "#c22d40"
   extensions:
   - ".scala"
-  - ".kojo"  
+  - ".kojo"
   - ".sbt"
   - ".sc"
   interpreters:
@@ -4273,9 +4310,30 @@ Shell:
   - ".bash_logout"
   - ".bash_profile"
   - ".bashrc"
+  - ".cshrc"
+  - ".login"
+  - ".profile"
+  - ".zlogin"
+  - ".zlogout"
+  - ".zprofile"
+  - ".zshenv"
+  - ".zshrc"
+  - 9fs
   - PKGBUILD
+  - bash_logout
+  - bash_profile
+  - bashrc
+  - cshrc
   - gradlew
   - mvnw
+  - login
+  - man
+  - profile
+  - zlogin
+  - zlogout
+  - zprofile
+  - zshenv
+  - zshrc
   interpreters:
   - ash
   - bash
@@ -4544,6 +4602,9 @@ Tcl:
   - ".tcl"
   - ".adp"
   - ".tm"
+  filenames:
+  - owh
+  - starfield
   interpreters:
   - tclsh
   - wish
@@ -4619,6 +4680,7 @@ Text:
   - ".no"
   filenames:
   - COPYING
+  - COPYING.regex
   - COPYRIGHT.regex
   - FONTLOG
   - INSTALL
@@ -4633,6 +4695,7 @@ Text:
   - delete.me
   - keep.me
   - read.me
+  - readme.1st
   - test.me
   tm_scope: none
   ace_mode: text
@@ -4820,6 +4883,7 @@ Vim script:
   extensions:
   - ".vim"
   filenames:
+  - ".gvimrc"
   - ".nvimrc"
   - ".vimrc"
   - _vimrc
@@ -5058,6 +5122,7 @@ XML:
   - ".zcml"
   filenames:
   - ".classpath"
+  - ".cproject"
   - ".project"
   - App.config
   - NuGet.config
@@ -5166,6 +5231,7 @@ YAML:
   filenames:
   - ".clang-format"
   - ".clang-tidy"
+  - ".gemrc"
   ace_mode: yaml
   codemirror_mode: yaml
   codemirror_mime_type: text/x-yaml
@@ -5315,3 +5381,4 @@ xBase:
   tm_scope: source.harbour
   ace_mode: text
   language_id: 421
+  

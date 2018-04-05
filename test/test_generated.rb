@@ -66,7 +66,10 @@ class TestGenerated < Minitest::Test
     generated_sample_without_loading_data("go/vendor/gopkg.in/some/nested/path/foo.go")
 
     # .NET designer file
-    generated_sample_without_loading_data("Dummu/foo.designer.cs")
+    generated_sample_without_loading_data("Dummy/foo.designer.cs")
+    generated_sample_without_loading_data("Dummy/foo.Designer.cs")
+    generated_sample_without_loading_data("Dummy/foo.designer.vb")
+    generated_sample_without_loading_data("Dummy/foo.Designer.vb")
 
     # Composer generated composer.lock file
     generated_sample_without_loading_data("JSON/composer.lock")
