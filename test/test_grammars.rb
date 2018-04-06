@@ -5,45 +5,35 @@ class TestGrammars < Minitest::Test
 
   # List of projects that are allowed without licenses
   PROJECT_WHITELIST = [
-    "vendor/grammars/Sublime-Lasso",
-    "vendor/grammars/blitzmax"
+    "vendor/grammars/Sublime-Lasso",      # No license file
+    "vendor/grammars/blitzmax",           # No license file
+    "vendor/grammars/creole",             # License filename is not LICENSE(.*)?
   ].freeze
 
   HASH_WHITELIST = [
-    "bc12b3b4917eab9aedb87ec1305c2a4376e34fd1", # TextMate bundles
-    "16c4748566b3dd996594af0410a1875b22d3a2b3", # language-yaml and atom-salt
-    "ff21db2554d69d78b2220db5615b16bbba0788d3", # factor
-    "b4381ebae3235e91aaf5ccab1e8e94e9ad4faef4", # jflex.tmbundle
+    "2edac46b0a63309c96442d2826321a442217472f", # Agda.tmbundle
+    "7dfce11e2e3579ee43b83e69b1b64e77a2e378f0", # ant.tmbundle
+    "79e72fd673dcebadd8fbace8d43db3da96d2c09f", # bro-sublime
+    "62b97e52b78439c14550a44a3fe51332aeffb3a1", # elixir-tmbundle
+    "75cf04a9121ca7bb5a9c122b33007ac016ba72e7", # factor
+    "0acff2bb1536a3942a39ac74987ffd9c44905a6b", # FreeMarker.tmbundle
+    "ee77ce4cf9121bccc3e37ba6b98f8e7acd589aaf", # gap-tmbundle
+    "4cfc7ce12de920ccc836bbab2d748151d5ba7e38", # go-tmbundle
+    "6c2e34d62c08f97a3e2ece3eedc65fbd99873ff4", # idl.tmbundle
+    "e5212ae103917a9c2c3c1429a4569df466686fbd", # Isabelle.tmbundle
+    "bb56ce634fb7ddd38eee988c593ab7cb98a04f64", # jflex.tmbundle
+    "41cdc7e9f9d2e62eb8ac68a1a9359b9c39a7a9bf", # mako-tmbundle
+    "7821982b18bc35d6925cc16ece68d9c71f1fbba3", # moonscript-tmbundle
+    "c235154dbf7864612ac0d337ef5fe79a586b061a", # PHP-Twig.tmbundle
+    "0c216b112f3a4e6d5848128504d8378d8c7eee00", # r.tmbundle
     "da39a3ee5e6b4b0d3255bfef95601890afd80709", # SCSS.tmbundle
-    "b5432a1e1055de7eeede2dddf91e009480651fd6", # jasmin-sublime
-    "170b35df61879139b88379a8f1bfd86289c13599", # language-clojure
-    "60e1fe192238a032341d5dd3cd80535459fc84e4", # language-coffee-script
-    "94fbd554ec1837fb7c508fd7425326639c3f4103", # language-csharp
-    "70fb557a431891c2d634c33fa7367feab5066fd6", # language-javascript
-    "8653305b358375d0fced85dc24793b99919b11ef", # language-shellscript
-    "9f0c0b0926a18f5038e455e8df60221125fc3111", # elixir-tmbundle
-    "a4dadb2374282098c5b8b14df308906f5347d79a", # mako-tmbundle
-    "e06722add999e7428048abcc067cd85f1f7ca71c", # r.tmbundle
-    "50b14a0e3f03d7ca754dac42ffb33302b5882b78", # smalltalk-tmbundle
-    "eafbc4a2f283752858e6908907f3c0c90188785b", # gap-tmbundle
-    "22b3bf41b9e3e8c22357ee12265f149d68aae60a", # Stylus
-    "c87e7e574fca543941650e5b0a144b44c02c55d8", # language-crystal
-    "ace112feb693358db2970d0805f6894b745e14b5", # atom-language-purescript
-    "a626362e3efd030c1d97c0faf422cf8c2dfaea54", # FreeMarker.tmbundle
-    "15a394f6bc43400946570b299aee8ae264a1e3ff", # language-renpy
-    "74bb588102e8f332970a0fcabe36299e0806f130", # language-less
-    "2f03492b52d7dd83b4e7472f01b87c6121e5b1a4", # monkey
-    "784da5ce445892bc3e26beeb6a4402bbc5ca997e", # ant.tmbundle
-    "bdab9fdc21e6790b479ccb5945b78bc0f6ce2493", # language-blade
-    "c9118c370411f2f049c746c0fd096554e877aea2", # atom-language-perl6
-    "15a502335012f27f8a5991139298edb87a6e467d", # atom-language-rust
-    "304be6184f7f344d44a1d13bddf511019624fd22", # language-css
-    "8c538244ba88ef9902a4faf11a2b9acec46f2a4e", # sublime-nginx
-    "82c356d6ecb143a8a20e1658b0d6a2d77ea8126f", # idl.tmbundle
-    "9dafd4e2a79cb13a6793b93877a254bc4d351e74", # sublime-text-ox
-    "8e111741d97ba2e27b3d18a309d426b4a37e604f", # sublime-varnish
+    "68539730d3cde34355f429f2267e265c1e030912", # smalltalk-tmbundle
+    "4b5f67a54532ca6e49ba44cd135a510a74712e07", # Stylus
     "23d2538e33ce62d58abda2c039364b92f64ea6bc", # sublime-angelscript
-    "53714285caad3c480ebd248c490509695d10404b", # atom-language-julia
+    "966085b715baa0b0b67b40924123f92f90acd0ba", # sublime-shen
+    "3df4ef028c6384b64bc59b8861d6c52093b2116d", # sublime-text-ox
+    "fd47e09f1fbdb3c26e2960d0aa2b8535bbc31188", # sublimetext-cuda-cpp
+    "93360925b1805be2b3f0a18e207649fcb524b991", # Std license in README.md of many TextMate grammars like abap.tmbundle
   ].freeze
 
   # List of allowed SPDX license names
@@ -101,7 +91,7 @@ class TestGrammars < Minitest::Test
   end
 
   def test_submodules_have_recognized_licenses
-    unrecognized = submodule_licenses.select { |k,v| v.nil? && Licensee::FSProject.new(k).license_file }
+    unrecognized = submodule_licenses.select { |k,v| v.nil? && Licensee.project(k).license_file }
     unrecognized.reject! { |k,v| PROJECT_WHITELIST.include?(k) }
     message = "The following submodules have unrecognized licenses:\n* #{unrecognized.keys.join("\n* ")}\n"
     message << "Please ensure that the project's LICENSE file contains the full text of the license"
@@ -186,15 +176,22 @@ class TestGrammars < Minitest::Test
   # If the license is unrecognized, return its hash
   def submodule_license(submodule)
     # Prefer Licensee to detect a submodule's license
-    project = Licensee::FSProject.new(submodule, detect_readme: true)
-    return project.license.key if project.license
+    project = Licensee.project(submodule, detect_packages: true, detect_readme: true)
+    return project.license.key if project.licenses.length == 1 && !project.license.pseudo_license?
+
+    # If we have more than one license, return the first one that isn't a
+    # pseudo-license (other or no-license), if any
+    if project.licenses.length > 1
+      first_real_license = project.licenses.reject{ |f| f.pseudo_license? }.first
+      return first_real_license.key unless first_real_license.nil?
+    end
 
     # We know a license exists, but no method was able to recognize it.
     # We return the license hash in this case, to uniquely identify it.
     if project.license_file
-      return project.license_file.hash
+      return project.license_file.content_hash
     elsif project.readme
-      return project.readme.hash
+      return project.readme.content_hash
     end
   end
 end

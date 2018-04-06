@@ -239,6 +239,10 @@ ApacheConf:
   extensions:
   - ".apacheconf"
   - ".vhost"
+  filenames:
+  - ".htaccess"
+  - apache2.conf
+  - httpd.conf
   tm_scope: source.apache-config
   ace_mode: apache_conf
   language_id: 16
@@ -1467,6 +1471,8 @@ GN:
   - ".gni"
   interpreters:
   - gn
+  filenames:
+  - ".gn"
   tm_scope: source.gn
   ace_mode: python
   codemirror_mode: python
@@ -1877,7 +1883,7 @@ Haxe:
   extensions:
   - ".hx"
   - ".hxsl"
-  tm_scope: source.haxe.2
+  tm_scope: source.hx
   language_id: 158
 Hy:
   type: programming
@@ -1925,6 +1931,8 @@ INI:
   - ".pro"
   - ".properties"
   filenames:
+  - ".editorconfig"
+  - ".gitconfig"
   - buildozer.spec
   tm_scope: source.ini
   aliases:
@@ -3226,6 +3234,7 @@ PHP:
   - ".phps"
   - ".phpt"
   filenames:
+  - ".php"
   - ".php_cs"
   - ".php_cs.dist"
   - Phakefile
@@ -3370,9 +3379,13 @@ Perl:
   - ".psgi"
   - ".t"
   filenames:
+  - ack
   - cpanfile
   interpreters:
+  - cperl
   - perl
+  aliases:
+  - cperl
   language_id: 282
 Perl 6:
   type: programming
@@ -3524,6 +3537,8 @@ PowerShell:
   - ".ps1"
   - ".psd1"
   - ".psm1"
+  interpreters:
+  - pwsh
   language_id: 293
 Processing:
   type: programming
@@ -3717,6 +3732,7 @@ R:
   - ".rsx"
   filenames:
   - ".Rprofile"
+  - expr-dist
   interpreters:
   - Rscript
   ace_mode: r
@@ -4043,6 +4059,7 @@ Ruby:
   - Berksfile
   - Brewfile
   - Buildfile
+  - Capfile
   - Dangerfile
   - Deliverfile
   - Fastfile
@@ -4306,8 +4323,29 @@ Shell:
   - ".bash_logout"
   - ".bash_profile"
   - ".bashrc"
+  - ".cshrc"
+  - ".login"
+  - ".profile"
+  - ".zlogin"
+  - ".zlogout"
+  - ".zprofile"
+  - ".zshenv"
+  - ".zshrc"
+  - 9fs
   - PKGBUILD
+  - bash_logout
+  - bash_profile
+  - bashrc
+  - cshrc
   - gradlew
+  - login
+  - man
+  - profile
+  - zlogin
+  - zlogout
+  - zprofile
+  - zshenv
+  - zshrc
   interpreters:
   - ash
   - bash
@@ -4576,6 +4614,9 @@ Tcl:
   - ".tcl"
   - ".adp"
   - ".tm"
+  filenames:
+  - owh
+  - starfield
   interpreters:
   - tclsh
   - wish
@@ -4651,6 +4692,7 @@ Text:
   - ".no"
   filenames:
   - COPYING
+  - COPYING.regex
   - COPYRIGHT.regex
   - FONTLOG
   - INSTALL
@@ -4665,6 +4707,7 @@ Text:
   - delete.me
   - keep.me
   - read.me
+  - readme.1st
   - test.me
   tm_scope: none
   ace_mode: text
@@ -4852,6 +4895,7 @@ Vim script:
   extensions:
   - ".vim"
   filenames:
+  - ".gvimrc"
   - ".nvimrc"
   - ".vimrc"
   - _vimrc
@@ -5090,6 +5134,7 @@ XML:
   - ".zcml"
   filenames:
   - ".classpath"
+  - ".cproject"
   - ".project"
   - App.config
   - NuGet.config
@@ -5198,6 +5243,7 @@ YAML:
   filenames:
   - ".clang-format"
   - ".clang-tidy"
+  - ".gemrc"
   ace_mode: yaml
   codemirror_mode: yaml
   codemirror_mime_type: text/x-yaml
