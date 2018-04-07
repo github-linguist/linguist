@@ -384,13 +384,13 @@ module Linguist
       if /^\s*=\w+$/.match(data)
         if /^=pod|=cut/.match(data)
           Language["Pod"]
-        elsif /^\s*=begin pod/.match(data)
-          Language["Perl 6"]
+        elsif /^\s+=(begin|cut|pod)/.match(data)
+          Language["Pod 6"]
         else
           Language["Pod"]
         end
       elsif Perl6Regex.match(data)
-        Language["Perl 6"]
+        Language["Pod 6"]
       elsif /^\s*\/\* XPM \*\//.match(data)
         Language["XPM"]
       end
