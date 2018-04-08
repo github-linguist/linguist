@@ -529,7 +529,7 @@ module Linguist
     
     # Internal: Is this an owl-generated Dart file?
     #
-    # An own generated file contains:
+    # An owl generated file contains:
     # // GENERATED CODE - DO NOT MODIFY
     # on the first line.
     #
