@@ -161,6 +161,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **HTML+ERB:** [atom/language-ruby](https://github.com/atom/language-ruby)
 - **HTML+PHP:** [textmate/php.tmbundle](https://github.com/textmate/php.tmbundle)
 - **HTTP:** [samsalisbury/Sublime-HTTP](https://github.com/samsalisbury/Sublime-HTTP)
+- **HXML:** [vshaxe/haxe-TmLanguage](https://github.com/vshaxe/haxe-TmLanguage)
 - **IDL:** [mgalloy/idl.tmbundle](https://github.com/mgalloy/idl.tmbundle)
 - **Idris:** [idris-hackers/idris-sublime](https://github.com/idris-hackers/idris-sublime)
 - **Inform 7:** [erkyrath/language-inform7](https://github.com/erkyrath/language-inform7)
