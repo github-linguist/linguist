@@ -111,6 +111,7 @@ log "Confirming license"
 if repo_old
   command('script/licensed')
 else
+  repo_new = File.absolute_path(repo_new)
   command('script/licensed', '--module', repo_new)
 end
 
