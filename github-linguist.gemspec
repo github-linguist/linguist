@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.executables = ['linguist', 'git-linguist']
   s.extensions = ['ext/linguist/extconf.rb']
 
-  s.add_dependency 'charlock_holmes', '~> 0.7.5'
+  s.add_dependency 'charlock_holmes', '~> 0.7.6'
   s.add_dependency 'escape_utils',    '~> 1.2.0'
   s.add_dependency 'mime-types',      '>= 1.19'
   s.add_dependency 'rugged',          '>= 0.25.1'
@@ -27,6 +27,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rake'
   s.add_development_dependency 'yajl-ruby'
   s.add_development_dependency 'color-proximity', '~> 0.2.1'
-  s.add_development_dependency 'licensed'
-  s.add_development_dependency 'licensee', '~> 8.8.0'
+  s.add_development_dependency 'licensed', '~> 1.0.0'
+  s.add_development_dependency 'licensee'
 end
