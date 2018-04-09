@@ -64,6 +64,7 @@ Examples:
 
 $replace = nil
 $verbose = true
+$compile = false
 
 OptionParser.new do |opts|
   opts.banner = usage
@@ -72,6 +73,9 @@ OptionParser.new do |opts|
   end
   opts.on("-rSUBMODULE", "--replace=SUBMODDULE", "Replace an existing grammar submodule.") do |name|
     $replace = name
+  end
+  opts.on("-C", "--compile", "Compile grammar using the new grammar-compiler.") do
+    $compile = true
   end
 end.parse!
 
@@ -96,12 +100,12 @@ if repo_old
   log "Deregistering: #{repo_old}"
   command('git', 'submodule', 'deinit', repo_old)
   command('git', 'rm', '-rf', repo_old)
-  command('script/grammar-compiler', 'update', '-f')
+  command('script/grammar-compiler', 'update', '-f') if $compile
 end
 
 log "Registering new submodule: #{repo_new}"
 command('git', 'submodule', 'add', '-f', https, repo_new)
-command('script/grammar-compiler', 'add', repo_new)
+command('script/grammar-compiler', 'add', repo_new) if $compile
 
 log "Confirming license"
 if repo_old
