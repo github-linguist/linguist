@@ -3386,6 +3386,8 @@ Perl:
   - ".psgi"
   - ".t"
   filenames:
+  - Makefile.PL
+  - Rexfile
   - ack
   - cpanfile
   interpreters:
@@ -3409,8 +3411,6 @@ Perl 6:
   - ".pm"
   - ".pm6"
   - ".t"
-  filenames:
-  - Rexfile
   interpreters:
   - perl6
   aliases:
@@ -5360,6 +5360,19 @@ reStructuredText:
   codemirror_mode: rst
   codemirror_mime_type: text/x-rst
   language_id: 419
+sed:
+  type: programming
+  color: "#64b970"
+  extensions:
+  - ".sed"
+  interpreters:
+  - gsed
+  - minised
+  - sed
+  - ssed
+  ace_mode: text
+  tm_scope: source.sed
+  language_id: 847830017
 wdl:
   type: programming
   color: "#42f1f4"
