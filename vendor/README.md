@@ -178,6 +178,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **J:** [tikkanz/JSyntax](https://github.com/tikkanz/JSyntax)
 - **Jasmin:** [atmarksharp/jasmin-sublime](https://github.com/atmarksharp/jasmin-sublime)
 - **Java:** [textmate/java.tmbundle](https://github.com/textmate/java.tmbundle)
+- **Java Properties:** [textmate/java.tmbundle](https://github.com/textmate/java.tmbundle)
 - **Java Server Pages:** [textmate/java.tmbundle](https://github.com/textmate/java.tmbundle)
 - **JavaScript:** [atom/language-javascript](https://github.com/atom/language-javascript)
 - **JFlex:** [jflex-de/jflex.tmbundle](https://github.com/jflex-de/jflex.tmbundle)
