@@ -28,9 +28,9 @@ To run Linguist from the cloned repository:
 
 ### Dependencies
 
-Linguist uses the [`charlock_holmes`](https://github.com/brianmario/charlock_holmes) character encoding detection library which in turn uses [ICU](http://site.icu-project.org/), and the libgit2 bindings for Ruby provided by [`rugged`](https://github.com/libgit2/rugged). These components have their own dependencies - `icu4c`, and `cmake` and `pkg-config` respectively - which you may need to install before you can install Linguist.
+Linguist uses the [`charlock_holmes`](https://github.com/brianmario/charlock_holmes) character encoding detection library which in turn uses [ICU](http://site.icu-project.org/), and the libgit2 bindings for Ruby provided by [`rugged`](https://github.com/libgit2/rugged). [Docker](https://www.docker.com/) is also required when adding or updating grammars. These components have their own dependencies - `icu4c`, and `cmake` and `pkg-config` respectively - which you may need to install before you can install Linguist.
 
-For example, on macOS with [Homebrew](http://brew.sh/): `brew install cmake pkg-config icu4c` and on Ubuntu: `apt-get install cmake pkg-config libicu-dev`.
+For example, on macOS with [Homebrew](http://brew.sh/): `brew install cmake pkg-config icu4c docker` and on Ubuntu: `apt-get install cmake pkg-config libicu-dev docker-ce`.
 
 ## Adding an extension to a language
 
