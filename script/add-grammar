@@ -107,7 +107,7 @@ log "Confirming license"
 if repo_old
   command('script/licensed')
 else
-  command('script/licensed', '--module', repo_new)
+  command('script/licensed', '--module', "#{File.expand_path("../", File.dirname(__FILE__))}/#{repo_new}")
 end
 
 log "Updating grammar documentation in vendor/README.md"
