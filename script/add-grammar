@@ -47,10 +47,9 @@ def command(*args)
   log "$ #{args.join(' ')}"
   output, status = Open3.capture2e(*args)
   if !status.success?
-    output.each_line do |line|
-      log "  > #{line}"
-    end
-    raise "Command failed. Aborting."
+    warn "Command failed. Aborting."
+    error.output = output.each_line { |line| "  > #{line}" }
+    raise { output: output, status: status }
   end
 end
 
@@ -65,7 +64,6 @@ EOH
 
 $replace = nil
 $verbose = true
-$compile = false
 
 OptionParser.new do |opts|
   opts.banner = usage
@@ -74,9 +72,6 @@ OptionParser.new do |opts|
   end
   opts.on("-rSUBMODULE", "--replace=SUBMODDULE", "Replace an existing grammar submodule.") do |name|
     $replace = name
-  end
-  opts.on("-C", "--compile", "Compile grammar using the new grammar-compiler.") do
-    $compile = true
   end
 end.parse!
 
@@ -90,14 +85,13 @@ unless $url
 end
 
 # Flags to track which changes should be reverted on an error
-did_remove? = false
-did_add?    = false
-gitmodules  = File.read("#{ROOT}/.gitmodules")
-git_config  = File.read("#{ROOT}/.git/config")
+$gitmodules  = File.read("#{ROOT}/.gitmodules")
+$git_config  = File.read("#{ROOT}/.git/config")
+$vendor_list = File.read("#{ROOT}/vendor/README.md")
 
 def restore_configs
-  File.write("#{ROOT}/.gitmodules", gitmodules)
-  File.write("#{ROOT}/.git/config", git_config)
+  File.write("#{ROOT}/.gitmodules", $gitmodules)
+  File.write("#{ROOT}/.git/config", $git_config)
 end
 
 begin
@@ -115,14 +109,12 @@ begin
 
   if repo_old
     log "Deregistering: #{repo_old}"
-    removed = repo_old
     command('git', 'submodule', 'deinit', repo_old)
     command('git', 'rm', '-rf', repo_old)
     command('script/grammar-compiler', 'update', '-f')
   end
 
   log "Registering new submodule: #{repo_new}"
-  added = repo_new
   command('git', 'submodule', 'add', '-f', https, repo_new)
   command('script/grammar-compiler', 'add', repo_new)
 
@@ -138,19 +130,17 @@ begin
   command('script/sort-submodules')
   command('script/list-grammars')
 rescue => ex
-  if did_add?
+  if repo_new
     `git submodule deinit #{repo_new}`
     `rm -rf #{repo_new}`
     `rm -rf .git/modules/#{repo_new}/`
-  end
-  restore_configs()
-  if did_remove?
-    `rm -rf #{repo_old}`
-    `git submodule add -f "#{https}", "#{repo_old}"`
-    
-    # Revert twice. Make no assumpsions about
-    # badly-mangled the working tree is.
     restore_configs()
   end
+  if repo_old
+    `rm -rf #{repo_old}`
+    `git submodule add -f "#{https}", "#{repo_old}"`
+    restore_configs()
+  end
+  File.write("#{ROOT}/vendor/README.md", $vendor_list)
   exit 1
 end
