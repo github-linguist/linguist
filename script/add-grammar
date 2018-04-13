@@ -1,134 +1,24 @@
 #!/usr/bin/env ruby
 
 require "optparse"
-require "open3"
+require_relative "./helpers/all"
 
-class GrammarRepo
-
-  # Whitelist of trusted hosting providers
-  HOSTS = Regexp.union %w[github.com bitbucket.org gitlab.com]
-
-  # Public: Define a repository source by upstream URL.
-  #
-  # url - an HTTPS, HTTP, or SSH address accepted by git-remote(1)
-  #       Only domains listed in HOSTS are accepted; unrecognised
-  #       hostnames or invalid URLs will raise an ArgumentError.
-  #
-  #       Assumption: Repo URLs will never include subdomains.
-  #       We only check for a possible `www`, nothing else.
-  #
-  # module_path - path of submodule as registered in `.gitmodules`
-  #               Omit this unless grammar is being replaced.
-  def initialize(url, module_path = nil)
-    if https? url
-      @host = $1.downcase
-      @user = $2
-      @repo = $3.sub /\.git$/, ""
-    elsif ssh?(url) || shorthand?(url)
-      @host = $1.downcase
-      @user = $2
-      @repo = $3
-    elsif implicit_shorthand? url
-      @host = "github.com"
-      @user = $1
-      @repo = $2
-    else
-      raise ArgumentError, "Unsupported URL: #{url}"
-    end
-  end
-
-  # Match a well-formed HTTP or HTTPS address
-  def https?(url)
-    nil unless url =~ /
-      ^  (?<protocol>   https? ://)?
-         (?<userauth>   [^@.]+ @  )?
-         (?<subdomain>  www    \. )?
-         (?<hostname>   #{HOSTS}  )
-      \/ (?<user>       [^\/]+    )
-      \/ (?<repo>       [^\/]+    ) /xi
-  end
-
-  # Match an SSH address starting with `git@`
-  def ssh?(url)
-    nil unless url =~ /
-      ^ git@
-        (?<hostname> #{HOSTS}) :
-        (?<user>     [^\/]+)  \/
-        (?<repo>     [^\/]+)  \.git $/xi
-  end
-
-  # Match `provider:user/repo`
-  def shorthand?(url)
-    nil unless url =~ /
-      ^ (?<hostname> #{HOSTS}) : \/?
-        (?<user>     [^\/]+) \/
-        (?<repo>     [^\/]+) \/? $ /xi
-  end
-
-  # Match `user/repo` shorthand, assumed to be GitHub
-  def implicit_shorthand?(url)
-    nil unless url =~ /
-      ^ \/? (?<user>[^\/]+)
-        \/  (?<repo>[^\/]+)
-        \/? $/xi
-  end
-end
-
-
-class GrammarGuardian
-
-  ROOT = File.expand_path("../../", __FILE__)
-
-  def initialize
-    # Track each change so we can roll back after a failed command
-    @changes = Hash.new
-  end
-
-  # Print debugging feedback to STDOUT if running with --verbose
-  def log(msg)
-    puts msg if $verbose
-  end
-
-  def command(*args)
-    log "$ #{args.join(' ')}"
-    output, status = Open3.capture2e(*args)
-    if !status.success?
-      output.each_line do |line|
-        log "  > #{line}"
-      end
-      warn "Command failed. Aborting."
-      exit 1
-    end
-  end
-end
-
-# Isolate the vendor-name component of a submodule path
-def parse_submodule(name)
-  name =~ /^(?:.*(?:vendor\/)?grammars\/)?([^\/]+)/i
-  path = "vendor/grammars/#{$1}"
-  unless File.exist?("#{ROOT}/" + path)
-    warn "Submodule '#{path}' does not exist. Aborting."
-    exit 1
-  end
-  path
-end
-
-
-usage = """Usage:
+usage = <<-EOH
+Usage:
   #{$0} [-v|--verbose] [--replace grammar] url
+
 Examples:
   #{$0} https://github.com/Alhadis/language-roff
   #{$0} --replace sublime-apl https://github.com/Alhadis/language-apl
-"""
+EOH
 
-$replace = nil
-$verbose = true
 $compile = false
+$replace = nil
 
 OptionParser.new do |opts|
   opts.banner = usage
   opts.on("-q", "--quiet", "Do not print output unless there's a failure") do
-    $verbose = false
+    $quiet = true
   end
   opts.on("-rSUBMODULE", "--replace=SUBMODDULE", "Replace an existing grammar submodule.") do |name|
     $replace = name
@@ -144,29 +34,27 @@ $url = ARGV[0]
 # No URL? Print a usage message and bail.
 unless $url
   warn usage
-  exit 1;
+  exit 1
 end
 
 # Exit early if docker isn't installed or running.
-log "Checking docker is installed and running"
+log "Checking Docker is installed and running"
 command('docker', 'ps')
 
-# Ensure the given URL is an HTTPS link
-parts    = parse_url $url
-https    = "https://#{parts[:host]}/#{parts[:user]}/#{parts[:repo]}"
-repo_new = "vendor/grammars/#{parts[:repo]}"
-repo_old = parse_submodule($replace) if $replace
+repo_new = GrammarSource.by_url $url
 
 Dir.chdir(ROOT)
 
-if repo_old
-  log "Deregistering: #{repo_old}"
-  command('git', 'submodule', 'deinit', repo_old)
-  command('git', 'rm', '-rf', repo_old)
+if $replace
+  repo_old = GrammarSource.by_path $replace
+  log "Deregistering: #{repo_old.path}"
+  $removed = repo_old
+  command('git', 'submodule', 'deinit', repo_old.path)
+  command('git', 'rm', '-rf', repo_old.path)
   command('script/grammar-compiler', 'update', '-f') if $compile
 end
 
-log "Registering new submodule: #{repo_new}"
+log "Registering new submodule: #{repo_new.path}"
 command('git', 'submodule', 'add', '-f', https, repo_new)
 command('script/grammar-compiler', 'add', repo_new) if $compile
 
