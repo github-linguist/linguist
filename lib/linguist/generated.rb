@@ -538,7 +538,7 @@ module Linguist
       return false unless extname == '.dart'
       return false unless lines.count > 1
       return true if lines[0].include?("Generated code. Do not modify.")
-      return lines[1].include?("GENERATED CODE - DO NOT MODIFY")
+      return lines[0].include?("GENERATED CODE - DO NOT MODIFY")
     end
   end
 end
