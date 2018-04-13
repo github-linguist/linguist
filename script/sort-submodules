@@ -1,7 +1,21 @@
 #!/usr/bin/env ruby
 
 require "optparse"
-require_relative "./helpers/submodule"
+
+ROOT = File.expand_path "../../", __FILE__
+
+
+# Extract and sort a list of submodules
+def sort_entries(file_data)
+  submodules = []
+  file_data.scan(/(^\[submodule[^\n]+\n)((?:\t[^\n]+\n)+)/).each do |head, body|
+    path = body.match(/^\tpath\s*=\s*\K(.+)$/)[0]
+    submodules << [path, head + body]
+  end
+  submodules.sort! { |a,b| a[0] <=> b[0] }
+  submodules.collect { |i| i[1] }
+end
+
 
 usage = <<-EOH
 Usage:
@@ -14,7 +28,6 @@ Examples:
 EOH
 
 $testing = false
-
 OptionParser.new do |opts|
   opts.banner = usage
   opts.on("-h", "--help") do
@@ -26,11 +39,12 @@ OptionParser.new do |opts|
   end
 end.parse!
 
-unsorted = read ".gitmodules"
-sorted = Submodule.list.join
+
+unsorted = File.read("#{ROOT}/.gitmodules")
+sorted = sort_entries(unsorted).join
 
 if $testing
   exit unsorted == sorted
 else
-  write ".gitmodules", sorted
+  File.write "#{ROOT}/.gitmodules", sorted
 end

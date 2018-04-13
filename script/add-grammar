@@ -1,24 +1,75 @@
 #!/usr/bin/env ruby
 
 require "optparse"
-require_relative "./helpers/all"
+require "open3"
 
-usage = <<-EOH
-Usage:
+ROOT = File.expand_path("../../", __FILE__)
+
+
+# Break a repository URL into its separate components
+def parse_url(input)
+  hosts = "github\.com|bitbucket\.org|gitlab\.com"
+
+  # HTTPS/HTTP link pointing to recognised hosts
+  if input =~ /^(?:https?:\/\/)?(?:[^.@]+@)?(?:www\.)?(#{hosts})\/([^\/]+)\/([^\/]+)/i
+    { host: $1.downcase(), user: $2, repo: $3.sub(/\.git$/, "") }
+  # SSH
+  elsif input =~ /^git@(#{hosts}):([^\/]+)\/([^\/]+)\.git$/i
+    { host: $1.downcase(), user: $2, repo: $3 }
+  # provider:user/repo
+  elsif input =~ /^(github|bitbucket|gitlab):\/?([^\/]+)\/([^\/]+)\/?$/i
+    { host: $1.downcase(), user: $2, repo: $3 }
+  # user/repo - Common GitHub shorthand
+  elsif input =~ /^\/?([^\/]+)\/([^\/]+)\/?$/
+    { host: "github.com", user: $1, repo: $2 }
+  else
+    raise "Unsupported URL: #{input}"
+  end
+end
+
+# Isolate the vendor-name component of a submodule path
+def parse_submodule(name)
+  name =~ /^(?:.*(?:vendor\/)?grammars\/)?([^\/]+)/i
+  path = "vendor/grammars/#{$1}"
+  unless File.exist?("#{ROOT}/" + path)
+    warn "Submodule '#{path}' does not exist. Aborting."
+    exit 1
+  end
+  path
+end
+
+# Print debugging feedback to STDOUT if running with --verbose
+def log(msg)
+  puts msg if $verbose
+end
+
+def command(*args)
+  log "$ #{args.join(' ')}"
+  output, status = Open3.capture2e(*args)
+  if !status.success?
+    output.each_line do |line|
+      log "  > #{line}"
+    end
+    warn "Command failed. Aborting."
+    exit 1
+  end
+end
+
+usage = """Usage:
   #{$0} [-v|--verbose] [--replace grammar] url
-
 Examples:
   #{$0} https://github.com/Alhadis/language-roff
   #{$0} --replace sublime-apl https://github.com/Alhadis/language-apl
-EOH
+"""
 
-$compile = false
 $replace = nil
+$verbose = true
+$compile = false
 
 OptionParser.new do |opts|
   opts.banner = usage
   opts.on("-q", "--quiet", "Do not print output unless there's a failure") do
-    $quiet = true
+    $verbose = false
   end
   opts.on("-rSUBMODULE", "--replace=SUBMODDULE", "Replace an existing grammar submodule.") do |name|
     $replace = name
@@ -34,27 +85,29 @@ $url = ARGV[0]
 # No URL? Print a usage message and bail.
 unless $url
   warn usage
-  exit 1
+  exit 1;
 end
 
 # Exit early if docker isn't installed or running.
-log "Checking Docker is installed and running"
+log "Checking docker is installed and running"
 command('docker', 'ps')
 
-repo_new = GrammarSource.by_url $url
+# Ensure the given URL is an HTTPS link
+parts    = parse_url $url
+https    = "https://#{parts[:host]}/#{parts[:user]}/#{parts[:repo]}"
+repo_new = "vendor/grammars/#{parts[:repo]}"
+repo_old = parse_submodule($replace) if $replace
 
 Dir.chdir(ROOT)
 
-if $replace
-  repo_old = GrammarSource.by_path $replace
-  log "Deregistering: #{repo_old.path}"
-  $removed = repo_old
-  command('git', 'submodule', 'deinit', repo_old.path)
-  command('git', 'rm', '-rf', repo_old.path)
+if repo_old
+  log "Deregistering: #{repo_old}"
+  command('git', 'submodule', 'deinit', repo_old)
+  command('git', 'rm', '-rf', repo_old)
   command('script/grammar-compiler', 'update', '-f') if $compile
 end
 
-log "Registering new submodule: #{repo_new.path}"
+log "Registering new submodule: #{repo_new}"
 command('git', 'submodule', 'add', '-f', https, repo_new)
 command('script/grammar-compiler', 'add', repo_new) if $compile
 
@@ -62,7 +115,6 @@ log "Confirming license"
 if repo_old
   command('script/licensed')
 else
-  repo_new = File.absolute_path(repo_new)
   command('script/licensed', '--module', repo_new)
 end
 
