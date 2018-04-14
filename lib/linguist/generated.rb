@@ -57,6 +57,7 @@ module Linguist
       generated_net_designer_file? ||
       generated_net_specflow_feature_file? ||
       composer_lock? ||
+      cargo_lock? ||
       node_modules? ||
       go_vendor? ||
       npm_shrinkwrap_or_package_lock? ||
@@ -376,6 +377,13 @@ module Linguist
     # Returns true or false.
     def generated_by_zephir?
       !!name.match(/.\.zep\.(?:c|h|php)$/)
+    end
+
+    # Internal: Is the blob a generated Rust Cargo lock file?
+    #
+    # Returns true or false.
+    def cargo_lock?
+      !!name.match(/Cargo\.lock/)
     end
 
     # Is the blob a VCR Cassette file?
