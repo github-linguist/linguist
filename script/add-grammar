@@ -117,7 +117,7 @@ begin
 
   if $repo_old
     log "Deregistering: #{$repo_old}"
-    command('git', 'submodule', 'deinit', $repo_old)
+    command('git', 'submodule', 'deinit', '-f', $repo_old)
     command('git', 'rm', '-rf', $repo_old)
     command('script/grammar-compiler', 'update', '-f')
   end
@@ -130,7 +130,8 @@ begin
   if $repo_old
     command('script/licensed')
   else
-    command('script/licensed', '--module', $repo_new)
+    repo_abs = File.absolute_path($repo_new)
+    command('script/licensed', '--module', repo_abs)
   end
 
   log "Updating grammar documentation in vendor/README.md"
