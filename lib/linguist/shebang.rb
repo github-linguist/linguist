@@ -16,7 +16,7 @@ module Linguist
       return [] if blob.symlink?
 
       languages = Language.find_by_interpreter interpreter(blob.data)
-      if candidates.any? then candidates & languages else languages end
+      candidates.any? ? candidates & languages : languages
     end
 
     # Public: Get the interpreter from the shebang

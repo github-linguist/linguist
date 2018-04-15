@@ -17,7 +17,7 @@ module Linguist
       def self.call(blob, candidates)
         name = blob.name.to_s
         languages = Language.find_by_filename(name)
-        if candidates.any? then candidates & languages else languages end
+        candidates.any? ? candidates & languages : languages
       end
     end
   end
