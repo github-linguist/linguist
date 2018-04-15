@@ -2,6 +2,18 @@ module Linguist
   module Strategy
     # Detects language based on extension
     class Extension
+      # Public: Use the file extension to detect the blob's language.
+      #
+      # blob               - An object that quacks like a blob.
+      # candidates         - A list of candidate languages.
+      #
+      # Examples
+      #
+      #   Extension.call(FileBlob.new("path/to/file"))
+      #
+      # Returns an Array of Languages associated blob's file extension.
+      # Selected Languages must be in the candidate list, except if it's empty,
+      # in which case any language is a valid candidate.
       def self.call(blob, candidates)
         languages = Language.find_by_extension(blob.name.to_s)
         if candidates.any? then languages & candidates else languages end
