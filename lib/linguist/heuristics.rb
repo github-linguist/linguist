@@ -77,7 +77,7 @@ module Linguist
     # Common heuristics
     CRegex = Regexp.union(
         /\b(char|double|short|int|long|float|unsigned|void)\s+\w+\s*\(\s*void\s*\)/,
-        /\([\s\w\*]+restrict\s+/,
+        /\([\sa-zA-Z0-9\*]+restrict\s+/,
         /\b(char|short|int|long|float|unsigned)\s+\w+\s*\[\]\s*;/
       )
     CPlusPlusRegex = Regexp.union(
@@ -236,12 +236,12 @@ module Linguist
     end
 
     disambiguate ".h" do |data|
-      if CRegex.match(data)
-        Language["C"]
-      elsif ObjectiveCRegex.match(data)
+      if ObjectiveCRegex.match(data)
         Language["Objective-C"]
       elsif CPlusPlusRegex.match(data)
         Language["C++"]
+      elsif CRegex.match(data)
+        Language["C"]
       end
     end
 
