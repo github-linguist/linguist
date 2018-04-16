@@ -9,8 +9,8 @@ module Linguist
     #
     #   Shebang.call(FileBlob.new("path/to/file"))
     #
-    # Returns an Array of Languages from the candidate list for which the
-    # blob's shebang is valid. Returns an empty list if there is not shebang.
+    # Returns an array of languages from the candidate list for which the
+    # blob's shebang is valid. Returns an empty list if there is no shebang.
     # If the candidate list is empty, any language is a valid candidate.
     def self.call(blob, candidates)
       return [] if blob.symlink?
