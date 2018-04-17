@@ -529,7 +529,7 @@ module Linguist
     
     # Internal: Is this a generated Dart file?
     #
-    # A dart-lang/appengine file contains:
+    # A dart-lang/appengine generated file contains:
     # // Generated code. Do not modify.
     # on the first line.
     #
@@ -541,8 +541,7 @@ module Linguist
     def generated_dart?
       return false unless extname == '.dart'
       return false unless lines.count > 1
-      return true if lines[0].include?("Generated code. Do not modify.")
-      return lines[0].include?("GENERATED CODE - DO NOT MODIFY")
+      return lines.first.downcase =~ /generated code\W{2,3}do not modify/
     end
   end
 end
