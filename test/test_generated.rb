@@ -118,5 +118,8 @@ class TestGenerated < Minitest::Test
 
     # PostScript
     generated_sample_loading_data("PostScript/lambda.pfa")
+
+    # Perl ppport.h
+    generated_fixture_loading_data("Generated/ppport.h")
   end
 end
