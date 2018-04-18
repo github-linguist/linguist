@@ -377,7 +377,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **TypeScript:** [Microsoft/TypeScript-TmLanguage](https://github.com/Microsoft/TypeScript-TmLanguage)
 - **Unified Parallel C:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **Unity3D Asset:** [atom/language-yaml](https://github.com/atom/language-yaml)
-- **Unix Assembly:** [Nessphoro/sublimeassembly](https://github.com/Nessphoro/sublimeassembly)
+- **Unix Assembly:** [calculuswhiz/Assembly-Syntax-Definition](https://github.com/calculuswhiz/Assembly-Syntax-Definition)
 - **Uno:** [atom/language-csharp](https://github.com/atom/language-csharp)
 - **UnrealScript:** [textmate/java.tmbundle](https://github.com/textmate/java.tmbundle)
 - **UrWeb:** [gwalborn/UrWeb-Language-Definition](https://github.com/gwalborn/UrWeb-Language-Definition)
