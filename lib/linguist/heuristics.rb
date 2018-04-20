@@ -386,9 +386,7 @@ module Linguist
           Language["Pod"]
         elsif /^\s+=(begin|cut|pod)/.match(data)
           Language["Pod 6"]
-        elsif /^\s*=comment/.match(data)
-          Language["Pod 6"]
-        elsif /^\s*=begin pod/.match(data)
+        elsif /^\s*=(comment|begin pod)/.match(data)
           Language["Pod 6"]
         else
           Language["Pod"]
