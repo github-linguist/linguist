@@ -384,7 +384,7 @@ module Linguist
       if /^[\s&&[^\n]]*=\w+$/.match(data)
         if /^[\s&&[^\n]]+=(begin|cut|pod)/.match(data)
           Language["Pod 6"]
-        elsif /^=(pod|=cut)/.match(data)
+        elsif /^=(pod|cut)/.match(data)
           Language["Pod"]
         elsif /^[\s&&[^\n]]*=(comment|begin pod)/.match(data)
           Language["Pod 6"]
