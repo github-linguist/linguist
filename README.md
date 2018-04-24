@@ -35,15 +35,25 @@ When you push changes to a repository on GitHub.com, a low priority background j
 
 ## Usage
 
+### Installation
+
 Install the gem:
 
     $ gem install github-linguist
 
 #### Dependencies
 
-Linguist uses the [`charlock_holmes`](https://github.com/brianmario/charlock_holmes) character encoding detection library which in turn uses [ICU](http://site.icu-project.org/), and the libgit2 bindings for Ruby provided by [`rugged`](https://github.com/libgit2/rugged). These components have their own dependencies - `icu4c`, and `cmake` and `pkg-config` respectively - which you may need to install before you can install Linguist.
+Linguist uses [`charlock_holmes`](https://github.com/brianmario/charlock_holmes) for character encoding and [`rugged`](https://github.com/libgit2/rugged) for libgit2 bindings for Ruby. These components have their own dependencies.
+1. charlock_holmes
+    * cmake
+    * pkg-config
+    * [ICU](http://site.icu-project.org/)
+    * [zlib](https://zlib.net/)
+2. rugged
+    * [libcurl](https://curl.haxx.se/libcurl/)
+    * [OpenSSL](https://www.openssl.org)
 
-For example, on macOS with [Homebrew](http://brew.sh/): `brew install cmake pkg-config icu4c` and on Ubuntu: `apt-get install cmake pkg-config libicu-dev`.
+You may need to install missing dependencies before you can install Linguist. For example, on macOS with [Homebrew](http://brew.sh/): `brew install cmake pkg-config icu4c` and on Ubuntu: `sudo apt-get install cmake pkg-config libicu-dev zlib1g-dev libcurl4-openssl-dev libssl-dev`.
 
 ### Application usage
 
