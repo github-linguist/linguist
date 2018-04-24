@@ -391,10 +391,10 @@ module Linguist
         else
           Language["Pod"]
         end
-      elsif Perl6Regex.match(data)
-        Language["Pod 6"]
       elsif /^\s*\/\* XPM \*\//.match(data)
         Language["XPM"]
+      else
+        Language["Pod"]
       end
     end
 
