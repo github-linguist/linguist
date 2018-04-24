@@ -381,18 +381,10 @@ module Linguist
     end
 
     disambiguate ".pod" do |data|
-      if /^[\s&&[^\n]]*=\w+$/.match(data)
-        if /^[\s&&[^\n]]+=(begin|cut|pod)/.match(data)
-          Language["Pod 6"]
-        elsif /^=(pod|cut)/.match(data)
-          Language["Pod"]
-        elsif /^[\s&&[^\n]]*=(comment|begin pod)/.match(data)
-          Language["Pod 6"]
-        else
-          Language["Pod"]
-        end
-      elsif /^\s*\/\* XPM \*\//.match(data)
+      if /^\s*\/\* XPM \*\//.match(data)
         Language["XPM"]
+      elsif /^[\s&&[^\n]]*=(comment|begin pod|begin para|item\d+)/.match(data)
+        Language["Pod 6"]
       else
         Language["Pod"]
       end
