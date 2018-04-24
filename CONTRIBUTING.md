@@ -125,7 +125,6 @@ Linguist is maintained with :heart: by:
 - **@Alhadis**
 - **@BenEddy** (GitHub staff)
 - **@Caged** (GitHub staff)
-- **@grantr** (GitHub staff)
 - **@kivikakk** (GitHub staff)
 - **@larsbrinkhoff**
 - **@lildude** (GitHub staff)
@@ -142,18 +141,19 @@ As Linguist is a production dependency for GitHub we have a couple of workflow r
 
 If you are the current maintainer of this gem:
 
-1. Create a branch for the release: `git checkout -b cut-release-vxx.xx.xx`
+1. Create a branch for the release: `git checkout -b release-vxx.xx.xx`
 1. Make sure your local dependencies are up to date: `script/bootstrap`
 1. If grammar submodules have not been updated recently, update them: `git submodule update --remote && git commit -a`
 1. Ensure that samples are updated: `bundle exec rake samples`
 1. Ensure that tests are green: `bundle exec rake test`
-1. Bump gem version in `lib/linguist/version.rb`, [like this](https://github.com/github/linguist/commit/8d2ea90a5ba3b2fe6e1508b7155aa4632eea2985).
-1. Make a PR to github/linguist, [like this](https://github.com/github/linguist/pull/1238).
-1. Build a local gem: `bundle exec rake build_gem`
-1. Test the gem:
+1. Build a test gem `GEM_VERSION=$(git describe --tags 2>/dev/null | sed 's/-/./g' | sed 's/v//') bundle exec rake build_gem`
+1. Test the test gem:
   1. Bump the Gemfile and Gemfile.lock versions for an app which relies on this gem
   1. Install the new gem locally
   1. Test behavior locally, branch deploy, whatever needs to happen
+1. Bump gem version in `lib/linguist/version.rb`, [like this](https://github.com/github/linguist/commit/8d2ea90a5ba3b2fe6e1508b7155aa4632eea2985).
+1. Make a PR to github/linguist, [like this](https://github.com/github/linguist/pull/1238).
+1. Build a local gem: `bundle exec rake build_gem`
 1. Merge github/linguist PR
 1. Tag and push: `git tag vx.xx.xx; git push --tags`
 1. Create a GitHub release with the pushed tag (https://github.com/github/linguist/releases/new)
