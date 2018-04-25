@@ -141,6 +141,10 @@ Linguist supports a number of different custom override strategies for language 
 
 Add a `.gitattributes` file to your project and use standard git-style path matchers for the files you want to override using the `linguist-documentation`, `linguist-language`, `linguist-vendored`, `linguist-generated`  and `linguist-detectable` attributes. `.gitattributes` will be used to determine language statistics and will be used to syntax highlight files. You can also manually set syntax highlighting using [Vim or Emacs modelines](#using-emacs-or-vim-modelines).
 
+When testing with a local installation of Linguist, take note that the added attributes will not take effect until the .gitattributes file is commited to your repository.
+
+File and folder paths inside .gitattributes are calulated relative to the position of the .gitattributes file.
+
 ```
 $ cat .gitattributes
 *.rb linguist-language=Java
