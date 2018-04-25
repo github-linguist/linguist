@@ -73,6 +73,11 @@ project.languages      #=> { "Ruby" => 119387 }
 
 A repository's languages stats can also be assessed from the command line using the `linguist` executable. Without any options, `linguist` will output the breakdown that correlates to what is shown in the language stats bar. The `--breakdown` flag will additionally show the breakdown of files by language.
 
+```console
+$ cd /path-to-repository/
+$ linguist
+```
+
 You can try running `linguist` on the root directory in this repository itself:
 
 ```console
