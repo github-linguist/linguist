@@ -539,7 +539,7 @@ module Linguist
     #
     # Return true or false
     def generated_graphql_relay_js?
-      !!name.match(/__generated__\/[_A-Za-z][_0-9A-Za-z]+\.graphql\.js$/)
+      !!name.match(/__generated__\//)
     end
   end
 end
