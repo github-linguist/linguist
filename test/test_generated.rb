@@ -118,5 +118,8 @@ class TestGenerated < Minitest::Test
 
     # PostScript
     generated_sample_loading_data("PostScript/lambda.pfa")
+
+    # Graphql Relay
+    generated_sample_without_loading_data("Javascript/__generated__/App_user.graphql.js")
   end
 end
