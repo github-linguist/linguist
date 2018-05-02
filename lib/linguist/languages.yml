@@ -734,6 +734,15 @@ Closure Templates:
   - ".soy"
   tm_scope: text.html.soy
   language_id: 357046146
+Cloud Firestore Security Rules:
+  type: data
+  ace_mode: less
+  codemirror_mode: css
+  codemirror_mime_type: text/css
+  tm_scope: source.firestore
+  filenames:
+  - firestore.rules
+  language_id: 407996372
 CoNLL-U:
   type: data
   extensions:
@@ -3532,6 +3541,7 @@ PowerShell:
   codemirror_mime_type: application/x-powershell
   aliases:
   - posh
+  - pwsh
   extensions:
   - ".ps1"
   - ".psd1"

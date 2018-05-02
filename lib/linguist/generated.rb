@@ -54,6 +54,7 @@ module Linguist
       xcode_file? ||
       cocoapods? ||
       carthage_build? ||
+      generated_graphql_relay? ||
       generated_net_designer_file? ||
       generated_net_specflow_feature_file? ||
       composer_lock? ||
@@ -542,6 +543,13 @@ module Linguist
         return false unless name.match(/ppport\.h$/)
         return false unless lines.count > 10
         return lines[8].include?("Automatically created by Devel::PPPort")
+    end
+        
+    # Internal: Is this a relay-compiler generated graphql file?
+    #
+    # Return true or false
+    def generated_graphql_relay?
+      !!name.match(/__generated__\//)
     end
   end
 end
