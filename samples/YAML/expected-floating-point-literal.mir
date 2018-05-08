@@ -67,6 +67,8 @@
 # ARM contributions   llvm/lib/Target/ARM/LICENSE.TXT
 # md5 contributions llvm/lib/Support/MD5.cpp llvm/include/llvm/Support/MD5.h
 
+# Original Source : https://github.com/llvm-mirror/llvm/blob/b931375195077d79330792590733db7de9a8f1bd/test/CodeGen/MIR/NVPTX/expected-floating-point-literal.mir
+
 # RUN: not llc -march=nvptx -mcpu=sm_20 -run-pass none -o /dev/null %s 2>&1 | FileCheck %s
 
 --- |
