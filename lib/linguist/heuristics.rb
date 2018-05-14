@@ -541,5 +541,13 @@ module Linguist
       end
     end
 
+    disambiguate ".yy" do |data|
+      Language["JSON"] if /\"modelName\"\:\s?\"/.match(data)
+    end
+
+    disambiguate ".yyp" do |data|
+      Language["JSON"] if /\"modelName\"\:\s?\"GMProject\"/.match(data)
+    end
+
   end
 end
