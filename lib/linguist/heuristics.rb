@@ -552,7 +552,7 @@ module Linguist
     end
 
     disambiguate ".yy" do |data|
-      if /\"modelName\"\:\s*\"/.match(data)
+      if /\"modelName\"\:\s*\"GM/.match(data)
         Language["JSON"]
       else
         Language["Yacc"]
