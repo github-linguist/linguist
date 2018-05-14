@@ -226,6 +226,16 @@ module Linguist
       end
     end
 
+    disambiguate ".gml" do |data|
+      if /^\s*(\<\?xml|xmlns)/i.match(data)
+        Language["XML"]
+      elsif /^\s*(graph\s?\[|node\s?\[)/i.match(data)
+        Language["Graph Modeling Language"]
+      else
+        Language["Game Maker Language"]
+      end
+    end
+
     disambiguate ".gs" do |data|
       Language["Gosu"] if /^uses java\./.match(data)
     end
@@ -542,11 +552,11 @@ module Linguist
     end
 
     disambiguate ".yy" do |data|
-      Language["JSON"] if /\"modelName\"\:\s?\"/.match(data)
-    end
-
-    disambiguate ".yyp" do |data|
-      Language["JSON"] if /\"modelName\"\:\s?\"GMProject\"/.match(data)
+      if /\"modelName\"\:\s?\"/.match(data)
+        Language["JSON"]
+      else
+        Language["Yacc"]
+      end
     end
 
   end
