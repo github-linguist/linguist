@@ -380,6 +380,16 @@ module Linguist
       end
     end
 
+    disambiguate ".pod" do |data|
+      if /^\s*\/\* XPM \*\//.match(data)
+        Language["XPM"]
+      elsif /^[\s&&[^\n]]*=(comment|begin pod|begin para|item\d+)/.match(data)
+        Language["Pod 6"]
+      else
+        Language["Pod"]
+      end
+    end
+
     disambiguate ".pro" do |data|
       if /^[^\[#]+:-/.match(data)
         Language["Prolog"]
@@ -397,6 +407,14 @@ module Linguist
         Language["XML"]
       elsif /\w+\s*=\s*/i.match(data)
         Language["INI"]
+      end
+    end
+
+    disambiguate ".q" do |data|
+      if /[A-Z\.][\w\d\.]*:{/i.match(data) || /(^|\n)\\(cd?|d|l|p|ts?) /.match(data)
+        Language["q"]
+      elsif /SELECT\s+[\w*,]+\s+FROM/i.match(data) || /(CREATE|ALTER|DROP)\s(DATABASE|SCHEMA|TABLE)/i.match(data)
+        Language["HiveQL"]
       end
     end
 
@@ -513,5 +531,15 @@ module Linguist
       end
     end
   
+    disambiguate ".x" do |data|
+      if /\b(program|version)\s+\w+\s*{|\bunion\s+\w+\s+switch\s*\(/.match(data)
+        Language["RPC"]
+      elsif /^%(end|ctor|hook|group)\b/.match(data)
+        Language["Logos"]
+      elsif /OUTPUT_ARCH\(|OUTPUT_FORMAT\(|SECTIONS/.match(data)
+        Language["Linker Script"]
+      end
+    end
+
   end
 end

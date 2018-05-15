@@ -3,17 +3,20 @@ module Linguist
     # Public: Use shebang to detect language of the blob.
     #
     # blob               - An object that quacks like a blob.
+    # candidates         - A list of candidate languages.
     #
     # Examples
     #
     #   Shebang.call(FileBlob.new("path/to/file"))
     #
-    # Returns an Array with one Language if the blob has a shebang with a valid
-    # interpreter, or empty if there is no shebang.
-    def self.call(blob, _ = nil)
+    # Returns an array of languages from the candidate list for which the
+    # blob's shebang is valid. Returns an empty list if there is no shebang.
+    # If the candidate list is empty, any language is a valid candidate.
+    def self.call(blob, candidates)
       return [] if blob.symlink?
 
-      Language.find_by_interpreter interpreter(blob.data)
+      languages = Language.find_by_interpreter interpreter(blob.data)
+      candidates.any? ? candidates & languages : languages
     end
 
     # Public: Get the interpreter from the shebang

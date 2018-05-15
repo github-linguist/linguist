@@ -169,6 +169,9 @@ class TestBlob < Minitest::Test
     assert sample_blob_memory("JavaScript/jquery-1.6.1.min.js").generated?
     assert sample_blob_memory("JavaScript/jquery-1.4.2.min.js").generated?
 
+    # Cargo generated composer.lock file
+    assert sample_blob_memory("TOML/filenames/Cargo.lock").generated?
+
     # Composer generated composer.lock file
     assert sample_blob_memory("JSON/filenames/composer.lock").generated?
 

@@ -539,14 +539,6 @@ module Linguist
       end
     end
 
-    if fns = filenames[name]
-      fns.each do |filename|
-        if !options['filenames'].include?(filename)
-          options['filenames'] << filename
-        end
-      end
-    end
-
     Language.create(
       :name              => name,
       :color             => options['color'],

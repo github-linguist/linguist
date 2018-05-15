@@ -84,6 +84,10 @@ unless $url
   exit 1;
 end
 
+# Exit early if docker isn't installed or running.
+log "Checking docker is installed and running"
+command('docker', 'ps')
+
 # Ensure the given URL is an HTTPS link
 parts    = parse_url $url
 https    = "https://#{parts[:host]}/#{parts[:user]}/#{parts[:repo]}"
@@ -107,9 +111,11 @@ log "Confirming license"
 if repo_old
   command('script/licensed')
 else
+  repo_new = File.absolute_path(repo_new)
   command('script/licensed', '--module', repo_new)
 end
 
 log "Updating grammar documentation in vendor/README.md"
 command('bundle', 'exec', 'rake', 'samples')
+command('script/sort-submodules')
 command('script/list-grammars')
