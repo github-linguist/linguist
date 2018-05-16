@@ -27,9 +27,9 @@ module Linguist
     @alias_index        = {}
     @language_id_index  = {}
 
-    @extension_index          = Hash.new { |h,k| h[k] = [] }
-    @interpreter_index        = Hash.new { |h,k| h[k] = [] }
-    @filename_index           = Hash.new { |h,k| h[k] = [] }
+    @extension_index    = Hash.new { |h,k| h[k] = [] }
+    @interpreter_index  = Hash.new { |h,k| h[k] = [] }
+    @filename_index     = Hash.new { |h,k| h[k] = [] }
 
     # Valid Languages types
     TYPES = [:data, :markup, :programming, :prose]
@@ -291,9 +291,9 @@ module Linguist
       @language_id = attributes[:language_id]
 
       # Set extensions or default to [].
-      @extensions = attributes[:extensions] || []
-      @interpreters = attributes[:interpreters]   || []
-      @filenames  = attributes[:filenames]  || []
+      @extensions   = attributes[:extensions]   || []
+      @interpreters = attributes[:interpreters] || []
+      @filenames    = attributes[:filenames]    || []
 
       # Set popular, and searchable flags
       @popular    = attributes.key?(:popular)    ? attributes[:popular]    : false
@@ -499,12 +499,12 @@ module Linguist
     end
   end
 
-  extensions = Samples.cache['extnames']
+  extensions   = Samples.cache['extnames']
   interpreters = Samples.cache['interpreters']
-  filenames = Samples.cache['filenames']
-  popular = YAML.load_file(File.expand_path("../popular.yml", __FILE__))
+  filenames    = Samples.cache['filenames']
+  popular      = YAML.load_file(File.expand_path("../popular.yml", __FILE__))
 
-  languages_yml = File.expand_path("../languages.yml", __FILE__)
+  languages_yml  = File.expand_path("../languages.yml",  __FILE__)
   languages_json = File.expand_path("../languages.json", __FILE__)
 
   if File.exist?(languages_json) && defined?(Yajl)
@@ -514,9 +514,9 @@ module Linguist
   end
 
   languages.each do |name, options|
-    options['extensions'] ||= []
+    options['extensions']   ||= []
     options['interpreters'] ||= []
-    options['filenames'] ||= []
+    options['filenames']    ||= []
 
     if extnames = extensions[name]
       extnames.each do |extname|
@@ -527,9 +527,8 @@ module Linguist
       end
     end
 
-    if interpreters == nil
-      interpreters = {}
-    end
+    interpreters = {} if interpreters.nil?
+    filenames    = {} if filenames.nil?
 
     if interpreter_names = interpreters[name]
       interpreter_names.each do |interpreter|
