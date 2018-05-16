@@ -501,7 +501,6 @@ module Linguist
 
   extensions   = Samples.cache['extnames']
   interpreters = Samples.cache['interpreters']
-  filenames    = Samples.cache['filenames']
   popular      = YAML.load_file(File.expand_path("../popular.yml", __FILE__))
 
   languages_yml  = File.expand_path("../languages.yml",  __FILE__)
@@ -527,8 +526,7 @@ module Linguist
       end
     end
 
-    interpreters = {} if interpreters.nil?
-    filenames    = {} if filenames.nil?
+    interpreters ||= {}
 
     if interpreter_names = interpreters[name]
       interpreter_names.each do |interpreter|
