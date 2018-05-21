@@ -61,6 +61,7 @@ module Linguist
       cargo_lock? ||
       node_modules? ||
       go_vendor? ||
+      go_lock? ||
       npm_shrinkwrap_or_package_lock? ||
       godeps? ||
       generated_by_zephir? ||
@@ -350,6 +351,13 @@ module Linguist
     # Returns true or false.
     def go_vendor?
       !!name.match(/vendor\/((?!-)[-0-9A-Za-z]+(?<!-)\.)+(com|edu|gov|in|me|net|org|fm|io)/)
+    end
+
+    # Internal: Is the blob a generated Go dep or glide lock file?
+    #
+    # Returns true or false.
+    def go_lock?
+      !!name.match(/(Gopkg|glide)\.lock/)
     end
 
     # Internal: Is the blob a generated npm shrinkwrap or package lock file?
