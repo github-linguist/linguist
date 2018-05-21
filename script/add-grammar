@@ -43,24 +43,32 @@ def log(msg)
   puts msg if $verbose
 end
 
+$aborted = false
+
 def command(*args)
   log "$ #{args.join(' ')}"
   output, status = Open3.capture2e(*args)
   if !status.success?
-    output.each_line do |line|
-      log "  > #{line}"
+    output = output.each_line { |line| "  > #{line}" }
+    unless $aborted
+      $aborted = true
+      warn "Command failed. Aborting."
+      raise output
+    else
+      warn output
+      exit 1
     end
-    warn "Command failed. Aborting."
-    exit 1
   end
 end
 
-usage = """Usage:
+usage = <<~EOH
+Usage:
   #{$0} [-v|--verbose] [--replace grammar] url
+
 Examples:
   #{$0} https://github.com/Alhadis/language-roff
   #{$0} --replace sublime-apl https://github.com/Alhadis/language-apl
-"""
+EOH
 
 $replace = nil
 $verbose = true
@@ -81,41 +89,71 @@ $url = ARGV[0]
 # No URL? Print a usage message and bail.
 unless $url
   warn usage
-  exit 1;
+  exit 1
 end
 
-# Exit early if docker isn't installed or running.
-log "Checking docker is installed and running"
-command('docker', 'ps')
+# Flags to track which changes should be reverted on an error
+$gitmodules  = File.read("#{ROOT}/.gitmodules")
+$git_config  = File.read("#{ROOT}/.git/config")
+$vendor_list = File.read("#{ROOT}/vendor/README.md")
 
-# Ensure the given URL is an HTTPS link
-parts    = parse_url $url
-https    = "https://#{parts[:host]}/#{parts[:user]}/#{parts[:repo]}"
-repo_new = "vendor/grammars/#{parts[:repo]}"
-repo_old = parse_submodule($replace) if $replace
-
-Dir.chdir(ROOT)
-
-if repo_old
-  log "Deregistering: #{repo_old}"
-  command('git', 'submodule', 'deinit', repo_old)
-  command('git', 'rm', '-rf', repo_old)
-  command('script/grammar-compiler', 'update', '-f')
+def restore_configs
+  File.write("#{ROOT}/.gitmodules", $gitmodules)
+  File.write("#{ROOT}/.git/config", $git_config)
 end
 
-log "Registering new submodule: #{repo_new}"
-command('git', 'submodule', 'add', '-f', https, repo_new)
-command('script/grammar-compiler', 'add', repo_new)
+begin
+  # Exit early if Docker isn't installed or running.
+  log "Checking Docker is installed and running"
+  command('docker', 'ps')
 
-log "Confirming license"
-if repo_old
-  command('script/licensed')
-else
-  repo_new = File.absolute_path(repo_new)
-  command('script/licensed', '--module', repo_new)
+  # Ensure the given URL is an HTTPS link
+  parts     = parse_url $url
+  $https    = "https://#{parts[:host]}/#{parts[:user]}/#{parts[:repo]}"
+  $repo_new = "vendor/grammars/#{parts[:repo]}"
+  $repo_old = parse_submodule($replace) if $replace
+
+  Dir.chdir(ROOT)
+
+  if $repo_old
+    log "Deregistering: #{$repo_old}"
+    command('git', 'submodule', 'deinit', '-f', $repo_old)
+    command('git', 'rm', '-rf', $repo_old)
+    command('script/grammar-compiler', 'update', '-f')
+  end
+
+  log "Registering new submodule: #{$repo_new}"
+  command('git', 'submodule', 'add', '-f', $https, $repo_new)
+  command('script/grammar-compiler', 'add', $repo_new)
+
+  log "Confirming license"
+  if $repo_old
+    command('script/licensed')
+  else
+    repo_abs = File.absolute_path($repo_new)
+    command('script/licensed', '--module', repo_abs)
+  end
+
+  log "Updating grammar documentation in vendor/README.md"
+  command('bundle', 'exec', 'rake', 'samples')
+  command('script/sort-submodules')
+  command('script/list-grammars')
+rescue => ex
+  log ex
+  if $repo_new
+    `git reset HEAD .gitmodules #{$repo_new}`
+    `git checkout -- vendor/licenses`
+    `rm -rf #{$repo_new}`
+    `rm -rf .git/modules/#{$repo_new}/`
+    restore_configs()
+  end
+  if $repo_old
+    `rm -rf #{$repo_old}`
+    `git submodule add -f "#{$https}", "#{$repo_old}"`
+    restore_configs()
+  end
+  File.write("#{ROOT}/vendor/README.md", $vendor_list)
+  `git reset HEAD vendor/licenses`
+  `git checkout -- vendor/licenses`
+  exit 1
 end
-
-log "Updating grammar documentation in vendor/README.md"
-command('bundle', 'exec', 'rake', 'samples')
-command('script/sort-submodules')
-command('script/list-grammars')
