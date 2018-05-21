@@ -411,7 +411,7 @@ module Linguist
     end
 
     disambiguate ".q" do |data|
-      if /[A-Z\.][\w\d\.]*:{/i.match(data) || /(^|\n)\\(cd?|d|l|p|ts?) /.match(data)
+      if /[A-Z.][\w.]*:{/i.match(data) || /(^|\n)\\(cd?|d|l|p|ts?) /.match(data)
         Language["q"]
       elsif /SELECT\s+[\w*,]+\s+FROM/i.match(data) || /(CREATE|ALTER|DROP)\s(DATABASE|SCHEMA|TABLE)/i.match(data)
         Language["HiveQL"]
