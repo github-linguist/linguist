@@ -401,6 +401,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **WebIDL:** [andik/IDL-Syntax](https://github.com/andik/IDL-Syntax)
 - **wisp:** [atom/language-clojure](https://github.com/atom/language-clojure)
 - **World of Warcraft Addon Data:** [nebularg/language-toc-wow](https://github.com/nebularg/language-toc-wow)
+- **Wren:** [munificent/wren-sublime](https://github.com/munificent/wren-sublime)
 - **X10:** [x10-lang/x10-highlighting](https://github.com/x10-lang/x10-highlighting)
 - **xBase:** [hernad/atom-language-harbour](https://github.com/hernad/atom-language-harbour)
 - **XC:** [graymalkin/xc.tmbundle](https://github.com/graymalkin/xc.tmbundle)
