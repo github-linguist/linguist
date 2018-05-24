@@ -4591,6 +4591,18 @@ SuperCollider:
   tm_scope: source.supercollider
   ace_mode: text
   language_id: 361
+SpiderScript:
+  type: programming
+  color: "#7a43d3"
+  aliases:
+  - spider
+  extensions:
+  - ".spider"
+  tm_scope: none
+  ace_mode: SpiderScript
+  codemirror_mode: javascript
+  codemirror_mime_type: application/javascript
+  language_id: 3781412
 Swift:
   type: programming
   color: "#ffac45"
@@ -4600,18 +4612,6 @@ Swift:
   codemirror_mode: swift
   codemirror_mime_type: text/x-swift
   language_id: 362
-SpiderScript:
-  type: programming
-  color: "#7a43d3"
-  aliases:
-  - spider
-  extensions:
-  - ".spider"
-  tm_scope: source.spider
-  ace_mode: SpiderScript
-  codemirror_mode: javascript
-  codemirror_mime_type: application/javascript
-  language_id: 3781412
 SystemVerilog:
   type: programming
   color: "#DAE1C2"
@@ -4821,13 +4821,13 @@ Type Language:
   language_id: 632765617
 TypeScript:
   type: programming
-  color: "#2b7489"
+  color: "#ceb8f2"
   aliases:
   - ts
   extensions:
   - ".ts"
   - ".tsx"
-  tm_scope: source.ts
+  tm_scope: none
   ace_mode: typescript
   codemirror_mode: javascript
   codemirror_mime_type: application/typescript
