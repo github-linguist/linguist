@@ -3022,7 +3022,7 @@ NodeScript:
   - ns
   extensions:
   - ".ns"
-  tm_scope: source.ns
+  tm_scope: none
   ace_mode: nodescript
   codemirror_mode: javascript
   codemirror_mime_type: application/javascript
@@ -4489,6 +4489,18 @@ Spline Font Database:
   tm_scope: text.sfd
   ace_mode: yaml
   language_id: 767169629
+SpiderScript:
+  type: programming
+  color: "#7a43d3"
+  aliases:
+  - spider
+  extensions:
+  - ".spider"
+  tm_scope: none
+  ace_mode: SpiderScript
+  codemirror_mode: javascript
+  codemirror_mime_type: application/javascript
+  language_id: 3781412
 Squirrel:
   type: programming
   color: "#800000"
@@ -4591,18 +4603,6 @@ SuperCollider:
   tm_scope: source.supercollider
   ace_mode: text
   language_id: 361
-SpiderScript:
-  type: programming
-  color: "#7a43d3"
-  aliases:
-  - spider
-  extensions:
-  - ".spider"
-  tm_scope: none
-  ace_mode: SpiderScript
-  codemirror_mode: javascript
-  codemirror_mime_type: application/javascript
-  language_id: 3781412
 Swift:
   type: programming
   color: "#ffac45"
