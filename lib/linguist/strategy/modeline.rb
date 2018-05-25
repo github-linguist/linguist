@@ -36,7 +36,7 @@ module Linguist
 
         # Start modeline. Could be `vim:`, `vi:` or `ex:`
         (?:
-          (?:[[:blank:]]|^)
+          (?:[ \t]|^)
           vi
           (?:m[<=>]?\d+|m)? # Version-specific modeline
           |
@@ -49,10 +49,10 @@ module Linguist
         # serves as a terminator for an option sequence, delimited by whitespace.
         (?=
           # So we have to ensure the modeline ends with a colon
-          : (?=[[:blank:]]* set? [[:blank:]] [^\n:]+ :) |
+          : (?=[ \t]* set? [ \t] [^\n:]+ :) |
 
           # Otherwise, it isn't valid syntax and should be ignored
-          : (?![[:blank:]]* set? [[:blank:]])
+          : (?![ \t]* set? [ \t])
         )
 
         # Possible (unrelated) `option=value` pairs to skip past
@@ -60,9 +60,9 @@ module Linguist
           # Option separator. Vim uses whitespace or colons to separate options (except if
           # the alternate "vim: set " form is used, where only whitespace is used)
           (?:
-            [[:blank:]]
+            [ \t]
             |
-            [[:blank:]]* : [[:blank:]]* # Note that whitespace around colons is accepted too:
+            [ \t]* : [ \t]* # Note that whitespace around colons is accepted too:
           )           # vim: noai :  ft=ruby:noexpandtab
 
           # Option's name. All recognised Vim options have an alphanumeric form.
@@ -71,11 +71,11 @@ module Linguist
           # Possible value. Not every option takes an argument.
           (?:
             # Whitespace between name and value is allowed: `vim: ft   =ruby`
-            [[:blank:]]*=
+            [ \t]*=
 
             # Option's value. Might be blank; `vim: ft= ` says "use no filetype".
             (?:
-              [^\\[[:blank:]]] # Beware of escaped characters: titlestring=\ ft=ruby
+              [^\\[ \t]] # Beware of escaped characters: titlestring=\ ft=ruby
               |       # will be read by Vim as { titlestring: " ft=ruby" }.
               \\.
             )*
@@ -83,13 +83,13 @@ module Linguist
         )*
 
         # The actual filetype declaration
-        [[[:blank:]]:] (?:filetype|ft|syntax) [[:blank:]]*=
+        [[ \t]:] (?:filetype|ft|syntax) [ \t]*=
 
         # Language's name
         (\w+)
 
         # Ensure it's followed by a legal separator
-        (?=[[:blank:]]|:|$)
+        (?=[ \t]|:|$)
       /xi
 
       MODELINES = [EMACS_MODELINE, VIM_MODELINE]
