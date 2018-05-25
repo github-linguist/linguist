@@ -63,7 +63,7 @@ module Linguist
             [ \t]
             |
             [ \t]* : [ \t]* # Note that whitespace around colons is accepted too:
-          )           # vim: noai :  ft=ruby:noexpandtab
+          )                 # vim: noai :  ft=ruby:noexpandtab
 
           # Option's name. All recognised Vim options have an alphanumeric form.
           \w*
@@ -76,7 +76,7 @@ module Linguist
             # Option's value. Might be blank; `vim: ft= ` says "use no filetype".
             (?:
               [^\\[ \t]] # Beware of escaped characters: titlestring=\ ft=ruby
-              |       # will be read by Vim as { titlestring: " ft=ruby" }.
+              |          # will be read by Vim as { titlestring: " ft=ruby" }.
               \\.
             )*
           )?
