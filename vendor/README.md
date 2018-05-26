@@ -286,7 +286,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **PostCSS:** [hudochenkov/Syntax-highlighting-for-PostCSS](https://github.com/hudochenkov/Syntax-highlighting-for-PostCSS)
 - **PostScript:** [textmate/postscript.tmbundle](https://github.com/textmate/postscript.tmbundle)
 - **POV-Ray SDL:** [c-lipka/language-povray](https://github.com/c-lipka/language-povray)
-- **PowerShell:** [SublimeText/PowerShell](https://github.com/SublimeText/PowerShell)
+- **PowerShell:** [PowerShell/EditorSyntax](https://github.com/PowerShell/EditorSyntax)
 - **Processing:** [textmate/processing.tmbundle](https://github.com/textmate/processing.tmbundle)
 - **Prolog:** [alnkpa/sublimeprolog](https://github.com/alnkpa/sublimeprolog)
 - **Propeller Spin:** [bitbased/sublime-spintools](https://github.com/bitbased/sublime-spintools)
