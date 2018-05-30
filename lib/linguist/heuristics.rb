@@ -380,16 +380,6 @@ module Linguist
       end
     end
 
-    disambiguate ".pod" do |data|
-      if /^\s*\/\* XPM \*\//.match(data)
-        Language["XPM"]
-      elsif /^[\s&&[^\n]]*=(comment|begin pod|begin para|item\d+)/.match(data)
-        Language["Pod 6"]
-      else
-        Language["Pod"]
-      end
-    end
-
     disambiguate ".pro" do |data|
       if /^[^\[#]+:-/.match(data)
         Language["Prolog"]
