@@ -314,6 +314,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **REXX:** [mblocker/rexx-sublime](https://github.com/mblocker/rexx-sublime)
 - **RHTML:** [atom/language-ruby](https://github.com/atom/language-ruby)
 - **Ring:** [MahmoudFayed/atom-language-ring](https://github.com/MahmoudFayed/atom-language-ring)
+- **Riot:** [riot/syntax-highlight](https://github.com/riot/syntax-highlight)
 - **RMarkdown:** [atom/language-gfm](https://github.com/atom/language-gfm)
 - **RobotFramework:** [shellderp/sublime-robot-plugin](https://github.com/shellderp/sublime-robot-plugin)
 - **Roff:** [Alhadis/language-roff](https://github.com/Alhadis/language-roff)
