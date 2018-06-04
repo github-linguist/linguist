@@ -615,16 +615,6 @@ CSV:
   extensions:
   - ".csv"
   language_id: 51
-Cuneiform:
-  type: programming
-  extensions:
-  - ".cfl"
-  interpreters:
-  - "cuneiform"
-  - "cf_client"
-  color: "#2772b0"
-  tm_scope: none
-  language_id: 2699
 CWeb:
   type: programming
   extensions:
@@ -946,6 +936,17 @@ Cuda:
   codemirror_mime_type: text/x-c++src
   color: "#3A4E3A"
   language_id: 77
+Cuneiform:
+  type: programming
+  ace_mode: text
+  extensions:
+  - ".cfl"
+  interpreters:
+  - "cuneiform"
+  - "cf_client"
+  color: "#501616"
+  tm_scope: none
+  language_id: 2699
 Cycript:
   type: programming
   extensions:
