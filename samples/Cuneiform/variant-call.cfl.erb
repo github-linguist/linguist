@@ -1,0 +1,234 @@
+% VARIANT-CALL
+%
+% A variant calling workflow.
+%
+% Sample data can be obtained from:
+% ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/phase3/data/HG02025/sequence_read/
+%
+% The HG38 reference genome can be downloaded from
+% http://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/
+%
+% An Annovar HG38 database is expected to reside in
+% /opt/data/annodb_hg38
+%
+% In addition to a Cuneiform interpreter the following tools need to be
+% installed to run this analysis:
+% - FastQC 0.11.4
+% - Bowtie2 2.2.6
+% - SAMtools 1.2
+% - VarScan 2.3.9
+% - Annovar
+ 
+%% ============================================================
+%% Task definitions
+%% ============================================================
+
+def untar( tar : File ) ->
+      <fileLst : [File]>
+
+in Bash*{
+  tar xf $tar
+  fileLst=`tar tf $tar`
+}*
+
+
+def gunzip( gz : File ) ->
+      <file : File>
+
+in Bash *{
+  file=unzipped_${gz%.gz}
+  gzip -c -d $gz > $file
+}*
+
+
+def fastqc( fastq : File ) ->
+      <zip : File>
+
+in Bash *{
+  fastqc -f fastq --noextract -o ./ $fastq
+  zip=`ls *.zip`
+}*
+
+
+def bowtie2Build( fa : File ) ->
+      <idx : File>
+
+in Bash *{
+  bowtie2-build $fa bt2idx
+  idx=idx.tar
+  tar cf $idx --remove-files bt2idx.*
+}*
+
+
+def bowtie2Align( idx : File, fastq1 : File, fastq2 : File ) ->
+      <bam : File>
+
+in Bash *{
+  tar xf $idx
+  bam=alignment.bam
+  bowtie2 -D 5 -R 1 -N 0 -L 22 -i S,0,2.50 --no-unal -x bt2idx \
+  -1 $fastq1 -2 $fastq2 -S - | samtools view -b - > $bam
+  rm bt2idx.*
+}*
+
+
+def samtoolsFaidx( fa : File ) ->
+      <fai : File>
+
+in Bash *{
+  samtools faidx $fa
+  fai=$fa.fai
+}*
+
+
+def samtoolsSort( bam : File ) ->
+      <sorted : File>
+
+in Bash *{
+  sorted=sorted.bam
+  samtools sort -m 2G $bam -o $sorted
+}*
+
+
+def samtoolsMpileup( bam : File, fa : File, fai : File ) ->
+      <mpileup : File>
+
+in Bash *{
+  ln -sf $fai $fa.fai
+  mpileup=mpileup.csv
+  samtools mpileup -f $fa $bam > $mpileup
+}*
+
+
+def samtoolsMerge( bamLst : [File] ) ->
+      <merged : File>
+
+{
+
+  def samtoolsMerge( bamLst : [File] ) ->
+        <merged : File>
+
+  in Bash *{
+    merged=merged.bam
+    if [ ${#bamLst[@]} -eq "1" ]
+    then
+      merged=$bam
+    else
+      samtools merge -f $merged ${bamLst[@]}
+    fi
+  }*
+
+
+  if isnil bamLst
+  then
+    error "Merge list must not be empty." : <merged : File>
+  else
+    samtoolsMerge( bamLst = bamLst )
+  end
+}
+
+
+def varscan( mpileup : File ) ->
+      <vcf : File>
+
+in Bash *{
+  vcf=variants.vcf
+  varscan mpileup2snp $mpileup --output-vcf --p-value 99e-02 > $vcf
+}*
+
+
+def annovar( vcfLst : [File], db : Str, buildVsn : Str ) ->
+      <fun : File, exonicFun : File>
+
+in Bash *{
+  fun=table.variant_function
+  exonicFun=table.exonic_variant_function
+  cat ${vcfLst[@]} | \
+  convert2annovar.pl -format vcf4 - | \
+  annotate_variation.pl -buildver $buildVsn -geneanno -outfile table - $db
+}*
+
+
+%% ============================================================
+%% Input data
+%% ============================================================
+
+let hg38Tar : File =
+  'hg38/hg38.tar';
+
+let fastq1LstGz : [File] =
+  ['kgenomes/SRR359188_1.filt.fastq.gz',
+   'kgenomes/SRR359195_1.filt.fastq.gz' : File];
+
+let fastq2LstGz : [File] =
+  ['kgenomes/SRR359188_2.filt.fastq.gz',
+   'kgenomes/SRR359195_2.filt.fastq.gz' : File];
+
+let db : Str =
+  "/opt/data/annodb_hg38";
+
+let buildVsn : Str =
+  "hg38";
+
+
+%% ============================================================
+%% Workflow definition
+%% ============================================================
+
+let <fileLst = faLst : [File]> =
+  untar( tar = hg38Tar );
+
+let fastq1Lst : [File] =
+  for gz <- fastq1LstGz do
+    ( gunzip( gz = gz )|file ) : File
+  end;
+
+let fastq2Lst : [File] =
+  for gz <- fastq2LstGz do
+    ( gunzip( gz = gz )|file ) : File
+  end;
+
+let qcLst : [File] =
+  for fastq <- ( fastq1Lst+fastq2Lst ) do
+    ( fastqc( fastq = fastq )|zip ) : File
+  end;
+
+let vcfLst : [File] =
+  for fa <- faLst do
+
+    let <idx = idx : File> =
+      bowtie2Build( fa = fa );
+
+    let <fai = fai : File> =
+      samtoolsFaidx( fa = fa );
+
+    let sortedLst : [File] =
+      for fastq1 <- fastq1Lst, fastq2 <- fastq2Lst do
+
+        let <bam = bam : File> =
+          bowtie2Align( idx = idx, fastq1 = fastq1, fastq2 = fastq2 );
+
+        ( samtoolsSort( bam = bam )|sorted ) : File
+
+      end;
+
+    let <merged = merged : File> =
+      samtoolsMerge( bamLst = sortedLst );
+
+    let <mpileup = mpileup : File> =
+      samtoolsMpileup( bam = merged, fa = fa, fai = fai );
+
+    ( varscan( mpileup = mpileup )|vcf ) : File
+
+  end;
+
+let <fun = fun : File, exonicFun = exonicFun : File> =
+  annovar( vcfLst = vcfLst, db = db, buildVsn = buildVsn );
+
+
+%% ============================================================
+%% Query
+%% ============================================================
+
+<fun = fun, exonicFun = exonicFun, qcLst = qcLst>;
+

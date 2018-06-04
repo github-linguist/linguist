@@ -1,0 +1,39 @@
+
+
+def inc( x : Str ) -> Str {
+
+  def inc( x : Str ) -> <y : Str> in Python *{
+    y = int( x )+1
+  }*
+
+  ( inc( x = x )|y )
+}
+
+def dec( x : Str ) -> Str {
+
+  def dec( x : Str ) -> <y : Str> in Python *{
+    y = int( x )-1
+  }*
+
+  ( dec( x = x )|y )
+}
+
+def ackermann( m : Str, n : Str ) -> Str {
+  if( m == 0 )
+  then
+    inc( x = n )
+  else
+    if( n == 0 )
+    then
+      ackermann(
+        m = dec( x = m ),
+        n = 1 )
+    else
+      ackermann(
+        m = dec( x = m ),
+        n = ackermann( m = m, n = dec( x = n ) ) )
+    end
+  end
+}
+
+ackermann( m = 2, n = 2 );
