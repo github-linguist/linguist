@@ -1,0 +1,74 @@
+
+
+%%====================================================================
+%% Functions
+%%====================================================================
+
+
+def range( first : Str, last : Str ) ->
+      <number_lst : [Str]>
+
+in Python *{
+  number_lst = [str( x ) for x in range( int( first ), int( last )+1 )]
+}*
+
+
+def is_multiple( number : Str, divisor : Str ) ->
+      <is_multiple : Bool>
+
+in Python *{
+  is_multiple = int( number ) % int( divisor ) == 0
+}*
+
+
+%%====================================================================
+%% Constants
+%%====================================================================
+
+
+let last : Str = 100;
+
+
+%%====================================================================
+%% Workflow
+%%====================================================================
+
+
+let <number_lst = number_lst : [Str]> =
+  range( first = 1,
+         last  = last );
+
+
+let fizzbuzz_lst : [Str] =
+  for x <- number_lst do
+
+    let <is_multiple = f : Bool> =
+      is_multiple( number  = x,
+                   divisor = 3 );
+
+    let <is_multiple = b : Bool> =
+      is_multiple( number  = x,
+                   divisor = 5 );
+
+    if ( f and b ) then "FizzBuzz"
+    else
+      if f then "Fizz"
+      else
+        if b then "Buzz"
+        else
+          x
+        end      
+      end
+    end
+
+    : Str
+
+  end;
+
+
+%%====================================================================
+%% Query
+%%====================================================================
+
+fizzbuzz_lst;
+
