@@ -143,7 +143,7 @@ Add a `.gitattributes` file to your project and use standard git-style path matc
 
 When testing with a local installation of Linguist, take note that the added attributes will not take effect until the .gitattributes file is commited to your repository.
 
-File and folder paths inside .gitattributes are calulated relative to the position of the .gitattributes file.
+File and folder paths inside .gitattributes are calculated relative to the position of the .gitattributes file.
 
 ```
 $ cat .gitattributes
