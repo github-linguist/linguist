@@ -598,6 +598,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **UnrealScript:** [textmate/java.tmbundle](https://github.com/textmate/java.tmbundle)
 - **UrWeb:** [gwalborn/UrWeb-Language-Definition](https://github.com/gwalborn/UrWeb-Language-Definition)
 - **V:** [0x9ef/vscode-vlang](https://github.com/0x9ef/vscode-vlang)
+- **varlink:** [varlink/language-varlink](https://github.com/varlink/language-varlink)
 - **VBA:** [serkonda7/vscode-vba](https://github.com/serkonda7/vscode-vba)
 - **VBScript:** [peters-ben-0007/VBDotNetSyntax](https://github.com/peters-ben-0007/VBDotNetSyntax)
 - **VCL:** [brandonwamboldt/sublime-varnish](https://github.com/brandonwamboldt/sublime-varnish)
