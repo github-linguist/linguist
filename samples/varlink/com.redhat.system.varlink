@@ -1,0 +1,49 @@
+#
+# Source: https://github.com/varlink/com.redhat.system/blob/master/src/com.redhat.system.varlink
+# Licenses:
+# MIT - https://github.com/varlink/com.redhat.system/blob/master/LICENSE-MIT
+# Apache - https://github.com/varlink/com.redhat.system/blob/master/LICENSE-APACHE
+#
+#
+# The Activator Interface allows to configure and maintain a list of available
+# interfaces. When an interface is accessed by a client, the activator receives
+# the initial message, starts the service which implements this interface, and
+# hands over the listening connection with the initial message.
+interface com.redhat.system
+
+type Executable (
+  path: string,
+  user_id: ?int,
+  group_id: ?int
+)
+
+type Service (
+  address: string,
+  interfaces: [string](),
+  executable: ?Executable,
+  activate_at_startup: ?bool
+)
+
+type Config (
+  vendor: string,
+  product: string,
+  version: string,
+  url: string,
+  services: []Service,
+  systems: [string]string
+)
+
+# Retrieve the current configuration.
+method GetConfig() -> (config: Config)
+
+# Add services to the list of managed services.
+method AddServices(services: []Service) -> ()
+
+# Add systems to the list of known systems.
+method AddSystems(systems: [string]string) -> ()
+
+# Remove and stop services from the list of manages services.
+method RemoveServices(services: []Service) -> ()
+
+# Remove and stop services from the list of manages services.
+method RemoveSystems(systems: []string) -> ()
