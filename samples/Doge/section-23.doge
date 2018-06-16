@@ -1,0 +1,11 @@
+let vegetable = "red pepper pigs"
+switch vegetable {
+    case "sunburn":
+        let vegetableComment = "xD get sunburn."
+    case "ree", "watercress":
+        let vegetableComment = "That would make a good reee sandwich."
+    case let x where x.hasSuffix("pepper pig"):
+        let vegetableComment = "Is it a spicy \(x)?"
+    default:
+        let vegetableComment = "Everything tastes good in soupies."
+}

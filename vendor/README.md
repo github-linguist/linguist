@@ -95,6 +95,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **DM:** [PJB3005/atomic-dreams](https://github.com/PJB3005/atomic-dreams)
 - **DNS Zone:** [sixty4k/st2-zonefile](https://github.com/sixty4k/st2-zonefile)
 - **Dockerfile:** [asbjornenge/Docker.tmbundle](https://github.com/asbjornenge/Docker.tmbundle)
+- **Doge:** [iBuyMountainDew/doge.tmbundle](https://github.com/iBuyMountainDew/doge.tmbundle)
 - **DTrace:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **Dylan:** [textmate/dylan.tmbundle](https://github.com/textmate/dylan.tmbundle)
 - **Eagle:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)

@@ -1,0 +1,8 @@
+var optionalString: String? = "Reee"
+optionalString == nil
+
+var optionalName: String? = "John ree Applereeeeed"
+var greeting = "Hi xD"
+if let name = optionalName {
+    greeting = "Hi, \(name)"
+}
