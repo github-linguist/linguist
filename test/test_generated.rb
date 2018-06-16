@@ -51,6 +51,8 @@ class TestGenerated < Minitest::Test
     generated_sample_without_loading_data("Dummy/Pods/SwiftDependency/foo.swift")
     generated_sample_without_loading_data("Dummy/Pods/ObjCDependency/foo.h")
     generated_sample_without_loading_data("Dummy/Pods/ObjCDependency/foo.m")
+    generated_sample_without_loading_data("Pods/DogeDependency/foo.doge")
+    generated_sample_without_loading_data("Dummy/Pods/DogeDependency/foo.doge")
 
     # Carthage
     generated_sample_without_loading_data("Carthage/Build/.Dependency.version")
