@@ -1,0 +1,10 @@
+let individualScores = [420, 42, 1036, 88, 9]
+var teamScore = 0
+for score in individualScores {
+    if score > 40 {
+        teamScore += 4
+    } else {
+        teamScore += 2
+    }
+}
+teamScore
