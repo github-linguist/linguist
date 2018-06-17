@@ -35,15 +35,25 @@ When you push changes to a repository on GitHub.com, a low priority background j
 
 ## Usage
 
+### Installation
+
 Install the gem:
 
     $ gem install github-linguist
 
 #### Dependencies
 
-Linguist uses the [`charlock_holmes`](https://github.com/brianmario/charlock_holmes) character encoding detection library which in turn uses [ICU](http://site.icu-project.org/), and the libgit2 bindings for Ruby provided by [`rugged`](https://github.com/libgit2/rugged). These components have their own dependencies - `icu4c`, and `cmake` and `pkg-config` respectively - which you may need to install before you can install Linguist.
+Linguist uses [`charlock_holmes`](https://github.com/brianmario/charlock_holmes) for character encoding and [`rugged`](https://github.com/libgit2/rugged) for libgit2 bindings for Ruby. These components have their own dependencies.
+1. charlock_holmes
+    * cmake
+    * pkg-config
+    * [ICU](http://site.icu-project.org/)
+    * [zlib](https://zlib.net/)
+2. rugged
+    * [libcurl](https://curl.haxx.se/libcurl/)
+    * [OpenSSL](https://www.openssl.org)
 
-For example, on macOS with [Homebrew](http://brew.sh/): `brew install cmake pkg-config icu4c` and on Ubuntu: `apt-get install cmake pkg-config libicu-dev`.
+You may need to install missing dependencies before you can install Linguist. For example, on macOS with [Homebrew](http://brew.sh/): `brew install cmake pkg-config icu4c` and on Ubuntu: `sudo apt-get install cmake pkg-config libicu-dev zlib1g-dev libcurl4-openssl-dev libssl-dev`.
 
 ### Application usage
 
@@ -62,6 +72,11 @@ project.languages      #=> { "Ruby" => 119387 }
 ### Command line usage
 
 A repository's languages stats can also be assessed from the command line using the `linguist` executable. Without any options, `linguist` will output the breakdown that correlates to what is shown in the language stats bar. The `--breakdown` flag will additionally show the breakdown of files by language.
+
+```console
+$ cd /path-to-repository/
+$ linguist
+```
 
 You can try running `linguist` on the root directory in this repository itself:
 
@@ -125,6 +140,10 @@ Linguist supports a number of different custom override strategies for language 
 ### Using gitattributes
 
 Add a `.gitattributes` file to your project and use standard git-style path matchers for the files you want to override using the `linguist-documentation`, `linguist-language`, `linguist-vendored`, `linguist-generated`  and `linguist-detectable` attributes. `.gitattributes` will be used to determine language statistics and will be used to syntax highlight files. You can also manually set syntax highlighting using [Vim or Emacs modelines](#using-emacs-or-vim-modelines).
+
+When testing with a local installation of Linguist, take note that the added attributes will not take effect until the .gitattributes file is commited to your repository.
+
+File and folder paths inside .gitattributes are calulated relative to the position of the .gitattributes file.
 
 ```
 $ cat .gitattributes

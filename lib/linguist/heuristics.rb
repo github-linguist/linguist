@@ -390,16 +390,6 @@ module Linguist
       end
     end
 
-    disambiguate ".pod" do |data|
-      if /^\s*\/\* XPM \*\//.match(data)
-        Language["XPM"]
-      elsif /^[\s&&[^\n]]*=(comment|begin pod|begin para|item\d+)/.match(data)
-        Language["Pod 6"]
-      else
-        Language["Pod"]
-      end
-    end
-
     disambiguate ".pro" do |data|
       if /^[^\[#]+:-/.match(data)
         Language["Prolog"]
@@ -421,7 +411,7 @@ module Linguist
     end
 
     disambiguate ".q" do |data|
-      if /[A-Z\.][\w\d\.]*:{/i.match(data) || /(^|\n)\\(cd?|d|l|p|ts?) /.match(data)
+      if /[A-Z.][\w.]*:{/i.match(data) || /(^|\n)\\(cd?|d|l|p|ts?) /.match(data)
         Language["q"]
       elsif /SELECT\s+[\w*,]+\s+FROM/i.match(data) || /(CREATE|ALTER|DROP)\s(DATABASE|SCHEMA|TABLE)/i.match(data)
         Language["HiveQL"]
