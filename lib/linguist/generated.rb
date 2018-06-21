@@ -54,11 +54,14 @@ module Linguist
       xcode_file? ||
       cocoapods? ||
       carthage_build? ||
+      generated_graphql_relay? ||
       generated_net_designer_file? ||
       generated_net_specflow_feature_file? ||
       composer_lock? ||
+      cargo_lock? ||
       node_modules? ||
       go_vendor? ||
+      go_lock? ||
       npm_shrinkwrap_or_package_lock? ||
       godeps? ||
       generated_by_zephir? ||
@@ -85,7 +88,8 @@ module Linguist
       generated_jison? ||
       generated_yarn_lock? ||
       generated_grpc_cpp? ||
-      generated_dart?
+      generated_dart? ||
+      generated_perl_ppport_header?
     end
 
     # Internal: Is the blob an Xcode file?
@@ -223,7 +227,7 @@ module Linguist
     #
     # Returns true or false
     def generated_net_designer_file?
-      name.downcase =~ /\.designer\.cs$/
+      name.downcase =~ /\.designer\.(cs|vb)$/
     end
 
     # Internal: Is this a codegen file for Specflow feature file?
@@ -350,6 +354,13 @@ module Linguist
       !!name.match(/vendor\/((?!-)[-0-9A-Za-z]+(?<!-)\.)+(com|edu|gov|in|me|net|org|fm|io)/)
     end
 
+    # Internal: Is the blob a generated Go dep or glide lock file?
+    #
+    # Returns true or false.
+    def go_lock?
+      !!name.match(/(Gopkg|glide)\.lock/)
+    end
+
     # Internal: Is the blob a generated npm shrinkwrap or package lock file?
     #
     # Returns true or false.
@@ -377,6 +388,13 @@ module Linguist
     # Returns true or false.
     def generated_by_zephir?
       !!name.match(/.\.zep\.(?:c|h|php)$/)
+    end
+
+    # Internal: Is the blob a generated Rust Cargo lock file?
+    #
+    # Returns true or false.
+    def cargo_lock?
+      !!name.match(/Cargo\.lock/)
     end
 
     # Is the blob a VCR Cassette file?
@@ -542,6 +560,22 @@ module Linguist
       return false unless extname == '.dart'
       return false unless lines.count > 1
       return lines.first.downcase =~ /generated code\W{2,3}do not modify/
+    end
+
+    # Internal: Is the file a generated Perl/Pollution/Portability header file?
+    #
+    # Returns true or false.
+    def generated_perl_ppport_header?
+        return false unless name.match(/ppport\.h$/)
+        return false unless lines.count > 10
+        return lines[8].include?("Automatically created by Devel::PPPort")
+    end
+        
+    # Internal: Is this a relay-compiler generated graphql file?
+    #
+    # Return true or false
+    def generated_graphql_relay?
+      !!name.match(/__generated__\//)
     end
   end
 end

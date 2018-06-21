@@ -9,11 +9,13 @@ require "optparse"
 module Licensed
   module Source
     class Filesystem
-      attr_reader :type
 
-      def initialize(glob, type: "directory")
+      def self.type
+        "grammar"
+      end
+
+      def initialize(glob)
         @glob = glob
-        @type = type
       end
 
       def enabled?
@@ -24,7 +26,7 @@ module Licensed
         Dir.glob(@glob).map do |directory|
           puts "caching #{directory}"
           Licensed::Dependency.new(directory, {
-            "type" => type,
+            "type" => Filesystem.type,
             "name" => File.basename(directory)
           })
         end
@@ -40,12 +42,12 @@ OptionParser.new do |opts|
   end
 end.parse!
 
-source = Licensed::Source::Filesystem.new(module_path || "vendor/grammars/*/", type: "grammar")
-config = Licensed::Configuration.new
+source = Licensed::Source::Filesystem.new(module_path || "#{File.expand_path("../", File.dirname(__FILE__))}/vendor/grammars/*/")
+config = Licensed::Configuration.load_from(File.expand_path("../vendor/licenses/config.yml", File.dirname(__FILE__)))
 config.sources << source
 
-command = if ARGV[0] == "verify"
-  Licensed::Command::Verify.new(config)
+command = if ARGV[0] == "status"
+  Licensed::Command::Status.new(config)
 else
   Licensed::Command::Cache.new(config)
 end

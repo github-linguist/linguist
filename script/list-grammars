@@ -78,7 +78,7 @@ class GrammarList
         short_url = "eregon/oz-tmbundle"
         long_url  = "https://github.com/eregon/oz-tmbundle"
       else
-        submodule = @submodules[@sources[scope].chomp("/")]
+        submodule = @submodules[(@sources[scope] || scope).chomp("/")]
         next unless submodule
         short_url = submodule[:short]
         long_url  = submodule[:url]

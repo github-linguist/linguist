@@ -1,0 +1,88 @@
+{
+	"requireCurlyBraces": [
+		"if",
+		"else",
+		"for",
+		"while",
+		"do",
+		"try",
+		"catch"
+	],
+	"requireSpaceAfterKeywords": [
+		"if",
+		"else",
+		"for",
+		"while",
+		"do",
+		"switch",
+		"case",
+		"return",
+		"try",
+		"catch",
+		"typeof"
+	],
+	"requireSpaceBeforeBlockStatements": true,
+	"requireParenthesesAroundIIFE": true,
+	"requireSpacesInConditionalExpression": true,
+	"disallowSpacesInNamedFunctionExpression": {
+		"beforeOpeningRoundBrace": true
+	},
+	"disallowSpacesInFunctionDeclaration": {
+		"beforeOpeningRoundBrace": true
+	},
+	"requireSpaceBetweenArguments": true,
+	"requireBlocksOnNewline": true,
+	"disallowEmptyBlocks": true,
+	"disallowSpacesInsideArrayBrackets": true,
+	"disallowSpacesInsideParentheses": true,
+	"disallowDanglingUnderscores": true,
+	"requireCommaBeforeLineBreak": true,
+	"disallowSpacesInCallExpression": true,
+	"disallowSpaceAfterPrefixUnaryOperators": true,
+	"disallowSpaceBeforePostfixUnaryOperators": true,
+	"disallowSpaceBeforeBinaryOperators": [
+		","
+	],
+	"requireSpacesInForStatement": true,
+	"requireSpaceBeforeBinaryOperators": true,
+	"requireSpaceAfterBinaryOperators": true,
+	"disallowKeywords": [
+		"with"
+	],
+	"disallowMixedSpacesAndTabs": true,
+	"disallowTrailingWhitespace": true,
+	"disallowKeywordsOnNewLine": [
+		"else"
+	],
+	"requireLineFeedAtFileEnd": true,
+	"requireCapitalizedConstructors": true,
+	"requireDotNotation": true,
+	"disallowNewlineBeforeBlockStatements": true,
+	"disallowMultipleLineStrings": true,
+	"requireSpaceBeforeObjectValues": true,
+	"validateQuoteMarks": "'",
+	"requireSpaceAfterLineComment": true,
+	"validateIndentation": 2,
+	"validateLineBreaks": "LF",
+	"disallowSpacesInFunction": {
+		"beforeOpeningRoundBrace": true
+	},
+	"requireSpacesInFunction": {
+		"beforeOpeningCurlyBrace": true
+	},
+	"disallowMultipleLineBreaks": true,
+	"disallowYodaConditions": true,
+	"disallowFunctionDeclarations": true,
+	"disallowMultipleVarDecl": "exceptUndefined",
+	"requirePaddingNewlinesBeforeKeywords": [
+		"do",
+		"for",
+		"if",
+		"switch",
+		"try",
+		"void",
+		"while",
+		"return"
+	],
+	"excludeFiles": ["**/node_modules/**", "**/min/**", "**/*.min.js"]
+}
