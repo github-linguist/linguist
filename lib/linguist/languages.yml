@@ -3505,16 +3505,6 @@ Pod:
   - perl
   tm_scope: none
   language_id: 288
-Pod 6:
-  type: prose
-  ace_mode: perl
-  tm_scope: source.perl6fe
-  wrap: true
-  extensions:
-  - ".pod"
-  interpreters:
-  - perl6
-  language_id: 155357471
 PogoScript:
   type: programming
   color: "#d80074"
@@ -5042,6 +5032,31 @@ World of Warcraft Addon Data:
   tm_scope: source.toc
   ace_mode: text
   language_id: 396
+X BitMap:
+  type: data
+  group: C
+  aliases:
+  - xbm
+  extensions:
+  - ".xbm"
+  ace_mode: c_cpp
+  tm_scope: source.c
+  codemirror_mode: clike
+  codemirror_mime_type: text/x-csrc
+  language_id: 782911107
+X PixMap:
+  type: data
+  group: C
+  aliases:
+  - xpm
+  extensions:
+  - ".xpm"
+  - ".pm"
+  ace_mode: c_cpp
+  tm_scope: source.c
+  codemirror_mode: clike
+  codemirror_mime_type: text/x-csrc
+  language_id: 781846279
 X10:
   type: programming
   aliases:
@@ -5193,14 +5208,6 @@ XML:
   - Web.config
   - packages.config
   language_id: 399
-XPM:
-  type: data
-  extensions:
-  - ".xpm"
-  - ".pm"
-  ace_mode: c_cpp
-  tm_scope: source.c
-  language_id: 781846279
 XPages:
   type: data
   extensions:
