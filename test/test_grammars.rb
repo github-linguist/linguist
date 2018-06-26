@@ -12,17 +12,17 @@ class TestGrammars < Minitest::Test
 
   HASH_WHITELIST = [
     "2edac46b0a63309c96442d2826321a442217472f", # Agda.tmbundle
-    "7dfce11e2e3579ee43b83e69b1b64e77a2e378f0", # ant.tmbundle
+    "4da01d631a29c76456fd0bd16749c71e8d5f6dbf", # ant.tmbundle
     "79e72fd673dcebadd8fbace8d43db3da96d2c09f", # bro-sublime
-    "62b97e52b78439c14550a44a3fe51332aeffb3a1", # elixir-tmbundle
+    "220e011c8d686129e9c4163a7c655b9d64f61e59", # elixir-tmbundle
     "75cf04a9121ca7bb5a9c122b33007ac016ba72e7", # factor
-    "0acff2bb1536a3942a39ac74987ffd9c44905a6b", # FreeMarker.tmbundle
+    "b81acf2ba52d312754bf5055845a723123bda388", # FreeMarker.tmbundle
     "ee77ce4cf9121bccc3e37ba6b98f8e7acd589aaf", # gap-tmbundle
     "4cfc7ce12de920ccc836bbab2d748151d5ba7e38", # go-tmbundle
     "6c2e34d62c08f97a3e2ece3eedc65fbd99873ff4", # idl.tmbundle
     "e5212ae103917a9c2c3c1429a4569df466686fbd", # Isabelle.tmbundle
     "bb56ce634fb7ddd38eee988c593ab7cb98a04f64", # jflex.tmbundle
-    "41cdc7e9f9d2e62eb8ac68a1a9359b9c39a7a9bf", # mako-tmbundle
+    "39f092c726491ca6a02354dbc6c3a0920bb44d4c", # mako-tmbundle
     "7821982b18bc35d6925cc16ece68d9c71f1fbba3", # moonscript-tmbundle
     "c235154dbf7864612ac0d337ef5fe79a586b061a", # PHP-Twig.tmbundle
     "0c216b112f3a4e6d5848128504d8378d8c7eee00", # r.tmbundle
