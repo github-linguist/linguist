@@ -229,7 +229,7 @@ module Linguist
     disambiguate ".gml" do |data|
       if /^\s*(\<\?xml|xmlns)/i.match(data)
         Language["XML"]
-      elsif /^\s*(graph[\s\n\r]{1,}\[$)|(node[\s\n\r]{1,}\[$)/i.match(data)
+      elsif /^\s*((graph|node)+[\s\n\r]+\[$)/i.match(data)
         Language["Graph Modeling Language"]
       else
         Language["Game Maker Language"]
