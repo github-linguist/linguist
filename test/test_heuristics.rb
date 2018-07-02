@@ -131,6 +131,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_gml_by_heuristics
+    assert_heuristics({
+      "Game Maker Language" => all_fixtures("Game Maker Language", "*.gml"),
+      "Graph Modeling Language" => all_fixtures("Graph Modeling Language", "*.gml")
+    })
+  end
+
   def test_fs_by_heuristics
     assert_heuristics({
       "F#" => all_fixtures("F#", "*.fs"),
