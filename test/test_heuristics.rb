@@ -143,7 +143,7 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "Game Maker Language" => all_fixtures("Game Maker Language", "*.gml"),
       "Graph Modeling Language" => all_fixtures("Graph Modeling Language", "*.gml"),
-      "XML" => all_fixtures("XML", "*.gml"),
+      "XML" => all_fixtures("XML", "*.gml")
     })
   end
   
