@@ -182,7 +182,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Jison Lex:** [cdibbs/language-jison](https://github.com/cdibbs/language-jison)
 - **Jolie:** [fmontesi/language-jolie](https://github.com/fmontesi/language-jolie)
 - **JSON:** [textmate/json.tmbundle](https://github.com/textmate/json.tmbundle)
-- **JSON with comments:** [atom/language-javascript](https://github.com/atom/language-javascript)
+- **JSON with Comments:** [atom/language-javascript](https://github.com/atom/language-javascript)
 - **JSON5:** [atom/language-javascript](https://github.com/atom/language-javascript)
 - **JSONiq:** [wcandillon/language-jsoniq](https://github.com/wcandillon/language-jsoniq)
 - **JSONLD:** [atom/language-javascript](https://github.com/atom/language-javascript)
