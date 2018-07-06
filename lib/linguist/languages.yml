@@ -2087,20 +2087,46 @@ JSON:
   filenames:
   - ".arcconfig"
   - ".htmlhintrc"
-  - ".jscsrc"
-  - ".jshintrc"
   - ".tern-config"
   - ".tern-project"
   - composer.lock
   - mcmod.info
   language_id: 174
+JSON with Comments:
+  type: data
+  group: JSON
+  tm_scope: source.js
+  ace_mode: javascript
+  codemirror_mode: javascript
+  codemirror_mime_type: text/javascript
+  aliases:
+  - jsonc
+  extensions:
+  - ".sublime-build"
+  - ".sublime-commands"
+  - ".sublime-completions"
+  - ".sublime-keymap"
+  - ".sublime-macro"
+  - ".sublime-menu"
+  - ".sublime-mousemap"
+  - ".sublime-project"
+  - ".sublime-settings"
+  - ".sublime-theme"
+  - ".sublime-workspace"
+  - ".sublime_metrics"
+  - ".sublime_session"
+  filenames:
+  - ".babelrc"
+  - ".eslintrc.json"
+  - ".jscsrc"
+  - ".jshintrc"
+  - ".jslintrc"
+  - tsconfig.json
+  language_id: 423
 JSON5:
   type: data
   extensions:
   - ".json5"
-  filenames:
-  - ".babelrc"
-  - ".jslintrc"
   tm_scope: source.js
   ace_mode: javascript
   codemirror_mode: javascript
@@ -4531,28 +4557,6 @@ SubRip Text:
   ace_mode: text
   tm_scope: text.srt
   language_id: 360
-Sublime Text Config:
-  type: data
-  group: JSON
-  tm_scope: source.js
-  ace_mode: javascript
-  codemirror_mode: javascript
-  codemirror_mime_type: text/javascript
-  extensions:
-  - ".sublime-build"
-  - ".sublime-commands"
-  - ".sublime-completions"
-  - ".sublime-keymap"
-  - ".sublime-macro"
-  - ".sublime-menu"
-  - ".sublime-mousemap"
-  - ".sublime-project"
-  - ".sublime-settings"
-  - ".sublime-theme"
-  - ".sublime-workspace"
-  - ".sublime_metrics"
-  - ".sublime_session"
-  language_id: 423
 SugarSS:
   type: markup
   tm_scope: source.css.postcss.sugarss
