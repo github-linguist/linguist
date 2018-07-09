@@ -339,7 +339,9 @@ module Linguist
     end
 
     disambiguate ".ncl" do |data|
-      if data.include?("THE_TITLE")
+      if /^\s*<\?xml\s+version/i.match(data)
+        Language["XML"]
+      elsif data.include?("THE_TITLE")
         Language["Text"]
       end
     end
