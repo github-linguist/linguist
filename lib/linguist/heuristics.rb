@@ -475,7 +475,7 @@ module Linguist
         Language["Perl"]
       elsif Perl6Regex.match(data)
         Language["Perl 6"]
-      elsif /^\s*%[ \t]+|^\s*var\s+\w+\s*:=\s*\w+/.match(data)
+      elsif /^\s*%[ \t]+|^\s*var\s+\w+(\s*:\s*\w+)?\s*:=\s*\w+/.match(data)
         Language["Turing"]
       end
     end
