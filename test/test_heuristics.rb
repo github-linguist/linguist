@@ -72,6 +72,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_builds_by_heuristics
+    assert_heuristics({
+      "Text" => all_fixtures("Text", "*.builds"),
+      "XML" => all_fixtures("XML", "*.builds")
+    })
+  end
+
   def test_ch_by_heuristics
     assert_heuristics({
       "xBase" => all_fixtures("xBase", ".ch")
@@ -98,6 +105,14 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "C#" => all_fixtures("C#", "*.cs"),
       "Smalltalk" => all_fixtures("Smalltalk", "*.cs")
+    })
+  end
+
+  def test_d_by_heuristics
+    assert_heuristics({
+      "D" => all_fixtures("D", "*.d"),
+      "DTrace" => all_fixtures("DTrace", "*.d"),
+      "Makefile" => all_fixtures("Makefile", "*.d"),
     })
   end
 
@@ -139,11 +154,19 @@ class TestHeuristics < Minitest::Test
     })
   end
 
-  # Candidate languages = ["Hack", "PHP"]
-  def test_hack_by_heuristics
+  def test_gs_by_heuristics
     assert_heuristics({
-      "Hack" => all_fixtures("Hack", "*.php"),
-      "PHP" => all_fixtures("PHP", "*.php")
+      "Gosu" => all_fixtures("Gosu", "*.gs")
+    })
+  end
+
+  # Candidate languages = ["C++", "Objective-C"]
+  def test_h_by_heuristics
+    # Only calling out '.h' filenames as these are the ones causing issues
+    assert_heuristics({
+      "Objective-C" => all_fixtures("Objective-C", "*.h"),
+      "C++" => ["C++/scanner.h", "C++/protocol-buffer.pb.h", "C++/v8.h", "C++/gdsdbreader.h"],
+      "C" => nil
     })
   end
 
@@ -199,6 +222,26 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_ml_by_heuristics
+    ambiguous = [
+      "#{samples_path}/OCaml/date.ml",
+      "#{samples_path}/OCaml/common.ml",
+      "#{samples_path}/OCaml/sigset.ml",
+    ]
+    assert_heuristics({
+      "OCaml" => all_fixtures("OCaml", "*.ml") - ambiguous,
+      "Standard ML" => all_fixtures("Standard ML", "*.ml") - ambiguous,
+      nil => ambiguous
+    })
+  end
+
+  def test_mod_by_heuristics
+    assert_heuristics({
+      "Modula-2" => all_fixtures("Modula-2", "*.mod"),
+      "XML" => all_fixtures("XML", "*.mod")
+    })
+  end
+
   def test_ms_by_heuristics
     assert_heuristics({
       "Roff" => all_fixtures("Roff", "*.ms"),
@@ -227,13 +270,18 @@ class TestHeuristics < Minitest::Test
     })
   end
 
-  # Candidate languages = ["C++", "Objective-C"]
-  def test_obj_c_by_heuristics
-    # Only calling out '.h' filenames as these are the ones causing issues
+  def test_nl_by_heuristics
     assert_heuristics({
-      "Objective-C" => all_fixtures("Objective-C", "*.h"),
-      "C++" => ["C++/scanner.h", "C++/protocol-buffer.pb.h", "C++/v8.h", "C++/gdsdbreader.h"],
-      "C" => nil
+      "NewLisp" => all_fixtures("NewLisp", "*.nl"),
+      "NL" => all_fixtures("NL", "*.nl")
+    })
+  end
+
+  # Candidate languages = ["Hack", "PHP"]
+  def test_php_by_heuristics
+    assert_heuristics({
+      "Hack" => all_fixtures("Hack", "*.php"),
+      "PHP" => all_fixtures("PHP", "*.php")
     })
   end
 
@@ -265,6 +313,20 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_props_by_heuristics
+    assert_heuristics({
+      "INI" => all_fixtures("INI", "*.props"),
+      "XML" => all_fixtures("XML", "*.props")
+    })
+  end
+
+  def test_q_by_heuristics
+    assert_heuristics({
+      "q" => all_fixtures("q", "*.q"),
+      "HiveQL" => all_fixtures("HiveQL", "*.q")
+    })
+  end
+
   def test_r_by_heuristics
     assert_heuristics({
       "R" => all_fixtures("R", "*.r") + all_fixtures("R", "*.R"),
@@ -276,6 +338,20 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "RUNOFF" => all_fixtures("RUNOFF", "*.rno"),
       "Roff" => all_fixtures("Roff", "*.rno")
+    })
+  end
+
+  def test_rpy_by_heuristics
+    assert_heuristics({
+      "Python" => all_fixtures("Python", "*.rpy"),
+      "Ren'Py" => all_fixtures("Ren'Py", "*.rpy")
+    })
+  end
+
+  def test_rs_by_heuristics
+    assert_heuristics({
+      "Rust" => all_fixtures("Rust", "*.rs"),
+      "RenderScript" => all_fixtures("RenderScript", "*.rs")
     })
   end
 
@@ -297,14 +373,28 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_srt_by_heuristics
+    assert_heuristics({
+      "SubRip Text" => all_fixtures("SubRip Text", "*.srt")
+    })
+  end
+
   # Candidate languages = ["Perl", "Perl 6", "Turing"]
   def test_t_perl_by_heuristics
+    # Turing not fully covered.
     assert_heuristics({
       "Turing" => all_fixtures("Turing", "*.t"),
       "Perl" => all_fixtures("Perl", "*.t"),
       "Perl 6" => ["Perl 6/01-dash-uppercase-i.t", "Perl 6/01-parse.t", "Perl 6/advent2009-day16.t",
                    "Perl 6/basic-open.t", "Perl 6/calendar.t", "Perl 6/for.t", "Perl 6/hash.t",
                    "Perl 6/listquote-whitespace.t"]
+    })
+  end
+
+  def test_toc_by_heuristics
+    assert_heuristics({
+      "TeX" => all_fixtures("TeX", "*.toc"),
+      "World of Warcraft Addon Data" => all_fixtures("World of Warcraft Addon Data", "*.toc")
     })
   end
 
@@ -315,10 +405,32 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_tst_by_heuristics
+    assert_heuristics({
+      "GAP" => all_fixtures("GAP", "*.tst"),
+      "Scilab" => all_fixtures("Scilab", "*.tst")
+    })
+  end
+
   def test_tsx_by_heuristics
     assert_heuristics({
       "TypeScript" => all_fixtures("TypeScript", "*.tsx"),
       "XML" => all_fixtures("XML", "*.tsx")
+    })
+  end
+
+  def test_w_by_heuristics
+    assert_heuristics({
+      "CWeb" => all_fixtures("CWeb", "*.w"),
+      "OpenEdge ABL" => all_fixtures("OpenEdge ABL", "*.w")
+    })
+  end
+
+  def test_x_by_heuristics
+    # Logos not fully covered
+    assert_heuristics({
+      "Linked Script" => all_fixtures("Linked Script", "*.x"),
+      "RPC" => all_fixtures("RPC", "*.x")
     })
   end
 end
