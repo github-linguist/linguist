@@ -355,7 +355,7 @@ module Linguist
     disambiguate ".php" do |data|
       if data.include?("<?hh")
         Language["Hack"]
-      elsif /<?[^h]/.match(data)
+      elsif /<\?[^h]/.match(data)
         Language["PHP"]
       end
     end
