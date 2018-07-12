@@ -27,9 +27,9 @@ module Linguist
     @alias_index        = {}
     @language_id_index  = {}
 
-    @extension_index          = Hash.new { |h,k| h[k] = [] }
-    @interpreter_index        = Hash.new { |h,k| h[k] = [] }
-    @filename_index           = Hash.new { |h,k| h[k] = [] }
+    @extension_index    = Hash.new { |h,k| h[k] = [] }
+    @interpreter_index  = Hash.new { |h,k| h[k] = [] }
+    @filename_index     = Hash.new { |h,k| h[k] = [] }
 
     # Valid Languages types
     TYPES = [:data, :markup, :programming, :prose]
@@ -110,7 +110,7 @@ module Linguist
     # Returns the Language or nil if none was found.
     def self.find_by_name(name)
       return nil if !name.is_a?(String) || name.to_s.empty?
-      name && (@name_index[name.downcase] || @name_index[name.split(',').first.downcase])
+      name && (@name_index[name.downcase] || @name_index[name.split(',', 2).first.downcase])
     end
 
     # Public: Look up Language by one of its aliases.
@@ -125,7 +125,7 @@ module Linguist
     # Returns the Language or nil if none was found.
     def self.find_by_alias(name)
       return nil if !name.is_a?(String) || name.to_s.empty?
-      name && (@alias_index[name.downcase] || @alias_index[name.split(',').first.downcase])
+      name && (@alias_index[name.downcase] || @alias_index[name.split(',', 2).first.downcase])
     end
 
     # Public: Look up Languages by filename.
@@ -219,10 +219,7 @@ module Linguist
       lang = @index[name.downcase]
       return lang if lang
 
-      name = name.split(',').first
-      return nil if name.to_s.empty?
-
-      @index[name.downcase]
+      @index[name.split(',', 2).first.downcase]
     end
 
     # Public: A List of popular languages
@@ -294,9 +291,9 @@ module Linguist
       @language_id = attributes[:language_id]
 
       # Set extensions or default to [].
-      @extensions = attributes[:extensions] || []
-      @interpreters = attributes[:interpreters]   || []
-      @filenames  = attributes[:filenames]  || []
+      @extensions   = attributes[:extensions]   || []
+      @interpreters = attributes[:interpreters] || []
+      @filenames    = attributes[:filenames]    || []
 
       # Set popular, and searchable flags
       @popular    = attributes.key?(:popular)    ? attributes[:popular]    : false
@@ -502,12 +499,11 @@ module Linguist
     end
   end
 
-  extensions = Samples.cache['extnames']
+  extensions   = Samples.cache['extnames']
   interpreters = Samples.cache['interpreters']
-  filenames = Samples.cache['filenames']
-  popular = YAML.load_file(File.expand_path("../popular.yml", __FILE__))
+  popular      = YAML.load_file(File.expand_path("../popular.yml", __FILE__))
 
-  languages_yml = File.expand_path("../languages.yml", __FILE__)
+  languages_yml  = File.expand_path("../languages.yml",  __FILE__)
   languages_json = File.expand_path("../languages.json", __FILE__)
 
   if File.exist?(languages_json) && defined?(Yajl)
@@ -517,9 +513,9 @@ module Linguist
   end
 
   languages.each do |name, options|
-    options['extensions'] ||= []
+    options['extensions']   ||= []
     options['interpreters'] ||= []
-    options['filenames'] ||= []
+    options['filenames']    ||= []
 
     if extnames = extensions[name]
       extnames.each do |extname|
@@ -530,22 +526,12 @@ module Linguist
       end
     end
 
-    if interpreters == nil
-      interpreters = {}
-    end
+    interpreters ||= {}
 
     if interpreter_names = interpreters[name]
       interpreter_names.each do |interpreter|
         if !options['interpreters'].include?(interpreter)
           options['interpreters'] << interpreter
-        end
-      end
-    end
-
-    if fns = filenames[name]
-      fns.each do |filename|
-        if !options['filenames'].include?(filename)
-          options['filenames'] << filename
         end
       end
     end

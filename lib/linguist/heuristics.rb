@@ -1,6 +1,8 @@
 module Linguist
   # A collection of simple heuristics that can be used to better analyze languages.
   class Heuristics
+    HEURISTICS_CONSIDER_BYTES = 50 * 1024
+
     # Public: Use heuristics to detect language of the blob.
     #
     # blob               - An object that quacks like a blob.
@@ -14,7 +16,9 @@ module Linguist
     #
     # Returns an Array of languages, or empty if none matched or were inconclusive.
     def self.call(blob, candidates)
-      data = blob.data
+      return [] if blob.symlink?
+
+      data = blob.data[0...HEURISTICS_CONSIDER_BYTES]
 
       @heuristics.each do |heuristic|
         if heuristic.matches?(blob.name, candidates)
@@ -71,7 +75,17 @@ module Linguist
     end
 
     # Common heuristics
+    CPlusPlusRegex = Regexp.union(
+        /^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>/,
+        /^\s*template\s*</,
+        /^[ \t]*try/,
+        /^[ \t]*catch\s*\(/,
+        /^[ \t]*(class|(using[ \t]+)?namespace)\s+\w+/,
+        /^[ \t]*(private|public|protected):$/,
+        /std::\w+/)
     ObjectiveCRegex = /^\s*(@(interface|class|protocol|property|end|synchronised|selector|implementation)\b|#import\s+.+\.h[">])/
+    Perl5Regex = /\buse\s+(?:strict\b|v?5\.)/
+    Perl6Regex = /^\s*(?:use\s+v6\b|\bmodule\b|\b(?:my\s+)?class\b)/
 
     disambiguate ".as" do |data|
       if /^\s*(package\s+[a-z0-9_\.]+|import\s+[a-zA-Z0-9_\.]+;|class\s+[A-Za-z0-9_]+\s+extends\s+[A-Za-z0-9_]+)/.match(data)
@@ -219,8 +233,7 @@ module Linguist
     disambiguate ".h" do |data|
       if ObjectiveCRegex.match(data)
         Language["Objective-C"]
-      elsif (/^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>/.match(data) ||
-        /^\s*template\s*</.match(data) || /^[ \t]*try/.match(data) || /^[ \t]*catch\s*\(/.match(data) || /^[ \t]*(class|(using[ \t]+)?namespace)\s+\w+/.match(data) || /^[ \t]*(private|public|protected):$/.match(data) || /std::\w+/.match(data))
+      elsif CPlusPlusRegex.match(data)
         Language["C++"]
       end
     end
@@ -350,25 +363,25 @@ module Linguist
     disambiguate ".pl" do |data|
       if /^[^#]*:-/.match(data)
         Language["Prolog"]
-      elsif /use strict|use\s+v?5\./.match(data)
+      elsif Perl5Regex.match(data)
         Language["Perl"]
-      elsif /^(use v6|(my )?class|module)/.match(data)
+      elsif Perl6Regex.match(data)
         Language["Perl 6"]
       end
     end
 
     disambiguate ".pm" do |data|
-      if /^\s*(?:use\s+v6\s*;|(?:\bmy\s+)?class|module)\b/.match(data)
-        Language["Perl 6"]
-      elsif /\buse\s+(?:strict\b|v?5\.)/.match(data)
+      if Perl5Regex.match(data)
         Language["Perl"]
+      elsif Perl6Regex.match(data)
+        Language["Perl 6"]
       elsif /^\s*\/\* XPM \*\//.match(data)
         Language["XPM"]
       end
     end
 
     disambiguate ".pro" do |data|
-      if /^[^#]+:-/.match(data)
+      if /^[^\[#]+:-/.match(data)
         Language["Prolog"]
       elsif data.include?("last_client=")
         Language["INI"]
@@ -384,6 +397,14 @@ module Linguist
         Language["XML"]
       elsif /\w+\s*=\s*/i.match(data)
         Language["INI"]
+      end
+    end
+
+    disambiguate ".q" do |data|
+      if /[A-Z.][\w.]*:{/i.match(data) || /(^|\n)\\(cd?|d|l|p|ts?) /.match(data)
+        Language["q"]
+      elsif /SELECT\s+[\w*,]+\s+FROM/i.match(data) || /(CREATE|ALTER|DROP)\s(DATABASE|SCHEMA|TABLE)/i.match(data)
+        Language["HiveQL"]
       end
     end
 
@@ -450,12 +471,12 @@ module Linguist
     end
     
     disambiguate ".t" do |data|
-      if /^\s*%[ \t]+|^\s*var\s+\w+\s*:=\s*\w+/.match(data)
-        Language["Turing"]
-      elsif /^\s*(?:use\s+v6\s*;|\bmodule\b|\b(?:my\s+)?class\b)/.match(data)
-        Language["Perl 6"]
-      elsif /\buse\s+(?:strict\b|v?5\.)/.match(data)
+      if Perl5Regex.match(data)
         Language["Perl"]
+      elsif Perl6Regex.match(data)
+        Language["Perl 6"]
+      elsif /^\s*%[ \t]+|^\s*var\s+\w+\s*:=\s*\w+/.match(data)
+        Language["Turing"]
       end
     end
     
@@ -468,7 +489,7 @@ module Linguist
     end
 
     disambiguate ".ts" do |data|
-      if data.include?("<TS")
+      if /<TS\b/.match(data)
         Language["XML"]
       else
         Language["TypeScript"]
@@ -500,5 +521,15 @@ module Linguist
       end
     end
   
+    disambiguate ".x" do |data|
+      if /\b(program|version)\s+\w+\s*{|\bunion\s+\w+\s+switch\s*\(/.match(data)
+        Language["RPC"]
+      elsif /^%(end|ctor|hook|group)\b/.match(data)
+        Language["Logos"]
+      elsif /OUTPUT_ARCH\(|OUTPUT_FORMAT\(|SECTIONS/.match(data)
+        Language["Linker Script"]
+      end
+    end
+
   end
 end

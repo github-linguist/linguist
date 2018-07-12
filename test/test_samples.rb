@@ -42,6 +42,15 @@ class TestSamples < Minitest::Test
     end
   end
 
+  def test_filename_listed
+    Samples.each do |sample|
+      if sample[:filename]
+        listed_filenames = Language[sample[:language]].filenames
+        assert_includes listed_filenames, sample[:filename], "#{sample[:path]} isn't listed as a filename for #{sample[:language]} in languages.yml"
+      end
+    end
+  end
+
   # Check that there aren't samples with extensions or interpreters that
   # aren't explicitly defined in languages.yml
   languages_yml = File.expand_path("../../lib/linguist/languages.yml", __FILE__)

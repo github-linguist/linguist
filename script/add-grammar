@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require "optparse"
+require "open3"
 
 ROOT = File.expand_path("../../", __FILE__)
 
@@ -42,6 +43,17 @@ def log(msg)
   puts msg if $verbose
 end
 
+def command(*args)
+  log "$ #{args.join(' ')}"
+  output, status = Open3.capture2e(*args)
+  if !status.success?
+    output.each_line do |line|
+      log "  > #{line}"
+    end
+    warn "Command failed. Aborting."
+    exit 1
+  end
+end
 
 usage = """Usage:
   #{$0} [-v|--verbose] [--replace grammar] url
@@ -51,12 +63,12 @@ Examples:
 """
 
 $replace = nil
-$verbose = false
+$verbose = true
 
 OptionParser.new do |opts|
   opts.banner = usage
-  opts.on("-v", "--verbose", "Print verbose feedback to STDOUT") do
-    $verbose = true
+  opts.on("-q", "--quiet", "Do not print output unless there's a failure") do
+    $verbose = false
   end
   opts.on("-rSUBMODULE", "--replace=SUBMODDULE", "Replace an existing grammar submodule.") do |name|
     $replace = name
@@ -72,6 +84,10 @@ unless $url
   exit 1;
 end
 
+# Exit early if docker isn't installed or running.
+log "Checking docker is installed and running"
+command('docker', 'ps')
+
 # Ensure the given URL is an HTTPS link
 parts    = parse_url $url
 https    = "https://#{parts[:host]}/#{parts[:user]}/#{parts[:repo]}"
@@ -82,23 +98,24 @@ Dir.chdir(ROOT)
 
 if repo_old
   log "Deregistering: #{repo_old}"
-  `git submodule deinit #{repo_old}`
-  `git rm -rf #{repo_old}`
-  `script/convert-grammars`
+  command('git', 'submodule', 'deinit', repo_old)
+  command('git', 'rm', '-rf', repo_old)
+  command('script/grammar-compiler', 'update', '-f')
 end
 
 log "Registering new submodule: #{repo_new}"
-`git submodule add -f #{https} #{repo_new}`
-exit 1 if $?.exitstatus > 0
-`script/convert-grammars --add #{repo_new}`
+command('git', 'submodule', 'add', '-f', https, repo_new)
+command('script/grammar-compiler', 'add', repo_new)
 
 log "Confirming license"
 if repo_old
-  `script/licensed`
+  command('script/licensed')
 else
-  `script/licensed --module "#{repo_new}"`
+  repo_new = File.absolute_path(repo_new)
+  command('script/licensed', '--module', repo_new)
 end
 
 log "Updating grammar documentation in vendor/README.md"
-`bundle exec rake samples`
-`script/list-grammars`
+command('bundle', 'exec', 'rake', 'samples')
+command('script/sort-submodules')
+command('script/list-grammars')

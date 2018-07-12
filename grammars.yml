@@ -1,4 +1,3 @@
----
 https://bitbucket.org/Clams/sublimesystemverilog/get/default.tar.gz:
 - source.systemverilog
 - source.ucfconstraints
@@ -10,6 +9,8 @@ vendor/grammars/Agda.tmbundle:
 - source.agda
 vendor/grammars/Alloy.tmbundle:
 - source.alloy
+vendor/grammars/Assembly-Syntax-Definition:
+- source.x86
 vendor/grammars/AutoHotkey:
 - source.ahk
 vendor/grammars/BrightScript.tmbundle:
@@ -45,12 +46,12 @@ vendor/grammars/Isabelle.tmbundle:
 - source.isabelle.theory
 vendor/grammars/JSyntax:
 - source.j
-vendor/grammars/Julia.tmbundle:
-- source.julia
 vendor/grammars/Lean.tmbundle:
 - source.lean
 vendor/grammars/LiveScript.tmbundle:
 - source.livescript
+vendor/grammars/MATLAB-Language-grammar:
+- source.matlab
 vendor/grammars/MQL5-sublime:
 - source.mql5
 vendor/grammars/MagicPython:
@@ -130,6 +131,9 @@ vendor/grammars/SublimePuppet:
 - source.puppet
 vendor/grammars/SublimeXtend:
 - source.xtend
+vendor/grammars/Syntax-highlighting-for-PostCSS:
+- source.css.postcss.sugarss
+- source.postcss
 vendor/grammars/TLA:
 - source.tla
 vendor/grammars/TXL:
@@ -181,6 +185,8 @@ vendor/grammars/asp.tmbundle:
 vendor/grammars/assembly:
 - objdump.x86asm
 - source.x86asm
+vendor/grammars/atom-firestore-grammar:
+- source.firestore
 vendor/grammars/atom-fsharp:
 - source.fsharp
 - source.fsharp.fsi
@@ -192,6 +198,12 @@ vendor/grammars/atom-language-1c-bsl:
 vendor/grammars/atom-language-clean:
 - source.clean
 - text.restructuredtext.clean
+vendor/grammars/atom-language-julia:
+- source.julia
+- source.julia.console
+vendor/grammars/atom-language-nextflow:
+- source.nextflow
+- source.nextflow-groovy
 vendor/grammars/atom-language-p4:
 - source.p4
 vendor/grammars/atom-language-perl6:
@@ -217,6 +229,8 @@ vendor/grammars/ats:
 - source.ats
 vendor/grammars/awk-sublime:
 - source.awk
+vendor/grammars/ballerina-grammar:
+- source.ballerina
 vendor/grammars/bison.tmbundle:
 - source.bison
 vendor/grammars/blitzmax:
@@ -240,6 +254,8 @@ vendor/grammars/chapel-tmbundle:
 vendor/grammars/cmake.tmbundle:
 - source.cache.cmake
 - source.cmake
+vendor/grammars/conllu-linguist-grammar:
+- text.conllu
 vendor/grammars/cool-tmbundle:
 - source.cool
 vendor/grammars/cpp-qt.tmbundle:
@@ -310,12 +326,9 @@ vendor/grammars/graphviz.tmbundle:
 - source.dot
 vendor/grammars/groovy.tmbundle:
 - source.groovy
-vendor/grammars/haxe-sublime-bundle:
-- source.erazor
-- source.haxe.2
-- source.hss.1
+vendor/grammars/haxe-TmLanguage:
+- source.hx
 - source.hxml
-- source.nmml
 vendor/grammars/html.tmbundle:
 - text.html.basic
 vendor/grammars/idl.tmbundle:
@@ -340,14 +353,14 @@ vendor/grammars/java.tmbundle:
 - source.java-properties
 - text.html.jsp
 - text.junit-test-report
+vendor/grammars/javadoc.tmbundle:
+- text.html.javadoc
 vendor/grammars/javascript-objective-j.tmbundle:
 - source.js.objj
 vendor/grammars/jflex.tmbundle:
 - source.jflex
 vendor/grammars/json.tmbundle:
 - source.json
-vendor/grammars/kotlin-sublime-package:
-- source.Kotlin
 vendor/grammars/language-agc:
 - source.agc
 vendor/grammars/language-apl:
@@ -357,8 +370,6 @@ vendor/grammars/language-asn1:
 vendor/grammars/language-babel:
 - source.js.jsx
 - source.regexp.babel
-vendor/grammars/language-ballerina:
-- source.ballerina
 vendor/grammars/language-batchfile:
 - source.batchfile
 vendor/grammars/language-blade:
@@ -379,13 +390,14 @@ vendor/grammars/language-csharp:
 - source.cake
 - source.cs
 - source.csx
-- source.nant-build
 vendor/grammars/language-csound:
 - source.csound
 - source.csound-document
 - source.csound-score
 vendor/grammars/language-css:
 - source.css
+vendor/grammars/language-cwl:
+- source.cwl
 vendor/grammars/language-emacs-lisp:
 - source.emacs.lisp
 vendor/grammars/language-fontforge:
@@ -413,6 +425,8 @@ vendor/grammars/language-haskell:
 - source.hsc2hs
 - source.hsig
 - text.tex.latex.haskell
+vendor/grammars/language-hql:
+- source.hql
 vendor/grammars/language-inform7:
 - source.inform7
 vendor/grammars/language-javascript:
@@ -429,6 +443,8 @@ vendor/grammars/language-jolie:
 vendor/grammars/language-jsoniq:
 - source.jq
 - source.xq
+vendor/grammars/language-kotlin:
+- source.kotlin
 vendor/grammars/language-less:
 - source.css.less
 vendor/grammars/language-maxscript:
@@ -474,6 +490,8 @@ vendor/grammars/language-ruby:
 - source.ruby
 - source.ruby.gemfile
 - text.html.erb
+vendor/grammars/language-sed:
+- source.sed
 vendor/grammars/language-shellscript:
 - source.shell
 - text.shell-session
@@ -500,6 +518,8 @@ vendor/grammars/language-yaml:
 - source.yaml
 vendor/grammars/language-yang:
 - source.yang
+vendor/grammars/language-yara:
+- source.yara
 vendor/grammars/latex.tmbundle:
 - text.bibtex
 - text.log.latex
@@ -529,9 +549,6 @@ vendor/grammars/marko-tmbundle:
 - text.marko
 vendor/grammars/mathematica-tmbundle:
 - source.mathematica
-vendor/grammars/matlab.tmbundle:
-- source.matlab
-- source.octave
 vendor/grammars/maven.tmbundle:
 - text.xml.pom
 vendor/grammars/mediawiki.tmbundle:
@@ -566,7 +583,7 @@ vendor/grammars/opa.tmbundle:
 - source.opa
 vendor/grammars/openscad.tmbundle:
 - source.scad
-vendor/grammars/oz-tmbundle/Syntaxes/Oz.tmLanguage:
+vendor/grammars/oz-tmbundle:
 - source.oz
 vendor/grammars/parrot:
 - source.parrot.pir
@@ -608,9 +625,6 @@ vendor/grammars/sas.tmbundle:
 - source.sas
 vendor/grammars/sass-textmate-bundle:
 - source.sass
-vendor/grammars/scala.tmbundle:
-- source.sbt
-- source.scala
 vendor/grammars/scheme.tmbundle:
 - source.scheme
 vendor/grammars/scilab.tmbundle:
@@ -672,6 +686,9 @@ vendor/grammars/sublime-opal:
 - source.opalsysdefs
 vendor/grammars/sublime-pony:
 - source.pony
+vendor/grammars/sublime-q:
+- source.q
+- source.q_output
 vendor/grammars/sublime-rexx:
 - source.rexx
 vendor/grammars/sublime-robot-plugin:
@@ -717,6 +734,8 @@ vendor/grammars/verilog.tmbundle:
 - source.verilog
 vendor/grammars/vhdl:
 - source.vhdl
+vendor/grammars/vscode-scala-syntax:
+- source.scala
 vendor/grammars/vue-syntax-highlight:
 - text.html.vue
 vendor/grammars/wdl-sublime-syntax-highlighter:

@@ -63,7 +63,8 @@ class TestLanguage < Minitest::Test
     assert_equal Language['Vim script'], Language.find_by_alias('vim')
     assert_equal Language['Vim script'], Language.find_by_alias('viml')
     assert_equal Language['reStructuredText'], Language.find_by_alias('rst')
-    assert_equal Language['XPM'], Language.find_by_alias('xpm')
+    assert_equal Language['X BitMap'], Language.find_by_alias('xbm')
+    assert_equal Language['X PixMap'], Language.find_by_alias('xpm')
     assert_equal Language['YAML'], Language.find_by_alias('yml')
     assert_nil Language.find_by_alias(nil)
   end
@@ -470,5 +471,13 @@ class TestLanguage < Minitest::Test
 
   def test_non_crash_on_comma
     assert_nil Language[',']
+    assert_nil Language.find_by_name(',')
+    assert_nil Language.find_by_alias(',')
+  end
+
+  def test_detect_prefers_markdown_for_md
+    blob = Linguist::FileBlob.new(File.join(samples_path, "Markdown/symlink.md"))
+    match = Linguist.detect(blob)
+    assert_equal Language["Markdown"], match
   end
 end
