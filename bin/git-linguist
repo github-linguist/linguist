@@ -76,7 +76,7 @@ class GitLinguist
   def write_cache(object)
     return unless File.directory? @repo_path
 
-    Tempfile.open(cache_file) do |f|
+    Tempfile.open('cache_file', @repo_path) do |f|
       marshal = Marshal.dump(object)
       f.write(Zlib::Deflate.deflate(marshal))
       f.close
