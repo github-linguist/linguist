@@ -75,6 +75,11 @@ module Linguist
     end
 
     # Common heuristics
+    CRegex = Regexp.union(
+        /\b(char|double|short|int|long|float|unsigned|void)\s+\w+\s*\(\s*void\s*\)/,
+        /\([\sa-zA-Z0-9\*]+restrict\s+/,
+        /\b(char|short|int|long|float|unsigned)\s+\w+\s*\[\]\s*;/
+      )
     CPlusPlusRegex = Regexp.union(
         /^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>/,
         /^\s*template\s*</,
@@ -235,6 +240,8 @@ module Linguist
         Language["Objective-C"]
       elsif CPlusPlusRegex.match(data)
         Language["C++"]
+      elsif CRegex.match(data)
+        Language["C"]
       end
     end
 
