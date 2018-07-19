@@ -1,0 +1,14 @@
+using System;
+using System.Console;
+
+module CLArgs
+{
+    Main(args : array[string]) : void
+    {
+        foreach (arg in args) Write($"$arg "); // using the array passed to Main(), everything after the program name
+        Write("\n");
+
+        def cl_args = Environment.GetCommandLineArgs(); // also gets program name
+        foreach (cl_arg in cl_args) Write($"$cl_arg ");
+    }
+}

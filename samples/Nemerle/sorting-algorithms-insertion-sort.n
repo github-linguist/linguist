@@ -1,0 +1,27 @@
+using System.Console;
+using Nemerle.English;
+
+module InsertSort
+{
+    public static Sort(this a : array[int]) : void
+    {
+        mutable value = 0; mutable j = 0;
+        foreach (i in [1 .. (a.Length - 1)])
+        {
+            value = a[i]; j = i - 1;
+            while (j >= 0 and a[j] > value)
+            {
+                a[j + 1] = a[j];
+                j = j - 1;
+            }
+            a[j + 1] = value;
+        }
+    }
+
+    Main() : void
+    {
+        def arr = array[1, 4, 8, 3, 8, 3, 5, 2, 6];
+        arr.Sort();
+        foreach (i in arr) Write($"$i  ");
+    }
+}

@@ -1,0 +1,18 @@
+using System;
+using System.Console;
+
+module Maprange
+{
+    Maprange(a : double * double, b : double * double, s : double) : double
+    {
+        def (a1, a2) = a; def (b1, b2) = b;
+
+        b1 + (((s - a1) * (b2 - b1))/(a2 - a1))
+    }
+
+    Main() : void
+    {
+        foreach (i in [0 .. 10])
+            WriteLine("{0, 2:f0} maps to {1:f1}", i, Maprange((0.0, 10.0), (-1.0, 0.0), i));
+    }
+}

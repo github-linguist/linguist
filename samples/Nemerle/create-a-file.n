@@ -1,0 +1,23 @@
+using System;
+using System.IO;
+
+module CreateFile
+{
+    Main() : void
+    {
+        unless (File.Exists("output.txt")) File.Create("output.txt");         // here
+        // returns a FileStream object which we're ignoring
+        try {
+            unless (File.Exists(@"\output.txt")) File.Create(@"\output.txt"); // root
+        }
+        catch {
+            |e is UnauthorizedAccessException => Console.WriteLine(
+            "Cannot create file in root directory without Administrator priveleges.")
+        }
+
+        unless (Directory.Exists("docs")) Directory.CreateDirectory("docs");
+        // returns a DirectoryInfo object which we're ignoring
+        unless (Directory.Exists(@"\docs")) Directory.CreateDirectory(@"\docs");
+        // no Exception for directory creation
+    }
+}

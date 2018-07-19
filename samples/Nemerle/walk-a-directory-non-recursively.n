@@ -1,0 +1,13 @@
+using System.Console;
+using System.IO;
+
+module DirWalk
+{
+    Main() : void
+    {
+        def files = Directory.GetFiles(@"C:\MyDir");                  // retrieves only files
+        def files_subs = Directory.GetFileSystemEntries(@"C:\MyDir"); // also retrieves (but does not enter) sub-directories
+                                                                      // (like ls command)
+        foreach (file in files) WriteLine(file);
+    }
+}

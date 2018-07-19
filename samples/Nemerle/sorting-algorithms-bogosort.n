@@ -1,0 +1,39 @@
+using System;
+using System.Console;
+using Nemerle.Imperative;
+
+module Bogosort
+{
+    public static Bogosort[T] (this x : array[T]) : void
+      where T : IComparable
+    {
+        def rnd = Random();
+        def shuffle(a)
+        {
+            foreach (i in [0 .. (a.Length - 2)])
+            a[i] <-> a[(rnd.Next(i, a.Length))];
+        }
+
+        def isSorted(b)
+        {
+            when (b.Length <= 1) return true;
+            foreach (i in [1 .. (b.Length - 1)])
+                when (b[i].CompareTo(b[i - 1]) < 0) return false;
+            true;
+        }
+
+        def loop()
+        {
+            unless (isSorted(x)) {shuffle(x); loop();};
+        }
+
+        loop()
+    }
+
+    Main() : void
+    {
+        def sortme = array[1, 5, 3, 6, 7, 3, 8, -2];
+        sortme.Bogosort();
+        foreach (i in sortme) Write($"$i  ");
+    }
+}

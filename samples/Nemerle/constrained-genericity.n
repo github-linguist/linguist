@@ -1,0 +1,46 @@
+using System.Collections.Generic;
+
+interface IEatable
+{
+    Eat() : void;
+}
+
+class FoodBox[T] : IEnumerable[T]
+  where T : IEatable
+{
+    private _foods : list[T] = [];
+
+    public this() {}
+
+    public this(items : IEnumerable[T])
+    {
+        this._foods = $[food | food in items];
+    }
+
+    public Add(food : T) : FoodBox[T]
+    {
+        FoodBox(food::_foods);
+    }
+
+    public GetEnumerator() : IEnumerator[T]
+    {
+        _foods.GetEnumerator();
+    }
+}
+
+class Apple : IEatable
+{
+    public this() {}
+
+    public Eat() : void
+    {
+        System.Console.WriteLine("nom..nom..nom");
+    }
+}
+
+mutable appleBox = FoodBox();
+repeat(3) {
+    appleBox = appleBox.Add(Apple());
+}
+
+foreach (apple in appleBox) apple.Eat();

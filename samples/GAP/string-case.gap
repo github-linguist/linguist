@@ -1,0 +1,2 @@
+LowercaseString("alphaBETA");
+UppercaseString("alphaBETA");

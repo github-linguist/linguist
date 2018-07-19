@@ -1,0 +1,15 @@
+using System.Console;
+using System.Globalization;
+
+module StringCase
+{
+    Main() : void
+    {
+        def alpha = "alphaBETA";
+        WriteLine(alpha.ToUpper());
+        WriteLine(alpha.ToLower());
+
+        WriteLine(CultureInfo.CurrentCulture.TextInfo.ToTitleCase("exAmpLe sTrinG"));
+
+    }
+}

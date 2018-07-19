@@ -1,0 +1,27 @@
+using System;
+using System.Console;
+
+module Ethiopian
+{
+    Multiply(x : int, y : int) : int
+    {
+        def halve(a)  {a / 2}
+        def doble(a)  {a * 2}
+        def isEven(a) {a % 2 == 0}
+        def multiply(p, q)
+        {
+            match(p)
+            {
+                |p when (p < 1) => 0
+                |p when (isEven(p)) => 0 + multiply(halve(p), doble(q))
+                |_ => q + multiply(halve(p), doble(q))
+            }
+        }
+        multiply(x, y)
+    }
+
+    Main() : void
+    {
+        WriteLine("By Ethiopian multiplication, 17 * 34 = {0}", Multiply(17, 34));
+    }
+}

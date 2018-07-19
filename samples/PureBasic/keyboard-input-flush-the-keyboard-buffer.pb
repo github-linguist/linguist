@@ -1,0 +1,1 @@
+While Inkey(): Wend

@@ -1,0 +1,13 @@
+using System.Console;
+
+module IntSort
+{
+    Main() : void
+    {
+        def nums = [1, 5, 3, 7, 2, 8, 3, 9];
+        def sorted = nums.Sort((x, y) => x.CompareTo(y));
+
+        WriteLine(nums);
+        WriteLine(sorted);
+    }
+}

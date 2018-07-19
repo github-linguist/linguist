@@ -1,0 +1,10 @@
+module Beer where
+
+beer 1 = "1 bottle of beer on the wall\n1 bottle of beer\nTake one down, pass it around"
+beer 0 = "better go to the store and buy some more."
+beer v = show v ++ " bottles of beer on the wall\n"
+                ++ show v
+                ++" bottles of beer\nTake one down, pass it around\n"
+                ++ head (lines $ beer $ v-1) ++ "\n"
+
+main _ = mapM_ (printStrLn . beer) (reverse (0..99))

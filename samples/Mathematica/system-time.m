@@ -1,0 +1,2 @@
+Print[DateList[]]
+Print[AbsoluteTime[]]

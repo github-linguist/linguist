@@ -1,0 +1,20 @@
+%!PS
+
+% We want the 'n'th fibonacci number
+/n 13 def
+
+% Prepare output canvas:
+/Helvetica findfont 20 scalefont setfont
+100 100 moveto
+
+%define the function recursively:
+/fib { dup
+       3 lt
+         { pop 1 }
+         { dup 1 sub fib exch 2 sub fib add }
+       ifelse
+    } def
+
+    (Fib\() show n (....) cvs show (\)=) show n fib (.....) cvs show
+
+showpage

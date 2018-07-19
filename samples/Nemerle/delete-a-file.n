@@ -1,0 +1,20 @@
+using System;
+using System.IO;
+using System.Console;
+
+module DeleteFile
+{
+    Main() : void
+    {
+        when (File.Exists("input.txt")) File.Delete("input.txt");
+        try {
+            when (File.Exists(@"\input.txt")) File.Delete(@"\input.txt");
+        }
+        catch {
+            |e is UnauthorizedAccessException => WriteLine(e.Message)
+        }
+
+        when (Directory.Exists("docs")) Directory.Delete("docs");
+        when (Directory.Exists(@"\docs")) Directory.Delete(@"\docs");
+    }
+}

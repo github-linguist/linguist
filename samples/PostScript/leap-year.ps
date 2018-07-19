@@ -1,0 +1,10 @@
+/isleapyear {
+    dup dup
+    4 mod 0 eq     % needs to be divisible by 4
+    exch
+    100 mod 0 ne   % but not by 100
+    and
+    exch
+    400 mod 0 eq   % or by 400
+    or
+} def

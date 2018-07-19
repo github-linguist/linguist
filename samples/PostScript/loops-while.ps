@@ -1,0 +1,9 @@
+1024
+{
+    dup 0 le     % check whether still greater than 0
+    { pop exit } % if not, exit the loop
+    if
+    dup =        % print the number
+    2 idiv       % divide by two
+}
+loop

@@ -1,0 +1,3 @@
+-> (for ([f (directory-list "/tmp")] #:when (regexp-match? "\\.rkt$" f))
+     (displayln f))
+... *.rkt files ...

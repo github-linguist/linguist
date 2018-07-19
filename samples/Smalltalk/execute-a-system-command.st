@@ -1,0 +1,1 @@
+Smalltalk system: 'ls'.

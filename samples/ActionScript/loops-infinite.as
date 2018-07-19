@@ -1,0 +1,3 @@
+while (true) {
+    trace("SPAM");
+}

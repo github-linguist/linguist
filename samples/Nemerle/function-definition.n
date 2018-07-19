@@ -1,0 +1,5 @@
+public Multiply (a : int, b : int) : int  // this is either a class or module method
+{
+    def multiply(a, b) { return a * b }   // this is a local function, can take advantage of type inference
+    return multiply(a, b)
+}

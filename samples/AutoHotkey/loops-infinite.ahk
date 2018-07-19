@@ -1,0 +1,2 @@
+Loop
+  MsgBox SPAM `n

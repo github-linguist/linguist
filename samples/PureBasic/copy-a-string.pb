@@ -1,0 +1,2 @@
+src$ = "Hello"
+dst$ = src$

@@ -1,0 +1,6 @@
+(define s "hello")
+(display (string-append s " literal"))
+(newline)
+(define s1 (string-append s " literal"))
+(display s1)
+(newline)

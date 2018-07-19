@@ -1,0 +1,16 @@
+using System;
+using System.Console;
+using Nemerle.Collections;
+using Nemerle.Collections.NCollectionsExtensions;
+
+module AssocArray
+{
+    Main() : void
+    {
+        def list1 = ["apples", "oranges", "bananas", "kumquats"];
+        def list2 = [13, 34, 12];
+        def inventory = Hashtable(ZipLazy(list1, list2));
+        foreach (item in inventory)
+            WriteLine("{0}:   {1}", item.Key, item.Value);
+    }
+}

@@ -1,0 +1,2 @@
+str= "Hello ";
+str<>"Literal"

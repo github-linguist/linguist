@@ -1,0 +1,17 @@
+using System;
+using System.Console;
+using Nemerle.Collections.NCollectionsExtensions;
+
+module FirstClassNums
+{
+    Main() : void
+    {
+        def x = 2.0;   def xi = 0.5;
+        def y = 4.0;   def yi = 0.25;
+        def z = x + y; def zi = 1.0 / (x + y);
+        def multiplier = fun (a, b) {fun (c) {a * b * c}};
+        def nums = [x, y, z];
+        def inums = [xi, yi, zi];
+        WriteLine($[multiplier(n, m) (0.5)|(n, m) in ZipLazy(nums, inums)]);
+    }
+}

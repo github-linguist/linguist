@@ -1,0 +1,24 @@
+using System;
+using System.Console;
+
+module Bottles
+{
+    Sing(x : int, bev = "beer", surface = "wall") : void
+    {
+        match(x)
+        {
+            |0 => WriteLine($"No more bottles of $bev on the $surface, no more bottles of $bev");
+                  WriteLine($"Go to the store and get some more $bev, 99 bottles of $bev on the $surface")
+            |1 => WriteLine($"One bottle of $bev on the $surface, one bottle of $bev");
+                  WriteLine($"Take it down, pass it around, no more bottles of $bev on the $surface")
+            |_ => WriteLine($"$x bottles of $bev on the $surface, $x bottles of $bev");
+                  WriteLine($"Take one down and pass it around, $(x-1) bottles of $bev on the $surface")
+        }
+    }
+
+    Main() : void
+    {
+        foreach (i in [99, 98 .. 0])
+            Sing(i)
+    }
+}

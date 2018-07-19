@@ -1,0 +1,5 @@
+SS(x : list[double]) : double
+{
+    |[] => 0.0
+    |_  => x.Map(fun (x) {x*x}).FoldLeft(0.0, _+_)
+}

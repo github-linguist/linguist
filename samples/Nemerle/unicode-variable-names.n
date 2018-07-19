@@ -1,0 +1,11 @@
+using System.Console;
+
+module UnicodeVar
+{
+    Main() : void
+    {
+        mutable Δ = 1;
+        Δ++;
+        WriteLine($"Δ = $Δ");
+    }
+}

@@ -1,0 +1,1 @@
+stopifnot(a==42)

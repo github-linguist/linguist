@@ -1,0 +1,5 @@
+StripChars( text : string, remove : string ) : string
+{
+    def chuck = Explode(remove);
+    Concat( "", Split(text, chuck))
+}

@@ -1,0 +1,19 @@
+using System;
+using System.Console;
+
+module IsNumeric
+{
+    IsNumeric( input : string) : bool
+    {
+        mutable meh = 0.0;  // I don't want it, not going to use it, why force me to declare it?
+        double.TryParse(input, out meh)
+    }
+
+    Main() : void
+    {
+        def num = "-1.2345E6";
+        def not = "abc45";
+        WriteLine($"$num is numeric: $(IsNumeric(num))");
+        WriteLine($"$not is numeric: $(IsNumeric(not))");
+    }
+}

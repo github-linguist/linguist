@@ -1,0 +1,3 @@
+if (somecondition) {
+    exit
+}

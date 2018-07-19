@@ -1,0 +1,10 @@
+using System.Console;
+
+module UnicodeOut
+{
+    Main() : void
+    {
+        if (OutputEncoding.ToString() == "System.Text.UTF8Encoding") Write("Δ")
+        else Write("Console encoding may not support Unicode characters.");
+    }
+}

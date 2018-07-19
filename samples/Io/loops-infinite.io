@@ -1,0 +1,1 @@
+loop("SPAM" println)

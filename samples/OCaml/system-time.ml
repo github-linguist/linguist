@@ -1,0 +1,12 @@
+#load "unix.cma";;
+open Unix;;
+let {tm_sec = sec;
+     tm_min = min;
+     tm_hour = hour;
+     tm_mday = mday;
+     tm_mon = mon;
+     tm_year = year;
+     tm_wday = wday;
+     tm_yday = yday;
+     tm_isdst = isdst} = localtime (time ());;
+Printf.printf "%04d-%02d-%02d %02d:%02d:%02d\n" (year + 1900) (mon + 1) mday hour min sec;;

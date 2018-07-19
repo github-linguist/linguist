@@ -1,0 +1,2 @@
+Reversed("abcdef");
+# "fedcba"

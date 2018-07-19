@@ -1,0 +1,1 @@
+(loop [] (println "SPAM") (recur))

@@ -1,0 +1,27 @@
+using System.Console;
+using Nemerle.Collections;
+
+module RCSet
+{
+    HasSubset[T](this super : Set[T], sub : Set[T]) : bool
+    {
+        super.ForAll(x => sub.Contains(x))
+    }
+
+    Main() : void
+    {
+        def names1 = Set(["Bob", "Billy", "Tom", "Dick", "Harry"]);
+        def names2 = Set(["Bob", "Mary", "Alice", "Louisa"]);
+        //def names3 = Set(["Bob", "Bob"]);        // unfortunately, duplicated elements are not well handled by the stock
+                                                   // implementation, this statement would throw an ArgumentException
+        def elem = names1.Contains("Bob");         // element test
+        def names1u2 = names1.Sum(names2);         // union
+        def names1d2 = names1.Subtract(names2);    // difference
+        def names1i2 = names1.Intersect(names2);   // intersection
+        def same = names1.Equals(names2);          // equality
+        def sub12 = names1.HasSubset(names2);      // subset
+
+        WriteLine($"$names1u2\n$names1d2\n$names1i2");
+        WriteLine($"$same\t$sub12");
+    }
+}

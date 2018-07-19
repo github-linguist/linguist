@@ -1,0 +1,14 @@
+using System;
+using System.Console;
+using Nemerle.Utility.NString; // contains method Concat()
+
+module Stringcat
+{
+    Main() : void
+    {
+        def text1 = "This string has";
+        def cat1  = Concat( " ", [text, "been concatenated"]);
+        def cat2  = text1 + " also been concatenated";
+        Write($"$cat1\n$cat2\n");
+    }
+}

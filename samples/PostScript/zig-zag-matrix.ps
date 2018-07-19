@@ -1,0 +1,55 @@
+%!PS
+%%BoundingBox: 0 0 300 200
+/size 9 def % defines row * column (9*9 -> 81 numbers,
+            % from 0 to 80)
+/itoa { 2 string cvs } bind def
+% visual bounding box...
+% 0 0 moveto 300 0 lineto 300 200 lineto 0 200 lineto
+% closepath stroke
+20 150 translate
+% it can be easily enhanced to support more columns and
+% rows. This limit is put here just to avoid more than 2
+% digits, mainly because of formatting
+size size mul 99 le {
+   /Helvetica findfont 14 scalefont setfont
+   /ulimit size size mul def
+   /sizem1 size 1 sub def
+   % prepare the number list
+   0 ulimit 1 sub { dup 1 add } repeat
+   ulimit array astore
+   /di -1 def /dj 1 def
+   /ri 1 def /rj 0 def /pus true def
+   0 0 moveto
+   /i 0 def /j 0 def
+   {  % can be rewritten a lot better :)
+      0.8 setgray i 30 mul j 15 mul neg lineto stroke
+      0 setgray i 30 mul j 15 mul neg moveto itoa show
+      i 30 mul j 15 mul neg moveto
+      pus {
+         i ri add size ge {
+             /ri 0 def /rj 1 def
+         } if
+         j rj add size ge {
+             /ri 1 def /rj 0 def
+         } if
+         /pus false def
+         /i i ri add def
+         /j j rj add def
+         /ri rj /rj ri def def
+      } {
+          i di add dup    0 le
+                  exch sizem1 ge or
+          j dj add dup    0 le
+                  exch sizem1 ge or
+             or {
+                /pus true def
+                /i i di add def /j j dj add def
+                /di di neg def /dj dj neg def
+          } {
+                /i i di add def /j j dj add def
+          } ifelse
+      } ifelse
+   } forall
+   stroke showpage
+} if
+%%EOF

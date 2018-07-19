@@ -1,0 +1,26 @@
+using System;
+using System.Console;
+using System.Numerics;
+using System.Numerics.Complex;
+
+module RCComplex
+{
+    PrettyPrint(this c : Complex) : string
+    {
+        mutable sign = '+';
+        when (c.Imaginary < 0) sign = '-';
+        $"$(c.Real) $sign $(Math.Abs(c.Imaginary))i"
+    }
+
+    Main() : void
+    {
+        def complex1 = Complex(1.0, 1.0);
+        def complex2 = Complex(3.14159, 1.2);
+
+        WriteLine(Add(complex1, complex2).PrettyPrint());
+        WriteLine(Multiply(complex1, complex2).PrettyPrint());
+        WriteLine(Negate(complex2).PrettyPrint());
+        WriteLine(Reciprocal(complex2).PrettyPrint());
+        WriteLine(Conjugate(complex2).PrettyPrint());
+    }
+}

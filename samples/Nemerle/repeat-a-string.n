@@ -1,0 +1,18 @@
+using System;
+using System.Console;
+
+module StrRep
+{
+    Repeat(this s : string, n : int) : string
+    {
+        String('x', n).Replace("x", s)
+    }
+
+    Main() : void
+    {
+        WriteLine("ha".Repeat(5));
+        WriteLine("*".Repeat(5));
+        WriteLine(String('*', 5)); // repeating single char
+
+    }
+}

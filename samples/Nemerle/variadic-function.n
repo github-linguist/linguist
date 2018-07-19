@@ -1,0 +1,15 @@
+using System;
+using System.Console;
+
+module Variadic
+{
+    PrintAll (params args : array[object]) : void
+    {
+        foreach (arg in args) WriteLine(arg);
+    }
+
+    Main() : void
+    {
+        PrintAll("test", "rosetta code", 123, 5.6, DateTime.Now);
+    }
+}

@@ -1,0 +1,4 @@
+Foo(number : int, word = "Default", option = true) : void // note type inference with default values
+
+Foo(word = "Bird", number = 3)        // an argument with a default value can be omitted from function call
+Foo(3, option = false, word = "Bird") // unnamed arguments must be in same order as function definition and precede named arguments

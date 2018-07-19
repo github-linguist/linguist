@@ -1,0 +1,5 @@
+StartWith[x_, y_] := MemberQ[Flatten[StringPosition[x, y]], 1]
+EndWith[x_, y_] :=  MemberQ[Flatten[StringPosition[x, y]], StringLength[x]]
+StartWith["XYZaaabXYZaaaaXYZXYZ", "XYZ"]
+EndWith["XYZaaabXYZaaaaXYZXYZ", "XYZ"]
+StringPosition["XYZaaabXYZaaaaXYZXYZ", "XYZ"]

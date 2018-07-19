@@ -1,0 +1,2 @@
+FileNames["*"]
+FileNames["*.png", $RootDirectory]

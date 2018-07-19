@@ -1,0 +1,51 @@
+using System;
+using System.Console;
+
+namespace NestedExceptions
+{
+    public class U0 : Exception
+    {
+        public this() {base()}
+    }
+
+    public class U1 : Exception
+    {
+        public this() {base()}
+    }
+
+    module NestedExceptions
+    {
+        Foo () : void
+        {
+            mutable call = 0;
+
+            repeat(2) {
+                try {
+                    Bar(call);
+                }
+                catch {
+                    |e is U0 => WriteLine("Exception U0 caught.")
+                }
+                finally {
+                    call++;
+                }
+            }
+        }
+
+        Bar (call : int) : void
+        {
+            Baz(call)
+        }
+
+        Baz (call : int) : void // throw U0() on first call, U1() on second
+        {
+            unless (call > 0) throw U0();
+            when (call > 0) throw U1();
+        }
+
+        Main () : void
+        {
+            Foo()
+        }
+    }
+}

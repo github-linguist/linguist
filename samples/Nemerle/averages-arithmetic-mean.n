@@ -1,0 +1,17 @@
+using System;
+using System.Console;
+using Nemerle.Collections;
+
+module Mean
+{
+    ArithmeticMean(x : list[int]) : double
+    {
+        |[] => 0.0
+        |_  =>(x.FoldLeft(0, _+_) :> double) / x.Length
+    }
+
+    Main() : void
+    {
+        WriteLine("Mean of [1 .. 10]: {0}", ArithmeticMean($[1 .. 10]));
+    }
+}

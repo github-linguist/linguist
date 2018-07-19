@@ -1,0 +1,16 @@
+% n  ident  [identity-matrix]
+% create an identity matrix of dimension n*n.
+% Uses a local dictionary for its one parameter, perhaps overkill.
+% Constructs arrays of arrays of integers using [], for loops, and stack manipulation.
+/ident { 1 dict begin /n exch def
+    [
+    1 1 n {                              % [ i
+        [ exch                           % [ [ i
+        1 1 n {                          % [ [ i j
+            1 index eq { 1 }{ 0 } ifelse % [ [ i b
+            exch                         % [ [ b i
+        } for                            % [ [ b+ i
+        pop ]                            % [ [ b+ ]
+    } for                                % [ [b+]+ ]
+    ]
+end } def

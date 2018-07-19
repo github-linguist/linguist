@@ -1,0 +1,8 @@
+Shuffle[T] (arr : array[T]) : array[T]
+{
+    def rnd = Random();
+
+    foreach (i in [0 .. (arr.Length - 2)])
+        arr[i] <-> arr[(rnd.Next(i, arr.Length))];
+    arr
+}

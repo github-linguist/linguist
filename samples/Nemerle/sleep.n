@@ -1,0 +1,14 @@
+using System;
+using System.Console;
+using System.Threading.Thread; // this is where the Sleep() method comes from
+
+module Zzzz
+{
+    Main() : void
+    {
+        def nap_time = Int32.Parse(ReadLine());
+        WriteLine("Sleeping...");
+        Sleep(nap_time); // parameter is time in milliseconds
+        WriteLine("Awake!");
+    }
+}

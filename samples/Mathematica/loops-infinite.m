@@ -1,0 +1,3 @@
+While[True,
+ Print@"SPAM";
+ ]

@@ -1,0 +1,1 @@
+print( os.getenv( "PATH" ) )

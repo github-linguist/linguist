@@ -1,0 +1,2 @@
+$Src= "Hello"
+$dest = $Src

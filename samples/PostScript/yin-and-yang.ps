@@ -1,0 +1,40 @@
+%!PS-Adobe-3.0
+%%BoundingBox: 0 0 400 400
+
+/fs 10 def
+/ed { exch def } def
+/dist { 3 -1 roll sub dup mul 3 1 roll sub dup mul add sqrt } def
+/circ {
+    /r exch def
+    [r neg 1 r {
+        /y exch def
+        [ r 2 mul neg 1 r 2 mul {
+            /x ed x 2 div y 0 0 dist r .05 add gt {( )}{
+                x 2 div y 0 r 2 div dist dup
+                r 5 div le { pop (.) } {
+                    r 2 div le { (@) }{
+                        x 2 div y 0 r 2 div neg dist dup
+                        r 5 div le { pop (@)} {
+                            r 2 div le {(.)}{
+                                x 0 le {(.)}{(@)}ifelse
+                            } ifelse
+                        } ifelse
+                    } ifelse
+                } ifelse
+            } ifelse
+        } for]
+    } for]
+} def
+
+/dis {  moveto gsave
+        {       grestore 0 fs 1.15 mul neg rmoveto gsave
+                {show} forall
+        } forall grestore
+} def
+
+/Courier findfont fs scalefont setfont
+
+11 circ 10 390 dis
+6 circ 220 180 dis
+showpage
+%%EOF

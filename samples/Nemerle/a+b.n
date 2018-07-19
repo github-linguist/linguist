@@ -1,0 +1,11 @@
+using System;
+using System.Console;
+using System.Linq;
+
+module AplusB
+{
+    Main() : void
+    {
+        WriteLine(ReadLine().Split().Select(int.Parse).Sum());
+    }
+}

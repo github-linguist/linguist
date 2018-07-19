@@ -1,0 +1,19 @@
+using System;
+using System.Console;
+
+module FizzBuzz
+{
+    FizzBuzz(x : int) : string
+    {
+        |x when x % 15 == 0 => "FizzBuzz"
+        |x when x %  5 == 0 => "Buzz"
+        |x when x %  3 == 0 => "Fizz"
+        |_                  => $"$x"
+    }
+
+    Main() : void
+    {
+        foreach (i in [1 .. 100])
+            WriteLine($"$(FizzBuzz(i))")
+    }
+}

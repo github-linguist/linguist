@@ -1,0 +1,6 @@
+VAR
+   b,c: BOOLEAN;
+...
+   b := TRUE;
+   c := FALSE;
+...

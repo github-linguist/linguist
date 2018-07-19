@@ -1,0 +1,19 @@
+using System;
+using System.Console;
+using Nemerle.Imperative;
+
+module Break
+{
+    Main() : void
+    {
+        def rnd = Random();
+        while (true)
+        {
+            def a = rnd.Next(20);
+            WriteLine(a);
+            when (a == 10) break;
+            def b = rnd.Next(20);
+            WriteLine(b);
+        }
+    }
+}

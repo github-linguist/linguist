@@ -1,0 +1,7 @@
+input <- readline("Enter two integers.  Space delimited, please:  ")
+dims <- as.numeric(strsplit(input, " ")[[1]])
+arr <- array(dim=dims)
+ii <- ceiling(dims[1]/2)
+jj <- ceiling(dims[2]/2)
+arr[ii, jj] <- sum(dims)
+cat("array[", ii, ",", jj, "] is ", arr[ii, jj], "\n", sep="")

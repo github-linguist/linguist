@@ -1,0 +1,7 @@
+using System.Console;
+using System.IO;
+
+WriteLine(File.Exists("input.txt"));
+WriteLine(File.Exists("/input.txt"));
+WriteLine(Directory.Exists("docs"));
+WriteLine(Directory.Exists("/docs"));

@@ -1,0 +1,13 @@
+using System.Console;
+
+module CustomSort
+{
+    Main() : void
+    {
+        def strings1 = ["these", "are", "strings", "of", "different", "length"];
+        def strings2 = ["apple", "House", "chewy", "Salty", "rises", "Later"];
+
+        WriteLine(strings1.Sort((x, y) => y.Length.CompareTo(x.Length)));
+        WriteLine(strings2.Sort((x, y) => x.CompareTo(y)))
+    }
+}

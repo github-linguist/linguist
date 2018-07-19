@@ -1,0 +1,17 @@
+using System;
+using System.Console;
+using System.Net;
+using System.IO;
+
+module HTTP
+{
+    Main() : void
+    {
+        def wc = WebClient();
+        def myStream = wc.OpenRead("http://rosettacode.org");
+        def sr = StreamReader(myStream);
+
+        WriteLine(sr.ReadToEnd());
+        myStream.Close()
+    }
+}

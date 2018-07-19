@@ -1,0 +1,4 @@
+def str = "\t\n\t   A string with\nwhitespace\n\n\t   ";
+WriteLine(str.TrimStart());
+WriteLine(str.TrimEnd());
+WriteLine(str.Trim());      // both ends at once, of course, internal whitespace is preserved in all 3

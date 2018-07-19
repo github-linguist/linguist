@@ -1,0 +1,3 @@
+% Module ceremony elided...
+:- func multiply(integer, integer) = integer.
+multiply(A, B) = A * B.

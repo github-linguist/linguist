@@ -1,0 +1,14 @@
+using System;
+using System.Console;
+using Nemerle.IO;  // contains printf() and print()
+
+module Stringy
+{
+    Main() : void
+    {
+        def extra = "little";
+        printf("Mary had a %s lamb.\n", extra);
+        print("Mary had a $extra lamb.\n");
+        WriteLine($"Mary had a $extra lamb.");
+    }
+}

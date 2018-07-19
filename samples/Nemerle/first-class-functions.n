@@ -1,0 +1,17 @@
+using System;
+using System.Console;
+using System.Math;
+using Nemerle.Collections.NCollectionsExtensions;
+
+module FirstClassFunc
+{
+    Main() : void
+    {
+        def cube = fun (x) {x * x * x};
+        def croot = fun (x) {Pow(x, 1.0/3.0)};
+        def compose = fun(f, g) {fun (x) {f(g(x))}};
+        def funcs = [Sin, Cos, cube];
+        def ifuncs = [Asin, Acos, croot];
+        WriteLine($[compose(f, g)(0.5) | (f, g) in ZipLazy(funcs, ifuncs)]);
+    }
+}

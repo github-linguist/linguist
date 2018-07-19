@@ -1,0 +1,4 @@
+mutable q = Queue(); // or use immutable version as per Haskell example
+def empty = q.IsEmpty(); // true at this point
+q.Push(empty); // or Enqueue(), or Add()
+def a = q.Pop(); // or Dequeue() or Take()

@@ -1,0 +1,11 @@
+using System.Console;
+
+module RemDups
+{
+    Main() : void
+    {
+        def nums = array[1, 4, 6, 3, 6, 2, 7, 2, 5, 2, 6, 8];
+        def unique = $[n | n in nums].RemoveDuplicates();
+        WriteLine(unique);
+    }
+}

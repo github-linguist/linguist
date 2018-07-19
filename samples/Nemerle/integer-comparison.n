@@ -1,0 +1,31 @@
+using System;
+using System.Console;
+
+module IntComp
+{
+    Main() : void
+    {
+        def ReadInt() : int {Int32.Parse(ReadLine())}
+        def WriteResult(x : int, y : int, res : string) : void
+        {WriteLine($"$x is $res $y")}
+
+        def a = ReadInt();
+        def b = ReadInt();
+
+        match(a)
+        {
+            |a when a > b  => WriteResult(a, b, "greater than")
+            |a when a < b  => WriteResult(a, b, "less than")
+            |a when a == b => WriteResult(a, b, "equal to")
+        }
+
+        def x = a.CompareTo(b);
+
+        match(x)
+        {
+            |x when x > 0  => WriteResult(a, b, "greater than")
+            |x when x < 0  => WriteResult(a, b, "less than")
+            |x when x == 0 => WriteResult(a, b, "equal to")
+        }
+    }
+}

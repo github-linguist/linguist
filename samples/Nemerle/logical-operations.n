@@ -1,0 +1,14 @@
+using System;
+using System.Console;
+
+module Logical
+{
+    WriteLogical(a : bool, b : bool) : void
+    {
+        WriteLine("{0} and {1} is {2}", a, b, a && b);
+        WriteLine("{0} or {1} is {2}", a, b, a || b);
+        WriteLine("not {0} is {1}", a, !a);
+    }
+
+    Main() : void {WriteLogical(true, false)}
+}

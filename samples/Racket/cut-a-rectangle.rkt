@@ -1,0 +1,48 @@
+#lang racket
+
+(define (cuts W H [count 0]) ; count = #f => visualize instead
+  (define W1 (add1 W)) (define H1 (add1 H))
+  (define B (make-vector (* W1 H1) #f))
+  (define (fD d) (cadr (assq d '([U D] [D U] [L R] [R L] [#f #f] [#t #t]))))
+  (define (fP p) (- (* W1 H1) p 1))
+  (define (Bset! p d) (vector-set! B p d) (vector-set! B (fP p) (fD d)))
+  (define center (/ (fP 0) 2))
+  (when (integer? center) (Bset! center #t))
+  (define (run c* d)
+    (define p (- center c*))
+    (Bset! p d)
+    (let loop ([p p])
+      (define-values [q r] (quotient/remainder p W1))
+      (if (and (< 0 r W) (< 0 q H))
+        (for ([d '(U D L R)])
+          (define n (+ p (case d [(U) (- W1)] [(D) W1] [(L) -1] [(R) 1])))
+          (unless (vector-ref B n) (Bset! n (fD d)) (loop n) (Bset! n #f)))
+        (if count (set! count (add1 count)) (visualize B W H))))
+    (Bset! p #f))
+  (when (even? W) (run (if (odd? H) (/ W1 2) W1) 'D))
+  (when (even? H) (run (if (odd? W) 1/2 1)       'R))
+  (or count (void)))
+
+(define (visualize B W H)
+  (define W2 (+ 2 (* W 2))) (define H2 (+ 1 (* H 2)))
+  (define str (make-string (* H2 W2) #\space))
+  (define (Sset! i c) (string-set! str i c))
+  (for ([i (in-range (- W2 1) (* W2 H2) W2)]) (Sset! i #\newline))
+  (for ([i (in-range 0 (- W2 1))]) (Sset! i #\#) (Sset! (+ i (* W2 H 2)) #\#))
+  (for ([i (in-range 0 (* W2 H2) W2)]) (Sset! i #\#) (Sset! (+ i W2 -2) #\#))
+  (for* ([i (add1 W)] [j (add1 H)])
+    (define p (* 2 (+ i (* j W2))))
+    (define b (vector-ref B (+ i (* j (+ W 1)))))
+    (cond [b (Sset! p #\#)
+             (define d (case b [(U) (- W2)] [(D) W2] [(R) 1] [(L) -1]))
+             (when (integer? d) (Sset! (+ p d) #\#))]
+          [(equal? #\space (string-ref str p)) (Sset! p #\.)]))
+  (display str) (newline))
+
+(printf "Counts:\n")
+(for* ([W (in-range 1 10)] [H (in-range 1 (add1 W))]
+       #:unless (and (odd? W) (odd? H)))
+  (printf "~s x ~s: ~s\n" W H (cuts W H)))
+
+(newline)
+(cuts 4 3 #f)

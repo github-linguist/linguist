@@ -1,0 +1,2 @@
+IsEvenInt(n);
+IsOddInt(n);

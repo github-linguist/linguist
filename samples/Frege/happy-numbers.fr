@@ -1,0 +1,17 @@
+module Happy where
+
+import Prelude.Math
+-- ugh, since Frege doesn't have Set, use Map instead
+import Data.Map (member, insertMin, empty)
+
+digitToInteger :: Char -> Integer
+digitToInteger c = fromInt $ (ord c) - (ord '0')
+
+isHappy :: Integer -> Bool
+isHappy = p empty
+  where p _ 1n = true
+        p s n | n `member` s = false
+              | otherwise  = p (insertMin n () s) (f n)
+        f = sum . map (sqr . digitToInteger) . unpacked . show
+
+main _ = printStrLn $ unwords $ map show $ take 8 $ filter isHappy $ iterate (+ 1n) 1n

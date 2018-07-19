@@ -1,0 +1,1 @@
+[ true ] whileTrue: [ 'SPAM' displayNl ]

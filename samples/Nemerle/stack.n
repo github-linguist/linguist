@@ -1,0 +1,34 @@
+public class Stack[T]
+{
+    private stack : list[T];
+
+    public this()
+    {
+        stack = [];
+    }
+
+    public this(init : list[T])
+    {
+        stack = init;
+    }
+
+    public Push(item : T) : Stack[T]
+    {
+        Stack(item::stack)
+    }
+
+    public Pop() : T * Stack[T]
+    {
+        (stack.Head, Stack(stack.Tail))
+    }
+
+    public Peek() : T
+    {
+        stack.Head
+    }
+
+    public IsEmpty() : bool
+    {
+        stack.Length == 0
+    }
+}

@@ -1,0 +1,3 @@
+function infinity {
+    [double]::PositiveInfinity
+}

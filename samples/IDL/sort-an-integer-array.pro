@@ -1,0 +1,1 @@
+result = array[sort(array)]

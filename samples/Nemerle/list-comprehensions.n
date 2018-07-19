@@ -1,0 +1,39 @@
+using System;
+using System.Console;
+using System.Collections.Generic;
+
+module Program
+{
+
+    PythTriples(n : int) : list[int * int * int]
+    {
+        $[ (x, y, z) | x in [1..n], y in [x..n], z in [y..n], ((x**2) + (y**2)) == (z**2) ]
+    }
+
+    GetPythTriples(n : int) : IEnumerable[int * int * int]
+    {
+        foreach (x in [1..n])
+        {
+            foreach (y in [x..n])
+            {
+                foreach (z in [y..n])
+                {
+                    when (((x**2) + (y**2)) == (z**2))
+                    {
+                        yield (x, y, z)
+                    }
+                }
+            }
+        }
+    }
+
+    Main() : void
+    {
+        WriteLine("Pythagorean triples up to x = 20: {0}", PythTriples(20));
+
+        foreach (triple in GetPythTriples(20))
+        {
+            Write(triple)
+        }
+    }
+}

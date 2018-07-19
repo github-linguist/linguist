@@ -1,0 +1,16 @@
+using System;
+using System.Console;
+using Nemerle.Imperative;
+
+module Continue
+{
+    Main() : void
+    {
+        foreach (i in [1 .. 10])
+        {
+            Write(i);
+            when (i % 5 == 0) {WriteLine(); continue;}
+            Write(", ");
+        }
+    }
+}

@@ -1,0 +1,2 @@
+src  =: 'hello'
+dest =: src

@@ -1,0 +1,1 @@
+extern void*stdin;main(){ char*p = "extern void*stdin;main(){ char*p = %c%s%c,a[300],b[300];sprintf(a,p,34,p,34);fgets(b,300,stdin);putchar(48+!strcmp(a,b)); }",a[300],b[300];sprintf(a,p,34,p,34);fgets(b,300,stdin);putchar(48+!strcmp(a,b)); }

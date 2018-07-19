@@ -1,0 +1,1 @@
+repeat print("SPAM")

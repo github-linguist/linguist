@@ -1,0 +1,1 @@
+sub empty{ not @_ }

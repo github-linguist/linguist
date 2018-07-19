@@ -1,0 +1,13 @@
+using System.Console;
+using System.Threading.Thread;
+
+module CursorVisibility
+{
+    Main() : void
+    {
+        repeat(3) {
+            CursorVisible = !CursorVisible;
+            Sleep(5000);
+        }
+    }
+}

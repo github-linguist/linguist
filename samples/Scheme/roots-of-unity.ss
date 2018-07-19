@@ -1,0 +1,10 @@
+(define pi (* 4 (atan 1)))
+
+(do ((n 2 (+ n 1)))
+    ((> n 10))
+    (display n)
+    (do ((k 0 (+ k 1)))
+        ((>= k n))
+        (display " ")
+        (display (make-polar 1 (* 2 pi (/ k n)))))
+    (newline))

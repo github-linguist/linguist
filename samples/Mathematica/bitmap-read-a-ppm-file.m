@@ -1,0 +1,1 @@
+Import["file.ppm","PPM"]

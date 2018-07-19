@@ -1,0 +1,1 @@
+s" HOME" getenv type

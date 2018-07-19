@@ -1,0 +1,10 @@
+math.exp(1)
+math.pi
+math.sqrt(x)
+math.log(x)
+math.log10(x)
+math.exp(x)
+math.abs(x)
+math.floor(x)
+math.ceil(x)
+x^y

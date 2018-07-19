@@ -1,0 +1,47 @@
+%Adding two complex numbers
+/addcomp{
+/x exch def
+/y exch def
+/z [0 0] def
+z 0 x 0 get y 0 get add put
+z 1 x 1 get y 1 get add put
+z pstack
+}def
+
+%Subtracting one complex number from another
+/subcomp{
+/x exch def
+/y exch def
+/z [0 0] def
+z 0 x 0 get y 0 get sub put
+z 1 x 1 get y 1 get sub put
+z pstack
+}def
+
+%Multiplying two complex numbers
+/mulcomp{
+/x exch def
+/y exch def
+/z [0 0] def
+z 0 x 0 get y 0 get mul x 1 get y 1 get mul sub  put
+z 1 x 1 get y 0 get mul x 0 get y 1 get mul add put
+z pstack
+}def
+
+%Negating a complex number
+/negcomp{
+/x exch def
+/z [0 0] def
+z 0 x 0 get neg put
+z 1 x 1 get neg put
+z pstack
+}def
+
+%Inverting a complex number
+/invcomp{
+/x exch def
+/z [0 0] def
+z 0 x 0 get x 0 get 2 exp x 1 get 2 exp add div put
+z 0 x 1 get neg x 0 get 2 exp x 1 get 2 exp add div put
+z pstack
+}def

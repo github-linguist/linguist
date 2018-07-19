@@ -1,0 +1,35 @@
+using System;
+using System.Console;
+
+module Program
+{
+  Main() : void
+  {
+      WriteLine("Factorial of which number?");
+      def number = long.Parse(ReadLine());
+      WriteLine("Using Fold : Factorial of {0} is {1}", number, FactorialFold(number));
+      WriteLine("Using Match: Factorial of {0} is {1}", number, FactorialMatch(number));
+      WriteLine("Iterative  : Factorial of {0} is {1}", number, FactorialIter(number));
+  }
+
+  FactorialFold(number : long) : long
+  {
+      $[1L..number].FoldLeft(1L, _ * _ )
+  }
+
+  FactorialMatch(number : long) : long
+  {
+      |0L => 1L
+      |n  => n * FactorialMatch(n - 1L)
+  }
+
+  FactorialIter(number : long) : long
+  {
+      mutable accumulator = 1L;
+      for (mutable factor = 1L; factor <= number; factor++)
+      {
+          accumulator *= factor;
+      }
+      accumulator  //implicit return
+  }
+}

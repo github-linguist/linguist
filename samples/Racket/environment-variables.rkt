@@ -1,0 +1,2 @@
+#lang racket
+(getenv "HOME")

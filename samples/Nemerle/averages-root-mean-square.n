@@ -1,0 +1,17 @@
+using System;
+using System.Console;
+using System.Math;
+
+module RMS
+{
+    RMS(x : list[int]) : double
+    {
+        def sum = x.Map(fun (x) {x*x}).FoldLeft(0, _+_);
+        Sqrt((sum :> double) / x.Length)
+    }
+
+    Main() : void
+    {
+        WriteLine("RMS of [1 .. 10]: {0:g6}", RMS($[1 .. 10]));
+    }
+}
