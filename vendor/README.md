@@ -110,7 +110,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Elixir:** [elixir-lang/elixir-tmbundle](https://github.com/elixir-lang/elixir-tmbundle)
 - **Emacs Lisp:** [Alhadis/language-emacs-lisp](https://github.com/Alhadis/language-emacs-lisp)
 - **EmberScript:** [atom/language-coffee-script](https://github.com/atom/language-coffee-script)
-- **EML:** [mariozaizar/eml-tmLanguage](https://github.com/mariozaizar/eml-tmLanguage)
+- **EML:** [mariozaizar/language-eml](https://github.com/mariozaizar/language-eml)
 - **EQ:** [atom/language-csharp](https://github.com/atom/language-csharp)
 - **Erlang:** [textmate/erlang.tmbundle](https://github.com/textmate/erlang.tmbundle)
 - **F#:** [fsprojects/atom-fsharp](https://github.com/fsprojects/atom-fsharp)
