@@ -214,6 +214,19 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_ncl_by_heuristics
+    ambiguous = [
+      "#{samples_path}/Text/LIDARLite.ncl",
+      "#{samples_path}/Text/Site.local.ncl"
+    ]
+    assert_heuristics({
+      "NCL" => all_fixtures("Roff", "*.ncl"),
+      "XML" => all_fixtures("XML", "*.ncl"),
+      "Text" => all_fixtures("Text", "*.ncl") - ambiguous,
+      nil => ambiguous
+    })
+  end
+
   # Candidate languages = ["C++", "Objective-C"]
   def test_obj_c_by_heuristics
     # Only calling out '.h' filenames as these are the ones causing issues
