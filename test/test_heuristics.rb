@@ -297,9 +297,10 @@ class TestHeuristics < Minitest::Test
     })
   end
 
-  # Candidate languages = ["Perl", "Perl 6"]
+  # Candidate languages = ["Perl", "Perl 6", "Turing"]
   def test_t_perl_by_heuristics
     assert_heuristics({
+      "Turing" => all_fixtures("Turing", "*.t"),
       "Perl" => all_fixtures("Perl", "*.t"),
       "Perl 6" => ["Perl 6/01-dash-uppercase-i.t", "Perl 6/01-parse.t", "Perl 6/advent2009-day16.t",
                    "Perl 6/basic-open.t", "Perl 6/calendar.t", "Perl 6/for.t", "Perl 6/hash.t",
