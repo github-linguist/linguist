@@ -75,13 +75,13 @@ A repository's languages stats can also be assessed from the command line using 
 
 ```console
 $ cd /path-to-repository/
-$ linguist
+$ github-linguist
 ```
 
 You can try running `linguist` on the root directory in this repository itself:
 
 ```console
-$ bundle exec bin/linguist --breakdown
+$ bundle exec bin/github-linguist --breakdown
 68.57%  Ruby
 22.90%  C
 6.93%   Go
@@ -92,7 +92,7 @@ Ruby:
 Gemfile
 Rakefile
 bin/git-linguist
-bin/linguist
+bin/github-linguist
 ext/linguist/extconf.rb
 github-linguist.gemspec
 lib/linguist.rb

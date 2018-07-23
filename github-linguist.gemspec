@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.license  = "MIT"
 
   s.files = Dir['lib/**/*'] + Dir['ext/**/*'] + Dir['grammars/*'] + ['LICENSE']
-  s.executables = ['linguist', 'git-linguist']
+  s.executables = ['github-linguist', 'git-linguist']
   s.extensions = ['ext/linguist/extconf.rb']
 
   s.add_dependency 'charlock_holmes', '~> 0.7.6'

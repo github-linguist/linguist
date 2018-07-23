@@ -27,7 +27,7 @@ class TestRepository < Minitest::Test
 
   def test_linguist_breakdown
     assert linguist_repo.breakdown_by_file.has_key?("Ruby")
-    assert linguist_repo.breakdown_by_file["Ruby"].include?("bin/linguist")
+    assert linguist_repo.breakdown_by_file["Ruby"].include?("bin/github-linguist")
     assert linguist_repo.breakdown_by_file["Ruby"].include?("lib/linguist/language.rb")
   end
 
