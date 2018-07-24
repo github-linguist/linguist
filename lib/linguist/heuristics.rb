@@ -349,7 +349,9 @@ module Linguist
     end
 
     disambiguate ".ncl" do |data|
-      if data.include?("THE_TITLE")
+      if /^\s*<\?xml\s+version/i.match(data)
+        Language["XML"]
+      elsif data.include?("THE_TITLE")
         Language["Text"]
       end
     end
@@ -365,7 +367,7 @@ module Linguist
     disambiguate ".php" do |data|
       if data.include?("<?hh")
         Language["Hack"]
-      elsif /<?[^h]/.match(data)
+      elsif /<\?[^h]/.match(data)
         Language["PHP"]
       end
     end
@@ -485,7 +487,7 @@ module Linguist
         Language["Perl"]
       elsif Perl6Regex.match(data)
         Language["Perl 6"]
-      elsif /^\s*%[ \t]+|^\s*var\s+\w+\s*:=\s*\w+/.match(data)
+      elsif /^\s*%[ \t]+|^\s*var\s+\w+(\s*:\s*\w+)?\s*:=\s*\w+/.match(data)
         Language["Turing"]
       end
     end

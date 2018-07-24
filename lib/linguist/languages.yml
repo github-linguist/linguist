@@ -1450,6 +1450,7 @@ GDB:
   language_id: 122
 GDScript:
   type: programming
+  color: "#355570"
   extensions:
   - ".gd"
   tm_scope: source.gdscript
@@ -1588,7 +1589,7 @@ Gherkin:
   language_id: 76
 Glyph:
   type: programming
-  color: "#e4cc98"
+  color: "#c1ac7f"
   extensions:
   - ".glf"
   tm_scope: source.tcl
@@ -1920,6 +1921,8 @@ Hy:
   color: "#7790B2"
   extensions:
   - ".hy"
+  interpreters:
+  - "hy"
   aliases:
   - hylang
   tm_scope: none
@@ -2089,20 +2092,46 @@ JSON:
   filenames:
   - ".arcconfig"
   - ".htmlhintrc"
-  - ".jscsrc"
-  - ".jshintrc"
   - ".tern-config"
   - ".tern-project"
   - composer.lock
   - mcmod.info
   language_id: 174
+JSON with Comments:
+  type: data
+  group: JSON
+  tm_scope: source.js
+  ace_mode: javascript
+  codemirror_mode: javascript
+  codemirror_mime_type: text/javascript
+  aliases:
+  - jsonc
+  extensions:
+  - ".sublime-build"
+  - ".sublime-commands"
+  - ".sublime-completions"
+  - ".sublime-keymap"
+  - ".sublime-macro"
+  - ".sublime-menu"
+  - ".sublime-mousemap"
+  - ".sublime-project"
+  - ".sublime-settings"
+  - ".sublime-theme"
+  - ".sublime-workspace"
+  - ".sublime_metrics"
+  - ".sublime_session"
+  filenames:
+  - ".babelrc"
+  - ".eslintrc.json"
+  - ".jscsrc"
+  - ".jshintrc"
+  - ".jslintrc"
+  - tsconfig.json
+  language_id: 423
 JSON5:
   type: data
   extensions:
   - ".json5"
-  filenames:
-  - ".babelrc"
-  - ".jslintrc"
   tm_scope: source.js
   ace_mode: javascript
   codemirror_mode: javascript
@@ -2254,7 +2283,7 @@ Jupyter Notebook:
   language_id: 185
 KRL:
   type: programming
-  color: "#28431f"
+  color: "#28430A"
   extensions:
   - ".krl"
   tm_scope: none
@@ -2838,6 +2867,17 @@ Modula-2:
   tm_scope: source.modula2
   ace_mode: text
   language_id: 234
+Modula-3:
+  type: programming
+  extensions:
+  - ".i3"
+  - ".ig"
+  - ".m3"
+  - ".mg"
+  color: "#223388"
+  ace_mode: text
+  tm_scope: source.modula-3
+  language_id: 564743864
 Module Management System:
   type: programming
   extensions:
@@ -3741,6 +3781,15 @@ QMake:
   - qmake
   ace_mode: text
   language_id: 306
+Quake:
+  type: programming
+  filenames:
+  - m3makefile
+  - m3overrides
+  color: "#882233"
+  ace_mode: text
+  tm_scope: source.quake
+  language_id: 375265331
 R:
   type: programming
   color: "#198CE7"
@@ -3973,7 +4022,7 @@ RenderScript:
   language_id: 323
 Ring:
   type: programming
-  color: "#0e60e3"
+  color: "#2D54CB"
   extensions:
   - ".ring"
   tm_scope: source.ring
@@ -4533,28 +4582,6 @@ SubRip Text:
   ace_mode: text
   tm_scope: text.srt
   language_id: 360
-Sublime Text Config:
-  type: data
-  group: JSON
-  tm_scope: source.js
-  ace_mode: javascript
-  codemirror_mode: javascript
-  codemirror_mime_type: text/javascript
-  extensions:
-  - ".sublime-build"
-  - ".sublime-commands"
-  - ".sublime-completions"
-  - ".sublime-keymap"
-  - ".sublime-macro"
-  - ".sublime-menu"
-  - ".sublime-mousemap"
-  - ".sublime-project"
-  - ".sublime-settings"
-  - ".sublime-theme"
-  - ".sublime-workspace"
-  - ".sublime_metrics"
-  - ".sublime_session"
-  language_id: 423
 SugarSS:
   type: markup
   tm_scope: source.css.postcss.sugarss
@@ -4834,7 +4861,7 @@ Unix Assembly:
   extensions:
   - ".s"
   - ".ms"
-  tm_scope: source.assembly.unix
+  tm_scope: source.x86
   ace_mode: assembly_x86
   language_id: 120
 Uno:
@@ -4869,7 +4896,7 @@ UrWeb:
   language_id: 383
 VCL:
   type: programming
-  color: "#0298c3"
+  color: "#148AA8"
   extensions:
   - ".vcl"
   tm_scope: source.varnish.vcl
@@ -5122,6 +5149,7 @@ XML:
   - ".mod"
   - ".mxml"
   - ".natvis"
+  - ".ncl"
   - ".ndproj"
   - ".nproj"
   - ".nuspec"

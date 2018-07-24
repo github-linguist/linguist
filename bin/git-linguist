@@ -6,7 +6,7 @@ require 'linguist'
 require 'rugged'
 require 'optparse'
 require 'json'
-require 'tmpdir'
+require 'tempfile'
 require 'zlib'
 
 class GitLinguist
@@ -76,17 +76,11 @@ class GitLinguist
   def write_cache(object)
     return unless File.directory? @repo_path
 
-    begin
-      tmp_path = Dir::Tmpname.make_tmpname(cache_file, nil)
-      File.open(tmp_path, "wb") do |f|
-        marshal = Marshal.dump(object)
-        f.write(Zlib::Deflate.deflate(marshal))
-      end
-
-      File.rename(tmp_path, cache_file)
-    rescue => e
-      (File.unlink(tmp_path) rescue nil)
-      raise e
+    Tempfile.open('cache_file', @repo_path) do |f|
+      marshal = Marshal.dump(object)
+      f.write(Zlib::Deflate.deflate(marshal))
+      f.close
+      File.rename(f.path, cache_file)
     end
   end
 
