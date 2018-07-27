@@ -82,6 +82,8 @@ class GitLinguist
       f.close
       File.rename(f.path, cache_file)
     end
+
+    FileUtils.chmod 0644, cache_file
   end
 
   def load_cache
@@ -99,11 +101,11 @@ def git_linguist(args)
 
   parser = OptionParser.new do |opts|
     opts.banner = <<-HELP
-    Linguist v#{Linguist::VERSION}
-    Detect language type and determine language breakdown for a given Git repository.
+Linguist v#{Linguist::VERSION}
+Detect language type and determine language breakdown for a given Git repository.
 
-    Usage:
-    git-linguist [OPTIONS] stats|breakdown|dump-cache|clear|disable"
+Usage:
+git-linguist [OPTIONS] stats|breakdown|dump-cache|clear|disable
     HELP
 
     opts.on("-f", "--force", "Force a full rescan") { incremental = false }
