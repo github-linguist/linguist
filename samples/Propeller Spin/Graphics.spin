@@ -302,7 +302,7 @@ PUB box(x, y, box_width, box_height) | x2, y2, pmin, pmax
 
     pmax := pixel_width - (pmin := pixel_width >> 1)    'get pixel-half-min and pixel-half-max
 
-    x += pmin                                           'adjust coordinates to accomodate width
+    x += pmin                                           'adjust coordinates to accommodate width
     y += pmin
     x2 := x + box_width - 1 - pixel_width
     y2 := y + box_height - 1 - pixel_width

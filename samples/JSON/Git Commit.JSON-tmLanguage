@@ -109,7 +109,7 @@
 		},
 		{
 			"name": "meta.diff.git-commit",
-			"comment": "diff at the end of the commit message when using commit -v, or viewing a log. End pattern is just something to be never matched so that the meta continues untill the end of the file.",
+			"comment": "diff at the end of the commit message when using commit -v, or viewing a log. End pattern is just something to be never matched so that the meta continues until the end of the file.",
 			"begin": "diff\\ \\-\\-git",
 			"end": "(?=xxxxxx)123457",
 			"patterns": [
