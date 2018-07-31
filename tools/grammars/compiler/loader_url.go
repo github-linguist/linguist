@@ -41,7 +41,7 @@ func (l *urlLoader) loadTarball(r io.Reader) {
 			}
 
 			ext := filepath.Ext(header.Name)
-			rule, unknown, err := ConvertProto(ext, data)
+			rule, unknown, err := ConvertProto(header.Name, ext, data)
 			if err != nil {
 				l.Fail(&ConversionError{header.Name, err})
 				continue
@@ -77,7 +77,7 @@ func (l *urlLoader) load() {
 
 	ext := filepath.Ext(l.Source)
 	filename := filepath.Base(l.Source)
-	rule, unknown, err := ConvertProto(ext, data)
+	rule, unknown, err := ConvertProto(l.Source, ext, data)
 	if err != nil {
 		l.Fail(&ConversionError{filename, err})
 		return
