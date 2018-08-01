@@ -3059,6 +3059,18 @@ Nix:
   tm_scope: source.nix
   ace_mode: nix
   language_id: 252
+NodeScript:
+  type: programming
+  color: "#e0d021"
+  aliases:
+  - ns
+  extensions:
+  - ".ns"
+  tm_scope: none
+  ace_mode: none
+  codemirror_mode: javascript
+  codemirror_mime_type: application/javascript
+  language_id: 3780987
 Nu:
   type: programming
   color: "#c9df40"
@@ -4513,6 +4525,18 @@ SourcePawn:
   tm_scope: source.sp
   ace_mode: text
   language_id: 354
+SpiderScript:
+  type: programming
+  color: "#7a43d3"
+  aliases:
+  - spider
+  extensions:
+  - ".spider"
+  tm_scope: none
+  ace_mode: none
+  codemirror_mode: javascript
+  codemirror_mime_type: application/javascript
+  language_id: 3781412
 Spline Font Database:
   type: data
   extensions:
@@ -4824,7 +4848,7 @@ TypeScript:
   extensions:
   - ".ts"
   - ".tsx"
-  tm_scope: source.ts
+  tm_scope: none
   ace_mode: typescript
   codemirror_mode: javascript
   codemirror_mime_type: application/typescript
