@@ -1,0 +1,18 @@
+; "Hello, world"
+; for Atari 8-bit computers
+; in 6502 assembly language
+; compiled with xasm (https://github.com/pfusik/xasm)
+
+	org	$3000
+main
+	ldx	#0
+	mva	#11	$342
+	mwa	#text	$344
+	mwa	#text_len	$348
+	jmp	$e456
+
+text
+	dta	c'Hello, world!',$9b
+text_len	equ	*-text
+
+	run	main
