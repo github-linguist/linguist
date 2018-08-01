@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"regexp"
 	"runtime"
 	"sort"
 	"strings"
@@ -18,7 +19,8 @@ import (
 )
 
 type Converter struct {
-	root string
+	root    string
+	version string
 
 	modified bool
 	grammars map[string][]string
@@ -194,6 +196,13 @@ func (conv *Converter) WriteJSON(rulePath string) error {
 		return err
 	}
 
+	f, err := os.Create(path.Join(rulePath, "version"))
+	if err != nil {
+		return err
+	}
+	f.Write([]byte(conv.version))
+	f.Close()
+
 	for _, repo := range conv.Loaded {
 		for scope, file := range repo.Files {
 			p := path.Join(rulePath, scope+".json")
@@ -248,13 +257,25 @@ func (conv *Converter) Report() error {
 	return nil
 }
 
+var VERSION_RE *regexp.Regexp = regexp.MustCompile("VERSION = \"(.+)\"")
+
 func NewConverter(root string) (*Converter, error) {
+	ver, err := ioutil.ReadFile(path.Join(root, "lib", "linguist", "version.rb"))
+	if err != nil {
+		return nil, err
+	}
+
+	submatches := VERSION_RE.FindSubmatch(ver)
+	if submatches == nil {
+		return nil, fmt.Errorf("no match in lib/linguist/version.rb")
+	}
+
 	yml, err := ioutil.ReadFile(path.Join(root, "grammars.yml"))
 	if err != nil {
 		return nil, err
 	}
 
-	conv := &Converter{root: root}
+	conv := &Converter{root: root, version: string(submatches[1])}
 
 	if err := yaml.Unmarshal(yml, &conv.grammars); err != nil {
 		return nil, err
