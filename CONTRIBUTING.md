@@ -61,8 +61,9 @@ To add support for a new language:
   This command will analyze the grammar and, if no problems are found, add it to the repository. If problems are found, please report them to the grammar maintainer as you will not be able to add the grammar if problems are found.  
   **Please only add grammars that have [one of these licenses][licenses].**
 1. Add samples for your language to the [samples directory][samples] in the correct subdirectory.
-1. Add a `language_id` for your language using `script/set-language-ids`.  
-  **You should only ever need to run `script/set-language-ids --update`. Anything other than this risks breaking GitHub search :cry:**
+1. Add a `language_id` for your language using `script/set-language-ids --update`.  
+  **You should only ever need to run with `--update`. Anything other than this risks breaking GitHub search :cry:**
+1. Add an entry to the [vendor README](vendor/README.md) using `script/list-grammars`.
 1. Open a pull request, linking to a [GitHub search results](https://github.com/search?utf8=%E2%9C%93&q=extension%3Aboot+NOT+nothack&type=Code&ref=searchresults) showing in-the-wild usage.  
   Please state clearly the license covering the code in the samples. Link directly to the original source if possible.
 
