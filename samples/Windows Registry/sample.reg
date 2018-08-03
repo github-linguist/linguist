@@ -1,0 +1,51 @@
+Windows Registry Editor Version 5.00
+
+
+; Comment Comment Comment
+
+[HKLM\SOFTWARE\Fake_Key\Fake_SubKey_1] ; Comment Comment Comment
+
+[HKLM\SOFTWARE\Fake_Key\Fake_SubKey_1\Fake_SubKey_2]
+@=- ; Comment Comment Comment
+
+[HKLM\SOFTWARE\Fake_SubKey\Fake_SubKey_1\Fake_SubKey_2\Fake_SubKey_3]
+@="Default Value" ; Comment Comment Comment
+"String Value"="My String Value" ; Comment Comment Comment
+"String Value With Escaped Chars"="C:\\Blah\\Blah\\Blee" ; Comment Comment Comment
+"Binary Value"=hexadecimal
+"DWORD Value"=dword:00000005
+"Bit Value"=0
+"Binary Value"=hex:25,53,79,73,74,65,6d,52,6f,6f,74,25,00
+"Value D"=hex(0):<REG_NONE (as comma-delimited list of hexadecimal values)> ; Comment Comment Comment
+"Value E"=hex(1):<REG_SZ (as comma-delimited list of hexadecimal values representing a UTF-16LE NUL-terminated string)>
+"Expandable String Value"=hex(2):25,53,79,73,74,65,6d,52,6f,6f,74,25,00
+"Value G"=hex(3):<Binary data (as comma-delimited list of hexadecimal values)> ; equal to "Value B"
+"Value H"=hex(4):<DWORD value (as comma-delimited list of 4 hexadecimal values, in little endian byte order)>
+"Value I"=hex(5):<DWORD value (as comma-delimited list of 4 hexadecimal values, in big endian byte order)>
+"Multi String Value"=hex(7):25,53,79,73,74,65,6d,52,6f,6f,74,25,00\
+25,53,79,73,74,65,6d,52,6f,6f,74,25,00\
+25,53,79,73,74,65,6d,52,6f,6f,74,25,00\
+25,53,79,73,74,65,6d,52,6f,6f,74,25,00\
+"Value K"=hex(8):<REG_RESOURCE_LIST (as comma-delimited list of hexadecimal values)>
+"Value L"=hex(a):<REG_RESOURCE_REQUIREMENTS_LIST (as comma-delimited list of hexadecimal values)>
+"Value M"=hex(b):<QWORD value (as comma-delimited list of 8 hexadecimal values, in little endian byte order)>
+"Deleted Value"=- ; Comment Comment Comment
+
+[HKEY_LOCAL_MACHINE]
+[HKLM]
+
+[HKEY_CURRENT_CONFIG]
+[HKCC]
+
+[HKEY_CLASSES_ROOT]
+[HKCR]
+
+[HKEY_CURRENT_USER]
+[HKCU]
+
+[HKEY_USERS]
+[HKU]
+
+[HKEY_PERFORMANCE_DATA]
+
+[HKEY_DYN_DATA]
