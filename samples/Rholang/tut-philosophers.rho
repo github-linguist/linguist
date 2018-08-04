@@ -1,0 +1,16 @@
+// https://github.com/rchain/rchain/tree/master/rholang/examples (MIT License)
+
+new north, south, knife, spoon in {
+    north(knife) |
+    south(spoon) |
+    for (knf <- north; spn <- south) {
+        "Philosopher 1 Utensils: ".display(knf, ", ", spn, "\n") |
+        north(knf) |
+        south(spn)
+    } |
+    for (spn <- south; knf <- north) {
+        "Philosopher 2 Utensils: ".display(knf, ", ", spn, "\n") |
+        north(knf) |
+        south(spn)
+    }
+}

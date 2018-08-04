@@ -315,6 +315,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Ren'Py:** [williamd1k0/language-renpy](https://github.com/williamd1k0/language-renpy)
 - **reStructuredText:** [Lukasa/language-restructuredtext](https://github.com/Lukasa/language-restructuredtext)
 - **REXX:** [mblocker/rexx-sublime](https://github.com/mblocker/rexx-sublime)
+- **Rholang:** [tgrospic/rholang-sublime](https://github.com/tgrospic/rholang-sublime)
 - **RHTML:** [atom/language-ruby](https://github.com/atom/language-ruby)
 - **Ring:** [MahmoudFayed/atom-language-ring](https://github.com/MahmoudFayed/atom-language-ring)
 - **RMarkdown:** [atom/language-gfm](https://github.com/atom/language-gfm)
