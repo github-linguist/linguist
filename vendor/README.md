@@ -387,6 +387,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **UnrealScript:** [textmate/java.tmbundle](https://github.com/textmate/java.tmbundle)
 - **UrWeb:** [gwalborn/UrWeb-Language-Definition](https://github.com/gwalborn/UrWeb-Language-Definition)
 - **Vala:** [technosophos/Vala-TMBundle](https://github.com/technosophos/Vala-TMBundle)
+- **varlink:** [varlink/language-varlink](https://github.com/varlink/language-varlink)
 - **VCL:** [brandonwamboldt/sublime-varnish](https://github.com/brandonwamboldt/sublime-varnish)
 - **Verilog:** [textmate/verilog.tmbundle](https://github.com/textmate/verilog.tmbundle)
 - **VHDL:** [textmate/vhdl.tmbundle](https://github.com/textmate/vhdl.tmbundle)
