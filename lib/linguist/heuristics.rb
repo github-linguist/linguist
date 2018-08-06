@@ -76,7 +76,7 @@ module Linguist
 
     # Internal
     def initialize(exts_and_langs, rules)
-      @exts_and_langs, @candidates = exts_and_langs.partition {|e| e =~ /\A\./}
+      @exts_and_langs = exts_and_langs
       @rules = rules
     end
 
@@ -85,10 +85,7 @@ module Linguist
     def matches?(filename, candidates)
       filename = filename.downcase
       candidates = candidates.compact.map(&:name)
-      @exts_and_langs.any? { |ext| filename.end_with?(ext) } ||
-        (candidates.any? &&
-         (@candidates - candidates == [] &&
-          candidates - @candidates == []))
+      @exts_and_langs.any? { |ext| filename.end_with?(ext) }
     end
 
     # Internal: Perform the heuristic
