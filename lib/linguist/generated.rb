@@ -588,7 +588,7 @@ module Linguist
     def generated_gamemakerstudio?
       return false unless ['.yy', '.yyp'].include? extname
       return false unless lines.count > 3
-      return /\"modelName\"\:\s*\"GM/.match(lines[3])
+      return lines[2].match(/\"modelName\"\:\s*\"GM/)
     end
   end
 end
