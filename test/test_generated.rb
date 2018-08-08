@@ -124,5 +124,10 @@ class TestGenerated < Minitest::Test
 
     # Graphql Relay
     generated_sample_without_loading_data("Javascript/__generated__/App_user.graphql.js")
+
+    # Game Maker Studio 2
+    generated_sample_loading_data("JSON/GMS2_Project.yyp")
+    generated_sample_loading_data("JSON/2ea73365-b6f1-4bd1-a454-d57a67e50684.yy")
+
   end
 end
