@@ -151,7 +151,7 @@ If you are the current maintainer of this gem:
   1. Bump the Gemfile and Gemfile.lock versions for an app which relies on this gem
   1. Install the new gem locally
   1. Test behavior locally, branch deploy, whatever needs to happen
-1. Bump gem version in `lib/linguist/version.rb`, [like this](https://github.com/github/linguist/commit/8d2ea90a5ba3b2fe6e1508b7155aa4632eea2985).
+1. Bump gem version in `lib/linguist/VERSION`, [like this](https://github.com/github/linguist/commit/8d2ea90a5ba3b2fe6e1508b7155aa4632eea2985).
 1. Make a PR to github/linguist, [like this](https://github.com/github/linguist/pull/1238).
 1. Build a local gem: `bundle exec rake build_gem`
 1. Merge github/linguist PR
