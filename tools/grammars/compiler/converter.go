@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
-	"regexp"
 	"runtime"
 	"sort"
 	"strings"
@@ -257,17 +256,10 @@ func (conv *Converter) Report() error {
 	return nil
 }
 
-var VERSION_RE *regexp.Regexp = regexp.MustCompile("VERSION = \"(.+)\"")
-
 func NewConverter(root string) (*Converter, error) {
-	ver, err := ioutil.ReadFile(path.Join(root, "lib", "linguist", "version.rb"))
+	ver, err := ioutil.ReadFile(path.Join(root, "lib", "linguist", "VERSION"))
 	if err != nil {
 		return nil, err
-	}
-
-	submatches := VERSION_RE.FindSubmatch(ver)
-	if submatches == nil {
-		return nil, fmt.Errorf("no match in lib/linguist/version.rb")
 	}
 
 	yml, err := ioutil.ReadFile(path.Join(root, "grammars.yml"))
@@ -275,7 +267,7 @@ func NewConverter(root string) (*Converter, error) {
 		return nil, err
 	}
 
-	conv := &Converter{root: root, version: string(submatches[1])}
+	conv := &Converter{root: root, version: strings.TrimSpace(string(ver))}
 
 	if err := yaml.Unmarshal(yml, &conv.grammars); err != nil {
 		return nil, err
