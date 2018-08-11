@@ -154,6 +154,14 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_gml_by_heuristics
+      assert_heuristics({
+        "Game Maker Language" => all_fixtures("Game Maker Language", "*.gml"),
+        "Graph Modeling Language" => all_fixtures("Graph Modeling Language", "*.gml"),
+        "XML" => all_fixtures("XML", "*.gml")
+      })
+  end
+
   def test_gs_by_heuristics
     assert_heuristics({
       "Gosu" => all_fixtures("Gosu", "*.gs")
@@ -431,6 +439,13 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "Linked Script" => all_fixtures("Linked Script", "*.x"),
       "RPC" => all_fixtures("RPC", "*.x")
+    })
+  end
+
+  def test_yy_by_heuristics
+    assert_heuristics({
+      "JSON" => all_fixtures("JSON", "*.yy"),
+      "Yacc" => all_fixtures("Yacc", "*.yy")
     })
   end
 end

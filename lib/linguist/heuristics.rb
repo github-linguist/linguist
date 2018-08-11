@@ -226,6 +226,16 @@ module Linguist
       end
     end
 
+    disambiguate ".gml" do |data|
+      if /^\s*(\<\?xml|xmlns)/i.match(data)
+        Language["XML"]
+      elsif /^\s*(graph|node)\s+\[$/i.match(data)
+        Language["Graph Modeling Language"]
+      else
+        Language["Game Maker Language"]
+      end
+    end
+
     disambiguate ".gs" do |data|
       Language["Gosu"] if /^uses java\./.match(data)
     end
@@ -530,6 +540,14 @@ module Linguist
         Language["Logos"]
       elsif /OUTPUT_ARCH\(|OUTPUT_FORMAT\(|SECTIONS/.match(data)
         Language["Linker Script"]
+      end
+    end
+
+    disambiguate ".yy" do |data|
+      if /\"modelName\"\:\s*\"GM/.match(data)
+        Language["JSON"]
+      else
+        Language["Yacc"]
       end
     end
 
