@@ -6,7 +6,7 @@ class TestRepository < Minitest::Test
   end
 
   def master_oid
-    'd40b4a33deba710e2f494db357c654fbe5d4b419'
+    '2a6dd02c6e81b7e30d978806d43d4ba1a7ba8003'
   end
 
   def linguist_repo(oid = master_oid)
@@ -27,7 +27,7 @@ class TestRepository < Minitest::Test
 
   def test_linguist_breakdown
     assert linguist_repo.breakdown_by_file.has_key?("Ruby")
-    assert linguist_repo.breakdown_by_file["Ruby"].include?("bin/linguist")
+    assert linguist_repo.breakdown_by_file["Ruby"].include?("bin/github-linguist")
     assert linguist_repo.breakdown_by_file["Ruby"].include?("lib/linguist/language.rb")
   end
 

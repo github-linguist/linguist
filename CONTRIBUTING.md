@@ -24,7 +24,7 @@ Run this command each time a [sample][samples] has been modified.
 
 To run Linguist from the cloned repository:
 
-    bundle exec bin/linguist --breakdown
+    bundle exec bin/github-linguist --breakdown
 
 ### Dependencies
 
