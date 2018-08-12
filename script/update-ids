@@ -1,0 +1,66 @@
+#!/usr/bin/env ruby
+
+require 'bundler/setup'
+require 'yaml'
+require 'pry'
+require 'digest'
+
+def generate_language_id(language)
+  Digest::SHA256.hexdigest(language).to_i(16) % (2**30 - 1)
+end
+
+data = File.read("lib/linguist/languages.yml")
+header = data.match(/\A(?:^#[^\n]*\n|^[ \t]*\n)+/m)[0]
+languages = YAML.load(data)
+
+
+# Do a dry-run to report which languages are missing IDs
+if ARGV[0] == "--check"
+  missing = []
+
+  languages.each do |name, vals|
+    missing << name unless vals.has_key?('language_id')
+  end
+
+  list = missing.map {|n| "  - #{n}"}.join("\n")
+  case missing.count
+  when 0
+    puts "No languages were found with missing IDs."
+    exit 0
+  when 1
+    puts "1 language was found with a missing ID:"
+    puts "\n#{list}\n\n"
+    puts "Run `#{$0}` to generate it."
+  else
+    puts "#{missing.count} languages were found with missing IDs:"
+    puts "\n#{list}\n\n"
+    puts "Run `#{$0}` to generate them."
+  end
+  exit 1
+
+# Generate `language_id' fields for those entries missing them.
+else
+  updated = []
+
+  languages.each do |name, vals|
+    unless vals.has_key?('language_id')
+      vals.merge!('language_id' => generate_language_id(name))
+      updated << name
+    end
+  end
+
+  list = updated.map {|n| "  - #{n}"}.join("\n")
+  case updated.count
+  when 0
+    puts "No languages were found with missing IDs."
+    exit
+  when 1
+    puts "Updated 1 language:"
+    puts "\n#{list}\n\n"
+  else
+    puts "Updated #{updated.count} languages:"
+    puts "\n#{list}\n\n"
+  end
+
+  File.write("lib/linguist/languages.yml", header + YAML.dump(languages))
+end
