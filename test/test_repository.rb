@@ -6,7 +6,7 @@ class TestRepository < Minitest::Test
   end
 
   def master_oid
-    '2a6dd02c6e81b7e30d978806d43d4ba1a7ba8003'
+    '7dbcffcf982e766fc711e633322de848f2b60ba5'
   end
 
   def linguist_repo(oid = master_oid)
