@@ -73,7 +73,7 @@ func (l *fsLoader) load() {
 			path = rel
 		}
 
-		rule, unknown, err := ConvertProto(filepath.Ext(path), data)
+		rule, unknown, err := ConvertProto(path, filepath.Ext(path), data)
 		if err != nil {
 			l.Fail(&ConversionError{path, err})
 			continue
