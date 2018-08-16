@@ -1,6 +1,6 @@
 require_relative "./helper"
 
-class TestModelines < Minitest::Test
+class TestStrategies < Minitest::Test
   include Linguist
 
   def assert_modeline(language, blob)
@@ -8,6 +8,36 @@ class TestModelines < Minitest::Test
       assert_nil Linguist::Strategy::Modeline.call(blob).first
     else
       assert_equal language, Linguist::Strategy::Modeline.call(blob).first
+    end
+  end
+
+  def assert_interpreter(interpreter, body)
+    if interpreter.nil?
+      assert_nil Shebang.interpreter(body)
+    else
+      assert_equal interpreter, Shebang.interpreter(body)
+    end
+  end
+
+  def file_blob(name)
+    path = File.exist?(name) ? name : File.join(samples_path, name)
+    FileBlob.new(path)
+  end
+
+  def all_xml_fixtures(file="*")
+    fixs = Dir.glob("#{samples_path}/XML/#{file}") -
+             ["#{samples_path}/XML/filenames"]
+    fixs.reject { |f| File.symlink?(f) }
+  end
+
+  def assert_xml(blob)
+    language = Linguist::Strategy::XML.call(file_blob(blob)).first
+    assert_equal Language["XML"], language, "#{blob} not detected as XML"
+  end
+
+  def assert_all_xml(blobs)
+    Array(blobs).each do |blob|
+      assert_xml blob
     end
   end
 
@@ -69,5 +99,63 @@ class TestModelines < Minitest::Test
     assert_equal Language["JavaScript"], fixture_blob("Data/Modelines/iamjs.pl").language
     assert_equal Language["JavaScript"], fixture_blob("Data/Modelines/iamjs2.pl").language
     assert_equal Language["PHP"], fixture_blob("Data/Modelines/iamphp.inc").language
+  end
+
+  def test_shebangs
+    assert_interpreter nil, ""
+    assert_interpreter nil, "foo"
+    assert_interpreter nil, "#bar"
+    assert_interpreter nil, "#baz"
+    assert_interpreter nil, "///"
+    assert_interpreter nil, "\n\n\n\n\n"
+    assert_interpreter nil, " #!/usr/sbin/ruby"
+    assert_interpreter nil, "\n#!/usr/sbin/ruby"
+    assert_interpreter nil, "#!"
+    assert_interpreter nil, "#! "
+    assert_interpreter nil, "#!/usr/bin/env"
+
+    assert_interpreter "ruby", "#!/usr/sbin/ruby\n# bar"
+    assert_interpreter "ruby", "#!/usr/bin/ruby\n# foo"
+    assert_interpreter "ruby", "#!/usr/sbin/ruby"
+    assert_interpreter "ruby", "#!/usr/sbin/ruby foo bar baz\n"
+
+    assert_interpreter "Rscript", "#!/usr/bin/env Rscript\n# example R script\n#\n"
+    assert_interpreter "crystal", "#!/usr/bin/env bin/crystal"
+    assert_interpreter "ruby", "#!/usr/bin/env ruby\n# baz"
+
+    assert_interpreter "bash", "#!/usr/bin/bash\n"
+    assert_interpreter "sh", "#!/bin/sh"
+    assert_interpreter "python", "#!/bin/python\n# foo\n# bar\n# baz"
+    assert_interpreter "python2", "#!/usr/bin/python2.7\n\n\n\n"
+    assert_interpreter "python3", "#!/usr/bin/python3\n\n\n\n"
+    assert_interpreter "sbcl", "#!/usr/bin/sbcl --script\n\n"
+    assert_interpreter "perl", "#! perl"
+
+    assert_interpreter "ruby", "#!/bin/sh\n\n\nexec ruby $0 $@"
+
+    assert_interpreter "sh", "#! /usr/bin/env A=003 B=149 C=150 D=xzd E=base64 F=tar G=gz H=head I=tail sh"
+  end
+
+  def test_xml
+    no_root_tag = [
+      "#{samples_path}/XML/libsomething.dll.config",
+      "#{samples_path}/XML/real-estate.mjml",
+      "#{samples_path}/XML/XmlIO.pluginspec",
+      "#{samples_path}/XML/MainView.ux",
+      "#{samples_path}/XML/MyApp.ux",
+      "#{samples_path}/XML/xhtml-struct-1.mod",
+      "#{samples_path}/XML/wixdemo.wixproj",
+      "#{samples_path}/XML/msbuild-example.proj",
+      "#{samples_path}/XML/sample.targets",
+      "#{samples_path}/XML/Default.props",
+      "#{samples_path}/XML/racoon.mjml",
+      "#{samples_path}/XML/some-ideas.mm",
+      "#{samples_path}/XML/GMOculus.project.gmx",
+      "#{samples_path}/XML/obj_control.object.gmx",
+    ]
+    assert_all_xml all_xml_fixtures("*") - no_root_tag
+
+    assert_xml "test/fixtures/XML/app.config"
+    assert_xml "test/fixtures/XML/AssertionIDRequestOptionalAttributes.xml.svn-base"
   end
 end

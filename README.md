@@ -21,6 +21,7 @@ If an [explicit language override](#using-gitattributes) has been used, that lan
 - commonly used filename,
 - shell shebang,
 - file extension,
+- XML header,
 - heuristics,
 - naïve Bayesian classification
 
