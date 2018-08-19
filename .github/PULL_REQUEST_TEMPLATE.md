@@ -26,8 +26,9 @@
     - Sample source(s):
       - [URL to each sample source, if applicable]
     - Sample license(s):
-  - [ ] I have included a syntax highlighting grammar.
-  - [ ] I have included a change to the heuristics to distinguish my language from others using the same extension.
+  <!-- Update the Lightshow URLs below to show the grammar in action if you included one. -->
+  - [ ] I have included a syntax highlighting grammar: https://github-lightshow.herokuapp.com/
+  - [ ] I have updated the heuristics to distinguish my language from others using the same extension.
 
 - [ ] **I am fixing a misclassified language**
   - [ ] I have included a new sample for the misclassified language:
