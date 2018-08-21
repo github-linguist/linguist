@@ -1932,7 +1932,7 @@ Hy:
   extensions:
   - ".hy"
   interpreters:
-  - "hy"
+  - hy
   aliases:
   - hylang
   tm_scope: none
@@ -2069,6 +2069,14 @@ J:
   tm_scope: source.j
   ace_mode: text
   language_id: 172
+J#:
+  type: programming
+  color: "#004a60"
+  extensions:
+  - ".jsl"
+  tm_scope: source.java
+  ace_mode: text
+  language_id: 422935320
 JFlex:
   type: programming
   group: Lex
@@ -2726,7 +2734,7 @@ Markdown:
   - ".ronn"
   - ".workbook"
   filenames:
-  - "contents.lr"
+  - contents.lr
   tm_scope: source.gfm
   language_id: 222
 Marko:
