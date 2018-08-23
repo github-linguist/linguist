@@ -175,7 +175,7 @@ module Linguist
         Language["ECL"]
       end
     end
-    
+
     disambiguate ".es" do |data|
       if /^\s*(?:%%|main\s*\(.*?\)\s*->)/.match(data)
         Language["Erlang"]
@@ -245,6 +245,12 @@ module Linguist
         Language["Objective-C"]
       elsif CPlusPlusRegex.match(data)
         Language["C++"]
+      end
+    end
+
+    disambiguate ".ice" do |data|
+      if /^\s*(#\s*(include|if[n]def|pragma)|module\s+[A-Za-z][_A-Za-z0-9]*)/i.match(data)
+        Language["Slice"]
       end
     end
 
@@ -475,13 +481,13 @@ module Linguist
         Language["SQL"]
       end
     end
-    
+
     disambiguate ".srt" do |data|
       if /^(\d{2}:\d{2}:\d{2},\d{3})\s*(-->)\s*(\d{2}:\d{2}:\d{2},\d{3})$/.match(data)
         Language["SubRip Text"]
       end
     end
-    
+
     disambiguate ".t" do |data|
       if Perl5Regex.match(data)
         Language["Perl"]
@@ -491,7 +497,7 @@ module Linguist
         Language["Turing"]
       end
     end
-    
+
     disambiguate ".toc" do |data|
       if /^## |@no-lib-strip@/.match(data)
         Language["World of Warcraft Addon Data"]
@@ -524,7 +530,7 @@ module Linguist
         Language["XML"]
       end
     end
-  
+
     disambiguate ".w" do |data|
       if (data.include?("&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS"))
         Language["OpenEdge ABL"]
@@ -532,7 +538,7 @@ module Linguist
         Language["CWeb"]
       end
     end
-  
+
     disambiguate ".x" do |data|
       if /\b(program|version)\s+\w+\s*{|\bunion\s+\w+\s+switch\s*\(/.match(data)
         Language["RPC"]
