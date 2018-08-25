@@ -1,0 +1,24 @@
+%!
+/deriveHersheyFontGS993 where { pop save {restore} } { {} } ifelse
+userdict begin
+/deriveHersheyFontGS993	% <newfontname> <uid> <xuid> <paintwidth>
+			%   <italicangle> <oldfontname>
+{	findfont dup length 1 add dict begin
+		{1 index /FID ne {def} {pop pop} ifelse} forall
+		FontInfo dup length dict copy begin
+			/ItalicAngle exch def
+		/FontInfo currentdict end def
+		Private dup length dict copy begin
+			/UniqueID 3 index def
+		/Private currentdict end readonly def
+		/FontMatrix [.001 0 FontInfo /ItalicAngle get neg sin 1000 div
+			     .001 0 0] def
+		/StrokeWidth exch 1000 28 div mul round cvi def
+		/XUID exch def
+		/UniqueID exch def
+		/FontName 1 index def
+	currentdict end definefont pop
+} def
+end exec
+/Hershey-Plain-Duplex-Bold 5066549 [107 0 5066549]
+  2.1 0 /Hershey-Plain-Duplex deriveHersheyFontGS993
