@@ -11,29 +11,27 @@ class TestGrammars < Minitest::Test
   ].freeze
 
   HASH_WHITELIST = [
-    "2edac46b0a63309c96442d2826321a442217472f", # Agda.tmbundle
-    "4da01d631a29c76456fd0bd16749c71e8d5f6dbf", # ant.tmbundle
-    "79e72fd673dcebadd8fbace8d43db3da96d2c09f", # bro-sublime
+    "4b4c1b4aff11b99e53091f95b24093655c0d9ed2", # Agda.tmbundle
+    "a92c0e4e644206078a158d663b9f033d0d0aefbf", # ant.tmbundle
+    "98eac91395c97ae090113e1b4527cae3228d563a", # bro-sublime
     "220e011c8d686129e9c4163a7c655b9d64f61e59", # elixir-tmbundle
-    "75cf04a9121ca7bb5a9c122b33007ac016ba72e7", # factor
+    "55f431fb78e7b3cb6d18ef1042f70ebf4b8d838d", # factor
     "b81acf2ba52d312754bf5055845a723123bda388", # FreeMarker.tmbundle
     "ee77ce4cf9121bccc3e37ba6b98f8e7acd589aaf", # gap-tmbundle
     "4cfc7ce12de920ccc836bbab2d748151d5ba7e38", # go-tmbundle
     "6c2e34d62c08f97a3e2ece3eedc65fbd99873ff4", # idl.tmbundle
-    "e5212ae103917a9c2c3c1429a4569df466686fbd", # Isabelle.tmbundle
-    "bb56ce634fb7ddd38eee988c593ab7cb98a04f64", # jflex.tmbundle
+    "e68efca5a844aa78729cadcf42507013151e6605", # jflex.tmbundle
     "39f092c726491ca6a02354dbc6c3a0920bb44d4c", # mako-tmbundle
     "7821982b18bc35d6925cc16ece68d9c71f1fbba3", # moonscript-tmbundle
-    "c235154dbf7864612ac0d337ef5fe79a586b061a", # PHP-Twig.tmbundle
+    "806dae0a87f95409496223dfd9a45cc57c878aeb", # PHP-Twig.tmbundle
     "0c216b112f3a4e6d5848128504d8378d8c7eee00", # r.tmbundle
     "da39a3ee5e6b4b0d3255bfef95601890afd80709", # SCSS.tmbundle
     "68539730d3cde34355f429f2267e265c1e030912", # smalltalk-tmbundle
     "4b5f67a54532ca6e49ba44cd135a510a74712e07", # Stylus
     "23d2538e33ce62d58abda2c039364b92f64ea6bc", # sublime-angelscript
-    "966085b715baa0b0b67b40924123f92f90acd0ba", # sublime-shen
+    "38ce879dc8b217a080caa2ff9e2241c9505256d6", # sublime-shen
     "3df4ef028c6384b64bc59b8861d6c52093b2116d", # sublime-text-ox
-    "fd47e09f1fbdb3c26e2960d0aa2b8535bbc31188", # sublimetext-cuda-cpp
-    "93360925b1805be2b3f0a18e207649fcb524b991", # Std license in README.md of many TextMate grammars like abap.tmbundle
+    "c18bcd787325167bf1405629259c091d49064541", # Std license in README.md of many TextMate grammars like abap.tmbundle
   ].freeze
 
   # List of allowed SPDX license names
