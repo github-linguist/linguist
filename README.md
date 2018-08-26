@@ -76,7 +76,7 @@ A repository's languages stats can also be assessed from the command line using 
 
 ```console
 $ cd /path-to-repository/
-$ github-linguist
+$ linguist
 ```
 
 You can try running `linguist` on the root directory in this repository itself:
