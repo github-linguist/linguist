@@ -83,6 +83,7 @@ class GrammarList
         short_url = submodule[:short]
         long_url  = submodule[:url]
       end
+      item = item.gsub("*", "\\*")
       markdown += "- **#{item}:** [#{short_url}](#{long_url})\n"
     end
 
