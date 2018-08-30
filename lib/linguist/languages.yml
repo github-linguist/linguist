@@ -1301,6 +1301,15 @@ F*:
   tm_scope: source.fstar
   ace_mode: text
   language_id: 336943375
+FIGlet Font:
+  type: data
+  aliases:
+  - FIGfont
+  extensions:
+  - ".flf"
+  tm_scope: source.figfont
+  ace_mode: text
+  language_id: 686129783
 FLUX:
   type: programming
   color: "#88ccff"
@@ -1607,6 +1616,13 @@ Glyph:
   codemirror_mode: tcl
   codemirror_mime_type: text/x-tcl
   language_id: 130
+Glyph Bitmap Distribution Format:
+  type: data
+  extensions:
+  - ".bdf"
+  tm_scope: source.bdf
+  ace_mode: text
+  language_id: 997665271
 Gnuplot:
   type: programming
   color: "#f0a9f0"
@@ -1932,7 +1948,7 @@ Hy:
   extensions:
   - ".hy"
   interpreters:
-  - "hy"
+  - hy
   aliases:
   - hylang
   tm_scope: none
@@ -2726,7 +2742,7 @@ Markdown:
   - ".ronn"
   - ".workbook"
   filenames:
-  - "contents.lr"
+  - contents.lr
   tm_scope: source.gfm
   language_id: 222
 Marko:
@@ -5078,6 +5094,16 @@ X BitMap:
   codemirror_mode: clike
   codemirror_mime_type: text/x-csrc
   language_id: 782911107
+X Font Directory Index:
+  type: data
+  filenames:
+  - encodings.dir
+  - fonts.alias
+  - fonts.dir
+  - fonts.scale
+  tm_scope: source.fontdir
+  ace_mode: text
+  language_id: 208700028
 X PixMap:
   type: data
   group: C
