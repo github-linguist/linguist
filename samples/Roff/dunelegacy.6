@@ -1,0 +1,175 @@
+.TH DUNELEGACY "6" "Jan 2012" "SlackBuilds.org" "Games"
+.SH NAME
+dunelegacy \- Engine for playing Westwood's "Dune II"
+.SH SYNOPSIS
+.B dunelegacy
+[\fIoptions...\fR]
+.SH DESCRIPTION
+Dune Legacy is an effort by a handful of developers to revitalize the
+first-ever real-time strategy game. The original game was the basis for
+the hugely successful Command and Conquer series, and the gameplay has
+been replicated an extended to a wide variety of storylines and series.
+.P
+Lead one of three interplanetary houses, Atreides, Harkonnen or Ordos,
+in an attempt to harvest the largest amount of spice from the sand
+dunes. Exchange your spice stockpiles for credits through refinement and
+build an army capable of thwarting attempts of the other houses to stop
+your harvesting!
+.P
+Dune Legacy is a game engine only. To play the game, you must have the
+data files (*.PAK) from the original game.
+.SH OPTIONS
+.TP
+\fB\-\-showlog\fR
+Print the debug log to stdout rather than a file.
+.TP
+\fB\-w\fR, \fB\-\-window\fR
+Start the game in a window (overrides .ini file setting).
+.TP
+\fB\-f\fR, \fB\-\-fullscreen\fR
+Start the game fullscreen (overrides .ini file setting).
+.TP
+\fB\-\-PlayerName\fR \fIname\fR
+Sets the player name to \fIname\fR, for multiplayer (overrides .ini file setting).
+.TP
+\fB\-\-ServerPort\fR \fIport\fR
+Sets the UDP network port to \fIport\fR, for multiplayer (overrides .ini file setting).
+Default port is 28747.
+.SH FILES
+.TP
+\fB/usr/share/dunelegacy/\fR, \fB~/.config/dunelegacy/data/\fR
+Game data files (PAK files) are searched for in these two directories.
+.br
+The
+data files may be named in upper\- or lowercase. See
+.nh
+\fI/usr/doc/dunelegacy-@VERSION@/Dune2-Versions.txt\fR
+.hy
+for details.
+.TP
+\fB~/.config/dunelegacy/Dune Legacy.ini\fR
+Game settings. This is a user\-editable file. See the comments in the file itself for
+more information. Will be created if it
+doesn't already exist.
+.TP
+\fB~/.config/dunelegacy/Dune Legacy.log\fR
+Log messages are written here, unless \fB\-\-showlog\fR is used.
+.TP
+\fB~/.config/dunelegacy/replay/\fR
+Replay data is stored here, for the game's "instant replay" feature.
+.TP
+\fB~/.config/dunelegacy/save/\fR
+Saved games are stored here.
+.SH CONTROLS
+.TP
+\fBEscape\fR
+Go to menu
+.TP
+\fBSpace\fR
+Pause game
+.TP
+\fBAlt + Enter\fR
+Toggle fullscreen
+.TP
+\fBAlt + Tab\fR
+Switch to other application
+.TP
+\fBPrintScreen or Ctrl + P\fR
+Save screenshot as ScreenshotX.bmp with increasing numbers for X
+.TP
+\fBEnter\fR
+Start/Stop chatting
+.TP
+\fBF1\fR
+Zoomlevel x1
+.TP
+\fBF2\fR
+Zoomlevel x2
+.TP
+\fBF3\fR
+Zoomlevel x3
+.TP
+\fBT\fR
+Toggle display of current game time
+.TP
+\fBF10\fR
+Toggle sound effects and voice
+.TP
+\fBF11\fR
+Toggle music
+.TP
+\fBF12\fR
+Toggle display of FPS
+.TP
+\fBUp, Down, Left or Right\fR
+Move on the map
+.TP
+\fBF5\fR
+Skip 30 seconds (only in singleplayer)
+.TP
+\fBF6\fR
+Skip 2 minutes (only in singleplayer)
+.TP
+\fB\-\fR
+Decrease gamespeed (only in singleplayer)
+.TP
+\fB+\fR
+Increase gamespeed (only in singleplayer)
+.TP
+\fBCtrl + (1 to 9)\fR
+Save the list of selected units as unit group 1 to 9
+.TP
+\fB1 to 9\fR
+Select units from unit group 1 to 9
+.TP
+\fBShift + (1 to 9)\fR
+Add all units from unit group 1 to 9 to the list of currently selected units
+.TP
+\fB0\fR
+Deselect all currently selected units
+.TP
+\fBCtrl + 0\fR
+Remove currently selected units form all unit groups (group 1-9)
+.TP
+\fBM\fR
+Order unit to move to some position
+.TP
+\fBA\fR
+Order selected units to attack some unit, structure or position
+.TP
+\fBR\fR
+Repair selected structure
+.TP
+\fBU\fR
+Upgrade selected structure
+.TP
+\fBP\fR
+Place a structure (if a construction yard is selected)
+.SH INTERNET MULTIPLAYER
+To play online via Internet, you have to manually enable port forwarding
+if you use a NAT Router. Forward the Dune Legacy Server Port (Default
+is 28747) from your NAT Router to your computer. Use the same port on
+your router as configured in Dune Legacy.
+.P
+Example: If your machine has IP 192.168.123.1 and you're using the
+default Dune Legacy Port, than forward port 28747 from your router to
+192.168.123.1:28747.
+.SH SEE ALSO
+The Dune II manual at http://dune2k.com/Duniverse/Games/DuneII/Manual
+.P
+The official (?) Dune II site at http://duneii.com/
+.SH AUTHORS
+Dune Legacy has been written by many people. e.g.:
+.br
+Anthony Cole (anthonycole81AThotmail.com.au) \- started this great game
+.br
+Olaf van der Spek
+.br
+Raal Goff (gumbyATleemingwireless.net)
+.br
+Stefen Hendriks \- random map generator: MapGenerator.cpp
+.br
+Richard Schaller (richard.schallerATgmx.de)
+.P
+This man page written by B. Watson for the SlackBuilds.org project,
+but it may be freely used by anyone for any purpose.

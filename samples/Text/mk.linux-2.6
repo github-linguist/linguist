@@ -1,0 +1,10 @@
+XEN_LINUX_SOURCE ?= tarball
+LINUX_VER ?= 2.6
+
+IMAGE_TARGET ?= vmlinux bzImage
+
+XEN_LINUX_CONFIG_UPDATE := buildconfigs/enable-xen-config
+
+EXTRAVERSION ?=
+
+include buildconfigs/mk.linux-2.6-common

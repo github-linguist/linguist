@@ -87,6 +87,32 @@ module Linguist
     Perl5Regex = /\buse\s+(?:strict\b|v?5\.)/
     Perl6Regex = /^\s*(?:use\s+v6\b|\bmodule\b|\b(?:my\s+)?class\b)/
 
+    disambiguate ".1", ".2", ".3", ".4", ".5", ".6", ".7", ".8", ".9" do |data|
+      roff_match = /^[.'][ \t]*(?:
+        # Comment
+        \\"
+
+        # man(7) macros, sans `.I`
+        |AT|B|BI|BR|BT|DT|EE|EX|HP|IB|IP|IR|LP|ME|MT|OP|P|PD|PP|PT|R|RB|RE|RI|RS|SB|SH|SM|SS|TH|TP|UC|UE|UR
+
+        # mdoc(7) macros
+        |%A|%B|%C|%D|%I|%J|%N|%O|%P|%Q|%R|%T|%U|%V|Ac|Ad|An|Ao|Ap|Aq|Ar|At|Bc|Bd|Bf|Bk|Bl|Bo|Bq|Brc|Bro|Brq|Bsx
+        |Bt|Bx|Cd|Cm|D1|Dc|Dd|Dl|Do|Dq|Dt|Dv|Dx|Ec|Ed|Ef|Ek|El|Em|En|Eo|Er|Es|Ev|Ex|Fa|Fc|Fd|Fl|Fn|Fo|Fr|Ft|Fx
+        |Hf|Ic|In|It|Lb|Li|Lk|Lp|Ms|Mt|Nd|Nm|No|Ns|Nx|Oc|Oo|Op|Os|Ot|Ox|Pa|Pc|Pf|Po|Pp|Pq|Qc|Ql|Qo|Qq|Re|Rs|Rv
+        |Sc|Sh|Sm|So|Sq|Ss|St|Sx|Sy|Ta|Tn|Ud|Ux|Va|Vt|Xc|Xo|Xr
+
+        # Native Roff requests (built-ins)
+        |ab|ad|af|am|as|bd|bp|br|c2|cc|ce|cf|ch|cs|cu|da|de|di|ds|dt|ec|el|em|eo|ev|ex|fc|fi|fl|fp|ft|hc|hw
+        |hy|ie|if|ig|in|it|lc|lg|lf|ll|ls|lt|mc|mk|na|ne|nf|nh|nm|nn|nr|ns|nx|os|pc|pi|pl|pm|pn|po|ps|rd|rm
+        |rn|rr|rs|rt|so|sp|ss|sv|sy|ta|tc|ti|tl|tm|tr|uf|ul|vs|wh
+      )(?=\s|$)/x
+      if /^[.'][ \t]*(TH|Dt)[ \t]+([^"\s]+|"[^"\s]+")[ \t]+\\"?([1-9]|@[^\s@]+@)|\A[.'][ \t]*so[ \t]+\S+\s*\z/.match(data)
+        Language["Roff"]
+      elsif !roff_match.match(data)
+        Language["Text"]
+      end
+    end
+
     disambiguate ".as" do |data|
       if /^\s*(package\s+[a-z0-9_\.]+|import\s+[a-zA-Z0-9_\.]+;|class\s+[A-Za-z0-9_]+\s+extends\s+[A-Za-z0-9_]+)/.match(data)
         Language["ActionScript"]

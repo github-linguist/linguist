@@ -1,0 +1,135 @@
+.de op
+.	ds o \\fB\\$1\\fP
+.	ie \\n(.$>2 .as o , \\fB\\$2\\fP \\fI\\$3\\fP
+.	el .if \\n(.$=2 \{
+.		length L \\$1
+.		ie \\nL=2 .as o , \\fB\\$2\\fP
+.		el        .as o " \\fI\\$2\\fP
+.		rm L
+.	\}
+.	TP
+\\*o
+.	rm o
+..
+.de env
+.	TP
+\\fB\\$1\\fP
+..
+.
+.\" ============================================================================
+.TH ATOM 1 v1.26.1
+.SH NAME
+atom \(em a hackable text editor for the 21st century
+.
+.SH SYNOPSIS
+.B  atom
+.RI [ options ]
+.RI [ "paths..." ]
+.
+.\" ============================================================================
+.SH DESCRIPTION
+Opens one or more \fIpaths\fP in Atom, which may point to either files or folders.
+.PP
+If there is an existing Atom window that contains all of the given folders, the paths will be opened in that window.
+Otherwise, they will be opened in a new window.
+.PP
+Paths that start with \(lqatom://\(rq will be interpreted as URLs.
+.
+.\" ============================================================================
+.SH OPTIONS
+.
+.op -1 --one ""
+This option is no longer supported.
+It was formerly used to preview v1.0 APIs, and became redundant once Atom v1.0 shipped.
+.
+.op -a --add ""
+Open path as a new project in last used window.
+.
+.op --benchmark
+Open a new window that runs the specified benchmarks.
+.
+.op --benchmark-test
+Run a faster version of the benchmarks in headless mode.
+.
+.op --clear-window-state
+Delete all Atom environment state.
+.
+.op -d --dev ""
+Run in development mode.
+.
+.op --enable-electron-logging
+Enable low-level logging messages from Electron.
+.
+.op -f --foreground ""
+Keep the main process in the foreground.
+.
+.op -h --help ""
+Print a usage message.
+.
+.op --include-deprecated-apis
+This option is not currently supported.
+.
+.op -l --log-file file
+Log all output to \fIfile\fP.
+.
+.op -m --main-process ""
+Run the specified specs in the main process.
+.
+.op -n --new-window ""
+Open a new window.
+.
+.op -p --project file
+Start Atom with a project specification \fIfile\fP, which may be either CSON or JSON.
+.
+.op --profile-startup
+Create a profile of the startup execution time.
+.
+.op -r --resource-path path
+Set the path to the Atom source directory and enable dev-mode.
+.
+.op --safe
+Do not load packages from
+.I ~/.atom/packages
+or
+.IR ~/.atom/dev/packages .
+.
+.op -t --test specs
+Run the specified
+.I specs
+and exit with an error code on failure.
+.
+.op --timeout delay
+When in test mode, waits until the specified time (in minutes) and kills the process (exit code: 130).
+.
+.op -v --version ""
+Print the version information.
+.
+.op -w --wait ""
+Wait for window to be closed before returning.
+.
+.\" ============================================================================
+.SH ENVIRONMENT VARIABLES
+.env ATOM_DEV_RESOURCE_PATH
+The path from which Atom loads source code in dev-mode. Defaults to
+.IR ~/github/atom .
+.
+.env ATOM_HOME
+The root path for all configuration files and folders. Defaults to
+.IR ~/.atom .
+.
+.\" ============================================================================
+.SH SEE ALSO
+.BR apm (1)
+.
+.PP
+The Atom flight manual:
+.I http://flight-manual.atom.io/
+.
+.\" ============================================================================
+.SH AUTHORS
+Copyright \(co 2011\(en2018, GitHub Inc.
+Released under the MIT license.
+.
+.PP
+Manpage written by Alhadis
+.RI < gardnerjohng@gmail.com >.

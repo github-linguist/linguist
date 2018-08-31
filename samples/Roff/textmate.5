@@ -1,0 +1,635 @@
+'\" t
+.ds < \(lq\fI
+.ds > \fP\(rq
+.ds .. \.\.\.
+.ds - \N'45'\N'45'
+.ad l
+.nh
+.de SX
+.ie n \fB\\$1\\fP\\$2
+.el the \(lq\\$1\\(rq section\\$2
+..
+.
+.\" Following two macros copied from `an-ext.tmac'
+.\" .EX: Start example
+.de EX
+.do ds mF \\n[.fam]
+.nr mE \\n(.f
+.nf
+.nh
+.do fam C
+.ft CW
+..
+.\" .EE: End example
+.de EE
+.do fam \\*(mF
+.ft \\n(mE
+.fi
+.hy \\n(HY
+..
+.
+.TH TEXTMATE 5 "16 May 2016 14:18:35 GMT" "TextMate Manual" "Language Grammars"
+.SH INTRO
+Language grammars are used to assign names to document elements such as keywords, comments, strings or similar.
+The purpose of this is to allow styling (syntax highlighting) and to make the text editor \(lqsmart\(rq about which context the caret is in.
+For example you may want a key stroke or tab trigger to act differently depending on the context,
+or you may want to disable spell check as you type those portions of your text document which are not prose (e.g. HTML tags).
+.PP
+The language grammar is used only to parse the document and assign names to subsets of this document.
+Then
+.UR \fIhttp://\:manual\.macromates\.com/\:en/\:scope_selectors\.html\fP
+scope selectors
+.UE
+can be used for styling, preferences and deciding how keys and tab triggers should expand.
+.
+.PP
+For a more thorough introduction to this concept, see the
+.UR \fIhttp://\:macromates\.com/\:blog/\:archives/\:2005/\:07/\:06/\:introduction-to-scopes/\fP
+introduction to scopes
+.UE
+blog post.
+.
+.
+.SH EXAMPLE
+You can create a new language grammar by opening the bundle editor
+(\fIWindow\fP \(-> \fIShow Bundle Editor\fP)
+and select \(lqNew Language\(rq from the add button in the lower left corner.
+.PP
+This will give you a starting grammar which will look like the one below, so let us start by explaining that.
+.PP
+.in +6n
+.EX
+\&{  scopeName = 'source.untitled';
+\&   fileTypes = ( );
+\&   foldingStartMarker = '\e{\es*$';
+\&   foldingStopMarker = '^\es*\e}';
+\&   patterns = (
+\&      {  name = 'keyword.control.untitled';
+\&         match = '\eb(if|while|for|return)\eb';
+\&      },
+\&      {  name = 'string.quoted.double.untitled';
+\&         begin = '"';
+\&         end = '"';
+\&         patterns = ( 
+\&            {  name = 'constant.character.escape.untitled';
+\&               match = '\\e.';
+\&            }
+\&         );
+\&      },
+\&   );
+\&}
+.EE
+.PP
+The format is the
+.UR \fIhttp://\:manual\.macromates\.com/\:en/\:appendix#property_list_format\.html\fP
+property list format
+.UE
+and at the root level there are five key/value pairs:
+.
+.TP
+.B scopeName
+This should be a unique name for the grammar, following the convention of being a dot-separated name where each new (left-most) part specializes the name.
+Normally it would be a two-part name where the first is either
+.I text
+or
+.IR source ,
+and the second is the name of the language or document type.
+But if you are specialising an existing type, you probably want to derive the name from the type you are specialising.
+For example, Markdown is
+.I text\.html\.markdown
+and Ruby on Rails (rhtml files) is
+.IR text\.html\.rails .
+The advantage of deriving it from (in this case)
+.I text\.html
+is that everything which works in the
+.I text\.html
+scope will also work in the
+.I text\.html\.*
+scope (but with a lower precedence than something specifically targeting
+.IR text\.html\.* )\.
+.
+.TP
+.B fileTypes
+This is an array of filetype extensions that the grammar should (by default) be used with.
+This is referenced when TextMate does not know what grammar to use for a file the user opens.
+If however the user selects a grammar from the language pop-up in the status bar, TextMate will remember that choice.
+.
+.TP
+.BR foldingStartMarker ", " foldingStopMarker
+These are regular expressions that lines (in the document) are matched against.
+If a line matches one of the patterns (but not both), it becomes a folding marker
+(see
+.SX Foldings
+for more info).
+.TP
+.B patterns
+This is an array with the actual rules used to parse the document.
+In this example there are two rules.
+Rules will be explained in the next section.
+.
+.PP
+There are two additional (root level) keys which are not used in the example:
+.
+.TP
+.B firstLineMatch
+A regular expression which is matched against the first line of the document (when first loaded).
+If it matches, the grammar is used for the document (unless there is a user override).
+Example:
+.IR ^#!/\.*\ebruby\eb .
+.
+.TP
+.B repository
+A dictionary (key/value pairs) of rules which can be included from other places in the grammar.
+The key is the name of the rule and the value is the actual rule.
+Further explanation (and example) follow with the description of the include rule key.
+.
+.
+.SH LANGUAGE RULES
+A language rule is responsible for matching a portion of the document.
+Generally a rule will specify a name which gets assigned to the part of the document which is matched by that rule.
+.
+.PP
+There are two ways a rule can match the document.
+It can either provide a single regular expression, or two.
+As with the \fImatch\fP key in the first rule above, everything which matches that regular expression will then get the name specified by that rule.
+For example the first rule above assigns the name \fIkeyword\.control\.untitled\fP to the following keywords:
+.IR if ,\  while ,\  for " and " return .
+We can then use a scope selector of \fIkeyword\.control\fR to have our theme style these keywords.
+.
+.PP
+The other type of match is the one used by the second rule.
+Here two regular expressions are given using the \fIbegin\fP and \fIend\fP keys.
+The name of the rule will be assigned from where the begin pattern matches to where the end pattern matches (including both matches).
+If there is no match for the end pattern, the end of the document is used.
+.
+.PP
+In this latter form, the rule can have sub-rules which are matched against the part between the begin and end matches.
+In our example here we match strings that start and end with a quote character and escape characters are marked up as
+.I constant\.character\.escape\.untitled
+inside the matched strings.
+.
+.PP
+.ul
+Note
+.cu 2
+that the regular expressions are matched against only a
+.uf 3
+\f(BIsingle\ line\ of\ the\ document
+.uf 2
+.cu 1
+at a time.
+.cu 2
+That means it is
+.uf 3
+\f(BInot possible to use a pattern that matches multiple lines\fP.
+The reason for this is technical: being able to restart the parser at an arbitrary line and having to re-parse only the minimal number of lines affected by an edit.
+In most situations it is possible to use the begin/end model to overcome this limitation.
+.
+.
+.SH RULE KEYS
+.ds BE \fBbegin\fP\~/\~\fBend\fP
+What follows is a list of all keys which can be used in a rule.
+.TP
+.B name
+The name which gets assigned to the portion matched.
+This is used for styling and scope-specific settings and actions, which means it should generally be derived from one of the standard names (see
+.SX "NAMING CONVENTIONS" ).
+.
+.TP
+.B match
+A regular expression which is used to identify the portion of text to which the name should be assigned.
+Example: \*<\eb(true|false)\e\*>.
+.
+.TP
+.BR begin ", " end
+These keys allow matches which span several lines, and must both be mutually exclusive with the match key.
+Each is a regular expression pattern.
+\fBbegin\fP is the pattern that starts the block, and \fBend\fP is the pattern which ends the block.
+Captures from the \fBbegin\fP pattern can be referenced in the \fBend\fP pattern using normal regular expression back-references.
+This is often used with here-docs, for example:
+.IP
+.in +4n
+.EX
+\&{   name = 'string.unquoted.here-doc';
+\&    begin = '<<(\ew+)';  // match here-doc token
+\&    end = '^\e1$';       // match end of here-doc
+\&}
+.EE
+.in -4n
+.IP
+A \*(BE rule can have nested patterns using the \fBpatterns\fP key.
+For example we can do:
+.IP
+.in +6n
+.EX
+\&{  begin = '<%'; end = '%>'; patterns = (
+\&      { match = '\eb(def|end)\eb'; \*(.. },
+\&      \*(..
+\&   );
+\&};
+.EE
+.in -6n
+.IP
+The above will match \fBdef\fP and \fBend\fP keywords inside a \*<<% \*(.. %>\*> block
+(though for embedded languages see info about the \fBinclude\fP key).
+.
+.TP
+.B contentName
+This key is similar to the \fBname\fP key, but only assigns the name to the text between what is matched by the \*(BE patterns.
+For example to get the text between \(lq#if 0\(rq and \(lq#endif\(rq marked up as a comment, we would do:
+.IP
+.in +6n
+.EX
+\&{  begin = '#if 0(\es.*)?$'; end = '#endif';
+\&   contentName = 'comment.block.preprocessor';
+\&};
+.EE
+.in -4n
+.TP
+.BR captures ,\~ beginCaptures ,\~ endCaptures
+These keys allow you to assign attributes to the captures of the \fBmatch\fP, \fBbegin\fP, or \fBend\fP patterns.
+Using the \fBcaptures\fP key for a \*(BE rule is shorthand for giving both \fBbeginCaptures\fP and \fBendCaptures\fP with same values.
+.IP
+The value of these keys is a dictionary with the key being the capture number and the value being a dictionary of attributes to assign to the captured text.
+Currently, \fBname\fP is the only attribute supported.
+Here is an example:
+.IP
+.in +6n
+.EX
+\&{  match = '(@selector\e()(.*?)(\e))';
+\&   captures = {
+\&      1 = { name = 'storage.type.objc'; };
+\&      3 = { name = 'storage.type.objc'; };
+\&   };
+\&};
+.EE
+.in -6n
+.IP
+In that example we match text like \*<@selector(windowWillClose:\*>,
+but the \fBstorage\.type\.objc\fP name will only be assigned to \*<@selector\*> and \*<)\*>.
+.
+.TP
+.B include
+This allows you to reference a different language, recursively reference the grammar itself, or a rule declared in this file's repository.
+.IP
+To reference another language, use the scope name of that language:
+.IP
+.in +6n
+.EX
+\&{  begin = '<\e?(php|=)?'; end = '\e?>'; patterns = (
+\&      { include = "source.php"; }
+\&   );
+\&}
+.EE
+.in -6n
+.
+.IP
+To reference the grammar itself, use
+.BR $self :
+.
+.IP
+.in +6n
+.EX
+\&{  begin = '\e('; end = '\e)'; patterns = (
+\&      { include = "$self"; }
+\&   );
+\&}
+.EE
+.in -6n
+.IP
+To reference a rule from the current grammars repository, prefix the name with a pound sign (#):
+.IP
+.in +6n
+.EX
+\&patterns = (
+\&   {  begin = '"'; end = '"'; patterns = (
+\&         { include = "#escaped-char"; },
+\&         { include = "#variable"; }
+\&      );
+\&   },
+\&   \*(..
+\&); // end of patterns
+\&repository = {
+\&   escaped-char = { match = '\\e.'; };
+\&   variable =     { match = '\e$[a-zA-Z0-9_]+'; };
+\&};
+.EE
+.in -6n
+.IP
+This can also be used to match recursive constructs like balanced characters:
+.IP
+.in +6n
+.EX
+\&patterns = (
+\&   {  name = 'string.unquoted.qq.perl';
+\&      begin = 'qq\e('; end = '\e)'; patterns = (
+\&         { include = '#qq_string_content'; },
+\&      );
+\&   },
+\&   \*(..
+\&); // end of patterns
+\&repository = {
+\&   qq_string_content = {
+\&      begin = '\e('; end = '\e)'; patterns = (
+\&         { include = '#qq_string_content'; },
+\&      );
+\&   };
+\&};
+.EE
+.IP
+This will correctly match a string like: \*<qq( this (is (the) entire) string)\*>.
+.
+.
+.SH NAMING CONVENTIONS
+TextMate is free-form in the sense that you can assign basically any name you wish
+to any part of the document that you can markup with the grammar system and then use that name in scope selectors.
+.PP
+There are however conventions so that one theme can target as many languages as possible,
+without having dozens of rules specific to each language and also so that functionality (mainly preferences) can be reused across languages,
+e.g. you probably do not want an apostrophe to be auto-paired when inserted in strings and comments,
+regardless of the language you are in, so it makes sense to only set this up once.
+.
+.PP
+Before going through the conventions, here are a few things to keep in mind:
+.
+.TP
+1.
+A minimal theme will only assign styles to 10 of the 11 root groups below
+(\fBmeta\fP does not get a visual style), so you should \(lqspread out\(rq your naming.
+That is, instead of putting everything below \fIkeyword\fP (as your formal language definition may insist)
+you should think \(lqwould I want these two elements styled differently?\(rq and if so,
+they should probably be put into different root groups.
+.TP
+2.
+Even though you should \(lqspread out\(rq your names,
+when you have found the group in which you want to place your element (e.g. \fIstorage\fP),
+you should reuse the existing names used below that group (for \fIstorage\fP that is \fImodifier\fP or \fItype\fP) rather than make up a new subtype.
+You should however append as much information to the subtype you choose.
+For example if you are matching the \*<static\*> storage modifier,
+then instead of just naming it \fIstorage.modifier\fP use \fIstorage.modifier.static\fP.
+A scope selector of just \fIstorage.modifier\fP will match both,
+but having the extra information in the name means it is possible to specifically target it disregarding the other storage modifiers.
+.TP
+3.
+Put the language name last in the name.
+This may seem redundant, since you can generally use a scope selector of \fIsource\.{language}\ \fIstorage\.modifier\fR,
+but when embedding languages, this is not always possible.
+.
+.PP
+And now the 11 root groups which are currently in use with some explanation about their intended purpose.
+.ig
+This is presented as a hierarchical list but the actual scope name is obtained by joining the name from each level with a dot.
+For example \fIdouble-slash\fP is \fIcomment\.line\.double-slash\fP.
+..
+.
+.
+.TS
+lb lb
+l l .
+Scope	Description
+_
+comment	For comments
+comment.line	Line comments. We specialise further so that the type of comment start character(s) can be extracted from the scope.
+comment.line.double-slash	// comment
+comment.line.double-dash	\*- comment
+comment.line.number-sign	# comment
+comment.line.percentage	% comment
+comment.line.{character}	Other types of line comments
+comment.block	Multiline comments like \fI/*\*(..*/\fP and \fI<!--\*(..-->\fP
+comment.block.documentation	Embedded documentation like JSDoc or Pod
+\~
+constant	Various forms of constants
+constant.numeric	Those which represent numbers, e.g. \fI42\fP, \fI1.3f\fP, \fI0x4AB1U\fP
+constant.character	Those which represent characters, e.g. \fI&lt;\fP, \fI\e031\fP.
+constant.character.escape	Escape sequences, e.g. like \fI\ee\fP
+constant.language	Constants (generally) provided by the language which are \(lqspecial\(rq, e.g, \fInil\fP, \fIundefined\fP, \fInull\fP,
+constant.language.boolean	Boolean-type values, e.g, \fItrue\fP, \fIfalse\fP, \fIYES\fP, \fINO\fP
+constant.other	Other constants, e.g. colours in CSS
+\~
+entity	T{
+An \(lqentity\(rq refers to a larger part of the document, for example a chapter, class, function, or tag.
+We do not scope the entire entity as \fIentity.*\fP (we use \fImeta.*\fP for that).
+But we do use \fIentity.*\fP for the \(lqplaceholders\(rq in the larger entity, e.g. if the entity is a chapter, we would use \fIentity.name.section\fP for the chapter title.
+T}
+entity.name	We are naming the larger entity
+entity.name.function	Name of a function
+entity.name.type	Name of a type declaration or class
+entity.name.tag	Name of an HTML tag
+entity.name.section	Name of a section/heading
+entity.other	Other entities
+entity.other.inherited-class	Superclass or baseclass name
+entity.other.attribute-name	Name of an attribute (mainly in tags).
+\~
+invalid	Stuff which is \(lqinvalid\(rq
+invalid.illegal	Illegal, e.g. an ampersand or lower-than character in HTML (which is not part of an entity/tag)
+invalid.deprecated	For deprecated stuff, e.g. using an API function which is deprecated or using styling with strict HTML
+\~
+keyword	Keywords (when these do not fall into the other groups)
+keyword.control	Mainly related to flow control like \fIcontinue\fP, \fIwhile\fP, \fIreturn\fP
+keyword.operator	Operators can either be textual (e.g. \fIand\fP \fIor\fP) or be characters (e.g \fI&&\fP \fI||\fP)
+keyword.other	Other types of keywords
+\~
+markup	This is for markup languages and generally applies to larger subsets of the text
+markup.underline	Underlined text
+markup.link	T{
+This is for links.
+As a convenience this is derived from \fImarkup.underline\fP so that if there is no theme rule
+which specifically targets \fImarkup.underline.link\fP then it will inherit the underline style
+T}
+markup.bold	Bold or \(lqstrong\(rq text
+markup.heading	Section headers. Optionally provide the heading level as the next element, e.g, \fImarkup.heading.2.html\fP for \*<<h2>\*(..</h2>\*> in HTML
+markup.italic	Italic, oblique or emphasised text.
+markup.list	List items
+markup.list.numbered	Numbered list items
+markup.list.unnumbered	Unnumbered list items
+markup.quote	Quoted text, including block-quotes
+markup.raw	Text which is verbatim, e.g. code listings. Normally spellchecking is disabled for \fImarkup.raw\fP
+markup.other	Other markup constructs
+\~
+meta	T{
+The meta scope is generally used to markup larger parts of the document.
+For example the entire line which declares a function would be \fImeta.function\fP and the subsets would be \fIstorage.type\fP, \fIentity.name.function\fP, \fIvariable.parameter\fP etc, and only the latter would be styled.
+Sometimes the meta part of the scope will be used only to limit the more general element that is styled;
+most of the time meta scopes are however used in scope selectors for activation of bundle items.
+For example in Objective-C there is a meta scope for the interface declaration of a class and the implementation,
+allowing the same tab-triggers to expand differently, depending on context.
+T}
+punctuation	Symbols which are often washed out to improve legibility.
+punctuation.definition	Markers for the start and end of an item
+punctuation.definition.string	\fI'\fP and \fI"\fP delimiting a string literal
+punctuation.definition.array	\fI()\fP or \fI[]\fP enclosing an item list
+punctuation.definition.header	\fI#\fP in Markdown headings
+punctuation.definition.list	\fI*\fP in Markdown list items
+punctuation.definition.table	Characters surrounding tables in a text markup language, e.g, pipes in reStructuredText
+punctuation.delimiter	Separators between the elements of a variable-length list
+punctuation.delimiter.comma	Commas between array values or arguments of a function-call
+punctuation.delimiter.period	Dots between property names, e.g, \fIdocument.body.firstElementChild\fP
+punctuation.section	Delimiters for structured sections often spanning multiple lines
+punctuation.section.comment	\fI/*\fP and \fI*/\fP in C block comments.
+punctuation.section.function	\fI{\fP and \fI}\fP pairs enclosing a function definition
+punctuation.section.scope	\fI{\fP and \fI}\fP pairs enclosing a CSS ruleset
+punctuation.section.quote	\fI>\fP in Markdown quotes
+punctuation.section.paragraph	Blocks in textual markup languages when there is a visual delimiter
+punctuation.separator	Punctuation separating two internal parts of a logical whole
+punctuation.separator.key-value	\fI:\fP in YAML and JSON fields, or \fI=\fP in HTML attributes
+punctuation.separator.arguments	Delimiter between a function's name and parameter list
+punctuation.terminator	Termination marker for a statement or rule, e.g, the \fI;\fP in \fIprint "foo";\fP is \fIpunctuation.terminator.statement\fP
+punctuation.whitespace	Whitespace that precedes or trails a context: \fIpunctuation.whitespace.leading\fP and \fIpunctuation.whitespace.trailing\fP
+\~
+storage	Things relating to \(lqstorage\(rq
+storage.type	The type of something, \fIclass\fP, \fIfunction\fP, \fIint\fP, \fIvar\fP
+storage.modifier	Storage modifiers like \fIstatic\fP, \fIfinal\fP, \fIabstract\fP
+\~
+string	Strings
+string.quoted	Quoted strings
+string.quoted.single	Single-quoted strings: \fI'foo'\fP
+string.quoted.double	Double-quoted strings: \fI"foo"\fP
+string.quoted.triple	Triple-quoted strings: \fI"""Python"""\fP
+string.quoted.other	Other types of quoting: \fI$'shell'\fP, \fI%s{...}\fP
+string.unquoted	Things like here-docs and here-strings
+string.interpolated	Strings which are \(lqevaluated\(rq: \fI`date`\fP, \fI$(pwd)\fP
+string.regexp	Regular expressions: \fI/(\ew+)/\fP
+string.other	Other types of strings (should rarely be used)
+\~
+support	Things provided by a framework or library should be below support
+support.function	Functions provided by the framework/library. For example \fINSLog\fP in Objective-C is \fIsupport.function\fP
+support.class	When the framework/library provides classes
+support.type	T{
+Types provided by the framework/library.
+This is probably only used for languages derived from C, which has typedef (and struct).
+Most other languages would introduce new types as classes
+T}
+support.constant	Constants (magic values) provided by the framework/library
+support.variable	Variables provided by the framework/library. For example NSApp in AppKit
+support.other	The above should be exhaustive, but for everything else use \fIsupport.other\fP
+\~
+variable	Variables. Not all languages allow easy identification (and thus markup) of these
+variable.parameter	When the variable is declared as the parameter
+variable.language	Reserved language variables like \fIthis\fP, \fIsuper\fP, \fIself\fP
+variable.other	Other variables, like \fI$some_variables\fP
+.TE
+.
+.
+.SS Appendix 1: Primer CSS classes
+.TS
+lb lb
+l l .
+Scope	CSS class
+_
+brackethighlighter.angle	pl-ba
+brackethighlighter.curly	pl-ba
+brackethighlighter.quote	pl-ba
+brackethighlighter.round	pl-ba
+brackethighlighter.square	pl-ba
+brackethighlighter.tag	pl-ba
+brackethighlighter.unmatched	pl-bu
+carriage-return	pl-c2
+comment	pl-c
+constant	pl-c1
+constant.character.escape	pl-cce
+constant.other.reference.link	pl-corl
+entity	pl-e
+entity.name	pl-en
+entity.name.constant	pl-c1
+entity.name.tag	pl-ent
+invalid.broken	pl-bu
+invalid.deprecated	pl-bu
+invalid.illegal	pl-ii
+invalid.unimplemented	pl-bu
+keyword	pl-k
+keyword.operator.symbole	pl-kos
+keyword.other.mark	pl-kos
+markup.bold	pl-mb
+markup.changed	pl-mc
+markup.deleted	pl-md
+markup.heading	pl-mh
+markup.ignored	pl-mi2
+markup.inserted	pl-mi1
+markup.italic	pl-mi
+markup.list	pl-ml
+markup.quote	pl-ent
+markup.raw	pl-c1
+markup.untracked	pl-mi2
+message.error	pl-bu
+meta.diff.header	pl-c1
+meta.diff.header.from-file	pl-md
+meta.diff.header.to-file	pl-mi1
+meta.diff.range	pl-mdr
+meta.module-reference	pl-c1
+meta.output	pl-c1
+meta.property-name	pl-c1
+meta.separator	pl-ms
+punctuation.definition.changed	pl-mc
+punctuation.definition.comment	pl-c
+punctuation.definition.deleted	pl-md
+punctuation.definition.inserted	pl-mi1
+punctuation.definition.string	pl-pds
+punctuation.section.embedded	pl-pse
+source	pl-s1
+source.regexp	pl-pds
+source.ruby.embedded	pl-sre
+storage	pl-k
+storage.modifier.import	pl-smi
+storage.modifier.package	pl-smi
+storage.type	pl-k
+storage.type.java	pl-smi
+string	pl-s
+string.comment	pl-c
+string.other.link	pl-corl
+string.regexp	pl-sr
+string.regexp.arbitrary-repitition	pl-sra
+string.regexp.character-class	pl-pds
+string.unquoted.import.ada	pl-kos
+sublimelinter.gutter-mark	pl-sg
+sublimelinter.mark.error	pl-bu
+sublimelinter.mark.warning	pl-smw
+support	pl-c1
+support.constant	pl-c1
+support.variable	pl-c1
+variable	pl-v
+variable.language	pl-c1
+variable.other	pl-smi
+variable.other.constant	pl-c1
+variable.parameter.function	pl-smi
+.TE
+.
+.
+.SH AUTHORS
+Specifications and reference for the TextMate grammar format sourced from
+.UR \fIhttp://\:manual\.macromates\.com/\:en/\:language_grammars\fP
+TextMate\(cqs online manual
+.UE
+with additions and minor amendments to adapt
+.SX "NAMING CONVENTIONS"
+for improved display in
+.BR man (1).
+Copyright \(co 2004\-2018 MacroMates Ltd.
+Updated on 1 June 2017.
+.
+.PP
+Primer CSS classes sourced from
+.UR \fIhttps://\:github.com/\:primer/\:github-syntax-light\fP
+.UE
+on 1 April 2018,
+released under the MIT license.
+Copyright \(co 2016\-2018 GitHub, Inc.
+Updated on 9 June 2017.
+.
+.PP
+Manpage adaptation by
+.MT \fIgardnerjohng@gmail.com\fP Alhadis
+.ME
+on 22 October 2017.
+.
+.
+.SH SEE ALSO
+.BR man (1),
+.BR onigsyntax (3),
+.BR pcresyntax (3),
+.BR plist (5).
+.
+.PP
+.UR \fIhttp://\:manual\.macromates\.com/\fP
+TextMate\(cqs online documentation
+.UE \.
+.\" vim: ts=40

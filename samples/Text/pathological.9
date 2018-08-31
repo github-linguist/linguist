@@ -1,0 +1,23 @@
+This file contains 3 tests to help govern the accuracy of Roff VS Text heuristics.
+
+.1 This line shouldn't be caught:
+
+	.TH MANPAGE 5
+
+... because Roff commands must start in the first column of the page.
+
+
+.2 This line appears to be Roff,
+
+.bedoogle
+
+but is ignored because no man/mdoc macro exists with the name "bedoogle".
+
+
+.3 This is a list of Roman numerals:
+
+.I One
+.II Two
+.III Three
+.IX Four
+.X Five

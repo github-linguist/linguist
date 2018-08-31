@@ -1,0 +1,99 @@
+.deEX
+.ift .ft5
+.nf
+..
+.deEE
+.ft1
+.fi
+..
+.TH UTF 7
+.SH NAME
+UTF, Unicode, ASCII, rune \- character set and format
+.SH DESCRIPTION
+The Plan 9 character set and representation are
+based on the Unicode Standard and on the ISO multibyte
+.SM UTF-8
+encoding (Universal Character
+Set Transformation Format, 8 bits wide).
+The Unicode Standard represents its characters in 16
+bits;
+.SM UTF-8
+represents such
+values in an 8-bit byte stream.
+Throughout this manual,
+.SM UTF-8
+is shortened to
+.SM UTF.
+.PP
+In Plan 9, a
+.I rune
+is a 16-bit quantity representing a Unicode character.
+Internally, programs may store characters as runes.
+However, any external manifestation of textual information,
+in files or at the interface between programs, uses a
+machine-independent, byte-stream encoding called
+.SM UTF.
+.PP
+.SM UTF
+is designed so the 7-bit
+.SM ASCII
+set (values hexadecimal 00 to 7F),
+appear only as themselves
+in the encoding.
+Runes with values above 7F appear as sequences of two or more
+bytes with values only from 80 to FF.
+.PP
+The
+.SM UTF
+encoding of the Unicode Standard is backward compatible with
+.SM ASCII\c
+:
+programs presented only with
+.SM ASCII
+work on Plan 9
+even if not written to deal with
+.SM UTF,
+as do
+programs that deal with uninterpreted byte streams.
+However, programs that perform semantic processing on
+.SM ASCII
+graphic
+characters must convert from
+.SM UTF
+to runes
+in order to work properly with non-\c
+.SM ASCII
+input.
+See
+.IR rune (3).
+.PP
+Letting numbers be binary,
+a rune x is converted to a multibyte
+.SM UTF
+sequence
+as follows:
+.PP
+01.   x in [00000000.0bbbbbbb] → 0bbbbbbb
+.br
+10.   x in [00000bbb.bbbbbbbb] → 110bbbbb, 10bbbbbb
+.br
+11.   x in [bbbbbbbb.bbbbbbbb] → 1110bbbb, 10bbbbbb, 10bbbbbb
+.br
+.PP
+Conversion 01 provides a one-byte sequence that spans the
+.SM ASCII
+character set in a compatible way.
+Conversions 10 and 11 represent higher-valued characters
+as sequences of two or three bytes with the high bit set.
+Plan 9 does not support the 4, 5, and 6 byte sequences proposed by X-Open.
+When there are multiple ways to encode a value, for example rune 0,
+the shortest encoding is used.
+.PP
+In the inverse mapping,
+any sequence except those described above
+is incorrect and is converted to rune hexadecimal 0080.
+.SH "SEE ALSO"
+.IR ascii (1),
+.IR tcs (1),
+.IR rune (3),
+.IR "The Unicode Standard" .
