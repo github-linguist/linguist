@@ -267,8 +267,7 @@ class TestHeuristics < Minitest::Test
 
   def test_ncl_by_heuristics
     ambiguous = [
-      "#{samples_path}/Text/LIDARLite.ncl",
-      "#{samples_path}/Text/Site.local.ncl"
+      "#{samples_path}/Text/LIDARLite.ncl"
     ]
     assert_heuristics({
       "NCL" => all_fixtures("Roff", "*.ncl"),
