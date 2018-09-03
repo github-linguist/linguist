@@ -421,4 +421,5 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **YAML:** [atom/language-yaml](https://github.com/atom/language-yaml)
 - **YANG:** [DzonyKalafut/language-yang](https://github.com/DzonyKalafut/language-yang)
 - **YARA:** [blacktop/language-yara](https://github.com/blacktop/language-yara)
+- **YASnippet:** [Alhadis/language-emacs-lisp](https://github.com/Alhadis/language-emacs-lisp)
 - **Zephir:** [phalcon/zephir-sublime](https://github.com/phalcon/zephir-sublime)
