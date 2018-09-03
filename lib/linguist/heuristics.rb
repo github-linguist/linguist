@@ -22,7 +22,7 @@ module Linguist
 
       @heuristics.each do |heuristic|
         if heuristic.matches?(blob.name, candidates)
-          return Array(heuristic.call(data))
+          return Array(heuristic.call(data, blob.name))
         end
       end
 
@@ -33,11 +33,12 @@ module Linguist
     #
     # exts_and_langs - String names of file extensions and languages to
     #                  disambiguate.
-    # heuristic - Block which takes data as an argument and returns a Language or nil.
+    # heuristic - Block which takes data (and optional filename) as arguments,
+    #             returning a Language or nil.
     #
     # Examples
     #
-    #     disambiguate ".pm" do |data|
+    #     disambiguate ".pm" do |data, filename|
     #       if data.include?("use strict")
     #         Language["Perl"]
     #       elsif /^[^#]+:-/.match(data)
@@ -70,7 +71,7 @@ module Linguist
     end
 
     # Internal: Perform the heuristic
-    def call(data)
+    def call(data, filename = nil)
       @heuristic.call(data)
     end
 
@@ -87,7 +88,7 @@ module Linguist
     Perl5Regex = /\buse\s+(?:strict\b|v?5\.)/
     Perl6Regex = /^\s*(?:use\s+v6\b|\bmodule\b|\b(?:my\s+)?class\b)/
 
-    disambiguate ".1", ".2", ".3", ".4", ".5", ".6", ".7", ".8", ".9" do |data|
+    disambiguate ".1", ".2", ".3", ".4", ".5", ".6", ".7", ".8", ".9" do |data, filename|
       roff_match = /^[.'][ \t]*(?:
         # Comment
         \\"
@@ -108,7 +109,7 @@ module Linguist
       )(?=\s|$)/x
       if /^[.'][ \t]*(TH|Dt)[ \t]+([^"\s]+|"[^"\s]+")[ \t]+\\"?([1-9]|@[^\s@]+@)|\A[.'][ \t]*so[ \t]+\S+\s*\z/.match(data)
         Language["Roff"]
-      elsif !roff_match.match(data)
+      elsif /[-.](?>[0-9]+\.)++[0-9]$/.match(filename) || !roff_match.match(data)
         Language["Text"]
       end
     end
