@@ -45,17 +45,26 @@ module Linguist
         exts = disambiguation['extensions']
         rules = disambiguation['rules']
         rules.map! do |rule|
-          if !rule['pattern'].nil?
-            rule['pattern'] = self.to_regex(rule['pattern'])
-          elsif !rule['negative_pattern'].nil?
-            pat = self.to_regex(rule['negative_pattern'])
-            rule['pattern'] = NegativePattern.new(pat)
-          elsif !rule['named_pattern'].nil?
-            rule['pattern'] = named_patterns[rule['named_pattern']]
-          end
+          rule['pattern'] = self.parse_rule(named_patterns, rule)
           rule
         end
         @heuristics << new(exts, rules)
+      end
+    end
+
+    def self.parse_rule(named_patterns, rule)
+      if !rule['and'].nil?
+        rules = rule['and'].map { |block| self.parse_rule(named_patterns, block) }
+        return And.new(rules)
+      elsif !rule['pattern'].nil?
+        return self.to_regex(rule['pattern'])
+      elsif !rule['negative_pattern'].nil?
+        pat = self.to_regex(rule['negative_pattern'])
+        return NegativePattern.new(pat)
+      elsif !rule['named_pattern'].nil?
+        return named_patterns[rule['named_pattern']]
+      else
+        return AlwaysMatch.new()
       end
     end
 
@@ -91,8 +100,7 @@ module Linguist
     # Internal: Perform the heuristic
     def call(data)
       matched = @rules.find do |rule|
-        m = !rule.key?('pattern') || rule['pattern'].match(data)
-        m
+        rule['pattern'].match(data)
       end
       if !matched.nil?
         languages = matched['language']
@@ -104,6 +112,24 @@ module Linguist
       end
     end
 
+  end
+
+  class And
+
+    def initialize(pats)
+      @pats = pats
+    end
+
+    def match(input)
+      return !@pats.any? { |pat| !pat.match(input) }
+    end
+
+  end
+
+  class AlwaysMatch
+    def match(input)
+      return true
+    end
   end
 
   class NegativePattern

@@ -16,6 +16,8 @@
 #                       Pattern can be a string with a single regular expression
 #                       or an array of strings that will be merged in a single
 #                       regular expression (with union).
+# and                 - An and block merges multiple rules and checks that all of
+#                       of them must match.
 # negative_pattern    - Same as pattern, but checks for absence of matches.
 # named_pattern       - A pattern can be reused by specifying it in the
 #                       named_patterns section and referencing it here by its
@@ -217,9 +219,9 @@ disambiguations:
   - language: Roff
     pattern: '^[.''][A-Za-z]{2}(\s|$)'
   - language: Unix Assembly
-    pattern:
-    - '(?<!\S)\.(include|globa?l)\s|(?<!\/\*)(\A|\n)\s*\.[A-Za-z][_A-Za-z0-9]*:'
-    #TODO: !/\/\*/.match(data) && /^\s*\.(?:include\s|globa?l\s|[A-Za-z][_A-Za-z0-9]*:)/.match(data)
+    and:
+      - negative_pattern: '/\*'
+      - pattern: '^\s*\.(?:include\s|globa?l\s|[A-Za-z][_A-Za-z0-9]*:)'
   - language: MAXScript
 - extensions: ['.n']
   rules:
@@ -267,7 +269,9 @@ disambiguations:
   - language: INI
     pattern: 'last_client='
   - language: QMake
-    pattern: '(HEADERS|SOURCES)'
+    and:
+    - pattern: HEADERS
+    - pattern: SOURCES
   - language: IDL
     pattern: '^\s*function[ \w,]+$'
 - extensions: ['.props']
