@@ -49,6 +49,13 @@ class TestHeuristics < Minitest::Test
     assert_equal Language["Objective-C"], match
   end
 
+  def test_1to9_by_heuristics
+    assert_heuristics({
+      "Roff" => all_fixtures("Roff", "*.{1..9}"),
+      "Text" => all_fixtures("Text", "*.{1..9}")
+    })
+  end
+
   def test_as_by_heuristics
     assert_heuristics({
       "ActionScript" => all_fixtures("ActionScript", "*.as"),

@@ -72,7 +72,7 @@ module Linguist
 
     # Internal: Perform the heuristic
     def call(data, filename = nil)
-      @heuristic.call(data)
+      @heuristic.call(data, filename)
     end
 
     # Common heuristics
