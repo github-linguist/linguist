@@ -1,0 +1,15 @@
+# name: font-face
+# key: font
+# group: css
+# --
+@font-face {
+	font-family: ${1:FontName};
+	font-weight: normal;
+	font-style: normal;
+	src: url("${2:fonts/font-name}.eot");
+	src: url("${2:fonts/font-name}.eot#iefix") format("embedded-opentype"),
+		url("${2:fonts/font-name}.woff2") format("woff2"),
+		url("${2:fonts/font-name}.ttf") format("truetype"),
+		url("${2:fonts/font-name}.woff") format("woff"),
+		url("${2:fonts/font-name}.svg#FontName") format("svg");
+}$3

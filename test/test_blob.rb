@@ -93,8 +93,8 @@ class TestBlob < Minitest::Test
     assert_equal "UTF-16LE", fixture_blob_memory("Data/utf16le").ruby_encoding
     assert_equal "UTF-16LE", fixture_blob_memory("Data/utf16le-windows").encoding
     assert_equal "UTF-16LE", fixture_blob_memory("Data/utf16le-windows").ruby_encoding
-    assert_equal "ISO-2022-KR", sample_blob_memory("Text/ISO-2022-KR.txt").encoding
-    assert_equal "binary", sample_blob_memory("Text/ISO-2022-KR.txt").ruby_encoding
+    assert_equal "ISO-2022-KR", fixture_blob_memory("Text/ISO-2022-KR.txt").encoding
+    assert_equal "binary", fixture_blob_memory("Text/ISO-2022-KR.txt").ruby_encoding
     assert_nil fixture_blob_memory("Binary/dog.o").encoding
   end
 
