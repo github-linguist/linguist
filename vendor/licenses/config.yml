@@ -1,4 +1,15 @@
 cache_path: "vendor/licenses"
+source_path: 'vendor/grammars'
+manifest:
+  #path: 'vendor/licenses/manifest.yml'
+  #exclude:
+  #  - "**/*"
+  #  - "!vendor/grammars/**/*"
+  dependencies:
+    grammars:
+      - "vendor/grammars/**/*"
+  #licenses:
+  #  creole: "vendor/grammars/creole/The MIT License (MIT)"
 
 allowed:
   - apache-2.0
