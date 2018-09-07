@@ -1,0 +1,416 @@
+# A collection of simple regexp-based rules that can be applied to content
+# to disambiguate languages with the same file extension.
+#
+# There two top-level keys: disambiguations and named_patterns.
+#
+# disambiguations     - a list of disambiguation rules, one for each
+#                       extension or group of extensions.
+# extensions          - an array of file extensions that this block applies to.
+# rules               - list of rules that are applied in order to the content
+#                       of a file with matching extension. Rules are evaluated
+#                       until one of them matches. If none matches, no language
+#                       is returned.
+# language            - Language to be returned if the rule matches.
+# pattern             - Ruby-compatible regular expression that makes the rule
+#                       match. If no pattern is specified, the rule always match.
+#                       Pattern can be a string with a single regular expression
+#                       or an array of strings that will be merged in a single
+#                       regular expression (with union).
+# and                 - An and block merges multiple rules and checks that all of
+#                       of them must match.
+# filename_pattern    - Same as pattern, but tests filenames instead of content.
+# negative_pattern    - Same as pattern, but checks for absence of matches.
+# named_pattern       - A pattern can be reused by specifying it in the
+#                       named_patterns section and referencing it here by its
+#                       key.
+# named_patterns      - Key-value map of reusable named patterns.
+#
+# Please keep this list alphabetized.
+#
+---
+disambiguations:
+- extensions: ['.1', '.2', '.3', '.4', '.5', '.6', '.7', '.8', '.9']
+  rules:
+  - language: Roff
+    pattern: '^[.''][ \t]*(TH|Dt)[ \t]+([^"\s]+|"[^"\s]+")[ \t]+\\"?([1-9]|@[^\s@]+@)|\A[.''][ \t]*so[ \t]+\S+\s*\z'
+  - language: Text
+    filename_pattern: '[-.](?>[0-9]+\.)++[0-9]$'
+  - language: Text
+    negative_pattern:
+    - '^[.''][ \t]*(?:\\")(?=\s|$)'
+    - '^[.''][ \t]*(?:AT|B|BI|BR|BT|DT|EE|EX|HP|IB|IP|IR|LP|ME|MT|OP|P|PD|PP|PT|R|RB|RE|RI|RS|SB|SH|SM|SS|TH|TP|UC|UE|UR)(?=\s|$)'
+    - '^[.''][ \t]*(?:%A|%B|%C|%D|%I|%J|%N|%O|%P|%Q|%R|%T|%U|%V|Ac|Ad|An|Ao|Ap|Aq|Ar|At|Bc|Bd|Bf|Bk|Bl|Bo|Bq|Brc|Bro|Brq|Bsx)(?=\s|$)'
+    - '^[.''][ \t]*(?:Bt|Bx|Cd|Cm|D1|Dc|Dd|Dl|Do|Dq|Dt|Dv|Dx|Ec|Ed|Ef|Ek|El|Em|En|Eo|Er|Es|Ev|Ex|Fa|Fc|Fd|Fl|Fn|Fo|Fr|Ft|Fx)(?=\s|$)'
+    - '^[.''][ \t]*(?:Hf|Ic|In|It|Lb|Li|Lk|Lp|Ms|Mt|Nd|Nm|No|Ns|Nx|Oc|Oo|Op|Os|Ot|Ox|Pa|Pc|Pf|Po|Pp|Pq|Qc|Ql|Qo|Qq|Re|Rs|Rv)(?=\s|$)'
+    - '^[.''][ \t]*(?:Sc|Sh|Sm|So|Sq|Ss|St|Sx|Sy|Ta|Tn|Ud|Ux|Va|Vt|Xc|Xo|Xr)(?=\s|$)'
+    - '^[.''][ \t]*(?:ab|ad|af|am|as|bd|bp|br|c2|cc|ce|cf|ch|cs|cu|da|de|di|ds|dt|ec|el|em|eo|ev|ex|fc|fi|fl|fp|ft|hc|hw)(?=\s|$)'
+    - '^[.''][ \t]*(?:hy|ie|if|ig|in|it|lc|lg|lf|ll|ls|lt|mc|mk|na|ne|nf|nh|nm|nn|nr|ns|nx|os|pc|pi|pl|pm|pn|po|ps|rd|rm)(?=\s|$)'
+    - '^[.''][ \t]*(?:rn|rr|rs|rt|so|sp|ss|sv|sy|ta|tc|ti|tl|tm|tr|uf|ul|vs|wh)(?=\s|$)'
+- extensions: ['.as']
+  rules:
+  - language: ActionScript
+    pattern: '^\s*(package\s+[a-z0-9_\.]+|import\s+[a-zA-Z0-9_\.]+;|class\s+[A-Za-z0-9_]+\s+extends\s+[A-Za-z0-9_]+)'
+  - language: AngelScript
+- extensions: ['.asc']
+  rules:
+  - language: Public Key
+    pattern: '^(----[- ]BEGIN|ssh-(rsa|dss)) '
+  - language: AsciiDoc
+    pattern: '^[=-]+(\s|\n)|{{[A-Za-z]'
+  - language: AGS Script
+    pattern: '^(\/\/.+|((import|export)\s+)?(function|int|float|char)\s+((room|repeatedly|on|game)_)?([A-Za-z]+[A-Za-z_0-9]+)\s*[;\(])'
+- extensions: ['.bb']
+  rules:
+  - language: BlitzBasic
+    pattern: '(<^\s*; |End Function)'
+  - language: BitBake
+    pattern: '^\s*(# |include|require)\b'
+- extensions: ['.builds']
+  rules:
+  - language: XML
+    pattern: '^(\s*)(?i:<Project|<Import|<Property|<?xml|xmlns)'
+  - language: Text
+- extensions: ['.ch']
+  rules:
+  - language: xBase
+    pattern: '^\s*#\s*(?i:if|ifdef|ifndef|define|command|xcommand|translate|xtranslate|include|pragma|undef)\b'
+- extensions: ['.cl']
+  rules:
+  - language: Common Lisp
+    pattern: '^\s*\((?i:defun|in-package|defpackage) '
+  - language: Cool
+    pattern: '^class'
+  - language: OpenCL
+    pattern: '\/\* |\/\/ |^\}'
+- extensions: ['.cls']
+  rules:
+  - language: TeX
+    pattern: '\\\w+{'
+- extensions: ['.cs']
+  rules:
+  - language: Smalltalk
+    pattern: '![\w\s]+methodsFor: '
+  - language: 'C#'
+    pattern: '^(\s*namespace\s*[\w\.]+\s*{|\s*\/\/)'
+- extensions: ['.d']
+  rules:
+  - language: D
+    # see http://dlang.org/spec/grammar
+    # ModuleDeclaration | ImportDeclaration | FuncDeclaration | unittest
+    pattern: '^module\s+[\w.]*\s*;|import\s+[\w\s,.:]*;|\w+\s+\w+\s*\(.*\)(?:\(.*\))?\s*{[^}]*}|unittest\s*(?:\(.*\))?\s*{[^}]*}'
+  - language: DTrace
+    # see http://dtrace.org/guide/chp-prog.html, http://dtrace.org/guide/chp-profile.html, http://dtrace.org/guide/chp-opt.html
+    pattern: '^(\w+:\w*:\w*:\w*|BEGIN|END|provider\s+|(tick|profile)-\w+\s+{[^}]*}|#pragma\s+D\s+(option|attributes|depends_on)\s|#pragma\s+ident\s)'
+  - language: Makefile
+    # path/target : dependency \
+    # target : \
+    #  : dependency
+    # path/file.ext1 : some/path/../file.ext2
+    pattern: '([\/\\].*:\s+.*\s\\$|: \\$|^ : |^[\w\s\/\\.]+\w+\.\w+\s*:\s+[\w\s\/\\.]+\w+\.\w+)'
+- extensions: ['.ecl']
+  rules:
+  - language: ECLiPSe
+    pattern: '^[^#]+:-'
+  - language: ECL
+    pattern: ':='
+- extensions: ['.es']
+  rules:
+  - language: Erlang
+    pattern: '^\s*(?:%%|main\s*\(.*?\)\s*->)'
+  - language: JavaScript
+    pattern: '(?m:\/\/|("|'')use strict\1|export\s+default\s|\/\*.*?\*\/)'
+- extensions: ['.f']
+  rules:
+  - language: Forth
+    pattern: '^: '
+  - language: Filebench WML
+    pattern: 'flowop'
+  - language: Fortran
+    named_pattern: fortran
+- extensions: ['.for']
+  rules:
+  - language: Forth
+    pattern: '^: '
+  - language: Fortran
+    named_pattern: fortran
+- extensions: ['.fr']
+  rules:
+  - language: Forth
+    pattern: '^(: |also |new-device|previous )'
+  - language: Frege
+    pattern: '^\s*(import|module|package|data|type) '
+  - language: Text
+- extensions: ['.fs']
+  rules:
+  - language: Forth
+    pattern: '^(: |new-device)'
+  - language: 'F#'
+    pattern: '^\s*(#light|import|let|module|namespace|open|type)'
+  - language: GLSL
+    pattern: '^\s*(#version|precision|uniform|varying|vec[234])'
+  - language: Filterscript
+    pattern: '#include|#pragma\s+(rs|version)|__attribute__'
+- extensions: ['.gml']
+  rules:
+  - language: XML
+    pattern: '(?i:^\s*(\<\?xml|xmlns))'
+  - language: Graph Modeling Language
+    pattern: '(?i:^\s*(graph|node)\s+\[$)'
+  - language: Game Maker Language
+- extensions: ['.gs']
+  rules:
+  - language: Gosu
+    pattern: '^uses java\.'
+- extensions: ['.h']
+  rules:
+  - language: Objective-C
+    named_pattern: objectivec
+  - language: C++
+    named_pattern: cpp
+- extensions: ['.inc']
+  rules:
+  - language: PHP
+    pattern: '^<\?(?:php)?'
+  - language: POV-Ray SDL
+    pattern: '^\s*#(declare|local|macro|while)\s'
+- extensions: ['.l']
+  rules:
+  - language: Common Lisp
+    pattern: '\(def(un|macro)\s'
+  - language: Lex
+    pattern: '^(%[%{}]xs|<.*>)'
+  - language: Roff
+    pattern: '^\.[A-Za-z]{2}(\s|$)'
+  - language: PicoLisp
+    pattern: '^\((de|class|rel|code|data|must)\s'
+- extensions: ['.ls']
+  rules:
+  - language: LoomScript
+    pattern: '^\s*package\s*[\w\.\/\*\s]*\s*{'
+  - language: LiveScript
+- extensions: ['.lsp', '.lisp']
+  rules:
+  - language: Common Lisp
+    pattern: '^\s*\((?i:defun|in-package|defpackage) '
+  - language: NewLisp
+    pattern: '^\s*\(define '
+- extensions: ['.m']
+  rules:
+  - language: Objective-C
+    named_pattern: objectivec
+  - language: Mercury
+    pattern: ':- module'
+  - language: MUF
+    pattern: '^: '
+  - language: M
+    pattern: '^\s*;'
+  - language: Mathematica
+    pattern: '\*\)$'
+  - language: Matlab
+    pattern: '^\s*%'
+  - language: Limbo
+    pattern: '^\w+\s*:\s*module\s*{'
+- extensions: ['.md']
+  rules:
+  - language: Markdown
+    pattern:
+    - '(^[-A-Za-z0-9=#!\*\[|>])|<\/'
+    - '\A\z'
+  - language: GCC Machine Description
+    pattern: '^(;;|\(define_)'
+  - language: Markdown
+- extensions: ['.ml']
+  rules:
+  - language: OCaml
+    pattern: '(^\s*module)|let rec |match\s+(\S+\s)+with'
+  - language: Standard ML
+    pattern: '=> |case\s+(\S+\s)+of'
+- extensions: ['.mod']
+  rules:
+  - language: XML
+    pattern: '<!ENTITY '
+  - language: Modula-2
+    pattern: '^\s*(?i:MODULE|END) [\w\.]+;'
+  - language: [Linux Kernel Module, AMPL]
+- extensions: ['.ms']
+  rules:
+  - language: Roff
+    pattern: '^[.''][A-Za-z]{2}(\s|$)'
+  - language: Unix Assembly
+    and:
+      - negative_pattern: '/\*'
+      - pattern: '^\s*\.(?:include\s|globa?l\s|[A-Za-z][_A-Za-z0-9]*:)'
+  - language: MAXScript
+- extensions: ['.n']
+  rules:
+  - language: Roff
+    pattern: '^[.'']'
+  - language: Nemerle
+    pattern: '^(module|namespace|using)\s'
+- extensions: ['.ncl']
+  rules:
+  - language: XML
+    pattern: '^\s*<\?xml\s+version'
+  - language: Text
+    pattern: 'THE_TITLE'
+- extensions: ['.nl']
+  rules:
+  - language: NL
+    pattern: '^(b|g)[0-9]+ '
+  - language: NewLisp
+- extensions: ['.php']
+  rules:
+  - language: Hack
+    pattern: '<\?hh'
+  - language: PHP
+    pattern: '<\?[^h]'
+- extensions: ['.pl']
+  rules:
+  - language: Prolog
+    pattern: '^[^#]*:-'
+  - language: Perl
+    named_pattern: perl5
+  - language: Perl 6
+    named_pattern: perl6
+- extensions: ['.pm']
+  rules:
+  - language: Perl
+    named_pattern: perl5
+  - language: Perl 6
+    named_pattern: perl6
+  - language: XPM
+    pattern: '^\s*\/\* XPM \*\/'
+- extensions: ['.pro']
+  rules:
+  - language: Prolog
+    pattern: '^[^\[#]+:-'
+  - language: INI
+    pattern: 'last_client='
+  - language: QMake
+    and:
+    - pattern: HEADERS
+    - pattern: SOURCES
+  - language: IDL
+    pattern: '^\s*function[ \w,]+$'
+- extensions: ['.props']
+  rules:
+  - language: XML
+    pattern: '^(\s*)(?i:<Project|<Import|<Property|<?xml|xmlns)'
+  - language: INI
+    pattern: '(?i:\w+\s*=\s*)'
+- extensions: ['.q']
+  rules:
+  - language: q
+    pattern: '((?i:[A-Z.][\w.]*:{)|(^|\n)\\(cd?|d|l|p|ts?) )'
+  - language: HiveQL
+    pattern: '(?i:SELECT\s+[\w*,]+\s+FROM|(CREATE|ALTER|DROP)\s(DATABASE|SCHEMA|TABLE))'
+- extensions: ['.r']
+  rules:
+  - language: Rebol
+    pattern: '(?i:\bRebol\b)'
+  - language: R
+    pattern: '<-|^\s*#'
+- extensions: ['.rno']
+  rules:
+  - language: RUNOFF
+    pattern: '(?i:^\.!|^\.end lit(?:eral)?\b)'
+  - language: Roff
+    pattern: '^\.\\" '
+- extensions: ['.rpy']
+  rules:
+  - language: Python
+    pattern: '(?m:^(import|from|class|def)\s)'
+  - language: "Ren'Py"
+- extensions: ['.rs']
+  rules:
+  - language: Rust
+    pattern: '^(use |fn |mod |pub |macro_rules|impl|#!?\[)'
+  - language: RenderScript
+    pattern: '#include|#pragma\s+(rs|version)|__attribute__'
+- extensions: ['.sc']
+  rules:
+  - language: SuperCollider
+    pattern: '(?i:\^(this|super)\.|^\s*~\w+\s*=\.)'
+  - language: Scala
+    pattern: '(^\s*import (scala|java)\.|^\s*class\b)'
+- extensions: ['.sql']
+  rules:
+   # Postgres
+  - language: PLpgSQL
+    pattern: '(?i:^\\i\b|AS \$\$|LANGUAGE ''?plpgsql''?|SECURITY (DEFINER|INVOKER)|BEGIN( WORK| TRANSACTION)?;)'
+  # IBM db2
+  - language: SQLPL
+    pattern: "(?i:(alter module)|(language sql)|(begin( NOT)+ atomic)|signal SQLSTATE '[0-9]+')"
+  # Oracle
+  - language: PLSQL
+    pattern: '(?i:\$\$PLSQL_|XMLTYPE|sysdate|systimestamp|\.nextval|connect by|AUTHID (DEFINER|CURRENT_USER)|constructor\W+function)'
+  # Generic SQL
+  - language: SQL
+    negative_pattern: '(?i:begin|boolean|package|exception)'
+- extensions: ['.srt']
+  rules:
+  - language: SubRip Text
+    pattern: '^(\d{2}:\d{2}:\d{2},\d{3})\s*(-->)\s*(\d{2}:\d{2}:\d{2},\d{3})$'
+- extensions: ['.t']
+  rules:
+  - language: Perl
+    named_pattern: perl5
+  - language: Perl 6
+    named_pattern: perl6
+  - language: Turing
+    pattern: '^\s*%[ \t]+|^\s*var\s+\w+(\s*:\s*\w+)?\s*:=\s*\w+'
+- extensions: ['.toc']
+  rules:
+  - language: World of Warcraft Addon Data
+    pattern: '^## |@no-lib-strip@'
+  - language: TeX
+    pattern: '^\\(contentsline|defcounter|beamer|boolfalse)'
+- extensions: ['.ts']
+  rules:
+  - language: XML
+    pattern: '<TS\b'
+  - language: TypeScript
+- extensions: ['.tst']
+  rules:
+  - language: GAP
+    pattern: 'gap> '
+  # Heads up - we don't usually write heuristics like this (with no regex match)
+  - language: Scilab
+- extensions: ['.tsx']
+  rules:
+  - language: TypeScript
+    pattern: '^\s*(import.+(from\s+|require\()[''"]react|\/\/\/\s*<reference\s)'
+  - language: XML
+    pattern: '(?i:^\s*<\?xml\s+version)'
+- extensions: ['.w']
+  rules:
+  - language: OpenEdge ABL
+    pattern: '&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS'
+  - language: CWeb
+    pattern: '^@(<|\w+\.)'
+- extensions: ['.x']
+  rules:
+  - language: RPC
+    pattern: '\b(program|version)\s+\w+\s*{|\bunion\s+\w+\s+switch\s*\('
+  - language: Logos
+    pattern: '^%(end|ctor|hook|group)\b'
+  - language: Linked Script
+    pattern: 'OUTPUT_ARCH\(|OUTPUT_FORMAT\(|SECTIONS'
+- extensions: ['.yy']
+  rules:
+  - language: JSON
+    pattern: '\"modelName\"\:\s*\"GM'
+  - language: Yacc
+named_patterns:
+  cpp:
+  - '^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>'
+  - '^\s*template\s*<'
+  - '^[ \t]*try'
+  - '^[ \t]*catch\s*\('
+  - '^[ \t]*(class|(using[ \t]+)?namespace)\s+\w+'
+  - '^[ \t]*(private|public|protected):$'
+  - 'std::\w+'
+  fortran: '^(?i:[c*][^abd-z]|      (subroutine|program|end|data)\s|\s*!)'
+  objectivec: '^\s*(@(interface|class|protocol|property|end|synchronised|selector|implementation)\b|#import\s+.+\.h[">])'
+  perl5: '\buse\s+(?:strict\b|v?5\.)'
+  perl6: '^\s*(?:use\s+v6\b|\bmodule\b|\b(?:my\s+)?class\b)'
