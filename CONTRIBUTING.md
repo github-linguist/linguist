@@ -40,7 +40,7 @@ To add support for a new extension:
 
 1. Add your extension to the language entry in [`languages.yml`][languages], keeping the extensions in alphabetical and case-sensitive (uppercase before lowercase) order, with the exception of the primary extension; the primary extension should be first.
 1. Add at least one sample for your extension to the [samples directory][samples] in the correct subdirectory. We'd prefer examples of real-world code showing common usage. The more representative of the structure of the language, the better.
-1. Open a pull request, linking to a [GitHub search result](https://github.com/search?utf8=%E2%9C%93&q=extension%3Aboot+NOT+nothack&type=Code&ref=searchresults) showing in-the-wild usage.  
+1. Open a pull request, linking to a [GitHub search result](https://github.com/search?utf8=%E2%9C%93&q=extension%3Aboot+NOT+nothack&type=Code&ref=searchresults) showing in-the-wild usage.
   If you are adding a sample, please state clearly the license covering the code in the sample, and if possible, link to the original source of the sample.
 
 Additionally, if this extension is already listed in [`languages.yml`][languages] and associated with another language, then sometimes a few more steps will need to be taken:
@@ -57,12 +57,12 @@ We try only to add languages once they have some usage on GitHub. In most cases 
 To add support for a new language:
 
 1. Add an entry for your language to [`languages.yml`][languages]. Omit the `language_id` field for now.
-1. Add a syntax-highlighting grammar for your language using: `script/add-grammar https://github.com/JaneSmith/MyGrammar`  
-  This command will analyze the grammar and, if no problems are found, add it to the repository. If problems are found, please report them to the grammar maintainer as you will not be able to add the grammar if problems are found.  
+1. Add a syntax-highlighting grammar for your language using: `script/add-grammar https://github.com/JaneSmith/MyGrammar`
+  This command will analyze the grammar and, if no problems are found, add it to the repository. If problems are found, please report them to the grammar maintainer as you will not be able to add the grammar if problems are found.
   **Please only add grammars that have [one of these licenses][licenses].**
 1. Add samples for your language to the [samples directory][samples] in the correct subdirectory.
-1. Generate a unique ID for your language by running `script/update-ids`.  
-1. Open a pull request, linking to a [GitHub search results](https://github.com/search?utf8=%E2%9C%93&q=extension%3Aboot+NOT+nothack&type=Code&ref=searchresults) showing in-the-wild usage.  
+1. Generate a unique ID for your language by running `script/update-ids`.
+1. Open a pull request, linking to a [GitHub search results](https://github.com/search?utf8=%E2%9C%93&q=extension%3Aboot+NOT+nothack&type=Code&ref=searchresults) showing in-the-wild usage.
   Please state clearly the license covering the code in the samples. Link directly to the original source if possible.
 
 In addition, if your new language defines an extension that's already listed in [`languages.yml`][languages] (such as `.foo`) then sometimes a few more steps will need to be taken:
@@ -100,7 +100,7 @@ Switching the source of a grammar is really easy:
 
     script/add-grammar --replace MyGrammar https://github.com/PeterPan/MyGrammar
 
-This command will analyze the grammar and, if no problems are found, add it to the repository. If problems are found, please report these problems to the grammar maintainer as you will not be able to add the grammar if problems are found.  
+This command will analyze the grammar and, if no problems are found, add it to the repository. If problems are found, please report these problems to the grammar maintainer as you will not be able to add the grammar if problems are found.
 
 **Please only add grammars that have [one of these licenses][licenses].**
 
@@ -142,7 +142,11 @@ If you are the current maintainer of this gem:
 
 1. Create a branch for the release: `git checkout -b release-vxx.xx.xx`
 1. Make sure your local dependencies are up to date: `script/bootstrap`
-1. If grammar submodules have not been updated recently, update them: `git submodule update --remote && git commit -a`
+1. If grammar submodules have not been updated recently, update them: `git submodule update --remote`. If any submodules are updated,
+    1. update the license cache: `script/licensed`
+    1. double check no problems found: `script/licensed status`
+    1. verify and fix any problems identified
+    1. commit all changes: `git commit -a`
 1. Ensure that samples are updated: `bundle exec rake samples`
 1. Ensure that tests are green: `bundle exec rake test`
 1. Build a test gem `GEM_VERSION=$(git describe --tags 2>/dev/null | sed 's/-/./g' | sed 's/v//') bundle exec rake build_gem`
