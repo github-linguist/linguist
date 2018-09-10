@@ -11,6 +11,7 @@ before_install: script/travis/before_install
 
 script:
   - bundle exec rake
+  - script/licensed
   - script/licensed status
 
 rvm:
