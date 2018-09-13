@@ -88,31 +88,6 @@ class TestGrammars < Minitest::Test
     assert_equal current_data, updated_data, "Grammar list is out-of-date. Run `script/list-grammars`"
   end
 
-  def test_submodules_have_recognized_licenses
-    unrecognized = submodule_licenses.select { |k,v| v.nil? && Licensee.project(k).license_file }
-    unrecognized.reject! { |k,v| PROJECT_WHITELIST.include?(k) }
-    message = "The following submodules have unrecognized licenses:\n* #{unrecognized.keys.join("\n* ")}\n"
-    message << "Please ensure that the project's LICENSE file contains the full text of the license"
-    assert_equal Hash.new, unrecognized, message
-  end
-
-  def test_submodules_have_licenses
-    unlicensed = submodule_licenses.select { |k,v| v.nil? }.reject { |k,v| PROJECT_WHITELIST.include?(k) }
-    message = "The following submodules don't have licenses:\n* #{unlicensed.keys.join("\n* ")}\n"
-    message << "Please ensure that the project has a LICENSE file, and that the LICENSE file contains the full text of the license"
-    assert_equal Hash.new, unlicensed, message
-  end
-
-  def test_submodules_have_approved_licenses
-    unapproved = submodule_licenses.reject { |k,v| LICENSE_WHITELIST.include?(v) ||
-                                                   PROJECT_WHITELIST.include?(k) ||
-                                                   HASH_WHITELIST.include?(v) }
-                                   .map { |k,v| "#{k}: #{v}"}
-    message = "The following submodules have unapproved licenses:\n* #{unapproved.join("\n* ")}\n"
-    message << "The license must be added to the LICENSE_WHITELIST in /test/test_grammars.rb once approved"
-    assert_equal [], unapproved, message
-  end
-
   def test_whitelisted_submodules_dont_have_licenses
     licensed = submodule_licenses.reject { |k,v| v.nil? }.select { |k,v| PROJECT_WHITELIST.include?(k) }
     message = "The following whitelisted submodules have a license:\n* #{licensed.keys.join("\n* ")}\n"
