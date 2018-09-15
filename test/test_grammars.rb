@@ -19,6 +19,7 @@ class TestGrammars < Minitest::Test
     "b81acf2ba52d312754bf5055845a723123bda388", # FreeMarker.tmbundle
     "ee77ce4cf9121bccc3e37ba6b98f8e7acd589aaf", # gap-tmbundle
     "4cfc7ce12de920ccc836bbab2d748151d5ba7e38", # go-tmbundle
+    "01868f4a2476fad9abb8b7199ea1547d33cd48db", # hy.tmLanguage
     "6c2e34d62c08f97a3e2ece3eedc65fbd99873ff4", # idl.tmbundle
     "e68efca5a844aa78729cadcf42507013151e6605", # jflex.tmbundle
     "39f092c726491ca6a02354dbc6c3a0920bb44d4c", # mako-tmbundle
