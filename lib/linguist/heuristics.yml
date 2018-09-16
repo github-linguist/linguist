@@ -274,6 +274,21 @@ disambiguations:
     - pattern: SOURCES
   - language: IDL
     pattern: '^\s*function[ \w,]+$'
+- extensions: ['.properties']
+  rules:
+  - language: INI
+    and:
+    - pattern: '^[^#!;][^=]*='
+    - pattern: '^[;\[]'
+  - language: Java Properties
+    and:
+    - pattern: '^[^#!;][^=]*='
+    - pattern: '^[#!]'
+  - language: INI
+    and:
+    - pattern: '^[^#!;][^=]*='
+  - language: Java properties
+    pattern: '^[^#!][^:]*:'
 - extensions: ['.props']
   rules:
   - language: XML
