@@ -278,15 +278,14 @@ disambiguations:
   rules:
   - language: INI
     and:
-    - pattern: '^[^#!;][^=]*='
+    - named_pattern: key_equals_value
     - pattern: '^[;\[]'
   - language: Java Properties
     and:
-    - pattern: '^[^#!;][^=]*='
+    - named_pattern: key_equals_value
     - pattern: '^[#!]'
   - language: INI
-    and:
-    - pattern: '^[^#!;][^=]*='
+    named_pattern: key_equals_value
   - language: Java properties
     pattern: '^[^#!][^:]*:'
 - extensions: ['.props']
@@ -408,6 +407,7 @@ named_patterns:
   - '^[ \t]*(private|public|protected):$'
   - 'std::\w+'
   fortran: '^(?i:[c*][^abd-z]|      (subroutine|program|end|data)\s|\s*!)'
+  key_equals_value: '^[^#!;][^=]*='
   objectivec: '^\s*(@(interface|class|protocol|property|end|synchronised|selector|implementation)\b|#import\s+.+\.h[">])'
   perl5: '\buse\s+(?:strict\b|v?5\.)'
   perl6: '^\s*(?:use\s+v6\b|\bmodule\b|\b(?:my\s+)?class\b)'
