@@ -1,0 +1,103 @@
+;; 1-1-1 Expressions
+
+(add 137 349)
+(sub 1000 334)
+(mul 5 99)
+(div 10 5)
+(add 2.7 10)
+(add (mul 3 5) (sub 10 6))
+
+;; 1-1-2 Naming and the Environment
+
+size = 2
+size
+(mul 5 size)
+
+pi = 3.14159
+radius = 10
+(mul pi (mul radius radius))
+
+circumference = (mul 2 (mul pi radius))
+circumference
+
+;; 1-1-3 Evaluating Combinations
+
+(mul (add 2 (mul 4 6)) (add 3 (add 5 7)))
+
+;; 1-1-4 Compound Procedures
+
+(square x) = (mul x x)
+(square 21)
+(square (add 2 5))
+(square (square 3))
+
+(sum-of-squares x y) = (add (square x) (square y))
+(sum-of-squares 3 4)
+
+;; 1-1-5 The Substitution Model for Procedure Application
+
+(sum-of-squares 6 10)
+(add (square 6) (square 10))
+(add 36 100)
+136
+
+;; 1-1-6 Conditional Expressions and Predicates
+
+(= (abs x)
+   (cond [(gt x 0) x]
+         [(eq x 0) 0]
+         [(lt x 0) (neg x)]))
+
+(= (abs x)
+   (cond [(lt x 0) (neg x)]
+         [else x]))
+
+(abs x) = (if (lt x 0) (neg x) x)
+
+(gteq x y) = (or (gt x y) (eq x y))
+
+(gteq x y) = (not (lt x y))
+
+(note Exercise 1.4
+  (a-plus-abs-b a b) = ((if (gt b 0) add sub) a b))
+
+(note Exercise 1.5
+  (p) = (p)
+  (t x y) = (if (eq x 0) 0 y)
+  (t 0 (p)))
+
+;; 1-1-7 Example: Square Roots by Newton's Method
+
+(average x y) = (div (add x y) 2)
+
+(= (sqrt-iter guess x)
+   (if (good-enough-p guess x)
+     guess
+     (sqrt-iter (improve guess x) x)))
+
+(improve guess x) = (average guess (div x guess))
+(good-enough-p guess x) = (lt (abs (sub (square guess) x)) 0.001)
+(sqrt x) = (sqrt-iter 1 x)
+
+(sqrt 9)
+(sqrt (add 100 37))
+(square (sqrt 1000))
+
+;; 1-1-8 Procedures as Black-Box Abstractions
+
+(square x) = (num-exp (double (num-ln x)))
+(double x) = (add x x)
+(square (sqrt 1000))
+
+(= (sqrt-iter guess x)
+   (= (good-enough-p guess)
+      (lt (abs (sub (square guess) x)) 0.001))
+   (= (improve guess)
+      (average guess (div x guess)))
+   (if (good-enough-p guess)
+     guess
+     (sqrt-iter (improve guess) x)))
+
+(sqrt 9)
+(sqrt (add 100 37))
+(square (sqrt 1000))

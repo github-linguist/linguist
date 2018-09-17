@@ -1,0 +1,149 @@
+;; 1-2-1 Linear Recursion and Iteration
+
+(= (factorial n)
+   (if (eq n 1)
+     1
+     (mul n (factorial (sub n 1)))))
+
+(factorial 6)
+
+(= (factorial n)
+   (fact-iter 1 1 n))
+
+(= (fact-iter product counter max-count)
+   (if (gt counter max-count)
+     product
+     (fact-iter (mul counter product)
+                (add counter 1)
+                max-count)))
+
+(factorial 6)
+
+(= (ackermann x y)
+   (cond
+     [(eq y 0) 0]
+     [(eq x 0) (mul 2 y)]
+     [(eq y 1) 2]
+     [else (ackermann (sub x 1)
+                      (ackermann x (sub y 1)))]))
+
+(ackermann 1 10)
+(ackermann 2 4)
+(ackermann 3 3)
+
+;; 1-2-2 Tree Recursion
+
+(= (fib n)
+   (cond
+     [(eq n 0) 0]
+     [(eq n 1) 1]
+     [else (add (fib (sub n 1))
+                (fib (sub n 2)))]))
+
+(fib 10)
+
+(fib n) = (fib-iter 1 0 n)
+
+(= (fib-iter a b count)
+   (if (eq count 0)
+     b
+     (fib-iter (add a b) a (sub count 1))))
+
+(fib 10)
+
+;; 1-2-3 Orders of Growth
+
+;; 1-2-4 Exponentiation
+
+(= (expt b n)
+   (if (eq n 0)
+     1
+     (mul b (expt b (sub n 1)))))
+
+(expt 2 10)
+
+(= (expt b n) (expt-iter b n 1))
+
+(= (expt-iter b counter product)
+   (if (eq counter 0)
+     product
+     (expt-iter b (sub counter 1) (mul b product))))
+
+(expt 2 10)
+
+(even-p n) = (eq (mod n 2) 0)
+(square n) = (mul n n)
+
+(= (fast-expt b n)
+   (cond [(eq n 0) 1]
+         [(even-p n) (square (fast-expt b (div n 2)))]
+         [else (mul b (fast-expt b (sub n 1)))]))
+
+(fast-expt 2 10)
+
+(= (fast-expt b n) (fast-expt-iter 1 b n))
+
+(= (fast-expt-iter a b n)
+   (cond [(eq n 0) a]
+         [(even-p n)
+          (fast-expt-iter a (square b) (div n 2))]
+         [else
+          (fast-expt-iter (mul a b) b (sub n 1))]))
+
+(fast-expt 2 10)
+
+
+(note Exercise 1.19
+
+  (note
+    (= (T p q)
+       a <- b q + a q + a p
+       b <- b p + a q)
+    (compose (T p q) (T p q)) = (T (p p + q q) (2 p q + q q)))
+
+  (fast-fib n) = (fast-fib-iter 1 0 0 1 n)
+
+  (= (fast-fib-iter a b p q n)
+     (cond [(eq n 0) b]
+           [(even-p n)
+            (fast-fib-iter
+             a b
+             (add (mul p p) (mul q q))
+             (add (mul 2 (mul p q)) (mul q q))
+             (div n 2))]
+           [else
+            (fast-fib-iter
+             (add (mul b q) (add (mul a q) (mul a p)))
+             (add (mul b p) (mul a q))
+             p q
+             (sub n 1))]))
+
+  (fast-fib 10))
+
+;; 1-2-5 Greatest Common Divisors
+
+(= (gcd a b)
+   (if (eq b 0)
+     a
+     (gcd b (mod a b))))
+
+(gcd 206 40)
+
+;; 1-2-6 Example: Testing for Primality
+
+(= (smallest-divisor n)
+   (find-divisor n 2))
+
+(= (find-divisor n test-divisor)
+   (cond [(gt (square test-divisor) n) n]
+         [(eq 0 (mod n test-divisor)) test-divisor]
+         [else (find-divisor n (add test-divisor 1))]))
+
+(assert (eq (smallest-divisor 123) 3))
+(assert (eq (smallest-divisor 121) 11))
+
+(= (prime-p n)
+   (eq n (smallest-divisor n)))
+
+(assert (not (prime-p 121)))
+(assert (prime-p 11))
