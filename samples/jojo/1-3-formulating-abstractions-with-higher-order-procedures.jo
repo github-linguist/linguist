@@ -1,0 +1,235 @@
+;; 1-3-1 Procedures as Arguments
+
+(= (sum-integers a b)
+   (if (gt a b)
+     0
+     (add a (sum-integers (add a 1) b))))
+
+(assert (eq 5050 (sum-integers 0 100)))
+
+(= (cube x) (mul x (mul x x)))
+
+(= (sum-cubes a b)
+   (if (gt a b)
+     0
+     (add (cube a)
+          (sum-cubes (add a 1) b))))
+
+(assert (eq (sum-cubes 0 3)
+            (add (cube 1)
+                 (add (cube 2)
+                      (cube 3)))))
+
+(= (pi-sum a b)
+   (if (gt a b)
+     0
+     (add (div 1 (mul a (add a 2)))
+          (pi-sum (add a 4) b))))
+
+(= pi 3.1415926)
+
+(assert (lt (abs (sub pi
+                      (mul 8 (pi-sum 1 10000))))
+            0.001))
+
+(= (sum term a next b)
+   (if (gt a b)
+     0
+     (add (term a)
+          (sum term (next a) next b))))
+
+(= (sum-cubes a b)
+   (sum cube a inc b))
+
+(assert (eq (sum-cubes 0 3)
+            (add (cube 1)
+                 (add (cube 2)
+                      (cube 3)))))
+
+(assert (eq (sum-cubes 1 10)
+            3025))
+
+(= (identity x) x)
+
+(= (sum-integers a b)
+   (sum identity a inc b))
+
+(assert (eq 5050 (sum-integers 0 100)))
+
+(= (pi-sum a b)
+   (= (pi-term x) (div 1 (mul x (add x 2))))
+   (= (pi-next x) (add x 4))
+   (sum pi-term a pi-next b))
+
+(assert (lt (abs (sub pi
+                      (mul 8 (pi-sum 1 10000))))
+            0.001))
+
+(= (integral f a b dx)
+   (= (add-dx x) (add x dx))
+   (mul (sum f (add a (div dx 2)) add-dx b)
+        dx))
+
+
+(assert (lt (abs (sub (integral cube 0 1 0.001)
+                      (div 1 4)))
+            0.001))
+
+;; Exercise 1.29 -- Simpson's Rule for numerical integration
+
+(= (simpson-integral f a b n)
+   (= h (div (sub b a) n))
+   (= (simpson-coefficient k)
+      (cond [(or (eq 0 k) (eq n k)) 1]
+            [(odd-p k) 4]
+            [(even-p k) 2]))
+   (= (simpson-term k)
+      (mul (simpson-coefficient k)
+           (f (add a (mul k h)))))
+   (mul (sum simpson-term 0 inc n)
+        (div h 3)))
+
+(assert (lt (abs (sub (simpson-integral cube 0 1 100)
+                      (div 1 4)))
+            0.0001))
+
+;; Exercise 1.30 -- sum-iter
+
+(note we do not have letrec
+  (= (sum term a next b)
+     (= (iter a result)
+        (if (gt a b)
+          result
+          (iter (next a) (add (term a) result))))
+     (iter a 0)))
+
+(= (sum-iter term a next b result)
+   (if (gt a b)
+     result
+     (sum-iter term (next a) next b (add (term a) result))))
+
+(= (sum term a next b)
+   (sum-iter term a next b 0))
+
+(= (sum-cubes a b)
+   (sum cube a inc b))
+
+(assert (eq (sum-cubes 0 3)
+            (add (cube 1)
+                 (add (cube 2)
+                      (cube 3)))))
+
+(assert (eq (sum-cubes 1 10)
+            3025))
+
+;; Exercise 1.31 -- Wallis Product
+
+(= (product term a next b)
+   (if (gt a b)
+     1
+     (mul (term a)
+          (product term (next a) next b))))
+
+(= (wallis-product a b)
+   (= (wallis-term x)
+      (div (mul (add (mul 2 x) 0) (add (mul 2 x) 2))
+           (mul (add (mul 2 x) 1) (add (mul 2 x) 1))))
+   (product wallis-term a inc b))
+
+(assert (lt (abs (sub (wallis-product 1 1000)
+                      (div pi 4)))
+            0.001))
+
+;; Exercise 1.32 -- accumulate
+
+(= (accumulate combiner null-value
+               term a next b)
+   (if (gt a b)
+     null-value
+     (combiner (term a)
+               (accumulate combiner null-value
+                           term (next a) next b))))
+
+(= (sum term a next b)
+   (accumulate add 0 term a next b))
+
+(= (product term a next b)
+   (accumulate mul 1 term a next b))
+
+(= (pi-sum a b)
+   (= (pi-term x) (div 1 (mul x (add x 2))))
+   (= (pi-next x) (add x 4))
+   (sum pi-term a pi-next b))
+
+(assert (lt (abs (sub pi
+                      (mul 8 (pi-sum 1 10000))))
+            0.001))
+
+(= (wallis-product a b)
+   (= (wallis-term x)
+      (div (mul (add (mul 2 x) 0) (add (mul 2 x) 2))
+           (mul (add (mul 2 x) 1) (add (mul 2 x) 1))))
+   (product wallis-term a inc b))
+
+(assert (lt (abs (sub (wallis-product 1 1000)
+                      (div pi 4)))
+            0.001))
+
+;; Exercise 1.33 -- filtered-accumulate
+
+(= (filtered-accumulate
+    combiner null-value
+    term a next b
+    filter)
+   (if (gt a b)
+     null-value
+     (if (filter a)
+       (combiner (term a)
+                 (filtered-accumulate
+                  combiner null-value
+                  term (next a) next b
+                  filter))
+       (filtered-accumulate
+        combiner null-value
+        term (next a) next b
+        filter))))
+
+(= section-1-2
+   (load "1-2-procedures-and-the-processes-they-generate.jo"))
+
+(= prime-p section-1-2.prime-p)
+
+(= (sum-prime-square a b)
+   (filtered-accumulate
+    add 0
+    identity a inc b
+    prime-p))
+
+(assert (eq (sum-prime-square 0 10)
+            (add 1 (add 2 (add 3 (add 5 7))))))
+
+;; 1-3-2 Constructing Procedures Using Lambda
+
+(= (pi-sum a b)
+   (sum (lambda [x] (div 1 (mul x (add x 2))))
+        a
+        (lambda [x] (add x 4))
+        b))
+
+(assert (lt (abs (sub pi
+                      (mul 8 (pi-sum 1 10000))))
+            0.001))
+
+(= (integral f a b dx)
+   (mul (sum f (add a (div dx 2))
+             (lambda [x] (add x dx))
+             b)
+        dx))
+
+(assert (lt (abs (sub (integral cube 0 1 0.001)
+                      (div 1 4)))
+            0.001))
+
+;; 1-3-3 Procedures as General Methods
+
+;; 1-3-4 Procedures as Returned Values
