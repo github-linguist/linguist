@@ -89,7 +89,8 @@ module Linguist
       generated_yarn_lock? ||
       generated_grpc_cpp? ||
       generated_dart? ||
-      generated_perl_ppport_header?
+      generated_perl_ppport_header? ||
+      generated_gamemakerstudio?
     end
 
     # Internal: Is the blob an Xcode file?
@@ -576,6 +577,18 @@ module Linguist
     # Return true or false
     def generated_graphql_relay?
       !!name.match(/__generated__\//)
+    end
+
+    # Internal: Is this a generated Game Maker Studio (2) metadata file?
+    #
+    # All Game Maker Studio 2 generated files will be JSON, .yy or .yyp, and have
+    # a part that looks like "modelName: GMname" on the 3rd line
+    #
+    # Return true or false
+    def generated_gamemakerstudio?
+      return false unless ['.yy', '.yyp'].include? extname
+      return false unless lines.count > 3
+      return lines[2].match(/\"modelName\"\:\s*\"GM/)
     end
   end
 end

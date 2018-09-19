@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.license  = "MIT"
 
   s.files = Dir['lib/**/*'] + Dir['ext/**/*'] + Dir['grammars/*'] + ['LICENSE']
-  s.executables = ['linguist', 'git-linguist']
+  s.executables = ['github-linguist', 'git-linguist']
   s.extensions = ['ext/linguist/extconf.rb']
 
   s.add_dependency 'charlock_holmes', '~> 0.7.6'
@@ -27,6 +27,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rake'
   s.add_development_dependency 'yajl-ruby'
   s.add_development_dependency 'color-proximity', '~> 0.2.1'
-  s.add_development_dependency 'licensed', '~> 1.1.0'
+  s.add_development_dependency 'licensed', '~> 1.3.0'
   s.add_development_dependency 'licensee'
 end

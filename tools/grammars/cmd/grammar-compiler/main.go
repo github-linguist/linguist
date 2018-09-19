@@ -40,7 +40,7 @@ func main() {
 				},
 			},
 			Action: func(c *cli.Context) error {
-				conv, err := compiler.NewConverter(c.String("linguist-path"))
+				conv, err := compiler.NewConverter(c.GlobalString("linguist-path"))
 				if err != nil {
 					return wrap(err)
 				}
@@ -65,7 +65,7 @@ func main() {
 				},
 			},
 			Action: func(c *cli.Context) error {
-				conv, err := compiler.NewConverter(c.String("linguist-path"))
+				conv, err := compiler.NewConverter(c.GlobalString("linguist-path"))
 				if err != nil {
 					return wrap(err)
 				}
@@ -91,7 +91,7 @@ func main() {
 				cli.StringFlag{Name: "out, o"},
 			},
 			Action: func(c *cli.Context) error {
-				conv, err := compiler.NewConverter(c.String("linguist-path"))
+				conv, err := compiler.NewConverter(c.GlobalString("linguist-path"))
 				if err != nil {
 					return cli.NewExitError(err, 1)
 				}

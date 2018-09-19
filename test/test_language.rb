@@ -69,8 +69,8 @@ class TestLanguage < Minitest::Test
     assert_nil Language.find_by_alias(nil)
   end
 
-  # Note these are set by script/set-language-ids. If these tests fail then someone
-  # has changed the language_id fields set in languages.yml which is almost certainly
+  # Note these are set by `script/update-ids`. If these tests fail then someone
+  # has changed the `language_id` fields set in languages.yml which is almost certainly
   # not what you want to happen (these fields are used in GitHub's search indexes)
   def test_language_ids
     assert_equal 4, Language['ANTLR'].language_id
@@ -387,7 +387,7 @@ class TestLanguage < Minitest::Test
   def test_all_languages_have_a_valid_id
     invalid = Language.all.select { |language| language.language_id < 0 || language.language_id >= (2**31 - 1) }
 
-    message = "The following languages do not have a valid language_id. Please use script/set-language-ids --update as per the contribution guidelines.\n"
+    message = "The following languages do not have a valid language_id. Please run `script/update-ids` as per the contribution guidelines.\n"
     invalid.each { |language| message << "#{language.name}\n" }
     assert invalid.empty?, message
   end
@@ -395,7 +395,7 @@ class TestLanguage < Minitest::Test
   def test_all_language_id_are_unique
     duplicates = Language.all.group_by{ |language| language.language_id }.select { |k, v| v.size > 1 }.map(&:first)
 
-    message = "The following language_id are used several times in languages.yml. Please use script/set-language-ids --update as per the contribution guidelines.\n"
+    message = "The following language_id are used several times in languages.yml. Please run `script/update-ids` as per the contribution guidelines.\n"
     duplicates.each { |language_id| message << "#{language_id}\n" }
     assert duplicates.empty?, message
   end
