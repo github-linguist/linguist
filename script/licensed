@@ -1,7 +1,5 @@
 #!/usr/bin/env ruby
 
-# TODO: push these changes to licensor gem
-
 require "bundler/setup"
 require "licensed/cli"
 require "optparse"
@@ -22,12 +20,19 @@ module Licensed
         !Dir.glob(@glob).empty?
       end
 
+      def submodule_version(directory)
+        return unless directory
+        Dir.chdir directory do
+          Licensed::Git.version(".")
+        end
+      end
+
       def dependencies
         Dir.glob(@glob).map do |directory|
-          puts "caching #{directory}"
           Licensed::Dependency.new(directory, {
             "type" => Filesystem.type,
-            "name" => File.basename(directory)
+            "name" => File.basename(directory),
+            "version" => submodule_version(directory)
           })
         end
       end
