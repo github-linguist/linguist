@@ -149,6 +149,10 @@ disambiguations:
     named_pattern: objectivec
   - language: C++
     named_pattern: cpp
+- extensions: ['.ice']
+  rules:
+  - language: Slice
+    pattern: '^\s*(#\s*(include|if[n]def|pragma)|module\s+[A-Za-z][_A-Za-z0-9]*)'
 - extensions: ['.inc']
   rules:
   - language: PHP
