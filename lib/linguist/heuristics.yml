@@ -153,6 +153,8 @@ disambiguations:
   rules:
   - language: Slice
     pattern: '^\s*(#\s*(include|if[n]def|pragma)|module\s+[A-Za-z][_A-Za-z0-9]*)'
+  - language: JSON
+    pattern: '\A\s*[{[]'
 - extensions: ['.inc']
   rules:
   - language: PHP
