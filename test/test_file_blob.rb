@@ -110,8 +110,8 @@ class TestFileBlob < Minitest::Test
     assert_equal "UTF-16LE", fixture_blob("Data/utf16le").ruby_encoding
     assert_equal "UTF-16LE", fixture_blob("Data/utf16le-windows").encoding
     assert_equal "UTF-16LE", fixture_blob("Data/utf16le-windows").ruby_encoding
-    assert_equal "ISO-2022-KR", sample_blob("Text/ISO-2022-KR.txt").encoding
-    assert_equal "binary", sample_blob("Text/ISO-2022-KR.txt").ruby_encoding
+    assert_equal "ISO-2022-KR", fixture_blob("Text/ISO-2022-KR.txt").encoding
+    assert_equal "binary", fixture_blob("Text/ISO-2022-KR.txt").ruby_encoding
     assert_nil fixture_blob("Binary/dog.o").encoding
   end
 

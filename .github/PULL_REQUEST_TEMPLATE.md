@@ -41,6 +41,9 @@
   <!-- Update the Lightshow URLs below to show the new and old grammars in action. -->
   - Old: https://github-lightshow.herokuapp.com/
   - New: https://github-lightshow.herokuapp.com/
+  
+- [ ] **I am updating a grammar submodule**
+  <!-- That's not necessary, grammar submodules are updated automatically with each new release. -->
 
 - [ ] **I am adding new or changing current functionality**
   <!-- This includes modifying the vendor, documentation, and generated lists. -->
