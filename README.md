@@ -54,7 +54,7 @@ Linguist uses [`charlock_holmes`](https://github.com/brianmario/charlock_holmes)
     * [libcurl](https://curl.haxx.se/libcurl/)
     * [OpenSSL](https://www.openssl.org)
 
-You may need to install missing dependencies before you can install Linguist. For example, on macOS with [Homebrew](http://brew.sh/): `brew install cmake pkg-config icu4c` and on Ubuntu: `sudo apt-get install cmake pkg-config libicu-dev zlib1g-dev libcurl4-openssl-dev libssl-dev`.
+You may need to install missing dependencies before you can install Linguist. For example, on macOS with [Homebrew](http://brew.sh/): `brew install cmake pkg-config icu4c` and on Ubuntu: `sudo apt-get install cmake pkg-config libicu-dev zlib1g-dev libcurl4-openssl-dev libssl-dev ruby-dev`.
 
 ### Application usage
 
