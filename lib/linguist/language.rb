@@ -260,6 +260,8 @@ module Linguist
       # @name is required
       @name = attributes[:name] || raise(ArgumentError, "missing name")
 
+      @fs_name = attributes[:fs_name]
+
       # Set type
       @type = attributes[:type] ? attributes[:type].to_sym : nil
       if @type && !TYPES.include?(@type)
@@ -320,6 +322,10 @@ module Linguist
     #
     # Returns the name String
     attr_reader :name
+
+    # Public: 
+    # 
+    attr_reader :fs_name
 
     # Public: Get type.
     #
@@ -538,6 +544,7 @@ module Linguist
 
     Language.create(
       :name              => name,
+      :fs_name           => options['fs_name'],
       :color             => options['color'],
       :type              => options['type'],
       :aliases           => options['aliases'],
