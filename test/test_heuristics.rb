@@ -332,6 +332,14 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+# Candidate languages = ["INI", "Java Properties"]
+  def test_properties_by_heuristics
+    assert_heuristics({
+      "INI" => all_fixtures("INI", "*.properties"),
+      "Java Properties" => all_fixtures("Java Properties", "*.properties")
+    })
+  end
+
   def test_props_by_heuristics
     assert_heuristics({
       "INI" => all_fixtures("INI", "*.props"),
