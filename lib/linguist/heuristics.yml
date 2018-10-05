@@ -268,6 +268,12 @@ disambiguations:
     named_pattern: perl6
   - language: XPM
     pattern: '^\s*\/\* XPM \*\/'
+- extensions: ['.pp']
+  rules:
+  - language: Pascal
+    pattern: '^\s*end[.;]'
+  - language: Puppet
+    pattern: '^\s+\w+\s+=>\s'
 - extensions: ['.pro']
   rules:
   - language: Prolog
