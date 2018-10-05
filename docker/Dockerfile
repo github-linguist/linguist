@@ -17,6 +17,8 @@ RUN ln -s /usr/bin/make /usr/bin/gmake
 
 RUN gem install bundler
 
+ENV LANG=C.UTF-8
+
 WORKDIR /data
 
 CMD tail -f /dev/null

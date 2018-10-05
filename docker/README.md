@@ -19,4 +19,4 @@
 - When you finish working with the container, type `exit`
 - Run `docker/docker-cli stop` to stop and remove the service.
  
- Please refer to [Contributing](CONTRIBUTING.md) doc for more details on the building and running the app.
+ Please refer to [Contributing](../CONTRIBUTING.md) doc for more details on the building and running the app.
