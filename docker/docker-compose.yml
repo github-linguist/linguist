@@ -1,0 +1,10 @@
+version: '3'
+services:
+  linguist:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    container_name: linguist-dev
+    volumes:
+      - ..:/data:Z
+    tty: true
