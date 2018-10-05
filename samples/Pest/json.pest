@@ -1,0 +1,32 @@
+// pest. The Elegant Parser
+// Copyright (c) 2018 Dragoș Tiselice
+//
+// Licensed under the Apache License, Version 2.0
+// <LICENSE-APACHE or http://www.apache.org/licenses/LICENSE-2.0> or the MIT
+// license <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. All files in the project carrying such notice may not be copied,
+// modified, or distributed except according to those terms.
+
+json = { SOI ~ (object | array) ~ EOI }
+
+object = { "{" ~ pair ~ ("," ~ pair)* ~ "}" | "{" ~ "}" }
+pair   = { string ~ ":" ~ value }
+
+array = { "[" ~ value ~ ("," ~ value)* ~ "]" | "[" ~ "]" }
+
+value = { string | number | object | array | bool | null }
+
+string  = @{ "\"" ~ inner ~ "\"" }
+inner   = @{ (!("\"" | "\\") ~ ANY)* ~ (escape ~ inner)? }
+escape  = @{ "\\" ~ ("\"" | "\\" | "/" | "b" | "f" | "n" | "r" | "t" | unicode) }
+unicode = @{ "u" ~ ASCII_HEX_DIGIT{4} }
+
+number = @{ "-"? ~ int ~ ("." ~ ASCII_DIGIT+ ~ exp? | exp)? }
+int    = @{ "0" | ASCII_NONZERO_DIGIT ~ ASCII_DIGIT* }
+exp    = @{ ("E" | "e") ~ ("+" | "-")? ~ ASCII_DIGIT+ }
+
+bool = { "true" | "false" }
+
+null = { "null" }
+
+WHITESPACE = _{ " " | "\t" | "\r" | "\n" }
