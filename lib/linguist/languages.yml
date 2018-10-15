@@ -1,5 +1,8 @@
 # Defines all Languages known to GitHub.
 #
+# fs_name               - Optional field. Only necessary as a replacement for the sample directory name if the
+#                         language name is not a valid filename under the Windows filesystem (e.g., if it
+#                         contains an asterisk).
 # type                  - Either data, programming, markup, prose, or nil
 # aliases               - An Array of additional aliases (implicitly
 #                         includes name.downcase)
@@ -1300,6 +1303,7 @@ F#:
   codemirror_mime_type: text/x-fsharp
   language_id: 105
 F*:
+  fs_name: Fstar
   type: programming
   color: "#572e30"
   aliases:
