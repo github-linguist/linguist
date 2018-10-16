@@ -128,6 +128,7 @@ class TestGenerated < Minitest::Test
     # Game Maker Studio 2
     generated_sample_loading_data("JSON/GMS2_Project.yyp")
     generated_sample_loading_data("JSON/2ea73365-b6f1-4bd1-a454-d57a67e50684.yy")
+    generated_sample_loading_data("Game Maker Language/options_main.inherited.yy")
 
   end
 end
