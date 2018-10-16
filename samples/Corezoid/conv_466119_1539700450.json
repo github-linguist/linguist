@@ -1,0 +1,671 @@
+[
+  {
+    "obj_type": 1,
+    "obj_id": 466119,
+    "parent_id": 0,
+    "title": "State token",
+    "description": "",
+    "status": "active",
+    "params": [
+      {
+        "name": "client_id",
+        "type": "string",
+        "descr": "client_id",
+        "flags": [
+          "input"
+        ],
+        "regex": "",
+        "regex_error_text": ""
+      },
+      {
+        "name": "client_secret",
+        "type": "string",
+        "descr": "client_secret",
+        "flags": [
+          "input"
+        ],
+        "regex": "",
+        "regex_error_text": ""
+      },
+      {
+        "name": "code",
+        "type": "string",
+        "descr": "code",
+        "flags": [
+          "input"
+        ],
+        "regex": "",
+        "regex_error_text": ""
+      },
+      {
+        "name": "expires_in",
+        "type": "number",
+        "descr": "expires_in",
+        "flags": [],
+        "regex": "",
+        "regex_error_text": ""
+      },
+      {
+        "name": "refresh_token",
+        "type": "string",
+        "descr": "refresh_token",
+        "flags": [],
+        "regex": "",
+        "regex_error_text": ""
+      },
+      {
+        "name": "access_token",
+        "type": "string",
+        "descr": "access_token",
+        "flags": [],
+        "regex": "",
+        "regex_error_text": ""
+      }
+    ],
+    "ref_mask": true,
+    "conv_type": "state",
+    "scheme": {
+      "nodes": [
+        {
+          "id": "5bc5f6aff6c37650e15c1cf1",
+          "obj_type": 2,
+          "condition": {
+            "logics": [],
+            "semaphors": []
+          },
+          "title": "Token is not updated",
+          "description": "",
+          "x": 1104,
+          "y": 1292,
+          "extra": "{\"modeForm\":\"collapse\",\"icon\":\"error\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1cf2",
+          "obj_type": 0,
+          "condition": {
+            "logics": [
+              {
+                "src": "require(\"libs/moment.js\");\n\nvar expire = parseInt(data.expires_in-60);\ndata.unix = moment().add(expire, 's').unix();",
+                "lang": "js",
+                "type": "api_code",
+                "err_node_id": "5bc5f6aff6c37650e15c1cff"
+              },
+              {
+                "id": "5c325b57-8f89-46e4-a1e2-196fe1d0e072",
+                "to_node_id": "5bc5f6aff6c37650e15c1d03",
+                "chTime": 1474663424543,
+                "type": "go"
+              }
+            ],
+            "semaphors": []
+          },
+          "title": "Calc expire time",
+          "description": "",
+          "x": 460,
+          "y": 628,
+          "extra": "{\"modeForm\":\"expand\",\"icon\":\"\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1cf3",
+          "obj_type": 2,
+          "condition": {
+            "logics": [],
+            "semaphors": []
+          },
+          "title": "Token is not created",
+          "description": "",
+          "x": 804,
+          "y": 544,
+          "extra": "{\"modeForm\":\"collapse\",\"icon\":\"error\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1cf4",
+          "obj_type": 2,
+          "condition": {
+            "logics": [],
+            "semaphors": []
+          },
+          "title": "Timeout create token",
+          "description": "",
+          "x": 804,
+          "y": 436,
+          "extra": "{\"modeForm\":\"collapse\",\"icon\":\"error\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1cf5",
+          "obj_type": 2,
+          "condition": {
+            "logics": [],
+            "semaphors": []
+          },
+          "title": "Error create token",
+          "description": "",
+          "x": 848,
+          "y": 240,
+          "extra": "{\"modeForm\":\"collapse\",\"icon\":\"error\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1cf6",
+          "obj_type": 2,
+          "condition": {
+            "logics": [],
+            "semaphors": []
+          },
+          "title": "",
+          "description": "",
+          "x": 1180,
+          "y": 1012,
+          "extra": "{\"modeForm\":\"collapse\",\"icon\":\"error\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1cf7",
+          "obj_type": 0,
+          "condition": {
+            "logics": [],
+            "semaphors": [
+              {
+                "type": "time",
+                "value": 30,
+                "dimension": "sec",
+                "to_node_id": "5bc5f6aff6c37650e15c1d00",
+                "id": "2ae7cc08-7e20-447a-9fb4-06f4e594ce16"
+              }
+            ]
+          },
+          "title": "",
+          "description": "",
+          "x": 1044,
+          "y": 892,
+          "extra": "{\"modeForm\":\"collapse\",\"icon\":\"\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1cfa",
+          "obj_type": 1,
+          "condition": {
+            "logics": [
+              {
+                "id": "dd30afea-1b26-4f66-807e-4b20a352824e",
+                "to_node_id": "5bc5f6aff6c37650e15c1d04",
+                "type": "go"
+              }
+            ],
+            "semaphors": []
+          },
+          "title": "Start",
+          "description": "",
+          "x": 560,
+          "y": -52,
+          "extra": "{\"modeForm\":\"collapse\",\"icon\":\"\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1cfb",
+          "obj_type": 2,
+          "condition": {
+            "logics": [],
+            "semaphors": []
+          },
+          "title": "",
+          "description": "",
+          "x": 844,
+          "y": 752,
+          "extra": "{\"modeForm\":\"collapse\",\"icon\":\"error\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1cfd",
+          "obj_type": 0,
+          "condition": {
+            "logics": [
+              {
+                "id": "218b8144-60ef-452f-b0f6-38af0d278788",
+                "type": "api_callback"
+              },
+              {
+                "id": "aaa3491f-eb4c-4310-aeba-01da3005c23b",
+                "conditions": [
+                  {
+                    "fun": "eq",
+                    "const": "",
+                    "param": "access_token",
+                    "cast": "string"
+                  }
+                ],
+                "to_node_id": "5bc5f6aff6c37650e15c1cf3",
+                "chTime": 1474661740218,
+                "type": "go_if_const"
+              },
+              {
+                "id": "1f590bce-9720-428a-95d7-66282f2125b1",
+                "to_node_id": "5bc5f6aff6c37650e15c1cf2",
+                "chTime": 1474661748853,
+                "type": "go"
+              }
+            ],
+            "semaphors": [
+              {
+                "id": "4554cbfc-a7f6-46bf-9926-5611cb737df9",
+                "type": "time",
+                "dimension": "",
+                "value": 30,
+                "to_node_id": "5bc5f6aff6c37650e15c1cf4",
+                "chTime": 1474661682696
+              }
+            ]
+          },
+          "title": "Wait create token",
+          "description": "",
+          "x": 460,
+          "y": 344,
+          "extra": "{\"modeForm\":\"expand\",\"icon\":\"state\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1cfe",
+          "obj_type": 3,
+          "condition": {
+            "logics": [
+              {
+                "id": "d2f10e50-38bc-49e4-8ec3-48a3bd98787c",
+                "to_node_id": "5bc5f6aff6c37650e15c1cf7",
+                "conditions": [
+                  {
+                    "fun": "eq",
+                    "const": "crash_api",
+                    "param": "__conveyor_copy_task_return_type_tag__",
+                    "cast": "string"
+                  }
+                ],
+                "type": "go_if_const"
+              },
+              {
+                "id": "c904183f-2ab3-4114-b0b0-777a2857361d",
+                "to_node_id": "5bc5f6aff6c37650e15c1cf7",
+                "conditions": [
+                  {
+                    "fun": "eq",
+                    "const": "copy_task_timeout",
+                    "param": "__conveyor_copy_task_return_type_tag__",
+                    "cast": "string"
+                  }
+                ],
+                "type": "go_if_const"
+              },
+              {
+                "id": "46a67586-d496-4e8a-ac75-5886b54c8f2f",
+                "to_node_id": "5bc5f6aff6c37650e15c1cf7",
+                "conditions": [
+                  {
+                    "fun": "eq",
+                    "const": "copy_task_fatal_error",
+                    "param": "__conveyor_copy_task_return_type_tag__",
+                    "cast": "string"
+                  }
+                ],
+                "type": "go_if_const"
+              },
+              {
+                "id": "5e2a70a0-adcb-4afe-9dae-5c89d55cdb03",
+                "to_node_id": "5bc5f6aff6c37650e15c1cf6",
+                "conditions": [
+                  {
+                    "fun": "eq",
+                    "const": "access_denied",
+                    "param": "__conveyor_copy_task_return_type_tag__",
+                    "cast": "string"
+                  }
+                ],
+                "type": "go_if_const"
+              },
+              {
+                "id": "5f8bccdf-bb1d-4d8d-9a36-bd9c1a6af12b",
+                "to_node_id": "5bc5f6aff6c37650e15c1cf6",
+                "type": "go"
+              }
+            ],
+            "semaphors": []
+          },
+          "title": "",
+          "description": "",
+          "x": 1044,
+          "y": 984,
+          "extra": "{\"modeForm\":\"collapse\",\"icon\":\"\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1cff",
+          "obj_type": 3,
+          "condition": {
+            "logics": [
+              {
+                "id": "e5dfde69-473b-4b3e-8ead-d1cd56121a17",
+                "to_node_id": "5bc5f6aff6c37650e15c1d06",
+                "conditions": [
+                  {
+                    "fun": "eq",
+                    "const": "hardware",
+                    "param": "__conveyor_code_return_type_error__",
+                    "cast": "string"
+                  }
+                ],
+                "type": "go_if_const"
+              },
+              {
+                "id": "8114345a-8659-49ee-b3a8-d5580377fa76",
+                "to_node_id": "5bc5f6aff6c37650e15c1cfb",
+                "conditions": [
+                  {
+                    "fun": "eq",
+                    "const": "software",
+                    "param": "__conveyor_code_return_type_error__",
+                    "cast": "string"
+                  }
+                ],
+                "type": "go_if_const"
+              },
+              {
+                "id": "fb18c5d7-a8da-459c-9040-192cf8e872a5",
+                "to_node_id": "5bc5f6aff6c37650e15c1cfb",
+                "type": "go"
+              }
+            ],
+            "semaphors": []
+          },
+          "title": "",
+          "description": "",
+          "x": 708,
+          "y": 724,
+          "extra": "{\"modeForm\":\"collapse\",\"icon\":\"\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1d00",
+          "obj_type": 0,
+          "condition": {
+            "logics": [
+              {
+                "user_id": 65281,
+                "data_type": {
+                  "refresh_token": "string",
+                  "grant_type": "string",
+                  "client_id": "string",
+                  "client_secret": "string"
+                },
+                "id": "d1d9ad9e-d9e2-4f30-94d4-0af291c5c439",
+                "convTitle": "Refresh token",
+                "err_node_id": "5bc5f6aff6c37650e15c1cfe",
+                "group": "all",
+                "conv_id": 466118,
+                "type": "api_copy",
+                "data": {
+                  "refresh_token": "{{refresh_token}}",
+                  "grant_type": "refresh_token",
+                  "client_id": "{{client_id}}",
+                  "client_secret": "{{client_secret}}"
+                },
+                "ref": "{{root.ref}}",
+                "mode": "create"
+              },
+              {
+                "id": "d43700e0-08c7-422b-aec2-2fbb556760c5",
+                "to_node_id": "5bc5f6aff6c37650e15c1d02",
+                "chTime": 1474660661243,
+                "type": "go"
+              }
+            ],
+            "semaphors": []
+          },
+          "title": "Refresh token",
+          "description": "",
+          "x": 796,
+          "y": 892,
+          "extra": "{\"modeForm\":\"expand\",\"icon\":\"\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1d01",
+          "obj_type": 3,
+          "condition": {
+            "logics": [
+              {
+                "id": "5f7eef9c-2e1a-48e6-896b-94b0c7ba8f96",
+                "to_node_id": "5bc5f6aff6c37650e15c1d05",
+                "conditions": [
+                  {
+                    "fun": "eq",
+                    "const": "crash_api",
+                    "param": "__conveyor_copy_task_return_type_tag__",
+                    "cast": "string"
+                  }
+                ],
+                "type": "go_if_const"
+              },
+              {
+                "id": "c3283a71-4d9b-438e-9092-7ffc05f45126",
+                "to_node_id": "5bc5f6aff6c37650e15c1d05",
+                "conditions": [
+                  {
+                    "fun": "eq",
+                    "const": "copy_task_timeout",
+                    "param": "__conveyor_copy_task_return_type_tag__",
+                    "cast": "string"
+                  }
+                ],
+                "type": "go_if_const"
+              },
+              {
+                "id": "8a27712a-9357-42f8-818c-797d3b20a14b",
+                "to_node_id": "5bc5f6aff6c37650e15c1d05",
+                "conditions": [
+                  {
+                    "fun": "eq",
+                    "const": "copy_task_fatal_error",
+                    "param": "__conveyor_copy_task_return_type_tag__",
+                    "cast": "string"
+                  }
+                ],
+                "type": "go_if_const"
+              },
+              {
+                "id": "c556c4a5-ad01-4ec0-b40d-71e08e224cc8",
+                "to_node_id": "5bc5f6aff6c37650e15c1cf5",
+                "conditions": [
+                  {
+                    "fun": "eq",
+                    "const": "access_denied",
+                    "param": "__conveyor_copy_task_return_type_tag__",
+                    "cast": "string"
+                  }
+                ],
+                "type": "go_if_const"
+              },
+              {
+                "id": "fcfc9cb5-7fa6-4920-9a3d-a819017f986a",
+                "to_node_id": "5bc5f6aff6c37650e15c1cf5",
+                "type": "go"
+              }
+            ],
+            "semaphors": []
+          },
+          "title": "",
+          "description": "",
+          "x": 712,
+          "y": 212,
+          "extra": "{\"modeForm\":\"collapse\",\"icon\":\"\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1d02",
+          "obj_type": 0,
+          "condition": {
+            "logics": [
+              {
+                "id": "3b2ab38d-5e2f-46bc-a759-183e33e2784b",
+                "type": "api_callback"
+              },
+              {
+                "id": "6d75f8a5-f18c-4463-bac5-85af7eeb4f74",
+                "conditions": [
+                  {
+                    "fun": "eq",
+                    "const": "",
+                    "param": "{{access_token}}",
+                    "cast": "string"
+                  }
+                ],
+                "to_node_id": "5bc5f6aff6c37650e15c1cf1",
+                "chTime": 1474663393886,
+                "type": "go_if_const"
+              },
+              {
+                "id": "09acec04-7443-4af5-9548-79883331748d",
+                "to_node_id": "5bc5f6aff6c37650e15c1cf2",
+                "type": "go"
+              }
+            ],
+            "semaphors": [
+              {
+                "id": "b274fb8c-803a-4874-8cb7-4aac02f3871c",
+                "type": "time",
+                "value": 30,
+                "dimension": "sec",
+                "to_node_id": "5bc5f6aff6c37650e15c1cf8",
+                "chTime": 1474660756729
+              }
+            ]
+          },
+          "title": "Half-dead token",
+          "description": "",
+          "x": 796,
+          "y": 1084,
+          "extra": "{\"modeForm\":\"expand\",\"icon\":\"state\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1d03",
+          "obj_type": 0,
+          "condition": {
+            "logics": [
+              {
+                "id": "52444b27-5c94-4619-8bf0-19e56f5bbda0",
+                "type": "api_callback"
+              },
+              {
+                "id": "22931782-3321-443b-b2db-fe27290feb80",
+                "to_node_id": "5bc5f6aff6c37650e15c1d03",
+                "type": "go"
+              }
+            ],
+            "semaphors": [
+              {
+                "type": "time",
+                "value": "{{unix}}",
+                "dimension": "sec",
+                "to_node_id": "5bc5f6aff6c37650e15c1d00",
+                "id": "749ada99-474c-4985-8738-9176b691a904",
+                "chTime": 1474665188431
+              }
+            ]
+          },
+          "title": "Active token",
+          "description": "",
+          "x": 416,
+          "y": 920,
+          "extra": "{\"modeForm\":\"expand\",\"icon\":\"state\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1d04",
+          "obj_type": 0,
+          "condition": {
+            "logics": [
+              {
+                "user_id": 65281,
+                "data_type": {
+                  "client_id": "string",
+                  "client_secret": "string",
+                  "code": "string"
+                },
+                "id": "36943499-b52a-4f59-80f0-75d90657876a",
+                "err_node_id": "5bc5f6aff6c37650e15c1d01",
+                "group": "",
+                "conv_id": 466117,
+                "type": "api_copy",
+                "data": {
+                  "client_id": "{{client_id}}",
+                  "client_secret": "{{client_secret}}",
+                  "code": "{{code}}"
+                },
+                "ref": "{{root.ref}}",
+                "mode": "create"
+              },
+              {
+                "id": "07e9b41a-4a8a-417d-9d03-9cb8fc16b42b",
+                "to_node_id": "5bc5f6aff6c37650e15c1cfd",
+                "chTime": 1474660617988,
+                "type": "go"
+              }
+            ],
+            "semaphors": []
+          },
+          "title": "Create token",
+          "description": "",
+          "x": 460,
+          "y": 120,
+          "extra": "{\"modeForm\":\"expand\",\"icon\":\"\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1d06",
+          "obj_type": 0,
+          "condition": {
+            "logics": [],
+            "semaphors": [
+              {
+                "type": "time",
+                "value": 30,
+                "dimension": "sec",
+                "to_node_id": "5bc5f6aff6c37650e15c1cf2",
+                "id": "61dcffb5-87a1-447e-bd8e-ff4716f76d3d"
+              }
+            ]
+          },
+          "title": "",
+          "description": "",
+          "x": 708,
+          "y": 628,
+          "extra": "{\"modeForm\":\"collapse\",\"icon\":\"\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1d05",
+          "obj_type": 0,
+          "condition": {
+            "logics": [],
+            "semaphors": [
+              {
+                "type": "time",
+                "value": 30,
+                "dimension": "sec",
+                "to_node_id": "5bc5f6aff6c37650e15c1d04",
+                "id": "9a771ed3-4ccd-4faa-900a-8d8c221490c6"
+              }
+            ]
+          },
+          "title": "",
+          "description": "",
+          "x": 712,
+          "y": 116,
+          "extra": "{\"modeForm\":\"collapse\",\"icon\":\"\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1cf8",
+          "obj_type": 2,
+          "condition": {
+            "logics": [],
+            "semaphors": []
+          },
+          "title": "Foul token",
+          "description": "",
+          "x": 1104,
+          "y": 1176,
+          "extra": "{\"modeForm\":\"collapse\",\"icon\":\"error\"}"
+        }
+      ],
+      "web_settings": [
+        [],
+        []
+      ]
+    },
+    "company_id": null
+  }
+]

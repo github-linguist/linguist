@@ -1,0 +1,395 @@
+[
+  {
+    "obj_type": 1,
+    "obj_id": 466117,
+    "parent_id": 0,
+    "title": "Create access token",
+    "description": "",
+    "status": "active",
+    "params": [
+      {
+        "name": "access_token",
+        "type": "string",
+        "descr": "access_token",
+        "flags": [],
+        "regex": "",
+        "regex_error_text": ""
+      },
+      {
+        "name": "client_id",
+        "type": "string",
+        "descr": "client_id",
+        "flags": [
+          "input",
+          "required"
+        ],
+        "regex": "",
+        "regex_error_text": ""
+      },
+      {
+        "name": "client_secret",
+        "type": "string",
+        "descr": "client_secret",
+        "flags": [
+          "input",
+          "required"
+        ],
+        "regex": "",
+        "regex_error_text": ""
+      },
+      {
+        "name": "code",
+        "type": "string",
+        "descr": "code",
+        "flags": [
+          "input",
+          "required"
+        ],
+        "regex": "",
+        "regex_error_text": ""
+      },
+      {
+        "name": "expires_in",
+        "type": "number",
+        "descr": "expires_in",
+        "flags": [],
+        "regex": "",
+        "regex_error_text": ""
+      },
+      {
+        "name": "refresh_token",
+        "type": "string",
+        "descr": "refresh_token",
+        "flags": [],
+        "regex": "",
+        "regex_error_text": ""
+      }
+    ],
+    "ref_mask": true,
+    "conv_type": "process",
+    "scheme": {
+      "nodes": [
+        {
+          "id": "5bc5f6aff6c37650e15c1cdc",
+          "obj_type": 1,
+          "condition": {
+            "logics": [
+              {
+                "id": "5394899e-97ff-4e0b-8304-db34fa75b2c6",
+                "to_node_id": "5bc5f6aff6c37650e15c1ce2",
+                "type": "go"
+              }
+            ],
+            "semaphors": []
+          },
+          "title": "Start",
+          "description": "",
+          "x": 628,
+          "y": 160,
+          "extra": "{\"modeForm\":\"collapse\",\"icon\":\"\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1cdd",
+          "obj_type": 2,
+          "condition": {
+            "logics": [],
+            "semaphors": []
+          },
+          "title": "",
+          "description": "",
+          "x": 912,
+          "y": 380,
+          "extra": "{\"modeForm\":\"collapse\",\"icon\":\"error\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1cde",
+          "obj_type": 0,
+          "condition": {
+            "logics": [],
+            "semaphors": [
+              {
+                "type": "time",
+                "value": 30,
+                "dimension": "sec",
+                "to_node_id": "5bc5f6aff6c37650e15c1ce2",
+                "id": "cd6884cc-19f9-414f-aab1-70dadc02eeac"
+              }
+            ]
+          },
+          "title": "",
+          "description": "",
+          "x": 776,
+          "y": 256,
+          "extra": "{\"modeForm\":\"collapse\",\"icon\":\"\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1cdf",
+          "obj_type": 3,
+          "condition": {
+            "logics": [
+              {
+                "id": "44691e3a-c2e2-4142-b1d5-ca2ee28a2bfa",
+                "to_node_id": "5bc5f6aff6c37650e15c1cde",
+                "conditions": [
+                  {
+                    "fun": "eq",
+                    "const": "hardware",
+                    "param": "__conveyor_api_return_type_error__",
+                    "cast": "string"
+                  }
+                ],
+                "type": "go_if_const"
+              },
+              {
+                "id": "da524a79-769b-491e-a6d0-4fb681fa44a3",
+                "to_node_id": "5bc5f6aff6c37650e15c1cde",
+                "conditions": [
+                  {
+                    "fun": "eq",
+                    "const": "software",
+                    "param": "__conveyor_api_return_type_error__",
+                    "cast": "string"
+                  },
+                  {
+                    "fun": "eq",
+                    "const": "api_bad_answer",
+                    "param": "__conveyor_api_return_type_tag__",
+                    "cast": "string"
+                  }
+                ],
+                "type": "go_if_const"
+              },
+              {
+                "id": "ae64a69c-a46b-4b58-8ed4-d32b57d84fb1",
+                "to_node_id": "5bc5f6aff6c37650e15c1cdd",
+                "type": "go"
+              }
+            ],
+            "semaphors": []
+          },
+          "title": "",
+          "description": "",
+          "x": 776,
+          "y": 352,
+          "extra": "{\"modeForm\":\"collapse\",\"icon\":\"\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1ce0",
+          "obj_type": 2,
+          "condition": {
+            "logics": [],
+            "semaphors": []
+          },
+          "title": "Final",
+          "description": "",
+          "x": 628,
+          "y": 672,
+          "extra": "{\"modeForm\":\"collapse\",\"icon\":\"success\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1ce2",
+          "obj_type": 0,
+          "condition": {
+            "logics": [
+              {
+                "response": {},
+                "method": "POST",
+                "customize_response": false,
+                "content_type": "application/x-www-form-urlencoded",
+                "max_threads": 5,
+                "response_type": {},
+                "id": "514226d7-a797-4a9e-9e0d-c68bebe474c1",
+                "url": "https://www.googleapis.com/oauth2/v4/token",
+                "extra_headers": {},
+                "err_node_id": "5bc5f6aff6c37650e15c1cdf",
+                "send_sys": true,
+                "debug_info": false,
+                "is_migrate": true,
+                "format": "",
+                "extra": {
+                  "redirect_uri": "urn:ietf:wg:oauth:2.0:oob",
+                  "grant_type": "authorization_code",
+                  "client_id": "{{client_id}}",
+                  "code": "{{code}}",
+                  "client_secret": "{{client_secret}}"
+                },
+                "cert_pem": "",
+                "type": "api",
+                "extra_type": {
+                  "redirect_uri": "string",
+                  "grant_type": "string",
+                  "client_id": "string",
+                  "code": "string",
+                  "client_secret": "string"
+                }
+              },
+              {
+                "id": "def92032-e1a9-425e-b128-d39b4639703d",
+                "to_node_id": "5bc5f6aff6c37650e15c1ce3",
+                "chTime": 1474661336788,
+                "type": "go"
+              }
+            ],
+            "semaphors": []
+          },
+          "title": "Create access token",
+          "description": "",
+          "x": 528,
+          "y": 260,
+          "extra": "{\"modeForm\":\"expand\",\"icon\":\"\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1ce3",
+          "obj_type": 0,
+          "condition": {
+            "logics": [
+              {
+                "user_id": 65281,
+                "data_type": {
+                  "refresh_token": "string",
+                  "access_token": "string",
+                  "expires_in": "number"
+                },
+                "id": "45d0a0e8-7ddb-4997-96df-7cae1679e360",
+                "err_node_id": "5bc5f6aff6c37650e15c1ce4",
+                "group": "",
+                "conv_id": 466119,
+                "type": "api_copy",
+                "data": {
+                  "refresh_token": "{{refresh_token}}",
+                  "access_token": "{{access_token}}",
+                  "expires_in": "{{expires_in}}"
+                },
+                "ref": "{{root.ref}}",
+                "mode": "modify",
+                "is_sync": true
+              },
+              {
+                "id": "19fbc748-4b89-4d30-a74c-2de3f20e2725",
+                "to_node_id": "5bc5f6aff6c37650e15c1ce0",
+                "chTime": 1474661450091,
+                "type": "go"
+              }
+            ],
+            "semaphors": []
+          },
+          "title": "Save access & refresh token",
+          "description": "",
+          "x": 528,
+          "y": 464,
+          "extra": "{\"modeForm\":\"expand\",\"icon\":\"\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1ce4",
+          "obj_type": 3,
+          "condition": {
+            "logics": [
+              {
+                "id": "a0548097-a581-4413-a15f-9a4193d68fb1",
+                "to_node_id": "5bc5f6aff6c37650e15c1ce5",
+                "conditions": [
+                  {
+                    "fun": "eq",
+                    "const": "crash_api",
+                    "param": "__conveyor_copy_task_return_type_tag__",
+                    "cast": "string"
+                  }
+                ],
+                "type": "go_if_const"
+              },
+              {
+                "id": "c0296d49-b21b-4258-ad48-5acc1af7a62e",
+                "to_node_id": "5bc5f6aff6c37650e15c1ce5",
+                "conditions": [
+                  {
+                    "fun": "eq",
+                    "const": "copy_task_timeout",
+                    "param": "__conveyor_copy_task_return_type_tag__",
+                    "cast": "string"
+                  }
+                ],
+                "type": "go_if_const"
+              },
+              {
+                "id": "19c524d6-ac4d-48dd-9ff0-2501874b6502",
+                "to_node_id": "5bc5f6aff6c37650e15c1ce5",
+                "conditions": [
+                  {
+                    "fun": "eq",
+                    "const": "copy_task_fatal_error",
+                    "param": "__conveyor_copy_task_return_type_tag__",
+                    "cast": "string"
+                  }
+                ],
+                "type": "go_if_const"
+              },
+              {
+                "id": "13391918-1c3a-40d2-a621-4176a89a13f4",
+                "to_node_id": "5bc5f6aff6c37650e15c1ce1",
+                "conditions": [
+                  {
+                    "fun": "eq",
+                    "const": "access_denied",
+                    "param": "__conveyor_copy_task_return_type_tag__",
+                    "cast": "string"
+                  }
+                ],
+                "type": "go_if_const"
+              },
+              {
+                "id": "e28ca160-20be-4dff-8dce-56b8dd801b79",
+                "to_node_id": "5bc5f6aff6c37650e15c1ce1",
+                "type": "go"
+              }
+            ],
+            "semaphors": []
+          },
+          "title": "",
+          "description": "",
+          "x": 780,
+          "y": 556,
+          "extra": "{\"modeForm\":\"collapse\",\"icon\":\"\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1ce5",
+          "obj_type": 0,
+          "condition": {
+            "logics": [],
+            "semaphors": [
+              {
+                "type": "time",
+                "value": 30,
+                "dimension": "sec",
+                "to_node_id": "5bc5f6aff6c37650e15c1ce3",
+                "id": "d320d060-08d3-425f-ac9f-adad5ee524a5"
+              }
+            ]
+          },
+          "title": "",
+          "description": "",
+          "x": 780,
+          "y": 460,
+          "extra": "{\"modeForm\":\"collapse\",\"icon\":\"\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1ce1",
+          "obj_type": 2,
+          "condition": {
+            "logics": [],
+            "semaphors": []
+          },
+          "title": "",
+          "description": "",
+          "x": 912,
+          "y": 584,
+          "extra": "{\"modeForm\":\"collapse\",\"icon\":\"error\"}"
+        }
+      ],
+      "web_settings": [
+        [],
+        []
+      ]
+    },
+    "company_id": null
+  }
+]
