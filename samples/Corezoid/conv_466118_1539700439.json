@@ -1,0 +1,383 @@
+[
+  {
+    "obj_type": 1,
+    "obj_id": 466118,
+    "parent_id": 0,
+    "title": "Refresh access token",
+    "description": "",
+    "status": "active",
+    "params": [
+      {
+        "name": "access_token",
+        "type": "string",
+        "descr": "access_token",
+        "flags": [],
+        "regex": "",
+        "regex_error_text": ""
+      },
+      {
+        "name": "client_id",
+        "type": "string",
+        "descr": "client_id",
+        "flags": [
+          "input",
+          "required"
+        ],
+        "regex": "",
+        "regex_error_text": ""
+      },
+      {
+        "name": "client_secret",
+        "type": "string",
+        "descr": "client_secret",
+        "flags": [
+          "input",
+          "required"
+        ],
+        "regex": "",
+        "regex_error_text": ""
+      },
+      {
+        "name": "refresh_token",
+        "type": "string",
+        "descr": "refresh_token",
+        "flags": [
+          "input",
+          "required"
+        ],
+        "regex": "",
+        "regex_error_text": ""
+      },
+      {
+        "name": "expires_in",
+        "type": "number",
+        "descr": "expires_in",
+        "flags": [],
+        "regex": "",
+        "regex_error_text": ""
+      }
+    ],
+    "ref_mask": true,
+    "conv_type": "process",
+    "scheme": {
+      "nodes": [
+        {
+          "id": "5bc5f6aff6c37650e15c1ce6",
+          "obj_type": 1,
+          "condition": {
+            "logics": [
+              {
+                "id": "17c433ef-3a56-463e-b215-39093ffdc4ea",
+                "to_node_id": "5bc5f6aff6c37650e15c1ced",
+                "type": "go"
+              }
+            ],
+            "semaphors": []
+          },
+          "title": "Start",
+          "description": "",
+          "x": 628,
+          "y": 100,
+          "extra": "{\"modeForm\":\"collapse\",\"icon\":\"\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1ce8",
+          "obj_type": 3,
+          "condition": {
+            "logics": [
+              {
+                "id": "d4f84747-b7ac-4804-8b12-649fa4b5d149",
+                "to_node_id": "5bc5f6aff6c37650e15c1cec",
+                "conditions": [
+                  {
+                    "fun": "eq",
+                    "const": "hardware",
+                    "param": "__conveyor_api_return_type_error__",
+                    "cast": "string"
+                  }
+                ],
+                "type": "go_if_const"
+              },
+              {
+                "id": "75ee688b-9310-40af-ab8b-5d5b0ceefa6c",
+                "to_node_id": "5bc5f6aff6c37650e15c1cec",
+                "conditions": [
+                  {
+                    "fun": "eq",
+                    "const": "software",
+                    "param": "__conveyor_api_return_type_error__",
+                    "cast": "string"
+                  },
+                  {
+                    "fun": "eq",
+                    "const": "api_bad_answer",
+                    "param": "__conveyor_api_return_type_tag__",
+                    "cast": "string"
+                  }
+                ],
+                "type": "go_if_const"
+              },
+              {
+                "id": "c2f75aa2-9f9a-4485-9b76-dde78ab9c4b7",
+                "to_node_id": "5bc5f6aff6c37650e15c1cea",
+                "type": "go"
+              }
+            ],
+            "semaphors": []
+          },
+          "title": "",
+          "description": "",
+          "x": 780,
+          "y": 288,
+          "extra": "{\"modeForm\":\"collapse\",\"icon\":\"\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1ce9",
+          "obj_type": 2,
+          "condition": {
+            "logics": [],
+            "semaphors": []
+          },
+          "title": "",
+          "description": "",
+          "x": 912,
+          "y": 540,
+          "extra": "{\"modeForm\":\"collapse\",\"icon\":\"error\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1cea",
+          "obj_type": 2,
+          "condition": {
+            "logics": [],
+            "semaphors": []
+          },
+          "title": "",
+          "description": "",
+          "x": 912,
+          "y": 316,
+          "extra": "{\"modeForm\":\"collapse\",\"icon\":\"error\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1ceb",
+          "obj_type": 2,
+          "condition": {
+            "logics": [],
+            "semaphors": []
+          },
+          "title": "Final",
+          "description": "",
+          "x": 628,
+          "y": 660,
+          "extra": "{\"modeForm\":\"collapse\",\"icon\":\"error\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1cec",
+          "obj_type": 0,
+          "condition": {
+            "logics": [],
+            "semaphors": [
+              {
+                "type": "time",
+                "value": 30,
+                "dimension": "sec",
+                "to_node_id": "5bc5f6aff6c37650e15c1ced",
+                "id": "e87bf3db-7a59-4da1-bc6d-1f637934df93"
+              }
+            ]
+          },
+          "title": "",
+          "description": "",
+          "x": 780,
+          "y": 196,
+          "extra": "{\"modeForm\":\"collapse\",\"icon\":\"\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1ced",
+          "obj_type": 0,
+          "condition": {
+            "logics": [
+              {
+                "response": {},
+                "method": "POST",
+                "customize_response": false,
+                "content_type": "application/x-www-form-urlencoded",
+                "max_threads": 5,
+                "response_type": {},
+                "id": "051c4b0e-4d21-4d31-b309-44ef4afd1490",
+                "url": "https://www.googleapis.com/oauth2/v4/token",
+                "extra_headers": {},
+                "err_node_id": "5bc5f6aff6c37650e15c1ce8",
+                "send_sys": true,
+                "debug_info": false,
+                "is_migrate": true,
+                "format": "",
+                "extra": {
+                  "refresh_token": "{{refresh_token}}",
+                  "grant_type": "refresh_token",
+                  "client_id": "{{client_id}}",
+                  "client_secret": "{{client_secret}}"
+                },
+                "cert_pem": "",
+                "type": "api",
+                "extra_type": {
+                  "refresh_token": "string",
+                  "grant_type": "string",
+                  "client_id": "string",
+                  "client_secret": "string"
+                }
+              },
+              {
+                "id": "fd9d9c10-c9e4-487a-8085-06c827edea1e",
+                "to_node_id": "5bc5f6aff6c37650e15c1cef",
+                "chTime": 1474661882463,
+                "type": "go"
+              }
+            ],
+            "semaphors": []
+          },
+          "title": "Refresh access token",
+          "description": "",
+          "x": 528,
+          "y": 196,
+          "extra": "{\"modeForm\":\"expand\",\"icon\":\"\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1cee",
+          "obj_type": 3,
+          "condition": {
+            "logics": [
+              {
+                "id": "3acb1e5f-b103-4847-8f07-c0d6c2943366",
+                "to_node_id": "5bc5f6aff6c37650e15c1ce7",
+                "conditions": [
+                  {
+                    "fun": "eq",
+                    "const": "crash_api",
+                    "param": "__conveyor_copy_task_return_type_tag__",
+                    "cast": "string"
+                  }
+                ],
+                "type": "go_if_const"
+              },
+              {
+                "id": "0e2f8044-afc2-42ba-8556-9acf769a918b",
+                "to_node_id": "5bc5f6aff6c37650e15c1ce7",
+                "conditions": [
+                  {
+                    "fun": "eq",
+                    "const": "copy_task_timeout",
+                    "param": "__conveyor_copy_task_return_type_tag__",
+                    "cast": "string"
+                  }
+                ],
+                "type": "go_if_const"
+              },
+              {
+                "id": "5036ee6c-021b-4780-ba87-fdc2517547cf",
+                "to_node_id": "5bc5f6aff6c37650e15c1ce7",
+                "conditions": [
+                  {
+                    "fun": "eq",
+                    "const": "copy_task_fatal_error",
+                    "param": "__conveyor_copy_task_return_type_tag__",
+                    "cast": "string"
+                  }
+                ],
+                "type": "go_if_const"
+              },
+              {
+                "id": "54e2acff-e9cc-402e-af14-2283a9451cad",
+                "to_node_id": "5bc5f6aff6c37650e15c1ce9",
+                "conditions": [
+                  {
+                    "fun": "eq",
+                    "const": "access_denied",
+                    "param": "__conveyor_copy_task_return_type_tag__",
+                    "cast": "string"
+                  }
+                ],
+                "type": "go_if_const"
+              },
+              {
+                "id": "3a1ecfa8-d973-410f-808d-1a938c6966f1",
+                "to_node_id": "5bc5f6aff6c37650e15c1ce9",
+                "type": "go"
+              }
+            ],
+            "semaphors": []
+          },
+          "title": "",
+          "description": "",
+          "x": 780,
+          "y": 512,
+          "extra": "{\"modeForm\":\"collapse\",\"icon\":\"\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1cef",
+          "obj_type": 0,
+          "condition": {
+            "logics": [
+              {
+                "user_id": 65281,
+                "data_type": {
+                  "access_token": "string",
+                  "expires_in": "number"
+                },
+                "id": "a0644181-0f13-40b6-ac2b-b38d957a84cd",
+                "err_node_id": "5bc5f6aff6c37650e15c1cee",
+                "group": "",
+                "conv_id": 466119,
+                "type": "api_copy",
+                "data": {
+                  "access_token": "{{access_token}}",
+                  "expires_in": "{{expires_in}}"
+                },
+                "ref": "{{root.ref}}",
+                "mode": "modify",
+                "is_sync": true
+              },
+              {
+                "id": "8c4950c9-2dd6-4932-a816-f2bb6a4951a4",
+                "to_node_id": "5bc5f6aff6c37650e15c1ceb",
+                "chTime": 1474663197559,
+                "type": "go"
+              }
+            ],
+            "semaphors": []
+          },
+          "title": "Save access token",
+          "description": "",
+          "x": 528,
+          "y": 416,
+          "extra": "{\"modeForm\":\"expand\",\"icon\":\"\"}"
+        },
+        {
+          "id": "5bc5f6aff6c37650e15c1ce7",
+          "obj_type": 0,
+          "condition": {
+            "logics": [],
+            "semaphors": [
+              {
+                "type": "time",
+                "value": 30,
+                "dimension": "sec",
+                "to_node_id": "5bc5f6aff6c37650e15c1cef",
+                "id": "ddd67608-8954-4742-b526-fe78af613685"
+              }
+            ]
+          },
+          "title": "",
+          "description": "",
+          "x": 780,
+          "y": 416,
+          "extra": "{\"modeForm\":\"collapse\",\"icon\":\"\"}"
+        }
+      ],
+      "web_settings": [
+        [],
+        []
+      ]
+    },
+    "company_id": null
+  }
+]
