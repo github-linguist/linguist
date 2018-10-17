@@ -480,4 +480,12 @@ class TestLanguage < Minitest::Test
     match = Linguist.detect(blob)
     assert_equal Language["Markdown"], match
   end
+
+  def test_fs_names
+    Language.all.each do |language|
+      next unless /[\\:*?"<>|]/.match(language.name)
+      assert language.fs_name, "#{language.name} needs an fs_name for Windows' file system."
+      assert !/[\\:*?"<>|]/.match(language.fs_name), "The fs_name for #{language.name} is invalid."
+    end
+  end
 end

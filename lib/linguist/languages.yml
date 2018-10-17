@@ -1,5 +1,8 @@
 # Defines all Languages known to GitHub.
 #
+# fs_name               - Optional field. Only necessary as a replacement for the sample directory name if the
+#                         language name is not a valid filename under the Windows filesystem (e.g., if it
+#                         contains an asterisk).
 # type                  - Either data, programming, markup, prose, or nil
 # aliases               - An Array of additional aliases (implicitly
 #                         includes name.downcase)
@@ -891,7 +894,7 @@ Creole:
   language_id: 71
 Crystal:
   type: programming
-  color: "#776791"
+  color: "#000100"
   extensions:
   - ".cr"
   ace_mode: ruby
@@ -1138,6 +1141,14 @@ EJS:
   tm_scope: text.html.js
   ace_mode: ejs
   language_id: 95
+EML:
+  type: data
+  extensions:
+  - ".eml"
+  - ".mbox"
+  tm_scope: text.eml.basic
+  ace_mode: text
+  language_id: 529653389
 EQ:
   type: programming
   color: "#a78649"
@@ -1292,6 +1303,7 @@ F#:
   codemirror_mime_type: text/x-fsharp
   language_id: 105
 F*:
+  fs_name: Fstar
   type: programming
   color: "#572e30"
   aliases:
@@ -1952,7 +1964,7 @@ Hy:
   - hy
   aliases:
   - hylang
-  tm_scope: none
+  tm_scope: source.hy
   language_id: 159
 HyPhy:
   type: programming
@@ -2209,6 +2221,15 @@ Java:
   extensions:
   - ".java"
   language_id: 181
+Java Properties:
+  type: data
+  extensions:
+  - ".properties"
+  tm_scope: source.java-properties
+  ace_mode: properties
+  codemirror_mode: properties
+  codemirror_mime_type: text/x-properties
+  language_id: 519377561
 Java Server Pages:
   type: programming
   group: Java
@@ -4497,6 +4518,14 @@ Slash:
   tm_scope: text.html.slash
   ace_mode: text
   language_id: 349
+Slice:
+  type: programming
+  color: "#003fa2"
+  tm_scope: source.slice
+  ace_mode: text
+  extensions:
+  - ".ice"
+  language_id: 894641667
 Slim:
   group: HTML
   type: markup
@@ -5389,7 +5418,8 @@ YANG:
   ace_mode: text
   language_id: 408
 YARA:
-  type: data
+  type: programming
+  color: "#220000"
   ace_mode: text
   extensions:
   - ".yar"

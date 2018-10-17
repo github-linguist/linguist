@@ -126,7 +126,7 @@ class TestHeuristics < Minitest::Test
       "ECLiPSe" => all_fixtures("ECLiPSe", "*.ecl")
     })
   end
-  
+
   def test_es_by_heuristics
     assert_heuristics({
       "Erlang" => all_fixtures("Erlang", "*.es"),
@@ -178,6 +178,13 @@ class TestHeuristics < Minitest::Test
       "Objective-C" => all_fixtures("Objective-C", "*.h"),
       "C++" => ["C++/scanner.h", "C++/protocol-buffer.pb.h", "C++/v8.h", "C++/gdsdbreader.h"],
       "C" => nil
+    })
+  end
+
+  def test_ice_by_heuristics
+    assert_heuristics({
+      "Slice" => all_fixtures("Slice", "*.ice"),
+      "JSON" => all_fixtures("JSON", "*.ice")
     })
   end
 
@@ -322,6 +329,14 @@ class TestHeuristics < Minitest::Test
       "IDL" => all_fixtures("IDL", "*.pro"),
       "INI" => all_fixtures("INI", "*.pro"),
       "QMake" => all_fixtures("QMake", "*.pro")
+    })
+  end
+
+# Candidate languages = ["INI", "Java Properties"]
+  def test_properties_by_heuristics
+    assert_heuristics({
+      "INI" => all_fixtures("INI", "*.properties"),
+      "Java Properties" => all_fixtures("Java Properties", "*.properties")
     })
   end
 
