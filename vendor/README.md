@@ -154,6 +154,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Hack:** [textmate/php.tmbundle](https://github.com/textmate/php.tmbundle)
 - **Haml:** [ezekg/language-haml](https://github.com/ezekg/language-haml)
 - **Handlebars:** [daaain/Handlebars](https://github.com/daaain/Handlebars)
+- **HAProxy:** [abulimov/atom-language-haproxy](https://github.com/abulimov/atom-language-haproxy)
 - **Harbour:** [hernad/atom-language-harbour](https://github.com/hernad/atom-language-harbour)
 - **Haskell:** [atom-haskell/language-haskell](https://github.com/atom-haskell/language-haskell)
 - **Haxe:** [vshaxe/haxe-TmLanguage](https://github.com/vshaxe/haxe-TmLanguage)
