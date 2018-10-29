@@ -278,7 +278,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Papyrus:** [Kapiainen/SublimePapyrus](https://github.com/Kapiainen/SublimePapyrus)
 - **Parrot Internal Representation:** [textmate/parrot.tmbundle](https://github.com/textmate/parrot.tmbundle)
 - **Pascal:** [textmate/pascal.tmbundle](https://github.com/textmate/pascal.tmbundle)
-- **PAWN:** [Southclaw/pawn-sublime-language](https://github.com/Southclaw/pawn-sublime-language)
+- **Pawn:** [Southclaw/pawn-sublime-language](https://github.com/Southclaw/pawn-sublime-language)
 - **Pep8:** [R4PaSs/Sublime-Pep8](https://github.com/R4PaSs/Sublime-Pep8)
 - **Perl:** [textmate/perl.tmbundle](https://github.com/textmate/perl.tmbundle)
 - **Perl 6:** [perl6/atom-language-perl6](https://github.com/perl6/atom-language-perl6)
