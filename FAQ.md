@@ -152,7 +152,7 @@ There are three primary reasons why a file may not be highlighted:
 
 If [the language is not supported by Linguist](#how-can-i-check-if-linguist-supports-a-given-language), and you believe it meets [the requirements for support](#what-are-the-requirements-to-add-support-for-a-new-language-or-associate-a-new-extension-with-a-language), please consider [submitting a pull request](https://github.com/github/linguist/blob/master/CONTRIBUTING.md#adding-a-language).
 
-You can see if Linguist has a grammar for the language in the [list of grammars](https://github.com/github/linguist/blob/master/vendor/README.md). If it doesn't and you know a Sublime Text, Atom, or TextMate grammar that would work, please consider [submitting a pull request](https://github.com/github/linguist/blob/master/CONTRIBUTING.md#fixing-syntax-highlighting).
+You can see if Linguist has a grammar for the language in the [list of grammars](https://github.com/github/linguist/blob/master/vendor/README.md). If it doesn't and you know a Sublime Text, Atom or TextMate grammar that would work, please consider [submitting a pull request](https://github.com/github/linguist/blob/master/CONTRIBUTING.md#fixing-syntax-highlighting).
 
 If Linguist supports the language and it has a grammar, the lack of syntax highlighting is probably the result of a misclassification. Please read [*The language detected for some files in my repository is incorrect*](#the-language-detected-for-some-files-in-my-repository-is-incorrect) to fix it.
 
