@@ -61,7 +61,7 @@ As this analysis is performed by a low priority background job, it can take a wh
 
 ### How can I change the language of my repository?
 
-A common misconception is that GitHub reports a repository language. This is not the case. Instead, GitHub uses a concept of _"this repository contains these languages in X, Y and Z proportions"_, and these proportions are determined by Linguist based on the bytes of code found within the repository. The "repository language" you see is the most prominant language detected and it is this that is shown next to the repository's name on some pages.
+A common misconception is that GitHub reports a repository language. This is not the case. Instead, GitHub uses a concept of _"this repository contains these languages in X, Y and Z proportions"_, and these proportions are determined by Linguist based on the bytes of code found within the repository. The "repository language" you see is the most prominent language detected and this is what is is shown next to the repository's name on some pages.
 
 If you believe the language statistics for your repository are incorrect, please see [*The language statistics in my repository are wrong*](#the-language-statistics-in-my-repository-are-wrong). If you believe we missed a language or one of its extensions, please consider [submitting a pull request](https://github.com/github/linguist/blob/master/CONTRIBUTING.md#adding-an-extension-to-a-language) if said extensions meet [the requirements](#what-are-the-requirements-to-associate-a-new-extension-to-a-language). If everything looks correct, but you'd still like another language to appear first, please consider using an [override](https://github.com/github/linguist#overrides).
 
