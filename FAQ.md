@@ -147,7 +147,7 @@ You can trigger a new analysis of your repository by pushing a change to your re
 There are three primary reasons why a file may not be highlighted:
 
 - the language for that file is not supported by Linguist, or
-- Linguist doesn't have a grammar to highlight files for that language, or
+- Linguist doesn't have a grammar to highlight files for that language or
 - Linguist was unable to properly detect the language.
 
 If [the language is not supported by Linguist](#how-can-i-check-if-linguist-supports-a-given-language), and you believe it meets [the requirements for support](#what-are-the-requirements-to-add-support-for-a-new-language-or-associate-a-new-extension-with-a-language), please consider [submitting a pull request](https://github.com/github/linguist/blob/master/CONTRIBUTING.md#adding-a-language).
