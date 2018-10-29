@@ -246,6 +246,9 @@ class TestBlob < Minitest::Test
     # protobuf/grpc-plugin C++
     assert sample_blob_memory("C++/hello.grpc.pb.h").generated?
     assert sample_blob_memory("C++/grpc.pb.cc").generated?
+
+    # pkgdown-generateed HTML
+    assert sample_blob_memory("HTML/pkgdown.html").generated?
   end
 
   def test_vendored
@@ -256,7 +259,8 @@ class TestBlob < Minitest::Test
     Samples.each do |sample|
       blob = sample_blob_memory(sample[:path])
       assert blob.language, "No language for #{sample[:path]}"
-      assert_equal sample[:language], blob.language.name, blob.name
+      fs_name = blob.language.fs_name ? blob.language.fs_name : blob.language.name
+      assert_equal sample[:language], fs_name, blob.name
     end
 
     # Test language detection for files which shouldn't be used as samples
@@ -280,7 +284,8 @@ class TestBlob < Minitest::Test
           assert blob.generated?, "#{filepath} is not a generated file"
         else
           assert blob.language, "No language for #{filepath}"
-          assert_equal language, blob.language.name, blob.name
+          fs_name = blob.language.fs_name ? blob.language.fs_name : blob.language.name
+          assert_equal language, fs_name, blob.name
         end
       end
     end
