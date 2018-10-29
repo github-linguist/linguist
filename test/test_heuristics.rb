@@ -322,6 +322,14 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  # Candidate languages = ["Pascal", "Puppet"]
+  def test_pp_by_heuristics
+    assert_heuristics({
+      "Pascal" => all_fixtures("Pascal", "*.pp"),
+      "Puppet" => all_fixtures("Puppet", "*.pp") - ["#{samples_path}/Puppet/stages-example.pp", "#{samples_path}/Puppet/hiera_include.pp"]
+    })
+  end
+
   # Candidate languages = ["IDL", "Prolog", "QMake", "INI"]
   def test_pro_by_heuristics
     assert_heuristics({
