@@ -97,7 +97,7 @@ Considering all this, if you still believe the repository should display a langu
 
 ### What are markup or programming languages?
 
-When a language is added to Linguist, a type is associated with it in [`languages.yml`](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml), and the choices are: `markup`, `programming`, `prose` or `data`.
+When a language is added to Linguist, one of four types is associated with it in [`languages.yml`](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml): `markup`, `programming`, `prose` or `data`.
 
 - Markup languages are those that are designed for the processing, definition and presentation of text, like HTML and CSS.
 - Programming languages are those that are designed to create a program, like C, Ruby and Bash.
