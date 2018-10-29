@@ -84,7 +84,7 @@ If all of the files you are expecting to see meet all the search considerations 
 
 Only [programming and markup languages](#what-are-markup-or-programming-languages) are counted in the language statistics. Files that are considered vendored, documentation, data languages, or generated will be excluded by default.
 
-For example, if all your code occurs in a directory called `vendor` it will be excluded as `vendor` in the path is considered vendored. Similarly, if all your code is in a directory called `examples`, it'll be excluded as files under `examples` are considered documentation. You can see a list of all the paths and criteria for each listed in:
+For example, if all your code occurs in a directory called `vendor` it will be excluded as `vendor` in the path is considered vendored. Similarly, if all your code is in a directory called `examples`, it'll be excluded as files under `examples` are considered documentation. You can see a list of all the paths and criteria listed in:
 
 - [`vendored.yml`](https://github.com/github/linguist/blob/master/lib/linguist/vendor.yml),
 - [`documentation.yml`](https://github.com/github/linguist/blob/master/lib/linguist/documentation.yml),
