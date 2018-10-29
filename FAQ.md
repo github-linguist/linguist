@@ -43,13 +43,13 @@
 
 Linguist takes the list of languages it knows from [`languages.yml`](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml) and uses the [following strategies](https://github.com/github/linguist/blob/8bf9efa3702a1a43df85dc5cd72b63f3ff36871f/lib/linguist.rb#L61-L69), in order, with each step either identifying the precise language or reducing the number of likely languages passed down to the next strategy, until a single language is identified:
 
-- Use the language defined by a [Vim or Emacs modeline](https://github.com/github/linguist/blob/master/README.md#using-emacs-or-vim-modelines).
-- Use the language associated with a commonly used filename, for example [`Makefile`](https://github.com/github/linguist/blob/a878620a8ee6f45d89d8c6e1cdfbe49cb821ddfe/lib/linguist/languages.yml#L2528-L2532).
-- Use the language associated with a shebang in the file, for a example a file with a [`#!/bin/bash` shebang](https://github.com/github/linguist/blob/a878620a8ee6f45d89d8c6e1cdfbe49cb821ddfe/lib/linguist/languages.yml#L4193) will be classified as Shell.
-- Use the language associated with the file extension, for example `.php`. Languages that share a common extention, for example C, C++ and Objective-C use `.h`, are further refined by subsequent strategies.
-- Use XML if an [XML root tag is found](https://github.com/github/linguist/blob/master/lib/linguist/strategy/xml.rb).
-- Use the language determined by a set of regexp-based [heuristic rules](https://github.com/github/linguist/blob/master/lib/linguist/heuristics.yml).
-- Use the best matched language returned by a naïve Bayesian classifier trained on [sample files](https://github.com/github/linguist/tree/master/samples). This is the last strategy with the lowest accuracy. The classifier always takes a subset of languages as input; it is not meant to classify all languages.
+1. Use the language defined by a [Vim or Emacs modeline](https://github.com/github/linguist/blob/master/README.md#using-emacs-or-vim-modelines).
+2. Use the language associated with a commonly used filename, for example [`Makefile`](https://github.com/github/linguist/blob/a878620a8ee6f45d89d8c6e1cdfbe49cb821ddfe/lib/linguist/languages.yml#L2528-L2532).
+3. Use the language associated with a shebang in the file, for a example a file with a [`#!/bin/bash` shebang](https://github.com/github/linguist/blob/a878620a8ee6f45d89d8c6e1cdfbe49cb821ddfe/lib/linguist/languages.yml#L4193) will be classified as Shell.
+4. Use the language associated with the file extension, for example `.php`. Languages that share a common extention, for example C, C++ and Objective-C use `.h`, are further refined by subsequent strategies.
+5. Use XML if an [XML root tag is found](https://github.com/github/linguist/blob/master/lib/linguist/strategy/xml.rb).
+6. Use the language determined by a set of regexp-based [heuristic rules](https://github.com/github/linguist/blob/master/lib/linguist/heuristics.yml).
+7. Use the best matched language returned by a naïve Bayesian classifier trained on [sample files](https://github.com/github/linguist/tree/master/samples). This is the last strategy with the lowest accuracy. The classifier always takes a subset of languages as input; it is not meant to classify all languages.
 
 
 ### How does Linguist work on GitHub.com?
