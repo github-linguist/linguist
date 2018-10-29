@@ -217,7 +217,7 @@ If Linguist doesn't currently support your language, you will need to add suppor
 
 ### How can I check if Linguist supports a given language?
 
-The list of supported languages is listed in [`languages.yml`](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml), with the associated extensions, shebangs, and filenames.
+The list of supported languages is listed in [`languages.yml`](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml), with the associated extensions, shebangs and filenames.
 
 
 ### How do I add a new language?
