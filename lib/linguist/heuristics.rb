@@ -103,7 +103,7 @@ module Linguist
     # Internal: Perform the heuristic
     def call(data, filename)
       matched = @rules.find do |rule|
-        unless rule['filename_pattern'].nil?
+        if rule['filename_pattern']
           rule['filename_pattern'].match(filename)
         else
           rule['pattern'].match(data)
