@@ -64,6 +64,7 @@ module Linguist
       go_lock? ||
       npm_shrinkwrap_or_package_lock? ||
       godeps? ||
+      go_mod? ||
       generated_by_zephir? ||
       minified_files? ||
       has_source_map? ||
@@ -376,6 +377,13 @@ module Linguist
     # Returns true or false.
     def godeps?
       !!name.match(/Godeps\//)
+    end
+
+    # Internal: Is the blob a Go module metadata file?
+    #
+    # Returns true or false.
+    def go_mod?
+      name.match(/go\.mod/) || name.match(/go\.sum/)
     end
 
     # Internal: Is the blob a generated php composer lock file?
