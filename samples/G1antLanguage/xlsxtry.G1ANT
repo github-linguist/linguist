@@ -1,0 +1,13 @@
+addon msoffice version 2.205.17304.1000
+addon xlsx version 2.205.17304.1000
+addon core version 4.83.18303.1058
+addon language version 4.83.18303.1058
+
+xlsx.open path ‴C:\Users\Marek Kosiński\Documents\test.xlsx‴ accessmode ‴readwrite‴ result ♥xls1
+xlsx.open path ‴C:\Users\Marek Kosiński\Documents\test2.xlsx‴ accessmode ‴readwrite‴ result ♥xls2
+xlsx.switch id ♥xls1
+xlsx.getvalue row 1 colname a result ♥A1
+dialog ♥A1
+xlsx.switch id ♥xls2
+xlsx.getvalue row 1 colname a result ♥A2
+dialog ♥A2 
