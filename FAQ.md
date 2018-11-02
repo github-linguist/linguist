@@ -217,7 +217,7 @@ Linguist detects the language of a file, but the actual syntax-highlighting is p
 
 ### Can I define my own syntax highlighter for files in my repository?
 
-GitHub doesn't currently offer a way to define a custom grammar for unsupported languages within a specific repository. All support needs to be provided through Linguist.
+GitHub doesn't currently offer a way to define a custom grammar for unsupported languages. All support needs to be provided through Linguist.
 
 If you have a Sublime Text, Atom, or TextMate grammar for a language Linguist already supports and it performs better than the grammar Linguist currently uses, please [submit a pull request](https://github.com/github/linguist/blob/master/CONTRIBUTING.md#changing-the-source-of-a-syntax-highlighting-grammar)!
 
