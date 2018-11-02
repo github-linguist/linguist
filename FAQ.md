@@ -15,7 +15,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [Language Detection](#language-detection)
+- [Language detection](#language-detection)
   - [How does Linguist detect the language of a file?](#how-does-linguist-detect-the-language-of-a-file)
   - [How does Linguist work on GitHub.com?](#how-does-linguist-work-on-githubcom)
   - [How can I change the language of my repository?](#how-can-i-change-the-language-of-my-repository)
@@ -61,42 +61,60 @@ Linguist takes the list of languages it knows from [`languages.yml`][] and uses 
 4. Use the language associated with the file extension, for example `.php`. Languages that share a common extension, for example C, C++ and Objective-C use `.h`, are further refined by subsequent strategies.
 5. Use XML if an [XML root tag is found](https://github.com/github/linguist/blob/master/lib/linguist/strategy/xml.rb).
 6. Use the language determined by a set of regexp-based [heuristic rules][`heuristics.yml`].
-7. Use the best matched language returned by a naïve Bayesian classifier trained on [sample files][]. This is the last strategy with the lowest accuracy. The classifier always takes a subset of languages as input; it is not meant to classify all languages.
+7. Use the best matched language returned by a naïve Bayesian classifier trained on [sample files][].
+   This is the last strategy with the lowest accuracy.
+   The classifier always takes a subset of languages as input; it is not meant to classify all languages.
 
 
 ### How does Linguist work on GitHub.com?
 
-When you push changes to a repository on GitHub.com, a low priority background job is enqueued to analyze the files in your repository as explained in [*How does Linguist detect the language of a file?*](#how-does-linguist-detect-the-language-of-a-file). The results of this analysis are cached for the lifetime of your repository and are only updated when the repository is updated.
+When you push changes to a repository on GitHub.com, a low priority background job is enqueued to analyze the files in your repository as explained in [*How does Linguist detect the language of a file?*](#how-does-linguist-detect-the-language-of-a-file).
+The results of this analysis are cached for the lifetime of your repository and are only updated when the repository is updated.
 
 As this analysis is performed by a low priority background job, it can take a while, particularly during busy periods, for your language statistics bar to reflect your changes.
 
 
+### How is a repository's language determined?
+
+A common misconception is that GitHub reports a repository language.
+This is not the case.
+Instead, GitHub uses a concept of _"this repository contains these languages in X, Y and Z proportions"_, and these proportions are determined by Linguist based on the bytes of code found within the repository.
+The "repository language" you see is the most prominent language detected and this is what is is shown next to the repository's name on some pages.
+
+
 ### How can I change the language of my repository?
 
-A common misconception is that GitHub reports a repository language. This is not the case. Instead, GitHub uses a concept of _"this repository contains these languages in X, Y and Z proportions"_, and these proportions are determined by Linguist based on the bytes of code found within the repository. The "repository language" you see is the most prominent language detected and this is what is is shown next to the repository's name on some pages.
-
-If you believe the language statistics for your repository are incorrect, please see [*The language statistics in my repository are wrong*](#the-language-statistics-in-my-repository-are-wrong). If you believe we missed a language or one of its extensions, please consider [submitting a pull request](https://github.com/github/linguist/blob/master/CONTRIBUTING.md#adding-an-extension-to-a-language) if said extensions meet [the requirements](#what-are-the-requirements-to-associate-a-new-extension-to-a-language). If everything looks correct, but you'd still like another language to appear first, please consider using an [override][].
+If you believe the language statistics for your repository are incorrect, please see [*The language statistics in my repository are wrong*](#the-language-statistics-in-my-repository-are-wrong).
+If you believe we missed a language or one of its extensions, please consider [submitting a pull request](https://github.com/github/linguist/blob/master/CONTRIBUTING.md#adding-an-extension-to-a-language) if said extensions meet [the requirements](#what-are-the-requirements-to-associate-a-new-extension-to-a-language).
+If everything looks correct, but you'd still like another language to appear first, please consider using an [override][].
 
 
 ### The language detected for some files in my repository is incorrect.
 
 You can force Linguist to determine the correct language using an [override][].
 
-It's also likely you can help us improve things. If you believe we don't support a language we should, and if that language is [widespread enough](#what-are-the-requirements-to-add-support-for-a-new-language-or-associate-a-new-extension-with-a-language), you can [send us a pull request](https://github.com/github/linguist/blob/master/CONTRIBUTING.md#adding-a-language). It is also possible to improve classification for existing languages by adding new [sample files][] or by adding/improving the [heuristic rules][`heuristics.yml`].
+It's also likely you can help us improve things.
+If you believe we don't support a language we should, and if that language is [widespread enough](#what-are-the-requirements-to-add-support-for-a-new-language-or-associate-a-new-extension-with-a-language), you can [send us a pull request](https://github.com/github/linguist/blob/master/CONTRIBUTING.md#adding-a-language).
+It is also possible to improve classification for existing languages by adding new [sample files][] or by adding/improving the [heuristic rules][`heuristics.yml`].
 
 
 ### When I click on a language in the statistics bar, no corresponding files are found in the search page.
 
-This is commonly caused by the size of the files for that specific language. GitHub does not index files larger than 384KB, however they still count towards the language statistics. Other [code search restrictions](https://help.github.com/articles/searching-code/#considerations-for-code-search) could also apply.
+This is commonly caused by the size of the files for that specific language.
+GitHub does not index files larger than 384KB, however they still count towards the language statistics.
+Other [code search restrictions](https://help.github.com/articles/searching-code/#considerations-for-code-search) could also apply.
 
 If all of the files you are expecting to see meet all the search considerations and still aren't appearing in the search results, please [contact GitHub support](https://github.com/contact).
 
 
 ### No language is detected in my repository.
 
-Only [programming and markup languages](#what-are-markup-or-programming-languages) are counted in the language statistics. Files that are considered vendored, documentation, data languages, or generated will be excluded by default.
+Only [programming and markup languages](#what-are-markup-or-programming-languages) are counted in the language statistics.
+Files that are considered vendored, documentation, data languages, or generated will be excluded by default.
 
-For example, if all your code occurs in a directory called `vendor` it will be excluded as `vendor` in the path is considered vendored. Similarly, if all your code is in a directory called `examples`, it'll be excluded as files under `examples` are considered documentation. You can see a list of all the paths and criteria listed in:
+For example, if all your code occurs in a directory called `vendor` it will be excluded as `vendor` in the path is considered vendored.
+Similarly, if all your code is in a directory called `examples`, it'll be excluded as files under `examples` are considered documentation.
+You can see a list of all the paths and criteria listed in:
 
 - [`vendor.yml`][],
 - [`documentation.yml`][],
@@ -126,7 +144,9 @@ The percentages in the statistics bar are calculated based on the total **bytes 
 
 ### The language statistics in my repository are wrong.
 
-The percentages in the statistics bar are calculated based on the total **bytes of code** for each [programming or markup language](#what-are-markup-or-programming-languages), after excluding [vendored][`vendor.yml`], [generated][`generated.rb`], and [documentation][`documentation.yml`] files. Considering this, if you believe the statistics are incorrect, it is likely that some files were incorrectly classified. Please read [*The language detected for some files in my repository is incorrect*](#the-language-detected-for-some-files-in-my-repository-is-incorrect) to fix it.
+The percentages in the statistics bar are calculated based on the total **bytes of code** for each [programming or markup language](#what-are-markup-or-programming-languages), after excluding [vendored][`vendor.yml`], [generated][`generated.rb`], and [documentation][`documentation.yml`] files.
+Considering this, if you believe the statistics are incorrect, it is likely that some files were incorrectly classified.
+Please read [*The language detected for some files in my repository is incorrect*](#the-language-detected-for-some-files-in-my-repository-is-incorrect) to fix it.
 
 
 ### How do I hide files in diffs?
@@ -143,12 +163,15 @@ If you believe Linguist should already recognize these files as generated, you c
 
 ### Why are some of my files not counted in the language statistics?
 
-Only files with a [markup or programming language](#what-are-markup-or-programming-languages) are counted in statistics. In addition, [generated][`generated.rb`], [documentation][`documentation.yml`], and [vendored][`vendor.yml`] files are excluded from statistics.
+Only files with a [markup or programming language](#what-are-markup-or-programming-languages) are counted in statistics.
+In addition, [generated][`generated.rb`], [documentation][`documentation.yml`], and [vendored][`vendor.yml`] files are excluded from statistics.
 
 
 ### How can I trigger an update of the language detection in my repository?
 
-You can trigger a new analysis of your repository by pushing a change to your repository. This will enqueue a low priority background job that will analyze your repository. Keep in mind that it may take a while, particularly during busy periods, for your language statistics bar to reflect your changes.
+You can trigger a new analysis of your repository by pushing a change to your repository.
+This will enqueue a low priority background job that will analyze your repository.
+Keep in mind that it may take a while, particularly during busy periods, for your language statistics bar to reflect your changes.
 
 ---
 
@@ -164,9 +187,11 @@ There are three primary reasons why a file may not be highlighted:
 
 If [the language is not supported by Linguist](#how-can-i-check-if-linguist-supports-a-given-language), and you believe it meets [the requirements for support](#what-are-the-requirements-to-add-support-for-a-new-language-or-associate-a-new-extension-with-a-language), please consider [submitting a pull request](https://github.com/github/linguist/blob/master/CONTRIBUTING.md#adding-a-language).
 
-You can see if Linguist has a grammar for the language in the [list of grammars][grammars]. If it doesn't and you know a Sublime Text, Atom or TextMate grammar that would work, please consider [submitting a pull request](https://github.com/github/linguist/blob/master/CONTRIBUTING.md#fixing-syntax-highlighting).
+You can see if Linguist has a grammar for the language in the [list of grammars][grammars].
+If it doesn't and you know a Sublime Text, Atom or TextMate grammar that would work, please consider [submitting a pull request](https://github.com/github/linguist/blob/master/CONTRIBUTING.md#fixing-syntax-highlighting).
 
-If Linguist supports the language and it has a grammar, the lack of syntax highlighting is probably the result of a misclassification. Please read [*The language detected for some files in my repository is incorrect*](#the-language-detected-for-some-files-in-my-repository-is-incorrect) to fix it.
+If Linguist supports the language and it has a grammar, the lack of syntax highlighting is probably the result of a misclassification.
+Please read [*The language detected for some files in my repository is incorrect*](#the-language-detected-for-some-files-in-my-repository-is-incorrect) to fix it.
 
 If a file was previously misclassified and you have implemented an override, you will need to push a change for the affected file too to invalidate the cached syntax highlighting.
 
@@ -190,14 +215,16 @@ For each language in [`languages.yml`][], you can use as specifiers:
 1. any of the language `aliases`;
 1. any of the language `interpreters`;
 1. any of the file extensions, with or without a leading `.`.
-White spaces must be replaced by dashes, for example, `emacs-lisp` is one specifier for `Emacs Lisp`. Languages with a `tm_scope: none` entry don't have a grammar defined and won't be highlighted on GitHub.com.
+   Whitespace must be replaced by dashes, for example, `emacs-lisp` is one specifier for `Emacs Lisp`.
+   Languages with a `tm_scope: none` entry don't have a grammar defined and won't be highlighted on GitHub.
 
 
 ### I found a syntax highlighting error.
 
 Linguist detects the language of a file, but the actual syntax highlighting is powered by a set of language grammars which are included in this project as a set of submodules as [listed here][grammars].
 
-If you experience an issue with the syntax highlighting on GitHub.com, please report the issue to the upstream grammar repository, not here. Grammars are updated automatically with every new release.
+If you experience an issue with the syntax highlighting on GitHub.com, please report the issue to the upstream grammar repository, not here.
+Grammars are updated automatically with every new release.
 
 
 ### When will changes in a syntax highlighting grammar take effect on GitHub.com?
@@ -217,7 +244,8 @@ Linguist detects the language of a file, but the actual syntax-highlighting is p
 
 ### Can I define my own syntax highlighter for files in my repository?
 
-GitHub doesn't currently offer a way to define a custom grammar for unsupported languages. All support needs to be provided through Linguist.
+GitHub doesn't currently offer a way to define a custom grammar for unsupported languages.
+All support needs to be provided through Linguist.
 
 If you have a Sublime Text, Atom, or TextMate grammar for a language Linguist already supports and it performs better than the grammar Linguist currently uses, please [submit a pull request](https://github.com/github/linguist/blob/master/CONTRIBUTING.md#changing-the-source-of-a-syntax-highlighting-grammar)!
 
@@ -244,12 +272,17 @@ Please see [*Adding an extension to a language*](https://github.com/github/lingu
 
 ### What are the requirements to add support for a new language or associate a new extension with a language?
 
-We prefer that each new file extension be in use in hundreds of repositories before supporting them in Linguist. In particular, we are wary of adding new languages for common extensions as they may conflict with other languages and cause misclassifications.
+We prefer that each new file extension be in use in hundreds of repositories before supporting them in Linguist.
+In particular, we are wary of adding new languages for common extensions as they may conflict with other languages and cause misclassifications.
 
 
 ### How can I search for repositories that are using the language or extension I want to add to Linguist?
 
-GitHub doesn't offer a way to search for repositories containing files with a particular file extension. Instead, we recommend you use the [Code search](https://github.com/search?q=extension%3Ajava+NOT+randomstring154769). We will then use [the Harvester tool](https://github.com/Alhadis/Harvester) to deduce the number of repositories from the number of files. You may need to add `NOT randomstring` to your search query for GitHub to allow you to search files only by their extension. If several languages use that extension, you will need to add keywords to your search query to obtain a conservative estimation of the number of files for your particular language.
+GitHub doesn't offer a way to search for repositories containing files with a particular file extension.
+Instead, we recommend you use the [Code search](https://github.com/search?q=extension%3Ajava+NOT+randomstring154769).
+We will then use [the Harvester tool](https://github.com/Alhadis/Harvester) to deduce the number of repositories from the number of files.
+You may need to add `NOT randomstring` to your search query for GitHub to allow you to search files only by their extension.
+If several languages use that extension, you will need to add keywords to your search query to obtain a conservative estimation of the number of files for your particular language.
 
 
 ### When will my pull request for Linguist take effect on GitHub.com?
