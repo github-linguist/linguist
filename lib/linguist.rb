@@ -7,6 +7,7 @@ require 'linguist/repository'
 require 'linguist/samples'
 require 'linguist/shebang'
 require 'linguist/version'
+require 'linguist/strategy/manpage'
 require 'linguist/strategy/xml'
 
 class << Linguist
@@ -62,6 +63,7 @@ class << Linguist
     Linguist::Strategy::Modeline,
     Linguist::Strategy::Filename,
     Linguist::Shebang,
+    Linguist::Strategy::Manpage,
     Linguist::Strategy::Extension,
     Linguist::Strategy::XML,
     Linguist::Heuristics,
