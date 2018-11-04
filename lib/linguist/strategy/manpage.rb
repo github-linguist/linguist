@@ -6,7 +6,7 @@ module Linguist
       SEARCH_SCOPE = 100
 
       # RegExp for matching conventional manpage extensions
-      MANPAGE_EXTS = /\.(?:[1-9](?![1-9])[a-z_0-9]*|0p|n|man|mdoc)(?:\.in)?$/i
+      MANPAGE_EXTS = /\.(?:[1-9](?![0-9])[a-z_0-9]*|0p|n|man|mdoc)(?:\.in)?$/i
 
       # RegExp for matching man(7) and mdoc(7) title macros 
       TITLE_MACRO = /
