@@ -1,0 +1,31 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+require "linguist"
+require "optparse"
+require "pp"
+
+class String
+  def colour(code);
+    "\e[38;5;#{code}m"
+  end
+  def reset; "\e[0m"; end
+  def green; colour(40) + self + reset; end
+  def red;   colour(1)  + self + reset; end
+end
+
+ARGV.each do |path|
+  begin
+    next unless File.file?(path)
+    blob = Linguist::Blob.new(path, File.read(path))
+    result = Linguist::Strategy::Manpage.call(blob)
+    if result.any?
+      puts path.green
+    else
+      puts path.red
+    end
+  rescue Exception => e
+    puts path.red + "".colour(1)
+    pp e
+  end
+end
