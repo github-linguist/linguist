@@ -1,31 +1,58 @@
 #!/usr/bin/env ruby
+# coding: utf-8
 
+CWD = Dir.pwd
+Dir.chdir(__dir__)
 require "bundler/setup"
 require "linguist"
 require "optparse"
 require "pp"
+Manpage = Linguist::Strategy::Manpage
+Dir.chdir(CWD)
 
-class String
-  def colour(code);
-    "\e[38;5;#{code}m"
+$show_all = false
+OptionParser.new do |opts|
+  opts.banner = "Usage:\n  #{$0} [-a|--all] ...files"
+  opts.on("-a", "--all", "Show all match results, not just failures") do
+    $show_all = true
   end
-  def reset; "\e[0m"; end
-  def green; colour(40) + self + reset; end
-  def red;   colour(1)  + self + reset; end
-end
+end.parse!
+
+
+failures = []
+successes = []
 
 ARGV.each do |path|
+  red_cross  = "\e[1;38;5;196m✘\e[22m"
+  green_tick = "\e[1;38;5;40m✓\e[22m"
   begin
-    next unless File.file?(path)
-    blob = Linguist::Blob.new(path, File.read(path))
-    result = Linguist::Strategy::Manpage.call(blob)
-    if result.any?
-      puts path.green
-    else
-      puts path.red
+    # Test contents of manpage file and emit result
+    if File.file?(path) && Manpage::MANPAGE_EXTS.match?(path)
+      blob = Linguist::Blob.new(path, File.read(path))
+      result = Manpage.call(blob)
+      if result.empty?
+        failures << path
+        puts "#{red_cross} #{path}\e[0m"
+      elsif
+        successes << path
+        puts "#{green_tick} #{path}\e[0m" if $show_all
+      end
     end
-  rescue Exception => e
-    puts path.red + "".colour(1)
-    pp e
+  rescue Exception => error
+    puts "#{red_cross} ERROR: #{path}"
+    pp error
+    print "\e[0m"
   end
+end
+
+total_count = failures.count + successes.count
+if(failures.count > 0)
+  print "\e[1;38;5;196m"
+  puts "#{failures.count} out of #{total_count} manpages failed to match:\n"
+  failures.each { |path| puts "\t\e[4m#{path}\e[24m" } 
+  print "\e[0m"
+  exit 1
+else
+  puts "\e[1;38;5;40m#{total_count} all matched!\e[0m"
+  exit 0
 end

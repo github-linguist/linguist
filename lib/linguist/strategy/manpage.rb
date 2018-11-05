@@ -3,7 +3,7 @@ module Linguist
     # Detect a well-formed man(7) or mdoc(7) manpage
     class Manpage
       # Number of lines to search at the beginning of the file
-      SEARCH_SCOPE = 100
+      SEARCH_SCOPE = 500
 
       # RegExp for matching conventional manpage extensions
       MANPAGE_EXTS = /\.(?:[1-9](?![0-9])[a-z_0-9]*|0p|n|man|mdoc)(?:\.in)?$/i
@@ -34,7 +34,8 @@ module Linguist
           header = blob.first_lines(SEARCH_SCOPE).join("\n")
           if match = TITLE_MACRO.match(header)
             title_matches_filename?(match, blob) ||
-            is_header_conventional?(match, header)
+            is_header_conventional?(match, header) ||
+            is_so_link?(header)
           end
         end
       end
@@ -48,8 +49,8 @@ module Linguist
       def self.title_matches_filename?(match, blob)
         file_name  = blob.name.downcase.gsub(/\.[^.]+$/, "")
         file_sect  = blob.extension.downcase.gsub(/^\./, "")
-        param_name = match[:name].downcase.gsub(/^"|"$/, "")
-        param_sect = match[:sect].downcase.gsub(/^"|"$/, "")
+        param_name = match[:name].downcase.gsub(/^"|"$/, "").gsub(/\\-/, "-")
+        param_sect = match[:sect].downcase.gsub(/^"|"$/, "").gsub(/\\-/, "-")
 
         # NB: The /^@.+@$/ matches are for autoconf variables
         (file_name == param_name || /^@.+@$/.match?(param_name)) &&
@@ -73,6 +74,11 @@ module Linguist
           /^[.'][ \t]*SH[ \t]+(NAME\b|"NAME")/.match?(header) &&      # "NAME"
           /^[.'][ \t]*SH[ \t]+(SYNOPSIS\b|"SYNOPSIS")/.match?(header) # "SYNOPSIS"
         end
+      end
+
+      # Internal: Test if file uses an `.so` request to load another page.
+      def self.is_so_link?(header)
+        /\A[.']so[ \t]+\S+\s*\Z/.match?(header)
       end
     end
   end
