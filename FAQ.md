@@ -19,9 +19,9 @@
   - [How does Linguist detect the language of a file?](#how-does-linguist-detect-the-language-of-a-file)
   - [How does Linguist work on GitHub.com?](#how-does-linguist-work-on-githubcom)
   - [How can I change the language of my repository?](#how-can-i-change-the-language-of-my-repository)
-  - [The language detected for some files in my repository is incorrect.](#the-language-detected-for-some-files-in-my-repository-is-incorrect)
-  - [When I click on a language in the statistics bar, no corresponding files are found in the search page.](#when-i-click-on-a-language-in-the-statistics-bar-no-corresponding-files-are-found-in-the-search-page)
-  - [No language is detected in my repository.](#no-language-is-detected-in-my-repository)
+  - [The language detected for some files in my repository is incorrect](#the-language-detected-for-some-files-in-my-repository-is-incorrect)
+  - [When I click on a language in the statistics bar, no corresponding files are found in the search page](#when-i-click-on-a-language-in-the-statistics-bar-no-corresponding-files-are-found-in-the-search-page)
+  - [No language is detected in my repository](#no-language-is-detected-in-my-repository)
   - [What are markup or programming languages?](#what-are-markup-or-programming-languages)
   - [How are the language statistics computed?](#how-are-the-language-statistics-computed)
   - [The language statistics in my repository are wrong.](#the-language-statistics-in-my-repository-are-wrong)
@@ -32,7 +32,7 @@
   - [Why aren't my files syntax highlighted?](#why-arent-my-files-syntax-highlighted)
   - [How do I disable syntax highlighting for a file?](#how-do-i-disable-syntax-highlighting-for-a-file)
   - [What keywords can I use to highlight a code snippet in Markdown?](#what-keywords-can-i-use-to-highlight-a-code-snippet-in-markdown)
-  - [I found a syntax highlighting error.](#i-found-a-syntax-highlighting-error)
+  - [I found a syntax highlighting error](#i-found-a-syntax-highlighting-error)
   - [When will changes in a syntax highlighting grammar take effect on GitHub.com?](#when-will-changes-in-a-syntax-highlighting-grammar-take-effect-on-githubcom)
   - [I changed a syntax highlighting grammar. Do I need to open a pull request on Linguist for it to take effect on GitHub.com?](#i-changed-a-syntax-highlighting-grammar-do-i-need-to-open-a-pull-request-on-linguist-for-it-to-take-effect-on-githubcom)
   - [How does Linguist highlight files?](#how-does-linguist-highlight-files)
@@ -89,7 +89,7 @@ If you believe we missed a language or one of its extensions, please consider [s
 If everything looks correct, but you'd still like another language to appear first, please consider using an [override][].
 
 
-### The language detected for some files in my repository is incorrect.
+### The language detected for some files in my repository is incorrect
 
 You can force Linguist to determine the correct language using an [override][].
 
@@ -142,7 +142,7 @@ Of these types, only markup and programming count towards the language statistic
 The percentages in the statistics bar are calculated based on the total **bytes of code** for each [programming or markup language](#what-are-markup-or-programming-languages), after excluding [vendored][`vendor.yml`], [generated][`generated.rb`], and [documentation][`documentation.yml`] files.
 
 
-### The language statistics in my repository are wrong.
+### The language statistics in my repository are wrong
 
 The percentages in the statistics bar are calculated based on the total **bytes of code** for each [programming or markup language](#what-are-markup-or-programming-languages), after excluding [vendored][`vendor.yml`], [generated][`generated.rb`], and [documentation][`documentation.yml`] files.
 Considering this, if you believe the statistics are incorrect, it is likely that some files were incorrectly classified.
@@ -219,12 +219,13 @@ For each language in [`languages.yml`][], you can use as specifiers:
    Languages with a `tm_scope: none` entry don't have a grammar defined and won't be highlighted on GitHub.
 
 
-### I found a syntax highlighting error.
+### I found a syntax highlighting error
 
 Linguist detects the language of a file, but the actual syntax highlighting is powered by a set of language grammars which are included in this project as a set of submodules as [listed here][grammars].
 
-If you experience an issue with the syntax highlighting on GitHub.com, please report the issue to the upstream grammar repository, not here.
-Grammars are updated automatically with every new release.
+Please report it to the upstream grammar repository. You can locate the defective repository in [the list of grammars](https://github.com/github/linguist/tree/master/vendor) which Linguist uses to highlight source code.
+
+Once the error has been fixed, it'll disappear with the next release of Linguist.
 
 
 ### When will changes in a syntax highlighting grammar take effect on GitHub.com?
