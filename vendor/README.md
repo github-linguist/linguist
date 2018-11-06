@@ -312,6 +312,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Racket:** [soegaard/racket-highlight-for-github](https://github.com/soegaard/racket-highlight-for-github)
 - **RAML:** [atom/language-yaml](https://github.com/atom/language-yaml)
 - **Rascal:** [usethesource/rascal-syntax-highlighting](https://github.com/usethesource/rascal-syntax-highlighting)
+- **Razor:** [austincummings/razor-plus](https://github.com/austincummings/razor-plus)
 - **RDoc:** [joshaven/RDoc.tmbundle](https://github.com/joshaven/RDoc.tmbundle)
 - **REALbasic:** [angryant0007/VBDotNetSyntax](https://github.com/angryant0007/VBDotNetSyntax)
 - **Reason:** [reasonml-editor/language-reason](https://github.com/reasonml-editor/language-reason)

@@ -505,7 +505,6 @@ C#:
   extensions:
   - ".cs"
   - ".cake"
-  - ".cshtml"
   - ".csx"
   language_id: 42
 C++:
@@ -1866,6 +1865,16 @@ HTML+PHP:
   codemirror_mode: php
   codemirror_mime_type: application/x-httpd-php
   language_id: 151
+HTML+Razor:
+  type: markup
+  tm_scope: text.html.razor
+  group: HTML
+  extensions:
+  - ".cshtml"
+  ace_mode: razor
+  codemirror_mode: razor
+  codemirror_mime_type: text/x-razor
+  language_id: 432
 HTTP:
   type: data
   extensions:
