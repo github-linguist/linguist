@@ -23,10 +23,11 @@ class ManpageTester
   CROSS = "✘ "
 
   def initialize
-    @show_all  = false
-    @recursive = false
-    @failures  = []
-    @matches   = []
+    @show_all    = false
+    @recursive   = false
+    @failures    = []
+    @matches     = []
+    @show_errors = false
   end
 
   attr_accessor :show_all, :recursive, :failures, :matches
@@ -44,8 +45,7 @@ class ManpageTester
   def show_summary
     total = @failures.count + @matches.count
     if @failures.count > 0
-      puts RED + @failures.count.to_s + " out of #{total.to_s} manpages failed to match:\n"
-      puts @failures.each.to_a.join("\n").gsub(/^/, "\t") + RESET
+      puts RED + @failures.count.to_s + " out of #{total.to_s} manpages failed to match#{RESET}"
       exit 1
     elsif @matches.count > 0
       puts GREEN + total.to_s + " all matched!" + RESET
@@ -75,6 +75,7 @@ class ManpageTester
     return unless Manpage::MANPAGE_EXTS.match?(path)
     begin
       blob = Linguist::Blob.new(path, File.read(path))
+      return if blob.large?
       result = Manpage.call(blob)
       if result.empty?
         @failures << path
@@ -83,7 +84,7 @@ class ManpageTester
         @matches << path
         show_pass path
       end
-    rescue Exception => error
+    rescue StandardError => error
       show_error error, path
     end
   end
@@ -103,6 +104,7 @@ class ManpageTester
   # They're usually related to the encoding of loaded content, which is
   # annoying, but generally safe to ignore.
   def show_error(error, path = "")
+    return unless @show_errors
     path = " #{path}" if path
     puts RED + CROSS + "ERROR:" + path
     puts error.inspect.gsub(/^/, "\t") + RESET
@@ -117,6 +119,9 @@ OptionParser.new do |opts|
   opts.banner = "Usage:\n  #{$0} [-a|--all] ...files"
   opts.on("-a", "--all", "Show all match results, not just failures") do
     tester.show_all = true
+  end
+  opts.on("-e", "--show-errors", "Show raised exceptions caught during recursion") do
+    tester.show_errors = true
   end
   opts.on("-r", "--recurse", "Recurse through subdirectories in search of manpages") do
     tester.recursive = true

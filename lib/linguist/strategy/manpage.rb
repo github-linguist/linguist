@@ -12,8 +12,8 @@ module Linguist
       TITLE_MACRO = /
         ^ [.']
         [ \t]* (?<macro> TH|Dt)
-        [ \t]+ (?<name>  "[^\n"]+"|[^ \s"]+)
-        [ \t]+ (?<sect>  "[^\n"]+"|[^ \s"]+)
+        [ \t]+ (?<name>  "[^\n"]+"|[^\s"]+)
+        [ \t]+ (?<sect>  "[^\n"]+"|[^\s"]+)
       /x
 
       # Public: Detect a Roff manpage based on its content and file extension.
