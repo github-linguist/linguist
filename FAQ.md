@@ -198,14 +198,14 @@ If a file was previously misclassified and you have implemented an override, you
 
 ### How do I disable syntax highlighting for a file?
 
-You can disable syntax highlighting by telling Linguist the file is a Text file:
+You can't. However, you can use `.gitattributes` to flag a file as ordinary text instead of source code:
 
 ```
-$ cat .gitattributes
-path/to/the/file linguist-language=Text
+path/to/unhighlighted-file/* linguist-language=Text
 ```
 
 You will need to push a change for the affected file too to invalidate the cached syntax highlighting.
+Be aware that doing so will affect your repository's language statistics.
 
 
 ### What keywords can I use to highlight a code snippet in Markdown?
