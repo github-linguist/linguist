@@ -8,14 +8,6 @@ module Linguist
       # RegExp for matching conventional manpage extensions
       MANPAGE_EXTS = /\.(?:[1-9](?![0-9])[a-z_0-9]*|0p|n|man|mdoc)(?:\.in)?$/i
 
-      # RegExp for matching man(7) and mdoc(7) title macros 
-      TITLE_MACRO = /
-        ^ [.']
-        [ \t]* (?<macro> TH|Dt)
-        [ \t]+ (?<name>  "[^\n"]+"|[^\s"]+)
-        [ \t]+ (?<sect>  "[^\n"]+"|[^\s"]+)
-      /x
-
       # Public: Detect a Roff manpage based on its content and file extension.
       #
       # blob       - An object that quacks like a blob.
@@ -25,71 +17,85 @@ module Linguist
       # if the strategy matched, and an empty array if the strategy didn't. 
       def self.call(blob, candidates = [])
         return candidates if candidates.any?
-        valid_manpage?(blob) ? [Language["Roff"]] : []
+        Manpage.new(blob).well_formed? ? [Language["Roff"]] : []
       end
 
-      # Wrapper method which handles the actual checking routines.
-      def self.valid_manpage?(blob)
-        if MANPAGE_EXTS.match?(blob.name)
-          header = blob.first_lines(SEARCH_SCOPE).join("\n")
-          if match = TITLE_MACRO.match(header)
-            title_matches_filename?(match, blob)   ||
-            is_header_conventional?(match, header) ||
-            is_pod_generated?(header)
-          else
-            is_so_link?(header)
+      def initialize(blob)
+        @blob = blob
+      end
+
+      def well_formed?
+        valid_ext? && valid_prologue?
+      end
+
+      # Is the file extension a conventional-looking manpage suffix?
+      def valid_ext?
+        if @blob.name =~ MANPAGE_EXTS
+          @name = $`
+          @ext = $~
+        end
+      end
+
+      # Scan the document's header in search of a .Dt or .TH line
+      def valid_prologue?
+        @valid_prologue = false
+
+        # 1-line manpages often use ".so" as "redirects" to other pages 
+        if @blob.sloc < 2 && /\A[.'][ \t]*so[ \t]+\S/.match?(@blob.lines[0])
+          @valid_prologue = true
+
+        else
+          @blob.first_lines(SEARCH_SCOPE).each do |line|
+            if empty_or_comment_only?(line)
+              next
+            # Skip over unrelated Roff commands, looking for the Dt/TM macro
+            elsif command_line?(line)
+              next
+            # We've found the title before the first visible line of text
+            elsif title_declaration?(line)
+              @valid_prologue = true
+              break
+            # There shouldn't be text before the document title
+            elsif input_text_line?(line)
+              @valid_prologue = false
+              break
+            end
+          end
+          @valid_prologue
+        end
+      end
+
+      def empty_or_comment_only?(line)
+        /^[.']?[ \t]*(?=$|\\")/.match?(line)
+      end
+
+      def title_declaration?(line)
+        if /^[.'][ \t]*(Dt|TH)[ \t]+(\S.*)$/.match(line)
+          @macro_name = $1
+          @macro_args = $2
+
+          # Set "flavour" by macro type
+          @uses_mdoc = false
+          @uses_man = false
+          case @macro_name
+            when "Dt"; @uses_mdoc = true
+            when "TH"; @uses_man  = true
           end
         end
       end
 
-      # Internal: First test we make, which should match most manpages.
-      #
-      # match - A #<MatchData> object returned from the extension match
-      # blob  - An object which quacks like a blob
-      #
-      # Returns a Boolean.
-      def self.title_matches_filename?(match, blob)
-        file_name  = blob.name.downcase.gsub(/\.[^.]+$/, "")
-        file_sect  = blob.extension.downcase.gsub(/^\./, "")
-        param_name = match[:name].downcase.gsub(/^"|"$/, "")
-        param_sect = match[:sect].downcase.gsub(/^"|"$/, "")
-
-        # Clean up characters which are sometimes (erroneously) escaped
-        param_name.gsub!(/\\(?=[-.])/, "")
-        param_sect.gsub!(/\\(?=[-.])/, "")
-
-        # NB: The /^@.+@$/ matches are for autoconf variables
-        (file_name == param_name || /^@.+@$/.match?(param_name)) &&
-        (file_sect == param_sect || /^@.+@$/.match?(param_sect))
-      end
-
-      # Internal: Second test that's run if the first happened to fail. 
-      #
-      # match - A #<MatchData> object returned from the extension match
-      # blob  - An object which quacks like a blob
-      #
-      # Returns a Boolean.
-      def self.is_header_conventional?(match, header)
-        if "Dt" == match[:macro]
-          # mdoc: Well-formed prologues will contain the following:
-          /^[.'][ \t]*Dd[ \t]+\S/.match?(header) && # Document date
-          /^[.'][ \t]*Os(?=\s|$)/.match?(header) && # System identifier
-          /^[.'][ \t]*Sh[ \t]+(NAME\b|"NAME")/.match?(header) # A "NAME" section
-        else
-          # man: Few expectations apply, so just match two common sections:
-          /^[.'][ \t]*SH[ \t]+(NAME\b|"NAME")/.match?(header) &&      # "NAME"
-          /^[.'][ \t]*SH[ \t]+(SYNOPSIS\b|"SYNOPSIS")/.match?(header) # "SYNOPSIS"
-        end
-      end
-
-      # Internal: Test if file uses an `.so` request to load another page.
-      def self.is_so_link?(header)
-        /\A[.']so[ \t]+\S+\s*\Z/.match?(header)
-      end
-
-      # Internal: Test for a pod2man(1)-generated manpage
-      def self.is_pod_generated?(header)
-        /^\.\\" Automatically generated by Pod::Man /.match?(header)
+      def command_line?(line)
+        /^[.'][ \t]*
+        (AT|B|BI|BR|BT|DT|EE|EX|HP|IB|IP|IR|LP|ME|MT|OP|P|PD|PP|PT|R|RB|RE|RI|RS|SB|SH|SM
+        |SS|TP|UC|UE|UR|%A|%B|%C|%D|%I|%J|%N|%O|%P|%Q|%R|%T|%U|%V|Ac|Ad|An|Ao|Ap|Aq|Ar
+        |At|Bc|Bd|Bf|Bk|Bl|Bo|Bq|Brc|Bro|Brq|Bsx|Bt|Bx|Cd|Cm|D1|Dc|Dd|Dl|Do|Dq|Dv|Dx|Ec
+        |Ed|Ef|Ek|El|Em|En|Eo|Er|Es|Ev|Ex|Fa|Fc|Fd|Fl|Fn|Fo|Fr|Ft|Fx|Hf|Ic|In|It|Lb|Li|Lk
+        |Lp|Ms|Mt|Nd|Nm|No|Ns|Nx|Oc|Oo|Op|Os|Ot|Ox|Pa|Pc|Pf|Po|Pp|Pq|Qc|Ql|Qo|Qq|Re|Rs|Rv
+        |Sc|Sh|Sm|So|Sq|Ss|St|Sx|Sy|Ta|Tn|Ud|Ux|Va|Vt|Xc|Xo|Xr|ab|ad|af|am|as|bd|bp|br|c2
+        |cc|ce|cf|ch|cs|cu|da|de|di|ds|dt|ec|el|em|eo|ev|ex|fc|fi|fl|fp|ft|hc|hw|hy|ie|if
+        |ig|in|it|lc|lg|lf|ll|ls|lt|mc|mk|na|ne|nf|nh|nm|nn|nr|ns|nx|os|pc|pi|pl|pm|pn|po
+        |ps|rd|rm|rn|rr|rs|rt|so|sp|ss|sv|sy|ta|tc|ti|tl|tm|tr|uf|ul|vs|wh)
+        (?=\s|$)/x.match?(line)
       end
     end
   end
