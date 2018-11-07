@@ -167,6 +167,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **HTML+EEX:** [elixir-lang/elixir-tmbundle](https://github.com/elixir-lang/elixir-tmbundle)
 - **HTML+ERB:** [atom/language-ruby](https://github.com/atom/language-ruby)
 - **HTML+PHP:** [textmate/php.tmbundle](https://github.com/textmate/php.tmbundle)
+- **HTML+Razor:** [austincummings/razor-plus](https://github.com/austincummings/razor-plus)
 - **HTTP:** [samsalisbury/Sublime-HTTP](https://github.com/samsalisbury/Sublime-HTTP)
 - **HXML:** [vshaxe/haxe-TmLanguage](https://github.com/vshaxe/haxe-TmLanguage)
 - **Hy:** [Slowki/hy.tmLanguage](https://github.com/Slowki/hy.tmLanguage)
