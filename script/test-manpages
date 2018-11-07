@@ -23,8 +23,8 @@ class ManpageTester
   CROSS = "✘ "
 
   def initialize
-    @show_all    = false
-    @recursive   = false
+    @failed_only = false
+    @recursive   = true
     @failures    = []
     @matches     = []
     @show_errors = false
@@ -91,7 +91,7 @@ class ManpageTester
 
   # Internal: Indicate that a file is a well-formed manpage
   def show_pass(path)
-    return unless @show_all
+    return if @failed_only
     puts GREEN + TICK + path + RESET
   end
 
@@ -117,14 +117,11 @@ tester = ManpageTester.new()
 # Handle CLI options
 OptionParser.new do |opts|
   opts.banner = "Usage:\n  #{$0} [-a|--all] ...files"
-  opts.on("-a", "--all", "Show all match results, not just failures") do
-    tester.show_all = true
-  end
   opts.on("-e", "--show-errors", "Show raised exceptions caught during recursion") do
     tester.show_errors = true
   end
-  opts.on("-r", "--recurse", "Recurse through subdirectories in search of manpages") do
-    tester.recursive = true
+  opts.on("-f", "--failed-only", "Show failed matches only") do
+    tester.failed_only = false
   end
 end.parse!
 
