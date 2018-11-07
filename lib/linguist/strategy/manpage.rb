@@ -2,11 +2,19 @@ module Linguist
   module Strategy
     # Detect a well-formed man(7) or mdoc(7) manpage
     class Manpage
+
       # Number of lines to search at the beginning of the file
+      #
+      # Ample room should be given to accommodate authors who
+      # embed hand-rolled macros or licensing info at the start
+      # of their documents.
       SEARCH_SCOPE = 500
 
-      # RegExp for matching conventional manpage extensions
+      # Public: RegExp for matching conventional manpage extensions
+      #
+      # This is the same expression as that used by `github/markup`
       MANPAGE_EXTS = /\.(?:[1-9](?![0-9])[a-z_0-9]*|0p|n|man|mdoc)(?:\.in)?$/i
+
 
       # Public: Detect a Roff manpage based on its content and file extension.
       #
@@ -24,8 +32,9 @@ module Linguist
         @blob = blob
       end
 
+      # Is this a Roff manpage that begins with a recognisable prologue? 
       def well_formed?
-        valid_ext? && valid_prologue?
+        @well_formed ||= valid_ext? && valid_prologue?
       end
 
       # Is the file extension a conventional-looking manpage suffix?
@@ -33,28 +42,38 @@ module Linguist
         if @blob.name =~ MANPAGE_EXTS
           @name = $`
           @ext = $~
+          true
+        elsif
+          false
         end
       end
 
       # Scan the document's header in search of a .Dt or .TH line
       def valid_prologue?
-        @valid_prologue = false
+        return unless @valid_prologue.nil?
 
-        # 1-line manpages often use ".so" as "redirects" to other pages 
-        if @blob.sloc < 2 && /\A[.'][ \t]*so[ \t]+\S/.match?(@blob.lines[0])
+        # A single-line manpage could only be valid if it's a `.so` redirect
+        if @blob.sloc < 2
+          @valid_prologue = so_request?(@blob.lines[0])
+
+        # Short-circuit on pages which have a preprocessor hint as their first line:
+        # https://www.gnu.org/software/groff/manual/html_node/Preprocessors-in-man-pages.html
+        elsif /^'\\" [tre]+(?=\s|$)/.match?(@blob.lines[0])
           @valid_prologue = true
 
+        # Scan until a title declaration is reached, or an input line is found.
+        # Well-formed manpages will never have content before their prologues.
         else
           @blob.first_lines(SEARCH_SCOPE).each do |line|
             if empty_or_comment_only?(line)
-              next
-            # Skip over unrelated Roff commands, looking for the Dt/TM macro
-            elsif command_line?(line)
               next
             # We've found the title before the first visible line of text
             elsif title_declaration?(line)
               @valid_prologue = true
               break
+            # Skip unrelated Roff commands, keep searching for a Dt/TH macro
+            elsif command_line?(line)
+              next
             # There shouldn't be text before the document title
             elsif input_text_line?(line)
               @valid_prologue = false
@@ -67,6 +86,10 @@ module Linguist
 
       def empty_or_comment_only?(line)
         /^[.']?[ \t]*(?=$|\\")/.match?(line)
+      end
+
+      def so_request?(line)
+        /^[.'][ \t]*so[ \t]+\S/.match?(line)
       end
 
       def title_declaration?(line)
@@ -87,8 +110,8 @@ module Linguist
       def command_line?(line)
         /^[.'][ \t]*
         (AT|B|BI|BR|BT|DT|EE|EX|HP|IB|IP|IR|LP|ME|MT|OP|P|PD|PP|PT|R|RB|RE|RI|RS|SB|SH|SM
-        |SS|TP|UC|UE|UR|%A|%B|%C|%D|%I|%J|%N|%O|%P|%Q|%R|%T|%U|%V|Ac|Ad|An|Ao|Ap|Aq|Ar
-        |At|Bc|Bd|Bf|Bk|Bl|Bo|Bq|Brc|Bro|Brq|Bsx|Bt|Bx|Cd|Cm|D1|Dc|Dd|Dl|Do|Dq|Dv|Dx|Ec
+        |SS|TH|TP|UC|UE|UR|%A|%B|%C|%D|%I|%J|%N|%O|%P|%Q|%R|%T|%U|%V|Ac|Ad|An|Ao|Ap|Aq|Ar
+        |At|Bc|Bd|Bf|Bk|Bl|Bo|Bq|Brc|Bro|Brq|Bsx|Bt|Bx|Cd|Cm|D1|Dc|Dd|Dl|Do|Dq|Dt|Dv|Dx|Ec
         |Ed|Ef|Ek|El|Em|En|Eo|Er|Es|Ev|Ex|Fa|Fc|Fd|Fl|Fn|Fo|Fr|Ft|Fx|Hf|Ic|In|It|Lb|Li|Lk
         |Lp|Ms|Mt|Nd|Nm|No|Ns|Nx|Oc|Oo|Op|Os|Ot|Ox|Pa|Pc|Pf|Po|Pp|Pq|Qc|Ql|Qo|Qq|Re|Rs|Rv
         |Sc|Sh|Sm|So|Sq|Ss|St|Sx|Sy|Ta|Tn|Ud|Ux|Va|Vt|Xc|Xo|Xr|ab|ad|af|am|as|bd|bp|br|c2
