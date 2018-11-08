@@ -385,7 +385,8 @@ class TestLanguage < Minitest::Test
   end
 
   def test_all_languages_have_a_valid_id
-    invalid = Language.all.select { |language| language.language_id < 0 || language.language_id >= (2**31 - 1) }
+    deleted_language_ids = [21]  # Prevent re-use of deleted language IDs
+    invalid = Language.all.select { |language| language.language_id < 0 || deleted_language_ids.include?(language.language_id) || (language.language_id > 431 && language.language_id < 1024) || language.language_id >= (2**31 - 1) }
 
     message = "The following languages do not have a valid language_id. Please run `script/update-ids` as per the contribution guidelines.\n"
     invalid.each { |language| message << "#{language.name}\n" }
