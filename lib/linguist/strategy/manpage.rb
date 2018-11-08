@@ -60,7 +60,7 @@ module Linguist
 
         # Short-circuit on pages which have a preprocessor hint as their first line:
         # https://www.gnu.org/software/groff/manual/html_node/Preprocessors-in-man-pages.html
-        elsif /^'\\" [tre]+(?=\s|$)/.match?(@blob.lines[0])
+        elsif /^'\\" [tre]+(?=\s|$)/.match(@blob.lines[0])
           @valid_prologue = true
 
         # Scan until a title declaration is reached, or an input line is found.
@@ -87,11 +87,11 @@ module Linguist
       end
 
       def empty_or_comment_only?(line)
-        /^[.']?[ \t]*(?=$|\\")/.match?(line)
+        /^[.']?[ \t]*(?=$|\\")/.match(line)
       end
 
       def so_request?(line)
-        /^[.'][ \t]*so[ \t]+\S/.match?(line)
+        /^[.'][ \t]*so[ \t]+\S/.match(line)
       end
 
       def title_declaration?(line)
@@ -120,7 +120,7 @@ module Linguist
         |cc|ce|cf|ch|cs|cu|da|de|di|ds|dt|ec|el|em|eo|ev|ex|fc|fi|fl|fp|ft|hc|hw|hy|ie|if
         |ig|in|it|lc|lg|lf|ll|ls|lt|mc|mk|na|ne|nf|nh|nm|nn|nr|ns|nx|os|pc|pi|pl|pm|pn|po
         |ps|rd|rm|rn|rr|rs|rt|so|sp|ss|sv|sy|ta|tc|ti|tl|tm|tr|uf|ul|vs|wh)
-        (?=\s|$)/x.match?(line)
+        (?=\s|$)/x.match(line)
       end
     end
   end
