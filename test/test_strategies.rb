@@ -41,6 +41,19 @@ class TestStrategies < Minitest::Test
     end
   end
 
+  def test_manpage_strategy
+    assert_equal Language["Roff"], fixture_blob("Data/Manpages/valid.1test").language
+    assert_equal Language["Roff"], fixture_blob("Data/Manpages/valid.2test").language
+    assert_equal Language["Roff"], fixture_blob("Data/Manpages/valid.3test").language
+    assert_equal Language["Roff"], fixture_blob("Data/Manpages/valid.4test").language
+    assert_equal Language["Roff"], fixture_blob("Data/Manpages/valid.5test").language
+    assert_equal Language["Roff"], fixture_blob("Data/Manpages/valid.6test").language
+    assert_equal Language["Roff"], fixture_blob("Data/Manpages/valid.7test").language
+    assert_nil fixture_blob("Data/Manpages/invalid.1test").language
+    assert_nil fixture_blob("Data/Manpages/invalid.2test").language
+    assert_nil fixture_blob("Data/Manpages/invalid.3test").language
+  end
+
   def test_modeline_strategy
     assert_modeline Language["Ruby"], fixture_blob("Data/Modelines/ruby")
     assert_modeline Language["Ruby"], fixture_blob("Data/Modelines/ruby2")

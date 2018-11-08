@@ -15,12 +15,12 @@ class ManpageTester
   SKIP_DIRS = /^\.(?:git|svn|hg)$/
 
   # Various cosmetic formatting junk
-  GREY  = "\e[38;5;8m"
-  RED   = "\e[31;38;5;196m"
-  GREEN = "\e[32;38;5;40m"
-  RESET = "\e[0m"
-  TICK  = "✓ "
-  CROSS = "✘ "
+  GREY  = $stdout.isatty ? "\e[38;5;8m" : ""
+  RED   = $stdout.isatty ? "\e[31;38;5;196m" : ""
+  GREEN = $stdout.isatty ? "\e[32;38;5;40m" : ""
+  RESET = $stdout.isatty ? "\e[0m" : ""
+  TICK  = $stdout.isatty ? "✓ " : "YES\t"
+  CROSS = $stdout.isatty ? "✘ " : "NO\t"
 
   def initialize
     @failed_only = false

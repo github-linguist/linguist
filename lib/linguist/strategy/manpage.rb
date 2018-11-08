@@ -30,6 +30,8 @@ module Linguist
 
       def initialize(blob)
         @blob = blob
+        @valid_prologue = nil
+        @well_formed = nil
       end
 
       # Is this a Roff manpage that begins with a recognisable prologue? 
