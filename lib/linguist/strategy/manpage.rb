@@ -74,8 +74,8 @@ module Linguist
             # Skip unrelated Roff commands, keep searching for a Dt/TH macro
             elsif command_line?(line)
               next
-            # There shouldn't be text before the document title
-            elsif input_text_line?(line)
+            # There shouldn't be content before the document title
+            else
               @valid_prologue = false
               break
             end

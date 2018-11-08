@@ -63,9 +63,9 @@ class << Linguist
     Linguist::Strategy::Modeline,
     Linguist::Strategy::Filename,
     Linguist::Shebang,
-    Linguist::Strategy::Manpage,
     Linguist::Strategy::Extension,
     Linguist::Strategy::XML,
+    Linguist::Strategy::Manpage,
     Linguist::Heuristics,
     Linguist::Classifier
   ]
