@@ -379,7 +379,7 @@ class TestLanguage < Minitest::Test
   def test_all_languages_have_a_language_id_set
     missing = Language.all.select { |language| language.language_id.nil? }
 
-    message = "The following languages do not have a language_id listed in languages.yml. Please add language_id fields for all new languages.\n"
+    message = "The following languages do not have a language_id listed in languages.yml. Please run `script/update-ids` as per the contribution guidelines.\n"
     missing.each { |language| message << "#{language.name}\n" }
     assert missing.empty?, message
   end
