@@ -1,0 +1,101 @@
+<!DOCTYPE PATCH  SYSTEM "http://vvvv.org/versions/vvvv50beta37.dtd" >
+
+   <PATCH nodename="C:\Users\case-12345\Desktop\example.v4p" scrollx="30" scrolly="0" systemname="example" filename="C:\Users\case-12345\Desktop\example.v4p">
+
+   <BOUNDS type="Window" left="3975" top="6540" width="9000" height="6000">
+
+   </BOUNDS>
+
+   <NODE systemname="IOBox (Value Advanced)" nodename="IOBox (Value Advanced)" componentmode="InABox" id="0">
+
+   <BOUNDS type="Node" left="1410" top="795" width="100" height="100">
+
+   </BOUNDS>
+
+   <BOUNDS type="Box" left="1410" top="795" width="795" height="240">
+
+   </BOUNDS>
+
+   <PIN pinname="Y Input Value" slicecount="1" values="9">
+
+   </PIN>
+
+   <PIN pinname="Y Output Value" visible="1">
+
+   </PIN>
+
+   </NODE>
+
+   <NODE systemname="IOBox (Value Advanced)" nodename="IOBox (Value Advanced)" componentmode="InABox" id="1">
+
+   <BOUNDS type="Node" left="3180" top="960" width="100" height="100">
+
+   </BOUNDS>
+
+   <BOUNDS type="Box" left="3180" top="960" width="795" height="240">
+
+   </BOUNDS>
+
+   <PIN pinname="Y Input Value" slicecount="1" values="12">
+
+   </PIN>
+
+   <PIN pinname="Y Output Value" visible="1">
+
+   </PIN>
+
+   </NODE>
+
+   <NODE systemname="Add (Value)" nodename="Add (Value)" componentmode="Hidden" id="2">
+
+   <BOUNDS type="Node" left="2490" top="1665" width="100" height="100">
+
+   </BOUNDS>
+
+   <PIN pinname="Input 1" visible="1">
+
+   </PIN>
+
+   <PIN pinname="Input 2" visible="1">
+
+   </PIN>
+
+   <PIN pinname="Output" visible="1">
+
+   </PIN>
+
+   </NODE>
+
+   <LINK srcnodeid="0" srcpinname="Y Output Value" dstnodeid="2" dstpinname="Input 1">
+
+   </LINK>
+
+   <LINK srcnodeid="1" srcpinname="Y Output Value" dstnodeid="2" dstpinname="Input 2">
+
+   </LINK>
+
+   <NODE nodename="IOBox (Value Advanced)" componentmode="InABox" id="3" systemname="IOBox (Value Advanced)">
+
+   <BOUNDS type="Box" left="2265" top="2775" width="795" height="240">
+
+   </BOUNDS>
+
+   <BOUNDS type="Node" left="2265" top="2775" width="0" height="0">
+
+   </BOUNDS>
+
+   <PIN pinname="Units" slicecount="1" values="||">
+
+   </PIN>
+
+   <PIN pinname="Precision" slicecount="1" values="4">
+
+   </PIN>
+
+   </NODE>
+
+   <LINK srcnodeid="2" srcpinname="Output" dstnodeid="3" dstpinname="Y Input Value">
+
+   </LINK>
+
+   </PATCH> 
