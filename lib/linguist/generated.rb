@@ -589,7 +589,7 @@ module Linguist
       return false unless ['.yy', '.yyp'].include? extname
       return false unless lines.count > 3
       return lines[2].match(/\"modelName\"\:\s*\"GM/) ||
-             lines[0] =~ /^\d\.\d\.\d\u2190/
+             lines[0] =~ /^\d\.\d\.\d.+\|\{/
     end
   end
 end
