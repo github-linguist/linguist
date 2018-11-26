@@ -403,6 +403,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Visual Basic:** [angryant0007/VBDotNetSyntax](https://github.com/angryant0007/VBDotNetSyntax)
 - **Volt:** [textmate/d.tmbundle](https://github.com/textmate/d.tmbundle)
 - **Vue:** [vuejs/vue-syntax-highlight](https://github.com/vuejs/vue-syntax-highlight)
+- **vvvv:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)
 - **Wavefront Material:** [Alhadis/language-wavefront](https://github.com/Alhadis/language-wavefront)
 - **Wavefront Object:** [Alhadis/language-wavefront](https://github.com/Alhadis/language-wavefront)
 - **wdl:** [broadinstitute/wdl-sublime-syntax-highlighter](https://github.com/broadinstitute/wdl-sublime-syntax-highlighter)
