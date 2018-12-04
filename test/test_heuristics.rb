@@ -227,7 +227,7 @@ class TestHeuristics < Minitest::Test
       "MUF" => all_fixtures("MUF", "*.m"),
       "M" => all_fixtures("M", "MDB.m"),
       "Mathematica" => all_fixtures("Mathematica", "*.m") - all_fixtures("Mathematica", "Problem12.m"),
-      "Matlab" => all_fixtures("Matlab", "create_ieee_paper_plots.m"),
+      "MATLAB" => all_fixtures("MATLAB", "create_ieee_paper_plots.m"),
       "Limbo" => all_fixtures("Limbo", "*.m"),
       nil => ["Objective-C/cocoa_monitor.m"]
     })
