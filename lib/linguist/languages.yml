@@ -1629,6 +1629,22 @@ Git Attributes:
   codemirror_mode: shell
   codemirror_mime_type: text/x-sh
   language_id: 956324166
+Git Config:
+  type: data
+  group: INI
+  aliases:
+  - gitconfig
+  - gitmodules
+  extensions:
+  - ".gitconfig"
+  filenames:
+  - ".gitconfig"
+  - ".gitmodules"
+  ace_mode: ini
+  codemirror_mode: properties
+  codemirror_mime_type: text/x-properties
+  tm_scope: source.gitconfig
+  language_id: 807968997
 Glyph:
   type: programming
   color: "#c1ac7f"
@@ -2034,7 +2050,6 @@ INI:
   - ".properties"
   filenames:
   - ".editorconfig"
-  - ".gitconfig"
   - buildozer.spec
   tm_scope: source.ini
   aliases:
