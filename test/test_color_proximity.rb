@@ -12,7 +12,7 @@ class TestColorProximity < Minitest::Test
     cp = ColorProximity.new(0.05, langs_with_colors.map { |lang| cut_hash(lang.color) })
     failing_threshold = langs_with_colors.map do |lang|
       state = cp.past_threshold?(cut_hash(lang.color))
-      if !state.first && lang.color != "##{state.last.first}"
+      if !state.first && lang.color != "##{state.last.first}" || state.last.uniq.length != state.last.length
         "- #{lang} (#{lang.color}) is too close to #{state.last}"
       end
     end.compact

@@ -49,7 +49,7 @@ func filterUnusedKeys(keys []string) (out []string) {
 	return
 }
 
-func ConvertProto(ext string, data []byte) (*grammar.Rule, []string, error) {
+func ConvertProto(path, ext string, data []byte) (*grammar.Rule, []string, error) {
 	var (
 		raw map[string]interface{}
 		out grammar.Rule
@@ -90,6 +90,10 @@ func ConvertProto(ext string, data []byte) (*grammar.Rule, []string, error) {
 
 	if err := decoder.Decode(raw); err != nil {
 		return nil, nil, err
+	}
+
+	if out.ScopeName == "" {
+		return nil, nil, &UndeclaredScopeError{path}
 	}
 
 	return &out, filterUnusedKeys(md.Unused), nil
