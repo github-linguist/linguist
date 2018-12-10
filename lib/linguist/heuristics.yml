@@ -149,6 +149,10 @@ disambiguations:
     named_pattern: objectivec
   - language: C++
     named_pattern: cpp
+- extensions: ['.hh']
+  rules:
+  - language: Hack
+    pattern: '<\?hh'
 - extensions: ['.ice']
   rules:
   - language: Slice

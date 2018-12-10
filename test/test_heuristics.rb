@@ -181,6 +181,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  # Candidate languages = ["C++", "Hack"]
+  def test_hh_by_heuristics
+    assert_heuristics({
+      "Hack" => all_fixtures("Hack", "*.hh"),
+    })
+  end
+
   def test_ice_by_heuristics
     assert_heuristics({
       "Slice" => all_fixtures("Slice", "*.ice"),
