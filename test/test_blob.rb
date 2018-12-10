@@ -93,8 +93,8 @@ class TestBlob < Minitest::Test
     assert_equal "UTF-16LE", fixture_blob_memory("Data/utf16le").ruby_encoding
     assert_equal "UTF-16LE", fixture_blob_memory("Data/utf16le-windows").encoding
     assert_equal "UTF-16LE", fixture_blob_memory("Data/utf16le-windows").ruby_encoding
-    assert_equal "ISO-2022-KR", sample_blob_memory("Text/ISO-2022-KR.txt").encoding
-    assert_equal "binary", sample_blob_memory("Text/ISO-2022-KR.txt").ruby_encoding
+    assert_equal "ISO-2022-KR", fixture_blob_memory("Text/ISO-2022-KR.txt").encoding
+    assert_equal "binary", fixture_blob_memory("Text/ISO-2022-KR.txt").ruby_encoding
     assert_nil fixture_blob_memory("Binary/dog.o").encoding
   end
 
@@ -246,6 +246,9 @@ class TestBlob < Minitest::Test
     # protobuf/grpc-plugin C++
     assert sample_blob_memory("C++/hello.grpc.pb.h").generated?
     assert sample_blob_memory("C++/grpc.pb.cc").generated?
+
+    # pkgdown-generateed HTML
+    assert sample_blob_memory("HTML/pkgdown.html").generated?
   end
 
   def test_vendored
@@ -256,7 +259,8 @@ class TestBlob < Minitest::Test
     Samples.each do |sample|
       blob = sample_blob_memory(sample[:path])
       assert blob.language, "No language for #{sample[:path]}"
-      assert_equal sample[:language], blob.language.name, blob.name
+      fs_name = blob.language.fs_name ? blob.language.fs_name : blob.language.name
+      assert_equal sample[:language], fs_name, blob.name
     end
 
     # Test language detection for files which shouldn't be used as samples
@@ -280,7 +284,8 @@ class TestBlob < Minitest::Test
           assert blob.generated?, "#{filepath} is not a generated file"
         else
           assert blob.language, "No language for #{filepath}"
-          assert_equal language, blob.language.name, blob.name
+          fs_name = blob.language.fs_name ? blob.language.fs_name : blob.language.name
+          assert_equal language, fs_name, blob.name
         end
       end
     end

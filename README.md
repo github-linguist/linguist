@@ -21,6 +21,7 @@ If an [explicit language override](#using-gitattributes) has been used, that lan
 - commonly used filename,
 - shell shebang,
 - file extension,
+- XML header,
 - heuristics,
 - naïve Bayesian classification
 
@@ -53,7 +54,7 @@ Linguist uses [`charlock_holmes`](https://github.com/brianmario/charlock_holmes)
     * [libcurl](https://curl.haxx.se/libcurl/)
     * [OpenSSL](https://www.openssl.org)
 
-You may need to install missing dependencies before you can install Linguist. For example, on macOS with [Homebrew](http://brew.sh/): `brew install cmake pkg-config icu4c` and on Ubuntu: `sudo apt-get install cmake pkg-config libicu-dev zlib1g-dev libcurl4-openssl-dev libssl-dev`.
+You may need to install missing dependencies before you can install Linguist. For example, on macOS with [Homebrew](http://brew.sh/): `brew install cmake pkg-config icu4c` and on Ubuntu: `sudo apt-get install cmake pkg-config libicu-dev zlib1g-dev libcurl4-openssl-dev libssl-dev ruby-dev`.
 
 ### Application usage
 
@@ -75,13 +76,13 @@ A repository's languages stats can also be assessed from the command line using 
 
 ```console
 $ cd /path-to-repository/
-$ linguist
+$ github-linguist
 ```
 
 You can try running `linguist` on the root directory in this repository itself:
 
 ```console
-$ bundle exec bin/linguist --breakdown
+$ bundle exec bin/github-linguist --breakdown
 68.57%  Ruby
 22.90%  C
 6.93%   Go
@@ -92,7 +93,7 @@ Ruby:
 Gemfile
 Rakefile
 bin/git-linguist
-bin/linguist
+bin/github-linguist
 ext/linguist/extconf.rb
 github-linguist.gemspec
 lib/linguist.rb
@@ -141,7 +142,7 @@ Linguist supports a number of different custom override strategies for language 
 
 Add a `.gitattributes` file to your project and use standard git-style path matchers for the files you want to override using the `linguist-documentation`, `linguist-language`, `linguist-vendored`, `linguist-generated`  and `linguist-detectable` attributes. `.gitattributes` will be used to determine language statistics and will be used to syntax highlight files. You can also manually set syntax highlighting using [Vim or Emacs modelines](#using-emacs-or-vim-modelines).
 
-When testing with a local installation of Linguist, take note that the added attributes will not take effect until the .gitattributes file is commited to your repository.
+When testing with a local installation of Linguist, take note that the added attributes will not take effect until the .gitattributes file is committed to your repository.
 
 File and folder paths inside .gitattributes are calculated relative to the position of the .gitattributes file.
 

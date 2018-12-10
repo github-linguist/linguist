@@ -35,10 +35,13 @@ class TestHeuristics < Minitest::Test
       Array(blobs).each do |blob|
         result = Heuristics.call(file_blob(blob), candidates)
         if language.nil?
-          assert_equal [], result, "Failed for #{blob}"
+          expected = []
+        elsif language.is_a?(Array)
+          expected = language.map{ |l| Language[l] }
         else
-          assert_equal [Language[language]], result, "Failed for #{blob}"
+          expected = [Language[language]]
         end
+        assert_equal expected, result, "Failed for #{blob}"
       end
     end
   end
@@ -123,7 +126,7 @@ class TestHeuristics < Minitest::Test
       "ECLiPSe" => all_fixtures("ECLiPSe", "*.ecl")
     })
   end
-  
+
   def test_es_by_heuristics
     assert_heuristics({
       "Erlang" => all_fixtures("Erlang", "*.es"),
@@ -154,6 +157,14 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_gml_by_heuristics
+      assert_heuristics({
+        "Game Maker Language" => all_fixtures("Game Maker Language", "*.gml"),
+        "Graph Modeling Language" => all_fixtures("Graph Modeling Language", "*.gml"),
+        "XML" => all_fixtures("XML", "*.gml")
+      })
+  end
+
   def test_gs_by_heuristics
     assert_heuristics({
       "Gosu" => all_fixtures("Gosu", "*.gs")
@@ -167,6 +178,13 @@ class TestHeuristics < Minitest::Test
       "Objective-C" => all_fixtures("Objective-C", "*.h"),
       "C++" => ["C++/scanner.h", "C++/protocol-buffer.pb.h", "C++/v8.h", "C++/gdsdbreader.h"],
       "C" => nil
+    })
+  end
+
+  def test_ice_by_heuristics
+    assert_heuristics({
+      "Slice" => all_fixtures("Slice", "*.ice"),
+      "JSON" => all_fixtures("JSON", "*.ice")
     })
   end
 
@@ -238,7 +256,9 @@ class TestHeuristics < Minitest::Test
   def test_mod_by_heuristics
     assert_heuristics({
       "Modula-2" => all_fixtures("Modula-2", "*.mod"),
-      "XML" => all_fixtures("XML", "*.mod")
+      "XML" => all_fixtures("XML", "*.mod"),
+      ["Linux Kernel Module", "AMPL"] => all_fixtures("Linux Kernel Module", "*.mod"),
+      ["Linux Kernel Module", "AMPL"] => all_fixtures("AMPL", "*.mod"),
     })
   end
 
@@ -259,8 +279,7 @@ class TestHeuristics < Minitest::Test
 
   def test_ncl_by_heuristics
     ambiguous = [
-      "#{samples_path}/Text/LIDARLite.ncl",
-      "#{samples_path}/Text/Site.local.ncl"
+      "#{samples_path}/Text/LIDARLite.ncl"
     ]
     assert_heuristics({
       "NCL" => all_fixtures("Roff", "*.ncl"),
@@ -303,6 +322,14 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  # Candidate languages = ["Pascal", "Puppet"]
+  def test_pp_by_heuristics
+    assert_heuristics({
+      "Pascal" => all_fixtures("Pascal", "*.pp"),
+      "Puppet" => all_fixtures("Puppet", "*.pp") - ["#{samples_path}/Puppet/stages-example.pp", "#{samples_path}/Puppet/hiera_include.pp"]
+    })
+  end
+
   # Candidate languages = ["IDL", "Prolog", "QMake", "INI"]
   def test_pro_by_heuristics
     assert_heuristics({
@@ -310,6 +337,14 @@ class TestHeuristics < Minitest::Test
       "IDL" => all_fixtures("IDL", "*.pro"),
       "INI" => all_fixtures("INI", "*.pro"),
       "QMake" => all_fixtures("QMake", "*.pro")
+    })
+  end
+
+# Candidate languages = ["INI", "Java Properties"]
+  def test_properties_by_heuristics
+    assert_heuristics({
+      "INI" => all_fixtures("INI", "*.properties"),
+      "Java Properties" => all_fixtures("Java Properties", "*.properties")
     })
   end
 
@@ -431,6 +466,13 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "Linked Script" => all_fixtures("Linked Script", "*.x"),
       "RPC" => all_fixtures("RPC", "*.x")
+    })
+  end
+
+  def test_yy_by_heuristics
+    assert_heuristics({
+      "JSON" => all_fixtures("JSON", "*.yy"),
+      "Yacc" => all_fixtures("Yacc", "*.yy")
     })
   end
 end

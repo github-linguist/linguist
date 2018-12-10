@@ -1,5 +1,8 @@
 # Defines all Languages known to GitHub.
 #
+# fs_name               - Optional field. Only necessary as a replacement for the sample directory name if the
+#                         language name is not a valid filename under the Windows filesystem (e.g., if it
+#                         contains an asterisk).
 # type                  - Either data, programming, markup, prose, or nil
 # aliases               - An Array of additional aliases (implicitly
 #                         includes name.downcase)
@@ -20,7 +23,7 @@
 # language_id           - Integer used as a language-name-independent indexed field so that we can rename
 #                         languages in Linguist without reindexing all the code on GitHub. Must not be
 #                         changed for existing languages without the explicit permission of GitHub staff.
-# color                 - CSS hex color to represent the language. Only used if type is "programming" or "prose".
+# color                 - CSS hex color to represent the language. Only used if type is "programming" or "markup".
 # tm_scope              - The TextMate scope that represents this programming
 #                         language. This should match one of the scopes listed in
 #                         the grammars.yml file. Use "none" if there is no grammar
@@ -502,7 +505,6 @@ C#:
   extensions:
   - ".cs"
   - ".cake"
-  - ".cshtml"
   - ".csx"
   language_id: 42
 C++:
@@ -891,7 +893,7 @@ Creole:
   language_id: 71
 Crystal:
   type: programming
-  color: "#776791"
+  color: "#000100"
   extensions:
   - ".cr"
   ace_mode: ruby
@@ -1138,6 +1140,14 @@ EJS:
   tm_scope: text.html.js
   ace_mode: ejs
   language_id: 95
+EML:
+  type: data
+  extensions:
+  - ".eml"
+  - ".mbox"
+  tm_scope: text.eml.basic
+  ace_mode: text
+  language_id: 529653389
 EQ:
   type: programming
   color: "#a78649"
@@ -1291,6 +1301,26 @@ F#:
   codemirror_mode: mllike
   codemirror_mime_type: text/x-fsharp
   language_id: 105
+F*:
+  fs_name: Fstar
+  type: programming
+  color: "#572e30"
+  aliases:
+  - fstar
+  extensions:
+  - ".fst"
+  tm_scope: source.fstar
+  ace_mode: text
+  language_id: 336943375
+FIGlet Font:
+  type: data
+  aliases:
+  - FIGfont
+  extensions:
+  - ".flf"
+  tm_scope: source.figfont
+  ace_mode: text
+  language_id: 686129783
 FLUX:
   type: programming
   color: "#88ccff"
@@ -1495,7 +1525,7 @@ GN:
   language_id: 302957008
 Game Maker Language:
   type: programming
-  color: "#8fb200"
+  color: "#71b417"
   extensions:
   - ".gml"
   tm_scope: source.c++
@@ -1597,6 +1627,13 @@ Glyph:
   codemirror_mode: tcl
   codemirror_mime_type: text/x-tcl
   language_id: 130
+Glyph Bitmap Distribution Format:
+  type: data
+  extensions:
+  - ".bdf"
+  tm_scope: source.bdf
+  ace_mode: text
+  language_id: 997665271
 Gnuplot:
   type: programming
   color: "#f0a9f0"
@@ -1720,12 +1757,22 @@ Groovy Server Pages:
   codemirror_mode: htmlembedded
   codemirror_mime_type: application/x-jsp
   language_id: 143
+HAProxy:
+  type: data
+  extensions:
+  - ".cfg"
+  filenames:
+  - haproxy.cfg
+  tm_scope: source.haproxy-config
+  ace_mode: text
+  language_id: 366607477
 HCL:
   type: programming
   extensions:
   - ".hcl"
   - ".tf"
   - ".tfvars"
+  - ".workflow"
   ace_mode: ruby
   codemirror_mode: ruby
   codemirror_mime_type: text/x-ruby
@@ -1827,6 +1874,16 @@ HTML+PHP:
   codemirror_mode: php
   codemirror_mime_type: application/x-httpd-php
   language_id: 151
+HTML+Razor:
+  type: markup
+  tm_scope: text.html.cshtml
+  group: HTML
+  extensions:
+  - ".cshtml"
+  ace_mode: razor
+  codemirror_mode: htmlmixed
+  codemirror_mime_type: text/html
+  language_id: 479039817
 HTTP:
   type: data
   extensions:
@@ -1922,10 +1979,10 @@ Hy:
   extensions:
   - ".hy"
   interpreters:
-  - "hy"
+  - hy
   aliases:
   - hylang
-  tm_scope: none
+  tm_scope: source.hy
   language_id: 159
 HyPhy:
   type: programming
@@ -1959,6 +2016,7 @@ INI:
   extensions:
   - ".ini"
   - ".cfg"
+  - ".lektorproject"
   - ".prefs"
   - ".pro"
   - ".properties"
@@ -2087,6 +2145,8 @@ JSON:
   - ".topojson"
   - ".webapp"
   - ".webmanifest"
+  - ".yy"
+  - ".yyp"
   filenames:
   - ".arcconfig"
   - ".htmlhintrc"
@@ -2179,6 +2239,15 @@ Java:
   extensions:
   - ".java"
   language_id: 181
+Java Properties:
+  type: data
+  extensions:
+  - ".properties"
+  tm_scope: source.java-properties
+  ace_mode: properties
+  codemirror_mode: properties
+  codemirror_mime_type: text/x-properties
+  language_id: 519377561
 Java Server Pages:
   type: programming
   group: Java
@@ -2712,6 +2781,8 @@ Markdown:
   - ".mkdown"
   - ".ronn"
   - ".workbook"
+  filenames:
+  - contents.lr
   tm_scope: source.gfm
   language_id: 222
 Marko:
@@ -3030,7 +3101,12 @@ Nim:
   color: "#37775b"
   extensions:
   - ".nim"
+  - ".nim.cfg"
+  - ".nimble"
   - ".nimrod"
+  - ".nims"
+  filenames:
+  - nim.cfg
   ace_mode: text
   tm_scope: source.nim
   language_id: 249
@@ -3273,15 +3349,6 @@ P4:
   tm_scope: source.p4
   ace_mode: text
   language_id: 348895984
-PAWN:
-  type: programming
-  color: "#dbb284"
-  extensions:
-  - ".pwn"
-  - ".inc"
-  tm_scope: source.pawn
-  ace_mode: text
-  language_id: 271
 PHP:
   type: programming
   tm_scope: text.html.php
@@ -3342,6 +3409,7 @@ PLpgSQL:
   codemirror_mime_type: text/x-sql
   tm_scope: source.sql
   extensions:
+  - ".pgsql"
   - ".sql"
   language_id: 274
 POV-Ray SDL:
@@ -3419,6 +3487,15 @@ Pascal:
   codemirror_mode: pascal
   codemirror_mime_type: text/x-pascal
   language_id: 281
+Pawn:
+  type: programming
+  color: "#dbb284"
+  extensions:
+  - ".pwn"
+  - ".inc"
+  tm_scope: source.pawn
+  ace_mode: text
+  language_id: 271
 Pep8:
   type: programming
   color: "#C76F5B"
@@ -4047,7 +4124,7 @@ Roff:
   type: markup
   color: "#ecdebe"
   extensions:
-  - ".man"
+  - ".roff"
   - ".1"
   - ".1in"
   - ".1m"
@@ -4065,19 +4142,27 @@ Roff:
   - ".8"
   - ".9"
   - ".l"
+  - ".man"
+  - ".mdoc"
   - ".me"
   - ".ms"
   - ".n"
   - ".nr"
   - ".rno"
-  - ".roff"
   - ".tmac"
   filenames:
   - mmn
   - mmt
   tm_scope: text.roff
   aliases:
+  - groff
+  - man
+  - manpage
+  - man page
+  - man-page
+  - mdoc
   - nroff
+  - troff
   ace_mode: text
   codemirror_mode: troff
   codemirror_mime_type: text/troff
@@ -4344,6 +4429,7 @@ Scheme:
   - ".sps"
   - ".ss"
   interpreters:
+  - scheme
   - guile
   - bigloo
   - chicken
@@ -4467,6 +4553,14 @@ Slash:
   tm_scope: text.html.slash
   ace_mode: text
   language_id: 349
+Slice:
+  type: programming
+  color: "#003fa2"
+  tm_scope: source.slice
+  ace_mode: text
+  extensions:
+  - ".ice"
+  language_id: 894641667
 Slim:
   group: HTML
   type: markup
@@ -4831,6 +4925,8 @@ TypeScript:
   color: "#2b7489"
   aliases:
   - ts
+  interpreters:
+  - node
   extensions:
   - ".ts"
   - ".tsx"
@@ -5046,6 +5142,15 @@ WebIDL:
   codemirror_mode: webidl
   codemirror_mime_type: text/x-webidl
   language_id: 395
+Windows Registry Entries:
+  type: data
+  extensions:
+  - ".reg"
+  tm_scope: source.reg
+  ace_mode: ini
+  codemirror_mode: properties
+  codemirror_mime_type: text/x-properties
+  language_id: 969674868
 World of Warcraft Addon Data:
   type: data
   extensions:
@@ -5065,6 +5170,16 @@ X BitMap:
   codemirror_mode: clike
   codemirror_mime_type: text/x-csrc
   language_id: 782911107
+X Font Directory Index:
+  type: data
+  filenames:
+  - encodings.dir
+  - fonts.alias
+  - fonts.dir
+  - fonts.scale
+  tm_scope: source.fontdir
+  ace_mode: text
+  language_id: 208700028
 X PixMap:
   type: data
   group: C
@@ -5143,6 +5258,7 @@ XML:
   - ".fxml"
   - ".glade"
   - ".gml"
+  - ".gmx"
   - ".grxml"
   - ".iml"
   - ".ivy"
@@ -5200,6 +5316,7 @@ XML:
   - ".vstemplate"
   - ".vxml"
   - ".wixproj"
+  - ".workflow"
   - ".wsdl"
   - ".wsf"
   - ".wxi"
@@ -5336,13 +5453,25 @@ YANG:
   ace_mode: text
   language_id: 408
 YARA:
-  type: data
+  type: programming
+  color: "#220000"
   ace_mode: text
   extensions:
   - ".yar"
   - ".yara"
   tm_scope: source.yara
   language_id: 805122868
+YASnippet:
+  type: markup
+  aliases:
+  - snippet
+  - yas
+  color: "#32AB90"
+  extensions:
+  - ".yasnippet"
+  tm_scope: source.yasnippet
+  ace_mode: text
+  language_id: 378760102
 Yacc:
   type: programming
   extensions:

@@ -192,12 +192,16 @@ vendor/grammars/atom-fsharp:
 - source.fsharp.fsi
 - source.fsharp.fsl
 - source.fsharp.fsx
+vendor/grammars/atom-fstar:
+- source.fstar
 vendor/grammars/atom-language-1c-bsl:
 - source.bsl
 - source.sdbl
 vendor/grammars/atom-language-clean:
 - source.clean
 - text.restructuredtext.clean
+vendor/grammars/atom-language-haproxy:
+- source.haproxy-config
 vendor/grammars/atom-language-julia:
 - source.julia
 - source.julia.console
@@ -229,6 +233,9 @@ vendor/grammars/ats:
 - source.ats
 vendor/grammars/awk-sublime:
 - source.awk
+vendor/grammars/babel-sublime:
+- source.js.css
+- source.js.jsx
 vendor/grammars/ballerina-grammar:
 - source.ballerina
 vendor/grammars/bison.tmbundle:
@@ -329,8 +336,8 @@ vendor/grammars/groovy.tmbundle:
 vendor/grammars/haxe-TmLanguage:
 - source.hx
 - source.hxml
-vendor/grammars/html.tmbundle:
-- text.html.basic
+vendor/grammars/hy.tmLanguage:
+- source.hy
 vendor/grammars/idl.tmbundle:
 - source.idl
 - source.idl-dlm
@@ -367,9 +374,6 @@ vendor/grammars/language-apl:
 - source.apl
 vendor/grammars/language-asn1:
 - source.asn
-vendor/grammars/language-babel:
-- source.js.jsx
-- source.regexp.babel
 vendor/grammars/language-batchfile:
 - source.batchfile
 vendor/grammars/language-blade:
@@ -400,8 +404,14 @@ vendor/grammars/language-cwl:
 - source.cwl
 vendor/grammars/language-emacs-lisp:
 - source.emacs.lisp
+- source.yasnippet
+vendor/grammars/language-eml:
+- text.eml.basic
 vendor/grammars/language-fontforge:
 - source.afm
+- source.bdf
+- source.figfont
+- source.fontdir
 - source.fontforge
 - source.opentype
 - text.sfd
@@ -427,6 +437,8 @@ vendor/grammars/language-haskell:
 - text.tex.latex.haskell
 vendor/grammars/language-hql:
 - source.hql
+vendor/grammars/language-html:
+- text.html.basic
 vendor/grammars/language-inform7:
 - source.inform7
 vendor/grammars/language-javascript:
@@ -467,6 +479,8 @@ vendor/grammars/language-povray:
 vendor/grammars/language-reason:
 - source.reason
 - source.reason.hover.type
+vendor/grammars/language-reg:
+- source.reg
 vendor/grammars/language-regexp:
 - source.regexp
 - source.regexp.extended
@@ -622,6 +636,8 @@ vendor/grammars/r.tmbundle:
 - text.tex.latex.rd
 vendor/grammars/rascal-syntax-highlighting:
 - source.rascal
+vendor/grammars/razor-plus:
+- text.html.cshtml
 vendor/grammars/ruby-slim.tmbundle:
 - text.slim
 vendor/grammars/sas.tmbundle:
@@ -740,6 +756,8 @@ vendor/grammars/vhdl:
 - source.vhdl
 vendor/grammars/vscode-scala-syntax:
 - source.scala
+vendor/grammars/vscode-slice:
+- source.slice
 vendor/grammars/vue-syntax-highlight:
 - text.html.vue
 vendor/grammars/wdl-sublime-syntax-highlighter:
