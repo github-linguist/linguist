@@ -1812,14 +1812,10 @@ HTML+Django:
   tm_scope: text.html.django
   group: HTML
   extensions:
-  - ".jinja"
-  - ".jinja2"
   - ".mustache"
   - ".njk"
   aliases:
   - django
-  - html+django/jinja
-  - html+jinja
   - htmldjango
   - njk
   - nunjucks
@@ -2125,6 +2121,22 @@ JFlex:
   tm_scope: source.jflex
   ace_mode: text
   language_id: 173
+Jinja2:
+  type: programming
+  color: "#B41717"
+  tm_scope: none
+  group: Python
+  extensions:
+  - ".j2"
+  - ".jinja"
+  - ".jinja2"
+  aliases:
+  - jinja
+  - html+jinja
+  ace_mode: text
+  codemirror_mode: jinja2
+  codemirror_mime_type:
+  language_id: 833257619
 JSON:
   type: data
   tm_scope: source.json

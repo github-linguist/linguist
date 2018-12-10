@@ -1,0 +1,209 @@
+---
+# Copyright 2014, Rackspace US, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+## General options
+debug: True
+
+## Installation method for OpenStack services
+install_method: "{{ bootstrap_host_install_method }}"
+
+## Tempest settings
+{% if bootstrap_host_container_tech == 'nspawn' %}
+tempest_public_subnet_cidr: "172.29.236.0/22"
+tempest_public_subnet_allocation_pools: "172.29.239.110-172.29.239.200"
+{% else %}
+## Tempest settings
+tempest_public_subnet_cidr: "172.29.248.0/22"
+tempest_public_subnet_allocation_pools: "172.29.249.110-172.29.249.200"
+{% endif %}
+
+## Galera settings
+galera_monitoring_allowed_source: "0.0.0.0/0"
+galera_innodb_buffer_pool_size: 16M
+galera_innodb_log_buffer_size: 4M
+galera_wsrep_provider_options:
+ - { option: "gcache.size", value: "4M" }
+
+### Set workers for all services to optimise memory usage
+
+## Repo
+repo_nginx_threads: 2
+
+## Keystone
+keystone_httpd_mpm_start_servers: 2
+keystone_httpd_mpm_min_spare_threads: 1
+keystone_httpd_mpm_max_spare_threads: 2
+keystone_httpd_mpm_thread_limit: 2
+keystone_httpd_mpm_thread_child: 1
+keystone_wsgi_threads: 1
+keystone_wsgi_processes_max: 2
+
+## Barbican
+barbican_wsgi_processes: 2
+barbican_wsgi_threads: 1
+
+## Cinder
+cinder_wsgi_processes_max: 2
+cinder_wsgi_threads: 1
+cinder_wsgi_buffer_size: 16384
+cinder_osapi_volume_workers_max: 2
+
+## Glance
+glance_api_threads_max: 2
+glance_api_threads: 1
+glance_api_workers: 1
+glance_registry_workers: 1
+glance_wsgi_threads: 1
+glance_wsgi_processes_max: 2
+glance_wsgi_processes: 2
+
+## Nova
+nova_wsgi_threads: 1
+nova_wsgi_processes_max: 2
+nova_wsgi_processes: 2
+nova_wsgi_buffer_size: 16384
+nova_api_threads_max: 2
+nova_api_threads: 1
+nova_osapi_compute_workers: 1
+nova_conductor_workers: 1
+nova_metadata_workers: 1
+nova_scheduler_workers: 1
+
+## Neutron
+neutron_rpc_workers: 1
+neutron_metadata_workers: 1
+neutron_api_workers: 1
+neutron_api_threads_max: 2
+neutron_api_threads: 2
+neutron_num_sync_threads: 1
+
+## Heat
+heat_api_workers: 1
+heat_api_threads_max: 2
+heat_api_threads: 1
+heat_wsgi_threads: 1
+heat_wsgi_processes_max: 2
+heat_wsgi_processes: 1
+heat_wsgi_buffer_size: 16384
+
+## Horizon
+horizon_wsgi_processes: 1
+horizon_wsgi_threads: 1
+horizon_wsgi_threads_max: 2
+
+## Ceilometer
+ceilometer_notification_workers_max: 2
+ceilometer_notification_workers: 1
+
+## AODH
+aodh_wsgi_threads: 1
+aodh_wsgi_processes_max: 2
+aodh_wsgi_processes: 1
+
+## Gnocchi
+gnocchi_wsgi_threads: 1
+gnocchi_wsgi_processes_max: 2
+gnocchi_wsgi_processes: 1
+
+## Swift
+swift_account_server_replicator_workers: 1
+swift_server_replicator_workers: 1
+swift_object_replicator_workers: 1
+swift_account_server_workers: 1
+swift_container_server_workers: 1
+swift_object_server_workers: 1
+swift_proxy_server_workers_max: 2
+swift_proxy_server_workers_not_capped: 1
+swift_proxy_server_workers_capped: 1
+swift_proxy_server_workers: 1
+
+## Ironic
+ironic_wsgi_threads: 1
+ironic_wsgi_processes_max: 2
+ironic_wsgi_processes: 1
+
+## Trove
+trove_api_workers_max: 2
+trove_api_workers: 1
+trove_conductor_workers_max: 2
+trove_conductor_workers: 1
+trove_wsgi_threads: 1
+trove_wsgi_processes_max: 2
+trove_wsgi_processes: 1
+
+## Sahara
+sahara_api_workers_max: 2
+sahara_api_workers: 1
+
+# NOTE: hpcloud-b4's eth0 uses 10.0.3.0/24, which overlaps with the
+#       lxc_net_address default
+# TODO: We'll need to implement a mechanism to determine valid lxc_net_address
+#       value which will not overlap with an IP already assigned to the host.
+lxc_net_address: 10.255.255.1
+lxc_net_netmask: 255.255.255.0
+lxc_net_dhcp_range: 10.255.255.2,10.255.255.253
+
+{% if repo_build_pip_extra_indexes is defined and repo_build_pip_extra_indexes | length > 0 %}
+## Wheel mirrors for the repo_build to use
+repo_build_pip_extra_indexes:
+{{ repo_build_pip_extra_indexes | to_nice_yaml }}
+{% endif %}
+
+{% if _lxc_mirror is defined and _lxc_mirror.stdout_lines is defined %}
+## images.linuxcontainers.org reverse proxy
+lxc_image_cache_server_mirrors:
+  - "http://{{ _lxc_mirror.stdout_lines[0] }}"
+{% endif %}
+
+{% if cache_timeout is defined %}
+## Package cache timeout
+cache_timeout: {{ cache_timeout }}
+{% endif %}
+
+# The container backing store is set to 'machinectl' to speed up the
+# AIO build time. Options are: [machinectl, overlayfs, btrfs, zfs, dir, lvm]
+lxc_container_backing_store: "{{ lxc_container_backing_store }}"
+
+## Always setup tempest, the resources for it, then execute tests
+tempest_install: yes
+tempest_run: yes
+
+{% if nodepool_dir.stat.exists %}
+# Disable chronyd in OpenStack CI
+security_rhel7_enable_chrony: no
+{% endif %}
+
+# For testing purposes in public clouds, we need to ignore these
+# services when trying to do a reload of nova services.
+nova_service_negate:
+  - "nova-agent.service"
+  - "nova-resetnetwork.service"
+
+{% if _pypi_wheel_mirror is defined and _pypi_wheel_mirror.stdout_lines is defined %}
+repo_build_pip_extra_indexes:
+ - "{{ _pypi_wheel_mirror.stdout_lines[1] }}"
+{% endif %}
+
+# Set all the distros to the same value: a "quiet" print
+# of kernel log messages.
+openstack_user_kernel_options:
+  - key: 'kernel.printk'
+    value: '4 1 7 4'
+
+{% if 'octavia' in bootstrap_host_services %}
+# Octavia specific stuff
+neutron_lbaas_octavia: True
+octavia_management_net_subnet_cidr: "{{ (bootstrap_host_container_tech == 'nspawn') | ternary('172.29.240.0/22', '172.29.252.0/22') }}"
+{% endif %}
