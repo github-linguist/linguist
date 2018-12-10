@@ -2674,6 +2674,18 @@ M4Sugar:
   tm_scope: none
   ace_mode: text
   language_id: 216
+MATLAB:
+  type: programming
+  color: "#e16737"
+  aliases:
+  - octave
+  extensions:
+  - ".matlab"
+  - ".m"
+  ace_mode: matlab
+  codemirror_mode: octave
+  codemirror_mime_type: text/x-octave
+  language_id: 225
 MAXScript:
   type: programming
   color: "#00a6a6"
@@ -2823,18 +2835,6 @@ Mathematica:
   codemirror_mode: mathematica
   codemirror_mime_type: text/x-mathematica
   language_id: 224
-Matlab:
-  type: programming
-  color: "#e16737"
-  aliases:
-  - octave
-  extensions:
-  - ".matlab"
-  - ".m"
-  ace_mode: matlab
-  codemirror_mode: octave
-  codemirror_mime_type: text/x-octave
-  language_id: 225
 Maven POM:
   type: data
   tm_scope: text.xml.pom
