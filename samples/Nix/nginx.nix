@@ -68,7 +68,7 @@ stdenv.mkDerivation rec {
   # escape example
   postInstall = ''
     mv $out/sbin $out/bin ''' ''${
-   ${ if true then ${ "" } else false }
+   ${ if true then "" else false }
   '';
 
   meta = {
