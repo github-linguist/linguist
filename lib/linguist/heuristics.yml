@@ -270,8 +270,6 @@ disambiguations:
     pattern: '^\s*\/\* XPM \*\/'
 - extensions: ['.pod']
   rules:
-  - language: XPM
-    pattern: '^\s*\/\* XPM \*\/'
   - language: Pod 6
     pattern: '^[\s&&[^\n]]*=(comment|begin pod|begin para|item\d+)'
   - language: Pod
