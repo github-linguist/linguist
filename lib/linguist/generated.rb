@@ -383,7 +383,7 @@ module Linguist
     #
     # Returns true or false.
     def go_mod?
-      name.match(/go\.mod/) || name.match(/go\.sum/)
+      name.match(/go\.sum/)
     end
 
     # Internal: Is the blob a generated php composer lock file?
