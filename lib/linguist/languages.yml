@@ -1615,6 +1615,34 @@ Gherkin:
   ace_mode: text
   color: "#5B2063"
   language_id: 76
+Git Attributes:
+  type: data
+  group: INI
+  aliases:
+  - gitattributes
+  filenames:
+  - ".gitattributes"
+  tm_scope: source.gitattributes
+  ace_mode: gitignore
+  codemirror_mode: shell
+  codemirror_mime_type: text/x-sh
+  language_id: 956324166
+Git Config:
+  type: data
+  group: INI
+  aliases:
+  - gitconfig
+  - gitmodules
+  extensions:
+  - ".gitconfig"
+  filenames:
+  - ".gitconfig"
+  - ".gitmodules"
+  ace_mode: ini
+  codemirror_mode: properties
+  codemirror_mime_type: text/x-properties
+  tm_scope: source.gitconfig
+  language_id: 807968997
 Glyph:
   type: programming
   color: "#c1ac7f"
@@ -2020,7 +2048,6 @@ INI:
   - ".properties"
   filenames:
   - ".editorconfig"
-  - ".gitconfig"
   - buildozer.spec
   tm_scope: source.ini
   aliases:
@@ -2051,6 +2078,36 @@ Idris:
   ace_mode: text
   tm_scope: source.idris
   language_id: 165
+Ignore List:
+  type: data
+  group: INI
+  aliases:
+  - ignore
+  - gitignore
+  - git-ignore
+  extensions:
+  - ".gitignore"
+  filenames:
+  - ".atomignore"
+  - ".babelignore"
+  - ".bzrignore"
+  - ".coffeelintignore"
+  - ".cvsignore"
+  - ".dockerignore"
+  - ".eslintignore"
+  - ".gitignore"
+  - ".nodemonignore"
+  - ".npmignore"
+  - ".prettierignore"
+  - ".stylelintignore"
+  - ".vscodeignore"
+  - gitignore-global
+  - gitignore_global
+  ace_mode: gitignore
+  tm_scope: source.gitignore
+  codemirror_mode: shell
+  codemirror_mime_type: text/x-sh
+  language_id: 74444240
 Inform 7:
   type: programming
   wrap: true
@@ -5540,6 +5597,17 @@ mupad:
   - ".mu"
   ace_mode: text
   language_id: 416
+nanorc:
+  type: data
+  group: INI
+  extensions:
+  - ".nanorc"
+  filenames:
+  - ".nanorc"
+  - nanorc
+  tm_scope: source.nanorc
+  ace_mode: text
+  language_id: 775996197
 nesC:
   type: programming
   color: "#94B0C7"
