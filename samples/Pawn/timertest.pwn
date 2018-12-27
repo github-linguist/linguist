@@ -24,7 +24,7 @@ public OnGameModeInit()
 public OneSecTimer() {
 
 	if(lasttick == 0) {
-     	lasttick = GetTickCount();
+	 	lasttick = GetTickCount();
 		return;
 	}
 	new sText[256];
