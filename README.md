@@ -23,7 +23,7 @@ If an [explicit language override](#using-gitattributes) has been used, that lan
 - file extension,
 - XML header,
 - heuristics,
-- naïve Bayesian classification
+- naive Bayesian classification
 
 The result of this analysis is used to produce the language stats bar which displays the languages percentages for the files in the repository. The percentages are calculated based on the bytes of code for each language as reported by the [List Languages](https://developer.github.com/v3/repos/#list-languages) API.
 
