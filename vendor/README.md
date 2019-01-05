@@ -278,6 +278,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Objective-J:** [textmate/javascript-objective-j.tmbundle](https://github.com/textmate/javascript-objective-j.tmbundle)
 - **Opa:** [mads379/opa.tmbundle](https://github.com/mads379/opa.tmbundle)
 - **Opal:** [artifactz/sublime-opal](https://github.com/artifactz/sublime-opal)
+- **Open Policy Agent:** [tsandall/vscode-opa](https://github.com/tsandall/vscode-opa)
 - **OpenCL:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **OpenEdge ABL:** [jfairbank/Sublime-Text-2-OpenEdge-ABL](https://github.com/jfairbank/Sublime-Text-2-OpenEdge-ABL)
 - **OpenRC runscript:** [atom/language-shellscript](https://github.com/atom/language-shellscript)
