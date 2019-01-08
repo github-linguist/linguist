@@ -223,6 +223,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **LookML:** [atom/language-yaml](https://github.com/atom/language-yaml)
 - **LoomScript:** [ambethia/Sublime-Loom](https://github.com/ambethia/Sublime-Loom)
 - **LSL:** [textmate/secondlife-lsl.tmbundle](https://github.com/textmate/secondlife-lsl.tmbundle)
+- **LTspice Symbol:** [Alhadis/language-pcb](https://github.com/Alhadis/language-pcb)
 - **Lua:** [textmate/lua.tmbundle](https://github.com/textmate/lua.tmbundle)
 - **Makefile:** [textmate/make.tmbundle](https://github.com/textmate/make.tmbundle)
 - **Mako:** [marconi/mako-tmbundle](https://github.com/marconi/mako-tmbundle)
