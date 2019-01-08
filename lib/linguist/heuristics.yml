@@ -44,7 +44,8 @@ disambiguations:
 - extensions: ['.asy']
   rules:
   - language: LTspice Symbol
-  - pattern: '^SymbolType\h'
+    pattern: '^SymbolType[ \t]'
+  - language: Asymptote
 - extensions: ['.bb']
   rules:
   - language: BlitzBasic
