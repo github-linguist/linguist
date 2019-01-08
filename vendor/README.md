@@ -29,6 +29,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **ASP:** [textmate/asp.tmbundle](https://github.com/textmate/asp.tmbundle)
 - **AspectJ:** [pchaigno/sublime-aspectj](https://github.com/pchaigno/sublime-aspectj)
 - **Assembly:** [Nessphoro/sublimeassembly](https://github.com/Nessphoro/sublimeassembly)
+- **Asymptote:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **ATS:** [steinwaywhw/ats-mode-sublimetext](https://github.com/steinwaywhw/ats-mode-sublimetext)
 - **AutoHotkey:** [ahkscript/SublimeAutoHotkey](https://github.com/ahkscript/SublimeAutoHotkey)
 - **AutoIt:** [AutoIt/SublimeAutoItScript](https://github.com/AutoIt/SublimeAutoItScript)
