@@ -438,3 +438,4 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **YARA:** [blacktop/language-yara](https://github.com/blacktop/language-yara)
 - **YASnippet:** [Alhadis/language-emacs-lisp](https://github.com/Alhadis/language-emacs-lisp)
 - **Zephir:** [phalcon/zephir-sublime](https://github.com/phalcon/zephir-sublime)
+- **Zig:** [ziglang/sublime-zig-language](https://github.com/ziglang/sublime-zig-language)
