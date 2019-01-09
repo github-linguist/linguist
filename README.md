@@ -27,7 +27,7 @@ If an [explicit language override](#using-gitattributes) has been used, that lan
 
 The result of this analysis is used to produce the language stats bar which displays the languages percentages for the files in the repository. The percentages are calculated based on the bytes of code for each language as reported by the [List Languages](https://developer.github.com/v3/repos/#list-languages) API.
 
-![language stats bar](https://cloud.githubusercontent.com/assets/173/5562290/48e24654-8ddf-11e4-8fe7-735b0ce3a0d3.png)
+![language stats bar](https://user-images.githubusercontent.com/2346707/50930521-52f57e80-14b4-11e9-92de-0ee9c768ae46.png)
 
 ### How Linguist works on GitHub.com
 
