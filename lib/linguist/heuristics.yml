@@ -156,7 +156,7 @@ disambiguations:
 - extensions: ['.ice']
   rules:
   - language: Slice
-    pattern: '^\s*(#\s*(include|if[n]def|pragma)|module\s+[A-Za-z][_A-Za-z0-9]*)'
+    pattern: '\A(?!\s*[{\[])'
   - language: JSON
     pattern: '\A\s*[{\[]'
 - extensions: ['.inc']
