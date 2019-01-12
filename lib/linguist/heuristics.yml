@@ -132,6 +132,11 @@ disambiguations:
     pattern: '^\s*(#version|precision|uniform|varying|vec[234])'
   - language: Filterscript
     pattern: '#include|#pragma\s+(rs|version)|__attribute__'
+- extensions: ['.gd']
+  rules:
+  - language: GAP
+    pattern: 'gap> '
+  - language: GDScript
 - extensions: ['.gml']
   rules:
   - language: XML
