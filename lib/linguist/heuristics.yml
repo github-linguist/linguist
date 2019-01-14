@@ -149,6 +149,10 @@ disambiguations:
     named_pattern: objectivec
   - language: C++
     named_pattern: cpp
+- extensions: ['.hh']
+  rules:
+  - language: Hack
+    pattern: '<\?hh'
 - extensions: ['.ice']
   rules:
   - language: Slice
@@ -194,7 +198,7 @@ disambiguations:
     pattern: '^\s*;'
   - language: Mathematica
     pattern: '\*\)$'
-  - language: Matlab
+  - language: MATLAB
     pattern: '^\s*%'
   - language: Limbo
     pattern: '^\w+\s*:\s*module\s*{'
@@ -268,6 +272,11 @@ disambiguations:
     named_pattern: perl6
   - language: XPM
     pattern: '^\s*\/\* XPM \*\/'
+- extensions: ['.pod']
+  rules:
+  - language: Pod 6
+    pattern: '^[\s&&[^\n]]*=(comment|begin pod|begin para|item\d+)'
+  - language: Pod
 - extensions: ['.pp']
   rules:
   - language: Pascal

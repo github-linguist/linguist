@@ -1,0 +1,82 @@
+=encoding utf8
+
+=head1 NAME
+
+POE::Component::IRC::Cookbook - The PoCo-IRC Cookbook: Overview
+
+=head1 DESCRIPTION
+
+L<POE::Component::IRC|POE::Component::IRC> is a fully event-driven IRC client
+module built around L<POE|POE>. It can be used to write IRC client applications
+of any kind. This cookbook features working examples of programs demonstrating
+the capabilities of POE::Component::IRC.
+
+B<Note:> This is a work in progress. The entries without hyperlinks indicate
+unwritten recipes.
+
+=head1 RECIPES
+
+=head2 General
+
+=head3 L<Disconnecting|POE::Component::IRC::Cookbook::Disconnecting>
+
+Shows you how to disconnect gracefully.
+
+=head2 Bots
+
+=head3 L<A basic bot|POE::Component::IRC::Cookbook::BasicBot>
+
+A basic bot demonstrating the basics of PoCo-IRC.
+
+=head3 L<Translator|POE::Component::IRC::Cookbook::Translator>
+
+Add translating capabilities to your bot.
+
+=head3 L<Resolver|POE::Component::IRC::Cookbook::Resolver>
+
+Have your bot resolve DNS records for you.
+
+=head3 L<MegaHAL|POE::Component::IRC::Cookbook::MegaHAL>
+
+Allow your bot to talk, using artificial "intelligence".
+
+=head3 L<Seen|POE::Component::IRC::Cookbook::Seen>
+
+Implement the "seen" feature found in many bots, which tells you when your bot
+last saw a particular user, and what they were doing/saying.
+
+=head3 L<Reload|POE::Component::IRC::Cookbook::Reload>
+
+Structure your code in such a way that your bot can be reprogrammed at runtime
+without reconnecting to the IRC server.
+
+=head3 Feeds
+
+Use your bot as an RSS/Atom feed aggregator.
+
+=head3 Reminder
+
+Have your bot remind you about something at a later time.
+
+=head3 Messenger
+
+Have your bot deliver messages to users as soon as they become active.
+
+=head3 Eval
+
+Have your bot evaluate mathematical expressions and code.
+
+=head2 Clients
+
+=head3 L<Gtk2|POE::Component::IRC::Cookbook::Gtk2>
+
+A simple IRC client with a Gtk2 interface.
+
+=head3 ReadLine
+
+A simple IRC client with a ReadLine interface.
+
+=head1 AUTHOR
+
+Hinrik E<Ouml>rn SigurE<eth>sson, hinrik.sig@gmail.com
+

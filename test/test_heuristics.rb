@@ -181,6 +181,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  # Candidate languages = ["C++", "Hack"]
+  def test_hh_by_heuristics
+    assert_heuristics({
+      "Hack" => all_fixtures("Hack", "*.hh"),
+    })
+  end
+
   def test_ice_by_heuristics
     assert_heuristics({
       "Slice" => all_fixtures("Slice", "*.ice"),
@@ -227,7 +234,7 @@ class TestHeuristics < Minitest::Test
       "MUF" => all_fixtures("MUF", "*.m"),
       "M" => all_fixtures("M", "MDB.m"),
       "Mathematica" => all_fixtures("Mathematica", "*.m") - all_fixtures("Mathematica", "Problem12.m"),
-      "Matlab" => all_fixtures("Matlab", "create_ieee_paper_plots.m"),
+      "MATLAB" => all_fixtures("MATLAB", "create_ieee_paper_plots.m"),
       "Limbo" => all_fixtures("Limbo", "*.m"),
       nil => ["Objective-C/cocoa_monitor.m"]
     })

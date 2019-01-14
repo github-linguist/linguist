@@ -1,0 +1,151 @@
+[alias]
+  br        = branch
+  ci        = commit
+  co        = checkout
+  d         = diff -w HEAD
+  dc        = diff -w --cached
+  ds        = diff -w --staged
+  g         = grep --break --heading --line-number
+  h         = log --pretty=oneline --decorate --abbrev-commit --date=short
+  hist      = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+  lgp       = log -p
+  lgs       = log --stat
+  lol       = log --graph --decorate --pretty=oneline --abbrev-commit
+  lola      = log --graph --decorate --pretty=oneline --abbrev-commit --all
+  lolar     = log --decorate --pretty=oneline --abbrev-commit --all --reverse
+  ls        = ls-files
+  p         = push
+  pr        = pull --rebase
+  st        = status
+  sta       = status
+  sts       = status -s
+  wc        = whatchanged -p --abbrev-commit --pretty=medium
+
+  ga        = add
+  gb        = branch
+  gba       = branch -a
+  gc        = commit -v
+  gca       = commit -v -a
+  gcf       = commit --fixup
+  gcl       = config --list
+  gclean    = reset --hard && git clean -dfx
+  gcm       = checkout master
+  gcmsg     = commit -m
+  gco       = checkout
+  gcount    = shortlog -sn
+  gcp       = cherry-pick
+  gf        = fetch
+  gfr       = fetch && git rebase remotes/origin/master
+  gg        = gui citool
+  gga       = gui citool --amend
+  ggpnp     = pull origin $(current_branch) && git push origin $(current_branch)
+  ggpull    = pull origin $(current_branch)
+  ggpur     = pull --rebase origin $(current_branch)
+  ggpush    = push origin $(current_branch)
+  gignore   = update-index --assume-unchanged
+  gignored  = ls-files -v | grep "^[[:lower:]]"
+  gl        = pull
+  glg       = log --stat --max-count=10
+  glgg      = log --graph --max-count=10
+  glgga     = log --graph --decorate --all
+  glo       = log --oneline --decorate --color
+  glog      = log --oneline --decorate --color --graph
+  glp       = _git_log_prettily
+  gm        = merge
+  gmt       = mergetool --no-prompt
+  gpoat     = push origin --all && git push origin --tags
+  gr        = remote
+  grba      = rebase --abort
+  grbc      = rebase --continue
+  grbi      = rebase -i
+  grh       = reset HEAD
+  grhh      = reset HEAD --hard
+  gri       = rebase --interactive
+  grmv      = remote rename
+  grrm      = remote remove
+  grset     = remote set-url
+  grt       = 'cd $(git rev-parse --show-toplevel || echo ".")'
+  grup      = remote update
+  grv       = remote -v
+  gss       = status -s
+  gst       = status
+  gsta      = stash
+  gstd      = stash drop
+  gstp      = stash pop
+  gsts      = stash show --text
+  gunignore = update-index --no-assume-unchanged
+
+  # 'gc!'    = commit -v --amend
+  # 'gca!'   = commit -v -a --amend
+  # gk        = k --all --branches
+  # gunwip   = log -n 1 | grep -q -c "\-\-wip\-\-" && git reset HEAD~1
+  # gwip     = add -A; git ls-files --deleted -z | xargs -r0 git rm; git commit -m "--wip--"
+
+  gsd       = svn dcommit
+  gsr       = svn rebase
+  git-svn-dcommit-push = svn dcommit && git push github master:svntrunk
+
+  # Blog Post: Human Git Aliases; http://gggritso.com/human-git-aliases
+  # https://github.com/gggritso/dotfiles/blob/master/gitconfig.symlink
+  # BEGIN HUMAN
+  #----
+  amend       = commit --amend
+  back        = checkout "-"
+  branches    = branch -a
+  branchout   = checkout -b
+  branch-name = rev-parse --abbrev-ref HEAD
+  contributors= shortlog -s -n
+  down        = pull --rebase
+  discard     = checkout --
+  dump        = cat-file -p
+  filetrail   = git log --follow -p -w
+  graph       = log --graph -10 --branches --remotes --tags\
+                    --format=format:'%Cgreen%h %Creset %<(75,trunc)%s (%cN, %ar) %Cred%d' --date-order
+
+  hist        = log -10 --format=format:'%Cgreen%h %Creset %s (%cN, %ar)'
+  history     = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --graph --date=short
+  ignore      = update-index --assume-unchanged
+  ignored     = ls-files -o -i --exclude-standard   # Show files ignored by git:
+  invert      = revert
+  incoming    = log orgin/master ^master            # show only what is in orgin/master that isn't in master
+  last        = log -1 HEAD --format=format:"%Cred%H"
+  logs        = log --stat
+  mergetrail  = log --ancestry-path --merges
+  move        = mv
+  nevermind   = !git reset --hard HEAD && git clean -d -f
+  outgoing    = log master ^orgin/master            # show only what is in master that isn't in orgin/master
+  praise      = blame
+  precommit   = diff --cached -w --word-diff=color --word-diff-regex='[^[:space:]<>]+'
+  prestage    = diff -w --word-diff=color
+  remotes     = remote -v
+  remove      = rm
+  resave      = commit --amend
+  rewrite     = rebase -i
+  ru          = log --since=\"one week ago\" --all --no-merges --oneline #--author=\"Mark Fernandes\"
+  #rushes      = log --since=\"1970-01-01 00:00:00\" --all --no-merges --oneline #--author=\"Mark Fernandes\"
+  rushes      = log --since=\"one week ago\" --all --no-merges --oneline #--author=\"Mark Fernandes\"
+  save        = commit -am
+  show-all    = log --follow
+  shop-all    = log --follow -p
+  stashes     = stash list
+  summary     = status -u -s
+  tags        = tag
+  type        = cat-file -t
+  uncommit    = reset --mixed HEAD~
+  undo        = reset --soft HEAD~1
+  unignore    = update-index --no-assume-changed
+  unmerged    = branch --no-merged
+  unmerged    = diff -w --name-only --diff-filter=U
+  unstage     = reset -q HEAD --
+  unstash     = stash pop
+  untrack     = rm -r --cached
+  up          = push up master
+  what        = show -w
+  #----
+  # END HUMAN
+
+  pup       = "!git remote update -p && git merge --ff-only @{u}"
+  pupup     = "!git remote update up -p && git merge --ff-only @{u}"
+
+# vim: et:nonu:nospell:ft=gitconfig
+
