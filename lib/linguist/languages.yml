@@ -321,6 +321,18 @@ Assembly:
   tm_scope: source.assembly
   ace_mode: assembly_x86
   language_id: 24
+Asymptote:
+  type: programming
+  color: "#4a0c0c"
+  extensions:
+  - ".asy"
+  interpreters:
+  - asy
+  tm_scope: source.c++
+  ace_mode: c_cpp
+  codemirror_mode: clike
+  codemirror_mime_type: text/x-kotlin
+  language_id: 591605007
 Augeas:
   type: programming
   extensions:
@@ -2501,6 +2513,15 @@ LSL:
   - lsl
   color: "#3d9970"
   language_id: 193
+LTspice Symbol:
+  type: data
+  extensions:
+  - ".asy"
+  tm_scope: source.ltspice.symbol
+  ace_mode: text
+  codemirror_mode: spreadsheet
+  codemirror_mime_type: text/x-spreadsheet
+  language_id: 1013566805
 LabVIEW:
   type: programming
   extensions:
