@@ -4,7 +4,7 @@ set -ex
 
 # As of 3 Jan 2019, Travis defaults to bundler 2.0 - https://docs.travis-ci.com/user/languages/ruby/#bundler-20
 # Linguist still requires Bundler 1.x due to Licensed.
-gem uninstall -v '>= 2' -i "$(rvm gemdir)@global" -ax bundler || true
+gem uninstall -v '>= 2' -i @global -ax bundler || true
 gem install bundler -v '< 2'
 
 # Fetch all commits/refs needed to run our tests.
