@@ -137,6 +137,7 @@ disambiguations:
   - language: GAP
     pattern: '\s*Declare'
   - language: GDScript
+    pattern: '\s*(extends|var|const|enum|func|class|signal|tool|yield|assert|onready)'
 - extensions: ['.gml']
   rules:
   - language: XML
