@@ -8,7 +8,7 @@ addons:
     - libicu52
 
 before_install:
-  - gem uninstall -v '>= 2' -i $(rvm gemdir)@global -ax bundler || true
+  - gem uninstall -v '>= 2' -ax bundler || true
   - gem install bundler -v '< 2'
   - script/travis/before_install
 
