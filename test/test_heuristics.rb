@@ -68,6 +68,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_asy_by_heuristics
+    assert_heuristics({
+      "Asymptote" => all_fixtures("Asymptote", "*.asy"),
+      "LTspice Symbol" => all_fixtures("LTspice Symbol", "*.asy")
+    })
+  end
+
   def test_bb_by_heuristics
     assert_heuristics({
       "BitBake" => all_fixtures("BitBake", "*.bb"),

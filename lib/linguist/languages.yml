@@ -321,6 +321,18 @@ Assembly:
   tm_scope: source.assembly
   ace_mode: assembly_x86
   language_id: 24
+Asymptote:
+  type: programming
+  color: "#4a0c0c"
+  extensions:
+  - ".asy"
+  interpreters:
+  - asy
+  tm_scope: source.c++
+  ace_mode: c_cpp
+  codemirror_mode: clike
+  codemirror_mime_type: text/x-kotlin
+  language_id: 591605007
 Augeas:
   type: programming
   extensions:
@@ -1062,7 +1074,7 @@ Diff:
   language_id: 88
 Dockerfile:
   type: programming
-  color: "#0db7ed"
+  color: "#384d54"
   tm_scope: source.dockerfile
   extensions:
   - ".dockerfile"
@@ -1675,7 +1687,7 @@ Gnuplot:
   language_id: 131
 Go:
   type: programming
-  color: "#375eab"
+  color: "#00ADD8"
   aliases:
   - golang
   extensions:
@@ -1799,6 +1811,8 @@ HCL:
   - ".tf"
   - ".tfvars"
   - ".workflow"
+  aliases:
+  - terraform
   ace_mode: ruby
   codemirror_mode: ruby
   codemirror_mime_type: text/x-ruby
@@ -2499,6 +2513,15 @@ LSL:
   - lsl
   color: "#3d9970"
   language_id: 193
+LTspice Symbol:
+  type: data
+  extensions:
+  - ".asy"
+  tm_scope: source.ltspice.symbol
+  ace_mode: text
+  codemirror_mode: spreadsheet
+  codemirror_mime_type: text/x-spreadsheet
+  language_id: 1013566805
 LabVIEW:
   type: programming
   extensions:

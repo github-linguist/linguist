@@ -41,6 +41,11 @@ disambiguations:
     pattern: '^[=-]+(\s|\n)|{{[A-Za-z]'
   - language: AGS Script
     pattern: '^(\/\/.+|((import|export)\s+)?(function|int|float|char)\s+((room|repeatedly|on|game)_)?([A-Za-z]+[A-Za-z_0-9]+)\s*[;\(])'
+- extensions: ['.asy']
+  rules:
+  - language: LTspice Symbol
+    pattern: '^SymbolType[ \t]'
+  - language: Asymptote
 - extensions: ['.bb']
   rules:
   - language: BlitzBasic
