@@ -29,4 +29,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'color-proximity', '~> 0.2.1'
   s.add_development_dependency 'licensed', '~> 1.3.0'
   s.add_development_dependency 'licensee'
+  s.add_development_dependency 'bundler', '~> 1.10'
 end
