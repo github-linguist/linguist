@@ -200,7 +200,7 @@ If you are the current maintainer of this gem:
 1. Create a branch for the release: `git checkout -b release-vxx.xx.xx`
 1. Make sure your local dependencies are up to date: `script/bootstrap`
 1. If grammar submodules have not been updated recently, update them: `git submodule update --remote`.
-   If any submodules are updated,
+   If any submodules are updated:
      1. Update the license cache: `script/licensed`
      1. Double check no problems found: `script/licensed status`
      1. Verify and fix any problems identified
