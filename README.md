@@ -44,8 +44,8 @@ As this analysis is performed by a low priority background job, it can take a wh
 
 Install the gem:
 
-```console
-$ gem install github-linguist
+```bash
+gem install github-linguist
 ```
 
 #### Dependencies
@@ -64,14 +64,14 @@ These components have their own dependencies.
 You may need to install missing dependencies before you can install Linguist.
 For example, on macOS with [Homebrew](http://brew.sh/):
 
-```console
-$ brew install cmake pkg-config icu4c
+```bash
+brew install cmake pkg-config icu4c
 ```
 
 On Ubuntu:
 
-```console
-$ sudo apt-get install cmake pkg-config libicu-dev zlib1g-dev libcurl4-openssl-dev libssl-dev ruby-dev
+```bash
+sudo apt-get install cmake pkg-config libicu-dev zlib1g-dev libcurl4-openssl-dev libssl-dev ruby-dev
 ```
 
 ### Application usage
@@ -94,9 +94,9 @@ A repository's languages stats can also be assessed from the command line using 
 Without any options, `linguist` will output the breakdown that correlates to what is shown in the language stats bar.
 The `--breakdown` flag will additionally show the breakdown of files by language.
 
-```console
-$ cd /path-to-repository/
-$ github-linguist
+```bash
+cd /path-to-repository/
+github-linguist
 ```
 
 You can try running `linguist` on the root directory in this repository itself:

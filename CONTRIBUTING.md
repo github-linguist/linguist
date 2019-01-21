@@ -16,24 +16,24 @@ The majority of contributions won't need to touch any Ruby code at all.
 Before you can start contributing to Linguist, you'll need to set up your environment first.
 Clone the repo and run `script/bootstrap` to install its dependencies.
 
-```console
-$ git clone https://github.com/github/linguist.git
-$ cd linguist/
-$ script/bootstrap
+```bash
+git clone https://github.com/github/linguist.git
+cd linguist/
+script/bootstrap
 ```
 
 To run Linguist from the cloned repository, you will need to generate the code samples first:
 
-```console
-$ bundle exec rake samples
+```bash
+bundle exec rake samples
 ```
 
 Run this command each time a [sample][samples] has been modified.
 
 To run Linguist from the cloned repository:
 
-```console
-$ bundle exec bin/github-linguist --breakdown
+```bash
+bundle exec bin/github-linguist --breakdown
 ```
 
 ### Dependencies
@@ -44,14 +44,14 @@ These components have their own dependencies - `icu4c`, and `cmake` and `pkg-con
 
 For example, on macOS with [Homebrew](http://brew.sh/):
 
-```console
-$ brew install cmake pkg-config icu4c docker
+```bash
+brew install cmake pkg-config icu4c docker
 ```
 
 On Ubuntu:
 
-```console
-$ apt-get install cmake pkg-config libicu-dev docker-ce
+```bash
+apt-get install cmake pkg-config libicu-dev docker-ce
 ```
 
 ## Adding an extension to a language
@@ -89,8 +89,8 @@ To add support for a new language:
 1. Add an entry for your language to [`languages.yml`][languages].
    Omit the `language_id` field for now.
 1. Add a syntax-highlighting grammar for your language using:
-   ```console
-   $ script/add-grammar https://github.com/JaneSmith/MyGrammar
+   ```bash
+   script/add-grammar https://github.com/JaneSmith/MyGrammar
    ```
    This command will analyze the grammar and, if no problems are found, add it to the repository.
    If problems are found, please report them to the grammar maintainer as you will otherwise be unable to add it.
@@ -146,8 +146,8 @@ This often results in someone grasping the opportunity to create a newer and bet
 
 Switching the source of a grammar is really easy:
 
-```console
-$ script/add-grammar --replace MyGrammar https://github.com/PeterPan/MyGrammar
+```bash
+script/add-grammar --replace MyGrammar https://github.com/PeterPan/MyGrammar
 ```
 
 This command will analyze the grammar and, if no problems are found, add it to the repository.
@@ -162,8 +162,8 @@ Please then open a pull request for the updated grammar.
 
 You can run the tests locally with:
 
-```console
-$ bundle exec rake test
+```bash
+bundle exec rake test
 ```
 
 Sometimes getting the tests running can be too much work, especially if you don't have much Ruby experience.
