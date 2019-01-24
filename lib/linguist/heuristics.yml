@@ -135,7 +135,7 @@ disambiguations:
 - extensions: ['.gd']
   rules:
   - language: GAP
-    pattern: '\s*Declare'
+    pattern: '\s*(Declare|BindGlobal|KeyDependentOperation)'
   - language: GDScript
     pattern: '\s*(extends|var|const|enum|func|class|signal|tool|yield|assert|onready)'
 - extensions: ['.gml']
