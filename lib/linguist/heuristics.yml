@@ -155,10 +155,9 @@ disambiguations:
     pattern: '<\?hh'
 - extensions: ['.ice']
   rules:
-  - language: Slice
-    pattern: '\A(?!\s*[{\[])'
   - language: JSON
     pattern: '\A\s*[{\[]'
+  - language: Slice
 - extensions: ['.inc']
   rules:
   - language: PHP
