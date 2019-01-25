@@ -46,7 +46,7 @@ disambiguations:
   # Document which uses man(7) macros
   - language: Roff Manpage
     and:
-    - pattern: '^[.''][ \t]*TH[ \t]+(?:[^"\s]+|"[^"\s]+)[ \t]+"?(?:[1-9]|@[^\s@]+@)'
+    - pattern: '^[.''][ \t]*TH[ \t]+(?:[^"\s]+|"[^"]+")[ \t]+"?(?:[1-9]|@[^\s@]+@)'
     - pattern: '^[.''][ \t]*SH[ \t]+(?:[^"\s]+|"[^"\s]+)'
 
   # Open-ended fallback to unrendered Roff source
