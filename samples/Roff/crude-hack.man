@@ -1,0 +1,101 @@
+'\"##===========================================================================##
+'\"## Crude hack to extract the line numbers of symbols defined in Roff source. ##
+'\"## Output is of the format `[define|remove]:[type]:[line-number]:[filename]` ##
+'\"## which is printed to stderr while Groff processes tmac files. Written as   ##
+'\"## part of the Roff.js project -- see <https://github.com/Alhadis/Roff.js>   ##
+'\"##=============[INCORRIGIBLE-HACKERY-BEGINS-UNDER-THIS-LINE]=================##
+'\" Remove "problematic" macros
+'rm ab
+'rm ex
+'rm lf
+'rm pi
+'rm rd
+'rm sy
+'rm open
+'rm opena
+'rm pnr
+'rm pso
+'
+'\" Restrict .tm to traced definitions only
+'rn tm tm_\*!
+'rm tm1
+'rm tmc
+'
+'\" Macros, strings, and diversions
+'rn de de_\*!
+'de_\*! de
+'	tm_\*! define:macro:\\n(.c:\\n(.F:\\$1
+'	de_\*! \\$1 \\$2
+..
+'rn ds ds_\*!
+'de_\*! ds
+'	tm_\*! define:string:\\n(.c:\\n(.F:\\$1
+'	ds_\*! \\$*
+..
+'rn di di_\*!
+'de_\*! di
+'	tm_\*! define:diversion:\\n(.c:\\n(.F:\\$1
+'	di_\*! \\$1 \\$2
+..
+'rn rm rm_\*!
+'de_\*! rm
+'	tm_\*! remove:object:\\n(.c:\\n(.F:\\$1
+'	rm_\*! \\$*
+..
+'rn de1 de1_\*!
+'de_\*! de1
+'	tm_\*! define:macro:\\n(.c:\\n(.F:\\$1
+'	de1_\*! \\$1 \\$2
+..
+'rn ds1 ds1_\*!
+'de_\*! ds1
+'	tm_\*! define:string:\\n(.c:\\n(.F:\\$1
+'	ds1_\*! \\$1 \\$2
+..
+'\" Registers
+'rn nr nr_\*!
+'de_\*! nr
+'	tm_\*! define:register:\\n(.c:\\n(.F:\\$1
+'	nr_\*! \\$*
+..
+'rn rr rr_\*!
+'de_\*! rr
+'	tm_\*! remove:register:\\n(.c:\\n(.F:\\$1
+'	rr_\*! \\$*
+..
+'rn length length_\*!
+'de_\*! length
+'	tm_\*! define:register:\\n(.c:\\n(.F:\\$1
+'	length_\*! \\$*
+..
+'\" Characters
+'rn char char_\*!
+'de_\*! char
+'	tm_\*! define:char:\\n(.c:\\n(.F:\\$1
+'	char_\*! \\$*
+..
+'rn rchar rchar_\*!
+'de_\*! rchar
+'	tm_\*! remove:char:\\n(.c:\\n(.F:\\$*
+'	rchar_\*! \\$*
+..
+'\" Colours
+'rn defcolor defcolor_\*!
+'de_\*! defcolor
+'	tm_\*! define:colour:\\n(.c:\\n(.F:\\$1
+'	defcolor_\*! \\$*
+..
+'\" Links
+'rn so so_\*!
+'de_\*! so
+'	tm_\*! link:file:\\n(.c:\\n(.F:\\$1
+'	so_\*! \\$*
+..
+'rn mso mso_\*!
+'de_\*! mso
+'	tm_\*! link:tmac:\\n(.c:\\n(.F:\\$1
+'	mso_\*! \\$*
+..
+.
+.\" EOF
+'rm !
