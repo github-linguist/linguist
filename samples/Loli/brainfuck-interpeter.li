@@ -1,0 +1,107 @@
+# Brainfuck interpeter in Loli
+# (c) @txlyre
+
+import (argv) sys
+
+# Utils
+fn chr(char: Integer): Byte {
+  return char.to_b()
+}
+
+fn ord(char: Byte): Integer {
+  return char.to_i()
+}
+
+fn s_to_l(s: String): List[Byte] {
+  var chars : ByteString = s.to_bs(),
+      ret   : List[Byte] = []
+  
+  for i in 0...chars.len()-1: {
+    ret.push(chars[i])  
+  }
+  
+  return ret
+}
+
+# Additional functions
+fn cleanup(code: String): String {
+  var chars : List[String] = s_to_l(code).map(|n: Byte| n.to_s())
+  
+  chars = chars.select(|x: String| x == "." || x == "," || x == "[" || x == "]" || x == "<" || x == ">" || x == "+" || x == "-")
+  return chars.join()
+}
+
+fn build_bracemap(code: String): Hash[Integer, Integer] {
+  var bracestack: List[Integer] = [],
+      bracemap  : Hash[Integer, Integer] = [],
+      chars     : ByteString = code.to_bs(),
+      char      : String = "",
+      start     : Integer = 0
+   
+  for i in 0...chars.len()-1: {
+    char = chars[i].to_s()
+    if char == "[": {
+      bracestack.push(i)
+    elif char == "]":
+      start = bracestack.pop()
+      bracemap[start] = i
+      bracemap[i] = start
+    }
+  }
+  
+  return bracemap
+}
+
+fn eval_bf(code: String) {
+  var chars     : ByteString = cleanup(code).to_bs(),
+      bracemap  : Hash[Integer, Integer] = build_bracemap(cleanup(code)),
+      cells     : List[Integer] = [0],
+      codeptr   : Integer = 0,
+      cellptr   : Integer = 0,
+      char      : String = "",
+      inp       : ByteString = b""
+      
+  while codeptr < chars.len(): {
+    char = chars[codeptr].to_s()
+    if char == ">": {
+      cellptr += 1
+      if cellptr >= cells.len(): { cells.push(0) }
+    elif char == "<": 
+      if cellptr <= 0: {
+        cellptr = 0
+      else:
+        cellptr -= 1
+      }
+    elif char == "+":
+      if cells[cellptr] >= 255: {
+        cells[cellptr] = 0
+      else:
+        cells[cellptr] += 1
+      }
+    elif char == "-":
+      if cells[cellptr] <= 0: {
+        cells[cellptr] = 0
+      else:
+        cells[cellptr] -= 1
+      }
+    elif char == "[" && cells[cellptr] == 0:
+      codeptr = bracemap[codeptr]
+    elif char == "]" && cells[cellptr] != 0:
+      codeptr = bracemap[codeptr]
+    elif char == ".":
+      say(chr(cells[cellptr]).to_s())
+    elif char == ",":
+      inp = input()
+      if inp.len() > 0: {
+        cells[cellptr] = ord(inp[0])
+      }
+    }
+    codeptr += 1
+  }
+}
+
+if(argv.len() <= 1): {
+  input().to_s() |> eval_bf
+else:
+  argv.slice(1).join(" ") |> eval_bf
+}
