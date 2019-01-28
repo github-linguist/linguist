@@ -1,0 +1,45 @@
+import sys
+import GL
+
+# define `future` functions
+future fn glutKeyboardFunc(Byte, Integer, Integer) { ... }
+future fn glutDisplayFunc                          { ... }
+
+# init window
+GL.glutInit               ("Test OpenGL application in loli")
+GL.glutInitDisplayMode    (GL.GLUT_RGBA | GL.GLUT_SINGLE)
+GL.glutInitWindowSize     (200, 200)
+GL.glutInitWindowPosition (100, 100)
+
+# create window
+GL.glutCreateWindow       (GL.loliGlVersion)
+
+# bind functions
+GL.glutDisplayFunc        (glutDisplayFunc)
+GL.glutKeyboardFunc       (glutKeyboardFunc)
+
+# main loop
+GL.glutMainLoop           ()
+
+fn glutKeyboardFunc(key: Byte, arg1: Integer, arg2: Integer) {
+    if (key == 27t): { sys.exit(0) } # on `Esc` press ...
+}
+
+fn glutDisplayFunc {
+    GL.glEnable(GL.GL_STENCIL_TEST)
+    GL.glMatrixMode(GL.GL_PROJECTION)
+    GL.glLoadIdentity()
+    GL.glOrtho(-5.0, 5.0, -5.0, 5.0, -5.0, 5.0)
+    GL.glMatrixMode(GL.GL_MODELVIEW)
+    GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_STENCIL_BUFFER_BIT)
+    GL.glClearColor(0.0, 0.0, 0.0, 1.0)
+
+    GL.glBegin(GL.GL_POLYGON)
+    GL.glVertex3i(3, 3, 0)
+    GL.glVertex3i(-1, 1, 0)
+    GL.glVertex3i(-3, -3, 0)
+    GL.glVertex3i(1, -1, 0)
+
+    GL.glEnd()
+    GL.glFlush()
+}
