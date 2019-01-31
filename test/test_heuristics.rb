@@ -164,6 +164,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_gd_by_heuristics
+    assert_heuristics({
+      "GAP" => all_fixtures("GAP", "*.gd"),
+      "GDScript" => all_fixtures("GDScript", "*.gd")
+    })
+  end
+
   def test_gml_by_heuristics
       assert_heuristics({
         "Game Maker Language" => all_fixtures("Game Maker Language", "*.gml"),
