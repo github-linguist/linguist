@@ -10,6 +10,7 @@ require 'linguist/heuristics'
 require 'linguist/samples'
 require 'linguist/file_blob'
 require 'linguist/blob_helper'
+require 'linguist/strategy/file_path_pattern'
 require 'linguist/strategy/filename'
 require 'linguist/strategy/extension'
 require 'linguist/strategy/modeline'
@@ -27,9 +28,10 @@ module Linguist
     @alias_index        = {}
     @language_id_index  = {}
 
-    @extension_index    = Hash.new { |h,k| h[k] = [] }
-    @interpreter_index  = Hash.new { |h,k| h[k] = [] }
-    @filename_index     = Hash.new { |h,k| h[k] = [] }
+    @extension_index           = Hash.new { |h,k| h[k] = [] }
+    @interpreter_index         = Hash.new { |h,k| h[k] = [] }
+    @filename_index            = Hash.new { |h,k| h[k] = [] }
+    @filepath_pattern_index    = Hash.new { |h,k| h[k] = [] }
 
     # Valid Languages types
     TYPES = [:data, :markup, :programming, :prose]
@@ -86,6 +88,10 @@ module Linguist
         @filename_index[filename] << language
       end
 
+      language.filepath_patterns.each do |filepath_pattern|
+        @filepath_pattern_index[filepath_pattern] << language
+      end
+
       @language_id_index[language.language_id] = language
 
       language
@@ -126,6 +132,25 @@ module Linguist
     def self.find_by_alias(name)
       return nil if !name.is_a?(String) || name.to_s.empty?
       name && (@alias_index[name.downcase] || @alias_index[name.split(',', 2).first.downcase])
+    end
+
+    # Public: Look up Languages by filepath patterns.
+    #
+    # path - The file path String.
+    #
+    # Examples
+    #
+    #   Language.find_by_filepath_pattern('.vscode/launch.json')
+    #   # => [#<Language name="JSON with Comments">]
+    #   Language.find_by_filepath_pattern('.vscode/foo.rb')
+    #   # => []
+    #
+    # Returns all matching Languages or [] if none were found.
+    def self.find_by_filepath_pattern(path)
+      @filepath_pattern_index.each do |pattern, language|
+        return language if path =~ Regexp.new(pattern)
+      end
+      []
     end
 
     # Public: Look up Languages by filename.
@@ -293,9 +318,10 @@ module Linguist
       @language_id = attributes[:language_id]
 
       # Set extensions or default to [].
-      @extensions   = attributes[:extensions]   || []
-      @interpreters = attributes[:interpreters] || []
-      @filenames    = attributes[:filenames]    || []
+      @extensions         = attributes[:extensions]         || []
+      @interpreters       = attributes[:interpreters]       || []
+      @filenames          = attributes[:filenames]          || []
+      @filepath_patterns  = attributes[:filepath_patterns]  || []
 
       # Set popular, and searchable flags
       @popular    = attributes.key?(:popular)    ? attributes[:popular]    : false
@@ -431,6 +457,15 @@ module Linguist
     # Returns the extensions Array
     attr_reader :filenames
 
+    # Public: Get filepath_patterns
+    #
+    # Examples
+    #
+    #   # => ['\.vscode\/.*\.json$', ...]
+    #
+    # Returns the extensions Array
+    attr_reader :filepath_patterns
+
     # Public: Get URL escaped name.
     #
     # Examples
@@ -522,6 +557,7 @@ module Linguist
     options['extensions']   ||= []
     options['interpreters'] ||= []
     options['filenames']    ||= []
+    options['filepath_patterns']  ||= []
 
     if extnames = extensions[name]
       extnames.each do |extname|
@@ -559,6 +595,7 @@ module Linguist
       :extensions        => Array(options['extensions']),
       :interpreters      => options['interpreters'].sort,
       :filenames         => options['filenames'],
+      :filepath_patterns => options['filepath_patterns'],
       :popular           => popular.include?(name)
     )
   end

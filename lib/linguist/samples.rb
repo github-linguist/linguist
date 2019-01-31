@@ -38,7 +38,7 @@ module Linguist
         Dir.entries(dirname).each do |filename|
           next if filename == '.' || filename == '..'
 
-          if filename == 'filenames'
+          if filename == 'filenames' || filename == '.vscode'
             Dir.entries(File.join(dirname, filename)).each do |subfilename|
               next if subfilename == '.' || subfilename == '..'
 

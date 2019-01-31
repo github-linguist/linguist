@@ -61,6 +61,7 @@ class << Linguist
   STRATEGIES = [
     Linguist::Strategy::Modeline,
     Linguist::Strategy::Filename,
+    Linguist::Strategy::FilePathPattern,
     Linguist::Shebang,
     Linguist::Strategy::Extension,
     Linguist::Strategy::XML,

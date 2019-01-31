@@ -42,11 +42,21 @@ class TestSamples < Minitest::Test
     end
   end
 
-  def test_filename_listed
+  def test_filename_or_regexpath_listed
     Samples.each do |sample|
       if sample[:filename]
         listed_filenames = Language[sample[:language]].filenames
-        assert_includes listed_filenames, sample[:filename], "#{sample[:path]} isn't listed as a filename for #{sample[:language]} in languages.yml"
+        listed_filepath_patterns = Language[sample[:language]].filepath_patterns
+        skip_loop = false
+        listed_filepath_patterns.each do |pattern|
+          if sample[:path] =~ Regexp.new(pattern)
+            skip_loop = true
+            break
+          end
+        end
+        next if skip_loop
+
+        assert_includes(listed_filenames, sample[:filename], "#{sample[:path]} isn't listed as a filename for #{sample[:language]} in languages.yml")
       end
     end
   end

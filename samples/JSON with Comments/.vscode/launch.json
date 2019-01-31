@@ -1,0 +1,32 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "program1",
+      "program": "${workspaceFolder}/program1.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "program2",
+      "program": "${workspaceFolder}/program2.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "program3",
+      "program": "${workspaceFolder}/program3.js"
+    }
+  ],
+  "compounds": [
+      {
+          "name": "Programs 1, 2 and 3", // launch/debug all - FTW!
+          "configurations": ["program1", "program2", "program3"]
+      }
+  ]
+}
