@@ -166,10 +166,9 @@ disambiguations:
     pattern: '<\?hh'
 - extensions: ['.ice']
   rules:
-  - language: Slice
-    pattern: '^\s*(#\s*(include|if[n]def|pragma)|module\s+[A-Za-z][_A-Za-z0-9]*)'
   - language: JSON
-    pattern: '/\A\s*[{\[]/'
+    pattern: '\A\s*[{\[]'
+  - language: Slice
 - extensions: ['.inc']
   rules:
   - language: PHP
