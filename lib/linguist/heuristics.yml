@@ -30,24 +30,18 @@
 disambiguations:
 - extensions: ['.1', '.1in', '.1m', '.1x', '.2', '.3', '.3in', '.3m', '.3qt', '.3x', '.4', '.5', '.6', '.7', '.8', '.9', '.man', '.mdoc']
   rules:
-  # ".so links" are used like symlinks in manpage directories.
-  # Match only if target file uses a relevant file extension.
-  - language: Roff Manpage
-    pattern: '\A[.''][ \t]*so[ \t]+\S+?\.((?:[1-9](?![0-9])[a-z_0-9]*|0p|n|man|mdoc)(?:\.in)?)\s*\z'
-
   # Document which uses mdoc(7) macros
   - language: Roff Manpage
     and:
-    - pattern: '^[.''][ \t]*Dd[ \t]+(?:[^"\s]+|"[^"\s]+")'
-    - pattern: '^[.''][ \t]*Dt[ \t]+(?:[^"\s]+|"[^"\s]+")[ \t]+"?(?:[1-9]|@[^\s@]+@)'
-    - pattern: '^[.''][ \t]*Os(?=$|[ \t])'
-    - pattern: '^[.''][ \t]*Sh[ \t]+(?i:NAME|"NAME"?)[ \t]*$'
+    - pattern: '^[.''][ \t]*Dd +(?:[^"\s]+|"[^"]+")'
+    - pattern: '^[.''][ \t]*Dt +(?:[^"\s]+|"[^"]+") +"?(?:[1-9]|@[^\s@]+@)'
+    - pattern: '^[.''][ \t]*Sh +(?:[^"\s]|"[^"]+")'
 
   # Document which uses man(7) macros
   - language: Roff Manpage
     and:
-    - pattern: '^[.''][ \t]*TH[ \t]+(?:[^"\s]+|"[^"]+")[ \t]+"?(?:[1-9]|@[^\s@]+@)'
-    - pattern: '^[.''][ \t]*SH[ \t]+(?:[^"\s]+|"[^"\s]+)'
+    - pattern: '^[.''][ \t]*TH +(?:[^"\s]+|"[^"]+") +"?(?:[1-9]|@[^\s@]+@)'
+    - pattern: '^[.''][ \t]*SH +(?:[^"\s]+|"[^"\s]+)'
 
   # Open-ended fallback to unrendered Roff source
   - language: Roff
