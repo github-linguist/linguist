@@ -37,6 +37,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Ballerina:** [ballerina-platform/ballerina-grammar](https://github.com/ballerina-platform/ballerina-grammar)
 - **Batchfile:** [mmims/language-batchfile](https://github.com/mmims/language-batchfile)
 - **Befunge:** [johanasplund/sublime-befunge](https://github.com/johanasplund/sublime-befunge)
+- **Beluga:** [marcelgoh/beluga-syntax](https://github.com/marcelgoh/beluga-syntax)
 - **Bison:** [textmate/bison.tmbundle](https://github.com/textmate/bison.tmbundle)
 - **Blade:** [jawee/language-blade](https://github.com/jawee/language-blade)
 - **BlitzBasic:** [textmate/blitzmax.tmbundle](https://github.com/textmate/blitzmax.tmbundle)
