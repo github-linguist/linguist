@@ -1,0 +1,40 @@
+% Definition of types and expressions
+tp: type.  --name tp T.
+arr: tp -> tp -> tp.
+nat: tp.
+
+exp: type. --name exp E.
+% lam : tp -> (exp -> exp) -> exp.
+lam :  (exp -> exp) -> exp.
+app : exp -> exp -> exp.
+
+% Evaluation judgment
+eval: exp -> exp -> type.
+ev_app : eval E1 (lam E) -> eval E2 V2 -> eval (E V2) V
+	-> eval (app E1 E2) V.
+ev_lam: eval (lam E) (lam E).
+
+% Equality predicate
+eq: exp -> exp -> type.
+eq_ref: eq E E.
+
+% Uniqueness of evaluation
+% Theorem:  If  eval E V  and eval E V'  then  equal V V'.
+
+rec unique_eval : [ |- eval E V] -> [ |- eval E V'] ->  [ |- eq V V'] =
+/ total e (unique_eval _ _ _ e) / 
+fn d => fn f => case d of
+| [ |- ev_app D1 D2 D3] =>
+  let [ |- ev_app F1 F2 F3] = f in
+  let [ |- eq_ref] = unique_eval [ |- D1] [ |- F1] in
+  let [ |- eq_ref] = unique_eval [ |- D2] [ |- F2] in
+    unique_eval [ |- D3] [ |- F3]
+
+| [ |- ev_lam] =>
+  let [ |- ev_lam] = f in
+    [ |- eq_ref]
+
+
+;
+
+

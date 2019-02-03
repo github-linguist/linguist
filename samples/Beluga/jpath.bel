@@ -1,0 +1,93 @@
+% An example with a 3rd order signature. Proving it's equivalent to a 2nd order
+% definition.
+% Authors: Andrew Cave, Brigitte Pientka
+
+tm: type. --name tm T.
+lam: (tm -> tm) -> tm.
+app: tm -> tm -> tm.
+rdx : (tm -> tm) -> tm -> tm.
+
+path: type. --name path P.
+bind: (path -> path) -> path.
+left: path -> path.
+right: path -> path.
+done: path.
+
+is_path: path -> tm -> type. --name is_path I.
+
+p_lam: is_path (bind P) (lam E)
+       <- ({x:tm}{q:path}is_path q x -> is_path (P q) (E x)).
+
+p_left: is_path (left P) (app M N)
+       <- is_path P M.
+
+p_right: is_path (right P) (app M N)
+       <- is_path P N.
+
+p_done: is_path done M.
+
+p_rdx : ({x:tm} ({q:path} is_path q M -> is_path q x) -> is_path P (F x)) -> is_path P (rdx F M).
+
+jpath : path -> tm -> type.
+jump : tm -> tm -> type.
+
+j_lam: jpath (bind P) (lam E)
+       <- ({x:tm}{q:path} jpath q x -> jpath (P q) (E x)).
+
+j_left: jpath (left P) (app M N)
+       <- jpath P M.
+
+j_right: jpath (right P) (app M N)
+       <- jpath P N.
+
+j_done: jpath done M.
+
+j_rdx : ({x:tm} jump M x -> jpath P (F x)) -> jpath P (rdx F M).
+j_jump : jump N X -> jpath P N -> jpath P X.
+
+schema jctx = block x:tm, p:path, _t:is_path p x, _u:jpath p x
+ + some [n:tm] block x:tm, _t: ({q:path} is_path q n -> is_path q x), _u:jump n x;
+
+rec fwd : (g:jctx) [g |- is_path P M] -> [g |- jpath P M] =
+% / total p (fwd g _ _ p) /
+fn p => case p of
+| [g |- p_lam (\x.\q.\d. P)] =>
+  let [g,b:block x:tm, p:path, _t:is_path p x, _u:jpath p x |-  P'[..,b.1,b.2,b.4]]
+     = fwd [g,b:block x:tm, p:path, _t:is_path p x, _u:jpath p x |-  P[..,b.1,b.2,b.3]] in
+  [g |- j_lam (\x.\q.\d. P')]
+| [g |- p_left P] => let [g |- P'] = fwd [g |- P] in [g |- j_left (P')]
+| [g |- p_right P] => let [g |- P'] = fwd [g |- P] in [g |- j_right (P')]
+| [g |- p_done] => [g |- j_done]
+| [g |- p_rdx (\x. \f. P)] : [g |- is_path Q (rdx (\x. F) M)] =>
+  let [g,b:block x:tm, _t: ({q:path} is_path q (N[..]) -> is_path q x), _u:jump (N[..]) x |-  E[..,b.1,b.3]]
+      = fwd [g,b:block x:tm, _t: ({q:path} is_path q (M[..]) -> is_path q x), _u:jump (M[..]) x |-  P[..,b.1,b.2]]
+  in
+    [g |- j_rdx (\x. \j. E)]
+| [g |- #p.3] => [g |- #p.4]
+| {#q : [g |- block x:tm, _t: ({q:path} is_path q (N[..]) -> is_path q x), _u:jump (N[..]) x]}
+  [g |- (#q.2) P D] => 
+  let [g |- J] = fwd [g |- D] in  
+   [g |- j_jump (#q.3) J]
+;
+
+rec bwd : (g:jctx) [g |- jpath P M] -> [g |- is_path P M] =
+/ total p (bwd g _ _ p) /
+fn p => case p of
+| [g |- j_lam (\x.\q.\d. P)] =>
+  let [g,b:block x:tm, p:path, _t:is_path p x, _u:jpath p x |-  P'[..,b.1,b.2,b.3]]
+     = bwd [g,b:block x:tm, p:path, _t:is_path p x, _u:jpath p x |-  P[..,b.1,b.2,b.4]] in
+  [g |- p_lam (\x.\q.\d. P')]
+| [g |- j_left P] => let [g |- P'] = bwd [g |- P] in [g |- p_left (P')]
+| [g |- j_right P] => let [g |- P'] = bwd [g |- P] in [g |- p_right (P')]
+| [g |- j_done] => [g |- p_done]
+| [g |- j_rdx (\x. \f. E)] : [g |- jpath Q (rdx (\x.F) N)] =>
+   let [g, b:block (x:tm, _t: ({q:path} is_path q (N1[..]) -> is_path q x), _u:jump (N1[..]) x) |-  F1[..,b.1,b.2]]
+       = bwd [g, b:block x:tm, _t: ({q:path} is_path q (N[..]) -> is_path q x), _u:jump (N[..]) x |-  E[..,b.1,b.3]] in
+   [g |- p_rdx (\x. \f. F1)]
+| [g |- #p.4] => [g |- #p.3]
+| {#q : [g |- block x:tm, _t: ({q:path} is_path q (N[..]) -> is_path q x), _u:jump (N[..]) x]}
+  {J : [g |- jpath P1 N]}
+  [g |- j_jump (#q.3) J] =>
+   let [g |- H] = bwd [g |- J] in
+   [g |- (#q.2) _ H]
+;
