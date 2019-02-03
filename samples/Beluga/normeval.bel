@@ -1,0 +1,163 @@
+
+
+atomic_tp : type.
+tp : type.                --name tp T.
+atomic : atomic_tp -> tp.
+arr: tp -> tp -> tp.
+
+tm : tp -> type.          --name tm E.
+app : tm (arr T S) -> tm T -> tm S.
+lam : (tm T -> tm S) -> tm (arr T S).
+
+schema tctx = tm T;
+
+neut : tp -> type.       --name neut R.
+norm : tp -> type.       --name norm M.
+nlam : (neut T -> norm S) -> norm (arr T S).
+rapp : neut (arr T S) -> norm T -> neut S.
+embed : neut (atomic P) -> norm (atomic P).
+
+schema ctx = neut T;
+
+inductive NeutVar : {g:ctx} [ |- tp] -> ctype =
+| NeutVar : {#p:[g |- neut T[]]} NeutVar [g] [ |- T]
+;
+
+inductive TmVar : {g:tctx} [ |- tp] -> ctype =
+| TmVar : {#p:[g |- tm T[]]} TmVar [g] [ |- T]
+;
+stratified Sem : {g:ctx} [ |- tp] -> ctype =
+| Syn :  [g |- neut (atomic P[])] -> Sem [g] [ |- atomic P]
+| Slam : %  {g:ctx}
+         %  {A:[ |- tp]}{B:[ |- tp]}
+         ({h:ctx} ({T:[ |- tp]} NeutVar [g] [ |- T] ->  NeutVar [h]  [ |- T]) -> Sem [h] [ |- A] -> Sem [h] [ |- B])
+           -> Sem [g] [ |- arr A B]
+;
+
+rec extendSub : ({T:[ |- tp]} NeutVar [g] [ |- T] ->  NeutVar [h] [ |- T])
+            ->  ({T:[ |- tp]} NeutVar [g, x:neut S[]] [ |- T] ->  NeutVar [h, x:neut S[]] [ |- T]) =
+/ total y (extendSub g h _ s t y) /
+fn s => let (s : {T:[ |- tp]} NeutVar [g] [ |- T] ->  NeutVar [h] [ |- T]) = s in
+(mlam T => fn y => case y of
+              | NeutVar [g,x:neut Tx[] |-  x ] => NeutVar [h,x:neut Tx[] |-  x]
+              | NeutVar [g,x:neut Tx[] |-  #p[..] ] =>
+                 let NeutVar [h |- #q] = s [ |- T] (NeutVar [g |- #p]) in
+                   NeutVar [h,x:neut Tx[] |-  #q[..]])
+;
+rec nsubst :  ({T:[ |- tp]} NeutVar [g] [ |- T]  -> NeutVar [h] [ |- T])
+           -> [g |- neut S[]]
+           -> [h |- neut S[]] =
+/ total n (nsubst g h _ s n ) /
+fn s => fn e => case e of
+| {#p: [g |- neut T[]]}
+  [g |- #p ] => let NeutVar [h |- #q] = s [ |- T] (NeutVar [g |- #p ]) in [h |- #q]
+| [g |- rapp R N] =>
+  let [h |- R' ] = nsubst s [g |- R ] in
+  let [h |- N' ] = nosubst s [g |- N ] in
+    [h |- rapp (R') (N' ) ]
+
+and nosubst : ({T:[ |- tp]} NeutVar [g] [ |- T] ->  NeutVar [h] [ |- T])
+	    -> [g |- norm S[]]
+            -> [h |- norm S[]] =
+/ total n (nosubst g h _ s n) /
+fn s => fn n =>
+let (s : {T:[ |- tp]} NeutVar [g] [ |- T] ->  NeutVar [h] [ |- T]) = s in
+case n of
+| {R:[g |- neut (atomic P[])]} [g |- embed (R ) ] =>
+  let [h |- R' ] = nsubst s [g |- R ] in [h |- embed (R' )]
+
+ | {N:[g,x:neut S[]  |-  norm S'[]]}
+   [g |- nlam (\x. N) ]  =>
+   let [h,x:neut S[] |-  N'] =
+    nosubst (extendSub s) [g ,x:neut S[] |-  N]
+  in
+   [h |- nlam (\x. N')]
+;
+
+rec subst : ({T:[ |- tp]} NeutVar [g] [ |- T] -> NeutVar [h] [ |- T])
+          -> Sem [g] [ |- A]
+          -> Sem [h] [ |- A] =
+/ total e (subst g h a s e) /
+fn s => fn e =>
+let (s : {T:[ |- tp]} NeutVar [g] [ |- T] -> NeutVar [h] [ |- T]) = s in
+case e of
+| Syn [g |- R] => Syn (nsubst s [g |- R])
+| Slam  f =>
+    Slam (mlam h' => fn s' => fn e => f [h'] (mlam T => fn y => s' [ |- T] (s [ |- T] y)) e)
+;
+
+rec weaken : {T:[ |- tp]} NeutVar [g] [ |- T] -> NeutVar [g,x:neut S[]] [ |- T] =
+/ total (weaken) /
+mlam T => fn x => let NeutVar [g |- #p] = x in NeutVar [g,x:neut _ |-  #p[..]]
+;
+
+rec extend : ({T:[ |- tp]} TmVar [g] [ |- T] -> Sem [h] [ |- T]) -> Sem [h] [ |- S]
+-> ({T:[ |- tp]} TmVar [g, x:tm S[]] [ |- T] ->  Sem [h] [ |- T]) =
+/ total (extend) /
+fn s => fn e => mlam T => fn x => case x of
+| TmVar [g,x:tm S[] |-  x] => e
+| TmVar [g,x:tm S[] |-  #q[..] ] => s [ |- T ] (TmVar [g |- #q])
+;
+
+rec id : {T:[ |- tp]} NeutVar [g] [ |- T] -> NeutVar [g] [ |- T] =
+/ total (id) /
+mlam T => fn y => y ;
+
+rec eval :  [g |- tm S[]] -> ({T:[ |- tp]} TmVar [g] [ |- T] -> Sem [h] [ |- T])
+           -> Sem [h] [ |- S]  =
+/ total t (eval g h _ t s) / 
+fn t => fn s =>
+case t of
+| [g |- #p ]           : [g |- tm S[]] =>  s [ |- S] (TmVar [g |- #p ])
+| [g |- lam (\x. E) ] : [g |- tm (arr A[] B[])] =>
+  Slam  (mlam h' => fn s' => fn e =>
+         eval [g,x:tm A[] |-  E]
+              (extend (mlam T => fn x => subst s' (s [ |- T] x))  e))
+
+| [g |- app E1 E2 ] =>
+  let (Slam f ) : Sem [h] [ |- arr A B] =  eval [g |- E1] s in
+    f [h] id (eval [g |- E2] s)
+;
+
+
+rec reflect : {A:[|- tp]}[g |- neut A[]] ->  Sem [g] [ |- A] =
+mlam A => fn r => % let [g |- R ] = r in
+% / total a (reflect g a) /
+case [ |- A] of
+| [ |- atomic P ] => Syn r
+| [ |- arr T S ] =>  
+ Slam (extendSem r)
+
+% Lesson: FACTORIZATION OF CODE HELPS TYPE RECONSTRUCTION!!!
+and extendSem : [g |- neut (arr A[] B[])] ->
+                ({h:ctx} ({T:[ |- tp]} NeutVar [g] [ |- T] ->  NeutVar [h]  [ |- T]) ->
+                 Sem [h] [ |- A] -> Sem [h] [ |- B])
+=
+% / total (extendSem) /
+ fn r => mlam h => fn s => fn e =>
+    let [h |- N ] = reify e in
+    let [h |- R' ] = nsubst s r in
+       reflect [|- _ ] [h |- rapp (R') N] 
+
+and reify : Sem [g] [ |- A] -> [g |- norm A[]] =
+% / total e (reify g a e) /
+fn e => let (e : Sem [g] [ |- A]) = e in case [ |- A] of
+| [ |- atomic P ] =>  (case e of Syn [g |- R] => [g |- embed R])
+| [ |- arr T S ] =>
+  (case e of
+   | (Slam f)  =>
+     let s = (f [g,x:neut T[] ] weaken (reflect [|- _ ] [g ,x:neut T[] |-  x])) in
+     let [g,x:neut T[] |-  E] = reify s
+     in [g |- nlam (\x. E)])
+;
+
+rec initialMap :  {T:[ |- tp]} TmVar [ ] [ |- T] -> Sem [ ] [ |- T] =
+% / total (initialMap) /
+mlam T => fn y => let TmVar [ |- #p] = y in impossible [ |- #p] in [ ];
+
+rec nbe : [ |- tm A] -> [ |- norm A] =
+% / total (nbe) /
+fn t => reify  (eval t initialMap)
+;
+
+
