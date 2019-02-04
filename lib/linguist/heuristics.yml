@@ -277,6 +277,13 @@ disambiguations:
   - language: NL
     pattern: '^(b|g)[0-9]+ '
   - language: NewLisp
+- extensions: ['.p']
+  rules:
+  - language: Gnuplot
+    pattern:
+    - '^s?plot\b'
+    - '^set\s+(term|terminal|out|output|[xy]tics|[xy]label|[xy]range|style)\b'
+  - language: OpenEdge ABL
 - extensions: ['.php']
   rules:
   - language: Hack

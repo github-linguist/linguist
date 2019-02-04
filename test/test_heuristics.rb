@@ -7,9 +7,13 @@ class TestHeuristics < Minitest::Test
     File.read(File.join(samples_path, name))
   end
 
-  def file_blob(name)
+  def file_blob(name, alt_name=nil)
     path = File.exist?(name) ? name : File.join(samples_path, name)
-    FileBlob.new(path)
+    blob = FileBlob.new(path)
+    if !alt_name.nil?
+      blob.instance_variable_set("@path", alt_name)
+    end
+    blob
   end
 
   def all_fixtures(language_name, file="*")
@@ -28,12 +32,15 @@ class TestHeuristics < Minitest::Test
     assert_equal [], Heuristics.call(file_blob("Markdown/symlink.md"), [Language["Markdown"]])
   end
 
-  def assert_heuristics(hash)
+  # alt_name is a file name that will be used instead of the file name of the
+  # original sample. This is used to force a sample to go through a specific
+  # heuristic even if it's extension doesn't match.
+  def assert_heuristics(hash, alt_name=nil)
     candidates = hash.keys.map { |l| Language[l] }
 
     hash.each do |language, blobs|
       Array(blobs).each do |blob|
-        result = Heuristics.call(file_blob(blob), candidates)
+        result = Heuristics.call(file_blob(blob, alt_name), candidates)
         if language.nil?
           expected = []
         elsif language.is_a?(Array)
@@ -315,6 +322,13 @@ class TestHeuristics < Minitest::Test
       "NewLisp" => all_fixtures("NewLisp", "*.nl"),
       "NL" => all_fixtures("NL", "*.nl")
     })
+  end
+
+  def test_p_by_heuristics
+    assert_heuristics({
+      "Gnuplot" => all_fixtures("Gnuplot"),
+      "OpenEdge ABL" => all_fixtures("OpenEdge ABL")
+    }, alt_name="test.p")
   end
 
   # Candidate languages = ["Hack", "PHP"]
