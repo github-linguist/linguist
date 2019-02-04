@@ -154,6 +154,16 @@ disambiguations:
     pattern: '^\s*(#version|precision|uniform|varying|vec[234])'
   - language: Filterscript
     pattern: '#include|#pragma\s+(rs|version)|__attribute__'
+- extensions: ['.g']
+  rules:
+  - language: ANTLR
+    pattern:
+    - '^(lexer\s+|parser\s+)?grammar\s+\S+;\s*$'
+    - '(?m)^options\s*{.*\b[A-Za-z0-9]+\s*=\s*[A-Za-z0-9]+.*}'
+  - language: G-code
+    pattern: '^(G|M)[0-9]+ [A-Z][0-9]+(\.[0-9]+)?(\s*;.*)?$'
+  - language: GAP
+    pattern: '\bfi;'
 - extensions: ['.gd']
   rules:
   - language: GAP
