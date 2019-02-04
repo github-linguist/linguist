@@ -1,0 +1,44 @@
+.pa 1
+.he 'SWITCH (III)'3/15/72'SWITCH (III)'
+.ti 0
+NAME		switch  --  switch on value
+.sp
+.ti 0
+SYNOPSIS	(switch value in r0)
+.br
+jsr	r5,switch; swtab
+.br
+(not-found return)
+.br
+.li
+...
+.ti -7
+swtab: val1; lab1;
+.br
+.li
+...
+.br
+valn; labn
+.br
+.li
+..;  0
+.sp
+.ti 0
+DESCRIPTION	switch______
+compares the value of r0 against each of the val\di\u; if
+a match is found, control is transferred to the corresponding
+lab\di\u (after popping the stack once).
+If no match has been found by the time a null lab\di\u
+occurs, switch______ returns.
+.sp
+.ti 0
+FILES		kept in /lib/liba.a
+.sp
+.ti 0
+SEE ALSO	--
+.sp
+.ti 0
+DIAGNOSTICS	--
+.sp
+.ti 0
+BUGS		--
