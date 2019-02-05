@@ -65,6 +65,7 @@ vendor/grammars/NSIS:
 - source.nsis
 vendor/grammars/NimLime:
 - source.nim
+- source.nim.comment
 - source.nim_filter
 - source.nimcfg
 vendor/grammars/PHP-Twig.tmbundle:
@@ -334,7 +335,11 @@ vendor/grammars/graphviz.tmbundle:
 vendor/grammars/groovy.tmbundle:
 - source.groovy
 vendor/grammars/haxe-TmLanguage:
+- markdown.haxe.codeblock
+- markdown.hxml.codeblock
 - source.hx
+- source.hx.argument
+- source.hx.type
 - source.hxml
 vendor/grammars/hy.tmLanguage:
 - source.hy
@@ -408,19 +413,26 @@ vendor/grammars/language-emacs-lisp:
 vendor/grammars/language-eml:
 - text.eml.basic
 vendor/grammars/language-etc:
+- etc
+- injections.etc
 - source.curlrc
 - source.gitattributes
 - source.gitconfig
 - source.gitignore
+- source.hgignore
 - source.m4
+- source.man-conf
 - source.nanorc
+- source.opts
 vendor/grammars/language-fontforge:
 - source.afm
 - source.bdf
+- source.figctrl
 - source.figfont
 - source.fontdir
 - source.fontforge
 - source.opentype
+- source.xlfd
 - text.sfd
 vendor/grammars/language-gfm:
 - source.gfm
