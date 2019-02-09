@@ -475,6 +475,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_v_by_heuristics
+    assert_heuristics({
+      "Coq" => all_fixtures("Coq", "*.v"),
+      "Verilog" => all_fixtures("Verilog", "*.v")
+    })
+  end
+
   def test_w_by_heuristics
     assert_heuristics({
       "CWeb" => all_fixtures("CWeb", "*.w"),

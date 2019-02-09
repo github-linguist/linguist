@@ -426,6 +426,19 @@ disambiguations:
     pattern: '^\s*(import.+(from\s+|require\()[''"]react|\/\/\/\s*<reference\s)'
   - language: XML
     pattern: '(?i:^\s*<\?xml\s+version)'
+- extensions: ['.v']
+  rules:
+  - language: Coq
+    pattern:
+    - '^(Proof\.|Qed\.$|Theorem\s+[\w'']+:|Inductive\s+\w+)'
+    - '^Require\s+(Import|Export)(\s+("\w+"|\w+))+\.'
+    - '(?m:^Module\s+\w+\..*?End\s+\w+\.)'
+  - language: Verilog
+    pattern:
+    - '^\s*module\s+\w+(\(|;$)'
+    - '^\s*endmodule\s*(//.*)?$'
+    - '^\s*endfunction\s*(//.*)?$'
+    - '^`define\s+\w+\s+[\w'']+\s*$'
 - extensions: ['.w']
   rules:
   - language: OpenEdge ABL
