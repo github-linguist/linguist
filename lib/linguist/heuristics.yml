@@ -284,6 +284,7 @@ disambiguations:
     - '^s?plot\b'
     - '^set\s+(term|terminal|out|output|[xy]tics|[xy]label|[xy]range|style)\b'
   - language: OpenEdge ABL
+    pattern: '^\s*(?i:(DEFINE|FOR|PROCEDURE|MESSAGE|RUN|ASSIGN|REPEAT|CLASS|METHOD|&SCOPED-DEFINE|&MESSAGE|&GLOBAL-DEFINE))'
 - extensions: ['.php']
   rules:
   - language: Hack
