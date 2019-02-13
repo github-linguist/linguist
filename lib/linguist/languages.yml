@@ -637,6 +637,20 @@ CWeb:
   tm_scope: none
   ace_mode: text
   language_id: 657332628
+Cabal Config:
+  type: data
+  aliases:
+  - Cabal
+  extensions:
+  - ".cabal"
+  filenames:
+  - cabal.config
+  - cabal.project
+  ace_mode: haskell
+  codemirror_mode: haskell
+  codemirror_mime_type: text/x-haskell
+  tm_scope: source.cabal
+  language_id: 677095381
 Cap'n Proto:
   type: programming
   tm_scope: source.capnp

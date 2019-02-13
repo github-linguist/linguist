@@ -1,0 +1,53 @@
+flags: -overloaded-methods -overloaded-signals -overloaded-properties
+
+optional-packages: *
+
+-- Needed for ios
+-- package reflex
+--  flags: -use-template-haskell
+-- package reflex-dom-core
+--  flags: -use-template-haskell
+-- package wai-websockets
+--  flags: -example
+-- package semigroupoids
+--  flags: -doctests
+-- package text
+--  flags: +integer-simple
+-- package scientific
+--  flags: +integer-simple
+-- package hashable
+--  flags: -integer-gmp
+package gi-atk
+ flags: -overloaded-methods -overloaded-signals -overloaded-properties
+package gi-cairo
+ flags: -overloaded-methods -overloaded-signals -overloaded-properties
+package gi-gdk
+ flags: -overloaded-methods -overloaded-signals -overloaded-properties
+package gi-gdkpixbuf
+ flags: -overloaded-methods -overloaded-signals -overloaded-properties
+package gi-gio
+ flags: -overloaded-methods -overloaded-signals -overloaded-properties
+package gi-glib
+ flags: -overloaded-methods -overloaded-signals -overloaded-properties
+package gi-gobject
+ flags: -overloaded-methods -overloaded-signals -overloaded-properties
+package gi-gtk
+ flags: -overloaded-methods -overloaded-signals -overloaded-properties
+package gi-gtk-hs
+ flags: -overloaded-methods -overloaded-signals -overloaded-properties
+package gi-gtkosxapplication
+ flags: -overloaded-methods -overloaded-signals -overloaded-properties
+package gi-gtksource
+ flags: -overloaded-methods -overloaded-signals -overloaded-properties
+package gi-javascriptcore
+ flags: -overloaded-methods -overloaded-signals -overloaded-properties
+package gi-pango
+ flags: -overloaded-methods -overloaded-signals -overloaded-properties
+package gi-pangocairo
+ flags: -overloaded-methods -overloaded-signals -overloaded-properties
+package gi-soup
+ flags: -overloaded-methods -overloaded-signals -overloaded-properties
+package gi-webkit
+ flags: -overloaded-methods -overloaded-signals -overloaded-properties
+package gi-webkit2
+ flags: -overloaded-methods -overloaded-signals -overloaded-properties
