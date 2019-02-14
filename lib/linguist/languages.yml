@@ -1198,6 +1198,18 @@ Ecere Projects:
   codemirror_mode: javascript
   codemirror_mime_type: application/json
   language_id: 98
+EditorConfig:
+  type: data
+  group: INI
+  filenames:
+  - ".editorconfig"
+  aliases:
+  - editor-config
+  ace_mode: ini
+  codemirror_mode: properties
+  codemirror_mime_type: text/x-properties
+  tm_scope: source.editorconfig
+  language_id: 96139566
 Edje Data Collection:
   type: data
   extensions:
@@ -2063,7 +2075,6 @@ INI:
   - ".pro"
   - ".properties"
   filenames:
-  - ".editorconfig"
   - buildozer.spec
   tm_scope: source.ini
   aliases:
