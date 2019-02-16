@@ -235,6 +235,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Maven POM:** [textmate/maven.tmbundle](https://github.com/textmate/maven.tmbundle)
 - **Max:** [textmate/json.tmbundle](https://github.com/textmate/json.tmbundle)
 - **MAXScript:** [Alhadis/language-maxscript](https://github.com/Alhadis/language-maxscript)
+- **mcfunction:** [Arcensoth/language-mcfunction](https://github.com/Arcensoth/language-mcfunction)
 - **MediaWiki:** [textmate/mediawiki.tmbundle](https://github.com/textmate/mediawiki.tmbundle)
 - **Mercury:** [sebgod/mercury-tmlanguage](https://github.com/sebgod/mercury-tmlanguage)
 - **Meson:** [TingPing/language-meson](https://github.com/TingPing/language-meson)
