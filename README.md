@@ -90,8 +90,8 @@ project.languages      #=> { "Ruby" => 119387 }
 
 ### Command line usage
 
-A repository's languages stats can also be assessed from the command line using the `linguist` executable.
-Without any options, `linguist` will output the breakdown that correlates to what is shown in the language stats bar.
+A repository's languages stats can also be assessed from the command line using the `github-linguist` executable.
+Without any options, `github-linguist` will output the breakdown that correlates to what is shown in the language stats bar.
 The `--breakdown` flag will additionally show the breakdown of files by language.
 
 ```bash
@@ -99,7 +99,7 @@ cd /path-to-repository/
 github-linguist
 ```
 
-You can try running `linguist` on the root directory in this repository itself:
+You can try running `github-linguist` on the root directory in this repository itself:
 
 ```console
 $ bundle exec bin/github-linguist --breakdown
