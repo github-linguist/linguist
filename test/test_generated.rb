@@ -131,7 +131,7 @@ class TestGenerated < Minitest::Test
     generated_fixture_loading_data("Generated/options_main.inherited.yy")
     
     # Generated KiCAD and GFortran Module Files
-    generated_fixture_loading_data("Generated/ABM8G.mod.h")
-    generated_fixture_loading_data("Generated/ms2.mod.h")
+    generated_fixture_loading_data("Generated/ABM8G.mod")
+    generated_fixture_loading_data("Generated/ms2.mod")
   end
 end
