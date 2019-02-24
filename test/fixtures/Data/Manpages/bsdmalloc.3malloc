@@ -1,0 +1,113 @@
+'\" te
+.\" Copyright (c) 2005, Sun Microsystems, Inc. All Rights Reserved.
+.\" The contents of this file are subject to the terms of the Common Development and Distribution License (the "License").  You may not use this file except in compliance with the License.
+.\" You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE or http://www.opensolaris.org/os/licensing.  See the License for the specific language governing permissions and limitations under the License.
+.\" When distributing Covered Code, include this CDDL HEADER in each file and include the License file at usr/src/OPENSOLARIS.LICENSE.  If applicable, add the following below this CDDL HEADER, with the fields enclosed by brackets "[]" replaced with your own identifying information: Portions Copyright [yyyy] [name of copyright owner]
+.TH BSDMALLOC 3MALLOC "Mar 21, 2005"
+.SH NAME
+bsdmalloc \- memory allocator
+.SH SYNOPSIS
+.LP
+.nf
+\fBcc\fR [ \fIflag\fR ... ] \fIfile\fR ... \fB-lbsdmalloc\fR [ \fIlibrary\fR ... ]
+
+\fBchar *\fR\fBmalloc\fR(\fB\fR\fIsize\fRunsigned \fIsize\fR;
+.fi
+
+.LP
+.nf
+\fBint\fR \fBfree\fR(\fB\fR \fIptr\fRchar *\fIptr\fR;
+.fi
+
+.LP
+.nf
+\fBchar *\fR\fBrealloc\fR(\fB\fR \fIptr\fR, \fB\fR\fIsize\fRchar *\fIptr\fR;
+unsigned \fIsize\fR;
+.fi
+
+.SH DESCRIPTION
+.sp
+.LP
+These routines provide a general-purpose memory allocation package. They
+maintain a table of free blocks for efficient allocation and coalescing of free
+storage. When there is no suitable space already free, the allocation routines
+call \fBsbrk\fR(2) to get more memory from the system. Each of the allocation
+routines returns a pointer  to  space suitably aligned for storage of any type
+of object. Each returns a null pointer if the request cannot be completed.
+.sp
+.LP
+The \fBmalloc()\fR function returns a pointer to  a block of at least
+\fIsize\fR bytes, which is appropriately aligned.
+.sp
+.LP
+The \fBfree()\fR function releases a previously allocated block. Its argument
+is a pointer to a block previously allocated by \fBmalloc()\fR or
+\fBrealloc()\fR. The \fBfree()\fR function does not set \fBerrno\fR.
+.sp
+.LP
+The \fBrealloc()\fR function changes the size of the block pointed to by
+\fIptr\fR to \fIsize\fR bytes and returns a pointer to the (possibly moved)
+block. The contents will be unchanged up to the lesser of the new and old
+sizes. If the new size of the block requires movement of the block, the space
+for the previous instantiation of the block is freed. If the new size is
+larger, the contents of the newly allocated portion of the block are
+unspecified. If \fIptr\fR is \fINULL\fR, \fBrealloc()\fR behaves like
+\fBmalloc()\fR for the specified size. If \fIsize\fR is 0 and \fIptr\fR is not
+a null pointer, the space pointed to is freed.
+.SH RETURN VALUES
+.sp
+.LP
+The \fBmalloc()\fR and \fBrealloc()\fR functions return a null pointer if there
+is not enough available memory. They  return a non-null pointer if \fIsize\fR
+is 0. These pointers should not be dereferenced. When \fBrealloc()\fR returns
+\fINULL\fR, the block pointed to by \fIptr\fR is left intact. Always cast the
+value returned by \fBmalloc()\fR and \fBrealloc()\fR.
+.SH ERRORS
+.sp
+.LP
+If \fBmalloc()\fR or \fBrealloc()\fR returns  unsuccessfully, \fBerrno\fR will
+be set to indicate the following:
+.sp
+.ne 2
+.na
+\fB\fBENOMEM\fR\fR
+.ad
+.RS 10n
+\fIsize\fR bytes of memory cannot be allocated because it exceeds the physical
+limits of the system.
+.RE
+
+.sp
+.ne 2
+.na
+\fB\fBEAGAIN\fR\fR
+.ad
+.RS 10n
+There is not enough memory available at this point in time to allocate
+\fIsize\fR bytes of memory; but the application could try again later.
+.RE
+
+.SH USAGE
+.sp
+.LP
+Using \fBrealloc()\fR with a block freed before the most recent call to
+\fBmalloc()\fR or \fBrealloc()\fR results in an error.
+.sp
+.LP
+Comparative features of the various allocation libraries can be found in the
+\fBumem_alloc\fR(3MALLOC) manual page.
+.SH SEE ALSO
+.sp
+.LP
+\fBbrk\fR(2), \fBmalloc\fR(3C), \fBmalloc\fR(3MALLOC),
+\fBmapmalloc\fR(3MALLOC), \fBumem_alloc\fR(3MALLOC)
+.SH WARNINGS
+.sp
+.LP
+Use of \fBlibbsdmalloc\fR renders an application non-SCD compliant.
+.sp
+.LP
+The \fBlibbsdmalloc\fR routines are incompatible with the memory allocation
+routines in the standard C-library (libc): \fBmalloc\fR(3C), \fBalloca\fR(3C),
+\fBcalloc\fR(3C), \fBfree\fR(3C), \fBmemalign\fR(3C), \fBrealloc\fR(3C), and
+\fBvalloc\fR(3C).
