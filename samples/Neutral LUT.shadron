@@ -1,0 +1,50 @@
+/*
+Display LUT PS (c) 2018 Jacob Maximilian Fober;
+
+This work is licensed under the Creative Commons 
+Attribution-ShareAlike 4.0 International License. 
+To view a copy of this license, visit 
+http://creativecommons.org/licenses/by-sa/4.0/.
+*/
+
+/*
+This shader is meant to be used with Shadron image editor,
+available here:
+https://www.arteryengine.com/shadron/
+*/
+
+// version 1.2.0 GLSL
+
+
+  ////////////////////
+ /////// MENU ///////
+////////////////////
+
+parameter int Size = 32 : range(3, 64);
+
+
+  //////////////////////
+ /////// SHADER ///////
+//////////////////////
+
+glsl vec3 DisplayLutPS(vec2 TexCoord)
+{
+	// Generate pattern UV
+	vec2 Gradient;
+	Gradient.x = TexCoord.x * Size;
+	Gradient.y = 1.0 - TexCoord.y;
+	// Convert pattern to RGB LUT
+	vec3 LUT;
+	LUT.rg = fract(Gradient) - 0.5 / Size;
+	LUT.rg /= 1.0 - 1.0 / Size;
+	LUT.b = floor(Gradient.r) / (Size - 1.0);
+	// Display LUT texture
+	return LUT;
+}
+
+
+  //////////////////////
+ /////// OUTPUT ///////
+//////////////////////
+
+	image lut = glsl(DisplayLutPS, ivec2(Size*Size, Size));
