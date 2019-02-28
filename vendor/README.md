@@ -245,6 +245,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Modula-3:** [newgrammars/m3](https://github.com/newgrammars/m3)
 - **Monkey:** [gingerbeardman/monkey.tmbundle](https://github.com/gingerbeardman/monkey.tmbundle)
 - **MoonScript:** [leafo/moonscript-tmbundle](https://github.com/leafo/moonscript-tmbundle)
+- **Motorola 68K Assembly:** [zerkman/language-m68k](https://github.com/zerkman/language-m68k)
 - **MQL4:** [mqsoft/MQL5-sublime](https://github.com/mqsoft/MQL5-sublime)
 - **MQL5:** [mqsoft/MQL5-sublime](https://github.com/mqsoft/MQL5-sublime)
 - **MTML:** [atom/language-html](https://github.com/atom/language-html)
