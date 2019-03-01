@@ -35,3 +35,15 @@ var KnownFields = map[string]bool{
 	"backgroundColor":       true,
 	"increaseIndentPattern": true,
 }
+
+// GrammarsInNonStdPath is a list of grammars known to have their syntax .cson or .json files in non-standard directories.
+var GrammarsInNonStdPath = []string{
+	"conllu-linguist-grammar",
+	"hy.tmLanguage",
+}
+
+// IgnoredFiles is a list of files that look like syntax files but aren't, or are known to be broken and never likely to be fixed.
+var IgnoredFiles = []string{
+	"syntaxes/ballerina.monarch.json",
+	"Originals/Oz.tmLanguage",
+}
