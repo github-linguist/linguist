@@ -348,7 +348,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Sass:** [nathos/sass-textmate-bundle](https://github.com/nathos/sass-textmate-bundle)
 - **Scala:** [scala/vscode-scala-syntax](https://github.com/scala/vscode-scala-syntax)
 - **Scaml:** [scalate/Scalate.tmbundle](https://github.com/scalate/Scalate.tmbundle)
-- **Scheme:** [textmate/scheme.tmbundle](https://github.com/textmate/scheme.tmbundle)
+- **Scheme:** [sicp-lang/scheme.tmbundle](https://github.com/sicp-lang/scheme.tmbundle)
 - **Scilab:** [textmate/scilab.tmbundle](https://github.com/textmate/scilab.tmbundle)
 - **SCSS:** [MarioRicalde/SCSS.tmbundle](https://github.com/MarioRicalde/SCSS.tmbundle)
 - **sed:** [Alhadis/language-sed](https://github.com/Alhadis/language-sed)
