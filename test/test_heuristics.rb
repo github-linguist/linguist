@@ -475,6 +475,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_vba_by_heuristics
+    assert_heuristics({
+      "Visual Basic" => all_fixtures("Visual Basic", "*.vba"),
+      "Vim script" => all_fixtures("Vim script", "*.vba")
+    })
+  end
+
   def test_w_by_heuristics
     assert_heuristics({
       "CWeb" => all_fixtures("CWeb", "*.w"),

@@ -428,6 +428,11 @@ disambiguations:
     pattern: '^\s*(import.+(from\s+|require\()[''"]react|\/\/\/\s*<reference\s)'
   - language: XML
     pattern: '(?i:^\s*<\?xml\s+version)'
+- extensions: ['.vba']
+  rules:
+  - language: Vim script
+    pattern: '^UseVimball'
+  - language: Visual Basic
 - extensions: ['.w']
   rules:
   - language: OpenEdge ABL
