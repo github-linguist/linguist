@@ -63,6 +63,10 @@ func (l *fsLoader) load() {
 	}
 
 	for _, path := range grammars {
+		if hasStringInArray(path, IgnoredFiles) {
+			continue
+		}
+
 		data, err := ioutil.ReadFile(path)
 		if err != nil {
 			l.Fail(err)
