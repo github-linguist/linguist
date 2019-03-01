@@ -65,6 +65,15 @@ func toMap(slice []string) map[string]bool {
 	return m
 }
 
+func hasStringInArray(str string, arr []string) bool {
+	for _, s := range arr {
+		if strings.Contains(str, s) {
+			return true
+		}
+	}
+	return false
+}
+
 func (repo *Repository) CompareScopes(scopes []string) {
 	expected := toMap(scopes)
 
@@ -122,7 +131,7 @@ func isValidGrammar(path string, info os.FileInfo) bool {
 	case ".tmlanguage", ".yaml-tmlanguage":
 		return true
 	case ".cson", ".json":
-		return strings.HasSuffix(dir, "/grammars") || strings.HasSuffix(dir, "/syntaxes")
+		return strings.HasSuffix(dir, "/grammars") || strings.HasSuffix(dir, "/syntaxes") || hasStringInArray(dir, GrammarsInNonStdPath)
 	default:
 		return false
 	}
