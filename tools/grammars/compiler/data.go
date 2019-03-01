@@ -13,6 +13,7 @@ var GrammarAliases = map[string]string{
 	"source.css.scss":    "source.scss",
 	"source.git-config":  "source.gitconfig",
 	"source.smarty":      "text.html.smarty",
+	"text.slm":           "text.slim",
 }
 
 var KnownFields = map[string]bool{
