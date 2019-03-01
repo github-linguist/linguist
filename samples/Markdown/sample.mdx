@@ -1,0 +1,121 @@
+import Doc from '~/components/layout/docs'
+import { Code, InlineCode } from '~/components/text/code'
+import { TerminalInput } from '~/components/text/terminal'
+import { GenericLink } from '~/components/text/link'
+import Note from '~/components/text/note'
+import Example from '~/components/example'
+import Tag from '~/components/text/tag'
+
+export const meta = {
+  title: 'Next.js Builder (@now/next)',
+  description:
+    'The official Next.js Builder for ZEIT Now. Deploy Next.js applications with ease.'
+}
+
+<Tag>Status: Stable</Tag>
+
+The Now Next.js Builder takes a [Next.js application](https://nextjs.org), defined by a `next.config.js` entrypoint and `pages` directory, and converts those pages into a series of individual [lambdas](/docs/v2/deployments/concepts/lambdas).
+
+It features built-in caching of `node_modules` and all compiler artifacts for very fast deployments.
+
+## When to use it
+
+`@now/next` is the ideal way to ship a fast, production-ready [Next.js application](https://nextjs.org) that scales automatically.
+
+For more information on why you should use Next.js for your project, see [the Next.js website](https://nextjs.org).
+
+## How to use it
+
+The first step is to set up a Next.js project. If you have not yet done so; [the best place to get started is the Next.js documentation](https://nextjs.org/docs/#setup).
+
+To get started, make sure you have installed the Next.js dependencies with the following command:
+
+<TerminalInput>yarn add next react react-dom</TerminalInput>
+
+Then, in your project directory, create a `pages` directory with some example pages, for example; the home index page, `pages/index.js`:
+
+```jsx
+export default () => <div>Hello world!</div>
+```
+
+Create a simple `next.config.js` file to use as our entrypoint for the build, and to configure that the build should be a collection of serverless [lambdas](/docs/v2/deployments/concepts/lambdas/):
+
+```js
+module.exports = {
+  target: 'serverless'
+}
+```
+
+<Note>
+  The serverless method is only supported in{' '}
+  <GenericLink href="https://nextjs.org/blog/next-8/#serverless-nextjs">
+    Next.js version 8
+  </GenericLink>{' '}
+  and above.
+</Note>
+
+Then define a build step in a `now.json` configuration file:
+
+```json
+{
+  "version": 2,
+  "builds": [{ "src": "next.config.js", "use": "@now/next" }]
+}
+```
+
+Upon deployment, you will get a URL like this: https://nextjs-8fnzfb1ci.now.sh
+
+## Technical Details
+
+### Entrypoint
+
+The entrypoint of this builder is a `next.config.js` file with the `target` configuration option set to `serverless`.
+
+```
+module.exports = {
+  target: "serverless"
+}
+```
+
+This configuration, shown above, tells Next.js to build each page in the `pages` directory as a [lambda](/docs/v2/deployments/concepts/lambdas/) function.
+
+For more information on this, see [the Next.js documentation](https://github.com/zeit/next.js#serverless-deployment).
+
+### Dependencies installation
+
+The installation algorithm of dependencies works as follows:
+
+- If a `package-lock.json` is present, `npm install` is used
+- Otherwise, `yarn` is used.
+
+### Private npm modules
+
+To install private npm modules, define `NPM_TOKEN` as a [build environment](/docs/v2/deployments/configuration#build.env) in `now.json`.
+
+### Node.js version
+
+The Node.js version used is the latest in the **8 branch**.
+
+### Custom Server
+
+This builder seperates your pages into individual serverless endpoints, so you cannot use a custom server.
+
+Using a custom server would require that all pages be routed through that custom server and the application would lose out on many of the benefits of [serverless](/docs/v2/deployments/concepts/lambdas/) Next.js. You can still achieve most of the logic that you have in a custom server by using [getInitialProps()](https://nextjs.org/docs/#fetching-data-and-component-lifecycle) and using [routes](/docs/v2/deployments/configuration/#routes).
+
+### Maximum Lambda Bundle Size
+
+To help keep cold boot times low, the [maximum output bundle size](/docs/v2/deployments/concepts/lambdas#maximum-bundle-size) for a Next.js output lambda is, by default, **`5mb`**.
+This [limit is extendable](/docs/v2/deployments/builders/overview#configuring-output-lambda-size) up to **`50mb`**.
+
+<Example>
+  <span>
+    Example <InlineCode>maxLambdaSize</InlineCode> configuration:
+  </span>
+  <Code lang="json">{`{
+  "builds": [
+    { "src": "next.config.js", "use": "@now/next", "config": { "maxLambdaSize": "10mb" } }
+  ]
+}`}</Code>
+</Example>
+
+export default ({ children }) => <Doc meta={meta}>{children}</Doc>
