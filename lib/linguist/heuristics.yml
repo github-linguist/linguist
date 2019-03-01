@@ -110,7 +110,7 @@ disambiguations:
     # target : \
     #  : dependency
     # path/file.ext1 : some/path/../file.ext2
-    pattern: '([\/\\].*:\s+.*\s\\$|: \\$|^ : |^[\w\s\/\\.]+\w+\.\w+\s*:\s+[\w\s\/\\.]+\w+\.\w+)'
+    pattern: '([\/\\].*:\s+.*\s\\$|: \\$|^[ %]:|^[\w\s\/\\.]+\w+\.\w+\s*:\s+[\w\s\/\\.]+\w+\.\w+)'
 - extensions: ['.ecl']
   rules:
   - language: ECLiPSe
@@ -299,7 +299,7 @@ disambiguations:
     named_pattern: perl5
   - language: Perl 6
     named_pattern: perl6
-  - language: XPM
+  - language: X PixMap
     pattern: '^\s*\/\* XPM \*\/'
 - extensions: ['.pod']
   rules:
@@ -341,7 +341,7 @@ disambiguations:
 - extensions: ['.props']
   rules:
   - language: XML
-    pattern: '^(\s*)(?i:<Project|<Import|<Property|<?xml|xmlns)'
+    pattern: '^(\s*)(?i:<Project|<Import|<Property|<\?xml|xmlns)'
   - language: INI
     pattern: '(?i:\w+\s*=\s*)'
 - extensions: ['.q']
@@ -445,7 +445,7 @@ disambiguations:
     pattern: '\b(program|version)\s+\w+\s*{|\bunion\s+\w+\s+switch\s*\('
   - language: Logos
     pattern: '^%(end|ctor|hook|group)\b'
-  - language: Linked Script
+  - language: Linker Script
     pattern: 'OUTPUT_ARCH\(|OUTPUT_FORMAT\(|SECTIONS'
 - extensions: ['.yy']
   rules:
