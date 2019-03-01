@@ -12,6 +12,7 @@ var GrammarAliases = map[string]string{
 	"source.perl6":       "source.perl6fe",
 	"source.css.scss":    "source.scss",
 	"source.git-config":  "source.gitconfig",
+	"source.smarty":      "text.html.smarty",
 }
 
 var KnownFields = map[string]bool{
