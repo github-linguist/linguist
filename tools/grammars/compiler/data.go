@@ -14,6 +14,7 @@ var GrammarAliases = map[string]string{
 	"source.git-config":  "source.gitconfig",
 	"source.smarty":      "text.html.smarty",
 	"text.slm":           "text.slim",
+	"text.pug":           "text.jade",
 }
 
 var KnownFields = map[string]bool{
