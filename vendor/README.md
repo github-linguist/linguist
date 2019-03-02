@@ -51,6 +51,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **C++:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **C-ObjDump:** [nanoant/assembly.tmbundle](https://github.com/nanoant/assembly.tmbundle)
 - **C2hs Haskell:** [atom-haskell/language-haskell](https://github.com/atom-haskell/language-haskell)
+- **Cabal Config:** [atom-haskell/language-haskell](https://github.com/atom-haskell/language-haskell)
 - **Cap'n Proto:** [textmate/capnproto.tmbundle](https://github.com/textmate/capnproto.tmbundle)
 - **CartoCSS:** [yohanboniface/carto-atom](https://github.com/yohanboniface/carto-atom)
 - **Ceylon:** [jeancharles-roger/ceylon-sublimetext](https://github.com/jeancharles-roger/ceylon-sublimetext)
