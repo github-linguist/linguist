@@ -63,7 +63,12 @@ func (l *fsLoader) load() {
 	}
 
 	for _, path := range grammars {
-		rel, _ := filepath.Rel("/src/linguist/vendor/grammars/", path)
+		rel, err := filepath.Rel("/src/linguist/vendor/grammars/", path)
+		if err != nil {
+			l.Fail(err)
+			return
+		}
+
 		if IgnoredFiles[rel] {
 			continue
 		}
