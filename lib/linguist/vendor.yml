@@ -60,17 +60,10 @@
 # Bootstrap css and js
 - (^|/)bootstrap([^.]*)\.(js|css|less|scss|styl)$
 - (^|/)custom\.bootstrap([^\s]*)(js|css|less|scss|styl)$
-# Bootstrap with a directory between the files and the main folder like bootstrap/css/bootstrap.css
-- (^|/)bootstrap/(css|js)/.*\.(js|css|less|scss|styl)$
 
 # Font Awesome
-- (^|/)font-awesome\.(css|less|scss|styl)$
-- (^|/)font-awesome/.*\.(css|less|scss|styl)$
-- (^|/)fontawesome\.(css|less|scss|styl)$
-- (^|/)fontawesome/.*\.(css|less|scss|styl)$
-# Font Awesome with a directory between the files and the main folder like fontawesome/css/fontawesome.all.css
-- (^|/)font-awesome/.*/.*\.(js|css|less|scss|styl)$
-- (^|/)fontawesome/.*/.*\.(js|css|less|scss|styl)$
+- (^|/)font-?awesome\.(css|less|scss|styl)$
+- (^|/)font-?awesome/.*\.(css|less|scss|styl)$
 
 # Foundation css
 - (^|/)foundation\.(css|less|scss|styl)$
@@ -283,9 +276,6 @@
 - (^|/)gradle/wrapper/
 
 ## Java ##
-# Java with maven based directory structure
-- /src/main/resources/static/vendor/.*
-- /src/test/resources/static/vendor/.*
 
 # Maven
 - (^|/)mvnw$
