@@ -145,9 +145,10 @@ If you are the current maintainer of this gem:
 1. Create a branch for the release: `git checkout -b release-vxx.xx.xx`
 1. Make sure your local dependencies are up to date: `script/bootstrap`
 1. If grammar submodules have not been updated recently, update them: `git submodule update --remote`. If any submodules are updated,
+    1. update the `grammars.yml`: `script/grammar-compiler update -f`
     1. update the license cache: `script/licensed`
-    1. double check no problems found: `script/licensed status`
-    1. confirm the updated grammars still compile and no new errors have been introduced: `bundle exec rake check_grammars`
+    1. double check no license problems found: `script/licensed status`
+    1. confirm the updated grammars still compile and no new errors have been introduced and none have gone missing: `bundle exec rake check_grammars`
     1. verify and fix any problems identified in the two steps above
     1. commit all changes: `git commit -a`
 1. Ensure that samples are updated: `bundle exec rake samples`
@@ -162,7 +163,7 @@ If you are the current maintainer of this gem:
 1. Build a local gem: `bundle exec rake build_gem`
 1. Merge github/linguist PR
 1. Tag and push: `git tag vx.xx.xx; git push --tags`
-1. Create a GitHub release with the pushed tag (https://github.com/github/linguist/releases/new)
+1. Create a GitHub release with the pushed tag (https://github.com/github/linguist/releases/new) and populate it with a list of the commits from `git log --pretty=format:"- %s" --reverse refs/tags/[OLD TAG]...refs/tags/[NEW TAG]` [like this](https://github.com/github/linguist/releases/tag/v7.2.0)
 1. Build a grammars tarball (`./script/build-grammars-tarball`) and attach it to the GitHub release
 1. Push to rubygems.org -- `gem push github-linguist-3.0.0.gem`
 
