@@ -6,6 +6,7 @@ require 'yaml'
 require 'yajl'
 require 'open-uri'
 require 'json'
+require 'open3'
 
 task :default => :test
 
@@ -52,6 +53,18 @@ task :flex do
     fail "flex not detected"
   end
   system "cd ext/linguist && flex tokenizer.l"
+end
+
+# The error count will need to be adjusted here until such time as all grammars are 100% error free.
+desc "Check that compiling the grammars doesn't introduce any new unexpected errors"
+task :check_grammars do
+  expected_error_count = 35  # This count should only ever go down. If it goes up, there's a new issue that needs to be addressed before updating the grammar.
+  rm_rf "linguist-grammars"
+  output, status = Open3.capture2e("script/grammar-compiler", "compile", "-o", "linguist-grammars")
+  errors_found = output[/the grammar library contains ([0-9]+) errors/, 1].to_i
+  missing_grammars = output.scan(/Missing scope in repository: `([^`].+)` is listed in grammars.yml but cannot be found/)
+  fail "#{output}\n\nERROR: The following grammars appear to have gone missing:\n\n#{missing_grammars.join("\n")}\n\nPlease review the output above.\n\n" unless missing_grammars.empty?
+  fail "#{output}\n\nERROR: An unexpected number of errors have been found. Expected: #{expected_error_count}, Found: #{errors_found}.\nPlease review the output and adjust the rake task expected error count if the number has gone down.\n\n" unless errors_found == expected_error_count
 end
 
 task :build_gem => :samples do
