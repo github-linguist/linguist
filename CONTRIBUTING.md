@@ -8,6 +8,14 @@ This project adheres to the [Contributor Covenant Code of Conduct](http://contri
 
 The majority of contributions won't need to touch any Ruby code at all.
 
+### Dependencies
+
+Linguist uses the [`charlock_holmes`](https://github.com/brianmario/charlock_holmes) character encoding detection library which in turn uses [ICU](http://site.icu-project.org/), and the libgit2 bindings for Ruby provided by [`rugged`](https://github.com/libgit2/rugged). [Bundler](https://bundler.io/) v1.10.0 or newer is required for installing the Ruby gem dependencies. [Docker](https://www.docker.com/) is also required when adding or updating grammars. These components have their own dependencies - `icu4c`, and `cmake` and `pkg-config` respectively - which you may need to install before you can install Linguist.
+
+For example, on macOS with [Homebrew](http://brew.sh/): `brew install cmake pkg-config icu4c && brew cask install docker` and on Ubuntu: `apt-get install cmake pkg-config libicu-dev docker-ce`.
+
+The latest version of Bundler v1 can be installed with `gem install bundler -v "~>1.10"`.
+
 ## Getting started
 
 Before you can start contributing to Linguist, you'll need to set up your environment first. Clone the repo and run `script/bootstrap` to install its dependencies.
@@ -25,12 +33,6 @@ Run this command each time a [sample][samples] has been modified.
 To run Linguist from the cloned repository:
 
     bundle exec bin/github-linguist --breakdown
-
-### Dependencies
-
-Linguist uses the [`charlock_holmes`](https://github.com/brianmario/charlock_holmes) character encoding detection library which in turn uses [ICU](http://site.icu-project.org/), and the libgit2 bindings for Ruby provided by [`rugged`](https://github.com/libgit2/rugged). [Docker](https://www.docker.com/) is also required when adding or updating grammars. These components have their own dependencies - `icu4c`, and `cmake` and `pkg-config` respectively - which you may need to install before you can install Linguist.
-
-For example, on macOS with [Homebrew](http://brew.sh/): `brew install cmake pkg-config icu4c docker` and on Ubuntu: `apt-get install cmake pkg-config libicu-dev docker-ce`.
 
 ## Adding an extension to a language
 
@@ -145,7 +147,8 @@ If you are the current maintainer of this gem:
 1. If grammar submodules have not been updated recently, update them: `git submodule update --remote`. If any submodules are updated,
     1. update the license cache: `script/licensed`
     1. double check no problems found: `script/licensed status`
-    1. verify and fix any problems identified
+    1. confirm the updated grammars still compile and no new errors have been introduced: `bundle exec rake check_grammars`
+    1. verify and fix any problems identified in the two steps above
     1. commit all changes: `git commit -a`
 1. Ensure that samples are updated: `bundle exec rake samples`
 1. Ensure that tests are green: `bundle exec rake test`
