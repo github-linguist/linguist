@@ -197,6 +197,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Jison:** [cdibbs/language-jison](https://github.com/cdibbs/language-jison)
 - **Jison Lex:** [cdibbs/language-jison](https://github.com/cdibbs/language-jison)
 - **Jolie:** [fmontesi/language-jolie](https://github.com/fmontesi/language-jolie)
+- **Jsonnet:** [google/language-jsonnet](https://github.com/google/language-jsonnet)
 - **Julia:** [JuliaEditorSupport/atom-language-julia](https://github.com/JuliaEditorSupport/atom-language-julia)
 - **Jupyter Notebook:** [textmate/json.tmbundle](https://github.com/textmate/json.tmbundle)
 - **KiCad Layout:** [Alhadis/language-pcb](https://github.com/Alhadis/language-pcb)
