@@ -73,7 +73,7 @@ class TestHeuristics < Minitest::Test
       "AsciiDoc" => all_fixtures("AsciiDoc"),
       "AGS Script" => all_fixtures("AGS Script"),
       "Public Key" => all_fixtures("Public Key")
-    }, alt_name="test.asc")
+    }, "test.asc")
   end
 
   def test_asy_by_heuristics
@@ -94,7 +94,7 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "Text" => all_fixtures("Text"),
       "XML" => all_fixtures("XML", "*.builds")
-    }, alt_name="test.builds")
+    }, "test.builds")
   end
 
   def test_ch_by_heuristics
@@ -132,7 +132,7 @@ class TestHeuristics < Minitest::Test
       "D" => all_fixtures("D"),
       "DTrace" => all_fixtures("DTrace"),
       "Makefile" => all_fixtures("Makefile"),
-    }, alt_name="test.d")
+    }, "test.d")
   end
 
   def test_ecl_by_heuristics
@@ -281,7 +281,7 @@ class TestHeuristics < Minitest::Test
       "OCaml" => all_fixtures("OCaml") - ambiguous,
       "Standard ML" => all_fixtures("Standard ML") - ambiguous,
       nil => ambiguous
-    }, alt_name="test.ml")
+    }, "test.ml")
   end
 
   def test_mod_by_heuristics
@@ -350,7 +350,7 @@ class TestHeuristics < Minitest::Test
       "Perl" => all_fixtures("Perl", "*.pm"),
       "Perl 6" => all_fixtures("Perl 6", "*.pm"),
       "X PixMap" => all_fixtures("X PixMap")
-    }, alt_name="test.pm")
+    }, "test.pm")
   end
 
   # Candidate languages = ["Pascal", "Puppet"]
@@ -383,7 +383,7 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "INI" => all_fixtures("INI"),
       "XML" => all_fixtures("XML", "*.props")
-    }, alt_name="test.props")
+    }, "test.props")
   end
 
   def test_q_by_heuristics
