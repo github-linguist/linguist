@@ -319,6 +319,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **RMarkdown:** [atom/language-gfm](https://github.com/atom/language-gfm)
 - **RPC:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **RPM Spec:** [waveclaw/language-rpm-spec](https://github.com/waveclaw/language-rpm-spec)
+- **RTF:** [nwhetsell/language-rtf](https://github.com/nwhetsell/language-rtf)
 - **RUNOFF:** [Alhadis/language-roff](https://github.com/Alhadis/language-roff)
 - **Racket:** [soegaard/racket-highlight-for-github](https://github.com/soegaard/racket-highlight-for-github)
 - **Rascal:** [usethesource/rascal-syntax-highlighting](https://github.com/usethesource/rascal-syntax-highlighting)
