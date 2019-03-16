@@ -63,8 +63,8 @@ class TestHeuristics < Minitest::Test
 
   def test_1to9_by_heuristics
     assert_heuristics({
-      "Roff" => all_fixtures("Roff", "*.{1..9}"),
-      "Text" => all_fixtures("Text", "*.{1..9}")
+      "Roff" => all_fixtures("Roff", "*.[1-9]"),
+      "Text" => all_fixtures("Text", "*.[1-9]")
     })
   end
 
