@@ -101,9 +101,6 @@ class TestGenerated < Minitest::Test
     generated_fixture_loading_data("Data/sourcemap.v3.map")
     generated_fixture_loading_data("Data/sourcemap.v1.map")
 
-    # Yarn locfile
-    generated_fixture_loading_data("Data/yarn.lock")
-
     # Specflow
     generated_fixture_without_loading_data("Features/BindingCulture.feature.cs")
 
@@ -128,6 +125,7 @@ class TestGenerated < Minitest::Test
     # Game Maker Studio 2
     generated_sample_loading_data("JSON/GMS2_Project.yyp")
     generated_sample_loading_data("JSON/2ea73365-b6f1-4bd1-a454-d57a67e50684.yy")
+    generated_fixture_loading_data("Generated/options_main.inherited.yy")
 
   end
 end

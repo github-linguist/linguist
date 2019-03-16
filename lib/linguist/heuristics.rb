@@ -118,7 +118,6 @@ module Linguist
         end
       end
     end
-
   end
 
   class And

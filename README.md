@@ -27,7 +27,7 @@ If an [explicit language override](#using-gitattributes) has been used, that lan
 
 The result of this analysis is used to produce the language stats bar which displays the languages percentages for the files in the repository. The percentages are calculated based on the bytes of code for each language as reported by the [List Languages](https://developer.github.com/v3/repos/#list-languages) API.
 
-![language stats bar](https://cloud.githubusercontent.com/assets/173/5562290/48e24654-8ddf-11e4-8fe7-735b0ce3a0d3.png)
+![language stats bar](https://user-images.githubusercontent.com/2346707/50930521-52f57e80-14b4-11e9-92de-0ee9c768ae46.png)
 
 ### How Linguist works on GitHub.com
 
@@ -40,7 +40,9 @@ When you push changes to a repository on GitHub.com, a low priority background j
 
 Install the gem:
 
-    $ gem install github-linguist
+```console
+$ gem install github-linguist
+```
 
 #### Dependencies
 
@@ -142,12 +144,12 @@ Linguist supports a number of different custom override strategies for language 
 
 Add a `.gitattributes` file to your project and use standard git-style path matchers for the files you want to override using the `linguist-documentation`, `linguist-language`, `linguist-vendored`, `linguist-generated`  and `linguist-detectable` attributes. `.gitattributes` will be used to determine language statistics and will be used to syntax highlight files. You can also manually set syntax highlighting using [Vim or Emacs modelines](#using-emacs-or-vim-modelines).
 
-When testing with a local installation of Linguist, take note that the added attributes will not take effect until the .gitattributes file is committed to your repository.
+When testing with a local installation of Linguist, take note that the added attributes will not take effect until the `.gitattributes` file is committed to your repository.
 
-File and folder paths inside .gitattributes are calculated relative to the position of the .gitattributes file.
+File and folder paths inside `.gitattributes` are calculated relative to the position of the `.gitattributes` file.
 
-```
-$ cat .gitattributes
+```gitattributes
+# Example of a `.gitattributes` file which reclassifies `.rb` files as Java:
 *.rb linguist-language=Java
 ```
 
@@ -155,10 +157,9 @@ $ cat .gitattributes
 
 Checking code you didn't write, such as JavaScript libraries, into your git repo is a common practice, but this often inflates your project's language stats and may even cause your project to be labeled as another language. By default, Linguist treats all of the paths defined in [`vendor.yml`](/lib/linguist/vendor.yml) as vendored and therefore doesn't include them in the language statistics for a repository.
 
-Use the `linguist-vendored` attribute to vendor or un-vendor paths.
+Use the `linguist-vendored` attribute to vendor or un-vendor paths:
 
-```
-$ cat .gitattributes
+```gitattributes
 special-vendored-path/* linguist-vendored
 jquery.js linguist-vendored=false
 ```
@@ -167,10 +168,9 @@ jquery.js linguist-vendored=false
 
 Just like vendored files, Linguist excludes documentation files from your project's language stats. [`documentation.yml`](/lib/linguist/documentation.yml) lists common documentation paths and excludes them from the language statistics for your repository.
 
-Use the `linguist-documentation` attribute to mark or unmark paths as documentation.
+Use the `linguist-documentation` attribute to mark or unmark paths as documentation:
 
-```
-$ cat .gitattributes
+```gitattributes
 project-docs/* linguist-documentation
 docs/formatter.rb linguist-documentation=false
 ```
@@ -181,8 +181,7 @@ Not all plain text files are true source files. Generated files like minified Ja
 
 Use the `linguist-generated` attribute to mark or unmark paths as generated.
 
-```
-$ cat .gitattributes
+```gitattributes
 Api.elm linguist-generated=true
 ```
 
@@ -190,10 +189,9 @@ Api.elm linguist-generated=true
 
 Only programming languages are included in the language statistics. Languages of a different type (as defined in [`languages.yml`](/lib/linguist/languages.yml)) are not "detectable" causing them not to be included in the language statistics.
 
-Use the `linguist-detectable` attribute to mark or unmark paths as detectable.
+Use the `linguist-detectable` attribute to mark or unmark paths as detectable:
 
-```
-$ cat .gitattributes
+```gitattributes
 *.kicad_pcb linguist-detectable=true
 *.sch linguist-detectable=true
 tools/export_bom.py linguist-detectable=false
@@ -214,7 +212,8 @@ vim: set ft=cpp:
 
 ##### Emacs
 ```
--*- mode: php;-*-
+-*- mode: php; -*-
+-*- c++ -*-
 ```
 
 
