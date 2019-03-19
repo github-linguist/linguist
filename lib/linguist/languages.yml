@@ -321,6 +321,18 @@ Assembly:
   tm_scope: source.assembly
   ace_mode: assembly_x86
   language_id: 24
+Asymptote:
+  type: programming
+  color: "#4a0c0c"
+  extensions:
+  - ".asy"
+  interpreters:
+  - asy
+  tm_scope: source.c++
+  ace_mode: c_cpp
+  codemirror_mode: clike
+  codemirror_mime_type: text/x-kotlin
+  language_id: 591605007
 Augeas:
   type: programming
   extensions:
@@ -594,12 +606,10 @@ COLLADA:
   language_id: 49
 CSON:
   type: data
-  group: CoffeeScript
   tm_scope: source.coffee
   ace_mode: coffee
   codemirror_mode: coffeescript
   codemirror_mime_type: text/x-coffeescript
-  searchable: false
   extensions:
   - ".cson"
   language_id: 424
@@ -627,6 +637,20 @@ CWeb:
   tm_scope: none
   ace_mode: text
   language_id: 657332628
+Cabal Config:
+  type: data
+  aliases:
+  - Cabal
+  extensions:
+  - ".cabal"
+  filenames:
+  - cabal.config
+  - cabal.project
+  ace_mode: haskell
+  codemirror_mode: haskell
+  codemirror_mime_type: text/x-haskell
+  tm_scope: source.cabal
+  language_id: 677095381
 Cap'n Proto:
   type: programming
   tm_scope: source.capnp
@@ -1064,7 +1088,7 @@ Diff:
   language_id: 88
 Dockerfile:
   type: programming
-  color: "#0db7ed"
+  color: "#384d54"
   tm_scope: source.dockerfile
   extensions:
   - ".dockerfile"
@@ -1188,6 +1212,18 @@ Ecere Projects:
   codemirror_mode: javascript
   codemirror_mime_type: application/json
   language_id: 98
+EditorConfig:
+  type: data
+  group: INI
+  filenames:
+  - ".editorconfig"
+  aliases:
+  - editor-config
+  ace_mode: ini
+  codemirror_mode: properties
+  codemirror_mime_type: text/x-properties
+  tm_scope: source.editorconfig
+  language_id: 96139566
 Edje Data Collection:
   type: data
   extensions:
@@ -1617,6 +1653,34 @@ Gherkin:
   ace_mode: text
   color: "#5B2063"
   language_id: 76
+Git Attributes:
+  type: data
+  group: INI
+  aliases:
+  - gitattributes
+  filenames:
+  - ".gitattributes"
+  tm_scope: source.gitattributes
+  ace_mode: gitignore
+  codemirror_mode: shell
+  codemirror_mime_type: text/x-sh
+  language_id: 956324166
+Git Config:
+  type: data
+  group: INI
+  aliases:
+  - gitconfig
+  - gitmodules
+  extensions:
+  - ".gitconfig"
+  filenames:
+  - ".gitconfig"
+  - ".gitmodules"
+  ace_mode: ini
+  codemirror_mode: properties
+  codemirror_mime_type: text/x-properties
+  tm_scope: source.gitconfig
+  language_id: 807968997
 Glyph:
   type: programming
   color: "#c1ac7f"
@@ -1649,7 +1713,7 @@ Gnuplot:
   language_id: 131
 Go:
   type: programming
-  color: "#375eab"
+  color: "#00ADD8"
   aliases:
   - golang
   extensions:
@@ -1773,6 +1837,8 @@ HCL:
   - ".tf"
   - ".tfvars"
   - ".workflow"
+  aliases:
+  - terraform
   ace_mode: ruby
   codemirror_mode: ruby
   codemirror_mime_type: text/x-ruby
@@ -1877,8 +1943,10 @@ HTML+PHP:
   language_id: 151
 HTML+Razor:
   type: markup
-  tm_scope: text.html.razor
+  tm_scope: text.html.cshtml
   group: HTML
+  aliases:
+  - razor
   extensions:
   - ".cshtml"
   ace_mode: razor
@@ -2022,8 +2090,6 @@ INI:
   - ".pro"
   - ".properties"
   filenames:
-  - ".editorconfig"
-  - ".gitconfig"
   - buildozer.spec
   tm_scope: source.ini
   aliases:
@@ -2054,6 +2120,36 @@ Idris:
   ace_mode: text
   tm_scope: source.idris
   language_id: 165
+Ignore List:
+  type: data
+  group: INI
+  aliases:
+  - ignore
+  - gitignore
+  - git-ignore
+  extensions:
+  - ".gitignore"
+  filenames:
+  - ".atomignore"
+  - ".babelignore"
+  - ".bzrignore"
+  - ".coffeelintignore"
+  - ".cvsignore"
+  - ".dockerignore"
+  - ".eslintignore"
+  - ".gitignore"
+  - ".nodemonignore"
+  - ".npmignore"
+  - ".prettierignore"
+  - ".stylelintignore"
+  - ".vscodeignore"
+  - gitignore-global
+  - gitignore_global
+  ace_mode: gitignore
+  tm_scope: source.gitignore
+  codemirror_mode: shell
+  codemirror_mime_type: text/x-sh
+  language_id: 74444240
 Inform 7:
   type: programming
   wrap: true
@@ -2129,7 +2225,6 @@ JFlex:
 JSON:
   type: data
   tm_scope: source.json
-  group: JavaScript
   ace_mode: json
   codemirror_mode: javascript
   codemirror_mime_type: application/json
@@ -2139,6 +2234,8 @@ JSON:
   - ".avsc"
   - ".geojson"
   - ".gltf"
+  - ".har"
+  - ".ice"
   - ".JSON-tmLanguage"
   - ".jsonl"
   - ".tfstate"
@@ -2153,6 +2250,7 @@ JSON:
   - ".htmlhintrc"
   - ".tern-config"
   - ".tern-project"
+  - ".watchmanconfig"
   - composer.lock
   - mcmod.info
   language_id: 174
@@ -2185,6 +2283,7 @@ JSON with Comments:
   - ".jscsrc"
   - ".jshintrc"
   - ".jslintrc"
+  - jsconfig.json
   - tsconfig.json
   language_id: 423
 JSON5:
@@ -2198,11 +2297,12 @@ JSON5:
   language_id: 175
 JSONLD:
   type: data
-  group: JavaScript
-  ace_mode: javascript
   extensions:
   - ".jsonld"
   tm_scope: source.js
+  ace_mode: javascript
+  codemirror_mode: javascript
+  codemirror_mime_type: application/json
   language_id: 176
 JSONiq:
   color: "#40d47e"
@@ -2324,6 +2424,15 @@ Jolie:
   ace_mode: text
   tm_scope: source.jolie
   language_id: 998078858
+Jsonnet:
+  color: "#0064bd"
+  type: programming
+  ace_mode: text
+  extensions:
+  - ".jsonnet"
+  - ".libsonnet"
+  tm_scope: source.jsonnet
+  language_id: 664885656
 Julia:
   type: programming
   extensions:
@@ -2444,6 +2553,15 @@ LSL:
   - lsl
   color: "#3d9970"
   language_id: 193
+LTspice Symbol:
+  type: data
+  extensions:
+  - ".asy"
+  tm_scope: source.ltspice.symbol
+  ace_mode: text
+  codemirror_mode: spreadsheet
+  codemirror_mime_type: text/x-spreadsheet
+  language_id: 1013566805
 LabVIEW:
   type: programming
   extensions:
@@ -2675,6 +2793,18 @@ M4Sugar:
   tm_scope: none
   ace_mode: text
   language_id: 216
+MATLAB:
+  type: programming
+  color: "#e16737"
+  aliases:
+  - octave
+  extensions:
+  - ".matlab"
+  - ".m"
+  ace_mode: matlab
+  codemirror_mode: octave
+  codemirror_mime_type: text/x-octave
+  language_id: 225
 MAXScript:
   type: programming
   color: "#00a6a6"
@@ -2777,6 +2907,7 @@ Markdown:
   - ".markdown"
   - ".mdown"
   - ".mdwn"
+  - ".mdx"
   - ".mkd"
   - ".mkdn"
   - ".mkdown"
@@ -2824,18 +2955,6 @@ Mathematica:
   codemirror_mode: mathematica
   codemirror_mime_type: text/x-mathematica
   language_id: 224
-Matlab:
-  type: programming
-  color: "#e16737"
-  aliases:
-  - octave
-  extensions:
-  - ".matlab"
-  - ".m"
-  ace_mode: matlab
-  codemirror_mode: octave
-  codemirror_mime_type: text/x-octave
-  language_id: 225
 Maven POM:
   type: data
   tm_scope: text.xml.pom
@@ -3616,6 +3735,17 @@ Pod:
   - perl
   tm_scope: none
   language_id: 288
+Pod 6:
+  type: prose
+  ace_mode: perl
+  tm_scope: source.perl6fe
+  wrap: true
+  extensions:
+  - ".pod"
+  - ".pod6"
+  interpreters:
+  - perl6
+  language_id: 155357471
 PogoScript:
   type: programming
   color: "#d80074"
@@ -3985,7 +4115,7 @@ RUNOFF:
   language_id: 315
 Racket:
   type: programming
-  color: "#22228f"
+  color: "#3c5caa"
   extensions:
   - ".rkt"
   - ".rktd"
@@ -4096,6 +4226,13 @@ RenderScript:
   tm_scope: none
   ace_mode: text
   language_id: 323
+Rich Text Format:
+  type: markup
+  extensions:
+  - ".rtf"
+  tm_scope: text.rtf
+  ace_mode: text
+  language_id: 51601661
 Ring:
   type: programming
   color: "#2D54CB"
@@ -4124,6 +4261,8 @@ Roff:
   - ".3"
   - ".3in"
   - ".3m"
+  - ".3p"
+  - ".3pm"
   - ".3qt"
   - ".3x"
   - ".4"
@@ -4158,6 +4297,35 @@ Roff:
   codemirror_mode: troff
   codemirror_mime_type: text/troff
   language_id: 141
+Roff Manpage:
+  type: markup
+  group: Roff
+  extensions:
+  - ".1"
+  - ".1in"
+  - ".1m"
+  - ".1x"
+  - ".2"
+  - ".3"
+  - ".3in"
+  - ".3m"
+  - ".3p"
+  - ".3pm"
+  - ".3qt"
+  - ".3x"
+  - ".4"
+  - ".5"
+  - ".6"
+  - ".7"
+  - ".8"
+  - ".9"
+  - ".man"
+  - ".mdoc"
+  tm_scope: text.roff
+  ace_mode: text
+  codemirror_mode: troff
+  codemirror_mime_type: text/troff
+  language_id: 612669833
 Rouge:
   type: programming
   ace_mode: clojure
@@ -4420,6 +4588,7 @@ Scheme:
   - ".sps"
   - ".ss"
   interpreters:
+  - scheme
   - guile
   - bigloo
   - chicken
@@ -4474,6 +4643,7 @@ Shell:
   - ".tool"
   - ".zsh"
   filenames:
+  - ".bash_aliases"
   - ".bash_history"
   - ".bash_logout"
   - ".bash_profile"
@@ -4488,6 +4658,7 @@ Shell:
   - ".zshrc"
   - 9fs
   - PKGBUILD
+  - bash_aliases
   - bash_logout
   - bash_profile
   - bashrc
@@ -4858,6 +5029,8 @@ Text:
   - README.mysql
   - click.me
   - delete.me
+  - go.mod
+  - go.sum
   - keep.me
   - read.me
   - readme.1st
@@ -5049,6 +5222,8 @@ Vim script:
   - nvim
   extensions:
   - ".vim"
+  - ".vba"
+  - ".vmb"
   filenames:
   - ".gvimrc"
   - ".nvimrc"
@@ -5489,6 +5664,14 @@ Zephir:
   tm_scope: source.php.zephir
   ace_mode: php
   language_id: 410
+Zig:
+  type: programming
+  color: "#ec915c"
+  extensions:
+  - ".zig"
+  tm_scope: source.zig
+  ace_mode: text
+  language_id: 646424281
 Zimpl:
   type: programming
   extensions:
@@ -5534,12 +5717,31 @@ fish:
   tm_scope: source.fish
   ace_mode: text
   language_id: 415
+mcfunction:
+  type: programming
+  color: "#E22837"
+  extensions:
+  - ".mcfunction"
+  tm_scope: source.mcfunction
+  ace_mode: text
+  language_id: 462488745
 mupad:
   type: programming
   extensions:
   - ".mu"
   ace_mode: text
   language_id: 416
+nanorc:
+  type: data
+  group: INI
+  extensions:
+  - ".nanorc"
+  filenames:
+  - ".nanorc"
+  - nanorc
+  tm_scope: source.nanorc
+  ace_mode: text
+  language_id: 775996197
 nesC:
   type: programming
   color: "#94B0C7"

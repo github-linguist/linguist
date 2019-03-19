@@ -1,0 +1,738 @@
+=comment Oh, this is in Pod6 format. Just so you know.
+
+=begin pod
+
+=TITLE Synopsis 15: Unicode [DRAFT]
+
+=VERSION
+=for table
+    Created          2 December 2013
+    Last Modified    10 October 2014
+    Version          8
+
+This document describes how Unicode and Perl 6 work together. Needless to say,
+it would be good for your chosen reader to support various Unicode characters.
+
+=head1 String Base Units
+
+A Unicode string can be looked at in any of four ways. It could be seen in terms
+of its graphemes, its codepoints, its encoding's code units, or the bytes that
+make up the encoding.
+
+For example, consider a string containing the Devanagari syllable नि, which is
+comprised of the codepoints
+
+    U+0928 DEVANAGARI LETTER NA
+    U+093F DEVANAGARI VOWEL SIGN I
+
+There are a variety of ways in which to perceive the length of this string. For
+reference, here is how the syllable gets encoded in each of UTF-8, UTF-16BE, and
+UTF-32BE.
+
+=for table
+    UTF-8       E0 A4 A8 E0 A4 BF
+    UTF-16BE    0928 093F
+    UTF-32BE    00000928 0000093F
+
+And depending on if you desire to count by graphemes, codepoints, code units, or
+bytes, the perceived length of the string differs:
+
+=for table
+    |------------+-------+--------+--------|
+    |  count by  | UTF-8 | UTF-16 | UTF-32 |
+    |============+=======+========+========|
+    | bytes      | 6     | 4      | 8      |
+    | code units | 6     | 2      | 2      |
+    | codepoints | 2     | 2      | 2      |
+    | graphemes  | 1     | 1      | 1      |
+    |------------+-------+--------+--------|
+
+Perl 6 offers various mechanisms to count by each of these "base units" of a
+string.
+
+Perl 6 by default operates on graphemes, so counting by graphemes involves:
+
+    "string".chars
+
+To count by codepoints, conversion of a string to one of NFC, NFD, NFKC, or NFKD
+is needed:
+
+    "string".NFC.chars
+    "string".NFKD.codes
+
+To count by code units, you can convert to the appropriate buffer type.
+
+    "string".encode("UTF-32LE").elems
+    "string".encode("utf-8").elems
+
+And finally, counting by bytes simply involves converting that buffer to a
+C<buf8> object:
+
+    "string".encode("UTF-16BE").buf8.elems
+
+Note that C<utf8> already stores by bytes, so the count for bytes and code units
+is always the same.
+
+=head1 Normalization Forms
+
+=head2 NFG
+
+Perl 6, by default, stores all strings given to it in NFG form, Normalization
+Form Grapheme. It's a Perl 6–invented character representation, designed to deal
+with un-precomposed graphemes properly.
+
+Formally Perl 6 graphemes are defined exactly according to Unicode Grapheme Cluster Boundaries
+at level "extended" (in contrast to "tailored" or "legacy"),
+see Unicode Standard Annex #29 UNICODE TEXT SEGMENTATION
+L<3 Grapheme Cluster Boundaries|http://www.unicode.org/reports/tr29/tr29-25.html#Grapheme_Cluster_Boundaries>>.
+This is the same as the Perl 5 character class
+
+  \X   Match Unicode "eXtended grapheme cluster"
+
+With NFG, strings start by being run through the normal NFC process, compressing
+any given character sequences into precomposed characters.
+
+Any graphemes remaining without precomposed characters, such as ậ or नि, are
+given their own internal designation to refer to them, at least 32 bits in
+length, in such a way that they avoid clashing with any potential future
+changes to Unicode.  The mapping between these internal designations and
+graphemes in this form is not guaranteed constant, even between strings in
+the same process.
+
+The Perl 6 C<Str> type, and more generally the C<Stringy> role, deals
+exclusively in NFG form.
+
+=head2 NFC and NFD
+
+The NFC and NFD normalization forms are a defined part of the Unicode
+standard. NFD takes precomposed characters and separates them into their
+constituent parts, with a specific ordering of those pieces. NFC tries to
+replace characters sequences into singular precomposed characters whenever
+possible, after first running it through the NFD process.
+
+These two Normalization Forms are similar to NFG, except that graphemes without
+precomposed versions exist as multiple codepoints.
+
+NFC is the form Perl 6 uses whenever NFG is not viable, such as printing the
+string to stdout or passing it to a C<{ use v5; }> section.
+
+=head2 NFKC and NFKD
+
+These forms are known as compatibility forms (denoted by a K to avoid confusion
+with C for Composition). They are similar to their canonical counterparts, but
+may transform various characters (such as ﬁ or ſ) to perform better with the
+software.
+
+All four of NFC, NFD, NFKC, and NFKD can be considered valid "codepoint views",
+though each differ in their exact formulation of the contents of a string:
+
+    say "ẛ̣".chars;               # OUTPUT: 1 (NFG, ẛ̣)
+    say "ẛ̣".NFC.chars;           # OUTPUT: 2 (NFC, ẛ + ̣)
+    say "ẛ̣".NFD.chars;           # OUTPUT: 3 (NFD, ſ + ̣+ ̇)
+    say "ẛ̣".NFKC.chars;          # OUTPUT: 1 (NFKC, ṩ)
+    say "ẛ̣".NFKD.chars;          # OUTPUT: 3 (NFKD, s + ̣+ ̇)
+
+Those who wish to operate with strings on the codepoint level may wish to use
+NFC, as it is the least different from NFG, as well as Perl 6's default form for
+NFG-less contexts.
+
+All of C<Uni>, C<NFC>, C<NFD>, C<NFKC>, and C<NFKD>, and more generally the
+C<Unicodey> role, deal with the various codepoint-based compositions.
+
+=head1 The C<Str> Type
+
+Presented are the variety of methods of C<Str> which are related to
+Unicode. C<Str> deals exclusively in the NFG form of Unicode strings.
+
+=head2 String to Numeral Conversion
+
+    Str.ord
+    Str.ords
+    ord(Str $string)
+    ords(Str $string)
+
+These give you the numeric values of the B<base character> of graphemes in a
+string. C<ord> only works on the first graphemes, while C<ords> works on every
+grapheme.
+
+=head2 Length Methods
+
+    Str.chars
+
+These methods are equivalent, and count the number of graphemes in your string.
+
+[Should there be methods that implicitly convert to the other string types, or
+would .NFKD.chars be necessary?]
+
+=head2 Buf conversion
+
+    Str.encode($enc = "utf-8")
+
+Encodes the contents of the string by the specified encoding (by default UTF-8)
+and generates the appropriate C<blob>.
+
+Note that if you convert to one of the UTFs, you'll get a UTF-aware version of
+the C<blob>. (Non-Unicode encodings will go for the most appropriate C<blob>
+type.)
+
+UTF-16 and UTF-32 default to big endian if you don't specify endianness.
+
+    Str.encode             --> utf8
+    Str.encode("UTF-16")   --> utf16 (big endian)
+    Str.encode("UTF-32LE") --> utf32 (little endian)
+    Str.encode("ASCII")    --> blob8
+
+=head1 The C<NF*> Types
+
+Perl 6 has four types corresponding to a specific Unicode Standard Normalization
+Form: C<NFC>, C<NFD>, C<NFKC>, and C<NFKD>.
+
+Each one of these types perform normalization on strings stored in it.
+
+The C<NF*> types do the C<Unicodey> role.
+
+=head1 The C<Uni> Type
+
+The C<Uni> type is like the various C<NF*> types, but allows a mixed collection
+of normalization forms to make up the string.
+
+The C<Uni> type does the C<Unicodey> role.
+
+=head1 The C<Unicodey> Role
+
+The C<Unicodey> role deals in various Unicode-aware functions.
+
+=head2 Length Methods
+
+    Unicodey.chars
+    Unicodey.codes
+
+Both are synonymous. Counts the number of codepoints in a C<Unicodey> type.
+
+[Maybe C<Unicodey does Stringy> ?]
+
+=head1 The C<Stringy> Role
+
+The C<Stringy> role deals with a more general, not necessarily Unicode-based
+view of strings. C<Str> uses this because it doesn't always play by the Unicode
+Standards' rules (most notably the use of NFG).
+
+=head1 C<Buf> methods
+
+=head2 Decoding buffers
+
+    Buf.decode($dec = "utf-8");
+
+Transforms the buffer into a C<Str>. Defaults to assuming a "utf-8"
+encoding. Encoding-aware buffers have a different default decoding, for
+instance:
+
+    utf8.decode($dec = "utf-8");
+    utf16.decode($dec = "utf-16be");
+    utf32.decode($dec = "utf-32be");
+
+[It would be best if utf16 and utf32 changed its default between BE and LE at
+creation, either because of what Str.encode said or, if the utf16/32 was
+manually created, analyzing the BOM, if any. Just know that Unicode itself
+defaults to BE if nothing else.]
+
+=head1 String Type Conversions
+
+If you desire to have a string in one of the other Normalization Forms, there
+are various conversion methods to do this.
+
+    Cool.Str
+    Cool.NFG  [ XXX this is purely a synonym to .Str. Necessary? ]
+    Cool.NFC
+    Cool.NFD
+    Cool.NFKC
+    Cool.NFKD
+    Cool.Uni
+
+Notably, conversion to the C<Uni> type will assume NFC for either NFG strings or
+non-strings being converted to this string-like type. Otherwise it's a
+transposition of the string without changes in normalization.
+
+=head1 Unicode Information
+
+There's plenty of information each Unicode codepoint possesses, and Perl 6
+provides various ways of accessing that information.
+
+Unless plural forms of these functions are provided, each function operates only
+on the first codepoint of the string. Various array-based operations would be
+needed to gain information on every character in the string.
+
+[Note: The properties of graphemes are not defined by Unicode, but to inherit
+the properties from the first NFC codepoint in the grapheme should make sense
+in most cases, but not for e.g. charnames. Or are they not supported at NFG?]
+
+[Note: If adding additional methods to access Unicode information, priority
+should be placed on info that can't be accessed as a Unicode property.]
+
+=head2 Property Lookup
+
+    uniprop(Int $codepoint, Stringy $property)
+    Int.uniprop(Str $property)
+
+    uniprop(Unicodey $char, Stringy $property)
+    Unicodey.uniprop(Stringy $property)
+
+    uniprops(Unicodey $str, Stringy $property)
+    Unicodey.uniprops(String $property)
+
+This function returns the value of C<$property> for the given C<$codepoint> or
+C<$char>, or an array of values of the property of each character in C<$str> .
+
+All official spellings of a property name are supported.
+
+    uniprops("a", "ASCII_Hex_Digit") # is this character an ASCII hex digit?
+    uniprops("a", "AHex")            # ditto
+
+Values returned for properties may be the narrowest possible type for numeric
+and boolean values (widest C<Rat>), and C<Str> objects for all other types of
+values. (To treat boolean values as boolean, see L<C<unibool>|#Binary Property
+Lookup>.)
+
+Note there is no version of C<uniprops> for integers, while there is one for
+strings. To achieve the same thing, use normal array operations:
+
+    my @isws = (32,42,43)».uniprop("White_Space");
+
+Note that the integer-based lookup is the fundamental version; the string-based
+versions are convenience functions. These two are nearly equivalent:
+
+    uniprop("0".ord, "Numeric_Value");  # integer lookup
+    uniprop("0", "Numeric_Value");      # stringy lookup
+
+However, the string-based version will convert NFG strings to NFC before sending
+either the first or all characters through the lookup. This is because Unicode
+property lookup is considered an NFG-less environment (see L<NFC and NFD|#NFC
+and NFD>).
+
+Integer-based lookup should die on negative integers, or integers greater than
+C<0x10_FFFF>.
+
+[Conjecture: would versions of uniprop with a slurpy instead of a single string
+property be useful? Or is C<uniprop(0x20, $_) for @props> good enough?]
+
+=head3 Binary Property Lookup
+
+    unibool(Int $codepoint, Stringy $property)
+    Int.unibool(Str $property)
+
+    unibool(Unicodey $char, Stringy $property)
+    Unicodey.unibool(Stringy $property)
+
+    unibools(Unicodey $str, Stringy $property)
+    Unicodey.unibools(String $property)
+
+Looks up a boolean Unicode property (such as C<Case_Ignorable>) and returns a
+boolean. Throws an error on non-boolean properties.
+
+    unibool(0x41, "Case_Ignorable");   # OK
+    unibool(0x41, "General_Category"); # dies
+
+As with C<uniprop>, the string version converts NFG strings to NFC, but
+otherwise is equivalent to feeding the result of C<.ord> through the base
+integer version.
+
+=head3 Binary Category Check
+
+    unimatch(Int $codepoint, Stringy $category)
+    Int.unimatch(Str $category)
+
+    unimatch(Unicodey $char, Stringy $category)
+    Unicodey.unimatch(Stringy $category)
+
+    unimatches(Unicodey $str, Stringy $category)
+    Unicodey.unimatches(String $category)
+
+Checks to see if the character(s) given are in the given C<$category>. The
+string-based versions are conveniences that convert any NFG input to NFC, and
+then pass it along to the integer version.
+
+    unimatch("A", "Lu"); # True
+    unimatch("A", "L");  # True
+    unimatch("A", "Sc"); # False
+
+An error may be issued if the given category name is not valid.
+
+=head2 Numeric Codepoint
+
+    ord(Stringy $char) --> Int
+    ords(Stringy $string) --> Array[Int]
+
+    Stringy.ord() --> Int
+
+    Stringy.ords() --> Array[Int]
+
+The C<&ord> function (and corresponding C<Stringy.ord> method) return the
+codepoint number of the base character of the first grapheme of the string.
+The C<&ords> function and method returns an C<Array> of codepoint numbers
+of the base character for every grapheme in the string.
+
+This works on any type that does the C<Stringy> role.
+
+=head2 Character Representation
+
+    chr(Int $codepoint) --> Uni
+    chrs(Array[Int] @codepoints) --> Uni
+
+    Cool.chr() --> Uni
+    Cool.chrs() --> Uni
+
+Converts one or more numbers into a series of characters, treating those numbers
+as Unicode codepoints. The C<chrs> version generates a multi-character string
+from the given array.
+
+Note that this operates on encoding-independent codepoints (use C<Buf> types for
+encoded codepoints).
+
+An error will occur if the C<Uni> generated by these functions contains an
+invalid character or sequence of characters. This includes, but is not limited
+to, codepoint values greater than C<0x10FFFF> and parts of surrogate code pairs.
+
+To obtain a more definitive string type, the normal ways of type conversion may
+be used.
+
+=head2 Character Name
+
+    uniname(Str $char, :$one = False, :$either = False) --> Str
+    uninames(Str $char, :$one = False, :$either = False) --> Array[Str]
+
+    Str.uniname(:$one = False, :$either = False) --> Str
+    Str.uninames(:$one = False, :$either = False) --> Array[Str]
+
+The C<&uniname> function returns the Unicode name associated with the first
+codepoint of the string. C<&uninames> returns an array of names, one per
+codepoint.
+
+By default, C<uniname> tries to find the Unicode name associated with that
+character, returning a code point label (see
+L<UAX#44|http://www.unicode.org/reports/tr44/tr44-12.html#Code_Point_Labels> and
+section 4.8 of the Standard). This is nearly identical to accessing the C<Name>
+property from the C<uniprops> hash, except that the hash holds an empty string
+for undefined names.
+
+    uninames("A\x[00]¶\x[2028,80]")
+    # results in:
+    "LATIN CAPITAL LETTER A",
+    "<control-0000>",
+    "PILCROW SIGN",
+    "LINE SEPARATOR",
+    "<control-0080>"
+
+The C<:one> adverb instead tries to find the Unicode 1.0 name associated with
+the character (this would most often be useful with getting a proper name for
+control codes). If there is no Unicode 1.0 name associated with the character, a
+code point label is returned. This is similar to the C<Unicode_1_Name> property
+of the C<uniprops> hash, except that the hash holds an empty string for
+undefined Unicode 1.0 names.
+
+    uninames("A\x[00]¶\x[2028,80]", :one)
+    # results in:
+    "<graphic-0041>",
+    "NULL",
+    "PARAGRAPH SIGN",
+    "<format-2028>",
+    "<control-0080>"
+
+The C<:either> adverb will try to first obtain a Unicode name for the
+character. Failing that, it will try to instead obtain the Unicode 1.0 name. If
+the character has neither name property defined, a code point label is returned.
+
+    uninames("A\x[00]¶\x[2028,80]", :either)
+    # results in:
+    "LATIN CAPITAL LETTER A",
+    "NULL",
+    "PILCROW SIGN",
+    "LINE SEPARATOR",
+    "<control-0080>"
+
+The use of C<:either> and C<:one> together will prefer Unicode 1.0 names over
+newer Unicode names, but otherwise function identically to C<:either>.
+
+    uninames("A\x[00]¶\x[2028,80]", :either :one)
+    # results in:
+    "LATIN CAPITAL LETTER A",
+    "NULL",
+    "PARAGRAPH SIGN",
+    "LINE SEPARATOR",
+    "<control-0080>"
+
+In the case of graphical or formatting characters without a Unicode 1.0 name,
+the use of the C<:one> adverb by itself will return a I<non-standard> codepoint
+label of either of the following:
+
+    <graphic-XXXX>
+    <format-XXXX>
+
+Note that the use of C<:either> and C<:one> together will not use these
+non-standard labels, as every graphic and format character has a current Unicode
+name.
+
+The definition of "graphic" and "format" characters is covered in Section 2.4,
+Table 2-3 of the current Unicode Standard.
+
+This command does not deal with name aliases; use the C<Name_Alias> property
+from the C<uniprops> hash.
+
+If a strict adherence to the values in those properties is desired (i.e. return
+null strings instead of code-point labels), the C<Name> and C<Unicode_1_Name>
+properties of the C<uniprops> hash may be used.
+
+=head2 Numeric Value
+
+    unival(Int $codepoint)
+    Int.unival
+
+    unival(Unicodey $char)
+    Unicodey.unival
+
+    univals(Unicodey $str)
+    Unicodey.univals
+
+Returns a C<Rat> (or C<Int> if the denominator is 1) of the given character's
+numeric value. Returns C<NaN> if the character is not a number.
+
+    say unival("0"); # output: 0
+    say unival("½"); # output: .5
+    say unival("."); # output: NaN
+    say univals("½¾"); # output: .5 .75 (array of Rats and/or Ints)
+
+Note that this will not convert a multi-digit string into one numeral; use the
+normal string-to-numeral coercers for that.
+
+[Conjecture: should C<val()> use C<unival> on one-character strings as part of
+its allomorphic type process? E.g. K<./fractionmagic.p6 ¾> takes the one
+positional argument as a C<RatStr>.]
+
+=head1 Regexes
+
+By default regexes operate on the grapheme (NFG) level, regardless of how the
+string itself is stored.
+
+The following is a list of adverbs that change how regexes view strings:
+
+    :i    Ignore case  (a ~~ A)
+    :m    Ignore marks (ä ~~ a)
+
+    :nfg    String matching against as NFG (default)
+    :nfc    String as NFC
+    :nfd    String as NFD
+    :nfkc   String as NFKC
+    :nfkd   String as NFKD
+
+There's of course the syntax for accessing Unicode properties inside a regex:
+
+    <:Letter>
+    <:East_Asian_Width<Narrow>>
+
+(For example, if you needed to collect combining mark usage (e.g. for
+language-guessing purposes):
+
+    $string ~~ /:nfd [<:Letter> (<:Mark>*)]+/
+
+would get that info for you.)
+
+C</./> always matches one "character" in the current view, in other words one
+element of C<"string being matched".ords>.
+
+=head2 Grapheme Explosion
+
+To match to one specific character under different rules, you may use one of the
+C«</ />» rules.
+
+    <D/ />    Work on next character in NFD mode
+    <C/ />    NFC mode
+    <KD/ />   NFKD mode
+    <KC/ />   NFKC mode
+    <G/ />    NFG mode
+    </ />     NFD mode
+
+This construct was primarily invented to allow you to deal with combining
+characters (matches C«<:Mark>») on single graphemes. This is why C«</ />» is
+used as a synonym to C«<D/ />».
+
+The forms with letters may use any brackets. Similar to how C<m/ /> and C</ />
+relate to each other.
+
+    </ />    Explodes grapheme
+    <⦃ ⦄>    Doesn't explode grapheme
+    <D/ />   Explodes grapheme
+    <D⦃ ⦄>   Explodes grapheme
+
+So to collect base characters and combining marks in one section of what you're
+parsing, you could define such a regex as:
+
+    $string ~~ / </ $<base>=<:Letter> $<marks>=[<:Mark>+] /> /
+
+Note that each of these exploders become useless when their counterpart adverbs
+are used beforehand.
+
+And yes, some of these forms do the opposite of exploding; the imagery of
+radically changing things in a localized area still applies C<:)>.
+
+=head1 Quoting Constructs
+
+By default, all quoting forms create C<Str> objects:
+
+    "interpolating $string"
+    'non-interpolating'
+    Q[Base form]
+
+Various adverbs may be used to generate non-NFG literals:
+
+    Q:nfd/NFD literal/
+    qq:nfc:to/heredocIsNFC/
+    qx:nfkd/useful for commands on less capable terminals perhaps/
+
+The typical C<:nf> adverbs are in use here.
+
+    :nfg    Str literal (default)
+    :nfd    NFD literal
+    :nfc    NFC literal
+    :nfkd   NFKD literal
+    :nfkc   NFKC literal
+
+=head1 Unicode Literals
+
+=head2 Identifiers
+
+Identifiers in Perl 6 can start with any alphabetic character (those characters
+in the C<L> category, as well as underscore), followed by any number of
+alphanumeric characters (those characters in the C<L> or C<N> category, as well
+as underscore). Dashes (C<->) and apostrophes (C<'>) may also appear, provided
+that they are followed by an alphabetic character.
+
+    my $foo;     # OK
+    my $ｆｏｏ;     # also OK
+    my $১০kinds; # not ok (১০ are digits)
+
+Combining marks (characters in the C<M> category) may not be the first character
+in an identifier, but they may appear at any time afterwards.
+
+Perl 6 internally stores all identifiers in NFG form, so these two lines create
+the same variable (and throw a redeclaration warning if used like this in code):
+
+    my $ä; # precomposed
+    my $ä; # not precomposed
+
+=head2 Numbers
+
+Similar to its support for any kind of Unicode in identifiers, Perl 6 allows any
+kind of character within the category C<Nd> (Decimal Number) for decimal
+numbers:
+
+    say 42 + ٤٢; # ascii digits + arabic indic
+    say ᱄2;     # lepcha & ascii
+    say ⑨;       # not ok (category No, not Nd)
+
+For hexadecimal digits, any character with C<Hex_Digit = yes> is allowed:
+
+    say 0xCAFE;     # OK
+    say 0xｃａｆｅ; # OK too
+
+The C<:radix[]> form of specifying numbers can accept strings following this
+same rule, with the following sets of characters specifying digits C<10..35>, as
+they have characters with true C<Hex_Digit> properties:
+
+    a b c d e f g h i j k l m n o p q r s t u v w x y z
+    A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+    ａ ｂ ｃ ｄ ｅ ｆ ｇ ｈ ｉ ｊ ｋ ｌ ｍ ｎ ｏ ｐ ｑ ｒ ｓ ｔ ｕ ｖ ｗ ｘ ｙ ｚ
+    Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ
+
+For radices greater than 36, you must use literal numbers (see L<doc:S02/General
+radices> for details).
+
+=head1 Pragmas
+
+[ the NF* pragmas have been removed, as they no longer are attributes of a Str
+object, and there's no sane way to set a default string-like type in a clean
+fashion. ]
+
+    use encoding :utf8;
+    use encoding :utf16<be> or :utf16<le>;
+    use encoding :utf32<be> or :utf32<le>;
+
+The C<encoding> pragma changes the default encoding for situations where that's
+necessary, e.g. for the default C<Str.encode> or C<Buf.decode>. C<Str>s
+themselves don't store encoding information.
+
+=for code :allow<R>
+    use unicode :v(R<version>);
+
+Specifies what version of Unicode you want to use. The C<$*UNICODE> variable
+will tell you what version of Unicode is currently in use. This is useful if you
+need to work on data created for much older Unicode versions, or if you're doing
+work with properties known to be highly volatile between versions.
+
+Pragmas are of course localize-able:
+
+    my $first = "hello"; # NFG string
+    {
+        use unicode :v(3.2);
+        ⋮
+    }
+
+    my $buffer = "foobar".encode; # object of type utf8 in $buffer
+    {
+        use utf32<le>;
+        $buffer = "foobar".encode; # object of type utf32 in $buffer
+    }
+    say $buffer.WHAT # output: (utf32)
+
+=head1 Final Considerations
+
+The C<Stringy> and C<Unicodey> roles need some expansion, definitely. Keep in
+mind that the C<Uni> type is supposed to accept any of the C<NFC>, C<NFD>,
+C<NFKC>, and C<NFKD> contents without normalizing.
+
+The inclusion of ropey types will most directly impact C<Uni>.
+
+Operators between various string types need defining. The general rule should be
+"most specialized type wins" for the return value.
+
+    NFD ~ NFD   -->  NFD
+    NFC ~ NFKD  -->  Uni
+        (UAX#15 says concat of mismatched NFs results in a non-NF string, which
+        is our Uni type.)
+
+[Note: concatenation and similar operations forming one string from parts can lead to non-NF,
+even between NFC ~ NFC or NFG ~ NFG, if the second string begins with one (or more) "orphan"
+combining characters.]
+
+Regexes likely need more work, though I don't see anything immediate.
+
+Some easy way to change how Perl 6 handles language specific weirdness, possibly
+through another type (C<Rope>? C<Twine>? C<Yarn>?). A very small selection of
+those weirdnesses:
+
+=item Turkish dotted and dotless eyes (I ı and İ i), which follow non-standard
+casing.
+
+=item Those who realize the superiority of a capital ẞ and would rather ß not be
+capitalized to SS C<:D>.
+
+How would a hypothetical C<EBCDIC> string type be implemented by some module
+writer?
+
+Other areas to consider, surely.
+
+(This spec should not be moved to a status more official than DRAFT status until
+this Final Considerations section disappears.)
+
+=AUTHOR
+=for table
+    Matthew N. "lue"      <L<rnddim@gmail.com|mailto:rnddim@gmail.com>>
+    Helmut Wollmersdorfer <L<helmut.wollmersdorfer@gmail.com|mailto:helmut.wollmersdorfer@gmail.com>>
+
+=ACKNOWLEDGEMENT
+
+Thanks to TimToady and the rest here:
+L<http://irclog.perlgeek.de/perl6/2013-12-02#i_7942599> for answering my
+questions and inadvertently steering this document in a far different direction
+than I would've taken it otherwise.
+
+=comment vim: expandtab sw=4
+=end pod

@@ -28,6 +28,23 @@
 #
 ---
 disambiguations:
+- extensions: ['.1', '.1in', '.1m', '.1x', '.2', '.3', '.3in', '.3m', '.3p', '.3pm', '.3qt', '.3x', '.4', '.5', '.6', '.7', '.8', '.9', '.man', '.mdoc']
+  rules:
+  # Document which uses mdoc(7) macros
+  - language: Roff Manpage
+    and:
+    - pattern: '^[.''][ \t]*Dd +(?:[^"\s]+|"[^"]+")'
+    - pattern: '^[.''][ \t]*Dt +(?:[^"\s]+|"[^"]+") +"?(?:[1-9]|@[^\s@]+@)'
+    - pattern: '^[.''][ \t]*Sh +(?:[^"\s]|"[^"]+")'
+
+  # Document which uses man(7) macros
+  - language: Roff Manpage
+    and:
+    - pattern: '^[.''][ \t]*TH +(?:[^"\s]+|"[^"]+") +"?(?:[1-9]|@[^\s@]+@)'
+    - pattern: '^[.''][ \t]*SH +(?:[^"\s]+|"[^"\s]+)'
+
+  # Open-ended fallback to unrendered Roff source
+  - language: Roff
 - extensions: ['.as']
   rules:
   - language: ActionScript
@@ -41,6 +58,11 @@ disambiguations:
     pattern: '^[=-]+(\s|\n)|{{[A-Za-z]'
   - language: AGS Script
     pattern: '^(\/\/.+|((import|export)\s+)?(function|int|float|char)\s+((room|repeatedly|on|game)_)?([A-Za-z]+[A-Za-z_0-9]+)\s*[;\(])'
+- extensions: ['.asy']
+  rules:
+  - language: LTspice Symbol
+    pattern: '^SymbolType[ \t]'
+  - language: Asymptote
 - extensions: ['.bb']
   rules:
   - language: BlitzBasic
@@ -88,7 +110,7 @@ disambiguations:
     # target : \
     #  : dependency
     # path/file.ext1 : some/path/../file.ext2
-    pattern: '([\/\\].*:\s+.*\s\\$|: \\$|^ : |^[\w\s\/\\.]+\w+\.\w+\s*:\s+[\w\s\/\\.]+\w+\.\w+)'
+    pattern: '([\/\\].*:\s+.*\s\\$|: \\$|^[ %]:|^[\w\s\/\\.]+\w+\.\w+\s*:\s+[\w\s\/\\.]+\w+\.\w+)'
 - extensions: ['.ecl']
   rules:
   - language: ECLiPSe
@@ -132,6 +154,12 @@ disambiguations:
     pattern: '^\s*(#version|precision|uniform|varying|vec[234])'
   - language: Filterscript
     pattern: '#include|#pragma\s+(rs|version)|__attribute__'
+- extensions: ['.gd']
+  rules:
+  - language: GAP
+    pattern: '\s*(Declare|BindGlobal|KeyDependentOperation)'
+  - language: GDScript
+    pattern: '\s*(extends|var|const|enum|func|class|signal|tool|yield|assert|onready)'
 - extensions: ['.gml']
   rules:
   - language: XML
@@ -149,12 +177,15 @@ disambiguations:
     named_pattern: objectivec
   - language: C++
     named_pattern: cpp
+- extensions: ['.hh']
+  rules:
+  - language: Hack
+    pattern: '<\?hh'
 - extensions: ['.ice']
   rules:
-  - language: Slice
-    pattern: '^\s*(#\s*(include|if[n]def|pragma)|module\s+[A-Za-z][_A-Za-z0-9]*)'
   - language: JSON
-    pattern: '/\A\s*[{\[]/'
+    pattern: '\A\s*[{\[]'
+  - language: Slice
 - extensions: ['.inc']
   rules:
   - language: PHP
@@ -193,8 +224,10 @@ disambiguations:
   - language: M
     pattern: '^\s*;'
   - language: Mathematica
-    pattern: '\*\)$'
-  - language: Matlab
+    and:
+      - pattern: '\(\*'
+      - pattern: '\*\)$'
+  - language: MATLAB
     pattern: '^\s*%'
   - language: Limbo
     pattern: '^\w+\s*:\s*module\s*{'
@@ -266,8 +299,13 @@ disambiguations:
     named_pattern: perl5
   - language: Perl 6
     named_pattern: perl6
-  - language: XPM
+  - language: X PixMap
     pattern: '^\s*\/\* XPM \*\/'
+- extensions: ['.pod']
+  rules:
+  - language: Pod 6
+    pattern: '^[\s&&[^\n]]*=(comment|begin pod|begin para|item\d+)'
+  - language: Pod
 - extensions: ['.pp']
   rules:
   - language: Pascal
@@ -303,7 +341,7 @@ disambiguations:
 - extensions: ['.props']
   rules:
   - language: XML
-    pattern: '^(\s*)(?i:<Project|<Import|<Property|<?xml|xmlns)'
+    pattern: '^(\s*)(?i:<Project|<Import|<Property|<\?xml|xmlns)'
   - language: INI
     pattern: '(?i:\w+\s*=\s*)'
 - extensions: ['.q']
@@ -390,6 +428,11 @@ disambiguations:
     pattern: '^\s*(import.+(from\s+|require\()[''"]react|\/\/\/\s*<reference\s)'
   - language: XML
     pattern: '(?i:^\s*<\?xml\s+version)'
+- extensions: ['.vba']
+  rules:
+  - language: Vim script
+    pattern: '^UseVimball'
+  - language: Visual Basic
 - extensions: ['.w']
   rules:
   - language: OpenEdge ABL
@@ -402,7 +445,7 @@ disambiguations:
     pattern: '\b(program|version)\s+\w+\s*{|\bunion\s+\w+\s+switch\s*\('
   - language: Logos
     pattern: '^%(end|ctor|hook|group)\b'
-  - language: Linked Script
+  - language: Linker Script
     pattern: 'OUTPUT_ARCH\(|OUTPUT_FORMAT\(|SECTIONS'
 - extensions: ['.yy']
   rules:

@@ -172,7 +172,7 @@ class TestLanguage < Minitest::Test
 
   def test_find_by_extension
     assert_equal [], Language.find_by_extension('.factor-rc')
-    assert_equal [Language['Limbo'], Language['M'], Language['MUF'], Language['Mathematica'], Language['Matlab'], Language['Mercury'], Language['Objective-C']], Language.find_by_extension('foo.m')
+    assert_equal [Language['Limbo'], Language['M'], Language['MATLAB'], Language['MUF'], Language['Mathematica'], Language['Mercury'], Language['Objective-C']], Language.find_by_extension('foo.m')
     assert_equal [Language['Ruby']], Language.find_by_extension('foo.rb')
     assert_equal [Language['Ruby']], Language.find_by_extension('foo/bar.rb')
     assert_equal [Language['Ruby']], Language.find_by_extension('PKGBUILD.rb')
@@ -379,7 +379,7 @@ class TestLanguage < Minitest::Test
   def test_all_languages_have_a_language_id_set
     missing = Language.all.select { |language| language.language_id.nil? }
 
-    message = "The following languages do not have a language_id listed in languages.yml. Please add language_id fields for all new languages.\n"
+    message = "The following languages do not have a language_id listed in languages.yml. Please run `script/update-ids` as per the contribution guidelines.\n"
     missing.each { |language| message << "#{language.name}\n" }
     assert missing.empty?, message
   end

@@ -65,6 +65,7 @@ vendor/grammars/NSIS:
 - source.nsis
 vendor/grammars/NimLime:
 - source.nim
+- source.nim.comment
 - source.nim_filter
 - source.nimcfg
 vendor/grammars/PHP-Twig.tmbundle:
@@ -120,6 +121,7 @@ vendor/grammars/SublimeClarion:
 - source.clarion
 vendor/grammars/SublimeEthereum:
 - source.solidity
+- source.vyper
 vendor/grammars/SublimeGDB/:
 - source.disasm
 - source.gdb
@@ -185,6 +187,8 @@ vendor/grammars/asp.tmbundle:
 vendor/grammars/assembly:
 - objdump.x86asm
 - source.x86asm
+vendor/grammars/atom-editorconfig:
+- source.editorconfig
 vendor/grammars/atom-firestore-grammar:
 - source.firestore
 vendor/grammars/atom-fsharp:
@@ -334,7 +338,12 @@ vendor/grammars/graphviz.tmbundle:
 vendor/grammars/groovy.tmbundle:
 - source.groovy
 vendor/grammars/haxe-TmLanguage:
+- documentation.markdown.injection.haxe
+- markdown.haxe.codeblock
+- markdown.hxml.codeblock
 - source.hx
+- source.hx.argument
+- source.hx.type
 - source.hxml
 vendor/grammars/hy.tmLanguage:
 - source.hy
@@ -407,13 +416,28 @@ vendor/grammars/language-emacs-lisp:
 - source.yasnippet
 vendor/grammars/language-eml:
 - text.eml.basic
+vendor/grammars/language-etc:
+- etc
+- injections.etc
+- source.curlrc
+- source.gitattributes
+- source.gitconfig
+- source.gitignore
+- source.hgignore
+- source.m4
+- source.man-conf
+- source.nanorc
+- source.opts
+- source.ssh-config
 vendor/grammars/language-fontforge:
 - source.afm
 - source.bdf
+- source.figctrl
 - source.figfont
 - source.fontdir
 - source.fontforge
 - source.opentype
+- source.xlfd
 - text.sfd
 vendor/grammars/language-gfm:
 - source.gfm
@@ -455,12 +479,17 @@ vendor/grammars/language-jolie:
 vendor/grammars/language-jsoniq:
 - source.jq
 - source.xq
+vendor/grammars/language-jsonnet:
+- source.jsonnet
 vendor/grammars/language-kotlin:
 - source.kotlin
 vendor/grammars/language-less:
 - source.css.less
 vendor/grammars/language-maxscript:
 - source.maxscript
+vendor/grammars/language-mcfunction:
+- source.mcfunction
+- source.mcfunction-snapshot
 vendor/grammars/language-meson:
 - source.meson
 vendor/grammars/language-ncl:
@@ -471,6 +500,7 @@ vendor/grammars/language-pan:
 - source.pan
 vendor/grammars/language-pcb:
 - source.gerber
+- source.ltspice.symbol
 - source.pcb.board
 - source.pcb.schematic
 - source.pcb.sexp
@@ -500,6 +530,8 @@ vendor/grammars/language-roff:
 vendor/grammars/language-rpm-spec:
 - source.changelogs.rpm-spec
 - source.rpm-spec
+vendor/grammars/language-rtf:
+- text.rtf
 vendor/grammars/language-ruby:
 - source.ruby
 - source.ruby.gemfile
@@ -637,7 +669,7 @@ vendor/grammars/r.tmbundle:
 vendor/grammars/rascal-syntax-highlighting:
 - source.rascal
 vendor/grammars/razor-plus:
-- text.html.razor
+- text.html.cshtml
 vendor/grammars/ruby-slim.tmbundle:
 - text.slim
 vendor/grammars/sas.tmbundle:
@@ -726,6 +758,8 @@ vendor/grammars/sublime-text-ox:
 - source.ox
 vendor/grammars/sublime-varnish:
 - source.varnish.vcl
+vendor/grammars/sublime-zig-language:
+- source.zig
 vendor/grammars/sublime_cobol:
 - source.acucobol
 - source.cobol
