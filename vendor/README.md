@@ -189,6 +189,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Java Properties:** [textmate/java.tmbundle](https://github.com/textmate/java.tmbundle)
 - **Java Server Pages:** [textmate/java.tmbundle](https://github.com/textmate/java.tmbundle)
 - **JavaScript:** [atom/language-javascript](https://github.com/atom/language-javascript)
+- **JavaScript+ERB:** [atom/language-javascript](https://github.com/atom/language-javascript)
 - **JFlex:** [jflex-de/jflex.tmbundle](https://github.com/jflex-de/jflex.tmbundle)
 - **Jison:** [cdibbs/language-jison](https://github.com/cdibbs/language-jison)
 - **Jison Lex:** [cdibbs/language-jison](https://github.com/cdibbs/language-jison)
