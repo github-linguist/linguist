@@ -33,9 +33,7 @@ class GrammarList
 
   # Grab the name of each language, sorted case-insensitively
   def load_languages
-    Linguist::Language.all.map(&:name).sort do |a, b|
-      a.downcase() <=> b.downcase()
-    end
+    Linguist::Language.all.map(&:name).sort
   end
 
   # Load grammars.yml

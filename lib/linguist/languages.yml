@@ -637,6 +637,20 @@ CWeb:
   tm_scope: none
   ace_mode: text
   language_id: 657332628
+Cabal Config:
+  type: data
+  aliases:
+  - Cabal
+  extensions:
+  - ".cabal"
+  filenames:
+  - cabal.config
+  - cabal.project
+  ace_mode: haskell
+  codemirror_mode: haskell
+  codemirror_mime_type: text/x-haskell
+  tm_scope: source.cabal
+  language_id: 677095381
 Cap'n Proto:
   type: programming
   tm_scope: source.capnp
@@ -1198,6 +1212,18 @@ Ecere Projects:
   codemirror_mode: javascript
   codemirror_mime_type: application/json
   language_id: 98
+EditorConfig:
+  type: data
+  group: INI
+  filenames:
+  - ".editorconfig"
+  aliases:
+  - editor-config
+  ace_mode: ini
+  codemirror_mode: properties
+  codemirror_mime_type: text/x-properties
+  tm_scope: source.editorconfig
+  language_id: 96139566
 Edje Data Collection:
   type: data
   extensions:
@@ -2063,7 +2089,6 @@ INI:
   - ".pro"
   - ".properties"
   filenames:
-  - ".editorconfig"
   - buildozer.spec
   tm_scope: source.ini
   aliases:
@@ -2408,6 +2433,15 @@ Jolie:
   ace_mode: text
   tm_scope: source.jolie
   language_id: 998078858
+Jsonnet:
+  color: "#0064bd"
+  type: programming
+  ace_mode: text
+  extensions:
+  - ".jsonnet"
+  - ".libsonnet"
+  tm_scope: source.jsonnet
+  language_id: 664885656
 Julia:
   type: programming
   extensions:
@@ -2882,6 +2916,7 @@ Markdown:
   - ".markdown"
   - ".mdown"
   - ".mdwn"
+  - ".mdx"
   - ".mkd"
   - ".mkdn"
   - ".mkdown"
@@ -4089,7 +4124,7 @@ RUNOFF:
   language_id: 315
 Racket:
   type: programming
-  color: "#22228f"
+  color: "#3c5caa"
   extensions:
   - ".rkt"
   - ".rktd"
@@ -4200,6 +4235,13 @@ RenderScript:
   tm_scope: none
   ace_mode: text
   language_id: 323
+Rich Text Format:
+  type: markup
+  extensions:
+  - ".rtf"
+  tm_scope: text.rtf
+  ace_mode: text
+  language_id: 51601661
 Ring:
   type: programming
   color: "#2D54CB"
@@ -5180,6 +5222,8 @@ Vim script:
   - nvim
   extensions:
   - ".vim"
+  - ".vba"
+  - ".vmb"
   filenames:
   - ".gvimrc"
   - ".nvimrc"
@@ -5673,6 +5717,14 @@ fish:
   tm_scope: source.fish
   ace_mode: text
   language_id: 415
+mcfunction:
+  type: programming
+  color: "#E22837"
+  extensions:
+  - ".mcfunction"
+  tm_scope: source.mcfunction
+  ace_mode: text
+  language_id: 462488745
 mupad:
   type: programming
   extensions:
