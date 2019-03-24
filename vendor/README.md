@@ -430,6 +430,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **YARA:** [blacktop/language-yara](https://github.com/blacktop/language-yara)
 - **YASnippet:** [Alhadis/language-emacs-lisp](https://github.com/Alhadis/language-emacs-lisp)
 - **Yacc:** [textmate/bison.tmbundle](https://github.com/textmate/bison.tmbundle)
+- **ZenScript:** [CraftTweaker/ZenScript-tmLanguage](https://github.com/CraftTweaker/ZenScript-tmLanguage)
 - **Zephir:** [phalcon/zephir-sublime](https://github.com/phalcon/zephir-sublime)
 - **Zig:** [ziglang/sublime-zig-language](https://github.com/ziglang/sublime-zig-language)
 - **desktop:** [Mailaender/desktop.tmbundle](https://github.com/Mailaender/desktop.tmbundle)
