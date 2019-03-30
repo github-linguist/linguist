@@ -115,6 +115,7 @@ class TestHeuristics < Minitest::Test
   def test_cls_by_heuristics
     assert_heuristics({
       "TeX" => all_fixtures("TeX", "*.cls"),
+      "ObjectScript" => all_fixtures("ObjectScript", "*.cls"),
       # Missing heuristics
       nil => all_fixtures("Apex", "*.cls") + all_fixtures("OpenEdge ABL", "*.cls") + all_fixtures("Visual Basic", "*.cls"),
     })
@@ -222,6 +223,7 @@ class TestHeuristics < Minitest::Test
   def test_inc_by_heuristics
     assert_heuristics({
       "PHP" => all_fixtures("PHP", "*.inc"),
+      "ObjectScript" => all_fixtures("ObjectScript", "*.inc"),
       "POV-Ray SDL" => all_fixtures("POV-Ray SDL", "*.inc")
     })
   end
@@ -504,6 +506,12 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "Linker Script" => all_fixtures("Linker Script", "*.x"),
       "RPC" => all_fixtures("RPC", "*.x")
+    })
+  end
+
+  def test_xml_by_heuristics
+    assert_heuristics({
+      "ObjectScript" => all_fixtures("ObjectScript", "*.xml")
     })
   end
 

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="IRIS" version="26">
+<Class name="Sample.Address">
+<Description>
+             Use or operation of this code is subject to acceptance of the license available in the code repository for this code.
+This is a sample embeddable class representing an address.</Description>
+<StorageStrategy>AddressState</StorageStrategy>
+<Super>%SerialObject,%Populate,%XML.Adaptor</Super>
+<TimeCreated>65094,34021.242082</TimeCreated>
+
+<Property name="Street">
+<Description>
+             The street address.</Description>
+<Type>%String</Type>
+<Parameter name="MAXLEN" value="80"/>
+<Parameter name="POPSPEC" value="Street()"/>
+</Property>
+
+<Property name="City">
+<Description>
+             The city name.</Description>
+<Type>%String</Type>
+<Parameter name="MAXLEN" value="80"/>
+<Parameter name="POPSPEC" value="City()"/>
+</Property>
+
+<Property name="State">
+<Description>
+             The 2-letter state abbreviation.</Description>
+<Type>%String</Type>
+<Parameter name="MAXLEN" value="2"/>
+<Parameter name="POPSPEC" value="USState()"/>
+</Property>
+
+<Property name="Zip">
+<Description>
+             The 5-digit U.S. Zone Improvement Plan (ZIP) code.</Description>
+<Type>%String</Type>
+<Parameter name="MAXLEN" value="5"/>
+<Parameter name="POPSPEC" value="USZip()"/>
+</Property>
+
+<Storage name="AddressState">
+<Type>%Storage.Serial</Type>
+<State>AddressState</State>
+<StreamLocation>^Sample.AddressS</StreamLocation>
+<Data name="AddressState">
+<Value name="1">
+<Value>Street</Value>
+</Value>
+<Value name="2">
+<Value>City</Value>
+</Value>
+<Value name="3">
+<Value>State</Value>
+</Value>
+<Value name="4">
+<Value>Zip</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>
