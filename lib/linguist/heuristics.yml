@@ -460,6 +460,7 @@ named_patterns:
   - '^[ \t]*catch\s*\('
   - '^[ \t]*(class|(using[ \t]+)?namespace)\s+\w+'
   - '^[ \t]*(private|public|protected):$'
+  - '^[ \t]*constexpr'
   - 'std::\w+'
   fortran: '^(?i:[c*][^abd-z]|      (subroutine|program|end|data)\s|\s*!)'
   key_equals_value: '^[^#!;][^=]*='
