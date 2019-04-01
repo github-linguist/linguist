@@ -12,7 +12,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **ANTLR:** [textmate/antlr.tmbundle](https://github.com/textmate/antlr.tmbundle)
 - **API Blueprint:** [apiaryio/api-blueprint-sublime-plugin](https://github.com/apiaryio/api-blueprint-sublime-plugin)
 - **APL:** [Alhadis/language-apl](https://github.com/Alhadis/language-apl)
-- **ASN.1:** [ajLangley12/language-asn1](https://github.com/ajLangley12/language-asn1)
+- **ASN.1:** [ajlangley/language-asn1](https://github.com/ajlangley/language-asn1)
 - **ASP:** [textmate/asp.tmbundle](https://github.com/textmate/asp.tmbundle)
 - **ATS:** [steinwaywhw/ats-mode-sublimetext](https://github.com/steinwaywhw/ats-mode-sublimetext)
 - **ActionScript:** [simongregory/actionscript3-tmbundle](https://github.com/simongregory/actionscript3-tmbundle)
