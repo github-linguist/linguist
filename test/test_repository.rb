@@ -47,7 +47,7 @@ class TestRepository < Minitest::Test
   end
 
   def test_repo_git_attributes
-    # See https://github.com/github/linguist/blob/e89bd3862b321c932b6c7064dc6ab24a2bbb03d1/.gitattributes
+    # See https://github.com/github/linguist/blob/1afde515160660fa368eba35ba37ac03cafc2074/.gitattributes
     #
     # It looks like this:
     # Gemfile linguist-vendored=true
@@ -56,7 +56,7 @@ class TestRepository < Minitest::Test
     # Rakefile linguist-generated
     # test/fixtures/* linguist-vendored=false
 
-    attr_commit = 'e89bd3862b321c932b6c7064dc6ab24a2bbb03d1'
+    attr_commit = '1afde515160660fa368eba35ba37ac03cafc2074'
     repo = linguist_repo(attr_commit)
 
     assert repo.breakdown_by_file.has_key?("Java")
@@ -65,9 +65,11 @@ class TestRepository < Minitest::Test
     assert repo.breakdown_by_file.has_key?("Ruby")
     assert !repo.breakdown_by_file["Ruby"].empty?
 
-    # Ensures the filename that contains unicode char is UTF-8 encoded
+    # Ensures the filename that contains unicode char is UTF-8 encoded and invalid chars scrubbed
     assert repo.breakdown_by_file.has_key?("Perl")
-    assert repo.breakdown_by_file["Perl"].include?("test/fixtures/file_ã.pl")
+    assert repo.breakdown_by_file["Perl"].include?("test/fixtures/ba�r/file_ã.pl")
+    assert_equal "UTF-8", repo.breakdown_by_file["Perl"].first.encoding.to_s
+    assert repo.breakdown_by_file["Perl"].first.valid_encoding?
   end
 
   def test_commit_with_git_attributes_data
@@ -84,7 +86,7 @@ class TestRepository < Minitest::Test
   end
 
   def test_linguist_override_vendored?
-    attr_commit = 'e89bd3862b321c932b6c7064dc6ab24a2bbb03d1'
+    attr_commit = '1afde515160660fa368eba35ba37ac03cafc2074'
     linguist_repo(attr_commit).read_index
 
     override_vendored = Linguist::LazyBlob.new(rugged_repository, attr_commit, 'Gemfile')
@@ -94,7 +96,7 @@ class TestRepository < Minitest::Test
   end
 
   def test_linguist_override_unvendored?
-    attr_commit = 'e89bd3862b321c932b6c7064dc6ab24a2bbb03d1'
+    attr_commit = '1afde515160660fa368eba35ba37ac03cafc2074'
     linguist_repo(attr_commit).read_index
 
     # lib/linguist/vendor.yml defines this as vendored.
@@ -117,7 +119,7 @@ class TestRepository < Minitest::Test
   end
 
   def test_linguist_override_generated?
-    attr_commit = "e89bd3862b321c932b6c7064dc6ab24a2bbb03d1"
+    attr_commit = "1afde515160660fa368eba35ba37ac03cafc2074"
     linguist_repo(attr_commit).read_index
 
     rakefile = Linguist::LazyBlob.new(rugged_repository, attr_commit, "Rakefile")
