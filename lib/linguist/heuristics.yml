@@ -198,10 +198,6 @@ disambiguations:
     pattern: '^\s*#(declare|local|macro|while)\s'
   - language: ObjectScript
     pattern: '^(ROUTINE|%RO)'
-- extensions: ['.int', '.mac']
-  rules:
-  - language: ObjectScript
-    pattern: '^(ROUTINE|%RO)'
 - extensions: ['.l']
   rules:
   - language: Common Lisp
@@ -241,6 +237,10 @@ disambiguations:
     pattern: '^\s*%'
   - language: Limbo
     pattern: '^\w+\s*:\s*module\s*{'
+- extensions: ['.mac']
+  rules:
+  - language: ObjectScript
+    pattern: '^(ROUTINE|%RO)'
 - extensions: ['.md']
   rules:
   - language: Markdown
@@ -462,10 +462,6 @@ disambiguations:
     pattern: '^%(end|ctor|hook|group)\b'
   - language: Linker Script
     pattern: 'OUTPUT_ARCH\(|OUTPUT_FORMAT\(|SECTIONS'
-- extensions: ['.xml']
-  rules:
-  - language: ObjectScript
-    pattern: '<Export generator="(Cache|IRIS)" version="\d+"'
 - extensions: ['.yy']
   rules:
   - language: JSON

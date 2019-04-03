@@ -223,7 +223,6 @@ class TestHeuristics < Minitest::Test
   def test_inc_by_heuristics
     assert_heuristics({
       "PHP" => all_fixtures("PHP", "*.inc"),
-      "ObjectScript" => all_fixtures("ObjectScript", "*.inc"),
       "POV-Ray SDL" => all_fixtures("POV-Ray SDL", "*.inc")
     })
   end
@@ -262,6 +261,12 @@ class TestHeuristics < Minitest::Test
       "MATLAB" => all_fixtures("MATLAB", "create_ieee_paper_plots.m"),
       "Limbo" => all_fixtures("Limbo", "*.m"),
       nil => ambiguous
+    })
+  end
+
+  def test_mac_by_heuristics
+    assert_heuristics({
+      "ObjectScript" => all_fixtures("ObjectScript", "*.mac")
     })
   end
 
@@ -506,12 +511,6 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "Linker Script" => all_fixtures("Linker Script", "*.x"),
       "RPC" => all_fixtures("RPC", "*.x")
-    })
-  end
-
-  def test_xml_by_heuristics
-    assert_heuristics({
-      "ObjectScript" => all_fixtures("ObjectScript", "*.xml")
     })
   end
 
