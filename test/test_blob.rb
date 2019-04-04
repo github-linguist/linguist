@@ -253,6 +253,9 @@ class TestBlob < Minitest::Test
 
   def test_vendored
     assert !fixture_blob_memory("Data/README").vendored?
+    
+    # Go fixtures
+    assert sample_blob("Go/testdata/foo.yml").vendored?
   end
 
   def test_language
