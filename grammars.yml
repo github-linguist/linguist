@@ -121,6 +121,7 @@ vendor/grammars/SublimeClarion:
 - source.clarion
 vendor/grammars/SublimeEthereum:
 - source.solidity
+- source.vyper
 vendor/grammars/SublimeGDB/:
 - source.disasm
 - source.gdb
@@ -186,6 +187,8 @@ vendor/grammars/asp.tmbundle:
 vendor/grammars/assembly:
 - objdump.x86asm
 - source.x86asm
+vendor/grammars/atom-editorconfig:
+- source.editorconfig
 vendor/grammars/atom-firestore-grammar:
 - source.firestore
 vendor/grammars/atom-fsharp:
@@ -335,6 +338,7 @@ vendor/grammars/graphviz.tmbundle:
 vendor/grammars/groovy.tmbundle:
 - source.groovy
 vendor/grammars/haxe-TmLanguage:
+- documentation.markdown.injection.haxe
 - markdown.haxe.codeblock
 - markdown.hxml.codeblock
 - source.hx
@@ -424,6 +428,7 @@ vendor/grammars/language-etc:
 - source.man-conf
 - source.nanorc
 - source.opts
+- source.ssh-config
 vendor/grammars/language-fontforge:
 - source.afm
 - source.bdf
@@ -474,6 +479,8 @@ vendor/grammars/language-jolie:
 vendor/grammars/language-jsoniq:
 - source.jq
 - source.xq
+vendor/grammars/language-jsonnet:
+- source.jsonnet
 vendor/grammars/language-kotlin:
 - source.kotlin
 vendor/grammars/language-less:
@@ -482,6 +489,9 @@ vendor/grammars/language-m68k:
 - source.m68k
 vendor/grammars/language-maxscript:
 - source.maxscript
+vendor/grammars/language-mcfunction:
+- source.mcfunction
+- source.mcfunction-snapshot
 vendor/grammars/language-meson:
 - source.meson
 vendor/grammars/language-ncl:
@@ -522,6 +532,8 @@ vendor/grammars/language-roff:
 vendor/grammars/language-rpm-spec:
 - source.changelogs.rpm-spec
 - source.rpm-spec
+vendor/grammars/language-rtf:
+- text.rtf
 vendor/grammars/language-ruby:
 - source.ruby
 - source.ruby.gemfile

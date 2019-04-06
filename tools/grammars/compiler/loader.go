@@ -122,7 +122,7 @@ func isValidGrammar(path string, info os.FileInfo) bool {
 	case ".tmlanguage", ".yaml-tmlanguage":
 		return true
 	case ".cson", ".json":
-		return strings.HasSuffix(dir, "/grammars") || strings.HasSuffix(dir, "/syntaxes")
+		return strings.HasSuffix(dir, "/grammars") || strings.HasSuffix(dir, "/syntaxes") || GrammarsInNonStdPath[filepath.Base(dir)]
 	default:
 		return false
 	}
