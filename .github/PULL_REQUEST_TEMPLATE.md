@@ -1,4 +1,4 @@
-<!--- Briefly describe what you're changing in the pull request title. -->
+<!--- Briefly describe your changes in the field above. -->
 
 ## Description
 <!--- If necessary, go into depth of what this pull request is doing. -->
@@ -50,7 +50,7 @@
   <!-- This includes modifying the vendor, documentation, and generated lists. -->
   - [ ] I have added or updated the tests for the new or changed functionality.
 
-- [ ] **I am changing the color of a language**
+- [ ] **I am changing the color associated with a language**
   <!-- Please ensure you have gathered agreement from the wider language community _before_ opening this PR -->
   - [ ] I have obtained agreement from the wider language community on this color change.
     - [URL to public discussion]
