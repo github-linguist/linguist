@@ -63,8 +63,30 @@ task :check_grammars do
   output, status = Open3.capture2e("script/grammar-compiler", "compile", "-o", "linguist-grammars")
   errors_found = output[/the grammar library contains ([0-9]+) errors/, 1].to_i
   missing_grammars = output.scan(/Missing scope in repository: `([^`].+)` is listed in grammars.yml but cannot be found/)
-  fail "#{output}\n\nERROR: The following grammars appear to have gone missing:\n\n#{missing_grammars.join("\n")}\n\nPlease review the output above.\n\n" unless missing_grammars.empty?
-  fail "#{output}\n\nERROR: An unexpected number of errors have been found. Expected: #{expected_error_count}, Found: #{errors_found}.\nPlease review the output and adjust the rake task expected error count if the number has gone down.\n\n" unless errors_found == expected_error_count
+
+  unless missing_grammars.empty?
+    fail <<~MISSING
+      #{output}
+
+      ERROR: Could not find the following grammars:
+
+      #{missing_grammars.join("\n")}
+
+      Please review the output above.
+
+      MISSING
+  end
+
+  unless errors_found == expected_error_count
+    fail <<~ERRORS
+      #{output}
+
+      ERROR: An unexpected number of errors have been found. Expected: #{expected_error_count}, Found: #{errors_found}.
+
+      Please review the output and adjust the rake task expected error count if needed.
+
+      ERRORS
+  end
 end
 
 task :build_gem => :samples do
