@@ -1948,6 +1948,7 @@ HTML+Razor:
   - razor
   extensions:
   - ".cshtml"
+  - ".razor"
   ace_mode: razor
   codemirror_mode: htmlmixed
   codemirror_mime_type: text/html
@@ -2237,6 +2238,7 @@ JSON:
   - ".ice"
   - ".JSON-tmLanguage"
   - ".jsonl"
+  - ".mcmeta"
   - ".tfstate"
   - ".tfstate.backup"
   - ".topojson"
@@ -2423,6 +2425,15 @@ Jolie:
   ace_mode: text
   tm_scope: source.jolie
   language_id: 998078858
+Jsonnet:
+  color: "#0064bd"
+  type: programming
+  ace_mode: text
+  extensions:
+  - ".jsonnet"
+  - ".libsonnet"
+  tm_scope: source.jsonnet
+  language_id: 664885656
 Julia:
   type: programming
   extensions:
@@ -4216,6 +4227,13 @@ RenderScript:
   tm_scope: none
   ace_mode: text
   language_id: 323
+Rich Text Format:
+  type: markup
+  extensions:
+  - ".rtf"
+  tm_scope: text.rtf
+  ace_mode: text
+  language_id: 51601661
 Ring:
   type: programming
   color: "#2D54CB"

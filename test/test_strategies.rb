@@ -134,6 +134,7 @@ class TestStrategies < Minitest::Test
     assert_interpreter "ruby", "#!/bin/sh\n\n\nexec ruby $0 $@"
 
     assert_interpreter "sh", "#! /usr/bin/env A=003 B=149 C=150 D=xzd E=base64 F=tar G=gz H=head I=tail sh"
+    assert_interpreter "python", "#!/usr/bin/env foo=bar bar=foo python -cos=__import__(\"os\");"
   end
 
   def test_xml
