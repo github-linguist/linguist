@@ -135,6 +135,10 @@ class TestStrategies < Minitest::Test
 
     assert_interpreter "sh", "#! /usr/bin/env A=003 B=149 C=150 D=xzd E=base64 F=tar G=gz H=head I=tail sh"
     assert_interpreter "python", "#!/usr/bin/env foo=bar bar=foo python -cos=__import__(\"os\");"
+
+    assert_interpreter "JavaScript", "#!/usr/bin/env osascript -l JavaScript"
+    assert_interpreter "AppleScript", "#!/usr/bin/env osascript -l AppleScript"
+    assert_interpreter "osascript", "#!/usr/bin/env osascript"
   end
 
   def test_xml

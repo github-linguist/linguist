@@ -58,6 +58,12 @@ module Linguist
         script = $1
       end
 
+      # osascript can be called with one of two languages: JavaScript or AppleScript and defaults to AppleScript if not specified
+      if script == 'osascript'
+        s.scan_until(/\-l\s?/)
+        script = s.scan(/(Java|Apple)Script/) if s.matched?
+      end
+
       File.basename(script)
     end
   end
