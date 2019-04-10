@@ -11,6 +11,26 @@ By participating, you are expected to uphold this code.
 
 The majority of contributions won't need to touch any Ruby code at all.
 
+### Dependencies
+
+Linguist uses the [`charlock_holmes`](https://github.com/brianmario/charlock_holmes) character encoding detection library which in turn uses [ICU](http://site.icu-project.org/), and the libgit2 bindings for Ruby provided by [`rugged`](https://github.com/libgit2/rugged).
+[Bundler](https://bundler.io/) v1.10.0 or newer is required for installing the Ruby gem dependencies.
+[Docker](https://www.docker.com/) is also required when adding or updating grammars.
+These components have their own dependencies - `icu4c`, and `cmake` and `pkg-config` respectively - which you may need to install before you can install Linguist.
+
+For example, on macOS with [Homebrew](http://brew.sh/):
+```bash
+brew install cmake pkg-config icu4c
+brew cask install docker
+```
+
+On Ubuntu:
+```bash
+apt-get install cmake pkg-config libicu-dev docker-ce
+```
+
+The latest version of Bundler v1 can be installed with `gem install bundler -v "~>1.10"`.
+
 ## Getting started
 
 Before you can start contributing to Linguist, you'll need to set up your environment first.
@@ -34,24 +54,6 @@ To run Linguist from the cloned repository:
 
 ```bash
 bundle exec bin/github-linguist --breakdown
-```
-
-### Dependencies
-
-Linguist uses the [`charlock_holmes`](https://github.com/brianmario/charlock_holmes) character encoding detection library which in turn uses [ICU](http://site.icu-project.org/), and the libgit2 bindings for Ruby provided by [`rugged`](https://github.com/libgit2/rugged).
-[Docker](https://www.docker.com/) is also required when adding or updating grammars.
-These components have their own dependencies - `icu4c`, and `cmake` and `pkg-config` respectively - which you may need to install before you can install Linguist.
-
-For example, on macOS with [Homebrew](http://brew.sh/):
-
-```bash
-brew install cmake pkg-config icu4c docker
-```
-
-On Ubuntu:
-
-```bash
-apt-get install cmake pkg-config libicu-dev docker-ce
 ```
 
 ## Adding an extension to a language
@@ -213,10 +215,12 @@ If you are the current maintainer of this gem:
 1. Make sure your local dependencies are up to date: `script/bootstrap`
 1. If grammar submodules have not been updated recently, update them: `git submodule update --remote`.
    If any submodules are updated:
-     1. Update the license cache: `script/licensed`
-     1. Double check no problems found: `script/licensed status`
-     1. Verify and fix any problems identified
-     1. Commit all changes: `git commit -a`
+    1. update the `grammars.yml`: `script/grammar-compiler update -f`
+    1. update the license cache: `script/licensed`
+    1. double check no license problems found: `script/licensed status`
+    1. confirm the updated grammars still compile and no new errors have been introduced and none have gone missing: `bundle exec rake check_grammars`
+    1. verify and fix any problems identified in the two steps above
+    1. commit all changes: `git commit -a`
 1. Ensure that samples are updated: `bundle exec rake samples`
 1. Ensure that tests are green: `bundle exec rake test`
 1. Build a test gem `GEM_VERSION=$(git describe --tags 2>/dev/null | sed 's/-/./g' | sed 's/v//') bundle exec rake build_gem`
@@ -229,7 +233,7 @@ If you are the current maintainer of this gem:
 1. Build a local gem: `bundle exec rake build_gem`
 1. Merge github/linguist PR
 1. Tag and push: `git tag vx.xx.xx; git push --tags`
-1. Create a GitHub release with the pushed tag (https://github.com/github/linguist/releases/new)
+1. Create a GitHub release with the pushed tag (https://github.com/github/linguist/releases/new) and populate it with a list of the commits from `git log --pretty=format:"- %s" --reverse refs/tags/[OLD TAG]...refs/tags/[NEW TAG]` [like this](https://github.com/github/linguist/releases/tag/v7.2.0)
 1. Build a grammars tarball (`./script/build-grammars-tarball`) and attach it to the GitHub release
 1. Push to rubygems.org -- `gem push github-linguist-3.0.0.gem`
 
