@@ -456,7 +456,7 @@ named_patterns:
   cpp:
   - '^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>'
   - '^\s*template\s*<'
-  - '^[ \t]*try'
+  - '^[ \t]*(try|constexpr)'
   - '^[ \t]*catch\s*\('
   - '^[ \t]*(class|(using[ \t]+)?namespace)\s+\w+'
   - '^[ \t]*(private|public|protected):$'

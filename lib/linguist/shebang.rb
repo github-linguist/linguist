@@ -39,7 +39,7 @@ module Linguist
       # if /usr/bin/env type shebang then walk the string
       if script == 'env'
         s.scan(/\s+/)
-        s.scan(/.*=[^\s]+\s+/) # skip over variable arguments e.g. foo=bar
+        s.scan(/([^\s]+=[^\s]+\s+)*/) # skip over variable arguments e.g. foo=bar
         script = s.scan(/\S+/)
       end
 
