@@ -1,37 +1,13 @@
-<form on:submit="createHandler(event)">
-  <div>
-    <label for="slinky-title">Title</label>
-    <input
-      bind:value='title'
-      id="slinky-title"
-      name="title"
-      type="text"
-    />
-  </div>
-  <button type="submit">Add Now</button>
-  <button type="button" on:click="logState()">Log</button>
-</form>
-
 <script>
-  const defaultData = {
-    title: '',
-  }
+  let name = '';
 
-  export default {
-    data: () => defaultData,
-
-    methods: {
-      logState() {
-        console.log(this.get())
-      },
-
-      createHandler(event) {
-        event.preventDefault()
-        // parse, validate, fire, reset
-        const slinky = this.get()
-        this.fire('create', slinky)
-        this.set(defaultData)
-      }
-    },
-  }
+  $: console.log('The name is', name);
 </script>
+
+<input type="text" placeholder="Name" bind:value={name}>
+
+{#if name}
+  <h1>Hello, {name}!</h1>
+{:else}
+  <h3>Please enter your name.</h3>
+{/if}
