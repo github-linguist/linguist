@@ -378,6 +378,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **SystemVerilog:** [bitbucket:Clams/sublimesystemverilog](https://bitbucket.org/Clams/sublimesystemverilog)
 - **TLA:** [agentultra/TLAGrammar](https://github.com/agentultra/TLAGrammar)
 - **TOML:** [textmate/toml.tmbundle](https://github.com/textmate/toml.tmbundle)
+- **TSQL:** [beau-witter/language-tsql](https://github.com/beau-witter/language-tsql)
 - **TXL:** [MikeHoffert/Sublime-Text-TXL-syntax](https://github.com/MikeHoffert/Sublime-Text-TXL-syntax)
 - **Tcl:** [textmate/tcl.tmbundle](https://github.com/textmate/tcl.tmbundle)
 - **Tcsh:** [atom/language-shellscript](https://github.com/atom/language-shellscript)

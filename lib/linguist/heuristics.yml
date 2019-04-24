@@ -394,7 +394,7 @@ disambiguations:
   - language: TSQL
     and:
     - negative_pattern: '(?i:IDENTIFIED|NUMBER|VARCHAR2|REPEAT|UNTIL|IMMEDIATE)'
-    - pattern: '(?i:(GO)|(@@)|(CREATE PROCEDURE)|BEGIN( TRY| CATCH)|OUTPUT( INSERTED)|IF|ELSE|CURSOR|FETCH|DEALLOCATE|DECLARE)'
+    - pattern: '(?i:(GO)|(@@)|(CREATE PROCEDURE)|BEGIN( TRY| CATCH)|OUTPUT( INSERTED)|IF|ELSE|IIF|CHOOSE|CURSOR|FETCH|DEALLOCATE|DECLARE)'
   # Generic SQL
   - language: SQL
     negative_pattern: '(?i:begin|boolean|package|exception)'
