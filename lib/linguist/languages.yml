@@ -1948,6 +1948,7 @@ HTML+Razor:
   - razor
   extensions:
   - ".cshtml"
+  - ".razor"
   ace_mode: razor
   codemirror_mode: htmlmixed
   codemirror_mime_type: text/html
@@ -2237,6 +2238,7 @@ JSON:
   - ".ice"
   - ".JSON-tmLanguage"
   - ".jsonl"
+  - ".mcmeta"
   - ".tfstate"
   - ".tfstate.backup"
   - ".topojson"
@@ -5655,6 +5657,24 @@ Yacc:
   ace_mode: text
   color: "#4B6C4B"
   language_id: 409
+ZAP:
+  type: programming
+  color: "#0d665e"
+  extensions:
+  - ".zap"
+  - ".xzap"
+  tm_scope: source.zap
+  ace_mode: text
+  language_id: 952972794
+ZIL:
+  type: programming
+  color: "#dc75e5"
+  extensions:
+  - ".zil"
+  - ".mud"
+  tm_scope: source.zil
+  ace_mode: text
+  language_id: 973483626
 Zephir:
   type: programming
   color: "#118f9e"
