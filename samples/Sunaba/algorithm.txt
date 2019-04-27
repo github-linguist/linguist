@@ -1,0 +1,57 @@
+def sortAscending(startAddress, count) #TODO:ヒープソートがよかろう
+   i -> 1
+   while i < count #i番目を
+      t -> startAddress[i]
+      j -> i - 1
+      while (j >= 0) * (t < startAddress[j]) #移動すべきだけ移動する
+         startAddress[j + 1] -> startAddress[j]
+	 j -> j - 1
+      startAddress[j + 1] -> t
+      i -> i + 1
+
+def sortDescending(startAddress, count) #TODO:ヒープソートがよかろう
+   i -> 1
+   while i < count #i番目を
+      t -> startAddress[i]
+      j -> i - 1
+      while (j >= 0) * (t > startAddress[j]) #上のとここの不等号だけ違う
+         startAddress[j + 1] -> startAddress[j]
+	 j -> j - 1
+      startAddress[j + 1] -> t
+      i -> i + 1
+
+def binarySearchFromSortedAscending(startAddress, count, value)
+   out -> -1 #見つからない時
+   b -> 0
+   e -> count - 1
+   while b < e
+      m -> (b + e) / 2
+      c -> startAddress[m]
+      if value < c
+         e -> m - 1
+      if value > c
+         b -> m + 1
+      if value = c
+         out -> m
+         e -> b #これで終わりになる
+   if b < count
+      if startAddress[b] = value
+         out -> b
+
+def binarySearchFromSortedDescending(startAddress, count, value)
+   out -> -1 #見つからない時
+   b -> 0
+   e -> count - 1
+   while b < e
+      m -> (b + e) / 2
+      c -> startAddress[m]
+      if value > c #ここが上と逆
+         e -> m - 1
+      if value < c #ここが下と逆
+         b -> m + 1
+      if value = c
+         out -> m
+         e -> b #これで終わりになる
+   if b < count
+      if startAddress[b] = value
+         out -> b

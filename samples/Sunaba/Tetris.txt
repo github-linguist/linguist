@@ -1,0 +1,240 @@
+﻿load()
+time->0
+horitime->0
+downcount->20
+shape->2
+randomshape->2
+roll->0
+color->2
+x->5
+y->-2
+while 1
+  i->10 #direction backup
+  while i≥0
+    memory[i+11]->memory[i+10]
+    memory[i+31]->memory[i+30]
+    memory[i+51]->memory[i+50]
+    i->i-1
+  memory[10]->memory[50004] #up
+  memory[30]->memory[50006] #left
+  memory[50]->memory[50007] #right
+  color(color)
+  calculate(y,x,shape,roll)
+  square(y,x)
+  square(memory[3],memory[4])
+  square(memory[5],memory[6])
+  square(memory[7],memory[8])
+  memory[55000]->1
+  color(0)
+  square(y,x)
+  square(memory[3],memory[4])
+  square(memory[5],memory[6])
+  square(memory[7],memory[8])
+  time->time+1+((10*memory[50005])*(downcount>30))
+  downcount->downcount+1
+  if time>15 #count to fall
+    y->y+1
+    time->0
+    calculate(y,x,shape,roll)
+    if stop(y,x)
+      color(color)
+      stack(y-1,x,color)
+      stack(memory[3]-1,memory[4],color)
+      stack(memory[5]-1,memory[6],color)
+      stack(memory[7]-1,memory[8],color)
+      clean()
+      x->5
+      y->-2
+      roll->0
+      downcount->0
+      color->color+1
+      if color>7
+        color->2
+      shape->randomshape
+  horimove->((memory[51]=0)*memory[50])-((memory[31]=0)*memory[30])
+  horitime->horitime+1
+  if horitime>2
+    i->0
+    horileft->1
+    horiright->1
+    while i<10 #direction
+      horileft->memory[30+i]*horileft
+      horiright->memory[50+i]*horiright
+      i->i+1
+    horitime->0
+    horimove->horimove+horiright-horileft
+  x->x+horimove
+  calculate(y,x,shape,roll)
+  if stop(y,x)
+    x->x-horimove
+  if (memory[11]=0)*memory[10]
+    roll->roll+1
+    if roll>3
+      roll->0
+    calculate(y,x,shape,roll)
+    if stop(y,x)
+      roll->roll-1
+      if roll<0
+        roll->3
+  randomshape->randomshape+1
+  if randomshape>8
+    randomshape->2
+
+
+
+def clean()
+ i->0
+ while i<4
+  x->1
+  y->18
+  while y≥0
+    clean->1
+    while x<12
+      clean->clean*memory[100+(12*y)+x]
+      x->x+1
+    if clean
+      x->1
+      while x<11
+        cleany->y
+        while cleany≥0
+          color->memory[100+(12*(cleany-1))+x]
+          color(color)
+          stack(cleany,x,color)
+          color(0)
+          stack(cleany-1,x,0)
+          cleany->cleany-1
+        x->x+1
+    y->y-1
+    x->1
+  i->i+1
+    
+def stop(y,x)
+  out->(memory[100+(12*y)+x]+memory[100+(12*memory[3])+memory[4]]+memory[100+(12*memory[5])+memory[6]]+memory[100+(12*memory[7])+memory[8]])
+
+def stack(y,x,color)
+  memory[100+(12*y)+x]->color
+  square(y,x)
+
+def square(y,x)
+ if (y≥0)*(x≥0)
+  i->0 #out
+  j->0
+  while i<4
+    while j<4
+      memory[60001+(100*i)+j+(500*y)+(5*x)]->memory[1]
+      j->j+1
+    i->i+1
+    j->0
+  i->0 #conor
+  j->0
+  while i<4
+    while j<4
+      memory[60001+(100*i)+j+(500*y)+(5*x)]->memory[0]
+      j->j+3
+    i->i+3
+    j->0
+  i->1 #inner
+  j->1
+  while i<3
+    while j<3
+      memory[60001+(100*i)+j+(500*y)+(5*x)]->memory[0]
+      j->j+1
+    i->i+1
+    j->1
+
+def color(color)
+  if color=0 #black
+    memory[0]->151515
+    memory[1]->111111
+  if color=1 #frame
+    memory[0]->501717
+    memory[1]->400707
+  if color=2 #red
+    memory[0]->880000
+    memory[1]->660000
+  if color=3 #green
+    memory[0]->008800
+    memory[1]->006600
+  if color=4 #blue
+    memory[0]->000088
+    memory[1]->000066
+  if color=5 #light blue
+    memory[0]->008888
+    memory[1]->006666
+  if color=6 #pink
+    memory[0]->880088
+    memory[1]->660066
+  if color=7 #yellow
+    memory[0]->888800
+    memory[1]->666600
+
+def calculate(y,x,shape,roll)
+    memory[3]->memory[1000+(6*shape)]+y
+    memory[4]->memory[1001+(6*shape)]+x
+    memory[5]->memory[1002+(6*shape)]+y
+    memory[6]->memory[1003+(6*shape)]+x
+    memory[7]->memory[1004+(6*shape)]+y
+    memory[8]->memory[1005+(6*shape)]+x
+    if ((roll=1)+(roll=3))*(shape<8)
+      memory[3]->memory[1001+(6*shape)]+y
+      memory[4]->-memory[1000+(6*shape)]+x
+      memory[5]->memory[1003+(6*shape)]+y
+      memory[6]->-memory[1002+(6*shape)]+x
+      memory[7]->memory[1005+(6*shape)]+y
+      memory[8]->-memory[1004+(6*shape)]+x
+    if ((roll=2)+(roll=3))*(shape<5)
+      memory[3]->(-(memory[3]-y))+y
+      memory[4]->(-(memory[4]-x))+x
+      memory[5]->(-(memory[5]-y))+y
+      memory[6]->(-(memory[6]-x))+x
+      memory[7]->(-(memory[7]-y))+y
+      memory[8]->(-(memory[8]-x))+x
+
+def prepare(shape,y1,x1,y2,x2,y3,x3)
+  memory[1000+(6*shape)]->y1
+  memory[1001+(6*shape)]->x1
+  memory[1002+(6*shape)]->y2
+  memory[1003+(6*shape)]->x2
+  memory[1004+(6*shape)]->y3
+  memory[1005+(6*shape)]->x3
+
+def load()
+  memory[55001]->1
+  prepare(2,-1,-1,0,-1,0,1) #roll 4 times
+  prepare(3,-1,0,0,-1,0,1) #roll 4 times
+  prepare(4,-1,1,0,-1,0,1) #roll 4 times
+  prepare(5,0,-1,0,1,0,2) #roll 2 times
+  prepare(6,-1,0,0,-1,-1,1) #roll 2 times
+  prepare(7,0,-1,1,0,1,1) #roll 2 times
+  prepare(8,-1,0,-1,1,0,1) #roll 0 times
+  x->0 #line
+  y->0
+  while y<99
+    while x<59
+      memory[60001+(100*y)+x]->050505
+      x->x+1
+    y->y+1
+    x->0
+  y->0
+  x->0
+  color(0)
+  while y<19
+    while x<11
+      square(y,x)
+      x->x+1
+    y->y+1
+    x->1
+
+  x->0 #grid
+  y->0
+  color(1)
+  while y<19
+    while x<12
+      stack(y,x,2)
+      x->x+11
+    y->y+1
+    x->0
+  while x<12
+    stack(19,x,1)
+    x->x+1
+  memory[55000]->1
