@@ -428,6 +428,10 @@ disambiguations:
     pattern: '^\s*(import.+(from\s+|require\()[''"]react|\/\/\/\s*<reference\s)'
   - language: XML
     pattern: '(?i:^\s*<\?xml\s+version)'
+- extensions: ['.txt']
+  rules:
+  - language: Sunaba
+    pattern: '(memory\[[^\]]+\]\s*->)|(\S+->\smemory\[[^\]]+\])'
 - extensions: ['.vba']
   rules:
   - language: Vim script
