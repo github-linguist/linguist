@@ -4916,6 +4916,16 @@ TOML:
   codemirror_mode: toml
   codemirror_mime_type: text/x-toml
   language_id: 365
+TSX:
+  type: programming
+  group: TypeScript
+  extensions:
+  - ".tsx"
+  tm_scope: source.tsx
+  ace_mode: javascript
+  codemirror_mode: jsx
+  codemirror_mime_type: text/jsx
+  language_id: 94901924
 TXL:
   type: programming
   extensions:
@@ -5093,7 +5103,6 @@ TypeScript:
   - node
   extensions:
   - ".ts"
-  - ".tsx"
   tm_scope: source.ts
   ace_mode: typescript
   codemirror_mode: javascript
