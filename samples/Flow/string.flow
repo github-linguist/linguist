@@ -1,0 +1,1263 @@
+// Obtained from https://github.com/area9innovation/flow9/blob/1a3fb95a1fe0c09d71738064dd6eafda10c51af3/lib/string.flow
+// Licensed under MIT per https://github.com/area9innovation/flow9/blob/1a3fb95a1fe0c09d71738064dd6eafda10c51af3/LICENSE.txt.
+
+// © Copyright 2011 Area9 Technologies.
+
+import runtime;
+import ds/tuples;
+
+
+export {
+	// The length of a string. Considering the string as UCS-2
+	native strlen : (string) -> int = Native.strlen;
+
+
+	// strIndexOf(text, substring) = index of substring in text, -1 if not found. Considering the string as UCS-2.
+	// returns 0 if substring is "" on cpp and js
+	native strIndexOf : (string, string) -> int = Native.strIndexOf;
+
+	// index of substring in a sub-range of str specified as [start, end)
+	strRangeIndexOf : (str : string, substr : string, start : int, end : int) -> int;
+
+	// Find the last occurrence of a given substring. Returns -1 if not found. Considering the string as UCS-2
+	strLastIndexOf : (string, string) -> int;
+
+	// Maybe<> version of strIndexOf.
+	strIndexOfM : (string, string) -> Maybe<int>;
+
+	// returns all positions of substr in str (for empty substring we returns empty array)
+	multipleStrIndexOf(str : string, substr : string) -> [int];
+	// version of multipleStrIndexOf that allows substring superposition (for example
+	// multipleSuperpositionStrIndexOf("lololol", "lol", false) == [0, 4], but
+	// multipleSuperpositionStrIndexOf("lololol", "lol", true) == [0, 2, 4] ).
+	multipleSuperpositionStrIndexOf(str : string, substr : string, allowSuperposition : bool) -> [int];
+
+	// Whether string contains a substring
+	strContains: (str: string, substr: string) -> bool;
+
+	// Whether the string contains the given substring at a given index
+	strContainsAt(str : string, index : int, substr : string) -> bool;
+
+	// count of substr in text, 0 if not found. Considering the string as UCS-2.
+	strCountOf : (text : string, substr : string) -> int;
+
+	// Tells if the string s starts with the string start
+	startsWith : (s : string, start : string) -> bool;
+	// Tells if the string s ends with the string end
+	endsWith : (s : string, end : string) -> bool;
+
+	// Is the first character in this string one of these?
+	strIsFirst(s : string, charsToFind : string) -> bool;
+
+	// Find one of these chars. -1 if none is found. Considering the string as UCS-2
+	strFindFirstOf(s : string, charsToFind : string) -> int;
+
+	// Finds first occurrence of any string given. Returns the position and the index of the found string.
+	// Ignores empty strings in stringsToFind array
+	strFindFirstOfStrings(s : string, stringsToFind : [string]) -> Maybe<Pair<int, int>>;
+
+	// Maybe<> version of strLastIndexOf
+	strLastIndexOfM : (string, string) -> Maybe<int>;
+
+
+	// Extract a substring. Considering the string as UCS-2
+	// do not use negative values here (because of some logical exceptions
+	// for Flash target, see flow/flowunit/lib/test_string.flow, UnitTest "substring")
+	native substring : (s : string, start : int, length : int) -> string = Native.substring;
+
+	// Smart version of substring
+	// `length` = 0 means to the end of `s`, negative `start` or `length` mean relative distance from the end of `s`
+	// Examples:
+	//      strsubsmart("filename.ext", -3, 0) == "ext"
+	//      strsubsmart("filename.ext", 0, -4) == "filename"
+	//      strsubsmart("Error: Access denied!", 7, -1) == "Access denied"
+	strsubsmart : (s : string, start : int, length : int) -> string;
+
+	// Take up to the given point. Considering the string as UCS-2
+	strLeft : (s : string, index : int) -> string;
+
+	// Take from the given index until the end of the string. Considering the string as UCS-2
+	strRight : (s : string, index : int) -> string;
+
+	// Substring specified as [start, end)
+	strSubRange : (s : string, start : int, end : int) -> string;
+
+	strInsert(destString : string, insertedString : string, insertPos : int) -> string;
+
+	strRemove(s : string, start : int, len : int) -> string;
+
+	// Check also unicodecharacters.flow
+	native toLowerCase : (string) -> string = Native.toLowerCase;
+	native toUpperCase : (string) -> string = Native.toUpperCase;
+
+	// Capitalization of the first word, and all other words, except for closed-class words
+	// (see http://en.wikipedia.org/wiki/Letter_case#Headings_and_publication_titles)
+	toCapitalization(s : string) -> string;
+
+
+	// replaces all occurrences of substring
+	strReplace : (s : string, old : string, new : string) -> string;
+
+	// strReplaces("abc", ["a","1","b","2","c","4"]) == "124"
+	// expected result: chain replace. strReplaces("q1e", ["q", "1", "1", "2"]) == "22e"
+	strReplaces : (s : string, oldnew : [string]) -> string;
+
+	// replaces substring if character before and character after satisfy given criteria.
+	// "" for character before and character after means start and end of string.
+	// replaces all occurrences.
+	strReplaceCustom : (s : string, old : string, new : string, charBeforeFn : Maybe<(string)->bool>, charAfterFn : Maybe<(string)->bool>) -> string;
+
+	// call matchFn for each match, do replaces when function returns Some.
+	// "matchStart" is match position in original str.
+	// "matchEnd" is match start + strlen(substr).
+	strReplaceCustom2(str : string, substr : string, matchFn : (matchStart : int, matchEnd : int) -> Maybe<string>) -> string;
+
+	// Substitutes strings from array instead of parameters given in main string: formatString("The %1 was %2", [ "man", "tired"])
+	formatString(s : string, p : [string]) -> string;
+
+
+	// Get the character at index. Considering the string as UCS-2
+	getCharAt : (string, int) -> string;
+
+	// Convert a string to an array of character codes in UTF-8 format
+	native string2utf8 : (s : string) -> [int] = Native.string2utf8;
+
+	// Convert a string to an array of character codes in UCS-2 format
+	native s2a : (string) -> [int] = Native.s2a;
+
+	// Convert a UCS-2 unicode character code to a string
+	native fromCharCode : (int) -> string = Native.fromCharCode;
+
+	// Considering the string as UCS-2, get the unicode character code at index i (starting from 0)
+	native getCharCodeAt : (s : string, i : int) -> int = Native.getCharCodeAt;
+
+
+	// Is this a single digit string?
+	isDigit : (string) -> bool;
+
+	// Returns true if string is not empty and consists of digits only.
+	isDigits(s : string) -> bool;
+
+	// Is this string could be properly converted to the double
+	isDouble(s : string) -> bool;
+
+	// Is this a single hex letter string?
+	isHexLetter : (string) -> bool;
+	//Is this a single hex digit string?
+	isHexDigit : (string) -> bool;
+
+	// Is this a single letter string?
+	// Knows latin letters only! Consider using isLetterUnicode from unicodecharacters.flow
+	isLetter : (string) -> bool;
+	isUpperLetter : (string) -> bool;
+	isLowerLetter : (string) -> bool;
+
+	// Checks whether a string has at least one letter.
+	// Knows latin letters only! Consider using containsLettersUnicode from unicodecharacters.flow
+	containsLetters(s : string) -> bool;
+
+	// Is this entire string different from whitespace?
+	isNotSpace(s : string) -> bool {trim2(s, " \n\t") != ""}
+
+	// Does the string contain any line break symbol?
+	isMultiline(s : string) -> bool {strIndexOf(s, "\n") != -1}
+
+
+	// Convert an integer to a string
+	i2s : (int) -> string;
+
+	// Convert a double to a string
+	d2s : (double) -> string;
+
+	// Converts string to bool
+	s2b : (string) -> bool;
+
+	// array of anything to string
+	a2s2 : (src : [?], delimiter : string, fn : (elem : ?) -> string) -> string;
+
+	// string to array of anything
+	s2a2 : (src : string, delimiter : string, fn : (elem : string) -> ?) -> [?];
+
+	// Format an int as hex (pretending it is unsigned)
+	formatHex(d : int) -> string;
+
+	// Parses binary number (a string of 1 and 0) to int
+	parseBin(bin : string) -> int;
+
+	// Parse a hex value in a string to an int
+	parseHex(s : string) -> int;
+
+	// Format an int as a 6-digit hex string usable in HTML and CSS
+	formatColor(d : int) -> string;
+
+	// Numbering stuff
+	fromDigit(c : string) -> int;
+
+
+	// Pad the string s by appending c at its left until it reach l characters
+	lpad(s : string, c : string, l : int) -> string;
+
+	// Pad the string s by appending c at its right until it reach l characters
+	rpad(s : string, c : string, l : int) -> string;
+
+
+	// Removes spaces at the beginning and the end of the string s
+	trim(s : string) -> string;
+
+	// Removes spaces at the left of the string s
+	ltrim(s : string) -> string;
+
+	// Removes spaces at the right of the string s
+	rtrim(s : string) -> string;
+
+	// Removes characters at the beginning and the end of the string s
+	trim2(s : string, ugly : string) -> string;
+
+	// Removes characters at the left of the string s
+	ltrim2(s : string, ugly : string) -> string;
+
+	// Removes characters at the right of the string s
+	rtrim2(s : string, ugly : string) -> string;
+
+
+	// Split a string at the given separator. If the string starts or ends with the separator
+	// (or multiple separator occur after each other), empty strings result.
+	// has issues on the edges: strSplit("aba", "a") -> ["", "b", ""] instead of ["b"].
+	strSplit(a : string, sep : string) -> [string];
+	strSplitLeave(s : string, sep : string) -> [string]; // separators are included in resulting array, no issues from strSplit
+
+	// separators in some sub-pieces are ignored.
+	// updateContext takes one char at once.
+	strSplitContextFilter(a : string, sep : string, emptyEdges : bool, updateContext : (string) -> bool) -> [string];
+
+	// Split a string at the given separator, and call the given function with each piece.
+	strSplitIterate(a : string, sep : string, fn : (string) -> void) -> void;
+
+	// Split a string at the given separator, call the given function with each piece, deferr() after each chunkSize element and call onFinish after last element.
+	strSplitIterateDeferred(a : string, sep : string, fn : (string) -> void, chunkSize : int, onFinish : () -> void) -> void;
+
+	// Splits string by all of separators, leaving them in resulting array
+	strSplit2(s : string, separators : [string]) -> [string];
+
+	// Splits string by all of separators, don't leaving them in resulting array
+	strSplit2WithoutLeave(s : string, separators : [string]) -> [string];
+
+	// Breaks text into lines with maximum length of maxWidth
+	strWordWrap(s : string, maxWidth : int, separators : [string]) -> [string];
+
+	// Finds the first sep, and returns whatever comes before. Returns def if the sep is not found
+	takeBefore(str : string, sep : string, def : string) -> string;
+
+	// Finds last occurance of sep, and returns whatever comes before. Returns def if the sep is not found
+	takeBeforeLast(str : string, sep : string, def : string) -> string;
+
+	// Finds the sep, and returns whatever comes after. Returns def if the sep is not found
+	takeAfter(str : string, sep : string, def : string) -> string;
+
+	// Finds last occurance of sep, and returns whatever comes after. Returns def if the sep is not found
+	takeAfterLast(str : string, sep : string, def : string) -> string;
+
+	// Return text between start and stop separators (only first)
+	takeBetween(str : string, start : string, stop : string, def : string) -> string;
+
+	// Splits the string at the next occurrence of the separator.
+	//   strSplitNext("a,b,c", ",") -> Pair("a", "b,c")
+	//   strSplitNext("abc", ",") -> Pair("abc", "")
+	//   strSplitNext(",b,c", ",") -> Pair("", "b,c")
+	//   strSplitNext("a:b::c::d", "::") -> Pair("a:b", "c::d")
+	strSplitNext(str : string, sep : string) -> Pair<string, string>;
+
+	// concats array of strings
+	concatStrings(strings : [string]) -> string;
+
+	// Glues strings from array interleaving with separator, also known as string join
+	strGlue(arr: [string], sep: string) -> string;
+
+
+	/// Folds over the character codes of the left-to-right character sequence in s.
+	stringFold : (s : string, a : ?, f : (a2 : ?, c : int) -> ?) -> ?;
+	stringFoldi : (s : string, a : ?, f : (i : int, a2 : ?, c : int) -> ?) -> ?;
+
+	// Reverses a string
+	reverse(s : string) -> string;
+
+
+	// For marking text for speech.
+	_s(s : string) -> string;
+
+
+	// shortens the string to given length appending ... at the end
+	ellipsis: (string, int) -> string;
+
+	// Turn long word into string with hyphens
+	addHyphensIntoWord(input : string, maxlngth : int) -> string;
+
+
+	// Search for the specified paired substrings in source string. TODO: Move somewhere else.
+	findMatchingPairM : (string, string, string) -> Maybe<Pair<int, int>>;
+
+	// Search for matching bracket.  TODO: Move somewhere else.
+	findMatchingBracketM : (src : string, openBracket : string, closeBracket : string) -> Maybe<Pair<int, int>>;
+
+	// Very specific function to support optional arguments lists with Natural Math in Wiki.
+	// \case{$a}[For 0][For 1][Interval - `(0; 5]`]
+	// ignoredBlocksBorder = "`"
+	//  TODO: Move somewhere else.
+	findMatchingBracketM2 : (src : string, openBracket : string, closeBracket : string, ignoredBlocksBorder : string) -> Maybe<Pair<int, int>>;
+
+	// Search for the specified paired substrings with respect to nested pairs of otherTags and closeTag
+	// in source string. Not real parser but better than findMatchingPairM
+	//  TODO: Move somewhere else.
+	findClosingTagM : (s : string, openTag : string, closeTag : string, otherTagsWithSameCloseTag : [string]) -> Maybe<Pair<int, int>>;
+
+
+	// Timestamp formatting. Result has 99:99:99 format. TODO: Move somewhere else
+	time2s : (double) -> string;
+
+	// get extension by URL. TODO: Move somewhere else
+	getUrlExtension(url : string) -> string;
+
+	// Fix a string with symbols like Å and ø, which can incorrectly proceed by getUrlParameter
+	stringEncodeFix(input : string) -> string;
+
+	// Filter to only letters
+	toAscii(input : string) -> string;
+
+	// Leaves string parameters "as is", converts everything else using toString
+	toStringNoExtraQuotes(v: flow) -> string;
+
+	// returns s repeated cnt times
+	strRepeat(s : string, cnt : int) -> string;
+}
+
+_s(s) { s }
+
+strsubsmart(s : string, start : int, len : int) -> string {
+	if (start >= 0 && len > 0) {
+		substring(s, start, len)
+	} else {
+		slen = strlen(s);
+		trueStart = if (start >= 0) start else { ss = slen + start; if (ss >= 0) ss else 0; };
+		trueLength = if (len > 0) len else slen + len - trueStart;
+
+		substring(s, trueStart, trueLength)
+	}
+}
+
+startsWith(s, start) {
+	sl = strlen(start);
+	if (sl > strlen(s)) {
+		false;
+	} else {
+		substring(s, 0, sl) == start;
+	}
+}
+
+endsWith(s, end) {
+	sl = strlen(s);
+	el = strlen(end);
+	if (el > sl) {
+		false;
+	} else {
+		substring(s, sl - el, el) == end;
+	}
+}
+
+// Implemented natively by targets where substring actually copies characters & cpp
+native strRangeIndexOf : (string, string, int, int) -> int = Native.strRangeIndexOf;
+
+strRangeIndexOf(str, substr, start, end) {
+	rv = strIndexOf(substring(str, start, end-start), substr);
+	if (rv < 0) rv else start+rv;
+}
+
+strLastIndexOf(s, p) {
+	i = strIndexOf(s, p);
+	if (i == -1) {
+		-1;
+	} else {
+		l = strlen(s);
+		pl = strlen(p);
+		if (pl == 0) {
+			0;
+		} else {
+			// TODO: We could skip until i and call ourselves recursively
+			f = countUntil(0, l - pl + 1, \i2 -> {
+				substring(s, l - pl - i2, pl) == p;
+			});
+			l - pl - f;
+		}
+	}
+}
+
+multipleSuperpositionStrIndexOf(str : string, substr : string, allowSuperposition : bool) -> [int] {
+	if (substr == "") { // main part do not support empty subsrt
+		[]
+	} else {
+		result = ref [];
+		subsrtLenght = strlen(substr);
+		step = if (allowSuperposition && strlen(str) > subsrtLenght) {
+			firstCharCode = getCharCodeAt(substr, 0);
+			stepM = stringFoldi(substr, None(), \i, acc, c -> {
+				// i == 0 is trivial case with zero gap, so we ignore it
+				if (isNone(acc) && c == firstCharCode && i > 0 && startsWith(substr, substring(substr, i, subsrtLenght - i))) Some(i) else acc
+			});
+			either(stepM, subsrtLenght);
+		} else subsrtLenght;
+		for(0, \i -> i < strlen(str), \i -> {
+			pos = strRangeIndexOf(str, substr, i, strlen(str));
+			if (pos < 0) {
+				2147483647 // intMax // break loop
+			} else {
+				refArrayPush(result, pos);
+				pos + step
+			}
+		});
+		^result
+	}
+}
+
+multipleStrIndexOf(str : string, substr : string) -> [int] {
+	multipleSuperpositionStrIndexOf(str, substr, false)
+}
+
+strCountOf(text : string, substr : string) -> int {
+	if (strlen(substr) == 0) 0
+	else strCountOfHelper(text, substr, 0, 0)
+}
+
+// Don't use this directly
+strCountOfHelper(text : string, substr : string, index : int, count : int) -> int {
+	i = strRangeIndexOf(text, substr, index, strlen(text));
+	if (i == -1) {
+		count
+	} else {
+		strCountOfHelper(text, substr, i + strlen(substr), count + 1)
+	}
+}
+
+native strReplace : (string, string, string) -> string = Native.strReplace;
+strReplace(s : string, old : string, new : string) -> string {
+	if (old == "") s
+	else if (strlen(s) > 500) list2string(doStrReplace(s, 0, old, new, makeList()))
+	else doStrReplace2("", s, old, new);
+}
+
+doStrReplace(s : string, i : int, old : string, new : string, acc : List<string>) -> List<string> {
+	n = strlen(s);
+	if (i < n) {
+		hit = strRangeIndexOf(s, old, i, n);
+		if (hit >= 0) {
+			before = substring(s, i, hit - i);
+			nacc = Cons(new, Cons(before, acc));
+			doStrReplace(s, hit + strlen(old), old, new, nacc)
+		} else Cons(strRight(s, i), acc);
+	} else acc;
+}
+
+doStrReplace2(prefix : string, suffix : string, old : string, new : string) -> string {
+	i = strIndexOf(suffix, old);
+	if (i >= 0) {
+		l = strlen(suffix);
+		oldLen = strlen(old);
+		doStrReplace2(prefix + substring(suffix, 0, i) + new, substring(suffix, i + oldLen, l - i - oldLen), old, new);
+	} else {
+		prefix + suffix
+	}
+}
+
+strReplaces(s, oldnew) {
+	n = length(oldnew);
+	if (n < 2) s else strReplaces(strReplace(s, oldnew[0], oldnew[1]), subrange(oldnew, 2, n - 2));
+}
+
+strReplaceCustomRec(prefix : string, suffix : string, old : string, new : string, charBeforeFn : Maybe<(string) -> bool>, charAfterFn : Maybe<(string) -> bool>) -> string {
+	if (old == "") {
+		prefix + suffix
+	} else {
+		// assuming prefix is part with replacement done
+		i = strIndexOf(suffix, old);
+		if (i >= 0) {
+			oldLen = strlen(old);
+			getCharBefore = \ -> {
+				if (i == 0) strsubsmart(prefix, -1, 0)
+				else substring(suffix, i-1, 1);
+			}
+
+			isCharBeforeGood = \ -> eitherMap(charBeforeFn, \fn -> fn(getCharBefore()), true);
+			ischarAfterGood = \ ->  eitherMap(charAfterFn, \fn -> fn(substring(suffix, i + oldLen, 1)), true);
+
+			l = strlen(suffix);
+			if (isCharBeforeGood() && ischarAfterGood()) {
+				// do replace and continue search
+				strReplaceCustomRec(prefix + substring(suffix, 0, i) + new, substring(suffix, i + oldLen, l - i - oldLen), old, new, charBeforeFn, charAfterFn);
+			} else {
+				// continue search
+				if (i + 1 < l)
+					strReplaceCustomRec(prefix + substring(suffix, 0, i + 1), substring(suffix, i + 1, l - (i + 1)), old, new, charBeforeFn, charAfterFn)
+				else
+					prefix + suffix  // end of string reached, stopping
+			}
+		} else {
+			prefix + suffix // no more matches, stopping
+		}
+	}
+}
+
+strReplaceCustom(s, old, new, charBeforeFn, charAfterFn) {
+	strReplaceCustomRec("", s, old, new, charBeforeFn, charAfterFn);
+}
+
+
+strReplaceCustom2Rec(str : string, pos : int, substr : string, matchFn : (int, int) -> Maybe<string>, resultAcc : List<string>) -> List<string>{
+	slen = strlen(str);
+	if (pos >= slen)
+		// end of str reached
+		resultAcc
+	else {
+		i = strRangeIndexOf(str, substr, pos, slen);
+		if (i < 0) {
+			// no more matches
+			Cons(substring(str, pos, slen - pos), resultAcc)
+		} else {
+			substrLen = strlen(substr);
+			maybeReplacement = matchFn(i, i + substrLen);
+			switch (maybeReplacement : Maybe<string>) {
+				Some(replacement): {
+					// do replace and continue search
+					newResult = Cons(substring(str, pos, i-pos) + replacement, resultAcc);
+					strReplaceCustom2Rec(str, i + substrLen, substr, matchFn, newResult)
+				}
+				None(): {
+					// continue search starting from position i + 1
+					if (i + 1 < slen) {
+						newResult = Cons(substring(str, pos, i + 1 - pos), resultAcc);
+						strReplaceCustom2Rec(str, i + 1, substr, matchFn, newResult)
+					} else {
+						resultAcc
+					}
+				}
+			}
+		}
+	}
+}
+
+strReplaceCustom2(str : string, substr : string, matchFn : (int, int) -> Maybe<string>) -> string {
+	if (substr == "")  {
+		fail0("invalid arguments to strReplaceCustom2()");
+	} else {
+		strReplaceCustom2Rec(str, 0, substr, matchFn, makeList())
+		|> list2string
+	}
+}
+
+
+getCharAt(s, n) {
+	substring(s, n, 1)
+}
+
+isDigits(s) {
+	isDigits0(s, 0, strlen(s))
+}
+
+isDigits0(s : string, index : int, len : int) -> bool {
+	if (index < len) isDigit(getCharAt(s, index)) && isDigits0(s, index+1, len) else len > 0
+}
+
+isDigit(s) {
+	strlen(s) == 1 && (s >= "0" && s <= "9")
+}
+
+isDouble(s0 : string) -> bool {
+	s = ltrim2(trim(s0), "-");
+	arr = strSplit(s, ".");
+	strlen(s) > 0 && length(arr) < 3 && all(map(arr, \el -> isDigits(el)));
+}
+
+isHexLetter(scs) {
+	s = toUpperCase(scs);
+	("A" <= s && s <= "F")
+}
+
+isHexDigit(scs) {
+	isDigit(scs) || isHexLetter(scs);
+}
+
+isUpperLetter(s) { strlen(s) == 1 && s >= "A" && s <= "Z" }
+isLowerLetter(s) { strlen(s) == 1 && s >= "a" && s <= "z" }
+isLetter(s) { strlen(s) == 1 &&	((s >= "a" && s <= "z") || (s >= "A" && s <= "Z")) }
+
+containsLetters(s : string) -> bool {
+	len = strlen(s);
+	countUntil(0, len, \i -> isLetter(getCharAt(s, i))) != len
+}
+
+
+i2s(i) { cast(i : int -> string); }
+
+d2s(d) { cast(d : double -> string); }
+
+s2b(s) { toLowerCase(s) == "true" || s == "1" }
+
+lpad(s, c, l) {
+	if (strlen(s) < l) {
+		c + lpad(s, c, l - 1);
+	} else {
+		s;
+	}
+}
+
+rpad(s, c, l) {
+	if (strlen(s) < l) {
+		rpad(s, c, l - 1) + c;
+	} else {
+		s;
+	}
+}
+
+trim(s) {
+	rtrim(ltrim(s));
+}
+
+ltrim(s) {
+	l = strlen(s);
+	if (l == 0) {
+		s;
+	} else {
+		first = getCharCodeAt(s, 0);
+		if (first == 32) {
+			ltrim(substring(s, 1, l - 1));
+		} else {
+			s
+		}
+	}
+}
+
+rtrim(s) {
+	l = strlen(s);
+	if (l == 0) {
+		s;
+	} else {
+		last = getCharCodeAt(s, l - 1);
+		if (last == 32) {
+			rtrim(substring(s, 0, l - 1));
+		} else {
+			s;
+		}
+	}
+}
+
+trim2(s, ugly) {
+	rtrim2(ltrim2(s, ugly), ugly);
+}
+
+//please note: it trims from 's' part of 'ugly': e.g. ltrim2("abced", "abght") returns "ced"
+ltrim2(s, ugly) {
+	if (ugly == "") s
+	else {
+		l = strlen(s);
+		e = countUntil(0, l, \i -> {
+			strIndexOf(ugly, getCharAt(s, i)) == -1;
+		});
+		if (e == 0) s
+		else strRight(s, e);
+	}
+}
+
+rtrim2(s, ugly) {
+	l = strlen(s);
+	e = countUntil(0, l, \i -> {
+		c = getCharAt(s, l - (i + 1));
+		strIndexOf(ugly, c) == -1;
+	});
+	strLeft(s, l - e);
+}
+
+// Format this 32 bit integer as if it was unsigned
+formatHex(d) {
+	if (d < 0) {
+		// We exploit 2-complement addition is the same for both signed and unsigned addition
+		b31 = 0x80000000 + d;
+		formatHex(8 + b31 / 0x10000000) + lpad(formatHex(b31 % 0x10000000), "0", 7);
+	} else {
+		if (d < 16) {
+			if (d < 10) {
+				i2s(d);
+			} else {
+				[ "A", "B", "C", "D", "E", "F" ] [ d - 10];
+			}
+		} else {
+			formatHex(d / 16) + formatHex(d % 16);
+		}
+	}
+}
+
+parseBin(bin : string) -> int {
+	stringFold(bin, 0, \acc, code -> {
+		acc * 2 + (if (code == 49/*1 in ascii*/) 1 else 0);
+	});
+}
+
+parseHex(s : string) -> int {
+	stringFold(s, 0, \acc, code -> {
+		subtract = \offset -> acc * 16 + (code - offset);
+		if (48 <= code && code <= 57) {
+			subtract(48);
+		} else if (65 <= code && code <= 70) { // A-F
+			subtract(55);
+		} else if (97 <= code && code <=102) { // a-f
+			subtract(87);
+		} else {
+			acc;
+		}
+	});
+}
+
+formatColor(d) {
+	lpad(formatHex(d), "0", 6);
+}
+
+fromDigit(c) {
+	elemIndex(map(enumFromTo(0, 9), i2s), c, -1)
+}
+
+doStrSplit(s: string, sep: string, start : int, acc: List<string>) -> List<string> {
+	l = strlen(s);
+	i = strRangeIndexOf(s, sep, start, l);
+	if (i < 0) {
+		Cons(substring(s, start, l), acc);
+	} else {
+			part = substring(s, start, i-start);
+			sepLen = strlen(sep);
+			doStrSplit(s, sep, i + sepLen, Cons(part, acc));
+	}
+}
+
+
+strSplit(s : string, sep : string) {
+	if (sep == "") [s]
+	else list2array(doStrSplit(s, sep, 0, makeList()));
+}
+
+strSplitContextFilter(s : string, sep : string, emptyEdges : bool, updateContext : (string) -> bool) -> [string] {
+	l = strlen(s);
+	sepL = strlen(sep);
+
+	acc = ref [];
+	curr = ref "";
+	currL = ref 0;
+
+	updateAcc = \ -> {
+		if (^currL > 0 || emptyEdges) {
+			acc := arrayPush(^acc, ^curr);
+			curr := "";
+			currL := 0;
+		}
+	}
+	fori(0, l - 1, \i -> {
+		c = getCharAt(s, i);
+		outsideSpecialPiece = updateContext(c);
+		curr := ^curr + c;
+		currL := ^currL + 1;
+		if (^currL >= sepL && outsideSpecialPiece && strRight(^curr, ^currL - sepL) == sep) {
+			curr := strLeft(^curr, ^currL - sepL);
+			currL := ^currL - sepL;
+			updateAcc()
+		}
+	});
+	updateAcc();
+	^acc
+}
+
+strSplitIterate(s : string, sep : string, fn : (string) -> void) {
+	i = strIndexOf(s, sep);
+	if (i >= 0) {
+		part = substring(s, 0, i);
+		l = strlen(s);
+		l1 = strlen(sep);
+		fn(part);
+		if (i < l) {
+			strSplitIterate(substring(s, i+l1, l-i-l1), sep, fn);
+		}
+	} else {
+		fn(s);
+	}
+}
+
+strSplitIterateDeferredStep(s : string, sep : string, fn : (string) -> void, chunkSize : int, current : int, onFinish : () -> void) {
+	i = strIndexOf(s, sep);
+	if (i >= 0) {
+		part = substring(s, 0, i);
+		l = strlen(s);
+		l1 = strlen(sep);
+		fn(part);
+		if (i < l) {
+			if (current < chunkSize)
+				strSplitIterateDeferredStep(substring(s, i+l1, l-i-l1), sep, fn, chunkSize, current+1, onFinish)
+			else
+				deferred(\ -> strSplitIterateDeferredStep(substring(s, i+l1, l-i-l1), sep, fn, chunkSize, 0, onFinish))
+		} else
+			onFinish()
+	} else {
+		fn(s);
+		onFinish();
+	}
+}
+
+strSplitIterateDeferred(s : string, sep : string, fn : (string) -> void, chunkSize : int, onFinish : () -> void) {
+	strSplitIterateDeferredStep(s, sep, fn, chunkSize, 0, onFinish);
+}
+
+doStrSplit2(s : string, sep : string, acc : [string], keepSeparator : bool) -> [string] {
+	l = strlen(s);
+	i = strIndexOf(s, sep);
+	if (i < 0) {
+		if (l > 0) arrayPush(acc, s) else acc;
+	} else {
+		part = concat(
+			if (i > 0) [substring(s, 0, i)] else [],
+			if (keepSeparator) [sep] else []
+		);
+		if (i < l) {
+			sepLen = strlen(sep);
+			doStrSplit2(substring(s, i + sepLen, l - i - sepLen), sep, concat(acc, part), keepSeparator);
+		} else {
+			concat(acc, part);
+		}
+	}
+}
+
+strSplitLeave(s : string, sep : string) {
+	doStrSplit2(s, sep, [], true);
+}
+
+// splits string by all of separators, don't leaving them in resulting array
+strSplit2WithoutLeave(s : string, separators : [string]) -> [string] {
+	fold(separators, [s], \stringParts, sep ->
+		fold(stringParts, [], \acc, stringPart -> concat(acc, doStrSplit2(stringPart, sep, [], false)))
+	);
+}
+
+// splits string by all of separators, leaving them in resulting array
+strSplit2(s : string, separators : [string]) -> [string] {
+	fold(separators, [s], \stringParts, sep ->
+		fold(stringParts, [], \acc, stringPart -> concat(acc, strSplitLeave(stringPart, sep)))
+	);
+}
+
+strGlue(arr: [string], sep: string) -> string {
+	if (arr == [])
+		""
+	else if (length(arr) == 1) {
+			arr[0]
+	} else {
+		list2string(foldi(arr, makeList(), \idx, acc, e -> {
+			if (idx == 0) Cons(e, acc) else Cons(e, Cons(sep, acc));
+		}))
+	}
+}
+
+takeBefore(str : string, sep : string, def : string) -> string {
+	i = strIndexOf(str, sep);
+	if (i == -1) def else strLeft(str, i);
+}
+
+takeBeforeLast(str : string, sep : string, def : string) -> string {
+	i = strLastIndexOf(str, sep);
+	if (i == -1) def else strLeft(str, i);
+}
+
+takeAfter(str : string, sep : string, def : string) -> string {
+	i = strIndexOf(str, sep);
+	if (i == -1) def else strRight(str, i + strlen(sep));
+}
+
+takeAfterLast(str : string, sep : string, def : string) -> string {
+	i = strLastIndexOf(str, sep);
+	if (i == -1) def else strRight(str, i + strlen(sep));
+}
+
+
+takeBetween(str : string, start : string, stop : string, def : string) -> string {
+	after = takeAfter(str, start, def);
+	if (after == def) def else takeBefore(after, stop, def);
+}
+
+strSplitNext(str : string, sep : string) -> Pair<string, string> {
+	i = strIndexOf(str, sep);
+	if (i == -1) {
+		Pair(str, "")
+	} else {
+		Pair(strLeft(str, i), strRight(str, i + strlen(sep)));
+	}
+}
+
+
+time2s(tm : double) {
+	tmi = cast(tm : double -> int);
+	hours = tmi / 3600000;
+	mins  = (tmi - 3600000 * hours) / 60000;
+	secs =  (tmi - 3600000 * hours - 60000 * mins) / 1000;
+
+	notZero = \i, s -> if (i > 9) i2s(i) + s else "0" + i2s(i) + s;
+
+	notZero(hours, ":") + notZero(mins, ":") + notZero(secs, "");
+}
+
+strLeft(s, index) {
+	substring(s, 0, index);
+}
+
+strRight(s, index) {
+	l = strlen(s);
+	if (index >= l) {
+		"";
+	} else {
+		substring(s, index, l - index);
+	}
+}
+
+strSubRange(s, start, end) {
+	substring(s, start, end-start);
+}
+
+strFindFirstOf(s, chars) {
+	n = strlen(s);
+	if (n == 0) -1
+	else if (n == 1) {
+		// Our string is a single character.
+		// Let's look the other way instead: Can we find the character among the ugly, then we know the result is 0
+		if (strIndexOf(chars, s) != -1) 0 else -1;
+	} else {
+		positions = generate(0, strlen(chars), \c -> strIndexOf(s, getCharAt(chars, c)));
+		fold(positions, -1, \acc, p -> if (p == -1) acc else if (acc == -1) p else if (p < acc) p else acc);
+	}
+}
+
+strIsFirst(s : string, charsToFind : string) -> bool {
+	l = strlen(s);
+	if (l == 0) false
+	else {
+		first = substring(s, 0, 1);
+		strIndexOf(charsToFind, first) != -1;
+	}
+}
+
+strFindFirstOfStrings(s, strings) {
+	foldi(strings, None(), \i, acc : Maybe<Pair<int, int>>, st -> {
+		if (st == "") {
+			acc
+		} else {
+			p = strIndexOf(s, st);
+			if (p == -1) acc else {
+				switch (acc) {
+					None(): Some(Pair(p, i));
+					Some(pa): if (p < pa.first) Some(Pair(p, i)) else acc;
+				}
+			}
+		}
+	});
+}
+
+strIndexOfM(s, s1) {
+	i = strIndexOf(s, s1);
+	if (i < 0) None() else Some(i)
+}
+
+strContains(str, substr) {
+	strIndexOf(str, substr) >= 0
+}
+
+// Implemented natively for cpp targets
+native strContainsAt : (str : string, index : int, substr : string) -> bool = Native.strContainsAt;
+
+strContainsAt(str : string, index : int, substr : string) -> bool {
+	strRangeIndexOf(str, substr, index, index + strlen(substr)) == index;
+}
+
+strLastIndexOfM(s, s1) {
+	i = strLastIndexOf(s, s1);
+	if (i < 0) None() else Some(i)
+}
+
+stringFold(s, a, f) {
+	fold(enumFromTo(0, strlen(s) - 1), a, \a2, i->f(a2, getCharCodeAt(s, i)));
+}
+
+stringFoldi(s, a, f) {
+	fold(enumFromTo(0, strlen(s) - 1), a, \a2, i->f(i, a2, getCharCodeAt(s, i)));
+}
+
+
+getUrlExtension(url) {
+	u0 = takeBefore(url, "?", url);
+	u1 = takeAfterLast(u0, ".", u0);
+	eitherMap(strIndexOfM(u1, "/"),
+		\i -> "", // extension should not contain "/"
+		u1
+	)
+	|> trim //drop trimming spaces
+}
+
+reverse(s) {
+	l = strlen(s);
+	if (l <= 1) {
+		s;
+	} else if (l <= 128) {
+		list2string(addReverse(makeList(), s, l - 1));
+	} else {
+		half = l / 2;
+		left = substring(s, 0, half);
+		right = substring(s, half, l);
+		reverse(right) + reverse(left);
+	}
+}
+
+addReverse(l : List<string>, s : string, i : int) -> List<string> {
+	if (i < 0) {
+		l;
+	} else {
+		addReverse(Cons(getCharAt(s, i), l), s, i - 1);
+	}
+}
+
+
+findMatchingPairM(s, s1, s2) {
+	l1 = strlen(s1);
+	l2 = strlen(s2);
+	m = maybeMap(strIndexOfM(s, s1), \i1 ->
+		maybeMap(strIndexOfM(substring(s, i1+l1, strlen(s)-i1-l1), s2), \i2 ->
+			Pair(i1, i1+l1+i2+l2),
+		)
+	);
+	either(m, None()) // remove one Some
+}
+
+//TODO: rewrite with iterative approach
+//Returns Pair(<position in last substring, length of last substring>)
+findClosingTag(s : string, sl : int, closeTag : string, ctl : int, otherTagsWithSameCloseTag : [string], level : int) -> Maybe<Pair<int, int>> {
+	tagStartsAt = \start -> \tag -> startsWith(substring(s, start, sl - start), tag);
+
+	m = maybeMap(strIndexOfM(s, "<"), \tagPosition : int -> {
+		if (closeTag |> tagStartsAt(tagPosition)) {
+			if (level == 0) {
+				Some(Pair(tagPosition, sl))
+			} else {
+				newLen = sl - tagPosition - ctl;
+				findClosingTag(substring(s, tagPosition + ctl, newLen), newLen, closeTag,  ctl, otherTagsWithSameCloseTag, level - 1)
+			}
+		} else {
+			eitherMap(
+				find(otherTagsWithSameCloseTag, tagStartsAt(tagPosition)),
+				\tag -> {
+					newLen = sl - tagPosition - strlen(tag);
+					findClosingTag(substring(s, tagPosition + strlen(tag), newLen), newLen, closeTag, ctl, otherTagsWithSameCloseTag, level + 1)
+				},
+				{
+					newLen = sl - tagPosition - 1;
+					findClosingTag(substring(s, tagPosition + 1, newLen), newLen, closeTag, ctl, otherTagsWithSameCloseTag, level)
+				}
+			)
+		}
+	});
+	either(m, None()); // remove one Some
+}
+
+findClosingTagM(s, openTag, closeTag, otherTagsWithSameCloseTag) {
+	l1 = strlen(openTag);
+	l2 = strlen(closeTag);
+	len = strlen(s);
+	m = maybeMap(strIndexOfM(s, openTag), \i1 ->
+		maybeMap(
+			findClosingTag(
+				substring(s, i1 + l1, len - i1 - l1),
+				len - i1 - l1,
+				closeTag, l2,
+				otherTagsWithSameCloseTag,
+				0
+			),
+			\p2 -> Pair(i1, p2.first + len - p2.second + l2)
+		)
+	);
+	either(m, None()) // remove one Some
+}
+
+findMatchingBracketEx(s : string, ob : string, obcb : string, ibb : string, level : int, insideIgnored : bool, openPos : int, len : int) -> Maybe<Pair<int, int>> {
+	pos = strFindFirstOf(s, obcb);
+	if (pos == -1) {
+		None()
+	} else {
+		newLen = strlen(s) - pos - 1;
+		foundChar = getCharAt(s, pos);
+		ignoredBorder = foundChar == ibb;
+		if (ignoredBorder || !ignoredBorder && insideIgnored) {
+			newInsideIgnored = !ignoredBorder && insideIgnored || ignoredBorder && !insideIgnored; // ignoredBorder xor !insideIgnored
+			findMatchingBracketEx(substring(s, pos + 1, newLen), ob, obcb, ibb, level, newInsideIgnored, openPos, len + pos + 1)
+		} else if (foundChar == ob) { // openBracket outside ignored block
+			findMatchingBracketEx(substring(s, pos + 1, newLen), ob, obcb, ibb, level + 1, insideIgnored, if (openPos == -1) pos else openPos, len + pos + 1)
+		} else { //foundChar == cb - closeBracket outside ignored block
+			if (level == 0) {
+				None()
+			} else if (level == 1) {
+				Some(Pair(openPos, len + pos + 1))
+			} else {
+				findMatchingBracketEx(substring(s, pos + 1, newLen), ob, obcb, ibb, level - 1, insideIgnored, openPos, len + pos + 1)
+			}
+		}
+	}
+}
+
+findMatchingBracketM (s, ob, cb) {
+	assert(strlen(ob) == 1 && strlen(cb) == 1, "Give one symbol length string as both arguments for findMatchedBracketM");
+	findMatchingBracketEx(s, ob, ob + cb, "",  0, false, -1, 0)
+}
+
+findMatchingBracketM2 (s, ob, cb, bb) {
+	assert(strlen(ob) == 1 && strlen(cb) == 1 && strlen(bb) == 1, "Give one symbol length strings as arguments for findMatchedBracketM2");
+	findMatchingBracketEx(s, ob, ob + cb + bb, bb, 0, false, -1, 0)
+}
+
+ellipsis(s, mlen) {
+	str = strReplace(s, "\n", " ");
+
+	if (strlen(str) <= mlen || mlen < 4) {
+		str
+	} else {
+		substring(str, 0, mlen - 3) + "..."
+	}
+}
+
+concatStrings(strings) {
+	// list2string is much faster for big arrays
+	if (length(strings) < 35){
+		fold(strings, "", \acc, val -> acc + val)
+	} else {
+		strings |> array2list |> list2string;
+	}
+}
+
+toCapitalization(s) {
+	output = ref s;
+	if (toUpperCase(s) != s) {
+		exceptions = [
+			"am", "are", "is",
+			"in", "on", "at", "of",
+			"and", "the", "a",
+			"my", "y"
+		];
+		spaces = [" ", "\xA0;", "\u00A0"];
+		endMarks = [".", "!", "?", "..."];
+		separators = concat3(["-", ":", ",", "\""], endMarks, spaces);
+		result = ref [];
+		newSentence = ref true;
+
+		separatedString = strSplit2(s, separators);
+		iter(separatedString, \v -> {
+			first = ref "";
+			rest = ref "";
+
+			if ((!contains(exceptions, toLowerCase(v)) || strIndexOf(s, v) == 0 || ^newSentence) && !contains(separators, toLowerCase(v))) {
+				newSentence := false;
+
+				first := substring(v, 0, 1);
+				rest := substring(v, 1, strlen(v) - 1);
+
+				result := arrayPush(^result, toUpperCase(^first) + toLowerCase(^rest));
+			} else {
+				result := arrayPush(^result, toLowerCase(v));
+			}
+
+			if (contains(endMarks, toLowerCase(v))) {
+				newSentence := true;
+			}
+		});
+
+		output := concatStrings(^result);
+	}
+	^output;
+}
+
+formatString(s : string, p : [string]) -> string {
+	foldi(reverseA(p), s, \i, st, par -> strReplace(st, "%" + i2s(length(p) - i), par))
+}
+
+stringEncodeFix(input : string) {
+	utfA = string2utf8(input);
+	ucsA = s2a(input);
+	if (length(utfA) == length(ucsA)) {
+		input
+	} else {
+		needTransform = ref false;
+		out = ref "";
+		iter(ucsA, \num -> {
+			if (num == 195) {
+				needTransform := true
+			} else {
+				out := ^out + fromCharCode(num + 64 * if (^needTransform) 1 else 0);
+				needTransform := false
+			}
+		});
+		^out
+	}
+}
+
+addHyphensIntoWord(input : string, maxlngth : int) {
+	if (strlen(input) > maxlngth) substring(input, 0, maxlngth - 5)+"- "+addHyphensIntoWord(substring(input, maxlngth - 5, strlen(input) - maxlngth + 5), maxlngth) else input
+}
+
+// insertPos must be in [0..strlen(destString)]. Otherwise it is undefined behavior.
+strInsert(destString : string, insertedString : string, insertPos : int) {
+	if (insertedString == "")
+		destString
+	else
+		strLeft(destString, insertPos) + insertedString + strRight(destString, insertPos)
+}
+
+// Arguments must conform to the following: 0 <= start <= start+len <= length(s).
+// Otherwise it is undefined behavior.
+strRemove(s : string, start : int, len : int) {
+	if (len == 0)
+		s
+	else
+		strLeft(s, start) + strRight(s, start + len)
+}
+
+toAscii(input : string) {
+	res = ref "";
+	for(0, \i -> i < strlen(input), \i -> {
+		char = getCharAt(input, i);
+		if (isLetter(char)) {
+			res := ^res + char;
+		}
+		i+1;
+	});
+	^res;
+}
+
+strWordWrap(s : string, maxWidth : int, separators : [string]) -> [string] {
+	fold(strSplit2(s, separators), [""], \r, t -> {
+		if (strlen(r[0]) + strlen(t) <= maxWidth) concat([r[0]+t], tail(r)) else concat([t], r);
+	}) |> reverseA;
+}
+
+toStringNoExtraQuotes(v: flow) -> string {
+	str = toString(v);
+
+	if (startsWith(str, "\"") && endsWith(str, "\"")) {
+		flow2s(v)
+	} else str;
+}
+
+strRepeat(s : string, cnt : int) -> string {
+	if (cnt > 0) s + strRepeat(s, cnt - 1) else "";
+}
+
+// array of anything to string
+a2s2(src : [?], delimiter : string, fn : (elem : ?) -> string) -> string {
+	strGlue(map(src, fn), delimiter);
+}
+
+// string to array of anything
+s2a2(src : string, delimiter : string, fn : (elem : string) -> ?) -> [?] {
+	map(strSplit(src, delimiter), fn);
+}
