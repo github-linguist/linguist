@@ -1,0 +1,106 @@
+-- Copyright (c) 2019 Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
+-- SPDX-License-Identifier: Apache-2.0
+
+daml 1.2
+module PaintHouse where
+
+template PaintHouse with
+    owner : Party
+    painter : Party
+    cleaner : Party
+    price : Decimal
+  where
+    signatory [owner, painter, cleaner]
+
+
+template PaintHouseProposal with
+    owner : Party
+    painter : Party
+    cleaner : Party
+    price : Decimal
+  where
+    signatory owner
+
+    controller [painter, cleaner] can
+      PaintHouseProposal_Accept : ContractId PaintHouse
+        do
+          create PaintHouse with owner; painter; cleaner; price
+
+
+template PainterCleanerRelationship with
+    painter : Party
+    cleaner : Party
+    threshold : Decimal
+  where
+    signatory [painter, cleaner]
+
+    controller painter can
+      nonconsuming AcceptPaintHouse : ContractId PaintHouse with
+          cid : ContractId PaintHouseProposal
+        do
+          paintHouseProposal <- fetch cid
+          assert (paintHouseProposal.painter == painter)
+          assert (paintHouseProposal.cleaner == cleaner)
+          assert (paintHouseProposal.price >= threshold)
+          exercise cid PaintHouseProposal_Accept
+
+
+template PainterCleanerProposal with
+    painter : Party
+    cleaner : Party
+    threshold : Decimal
+  where
+    signatory painter
+
+    controller cleaner can
+      PainterCleanerProposal_Accept : ContractId PainterCleanerRelationship
+        do
+          create PainterCleanerRelationship with painter; cleaner; threshold
+
+
+demo = scenario do
+  alice <- getParty "Alice"
+  bob <- getParty "Bob"
+  carl <- getParty "Carl"
+
+  painterCleanerProposal <- submit bob do
+    create PainterCleanerProposal with
+      painter = bob
+      cleaner = carl
+      threshold = 500.0
+  painterCleanerRelationship <- submit carl do
+    exercise painterCleanerProposal PainterCleanerProposal_Accept
+
+  paintAlicesHouseProposal <- submit alice do
+    create PaintHouseProposal with
+      owner = alice
+      painter = bob
+      cleaner = carl
+      price = 1000.0
+  submit bob do
+    exercise painterCleanerRelationship AcceptPaintHouse with
+      cid = paintAlicesHouseProposal
+
+  donna <- getParty "Donna"
+  eric <- getParty "Eric"
+
+  paintDonnasHouseProposal1 <- submit donna do
+    create PaintHouseProposal with
+      owner = donna
+      painter = bob
+      cleaner = eric
+      price = 1000000.0
+  submitMustFail bob do
+    exercise painterCleanerRelationship AcceptPaintHouse with
+      cid = paintDonnasHouseProposal1
+  submitMustFail bob do
+    exercise paintDonnasHouseProposal1 PaintHouseProposal_Accept
+
+  paintDonnasHouseProposal2 <- submit donna do
+    create PaintHouseProposal with
+      owner = donna
+      painter = bob
+      cleaner = bob
+      price = 1500000.0
+  submit bob do
+    exercise paintDonnasHouseProposal2 PaintHouseProposal_Accept
