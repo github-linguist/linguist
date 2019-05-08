@@ -95,6 +95,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **DTrace:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **Dart:** [dart-atom/dartlang](https://github.com/dart-atom/dartlang)
 - **DataWeave:** [mulesoft-labs/data-weave-tmLanguage](https://github.com/mulesoft-labs/data-weave-tmLanguage)
+- **Dhall:** [atom-haskell/language-haskell](https://github.com/atom-haskell/language-haskell)
 - **Diff:** [textmate/diff.tmbundle](https://github.com/textmate/diff.tmbundle)
 - **Dockerfile:** [asbjornenge/Docker.tmbundle](https://github.com/asbjornenge/Docker.tmbundle)
 - **Dylan:** [textmate/dylan.tmbundle](https://github.com/textmate/dylan.tmbundle)
