@@ -1,0 +1,50 @@
+ res←mode accFapChkBmPor arg;__largshape;__rargshape;accmf;accmm;accmthf;accmthnones;aprik;bmmporlx;cond;datf;datm;errfamv;errfapv;errstr;errtxt;errtxtadj;errx;fapf;fapm;fapv;instix;instypes;ix;lx;lxnotokm;manflds;mlx;portypes;rec;sf;sink;skipadjcheck;spf;splitm;srchf;srchm;xs
+⍝0: Validation of split fields and systematic and EOX adjustments
+ datm datf←arg
+ xs←xsOK
+ errstr←0⍴⊂0 0 ''
+ lxnotokm←(⍴datm)⍴0
+ skipadjcheck←progCUSTNO∊listsCustLooseFapValBmMp
+
+⍝____________________________________
+⍝ ... Prepare some data to work with:
+⍝¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+ manflds←pSPLPURPOSE,pSPLIFRS9PURPOSE,pSPLWTHDRWDATE,pSPLRESERVE,pSPLMIRRORTRANS,pSPLMP
+ spf←∪(bFALSE accCondSplitFldsFlex ⍬)~manflds                     
+ sf←pAPRIK,pINSTYPE,spf                                           
+ portypes←accDefPorBmPorTypes                                     
+ instypes←bmCompInsTypes
+ errtxt←'For benchmark and model portfolios, the accounting principle may only split on mandatory split fields for the following instruments: @'
+ errtxt←(textAndList dIT fmtDomain instypes)txRp errtxt
+
+⍝_________________________________________________________________
+⍝ ... Initialisation for systematic and EOX adjustments validation
+⍝¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+ errtxtadj←'FAM fields @ must be set to inactive values for benchmark and model portfolios.'
+ fapf←pAPRIK,accmthf←accFwksMethods accFwks
+ accmf accmthnones←accFapChkBmPorAdjNoneVals
+ errx←',' 1 fmtList xEnqd¨ddPtrTitleExt accmf
+ errtxtadj←errx txRp errtxtadj
+ accmf,←pACCMETHIK
+
+ :If mode
+    :If ∨/bmmporlx←datm[;datf⍳pPORTYPE]∊portypes                  
+       fapv←∪bmmporlx/datm[;datf⍳pAPRIK]
+       srchm←fapv xComb instypes
+       srchf←pAPRIK,pINSTYPE
+       sf←srchf,spf
+       splitm←tHOLKEYSDEF accCacheRead sf srchf srchm             
+       :If 0≠⊃⍴splitm                                             
+       :AndIf ∨/lx←∨/∨⌿(0,accFwks)accCondSplEncode splitm[;sf⍳spf]
+          errfapv←∪lx/splitm[;sf⍳pAPRIK]
+          ix←xWhere bmmporlx∧datm[;datf⍳pAPRIK]∊errfapv
+          lxnotokm[ix;]←bTRUE                            
+          errstr←errstr,↓pAPRIK,ix,[1.5]⊂errtxt
+       :EndIf
+    :EndIf
+ :Else
+    cond←dcEmpty
+ :EndIf
+
+End:
+ res←xs lxnotokm errstr
