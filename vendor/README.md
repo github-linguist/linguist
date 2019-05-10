@@ -344,6 +344,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **SQL:** [textmate/sql.tmbundle](https://github.com/textmate/sql.tmbundle)
 - **SQLPL:** [textmate/sql.tmbundle](https://github.com/textmate/sql.tmbundle)
 - **SRecode Template:** [textmate/lisp.tmbundle](https://github.com/textmate/lisp.tmbundle)
+- **SSH Config:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **STON:** [tomas-stefano/smalltalk-tmbundle](https://github.com/tomas-stefano/smalltalk-tmbundle)
 - **SVG:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)
 - **Sage:** [MagicStack/MagicPython](https://github.com/MagicStack/MagicPython)
