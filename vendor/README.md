@@ -435,6 +435,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **ZAP:** [tclem/vscode-zil-language](https://github.com/tclem/vscode-zil-language)
 - **ZIL:** [tclem/vscode-zil-language](https://github.com/tclem/vscode-zil-language)
 - **Zeek:** [zeek/zeek-sublime](https://github.com/zeek/zeek-sublime)
+- **ZenScript:** [CraftTweaker/ZenScript-tmLanguage](https://github.com/CraftTweaker/ZenScript-tmLanguage)
 - **Zephir:** [phalcon/zephir-sublime](https://github.com/phalcon/zephir-sublime)
 - **Zig:** [ziglang/sublime-zig-language](https://github.com/ziglang/sublime-zig-language)
 - **desktop:** [Mailaender/desktop.tmbundle](https://github.com/Mailaender/desktop.tmbundle)
