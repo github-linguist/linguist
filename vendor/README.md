@@ -170,6 +170,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Haskell:** [atom-haskell/language-haskell](https://github.com/atom-haskell/language-haskell)
 - **Haxe:** [vshaxe/haxe-TmLanguage](https://github.com/vshaxe/haxe-TmLanguage)
 - **HiveQL:** [adidonato/language-hql](https://github.com/adidonato/language-hql)
+- **HolyC:** [codingdandy/holyc.tmbundle](https://github.com/codingdandy/holyc.tmbundle)
 - **Hy:** [Slowki/hy.tmLanguage](https://github.com/Slowki/hy.tmLanguage)
 - **IDL:** [mgalloy/idl.tmbundle](https://github.com/mgalloy/idl.tmbundle)
 - **INI:** [textmate/ini.tmbundle](https://github.com/textmate/ini.tmbundle)
