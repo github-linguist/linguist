@@ -383,13 +383,18 @@ disambiguations:
   rules:
    # Postgres
   - language: PLpgSQL
-    pattern: '(?i:^\\i\b|AS \$\$|LANGUAGE ''?plpgsql''?|SECURITY (DEFINER|INVOKER)|BEGIN( WORK| TRANSACTION)?;)'
+    pattern: '(?i:^\\i\b|AS \$\$|LANGUAGE ''?plpgsql''?|SECURITY (DEFINER|INVOKER)|BEGIN( WORK )?;)'
   # IBM db2
   - language: SQLPL
     pattern: "(?i:(alter module)|(language sql)|(begin( NOT)+ atomic)|signal SQLSTATE '[0-9]+')"
   # Oracle
   - language: PLSQL
     pattern: '(?i:\$\$PLSQL_|XMLTYPE|sysdate|systimestamp|\.nextval|connect by|AUTHID (DEFINER|CURRENT_USER)|constructor\W+function)'
+  # T-SQL
+  - language: TSQL
+    and:
+    - negative_pattern: '(?i:IDENTIFIED|NUMBER|VARCHAR2|REPEAT|UNTIL|IMMEDIATE)'
+    - pattern: '(?i:(GO)|(@@)|(CREATE PROCEDURE)|BEGIN( TRY| CATCH)|OUTPUT( INSERTED)|IF|ELSE|IIF|CHOOSE|CURSOR|FETCH|DEALLOCATE|DECLARE)'
   # Generic SQL
   - language: SQL
     negative_pattern: '(?i:begin|boolean|package|exception)'

@@ -485,12 +485,6 @@ Brightscript:
   tm_scope: source.brightscript
   ace_mode: text
   language_id: 39
-Bro:
-  type: programming
-  extensions:
-  - ".bro"
-  ace_mode: text
-  language_id: 40
 C:
   type: programming
   color: "#555555"
@@ -1759,12 +1753,10 @@ Grammatical Framework:
   type: programming
   aliases:
   - gf
-  wrap: false
   extensions:
   - ".gf"
-  searchable: true
   color: "#79aa7a"
-  tm_scope: source.haskell
+  tm_scope: source.gf
   ace_mode: haskell
   codemirror_mode: haskell
   codemirror_mime_type: text/x-haskell
@@ -2041,6 +2033,16 @@ HiveQL:
   tm_scope: source.hql
   ace_mode: sql
   language_id: 931814087
+HolyC:
+  type: programming
+  color: "#ffefaf"
+  extensions:
+  - ".hc"
+  tm_scope: source.hc
+  ace_mode: c_cpp
+  codemirror_mode: clike
+  codemirror_mime_type: text/x-csrc
+  language_id: 928121743
 Hy:
   type: programming
   ace_mode: text
@@ -2285,6 +2287,7 @@ JSON with Comments:
   - ".jshintrc"
   - ".jslintrc"
   - jsconfig.json
+  - language-configuration.json
   - tsconfig.json
   language_id: 423
 JSON5:
@@ -2396,7 +2399,13 @@ JavaScript:
   filenames:
   - Jakefile
   interpreters:
+  - chakra
+  - d8
+  - js
   - node
+  - rhino
+  - v8
+  - v8-shell
   language_id: 183
 Jison:
   type: programming
@@ -4505,6 +4514,19 @@ SRecode Template:
   extensions:
   - ".srt"
   language_id: 335
+SSH Config:
+  type: data
+  group: INI
+  filenames:
+  - "ssh-config"
+  - "ssh_config"
+  - "sshconfig"
+  - "sshconfig.snip"
+  - "sshd-config"
+  - "sshd_config"
+  ace_mode: text
+  tm_scope: source.ssh-config
+  language_id: 554920715
 STON:
   type: data
   group: Smalltalk
@@ -4926,6 +4948,13 @@ TSX:
   codemirror_mode: jsx
   codemirror_mime_type: text/jsx
   language_id: 94901924
+TSQL:
+  type: programming
+  extensions:
+  - ".sql"
+  ace_mode: sql
+  tm_scope: source.tsql
+  language_id: 918334941
 TXL:
   type: programming
   extensions:
@@ -5100,7 +5129,8 @@ TypeScript:
   aliases:
   - ts
   interpreters:
-  - node
+  - deno
+  - ts-node
   extensions:
   - ".ts"
   tm_scope: source.ts
@@ -5675,6 +5705,24 @@ ZIL:
   tm_scope: source.zil
   ace_mode: text
   language_id: 973483626
+Zeek:
+  type: programming
+  aliases:
+  - bro
+  extensions:
+  - ".zeek"
+  - ".bro"
+  tm_scope: source.zeek
+  ace_mode: text
+  language_id: 40
+ZenScript:
+  type: programming
+  color: "#00BCD1"
+  extensions:
+  - ".zs"
+  tm_scope: source.zenscript
+  ace_mode: text
+  language_id: 494938890
 Zephir:
   type: programming
   color: "#118f9e"
