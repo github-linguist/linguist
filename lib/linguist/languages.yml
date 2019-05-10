@@ -2399,7 +2399,13 @@ JavaScript:
   filenames:
   - Jakefile
   interpreters:
+  - chakra
+  - d8
+  - js
   - node
+  - rhino
+  - v8
+  - v8-shell
   language_id: 183
 Jison:
   type: programming
@@ -5113,7 +5119,8 @@ TypeScript:
   aliases:
   - ts
   interpreters:
-  - node
+  - deno
+  - ts-node
   extensions:
   - ".ts"
   - ".tsx"
