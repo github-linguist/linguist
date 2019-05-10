@@ -146,7 +146,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Gosu:** [jpcamara/Textmate-Gosu-Bundle](https://github.com/jpcamara/Textmate-Gosu-Bundle)
 - **Grace:** [zmthy/grace-tmbundle](https://github.com/zmthy/grace-tmbundle)
 - **Gradle:** [alkemist/gradle.tmbundle](https://github.com/alkemist/gradle.tmbundle)
-- **Grammatical Framework:** [atom-haskell/language-haskell](https://github.com/atom-haskell/language-haskell)
+- **Grammatical Framework:** [johnjcamilleri/language-gf](https://github.com/johnjcamilleri/language-gf)
 - **GraphQL:** [rmosolgo/language-graphql](https://github.com/rmosolgo/language-graphql)
 - **Graphviz (DOT):** [textmate/graphviz.tmbundle](https://github.com/textmate/graphviz.tmbundle)
 - **Groovy:** [textmate/groovy.tmbundle](https://github.com/textmate/groovy.tmbundle)
