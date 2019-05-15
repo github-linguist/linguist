@@ -1,0 +1,185 @@
+(use Int)
+(use Double)
+(use Array)
+
+(load "SDL.carp")
+(load "SDL_image.carp")
+
+(load "Vector.carp")
+(use Vector2)
+
+(Project.config "title" "Reptile")
+
+(deftype Snake
+    [body (Array (Vector2 Double))
+     dir SDL_Keycode
+     freeze Int
+     ])
+
+(use Snake)
+
+(deftype World
+    [snake Snake
+     human (Vector2 Double)
+     dead Bool])
+
+(use World)
+
+(def bg-col 120)
+(def grid-size 32)
+
+(defn draw-snake [rend snake]
+  (let [body-length (length (body snake))]
+    (for [i 0 body-length]
+      (let [part (nth (body snake) i)
+            x (* grid-size (to-int @(Vector2.x part)))
+            y (* grid-size (to-int @(Vector2.y part)))]
+        (if (= i 0)
+          (do
+            (SDL.set-render-draw-color rend 200 255 (+ 100 (* body-length 10)) 255)
+            (SDL.render-fill-rect rend (address (SDL.rect x y grid-size grid-size))))
+          (do
+            (SDL.set-render-draw-color rend 200 (+ 50 (* i (/ 200 body-length))) 100 255)
+            (SDL.render-fill-rect rend (address (SDL.rect x y grid-size grid-size)))))))))
+
+(defn draw-human [rend human]
+  (do
+    (SDL.set-render-draw-color rend 100 100 250 255)
+    (let [x (* grid-size (to-int @(Vector2.x human)))
+          y (* grid-size (to-int @(Vector2.y human)))]
+      (SDL.render-fill-rect rend (address (SDL.rect x y grid-size grid-size))))))
+
+(defn draw [rend world]
+  (do
+    (SDL.set-render-draw-blend-mode rend SDL.blend-mode-add)
+    (SDL.set-render-draw-color rend (- bg-col @(Snake.freeze (World.snake world))) bg-col bg-col 255)
+    (SDL.render-clear rend)
+    (draw-snake rend (snake world))
+    (draw-human rend (World.human world))
+    (SDL.render-present rend)
+    ))
+
+(def input-dir SDL.Keycode.down)
+(def reset false)
+
+(defn handle-events [app rend world]
+  (let [event (SDL.Event.init)]
+    (while (SDL.Event.poll (address event))
+      (let [et (SDL.Event.type &event)]
+        (cond (= et SDL.Event.quit) (SDLApp.stop app)
+              (= et SDL.Event.key-down) (let [key (SDL.Event.keycode &event)]
+                                          (cond
+                                            (or (= key SDL.Keycode.right)
+                                                (or (= key SDL.Keycode.up)
+                                                    (or (= key SDL.Keycode.left) (= key SDL.Keycode.down))))
+                                            (set! input-dir key)
+                                            (= key SDL.Keycode.return) (set! reset true)
+                                            (= key SDL.Keycode.escape) (SDLApp.stop app)
+                                            ()))
+              ()
+              )))))
+
+(defn move [vec dir]
+  (cond
+    (= SDL.Keycode.right dir) (add &vec &(Vector2.init 1.0 0.0))
+    (= SDL.Keycode.up dir)    (add &vec &(Vector2.init 0.0 -1.0))
+    (= SDL.Keycode.left dir)  (add &vec &(Vector2.init -1.0 0.0))
+    (= SDL.Keycode.down dir)  (add &vec &(Vector2.init 0.0 1.0))
+    vec))
+
+(defn shift-body [body]
+  (do
+     (let [i (- (length body) 2)]
+       (while (> i -1)
+         (do
+           (aset! body (inc i) @(nth body i))
+           (set! i (dec i)))))
+    @body))
+
+(defn create-human []
+  (Vector2.init (from-int (random-between 0 26))
+                (from-int (random-between 0 20))))
+
+(defn kill-human [world]
+  (let [new-human (create-human)]
+    (World.set-human world new-human)))
+
+(defn inc2 [i]
+  (+ i 2))
+
+(defn grow [snake]
+  (let [new-snake (Snake.update-freeze snake &inc2)
+        b (Snake.body &new-snake)]
+    (Snake.set-body new-snake (push-back @b (unsafe-last b)))))
+
+(defn update-after-kill [world]
+  (let [s (World.snake &world)
+        new-world (kill-human world)]
+    (World.set-snake new-world (grow @s))))
+
+(defn check-for-kill [world]
+  (let [s (World.snake world)
+        h (World.human world)
+        b (Snake.body s)
+        head &(unsafe-first b)]
+    (if (= head h)
+      (update-after-kill @world)
+      @world)))
+
+(defn check-world [world]
+  (let [snake (World.snake world)
+        b (Snake.body snake)
+        head &(unsafe-first b)
+        x @(Vector2.x head)
+        y @(Vector2.y head)]
+    (World.set-dead @world (or (< x 0.0)
+                           (or (> x 26.0)
+                           (or (< y 0.0) (> y 24.0)))))))
+
+(defn tick [world]
+  (let [s (Snake.set-dir @(World.snake world) input-dir)
+        b (Snake.body &s)
+        new-head (move @(nth b 0) @(dir &s))
+        new-body (aset (shift-body b) 0 new-head)
+        new-snake (Snake.set-body s new-body)
+        world-after-snake-move (World.set-snake @world new-snake)
+        world-checked (check-world &world-after-snake-move)]
+    (check-for-kill &world-checked)))
+
+(defn create-world []
+  (World.init (Snake.init [(Vector2.init 10.0 10.0)
+                           (Vector2.init 9.0 10.0)
+                           (Vector2.init 8.0 10.0)
+                           (Vector2.init 7.0 10.0)]
+                          SDL.Keycode.down
+                          0)
+               (create-human)
+               false))
+
+(defn render-dead [rend]
+  (do
+    (SDL.set-render-draw-blend-mode rend SDL.blend-mode-add)
+    (SDL.set-render-draw-color rend 200 90 90 255)
+    (SDL.render-clear rend)
+    (SDL.render-present rend)
+    (SDL.delay 2000)
+  ))
+
+(defn main []
+  (let [app (SDLApp.create "R E P T I L E" 832 640)
+        rend @(SDLApp.renderer &app)
+        world (create-world)]
+    (do
+      (while (not @(World.dead &world))
+        (if reset
+          (do
+            (set! input-dir SDL.Keycode.right)
+            (set! world (create-world))
+            (set! reset false))
+          (do
+            (let [new-world (tick &world)]
+              (set! world new-world))
+            (handle-events &app rend &world)
+            (draw rend &world)
+            (SDL.delay 50))))
+       (render-dead rend))))

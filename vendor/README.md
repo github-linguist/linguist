@@ -58,6 +58,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **CSS:** [atom/language-css](https://github.com/atom/language-css)
 - **Cabal Config:** [atom-haskell/language-haskell](https://github.com/atom-haskell/language-haskell)
 - **Cap'n Proto:** [textmate/capnproto.tmbundle](https://github.com/textmate/capnproto.tmbundle)
+- **Carp:** [GrayJack/language-carp](https://github.com/GrayJack/language-carp)
 - **CartoCSS:** [yohanboniface/carto-atom](https://github.com/yohanboniface/carto-atom)
 - **Ceylon:** [jeancharles-roger/ceylon-sublimetext](https://github.com/jeancharles-roger/ceylon-sublimetext)
 - **Chapel:** [chapel-lang/chapel-tmbundle](https://github.com/chapel-lang/chapel-tmbundle)

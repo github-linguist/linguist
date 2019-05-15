@@ -1,0 +1,51 @@
+;; The number guessing game
+
+(use IO)
+(use Int)
+(use String)
+
+(Project.config "title" "Guessing")
+
+(def guessing true)
+(def answer 0)
+
+(defn start-new-game! []
+  (do (println "~ The Number Guessing Game ~")
+      (println "(Enter q to quit.)\n")
+
+      (set! guessing true)
+      (set! answer (random-between 1 100))
+
+      (print "Please enter a number between 1 - 99: ")))
+
+(defn exit! []
+  (do (println "Good bye...")
+      (set! guessing false)))
+
+(defn play-again? [user-input]
+  (if (= user-input "y\n") true false))
+
+(defn correct! []
+  (do (println "Correct!\n")
+      (print "Play again? (y/n): ")
+      (let [user-input (get-line)]
+        (if (play-again? &user-input)
+          (start-new-game!)
+          (exit!)))))
+
+(defn guess-again [low-or-high]
+  (do (println &(str* @"Too " @low-or-high @"."))
+      (print "\nPlease guess again: ")))
+
+(defn main []
+  (do (println "Seeding random number generator...\n")
+      (Random.seed-from (Double.from-int (System.time)))
+      (start-new-game!)
+      (while guessing
+        (let [user-input (get-line)
+              guessed-num (from-string &user-input)]
+          (if (= &user-input "q\n")
+            (exit!)
+            (cond (< guessed-num answer) (guess-again "low")
+                  (> guessed-num answer) (guess-again "high")
+                  (correct!)))))))

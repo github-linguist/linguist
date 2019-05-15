@@ -559,6 +559,14 @@ C2hs Haskell:
   codemirror_mode: haskell
   codemirror_mime_type: text/x-haskell
   language_id: 45
+Carp:
+  type: programming
+  color: "#ef7f75"
+  extensions:
+  - ".carp"
+  tm_scope: source.carp
+  ace_mode: text
+  language_id: 1020101850
 CLIPS:
   type: programming
   extensions:
@@ -4518,12 +4526,12 @@ SSH Config:
   type: data
   group: INI
   filenames:
-  - "ssh-config"
-  - "ssh_config"
-  - "sshconfig"
-  - "sshconfig.snip"
-  - "sshd-config"
-  - "sshd_config"
+  - ssh-config
+  - ssh_config
+  - sshconfig
+  - sshconfig.snip
+  - sshd-config
+  - sshd_config
   ace_mode: text
   tm_scope: source.ssh-config
   language_id: 554920715
