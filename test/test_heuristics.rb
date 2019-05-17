@@ -264,12 +264,6 @@ class TestHeuristics < Minitest::Test
     })
   end
 
-  def test_mac_by_heuristics
-    assert_heuristics({
-      "ObjectScript" => all_fixtures("ObjectScript", "*.mac")
-    })
-  end
-
   def test_md_by_heuristics
     assert_heuristics({
       "Markdown" => all_fixtures("Markdown", "*.md"),

@@ -196,8 +196,6 @@ disambiguations:
     pattern: '^<\?(?:php)?'
   - language: POV-Ray SDL
     pattern: '^\s*#(declare|local|macro|while)\s'
-  - language: ObjectScript
-    pattern: '^(ROUTINE|%RO)'
 - extensions: ['.l']
   rules:
   - language: Common Lisp
@@ -237,10 +235,6 @@ disambiguations:
     pattern: '^\s*%'
   - language: Limbo
     pattern: '^\w+\s*:\s*module\s*{'
-- extensions: ['.mac']
-  rules:
-  - language: ObjectScript
-    pattern: '^(ROUTINE|%RO)'
 - extensions: ['.md']
   rules:
   - language: Markdown
