@@ -127,5 +127,8 @@ class TestGenerated < Minitest::Test
     generated_sample_loading_data("JSON/2ea73365-b6f1-4bd1-a454-d57a67e50684.yy")
     generated_fixture_loading_data("Generated/options_main.inherited.yy")
 
+    # Pipenv
+    generated_sample_without_loading_data("Dummy/Pipfile.lock")
+
   end
 end
