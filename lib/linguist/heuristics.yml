@@ -166,6 +166,8 @@ disambiguations:
     pattern: '(?i:^\s*(\<\?xml|xmlns))'
   - language: Graph Modeling Language
     pattern: '(?i:^\s*(graph|node)\s+\[$)'
+  - language: Gerber Image
+    pattern: '\*\%$'
   - language: Game Maker Language
 - extensions: ['.gs']
   rules:
@@ -359,7 +361,7 @@ disambiguations:
 - extensions: ['.rno']
   rules:
   - language: RUNOFF
-    pattern: '(?i:^\.!|^\.end lit(?:eral)?\b)'
+    pattern: '(?i:^\.!|^\f|\f$|^\.end lit(?:eral)?\b|^\.[a-zA-Z].*?;\.[a-zA-Z](?:[; \t])|\^\*[^\s*][^*]*\\\*(?=$|\s)|^\.c;[ \t]*\w+)'
   - language: Roff
     pattern: '^\.\\" '
 - extensions: ['.rpy']
@@ -383,13 +385,18 @@ disambiguations:
   rules:
    # Postgres
   - language: PLpgSQL
-    pattern: '(?i:^\\i\b|AS \$\$|LANGUAGE ''?plpgsql''?|SECURITY (DEFINER|INVOKER)|BEGIN( WORK| TRANSACTION)?;)'
+    pattern: '(?i:^\\i\b|AS \$\$|LANGUAGE ''?plpgsql''?|SECURITY (DEFINER|INVOKER)|BEGIN( WORK )?;)'
   # IBM db2
   - language: SQLPL
     pattern: "(?i:(alter module)|(language sql)|(begin( NOT)+ atomic)|signal SQLSTATE '[0-9]+')"
   # Oracle
   - language: PLSQL
     pattern: '(?i:\$\$PLSQL_|XMLTYPE|sysdate|systimestamp|\.nextval|connect by|AUTHID (DEFINER|CURRENT_USER)|constructor\W+function)'
+  # T-SQL
+  - language: TSQL
+    and:
+    - negative_pattern: '(?i:IDENTIFIED|NUMBER|VARCHAR2|REPEAT|UNTIL|IMMEDIATE)'
+    - pattern: '(?i:(GO)|(@@)|(CREATE PROCEDURE)|BEGIN( TRY| CATCH)|OUTPUT( INSERTED)|IF|ELSE|IIF|CHOOSE|CURSOR|FETCH|DEALLOCATE|DECLARE)'
   # Generic SQL
   - language: SQL
     negative_pattern: '(?i:begin|boolean|package|exception)'
@@ -424,7 +431,7 @@ disambiguations:
   - language: Scilab
 - extensions: ['.tsx']
   rules:
-  - language: TypeScript
+  - language: TSX
     pattern: '^\s*(import.+(from\s+|require\()[''"]react|\/\/\/\s*<reference\s)'
   - language: XML
     pattern: '(?i:^\s*<\?xml\s+version)'
@@ -456,7 +463,7 @@ named_patterns:
   cpp:
   - '^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>'
   - '^\s*template\s*<'
-  - '^[ \t]*try'
+  - '^[ \t]*(try|constexpr)'
   - '^[ \t]*catch\s*\('
   - '^[ \t]*(class|(using[ \t]+)?namespace)\s+\w+'
   - '^[ \t]*(private|public|protected):$'

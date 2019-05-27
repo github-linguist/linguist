@@ -480,7 +480,7 @@ class TestHeuristics < Minitest::Test
 
   def test_tsx_by_heuristics
     assert_heuristics({
-      "TypeScript" => all_fixtures("TypeScript", "*.tsx"),
+      "TSX" => all_fixtures("TSX", "*.tsx"),
       "XML" => all_fixtures("XML", "*.tsx")
     })
   end

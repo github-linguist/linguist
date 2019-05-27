@@ -485,12 +485,6 @@ Brightscript:
   tm_scope: source.brightscript
   ace_mode: text
   language_id: 39
-Bro:
-  type: programming
-  extensions:
-  - ".bro"
-  ace_mode: text
-  language_id: 40
 C:
   type: programming
   color: "#555555"
@@ -1620,6 +1614,7 @@ Gerber Image:
   - ".gbp"
   - ".gbs"
   - ".gko"
+  - ".gml"
   - ".gpb"
   - ".gpt"
   - ".gtl"
@@ -1759,12 +1754,10 @@ Grammatical Framework:
   type: programming
   aliases:
   - gf
-  wrap: false
   extensions:
   - ".gf"
-  searchable: true
   color: "#79aa7a"
-  tm_scope: source.haskell
+  tm_scope: source.gf
   ace_mode: haskell
   codemirror_mode: haskell
   codemirror_mime_type: text/x-haskell
@@ -1781,6 +1774,7 @@ GraphQL:
   extensions:
   - ".graphql"
   - ".gql"
+  - ".graphqls"
   tm_scope: source.graphql
   ace_mode: text
   language_id: 139
@@ -1948,6 +1942,7 @@ HTML+Razor:
   - razor
   extensions:
   - ".cshtml"
+  - ".razor"
   ace_mode: razor
   codemirror_mode: htmlmixed
   codemirror_mime_type: text/html
@@ -2040,6 +2035,16 @@ HiveQL:
   tm_scope: source.hql
   ace_mode: sql
   language_id: 931814087
+HolyC:
+  type: programming
+  color: "#ffefaf"
+  extensions:
+  - ".hc"
+  tm_scope: source.hc
+  ace_mode: c_cpp
+  codemirror_mode: clike
+  codemirror_mime_type: text/x-csrc
+  language_id: 928121743
 Hy:
   type: programming
   ace_mode: text
@@ -2237,6 +2242,7 @@ JSON:
   - ".ice"
   - ".JSON-tmLanguage"
   - ".jsonl"
+  - ".mcmeta"
   - ".tfstate"
   - ".tfstate.backup"
   - ".topojson"
@@ -2283,6 +2289,7 @@ JSON with Comments:
   - ".jshintrc"
   - ".jslintrc"
   - jsconfig.json
+  - language-configuration.json
   - tsconfig.json
   language_id: 423
 JSON5:
@@ -2394,7 +2401,13 @@ JavaScript:
   filenames:
   - Jakefile
   interpreters:
+  - chakra
+  - d8
+  - js
   - node
+  - rhino
+  - v8
+  - v8-shell
   language_id: 183
 JavaScript+ERB:
   type: programming
@@ -4513,6 +4526,19 @@ SRecode Template:
   extensions:
   - ".srt"
   language_id: 335
+SSH Config:
+  type: data
+  group: INI
+  filenames:
+  - "ssh-config"
+  - "ssh_config"
+  - "sshconfig"
+  - "sshconfig.snip"
+  - "sshd-config"
+  - "sshd_config"
+  ace_mode: text
+  tm_scope: source.ssh-config
+  language_id: 554920715
 STON:
   type: data
   group: Smalltalk
@@ -4924,6 +4950,23 @@ TOML:
   codemirror_mode: toml
   codemirror_mime_type: text/x-toml
   language_id: 365
+TSQL:
+  type: programming
+  extensions:
+  - ".sql"
+  ace_mode: sql
+  tm_scope: source.tsql
+  language_id: 918334941
+TSX:
+  type: programming
+  group: TypeScript
+  extensions:
+  - ".tsx"
+  tm_scope: source.tsx
+  ace_mode: javascript
+  codemirror_mode: jsx
+  codemirror_mime_type: text/jsx
+  language_id: 94901924
 TXL:
   type: programming
   extensions:
@@ -5098,10 +5141,10 @@ TypeScript:
   aliases:
   - ts
   interpreters:
-  - node
+  - deno
+  - ts-node
   extensions:
   - ".ts"
-  - ".tsx"
   tm_scope: source.ts
   ace_mode: typescript
   codemirror_mode: javascript
@@ -5325,6 +5368,14 @@ Windows Registry Entries:
   codemirror_mode: properties
   codemirror_mime_type: text/x-properties
   language_id: 969674868
+Wollok:
+  type: programming
+  color: "#a23738"
+  extensions:
+  - ".wlk"
+  ace_mode: text
+  tm_scope: source.wollok
+  language_id: 632745969
 World of Warcraft Addon Data:
   type: data
   extensions:
@@ -5656,6 +5707,42 @@ Yacc:
   ace_mode: text
   color: "#4B6C4B"
   language_id: 409
+ZAP:
+  type: programming
+  color: "#0d665e"
+  extensions:
+  - ".zap"
+  - ".xzap"
+  tm_scope: source.zap
+  ace_mode: text
+  language_id: 952972794
+ZIL:
+  type: programming
+  color: "#dc75e5"
+  extensions:
+  - ".zil"
+  - ".mud"
+  tm_scope: source.zil
+  ace_mode: text
+  language_id: 973483626
+Zeek:
+  type: programming
+  aliases:
+  - bro
+  extensions:
+  - ".zeek"
+  - ".bro"
+  tm_scope: source.zeek
+  ace_mode: text
+  language_id: 40
+ZenScript:
+  type: programming
+  color: "#00BCD1"
+  extensions:
+  - ".zs"
+  tm_scope: source.zenscript
+  ace_mode: text
+  language_id: 494938890
 Zephir:
   type: programming
   color: "#118f9e"
