@@ -68,6 +68,11 @@ vendor/grammars/NimLime:
 - source.nim.comment
 - source.nim_filter
 - source.nimcfg
+vendor/grammars/ObjectScript.tmBundle:
+- source.objectscript
+- source.objectscript_class
+- source.objectscript_csp
+- source.objectscript_macros
 vendor/grammars/PHP-Twig.tmbundle:
 - text.html.twig
 vendor/grammars/PogoScript.tmbundle:
@@ -157,6 +162,8 @@ vendor/grammars/Vala-TMBundle:
 - source.vala
 vendor/grammars/X10:
 - source.x10
+vendor/grammars/ZenScript-tmLanguage:
+- source.zenscript
 vendor/grammars/abap.tmbundle:
 - source.abap
 vendor/grammars/actionscript3-tmbundle/:
@@ -248,8 +255,6 @@ vendor/grammars/blitzmax:
 - source.blitzmax
 vendor/grammars/boo:
 - source.boo
-vendor/grammars/bro-sublime:
-- source.bro
 vendor/grammars/c.tmbundle:
 - source.c
 - source.c++
@@ -345,6 +350,8 @@ vendor/grammars/haxe-TmLanguage:
 - source.hx.argument
 - source.hx.type
 - source.hxml
+vendor/grammars/holyc.tmbundle:
+- source.hc
 vendor/grammars/hy.tmLanguage:
 - source.hy
 vendor/grammars/idl.tmbundle:
@@ -420,6 +427,7 @@ vendor/grammars/language-etc:
 - etc
 - injections.etc
 - source.curlrc
+- source.dosbox-conf
 - source.gitattributes
 - source.gitconfig
 - source.gitignore
@@ -439,6 +447,8 @@ vendor/grammars/language-fontforge:
 - source.opentype
 - source.xlfd
 - text.sfd
+vendor/grammars/language-gf:
+- source.gf
 vendor/grammars/language-gfm:
 - source.gfm
 vendor/grammars/language-gn:
@@ -485,6 +495,8 @@ vendor/grammars/language-kotlin:
 - source.kotlin
 vendor/grammars/language-less:
 - source.css.less
+vendor/grammars/language-m68k:
+- source.m68k
 vendor/grammars/language-maxscript:
 - source.maxscript
 vendor/grammars/language-mcfunction:
@@ -545,6 +557,8 @@ vendor/grammars/language-supercollider:
 - source.supercollider
 vendor/grammars/language-toc-wow:
 - source.toc
+vendor/grammars/language-tsql:
+- source.tsql
 vendor/grammars/language-turing:
 - source.turing
 vendor/grammars/language-typelanguage:
@@ -792,14 +806,21 @@ vendor/grammars/vscode-scala-syntax:
 - source.scala
 vendor/grammars/vscode-slice:
 - source.slice
+vendor/grammars/vscode-zil-language:
+- source.zap
+- source.zil
 vendor/grammars/vue-syntax-highlight:
 - text.html.vue
 vendor/grammars/wdl-sublime-syntax-highlighter:
 - source.wdl
+vendor/grammars/wollok-sublime:
+- source.wollok
 vendor/grammars/xc.tmbundle:
 - source.xc
 vendor/grammars/xml.tmbundle:
 - text.xml
 - text.xml.xsl
+vendor/grammars/zeek-sublime:
+- source.zeek
 vendor/grammars/zephir-sublime:
 - source.php.zephir

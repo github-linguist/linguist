@@ -1,0 +1,10 @@
+# Example server
+Host client-roomserver01
+Hostname 255.255.255.255
+User root
+Port 22
+IdentitiesOnly no
+PreferredAuthentications=password
+# ProxyCommand ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no client-proxy-server nc %h %p %r -e
+# ProxyCommand ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no client-proxy-server nc %h %p
+ProxyJump client-proxy-server
