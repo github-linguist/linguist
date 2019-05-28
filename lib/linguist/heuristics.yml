@@ -192,6 +192,8 @@ disambiguations:
   rules:
   - language: PHP
     pattern: '^<\?(?:php)?'
+  - language: SourcePawn
+    pattern: '^public\s+(?:SharedPlugin(?:\s+|:)__pl_\w+\s*=(?:\s*{)?|(?:void\s+)?__pl_\w+_SetNTVOptional\(\)(?:\s*{)?)'
   - language: POV-Ray SDL
     pattern: '^\s*#(declare|local|macro|while)\s'
 - extensions: ['.l']
