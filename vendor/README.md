@@ -377,6 +377,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **SubRip Text:** [314eter/atom-language-srt](https://github.com/314eter/atom-language-srt)
 - **SugarSS:** [hudochenkov/Syntax-highlighting-for-PostCSS](https://github.com/hudochenkov/Syntax-highlighting-for-PostCSS)
 - **SuperCollider:** [supercollider/language-supercollider](https://github.com/supercollider/language-supercollider)
+- **Svelte:** [umanghome/svelte-atom](https://github.com/umanghome/svelte-atom)
 - **Swift:** [textmate/swift.tmbundle](https://github.com/textmate/swift.tmbundle)
 - **SystemVerilog:** [bitbucket:Clams/sublimesystemverilog](https://bitbucket.org/Clams/sublimesystemverilog)
 - **TLA:** [agentultra/TLAGrammar](https://github.com/agentultra/TLAGrammar)
