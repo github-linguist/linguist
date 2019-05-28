@@ -115,6 +115,7 @@ class TestHeuristics < Minitest::Test
   def test_cls_by_heuristics
     assert_heuristics({
       "TeX" => all_fixtures("TeX", "*.cls"),
+      "ObjectScript" => all_fixtures("ObjectScript", "*.cls"),
       # Missing heuristics
       nil => all_fixtures("Apex", "*.cls") + all_fixtures("OpenEdge ABL", "*.cls") + all_fixtures("Visual Basic", "*.cls"),
     })

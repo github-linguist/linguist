@@ -90,6 +90,8 @@ disambiguations:
   rules:
   - language: TeX
     pattern: '\\\w+{'
+  - language: ObjectScript
+    pattern: '^Class\s'
 - extensions: ['.cs']
   rules:
   - language: Smalltalk

@@ -265,6 +265,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Nu:** [jsallis/nu.tmbundle](https://github.com/jsallis/nu.tmbundle)
 - **OCaml:** [textmate/ocaml.tmbundle](https://github.com/textmate/ocaml.tmbundle)
 - **ObjDump:** [nanoant/assembly.tmbundle](https://github.com/nanoant/assembly.tmbundle)
+- **ObjectScript:** [intersystems-community/ObjectScript.tmBundle](https://github.com/intersystems-community/ObjectScript.tmBundle)
 - **Objective-C:** [textmate/objective-c.tmbundle](https://github.com/textmate/objective-c.tmbundle)
 - **Objective-C++:** [textmate/objective-c.tmbundle](https://github.com/textmate/objective-c.tmbundle)
 - **Objective-J:** [textmate/javascript-objective-j.tmbundle](https://github.com/textmate/javascript-objective-j.tmbundle)
