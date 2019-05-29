@@ -416,6 +416,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Web Ontology Language:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)
 - **WebAssembly:** [Alhadis/language-webassembly](https://github.com/Alhadis/language-webassembly)
 - **WebIDL:** [andik/IDL-Syntax](https://github.com/andik/IDL-Syntax)
+- **WebVTT:** [weizhenye/language-vtt](https://github.com/weizhenye/language-vtt)
 - **Windows Registry Entries:** [bsara/language-reg](https://github.com/bsara/language-reg)
 - **Wollok:** [uqbar-project/wollok-sublime](https://github.com/uqbar-project/wollok-sublime)
 - **World of Warcraft Addon Data:** [nebularg/language-toc-wow](https://github.com/nebularg/language-toc-wow)
