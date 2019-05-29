@@ -113,6 +113,9 @@ class TestStrategies < Minitest::Test
     assert_interpreter nil, "#!"
     assert_interpreter nil, "#! "
     assert_interpreter nil, "#!/usr/bin/env"
+    assert_interpreter nil, "#!/usr/bin/env osascript -l JavaScript"
+    assert_interpreter nil, "#!/usr/bin/env osascript -l AppleScript"
+    assert_interpreter nil, "#!/usr/bin/env osascript -l foobar"
 
     assert_interpreter "ruby", "#!/usr/sbin/ruby\n# bar"
     assert_interpreter "ruby", "#!/usr/bin/ruby\n# foo"
@@ -135,9 +138,6 @@ class TestStrategies < Minitest::Test
 
     assert_interpreter "sh", "#! /usr/bin/env A=003 B=149 C=150 D=xzd E=base64 F=tar G=gz H=head I=tail sh"
     assert_interpreter "python", "#!/usr/bin/env foo=bar bar=foo python -cos=__import__(\"os\");"
-
-    assert_interpreter "JavaScript", "#!/usr/bin/env osascript -l JavaScript"
-    assert_interpreter "AppleScript", "#!/usr/bin/env osascript -l AppleScript"
     assert_interpreter "osascript", "#!/usr/bin/env osascript"
   end
 
