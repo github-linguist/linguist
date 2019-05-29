@@ -216,6 +216,18 @@ Alpine Abuild:
   codemirror_mode: shell
   codemirror_mime_type: text/x-sh
   language_id: 14
+Altium Designer:
+  type: data
+  aliases:
+  - altium
+  extensions:
+  - ".OutJob"
+  - ".PcbDoc"
+  - ".PrjPCB"
+  - ".SchDoc"
+  tm_scope: source.ini
+  ace_mode: ini
+  language_id: 187772328
 AngelScript:
   type: programming
   color: "#C7D7DC"
@@ -4539,12 +4551,12 @@ SSH Config:
   type: data
   group: INI
   filenames:
-  - "ssh-config"
-  - "ssh_config"
-  - "sshconfig"
-  - "sshconfig.snip"
-  - "sshd-config"
-  - "sshd_config"
+  - ssh-config
+  - ssh_config
+  - sshconfig
+  - sshconfig.snip
+  - sshd-config
+  - sshd_config
   ace_mode: text
   tm_scope: source.ssh-config
   language_id: 554920715

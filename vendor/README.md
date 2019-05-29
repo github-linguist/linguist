@@ -21,6 +21,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Agda:** [mokus0/Agda.tmbundle](https://github.com/mokus0/Agda.tmbundle)
 - **Alloy:** [macekond/Alloy.tmbundle](https://github.com/macekond/Alloy.tmbundle)
 - **Alpine Abuild:** [atom/language-shellscript](https://github.com/atom/language-shellscript)
+- **Altium Designer:** [textmate/ini.tmbundle](https://github.com/textmate/ini.tmbundle)
 - **AngelScript:** [wronex/sublime-angelscript](https://github.com/wronex/sublime-angelscript)
 - **Ant Build System:** [textmate/ant.tmbundle](https://github.com/textmate/ant.tmbundle)
 - **ApacheConf:** [textmate/apache.tmbundle](https://github.com/textmate/apache.tmbundle)
