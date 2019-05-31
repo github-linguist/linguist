@@ -58,6 +58,12 @@ module Linguist
         script = $1
       end
 
+      # osascript can be called with an optional `-l <language>` argument, which may not be a language with an interpreter.
+      # In this case, return and rely on the subsequent strategies to determine the language.
+      if script == 'osascript'
+        return if s.scan_until(/\-l\s?/)
+      end
+
       File.basename(script)
     end
   end
