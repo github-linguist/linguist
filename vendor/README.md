@@ -432,7 +432,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **XQuery:** [wcandillon/language-jsoniq](https://github.com/wcandillon/language-jsoniq)
 - **XS:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **XSLT:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)
-- **Xojo:** [angryant0007/VBDotNetSyntax](https://github.com/angryant0007/VBDotNetSyntax)
+- **Xojo:** [jimmckay/XojoSyntaxTM](https://github.com/jimmckay/XojoSyntaxTM)
 - **Xtend:** [staltz/SublimeXtend](https://github.com/staltz/SublimeXtend)
 - **YAML:** [atom/language-yaml](https://github.com/atom/language-yaml)
 - **YANG:** [DzonyKalafut/language-yang](https://github.com/DzonyKalafut/language-yang)
