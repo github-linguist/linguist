@@ -1,7 +1,7 @@
 require 'linguist/generated'
 require 'charlock_holmes'
 require 'escape_utils'
-require 'mime/types'
+require 'mini_mime'
 require 'yaml'
 
 module Linguist
@@ -33,12 +33,7 @@ module Linguist
       if defined? @_mime_type
         @_mime_type
       else
-        guesses = ::MIME::Types.type_for(extname.to_s)
-
-        # Prefer text mime types over binary
-        @_mime_type = guesses.detect { |type| type.ascii? } ||
-          # Otherwise use the first guess
-          guesses.first
+        @_mime_type = MiniMime.lookup_by_filename(name)
       end
     end
 
@@ -51,7 +46,7 @@ module Linguist
     #
     # Returns a mime type String.
     def mime_type
-      _mime_type ? _mime_type.to_s : 'text/plain'
+      _mime_type ? _mime_type.content_type : 'text/plain'
     end
 
     # Internal: Is the blob binary according to its mime type
@@ -275,7 +270,7 @@ module Linguist
           # also--importantly--without having to duplicate many (potentially
           # large) strings.
           begin
-            
+
             data.split(encoded_newlines_re, -1)
           rescue Encoding::ConverterNotFoundError
             # The data is not splittable in the detected encoding.  Assume it's
