@@ -165,7 +165,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **HTML+Razor:** [austincummings/razor-plus](https://github.com/austincummings/razor-plus)
 - **HTTP:** [samsalisbury/Sublime-HTTP](https://github.com/samsalisbury/Sublime-HTTP)
 - **HXML:** [vshaxe/haxe-TmLanguage](https://github.com/vshaxe/haxe-TmLanguage)
-- **Hack:** [textmate/php.tmbundle](https://github.com/textmate/php.tmbundle)
+- **Hack:** [slackhq/vscode-hack](https://github.com/slackhq/vscode-hack)
 - **Haml:** [ezekg/language-haml](https://github.com/ezekg/language-haml)
 - **Handlebars:** [daaain/Handlebars](https://github.com/daaain/Handlebars)
 - **Harbour:** [hernad/atom-language-harbour](https://github.com/hernad/atom-language-harbour)
