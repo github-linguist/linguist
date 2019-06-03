@@ -26,7 +26,7 @@ module Linguist
       File.extname(name.to_s)
     end
 
-    # Internal: Lookup mime type for extension.
+    # Internal: Lookup mime type for filename.
     #
     # Returns a MIME::Type
     def _mime_type
