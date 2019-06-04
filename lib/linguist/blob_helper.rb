@@ -26,14 +26,14 @@ module Linguist
       File.extname(name.to_s)
     end
 
-    # Internal: Lookup mime type for extension.
+    # Internal: Lookup mime type for filename.
     #
     # Returns a MIME::Type
     def _mime_type
       if defined? @_mime_type
         @_mime_type
       else
-        @_mime_type = MiniMime.lookup_by_filename(name)
+        @_mime_type = MiniMime.lookup_by_filename(name.to_s)
       end
     end
 

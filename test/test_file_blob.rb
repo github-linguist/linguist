@@ -49,6 +49,9 @@ class TestFileBlob < Minitest::Test
     assert_equal "application/xml", sample_blob("XML/bar.xml").mime_type
     assert_equal "audio/ogg", fixture_blob("Binary/foo.ogg").mime_type
     assert_equal "text/plain", fixture_blob("Data/README").mime_type
+    # GitHub doesn't use a filename when returning raw blobs
+    blob = Struct.new(:name) { include Linguist::BlobHelper }
+    assert_equal "text/plain", blob.new(nil).mime_type
   end
 
   def test_content_type
