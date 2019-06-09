@@ -227,6 +227,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **LookML:** [atom/language-yaml](https://github.com/atom/language-yaml)
 - **LoomScript:** [ambethia/Sublime-Loom](https://github.com/ambethia/Sublime-Loom)
 - **Lua:** [textmate/lua.tmbundle](https://github.com/textmate/lua.tmbundle)
+- **Lys:** [lys-lang/lys-TmLanguage](https://github.com/lys-lang/lys-TmLanguage)
 - **MATLAB:** [mathworks/MATLAB-Language-grammar](https://github.com/mathworks/MATLAB-Language-grammar)
 - **MAXScript:** [Alhadis/language-maxscript](https://github.com/Alhadis/language-maxscript)
 - **MQL4:** [mqsoft/MQL5-sublime](https://github.com/mqsoft/MQL5-sublime)

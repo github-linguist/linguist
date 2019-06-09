@@ -1,0 +1,442 @@
+
+struct Keccak(data: bytes, result: bytes)
+
+impl Keccak {
+  fun apply(): Keccak = {
+    // The context is laid out as follows:
+    //   0: 1600 bits - 200 bytes - hashing state
+    // 200:   64 bits -   8 bytes - residue position
+    // 208: 1536 bits - 192 bytes - residue buffer
+    // 400: 1536 bits - 192 bytes - round constants
+    // 592:  192 bits -  24 bytes - rotation constants
+
+    val context = bytes(616 as u32)
+    val result = bytes(32 as u32)
+
+    keccakInit(context.ptr)
+
+    Keccak(context, result)
+  }
+
+  fun reset(self: Keccak): void = {
+    keccakInit(self.data.ptr)
+  }
+
+  fun update(self: Keccak, data: bytes): void = {
+    update(self, data.ptr, data.length)
+  }
+
+  fun update(self: Keccak, address: u32, length: u32): void = {
+    keccakUpdate(self.data.ptr, address, length)
+  }
+
+  fun digest(self: Keccak): bytes = {
+    keccakFinish(self.data.ptr, self.result.ptr)
+
+    self.result
+  }
+
+  /// Internal implementation
+
+  private fun keccakTheta(context: ref): void = {
+    // C[x] = A[x] ^ A[x + 5] ^ A[x + 10] ^ A[x + 15] ^ A[x + 20];
+    val C0 =
+        i64.load(context, 0 as u32) ^ i64.load(context, 40 as u32) ^
+        i64.load(context, 80 as u32) ^ i64.load(context, 120 as u32) ^
+        i64.load(context, 160 as u32)
+
+    val C1 =
+        i64.load(context, 8 as u32) ^ i64.load(context, 48 as u32) ^
+        i64.load(context, 88 as u32) ^ i64.load(context, 128 as u32) ^
+        i64.load(context, 168 as u32)
+
+    val C2 =
+        i64.load(context, 16 as u32) ^ i64.load(context, 56 as u32) ^
+        i64.load(context, 96 as u32) ^ i64.load(context, 136 as u32) ^
+        i64.load(context, 176 as u32)
+
+    val C3 =
+        i64.load(context, 24 as u32) ^ i64.load(context, 64 as u32) ^
+        i64.load(context, 104 as u32) ^ i64.load(context, 144 as u32) ^
+        i64.load(context, 184 as u32)
+
+    val C4 =
+        i64.load(context, 32 as u32) ^ i64.load(context, 72 as u32) ^
+        i64.load(context, 112 as u32) ^ i64.load(context, 152 as u32) ^
+        i64.load(context, 192 as u32)
+
+    val D0 = C4 ^ i64.rotl(C1, 1 as i64)
+    val D1 = C0 ^ i64.rotl(C2, 1 as i64)
+    val D2 = C1 ^ i64.rotl(C3, 1 as i64)
+    val D3 = C2 ^ i64.rotl(C4, 1 as i64)
+    val D4 = C3 ^ i64.rotl(C0, 1 as i64)
+
+    // A[x]      ^= D[x];
+    // A[x + 5]  ^= D[x];
+    // A[x + 10] ^= D[x];
+    // A[x + 15] ^= D[x];
+    // A[x + 20] ^= D[x];
+
+    // x = 0
+    i64.store(context, i64.load(context, 0 as u32) ^ D0, 0 as u32)
+    i64.store(context, i64.load(context, 40 as u32) ^ D0, 40 as u32)
+    i64.store(context, i64.load(context, 80 as u32) ^ D0, 80 as u32)
+    i64.store(context, i64.load(context, 120 as u32) ^ D0, 120 as u32)
+    i64.store(context, i64.load(context, 160 as u32) ^ D0, 160 as u32)
+
+    // x = 1
+    i64.store(context, i64.load(context, 8 as u32) ^ D1, 8 as u32)
+    i64.store(context, i64.load(context, 48 as u32) ^ D1, 48 as u32)
+    i64.store(context, i64.load(context, 88 as u32) ^ D1, 88 as u32)
+    i64.store(context, i64.load(context, 128 as u32) ^ D1, 128 as u32)
+    i64.store(context, i64.load(context, 168 as u32) ^ D1, 168 as u32)
+
+    // x = 2
+    i64.store(context, i64.load(context, 16 as u32) ^ D2, 16 as u32)
+    i64.store(context, i64.load(context, 56 as u32) ^ D2, 56 as u32)
+    i64.store(context, i64.load(context, 96 as u32) ^ D2, 96 as u32)
+    i64.store(context, i64.load(context, 136 as u32) ^ D2, 136 as u32)
+    i64.store(context, i64.load(context, 176 as u32) ^ D2, 176 as u32)
+
+    // x = 3
+    i64.store(context, i64.load(context, 24 as u32) ^ D3, 24 as u32)
+    i64.store(context, i64.load(context, 64 as u32) ^ D3, 64 as u32)
+    i64.store(context, i64.load(context, 104 as u32) ^ D3, 104 as u32)
+    i64.store(context, i64.load(context, 144 as u32) ^ D3, 144 as u32)
+    i64.store(context, i64.load(context, 184 as u32) ^ D3, 184 as u32)
+
+    // x = 4
+    i64.store(context, i64.load(context, 32 as u32) ^ D4, 32 as u32)
+    i64.store(context, i64.load(context, 72 as u32) ^ D4, 72 as u32)
+    i64.store(context, i64.load(context, 112 as u32) ^ D4, 112 as u32)
+    i64.store(context, i64.load(context, 152 as u32) ^ D4, 152 as u32)
+    i64.store(context, i64.load(context, 192 as u32) ^ D4, 192 as u32)
+  }
+
+  private fun keccakRho(contextRef: ref, rotationConsts: ref): void = {
+    var i = 0 as u32
+
+    loop {
+      if (i >= 24 as u32) {
+        break
+      } else {
+        val offset = (1 as u32 + i) << 3
+
+        i64.store(contextRef,
+          i64.rotl(
+            i64.load(contextRef, offset),
+            i64.load8_u(rotationConsts, i)
+          ),
+          offset
+        )
+
+        i = i + 1 as u32
+        continue
+      }
+    }
+  }
+
+  private fun keccakPi(context: ref): void = {
+    val A1 = i64.load(context, 8 as u32)
+
+    // Swap non-overlapping fields, i.e. $A1 = $A6, etc.
+    // NOTE: $A0 is untouched
+    i64.store(context, i64.load(context, 48 as u32), 8 as u32)
+    i64.store(context, i64.load(context, 72 as u32), 48 as u32)
+    i64.store(context, i64.load(context, 176 as u32), 72 as u32)
+    i64.store(context, i64.load(context, 112 as u32), 176 as u32)
+    i64.store(context, i64.load(context, 160 as u32), 112 as u32)
+    i64.store(context, i64.load(context, 16 as u32), 160 as u32)
+    i64.store(context, i64.load(context, 96 as u32), 16 as u32)
+    i64.store(context, i64.load(context, 104 as u32), 96 as u32)
+    i64.store(context, i64.load(context, 152 as u32), 104 as u32)
+    i64.store(context, i64.load(context, 184 as u32), 152 as u32)
+    i64.store(context, i64.load(context, 120 as u32), 184 as u32)
+    i64.store(context, i64.load(context, 32 as u32), 120 as u32)
+    i64.store(context, i64.load(context, 192 as u32), 32 as u32)
+    i64.store(context, i64.load(context, 168 as u32), 192 as u32)
+    i64.store(context, i64.load(context, 64 as u32), 168 as u32)
+    i64.store(context, i64.load(context, 128 as u32), 64 as u32)
+    i64.store(context, i64.load(context, 40 as u32), 128 as u32)
+    i64.store(context, i64.load(context, 24 as u32), 40 as u32)
+    i64.store(context, i64.load(context, 144 as u32), 24 as u32)
+    i64.store(context, i64.load(context, 136 as u32), 144 as u32)
+    i64.store(context, i64.load(context, 88 as u32), 136 as u32)
+    i64.store(context, i64.load(context, 56 as u32), 88 as u32)
+    i64.store(context, i64.load(context, 80 as u32), 56 as u32)
+
+    // Place the previously saved overlapping field
+    i64.store(context, A1, 80 as u32)
+  }
+
+  private fun keccakChi(context: ref): void = {
+    var i = 0 as u32
+
+    // for (round = 0; round < 25; i += 5)
+    loop {
+      if (i >= 25 as u32) break
+
+      val A0 = i64.load(context, i << 3)
+      val A1 = i64.load(context, (i + 1 as u32) << 3)
+
+      // A[0 + i] ^= ~A1 & A[2 + i];
+      i64.store(context,
+        i64.load(context, i << 3) ^ (~A1 & i64.load(context, (i + 2 as u32) << 3)),
+        i << 3
+      )
+
+      // A[1 + i] ^= ~A[2 + i] & A[3 + i];
+      i64.store(context,
+        i64.load(context, (i + 1 as u32) << 3) ^ (~i64.load(context, (i + 2 as u32) << 3) & i64.load(context, (i + 3 as u32) << 3)),
+        (i + 1 as u32) << 3
+      )
+
+      // A[2 + i] ^= ~A[3 + i] & A[4 + i];
+      i64.store(context,
+        i64.load(context, (i + 2 as u32) << 3) ^ (~i64.load(context, (i + 3 as u32) << 3) & i64.load(context, (i + 4 as u32) << 3)),
+        (i + 2 as u32) << 3
+      )
+
+      // A[3 + i] ^= ~A[4 + i] & A0;
+      i64.store(context,
+        i64.load(context, (i + 3 as u32) << 3) ^ (~i64.load(context, (i + 4 as u32) << 3) & A0),
+        (i + 3 as u32) << 3
+      )
+
+      // A[4 + i] ^= ~A0 & A1;
+      i64.store(context, i64.load(context, (i + 4 as u32) << 3) ^ ~A0 & A1, (i + 4 as u32) << 3)
+
+      i = i + 5 as u32
+
+      continue
+    }
+  }
+
+  private fun keccakPermute(contextOffset: u32): void = {
+    val roundConsts = (contextOffset + 400 as u32) as ref
+    val rotationConsts = (contextOffset + 592 as u32) as ref
+    val contextRef = contextOffset as ref
+    var round = 0
+
+    // for (round = 0; round < 24; round++)
+    loop {
+      if (round >= 24) {
+        break
+      } else {
+
+        // theta transform
+        keccakTheta(contextRef)
+
+        // rho transform
+        keccakRho(contextRef, rotationConsts)
+
+        // pi transform
+        keccakPi(contextRef)
+
+        // chi transform
+        keccakChi(contextRef)
+
+        // iota transform
+        // contextOffset[0] ^= KECCAK_ROUND_CONSTANTS[round];
+        i64.store(
+          contextRef,
+          i64.load(contextRef) ^ i64.load(roundConsts, (round as u32) << 3)
+        )
+
+        round = round + 1
+        continue
+      }
+    }
+  }
+
+  private fun keccakBlock(inputOffset: u32, contextOffset: u32): void = {
+    val input = inputOffset as ref
+    val context = contextOffset as ref
+
+    // read blocks in little-endian order and XOR against contextOffset
+    i64.store(context, i64.load(context, 0 as u32) ^ i64.load(input, 0 as u32), 0 as u32)
+    i64.store(context, i64.load(context, 8 as u32) ^ i64.load(input, 8 as u32), 8 as u32)
+    i64.store(context, i64.load(context, 16 as u32) ^ i64.load(input, 16 as u32), 16 as u32)
+    i64.store(context, i64.load(context, 24 as u32) ^ i64.load(input, 24 as u32), 24 as u32)
+    i64.store(context, i64.load(context, 32 as u32) ^ i64.load(input, 32 as u32), 32 as u32)
+    i64.store(context, i64.load(context, 40 as u32) ^ i64.load(input, 40 as u32), 40 as u32)
+    i64.store(context, i64.load(context, 48 as u32) ^ i64.load(input, 48 as u32), 48 as u32)
+    i64.store(context, i64.load(context, 56 as u32) ^ i64.load(input, 56 as u32), 56 as u32)
+    i64.store(context, i64.load(context, 64 as u32) ^ i64.load(input, 64 as u32), 64 as u32)
+    i64.store(context, i64.load(context, 72 as u32) ^ i64.load(input, 72 as u32), 72 as u32)
+    i64.store(context, i64.load(context, 80 as u32) ^ i64.load(input, 80 as u32), 80 as u32)
+    i64.store(context, i64.load(context, 88 as u32) ^ i64.load(input, 88 as u32), 88 as u32)
+    i64.store(context, i64.load(context, 96 as u32) ^ i64.load(input, 96 as u32), 96 as u32)
+    i64.store(context, i64.load(context, 104 as u32) ^ i64.load(input, 104 as u32), 104 as u32)
+    i64.store(context, i64.load(context, 112 as u32) ^ i64.load(input, 112 as u32), 112 as u32)
+    i64.store(context, i64.load(context, 120 as u32) ^ i64.load(input, 120 as u32), 120 as u32)
+    i64.store(context, i64.load(context, 128 as u32) ^ i64.load(input, 128 as u32), 128 as u32)
+
+    keccakPermute(contextOffset)
+  }
+
+  //
+  // Initialise the context
+  //
+  private fun keccakInit(contextOffset: u32): void = {
+    keccakReset(contextOffset)
+
+    // insert the round constants (used by $KECCAK_IOTA)
+    val roundConsts = (contextOffset + 400 as u32) as ref
+    u64.store(roundConsts, 0x0000000000000001, 0 as u32)
+    u64.store(roundConsts, 0x0000000000008082, 8 as u32)
+    u64.store(roundConsts, 0x800000000000808A, 16 as u32)
+    u64.store(roundConsts, 0x8000000080008000, 24 as u32)
+    u64.store(roundConsts, 0x000000000000808B, 32 as u32)
+    u64.store(roundConsts, 0x0000000080000001, 40 as u32)
+    u64.store(roundConsts, 0x8000000080008081, 48 as u32)
+    u64.store(roundConsts, 0x8000000000008009, 56 as u32)
+    u64.store(roundConsts, 0x000000000000008A, 64 as u32)
+    u64.store(roundConsts, 0x0000000000000088, 72 as u32)
+    u64.store(roundConsts, 0x0000000080008009, 80 as u32)
+    u64.store(roundConsts, 0x000000008000000A, 88 as u32)
+    u64.store(roundConsts, 0x000000008000808B, 96 as u32)
+    u64.store(roundConsts, 0x800000000000008B, 104 as u32)
+    u64.store(roundConsts, 0x8000000000008089, 112 as u32)
+    u64.store(roundConsts, 0x8000000000008003, 120 as u32)
+    u64.store(roundConsts, 0x8000000000008002, 128 as u32)
+    u64.store(roundConsts, 0x8000000000000080, 136 as u32)
+    u64.store(roundConsts, 0x000000000000800A, 144 as u32)
+    u64.store(roundConsts, 0x800000008000000A, 152 as u32)
+    u64.store(roundConsts, 0x8000000080008081, 160 as u32)
+    u64.store(roundConsts, 0x8000000000008080, 168 as u32)
+    u64.store(roundConsts, 0x0000000080000001, 176 as u32)
+    u64.store(roundConsts, 0x8000000080008008, 184 as u32)
+
+    // insert the rotation constants (used by $keccakRho)
+    val rotationConsts = (contextOffset + 592 as u32) as ref
+    u8.store(rotationConsts, 1 as u8, 0 as u32)
+    u8.store(rotationConsts, 62 as u8, 1 as u32)
+    u8.store(rotationConsts, 28 as u8, 2 as u32)
+    u8.store(rotationConsts, 27 as u8, 3 as u32)
+    u8.store(rotationConsts, 36 as u8, 4 as u32)
+    u8.store(rotationConsts, 44 as u8, 5 as u32)
+    u8.store(rotationConsts, 6 as u8, 6 as u32)
+    u8.store(rotationConsts, 55 as u8, 7 as u32)
+    u8.store(rotationConsts, 20 as u8, 8 as u32)
+    u8.store(rotationConsts, 3 as u8, 9 as u32)
+    u8.store(rotationConsts, 10 as u8, 10 as u32)
+    u8.store(rotationConsts, 43 as u8, 11 as u32)
+    u8.store(rotationConsts, 25 as u8, 12 as u32)
+    u8.store(rotationConsts, 39 as u8, 13 as u32)
+    u8.store(rotationConsts, 41 as u8, 14 as u32)
+    u8.store(rotationConsts, 45 as u8, 15 as u32)
+    u8.store(rotationConsts, 15 as u8, 16 as u32)
+    u8.store(rotationConsts, 21 as u8, 17 as u32)
+    u8.store(rotationConsts, 8 as u8, 18 as u32)
+    u8.store(rotationConsts, 18 as u8, 19 as u32)
+    u8.store(rotationConsts, 2 as u8, 20 as u32)
+    u8.store(rotationConsts, 61 as u8, 21 as u32)
+    u8.store(rotationConsts, 56 as u8, 22 as u32)
+    u8.store(rotationConsts, 14 as u8, 23 as u32)
+  }
+
+  // Reset the context
+  //
+  private fun keccakReset(contextOffset: u32): void = {
+    // clear out the context memory
+    system::core::memory::memset(contextOffset, 0 as u8, 616 as u32)
+  }
+
+  //
+  // Push input to the context
+  //
+  private fun keccakUpdate(contextOffset: u32, inputOffset: u32, inputLength: u32): void = {
+    // this is where we store the pointer
+    val residueOffsetRef = (contextOffset + 200 as u32) as ref
+    // this is where the buffer is
+    val residueBuffer = contextOffset + 208 as u32
+
+    var residueIndex = u32.load(residueOffsetRef)
+    var mutInputLength = inputLength
+    var mutInputOffset = inputOffset
+
+    // process residue from last block
+    if (residueIndex != 0 as u32) {
+      // the space left in the residue buffer
+      var tmp = 136 as u32 - residueIndex
+
+      // limit to what we have as an input
+      if (mutInputLength < tmp) {
+        tmp = mutInputLength
+      }
+
+      // fill up the residue buffer
+      system::core::memory::memcpy(residueBuffer + residueIndex, mutInputOffset, tmp)
+
+      residueIndex = residueIndex + tmp
+
+      // block complete
+      if (residueIndex == 136 as u32) {
+        keccakBlock(mutInputOffset, contextOffset)
+
+        residueIndex = 0 as u32
+      }
+
+      u32.store(residueOffsetRef, residueIndex)
+
+      mutInputLength = mutInputLength - tmp
+    }
+
+    // while (mutInputLength > block_size)
+    loop {
+      if (mutInputLength < 136 as u32) {
+        break
+      }
+      keccakBlock(mutInputOffset, contextOffset)
+
+      mutInputOffset = mutInputOffset + 136 as u32
+      mutInputLength = mutInputLength - 136 as u32
+
+      continue
+    }
+
+    // copy to the residue buffer
+    if (mutInputLength > 0 as u32) {
+      system::core::memory::memcpy(residueBuffer + residueIndex, mutInputOffset, mutInputLength)
+
+      u32.store(residueOffsetRef, residueIndex + mutInputLength)
+    }
+  }
+
+  //
+  // Finalise and return the hash
+  //
+  // The 256 bit hash is returned at the output offset.
+  //
+  private fun keccakFinish(contextOffset: u32, outputOffset: u32): void =  {
+    // this is where the buffer is
+    var residueBuffer = contextOffset + 208 as u32
+    val residueRef = residueBuffer as ref
+
+    var residueIndex = u32.load(
+      // this is where we store the pointer
+      (contextOffset + 200 as u32) as ref
+    )
+
+    // clear the rest of the residue buffer
+    system::core::memory::memset(residueBuffer + residueIndex, 0 as u8, 136 as u32 - residueIndex)
+
+    // ((char*)ctx->message)[ctx->rest] |= 0x01;
+    u8.store(residueRef, u8.load(residueRef, residueIndex) | 0x01 as u8, residueIndex)
+
+    // ((char*)ctx->message)[block_size - 1] |= 0x80;
+    residueIndex = 135 as u32
+    u8.store(residueRef, u8.load(residueRef, residueIndex) | 0x80 as u8, residueIndex)
+
+    keccakBlock(residueBuffer, contextOffset)
+
+    // the first 32 bytes pointed at by $outputOffset is the final hash
+    var outputRef = outputOffset as ref
+    var contextRef = contextOffset as ref
+    i64.store(outputRef, i64.load(contextRef))
+    i64.store(outputRef, i64.load(contextRef, 8 as u32), 8 as u32)
+    i64.store(outputRef, i64.load(contextRef, 16 as u32), 16 as u32)
+    i64.store(outputRef, i64.load(contextRef, 24 as u32), 24 as u32)
+  }
+}

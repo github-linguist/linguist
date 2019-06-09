@@ -1,0 +1,298 @@
+/** Number of alignment bits. */
+val AL_BITS: i32 = 3
+
+/** Number of possible alignment values. */
+val AL_SIZE: i32 = 1 << AL_BITS
+
+/** Mask to obtain just the alignment bits. */
+val AL_MASK: i32 = AL_SIZE - 1
+
+/** Maximum 32-bit allocation size. */
+val MAX_SIZE_32: i32 = 1 << 30 // 1G
+
+val HEAP_BASE = 0
+
+struct asd()
+
+private var startOffset: i32 = (HEAP_BASE + AL_MASK) & ~AL_MASK
+private var offset: i32 = startOffset
+
+private var lastPtr: i32 = 0
+
+private fun growMemory(pages: i32): i32 = %wasm {
+  (grow_memory (get_local $pages))
+}
+
+private fun currentMemory(): i32 = %wasm {
+  (current_memory)
+}
+
+private fun max(a: i32, b: i32): i32 = if (a > b) a else b
+
+#[inline]
+fun allocBytes(size: i32): bytes = %wasm {
+  (local $allocation i32)
+  (set_local $allocation (call $malloc (get_local $size)))
+  (i32.store (get_local $allocation) (get_local $size))
+  (i64.or
+    (i64.extend_s/i32 (get_local $allocation))
+    (i64.shl
+      (i64.extend_s/i32 (i32.const 0))
+      (i64.const 32)
+    )
+  )
+}
+
+#[inline]
+#[export "calloc"]
+#[explicit]
+fun calloc(itemCount: i32, itemSize: i32): i32 = {
+  val size = itemCount * itemSize
+  val $ret = malloc(size)
+  memset($ret, size, 0)
+  $ret
+}
+
+fun malloc(size: i32): i32 = {
+  if (size > 0) {
+    if (size > MAX_SIZE_32) {
+      panic()
+    }
+    val ptr = offset
+    val newPtr = (ptr + size + AL_MASK) & ~AL_MASK
+    val pagesBefore = currentMemory()
+    if (newPtr > pagesBefore << 16) {
+      val pagesNeeded = ((newPtr - ptr + 0xffff) & ~0xffff) >>> 16
+      val pagesWanted = max(pagesBefore, pagesNeeded) // double memory
+      if (growMemory(pagesWanted) < 0) {
+        if (growMemory(pagesNeeded) < 0) {
+          panic() // out of memory
+        }
+      }
+    }
+    offset = newPtr
+    ptr
+  } else {
+    0
+  }
+}
+
+fun free(ptr: i32): void = {
+  // stub
+}
+
+fun discriminant(v: ref): u64 = %wasm {
+  (i64.and
+    (i64.const 0xffffffff00000000)
+    (get_local $v)
+  )
+}
+
+fun memcpy(to: i32, from: i32, len: i32): void = %wasm {
+  (local $end i32)
+  (set_local $end (i32.add (get_local $from) (get_local $len)))
+  (block $exit
+    (loop $cont
+      (br_if $exit (i32.eq (get_local $from) (get_local $end)))
+      (i32.store8 (get_local $to) (i32.load8_u (get_local $from)))
+      (set_local $from (i32.add (get_local $from) (i32.const 1)))
+      (set_local $to (i32.add (get_local $to) (i32.const 1)))
+      (br $cont)
+    )
+  )
+}
+
+fun memset(ptr: i32, content: i32, len: i32): void = %wasm {
+  (local $end i32)
+  (set_local $end (i32.add (get_local $ptr) (get_local $len)))
+  (block $exit
+    (loop $cont
+      (br_if $exit (i32.eq (get_local $ptr) (get_local $end)))
+      (i32.store8 (get_local $ptr) (i32.load8_u (get_local $content)))
+      (set_local $ptr (i32.add (get_local $ptr) (i32.const 1)))
+      (br $cont)
+    )
+  )
+}
+
+
+struct String(data: bytes)
+
+impl String {
+  #[getter]
+  fun length(str: String): i32 = str.data.length / 2
+
+  #[setter]
+  fun length(str: String, a: i32): i32 = str.data.length / 2
+
+  fun +(lhs: String, rhs: String): String = {
+    val lhsData = lhs.data
+    val rhsData = rhs.data
+
+    val lhsLen = lhsData.length
+    val rhsLen = rhsData.length
+
+    var newData = bytes(lhsLen + rhsLen)
+
+    system::core::memory::memcpy(newData.ptr, lhsData.ptr, lhsLen)
+    system::core::memory::memcpy(newData.ptr + lhsLen, rhs.data.ptr, rhsLen)
+
+    String(newData)
+  }
+
+  fun charAt(str: String, at: i32): u16 = {
+    if (at > str.length) {
+      panic()
+    }
+    u16.load(str.data.ptr as ref, at * 2)
+  }
+}
+
+enum AA {
+  BB
+}
+
+struct TT()
+
+impl BB {
+  fun a(): i32 = 1
+}
+
+fun main(): i32 = BB.a()
+
+type test = %struct{}
+impl test {
+  fun x(): i32 = 1
+}
+
+fun x(a): i32 = 1
+fun x1(): i32 = 1 + 2 / 3 * 4 - -5
+fun x2(x): i32 = ~x
+fun x3(x): i32 = -x
+fun x4(): i32 = ~99
+fun x5(): i32 = ~test.x()
+fun x6(): boolean = !true
+
+
+enum Tree {
+  Empty
+  Node(a: Tree | Forest)
+}
+
+enum Forest {
+  Nil
+  Cons(tree: Tree | Forest)
+}
+
+fun testPassing(): void = {
+  var a = Nil
+  var b = Cons(Empty)
+  var c = Cons(Nil)
+  var d = Cons(Node(Empty))
+  var e = Node(Nil)
+
+  support::test::assert( a is Nil            == true )
+  support::test::assert( a is Forest         == true )
+  support::test::assert( b is Forest         == true )
+  support::test::assert( c is Cons           == true )
+  support::test::assert( e is Node           == true )
+  support::test::assert( e is Tree           == true )
+}
+
+
+
+fun testFn(): void = {
+  var x = 1
+  loop {
+    x = x + 1
+    if (x > 10)
+      break
+  }
+}
+
+fun testFn2(): void = {
+  var x = 1
+  loop {
+    x = x + 1
+    continue
+  }
+}
+
+struct Color(r: i32, g: i32, b: i32)
+
+fun main(color: Color): i32 =
+  color.r * 0x10000 | asd |
+  color.g * 0x100 |
+  color.b
+
+struct True()
+struct False()
+type Boolean = True | False
+
+fun gt0(x: i32): Boolean =
+  if (x > 0)
+    True()
+  else
+    False()
+
+fun isTrue(a: Boolean): boolean =
+  match a {
+    case is True() -> true
+    else -> false
+  }
+
+fun x1(): f32 = {
+  fun Y(): f32 = 1.0
+  Y()
+}
+
+fun x2(): i32 = {
+  var n = 1
+  fun Y(): i32 = n
+  Y()
+}
+
+struct Iterator(current: i32, target: i32)
+
+enum Maybe {
+  None
+  Some(value: i32)
+}
+
+impl Iterator {
+  fun next(iter: Iterator): Maybe = {
+    if (iter.current <= iter.target) {
+      var r = Some(iter.current)
+      iter.current = iter.current + 1
+      r
+    } else {
+      None
+    }
+  }
+}
+
+fun testFn3(from: i32, to: i32): i32 = {
+  /**
+    * This is a candidate sugar syntax for
+    *
+    * var ret = 0
+    * for (value in Iterator(from, to)) {
+    *   ret = ret + value
+    * }
+    */
+  var ret = 0
+
+  val $iter$ = Iterator(from, to)
+  loop {
+    match Iterator.next($iter$) {
+      case is Some(value) -> {
+        ret = ret + value
+
+        continue
+      }
+      case is None -> break
+    }
+  }
+
+  ret
+}

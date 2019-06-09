@@ -1,0 +1,21 @@
+
+private fun fibonacci(n: i64, x1: i64, x2: i64): i64 = {
+  if (n > 0) {
+    fibonacci(n - 1, x2, x1 + x2)
+  } else {
+    x1
+  }
+}
+
+fun fibonacciIf(n: i64): i64 =
+  fibonacci(n, 0, 1)
+
+private fun fibonacci2(n: i64, a: i64, b: i64): i64 =
+  match n {
+    case 0 -> a
+    case 1 -> b
+    else   -> fibonacci(n - 1, b, a + b)
+  }
+
+fun fibonacciMatch(n: i64): i64 =
+  fibonacci2(n, 0, 1)

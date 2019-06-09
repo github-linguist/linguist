@@ -1,0 +1,15 @@
+enum Color {
+  Red
+  Green
+  Blue
+  Custom(r: i32, g: i32, b: i32)
+}
+
+fun isRed(color: Color): boolean = {
+  match color {
+    case is Red -> true
+    case is Custom(r, g, b) ->
+      r == 255 && g == 0 && b == 0
+    else -> false
+  }
+}
