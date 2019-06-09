@@ -42,13 +42,34 @@ class TestGenerated < Minitest::Test
     generated_sample_without_loading_data("Dummy/foo.xcworkspacedata")
     generated_sample_without_loading_data("Dummy/foo.xcuserstate")
 
+    # Cocoapods
+    generated_sample_without_loading_data("Pods/Pods.xcodeproj")
+    generated_sample_without_loading_data("Pods/SwiftDependency/foo.swift")
+    generated_sample_without_loading_data("Pods/ObjCDependency/foo.h")
+    generated_sample_without_loading_data("Pods/ObjCDependency/foo.m")
+    generated_sample_without_loading_data("Dummy/Pods/Pods.xcodeproj")
+    generated_sample_without_loading_data("Dummy/Pods/SwiftDependency/foo.swift")
+    generated_sample_without_loading_data("Dummy/Pods/ObjCDependency/foo.h")
+    generated_sample_without_loading_data("Dummy/Pods/ObjCDependency/foo.m")
+
+    # Carthage
+    generated_sample_without_loading_data("Carthage/Build/.Dependency.version")
+    generated_sample_without_loading_data("Carthage/Build/iOS/Dependency.framework")
+    generated_sample_without_loading_data("Carthage/Build/Mac/Dependency.framework")
+    generated_sample_without_loading_data("src/Carthage/Build/.Dependency.version")
+    generated_sample_without_loading_data("src/Carthage/Build/iOS/Dependency.framework")
+    generated_sample_without_loading_data("src/Carthage/Build/Mac/Dependency.framework")
+
     # Go-specific vendored paths
     generated_sample_without_loading_data("go/vendor/github.com/foo.go")
     generated_sample_without_loading_data("go/vendor/golang.org/src/foo.c")
     generated_sample_without_loading_data("go/vendor/gopkg.in/some/nested/path/foo.go")
 
     # .NET designer file
-    generated_sample_without_loading_data("Dummu/foo.designer.cs")
+    generated_sample_without_loading_data("Dummy/foo.designer.cs")
+    generated_sample_without_loading_data("Dummy/foo.Designer.cs")
+    generated_sample_without_loading_data("Dummy/foo.designer.vb")
+    generated_sample_without_loading_data("Dummy/foo.Designer.vb")
 
     # Composer generated composer.lock file
     generated_sample_without_loading_data("JSON/composer.lock")
@@ -80,9 +101,6 @@ class TestGenerated < Minitest::Test
     generated_fixture_loading_data("Data/sourcemap.v3.map")
     generated_fixture_loading_data("Data/sourcemap.v1.map")
 
-    # Yarn locfile
-    generated_fixture_loading_data("Data/yarn.lock")
-
     # Specflow
     generated_fixture_without_loading_data("Features/BindingCulture.feature.cs")
 
@@ -94,5 +112,23 @@ class TestGenerated < Minitest::Test
 
     # roxygen2
     generated_sample_loading_data("R/import.Rd")
+
+    # PostScript
+    generated_sample_loading_data("PostScript/lambda.pfa")
+
+    # Perl ppport.h
+    generated_fixture_loading_data("Generated/ppport.h")
+
+    # Graphql Relay
+    generated_sample_without_loading_data("Javascript/__generated__/App_user.graphql.js")
+
+    # Game Maker Studio 2
+    generated_sample_loading_data("JSON/GMS2_Project.yyp")
+    generated_sample_loading_data("JSON/2ea73365-b6f1-4bd1-a454-d57a67e50684.yy")
+    generated_fixture_loading_data("Generated/options_main.inherited.yy")
+
+    # Pipenv
+    generated_sample_without_loading_data("Dummy/Pipfile.lock")
+
   end
 end

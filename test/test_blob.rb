@@ -93,8 +93,8 @@ class TestBlob < Minitest::Test
     assert_equal "UTF-16LE", fixture_blob_memory("Data/utf16le").ruby_encoding
     assert_equal "UTF-16LE", fixture_blob_memory("Data/utf16le-windows").encoding
     assert_equal "UTF-16LE", fixture_blob_memory("Data/utf16le-windows").ruby_encoding
-    assert_equal "ISO-2022-KR", sample_blob_memory("Text/ISO-2022-KR.txt").encoding
-    assert_equal "binary", sample_blob_memory("Text/ISO-2022-KR.txt").ruby_encoding
+    assert_equal "ISO-2022-KR", fixture_blob_memory("Text/ISO-2022-KR.txt").encoding
+    assert_equal "binary", fixture_blob_memory("Text/ISO-2022-KR.txt").ruby_encoding
     assert_nil fixture_blob_memory("Binary/dog.o").encoding
   end
 
@@ -169,6 +169,13 @@ class TestBlob < Minitest::Test
     assert sample_blob_memory("JavaScript/jquery-1.6.1.min.js").generated?
     assert sample_blob_memory("JavaScript/jquery-1.4.2.min.js").generated?
 
+    # Go lockfiles
+    assert sample_blob_memory("TOML/filenames/Gopkg.lock").generated?
+    assert sample_blob_memory("YAML/filenames/glide.lock").generated?
+
+    # Cargo generated Cargo.lock file
+    assert sample_blob_memory("TOML/filenames/Cargo.lock").generated?
+
     # Composer generated composer.lock file
     assert sample_blob_memory("JSON/filenames/composer.lock").generated?
 
@@ -235,17 +242,28 @@ class TestBlob < Minitest::Test
 
     # Racc-generated Ruby
     assert sample_blob_memory("Ruby/racc.rb").generated?
+
+    # protobuf/grpc-plugin C++
+    assert sample_blob_memory("C++/hello.grpc.pb.h").generated?
+    assert sample_blob_memory("C++/grpc.pb.cc").generated?
+
+    # pkgdown-generateed HTML
+    assert sample_blob_memory("HTML/pkgdown.html").generated?
   end
 
   def test_vendored
     assert !fixture_blob_memory("Data/README").vendored?
+
+    # Go fixtures
+    assert sample_blob("Go/testdata/foo.yml").vendored?
   end
 
   def test_language
     Samples.each do |sample|
       blob = sample_blob_memory(sample[:path])
       assert blob.language, "No language for #{sample[:path]}"
-      assert_equal sample[:language], blob.language.name, blob.name
+      fs_name = blob.language.fs_name ? blob.language.fs_name : blob.language.name
+      assert_equal sample[:language], fs_name, blob.name
     end
 
     # Test language detection for files which shouldn't be used as samples
@@ -269,7 +287,8 @@ class TestBlob < Minitest::Test
           assert blob.generated?, "#{filepath} is not a generated file"
         else
           assert blob.language, "No language for #{filepath}"
-          assert_equal language, blob.language.name, blob.name
+          fs_name = blob.language.fs_name ? blob.language.fs_name : blob.language.name
+          assert_equal language, fs_name, blob.name
         end
       end
     end
@@ -303,5 +322,36 @@ class TestBlob < Minitest::Test
 
     included = sample_blob_memory("HTML/pages.html")
     assert_predicate included, :include_in_language_stats?
+
+    # Test detectable override (i.e by .gitattributes)
+
+    def prose.detectable?; true end
+    assert_predicate prose, :include_in_language_stats?
+
+    included_not_detectable = included.clone()
+    def included_not_detectable.detectable?; false end
+    refute_predicate included_not_detectable, :include_in_language_stats?
+
+    # Test not included if vendored, documentation or generated overridden
+    # even if detectable
+
+    included_vendored = included.clone()
+    def included_vendored.vendored?; true end
+    refute_predicate included_vendored, :include_in_language_stats?
+    def included_vendored.detectable?; true end
+    refute_predicate included_vendored, :include_in_language_stats?
+
+    included_documentation = included.clone()
+    def included_documentation.documentation?; true end
+    refute_predicate included_documentation, :include_in_language_stats?
+    def included_documentation.detectable?; true end
+    refute_predicate included_documentation, :include_in_language_stats?
+
+    included_generated = included.clone()
+    def included_generated.generated?; true end
+    refute_predicate included_generated, :include_in_language_stats?
+    def included_generated.detectable?; true end
+    refute_predicate included_generated, :include_in_language_stats?
+
   end
 end

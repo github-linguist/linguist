@@ -1,11 +1,14 @@
-whitelist:
+cache_path: "vendor/licenses"
+
+allowed:
   - apache-2.0
   - bsd-2-clause
   - bsd-3-clause
-  - permissive
-  - mit
   - isc
+  - mit
   - mpl-2.0
+  - ncsa
+  - permissive
   - unlicense
   - wtfpl
   - zlib
@@ -20,7 +23,10 @@ reviewed:
   rubygem:
     - mime-types
   grammar:
-    - Sublime-Lasso
+    - blitzmax        # No license file. License in README
+    - creole          # License filename is not LICENSE(.*) but rather "The MIT License (MIT)"
+    - Sublime-Lasso   # No license file. License in README
+    - vscode-zil-language # MIT
 
 sources:
   npm: false

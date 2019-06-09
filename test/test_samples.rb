@@ -42,6 +42,27 @@ class TestSamples < Minitest::Test
     end
   end
 
+  def test_filename_listed
+    Samples.each do |sample|
+      if sample[:filename]
+        listed_filenames = Language[sample[:language]].filenames
+        assert_includes listed_filenames, sample[:filename], "#{sample[:path]} isn't listed as a filename for #{sample[:language]} in languages.yml"
+      end
+    end
+  end
+
+  # Some named files are deliberately classified as Text without a corresponding sample as including
+  # the sample would affect the classifier leading to incorrect analysis and classification.
+  # This test ensures samples aren't added for those specific cases.
+  def test_no_text_samples
+    no_text_samples = ["go.mod", "go.sum"]
+    Samples.each do |sample|
+      if sample[:language] == "Text"
+        refute_includes no_text_samples, sample[:filename], "#{sample[:filename]} should NOT be added as a sample for #{sample[:language]}"
+      end
+    end
+  end
+
   # Check that there aren't samples with extensions or interpreters that
   # aren't explicitly defined in languages.yml
   languages_yml = File.expand_path("../../lib/linguist/languages.yml", __FILE__)

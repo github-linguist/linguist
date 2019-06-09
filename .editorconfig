@@ -1,0 +1,29 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 2
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.md]
+trim_trailing_whitespace = false
+
+[*.{h,c}]
+indent_style = tab
+indent_size = 8
+
+[{Dockerfile,Makefile,*.go}]
+indent_style = tab
+indent_size = 4
+
+# Ignore fixtures and vendored files
+[{grammars,test/fixtures,samples,vendor}/**]
+charset = unset
+end_of_line = unset
+indent_size = unset
+indent_style = unset
+insert_final_newline = unset
+trim_trailing_spaces = unset

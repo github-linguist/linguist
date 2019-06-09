@@ -17,12 +17,15 @@ module Linguist
     # Path for serialized samples db
     PATH = File.expand_path('../samples.json', __FILE__)
 
-    # Hash of serialized samples object
+    # Hash of serialized samples object, cached in memory
     def self.cache
-      @cache ||= begin
-        serializer = defined?(Yajl) ? Yajl : YAML
-        serializer.load(File.read(PATH, encoding: 'utf-8'))
-      end
+      @cache ||= load_samples
+    end
+
+    # Hash of serialized samples object, uncached
+    def self.load_samples
+      serializer = defined?(Yajl) ? Yajl : YAML
+      serializer.load(File.read(PATH, encoding: 'utf-8'))
     end
 
     # Public: Iterate over each sample.

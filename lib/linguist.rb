@@ -7,6 +7,7 @@ require 'linguist/repository'
 require 'linguist/samples'
 require 'linguist/shebang'
 require 'linguist/version'
+require 'linguist/strategy/xml'
 
 class << Linguist
   # Public: Detects the Language of the blob.
@@ -62,6 +63,7 @@ class << Linguist
     Linguist::Strategy::Filename,
     Linguist::Shebang,
     Linguist::Strategy::Extension,
+    Linguist::Strategy::XML,
     Linguist::Heuristics,
     Linguist::Classifier
   ]

@@ -36,7 +36,7 @@ module Linguist
 
         # Start modeline. Could be `vim:`, `vi:` or `ex:`
         (?:
-          (?:\s|^)
+          (?:[ \t]|^)
           vi
           (?:m[<=>]?\d+|m)? # Version-specific modeline
           |
@@ -49,10 +49,10 @@ module Linguist
         # serves as a terminator for an option sequence, delimited by whitespace.
         (?=
           # So we have to ensure the modeline ends with a colon
-          : (?=\s* set? \s [^\n:]+ :) |
+          : (?=[ \t]* set? [ \t] [^\n:]+ :) |
 
           # Otherwise, it isn't valid syntax and should be ignored
-          : (?!\s* set? \s)
+          : (?![ \t]* set? [ \t])
         )
 
         # Possible (unrelated) `option=value` pairs to skip past
@@ -60,10 +60,10 @@ module Linguist
           # Option separator. Vim uses whitespace or colons to separate options (except if
           # the alternate "vim: set " form is used, where only whitespace is used)
           (?:
-            \s
+            [ \t]
             |
-            \s* : \s* # Note that whitespace around colons is accepted too:
-          )           # vim: noai :  ft=ruby:noexpandtab
+            [ \t]* : [ \t]* # Note that whitespace around colons is accepted too:
+          )                 # vim: noai :  ft=ruby:noexpandtab
 
           # Option's name. All recognised Vim options have an alphanumeric form.
           \w*
@@ -71,25 +71,25 @@ module Linguist
           # Possible value. Not every option takes an argument.
           (?:
             # Whitespace between name and value is allowed: `vim: ft   =ruby`
-            \s*=
+            [ \t]*=
 
             # Option's value. Might be blank; `vim: ft= ` says "use no filetype".
             (?:
-              [^\\\s] # Beware of escaped characters: titlestring=\ ft=ruby
-              |       # will be read by Vim as { titlestring: " ft=ruby" }.
+              [^\\[ \t]] # Beware of escaped characters: titlestring=\ ft=ruby
+              |          # will be read by Vim as { titlestring: " ft=ruby" }.
               \\.
             )*
           )?
         )*
 
         # The actual filetype declaration
-        [\s:] (?:filetype|ft|syntax) \s*=
+        [[ \t]:] (?:filetype|ft|syntax) [ \t]*=
 
         # Language's name
         (\w+)
 
         # Ensure it's followed by a legal separator
-        (?=\s|:|$)
+        (?=[ \t]|:|$)
       /xi
 
       MODELINES = [EMACS_MODELINE, VIM_MODELINE]
@@ -109,8 +109,10 @@ module Linguist
       # Returns an Array with one Language if the blob has a Vim or Emacs modeline
       # that matches a Language name or alias. Returns an empty array if no match.
       def self.call(blob, _ = nil)
-        header = blob.lines.first(SEARCH_SCOPE).join("\n")
-        footer = blob.lines.last(SEARCH_SCOPE).join("\n")
+        return [] if blob.symlink?
+
+        header = blob.first_lines(SEARCH_SCOPE).join("\n")
+        footer = blob.last_lines(SEARCH_SCOPE).join("\n")
         Array(Language.find_by_alias(modeline(header + footer)))
       end
 

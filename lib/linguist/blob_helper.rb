@@ -1,7 +1,7 @@
 require 'linguist/generated'
 require 'charlock_holmes'
 require 'escape_utils'
-require 'mime/types'
+require 'mini_mime'
 require 'yaml'
 
 module Linguist
@@ -26,19 +26,14 @@ module Linguist
       File.extname(name.to_s)
     end
 
-    # Internal: Lookup mime type for extension.
+    # Internal: Lookup mime type for filename.
     #
     # Returns a MIME::Type
     def _mime_type
       if defined? @_mime_type
         @_mime_type
       else
-        guesses = ::MIME::Types.type_for(extname.to_s)
-
-        # Prefer text mime types over binary
-        @_mime_type = guesses.detect { |type| type.ascii? } ||
-          # Otherwise use the first guess
-          guesses.first
+        @_mime_type = MiniMime.lookup_by_filename(name.to_s)
       end
     end
 
@@ -51,7 +46,7 @@ module Linguist
     #
     # Returns a mime type String.
     def mime_type
-      _mime_type ? _mime_type.to_s : 'text/plain'
+      _mime_type ? _mime_type.content_type : 'text/plain'
     end
 
     # Internal: Is the blob binary according to its mime type
@@ -275,10 +270,8 @@ module Linguist
           # also--importantly--without having to duplicate many (potentially
           # large) strings.
           begin
-            encoded_newlines = ["\r\n", "\r", "\n"].
-              map { |nl| nl.encode(ruby_encoding, "ASCII-8BIT").force_encoding(data.encoding) }
 
-            data.split(Regexp.union(encoded_newlines), -1)
+            data.split(encoded_newlines_re, -1)
           rescue Encoding::ConverterNotFoundError
             # The data is not splittable in the detected encoding.  Assume it's
             # one big line.
@@ -287,6 +280,51 @@ module Linguist
         else
           []
         end
+    end
+
+    def encoded_newlines_re
+      @encoded_newlines_re ||= Regexp.union(["\r\n", "\r", "\n"].
+                                              map { |nl| nl.encode(ruby_encoding, "ASCII-8BIT").force_encoding(data.encoding) })
+
+    end
+
+    def first_lines(n)
+      return lines[0...n] if defined? @lines
+      return [] unless viewable? && data
+
+      i, c = 0, 0
+      while c < n && j = data.index(encoded_newlines_re, i)
+        i = j + $&.length
+        c += 1
+      end
+      data[0...i].split(encoded_newlines_re, -1)
+    end
+
+    def last_lines(n)
+      if defined? @lines
+        if n >= @lines.length
+          @lines
+        else
+          lines[-n..-1]
+        end
+      end
+      return [] unless viewable? && data
+
+      no_eol = true
+      i, c = data.length, 0
+      k = i
+      while c < n && j = data.rindex(encoded_newlines_re, i - 1)
+        if c == 0 && j + $&.length == i
+          no_eol = false
+          n += 1
+        end
+        i = j
+        k = j + $&.length
+        c += 1
+      end
+      r = data[k..-1].split(encoded_newlines_re, -1)
+      r.pop if !no_eol
+      r
     end
 
     # Public: Get number of lines of code
@@ -340,7 +378,10 @@ module Linguist
       !vendored? &&
       !documentation? &&
       !generated? &&
-      language && DETECTABLE_TYPES.include?(language.type)
+      language && ( defined?(detectable?) && !detectable?.nil? ?
+        detectable? :
+        DETECTABLE_TYPES.include?(language.type)
+      )
     end
   end
 end

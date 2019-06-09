@@ -63,12 +63,14 @@ class TestLanguage < Minitest::Test
     assert_equal Language['Vim script'], Language.find_by_alias('vim')
     assert_equal Language['Vim script'], Language.find_by_alias('viml')
     assert_equal Language['reStructuredText'], Language.find_by_alias('rst')
+    assert_equal Language['X BitMap'], Language.find_by_alias('xbm')
+    assert_equal Language['X PixMap'], Language.find_by_alias('xpm')
     assert_equal Language['YAML'], Language.find_by_alias('yml')
     assert_nil Language.find_by_alias(nil)
   end
 
-  # Note these are set by script/set-language-ids. If these tests fail then someone
-  # has changed the language_id fields set in languages.yml which is almost certainly
+  # Note these are set by `script/update-ids`. If these tests fail then someone
+  # has changed the `language_id` fields set in languages.yml which is almost certainly
   # not what you want to happen (these fields are used in GitHub's search indexes)
   def test_language_ids
     assert_equal 4, Language['ANTLR'].language_id
@@ -170,7 +172,7 @@ class TestLanguage < Minitest::Test
 
   def test_find_by_extension
     assert_equal [], Language.find_by_extension('.factor-rc')
-    assert_equal [Language['Limbo'], Language['M'], Language['MUF'], Language['Mathematica'], Language['Matlab'], Language['Mercury'], Language['Objective-C']], Language.find_by_extension('foo.m')
+    assert_equal [Language['Limbo'], Language['M'], Language['MATLAB'], Language['MUF'], Language['Mathematica'], Language['Mercury'], Language['Objective-C']], Language.find_by_extension('foo.m')
     assert_equal [Language['Ruby']], Language.find_by_extension('foo.rb')
     assert_equal [Language['Ruby']], Language.find_by_extension('foo/bar.rb')
     assert_equal [Language['Ruby']], Language.find_by_extension('PKGBUILD.rb')
@@ -267,6 +269,12 @@ class TestLanguage < Minitest::Test
     assert_nil Language.find_by_alias('')
     assert_nil Language.find_by_name(nil)
     assert_nil Language[""]
+  end
+
+  def test_does_not_blow_up_with_non_string_lookup
+    assert_nil Language.find_by_alias(true)
+    assert_nil Language.find_by_name(true)
+    assert_nil Language[true]
   end
 
   def test_name
@@ -371,15 +379,16 @@ class TestLanguage < Minitest::Test
   def test_all_languages_have_a_language_id_set
     missing = Language.all.select { |language| language.language_id.nil? }
 
-    message = "The following languages do not have a language_id listed in languages.yml. Please add language_id fields for all new languages.\n"
+    message = "The following languages do not have a language_id listed in languages.yml. Please run `script/update-ids` as per the contribution guidelines.\n"
     missing.each { |language| message << "#{language.name}\n" }
     assert missing.empty?, message
   end
 
   def test_all_languages_have_a_valid_id
-    invalid = Language.all.select { |language| language.language_id < 0 || language.language_id >= (2**31 - 1) }
+    deleted_language_ids = [21]  # Prevent re-use of deleted language IDs
+    invalid = Language.all.select { |language| language.language_id < 0 || deleted_language_ids.include?(language.language_id) || (language.language_id > 431 && language.language_id < 1024) || language.language_id >= (2**31 - 1) }
 
-    message = "The following languages do not have a valid language_id. Please use script/set-language-ids --update as per the contribution guidelines.\n"
+    message = "The following languages do not have a valid language_id. Please run `script/update-ids` as per the contribution guidelines.\n"
     invalid.each { |language| message << "#{language.name}\n" }
     assert invalid.empty?, message
   end
@@ -387,7 +396,7 @@ class TestLanguage < Minitest::Test
   def test_all_language_id_are_unique
     duplicates = Language.all.group_by{ |language| language.language_id }.select { |k, v| v.size > 1 }.map(&:first)
 
-    message = "The following language_id are used several times in languages.yml. Please use script/set-language-ids --update as per the contribution guidelines.\n"
+    message = "The following language_id are used several times in languages.yml. Please run `script/update-ids` as per the contribution guidelines.\n"
     duplicates.each { |language_id| message << "#{language_id}\n" }
     assert duplicates.empty?, message
   end
@@ -463,5 +472,21 @@ class TestLanguage < Minitest::Test
 
   def test_non_crash_on_comma
     assert_nil Language[',']
+    assert_nil Language.find_by_name(',')
+    assert_nil Language.find_by_alias(',')
+  end
+
+  def test_detect_prefers_markdown_for_md
+    blob = Linguist::FileBlob.new(File.join(samples_path, "Markdown/symlink.md"))
+    match = Linguist.detect(blob)
+    assert_equal Language["Markdown"], match
+  end
+
+  def test_fs_names
+    Language.all.each do |language|
+      next unless /[\\:*?"<>|]/.match(language.name)
+      assert language.fs_name, "#{language.name} needs an fs_name for Windows' file system."
+      assert !/[\\:*?"<>|]/.match(language.fs_name), "The fs_name for #{language.name} is invalid."
+    end
   end
 end

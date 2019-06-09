@@ -1,0 +1,20 @@
+#!/bin/sh
+
+set -e
+cd "$(dirname "$0")/.."
+
+image="linguist/grammar-compiler:latest"
+mkdir -p grammars
+
+if [ -z "$REBUILD" ]; then
+    docker pull $image
+else
+    cd tools/grammars
+    image=$(docker build -q .)
+    cd "../.."
+fi
+
+exec docker run --rm \
+    -u "$(id -u "$USER")":"$(id -g "$USER")" \
+    -v "$PWD:/src/linguist" \
+    -w /src/linguist "$image" "$@"

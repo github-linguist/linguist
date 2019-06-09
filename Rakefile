@@ -1,17 +1,25 @@
 require 'bundler/setup'
 require 'rake/clean'
 require 'rake/testtask'
+require 'rake/extensiontask'
 require 'yaml'
 require 'yajl'
 require 'open-uri'
 require 'json'
+require 'open3'
 
 task :default => :test
 
 Rake::TestTask.new
 
+gem_spec = Gem::Specification.load('github-linguist.gemspec')
+
+Rake::ExtensionTask.new('linguist', gem_spec) do |ext|
+  ext.lib_dir = File.join('lib', 'linguist')
+end
+
 # Extend test task to check for samples and fetch latest Ace modes
-task :test => [:check_samples, :fetch_ace_modes]
+task :test => [:compile, :check_samples, :fetch_ace_modes]
 
 desc "Check that we have samples.json generated"
 task :check_samples do
@@ -34,15 +42,56 @@ task :fetch_ace_modes do
   end
 end
 
-task :samples do
+task :samples => :compile do
   require 'linguist/samples'
   json = Yajl.dump(Linguist::Samples.data, :pretty => true)
   File.write 'lib/linguist/samples.json', json
 end
 
+task :flex do
+  if `flex -V` !~ /^flex \d+\.\d+\.\d+/
+    fail "flex not detected"
+  end
+  system "cd ext/linguist && flex tokenizer.l"
+end
+
+# The error count will need to be adjusted here until such time as all grammars are 100% error free.
+desc "Check that compiling the grammars doesn't introduce any new unexpected errors"
+task :check_grammars do
+  expected_error_count = 37  # This count should only ever go down. If it goes up, there's a new issue that needs to be addressed before updating the grammar.
+  rm_rf "linguist-grammars"
+  output, status = Open3.capture2e("script/grammar-compiler", "compile", "-o", "linguist-grammars")
+  errors_found = output[/the grammar library contains ([0-9]+) errors/, 1].to_i
+  missing_grammars = output.scan(/Missing scope in repository: `([^`].+)` is listed in grammars.yml but cannot be found/)
+
+  unless missing_grammars.empty?
+    fail <<~MISSING
+      #{output}
+
+      ERROR: Could not find the following grammars:
+
+      #{missing_grammars.join("\n")}
+
+      Please review the output above.
+
+      MISSING
+  end
+
+  unless errors_found == expected_error_count
+    fail <<~ERRORS
+      #{output}
+
+      ERROR: An unexpected number of errors have been found. Expected: #{expected_error_count}, Found: #{errors_found}.
+
+      Please review the output and adjust the rake task expected error count if needed.
+
+      ERRORS
+  end
+end
+
 task :build_gem => :samples do
   rm_rf "grammars"
-  sh "script/convert-grammars"
+  sh "script/grammar-compiler compile -o grammars || true"
   languages = YAML.load_file("lib/linguist/languages.yml")
   File.write("lib/linguist/languages.json", Yajl.dump(languages))
   `gem build github-linguist.gemspec`

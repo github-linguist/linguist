@@ -4,6 +4,7 @@ class TestPedantic < Minitest::Test
   filename = File.expand_path("../../lib/linguist/languages.yml", __FILE__)
   LANGUAGES = YAML.load(File.read(filename))
   GRAMMARS = YAML.load(File.read(File.expand_path("../../grammars.yml", __FILE__)))
+  HEURISTICS = YAML.load_file(File.expand_path("../../lib/linguist/heuristics.yml", __FILE__))
 
   def test_language_names_are_sorted
     assert_sorted LANGUAGES.keys
@@ -33,15 +34,20 @@ class TestPedantic < Minitest::Test
   end
 
   def test_heuristics_are_sorted
-    file = File.expand_path("../../lib/linguist/heuristics.rb", __FILE__)
-    heuristics = open(file).each.grep(/^ *disambiguate/)
-    assert_sorted heuristics
+    disambiguations = HEURISTICS['disambiguations']
+    assert_sorted disambiguations.map { |r| r['extensions'][0] }
+    assert_sorted HEURISTICS['named_patterns'].keys
   end
 
   def test_heuristics_tests_are_sorted
     file = File.expand_path("../test_heuristics.rb", __FILE__)
     tests = open(file).each.grep(/^ *def test_[a-z_]+_by_heuristics/)
     assert_sorted tests
+  end
+
+  def test_submodules_are_sorted
+    system(File.expand_path("../../script/sort-submodules", __FILE__) + " -t")
+    assert $?.success?
   end
 
   def assert_sorted(list)

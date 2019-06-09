@@ -3,6 +3,8 @@ require 'linguist/tokenizer'
 module Linguist
   # Language bayesian classifier.
   class Classifier
+    CLASSIFIER_CONSIDER_BYTES = 50 * 1024
+
     # Public: Use the classifier to detect language of the blob.
     #
     # blob               - An object that quacks like a blob.
@@ -17,7 +19,7 @@ module Linguist
     # Returns an Array of Language objects, most probable first.
     def self.call(blob, possible_languages)
       language_names = possible_languages.map(&:name)
-      classify(Samples.cache, blob.data, language_names).map do |name, _|
+      classify(Samples.cache, blob.data[0...CLASSIFIER_CONSIDER_BYTES], language_names).map do |name, _|
         Language[name] # Return the actual Language objects
       end
     end

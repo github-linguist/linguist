@@ -1,0 +1,9 @@
+#!/bin/sh
+
+set -e
+cd "$(dirname "$0")/.."
+rm -rf ./linguist-grammars
+./script/grammar-compiler compile -o linguist-grammars || true
+tar -zcvf linguist-grammars.tar.gz linguist-grammars
+
+
