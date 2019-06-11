@@ -319,7 +319,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **R:** [textmate/r.tmbundle](https://github.com/textmate/r.tmbundle)
 - **RAML:** [atom/language-yaml](https://github.com/atom/language-yaml)
 - **RDoc:** [joshaven/RDoc.tmbundle](https://github.com/joshaven/RDoc.tmbundle)
-- **REALbasic:** [angryant0007/VBDotNetSyntax](https://github.com/angryant0007/VBDotNetSyntax)
+- **REALbasic:** [jimmckay/XojoSyntaxTM](https://github.com/jimmckay/XojoSyntaxTM)
 - **REXX:** [mblocker/rexx-sublime](https://github.com/mblocker/rexx-sublime)
 - **RHTML:** [atom/language-ruby](https://github.com/atom/language-ruby)
 - **RMarkdown:** [atom/language-gfm](https://github.com/atom/language-gfm)
