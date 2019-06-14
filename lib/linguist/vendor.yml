@@ -48,6 +48,9 @@
 # Go dependencies
 - Godeps/_workspace/
 
+# Go fixtures
+- (^|/)testdata/
+
 # GNU indent profiles
 - .indent.pro
 
@@ -62,8 +65,8 @@
 - (^|/)custom\.bootstrap([^\s]*)(js|css|less|scss|styl)$
 
 # Font Awesome
-- (^|/)font-awesome\.(css|less|scss|styl)$
-- (^|/)font-awesome/.*\.(css|less|scss|styl)$
+- (^|/)font-?awesome\.(css|less|scss|styl)$
+- (^|/)font-?awesome/.*\.(css|less|scss|styl)$
 
 # Foundation css
 - (^|/)foundation\.(css|less|scss|styl)$
@@ -85,6 +88,9 @@
 
 # Select2
 - (^|/)select2/.*\.(css|scss|js)$
+
+# Bulma css
+- (^|/)bulma\.(css|sass|scss)$
 
 # Vendored dependencies
 - (3rd|[Tt]hird)[-_]?[Pp]arty/

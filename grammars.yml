@@ -68,6 +68,11 @@ vendor/grammars/NimLime:
 - source.nim.comment
 - source.nim_filter
 - source.nimcfg
+vendor/grammars/ObjectScript.tmBundle:
+- source.objectscript
+- source.objectscript_class
+- source.objectscript_csp
+- source.objectscript_macros
 vendor/grammars/PHP-Twig.tmbundle:
 - text.html.twig
 vendor/grammars/PogoScript.tmbundle:
@@ -76,8 +81,6 @@ vendor/grammars/RDoc.tmbundle:
 - text.rdoc
 vendor/grammars/Racket:
 - source.racket
-vendor/grammars/SCSS.tmbundle:
-- source.scss
 vendor/grammars/SMT.tmbundle:
 - source.smt
 vendor/grammars/Scalate.tmbundle:
@@ -121,6 +124,7 @@ vendor/grammars/SublimeClarion:
 - source.clarion
 vendor/grammars/SublimeEthereum:
 - source.solidity
+- source.vyper
 vendor/grammars/SublimeGDB/:
 - source.disasm
 - source.gdb
@@ -156,6 +160,10 @@ vendor/grammars/Vala-TMBundle:
 - source.vala
 vendor/grammars/X10:
 - source.x10
+vendor/grammars/XojoSyntaxTM:
+- source.xojo
+vendor/grammars/ZenScript-tmLanguage:
+- source.zenscript
 vendor/grammars/abap.tmbundle:
 - source.abap
 vendor/grammars/actionscript3-tmbundle/:
@@ -186,6 +194,8 @@ vendor/grammars/asp.tmbundle:
 vendor/grammars/assembly:
 - objdump.x86asm
 - source.x86asm
+vendor/grammars/atom-editorconfig:
+- source.editorconfig
 vendor/grammars/atom-firestore-grammar:
 - source.firestore
 vendor/grammars/atom-fsharp:
@@ -245,8 +255,6 @@ vendor/grammars/blitzmax:
 - source.blitzmax
 vendor/grammars/boo:
 - source.boo
-vendor/grammars/bro-sublime:
-- source.bro
 vendor/grammars/c.tmbundle:
 - source.c
 - source.c++
@@ -335,12 +343,15 @@ vendor/grammars/graphviz.tmbundle:
 vendor/grammars/groovy.tmbundle:
 - source.groovy
 vendor/grammars/haxe-TmLanguage:
+- documentation.markdown.injection.haxe
 - markdown.haxe.codeblock
 - markdown.hxml.codeblock
 - source.hx
 - source.hx.argument
 - source.hx.type
 - source.hxml
+vendor/grammars/holyc.tmbundle:
+- source.hc
 vendor/grammars/hy.tmLanguage:
 - source.hy
 vendor/grammars/idl.tmbundle:
@@ -416,6 +427,7 @@ vendor/grammars/language-etc:
 - etc
 - injections.etc
 - source.curlrc
+- source.dosbox-conf
 - source.gitattributes
 - source.gitconfig
 - source.gitignore
@@ -424,6 +436,7 @@ vendor/grammars/language-etc:
 - source.man-conf
 - source.nanorc
 - source.opts
+- source.ssh-config
 vendor/grammars/language-fontforge:
 - source.afm
 - source.bdf
@@ -434,6 +447,8 @@ vendor/grammars/language-fontforge:
 - source.opentype
 - source.xlfd
 - text.sfd
+vendor/grammars/language-gf:
+- source.gf
 vendor/grammars/language-gfm:
 - source.gfm
 vendor/grammars/language-gn:
@@ -474,12 +489,19 @@ vendor/grammars/language-jolie:
 vendor/grammars/language-jsoniq:
 - source.jq
 - source.xq
+vendor/grammars/language-jsonnet:
+- source.jsonnet
 vendor/grammars/language-kotlin:
 - source.kotlin
 vendor/grammars/language-less:
 - source.css.less
+vendor/grammars/language-m68k:
+- source.m68k
 vendor/grammars/language-maxscript:
 - source.maxscript
+vendor/grammars/language-mcfunction:
+- source.mcfunction
+- source.mcfunction-snapshot
 vendor/grammars/language-meson:
 - source.meson
 vendor/grammars/language-ncl:
@@ -520,10 +542,16 @@ vendor/grammars/language-roff:
 vendor/grammars/language-rpm-spec:
 - source.changelogs.rpm-spec
 - source.rpm-spec
+vendor/grammars/language-rtf:
+- text.rtf
 vendor/grammars/language-ruby:
 - source.ruby
 - source.ruby.gemfile
 - text.html.erb
+vendor/grammars/language-sass:
+- source.css.scss
+- source.sass
+- source.sassdoc
 vendor/grammars/language-sed:
 - source.sed
 vendor/grammars/language-shellscript:
@@ -533,12 +561,16 @@ vendor/grammars/language-supercollider:
 - source.supercollider
 vendor/grammars/language-toc-wow:
 - source.toc
+vendor/grammars/language-tsql:
+- source.tsql
 vendor/grammars/language-turing:
 - source.turing
 vendor/grammars/language-typelanguage:
 - source.tl
 vendor/grammars/language-viml:
 - source.viml
+vendor/grammars/language-vtt:
+- source.vtt
 vendor/grammars/language-wavefront:
 - source.wavefront.mtl
 - source.wavefront.obj
@@ -663,8 +695,6 @@ vendor/grammars/ruby-slim.tmbundle:
 vendor/grammars/sas.tmbundle:
 - source.SASLog
 - source.sas
-vendor/grammars/sass-textmate-bundle:
-- source.sass
 vendor/grammars/scheme.tmbundle:
 - source.scheme
 vendor/grammars/scilab.tmbundle:
@@ -760,6 +790,8 @@ vendor/grammars/sublimeprolog:
 - source.prolog.eclipse
 vendor/grammars/sublimetext-cuda-cpp:
 - source.cuda-c++
+vendor/grammars/svelte-atom:
+- source.svelte
 vendor/grammars/swift.tmbundle:
 - source.swift
 vendor/grammars/tcl.tmbundle:
@@ -776,18 +808,27 @@ vendor/grammars/verilog.tmbundle:
 - source.verilog
 vendor/grammars/vhdl:
 - source.vhdl
+vendor/grammars/vscode-hack:
+- source.hack
 vendor/grammars/vscode-scala-syntax:
 - source.scala
 vendor/grammars/vscode-slice:
 - source.slice
+vendor/grammars/vscode-zil-language:
+- source.zap
+- source.zil
 vendor/grammars/vue-syntax-highlight:
 - text.html.vue
 vendor/grammars/wdl-sublime-syntax-highlighter:
 - source.wdl
+vendor/grammars/wollok-sublime:
+- source.wollok
 vendor/grammars/xc.tmbundle:
 - source.xc
 vendor/grammars/xml.tmbundle:
 - text.xml
 - text.xml.xsl
+vendor/grammars/zeek-sublime:
+- source.zeek
 vendor/grammars/zephir-sublime:
 - source.php.zephir

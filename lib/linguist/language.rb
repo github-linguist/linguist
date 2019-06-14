@@ -505,8 +505,9 @@ module Linguist
     end
   end
 
-  extensions   = Samples.cache['extnames']
-  interpreters = Samples.cache['interpreters']
+  samples      = Samples.load_samples
+  extensions   = samples['extnames']
+  interpreters = samples['interpreters']
   popular      = YAML.load_file(File.expand_path("../popular.yml", __FILE__))
 
   languages_yml  = File.expand_path("../languages.yml",  __FILE__)
