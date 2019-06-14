@@ -1,4 +1,3 @@
-# coding: utf-8
 require 'linguist/blob_helper'
 require 'linguist/generated'
 require 'linguist/grammars'
