@@ -1,0 +1,12 @@
+#!/usr/bin/env hhvm
+namespace GitHub\Linguist;
+
+use namespace HH\Lib\Experimental\IO;
+
+async function main(): Awaitable<noreturn> {
+  $stdout = IO\request_output();
+  await $stdout->writeAsync('Hello, World!');
+
+  exit(0);
+}
+
