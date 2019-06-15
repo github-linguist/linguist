@@ -5,6 +5,7 @@ namespace GitHub\Linguist;
 
 use namespace HH\Lib\Experimental\IO;
 
+<<__EntryPoint>>
 async function main(): Awaitable<noreturn> {
   $stdout = IO\request_output();
   await $stdout->writeAsync('Hello, World!');
