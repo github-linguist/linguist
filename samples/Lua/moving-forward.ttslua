@@ -1,0 +1,12 @@
+-- Example of moving forward 5 units
+function onLoad()
+    distance = 5
+    pos_target = self.getTransformForward()
+    pos_current = self.getPosition()
+    pos = {
+        x = pos_current.x + pos_target.x * distance,
+        y = pos_current.y + pos_target.y * distance,
+        z = pos_current.z + pos_target.z * distance,
+    }
+    self.setPositionSmooth(pos)
+end
