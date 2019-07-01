@@ -175,6 +175,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **HolyC:** [codingdandy/holyc.tmbundle](https://github.com/codingdandy/holyc.tmbundle)
 - **Hy:** [Slowki/hy.tmLanguage](https://github.com/Slowki/hy.tmLanguage)
 - **IDL:** [mgalloy/idl.tmbundle](https://github.com/mgalloy/idl.tmbundle)
+- **IGOR Pro:** [byte-physics/igor-linguist-syntax](https://github.com/byte-physics/igor-linguist-syntax)
 - **INI:** [textmate/ini.tmbundle](https://github.com/textmate/ini.tmbundle)
 - **Idris:** [idris-hackers/idris-sublime](https://github.com/idris-hackers/idris-sublime)
 - **Ignore List:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
