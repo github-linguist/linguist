@@ -4305,6 +4305,25 @@ Ring:
   tm_scope: source.ring
   ace_mode: text
   language_id: 431
+Roblox:
+  type: data
+  tm_scope: none
+  ace_mode: text
+  color: "#E2231A"
+  extensions:
+  - ".rbxl"
+  - ".rbxm"
+Roblox XML:
+  type: markup
+  tm_scope: text.xml
+  codemirror_mode: xml
+  codemirror_mime_type: text/xml
+  ace_mode: xml # New syntax highlighter should come later.
+  color: "#E2231A"
+  extensions:
+  - ".rbxlx"
+  - ".rbxmx"
+  group: Roblox
 RobotFramework:
   type: programming
   extensions:
