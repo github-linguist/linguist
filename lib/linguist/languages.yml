@@ -4306,7 +4306,7 @@ Ring:
   ace_mode: text
   language_id: 431
 Roblox:
-  type: data
+  type: markup
   tm_scope: none
   ace_mode: text
   color: "#E2231A"
@@ -4315,8 +4315,10 @@ Roblox:
   - ".rbxm"
   language_id: 8292744 # In reference to the US patent number of the Roblox platform.
 Roblox XML:
-  type: data
-  tm_scope: none
+  type: markup
+  tm_scope: text.xml
+  codemirror_mode: xml
+  codemirror_mime_type: text/xml
   ace_mode: xml # New syntax highlighter should come later.
   color: "#E2231A"
   extensions:
