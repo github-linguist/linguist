@@ -648,7 +648,7 @@ module Linguist
         key = match[0].downcase
         val = match[1].gsub(/\A["']|["']\Z/, '')
         [key, val]
-      end.filter { |x| x.length == 2 }.to_h
+      end.select { |x| x.length == 2 }.to_h
     end
   end
 end
