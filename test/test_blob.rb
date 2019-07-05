@@ -247,8 +247,11 @@ class TestBlob < Minitest::Test
     assert sample_blob_memory("C++/hello.grpc.pb.h").generated?
     assert sample_blob_memory("C++/grpc.pb.cc").generated?
 
-    # pkgdown-generateed HTML
+    # Generated HTML
     assert sample_blob_memory("HTML/pkgdown.html").generated?
+    assert sample_blob_memory("HTML/pages.html").generated?
+    assert fixture_blob_memory("HTML/mandoc.html").generated?
+    assert fixture_blob_memory("HTML/node78.html").generated?
   end
 
   def test_vendored
@@ -321,7 +324,7 @@ class TestBlob < Minitest::Test
     refute_predicate prose, :include_in_language_stats?
 
     included = sample_blob_memory("HTML/pages.html")
-    assert_predicate included, :include_in_language_stats?
+    refute_predicate included, :include_in_language_stats?
 
     # Test detectable override (i.e by .gitattributes)
 

@@ -721,6 +721,6 @@ class TestFileBlob < Minitest::Test
     refute_predicate prose, :include_in_language_stats?
 
     included = sample_blob("HTML/pages.html")
-    assert_predicate included, :include_in_language_stats?
+    refute_predicate included, :include_in_language_stats?
   end
 end
