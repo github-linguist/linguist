@@ -303,6 +303,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **PostCSS:** [hudochenkov/Syntax-highlighting-for-PostCSS](https://github.com/hudochenkov/Syntax-highlighting-for-PostCSS)
 - **PostScript:** [textmate/postscript.tmbundle](https://github.com/textmate/postscript.tmbundle)
 - **PowerShell:** [PowerShell/EditorSyntax](https://github.com/PowerShell/EditorSyntax)
+- **Prisma:** [prisma/vscode-prisma](https://github.com/prisma/vscode-prisma)
 - **Processing:** [textmate/processing.tmbundle](https://github.com/textmate/processing.tmbundle)
 - **Prolog:** [alnkpa/sublimeprolog](https://github.com/alnkpa/sublimeprolog)
 - **Propeller Spin:** [bitbased/sublime-spintools](https://github.com/bitbased/sublime-spintools)
