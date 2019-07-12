@@ -23,6 +23,7 @@ model Post {
   author    User?
 }
 
+
 model User {
   id       String  @default(cuid()) @id @unique
   email    String  @unique
