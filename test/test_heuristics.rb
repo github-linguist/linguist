@@ -345,6 +345,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_plist_by_heuristics
+    assert_heuristics({
+      "OpenStep Property List" => all_fixtures("OpenStep Property List", "*.plist"),
+      "XML Property List" => all_fixtures("XML Property List", "*.plist")
+    })
+  end
+
   # Candidate languages = ["Perl", "Perl 6", "XPM"]
   def test_pm_by_heuristics
     assert_heuristics({
@@ -372,7 +379,7 @@ class TestHeuristics < Minitest::Test
     })
   end
 
-# Candidate languages = ["INI", "Java Properties"]
+  # Candidate languages = ["INI", "Java Properties"]
   def test_properties_by_heuristics
     assert_heuristics({
       "INI" => all_fixtures("INI", "*.properties"),
