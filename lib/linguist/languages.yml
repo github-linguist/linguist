@@ -418,6 +418,16 @@ Befunge:
   - ".befunge"
   ace_mode: text
   language_id: 30
+BibTeX:
+  type: markup
+  group: TeX
+  extensions:
+  - ".bib"
+  tm_scope: text.bibtex
+  ace_mode: tex
+  codemirror_mode: stex
+  codemirror_mime_type: text/x-stex
+  language_id: 982188347
 Bison:
   type: programming
   group: Yacc
@@ -5059,6 +5069,7 @@ TeX:
   ace_mode: tex
   codemirror_mode: stex
   codemirror_mime_type: text/x-stex
+  tm_scope: text.tex.latex
   wrap: true
   aliases:
   - latex
@@ -5066,7 +5077,6 @@ TeX:
   - ".tex"
   - ".aux"
   - ".bbx"
-  - ".bib"
   - ".cbx"
   - ".cls"
   - ".dtx"
