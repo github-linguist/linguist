@@ -367,6 +367,14 @@ class TestLanguage < Minitest::Test
     assert missing.empty?, message
   end
 
+  def test_all_languages_have_scopes
+    languages = YAML.load(File.read(File.expand_path("../../lib/linguist/languages.yml", __FILE__)))
+    missing = languages.reject { |name,language| language.has_key?('tm_scope') }
+    message = "The following languages do not have a `tm_scope` field defined. Use `tm_scope: none` if the language has no grammar.\n"
+    message << missing.keys.sort.join("\n")
+    assert missing.empty?, message
+  end
+
   def test_all_languages_have_type
     missing = Language.all.select { |language| language.type.nil? }
     message = "The following languages do not have a type listed in grammars.yml. Please add types for all new languages.\n"
