@@ -1,0 +1,80 @@
+---
+type: grammar
+name: vscode-abap-cds
+version: 1cc2daf3c433753ff3cc83f670579ca0e7997806
+license: other
+---
+The following license applies to the contents of the folder 'snippets':
+
+SAP SAMPLE CODE LICENSE AGREEMENT
+
+Please scroll down and read the following SAP Sample Code License Agreement carefully ("Agreement").  By downloading, installing, or otherwise using the SAP sample code or any materials that accompany the sample code documentation (collectively, the "Sample Code"), You agree that this Agreement forms a legally binding agreement between You ("You" or "Your") and SAP SE, for and on behalf of itself and its subsidiaries and affiliates (as defined in Section 15 of the German Stock Corporation Act), and You agree to be bound by all of the terms and conditions stated in this Agreement. If You are trying to access or download the Sample Code on behalf of Your employer or as a consultant or agent of a third party (either "Your Company"), You represent and warrant that You have the authority to act on behalf of and bind Your Company to the terms of this Agreement and everywhere in this Agreement that refers to 'You' or 'Your' shall also include Your Company. If You do not agree to these terms, do not attempt to access or use the Sample Code.
+
+1.  LICENSE: Subject to the terms of this Agreement, SAP grants You a non-exclusive, non-transferable, non-sublicensable, revocable, royalty-free, limited license to use, copy, and modify the Sample Code solely for Your internal business purposes. 
+
+2.  RESTRICTIONS: You must not use the Sample Code to: (a) impair, degrade or reduce the performance or security of any SAP products, services or related technology (collectively, "SAP Products"); (b) enable the bypassing or circumventing of SAP's license restrictions and/or provide users with access to the SAP Products to which such users are not licensed; or (c) permit mass data extraction from an SAP Product to a non-SAP Product, including use, modification, saving or other processing of such data in the non-SAP Product. Further, You must not: (i) provide or make the Sample Code available to any third party other than your authorized employees, contractors and agents (collectively, “Representatives”) and solely to be used by Your Representatives for Your own internal business purposes; ii) remove or modify any marks or proprietary notices from the Sample Code; iii) assign this Agreement, or any interest therein, to any third party; (iv) use any SAP name, trademark or logo without the prior written authorization of SAP; or (v) use the Sample Code to modify an SAP Product or decompile, disassemble or reverse engineer an SAP Product (except to the extent permitted by applicable law). You are responsible for any breach of the terms of this Agreement by You or Your Representatives.
+
+3.  INTELLECTUAL PROPERTY: SAP or its licensors retain all ownership and intellectual property rights in and to the Sample Code and SAP Products. In exchange for the right to use, copy and modify the Sample Code provided under this Agreement, You covenant not to assert any intellectual property rights in or to any of Your products, services, or related technology that are based on or incorporate the Sample Code against any individual or entity in respect of any current or future SAP Products.
+
+4. SAP AND THIRD PARTY APIS: The Sample Code may include API (application programming interface) calls to SAP and third-party products or services. The access or use of the third-party products and services to which the API calls are directed may be subject to additional terms and conditions between you and SAP or such third parties. You (and not SAP) are solely responsible for understanding and complying with any additional terms and conditions that apply to the access or use of those APIs and/or third-party products and services.  SAP does not grant You any rights in or to these APIs, products or services under this Agreement. 
+
+5. FREE AND OPEN SOURCE COMPONENTS: The Sample Code may include third party free or open source components ("FOSS Components"). You may have additional rights in such FOSS Components that are provided by the third party licensors of those components.
+
+6. THIRD PARTY DEPENDENCIES: The Sample Code may require third party software dependencies ("Dependencies") for the use or operation of the Sample Code. These Dependencies may be identified by SAP in Maven POM files, documentation or by other means. SAP does not grant You any rights in or to such Dependencies under this Agreement. You are solely responsible for the acquisition, installation and use of such Dependencies. 
+
+7.  WARRANTY:
+a)  If You are located outside the US or Canada: AS THE SAMPLE CODE IS PROVIDED TO YOU FREE OF CHARGE, SAP DOES NOT GUARANTEE OR WARRANT ANY FEATURES OR QUALITIES OF THE SAMPLE CODE OR GIVE ANY UNDERTAKING WITH REGARD TO ANY OTHER QUALITY. NO SUCH WARRANTY OR UNDERTAKING SHALL BE IMPLIED BY YOU FROM ANY DESCRIPTION IN THE SAMPLE CODE OR ANY OTHER MATERIALS, COMMUNICATION OR ADVERTISEMENT. IN PARTICULAR, SAP DOES NOT WARRANT THAT THE SAMPLE CODE WILL BE AVAILABLE UNINTERRUPTED, ERROR FREE, OR PERMANENTLY AVAILABLE.  ALL WARRANTY CLAIMS RESPECTING THE SAMPLE CODE ARE SUBJECT TO THE LIMITATION OF LIABILITY STIPULATED IN SECTION 8 BELOW.
+b)  If You are located in the US or Canada: THE SAMPLE CODE IS LICENSED TO YOU "AS IS", WITHOUT ANY WARRANTY, ESCROW, TRAINING, MAINTENANCE, OR SERVICE OBLIGATIONS WHATSOEVER ON THE PART OF SAP. SAP MAKES NO EXPRESS OR IMPLIED WARRANTIES OR CONDITIONS OF SALE OF ANY TYPE WHATSOEVER, INCLUDING BUT NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY AND OF FITNESS FOR A PARTICULAR PURPOSE. IN PARTICULAR, SAP DOES NOT WARRANT THAT THE SAMPLE CODE WILL BE AVAILABLE UNINTERRUPTED, ERROR FREE, OR PERMANENTLY AVAILABLE.  YOU ASSUME ALL RISKS ASSOCIATED WITH THE USE OF THE SAMPLE CODE, INCLUDING WITHOUT LIMITATION RISKS RELATING TO QUALITY, AVAILABILITY, PERFORMANCE, DATA LOSS, AND UTILITY IN A PRODUCTION ENVIRONMENT.
+c) For all locations: SAP DOES NOT MAKE ANY REPRESENTATIONS OR WARRANTIES IN RESPECT OF THIRD PARTY DEPENDENCIES, APIS, PRODUCTS AND SERVICES, INCLUDING BUT NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY AND OF FITNESS FOR A PARTICULAR PURPOSE. IN PARTICULAR, SAP DOES NOT WARRANT THAT THIRD-PARTY DEPENDENCIES, APIS, PRODUCTS AND SERVICES WILL BE AVAILABLE, ERROR FREE, INTEROPERABLE WITH THE SAMPLE CODE, SUITABLE FOR ANY PARTICULAR PURPOSE OR NON-INFRINGING.  YOU ASSUME ALL RISKS ASSOCIATED WITH THE USE OF THIRD PARTY DEPENDENCIES, APIS, PRODUCTS AND SERVICES, INCLUDING WITHOUT LIMITATION RISKS RELATING TO QUALITY, AVAILABILITY, PERFORMANCE, DATA LOSS, UTILITY IN A PRODUCTION ENVIRONMENT, AND NON-INFRINGEMENT. IN NO EVENT WILL SAP BE LIABLE DIRECTLY OR INDIRECTLY IN RESPECT OF ANY USE OF THIRD PARTY DEPENDENCIES, APIS, PRODUCTS AND SERVICES BY YOU.
+
+8.  LIMITATION OF LIABILITY:
+a)  If You are located outside the US or Canada: IRRESPECTIVE OF THE LEGAL REASONS, SAP SHALL ONLY BE LIABLE FOR DAMAGES UNDER THIS AGREEMENT IF SUCH DAMAGE (I) CAN BE CLAIMED UNDER THE GERMAN PRODUCT LIABILITY ACT OR (II) IS CAUSED BY INTENTIONAL MISCONDUCT OF SAP OR (III) CONSISTS OF PERSONAL INJURY. IN ALL OTHER CASES, NEITHER SAP NOR ITS EMPLOYEES, AGENTS AND SUBCONTRACTORS SHALL BE LIABLE FOR ANY KIND OF DAMAGE OR CLAIMS HEREUNDER.
+b)  If You are located in the US or Canada: IN NO EVENT SHALL SAP BE LIABLE TO YOU, YOUR COMPANY OR TO ANY THIRD PARTY FOR ANY DAMAGES IN AN AMOUNT IN EXCESS OF $100 ARISING IN CONNECTION WITH YOUR USE OF OR INABILITY TO USE THE SAMPLE CODE OR IN CONNECTION WITH SAP'S PROVISION OF OR FAILURE TO PROVIDE SERVICES PERTAINING TO THE SAMPLE CODE, OR AS A RESULT OF ANY DEFECT IN THE SAMPLE CODE. THIS DISCLAIMER OF LIABILITY SHALL APPLY REGARDLESS OF THE FORM OF ACTION THAT MAY BE BROUGHT AGAINST SAP, WHETHER IN CONTRACT OR TORT, INCLUDING WITHOUT LIMITATION ANY ACTION FOR NEGLIGENCE. YOUR SOLE REMEDY IN THE EVENT OF BREACH OF THIS AGREEMENT BY SAP OR FOR ANY OTHER CLAIM RELATED TO THE SAMPLE CODE SHALL BE TERMINATION OF THIS AGREEMENT. NOTWITHSTANDING ANYTHING TO THE CONTRARY HEREIN, UNDER NO CIRCUMSTANCES SHALL SAP OR ITS LICENSORS BE LIABLE TO YOU OR ANY OTHER PERSON OR ENTITY FOR ANY SPECIAL, INCIDENTAL, CONSEQUENTIAL, OR INDIRECT DAMAGES, LOSS OF GOOD WILL OR BUSINESS PROFITS, WORK STOPPAGE, DATA LOSS, COMPUTER FAILURE OR MALFUNCTION, ANY AND ALL OTHER COMMERCIAL DAMAGES OR LOSS, OR EXEMPLARY OR PUNITIVE DAMAGES.
+
+9.  INDEMNITY: You will fully indemnify, hold harmless and defend SAP against law suits based on any claim: (a) that any of Your products, services or related technology that are based on or incorporate the Sample Code infringes or misappropriates any patent, copyright, trademark, trade secrets, or other proprietary rights of a third party, or (b) related to Your alleged violation of the terms of this Agreement.
+
+10.  EXPORT: The Sample Code is subject to German, EU and US export control regulations. You confirm that: a) You will not use the Sample Code for, and will not allow the Sample Code to be used for, any purposes prohibited by German, EU and US law, including, without limitation, for the development, design, manufacture or production of nuclear, chemical or biological weapons of mass destruction; b) You are not located in Cuba, Iran, Sudan, Iraq, North Korea, Syria, nor any other country to which the United States has prohibited export or that has been designated by the U.S. Government as a "terrorist supporting" country (any, an "US Embargoed Country"); c) You are not a citizen, national or resident of, and are not under the control of, a US Embargoed Country; d) You will not download or otherwise export or re-export the Sample Code, directly or indirectly, to a US Embargoed Country nor to citizens, nationals or residents of a US Embargoed Country; e) You are not listed on the United States Department of Treasury lists of Specially Designated Nationals, Specially Designated Terrorists, and Specially Designated Narcotic Traffickers, nor listed on the United States Department of Commerce Table of Denial Orders or any other U.S. government list of prohibited or restricted parties and f) You will not download or otherwise export or re-export the Sample Code, directly or indirectly, to persons on the above-mentioned lists.
+
+11.  SUPPORT: SAP does not offer support for the Sample Code.
+
+12.  TERM AND TERMINATION: You may terminate this Agreement by destroying all copies of the Sample Code in Your possession or control. SAP may terminate Your license to use the Sample Code immediately if You fail to comply with any of the terms of this Agreement, or, for SAP's convenience by providing you with ten (10) days written notice of termination. In case of termination or expiration of this Agreement, You must immediately destroy all copies of the Sample Code in your possession or control.  In the event Your Company is acquired (by merger, purchase of stock, assets or intellectual property or exclusive license), or You become employed, by a direct competitor of SAP, then this Agreement and all licenses granted to You in this Agreement shall immediately terminate upon the date of such acquisition or change of employment.
+
+13.  LAW/VENUE:
+a)  If You are located outside the US or Canada: This Agreement is governed by and construed in accordance with the laws of Germany without reference to its conflicts of law principles. You and SAP agree to submit to the exclusive jurisdiction of, and venue in, the courts located in Karlsruhe, Germany in any dispute arising out of or relating to this Agreement or the Sample Code. The United Nations Convention on Contracts for the International Sale of Goods shall not apply to this Agreement.
+b)  If You are located in the US or Canada: This Agreement shall be governed by and construed in accordance with the laws of the State of New York, USA without reference to its conflicts of law principles. You and SAP agree to submit to the exclusive jurisdiction of, and venue in, the courts located in New York, New York, USA in any dispute arising out of or relating to this Agreement or the Sample Code. The United Nations Convention on Contracts for the International Sale of Goods shall not apply to this Agreement.
+
+14. MISCELLANEOUS: This Agreement is the complete agreement between the parties respecting the Sample Code. This Agreement supersedes all prior or contemporaneous agreements or representations with regards to the Sample Code. If any term of this Agreement is found to be invalid or unenforceable, the surviving provisions shall remain effective. SAP's failure to enforce any right or provisions stipulated in this Agreement will not constitute a waiver of such provision, or any other provision of this Agreement.
+
+
+v1.0-071618
+
+-------------------------------------------------------------------
+
+The following license applies to the contents of the folder 'syntaxes':
+
+This is free and unencumbered software released into the public domain.
+
+Anyone is free to copy, modify, publish, use, compile, sell, or
+distribute this software, either in source code form or as a compiled
+binary, for any purpose, commercial or non-commercial, and by any
+means.
+
+In jurisdictions that recognize copyright laws, the author or authors
+of this software dedicate any and all copyright interest in the
+software to the public domain. We make this dedication for the benefit
+of the public at large and to the detriment of our heirs and
+successors. We intend this dedication to be an overt act of
+relinquishment in perpetuity of all present and future rights to this
+software under copyright law.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+For more information, please refer to <http://unlicense.org>
+--------------------------------------------------------------------------------
+Copyright (c) 2019 SAP SE or an SAP affiliate company. All rights reserved.
