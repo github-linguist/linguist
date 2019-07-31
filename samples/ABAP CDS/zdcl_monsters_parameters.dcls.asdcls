@@ -1,9 +1,0 @@
-@EndUserText.label: 'Restrict Access to Colorful Monsters' 
-@MappingRole: true 
-// Listing 07.35 : Coding DCL Source
-define role mad_scientist {
-grant select on zcds_monsters_parameters
-where ( color ) =
-aspect pfcg_auth ( z_mon_col,
-color,
-actvt = '03' ); }
