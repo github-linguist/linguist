@@ -489,7 +489,7 @@ class TestHeuristics < Minitest::Test
   def test_v_by_heuristics
     assert_heuristics({
       "Coq" => all_fixtures("Coq", "*.v"),
-      "V" => ["V/loop.v"],
+      "V" => all_fixtures("V", "*.v"),
       "Verilog" => all_fixtures("Verilog", "*.v")
     })
   end
