@@ -109,7 +109,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Easybuild:** [MagicStack/MagicPython](https://github.com/MagicStack/MagicPython)
 - **Ecere Projects:** [textmate/json.tmbundle](https://github.com/textmate/json.tmbundle)
 - **EditorConfig:** [sindresorhus/atom-editorconfig](https://github.com/sindresorhus/atom-editorconfig)
-- **Edje Data Collection:** [textmate/json.tmbundle](https://github.com/textmate/json.tmbundle)
+- **Edje Data Collection:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **Eiffel:** [textmate/eiffel.tmbundle](https://github.com/textmate/eiffel.tmbundle)
 - **Elixir:** [elixir-lang/elixir-tmbundle](https://github.com/elixir-lang/elixir-tmbundle)
 - **Emacs Lisp:** [Alhadis/language-emacs-lisp](https://github.com/Alhadis/language-emacs-lisp)
