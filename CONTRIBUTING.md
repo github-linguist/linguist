@@ -237,6 +237,7 @@ If you are the current maintainer of this gem:
 1. Tag and push: `git tag vx.xx.xx; git push --tags`
 1. Create a GitHub release with the pushed tag (https://github.com/github/linguist/releases/new) and populate it with a list of the commits from `git log --pretty=format:"- %s" --reverse refs/tags/[OLD TAG]...refs/tags/[NEW TAG]` [like this](https://github.com/github/linguist/releases/tag/v7.2.0)
 1. Build a grammars tarball (`./script/build-grammars-tarball`) and attach it to the GitHub release
+1. Push to rubygems.pkg.github.com -- `gem push --key github --host https://rubygems.pkg.github.com/github github-linguist-3.0.0.gem`. See [Configuring RubyGems for use with GitHub Package Registry][gpr] for more details.
 1. Push to rubygems.org -- `gem push github-linguist-3.0.0.gem`
 
 
@@ -248,3 +249,4 @@ If you are the current maintainer of this gem:
 [color proximity test]: https://github.com/github/linguist/blob/master/test/test_color_proximity.rb
 [samples]: /samples
 [search-example]: https://github.com/search?utf8=%E2%9C%93&q=extension%3Aboot+NOT+nothack&type=Code&ref=searchresults
+[gpr]: https://help.github.com/en/articles/configuring-rubygems-for-use-with-github-package-registry
