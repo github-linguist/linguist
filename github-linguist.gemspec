@@ -9,6 +9,9 @@ Gem::Specification.new do |s|
   s.authors  = "GitHub"
   s.homepage = "https://github.com/github/linguist"
   s.license  = "MIT"
+  s.metadata = {
+    "github_repo" => "ssh://github.com/github/linguist"
+  }
 
   s.files = Dir['lib/**/*'] + Dir['ext/**/*'] + Dir['grammars/*'] + ['LICENSE']
   s.executables = ['github-linguist', 'git-linguist']
