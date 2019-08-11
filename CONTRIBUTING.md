@@ -136,8 +136,8 @@ If you can, try to reproduce the highlighting problem in the text editor that th
 
 You can also try to fix the bug yourself and submit a pull-request.
 [TextMate's documentation](https://manual.macromates.com/en/language_grammars) offers a good introduction on how to work with TextMate-compatible grammars.
-Note that Linguist uses [PCRE](https://www.pcre.org/) regular expressions, while TextMate uses [Oniguruma](https://github.com/kkos/oniguruma). 
-Although they are mostly compatible there might be some differences in syntax and semantics between the two. 
+Note that Linguist uses [PCRE](https://www.pcre.org/) regular expressions, while TextMate uses [Oniguruma](https://github.com/kkos/oniguruma).
+Although they are mostly compatible there might be some differences in syntax and semantics between the two.
 You can test grammars using [Lightshow](https://github-lightshow.herokuapp.com).
 
 Once the bug has been fixed upstream, we'll pick it up for GitHub in the next release of Linguist.
@@ -183,10 +183,10 @@ bundle exec rake test
 ```
 
 Sometimes getting the tests running can be too much work, especially if you don't have much Ruby experience.
-It's okay: be lazy and let our build bot [Travis](https://travis-ci.org/#!/github/linguist) run the tests for you.
+It's okay: be lazy and let GitHub Actions run the tests for you.
 Just open a pull request and the bot will start cranking away.
 
-Here's our current build status: [![Build Status](https://api.travis-ci.org/github/linguist.svg?branch=master)](https://travis-ci.org/github/linguist)
+Here's our current build status: [![Actions Status](https://wdp9fww0r9.execute-api.us-west-2.amazonaws.com/production/badge/github/linguist)](https://wdp9fww0r9.execute-api.us-west-2.amazonaws.com/production/results/github/linguist)
 
 
 ## Maintainers
