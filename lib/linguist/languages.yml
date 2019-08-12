@@ -439,7 +439,7 @@ BibTeX:
 Bison:
   type: programming
   group: Yacc
-  tm_scope: source.bison
+  tm_scope: source.yacc
   extensions:
   - ".bison"
   ace_mode: text
@@ -2717,7 +2717,7 @@ Lex:
   extensions:
   - ".l"
   - ".lex"
-  tm_scope: none
+  tm_scope: source.lex
   ace_mode: text
   language_id: 199
 LilyPond:
@@ -5890,7 +5890,7 @@ Yacc:
   - ".y"
   - ".yacc"
   - ".yy"
-  tm_scope: source.bison
+  tm_scope: source.yacc
   ace_mode: text
   color: "#4B6C4B"
   language_id: 409
