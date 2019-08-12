@@ -396,6 +396,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **TeX:** [textmate/latex.tmbundle](https://github.com/textmate/latex.tmbundle)
 - **Tea:** [pferruggiaro/sublime-tea](https://github.com/pferruggiaro/sublime-tea)
 - **Terra:** [pyk/sublime-terra](https://github.com/pyk/sublime-terra)
+- **Texinfo:** [Alhadis/language-texinfo](https://github.com/Alhadis/language-texinfo)
 - **Thrift:** [textmate/thrift.tmbundle](https://github.com/textmate/thrift.tmbundle)
 - **Turing:** [Alhadis/language-turing](https://github.com/Alhadis/language-turing)
 - **Turtle:** [peta/turtle.tmbundle](https://github.com/peta/turtle.tmbundle)

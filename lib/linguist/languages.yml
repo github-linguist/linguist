@@ -5199,6 +5199,18 @@ Terra:
   interpreters:
   - lua
   language_id: 371
+Texinfo:
+  type: prose
+  wrap: true
+  extensions:
+  - ".texinfo"
+  - ".texi"
+  - ".txi"
+  ace_mode: text
+  tm_scope: text.texinfo
+  interpreters:
+  - makeinfo
+  language_id: 988020015
 Text:
   type: prose
   wrap: true
