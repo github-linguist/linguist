@@ -28,7 +28,7 @@ Function CallOperationsAndBuiltInFuncs(string var)
 
 	string someDQString = "abcd"
 
-	Make/N=(1,2,3,4) myWave
+	Make/N=(1,2,3,4) root:myWave/WAVE=myWave
 	Redimension/N=(-1,-1,-1,5) myWave
 
 	print strlen(someDQString)

@@ -1,0 +1,125 @@
+.\" Copyright (c) 2001-2003 The Open Group, All Rights Reserved 
+.TH "<dirent.h>" P 2003 "IEEE/The Open Group" "POSIX Programmer's Manual"
+.\" <dirent.h> 
+.SH NAME
+dirent.h \- format of directory entries
+.SH SYNOPSIS
+.LP
+\fB#include <dirent.h>\fP
+.SH DESCRIPTION
+.LP
+The internal format of directories is unspecified.
+.LP
+The \fI<dirent.h>\fP header shall define the following type:
+.TP 7
+\fBDIR\fP
+A type representing a directory stream.
+.sp
+.LP
+It shall also define the structure \fBdirent\fP which shall include
+the following members:
+.sp
+.RS
+.nf
+
+\fB
+ino_t  d_ino      \fP File serial number. \fB
+
+char   d_name[]   \fP Name of entry. \fB
+\fP
+.fi
+.RE
+.LP
+The type \fBino_t\fP shall be defined as described in \fI<sys/types.h>\fP
+\&. 
+.LP
+The character array \fId_name\fP is of unspecified size, but the number
+of bytes preceding the terminating null byte shall not
+exceed {NAME_MAX}.
+.LP
+The following shall be declared as functions and may also be defined
+as macros. Function prototypes shall be provided.
+.sp
+.RS
+.nf
+
+\fBint            closedir(DIR *);
+DIR           *opendir(const char *);
+struct dirent *readdir(DIR *);
+
+int            readdir_r(DIR *restrict, struct dirent *restrict,
+                   struct dirent **restrict);
+
+void           rewinddir(DIR *);
+
+void           seekdir(DIR *, long);
+long           telldir(DIR *);
+
+\fP
+.fi
+.RE
+.LP
+\fIThe following sections are informative.\fP
+.SH APPLICATION USAGE
+.LP
+None.
+.SH RATIONALE
+.LP
+Information similar to that in the \fI<dirent.h>\fP header is contained
+in a file \fI<sys/dir.h>\fP in 4.2 BSD and
+4.3 BSD. The equivalent in these implementations of \fBstruct dirent\fP
+from this volume of IEEE\ Std\ 1003.1-2001 is
+\fBstruct direct\fP. The filename was changed because the name \fI<sys/dir.h>\fP
+was also used in earlier implementations
+to refer to definitions related to the older access method; this produced
+name conflicts. The name of the structure was changed
+because this volume of IEEE\ Std\ 1003.1-2001 does not completely
+define what is in the structure, so it could be different
+on some implementations from \fBstruct direct\fP.
+.LP
+The name of an array of \fBchar\fP of an unspecified size should not
+be used as an lvalue. Use of:
+.sp
+.RS
+.nf
+
+\fBsizeof(d_name)
+\fP
+.fi
+.RE
+.LP
+is incorrect; use:
+.sp
+.RS
+.nf
+
+\fBstrlen(d_name)
+\fP
+.fi
+.RE
+.LP
+instead.
+.LP
+The array of \fBchar\fP \fId_name\fP is not a fixed size. Implementations
+may need to declare \fBstruct dirent\fP with an
+array size for \fId_name\fP of 1, but the actual number of characters
+provided matches (or only slightly exceeds) the length of
+the filename.
+.SH FUTURE DIRECTIONS
+.LP
+None.
+.SH SEE ALSO
+.LP
+\fI<sys/types.h>\fP , the System Interfaces volume of IEEE\ Std\ 1003.1-2001,
+\fIclosedir\fP(), \fIopendir\fP(), \fIreaddir\fP(), \fIreaddir_r\fP(),
+\fIrewinddir\fP(), \fIseekdir\fP(), \fItelldir\fP()
+.SH COPYRIGHT
+Portions of this text are reprinted and reproduced in electronic form
+from IEEE Std 1003.1, 2003 Edition, Standard for Information Technology
+-- Portable Operating System Interface (POSIX), The Open Group Base
+Specifications Issue 6, Copyright (C) 2001-2003 by the Institute of
+Electrical and Electronics Engineers, Inc and The Open Group. In the
+event of any discrepancy between this version and the original IEEE and
+The Open Group Standard, the original IEEE and The Open Group Standard
+is the referee document. The original Standard can be obtained online at
+http://www.opengroup.org/unix/online.html .

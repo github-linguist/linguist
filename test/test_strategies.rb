@@ -30,6 +30,12 @@ class TestStrategies < Minitest::Test
     fixs.reject { |f| File.symlink?(f) }
   end
 
+  def assert_manpage(blob)
+    languages = Linguist::Strategy::Manpage.call(blob)
+    assert_equal Language["Roff Manpage"], languages[0], "#{blob} not detected as manpage"
+    assert_equal Language["Roff"], languages[1], "#{blob} should include Roff as candidate language"
+  end
+
   def assert_xml(blob)
     language = Linguist::Strategy::XML.call(file_blob(blob)).first
     assert_equal Language["XML"], language, "#{blob} not detected as XML"
@@ -39,6 +45,23 @@ class TestStrategies < Minitest::Test
     Array(blobs).each do |blob|
       assert_xml blob
     end
+  end
+
+  def test_manpage_strategy
+    assert_manpage fixture_blob("Data/Manpages/bsdmalloc.3malloc")
+    assert_manpage fixture_blob("Data/Manpages/dirent.h.0p")
+    assert_manpage fixture_blob("Data/Manpages/linguist.1gh")
+    assert_manpage fixture_blob("Data/Manpages/test.1.in")
+    assert_manpage fixture_blob("Data/Manpages/test.2.in")
+    assert_manpage fixture_blob("Data/Manpages/test.3.in")
+    assert_manpage fixture_blob("Data/Manpages/test.4.in")
+    assert_manpage fixture_blob("Data/Manpages/test.5.in")
+    assert_manpage fixture_blob("Data/Manpages/test.6.in")
+    assert_manpage fixture_blob("Data/Manpages/test.7.in")
+    assert_manpage fixture_blob("Data/Manpages/test.8.in")
+    assert_manpage fixture_blob("Data/Manpages/test.9.in")
+    assert_manpage fixture_blob("Data/Manpages/test.man.in")
+    assert_manpage fixture_blob("Data/Manpages/test.mdoc.in")
   end
 
   def test_modeline_strategy
