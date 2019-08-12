@@ -299,6 +299,11 @@ disambiguations:
     named_pattern: perl5
   - language: Perl 6
     named_pattern: perl6
+- extensions: ['.plist']
+  rules:
+  - language: XML Property List
+    pattern: '<!DOCTYPE\s+plist'
+  - language: OpenStep Property List
 - extensions: ['.pm']
   rules:
   - language: Perl

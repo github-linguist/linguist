@@ -3541,6 +3541,13 @@ OpenSCAD:
   tm_scope: source.scad
   ace_mode: scad
   language_id: 266
+OpenStep Property List:
+  type: data
+  extensions:
+  - ".plist"
+  tm_scope: source.plist
+  ace_mode: text
+  language_id: 598917541
 OpenType Feature File:
   type: data
   aliases:
@@ -4665,7 +4672,7 @@ SVG:
   type: data
   extensions:
   - ".svg"
-  tm_scope: text.xml
+  tm_scope: text.xml.svg
   ace_mode: xml
   codemirror_mode: xml
   codemirror_mime_type: text/xml
@@ -5649,7 +5656,6 @@ XML:
   - ".odd"
   - ".osm"
   - ".pkgproj"
-  - ".plist"
   - ".pluginspec"
   - ".proj"
   - ".props"
@@ -5665,15 +5671,9 @@ XML:
   - ".shproj"
   - ".srdf"
   - ".storyboard"
-  - ".stTheme"
   - ".sublime-snippet"
   - ".targets"
-  - ".tmCommand"
   - ".tml"
-  - ".tmLanguage"
-  - ".tmPreferences"
-  - ".tmSnippet"
-  - ".tmTheme"
   - ".ts"
   - ".tsx"
   - ".ui"
@@ -5717,6 +5717,22 @@ XML:
   - Web.config
   - packages.config
   language_id: 399
+XML Property List:
+  type: data
+  group: XML
+  extensions:
+  - ".plist"
+  - ".stTheme"
+  - ".tmCommand"
+  - ".tmLanguage"
+  - ".tmPreferences"
+  - ".tmSnippet"
+  - ".tmTheme"
+  tm_scope: text.xml.plist
+  ace_mode: xml
+  codemirror_mode: xml
+  codemirror_mime_type: text/xml
+  language_id: 75622871
 XPages:
   type: data
   extensions:
