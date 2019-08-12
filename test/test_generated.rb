@@ -5,35 +5,47 @@ class TestGenerated < Minitest::Test
 
   class DataLoadedError < StandardError; end
 
-  def generated_without_loading_data(blob)
+  def error_message(blob, negate = false)
+    if negate
+      "#{blob} was incorrectly recognised as a generated file"
+    else
+      "#{blob} was not recognised as a generated file"
+    end
+  end
+
+  def generated_without_loading_data(blob, negate = false)
     begin
-      assert Generated.generated?(blob, lambda { raise DataLoadedError.new }), "#{blob} was not recognized as a generated file"
+      expected = !negate
+      actual = Generated.generated?(blob, lambda { raise DataLoadedError.new })
+      assert(expected == !!actual, error_message(blob, negate))
     rescue DataLoadedError
       assert false, "Data was loaded when calling generated? on #{blob}"
     end
   end
 
-  def generated_loading_data(blob)
+  def generated_loading_data(blob, negate = false)
     assert_raises(DataLoadedError, "Data wasn't loaded when calling generated? on #{blob}") do
       Generated.generated?(blob, lambda { raise DataLoadedError.new })
     end
-    assert Generated.generated?(blob, lambda { IO.read(blob) }), "#{blob} was not recognized as a generated file"
+    expected = !negate
+    actual = Generated.generated?(blob, lambda { IO.read(blob) })
+    assert(expected == !!actual, error_message(blob, negate))
   end
 
-  def generated_fixture_without_loading_data(name)
-    generated_without_loading_data(File.join(fixtures_path, name))
+  def generated_fixture_without_loading_data(name, negate = false)
+    generated_without_loading_data(File.join(fixtures_path, name), negate)
   end
 
-  def generated_fixture_loading_data(name)
-    generated_loading_data(File.join(fixtures_path, name))
+  def generated_fixture_loading_data(name, negate = false)
+    generated_loading_data(File.join(fixtures_path, name), negate)
   end
 
-  def generated_sample_without_loading_data(name)
-    generated_without_loading_data(File.join(samples_path, name))
+  def generated_sample_without_loading_data(name, negate = false)
+    generated_without_loading_data(File.join(samples_path, name), negate)
   end
 
-  def generated_sample_loading_data(name)
-    generated_loading_data(File.join(samples_path, name))
+  def generated_sample_loading_data(name, negate = false)
+    generated_loading_data(File.join(samples_path, name), negate)
   end
 
   def test_check_generated
@@ -129,6 +141,24 @@ class TestGenerated < Minitest::Test
 
     # Pipenv
     generated_sample_without_loading_data("Dummy/Pipfile.lock")
+
+    # HTML
+    generated_fixture_loading_data("HTML/attr-swapped.html")
+    generated_fixture_loading_data("HTML/extra-attr.html")
+    generated_fixture_loading_data("HTML/extra-spaces.html")
+    generated_fixture_loading_data("HTML/extra-tags.html")
+    generated_fixture_loading_data("HTML/grohtml.html")
+    generated_fixture_loading_data("HTML/grohtml.xhtml")
+    generated_fixture_loading_data("HTML/makeinfo.html")
+    generated_fixture_loading_data("HTML/mandoc.html")
+    generated_fixture_loading_data("HTML/node78.html")
+    generated_fixture_loading_data("HTML/org-mode.html")
+    generated_fixture_loading_data("HTML/quotes-double.html")
+    generated_fixture_loading_data("HTML/quotes-none.html")
+    generated_fixture_loading_data("HTML/quotes-single.html")
+    generated_fixture_loading_data("HTML/uppercase.html")
+    generated_fixture_loading_data("HTML/unknown.html", true)
+    generated_sample_loading_data("HTML/pages.html")
 
   end
 end
