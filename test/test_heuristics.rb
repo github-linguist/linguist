@@ -493,6 +493,14 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_v_by_heuristics
+    assert_heuristics({
+      "Coq" => all_fixtures("Coq", "*.v"),
+      "V" => all_fixtures("V", "*.v"),
+      "Verilog" => all_fixtures("Verilog", "*.v")
+    })
+  end
+
   def test_vba_by_heuristics
     assert_heuristics({
       "Visual Basic" => all_fixtures("Visual Basic", "*.vba"),

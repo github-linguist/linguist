@@ -410,6 +410,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Uno:** [atom/language-csharp](https://github.com/atom/language-csharp)
 - **UnrealScript:** [textmate/java.tmbundle](https://github.com/textmate/java.tmbundle)
 - **UrWeb:** [gwalborn/UrWeb-Language-Definition](https://github.com/gwalborn/UrWeb-Language-Definition)
+- **V:** [0x9ef/vscode-vlang](https://github.com/0x9ef/vscode-vlang)
 - **VCL:** [brandonwamboldt/sublime-varnish](https://github.com/brandonwamboldt/sublime-varnish)
 - **VHDL:** [textmate/vhdl.tmbundle](https://github.com/textmate/vhdl.tmbundle)
 - **Vala:** [technosophos/Vala-TMBundle](https://github.com/technosophos/Vala-TMBundle)

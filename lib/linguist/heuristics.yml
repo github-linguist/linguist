@@ -444,6 +444,14 @@ disambiguations:
     pattern: '^\s*(import.+(from\s+|require\()[''"]react|\/\/\/\s*<reference\s)'
   - language: XML
     pattern: '(?i:^\s*<\?xml\s+version)'
+- extensions: ['.v']
+  rules:
+  - language: Coq
+    pattern: '\(\*.*?\*\)|(?:^|\s)(?:Proof|Qed)\.(?:$|\s)|(?:^|\s)Require[ \t]+Import\s'
+  - language: Verilog
+    pattern: '^[ \t]*module\s+[^\s()]+\s+\#?\(|^[ \t]*`(?:ifdef|timescale)\s|^[ \t]*always[ \t]+@'
+  - language: V
+    pattern: '\$(?:if|else)[ \t]|^[ \t]*fn\s+[^\s()]+\(.*?\).*?\{|^[ \t]*for\s*\{'
 - extensions: ['.vba']
   rules:
   - language: Vim script
