@@ -10,7 +10,7 @@ gem install bundler -v '< 2'
 git fetch origin master:master v2.0.0:v2.0.0 test/attributes:test/attributes test/master:test/master
 
 # Replace SSH links to submodules by HTTPS links.
-sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
+sed -i 's|git@github.com:|https://github.com/|' .gitmodules
 
 # Fetch all grammars
 git submodule init
