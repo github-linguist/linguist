@@ -183,7 +183,7 @@ bundle exec rake test
 ```
 
 Sometimes getting the tests running can be too much work, especially if you don't have much Ruby experience.
-It's okay: be lazy and let GitHub Actions run the tests for you.
+It's okay: be lazy and let [GitHub Actions](https://github.com/features/actions) run the tests for you.
 Just open a pull request and the bot will start cranking away.
 
 Here's our current build status: [![Actions Status](https://wdp9fww0r9.execute-api.us-west-2.amazonaws.com/production/badge/github/linguist)](https://wdp9fww0r9.execute-api.us-west-2.amazonaws.com/production/results/github/linguist)
