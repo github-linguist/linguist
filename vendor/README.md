@@ -368,6 +368,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Slash:** [slash-lang/Slash.tmbundle](https://github.com/slash-lang/Slash.tmbundle)
 - **Slice:** [zeroc-ice/vscode-slice](https://github.com/zeroc-ice/vscode-slice)
 - **Slim:** [slim-template/ruby-slim.tmbundle](https://github.com/slim-template/ruby-slim.tmbundle)
+- **SmPL:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **Smali:** [ShaneWilton/sublime-smali](https://github.com/ShaneWilton/sublime-smali)
 - **Smalltalk:** [tomas-stefano/smalltalk-tmbundle](https://github.com/tomas-stefano/smalltalk-tmbundle)
 - **Smarty:** [textmate/php-smarty.tmbundle](https://github.com/textmate/php-smarty.tmbundle)
