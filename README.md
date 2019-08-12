@@ -1,6 +1,6 @@
 # Linguist
 
-[![Build Status](https://travis-ci.org/github/linguist.svg?branch=master)](https://travis-ci.org/github/linguist)
+[![Actions Status](https://wdp9fww0r9.execute-api.us-west-2.amazonaws.com/production/badge/github/linguist)](https://wdp9fww0r9.execute-api.us-west-2.amazonaws.com/production/results/github/linguist)
 
 [issues]: https://github.com/github/linguist/issues
 [new-issue]: https://github.com/github/linguist/issues/new
@@ -127,7 +127,7 @@ lib/linguist.rb
 
 If the language stats bar is reporting a language that you don't expect:
 
-1. Click on the name of the language in the stats bar to see a list of the files that are identified as that language.  
+1. Click on the name of the language in the stats bar to see a list of the files that are identified as that language.
    Keep in mind this performs a search so the [code search restrictions][search-limits] may result in files identified in the language statistics not appearing in the search results.
    [Installing Linguist locally](#usage) and running it from the [command line](#command-line-usage) will give you accurate results.
 1. If you see files that you didn't write in the search results, consider moving the files into one of the [paths for vendored code](/lib/linguist/vendor.yml), or use the [manual overrides](#overrides) feature to ignore them.
