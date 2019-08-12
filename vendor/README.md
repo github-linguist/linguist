@@ -374,7 +374,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Smalltalk:** [tomas-stefano/smalltalk-tmbundle](https://github.com/tomas-stefano/smalltalk-tmbundle)
 - **Smarty:** [textmate/php-smarty.tmbundle](https://github.com/textmate/php-smarty.tmbundle)
 - **Solidity:** [davidhq/SublimeEthereum](https://github.com/davidhq/SublimeEthereum)
-- **SourcePawn:** [github-linguist/sublime-sourcepawn](https://github.com/github-linguist/sublime-sourcepawn)
+- **SourcePawn:** [Dreae/sourcepawn-vscode](https://github.com/Dreae/sourcepawn-vscode)
 - **Spline Font Database:** [Alhadis/language-fontforge](https://github.com/Alhadis/language-fontforge)
 - **Squirrel:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **Stan:** [jrnold/atom-language-stan](https://github.com/jrnold/atom-language-stan)
