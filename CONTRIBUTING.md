@@ -136,8 +136,8 @@ If you can, try to reproduce the highlighting problem in the text editor that th
 
 You can also try to fix the bug yourself and submit a pull-request.
 [TextMate's documentation](https://manual.macromates.com/en/language_grammars) offers a good introduction on how to work with TextMate-compatible grammars.
-Note that Linguist uses [PCRE](https://www.pcre.org/) regular expressions, while TextMate uses [Oniguruma](https://github.com/kkos/oniguruma). 
-Although they are mostly compatible there might be some differences in syntax and semantics between the two. 
+Note that Linguist uses [PCRE](https://www.pcre.org/) regular expressions, while TextMate uses [Oniguruma](https://github.com/kkos/oniguruma).
+Although they are mostly compatible there might be some differences in syntax and semantics between the two.
 You can test grammars using [Lightshow](https://github-lightshow.herokuapp.com).
 
 Once the bug has been fixed upstream, we'll pick it up for GitHub in the next release of Linguist.
@@ -183,10 +183,10 @@ bundle exec rake test
 ```
 
 Sometimes getting the tests running can be too much work, especially if you don't have much Ruby experience.
-It's okay: be lazy and let our build bot [Travis](https://travis-ci.org/#!/github/linguist) run the tests for you.
+It's okay: be lazy and let [GitHub Actions](https://github.com/features/actions) run the tests for you.
 Just open a pull request and the bot will start cranking away.
 
-Here's our current build status: [![Build Status](https://api.travis-ci.org/github/linguist.svg?branch=master)](https://travis-ci.org/github/linguist)
+Here's our current build status: [![Actions Status](https://wdp9fww0r9.execute-api.us-west-2.amazonaws.com/production/badge/github/linguist)](https://wdp9fww0r9.execute-api.us-west-2.amazonaws.com/production/results/github/linguist)
 
 
 ## Maintainers
@@ -237,6 +237,7 @@ If you are the current maintainer of this gem:
 1. Tag and push: `git tag vx.xx.xx; git push --tags`
 1. Create a GitHub release with the pushed tag (https://github.com/github/linguist/releases/new) and populate it with a list of the commits from `git log --pretty=format:"- %s" --reverse refs/tags/[OLD TAG]...refs/tags/[NEW TAG]` [like this](https://github.com/github/linguist/releases/tag/v7.2.0)
 1. Build a grammars tarball (`./script/build-grammars-tarball`) and attach it to the GitHub release
+1. Push to rubygems.pkg.github.com -- `gem push --key github --host https://rubygems.pkg.github.com/github github-linguist-3.0.0.gem`. See [Configuring RubyGems for use with GitHub Package Registry][gpr] for more details.
 1. Push to rubygems.org -- `gem push github-linguist-3.0.0.gem`
 
 
@@ -248,3 +249,4 @@ If you are the current maintainer of this gem:
 [color proximity test]: https://github.com/github/linguist/blob/master/test/test_color_proximity.rb
 [samples]: /samples
 [search-example]: https://github.com/search?utf8=%E2%9C%93&q=extension%3Aboot+NOT+nothack&type=Code&ref=searchresults
+[gpr]: https://help.github.com/en/articles/configuring-rubygems-for-use-with-github-package-registry

@@ -1,0 +1,22 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby: [ '2.6.x', '2.5.x', '2.4.x', '2.3.x' ]
+    steps:
+    - uses: actions/checkout@master
+    - name: Set up Ruby
+      uses: actions/setup-ruby@v1
+      with:
+        version: ${{ matrix.ruby }}
+    - name: Install dependencies
+      run: script/ci/install_deps
+    - name: Run tests
+      run: bundle exec rake
+    - name: Check Licenses
+      run: script/licensed status

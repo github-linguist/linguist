@@ -18,6 +18,7 @@ var GrammarAliases = map[string]string{
 }
 
 var KnownFields = map[string]bool{
+	"$schema":               true,
 	"comment":               true,
 	"uuid":                  true,
 	"author":                true,
