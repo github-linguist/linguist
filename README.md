@@ -1,6 +1,6 @@
 # Linguist
 
-[![Actions Status](https://wdp9fww0r9.execute-api.us-west-2.amazonaws.com/production/badge/github/linguist)](https://wdp9fww0r9.execute-api.us-west-2.amazonaws.com/production/results/github/linguist)
+[![Build Status](https://action-badges.now.sh/github/linquist)](https://github.com/github/linguist/actions)
 
 [issues]: https://github.com/github/linguist/issues
 [new-issue]: https://github.com/github/linguist/issues/new
