@@ -1,9 +1,10 @@
-name: CI
+name: Run Tests
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
-  build:
+  run:
+    name: Ruby ${{ matrix.ruby }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
