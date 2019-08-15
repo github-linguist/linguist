@@ -232,6 +232,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Lua:** [textmate/lua.tmbundle](https://github.com/textmate/lua.tmbundle)
 - **MATLAB:** [mathworks/MATLAB-Language-grammar](https://github.com/mathworks/MATLAB-Language-grammar)
 - **MAXScript:** [Alhadis/language-maxscript](https://github.com/Alhadis/language-maxscript)
+- **MLIR:** [jpienaar/mlir-grammar](https://github.com/jpienaar/mlir-grammar)
 - **MQL4:** [mqsoft/MQL5-sublime](https://github.com/mqsoft/MQL5-sublime)
 - **MQL5:** [mqsoft/MQL5-sublime](https://github.com/mqsoft/MQL5-sublime)
 - **MTML:** [atom/language-html](https://github.com/atom/language-html)
