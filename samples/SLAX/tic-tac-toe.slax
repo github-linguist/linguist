@@ -1,0 +1,1448 @@
+/*
+ * Author        : Curtis Call
+ * Version       : 1.0
+ * Last Modified : December 29, 2009
+ * Platform      : all
+ * Release       : 9.6 and above
+ *
+ * Description   : Play a quick game of tic-tac-toe against a human or computer
+ * opponent.
+ *
+ * License       : BSD-Style
+ *  Copyright (c) 2009 Curtis Call. All Rights Reserved.
+ *  Redistribution and use in source and binary forms, with or without modification, 
+ *  are permitted provided that the following conditions are met:
+ *  1. Redistributions of source code must retain the above copyright notice, this 
+ *  list of conditions and the following disclaimer.
+ *  2. Redistributions in binary form must reproduce the above copyright notice, 
+ *  this list of conditions and the following disclaimer in the documentation and/or
+ *  other materials provided with the distribution.
+ *  3. The name of the author may not be used to endorse or promote products derived 
+ *  from this software without specific prior written permission.
+ *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED 
+ *  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY 
+ *  AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE 
+ *  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL 
+ *  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ *  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
+ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ *  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN 
+ *  IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */ 
+version 1.0;
+
+ns junos = "http://xml.juniper.net/junos/*/junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/junos/commit-scripts/1.0";
+ns str = "http://exslt.org/strings";
+ns math = "http://exslt.org/math";
+ns func extension = "http://exslt.org/functions";
+ns tic extension = "http://xml.juniper.net/tic-tac-toe";
+
+import "../import/junos.xsl";
+
+/* Single connection to use for all API calls */
+var $connection = jcs:open();
+
+/* Retrieve the current software version */
+var $kern-osrelease = jcs:sysctl("kern.osrelease", "s");
+var $version-set = jcs:split("[IRSB-]", $kern-osrelease );
+var $version = $version-set[1];
+
+/* Utility MIB values */
+var $mib-prefix = "tic-tac-toe:";
+var $mib-oid-prefix = ".1.3.6.1.4.1.2636.3.47.1.1.5.1.2.116.105.99.45.116.97.99.45.116.111.101.58";
+
+/* Build valid ascii string */
+var $valid-ascii = tic:get-valid-ascii();
+
+/* Grab current microtime mod 100000 */
+var $micro-time = jcs:sysctl( "kern.timecounter.nmicrotime", "i" ) mod 100000;
+
+/* user string - add micro time to differentiate between the same user account */
+var $user-string = $user _ ":" _ $micro-time;
+
+/* Workaround for PR 436699 */
+var $quote = tic:get-quote-char();
+
+/* Local game oid */
+var $local-game-prefix = "tic-tac-toe:" _ $user-string _ ":";
+var $local-game-oid-prefix = ".1.3.6.1.4.1.2636.3.47.1.1.5.1.2.116.105.99.45.116.97.99.45.116.111.101.58." _ tic:translate-to-oid( $user ) _ ".58." _ tic:translate-to-oid( $micro-time ) _ ".58"; 
+
+/* MIB suffixes for the various values*/
+var $opponent = "opponent";
+var $second-player = "second-player";
+var $owner-character = "character";
+var $turn = "turn";
+var $positions = "positions";
+
+/* Win coordinates */
+var $board-set := {
+    <row> {
+        <square> 1;
+        <square> 2;
+        <square> 3;
+    }
+    <row> {
+        <square> 4;
+        <square> 5;
+        <square> 6;
+    }
+    <row> {
+        <square> 7;
+        <square> 8;
+        <square> 9;
+    }
+    <row> {
+        <square> 1;
+        <square> 4;
+        <square> 7;
+    }
+    <row> {
+        <square> 2;
+        <square> 5;
+        <square> 8;
+    }
+    <row> {
+        <square> 3;
+        <square> 6;
+        <square> 9;
+    }
+    <row> {
+        <square> 1;
+        <square> 5;
+        <square> 9;
+    }
+    <row> {
+        <square> 3;
+        <square> 5;
+        <square> 7;
+    }
+}
+
+match / {
+    <op-script-results> {
+
+        /* Minimum version is 9.6 */
+        expr tic:check-version( 9.6, "Sorry, Junos 9.6 is required" );
+    
+        /* Start the game fresh */
+        expr tic:clear-all-instances();
+        
+        /* Start the main menu loop */
+        expr tic:main-menu();
+
+        /* Clean up */
+        expr tic:clear-all-instances();
+
+        /* Close the connection */
+        expr jcs:close( $connection );
+    }
+}
+
+/*
+ * This function calls the math:random() number a variable number of times.  This
+ * is done because pre-10.2 the math:random() function is not seeded.  By jumping
+ * a variable number of times through the random sequence we ensure that every game
+ * isn't played the exact same way.
+ */
+<func:function name="tic:cycle-randoms"> {
+    param $count;
+    
+    var $absorb = math:random();
+    
+    if( $count > 1 ) {
+        expr tic:cycle-randoms( $count - 1 );
+    }
+}
+
+/*
+ * Displays the main menu prompt and directs to functions based on user's choice
+ */
+<func:function name="tic:main-menu"> {
+
+    var $prompt = {
+        expr " \n[Choose your opponent]\n";
+        expr    "-----------------------------------\n";
+        expr    " 1. Human - Serve Game\n";
+        expr    " 2. Human - Join Game\n";
+        expr    " 3. Computer - Simple\n";
+        expr    " 4. Computer - Tough\n";
+        expr    " 5. Computer - Unbeatable\n";
+        expr    " Q. Quit\n";
+        expr    "-----------------------------------\n";
+        expr    "Enter Selection:> ";
+    }
+    var $answer = tic:safe-get-input( $prompt );
+    
+    if( string( number( $answer ) ) != "NaN" && $answer >= 1 && $answer <= 5 ) {
+        
+        /* Human server game, wait for second player */
+        if( $answer == 1 ) {
+            var $string = "*Game: " _ substring( $local-game-prefix, 1, string-length( $local-game-prefix ) - 1 ) _ " Waiting for player to join*";
+            var $line = { call build-line( $character = "*", $length = string-length( $string ) ); }
+            expr jcs:output( " \n", $line );
+            expr jcs:output($string);
+            expr jcs:output( $line );
+            expr tic:write-string( concat( $local-game-prefix, $opponent ), $answer );
+            expr tic:wait-for-player();
+
+            /* Pick the letter */
+            expr tic:select-character();
+        }
+        /* Computer game */
+        else if( $answer > 2 ) {
+            expr tic:write-string( concat( $local-game-prefix, $opponent ), $answer );
+
+            /* Cycle through random numbers due to PR 471625 */
+            expr tic:cycle-randoms( $micro-time mod 117 );
+            
+            /* Pick the letter */
+            expr tic:select-character();
+        }
+        
+        
+        var $game-name = {
+            if( $answer == 2 ) {
+                /* Look for open game */
+                var $name = tic:find-game();
+                expr jcs:output(" \n*******************************" );
+                expr jcs:output("*Waiting for X vs O assignment*" );
+                expr jcs:output("*******************************" );
+                expr tic:wait-for-game( $name );
+                expr $name;
+            }
+            else {
+                expr $local-game-prefix;
+            }
+        }
+        
+        /* Start game */
+        expr tic:start-game( $game-name );
+    }
+    /* Exit */
+    else if( $answer == "Q" || $answer == "q" ) {
+        expr jcs:output(" \nExiting the game");
+    }
+    /* Invalid choice, loop to main */
+    else {
+        expr tic:main-menu();
+    }
+}
+
+/*
+ * Looks for a current server game that is waiting for a second player.  If none is
+ * found then it exits the script with an error.
+ */
+<func:function name="tic:find-game"> {
+    var $game-oids = tic:walk-mib( $mib-oid-prefix );
+
+    /* Collect all open games that are waiting for an opponent */    
+    var $games := {
+        for-each( $game-oids/snmp-object[ tic:ends-with( tic:clean-oid-name( name ), $opponent )][ object-value == 1 ] ) {
+            var $name = substring-before( tic:clean-oid-name( name ), $opponent );
+            
+            if( jcs:empty( $game-oids/snmp-object[ starts-with( tic:clean-oid-name(name), $name ) ][ tic:ends-with( tic:clean-oid-name( name ), $second-player )] ) ) {
+                <game> $name;
+            }
+        }
+    }
+
+    /* No games are open, exit */    
+    if( count( $games/game ) == 0 ) {
+        <xsl:message terminate="yes"> "Could not find an open game";
+    }
+    
+    /* Join the game */
+    expr jcs:output( " \nJoining game ", substring( $games/game[1], 1, string-length( $games/game[1] ) - 1 ) );
+    expr tic:write-string( concat( $games/game[1], $second-player ), $user-string );
+    <func:result select="$games/game[1]">;
+}
+
+/* 
+ * Remove the leading portion and the quotes from the name 
+ */
+<func:function name="tic:clean-oid-name"> {
+    param $name;
+    
+    var $new-name = translate( substring-after( $name, "jnxUtilStringValue." ), $quote, "" );
+    <func:result select="$new-name">;
+}
+
+/*
+ * Checks if string ends with the sub-string
+ */
+<func:function name="tic:ends-with"> {
+    param $string;
+    param $sub-string;
+    
+    if( substring( $string, 1 + string-length( $string ) - string-length( $sub-string ) ) == $sub-string ) {
+        <func:result select="true()">;
+    }
+    else {
+        <func:result select="false()">;
+    }
+}
+
+/*
+ * Select either X or O (X goes first)
+ */
+<func:function name="tic:select-character"> {
+
+    var $prompt = {
+        expr " \n[Choose Letter (X goes first)]\n";
+        expr    "-----------------------------------\n";
+        expr    " X.\n";
+        expr    " O.\n";
+        expr    "-----------------------------------\n";
+        expr    "Enter Selection:> ";
+    }
+    var $answer = tic:safe-get-input( $prompt );
+
+    /* X or O */
+    if( $answer == "X" || $answer == "x" || $answer == "O" || $answer == "o" ) {
+        expr tic:write-string( concat( $local-game-prefix, $owner-character ), translate( $answer, "xo", "XO" ) );
+        if( $answer == "x" || $answer == "X" ) {
+            expr tic:write-string( concat( $local-game-prefix, $turn ), $user-string );
+        }
+        else {
+            expr tic:write-string( concat( $local-game-prefix, $turn ), tic:read-string( concat( $local-game-prefix, $second-player ) ) );
+        }
+    }
+    else if( $answer == "q" || $answer == "Q" ) {
+        expr tic:clear-all-instances();
+        <xsl:message terminate="yes"> "Exiting game";
+    }
+    /* Invalid choice, loop */
+    else {
+        expr tic:select-character();
+    }
+}
+
+
+/*
+ * Set the game to blank and start the looping
+ */
+<func:function name="tic:start-game"> {
+    param $game-name;
+
+    expr tic:write-string( concat( $local-game-prefix, $positions ), ",,,,,,,," );
+    
+    expr tic:turn-loop( $game-name );
+}
+
+/*
+ * This is the main turn loop.  Calls itself recursively until the game is over.
+ */
+<func:function name="tic:turn-loop"> {
+    param $game-name;
+
+    /* Retrieve the current player's character */    
+    var $character = {
+        var $owner-character = tic:read-string( concat( $game-name, $owner-character ) );
+        if( $game-name == $local-game-prefix ) {
+            expr $owner-character;
+        }
+        else {
+            expr translate( $owner-character, "XO", "OX" );
+        }
+    }   
+
+    /* Display the current board */
+    expr tic:display-board( $game-name );
+
+    /* Wait for turn */
+    if( not( tic:is-turn( $game-name ) ) ) {
+        var $opponent-type = tic:read-string( concat( $game-name, $opponent ) );
+
+        /* Human opponent, give them their turn */
+        if( $opponent-type == 1 ) {
+            var $string = "*Waiting for other player's turn*";
+            var $line = { call build-line( $character = "*", $length = string-length( $string ) ); }
+            expr jcs:output( " \n", $line );
+            expr jcs:output( $string );
+            expr jcs:output( $line );
+            expr tic:wait-turn( $game-name );
+        }
+        /* Computer opponent */
+        else {
+            var $string = "*Waiting for computer's turn*";
+            var $line = { call build-line( $character = "*", $length = string-length( $string ) ); }
+            expr jcs:output( " \n", $line );
+            expr jcs:output( $string );
+            expr jcs:output( $line );
+            expr tic:computer-move( $game-name, $opponent-type, translate( $character, "XO", "OX" ) );
+        }
+        /* Display it again, after the last change */
+        expr tic:display-board( $game-name );
+    }
+
+    /* Check if other player just won */
+    var $other-player-won = tic:check-for-win( $game-name, translate( $character, "XO", "OX" ) );
+    /* Game is over... declare the winner */
+    if( $other-player-won ) {
+        expr jcs:output( " \nSorry, better luck next time..." );
+        /* Sleep for a few seconds to let the other side catch up */
+        expr jcs:sleep( 3 );
+    }
+    /* Continue playing */
+    else {
+    
+        /* Check if either player can still win */
+        var $x-can-win = tic:can-still-win( $game-name, "X" );
+        var $o-can-win = tic:can-still-win( $game-name, "O" );
+        
+        /* If no one can win then give up */
+        if( not( $x-can-win ) && not( $o-can-win ) ) {
+            expr jcs:output( " \nHmmm, it is a tie..." );
+            /* Sleep for a few seconds to let the other side catch up */
+            expr jcs:sleep( 3 );
+        }
+        else {
+            /* Get selection */
+            var $prompt = "You are: " _ $character _ " - Select 1-9 (Q to quit): ";
+            var $answer = tic:safe-get-input( $prompt );
+            
+            /* Are they quiting? */
+            if( $answer == "q" || $answer == "Q" ) {
+                expr tic:clear-all-instances( tic:get-game-oid( $game-name ) );
+                <xsl:message terminate="yes"> "Exiting game";
+            }
+        
+            /* Retrieve the name of the other player */
+            var $other-player-name = {
+                var $after-prefix = substring-after( $game-name, ":" );
+                var $owner-name = substring( $after-prefix, 1, string-length( $after-prefix ) - 1 );
+                if( $owner-name == $user-string ) {
+                    expr tic:read-string( concat( $game-name, $second-player ) );
+                }
+                else {
+                    expr $owner-name;
+                }
+            }
+            
+            /* Is it a valid move? */
+            if( tic:is-valid-move( $game-name, $answer ) ) {
+                /* Remove the move */
+                expr tic:write-indexed-string-value( concat( $game-name, $positions), number( $answer ), $character );
+                /* Switch turns to the other player */
+                expr tic:write-string( concat( $game-name, $turn), $other-player-name );
+            }
+            else {
+                expr jcs:output( " \nInvalid move" );
+            }
+            
+            /* Check if they just won... */
+            var $you-won = tic:check-for-win( $game-name, $character );
+            /* Game is over... declare the winner */
+            if( $you-won ) {
+                /* Display the winning board */
+                expr tic:display-board( $game-name );
+                expr jcs:output( "\nCongratulations!  You win!" );
+                /* Sleep for a few seconds to let the other side catch up */
+                expr jcs:sleep( 3 );
+            }
+            else {
+                /* Check if either player can still win */
+                var $x-can-win2 = tic:can-still-win( $game-name, "X" );
+                var $o-can-win2 = tic:can-still-win( $game-name, "O" );
+                
+                /* No one can win...why go on? */
+                if( not( $x-can-win2 ) && not( $o-can-win2 ) ) {
+                    expr jcs:output( "\nHmmm, it is a tie..." );
+                    /* Sleep for a few seconds to let the other side catch up */
+                    expr jcs:sleep( 3 );
+                }
+                else {
+                    expr tic:turn-loop( $game-name );
+                }
+            }
+        }
+    }
+}
+
+/*
+ * Performs the computer's moves
+ */
+<func:function name="tic:computer-move"> {
+    param $game-name;
+    param $opponent;
+    param $character;
+    
+    var $our-character = translate( $character, "XO", "OX" );
+    
+    /* Retrieve the current board settings */
+    var $position-set := {
+        var $string = tic:read-string( concat( $game-name, $positions ) );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 1, $string );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 2, $string );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 3, $string );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 4, $string );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 5, $string );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 6, $string );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 7, $string );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 8, $string );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 9, $string );
+    }
+
+    /* Dumb computers */
+    if( $opponent == 3 ) {
+        expr tic:random-move( $game-name, $position-set, $character );
+    }
+    /* Moderate */
+    else if( $opponent == 4 ) {
+        /* Be smart part of the time */
+        var $result = round( 99 * math:random() ) + 1;
+        if( $result > 80 ) {
+            expr tic:smart-move( $game-name, $position-set, $character );
+        }
+        else {
+            /* Always go for the win and the block */
+            var $move := {
+                /* Check for their win */
+                for-each( $board-set/row ) {
+                    if( tic:two-in-a-row( $position-set, $character, square[1], square[2], square[3] ) ) {
+                        var $index1 = number( square[1] );
+                        var $index2 = number( square[2] );
+                        /* Find the blank one... */
+                        if( $position-set/position[ $index1 ] == "" ) {
+                            <move> square[1];
+                        }
+                        else if( $position-set/position[ $index2 ] == "" ) {
+                            <move> square[2];
+                        }
+                        else {
+                            <move> square[3];
+                        }
+                    }
+                }
+            
+            
+                /* Check for our win - block it */
+                for-each( $board-set/row ) {
+                    if( tic:two-in-a-row( $position-set, $our-character, square[1], square[2], square[3] ) ) {
+                        var $index1 = number( square[1] );
+                        var $index2 = number( square[2] );
+                        /* Find the blank one... */
+                        if( $position-set/position[ $index1 ] == "" ) {
+                            <move> square[1];
+                        }
+                        else if( $position-set/position[ $index2 ] == "" ) {
+                            <move> square[2];
+                        }
+                        else {
+                            <move> square[3];
+                        }
+                    }
+                }
+            }
+            /* Make the suggested move */    
+            if( $move/move[1] ) {
+                expr tic:write-indexed-string-value( concat( $game-name, $positions), number( $move/move[1] ), $character );
+            }
+            /* Fallback to randomness */
+            else {
+                expr tic:random-move( $game-name, $position-set, $character );
+            }
+        }
+    }
+    /* Smart computer */
+    else if( $opponent == 5 ) {
+        expr tic:smart-move( $game-name, $position-set, $character );
+    }
+    else {
+        <xsl:message terminate="yes"> "Unknown opponent type: " _ $opponent;
+    }
+}
+
+/*
+ * Does the correct move to guarantee a win or a tie
+ */
+<func:function name="tic:smart-move"> {
+    param $game-name;
+    param $position-set;
+    param $character;
+
+    var $our-character = translate( $character, "XO", "OX" );
+    
+    /* Collect the moves, make the first one */
+    var $move := {
+        /* Check for their win */
+        for-each( $board-set/row ) {
+            if( tic:two-in-a-row( $position-set, $character, square[1], square[2], square[3] ) ) {
+                var $index1 = number( square[1] );
+                var $index2 = number( square[2] );
+                /* Find the blank one... */
+                if( $position-set/position[ $index1 ] == "" ) {
+                    <move> square[1];
+                }
+                else if( $position-set/position[ $index2 ] == "" ) {
+                    <move> square[2];
+                }
+                else {
+                    <move> square[3];
+                }
+            }
+        }
+    
+    
+        /* Check for our win - block it */
+        for-each( $board-set/row ) {
+            if( tic:two-in-a-row( $position-set, $our-character, square[1], square[2], square[3] ) ) {
+                var $index1 = number( square[1] );
+                var $index2 = number( square[2] );
+                /* Find the blank one... */
+                if( $position-set/position[ $index1 ] == "" ) {
+                    <move> square[1];
+                }
+                else if( $position-set/position[ $index2 ] == "" ) {
+                    <move> square[2];
+                }
+                else {
+                    <move> square[3];
+                }
+            }
+        }
+        
+        /*
+               |       |     
+           1   |   2   |   3           
+               |       |
+        -------|-------|------
+               |       |     
+           4   |   5   |   6   
+               |       |
+        -------|-------|------
+               |       |     
+           7   |   8   |   9
+               |       |
+        */
+
+        /* Do a fork */
+        /* Check for 1, 9 - 3 fork */
+        if( $position-set/position[1] == $character && $position-set/position[9] == $character && $position-set/position[3] == "" &&
+            $position-set/position[2] == "" && $position-set/position[6] == "" ) {
+            /* Move into 3 */
+            <move> 3;
+        }
+        
+        /* Check for 1,9 - 7 fork */
+        if( $position-set/position[1] == $character && $position-set/position[9] == $character && $position-set/position[7] == "" &&
+            $position-set/position[4] == "" && $position-set/position[8] == "" ) {
+            /* Move into 4 */
+            <move> 4;
+        }
+        
+        /* Check for 3, 7 - 1 fork */
+        if( $position-set/position[3] == $character && $position-set/position[7] == $character && $position-set/position[1] == "" &&
+            $position-set/position[2] == "" && $position-set/position[4] == "" ) {
+            /* Move into 1 */
+            <move> 1;
+        }
+        
+        /* Check for 3, 7 - 9 fork */
+        if( $position-set/position[3] == $character && $position-set/position[7] == $character && $position-set/position[9] == "" &&
+            $position-set/position[2] == "" && $position-set/position[6] == "" ) {
+            /* Move into 9 */
+            <move> 9;
+        }
+        
+
+        /* Block our forks */
+        
+        /* Check for 1, 9 - 3 fork */
+        if( $position-set/position[1] == $our-character && $position-set/position[9] == $our-character && $position-set/position[3] == "" &&
+            $position-set/position[2] == "" && $position-set/position[6] == "" ) {
+            /* Move into 2 */
+            <move> 2;
+        }
+        
+        /* Check for 1,9 - 7 fork */
+        if( $position-set/position[1] == $our-character && $position-set/position[9] == $our-character && $position-set/position[7] == "" &&
+            $position-set/position[4] == "" && $position-set/position[8] == "" ) {
+            /* Move into 4 */
+            <move> 4;
+        }
+        
+        /* Check for 3, 7 - 1 fork */
+        if( $position-set/position[3] == $our-character && $position-set/position[7] == $our-character && $position-set/position[1] == "" &&
+            $position-set/position[2] == "" && $position-set/position[4] == "" ) {
+            /* Move into 4 */
+            <move> 4;
+        }
+        
+        /* Check for 3, 7 - 9 fork */
+        if( $position-set/position[3] == $our-character && $position-set/position[7] == $our-character && $position-set/position[9] == "" &&
+            $position-set/position[2] == "" && $position-set/position[6] == "" ) {
+            /* Move into 2 */
+            <move> 2;
+        }
+        
+        /* Is the center open?  Then go there */
+        if( $position-set/position[5] == "" ) {
+            <move> 5;
+        }
+        
+        /* Opposite corner open? */
+        /* 1 and 9 */
+        if( $position-set/position[1] == $our-character && $position-set/position[9] == "" ) {
+            <move> 9;
+        }
+        else if( $position-set/position[9] == $our-character && $position-set/position[1] == "" ) {
+            <move> 1;
+        }
+        /* 3 and 7 */
+        else if( $position-set/position[3] == $our-character && $position-set/position[7] == "" ) {
+            <move> 7;
+        }
+        else if( $position-set/position[7] == $our-character && $position-set/position[3] == "" ) {
+            <move> 3;
+        }
+        
+        /* Empty corner? */
+        if( $position-set/position[9] == "" ) {
+            <move> 9;
+        }
+        else if( $position-set/position[1] == "" ) {
+            <move> 1;
+        }
+        /* 3 and 7 */
+        else if( $position-set/position[7] == "" ) {
+            <move> 7;
+        }
+        else if( $position-set/position[3] == "" ) {
+            <move> 3;
+        }
+    }
+
+    /* Make the first suggested move */    
+    if( $move/move[1] ) {
+        expr tic:write-indexed-string-value( concat( $game-name, $positions), number( $move/move[1] ), $character );
+    }
+    /* Fallback to randomness */
+    else {
+        expr tic:random-move( $game-name, $position-set, $character );
+    }
+    
+}
+
+/*
+ * Moves to a random unoccupied space
+ */
+<func:function name="tic:random-move"> {
+    param $game-name;
+    param $position-set;
+    param $character;
+    
+    /* Random number from 1 - 9 */
+    var $random = round( 8 * math:random() ) + 1;
+    
+    /* Is it already in use?  If so then try again... */
+    if( $position-set/position[ number( $random ) ] != "" ) {
+        expr tic:random-move($game-name, $position-set, $character );
+    }
+    else {
+        expr tic:write-indexed-string-value( concat( $game-name, $positions), number( $random ), $character );
+    }
+}
+
+/*
+ * Checks if the given letter has won by getting three in a row
+ */
+<func:function name="tic:check-for-win"> {
+    param $game-name;
+    param $character;
+    
+    var $position-set := {
+        var $string = tic:read-string( concat( $game-name, $positions ) );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 1, $string );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 2, $string );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 3, $string );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 4, $string );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 5, $string );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 6, $string );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 7, $string );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 8, $string );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 9, $string );
+    }
+    
+    /* Check each row */
+    var $result := {
+        for-each( $board-set/row ) {
+            if( tic:check-value( $position-set, $character, square[1], square[2], square[3] ) ) {
+                <true>;
+            }
+        }
+    }
+    if( $result/true ) {
+        <func:result select="true()">;
+    }
+    else {
+        <func:result select="false()">;
+    }
+}
+
+
+/*
+ * Checks if the given letter can still possibly win
+ */
+<func:function name="tic:can-still-win"> {
+    param $game-name;
+    param $character;
+    
+    var $position-set := {
+        var $string = tic:read-string( concat( $game-name, $positions ) );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 1, $string );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 2, $string );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 3, $string );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 4, $string );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 5, $string );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 6, $string );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 7, $string );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 8, $string );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 9, $string );
+    }
+    
+    /* Check each row */
+    var $result := {
+        for-each( $board-set/row ) {
+            if( tic:check-value( $position-set, $character, square[1], square[2], square[3], true() ) ) {
+                <true>;
+            }
+        }
+    }
+    if( $result/true ) {
+        <func:result select="true()">;
+    }
+    else {
+        <func:result select="false()">;
+    }
+}
+
+
+/*
+ * Checks if the values of all three squares are the indicated value, or blank if $can-be-blank is true
+ */
+<func:function name="tic:check-value"> {
+    param $position-set;
+    param $value;
+    param $index1;
+    param $index2;
+    param $index3;
+    param $can-be-blank = false();
+    
+    if( ( $position-set/position[ number( $index1 ) ] == $value || ( $can-be-blank && $position-set/position[ number( $index1 ) ] == "" ) ) &&
+        ( $position-set/position[ number( $index2 ) ] == $value || ( $can-be-blank && $position-set/position[ number( $index2 ) ] == "" ) ) &&
+        ( $position-set/position[ number( $index3 ) ] == $value || ( $can-be-blank && $position-set/position[ number( $index3 ) ] == "" ) ) ) {
+        
+        <func:result select="true()">;
+    }        
+    else {
+        <func:result select="false()">;
+    }
+}
+
+
+/*
+ * Checks if there are two in a row with a blank for the third
+ */
+<func:function name="tic:two-in-a-row"> {
+    param $position-set;
+    param $value;
+    param $index1;
+    param $index2;
+    param $index3;
+    
+    if( ( $position-set/position[ number( $index1 ) ] == $value || $position-set/position[ number( $index1 ) ] == "" ) &&
+        ( $position-set/position[ number( $index2 ) ] == $value || $position-set/position[ number( $index2 ) ] == "" ) &&
+        ( $position-set/position[ number( $index3 ) ] == $value || $position-set/position[ number( $index3 ) ] == "" ) &&
+        count( $position-set/position[ position() == number( $index1 ) || position() == number( $index2 ) || position() == number( $index3 ) ][. == $value] ) == 2 ) {
+        
+        <func:result select="true()">;
+    }        
+    else {
+        <func:result select="false()">;
+    }
+}
+
+
+/*
+ * Checks if the desired move is to a valid unoccupied square
+ */
+<func:function name="tic:is-valid-move"> {
+    param $game-name;
+    param $square;
+    
+    if( string( number( $square ) ) == "NaN" ) {
+        <func:result select="false()">;
+    }
+    else if( $square < 1 || $square > 9 ) {
+        <func:result select="false()">;
+    }
+    else {
+        var $positions := {
+            var $string = tic:read-string( concat( $game-name, $positions ) );
+            <position> tic:read-indexed-string-value( concat( $game-name, $positions), 1, $string );
+            <position> tic:read-indexed-string-value( concat( $game-name, $positions), 2, $string );
+            <position> tic:read-indexed-string-value( concat( $game-name, $positions), 3, $string );
+            <position> tic:read-indexed-string-value( concat( $game-name, $positions), 4, $string );
+            <position> tic:read-indexed-string-value( concat( $game-name, $positions), 5, $string );
+            <position> tic:read-indexed-string-value( concat( $game-name, $positions), 6, $string );
+            <position> tic:read-indexed-string-value( concat( $game-name, $positions), 7, $string );
+            <position> tic:read-indexed-string-value( concat( $game-name, $positions), 8, $string );
+            <position> tic:read-indexed-string-value( concat( $game-name, $positions), 9, $string );
+        }
+        
+        /* Check if it is open */
+        if( string-length( $positions/position[ number( $square ) ] ) > 0 ) {
+            <func:result select="false()">;
+        }
+        else {
+            <func:result select="true()">;
+        }
+    }
+}
+
+/*
+ * Wait until the other player turns the turn back to us
+ */
+<func:function name="tic:wait-turn"> {
+    param $game-name;
+    
+    /* Sleep a second */
+    expr jcs:sleep( 1 );
+    
+    /* Check if it is our turn, or call function again... */
+    if( not( tic:is-turn( $game-name ) ) ) {
+        expr tic:wait-turn( $game-name );
+    }
+}
+
+/*
+ * Wait for another player to join the game
+ */
+<func:function name="tic:wait-for-player"> {
+
+    /* Sleep a second */
+    expr jcs:sleep( 1 );
+    
+    /* Check if a second player has joined */
+    var $second-player = tic:read-string( concat( $local-game-prefix, $second-player ) ); 
+    if( jcs:empty( $second-player ) ) {
+        expr tic:wait-for-player();
+    }
+    else {
+        expr jcs:output( $second-player, " has joined the game!" );
+    }
+}
+
+
+/*
+ * Wait for the game to start (second player)
+ */
+<func:function name="tic:wait-for-game"> {
+    param $game-name;
+
+    /* Sleep a second */
+    expr jcs:sleep( 1 );
+    
+    /* Check if a character is selected */
+    var $character = tic:read-string( concat( $game-name, $owner-character ) ); 
+    if( jcs:empty( $character ) ) {
+        expr tic:wait-for-game( $game-name );
+    }
+    else {
+        expr jcs:output( "You have been assigned the character: ", translate( $character, "XO", "OX" ) );
+    }
+}
+
+/*
+ * Checks if it is currently our turn or not as indicated by the turn value in the MIB
+ */
+<func:function name="tic:is-turn"> {
+    param $game-name;
+
+    var $turn = tic:read-string( concat( $game-name, $turn ) );
+    
+    /* If it is empty then there is a problem ... */
+    if( jcs:empty( $turn ) ) {
+        expr tic:clear-all-instances( tic:get-game-oid( $game-name ) );
+        <xsl:message terminate="yes"> "Other player quit";
+    }
+    if( $turn == $user-string ) {
+        <func:result select="true()">;
+    }
+    else {
+        <func:result select="false()">;
+    }
+}
+
+/*
+ * Display the current board
+ */
+<func:function name="tic:display-board"> {
+    param $game-name;
+    
+    var $positions := {
+        var $string = tic:read-string( concat( $game-name, $positions ) );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 1, $string );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 2, $string );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 3, $string );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 4, $string );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 5, $string );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 6, $string );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 7, $string );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 8, $string );
+        <position> tic:read-indexed-string-value( concat( $game-name, $positions), 9, $string );
+    }
+
+    var $position-strings := {
+        for-each( $positions/position ) {
+            if( string-length( . ) > 0 ) {
+                <position> .;
+            }
+            else {
+                <position> position();
+            }
+        }
+    }    
+    
+/*
+       |       |     
+   1   |   2   |   3           
+       |       |
+-------|-------|------
+       |       |     
+   4   |   5   |   6   
+       |       |
+-------|-------|------
+       |       |     
+   7   |   8   |   9
+       |       |
+*/
+
+    var $blank-line = "       |       |       ";
+    var $cross-line = "-------|-------|-------";
+    
+    expr jcs:output( " \n", $blank-line );
+    expr jcs:output( jcs:printf( "   %1s   |   %1s   |   %1s   ", $position-strings/position[1], $position-strings/position[2], $position-strings/position[3] ) );
+    expr jcs:output( $blank-line );
+    expr jcs:output( $cross-line );
+    expr jcs:output( $blank-line );
+    expr jcs:output( jcs:printf( "   %1s   |   %1s   |   %1s   ", $position-strings/position[4], $position-strings/position[5], $position-strings/position[6] ) );
+    expr jcs:output( $blank-line );
+    expr jcs:output( $cross-line );
+    expr jcs:output( $blank-line );
+    expr jcs:output( jcs:printf( "   %1s   |   %1s   |   %1s   ", $position-strings/position[7], $position-strings/position[8], $position-strings/position[9] ) );
+    expr jcs:output( $blank-line );
+
+}
+
+
+/* 
+ * Workaround for PR 436699 - Returns the " character 
+ */
+<func:function name="tic:get-quote-char"> {
+
+    var $quote-xml = <quote> "\"";
+    var $quote-char = {
+        if( string-length( $quote-xml ) == 2 ) {
+            expr substring( $quote-xml, 2, 1 );
+        }
+        else {
+            expr $quote-xml;
+        }
+    }
+    <func:result select="$quote-char">;
+}
+
+
+/*
+ * Clear out the Utility MIB of all script values
+ */
+<func:function name="tic:clear-all-instances"> {
+    param $oid = $local-game-oid-prefix;
+    
+    /* First walk the MIB and gather all instances */
+    var $walk-rpc = {
+        <walk-snmp-object> {
+            <snmp-object-name> $oid;
+            <ascii>;
+        }
+    }
+    var $mib-objects = jcs:execute($connection, $walk-rpc );
+
+    /* Clear all instances */
+    for-each( $mib-objects/snmp-object ) {
+        /* Remove the quotes */
+        var $name = translate( name, $quote, "" );
+        var $instance = substring-after( $name, "." );
+        /* Build RPC and invoke it */ 
+        var $rpc-clear = {
+            <request-snmp-utility-mib-clear> {
+                <instance> $instance;
+                <object-type> "string";
+            }
+        }
+        var $results = jcs:execute($connection, $rpc-clear );
+        
+        /* Check for error */
+        if( $results/..//xnm:error ) {
+            <xsl:message terminate="yes"> "Error clearing Utility MIB: " _ $results/..//xnm:error/message;
+        }
+    }
+}
+
+
+/*
+ * Return the full oid for the given game
+ */
+<func:function name="tic:get-game-oid"> {
+    param $game-name;
+    
+    /* Removing prefix */
+    var $name = substring-after( $game-name, ":" );
+    
+    /* Convert to oid */
+    var $name-oid = tic:translate-to-oid( $name );
+    
+    var $combined = $mib-oid-prefix _ "." _ $name-oid;
+    <func:result select="$combined">;
+}
+
+
+/*
+ * translate-to-oid - converts string into oid format
+ */
+<func:function name="tic:translate-to-oid"> {
+    param $string;
+
+    /* Split the name into characters */    
+    var $characters = str:tokenize( $string, "" );
+    
+    var $oid-string = {
+        for-each( $characters ) {
+            /* Convert the characters to their ASCII code equivalent */
+            var $char = .;
+            /* Use substring to workaround PR 436699 */
+            var $ascii-char = $ascii/char[ substring( sym, string-length( sym ), 1 ) == $char ];
+            /* Add dot after first one */
+            if( position() != 1 ) {
+                expr ".";
+            }
+            expr  $ascii-char/num;
+        }
+    }
+    <func:result select="$oid-string">;    
+}
+
+
+/*
+ * write-string - Sets the instance in the MIB
+ */
+<func:function name="tic:write-string"> {
+    param $instance;
+    param $value;
+
+    /* Build RPC and invoke it */ 
+    var $rpc = {
+        <request-snmp-utility-mib-set> {
+            <instance> $instance;
+            <object-type> "string";
+            <object-value> $value;
+        }
+    }
+    var $results = jcs:execute($connection, $rpc );
+    
+    /* Check for error */
+    if( $results/..//xnm:error ) {
+        <xsl:message terminate="yes"> "Error writing to Utility MIB: " _ $results/..//xnm:error/message;
+    }
+}
+
+
+/*
+ * tic:read-string - 
+ *
+ * Arguments:
+ *     $name - [Required] - The Utility MIB instance name
+ *
+ * Returns: string - the string from the Utility MIB
+ */
+<func:function name="tic:read-string"> {
+    param $name;
+
+    var $oid-name = tic:build-oid-name( $name, "string" );
+    
+    var $rpc = {
+        <get-snmp-object> {
+            <snmp-object-name> $oid-name;
+        }
+    }
+    var $object = jcs:execute( $connection, $rpc );
+    
+    <func:result select="$object/snmp-object/object-value">;
+}
+
+
+/*
+ * tic:build-oid-name - Converts a Utility MIB instance name into OID format as 
+ * required by <get-snmp-object>.  
+ *
+ * Arguments:
+ *     $name - [Required] - The instance name
+ *     $type - [Required] - The data type, either string, counter, counter64,
+ *     integer, or unsigned-integer.
+ *
+ * Returns: string OID name
+ */
+<func:function name="tic:build-oid-name"> {
+    param $name;
+    param $type;    
+
+    /* Build the type portion of the name */
+    var $string-portion = {
+        if( $type == "string" ) {
+            expr "jnxUtilStringValue";
+        }
+        else if( $type == "counter" ) {
+            expr "jnxUtilCounter32Value";
+        }
+        else if( $type == "integer" ) {
+            expr "jnxUtilIntegerValue";
+        }
+        else if( $type == "counter64" ) {
+            expr "jnxUtilCounter64Value";
+        }
+        else if( $type == "counter" ) {
+            expr "jnxUtilUintValue";
+        }
+    }
+
+    /* Return the full string */
+    var $result = $string-portion _ "." _ tic:translate-to-oid( $name );
+    <func:result select="$result">;
+}
+
+
+/*
+ * walk-mib - Walks the Utility MIB in ascii mode
+ */
+<func:function name="tic:walk-mib"> {
+    param $oid;
+
+    /* Gather walk output */
+    var $walk-rpc = {
+        <walk-snmp-object> {
+            <snmp-object-name> $oid;
+            <ascii>;
+        }
+    }
+    var $mib-objects = jcs:execute($connection, $walk-rpc );
+
+    <func:result select="$mib-objects">;
+}
+
+
+/*
+ * Workaround to PR 473851.  XML cannot handle control characters.  Nuking them from
+ * the input, after detecting them, is the safest approach.
+ */
+<func:function name="tic:safe-get-input"> {
+    param $prompt;
+    
+    var $word = jcs:get-input( $prompt );
+    
+    /* Nuke all non-whitespace */
+    var $word-run1 = translate( $word, $valid-ascii, "" );
+    
+    /* 
+     * Nuke white-space - only look for tabs and spaces since there will be no
+     * newlines or carriage returns in this input
+     */
+    var $word-run2 = translate( $word-run1, " \t", "" );
+    
+    /* If anything is left, then it isn't valid ascii, so return blank */
+    if( string-length( $word-run2 ) > 0 ) {
+        expr jcs:output("Control characters are not supported");
+        var $blank = "";
+        <func:result select ="$blank">;
+    }
+    else {
+        <func:result select ="$word">;
+    }
+}
+
+
+/*
+ * tic:check-version - Checks if Junos version is at the minimum version or above, 
+ * displays the failure message and exits if it is not.
+ *
+ * Arguments:
+ *     $minimum-version - [Required] - Minimum version string - like 9.6
+ *     $failure-message - [Required] - Failure message for insufficient version
+ */
+<func:function name="tic:check-version"> {
+    param $minimum-version;
+    param $failure-message;
+
+    if( $minimum-version > $version ) {
+        <xsl:message terminate="yes"> $failure-message;
+    }
+}
+
+
+/*
+ * tic:write-indexed-string-value - Writes a value at a particular index of an
+ * indexed string and records it to the Utility MIB.
+ *
+ * Arguments:
+ *     $name - [Required] - The Utility MIB instance name
+ *     $index - [Required] - The index to modify
+ *     $value - [Required] - The value to set
+ */
+<func:function name="tic:write-indexed-string-value"> {
+    param $name;
+    param $index;
+    param $value;
+
+    /* Nuke any commas from the value so it doesn't mess up the index...*/
+    var $new-value = translate( $value, ",", "" );
+    
+    /* Get current string */
+    var $string = tic:read-string( $name );
+    
+    /* Chop it into parts - use jcs:split because it returns zero size chunks unlike str:tokenize */
+    var $parts = jcs:split( ",", $string );
+    
+    
+    /* Create new string */
+    var $new-string = {
+        for-each( $parts ) {
+            if( position() == $index ) {
+                /* Write new value...*/
+                expr $new-value; 
+            }
+            else {
+                /* Write current value...*/
+                expr .;
+            }
+            /* Add comma if not the last one... */
+            if( position() != last() ) {
+                expr ",";
+            }
+        }
+    }
+    
+    /* Write new string to MIB unless it is blank, never write a blank indexed string, that is an error */
+    if( string-length( $new-string ) == 0 ) {
+        expr jcs:output( "Error: write-indexed-string-value is trying to write a blank string." );
+    }
+    else {
+        expr tic:write-string( $name, $new-string );
+    }
+}
+
+
+/*
+ * tic:read-indexed-string-value - Reads a value at a particular index of an
+ * indexed string from the Utility MIB
+ *
+ * Arguments:
+ *     $name - [Required] - The Utility MIB instance name
+ *     $index - [Required] - The index to retrieve
+ *     $passed-string - [Optional] - The MIB data string
+ *
+ * Returns: number or string - The desired index value
+ */
+<func:function name="tic:read-indexed-string-value"> {
+    param $name;
+    param $index;
+    param $passed-string = "";
+    
+    var $string = {
+        if( $passed-string == "" ) {
+            expr tic:read-string( $name );
+        }
+        else {
+            expr $passed-string;
+        }
+    }
+    
+    /* Chop it into parts - use jcs:split so that blanks are returned right */
+    var $parts = jcs:split( ",", $string );
+    
+    var $result = string($parts[ number( $index ) ]);
+    
+    /* Return any number results as a number so that they can be converted to a boolean, otherwise they would be strings and
+       would always be true... */
+       
+    if( string( number( $result ) ) != "NaN" ) {
+        <func:result select="number($result)">;
+    }
+    else {
+        <func:result select="$result">;
+    }
+}
+
+
+/*
+ * Build a string of all the ascii characters
+ */
+<func:function name="tic:get-valid-ascii"> {
+    var $valid-ascii-string = {
+        for-each( $ascii/char ) {
+            /* Due to PR 436699 */
+            expr substring( sym, string-length( sym ), 1 );
+        }
+    }
+    
+    <func:result select="$valid-ascii-string">;
+}
+
+
+/* 
+ * Build-line - Builds a single string of - of length $length and returns in the
+ * result tree.
+ */
+template build-line( $length, $character ) {
+    if( $length > 0 ) {
+        expr $character;
+        call build-line( $length = $length - 1, $character );
+    }
+}
+
+
+/*
+ * This is a listing of all the visible ascii characters.  It is used to detect if any control
+ * characters are present in the input strings.  The xml:space="preserve" attribute
+ * is used on the whitespace nodes because XML/XSLT would strip the whitespace by
+ * default, making it worthless.
+ *
+ * Note that because of PR 436699 that number 34 is actually the two character string
+ * "\"" rather than a single escaped quote character.
+ */
+var $ascii := {
+<char> { <num> 32; <sym xml:space="preserve"> " "; }<char> { <num> 33; <sym> "!"; }<char> { <num> 34; <sym> "\""; }<char> { <num> 35; <sym> "#"; }<char> { <num> 36; <sym> "$"; }
+<char> { <num> 37; <sym> "%"; }<char> { <num> 38; <sym> "&"; }<char> { <num> 39; <sym> "'"; }<char> { <num> 40; <sym> "("; }<char> { <num> 41; <sym> ")"; }
+<char> { <num> 42; <sym> "*"; }<char> { <num> 43; <sym> "+"; }<char> { <num> 44; <sym> ","; }<char> { <num> 45; <sym> "-"; }<char> { <num> 46; <sym> "."; }
+<char> { <num> 47; <sym> "/"; }<char> { <num> 48; <sym> "0"; }<char> { <num> 49; <sym> "1"; }<char> { <num> 50; <sym> "2"; }<char> { <num> 51; <sym> "3"; }
+<char> { <num> 52; <sym> "4"; }<char> { <num> 53; <sym> "5"; }<char> { <num> 54; <sym> "6"; }<char> { <num> 55; <sym> "7"; }<char> { <num> 56; <sym> "8"; }
+<char> { <num> 57; <sym> "9"; }<char> { <num> 58; <sym> ":"; }<char> { <num> 59; <sym> ";"; }<char> { <num> 60; <sym> "<"; }<char> { <num> 61; <sym> "="; } /* >" */
+<char> { <num> 62; <sym> ">"; }<char> { <num> 63; <sym> "?"; }<char> { <num> 64; <sym> "@"; }<char> { <num> 65; <sym> "A"; }<char> { <num> 66; <sym> "B"; }
+<char> { <num> 67; <sym> "C"; }<char> { <num> 68; <sym> "D"; }<char> { <num> 69; <sym> "E"; }<char> { <num> 70; <sym> "F"; }<char> { <num> 71; <sym> "G"; }
+<char> { <num> 72; <sym> "H"; }<char> { <num> 73; <sym> "I"; }<char> { <num> 74; <sym> "J"; }<char> { <num> 75; <sym> "K"; }<char> { <num> 76; <sym> "L"; }
+<char> { <num> 77; <sym> "M"; }<char> { <num> 78; <sym> "N"; }<char> { <num> 79; <sym> "O"; }<char> { <num> 80; <sym> "P"; }<char> { <num> 81; <sym> "Q"; }
+<char> { <num> 82; <sym> "R"; }<char> { <num> 83; <sym> "S"; }<char> { <num> 84; <sym> "T"; }<char> { <num> 85; <sym> "U"; }<char> { <num> 86; <sym> "V"; }
+<char> { <num> 87; <sym> "W"; }<char> { <num> 88; <sym> "X"; }<char> { <num> 89; <sym> "Y"; }<char> { <num> 90; <sym> "Z"; }<char> { <num> 91; <sym> "["; }
+<char> { <num> 92; <sym> "\\"; }<char> { <num> 93; <sym> "]"; }<char> { <num> 94; <sym> "^"; }<char> { <num> 95; <sym> "_"; }<char> { <num> 96; <sym> "`"; }
+<char> { <num> 97; <sym> "a"; }<char> { <num> 98; <sym> "b"; }<char> { <num> 99; <sym> "c"; }<char> { <num> 100; <sym> "d"; }<char> { <num> 101; <sym> "e"; }
+<char> { <num> 102; <sym> "f"; }<char> { <num> 103; <sym> "g"; }<char> { <num> 104; <sym> "h"; }<char> { <num> 105; <sym> "i"; }<char> { <num> 106; <sym> "j"; }
+<char> { <num> 107; <sym> "k"; }<char> { <num> 108; <sym> "l"; }<char> { <num> 109; <sym> "m"; }<char> { <num> 110; <sym> "n"; }<char> { <num> 111; <sym> "o"; }
+<char> { <num> 112; <sym> "p"; }<char> { <num> 113; <sym> "q"; }<char> { <num> 114; <sym> "r"; }<char> { <num> 115; <sym> "s"; }<char> { <num> 116; <sym> "t"; }
+<char> { <num> 117; <sym> "u"; }<char> { <num> 118; <sym> "v"; }<char> { <num> 119; <sym> "w"; }<char> { <num> 120; <sym> "x"; }<char> { <num> 121; <sym> "y"; }
+<char> { <num> 122; <sym> "z"; }<char> { <num> 123; <sym> "{"; }<char> { <num> 124; <sym> "|"; }<char> { <num> 125; <sym> "}"; }<char> { <num> 126; <sym> "~"; }
+}
+
+
+

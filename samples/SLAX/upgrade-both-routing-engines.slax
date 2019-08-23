@@ -1,0 +1,203 @@
+/*
+ * Author        : Curtis Call
+ * Version       : 1.1
+ * Last Modified : November 12, 2009
+ * Platform      : M/MX/T
+ * Release       : 8.2 and above
+ *
+ * This script provides a quick and dirty way to upgrade both routing-engines
+ * with a single command.  Note that there is no attempt at ISSU or graceful
+ * switchover between routing-engines.  This is only intended for lab use or
+ * when initially deploying routers, not during production.
+ * 
+ * The usage is simple, at a minimum specify the file parameter with the filename.
+ * If the force or validate upgrade knobs are desired then those are be specified
+ * on the command-line as well, otherwise they default to their default value.
+ *
+ * Revisions:
+ *    1.1 - Corrected if statements and added space prior to no-validate in 
+ *    build-upgrade-strings() template.  Added BSD-style license. 
+ *
+ * License       : BSD-Style
+ *  Copyright (c) 2009 Curtis Call. All Rights Reserved.
+ *  Redistribution and use in source and binary forms, with or without modification, 
+ *  are permitted provided that the following conditions are met:
+ *  1. Redistributions of source code must retain the above copyright notice, this 
+ *  list of conditions and the following disclaimer.
+ *  2. Redistributions in binary form must reproduce the above copyright notice, 
+ *  this list of conditions and the following disclaimer in the documentation and/or
+ *  other materials provided with the distribution.
+ *  3. The name of the author may not be used to endorse or promote products derived 
+ *  from this software without specific prior written permission.
+ *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED 
+ *  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY 
+ *  AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE 
+ *  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL 
+ *  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ *  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
+ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ *  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN 
+ *  IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+version 1.0;
+
+ns junos = "http://xml.juniper.net/junos/*/junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/junos/commit-scripts/1.0";
+
+import "../import/junos.xsl";
+
+var $arguments = {
+    <argument> {
+        <name> "file";
+        <description> "Required: Specify the full path of the JUNOS installation file.";
+    }
+    <argument> {
+        <name> "force";
+        <description> "Optional: Force upgrade?  true or [false].";
+    }
+    <argument> {
+        <name> "validate";
+        <description> "Optional: Perform validation?  [true] or false.";
+    }
+}
+
+param $file;
+param $force;
+param $validate;
+
+match / {
+    <op-script-results> {
+    
+        /* 
+         * First check if they have specified a filename, if not then show error
+         * and halt script 
+        */
+        if( not( $file ) ) {
+            <xsl:message terminate="yes"> "You must specify the JUNOS upgrade file.";
+        }
+
+        /* Determine if the local RE is RE0 or RE1 */
+        var $local-re = { call determine-local-re(); }
+
+        /* Based on the local RE determine the other RE */
+        var $other-re = {
+            if( $local-re == "re0" ) {
+                expr "re1";
+            }
+            else {
+                expr "re0";
+            }
+        }
+
+        /* Show warning string, this is not intended for production usage */
+        var $warning-string =
+        "This script is only intended for lab or pre-production environments.  " _
+        "It is being executed on\n" _ $local-re _ " if that is incorrect then " _
+        "press Control-C to break now.";
+        
+        expr jcs:output($warning-string);
+        
+        /* Upgrade the other RE first, then it can reboot and not affect the local RE */
+        expr jcs:output("Upgrading other RE first...");
+        
+        var $other-re-upgrade-string = { 
+            call build-upgrade-string( $re=$other-re, $file, $force, $validate ); 
+        }
+        var $other-re-command = <command> $other-re-upgrade-string;
+        
+        var $other-re-progress-string = "Executing command: " _ 
+        $other-re-upgrade-string _ " - this might take a few minutes...\n";
+        
+        expr jcs:output($other-re-progress-string);
+        
+        var $other-result = jcs:invoke($other-re-command );
+        /* 
+         * Copy any output from the command to the screen.  Either error or
+         * success will be shown to the user.  Use jcs:output so that the output
+         * is shown inline with the other commands.
+         */
+        for-each( $other-result//text() ) {
+            expr jcs:output( . );
+        }
+		
+        /* Now upgrade the local RE */
+        expr jcs:output("\nNow upgrading local RE...");
+        
+        var $local-re-upgrade-string = { 
+            call build-upgrade-string( $re=$local-re, $file, $force, $validate ); 
+        }
+        var $local-re-command = <command> $local-re-upgrade-string;
+		
+        var $local-re-progress-string = "Executing command: " _ 
+        $local-re-upgrade-string _ " - this might take a few minutes...\n";
+        
+        expr jcs:output($local-re-progress-string);
+		
+        var $local-result = jcs:invoke($local-re-command);
+        
+        /* 
+         * Copy any output from the command to the screen.  Either error or
+         * success will be shown to the user.  Use jcs:output so that the output
+         * is displayed inline with other commands.
+         */
+        for-each( $local-result//text() ) {
+            expr jcs:output( . );
+        }
+    }
+}
+
+/* 
+ * This template assembles the needed upgrade string and returns it to the starting
+ * template for variable assignment.
+ */
+template build-upgrade-string($re, $file, $force, $validate) {
+    if( $force == "true" ) {
+        if( $validate == "false" ) {
+            expr "request system software add " _ $file _ " reboot " _ $re _ " force " _ " no-validate";
+        }
+        else {
+            expr "request system software add " _ $file _ " reboot " _ $re _ " force";
+        }
+    }
+    else {
+        if( $validate == "false" ) {
+            expr "request system software add " _ $file _ " reboot " _ $re _ " no-validate";
+        }
+        else {
+            expr "request system software add " _ $file _ " reboot " _ $re;
+        }
+    }
+}
+
+/* 
+ * This template determines which RE is the local RE based on the results of
+ * the show chassis routing-engine command. It returns either "re0" or "re1" for
+ * variable assignment.
+ */ 
+template determine-local-re() {
+	
+    /* Retrieve "show chassis routing-engine */
+    var $get-routing-engine = <get-route-engine-information>;
+    var $routing-engine-info = jcs:invoke( $get-routing-engine );
+
+    /* Now perform checks on the routing-engine information looking for a match */
+	
+    /* Does it have slot information?  If not then it's a single slot machine so return re0 */
+	if( not( $routing-engine-info/route-engine/slot ) ) {
+		expr "re0";
+	}
+	/* Does re0 have the load-average-one tag?  That indicates the current RE. */
+	else if( $routing-engine-info/route-engine[slot == "0"]/load-average-one ) {
+		expr "re0";
+	}
+	/* Does re1 have the load-average-one tag?  That indicates the current RE. */
+	else if( $routing-engine-info/route-engine[slot == "1"]/load-average-one ) {
+		expr "re1";
+	}
+	/* Default to re0 */
+	else {
+		expr "re0";
+	}
+}

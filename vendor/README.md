@@ -348,6 +348,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Rust:** [zargony/atom-language-rust](https://github.com/zargony/atom-language-rust)
 - **SAS:** [rpardee/sas.tmbundle](https://github.com/rpardee/sas.tmbundle)
 - **SCSS:** [atom/language-sass](https://github.com/atom/language-sass)
+- **SLAX:** [dpajin/atom-language-slax](https://github.com/dpajin/atom-language-slax)
 - **SMT:** [SRI-CSL/SMT.tmbundle](https://github.com/SRI-CSL/SMT.tmbundle)
 - **SPARQL:** [peta/turtle.tmbundle](https://github.com/peta/turtle.tmbundle)
 - **SQF:** [JonBons/Sublime-SQF-Language](https://github.com/JonBons/Sublime-SQF-Language)

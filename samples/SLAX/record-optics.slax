@@ -1,0 +1,348 @@
+/*
+ * Author        : Curtis Call
+ * Version       : 1.3
+ * Last Modified : August 25, 2010
+ * Platform      : all
+ * Release       : 9.3 and above
+ *
+ * Description   : This event script automatically writes the receive optic laser
+ * levels into the Utility MIB every thirty seconds.
+ *
+ * Only interfaces that show up in "show interfaces diagnostics optics" are included.
+ *
+ * All values are recorded under the following OID:
+ * enterprises.juniperMIB.jnxMibs.jnxUtilMibRoot.jnxUtil.jnxUtilData.jnxUtilStringTable.jnxUtilStringEntry.jnxUtilStringValue.111.112.116.105.99.115
+ * .1.3.6.1.4.1.2636.3.47.1.1.5.1.2.111.112.116.105.99.115
+ *
+ * There are three values recorded per interface:
+ *
+ * Interface Name:
+ * jnxUtilStringValue.111.112.116.105.99.115.78
+ *
+ * Receive Power:
+ * jnxUtilStringValue.111.112.116.105.99.115.80
+ *
+ * Receive Power dBm:
+ * jnxUtilStringValue.111.112.116.105.99.115.68 
+ *
+ * Interfaces are differentiated by their ifIndex which appears at the end of the OID as the ascii values of each ifIndex character.
+ *
+ * For example, ifIndex 153 results in the following OIDs:
+ * jnxUtilStringValue.111.112.116.105.99.115.68.49.53.51 = -5.21
+ * jnxUtilStringValue.111.112.116.105.99.115.78.49.53.51 = ge-1/0/0
+ * jnxUtilStringValue.111.112.116.105.99.115.80.49.53.51 = 0.3015
+ * 
+ * Revisions:
+ * 1.2 - Switched from recursive template design to for-each design in order to conserve memory usage.
+ *     - Added new "opowner" instance to track the current script owner. When an older instance detects
+ *       that a new one has started then the old instance will exit.
+ *     - Added new daemon.info messages to describe the starting and stopping of the script.
+ * 1.3 - Changed from "show interfaces" to "show interfaces media" because of a bug in 10.2R2 that caused
+ *       the script to hang.
+ *
+ * License       : BSD-Style
+ *  Copyright (c) 2010 Curtis Call. All Rights Reserved.
+ *  Redistribution and use in source and binary forms, with or without modification, 
+ *  are permitted provided that the following conditions are met:
+ *  1. Redistributions of source code must retain the above copyright notice, this 
+ *  list of conditions and the following disclaimer.
+ *  2. Redistributions in binary form must reproduce the above copyright notice, 
+ *  this list of conditions and the following disclaimer in the documentation and/or
+ *  other materials provided with the distribution.
+ *  3. The name of the author may not be used to endorse or promote products derived 
+ *  from this software without specific prior written permission.
+ *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED 
+ *  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY 
+ *  AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE 
+ *  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL 
+ *  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ *  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
+ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ *  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN 
+ *  IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */ 
+version 1.0;
+
+ns junos = "http://xml.juniper.net/junos/*/junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/junos/commit-scripts/1.0";
+
+import "../import/junos.xsl";
+
+/* Embedded event policy */
+var $event-definition = {
+    <event-options> {
+        <generate-event> {
+            <name> "5-minutes";
+            <time-interval> "300";
+        }
+        <policy> {
+            <name> "record-optics";
+            <events> "5-minutes";
+            <then> {
+                <event-script> {
+                    <name> "record-optics.slax";
+                }
+            }
+        }
+    }
+}
+
+var $owner-instance = "opowner";
+var $owner-oid = "jnxUtilStringValue.o.p.o.w.n.e.r";
+
+
+var $connection = jcs:open();
+
+match / {
+    expr jcs:syslog( "daemon.info", "Starting new record optics instance" );
+    
+    /* Loop through ten times */
+    var $loop := { call build-loop(); }
+
+    /* Record self as new mcast owner */
+    call write-owner();    
+    
+    for-each( $loop/loop ) {
+        /* Verify that we are still optics owner */
+        var $current-owner = { call read-owner(); }
+        if( $current-owner != $localtime-iso ) {
+            expr jcs:syslog( "daemon.info", "New optics instance has assumed ownership, exiting" );
+            <xsl:message terminate="yes"> "New instance has take over";
+        }
+    
+        /* Read the current optic output */
+        var $interface-optics = jcs:execute( $connection, "get-interface-optics-diagnostics-information" );    
+        /* Read the current interfaces - for their ifIndexes */
+        var $interface-rpc = {
+            <get-interface-information> {
+                <media>;
+            }
+        }
+        var $interfaces = jcs:execute( $connection, $interface-rpc );
+
+        /* Populate the Utility MIB - and build set of used instances while we are at it */
+        var $used-instance-set := {
+            for-each( $interface-optics/physical-interface ) {
+                var $name = name;
+                var $interface = $interfaces/physical-interface[name == $name];
+                var $ifIndex = $interface/snmp-index; 
+                /* Only go on if there is an ifIndex */
+                if( string-length( $ifIndex ) > 0 ) {
+                    /* Write interface name */
+                    var $name-instance = { call build-instance-name( $instance-type = "N", $ifIndex ); }
+                    <instance> "jnxUtilStringValue." _ $name-instance;
+                    call set-instance( $connection, $instance = $name-instance, $type = "string", $value = $name );
+                    /* Write receive power */
+                    var $receive-instance = { call build-instance-name( $instance-type = "P", $ifIndex ); }
+                    <instance> "jnxUtilStringValue." _ $receive-instance;
+                    var $power = {
+                        if( optics-diagnostics/rx-signal-avg-optical-power ) {
+                            expr optics-diagnostics/rx-signal-avg-optical-power;
+                        }
+                        else if( optics-diagnostics/laser-rx-optical-power ){
+                            expr optics-diagnostics/laser-rx-optical-power;
+                        }
+                        else {
+                            expr "0.0000";
+                        }
+                    }
+                    call set-instance( $connection, $instance = $receive-instance, $type = "string", $value = $power );
+                    /* Write receive dbm */
+                    var $dbm-instance = { call build-instance-name( $instance-type = "D", $ifIndex ); }
+                    <instance> "jnxUtilStringValue." _ $dbm-instance;
+                    var $dbm = {
+                        if( optics-diagnostics/rx-signal-avg-optical-power-dbm ) {
+                            expr optics-diagnostics/rx-signal-avg-optical-power-dbm;
+                        }
+                        else if( optics-diagnostics/laser-rx-optical-power-dbm ){
+                            expr optics-diagnostics/laser-rx-optical-power-dbm;
+                        }
+                        else {
+                            expr "0";
+                        }
+                    }
+                    call set-instance( $connection, $instance = $dbm-instance, $type = "string", $value = $dbm );
+                 }
+                 else {
+                    expr jcs:syslog( "daemon.error", "Interface ", $name, " does not have ifIndex." );
+                 }
+            }
+        }
+        expr jcs:syslog( "daemon.info", "Updated ", ( count( $used-instance-set/instance ) div 3 ), " interface optic values in the Utility MIB. (", position(), " of 10)" );
+        
+        /* Remove old interfaces from Utility MIB */
+        var $oids := { call walk-mib(); }
+        
+        for-each( $oids/instance ) {
+            var $instance = .;
+            
+            /* If it doesn't exist in the used instances then clear it because it has been removed */
+            if( jcs:empty( $used-instance-set[instance == $instance] ) ) {
+                call clear-instance($connection, $instance = substring-after( $instance, "." ), $type = "string" );
+                expr jcs:syslog( "daemon.info", "Clearing instance ", $instance, " from Utility MIB because interface is not present." );
+            }
+        }
+        
+        /* Pause 30 seconds, Repeat ten times */
+        if( position() < 10 ) {
+            expr jcs:sleep(30);
+        }
+    }
+    expr jcs:syslog( "daemon.info", "Current instance has finished cycle, exiting" );
+    expr jcs:close( $connection );
+}
+
+
+/*
+ * Assembles an instance name.  The format is:
+ * optics + [N/P/D] + ifIndex
+ * $instance-type = N/P/D
+ */
+template build-instance-name( $instance-type, $ifIndex ) {
+    expr "optics" _ $instance-type _ $ifIndex;
+}
+
+
+/*
+ * set-instance - Sets the instance in the MIB
+ */
+template set-instance($connection, $instance, $type, $value) {
+
+    /* Build RPC and invoke it */ 
+    var $rpc = {
+        <request-snmp-utility-mib-set> {
+            <instance> $instance;
+            <object-type> $type;
+            <object-value> $value;
+        }
+    }
+    var $results = jcs:execute( $connection, $rpc );
+}
+
+
+/*
+ * clear-instance - Removes the instance from the MIB
+ */
+template clear-instance($connection, $instance, $type) {
+    
+    /* Build RPC and invoke it */ 
+    var $rpc = {
+        <request-snmp-utility-mib-clear> {
+            <instance> $instance;
+            <object-type> $type;
+        }
+    }
+    var $results = jcs:execute( $connection, $rpc );
+}
+
+
+/*
+ * walk-mib - Walks the Utility MIB in ascii or oid mode
+ */
+template walk-mib() {
+
+    /* Gather walk output */
+    var $walk-rpc = {
+        <walk-snmp-object> {
+            <snmp-object-name> ".1.3.6.1.4.1.2636.3.47.1.1.5.1.2.111.112.116.105.99.115";
+        }
+    }
+    var $mib-objects = jcs:invoke( $walk-rpc );
+
+    for-each( $mib-objects/snmp-object[ jcs:regex( "jnxUtil.*Value\\.", name ) ] ) {
+        var $name = { call translate-to-instance-format( $oid-name = name ); }
+        <instance> $name;
+    }
+}
+
+
+/*
+ * translate-to-instance-format - Translates an OID name into a corresponding
+ * instance name
+ *
+ * $oid-name - The oid name returned by <walk-snmp-object>.
+ *
+ * Returns the instance formatted name in the result tree
+ */
+template translate-to-instance-format( $oid-name ) {
+    
+    /* Get the type portion of name */
+    var $type-name = substring-before( $oid-name, "." );
+    
+    /* The oid portion */
+    var $oid = substring-after( $oid-name, "." );
+    
+    /* Break up the parts into different numbers */
+    var $number-set = jcs:split("\\.", $oid );
+    
+    /* Convert everything to characters */
+    var $instance-name = {
+        for-each( $number-set ) {
+            var $number = .;
+            /* Use substring to workaround PR 436699 */
+            expr substring( $ascii-set/char[num == $number]/sym, 1, 1 ); 
+        }
+    }
+    
+    /* Combine the two parts and write to result tree */
+    expr $type-name _ "." _ $instance-name;
+}
+
+
+var $ascii-set := {
+<char> { <num> 32; <sym xml:space="preserve"> " "; }<char> { <num> 33; <sym> "!"; }<char> { <num> 34; <sym> "\""; }<char> { <num> 35; <sym> "#"; }<char> { <num> 36; <sym> "$"; }
+<char> { <num> 37; <sym> "%"; }<char> { <num> 38; <sym> "&"; }<char> { <num> 39; <sym> "'"; }<char> { <num> 40; <sym> "("; }<char> { <num> 41; <sym> ")"; }
+<char> { <num> 42; <sym> "*"; }<char> { <num> 43; <sym> "+"; }<char> { <num> 44; <sym> ","; }<char> { <num> 45; <sym> "-"; }<char> { <num> 46; <sym> "."; }
+<char> { <num> 47; <sym> "/"; }<char> { <num> 48; <sym> "0"; }<char> { <num> 49; <sym> "1"; }<char> { <num> 50; <sym> "2"; }<char> { <num> 51; <sym> "3"; }
+<char> { <num> 52; <sym> "4"; }<char> { <num> 53; <sym> "5"; }<char> { <num> 54; <sym> "6"; }<char> { <num> 55; <sym> "7"; }<char> { <num> 56; <sym> "8"; }
+<char> { <num> 57; <sym> "9"; }<char> { <num> 58; <sym> ":"; }<char> { <num> 59; <sym> ";"; }<char> { <num> 60; <sym> "<"; }<char> { <num> 61; <sym> "="; } /* >" */
+<char> { <num> 62; <sym> ">"; }<char> { <num> 63; <sym> "?"; }<char> { <num> 64; <sym> "@"; }<char> { <num> 65; <sym> "A"; }<char> { <num> 66; <sym> "B"; }
+<char> { <num> 67; <sym> "C"; }<char> { <num> 68; <sym> "D"; }<char> { <num> 69; <sym> "E"; }<char> { <num> 70; <sym> "F"; }<char> { <num> 71; <sym> "G"; }
+<char> { <num> 72; <sym> "H"; }<char> { <num> 73; <sym> "I"; }<char> { <num> 74; <sym> "J"; }<char> { <num> 75; <sym> "K"; }<char> { <num> 76; <sym> "L"; }
+<char> { <num> 77; <sym> "M"; }<char> { <num> 78; <sym> "N"; }<char> { <num> 79; <sym> "O"; }<char> { <num> 80; <sym> "P"; }<char> { <num> 81; <sym> "Q"; }
+<char> { <num> 82; <sym> "R"; }<char> { <num> 83; <sym> "S"; }<char> { <num> 84; <sym> "T"; }<char> { <num> 85; <sym> "U"; }<char> { <num> 86; <sym> "V"; }
+<char> { <num> 87; <sym> "W"; }<char> { <num> 88; <sym> "X"; }<char> { <num> 89; <sym> "Y"; }<char> { <num> 90; <sym> "Z"; }<char> { <num> 91; <sym> "["; }
+<char> { <num> 92; <sym> "\\"; }<char> { <num> 93; <sym> "]"; }<char> { <num> 94; <sym> "^"; }<char> { <num> 95; <sym> "_"; }<char> { <num> 96; <sym> "`"; }
+<char> { <num> 97; <sym> "a"; }<char> { <num> 98; <sym> "b"; }<char> { <num> 99; <sym> "c"; }<char> { <num> 100; <sym> "d"; }<char> { <num> 101; <sym> "e"; }
+<char> { <num> 102; <sym> "f"; }<char> { <num> 103; <sym> "g"; }<char> { <num> 104; <sym> "h"; }<char> { <num> 105; <sym> "i"; }<char> { <num> 106; <sym> "j"; }
+<char> { <num> 107; <sym> "k"; }<char> { <num> 108; <sym> "l"; }<char> { <num> 109; <sym> "m"; }<char> { <num> 110; <sym> "n"; }<char> { <num> 111; <sym> "o"; }
+<char> { <num> 112; <sym> "p"; }<char> { <num> 113; <sym> "q"; }<char> { <num> 114; <sym> "r"; }<char> { <num> 115; <sym> "s"; }<char> { <num> 116; <sym> "t"; }
+<char> { <num> 117; <sym> "u"; }<char> { <num> 118; <sym> "v"; }<char> { <num> 119; <sym> "w"; }<char> { <num> 120; <sym> "x"; }<char> { <num> 121; <sym> "y"; }
+<char> { <num> 122; <sym> "z"; }<char> { <num> 123; <sym> "{"; }<char> { <num> 124; <sym> "|"; }<char> { <num> 125; <sym> "}"; }<char> { <num> 126; <sym> "~"; }
+}
+
+template build-loop( $index = 1 ) {
+    <loop>;
+    if( $index < 10 ) {
+        call build-loop( $index = $index + 1 );
+    }
+}
+
+template read-owner() {
+    var $rpc = {
+        <get-snmp-object> {
+            <snmp-object-name> $owner-oid;
+        }
+    }
+    var $result = jcs:execute( $connection, $rpc );
+    for-each( $result//self::xnm:error ) {
+        expr jcs:syslog( "daemon.error", "Error writing owner to Utility MIB: ", message );
+    }
+    expr $result/snmp-object/object-value;
+}
+
+template write-owner() {
+    var $rpc = {
+        <request-snmp-utility-mib-set> {
+            <instance> $owner-instance;
+            <object-type> "string";
+            <object-value> $localtime-iso;
+        }
+    }        
+    var $result = jcs:execute( $connection, $rpc );
+    for-each( $result//self::xnm:error ) {
+        expr jcs:syslog( "daemon.error", "Error writing owner to Utility MIB: ", message );
+    }
+}
+

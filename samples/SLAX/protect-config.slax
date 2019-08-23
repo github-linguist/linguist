@@ -1,0 +1,234 @@
+version 1.0;
+ns junos = "http://xml.juniper.net/junos/*/junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/junos/commit-scripts/1.0";
+import "../import/junos.xsl";
+match configuration {
+/*
+
+version: 1.1
+date: 8 August 2014
+*/
+
+    /*
+    - Make sure [edit chassis] is not totally deleted...
+    -
+     */
+    call error-if-missing($must = chassis, $statement = "chassis") {
+        with $message = {
+            expr "Chassis configuration cannot be empty !!!";
+         }
+    }
+    /*
+    - We are making sure that the loopback interface configuration is present
+    - and it has family inet configured.
+    - The commit will fail if this is the case.
+    - 
+    - Uncomment the line with 'v6-enable' if you have/want to cover IPv6 too.
+     */
+    call error-if-missing($must = interfaces/interface[name == "lo0"]/unit[name == "0"]/family/inet/address, $statement = "interfaces lo0 unit 0 family inet address");
+
+/* v6-enable BEGIN
+    call error-if-missing($must = interfaces/interface[name == "lo0"]/unit[name == "0"]/family/inet6/address, $statement = "interfaces lo0 unit 0 family inet6 address");
+/* v6-enable END
+	
+    /*
+    - Now we check the present loopback interface configuration and make sure it's not disabled.
+    - The commit will fail if this is the case.
+     */
+    call error-if-present($must = interfaces/interface[name == "lo0"]/disable | interfaces/interface[name == "lo0"]/unit[name == "0"]/disable) {
+        with $message = {
+            expr "The Loopback interface is disabled.";
+         }
+    }
+    /*
+    - Make sure snmp 0/0 is not configured. It would mess up with some apply-path implementations on the loopback filter !
+    - The commit will fail if this is the case.
+     */
+    call error-if-present($must = snmp/community[name == *]/clients[name == "0.0.0.0/0"]) {
+        with $message = {
+            expr "0.0.0.0/0 restrict is not recommended along with apply-path";
+            expr " because it would compromise the firewall filter !!! ";
+         }
+    }
+    /*
+    - Making sure the whole forwarding-options section is not deleted/deactivated.
+    - The commit will fail if this is the case.
+     */
+    call error-if-missing($must = forwarding-options, $statement = "[edit forwarding-options]") {
+        with $message = {
+            expr "The [edit forwarding-options] is missing !!! ";
+         }
+    }
+    /*
+    /*
+    - Making sure the whole routing-options section is not deleted/deactivated.
+    - The commit will fail if this is the case.
+     */
+    call error-if-missing($must = routing-options, $statement = "[edit routing-options]") {
+        with $message = {
+            expr "The [edit routing-options] is missing !!! ";
+         }
+    }
+    /*              
+    - Making sure the whole protocols/bgp section is not deleted/deactivated.
+    - The commit will fail if this is the case.
+     */
+    call error-if-missing($must = protocols/bgp, $statement = "protocols bgp") {
+        with $message = {
+            expr "The protocols/bgp is missing !!! ";
+         }
+    }
+    /*
+    - Check that the protocol is not disabled...
+     */
+    call error-if-present($must = protocols/bgp/disable) {
+        with $message = {
+            expr "The BGP protocol is disabled, failing commit..";
+         }
+    }
+    /*
+    - Making sure the whole protocols/ospf section is not deleted/deactivated.
+    - The commit will fail if this is the case.
+     */
+    call error-if-missing($must = protocols/ospf, $statement = "protocols ospf") {
+        with $message = {
+            expr "The OSPF protocol is missing, failing commit..";
+         }
+    }
+    /*
+    - Check that the protocol is not disabled...
+     */
+    call error-if-present($must = protocols/ospf/disable) {
+        with $message = {
+            expr "The OSPF protocol is disabled, failing commit..";
+         }
+    }
+ 
+    /*
+    - Making sure the whole class-of-service section is not deleted/deactivated.
+    - The commit will fail if this is the case.
+     */
+ 
+    call error-if-missing($must = class-of-service, $statement = "[edit class-of-service]") {
+        with $message = {
+            expr "The whole class-of-service section is missing, failing commit..";
+         }
+    }
+    /*
+    - Check that the Cos is not disabled...
+     */
+    call error-if-present($must = class-of-service/disable) {
+        with $message = {
+            expr "The whole class-of-service is disabled, failing commit..";
+         }
+    }
+    /*
+    - Making sure the whole protocols/pim section is not deleted/deactivated.
+    - The commit will fail if this is the case.
+     */
+    call error-if-missing($must = protocols/pim, $statement = "protocols pim") {
+        with $message = {
+            expr "The pim protocol is missing, failing commit..";
+         }
+    }
+    /*
+    - Check that the protocol is not disabled...
+     */
+    call error-if-present($must = protocols/pim/disable) {
+        with $message = {
+            expr "The pim protocol is disabled, failing commit..";
+         }
+    }
+    /*
+    - Making sure the whole protocols/mpls section is not deleted/deactivated.
+    - The commit will fail if this is the case.
+     */
+    call error-if-missing($must = protocols/mpls, $statement = "protocols mpls") {
+        with $message = {
+            expr "The mpls protocol is missing, failing commit..";
+         }
+    }
+    /*
+    - Check that the protocol is not disabled...
+     */
+    call error-if-present($must = protocols/mpls/disable) {
+        with $message = {
+            expr "The MPLS protocol is disabled, failing commit..";
+         }
+    }
+    /*
+    - Making sure the whole protocols/ldp section is not deleted/deactivated.
+    - The commit will fail if this is the case.
+     */
+    call error-if-missing($must = protocols/ldp, $statement = "protocols ldp") {
+        with $message = {
+            expr "The LDP protocol is missing, failing commit..";
+         }
+    }
+    /*
+    - Check that the protocol is not disabled...
+     */
+    call error-if-present($must = protocols/ldp/disable) {
+        with $message = {
+            expr "The LDP protocol is disabled, failing commit..";
+         }
+    }
+}
+/*
+    - Make sure snmp 0/0 is not configured. It would mess up with auto-filter !QQ
+    - The commit will fail if this is the case.
+     */
+/*
+- This is where we can generate custom error/warning messages
+- by modifying the default templates.
+ */
+template warn-if-missing ($must, $statement = "unknown", $message = "missing mandatory configuration statement") {
+ 
+    if (not($must)) {
+        <xnm:warning> {
+            <edit-path> {
+                copy-of $statement;
+            }
+            <message> {
+                copy-of $message;
+            }
+        }
+    }
+}
+/*                  
+-
+-
+-
+ */
+template error-if-missing ($must, $statement = "unknown", $message = "missing mandatory configuration statement") {
+ 
+    if (not($must)) {
+        <xnm:error> {
+            <edit-path> {
+                copy-of $statement;
+            }
+            <message> {
+                copy-of $message;
+            }
+        }
+    }
+}
+/*
+-
+-
+-
+ */
+template error-if-present ($must = 1, $message = "invalid configuration statement") {
+    /* give error if param missing */
+ 
+    for-each ($must) {
+        <xnm:error> {
+            call jcs:edit-path();
+            call jcs:statement();
+            <message> {
+                copy-of $message;
+            }
+        }
+    }
+}

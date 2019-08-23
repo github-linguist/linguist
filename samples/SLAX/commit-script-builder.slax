@@ -1,0 +1,4706 @@
+/*
+ * Author        : Curtis Call
+ * Version       : 1.16
+ * Last Modified : March 7, 2013
+ * Platform      : all
+ * Release       : 10.0 and above
+ *
+ * Description   : Commit Script Builder is an op script that allows you to create
+ * a fully customized commit script by selecting from a number of possible 
+ * configuration violations.  It can only be run by a single user at a time per Junos
+ * device.
+ *
+ * Junos 10.0 is required due to PR 443586 and PR 452398.
+ *
+ *
+ * Revisions:
+ * 1.15 - Started using jcs:output() to display the large prompts instead of only
+ * using jcs:get-input(). This was required due to changes in Junos 10.2 that limited
+ * the prompt size to 1024 bytes. However, this makes the script susceptible to PR 473816
+ * so | no-more must always be used when running it.
+ * 1.16 - Output menus line by line to work around the unfortunate buffer limit added by
+ * SLAX 1.1 in Junos 12.2.
+ *
+ * License       : BSD-Style
+ *  Copyright (c) 2013 Curtis Call. All Rights Reserved.
+ *  Redistribution and use in source and binary forms, with or without modification, 
+ *  are permitted provided that the following conditions are met:
+ *  1. Redistributions of source code must retain the above copyright notice, this 
+ *  list of conditions and the following disclaimer.
+ *  2. Redistributions in binary form must reproduce the above copyright notice, 
+ *  this list of conditions and the following disclaimer in the documentation and/or
+ *  other materials provided with the distribution.
+ *  3. The name of the author may not be used to endorse or promote products derived 
+ *  from this software without specific prior written permission.
+ *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED 
+ *  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY 
+ *  AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE 
+ *  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL 
+ *  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ *  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
+ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ *  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN 
+ *  IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */ 
+version 1.0;
+
+ns junos = "http://xml.juniper.net/junos/*/junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/junos/commit-scripts/1.0";
+ns set = "http://exslt.org/sets";
+ns str = "http://exslt.org/strings";
+ns func extension = "http://exslt.org/functions";
+ns csb extension = "http://xml.juniper.net/commit-script-builder";
+
+import "../import/junos.xsl";
+
+/* Builder version number */
+var $script-version = "1.16"; 
+
+/* Possible violation actions */
+var $error = "Error";
+var $warning = "Warning";
+var $syslog = "Syslog";
+var $warning-and-syslog = "Warning & Syslog";
+var $change = "Auto-Correct";
+var $do-nothing = "Do nothing";
+
+/* Descriptive action strings */
+var $action-set := {
+    <action> {
+        <name> $error;
+        <string> $error _ " - Fail commit with an error message";
+    }
+    <action> {
+        <name> $warning;
+        <string> $warning _ " - Display warning message on console";
+    }
+    <action> {
+        <name> $syslog;
+        <string> $syslog _ " - Write warning message to syslog";
+    }
+    <action> {
+        <name> $warning-and-syslog;
+        <string> $warning-and-syslog _ " - Report warning to both console and syslog";
+    }
+    <action> {
+        <name> $change;
+        <string> $change _ " - Resolve violation through configuration change";
+    }
+    <action> {
+        <name> $do-nothing;
+        <string> $do-nothing _ " - Do not monitor this violation";
+    }
+}
+
+/* Used in violation definitions and in selected the selected category */
+var $all = "All"; 
+var $all-except-change = "All-Except-Change";
+var $selected = "Selected";
+
+/* Retrieve the current software version */
+var $kern-osrelease = jcs:sysctl("kern.osrelease", "s");
+var $version-set = jcs:split("[IRSB-]", $kern-osrelease );
+var $version = $version-set[1];
+
+/* Workaround for PR 436699 */
+var $quote = csb:get-quote-char();
+
+/* Retrieve the commit script directory for file operations */
+var $directory = csb:get-directory();
+
+/* Build valid ascii string */
+var $valid-ascii = csb:get-valid-ascii();
+
+/* Commit script name */
+var $script-name = "custom-commit-script.slax";
+
+/* Single connection to use for all API calls */
+var $connection = jcs:open();
+
+/* Utility MIB values */
+var $mib-violation-prefix = "csb:violation:";
+var $mib-violation-oid = ".1.3.6.1.4.1.2636.3.47.1.1.5.1.2.99.115.98.58.118.105.111.108.97.116.105.111.110.58";
+var $mib-data-prefix = "csb:data:";
+var $mib-data-oid = ".1.3.6.1.4.1.2636.3.47.1.1.5.1.2.99.115.98.58.100.97.116.97.58";
+
+/* Configuration violation categories */
+var $violation-category-set = csb:get-category-set();
+
+/* Sorted violations */
+var $sorted-violations = csb:get-sorted-violations();
+
+/* Main template of script */
+match / {
+
+    /* Check version */
+    expr csb:check-version( "10.0", "Commit Script Builder requires Junos 10.0" );
+
+    /* Verify that they have the maintenance permission bit */
+    expr csb:verify-authorization(); 
+
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+    var $welcome = " \nWelcome to Commit Script Builder " _ $script-version _ "!\n" _
+                      "---------------------------------\n" _
+                      "This script gives you easy control over the commit process of your Junos\n" _
+                      "device.  Select what configuration violations should be checked, and what\n" _
+                      "actions should be performed if they occur.  Then allow the Commit Script\n" _
+                      "Builder op script to generate the customized commit script, save it within\n" _
+                      "the local commit script directory, and enable it automatically.";
+    expr jcs:output( $welcome );
+    
+    /* Start with a clean slate by clearing out the MIB */
+    expr csb:clear-all-instances();
+    
+    /* Read from existing commit script if present */
+    expr csb:read-settings();
+    
+    /* Start the main menu loop */
+    expr csb:main-menu();
+    
+    /* Leave No Trace */
+    expr csb:clear-all-instances();
+
+    /* Clean up after ourselves */
+    expr jcs:close( $connection );
+}
+
+
+/*
+ * Displays the main menu prompt and directs to functions based on user's choice
+ */
+<func:function name="csb:main-menu"> {
+
+    /* Retrieve the current selections */
+    var $selections = csb:get-violation-selections();
+
+    var $before-prompt = {
+        expr "_\r \n[Commit Script Builder - Main Menu]\n";
+        expr    "-----------------------------------\n";
+        expr    " 1. Edit Configuration Violations\n";
+        expr    " 2. View Automation Instructions\n";
+        expr    " 3. View Customized Commit Script\n";
+        expr    " 4. Build and Apply Commit Script\n";
+        expr    " 5. Clear All Instructions\n";
+        expr    "...\n";
+        expr    " Q. Quit and Discard Changes\n";
+        expr    "-----------------------------------\n";
+        expr    "(" _ count( $selections/violation ) _ " selected violations)\n";
+    }
+    var $prompt = {
+        expr    "Enter Selection:> ";
+    }
+    expr jcs:output( $before-prompt );
+    var $answer = csb:safe-get-input( $prompt );
+    
+    /* Edit configuration violations */
+    if( $answer == "1" ) {
+        expr csb:violation-category-menu();
+        
+        /* Loop to main menu */
+        expr csb:main-menu();
+    }
+    /* View current script logic */
+    else if( $answer == "2" ) {
+    
+        expr csb:show-logic();
+        
+        /* Loop to main menu */
+        expr csb:main-menu();
+    }
+    /* View current script  */
+    else if( $answer == "3" ) {
+    
+        expr csb:show-script();
+        
+        /* Loop to main menu */
+        expr csb:main-menu();
+    }
+    /* Clear all settings */
+    else if( $answer == "5" ) {
+    
+        expr csb:clear-all-instances();
+        
+        expr jcs:output(" \nClearing all current selections");
+
+        /* Loop to main menu */
+        expr csb:main-menu();
+        
+    }
+    /* Build and apply script */
+    else if( $answer == "4" ) {
+    
+        expr csb:apply-commit-script();
+        
+        /* By default, fall through and end the program, errors will loop back to main  */
+    }
+    /* Exit */
+    else if( $answer == "Q" || $answer == "q" ) {
+        expr jcs:output(" \nExiting, discarding all changes.");
+    }
+    /* Invalid choice, loop to main */
+    else {
+        expr csb:main-menu();
+    }
+   
+}
+
+
+/*
+ * Displays the Violation Category menu prompt
+ */
+<func:function name="csb:violation-category-menu"> {
+
+    /* Retrieve the current selections */
+    var $selections = csb:get-violation-selections();
+
+	expr jcs:output("_\r \n[Configuration Violation Categories]\n",
+		 "------------------------------------");
+	for-each( $violation-category-set[ position() <= round( count( $violation-category-set ) div 2) ] ) {
+	    var $first-string = " " _ position() _ ". " _ .;
+	    var $second-string = {
+            var $number = round( count( $violation-category-set ) div 2 ) + position(); 
+            if( $number <= count( $violation-category-set ) ) {
+                expr " " _ $number _ ". " _ $violation-category-set[ number( $number ) ];
+            }
+            else {
+                expr "";
+            }
+	    }
+	    /* Output line by line in order to avoid buffer issues */
+	    expr jcs:output( jcs:printf( "%-20s %-20s", $first-string,  $second-string ) ); 
+	}
+	expr jcs:output( " ", ( count( $violation-category-set ) + 1 ), ". <All Categories>");
+	expr jcs:output( " ", ( count( $violation-category-set ) + 2 ), ". <Current Selections>");
+	expr jcs:output( "...");
+	expr jcs:output(" 0. Return to Main Menu\n",
+	     "------------------------------------");
+	expr jcs:output( "(", count( $selections/violation ), " selected violations)");
+    var $prompt = {
+        expr "Select Category:> ";
+    }
+    var $answer = csb:safe-get-input( $prompt );
+    
+    /* Valid responses are numbers within the category range */
+    if( string( number( $answer ) ) != "NaN" && $answer >= 0 && $answer <= count( $violation-category-set ) + 2 ) {
+        if( $answer != 0 ) {
+            /* Selected category is either all, selected, or a specific category */
+            var $selected-category = {
+                if( $answer == count( $violation-category-set ) + 1 ) {
+                    expr $all;
+                }
+                else if( $answer == count( $violation-category-set ) + 2 ) {
+                    expr $selected;
+                }
+                else {
+                    expr $violation-category-set[ number( $answer )  ];
+                }
+            }
+            /* Go to violation menu */
+            expr csb:violation-menu( $selected-category );
+            
+            /* Loop back to category menu */
+            expr csb:violation-category-menu();
+        }
+    }
+    else {
+        /* Invalid responses loop back to category menu */
+        expr csb:violation-category-menu();
+    }
+}
+
+
+/*
+ * Displays the menu prompt for the available violations for the category
+ */
+<func:function name="csb:violation-menu"> {
+    param $category;
+    
+    /* Retrieve the current selections */
+    var $selections = csb:get-violation-selections();
+
+    /* Retrieve all the violations for the selected category */
+    var $display-violations := {
+        if( $category == $selected ) {
+            for-each( $sorted-violations/violation ) {
+                var $template-name = template-name;
+                if( $selections/violation[template-name == $template-name ] ) {
+                    copy-of .;
+                }
+            }
+        }
+        else {
+            copy-of $sorted-violations/violation[$category == $all || category[. == $category] ];
+        }
+    }
+    
+    var $title = {
+        if( $category == $selected ) {
+            expr "All Selected Violations";
+        }
+        else if( $category == $all ) {
+            expr "All Configuration Violations";
+        }
+        else {
+            expr $category _ " - Configuration Violations";
+        }
+    }
+    var $line = { call build-line( $length = string-length( $title ) + 2, $character = "-" ); }
+    
+    expr jcs:output( "_\r \n[",  $title,  "]\n",  $line);
+    for-each( $display-violations/violation ) {
+        var $template-name = template-name;
+        /* Display the selected violations with brackets around them */
+        if( $selections/violation[template-name == $template-name ] ) {
+            expr jcs:output( "[", position(), "] ",  synopsis);
+        }
+        else {
+            expr jcs:output( " ", position(), ". ", synopsis);
+        }
+    }
+    expr jcs:output( "...");
+    expr jcs:output(" 0. Return to Category Menu\n", $line);
+    expr jcs:output( "[#] = Action is selected" );
+    var $prompt = {
+        expr "Select Violation to Edit:> ";
+    }
+    var $answer = csb:safe-get-input( $prompt );
+    
+    /* edit the violation */
+    if( $answer > "0" && string( number( $answer ) ) != "NaN" && $answer <= count( $display-violations/violation ) ) {
+        expr csb:violation-response-menu( $display-violations/violation[ number( $answer ) ], $selections );
+
+        /* Loop back to menu */
+        expr csb:violation-menu( $category );
+    }
+    /* If they didn't select to go back then loop back to menu */
+    else if( string( number( $answer ) ) != "NaN" && $answer != 0 ) {
+        expr csb:violation-menu( $category );
+    }
+}
+
+
+/*
+ * This displays the response menu for a specific violation
+ */
+<func:function name="csb:violation-response-menu"> {
+    param $violation;
+    param $selections;
+    
+    /* Assemble action list */
+    var $actions := {
+        if( $violation/action[. == $all] || $violation/action[. == $error] || $violation/action[. == $all-except-change] ) {
+            <action> $error;
+        }
+        if( $violation/action[. == $all] || $violation/action[. == $warning] || $violation/action[. == $all-except-change] ) {
+            <action> $warning;
+        } 
+        if( $violation/action[. == $all] || $violation/action[. == $syslog] || $violation/action[. == $all-except-change] ) {
+            <action> $syslog;
+        } 
+        if( $violation/action[. == $all] || $violation/action[. == $warning-and-syslog] || $violation/action[. == $all-except-change] ) {
+            <action> $warning-and-syslog;
+        } 
+        if( $violation/action[. == $all] || $violation/action[. == $change] ) {
+            <action> $change;
+        }
+        <action> $do-nothing;
+    }
+    
+    /* Retrieve the current selection */
+    var $template-name = $violation/template-name;
+    var $selection = {
+        var $selected-violation = $selections/violation[template-name == $template-name ]; 
+        if( $selected-violation ) {
+            expr $selected-violation/action;
+        }
+        else {
+            expr $do-nothing;
+        }
+    }
+    
+    var $data = {
+        var $selected-violation = $selections/violation[template-name == $template-name ]; 
+        if( $selected-violation && $selected-violation/data ) {
+            expr $selected-violation/data;
+        }
+        else {
+            expr "";
+        }
+    }
+    
+    /* Assemble the prompt */
+    var $before-prompt = {
+        expr "_\r \n[Edit Configuration Violation Response]\n";
+        var $top-line = { call build-line( $length = 76, $character = "-" ); }
+        expr "+" _ $top-line _ "+\n";
+        expr jcs:printf( "%-76s %s", concat( "|Synopsis: ", $violation/synopsis), "|" ) _ "\n";
+        var $line = { call build-line( $length = 76, $character = "." ); }
+        expr "|" _ $line _ "|\n";
+        expr $violation/description _ "\n";
+        var $bottom-line = { call build-line( $length = 76, $character = "-" ); }
+        expr "+" _ $bottom-line _ "+\n";
+        
+        /* Display specific value if applicable */
+        if( $violation/specific-value ) {
+            if( string-length( $data ) == 0 ) {
+                expr "Specific value needs to be set!!!\n";
+            }
+            else {
+                expr "Specific value:\n" _ $data _ "\n";
+            }
+            expr "+" _ $bottom-line _ "+\n";
+        }
+        
+        for-each( $actions/action ) {
+            var $action = .;
+            var $action-string = {
+                if( $action == $change ) {
+                    expr $action _ " - " _ $violation/change-description;
+                }
+                else {
+                    expr $action-set/action[name == $action]/string;
+                }
+            }
+            /* Display the selected violations with brackets around them */
+            if( $selection == . ) {
+                expr "[" _ position() _ "] " _ $action-string _ "\n";
+            }
+            else {
+                expr " " _ position() _ ". " _ $action-string _ "\n";
+            }
+        }
+        expr "...\n";
+        
+        /* Offer edit option */
+        if( $violation/specific-value ) {
+            expr " E. Edit specific value\n";
+        }
+        
+        expr " V. View violation script code\n";
+        expr " 0. Return to Violations Menu\n";
+        var $current-string = "[#] = Current Selection"; 
+        var $final-line = { call build-line( $length = string-length( $current-string ), $character = "-" ); }
+        expr $final-line _ "\n";
+        expr $current-string _ "\n";
+    }
+    var $prompt = {
+        expr "Select Response:> ";
+    }
+    expr jcs:output( $before-prompt );
+    var $answer = csb:safe-get-input( $prompt );
+
+    /* Let the edit the specific value */
+    if( $answer == "e" || $answer == "E" ) {
+        expr jcs:output( "Current Value: ", $data );
+        expr jcs:output( "Note: Use C-style escapes for newlines. Do not use quotes, and do not end with a newline." );
+        var $new-value = jcs:get-input( "New Value: " );
+        
+        /* If blank, then delete it and readd the action if necessary */
+        if( string-length( $new-value ) == 0 ) {
+            expr csb:delete-violation-action( $violation/template-name );
+            
+            /* If action != do-nothing then readd it without any data */
+            if( $selection != $do-nothing ) {
+                expr csb:record-violation-action( $violation/template-name, $selection );
+            }
+        }
+        else {
+            /* Record with do-nothing action if necessary so that the data is recorded */
+            expr csb:record-violation-action( $violation/template-name, $selection, $new-value );
+        }
+        
+        /* Loop back through - Re-retrieve the violation selections so we have the new value */
+        expr csb:violation-response-menu( $violation, csb:get-violation-selections() );
+    }    
+    /* Display the template for them to see */
+    else if( $answer == "V" || $answer == "v" ) {
+        var $code = {
+            expr " \nCode used to monitor configuration violation\n";
+            expr "--------------------------------------------\n";
+            if( $violation/specific-value ) {
+                expr "template " _ $violation/template-name _ "( $action, $data = /null ) {\n";
+            }
+            else {
+                expr "template " _ $violation/template-name _ "( $action ) {\n";
+            }
+            expr translate( $violation/template-code, "'", $quote ) _ "\n";
+            expr "}\n\n";
+            /* Add change functions if change is possible and "delete-node" is referenced */
+            if( ( $violation/action[. == $all ] || $violation/action[ . == $change ] ) && contains( $violation/template-code, "call delete-node(" ) ) {
+                expr csb:get-change-templates();                 
+            }
+            expr "--Press Enter to Continue--";
+        }
+        expr csb:pause-for-enter( $code );
+        
+        /* Loop back through */
+        expr csb:violation-response-menu( $violation, $selections );
+    }
+    /* They made a valid selection */
+    else if( string( number( $answer ) ) != "NaN" && $answer >= 0 && $answer <= count( $actions/action ) + 1 ) {
+
+        /* Action or Do Nothing has been selected */
+        if( $answer > 0 ) {
+            /* Selection is to do nothing */
+            if( $answer == count( $actions/action ) ) {
+                
+                /* Clear from MIB if this is a change - unless there is data, then record with a blank action */
+                if( string-length( $data ) == 0 ) {
+                    if( $selection != $do-nothing ) {
+                        expr csb:delete-violation-action( $violation/template-name );
+                    }
+                }
+                else {
+                    if( $selection != $do-nothing ) {
+                        expr csb:record-violation-action( $violation/template-name, $do-nothing, $data );
+                    }
+                }
+            }
+            /* Selection is an action */
+            else {
+                /* Enter selection in mib */
+                expr csb:record-violation-action( $violation/template-name, $actions/action[ number( $answer ) ], $data );
+            }
+        }
+        /* Return to previous menu */
+    }
+    else {
+        /* Invalid entry - loop back to menu */
+        expr csb:violation-response-menu( $violation, $selections );
+    }
+}
+
+
+/*
+ * Read the commit script and retrieve its contents.  No error checking is performed,
+ * if the file doesn't exist then the returned value is an empty node-set.
+ */
+<func:function name="csb:read-script-file"> {
+
+    var $rpc = {
+        <file-get> {
+            <filename> $directory _ $script-name;
+            <encoding> "ascii";
+        }
+    }
+    var $file-contents = jcs:execute( $connection, $rpc )/file-contents;
+    
+    <func:result select="$file-contents">;
+}
+
+
+/*
+ * Read commit script, if present, when script starts to pull in the existing
+ * commit file settings.
+ */
+<func:function name="csb:read-settings"> {
+    
+    /* Grab the existing file contents */
+    var $file-contents = csb:read-script-file();
+    
+    expr jcs:output( " \nChecking for existing commit script: ", $script-name, "..." );
+    
+    /* If file exists, then this will be a valid node */
+    if( $file-contents ) {
+
+        /* Indicate that we will try to pull from the existing script */
+        expr jcs:output( "Found ", $script-name, " - retrieving current settings..." );
+    
+        var $lines = jcs:break-lines( $file-contents );
+
+        /* Go through file and record where the $settings variable started and all the } */
+        var $file-info := {    
+            for-each( $lines ) {
+                /* Find the variable start */
+                if( starts-with( ., "var $settings = {" ) ) {
+                    <start> position();
+                }
+                /* Find closing braces */
+                if( starts-with( ., "}" ) ) {
+                    <end> position();
+                }
+            }
+        }
+
+        /* Determine start and end of settings based on start and end tags */        
+        var $start-line = $file-info/start[1];
+        var $end-line = $file-info/end[ . > $start-line ][1];
+
+        /* Read violations between the lines */
+        var $violation-count := {
+            for-each( $lines[ position() > $start-line && position() < $end-line ] ) {
+
+                /* Old style is all in one line */
+                var $line = normalize-space( . );
+                if( starts-with( $line, "<violation>" ) && substring( $line, string-length( $line ) ) != "{"  ) { 
+                    var $violation = translate( substring-after( ., "<violation> " ), concat( ";", $quote ), "" );
+                    
+                    var $template-name = substring-before( $violation, ":" );
+                    var $action = substring-after( $violation, ":" );
+                    if( string-length( $template-name ) > 0 && string-length( $action ) > 0 ) {
+                        /* Enter selection in mib */
+                        expr csb:record-violation-action( $template-name, $action );
+                        <violation> $violation;
+                    }
+                }
+                /* New style is in better XML format to allow for future expansion */
+                else if( starts-with( $line, "<violation>" ) && substring( $line, string-length( $line ) ) == "{" ) {
+                    /* position() is relative to $start-line */
+                    var $position = $start-line + position();
+                    
+                    /* Determine the end of this <violation> element */
+                    var $closing-brackets := {
+                        for-each( $lines[ position() > $position && position() < $end-line] ) {
+                            var $test-line = normalize-space( . );
+                            if( starts-with( $test-line, "}" ) ) {
+                                /* Add current position since the position() is relative to it */
+                                <bracket> $position + position();
+                            }
+                        }
+                    }
+                    /* The first retrieved bracket is the one that applies to this element */
+                    var $violation-stop = $closing-brackets/bracket[1];
+
+                    /* Assemble all the child elements and build a violation */
+                    var $violation := {
+                        /* Read from the current position to the first closing bracket */
+                        for-each( $lines[ position() > $position && position() < $violation-stop] ) {
+                            var $violation-line = normalize-space( . );
+                            
+                            /* Format is always: <element> "data"; */
+                            var $cut-start = substring-after( $violation-line, concat( "> ", $quote ) );
+                            var $stripped-text = substring( $cut-start, 1, string-length( $cut-start ) - 2 );
+
+                            /* Handle each child element separately */
+                            if( starts-with( $violation-line, "<template-name>" ) ) {
+                                <template-name> $stripped-text; 
+                            }
+                            else if( starts-with( $violation-line, "<action>" ) ) {
+                                <action> $stripped-text; 
+                            }
+                            else if( starts-with( $violation-line, "<data>" ) ) {
+                                <data> $stripped-text; 
+                            }
+                        }
+                    }
+                    
+                    if( $violation/template-name && $violation/action ) {
+                        /* Enter selection in mib */
+                        expr csb:record-violation-action( $violation/template-name, $violation/action, $violation/data );
+                        
+                        /* Submit for the count */
+                        <violation>;
+                    }
+                }
+            }
+        }
+        /* Display the count */
+        expr jcs:output( "---Retrieved ", count( $violation-count/violation ), " configuration violation response selection(s)" );
+    }
+    else {
+        expr jcs:output( "Existing commit script was not found" );
+    }
+}
+
+
+/*
+ * Checks in the committed configuration to see if the commit script is already
+ * enabled.
+ */
+<func:function name="csb:is-script-enabled"> {
+
+    var $rpc = {
+        <get-configuration database="committed" inherit="inherit"> {
+            <configuration> {
+                <system> {
+                    <scripts> {
+                        <commit>;
+                    }
+                }
+            }
+        }
+    }
+    var $script-node = jcs:execute( $connection, $rpc )/system/scripts/commit/file[name == $script-name ];
+    
+    if( $script-node ) {
+        <func:result select="true()">;
+    }
+    else {
+        <func:result select="false()">;
+    }
+}
+
+
+/*
+ * Writes the contents to the script file
+ */
+<func:function name="csb:write-script-file"> {
+    param $contents;
+    
+    var $rpc = {
+        <file-put> {
+            <filename> $directory _ $script-name;
+            <encoding> "ascii";
+            <permission> "644";
+            <delete-if-exist>;
+            <file-contents> $contents;
+        }
+    }
+
+    /* 
+     * Do not use jcs:execute because this function is called in failure scenarios where
+     * the connection might no longer be valid.
+     */
+    var $results = jcs:invoke( $rpc );
+    
+    <func:result select="$results">;
+}
+
+
+/*
+ * Assembles the script, writes it to the local hard disk, copies it to any other
+ * routing-engines, and commits the configuration.
+ */
+<func:function name="csb:apply-commit-script"> {
+    
+    /* Retrieve the current file contents (or empty node if not present) */
+    var $file-contents = csb:read-script-file();
+    
+    /* Learn if script is currently enabled */
+    var $script-is-enabled = csb:is-script-enabled();
+    
+    var $step-1 = " \n***********************************************\n" _
+                     "* Step 1 of 4: Building commit script...      *\n" _
+                     "***********************************************";
+    expr jcs:output( $step-1 );
+    
+    var $customized-script = csb:build-script();
+    
+    expr jcs:output( "[Success]" );
+
+    var $step-2 = " \n***********************************************\n" _
+                     "* Step 2 of 4: Locking the configuration...   *\n" _
+                     "***********************************************";
+    expr jcs:output( $step-2 );
+
+    /* Lock configuration */
+    var $lock-results = jcs:execute( $connection, "lock-configuration" );
+    if( $lock-results/..//xnm:error ) {
+        expr jcs:output("!!!Could not lock configuration database");
+        for-each( $lock-results/..//xnm:error ) {
+            expr jcs:output( "Error: ", message );
+        }
+        
+        expr jcs:output( " \n!!!Unable to apply commit script, returning to main menu." );
+        
+        expr csb:pause-for-enter();
+
+        /* Go back to main */
+        expr csb:main-menu();
+    }
+    /* Configuration is now locked */
+    else {
+        expr jcs:output("[Success]");
+        
+        var $step-3 = " \n***********************************************\n" _
+                         "* Step 3 of 4: Writing commit script...       *\n" _
+                         "***********************************************";
+        expr jcs:output( $step-3 );
+    
+        var $results = csb:write-script-file( $customized-script );
+    
+        /* If success isn't reported then the script wasn't written successfully */
+        if( jcs:empty( $results/success ) ) {
+            
+            /* Report error */
+            expr jcs:output( "!!!Error writing commit script to local file: " );
+            for-each( $results/xnm:error ) {
+                expr jcs:output("Error: ", message );
+            }
+    
+            /* If they already had the commit script enabled then we might have just overwritten part of the file */
+            if( $file-contents && $script-is-enabled ) {
+                expr jcs:output("!!!Warning!  Commit script ", $directory, $script-name, " might be corrupted.\nThis needs to be resolved manually." );
+            }
+    
+            /* Unlock the configuration! */
+            var $absorb-results = jcs:execute( $connection, "unlock-configuration" );
+            
+            expr jcs:output( " \n!!!Unable to apply commit script, returning to main menu." );
+            
+            expr csb:pause-for-enter();
+            
+            /* Go back to main */
+            expr csb:main-menu();
+        }
+        /* If the file was recorded successfully, then go on */
+        else {
+        
+            expr jcs:output("[Success]");
+            
+            /* Pull in this info to figure out what other REs are present */
+            var $re-info = jcs:execute($connection, "get-route-engine-information" );
+            var $vc-info = jcs:execute($connection, "get-virtual-chassis-information" );
+    
+            /* Generate list of other routing-engines */
+            var $target-set := {
+                if( starts-with( $product, "ex42")  && count( $vc-info/member-list/member ) > 1 ) {
+                    /* Copy to non-local FPCs */
+                    for-each( $vc-info/member-list/member ) {
+                        if( not( contains( member-role, "*" ) ) ) {
+                            <target> "fpc" _ member-id;
+                        }
+                    }
+                }
+                else {
+                    /* Copy to non-local REs */
+                    for-each( $re-info/route-engine ) {
+                        if( jcs:empty( load-average-one ) ) {
+                            <target> "re" _ slot;
+                        }
+                    }
+                }
+            }
+    
+            /* Copy to non-local routing-engines */
+            if( count( $target-set/target ) >= 1 ) {
+                var $step-3-5 = " \n***********************************************\n" _
+                                   "* Step 3.5 of 4: Copying to other RE(s)...    *\n" _
+                                   "***********************************************";
+                expr jcs:output( $step-3-5 );
+            }
+            var $copy-results = csb:copy-to-other-routing-engines( $target-set );
+    
+            /* Do not go on because other routing-engines did not receive the file */
+            if( $copy-results/error ) {        
+            
+                /* If they already had the commit script enabled then rewrite the original */
+                if( $file-contents && $script-is-enabled ) {
+                    var $success = csb:revert-script( $file-contents );
+                    
+                    /* If successfully reverted, then try to copy to other REs so we can try to be synchronized */
+                    if( $success ) {
+                        expr jcs:output( " \n!!!Trying to copy original script to other REs..." );
+                        
+                        var $attempt = csb:copy-to-other-routing-engines( $target-set );
+                        
+                        /* Give extra warning if errors */
+                        if( $attempt/error ) {
+                            expr jcs:output("!!!Unable to fix script on other REs.  Please fix manually." );
+                        }
+                        else {
+                            expr jcs:output("!!!Successfully copied original script to other REs.");
+                        }
+                    }
+                }
+                
+                /* Unlock the configuration! */
+                var $absorb-results = jcs:execute( $connection, "unlock-configuration" );
+
+                expr jcs:output( " \n!!!Unable to apply commit script, returning to main menu." );
+                
+                expr csb:pause-for-enter();
+    
+                /* Go back to main */
+                expr csb:main-menu();
+            }
+            /* Time to alter the configuration */
+            else {
+                /* Only display if we did step 3.5 */
+                if( count( $target-set/target ) >= 1 ) {
+                    expr jcs:output("[Success]");
+                }
+    
+                /* Enable the commit script in the configuration */
+                var $step-4 =   " \n***********************************************\n" _
+                                   "* Step 4 of 4: Enabling script and committing *\n" _
+                                   "***********************************************";
+                expr jcs:output( $step-4 );
+    
+                var $load-configuration-rpc = {
+                    <load-configuration> {
+                        <configuration> {
+                            <system> {
+                                <scripts active="active"> {
+                                    <commit active="active"> {
+                                        <file active="active"> {
+                                            <name> $script-name;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                /* Load configuration */
+                var $load-results = jcs:execute( $connection, $load-configuration-rpc );
+                if( $load-results/..//xnm:error ) {
+                    expr jcs:output(  "!!!Could not load configuration change." );
+                    for-each( $load-results/..//xnm:error ) {
+                        if( token ) {
+                            expr jcs:output( "Token: ", token );
+                        }
+                        expr jcs:output( "Error: ", message );
+                    }
+                    /* Do an unlock to make sure we don't hold onto it */
+                    var $absorb-results = jcs:execute( $connection, "unlock-configuration" );
+                    
+                    /* If they already had the commit script enabled then rewrite the original */
+                    if( $file-contents && $script-is-enabled ) {
+                        var $success = csb:revert-script( $file-contents );
+                        
+                        /* If successfully reverted, then try to copy to other REs so we can try to be synchronized */
+                        if( $success ) {
+                            expr jcs:output( " \n!!!Trying to copy original script to other REs..." );
+                            
+                            var $attempt = csb:copy-to-other-routing-engines( $target-set );
+                            
+                            /* Give extra warning if errors */
+                            if( $attempt/error ) {
+                                expr jcs:output("!!!Unable to fix script on other REs.  Please fix manually." );
+                            }
+                            else {
+                                expr jcs:output("!!!Successfully copied original script to other REs.");
+                            }
+                        }
+                    }
+                        
+                    expr jcs:output( " \n!!!Unable to apply commit script, returning to main menu." );
+                    
+                    expr csb:pause-for-enter();
+        
+                    /* Go back to main */
+                    expr csb:main-menu();
+                }
+                /* Otherwise, configuration has been successfully loaded */
+                else {
+                    /* Commit configuration */
+                    var $commit-configuration-rpc = {
+                        <commit-configuration> {
+                            /* Synchronize multi-routing-engine systems */
+                            if( count( $target-set/target ) >= 1 ) {
+                                <synchronize>;
+                            }
+                        }
+                    }
+                    var $commit-results = jcs:execute( $connection, $commit-configuration-rpc );
+                    if( $commit-results/..//xnm:error ) {
+                        expr jcs:output( "!!!Could not commit configuration" );
+                        for-each( $commit-results/..//xnm:error ) {
+                            if( token ) {
+                                expr jcs:output( "Token: ", token );
+                            }
+                            if( edit-path ) {
+                                expr jcs:output( edit-path );
+                            }
+                            if( statement ) {
+                                expr jcs:output( statement );
+                            }
+                            expr jcs:output( "Error: ", message );
+                        }
+                        var $absorb-results = jcs:execute( $connection, "unlock-configuration" );
+                        
+                        /* If they already had the commit script enabled then rewrite the original */
+                        if( $file-contents && $script-is-enabled ) {
+                            var $success = csb:revert-script( $file-contents );
+                            
+                            /* If successfully reverted, then try to copy to other REs so we can try to be synchronized */
+                            if( $success ) {
+                                expr jcs:output( " \n!!!Trying to copy original script to other REs..." );
+                                
+                                var $attempt = csb:copy-to-other-routing-engines( $target-set );
+                                
+                                /* Give extra warning if errors */
+                                if( $attempt/error ) {
+                                    expr jcs:output("!!!Unable to fix script on other REs.  Please fix manually." );
+                                }
+                                else {
+                                    expr jcs:output("!!!Successfully copied original script to other REs.");
+                                }
+                            }
+                        }
+                            
+                        expr jcs:output( " \n!!!Unable to apply commit script, returning to main menu." );
+                        
+                        expr csb:pause-for-enter();
+            
+                        /* Go back to main */
+                        expr csb:main-menu();
+                        
+                    }
+                    /* Commit is done and successful...unlock and report success... */
+                    else {
+                        /* Unlock configuration */
+                        var $unlock-results = jcs:execute( $connection, "unlock-configuration" );
+                        if( $unlock-results/..//xnm:error ) {
+                            expr jcs:output("!!!Could not unlock configuration.");
+                            for-each( $unlock-results/..//xnm:error ) {
+                                expr jcs:output( "Error", message );
+                            }
+                        }
+                        
+                        /* Report success whether it was unlocked successfully or not */
+                        expr jcs:output("[Success]");
+                    
+                        /* Final success message */
+                        expr jcs:output(" \n", $script-name, " was applied successfully.\nExiting to Junos prompt." );
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+/*
+ * Assembles the script text based on the selections
+ */
+<func:function name="csb:build-script"> {
+
+    /* Retrieve the current selections */
+    var $selections = csb:get-violation-selections();
+
+    /* Assemble the parts */
+
+    /* Basic boilerplate header + needed variables */
+    var $header =   "/* Created by Commit Script Builder version " _ $script-version _ ".  Designed for Junos 10.0+ */\n" _
+                    "version 1.0;\n\n" _
+                    "ns junos = 'http://xml.juniper.net/junos/*/junos';\n"_
+                    "ns xnm = 'http://xml.juniper.net/xnm/1.1/xnm';\n"_
+                    "ns jcs = 'http://xml.juniper.net/junos/commit-scripts/1.0';\n\n"_
+                    "import '../import/junos.xsl';\n\n" _
+                    "var $error = 'Error';\n"_
+                    "var $warning = 'Warning';\n"_
+                    "var $syslog = 'Syslog';\n"_
+                    "var $warning-and-syslog = 'Warning & Syslog';\n"_
+                    "var $change = 'Auto-Correct';\n\n";
+
+    /* Record current selections within the commit script */                    
+    var $settings = {
+        expr "var $settings = {\n";
+        
+        for-each( $sorted-violations/violation ) {
+            var $template-name = template-name;
+            /* Do not record do-nothing actions to the script, these could be present because they have entered a specific value but no action */
+            var $selected-violation = $selections/violation[template-name == $template-name][action != $do-nothing];
+            if( $selected-violation ) {
+                var $action = $selected-violation/action;
+                expr "    <violation> {\n";
+                expr "        <template-name> '" _  $template-name _ "';\n";
+                expr "        <action> '" _  $action _ "';\n";
+                /* Add data if present */
+                if( $selected-violation/data ) {
+                    expr "        <data> '" _  $selected-violation/data _ "';\n";
+                }
+                expr "    }\n";
+            }
+        }
+        expr "}\n\n";        
+    }
+    
+    /* If there are any change actions then add the standard change templates */
+    var $change-templates = {
+        if( $selections/violation[action == $change] ) {
+            expr csb:get-change-templates();
+        }
+    }
+
+    /* Create match configuration template that calls all the desired templates */
+    var $main-template = {
+        expr "match configuration {\n";
+    
+        for-each( $sorted-violations/violation ) {
+            var $template-name = template-name;
+            /* Do not record do-nothing actions to the script, these could be present because they have entered a specific value but no action */
+            var $selected-violation = $selections/violation[template-name == $template-name][action != $do-nothing];
+            if( $selected-violation ) {
+                var $action = $selected-violation/action;
+                var $data = $selected-violation/data;
+                if( $data ) {
+                    expr "    call " _ template-name _ "( $action = '" _ $action _ "', $data = '" _ $data  _  "' );\n";
+                }
+                else {
+                    expr "    call " _ template-name _ "( $action = '" _ $action _ "' );\n";
+                }
+            }
+        }
+        
+        expr "}\n\n";
+    }
+
+    /* Write all the desired templates */    
+    var $templates = {
+        for-each( $sorted-violations/violation ) {
+            var $template-name = template-name;
+            /* Do not record do-nothing actions to the script, these could be present because they have entered a specific value but no action */
+            var $selected-violation = $selections/violation[template-name == $template-name][action != $do-nothing];
+            if( $selected-violation ) {
+
+                expr "template " _ template-name _ "( $action, $data = /null ) {\n";
+                expr template-code _ "\n";
+                expr "}\n\n";
+            }
+        }
+    }
+
+    var $assembled = translate( concat( $header, $settings, $main-template, $templates, $change-templates), "'", $quote );
+    <func:result select="$assembled">;
+}
+
+
+/*
+ * Copy commit script from local routing-engine to all other routing-engines
+ */
+<func:function name="csb:copy-to-other-routing-engines"> {
+    param $target-set;
+
+    /* Record any errors in any of the copy operations */
+    var $results := {
+        for-each( $target-set/target ) {
+        
+            expr jcs:output( "-Copying script to ", ., "..." );
+            
+            var $file-copy-rpc = {
+                <file-copy> {
+                    <source> $directory _ $script-name;
+                    <destination> . _ ":" _ $directory _ $script-name;
+                }
+            }
+            /* 
+             * Use jcs:invoke instead of jcs:execute in case the connection has failed
+             * and the script is recovering.
+             */
+            var $rpc-results = jcs:invoke( $file-copy-rpc );
+            
+            /* Report error messages that occurred */
+            if( $rpc-results/..//xnm:error ) {
+            
+                expr jcs:output( "!!!Error copying script to ", . );
+                for-each( $rpc-results/..//xnm:error ) {
+                    expr jcs:output( "Error:", message );
+                }
+                <error>;
+            }
+        }
+    }
+    
+    <func:result select="$results">;
+}
+
+
+/*
+ * Replaces the change file with the original file
+ */
+<func:function name="csb:revert-script"> {
+    param $file-contents;
+
+    expr jcs:output("\n!!!Trying to revert to original commit script." );
+
+    /* Remove the extra newline */
+    var $contents = {
+        if( starts-with( $file-contents, "\n" ) ) {
+            expr substring( $file-contents, 2 );
+        }
+        else {
+            expr $file-contents;
+        }
+    }
+    var $revert-results = csb:write-script-file( $contents );
+    
+    /* Report any errors with reverting... */
+    if( $revert-results/..//xnm:error ) {
+    
+        expr jcs:output( "!!!Error reverting to original script.");
+        for-each( $revert-results/..//xnm:error ) {
+            expr jcs:output( "Error:", message );
+        }
+        <func:result select="false()">;
+    }
+    else {
+        expr jcs:output( "!!!Successfully reverted to original commit script.");
+        <func:result select="true()">;
+    }
+}
+
+
+/*
+ * Display all current selections
+ */
+<func:function name="csb:show-logic"> {
+    
+    /* Retrieve the current selections */
+    var $selections = csb:get-violation-selections();
+    
+    var $prompt = {
+        expr " \nConfiguration Violation Responses:\n";
+        expr "----\n";
+ 
+        /* Retrieve all selected violations and their actions */
+        for-each( $sorted-violations/violation ) {
+            var $template-name = template-name;
+            var $selected-violation = $selections/violation[template-name == $template-name ];
+            if( $selected-violation ) {
+                expr "If: " _ synopsis _ "\n";
+                expr "Then: " _ $action-set/action[name == $selected-violation/action ]/string _ "\n";
+                if( $selected-violation/data ) {
+                    expr "Data: " _ $selected-violation/data _ "\n";
+                }
+                expr "----\n";
+            }
+        }
+        expr " \n--Press Enter to Continue--";
+    }
+    expr csb:pause-for-enter( $prompt );
+}
+
+/*
+ * Display current customized script
+ */
+<func:function name="csb:show-script"> {
+    
+    /* Retrieve the current text */
+    var $customized-script = csb:build-script();
+
+    var $element := {
+        <element> $customized-script;
+    }
+    var $lines = jcs:break-lines( $element/element );
+    
+    expr jcs:output( " \nCustomized Commit Script Code:" );
+    expr jcs:output( " \n------------------------------" );
+    
+    /* Display line by line so we don't run into PR 473816 */
+    for-each( $lines ) {
+        expr jcs:output( . );
+    }
+    
+    expr csb:pause-for-enter();
+}
+
+
+/*
+ * Display prompt and then pause for enter.  Use jcs:get-secret so other input
+ * isn't displayed.
+ */
+<func:function name="csb:pause-for-enter"> {
+    param $prompt = "--Press Enter to Continue--";
+    
+    var $absorb = jcs:get-secret( $prompt );
+}
+
+
+/*
+ * Retrieves the alphabetical category set
+ */
+<func:function name="csb:get-category-set"> {
+
+    var $set = set:distinct( $sorted-violations/violation/category );
+    
+    /* Sort alphabetically */
+    var $sorted-set := {
+        for-each( $set ) {
+            <xsl:sort>;
+            <category> .;
+        }
+    }
+    var $adjusted-set = $sorted-set/category;
+    
+    <func:result select="$adjusted-set">;
+}
+
+
+/*
+ * Returns the violation set in sorted order 
+ */
+<func:function name="csb:get-sorted-violations"> {
+    var $sorted-set := {
+        for-each( $violations/violation ) {
+            <xsl:sort select="synopsis">;
+            copy-of .;
+        }
+    }
+    <func:result select="$sorted-set">;
+}
+ 
+ 
+/*
+ * clear-instance - Removes the instance from the MIB
+ */
+<func:function name="csb:clear-instance"> {
+    param $instance;
+    
+    /* Build RPC and invoke it */ 
+    var $rpc = {
+        <request-snmp-utility-mib-clear> {
+            <instance> $instance;
+            <object-type> "string";
+        }
+    }
+    var $results = jcs:execute($connection, $rpc );
+}
+
+
+/*
+ * Configuration violation is no longer needed, remove it
+ */
+<func:function name="csb:delete-violation-action"> {
+    param $template-name;
+    
+    expr csb:clear-instance( concat( $mib-violation-prefix, $template-name ) );
+    expr csb:clear-instance( concat( $mib-data-prefix, $template-name ) );
+}
+
+
+/*
+ * set-instance - Sets the instance in the MIB
+ */
+<func:function name="csb:set-instance"> {
+    param $instance;
+    param $value;
+    
+    /* Build RPC and invoke it */ 
+    var $rpc = {
+        <request-snmp-utility-mib-set> {
+            <instance> $instance;
+            <object-type> "string";
+            <object-value> $value;
+        }
+    }
+    var $results = jcs:execute($connection, $rpc );
+}
+
+
+/*
+ * Record configuration violation action and data (if needed)
+ */
+<func:function name="csb:record-violation-action"> {
+    param $template-name;
+    param $action;
+    /* Defaults to empty node-set */ 
+    param $data = null;
+    
+    expr csb:set-instance( concat( $mib-violation-prefix, $template-name), $action );
+    /* If data is provided then record it also */
+    if( string-length( $data ) > 0 ) {
+        expr csb:set-instance( concat( $mib-data-prefix, $template-name), $data );
+    }
+}
+
+
+/*
+ * walk-mib - Walks the Utility MIB in ascii mode
+ */
+<func:function name="csb:walk-mib"> {
+    param $oid;
+
+    /* Gather walk output */
+    var $walk-rpc = {
+        <walk-snmp-object> {
+            <snmp-object-name> $oid;
+            <ascii>;
+        }
+    }
+    var $mib-objects = jcs:execute($connection, $walk-rpc );
+
+    <func:result select="$mib-objects">;
+}
+
+
+/*
+ * get-oid - Gets the object value
+ */
+<func:function name="csb:get-oid"> {
+    param $oid;
+
+    /* Gather walk output */
+    var $get-rpc = {
+        <get-snmp-object> {
+            <snmp-object-name> $oid;
+        }
+    }
+    var $mib-object = jcs:execute($connection, $get-rpc );
+
+    <func:result select="$mib-object">;
+}
+
+
+/*
+ * Retrieve violations from MIB and convert into a more usable format:
+ * <violation> {
+ *     <template-name>;
+ *     <action>;
+ *     <data>;
+ * }
+ */
+<func:function name="csb:get-violation-selections"> {
+
+    /* Raw snmp results */
+    var $snmp-objects = csb:walk-mib( $mib-violation-oid );
+    
+    var $selection-set := {
+        for-each( $snmp-objects/snmp-object ) {
+            <violation> {
+                var $template-name = substring-after( translate( substring-after( name, "." ), $quote, "" ), $mib-violation-prefix ); 
+                <template-name> $template-name;
+                <action> object-value;
+                
+                /* Check for data object */
+                var $data-object = csb:get-oid( concat( $mib-data-oid, ".", csb:translate-string-to-oid( $template-name ) ) );
+                if( $data-object/snmp-object/object-value ) {
+                    <data> $data-object/snmp-object/object-value;
+                }
+            }
+        }
+    }
+    
+    <func:result select="$selection-set">;
+}
+
+
+/* 
+ * Translate string to oid form 
+ */
+<func:function name="csb:translate-string-to-oid"> {
+    param $string;
+
+    var $characters = str:tokenize( $string, "" );
+    
+    var $oid-string = {
+        for-each( $characters ) {
+    
+            /* Convert the characters to their ASCII code equivalent */
+            var $char = .;
+            /* Use substring to workaround PR 436699 */
+            var $ascii-char = $ascii/char[ substring( sym, 1, 1 ) == $char ];
+            expr $ascii-char/num;
+            if( position() != last() ) {
+                expr ".";
+            }
+        }
+    }
+    
+    /* Return the full string */
+    <func:result select="$oid-string">;
+}
+
+
+/*
+ * Clear out the Utility MIB of all script values
+ */
+<func:function name="csb:clear-all-instances"> {
+    
+    /* First walk the MIB and gather all instances */
+    var $walk-violation-rpc = {
+        <walk-snmp-object> {
+            <snmp-object-name> $mib-violation-oid;
+            <ascii>;
+        }
+    }
+    var $mib-violation-objects = jcs:execute($connection, $walk-violation-rpc );
+    var $walk-data-rpc = {
+        <walk-snmp-object> {
+            <snmp-object-name> $mib-data-oid;
+            <ascii>;
+        }
+    }
+    var $mib-data-objects = jcs:execute($connection, $walk-data-rpc );
+    
+    /* Combine both */
+    var $mib-objects = $mib-violation-objects | $mib-data-objects;
+
+    /* Clear all instances */
+    for-each( $mib-objects/snmp-object ) {
+        /* Remove the quotes */
+        var $name = translate( name, $quote, "" );
+        var $type = csb:get-object-type( substring-before( $name, "." ) );
+        var $instance = substring-after( $name, "." );
+        /* Only remove if it has a valid type */
+        if( string-length( $type ) > 0 ) {
+            /* Build RPC and invoke it */ 
+            var $rpc-clear = {
+                <request-snmp-utility-mib-clear> {
+                    <instance> $instance;
+                    <object-type> $type;
+                }
+            }
+            var $results = jcs:execute($connection, $rpc-clear );
+        }
+    }
+}
+
+
+/*
+ * get-object-type - Converts MIB string type name into object-type
+ *
+ * $mib-type-name - jnxUtilStringValue, jnxUtilCounter32Value, jnxUtilIntegerValue,
+ * jnxUtilUintValue, or unxUtilCounter64Value
+ *
+ * Returns the object-type in the result tree
+ */
+<func:function name="csb:get-object-type"> {
+    param $mib-type-name;
+    
+    var $object-type = {
+        if( $mib-type-name == "jnxUtilStringValue" ) {
+            expr "string";
+        }
+        else if( $mib-type-name == "jnxUtilCounter32Value" ) {
+            expr "counter";
+        }
+        else if( $mib-type-name == "jnxUtilIntegerValue" ) {
+            expr "integer";
+        }
+        else if( $mib-type-name == "jnxUtilCounter64Value" ) {
+            expr "counter64";
+        }
+        else if( $mib-type-name == "jnxUtilUintValue" ) {
+            expr "counter";
+        }
+        else {
+            expr jcs:output("ERROR: Invalid type name: ", $mib-type-name );
+        }
+    }
+    <func:result select="$object-type">;
+}
+
+
+/* 
+ * Build-line - Builds a single string of - of length $length and returns in the
+ * result tree.
+ */
+template build-line( $length, $character ) {
+    if( $length > 0 ) {
+        expr $character;
+        call build-line( $length = $length - 1, $character );
+    }
+}
+
+
+/* 
+ * Workaround for PR 436699 - Returns the " character 
+ */
+<func:function name="csb:get-quote-char"> {
+
+    var $quote-xml = <quote> "\"";
+    var $quote-char = {
+        if( string-length( $quote-xml ) == 2 ) {
+            expr substring( $quote-xml, 2, 1 );
+        }
+        else {
+            expr $quote-xml;
+        }
+    }
+    <func:result select="$quote-char">;
+}
+
+
+/*
+ * Most Junos devices can reference their commit script directory via 
+ * /var/run/scripts/commit, but EX lack that directory (in current versions) and
+ * use /config/db/scripts/commit by default.  Retrieve the correct directory
+ * for the platform.
+ */
+<func:function name="csb:get-directory"> {
+    
+    /* Script directory differs based on type */
+    var $directory = {
+        if( starts-with( $product, "ex" ) ) {
+            expr "/config/db/scripts/commit/";
+        }
+        else {
+            expr "/var/run/scripts/commit/";
+        }
+    }
+    <func:result select="$directory">;
+}
+
+
+/* 
+ * Only allow users with the maintenance permission bit to run the script.
+ */
+<func:function name="csb:verify-authorization"> {
+
+    var $maintenance = jcs:execute( $connection, "get-authorization-information" )/user-permission-list/user-permission-entry[permission-type == "maintenance"];
+    if( jcs:empty( $maintenance ) ) {
+        <xsl:message terminate="yes"> "Commit Script Builder requires 'maintenance' user account permission.";
+    }
+}
+
+
+/*
+ * Workaround to PR 473851.  XML cannot handle control characters.  Nuking them from
+ * the input, after detecting them, is the safest approach.
+ */
+<func:function name="csb:safe-get-input"> {
+    param $prompt;
+    
+    var $word = jcs:get-input( $prompt );
+    
+    /* Nuke all non-whitespace */
+    var $word-run1 = translate( $word, $valid-ascii, "" );
+    
+    /* 
+     * Nuke white-space - only look for tabs and spaces since there will be no
+     * newlines or carriage returns in this input
+     */
+    var $word-run2 = translate( $word-run1, " \t", "" );
+    
+    /* If anything is left, then it isn't valid ascii, so return blank */
+    if( string-length( $word-run2 ) > 0 ) {
+        expr jcs:output("Control characters are not supported");
+        var $blank = "";
+        <func:result select ="$blank">;
+    }
+    else {
+        <func:result select ="$word">;
+    }
+}
+
+
+/*
+ * Build a string of all the ascii characters
+ */
+<func:function name="csb:get-valid-ascii"> {
+    var $valid-ascii-string = {
+        for-each( $ascii/char ) {
+            /* Due to PR 436699 */
+            if( string-length( sym ) > 1 ) {
+                expr substring( sym, 2 );
+            }
+            else {
+                expr sym;
+            }
+        }
+    }
+    
+    <func:result select="$valid-ascii-string">;
+}
+
+
+/*
+ * csb:check-version - Checks if Junos version is at the minimum version or above, 
+ * displays the failure message and exits if it is not.
+ *
+ * Arguments:
+ *     $minimum-version - [Required] - Minimum version string - like 9.6
+ *     $failure-message - [Required] - Failure message for insufficient version
+ */
+<func:function name="csb:check-version"> {
+    param $minimum-version;
+    param $failure-message;
+
+    if( $minimum-version > $version ) {
+        <xsl:message terminate="yes"> $failure-message;
+    }
+}
+
+
+/*
+ * Returns the string from the standard change templates that are included in
+ * the generated commit script anytime it wants to do changes.
+ */
+<func:function name="csb:get-change-templates"> {
+    var $string = "
+template delete-node( $node ) {
+    /* Is the current node inherited? */
+    var $group = $node/@junos:group;
+    var $change := {
+        var $content = {
+            <xsl:element name=name( $node )> {
+                <xsl:attribute name='delete'> {
+                    expr 'delete';
+                }
+                /* Add any string content if present */
+                if( count( $node/* ) == 0 && string-length( $node ) > 0 ) {
+                    expr $node;
+                }
+            }
+        }
+        call jcs:emit-change( $dot = $node/.., $content );
+    }
+    /* Not inherited */
+    if( jcs:empty( $group ) ) {
+        /* Copy change to result tree */
+        copy-of $change/change;
+    }
+    else {
+        /* Delete it within the configuration group */
+        /* Build custom <change> element */
+        <change> {
+            <groups> {
+                <name> $group;
+                copy-of $change/change/*;
+            }
+        }
+    }
+    /* Get configuration for their hierarchy */
+    var $configuration-rpc = {
+        <get-configuration database='candidate'> {
+            <configuration> {
+                <apply-groups>;
+                var $top-level-element-name = name( $change/change/*);
+                <xsl:element name=$top-level-element-name>;
+            }
+        }
+    }
+    var $configuration = jcs:invoke( $configuration-rpc );
+    /* Gather all groups that inherit within this top-level hierarchy */
+    var $groups = $configuration//apply-groups;
+    /* 
+     * Delete the node from any other groups that it might inherit from, skip
+     * the group that it currently inherits from because that is already gone
+     */
+    for-each( $groups[ jcs:empty( $group ) || . != $group ][ jcs:empty( @inactive ) ] ) {
+        var $name = .;
+        /* Build the hierarchy of the node by creating a fake change */
+        var $node-hierarchy := {
+            var $content = {
+                var $node-name = name( $node );
+                <xsl:element name=$node-name>;
+            }
+            call jcs:emit-change( $dot = $node/.., $content );
+        }
+        /* 
+         * Request the node from within the group - returns no config if the
+         * node is not present
+         */
+        var $group-config-rpc = {
+            <get-configuration database='candidate'> {
+                <configuration> {
+                    <groups> {
+                        <name> $name;
+                        copy-of $node-hierarchy/change/*;
+                    }
+                }
+            }
+        }
+        var $config-in-group = jcs:invoke( $group-config-rpc );
+        /* If it exists then delete it - check for the name of the element and its value */
+        if( $config-in-group//*[name() == name( $node )][ count( $node/* ) > 0 || . == $node ]) {
+            <change> {
+                <groups> {
+                    <name> $name;
+                    copy-of $change/change/*;
+                }
+            }
+        }
+    }
+}\n\n";
+        
+    <func:result select="$string">;
+}
+
+
+/*
+ * This is a listing of all the visible ascii characters.  It is used to detect if any control
+ * characters are present in the input strings.  The xml:space="preserve" attribute
+ * is used on the whitespace nodes because XML/XSLT would strip the whitespace by
+ * default, making it worthless.
+ *
+ * Note that because of PR 436699 that number 34 is actually the two character string
+ * "\"" rather than a single escaped quote character.
+ */
+var $ascii := {
+<char> { <num> 32; <sym xml:space="preserve"> " "; }<char> { <num> 33; <sym> "!"; }<char> { <num> 34; <sym> "\""; }<char> { <num> 35; <sym> "#"; }<char> { <num> 36; <sym> "$"; }
+<char> { <num> 37; <sym> "%"; }<char> { <num> 38; <sym> "&"; }<char> { <num> 39; <sym> "'"; }<char> { <num> 40; <sym> "("; }<char> { <num> 41; <sym> ")"; }
+<char> { <num> 42; <sym> "*"; }<char> { <num> 43; <sym> "+"; }<char> { <num> 44; <sym> ","; }<char> { <num> 45; <sym> "-"; }<char> { <num> 46; <sym> "."; }
+<char> { <num> 47; <sym> "/"; }<char> { <num> 48; <sym> "0"; }<char> { <num> 49; <sym> "1"; }<char> { <num> 50; <sym> "2"; }<char> { <num> 51; <sym> "3"; }
+<char> { <num> 52; <sym> "4"; }<char> { <num> 53; <sym> "5"; }<char> { <num> 54; <sym> "6"; }<char> { <num> 55; <sym> "7"; }<char> { <num> 56; <sym> "8"; }
+<char> { <num> 57; <sym> "9"; }<char> { <num> 58; <sym> ":"; }<char> { <num> 59; <sym> ";"; }<char> { <num> 60; <sym> "<"; }<char> { <num> 61; <sym> "="; } /* >" */
+<char> { <num> 62; <sym> ">"; }<char> { <num> 63; <sym> "?"; }<char> { <num> 64; <sym> "@"; }<char> { <num> 65; <sym> "A"; }<char> { <num> 66; <sym> "B"; }
+<char> { <num> 67; <sym> "C"; }<char> { <num> 68; <sym> "D"; }<char> { <num> 69; <sym> "E"; }<char> { <num> 70; <sym> "F"; }<char> { <num> 71; <sym> "G"; }
+<char> { <num> 72; <sym> "H"; }<char> { <num> 73; <sym> "I"; }<char> { <num> 74; <sym> "J"; }<char> { <num> 75; <sym> "K"; }<char> { <num> 76; <sym> "L"; }
+<char> { <num> 77; <sym> "M"; }<char> { <num> 78; <sym> "N"; }<char> { <num> 79; <sym> "O"; }<char> { <num> 80; <sym> "P"; }<char> { <num> 81; <sym> "Q"; }
+<char> { <num> 82; <sym> "R"; }<char> { <num> 83; <sym> "S"; }<char> { <num> 84; <sym> "T"; }<char> { <num> 85; <sym> "U"; }<char> { <num> 86; <sym> "V"; }
+<char> { <num> 87; <sym> "W"; }<char> { <num> 88; <sym> "X"; }<char> { <num> 89; <sym> "Y"; }<char> { <num> 90; <sym> "Z"; }<char> { <num> 91; <sym> "["; }
+<char> { <num> 92; <sym> "\\"; }<char> { <num> 93; <sym> "]"; }<char> { <num> 94; <sym> "^"; }<char> { <num> 95; <sym> "_"; }<char> { <num> 96; <sym> "`"; }
+<char> { <num> 97; <sym> "a"; }<char> { <num> 98; <sym> "b"; }<char> { <num> 99; <sym> "c"; }<char> { <num> 100; <sym> "d"; }<char> { <num> 101; <sym> "e"; }
+<char> { <num> 102; <sym> "f"; }<char> { <num> 103; <sym> "g"; }<char> { <num> 104; <sym> "h"; }<char> { <num> 105; <sym> "i"; }<char> { <num> 106; <sym> "j"; }
+<char> { <num> 107; <sym> "k"; }<char> { <num> 108; <sym> "l"; }<char> { <num> 109; <sym> "m"; }<char> { <num> 110; <sym> "n"; }<char> { <num> 111; <sym> "o"; }
+<char> { <num> 112; <sym> "p"; }<char> { <num> 113; <sym> "q"; }<char> { <num> 114; <sym> "r"; }<char> { <num> 115; <sym> "s"; }<char> { <num> 116; <sym> "t"; }
+<char> { <num> 117; <sym> "u"; }<char> { <num> 118; <sym> "v"; }<char> { <num> 119; <sym> "w"; }<char> { <num> 120; <sym> "x"; }<char> { <num> 121; <sym> "y"; }
+<char> { <num> 122; <sym> "z"; }<char> { <num> 123; <sym> "{"; }<char> { <num> 124; <sym> "|"; }<char> { <num> 125; <sym> "}"; }<char> { <num> 126; <sym> "~"; }
+}
+
+
+/*
+ * All available violations.  New violations can be added easily by appending to the existing list.
+ * Each violation must have one or more categories, a synopsis, a description, one or more actions,
+ * a template name, and template code.  The change-description is only required when changes are
+ * one of the available actions.
+ *
+ * The template code should use ' instead of \" due to PR 436699, the script will translate all ' to
+ * " as part of the commit script writing process.
+ *
+ * Template names must be unique.
+ */
+var $violations := {
+    <violation> {
+        <category> "System";
+        <category> "Access";
+        <synopsis> "SSH is not enabled";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|The ssh protocol is not currently enabled under [edit system services].  If |\n" _
+                      "|Auto-Correct is selected then ssh will be added as a system service.        |";
+        <change-description> "Enable ssh in the configuration";
+        <action> $all;
+        <template-name> "check-ssh-is-enabled";
+        <template-code> "    
+    /* Check for violation */
+    var $missing-node = system/services/ssh;
+    if( jcs:empty( $missing-node ) ) {
+        /* Message used for error, warning, or syslog */
+        var $message = 'ssh is not enabled';
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+        /* Configuration Change */
+        if( $action == $change ) {
+            /* Node is missing, add to configuration */
+            <change> {
+                <system> {
+                    <services> {
+                        <ssh>;
+                    }
+                }
+            }
+            var $change-message = 'Automatically enabled ssh protocol';
+            <syslog> {
+                <message> $change-message;
+            }
+            <xnm:warning> {
+                <message> $change-message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "System";
+        <category> "Access";
+        <synopsis> "SSH version 2 is not enabled/required";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|Either the ssh protocol is not currently enabled or else version 2 is not   |\n" _
+                      "|required.  If Auto-Correct is selected then ssh will be enabled as a system |\n" _
+                      "|service with only protocol-version 2 allowed.                               |";
+        <change-description> "Enable ssh and require version 2";
+        <action> $all;
+        <template-name> "check-ssh-v2-is-enabled";
+        <template-code> "    
+    /* Check for violation */
+    var $missing-node = system/services/ssh/protocol-version[ . == 'v2'];
+    var $bad-node = system/services/ssh/protocol-version[. == 'v1'];
+    if( jcs:empty( $missing-node ) || $bad-node ) {
+        /* Message used for error, warning, or syslog */
+        var $message = 'ssh is not enabled or version 2 is not required';
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+        /* Configuration Change */
+        if( $action == $change ) {
+            /* Node is missing, add to configuration */
+            if( jcs:empty( $missing-node ) ) {
+                <change> {
+                    <system> {
+                        <services> {
+                            <ssh> {
+                                <protocol-version> 'v2';
+                            }
+                        }
+                    }
+                }
+            }
+            if( $bad-node ) {
+                call delete-node( $node = $bad-node );
+            }
+            var $change-message = 'Automatically enabled ssh protocol with v2 required';
+            <syslog> {
+                <message> $change-message;
+            }
+            <xnm:warning> {
+                <message> $change-message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "System";
+        <category> "Access";
+        <synopsis> "Telnet is enabled";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|The telnet protocol is enabled under [edit system services] or is inherited |\n" _
+                      "|through a configuration group.  If Auto-Correct is selected then telnet will|\n" _
+                      "|be removed from the [edit system services] hierarchy as well as any groups  |\n" _
+                      "|that inherit within the [edit system] hierarchy.                            |";
+        <change-description> "Delete telnet protocol from configuration";
+        <action> $all;
+        <template-name> "check-telnet-is-enabled";
+        <template-code> "    
+    /* Check for violation */
+    var $bad-node = system/services/telnet;
+    if( $bad-node ) {
+        /* Message used for error, warning, or syslog */
+        var $message = name( $bad-node ) _ ' is enabled';
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+                call jcs:edit-path( $dot = $bad-node/.. );
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+                call jcs:edit-path( $dot = $bad-node/.. );
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+        /* Configuration Change */
+        if( $action == $change ) {
+            /* Bad node is present, delete it from the configuration */
+            if( $bad-node ) {
+                call delete-node( $node = $bad-node );
+            }
+            var $change-message = 'Automatically removed ' _ name( $bad-node ) _ ' protocol';
+            <syslog> {
+                <message> $change-message;
+            }
+            <xnm:warning> {
+                <message> $change-message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "System";
+        <category> "Access";
+        <synopsis> "FTP is enabled";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|The ftp protocol is enabled under [edit system services] or is inherited    |\n" _
+                      "|through a configuration group.  If Auto-Correct is selected then ftp will be|\n" _
+                      "|removed from the [edit system services] hierarchy as well as any groups that|\n" _
+                      "|inherit within the [edit system] hierarchy.                                 |";
+        <change-description> "Delete ftp protocol from configuration";
+        <action> $all;
+        <template-name> "check-ftp-is-enabled";
+        <template-code> "    
+    /* Check for violation */
+    var $bad-node = system/services/ftp;
+    if( $bad-node ) {
+        /* Message used for error, warning, or syslog */
+        var $message = name( $bad-node ) _ ' is enabled';
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+                call jcs:edit-path( $dot = $bad-node/.. );
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+                call jcs:edit-path( $dot = $bad-node/.. );
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+        /* Configuration Change */
+        if( $action == $change ) {
+            /* Bad node is present, delete it from the configuration */
+            if( $bad-node ) {
+                call delete-node( $node = $bad-node );
+            }
+            var $change-message = 'Automatically removed ' _ name( $bad-node ) _ ' protocol';
+            <syslog> {
+                <message> $change-message;
+            }
+            <xnm:warning> {
+                <message> $change-message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "Scripts";
+        <synopsis> "Event script is not enabled";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|An event script that is referenced as an action in an event policy has not  |\n" _
+                      "|been enabled in [edit system scripts] or [edit event-options event-script]. |";
+        <action> $all-except-change;
+        <template-name> "check-event-script-is-not-enabled";
+        <template-code> "    
+    /* Save these hierarchy nodes */
+    var $event-options = event-options;
+    var $system = system;
+    /* Look for any referenced event scripts */
+    for-each( event-options/policy/then/event-script ) {
+        /* Record event-script name */
+        var $name = name;
+        /* Check if enabled in either location */
+        var $under-event-options = $event-options/event-script/file[name == $name];
+        var $under-system-scripts = $system/scripts/op/file[name == $name];
+        /* If it isn't enabled in either location then perform the action */
+        if( jcs:empty( $under-event-options ) and jcs:empty( $under-system-scripts ) ) {
+            var $message = 'Event script is not enabled.';
+            if( $action == $error ) {
+                <xnm:error> {
+                    call jcs:edit-path( $dot = ancestor::policy );
+                    call jcs:statement();
+                    <message> $message;
+                }
+            }
+            if( contains( $action, $warning ) ) {
+                <xnm:warning> {
+                    call jcs:edit-path( $dot = ancestor::policy );
+                    call jcs:statement();
+                    <message> $message;
+                }
+            }
+            if( contains( $action, $syslog ) ) {
+                <syslog> {
+                    <message> 'Event script ' _ name _ ' is not enabled';
+                }
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "Interfaces";
+        <category> "lo0.0";
+        <category> "Firewalls";
+        <category> "Security";
+        <synopsis> "Missing lo0.0 IPv4 input firewall filter";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|No IPv4 input filter has been configured for the lo0.0 interface.  One needs|\n" _
+                      "|to be added to ensure the security of the Junos device.                     |";
+        <action> $all-except-change;
+        <template-name> "check-missing-lo0-0-input-ipv4-filter";
+        <template-code> "    
+    /* Check for violation */
+    var $missing-node = interfaces/interface[name == 'lo0']/unit[name == '0']/family/inet/filter/input;
+    if( jcs:empty( $missing-node ) ) {
+        /* Message used for error, warning, or syslog */
+        var $message = 'Missing lo0.0 input firewall filter';
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "Interfaces";
+        <category> "fxp0.0";
+        <category> "Firewalls";
+        <category> "Security";
+        <synopsis> "Missing fxp0.0 IPv4 input firewall filter";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|No IPv4 input filter has been configured for the fxp0.0 interface.  A filter|\n" _
+                      "|should be added to ensure the security of the Junos device.                 |";
+        <action> $all-except-change;
+        <template-name> "check-missing-fxp0-0-input-ipv4-filter";
+        <template-code> "    
+    /* Check for violation */
+    var $missing-node = interfaces/interface[name == 'fxp0']/unit[name == '0']/family/inet/filter/input;
+    if( jcs:empty( $missing-node ) ) {
+        /* Message used for error, warning, or syslog */
+        var $message = 'Missing fxp0.0 input firewall filter';
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "System";
+        <category> "Access";
+        <synopsis> "No user accounts have been configured";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|There are no user accounts configured in [edit system login].  It is best to|\n" _
+                      "|login with a user account instead of utilizing the 'root' account for normal|\n" _
+                      "|administrative tasks.                                                       |";
+        <action> $all-except-change;
+        <template-name> "check-no-user-accounts";
+        <template-code> "    
+    /* Check for violation */
+    var $missing-node = system/login/user;
+    if( jcs:empty( $missing-node ) ) {
+        /* Message used for error, warning, or syslog */
+        var $message = 'No user accounts have been configured';
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "System";
+        <category> "RADIUS";
+        <category> "Authentication";
+        <synopsis> "RADIUS server configured but RADIUS authentication not enabled";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|One or more RADIUS servers have been configured in [edit system], but these |\n" _
+                      "|servers are not yet used because [edit system authentication-order] does not|\n" _
+                      "|include the RADIUS protocol.  If Auto-Correct is selected then RADIUS will  |\n" _
+                      "|be automatically added to the beginning of the authentication-order.        |";
+        <change-description> "Add RADIUS to authentication-order";
+        <action> $all;
+        <template-name> "check-radius-server-not-in-authentication-order";
+        <template-code> "    
+    /* Check for violation */
+    var $missing-node = system/authentication-order[. == 'radius'];
+    var $radius-server-node = system/radius-server;
+    if( $radius-server-node && jcs:empty( $missing-node ) ) {
+        /* Message used for error, warning, or syslog */
+        var $message = 'RADIUS server(s) missing from authentication-order';
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+        /* Configuration Change */
+        if( $action == $change ) {
+            /* Add to authentication order */
+            <change> {
+                <system> {
+                    if( system/authentication-order ) {
+                        var $first = system/authentication-order[1];
+                        <authentication-order insert='before' name=$first> 'radius';
+                    }
+                    else {
+                        <authentication-order> 'radius';
+                    }
+                }
+            }
+            var $change-message = 'Automatically added RADIUS to authentication-order';
+            <syslog> {
+                <message> $change-message;
+            }
+            <xnm:warning> {
+                <message> $change-message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "System";
+        <category> "TACACS+";
+        <category> "Authentication";
+        <synopsis> "TACACS+ server configured but TACACS+ authentication not enabled";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|One or more TACACS+ servers have been configured in [edit system], but these|\n" _
+                      "|servers are not yet used because [edit system authentication-order] does not|\n" _
+                      "|include the TACACS+ protocol.  If Auto-Correct is selected then TACACS+ will|\n" _
+                      "|be automatically added to the beginning of the authentication-order.        |";
+        <change-description> "Add TACACS+ to authentication-order";
+        <action> $all;
+        <template-name> "check-tacplus-server-not-in-authentication-order";
+        <template-code> "
+    /* Check for violation */
+    var $missing-node = system/authentication-order[. == 'tacplus'];
+    var $tacplus-server-node = system/tacplus-server;
+    if( $tacplus-server-node && jcs:empty( $missing-node ) ) {
+        /* Message used for error, warning, or syslog */
+        var $message = 'TACACS+ server(s) missing from authentication-order';
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+        /* Configuration Change */
+        if( $action == $change ) {
+            /* Add to authentication order */
+            <change> {
+                <system> {
+                    if( system/authentication-order ) {
+                        var $first = system/authentication-order[1];
+                        <authentication-order insert='before' name=$first> 'tacplus';
+                    }
+                    else {
+                        <authentication-order> 'tacplus';
+                    }
+                }
+            }
+            var $change-message = 'Automatically added TACACS+ to authentication-order';
+            <syslog> {
+                <message> $change-message;
+            }
+            <xnm:warning> {
+                <message> $change-message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "System";
+        <category> "RADIUS";
+        <category> "Authentication";
+        <synopsis> "RADIUS authentication is enabled but no servers exist";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|RADIUS authentication is included in [edit system authentication-order] but |\n" _
+                      "|no RADIUS servers have been configured in [edit system].                    |";
+        <action> $all-except-change;
+        <template-name> "check-missing-radius-server";
+        <template-code> "    
+    /* Check for violation */
+    var $auth-node = system/authentication-order[. == 'radius'];
+    var $radius-server-node = system/radius-server;
+    if( jcs:empty( $radius-server-node ) && $auth-node ) {
+        /* Message used for error, warning, or syslog */
+        var $message = 'RADIUS authentication is enabled but no servers are configured';
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "System";
+        <category> "TACACS+";
+        <category> "Authentication";
+        <synopsis> "TACACS+ authentication is enabled but no servers exist";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|TACACS+ authentication is included in [edit system authentication-order] but|\n" _
+                      "|no TACACS+ servers have been configured in [edit system].                   |";
+        <action> $all-except-change;
+        <template-name> "check-missing-tacplus-server";
+        <template-code> "    
+    /* Check for violation */
+    var $auth-node = system/authentication-order[. == 'tacplus'];
+    var $tacplus-server-node = system/tacplus-server;
+    if( jcs:empty( $tacplus-server-node ) && $auth-node ) {
+        /* Message used for error, warning, or syslog */
+        var $message = 'TACACS+ authentication is enabled but no servers are configured';
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "BGP";
+        <category> "Routing";
+        <category> "Security";
+        <synopsis> "BGP peer lacks authentication";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|BGP peer does not have an authentication-key, authentication-key-chain, or  |\n" _
+                      "|IPSEC-SA configured at protocol, group, or neighbor level.                  |";
+        <action> $all-except-change;
+        <template-name> "check-missing-bgp-authentication";
+        <template-code> "
+    /* Check for violation */
+    for-each( protocols | routing-instances/instance/protocols | logical-systems/protocols | 
+          logical-systems/routing-instances/instance/protocols ) {
+        for-each( bgp[ jcs:empty( authentication-key ) && jcs:empty( ipsec-sa ) && 
+              jcs:empty( authentication-key-chain ) ] ) {
+            for-each( group[ jcs:empty( authentication-key ) && jcs:empty( ipsec-sa ) && 
+                  jcs:empty( authentication-key-chain ) ] ) {
+                for-each( neighbor[ jcs:empty( authentication-key ) && jcs:empty( ipsec-sa ) && 
+                      jcs:empty( authentication-key-chain ) ] ) {
+                    /* Message used for error, warning, or syslog */
+                    var $message = 'BGP peer ' _ name _ ' lacks authentication';
+                    /* Error? */
+                    if( $action == $error ) {
+                        <xnm:error> {
+                            <message> $message;
+                             call jcs:edit-path( $dot = .. );
+                        }
+                    }
+                    /* Warning? */
+                    if( contains( $action, $warning ) ) {
+                        <xnm:warning> {
+                            <message> $message;
+                             call jcs:edit-path( $dot = .. );
+                        }
+                    }
+                    /* Syslog */
+                    if( contains( $action, $syslog ) ) {
+                        <syslog> {
+                            <message> 'Configuration Violation: ' _ $message;
+                        }
+                    }
+                }
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "System";
+        <synopsis> "No Syslog destinations are configured";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|There are no syslog destinations configured under [edit system syslog].  If |\n" _
+                      "|Auto-Correct is selected then the factory-default syslog configuration will |\n" _
+                      "|be automatically applied.                                                   |";
+        <change-description> "Apply factory-default syslog configuration";
+        <action> $all;
+        <template-name> "check-no-syslog-destinations";
+        <template-code> "    
+    /* Check for violation */
+    var $missing-node = system/syslog/host | system/syslog/console | system/syslog/file | system/syslog/user;
+    if( jcs:empty( $missing-node ) ) {
+        /* Message used for error, warning, or syslog */
+        var $message = 'No Syslog destinations are configured';
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+        /* Configuration Change */
+        if( $action == $change ) {
+            /* Add factory-default syslog configuration */
+            <change> {
+                <system> {
+                    <syslog active='active'> {
+                        <user active='active'> {
+                            <name> '*';
+                            <contents> {
+                                <name> 'any';
+                                <emergency>;
+                            }
+                        }
+                        <file active='active'> {
+                            <name> 'messages';
+                            <contents> {
+                                <name> 'any';
+                                <notice>;
+                            }
+                            <contents> {
+                                <name> 'authorization';
+                                <info>;
+                            }
+                        }
+                        <file active='active'> {
+                            <name> 'interactive-commands';
+                            <contents> {
+                                <name> 'interactive-commands';
+                                <any>;
+                            }
+                        }
+                    }
+                }
+            }
+            var $change-message = 'Automatically added factory-default Syslog configuration';
+            <syslog> {
+                <message> $change-message;
+            }
+            <xnm:warning> {
+                <message> $change-message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "OSPF";
+        <category> "Routing";
+        <category> "Interfaces";
+        <category> "fxp0.0";
+        <synopsis> "fxp0.0 interface is included in OSPF";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|The fxp0.0 interface is configured and is being included in OSPF either     |\n" _
+                      "|specifically or through 'interface all'.  If Auto-Correct is selected then  |\n" _
+                      "|fxp0.0 will be disabled in area 0.0.0.0, if present, or in the first area   |\n" _
+                      "|in the configuration.                                                       |";
+        <change-description> "Disable fxp0.0 in area 0.0.0.0 or first area";
+        <action> $all;
+        <template-name> "check-fxp0-in-ospf";
+        <template-code> "    
+    /* Check for violation */
+    var $fxp0 = interfaces/interface[name == 'fxp0']/unit[name == '0'];
+    if( $fxp0 && jcs:empty( protocols/ospf/area/interface[name == 'fxp0.0']/disable) &&
+        ( protocols/ospf/area/interface[name == 'fxp0.0'] || protocols/ospf/area/interface[name == 'all'] ) ) {
+        /* Message used for error, warning, or syslog */
+        var $message = 'fxp0.0 interface is included in OSPF';
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+        /* Configuration Change */
+        if( $action == $change ) {
+            /* Add fxp0 disable */
+            <change> {
+                <protocols> {
+                    <ospf> {
+                        var $area = {
+                            if( protocols/ospf/area[name == '0.0.0.0'] ) {
+                                expr '0.0.0.0';
+                            }
+                            else {
+                                expr protocols/ospf/area[1]/name;
+                            }
+                        }
+                        <area> {
+                            <name> $area;
+                            <interface active='active'> {
+                                <name> 'fxp0.0';
+                                <disable active='active'>;
+                            }
+                        }
+                    }
+                }
+            }
+            var $change-message = 'Automatically disabled interface fxp0.0 in OSPF';
+            <syslog> {
+                <message> $change-message;
+            }
+            <xnm:warning> {
+                <message> $change-message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "OSPFv3";
+        <category> "Routing";
+        <category> "Interfaces";
+        <category> "fxp0.0";
+        <synopsis> "fxp0.0 interface is included in OSPFv3";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|The fxp0.0 interface is configured, has an IPv6 address, and is included in |\n" _
+                      "|OSPFv3 either specifically or through 'interface all'.  If Auto-Correct is  |\n" _
+                      "|selected then fxp0.0 will be disabled in area 0.0.0.0, if present, or in the|\n" _
+                      "|first area in the configuration.                                            |";
+        <change-description> "Disable fxp0.0 in area 0.0.0.0 or first area";
+        <action> $all;
+        <template-name> "check-fxp0-in-ospfv3";
+        <template-code> "    
+    /* Check for violation */
+    var $fxp0 = interfaces/interface[name == 'fxp0']/unit[name == '0']/family/inet6[address | unnumbered-address];
+    if( $fxp0 && jcs:empty( protocols/ospf3/area/interface[name == 'fxp0.0']/disable) &&
+        ( protocols/ospf3/area/interface[name == 'fxp0.0'] || protocols/ospf3/area/interface[name == 'all'] ) ) {
+        /* Message used for error, warning, or syslog */
+        var $message = 'fxp0.0 interface is included in OSPFv3';
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+        /* Configuration Change */
+        if( $action == $change ) {
+            /* Add fxp0 disable */
+            <change> {
+                <protocols> {
+                    <ospf3> {
+                        var $area = {
+                            if( protocols/ospf3/area[name == '0.0.0.0'] ) {
+                                expr '0.0.0.0';
+                            }
+                            else {
+                                expr protocols/ospf3/area[1]/name;
+                            }
+                        }
+                        <area> {
+                            <name> $area;
+                            <interface active='active'> {
+                                <name> 'fxp0.0';
+                                <disable active='active'>;
+                            }
+                        }
+                    }
+                }
+            }
+            var $change-message = 'Automatically disabled interface fxp0.0 in OSPFv3';
+            <syslog> {
+                <message> $change-message;
+            }
+            <xnm:warning> {
+                <message> $change-message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "Routing";
+        <synopsis> "Router-id is not configured";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|No router-id has been configured in [edit routing-options].                 |";
+        <action> $all-except-change;
+        <template-name> "check-missing-router-id";
+        <template-code> "
+    /* Check for violation */
+    if( jcs:empty( routing-options/router-id )  ) {
+        /* Message used for error, warning, or syslog */
+        var $message = 'Router-id is not configured';
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "OSPF";
+        <category> "Routing";
+        <category> "lo0.0";
+        <category> "Interfaces";
+        <synopsis> "lo0.0 interface is not included in OSPF";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|The lo0.0 interface has not been configured as an OSPF interface.  If Auto- |\n" _
+                      "|Correct is selected then lo0.0 will be placed in passive mode into area 0,  |\n" _
+                      "|if it exists, or otherwise in the first area in the configuration.          |";
+        <change-description> "Add lo0.0 to OSPF in area 0.0.0.0 or first area";
+        <action> $all;
+        <template-name> "check-lo0-in-ospf";
+        <template-code> "    
+    /* Check for violation */
+    if( protocols/ospf && ( protocols/ospf/area/interface[name == 'lo0.0']/disable ||
+        ( jcs:empty( protocols/ospf/area/interface[name == 'lo0.0'][jcs:empty( disable ) ] ) &&
+             jcs:empty( protocols/ospf/area/interface[name == 'all'][jcs:empty( disable ) ] ) ) ) ) {
+        /* Message used for error, warning, or syslog */
+        var $message = 'lo0.0 interface is not included in OSPF';
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+        /* Configuration Change */
+        if( $action == $change ) {
+            /* Is it present but disabled? */
+            if( protocols/ospf/area/interface[name == 'lo0.0']/disable ) {
+                call delete-node( $node = protocols/ospf/area/interface[name == 'lo0.0']/disable );
+            }
+            /* Otherwise, add it as a passive interface */
+            else {
+                <change> {
+                    <protocols> {
+                        <ospf> {
+                            var $area = {
+                                if( protocols/ospf/area[name == '0.0.0.0'] ) {
+                                    expr '0.0.0.0';
+                                }
+                                else {
+                                    expr protocols/ospf/area[1]/name;
+                                }
+                            }
+                            <area> {
+                                <name> $area;
+                                <interface active='active'> {
+                                    <name> 'lo0.0';
+                                    <passive>;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            var $change-message = 'Automatically added interface lo0.0 to OSPF';
+            <syslog> {
+                <message> $change-message;
+            }
+            <xnm:warning> {
+                <message> $change-message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "OSPFv3";
+        <category> "Routing";
+        <category> "lo0.0";
+        <category> "Interfaces";
+        <synopsis> "lo0.0 interface is not included in OSPFv3";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|The lo0.0 interface has not been configured as an OSPFv3 interface.  If     |\n" _
+                      "|Auto-Correct is selected then lo0.0 will be placed in passive mode into area|\n" _
+                      "|0 if it exists, or otherwise in the first area in the configuration.        |";
+        <change-description> "Add lo0.0 to OSPFv3 in area 0.0.0.0 or first area";
+        <action> $all;
+        <template-name> "check-lo0-in-ospfv3";
+        <template-code> "    
+    /* Check for violation */
+    if( protocols/ospf3 && ( protocols/ospf3/area/interface[name == 'lo0.0']/disable || 
+        ( jcs:empty( protocols/ospf3/area/interface[name == 'lo0.0'][jcs:empty( disable ) ] ) &&
+             jcs:empty( protocols/ospf3/area/interface[name == 'all'][jcs:empty( disable ) ] ) ) ) ) {
+        /* Message used for error, warning, or syslog */
+        var $message = 'lo0.0 interface is not included in OSPFv3';
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+        /* Configuration Change */
+        if( $action == $change ) {
+            /* Is it present but disabled? */
+            if( protocols/ospf3/area/interface[name == 'lo0.0']/disable ) {
+                call delete-node( $node = protocols/ospf3/area/interface[name == 'lo0.0']/disable );
+            }
+            /* Otherwise, add it as a passive interface */
+            else {
+                <change> {
+                    <protocols> {
+                        <ospf3> {
+                            var $area = {
+                                if( protocols/ospf3/area[name == '0.0.0.0'] ) {
+                                    expr '0.0.0.0';
+                                }
+                                else {
+                                    expr protocols/ospf3/area[1]/name;
+                                }
+                            }
+                            <area> {
+                                <name> $area;
+                                <interface active='active'> {
+                                    <name> 'lo0.0';
+                                    <passive>;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            var $change-message = 'Automatically added interface lo0.0 to OSPFv3';
+            <syslog> {
+                <message> $change-message;
+            }
+            <xnm:warning> {
+                <message> $change-message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "IS-IS";
+        <category> "Routing";
+        <category> "lo0.0";
+        <category> "Interfaces";
+        <synopsis> "lo0.0 interface is not included in IS-IS";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|The lo0.0 interface has not been configured as an IS-IS interface.  If Auto-|\n" _
+                      "|Correct is selected then lo0.0 will be added to IS-IS.                      |";
+        <change-description> "Enable lo0.0 in IS-IS";
+        <action> $all;
+        <template-name> "check-lo0-in-is-is";
+        <template-code> "    
+    /* Check for violation */
+    if( protocols/isis && ( protocols/isis/interface[name == 'lo0.0']/disable || 
+        ( jcs:empty( protocols/isis/interface[name == 'lo0.0'][jcs:empty( disable ) ] ) &&
+         jcs:empty( protocols/isis/interface[name == 'all'][jcs:empty( disable ) ] ) ) ) ) {
+        /* Message used for error, warning, or syslog */
+        var $message = 'lo0.0 interface is not included in IS-IS';
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+        /* Configuration Change */
+        if( $action == $change ) {
+            /* Is it present but disabled? */
+            if( protocols/isis/interface[name == 'lo0.0']/disable ) {
+                call delete-node( $node = protocols/isis/interface[name == 'lo0.0']/disable );
+            }
+            /* Otherwise, add it */
+            else {
+                <change> {
+                    <protocols> {
+                        <isis> {
+                            <interface active='active'> {
+                                <name> 'lo0.0';
+                            }
+                        }
+                    }
+                }
+            }
+            var $change-message = 'Automatically enabled interface lo0.0 in IS-IS';
+            <syslog> {
+                <message> $change-message;
+            }
+            <xnm:warning> {
+                <message> $change-message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "Interfaces";
+        <category> "lo0.0";
+        <synopsis> "lo0.0 interface is not configured";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|The [edit interfaces lo0 unit 0] configuration hierarchy does not exist.    |";
+        <action> $all-except-change;
+        <template-name> "check-missing-lo0-interface";
+        <template-code> "
+    /* Check for violation */
+    if( jcs:empty( interfaces/interface[name == 'lo0']/unit[name == '0'] )  ) {
+        /* Message used for error, warning, or syslog */
+        var $message = 'lo0.0 interface is not configured';
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "Interfaces";
+        <category> "Hierarchies";
+        <synopsis> "Interfaces configuration hierarchy is missing";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|The entire [edit interfaces] configuration hierarchy is missing.            |";
+        <action> $all-except-change;
+        <template-name> "check-missing-interfaces-hierarchy";
+        <template-code> "
+    /* Check for violation */
+    if( jcs:empty( interfaces )  ) {
+        /* Message used for error, warning, or syslog */
+        var $message = '[edit interfaces] configuration hierarchy is missing';
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "Hierarchies";
+        <category> "Routing";
+        <synopsis> "Protocols configuration hierarchy is missing";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|The entire [edit protocols] configuration hierarchy is missing.            |";
+        <action> $all-except-change;
+        <template-name> "check-missing-protocols-hierarchy";
+        <template-code> "
+    /* Check for violation */
+    if( jcs:empty( protocols )  ) {
+        /* Message used for error, warning, or syslog */
+        var $message = '[edit protocols] configuration hierarchy is missing';
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "Interfaces";
+        <category> "lo0.0";
+        <synopsis> "lo0.0 interface doesn't have an IPv4 address";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|The [edit interfaces lo0 unit 0] exists, but it does not currently have an  |\n" _
+                      "|IPv4 address assigned.                                                      |";
+        <action> $all-except-change;
+        <template-name> "check-missing-lo0-interface-ipv4-address";
+        <template-code> "
+    /* Check for violation */
+    if( interfaces/interface[name == 'lo0']/unit[name == '0'] &&
+            jcs:empty( interfaces/interface[name == 'lo0']/unit[name == '0']/family/inet/address ) ) {
+        /* Message used for error, warning, or syslog */
+        var $message = 'lo0.0 interface does not have IPv4 address';
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "Interfaces";
+        <category> "lo0.0";
+        <category> "IS-IS";
+        <synopsis> "lo0.0 interface doesn't have an ISO address";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|The [edit interfaces lo0 unit 0] exists, but it does not currently have an  |\n" _
+                      "|ISO address assigned.                                                       |";
+        <action> $all-except-change;
+        <template-name> "check-missing-lo0-interface-iso-address";
+        <template-code> "
+    /* Check for violation */
+    if( interfaces/interface[name == 'lo0']/unit[name == '0'] &&
+            jcs:empty( interfaces/interface[name == 'lo0']/unit[name == '0']/family/iso/address ) ) {
+        /* Message used for error, warning, or syslog */
+        var $message = 'lo0.0 interface does not have ISO address';
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "Interfaces";
+        <category> "lo0.0";
+        <synopsis> "lo0.0 interface doesn't have an IPv6 address";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|The [edit interfaces lo0 unit 0] exists, but it does not currently have an  |\n" _
+                      "|IPv6 address assigned.                                                      |";
+        <action> $all-except-change;
+        <template-name> "check-missing-lo0-interface-ipv6-address";
+        <template-code> "
+    /* Check for violation */
+    if( interfaces/interface[name == 'lo0']/unit[name == '0'] &&
+            jcs:empty( interfaces/interface[name == 'lo0']/unit[name == '0']/family/inet6/address ) ) {
+        /* Message used for error, warning, or syslog */
+        var $message = 'lo0.0 interface does not have IPv6 address';
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "MPLS";
+        <category> "Interfaces";
+        <synopsis> "Interface enabled for MPLS protocol lacks family mpls";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|The interface has been specifically configured under [edit protocols mpls]  |\n" _
+                      "|but it lacks family mpls in its interface configuration.  (Interfaces that  |\n"  _
+                      "|are enabled through 'interface all' are not considered).  If Auto-Correct is|\n" _
+                      "|selected then family mpls is automatically added to the interface.          |";
+        <change-description> "Add family mpls to interface";
+        <action> $all;
+        <template-name> "check-protocols-mpls-interface-lacks-family-mpls";
+        <template-code> "
+    /* Check for violation */
+    var $interfaces = interfaces;
+    for-each( protocols/mpls/interface[ name != 'all' ][ jcs:empty( disable ) ] ) {
+        var $physical = substring-before( name, '.' );
+        var $logical = substring-after( name, '.' );
+        
+        /* Interface exists but lacks family mpls */
+        var $interface = $interfaces/interface[name == $physical]/unit[ name == $logical ];
+        if( $interface && jcs:empty( $interface/family/mpls ) ) {
+            /* Message used for error, warning, or syslog */
+            var $message = 'interface ' _ name _ ' lacks family mpls';
+            /* Error? */
+            if( $action == $error ) {
+                <xnm:error> {
+                    <message> $message;
+                    call jcs:edit-path();
+                }
+            }
+            /* Warning? */
+            if( contains( $action, $warning ) ) {
+                <xnm:warning> {
+                    <message> $message;
+                    call jcs:edit-path();
+                }
+            }
+            /* Syslog */
+            if( contains( $action, $syslog ) ) {
+                <syslog> {
+                    <message> 'Configuration Violation: ' _ $message;
+                }
+            }
+            /* Configuration Change */
+            if( $action == $change ) {
+                /* Add it */
+                <change> {
+                    <interfaces> {
+                        <interface> {
+                            <name> $physical;
+                            <unit> {
+                                <name> $logical;
+                                <family active='active'> {
+                                    <mpls active='active'>;
+                                }
+                            }
+                        }
+                    }
+                }
+                var $change-message = 'Automatically added family mpls to interface ' _ name;
+                <syslog> {
+                    <message> $change-message;
+                }
+                <xnm:warning> {
+                    <message> $change-message;
+                }
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "MPLS";
+        <category> "LDP";
+        <category> "Interfaces";
+        <synopsis> "Interface enabled for LDP protocol lacks family mpls";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|The interface has been specifically configured under [edit protocols ldp]   |\n" _
+                      "|but it lacks family mpls in its interface configuration.  (Interfaces that  |\n"  _
+                      "|are enabled through 'interface all' are not considered).  If Auto-Correct is|\n" _
+                      "|selected then family mpls is automatically added to the interface.          |";
+        <change-description> "Add family mpls to interface";
+        <action> $all;
+        <template-name> "check-protocols-ldp-interface-lacks-family-mpls";
+        <template-code> "
+    /* Check for violation */
+    var $interfaces = interfaces;
+    for-each( protocols/ldp/interface[ name != 'all' ][ jcs:empty( disable ) ] |
+              routing-instances/instance/protocols/ldp/interface[ name != 'all' ][ jcs:empty( disable ) ] ) {
+        var $physical = substring-before( name, '.' );
+        var $logical = substring-after( name, '.' );
+        
+        /* Interface exists but lacks family mpls */
+        var $interface = $interfaces/interface[name == $physical]/unit[ name == $logical ];
+        if( $interface && jcs:empty( $interface/family/mpls ) ) {
+            /* Message used for error, warning, or syslog */
+            var $message = 'interface ' _ name _ ' lacks family mpls';
+            /* Error? */
+            if( $action == $error ) {
+                <xnm:error> {
+                    <message> $message;
+                    call jcs:edit-path();
+                }
+            }
+            /* Warning? */
+            if( contains( $action, $warning ) ) {
+                <xnm:warning> {
+                    <message> $message;
+                    call jcs:edit-path();
+                }
+            }
+            /* Syslog */
+            if( contains( $action, $syslog ) ) {
+                <syslog> {
+                    <message> 'Configuration Violation: ' _ $message;
+                }
+            }
+            /* Configuration Change */
+            if( $action == $change ) {
+                /* Add it */
+                <change> {
+                    <interfaces> {
+                        <interface> {
+                            <name> $physical;
+                            <unit> {
+                                <name> $logical;
+                                <family active='active'> {
+                                    <mpls active='active'>;
+                                }
+                            }
+                        }
+                    }
+                }
+                var $change-message = 'Automatically added family mpls to interface ' _ name;
+                <syslog> {
+                    <message> $change-message;
+                }
+                <xnm:warning> {
+                    <message> $change-message;
+                }
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "MPLS";
+        <category> "RSVP";
+        <category> "Interfaces";
+        <synopsis> "Interface enabled for RSVP protocol lacks family mpls";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|The interface has been specifically configured under [edit protocols rsvp]  |\n" _
+                      "|but it lacks family mpls in its interface configuration.  (Interfaces that  |\n"  _
+                      "|are enabled through 'interface all' are not considered).  If Auto-Correct is|\n" _
+                      "|selected then family mpls is automatically added to the interface.          |";
+        <change-description> "Add family mpls to interface";
+        <action> $all;
+        <template-name> "check-protocols-rsvp-interface-lacks-family-mpls";
+        <template-code> "
+    /* Check for violation */
+    var $interfaces = interfaces;
+    for-each( protocols/rsvp/interface[ name != 'all' ][ jcs:empty( disable ) ] ) {
+        var $physical = substring-before( name, '.' );
+        var $logical = substring-after( name, '.' );
+        
+        /* Interface exists but lacks family mpls */
+        var $interface = $interfaces/interface[name == $physical]/unit[ name == $logical ];
+        if( $interface && jcs:empty( $interface/family/mpls ) ) {
+            /* Message used for error, warning, or syslog */
+            var $message = 'interface ' _ name _ ' lacks family mpls';
+            /* Error? */
+            if( $action == $error ) {
+                <xnm:error> {
+                    <message> $message;
+                    call jcs:edit-path();
+                }
+            }
+            /* Warning? */
+            if( contains( $action, $warning ) ) {
+                <xnm:warning> {
+                    <message> $message;
+                    call jcs:edit-path();
+                }
+            }
+            /* Syslog */
+            if( contains( $action, $syslog ) ) {
+                <syslog> {
+                    <message> 'Configuration Violation: ' _ $message;
+                }
+            }
+            /* Configuration Change */
+            if( $action == $change ) {
+                /* Add it */
+                <change> {
+                    <interfaces> {
+                        <interface> {
+                            <name> $physical;
+                            <unit> {
+                                <name> $logical;
+                                <family active='active'> {
+                                    <mpls active='active'>;
+                                }
+                            }
+                        }
+                    }
+                }
+                var $change-message = 'Automatically added family mpls to interface ' _ name;
+                <syslog> {
+                    <message> $change-message;
+                }
+                <xnm:warning> {
+                    <message> $change-message;
+                }
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "MPLS";
+        <category> "RSVP";
+        <category> "Interfaces";
+        <synopsis> "Interface is enabled for RSVP protocol but not MPLS protocol";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|The interface has been specifically configured under [edit protocols rsvp]  |\n" _
+                      "|but it has not also been configured under [edit protocols mpls].  If Auto-  |\n" _
+                      "|Correct is selected then the interface is added to [edit protocols mpls].   |";
+        <change-description> "Add to MPLS protocol";
+        <action> $all;
+        <template-name> "check-protocols-rsvp-but-not-mpls";
+        <template-code> "
+    /* Check for violation */
+    var $mpls = protocols/mpls/interface;
+    for-each( protocols/rsvp/interface[ jcs:empty( disable ) ] ) {
+        var $interface-name = name;
+        
+        /* Missing from MPLS */        
+        if( $mpls[ name == $interface-name ]/disable || 
+            ( jcs:empty( $mpls[ name == $interface-name ][ jcs:empty( disable ) ] )  && jcs:empty( $mpls[ name == 'all'][jcs:empty( disable ) ] ) ) ) { 
+            /* Message used for error, warning, or syslog */
+            var $message = 'interface ' _ name _ ' is enabled for RSVP but not MPLS';
+            /* Error? */
+            if( $action == $error ) {
+                <xnm:error> {
+                    <message> $message;
+                    call jcs:edit-path();
+                }
+            }
+            /* Warning? */
+            if( contains( $action, $warning ) ) {
+                <xnm:warning> {
+                    <message> $message;
+                    call jcs:edit-path();
+                }
+            }
+            /* Syslog */
+            if( contains( $action, $syslog ) ) {
+                <syslog> {
+                    <message> 'Configuration Violation: ' _ $message;
+                }
+            }
+            /* Configuration Change */
+            if( $action == $change ) {
+                /* Add it to MPLS */
+                <change> {
+                    <protocols> {
+                        <mpls> {
+                            <interface active='active'> {
+                                <name active='active'> $interface-name;
+                            }
+                        }
+                    }
+                }
+                var $change-message = 'Automatically added interface ' _ $interface-name _ ' to MPLS protocol';
+                <syslog> {
+                    <message> $change-message;
+                }
+                <xnm:warning> {
+                    <message> $change-message;
+                }
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "MPLS";
+        <category> "RSVP";
+        <category> "Interfaces";
+        <synopsis> "Interface is enabled for MPLS protocol but not RSVP protocol";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|The interface has been specifically configured under [edit protocols mpls]  |\n" _
+                      "|but it has not also been configured under [edit protocols rsvp].  If Auto-  |\n" _
+                      "|Correct is selected then the interface is added to [edit protocols rsvp].   |";
+        <change-description> "Add to RSVP protocol";
+        <action> $all;
+        <template-name> "check-protocols-mpls-but-not-rsvp";
+        <template-code> "
+    /* Check for violation */
+    var $rsvp = protocols/rsvp/interface;
+    for-each( protocols/mpls/interface[ jcs:empty( disable ) ] ) {
+        var $interface-name = name;
+
+        /* Missing from RSVP */        
+        if( $rsvp[ name == $interface-name ]/disable || 
+            ( jcs:empty( $rsvp[ name == $interface-name ][ jcs:empty( disable ) ] )  && jcs:empty( $rsvp[ name == 'all'][jcs:empty( disable ) ] ) ) ) { 
+            /* Message used for error, warning, or syslog */
+            var $message = 'interface ' _ name _ ' is enabled for MPLS but not RSVP';
+            /* Error? */
+            if( $action == $error ) {
+                <xnm:error> {
+                    <message> $message;
+                    call jcs:edit-path();
+                }
+            }
+            /* Warning? */
+            if( contains( $action, $warning ) ) {
+                <xnm:warning> {
+                    <message> $message;
+                    call jcs:edit-path();
+                }
+            }
+            /* Syslog */
+            if( contains( $action, $syslog ) ) {
+                <syslog> {
+                    <message> 'Configuration Violation: ' _ $message;
+                }
+            }
+            /* Configuration Change */
+            if( $action == $change ) {
+                /* Add it to RSVP */
+                <change> {
+                    <protocols> {
+                        <rsvp> {
+                            <interface active='active'> {
+                                <name active='active'> $interface-name;
+                            }
+                        }
+                    }
+                }
+                var $change-message = 'Automatically added interface ' _ $interface-name _ ' to RSVP protocol';
+                <syslog> {
+                    <message> $change-message;
+                }
+                <xnm:warning> {
+                    <message> $change-message;
+                }
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "Routing";
+        <category> "IS-IS";
+        <category> "Interfaces";
+        <synopsis> "Interface enabled for IS-IS protocol lacks family iso";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|The interface has been specifically configured under [edit protocols isis]  |\n" _
+                      "|but it lacks family iso in its interface configuration.  (Interfaces that   |\n"  _
+                      "|are enabled through 'interface all' are not considered, also fxp0.0 and     |\n" _
+                      "|lo0.0 are ignored).  If Auto-Correct is selected then family iso is added   |\n" _
+                      "|automatically to the interface.                                             |";
+        <change-description> "Add family iso to interface";
+        <action> $all;
+        <template-name> "check-protocols-isis-interface-lacks-family-iso";
+        <template-code> "
+    /* Check for violation */
+    var $interfaces = interfaces;
+    for-each( protocols/isis/interface[ name != 'all' ][ name != 'lo0.0'][ name != 'fxp0.0'][ jcs:empty( disable ) ] ) {
+        var $physical = substring-before( name, '.' );
+        var $logical = substring-after( name, '.' );
+        
+        /* Interface exists but lacks family iso */
+        var $interface = $interfaces/interface[name == $physical]/unit[ name == $logical ];
+        if( $interface && jcs:empty( $interface/family/iso ) ) {
+            /* Message used for error, warning, or syslog */
+            var $message = 'interface ' _ name _ ' lacks family iso';
+            /* Error? */
+            if( $action == $error ) {
+                <xnm:error> {
+                    <message> $message;
+                    call jcs:edit-path();
+                }
+            }
+            /* Warning? */
+            if( contains( $action, $warning ) ) {
+                <xnm:warning> {
+                    <message> $message;
+                    call jcs:edit-path();
+                }
+            }
+            /* Syslog */
+            if( contains( $action, $syslog ) ) {
+                <syslog> {
+                    <message> 'Configuration Violation: ' _ $message;
+                }
+            }
+            /* Configuration Change */
+            if( $action == $change ) {
+                /* Add it */
+                <change> {
+                    <interfaces> {
+                        <interface> {
+                            <name> $physical;
+                            <unit> {
+                                <name> $logical;
+                                <family active='active'> {
+                                    <iso active='active'>;
+                                }
+                            }
+                        }
+                    }
+                }
+                var $change-message = 'Automatically added family iso to interface ' _ name;
+                <syslog> {
+                    <message> $change-message;
+                }
+                <xnm:warning> {
+                    <message> $change-message;
+                }
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "Firewalls";
+        <synopsis> "Filter term matches UDP/TCP port without matching the protocol";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|A stateless firewall filter is matching on a Layer 4 port without also      |\n" _
+                      "|checking that the packet is actually UDP or TCP.  This can result in an     |\n" _
+                      "|incorrect match because the destination-port and source-port filter matches |\n" _
+                      "|only check their respective bit locations, so packets from other protocols  |\n" _
+                      "|that coincidentally have the selected value at the bit location will match  |\n" _
+                      "|the term even though they are not UDP or TCP packets.  Both IPv4 and IPv6   |\n" _
+                      "|filters are checked.                                                        |";
+        <action> $all-except-change;
+        <template-name> "check-missing-tcp-udp-match";
+        <template-code> "    
+    /* Check for violation - scan through every firewall term */
+    for-each( logical-systems/firewall//filter/term | firewall//filter/term ) {
+        var $port-match = from/port | from/source-port | from/destination-port | from/port-except |
+                          from/source-port-except | from/destination-port-except;
+        var $protocol-match = from/protocol[ . == 'tcp' || . == 'udp' || . == 6 || . == 17 ] |
+                              from/next-header[ . == 'tcp' || . == 'udp' || . == 6 || . == 17 ];
+        if( $port-match && jcs:empty( $protocol-match ) ) {
+            /* Message used for error, warning, or syslog */
+            var $message = 'Filter term ' _ name _ ' is matching a UDP/TCP port without matching the protocol';
+            /* Error? */
+            if( $action == $error ) {
+                <xnm:error> {
+                    <message> $message;
+                    call jcs:edit-path();
+                }
+            }
+            /* Warning? */
+            if( contains( $action, $warning ) ) {
+                <xnm:warning> {
+                    <message> $message;
+                    call jcs:edit-path();
+                }
+            }
+            /* Syslog */
+            if( contains( $action, $syslog ) ) {
+                <syslog> {
+                    <message> 'Configuration Violation: ' _ $message;
+                }
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "Firewalls";
+        <synopsis> "Filter term matches ICMP field without matching the protocol";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|A stateless firewall filter is matching on a ICMP field without also        |\n" _
+                      "|checking that the packet is actually an ICMP packet.  This can result in an |\n" _
+                      "|incorrect match because the ICMP type and ICMP code matches only check their|\n" _
+                      "|respective bit locations, so packets from other protocols that have the     |\n" _
+                      "|selected value at the bit location will match the term even though they are |\n" _
+                      "|not ICMP packets.  Both IPv4 and IPv6 filters are checked.                  |";
+        <action> $all-except-change;
+        <template-name> "check-missing-icmp-match";
+        <template-code> "    
+    /* Check for violation - scan through every firewall term */
+    for-each( logical-systems/firewall//filter/term | firewall//filter/term ) {
+        var $icmp-match = from/icmp-type | from/icmp-code | from/icmp-type-except | from/icmp-code-except;
+        var $protocol-match = from/protocol[ . == 'icmp' || . == 1 ] | from/next-header[ . == 'icmp' || . == 1 ];
+        if( $icmp-match && jcs:empty( $protocol-match ) ) {
+            /* Message used for error, warning, or syslog */
+            var $message = 'Filter term ' _ name _ ' is matching an ICMP field without matching the protocol';
+            /* Error? */
+            if( $action == $error ) {
+                <xnm:error> {
+                    <message> $message;
+                    call jcs:edit-path();
+                }
+            }
+            /* Warning? */
+            if( contains( $action, $warning ) ) {
+                <xnm:warning> {
+                    <message> $message;
+                    call jcs:edit-path();
+                }
+            }
+            /* Syslog */
+            if( contains( $action, $syslog ) ) {
+                <syslog> {
+                    <message> 'Configuration Violation: ' _ $message;
+                }
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "Routing";
+        <category> "BGP";
+        <synopsis> "BGP VPN path-selection mode is being turned on or off";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|A PE operates by default in normal VPN route advertisement mode, but if the |\n" _
+                      "|PE is a route-reflector or ASBR for any VPN address families then it will   |\n" _
+                      "|operate in path-selection mode for those families.  The switch between      |\n" _
+                      "|default and  path-selection mode resets all IBGP peers that advertise the   |\n" _
+                      "|affected address family.  This configuration violation is a change that     |\n" _
+                      "|would result in path-selection mode being turned on or off and a currently  |\n" _
+                      "|established peer being reset.  A commit error can halt the commit when this |\n" _ 
+                      "|occurs, forcing the user to deactivate the commit script before making the  |\n" _
+                      "|change.  This extra step ensures that the committing user knows the commit  |\n" _
+                      "|will bounce some of their IBGP peers and that it should only be done during |\n" _
+                      "|a maintenance window.                                                       |";
+        <action> $error;
+        <template-name> "check-vpn-path-selection-change";
+        <template-code> "    
+    /* Different modes */
+    var $path-selection = 'path-selection';
+    var $default = 'default';
+
+    /* Structure of all the AFI/SAFIs to check */
+    var $families := {
+        <family> {
+            <afi> 'inet-vpn';
+            <safi> 'unicast';
+            <table> 'bgp.l3vpn.0';
+        }
+        <family> {
+            <afi> 'inet-vpn';
+            <safi> 'multicast';
+            <table> 'bgp.l3vpn.2';
+        }
+        <family> {
+            <afi> 'inet6-vpn';
+            <safi> 'unicast';
+            <table> 'bgp.l3vpn-inet6.0';
+        }
+        <family> {
+            <afi> 'inet6-vpn';
+            <safi> 'multicast';
+            <table> 'bgp.l3vpn-inet6.2';
+        }
+        <family> {
+            <afi> 'iso-vpn';
+            <safi> 'unicast';
+            <table> 'bgp.isovpn.0';
+        }
+    }
+    
+    /* Retrieve current bgp neighbor status */
+    var $neighbors = jcs:invoke( 'get-bgp-neighbor-information' );
+    
+    /* protocols bgp anchor */
+    var $bgp-config = protocols/bgp;
+    
+    /* Check each address family */
+    for-each ( $families/family ) {
+
+        var $afi = afi;
+        var $safi = safi;
+        var $combined-afi-safi = afi _ '-' _ safi;
+        var $table = table;
+        /* Is there an established IBGP peer with that address family?  If not then skip */
+        var $up-peer = $neighbors/bgp-peer[peer-type == 'Internal'][peer-state == 'Established'][ contains( nlri-type-session, $combined-afi-safi ) ];
+        
+        if( $up-peer ) {
+        
+            /* Determine current mode */
+            var $current-mode = {
+                /* There might be more than one, only look at first one */
+                if( $up-peer[1]/bgp-rib[name == $table]/send-state == 'in sync' ) {
+                    expr $path-selection;
+                }
+                else {
+                    expr $default;
+                }
+            }
+        
+            /* Determine configuration mode */
+            var $configuration-mode = {
+                var $path-selection-on = {
+                    /* Go through all BGP neighbors */
+                    for-each( $bgp-config/group/neighbor ) {
+                        /* Check for family in any of three valid locations */
+                        var $address-location = jcs:first-of( family, ../family, ../../family );
+                        var $address-family = $address-location/*[name() == $afi]/*[name() == $safi || name() == 'any'];
+                        
+                        /* If address family is configured then check for RR or VPN ASBR */
+                        if( $address-family ) {
+                            /* In any location */
+                            var $cluster = cluster | ../cluster | ../../cluster;
+                            /* VPN RR */
+                            if( $cluster ) {
+                                expr $path-selection;
+                            }
+                            /* Check for VPN ASBR if type external */
+                            else if( jcs:empty( ../type ) || ../type != 'internal' ) {
+                                /* Determine the local ASN */
+                                var $local-asn = {
+                                    if( local-as/as-number ) {
+                                        expr local-as/as-number;
+                                    }
+                                    else if( ../local-as/as-number ) {
+                                        expr ../local-as/as-number;
+                                    }
+                                    else if( ../../local-as/as-number ) {
+                                        expr ../../local-as/as-number;
+                                    }
+                                    else {
+                                        expr /commit-script-input/configuration/routing-options/autonomous-system/as-number;
+                                    }
+                                }
+                                /* Determine the remote ASN */
+                                var $remote-asn = {
+                                    if( peer-as ) {
+                                        expr peer-as;
+                                    }
+                                    else if( ../peer-as ) {
+                                        expr ../peer-as;
+                                    }
+                                    else if( ../../peer-as ) {
+                                        expr ../../peer-as;
+                                    }
+                                }
+
+                                /* If different then it is an ASBR */
+                                if( $local-asn != $remote-asn ) {
+                                    expr $path-selection;
+                                }
+                            }
+                        }
+                    }
+                }
+                /* Base configuration mode on path-selection on variable */
+                if( $path-selection-on == $path-selection ) {
+                    expr $path-selection;
+                }
+                else {
+                    expr $default;
+                }
+            }
+            
+            /* If current mode and configuration mode differ then show an error */
+            if( $configuration-mode == $path-selection && $current-mode != $configuration-mode ) {
+                <xnm:error> {
+                    <message> 'This commit would activate path-selection mode for family ' _ afi _ '\n' _ 
+                              safi _ ' and reset all IBGP peers that advertise that family.  To make the\n' _
+                              'change, and reset the peers, deactivate this commit script, perform the\n' _
+                              'commit, then reactivate the commit script and commit again.';
+                }
+            }
+            else if( $configuration-mode == $default && $current-mode != $configuration-mode ) {
+                <xnm:error> {
+                    <message> 'This commit would deactivate path-selection mode for family ' _ afi _ '\n' _ 
+                              safi _ ' and reset all IBGP peers that advertise that family.  To make the\n' _
+                              'change, and reset the peers, deactivate this commit script, perform the\n' _
+                              'commit, then reactivate the commit script and commit again.';
+                }
+            }
+            
+        }
+    }";
+    }
+    <violation> {
+        <category> "System";
+        <category> "Redundancy";
+        <synopsis> "Host-name is not set within re0 or re1 configuration group";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|The re0 and re1 configuration groups are special groups that only apply to  |\n" _
+                      "|their designated routing engines.  Configuring the host-name within these   |\n" _
+                      "|groups allows the host-name to be different on each RE.  This configuration |\n" _
+                      "|violation detects if the system host-name is not being set within one of    |\n" _
+                      "|these two groups.                                                           |";
+        <action> $all-except-change;
+        <template-name> "check-no-re-group-hostname";
+        <template-code> "    
+    /* Check for violation */
+    var $missing-node = system/host-name/@junos:group[. == 're0' || . == 're1'];
+    if( jcs:empty( $missing-node ) ) {
+        /* Message used for error, warning, or syslog */
+        var $message = 'Host-name should be set within re0 or re1 configuration group';
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "System";
+        <category> "Redundancy";
+        <category> "fxp0.0";
+        <synopsis> "fxp0 address is not set within re0 or re1 configuration group";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|The re0 and re1 configuration groups are special groups that only apply to  |\n" _
+                      "|their designated routing engines.  Configuring the fxp0 address within these|\n" _
+                      "|groups allows the address to be different on each RE.  This configuration   |\n" _
+                      "|violation detects if the fxp0 address is not being set within one of these  |\n" _
+                      "|two groups.                                                                 |";
+        <action> $all-except-change;
+        <template-name> "check-no-re-group-fxp0-address";
+        <template-code> "    
+    /* Check for violation */
+    var $missing-node = interfaces/interface[name == 'fxp0']/unit[name == '0']/family/inet/address/@junos:group[. == 're0' || . == 're1'];
+    if( jcs:empty( $missing-node ) ) {
+        /* Message used for error, warning, or syslog */
+        var $message = 'fxp0 address should be set within re0 or re1 configuration group';
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "System";
+        <synopsis> "Configuration includes hidden configuration statements";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|Typically, configuration statements that are hidden are unsupported.  This  |\n" _
+                      "|configuration violation reports any hidden configuration statements that are|\n" _
+                      "|in use.                                                                     |";
+        <action> $warning;
+        <action> $syslog;
+        <action> $warning-and-syslog;
+        <template-name> "check-for-hidden-configuration";
+        <template-code> "    
+    /* Check for violation */
+    var $undocumented = .//undocumented;
+    for-each( $undocumented ) {
+        /* Message used for error, warning, or syslog */
+        var $child = ./*[1];
+        var $message = 'Configuration includes hidden statement: ' _ name( $child );
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "Firewalls";
+        <synopsis> "Undefined routing-instance used as firewall filter action";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|Firewall filters can direct traffic to routing-instances by using the       |\n" _
+                      "|routing-instance filter action.  This configuration violation detects if any|\n" _
+                      "|filters are directing traffic to non-existant routing-instances.            |";
+        <action> $all-except-change;
+        <template-name> "check-undefined-routing-instance";
+        <template-code> "    
+    /* Check for violation */
+    var $routing-instances = routing-instances;
+    for-each( firewall//filter/term/then/routing-instance ) {
+        var $instance-name = routing-instance-name;
+        
+        var $missing-node = $routing-instances/instance[name == $instance-name];
+        if( jcs:empty( $missing-node ) ) {
+            /* Message used for error, warning, or syslog */
+            var $message = 'filter ' _ ../../name _ ' is directing traffic to undefined routing-instance ' _ $instance-name;
+            /* Error? */
+            if( $action == $error ) {
+                <xnm:error> {
+                    <message> $message;
+                }
+            }
+            /* Warning? */
+            if( contains( $action, $warning ) ) {
+                <xnm:warning> {
+                    <message> $message;
+                }
+            }
+            /* Syslog */
+            if( contains( $action, $syslog ) ) {
+                <syslog> {
+                    <message> 'Configuration Violation: ' _ $message;
+                }
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "Interfaces";
+        <synopsis> "Vlan-id 0 assigned via vlan-id-list to different unit than native-vlan-id";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|vlan-id 0 must map to the same logical interface as the native-vlan-id, if  |\n" _
+                      "|one exists; however, Junos does not currently enforce this requirement when |\n" _
+                      "|the vlan is assigned through a vlan-id-list rather than a vlan-id.  This    |\n" _
+                      "|configuration violation occurs when the native-vlan-id is non-zero and the  |\n" _
+                      "|vlan-id 0 is assigned through a vlan-id-list that does not also contain the |\n" _
+                      "|native-vlan-id.                                                             |";
+        <action> $all-except-change;
+        <template-name> "check-vlan-id-0";
+        <template-code> "    
+    /* Check for violation */
+    for-each( interfaces/interface[native-vlan-id != '0'][unit/vlan-id-list] ) {
+        var $native-vlan-id = native-vlan-id;
+        
+        for-each( unit[ vlan-id-list[. == '0'] && count( vlan-id-list[. == $native-vlan-id] ) == 0 ] ) {
+            
+            /* Message used for error, warning, or syslog */
+            var $message = 'interface ' _ ../name _ '.' _ name _ ' is assigning vlan-id 0 to a different unit than the native-vlan-id';
+            /* Error? */
+            if( $action == $error ) {
+                <xnm:error> {
+                    <message> $message;
+                }
+            }
+            /* Warning? */
+            if( contains( $action, $warning ) ) {
+                <xnm:warning> {
+                    <message> $message;
+                }
+            }
+            /* Syslog */
+            if( contains( $action, $syslog ) ) {
+                <syslog> {
+                    <message> 'Configuration Violation: ' _ $message;
+                }
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "Firewalls";
+        <synopsis> "Firewall filter does not end with a final 'accept' term";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|By default, all traffic that is not specifically accepted by a filter will  |\n" _
+                      "|be discarded, but some Junos users would prefer to have filters accept by   |\n" _
+                      "|default rather than discard. This configuration violation enforces that     |\n" _
+                      "|policy by flagging any filters that do not end with a term that accepts all |\n" _
+                      "|traffic. If Auto-Correct is selected then a 'default-accept' term is added  |\n" _
+                      "|to all filters found in violation.                                          |\n" _
+                      "|(Logical routers are not supported and the entire firewall filter must be   |\n" _
+                      "|located in the main firewall hierarchy or inherited from a single config    |\n" _
+                      "|group).                                                                     |";
+        <change-description> "Add 'default-accept' term to end of firewall filter";
+        <action> $all;
+        <template-name> "check-filter-no-final-accept";
+        <template-code> "    
+    /* Check for violation */
+    for-each( firewall//filter[ term[last()]/from || jcs:empty( term[last()]/then/accept ) ] ) {
+
+        /* Message used for error, warning, or syslog */
+        var $message = 'filter ' _ name _ ' is missing a final accept term';
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+        /* Configuration Change */
+        if( $action == $change ) {
+            /* 
+             * If filter already contains a default-accept term then we cannot fix it 
+             * (no attempt is made to randomize the name) 
+             */
+            if( term/name == 'default-accept' ) {
+                <xnm:error> {
+                    <message> 'Cannot add final default-accept term to filter ' _ name;
+                }
+            }
+            else {
+                var $configuration-change = {
+                    <term> {
+                        <name> 'default-accept';
+                        <then> {
+                            <accept>;
+                        }
+                    }
+                }
+                var $change-message = 'Added final default-accept term to filter ' _ name;
+                
+                /* Retrieve the returned <change> in case we have to put within a group */
+                var $change-element := { call jcs:emit-change( $content = $configuration-change, $message = $change-message  ); }
+                
+                /* If filter is inherited from a group then make the change within the group */
+                if( @junos:group ) {
+                    <change> {
+                        <groups> {
+                            <name> @junos:group;
+                            copy-of $change-element/change/firewall;
+                        }
+                    }
+                }
+                /* Otherwise, just copy the <change> into a change element */
+                else {
+                    <change> {
+                        copy-of $change-element/change/firewall;
+                    }
+                }
+                /* Display the xnm:warning as well */
+                copy-of $change-element/xnm:warning;
+                
+                <syslog> {
+                    <message> $change-message;
+                }
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "Firewalls";
+        <synopsis> "IPv4 firewall filter is not defined within family inet hierarchy";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|IPv4 firewall filters can be defined at either the [edit firewall] hierarchy|\n" _
+                      "|or the [edit firewall family inet] hierarchy. This configuration violation  |\n" _
+                      "|flags when an IPv4 filter is defined at the older [edit firewall] hierarchy.|";
+        <action> $all-except-change;
+        <template-name> "check-ipv4-filter-at-old-level";
+        <template-code> "    
+    /* Check for violation */
+    for-each( firewall/filter ) {
+
+        /* Message used for error, warning, or syslog */
+        var $message = 'filter ' _ name _ ' is defined at [edit firewall] hierarchy level';
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "Routing";
+        <category> "Specific value";
+        <synopsis> "AS number does not match specific value";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|The AS number is not configured or it does not match the specified value. If|\n" _
+                      "|Auto-Correct is chosen then the AS number will be set to the specific value.|";
+        <action> $all;
+        <specific-value>;
+        <template-name> "check-wrong-asn";
+        <change-description> "Change ASN to specific value";
+        <template-code> "
+    /* Verify that data has been set */
+    if( jcs:empty( $data ) ) {
+        <xnm:warning> {
+            <message> 'Specific AS number was not set within Commit Script Builder, skipping violation check';
+        }
+    }
+    /* Check for violation */
+    else if( jcs:empty( routing-options/autonomous-system/as-number ) || routing-options/autonomous-system/as-number != $data  ) {
+        /* Message used for error, warning, or syslog */
+        var $message = 'AS number is not set to ' _ $data;
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+        /* Configuration Change */
+        if( $action == $change ) {
+            /* Set it */
+            <change> {
+                <routing-options active='active'> {
+                    <autonomous-system active='active'> {
+                        <as-number active='active'> $data;
+                    }
+                }
+            }
+            var $change-message = 'Automatically set AS number to ' _ $data;
+            <syslog> {
+                <message> $change-message;
+            }
+            <xnm:warning> {
+                <message> $change-message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "System";
+        <category> "Specific value";
+        <synopsis> "Login message does not match specific value";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|The login message (displayed before login) is not set, or is set to the     |\n" _
+                      "|wrong value. If Auto-Correct is chosen then the login message is changed to |\n" _
+                      "|the specified value                                                         |";
+        <action> $all;
+        <specific-value>;
+        <template-name> "check-wrong-login-message";
+        <change-description> "Change login message to specific value";
+        <template-code> "
+    /* Verify that data has been set */
+    if( jcs:empty( $data ) ) {
+        <xnm:warning> {
+            <message> 'Specific login message was not set within Commit Script Builder, skipping violation check';
+        }
+    }
+    /* Check for violation */
+    else if( jcs:empty( system/login/message ) || system/login/message != $data  ) {
+        /* Message used for error, warning, or syslog */
+        var $message = 'Login message is not set correctly';
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+        /* Configuration Change */
+        if( $action == $change ) {
+            /* Set it */
+            <change> {
+                <system active='active'> {
+                    <login active='active'> {
+                        <message active='active'> $data;
+                    }
+                }
+            }
+            var $change-message = 'Automatically set login message';
+            <syslog> {
+                <message> $change-message;
+            }
+            <xnm:warning> {
+                <message> $change-message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "System";
+        <category> "Specific value";
+        <synopsis> "Login announcement does not match specific value";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|The login announcement (displayed after login) is not set, or is set to the |\n" _
+                      "|wrong value. If Auto-Correct is chosen then the announcement is changed to  |\n" _
+                      "|the specified value                                                         |";
+        <action> $all;
+        <specific-value>;
+        <template-name> "check-wrong-login-announcement";
+        <change-description> "Change login announcement to specific value";
+        <template-code> "
+    /* Verify that data has been set */
+    if( jcs:empty( $data ) ) {
+        <xnm:warning> {
+            <message> 'Specific login announcement was not set within Commit Script Builder, skipping violation check';
+        }
+    }
+    /* Check for violation */
+    else if( jcs:empty( system/login/announcement ) || system/login/announcement != $data  ) {
+        /* Message used for error, warning, or syslog */
+        var $message = 'Login announcement is not set correctly';
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+        /* Configuration Change */
+        if( $action == $change ) {
+            /* Set it */
+            <change> {
+                <system active='active'> {
+                    <login active='active'> {
+                        <announcement active='active'> $data;
+                    }
+                }
+            }
+            var $change-message = 'Automatically set login announcement';
+            <syslog> {
+                <message> $change-message;
+            }
+            <xnm:warning> {
+                <message> $change-message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "EX Series";
+        <category> "vme";
+        <category> "Virtual Chassis";
+        <synopsis> "vme interface is not configured";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|A vme interface serves as a single entry point into any of the members of a |\n" _
+                      "|virtual chassis. It is recommended that one be configured whenever using EX |\n" _
+                      "|VCs.                                                                        |";
+        <action> $all-except-change;
+        <template-name> "check-for-vme";
+        <template-code> "    
+    /* Check for violation */
+    if( jcs:empty( interfaces/interface[name == 'vme'] ) ) {
+            
+        /* Message used for error, warning, or syslog */
+        var $message = 'EX4200 vme interface is not configured';
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "EX Series";
+        <category> "RTG";
+        <synopsis> "Redundant trunk group primary is configured";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|When an interface within a redundant trunk group is configured as primary   |\n" _
+                      "|then it will always be the active link whenever it is operational, meaning  |\n" _
+                      "|that when it comes back online after an outage it will preempt the currently|\n" _
+                      "|active link. If no primary is specified then the active will be selected    |\n" _
+                      "|automatically and preemption will not occur.                                |";
+        <change-description> "Delete primary option from interface";
+        <action> $all;
+        <template-name> "check-rtg-has-primary";
+        <template-code> "    
+    /* Check for violation */
+    for-each( ethernet-switching-options/redundant-trunk-group/group ) {
+        /* Check for presence of a primary */
+        var $primary-node = .//primary;
+        
+        if( $primary-node ) {
+            /* Message used for error, warning, or syslog */
+            var $message = 'RTG ' _ name _ ' has a primary interface configured';
+            /* Error? */
+            if( $action == $error ) {
+                <xnm:error> {
+                    <message> $message;
+                }
+            }
+            /* Warning? */
+            if( contains( $action, $warning ) ) {
+                <xnm:warning> {
+                    <message> $message;
+                }
+            }
+            /* Syslog */
+            if( contains( $action, $syslog ) ) {
+                <syslog> {
+                    <message> 'Configuration Violation: ' _ $message;
+                }
+            }
+            /* Configuration Change */
+            if( $action == $change ) {
+                /* Bad node is present, delete it from the configuration */
+                call delete-node( $node = $primary-node );
+                var $change-message = 'Removed primary from RTG ' _ name;
+                <syslog> {
+                    <message> $change-message;
+                }
+                <xnm:warning> {
+                    <message> $change-message;
+                }
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "EX Series";
+        <category> "Virtual Chassis";
+        <synopsis> "Virtual Chassis master and backup are not configured";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|The default mastership-priority is 128. It is recommended that the priority |\n" _
+                      "|be set higher on two of the VC members in order to indicate that they should|\n" _
+                      "|serve as the master and backup of the VC.                                   |";
+        <action> $all-except-change;
+        <template-name> "check-for-vc-master";
+        <template-code> "    
+    /* Check for violation */
+    var $priorities = virtual-chassis/member[mastership-priority > 128];
+    
+    if( count( $priorities ) < 2 ) {
+            
+        /* Message used for error, warning, or syslog */
+        var $message = 'Virtual Chassis master and backup are not configured';
+        /* Error? */
+        if( $action == $error ) {
+            <xnm:error> {
+                <message> $message;
+            }
+        }
+        /* Warning? */
+        if( contains( $action, $warning ) ) {
+            <xnm:warning> {
+                <message> $message;
+            }
+        }
+        /* Syslog */
+        if( contains( $action, $syslog ) ) {
+            <syslog> {
+                <message> 'Configuration Violation: ' _ $message;
+            }
+        }
+    }";
+    }
+    <violation> {
+        <category> "EX Series";
+        <synopsis> "LCD maintenance-menu is not disabled";
+                     /*123456789012345678901234567890123456789012345678901234567890123456789012345678*/
+        <description> "|EX Series switches allow some administrative functions to be performed via  |\n" _
+                      "|the LCD menu. For security purposes, this can be disabled. The configuration|\n" _
+                      "|enforced by the script differs based on the EX product:                     |\n" _
+                      "|EX3200:                                                                     |\n" _
+                      "|set chassis lcd fpc 0 maintenance-menu disable                              |\n" _
+                      "|EX4200:                                                                     |\n" _
+                      "|set chassis lcd fpc 0 maintenance-menu disable                              |\n" _
+                      "|set chassis lcd fpc 1 maintenance-menu disable                              |\n" _
+                      "|set chassis lcd fpc 2 maintenance-menu disable                              |\n" _
+                      "|set chassis lcd fpc 3 maintenance-menu disable                              |\n" _
+                      "|set chassis lcd fpc 4 maintenance-menu disable                              |\n" _
+                      "|set chassis lcd fpc 5 maintenance-menu disable                              |\n" _
+                      "|set chassis lcd fpc 6 maintenance-menu disable                              |\n" _
+                      "|set chassis lcd fpc 7 maintenance-menu disable                              |\n" _
+                      "|set chassis lcd fpc 8 maintenance-menu disable                              |\n" _
+                      "|set chassis lcd fpc 9 maintenance-menu disable                              |\n" _
+                      "|EX4500:                                                                     |\n" _
+                      "|set chassis lcd fpc 0 maintenance-menu disable                              |\n" _
+                      "|EX8200:                                                                     |\n" _
+                      "|set chassis lcd maintenance-menu disable                                    |";
+        <change-description> "Disable LCD menu";
+        <action> $all;
+        <template-name> "check-ex-lcd-is-disabled";
+        <template-code> "    
+    /* Check for violation */
+    /* EX3200 and EX4500 */
+    if( starts-with( $product, 'ex32' ) || starts-with( $product, 'ex45' ) ) {
+        if( jcs:empty( chassis/lcd/fpc[name == '0'][maintenance-menu][disable] ) ) {
+            /* Message used for error, warning, or syslog */
+            var $message = 'LCD menu is not disabled';
+            /* Error? */
+            if( $action == $error ) {
+                <xnm:error> {
+                    <message> $message;
+                }
+            }
+            /* Warning? */
+            if( contains( $action, $warning ) ) {
+                <xnm:warning> {
+                    <message> $message;
+                }
+            }
+            /* Syslog */
+            if( contains( $action, $syslog ) ) {
+                <syslog> {
+                    <message> 'Configuration Violation: ' _ $message;
+                }
+            }
+            /* Configuration Change */
+            if( $action == $change ) {
+                /* Add it */
+                <change> {
+                    <chassis active='active'> {
+                        <lcd active='active'> {
+                            <fpc active='active'> {
+                                <name> '0';
+                                <maintenance-menu active='active'>;
+                                <disable active='active'>;
+                            }
+                        }
+                    }
+                }
+                var $change-message = 'Automatically disabled LCD menu';
+                <syslog> {
+                    <message> $change-message;
+                }
+                <xnm:warning> {
+                    <message> $change-message;
+                }
+            }
+        }
+    }
+    else if( starts-with( $product, 'ex42' ) ) {
+        if( count( chassis/lcd/fpc[maintenance-menu][disable] ) != 10 ) {
+            /* Message used for error, warning, or syslog */
+            var $message = 'LCD menu is not disabled on all potential VC FPCs';
+            /* Error? */
+            if( $action == $error ) {
+                <xnm:error> {
+                    <message> $message;
+                }
+            }
+            /* Warning? */
+            if( contains( $action, $warning ) ) {
+                <xnm:warning> {
+                    <message> $message;
+                }
+            }
+            /* Syslog */
+            if( contains( $action, $syslog ) ) {
+                <syslog> {
+                    <message> 'Configuration Violation: ' _ $message;
+                }
+            }
+            /* Configuration Change */
+            if( $action == $change ) {
+                /* Add it */
+                <change> {
+                    <chassis active='active'> {
+                        <lcd active='active'> {
+                            <fpc active='active'> {
+                                <name> '0';
+                                <maintenance-menu active='active'>;
+                                <disable active='active'>;
+                            }
+                            <fpc active='active'> {
+                                <name> '1';
+                                <maintenance-menu active='active'>;
+                                <disable active='active'>;
+                            }
+                            <fpc active='active'> {
+                                <name> '2';
+                                <maintenance-menu active='active'>;
+                                <disable active='active'>;
+                            }
+                            <fpc active='active'> {
+                                <name> '3';
+                                <maintenance-menu active='active'>;
+                                <disable active='active'>;
+                            }
+                            <fpc active='active'> {
+                                <name> '4';
+                                <maintenance-menu active='active'>;
+                                <disable active='active'>;
+                            }
+                            <fpc active='active'> {
+                                <name> '5';
+                                <maintenance-menu active='active'>;
+                                <disable active='active'>;
+                            }
+                            <fpc active='active'> {
+                                <name> '6';
+                                <maintenance-menu active='active'>;
+                                <disable active='active'>;
+                            }
+                            <fpc active='active'> {
+                                <name> '7';
+                                <maintenance-menu active='active'>;
+                                <disable active='active'>;
+                            }
+                            <fpc active='active'> {
+                                <name> '8';
+                                <maintenance-menu active='active'>;
+                                <disable active='active'>;
+                            }
+                            <fpc active='active'> {
+                                <name> '9';
+                                <maintenance-menu active='active'>;
+                                <disable active='active'>;
+                            }
+                        }
+                    }
+                }
+                var $change-message = 'Automatically disabled LCD menu';
+                <syslog> {
+                    <message> $change-message;
+                }
+                <xnm:warning> {
+                    <message> $change-message;
+                }
+            }
+        }
+    }
+    else if( starts-with( $product, 'ex82' ) ) {
+        if( jcs:empty( chassis/lcd[maintenance-menu][disable] ) ) {
+            /* Message used for error, warning, or syslog */
+            var $message = 'LCD menu is not disabled';
+            /* Error? */
+            if( $action == $error ) {
+                <xnm:error> {
+                    <message> $message;
+                }
+            }
+            /* Warning? */
+            if( contains( $action, $warning ) ) {
+                <xnm:warning> {
+                    <message> $message;
+                }
+            }
+            /* Syslog */
+            if( contains( $action, $syslog ) ) {
+                <syslog> {
+                    <message> 'Configuration Violation: ' _ $message;
+                }
+            }
+            /* Configuration Change */
+            if( $action == $change ) {
+                /* Add it */
+                <change> {
+                    <chassis active='active'> {
+                        <lcd active='active'> {
+                            <maintenance-menu active='active'>;
+                            <disable active='active'>;
+                        }
+                    }
+                }
+                var $change-message = 'Automatically disabled LCD menu';
+                <syslog> {
+                    <message> $change-message;
+                }
+                <xnm:warning> {
+                    <message> $change-message;
+                }
+            }
+        }
+    }
+    else {
+        <xnm:warning> {
+            <message> 'LCD menu check is not supported for this product: ' _ $product;
+        }
+    }
+    for-each( ethernet-switching-options/redundant-trunk-group/group ) {
+        /* Check for presence of a primary */
+        var $primary-node = .//primary;
+        
+        if( $primary-node ) {
+            /* Message used for error, warning, or syslog */
+            var $message = 'RTG ' _ name _ ' has a primary interface configured';
+            /* Error? */
+            if( $action == $error ) {
+                <xnm:error> {
+                    <message> $message;
+                }
+            }
+            /* Warning? */
+            if( contains( $action, $warning ) ) {
+                <xnm:warning> {
+                    <message> $message;
+                }
+            }
+            /* Syslog */
+            if( contains( $action, $syslog ) ) {
+                <syslog> {
+                    <message> 'Configuration Violation: ' _ $message;
+                }
+            }
+            /* Configuration Change */
+            if( $action == $change ) {
+                /* Bad node is present, delete it from the configuration */
+                call delete-node( $node = $primary-node );
+                var $change-message = 'Removed primary from RTG ' _ name;
+                <syslog> {
+                    <message> $change-message;
+                }
+                <xnm:warning> {
+                    <message> $change-message;
+                }
+            }
+        }
+    }";
+    }
+}
+
+

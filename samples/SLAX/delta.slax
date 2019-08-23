@@ -1,0 +1,120 @@
+version 1.0;
+
+ns junos = "http://xml.juniper.net/junos/*/junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/junos/commit-scripts/1.0";
+
+import "../import/junos.xsl";
+
+/*
+ * This script is called in two passes.  On the first pass, it is
+ * invoked without the filename argument and outputs data to be
+ * saved.  The user is responsible for saving this data.  The
+ * typical invocation is:
+ *
+ *      op delta | display xml | save /tmp/save.xml
+ *
+ * At a later point, the script is invoked a second time, but this
+ * time the name of the saved file from the first pass is passed in
+ * as the "filename" argument.  The data from this file is compared
+ * with the currently values and errors can be reported as needed.
+ *
+ *      op delta filename /tmp/save.xml
+ *
+ * In this test case, we record the output of "show system uptime"
+ * on the first pass and compare the saved value for the current-time
+ * during the second pass.  The delta is reported.
+ */
+var $arguments = {
+    <argument> {
+	<name> "phase";
+	<description> "Phase of delta (baseline or compare)";
+    }
+    <argument> {
+	<name> "filename";
+	<description> "Name of baseline file";
+    }
+}
+
+param $filename;
+param $phase = {
+    if ($filename) {
+	expr "compare";
+    } else {
+	expr "baseline";
+    }
+}
+
+match / {
+    <op-script-results> {
+	var $rpc = <get-system-uptime-information>;
+	var $new = jcs:invoke($rpc);
+
+	if ($phase == "baseline") {
+	    copy-of $new;
+	} else {
+	    var $doc = document($filename);
+	    var $old = $doc/rpc-reply/ *;
+
+	    /*
+	     * This is ugly work, but we don't know the
+	     * namespace string, so we have to use local-name()
+	     * to find the nodes we need.
+	     */
+	    var $ot = {
+		call extract($node = $old,
+			     $path = "current-time/date-time/@seconds");
+	    }
+	    var $nt = {
+		call extract($node = $new,
+			     $path = "current-time/date-time/@seconds");
+	    }
+
+	    <top> {
+		<output> jcs:printf("old %s, new %s, delta %s",
+				    $ot, $nt, $nt - $ot);
+	    }
+	}
+    }
+}
+
+template extract ($node, $path)
+{
+    if (not($path)) {
+	copy-of $node;
+
+    } else {
+	var $pre = {
+	    if (contains($path, "/")) {
+		expr substring-before($path, "/");
+	    } else {
+		expr $path;
+	    }
+	}
+	var $post = substring-after($path, "/");
+
+	if (starts-with($pre, "@")) {
+	    var $rest =  $node/@*[local-name() == substring($pre, 2)];
+	    expr $rest;
+
+	} else {
+	    var $rest = $node/ *[local-name() == $pre];
+	    call extract($node = $rest, $path = $post);
+	}
+    }
+}
+
+template remove-namespaces ($node)
+{
+    <xsl:element name=local-name($node)> {
+	for-each ($node/@*) {
+	    <xsl:attribute name=local-name(.)> {
+		expr .;
+	    }
+	}
+	for-each ($node/*) {
+	    call remove-namespaces($node = .);
+	}
+	expr $node/text();
+    }
+}
