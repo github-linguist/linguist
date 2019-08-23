@@ -1,0 +1,182 @@
+/*
+ * Title               : add-family-inet6
+ * Last modified date  : 26.11.2018
+ * Author              : jumation.com
+ * Description         : Adds family inet6 with automatically generated IPv6
+ *                       address to all VLAN sub-interfaces used for DIA or
+ *                       MGMT-DIA services not already having the IPv6 address
+ *                       configured. Most-significant byte of the third hextet
+ *                       refers to location and this comes from the assignment
+ *                       made to the data center. Next eight bits refer to
+ *                       general customers assignment. First nibble of the
+ *                       fourth hextet is the DIA service(0) or MGMT-DIA
+ *                       service(1). Rest of the 12 bits of this hextet is a
+ *                       VLAN ID in hex. First address of the /64 is configured
+ *                       to the router interface.
+ *                       For MGMT-DIA services, a default "discard-all" fire-
+ *                       wall policy is applied for all outgoing traffic.
+ *                       MGMT-DIA service is meant to provide connectivity for
+ *                       various OoB adapters(IBM RSA, HP iLO, Dell DRAC, etc),
+ *                       management ports of network equipment, etc.
+ * Options             :
+ * Notes               : Requires Junos 12.2 or newer.
+ *                       Script expects protocols and interfaces configuration-
+ *                       hierarchies to be present.
+ */
+
+version 1.1;
+
+ns junos = "http://xml.juniper.net/junos/*/junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/junos/commit-scripts/1.0";
+ns bit extension = "http://xml.libslax.org/bit";
+ns jumation = "https://www.jumation.com/slaxfunctions";
+
+import "../import/junos.xsl";
+
+
+/* Convert decimal integer to hex. */
+function jumation:decimal-to-hex($int) {
+
+	var $bit_string = bit:from-int($int);
+	var $hex_string = bit:to-hex($bit_string);
+
+	result substring-after($hex_string, "0x");
+}
+
+
+template add-inet6($service_type, $address, $i_policer, $o_policer) {
+	<family> {
+		<inet6> {
+			if ($i_policer && $o_policer) {
+				<policer> {
+					<input> $i_policer;
+					<output> $o_policer;
+				}
+			}
+			else if ($i_policer) {
+				<policer> {
+					<input> $i_policer;
+				}
+			}
+			else if ($o_policer) {
+				<policer> {
+					<output> $o_policer;
+				}
+			}
+			if ($service_type == "1") {
+				<filter> {
+					<output-list> "discard-all";
+				}
+			}
+			<address> {
+				<name> $address;
+			}
+		}
+	}
+}
+
+
+template add-ra($network, $int) {
+	<router-advertisement> {
+		<interface> {
+			<name> $int;
+			<prefix> {
+				<name> $network;
+			}
+		}
+	}
+}
+
+
+match configuration {
+
+	var $aggr = routing-options/rib[name == "inet6.0"]/aggregate/route/name;
+	var $protocols = protocols;
+
+	if ($aggr) {
+		/*
+		 * Process each IFL used for DIA or MGMT-DIA service
+		 * with VLAN ID set and IPv6 address already not configured.
+		 */
+		for-each(interfaces/interface/unit[vlan-id]
+										[starts-with(description, "DIA: ") ||
+										starts-with(description, "MGMT-DIA: ")]
+										[not(family/inet6/address)]) {
+
+			/*
+			 * Policers are configured as aggregate policers(logical-
+			 * interface-policer), i.e when the same policer is configured
+			 * under multiple families, then the policer restricts traffic
+			 * for all those protocol families combined.
+			 */
+			var $i_policer = family/inet/policer/input;
+			var $o_policer = family/inet/policer/output;
+
+			var $type_nibble = {
+				if (starts-with(description, "DIA: ")) {
+					expr "0";
+				}
+				else if (starts-with(description, "MGMT-DIA: ")) {
+					expr "1";
+				}
+			}
+
+			var $vlan = number(vlan-id);
+			var $hex_vlan = jumation:decimal-to-hex($vlan);
+			var $hextet = $type_nibble _ jcs:printf("%03s", $hex_vlan);
+
+			var $hextets = jcs:split(":", $aggr);
+			var $third_hextet = jcs:printf("%04s", $hextets[3]);
+
+			var $prefix = jcs:printf("%s:%s:%s01:%s",
+									$hextets[1],
+									$hextets[2],
+									substring($third_hextet, 1, 2),
+									$hextet);
+
+			var $address = $prefix _ "::1/64";
+			var $network = $prefix _ "::/64";
+
+			call jcs:emit-change {
+				with $message = "Adding inet6 family with address " _ $address;
+				with $tag = "change";
+				with $content = {
+					call add-inet6 {
+						with $service_type = $type_nibble;
+						with $address = $address;
+						with $i_policer = $i_policer;
+						with $o_policer = $o_policer;
+					}
+				}
+			}
+
+
+			/* Enable SLAAC for DIA services. */
+			if ($type_nibble == "0") {
+
+				var $int = ../name _ "." _ name;
+
+				call jcs:emit-change {
+					with $message = "Enable router advertisement for " _
+										$network _ " on " _ $int;
+					with $tag = "change";
+					with $dot = $protocols;
+					with $content = {
+						call add-ra {
+							with $network = $network;
+							with $int = $int;
+						}
+					}
+				}
+			}
+		}
+	}
+	else {
+		<xnm:warning> {
+			<edit-path> "[edit routing-options rib inet6.0 aggregate]";
+			<message> $script _ ": Aggregate IPv6 route is missing! " _
+					"Unable to automatically configure inet6 families.";
+		}
+	}
+}
