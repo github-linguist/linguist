@@ -3,8 +3,6 @@ https://bitbucket.org/Clams/sublimesystemverilog/get/default.tar.gz:
 - source.ucfconstraints
 https://svn.edgewall.org/repos/genshi/contrib/textmate/Genshi.tmbundle/Syntaxes/Markup%20Template%20%28XML%29.tmLanguage:
 - text.xml.genshi
-vendor/grammars/ABNF.tmbundle:
-- source.abnf
 vendor/grammars/Agda.tmbundle:
 - source.agda
 vendor/grammars/Alloy.tmbundle:
@@ -23,8 +21,6 @@ vendor/grammars/ColdFusion:
 - text.html.cfm
 vendor/grammars/Docker.tmbundle:
 - source.dockerfile
-vendor/grammars/EBNF.tmbundle:
-- source.ebnf
 vendor/grammars/Elm/Syntaxes:
 - source.elm
 - text.html.mediawiki.elm-build-output
@@ -452,6 +448,9 @@ vendor/grammars/language-gfm:
 vendor/grammars/language-gn:
 - source.gn
 vendor/grammars/language-grammars:
+- source.abnf
+- source.bnf
+- source.ebnf
 - source.lex
 - source.lex.regexp
 - source.yacc
