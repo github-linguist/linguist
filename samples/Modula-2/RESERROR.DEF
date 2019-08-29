@@ -1,0 +1,17 @@
+DEFINITION MODULE RESerrors;
+
+TYPE
+        RESerrorcodes = (USERERROR, NOENVAR, NOMEMAVAIL,
+                         NOFILEFOUND, FILEEMPTY,
+                         PICKLIMITERROR
+                         );
+        RESerrorlevel = (WARNING,FATAL);
+
+PROCEDURE RESerror( err : RESerrorcodes;
+                    msg : ARRAY OF CHAR;
+                    lev : RESerrorlevel);
+END RESerrors.
+
+
+
+
