@@ -158,6 +158,7 @@ class TestGenerated < Minitest::Test
     generated_fixture_loading_data("HTML/quotes-single.html")
     generated_fixture_loading_data("HTML/uppercase.html")
     generated_fixture_loading_data("HTML/unknown.html", true)
+    generated_fixture_loading_data("HTML/no-content.html", true)
     generated_sample_loading_data("HTML/pages.html")
 
   end
