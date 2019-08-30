@@ -621,23 +621,27 @@ module Linguist
       return false if matches.empty?
       return matches.map {|x| extract_html_meta(x) }.any? do |attr|
         attr["name"].to_s.downcase == 'generator' &&
-        attr["content"].match(/^
-          ( org \s+ mode
-          | j?latex2html
-          | groff
-          | makeinfo
-          | texi2html
-          ) \b
-        /ix)
+        [attr["content"], attr["value"]].any? do |cv|
+          !cv.nil? &&
+          cv.match(/^
+            ( org \s+ mode
+            | j?latex2html
+            | groff
+            | makeinfo
+            | texi2html
+            | ronn
+            ) \b
+          /ix)
+        end
       end
     end
 
     # Internal: Extract a Hash of name/content pairs from an HTML <meta> tag
     def extract_html_meta(match)
       (match.last.sub(/\/\Z/, "").strip.scan(/
-        (?<=^|\s)        # Check for preceding whitespace
-        (name|content)   # Attribute names we're interested in
-        \s* = \s*        # Key-value separator
+        (?<=^|\s)              # Check for preceding whitespace
+        (name|content|value)   # Attribute names we're interested in
+        \s* = \s*              # Key-value separator
 
         # Attribute value
         ( "[^"]+"        # name="value"
