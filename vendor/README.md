@@ -364,6 +364,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Scaml:** [scalate/Scalate.tmbundle](https://github.com/scalate/Scalate.tmbundle)
 - **Scheme:** [sicp-lang/scheme.tmbundle](https://github.com/sicp-lang/scheme.tmbundle)
 - **Scilab:** [textmate/scilab.tmbundle](https://github.com/textmate/scilab.tmbundle)
+- **Scilla:** [as1ndu/scilla-grammar](https://github.com/as1ndu/scilla-grammar)
 - **ShaderLab:** [tgjones/shaders-tmLanguage](https://github.com/tgjones/shaders-tmLanguage)
 - **Shell:** [atom/language-shellscript](https://github.com/atom/language-shellscript)
 - **ShellSession:** [atom/language-shellscript](https://github.com/atom/language-shellscript)
