@@ -3224,11 +3224,16 @@ MoonScript:
   language_id: 238
 Motorola 68K Assembly:
   type: programming
-  group: Assembly
+  aliases:
+  - m68k
   extensions:
-  - ".X68"
+  - ".asm"
+  - ".i"
+  - ".inc"
+  - ".s"
+  - ".x68"
   tm_scope: source.m68k
-  ace_mode: assembly_x86
+  ace_mode: text
   language_id: 477582706
 Myghty:
   type: programming
