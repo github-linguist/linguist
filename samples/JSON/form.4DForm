@@ -1,0 +1,374 @@
+{
+	"destination": "detailScreen",
+	"formSizeAnchor": "Variable2",
+	"rightMargin": 19,
+	"bottomMargin": 20,
+	"markerHeader": 15,
+	"markerBody": 200,
+	"markerBreak": 220,
+	"markerFooter": 240,
+	"events": [
+		"onLoad",
+		"onValidate",
+		"onClick",
+		"onOutsideCall",
+		"onDoubleClick",
+		"onDrop",
+		"onMenuSelect",
+		"onPluginArea",
+		"onDataChange",
+		"onDragOver",
+		"onTimer",
+		"onAfterKeystroke",
+		"onAfterEdit",
+		"onBeginDragOver",
+		"onBoundVariableChange",
+		"onPageChange"
+	],
+	"method": "method.4dm",
+	"pages": [
+		null,
+		{
+			"objects": {
+				"Variable": {
+					"type": "input",
+					"top": 26,
+					"left": 13,
+					"width": 180,
+					"height": 17,
+					"dataSource": "Form:C1466.employeeName",
+					"focusable": false,
+					"fill": "transparent",
+					"borderStyle": "none",
+					"enterable": false,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "custom",
+					"events": [
+						"onLoad",
+						"onLosingFocus",
+						"onGettingFocus",
+						"onDataChange",
+						"onAfterEdit"
+					]
+				},
+				"Text": {
+					"type": "text",
+					"top": 7,
+					"left": 13,
+					"width": 102,
+					"height": 17,
+					"stroke": "#696969",
+					"text": "Employee"
+				},
+				"Variable1": {
+					"type": "input",
+					"top": 26,
+					"left": 280,
+					"width": 260,
+					"height": 17,
+					"dataSource": "Form:C1466.creation",
+					"focusable": false,
+					"fill": "transparent",
+					"borderStyle": "none",
+					"enterable": false,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "custom",
+					"events": [
+						"onLoad",
+						"onLosingFocus",
+						"onGettingFocus",
+						"onDataChange",
+						"onAfterEdit"
+					]
+				},
+				"Text1": {
+					"type": "text",
+					"top": 7,
+					"left": 280,
+					"width": 102,
+					"height": 17,
+					"stroke": "#696969",
+					"text": "Creation"
+				},
+				"Variable2": {
+					"type": "input",
+					"top": 418,
+					"left": 476,
+					"width": 220,
+					"height": 17,
+					"sizingX": "move",
+					"sizingY": "move",
+					"dataSource": "Form:C1466.priceTotal",
+					"dataSourceTypeHint": "number",
+					"textAlign": "right",
+					"fontWeight": "bold",
+					"focusable": false,
+					"fill": "transparent",
+					"borderStyle": "none",
+					"enterable": false,
+					"contextMenu": "none",
+					"numberFormat": {
+						"$ref": "/SOURCES/filters.json#/amount_CHF"
+					},
+					"dragging": "none",
+					"dropping": "custom",
+					"events": [
+						"onLoad",
+						"onLosingFocus",
+						"onGettingFocus",
+						"onDataChange",
+						"onAfterEdit"
+					]
+				},
+				"Text2": {
+					"type": "text",
+					"top": 399,
+					"left": 594,
+					"width": 102,
+					"height": 17,
+					"sizingX": "move",
+					"sizingY": "move",
+					"stroke": "#696969",
+					"textAlign": "right",
+					"fontWeight": "bold",
+					"text": "Total"
+				},
+				"List Box": {
+					"type": "listbox",
+					"top": 144,
+					"left": 13,
+					"width": 683,
+					"height": 245,
+					"sizingX": "grow",
+					"sizingY": "grow",
+					"listboxType": "currentSelection",
+					"movableRows": false,
+					"highlightSet": "$ListboxSet",
+					"table": 5,
+					"scrollbarHorizontal": "automatic",
+					"horizontalLineStroke": "transparent",
+					"verticalLineStroke": "transparent",
+					"alternateFill": "#F2F3F8",
+					"borderStyle": "none",
+					"events": [
+						"onClick",
+						"onDataChange",
+						"onSelectionChange",
+						"onHeaderClick"
+					],
+					"columns": [
+						{
+							"name": "Column1",
+							"dataSource": "[Product:3]name:2",
+							"width": 195,
+							"minWidth": 75,
+							"maxWidth": 300,
+							"alternateFill": "#F2F3F8",
+							"events": [
+								"onClick",
+								"onDataChange"
+							],
+							"header": {
+								"name": "Header1",
+								"text": "Product",
+								"textAlign": "left"
+							},
+							"footer": {
+								"name": "Footer1",
+								"timeFormat": "hh_mm_ss",
+								"fontWeight": "bold"
+							}
+						},
+						{
+							"name": "Column2",
+							"dataSource": "[Invoice_Line:5]quantity:4",
+							"width": 78,
+							"minWidth": 75,
+							"maxWidth": 100,
+							"alternateFill": "#F2F3F8",
+							"events": [
+								"onClick",
+								"onDataChange"
+							],
+							"header": {
+								"name": "Header2",
+								"text": "Qty",
+								"textAlign": "right"
+							},
+							"footer": {
+								"name": "Footer2",
+								"timeFormat": "hh_mm_ss"
+							}
+						},
+						{
+							"name": "Column3",
+							"dataSource": "[Invoice_Line:5]price:5",
+							"dataSourceTypeHint": "number",
+							"width": 150,
+							"minWidth": 30,
+							"maxWidth": 250,
+							"numberFormat": "|amount_CHF",
+							"alternateFill": "#F2F3F8",
+							"events": [
+								"onClick",
+								"onDataChange"
+							],
+							"header": {
+								"name": "Header3",
+								"text": "Price",
+								"textAlign": "right"
+							},
+							"footer": {
+								"name": "Footer3",
+								"variableCalculation": "sum",
+								"timeFormat": "hh_mm_ss",
+								"fontWeight": "bold"
+							}
+						}
+					]
+				},
+				"Text3": {
+					"type": "text",
+					"top": 122,
+					"left": 13,
+					"width": 102,
+					"height": 17,
+					"text": "Lines"
+				},
+				"product_list": {
+					"type": "dropdown",
+					"top": 94,
+					"left": 13,
+					"width": 207,
+					"height": 17,
+					"focusable": false,
+					"method": "ObjectMethods/product_list.4dm",
+					"events": [
+						"onDataChange"
+					]
+				},
+				"Text4": {
+					"type": "text",
+					"top": 75,
+					"left": 13,
+					"width": 102,
+					"height": 17,
+					"text": "Product"
+				},
+				"quantity": {
+					"type": "input",
+					"top": 95,
+					"left": 243,
+					"width": 152,
+					"height": 17,
+					"dataSource": "Form:C1466.quantity",
+					"dataSourceTypeHint": "number",
+					"borderStyle": "solid",
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "custom",
+					"method": "ObjectMethods/quantity.4dm",
+					"events": [
+						"onLoad",
+						"onLosingFocus",
+						"onGettingFocus",
+						"onDataChange",
+						"onAfterEdit"
+					]
+				},
+				"Text5": {
+					"type": "text",
+					"top": 75,
+					"left": 240,
+					"width": 102,
+					"height": 17,
+					"text": "Quatity"
+				},
+				"Variable4": {
+					"type": "input",
+					"top": 95,
+					"left": 408,
+					"width": 152,
+					"height": 17,
+					"dataSource": "Form:C1466.linePrice",
+					"dataSourceTypeHint": "number",
+					"focusable": false,
+					"borderStyle": "solid",
+					"enterable": false,
+					"contextMenu": "none",
+					"dragging": "none",
+					"dropping": "custom",
+					"events": [
+						"onLoad",
+						"onLosingFocus",
+						"onGettingFocus",
+						"onDataChange",
+						"onAfterEdit"
+					]
+				},
+				"Text6": {
+					"type": "text",
+					"top": 75,
+					"left": 405,
+					"width": 102,
+					"height": 17,
+					"text": "Price"
+				},
+				"Button": {
+					"type": "button",
+					"top": 91,
+					"left": 580,
+					"width": 87,
+					"height": 25,
+					"text": "Add Line",
+					"focusable": false,
+					"method": "ObjectMethods/Button.4dm",
+					"events": [
+						"onClick"
+					]
+				},
+				"product_id": {
+					"type": "dropdown",
+					"top": 494,
+					"left": 13,
+					"width": 207,
+					"height": 17,
+					"visibility": "hidden",
+					"dataSourceTypeHint": "arrayNumber",
+					"focusable": false,
+					"events": [
+						"onDataChange"
+					]
+				},
+				"product_price": {
+					"type": "dropdown",
+					"top": 514,
+					"left": 13,
+					"width": 207,
+					"height": 17,
+					"visibility": "hidden",
+					"dataSourceTypeHint": "arrayNumber",
+					"focusable": false,
+					"events": [
+						"onDataChange"
+					]
+				},
+				"Button1": {
+					"type": "button",
+					"top": 27,
+					"left": 197,
+					"width": 63,
+					"height": 18,
+					"text": "Select",
+					"focusable": false,
+					"method": "ObjectMethods/Button1.4dm",
+					"events": [
+						"onClick"
+					]
+				}
+			}
+		}
+	]
+}
