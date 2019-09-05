@@ -1,0 +1,15 @@
+@isTest
+public class TestVerifyDate {
+    // EXAMPLE APEX TEST
+    // https://trailhead.salesforce.com/es-MX/content/learn/modules/apex_testing/apex_testing_triggers?trail_id=force_com_dev_beginner
+
+	@isTest static void testCheckDates() {
+        Date pri = VerifyDate.CheckDates(date.newinstance(2019, 5, 14), date.newinstance(2019, 5, 31));
+        System.assertEquals(date.newinstance(2019, 5, 31), pri);
+    }
+    
+    @isTest static void testCheckDates2() {
+        Date pri = VerifyDate.CheckDates(date.newinstance(2019, 5, 14), date.newinstance(2019, 6, 30));
+        System.assertEquals(date.newinstance(2019, 6, 30), pri);
+    }
+}

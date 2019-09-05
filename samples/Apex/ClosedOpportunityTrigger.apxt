@@ -1,0 +1,14 @@
+trigger ClosedOpportunityTrigger on Opportunity (after insert, after update) {
+    // EXAMPLE APEX TRIGGER ON Opportunity
+    // https://trailhead.salesforce.com/es-MX/content/learn/modules/apex_triggers/apex_triggers_bulk?trail_id=force_com_dev_beginner
+    
+    List<Task> t = new List<Task>();
+    for(Opportunity o : Trigger.New) {
+        if (o.StageName == 'Closed Won'){
+            t.add(new Task(Subject = 'Follow Up Test Task' + WhatId = o.Id));
+        }
+	}
+	if (t.size() > 0) {
+        insert t;
+    }
+}

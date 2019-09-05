@@ -1,0 +1,23 @@
+trigger AccountAddressTrigger on Account(before insert, before update) {
+    // EXAMPLE APEX TRIGGER ON Account
+    // https://trailhead.salesforce.com/es-MX/content/learn/modules/apex_triggers/apex_triggers_intro?trail_id=force_com_dev_beginner
+
+    Account a = new Account();
+    for(Account a : Trigger.New) {
+        if (a.Match_Billing_Address__c){
+            a.ShippingPostalCode = a.BillingPostalCode;
+        }
+    }
+    
+    for(Account a2 : Trigger.New) {
+        if (a2.Match_Billing_Address__c == true && a2.Match_Billing_Address__c != null){
+        	a2.ShippingPostalCode = a2.BillingPostalCode;
+        }
+    }
+    
+    for(Account a3 : Trigger.New) {
+        if (a3.Match_Billing_Address__c == true){
+        	a3.ShippingPostalCode = a3.BillingPostalCode;
+        }
+    }
+}

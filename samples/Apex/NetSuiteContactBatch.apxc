@@ -1,0 +1,90 @@
+global class NetSuiteContactBatch implements Database.Batchable<Integer>, Database.Stateful, Database.AllowsCallouts{    
+    // EXAMPLE APEX BATCH
+
+    public Boolean isAll;
+    public Integer pageSize;
+    public String searchId;
+    
+    global NetSuiteContactBatch(Boolean isAll, Integer pageSize){
+        this.pageSize = pageSize;
+        this.isAll = isAll;
+    }
+
+    global List<Integer> start(Database.BatchableContext BC){
+        Integer totalPages = 0;
+        for(Dom.XmlNode childElement1:NetSuiteConnection.getNetSuiteSearchObject(isAll, 'ContactSearch', pageSize)) 
+        for(Dom.XmlNode childElement2:childElement1.getChildElements()) 
+        
+        for(Dom.XmlNode childElement3:childElement2.getChildElements()){
+            if(childElement3.getName() == 'totalPages'){
+                totalPages = String.isNotBlank(childElement3.getText()) ? Integer.valueOf(childElement3.getText()) : 0;
+            }
+            if(childElement3.getName() == 'searchId'){
+                searchId = childElement3.getText();
+                break;
+            }
+        }  
+        
+        List<Integer> pages = new List<Integer>();
+        for(Integer i = 1; i <= totalPages; i++) pages.add(i);
+        return pages;
+    }
+
+    global void execute(Database.BatchableContext BC, List<Integer> scope) {
+        Map<String, Contact> contactsMap = new Map<String, Contact>();
+        Map<String, Id> accountsMap = new Map<String, Id>();
+        Contact cont;
+        for(Dom.XmlNode childElement1:NetSuiteConnection.getNetSuiteSearchMore(searchId, scope[0])){
+            for(Dom.XmlNode childElement2:childElement1.getChildElements()){
+                for(Dom.XmlNode childElement3:childElement2.getChildElements()){
+                    if(childElement3.getName() == 'recordList'){
+                        for(Dom.XmlNode childElement4:childElement3.getChildElements()){
+                            cont = new Contact();        
+                            cont.NetSuite_ID__c = childElement4.getAttributeValue('internalId', '');
+                            for(Dom.XmlNode childElement5:childElement4.getChildElements()){
+                                if(childElement5.getName() == 'entityId') cont.LastName = childElement5.getText();
+                                if(childElement5.getName() == 'firstName') cont.FirstName = childElement5.getText();
+                                if(childElement5.getName() == 'lastName') cont.LastName = childElement5.getText();
+                                if(childElement5.getName() == 'company') cont.NetSuite_Customer_ID__c = childElement5.getAttributeValue('internalId', '');
+                                if(childElement5.getName() == 'dateCreated') cont.Date_Created__c = childElement5.getText().countMatches('-')  ==  3 ? DateTime.valueOf(childElement5.getText().substringBeforeLast('-').replace('T', ' ')) : DateTime.valueOf(childElement5.getText().replace('T', ' '));
+                                if(childElement5.getName() == 'email') cont.Email = childElement5.getText();
+                                if(childElement5.getName() == 'addressbookList'){
+                                    for(Dom.XmlNode childElement6:childElement5.getChildElements()){
+                                        for(Dom.XmlNode childElement7:childElement6.getChildElements()){
+                                            if(childElement7.getName() == 'defaultBilling') cont.Default_Billing__c = childElement7.getText() == 'true' ? true : false;
+                                            if(childElement7.getName() == 'addressbookAddress'){
+                                                if(cont.Default_Billing__c != null && cont.Default_Billing__c){
+                                                    for(Dom.XmlNode childElement8:childElement7.getChildElements()){
+                                                        if(childElement8.getName() == 'city') cont.MailingCity = childElement8.getText();
+                                                        if(childElement8.getName() == 'country') cont.MailingCountry = childElement8.getText();
+                                                        if(childElement8.getName() == 'dropdownstate') cont.MailingState = childElement8.getText();
+                                                        if(childElement8.getName() == 'zip') cont.MailingPostalCode = childElement8.getText();
+                                                        if(childElement8.getName() == 'addrText') cont.MailingStreet = childElement8.getText();
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    } 
+                                }
+                            }
+                            if(String.isNotEmpty(cont.NetSuite_Customer_ID__c)) accountsMap.put(cont.NetSuite_Customer_ID__c, null);
+                            contactsMap.put(cont.NetSuite_ID__c, cont);
+                        }
+                    }
+                } 
+            } 
+        }
+        List<Database.UpsertResult> upsertResults;
+        for(Account account: [Select id, NetSuite_ID__c from Account where NetSuite_ID__c in:accountsMap.keySet()]) accountsMap.put(account.NetSuite_ID__c, account.id);
+        for(Contact con: contactsMap.values()) if(accountsMap.get(con.NetSuite_Customer_ID__c) != null) con.AccountId = accountsMap.get(con.NetSuite_Customer_ID__c);
+       
+        if(!contactsMap.values().isEmpty()){
+            upsertResults = Database.upsert(contactsMap.values(), Contact.NetSuite_ID__c, false);
+            for(Database.UpsertResult upsertResult:upsertResults) if(!upsertResult.isSuccess()) for(Database.Error upsertError : upsertResult.getErrors()) System.debug('NetSuiteContactBatch Contact Upsert Error: ' + upsertError.getMessage());
+        }
+    }
+    
+    global void finish(Database.BatchableContext BC) {
+		if(!Test.isRunningTest()) Database.executeBatch(new NetSuiteItemBatch(isAll, pageSize), 1);        
+    }
+}
