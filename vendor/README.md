@@ -218,6 +218,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Lasso:** [bfad/Sublime-Lasso](https://github.com/bfad/Sublime-Lasso)
 - **Latte:** [textmate/php-smarty.tmbundle](https://github.com/textmate/php-smarty.tmbundle)
 - **Lean:** [leanprover/vscode-lean](https://github.com/leanprover/vscode-lean)
+- **Ledger:** [lifepillar/Ledger.tmbundle](https://github.com/lifepillar/Ledger.tmbundle)
 - **Less:** [atom/language-less](https://github.com/atom/language-less)
 - **Lex:** [Alhadis/language-grammars](https://github.com/Alhadis/language-grammars)
 - **LilyPond:** [textmate/lilypond.tmbundle](https://github.com/textmate/lilypond.tmbundle)

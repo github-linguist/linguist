@@ -1,0 +1,47 @@
+
+; Define valid currencies/commodities.
+; See 3.0/doc/ledger3.html#Commodities-and-Currencies
+commodity MT
+	note Mozambican Metical
+	nomarket
+	default
+commodity R
+commodity $
+commodity €
+commodity £
+
+; Define list of valid accounts.
+account Equity:Opening Balances
+account Assets:Accounts Receivable
+account Assets:Savings
+account Assets:Inventory
+account Assets:Property
+account Assets:Shares
+account Liabilities:Mortgage
+account Liabilities:Txeneka
+account Income:Salary
+account Income:Sales
+account Income:Interest
+account Income:Gift
+account Expenses:Auto:Gas
+account Expenses:Auto:Repairs
+account Expenses:Utilities
+account Expenses:Utilities:Electricity
+account Expenses:Utilities:Water
+account Expenses:Utilities:Broadband
+account Expenses:Mortgage:Interest
+account Expenses:Insurance
+account Expenses:Taxes
+account Expenses:Clothes
+account Expenses:Groceries
+account Expenses:Gift
+account Expenses:Shoes
+account Expenses:Food
+	note This account is all about the chicken!
+	alias food
+	payee ^(Mastrong|Cartuchinhos)$
+	check commodity == "MT"
+	assert commodity == "MT"
+	; eval print("Hello!")
+	default
+; vim: set ft=ledger ts=2 sts=2 sw=2 et :

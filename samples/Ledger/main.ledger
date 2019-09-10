@@ -1,0 +1,9 @@
+; This is the main entry file for ledger.
+; Nothing fancy happens here. All real data is in journal.txt, configuration
+; stuff etc. is to be found in meta.txt.
+
+; Include the config file.
+include meta.ledger
+
+; Include the actual journal.
+include transactions.ledger
