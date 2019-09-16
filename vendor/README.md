@@ -271,6 +271,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Nix:** [wmertens/sublime-nix](https://github.com/wmertens/sublime-nix)
 - **Nu:** [jsallis/nu.tmbundle](https://github.com/jsallis/nu.tmbundle)
 - **OCaml:** [textmate/ocaml.tmbundle](https://github.com/textmate/ocaml.tmbundle)
+- **Oberon:** [harogaston/Sublime-Modula-2](https://github.com/harogaston/Sublime-Modula-2)
 - **ObjDump:** [nanoant/assembly.tmbundle](https://github.com/nanoant/assembly.tmbundle)
 - **ObjectScript:** [intersystems-community/ObjectScript.tmBundle](https://github.com/intersystems-community/ObjectScript.tmBundle)
 - **Objective-C:** [textmate/objective-c.tmbundle](https://github.com/textmate/objective-c.tmbundle)
