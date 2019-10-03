@@ -118,7 +118,14 @@ module Linguist
       !!name.match(/(^|\/)Carthage\/Build\//)
     end
 
-    # Internal: Is the blob minified files?
+    # Internal: Does extname indicate a filetype which is commonly minified?
+    #
+    # Returns true or false.
+    def maybe_minified?
+      ['.js', '.css'].include? extname.downcase
+    end
+
+    # Internal: Is the blob a minified file?
     #
     # Consider a file minified if the average line length is
     # greater then 110c.
@@ -127,8 +134,7 @@ module Linguist
     #
     # Returns true or false.
     def minified_files?
-      return unless ['.js', '.css'].include? extname
-      if lines.any?
+      if maybe_minified? and lines.any?
         (lines.inject(0) { |n, l| n += l.length } / lines.length) > 110
       else
         false
@@ -146,7 +152,7 @@ module Linguist
     #
     # Returns true or false.
     def has_source_map?
-      return false unless extname.downcase == '.js'
+      return false unless maybe_minified?
       lines.last(2).any? { |line| line.start_with?('//# sourceMappingURL') }
     end
 
