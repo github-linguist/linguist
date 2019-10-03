@@ -606,8 +606,8 @@ module Linguist
     def generated_gimp?
       return false unless ['.c', '.h'].include? extname
       return false unless lines.count > 0
-      return lines[0].match(/\/\* GIMP [a-zA-Z0-9- ]+ C\-Source image dump \(.+?\.c\) \*\//) ||
-             lines[0].match(/\/\*  GIMP header image file format \([a-zA-Z0-9- ]+\)\: .+?\.h  \*\//)
+      return lines[0].match(/\/\* GIMP [a-zA-Z0-9\- ]+ C\-Source image dump \(.+?\.c\) \*\//) ||
+             lines[0].match(/\/\*  GIMP header image file format \([a-zA-Z0-9\- ]+\)\: .+?\.h  \*\//)
     end
 
     # Internal: Is this a generated HTML file?
