@@ -62,6 +62,7 @@ module Linguist
       node_modules? ||
       go_vendor? ||
       go_lock? ||
+      go_sum? ||
       npm_shrinkwrap_or_package_lock? ||
       godeps? ||
       generated_by_zephir? ||
@@ -357,6 +358,13 @@ module Linguist
       !!name.match(/vendor\/((?!-)[-0-9A-Za-z]+(?<!-)\.)+(com|edu|gov|in|me|net|org|fm|io)/)
     end
 
+    # Internal: Is the blob a generated go.sum file?
+    #
+    # Returns true or false.
+    def go_sum?
+      !!name.match(/go\.sum/)
+    end
+
     # Internal: Is the blob a generated Go dep or glide lock file?
     #
     # Returns true or false.
@@ -591,7 +599,7 @@ module Linguist
       return lines[2].match(/\"modelName\"\:\s*\"GM/) ||
              lines[0] =~ /^\d\.\d\.\d.+\|\{/
     end
-        
+
     # Internal: Is this a generated GIMP C image file?
     #
     # GIMP saves C sources with one of two comment forms:

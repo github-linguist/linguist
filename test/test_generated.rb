@@ -93,6 +93,8 @@ class TestGenerated < Minitest::Test
     generated_sample_without_loading_data("Dummy/npm-shrinkwrap.json")
     generated_sample_without_loading_data("Dummy/package-lock.json")
 
+    generated_sample_without_loading_data("Dummy/go.sum")
+
     # Godep saved dependencies
     generated_sample_without_loading_data("Godeps/Godeps.json")
     generated_sample_without_loading_data("Godeps/_workspace/src/github.com/kr/s3/sign.go")
@@ -161,7 +163,7 @@ class TestGenerated < Minitest::Test
     generated_fixture_loading_data("HTML/unknown.html", true)
     generated_fixture_loading_data("HTML/no-content.html", true)
     generated_sample_loading_data("HTML/pages.html")
-    
+
     # GIMP
     generated_fixture_loading_data("C/image.c")
     generated_fixture_loading_data("C/image.h")
