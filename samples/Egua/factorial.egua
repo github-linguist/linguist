@@ -1,0 +1,12 @@
+function factorial(n):
+    if n < 2:
+        return 1
+    else:
+        n1 = n - 1
+        f = factorial(n1)
+        return n * f 
+    end
+end
+
+x = factorial(10)
+printf x

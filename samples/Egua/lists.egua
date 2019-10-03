@@ -1,0 +1,38 @@
+function test(array):
+	array.append(11)
+	return array
+end
+
+function clear(array):
+	while len(array) > 0:
+		array.pop()
+	end
+	return array
+end
+
+
+b = 9
+a = [1,b,3.2,4,5.2,6,7,8]
+d = []
+printf a
+printf a[0]
+c = a[4]
+printf c
+a[5] = 22
+printf a[5]
+printf a
+printf "empty list: " + d
+e = len(a)
+printf "Length : " + e
+
+d.append(2)
+d.append(6)
+printf "Appended 2, 6 "
+printf d
+d.pop()
+printf "Using pop"
+printf d
+d = test(d)
+printf d
+a = clear(a)
+printf a

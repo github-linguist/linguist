@@ -1,0 +1,29 @@
+function fibonnaci(n):
+	if n == 0:
+		return 0
+	else:
+		if n == 1:
+			return 1
+		else:
+			n1 = n-1
+			n2 = n-2
+			f1 = fibonnaci(n1)
+			f2 = fibonnaci(n2)
+			return  f1 + f2
+		end
+	end	
+end
+
+
+a = fibonnaci(0)
+printf a
+a = fibonnaci(1)
+printf a
+a = fibonnaci(2)
+printf a
+a = fibonnaci(3)
+printf a
+a = fibonnaci(4)
+printf a
+a = fibonnaci(5)
+printf a

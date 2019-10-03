@@ -1,0 +1,37 @@
+# Egua IDE [www.egua.tech]
+
+function delta(a, b, c):
+    4ac = 4 * a * c
+    b2 = b**2
+    delta = b2 - 4ac
+    return delta
+end
+
+function x1(a, b, c):
+    delta = delta(a, b, c)
+    raizdelta = delta**0.5
+    bdelta = -b + raizdelta
+    2a = 2 * a
+    x1 = bdelta / 2a
+    return x1
+end
+
+function x2(a, b, c):
+    delta = delta(a, b, c)
+    raizdelta = delta**0.5
+    bdelta = -b - raizdelta
+    2a = 2 * a
+    x2 = bdelta / 2a
+    return x2
+end
+
+function bhaskara(a, b, c):
+    x1 = x1(a, b, c)
+    x2 = x2(a, b, c)
+    
+    printf x1
+    printf x2
+end
+
+c = -14
+bhaskara(2, 12, c)
