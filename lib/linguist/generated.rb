@@ -141,24 +141,22 @@ module Linguist
       end
     end
 
-    # Internal: Does the blob contain a source map reference?
+    # Internal: Does the blob contain a source-map reference?
     #
-    # We assume that if one of the last 2 lines starts with a source map
+    # We assume that if one of the last 2 lines starts with a source-map
     # reference, then the current file was generated from other files.
     #
     # We use the last 2 lines because the last line might be empty.
     #
-    # We only handle JavaScript, no CSS support yet.
-    #
     # Returns true or false.
     def has_source_map?
       return false unless maybe_minified?
-      lines.last(2).any? { |line| line.start_with?('//# sourceMappingURL') }
+      lines.last(2).any? { |l| l.match(/^\/[*\/][\#@] source(?:Mapping)?URL|sourceURL=/) }
     end
 
-    # Internal: Is the blob a generated source map?
+    # Internal: Is the blob a generated source-map?
     #
-    # Source Maps usually have .css.map or .js.map extensions. In case they
+    # Source-maps usually have .css.map or .js.map extensions. In case they
     # are not following the name convention, detect them based on the content.
     #
     # Returns true or false.

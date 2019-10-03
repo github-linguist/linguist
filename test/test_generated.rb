@@ -105,11 +105,17 @@ class TestGenerated < Minitest::Test
     # Minified files
     generated_sample_loading_data("JavaScript/jquery-1.6.1.min.js")
 
-    # JS files with source map reference
+    # JavaScript with source-maps
     generated_sample_loading_data("JavaScript/namespace.js")
+    generated_fixture_loading_data("Generated/inline.js")
 
-    # Source Map
+    # CSS with source-maps
+    generated_fixture_loading_data("Generated/linked.css")
+    generated_fixture_loading_data("Generated/inline.css")
+
+    # Source-map
     generated_fixture_without_loading_data("Data/bootstrap.css.map")
+    generated_fixture_without_loading_data("Generated/linked.css.map")
     generated_fixture_loading_data("Data/sourcemap.v3.map")
     generated_fixture_loading_data("Data/sourcemap.v1.map")
 
