@@ -91,7 +91,8 @@ module Linguist
       generated_grpc_cpp? ||
       generated_dart? ||
       generated_perl_ppport_header? ||
-      generated_gamemakerstudio?
+      generated_gamemakerstudio? ||
+      generated_gimp?
     end
 
     # Internal: Is the blob an Xcode file?
@@ -589,6 +590,20 @@ module Linguist
       return false unless lines.count > 3
       return lines[2].match(/\"modelName\"\:\s*\"GM/) ||
              lines[0] =~ /^\d\.\d\.\d.+\|\{/
+    end
+        
+    # Internal: Is this a generated GIMP C image file?
+    #
+    # GIMP saves C sources with one of two comment forms:
+    # * `/* GIMP RGB C-Source image dump (<filename>.c) */` (C source export)
+    # * `/*  GIMP header image file format (RGB): <filename>.h  */` (Header export)
+    #
+    # Return true or false
+    def generated_gimp?
+      return false unless ['.c', '.h'].include? extname
+      return false unless lines.count > 0
+      return lines[0].match(/\/\* GIMP [a-zA-Z0-9- ]+ C\-Source image dump \(.+?\.c\) \*\//) ||
+             lines[0].match(/\/\*  GIMP header image file format \([a-zA-Z0-9- ]+\)\: .+?\.h  \*\//)
     end
 
     # Internal: Is this a generated HTML file?

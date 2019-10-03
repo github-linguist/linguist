@@ -161,6 +161,10 @@ class TestGenerated < Minitest::Test
     generated_fixture_loading_data("HTML/unknown.html", true)
     generated_fixture_loading_data("HTML/no-content.html", true)
     generated_sample_loading_data("HTML/pages.html")
+    
+    # GIMP
+    generated_fixture_loading_data("C/image.c")
+    generated_fixture_loading_data("C/image.h")
 
   end
 end
