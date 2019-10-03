@@ -270,8 +270,10 @@ module Linguist
           # also--importantly--without having to duplicate many (potentially
           # large) strings.
           begin
-
-            data.split(encoded_newlines_re, -1)
+            # `data` is split after having its last `\n` removed by
+            # chomp (if any). This prevents the creation of an empty
+            # element after the final `\n` character on POSIX files.
+            data.chomp.split(encoded_newlines_re, -1)
           rescue Encoding::ConverterNotFoundError
             # The data is not splittable in the detected encoding.  Assume it's
             # one big line.
