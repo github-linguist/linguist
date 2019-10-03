@@ -364,7 +364,7 @@ module Linguist
       !!name.match(/(Gopkg|glide)\.lock/)
     end
 
-    # Internal: Is the blob a generated Go dep or glide lock file?
+    # Internal: Is the blob a generated esy lock file?
     #
     # Returns true or false.
     def esy_lock?
