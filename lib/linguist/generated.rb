@@ -119,7 +119,14 @@ module Linguist
       !!name.match(/(^|\/)Carthage\/Build\//)
     end
 
-    # Internal: Is the blob minified files?
+    # Internal: Does extname indicate a filetype which is commonly minified?
+    #
+    # Returns true or false.
+    def maybe_minified?
+      ['.js', '.css'].include? extname.downcase
+    end
+
+    # Internal: Is the blob a minified file?
     #
     # Consider a file minified if the average line length is
     # greater then 110c.
@@ -128,32 +135,29 @@ module Linguist
     #
     # Returns true or false.
     def minified_files?
-      return unless ['.js', '.css'].include? extname
-      if lines.any?
+      if maybe_minified? and lines.any?
         (lines.inject(0) { |n, l| n += l.length } / lines.length) > 110
       else
         false
       end
     end
 
-    # Internal: Does the blob contain a source map reference?
+    # Internal: Does the blob contain a source-map reference?
     #
-    # We assume that if one of the last 2 lines starts with a source map
+    # We assume that if one of the last 2 lines starts with a source-map
     # reference, then the current file was generated from other files.
     #
     # We use the last 2 lines because the last line might be empty.
     #
-    # We only handle JavaScript, no CSS support yet.
-    #
     # Returns true or false.
     def has_source_map?
-      return false unless extname.downcase == '.js'
-      lines.last(2).any? { |line| line.start_with?('//# sourceMappingURL') }
+      return false unless maybe_minified?
+      lines.last(2).any? { |l| l.match(/^\/[*\/][\#@] source(?:Mapping)?URL|sourceURL=/) }
     end
 
-    # Internal: Is the blob a generated source map?
+    # Internal: Is the blob a generated source-map?
     #
-    # Source Maps usually have .css.map or .js.map extensions. In case they
+    # Source-maps usually have .css.map or .js.map extensions. In case they
     # are not following the name convention, detect them based on the content.
     #
     # Returns true or false.
@@ -602,8 +606,8 @@ module Linguist
     def generated_gimp?
       return false unless ['.c', '.h'].include? extname
       return false unless lines.count > 0
-      return lines[0].match(/\/\* GIMP [a-zA-Z0-9- ]+ C\-Source image dump \(.+?\.c\) \*\//) ||
-             lines[0].match(/\/\*  GIMP header image file format \([a-zA-Z0-9- ]+\)\: .+?\.h  \*\//)
+      return lines[0].match(/\/\* GIMP [a-zA-Z0-9\- ]+ C\-Source image dump \(.+?\.c\) \*\//) ||
+             lines[0].match(/\/\*  GIMP header image file format \([a-zA-Z0-9\- ]+\)\: .+?\.h  \*\//)
     end
 
     # Internal: Is this a generated HTML file?
