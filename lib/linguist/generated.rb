@@ -62,6 +62,7 @@ module Linguist
       node_modules? ||
       go_vendor? ||
       go_lock? ||
+      esy_lock? ||
       npm_shrinkwrap_or_package_lock? ||
       godeps? ||
       generated_by_zephir? ||
@@ -366,6 +367,13 @@ module Linguist
     # Returns true or false.
     def go_lock?
       !!name.match(/(Gopkg|glide)\.lock/)
+    end
+
+    # Internal: Is the blob a generated esy lock file?
+    #
+    # Returns true or false.
+    def esy_lock?
+      !!name.match(/(^|\/)(\w+\.)?esy.lock$/)
     end
 
     # Internal: Is the blob a generated npm shrinkwrap or package lock file?
