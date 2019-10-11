@@ -1,0 +1,41 @@
+datasource sqlite {
+  url      = "file:data.db"
+  provider = "sqlite"
+}
+
+model User {
+  id        Int      @id
+  createdAt DateTime @default(now())
+  email     String   @unique
+  name      String?
+  role      Role     @default(USER)
+  posts     Post[]
+  profile   Profile?
+}
+
+model Profile {
+  id   Int    @id
+  user User
+  bio  String
+}
+
+model Post {
+  id         Int        @id
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  author     User
+  title      String
+  published  Boolean    @default(false)
+  categories Category[]
+}
+
+model Category {
+  id    Int    @id
+  name  String
+  posts Post[]
+}
+
+enum Role {
+  USER
+  ADMIN
+}
