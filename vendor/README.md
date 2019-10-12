@@ -343,6 +343,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Ren'Py:** [williamd1k0/language-renpy](https://github.com/williamd1k0/language-renpy)
 - **Rich Text Format:** [nwhetsell/language-rtf](https://github.com/nwhetsell/language-rtf)
 - **Ring:** [MahmoudFayed/atom-language-ring](https://github.com/MahmoudFayed/atom-language-ring)
+- **Riot:** [riot/syntax-highlight](https://github.com/riot/syntax-highlight)
 - **RobotFramework:** [shellderp/sublime-robot-plugin](https://github.com/shellderp/sublime-robot-plugin)
 - **Roff:** [Alhadis/language-roff](https://github.com/Alhadis/language-roff)
 - **Roff Manpage:** [Alhadis/language-roff](https://github.com/Alhadis/language-roff)
