@@ -3264,6 +3264,16 @@ NL:
   tm_scope: none
   ace_mode: text
   language_id: 241
+NPM Config:
+  type: data
+  group: INI
+  aliases:
+  - npmrc
+  filenames:
+  - ".npmrc"
+  tm_scope: source.ini.npmrc
+  ace_mode: text
+  language_id: 685022663
 NSIS:
   type: programming
   extensions:
@@ -3398,16 +3408,6 @@ Nix:
   tm_scope: source.nix
   ace_mode: nix
   language_id: 252
-NPM Config:
-  type: data
-  group: INI
-  aliases:
-  - npmrc
-  filenames:
-  - ".npmrc"
-  tm_scope: source.ini.npmrc
-  ace_mode: text
-  language_id: 685022663
 Nu:
   type: programming
   color: "#c9df40"
