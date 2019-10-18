@@ -3398,6 +3398,16 @@ Nix:
   tm_scope: source.nix
   ace_mode: nix
   language_id: 252
+NPM Config:
+  type: data
+  group: INI
+  aliases:
+  - npmrc
+  filenames:
+  - ".npmrc"
+  tm_scope: source.ini.npmrc
+  ace_mode: text
+  language_id: 685022663
 Nu:
   type: programming
   color: "#c9df40"
@@ -4340,6 +4350,17 @@ Raw token data:
   tm_scope: none
   ace_mode: text
   language_id: 318
+Readline Config:
+  type: data
+  group: INI
+  aliases:
+  - inputrc
+  - readline
+  filenames:
+  - ".inputrc"
+  tm_scope: source.inputrc
+  ace_mode: text
+  language_id: 538732839
 Reason:
   type: programming
   group: OCaml
@@ -5614,6 +5635,16 @@ WebVTT:
   tm_scope: source.vtt
   ace_mode: text
   language_id: 658679714
+Wget Config:
+  type: data
+  group: INI
+  aliases:
+  - wgetrc
+  filenames:
+  - ".wgetrc"
+  tm_scope: source.wgetrc
+  ace_mode: text
+  language_id: 668457123
 Windows Registry Entries:
   type: data
   extensions:
@@ -6034,6 +6065,17 @@ Zimpl:
   tm_scope: none
   ace_mode: text
   language_id: 411
+cURL Config:
+  type: data
+  group: INI
+  aliases:
+  - curlrc
+  filenames:
+  - ".curlrc"
+  - _curlrc
+  tm_scope: source.curlrc
+  ace_mode: text
+  language_id: 992375436
 desktop:
   type: data
   extensions:
