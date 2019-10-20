@@ -98,6 +98,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **DataWeave:** [mulesoft-labs/data-weave-tmLanguage](https://github.com/mulesoft-labs/data-weave-tmLanguage)
 - **Dhall:** [atom-haskell/language-haskell](https://github.com/atom-haskell/language-haskell)
 - **Diff:** [textmate/diff.tmbundle](https://github.com/textmate/diff.tmbundle)
+- **DirectX 3D File:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **Dockerfile:** [asbjornenge/Docker.tmbundle](https://github.com/asbjornenge/Docker.tmbundle)
 - **Dylan:** [textmate/dylan.tmbundle](https://github.com/textmate/dylan.tmbundle)
 - **EBNF:** [Alhadis/language-grammars](https://github.com/Alhadis/language-grammars)

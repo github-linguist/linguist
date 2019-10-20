@@ -518,6 +518,7 @@ class TestHeuristics < Minitest::Test
   def test_x_by_heuristics
     # Logos not fully covered
     assert_heuristics({
+      "DirectX 3D File" => all_fixtures("DirectX 3D File", "*.x"),
       "Linker Script" => all_fixtures("Linker Script", "*.x"),
       "RPC" => all_fixtures("RPC", "*.x")
     })
