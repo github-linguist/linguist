@@ -58,20 +58,20 @@ elsif File.file?(path)
     'Binary'
   end
 
-  if !json_breakdown
+  if json_breakdown
+    puts JSON.generate( { blob.name =>  {
+                                          :lines => blob.loc,
+                                          :sloc => blob.sloc,
+                                          :type => type,
+                                          :mime_type => blob.mime_type,
+                                          :language => blob.language
+                                        }
+                        } )
+  else
     puts "#{blob.name}: #{blob.loc} lines (#{blob.sloc} sloc)"
     puts "  type:      #{type}"
     puts "  mime type: #{blob.mime_type}"
     puts "  language:  #{blob.language}"
-  else
-    puts JSON.generate( { blob.name =>	{
-	    					:lines => blob.loc,
-						:sloc => blob.sloc,
-						:type => type,
-						:mime_type => blob.mime_type,
-						:language => blob.language
-    					}
-    			} )
   end
 
   if blob.large?
