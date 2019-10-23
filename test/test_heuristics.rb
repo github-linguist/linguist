@@ -122,6 +122,7 @@ class TestHeuristics < Minitest::Test
   def test_cls_by_heuristics
     assert_heuristics({
       "TeX" => all_fixtures("TeX", "*.cls"),
+      "ObjectScript" => all_fixtures("ObjectScript", "*.cls"),
       # Missing heuristics
       nil => all_fixtures("Apex", "*.cls") + all_fixtures("OpenEdge ABL", "*.cls") + all_fixtures("Visual Basic", "*.cls"),
     })
@@ -270,6 +271,12 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_mask_by_heuristics
+    assert_heuristics({
+      "Unity3D Asset" => all_fixtures("Unity3D Asset", "*.mask")
+    })
+  end
+
   def test_md_by_heuristics
     assert_heuristics({
       "Markdown" => all_fixtures("Markdown", "*.md"),
@@ -351,6 +358,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_plist_by_heuristics
+    assert_heuristics({
+      "OpenStep Property List" => all_fixtures("OpenStep Property List", "*.plist"),
+      "XML Property List" => all_fixtures("XML Property List", "*.plist")
+    })
+  end
+
   # Candidate languages = ["Perl", "Perl 6", "XPM"]
   def test_pm_by_heuristics
     assert_heuristics({
@@ -378,7 +392,7 @@ class TestHeuristics < Minitest::Test
     })
   end
 
-# Candidate languages = ["INI", "Java Properties"]
+  # Candidate languages = ["INI", "Java Properties"]
   def test_properties_by_heuristics
     assert_heuristics({
       "INI" => all_fixtures("INI", "*.properties"),
@@ -487,8 +501,16 @@ class TestHeuristics < Minitest::Test
 
   def test_tsx_by_heuristics
     assert_heuristics({
-      "TypeScript" => all_fixtures("TypeScript", "*.tsx"),
+      "TSX" => all_fixtures("TSX", "*.tsx"),
       "XML" => all_fixtures("XML", "*.tsx")
+    })
+  end
+
+  def test_v_by_heuristics
+    assert_heuristics({
+      "Coq" => all_fixtures("Coq", "*.v"),
+      "V" => all_fixtures("V", "*.v"),
+      "Verilog" => all_fixtures("Verilog", "*.v")
     })
   end
 
@@ -509,6 +531,7 @@ class TestHeuristics < Minitest::Test
   def test_x_by_heuristics
     # Logos not fully covered
     assert_heuristics({
+      "DirectX 3D File" => all_fixtures("DirectX 3D File", "*.x"),
       "Linker Script" => all_fixtures("Linker Script", "*.x"),
       "RPC" => all_fixtures("RPC", "*.x")
     })

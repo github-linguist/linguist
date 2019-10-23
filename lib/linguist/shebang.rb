@@ -39,7 +39,7 @@ module Linguist
       # if /usr/bin/env type shebang then walk the string
       if script == 'env'
         s.scan(/\s+/)
-        s.scan(/.*=[^\s]+\s+/) # skip over variable arguments e.g. foo=bar
+        s.scan(/([^\s]+=[^\s]+\s+)*/) # skip over variable arguments e.g. foo=bar
         script = s.scan(/\S+/)
       end
 
@@ -56,6 +56,12 @@ module Linguist
       if script == 'sh' &&
         data.lines.first(5).any? { |l| l.match(/exec (\w+).+\$0.+\$@/) }
         script = $1
+      end
+
+      # osascript can be called with an optional `-l <language>` argument, which may not be a language with an interpreter.
+      # In this case, return and rely on the subsequent strategies to determine the language.
+      if script == 'osascript'
+        return if s.scan_until(/\-l\s?/)
       end
 
       File.basename(script)

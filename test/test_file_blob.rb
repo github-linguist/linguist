@@ -49,6 +49,9 @@ class TestFileBlob < Minitest::Test
     assert_equal "application/xml", sample_blob("XML/bar.xml").mime_type
     assert_equal "audio/ogg", fixture_blob("Binary/foo.ogg").mime_type
     assert_equal "text/plain", fixture_blob("Data/README").mime_type
+    # GitHub doesn't use a filename when returning raw blobs
+    blob = Struct.new(:name) { include Linguist::BlobHelper }
+    assert_equal "text/plain", blob.new(nil).mime_type
   end
 
   def test_content_type
@@ -74,9 +77,9 @@ class TestFileBlob < Minitest::Test
   end
 
   def test_lines
-    assert_equal ["module Foo", "end", ""], sample_blob("Ruby/foo.rb").lines
-    assert_equal ["line 1", "line 2", ""], sample_blob("Text/mac.txt").lines
-    assert_equal 475, sample_blob("Emacs Lisp/ess-julia.el").lines.length
+    assert_equal ["module Foo", "end"], sample_blob("Ruby/foo.rb").lines
+    assert_equal ["line 1", "line 2"], sample_blob("Text/mac.txt").lines
+    assert_equal 474, sample_blob("Emacs Lisp/ess-julia.el").lines.length
   end
 
   def test_lines_maintains_original_encoding
@@ -92,7 +95,7 @@ class TestFileBlob < Minitest::Test
   end
 
   def test_loc
-    assert_equal 3, sample_blob("Ruby/foo.rb").loc
+    assert_equal 2, sample_blob("Ruby/foo.rb").loc
   end
 
   def test_sloc
@@ -718,6 +721,6 @@ class TestFileBlob < Minitest::Test
     refute_predicate prose, :include_in_language_stats?
 
     included = sample_blob("HTML/pages.html")
-    assert_predicate included, :include_in_language_stats?
+    refute_predicate included, :include_in_language_stats?
   end
 end

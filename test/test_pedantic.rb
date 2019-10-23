@@ -55,4 +55,30 @@ class TestPedantic < Minitest::Test
       flunk "#{previous} should come after #{item}" if previous > item
     end
   end
+
+  def test_no_unknown_fields
+    known_fields = <<~END.split("\n")
+      ace_mode
+      aliases
+      codemirror_mime_type
+      codemirror_mode
+      color
+      extensions
+      filenames
+      fs_name
+      group
+      interpreters
+      language_id
+      searchable
+      tm_scope
+      type
+      wrap
+    END
+    LANGUAGES.each do |name, language|
+      unknown_fields = language.keys.reject { |key| known_fields.include?(key) }
+      message = "Language '#{name}' has the following unknown field(s):\n"
+      message << unknown_fields.map { |key| sprintf("  - %s: %s", key, language[key]) }.sort.join("\n")
+      assert unknown_fields.empty?, message
+    end
+  end
 end

@@ -1,0 +1,102 @@
+.Dd February 25, 2019
+.Dt GITHUB-LINGUIST 1gh
+.Os
+.Sh NAME
+.Nm github-linguist
+.Nd detect language types of files or repositories
+.
+.Sh SYNOPSIS
+.Nm
+.Op Fl -breakdown
+.Op Fl -json
+.Ar path
+.
+.Sh DESCRIPTION
+.Nm
+attempts to determine the language(s) used by
+.Ar path ,
+which may be a file or a Git repository.
+.
+.Pp
+If
+.Ar path
+is a file,
+.Nm
+analyses its language,
+MIME type,
+and whether the file is
+.Sy Text ,
+.Sy Image ,
+or
+.Sy Binary .
+.
+.Pp
+Otherwise,
+.Ar path
+is assumed to be a directory of a Git repository,
+and a language breakdown is generated on standard output.
+.
+.Bl -tag -width indent
+.It Fl -breakdown
+Generate a more detailed breakdown listing.
+.It Fl -json
+Generate a JSON-encoded representation of the repo's breakdown graph.
+.El
+..
+.Sh ENVIRONMENT
+.Bl -tag -width LANG
+.It Ev LANG
+Overriding locale is sometimes necessary to fix unexplained encoding errors raised when running
+.Li bundle exec rake .
+This is currently needed on
+.Ox .
+.
+.Sh EXAMPLES
+Identify a file's language:
+.Bd -literal -offset 4n \" shell-console:
+$ github-linguist /path/to/which.pl
+which.pl: 61 lines (56 sloc)
+\&  type:      Text
+\&  mime type: application/x-perl
+\&  language:  Perl
+.Ed
+.
+.Pp
+Display a detailed breakdown graph for the working directory:
+.Bd -literal -offset 4n \" Shell-Console:
+$ bundle exec bin/github-linguist --breakdown
+68.57%  Ruby
+22.90%  C
+6.93%   Go
+1.21%   Lex
+0.39%   Shell
+\&
+Ruby:
+Gemfile
+Rakefile
+bin/git-linguist
+bin/github-linguist
+ext/linguist/extconf.rb
+github-linguist.gemspec
+lib/linguist.rb
+\.\.\.
+.Ed
+.
+.Pp
+More examples may be found in the project's readme on GitHub.
+.
+.Sh FILES
+.Bl -tag -width lib/linguist/languages.yml -compact
+.It Pa lib/linguist/languages.yml
+Database of every language or filetype recognised on GitHub.
+.El
+.
+.Sh EXIT STATUS
+.Ex -std
+.
+.Sh SEE ALSO
+.Xr file 1 ,
+.Xr sigils 1 ,
+.Xr magic 5 .
+.Pp
+.Lk https://github.com/linguist/#readme "Full documentation at GitHub.com"

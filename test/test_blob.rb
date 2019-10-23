@@ -57,9 +57,9 @@ class TestBlob < Minitest::Test
   end
 
   def test_lines
-    assert_equal ["module Foo", "end", ""], sample_blob_memory("Ruby/foo.rb").lines
-    assert_equal ["line 1", "line 2", ""], sample_blob_memory("Text/mac.txt").lines
-    assert_equal 475, sample_blob_memory("Emacs Lisp/ess-julia.el").lines.length
+    assert_equal ["module Foo", "end"], sample_blob_memory("Ruby/foo.rb").lines
+    assert_equal ["line 1", "line 2"], sample_blob_memory("Text/mac.txt").lines
+    assert_equal 474, sample_blob_memory("Emacs Lisp/ess-julia.el").lines.length
   end
 
   def test_lines_maintains_original_encoding
@@ -75,7 +75,7 @@ class TestBlob < Minitest::Test
   end
 
   def test_loc
-    assert_equal 3, sample_blob_memory("Ruby/foo.rb").loc
+    assert_equal 2, sample_blob_memory("Ruby/foo.rb").loc
   end
 
   def test_sloc
@@ -247,12 +247,18 @@ class TestBlob < Minitest::Test
     assert sample_blob_memory("C++/hello.grpc.pb.h").generated?
     assert sample_blob_memory("C++/grpc.pb.cc").generated?
 
-    # pkgdown-generateed HTML
+    # Generated HTML
     assert sample_blob_memory("HTML/pkgdown.html").generated?
+    assert sample_blob_memory("HTML/pages.html").generated?
+    assert fixture_blob_memory("HTML/mandoc.html").generated?
+    assert fixture_blob_memory("HTML/node78.html").generated?
   end
 
   def test_vendored
     assert !fixture_blob_memory("Data/README").vendored?
+
+    # Go fixtures
+    assert sample_blob("Go/testdata/foo.yml").vendored?
   end
 
   def test_language
@@ -318,7 +324,7 @@ class TestBlob < Minitest::Test
     refute_predicate prose, :include_in_language_stats?
 
     included = sample_blob_memory("HTML/pages.html")
-    assert_predicate included, :include_in_language_stats?
+    refute_predicate included, :include_in_language_stats?
 
     # Test detectable override (i.e by .gitattributes)
 

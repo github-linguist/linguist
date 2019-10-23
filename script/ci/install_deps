@@ -1,0 +1,21 @@
+#!/bin/sh
+
+set -e
+
+# Linguist still requires Bundler 1.x due to Licensed.
+gem uninstall -v '>= 2' -ax bundler || true
+gem install bundler -v '< 2'
+
+# Fetch all commits/refs needed to run our tests.
+git fetch origin master:master v2.0.0:v2.0.0 test/attributes:test/attributes test/master:test/master
+
+# Replace SSH links to submodules by HTTPS links.
+sed -i 's|git@github.com:|https://github.com/|' .gitmodules
+
+# Fetch all grammars
+git submodule init
+git submodule sync --quiet
+script/fast-submodule-update
+
+# Install dependent gems
+bundle install --jobs 4 --retry 3 --without debug

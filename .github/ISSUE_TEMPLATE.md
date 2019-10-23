@@ -10,6 +10,8 @@ Please confirm you have...
 
 <!-- Please review these preliminary steps before logging your issue. You may find the information referenced may answer or explain the behaviour you are seeing. It'll help us to know you've reviewed this information. -->
 
+<!-- Please review the "Changing the color of a language" section in CONTRIBUTING.md before asking for a language color to be changed. -->
+
 ## Problem Description
 
 <!--- Provide a more detailed introduction to the issue itself, and why you consider it to be a bug -->

@@ -1,0 +1,75 @@
+<live-filtering>
+  <header>
+    <input type="search" value={ state.keyword } onkeyup={ change } placeholder="search">
+  </header>
+
+  <currency each={ rate in filtered.slice(0, state.max) } title={ rate.title } price={ rate.price } />
+
+  <footer if={ filtered.length > state.max }>
+    and { filtered.length - state.max } more currencies
+  </footer>
+
+  <script>
+    // License MIT https://github.com/riot/examples/blob/gh-pages/LICENSE
+    // source https://github.com/riot/examples/tree/gh-pages/live-filtering
+    export default {
+      state: {
+        keyword: '',
+        rates: [],
+        max: 15,
+      },
+      get filtered() {
+        return this.state.rates.filter((c) => !this.state.keyword || c.title.indexOf(this.state.keyword.toUpperCase()) === 0)
+      },
+      onBeforeMount() {
+        fetch('https://api.exchangeratesapi.io/latest?base=USD')
+          .then((res) => res.json())
+          .then((data) => {
+            const rates = Object.keys(data.rates)
+              .map((key) => ({ title: key, price: data.rates[key] }))
+              .sort((a, b) => a.price - b.price)
+
+            this.update({ rates })
+          })
+      },
+      change(e) {
+        this.update({
+          keyword: e.target.value,
+        })
+      }
+    }
+  </script>
+
+  <style>
+    :scope {
+      display: block;
+      text-align: center;
+      color: #666;
+    }
+    header {
+      background: #72A7EE;
+      padding: 2em;
+      margin-bottom: 1em;
+    }
+    footer {
+      color: #ccc;
+      padding: 1em;
+    }
+    input[type=search] {
+      width: 100%;
+      font-size: 2em;
+      padding: .5em 0;
+      text-align: center;
+      outline: none;
+      border: 0;
+      border-radius: .2em;
+      background-color: rgba(255,255,255,.7);
+      transition: all .5s;
+    }
+    input[type=search]:hover,
+    input[type=search]:focus {
+      background-color: rgba(255,255,255,1);
+      box-shadow: 0 1px 5px rgba(0,0,0,.3);
+    }
+  </style>
+</live-filtering>

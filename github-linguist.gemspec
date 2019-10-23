@@ -9,6 +9,9 @@ Gem::Specification.new do |s|
   s.authors  = "GitHub"
   s.homepage = "https://github.com/github/linguist"
   s.license  = "MIT"
+  s.metadata = {
+    "github_repo" => "ssh://github.com/github/linguist"
+  }
 
   s.files = Dir['lib/**/*'] + Dir['ext/**/*'] + Dir['grammars/*'] + ['LICENSE']
   s.executables = ['github-linguist', 'git-linguist']
@@ -16,7 +19,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'charlock_holmes', '~> 0.7.6'
   s.add_dependency 'escape_utils',    '~> 1.2.0'
-  s.add_dependency 'mime-types',      '>= 1.19'
+  s.add_dependency 'mini_mime',       '~> 1.0'
   s.add_dependency 'rugged',          '>= 0.25.1'
 
   s.add_development_dependency 'minitest', '>= 5.0'

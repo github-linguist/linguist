@@ -32,11 +32,17 @@
 - (^|/)ltversion.m4
 - (^|/)lt~obsolete.m4
 
+# .NET Core Install Scripts
+- dotnet-install\.(ps1|sh)$
+
 # Linters
 - cpplint.py
 
 # Node dependencies
 - node_modules/
+
+# esy.sh dependencies
+- (^|/)_esy$
 
 # Bower Components
 - bower_components/
@@ -47,6 +53,9 @@
 
 # Go dependencies
 - Godeps/_workspace/
+
+# Go fixtures
+- (^|/)testdata/
 
 # GNU indent profiles
 - .indent.pro
@@ -62,8 +71,8 @@
 - (^|/)custom\.bootstrap([^\s]*)(js|css|less|scss|styl)$
 
 # Font Awesome
-- (^|/)font-awesome\.(css|less|scss|styl)$
-- (^|/)font-awesome/.*\.(css|less|scss|styl)$
+- (^|/)font-?awesome\.(css|less|scss|styl)$
+- (^|/)font-?awesome/.*\.(css|less|scss|styl)$
 
 # Foundation css
 - (^|/)foundation\.(css|less|scss|styl)$
@@ -85,6 +94,9 @@
 
 # Select2
 - (^|/)select2/.*\.(css|scss|js)$
+
+# Bulma css
+- (^|/)bulma\.(css|sass|scss)$
 
 # Vendored dependencies
 - (3rd|[Tt]hird)[-_]?[Pp]arty/

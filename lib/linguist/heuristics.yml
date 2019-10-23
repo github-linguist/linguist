@@ -104,6 +104,8 @@ disambiguations:
   rules:
   - language: TeX
     pattern: '\\\w+{'
+  - language: ObjectScript
+    pattern: '^Class\s'
 - extensions: ['.cs']
   rules:
   - language: Smalltalk
@@ -180,6 +182,8 @@ disambiguations:
     pattern: '(?i:^\s*(\<\?xml|xmlns))'
   - language: Graph Modeling Language
     pattern: '(?i:^\s*(graph|node)\s+\[$)'
+  - language: Gerber Image
+    pattern: '\*\%$'
   - language: Game Maker Language
 - extensions: ['.gs']
   rules:
@@ -204,6 +208,8 @@ disambiguations:
   rules:
   - language: PHP
     pattern: '^<\?(?:php)?'
+  - language: SourcePawn
+    pattern: '^public\s+(?:SharedPlugin(?:\s+|:)__pl_\w+\s*=(?:\s*{)?|(?:void\s+)?__pl_\w+_SetNTVOptional\(\)(?:\s*{)?)'
   - language: POV-Ray SDL
     pattern: '^\s*#(declare|local|macro|while)\s'
 - extensions: ['.l']
@@ -245,6 +251,10 @@ disambiguations:
     pattern: '^\s*%'
   - language: Limbo
     pattern: '^\w+\s*:\s*module\s*{'
+- extensions: ['.mask']
+  rules:
+  - language: Unity3d Asset
+    pattern: 'tag:unity3d.com'
 - extensions: ['.md']
   rules:
   - language: Markdown
@@ -307,6 +317,11 @@ disambiguations:
     named_pattern: perl5
   - language: Perl 6
     named_pattern: perl6
+- extensions: ['.plist']
+  rules:
+  - language: XML Property List
+    pattern: '<!DOCTYPE\s+plist'
+  - language: OpenStep Property List
 - extensions: ['.pm']
   rules:
   - language: Perl
@@ -373,7 +388,7 @@ disambiguations:
 - extensions: ['.rno']
   rules:
   - language: RUNOFF
-    pattern: '(?i:^\.!|^\.end lit(?:eral)?\b)'
+    pattern: '(?i:^\.!|^\f|\f$|^\.end lit(?:eral)?\b|^\.[a-zA-Z].*?;\.[a-zA-Z](?:[; \t])|\^\*[^\s*][^*]*\\\*(?=$|\s)|^\.c;[ \t]*\w+)'
   - language: Roff
     pattern: '^\.\\" '
 - extensions: ['.rpy']
@@ -397,13 +412,18 @@ disambiguations:
   rules:
    # Postgres
   - language: PLpgSQL
-    pattern: '(?i:^\\i\b|AS \$\$|LANGUAGE ''?plpgsql''?|SECURITY (DEFINER|INVOKER)|BEGIN( WORK| TRANSACTION)?;)'
+    pattern: '(?i:^\\i\b|AS \$\$|LANGUAGE ''?plpgsql''?|SECURITY (DEFINER|INVOKER)|BEGIN( WORK )?;)'
   # IBM db2
   - language: SQLPL
     pattern: "(?i:(alter module)|(language sql)|(begin( NOT)+ atomic)|signal SQLSTATE '[0-9]+')"
   # Oracle
   - language: PLSQL
     pattern: '(?i:\$\$PLSQL_|XMLTYPE|sysdate|systimestamp|\.nextval|connect by|AUTHID (DEFINER|CURRENT_USER)|constructor\W+function)'
+  # T-SQL
+  - language: TSQL
+    and:
+    - negative_pattern: '(?i:IDENTIFIED|NUMBER|VARCHAR2|REPEAT|UNTIL|IMMEDIATE)'
+    - pattern: '(?i:(GO)|(@@)|(CREATE PROCEDURE)|BEGIN( TRY| CATCH)|OUTPUT( INSERTED)|IF|ELSE|IIF|CHOOSE|CURSOR|FETCH|DEALLOCATE|DECLARE)'
   # Generic SQL
   - language: SQL
     negative_pattern: '(?i:begin|boolean|package|exception)'
@@ -438,10 +458,18 @@ disambiguations:
   - language: Scilab
 - extensions: ['.tsx']
   rules:
-  - language: TypeScript
+  - language: TSX
     pattern: '^\s*(import.+(from\s+|require\()[''"]react|\/\/\/\s*<reference\s)'
   - language: XML
     pattern: '(?i:^\s*<\?xml\s+version)'
+- extensions: ['.v']
+  rules:
+  - language: Coq
+    pattern: '\(\*.*?\*\)|(?:^|\s)(?:Proof|Qed)\.(?:$|\s)|(?:^|\s)Require[ \t]+Import\s'
+  - language: Verilog
+    pattern: '^[ \t]*module\s+[^\s()]+\s+\#?\(|^[ \t]*`(?:ifdef|timescale)\s|^[ \t]*always[ \t]+@'
+  - language: V
+    pattern: '\$(?:if|else)[ \t]|^[ \t]*fn\s+[^\s()]+\(.*?\).*?\{|^[ \t]*for\s*\{'
 - extensions: ['.vba']
   rules:
   - language: Vim script
@@ -455,6 +483,8 @@ disambiguations:
     pattern: '^@(<|\w+\.)'
 - extensions: ['.x']
   rules:
+  - language: DirectX 3D File
+    pattern:  '^xof 030(2|3)(?:txt|bin|tzip|bzip)\b'
   - language: RPC
     pattern: '\b(program|version)\s+\w+\s*{|\bunion\s+\w+\s+switch\s*\('
   - language: Logos
@@ -470,7 +500,7 @@ named_patterns:
   cpp:
   - '^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>'
   - '^\s*template\s*<'
-  - '^[ \t]*try'
+  - '^[ \t]*(try|constexpr)'
   - '^[ \t]*catch\s*\('
   - '^[ \t]*(class|(using[ \t]+)?namespace)\s+\w+'
   - '^[ \t]*(private|public|protected):$'
