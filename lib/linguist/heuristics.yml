@@ -465,6 +465,8 @@ disambiguations:
     pattern: '^@(<|\w+\.)'
 - extensions: ['.x']
   rules:
+  - language: DirectX 3D File
+    pattern:  '^xof 030(2|3)(?:txt|bin|tzip|bzip)\b'
   - language: RPC
     pattern: '\b(program|version)\s+\w+\s*{|\bunion\s+\w+\s+switch\s*\('
   - language: Logos
