@@ -237,6 +237,10 @@ disambiguations:
     pattern: '^\s*%'
   - language: Limbo
     pattern: '^\w+\s*:\s*module\s*{'
+- extensions: ['.mask']
+  rules:
+  - language: Unity3d Asset
+    pattern: 'tag:unity3d.com'
 - extensions: ['.md']
   rules:
   - language: Markdown

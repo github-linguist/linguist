@@ -264,6 +264,12 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_mask_by_heuristics
+    assert_heuristics({
+      "Unity3D Asset" => all_fixtures("Unity3D Asset", "*.mask")
+    })
+  end
+
   def test_md_by_heuristics
     assert_heuristics({
       "Markdown" => all_fixtures("Markdown", "*.md"),
