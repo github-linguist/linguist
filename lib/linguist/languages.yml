@@ -3244,7 +3244,7 @@ Muse:
   type: prose
   extensions:
   - ".muse"
-  tm_scope: none
+  tm_scope: text.muse
   ace_mode: text
   wrap: true
   language_id: 474864066
@@ -3273,6 +3273,16 @@ NL:
   tm_scope: none
   ace_mode: text
   language_id: 241
+NPM Config:
+  type: data
+  group: INI
+  aliases:
+  - npmrc
+  filenames:
+  - ".npmrc"
+  tm_scope: source.ini.npmrc
+  ace_mode: text
+  language_id: 685022663
 NSIS:
   type: programming
   extensions:
@@ -4349,6 +4359,18 @@ Raw token data:
   tm_scope: none
   ace_mode: text
   language_id: 318
+Readline Config:
+  type: data
+  group: INI
+  aliases:
+  - inputrc
+  - readline
+  filenames:
+  - ".inputrc"
+  - inputrc
+  tm_scope: source.inputrc
+  ace_mode: text
+  language_id: 538732839
 Reason:
   type: programming
   group: OCaml
@@ -5514,7 +5536,7 @@ Vim Snippet:
   - ".snip"
   - ".snippet"
   - ".snippets"
-  tm_scope: none
+  tm_scope: source.vim-snippet
   ace_mode: text
   language_id: 81265970
 Vim script:
@@ -5629,6 +5651,16 @@ WebVTT:
   tm_scope: source.vtt
   ace_mode: text
   language_id: 658679714
+Wget Config:
+  type: data
+  group: INI
+  aliases:
+  - wgetrc
+  filenames:
+  - ".wgetrc"
+  tm_scope: source.wgetrc
+  ace_mode: text
+  language_id: 668457123
 Windows Registry Entries:
   type: data
   extensions:
@@ -6049,6 +6081,17 @@ Zimpl:
   tm_scope: none
   ace_mode: text
   language_id: 411
+cURL Config:
+  type: data
+  group: INI
+  aliases:
+  - curlrc
+  filenames:
+  - ".curlrc"
+  - _curlrc
+  tm_scope: source.curlrc
+  ace_mode: text
+  language_id: 992375436
 desktop:
   type: data
   extensions:
