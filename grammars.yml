@@ -423,6 +423,7 @@ vendor/grammars/language-etc:
 - etc
 - injections.etc
 - source.curlrc
+- source.direct-x
 - source.dosbox-conf
 - source.gitattributes
 - source.gitconfig
@@ -434,7 +435,6 @@ vendor/grammars/language-etc:
 - source.m4
 - source.man-conf
 - source.nanorc
-- source.npmrc
 - source.opts
 - source.smpl
 - source.ssh-config
@@ -460,7 +460,6 @@ vendor/grammars/language-grammars:
 - source.abnf
 - source.bnf
 - source.ebnf
-- source.jlex
 - source.lex
 - source.lex.regexp
 - source.yacc
@@ -552,6 +551,7 @@ vendor/grammars/language-restructuredtext:
 vendor/grammars/language-ring:
 - source.ring
 vendor/grammars/language-roff:
+- hidden.manref
 - source.ditroff
 - source.ditroff.desc
 - source.gremlin
@@ -592,6 +592,7 @@ vendor/grammars/language-typelanguage:
 vendor/grammars/language-viml:
 - source.vim-snippet
 - source.viml
+- text.vim-help
 vendor/grammars/language-vtt:
 - source.vtt
 vendor/grammars/language-wavefront:
