@@ -119,7 +119,15 @@ github-linguist.gemspec
 lib/linguist.rb
 …
 ```
-
+## Docker
+If you have docker installed you can build an image and run this as a container.
+```
+docker build -t my-linguist .
+```
+Move to project folder then run.
+```
+docker run --rm -v `pwd`:`pwd` -w `pwd` -t my-linguist
+```
 
 ## Troubleshooting
 
