@@ -121,6 +121,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Factor:** [slavapestov/factor](https://github.com/slavapestov/factor)
 - **Fancy:** [fancy-lang/fancy-tmbundle](https://github.com/fancy-lang/fancy-tmbundle)
 - **Fantom:** [rkoeninger/sublime-fantom](https://github.com/rkoeninger/sublime-fantom)
+- **Faust:** [jpcima/language-faust](https://github.com/jpcima/language-faust)
 - **Forth:** [textmate/forth.tmbundle](https://github.com/textmate/forth.tmbundle)
 - **Fortran:** [textmate/fortran.tmbundle](https://github.com/textmate/fortran.tmbundle)
 - **FreeMarker:** [freemarker/FreeMarker.tmbundle](https://github.com/freemarker/FreeMarker.tmbundle)
