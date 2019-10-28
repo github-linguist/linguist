@@ -122,11 +122,12 @@ lib/linguist.rb
 ## Docker
 If you have docker installed you can build an image and run this as a container.
 ```
-docker build -t my-linguist .
+docker build -t linguist .
 ```
 Move to project folder then run.
 ```
-docker run --rm -v `pwd`:`pwd` -w `pwd` -t my-linguist
+docker run --rm -v `pwd`:`pwd` -w `pwd` -t linguist
+docker run --rm -v `pwd`:`pwd` -w `pwd` -t linguist github-linguist --breakdown
 ```
 
 ## Troubleshooting
