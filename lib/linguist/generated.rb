@@ -624,7 +624,7 @@ module Linguist
     # Return true or false
     def generated_visualstudio6?
       return false unless extname.downcase == '.dsp'
-      lines.any? { |l| l.include? '# Microsoft Developer Studio Generated Build File' }
+      lines.first(3).any? { |l| l.include? '# Microsoft Developer Studio Generated Build File' }
     end
 
     # Internal: Is this a generated HTML file?
