@@ -138,7 +138,7 @@ class TestHeuristics < Minitest::Test
 
   def test_dsp_heuristics
     assert_heuristics({
-      "Faust" => all_fixtures("Faust"),
+      "Faust" => all_fixtures("Faust", "*.dsp"),
       "Microsoft Developer Studio Project" => all_fixtures("Microsoft Developer Studio Project"),
     })
   end
