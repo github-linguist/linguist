@@ -118,7 +118,7 @@ disambiguations:
   - language: Microsoft Developer Studio Project
     pattern: '# Microsoft Developer Studio Generated Build File'
   - language: Faust
-    pattern: '='
+    pattern: '\bprocess\s*[(=]|\b(library|import)\s*\(\s*"|\bdeclare\s+(name|version|author|copyright|license)\s+"'
 - extensions: ['.ecl']
   rules:
   - language: ECLiPSe
