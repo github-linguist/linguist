@@ -136,6 +136,13 @@ class TestHeuristics < Minitest::Test
     }, "test.d")
   end
 
+  def test_dsp_heuristics
+    assert_heuristics({
+      "Faust" => all_fixtures("Faust"),
+      "Microsoft Developer Studio Project" => all_fixtures("Microsoft Developer Studio Project"),
+    })
+  end
+
   def test_ecl_by_heuristics
     assert_heuristics({
       "ECL" => all_fixtures("ECL", "*.ecl"),
