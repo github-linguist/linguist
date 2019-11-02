@@ -264,6 +264,12 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_mask_by_heuristics
+    assert_heuristics({
+      "Unity3D Asset" => all_fixtures("Unity3D Asset", "*.mask")
+    })
+  end
+
   def test_md_by_heuristics
     assert_heuristics({
       "Markdown" => all_fixtures("Markdown", "*.md"),
@@ -518,6 +524,7 @@ class TestHeuristics < Minitest::Test
   def test_x_by_heuristics
     # Logos not fully covered
     assert_heuristics({
+      "DirectX 3D File" => all_fixtures("DirectX 3D File", "*.x"),
       "Linker Script" => all_fixtures("Linker Script", "*.x"),
       "RPC" => all_fixtures("RPC", "*.x")
     })

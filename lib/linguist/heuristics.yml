@@ -237,6 +237,10 @@ disambiguations:
     pattern: '^\s*%'
   - language: Limbo
     pattern: '^\w+\s*:\s*module\s*{'
+- extensions: ['.mask']
+  rules:
+  - language: Unity3d Asset
+    pattern: 'tag:unity3d.com'
 - extensions: ['.md']
   rules:
   - language: Markdown
@@ -465,6 +469,8 @@ disambiguations:
     pattern: '^@(<|\w+\.)'
 - extensions: ['.x']
   rules:
+  - language: DirectX 3D File
+    pattern:  '^xof 030(2|3)(?:txt|bin|tzip|bzip)\b'
   - language: RPC
     pattern: '\b(program|version)\s+\w+\s*{|\bunion\s+\w+\s+switch\s*\('
   - language: Logos

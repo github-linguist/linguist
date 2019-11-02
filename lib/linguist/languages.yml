@@ -1132,6 +1132,13 @@ Diff:
   codemirror_mode: diff
   codemirror_mime_type: text/x-diff
   language_id: 88
+DirectX 3D File:
+  type: data
+  extensions:
+  - ".x"
+  ace_mode: text
+  tm_scope: none
+  language_id: 201049282
 Dockerfile:
   type: programming
   color: "#384d54"
@@ -2084,6 +2091,7 @@ Haskell:
   color: "#5e5086"
   extensions:
   - ".hs"
+  - ".hs-boot"
   - ".hsc"
   interpreters:
   - runhaskell
@@ -2248,7 +2256,7 @@ Inno Setup:
   type: programming
   extensions:
   - ".iss"
-  tm_scope: none
+  tm_scope: source.inno
   ace_mode: text
   language_id: 167
 Io:
@@ -3224,6 +3232,7 @@ MoonScript:
   language_id: 238
 Motorola 68K Assembly:
   type: programming
+  group: Assembly
   aliases:
   - m68k
   extensions:
@@ -3235,6 +3244,17 @@ Motorola 68K Assembly:
   tm_scope: source.m68k
   ace_mode: assembly_x86
   language_id: 477582706
+Muse:
+  type: prose
+  extensions:
+  - ".muse"
+  tm_scope: text.muse
+  ace_mode: text
+  wrap: true
+  language_id: 474864066
+  aliases:
+  - amusewiki
+  - emacs muse
 Myghty:
   type: programming
   extensions:
@@ -3257,6 +3277,16 @@ NL:
   tm_scope: none
   ace_mode: text
   language_id: 241
+NPM Config:
+  type: data
+  group: INI
+  aliases:
+  - npmrc
+  filenames:
+  - ".npmrc"
+  tm_scope: source.ini.npmrc
+  ace_mode: text
+  language_id: 685022663
 NSIS:
   type: programming
   extensions:
@@ -3519,6 +3549,13 @@ Opal:
   tm_scope: source.opal
   ace_mode: text
   language_id: 262
+Open Policy Agent:
+  type: programming
+  ace_mode: text
+  extensions:
+  - ".rego"
+  language_id: 840483232
+  tm_scope: source.rego
 OpenCL:
   type: programming
   group: C
@@ -3965,6 +4002,13 @@ PowerShell:
   interpreters:
   - pwsh
   language_id: 293
+Prisma:
+  type: data
+  extensions:
+  - ".prisma"
+  tm_scope: source.prisma
+  ace_mode: text
+  language_id: 499933428
 Processing:
   type: programming
   color: "#0096D8"
@@ -4108,7 +4152,10 @@ Python:
   - python2
   - python3
   aliases:
+  - bazel
+  - bzl
   - rusthon
+  - starlark
   - python3
   language_id: 303
 Python console:
@@ -4316,6 +4363,18 @@ Raw token data:
   tm_scope: none
   ace_mode: text
   language_id: 318
+Readline Config:
+  type: data
+  group: INI
+  aliases:
+  - inputrc
+  - readline
+  filenames:
+  - ".inputrc"
+  - inputrc
+  tm_scope: source.inputrc
+  ace_mode: text
+  language_id: 538732839
 Reason:
   type: programming
   group: OCaml
@@ -4403,6 +4462,14 @@ Ring:
   tm_scope: source.ring
   ace_mode: text
   language_id: 431
+Riot:
+  type: markup
+  color: "#A71E49"
+  ace_mode: html
+  extensions:
+  - ".riot"
+  tm_scope: text.html.riot
+  language_id: 878396783
 RobotFramework:
   type: programming
   extensions:
@@ -5261,9 +5328,14 @@ Text:
   - go.mod
   - go.sum
   - keep.me
+  - package.mask
+  - package.use.mask
+  - package.use.stable.mask
   - read.me
   - readme.1st
   - test.me
+  - use.mask
+  - use.stable.mask
   tm_scope: none
   ace_mode: text
   language_id: 372
@@ -5354,6 +5426,7 @@ Unity3D Asset:
   extensions:
   - ".anim"
   - ".asset"
+  - ".mask"
   - ".mat"
   - ".meta"
   - ".prefab"
@@ -5456,6 +5529,20 @@ Verilog:
   codemirror_mode: verilog
   codemirror_mime_type: text/x-verilog
   language_id: 387
+Vim Snippet:
+  type: markup
+  aliases:
+  - SnipMate
+  - UltiSnip
+  - UltiSnips
+  - NeoSnippet
+  extensions:
+  - ".snip"
+  - ".snippet"
+  - ".snippets"
+  tm_scope: source.vim-snippet
+  ace_mode: text
+  language_id: 81265970
 Vim script:
   type: programming
   color: "#199f4b"
@@ -5568,6 +5655,16 @@ WebVTT:
   tm_scope: source.vtt
   ace_mode: text
   language_id: 658679714
+Wget Config:
+  type: data
+  group: INI
+  aliases:
+  - wgetrc
+  filenames:
+  - ".wgetrc"
+  tm_scope: source.wgetrc
+  ace_mode: text
+  language_id: 668457123
 Windows Registry Entries:
   type: data
   extensions:
@@ -5988,6 +6085,17 @@ Zimpl:
   tm_scope: none
   ace_mode: text
   language_id: 411
+cURL Config:
+  type: data
+  group: INI
+  aliases:
+  - curlrc
+  filenames:
+  - ".curlrc"
+  - _curlrc
+  tm_scope: source.curlrc
+  ace_mode: text
+  language_id: 992375436
 desktop:
   type: data
   extensions:
@@ -6024,6 +6132,14 @@ fish:
   tm_scope: source.fish
   ace_mode: text
   language_id: 415
+mIRC Script:
+  type: programming
+  color: "#926059"
+  extensions:
+  - ".mrc"
+  tm_scope: source.mrc
+  ace_mode: text
+  language_id: 517654727
 mcfunction:
   type: programming
   color: "#E22837"

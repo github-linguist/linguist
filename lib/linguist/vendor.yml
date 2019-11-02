@@ -32,11 +32,17 @@
 - (^|/)ltversion.m4
 - (^|/)lt~obsolete.m4
 
+# .NET Core Install Scripts
+- dotnet-install\.(ps1|sh)$
+
 # Linters
 - cpplint.py
 
 # Node dependencies
 - node_modules/
+
+# esy.sh dependencies
+- (^|/)_esy$
 
 # Bower Components
 - bower_components/

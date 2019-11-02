@@ -190,6 +190,7 @@ vendor/grammars/assembly:
 - source.x86asm
 vendor/grammars/atom-editorconfig:
 - source.editorconfig
+- text.plain
 vendor/grammars/atom-firestore-grammar:
 - source.firestore
 vendor/grammars/atom-fsharp:
@@ -207,6 +208,8 @@ vendor/grammars/atom-language-clean:
 - text.restructuredtext.clean
 vendor/grammars/atom-language-haproxy:
 - source.haproxy-config
+vendor/grammars/atom-language-innosetup:
+- source.inno
 vendor/grammars/atom-language-julia:
 - source.julia
 - source.julia.console
@@ -413,6 +416,7 @@ vendor/grammars/language-cwl:
 vendor/grammars/language-emacs-lisp:
 - source.emacs.lisp
 - source.yasnippet
+- text.muse
 vendor/grammars/language-eml:
 - text.eml.basic
 vendor/grammars/language-etc:
@@ -424,12 +428,17 @@ vendor/grammars/language-etc:
 - source.gitconfig
 - source.gitignore
 - source.hgignore
+- source.hosts
+- source.ini.npmrc
+- source.inputrc
 - source.m4
 - source.man-conf
 - source.nanorc
+- source.npmrc
 - source.opts
 - source.smpl
 - source.ssh-config
+- source.wgetrc
 - text.xml.svg
 vendor/grammars/language-fontforge:
 - source.afm
@@ -451,6 +460,7 @@ vendor/grammars/language-grammars:
 - source.abnf
 - source.bnf
 - source.ebnf
+- source.jlex
 - source.lex
 - source.lex.regexp
 - source.yacc
@@ -507,6 +517,8 @@ vendor/grammars/language-mcfunction:
 - source.mcfunction-snapshot
 vendor/grammars/language-meson:
 - source.meson
+vendor/grammars/language-msl:
+- source.mrc
 vendor/grammars/language-ncl:
 - source.ncl
 vendor/grammars/language-ninja:
@@ -532,6 +544,7 @@ vendor/grammars/language-reg:
 vendor/grammars/language-regexp:
 - source.regexp
 - source.regexp.extended
+- source.sy
 vendor/grammars/language-renpy:
 - source.renpy
 vendor/grammars/language-restructuredtext:
@@ -541,6 +554,7 @@ vendor/grammars/language-ring:
 vendor/grammars/language-roff:
 - source.ditroff
 - source.ditroff.desc
+- source.gremlin
 - source.ideal
 - source.pic
 - text.roff
@@ -576,6 +590,7 @@ vendor/grammars/language-turing:
 vendor/grammars/language-typelanguage:
 - source.tl
 vendor/grammars/language-viml:
+- source.vim-snippet
 - source.viml
 vendor/grammars/language-vtt:
 - source.vtt
@@ -700,6 +715,8 @@ vendor/grammars/rascal-syntax-highlighting:
 - source.rascal
 vendor/grammars/razor-plus:
 - text.html.cshtml
+vendor/grammars/riot-syntax-highlight:
+- text.html.riot
 vendor/grammars/ruby-slim.tmbundle:
 - text.slim
 vendor/grammars/sas.tmbundle:
@@ -822,6 +839,10 @@ vendor/grammars/vscode-hack:
 - source.hack
 vendor/grammars/vscode-lean:
 - source.lean
+vendor/grammars/vscode-opa:
+- source.rego
+vendor/grammars/vscode-prisma:
+- source.prisma
 vendor/grammars/vscode-scala-syntax:
 - source.scala
 vendor/grammars/vscode-slice:
