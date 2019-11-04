@@ -181,7 +181,7 @@ File and folder paths inside `.gitattributes` are calculated relative to the pos
 *.rb linguist-language=Java
 
 # Replace any whitespace in the language name with hyphens:
-*.glyphs linguist-language=OpenStep-Property-List 
+*.glyphs linguist-language=OpenStep-Property-List
 ```
 
 #### Vendored code
