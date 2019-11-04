@@ -179,19 +179,9 @@ File and folder paths inside `.gitattributes` are calculated relative to the pos
 ```gitattributes
 # Example of a `.gitattributes` file which reclassifies `.rb` files as Java:
 *.rb linguist-language=Java
-```
 
-Be aware that `gitattribute` values cannot contain whitespace.
-If a language's name contains spaces, replace them with hyphens instead:
-
-```gitattributes
-# These lines won't work:
-*.glyphs linguist-language=OpenStep Property List
-*.glyphs linguist-language=OpenStep\ Property\ List
-*.glyphs linguist-language="OpenStep Property List"
-
-# But this line will:
-*.glyphs linguist-language=OpenStep-Property-List
+# Replace any whitespace in the language name with hyphens:
+*.glyphs linguist-language=OpenStep-Property-List 
 ```
 
 #### Vendored code
