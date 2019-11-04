@@ -181,6 +181,19 @@ File and folder paths inside `.gitattributes` are calculated relative to the pos
 *.rb linguist-language=Java
 ```
 
+Be aware that `gitattribute` values cannot contain whitespace.
+If a language's name contains spaces, replace them with hyphens instead:
+
+```gitattributes
+# These lines won't work:
+*.glyphs linguist-language=OpenStep Property List
+*.glyphs linguist-language=OpenStep\ Property\ List
+*.glyphs linguist-language="OpenStep Property List"
+
+# But this line will:
+*.glyphs linguist-language=OpenStep-Property-List
+```
+
 #### Vendored code
 
 Checking code you didn't write, such as JavaScript libraries, into your git repo is a common practice, but this often inflates your project's language stats and may even cause your project to be labeled as another language.
