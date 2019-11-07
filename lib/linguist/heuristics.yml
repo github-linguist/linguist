@@ -329,6 +329,8 @@ disambiguations:
     pattern: '^\s+\w+\s+=>\s'
 - extensions: ['.pro']
   rules:
+  - language: Proguard
+    pattern: '^-(include\b.*\.pro$|keep\b|keepclassmembers\b|keepattributes\b)'
   - language: Prolog
     pattern: '^[^\[#]+:-'
   - language: INI
