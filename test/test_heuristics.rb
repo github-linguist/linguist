@@ -375,9 +375,10 @@ class TestHeuristics < Minitest::Test
     })
   end
 
-  # Candidate languages = ["IDL", "Prolog", "QMake", "INI"]
+  # Candidate languages = ["IDL", "Proguard", "Prolog", "QMake", "INI"]
   def test_pro_by_heuristics
     assert_heuristics({
+      "Proguard" => all_fixtures("Proguard", "*.pro"),
       "Prolog" => all_fixtures("Prolog", "*.pro"),
       "IDL" => all_fixtures("IDL", "*.pro"),
       "INI" => all_fixtures("INI", "*.pro"),
