@@ -1507,7 +1507,7 @@ Fortran:
   - ".f95"
   - ".for"
   - ".fpp"
-  tm_scope: source.fortran.modern
+  tm_scope: source.fortran
   ace_mode: text
   codemirror_mode: fortran
   codemirror_mime_type: text/x-fortran
@@ -2470,6 +2470,7 @@ JavaScript:
   - ".js"
   - "._js"
   - ".bones"
+  - ".cjs"
   - ".es"
   - ".es6"
   - ".frag"
@@ -4013,6 +4014,13 @@ Processing:
   tm_scope: source.processing
   ace_mode: text
   language_id: 294
+Proguard:
+  type: data
+  extensions:
+  - ".pro"
+  tm_scope: none
+  ace_mode: text
+  language_id: 716513858
 Prolog:
   type: programming
   color: "#74283c"
@@ -5973,6 +5981,7 @@ YAML:
   - ".syntax"
   - ".yaml"
   - ".yaml-tmlanguage"
+  - ".yaml.sed"
   - ".yml.mysql"
   filenames:
   - ".clang-format"
