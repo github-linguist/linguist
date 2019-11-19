@@ -1,0 +1,8 @@
+
+contract BytesToX =
+
+  entrypoint to_int(b : bytes(42)) : int = Bytes.to_int(b)
+  entrypoint to_str(b : bytes(12)) : string =
+    String.concat(Bytes.to_str(b), Bytes.to_str(#ffff))
+  entrypoint to_str_big(b : bytes(65)) : string =
+    Bytes.to_str(b)

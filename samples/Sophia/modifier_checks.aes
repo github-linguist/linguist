@@ -1,0 +1,12 @@
+
+namespace Lib =
+  entrypoint foo() = ()
+
+contract Remote =
+  public function foo : () => unit
+  function bla() = ()
+
+contract Contract =
+  public function foo() = ()
+  public private stateful function all_the_things() = ()
+  private entrypoint wha() = ()

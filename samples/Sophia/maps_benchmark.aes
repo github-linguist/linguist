@@ -1,0 +1,29 @@
+
+contract MapUpdater =
+  function update_map : (int, string, map(int, string)) => map(int, string)
+
+contract Benchmark =
+
+  record state = { updater : MapUpdater,
+                   map     : map(int, string) }
+
+  function init(u, m) = { updater = u, map = m }
+
+  function set_updater(u) = put(state{ updater = u })
+
+  function update_map(k : int, v : string, m) = m{ [k] = v }
+
+  function update(a : int, b : int, v : string) =
+    if (a > b) ()
+    else
+      put(state{ map[a] = v })
+      update(a + 1, b, v)
+
+  function get(k) = state.map[k]
+  function noop() = ()
+
+  function benchmark(k, v) =
+    let m = state.updater.update_map(k, v, state.map)
+    put(state{ map = m })
+    m
+

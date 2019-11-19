@@ -1,0 +1,4 @@
+include "cyclic_include_forth.aes"
+
+contract CI =
+  entrypoint ci() = Back.back() + Forth.forth()

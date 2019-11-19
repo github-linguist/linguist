@@ -1,0 +1,6 @@
+contract MinimalInit =
+
+  record state = {foo : int}
+
+  function init() =
+    { foo = 0 }

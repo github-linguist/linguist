@@ -1,0 +1,40 @@
+//
+// Dutch auction example
+//
+contract DutchAuction =
+
+  record state = { start_amount : int,
+                   start_height : int,
+                   dec          : int,
+                   beneficiary  : address,
+                   sold         : bool }
+
+  // Add to work around current lack of predefined functions
+  stateful function spend(to, amount) =
+    let total = Contract.balance
+    Chain.spend(to, amount)
+    total - amount
+
+  // TTL set by user on posting contract, typically (start - end ) div dec
+  entrypoint init(beneficiary, start, decrease) : state =
+    require(start > 0 && decrease > 0, "bad args")
+    { start_amount = start,
+      start_height = Chain.block_height,
+      beneficiary  = beneficiary,
+      dec          = decrease,
+      sold         = false }
+
+  // -- API
+
+  // We are the buyer... interesting case to buy for someone else and keep 10%
+  stateful entrypoint bid() =
+    require( !(state.sold), "sold")
+    let cost =
+      state.start_amount - (Chain.block_height - state.start_height) * state.dec
+    require( Contract.balance >= cost, "no money")
+
+//    transaction(SpendTx({recipient = state.beneficiary,
+//                         amount    = cost }))  // or self.balance ** burn money **
+    spend(state.beneficiary, cost)
+    spend(Call.caller, Contract.balance)
+    put(state{sold = true})

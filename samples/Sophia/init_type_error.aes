@@ -1,0 +1,8 @@
+
+contract InitTypeError =
+
+  type state = map(int, int)
+
+  // Check that the compiler catches ill-typed init entrypoint
+  entrypoint init() = "not the right type!"
+

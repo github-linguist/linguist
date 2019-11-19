@@ -1,0 +1,76 @@
+include "List.aes"
+
+namespace Option =
+
+  function is_none(o : option('a)) : bool = switch(o)
+    None => true
+    Some(_) => false
+
+  function is_some(o : option('a)) : bool = switch(o)
+    None => false
+    Some(_) => true
+
+
+  function match(n : 'b, s : 'a => 'b, o : option('a)) : 'b = switch(o)
+    None => n
+    Some(x) => s(x)
+
+  function default(def : 'a, o : option('a)) : 'a = match(def, (x) => x, o)
+
+  function force(o : option('a)) : 'a = default(abort("Forced None value"), o)
+
+  function on_elem(o : option('a), f : 'a => unit) : unit = match((), f, o)
+
+  function map(f : 'a => 'b, o : option('a)) : option('b) = switch(o)
+    None => None
+    Some(x) => Some(f(x))
+
+  function map2(f : ('a, 'b) => 'c
+               , o1 : option('a)
+               , o2 : option('b)
+               ) : option('c) = switch((o1, o2))
+    (Some(x1), Some(x2)) => Some(f(x1, x2))
+    _ => None
+
+  function map3( f : ('a, 'b, 'c) => 'd
+               , o1 : option('a)
+               , o2 : option('b)
+               , o3 : option('c)
+               ) : option('d) = switch((o1, o2, o3))
+    (Some(x1), Some(x2), Some(x3)) => Some(f(x1, x2, x3))
+    _ => None
+
+  function app_over(f : option ('a => 'b), o : option('a)) : option('b) = switch((f, o))
+    (Some(ff), Some(xx)) => Some(ff(xx))
+    _ => None
+
+  function flat_map(f : 'a => option('b), o : option('a)) : option('b) = switch(o)
+    None => None
+    Some(x) => f(x)
+
+
+  function to_list(o : option('a)) : list('a) = switch(o)
+    None => []
+    Some(x) => [x]
+
+  function filter_options(l : list(option('a))) : list('a) = filter_options_(l, [])
+  private function filter_options_(l : list (option('a)), acc : list('a)) : list('a) = switch(l)
+    []         => List.reverse(acc)
+    None::t    => filter_options_(t, acc)
+    Some(x)::t => filter_options_(t, x::acc)
+
+  function seq_options(l : list (option('a))) : option (list('a)) = seq_options_(l, [])
+  private function seq_options_(l : list (option('a)), acc : list('a)) : option(list('a)) = switch(l)
+    []         => Some(List.reverse(acc))
+    None::t    => None
+    Some(x)::t => seq_options_(t, x::acc)
+
+
+  function choose(o1 : option('a), o2 : option('a)) : option('a) =
+    if(is_some(o1)) o1 else o2
+
+  function choose_first(l : list(option('a))) : option('a) = switch(l)
+    [] => None
+    None::t    => choose_first(t)
+    Some(x)::_ => Some(x)
+

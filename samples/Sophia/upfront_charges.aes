@@ -1,0 +1,6 @@
+contract UpfrontCharges =
+  record state = { b : int } // For enabling retrieval of sender balance observed inside init.
+  public function init() : state = { b = b() }
+  public function initialSenderBalance() : int = state.b
+  public function senderBalance() : int = b()
+  private function b() = Chain.balance(Call.origin)

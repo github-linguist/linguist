@@ -1,0 +1,37 @@
+// - + * / mod 	arithmetic operators
+// ! && || 	logical operators
+// == != < > =< >= 	comparison operators
+// :: ++ 	list operators
+
+contract Operators =
+  function int_op(a : int, b : int, op : string) =
+    switch(op)
+      "+"    => a + b
+      "-"    => a - b
+      "*"    => a * b
+      "/"    => a / b
+      "mod"  => a mod b
+      "^"    => a ^ b
+
+  function bool_op(a : bool, b : bool, op : string) =
+    switch(op)
+      "!"  => !a
+      "&&" => a && b
+      "||" => a || b
+
+  function cmp_op(a : int, b : int, op : string) =
+    switch(op)
+      "==" => a == b
+      "!=" => a != b
+      "<"  => a < b
+      ">"  => a > b
+      "=<" => a =< b
+      ">=" => a >= b
+
+  function cons(a, l) = a :: l
+  function concat(l1, l2) = l1 ++ l2
+
+  function hash(s) = // String.sha3(s)
+    let x = String.sha3(s)
+    let y = String.sha3(s)
+    (x, y)

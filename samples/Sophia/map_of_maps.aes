@@ -1,0 +1,36 @@
+
+contract MapOfMaps =
+
+  type board = map(int, map(int, string))
+  type map2('a, 'b, 'c) = map('a, map('b, 'c))
+
+  record state = { big1   : map2(string, string, string),
+                   big2   : map2(string, string, string),
+                   small1 : map(string, string),
+                   small2 : map(string, string)  }
+
+  private function empty_state() =
+    { big1   = {}, big2   = {},
+      small1 = {}, small2 = {} }
+
+  function init() = empty_state()
+
+  function setup_state() =
+    let small = {["key"] = "val"}
+    put({ big1 = {["one"] = small},
+          big2 = {["two"] = small},
+          small1 = small,
+          small2 = small })
+
+  // -- Garbage collection of inner map when outer map is garbage collected
+  function test1_setup() =
+    let inner = {["key"] = "val"}
+    put(empty_state() { big1 = {["one"] = inner} })
+
+  function test1_execute() =
+    put(state{ big1 = {} })
+
+  function test1_check() =
+    state.big1
+
+

@@ -1,0 +1,12 @@
+
+// Compiler failed to detect the map lookup nested in the state update and
+// generate the appropriate builtin for it.
+contract BuiltinBug =
+
+  record state = {proofs : map(address, list(string))}
+
+  entrypoint init() = {proofs = {}}
+
+  stateful entrypoint createProof(hash : string) =
+    put( state{ proofs[Call.caller] = hash :: state.proofs[Call.caller] } )
+

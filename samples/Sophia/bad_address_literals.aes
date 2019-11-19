@@ -1,0 +1,35 @@
+
+contract Remote =
+  entrypoint foo : () => unit
+
+contract AddressLiterals =
+  entrypoint addr1() : bytes(32) =
+    ak_2gx9MEFxKvY9vMG5YnqnXWv1hCsX7rgnfvBLJS4aQurustR1rt
+  entrypoint addr2() : Remote =
+    ak_2gx9MEFxKvY9vMG5YnqnXWv1hCsX7rgnfvBLJS4aQurustR1rt
+  entrypoint addr3() : oracle(int, bool) =
+    ak_2gx9MEFxKvY9vMG5YnqnXWv1hCsX7rgnfvBLJS4aQurustR1rt
+
+  entrypoint oracle1() : oracle_query(int, bool) =
+    ok_2YNyxd6TRJPNrTcEDCe9ra59SVUdp9FR9qWC5msKZWYD9bP9z5
+  entrypoint oracle2() : bytes(32) =
+    ok_2YNyxd6TRJPNrTcEDCe9ra59SVUdp9FR9qWC5msKZWYD9bP9z5
+  entrypoint oracle3() : Remote =
+    ok_2YNyxd6TRJPNrTcEDCe9ra59SVUdp9FR9qWC5msKZWYD9bP9z5
+
+  entrypoint query1() : oracle(int, bool) =
+    oq_2oRvyowJuJnEkxy58Ckkw77XfWJrmRgmGaLzhdqb67SKEL1gPY
+  entrypoint query2() : bytes(32) =
+    oq_2oRvyowJuJnEkxy58Ckkw77XfWJrmRgmGaLzhdqb67SKEL1gPY
+  entrypoint query3() : Remote =
+    oq_2oRvyowJuJnEkxy58Ckkw77XfWJrmRgmGaLzhdqb67SKEL1gPY
+
+  entrypoint contr1() : address =
+    ct_Ez6MyeTMm17YnTnDdHTSrzMEBKmy7Uz2sXu347bTDPgVH2ifJ
+  entrypoint contr2() : oracle(int, bool) =
+    ct_Ez6MyeTMm17YnTnDdHTSrzMEBKmy7Uz2sXu347bTDPgVH2ifJ
+  entrypoint contr3() : bytes(32) =
+    ct_Ez6MyeTMm17YnTnDdHTSrzMEBKmy7Uz2sXu347bTDPgVH2ifJ
+  entrypoint contr4() : address =
+    Address.to_contract(Contract.address)
+

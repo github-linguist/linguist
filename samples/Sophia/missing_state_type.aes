@@ -1,0 +1,6 @@
+
+contract MissingStateType =
+
+  // Check that we get a type error also for implicit state
+  entrypoint init() = "should be ()"
+

@@ -1,0 +1,110 @@
+contract Oracles =
+
+  type fee = int
+  type ttl = Chain.ttl
+
+  type query_t  = string
+  type answer_t = int
+
+  type oracle_id = oracle(query_t, answer_t)
+  type query_id  = oracle_query(query_t, answer_t)
+
+  stateful entrypoint registerOracle(acct : address,
+                          qfee : fee,
+                          ttl  : ttl) : oracle_id =
+     Oracle.register(acct, qfee, ttl)
+
+  stateful entrypoint registerIntIntOracle(acct : address,
+                                qfee : fee,
+                                ttl  : ttl) : oracle(int, int) =
+     Oracle.register(acct, qfee, ttl)
+
+  stateful entrypoint registerStringStringOracle(acct : address,
+                                      qfee : fee,
+                                      ttl  : ttl) : oracle(string, string) =
+     Oracle.register(acct, qfee, ttl)
+
+  stateful entrypoint signedRegisterOracle(acct : address,
+                                sign : signature,
+                                qfee : fee,
+                                ttl  : ttl) : oracle_id =
+     Oracle.register(acct, qfee, ttl, signature = sign)
+
+  entrypoint queryFee(o : oracle_id) : fee =
+    Oracle.query_fee(o)
+
+  stateful entrypoint createQuery(o    : oracle_id,
+                       q    : query_t,
+                       qfee : fee,
+                       qttl : ttl,
+                       rttl : ttl) : query_id =
+    require(qfee =< Call.value, "insufficient value for qfee")
+    Oracle.query(o, q, qfee, qttl, rttl)
+
+  // Do not use in production!
+  stateful entrypoint unsafeCreateQuery(o    : oracle_id,
+                       q    : query_t,
+                       qfee : fee,
+                       qttl : ttl,
+                       rttl : ttl) : query_id =
+    Oracle.query(o, q, qfee, qttl, rttl)
+
+  // Do not use in production!
+  stateful entrypoint unsafeCreateQueryThenErr(o    : oracle_id,
+                       q    : query_t,
+                       qfee : fee,
+                       qttl : ttl,
+                       rttl : ttl) : query_id =
+    let res = Oracle.query(o, q, qfee, qttl, rttl)
+    require(qfee >= 100000000000000000, "causing a late error")
+    res
+
+  stateful entrypoint extendOracle(o    : oracle_id,
+                        ttl  : ttl) : unit =
+    Oracle.extend(o, ttl)
+
+  stateful entrypoint signedExtendOracle(o    : oracle_id,
+                              sign : signature,   // Signed oracle address
+                              ttl  : ttl) : unit =
+    Oracle.extend(o, signature = sign, ttl)
+
+  stateful entrypoint respond(o    : oracle_id,
+                   q    : query_id,
+                   r    : answer_t) : unit =
+    Oracle.respond(o, q, r)
+
+  stateful entrypoint signedRespond(o    : oracle_id,
+                         q    : query_id,
+                         sign : signature,
+                         r    : answer_t) : unit =
+    Oracle.respond(o, q, signature = sign, r)
+
+  entrypoint getQuestion(o : oracle_id,
+                       q : query_id) : query_t =
+    Oracle.get_question(o, q)
+
+  entrypoint hasAnswer(o : oracle_id,
+                     q : query_id) =
+    switch(Oracle.get_answer(o, q))
+      None    => false
+      Some(_) => true
+
+  entrypoint getAnswer(o : oracle_id,
+                     q : query_id) : option(answer_t) =
+    Oracle.get_answer(o, q)
+
+  datatype complexQuestion = Why(int) | How(string)
+  datatype complexAnswer   = NoAnswer | Answer(complexQuestion, string, int)
+
+  stateful entrypoint complexOracle(question) =
+    let o = Oracle.register(Contract.address, 0, FixedTTL(1000)) : oracle(complexQuestion, complexAnswer)
+    let q = Oracle.query(o, question, 0, RelativeTTL(100), RelativeTTL(100))
+    Oracle.respond(o, q, Answer(question, "magic", 1337))
+    Oracle.get_answer(o, q)
+
+  stateful entrypoint signedComplexOracle(question, sig) =
+    let o = Oracle.register(signature = sig, Contract.address, 0, FixedTTL(1000)) : oracle(complexQuestion, complexAnswer)
+    let q = Oracle.query(o, question, 0, RelativeTTL(100), RelativeTTL(100))
+    Oracle.respond(o, q, Answer(question, "magic", 1337), signature = sig)
+    Oracle.get_answer(o, q)
+

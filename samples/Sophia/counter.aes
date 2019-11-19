@@ -1,0 +1,9 @@
+
+contract Counter =
+
+  record state = { value : int }
+
+  entrypoint init(val) = { value = val }
+  entrypoint get()     = state.value
+  stateful entrypoint tick()    = put(state{ value = state.value + 1 })
+

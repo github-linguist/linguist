@@ -1,0 +1,17 @@
+// An implementation of the factorial function where each recursive
+// call is to another contract. Not the cheapest way to compute factorial.
+contract FactorialServer =
+  entrypoint fac : (int) => int
+
+contract Factorial =
+
+  record state = {worker : FactorialServer}
+
+  entrypoint init(worker) = {worker = worker}
+
+  stateful entrypoint set_worker(worker) = put(state{worker = worker})
+
+  entrypoint fac(x : int) : int =
+    if(x == 0) 1
+    else x * state.worker.fac(x - 1)
+

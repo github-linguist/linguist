@@ -1,0 +1,23 @@
+contract Events =
+  type alias_int = int
+  type alias_address = address
+  type alias_string = string
+
+  datatype event =
+      Event1(indexed alias_int, indexed int, string)
+    | Event2(alias_string, indexed alias_address)
+    | BadEvent1(indexed string)
+    | BadEvent2(indexed alias_string)
+
+  entrypoint f1(x : int, y : string) =
+    Chain.event(Event1(x, x+1, y))
+
+  entrypoint f2(s : string) =
+    Chain.event(Event2(s, Call.caller))
+
+  entrypoint f3(x : int) =
+    Chain.event(Event1(x, x + 2, Int.to_str(x + 7)))
+
+  entrypoint i2s(i : int) = Int.to_str(i)
+  entrypoint a2s(a : address) = Address.to_str(a)
+

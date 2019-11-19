@@ -1,0 +1,7 @@
+contract ChannelOnChainContractNameResolution =
+
+  public function can_resolve(name: string, key: string) : bool =
+    switch(AENS.resolve(name, key) : option(string))
+      None           => false
+      Some(_address) => true
+

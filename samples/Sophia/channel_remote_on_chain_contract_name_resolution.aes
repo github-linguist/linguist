@@ -1,0 +1,9 @@
+contract Remote =
+  function get : () => int
+  function can_resolve : (string, string) => bool
+
+contract RemoteCall =
+
+    function remote_resolve(r : Remote, name: string, key: string) : bool =
+        r.can_resolve(name, key)
+

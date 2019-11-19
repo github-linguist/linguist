@@ -1,0 +1,87 @@
+contract ERC20Token =
+  record state = {
+    totalSupply : int,
+    decimals : int,
+    name : string,
+    symbol : string,
+    balances : map(address, int),
+    allowed : map(address, map(address,int)),
+    // Logs, remove when native Events are there
+    transfer_log : list((address,address,int)),
+    approval_log : list((address,address,int))}
+
+  // init(100000000, 10, "Token Name", "TKN")
+  public stateful function init(_totalSupply : int, _decimals : int, _name : string, _symbol : string ) = {
+    totalSupply = _totalSupply,
+    decimals = _decimals,
+    name = _name,
+    symbol = _symbol,
+    balances = {[Call.caller] = _totalSupply }, // creator gets all Tokens
+    allowed = {},
+    // Logs, remove when native Events are there
+    transfer_log = [],
+    approval_log = []}
+
+  public stateful function totalSupply() : int = state.totalSupply
+  public stateful function decimals() : int = state.decimals
+  public stateful function name() : string = state.name
+  public stateful function symbol() : string = state.symbol
+
+  public stateful function balanceOf(tokenOwner : address ) : int =
+    Map.lookup_default(tokenOwner, state.balances, 0)
+
+  public stateful function transfer(to : address, tokens : int) =
+    put( state{balances[Call.caller] = sub(state.balances[Call.caller], tokens) })
+    put( state{balances[to] = add(Map.lookup_default(to, state.balances, 0), tokens) })
+    transferEvent(Call.caller, to, tokens)
+    true
+
+  public stateful function approve(spender : address, tokens : int) =
+    // allowed[Call.caller] field must have a value!
+    ensure_allowed(Call.caller)
+    put( state{allowed[Call.caller][spender] = tokens} )
+    approvalEvent(Call.caller, spender, tokens)
+    true
+
+  public stateful function transferFrom(from : address, to : address, tokens : int) =
+    put( state{ balances[from] = sub(state.balances[from], tokens) })
+    put( state{ allowed[from][Call.caller] = sub(state.allowed[from][Call.caller], tokens) })
+    put( state{ balances[to] = add(balanceOf(to), tokens) })
+    transferEvent(from, to, tokens)
+    true
+
+  public function allowance(_owner : address, _spender : address) : int =
+    state.allowed[_owner][_spender]
+
+  public stateful function getTransferLog() : list((address,address,int)) =
+    state.transfer_log
+  public stateful function getApprovalLog() : list((address,address,int)) =
+    state.approval_log
+
+  //
+  // Private Functions
+  //
+
+  private function ensure_allowed(key : address) =
+    switch(Map.lookup(key, state.allowed))
+      None => put(state{allowed[key] = {}})
+      Some(_) => ()
+
+  private function transferEvent(from : address, to : address, tokens : int) =
+    let e = (from, to, tokens)
+    put( state{transfer_log = e :: state.transfer_log })
+    e
+
+  private function approvalEvent(from : address, to : address, tokens : int) =
+    let e = (from, to, tokens)
+    put( state{approval_log = e :: state.approval_log })
+    e
+
+  private function sub(_a : int, _b : int) : int =
+    require(_b =< _a, "Error")
+    _a - _b
+
+  private function add(_a : int, _b : int) : int =
+    let c : int = _a + _b
+    require(c >= _a, "Error")
+    c

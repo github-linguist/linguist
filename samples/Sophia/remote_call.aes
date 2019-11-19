@@ -1,0 +1,27 @@
+
+contract Remote1 =
+  entrypoint main : (int) => int
+
+contract Remote2 =
+  entrypoint call : (Remote1, int) => int
+
+contract Remote3 =
+  entrypoint get : () => int
+  entrypoint tick : () => unit
+
+contract RemoteCall =
+
+    stateful entrypoint call(r : Remote1, x : int) : int =
+        r.main(gas = 10000, value = 10, x)
+
+    entrypoint staged_call(r1 : Remote1, r2 : Remote2, x : int) =
+        r2.call(r1, x)
+
+    entrypoint increment(r3 : Remote3) =
+        r3.tick()
+
+    entrypoint get(r3 : Remote3) =
+        r3.get()
+
+    entrypoint plus(x, y) = x + y
+

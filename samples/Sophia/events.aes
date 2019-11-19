@@ -1,0 +1,40 @@
+contract Remote =
+  entrypoint dummy : () => unit
+
+contract Events =
+
+  // Valid index types
+  type ix1 = int
+  type ix2 = bool
+  type ix3 = bits
+  type ix4 = bytes(12)
+  type ix5 = hash // bytes(32)
+  type ix6 = address
+  type ix7 = Remote
+  type ix8 = oracle(int, int)
+  type ix9 = oracle_query(int, int)
+
+  // Valid payload types
+  type data1 = string
+  type data2 = signature  // bytes(64)
+  type data3 = bytes(65)
+
+  datatype event
+    = Nodata0
+    | Nodata1(ix1)
+    | Nodata2(ix2, ix3)
+    | Nodata3(ix4, ix5, ix6)
+    | Data0(data1)
+    | Data1(data2, ix7)
+    | Data2(ix8, data3, ix9)
+    | Data3(ix1, ix2, ix5, data1)
+
+  entrypoint nodata0()                   = Chain.event(Nodata0)
+  entrypoint nodata1(ix1)                = Chain.event(Nodata1(ix1))
+  entrypoint nodata2(ix2, ix3)           = Chain.event(Nodata2(ix2, ix3))
+  entrypoint nodata3(ix4, ix5, ix6)      = Chain.event(Nodata3(ix4, ix5, ix6))
+  entrypoint data0(data1)                = Chain.event(Data0(data1))
+  entrypoint data1(data2, ix7)           = Chain.event(Data1(data2, ix7))
+  entrypoint data2(ix8, data3, ix9)      = Chain.event(Data2(ix8, data3, ix9))
+  entrypoint data3(ix1, ix2, ix5, data1) = Chain.event(Data3(ix1, ix2, ix5, data1))
+

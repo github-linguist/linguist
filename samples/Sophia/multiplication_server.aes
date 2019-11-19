@@ -1,0 +1,7 @@
+
+contract MultiplicationServer =
+
+  function multiply(x : int, y : int) =
+    switch(Call.value >= 100)
+      true => x * y
+

@@ -1,0 +1,54 @@
+
+contract Remote =
+  stateful entrypoint remote_spend : (address, int) => unit
+  entrypoint remote_pure : int => int
+
+contract Stateful =
+
+  function pure(x) = x + 1
+  stateful function local_spend(a) =
+    Chain.spend(a, 1000)
+
+  // Non-stateful functions cannot mention stateful functions
+  entrypoint fail1(a : address) = Chain.spend(a, 1000)
+  entrypoint fail2(a : address) = local_spend(a)
+  entrypoint fail3(a : address) =
+    let foo = Chain.spend
+    foo(a, 1000)
+
+  // Private functions must also be annotated
+  private function fail4(a) = Chain.spend(a, 1000)
+
+  // If annotated, stateful functions are allowed
+  stateful entrypoint ok1(a : address) = Chain.spend(a, 1000)
+
+  // And pure functions are always allowed
+  stateful entrypoint ok2(a : address) = pure(5)
+  stateful entrypoint ok3(a : address) =
+    let foo = pure
+    foo(5)
+
+  // No error here (fail4 is annotated as not stateful)
+  entrypoint ok4(a : address) = fail4(a)
+
+  // Lamdbas are checked at the construction site
+  function fail5() : address => unit = (a) => Chain.spend(a, 1000)
+
+  // .. so you can pass a stateful lambda to a non-stateful higher-order
+  // function:
+  function apply(f : 'a => 'b, x) = f(x)
+  stateful entrypoint ok5(a : address) =
+    apply((val) => Chain.spend(a, val), 1000)
+
+  // It doesn't matter if remote calls are stateful or not
+  entrypoint ok6(r : Remote) = r.remote_spend(Contract.address, 1000)
+  entrypoint ok7(r : Remote) = r.remote_pure(5)
+
+  // But you can't send any tokens if not stateful
+  entrypoint fail6(r : Remote) = r.remote_spend(value = 1000, Contract.address, 1000)
+  entrypoint fail7(r : Remote) = r.remote_pure(value = 1000, 5)
+  entrypoint fail8(r : Remote) =
+    let foo = r.remote_pure
+    foo(value = 1000, 5)
+  entrypoint ok8(r : Remote) = r.remote_spend(Contract.address, 1000, value = 0)
+

@@ -1,0 +1,4 @@
+contract Strings =
+    entrypoint str_len(s) = String.length(s)
+    entrypoint str_concat(s1, s2) = String.concat(s1, s2)
+

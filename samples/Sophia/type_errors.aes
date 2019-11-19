@@ -1,0 +1,64 @@
+
+contract Test =
+
+  record r = { x : map(string, string), y : int }
+  record r' = { y : string }
+  record r2 = { z : int, w : int }
+  record r3 = { x : int, z : int }
+
+  entrypoint set_x(r : r, z) = r{ x["foo"] @ x = x + 1 }
+
+  entrypoint bla(m : map(string, int)) = { [0] = "bla", ["foo"] = "" }
+
+  entrypoint foo(r) = r { y = 0 }
+  entrypoint bar() = { y = "foo", z = 0 }
+  entrypoint baz() = { y = "foo", w = 0 }
+
+  entrypoint foo1() = zz
+
+  entrypoint test1() : string = { y = 0 }
+  entrypoint test2(x : string) = x { y = 0 }
+  entrypoint test3(x : string) = x { y @ y = y + 1 }
+  entrypoint test4(x : string) : int = x.y
+
+  entrypoint test5(xs) =
+    switch(xs)
+      x :: x => x
+      [] => 0
+
+  entrypoint case_pat(xs) =
+    switch(xs)
+      [] => 0
+      x :: xs => "x"
+
+  entrypoint foo2(m : map(string, int)) = m{ [1] = "bla" }
+
+  entrypoint bad_if(x, y : int, w : int, z : string) =
+    if(x) y
+    elif(x) w
+    else z
+
+  entrypoint type_error(r, x) =
+    set_x(set_x(x, r), x)
+
+  entrypoint repeated_arg(x : int, y, x : string, y : bool) : string = x
+
+  entrypoint missing1() =
+    let x = 0
+
+  entrypoint missing_fun1() =
+    let f(x) = x
+
+  entrypoint missing2() =
+    let x = 0
+    let y = 0
+
+  entrypoint missing_fun2() =
+    let f() = 0
+    let g() = f()
+
+  function id(x : 'a) : 'a = x
+
+  entrypoint wrong_return(n : int) : bool =
+    id(n)
+

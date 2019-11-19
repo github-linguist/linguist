@@ -1,0 +1,31 @@
+// A simple test of the abort built-in function.
+
+contract AbortTest =
+
+  record state = { value : int }
+
+  public function init(v : int) =
+    { value = v }
+
+  // Aborting
+  public function do_abort(v : int, s : string) : unit =
+    put_value(v)
+    revert_abort(s)
+
+  // Accessing the value
+  public function get_value() = state.value
+  public function put_value(v : int) = put(state{value = v})
+  public function get_values() : list(int) = [state.value]
+  public function put_values(v : int) = put(state{value = v})
+
+  // Some basic statistics
+  public function get_stats(acct : address) =
+    ( Contract.balance, Chain.balance(acct) )
+
+  // Abort functions.
+  private function revert_abort(s : string) =
+    abort(s)
+
+  // This is still legal but will be stripped out.
+  // TODO: This function confuses the type inference, so it cannot be present.
+  //private function abort(s : string) = 42

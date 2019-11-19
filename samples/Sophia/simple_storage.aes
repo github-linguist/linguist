@@ -1,0 +1,28 @@
+/* Example from Solidity by Example
+   http://solidity.readthedocs.io/en/develop/introduction-to-smart-contracts.html
+
+   The Solidity code:
+
+   contract SimpleStorage {
+       uint storedData
+
+       entrypoint set(uint x) {
+           storedData = x
+       }
+
+       entrypoint get() constant returns (uint) {
+           return storedData
+       }
+   }
+*/
+
+contract SimpleStorage =
+
+  record state = { data : int }
+
+  entrypoint init(value : int) : state = { data = value }
+
+  entrypoint get() : int = state.data
+
+  stateful entrypoint set(value : int) =
+      put(state{data = value})

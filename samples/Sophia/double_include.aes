@@ -1,0 +1,7 @@
+include "included.aes"
+include "../contracts/included.aes"
+
+contract Include =
+  entrypoint foo() =
+    Included.foo()
+

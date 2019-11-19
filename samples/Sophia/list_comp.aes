@@ -1,0 +1,23 @@
+contract ListComp =
+
+    entrypoint sample1() = [1,2,3]
+    entrypoint sample2() = [4,5]
+
+    entrypoint l1() = [x | x <- sample1()]
+    entrypoint l1_true() = [1,2,3]
+
+    entrypoint l2() = [x + y | x <- sample1(), y <- sample2()]
+    entrypoint l2_true() = [5,6,6,7,7,8]
+
+    entrypoint l3() = [x ++ y | x <- [[":)"] | x <- [1,2]]
+                              , y <- [[":("]]]
+    entrypoint l3_true() = [[":)", ":("], [":)", ":("]]
+
+    entrypoint l4() = [(a, b, c) | let is_pit(a, b, c) = a*a + b*b == c*c
+                                 , let base = [1..10]
+                                 , a <- base
+                                 , b <- base, if (b >= a)
+                                 , c <- base, if (c >= b)
+                                 , if (is_pit(a, b, c))
+                                 ]
+    entrypoint l4_true() = [(3, 4, 5), (6, 8, 10)]

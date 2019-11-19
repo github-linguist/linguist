@@ -1,0 +1,7 @@
+
+contract Fail =
+
+  entrypoint tttt() : bool * int =
+    let f(x : 'a) : 'a = x
+    (f(true), f(1))
+

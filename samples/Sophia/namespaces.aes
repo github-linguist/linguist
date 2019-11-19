@@ -1,0 +1,21 @@
+
+namespace Lib =
+
+  private function rev(xs, ys) =
+    switch(xs)
+      []      => ys
+      x :: xs => rev(xs, x :: ys)
+
+  function reverse(xs : list('a)) : list('a) = rev(xs, [])
+
+  function eqlist(xs : list(int), ys : list(int)) =
+    switch((xs, ys))
+      ([], [])           => true
+      (x :: xs, y :: ys) => x == y && eqlist(xs, ys)
+      _                  => false
+
+contract TestNamespaces =
+
+  function palindrome(xs : list(int)) : bool =
+    Lib.eqlist(xs, Lib.reverse(xs))
+

@@ -1,0 +1,13 @@
+
+contract UnderscoreNumberLiterals =
+
+  entrypoint ints() : list(int) =
+    [ 1_999_000_000,
+      19_99_00_00_00,
+      0xfff_FFF_010 ]
+
+  entrypoint bytes() : list(bytes(4)) =
+    [ #abcd_ef_00,
+      #01_02_03_04,
+      #aaaa_FFFF ]
+

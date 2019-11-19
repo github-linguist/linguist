@@ -1,0 +1,16 @@
+
+contract Remote =
+  entrypoint foo : () => unit
+
+contract AddressLiterals =
+  entrypoint addr() : address =
+    ak_2gx9MEFxKvY9vMG5YnqnXWv1hCsX7rgnfvBLJS4aQurustR1rt
+  entrypoint oracle() : oracle(int, bool) =
+    ok_2YNyxd6TRJPNrTcEDCe9ra59SVUdp9FR9qWC5msKZWYD9bP9z5
+  entrypoint query() : oracle_query(int, bool) =
+    oq_2oRvyowJuJnEkxy58Ckkw77XfWJrmRgmGaLzhdqb67SKEL1gPY
+  entrypoint contr() : Remote =
+    ct_Ez6MyeTMm17YnTnDdHTSrzMEBKmy7Uz2sXu347bTDPgVH2ifJ
+  entrypoint contr_addr() : Remote =
+    Address.to_contract(addr())
+

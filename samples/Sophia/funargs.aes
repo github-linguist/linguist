@@ -1,0 +1,47 @@
+
+contract FunctionArguments =
+
+  entrypoint sum(n : int, m: int) =
+    n + m
+
+  entrypoint append(xs : list(string)) =
+     switch(xs)
+      []      => ""
+      y :: ys => String.concat(y, append(ys))
+
+  entrypoint menot(b) =
+    !b
+
+  entrypoint bitsum(b : bits) =
+    Bits.sum(b)
+
+  record answer('a) = {label : string, result : 'a}
+
+  entrypoint read(a : answer(int)) =
+     a.result
+
+  entrypoint sjutton(b : bytes(17)) =
+     b
+
+  entrypoint sextiosju(b : bytes(67)) =
+     b
+
+  entrypoint trettiotva(b : bytes(32)) =
+     b
+
+  entrypoint find_oracle(o : oracle(int, bool)) =
+     true
+
+  entrypoint find_query(q : oracle_query(int, bool)) =
+     true
+
+  datatype colour() = Green | Yellow | Red | Pantone(int)
+
+  entrypoint traffic_light(c : colour) =
+     Red
+
+  entrypoint tuples(t : unit) =
+     t
+
+  entrypoint due(t : Chain.ttl) =
+     true

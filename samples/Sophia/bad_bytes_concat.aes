@@ -1,0 +1,19 @@
+contract BytesConcat =
+
+  entrypoint test1(x : bytes(10), y : bytes(20)) =
+    Bytes.concat(x, y)
+
+  entrypoint test2(x : bytes(10), y) : bytes(15) =
+    Bytes.concat(x, y)
+
+  entrypoint test3(x, y : bytes(20)) : bytes(25) =
+    Bytes.concat(x, y)
+
+  entrypoint fail1(x, y) : bytes(10) = Bytes.concat(x, y)
+  entrypoint fail2(x, y) = Bytes.concat(x, y)
+  entrypoint fail3(x : bytes(6), y : bytes(20)) : bytes(25) =
+    Bytes.concat(x, y)
+  entrypoint fail4(x : bytes(6), y) : _ =
+    Bytes.concat(x, y)
+
+  entrypoint fail5(x) = Bytes.to_str(x)

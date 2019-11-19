@@ -1,0 +1,8 @@
+contract TestContract =
+  record state = {_allowed : map(address, map(address, int))}
+
+  entrypoint init() = {_allowed = {}}
+
+  stateful entrypoint approve(spender: address, value: int) : bool =
+    put(state{_allowed[Call.caller][spender] = value})
+    true

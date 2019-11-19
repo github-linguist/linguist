@@ -1,0 +1,18 @@
+
+namespace Foo =
+
+  record bla = {x : int, y : bool}
+
+  function bar() : Foo.bla = {x = 17, y = true}
+
+contract Bug =
+
+  // Crashed the type checker
+  entrypoint foo() = Foo.bar()
+
+  // Also crashed the type checker
+  type t = Foo.bla
+
+  entrypoint test() =
+    let x : t = Foo.bar()
+    x

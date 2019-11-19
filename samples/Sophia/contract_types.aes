@@ -1,0 +1,20 @@
+
+contract OtherContract =
+
+  function multiply : (int, int) => int
+
+contract ThisContract =
+
+  record state = { server : OtherContract, n : int }
+
+  function init(server : OtherContract) =
+    { server = server, n = 2 }
+
+  function square() =
+    put(state{ n @ n = state.server.multiply(value = 100, n, n) })
+
+  function get_n() = state.n
+
+  function tip_server() =
+    Chain.spend(state.server.address, Call.value)
+

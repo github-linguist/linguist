@@ -1,0 +1,18 @@
+
+contract BytesEquality =
+
+  entrypoint eq16(a : bytes(16), b) = a == b
+  entrypoint ne16(a : bytes(16), b) = a != b
+
+  entrypoint eq32(a : bytes(32), b) = a == b
+  entrypoint ne32(a : bytes(32), b) = a != b
+
+  entrypoint eq47(a : bytes(47), b) = a == b
+  entrypoint ne47(a : bytes(47), b) = a != b
+
+  entrypoint eq64(a : bytes(64), b) = a == b
+  entrypoint ne64(a : bytes(64), b) = a != b
+
+  entrypoint eq65(a : bytes(65), b) = a == b
+  entrypoint ne65(a : bytes(65), b) = a != b
+

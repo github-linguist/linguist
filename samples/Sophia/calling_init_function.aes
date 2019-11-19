@@ -1,0 +1,7 @@
+contract CallingInitFunction =
+
+  type state = int * int
+
+  entrypoint init() = (1, 2)
+
+  entrypoint call_init() = init()

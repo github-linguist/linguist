@@ -1,0 +1,22 @@
+contract OraclesGas =
+
+  type fee = int
+  type question_t = string
+  type answer_t = int
+
+  public function happyPathWithAllBuiltinsAtSameHeight(
+    qfee : fee,
+    ottl : Chain.ttl,
+    ettl : Chain.ttl,
+    qttl : Chain.ttl,
+    rttl : Chain.ttl
+    ) =
+    let question = "why"
+    let answer = 42
+    let o = Oracle.register(Contract.address, qfee, ottl) : oracle(question_t, answer_t)
+    Oracle.extend(o, ettl)
+    require(qfee =< Call.value, "insufficient value for qfee")
+    let q = Oracle.query(o, question, qfee, qttl, rttl)
+    Oracle.respond(o, q, answer)
+    ()
+

@@ -1,0 +1,7 @@
+@compiler < 1.0
+@compiler == 9.9.9
+@compiler >= 0.1
+@compiler =< 100.0.1
+
+contract Fail =
+  entrypoint foo() = ()

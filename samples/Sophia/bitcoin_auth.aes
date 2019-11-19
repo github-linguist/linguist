@@ -1,0 +1,16 @@
+contract BitcoinAuth =
+  record state = { nonce : int, owner : bytes(20) }
+
+  entrypoint init(owner' : bytes(20)) = { nonce = 1, owner = owner' }
+
+  stateful entrypoint authorize(n : int, s : bytes(65)) : bool =
+    require(n >= state.nonce, "Nonce too low")
+    require(n =< state.nonce, "Nonce too high")
+    put(state{ nonce = n + 1 })
+    switch(Auth.tx_hash)
+      None          => abort("Not in Auth context")
+      Some(tx_hash) => Crypto.ecverify_secp256k1(to_sign(tx_hash, n), state.owner, s)
+
+  entrypoint to_sign(h : hash, n : int) : hash =
+    Crypto.blake2b((h, n))
+

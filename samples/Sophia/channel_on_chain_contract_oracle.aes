@@ -1,0 +1,48 @@
+contract ChannelOnChainContractOracle =
+
+  type query_t  = string
+  type answer_t = string
+  type oracle_id = oracle(query_t, answer_t)
+  type query_id = oracle_query(query_t, answer_t)
+
+  record state = { oracle        : oracle_id,
+                   question      : string,
+                   bets          : map(string, address)
+                   }
+
+
+  public function init(oracle: oracle_id, question: string) : state =
+    { oracle   = oracle,
+      question = question,
+      bets     = {}
+      }
+
+  public stateful function place_bet(answer: string) = 
+    switch(Map.lookup(answer, state.bets))
+      None =>
+        put(state{ bets = state.bets{[answer] = Call.caller}})
+        "ok"
+      Some(_value) =>
+        "bet_already_taken"
+
+  public function query_fee() =
+    Oracle.query_fee(state.oracle)
+
+  public function get_question(q: query_id) =
+    Oracle.get_question(state.oracle, q)
+
+  public stateful function resolve(q: query_id) =
+    switch(Oracle.get_answer(state.oracle, q))
+      None         =>
+        "no response"
+      Some(result) => 
+        if(state.question == Oracle.get_question(state.oracle, q))
+            switch(Map.lookup(result, state.bets))
+              None         =>
+                "no winning bet"
+              Some(winner) =>
+                Chain.spend(winner, Contract.balance)
+                "ok"
+        else
+          "different question"
+

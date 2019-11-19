@@ -1,0 +1,6 @@
+contract Foo =
+  entrypoint foo : () => int
+
+contract Fail =
+  entrypoint bad() : int = Foo.foo()
+

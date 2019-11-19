@@ -1,0 +1,20 @@
+contract BytesSplit =
+
+  entrypoint test1(x) : bytes(10) * bytes(20) =
+    Bytes.split(x)
+
+  entrypoint test2(x : bytes(15)) : bytes(10) * _ =
+    Bytes.split(x)
+
+  entrypoint test3(x : bytes(25)) : _ * bytes(20) =
+    Bytes.split(x)
+
+  entrypoint fail1(x) : _ * bytes(20) =
+    Bytes.split(x)
+
+  entrypoint fail2(x : bytes(15)) : _ =
+    Bytes.split(x)
+
+  entrypoint fail3(x) : bytes(20) * _ =
+    Bytes.split(x)
+

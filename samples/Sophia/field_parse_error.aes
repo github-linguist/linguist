@@ -1,0 +1,5 @@
+
+contract Fail =
+  record pt = {x : int, y : int}
+  record r  = {p : pt}
+  function fail() = {p.x = 0, p.y = 0}

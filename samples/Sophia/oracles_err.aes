@@ -1,0 +1,11 @@
+contract OraclesErr =
+
+  public function unsafeCreateQueryThenErr(
+    o    : oracle(string, int),
+    q    : string,
+    qfee  : int,
+    qttl : Chain.ttl,
+    rttl : Chain.ttl) : oracle_query(string, int) =
+    let x = Oracle.query(o, q, qfee, qttl, rttl)
+    switch(0) 1 => ()
+    x // Never reached.

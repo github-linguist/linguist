@@ -1,0 +1,29 @@
+// Testing more interesting state types
+contract Stack =
+
+  type stack('a) = list('a)
+
+  record state = { stack : stack(string),
+                   size  : int }
+
+  entrypoint init(ss : list(string)) = { stack = ss, size = length(ss) }
+
+  function length(xs) =
+    switch(xs)
+      [] => 0
+      _ :: xs => length(xs) + 1
+
+  stateful entrypoint pop() : string =
+    switch(state.stack)
+      s :: ss =>
+        put(state{ stack = ss, size = state.size - 1 })
+        s
+
+  stateful entrypoint push(s) =
+    put(state{ stack = s :: state.stack, size = state.size + 1 })
+    state.size
+
+  entrypoint all() = state.stack
+
+  entrypoint size() = state.size
+

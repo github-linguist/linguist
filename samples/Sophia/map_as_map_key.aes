@@ -1,0 +1,6 @@
+contract MapAsMapKey =
+  type t('key) = map('key, int)
+  type lm = list(map(int, int))
+
+  entrypoint foo(m) : t(map(int, int)) = {[m] = 0}
+  entrypoint bar(m) : t(lm) = Map.delete(m, {})

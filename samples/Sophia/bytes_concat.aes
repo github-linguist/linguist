@@ -1,0 +1,4 @@
+contract BytesConcat =
+  entrypoint rot(a : bytes(3)) =
+    switch (Bytes.split(a))
+      (b, c) => Bytes.concat(c : bytes(2), b)

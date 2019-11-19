@@ -1,0 +1,2 @@
+contract BadComp =
+  entrypoint failing() = [x | x <- [], if (3)] 

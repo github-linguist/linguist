@@ -1,0 +1,70 @@
+contract Remote =
+  record rstate = { i : int, s : string, m : map(int, int) }
+
+  entrypoint look_at : (rstate) => unit
+  entrypoint return_s : (bool) => string
+  entrypoint return_m : (bool) => map(int, int)
+  entrypoint get : (rstate) => rstate
+  entrypoint get_i : (rstate) => int
+  entrypoint get_s : (rstate) => string
+  entrypoint get_m : (rstate) => map(int, int)
+
+  entrypoint fun_update_i  : (rstate, int)           => rstate
+  entrypoint fun_update_s  : (rstate, string)        => rstate
+  entrypoint fun_update_m  : (rstate, map(int, int)) => rstate
+  entrypoint fun_update_mk : (rstate, int, int)      => rstate
+
+contract StateHandling =
+
+  type state = Remote.rstate
+
+  entrypoint init(r : Remote, i : int) =
+    let state0 = { i = 0, s = "undefined", m = {} }
+    r.fun_update_i(state0, i)
+
+  entrypoint read() = state
+  entrypoint read_i() = state.i
+  entrypoint read_s() = state.s
+  entrypoint read_m() = state.m
+
+  stateful entrypoint update(new_state : state) = put(new_state)
+  stateful entrypoint update_i(new_i) = put(state{ i = new_i })
+  stateful entrypoint update_s(new_s) = put(state{ s = new_s })
+  stateful entrypoint update_m(new_m) = put(state{ m = new_m })
+
+  entrypoint pass_it(r : Remote) = r.look_at(state)
+  stateful entrypoint nop(r : Remote) = put(state{ i = state.i })
+  entrypoint return_it_s(r : Remote, big : bool) =
+    let x = r.return_s(big)
+    String.length(x)
+  entrypoint return_it_m(r : Remote, big : bool) =
+    let x = r.return_m(big)
+    Map.size(x)
+
+  entrypoint pass(r : Remote) = r.get(state)
+  entrypoint pass_i(r : Remote) = r.get_i(state)
+  entrypoint pass_s(r : Remote) = r.get_s(state)
+  entrypoint pass_m(r : Remote) = r.get_m(state)
+
+  entrypoint pass_update_i(r : Remote, i) = r.fun_update_i(state, i)
+  entrypoint pass_update_s(r : Remote, s) = r.fun_update_s(state, s)
+  entrypoint pass_update_m(r : Remote, m) = r.fun_update_m(state, m)
+
+  stateful entrypoint remote_update_i (r : Remote, i)    = put(r.fun_update_i(state, i))
+  stateful entrypoint remote_update_s (r : Remote, s)    = put(r.fun_update_s(state, s))
+  stateful entrypoint remote_update_m (r : Remote, m)    = put(r.fun_update_m(state, m))
+  stateful entrypoint remote_update_mk(r : Remote, k, v) = put(r.fun_update_mk(state, k, v))
+
+  // remote called
+  entrypoint look_at(s : state) = ()
+
+  entrypoint get(s : state) = s
+  entrypoint get_i(s : state) = s.i
+  entrypoint get_s(s : state) = s.s
+  entrypoint get_m(s : state) = s.m
+
+  entrypoint fun_update_i(st, ni) = st{ i = ni }
+  entrypoint fun_update_s(st, ns) = st{ s = ns }
+  entrypoint fun_update_m(st, nm) = st{ m = nm }
+  entrypoint fun_update_mk(st, k, v) = st{ m = st.m{[k] = v} }
+

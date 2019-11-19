@@ -1,0 +1,2 @@
+contract BadComp =
+  entrypoint failing() = [x + 1 | x <- [1,2,3], let x = "XD"]

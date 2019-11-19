@@ -1,0 +1,7 @@
+contract ValueOnErr =
+
+  public function err() : int =
+    switch(0) 1 => 5
+
+  public function ok() : int =
+    11

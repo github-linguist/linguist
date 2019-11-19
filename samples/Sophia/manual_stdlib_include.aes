@@ -1,0 +1,6 @@
+// This should include Lists.aes implicitly, since Option.aes does.
+include "Option.aes"
+
+contract Test =
+  entrypoint i_should_build() =
+    List.is_empty(Option.to_list(None))

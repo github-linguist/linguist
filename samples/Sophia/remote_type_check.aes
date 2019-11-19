@@ -1,0 +1,22 @@
+contract Remote =
+  function id : ('a) => 'a
+  function missing : ('a) => 'a
+  function wrong_type : (string) => string
+
+contract Main =
+
+  function id(x : int) =
+    x
+
+  function wrong_type(x : int) =
+    x
+
+  function remote_id(r : Remote, x) =
+    r.id(x)
+
+  function remote_missing(r : Remote, x) =
+    r.missing(x)
+
+  function remote_wrong_type(r : Remote, x) =
+    r.wrong_type(x)
+

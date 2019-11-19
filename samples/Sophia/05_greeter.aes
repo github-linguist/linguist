@@ -1,0 +1,77 @@
+/* https://github.com/fivedogit/solidity-baby-steps/blob/master/contracts/05_greeter.sol
+
+   /*
+	The following is an extremely basic example of a solidity contract.
+	It takes a string upon creation and then repeats it when greet() is called.
+   */
+
+  contract Greeter         // The contract definition. A constructor of the same name will be automatically called on contract creation.
+  {
+    address creator;     // At first, an empty "address"-type variable of the name "creator". Will be set in the constructor.
+    string greeting;     // At first, an empty "string"-type variable of the name "greeting". Will be set in constructor and can be changed.
+
+    function Greeter(string _greeting) public   // The constructor. It accepts a string input and saves it to the contract's "greeting" variable.
+    {
+        creator = msg.sender
+        greeting = _greeting
+    }
+
+    function greet() constant returns (string)
+    {
+        return greeting
+    }
+
+    function getBlockNumber() constant returns (uint) // this doesn't have anything to do with the act of greeting
+    {													// just demonstrating return of some global variable
+        return block.number
+    }
+
+    function setGreeting(string _newgreeting)
+    {
+        greeting = _newgreeting
+    }
+
+     /**********
+     Standard kill() function to recover funds
+     **********/
+
+    function kill()
+    {
+        if (msg.sender == creator)  // only allow this action if the account sending the signal is the creator
+            suicide(creator);       // kills this contract and sends remaining funds back to creator
+    }
+
+  }
+
+*/
+
+contract Greeter =
+
+
+     /* The creator of the contract will automatically
+       be set in creator() by the transaction creating the contract. */
+    function blockheight : unit => uint
+    record transaction = { tx : string }
+    record state = { greeting: string }
+    record retval = { state: state,
+                    transactions: list(transaction)}
+
+    let state = { greeting = "Hello" }
+
+    let setGreeting =
+        (greeting: string) =>
+            state{ greeting = greeting }
+
+
+
+    /* this doesn't have anything to do with the act of greeting
+       just demonstrating return of some global variable */
+    function getBlockNumber() = blockheight()
+
+    /* There is no suicide functionallity in Sophia */
+    function kill() =
+      if ((caller() == creator()) /* only allow this action if the account sending the signal is the creator */
+          && (balance() > 0)) /* only creata a transaction if there is something to send */
+          state{ transactions = [spend_tx(creator(), balance())] }
+      else state
+

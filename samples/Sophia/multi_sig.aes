@@ -1,0 +1,121 @@
+/* Multi-signature wallet from
+   https://github.com/ethereum/dapp-bin/blob/master/wallet/wallet.sol
+
+*/
+
+contract MultiSig =
+
+    record pending_state = { yetNeeded : int, ownersDone : bits, index : int }
+
+    datatype event =
+        Confirmation (address, hash)    // of { .owner : Address, .operation : Hash }
+      | Revoke       (address, hash)    // of { .owner : Address, .operation : Hash }
+      | OwnerChanged (address, address) // of { .oldOwner : Address, .newOwner : Address }
+      | OwnerAdded   (address)          // of { .newOwner : Address }
+      | OwnerRemoved (address)          // of { .removedOwner : Address }
+      | ReqChanged   (int)             // of { .newReq : int }
+
+    let maxOwners : int = 250
+
+    record state = { nRequired    : int
+                 , nOwners      : int
+                 , owners       : map(int, address)
+                 , ownerIndex   : map(address, int)
+                 , pending      : map(hash, pending_state)
+                 , pendingIndex : list(address) }
+
+    function init (owners : list(address), nRequired : int) : state =
+      let n = length(owners) + 1
+      { nRequired  = nRequired,
+        nOwners    = n,
+        owners     = Map.from_list(MyList.zip([1..n], caller() :: owners)),
+        ownerIndex = Map.from_list(MyList.zip(caller() :: owners, [1..n])) }
+
+    function lookup(map, key) =
+      switch(Map.get(key, map))
+        None        => abort("not found")
+        Some(value) => value
+
+    function revoke(operation : hash) =
+      let ownerIx = lookup(state.ownerIndex, caller())
+      let pending = lookup(state.pendingIndex, operation)
+      let _ = require(Bits.test(pending.ownersDone, ownerIx))
+      let pending' = pending { yetNeeded  = pending.yetNeeded + 1
+                             , ownersDone = Bits.clear(pending.ownersDone, ownerIx - 1) }
+      put(state{ pendingIndex.operator = pending' })
+      event(Revoke(caller, operation))
+
+
+    datatype check_pending = CheckOk(state) | CheckFail(state)
+
+    function changeOwner(fromOwner : address, toOwner : address) =
+      switch(check_pending(callhash()))
+        CheckFail(state') => { state = state' }
+        CheckOk(state') =>
+            if(isOwner(toOwner)) put(state')
+            else
+              switch(Map.get(fromOwner, state.ownerIndex))
+                None => { state = state' }
+                Some(ownerIx) =>
+                    { state = state' { owners = Map.insert(ownerIx, toOwner, state'.owners)
+                                    , ownerIndex = Map.delete(fromOwner, Map.insert(toOwner, ownerIx, state'.ownerIndex))
+                                    , pending = Map.empty
+                                    , pendingIx = [] },
+                      events = [OwnerChanged(fromOwner, toOwner)] }
+
+    function addOwner(newOwner : address) =
+      let _ = require (!isOwner(newOwner))
+      switch(check_pending(callhash()))
+        CheckFail(state') => { state = state' }
+        CheckOk(state') =>
+            if(state.nOwners >= maxOwners) () /* TODO */
+            else
+              let nOwners' = state'.nOwners + 1
+              { state = state' { owners    = Map.insert(nOwners', newOwner, state'.owners)
+                              , ownerIndex = Map.insert(newOwner, nOwners', state'.ownerIndex)
+                              , pending    = Map.empty
+                              , pendingIx  = [] },
+                event = [OwnerAdded(newOwner)] }
+
+    function removeOwner(oldOwner : address) =
+      let _ = require(isOwner(oldOwner))
+      let _ = require(state.nRequired > state.nOwners - 1)
+      switch(check_pending(callhash()))
+        CheckFail(state') => { state = state' }
+        CheckOk(state') =>
+            let ownerIx = lookup(state'.ownerIndex, oldOwner)
+            { state = state' { owners = Map.delete(ownerIx, state'.owners)
+                             , ownerIndex = Map.delete(newOwner, state'.ownerIndex)
+                             , pending = Map.empty
+                             , pendingIx = [] },
+              event = [OwnerRemoved(oldOwner)] }
+
+    function changeRequirement(newReq : int) =
+      let _ = require(newReq =< state.nOwners)
+      switch(check_pending(callhash()))
+        CheckFail(state') => { state = state' }
+        CheckOk(state') =>
+          { state = state' { nRequired = newReq
+                           , pending = Map.empty
+                           , pendingIx = [] },
+            event = [ReqChanged(newReq)] }
+
+
+    function getOwner(ownerIx0 : int) =
+      lookup(state.owners, ownerIx0 + 1)
+
+    function isOwner(owner : address) =
+      switch(Map.get(owner, state.ownerIndex))
+        None    => false
+        Some(_) => true
+
+    function hasConfirmed(operation : hash, owner : address) =
+      switch(Map.get(operation, state.pending))
+        None => false
+        Some(pending) =>
+          let _ = require(isOwner(owner))
+          let ownerIx = lookup(state.ownerIndex, owner)
+          Bits.test(pending.ownersDone, ownerIx - 1)
+
+    /* Leave the rest for now... */
+

@@ -1,0 +1,63 @@
+// Builtins without named arguments can appear unapplied in both AEVM and FATE.
+// Named argument builtins are:
+//    Oracle.register
+//    Oracle.respond
+//    AENS.preclaim
+//    AENS.claim
+//    AENS.transfer
+//    AENS.revoke
+//    Oracle.extend
+contract UnappliedBuiltins =
+  entrypoint main() = ()
+  type o = oracle(int, int)
+  type t = list(int * string)
+  type m = map(int, int)
+  datatype event = Event(int)
+  stateful function chain_spend()        = Chain.spend
+  function chain_event()                 = Chain.event
+  function chain_balance()               = Chain.balance
+  function chain_block_hash()            = Chain.block_hash
+  function call_gas_left()               = Call.gas_left
+  function b_abort()                     = abort
+  function b_require()                   = require
+  function oracle_query_fee()            = Oracle.query_fee
+  stateful function oracle_query()       = Oracle.query        : (o, _, _, _, _) => _
+  function oracle_get_question()         = Oracle.get_question : (o, _) => _
+  function oracle_get_answer()           = Oracle.get_answer   : (o, _) => _
+  function oracle_check()                = Oracle.check        : o => _
+  function oracle_check_query()          = Oracle.check_query  : (o, _) => _
+  function aens_resolve()                = AENS.resolve        : (_, _) => option(string)
+  function map_lookup()                  = Map.lookup          : (_, m) => _
+  function map_lookup_default()          = Map.lookup_default  : (_, m, _) => _
+  function map_member()                  = Map.member          : (_, m) => _
+  function map_size()                    = Map.size : m => _
+  function map_delete()                  = Map.delete : (_, m) => _
+  function map_from_list()               = Map.from_list : _ => m
+  function map_to_list()                 = Map.to_list : m => _
+  function crypto_verify_sig()           = Crypto.verify_sig
+  function crypto_verify_sig_secp256k1() = Crypto.verify_sig_secp256k1
+  function crypto_ecverify_secp256k1()   = Crypto.ecverify_secp256k1
+  function crypto_ecrecover_secp256k1()  = Crypto.ecrecover_secp256k1
+  function crypto_sha3()                 = Crypto.sha3    : t => _
+  function crypto_sha256()               = Crypto.sha256  : t => _
+  function crypto_blake2b()              = Crypto.blake2b : t => _
+  function string_sha256()               = String.sha256
+  function string_blake2b()              = String.blake2b
+  function string_length()               = String.length
+  function string_concat()               = String.concat
+  function string_sha3()                 = String.sha3
+  function bits_test()                   = Bits.test
+  function bits_set()                    = Bits.set
+  function bits_clear()                  = Bits.clear
+  function bits_union()                  = Bits.union
+  function bits_intersection()           = Bits.intersection
+  function bits_difference()             = Bits.difference
+  function bits_sum()                    = Bits.sum
+  function int_to_str()                  = Int.to_str
+  function address_to_str()              = Address.to_str
+  function address_is_oracle()           = Address.is_oracle
+  function address_is_contract()         = Address.is_contract
+  function address_is_payable()          = Address.is_payable
+  function bytes_to_int()                = Bytes.to_int : bytes(10) => int
+  function bytes_to_str()                = Bytes.to_str : bytes(99) => string
+

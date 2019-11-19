@@ -1,0 +1,36 @@
+contract TuplesMatch =
+
+  function tuplify3() = (t) => switch(t)
+    (x, y, z) => 3
+
+  entrypoint fst(p : int * string) =
+    switch(p)
+      (x, y) => x
+  entrypoint fst'(p : int * string) =
+    switch(p)
+      (x, _) => x
+  entrypoint snd(p : int * string) =
+    switch(p)
+      (x, y) => y
+  entrypoint snd'(p : int * string) =
+    switch(p)
+      (_, y) => y
+  entrypoint sum(p) =
+    switch(p)
+      (x, y) => x + y
+  entrypoint swap(p : int * string) =
+    switch(p)
+      (x, y) => (y, x)
+  entrypoint id(p : int * int * string) =
+    switch(p)
+      (x, y, z) => (x, y, z)
+  entrypoint nest(p : (int * int) * string) =
+    switch(p)
+      (xy, z) => switch(xy) (x, y) => (x, y, z)
+  entrypoint deep(p : (int * int) * (int * int)) =
+    switch(p)
+      ((x, y), (z, w)) => (x, y, z, w)
+  entrypoint deep_sum(p : (int * int) * (int * int)) =
+    switch(p)
+      ((x, y), (z, w)) => x + y + z + w
+

@@ -1,0 +1,97 @@
+
+/* Contract type */
+contract VotingType =
+  type state
+  function init            : list(string) => state
+
+  function giveRightToVote : address => unit
+  function delegate        : address => unit
+  function vote            : int => unit
+  function winnerName      : unit => string
+  function currentTally    : unit => list(string * int)
+
+/* Contract implementation */
+contract Voting =
+
+  // Types
+  record proposal =
+    { name : string
+    , voteCount : uint
+    }
+
+  datatype vote = NotVoted | Voted(int) | Delegated(address)
+
+  record voter =
+    { weight : int
+    , vote : vote
+    }
+
+  record state =
+    { chairPerson : address
+    , voters : map(address, voter)
+    , proposals : list(proposal)
+    }
+
+  // Initialization
+  function init(proposalNames: list(string)): state =
+    { chairPerson = caller(),
+      voters      = Map.empty,
+      proposals   = MyList.map((name) => {name = name, voteCount = 0}, proposalNames) }
+
+  function initVoter() = { weight = 1, vote = NotVoted}
+
+  function giveRightToVote(voter: address) =
+    require(caller() == state.chairPerson)
+    require(!Map.mem(voter, state.voters))
+    put(state{ voters = Map.add(voter, initVoter(), state.voters) })
+
+  function delegateChain(delegate: address) =
+    require(delegate != caller()) /* Delegation loop! */
+    let voter = Map.find(delegate, state.voters)
+    switch(voter.vote)
+      Delegated(d) => delegateChain(d)
+      _            => delegate
+
+  function addVote(candidate, weight) =
+    let proposal = MyList.nth(state.proposals, candidate)
+    proposal{ voteCount = proposal.voteCount + weight }
+
+  function delegateVote(delegateTo: address, weight: uint) =
+    let voter = Map.find(delegateTo, state.voters)
+    switch(voter.vote)
+      Voted(vote)  => addVote(vote, weight)
+      Delegated(_) => abort("impossible")   // impossible
+      NotVoted     => voter{ weight = voter.weight + weight }
+
+  function delegate(delegateTo: address) =
+    require(delegateTo != caller())
+    let voter = Map.find(caller(), state.voters)
+    require(voter.vote == NotVoted)
+    let finalDelegate = delegateChain(delegateTo)
+    let voter' = voter{ vote = Delegated(finalDelegate) }
+    delegateVote(finalDelegate, voter.weight)
+
+  function vote(candidate: uint) =
+    let voter = Map.find(caller(), state.voters)
+    require(voter.vote == NotVoted)
+    let voter' = voter{ vote = Voted(candidate) }
+    addVote(candidate, voter.weight)
+
+  function winningProposal'(current, rest) =
+    switch(rest)
+      []      => current
+      p :: ps => winningProposal'(if (p.voteCount > current.voteCount) p else current, ps)
+
+  // const
+  function winningProposal() : proposal =
+    switch(state.proposals)
+      []      => abort("none")
+      p :: ps => winningProposal'(p, ps)
+
+  // const
+  function winnerName() = winningProposal().name
+
+  // const
+  function currentTally() =
+    MyList.map((p) => (p.name, p.voteCount), state.proposals)
+

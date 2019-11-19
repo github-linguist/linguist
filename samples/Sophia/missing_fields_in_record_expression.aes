@@ -1,0 +1,8 @@
+contract MissingFieldsInRecordExpr =
+
+  record r('a) = {x : int, y : string, z : 'a}
+  type alias('a) = r('a)
+
+  entrypoint fail1()               = { x = 0 }
+  entrypoint fail2(z : 'a) : r('a) = { y = "string", z = z }
+  entrypoint fail3() : alias(int)  = { x = 0, z = 1 }

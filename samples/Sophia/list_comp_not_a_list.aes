@@ -1,0 +1,2 @@
+contract ListCompBad =
+  entrypoint failing() = [x | x <- 1]

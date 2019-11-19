@@ -1,0 +1,51 @@
+
+contract Chess =
+
+  type board = map(int, map(int, string))
+  type state = board
+
+  private function get_row(r, m : board) =
+    Map.lookup_default(r, m, {})
+
+  private function set_piece(r, c, p, m : board) =
+    m { [r] = get_row(r, m) { [c] = p } }
+
+  private function get_piece(r, c, m : board) =
+    Map.lookup(c, get_row(r, m))
+
+  private function from_list(xs, m : board) =
+    switch(xs)
+      []              => m
+      (r, c, p) :: xs => from_list(xs, set_piece(r, c, p, m))
+
+  function init() =
+    from_list([ (2, 1, "white pawn"),   (7, 1, "black pawn")
+              , (2, 2, "white pawn"),   (7, 2, "black pawn")
+              , (2, 3, "white pawn"),   (7, 3, "black pawn")
+              , (2, 4, "white pawn"),   (7, 4, "black pawn")
+              , (2, 5, "white pawn"),   (7, 5, "black pawn")
+              , (2, 6, "white pawn"),   (7, 6, "black pawn")
+              , (2, 7, "white pawn"),   (7, 7, "black pawn")
+              , (2, 8, "white pawn"),   (7, 8, "black pawn")
+              , (1, 1, "white rook"),   (8, 1, "black rook")
+              , (1, 2, "white knight"), (8, 2, "black knight")
+              , (1, 3, "white bishop"), (8, 3, "black bishop")
+              , (1, 4, "white queen"),  (8, 4, "black queen")
+              , (1, 5, "white king"),   (8, 5, "black king")
+              , (1, 6, "white bishop"), (8, 6, "black bishop")
+              , (1, 7, "white knight"), (8, 7, "black knight")
+              , (1, 8, "white rook"),   (8, 8, "black rook")
+              ], {})
+
+  function piece(r, c) = get_piece(r, c, state)
+
+  function move_piece(r, c, r1, c1) =
+    switch(piece(r, c))
+      Some(p) => put(set_piece(r1, c1, p, state))
+
+  function destroy_piece(r, c) =
+    put(state{ [r] = Map.delete(c, get_row(r, state)) })
+
+  function delete_row(r) =
+    put(Map.delete(r, state))
+

@@ -1,0 +1,27 @@
+
+contract VariantTypes =
+
+  datatype state = Started(started_state) | Stopped
+
+  record started_state = {owner : address, balance : int, color : color}
+
+  datatype color = Red | Green | Blue | Grey(int)
+
+  entrypoint init() = Stopped
+
+  stateful entrypoint start(bal : int) =
+    switch(state)
+      Stopped => put(Started({owner = Call.caller, balance = bal, color = Grey(0)}))
+
+  stateful entrypoint stop() =
+    switch(state)
+      Started(st) =>
+        require(Call.caller == st.owner, "required")
+        put(Stopped)
+        st.balance
+
+  entrypoint get_color()  = switch(state) Started(st) => st.color
+  stateful entrypoint set_color(c) = switch(state) Started(st) => put(Started(st{color = c}))
+
+  entrypoint get_state() = state
+

@@ -1,0 +1,36 @@
+contract Remote =
+  entrypoint main : (int) => unit
+
+contract AddrChain =
+  type o_type = oracle(string, map(string, int))
+  type oq_type = oracle_query(string, map(string, int))
+
+  entrypoint is_o(a : address) =
+    Address.is_oracle(a)
+
+  entrypoint is_c(a : address) =
+    Address.is_contract(a)
+
+//   entrypoint get_o(a : address) : option(o_type) =
+//     Address.get_oracle(a)
+
+//   entrypoint get_c(a : address) : option(Remote) =
+//     Address.get_contract(a)
+
+  entrypoint check_o(o : o_type) =
+    Oracle.check(o)
+
+  entrypoint check_oq(o : o_type, oq : oq_type) =
+    Oracle.check_query(o, oq)
+
+//   entrypoint h_to_i(h : hash) : int =
+//     Hash.to_int(h)
+
+//   entrypoint a_to_i(a : address) : int =
+//     Address.to_int(a) mod 10 ^ 16
+
+  entrypoint c_creator() : address =
+    Contract.creator
+
+  entrypoint is_payable(a : address) : bool =
+    Address.is_payable(a)

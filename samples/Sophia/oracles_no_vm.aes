@@ -1,0 +1,35 @@
+contract Oracles =
+
+  type fee = int
+  type ttl = Chain.ttl
+
+  type query_t  = string
+  type answer_t = string
+
+  type oracle_id = oracle(query_t, answer_t)
+  type query_id  = oracle_query(query_t, answer_t)
+
+  function createQuery(o    : oracle_id,
+                       q    : query_t,
+                       qfee : fee,
+                       qttl : ttl,
+                       rttl : ttl) : query_id =
+    require(qfee =< Call.value, "insufficient value for qfee")
+    Oracle.query(o, q, qfee, qttl, rttl)
+
+
+  function respond(o    : oracle_id,
+                   q    : query_id,
+                   sign : signature,
+                   r    : answer_t) : unit =
+    Oracle.respond(o, q, signature = sign, r)
+
+
+  function getQuestion(o : oracle_id,
+                       q : query_id) : query_t =
+    Oracle.get_question(o, q)
+
+  function getAnswer(o : oracle_id,
+                     q : query_id) : option(answer_t) =
+    Oracle.get_answer(o, q)
+

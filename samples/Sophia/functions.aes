@@ -1,0 +1,15 @@
+contract Functions =
+  function curry(f : ('a, 'b) => 'c) =
+    (x) => (y) => f(x, y)
+  function map(f : 'a => 'b, xs : list('a)) =
+    switch(xs)
+      [] => []
+      x :: xs => f(x) :: map(f, xs)
+  function map'() = map
+  function plus(x, y) = x + y
+  entrypoint test1(xs : list(int)) = map(curry(plus)(5), xs)
+  entrypoint test2(xs : list(int)) = map'()(((x) => (y) => ((x, y) => x + y)(x, y))(100), xs)
+  entrypoint test3(xs : list(int)) =
+    let m(f, xs) = map(f, xs)
+    m((x) => x + 1, xs)
+

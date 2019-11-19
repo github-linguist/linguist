@@ -1,0 +1,21 @@
+
+namespace MyList =
+
+  function map1(f : 'a => 'b, xs : list('a)) =
+    switch(xs)
+      [] => []
+      x :: xs => f(x) :: map1(f, xs)
+
+  function map2(f : 'a => 'b, xs : list('a)) =
+    switch(xs)
+      [] => []
+      x :: xs => f(x) :: map2(f, xs)
+
+contract Deadcode =
+
+  entrypoint inc1(xs : list(int)) : list(int) =
+    MyList.map1((x) => x + 1, xs)
+
+  entrypoint inc2(xs : list(int)) : list(int) =
+    MyList.map2((x) => x + 1, xs)
+

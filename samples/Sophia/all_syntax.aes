@@ -1,0 +1,44 @@
+// Try to cover all syntactic constructs.
+
+contract AllSyntaxType =
+  type typeDecl /* bla */
+  type paramTypeDecl('a, 'b)
+
+  /** Multi-
+    * line
+    * comment
+    */
+  function foo : _
+
+contract AllSyntax =
+
+  type typeDecl = int
+  type paramTypeDecl('a, 'b) = (('a, 'b) => 'b) => list('a) => 'b => 'b
+
+  record nestedRecord = { x : int }
+  record recordType = { z : nestedRecord, y : int }
+  datatype variantType('a) = None | Some('a)
+
+  let valWithType : map(int, int) => option(int) = (m) => Map.get(m, 42)
+  let valNoType =
+        if(valWithType(Map.empty) == None)
+          print(42 mod 10 * 5 / 3)
+
+  function funWithType(x : int, y) : int * list(int) = (x, 0 :: [y] ++ [])
+  function funNoType() =
+    let foo = (x, y : bool) =>
+                if (! (y && x =< 0x0b || true)) [x]
+                else [11..20]
+    let setY(r : recordType) : unit = r{ y = 5 }
+    let setX(r : recordType, x : int) : recordType = r { z.x = x }  // nested record update
+    let getY(r) = switch(r) {y = y} => y
+    switch (funWithType(1, -2))
+      (x, [y, z]) => bar({x = z, y = -y + - -z * (-1)})
+      (x, y :: _) => ()
+
+  let hash : address = #01ab0fff11
+  let b = false
+  let qcon = Mod.Con
+  let str = "blabla\nfoo"
+  let chr = '"'
+

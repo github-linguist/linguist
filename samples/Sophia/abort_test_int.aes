@@ -1,0 +1,27 @@
+contract Interface =
+  function do_abort : (int, string) => unit
+  function get_value : () => int
+  function put_value : (int) => unit
+  function get_values : () => list(int)
+  function put_values : (int) => unit
+
+contract AbortTestInt =
+
+  record state = {r : Interface, value : int}
+
+  public function init(r : Interface, value : int) =
+    {r = r, value = value}
+
+  // Aborting
+  public function do_abort(v : int, s : string) =
+    put_value(v)
+    state.r.do_abort(v + 100, s)
+
+  // Accessing the value
+  public function put_value(v : int) = put(state{value = v})
+  public function get_value() = state.value
+  public function get_values() : list(int) =
+    state.value :: state.r.get_values()
+  public function put_values(v : int) =
+    put_value(v)
+    state.r.put_values(v + 1000)

@@ -1,0 +1,102 @@
+
+contract Identity =
+  // type xy = {x:int, y:int}
+  // type xz = {x:int, z:int}
+  // type yz = {y:int, z:int}
+  record point = {x:int,y:int}
+  record cp('a) = {color: string, p:'a}
+  //type intpoint = point(int)
+  //   //if (x==42) 1 else (x*x)
+  // }
+  //let baz() = {age:3, name:(4:int)}
+  //let foo(a,b,c) = c
+  // let rec fac(n) = if((n:int)==0) 1 else (n*fac(n-1))
+  //    and main(x) = x::[x+1]
+  // let lentr(l) = lent(0,l)
+  // let rec len(l) =
+  //    switch(l) {
+  //     | [] => 0
+  //     | x::xs => 1+len(xs)
+  //     }
+  // let lent(n,l) =
+  //   switch (l) {
+  //   | [] => n
+  //   | (x::xs) => lent(n+1,xs)
+  //   }
+  //  let rec app(a,b) =
+  //     switch(a) {
+  //     | [] => b
+  //     | (x::xs) => x::app(xs,b)
+  //     }
+  // let rec revt(l,r) =
+  //   switch(l) {
+  //   | [] => r
+  //   | x::xs => revt(xs,x::r)
+  //   }
+  // let rev(l) = revt(l,[])
+  // let main(x:int) = {
+  //   switch(rev([1,2,3])) {
+  //   | h::_ => h
+  //   }
+  //   }
+  //let fac(n:int) = {
+  //  if (n==0) 1 else (n*fac(n-1))
+  //}
+  //let main(x) = switch((12,34)) {
+  //| (13,_) => x
+  //| (_,a) => x+a
+  //    | y => y+1
+  //  }
+  //let main(x) = ({y:0>1, x:x==0}:point(bool))
+  //let main(x) = x
+  //let main(x) = len(1::2::[])
+  //let main(x) = ((x,x):list('a))
+  // let main(x) = switch("a") {
+  //    	  |  "b" => 0
+  // 	  |  "a" => 1
+  // 	  |  "c" => 2
+  // 	  }
+  //let main(x) = x.color+1
+  //let main(x) = switch(({x:x, y:x+1}:cp(int))) {
+  //              | {y:xx} => xx
+  //		}
+  //let main(x) = {x:0, y:1, z:2}
+  // let id(x) = x
+  // let double(x) = x+x
+  // let pair(x) = (1,2)
+  // let unit(x) = ()
+  // let tuples(x) = ((1,x),(2,3,4))
+  // let singleton(x) = [x]
+  // let rec seq(n) = if (n==0) [] else (app(seq(n-1),[n]))
+  // let idString(s:string) = s
+  // let pairString(s:string) = (s,s)
+  // let revStrings(ss:list(string))=rev(ss)
+  // let makePoint(x,y) = {x:x, y:y}
+  // let getx(x) = x.x
+  // let updatex(p,x) = p{x:x}
+  // let quad(x) = {let y=x+x; let z=y+y; z;}
+ //  let noblock(x) = {x; x}
+ //  let unit(x) = ()
+  // let foo(x) = switch (x) {
+  //     	       | y => y+1
+// 	       }
+  // let p(x) = {color:"blue", p:{x:x, y:x+1}}
+  //let twice(f,x) = f(f(x))
+  // let twice(f,x) = f(f(x))
+  // let double(x) = x+x
+  // let main(x) = twice((y=>y+y),x)
+  // let rec map(f,xs) = switch(xs) {
+  // | [] => []
+  // | (x::ys) => f(x)::map(f,ys)
+  // }
+  // let id(x) = x
+  // let main(xs) = map(double,xs)
+  function z(f,x) = x
+  function s(n) = (f,x)=>f(n(f,x))
+  function add(m,n) = (f,x)=>m(f,n(f,x))
+
+  entrypoint main() =
+    let three=s(s(s(z)))
+    add(three,three)
+       (((i)=>i+1),0)
+

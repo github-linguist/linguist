@@ -1,0 +1,21 @@
+contract ValueOnErr =
+  function err : () => int
+  function ok  : () => int
+
+contract RemoteValueOnErr =
+
+  public function callErr(
+    r : ValueOnErr,
+    value : int) : int =
+    r.err(value = value)
+
+  public function callErrLimitGas(
+    r : ValueOnErr,
+    value : int,
+    gas : int) : int =
+    r.err(value = value, gas = gas)
+
+  public function callOk(
+    r : ValueOnErr,
+    value : int) : int =
+    r.ok(value = value)

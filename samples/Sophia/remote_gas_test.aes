@@ -1,0 +1,20 @@
+contract Remote1 =
+  function set : (int) => int
+
+contract RemoteCall =
+    record state = { i : int }
+
+    function init(x) = { i = x }
+
+    function set( x : int) : int =
+        let old = state.i
+        put(state{ i = x })
+        old
+
+    function call(r : Remote1, x : int, g : int) : int =
+        r.set(gas = g, value = 10, x)
+
+    function get() = state.i
+
+
+

@@ -1,0 +1,100 @@
+contract Maps =
+
+  record pt    = {x : int, y : int}
+  record state = { map_i : map(int, pt),
+                   map_s : map(string, pt) }
+
+  entrypoint init() = { map_i = {}, map_s = {} }
+
+  entrypoint get_state() = state
+
+  // {[k] = v}
+  entrypoint map_i() =
+    { [1] = {x = 1, y = 2},
+      [2] = {x = 3, y = 4},
+      [3] = {x = 5, y = 6} }
+  entrypoint map_s() =
+    { ["one"]   = {x = 1, y = 2},
+      ["two"]   = {x = 3, y = 4},
+      ["three"] = {x = 5, y = 6} }
+  stateful entrypoint map_state_i() = put(state{ map_i = map_i() })
+  stateful entrypoint map_state_s() = put(state{ map_s = map_s() })
+
+  // m[k]
+  entrypoint get_i(k, m : map(int,    pt)) = m[k]
+  entrypoint get_s(k, m : map(string, pt)) = m[k]
+  entrypoint get_state_i(k) = get_i(k, state.map_i)
+  entrypoint get_state_s(k) = get_s(k, state.map_s)
+
+  // m[k = v]
+  entrypoint get_def_i(k, v, m : map(int,    pt)) = m[k = v]
+  entrypoint get_def_s(k, v, m : map(string, pt)) = m[k = v]
+  entrypoint get_def_state_i(k, v) = get_def_i(k, v, state.map_i)
+  entrypoint get_def_state_s(k, v) = get_def_s(k, v, state.map_s)
+
+  // m{[k] = v}
+  entrypoint set_i(k, p, m : map(int,    pt)) = m{ [k] = p }
+  entrypoint set_s(k, p, m : map(string, pt)) = m{ [k] = p }
+  stateful entrypoint set_state_i(k, p) = put(state{ map_i = set_i(k, p, state.map_i) })
+  stateful entrypoint set_state_s(k, p) = put(state{ map_s = set_s(k, p, state.map_s) })
+
+  // m{f[k].x = v}
+  entrypoint setx_i(k, x, m : map(int,    pt)) = m{ [k].x = x }
+  entrypoint setx_s(k, x, m : map(string, pt)) = m{ [k].x = x }
+  stateful entrypoint setx_state_i(k, x) = put(state{ map_i[k].x = x })
+  stateful entrypoint setx_state_s(k, x) = put(state{ map_s[k].x = x })
+
+  // m{[k] @ x = v }
+  entrypoint addx_i(k, d, m : map(int,    pt)) = m{ [k].x @ x = x + d }
+  entrypoint addx_s(k, d, m : map(string, pt)) = m{ [k].x @ x = x + d }
+  stateful entrypoint addx_state_i(k, d) = put(state{ map_i[k].x @ x = x + d })
+  stateful entrypoint addx_state_s(k, d) = put(state{ map_s[k].x @ x = x + d })
+
+  // m{[k = def] @ x = v }
+  entrypoint addx_def_i(k, v, d, m : map(int,    pt)) = m{ [k = v].x @ x = x + d }
+  entrypoint addx_def_s(k, v, d, m : map(string, pt)) = m{ [k = v].x @ x = x + d }
+
+  // Map.member
+  entrypoint member_i(k, m : map(int,    pt)) = Map.member(k, m)
+  entrypoint member_s(k, m : map(string, pt)) = Map.member(k, m)
+  entrypoint member_state_i(k) = member_i(k, state.map_i)
+  entrypoint member_state_s(k) = member_s(k, state.map_s)
+
+  // Map.lookup
+  entrypoint lookup_i(k, m : map(int,    pt)) = Map.lookup(k, m)
+  entrypoint lookup_s(k, m : map(string, pt)) = Map.lookup(k, m)
+  entrypoint lookup_state_i(k) = lookup_i(k, state.map_i)
+  entrypoint lookup_state_s(k) = lookup_s(k, state.map_s)
+
+  // Map.lookup_default
+  entrypoint lookup_def_i(k, m : map(int,    pt), def : pt) =
+    Map.lookup_default(k, m, def)
+  entrypoint lookup_def_s(k, m : map(string, pt), def : pt) =
+    Map.lookup_default(k, m, def)
+  entrypoint lookup_def_state_i(k, def) = lookup_def_i(k, state.map_i, def)
+  entrypoint lookup_def_state_s(k, def) = lookup_def_s(k, state.map_s, def)
+
+  // Map.delete
+  entrypoint delete_i(k, m : map(int,    pt)) = Map.delete(k, m)
+  entrypoint delete_s(k, m : map(string, pt)) = Map.delete(k, m)
+  stateful entrypoint delete_state_i(k) = put(state{ map_i = delete_i(k, state.map_i) })
+  stateful entrypoint delete_state_s(k) = put(state{ map_s = delete_s(k, state.map_s) })
+
+  // Map.size
+  entrypoint size_i(m : map(int,    pt)) = Map.size(m)
+  entrypoint size_s(m : map(string, pt)) = Map.size(m)
+  entrypoint size_state_i() = size_i(state.map_i)
+  entrypoint size_state_s() = size_s(state.map_s)
+
+  // Map.to_list
+  entrypoint tolist_i(m : map(int,    pt)) = Map.to_list(m)
+  entrypoint tolist_s(m : map(string, pt)) = Map.to_list(m)
+  entrypoint tolist_state_i() = tolist_i(state.map_i)
+  entrypoint tolist_state_s() = tolist_s(state.map_s)
+
+  // Map.from_list
+  entrypoint fromlist_i(xs : list(int    * pt)) = Map.from_list(xs)
+  entrypoint fromlist_s(xs : list(string * pt)) = Map.from_list(xs)
+  stateful entrypoint fromlist_state_i(xs) = put(state{ map_i = fromlist_i(xs) })
+  stateful entrypoint fromlist_state_s(xs) = put(state{ map_s = fromlist_s(xs) })
+

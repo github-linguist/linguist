@@ -1,0 +1,26 @@
+
+contract SpendContract =
+  entrypoint withdraw : (int) => int
+
+contract SpendTest =
+
+  stateful entrypoint spend(to, amount) =
+    let total = Contract.balance
+    Chain.spend(to, amount)
+    total - amount
+
+  stateful entrypoint withdraw(amount) : int =
+    spend(Call.caller, amount)
+
+  stateful entrypoint withdraw_from(account, amount) =
+    account.withdraw(amount)
+    withdraw(amount)
+
+  stateful entrypoint spend_from(from, to, amount) =
+    from.withdraw(amount)
+    Chain.spend(to, amount)
+    Chain.balance(to)
+
+  entrypoint get_balance() = Contract.balance
+  entrypoint get_balance_of(a) = Chain.balance(a)
+

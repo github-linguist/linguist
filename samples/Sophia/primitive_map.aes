@@ -1,0 +1,57 @@
+
+contract MapServer =
+
+  function insert : (string, string, map(string, string)) => map(string, string)
+  function delete : (string, map(string, string)) => map(string, string)
+
+contract PrimitiveMaps =
+
+  record state = { remote : MapServer,
+                   map    : map(string, string),
+                   map2   : map(string, string) }
+
+  function init(r) =
+    let m = {}
+    { remote = r, map = m, map2 = m }
+
+  function set_remote(r) = put(state{ remote = r })
+
+  function insert(k, v, m) : map(string, string) = m{ [k] = v }
+  function delete(k, m) : map(string, string) = Map.delete(k, m)
+
+  function remote_insert(k, v, m) =
+    state.remote.insert(k, v, m)
+
+  function remote_delete(k, m) =
+    state.remote.delete(k, m)
+
+  function get_state_map()  = state.map
+  function set_state_map(m) = put(state{ map = m })
+
+  function clone_state() = put(state{ map2 = state.map })
+
+  function insert_state(k, v) = put(state{ map @ m = m { [k] = v } })
+  function delete_state(k)    = put(state{ map @ m = Map.delete(k, m) })
+  function lookup_state(k)    = Map.lookup(k, state.map)
+
+  function double_insert_state(k, v1, v2) =
+    put(state{ map  @ m = m { [k] = v1 },
+               map2 @ m = m { [k] = v2 } })
+
+  function test() =
+    let m  = {} : map(string, string)
+    let m1 = m { ["foo"] = "value_of_foo",
+                 ["bla"] = "value_of_bla" }
+    let m2 = Map.delete("foo", m1)
+    let m3 = m2 { ["bla"] = "new_value_of_bla" }
+    [Map.lookup("foo", m),  Map.lookup("bla", m),
+     Map.lookup("foo", m1), Map.lookup("bla", m1),
+     Map.lookup("foo", m2), Map.lookup("bla", m2),
+     Map.lookup("foo", m3), Map.lookup("bla", m3)]
+
+  function return_map() =
+    Map.delete("goo", {["foo"] = "bar", ["goo"] = "gaa"})
+
+  function argument_map(m : map(string, string)) =
+    m["foo"]
+

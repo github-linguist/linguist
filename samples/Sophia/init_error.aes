@@ -1,0 +1,9 @@
+contract Remote =
+  function missing : (int) => int
+
+contract Init_error =
+
+  record state = {value : int}
+
+  function init(r : Remote, x : int) =
+    {value = r.missing(x)}

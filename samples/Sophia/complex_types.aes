@@ -1,0 +1,86 @@
+
+contract Remote =
+  entrypoint up_to       : (int)               => list(int)
+  entrypoint sum         : (list(int))         => int
+  entrypoint some_string : ()                  => string
+  entrypoint pair        : (int, string)       => int * string
+  entrypoint squares     : (int)               => list(int * int)
+  entrypoint filter_some : (list(option(int))) => list(int)
+  entrypoint all_some    : (list(option(int))) => option(list(int))
+
+contract ComplexTypes =
+
+  record state = { worker : Remote }
+
+  entrypoint init(worker) = {worker = worker}
+
+  entrypoint sum_acc(xs, n) =
+    switch(xs)
+      []      => n
+      x :: xs => sum_acc(xs, x + n)
+
+  // Sum a list of integers
+  entrypoint sum(xs : list(int)) =
+    sum_acc(xs, 0)
+
+  entrypoint up_to_acc(n, xs) =
+    switch(n)
+      0 => xs
+      _ => up_to_acc(n - 1, n :: xs)
+
+  entrypoint up_to(n) = up_to_acc(n, [])
+
+  record answer('a) = {label : string, result : 'a}
+
+  entrypoint remote_triangle(worker, n) : answer(int) =
+    let xs = worker.up_to(gas = 100000, n)
+    let t  = worker.sum(xs)
+    { label = "answer:", result = t }
+
+  entrypoint remote_list(n) : list(int) =
+    state.worker.up_to(n)
+
+  entrypoint some_string() = "string"
+
+  entrypoint remote_string() : string =
+    state.worker.some_string()
+
+  entrypoint pair(x : int, y : string) = (x, y)
+
+  entrypoint remote_pair(n : int, s : string) : int * string =
+    state.worker.pair(gas = 10000, n, s)
+
+  function map(f, xs) =
+    switch(xs)
+      []      => []
+      x :: xs => f(x) :: map(f, xs)
+
+  entrypoint squares(n) =
+    map((i) => (i, i * i), up_to(n))
+
+  entrypoint remote_squares(n) : list(int * int) =
+    state.worker.squares(n)
+
+  // option types
+
+  entrypoint filter_some(xs : list(option(int))) : list(int) =
+    switch(xs)
+      []            => []
+      None    :: ys => filter_some(ys)
+      Some(x) :: ys => x :: filter_some(ys)
+
+  entrypoint remote_filter_some(xs : list(option(int))) : list(int) =
+    state.worker.filter_some(xs)
+
+  entrypoint all_some(xs : list(option(int))) : option(list(int)) =
+    switch(xs)
+      []         => Some([])
+      None :: ys => None
+      Some(x) :: ys =>
+        switch(all_some(ys))
+          Some(xs) => Some(x :: xs)
+          None     => None
+
+  entrypoint remote_all_some(xs : list(option(int))) : option(list(int)) =
+    state.worker.all_some(gas = 10000, xs)
+
