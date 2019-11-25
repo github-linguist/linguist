@@ -5569,18 +5569,31 @@ Vim script:
   - vimrc
   ace_mode: text
   language_id: 388
-Visual Basic:
+VB.NET:
   type: programming
   color: "#945db7"
   extensions:
   - ".vb"
+  - ".vbhtml"
+  aliases:
+  - visual basic
+  - visual basic .net
+  - vbnet
+  - vb .net
+  tm_scope: source.vbnet
+  ace_mode: text
+  codemirror_mode: vb
+  codemirror_mime_type: text/x-vb
+  language_id: 389
+VBA/VB6:
+  type: programming
+  color: "#945db7"
+  extensions:
   - ".bas"
   - ".cls"
   - ".frm"
   - ".frx"
   - ".vba"
-  - ".vbhtml"
-  - ".vbs"
   tm_scope: source.vbnet
   aliases:
   - vb.net
@@ -5588,7 +5601,18 @@ Visual Basic:
   ace_mode: text
   codemirror_mode: vb
   codemirror_mime_type: text/x-vb
-  language_id: 389
+VBScript:
+  type: programming
+  color: "#945db7"
+  extensions:
+  - ".vbs"
+  tm_scope: source.vbnet
+  aliases:
+  - vb.net
+  - vbnet
+  ace_mode: text
+  codemirror_mode: vbscript
+  codemirror_mime_type: text/vbscript
 Volt:
   type: programming
   color: "#1F1F1F"
