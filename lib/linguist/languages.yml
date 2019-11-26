@@ -5488,40 +5488,6 @@ V:
   codemirror_mode: go
   codemirror_mime_type: text/x-go
   language_id: 603371597
-VB.NET:
-  type: programming
-  color: "#945db7"
-  extensions:
-  - ".vb"
-  - ".vbhtml"
-  aliases:
-  - visual basic
-  - visual basic .net
-  - vbnet
-  - vb .net
-  tm_scope: source.vbnet
-  ace_mode: text
-  codemirror_mode: vb
-  codemirror_mime_type: text/x-vb
-  language_id: 389
-VBA/VB6:
-  fs_name: VBA_VB6
-  type: programming
-  color: "#867db1"
-  extensions:
-  - ".bas"
-  - ".cls"
-  - ".frm"
-  - ".frx"
-  - ".vba"
-  tm_scope: source.vbnet
-  aliases:
-  - vba
-  - vb6
-  - visual basic for applications
-  ace_mode: text
-  codemirror_mode: vb
-  codemirror_mime_type: text/x-vb
 VBScript:
   type: programming
   color: "#15dcdc"
@@ -5565,46 +5531,6 @@ Vala:
   tm_scope: source.vala
   ace_mode: vala
   language_id: 386
-VB.NET:
-  type: programming
-  color: "#178600"
-  extensions:
-  - ".vb"
-  - ".vbhtml"
-  aliases:
-  - visual basic
-  - visual basic .net
-  - vbnet
-  - vb .net
-  tm_scope: source.vbnet
-  ace_mode: text
-  codemirror_mode: vb
-  codemirror_mime_type: text/x-vb
-  language_id: 389
-VBA/VB6:
-  type: programming
-  color: "#bfdbff"
-  extensions:
-  - ".bas"
-  - ".cls"
-  - ".frm"
-  - ".frx"
-  - ".vba"
-  tm_scope: source.vbnet
-  aliases:
-  - visual basic for applications
-  ace_mode: text
-  codemirror_mode: vb
-  codemirror_mime_type: text/x-vb
-VBScript:
-  type: programming
-  color: "#0072b6"
-  extensions:
-  - ".vbs"
-  tm_scope: source.vbnet
-  ace_mode: text
-  codemirror_mode: vbscript
-  codemirror_mime_type: text/vbscript
 Verilog:
   type: programming
   color: "#b2b7f8"
@@ -5630,6 +5556,38 @@ Vim Snippet:
   tm_scope: source.vim-snippet
   ace_mode: text
   language_id: 81265970
+Visual Basic .NET:
+  type: programming
+  color: "#945db7"
+  extensions:
+  - ".vb"
+  - ".vbhtml"
+  aliases:
+  - visual basic
+  - vbnet
+  - vb .net
+  tm_scope: source.vbnet
+  ace_mode: text
+  codemirror_mode: vb
+  codemirror_mime_type: text/x-vb
+  language_id: 389
+Visual Basic for Applications:
+  type: programming
+  color: "#867db1"
+  extensions:
+  - ".bas"
+  - ".cls"
+  - ".frm"
+  - ".frx"
+  - ".vba"
+  tm_scope: source.vbnet
+  aliases:
+  - vba
+  - vb6
+  - visual basic 6
+  ace_mode: text
+  codemirror_mode: vb
+  codemirror_mime_type: text/x-vb
 Vim script:
   type: programming
   color: "#199f4b"
