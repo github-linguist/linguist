@@ -5522,6 +5522,46 @@ Vala:
   tm_scope: source.vala
   ace_mode: vala
   language_id: 386
+VB.NET:
+  type: programming
+  color: "#178600"
+  extensions:
+  - ".vb"
+  - ".vbhtml"
+  aliases:
+  - visual basic
+  - visual basic .net
+  - vbnet
+  - vb .net
+  tm_scope: source.vbnet
+  ace_mode: text
+  codemirror_mode: vb
+  codemirror_mime_type: text/x-vb
+  language_id: 389
+VBA/VB6:
+  type: programming
+  color: "#bfdbff"
+  extensions:
+  - ".bas"
+  - ".cls"
+  - ".frm"
+  - ".frx"
+  - ".vba"
+  tm_scope: source.vbnet
+  aliases:
+  - visual basic for applications
+  ace_mode: text
+  codemirror_mode: vb
+  codemirror_mime_type: text/x-vb
+VBScript:
+  type: programming
+  color: "#0072b6"
+  extensions:
+  - ".vbs"
+  tm_scope: source.vbnet
+  ace_mode: text
+  codemirror_mode: vbscript
+  codemirror_mime_type: text/vbscript
 Verilog:
   type: programming
   color: "#b2b7f8"
@@ -5569,46 +5609,6 @@ Vim script:
   - vimrc
   ace_mode: text
   language_id: 388
-VB.NET:
-  type: programming
-  color: "#178600"
-  extensions:
-  - ".vb"
-  - ".vbhtml"
-  aliases:
-  - visual basic
-  - visual basic .net
-  - vbnet
-  - vb .net
-  tm_scope: source.vbnet
-  ace_mode: text
-  codemirror_mode: vb
-  codemirror_mime_type: text/x-vb
-  language_id: 389
-VBA/VB6:
-  type: programming
-  color: "#945db7"
-  extensions:
-  - ".bas"
-  - ".cls"
-  - ".frm"
-  - ".frx"
-  - ".vba"
-  tm_scope: source.vbnet
-  aliases:
-  - visual basic for applications
-  ace_mode: text
-  codemirror_mode: vb
-  codemirror_mime_type: text/x-vb
-VBScript:
-  type: programming
-  color: "#945db7"
-  extensions:
-  - ".vbs"
-  tm_scope: source.vbnet
-  ace_mode: text
-  codemirror_mode: vbscript
-  codemirror_mime_type: text/vbscript
 Volt:
   type: programming
   color: "#1F1F1F"
