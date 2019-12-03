@@ -3844,30 +3844,6 @@ Perl:
   aliases:
   - cperl
   language_id: 282
-Perl 6:
-  type: programming
-  color: "#0000fb"
-  extensions:
-  - ".6pl"
-  - ".6pm"
-  - ".nqp"
-  - ".p6"
-  - ".p6l"
-  - ".p6m"
-  - ".pl"
-  - ".pl6"
-  - ".pm"
-  - ".pm6"
-  - ".t"
-  interpreters:
-  - perl6
-  aliases:
-  - perl6
-  tm_scope: source.perl6fe
-  ace_mode: perl
-  codemirror_mode: perl
-  codemirror_mime_type: text/x-perl
-  language_id: 283
 Pic:
   type: markup
   group: Roff
@@ -4352,6 +4328,33 @@ Ragel:
   tm_scope: none
   ace_mode: text
   language_id: 317
+Raku:
+  type: programming
+  color: "#0000fb"
+  extensions:
+  - ".6pl"
+  - ".6pm"
+  - ".nqp"
+  - ".p6"
+  - ".p6l"
+  - ".p6m"
+  - ".pl"
+  - ".pl6"
+  - ".pm"
+  - ".pm6"
+  - ".t"
+  interpreters:
+  - perl6
+  - raku
+  - rakudo
+  aliases:
+  - perl6
+  - perl-6
+  tm_scope: source.perl6fe
+  ace_mode: perl
+  codemirror_mode: perl
+  codemirror_mime_type: text/x-perl
+  language_id: 283
 Rascal:
   type: programming
   color: "#fffaa0"
