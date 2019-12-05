@@ -334,6 +334,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_p_by_heuristics
+    assert_heuristics({
+      "Gnuplot" => all_fixtures("Gnuplot"),
+      "OpenEdge ABL" => all_fixtures("OpenEdge ABL")
+    }, alt_name="test.p")
+  end
+
   # Candidate languages = ["Hack", "PHP"]
   def test_php_by_heuristics
     assert_heuristics({
