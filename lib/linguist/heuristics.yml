@@ -450,6 +450,13 @@ disambiguations:
     pattern: '^\s*(import.+(from\s+|require\()[''"]react|\/\/\/\s*<reference\s)'
   - language: XML
     pattern: '(?i:^\s*<\?xml\s+version)'
+- extensions: ['.txt']
+  rules:
+    # The following RegExp is simply a collapsed and simplified form of the
+    # modeline-checking ptattern in `./lib/linguist/strategy/modeline.rb`.
+  - language: Vim Help File
+    pattern: '(?:(?:\s|^)vi(?:m[<=>]?\d+|m)?|\sex)(?=:(?=\s*set?\s[^\n:]+:)|:(?!\s* set?\s))(?:(?:\s|\s*:\s*)\w*(?:\s*=(?:[^\\\s]|\\.)*)?)*[\s:](?:filetype|ft|syntax)\s*=help(?=\s|:|$)'
+  - language: Text
 - extensions: ['.v']
   rules:
   - language: Coq
