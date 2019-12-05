@@ -1,0 +1,208 @@
+# List of TERM entries for each termtype that is colorizable
+TERM gnome-256color
+TERM konsole-256color
+TERM putty-256color
+TERM rxvt-256color
+TERM rxvt-unicode256
+TERM screen-256color
+TERM xterm-256color
+
+# Attribute codes:
+# 00=none 01=bold 04=underscore 05=blink 07=reverse 08=concealed
+#
+# Text color (8 colors mode) codes:
+# 30=black 31=red 32=green 33=yellow 34=blue 35=magenta 36=cyan 37=white
+#
+# Background color (8 colors mode) codes:
+# 40=black 41=red 42=green 43=yellow 44=blue 45=magenta 46=cyan 47=white
+#
+# Text color (256 colors mode) codes:
+# 38;5;$n, where $n is a number between 0 and 255. (0 has no color)
+# You can use the following command to find one you like:
+# for ((n=0;++n<256;)) { printf "\033[38;5;${n}m$n\033[000m "; }
+#
+# Background color (256 colors mode) codes:
+# 38;5;$n, where $n is a number between 0 and 255. (0 has no color)
+# You can use the following command to find one you like:
+# for ((n=0;++n<256;)) { printf "\033[48;5;${n}m$n\033[000m "; }
+
+# File types {{{
+BLK                   48;5;232;38;5;11  # block device driver
+CAPABILITY            48;5;196;38;5;226 # file with capability
+CHR                   48;5;232;38;5;3   # character device driver
+DIR                   38;5;27           # directory
+DOOR                  38;5;5            # door
+EXEC                  38;5;34           # file with execute permission (+x)
+FIFO                  40;38;5;11        # pipe
+FILE                  00                # normal file, use no color at all
+LINK                  38;5;51           # symbolic link
+MISSING               48;5;232;38;5;15  # file pointed to by an orphan link
+MULTIHARDLINK         44;38;5;15        # regular file with more than one link
+NORMAL                00                # global default, no color code at all
+ORPHAN                48;5;232;38;5;9   # symlink to nonexistent file, or non-statable file
+OTHER_WRITABLE        48;5;10;38;5;21   # dir that is other-writable (o+w) and not sticky
+RESET                 0                 # reset to "normal" color
+SETGID                48;5;11;38;5;16   # file that is setgid (g+s)
+SETUID                48;5;196;38;5;15  # file that is setuid (u+s)
+SOCK                  38;5;13           # socket
+STICKY                48;5;21;38;5;15   # dir with the sticky bit set (+t) and not other-writable
+STICKY_OTHER_WRITABLE 48;5;10;38;5;16   # dir that is sticky and other-writable (+t,o+w)
+# }}}
+
+# File extensions {{{
+# windows files (green) {{{
+.bat  38;5;36
+.BAT  38;5;36
+.btm  38;5;36
+.BTM  38;5;36
+.cmd  38;5;36
+.CMD  38;5;36
+.com  38;5;36
+.COM  38;5;36
+.exe  38;5;36
+.EXE  38;5;36
+.lnk  38;5;36
+.LNK  38;5;36
+# }}}
+
+ # archives or compressed (gray) {{{
+.7z   38;5;247
+.ace  38;5;247
+.apk  38;5;247
+.arj  38;5;247
+.br   38;5;247
+.bz   38;5;247
+.bz2  38;5;247
+.cb7  38;5;247
+.cbr  38;5;247
+.cbz  38;5;247
+.cbt  38;5;247
+.cpio 38;5;247
+.deb  38;5;247
+.dz   38;5;247
+.egg  38;5;247
+.gz   38;5;247
+.jar  38;5;247
+.kra  38;5;247
+.lz   38;5;247
+.lzh  38;5;247
+.lzma 38;5;247
+.ora  38;5;247
+.piz  38;5;247
+.rar  38;5;247
+.rpm  38;5;247
+.rz   38;5;247
+.tar  38;5;247
+.taz  38;5;247
+.tbz  38;5;247
+.tbz2 38;5;247
+.tgz  38;5;247
+.tlz  38;5;247
+.txz  38;5;247
+.tz   38;5;247
+.whl  38;5;247
+.xz   38;5;247
+.Z    38;5;247
+.z    38;5;247
+.zip  38;5;247
+.zoo  38;5;247
+# }}}
+
+# image formats (magenta) {{{
+.apng 38;5;13
+.avif 38;5;13
+.bmp  38;5;13
+.bpg  38;5;13
+.eps  38;5;13
+.exr  38;5;13
+.flif 38;5;13
+.gif  38;5;13
+.heic 38;5;13
+.heif 38;5;13
+.ico  38;5;13
+.icon 38;5;13
+.j2k  38;5;13
+.jp2  38;5;13
+.jpeg 38;5;13
+.jpf  38;5;13
+.jpg  38;5;13
+.jpm  38;5;13
+.jpx  38;5;13
+.mng  38;5;13
+.pbm  38;5;13
+.pcx  38;5;13
+.pgm  38;5;13
+.png  38;5;13
+.psd  38;5;13
+.ppm  38;5;13
+.svg  38;5;13
+.svgz 38;5;13
+.tga  38;5;13
+.tif  38;5;13
+.tiff 38;5;13
+.webp 38;5;13
+.xbm  38;5;13
+.xpm  38;5;13
+# }}}
+
+# video formats (orange) {{{
+.anx  38;5;202
+.asf  38;5;202
+.avi  38;5;202
+.axv  38;5;202
+.bik  38;5;202
+.bk2  38;5;202
+.cgm  38;5;202
+.dl   38;5;202
+.drc  38;5;202
+.emf  38;5;202
+.flc  38;5;202
+.fli  38;5;202
+.flv  38;5;202
+.gl   38;5;202
+.hevc 38;5;202
+.m2v  38;5;202
+.m4v  38;5;202
+.mkv  38;5;202
+.mov  38;5;202
+.mp4  38;5;202
+.mp4v 38;5;202
+.mpeg 38;5;202
+.mpg  38;5;202
+.nuv  38;5;202
+.ogm  38;5;202
+.ogv  38;5;202
+.ogx  38;5;202
+.qt   38;5;202
+.rm   38;5;202
+.rmvb 38;5;202
+.vob  38;5;202
+.webm 38;5;202
+.wmv  38;5;202
+.xcf  38;5;202
+.xwd  38;5;202
+.yuv  38;5;202
+# }}}
+
+# audio formats (cyan) {{{
+.aac  38;5;45
+.ac3  38;5;45
+.au   38;5;45
+.axa  38;5;45
+.flac 38;5;45
+.mid  38;5;45
+.midi 38;5;45
+.mka  38;5;45
+.mp3  38;5;45
+.mpc  38;5;45
+.oga  38;5;45
+.ogg  38;5;45
+.opus 38;5;45
+.ra   38;5;45
+.spx  38;5;45
+.wav  38;5;45
+.xspf 38;5;45
+# }}}
+# }}}
+
+# vim:ft=dircolors:

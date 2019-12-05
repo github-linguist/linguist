@@ -1777,6 +1777,7 @@ Gnuplot:
   - ".gp"
   - ".gnu"
   - ".gnuplot"
+  - ".p"
   - ".plot"
   - ".plt"
   interpreters:
@@ -2116,6 +2117,7 @@ HiveQL:
   type: programming
   extensions:
   - ".q"
+  - ".hql"
   color: "#dce200"
   tm_scope: source.hql
   ace_mode: sql
@@ -5491,6 +5493,34 @@ V:
   codemirror_mode: go
   codemirror_mime_type: text/x-go
   language_id: 603371597
+VBA:
+  type: programming
+  color: "#867db1"
+  extensions:
+  - ".bas"
+  - ".cls"
+  - ".frm"
+  - ".frx"
+  - ".vba"
+  tm_scope: source.vbnet
+  aliases:
+  - vb6
+  - visual basic 6
+  - visual basic for applications
+  ace_mode: text
+  codemirror_mode: vb
+  codemirror_mime_type: text/x-vb
+  language_id: 399230729
+VBScript:
+  type: programming
+  color: "#15dcdc"
+  extensions:
+  - ".vbs"
+  tm_scope: source.vbnet
+  ace_mode: text
+  codemirror_mode: vbscript
+  codemirror_mime_type: text/vbscript
+  language_id: 408016005
 VCL:
   type: programming
   color: "#148AA8"
@@ -5572,22 +5602,18 @@ Vim script:
   - vimrc
   ace_mode: text
   language_id: 388
-Visual Basic:
+Visual Basic .NET:
   type: programming
   color: "#945db7"
   extensions:
   - ".vb"
-  - ".bas"
-  - ".cls"
-  - ".frm"
-  - ".frx"
-  - ".vba"
   - ".vbhtml"
-  - ".vbs"
-  tm_scope: source.vbnet
   aliases:
-  - vb.net
+  - visual basic
   - vbnet
+  - vb .net
+  - vb.net
+  tm_scope: source.vbnet
   ace_mode: text
   codemirror_mode: vb
   codemirror_mime_type: text/x-vb
@@ -6112,6 +6138,20 @@ desktop:
   tm_scope: source.desktop
   ace_mode: text
   language_id: 412
+dircolors:
+  type: data
+  extensions:
+  - ".dircolors"
+  filenames:
+  - ".dir_colors"
+  - ".dircolors"
+  - DIR_COLORS
+  - _dir_colors
+  - _dircolors
+  - dir_colors
+  tm_scope: source.dircolors
+  ace_mode: text
+  language_id: 691605112
 eC:
   type: programming
   color: "#913960"
