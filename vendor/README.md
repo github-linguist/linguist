@@ -469,6 +469,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Zig:** [ziglang/sublime-zig-language](https://github.com/ziglang/sublime-zig-language)
 - **cURL Config:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **desktop:** [Mailaender/desktop.tmbundle](https://github.com/Mailaender/desktop.tmbundle)
+- **dircolors:** [jolkdarr/language-dircolors](https://github.com/jolkdarr/language-dircolors)
 - **eC:** [ecere/ec.tmbundle](https://github.com/ecere/ec.tmbundle)
 - **edn:** [atom/language-clojure](https://github.com/atom/language-clojure)
 - **fish:** [l15n/fish-tmbundle](https://github.com/l15n/fish-tmbundle)
