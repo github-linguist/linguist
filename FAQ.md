@@ -21,9 +21,9 @@
   - [How can I change the language of my repository?](#how-can-i-change-the-language-of-my-repository)
   - [The language detected for some files in my repository is incorrect](#the-language-detected-for-some-files-in-my-repository-is-incorrect)
   - [When I click on a language in the statistics bar, no corresponding files are found in the search page](#when-i-click-on-a-language-in-the-statistics-bar-no-corresponding-files-are-found-in-the-search-page)
-  - [No language is detected in my repository](#no-language-is-detected-in-my-repository)
+  - [Why does the language bar show some languages, but never others?](#why-does-the-language-bar-show-some-languages-but-never-others)
+  - [I pushed changes to my repository, but its language bar hasn't changed](  #i-pushed-changes-to-my-repository-but-its-language-bar-hasnt-changed)
   - [What are markup or programming languages?](#what-are-markup-or-programming-languages)
-  - [How are the language statistics computed?](#how-are-the-language-statistics-computed)
   - [The language statistics in my repository are wrong.](#the-language-statistics-in-my-repository-are-wrong)
   - [How do I hide files in diffs?](#how-do-i-hide-files-in-diffs)
   - [Why are some of my files not counted in the language statistics?](#why-are-some-of-my-files-not-counted-in-the-language-statistics)
@@ -33,9 +33,7 @@
   - [How do I disable syntax highlighting for a file?](#how-do-i-disable-syntax-highlighting-for-a-file)
   - [What keywords can I use to highlight a code snippet in Markdown?](#what-keywords-can-i-use-to-highlight-a-code-snippet-in-markdown)
   - [I found a syntax highlighting error](#i-found-a-syntax-highlighting-error)
-  - [When will changes in a syntax highlighting grammar take effect on GitHub.com?](#when-will-changes-in-a-syntax-highlighting-grammar-take-effect-on-githubcom)
-  - [I changed a syntax highlighting grammar. Do I need to open a pull request on Linguist for it to take effect on GitHub.com?](#i-changed-a-syntax-highlighting-grammar-do-i-need-to-open-a-pull-request-on-linguist-for-it-to-take-effect-on-githubcom)
-  - [How does Linguist highlight files?](#how-does-linguist-highlight-files)
+  - [I've updated a syntax highlighting grammar. What should I do?](#ive-updated-a-syntax-highlighting-grammar-what-should-i-do)
   - [Can I define my own syntax highlighter for files in my repository?](#can-i-define-my-own-syntax-highlighter-for-files-in-my-repository)
 - [Contributing to Linguist](#contributing-to-linguist)
   - [How can I check if Linguist supports a given language?](#how-can-i-check-if-linguist-supports-a-given-language)
@@ -53,25 +51,12 @@
 
 ### How does Linguist detect the language of a file?
 
-Linguist takes the list of languages it knows from [`languages.yml`][] and uses the [following strategies](https://github.com/github/linguist/blob/8bf9efa3702a1a43df85dc5cd72b63f3ff36871f/lib/linguist.rb#L61-L69), in order, with each step either identifying the precise language or reducing the number of likely languages passed down to the next strategy, until a single language is identified:
-
-1. Use the language defined by a [Vim or Emacs modeline][modelines].
-2. Use the language associated with a commonly used filename, for example [`Makefile`](https://github.com/github/linguist/blob/a878620a8ee6f45d89d8c6e1cdfbe49cb821ddfe/lib/linguist/languages.yml#L2528-L2532).
-3. Use the language associated with a shebang in the file, for a example a file with a [`#!/bin/bash` shebang](https://github.com/github/linguist/blob/a878620a8ee6f45d89d8c6e1cdfbe49cb821ddfe/lib/linguist/languages.yml#L4193) will be classified as Shell.
-4. Use the language associated with the file extension, for example `.php`. Languages that share a common extension, for example C, C++ and Objective-C use `.h`, are further refined by subsequent strategies.
-5. Use XML if an [XML root tag is found](https://github.com/github/linguist/blob/master/lib/linguist/strategy/xml.rb).
-6. Use the language determined by a set of regexp-based [heuristic rules][`heuristics.yml`].
-7. Use the best matched language returned by a naïve Bayesian classifier trained on [sample files][].
-   This is the last strategy with the lowest accuracy.
-   The classifier always takes a subset of languages as input; it is not meant to classify all languages.
+See [*How Linguist Works*](https://github.com/github/linguist#how-linguist-works).
 
 
 ### How does Linguist work on GitHub.com?
 
-When you push changes to a repository on GitHub.com, a low priority background job is enqueued to analyze the files in your repository as explained in [*How does Linguist detect the language of a file?*](#how-does-linguist-detect-the-language-of-a-file).
-The results of this analysis are cached for the lifetime of your repository and are only updated when the repository is updated.
-
-As this analysis is performed by a low priority background job, it can take a while, particularly during busy periods, for your language statistics bar to reflect your changes.
+See [the README](https://github.com/github/linguist#how-linguist-works-on-githubcom).
 
 
 ### How is a repository's language determined?
@@ -107,7 +92,7 @@ Other [code search restrictions](https://help.github.com/articles/searching-code
 If all of the files you are expecting to see meet all the search considerations and still aren't appearing in the search results, please [contact GitHub support](https://github.com/contact).
 
 
-### No language is detected in my repository.
+### Why does the language bar show some languages, but never others?
 
 Only [programming and markup languages](#what-are-markup-or-programming-languages) are counted in the language statistics.
 Files that are considered vendored, documentation, data languages, or generated will be excluded by default.
@@ -120,26 +105,29 @@ You can see a list of all the paths and criteria listed in:
 - [`documentation.yml`][],
 - [`generated.rb`][].
 
-Please also consider that Linguist runs as a low priority background job and it may therefore take some time for the languages to appear after you have pushed to the repository.
+
+### I pushed changes to my repository, but its language bar hasn't changed
+
+Please consider that Linguist runs as a low priority background job and it may therefore take some time for the languages to appear after you have pushed to the repository.
 
 Considering all this, if you still believe the repository should display a language, you can try to [run Linguist locally on your repository](https://github.com/github/linguist/blob/master/CONTRIBUTING.md#getting-started) or you can open an issue.
 
 
 ### What are markup or programming languages?
 
-When a language is added to Linguist, one of four types is associated with it in [`languages.yml`](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml): `markup`, `programming`, `prose` or `data`.
-
-- Markup languages are those that are designed for the processing, definition and presentation of text, like HTML and CSS.
-- Programming languages are those that are designed to create a program, like C, Ruby and Bash.
-- Prose languages are those that are used for writing and lightly formatting of text, like Markdown and AsciiDoc.
-- Data languages are those that are commonly associated with storing of data, like XML and JSON.
+Linguist distinguishes between 4 different language types
+1. **Programming:**
+Executed or interpreted source code (e.g., C++, JavaScript, Perl, Assembly, etc)
+2. **Markup:**
+Code defining a document's presentation or formatting.
+This can include "true" markup languages (e.g., HTML), templating languages (e.g., Blade, Handlebars), or programming languages mostly used as page-description languages (e.g., PostScript, Roff, TeX).
+3. **Prose:**
+Similar to markup, except the content is composed mostly of human-readable content, and can usually be consume without additional processing.
+Most "lightweight markup" languages fall into this category (e.g., Markdown, AsciiDoc).
+4. **Data:**
+If it's plain-text which doesn't fit into any of the above categories, it probably comes under `Data`.
 
 Of these types, only markup and programming count towards the language statistics, though you can override this behaviour with the [detectable override](https://github.com/github/linguist#detectable).
-
-
-### How are the language statistics computed?
-
-The percentages in the statistics bar are calculated based on the total **bytes of code** for each [programming or markup language](#what-are-markup-or-programming-languages), after excluding [vendored][`vendor.yml`], [generated][`generated.rb`], and [documentation][`documentation.yml`] files.
 
 
 ### The language statistics in my repository are wrong
@@ -228,19 +216,12 @@ Please report it to the upstream grammar repository. You can locate the defectiv
 Once the error has been fixed, it'll disappear with the next release of Linguist.
 
 
-### When will changes in a syntax highlighting grammar take effect on GitHub.com?
+### I've updated a syntax highlighting grammar. What should I do?
 
-Changes to any syntax highlighting grammar will take effect with the next release of Linguist, usually once a month.
+Nothing.
+All grammars are updated automatically when a new release of Linguist is prepared.
 
-
-### I changed a syntax highlighting grammar. Do I need to open a pull request on Linguist for it to take effect on GitHub.com?
-
-No. Grammars are updated automatically with every new release.
-
-
-### How does Linguist highlight files?
-
-Linguist detects the language of a file, but the actual syntax-highlighting is powered by a set of language grammars which are included in this project as a set of submodules as [listed here][grammars].
+Changes to upstream grammars (as well as Linguist itself) won't become visible on GitHub.com until the next release of Linguist.
 
 
 ### Can I define my own syntax highlighter for files in my repository?
