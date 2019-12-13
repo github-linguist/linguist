@@ -1,0 +1,50 @@
+title Collapse Join Workflow
+' from https://github.com/screwdriver-cd/screwdriver/blob/master/design/diagrams/executor-queue-collapse-join.wsd
+
+participant Commits
+participant JobA as A
+participant JobB as B
+participant JobC as C
+participant JobD as D
+
+Commits->A: commit1
+A-->+A: commit1 Work Start
+Commits->A: commit2
+Commits->A: commit3
+A-->-A: commit1 Work Done
+
+parallel {
+A->B: commit1
+A->C:
+}
+
+parallel {
+A-->+A: commit2+3 Work Start
+B-->+B: commit1 Work Start
+C-->+C: commit1 Work Start
+}
+
+B-->-B: commit1 Work Done
+B->D: commit1
+
+A-->-A: commit2+3 Work Done
+parallel {
+A->B: commit2+3
+A->C:
+}
+
+B-->+B: commit2+3 Work Start
+B-->-B: commit2+3 Work Done
+B->D: commit2+3
+C-->-C: commit1 Work Done
+C->D: commit1
+
+parallel {
+C-->+C: commit2+3 Work Start
+D-->+D: commit1 Work Start
+}
+
+C-->-C: commit2+3 Work Done
+C->D: commit2+3
+D-->-D: commit1 Work Done
+D-->+D: commit2 Work Start

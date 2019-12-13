@@ -1,0 +1,26 @@
+title Sarpa Network Diagram
+' from https://github.com/abhiyerra/sarpa/blob/master/usage.wsd'
+
+participant Service as ser
+participant Docker as doc
+participant Etcd as etcd
+participant Sarpa as sar
+participant S3 as s3
+participant Client as c
+
+opt Systemd Service Starting Up Docker
+    ser->doc: Systemd Service which starts up Docker
+    doc->ser: Get the Host:IP where the container is running
+    ser->etcd: System reports public access host:ip to etcd /sarpa/service/names
+end
+
+loop Sarpa Watches for Changes to Etcd
+    sar-->-etcd: Watch for changes
+    etcd-->-sar: New Host:IP received
+    sar->s3: Upload a discovery file to S3
+end
+
+opt Client Uses the Service
+    c->s3: Client gets the list of hosts to use
+    c->doc: Client connects to an available docker container
+end
