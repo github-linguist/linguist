@@ -3453,6 +3453,13 @@ ObjDump:
   tm_scope: objdump.x86asm
   ace_mode: assembly_x86
   language_id: 256
+Object Data Instance Notation:
+  type: data
+  extensions:
+  - ".odin"
+  tm_scope: none
+  ace_mode: text
+  language_id: 985227236
 ObjectScript:
   type: programming
   extensions:
@@ -3508,6 +3515,7 @@ Odin:
   color: "#60AFFE"
   aliases:
   - odinlang
+  - odin-lang
   extensions:
   - ".odin"
   tm_scope: source.odin
