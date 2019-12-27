@@ -4752,13 +4752,21 @@ SSH Config:
   ace_mode: text
   tm_scope: source.ssh-config
   language_id: 554920715
+STON:
+  type: data
+  group: Smalltalk
+  extensions:
+  - ".ston"
+  tm_scope: source.smalltalk
+  ace_mode: text
+  language_id: 336
 Starlark:
   type: programming
   tm_scope: source.python
   ace_mode: python
   codemirror_mode: python
   codemirror_mime_type: text/x-python
-  color: "#43a047"
+  color: "#76d275"
   extensions:
   - ".bazel"
   - ".bzl"
@@ -4771,14 +4779,6 @@ Starlark:
   - bazel
   - bzl
   language_id: 960266174
-STON:
-  type: data
-  group: Smalltalk
-  extensions:
-  - ".ston"
-  tm_scope: source.smalltalk
-  ace_mode: text
-  language_id: 336
 SVG:
   type: data
   extensions:
