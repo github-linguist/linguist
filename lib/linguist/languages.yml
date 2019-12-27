@@ -4760,25 +4760,6 @@ STON:
   tm_scope: source.smalltalk
   ace_mode: text
   language_id: 336
-Starlark:
-  type: programming
-  tm_scope: source.python
-  ace_mode: python
-  codemirror_mode: python
-  codemirror_mime_type: text/x-python
-  color: "#76d275"
-  extensions:
-  - ".bazel"
-  - ".bzl"
-  - ".starlark"
-  filenames:
-  - BUCK
-  - BUILD
-  - WORKSPACE
-  aliases:
-  - bazel
-  - bzl
-  language_id: 960266174
 SVG:
   type: data
   extensions:
@@ -5099,6 +5080,25 @@ Standard ML:
   codemirror_mode: mllike
   codemirror_mime_type: text/x-ocaml
   language_id: 357
+Starlark:
+  type: programming
+  tm_scope: source.python
+  ace_mode: python
+  codemirror_mode: python
+  codemirror_mime_type: text/x-python
+  color: "#76d275"
+  extensions:
+  - ".bazel"
+  - ".bzl"
+  - ".starlark"
+  filenames:
+  - BUCK
+  - BUILD
+  - WORKSPACE
+  aliases:
+  - bazel
+  - bzl
+  language_id: 960266174
 Stata:
   type: programming
   extensions:
