@@ -4127,7 +4127,6 @@ Python:
   color: "#3572A5"
   extensions:
   - ".py"
-  - ".bzl"
   - ".cgi"
   - ".fcgi"
   - ".gyp"
@@ -4146,25 +4145,18 @@ Python:
   - ".xpy"
   filenames:
   - ".gclient"
-  - BUCK
-  - BUILD
-  - BUILD.bazel
   - DEPS
   - SConscript
   - SConstruct
   - Snakefile
-  - WORKSPACE
   - wscript
   interpreters:
   - python
   - python2
   - python3
   aliases:
-  - bazel
-  - bzl
-  - rusthon
-  - starlark
   - python3
+  - rusthon
   language_id: 303
 Python console:
   type: programming
@@ -4701,6 +4693,26 @@ SPARQL:
   - ".sparql"
   - ".rq"
   language_id: 331
+Starlark:
+  type: programming
+  tm_scope: source.python
+  ace_mode: python
+  codemirror_mode: python
+  codemirror_mime_type: text/x-python
+  color: "#43a047"
+  extensions:
+  - ".bazel"
+  - ".bzl"
+  - ".starlark"
+  filenames:
+  - BUCK
+  - BUILD
+  - WORKSPACE
+  aliases:
+  - bazel
+  - bzl
+  - starlark
+  language_id: 432
 SQF:
   type: programming
   color: "#3F3F3F"
