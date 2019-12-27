@@ -4693,25 +4693,6 @@ SPARQL:
   - ".sparql"
   - ".rq"
   language_id: 331
-Starlark:
-  type: programming
-  tm_scope: source.python
-  ace_mode: python
-  codemirror_mode: python
-  codemirror_mime_type: text/x-python
-  color: "#43a047"
-  extensions:
-  - ".bazel"
-  - ".bzl"
-  - ".starlark"
-  filenames:
-  - BUCK
-  - BUILD
-  - WORKSPACE
-  aliases:
-  - bazel
-  - bzl
-  language_id: 432
 SQF:
   type: programming
   color: "#3F3F3F"
@@ -4771,6 +4752,25 @@ SSH Config:
   ace_mode: text
   tm_scope: source.ssh-config
   language_id: 554920715
+Starlark:
+  type: programming
+  tm_scope: source.python
+  ace_mode: python
+  codemirror_mode: python
+  codemirror_mime_type: text/x-python
+  color: "#43a047"
+  extensions:
+  - ".bazel"
+  - ".bzl"
+  - ".starlark"
+  filenames:
+  - BUCK
+  - BUILD
+  - WORKSPACE
+  aliases:
+  - bazel
+  - bzl
+  language_id: 960266174
 STON:
   type: data
   group: Smalltalk
