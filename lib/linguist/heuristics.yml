@@ -285,6 +285,11 @@ disambiguations:
   - language: NL
     pattern: '^(b|g)[0-9]+ '
   - language: NewLisp
+- extensions: ['.odin']
+  rules:
+  - language: Odin
+    pattern: '(package\s+[\w0-9]+|import\s*"[\w0-9:/\.\.]+"|[\w0-9]+\s*::\s*proc\s*\(.*\)|[\w0-9]+\s*::\s*struct\s*|.*\/\/.*|for\s+.*in\s+.*)'
+  - language: Object Data Instance Notation
 - extensions: ['.php']
   rules:
   - language: Hack
@@ -476,11 +481,6 @@ disambiguations:
   - language: JSON
     pattern: '\"modelName\"\:\s*\"GM'
   - language: Yacc
-- extensions: ['.odin']
-  rules:
-  - language: Odin
-    pattern: '(package\s+[\w0-9]+|import\s*"[\w0-9:/\.\.]+"|[\w0-9]+\s*::\s*proc\s*\(.*\)|[\w0-9]+\s*::\s*struct\s*|.*\/\/.*|for\s+.*in\s+.*)'
-  - language: Object Data Instance Notation
 named_patterns:
   cpp:
   - '^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>'
