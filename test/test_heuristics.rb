@@ -117,7 +117,7 @@ class TestHeuristics < Minitest::Test
       "TeX" => all_fixtures("TeX", "*.cls"),
       "ObjectScript" => all_fixtures("ObjectScript", "*.cls"),
       # Missing heuristics
-      nil => all_fixtures("Apex", "*.cls") + all_fixtures("OpenEdge ABL", "*.cls") + all_fixtures("Visual Basic", "*.cls"),
+      nil => all_fixtures("Apex", "*.cls") + all_fixtures("OpenEdge ABL", "*.cls") + all_fixtures("VBA", "*.cls"),
     })
   end
 
@@ -134,6 +134,13 @@ class TestHeuristics < Minitest::Test
       "DTrace" => all_fixtures("DTrace"),
       "Makefile" => all_fixtures("Makefile"),
     }, "test.d")
+  end
+
+  def test_dsp_heuristics
+    assert_heuristics({
+      "Faust" => all_fixtures("Faust", "*.dsp"),
+      "Microsoft Developer Studio Project" => all_fixtures("Microsoft Developer Studio Project"),
+    })
   end
 
   def test_ecl_by_heuristics
@@ -264,6 +271,12 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_mask_by_heuristics
+    assert_heuristics({
+      "Unity3D Asset" => all_fixtures("Unity3D Asset", "*.mask")
+    })
+  end
+
   def test_md_by_heuristics
     assert_heuristics({
       "Markdown" => all_fixtures("Markdown", "*.md"),
@@ -328,6 +341,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_p_by_heuristics
+    assert_heuristics({
+      "Gnuplot" => all_fixtures("Gnuplot"),
+      "OpenEdge ABL" => all_fixtures("OpenEdge ABL")
+    }, alt_name="test.p")
+  end
+
   # Candidate languages = ["Hack", "PHP"]
   def test_php_by_heuristics
     assert_heuristics({
@@ -336,12 +356,12 @@ class TestHeuristics < Minitest::Test
     })
   end
 
-  # Candidate languages = ["Perl", "Perl 6", "Prolog"]
+  # Candidate languages = ["Perl", "Raku", "Prolog"]
   def test_pl_prolog_perl_by_heuristics
     assert_heuristics({
       "Prolog" => all_fixtures("Prolog", "*.pl"),
       "Perl" => ["Perl/oo1.pl", "Perl/oo2.pl", "Perl/oo3.pl", "Perl/fib.pl", "Perl/use5.pl"],
-      "Perl 6" => all_fixtures("Perl 6", "*.pl")
+      "Raku" => all_fixtures("Raku", "*.pl")
     })
   end
 
@@ -352,11 +372,11 @@ class TestHeuristics < Minitest::Test
     })
   end
 
-  # Candidate languages = ["Perl", "Perl 6", "XPM"]
+  # Candidate languages = ["Perl", "Raku", "XPM"]
   def test_pm_by_heuristics
     assert_heuristics({
       "Perl" => all_fixtures("Perl", "*.pm"),
-      "Perl 6" => all_fixtures("Perl 6", "*.pm"),
+      "Raku" => all_fixtures("Raku", "*.pm"),
       "X PixMap" => all_fixtures("X PixMap")
     }, "test.pm")
   end
@@ -369,9 +389,10 @@ class TestHeuristics < Minitest::Test
     })
   end
 
-  # Candidate languages = ["IDL", "Prolog", "QMake", "INI"]
+  # Candidate languages = ["IDL", "Proguard", "Prolog", "QMake", "INI"]
   def test_pro_by_heuristics
     assert_heuristics({
+      "Proguard" => all_fixtures("Proguard", "*.pro"),
       "Prolog" => all_fixtures("Prolog", "*.pro"),
       "IDL" => all_fixtures("IDL", "*.pro"),
       "INI" => all_fixtures("INI", "*.pro"),
@@ -453,15 +474,15 @@ class TestHeuristics < Minitest::Test
     })
   end
 
-  # Candidate languages = ["Perl", "Perl 6", "Turing"]
+  # Candidate languages = ["Perl", "Raku", "Turing"]
   def test_t_perl_by_heuristics
     # Turing not fully covered.
     assert_heuristics({
       "Turing" => all_fixtures("Turing", "*.t"),
       "Perl" => all_fixtures("Perl", "*.t"),
-      "Perl 6" => ["Perl 6/01-dash-uppercase-i.t", "Perl 6/01-parse.t", "Perl 6/advent2009-day16.t",
-                   "Perl 6/basic-open.t", "Perl 6/calendar.t", "Perl 6/for.t", "Perl 6/hash.t",
-                   "Perl 6/listquote-whitespace.t"]
+      "Raku" => ["Raku/01-dash-uppercase-i.t", "Raku/01-parse.t", "Raku/advent2009-day16.t",
+                   "Raku/basic-open.t", "Raku/calendar.t", "Raku/for.t", "Raku/hash.t",
+                   "Raku/listquote-whitespace.t"]
     })
   end
 
@@ -503,7 +524,7 @@ class TestHeuristics < Minitest::Test
 
   def test_vba_by_heuristics
     assert_heuristics({
-      "Visual Basic" => all_fixtures("Visual Basic", "*.vba"),
+      "VBA" => all_fixtures("VBA", "*.vba"),
       "Vim script" => all_fixtures("Vim script", "*.vba")
     })
   end
@@ -518,6 +539,7 @@ class TestHeuristics < Minitest::Test
   def test_x_by_heuristics
     # Logos not fully covered
     assert_heuristics({
+      "DirectX 3D File" => all_fixtures("DirectX 3D File", "*.x"),
       "Linker Script" => all_fixtures("Linker Script", "*.x"),
       "RPC" => all_fixtures("RPC", "*.x")
     })

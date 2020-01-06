@@ -413,27 +413,37 @@ vendor/grammars/language-css:
 - source.css
 vendor/grammars/language-cwl:
 - source.cwl
+vendor/grammars/language-dircolors:
+- source.dircolors
 vendor/grammars/language-emacs-lisp:
 - source.emacs.lisp
 - source.yasnippet
+- text.muse
 vendor/grammars/language-eml:
 - text.eml.basic
 vendor/grammars/language-etc:
 - etc
 - injections.etc
 - source.curlrc
+- source.direct-x
 - source.dosbox-conf
 - source.gitattributes
 - source.gitconfig
 - source.gitignore
 - source.hgignore
+- source.hosts
+- source.ini.npmrc
+- source.inputrc
 - source.m4
 - source.man-conf
 - source.nanorc
 - source.opts
 - source.smpl
 - source.ssh-config
+- source.wgetrc
 - text.xml.svg
+vendor/grammars/language-faust:
+- source.faust
 vendor/grammars/language-fontforge:
 - source.afm
 - source.bdf
@@ -454,7 +464,6 @@ vendor/grammars/language-grammars:
 - source.abnf
 - source.bnf
 - source.ebnf
-- source.jlex
 - source.lex
 - source.lex.regexp
 - source.yacc
@@ -546,6 +555,7 @@ vendor/grammars/language-restructuredtext:
 vendor/grammars/language-ring:
 - source.ring
 vendor/grammars/language-roff:
+- hidden.manref
 - source.ditroff
 - source.ditroff.desc
 - source.gremlin
@@ -584,7 +594,9 @@ vendor/grammars/language-turing:
 vendor/grammars/language-typelanguage:
 - source.tl
 vendor/grammars/language-viml:
+- source.vim-snippet
 - source.viml
+- text.vim-help
 vendor/grammars/language-vtt:
 - source.vtt
 vendor/grammars/language-wavefront:

@@ -179,6 +179,9 @@ File and folder paths inside `.gitattributes` are calculated relative to the pos
 ```gitattributes
 # Example of a `.gitattributes` file which reclassifies `.rb` files as Java:
 *.rb linguist-language=Java
+
+# Replace any whitespace in the language name with hyphens:
+*.glyphs linguist-language=OpenStep-Property-List
 ```
 
 #### Vendored code
