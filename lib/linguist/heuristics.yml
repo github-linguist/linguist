@@ -113,6 +113,12 @@ disambiguations:
     #  : dependency
     # path/file.ext1 : some/path/../file.ext2
     pattern: '([\/\\].*:\s+.*\s\\$|: \\$|^[ %]:|^[\w\s\/\\.]+\w+\.\w+\s*:\s+[\w\s\/\\.]+\w+\.\w+)'
+- extensions: ['.dsp']
+  rules:
+  - language: Microsoft Developer Studio Project
+    pattern: '# Microsoft Developer Studio Generated Build File'
+  - language: Faust
+    pattern: '\bprocess\s*[(=]|\b(library|import)\s*\(\s*"|\bdeclare\s+(name|version|author|copyright|license)\s+"'
 - extensions: ['.ecl']
   rules:
   - language: ECLiPSe
