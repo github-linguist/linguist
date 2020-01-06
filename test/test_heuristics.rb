@@ -349,12 +349,12 @@ class TestHeuristics < Minitest::Test
     })
   end
 
-  # Candidate languages = ["Perl", "Perl 6", "Prolog"]
+  # Candidate languages = ["Perl", "Raku", "Prolog"]
   def test_pl_prolog_perl_by_heuristics
     assert_heuristics({
       "Prolog" => all_fixtures("Prolog", "*.pl"),
       "Perl" => ["Perl/oo1.pl", "Perl/oo2.pl", "Perl/oo3.pl", "Perl/fib.pl", "Perl/use5.pl"],
-      "Perl 6" => all_fixtures("Perl 6", "*.pl")
+      "Raku" => all_fixtures("Raku", "*.pl")
     })
   end
 
@@ -365,11 +365,11 @@ class TestHeuristics < Minitest::Test
     })
   end
 
-  # Candidate languages = ["Perl", "Perl 6", "XPM"]
+  # Candidate languages = ["Perl", "Raku", "XPM"]
   def test_pm_by_heuristics
     assert_heuristics({
       "Perl" => all_fixtures("Perl", "*.pm"),
-      "Perl 6" => all_fixtures("Perl 6", "*.pm"),
+      "Raku" => all_fixtures("Raku", "*.pm"),
       "X PixMap" => all_fixtures("X PixMap")
     }, "test.pm")
   end
@@ -467,15 +467,15 @@ class TestHeuristics < Minitest::Test
     })
   end
 
-  # Candidate languages = ["Perl", "Perl 6", "Turing"]
+  # Candidate languages = ["Perl", "Raku", "Turing"]
   def test_t_perl_by_heuristics
     # Turing not fully covered.
     assert_heuristics({
       "Turing" => all_fixtures("Turing", "*.t"),
       "Perl" => all_fixtures("Perl", "*.t"),
-      "Perl 6" => ["Perl 6/01-dash-uppercase-i.t", "Perl 6/01-parse.t", "Perl 6/advent2009-day16.t",
-                   "Perl 6/basic-open.t", "Perl 6/calendar.t", "Perl 6/for.t", "Perl 6/hash.t",
-                   "Perl 6/listquote-whitespace.t"]
+      "Raku" => ["Raku/01-dash-uppercase-i.t", "Raku/01-parse.t", "Raku/advent2009-day16.t",
+                   "Raku/basic-open.t", "Raku/calendar.t", "Raku/for.t", "Raku/hash.t",
+                   "Raku/listquote-whitespace.t"]
     })
   end
 
