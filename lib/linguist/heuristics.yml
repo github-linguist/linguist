@@ -300,7 +300,7 @@ disambiguations:
   - language: Object Data Instance Notation
     pattern: '(?:^|<)\s*[A-Za-z0-9_]+\s*=\s*<'
   - language: Odin
-    pattern: 'package\s+\w+|import\s*"[\w:./]+"|\w+\s*::\s*(?:proc|struct)\s*\(|^\s*//\s'
+    pattern: 'package\s+\w+|\b(?:im|ex)port\s*"[\w:./]+"|\w+\s*::\s*(?:proc|struct)\s*\(|^\s*//\s'
 - extensions: ['.p']
   rules:
   - language: Gnuplot
