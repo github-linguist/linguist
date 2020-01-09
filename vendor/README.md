@@ -18,7 +18,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **ActionScript:** [simongregory/actionscript3-tmbundle](https://github.com/simongregory/actionscript3-tmbundle)
 - **Ada:** [textmate/ada.tmbundle](https://github.com/textmate/ada.tmbundle)
 - **Adobe Font Metrics:** [Alhadis/language-fontforge](https://github.com/Alhadis/language-fontforge)
-- **Agda:** [mokus0/Agda.tmbundle](https://github.com/mokus0/Agda.tmbundle)
+- **Agda:** [agda/agda-github-syntax-highlighting](https://github.com/agda/agda-github-syntax-highlighting)
 - **Alloy:** [macekond/Alloy.tmbundle](https://github.com/macekond/Alloy.tmbundle)
 - **Alpine Abuild:** [atom/language-shellscript](https://github.com/atom/language-shellscript)
 - **Altium Designer:** [textmate/ini.tmbundle](https://github.com/textmate/ini.tmbundle)
