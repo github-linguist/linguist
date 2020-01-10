@@ -334,6 +334,7 @@ Assembly:
   extensions:
   - ".asm"
   - ".a51"
+  - ".i"
   - ".inc"
   - ".nasm"
   tm_scope: source.assembly
@@ -4800,6 +4801,15 @@ SVG:
   codemirror_mode: xml
   codemirror_mime_type: text/xml
   language_id: 337
+SWIG:
+  type: programming
+  extensions:
+  - ".i"
+  tm_scope: source.c++
+  ace_mode: c_cpp
+  codemirror_mode: clike
+  codemirror_mime_type: text/x-c++src
+  language_id: 1066250075
 Sage:
   type: programming
   group: Python

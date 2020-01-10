@@ -226,6 +226,15 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_i_by_heuristics
+    assert_heuristics({
+      "Motorola 68K Assembly" => all_fixtures("Motorola 68K Assembly", "*.i"),
+      "SWIG" => all_fixtures("SWIG", "*.i"),
+      # No heuristic defined for Assembly
+      nil => all_fixtures("Assembly", "*.i")
+    })
+  end
+
   def test_ice_by_heuristics
     assert_heuristics({
       "Slice" => all_fixtures("Slice", "*.ice"),

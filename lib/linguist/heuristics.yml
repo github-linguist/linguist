@@ -195,6 +195,12 @@ disambiguations:
   rules:
   - language: Hack
     pattern: '<\?hh'
+- extensions: ['.i']
+  rules:
+  - language: Motorola 68K Assembly
+    named_pattern: m68k
+  - language: SWIG
+    pattern: '^[ \t]*%[a-z_]+\b|^%[{}]$'
 - extensions: ['.ice']
   rules:
   - language: JSON
