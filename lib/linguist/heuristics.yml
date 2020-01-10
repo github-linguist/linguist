@@ -113,6 +113,12 @@ disambiguations:
     #  : dependency
     # path/file.ext1 : some/path/../file.ext2
     pattern: '([\/\\].*:\s+.*\s\\$|: \\$|^[ %]:|^[\w\s\/\\.]+\w+\.\w+\s*:\s+[\w\s\/\\.]+\w+\.\w+)'
+- extensions: ['.dsp']
+  rules:
+  - language: Microsoft Developer Studio Project
+    pattern: '# Microsoft Developer Studio Generated Build File'
+  - language: Faust
+    pattern: '\bprocess\s*[(=]|\b(library|import)\s*\(\s*"|\bdeclare\s+(name|version|author|copyright|license)\s+"'
 - extensions: ['.ecl']
   rules:
   - language: ECLiPSe
@@ -289,6 +295,13 @@ disambiguations:
   - language: NL
     pattern: '^(b|g)[0-9]+ '
   - language: NewLisp
+- extensions: ['.p']
+  rules:
+  - language: Gnuplot
+    pattern:
+    - '^s?plot\b'
+    - '^set\s+(term|terminal|out|output|[xy]tics|[xy]label|[xy]range|style)\b'
+  - language: OpenEdge ABL
 - extensions: ['.php']
   rules:
   - language: Hack
@@ -301,7 +314,7 @@ disambiguations:
     pattern: '^[^#]*:-'
   - language: Perl
     named_pattern: perl5
-  - language: Perl 6
+  - language: Raku
     named_pattern: perl6
 - extensions: ['.plist']
   rules:
@@ -312,7 +325,7 @@ disambiguations:
   rules:
   - language: Perl
     named_pattern: perl5
-  - language: Perl 6
+  - language: Raku
     named_pattern: perl6
   - language: X PixMap
     pattern: '^\s*\/\* XPM \*\/'
@@ -329,6 +342,8 @@ disambiguations:
     pattern: '^\s+\w+\s+=>\s'
 - extensions: ['.pro']
   rules:
+  - language: Proguard
+    pattern: '^-(include\b.*\.pro$|keep\b|keepclassmembers\b|keepattributes\b)'
   - language: Prolog
     pattern: '^[^\[#]+:-'
   - language: INI
@@ -421,7 +436,7 @@ disambiguations:
   rules:
   - language: Perl
     named_pattern: perl5
-  - language: Perl 6
+  - language: Raku
     named_pattern: perl6
   - language: Turing
     pattern: '^\s*%[ \t]+|^\s*var\s+\w+(\s*:\s*\w+)?\s*:=\s*\w+'
@@ -460,7 +475,7 @@ disambiguations:
   rules:
   - language: Vim script
     pattern: '^UseVimball'
-  - language: Visual Basic
+  - language: VBA
 - extensions: ['.w']
   rules:
   - language: OpenEdge ABL

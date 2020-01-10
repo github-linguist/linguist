@@ -1,6 +1,6 @@
 require "bundler/setup"
 require "minitest/autorun"
-require "mocha/setup"
+require "mocha/minitest"
 require "linguist"
 require 'color-proximity'
 require "linguist/blob"

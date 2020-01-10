@@ -93,7 +93,8 @@ module Linguist
       generated_dart? ||
       generated_perl_ppport_header? ||
       generated_gamemakerstudio? ||
-      generated_gimp?
+      generated_gimp? ||
+      generated_visualstudio6?
     end
 
     # Internal: Is the blob an Xcode file?
@@ -616,6 +617,14 @@ module Linguist
       return false unless lines.count > 0
       return lines[0].match(/\/\* GIMP [a-zA-Z0-9\- ]+ C\-Source image dump \(.+?\.c\) \*\//) ||
              lines[0].match(/\/\*  GIMP header image file format \([a-zA-Z0-9\- ]+\)\: .+?\.h  \*\//)
+    end
+
+    # Internal: Is this a generated Microsoft Visual Studio 6.0 build file?
+    #
+    # Return true or false
+    def generated_visualstudio6?
+      return false unless extname.downcase == '.dsp'
+      lines.first(3).any? { |l| l.include? '# Microsoft Developer Studio Generated Build File' }
     end
 
     # Internal: Is this a generated HTML file?
