@@ -367,6 +367,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **SSH Config:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **STON:** [tomas-stefano/smalltalk-tmbundle](https://github.com/tomas-stefano/smalltalk-tmbundle)
 - **SVG:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
+- **SWIG:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **Sage:** [MagicStack/MagicPython](https://github.com/MagicStack/MagicPython)
 - **SaltStack:** [saltstack/atom-salt](https://github.com/saltstack/atom-salt)
 - **Sass:** [atom/language-sass](https://github.com/atom/language-sass)
