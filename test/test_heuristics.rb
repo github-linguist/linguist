@@ -36,7 +36,7 @@ class TestHeuristics < Minitest::Test
 
   # alt_name is a file name that will be used instead of the file name of the
   # original sample. This is used to force a sample to go through a specific
-  # heuristic even if it's extension doesn't match.
+  # heuristic even if its extension doesn't match.
   def assert_heuristics(hash, alt_name=nil)
     candidates = hash.keys.map { |l| Language[l] }
 
@@ -74,6 +74,14 @@ class TestHeuristics < Minitest::Test
       "AGS Script" => all_fixtures("AGS Script"),
       "Public Key" => all_fixtures("Public Key")
     }, "test.asc")
+  end
+
+  def test_asm_by_heuristics
+    assert_heuristics({
+      "Motorola 68K Assembly" => all_fixtures("Motorola 68K Assembly", "*.asm"),
+      # Assembly lacks a heuristic
+      nil => all_fixtures("Assembly", "*.asm")
+    })
   end
 
   def test_asy_by_heuristics
@@ -218,6 +226,15 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_i_by_heuristics
+    assert_heuristics({
+      "Motorola 68K Assembly" => all_fixtures("Motorola 68K Assembly", "*.i"),
+      "SWIG" => all_fixtures("SWIG", "*.i"),
+      # No heuristic defined for Assembly
+      nil => all_fixtures("Assembly", "*.i")
+    })
+  end
+
   def test_ice_by_heuristics
     assert_heuristics({
       "Slice" => all_fixtures("Slice", "*.ice"),
@@ -225,10 +242,11 @@ class TestHeuristics < Minitest::Test
     })
   end
 
-  # Candidate languages = ["Assembly", "C++", "HTML", "PAWN", "PHP",
-  #                        "POV-Ray SDL", "Pascal", "SQL", "SourcePawn"]
+  # Candidate languages = ["Assembly", "C++", "HTML", "Motorola 68K Assembly", "PAWN",
+  #                        "PHP", "POV-Ray SDL", "Pascal", "SQL", "SourcePawn"]
   def test_inc_by_heuristics
     assert_heuristics({
+      "Motorola 68K Assembly" => all_fixtures("Motorola 68K Assembly", "*.inc"),
       "PHP" => all_fixtures("PHP", "*.inc"),
       "POV-Ray SDL" => all_fixtures("POV-Ray SDL", "*.inc")
     })
@@ -447,6 +465,14 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "Rust" => all_fixtures("Rust", "*.rs"),
       "RenderScript" => all_fixtures("RenderScript", "*.rs")
+    })
+  end
+
+  def test_s_by_heuristics
+    assert_heuristics({
+      "Motorola 68K Assembly" => all_fixtures("Motorola 68K Assembly", "*.s"),
+      # Unix Assembly lacks a heuristic
+      nil => all_fixtures("Unix Assembly", "*.s")
     })
   end
 
