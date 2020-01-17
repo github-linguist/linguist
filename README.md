@@ -45,7 +45,7 @@ As this analysis is performed by a low priority background job, it can take a wh
 Install the gem:
 
 ```bash
-gem install github-linguist
+sudo gem install github-linguist
 ```
 
 #### Dependencies
