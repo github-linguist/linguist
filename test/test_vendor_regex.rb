@@ -9,5 +9,6 @@ class TestBlob < Minitest::Test
 
     assert ".vscode" =~ vendored_regexp
     refute "testing-vscode-testing" =~ vendored_regexp, "Regex matched the middle of a string, but it shouldn't have"
+    refute "testing.vscode.testing" =~ vendored_regexp, "Regex matched the middle of a string, but it shouldn't have"
   end
 end
