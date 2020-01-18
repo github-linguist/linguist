@@ -1,0 +1,168 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 20.01.1-DevelopmentSnapshot ] */
+/* [wxMaxima: title   start ]
+Solving differential equations
+   [wxMaxima: title   end   ] */
+
+
+/* [wxMaxima: comment start ]
+If the equation that defines the shape of a curve references the steepness of the curve (diff('f(x),x)), the steepness of the steepness of the curve (diff('f(x),x,2)) or any other deviration if the curve the result is an differential equation that describes the general shapes the curve can have without describing its actual height.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+Often an differential equation has a solution that cannot be expressed symbolically as mathematics lacks the necessary functions. In other cases one has to guess the general form of the solution and the computer only helps in finding the values of the parameters this solution contains. In the simple cases an engineer encounters on a daily basis maxima can do this automatically, instead.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: section start ]
+An example
+   [wxMaxima: section end   ] */
+
+
+/* [wxMaxima: comment start ]
+A circuit is provided with an input capacitance of C_In=100nF, provides a resistive load R_Load and is connected to a power supply U_Supply via a cable of the inductivity L_Cable. In this moment the circuit is destroyed by an overvoltage. Let's see if we can calculate how high this voltage was.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+First we describe the energy-storing circuit elements. The voltage over the inductivity of the cable is calculated as follows:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+eq1:U_Supply=U_In(t)+L_Cable*diff(I_Cable(t),t);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+The current into the input capacitance is:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+eq2:I_C(t)=C_In*diff(U_In(t),t);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Now we have enough information to calculate the input voltage itself:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+eq3:U_In(t)=R_Load*(I_Cable(t)-I_C(t));
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+If we did everything right maxima now can determine the equation that defines the general shape of all possible loading curves:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+desolve([eq1,eq2,eq3],[U_In(t),I_Cable(t),I_C(t)]);
+/* [wxMaxima: input   end   ] */
+/* [wxMaxima: question  start ] */
+<mth><st>Is </st><munder altCopy="L_Cable"><mrow><mi>L</mi></mrow><mrow><mi>Cable</mi></mrow></munder><h>*</h><mrow><p><mn>4</mn><h>*</h><munder altCopy="C_In"><mrow><mi>C</mi></mrow><mrow><mi>In</mi></mrow></munder><h>*</h><msup><mrow><munder altCopy="R_Load"><mrow><mi>R</mi></mrow><mrow><mi>Load</mi></mrow></munder></mrow><mn>2</mn></msup><mi>-</mi><munder altCopy="L_Cable"><mrow><mi>L</mi></mrow><mrow><mi>Cable</mi></mrow></munder></p></mrow><st> positive, negative or zero?</st></mth>
+/* [wxMaxima: question  end   ] */
+/* [wxMaxima: answer  start ] */
+p;
+/* [wxMaxima: answer  end   ] */
+
+
+/* [wxMaxima: comment start ]
+In this case the answer to the question desolve() asks doesn't actually affect the shape of the result, but the way the result is expressed. The equations we get are very generic, though, still, as maxima knows the general set of shapes the function might have, but in order to draw actual curves lacks I_Cable(0) and U_In(0):
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+I_Cable(t=0)=atvalue(I_Cable(t),t=0,0);
+U_In(t=0)=atvalue(U_In(t),t=0,0);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Next let's avoid the question using assume():
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+assume(L_Cable>0,R_Load>0,C_In>0,(4*C_In*R_Load^2-L_Cable)>0);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Additionally we are interested only in the first item in the result list:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+sol1:desolve([eq1,eq2,eq3],[U_In(t),I_Cable(t),I_C(t)])[1];
+/* [wxMaxima: input   end   ] */
+/* [wxMaxima: question  start ] */
+<mth><st>Is </st><munder altCopy="L_Cable"><mrow><mi>L</mi></mrow><mrow><mi>Cable</mi></mrow></munder><h>*</h><mrow><p><mn>4</mn><h>*</h><munder altCopy="C_In"><mrow><mi>C</mi></mrow><mrow><mi>In</mi></mrow></munder><h>*</h><msup><mrow><munder altCopy="R_Load"><mrow><mi>R</mi></mrow><mrow><mi>Load</mi></mrow></munder></mrow><mn>2</mn></msup><mi>-</mi><munder altCopy="L_Cable"><mrow><mi>L</mi></mrow><mrow><mi>Cable</mi></mrow></munder></p></mrow><st> positive, negative or zero?</st></mth>
+/* [wxMaxima: question  end   ] */
+/* [wxMaxima: answer  start ] */
+p;
+/* [wxMaxima: answer  end   ] */
+
+
+/* [wxMaxima: comment start ]
+Let's specify the circuit values we might know about...
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+vals:[
+    U_Supply=5,
+    R_Load=100,
+    C_In=100*10^-9
+];
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+sol1_val:subst(vals,sol1);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+...and let's plot the result for different L_Cable:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+load("engineering-format")$
+engineering_format_floats: true$
+engineering_format_min: .01$
+engineering_format_max: 1000$
+fpprintprec: 6$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxplot_size:[1280,800]$
+wxanimate_autoplay:true$
+wxanimate_framerate:2$
+with_slider_draw(
+    L,makelist(i*10^-9*10,i,1,20),
+    title=sconcat("L_{Cable}=",float(L)),
+    explicit(
+        subst(
+            t=us*10^-6,
+            subst(
+                L_Cable=L,
+                rhs(sol1_val)
+            )
+        ),
+        us,0,20
+    ),
+    yrange=[0,10], grid=[2,1]
+)$
+/* [wxMaxima: input   end   ] */
+
+
+
+/* Old versions of Maxima abort on loading files that end in a comment. */
+"Created with wxMaxima 20.01.1-DevelopmentSnapshot"$

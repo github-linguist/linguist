@@ -1,0 +1,293 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 20.01.2-DevelopmentSnapshot ] */
+/* [wxMaxima: title   start ]
+Solving equations
+   [wxMaxima: title   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Mathematics can be seen as a language consisting only of a rather small set of words and only a handful of grammatical rules. Both sets are carefully chosen, though, that by simply reformulating the question in many cases the answer can be found.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+If you are studying mathematics the good news is that solving equations is an art a computer can help with in many special cases but that often relies on human creativity for finding algorithms and ways.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: section start ]
+Simple equations
+   [wxMaxima: section end   ] */
+
+
+/* [wxMaxima: comment start ]
+For many problems Maxima's solve() program instantly finds a list of solutions:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+pyth:c^2=a^2+b^2;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+sol1:solve(pyth,a);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Both solutions solve() offers are valid. We can pick any of them manually, for example:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+sol2:sol1[2];
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+By having given this equation a name ("sol2") we gained a way to re-use this equation later.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+This time the type of solutions we can get depends on the value of a which is why maxima asked about it. One can avoid asking questions by telling the answers to maxima's assume database:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+assume(a>0, b>0, c>0);
+solve(sol2,b);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Solve also accepts lists as its arguments. In this case it will only find solutions if the following conditions are all met:
+ * The number of linearly independent equations matches the number of variables to solve to
+ * The solution doesn't completely change its form depending on the range one variable is in.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+eq2:a+2*b=10;
+solve(
+    [pyth,eq2],
+    [a,b]
+);
+rootscontract(%);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+By choosing [a,b] as the list of solution variables maxima is automatically told to eliminate these two variables on the right side of the equations, if possible.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: section start ]
+Re-using the solutions
+   [wxMaxima: section end   ] */
+
+
+/* [wxMaxima: comment start ]
+As seen above the last equation displayed by maxima can be referenced by using the placeholder "%":
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+%;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Additionally have given nearly all equations names that allow to reference the whenever we need them. For example we can print them out again:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+sol2;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+We can use them as an input to solve:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+solve(sol2,b);
+/* [wxMaxima: input   end   ] */
+/* [wxMaxima: question  start ] */
+<mth><st>Is </st><mi>a</mi><st> positive, negative or zero?</st></mth>
+/* [wxMaxima: question  end   ] */
+/* [wxMaxima: answer  start ] */
+p;
+/* [wxMaxima: answer  end   ] */
+
+
+/* [wxMaxima: comment start ]
+We can introduce ("substitute") them into other equations:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+E=m*c^2;
+subst(pyth,%);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Additionally the left hand side and the right hand side can be extracted using the command lhs() and rhs() which allows to use the part left or right to to the "=" in a new equation:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+lhs(pyth);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+rhs(pyth);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+eq10:sin(δ)=rhs(pyth);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: section start ]
+Boiling it down to numbers
+   [wxMaxima: section end   ] */
+
+
+/* [wxMaxima: comment start ]
+If in mathematics two things cancel each other out they do so exactly. The same isn't true with IEEE floating-point numbers like the ones the computer uses:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+.1;
+%-.01;
+%-.1;
+%+.01;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Many computer programs are configured to show small numbers as "0" or only to show the first few digits after the decimal dot hoping that the rest is a rounding error that doesn't add up (see wilkinson's polynomial for an example where this happens quickly). Maxima's solve instead tries to replace floating-point numbers by the exact fraction it most likely means and warns about doing so:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+solve(x+.1=2,x);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Since it often is the general case that allows to learn about the fundamental mechanisms often a good approach is to solve everything symbolically and to keep the actual numerical input values in a separate list like the following one:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+vals:[
+    a=sqrt(1/2),
+    b=sqrt(1/2),
+    δ=π/2
+];
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Whenever a numerical value is needed this list can be introduced into any equation:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+subst(vals,pyth);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+subst(vals,eq10);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: section start ]
+What if there exists no symbolical solution?
+   [wxMaxima: section end   ] */
+
+
+/* [wxMaxima: comment start ]
+Some solutions have never been assigned a name in mathematics. One popular example would be:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+eq2:cos(x)=x;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+solve() which tries to find an symbolical solution is bound to fail here and tells us how far it got:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+solve(eq2,x);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+In this case maxima offers several options to at least find the numerical values, two examples are given below:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxdraw2d(
+    explicit(
+        rhs(eq2)-lhs(eq2),
+        x,-1,1
+    ),
+    grid=true
+)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: subsect start ]
+mnewton
+   [wxMaxima: subsect end   ] */
+
+
+/* [wxMaxima: comment start ]
+mnewton uses a modified version of newton's method for finding a solution of a nonlinear, but differentiable, stetical and monotonic function near to a point (in this example 0.1)
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+load("mnewton")$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+mnewton(eq2,x,.1);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: subsect start ]
+find_root
+   [wxMaxima: subsect end   ] */
+
+
+/* [wxMaxima: comment start ]
+find_root even works if the equation isn't differentiable and searches for a solution in between two points.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+find_root(eq2,x,-.001,1);
+/* [wxMaxima: input   end   ] */
+
+
+
+/* Old versions of Maxima abort on loading files that end in a comment. */
+"Created with wxMaxima 20.01.2-DevelopmentSnapshot"$

@@ -1,0 +1,181 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 20.01.2-DevelopmentSnapshot ] */
+/* [wxMaxima: title   start ]
+Visualizing 3D curves
+   [wxMaxima: title   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxplot_size:[1200,900]$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: section start ]
+Standard curves
+   [wxMaxima: section end   ] */
+
+
+/* [wxMaxima: comment start ]
+Maxima's default way of displaying 3d surfaces is optimized on fast display. In order to get a feeling for the shape of the curve it might help to right-click on it and press on the "Pop-out interactively" button which opens a window the curve can be rotated in:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+curve1:z=sin(x)*cos(y);
+wxdraw3d(
+    explicit(
+        rhs(curve1),
+        x,-3,3,
+        y,-3,3
+    )
+)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Slower to draw, but easier to understand the curve is if the surface isn't transparent:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxdraw3d(
+    surface_hide=true,
+    explicit(
+        rhs(curve1),
+        x,-3,3,
+        y,-3,3
+    )
+)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Alternatively the curve can be made more colorful:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxdraw3d(
+    enhanced3d=true,
+    explicit(
+        rhs(curve1),
+        x,-3,3,
+        y,-3,3
+    )
+)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: section start ]
+Contour lines
+   [wxMaxima: section end   ] */
+
+
+/* [wxMaxima: comment start ]
+If not the shape, but the absolute heights are important maxima offers contour lines.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxdraw3d(
+    surface_hide=true,
+    color="#a0a0a0",
+    key="curve_1",
+    explicit(
+        rhs(curve1),
+        x,-3,3,
+        y,-3,3
+    ),
+    contour='both,
+    contour_levels=[-1,.2,1]
+)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+In many cases the actual curve actually isn't important while the height values are. In this case it is possible to generate a top view without drawing the actual surface:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxdraw3d(
+    explicit(
+        rhs(curve1),
+        x,-3,3,
+        y,-3,3
+    ),
+    contour='map,
+    contour_levels=[-1,.1,1]
+)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: section start ]
+Moving pictures
+   [wxMaxima: section end   ] */
+
+
+/* [wxMaxima: subsect start ]
+In order to make the 3d shape easier to grasp
+   [wxMaxima: subsect end   ] */
+
+
+/* [wxMaxima: comment start ]
+As can easily be seen if one pops out the above images interactively and moves them the human brain is quite efficient in grasping the complete shape of a moving picture. wxMaxima allows to embed such a thing into the worksheet:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxanimate_autoplay:true$
+wxanimate_framerate:10$
+with_slider_draw3d(
+    α,makelist(10*sin(2*π*t/20),t,0,40),
+    view=[60,30+α],
+    surface_hide=true,
+    key="curve_1",
+    explicit(
+        rhs(curve1),
+        x,-3,3,
+        y,-3,3
+    ),
+    contour='both,
+    contour_levels=[-1,.2,1]
+)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: subsect start ]
+In order to allow to read values more easily
+   [wxMaxima: subsect end   ] */
+
+
+/* [wxMaxima: comment start ]
+Sometimes it isn't actually necessary to display the whole 3D shape and the height of the curve is more easy to read if one assigns the mouse's scroll wheel to the y coordinate.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxanimate_autoplay:false;
+with_slider_draw(
+    y_coord,makelist(i,i,-2,2,.1),
+    key="z_{curve_1}",
+    explicit(
+        subst(y=y_coord,rhs(curve1)),
+        x,-3,3
+    ),
+    grid=[2,2],
+    title=sconcat("y=",y_coord),
+    xlabel="x",ylabel="z",
+    yrange=[-1,1]
+),fpprintprec=3$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+In order to view this picture just click on it and move the mouse wheel; The fact that y needs to substituted into the equation to plot manually is a long-standing bug in maxima's makelist() command.
+   [wxMaxima: comment end   ] */
+
+
+
+/* Old versions of Maxima abort on loading files that end in a comment. */
+"Created with wxMaxima 20.01.2-DevelopmentSnapshot"$

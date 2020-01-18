@@ -1,0 +1,376 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 20.01.2-DevelopmentSnapshot ] */
+/* [wxMaxima: title   start ]
+Tolerance calculations
+   [wxMaxima: title   end   ] */
+
+
+/* [wxMaxima: comment start ]
+If the outcome of an calculation depends on many factors determining manually which cases are the worst-case one is a manual and error-prone process. Alternatives to doing so are:
+ * Implementing a full-fledged interval arithmetics that automatically determines the range of the output depending on the ranges of the input parameters. Unfortunately doing so is so complex that any interval arithmetics is bound to work only in more or less trivial cases.
+ * Calculating the derivation of the result over the tolerance of each parameter hoping these derivations point to a global maximum, not only to a local one.
+ * A montecarlo analysis: All parameters are filled with random values out of their tolerance range. Then the calculation is repeated until the spread of the outcome can be seen.
+ * Or systematically trying out all combinations at the edges of the n-dimensional tolerance space. 
+The last two of these methods are described here.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: section start ]
+The problem
+   [wxMaxima: section end   ] */
+
+
+/* [wxMaxima: comment start ]
+A simple voltage divider of R_1 and R_2 is powered by a voltage source U_In. In which range can U_Out lie?
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: subsect start ]
+Mathematical description
+   [wxMaxima: subsect end   ] */
+
+
+/* [wxMaxima: input   start ] */
+eq1: I=U_In/(R_1+R_2);
+eq2: U_Out=I*R_2;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+These equations are simple enough that there is no need to use solve() to introduce them into each other:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+uout:subst(eq1,eq2);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: subsect start ]
+Input values that include a tolerance
+   [wxMaxima: subsect end   ] */
+
+
+/* [wxMaxima: comment start ]
+First we load the tolerance calculation package:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+load("wrstcse")$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+The tolerance calculation package lets tol[n] tolerate between -1 and 1. tol[n] with the same n are coupled tolerances that share the same value. In theory the "n" doesn't need to be a number. But if it is a symbolic name one has to make sure this name is never assigned a value else tol[name] will be replaced by tol[<value of the variable "name">]
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+Let's assume that R_1 is a 100Ω with 10% tolerance. R_2 is a 1000Ω resistor with 1% tolerance instead:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+vals1:[
+    R_1=100*(1+.1*tol[1]),
+    R_2=1000*(1+.01*tol[2])
+];
+wc_inputvalueranges(%);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+We can propose another set of values: Two resistors that are only 10% ones, but are guaranteed to always deviate into the same direction by the same percentage.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+vals2:[
+    R_1=100*(1+.1*tol[1]),
+    R_2=1000*(1+.1*tol[1])
+];
+wc_inputvalueranges(%);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: subsect start ]
+Print out the results
+   [wxMaxima: subsect end   ] */
+
+
+/* [wxMaxima: comment start ]
+Just substituting the values into the equations provides us with the equation containing the real values and the tolerances in wrstcse's notation:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+subst(vals1,uout);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+If we just want to know the typical value we can do the following:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wc_typicalvalues(subst(vals1,uout));
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wc_typicalvalues(subst(vals2,uout));
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+We now want to test all combinations of minimum, typical or maximum value, instead.
+First we tell maxima not to print a warning if a float is replaced by a fraction of the same value:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+ratprint:false;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Then we ask wrstcse to print out the tolerances of the right hand side of our equation "uout":
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+lhs(uout)=wc_mintypmax(subst(vals1,rhs(uout)));
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+This result is still - well, hard to interpret, because Maxima didn't know the value of U_In which is necessary to decide which of all the terms is the minimum and which is the maximum. But we can inform maxima about the necessary facts:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+assume(U_In>0);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+lhs(uout)=wc_mintypmax(subst(vals1,rhs(uout)));
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+lhs(uout)=wc_mintypmax(subst(vals2,rhs(uout)));
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+As we have guessed the 2nd voltage divider was the better one.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: section start ]
+Specifying complex tolerances
+   [wxMaxima: section end   ] */
+
+
+/* [wxMaxima: comment start ]
+Now we want to tell maxima that the voltage source provides a voltage between 4V and 6V, typically 4.5V. For doing this a specialized function exists:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+vals3:[
+    R_1=100*(1+.1*tol[1]),
+    R_2=1000*(1+.1*tol[1]),
+    U_In=wc_mintypmax2tol(tol[3],4,4.5,6)    
+];
+wc_inputvalueranges(%);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+lhs(uout)=wc_mintypmax(subst(vals3,rhs(uout)));
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: section start ]
+Appending lists of tolerances
+   [wxMaxima: section end   ] */
+
+
+/* [wxMaxima: comment start ]
+If it is necessary to append two lists of values with tolerances to each other without risking a collision of tol[n] that happen to have the same n in the two lists the following function can be used:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+vals4:[
+    U_In=wc_mintypmax2tol(tol[1],4,4.5,6)    
+];
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+vals5:wc_tolappend(vals1,vals4);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+wc_tolappend() appends values with tolerances and renumbers the tol[n]
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: section start ]
+Using a bigger or lower number of samples
+   [wxMaxima: section end   ] */
+
+
+/* [wxMaxima: comment start ]
+By default the wrstcse package tests all combinations of 3 values per tol[n]: The minimum, the maximum and the typical value. If we only want to test 2 values (the minimum and the maximum) that might speed up lengthy calculations with many values that contain tolerances:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+lhs(uout)=wc_mintypmax(subst(vals5,rhs(uout)),2);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: section start ]
+Monte carlo analysis
+   [wxMaxima: section end   ] */
+
+
+/* [wxMaxima: comment start ]
+This time we want the tolerance package to use 1000 random sets of values and to find the best and worst case that can be reached using these values:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+lhs(uout)=wc_mintypmax(subst(vals5,rhs(uout)),-1000);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+If this calculation is repeated it will naturally result in slightly different numeric values:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+lhs(uout)=wc_mintypmax(subst(vals5,rhs(uout)),-1000);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: section start ]
+A ridicously advanced example
+   [wxMaxima: section end   ] */
+
+
+/* [wxMaxima: subsect start ]
+Description of the problem
+   [wxMaxima: subsect end   ] */
+
+
+/* [wxMaxima: comment start ]
+Someone constructs a magic drill that is guaranteed to generate holes that exactly meet 3 points. But that points unfortunately all have tolerances. We now are asked to produce images of the possible outcome.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+Round holes can be described as follows:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+hole1:(x-x_1)^2+(y-y_1)^2=r^2;
+hole2:(x-x_2)^2+(y-y_2)^2=r^2;
+hole3:(x-x_3)^2+(y-y_3)^2=r^2;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+solve([hole1,hole2,hole3],[x,y,r])$
+sol1:%[2];
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: subsect start ]
+The coordinates of the points the holes touch
+   [wxMaxima: subsect end   ] */
+
+
+/* [wxMaxima: input   start ] */
+coords:[
+    x_1=0+.04*tol[x1],y_1=0+.04*tol[y1],
+    x_2=1+.04*tol[x2],y_2=0+.04*tol[y2],
+    x_3=0+.04*tol[x3],y_3=1+.04*tol[y3]
+];
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: subsect start ]
+Generating a list of 100 sets of possible values of "coords"
+   [wxMaxima: subsect end   ] */
+
+
+/* [wxMaxima: input   start ] */
+lstOfCoords:wc_montecarlo(coords,100)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: subsect start ]
+Plotting these lists
+   [wxMaxima: subsect end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxanimate_autoplay:true$
+wxanimate_framerate:5$
+with_slider_draw2d(
+    i,lstOfCoords,
+    point_type=2,grid=true,
+    proportional_axes='xy,
+    subst(
+        i,
+        [
+            key="The 3 coordinates",
+            points([x_1,x_2,x_3],[y_1,y_2,y_3]),
+            key="",fill_color="#000000FF",
+            subst(
+                sol1,
+                ellipse(x,y,r,r,0,360)
+            )
+        ]
+    ),
+    xrange=[-.55,1.55],
+    yrange=[-.55,1.55]
+)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxdraw2d(
+    point_type=2,grid=true,
+    proportional_axes='xy,
+    makelist(
+        subst(
+            i,
+            [
+                points([x_1,x_2,x_3],[y_1,y_2,y_3]),
+                key="",fill_color="#000000FF",
+                subst(
+                    sol1,
+                    ellipse(x,y,r,r,0,360)
+                )
+            ]
+        ),i,lstOfCoords),
+    xrange=[-.55,1.55],
+    yrange=[-.55,1.55]
+)$
+/* [wxMaxima: input   end   ] */
+
+
+
+/* Old versions of Maxima abort on loading files that end in a comment. */
+"Created with wxMaxima 20.01.2-DevelopmentSnapshot"$

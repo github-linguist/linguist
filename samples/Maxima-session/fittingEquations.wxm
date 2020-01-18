@@ -1,0 +1,313 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 20.01.2-DevelopmentSnapshot ] */
+/* [wxMaxima: title   start ]
+Fitting equations to real measurement data
+   [wxMaxima: title   end   ] */
+
+
+/* [wxMaxima: comment start ]
+One place Maxima can show its full power at is where symbolical mathematics that describes a phenomenon is used for understanding real measurement data.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+As a first step normally the real measurement data is loaded from a .csv file using read_matrix:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+? read_matrix;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+For the sake of generating a self-contained example we generate this data synthetically. For the first example a parabola with a bit of measurement noise might be a good start:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+fun1(x):=3*x^2-2*x+7;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+time1:makelist(i,i,-10,10,.02)$
+data1:transpose(
+    matrix(
+        time1,
+        makelist(fun1(i)+random(32.0)-16,i,time1)
+    )
+)$
+wxdraw2d(grid=true,xlabel="x",ylabel="y",
+    points(data1)
+)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: section start ]
+The general approach
+   [wxMaxima: section end   ] */
+
+
+/* [wxMaxima: comment start ]
+Let's assume we have guessed that the curve might be something parabola-like:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+approach1:y=a*x^2+b*x+c;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Maxima now offers a simple, but powerful curve fitter that guesses the parameters a,b and c for us:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+load("lsquares")$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+lsquares_estimates_approximate(
+    lsquares_mse(
+        data1,[x,y],approach1
+    ),
+    [a,b,c],
+    initial=[0,0,0]
+);
+params1:%[1];
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+In this example the "initial=" wasn't really necessary. But sometimes using the wrong starting point means that lsquares heads for the wrong local optimum of the problem.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+rec1:subst(params1,approach1);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxdraw2d(
+    grid=true,xlabel="x",ylabel="y",
+    color=red,key="Reconstructed",
+    explicit(rhs(rec1),x,-10,10),
+    color=blue,key="Original",
+    explicit(fun1,x,-10,10)
+)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Besides lsquares_estimates_approximate the lsquares package also provides a command named lsquares_estimates that tries to find the exact optimum by running the problem through solve() before finding the answer numerically. But as it is always the case with computers if the problem that is to be solved is complex one does never know in advance how long it will take and if it ever will finish. lsquares_estimates_approximate doesn't have this drawback.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: section start ]
+Dealing with non-evenly-spaced data
+   [wxMaxima: section end   ] */
+
+
+/* [wxMaxima: comment start ]
+Sometimes the input data isn't evenly spaced.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+The places with a higher density of samples have more weight when fitting data to the curves. So let's add an error to the place with the highest data density and see if we can cope with it.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+time2:makelist(i^4*i/abs(i),i,-2,2,.02)$
+data2:transpose(
+    matrix(
+        time2,
+        makelist(fun1(i)+random(4.0)-2+50*sin(i)/i,i,time2)
+    )
+)$
+wxdraw2d(grid=true,xlabel="x",ylabel="y",
+    points(data2),
+    yrange=[0,800]
+)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Since the biggest error occurs where we have the highest density of data the result of fitting the curve to this data directly will be suboptimal:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+lsquares_estimates_approximate(
+    lsquares_mse(
+        data2,[x,y],approach1
+    ),
+    [a,b,c]
+);
+params2_1:%[1];
+wxdraw2d(
+    grid=true,xlabel="x",ylabel="y",
+    color=red,key="Reconstructed",
+    explicit(rhs(subst(params2_1,approach1)),x,-10,10),
+    color=blue,key="Original",
+    explicit(fun1,x,-10,10)
+)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: subsect start ]
+Converting the data to an continuous curve
+   [wxMaxima: subsect end   ] */
+
+
+/* [wxMaxima: comment start ]
+The interpol package allows to generate continuous and half-way smooth curves from any input data.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+load("interpol")$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+data2_cont:cspline(data2,'varname=x)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxdraw2d(
+    explicit(data2_cont,x,-10,10),
+    grid=true,xlabel="x",ylabel="y"
+)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: subsect start ]
+Generating evenly-spaced samples from this curve
+   [wxMaxima: subsect end   ] */
+
+
+/* [wxMaxima: comment start ]
+First we generate the new data and time vector. As always the fact that a subst() is necessary in this step is caused by a bug in makelist.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+time_i:data2_i:makelist(i,i,-10,10,.05)$
+values2_i:makelist(subst(x=i,data2_cont),i,time_i)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Now we generate a matrix of values lsquares can deal with:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+data2_i:float(transpose(matrix(time_i,values2_i)))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+The result is a still noisy and distorted, but more evenly-spaced curve:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxdraw2d(
+    points(data2_i),
+    grid=true,xlabel="x",ylabel="y"
+)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Fitting this curve will yield a better result as the first attempt:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+lsquares_estimates_approximate(
+    lsquares_mse(
+        data2_i,[x,y],approach1
+    ),
+    [a,b,c]
+);
+params2_2:%[1];
+wxdraw2d(
+    grid=true,xlabel="x",ylabel="y",
+    color=red,key="Reconstructed",
+    explicit(rhs(subst(params2_2,approach1)),x,-10,10),
+    color=blue,key="Original",
+    explicit(fun1,x,-10,10)
+)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: section start ]
+Fitting data to a·exp(k·t)
+   [wxMaxima: section end   ] */
+
+
+/* [wxMaxima: comment start ]
+The natural approach to fitting data to exponential curves would be:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+approach2:y=a*exp(k*t);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Unfortunately it is hard to fit to experimental data to this approach in many ways, for example:
+ * One part of this curve results in low values. Even small measurement noise on this part will yield widely incorrect results for the curve parameters as the fitter is trying to model the noise, too, and as noise in nonlinear systems tends not to be averanged out completely.
+ * Another part of this curve contains quite in high values and is sensitive to even small changes in k. As the fitter wants to keep the overall error low it will therefore respect this part much more than the lower, more good-natured part of the curve.
+ * Starting from the wrong point and optimizing a and k in the direction that reduces the error most in each step might lead to a point that is far from being the solution
+ * and trying to use lsquares_estimates to find the ideal solution often leads to numbers that exceed the floating-point range (or exact numbers longer than the computer's memory).
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+A better approach is therefore to use Caruana's approach for fitting:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+approach2/a;
+caruana:log(%);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+This approach is much more good-natured for finding the parameters (that can then be substituted into approach2).
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+The problem with noise causing finding erroneous parameters is still valid, though, in this case.  It can be partially eliminated by introducing a c_noise, as proposed by Guo.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+lhs(approach2)=rhs(approach2+c_noise);
+%-c_noise;
+%/a;
+approach_guo:log(%),logexpand=super;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Additionally https://ieeexplore.ieee.org/document/5999593 offers an iterative method that allows to reduce the influence of noise in each step:
+   [wxMaxima: comment end   ] */
+
+
+
+/* Old versions of Maxima abort on loading files that end in a comment. */
+"Created with wxMaxima 20.01.2-DevelopmentSnapshot"$

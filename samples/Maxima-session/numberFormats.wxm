@@ -1,0 +1,177 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 20.01.1 ] */
+/* [wxMaxima: title   start ]
+Number formats
+   [wxMaxima: title   end   ] */
+
+
+/* [wxMaxima: section start ]
+Floating-point numbers
+   [wxMaxima: section end   ] */
+
+
+/* [wxMaxima: comment start ]
+Most computers include floating-point units that make relatively-high-precision calculations very fast. If a number is input with a decimal dot or in the "1e3" notation maxima assumes one wants to use the kind of floats the machine supports out-of-the box:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+1.0;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+1000121012.10;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+1e9;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Any other number can be converted to a floating-point one using the float() keyword:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+float(10);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+float(10/3);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+The drawback the enhanced speed comes with is that using floating-point numbers come with inaccuracies that might hit when one least expects them. For example machine floats cannot exactly express seemingly simple numbers like 0.1:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+rationalize(0.1);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Another drawback is that mathematics is based on the fact that two things that cancel each other out actually do so:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+0.1+0.01-0.1-0.01;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Rump and Wilkinson have provided warning examples of simple polynoms where this adds up to catastrophic errors quickly and it is surprising how often one encounters similar in real live including a big fraction of the glitches one can find in computer games.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+Maxima allows to customize the format floating-point numbers are displayed in:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+load("engineering-format")$
+engineering_format_floats: true$
+engineering_format_min: .01$
+engineering_format_max: 1000$
+fpprintprec: 6$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+0.1+0.01-0.1-0.01;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+float(π);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+float(π*10000);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: section start ]
+Bigfloats
+   [wxMaxima: section end   ] */
+
+
+/* [wxMaxima: comment start ]
+Maxima alternatively provides its own implementation of floating-point numbers that are slow (they have to be processed in software), but can be provided with any precision. Numbers can be converted to bifgfloats using the bfloat() command or by entering a "b" instead of an "e" when declaring the exponent:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+fpprintprec:0$
+fpprec:100$
+bfloat(%pi);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+rationalize(1b-1);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+If too low or to high a number of digits is displayed here when right-clicking on such a number opens up a menu that allows to customize this behavior.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: section start ]
+Exact numbers
+   [wxMaxima: section end   ] */
+
+
+/* [wxMaxima: comment start ]
+The type of number maxima was written for is exact numbers instead. Maxima assumes any number that doesn't contain a decimal dot to be intended as being an exact number:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+1/10;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+π/4*3;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+sqrt(2)/2;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+exp(21/7);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+R_100=121*10^3;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Many hard-to-find errors can be avoided by using exact numbers. It is therefore wise to use exact numbers wherever possible and only to convert the results to floats using float() or bfloat():
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+sqrt(π)*3;
+float(%);
+/* [wxMaxima: input   end   ] */
+
+
+
+/* Old versions of Maxima abort on loading files that end in a comment. */
+"Created with wxMaxima 20.01.1"$
