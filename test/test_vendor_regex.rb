@@ -8,6 +8,7 @@ class TestBlob < Minitest::Test
     vendored_regexp = Regexp.new(vendored_paths.join('|'))
 
     assert ".vscode" =~ vendored_regexp
+    refute ".vscode-testing" =~ vendored_regexp, "Regex matched a longer string than it should have"
     refute "testing-vscode-testing" =~ vendored_regexp, "Regex matched the middle of a string, but it shouldn't have"
     refute "testing.vscode.testing" =~ vendored_regexp, "Regex matched the middle of a string, but it shouldn't have"
   end
