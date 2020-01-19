@@ -29,6 +29,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Apex:** [textmate/java.tmbundle](https://github.com/textmate/java.tmbundle)
 - **Apollo Guidance Computer:** [Alhadis/language-agc](https://github.com/Alhadis/language-agc)
 - **AppleScript:** [textmate/applescript.tmbundle](https://github.com/textmate/applescript.tmbundle)
+- **Arend:** [arend-lang/arend-tmbundle](https://github.com/arend-lang/arend-tmbundle)
 - **AsciiDoc:** [zuckschwerdt/asciidoc.tmbundle](https://github.com/zuckschwerdt/asciidoc.tmbundle)
 - **AspectJ:** [pchaigno/sublime-aspectj](https://github.com/pchaigno/sublime-aspectj)
 - **Assembly:** [Nessphoro/sublimeassembly](https://github.com/Nessphoro/sublimeassembly)
