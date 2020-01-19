@@ -1,0 +1,117 @@
+\import Equiv
+\import Equiv.Fiber
+\import Equiv.Univalence
+\import HLevel
+\import Logic
+\import Paths
+
+\record Seq (A : Nat -> \Type) (f : \Pi {n : Nat} -> A n -> A (suc n))
+
+\data SeqColimit (s : Seq)
+  | inSC {n : Nat} (s.A n)
+  | quotSC {n : Nat} (x : s.A n) (i : I) \elim i {
+    | left => inSC x
+    | right => inSC (s.f x)
+  }
+  \where {
+    -- | The total space of a fibration over a sequential colimit is equivalent to a sequential colimit of fibers of this fibration.
+    \func flattening {s : Seq} (P : SeqColimit s -> \Type) : total P = (\Sigma (w : SeqColimit s) (P w))
+      => Equiv-to-= totalSeqColimitLeft *> path (TotalSeqColimit P) *> Equiv-to-= totalSeqColimitRight
+      \where {
+        \func total {s : Seq} (P : SeqColimit s -> \Type) => SeqColimit (seq P)
+          \where
+            \func seq {s : Seq} (P : SeqColimit s -> \Type) : Seq \cowith
+              | A n => \Sigma (x : s.A n) (P (inSC x))
+              | f p => (s.f p.1, transport P (path (quotSC p.1)) p.2)
+
+        \data TotalSeqColimit {s : Seq} (P : SeqColimit s -> \Type) (j : I)
+          | tinSC {n : Nat} (x : s.A n) (P (inSC x))
+          | tquotSC {n : Nat} (x : s.A n) (i : I) (w : P (quotSC x (I.squeeze i j))) \elim i {
+            | left => tinSC x w
+            | right => tinSC (s.f x) (coe2 (\lam i => P (quotSC x i)) j w right)
+          }
+
+        \func totalSeqColimitLeft {s : Seq} {P : SeqColimit s -> \Type} : QEquiv {total P} {TotalSeqColimit P left} \cowith
+          | f => LR
+          | ret => RL
+          | ret_f t => \case \elim t \with {
+            | inSC (x,p) => idp
+            | quotSC (x,p) i => idp
+          }
+          | f_sec t => \case \elim t \with {
+            | tinSC x p => idp
+            | tquotSC x i p => idp
+          }
+          \where {
+            \func LR {s : Seq} {P : SeqColimit s -> \Type} (t : total P) : TotalSeqColimit P left \elim t
+              | inSC (x,p) => tinSC x p
+              | quotSC (x,p) i => tquotSC x i p
+
+            \func RL {s : Seq} {P : SeqColimit s -> \Type} (t : TotalSeqColimit P left) : total P \elim t
+              | tinSC x p => inSC (x,p)
+              | tquotSC x i p => quotSC (x,p) i
+          }
+
+        \func totalSeqColimitRight {s : Seq} {P : SeqColimit s -> \Type} : QEquiv {TotalSeqColimit P right} {\Sigma (w : SeqColimit s) (P w)} \cowith
+          | f => LR
+          | ret => RL
+          | ret_f t => \case \elim t \with {
+            | tinSC _ _ => idp
+            | tquotSC _ _ _ => idp
+          }
+          | f_sec t => \case \elim t \with {
+            | (inSC x, p) => idp
+            | (quotSC x i, p) => idp
+          }
+          \where {
+            \func LR {s : Seq} {P : SeqColimit s -> \Type} (t : TotalSeqColimit P right) : \Sigma (w : SeqColimit s) (P w) \elim t
+              | tinSC x p => (inSC x, p)
+              | tquotSC x i p => (quotSC x i, p)
+
+            \func RL {s : Seq} {P : SeqColimit s -> \Type} (p : \Sigma (w : SeqColimit s) (P w)) : TotalSeqColimit P right \elim p
+              | (inSC x, p) => tinSC x p
+              | (quotSC x i, p) => tquotSC x i p
+          }
+      }
+  }
+
+-- | The colimit of a sequence of surjections is a surjection.
+\lemma seqColimit-surj (s : Seq) (p : \Pi (n : Nat) -> Surjection (s.f {n})) : Surjection (inSC {s} {0}) \cowith
+  | isSurj y => \case \elim y \with {
+    | inSC x => helper s p x
+  }
+  \where {
+    \lemma helper (s : Seq) (p : \Pi (n : Nat) -> Surjection (s.f {n})) {n : Nat} (x : s.A n) : TruncP (Fib (inSC {s} {0}) (inSC x)) \elim n
+      | 0 => inP (x,idp)
+      | suc n =>
+        \case Surjection.isSurj {p n} x \with {
+          | inP r => \case helper s p r.1 \with {
+            | inP t => inP (t.1, t.2 *> path (quotSC r.1) *> pmap inSC r.2)
+          }
+        }
+  }
+
+-- | The colimit of a sequence of constant maps is contractible.
+\lemma constantMaps (s : Seq) (p : \Pi (n : Nat) -> \Sigma (x : s.A (suc n)) (\Pi (a : s.A n) -> s.f a = x)) : Contr (SeqColimit s)
+  => Contr.make (inSC (p 0).1) (\lam x => inv (contraction s p x))
+  \where {
+    \func points (s : Seq) (p : \Pi (n : Nat) -> \Sigma (x : s.A (suc n)) (\Pi (a : s.A n) -> s.f a = x)) (n : Nat) : inSC (p n).1 = inSC (p 0).1 \elim n
+      | 0 => idp
+      | suc n => inv (path (quotSC (p n).1) *> pmap inSC ((p (suc n)).2 (p n).1)) *> points s p n
+
+    \func contraction (s : Seq) (p : \Pi (n : Nat) -> \Sigma (x : s.A (suc n)) (\Pi (a : s.A n) -> s.f a = x)) (x : SeqColimit s) : x = inSC (p 0).1 \elim x
+      | inSC {n} x => path (quotSC x) *> pmap inSC ((p n).2 x) *> points s p n
+      | quotSC {n} x i =>
+        \let | t => path (quotSC x) *> pmap inSC ((p n).2 x) *> points s p n
+             | h a => (path (quotSC a) *> pmap inSC ((p (suc n)).2 a))
+             | q =>
+               coe (\lam i => quotSC x i = inSC (p 0).1) t right                                   ==< coe_path (path (quotSC x)) t idp >==
+               inv (path (quotSC x)) *> t                                                          ==< inv (*>-assoc _ _ _) >==
+               (inv (path (quotSC x)) *> path (quotSC x)) *> pmap inSC ((p n).2 x) *> points s p n ==< pmap (`*> pmap inSC ((p n).2 x) *> points s p n) (inv_*> (path (quotSC x))) >==
+               idp *> pmap inSC ((p n).2 x) *> points s p n                                        ==< idp_*> _ >==
+               pmap inSC ((p n).2 x) *> points s p n                                               ==< pmap (`*> points s p n) (inv (Jl (\lam y q => h (s.f x) *> inv (h y) = pmap inSC q) (*>_inv _) ((p n).2 x))) >==
+               (h (s.f x) *> inv (h (p n).1)) *> points s p n                                      ==< *>-assoc _ _ _ >==
+               h (s.f x) *> points s p (suc n)                                                     ==< *>-assoc _ _ _ >==
+               path (quotSC (s.f x)) *> pmap inSC ((p (suc n)).2 (s.f x)) *> points s p (suc n)    `qed
+        \in pathOver q @ i
+  }
