@@ -38,7 +38,7 @@ module Linguist
     end
 
     def documentation?
-      unless git_attributes['linguist-documentation'].nil?
+      if not git_attributes['linguist-documentation'].nil?
         boolean_attribute(git_attributes['linguist-documentation'])
       else
         super
@@ -46,7 +46,7 @@ module Linguist
     end
 
     def generated?
-      unless git_attributes['linguist-generated'].nil?
+      if not git_attributes['linguist-generated'].nil?
         boolean_attribute(git_attributes['linguist-generated'])
       else
         super
@@ -54,7 +54,7 @@ module Linguist
     end
 
     def vendored?
-      unless git_attributes['linguist-vendored'].nil?
+      if not git_attributes['linguist-vendored'].nil?
         boolean_attribute(git_attributes['linguist-vendored'])
       else
         super
@@ -72,7 +72,7 @@ module Linguist
     end
 
     def detectable?
-      unless git_attributes['linguist-detectable'].nil?
+      if not git_attributes['linguist-detectable'].nil?
         boolean_attribute(git_attributes['linguist-detectable'])
       else
         nil
