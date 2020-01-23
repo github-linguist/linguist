@@ -416,6 +416,10 @@ class TestFileBlob < Minitest::Test
     assert sample_blob("leaflet-plugins/leaflet.draw-src.js").vendored?
     assert sample_blob("leaflet-plugins/leaflet.spin.js").vendored?
 
+    # VSCode
+    assert sample_blob(".vscode/settings.json").vendored?
+    assert !sample_blob("testing.vscode-testing").vendored?
+
     # MooTools
     assert sample_blob("public/javascripts/mootools-core-1.3.2-full-compat.js").vendored?
     assert sample_blob("public/javascripts/mootools-core-1.3.2-full-compat-yc.js").vendored?

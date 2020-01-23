@@ -5,7 +5,7 @@
 # pathname.
 #
 # Please add additional test coverage to
-# `test/test_blob.rb#test_vendored` if you make any changes.
+# `test/test_file_blob.rb#test_vendored` if you make any changes.
 
 ## Vendor Conventions ##
 
@@ -161,7 +161,7 @@
 - .sublime-workspace
 
 # VS Code workspace files
-- (^|/)\.vscode$
+- ^\.vscode/
 
 # Prototype
 - (^|/)prototype(.*)\.js$
