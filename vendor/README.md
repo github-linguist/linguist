@@ -392,6 +392,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Squirrel:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **Stan:** [jrnold/atom-language-stan](https://github.com/jrnold/atom-language-stan)
 - **Standard ML:** [textmate/standard-ml.tmbundle](https://github.com/textmate/standard-ml.tmbundle)
+- **Starlark:** [MagicStack/MagicPython](https://github.com/MagicStack/MagicPython)
 - **Stata:** [pschumm/Stata.tmbundle](https://github.com/pschumm/Stata.tmbundle)
 - **Stylus:** [billymoon/Stylus](https://github.com/billymoon/Stylus)
 - **SubRip Text:** [314eter/atom-language-srt](https://github.com/314eter/atom-language-srt)
