@@ -104,7 +104,7 @@ class TestRepository < Minitest::Test
   end
 
   def test_linguist_override_unvendored?
-    attr_commit = '933c687cb8c02035394979b2308e5120a9904fdf'
+    attr_commit = '01d6b9c637a7a6581fe456c600725b68f355b295'
     linguist_repo(attr_commit).read_index
 
     # lib/linguist/vendor.yml defines this as vendored.
@@ -118,7 +118,7 @@ class TestRepository < Minitest::Test
   end
 
   def test_linguist_override_documentation?
-    attr_commit = "933c687cb8c02035394979b2308e5120a9904fdf"
+    attr_commit = "01d6b9c637a7a6581fe456c600725b68f355b295"
     linguist_repo(attr_commit).read_index
 
     readme = Linguist::LazyBlob.new(rugged_repository, attr_commit, "README.md")
@@ -133,7 +133,7 @@ class TestRepository < Minitest::Test
   end
 
   def test_linguist_override_generated?
-    attr_commit = "933c687cb8c02035394979b2308e5120a9904fdf"
+    attr_commit = "01d6b9c637a7a6581fe456c600725b68f355b295"
     linguist_repo(attr_commit).read_index
 
     rakefile = Linguist::LazyBlob.new(rugged_repository, attr_commit, "Rakefile")
@@ -145,7 +145,7 @@ class TestRepository < Minitest::Test
   end
 
   def test_linguist_override_detectable?
-    attr_commit = "933c687cb8c02035394979b2308e5120a9904fdf"
+    attr_commit = "01d6b9c637a7a6581fe456c600725b68f355b295"
     linguist_repo(attr_commit).read_index
 
     # markdown is overridden by .gitattributes to be detectable, html to not be detectable
