@@ -398,10 +398,6 @@ disambiguations:
     pattern: '^(\s*)(?i:<Project|<Import|<Property|<\?xml|xmlns)'
   - language: INI
     pattern: '(?i:\w+\s*=\s*)'
-- extensions: ['.pu']
-  rules:
-  - language: PlantUML
-    named_pattern: plantuml
 - extensions: ['.q']
   rules:
   - language: q
@@ -514,10 +510,6 @@ disambiguations:
     pattern: '&ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS'
   - language: CWeb
     pattern: '^@(<|\w+\.)'
-- extensions: ['.wsd']
-  rules:
-  - language: PlantUML
-    named_pattern: plantuml
 - extensions: ['.x']
   rules:
   - language: DirectX 3D File
