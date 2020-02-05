@@ -46,6 +46,13 @@
   tm_scope: source.bsl
   ace_mode: text
   language_id: 0
+4D:
+  type: programming
+  extensions:
+  - ".4dm"
+  tm_scope: source.4dm
+  ace_mode: text
+  language_id: 577529595
 ABAP:
   type: programming
   color: "#E8274B"
@@ -1614,7 +1621,9 @@ GLSL:
   - ".fshader"
   - ".geo"
   - ".geom"
+  - ".glslf"
   - ".glslv"
+  - ".gs"
   - ".gshader"
   - ".shader"
   - ".tesc"
@@ -2507,8 +2516,10 @@ JavaScript:
   interpreters:
   - chakra
   - d8
+  - gjs
   - js
   - node
+  - qjs
   - rhino
   - v8
   - v8-shell
@@ -2891,6 +2902,7 @@ Lua:
   - ".p8"
   - ".pd_lua"
   - ".rbxs"
+  - ".rockspec"
   - ".wlua"
   interpreters:
   - lua
@@ -3499,6 +3511,13 @@ ObjDump:
   tm_scope: objdump.x86asm
   ace_mode: assembly_x86
   language_id: 256
+Object Data Instance Notation:
+  type: data
+  extensions:
+  - ".odin"
+  tm_scope: source.odin-ehr
+  ace_mode: text
+  language_id: 985227236
 ObjectScript:
   type: programming
   extensions:
@@ -3549,6 +3568,17 @@ Objective-J:
   tm_scope: source.js.objj
   ace_mode: text
   language_id: 259
+Odin:
+  type: programming
+  color: "#60AFFE"
+  aliases:
+  - odinlang
+  - odin-lang
+  extensions:
+  - ".odin"
+  tm_scope: source.odin
+  ace_mode: text
+  language_id: 889244082
 Omgrofl:
   type: programming
   extensions:
@@ -4127,7 +4157,6 @@ Python:
   color: "#3572A5"
   extensions:
   - ".py"
-  - ".bzl"
   - ".cgi"
   - ".fcgi"
   - ".gyp"
@@ -4147,25 +4176,18 @@ Python:
   - ".xpy"
   filenames:
   - ".gclient"
-  - BUCK
-  - BUILD
-  - BUILD.bazel
   - DEPS
   - SConscript
   - SConstruct
   - Snakefile
-  - WORKSPACE
   - wscript
   interpreters:
   - python
   - python2
   - python3
   aliases:
-  - bazel
-  - bzl
-  - rusthon
-  - starlark
   - python3
+  - rusthon
   language_id: 303
 Python console:
   type: programming
@@ -4328,6 +4350,7 @@ RUNOFF:
   extensions:
   - ".rnh"
   - ".rno"
+  wrap: true
   tm_scope: text.runoff
   ace_mode: text
   language_id: 315
@@ -4561,6 +4584,7 @@ Roff:
   - mdoc
   - nroff
   - troff
+  wrap: true
   ace_mode: text
   codemirror_mode: troff
   codemirror_mime_type: text/troff
@@ -4589,6 +4613,7 @@ Roff Manpage:
   - ".9"
   - ".man"
   - ".mdoc"
+  wrap: true
   tm_scope: text.roff
   ace_mode: text
   codemirror_mode: troff
@@ -5125,6 +5150,24 @@ Standard ML:
   codemirror_mode: mllike
   codemirror_mime_type: text/x-ocaml
   language_id: 357
+Starlark:
+  type: programming
+  tm_scope: source.python
+  ace_mode: python
+  codemirror_mode: python
+  codemirror_mime_type: text/x-python
+  color: "#76d275"
+  extensions:
+  - ".bzl"
+  filenames:
+  - BUCK
+  - BUILD
+  - BUILD.bazel
+  - WORKSPACE
+  aliases:
+  - bazel
+  - bzl
+  language_id: 960266174
 Stata:
   type: programming
   extensions:

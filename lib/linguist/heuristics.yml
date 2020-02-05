@@ -183,6 +183,8 @@ disambiguations:
   - language: Game Maker Language
 - extensions: ['.gs']
   rules:
+  - language: GLSL
+    pattern: '^#version\s+[0-9]+\b'
   - language: Gosu
     pattern: '^uses java\.'
 - extensions: ['.h']
@@ -307,6 +309,12 @@ disambiguations:
   - language: NL
     pattern: '^(b|g)[0-9]+ '
   - language: NewLisp
+- extensions: ['.odin']
+  rules:
+  - language: Object Data Instance Notation
+    pattern: '(?:^|<)\s*[A-Za-z0-9_]+\s*=\s*<'
+  - language: Odin
+    pattern: 'package\s+\w+|\b(?:im|ex)port\s*"[\w:./]+"|\w+\s*::\s*(?:proc|struct)\s*\(|^\s*//\s'
 - extensions: ['.p']
   rules:
   - language: Gnuplot
