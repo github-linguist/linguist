@@ -217,7 +217,12 @@ disambiguations:
   - language: SourcePawn
     pattern: '^public\s+(?:SharedPlugin(?:\s+|:)__pl_\w+\s*=(?:\s*{)?|(?:void\s+)?__pl_\w+_SetNTVOptional\(\)(?:\s*{)?)'
   - language: NASL
-    named_pattern: incNASL
+    pattern:
+    - '^\s*include\s*\(\s*(?:"|'')[\\/\w\-\.:\s]+(?:"|'')\s*\)\s*;'
+    - '^\s*(?:global|local)_var\s+(?:[\w\-]+(?:\s*=\s*[\w\-"'']+|)\s*)(?:,\s*[\w\-]+(?:\s*=\s*[\w\-"'']+|)\s*)*+\s*;'
+    - '^\s*namespace\s+[\w\-]+\s*(?:$^)*\s*\{'
+    - '^\s*object\s+[\w\-]+\s*(?:extends\s+[\w\-:]+\s+|)\s*(?:$^)*\s*\{'
+    - '^\s*(?:public\s|private\s|)\s*function\s+[\w]+\s*\([\w\s,]*\)\s*(?:$^)*\s*\{'
   - language: POV-Ray SDL
     pattern: '^\s*#(declare|local|macro|while)\s'
 - extensions: ['.l']
@@ -533,12 +538,6 @@ named_patterns:
   - '^[ \t]*(private|public|protected):$'
   - 'std::\w+'
   fortran: '^(?i:[c*][^abd-z]|      (subroutine|program|end|data)\s|\s*!)'
-  incNASL:
-  - '^\s*include\s*\(\s*(?:"|'')[\\/\w\-\.:\s]+(?:"|'')\s*\)\s*;'
-  - '^\s*global_var\s+[\w\-]+(\s*=\s*[\w\-"'']+|)\s*;'
-  - '^\s*namespace\s+[\w\-]+\s*($^)*\s*\{'
-  - '^\s*object\s+[\w\-]+\s*(extends\s+[\w\-:]+\s+|)\s*($^)*\s*\{'
-  - '^\s*(public\s|private\s|)\s*function\s+[\w]+\s*\([\w\s,]*\)\s*($^)*\s*\{'
   key_equals_value: '^[^#!;][^=]*='
   m68k:
   - '(?im)\bmoveq(?:\.l)?\s+#(?:\$-?[0-9a-f]{1,3}|%[0-1]{1,8}|-?[0-9]{1,3}),\s*d[0-7]\b'
