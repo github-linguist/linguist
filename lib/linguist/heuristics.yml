@@ -218,10 +218,6 @@ disambiguations:
     pattern: '^public\s+(?:SharedPlugin(?:\s+|:)__pl_\w+\s*=(?:\s*{)?|(?:void\s+)?__pl_\w+_SetNTVOptional\(\)(?:\s*{)?)'
   - language: POV-Ray SDL
     pattern: '^\s*#(declare|local|macro|while)\s'
-- extensions: ['.iuml']
-  rules:
-  - language: PlantUML
-    named_pattern: plantuml
 - extensions: ['.l']
   rules:
   - language: Common Lisp
@@ -547,10 +543,3 @@ named_patterns:
   objectivec: '^\s*(@(interface|class|protocol|property|end|synchronised|selector|implementation)\b|#import\s+.+\.h[">])'
   perl5: '\buse\s+(?:strict\b|v?5\.)'
   perl6: '^\s*(?:use\s+v6\b|\bmodule\b|\b(?:my\s+)?class\b)'
-  plantuml:
-  - '(@startuml|@enduml)'
-  - '(\w|\[).+->\s*(\w|\]).*(:.+)?'
-  - '(\w|\[).+<-\s*(\w|\]).*(:.+)?'
-  - '^(participant|actor|boundary|control|entity|database|collections) \w.*'
-  - '^skinparam'
-  - '^(!include|!define|!ifndef|!endif)'
