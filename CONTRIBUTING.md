@@ -196,7 +196,6 @@ Linguist is maintained with :heart: by:
 - **@Alhadis**
 - **@BenEddy** (GitHub staff)
 - **@Caged** (GitHub staff)
-- **@kivikakk** (GitHub staff)
 - **@larsbrinkhoff**
 - **@lildude** (GitHub staff)
 - **@pchaigno**
