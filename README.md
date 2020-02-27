@@ -193,7 +193,7 @@ Use the `linguist-vendored` attribute to vendor or un-vendor paths:
 
 ```gitattributes
 special-vendored-path/* linguist-vendored
-jquery.js linguist-vendored=false
+jquery.js -linguist-vendored
 ```
 
 #### Documentation
@@ -205,7 +205,7 @@ Use the `linguist-documentation` attribute to mark or unmark paths as documentat
 
 ```gitattributes
 project-docs/* linguist-documentation
-docs/formatter.rb linguist-documentation=false
+docs/formatter.rb -linguist-documentation
 ```
 
 #### Generated code
@@ -218,7 +218,7 @@ As an added bonus, unlike vendored and documentation files, these files are supp
 Use the `linguist-generated` attribute to mark or unmark paths as generated.
 
 ```gitattributes
-Api.elm linguist-generated=true
+Api.elm linguist-generated
 ```
 
 #### Detectable
@@ -229,9 +229,9 @@ Languages of a different type (as defined in [`languages.yml`](/lib/linguist/lan
 Use the `linguist-detectable` attribute to mark or unmark paths as detectable:
 
 ```gitattributes
-*.kicad_pcb linguist-detectable=true
-*.sch linguist-detectable=true
-tools/export_bom.py linguist-detectable=false
+*.kicad_pcb linguist-detectable
+*.sch linguist-detectable
+tools/export_bom.py -linguist-detectable
 ```
 
 ### Using Emacs or Vim modelines

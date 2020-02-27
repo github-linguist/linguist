@@ -58,6 +58,10 @@ disambiguations:
     pattern: '^[=-]+(\s|\n)|{{[A-Za-z]'
   - language: AGS Script
     pattern: '^(\/\/.+|((import|export)\s+)?(function|int|float|char)\s+((room|repeatedly|on|game)_)?([A-Za-z]+[A-Za-z_0-9]+)\s*[;\(])'
+- extensions: ['.asm']
+  rules:
+  - language: Motorola 68K Assembly
+    named_pattern: m68k
 - extensions: ['.asy']
   rules:
   - language: LTspice Symbol
@@ -179,6 +183,8 @@ disambiguations:
   - language: Game Maker Language
 - extensions: ['.gs']
   rules:
+  - language: GLSL
+    pattern: '^#version\s+[0-9]+\b'
   - language: Gosu
     pattern: '^uses java\.'
 - extensions: ['.h']
@@ -191,6 +197,12 @@ disambiguations:
   rules:
   - language: Hack
     pattern: '<\?hh'
+- extensions: ['.i']
+  rules:
+  - language: Motorola 68K Assembly
+    named_pattern: m68k
+  - language: SWIG
+    pattern: '^[ \t]*%[a-z_]+\b|^%[{}]$'
 - extensions: ['.ice']
   rules:
   - language: JSON
@@ -198,6 +210,8 @@ disambiguations:
   - language: Slice
 - extensions: ['.inc']
   rules:
+  - language: Motorola 68K Assembly
+    named_pattern: m68k
   - language: PHP
     pattern: '^<\?(?:php)?'
   - language: SourcePawn
@@ -295,6 +309,12 @@ disambiguations:
   - language: NL
     pattern: '^(b|g)[0-9]+ '
   - language: NewLisp
+- extensions: ['.odin']
+  rules:
+  - language: Object Data Instance Notation
+    pattern: '(?:^|<)\s*[A-Za-z0-9_]+\s*=\s*<'
+  - language: Odin
+    pattern: 'package\s+\w+|\b(?:im|ex)port\s*"[\w:./]+"|\w+\s*::\s*(?:proc|struct)\s*\(|^\s*//\s'
 - extensions: ['.p']
   rules:
   - language: Gnuplot
@@ -403,6 +423,10 @@ disambiguations:
     pattern: '^(use |fn |mod |pub |macro_rules|impl|#!?\[)'
   - language: RenderScript
     pattern: '#include|#pragma\s+(rs|version)|__attribute__'
+- extensions: ['.s']
+  rules:
+  - language: Motorola 68K Assembly
+    named_pattern: m68k
 - extensions: ['.sc']
   rules:
   - language: SuperCollider
@@ -508,6 +532,14 @@ named_patterns:
   - 'std::\w+'
   fortran: '^(?i:[c*][^abd-z]|      (subroutine|program|end|data)\s|\s*!)'
   key_equals_value: '^[^#!;][^=]*='
+  m68k:
+  - '(?im)\bmoveq(?:\.l)?\s+#(?:\$-?[0-9a-f]{1,3}|%[0-1]{1,8}|-?[0-9]{1,3}),\s*d[0-7]\b'
+  - '(?im)^\s*move(?:\.[bwl])?\s+(?:sr|usp),\s*[^\s]+'
+  - '(?im)^\s*move\.[bwl]\s+.*\b[ad]\d'
+  - '(?im)^\s*movem\.[bwl]\b'
+  - '(?im)^\s*move[mp](?:\.[wl])?\b'
+  - '(?im)^\s*btst\b'
+  - '(?im)^\s*dbra\b'
   objectivec: '^\s*(@(interface|class|protocol|property|end|synchronised|selector|implementation)\b|#import\s+.+\.h[">])'
   perl5: '\buse\s+(?:strict\b|v?5\.)'
   perl6: '^\s*(?:use\s+v6\b|\bmodule\b|\b(?:my\s+)?class\b)'
