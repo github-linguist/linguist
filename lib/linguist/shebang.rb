@@ -26,7 +26,7 @@ module Linguist
       # First line must start with #!
       return unless data.b.start_with?("#!")
 
-      shebang = data[/\A[^#{$/}]*#{$/}/].chomp
+      shebang = data[0, data.index($/) || data.length]
 
       s = StringScanner.new(shebang)
 
