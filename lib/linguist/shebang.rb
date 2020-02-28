@@ -24,7 +24,7 @@ module Linguist
     # Returns a String or nil
     def self.interpreter(data)
       # First line must start with #!
-      return unless data.b.match?(/\A#!/n)
+      return unless data.b.start_with?("#!")
 
       shebang = data[/\A[^#{$/}]*#{$/}/].chomp
 
