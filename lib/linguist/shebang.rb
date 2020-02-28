@@ -23,10 +23,10 @@ module Linguist
     #
     # Returns a String or nil
     def self.interpreter(data)
-      shebang = data.lines.first
-
       # First line must start with #!
-      return unless shebang && shebang.start_with?("#!")
+      return unless data.b.match?(/\A#!/n)
+
+      shebang = data[/\A[^#{$/}]*#{$/}/].chomp
 
       s = StringScanner.new(shebang)
 
