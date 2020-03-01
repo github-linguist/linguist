@@ -172,5 +172,14 @@ class TestGenerated < Minitest::Test
     generated_fixture_loading_data("C/image.c")
     generated_fixture_loading_data("C/image.h")
 
+    # Haxe
+    generated_fixture_loading_data("Generated/Haxe/main.js")
+    generated_fixture_loading_data("Generated/Haxe/main.py")
+    generated_fixture_loading_data("Generated/Haxe/main.lua")
+    generated_fixture_loading_data("Generated/Haxe/Main.cpp")
+    generated_fixture_loading_data("Generated/Haxe/Main.h")
+    generated_fixture_loading_data("Generated/Haxe/Main.java")
+    generated_fixture_loading_data("Generated/Haxe/Main.cs")
+    generated_fixture_loading_data("Generated/Haxe/Main.php")
   end
 end
