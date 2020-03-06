@@ -824,6 +824,18 @@ CoNLL-U:
   - CoNLL
   - CoNLL-X
   language_id: 421026389
+CodeQL:
+  type: programming
+  extensions:
+  - ".ql"
+  - ".qll"
+  tm_scope: source.ql
+  ace_mode: text
+  language_id: 424259634
+  aliases:
+    - QL
+    - ql
+    - codeql
 CoffeeScript:
   type: programming
   tm_scope: source.coffee
@@ -4207,14 +4219,6 @@ Python traceback:
   tm_scope: text.python.traceback
   ace_mode: text
   language_id: 304
-QL:
-  type: programming
-  extensions:
-  - ".ql"
-  - ".qll"
-  tm_scope: source.ql
-  ace_mode: text
-  language_id: 424259634
 QML:
   type: programming
   color: "#44a51c"
