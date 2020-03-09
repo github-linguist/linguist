@@ -73,6 +73,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Closure Templates:** [mthadley/language-closure-templates](https://github.com/mthadley/language-closure-templates)
 - **Cloud Firestore Security Rules:** [jaysquared/atom-firestore-grammar](https://github.com/jaysquared/atom-firestore-grammar)
 - **CoNLL-U:** [odanoburu/conllu-linguist-grammar](https://github.com/odanoburu/conllu-linguist-grammar)
+- **CodeQL:** [github/vscode-codeql](https://github.com/github/vscode-codeql)
 - **CoffeeScript:** [atom/language-coffee-script](https://github.com/atom/language-coffee-script)
 - **ColdFusion:** [SublimeText/ColdFusion](https://github.com/SublimeText/ColdFusion)
 - **ColdFusion CFC:** [SublimeText/ColdFusion](https://github.com/SublimeText/ColdFusion)
