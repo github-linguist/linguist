@@ -1,0 +1,6 @@
+let T = 
+range idx from 0 to 24*10-1 step 1
+| project Timestamp = datetime(2018-01-01) + 1h*idx, val=idx+1
+| extend EvenOrOdd = iff(val % 2 == 0, "Even", "Odd");
+ T  
+ | evaluate rolling_percentile(val, 50, Timestamp, 1d, 3)
