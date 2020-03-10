@@ -2390,6 +2390,7 @@ JSON with Comments:
   aliases:
   - jsonc
   extensions:
+  - ".jsonc"
   - ".sublime-build"
   - ".sublime-commands"
   - ".sublime-completions"
@@ -2914,6 +2915,8 @@ Lua:
   - ".rbxs"
   - ".rockspec"
   - ".wlua"
+  filenames:
+  - ".luacheckrc"
   interpreters:
   - lua
   language_id: 213
@@ -3643,6 +3646,14 @@ OpenEdge ABL:
   tm_scope: source.abl
   ace_mode: text
   language_id: 264
+OpenQASM:
+  type: programming
+  extensions:
+  - ".qasm"
+  color: "#AA70FF"
+  tm_scope: source.qasm
+  ace_mode: text
+  language_id: 153739399
 OpenRC runscript:
   type: programming
   group: Shell
@@ -3955,6 +3966,15 @@ Pike:
   tm_scope: source.pike
   ace_mode: text
   language_id: 287
+PlantUML:
+  type: data
+  extensions:
+  - ".puml"
+  - ".iuml"
+  - ".plantuml"
+  tm_scope: source.wsd
+  ace_mode: text
+  language_id: 833504686
 Pod:
   type: prose
   ace_mode: perl
@@ -6110,6 +6130,7 @@ YAML:
   - ".clang-tidy"
   - ".gemrc"
   - glide.lock
+  - yarn.lock
   ace_mode: yaml
   codemirror_mode: yaml
   codemirror_mime_type: text/x-yaml

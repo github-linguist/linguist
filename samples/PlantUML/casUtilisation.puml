@@ -1,0 +1,38 @@
+@startuml
+' from https://github.com/teamflat/enflatme/blob/master/livrables/casUtilisation/casUtilisation.txt'
+
+title Modèle d'usage\n <b>enflatme</b>
+left to right direction
+skinparam packageStyle rect
+skinparam shadowing false
+
+actor Visiteur as visiteur
+actor Colocataire as coloc
+actor :Responsable de la colocation: as respColoc
+coloc <|-- respColoc
+
+rectangle application {
+	(S'inscrire) as inscription
+	(Afficher la colocation) as afficher
+	(Modifier la colocation) as modifier
+	(Administrer la colocation) as administrer
+	(Modifier des tâches) as modifierTaches
+
+	(Créer une colocation) .> administrer : extends
+	(Supprimer une colocation) ..> administrer : extends
+	(Ajouter des tâches) ..> administrer : extends
+	(Supprimer des tâches) ..> administrer : extends
+
+	(Marquer une tâche commme complétée) .> modifier : extends
+	modifierTaches ..> modifier : extends
+	note right of modifierTaches
+		Exemple : indiquer qu'une tâche
+		ménagère a été effectuée.
+	end note
+
+	visiteur --> inscription
+	coloc --> afficher
+	coloc --> modifier
+	respColoc -> administrer
+}
+@enduml

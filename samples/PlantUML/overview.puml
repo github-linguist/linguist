@@ -1,0 +1,69 @@
+@startuml
+' from https://github.com/Distrotech/bind10/blob/master/doc/design/datasrc/overview.txt'
+
+hide members
+
+note "Automatic placement of classes\ndoesn't look good. This diagram\nhas to be improved." as n1
+
+Auth "1" *--> "*" ConfigurableClientList
+Auth --> DataSourceClient
+Auth --> ZoneWriter
+Auth --> ZoneTableAccessor
+Auth --> DataSourceStatus
+Auth --> ZoneTableIterator
+
+ConfigurableClientList "1" *--> "*" DataSourceInfo
+ConfigurableClientList ..> ZoneTableSegment : <<reset>>
+ConfigurableClientList ..> DataSourceStatus : <<create>>
+ConfigurableClientList ..> ZoneWriter : <<create>>
+ConfigurableClientList ..> ZoneTableAccessor : <<create>>
+
+DataSourceInfo "1" *--> "*" DataSourceClient
+DataSourceInfo "1" *--> "*" CacheConfig
+DataSourceInfo "1" *--> "*" ZoneTableSegment
+
+ZoneTableAccessor ..> ZoneTableIterator : <<create>>
+
+ZoneTableAccessorCache --> CacheConfig
+ZoneTableAccessorCache ..> ZoneTableIteratorCache : <<create>>
+ZoneTableAccessorCache --o ZoneTableAccessor
+
+ZoneTableIteratorCache --o ZoneTableIterator
+ZoneTableIteratorCache --> CacheConfig
+
+ZoneWriter --> ZoneTableSegment
+ZoneWriter ..> ZoneData : add/replace
+
+ZoneTableSegment "1" *--> "1" ZoneTableHeader
+ZoneTableSegment "1" *--> "1" MemorySegment
+
+CacheConfig ..> LoadAction
+
+LoadAction ..> ZoneData : create
+LoadAction *--> ZoneDataLoader
+
+ZoneDataLoader --> ZoneData
+ZoneDataLoader *--> ZoneDataUpdater
+ZoneDataLoader --> MemorySegment
+
+ZoneDataUpdater --> ZoneData
+ZoneDataUpdater ..> RdataSet : create
+ZoneDataUpdater ..> RdataSet : add
+
+ZoneTableHeader "1" *--> "1" ZoneTable
+ZoneTable "1" *--> "1" ZoneData
+ZoneData "1" *--> "1" RdataSet
+
+LoadFromFile --o LoadAction
+IteratorLoader --o LoadAction
+
+MemorySegmentMapped --o MemorySegment
+MemorySegmentLocal --o MemorySegment
+
+ZoneTableSegmentMapped --o ZoneTableSegment
+ZoneTableSegmentLocal --o ZoneTableSegment
+
+ZoneTableSegmentMapped *--> MemorySegmentMapped
+ZoneTableSegmentLocal *--> MemorySegmentLocal
+
+@enduml
