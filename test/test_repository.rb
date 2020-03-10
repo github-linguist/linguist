@@ -54,7 +54,7 @@ class TestRepository < Minitest::Test
     # lib/linguist.rb linguist-language=Java
     # test/*.rb linguist-language=Java
     # Rakefile linguist-generated
-    # test/fixtures/* linguist-vendored=false
+    # test/fixtures/** linguist-vendored=false
     # README.md linguist-documentation=false
     # samples/Arduino/* linguist-documentation
     # samples/Markdown/*.md linguist-detectable=true
