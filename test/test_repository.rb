@@ -47,7 +47,7 @@ class TestRepository < Minitest::Test
   end
 
   def test_repo_git_attributes
-    # See https://github.com/github/linguist/blob/c20ebee0ebf33f73313d4694680521f80635d477/.gitattributes
+    # See https://github.com/github/linguist/blob/f912648ad8d4bc8b0b9f3fba209deda4c4abb77e/.gitattributes
     #
     # It looks like this:
     # Gemfile linguist-vendored=true
@@ -64,7 +64,7 @@ class TestRepository < Minitest::Test
     # LICENSE -linguist-documentation
     # samples/CoffeeScript/browser.coffee -linguist-detectable
 
-    attr_commit = 'c20ebee0ebf33f73313d4694680521f80635d477'
+    attr_commit = 'f912648ad8d4bc8b0b9f3fba209deda4c4abb77e'
     repo = linguist_repo(attr_commit)
 
     assert repo.breakdown_by_file.has_key?("Java")
@@ -94,7 +94,7 @@ class TestRepository < Minitest::Test
   end
 
   def test_linguist_override_vendored?
-    attr_commit = 'c20ebee0ebf33f73313d4694680521f80635d477'
+    attr_commit = 'f912648ad8d4bc8b0b9f3fba209deda4c4abb77e'
     linguist_repo(attr_commit).read_index
 
     override_vendored = Linguist::LazyBlob.new(rugged_repository, attr_commit, 'Gemfile')
