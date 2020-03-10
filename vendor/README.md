@@ -313,6 +313,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **PicoLisp:** [textmate/lisp.tmbundle](https://github.com/textmate/lisp.tmbundle)
 - **PigLatin:** [goblindegook/sublime-text-pig-latin](https://github.com/goblindegook/sublime-text-pig-latin)
 - **Pike:** [hww3/pike-textmate](https://github.com/hww3/pike-textmate)
+- **PlantUML:** [qjebbs/vscode-plantuml](https://github.com/qjebbs/vscode-plantuml)
 - **Pod 6:** [perl6/atom-language-perl6](https://github.com/perl6/atom-language-perl6)
 - **PogoScript:** [featurist/PogoScript.tmbundle](https://github.com/featurist/PogoScript.tmbundle)
 - **Pony:** [CausalityLtd/sublime-pony](https://github.com/CausalityLtd/sublime-pony)
