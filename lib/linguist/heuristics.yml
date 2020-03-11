@@ -216,6 +216,13 @@ disambiguations:
     pattern: '^<\?(?:php)?'
   - language: SourcePawn
     pattern: '^public\s+(?:SharedPlugin(?:\s+|:)__pl_\w+\s*=(?:\s*{)?|(?:void\s+)?__pl_\w+_SetNTVOptional\(\)(?:\s*{)?)'
+  - language: NASL
+    pattern:
+    - '^\s*include\s*\(\s*(?:"|'')[\\/\w\-\.:\s]+\.(?:nasl|inc)\s*(?:"|'')\s*\)\s*;'
+    - '^\s*(?:global|local)_var\s+(?:\w+(?:\s*=\s*[\w\-"'']+)?\s*)(?:,\s*\w+(?:\s*=\s*[\w\-"'']+)?\s*)*+\s*;'
+    - '^\s*namespace\s+\w+\s*{'
+    - '^\s*object\s+\w+\s*(?:extends\s+\w+(?:::\w+)?)?\s*{'
+    - '^\s*(?:public\s+|private\s+|\s*)function\s+\w+\s*\([\w\s,]*\)\s*{'
   - language: POV-Ray SDL
     pattern: '^\s*#(declare|local|macro|while)\s'
 - extensions: ['.l']
