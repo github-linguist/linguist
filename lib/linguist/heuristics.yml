@@ -102,6 +102,12 @@ disambiguations:
     pattern: '![\w\s]+methodsFor: '
   - language: 'C#'
     pattern: '^(\s*namespace\s*[\w\.]+\s*{|\s*\/\/)'
+- extensions: ['.csl']
+  rules:
+  - language: XML
+    pattern: '(?i:^\s*(\<\?xml|xmlns))'
+  - language: Kusto
+    pattern: '^\|\s*(?i:where|extent|project|limit|summarize)'
 - extensions: ['.d']
   rules:
   - language: D
