@@ -386,6 +386,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Shell:** [atom/language-shellscript](https://github.com/atom/language-shellscript)
 - **ShellSession:** [atom/language-shellscript](https://github.com/atom/language-shellscript)
 - **Shen:** [rkoeninger/sublime-shen](https://github.com/rkoeninger/sublime-shen)
+- **Sieve:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **Slash:** [slash-lang/Slash.tmbundle](https://github.com/slash-lang/Slash.tmbundle)
 - **Slice:** [zeroc-ice/vscode-slice](https://github.com/zeroc-ice/vscode-slice)
 - **Slim:** [slim-template/ruby-slim.tmbundle](https://github.com/slim-template/ruby-slim.tmbundle)
