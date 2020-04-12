@@ -96,6 +96,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **DM:** [PJB3005/atomic-dreams](https://github.com/PJB3005/atomic-dreams)
 - **DNS Zone:** [sixty4k/st2-zonefile](https://github.com/sixty4k/st2-zonefile)
 - **DTrace:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
+- **Dafny:** [DafnyVSCode/Dafny-VSCode](https://github.com/DafnyVSCode/Dafny-VSCode)
 - **Dart:** [dart-lang/dart-syntax-highlight](https://github.com/dart-lang/dart-syntax-highlight)
 - **DataWeave:** [mulesoft-labs/data-weave-tmLanguage](https://github.com/mulesoft-labs/data-weave-tmLanguage)
 - **Dhall:** [atom-haskell/language-haskell](https://github.com/atom-haskell/language-haskell)
