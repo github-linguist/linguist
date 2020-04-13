@@ -1,3 +1,5 @@
+// From https://rise4fun.com/Dafny/Problem1-SumMax
+
 // This method computes the sum and max of a given array of
 // integers.  The method's postcondition only promises that
 // 'sum' will be no greater than 'max'.  Can you write a
