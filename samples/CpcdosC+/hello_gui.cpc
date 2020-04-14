@@ -1,0 +1,34 @@
+Window/ My_Window
+    .title          = "My first application"
+    .px             = "100"
+    .py             = "20"
+    .sx             = "250"
+    .sy             = "150"
+    .Opacity        = "200"
+    .Parameters     = ""
+    .WindowColor    = "050,050,250"
+    .TitleColor     = "055,055,255"
+    .BackColor      = "050,050,250"
+    .event          = ""
+    @#Window_Handle Create/
+end/ window
+
+Button/ My_Button
+    .Handle         = "%Window_Handle%"
+    .Parameters     = "IMGAUTO:2"
+    .PX             = "20"
+    .PY             = "20"
+    .sx             = "100"
+    .sy             = "30"
+    .opacity        = "255"
+    .text           = "Clic moi!"
+    .Image          = "%OS_GUI%/Buttons/BTN_BLUE.png"
+    .event          = "%_EXE_PATH_%"
+    create/
+End/ Button
+
+Function/ My_Button.MouseClic()
+
+    msgbox/ Hello ! :-)
+
+End/ Function

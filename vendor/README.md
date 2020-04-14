@@ -82,6 +82,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Component Pascal:** [textmate/pascal.tmbundle](https://github.com/textmate/pascal.tmbundle)
 - **Cool:** [anunayk/cool-tmbundle](https://github.com/anunayk/cool-tmbundle)
 - **Coq:** [mkolosick/Sublime-Coq](https://github.com/mkolosick/Sublime-Coq)
+- **CpcdosC+:** [SPinti-Software/vscode-cpcdos](https://github.com/SPinti-Software/vscode-cpcdos)
 - **Cpp-ObjDump:** [nanoant/assembly.tmbundle](https://github.com/nanoant/assembly.tmbundle)
 - **Creole:** [Siddley/Creole](https://github.com/Siddley/Creole)
 - **Crystal:** [atom-crystal/language-crystal](https://github.com/atom-crystal/language-crystal)
