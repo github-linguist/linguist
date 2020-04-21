@@ -292,7 +292,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Opal:** [artifactz/sublime-opal](https://github.com/artifactz/sublime-opal)
 - **Open Policy Agent:** [tsandall/vscode-opa](https://github.com/tsandall/vscode-opa)
 - **OpenCL:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
-- **OpenEdge ABL:** [jfairbank/Sublime-Text-2-OpenEdge-ABL](https://github.com/jfairbank/Sublime-Text-2-OpenEdge-ABL)
+- **OpenEdge ABL:** [chriscamicas/abl-tmlanguage](https://github.com/chriscamicas/abl-tmlanguage)
 - **OpenQASM:** [tareqdandachi/language-qasm](https://github.com/tareqdandachi/language-qasm)
 - **OpenRC runscript:** [atom/language-shellscript](https://github.com/atom/language-shellscript)
 - **OpenSCAD:** [tbuser/openscad.tmbundle](https://github.com/tbuser/openscad.tmbundle)
