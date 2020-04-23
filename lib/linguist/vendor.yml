@@ -33,13 +33,13 @@
 - (^|/)lt~obsolete\.m4
 
 # .NET Core Install Scripts
-- dotnet-install\.(ps1|sh)$
+- (^|/)dotnet-install\.(ps1|sh)$
 
 # Linters
-- cpplint\.py
+- (^|/)cpplint\.py
 
 # Node dependencies
-- node_modules/
+- (^|/)node_modules/
 
 # Yarn releases
 - (^|/)\.yarn/releases/
@@ -48,20 +48,20 @@
 - (^|/)_esy$
 
 # Bower Components
-- bower_components/
+- (^|/)bower_components/
 
 # Erlang bundles
 - ^rebar$
-- erlang\.mk
+- (^|/)erlang\.mk
 
 # Go dependencies
-- Godeps/_workspace/
+- (^|/)Godeps/_workspace/
 
 # Go fixtures
 - (^|/)testdata/
 
 # GNU indent profiles
-- \.indent\.pro
+- (^|/)\.indent\.pro
 
 # Minified JavaScript and CSS
 - (\.|-)min\.(js|css)$
@@ -103,18 +103,18 @@
 
 # Vendored dependencies
 - (3rd|[Tt]hird)[-_]?[Pp]arty/
-- vendors?/
-- extern(al)?/
+- (^|/)vendors?/
+- (^|/)extern(al)?/
 - (^|/)[Vv]+endor/
 
 # Debian packaging
 - ^debian/
 
 # Haxelib projects often contain a neko bytecode file named run.n
-- run\.n$
+- (^|/)run\.n$
 
 # Bootstrap Datepicker
-- bootstrap-datepicker/
+- (^|/)bootstrap-datepicker/
 
 ## Commonly Bundled JavaScript frameworks ##
 
@@ -127,41 +127,41 @@
 - (^|/)jquery\.(ui|effects)\.([^.]*)\.(js|css)$
 
 # jQuery Gantt
-- jquery\.fn\.gantt\.js
+- (^|/)jquery\.fn\.gantt\.js
 
 # jQuery fancyBox
-- jquery\.fancybox\.(js|css)
+- (^|/)jquery\.fancybox\.(js|css)
 
 # Fuel UX
-- fuelux\.js
+- (^|/)fuelux\.js
 
 # jQuery File Upload
 - (^|/)jquery\.fileupload(-\w+)?\.js$
 
 # jQuery dataTables
-- jquery\.dataTables\.js
+- (^|/)jquery\.dataTables\.js
 
 # bootboxjs
-- bootbox\.js
+- (^|/)bootbox\.js
 
 # pdf-worker
-- pdf\.worker\.js
+- (^|/)pdf\.worker\.js
 
 # Slick
 - (^|/)slick\.\w+.js$
 
 # Leaflet plugins
 - (^|/)Leaflet\.Coordinates-\d+\.\d+\.\d+\.src\.js$
-- leaflet\.draw-src\.js
-- leaflet\.draw\.css
-- Control\.FullScreen\.css
-- Control\.FullScreen\.js
-- leaflet\.spin\.js
-- wicket-leaflet\.js
+- (^|/)leaflet\.draw-src\.js
+- (^|/)leaflet\.draw\.css
+- (^|/)Control\.FullScreen\.css
+- (^|/)Control\.FullScreen\.js
+- (^|/)leaflet\.spin\.js
+- (^|/)wicket-leaflet\.js
 
 # Sublime Text workspace files
-- \.sublime-project
-- \.sublime-workspace
+- (^|/)\.sublime-project
+- (^|/)\.sublime-workspace
 
 # VS Code workspace files
 - (^|/)\.vscode/
@@ -242,20 +242,20 @@
 - (^|/)env/
 
 # Fabric
-- ^fabfile\.py$
+- (^|/)fabfile\.py$
 
 # WAF
-- ^waf$
+- (^|/)waf$
 
 # .osx
-- ^\.osx$
+- (^|/)\.osx$
 
 ## Obj-C ##
 
 # Xcode
 
-- \.xctemplate/
-- \.imageset/
+- (^|/)\.xctemplate/
+- (^|/)\.imageset/
 
 # Carthage
 - (^|/)Carthage/
@@ -264,24 +264,24 @@
 - (^|/)Sparkle/
 
 # Crashlytics
-- Crashlytics\.framework/
+- (^|/)Crashlytics\.framework/
 
 # Fabric
-- Fabric\.framework/
+- (^|/)Fabric\.framework/
 
 # BuddyBuild
-- BuddyBuildSDK\.framework/
+- (^|/)BuddyBuildSDK\.framework/
 
 # Realm
-- Realm\.framework
+- (^|/)Realm\.framework
 
 # RealmSwift
-- RealmSwift\.framework
+- (^|/)RealmSwift\.framework
 
 # git config files
-- gitattributes$
-- gitignore$
-- gitmodules$
+- (^|/)\.gitattributes$
+- (^|/)\.gitignore$
+- (^|/)\.gitmodules$
 
 ## Groovy ##
 
@@ -311,7 +311,7 @@
 - (^|/)[Mm]icrosoft([Mm]vc)?([Aa]jax|[Vv]alidation)(\.debug)?\.js$
 
 # NuGet
-- ^[Pp]ackages\/.+\.\d+\/
+- (^|/)[Pp]ackages\/.+\.\d+\/
 
 # ExtJS
 - (^|/)extjs/.*?\.js$
@@ -335,25 +335,25 @@
 - (^|/)html5shiv\.js$
 
 # Test fixtures
-- ^[Tt]ests?/fixtures/
-- ^[Ss]pecs?/fixtures/
+- (^|/)[Tt]ests?/fixtures/
+- (^|/)[Ss]pecs?/fixtures/
 
 # PhoneGap/Cordova
 - (^|/)cordova([^.]*)\.js$
 - (^|/)cordova\-\d\.\d(\.\d)?\.js$
 
 # Foundation js
-- foundation(\..*)?\.js$
+- (^|/)foundation(\..*)?\.js$
 
 # Vagrant
-- ^Vagrantfile$
+- (^|/)Vagrantfile$
 
 # .DS_Stores
-- \.[Dd][Ss]_[Ss]tore$
+- (^|/)\.[Dd][Ss]_[Ss]tore$
 
 # R packages
-- ^vignettes/
-- ^inst/extdata/
+- (^|/)vignettes/
+- (^|/)inst/extdata/
 
 # Octicons
 - (^|/)octicons\.css
@@ -368,10 +368,10 @@
 - (^|/)proguard-rules\.pro$
 
 # PuPHPet
-- ^puphpet/
+- (^|/)puphpet/
 
 # Android Google APIs
 - (^|/)\.google_apis/
 
 # Jenkins Pipeline
-- ^Jenkinsfile$
+- (^|/)Jenkinsfile$
