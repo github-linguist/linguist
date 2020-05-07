@@ -98,6 +98,12 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_bst_by_heuristics
+    assert_heuristics({
+      "BuildStream" => all_fixtures("BuildStream", "*.bst")
+    })
+  end
+
   def test_builds_by_heuristics
     assert_heuristics({
       "Text" => all_fixtures("Text"),
