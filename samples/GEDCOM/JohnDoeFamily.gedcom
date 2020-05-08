@@ -1,0 +1,94 @@
+0 HEAD
+1 SOUR PAF
+2 VERS 2.1
+1 DEST ANSTFILE
+1 SUBM @5@
+1 SUBN @8@
+1 GEDC
+2 VERS 5.4
+2 FORM Lineage-Linked
+1 CHAR ANSEL
+0 @1@ INDI
+1 NAME John Robert /Doe/
+1 SEX M
+1 BIRT
+2 DATE 02 OCT 1822
+2 PLAC Bro Gwenrann Breizh
+2 SOUR @6@
+3 PAGE Sec. 2, p. 45
+3 EVEN BIRT
+4 ROLE CHIL
+1 DEAT
+2 DATE 14 APR 1905
+2 PLAC Stamford, Fairfield, CT
+1 BURI
+2 PLAC Spring Hill Cem., Stamford, CT
+1 RESI
+2 ADDR 73 North Ashley
+3 CONT Spencer, Utah UT84991
+2 DATE from 1900 to 1905
+1 FAMS @4@
+1 FAMS @9@
+0 @2@ INDI
+1 NAME Mary Ann/Wilson/
+1 SEX F
+1 BIRT
+2 DATE BEF 1828
+2 PLAC Connecticut
+1 FAMS @4@
+0 @3@ INDI
+1 NAME Joe/Williams/
+1 SEX M
+1 BIRT
+2 DATE 11 JUN 1861
+2 PLAC Idaho Falls, Bonneville, Idaho
+2 FAMC @4@ /* note: this ptr is not required but is allowed in 5.5 */
+1 FAMC @4@
+1 FAMC @9@
+2 PEDI Adopted
+1 ADOP
+2 FAMC @9@
+2 DATE 16 MAR 1864
+1 SLGC
+2 FAMC @9@
+2 DATE 2 OCT 1987
+2 TEMP SLAKE
+0 @4@ FAM
+1 MARR
+2 DATE DEC 1859
+2 PLAC Rapid City, South Dakota
+1 SLGS
+2 DATE 14 JUN 1975
+2 TEMP SLAKE
+1 HUSB @1@
+1 WIFE @2@
+1 CHIL @3@
+0 @5@ SUBM
+1 NAME Reldon /Poulson/
+1 ADDR 1900 43rd Street West
+2 CONT Billings, MT 68051
+1 PHON (406) 555-1232
+0 @6@ SOUR
+1 DATA
+2 EVEN BIRT, DEAT, MARR
+3 DATE FROM Jan 1820 TO DEC 1825
+3 PLAC Madison, Connecticut
+2 AGNC Madison County Court, State of Connecticut
+1 TITL Madison County Birth, Death, and Marriage Records
+1 ABBR VITAL RECORDS
+1 REPO @7@
+2 CALN 13B-1234.01
+3 MEDI Microfilm
+0 @7@ REPO
+1 NAME Family History Library
+1 ADDR 35 N West Temple Street
+2 CONT Salt Lake City, Utah
+2 CONT UT 84150
+0 @8@ SUBN
+1 SUBM @5@
+1 FAMF Reg Poulson Family
+1 TEMP SLAKE
+0 @9@ FAM
+1 HUSB @1@
+1 CHIL @3@
+0 TRLR
