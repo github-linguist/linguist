@@ -64,6 +64,7 @@ module Linguist
       go_lock? ||
       esy_lock? ||
       npm_shrinkwrap_or_package_lock? ||
+      generated_yarn_plugnplay? ||
       godeps? ||
       generated_by_zephir? ||
       minified_files? ||
@@ -384,6 +385,13 @@ module Linguist
     # Returns true or false.
     def npm_shrinkwrap_or_package_lock?
       name.match(/npm-shrinkwrap\.json/) || name.match(/package-lock\.json/)
+    end
+
+    # Internal: Is the blob a generated Yarn Plug'n'Play?
+    #
+    # Returns true or false.
+    def generated_yarn_plugnplay?
+      name.match(/^\.pnp\.(c|m)?js/)
     end
 
     # Internal: Is the blob part of Godeps/,

@@ -93,6 +93,11 @@ class TestGenerated < Minitest::Test
     generated_sample_without_loading_data("Dummy/npm-shrinkwrap.json")
     generated_sample_without_loading_data("Dummy/package-lock.json")
 
+    # Yarn Plug'n'Play file
+    generated_sample_without_loading_data(".pnp.js")
+    generated_sample_without_loading_data(".pnp.cjs")
+    generated_sample_without_loading_data(".pnp.mjs")
+
     # Godep saved dependencies
     generated_sample_without_loading_data("Godeps/Godeps.json")
     generated_sample_without_loading_data("Godeps/_workspace/src/github.com/kr/s3/sign.go")
