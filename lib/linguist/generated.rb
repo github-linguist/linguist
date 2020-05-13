@@ -391,7 +391,7 @@ module Linguist
     #
     # Returns true or false.
     def generated_yarn_plugnplay?
-      name.match(/^\.pnp\.(c|m)?js/)
+      name.match(/(^|\/)\.pnp\.(c|m)?js$/)
     end
 
     # Internal: Is the blob part of Godeps/,
