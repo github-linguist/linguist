@@ -384,14 +384,14 @@ module Linguist
     #
     # Returns true or false.
     def npm_shrinkwrap_or_package_lock?
-      name.match(/npm-shrinkwrap\.json/) || name.match(/package-lock\.json/)
+      !!name.match(/npm-shrinkwrap\.json/) || !!name.match(/package-lock\.json/)
     end
 
     # Internal: Is the blob a generated Yarn Plug'n'Play?
     #
     # Returns true or false.
     def generated_yarn_plugnplay?
-      name.match(/(^|\/)\.pnp\.(c|m)?js$/)
+      !!name.match(/(^|\/)\.pnp\.(c|m)?js$/)
     end
 
     # Internal: Is the blob part of Godeps/,
@@ -450,7 +450,7 @@ module Linguist
     #
     # Returns true or false.
     def pipenv_lock?
-      name.match(/Pipfile\.lock/)
+      !!name.match(/Pipfile\.lock/)
     end
 
     # Internal: Is it a KiCAD or GFortran module file?
