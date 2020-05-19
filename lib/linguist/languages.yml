@@ -833,7 +833,7 @@ CodeQL:
   ace_mode: text
   language_id: 424259634
   aliases:
-    - ql
+  - ql
 CoffeeScript:
   type: programming
   tm_scope: source.coffee
@@ -3326,6 +3326,16 @@ NCL:
   tm_scope: source.ncl
   ace_mode: text
   language_id: 240
+NEON:
+  type: data
+  extensions:
+  - ".neon"
+  tm_scope: source.neon
+  ace_mode: text
+  aliases:
+  - nette object notation
+  - ne-on
+  language_id: 481192983
 NL:
   type: data
   extensions:
@@ -6134,7 +6144,6 @@ YAML:
   - ".yaml-tmlanguage"
   - ".yaml.sed"
   - ".yml.mysql"
-  - ".neon"
   filenames:
   - ".clang-format"
   - ".clang-tidy"

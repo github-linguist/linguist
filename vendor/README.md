@@ -264,6 +264,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Muse:** [Alhadis/language-emacs-lisp](https://github.com/Alhadis/language-emacs-lisp)
 - **NASL:** [tenable/sublimetext-nasl](https://github.com/tenable/sublimetext-nasl)
 - **NCL:** [rpavlick/language-ncl](https://github.com/rpavlick/language-ncl)
+- **NEON:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **NPM Config:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **NSIS:** [github-linguist/NSIS](https://github.com/github-linguist/NSIS)
 - **Nearley:** [Hardmath123/sublime-nearley](https://github.com/Hardmath123/sublime-nearley)
