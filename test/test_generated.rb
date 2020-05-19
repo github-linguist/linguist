@@ -167,7 +167,7 @@ class TestGenerated < Minitest::Test
     generated_fixture_loading_data("HTML/unknown.html", true)
     generated_fixture_loading_data("HTML/no-content.html", true)
     generated_sample_loading_data("HTML/pages.html")
-    
+
     # GIMP
     generated_fixture_loading_data("C/image.c")
     generated_fixture_loading_data("C/image.h")
@@ -181,5 +181,8 @@ class TestGenerated < Minitest::Test
     generated_fixture_loading_data("Generated/Haxe/Main.java")
     generated_fixture_loading_data("Generated/Haxe/Main.cs")
     generated_fixture_loading_data("Generated/Haxe/Main.php")
+
+    # jOOQ
+    generated_sample_loading_data("Java/generated-jooq-table.java")
   end
 end
