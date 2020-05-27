@@ -134,6 +134,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **GCC Machine Description:** [textmate/lisp.tmbundle](https://github.com/textmate/lisp.tmbundle)
 - **GDB:** [quarnster/SublimeGDB](https://github.com/quarnster/SublimeGDB)
 - **GDScript:** [beefsack/GDScript-sublime](https://github.com/beefsack/GDScript-sublime)
+- **GEDCOM:** [fguitton/vscode-gedcom](https://github.com/fguitton/vscode-gedcom)
 - **GLSL:** [euler0/sublime-glsl](https://github.com/euler0/sublime-glsl)
 - **GN:** [devoncarew/language-gn](https://github.com/devoncarew/language-gn)
 - **Game Maker Language:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
