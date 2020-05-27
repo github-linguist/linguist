@@ -47,14 +47,14 @@ class TestRepository < Minitest::Test
   end
 
   def test_repo_git_attributes
-    # See https://github.com/github/linguist/blob/c20ebee0ebf33f73313d4694680521f80635d477/.gitattributes
+    # See https://github.com/github/linguist/blob/72a89fc9dcd3585250056ab591f9d7e2411d5fa1/.gitattributes
     #
     # It looks like this:
     # Gemfile linguist-vendored=true
     # lib/linguist.rb linguist-language=Java
     # test/*.rb linguist-language=Java
     # Rakefile linguist-generated
-    # test/fixtures/* linguist-vendored=false
+    # test/fixtures/** linguist-vendored=false
     # README.md linguist-documentation=false
     # samples/Arduino/* linguist-documentation
     # samples/Markdown/*.md linguist-detectable=true
@@ -64,7 +64,7 @@ class TestRepository < Minitest::Test
     # LICENSE -linguist-documentation
     # samples/CoffeeScript/browser.coffee -linguist-detectable
 
-    attr_commit = 'c20ebee0ebf33f73313d4694680521f80635d477'
+    attr_commit = '72a89fc9dcd3585250056ab591f9d7e2411d5fa1'
     repo = linguist_repo(attr_commit)
 
     assert repo.breakdown_by_file.has_key?("Java")
@@ -94,7 +94,7 @@ class TestRepository < Minitest::Test
   end
 
   def test_linguist_override_vendored?
-    attr_commit = 'c20ebee0ebf33f73313d4694680521f80635d477'
+    attr_commit = '72a89fc9dcd3585250056ab591f9d7e2411d5fa1'
     linguist_repo(attr_commit).read_index
 
     override_vendored = Linguist::LazyBlob.new(rugged_repository, attr_commit, 'Gemfile')

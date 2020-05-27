@@ -17,6 +17,8 @@ vendor/grammars/ColdFusion:
 - source.cfscript.cfc
 - text.cfml.basic
 - text.html.cfm
+vendor/grammars/Dafny-VSCode:
+- text.dfy.dafny
 vendor/grammars/Docker.tmbundle:
 - source.dockerfile
 vendor/grammars/Elm/Syntaxes:
@@ -101,9 +103,6 @@ vendor/grammars/Sublime-Red:
 - source.red
 vendor/grammars/Sublime-SQF-Language:
 - source.sqf
-vendor/grammars/Sublime-Text-2-OpenEdge-ABL:
-- source.abl
-- text.html.abl
 vendor/grammars/SublimeBrainfuck:
 - source.bf
 vendor/grammars/SublimeClarion:
@@ -152,6 +151,8 @@ vendor/grammars/ZenScript-tmLanguage:
 - source.zenscript
 vendor/grammars/abap.tmbundle:
 - source.abap
+vendor/grammars/abl-tmlanguage:
+- source.abl
 vendor/grammars/actionscript3-tmbundle/:
 - source.actionscript.3
 - text.html.asdoc
@@ -275,9 +276,8 @@ vendor/grammars/cython:
 - source.cython
 vendor/grammars/d.tmbundle:
 - source.d
-vendor/grammars/dartlang:
+vendor/grammars/dart-syntax-highlight:
 - source.dart
-- source.yaml-ext
 vendor/grammars/data-weave-tmLanguage:
 - source.data-weave
 vendor/grammars/desktop.tmbundle:
@@ -423,6 +423,8 @@ vendor/grammars/language-etc:
 - source.curlrc
 - source.direct-x
 - source.dosbox-conf
+- source.futhark
+- source.generic-db
 - source.gitattributes
 - source.gitconfig
 - source.gitignore
@@ -430,14 +432,20 @@ vendor/grammars/language-etc:
 - source.hosts
 - source.ini.npmrc
 - source.inputrc
+- source.lcov
 - source.m4
 - source.man-conf
 - source.nanorc
+- source.neon
 - source.odin-ehr
+- source.openbsd-pkg.contents
 - source.opts
+- source.sieve
 - source.smpl
 - source.ssh-config
+- source.tags
 - source.wgetrc
+- text.openbsd-pkg.desc
 - text.xml.svg
 vendor/grammars/language-faust:
 - source.faust
@@ -510,6 +518,8 @@ vendor/grammars/language-less:
 - source.css.less
 vendor/grammars/language-m68k:
 - source.m68k
+vendor/grammars/language-macaulay2:
+- source.macaulay2
 vendor/grammars/language-maxscript:
 - source.maxscript
 vendor/grammars/language-mcfunction:
@@ -536,6 +546,8 @@ vendor/grammars/language-povray:
 vendor/grammars/language-property-list:
 - source.plist
 - text.xml.plist
+vendor/grammars/language-qasm:
+- source.qasm
 vendor/grammars/language-reason:
 - source.reason
 - source.reason.hover.type
@@ -821,6 +833,9 @@ vendor/grammars/sublimeprolog:
 - source.prolog.eclipse
 vendor/grammars/sublimetext-cuda-cpp:
 - source.cuda-c++
+vendor/grammars/sublimetext-nasl:
+- source.nasl
+- source.tnsaudit
 vendor/grammars/svelte-atom:
 - source.svelte
 vendor/grammars/swift.tmbundle:
@@ -839,14 +854,22 @@ vendor/grammars/verilog.tmbundle:
 - source.verilog
 vendor/grammars/vhdl:
 - source.vhdl
+vendor/grammars/vscode-codeql:
+- source.ql
 vendor/grammars/vscode-gcode-syntax:
 - source.gcode
+vendor/grammars/vscode-gedcom:
+- source.gedcom
 vendor/grammars/vscode-hack:
 - source.hack
 vendor/grammars/vscode-lean:
 - source.lean
+- source.lean.markdown
 vendor/grammars/vscode-opa:
 - source.rego
+vendor/grammars/vscode-plantuml:
+- markdown.plantuml.codeblock
+- source.wsd
 vendor/grammars/vscode-prisma:
 - source.prisma
 vendor/grammars/vscode-scala-syntax:

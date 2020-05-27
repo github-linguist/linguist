@@ -44,10 +44,13 @@ var KnownFields = map[string]bool{
 var GrammarsInNonStdPath = map[string]bool{
 	"conllu-linguist-grammar": true,
 	"hy.tmLanguage":           true,
+	"abl-tmlanguage":          true,
 }
 
 // IgnoredFiles is a list of files that look like syntax files but aren't, or are known to be broken and never likely to be fixed.
 var IgnoredFiles = map[string]bool{
 	"ballerina-grammar/syntaxes/ballerina.monarch.json": true,
 	"oz-tmbundle/Originals/Oz.tmLanguage":               true,
+	"abl-tmlanguage/package-lock.json":                  true,
+	"abl-tmlanguage/package.json":                       true,
 }

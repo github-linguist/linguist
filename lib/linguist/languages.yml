@@ -824,6 +824,16 @@ CoNLL-U:
   - CoNLL
   - CoNLL-X
   language_id: 421026389
+CodeQL:
+  type: programming
+  extensions:
+  - ".ql"
+  - ".qll"
+  tm_scope: source.ql
+  ace_mode: text
+  language_id: 424259634
+  aliases:
+  - ql
 CoffeeScript:
   type: programming
   tm_scope: source.coffee
@@ -1089,6 +1099,16 @@ DTrace:
   codemirror_mode: clike
   codemirror_mime_type: text/x-csrc
   language_id: 85
+Dafny:
+  type: programming
+  color: "#FFEC25"
+  extensions:
+  - ".dfy"
+  interpreters:
+  - dafny
+  tm_scope: text.dfy.dafny
+  ace_mode: text
+  language_id: 969323346
 Darcs Patch:
   type: data
   aliases:
@@ -1609,6 +1629,13 @@ GDScript:
   tm_scope: source.gdscript
   ace_mode: text
   language_id: 123
+GEDCOM:
+  type: data
+  ace_mode: text
+  extensions:
+  - ".ged"
+  tm_scope: source.gedcom
+  language_id: 459577965
 GLSL:
   type: programming
   extensions:
@@ -2279,6 +2306,7 @@ Inno Setup:
   type: programming
   extensions:
   - ".iss"
+  - ".isl"
   tm_scope: source.inno
   ace_mode: text
   language_id: 167
@@ -2380,6 +2408,7 @@ JSON with Comments:
   aliases:
   - jsonc
   extensions:
+  - ".jsonc"
   - ".sublime-build"
   - ".sublime-commands"
   - ".sublime-completions"
@@ -2904,6 +2933,8 @@ Lua:
   - ".rbxs"
   - ".rockspec"
   - ".wlua"
+  filenames:
+  - ".luacheckrc"
   interpreters:
   - lua
   language_id: 213
@@ -3007,6 +3038,18 @@ MUF:
   codemirror_mode: forth
   codemirror_mime_type: text/x-forth
   language_id: 219
+Macaulay2:
+  type: programming
+  extensions:
+  - ".m2"
+  aliases:
+  - m2
+  interpreters:
+  - M2
+  ace_mode: text
+  tm_scope: source.macaulay2
+  color: "#d8ffff"
+  language_id: 34167825
 Makefile:
   type: programming
   color: "#427819"
@@ -3297,6 +3340,14 @@ Myghty:
   tm_scope: none
   ace_mode: text
   language_id: 239
+NASL:
+  type: programming
+  extensions:
+  - ".nasl"
+  - ".inc"
+  tm_scope: source.nasl
+  ace_mode: text
+  language_id: 171666519
 NCL:
   type: programming
   color: "#28431f"
@@ -3305,6 +3356,16 @@ NCL:
   tm_scope: source.ncl
   ace_mode: text
   language_id: 240
+NEON:
+  type: data
+  extensions:
+  - ".neon"
+  tm_scope: source.neon
+  ace_mode: text
+  aliases:
+  - nette object notation
+  - ne-on
+  language_id: 481192983
 NL:
   type: data
   extensions:
@@ -3419,7 +3480,7 @@ Nginx:
   language_id: 248
 Nim:
   type: programming
-  color: "#37775b"
+  color: "#ffdf00"
   extensions:
   - ".nim"
   - ".nim.cfg"
@@ -3633,6 +3694,14 @@ OpenEdge ABL:
   tm_scope: source.abl
   ace_mode: text
   language_id: 264
+OpenQASM:
+  type: programming
+  extensions:
+  - ".qasm"
+  color: "#AA70FF"
+  tm_scope: source.qasm
+  ace_mode: text
+  language_id: 153739399
 OpenRC runscript:
   type: programming
   group: Shell
@@ -3945,6 +4014,15 @@ Pike:
   tm_scope: source.pike
   ace_mode: text
   language_id: 287
+PlantUML:
+  type: data
+  extensions:
+  - ".puml"
+  - ".iuml"
+  - ".plantuml"
+  tm_scope: source.wsd
+  ace_mode: text
+  language_id: 833504686
 Pod:
   type: prose
   ace_mode: perl
@@ -5163,6 +5241,7 @@ Starlark:
   - BUCK
   - BUILD
   - BUILD.bazel
+  - Tiltfile
   - WORKSPACE
   aliases:
   - bazel
@@ -6100,6 +6179,7 @@ YAML:
   - ".clang-tidy"
   - ".gemrc"
   - glide.lock
+  - yarn.lock
   ace_mode: yaml
   codemirror_mode: yaml
   codemirror_mime_type: text/x-yaml
