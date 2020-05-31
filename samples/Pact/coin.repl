@@ -1,0 +1,875 @@
+;; Enable the table gas model
+(env-gasmodel "table")
+(env-gaslimit 30000)
+
+(begin-tx)
+(env-gas 0) (env-gaslog)
+(load "fungible-v2.pact")
+(env-gaslog)
+(expect
+  "Gas cost of loading fungible contract"
+  840 (env-gas))
+
+(env-gas 0) (env-gaslog)
+(load "coin.pact")
+(env-gaslog)
+(expect
+  "Gas cost of loading coin contract"
+  3301 (env-gas))
+
+(create-table coin.coin-table)
+(create-table coin.allocation-table)
+
+(commit-tx)
+
+(verify 'coin)
+
+;; Account creation and account details unit tests
+
+(begin-tx)
+(env-data { "emily" : ["keys1"], "doug": ["keys2"], "stuart": ["keys3"] })
+(env-keys ["keys1", "keys2", "keys3", "keys4"])
+(define-keyset 'emily (read-keyset "emily"))
+(define-keyset 'doug (read-keyset "doug"))
+(define-keyset 'stuart (read-keyset "stuart"))
+
+(env-gas 0) (env-gaslog)
+(use coin)
+(env-gaslog)
+(expect
+  "Gas cost of using the coin contract"
+  2 (env-gas))
+
+;; account balance for emily does not exist, because account does not exist yet
+(expect-failure
+  "account does not exist yet"
+  (get-balance 'emily))
+
+;; create accounts should succeed and initialize with correct amounts and guards
+(env-gas 0) (env-gaslog)
+(create-account 'emily (read-keyset 'emily))
+(env-gaslog)
+(expect
+  "Gas cost of coin contract account creation"
+  186 (env-gas))
+
+(create-account 'doug (read-keyset 'doug))
+
+
+; accounts conform to account structure
+(expect-failure
+  "non-latin1+ascii account names fail to create"
+  "charset"
+  (create-account "emilyπ" (read-keyset 'emily)))
+
+(expect-failure
+  "empty account names fail to create"
+  "min length"
+  (create-account "" (read-keyset 'doug)))
+
+(expect-failure
+  "account names not >= 3 chars fail"
+  "min length"
+  (create-account "jo" (read-keyset 'stuart)))
+
+(expect-failure
+  "account names not <= 256 chars fail"
+  "max length"
+  (create-account
+    "Before getting down to business, let us ask why it should be that category theory has such far-reaching applications. \
+    \Well, we said that it's the abstract theory of functions; so the answer is simply this: Functions are everywhere! \
+    \And everywhere that functions are, there are categories. Indeed, the subject might better have been called abstract \
+    \function theory, or perhaps even better: archery."
+    (read-keyset 'emily)))
+
+; check account balances for newly created accounts
+(env-gas 0) (env-gaslog)
+(expect
+  "initial balance at 0.0"
+  0.0
+  (get-balance 'emily))
+(env-gaslog)
+(expect
+  "Gas cost of querying an account's balance"
+  16 (env-gas))
+
+; account information checks out for new accounts
+(env-gas 0) (env-gaslog)
+(expect
+  "details reflects the correct balance and guard information"
+  {"account" : "doug", "balance": 0.0, "guard": (read-keyset 'doug)}
+  (details 'doug))
+(env-gaslog)
+(expect
+  "Gas cost of querying the details of an account"
+  17 (env-gas))
+
+(commit-tx)
+
+;; credits + debits should succeed. Both should reflect the correct balance
+
+(begin-tx)
+
+(use coin)
+
+; w/o capability
+(expect-failure
+  "direct call to credit fails"
+  "not granted"
+  (credit 'emily (read-keyset 'emily) 1.0))
+
+(expect-failure
+  "direct call to debit fails"
+  "not granted"
+  (debit 'emily 1.0))
+
+(env-gas 0) (env-gaslog)
+(test-capability (DEBIT 'emily))
+(env-gaslog)
+(expect
+  "Gas cost of testing the DEBIT capability"
+  26 (env-gas))
+
+; debit tests
+(expect-failure
+  "debit not > 0.0 quantities fail fast"
+  "must be positive"
+  (debit 'emily 0.0))
+
+(expect-failure
+  "debit not > 0.0 quantities fail fast"
+  "must be positive"
+  (debit 'emily (- 1.0)))
+
+(expect-failure
+  "debit from account with 0.0 in it yields failure"
+  "Insufficient funds"
+  (debit 'emily 1.0))
+
+(expect-failure
+  "cannot debit to poorly formatted accounts: charset"
+  "charset"
+  (debit "emilyπ" 1.0))
+
+(expect-failure
+  "cannot debit to poorly formatted accounts: min length"
+  "min length"
+  (debit "l" 1.0))
+
+(expect-failure
+  "cannot debit to poorly formatted accounts: max length"
+  "max length"
+  (debit "a mathematical object X is best thought of in the context of a category surrounding it, \
+  \and is determined by the network of relations it enjoys with all the objects of that category. \
+  \Moreover, to understand X it might be more germane to deal directly with the functor representing it" 1.0))
+
+; credit tests
+(test-capability (CREDIT "emily"))
+(credit 'emily (read-keyset 'emily) 1.0)
+
+(expect
+  "account balance reflects credit"
+  1.0
+  (get-balance 'emily))
+
+(expect-failure
+  "cannot credit to poorly formatted accounts: charset"
+  "charset"
+  (credit "emilyπ" (read-keyset 'emily) 1.0))
+
+(expect-failure
+  "cannot credit to poorly formatted accounts: min length"
+  "min length"
+  (credit "l" (read-keyset 'emily) 1.0))
+
+(expect-failure
+  "cannot credit to poorly formatted accounts: max length"
+  "max length"
+  (credit "The aim of theory really is, to a great extent, that of systematically organizing past experience in such a way that the next generation, our students and their students and so on, will be able to absorb the essential aspects in as painless a way as possible, and this is the only way in which you can go on cumulatively building up any kind of scientific activity without eventually coming to a dead end." (read-keyset 'emily) 1.0))
+
+(test-capability (DEBIT "emily"))
+(debit 'emily 1.0)
+
+(expect
+  "debiting funds now succeeds when there's enough funds"
+  0.0
+  (get-balance 'emily))
+
+;; crediting non-existing accounts with guard should have supplied keys
+(test-capability (CREDIT "stuart"))
+
+(expect-failure
+  "crediting trivial or negative funds fails fast"
+  "positive"
+  (credit 'stuart (read-keyset 'stuart) 0.0))
+
+(expect-failure
+  "crediting trivial or negative funds fails fast"
+  "positive"
+  (credit 'stuart (read-keyset 'stuart) (- 1.0)))
+
+(credit 'stuart (read-keyset 'stuart) 1.0)
+
+(expect
+  "crediting funds to new account succeeds with correct balance"
+  1.0
+  (get-balance 'stuart))
+
+(expect-failure
+  "cannot update a keyset for an existing account with wrong keyset"
+  "account guards do not match"
+  (credit 'stuart (read-keyset 'doug) 1.0))
+
+(commit-tx)
+
+;; fund-tx should require GAS capability in scope, and all funds should succeed
+;; when available and reflect correct balances
+
+(begin-tx)
+
+(use coin)
+
+(expect-failure
+ "fund-tx should fail when GAS is not in scope"
+ "not granted: (coin.GAS)"
+ (fund-tx 'emily 'doug (read-keyset 'doug) 1.0))
+
+(test-capability (GAS))
+(env-keys [])
+
+(expect-failure
+  "fund-tx fails without signature"
+  "Keyset failure"
+  (fund-tx 'emily 'doug (read-keyset 'doug) 1.0))
+
+(env-sigs [{"key": "keys1", "caps": [(TRANSFER "emily" "doug" 1.0)]}])
+
+(expect-failure
+  "fund-tx fails for no gas cap"
+  "Keyset failure"
+  (fund-tx 'emily 'doug (read-keyset 'doug) 1.0))
+
+(expect-failure
+  "fund-tx fails for trivial or negative quantities"
+  "positive"
+  (fund-tx 'emily 'doug (read-keyset 'doug) 0.0))
+
+(expect-failure
+  "fund-tx fails for trivial or negative quantities"
+  "positive"
+  (fund-tx 'emily 'doug (read-keyset 'doug) (- 1.0)))
+
+(env-sigs [{"key": "keys1", "caps": [(GAS)]}])
+
+(expect-failure
+  "fund-tx fails for insufficient funds"
+  "Insufficient funds"
+  (fund-tx 'emily 'doug (read-keyset 'doug) 1.0))
+
+(env-keys ["keys1"])
+(test-capability (CREDIT "emily"))
+(credit "emily" (read-keyset "emily") 3.0)
+
+(expect
+  "fund-tx succeeds with gas cap"
+  "Write succeeded"
+  (fund-tx 'emily 'doug (read-keyset 'doug) 1.0))
+
+(pact-state true)
+
+(env-sigs [{"key": "keys1", "caps": [(GAS),(TRANSFER "emily" "doug" 1.0)]}])
+
+(expect
+  "fund-tx succeeds with gas cap and other cap"
+  "Write succeeded"
+  (fund-tx 'emily 'doug (read-keyset 'doug) 1.0))
+
+(pact-state true)
+
+(env-keys ["keys1"])
+(expect
+  "fund-tx succeeds with no caps"
+  "Write succeeded"
+  (fund-tx 'emily 'doug (read-keyset 'doug) 1.0))
+
+(env-data { "fee" : 1.0 , "miner" : ["miner"] })
+
+(expect
+  "redeem-gas succeeds when fee is in scope"
+  "Write succeeded"
+  (redeem-gas "miner" (read-keyset "miner") "emily" 1.0))
+
+(commit-tx)
+
+;;; GAS (gas buying) tests
+
+(begin-tx)
+
+(use coin)
+
+;; setup for next txs
+(env-data { "emily" : ["keys1"] })
+(env-keys ["keys1"])
+(test-capability (CREDIT "emily"))
+(credit "emily" (read-keyset "emily") 1.0)
+
+(env-data { "fee" : 0.0, "emily" : ["keys1"], "doug": ["keys2"] })
+(env-keys ["keys1", "keys2"])
+
+(test-capability (GAS))
+
+(fund-tx 'emily 'doug (read-keyset 'doug) 1.0)
+
+(expect
+  "doug should now have 0.0 coins having mined the tx due to 0 gas"
+  0.0
+  (get-balance 'doug))
+
+(expect
+  "emily should now have 0.0 coins after paying miner"
+  0.0
+  (get-balance 'emily))
+
+(rollback-tx)
+
+;; credit to seed next tests
+(begin-tx)
+
+(env-data { "fee" : 0.4, "emily" : ["keys1"], "doug": ["keys2"], "will": ["keys4"] })
+(env-keys ["keys1", "keys2", "keys4"])
+
+(test-capability (coin.CREDIT "emily"))
+(coin.credit "emily" (read-keyset "emily") 1.0)
+
+(commit-tx)
+
+; Test capabilities interactions with transfers
+(begin-tx)
+
+(use coin)
+
+(env-data { "fee" : 0.4, "emily" : ["keys1"], "doug": ["keys2"], "will": ["keys4"] })
+(env-keys ["keys1", "keys2", "keys4"])
+
+(test-capability (GAS))
+
+(coin.fund-tx 'emily 'doug (read-keyset 'doug) 1.0)
+
+(continue-pact 1)
+(expect
+  "doug should now have 0.4 coins after mining 0.4 coin fee"
+  0.4
+  (get-balance 'doug))
+
+(expect
+  "emily should now have 0.6 coins after paying for 0.4 coin fee"
+  0.6
+  (get-balance 'emily))
+
+;; transfers should respect balances as intended
+(test-capability (CREDIT "emily"))
+(credit 'emily (read-keyset 'emily) 1.0)
+
+(commit-tx)
+(begin-tx)
+(use coin)
+
+(expect-failure
+  "transfers of trivial or negative quantities fails fast"
+  "positive"
+  (transfer 'emily 'doug 0.0))
+
+(expect-failure "can't install negative"
+  "Positive amount"
+  (test-capability (coin.TRANSFER "emily" "doug" -1.0)))
+
+(expect-failure
+  "Transfer fails without managed cap installed"
+  "not installed"
+  (transfer 'emily 'doug 1.0))
+
+(test-capability (coin.TRANSFER "emily" "doug" 1.0))
+(env-gas 0) (env-gaslog)
+(expect
+  "roundtrip 1.0 transfer succeeds" "Write succeeded"
+  (transfer 'emily 'doug 1.0))
+(env-gaslog)
+(expect
+  "Gas cost of transfer"
+  484 (env-gas))
+
+(expect-failure "emily->doug capability used up"
+  "TRANSFER exceeded"
+  (transfer 'emily 'doug 1.0))
+
+(expect
+  "emily now has 0.6 coins after transfer to 'doug"
+  0.6
+  (get-balance 'emily))
+
+(expect
+  "doug now has 1.4 coins after transfer from 'emily"
+  1.4
+  (get-balance 'doug))
+
+(commit-tx)
+(begin-tx)
+(use coin)
+
+(test-capability (coin.TRANSFER "emily" "doug" 1.0))
+(expect-failure
+  "emily now has insufficient funds and cannot transfer"
+  "Insufficient funds"
+  (transfer 'emily 'doug 1.0))
+
+(expect-failure "No account for will"
+  "row not found"
+  (get-balance 'will))
+
+(test-capability (TRANSFER 'doug 'will 1.0))
+(env-gas 0) (env-gaslog)
+(expect "transfer-create to new account succeeds"
+  "Write succeeded"
+  (transfer-create 'doug 'will (read-keyset 'will) 1.0))
+(env-gaslog)
+(expect
+  "Gas cost of transfer-create" 468 (env-gas))
+
+(expect
+  "doug now has 0.4 coins"
+  0.4
+  (get-balance 'doug))
+
+(expect
+  "will now has 1.0 coins"
+  1.0
+  (get-balance 'will))
+
+(expect
+  "details reflects the correct balance and guard information"
+  {"account" : "will", "balance": 1.0, "guard": (read-keyset 'will)}
+  (details 'will))
+
+;; coinbase should fail when 'COINBASE' capability is not in scope
+;; and should magically create tokens for users and reflect correct balance
+
+(commit-tx)
+(begin-tx)
+(use coin)
+
+(expect-failure
+  "coinbase fails when capability is not in scope"
+  "not granted"
+  (coinbase 'emily (read-keyset 'emily) 0.0))
+
+(test-capability (COINBASE))
+
+(coinbase 'emily (read-keyset 'emily) 1.0)
+
+(test-capability (COINBASE))
+(expect-failure
+  "coinbasing trivial or negative amounts fails fast"
+  "positive"
+  (coinbase 'emily (read-keyset 'emily) 0.0))
+
+(test-capability (COINBASE))
+(expect-failure
+  "coinbasing trivial or negative amounts fails fast"
+  "positive"
+  (coinbase 'emily (read-keyset 'emily) (- 1.0)))
+
+(expect
+  "after coinbase, emily should have 1.6 coins in its account"
+  1.6
+  (get-balance 'emily))
+
+
+(env-data { "miner2": ["miner2"] })
+
+(expect-failure "no account for miner2"
+  "row not found"
+  (get-balance 'miner2))
+
+(test-capability (COINBASE))
+(coinbase 'miner2 (read-keyset 'miner2) 1.0)
+
+(expect
+  "coinbase should create accounts and credit them some amount"
+  1.0 (get-balance 'miner2))
+
+(commit-tx)
+
+;; test burn-creates on new chains
+
+(begin-tx)
+
+(use coin)
+(env-chain-data { "chain-id" : "0" })
+(env-hash (hash "burn-create"))
+(env-data {"doug": ["keys2"]})
+
+(expect-failure
+  "cross-chain transfers fail for trivial or negative quantities"
+  "positive"
+  (transfer-crosschain 'emily 'doug (read-keyset 'doug) "1" 0.0))
+
+(expect-failure
+  "cross-chain transfers fail for trivial or negative quantities"
+  "positive"
+  (transfer-crosschain 'emily 'doug (read-keyset 'doug) "1" (- 1.0)))
+
+(expect
+  "burn side of cross-chain transfers succeed"
+  "success"
+  (let
+    ((p
+      (transfer-crosschain 'emily 'doug (read-keyset 'doug) "1" 1.0)))
+    "success"))
+
+; make sure chain-id is enforced in the yield
+(expect-failure
+  "create side of cross-chain transfer fails yield on wrong chain"
+  "does not match (chain"
+  (continue-pact 1 false (hash "burn-create")
+    { "create-account": 'doug
+    , "create-account-guard": (read-keyset 'doug)
+    , "quantity": 1.0
+    }))
+
+; successful path
+(env-chain-data { "chain-id" : "1" })
+
+(expect
+  "create side of cross-chain transfer succeeds"
+  "Write succeeded"
+  (continue-pact 1 false (hash "burn-create")
+    { "receiver": 'doug
+    , "receiver-guard": (read-keyset 'doug)
+    , "amount": 1.0
+    }))
+
+; double spends are disallowed by construction
+(expect-failure
+  "cross-chain transfer pact prevents double spends"
+  "pact completed"
+  (continue-pact 1 false (hash "burn-create")))
+
+; account guard rotation
+(expect
+  "account info for 'emily uses 'emily keyset pre-rotation"
+  "Account: 0.6 Guard: KeySet {keys: [keys1],pred: keys-all}"
+  (let
+    ((i (details 'emily)))
+    (format "Account: {} Guard: {}" [(at 'balance i) (at 'guard i)])))
+
+; account details will now feature rotated guard
+(env-keys ["keys1", "keys2"])
+(expect-failure
+  "guard rotation fails when ROTATE is not scoped"
+  "Managed capability not installed"
+  (rotate 'emily (read-keyset 'doug)))
+
+(env-sigs [{'key: "keys1", 'caps: [(coin.ROTATE "emily")]}])
+(install-capability (ROTATE "emily"))
+
+(expect
+  "guard rotation succeeds when ROTATE is scoped"
+  "Write succeeded"
+  (rotate 'emily (read-keyset 'doug)))
+
+(expect
+  "account info for 'emily uses 'doug keyset after rotation"
+  "Account: 0.6 Guard: KeySet {keys: [keys2],pred: keys-all}"
+  (let ((i (details 'emily)))
+    (format "Account: {} Guard: {}" [(at 'balance i) (at 'guard i)])))
+
+(commit-tx)
+
+;; cover enforce-unit
+
+(begin-tx)
+
+(use coin)
+(module T G
+  (defcap G () true)
+  (defconst UNIT_BAD 0.0000000000001)
+  (defconst UNIT_GOOD 0.000000000001))
+
+(expect
+  "valid unit"
+  true
+  (enforce-unit 1.234))
+
+(expect-failure
+  "invalid precision"
+  "minimum precision"
+  (enforce-unit 1.1234567890123))
+
+(expect-failure
+  "too small"
+  "minimum precision"
+  (enforce-unit UNIT_BAD))
+
+(expect
+  "min value ok"
+  true
+  (enforce-unit UNIT_GOOD))
+
+(env-keys ["keys1", "keys2"])
+
+(test-capability (TRANSFER "emily" "doug" UNIT_GOOD))
+;; Transfer
+(expect
+  "min transfer ok"
+  "Write succeeded"
+  (transfer 'emily 'doug UNIT_GOOD))
+
+ (expect-failure
+   "bad transfer fails"
+   "precision"
+   (transfer 'emily 'doug UNIT_BAD))
+
+;; transfer-create
+(expect-failure
+  "TRANSFER capability fails when paid amount is exceeded"
+  "TRANSFER exceeded"
+  (transfer-create 'emily 'doug (read-keyset 'doug) UNIT_GOOD))
+(commit-tx)
+(begin-tx)
+(use coin)
+(use T)
+
+(test-capability (TRANSFER "emily" "doug" (* 2 UNIT_GOOD)))
+(expect
+  "min transfer-create ok"
+  "Write succeeded"
+  (transfer-create 'emily 'doug (read-keyset 'doug) UNIT_GOOD))
+
+ (expect-failure
+   "bad transfer-create fails"
+   "minimum precision"
+   (transfer-create 'emily 'doug (read-keyset 'doug) UNIT_BAD))
+
+;;transfer-crosschain (step 0 only covered)
+
+(expect
+  "min transfer-crosschain step 1 succeeds"
+  "success"
+  (let ((s "success"))
+    (transfer-crosschain 'emily 'doug (read-keyset 'doug) "chain" UNIT_GOOD)
+    s))
+
+(pact-state true)
+
+(expect-failure
+  "bad transfer-crosschain fails"
+  "minimum precision"
+  (transfer-crosschain 'emily 'doug (read-keyset 'doug) "chain" UNIT_BAD))
+
+;;coinbase
+(test-capability (COINBASE))
+(expect
+  "min coinbase succeeds"
+  "Write succeeded"
+  (coinbase 'doug (read-keyset 'doug) UNIT_GOOD))
+
+(expect-failure
+  "bad coinbase fails"
+  "minimum precision"
+  (coinbase 'doug (read-keyset 'doug) UNIT_BAD))
+
+;;buy-gas
+(test-capability (GAS))
+(expect
+  "min buy-gas succeeds"
+  "Write succeeded"
+  (buy-gas 'emily UNIT_GOOD))
+
+(expect-failure
+  "bad buy-gas fails"
+  "minimum precision"
+  (buy-gas 'emily UNIT_BAD))
+
+;;redeem-gas
+(env-data { "fee" : UNIT_GOOD, "doug": ["keys2"]})
+
+(expect
+  "min redeem-gas succeeds"
+  "Write succeeded"
+  (redeem-gas 'doug (read-keyset 'doug) 'emily UNIT_GOOD))
+
+(env-data { "fee" : UNIT_BAD, "doug": ["keys2"]})
+
+(expect-failure
+  "bad redeem-gas fails"
+  "minimum precision"
+  (redeem-gas 'doug (read-keyset 'doug) 'emily UNIT_BAD))
+
+(commit-tx)
+
+;; Coin allocation tests
+
+(begin-tx)
+
+(use coin)
+
+; account creation
+
+(expect-failure
+  "allocation account creation only occurs at genesis"
+  "not granted: (coin.GENESIS)"
+  (create-allocation-account "brandon" (time "1900-10-31T00:00:00Z") "brandon" 200000.0))
+
+(test-capability (GENESIS))
+
+(expect-failure
+  "all allocation amounts must be positive"
+  "non-negative"
+  (create-allocation-account "brandon" (time "1900-10-31T00:00:00Z") "brandon" -200000.0))
+
+(expect-failure
+  "all allocation accounts must satisfy coin contract account min chars"
+  "min length"
+  (create-allocation-account "br" (time "1900-10-31T00:00:00Z") "brandon" 200000.0))
+
+(expect-failure
+  "all allocation accounts must satisfy coin contract account max chars"
+  "max length"
+  (create-allocation-account
+    "There he met Saunders Mac Lane. Mac Lane, then visiting Paris, was anxious \
+    \to learn from Yoneda, and commenced an interview with Yoneda in a cafe at \
+    \Gare du Nord. The interview was continued on Yoneda's train until its \
+    \departure. In its course, Mac Lane learned about the lemma and \
+    \subsequently baptized it."
+    (time "1900-10-31T00:00:00Z") "brandon" 200000.0))
+
+(expect-failure
+ "account creation fails when no keyset corresponds with keyset ref"
+ "Keyset reference"
+ (create-allocation-account "brandon" (time "2020-10-31T00:00:00Z") "brandon" 200000.0))
+
+; successful keyset refs require defined keyset
+
+(env-data { "brandon" : ["brandon"]})
+(define-keyset "brandon" (read-keyset "brandon"))
+
+(expect
+  "allocating coin accounts succeeds"
+  "Write succeeded"
+  (create-allocation-account "brandon" (time "2020-10-31T00:00:00Z") "brandon" 10.0))
+
+(expect
+  "allocation creates empty account"
+  {"account" : "brandon", "balance":0.0, "guard":(keyset-ref-guard "brandon")}
+  (details "brandon"))
+
+; release-allocation
+
+(expect-failure
+  "allocation coins fails since release date is not >= current time"
+  "funds locked until"
+  (release-allocation "brandon"))
+
+(env-chain-data { "block-time" : (time "2020-10-31T00:00:00Z") })
+
+(expect-failure
+  "allocation release fails when keys are not in scope"
+  "Keyset failure"
+  (release-allocation "brandon"))
+
+(env-keys ["brandon"])
+
+(expect
+ "successfully allocates funds for correct amounts and date"
+ "Allocation successfully released to main ledger"
+ (release-allocation "brandon"))
+
+(expect-failure
+ "releases fail when funds have been redeemed"
+ "funds have already been redeemed"
+ (release-allocation "brandon"))
+
+(expect
+  "brandon has 10 coins released to his account in coin contract"
+  10.0 (get-balance 'brandon))
+
+(commit-tx)
+
+(begin-tx)
+
+(use coin)
+
+(expect-failure
+  "gas-only fails without the presence of GAS"
+  "not granted: (coin.GAS)"
+  (gas-only))
+
+(expect-failure
+  "gas-guard fails when GAS is not present"
+  "Failure: Tx Failed: Enforce either the presence of a GAS cap or keyset"
+  (gas-guard (keyset-ref-guard "emily")))
+
+(test-capability (GAS))
+
+(expect
+  "gas-only succeeds with the presence of GAS"
+  true
+  (gas-only))
+
+(expect
+  "gas-guard succeeds when one of Gas or keyset are present"
+  true
+  (gas-guard (keyset-ref-guard "emily")))
+
+(commit-tx)
+
+(begin-tx)
+
+(use coin)
+
+(env-data { "bez" : ["bez"] })
+(env-keys ["bez"])
+(define-keyset "bez" (read-keyset "bez"))
+
+(expect
+  "gas-guard succeeds when GAS not present, but keyset is"
+  true
+  (gas-guard (keyset-ref-guard "bez")))
+
+(commit-tx)
+
+(begin-tx)
+
+(use coin)
+
+(expect-failure
+  "Remediations fail without the presence of REMEDIATE"
+  "not granted"
+  (remediate "brandon" 1.0))
+
+(test-capability (REMEDIATE))
+
+(expect
+  "Remediations succeed in the presence of REMEDIATE"
+  "Write succeeded"
+  (remediate "brandon" 1.0))
+
+(expect-failure
+  "Cannot remediate negative amounts"
+  "Remediation amount must be positive"
+  (remediate "brandon" -1.0))
+
+(expect-failure
+  "Cannot remediate amounts that don't conform to unit standards"
+  "Amount violates minimum precision"
+  (remediate "brandon" 1.0000000000001))
+
+(expect-failure
+  "Cannot remediate accounts that are too small"
+  "Account name does not conform to the min length requirement"
+  (remediate "br" 1.0))
+
+(expect-failure
+  "Cannot remediate accounts that are too large"
+  "Account name does not conform to the max length requirement"
+  (remediate "Classically, category theory is a useful tool not so much because of the light it sheds on any particular mathematical discipline but instead because categories are so ubiquitous: mathematical objects in many different settings (sets, groups, smooth manifolds, and so on) can be organized into categories. Moreover, many elementary mathematical concepts can be described in purely categorical terms and therefore make sense in each of these settings." 1.0))
