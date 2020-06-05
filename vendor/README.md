@@ -127,6 +127,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Faust:** [jpcima/language-faust](https://github.com/jpcima/language-faust)
 - **Forth:** [textmate/forth.tmbundle](https://github.com/textmate/forth.tmbundle)
 - **Fortran:** [textmate/fortran.tmbundle](https://github.com/textmate/fortran.tmbundle)
+- **Fortran Free Form:** [textmate/fortran.tmbundle](https://github.com/textmate/fortran.tmbundle)
 - **FreeMarker:** [freemarker/FreeMarker.tmbundle](https://github.com/freemarker/FreeMarker.tmbundle)
 - **Frege:** [atom-haskell/language-haskell](https://github.com/atom-haskell/language-haskell)
 - **G-code:** [appliedengdesign/vscode-gcode-syntax](https://github.com/appliedengdesign/vscode-gcode-syntax)
