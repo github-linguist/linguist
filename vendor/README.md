@@ -325,7 +325,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **PogoScript:** [featurist/PogoScript.tmbundle](https://github.com/featurist/PogoScript.tmbundle)
 - **Pony:** [CausalityLtd/sublime-pony](https://github.com/CausalityLtd/sublime-pony)
 - **PostCSS:** [hudochenkov/Syntax-highlighting-for-PostCSS](https://github.com/hudochenkov/Syntax-highlighting-for-PostCSS)
-- **PostScript:** [textmate/postscript.tmbundle](https://github.com/textmate/postscript.tmbundle)
+- **PostScript:** [Alhadis/Atom-PostScript](https://github.com/Alhadis/Atom-PostScript)
 - **PowerShell:** [PowerShell/EditorSyntax](https://github.com/PowerShell/EditorSyntax)
 - **Prisma:** [prisma/vscode-prisma](https://github.com/prisma/vscode-prisma)
 - **Processing:** [textmate/processing.tmbundle](https://github.com/textmate/processing.tmbundle)
