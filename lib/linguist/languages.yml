@@ -1099,6 +1099,16 @@ DTrace:
   codemirror_mode: clike
   codemirror_mime_type: text/x-csrc
   language_id: 85
+Dafny:
+  type: programming
+  color: "#FFEC25"
+  extensions:
+  - ".dfy"
+  interpreters:
+  - dafny
+  tm_scope: text.dfy.dafny
+  ace_mode: text
+  language_id: 969323346
 Darcs Patch:
   type: data
   aliases:
@@ -1523,15 +1533,12 @@ Forth:
   codemirror_mime_type: text/x-forth
   language_id: 114
 Fortran:
+  group: Fortran
   type: programming
   color: "#4d41b1"
   extensions:
-  - ".f90"
   - ".f"
-  - ".f03"
-  - ".f08"
   - ".f77"
-  - ".f95"
   - ".for"
   - ".fpp"
   tm_scope: source.fortran
@@ -1539,6 +1546,19 @@ Fortran:
   codemirror_mode: fortran
   codemirror_mime_type: text/x-fortran
   language_id: 107
+Fortran Free Form:
+  group: Fortran
+  type: programming
+  extensions:
+  - ".f90"
+  - ".f03"
+  - ".f08"
+  - ".f95"
+  tm_scope: source.fortran.modern
+  ace_mode: text
+  codemirror_mode: fortran
+  codemirror_mime_type: text/x-fortran
+  language_id: 761352333
 FreeMarker:
   type: programming
   color: "#0050b2"
@@ -1557,6 +1577,14 @@ Frege:
   tm_scope: source.haskell
   ace_mode: haskell
   language_id: 116
+Futhark:
+  type: programming
+  color: "#5f021f"
+  extensions:
+  - ".fut"
+  tm_scope: source.futhark
+  ace_mode: text
+  language_id: 97358117
 G-code:
   type: programming
   color: "#D08CF2"
@@ -1619,6 +1647,13 @@ GDScript:
   tm_scope: source.gdscript
   ace_mode: text
   language_id: 123
+GEDCOM:
+  type: data
+  ace_mode: text
+  extensions:
+  - ".ged"
+  tm_scope: source.gedcom
+  language_id: 459577965
 GLSL:
   type: programming
   extensions:
@@ -2289,6 +2324,7 @@ Inno Setup:
   type: programming
   extensions:
   - ".iss"
+  - ".isl"
   tm_scope: source.inno
   ace_mode: text
   language_id: 167
@@ -3020,6 +3056,18 @@ MUF:
   codemirror_mode: forth
   codemirror_mime_type: text/x-forth
   language_id: 219
+Macaulay2:
+  type: programming
+  extensions:
+  - ".m2"
+  aliases:
+  - m2
+  interpreters:
+  - M2
+  ace_mode: text
+  tm_scope: source.macaulay2
+  color: "#d8ffff"
+  language_id: 34167825
 Makefile:
   type: programming
   color: "#427819"
@@ -3326,6 +3374,16 @@ NCL:
   tm_scope: source.ncl
   ace_mode: text
   language_id: 240
+NEON:
+  type: data
+  extensions:
+  - ".neon"
+  tm_scope: source.neon
+  ace_mode: text
+  aliases:
+  - nette object notation
+  - ne-on
+  language_id: 481192983
 NL:
   type: data
   extensions:

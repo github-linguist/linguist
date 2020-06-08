@@ -17,6 +17,8 @@ vendor/grammars/ColdFusion:
 - source.cfscript.cfc
 - text.cfml.basic
 - text.html.cfm
+vendor/grammars/Dafny-VSCode:
+- text.dfy.dafny
 vendor/grammars/Docker.tmbundle:
 - source.dockerfile
 vendor/grammars/Elm/Syntaxes:
@@ -421,6 +423,8 @@ vendor/grammars/language-etc:
 - source.curlrc
 - source.direct-x
 - source.dosbox-conf
+- source.futhark
+- source.generic-db
 - source.gitattributes
 - source.gitconfig
 - source.gitignore
@@ -428,15 +432,20 @@ vendor/grammars/language-etc:
 - source.hosts
 - source.ini.npmrc
 - source.inputrc
+- source.lcov
 - source.m4
 - source.man-conf
 - source.nanorc
+- source.neon
 - source.odin-ehr
+- source.openbsd-pkg.contents
 - source.opts
 - source.sieve
 - source.smpl
 - source.ssh-config
+- source.tags
 - source.wgetrc
+- text.openbsd-pkg.desc
 - text.xml.svg
 vendor/grammars/language-faust:
 - source.faust
@@ -509,6 +518,8 @@ vendor/grammars/language-less:
 - source.css.less
 vendor/grammars/language-m68k:
 - source.m68k
+vendor/grammars/language-macaulay2:
+- source.macaulay2
 vendor/grammars/language-maxscript:
 - source.maxscript
 vendor/grammars/language-mcfunction:
@@ -847,6 +858,8 @@ vendor/grammars/vscode-codeql:
 - source.ql
 vendor/grammars/vscode-gcode-syntax:
 - source.gcode
+vendor/grammars/vscode-gedcom:
+- source.gedcom
 vendor/grammars/vscode-hack:
 - source.hack
 vendor/grammars/vscode-lean:
