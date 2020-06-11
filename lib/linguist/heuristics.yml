@@ -444,10 +444,10 @@ disambiguations:
   rules:
    # Postgres
   - language: PLpgSQL
-    pattern: '(?i:^\\i\b|AS \$\$|LANGUAGE ''?plpgsql''?|SECURITY (DEFINER|INVOKER)|BEGIN( WORK )?;)'
+    pattern: '(?i:^\\i\b|AS \$\$|LANGUAGE ''?plpgsql''?|BEGIN( WORK )?;)'
   # IBM db2
   - language: SQLPL
-    pattern: "(?i:(alter module)|(language sql)|(begin( NOT)+ atomic)|signal SQLSTATE '[0-9]+')"
+    pattern: "(?i:alter module|MODE DB2SQL)"
   # Oracle
   - language: PLSQL
     pattern: '(?i:\$\$PLSQL_|XMLTYPE|sysdate|systimestamp|\.nextval|connect by|AUTHID (DEFINER|CURRENT_USER)|constructor\W+function)'
