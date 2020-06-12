@@ -192,9 +192,11 @@ Linguist supports a number of different custom override strategies for language 
 
 ### Using gitattributes
 
-Add [a `.gitattributes` file](https://git-scm.com/docs/gitattributes) to your project and use standard git-style path matchers for the files you want to override using the `linguist-documentation`, `linguist-language`, `linguist-vendored`, `linguist-generated`  and `linguist-detectable` attributes.
+Add [a `.gitattributes` file](https://git-scm.com/docs/gitattributes) to your project and use standard git-style path matchers* for the files you want to override using the `linguist-documentation`, `linguist-language`, `linguist-vendored`, `linguist-generated`  and `linguist-detectable` attributes.
 `.gitattributes` will be used to determine language statistics and will be used to syntax highlight files.
 You can also manually set syntax highlighting using [Vim or Emacs modelines](#using-emacs-or-vim-modelines).
+
+> \* As noted in the `.gitattributes` doc, be advised that patterns matching a directory do not recurse, as `.gitignore` does; you need to use `path/**` to recursively configure the contents of a folder.
 
 When testing with a local installation of Linguist, take note that the added attributes will not take effect until the `.gitattributes` file is committed to your repository.
 
