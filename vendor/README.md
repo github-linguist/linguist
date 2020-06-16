@@ -121,6 +121,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **F#:** [fsprojects/atom-fsharp](https://github.com/fsprojects/atom-fsharp)
 - **F\*:** [FStarLang/atom-fstar](https://github.com/FStarLang/atom-fstar)
 - **FIGlet Font:** [Alhadis/language-fontforge](https://github.com/Alhadis/language-fontforge)
+- **Facility Service Definition:** [FacilityApi/FacilitySublime](https://github.com/FacilityApi/FacilitySublime)
 - **Factor:** [slavapestov/factor](https://github.com/slavapestov/factor)
 - **Fancy:** [fancy-lang/fancy-tmbundle](https://github.com/fancy-lang/fancy-tmbundle)
 - **Fantom:** [rkoeninger/sublime-fantom](https://github.com/rkoeninger/sublime-fantom)

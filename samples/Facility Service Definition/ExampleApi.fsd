@@ -1,0 +1,325 @@
+/// Example service for widgets.
+[http(url: "http://local.example.com/v1")]
+[csharp(namespace: Facility.ExampleApi)]
+service ExampleApi
+{
+	/// Gets widgets.
+	[http(method: GET, path: "/widgets")]
+	method getWidgets
+	{
+		/// The query.
+		[http(from: query, name: "q")]
+		query: string;
+
+		/// The limit of returned results.
+		limit: int32;
+
+		/// The sort field.
+		sort: WidgetField;
+
+		/// True to sort descending.
+		desc: boolean;
+
+		/// The maximum weight.
+		[obsolete]
+		maxWeight: double;
+	}:
+	{
+		/// The widgets.
+		widgets: Widget[];
+
+		/// The total number of widgets.
+		total: int64;
+
+		/// The total weight.
+		[obsolete]
+		totalWeight: double;
+
+		/// The pending job.
+		[http(from: body, code: 202)]
+		job: WidgetJob;
+	}
+
+	/// Creates a new widget.
+	[http(method: POST, path: "/widgets/", code: 201)]
+	method createWidget
+	{
+		/// The widget to create.
+		[http(from: body)]
+		widget: Widget;
+	}:
+	{
+		/// The created widget.
+		[http(from: body)]
+		widget: Widget;
+	}
+
+	/// Gets the specified widget.
+	[http(method: GET, path: "/widgets/{id}")]
+	method getWidget
+	{
+		/// The widget ID.
+		id: string;
+
+		[http(from: header, name: "If-None-Match")]
+		ifNoneMatch: string;
+	}:
+	{
+		/// The requested widget.
+		[http(from: body)]
+		widget: Widget;
+
+		[http(from: header)]
+		eTag: string;
+
+		[http(from: body, code: 304)]
+		notModified: boolean;
+	}
+
+	/// Deletes the specified widget.
+	[http(method: DELETE, path: "/widgets/{id}", code: 204)]
+	method deleteWidget
+	{
+		/// The widget ID.
+		id: string;
+	}:
+	{
+	}
+
+	/// Edits widget.
+	[http(method: POST, path: "/widgets/{id}")]
+	method editWidget
+	{
+		/// The widget ID.
+		id: string;
+
+		/// The operations.
+		ops: object[];
+
+		/// The new weight.
+		[obsolete]
+		weight: double;
+	}:
+	{
+		/// The edited widget.
+		[http(from: body, code: 200)]
+		widget: Widget;
+
+		/// The pending job.
+		[http(from: body, code: 202)]
+		job: WidgetJob;
+	}
+
+	/// Gets the specified widgets.
+	[http(method: POST, path: "/widgets/get")]
+	method getWidgetBatch
+	{
+		/// The IDs of the widgets to return.
+		ids: string[];
+	}:
+	{
+		/// The widget results.
+		results: result<Widget>[];
+	}
+
+	/// Gets the widget weight.
+	[obsolete]
+	[http(method: GET, path: "/widgets/{id}/weight")]
+	method getWidgetWeight
+	{
+		/// The widget ID.
+		id: string;
+	}:
+	{
+		/// The widget weight.
+		value: double;
+	}
+
+	/// Gets a widget preference.
+	[http(method: GET, path: "/prefs/{key}")]
+	method getPreference
+	{
+		/// The preference key.
+		key: string;
+	}:
+	{
+		/// The preference value.
+		[http(from: body)]
+		value: Preference;
+	}
+
+	/// Sets a widget preference.
+	[http(method: PUT, path: "/prefs/{key}")]
+	method setPreference
+	{
+		/// The preference key.
+		key: string;
+
+		/// The preference value.
+		[http(from: body)]
+		value: Preference;
+	}:
+	{
+		/// The preference value.
+		[http(from: body)]
+		value: Preference;
+	}
+
+	/// Demonstrates the default HTTP behavior.
+	method notRestful
+	{
+	}:
+	{
+	}
+
+	method kitchen
+	{
+		sink: KitchenSink;
+	}:
+	{
+	}
+
+	/// Custom errors.
+	errors ExampleApiErrors
+	{
+		/// The user is not an administrator.
+		[http(code: 403)]
+		NotAdmin,
+	}
+
+	/// A widget.
+	data Widget
+	{
+		/// A unique identifier for the widget.
+		id: string;
+
+		/// The name of the widget.
+		name: string;
+
+		/// The weight of the widget.
+		[obsolete]
+		weight: double;
+	}
+
+	/// A widget job.
+	data WidgetJob
+	{
+		/// A unique identifier for the widget job.
+		id: string;
+	}
+
+	/// A preference.
+	data Preference
+	{
+		[csharp(name: "IsBoolean")]
+		boolean: boolean;
+
+		booleans: boolean[];
+
+		double: double;
+
+		doubles: double[];
+
+		integer: int32;
+
+		integers: int32[];
+
+		string: string;
+
+		strings: string[];
+
+		bytes: bytes;
+
+		byteses: bytes[];
+
+		widgetField: WidgetField;
+
+		widgetFields: WidgetField[];
+
+		widget: Widget;
+
+		widgets: Widget[];
+
+		result: result<Widget>;
+
+		results: result<Widget>[];
+
+		bigInteger: int64;
+
+		bigIntegers: int64[];
+
+		decimal: decimal;
+
+		decimals: decimal[];
+
+		error: error;
+
+		errors: error[];
+
+		object: object;
+
+		objects: object[];
+
+		namedStrings: map<string>;
+
+		namedWidgets: map<Widget>;
+	}
+
+	/// Identifies a widget field.
+	enum WidgetField
+	{
+		/// The 'id' field.
+		id,
+
+		/// The 'name' field.
+		name,
+
+		/// The 'weight' field.
+		[obsolete]
+		weight,
+	}
+
+	/// An obsolete DTO.
+	[obsolete]
+	data ObsoleteData
+	{
+		unused: boolean;
+	}
+
+	/// An obsolete enum.
+	[obsolete]
+	enum ObsoleteEnum
+	{
+		unused,
+	}
+
+	data KitchenSink
+	{
+		[obsolete, proto(id: 1)]
+		oldField: string;
+	}
+}
+
+# ExampleApi
+
+Additional service remarks.
+
+## Heading
+
+Use a primary heading to indicate the member name.
+
+# getWidgets
+
+Additional method remarks.
+
+# Widget
+
+Additional DTO remarks.
+
+## Heading
+
+Only top-level headings need to match a member name.
+
+# WidgetField
+
+Additional enum remarks.
