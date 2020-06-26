@@ -459,6 +459,10 @@ disambiguations:
   # Generic SQL
   - language: SQL
     negative_pattern: '(?i:begin|boolean|package|exception)'
+- extensions: ['.sol']
+  rules:
+  - language: Solidity
+    pattern: 'pragma\s+solidity'
 - extensions: ['.srt']
   rules:
   - language: SubRip Text
