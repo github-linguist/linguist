@@ -1,0 +1,103 @@
+// SPDX-FileCopyrightText: © 2019-2020 Nadim Kobeissi <nadim@symbolic.software>
+// SPDX-License-Identifier: GPL-3.0-only
+
+attacker[active]
+
+principal Alice[
+	knows public c0, c1, c2, c3, c4
+	knows private alongterm
+	galongterm = G^alongterm
+]
+
+principal Bob[
+	knows public c0, c1, c2, c3, c4
+	knows private blongterm, bs
+	generates bo
+	gblongterm = G^blongterm
+	gbs = G^bs
+	gbo = G^bo
+	gbssig = SIGN(blongterm, gbs)
+]
+
+Bob -> Alice: [gblongterm], gbssig, gbs, gbo
+
+principal Alice[
+	generates ae1
+	gae1 = G^ae1
+	amaster = HASH(c0, gbs^alongterm, gblongterm^ae1, gbs^ae1, gbo^ae1)
+	arkba1, ackba1 = HKDF(amaster, c1, c2)
+]
+
+principal Alice[
+	generates m1, ae2
+	gae2 = G^ae2
+	_ = SIGNVERIF(gblongterm, gbs, gbssig)?
+	akshared1 = gbs^ae2
+	arkab1, ackab1 = HKDF(akshared1, arkba1, c2)
+	akenc1, akenc2 = HKDF(MAC(ackab1, c3), c1, c4)
+	e1 = AEAD_ENC(akenc1, m1, HASH(galongterm, gblongterm, gae2))
+]
+
+Alice -> Bob: [galongterm], gae1, gae2, e1
+
+principal Bob[
+	bmaster = HASH(c0, galongterm^bs, gae1^blongterm, gae1^bs, gae1^bo)
+	brkba1, bckba1 = HKDF(bmaster, c1, c2)
+]
+
+principal Bob[
+	bkshared1 = gae2^bs
+	brkab1, bckab1 = HKDF(bkshared1, brkba1, c2)
+	bkenc1, bkenc2 = HKDF(MAC(bckab1, c3), c1, c4)
+	m1_d = AEAD_DEC(bkenc1, e1, HASH(galongterm, gblongterm, gae2))
+]
+
+principal Bob[
+	generates m2, be
+	gbe = G^be
+	bkshared2 = gae2^be
+	brkba2, bckba2 = HKDF(bkshared2, brkab1, c2)
+	bkenc3, bkenc4 = HKDF(MAC(bckba2, c3), c1, c4)
+	e2 = AEAD_ENC(bkenc3, m2, HASH(gblongterm, galongterm, gbe))
+]
+
+Bob -> Alice: gbe, e2
+
+principal Alice[
+	akshared2 = gbe^ae2
+	arkba2, ackba2 = HKDF(akshared2, arkab1, c2)
+	akenc3, akenc4 = HKDF(MAC(ackba2, c3), c1, c4)
+	m2_d = AEAD_DEC(akenc3, e2, HASH(gblongterm, galongterm, gbe))
+]
+
+principal Alice[
+	generates m3, ae3
+	gae3 = G^ae3
+	akshared3 = gbe^ae3
+	arkab3, ackab3 = HKDF(akshared3, arkba2, c2)
+	akenc5, akenc6 = HKDF(MAC(ackab3, c3), c1, c4)
+	e3 = AEAD_ENC(akenc5, m3, HASH(gblongterm, galongterm, gae3))
+]
+
+Alice -> Bob: gae3, e3
+
+principal Bob[
+	bkshared3 = gae3^be
+	brkab3, bckab3 = HKDF(bkshared3, brkba2, c2)
+	bkenc5, bkenc6 = HKDF(MAC(bckab3, c3), c1, c4)
+	m3_d = AEAD_DEC(bkenc5, e3, HASH(gblongterm, galongterm, gae3))
+]
+
+phase[1]
+
+principal Alice[leaks alongterm]
+principal Bob[leaks blongterm]
+
+queries[
+	confidentiality? m1
+	authentication? Alice -> Bob: e1
+	confidentiality? m2
+	authentication? Bob -> Alice: e2
+	confidentiality? m3
+	authentication? Alice -> Bob: e3
+]

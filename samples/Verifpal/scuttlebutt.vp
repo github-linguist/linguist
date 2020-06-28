@@ -1,0 +1,113 @@
+// SPDX-FileCopyrightText: © 2019-2020 Nadim Kobeissi <nadim@symbolic.software>
+// SPDX-License-Identifier: GPL-3.0-only
+
+attacker[active]
+
+// Setup
+
+principal Alice[
+	knows public n
+	knows private longTermA
+	generates ephemeralA
+	longTermAPub = G^longTermA
+	ephemeralAPub = G^ephemeralA
+]
+
+principal Bob[
+	knows public n
+	knows private longTermB
+	generates ephemeralB
+	longTermBPub = G^longTermB
+	ephemeralBPub = G^ephemeralB
+]
+
+Bob -> Alice: longTermBPub
+
+// 1. Client Hello
+
+principal Alice[
+	nMacAlice = MAC(n, ephemeralAPub)
+]
+
+Alice -> Bob: ephemeralAPub, nMacAlice
+
+// 2. Server Hello
+
+principal Bob[
+	nMacAliceValid = ASSERT(MAC(n, ephemeralAPub), nMacAlice)?
+	nMacBob = MAC(n, ephemeralBPub)
+]
+
+Bob -> Alice: ephemeralBPub, nMacBob
+
+// 3. Client Authenticate
+
+principal Alice[
+	nMacBobValid = ASSERT(MAC(n, ephemeralBPub), nMacBob)?
+	ephemeralSecretAlice = ephemeralBPub^ephemeralA
+	longTermSecretAlice = longTermBPub^ephemeralA
+	masterSecret1Alice = HASH(n, ephemeralSecretAlice, longTermSecretAlice)
+	sig1Alice = SIGN(longTermA, HASH(n, longTermBPub, ephemeralSecretAlice))
+	secretBox1Alice = AEAD_ENC(masterSecret1Alice, sig1Alice, nil)
+	secretBox2Alice = AEAD_ENC(masterSecret1Alice, longTermAPub, nil)
+	longEphemeralSecretAlice = ephemeralBPub^longTermA
+	masterSecret2Alice = HASH(n, ephemeralSecretAlice, longTermSecretAlice, longEphemeralSecretAlice)
+]
+
+// TODO: Concatentation
+Alice -> Bob: secretBox1Alice, secretBox2Alice
+
+principal Bob[
+	ephemeralSecretBob = ephemeralAPub^ephemeralB
+	longTermSecretBob = ephemeralAPub^longTermB
+	masterSecret1Bob = HASH(n, ephemeralSecretBob, longTermSecretBob)
+	sig1Bob = AEAD_DEC(masterSecret1Bob, secretBox1Alice, nil)?
+	longTermAPub_Bob = AEAD_DEC(masterSecret1Bob, secretBox2Alice, nil)?
+	sig1Valid = SIGNVERIF(longTermAPub_bob, HASH(n, longTermBPub, ephemeralSecretBob), sig1Bob)?
+	longEphemeralSecretBob = longTermAPub_Bob^ephemeralB
+]
+
+// 4. Server Accept
+
+principal Bob[
+	sig2Bob = SIGN(longTermB, HASH(n, sig1Bob, longTermAPub_Bob, ephemeralSecretBob))
+	masterSecret2Bob = HASH(n, ephemeralSecretBob, longTermSecretBob, longEphemeralSecretBob)
+	secretBox1Bob = AEAD_ENC(masterSecret2Bob, sig2Bob, nil)
+]
+
+Bob -> Alice: secretBox1Bob
+
+// 5. Send a message
+
+principal Alice[
+	knows private m1
+	sig2Alice = AEAD_DEC(masterSecret2Alice, secretBox1Bob, nil)?
+	sig2Valid = SIGNVERIF(longTermBPub, HASH(n, sig1Alice, longTermAPub, ephemeralSecretAlice), sig2Alice)?
+	secretBoxM1Alice = AEAD_ENC(masterSecret2Alice, m1, nil)
+]
+
+Alice -> Bob: secretBoxM1Alice
+
+principal Bob[
+	knows private m2
+	m1Bob = AEAD_DEC(masterSecret2Bob, secretBoxM1Alice, nil)?
+	secretBoxM2Bob = AEAD_ENC(masterSecret2Bob, m2, nil)
+]
+
+Bob -> Alice: secretBoxM2Bob
+
+principal Alice [
+	m2Alice = AEAD_DEC(masterSecret2Alice, secretBoxM2Bob, nil)?
+]
+
+queries[
+	confidentiality? n
+	confidentiality? m1
+	confidentiality? m2
+	confidentiality? longTermAPub
+	authentication? Alice -> Bob: secretBox1Alice
+	authentication? Alice -> Bob: secretBox2Alice
+	authentication? Bob -> Alice: secretBox1Bob
+	authentication? Alice -> Bob: secretBoxM1Alice
+	authentication? Bob -> Alice: secretBoxM2Bob
+]

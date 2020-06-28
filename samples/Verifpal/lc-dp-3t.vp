@@ -1,0 +1,112 @@
+// SPDX-FileCopyrightText: © 2019-2020 Nadim Kobeissi <nadim@symbolic.software>
+// SPDX-License-Identifier: GPL-3.0-only
+
+attacker[active]
+
+// All lines that start with "//" are treated as comments and ignored by Verifpal
+// A principal block looks like the following
+principal SmartphoneA[
+	// In the line below we state that Alice knows the public BroadcastKey
+	
+	knows public BroadcastKey
+	
+	// SK is going to be a secret random value
+	// To define it we use the "generates" keyword
+	// We will use the following template for SK variable names
+	// SK[day number][principal initial]
+	
+	generates SK0A
+	
+	// We will use the following template for EphID variable names
+	// EphID[day number][value number][principal initial]
+	
+	EphID00A, EphID01A, EphID02A = HKDF(nil, SK0A, BroadcastKey)
+]
+
+principal SmartphoneB[
+	knows public BroadcastKey
+	generates SK0B
+	EphID00B, EphID01B, EphID02B = HKDF(nil, SK0B, BroadcastKey)
+]
+
+principal SmartphoneC[
+	knows public BroadcastKey
+	generates SK0C
+	EphID00C, EphID01C, EphID02C = HKDF(nil, SK0C, BroadcastKey)
+]
+
+// Sender -> Recipient : Name of Value
+
+SmartphoneA -> SmartphoneB: EphID00A
+SmartphoneB -> SmartphoneA: EphID00B
+
+SmartphoneC -> SmartphoneB: EphID01C
+SmartphoneB -> SmartphoneC: EphID01B
+
+// A server is just like any other principal
+
+principal BackendServer[
+	// Let's assume that infectedPatients0 is the list of infected patients on day 0
+	knows private infectedPatients0
+]
+
+BackendServer -> SmartphoneA: infectedPatients0
+BackendServer -> SmartphoneB: infectedPatients0
+BackendServer -> SmartphoneC: infectedPatients0
+
+principal SmartphoneA[
+	SK1A = HASH(SK0A)
+	EphID10A, EphID11A, EphID12A = HKDF(nil, SK1A, BroadcastKey)
+]
+
+principal SmartphoneB[
+	SK1B = HASH(SK0B)
+	EphID10B, EphID11B, EphID12B = HKDF(nil, SK1B, BroadcastKey)
+]
+
+principal SmartphoneC[
+	SK1C = HASH(SK0C)
+	EphID10C, EphID11C, EphID12C = HKDF(nil, SK1C, BroadcastKey)
+]
+
+principal SmartphoneA[
+	SK2A = HASH(SK1A)
+	EphID20A, EphID21A, EphID22A = HKDF(nil, SK2A, BroadcastKey)
+]
+
+principal HealthCareAuthority[
+	generates triggerToken
+	knows private ephemeral_sk
+	m1 = ENC(ephemeral_sk, triggerToken)
+]
+
+// The brackets around m1 here mean that the value is guarded
+// ie: an active attacker cannot inject a value in its place
+HealthCareAuthority -> BackendServer : [m1]
+HealthCareAuthority -> SmartphoneA : m1
+
+principal SmartphoneA[
+	knows private ephemeral_sk
+	m1_dec = DEC(ephemeral_sk, m1)
+	m2 = ENC(ephemeral_sk, SK1A)
+]
+
+SmartphoneA -> BackendServer: m2
+
+principal BackendServer [
+	knows private ephemeral_sk
+	m2_dec = DEC(ephemeral_sk, m2)
+	infectedPatients1 = CONCAT(infectedPatients0, m2_dec)
+]
+
+BackendServer -> SmartphoneA: infectedPatients1
+BackendServer -> SmartphoneB: infectedPatients1
+BackendServer -> SmartphoneC: infectedPatients1
+
+queries[
+	// Would someone who shared a value 15 days before they got tested get flagged?
+	confidentiality? EphID02A
+	// Is the server able to Authenticate Alice as the sender of m2?
+	authentication? SmartphoneA -> BackendServer: m2
+	unlinkability? EphID02A, EphID00A, EphID01A
+]
