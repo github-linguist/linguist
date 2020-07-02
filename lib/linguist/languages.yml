@@ -3154,10 +3154,9 @@ Mask:
   - ".mask"
   tm_scope: source.mask
   language_id: 223
-Mathematica:
+Wolfram Language:
   type: programming
   extensions:
-  - ".mathematica"
   - ".cdf"
   - ".m"
   - ".ma"
@@ -3166,8 +3165,11 @@ Mathematica:
   - ".nbp"
   - ".wl"
   - ".wlt"
+  - ".wls"
   aliases:
+  - Mathematica
   - mma
+  - wl
   tm_scope: source.mathematica
   ace_mode: text
   codemirror_mode: mathematica

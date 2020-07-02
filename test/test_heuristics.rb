@@ -287,7 +287,7 @@ class TestHeuristics < Minitest::Test
       "Mercury" => all_fixtures("Mercury", "*.m"),
       "MUF" => all_fixtures("MUF", "*.m"),
       "M" => all_fixtures("M", "MDB.m"),
-      "Mathematica" => all_fixtures("Mathematica", "*.m") - all_fixtures("Mathematica", "Problem12.m"),
+      "Wolfram Language" => all_fixtures("Wolfram Language", "*.m") - all_fixtures("Wolfram Language", "Problem12.m"),
       "MATLAB" => all_fixtures("MATLAB", "create_ieee_paper_plots.m"),
       "Limbo" => all_fixtures("Limbo", "*.m"),
       nil => ambiguous
