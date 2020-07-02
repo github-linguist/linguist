@@ -3154,27 +3154,6 @@ Mask:
   - ".mask"
   tm_scope: source.mask
   language_id: 223
-Wolfram Language:
-  type: programming
-  extensions:
-  - ".cdf"
-  - ".m"
-  - ".ma"
-  - ".mt"
-  - ".nb"
-  - ".nbp"
-  - ".wl"
-  - ".wlt"
-  - ".wls"
-  aliases:
-  - Mathematica
-  - mma
-  - wl
-  tm_scope: source.mathematica
-  ace_mode: text
-  codemirror_mode: mathematica
-  codemirror_mime_type: text/x-mathematica
-  language_id: 224
 Maven POM:
   type: data
   tm_scope: text.xml.pom
@@ -5899,6 +5878,27 @@ Windows Registry Entries:
   codemirror_mode: properties
   codemirror_mime_type: text/x-properties
   language_id: 969674868
+Wolfram Language:
+  type: programming
+  extensions:
+  - ".cdf"
+  - ".m"
+  - ".ma"
+  - ".mt"
+  - ".nb"
+  - ".nbp"
+  - ".wl"
+  - ".wls"
+  - ".wlt"
+  aliases:
+  - Mathematica
+  - mma
+  - wl
+  tm_scope: source.mathematica
+  ace_mode: text
+  codemirror_mode: mathematica
+  codemirror_mime_type: text/x-mathematica
+  language_id: 224
 Wollok:
   type: programming
   color: "#a23738"
