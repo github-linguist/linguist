@@ -117,6 +117,10 @@ disambiguations:
     #  : dependency
     # path/file.ext1 : some/path/../file.ext2
     pattern: '([\/\\].*:\s+.*\s\\$|: \\$|^[ %]:|^[\w\s\/\\.]+\w+\.\w+\s*:\s+[\w\s\/\\.]+\w+\.\w+)'
+- extensions: ['.def']
+  rules:
+  - language: Singularity
+    pattern: '^(%app(install|run)|%post|%(run|start)script)'
 - extensions: ['.dsp']
   rules:
   - language: Microsoft Developer Studio Project
