@@ -341,6 +341,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Q#:** [ivangabriele/qsharp-tmLanguage](https://github.com/ivangabriele/qsharp-tmLanguage)
 - **QML:** [skozlovf/Sublime-QML](https://github.com/skozlovf/Sublime-QML)
 - **QMake:** [textmate/cpp-qt.tmbundle](https://github.com/textmate/cpp-qt.tmbundle)
+- **Qt Script:** [atom/language-javascript](https://github.com/atom/language-javascript)
 - **Quake:** [newgrammars/quake](https://github.com/newgrammars/quake)
 - **R:** [textmate/r.tmbundle](https://github.com/textmate/r.tmbundle)
 - **RAML:** [atom/language-yaml](https://github.com/atom/language-yaml)
