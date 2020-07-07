@@ -453,7 +453,7 @@ disambiguations:
     pattern: '(?i:\$\$PLSQL_|XMLTYPE|sysdate|systimestamp|\.nextval|connect by|AUTHID (DEFINER|CURRENT_USER)|constructor\W+function)'
   # T-SQL
   - language: TSQL
-    pattern: '(?i:^\s*GO\b|@@[_A-Z]\w*\b|BEGIN( TRY| CATCH)|OUTPUT INSERTED|DECLARE\s+@)'
+    pattern: '(?i:^\s*GO\b|BEGIN( TRY| CATCH)|OUTPUT INSERTED|DECLARE\s+@)'
   # Generic SQL
   - language: SQL
     negative_pattern: '(?i:begin|boolean|package|exception)'
