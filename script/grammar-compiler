@@ -14,12 +14,7 @@ else
     cd "../.."
 fi
 
-#exec docker run --rm \
-#    -u "$(id -u "$USER")":"$(id -g "$USER")" \
-#    -v "$PWD:/src/linguist" \
-#    -w /src/linguist "$image" "$@"
-
 exec docker run --rm \
     -u "$(id -u "$USER")":"$(id -g "$USER")" \
-    -v "D:\temp\ling\linguist\:/src/linguist" \
+    -v "$PWD:/src/linguist" \
     -w /src/linguist "$image" "$@"
