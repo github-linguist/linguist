@@ -18,13 +18,36 @@ Linguist uses the [`charlock_holmes`](https://github.com/brianmario/charlock_hol
 [Docker](https://www.docker.com/) is also required when adding or updating grammars.
 These components have their own dependencies - `icu4c`, and `cmake` and `pkg-config` respectively - which you may need to install before you can install Linguist.
 
+#### Installing dependencies on MacOS
+
 For example, on macOS with [Homebrew](http://brew.sh/):
 ```bash
 brew install cmake pkg-config icu4c
 brew cask install docker
 ```
 
-On Ubuntu:
+There are issues with the installation of Charlock Holmes on Macs (these have been reported upstream but there has been little progress in over a year.
+
+On Macs with newer versions of xcode, trying to run the bootstreap script below gives an error along the lines of:
+
+```/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/universal-darwin19/ruby/config.h:413:31:
+error: invalid suffix on literal; C++11 requires a space between literal and identifier
+```
+
+If you get this error, then you need to note exactly which file is causing the problem, and edit the lines that are mentioned. (The line numbers will vary depending on your version of MacOS.)
+
+You need to insert a space immediately before the word RUBY that follows the closing of a literal string. There will probably be two of these.
+
+```
+OLD:
+#define RUBY_ARCH "universal-"RUBY_PLATFORM_OS
+CORRECTED:
+#define RUBY_ARCH "universal-" RUBY_PLATFORM_OS
+```
+
+After this, you should be able to run the bootstrap script from linguist.
+
+#### Installing dependencies on Ubuntu:
 ```bash
 apt-get install cmake pkg-config libicu-dev docker-ce
 ```
