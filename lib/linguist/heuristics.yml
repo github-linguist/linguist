@@ -410,9 +410,9 @@ disambiguations:
 - extensions: ['.qs']
   rules:
   - language: Q#
-    pattern: '^(//)?\s*(namespace|operation)'
+    pattern: '^((\/{2,3})?\s*(namespace|operation)\b)'
   - language: Qt Script
-    pattern: '(function|\w+\.prototype\.\w+|===)'
+    pattern: '(\w+\.prototype\.\w+|===|\bvar\b)'
 - extensions: ['.r']
   rules:
   - language: Rebol
