@@ -424,6 +424,10 @@ disambiguations:
   - language: Python
     pattern: '(?m:^(import|from|class|def)\s)'
   - language: "Ren'Py"
+- extensions: ['.hey']
+  rules:
+  - language: HEY
+    pattern: '(?m:^(compile|class|func|hey)\s)'
 - extensions: ['.rs']
   rules:
   - language: Rust
