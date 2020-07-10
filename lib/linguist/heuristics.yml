@@ -187,6 +187,10 @@ disambiguations:
     pattern: '^#version\s+[0-9]+\b'
   - language: Gosu
     pattern: '^uses java\.'
+extensions: ['.neo']
+  rules:
+  - language: NEO
+    pattern: '(?m:^(include|loop|func|hey)\s)'
 - extensions: ['.h']
   rules:
   - language: Objective-C
