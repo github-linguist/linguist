@@ -338,6 +338,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Python:** [MagicStack/MagicPython](https://github.com/MagicStack/MagicPython)
 - **Python console:** [MagicStack/MagicPython](https://github.com/MagicStack/MagicPython)
 - **Python traceback:** [MagicStack/MagicPython](https://github.com/MagicStack/MagicPython)
+- **Q#:** [microsoft/qsharp-compiler](https://github.com/microsoft/qsharp-compiler)
 - **QML:** [skozlovf/Sublime-QML](https://github.com/skozlovf/Sublime-QML)
 - **QMake:** [textmate/cpp-qt.tmbundle](https://github.com/textmate/cpp-qt.tmbundle)
 - **Qt Script:** [atom/language-javascript](https://github.com/atom/language-javascript)
