@@ -450,7 +450,7 @@ disambiguations:
     pattern: "(?i:(alter module)|(language sql)|(begin( NOT)+ atomic)|signal SQLSTATE '[0-9]+')"
   # Oracle
   - language: PLSQL
-    pattern: '(?i:\$\$PLSQL_|XMLTYPE|sysdate|systimestamp|\.nextval|connect by|AUTHID (DEFINER|CURRENT_USER)|constructor\W+function)'
+    pattern: '(?i:\$\$PLSQL_|XMLTYPE|systimestamp|\.nextval|connect by|AUTHID (DEFINER|CURRENT_USER)|constructor\W+function)'
   # T-SQL
   - language: TSQL
     pattern: '(?i:^\s*GO\b|BEGIN( TRY| CATCH)|OUTPUT INSERTED|DECLARE\s+@)'
