@@ -553,6 +553,7 @@ C#:
   - ".cs"
   - ".cake"
   - ".csx"
+  - ".linq"
   language_id: 42
 C++:
   type: programming
@@ -3065,7 +3066,7 @@ Macaulay2:
   interpreters:
   - M2
   ace_mode: text
-  tm_scope: source.macaulay2
+  tm_scope: source.m2
   color: "#d8ffff"
   language_id: 34167825
 Makefile:
@@ -3498,7 +3499,7 @@ Nginx:
   language_id: 248
 Nim:
   type: programming
-  color: "#37775b"
+  color: "#ffc200"
   extensions:
   - ".nim"
   - ".nim.cfg"
@@ -5379,6 +5380,7 @@ TOML:
   filenames:
   - Cargo.lock
   - Gopkg.lock
+  - poetry.lock
   tm_scope: source.toml
   ace_mode: toml
   codemirror_mode: toml
@@ -6375,7 +6377,7 @@ mIRC Script:
   color: "#926059"
   extensions:
   - ".mrc"
-  tm_scope: source.mrc
+  tm_scope: source.msl
   ace_mode: text
   language_id: 517654727
 mcfunction:

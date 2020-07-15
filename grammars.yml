@@ -386,6 +386,7 @@ vendor/grammars/language-asn1:
 vendor/grammars/language-batchfile:
 - source.batchfile
 vendor/grammars/language-blade:
+- source.gfm.blade
 - text.html.php.blade
 vendor/grammars/language-click:
 - source.click
@@ -521,7 +522,7 @@ vendor/grammars/language-less:
 vendor/grammars/language-m68k:
 - source.m68k
 vendor/grammars/language-macaulay2:
-- source.macaulay2
+- source.m2
 vendor/grammars/language-maxscript:
 - source.maxscript
 vendor/grammars/language-mcfunction:
@@ -530,7 +531,7 @@ vendor/grammars/language-mcfunction:
 vendor/grammars/language-meson:
 - source.meson
 vendor/grammars/language-msl:
-- source.mrc
+- source.msl
 vendor/grammars/language-ncl:
 - source.ncl
 vendor/grammars/language-ninja:
@@ -556,6 +557,7 @@ vendor/grammars/language-reason:
 vendor/grammars/language-reg:
 - source.reg
 vendor/grammars/language-regexp:
+- hidden.regexp.injection-shell
 - source.regexp
 - source.regexp.extended
 - source.sy
