@@ -1,0 +1,14 @@
+!define PROTECTED_META
+' from https://github.com/FooBarShebang/libencapsulation/blob/master/docs/UML/implementation/ProtectedMeta.iuml'
+
+!ifndef CLASSES
+!include ../Templates/Classes.cuml
+!endif
+
+class ProtectedMeta <<metaclass>> {
+    __getattribute__(): class A, str -> type A
+    __setattr__(): class A, str, type A -> None
+    __delattr__(): class A, str -> None
+    __new__(): type class A, str, list(class B), dict(str -> type A) -> class A
+    __del__(): class A -> None
+}

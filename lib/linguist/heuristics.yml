@@ -58,6 +58,10 @@ disambiguations:
     pattern: '^[=-]+(\s|\n)|{{[A-Za-z]'
   - language: AGS Script
     pattern: '^(\/\/.+|((import|export)\s+)?(function|int|float|char)\s+((room|repeatedly|on|game)_)?([A-Za-z]+[A-Za-z_0-9]+)\s*[;\(])'
+- extensions: ['.asm']
+  rules:
+  - language: Motorola 68K Assembly
+    named_pattern: m68k
 - extensions: ['.asy']
   rules:
   - language: LTspice Symbol
@@ -113,6 +117,12 @@ disambiguations:
     #  : dependency
     # path/file.ext1 : some/path/../file.ext2
     pattern: '([\/\\].*:\s+.*\s\\$|: \\$|^[ %]:|^[\w\s\/\\.]+\w+\.\w+\s*:\s+[\w\s\/\\.]+\w+\.\w+)'
+- extensions: ['.dsp']
+  rules:
+  - language: Microsoft Developer Studio Project
+    pattern: '# Microsoft Developer Studio Generated Build File'
+  - language: Faust
+    pattern: '\bprocess\s*[(=]|\b(library|import)\s*\(\s*"|\bdeclare\s+(name|version|author|copyright|license)\s+"'
 - extensions: ['.ecl']
   rules:
   - language: ECLiPSe
@@ -173,6 +183,8 @@ disambiguations:
   - language: Game Maker Language
 - extensions: ['.gs']
   rules:
+  - language: GLSL
+    pattern: '^#version\s+[0-9]+\b'
   - language: Gosu
     pattern: '^uses java\.'
 - extensions: ['.h']
@@ -185,6 +197,12 @@ disambiguations:
   rules:
   - language: Hack
     pattern: '<\?hh'
+- extensions: ['.i']
+  rules:
+  - language: Motorola 68K Assembly
+    named_pattern: m68k
+  - language: SWIG
+    pattern: '^[ \t]*%[a-z_]+\b|^%[{}]$'
 - extensions: ['.ice']
   rules:
   - language: JSON
@@ -192,10 +210,19 @@ disambiguations:
   - language: Slice
 - extensions: ['.inc']
   rules:
+  - language: Motorola 68K Assembly
+    named_pattern: m68k
   - language: PHP
     pattern: '^<\?(?:php)?'
   - language: SourcePawn
     pattern: '^public\s+(?:SharedPlugin(?:\s+|:)__pl_\w+\s*=(?:\s*{)?|(?:void\s+)?__pl_\w+_SetNTVOptional\(\)(?:\s*{)?)'
+  - language: NASL
+    pattern:
+    - '^\s*include\s*\(\s*(?:"|'')[\\/\w\-\.:\s]+\.(?:nasl|inc)\s*(?:"|'')\s*\)\s*;'
+    - '^\s*(?:global|local)_var\s+(?:\w+(?:\s*=\s*[\w\-"'']+)?\s*)(?:,\s*\w+(?:\s*=\s*[\w\-"'']+)?\s*)*+\s*;'
+    - '^\s*namespace\s+\w+\s*{'
+    - '^\s*object\s+\w+\s*(?:extends\s+\w+(?:::\w+)?)?\s*{'
+    - '^\s*(?:public\s+|private\s+|\s*)function\s+\w+\s*\([\w\s,]*\)\s*{'
   - language: POV-Ray SDL
     pattern: '^\s*#(declare|local|macro|while)\s'
 - extensions: ['.l']
@@ -289,6 +316,19 @@ disambiguations:
   - language: NL
     pattern: '^(b|g)[0-9]+ '
   - language: NewLisp
+- extensions: ['.odin']
+  rules:
+  - language: Object Data Instance Notation
+    pattern: '(?:^|<)\s*[A-Za-z0-9_]+\s*=\s*<'
+  - language: Odin
+    pattern: 'package\s+\w+|\b(?:im|ex)port\s*"[\w:./]+"|\w+\s*::\s*(?:proc|struct)\s*\(|^\s*//\s'
+- extensions: ['.p']
+  rules:
+  - language: Gnuplot
+    pattern:
+    - '^s?plot\b'
+    - '^set\s+(term|terminal|out|output|[xy]tics|[xy]label|[xy]range|style)\b'
+  - language: OpenEdge ABL
 - extensions: ['.php']
   rules:
   - language: Hack
@@ -301,7 +341,7 @@ disambiguations:
     pattern: '^[^#]*:-'
   - language: Perl
     named_pattern: perl5
-  - language: Perl 6
+  - language: Raku
     named_pattern: perl6
 - extensions: ['.plist']
   rules:
@@ -312,7 +352,7 @@ disambiguations:
   rules:
   - language: Perl
     named_pattern: perl5
-  - language: Perl 6
+  - language: Raku
     named_pattern: perl6
   - language: X PixMap
     pattern: '^\s*\/\* XPM \*\/'
@@ -367,6 +407,12 @@ disambiguations:
     pattern: '((?i:[A-Z.][\w.]*:{)|(^|\n)\\(cd?|d|l|p|ts?) )'
   - language: HiveQL
     pattern: '(?i:SELECT\s+[\w*,]+\s+FROM|(CREATE|ALTER|DROP)\s(DATABASE|SCHEMA|TABLE))'
+- extensions: ['.qs']
+  rules:
+  - language: Q#
+    pattern: '^((\/{2,3})?\s*(namespace|operation)\b)'
+  - language: Qt Script
+    pattern: '(\w+\.prototype\.\w+|===|\bvar\b)'
 - extensions: ['.r']
   rules:
   - language: Rebol
@@ -390,6 +436,10 @@ disambiguations:
     pattern: '^(use |fn |mod |pub |macro_rules|impl|#!?\[)'
   - language: RenderScript
     pattern: '#include|#pragma\s+(rs|version)|__attribute__'
+- extensions: ['.s']
+  rules:
+  - language: Motorola 68K Assembly
+    named_pattern: m68k
 - extensions: ['.sc']
   rules:
   - language: SuperCollider
@@ -400,18 +450,16 @@ disambiguations:
   rules:
    # Postgres
   - language: PLpgSQL
-    pattern: '(?i:^\\i\b|AS \$\$|LANGUAGE ''?plpgsql''?|SECURITY (DEFINER|INVOKER)|BEGIN( WORK )?;)'
+    pattern: '(?i:^\\i\b|AS \$\$|LANGUAGE ''?plpgsql''?|BEGIN( WORK )?;)'
   # IBM db2
   - language: SQLPL
-    pattern: "(?i:(alter module)|(language sql)|(begin( NOT)+ atomic)|signal SQLSTATE '[0-9]+')"
+    pattern: "(?i:alter module|MODE DB2SQL)"
   # Oracle
   - language: PLSQL
-    pattern: '(?i:\$\$PLSQL_|XMLTYPE|sysdate|systimestamp|\.nextval|connect by|AUTHID (DEFINER|CURRENT_USER)|constructor\W+function)'
+    pattern: '(?i:\$\$PLSQL_|XMLTYPE|systimestamp|\.nextval|connect by|AUTHID (DEFINER|CURRENT_USER)|constructor\W+function)'
   # T-SQL
   - language: TSQL
-    and:
-    - negative_pattern: '(?i:IDENTIFIED|NUMBER|VARCHAR2|REPEAT|UNTIL|IMMEDIATE)'
-    - pattern: '(?i:(GO)|(@@)|(CREATE PROCEDURE)|BEGIN( TRY| CATCH)|OUTPUT( INSERTED)|IF|ELSE|IIF|CHOOSE|CURSOR|FETCH|DEALLOCATE|DECLARE)'
+    pattern: '(?i:^\s*GO\b|BEGIN( TRY| CATCH)|OUTPUT INSERTED|DECLARE\s+@)'
   # Generic SQL
   - language: SQL
     negative_pattern: '(?i:begin|boolean|package|exception)'
@@ -423,7 +471,7 @@ disambiguations:
   rules:
   - language: Perl
     named_pattern: perl5
-  - language: Perl 6
+  - language: Raku
     named_pattern: perl6
   - language: Turing
     pattern: '^\s*%[ \t]+|^\s*var\s+\w+(\s*:\s*\w+)?\s*:=\s*\w+'
@@ -469,7 +517,7 @@ disambiguations:
   rules:
   - language: Vim script
     pattern: '^UseVimball'
-  - language: Visual Basic
+  - language: VBA
 - extensions: ['.w']
   rules:
   - language: OpenEdge ABL
@@ -502,6 +550,14 @@ named_patterns:
   - 'std::\w+'
   fortran: '^(?i:[c*][^abd-z]|      (subroutine|program|end|data)\s|\s*!)'
   key_equals_value: '^[^#!;][^=]*='
+  m68k:
+  - '(?im)\bmoveq(?:\.l)?\s+#(?:\$-?[0-9a-f]{1,3}|%[0-1]{1,8}|-?[0-9]{1,3}),\s*d[0-7]\b'
+  - '(?im)^\s*move(?:\.[bwl])?\s+(?:sr|usp),\s*[^\s]+'
+  - '(?im)^\s*move\.[bwl]\s+.*\b[ad]\d'
+  - '(?im)^\s*movem\.[bwl]\b'
+  - '(?im)^\s*move[mp](?:\.[wl])?\b'
+  - '(?im)^\s*btst\b'
+  - '(?im)^\s*dbra\b'
   objectivec: '^\s*(@(interface|class|protocol|property|end|synchronised|selector|implementation)\b|#import\s+.+\.h[">])'
   perl5: '\buse\s+(?:strict\b|v?5\.)'
   perl6: '^\s*(?:use\s+v6\b|\bmodule\b|\b(?:my\s+)?class\b)'
