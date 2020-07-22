@@ -4304,6 +4304,16 @@ Python traceback:
   tm_scope: text.python.traceback
   ace_mode: text
   language_id: 304
+Q#:
+  type: programming
+  extensions:
+  - ".qs"
+  aliases:
+  - qsharp
+  color: "#fed659"
+  ace_mode: text
+  tm_scope: source.qsharp
+  language_id: 697448245
 QML:
   type: programming
   color: "#44a51c"
@@ -4323,6 +4333,19 @@ QMake:
   tm_scope: source.qmake
   ace_mode: text
   language_id: 306
+Qt Script:
+  type: programming
+  ace_mode: javascript
+  codemirror_mode: javascript
+  codemirror_mime_type: text/javascript
+  extensions:
+  - ".qs"
+  filenames:
+  - "installscript.qs"
+  - "toolchain_installscript.qs"
+  color: "#00b841"
+  tm_scope: source.js
+  language_id: 558193693
 Quake:
   type: programming
   filenames:

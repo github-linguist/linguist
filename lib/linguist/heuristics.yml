@@ -407,6 +407,12 @@ disambiguations:
     pattern: '((?i:[A-Z.][\w.]*:{)|(^|\n)\\(cd?|d|l|p|ts?) )'
   - language: HiveQL
     pattern: '(?i:SELECT\s+[\w*,]+\s+FROM|(CREATE|ALTER|DROP)\s(DATABASE|SCHEMA|TABLE))'
+- extensions: ['.qs']
+  rules:
+  - language: Q#
+    pattern: '^((\/{2,3})?\s*(namespace|operation)\b)'
+  - language: Qt Script
+    pattern: '(\w+\.prototype\.\w+|===|\bvar\b)'
 - extensions: ['.r']
   rules:
   - language: Rebol
