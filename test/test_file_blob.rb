@@ -394,6 +394,10 @@ class TestFileBlob < Minitest::Test
     assert sample_blob("leaflet-plugins/leaflet.draw-src.js").vendored?
     assert sample_blob("leaflet-plugins/leaflet.spin.js").vendored?
 
+    # VSCode
+    assert sample_blob(".vscode/settings.json").vendored?
+    assert !sample_blob("testing.vscode-testing").vendored?
+
     # MooTools
     assert sample_blob("public/javascripts/mootools-core-1.3.2-full-compat.js").vendored?
     assert sample_blob("public/javascripts/mootools-core-1.3.2-full-compat-yc.js").vendored?
@@ -523,6 +527,10 @@ class TestFileBlob < Minitest::Test
     assert sample_blob("subproject/mvnw.cmd").vendored?
     assert sample_blob("subproject/.mvn/wrapper/maven-wrapper.properties").vendored?
 
+    # .DS_Store
+    assert sample_blob(".DS_Store").vendored?
+    assert sample_blob("another-dir/.DS_Store").vendored?
+
     # Octicons
     assert sample_blob("octicons.css").vendored?
     assert sample_blob("public/octicons.min.css").vendored?
@@ -540,6 +548,10 @@ class TestFileBlob < Minitest::Test
     # Sphinx docs
     assert sample_blob("docs/_build/asset.doc").vendored?
     assert sample_blob("docs/theme/file.css").vendored?
+
+    # ProGuard
+    assert sample_blob("proguard.pro").vendored?
+    assert sample_blob("proguard-rules.pro").vendored?
 
     # Vagrant
     assert sample_blob("puphpet/file.pp").vendored?

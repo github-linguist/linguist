@@ -553,6 +553,7 @@ C#:
   - ".cs"
   - ".cake"
   - ".csx"
+  - ".linq"
   language_id: 42
 C++:
   type: programming
@@ -833,7 +834,7 @@ CodeQL:
   ace_mode: text
   language_id: 424259634
   aliases:
-    - ql
+  - ql
 CoffeeScript:
   type: programming
   tm_scope: source.coffee
@@ -1099,6 +1100,16 @@ DTrace:
   codemirror_mode: clike
   codemirror_mime_type: text/x-csrc
   language_id: 85
+Dafny:
+  type: programming
+  color: "#FFEC25"
+  extensions:
+  - ".dfy"
+  interpreters:
+  - dafny
+  tm_scope: text.dfy.dafny
+  ace_mode: text
+  language_id: 969323346
 Darcs Patch:
   type: data
   aliases:
@@ -1523,15 +1534,12 @@ Forth:
   codemirror_mime_type: text/x-forth
   language_id: 114
 Fortran:
+  group: Fortran
   type: programming
   color: "#4d41b1"
   extensions:
-  - ".f90"
   - ".f"
-  - ".f03"
-  - ".f08"
   - ".f77"
-  - ".f95"
   - ".for"
   - ".fpp"
   tm_scope: source.fortran
@@ -1539,6 +1547,19 @@ Fortran:
   codemirror_mode: fortran
   codemirror_mime_type: text/x-fortran
   language_id: 107
+Fortran Free Form:
+  group: Fortran
+  type: programming
+  extensions:
+  - ".f90"
+  - ".f03"
+  - ".f08"
+  - ".f95"
+  tm_scope: source.fortran.modern
+  ace_mode: text
+  codemirror_mode: fortran
+  codemirror_mime_type: text/x-fortran
+  language_id: 761352333
 FreeMarker:
   type: programming
   color: "#0050b2"
@@ -1557,6 +1578,14 @@ Frege:
   tm_scope: source.haskell
   ace_mode: haskell
   language_id: 116
+Futhark:
+  type: programming
+  color: "#5f021f"
+  extensions:
+  - ".fut"
+  tm_scope: source.futhark
+  ace_mode: text
+  language_id: 97358117
 G-code:
   type: programming
   color: "#D08CF2"
@@ -1619,6 +1648,13 @@ GDScript:
   tm_scope: source.gdscript
   ace_mode: text
   language_id: 123
+GEDCOM:
+  type: data
+  ace_mode: text
+  extensions:
+  - ".ged"
+  tm_scope: source.gedcom
+  language_id: 459577965
 GLSL:
   type: programming
   extensions:
@@ -2289,6 +2325,7 @@ Inno Setup:
   type: programming
   extensions:
   - ".iss"
+  - ".isl"
   tm_scope: source.inno
   ace_mode: text
   language_id: 167
@@ -3032,6 +3069,18 @@ MUF:
   codemirror_mode: forth
   codemirror_mime_type: text/x-forth
   language_id: 219
+Macaulay2:
+  type: programming
+  extensions:
+  - ".m2"
+  aliases:
+  - m2
+  interpreters:
+  - M2
+  ace_mode: text
+  tm_scope: source.m2
+  color: "#d8ffff"
+  language_id: 34167825
 Makefile:
   type: programming
   color: "#427819"
@@ -3338,6 +3387,16 @@ NCL:
   tm_scope: source.ncl
   ace_mode: text
   language_id: 240
+NEON:
+  type: data
+  extensions:
+  - ".neon"
+  tm_scope: source.neon
+  ace_mode: text
+  aliases:
+  - nette object notation
+  - ne-on
+  language_id: 481192983
 NL:
   type: data
   extensions:
@@ -3452,7 +3511,7 @@ Nginx:
   language_id: 248
 Nim:
   type: programming
-  color: "#37775b"
+  color: "#ffc200"
   extensions:
   - ".nim"
   - ".nim.cfg"
@@ -4257,6 +4316,16 @@ Python traceback:
   tm_scope: text.python.traceback
   ace_mode: text
   language_id: 304
+Q#:
+  type: programming
+  extensions:
+  - ".qs"
+  aliases:
+  - qsharp
+  color: "#fed659"
+  ace_mode: text
+  tm_scope: source.qsharp
+  language_id: 697448245
 QML:
   type: programming
   color: "#44a51c"
@@ -4276,6 +4345,19 @@ QMake:
   tm_scope: source.qmake
   ace_mode: text
   language_id: 306
+Qt Script:
+  type: programming
+  ace_mode: javascript
+  codemirror_mode: javascript
+  codemirror_mime_type: text/javascript
+  extensions:
+  - ".qs"
+  filenames:
+  - "installscript.qs"
+  - "toolchain_installscript.qs"
+  color: "#00b841"
+  tm_scope: source.js
+  language_id: 558193693
 Quake:
   type: programming
   filenames:
@@ -5078,6 +5160,15 @@ Shen:
   tm_scope: source.shen
   ace_mode: text
   language_id: 348
+Sieve:
+  type: programming
+  tm_scope: source.sieve
+  ace_mode: text
+  extensions:
+  - ".sieve"
+  codemirror_mode: sieve
+  codemirror_mime_type: application/sieve
+  language_id: 208976687
 Slash:
   type: programming
   color: "#007eff"
@@ -5213,6 +5304,7 @@ Starlark:
   - BUCK
   - BUILD
   - BUILD.bazel
+  - Tiltfile
   - WORKSPACE
   aliases:
   - bazel
@@ -5323,6 +5415,7 @@ TOML:
   filenames:
   - Cargo.lock
   - Gopkg.lock
+  - poetry.lock
   tm_scope: source.toml
   ace_mode: toml
   codemirror_mode: toml
@@ -6319,7 +6412,7 @@ mIRC Script:
   color: "#926059"
   extensions:
   - ".mrc"
-  tm_scope: source.mrc
+  tm_scope: source.msl
   ace_mode: text
   language_id: 517654727
 mcfunction:

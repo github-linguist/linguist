@@ -407,6 +407,12 @@ disambiguations:
     pattern: '((?i:[A-Z.][\w.]*:{)|(^|\n)\\(cd?|d|l|p|ts?) )'
   - language: HiveQL
     pattern: '(?i:SELECT\s+[\w*,]+\s+FROM|(CREATE|ALTER|DROP)\s(DATABASE|SCHEMA|TABLE))'
+- extensions: ['.qs']
+  rules:
+  - language: Q#
+    pattern: '^((\/{2,3})?\s*(namespace|operation)\b)'
+  - language: Qt Script
+    pattern: '(\w+\.prototype\.\w+|===|\bvar\b)'
 - extensions: ['.r']
   rules:
   - language: Rebol
@@ -444,18 +450,16 @@ disambiguations:
   rules:
    # Postgres
   - language: PLpgSQL
-    pattern: '(?i:^\\i\b|AS \$\$|LANGUAGE ''?plpgsql''?|SECURITY (DEFINER|INVOKER)|BEGIN( WORK )?;)'
+    pattern: '(?i:^\\i\b|AS \$\$|LANGUAGE ''?plpgsql''?|BEGIN( WORK )?;)'
   # IBM db2
   - language: SQLPL
-    pattern: "(?i:(alter module)|(language sql)|(begin( NOT)+ atomic)|signal SQLSTATE '[0-9]+')"
+    pattern: "(?i:alter module|MODE DB2SQL)"
   # Oracle
   - language: PLSQL
-    pattern: '(?i:\$\$PLSQL_|XMLTYPE|sysdate|systimestamp|\.nextval|connect by|AUTHID (DEFINER|CURRENT_USER)|constructor\W+function)'
+    pattern: '(?i:\$\$PLSQL_|XMLTYPE|systimestamp|\.nextval|connect by|AUTHID (DEFINER|CURRENT_USER)|constructor\W+function)'
   # T-SQL
   - language: TSQL
-    and:
-    - negative_pattern: '(?i:IDENTIFIED|NUMBER|VARCHAR2|REPEAT|UNTIL|IMMEDIATE)'
-    - pattern: '(?i:(GO)|(@@)|(CREATE PROCEDURE)|BEGIN( TRY| CATCH)|OUTPUT( INSERTED)|IF|ELSE|IIF|CHOOSE|CURSOR|FETCH|DEALLOCATE|DECLARE)'
+    pattern: '(?i:^\s*GO\b|BEGIN( TRY| CATCH)|OUTPUT INSERTED|DECLARE\s+@)'
   # Generic SQL
   - language: SQL
     negative_pattern: '(?i:begin|boolean|package|exception)'

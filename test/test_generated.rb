@@ -93,6 +93,11 @@ class TestGenerated < Minitest::Test
     generated_sample_without_loading_data("Dummy/npm-shrinkwrap.json")
     generated_sample_without_loading_data("Dummy/package-lock.json")
 
+    # Yarn Plug'n'Play file
+    generated_sample_without_loading_data(".pnp.js")
+    generated_sample_without_loading_data(".pnp.cjs")
+    generated_sample_without_loading_data(".pnp.mjs")
+
     # Godep saved dependencies
     generated_sample_without_loading_data("Godeps/Godeps.json")
     generated_sample_without_loading_data("Godeps/_workspace/src/github.com/kr/s3/sign.go")
@@ -167,7 +172,7 @@ class TestGenerated < Minitest::Test
     generated_fixture_loading_data("HTML/unknown.html", true)
     generated_fixture_loading_data("HTML/no-content.html", true)
     generated_sample_loading_data("HTML/pages.html")
-    
+
     # GIMP
     generated_fixture_loading_data("C/image.c")
     generated_fixture_loading_data("C/image.h")
@@ -181,5 +186,11 @@ class TestGenerated < Minitest::Test
     generated_fixture_loading_data("Generated/Haxe/Main.java")
     generated_fixture_loading_data("Generated/Haxe/Main.cs")
     generated_fixture_loading_data("Generated/Haxe/Main.php")
+
+    # jOOQ
+    generated_sample_loading_data("Java/generated-jooq-table.java")
+
+    # poetry
+    generated_sample_without_loading_data("TOML/filenames/poetry.lock")
   end
 end
