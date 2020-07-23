@@ -213,6 +213,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Jsonnet:** [google/language-jsonnet](https://github.com/google/language-jsonnet)
 - **Julia:** [JuliaEditorSupport/atom-language-julia](https://github.com/JuliaEditorSupport/atom-language-julia)
 - **Jupyter Notebook:** [textmate/json.tmbundle](https://github.com/textmate/json.tmbundle)
+- **Kaitai Struct:** [atom/language-yaml](https://github.com/atom/language-yaml)
 - **KiCad Layout:** [Alhadis/language-pcb](https://github.com/Alhadis/language-pcb)
 - **KiCad Legacy Layout:** [Alhadis/language-pcb](https://github.com/Alhadis/language-pcb)
 - **KiCad Schematic:** [Alhadis/language-pcb](https://github.com/Alhadis/language-pcb)
