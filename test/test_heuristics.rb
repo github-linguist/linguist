@@ -7,8 +7,8 @@ class TestHeuristics < Minitest::Test
     File.read(File.join(samples_path, name))
   end
 
-  def file_blob(name, alt_name=nil)
-    path = File.exist?(name) ? name : File.join(samples_path, name)
+  def file_blob(name, alt_name=nil, base_dir=samples_path)
+    path = File.exist?(name) ? name : File.join(base_dir, name)
     blob = FileBlob.new(path)
     if !alt_name.nil?
       blob.instance_variable_set("@path", alt_name)
@@ -34,15 +34,17 @@ class TestHeuristics < Minitest::Test
     assert_equal [], Heuristics.call(file_blob("Markdown/symlink.md"), [Language["Markdown"]])
   end
 
-  # alt_name is a file name that will be used instead of the file name of the
+  # `alt_name` is a file name that will be used instead of the file name of the
   # original sample. This is used to force a sample to go through a specific
   # heuristic even if its extension doesn't match.
-  def assert_heuristics(hash, alt_name=nil)
+  #
+  # `base_dir` is the root directory from which to resolve relative paths in `hash`
+  def assert_heuristics(hash, alt_name=nil, base_dir=samples_path)
     candidates = hash.keys.map { |l| Language[l] }
 
     hash.each do |language, blobs|
       Array(blobs).each do |blob|
-        result = Heuristics.call(file_blob(blob, alt_name), candidates)
+        result = Heuristics.call(file_blob(blob, alt_name, base_dir), candidates)
         if language.nil?
           expected = []
         elsif language.is_a?(Array)
@@ -487,6 +489,13 @@ class TestHeuristics < Minitest::Test
       "SuperCollider" => all_fixtures("SuperCollider", "*.sc"),
       "Scala" => all_fixtures("Scala", "*.sc")
     })
+  end
+
+  def test_solidity_by_heuristics
+    assert_heuristics({
+      "Solidity" => ["Data/Solidity/modern.sol", "Data/Solidity/legacy.sol"],
+      nil => ["Data/Solidity/ignored.sol"]
+    }, nil, fixtures_path)
   end
 
   # Candidate languages = ["SQL", "PLpgSQL", "SQLPL", "PLSQL"]
