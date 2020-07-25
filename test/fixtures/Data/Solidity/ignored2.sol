@@ -1,0 +1,3 @@
+contract {
+	// Missing identifier
+}

@@ -493,8 +493,8 @@ class TestHeuristics < Minitest::Test
 
   def test_solidity_by_heuristics
     assert_heuristics({
-      "Solidity" => ["Data/Solidity/modern.sol", "Data/Solidity/legacy.sol"],
-      nil => ["Data/Solidity/ignored.sol"]
+      "Solidity" => ["Data/Solidity/modern.sol", "Data/Solidity/legacy1.sol", "Data/Solidity/legacy2.sol"],
+      nil => ["Data/Solidity/ignored1.sol", "Data/Solidity/ignored2.sol"]
     }, nil, fixtures_path)
   end
 

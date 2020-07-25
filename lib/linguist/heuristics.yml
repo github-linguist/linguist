@@ -449,7 +449,7 @@ disambiguations:
 - extensions: ['.sol']
   rules:
   - language: Solidity
-    pattern: '\bpragma\s+solidity\b|\b(?:abstract\s+)?contract\s+(?:(?!\d)[a-zA-Z0-9$_]+)(?:\s+is\s+(?:[a-zA-Z0-9$_]+))?+\s*{'
+    pattern: '\bpragma\s+solidity\b|\b(?:abstract\s+)?contract\s+(?!\d)[a-zA-Z0-9$_]+(?:\s+is\s+(?:[a-zA-Z0-9$_][^\{]*?)?)?\s*\{'
 - extensions: ['.sql']
   rules:
    # Postgres
