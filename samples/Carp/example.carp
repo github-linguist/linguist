@@ -1,0 +1,133 @@
+(use IO)
+(use System)
+(use Int)
+(use Double)
+(use Array)
+(use Map)
+
+(load "SDL.carp")
+(load "SDL_image.carp")
+
+(defmodule ResourceManager
+           (deftype ResourceData
+             (None [])
+             (LoadingError [String])
+             (Unloaded [String])
+             (PNG [(Ptr SDL_Texture)])
+             )
+           (use ResourceData)
+
+           (deftype ResourceType
+             Png
+             )
+           (use ResourceType)
+
+           (deftype Resource
+             [type ResourceType
+                   path String
+                   data ResourceData
+                   loadTriggers (Array String)
+                   unloadTriggers (Array String)])
+           (use Resource)
+
+           (defn hash [r]
+                 (hash (path r)))
+           (implements hash ResourceManager.hash)
+
+           (defn = [a b]
+                 (= (path a) (path b)))
+           (implements = ResourceManager.=)
+
+           (deftype Resources
+             [store (Map String Resource)
+                    renderer (Ptr SDL_Renderer)])
+           (use Resources)
+
+
+           (defn load-resource-data-by-type [resources type data]
+                 (do
+                   (println "!")
+                   (match data
+                          (Unloaded path-on-disk) (match type
+                                                         (Png) (PNG (IMG.load-texture
+                                                                      @(renderer resources)
+                                                                      (cstr &path-on-disk)))
+                                                         _ (None))
+                          _ data)))
+
+           (defn load-resource [resources resource]
+                 (update-data @resource
+                              &(fn [data]
+                                   (load-resource-data-by-type
+                                     resources
+                                     @(type resource)
+                                     data))))
+
+           (defn load-into-store-by-id [resources store id]
+                 (update store 
+                         id
+                         &(fn [resource]
+                              (load-resource 
+                                &resources
+                                &resource))))
+
+
+           (defn load-into-store-by-ids [resources store ids]
+                 (reduce &(fn [store id]
+                              (load-into-store-by-id
+                                resources
+                                store
+                                id))
+                         store 
+                         ids))
+
+           (defn load-by-ids [resources ids]
+                 (update-store @resources
+                               &(fn [store]
+                                    (load-into-store-by-ids
+                                      @resources 
+                                      store
+                                      ids))))
+
+           (defn ids-by-trigger [store trigger]
+                 (kv-reduce
+                   &(fn [ids id resource]
+                        (if (contains? (loadTriggers resource)
+                                       trigger)
+                          (push-back ids @id)
+                          ids))
+                   []
+                   &store))
+
+           (defn load-by-trigger [resources trigger]
+                 (let [ids (ids-by-trigger @(store resources) trigger)]
+                   (load-by-ids resources &ids)))
+
+           (defn get-r [resources id]
+                 (let [result (get-maybe (store &resources) id)]
+                   (match result
+                          (Maybe.Just resource) @(data &resource)
+                          (Maybe.Nothing) (None))))
+
+           (defn get-png [resources id]
+                 (match (get-r @resources id)
+                        (PNG image) image
+                        _ (IMG.load-texture
+                            @(renderer resources)
+                            (cstr "./img/error.png"))))
+
+           (defn resources-hardcoded [rend]
+                 (let [img-path "./img/square.png"
+                       logo (IMG.load-texture
+                              rend
+                              (cstr img-path))]
+                   (Resources.init
+                     (put (Map.create) 
+                          img-path
+                          &(Resource.init (Png)
+                                          @img-path
+                                          (PNG logo)
+                                          [@"OnStartup"]
+                                          []))
+                     rend))))
+
