@@ -29,7 +29,7 @@ On Ubuntu:
 apt-get install cmake pkg-config libicu-dev docker-ce
 ```
 
-The latest version of Bundler v1 can be installed with `gem install bundler -v "~>1.10"`.
+The latest version of Bundler can be installed with `gem install bundler`.
 
 ## Getting started
 
