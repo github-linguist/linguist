@@ -62,6 +62,7 @@ module Linguist
       node_modules? ||
       go_vendor? ||
       go_lock? ||
+      poetry_lock? ||
       esy_lock? ||
       npm_shrinkwrap_or_package_lock? ||
       generated_yarn_plugnplay? ||
@@ -371,6 +372,13 @@ module Linguist
     # Returns true or false.
     def go_lock?
       !!name.match(/(Gopkg|glide)\.lock/)
+    end
+
+    # Internal: Is the blob a generated poetry.lock?
+    #
+    # Returns true or false.
+    def poetry_lock?
+      !!name.match(/poetry\.lock/)
     end
 
     # Internal: Is the blob a generated esy lock file?
