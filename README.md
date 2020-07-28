@@ -23,6 +23,7 @@ The language of each remaining file is then determined using the following strat
 - shell shebang,
 - file extension,
 - XML header,
+- man page section,
 - heuristics,
 - naïve Bayesian classification
 
