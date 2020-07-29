@@ -150,10 +150,14 @@ module Linguist
 
     # Public: Look up Languages by file extension.
     #
-    # The behaviour of this method recently changed.
-    # See the second example below.
+    # query - Either a filename String, or an Array of extension strings
+    #         prefixed by ".". If called with the former, the extensions
+    #         to search from are derived automatically from the filename:
     #
-    # filename - The path String.
+    #             "filename.html.erb" => [".html.erb", ".erb"]
+    #
+    #         This behaviour will be bypassed if the method is called
+    #         with a pre-computed list of extension names instead.
     #
     # Examples
     #
@@ -161,14 +165,16 @@ module Linguist
     #   # => [#<Language name="Ruby">]
     #   Language.find_by_extension('rb')
     #   # => []
+    #   Language.find_by_extension(['.html.rb', '.rb'])
+    #   # => [#<Language name="Ruby">]
     #
     # Returns all matching Languages or [] if none were found.
-    def self.find_by_extension(filename)
-      # find the first extension with language definitions
-      extname = FileBlob.new(filename.downcase).extensions.detect do |e|
-        !@extension_index[e].empty?
+    def self.find_by_extension(query)
+      unless query.is_a? Array
+        query = FileBlob.new(query.downcase).extensions
       end
 
+      extname = query.detect {|e| !@extension_index[e].empty? }
       @extension_index[extname]
     end
 
