@@ -77,7 +77,6 @@ disambiguations:
   rules:
   - language: XML
     pattern: '^(\s*)(?i:<Project|<Import|<Property|<?xml|xmlns)'
-  - language: Text
 - extensions: ['.ch']
   rules:
   - language: xBase
@@ -395,12 +394,6 @@ disambiguations:
     named_pattern: key_equals_value
   - language: Java properties
     pattern: '^[^#!][^:]*:'
-- extensions: ['.props']
-  rules:
-  - language: XML
-    pattern: '^(\s*)(?i:<Project|<Import|<Property|<\?xml|xmlns)'
-  - language: INI
-    pattern: '(?i:\w+\s*=\s*)'
 - extensions: ['.q']
   rules:
   - language: q

@@ -32,6 +32,14 @@ module Linguist
       [] # No heuristics matched
     end
 
+    # Public: Get all heuristic definitions
+    #
+    # Returns an Array of heuristic objects.
+    def self.all
+      self.load()
+      @heuristics
+    end
+
     # Internal: Load heuristics from 'heuristics.yml'.
     def self.load()
       if @heuristics.any?
@@ -87,6 +95,18 @@ module Linguist
     def initialize(exts_and_langs, rules)
       @exts_and_langs = exts_and_langs
       @rules = rules
+    end
+
+    # Internal: Return the heuristic's target extensions
+    def extensions
+      @exts_and_langs
+    end
+
+    # Internal: Return the heuristic's candidate languages
+    def languages
+      @rules.map do |rule|
+        [rule['language']].flatten(2).map { |name| Language[name] }
+      end.flatten.uniq
     end
 
     # Internal: Check if this heuristic matches the candidate filenames or
