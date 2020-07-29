@@ -184,13 +184,6 @@ class TestLanguage < Minitest::Test
     assert_equal [], Language.find_by_filename('F.I.L.E.')
   end
 
-  def test_find_by_extension_list
-    assert_equal [Language['Ruby']], Language.find_by_extension(['.rb'])
-    assert_equal [Language['Coq'], Language['V'], Language['Verilog']], Language.find_by_extension(['.v'])
-    assert_equal [], Language.find_by_extension(['.null'])
-    assert_equal [], Language.find_by_extension(['rb']) # Dot required
-  end
-
   def test_find_all_by_extension
     Language.all.each do |language|
       language.extensions.each do |extension|
