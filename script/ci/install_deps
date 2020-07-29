@@ -2,10 +2,6 @@
 
 set -e
 
-# Linguist still requires Bundler 1.x due to Licensed.
-gem uninstall -v '>= 2' -ax bundler || true
-gem install bundler -v '< 2'
-
 # Fetch all commits/refs needed to run our tests.
 git fetch origin master:master v2.0.0:v2.0.0 test/attributes:test/attributes test/master:test/master
 
