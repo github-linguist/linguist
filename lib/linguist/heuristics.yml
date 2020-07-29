@@ -45,6 +45,14 @@ disambiguations:
 
   # Open-ended fallback to unrendered Roff source
   - language: Roff
+- extensions: ['.al']
+  rules:
+  # AL Code pattern source from https://github.com/microsoft/AL/blob/master/grammar/alsyntax.tmlanguage - keyword.other.applicationobject.al
+  - language: AL Code
+    and:
+    - pattern: '\b(?i:(CODEUNIT|PAGE|PAGEEXTENSION|PAGECUSTOMIZATION|DOTNET|ENUM|ENUMEXTENSION|VALUE|QUERY|REPORT|TABLE|TABLEEXTENSION|XMLPORT|PROFILE|CONTROLADDIN))\b'
+  # Open-ended fallback to Perl AutoLoader
+  - language: Perl
 - extensions: ['.as']
   rules:
   - language: ActionScript
