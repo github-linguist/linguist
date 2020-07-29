@@ -439,6 +439,10 @@ disambiguations:
     pattern: '(?i:\^(this|super)\.|^\s*~\w+\s*=\.)'
   - language: Scala
     pattern: '(^\s*import (scala|java)\.|^\s*class\b)'
+- extensions: ['.sol']
+  rules:
+  - language: Solidity
+    pattern: '\bpragma\s+solidity\b|\b(?:abstract\s+)?contract\s+(?!\d)[a-zA-Z0-9$_]+(?:\s+is\s+(?:[a-zA-Z0-9$_][^\{]*?)?)?\s*\{'
 - extensions: ['.sql']
   rules:
    # Postgres

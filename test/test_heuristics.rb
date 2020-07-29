@@ -494,6 +494,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_sol_by_heuristics
+    assert_heuristics({
+      "Solidity" => Dir.glob("#{fixtures_path}/Solidity/{legacy,modern}*"),
+      nil        => Dir.glob("#{fixtures_path}/Solidity/ignored*")
+    })
+  end
+
   # Candidate languages = ["SQL", "PLpgSQL", "SQLPL", "PLSQL"]
   def test_sql_by_heuristics
     assert_heuristics({
