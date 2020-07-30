@@ -92,14 +92,14 @@ module Linguist
     @heuristics = []
 
     # Internal
-    def initialize(exts_and_langs, rules)
-      @exts_and_langs = exts_and_langs
+    def initialize(exts, rules)
+      @exts = exts
       @rules = rules
     end
 
     # Internal: Return the heuristic's target extensions
     def extensions
-      @exts_and_langs
+      @exts
     end
 
     # Internal: Return the heuristic's candidate languages
@@ -114,7 +114,7 @@ module Linguist
     def matches?(filename, candidates)
       filename = filename.downcase
       candidates = candidates.compact.map(&:name)
-      @exts_and_langs.any? { |ext| filename.end_with?(ext) }
+      @exts.any? { |ext| filename.end_with?(ext) }
     end
 
     # Internal: Perform the heuristic
