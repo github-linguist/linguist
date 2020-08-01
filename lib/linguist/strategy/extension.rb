@@ -20,7 +20,7 @@ module Linguist
       # Selected languages must be in the candidate list, except if it's empty,
       # in which case any language is a valid candidate.
       def self.call(blob, candidates)
-        return candidates if GENERIC.any? { |ext| blob.name.end_with? ext }
+        return candidates if GENERIC.any? { |ext| blob.name.downcase.end_with? ext }
         languages = Language.find_by_extension(blob.name.to_s)
         candidates.any? ? candidates & languages : languages
       end
