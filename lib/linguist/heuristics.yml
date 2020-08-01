@@ -443,6 +443,8 @@ disambiguations:
   rules:
   - language: Solidity
     pattern: '\bpragma\s+solidity\b|\b(?:abstract\s+)?contract\s+(?!\d)[a-zA-Z0-9$_]+(?:\s+is\s+(?:[a-zA-Z0-9$_][^\{]*?)?)?\s*\{'
+  - language: Gerber Image
+    pattern: '^G75\*'
 - extensions: ['.sql']
   rules:
    # Postgres

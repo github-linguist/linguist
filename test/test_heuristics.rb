@@ -496,8 +496,9 @@ class TestHeuristics < Minitest::Test
 
   def test_sol_by_heuristics
     assert_heuristics({
+      "Gerber Image" => Dir.glob("#{fixtures_path}/Gerber Image/*"),
       "Solidity" => Dir.glob("#{fixtures_path}/Solidity/*"),
-      nil        => Dir.glob("#{fixtures_path}/Generic/*")
+      nil => Dir.glob("#{fixtures_path}/Generic/*")
     })
   end
 
