@@ -48,7 +48,13 @@ disambiguations:
 - extensions: ['.as']
   rules:
   - language: ActionScript
-    pattern: '^\s*(package\s+[a-z0-9_\.]+|import\s+[a-zA-Z0-9_\.]+;|class\s+[A-Za-z0-9_]+\s+extends\s+[A-Za-z0-9_]+)'
+    pattern: 
+    - '^\s*package(?:\s+[\w\.]+)?\s+[{\n]{1}'
+    - '^\s*import\s+[\w\.\*]+\s*;'
+    - '^\s*intrinsic\s+class\s+[\w<>\.]+'
+    - '^\s*class\s+[\w<>\.]+\s+extends\s+[\w<>\.]+'
+    - '^\s*(?:(?:public|protected|private|static|var|const|local)\s+)+\w+\s*:\s*[\w<>\.]+(?:\s*=.*)?\s*;'
+    - '^\s*(?:(?:public|protected|private|static)\s+)*function\s+[\w]+\s*\((?:\s*\w+(?:\s*:\s*[\w<>\.]+)?,?)*\)(?:\s*:\s*[\w<>\.]+)?'
   - language: AngelScript
 - extensions: ['.asc']
   rules:
