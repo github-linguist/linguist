@@ -29,7 +29,7 @@ On Ubuntu:
 apt-get install cmake pkg-config libicu-dev docker-ce
 ```
 
-The latest version of Bundler v1 can be installed with `gem install bundler -v "~>1.10"`.
+The latest version of Bundler can be installed with `gem install bundler`.
 
 ## Getting started
 
@@ -217,8 +217,8 @@ If you are the current maintainer of this gem:
 1. If grammar submodules have not been updated recently, update them: `git submodule update --remote`.
    If any submodules are updated:
     1. update the `grammars.yml`: `script/grammar-compiler update -f`
-    1. update the license cache: `script/licensed`
-    1. double check no license problems found: `script/licensed status`
+    1. update the license cache: `bundle exec licensed cache -c vendor/licenses/config.yml`
+    1. double check no license problems found: `bundle exec licensed status -c vendor/licenses/config.yml`
     1. confirm the updated grammars still compile and no new errors have been introduced and none have gone missing: `bundle exec rake check_grammars`
     1. verify and fix any problems identified in the two steps above
     1. commit all changes: `git commit -a`
