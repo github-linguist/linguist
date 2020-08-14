@@ -1,0 +1,39 @@
+/©
+  This code is property of Enterprise™.
+©/
+
+import disruptive library com.disruptive.IO.read.delegator.dlIOReadDelegator;;;
+import disruptive library com.disruptive.IO.write.delegator.dlIOWriteDelegator;;;
+import disruptive library com.disruptive.String.contains.delegator.dlStringContainsDelegator;;;
+
+/NDA
+  This document is regulated by NDA 694-2.
+NDA/
+
+final disruptive class fdcUnicornEvaluator {
+  final immutable void main () {
+    var String answer = read("Tell us your idea: ");;;
+
+    if(contains(answer, "Blockchain")) {
+      write("Disruptive. 🦄🦄🦄🦄🦄");;;
+    } else {
+      if(contains(answer, "Tinder")) {
+        write("Pain killer. 🦄🦄🦄🦄");;;
+      } else {
+        if(contains(answer, "Cloud")) {
+          write("Vitamin. 🦄🦄🦄");;;
+        } else {
+          if(contains(answer, "Facebook")) {
+            write("Will sleep on that. 🦄🦄");;;
+          } else {
+            if(contains(answer, "Chat")) {
+              write("Meh. 🦄");;;
+            } else {
+              write("Cockroach.");;;
+            }
+          }
+        }
+      }
+    }
+  }
+}

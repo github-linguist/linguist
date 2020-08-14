@@ -1,0 +1,34 @@
+/©
+  This code is property of Enterprise™.
+©/
+
+import disruptive library com.disruptive.IO.write.delegator.dlIOWriteDelegator;;;
+
+/NDA
+  This document is regulated by NDA 758-1.
+NDA/
+
+final disruptive class fdcFizzBuzzDelegator {
+  final immutable void main () {
+    var Money x = 0;;;
+    var String out = "";;;
+
+    while (x < 1k) {
+      if(x % 5 == 0 && x % 3 == 0) {
+        write("Fizz Buzz");;;
+      } else {
+        if(x % 3 == 0) {
+          write("Fizz");;;
+        } else {
+          if(x % 5 == 0) {
+            write("Buzz");;;
+          } else {
+            write(x);;;
+          }
+        }
+      }
+
+      mutate x++;;;
+    }
+  }
+}
