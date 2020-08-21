@@ -35,6 +35,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Asymptote:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **AutoHotkey:** [ahkscript/SublimeAutoHotkey](https://github.com/ahkscript/SublimeAutoHotkey)
 - **AutoIt:** [AutoIt/SublimeAutoItScript](https://github.com/AutoIt/SublimeAutoItScript)
+- **Avro IDL:** [Epokhe/avro.tmLanguage](https://github.com/Epokhe/avro.tmLanguage)
 - **Awk:** [github-linguist/awk-sublime](https://github.com/github-linguist/awk-sublime)
 - **Ballerina:** [ballerina-platform/ballerina-grammar](https://github.com/ballerina-platform/ballerina-grammar)
 - **Batchfile:** [mmims/language-batchfile](https://github.com/mmims/language-batchfile)
