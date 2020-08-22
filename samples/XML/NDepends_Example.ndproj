@@ -45,6 +45,7 @@ let sourceFilesPathsToDiscard = (
         ".g.cs",        // Popular pattern to name generated files.
         ".g.vb",
         ".xaml",        // notmycode WPF xaml code
+        ".axaml",       // notmycode Avalonia xaml code
         ".designer.cs", // notmycode C# Windows Forms designer code
         ".designer.vb") // notmycode VB.NET Windows Forms designer code
        ||
