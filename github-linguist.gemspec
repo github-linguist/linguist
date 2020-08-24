@@ -16,6 +16,7 @@ Gem::Specification.new do |s|
   s.files = Dir['lib/**/*'] + Dir['ext/**/*'] + Dir['grammars/*'] + ['LICENSE']
   s.executables = ['github-linguist', 'git-linguist']
   s.extensions = ['ext/linguist/extconf.rb']
+  s.require_paths = ['lib', 'ext']
 
   s.add_dependency 'charlock_holmes', '~> 0.7.7'
   s.add_dependency 'escape_utils',    '~> 1.2.0'
@@ -30,7 +31,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rake'
   s.add_development_dependency 'yajl-ruby'
   s.add_development_dependency 'color-proximity', '~> 0.2.1'
-  s.add_development_dependency 'licensed', '~> 1.3.0'
+  s.add_development_dependency 'licensed', '~> 2.0'
   s.add_development_dependency 'licensee'
-  s.add_development_dependency 'bundler', '~> 1.10'
+  s.add_development_dependency 'bundler', '>= 1.10'
 end

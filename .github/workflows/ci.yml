@@ -20,4 +20,4 @@ jobs:
     - name: Run tests
       run: bundle exec rake
     - name: Check Licenses
-      run: script/licensed status
+      run: bundle exec licensed status -c vendor/licenses/config.yml
