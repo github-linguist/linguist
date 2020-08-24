@@ -230,7 +230,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Lean:** [leanprover/vscode-lean](https://github.com/leanprover/vscode-lean)
 - **Less:** [atom/language-less](https://github.com/atom/language-less)
 - **Lex:** [Alhadis/language-grammars](https://github.com/Alhadis/language-grammars)
-- **LilyPond:** [textmate/lilypond.tmbundle](https://github.com/textmate/lilypond.tmbundle)
+- **LilyPond:** [nwhetsell/linter-lilypond](https://github.com/nwhetsell/linter-lilypond)
 - **Liquid:** [bastilian/validcode-textmate-bundles](https://github.com/bastilian/validcode-textmate-bundles)
 - **Literate CoffeeScript:** [atom/language-coffee-script](https://github.com/atom/language-coffee-script)
 - **Literate Haskell:** [atom-haskell/language-haskell](https://github.com/atom-haskell/language-haskell)
