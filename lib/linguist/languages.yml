@@ -2071,9 +2071,12 @@ HTML+ERB:
   group: HTML
   aliases:
   - erb
+  - rhtml
+  - html+ruby
   extensions:
   - ".erb"
   - ".erb.deface"
+  - ".rhtml"
   ace_mode: text
   codemirror_mode: htmlembedded
   codemirror_mime_type: application/x-erb
@@ -4441,18 +4444,6 @@ REXX:
   tm_scope: source.rexx
   ace_mode: text
   language_id: 311
-RHTML:
-  type: markup
-  group: HTML
-  extensions:
-  - ".rhtml"
-  tm_scope: text.html.erb
-  aliases:
-  - html+ruby
-  ace_mode: rhtml
-  codemirror_mode: htmlembedded
-  codemirror_mime_type: application/x-erb
-  language_id: 312
 RMarkdown:
   type: prose
   wrap: true

@@ -350,7 +350,6 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **RDoc:** [joshaven/RDoc.tmbundle](https://github.com/joshaven/RDoc.tmbundle)
 - **REALbasic:** [angryant0007/VBDotNetSyntax](https://github.com/angryant0007/VBDotNetSyntax)
 - **REXX:** [mblocker/rexx-sublime](https://github.com/mblocker/rexx-sublime)
-- **RHTML:** [atom/language-ruby](https://github.com/atom/language-ruby)
 - **RMarkdown:** [atom/language-gfm](https://github.com/atom/language-gfm)
 - **RPC:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **RPM Spec:** [waveclaw/language-rpm-spec](https://github.com/waveclaw/language-rpm-spec)
