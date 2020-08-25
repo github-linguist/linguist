@@ -107,13 +107,8 @@ log "Registering new submodule: #{repo_new}"
 command('git', 'submodule', 'add', '-f', https, repo_new)
 command('script/grammar-compiler', 'add', repo_new)
 
-log "Confirming license"
-if repo_old
-  command('script/licensed')
-else
-  repo_new = File.absolute_path(repo_new)
-  command('script/licensed', '--module', repo_new)
-end
+log "Caching grammar license"
+command("bundle", "exec", "licensed", "cache", "-c", "vendor/licenses/config.yml")
 
 log "Updating grammar documentation in vendor/README.md"
 command('bundle', 'exec', 'rake', 'samples')
