@@ -121,6 +121,14 @@ APL:
   codemirror_mode: apl
   codemirror_mime_type: text/apl
   language_id: 6
+ASL:
+  type: programming
+  ace_mode: text
+  extensions:
+  - ".asl"
+  - ".dsl"
+  tm_scope: source.asl
+  language_id: 124996147
 ASN.1:
   type: data
   extensions:
@@ -2453,6 +2461,7 @@ JSON with Comments:
   - jsconfig.json
   - language-configuration.json
   - tsconfig.json
+  - tslint.json
   language_id: 423
 JSON5:
   type: data
@@ -5674,6 +5683,7 @@ Unix Assembly:
   language_id: 120
 Uno:
   type: programming
+  color: "#9933cc"
   extensions:
   - ".uno"
   ace_mode: csharp
