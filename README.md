@@ -32,8 +32,6 @@ The percentages are calculated based on the bytes of code for each language as r
 
 ![language stats bar](https://user-images.githubusercontent.com/5887227/91159208-0500af00-e6c8-11ea-810f-9488cd83906e.png)
 
-
-
 ### How Linguist works on GitHub.com
 
 When you push changes to a repository on GitHub.com, a low priority background job is enqueued to analyze your repository as explained above.
