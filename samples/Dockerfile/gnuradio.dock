@@ -1,0 +1,29 @@
+#The MIT License (MIT)
+#
+#Copyright (c) 2015 Elliot Briggs
+#
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+#
+#The above copyright notice and this permission notice shall be included in all
+#copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#SOFTWARE.
+
+FROM ubuntu:14.04.1
+MAINTAINER Elliot Briggs <elliot.briggs@gmail.com>
+RUN apt-get update; apt-get upgrade
+RUN apt-get install -y build-essential git python cmake
+RUN mkdir /opt/github/; cd /opt/github/; git clone https://github.com/pybombs/pybombs.git
+RUN printf "[config]\ngituser = \nprefix = /usr/local/ \nsatisfy_order = deb,src\nforcepkgs = cmake,git,python\nforcebuild = gnuradio,uhd,gr-air-modes,gr-osmosdr,gr-iqbal,gr-fcdproplus,uhd,rtl-sdr,osmo-sdr,hackrf,gqrx,bladerf,airspy\ntimeout = 30\ncmakebuildtype = RelWithDebInfo\nbuilddocs = OFF\ncc = gcc\ncxx = g++\nmakewidth = 4" > /opt/github/pybombs/config.dat 
+RUN cd /opt/github/pybombs/; ./pybombs install gnuradio
