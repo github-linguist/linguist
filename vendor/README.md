@@ -361,6 +361,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Racket:** [soegaard/racket-highlight-for-github](https://github.com/soegaard/racket-highlight-for-github)
 - **Raku:** [perl6/atom-language-perl6](https://github.com/perl6/atom-language-perl6)
 - **Rascal:** [usethesource/rascal-syntax-highlighting](https://github.com/usethesource/rascal-syntax-highlighting)
+- **ReScript:** [rescript-lang/rescript-vscode](https://github.com/rescript-lang/rescript-vscode)
 - **Readline Config:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **Reason:** [reasonml-editor/language-reason](https://github.com/reasonml-editor/language-reason)
 - **Rebol:** [Oldes/Sublime-REBOL](https://github.com/Oldes/Sublime-REBOL)
