@@ -30,7 +30,7 @@ The language of each remaining file is then determined using the following strat
 The result of this analysis is used to produce the language stats bar which displays the languages percentages for the files in the repository.
 The percentages are calculated based on the bytes of code for each language as reported by the [List Languages](https://developer.github.com/v3/repos/#list-languages) API.
 
-![language stats bar](https://user-images.githubusercontent.com/5887227/91159208-0500af00-e6c8-11ea-810f-9488cd83906e.png)
+![language stats bar](https://user-images.githubusercontent.com/2346707/91533656-9768b300-e953-11ea-808d-994cd50e6273.png)
 
 ### How Linguist works on GitHub.com
 
