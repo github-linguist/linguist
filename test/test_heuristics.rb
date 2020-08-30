@@ -61,6 +61,18 @@ class TestHeuristics < Minitest::Test
     assert_equal Language["Objective-C"], match
   end
 
+  def test_all_extensions_are_listed
+    Heuristics.all.all? do |rule|
+      rule.languages.each do |lang|
+        unlisted = rule.extensions.reject { |ext| lang.extensions.include? ext }
+        assert_equal [], unlisted, (<<~EOF).chomp
+          The extension '#{unlisted.first}' is not assigned to #{lang.name}.
+          Add it to `languages.yml` or update the heuristic which uses it
+        EOF
+      end
+    end
+  end
+
   def test_as_by_heuristics
     assert_heuristics({
       "ActionScript" => all_fixtures("ActionScript", "*.as"),
@@ -100,7 +112,7 @@ class TestHeuristics < Minitest::Test
 
   def test_builds_by_heuristics
     assert_heuristics({
-      "Text" => all_fixtures("Text"),
+      nil => all_fixtures("Text"),
       "XML" => all_fixtures("XML", "*.builds")
     }, "test.builds")
   end
@@ -431,13 +443,6 @@ class TestHeuristics < Minitest::Test
     })
   end
 
-  def test_props_by_heuristics
-    assert_heuristics({
-      "INI" => all_fixtures("INI"),
-      "XML" => all_fixtures("XML", "*.props")
-    }, "test.props")
-  end
-
   def test_q_by_heuristics
     assert_heuristics({
       "q" => all_fixtures("q", "*.q"),
@@ -486,6 +491,14 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "SuperCollider" => all_fixtures("SuperCollider", "*.sc"),
       "Scala" => all_fixtures("Scala", "*.sc")
+    })
+  end
+
+  def test_sol_by_heuristics
+    assert_heuristics({
+      "Gerber Image" => Dir.glob("#{fixtures_path}/Gerber Image/*"),
+      "Solidity" => Dir.glob("#{fixtures_path}/Solidity/*"),
+      nil => Dir.glob("#{fixtures_path}/Generic/nil/*")
     })
   end
 

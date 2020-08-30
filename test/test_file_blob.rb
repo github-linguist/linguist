@@ -667,6 +667,8 @@ class TestFileBlob < Minitest::Test
           assert blob.language.nil?, "A language was found for #{filepath}"
         elsif language == 'Generated'
           assert blob.generated?, "#{filepath} is not a generated file"
+        elsif language == 'Generic'
+          assert !blob.language, "#{filepath} should not match a language"
         else
           assert blob.language, "No language for #{filepath}"
           fs_name = blob.language.fs_name ? blob.language.fs_name : blob.language.name
