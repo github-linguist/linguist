@@ -77,7 +77,6 @@ disambiguations:
   rules:
   - language: XML
     pattern: '^(\s*)(?i:<Project|<Import|<Property|<?xml|xmlns)'
-  - language: Text
 - extensions: ['.ch']
   rules:
   - language: xBase
@@ -395,12 +394,6 @@ disambiguations:
     named_pattern: key_equals_value
   - language: Java properties
     pattern: '^[^#!][^:]*:'
-- extensions: ['.props']
-  rules:
-  - language: XML
-    pattern: '^(\s*)(?i:<Project|<Import|<Property|<\?xml|xmlns)'
-  - language: INI
-    pattern: '(?i:\w+\s*=\s*)'
 - extensions: ['.q']
   rules:
   - language: q
@@ -446,6 +439,12 @@ disambiguations:
     pattern: '(?i:\^(this|super)\.|^\s*~\w+\s*=\.)'
   - language: Scala
     pattern: '(^\s*import (scala|java)\.|^\s*class\b)'
+- extensions: ['.sol']
+  rules:
+  - language: Solidity
+    pattern: '\bpragma\s+solidity\b|\b(?:abstract\s+)?contract\s+(?!\d)[a-zA-Z0-9$_]+(?:\s+is\s+(?:[a-zA-Z0-9$_][^\{]*?)?)?\s*\{'
+  - language: Gerber Image
+    pattern: '^G75\*'
 - extensions: ['.sql']
   rules:
    # Postgres
