@@ -397,6 +397,13 @@ AutoIt:
   tm_scope: source.autoit
   ace_mode: autohotkey
   language_id: 27
+Avro IDL:
+  type: data
+  extensions:
+  - ".avdl"
+  tm_scope: source.avro
+  ace_mode: text
+  language_id: 785497837
 Awk:
   type: programming
   extensions:
@@ -4367,8 +4374,8 @@ Qt Script:
   extensions:
   - ".qs"
   filenames:
-  - "installscript.qs"
-  - "toolchain_installscript.qs"
+  - installscript.qs
+  - toolchain_installscript.qs
   color: "#00b841"
   tm_scope: source.js
   language_id: 558193693
