@@ -121,6 +121,14 @@ APL:
   codemirror_mode: apl
   codemirror_mime_type: text/apl
   language_id: 6
+ASL:
+  type: programming
+  ace_mode: text
+  extensions:
+  - ".asl"
+  - ".dsl"
+  tm_scope: source.asl
+  language_id: 124996147
 ASN.1:
   type: data
   extensions:
@@ -389,6 +397,13 @@ AutoIt:
   tm_scope: source.autoit
   ace_mode: autohotkey
   language_id: 27
+Avro IDL:
+  type: data
+  extensions:
+  - ".avdl"
+  tm_scope: source.avro
+  ace_mode: text
+  language_id: 785497837
 Awk:
   type: programming
   extensions:
@@ -2062,9 +2077,12 @@ HTML+ERB:
   group: HTML
   aliases:
   - erb
+  - rhtml
+  - html+ruby
   extensions:
   - ".erb"
   - ".erb.deface"
+  - ".rhtml"
   ace_mode: text
   codemirror_mode: htmlembedded
   codemirror_mime_type: application/x-erb
@@ -2449,6 +2467,7 @@ JSON with Comments:
   - jsconfig.json
   - language-configuration.json
   - tsconfig.json
+  - tslint.json
   language_id: 423
 JSON5:
   type: data
@@ -2881,6 +2900,7 @@ Literate CoffeeScript:
   - litcoffee
   extensions:
   - ".litcoffee"
+  - ".coffee.md"
   language_id: 206
 Literate Haskell:
   type: programming
@@ -3507,6 +3527,7 @@ Nextflow:
 Nginx:
   type: data
   extensions:
+  - ".nginx"
   - ".nginxconf"
   - ".vhost"
   filenames:
@@ -4362,8 +4383,8 @@ Qt Script:
   extensions:
   - ".qs"
   filenames:
-  - "installscript.qs"
-  - "toolchain_installscript.qs"
+  - installscript.qs
+  - toolchain_installscript.qs
   color: "#00b841"
   tm_scope: source.js
   language_id: 558193693
@@ -4441,18 +4462,6 @@ REXX:
   tm_scope: source.rexx
   ace_mode: text
   language_id: 311
-RHTML:
-  type: markup
-  group: HTML
-  extensions:
-  - ".rhtml"
-  tm_scope: text.html.erb
-  aliases:
-  - html+ruby
-  ace_mode: rhtml
-  codemirror_mode: htmlembedded
-  codemirror_mime_type: application/x-erb
-  language_id: 312
 RMarkdown:
   type: prose
   wrap: true
@@ -4814,6 +4823,7 @@ Ruby:
   filenames:
   - ".irbrc"
   - ".pryrc"
+  - ".simplecov"
   - Appraisals
   - Berksfile
   - Brewfile
@@ -5098,6 +5108,7 @@ Shell:
   - ".bats"
   - ".cgi"
   - ".command"
+  - ".env"
   - ".fcgi"
   - ".ksh"
   - ".sh.in"
@@ -5111,6 +5122,9 @@ Shell:
   - ".bash_profile"
   - ".bashrc"
   - ".cshrc"
+  - ".env"
+  - ".env.example"
+  - ".flaskenv"
   - ".login"
   - ".profile"
   - ".zlogin"
@@ -5688,6 +5702,7 @@ Unix Assembly:
   language_id: 120
 Uno:
   type: programming
+  color: "#9933cc"
   extensions:
   - ".uno"
   ace_mode: csharp
