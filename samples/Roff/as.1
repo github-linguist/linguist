@@ -1,0 +1,89 @@
+.pa 1
+.he 'AS (I)'1/15/73'AS (I)'
+.ti 0
+NAME		as -- assembler
+.sp
+.ti 0
+SYNOPSIS	as__ [ -_ ] name918 ...
+.sp
+.ti 0
+DESCRIPTION	as__
+assembles the concatenation of name\d1\u, ....
+If the optional first argument
+-_ is used,
+all undefined symbols in the assembly
+are treated as global.
+
+The output of the assembly is left on the file "a.out".
+It is executable if no errors occurred
+during the assembly.
+
+.ti 0
+FILES		/etc/as2	pass 2 of the assembler
+.br
+/tmp/atm1?	temporary
+.br
+/tmp/atm2?	temporary
+.br
+/tmp/atm3?	temporary
+.br
+a.out		object
+.sp
+.ti 0
+SEE ALSO	ld(I),
+nm(I),
+un(I),
+db(I),
+a.out(V),
+"UNIX Assembler Manual".
+.sp
+.ti 0
+DIAGNOSTICS	When
+an input file cannot be read, its name
+followed by a question mark is typed and assembly
+ceases.
+When syntactic or semantic errors occur, a single-character diagnostic is typed out
+together with the line number and the file name in which it
+occurred.  Errors in pass 1 cause cancellation of pass 2.
+The possible errors are:
+.sp
+.in +6
+.ti -6
+)  parentheses error
+.ti -6
+]  parentheses error
+.ti -6
+<  String not terminated properly
+.ti -6
+*  Indirection ("*_") used illegally
+.ti -6
+.li
+.  Illegal assignment to "."
+.ti -6
+A  error in A_ddress
+.ti -6
+B  B_ranch instruction is odd or too remote
+.ti -6
+E  error in E_xpression
+.ti -6
+F  error in local ("F_" or "b") type symbol
+.ti -6
+G  G_arbage (unknown) character
+.ti -6
+I  End of file inside an If__
+.ti -6
+M  M_ultiply defined symbol as label
+.ti -6
+O  O_dd-- word quantity assembled at odd address
+.ti -6
+P  P_hase error-- "." different in pass 1 and 2
+.ti -6
+R  R_elocation error
+.ti -6
+U  U_ndefined symbol
+.ti -6
+X  syntaX_ error
+.in -6
+.sp
+.ti 0
+BUGS		Symbol table overflow is not checked.

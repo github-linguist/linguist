@@ -1,18 +1,15 @@
 [submodule "vendor/CodeMirror"]
 	path = vendor/CodeMirror
 	url = https://github.com/codemirror/CodeMirror
-[submodule "vendor/grammars/ABNF.tmbundle"]
-	path = vendor/grammars/ABNF.tmbundle
-	url = https://github.com/sanssecours/ABNF.tmbundle
-[submodule "vendor/grammars/Agda.tmbundle"]
-	path = vendor/grammars/Agda.tmbundle
-	url = https://github.com/mokus0/Agda.tmbundle
 [submodule "vendor/grammars/Alloy.tmbundle"]
 	path = vendor/grammars/Alloy.tmbundle
 	url = https://github.com/macekond/Alloy.tmbundle
 [submodule "vendor/grammars/Assembly-Syntax-Definition"]
 	path = vendor/grammars/Assembly-Syntax-Definition
 	url = https://github.com/calculuswhiz/Assembly-Syntax-Definition
+[submodule "vendor/grammars/Atom-PostScript"]
+	path = vendor/grammars/Atom-PostScript
+	url = https://github.com/Alhadis/Atom-PostScript
 [submodule "vendor/grammars/AutoHotkey"]
 	path = vendor/grammars/AutoHotkey
 	url = https://github.com/ahkscript/SublimeAutoHotkey
@@ -22,21 +19,18 @@
 [submodule "vendor/grammars/ColdFusion"]
 	path = vendor/grammars/ColdFusion
 	url = https://github.com/SublimeText/ColdFusion
+[submodule "vendor/grammars/Dafny-VSCode"]
+	path = vendor/grammars/Dafny-VSCode
+	url = https://github.com/DafnyVSCode/Dafny-VSCode
 [submodule "vendor/grammars/Docker.tmbundle"]
 	path = vendor/grammars/Docker.tmbundle
 	url = https://github.com/asbjornenge/Docker.tmbundle
-[submodule "vendor/grammars/EBNF.tmbundle"]
-	path = vendor/grammars/EBNF.tmbundle
-	url = https://github.com/sanssecours/EBNF.tmbundle
 [submodule "vendor/grammars/Elm"]
 	path = vendor/grammars/Elm
 	url = https://github.com/elm-community/Elm.tmLanguage
 [submodule "vendor/grammars/FreeMarker.tmbundle"]
 	path = vendor/grammars/FreeMarker.tmbundle
 	url = https://github.com/freemarker/FreeMarker.tmbundle
-[submodule "vendor/grammars/G-Code"]
-	path = vendor/grammars/G-Code
-	url = https://github.com/robotmaster/sublime-text-syntax-highlighting
 [submodule "vendor/grammars/Handlebars"]
 	path = vendor/grammars/Handlebars
 	url = https://github.com/daaain/Handlebars
@@ -49,9 +43,6 @@
 [submodule "vendor/grammars/JSyntax"]
 	path = vendor/grammars/JSyntax
 	url = https://github.com/tikkanz/JSyntax
-[submodule "vendor/grammars/Lean.tmbundle"]
-	path = vendor/grammars/Lean.tmbundle
-	url = https://github.com/leanprover/Lean.tmbundle
 [submodule "vendor/grammars/LiveScript.tmbundle"]
 	path = vendor/grammars/LiveScript.tmbundle
 	url = https://github.com/paulmillr/LiveScript.tmbundle
@@ -73,6 +64,9 @@
 [submodule "vendor/grammars/NimLime"]
 	path = vendor/grammars/NimLime
 	url = https://github.com/Varriount/NimLime
+[submodule "vendor/grammars/ObjectScript.tmBundle"]
+	path = vendor/grammars/ObjectScript.tmBundle
+	url = https://github.com/intersystems-community/ObjectScript.tmBundle
 [submodule "vendor/grammars/PHP-Twig.tmbundle"]
 	path = vendor/grammars/PHP-Twig.tmbundle
 	url = https://github.com/Anomareh/PHP-Twig.tmbundle
@@ -85,9 +79,6 @@
 [submodule "vendor/grammars/Racket"]
 	path = vendor/grammars/Racket
 	url = https://github.com/soegaard/racket-highlight-for-github
-[submodule "vendor/grammars/SCSS.tmbundle"]
-	path = vendor/grammars/SCSS.tmbundle
-	url = https://github.com/MarioRicalde/SCSS.tmbundle
 [submodule "vendor/grammars/SMT.tmbundle"]
 	path = vendor/grammars/SMT.tmbundle
 	url = https://github.com/SRI-CSL/SMT.tmbundle.git
@@ -136,9 +127,6 @@
 [submodule "vendor/grammars/Sublime-SQF-Language"]
 	path = vendor/grammars/Sublime-SQF-Language
 	url = https://github.com/JonBons/Sublime-SQF-Language
-[submodule "vendor/grammars/Sublime-Text-2-OpenEdge-ABL"]
-	path = vendor/grammars/Sublime-Text-2-OpenEdge-ABL
-	url = https://github.com/jfairbank/Sublime-Text-2-OpenEdge-ABL
 [submodule "vendor/grammars/SublimeBrainfuck"]
 	path = vendor/grammars/SublimeBrainfuck
 	url = https://github.com/Drako/SublimeBrainfuck
@@ -148,6 +136,7 @@
 [submodule "vendor/grammars/SublimeEthereum"]
 	path = vendor/grammars/SublimeEthereum
 	url = https://github.com/davidhq/SublimeEthereum.git
+	branch = linguist
 [submodule "vendor/grammars/SublimeGDB"]
 	path = vendor/grammars/SublimeGDB
 	url = https://github.com/quarnster/SublimeGDB
@@ -190,15 +179,27 @@
 [submodule "vendor/grammars/X10"]
 	path = vendor/grammars/X10
 	url = https://github.com/x10-lang/x10-highlighting
+[submodule "vendor/grammars/XojoSyntaxTM"]
+	path = vendor/grammars/XojoSyntaxTM
+	url = https://github.com/jimmckay/XojoSyntaxTM
+[submodule "vendor/grammars/ZenScript-tmLanguage"]
+	path = vendor/grammars/ZenScript-tmLanguage
+	url = https://github.com/CraftTweaker/ZenScript-tmLanguage
 [submodule "vendor/grammars/abap.tmbundle"]
 	path = vendor/grammars/abap.tmbundle
 	url = https://github.com/pvl/abap.tmbundle
+[submodule "vendor/grammars/abl-tmlanguage"]
+	path = vendor/grammars/abl-tmlanguage
+	url = https://github.com/chriscamicas/abl-tmlanguage
 [submodule "vendor/grammars/actionscript3-tmbundle"]
 	path = vendor/grammars/actionscript3-tmbundle
 	url = https://github.com/simongregory/actionscript3-tmbundle
 [submodule "vendor/grammars/ada.tmbundle"]
 	path = vendor/grammars/ada.tmbundle
 	url = https://github.com/textmate/ada.tmbundle
+[submodule "vendor/grammars/agda-github-syntax-highlighting"]
+	path = vendor/grammars/agda-github-syntax-highlighting
+	url = https://github.com/agda/agda-github-syntax-highlighting
 [submodule "vendor/grammars/ampl"]
 	path = vendor/grammars/ampl
 	url = https://github.com/ampl/sublime-ampl
@@ -226,6 +227,9 @@
 [submodule "vendor/grammars/assembly"]
 	path = vendor/grammars/assembly
 	url = https://github.com/nanoant/assembly.tmbundle
+[submodule "vendor/grammars/atom-editorconfig"]
+	path = vendor/grammars/atom-editorconfig
+	url = https://github.com/sindresorhus/atom-editorconfig
 [submodule "vendor/grammars/atom-firestore-grammar"]
 	path = vendor/grammars/atom-firestore-grammar
 	url = https://github.com/jaysquared/atom-firestore-grammar
@@ -244,6 +248,9 @@
 [submodule "vendor/grammars/atom-language-haproxy"]
 	path = vendor/grammars/atom-language-haproxy
 	url = https://github.com/abulimov/atom-language-haproxy
+[submodule "vendor/grammars/atom-language-innosetup"]
+	path = vendor/grammars/atom-language-innosetup
+	url = https://github.com/idleberg/atom-language-innosetup
 [submodule "vendor/grammars/atom-language-julia"]
 	path = vendor/grammars/atom-language-julia
 	url = https://github.com/JuliaEditorSupport/atom-language-julia
@@ -277,6 +284,9 @@
 [submodule "vendor/grammars/ats"]
 	path = vendor/grammars/ats
 	url = https://github.com/steinwaywhw/ats-mode-sublimetext
+[submodule "vendor/grammars/avro.tmLanguage"]
+	path = vendor/grammars/avro.tmLanguage
+	url = https://github.com/Jason3S/avro.tmLanguage
 [submodule "vendor/grammars/awk-sublime"]
 	path = vendor/grammars/awk-sublime
 	url = https://github.com/github-linguist/awk-sublime
@@ -286,18 +296,12 @@
 [submodule "vendor/grammars/ballerina-grammar"]
 	path = vendor/grammars/ballerina-grammar
 	url = https://github.com/ballerina-platform/ballerina-grammar
-[submodule "vendor/grammars/bison.tmbundle"]
-	path = vendor/grammars/bison.tmbundle
-	url = https://github.com/textmate/bison.tmbundle
 [submodule "vendor/grammars/blitzmax"]
 	path = vendor/grammars/blitzmax
 	url = https://github.com/textmate/blitzmax.tmbundle
 [submodule "vendor/grammars/boo"]
 	path = vendor/grammars/boo
 	url = https://github.com/Shammah/boo-sublime
-[submodule "vendor/grammars/bro-sublime"]
-	path = vendor/grammars/bro-sublime
-	url = https://github.com/bro/bro-sublime
 [submodule "vendor/grammars/c.tmbundle"]
 	path = vendor/grammars/c.tmbundle
 	url = https://github.com/textmate/c.tmbundle
@@ -337,9 +341,9 @@
 [submodule "vendor/grammars/d.tmbundle"]
 	path = vendor/grammars/d.tmbundle
 	url = https://github.com/textmate/d.tmbundle
-[submodule "vendor/grammars/dartlang"]
-	path = vendor/grammars/dartlang
-	url = https://github.com/dart-atom/dartlang
+[submodule "vendor/grammars/dart-syntax-highlight"]
+	path = vendor/grammars/dart-syntax-highlight
+	url = https://github.com/dart-lang/dart-syntax-highlight
 [submodule "vendor/grammars/data-weave-tmLanguage"]
 	path = vendor/grammars/data-weave-tmLanguage
 	url = https://github.com/mulesoft-labs/data-weave-tmLanguage
@@ -412,6 +416,9 @@
 [submodule "vendor/grammars/haxe-TmLanguage"]
 	path = vendor/grammars/haxe-TmLanguage
 	url = https://github.com/vshaxe/haxe-TmLanguage
+[submodule "vendor/grammars/holyc.tmbundle"]
+	path = vendor/grammars/holyc.tmbundle
+	url = https://github.com/codingdandy/holyc.tmbundle
 [submodule "vendor/grammars/hy.tmLanguage"]
 	path = vendor/grammars/hy.tmLanguage
 	url = https://github.com/Slowki/hy.tmLanguage.git
@@ -451,15 +458,21 @@
 [submodule "vendor/grammars/json.tmbundle"]
 	path = vendor/grammars/json.tmbundle
 	url = https://github.com/textmate/json.tmbundle
+[submodule "vendor/grammars/lang-4d"]
+	path = vendor/grammars/lang-4d
+	url = https://github.com/ayoubserti/lang-4d
 [submodule "vendor/grammars/language-agc"]
 	path = vendor/grammars/language-agc
 	url = https://github.com/Alhadis/language-agc
 [submodule "vendor/grammars/language-apl"]
 	path = vendor/grammars/language-apl
 	url = https://github.com/Alhadis/language-apl.git
+[submodule "vendor/grammars/language-asl"]
+	path = vendor/grammars/language-asl
+	url = https://github.com/sebadur/language-asl
 [submodule "vendor/grammars/language-asn1"]
 	path = vendor/grammars/language-asn1
-	url = https://github.com/ajLangley12/language-asn1
+	url = https://github.com/ajlangley/language-asn1
 [submodule "vendor/grammars/language-batchfile"]
 	path = vendor/grammars/language-batchfile
 	url = https://github.com/mmims/language-batchfile
@@ -493,21 +506,36 @@
 [submodule "vendor/grammars/language-cwl"]
 	path = vendor/grammars/language-cwl
 	url = https://github.com/manabuishii/language-cwl
+[submodule "vendor/grammars/language-dircolors"]
+	path = vendor/grammars/language-dircolors
+	url = https://github.com/jolkdarr/language-dircolors
 [submodule "vendor/grammars/language-emacs-lisp"]
 	path = vendor/grammars/language-emacs-lisp
 	url = https://github.com/Alhadis/language-emacs-lisp
 [submodule "vendor/grammars/language-eml"]
 	path = vendor/grammars/language-eml
 	url = https://github.com/mariozaizar/language-eml
+[submodule "vendor/grammars/language-etc"]
+	path = vendor/grammars/language-etc
+	url = https://github.com/Alhadis/language-etc
+[submodule "vendor/grammars/language-faust"]
+	path = vendor/grammars/language-faust
+	url = https://github.com/jpcima/language-faust
 [submodule "vendor/grammars/language-fontforge"]
 	path = vendor/grammars/language-fontforge
 	url = https://github.com/Alhadis/language-fontforge
+[submodule "vendor/grammars/language-gf"]
+	path = vendor/grammars/language-gf
+	url = https://github.com/johnjcamilleri/language-gf
 [submodule "vendor/grammars/language-gfm"]
 	path = vendor/grammars/language-gfm
 	url = https://github.com/atom/language-gfm
 [submodule "vendor/grammars/language-gn"]
 	path = vendor/grammars/language-gn
 	url = https://github.com/devoncarew/language-gn
+[submodule "vendor/grammars/language-grammars"]
+	path = vendor/grammars/language-grammars
+	url = https://github.com/Alhadis/language-grammars
 [submodule "vendor/grammars/language-graphql"]
 	path = vendor/grammars/language-graphql
 	url = https://github.com/rmosolgo/language-graphql
@@ -523,6 +551,9 @@
 [submodule "vendor/grammars/language-html"]
 	path = vendor/grammars/language-html
 	url = https://github.com/atom/language-html
+[submodule "vendor/grammars/language-igor"]
+	path = vendor/grammars/language-igor
+	url = https://github.com/byte-physics/language-igor
 [submodule "vendor/grammars/language-inform7"]
 	path = vendor/grammars/language-inform7
 	url = https://github.com/erkyrath/language-inform7
@@ -538,18 +569,33 @@
 [submodule "vendor/grammars/language-jsoniq"]
 	path = vendor/grammars/language-jsoniq
 	url = https://github.com/wcandillon/language-jsoniq
+[submodule "vendor/grammars/language-jsonnet"]
+	path = vendor/grammars/language-jsonnet
+	url = https://github.com/google/language-jsonnet
 [submodule "vendor/grammars/language-kotlin"]
 	path = vendor/grammars/language-kotlin
 	url = https://github.com/nishtahir/language-kotlin
 [submodule "vendor/grammars/language-less"]
 	path = vendor/grammars/language-less
 	url = https://github.com/atom/language-less.git
+[submodule "vendor/grammars/language-m68k"]
+	path = vendor/grammars/language-m68k
+	url = https://github.com/zerkman/language-m68k
+[submodule "vendor/grammars/language-macaulay2"]
+	path = vendor/grammars/language-macaulay2
+	url = https://github.com/Macaulay2/language-macaulay2
 [submodule "vendor/grammars/language-maxscript"]
 	path = vendor/grammars/language-maxscript
 	url = https://github.com/Alhadis/language-maxscript
+[submodule "vendor/grammars/language-mcfunction"]
+	path = vendor/grammars/language-mcfunction
+	url = https://github.com/Arcensoth/language-mcfunction
 [submodule "vendor/grammars/language-meson"]
 	path = vendor/grammars/language-meson
 	url = https://github.com/TingPing/language-meson
+[submodule "vendor/grammars/language-msl"]
+	path = vendor/grammars/language-msl
+	url = https://github.com/gen-angry/language-msl
 [submodule "vendor/grammars/language-ncl"]
 	path = vendor/grammars/language-ncl
 	url = https://github.com/rpavlick/language-ncl.git
@@ -565,6 +611,12 @@
 [submodule "vendor/grammars/language-povray"]
 	path = vendor/grammars/language-povray
 	url = https://github.com/c-lipka/language-povray
+[submodule "vendor/grammars/language-property-list"]
+	path = vendor/grammars/language-property-list
+	url = https://github.com/atom/language-property-list
+[submodule "vendor/grammars/language-qasm"]
+	path = vendor/grammars/language-qasm
+	url = https://github.com/tareqdandachi/language-qasm
 [submodule "vendor/grammars/language-reason"]
 	path = vendor/grammars/language-reason
 	url = https://github.com/reasonml-editor/language-reason
@@ -589,9 +641,15 @@
 [submodule "vendor/grammars/language-rpm-spec"]
 	path = vendor/grammars/language-rpm-spec
 	url = https://github.com/waveclaw/language-rpm-spec
+[submodule "vendor/grammars/language-rtf"]
+	path = vendor/grammars/language-rtf
+	url = https://github.com/nwhetsell/language-rtf
 [submodule "vendor/grammars/language-ruby"]
 	path = vendor/grammars/language-ruby
 	url = https://github.com/atom/language-ruby
+[submodule "vendor/grammars/language-sass"]
+	path = vendor/grammars/language-sass
+	url = https://github.com/atom/language-sass
 [submodule "vendor/grammars/language-sed"]
 	path = vendor/grammars/language-sed
 	url = https://github.com/Alhadis/language-sed
@@ -601,9 +659,15 @@
 [submodule "vendor/grammars/language-supercollider"]
 	path = vendor/grammars/language-supercollider
 	url = https://github.com/supercollider/language-supercollider
+[submodule "vendor/grammars/language-texinfo"]
+	path = vendor/grammars/language-texinfo
+	url = https://github.com/Alhadis/language-texinfo
 [submodule "vendor/grammars/language-toc-wow"]
 	path = vendor/grammars/language-toc-wow
 	url = https://github.com/nebularg/language-toc-wow
+[submodule "vendor/grammars/language-tsql"]
+	path = vendor/grammars/language-tsql
+	url = https://github.com/beau-witter/language-tsql
 [submodule "vendor/grammars/language-turing"]
 	path = vendor/grammars/language-turing
 	url = https://github.com/Alhadis/language-turing
@@ -613,6 +677,9 @@
 [submodule "vendor/grammars/language-viml"]
 	path = vendor/grammars/language-viml
 	url = https://github.com/Alhadis/language-viml
+[submodule "vendor/grammars/language-vtt"]
+	path = vendor/grammars/language-vtt
+	url = https://github.com/weizhenye/language-vtt
 [submodule "vendor/grammars/language-wavefront"]
 	path = vendor/grammars/language-wavefront
 	url = https://github.com/Alhadis/language-wavefront
@@ -637,9 +704,9 @@
 [submodule "vendor/grammars/latex.tmbundle"]
 	path = vendor/grammars/latex.tmbundle
 	url = https://github.com/textmate/latex.tmbundle
-[submodule "vendor/grammars/lilypond.tmbundle"]
-	path = vendor/grammars/lilypond.tmbundle
-	url = https://github.com/textmate/lilypond.tmbundle
+[submodule "vendor/grammars/linter-lilypond"]
+	path = vendor/grammars/linter-lilypond
+	url = https://github.com/nwhetsell/linter-lilypond
 [submodule "vendor/grammars/liquid.tmbundle"]
 	path = vendor/grammars/liquid.tmbundle
 	url = https://github.com/bastilian/validcode-textmate-bundles
@@ -682,6 +749,9 @@
 [submodule "vendor/grammars/mercury-tmlanguage"]
 	path = vendor/grammars/mercury-tmlanguage
 	url = https://github.com/sebgod/mercury-tmlanguage
+[submodule "vendor/grammars/mlir-grammar"]
+	path = vendor/grammars/mlir-grammar
+	url = https://github.com/jpienaar/mlir-grammar
 [submodule "vendor/grammars/monkey"]
 	path = vendor/grammars/monkey
 	url = https://github.com/gingerbeardman/monkey.tmbundle
@@ -742,9 +812,6 @@
 [submodule "vendor/grammars/pike-textmate"]
 	path = vendor/grammars/pike-textmate
 	url = https://github.com/hww3/pike-textmate
-[submodule "vendor/grammars/postscript.tmbundle"]
-	path = vendor/grammars/postscript.tmbundle
-	url = https://github.com/textmate/postscript.tmbundle
 [submodule "vendor/grammars/powershell"]
 	path = vendor/grammars/powershell
 	url = https://github.com/PowerShell/EditorSyntax
@@ -757,6 +824,9 @@
 [submodule "vendor/grammars/python-django.tmbundle"]
 	path = vendor/grammars/python-django.tmbundle
 	url = https://github.com/textmate/python-django.tmbundle
+[submodule "vendor/grammars/qsharp-compiler"]
+	path = vendor/grammars/qsharp-compiler
+	url = https://github.com/microsoft/qsharp-compiler
 [submodule "vendor/grammars/quake"]
 	path = vendor/grammars/quake
 	url = https://github.com/newgrammars/quake
@@ -769,18 +839,18 @@
 [submodule "vendor/grammars/razor-plus"]
 	path = vendor/grammars/razor-plus
 	url = https://github.com/austincummings/razor-plus
+[submodule "vendor/grammars/riot-syntax-highlight"]
+	path = vendor/grammars/riot-syntax-highlight
+	url = https://github.com/riot/syntax-highlight
 [submodule "vendor/grammars/ruby-slim.tmbundle"]
 	path = vendor/grammars/ruby-slim.tmbundle
 	url = https://github.com/slim-template/ruby-slim.tmbundle
 [submodule "vendor/grammars/sas.tmbundle"]
 	path = vendor/grammars/sas.tmbundle
 	url = https://github.com/rpardee/sas.tmbundle
-[submodule "vendor/grammars/sass-textmate-bundle"]
-	path = vendor/grammars/sass-textmate-bundle
-	url = https://github.com/nathos/sass-textmate-bundle
 [submodule "vendor/grammars/scheme.tmbundle"]
 	path = vendor/grammars/scheme.tmbundle
-	url = https://github.com/textmate/scheme.tmbundle
+	url = https://github.com/sicp-lang/scheme.tmbundle
 [submodule "vendor/grammars/scilab.tmbundle"]
 	path = vendor/grammars/scilab.tmbundle
 	url = https://github.com/textmate/scilab.tmbundle
@@ -796,9 +866,9 @@
 [submodule "vendor/grammars/smalltalk-tmbundle"]
 	path = vendor/grammars/smalltalk-tmbundle
 	url = https://github.com/tomas-stefano/smalltalk-tmbundle
-[submodule "vendor/grammars/sourcepawn"]
-	path = vendor/grammars/sourcepawn
-	url = https://github.com/github-linguist/sublime-sourcepawn
+[submodule "vendor/grammars/sourcepawn-vscode"]
+	path = vendor/grammars/sourcepawn-vscode
+	url = https://github.com/Dreae/sourcepawn-vscode
 [submodule "vendor/grammars/sql.tmbundle"]
 	path = vendor/grammars/sql.tmbundle
 	url = https://github.com/textmate/sql.tmbundle
@@ -856,6 +926,9 @@
 [submodule "vendor/grammars/sublime-nginx"]
 	path = vendor/grammars/sublime-nginx
 	url = https://github.com/brandonwamboldt/sublime-nginx
+[submodule "vendor/grammars/sublime-odin"]
+	path = vendor/grammars/sublime-odin
+	url = https://github.com/odin-lang/sublime-odin
 [submodule "vendor/grammars/sublime-opal"]
 	path = vendor/grammars/sublime-opal
 	url = https://github.com/artifactz/sublime-opal
@@ -889,6 +962,9 @@
 [submodule "vendor/grammars/sublime-varnish"]
 	path = vendor/grammars/sublime-varnish
 	url = https://github.com/brandonwamboldt/sublime-varnish
+[submodule "vendor/grammars/sublime-zig-language"]
+	path = vendor/grammars/sublime-zig-language
+	url = https://github.com/ziglang/sublime-zig-language
 [submodule "vendor/grammars/sublime_cobol"]
 	path = vendor/grammars/sublime_cobol
 	url = https://bitbucket.org/bitlang/sublime_cobol
@@ -901,6 +977,12 @@
 [submodule "vendor/grammars/sublimetext-cuda-cpp"]
 	path = vendor/grammars/sublimetext-cuda-cpp
 	url = https://github.com/harrism/sublimetext-cuda-cpp
+[submodule "vendor/grammars/sublimetext-nasl"]
+	path = vendor/grammars/sublimetext-nasl
+	url = https://github.com/tenable/sublimetext-nasl
+[submodule "vendor/grammars/svelte-atom"]
+	path = vendor/grammars/svelte-atom
+	url = https://github.com/umanghome/svelte-atom
 [submodule "vendor/grammars/swift.tmbundle"]
 	path = vendor/grammars/swift.tmbundle
 	url = https://github.com/textmate/swift.tmbundle
@@ -922,24 +1004,60 @@
 [submodule "vendor/grammars/vhdl"]
 	path = vendor/grammars/vhdl
 	url = https://github.com/textmate/vhdl.tmbundle
+[submodule "vendor/grammars/vscode-codeql"]
+	path = vendor/grammars/vscode-codeql
+	url = https://github.com/github/vscode-codeql
+[submodule "vendor/grammars/vscode-gcode-syntax"]
+	path = vendor/grammars/vscode-gcode-syntax
+	url = https://github.com/appliedengdesign/vscode-gcode-syntax
+[submodule "vendor/grammars/vscode-gedcom"]
+	path = vendor/grammars/vscode-gedcom
+	url = https://github.com/fguitton/vscode-gedcom
+[submodule "vendor/grammars/vscode-hack"]
+	path = vendor/grammars/vscode-hack
+	url = https://github.com/slackhq/vscode-hack
+[submodule "vendor/grammars/vscode-lean"]
+	path = vendor/grammars/vscode-lean
+	url = https://github.com/leanprover/vscode-lean
+[submodule "vendor/grammars/vscode-opa"]
+	path = vendor/grammars/vscode-opa
+	url = https://github.com/tsandall/vscode-opa
+[submodule "vendor/grammars/vscode-plantuml"]
+	path = vendor/grammars/vscode-plantuml
+	url = https://github.com/qjebbs/vscode-plantuml
+[submodule "vendor/grammars/vscode-prisma"]
+	path = vendor/grammars/vscode-prisma
+	url = https://github.com/prisma/vscode-prisma
 [submodule "vendor/grammars/vscode-scala-syntax"]
 	path = vendor/grammars/vscode-scala-syntax
 	url = https://github.com/scala/vscode-scala-syntax
 [submodule "vendor/grammars/vscode-slice"]
 	path = vendor/grammars/vscode-slice
 	url = https://github.com/zeroc-ice/vscode-slice
+[submodule "vendor/grammars/vscode-vlang"]
+	path = vendor/grammars/vscode-vlang
+	url = https://github.com/0x9ef/vscode-vlang
+[submodule "vendor/grammars/vscode-zil-language"]
+	path = vendor/grammars/vscode-zil-language
+	url = https://github.com/tclem/vscode-zil-language
 [submodule "vendor/grammars/vue-syntax-highlight"]
 	path = vendor/grammars/vue-syntax-highlight
 	url = https://github.com/vuejs/vue-syntax-highlight
 [submodule "vendor/grammars/wdl-sublime-syntax-highlighter"]
 	path = vendor/grammars/wdl-sublime-syntax-highlighter
 	url = https://github.com/broadinstitute/wdl-sublime-syntax-highlighter
+[submodule "vendor/grammars/wollok-sublime"]
+	path = vendor/grammars/wollok-sublime
+	url = https://github.com/uqbar-project/wollok-sublime
 [submodule "vendor/grammars/xc.tmbundle"]
 	path = vendor/grammars/xc.tmbundle
 	url = https://github.com/graymalkin/xc.tmbundle
 [submodule "vendor/grammars/xml.tmbundle"]
 	path = vendor/grammars/xml.tmbundle
 	url = https://github.com/textmate/xml.tmbundle
+[submodule "vendor/grammars/zeek-sublime"]
+	path = vendor/grammars/zeek-sublime
+	url = https://github.com/zeek/zeek-sublime
 [submodule "vendor/grammars/zephir-sublime"]
 	path = vendor/grammars/zephir-sublime
 	url = https://github.com/phalcon/zephir-sublime
