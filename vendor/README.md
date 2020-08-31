@@ -449,6 +449,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **VHDL:** [textmate/vhdl.tmbundle](https://github.com/textmate/vhdl.tmbundle)
 - **Vala:** [technosophos/Vala-TMBundle](https://github.com/technosophos/Vala-TMBundle)
 - **Verilog:** [textmate/verilog.tmbundle](https://github.com/textmate/verilog.tmbundle)
+- **Vim Help File:** [Alhadis/language-viml](https://github.com/Alhadis/language-viml)
 - **Vim Snippet:** [Alhadis/language-viml](https://github.com/Alhadis/language-viml)
 - **Vim script:** [Alhadis/language-viml](https://github.com/Alhadis/language-viml)
 - **Visual Basic .NET:** [angryant0007/VBDotNetSyntax](https://github.com/angryant0007/VBDotNetSyntax)

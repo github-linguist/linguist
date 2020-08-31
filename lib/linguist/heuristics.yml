@@ -497,6 +497,15 @@ disambiguations:
     pattern: '^\s*(import.+(from\s+|require\()[''"]react|\/\/\/\s*<reference\s)'
   - language: XML
     pattern: '(?i:^\s*<\?xml\s+version)'
+- extensions: ['.txt']
+  rules:
+    # The following RegExp is simply a collapsed and simplified form of the
+    # VIM_MODELINE pattern in `./lib/linguist/strategy/modeline.rb`.
+  - language: Vim Help File
+    pattern: '(?:(?:\s|^)vi(?:m[<=>]?\d+|m)?|\sex)(?=:(?=\s*set?\s[^\n:]+:)|:(?!\s* set?\s))(?:(?:\s|\s*:\s*)\w*(?:\s*=(?:[^\\\s]|\\.)*)?)*[\s:](?:filetype|ft|syntax)\s*=help(?=\s|:|$)'
+    # HACK: This is a contrived use of heuristics needed to address
+    # an unusual edge-case. See https://git.io/JULye for discussion.
+  - language: Text
 - extensions: ['.v']
   rules:
   - language: Coq
