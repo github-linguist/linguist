@@ -416,17 +416,13 @@ disambiguations:
   rules:
   - language: Reason
     pattern:
-    - '^\s*open\s+\w+\s*;$'
-    - '^\s*include\s+\w+\s*;$'
     - '^\s*module\s+type\s'
-    - '^\s*let\s+\w+:\s+.*=.*;\s*$'
-    - '^\s*let\s+module\s\w+\s*=\s*{'
+    - '^\s*(?:include|open)\s+\w+\s*;\s*$'
+    - '^\s*let\s+(?:module\s\w+\s*=\s*{|\w+:\s+.*=.*;\s*$)'
   - language: C++
     pattern:
-    - '^\s*#\s*include\s+<[^>]+>'
-    - '^\s*#(if|ifdef|define|pragma)\s+\w'
+    - '^\s*#(?:(?:if|ifdef|define|pragma)\s+\w|\s*include\s+<[^>]+>)'
     - '^\s*template\s*<'
-    - '\bstd::\w+'
 - extensions: ['.rno']
   rules:
   - language: RUNOFF
