@@ -35,7 +35,7 @@ module Linguist
     #
     # Returns a String.
     def data
-      @data ||= File.read(@fullpath)
+      @data ||= File.read(@fullpath, :encoding => "ASCII-8BIT")
     end
 
     # Public: Get byte size

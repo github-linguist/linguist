@@ -38,24 +38,24 @@ module Linguist
     end
 
     def documentation?
-      if attr = git_attributes['linguist-documentation']
-        boolean_attribute(attr)
+      if not git_attributes['linguist-documentation'].nil?
+        boolean_attribute(git_attributes['linguist-documentation'])
       else
         super
       end
     end
 
     def generated?
-      if attr = git_attributes['linguist-generated']
-        boolean_attribute(attr)
+      if not git_attributes['linguist-generated'].nil?
+        boolean_attribute(git_attributes['linguist-generated'])
       else
         super
       end
     end
 
     def vendored?
-      if attr = git_attributes['linguist-vendored']
-        return boolean_attribute(attr)
+      if not git_attributes['linguist-vendored'].nil?
+        boolean_attribute(git_attributes['linguist-vendored'])
       else
         super
       end
@@ -72,8 +72,8 @@ module Linguist
     end
 
     def detectable?
-      if attr = git_attributes['linguist-detectable']
-        return boolean_attribute(attr)
+      if not git_attributes['linguist-detectable'].nil?
+        boolean_attribute(git_attributes['linguist-detectable'])
       else
         nil
       end
@@ -100,9 +100,9 @@ module Linguist
 
     protected
 
-    # Returns true if the attribute is present and not the string "false".
+    # Returns true if the attribute is present and not the string "false" and not the false boolean.
     def boolean_attribute(attribute)
-      attribute != "false"
+      attribute != "false" && attribute != false
     end
 
     def load_blob!

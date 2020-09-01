@@ -1,0 +1,7 @@
+version: 2
+updates:
+  # Only check for Ruby gem updates
+  - package-ecosystem: "bundler"
+    directory: "/"
+    schedule:
+      interval: "daily"
