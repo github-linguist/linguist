@@ -129,6 +129,14 @@ APL:
   codemirror_mode: apl
   codemirror_mime_type: text/apl
   language_id: 6
+ASL:
+  type: programming
+  ace_mode: text
+  extensions:
+  - ".asl"
+  - ".dsl"
+  tm_scope: source.asl
+  language_id: 124996147
 ASN.1:
   type: data
   extensions:
@@ -397,6 +405,13 @@ AutoIt:
   tm_scope: source.autoit
   ace_mode: autohotkey
   language_id: 27
+Avro IDL:
+  type: data
+  extensions:
+  - ".avdl"
+  tm_scope: source.avro
+  ace_mode: text
+  language_id: 785497837
 Awk:
   type: programming
   extensions:
@@ -1771,6 +1786,7 @@ Gerber Image:
   - ".gto"
   - ".gtp"
   - ".gts"
+  - ".sol"
   interpreters:
   - gerbv
   - gerbview
@@ -2028,7 +2044,6 @@ HTML+Django:
   extensions:
   - ".jinja"
   - ".jinja2"
-  - ".mustache"
   - ".njk"
   aliases:
   - django
@@ -2071,9 +2086,12 @@ HTML+ERB:
   group: HTML
   aliases:
   - erb
+  - rhtml
+  - html+ruby
   extensions:
   - ".erb"
   - ".erb.deface"
+  - ".rhtml"
   ace_mode: text
   codemirror_mode: htmlembedded
   codemirror_mime_type: application/x-erb
@@ -2458,6 +2476,7 @@ JSON with Comments:
   - jsconfig.json
   - language-configuration.json
   - tsconfig.json
+  - tslint.json
   language_id: 423
 JSON5:
   type: data
@@ -2575,6 +2594,7 @@ JavaScript:
   - gjs
   - js
   - node
+  - nodejs
   - qjs
   - rhino
   - v8
@@ -2890,6 +2910,7 @@ Literate CoffeeScript:
   - litcoffee
   extensions:
   - ".litcoffee"
+  - ".coffee.md"
   language_id: 206
 Literate Haskell:
   type: programming
@@ -3372,6 +3393,16 @@ Muse:
   aliases:
   - amusewiki
   - emacs muse
+Mustache:
+  type: markup
+  group: HTML
+  extensions:
+  - ".mustache"
+  tm_scope: text.html.smarty
+  ace_mode: smarty
+  codemirror_mode: smarty
+  codemirror_mime_type: text/x-smarty
+  language_id: 638334590
 Myghty:
   type: programming
   extensions:
@@ -3506,6 +3537,7 @@ Nextflow:
 Nginx:
   type: data
   extensions:
+  - ".nginx"
   - ".nginxconf"
   - ".vhost"
   filenames:
@@ -4361,8 +4393,8 @@ Qt Script:
   extensions:
   - ".qs"
   filenames:
-  - "installscript.qs"
-  - "toolchain_installscript.qs"
+  - installscript.qs
+  - toolchain_installscript.qs
   color: "#00b841"
   tm_scope: source.js
   language_id: 558193693
@@ -4440,18 +4472,6 @@ REXX:
   tm_scope: source.rexx
   ace_mode: text
   language_id: 311
-RHTML:
-  type: markup
-  group: HTML
-  extensions:
-  - ".rhtml"
-  tm_scope: text.html.erb
-  aliases:
-  - html+ruby
-  ace_mode: rhtml
-  codemirror_mode: htmlembedded
-  codemirror_mime_type: application/x-erb
-  language_id: 312
 RMarkdown:
   type: prose
   wrap: true
@@ -4813,6 +4833,7 @@ Ruby:
   filenames:
   - ".irbrc"
   - ".pryrc"
+  - ".simplecov"
   - Appraisals
   - Berksfile
   - Brewfile
@@ -5097,6 +5118,7 @@ Shell:
   - ".bats"
   - ".cgi"
   - ".command"
+  - ".env"
   - ".fcgi"
   - ".ksh"
   - ".sh.in"
@@ -5110,6 +5132,9 @@ Shell:
   - ".bash_profile"
   - ".bashrc"
   - ".cshrc"
+  - ".env"
+  - ".env.example"
+  - ".flaskenv"
   - ".login"
   - ".profile"
   - ".zlogin"
@@ -5247,6 +5272,8 @@ Solidity:
   color: "#AA6746"
   ace_mode: text
   tm_scope: source.solidity
+  extensions:
+  - ".sol"
   language_id: 237469032
 SourcePawn:
   type: programming
@@ -5290,7 +5317,7 @@ Standard ML:
   aliases:
   - sml
   extensions:
-  - ".ML"
+  - ".ml"
   - ".fun"
   - ".sig"
   - ".sml"
@@ -5687,6 +5714,7 @@ Unix Assembly:
   language_id: 120
 Uno:
   type: programming
+  color: "#9933cc"
   extensions:
   - ".uno"
   ace_mode: csharp
@@ -5800,6 +5828,15 @@ Verilog:
   codemirror_mode: verilog
   codemirror_mime_type: text/x-verilog
   language_id: 387
+Vim Help File:
+  type: prose
+  aliases:
+  - vimhelp
+  extensions:
+  - ".txt"
+  tm_scope: text.vim-help
+  ace_mode: text
+  language_id: 508563686
 Vim Snippet:
   type: markup
   aliases:
@@ -6059,6 +6096,7 @@ XML:
   - ".gml"
   - ".gmx"
   - ".grxml"
+  - ".gst"
   - ".iml"
   - ".ivy"
   - ".jelly"
