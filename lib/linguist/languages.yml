@@ -485,7 +485,7 @@ BitBake:
   language_id: 32
 Blade:
   type: markup
-  group: HTML
+  color: "#f7523f"
   extensions:
   - ".blade"
   - ".blade.php"
@@ -2154,8 +2154,8 @@ Hack:
   color: "#878787"
   language_id: 153
 Haml:
-  group: HTML
   type: markup
+  color: "#ece2a9"
   extensions:
   - ".haml"
   - ".haml.deface"
@@ -2166,7 +2166,7 @@ Haml:
   language_id: 154
 Handlebars:
   type: markup
-  group: HTML
+  color: "#f7931e"
   aliases:
   - hbs
   - htmlbars
@@ -2819,7 +2819,7 @@ Lasso:
   language_id: 195
 Latte:
   type: markup
-  group: HTML
+  color: "#f2a542"
   extensions:
   - ".latte"
   tm_scope: text.html.smarty
@@ -2837,7 +2837,7 @@ Lean:
   language_id: 197
 Less:
   type: markup
-  group: CSS
+  color: "#1d365d"
   extensions:
   - ".less"
   tm_scope: source.css.less
@@ -3184,8 +3184,8 @@ Markdown:
   tm_scope: source.gfm
   language_id: 222
 Marko:
-  group: HTML
   type: markup
+  color: "#42bff2"
   tm_scope: text.marko
   extensions:
   - ".marko"
@@ -4257,8 +4257,8 @@ Public Key:
   codemirror_mime_type: application/pgp
   language_id: 298
 Pug:
-  group: HTML
   type: markup
+  color: "#a86454"
   extensions:
   - ".jade"
   - ".pug"
@@ -4886,8 +4886,8 @@ SAS:
   language_id: 328
 SCSS:
   type: markup
+  color: "#c6538c"
   tm_scope: source.css.scss
-  group: CSS
   ace_mode: scss
   codemirror_mode: css
   codemirror_mime_type: text/x-scss
@@ -5010,7 +5010,6 @@ SWIG:
   language_id: 1066250075
 Sage:
   type: programming
-  group: Python
   extensions:
   - ".sage"
   - ".sagews"
@@ -5034,8 +5033,8 @@ SaltStack:
   language_id: 339
 Sass:
   type: markup
+  color: "#a53b70"
   tm_scope: source.sass
-  group: CSS
   extensions:
   - ".sass"
   ace_mode: sass
@@ -5227,8 +5226,8 @@ Slice:
   - ".ice"
   language_id: 894641667
 Slim:
-  group: HTML
   type: markup
+  color: "#2b2b2b"
   extensions:
   - ".slim"
   tm_scope: text.slim
@@ -5368,7 +5367,7 @@ Stata:
   language_id: 358
 Stylus:
   type: markup
-  group: CSS
+  color: "#ff6347"
   extensions:
   - ".styl"
   tm_scope: source.stylus
@@ -5403,8 +5402,8 @@ SuperCollider:
   language_id: 361
 Svelte:
   type: markup
+  color: "#ff3e00"
   tm_scope: source.svelte
-  group: HTML
   ace_mode: html
   codemirror_mode: htmlmixed
   codemirror_mime_type: text/html
@@ -5661,7 +5660,7 @@ Turtle:
   language_id: 376
 Twig:
   type: markup
-  group: HTML
+  color: "#c1d026"
   extensions:
   - ".twig"
   tm_scope: text.html.twig
