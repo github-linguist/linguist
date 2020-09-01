@@ -25,6 +25,7 @@ jobs:
     name: Test Dockerfile
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v1
     - name: Build container
       run: docker build -t linguist .
     - name: Analyse current directory
