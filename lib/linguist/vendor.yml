@@ -41,9 +41,12 @@
 # Node dependencies
 - (^|/)node_modules/
 
-# Yarn releases & plugins
+# Yarn 2
 - (^|/)\.yarn/releases/
 - (^|/)\.yarn/plugins/
+- (^|/)\.yarn/sdks/
+- (^|/)\.yarn/versions/
+- (^|/)\.yarn/unplugged/
 
 # esy.sh dependencies
 - (^|/)_esy$
