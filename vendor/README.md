@@ -270,6 +270,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **MoonScript:** [leafo/moonscript-tmbundle](https://github.com/leafo/moonscript-tmbundle)
 - **Motorola 68K Assembly:** [zerkman/language-m68k](https://github.com/zerkman/language-m68k)
 - **Muse:** [Alhadis/language-emacs-lisp](https://github.com/Alhadis/language-emacs-lisp)
+- **Mustache:** [textmate/php-smarty.tmbundle](https://github.com/textmate/php-smarty.tmbundle)
 - **NASL:** [tenable/sublimetext-nasl](https://github.com/tenable/sublimetext-nasl)
 - **NCL:** [rpavlick/language-ncl](https://github.com/rpavlick/language-ncl)
 - **NEON:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)

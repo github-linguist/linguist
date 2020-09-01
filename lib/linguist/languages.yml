@@ -2036,7 +2036,6 @@ HTML+Django:
   extensions:
   - ".jinja"
   - ".jinja2"
-  - ".mustache"
   - ".njk"
   aliases:
   - django
@@ -3386,6 +3385,16 @@ Muse:
   aliases:
   - amusewiki
   - emacs muse
+Mustache:
+  type: markup
+  group: HTML
+  extensions:
+  - ".mustache"
+  tm_scope: text.html.smarty
+  ace_mode: smarty
+  codemirror_mode: smarty
+  codemirror_mime_type: text/x-smarty
+  language_id: 638334590
 Myghty:
   type: programming
   extensions:
