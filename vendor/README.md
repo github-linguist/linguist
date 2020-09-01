@@ -9,6 +9,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **ABAP:** [pvl/abap.tmbundle](https://github.com/pvl/abap.tmbundle)
 - **ABNF:** [Alhadis/language-grammars](https://github.com/Alhadis/language-grammars)
 - **AGS Script:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
+- **AL Code:** [microsoft/AL](https://github.com/microsoft/AL)
 - **AMPL:** [ampl/sublime-ampl](https://github.com/ampl/sublime-ampl)
 - **ANTLR:** [textmate/antlr.tmbundle](https://github.com/textmate/antlr.tmbundle)
 - **API Blueprint:** [apiaryio/api-blueprint-sublime-plugin](https://github.com/apiaryio/api-blueprint-sublime-plugin)

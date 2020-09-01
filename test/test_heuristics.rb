@@ -73,6 +73,13 @@ class TestHeuristics < Minitest::Test
     end
   end
 
+  def test_al_by_heuristics
+    assert_heuristics({
+      "AL Code" => all_fixtures("AL Code", "*.al"),
+      "Perl" => all_fixtures("Perl", "*.al")
+    })
+  end
+  
   def test_as_by_heuristics
     assert_heuristics({
       "ActionScript" => all_fixtures("ActionScript", "*.as"),
