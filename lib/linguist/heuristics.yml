@@ -449,19 +449,17 @@ disambiguations:
   rules:
    # Postgres
   - language: PLpgSQL
-    pattern: '(?i:^\\i\b|AS \$\$|LANGUAGE ''?plpgsql''?|BEGIN( WORK )?;)'
+    pattern: '(?i:^\\i\b|AS\s+\$\$|LANGUAGE\s+''?plpgsql''?|BEGIN(\s+WORK)?\s*;)'
   # IBM db2
   - language: SQLPL
-    pattern: "(?i:alter module|MODE DB2SQL)"
+    pattern: '(?i:ALTER\s+MODULE|MODE\s+DB2SQL|\bSYS(CAT|PROC)\.|ASSOCIATE\s+RESULT\s+SET|\bEND!\s*$)'
   # Oracle
   - language: PLSQL
-    pattern: '(?i:\$\$PLSQL_|XMLTYPE|systimestamp|\.nextval|connect by|AUTHID (DEFINER|CURRENT_USER)|constructor\W+function)'
+    pattern: '(?i:\$\$PLSQL_|XMLTYPE|systimestamp|\.nextval|CONNECT\s+BY|AUTHID\s+(DEFINER|CURRENT_USER)|constructor\W+function)'
   # T-SQL
   - language: TSQL
-    pattern: '(?i:^\s*GO\b|BEGIN( TRY| CATCH)|OUTPUT INSERTED|DECLARE\s+@)'
-  # Generic SQL
+    pattern: '(?i:^\s*GO\b|BEGIN(\s+TRY|\s+CATCH)|OUTPUT\s+INSERTED|DECLARE\s+@|\[dbo\])'
   - language: SQL
-    negative_pattern: '(?i:begin|boolean|package|exception)'
 - extensions: ['.srt']
   rules:
   - language: SubRip Text
