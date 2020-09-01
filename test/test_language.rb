@@ -470,14 +470,6 @@ class TestLanguage < Minitest::Test
     assert missing.empty?, message
   end
 
-  def test_no_unused_colours
-    Language.all.each do |language|
-      next unless language.type == :data || language.type == :prose ||
-        language.group.to_s != language.name
-      assert !language.color, "Unused colour assigned to #{language.name}"
-    end
-  end
-
   def test_non_crash_on_comma
     assert_nil Language[',']
     assert_nil Language.find_by_name(',')

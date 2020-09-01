@@ -45,6 +45,14 @@ disambiguations:
 
   # Open-ended fallback to unrendered Roff source
   - language: Roff
+- extensions: ['.al']
+  rules:
+  # AL Code pattern source from https://github.com/microsoft/AL/blob/master/grammar/alsyntax.tmlanguage - keyword.other.applicationobject.al
+  - language: AL Code
+    and:
+    - pattern: '\b(?i:(CODEUNIT|PAGE|PAGEEXTENSION|PAGECUSTOMIZATION|DOTNET|ENUM|ENUMEXTENSION|VALUE|QUERY|REPORT|TABLE|TABLEEXTENSION|XMLPORT|PROFILE|CONTROLADDIN))\b'
+  # Open-ended fallback to Perl AutoLoader
+  - language: Perl
 - extensions: ['.as']
   rules:
   - language: ActionScript
@@ -77,7 +85,6 @@ disambiguations:
   rules:
   - language: XML
     pattern: '^(\s*)(?i:<Project|<Import|<Property|<?xml|xmlns)'
-  - language: Text
 - extensions: ['.ch']
   rules:
   - language: xBase
@@ -395,12 +402,6 @@ disambiguations:
     named_pattern: key_equals_value
   - language: Java properties
     pattern: '^[^#!][^:]*:'
-- extensions: ['.props']
-  rules:
-  - language: XML
-    pattern: '^(\s*)(?i:<Project|<Import|<Property|<\?xml|xmlns)'
-  - language: INI
-    pattern: '(?i:\w+\s*=\s*)'
 - extensions: ['.q']
   rules:
   - language: q
@@ -419,6 +420,17 @@ disambiguations:
     pattern: '(?i:\bRebol\b)'
   - language: R
     pattern: '<-|^\s*#'
+- extensions: ['.re']
+  rules:
+  - language: Reason
+    pattern:
+    - '^\s*module\s+type\s'
+    - '^\s*(?:include|open)\s+\w+\s*;\s*$'
+    - '^\s*let\s+(?:module\s\w+\s*=\s*{|\w+:\s+.*=.*;\s*$)'
+  - language: C++
+    pattern:
+    - '^\s*#(?:(?:if|ifdef|define|pragma)\s+\w|\s*include\s+<[^>]+>)'
+    - '^\s*template\s*<'
 - extensions: ['.rno']
   rules:
   - language: RUNOFF
@@ -446,23 +458,27 @@ disambiguations:
     pattern: '(?i:\^(this|super)\.|^\s*~\w+\s*=\.)'
   - language: Scala
     pattern: '(^\s*import (scala|java)\.|^\s*class\b)'
+- extensions: ['.sol']
+  rules:
+  - language: Solidity
+    pattern: '\bpragma\s+solidity\b|\b(?:abstract\s+)?contract\s+(?!\d)[a-zA-Z0-9$_]+(?:\s+is\s+(?:[a-zA-Z0-9$_][^\{]*?)?)?\s*\{'
+  - language: Gerber Image
+    pattern: '^G75\*'
 - extensions: ['.sql']
   rules:
    # Postgres
   - language: PLpgSQL
-    pattern: '(?i:^\\i\b|AS \$\$|LANGUAGE ''?plpgsql''?|BEGIN( WORK )?;)'
+    pattern: '(?i:^\\i\b|AS\s+\$\$|LANGUAGE\s+''?plpgsql''?|BEGIN(\s+WORK)?\s*;)'
   # IBM db2
   - language: SQLPL
-    pattern: "(?i:alter module|MODE DB2SQL)"
+    pattern: '(?i:ALTER\s+MODULE|MODE\s+DB2SQL|\bSYS(CAT|PROC)\.|ASSOCIATE\s+RESULT\s+SET|\bEND!\s*$)'
   # Oracle
   - language: PLSQL
-    pattern: '(?i:\$\$PLSQL_|XMLTYPE|systimestamp|\.nextval|connect by|AUTHID (DEFINER|CURRENT_USER)|constructor\W+function)'
+    pattern: '(?i:\$\$PLSQL_|XMLTYPE|systimestamp|\.nextval|CONNECT\s+BY|AUTHID\s+(DEFINER|CURRENT_USER)|constructor\W+function)'
   # T-SQL
   - language: TSQL
-    pattern: '(?i:^\s*GO\b|BEGIN( TRY| CATCH)|OUTPUT INSERTED|DECLARE\s+@)'
-  # Generic SQL
+    pattern: '(?i:^\s*GO\b|BEGIN(\s+TRY|\s+CATCH)|OUTPUT\s+INSERTED|DECLARE\s+@|\[dbo\])'
   - language: SQL
-    negative_pattern: '(?i:begin|boolean|package|exception)'
 - extensions: ['.srt']
   rules:
   - language: SubRip Text
@@ -498,6 +514,15 @@ disambiguations:
     pattern: '^\s*(import.+(from\s+|require\()[''"]react|\/\/\/\s*<reference\s)'
   - language: XML
     pattern: '(?i:^\s*<\?xml\s+version)'
+- extensions: ['.txt']
+  rules:
+    # The following RegExp is simply a collapsed and simplified form of the
+    # VIM_MODELINE pattern in `./lib/linguist/strategy/modeline.rb`.
+  - language: Vim Help File
+    pattern: '(?:(?:\s|^)vi(?:m[<=>]?\d+|m)?|\sex)(?=:(?=\s*set?\s[^\n:]+:)|:(?!\s* set?\s))(?:(?:\s|\s*:\s*)\w*(?:\s*=(?:[^\\\s]|\\.)*)?)*[\s:](?:filetype|ft|syntax)\s*=help(?=\s|:|$)'
+    # HACK: This is a contrived use of heuristics needed to address
+    # an unusual edge-case. See https://git.io/JULye for discussion.
+  - language: Text
 - extensions: ['.v']
   rules:
   - language: Coq
