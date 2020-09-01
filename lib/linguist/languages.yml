@@ -487,7 +487,6 @@ BitBake:
 Blade:
   type: markup
   color: "#f7523f"
-  group: HTML
   extensions:
   - ".blade"
   - ".blade.php"
@@ -2157,7 +2156,6 @@ Hack:
   color: "#878787"
   language_id: 153
 Haml:
-  group: HTML
   type: markup
   color: "#ece2a9"
   extensions:
@@ -2170,7 +2168,6 @@ Haml:
   language_id: 154
 Handlebars:
   type: markup
-  group: HTML
   color: "#f7931e"
   aliases:
   - hbs
@@ -2825,7 +2822,6 @@ Lasso:
 Latte:
   type: markup
   color: "#f2a542"
-  group: HTML
   extensions:
   - ".latte"
   tm_scope: text.html.smarty
@@ -2844,7 +2840,6 @@ Lean:
 Less:
   type: markup
   color: "#1d365d"
-  group: CSS
   extensions:
   - ".less"
   tm_scope: source.css.less
@@ -3192,7 +3187,6 @@ Markdown:
   tm_scope: source.gfm
   language_id: 222
 Marko:
-  group: HTML
   type: markup
   color: "#42bff2"
   tm_scope: text.marko
@@ -4267,7 +4261,6 @@ Public Key:
   codemirror_mime_type: application/pgp
   language_id: 298
 Pug:
-  group: HTML
   type: markup
   color: "#a86454"
   extensions:
@@ -4899,7 +4892,6 @@ SCSS:
   type: markup
   color: "#c6538c"
   tm_scope: source.css.scss
-  group: CSS
   ace_mode: scss
   codemirror_mode: css
   codemirror_mime_type: text/x-scss
@@ -5023,7 +5015,6 @@ SWIG:
   language_id: 1066250075
 Sage:
   type: programming
-  group: Python
   extensions:
   - ".sage"
   - ".sagews"
@@ -5049,7 +5040,6 @@ Sass:
   type: markup
   color: "#a53b70"
   tm_scope: source.sass
-  group: CSS
   extensions:
   - ".sass"
   ace_mode: sass
@@ -5241,7 +5231,6 @@ Slice:
   - ".ice"
   language_id: 894641667
 Slim:
-  group: HTML
   type: markup
   color: "#2b2b2b"
   extensions:
@@ -5384,7 +5373,6 @@ Stata:
 Stylus:
   type: markup
   color: "#ff6347"
-  group: CSS
   extensions:
   - ".styl"
   tm_scope: source.stylus
@@ -5421,7 +5409,6 @@ Svelte:
   type: markup
   color: "#ff3e00"
   tm_scope: source.svelte
-  group: HTML
   ace_mode: html
   codemirror_mode: htmlmixed
   codemirror_mime_type: text/html
@@ -5679,7 +5666,6 @@ Turtle:
 Twig:
   type: markup
   color: "#c1d026"
-  group: HTML
   extensions:
   - ".twig"
   tm_scope: text.html.twig
