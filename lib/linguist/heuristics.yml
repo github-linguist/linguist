@@ -420,6 +420,17 @@ disambiguations:
     pattern: '(?i:\bRebol\b)'
   - language: R
     pattern: '<-|^\s*#'
+- extensions: ['.re']
+  rules:
+  - language: Reason
+    pattern:
+    - '^\s*module\s+type\s'
+    - '^\s*(?:include|open)\s+\w+\s*;\s*$'
+    - '^\s*let\s+(?:module\s\w+\s*=\s*{|\w+:\s+.*=.*;\s*$)'
+  - language: C++
+    pattern:
+    - '^\s*#(?:(?:if|ifdef|define|pragma)\s+\w|\s*include\s+<[^>]+>)'
+    - '^\s*template\s*<'
 - extensions: ['.rno']
   rules:
   - language: RUNOFF

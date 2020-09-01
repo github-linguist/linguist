@@ -464,6 +464,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_re_by_heuristics
+    assert_heuristics({
+      "C++" => all_fixtures("C++", "*.re"),
+      "Reason" => all_fixtures("Reason", "*.re")
+    })
+  end
+
   def test_rno_by_heuristics
     assert_heuristics({
       "RUNOFF" => all_fixtures("RUNOFF", "*.rno"),
