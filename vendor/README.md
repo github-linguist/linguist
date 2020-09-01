@@ -423,6 +423,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **TLA:** [agentultra/TLAGrammar](https://github.com/agentultra/TLAGrammar)
 - **TOML:** [textmate/toml.tmbundle](https://github.com/textmate/toml.tmbundle)
 - **TSQL:** [beau-witter/language-tsql](https://github.com/beau-witter/language-tsql)
+- **TSV:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **TSX:** [Microsoft/TypeScript-TmLanguage](https://github.com/Microsoft/TypeScript-TmLanguage)
 - **TXL:** [MikeHoffert/Sublime-Text-TXL-syntax](https://github.com/MikeHoffert/Sublime-Text-TXL-syntax)
 - **Tcl:** [textmate/tcl.tmbundle](https://github.com/textmate/tcl.tmbundle)
