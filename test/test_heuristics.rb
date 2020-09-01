@@ -73,6 +73,13 @@ class TestHeuristics < Minitest::Test
     end
   end
 
+  def test_al_by_heuristics
+    assert_heuristics({
+      "AL Code" => all_fixtures("AL Code", "*.al"),
+      "Perl" => all_fixtures("Perl", "*.al")
+    })
+  end
+  
   def test_as_by_heuristics
     assert_heuristics({
       "ActionScript" => all_fixtures("ActionScript", "*.as"),
@@ -454,6 +461,13 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "R" => all_fixtures("R", "*.r") + all_fixtures("R", "*.R"),
       "Rebol" => all_fixtures("Rebol", "*.r")
+    })
+  end
+
+  def test_re_by_heuristics
+    assert_heuristics({
+      "C++" => all_fixtures("C++", "*.re"),
+      "Reason" => all_fixtures("Reason", "*.re")
     })
   end
 

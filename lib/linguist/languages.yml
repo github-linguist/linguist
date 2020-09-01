@@ -81,6 +81,14 @@ AGS Script:
   codemirror_mode: clike
   codemirror_mime_type: text/x-c++src
   language_id: 2
+AL Code:
+  type: programming
+  color: "#3AA2B5"
+  extensions:
+  - ".al"
+  tm_scope: source.al
+  ace_mode: text
+  language_id: 658971832
 AMPL:
   type: programming
   color: "#E6EFBB"
@@ -1263,6 +1271,8 @@ EJS:
   group: HTML
   extensions:
   - ".ejs"
+  - ".ect"
+  - ".jst"
   tm_scope: text.html.js
   ace_mode: ejs
   language_id: 95
@@ -1803,6 +1813,7 @@ Gherkin:
   type: programming
   extensions:
   - ".feature"
+  - ".story"
   tm_scope: text.gherkin.feature
   aliases:
   - cucumber
@@ -1993,6 +2004,7 @@ HCL:
   type: programming
   extensions:
   - ".hcl"
+  - ".nomad"
   - ".tf"
   - ".tfvars"
   - ".workflow"
@@ -2038,8 +2050,8 @@ HTML+Django:
   group: HTML
   extensions:
   - ".jinja"
+  - ".j2"
   - ".jinja2"
-  - ".mustache"
   - ".njk"
   aliases:
   - django
@@ -2848,6 +2860,9 @@ Lex:
   extensions:
   - ".l"
   - ".lex"
+  filenames:
+  - Lexer.x
+  - lexer.x
   tm_scope: source.lex
   ace_mode: text
   language_id: 199
@@ -3395,6 +3410,16 @@ Muse:
   aliases:
   - amusewiki
   - emacs muse
+Mustache:
+  type: markup
+  group: HTML
+  extensions:
+  - ".mustache"
+  tm_scope: text.html.smarty
+  ace_mode: smarty
+  codemirror_mode: smarty
+  codemirror_mime_type: text/x-smarty
+  language_id: 638334590
 Myghty:
   type: programming
   extensions:
@@ -5463,6 +5488,13 @@ TSQL:
   ace_mode: sql
   tm_scope: source.tsql
   language_id: 918334941
+TSV:
+  type: data
+  ace_mode: text
+  tm_scope: source.generic-db
+  extensions:
+  - ".tsv"
+  language_id: 1035892117
 TSX:
   type: programming
   group: TypeScript
@@ -6097,6 +6129,7 @@ XML:
   - ".gml"
   - ".gmx"
   - ".grxml"
+  - ".gst"
   - ".iml"
   - ".ivy"
   - ".jelly"

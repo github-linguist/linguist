@@ -45,6 +45,14 @@ disambiguations:
 
   # Open-ended fallback to unrendered Roff source
   - language: Roff
+- extensions: ['.al']
+  rules:
+  # AL Code pattern source from https://github.com/microsoft/AL/blob/master/grammar/alsyntax.tmlanguage - keyword.other.applicationobject.al
+  - language: AL Code
+    and:
+    - pattern: '\b(?i:(CODEUNIT|PAGE|PAGEEXTENSION|PAGECUSTOMIZATION|DOTNET|ENUM|ENUMEXTENSION|VALUE|QUERY|REPORT|TABLE|TABLEEXTENSION|XMLPORT|PROFILE|CONTROLADDIN))\b'
+  # Open-ended fallback to Perl AutoLoader
+  - language: Perl
 - extensions: ['.as']
   rules:
   - language: ActionScript
@@ -412,6 +420,17 @@ disambiguations:
     pattern: '(?i:\bRebol\b)'
   - language: R
     pattern: '<-|^\s*#'
+- extensions: ['.re']
+  rules:
+  - language: Reason
+    pattern:
+    - '^\s*module\s+type\s'
+    - '^\s*(?:include|open)\s+\w+\s*;\s*$'
+    - '^\s*let\s+(?:module\s\w+\s*=\s*{|\w+:\s+.*=.*;\s*$)'
+  - language: C++
+    pattern:
+    - '^\s*#(?:(?:if|ifdef|define|pragma)\s+\w|\s*include\s+<[^>]+>)'
+    - '^\s*template\s*<'
 - extensions: ['.rno']
   rules:
   - language: RUNOFF
@@ -449,19 +468,17 @@ disambiguations:
   rules:
    # Postgres
   - language: PLpgSQL
-    pattern: '(?i:^\\i\b|AS \$\$|LANGUAGE ''?plpgsql''?|BEGIN( WORK )?;)'
+    pattern: '(?i:^\\i\b|AS\s+\$\$|LANGUAGE\s+''?plpgsql''?|BEGIN(\s+WORK)?\s*;)'
   # IBM db2
   - language: SQLPL
-    pattern: "(?i:alter module|MODE DB2SQL)"
+    pattern: '(?i:ALTER\s+MODULE|MODE\s+DB2SQL|\bSYS(CAT|PROC)\.|ASSOCIATE\s+RESULT\s+SET|\bEND!\s*$)'
   # Oracle
   - language: PLSQL
-    pattern: '(?i:\$\$PLSQL_|XMLTYPE|systimestamp|\.nextval|connect by|AUTHID (DEFINER|CURRENT_USER)|constructor\W+function)'
+    pattern: '(?i:\$\$PLSQL_|XMLTYPE|systimestamp|\.nextval|CONNECT\s+BY|AUTHID\s+(DEFINER|CURRENT_USER)|constructor\W+function)'
   # T-SQL
   - language: TSQL
-    pattern: '(?i:^\s*GO\b|BEGIN( TRY| CATCH)|OUTPUT INSERTED|DECLARE\s+@)'
-  # Generic SQL
+    pattern: '(?i:^\s*GO\b|BEGIN(\s+TRY|\s+CATCH)|OUTPUT\s+INSERTED|DECLARE\s+@|\[dbo\])'
   - language: SQL
-    negative_pattern: '(?i:begin|boolean|package|exception)'
 - extensions: ['.srt']
   rules:
   - language: SubRip Text
