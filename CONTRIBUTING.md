@@ -191,13 +191,9 @@ Here's our current build status: [![Actions Status](https://github.com/github/li
 Linguist is maintained with :heart: by:
 
 - **@Alhadis**
-- **@BenEddy** (GitHub staff)
-- **@Caged** (GitHub staff)
 - **@larsbrinkhoff**
 - **@lildude** (GitHub staff)
 - **@pchaigno**
-- **@rafer** (GitHub staff)
-- **@shreyasjoshis** (GitHub staff)
 
 As Linguist is a production dependency for GitHub we have a couple of workflow restrictions:
 
