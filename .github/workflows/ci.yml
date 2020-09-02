@@ -8,9 +8,15 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby: [ '2.6.x', '2.5.x', '2.4.x' ]
+        ruby: [ '2.7.x', '2.6.x', '2.5.x' ]
     steps:
     - uses: actions/checkout@v1
+    - uses: actions/cache@v2
+      with:
+        path: vendor/bundle
+        key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-gems-
     - name: Set up Ruby
       uses: actions/setup-ruby@v1
       with:
