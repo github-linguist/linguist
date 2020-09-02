@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Linguist
   class Shebang
     # Public: Use shebang to detect language of the blob.
@@ -23,10 +25,10 @@ module Linguist
     #
     # Returns a String or nil
     def self.interpreter(data)
-      shebang = data.lines.first
-
       # First line must start with #!
-      return unless shebang && shebang.start_with?("#!")
+      return unless data.start_with?("#!")
+
+      shebang = data[0, data.index($/) || data.length]
 
       s = StringScanner.new(shebang)
 
