@@ -431,6 +431,12 @@ disambiguations:
     pattern:
     - '^\s*#(?:(?:if|ifdef|define|pragma)\s+\w|\s*include\s+<[^>]+>)'
     - '^\s*template\s*<'
+- extensions: ['.res']
+  rules:
+  - language: ReScript
+    pattern: 
+    - '^\s*(let|module|type)\s+\w*\s+=\s+'
+    - '^\s*(?:include|open)\s+\w+\s*$'
 - extensions: ['.rno']
   rules:
   - language: RUNOFF
