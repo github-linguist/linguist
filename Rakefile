@@ -44,7 +44,7 @@ end
 
 task :samples => :compile do
   require 'linguist/samples'
-  json = Yajl.dump(Linguist::Samples.data, :pretty => true)
+  json = Yajl.dump(Linguist::Samples.data, :pretty => false)
   File.write 'lib/linguist/samples.json', json
 end
 
