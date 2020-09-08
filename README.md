@@ -137,6 +137,36 @@ grammars.yml: 884 lines (884 sloc)
   language:  YAML
 ```
 
+#### Docker
+
+If you have Docker installed you can build an image and run Linguist within a container:
+
+```console
+$ docker build -t linguist .
+$ docker run --rm -v $(pwd):$(pwd) -w $(pwd) -t linguist
+68.57%  Ruby
+22.90%  C
+6.93%   Go
+1.21%   Lex
+0.39%   Shell
+$ docker run --rm -v $(pwd):$(pwd) -w $(pwd) -t linguist github-linguist --breakdown
+68.57%  Ruby
+22.90%  C
+6.93%   Go
+1.21%   Lex
+0.39%   Shell
+
+Ruby:
+Gemfile
+Rakefile
+bin/git-linguist
+bin/github-linguist
+ext/linguist/extconf.rb
+github-linguist.gemspec
+lib/linguist.rb
+…
+```
+
 ## Troubleshooting
 
 ### My repository is detected as the wrong language
