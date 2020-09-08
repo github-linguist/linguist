@@ -421,7 +421,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **SuperCollider:** [supercollider/language-supercollider](https://github.com/supercollider/language-supercollider)
 - **Svelte:** [umanghome/svelte-atom](https://github.com/umanghome/svelte-atom)
 - **Swift:** [textmate/swift.tmbundle](https://github.com/textmate/swift.tmbundle)
-- **SystemVerilog:** [bitbucket:Clams/sublimesystemverilog](https://bitbucket.org/Clams/sublimesystemverilog)
+- **SystemVerilog:** [TheClams/SystemVerilog](https://github.com/TheClams/SystemVerilog)
 - **TLA:** [agentultra/TLAGrammar](https://github.com/agentultra/TLAGrammar)
 - **TOML:** [textmate/toml.tmbundle](https://github.com/textmate/toml.tmbundle)
 - **TSQL:** [beau-witter/language-tsql](https://github.com/beau-witter/language-tsql)
