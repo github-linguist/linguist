@@ -3,21 +3,6 @@ require_relative "./helper"
 class TestBlob < Minitest::Test
   include Linguist
 
-  def setup
-    silence_warnings do
-      # git blobs are normally loaded as ASCII-8BIT since they may contain data
-      # with arbitrary encoding not known ahead of time
-      @original_external = Encoding.default_external
-      Encoding.default_external = Encoding.find("ASCII-8BIT")
-    end
-  end
-
-  def teardown
-    silence_warnings do
-      Encoding.default_external = @original_external
-    end
-  end
-
   def script_blob(name)
     blob = sample_blob_memory(name)
     blob.instance_variable_set(:@name, 'script')
@@ -62,26 +47,23 @@ class TestBlob < Minitest::Test
     assert_equal 474, sample_blob_memory("Emacs Lisp/ess-julia.el").lines.length
   end
 
-  def test_lines_maintains_original_encoding
-    # Even if the file's encoding is detected as something like UTF-16LE,
-    # earlier versions of the gem made implicit guarantees that the encoding of
-    # each `line` is in the same encoding as the file was originally read (in
-    # practice, UTF-8 or ASCII-8BIT)
-    assert_equal Encoding.default_external, fixture_blob_memory("Data/utf16le").lines.first.encoding
-  end
-
   def test_size
     assert_equal 15, sample_blob_memory("Ruby/foo.rb").size
   end
 
   def test_loc
     assert_equal 2, sample_blob_memory("Ruby/foo.rb").loc
+    assert_equal 3, fixture_blob_memory("Data/utf16le-windows").loc
+    assert_equal 3, fixture_blob_memory("Data/utf16le").loc
+    assert_equal 1, fixture_blob_memory("Data/iso8859-8-i").loc
   end
 
   def test_sloc
     assert_equal 2, sample_blob_memory("Ruby/foo.rb").sloc
     assert_equal 3, fixture_blob_memory("Data/utf16le-windows").sloc
+    assert_equal 3, fixture_blob_memory("Data/utf16le").sloc
     assert_equal 1, fixture_blob_memory("Data/iso8859-8-i").sloc
+
   end
 
   def test_encoding
@@ -204,7 +186,9 @@ class TestBlob < Minitest::Test
     assert sample_blob_memory("Python/protocol_buffer_pb2.py").generated?
     assert sample_blob_memory("Go/api.pb.go").generated?
     assert sample_blob_memory("Go/embedded.go").generated?
+    assert sample_blob_memory("Go/oapi-codegen.go").generated?
     assert sample_blob_memory("JavaScript/proto.js").generated?
+    assert sample_blob_memory("PHP/ProtobufGenerated.php").generated?
 
     # Apache Thrift generated code
     assert sample_blob_memory("Python/gen-py-linguist-thrift.py").generated?
@@ -288,6 +272,8 @@ class TestBlob < Minitest::Test
           assert blob.language.nil?, "A language was found for #{filepath}"
         elsif language == 'Generated'
           assert blob.generated?, "#{filepath} is not a generated file"
+        elsif language == 'Generic'
+          assert !blob.language, "#{filepath} should not match a language"
         else
           assert blob.language, "No language for #{filepath}"
           fs_name = blob.language.fs_name ? blob.language.fs_name : blob.language.name
