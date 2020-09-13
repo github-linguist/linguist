@@ -17,6 +17,8 @@
 
 #define FEED() FEED2(yytext, yyleng)
 
+#define FEED_STATIC(s) FEED2(s, sizeof(s) - 1)
+
 #define FEED_SHEBANG(s) do { \
     const size_t __l = strlen(s); \
     if (__l > MAX_TOKEN_LEN) \
@@ -58,7 +60,7 @@
 %}
 
 %option never-interactive yywrap reentrant nounput warn nodefault header-file="lex.linguist_yy.h" extra-type="VALUE*" prefix="linguist_yy"
-%x sgml c_comment xml_comment haskell_comment ocaml_comment python_dcomment python_scomment punct
+%x sgml c_comment xml_comment haskell_comment ocaml_comment python_dcomment python_scomment roff_comment punct
 
 not_punct [^-!#$%&*+,./:;<=>?@\\^_`|~]
 
@@ -90,24 +92,35 @@ not_punct [^-!#$%&*+,./:;<=>?@\\^_`|~]
   }
 }
 
-^[ \t]*"//".*[\n]?                 { /* nothing */ }
-^[ \t]*(\/\/|--|\#|%|\")" ".*[\n]? {  /* nothing */ }
+^[ \t]*[#]+(" ".*|\n)    { FEED_STATIC("COMMENT#"); return 1; }
+^[ \t]*"//!"(" ".*|\n)   { FEED_STATIC("COMMENT//!"); return 1; }
+^[ \t]*"//".*[\n]?       { FEED_STATIC("COMMENT//"); return 1; }
+^[ \t]*"--"(" ".*|\n)    { FEED_STATIC("COMMENT--"); return 1; }
+^[ \t]*[%]+(" ".*|\n)    { FEED_STATIC("COMMENT%"); return 1; }
+^[ \t]*\"(" ".*|\n)      { FEED_STATIC("COMMENT\""); return 1; }
+^[ \t]*;+(" ".*|\n)      { FEED_STATIC("COMMENT;"); return 1; }
+^[.][ \t]*\\\"(.*|\n)    { FEED_STATIC("COMMENT.\\\""); return 1; }
+^['][ \t]*\\\"(.*|\n)    { FEED_STATIC("COMMENT'\\\""); return 1; }
 
-"/*"                              { BEGIN(c_comment); }
-"/**"                             { BEGIN(c_comment); }
-"<!--"                            { BEGIN(xml_comment); }
-"{-"                              { BEGIN(haskell_comment); }
-"(*"                              { BEGIN(ocaml_comment); }
-"\"\"\""                          { BEGIN(python_dcomment); }
-"'''"                             { BEGIN(python_scomment); }
+"/**/"                   { FEED_STATIC("COMMENT/*"); return 1; }
+"/**"                    { FEED_STATIC("COMMENT/**"); BEGIN(c_comment); return 1; }
+"/*!"                    { FEED_STATIC("COMMENT/*!"); BEGIN(c_comment); return 1; }
+"/*"                     { FEED_STATIC("COMMENT/*"); BEGIN(c_comment); return 1; }
+"<!--"                   { FEED_STATIC("COMMENT<!--"); BEGIN(xml_comment); return 1; }
+"{-"                     { FEED_STATIC("COMMENT{-"); BEGIN(haskell_comment); return 1; }
+"(*"                     { FEED_STATIC("COMMENT(*"); BEGIN(ocaml_comment); return 1; }
+"\"\"\""                 { FEED_STATIC("COMMENT\"\"\""); BEGIN(python_dcomment); return 1; }
+"'''"                    { FEED_STATIC("COMMENT'''"); BEGIN(python_scomment); return 1; }
+^".ig"\n                 { FEED_STATIC("COMMENT.ig"); BEGIN(roff_comment); return 1; }
 
-<c_comment,xml_comment,haskell_comment,ocaml_comment,python_dcomment,python_scomment>.|\n { /* nothing */ }
+<c_comment,xml_comment,haskell_comment,ocaml_comment,python_dcomment,python_scomment,roff_comment>.|\n { /* nothing */ }
 <c_comment>"*/"                   { BEGIN(INITIAL); }
 <xml_comment>"-->"                { BEGIN(INITIAL); }
 <haskell_comment>"-}"             { BEGIN(INITIAL); }
 <ocaml_comment>"*)"               { BEGIN(INITIAL); }
 <python_dcomment>"\"\"\""         { BEGIN(INITIAL); }
 <python_scomment>"'''"            { BEGIN(INITIAL); }
+<roff_comment>".."\n              { BEGIN(INITIAL); }
 
 \"\"|''                           { /* nothing */ }
 \"                                { eat_until_unescaped('"'); }
