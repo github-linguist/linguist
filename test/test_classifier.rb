@@ -44,6 +44,15 @@ class TestClassifier < Minitest::Test
   end
 
   def test_classify_ambiguous_languages
+    # Skip extensions with catch-all heuristics (e.g. .sql)
+    skip_extensions = Set.new
+    Heuristics.all.each do |h|
+      rules = h.instance_variable_get(:@rules)
+      if rules[-1]['pattern'].is_a? AlwaysMatch
+        skip_extensions |= Set.new(h.extensions)
+      end
+    end
+
     Samples.each do |sample|
       language  = Linguist::Language.find_by_name(sample[:language])
       languages = Language.find_by_filename(sample[:path]).map(&:name)
@@ -51,6 +60,8 @@ class TestClassifier < Minitest::Test
 
       languages = Language.find_by_extension(sample[:path]).map(&:name)
       next if languages.length <= 1
+
+      next if skip_extensions.include? sample[:extname]
 
       results = Classifier.classify(Samples.cache, File.read(sample[:path]), languages)
       assert_equal language.name, results.first[0], "#{sample[:path]}\n#{results.inspect}"
