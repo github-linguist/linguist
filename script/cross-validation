@@ -2,11 +2,11 @@
 
 # Number of acceptable classification errors.
 # It should only be decreased.
-ACCEPTABLE_ERRORS = 38
+ACCEPTABLE_ERRORS = 17
 
 # Number of acceptable classification errors when using --all.
 # It should only be decreased.
-ACCEPTABLE_ERRORS_ALL = 671
+ACCEPTABLE_ERRORS_ALL = 534
 
 # Avoid buffering output.
 STDOUT.sync = true
@@ -100,6 +100,7 @@ def eval(sample)
   train_samples.each do |train_sample|
     Classifier.train!(db, train_sample[:language], train_sample[:tokens])
   end
+  Classifier.finalize_train! db
 
   # Get result.
   results = Classifier.classify(db, sample[:data], languages)
