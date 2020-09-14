@@ -1,0 +1,23 @@
+//
+//This is a bosque program for a simple max function.
+//Expected output is: 20
+//
+
+namespace NSMain;
+
+function max(x: Int, y: Int): Int
+    ensures $return == x || $return == y;
+{
+    if (x >= y) {
+        return x; 
+    } else {
+        return y;
+    }
+}
+
+entrypoint function main(): Int {
+    let x = 10;
+    let y = 20;
+
+    return max(x, y);
+}
