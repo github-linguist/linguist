@@ -132,6 +132,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Forth:** [textmate/forth.tmbundle](https://github.com/textmate/forth.tmbundle)
 - **Fortran:** [textmate/fortran.tmbundle](https://github.com/textmate/fortran.tmbundle)
 - **Fortran Free Form:** [textmate/fortran.tmbundle](https://github.com/textmate/fortran.tmbundle)
+- **FreeBasic:** [angryant0007/VBDotNetSyntax](https://github.com/angryant0007/VBDotNetSyntax)
 - **FreeMarker:** [freemarker/FreeMarker.tmbundle](https://github.com/freemarker/FreeMarker.tmbundle)
 - **Frege:** [atom-haskell/language-haskell](https://github.com/atom-haskell/language-haskell)
 - **Futhark:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
