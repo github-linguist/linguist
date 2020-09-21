@@ -236,6 +236,9 @@ class TestBlob < Minitest::Test
     assert sample_blob_memory("HTML/pages.html").generated?
     assert fixture_blob_memory("HTML/mandoc.html").generated?
     assert fixture_blob_memory("HTML/node78.html").generated?
+    
+    # Generated Pascal _TLB file
+    assert sample_blob_memory("Pascal/lazcomlib_1_0_tlb.pas").generated?
   end
 
   def test_vendored
