@@ -488,7 +488,7 @@ disambiguations:
   - language: Perl
     named_pattern: perl5
   - language: Raku
-    named_pattern: perl6
+    pattern: '^\s*(?:use\s+v6\b|\bmodule\b|\bmy\s+class\b)'
   - language: Turing
     pattern: '^\s*%[ \t]+|^\s*var\s+\w+(\s*:\s*\w+)?\s*:=\s*\w+'
 - extensions: ['.toc']
