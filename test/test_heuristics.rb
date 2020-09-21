@@ -222,14 +222,18 @@ class TestHeuristics < Minitest::Test
       })
   end
 
-  # Candidate languages = ["Genie", "GLSL", "Gosu", "JavaScript"]
   def test_gs_by_heuristics
+    ambiguous = [
+      "#{samples_path}/Genie/Class.gs",
+      "#{samples_path}/Genie/Hello.gs",
+    ]
     assert_heuristics({
       "GLSL" => all_fixtures("GLSL", "*.gs"),
+      "Genie" => all_fixtures("Genie", "*.gs") - ambiguous,
       "Gosu" => all_fixtures("Gosu", "*.gs"),
     })
     assert_heuristics({
-      nil => all_fixtures("Genie", "*.gs") + all_fixtures("JavaScript")
+      nil => all_fixtures("JavaScript")
     }, alt_name="test.gs")
   end
 
