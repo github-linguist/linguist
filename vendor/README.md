@@ -139,7 +139,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **GAP:** [dhowden/gap-tmbundle](https://github.com/dhowden/gap-tmbundle)
 - **GCC Machine Description:** [textmate/lisp.tmbundle](https://github.com/textmate/lisp.tmbundle)
 - **GDB:** [quarnster/SublimeGDB](https://github.com/quarnster/SublimeGDB)
-- **GDScript:** [beefsack/GDScript-sublime](https://github.com/beefsack/GDScript-sublime)
+- **GDScript:** [godotengine/godot-vscode-plugin](https://github.com/godotengine/godot-vscode-plugin)
 - **GEDCOM:** [fguitton/vscode-gedcom](https://github.com/fguitton/vscode-gedcom)
 - **GLSL:** [euler0/sublime-glsl](https://github.com/euler0/sublime-glsl)
 - **GN:** [devoncarew/language-gn](https://github.com/devoncarew/language-gn)
