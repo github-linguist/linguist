@@ -716,7 +716,7 @@ module Linguist
     #
     # Returns true or false
     def generated_pascal_tlb?
-      name.downcase =~ /_tlb\.pas$/
+      name =~ /_tlb\.pas$/i
     end    
     
     # Internal: Extract a Hash of name/content pairs from an HTML <meta> tag
