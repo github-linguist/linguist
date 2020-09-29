@@ -1,46 +1,30 @@
 <html>
   <head>
-    <title>Linguist Colors</title>
-    <script src="scripts/js-yaml.min.js"></script>
-    <script src="scripts/jquery.min.js"></script>
-    <style>
-      body {
-        font-family: "Heletica Neue", Helvetica, sans-serif;
-        font-size: 13px;
-      }
+    <title>Linguist Languages</title>
 
-      #languages {
-        list-style: none;
-      }
-
-      #languages li {
-        width: 180px;
-        float: left;
-        text-align: center;
-        padding: 0.5em 0;
-        margin: 0.25em;
-        font-weight: bold;
-        border-bottom: 12px solid #ccc;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-      }
-    </style>
+    <link rel="stylesheet" href="vendor/bootstrap-4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
   </head>
   <body>
-    <ul id="languages"></ul>
 
-    <script type="text/javascript">
-      var $list = $("#languages");
+    <div class="container py-4">
+      <h2 class="text-center mb-3"><a href="https://github.com/github/linguist/" target="_blank">Linguist</a> Languages</h2>
+      <div class="mb-1">
+          <div class="input-group md-form form-sm form-1 pl-0 mb-4">
+              <input id="searchTerm" class="form-control my-0 py-1" type="text" placeholder="Enter language name" aria-label="Search">
+              <div class="input-group-append">
+                  <button class="btn btn-secondary" type="button" onclick="search()">Search</button>
+              </div>
+          </div>
+      </div>
+      <h5 class="mb-4 text-right"><span id="numberOfLanguages" class="badge badge-secondary" style="display: none;"></span></h5>
 
-      $.get("https://rawgit.com/github/linguist/master/lib/linguist/languages.yml", function(data) {
-        var languages = jsyaml.safeLoad(data);
+      <div id="langs" class="row"></div>
+    </div>
 
-        for(var language in languages) {
-          attrs = languages[language];
-          $list.append('<li style="border-bottom-color:' + attrs.color + '">' + language + '</li>');
-        }
-      });
-
-    </script>
+    <script src="vendor/jquery.min.js"></script>
+    <script src="vendor/bootstrap-4.5.2/js/bootstrap.min.js"></script>
+    <script src="vendor/js-yaml.min.js"></script>
+    <script src="main.js"></script>
   </body>
 </html>
