@@ -1,7 +1,7 @@
-require 'digest/md5'
+require 'digest/sha2'
 
 module Linguist
-  module MD5
+  module SHA256
     # Public: Create deep nested digest of value object.
     #
     # Useful for object comparison.
@@ -10,7 +10,7 @@ module Linguist
     #
     # Returns String hex digest
     def self.hexdigest(obj)
-      digest = Digest::MD5.new
+      digest = Digest::SHA256.new
 
       case obj
       when String, Symbol, Integer

@@ -4,7 +4,7 @@ rescue LoadError
   require 'yaml'
 end
 
-require 'linguist/md5'
+require 'linguist/sha256'
 require 'linguist/classifier'
 require 'linguist/shebang'
 
@@ -106,7 +106,7 @@ module Linguist
         Classifier.train!(db, language_name, data)
       end
 
-      db['md5'] = Linguist::MD5.hexdigest(db)
+      db['sha256'] = Linguist::SHA256.hexdigest(db)
 
       db
     end
