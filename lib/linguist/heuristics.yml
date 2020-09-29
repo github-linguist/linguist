@@ -81,6 +81,10 @@ disambiguations:
     pattern: '(<^\s*; |End Function)'
   - language: BitBake
     pattern: '^\s*(# |include|require)\b'
+- extensions: ['.bi']
+  rules:
+  - language: FreeBasic
+    pattern: '^\s*#(define|endif|endmacro|if|ifdef|ifndef|include|lang|macro)\s'
 - extensions: ['.builds']
   rules:
   - language: XML
@@ -232,6 +236,8 @@ disambiguations:
     - '^\s*(?:public\s+|private\s+|\s*)function\s+\w+\s*\([\w\s,]*\)\s*{'
   - language: POV-Ray SDL
     pattern: '^\s*#(declare|local|macro|while)\s'
+  - language: FreeBasic
+    pattern: '^\s*#(define|endif|endmacro|if|ifdef|ifndef|include|lang|macro)\s'
 - extensions: ['.l']
   rules:
   - language: Common Lisp
