@@ -1,0 +1,894 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<XControl LVVersion="20008000">
+	<Property Name="" Type="Bool">true</Property>
+	<Property Name="NI.Lib.HelpPath" Type="Str">/&lt;helpdir&gt;/lvprop.chm</Property>
+	<Property Name="NI.Lib.Icon" Type="Bin">)!#!!!!!!!)!"1!&amp;!!!-!%!!!@````]!!!!"!!%!!!0;!!!*Q(C=T:;R;RR(&amp;-;`=W2:23"295BB3.!6VF5W4*6+6QCOS:*#K%A23"'G5?8KH%,=W7Z5"*2W)'F/25"6;KP)O&gt;F4Y%HY(R$R8S#56#9)4XYT.X&gt;;24J$)%6W^ZXWPG`GP&gt;`.P&amp;UEZ7.&amp;7N,V)[:$#Y]YOWZXYX3)&lt;E]2&lt;XR?=Z_/GMY`5]2202Z@_@?PJW$U;0RSL)&gt;4O&gt;NONZMJUMVI]L+O/F`E_Q?^Z-^:]J`2:&amp;RX\C[FO&gt;`/`'S6,-F`&gt;(&gt;&gt;\6\\18@G.YIU`/Z.`\NRH@SNKHJRKT_;:,`;L;LX_FO&gt;B@YR`!P]![JHP\/,D]HV?=.0W60_X&gt;K/]8?YWIU6+0[ENF/LKT3\V^[Z[:_=HJT5&gt;7@ORXELV(8S[Z0[.0M\M`ER_Z'^&lt;@C85-\SJW:-#8[;_^;J&gt;J]];&gt;3@FPCRHPF@6@WUBLUS`WL`UQD]L?2`0&gt;XBKQ;*#4,Z^6;HX[FU(`N;#];=A&gt;_H^;L4O7K?:AM?J$75KP6G8T240#U^P/!2GM^:_!AO?HC;+&gt;\X`.Y_?;A0XEDX,K20,[7.&gt;SH.M"8D_&amp;[-&amp;R`&amp;_(9DRH?$_/_/.$\.3`.4HJ1PZ=XZ5ZV5,^7FP.1K?RW.#)1HX04Z-X2$.X2$.X2$$_A"0;!(^)!?U$W[2`@I(NWD?X3(\N!&gt;OE.X[#YN3$L2B3ZUO&lt;R)2H'DE*(53'!-"E8'B]&amp;D]"A]"A^@:@!90!;0Q70Q-%1'D]&amp;D]"A]"A`4:0!90!;0Q70QE#K47$\2Y4&amp;Y3+]!4Y!HQ"0A#@"15A'?!%#A7#"R)!E9#JC"GQ"0A#@!Q[U#0!'?!%_!*]#$L1"0A#@!%_!*]$!FLUL)./F%BY=U]P"Y?$Q](BY0$[HFY@(Q?(A]0"Y?SMH$Y_(R1(A+?J+$)-]ETQ$0&amp;Q_0BY=`]P"Y?$Q](BY0$V&lt;?):^8*N'E%RU?"Y_$R](DY((QE%)/(A?0A]@"Y_!BL2Q]$BY(DY0(Q5-J/8A=0!Y?"YCD+/8F3/;9["DE%"Q]8,F&lt;8.[FE%F=0MN40'V5F1:5;3S6BF&amp;J"*5.6NEYF1V277C6"62:'*5@L0*$6!"6#KME6"GI=T\0C#0CE.AD_M1WM5GM%;NJ[H]]]0T]8'&gt;H:TI[/N,BY;(W^P&lt;5\`?VP&lt;WNT=V.L;WN;86V&gt;@YG_IRT?L4G\[7F([20PM&gt;\,LVZ.GR&gt;0/]OP^Z`P0*[@_8R26TOPIWN)@(M-L:?`$79RJ_$VH[+/(B6YA`CNV`DFZ.?@0D+R:`LF8BQP$QY_+7VI;Z_&lt;QXV[!ZV0K4?R\S8PCHPJ@`$OV&amp;XV0SHD$8['`$N731!!!!!</Property>
+	<Property Name="NI.Lib.SourceVersion" Type="Int">536903680</Property>
+	<Property Name="NI.Lib.Version" Type="Str">2.0.0.0</Property>
+	<Property Name="NI.LV.All.SourceOnly" Type="Bool">true</Property>
+	<Property Name="NI.SortType" Type="Int">3</Property>
+	<Property Name="NI.XClass.Flags" Type="Int">0</Property>
+	<Property Name="NI.XCtl.OptimizeDataUpdate" Type="Bool">true</Property>
+	<Property Name="NI.XItem.DeclaredLeakProof" Type="Bool">false</Property>
+	<Property Name="NI.XItem.Express" Type="Bool">false</Property>
+	<Property Name="NI.XItem.Name" Type="Str">XControl 1</Property>
+	<Property Name="NI.XItem.SupportsFatalErrorOut" Type="Bool">false</Property>
+	<Item Name="Properties" Type="Folder">
+		<Item Name="Graph" Type="Folder">
+			<Item Name="Fast Draw" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_graph_fastdraw.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Graph:Fast Draw</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Speeds up the pan, zoom, and rotate operations of the 3D graph.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Graph:Fast Draw</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Fast Draw Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Graph/Fast Draw Read.vi"/>
+				<Item Name="Fast Draw Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Graph/Fast Draw Write.vi"/>
+			</Item>
+			<Item Name="Clip Data" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_graph_clipdata.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Graph:Clip Data</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Uses the clip plane to hide the part of the plot that is outside the axes.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Graph:Clip Data</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Clip Data Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Graph/Clip Data Read.vi"/>
+				<Item Name="Clip Data Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Graph/Clip Data Write.vi"/>
+			</Item>
+			<Item Name="Background Color" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_graph_backgroundcolor.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Graph:Bakground Color</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Specifies the background color of the plot.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Graph:Background Color</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Background Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Graph/Background Read.vi"/>
+				<Item Name="Background Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Graph/Background Write.vi"/>
+			</Item>
+			<Item Name="Projection Mode" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_graph_projectionmode.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Graph:Projection Mode</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Changes the projection of the 3D graph.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Graph:Projection Mode</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Projection Mode Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Graph/Projection Mode Read.vi"/>
+				<Item Name="Projection Mode Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Graph/Projection Mode Write.vi"/>
+			</Item>
+			<Item Name="View Direction" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_graph_viewdirection.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Graph:View Direction</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the direction for viewing the 3D graph.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Graph:View Direction</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="View Direction Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Graph/View Direction Read.vi"/>
+				<Item Name="View Direction Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Graph/View Direction Write.vi"/>
+			</Item>
+			<Item Name="View Latitude" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_graph_userdefinedview_viewlatitude.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Graph:View Latitude</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the latitude of the user-defined direction for viewing the 3D graph.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Graph:User Defined View:View Latitude</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="View Latitude Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Graph/View Latitude Read.vi"/>
+				<Item Name="View Latitude Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Graph/View Latitude Write.vi"/>
+			</Item>
+			<Item Name="View Longitude" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_graph_userdefinedview_viewlongitude.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Graph:View Longitude</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the longitude of the user-defined direction for viewing the 3D graph.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Graph:User Defined View:View Longitude</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="View Longitude Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Graph/View Longitude Read.vi"/>
+				<Item Name="View Longitude Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Graph/View Longitude Write.vi"/>
+			</Item>
+			<Item Name="View Distance" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_graph_userdefinedview_viewdistance.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Graph: View Distance</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the distance of the user-defined direction for viewing the 3D graph.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Graph:User Defined View:View Distance</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="View Distance Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Graph/View Distance Read.vi"/>
+				<Item Name="View Distance Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Graph/View Distance Write.vi"/>
+			</Item>
+			<Item Name="XY Plane Visible" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_graph_gridplane_xyplanevisible.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Graph:XY Plane Visible</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Shows the 3D graph in the direction of the XY plane.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Graph:Grid Plane:XY Plane Visible</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Grid XY Plane Visible Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Graph/Grid XY Plane Visible Read.vi"/>
+				<Item Name="Grid XY Plane Visible Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Graph/Grid XY Plane Visible Write.vi"/>
+			</Item>
+			<Item Name="YZ Plane Visible" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_graph_gridplane_yzplanevisible.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Graph:YZ Plane Visible</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Shows the 3D graph in the direction of the YZ plane.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Graph:Grid Plane:YZ Plane Visible</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Grid YZ Plane Visible Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Graph/Grid YZ Plane Visible Read.vi"/>
+				<Item Name="Grid YZ Plane Visible Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Graph/Grid YZ Plane Visible Write.vi"/>
+			</Item>
+			<Item Name="XZ Plane Visible" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_graph_gridplane_xzplanevisible.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Graph:XZ Plane Visible</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Shows the 3D graph in the direction of the XZ plane.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Graph:Grid Plane:XZ Plane Visible</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Grid XZ Plane Visible Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Graph/Grid XZ Plane Visible Read.vi"/>
+				<Item Name="Grid XZ Plane Visible Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Graph/Grid XZ Plane Visible Write.vi"/>
+			</Item>
+			<Item Name="Grid Anti-aliasing" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_graph_gridplane_gridantialiasing.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Graph:Grid Anti-aliasing</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Uses anti-aliasing to show the grid lines.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Graph:Grid Plane:Grid Anti-aliasing</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Grid Antialiasing Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Graph/Grid Antialiasing Read.vi"/>
+				<Item Name="Grid Antialiasing Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Graph/Grid Antialiasing Write.vi"/>
+			</Item>
+			<Item Name="Frame Color" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_graph_gridplane_framecolor.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Graph:Frame Color</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Specifies the color of the grid frame.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Graph:Grid Plane:Frame Color</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Frame Color Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Graph/Frame Color Read.vi"/>
+				<Item Name="Frame Color Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Graph/Frame Color Write.vi"/>
+			</Item>
+		</Item>
+		<Item Name="Light" Type="Folder">
+			<Item Name="Enable Lighting" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_light_enablelighting.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Light:Enable Lighting</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Enables the entire setting for the light.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Light:Enable Lighting</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Enable Lighting Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Light/Enable Lighting Read.vi"/>
+				<Item Name="Enable Lighting Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Light/Enable Lighting Write.vi"/>
+			</Item>
+			<Item Name="Active Light" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_light_activelight.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Light:Active Light</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the specified settings of the light you want to configure.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Light:Active Light</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Active Light Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Light/Active Light Read.vi"/>
+				<Item Name="Active Light Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Light/Active Light Write.vi"/>
+			</Item>
+			<Item Name="Enable Light" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_light_enablelight.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Light:Enable Light</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Enables specified settings for the light.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Light:Enable Light</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Enable Light Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Light/Enable Light Read.vi"/>
+				<Item Name="Enable Light Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Light/Enable Light Write.vi"/>
+			</Item>
+			<Item Name="Light Color" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_light_lightcolor.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Light:Light Color</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Changes the specific light color.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Light:Light Color</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Light Color Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Light/Light Color Read.vi"/>
+				<Item Name="Light Color Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Light/Light Color Write.vi"/>
+			</Item>
+			<Item Name="Light Latitude" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_light_lightlatitude.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Light:Light Latitude</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the latitude of the specified light towards the target.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Light:Light Latitude</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Light Latitude Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Light/Light Latitude Read.vi"/>
+				<Item Name="Light Latitude Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Light/Light Latitude Write.vi"/>
+			</Item>
+			<Item Name="Light Longitude" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_light_lightlongitude.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Light:Light Longitude</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the longitude of the specified light towards the target.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Light:Light Longitude</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Light Longitude Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Light/Light Longitude Read.vi"/>
+				<Item Name="Light Longitude Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Light/Light Longitude Write.vi"/>
+			</Item>
+			<Item Name="Light Distance" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_light_lightdistance.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Light:Light Distance</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the distance of the specified light towards the target.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Light:Light Distance</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Light Distance Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Light/Light Distance Read.vi"/>
+				<Item Name="Light Distance Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Light/Light Distance Write.vi"/>
+			</Item>
+			<Item Name="Light Attenuation" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_light_lightattenuation.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Light:Light Attenuation</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Changes the attenuation mode of the specified settings for the light.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Light:Light Attenuation</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Light Attenuation Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Light/Light Attenuation Read.vi"/>
+				<Item Name="Light Attenuation Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Light/Light Attenuation Write.vi"/>
+			</Item>
+		</Item>
+		<Item Name="Axis" Type="Folder">
+			<Item Name="Active Axis" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_axis_activeaxis.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Axis:Active Axis</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the axis you want to configure.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Axis:Active Axis</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Active Axis Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Active Axis Read.vi"/>
+				<Item Name="Active Axis Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Active Axis Write.vi"/>
+			</Item>
+			<Item Name="Name Label Color" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_axis_namelabel_namelabelcolor.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Axis:Name Label Color</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the color of the axis name label.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Axis:Name Label:Name Label Color</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Name Label Color Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Name Label Color Read.vi"/>
+				<Item Name="Name Label Color Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Name Label Color Write.vi"/>
+			</Item>
+			<Item Name="Name Label Size" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_axis_namelabel_namelabelsize.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Axis:Name Label Size</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the font size of the axis name label.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Axis:Name Label:Name Label Size</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Name Label Size Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Name Label Size Read.vi"/>
+				<Item Name="Name Label Size Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Name Label Size Write.vi"/>
+			</Item>
+			<Item Name="Name Label Text" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_axis_namelabel_namelabeltext.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Axis:Name Label Text</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Configures the text that displays for the axis name label.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Axis:Name Label:Name Label Text</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Name Label Text Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Name Label Text Read.vi"/>
+				<Item Name="Name Label Text Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Name Label Text Write.vi"/>
+			</Item>
+			<Item Name="Name Label Normal Visible" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_axis_namelabel_namelabelnormalvisible.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Axis:Name Label Normal Visible</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Displays the axis name label on one side of the axis.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Axis:Name Label:Name Label Normal Visible</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Name Label Normal Visible Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Name Label Normal Visible Read.vi"/>
+				<Item Name="Name Label Normal Visible Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Name Label Normal Visible Write.vi"/>
+			</Item>
+			<Item Name="Name Label Opposite Visible" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_axis_namelabel_namelabeloppositevisible.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Axis:Name Label Opposite Visible</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Displays the axis name label on the opposite side of the axis.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Axis:Name Label:Name Label Opposite Visible</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Name Label Opposite Visible Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Name Label Opposite Visible Read.vi"/>
+				<Item Name="Name Label Opposite Visible Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Name Label Opposite Visible Write.vi"/>
+			</Item>
+			<Item Name="Marker Color" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_axis_marker_markercolor.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Axis:Marker Color</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the color of the scale marker.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Axis:Marker:Marker Color</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Marker Color Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Marker Color Read.vi"/>
+				<Item Name="Marker Color Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Marker Color Write.vi"/>
+			</Item>
+			<Item Name="Marker Size" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_axis_marker_markersize.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Axis:Marker Size</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the font size of the scale marker.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Axis:Marker:Marker Size</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Marker Size Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Marker Size Read.vi"/>
+				<Item Name="Marker Size Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Marker Size Write.vi"/>
+			</Item>
+			<Item Name="Marker Normal Visible" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_axis_marker_markernormalvisible.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Axis:Marker Normal Visible</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Displays the scale marker on one side of the axis.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Axis:Marker:Marker Normal Visible</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Marker Normal Visible Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Marker Normal Visible Read.vi"/>
+				<Item Name="Marker Normal Visible Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Marker Normal Visible Write.vi"/>
+			</Item>
+			<Item Name="Marker Opposite Visible" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_axis_marker_markeroppositevisible.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Axis:Marker Opposite Visible</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Displays the scale marker on the opposite side of the axis.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Axis:Marker:Marker Opposite Visible</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Marker Opposite Visible Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Marker Opposite Visible Read.vi"/>
+				<Item Name="Marker Opposite Visible Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Marker Opposite Visible Write.vi"/>
+			</Item>
+			<Item Name="Range Maximum" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_axis_range_rangemaximum.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Axis:Range Maximum</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the maximum value of the scale.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Axis:Range:Range Maximum</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Range Maximum Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Range Maximum Read.vi"/>
+				<Item Name="Range Maximum Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Range Maximum Write.vi"/>
+			</Item>
+			<Item Name="Range Minimum" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_axis_range_rangeminimum.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Axis:Range Minimum</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the minimum value of the scale.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Axis:Range:Range Minimum</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Range Minimum Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Range Minimum Read.vi"/>
+				<Item Name="Range Minimum Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Range Minimum Write.vi"/>
+			</Item>
+			<Item Name="Range Auto Scale" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_axis_range_rangeautoscale.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Axis:Range Auto Scale</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Adjusts the scale automatically to reflect the data you wire to the 3D graph.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Axis:Range:Range Auto Scale</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Range Auto Scale Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Range Auto Scale Read.vi"/>
+				<Item Name="Range Auto Scale Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Range Auto Scale Write.vi"/>
+			</Item>
+			<Item Name="Range Inverted" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_axis_range_rangeinverted.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Axis:Range Inverted</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Inverts the scale range from maximum to minimum.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Axis:Range:Range Inverted</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Range Inverted Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Range Inverted Read.vi"/>
+				<Item Name="Range Inverted Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Range Inverted Write.vi"/>
+			</Item>
+			<Item Name="Range Logarithm" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_axis_range_rangelogarithm.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Axis:Range Logarithm</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Shows the scale in the logarithm mapping mode.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Axis:Range:Range Logarithm</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Range Logarithm Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Range Logarithm Read.vi"/>
+				<Item Name="Range Logarithm Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Range Logarithm Write.vi"/>
+			</Item>
+			<Item Name="Grid Major Color" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_axis_grid_gridmajorcolor.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Axis:Grid Major Color</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the color of the major axis grid.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Axis:Grid:Grid Major Color</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Grid Major Color Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Grid Major Color Read.vi"/>
+				<Item Name="Grid Major Color Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Grid Major Color Write.vi"/>
+			</Item>
+			<Item Name="Grid Major Visible" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_axis_grid_gridmajorvisible.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Axis:Grid Major Visible</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Displays the major axis grid in the 3D graph.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Axis:Grid:Grid Major Visible</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Grid Major Visible Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Grid Major Visible Read.vi"/>
+				<Item Name="Grid Major Visible Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Grid Major Visible Write.vi"/>
+			</Item>
+			<Item Name="Grid Minor Color" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_axis_grid_gridminorcolor.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Axis:Grid Minor Color</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the color of the minor axis grid.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Axis:Grid:Grid Minor Color</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Grid Minor Color Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Grid Minor Color Read.vi"/>
+				<Item Name="Grid Minor Color Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Grid Minor Color Write.vi"/>
+			</Item>
+			<Item Name="Grid Minor Visible" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_axis_grid_gridminorvisible.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Axis:Grid Minor Visible</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Displays the minor axis grid in the 3D graph.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Axis:Grid:Grid Minor Visible</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Grid Minor Visible Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Grid Minor Visible Read.vi"/>
+				<Item Name="Grid Minor Visible Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Grid Minor Visible Write.vi"/>
+			</Item>
+			<Item Name="Tick Major Count" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_axis_tick_tickmajorcount.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Axis:Tick Major Count</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Specifies the number of major tick marks that appear on the axis.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Axis:Tick:Tick Major Count</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Tick Major Count Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Tick Major Count Read.vi"/>
+				<Item Name="Tick Major Count Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Tick Major Count Write.vi"/>
+			</Item>
+			<Item Name="Tick Major Color" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_axis_tick_tickmajorcolor.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Axis:Tick Major Color</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the color of the major tick marks on the axis.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Axis:Tick:Tick Major Color</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Tick Major Color Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Tick Major Color Read.vi"/>
+				<Item Name="Tick Major Color Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Tick Major Color Write.vi"/>
+			</Item>
+			<Item Name="Tick Major Visible" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_axis_tick_tickmajorvisible.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Axis:Tick Major Visible</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Displays the major tick marks on the axis.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Axis:Tick:Tick Major Visible</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Tick Major Visible Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Tick Major Visible Read.vi"/>
+				<Item Name="Tick Major Visible Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Tick Major Visible Write.vi"/>
+			</Item>
+			<Item Name="Tick Minor Count" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_axis_tick_tickminorcount.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Axis:Tick Minor Count</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Specifies the number of minor tick marks that appear on the axis.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Axis:Tick:Tick Minor Count</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Tick Minor Count Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Tick Minor Count Read.vi"/>
+				<Item Name="Tick Minor Count Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Tick Minor Count Write.vi"/>
+			</Item>
+			<Item Name="Tick Minor Color" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_axis_tick_tickminorcolor.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Axis:Tick Minor Color</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the color of the minor tick marks on the axis.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Axis:Tick:Tick Minor Color</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Tick Minor Color Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Tick Minor Color Read.vi"/>
+				<Item Name="Tick Minor Color Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Tick Minor Color Write.vi"/>
+			</Item>
+			<Item Name="Tick Minor Visible" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_axis_tick_tickminorvisible.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Axis:Tick Minor Visible</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Displays the minor tick marks on the axis.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Axis:Tick:Tick Minor Visible</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Tick Minor Visible Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Tick Minor Visible Read.vi"/>
+				<Item Name="Tick Minor Visible Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Axis/Tick Minor Visible Write.vi"/>
+			</Item>
+		</Item>
+		<Item Name="Value Pairs" Type="Folder">
+			<Item Name="Active Value Pair" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_valuepairs_activevaluepair.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Value Pairs:Active Value Pair</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the axis to configure its value pairs.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Value Pairs:Active Value Pair</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Active Value Pair Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Value Pairs/Active Value Pair Read.vi"/>
+				<Item Name="Active Value Pair Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Value Pairs/Active Value Pair Write.vi"/>
+			</Item>
+			<Item Name="Value Pair Label Type" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_valuepairs_valuepairlabeltype.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Value Pairs:Value Pair Label Type</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Specifies how value pairs appear on the scale marker.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Value Pairs:Value Pair Label Type</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Value Pair Label Type Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Value Pairs/Value Pair Label Type Read.vi"/>
+				<Item Name="Value Pair Label Type Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Value Pairs/Value Pair Label Type Write.vi"/>
+			</Item>
+			<Item Name="Value Pair Tick Visible" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_valuepairs_valuepairtickvisible.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Value Pairs:Value Pair Tick Visible</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Displays tick marks for each value pair.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Value Pairs:Value Pair Tick Visible</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Value Pair Tick Visible Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Value Pairs/Value Pair Tick Visible Read.vi"/>
+				<Item Name="Value Pair Tick Visible Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Value Pairs/Value Pair Tick Visible Write.vi"/>
+			</Item>
+			<Item Name="Value Pair Grid Visible" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_valuepairs_valuepairgridvisible.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Value Pairs:Value Pair Grid Visible</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Displays grid lines for each value pair.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Value Pairs:Value Pair Grid Visible</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Value Pair Grid Visible Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Value Pairs/Value Pair Grid Visible Read.vi"/>
+				<Item Name="Value Pair Grid Visible Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Value Pairs/Value Pair Grid Visible Write.vi"/>
+			</Item>
+			<Item Name="Value Pair Array" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_valuepairs_valuepairarray.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Value Pairs:Value Pair Array</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Lists the index, name, and value of the value pairs you want to display on the 3D graph.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Value Pairs:Value Pair Array</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Value Pair Array Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Value Pairs/Value Pair Array Read.vi"/>
+				<Item Name="Value Pair Array Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Value Pairs/Value Pair Array Write.vi"/>
+			</Item>
+		</Item>
+		<Item Name="Format" Type="Folder">
+			<Item Name="Axis X Format String" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_format_axisxformatstring.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Format:Axis X Format String</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the formatting for the x-axis.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Format:Axis X Format String</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Axis X Format String Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Format/Axis X Format String Read.vi"/>
+				<Item Name="Axis X Format String Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Format/Axis X Format String Write.vi"/>
+			</Item>
+			<Item Name="Axis Y Format String" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_format_axisyformatstring.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Format:Axis Y Format String</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the formatting for the y-axis.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Format:Axis Y Format String</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Axis Y Format String Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Format/Axis Y Format String Read.vi"/>
+				<Item Name="Axis Y Format String Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Format/Axis Y Format String Write.vi"/>
+			</Item>
+			<Item Name="Axis Z Format String" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_format_axiszformatstring.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Format:Axis Z Format String</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the formatting for the z-axis.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Format:Axis Z Format String</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Axis Z Format String Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Format/Axis Z Format String Read.vi"/>
+				<Item Name="Axis Z Format String Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Format/Axis Z Format String Write.vi"/>
+			</Item>
+		</Item>
+		<Item Name="Cursors" Type="Folder">
+			<Item Name="Active Cursor" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_cursors_activecursor.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Cursors:Active Cursor</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the cursor you want to configure.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Cursors:Active Cursor</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Active Cursor Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Active Cursor Read.vi"/>
+				<Item Name="Active Cursor Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Active Cursor Write.vi"/>
+			</Item>
+			<Item Name="Cursor Enable" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_cursors_general_cursorenable.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Cursors:Cursor Enable</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Enables you to move the cursor you configure around the 3D graph.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Cursors:General:Cursor Enable</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Cursor Enable Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Enable Read.vi"/>
+				<Item Name="Cursor Enable Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Enable Write.vi"/>
+			</Item>
+			<Item Name="Cursor Visible" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_cursors_general_cursorvisible.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Cursors:Cursor Visible</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Displays the cursor in the 3D graph.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Cursors:General:Cursor Visible</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Cursor Visible Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Visible Read.vi"/>
+				<Item Name="Cursor Visible Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Visible Write.vi"/>
+			</Item>
+			<Item Name="Cursor Lock Style" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_cursors_general_cursorlockstyle.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Cursors:Cursor Lock Style</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the style of the cursor lock.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Cursors:General:Cursor Lock Style</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Cursor Lock Style Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Lock Style Read.vi"/>
+				<Item Name="Cursor Lock Style Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Lock Style Write.vi"/>
+			</Item>
+			<Item Name="Cursor Plot ID" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_cursors_general_cursorplotid.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Cursors:Cursor Plot ID</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the cursor to snap to the specified plot.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Cursors:General:Cursor Plot ID</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Cursor Plot ID Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Plot ID Read.vi"/>
+				<Item Name="Cursor Plot ID Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Plot ID Write.vi"/>
+			</Item>
+			<Item Name="Cursor X Position" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_cursors_general_cursorxposition.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Cursors:Cursor X Position</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the position of the cursor on the x-axis.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Cursors:General:Cursor X Position</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Cursor X Position Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor X Position Read.vi"/>
+				<Item Name="Cursor X Position Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor X Position Write.vi"/>
+			</Item>
+			<Item Name="Cursor Y Position" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_cursors_general_cursoryposition.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Cursors:Cursor Y Position</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the position of the cursor on the y-axis.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Cursors:General:Cursor Y Position</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Cursor Y Position Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Y Position Read.vi"/>
+				<Item Name="Cursor Y Position Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Y Position Write.vi"/>
+			</Item>
+			<Item Name="Cursor Z Position" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_cursors_general_cursorzposition.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Cursors:Cursor Z Position</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the position of the cursor on the z-axis.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Cursors:General:Cursor Z Position</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Cursor Z Position Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Z Position Read.vi"/>
+				<Item Name="Cursor Z Position Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Z Position Write.vi"/>
+			</Item>
+			<Item Name="Cursor Point Color" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_cursors_point_cursorpointcolor.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Cursors:Cursor Point Color</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the color of the cursor point.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Cursors:Point:Cursor Point Color</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Cursor Point Color Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Point Color Read.vi"/>
+				<Item Name="Cursor Point Color Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Point Color Write.vi"/>
+			</Item>
+			<Item Name="Cursor Point Size" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_cursors_point_cursorpointsize.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Cursors:Cursor Point Size</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Specifies the size of the point on the cursor.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Cursors:Point:Cursor Point Size</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Cursor Point Size Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Point Size Read.vi"/>
+				<Item Name="Cursor Point Size Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Point Size Write.vi"/>
+			</Item>
+			<Item Name="Cursor Point Style" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_cursors_point_cursorpointstyle.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Cursors:Cursor Point Style</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Specifies the symbol style of the point on the cursor.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Cursors:Point:Cursor Point Style</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Cursor Point Style Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Point Style Read.vi"/>
+				<Item Name="Cursor Point Style Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Point Style Write.vi"/>
+			</Item>
+			<Item Name="Cursor Line Color" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_cursors_line_cursorlinecolor.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Cursors:Cursor Line Color</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the color of the cursor line.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Cursors:Line:Cursor Line Color</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Cursor Line Color Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Line Color Read.vi"/>
+				<Item Name="Cursor Line Color Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Line Color Write.vi"/>
+			</Item>
+			<Item Name="Cursor Line Width" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_cursors_line_cursorlinewidth.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Cursors:Cursor Line Width</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Specifies the width of the cursor line.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Cursors:Line:Cursor Line Width</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Cursor Line Width Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Line Width Read.vi"/>
+				<Item Name="Cursor Line Width Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Line Width Write.vi"/>
+			</Item>
+			<Item Name="Cursor Line Style" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_cursors_line_cursorlinestyle.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Cursors:Cursor Line Style</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Specifies the style of the cursor line.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Cursors:Line:Cursor Line Style</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Cursor Line Style Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Line Style Read.vi"/>
+				<Item Name="Cursor Line Style Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Line Style Write.vi"/>
+			</Item>
+			<Item Name="Cursor Plane Color" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_cursors_plane_cursorplanecolor.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Cursors:Cursor Plane Color</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the color of the cursor plane.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Cursors:Plane:Cursor Plane Color</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Cursor Plane Color Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Plane Color Read.vi"/>
+				<Item Name="Cursor Plane Color Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Plane Color Write.vi"/>
+			</Item>
+			<Item Name="Cursor Plane Opacity" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_cursors_plane_cursorplaneopacity.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Cursors:Cursor Plane Opacity</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Specifies the level of opacity of the color you apply to the cursor plane.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Cursors:Plane:Cursor Plane Opacity</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Cursor Plane Opacity Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Plane Opacity Read.vi"/>
+				<Item Name="Cursor Plane Opacity Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Plane Opacity Write.vi"/>
+			</Item>
+			<Item Name="Cursor Plane XY Visible" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_cursors_plane_cursorplanexyvisible.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Cursors:Cursor Plane XY Visible</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Displays the XY cursor plane on the 3D graph.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Cursors:Plane:Cursor Plane XY Visible</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Cursor Plane XY Visible Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Plane XY Visible Read.vi"/>
+				<Item Name="Cursor Plane XY Visible Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Plane XY Visible Write.vi"/>
+			</Item>
+			<Item Name="Cursor Plane XZ Visible" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_cursors_plane_cursorplanexzvisible.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Cursors:Cursor Plane XZ Visible</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Displays the XZ cursor plane on the 3D graph.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Cursors:Plane:Cursor Plane XZ Visible</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Cursor Plane XZ Visible Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Plane XZ Visible Read.vi"/>
+				<Item Name="Cursor Plane XZ Visible Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Plane XZ Visible Write.vi"/>
+			</Item>
+			<Item Name="Cursor Plane YZ Visible" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_cursors_plane_cursorplaneyzvisible.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Cursors:Cursor Plane YZ Visible</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Displays the YZ cursor plane on the 3D graph.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Cursors:Plane:Cursor Plane YZ Visible</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Cursor Plane YZ Visible Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Plane YZ Visible Read.vi"/>
+				<Item Name="Cursor Plane YZ Visible Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Plane YZ Visible Write.vi"/>
+			</Item>
+			<Item Name="Cursor Name" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_cursors_text_cursorname.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Cursors:Cursor Name</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Configures the text of the cursor name.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Cursors:Text:Cursor Name</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Cursor Name Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Name Read.vi"/>
+				<Item Name="Cursor Name Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Name Write.vi"/>
+			</Item>
+			<Item Name="Cursor Text Color" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_cursors_text_cursornamecolor.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Cursors:Cursor Text Color</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Specifies the color of the cursor text.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Cursors:Text:Cursor Text Color</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Cursor Text Color Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Text Color Read.vi"/>
+				<Item Name="Cursor Text Color Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Text Color Write.vi"/>
+			</Item>
+			<Item Name="Cursor Text Size" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_cursors_text_cursornamesize.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Cursors:Cursor Text Size</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Specifies the font size of the cursor text. The text includes the cursor name and its position.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Cursors:Text:Cursor Text Size</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Cursor Text Size Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Text Size Read.vi"/>
+				<Item Name="Cursor Text Size Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Text Size Write.vi"/>
+			</Item>
+			<Item Name="Cursor Show Position" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_cursors_text_cursorshowposition.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Cursors:Cursor Show Position</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Displays the cursor position on the 3D graph.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Cursors:Text:Cursor Show Position</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Cursor Show Position Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Show Position Read.vi"/>
+				<Item Name="Cursor Show Position Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Show Position Write.vi"/>
+			</Item>
+			<Item Name="Cursor Show Name" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_cursors_text_cursorshowname.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Cursors:Cursor Show Name</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Displays the cursor name on the 3D graph.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Cursors:Text:Cursor Show Name</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Cursor Show Name Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Show Name Read.vi"/>
+				<Item Name="Cursor Show Name Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Show Name Write.vi"/>
+			</Item>
+			<Item Name="Cursor Text Background Color" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_cursors_text_cursornamebackgroundcolor.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Cursors:Cursor Text Background Color</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Specifies the color of the cursor text background.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Cursors:Text:Cursor Text Background Color</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Cursor Text Background Color Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Text Background Color Read.vi"/>
+				<Item Name="Cursor Text Background Color Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Text Background Color Write.vi"/>
+			</Item>
+			<Item Name="Cursor Text Background Opacity" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_cursors_text_cursornamebackgroundopacity.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Cursors:Cursor Text Background Opacity</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Specifies the level of opacity of the color you apply to the cursor text background.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Cursors:Text:Cursor Name Background Opacity</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Cursor Text Background Opacity Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Text Background Opacity Read.vi"/>
+				<Item Name="Cursor Text Background Opacity Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor Text Background Opacity Write.vi"/>
+			</Item>
+			<Item Name="Cursor List" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dgraph_cursors_cursorlist.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Cursors:Cursor List</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Displays an array of information about all the cursors.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Cursors:Cursor List</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Cursor List Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor List Read.vi"/>
+				<Item Name="Cursor List Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Cursors/Cursor List Write.vi"/>
+			</Item>
+		</Item>
+		<Item Name="Plot Specific" Type="Folder">
+			<Item Name="Plot Name" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dsurface_plotspecific_general_plotname.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Plot Specific:Plot Name</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Configures the text of the plot name.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Plot Specific:General:Plot Name</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Plot Name Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Plot Specific/Plot Name Read.vi"/>
+				<Item Name="Plot Name Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Plot Specific/Plot Name Write.vi"/>
+			</Item>
+			<Item Name="Plot Opacity" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dsurface_plotspecific_general_plotopacity.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Plot Specific:Plot Opacity</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Specifies the level of opacity of the color you apply to the plot.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Plot Specific:General:Plot Opacity</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Plot Opacity Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Plot Specific/Plot Opacity Read.vi"/>
+				<Item Name="Plot Opacity Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Plot Specific/Plot Opacity Write.vi"/>
+			</Item>
+			<Item Name="Draw XY Projection" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dsurface_plotspecific_projection_drawxyprojection.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Plot Specific:Draw XY Projection</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Displays the plot projection on the XY plane.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Plot Specific:Projection:Draw XY Projection</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Draw XY Projection Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Plot Specific/Draw XY Projection Read.vi"/>
+				<Item Name="Draw XY Projection Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Plot Specific/Draw XY Projection Write.vi"/>
+			</Item>
+			<Item Name="Draw YZ Projection" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dsurface_plotspecific_projection_drawyzprojection.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Plot Specific:Draw YZ Projection</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Displays the plot projection on the YZ plane.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Plot Specific:Projection:Draw YZ Projection</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Draw YZ Projection Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Plot Specific/Draw YZ Projection Read.vi"/>
+				<Item Name="Draw YZ Projection Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Plot Specific/Draw YZ Projection Write.vi"/>
+			</Item>
+			<Item Name="Draw XZ Projection" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dsurface_plotspecific_projection_drawxzprojection.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Plot Specific:Draw XZ Projection</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Displays the plot projection on the XZ plane.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Plot Specific:Projection:Draw XZ Projection</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Draw XZ Projection Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Plot Specific/Draw XZ Projection Read.vi"/>
+				<Item Name="Draw XZ Projection Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Plot Specific/Draw XZ Projection Write.vi"/>
+			</Item>
+			<Item Name="Bar Line Style" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dbar_plotspecific_bar_barlinestyle.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Plot Specific:Bar Line Style</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Specifies the style of the bar outline.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Plot Specific:Bar:Bar Line Style</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Bar Line Style Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Plot Specific/Bar Line Style Read.vi"/>
+				<Item Name="Bar Line Style Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Plot Specific/Bar Line Style Write.vi"/>
+			</Item>
+			<Item Name="Bar Line Width" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dbar_plotspecific_bar_barlinewidth.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Plot Specific:Bar Line Width</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Specifies the width of the bar outline.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Plot Specific:Bar:Bar Line Width</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Bar Line Width Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Plot Specific/Bar Line Width Read.vi"/>
+				<Item Name="Bar Line Width Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Plot Specific/Bar Line Width Write.vi"/>
+			</Item>
+			<Item Name="Bar Line Color" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dbar_plotspecific_bar_barlinecolor.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Plot Specific:Bar Line Color</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the color of the bar outline.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Plot Specific:Bar:Bar Line Color</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Bar Line Color Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Plot Specific/Bar Line Color Read.vi"/>
+				<Item Name="Bar Line Color Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Plot Specific/Bar Line Color Write.vi"/>
+			</Item>
+			<Item Name="Bar Line Anti-aliasing" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dbar_plotspecific_bar_barlineantialiasing.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Plot Specific:Bar Line Anti-aliasing</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Uses anti-aliasing to show the bar outline.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Plot Specific:Bar:Bar Line Anti-aliasing</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Bar Line Antialiasing Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Plot Specific/Bar Line Antialiasing Read.vi"/>
+				<Item Name="Bar Line Antialiasing Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Plot Specific/Bar Line Antialiasing Write.vi"/>
+			</Item>
+			<Item Name="Bar Mode" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dbar_plotspecific_bar_barmode.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Plot Specific:Bar Mode</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Sets the display mode of the bars.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Plot Specific:Bar:Bar Mode</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Bar Mode Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Plot Specific/Bar Mode Read.vi"/>
+				<Item Name="Bar Mode Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Plot Specific/Bar Mode Write.vi"/>
+			</Item>
+			<Item Name="Bar Width" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dbar_plotspecific_bar_barwidth.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Plot Specific:Bar Width</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Specifies the width for the bar.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Plot Specific:Bar:Bar Width</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Bar Width Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Plot Specific/Bar Width Read.vi"/>
+				<Item Name="Bar Width Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Plot Specific/Bar Width Write.vi"/>
+			</Item>
+			<Item Name="Color and Name" Type="Property Folder">
+				<Property Name="NI.LibItem.Prop.HelpTag" Type="Str">3Dpie_plotspecific_pie_colorandname.html</Property>
+				<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Plot Specific:Color and Name</Property>
+				<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Specifies the name and color for each pie slice.</Property>
+				<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Plot Specific:Bar:Color and Name</Property>
+				<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+				<Item Name="Color and Name Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Plot Specific/Color and Name Read.vi"/>
+				<Item Name="Color and Name Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Properties/Plot Specific/Color and Name Write.vi"/>
+			</Item>
+		</Item>
+	</Item>
+	<Item Name="Methods" Type="Folder">
+		<Item Name="Clean Data.vi" Type="Method VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Methods/Clean Data.vi"/>
+		<Item Name="Reset To Default View.vi" Type="Method VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Methods/Reset To Default View.vi"/>
+		<Item Name="Image to Printer.vi" Type="Method VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Methods/Image to Printer.vi"/>
+		<Item Name="Image to File.vi" Type="Method VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Methods/Image to File.vi"/>
+		<Item Name="Get Picture Control Ref.vi" Type="Method VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Methods/Get Picture Control Ref.vi"/>
+	</Item>
+	<Item Name="Data.ctl" Type="Ability VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Data.ctl">
+		<Property Name="NI.XItem.Name" Type="Str">Data</Property>
+	</Item>
+	<Item Name="State.ctl" Type="Ability VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/State.ctl">
+		<Property Name="NI.XItem.Name" Type="Str">State</Property>
+	</Item>
+	<Item Name="Facade.vi" Type="Ability VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Facade.vi">
+		<Property Name="NI.XItem.Name" Type="Str">Facade</Property>
+	</Item>
+	<Item Name="Init.vi" Type="Ability VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Init.vi">
+		<Property Name="NI.XItem.Name" Type="Str">Init</Property>
+	</Item>
+	<Item Name="Uninit.vi" Type="Ability VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Uninit.vi">
+		<Property Name="NI.XItem.Name" Type="Str">UnInit</Property>
+	</Item>
+	<Item Name="Convert State For Save.vi" Type="Ability VI" URL="/&lt;vilib&gt;/Math Plots/3D Math Plots/3D Bar/3D Bar XCtrl/Convert State For Save.vi">
+		<Property Name="NI.XItem.Name" Type="Str">ConvertStateForSave</Property>
+	</Item>
+</XControl>

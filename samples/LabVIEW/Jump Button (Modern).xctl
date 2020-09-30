@@ -1,0 +1,50 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<XControl LVVersion="13008000">
+	<Property Name="" Type="Bool">true</Property>
+	<Property Name="Localized" Type="Str">Localize</Property>
+	<Property Name="NI.Lib.HelpPath" Type="Str"></Property>
+	<Property Name="NI.Lib.Icon" Type="Bin">%Q#!!!!!!!)!"1!&amp;!!!-!%!!!@````]!!!!"!!%!!!*Q!!!*Q(C=T:4,&lt;2N"$):`'U'1KRIQ$,8!?_#$7N#7Q";57XR5#WR",;A&amp;NK!76-$!]0K&lt;]=13^&amp;D(A/&amp;E2FRJ@X,)&lt;RY;K&lt;5@UD?^WZ[GWIB`9OT1`-066L\18X%HRZ=[V[H]J;\'60WTA&amp;/_UY#0_E]$0N8@.P40DF`QF[/.,:@SFV0XJ@5Z&gt;F_=`Z(\Q`Y75)&lt;L@A,+-/5@SD$N(\\=0Z4L$@]YW&gt;\`@UO0^@&amp;\(*``B&lt;UCX,2Z9)E&amp;ZJCJ]I_*HOC*HOC*HOC"(OC"(OC"(OC/\OC/\OC/\OC'&lt;OC'&lt;OC'&lt;OCNIQN&gt;[%)(+3G?&amp;%K3*AG39&amp;#50"+?B#@B38BY6=+4]#1]#5`#1YA3HI1HY5FY%B['+?&amp;*?"+?B#@B)65DS&gt;&lt;2Y5FY3+_!*_!*?!+?A)?3#HA#A+"9E$B)!I9#:`!DY!FY!BZ_+O!*?!+?A#@AQ;W!*_!*?!+?A)=B&lt;67CU&gt;3/$A^JZ0!Y0![0Q_0QE&amp;I/D]0D]$A]$A`FZ0!Y0![%5^"*$I+=15[!]_,Q/$R]S?&amp;R?"Q?B]@BQ&gt;6WS.P+6*L;U?%R?!Q?A]@A-8B))90(Y$&amp;Y$"[$B\1S?!Q?A]@A-8AI*90(Y$&amp;Y$"#D+/6F*$-''E''90$Q;;@&amp;WCZ&amp;)\(7J8ZYV1_F_G&amp;40U4KBU.^U^5X5XW4V"&gt;@@6(6&amp;UN^%&gt;1HJQ[N$K.?2(VQ$&gt;3?ZQ\&lt;9BNMD;WQ*&lt;&lt;!ZNCM$PXEQ0V_L^VOJ_VWK]VGI`6[L&gt;6KJ?6SK=6CI@F]LNFM^H94X&gt;0@,I4$P@1AX:\:,_Q\&gt;F0@(\'(&lt;P=(_XFX0OYP\(!P`1^XIWZV@*'T2C`'S^?F!!!!!!</Property>
+	<Property Name="NI.Lib.LocalName" Type="Str">Jump Button</Property>
+	<Property Name="NI.Lib.SourceVersion" Type="Int">318799872</Property>
+	<Property Name="NI.Lib.Version" Type="Str">2.0.0.0</Property>
+	<Property Name="NI.LV.All.SourceOnly" Type="Bool">true</Property>
+	<Property Name="NI.SortType" Type="Int">3</Property>
+	<Property Name="NI.XClass.Flags" Type="Int">0</Property>
+	<Property Name="NI.XItem.DeclaredLeakProof" Type="Bool">false</Property>
+	<Property Name="NI.XItem.Express" Type="Bool">false</Property>
+	<Property Name="NI.XItem.Name" Type="Str">XControl 1</Property>
+	<Property Name="NI.XItem.SupportsFatalErrorOut" Type="Bool">false</Property>
+	<Item Name="Jump Button Data.ctl" Type="Ability VI" URL="/&lt;vilib&gt;/Navigation Controls/Jump Button/Jump Button Data.ctl">
+		<Property Name="NI.XItem.Name" Type="Str">Data</Property>
+	</Item>
+	<Item Name="Jump Button State.ctl" Type="Ability VI" URL="/&lt;vilib&gt;/Navigation Controls/Jump Button/Jump Button State.ctl">
+		<Property Name="NI.XItem.Name" Type="Str">State</Property>
+	</Item>
+	<Item Name="Jump Button Facade.vi" Type="Ability VI" URL="/&lt;vilib&gt;/Navigation Controls/Jump Button/Jump Button Facade.vi">
+		<Property Name="NI.XItem.Name" Type="Str">Facade</Property>
+	</Item>
+	<Item Name="Jump Button Init.vi" Type="Ability VI" URL="/&lt;vilib&gt;/Navigation Controls/Jump Button/Jump Button Init.vi">
+		<Property Name="NI.XItem.Name" Type="Str">Init</Property>
+	</Item>
+	<Item Name="Jump Button Convert State For Save.vi" Type="Ability VI" URL="/&lt;vilib&gt;/Navigation Controls/Jump Button/Jump Button Convert State For Save.vi">
+		<Property Name="NI.XItem.Name" Type="Str">ConvertStateForSave</Property>
+	</Item>
+	<Item Name="Button Text" Type="Property Folder">
+		<Property Name="NI.LibItem.Prop.HelpTag" Type="Str"></Property>
+		<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Button Text</Property>
+		<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Text displayed on a navigation button.</Property>
+		<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Button Text</Property>
+		<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+		<Item Name="Button Text Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Navigation Controls/Jump Button/Button Text Read.vi"/>
+		<Item Name="Button Text Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Navigation Controls/Jump Button/Button Text Write.vi"/>
+	</Item>
+	<Item Name="Target VI" Type="Property Folder">
+		<Property Name="NI.LibItem.Prop.HelpTag" Type="Str"></Property>
+		<Property Name="NI.LibItem.Prop.Identifier" Type="Str">Target VI</Property>
+		<Property Name="NI.LibItem.Prop.Localized.Description" Type="Str">Specifies the VI to open and run when you click a navigation control. This property is available for the Jump Button navigation control only.</Property>
+		<Property Name="NI.LibItem.Prop.Localized.LongName" Type="Str">Target VI</Property>
+		<Property Name="NI.LibItem.Scope" Type="Int">1</Property>
+		<Item Name="Target VI Read.vi" Type="Property VI" URL="/&lt;vilib&gt;/Navigation Controls/Jump Button/Target VI Read.vi"/>
+		<Item Name="Target VI Write.vi" Type="Property VI" URL="/&lt;vilib&gt;/Navigation Controls/Jump Button/Target VI Write.vi"/>
+	</Item>
+</XControl>
