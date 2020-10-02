@@ -716,9 +716,9 @@ module Linguist
     #
     # Returns true or false
     def generated_pascal_tlb?
-      name =~ /_tlb\.pas$/i
-    end    
-    
+      !!name.match(/_tlb\.pas$/i)
+    end
+
     # Internal: Extract a Hash of name/content pairs from an HTML <meta> tag
     def extract_html_meta(match)
       (match.last.sub(/\/\Z/, "").strip.scan(/
