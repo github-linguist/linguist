@@ -136,6 +136,8 @@ class TestBlob < Minitest::Test
 
   def test_generated
     assert !fixture_blob_memory("Data/README").generated?
+    # Catch generated checks that don't return a boolean when they don't match
+    refute_nil fixture_blob_memory("Data/README").generated?
 
     # Generated .NET Docfiles
     assert sample_blob_memory("XML/net_docfile.xml").generated?
@@ -236,6 +238,9 @@ class TestBlob < Minitest::Test
     assert sample_blob_memory("HTML/pages.html").generated?
     assert fixture_blob_memory("HTML/mandoc.html").generated?
     assert fixture_blob_memory("HTML/node78.html").generated?
+
+    # Generated Pascal _TLB file
+    assert sample_blob_memory("Pascal/lazcomlib_1_0_tlb.pas").generated?
   end
 
   def test_vendored

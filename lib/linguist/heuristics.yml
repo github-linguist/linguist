@@ -47,8 +47,8 @@ disambiguations:
   - language: Roff
 - extensions: ['.al']
   rules:
-  # AL Code pattern source from https://github.com/microsoft/AL/blob/master/grammar/alsyntax.tmlanguage - keyword.other.applicationobject.al
-  - language: AL Code
+  # AL pattern source from https://github.com/microsoft/AL/blob/master/grammar/alsyntax.tmlanguage - keyword.other.applicationobject.al
+  - language: AL
     and:
     - pattern: '\b(?i:(CODEUNIT|PAGE|PAGEEXTENSION|PAGECUSTOMIZATION|DOTNET|ENUM|ENUMEXTENSION|VALUE|QUERY|REPORT|TABLE|TABLEEXTENSION|XMLPORT|PROFILE|CONTROLADDIN))\b'
   # Open-ended fallback to Perl AutoLoader
@@ -488,7 +488,7 @@ disambiguations:
   - language: Perl
     named_pattern: perl5
   - language: Raku
-    named_pattern: perl6
+    pattern: '^\s*(?:use\s+v6\b|\bmodule\b|\bmy\s+class\b)'
   - language: Turing
     pattern: '^\s*%[ \t]+|^\s*var\s+\w+(\s*:\s*\w+)?\s*:=\s*\w+'
 - extensions: ['.toc']
