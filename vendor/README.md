@@ -228,6 +228,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **LSL:** [textmate/secondlife-lsl.tmbundle](https://github.com/textmate/secondlife-lsl.tmbundle)
 - **LTspice Symbol:** [Alhadis/language-pcb](https://github.com/Alhadis/language-pcb)
 - **LabVIEW:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)
+- **Lark:** [Alhadis/language-grammars](https://github.com/Alhadis/language-grammars)
 - **Lasso:** [bfad/Sublime-Lasso](https://github.com/bfad/Sublime-Lasso)
 - **Latte:** [textmate/php-smarty.tmbundle](https://github.com/textmate/php-smarty.tmbundle)
 - **Lean:** [leanprover/vscode-lean](https://github.com/leanprover/vscode-lean)
