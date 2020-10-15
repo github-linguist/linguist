@@ -49,7 +49,7 @@ disambiguations:
   rules:
   - language: ActionScript
     pattern: 
-    - '^\s*(?:package(?:\s+[\w.]+)?\s+(?:{|$)|import\s+[\w.*]+\s*;|(intrinsic\s+)?class\s+[\w<>.]+(?:\s+extends\s+[\w<>.]+)?|(?:(?:public|protected|private|static)\s+)*(?:(?:var|const|local)\s+\w+\s*:\s*[\w<>.]+(?:\s*=.*)?\s*;|function\s+\w+\s*\((?:\s*\w+(?:\s*:\s*[\w<>.]+)?,?)*\)(?:\s*:\s*[\w<>.]+)?))'
+- '^\s*(?:package(?:\s+[\w.]+)?\s+(?:{|$)|import\s+[\w.*]+\s*;|(?=.*?(?:intrinsic|extends))(intrinsic\s+)?class\s+[\w<>.]+(?:\s+extends\s+[\w<>.]+)?|(?:(?:public|protected|private|static)\s+)*(?:(?:var|const|local)\s+\w+\s*:\s*[\w<>.]+(?:\s*=.*)?\s*;|function\s+\w+\s*\((?:\s*\w+(?:\s*:\s*[\w<>.]+)?,?)*\)(?:\s*:\s*[\w<>.]+)?))'
 - extensions: ['.asc']
   rules:
   - language: Public Key
