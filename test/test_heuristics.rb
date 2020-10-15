@@ -75,7 +75,7 @@ class TestHeuristics < Minitest::Test
 
   def test_al_by_heuristics
     assert_heuristics({
-      "AL Code" => all_fixtures("AL Code", "*.al"),
+      "AL" => all_fixtures("AL", "*.al"),
       "Perl" => all_fixtures("Perl", "*.al")
     })
   end
