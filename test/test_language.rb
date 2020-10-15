@@ -4,9 +4,8 @@ class TestLanguage < Minitest::Test
   include Linguist
 
   def test_find_by_alias
-    assert_equal Language['ASP'], Language.find_by_alias('asp')
-    assert_equal Language['ASP'], Language.find_by_alias('aspx')
-    assert_equal Language['ASP'], Language.find_by_alias('aspx-vb')
+    assert_equal Language['ASP.NET'], Language.find_by_alias('aspx')
+    assert_equal Language['ASP.NET'], Language.find_by_alias('aspx-vb')
     assert_equal Language['ActionScript'], Language.find_by_alias('as3')
     assert_equal Language['ApacheConf'], Language.find_by_alias('apache')
     assert_equal Language['Assembly'], Language.find_by_alias('nasm')
@@ -17,6 +16,7 @@ class TestLanguage < Minitest::Test
     assert_equal Language['C++'], Language.find_by_alias('c++')
     assert_equal Language['C++'], Language.find_by_alias('cpp')
     assert_equal Language['Chapel'], Language.find_by_alias('chpl')
+    assert_equal Language['Classic ASP'], Language.find_by_alias('asp')
     assert_equal Language['CoffeeScript'], Language.find_by_alias('coffee')
     assert_equal Language['CoffeeScript'], Language.find_by_alias('coffee-script')
     assert_equal Language['ColdFusion'], Language.find_by_alias('cfm')
@@ -468,14 +468,6 @@ class TestLanguage < Minitest::Test
     message = "The following languages are listed in lib/linguist/popular.yml but not in lib/linguist/languages.yml.\n"
     message << missing.sort.join("\n")
     assert missing.empty?, message
-  end
-
-  def test_no_unused_colours
-    Language.all.each do |language|
-      next unless language.type == :data || language.type == :prose ||
-        language.group.to_s != language.name
-      assert !language.color, "Unused colour assigned to #{language.name}"
-    end
   end
 
   def test_non_crash_on_comma

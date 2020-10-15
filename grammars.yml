@@ -1,8 +1,7 @@
-https://bitbucket.org/Clams/sublimesystemverilog/get/default.tar.gz:
-- source.systemverilog
-- source.ucfconstraints
 https://svn.edgewall.org/repos/genshi/contrib/textmate/Genshi.tmbundle/Syntaxes/Markup%20Template%20%28XML%29.tmLanguage:
 - text.xml.genshi
+vendor/grammars/AL:
+- source.al
 vendor/grammars/Alloy.tmbundle:
 - source.alloy
 vendor/grammars/Assembly-Syntax-Definition:
@@ -126,6 +125,9 @@ vendor/grammars/SublimeXtend:
 vendor/grammars/Syntax-highlighting-for-PostCSS:
 - source.css.postcss.sugarss
 - source.postcss
+vendor/grammars/SystemVerilog:
+- source.systemverilog
+- source.ucfconstraints
 vendor/grammars/TLA:
 - source.tla
 vendor/grammars/TXL:
@@ -236,6 +238,8 @@ vendor/grammars/atomic-dreams:
 - source.dmf
 vendor/grammars/ats:
 - source.ats
+vendor/grammars/avro.tmLanguage:
+- source.avro
 vendor/grammars/awk-sublime:
 - source.awk
 vendor/grammars/babel-sublime:
@@ -317,14 +321,14 @@ vendor/grammars/fortran.tmbundle:
 - source.fortran.modern
 vendor/grammars/gap-tmbundle:
 - source.gap
-vendor/grammars/gdscript:
-- source.gdscript
 vendor/grammars/gettext.tmbundle:
 - source.po
 vendor/grammars/gnuplot-tmbundle:
 - source.gnuplot
 vendor/grammars/go-tmbundle:
 - source.go
+vendor/grammars/godot-vscode-plugin:
+- source.gdscript
 vendor/grammars/grace:
 - source.grace
 vendor/grammars/gradle.tmbundle:
@@ -381,6 +385,8 @@ vendor/grammars/language-agc:
 - source.agc
 vendor/grammars/language-apl:
 - source.apl
+vendor/grammars/language-asl:
+- source.asl
 vendor/grammars/language-asn1:
 - source.asn
 vendor/grammars/language-batchfile:
@@ -437,6 +443,7 @@ vendor/grammars/language-etc:
 - source.inputrc
 - source.lcov
 - source.m4
+- source.mailmap
 - source.man-conf
 - source.nanorc
 - source.neon
@@ -447,6 +454,8 @@ vendor/grammars/language-etc:
 - source.smpl
 - source.ssh-config
 - source.tags
+- source.ucd.nameslist
+- source.ucd.unidata
 - source.wgetrc
 - text.openbsd-pkg.desc
 - text.xml.svg
@@ -472,6 +481,7 @@ vendor/grammars/language-grammars:
 - source.abnf
 - source.bnf
 - source.ebnf
+- source.lark
 - source.lex
 - source.lex.regexp
 - source.yacc
@@ -634,7 +644,7 @@ vendor/grammars/latex.tmbundle:
 - text.tex.latex
 - text.tex.latex.beamer
 - text.tex.latex.memoir
-vendor/grammars/lilypond.tmbundle:
+vendor/grammars/linter-lilypond:
 - source.lilypond
 vendor/grammars/liquid.tmbundle:
 - text.html.liquid
@@ -865,6 +875,7 @@ vendor/grammars/vscode-gcode-syntax:
 vendor/grammars/vscode-gedcom:
 - source.gedcom
 vendor/grammars/vscode-hack:
+- markdown.hack.codeblock
 - source.hack
 vendor/grammars/vscode-lean:
 - source.lean
@@ -875,6 +886,7 @@ vendor/grammars/vscode-plantuml:
 - markdown.plantuml.codeblock
 - source.wsd
 vendor/grammars/vscode-prisma:
+- inline.prisma
 - source.prisma
 vendor/grammars/vscode-scala-syntax:
 - source.scala

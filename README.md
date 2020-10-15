@@ -30,7 +30,7 @@ The language of each remaining file is then determined using the following strat
 The result of this analysis is used to produce the language stats bar which displays the languages percentages for the files in the repository.
 The percentages are calculated based on the bytes of code for each language as reported by the [List Languages](https://developer.github.com/v3/repos/#list-languages) API.
 
-![language stats bar](https://user-images.githubusercontent.com/2346707/50930521-52f57e80-14b4-11e9-92de-0ee9c768ae46.png)
+![language stats bar](https://user-images.githubusercontent.com/2346707/91533656-9768b300-e953-11ea-808d-994cd50e6273.png)
 
 ### How Linguist works on GitHub.com
 
@@ -135,6 +135,36 @@ grammars.yml: 884 lines (884 sloc)
   type:      Text
   mime type: text/x-yaml
   language:  YAML
+```
+
+#### Docker
+
+If you have Docker installed you can build an image and run Linguist within a container:
+
+```console
+$ docker build -t linguist .
+$ docker run --rm -v $(pwd):$(pwd) -w $(pwd) -t linguist
+68.57%  Ruby
+22.90%  C
+6.93%   Go
+1.21%   Lex
+0.39%   Shell
+$ docker run --rm -v $(pwd):$(pwd) -w $(pwd) -t linguist github-linguist --breakdown
+68.57%  Ruby
+22.90%  C
+6.93%   Go
+1.21%   Lex
+0.39%   Shell
+
+Ruby:
+Gemfile
+Rakefile
+bin/git-linguist
+bin/github-linguist
+ext/linguist/extconf.rb
+github-linguist.gemspec
+lib/linguist.rb
+…
 ```
 
 ## Troubleshooting
