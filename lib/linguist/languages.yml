@@ -81,7 +81,7 @@ AGS Script:
   codemirror_mode: clike
   codemirror_mime_type: text/x-c++src
   language_id: 2
-AL Code:
+AL:
   type: programming
   color: "#3AA2B5"
   extensions:
@@ -303,6 +303,7 @@ Apex:
   language_id: 17
 Apollo Guidance Computer:
   type: programming
+  color: "#0B3D91"
   group: Assembly
   extensions:
   - ".agc"
@@ -470,6 +471,7 @@ BibTeX:
   language_id: 982188347
 Bison:
   type: programming
+  color: "#6A463F"
   group: Yacc
   tm_scope: source.yacc
   extensions:
@@ -905,6 +907,7 @@ ColdFusion:
   language_id: 64
 ColdFusion CFC:
   type: programming
+  color: "#ed2cd6"
   group: ColdFusion
   ace_mode: coldfusion
   aliases:
@@ -1276,6 +1279,7 @@ ECLiPSe:
   language_id: 94
 EJS:
   type: markup
+  color: "#a91e50"
   group: HTML
   extensions:
   - ".ejs"
@@ -1954,6 +1958,7 @@ Graph Modeling Language:
   language_id: 138
 GraphQL:
   type: data
+  color: "#e10098"
   extensions:
   - ".graphql"
   - ".gql"
@@ -2203,7 +2208,9 @@ Haskell:
   - ".hs-boot"
   - ".hsc"
   interpreters:
+  - runghc
   - runhaskell
+  - runhugs
   tm_scope: source.haskell
   ace_mode: haskell
   codemirror_mode: haskell
@@ -2419,6 +2426,7 @@ J:
   language_id: 172
 JFlex:
   type: programming
+  color: "#DBCA00"
   group: Lex
   extensions:
   - ".flex"
@@ -2815,6 +2823,17 @@ LabVIEW:
   codemirror_mode: xml
   codemirror_mime_type: text/xml
   language_id: 194
+Lark:
+  type: data
+  group: EBNF
+  color: "#0b130f"
+  extensions:
+  - ".lark"
+  tm_scope: source.lark
+  ace_mode: text
+  codemirror_mode: ebnf
+  codemirror_mime_type: text/x-ebnf
+  language_id: 758480799
 Lasso:
   type: programming
   color: "#999999"
@@ -3626,6 +3645,7 @@ Nu:
   language_id: 253
 NumPy:
   type: programming
+  color: "#9C8AF9"
   group: Python
   extensions:
   - ".numpy"
@@ -4624,8 +4644,6 @@ Reason:
   extensions:
   - ".re"
   - ".rei"
-  interpreters:
-  - ocaml
   tm_scope: source.reason
   language_id: 869538413
 Rebol:
@@ -5708,6 +5726,7 @@ TypeScript:
   language_id: 378
 Unified Parallel C:
   type: programming
+  color: "#4e3617"
   group: C
   ace_mode: c_cpp
   codemirror_mode: clike
