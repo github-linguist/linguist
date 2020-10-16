@@ -193,7 +193,9 @@ disambiguations:
   - language: GLSL
     pattern: '^#version\s+[0-9]+\b'
   - language: Gosu
-    pattern: '^uses java\.'
+    pattern: '^uses (java|gw)\.'
+  - language: Genie
+    pattern: '^\[indent=[0-9]+\]'
 - extensions: ['.h']
   rules:
   - language: Objective-C
