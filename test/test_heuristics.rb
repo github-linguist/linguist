@@ -83,7 +83,7 @@ class TestHeuristics < Minitest::Test
   def test_as_by_heuristics
     assert_heuristics({
       "ActionScript" => all_fixtures("ActionScript", "*.as"),
-      "AngelScript" => all_fixtures("AngelScript", "*.as")
+      nil => all_fixtures("AngelScript", "*.as")
     })
   end
 
