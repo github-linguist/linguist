@@ -190,6 +190,11 @@ disambiguations:
   - language: Frege
     pattern: '^\s*(import|module|package|data|type) '
   - language: Text
+- extensions: ['.frag']
+  rules:
+  - language: JavaScript
+    pattern: '^\s*(?:;\s*)?[(!]function\s*\('
+  - language: GLSL
 - extensions: ['.fs']
   rules:
   - language: Forth
