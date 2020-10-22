@@ -387,6 +387,16 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_numbers_by_heuristics
+    1.upto(9) do |n|
+      assert_heuristics({
+        "Roff Manpage" => Dir.glob("#{fixtures_path}/Generic/#{n}/Roff Manpage/*"),
+        "Roff" => Dir.glob("#{fixtures_path}/Generic/#{n}/Roff/*"),
+        nil => Dir.glob("#{fixtures_path}/Generic/#{n}/nil/*")
+      })
+    end
+  end
+
   def test_p_by_heuristics
     assert_heuristics({
       "Gnuplot" => all_fixtures("Gnuplot"),
