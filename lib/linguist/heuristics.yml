@@ -56,8 +56,7 @@ disambiguations:
 - extensions: ['.as']
   rules:
   - language: ActionScript
-    pattern: '^\s*(package\s+[a-z0-9_\.]+|import\s+[a-zA-Z0-9_\.]+;|class\s+[A-Za-z0-9_]+\s+extends\s+[A-Za-z0-9_]+)'
-  - language: AngelScript
+    pattern: '^\s*(?:package(?:\s+[\w.]+)?\s+(?:{|$)|import\s+[\w.*]+\s*;|(?=.*?(?:intrinsic|extends))(intrinsic\s+)?class\s+[\w<>.]+(?:\s+extends\s+[\w<>.]+)?|(?:(?:public|protected|private|static)\s+)*(?:(?:var|const|local)\s+\w+\s*:\s*[\w<>.]+(?:\s*=.*)?\s*;|function\s+\w+\s*\((?:\s*\w+(?:\s*:\s*[\w<>.]+)?,?)*\)(?:\s*:\s*[\w<>.]+)?))'
 - extensions: ['.asc']
   rules:
   - language: Public Key
@@ -193,7 +192,9 @@ disambiguations:
   - language: GLSL
     pattern: '^#version\s+[0-9]+\b'
   - language: Gosu
-    pattern: '^uses java\.'
+    pattern: '^uses (java|gw)\.'
+  - language: Genie
+    pattern: '^\[indent=[0-9]+\]'
 - extensions: ['.h']
   rules:
   - language: Objective-C
@@ -525,7 +526,7 @@ disambiguations:
     # The following RegExp is simply a collapsed and simplified form of the
     # VIM_MODELINE pattern in `./lib/linguist/strategy/modeline.rb`.
   - language: Vim Help File
-    pattern: '(?:(?:\s|^)vi(?:m[<=>]?\d+|m)?|\sex)(?=:(?=\s*set?\s[^\n:]+:)|:(?!\s* set?\s))(?:(?:\s|\s*:\s*)\w*(?:\s*=(?:[^\\\s]|\\.)*)?)*[\s:](?:filetype|ft|syntax)\s*=help(?=\s|:|$)'
+    pattern: '(?:(?:[ \t]|^)vi(?:m[<=>]?\d+|m)?|[ \t]ex)(?=:(?=[ \t]*set?[ \t][^\n:]+:)|:(?![ \t]* set?[ \t]))(?:(?:[ \t]|[ \t]*:[ \t]*)\w*(?:[ \t]*=(?:[^\\[ \t]]|\\.)*)?)*[[ \t]:](?:filetype|ft|syntax)[ \t]*=help(?=[ \t]|:|$)'
     # HACK: This is a contrived use of heuristics needed to address
     # an unusual edge-case. See https://git.io/JULye for discussion.
   - language: Text
