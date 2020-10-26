@@ -38,6 +38,8 @@ var KnownFields = map[string]bool{
 	"foregroundColor":       true,
 	"backgroundColor":       true,
 	"increaseIndentPattern": true,
+	"beginComment":          true,
+	"endComment":            true,
 }
 
 // GrammarsInNonStdPath is a list of grammars known to have their syntax .cson or .json files in non-standard directories.
