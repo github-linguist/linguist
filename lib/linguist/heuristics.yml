@@ -28,22 +28,30 @@
 #
 ---
 disambiguations:
-- extensions: ['.1', '.1in', '.1m', '.1x', '.2', '.3', '.3in', '.3m', '.3p', '.3pm', '.3qt', '.3x', '.4', '.5', '.6', '.7', '.8', '.9', '.man', '.mdoc']
+- extensions: ['.1', '.2', '.3', '.4', '.5', '.6', '.7', '.8', '.9']
   rules:
-  # Document which uses mdoc(7) macros
   - language: Roff Manpage
     and:
-    - pattern: '^[.''][ \t]*Dd +(?:[^"\s]+|"[^"]+")'
-    - pattern: '^[.''][ \t]*Dt +(?:[^"\s]+|"[^"]+") +"?(?:[1-9]|@[^\s@]+@)'
-    - pattern: '^[.''][ \t]*Sh +(?:[^"\s]|"[^"]+")'
-
-  # Document which uses man(7) macros
+    - named_pattern: mdoc-date
+    - named_pattern: mdoc-title
+    - named_pattern: mdoc-heading
   - language: Roff Manpage
     and:
-    - pattern: '^[.''][ \t]*TH +(?:[^"\s]+|"[^"]+") +"?(?:[1-9]|@[^\s@]+@)'
-    - pattern: '^[.''][ \t]*SH +(?:[^"\s]+|"[^"\s]+)'
-
-  # Open-ended fallback to unrendered Roff source
+    - named_pattern: man-title
+    - named_pattern: man-heading
+  - language: Roff
+    pattern: '^\.(?:[A-Za-z]{2}(?:\s|$)|\\")'
+- extensions: ['.1in', '.1m', '.1x', '.3in', '.3m', '.3p', '.3pm', '.3qt', '.3x', '.man', '.mdoc']
+  rules:
+  - language: Roff Manpage
+    and:
+    - named_pattern: mdoc-date
+    - named_pattern: mdoc-title
+    - named_pattern: mdoc-heading
+  - language: Roff Manpage
+    and:
+    - named_pattern: man-title
+    - named_pattern: man-heading
   - language: Roff
 - extensions: ['.al']
   rules:
@@ -577,6 +585,11 @@ named_patterns:
   - '(?im)^\s*move[mp](?:\.[wl])?\b'
   - '(?im)^\s*btst\b'
   - '(?im)^\s*dbra\b'
+  man-heading:  '^[.''][ \t]*SH +(?:[^"\s]+|"[^"\s]+)'
+  man-title:    '^[.''][ \t]*TH +(?:[^"\s]+|"[^"]+") +"?(?:[1-9]|@[^\s@]+@)'
+  mdoc-date:    '^[.''][ \t]*Dd +(?:[^"\s]+|"[^"]+")'
+  mdoc-heading: '^[.''][ \t]*Sh +(?:[^"\s]|"[^"]+")'
+  mdoc-title:   '^[.''][ \t]*Dt +(?:[^"\s]+|"[^"]+") +"?(?:[1-9]|@[^\s@]+@)'
   objectivec: '^\s*(@(interface|class|protocol|property|end|synchronised|selector|implementation)\b|#import\s+.+\.h[">])'
   perl5: '\buse\s+(?:strict\b|v?5\.)'
   perl6: '^\s*(?:use\s+v6\b|\bmodule\b|\b(?:my\s+)?class\b)'
