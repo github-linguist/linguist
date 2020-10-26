@@ -41,7 +41,9 @@ class TestHeuristics < Minitest::Test
     candidates = hash.keys.map { |l| Language[l] }
 
     hash.each do |language, blobs|
-      Array(blobs).each do |blob|
+      blobs = Array(blobs)
+      assert blobs.length >= 1, "Expected at least 1 blob for #{language}"
+      blobs.each do |blob|
         result = Heuristics.call(file_blob(blob, alt_name), candidates)
         if language.nil?
           expected = []
@@ -239,11 +241,15 @@ class TestHeuristics < Minitest::Test
 
   # Candidate languages = ["C++", "Objective-C"]
   def test_h_by_heuristics
-    # Only calling out '.h' filenames as these are the ones causing issues
+    ambiguous = [
+        "#{samples_path}/C++/Field.h",
+        "#{samples_path}/C++/rpc.h",
+    ]
     assert_heuristics({
       "Objective-C" => all_fixtures("Objective-C", "*.h"),
-      "C++" => ["C++/scanner.h", "C++/protocol-buffer.pb.h", "C++/v8.h", "C++/gdsdbreader.h"],
-      "C" => nil
+      "C++" => all_fixtures("C++", "*.h") - ambiguous,
+      # no heuristic for C
+      nil => all_fixtures("C", "*.h")
     })
   end
 
@@ -514,9 +520,9 @@ class TestHeuristics < Minitest::Test
 
   def test_sol_by_heuristics
     assert_heuristics({
-      "Gerber Image" => Dir.glob("#{fixtures_path}/Gerber Image/*"),
-      "Solidity" => Dir.glob("#{fixtures_path}/Solidity/*"),
-      nil => Dir.glob("#{fixtures_path}/Generic/nil/*")
+      "Gerber Image" => Dir.glob("#{fixtures_path}/Generic/sol/Gerber Image/*"),
+      "Solidity" => Dir.glob("#{fixtures_path}/Generic/sol/Solidity/*"),
+      nil => Dir.glob("#{fixtures_path}/Generic/sol/nil/*")
     })
   end
 
