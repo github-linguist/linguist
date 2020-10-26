@@ -3,7 +3,7 @@ module Linguist
     # Extensions considered too common for simple extension lookup.
     # Languages which use such an extension must instead satisfy a
     # heuristic (or some other strategy) to be matched on extension.
-    GENERIC = %w[.sol]
+    GENERIC = %w[.1 .2 .3 .4 .5 .6 .7 .8 .9 .sol]
 
     # Detects language based on extension
     class Extension
