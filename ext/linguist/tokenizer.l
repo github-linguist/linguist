@@ -1,11 +1,36 @@
 %{
 
-#include "linguist.h"
+#include "ruby.h"
 
-#define feed_token(tok, typ) do { \
-    yyextra->token = (tok); \
-    yyextra->type = (typ); \
-  } while (0)
+// Anything longer is unlikely to be useful.
+#define MAX_TOKEN_LEN 32
+
+#define FEED2(s, l) do { \
+    const char* __s = (s); \
+    const size_t __l = (l); \
+    if ((__l) > MAX_TOKEN_LEN) \
+      break; \
+    *yyextra = rb_str_new(__s, __l); \
+  } while(0)
+
+#define FEED1(s) FEED2(s, strlen(s))
+
+#define FEED() FEED2(yytext, yyleng)
+
+#define FEED_SHEBANG(s) do { \
+    const size_t __l = strlen(s); \
+    if (__l > MAX_TOKEN_LEN) \
+      break; \
+    *yyextra = rb_str_new("SHEBANG#!", sizeof("SHEBANG#!") - 1); \
+    rb_str_cat(*yyextra, s, __l); \
+  } while(0)
+
+#define FEED_SGML() do { \
+    if (yyleng > MAX_TOKEN_LEN) \
+      break; \
+    *yyextra = rb_str_new(yytext, yyleng); \
+    rb_str_cat(*yyextra, ">", 1); \
+  } while(0)
 
 #define eat_until_eol() do { \
     int c; \
@@ -32,36 +57,36 @@
 
 %}
 
-%option never-interactive yywrap reentrant nounput warn nodefault header-file="lex.linguist_yy.h" extra-type="struct tokenizer_extra *" prefix="linguist_yy"
+%option never-interactive yywrap reentrant nounput warn nodefault header-file="lex.linguist_yy.h" extra-type="VALUE*" prefix="linguist_yy"
 %x sgml c_comment xml_comment haskell_comment ocaml_comment python_dcomment python_scomment
 
 %%
 
 ^#![ \t]*([[:alnum:]_\/]*\/)?env([ \t]+([^ \t=]*=[^ \t]*))*[ \t]+[[:alpha:]_]+ {
-    const char *off = strrchr(yytext, ' ');
-    if (!off)
-      off = yytext;
-    else
-      ++off;
-    feed_token(strdup(off), SHEBANG_TOKEN);
+  const char *off = strrchr(yytext, ' ');
+  if (!off)
+    off = yytext;
+  else
+    ++off;
+  FEED_SHEBANG(off);
+  eat_until_eol();
+  return 1;
+}
+
+^#![ \t]*[[:alpha:]_\/]+  {
+  const char *off = strrchr(yytext, '/');
+  if (!off)
+    off = yytext;
+  else
+   ++off;
+  if (strcmp(off, "env") == 0) {
+    eat_until_eol();
+  } else {
+    FEED_SHEBANG(off);
     eat_until_eol();
     return 1;
   }
-
-^#![ \t]*[[:alpha:]_\/]+ {
-    const char *off = strrchr(yytext, '/');
-    if (!off)
-      off = yytext;
-    else
-      ++off;
-    if (strcmp(off, "env") == 0) {
-      eat_until_eol();
-    } else {
-      feed_token(strdup(off), SHEBANG_TOKEN);
-      eat_until_eol();
-      return 1;
-    }
-  }
+}
 
 ^[ \t]*(\/\/|--|\#|%|\")" ".*   { /* nothing */ }
 
@@ -88,31 +113,31 @@
     if (strcmp(yytext, "<!--") == 0) {
      BEGIN(xml_comment);
     } else {
-      feed_token(strdup(yytext), SGML_TOKEN);
+      FEED_SGML();
       BEGIN(sgml);
       return 1;
     }
   }
-<sgml>[[:alnum:]_]+=\"            { feed_token(strndup(yytext, strlen(yytext) - 1), REGULAR_TOKEN); eat_until_unescaped('"'); return 1; }
-<sgml>[[:alnum:]_]+='             { feed_token(strndup(yytext, strlen(yytext) - 1), REGULAR_TOKEN); eat_until_unescaped('\''); return 1; }
-<sgml>[[:alnum:]_]+=[[:alnum:]_]* { feed_token(strdup(yytext), REGULAR_TOKEN); *(strchr(yyextra->token, '=') + 1) = 0; return 1; }
-<sgml>[[:alnum:]_]+               { feed_token(strdup(yytext), REGULAR_TOKEN); return 1; }
+<sgml>[[:alnum:]_]+=\"            { FEED2(yytext, yyleng - 1); eat_until_unescaped('"'); return 1; }
+<sgml>[[:alnum:]_]+='             { FEED2(yytext, yyleng - 1); eat_until_unescaped('\''); return 1; }
+<sgml>[[:alnum:]_]+=[[:alnum:]_]* { FEED2(yytext, strchr(yytext, '=') - yytext + 1); return 1; }
+<sgml>[[:alnum:]_]+               { FEED(); return 1; }
 <sgml>\>                          { BEGIN(INITIAL); }
 <sgml>.|\n                        { /* nothing */ }
-;|\{|\}|\(|\)|\[|\]               { feed_token(strdup(yytext), REGULAR_TOKEN); return 1; }
+;|\{|\}|\(|\)|\[|\]               { FEED(); return 1; }
 [[:alnum:]_.@#/*]+                {
     if (strncmp(yytext, "/*", 2) == 0) {
-      if (strlen(yytext) >= 4 && strcmp(yytext + strlen(yytext) - 2, "*/") == 0) {
+      if (yyleng >= 4 && strcmp(yytext + yyleng - 2, "*/") == 0) {
         /* nothing */
       } else {
         BEGIN(c_comment);
       }
     } else {
-      feed_token(strdup(yytext), REGULAR_TOKEN);
+      FEED();
       return 1;
     }
   }
-\<\<?|\+|\-|\*|\/|%|&&?|\|\|?     { feed_token(strdup(yytext), REGULAR_TOKEN); return 1; }
+\<\<?|\+|\-|\*|\/|%|&&?|\|\|?     { FEED(); return 1; }
 .|\n                              { /* nothing */ }
 
 %%

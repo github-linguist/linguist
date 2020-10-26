@@ -446,7 +446,7 @@ void yyfree ( void * , yyscan_t yyscanner );
 #include <unistd.h>
 #endif
 
-#define YY_EXTRA_TYPE struct tokenizer_extra *
+#define YY_EXTRA_TYPE VALUE*
 
 int yylex_init (yyscan_t* scanner);
 
@@ -694,7 +694,7 @@ extern int yylex (yyscan_t yyscanner);
 #undef yyTABLES_NAME
 #endif
 
-#line 118 "tokenizer.l"
+#line 143 "tokenizer.l"
 
 
 #line 701 "lex.linguist_yy.h"
