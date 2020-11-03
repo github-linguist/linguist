@@ -541,9 +541,9 @@ disambiguations:
 - extensions: ['.v']
   rules:
   - language: Coq
-    pattern: '\(\*.*?\*\)|(?:^|\s)(?:Proof|Qed)\.(?:$|\s)|(?:^|\s)Require[ \t]+Import\s'
+    pattern: '(?:^|\s)(?:Proof|Qed)\.(?:$|\s)|(?:^|\s)Require[ \t]+(Import|Export)\s'
   - language: Verilog
-    pattern: '^[ \t]*module\s+[^\s()]+\s+\#?\(|^[ \t]*`(?:ifdef|timescale)\s|^[ \t]*always[ \t]+@'
+    pattern: '^[ \t]*module\s+[^\s()]+\s+\#?\(|^[ \t]*`(?:define|ifdef|ifndef|include|timescale)|^[ \t]*always[ \t]+@|^[ \t]*initial[ \t]+(begin|@)'
   - language: V
     pattern: '\$(?:if|else)[ \t]|^[ \t]*fn\s+[^\s()]+\(.*?\).*?\{|^[ \t]*for\s*\{'
 - extensions: ['.vba']
