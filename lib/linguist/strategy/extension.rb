@@ -25,7 +25,7 @@ module Linguist
 
       # Public: Return true if filename uses a generic extension.
       def self.generic?(filename)
-        self.load()
+        self.load
         @generic.any? { |ext| filename.downcase.end_with? ext }
       end
 
