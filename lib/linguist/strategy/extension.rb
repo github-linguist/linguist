@@ -1,9 +1,7 @@
+require 'yaml'
+
 module Linguist
   module Strategy
-    # Extensions considered too common for simple extension lookup.
-    # Languages which use such an extension must instead satisfy a
-    # heuristic (or some other strategy) to be matched on extension.
-    GENERIC = %w[.1 .2 .3 .4 .5 .6 .7 .8 .9 .sol]
 
     # Detects language based on extension
     class Extension
@@ -27,7 +25,17 @@ module Linguist
 
       # Public: Return true if filename uses a generic extension.
       def self.generic?(filename)
-        GENERIC.any? { |ext| filename.downcase.end_with? ext }
+        self.load
+        @generic.any? { |ext| filename.downcase.end_with? ext }
+      end
+
+      @generic = []
+
+      # Internal: Load the contents of `generic.yml`
+      def self.load()
+        return if @generic.any?
+        data = YAML.load_file(File.expand_path("../../generic.yml", __FILE__))
+        @generic = data['extensions']
       end
     end
   end

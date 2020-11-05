@@ -4,6 +4,7 @@ class TestPedantic < Minitest::Test
   filename = File.expand_path("../../lib/linguist/languages.yml", __FILE__)
   LANGUAGES = YAML.load(File.read(filename))
   GRAMMARS = YAML.load(File.read(File.expand_path("../../grammars.yml", __FILE__)))
+  GENERICS = YAML.load_file(File.expand_path("../../lib/linguist/generic.yml", __FILE__))
   HEURISTICS = YAML.load_file(File.expand_path("../../lib/linguist/heuristics.yml", __FILE__))
 
   def test_language_names_are_sorted
@@ -21,6 +22,10 @@ class TestPedantic < Minitest::Test
     LANGUAGES.each do |name, language|
       assert_sorted language['filenames'] if language['filenames']
     end
+  end
+
+  def test_generics_are_sorted
+    assert_sorted GENERICS.keys
   end
 
   def test_grammars_are_sorted
