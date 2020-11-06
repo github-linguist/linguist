@@ -9,7 +9,7 @@ var GrammarAliases = map[string]string{
 	"source.php":         "text.html.php",
 	"text.plain":         "",
 	"source.asciidoc":    "text.html.asciidoc",
-	"source.perl6":       "source.perl6fe",
+	"source.perl6":       "source.raku",
 	"source.scss":        "source.css.scss",
 	"source.git-config":  "source.gitconfig",
 	"source.smarty":      "text.html.smarty",
