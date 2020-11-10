@@ -182,7 +182,7 @@ If the language stats bar is reporting a language that you don't expect:
    You can also use the [manual overrides](#overrides) feature to correctly classify them in your repository.
 1. If there are no reported issues of this misclassification, [open an issue][new-issue] and include a link to the repository or a sample of the code that is being misclassified.
 
-[search-limits]: https://help.github.com/articles/searching-code/#considerations-for-code-search
+[search-limits]: https://docs.github.com/github/searching-for-information-on-github/searching-code#considerations-for-code-search
 
 Keep in mind that the repository language stats are only [updated when you push changes](#how-linguist-works-on-githubcom), and the results are cached for the lifetime of your repository.
 If you have not made any changes to your repository in a while, you may find pushing another change will correct the stats.
