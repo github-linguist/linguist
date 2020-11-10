@@ -4,7 +4,7 @@ Hi there!
 We're thrilled that you'd like to contribute to this project.
 Your help is essential for keeping it great.
 
-Contributions to this project are [released](https://help.github.com/articles/github-terms-of-service/#6-contributions-under-repository-license) to the public under the [project's open source license](LICENSE).
+Contributions to this project are [released](https://docs.github.com/github/site-policy/github-terms-of-service#6-contributions-under-repository-license) to the public under the [project's open source license](LICENSE).
 
 This project adheres to the [Contributor Covenant Code of Conduct](http://contributor-covenant.org/).
 By participating, you are expected to uphold this code.
@@ -240,4 +240,4 @@ If you are the current maintainer of this gem:
 [new-issue]: https://github.com/github/linguist/issues/new
 [samples]: /samples
 [search-example]: https://github.com/search?utf8=%E2%9C%93&q=extension%3Aboot+NOT+nothack&type=Code&ref=searchresults
-[gpr]: https://help.github.com/en/articles/configuring-rubygems-for-use-with-github-package-registry
+[gpr]: https://docs.github.com/packages/using-github-packages-with-your-projects-ecosystem/configuring-rubygems-for-use-with-github-packages
