@@ -161,28 +161,6 @@ class TestHeuristics < Minitest::Test
     })
   end
 
-  def test_crc_by_heuristics
-    assert_heuristics({
-      "Gerber Image" => all_fixtures("Gerber Image", "*"),
-      nil => all_fixtures("Text", "*"),
-    }, alt_name="test.crc")
-    assert_heuristics({
-      "Gerber Image" => Dir.glob("#{fixtures_path}/Generic/crc/Gerber Image/*"),
-      nil => Dir.glob("#{fixtures_path}/Generic/crc/nil/*"),
-    })
-  end
-
-  def test_crs_by_heuristics
-    assert_heuristics({
-      "Gerber Image" => all_fixtures("Gerber Image", "*"),
-      nil => all_fixtures("Text", "*"),
-    }, alt_name="test.crs")
-    assert_heuristics({
-      "Gerber Image" => Dir.glob("#{fixtures_path}/Generic/crs/Gerber Image/*"),
-      nil => Dir.glob("#{fixtures_path}/Generic/crs/nil/*"),
-    })
-  end
-
   def test_cs_by_heuristics
     assert_heuristics({
       "C#" => all_fixtures("C#", "*.cs"),
