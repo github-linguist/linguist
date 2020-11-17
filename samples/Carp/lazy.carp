@@ -1,0 +1,138 @@
+;; Copyright 2020 Google LLC
+;;
+;; Licensed under the Apache License, Version 2.0 (the "License");
+;; you may not use this file except in compliance with the License.
+;; You may obtain a copy of the License at
+;;
+;;  https://www.apache.org/licenses/LICENSE-2.0
+;;
+;;  Unless required by applicable law or agreed to in writing, software
+;;  distributed under the License is distributed on an "AS IS" BASIS,
+;;  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+;;  See the License for the specific language governing permissions and
+;;  limitations under the License.
+
+(doc Lazy
+  "The Lazy module provides mechanisms for defining lazy computations.")
+(defmodule Lazy
+  (doc Lazy-Computation
+    "The internal representation of a lazy computation.")
+  (private Lazy-Computation)
+  (hidden Lazy-Computation)
+  (deftype (Lazy-Computation a) [evaluated? Bool, value a, thunk (Fn [] a)])
+ 
+  (doc lazy-computation
+    "Initializes a lazy computation from a thunk, `f`.")
+  (private lazy-computation)
+  (hidden lazy-computation)
+  (defn lazy-computation [f]
+    (let [l (Lazy-Computation.init false (zero) f)]
+      (fn [evaluate?] 
+        (if evaluate?
+             (if @(Lazy-Computation.evaluated? &l)
+                 @(Lazy-Computation.value &l)
+                 (do (Lazy-Computation.set-value! &l (~(Lazy-Computation.thunk &l)))
+		     (Lazy-Computation.set-evaluated?! &l true)
+		     @(Lazy-Computation.value &l)))
+            @(Lazy-Computation.value &l)))))
+
+  (doc Suspended
+    "The type of lazy computations.")
+  (deftype (Suspended a) [suspended (Fn [Bool] a)])
+
+  (doc suspend "
+    Suspends a computation, `f`.
+
+    ```
+    (suspend (fn [] (+ 1 2)))
+    ```")
+  (sig suspend (Fn [(Fn [] a)] (Suspended a)))
+  (defn suspend [f]
+    (Lazy.Suspended.init (Lazy.lazy-computation f)))
+
+  (doc force "
+    Forces evaluation of a `Suspended` computation, `s`. 
+
+    After a computation is forced, the resulting value is memoized. Subsequent
+    calls to `force` will yield the memoized value.
+
+    ```
+    (force &(suspend (fn [] (+ 1 2))))
+    => 3
+    ```")
+  (sig force (Fn [(Ref (Suspended a))] a))
+  (defn force [s]
+    (~(Lazy.Suspended.suspended s) true))
+
+  (doc yield "
+    Gets the current memoized value of a lazy computation without evaluating the
+    computation.
+
+    When `yield` is called before evalauating the computation, it returns
+    `zero`.
+
+    ```
+    (yield &(suspend (fn [] (+ 1 2))))
+    => 0
+    ```")
+  (sig yield (Fn [(Ref (Suspended a))] a))
+  (defn yield [s]
+    (~(Lazy.Suspended.suspended s) false))
+
+  (doc = "
+    Returns true if the values of suspended computations are equivalent, without
+    forcing evaluation.
+
+    ```
+    (= &(suspend (fn [] (+ 1 2))) &(suspend (fn [] (+ 1 2))))
+    => true
+    (= (force &(suspend (fn [] (+ 1 2)))) &(suspend (fn [] (+ 1 2))))
+    => false
+    ```")
+  (implements = =)
+  (sig = (Fn [(Ref (Suspended a)) (Ref (Suspended b))] Bool))
+  (defn = [s s*]
+    (= (yield s) (yield s*)))
+
+  (doc force= "
+    Forces the evaluation of two suspended computations and returns true if
+    their values are equivalent
+
+    ```
+    (force= &(suspend (fn [] (+ 1 2))) &(suspend (fn [] (+ 1 2))))
+    => true
+    ```")
+  (sig force= (Fn [(Ref (Suspended a)) (Ref (Suspended b))] Bool))
+  (defn force= [s s*]
+    (= (force s) (force s*)))
+  
+  (doc delay "
+    Delays the application of `f` to `arguments`, returns a suspended
+    computation.
+
+    If `arguments` exceeds the arity of `f`, only the first n arguments 
+    will be passed to f in the resulting form.
+
+    ```
+    (delay inc 1)
+    => (suspend (fn [] (inc 1)))
+    (eval (delay inc 1))
+    => (Suspended fn)
+    ```")
+  (defmacro delay [f :rest arguments]
+    (let [max (take (Introspect.arity (eval f)) arguments)]
+      (list 'Lazy.suspend (list 'fn (array) (cons f max)))))
+
+  (doc lazy "
+    Wraps a form `body`, in a thunk, capturing its environment, `body` in a lazy
+    computation.
+
+    ```
+    (lazy (inc 1))
+    => (suspend (fn [] (inc 1)))
+    (eval (lazy (inc 1)))
+    => (Suspended fn)
+    ```")
+  (defmacro lazy [body]
+    (list 'Lazy.suspend (list 'fn (array) body)))
+)

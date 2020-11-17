@@ -1,0 +1,523 @@
+(deftype URI  [
+  scheme (Maybe String)
+  host (Maybe String)
+  port (Maybe Int)
+  path (Maybe String)
+  query (Maybe String)
+  user (Maybe String)
+  password (Maybe String)
+  fragment (Maybe String)
+  opaque (Maybe String)
+])
+
+(use-all Array Int Maybe Result)
+
+(defmodule URI
+  (doc zero "Creates an empty URI, i.e. one that has only `Nothing` in it.")
+  (implements zero zero)
+  (defn zero []
+    (URI.init (Nothing) (Nothing) (Nothing) (Nothing) (Nothing) (Nothing)
+              (Nothing) (Nothing) (Nothing)))
+
+  (doc default-ports "is a map of all the services that have default ports—that
+we know of—and their port values.")
+  (def default-ports {
+    @"acap" 674,
+    @"afp" 548,
+    @"dict" 2628,
+    @"dns" 53,
+    @"ftp" 21,
+    @"ftps" 990,
+    @"git" 9418,
+    @"gopher" 70,
+    @"http" 80,
+    @"https" 443,
+    @"imap" 143,
+    @"ipp" 631,
+    @"ipps" 631,
+    @"irc" 194,
+    @"ircs" 6697,
+    @"ldap" 389,
+    @"ldaps" 636,
+    @"mms" 1755,
+    @"msrp" 2855,
+    @"mtqp" 1038,
+    @"nfs" 111,
+    @"nntp" 119,
+    @"nntps" 563,
+    @"pop" 110,
+    @"prospero" 1525,
+    @"redis" 6379,
+    @"rsync" 873,
+    @"rtsp" 554,
+    @"rtsps" 322,
+    @"rtspu" 5005,
+    @"scp" 22,
+    @"sftp" 22,
+    @"smb" 445,
+    @"snmp" 161,
+    @"ssh" 22,
+    @"svn" 3690,
+    @"telnet" 23,
+    @"ventrilo" 3784,
+    @"vnc" 5900,
+    @"wais" 210,
+    @"ws" 80,
+    @"wss" 443,
+  })
+
+  (doc default-port "gets the default `port` for the `scheme` of the URI `u`.
+Returns 0 if it’s unknown.")
+  (defn default-port [s]
+    (from (apply s &(fn [s] (Map.get &default-ports &s))) 0))
+
+  (doc default-port? "checks whether the `port` of the URI `u` is the default
+port for its `scheme`.")
+  (defn default-port? [u]
+    (from (apply @(port u) &(fn [p] (= p (default-port @(scheme u))))) false))
+
+  (doc hostname "returns the host part of a URI `u`, unwrapping brackets for
+IPv6 addresses.
+
+```
+(URI.hostname &(URI.parse \"http://[::1]/bar\")) ; => ::1
+(URI.hostname &(URI.parse \"http://[::1]/bar\")) ; => [::1]
+```
+")
+  (defn hostname [u]
+    (apply @(host u)
+      &(fn [h]
+        (if (and (starts-with? &h "[") (ends-with? &h "]"))
+          (slice &h 1 (Int.dec (length &h)))
+          h))))
+
+  (doc full-path "returns the full path of a URI `u`.
+
+```
+(def uri (URI.parse \"http://foo.com/posts?id=30&limit=5#time=1305298413\"))
+(URI.full-path &uri) ; => /posts?id=30&limit=5
+```
+")
+  (defn full-path [u]
+    (let [q (from @(query u) @"")]
+      (concat &[(from @(path u) @"/") (if (String.empty? &q) @"" @"?") q])))
+
+  (doc absolute? "checks whether a URI `u` is absolute.")
+  (defn absolute? [u] (just? (scheme u)))
+  (doc relative? "checks whether a URI `u` is relative.")
+  (defn relative? [u] (nothing? (scheme u)))
+
+  (doc userinfo "returns the user-information component for a URI `u`, which
+contains the provided username and password.
+
+```
+(def uri (URI.parse \"http://admin:password@foo.com\"))
+(URI.userinfo &uri) ; => admin:password
+```
+")
+  (defn userinfo [u]
+    (concat &[
+      (from @(user u) @"")
+      @(if (just? (password u)) ":" "")
+      (from @(password u) @"")
+    ]))
+
+  (doc query-map-from-str "parses the querystring as a `Map` and returns it.
+
+It can fail if the querystring is malformed, and will then return an `Error`.")
+  (defn query-map-from-str [s]
+    (if (= s "")
+      (Success {})
+      (reduce
+        &(fn [a x]
+          (match a
+            (Error err) (Error err)
+            (Success m)
+              (let [splt (split-by x &[\=])]
+                (if (= (Array.length &splt) 2)
+                  (Success (Map.put m &(unsafe-first &splt) (unsafe-nth &splt 1)))
+                  (Error (fmt "Query parameter %s malformed." x))))))
+        (Success {})
+        &(split-by s &[\&]))))
+
+  (doc query-map "parses the querystring as a `Map` and returns it.
+
+It can fail if the querystring is malformed, and will then return an `Error`.")
+  (defn query-map [u]
+    (match @(query u)
+      (Nothing) (Success {})
+      (Just s) (query-map-from-str &s)))
+
+  (doc str "prints the URL `u` as idempotently as possible, i.e. as the parsed
+string.
+
+```
+(def uri (URI.parse \"http://admin:password@foo.com\"))
+(URI.str &uri) ; => \"http://admin:password@foo.com\"
+```
+")
+  (defn str [u]
+    (let [s @(scheme u)
+          o @(opaque u)
+          usr @(user u)
+          q @(query u)
+          h @(host u)
+          p @(port u)
+          pth @(path u)
+          f @(fragment u)
+         ]
+      (concat &[
+        (from (apply s &(fn [s] (concat &[s @":" @(if (just? &o) "" "//")])))
+              @""
+        )
+        (from o @"")
+        (from (apply usr &(fn [usr] (concat &[(userinfo u) @"@"]))) @"")
+        (from h @"")
+        (from (apply p &(fn [p] (if (default-port? u)
+                                  @""
+                                  (concat &[@":" (str p)]))))
+              @""
+        )
+        @"/"
+        (from pth @"")
+        (from (apply q &(fn [q] (concat &[@"?" q]))) @"")
+        (from (apply f &(fn [f] (concat &[@"#" f]))) @"")
+      ])
+    )
+  )
+
+  (doc = "is defined as the equality of all members of URIs `u1` and `u2`.
+
+N.B.: We’re being cute by using string equality (which gets rid of differences
+between explicit/implicit port assignments). That might not always be
+desirable—and can be fairly slow.")
+  (sig = (Fn [(Ref URI) (Ref URI)] Bool))
+  (implements = =)
+  (defn = [u1 u2] (= (str (the (Ref URI) u1)) (str u2)))
+
+  ; the escape mechanisms are inspired by janet’s uri library, written by
+  ; Andrew Chambers.
+
+  (private decode-nibble)
+  (hidden decode-nibble)
+  (defn decode-nibble [c]
+    (let [b (to-int c)]
+      (cond
+        (and (>= c \0) (<= c \9)) (- b 48)
+        (and (>= c \a) (<= c \f)) (+ 10 (- b 97))
+        (and (>= c \A) (<= c \F)) (+ 10 (- b 65))
+        0)))
+
+  (private unreserved?)
+  (hidden unreserved?)
+  (defn unreserved? [c]
+    (or (and (>= c \a) (<= c \z))
+        (or (and (>= c \A) (<= c \Z))
+            (or (and (>= c \0) (<= c \9))
+                (or (= c \-) (or (= c \_) (or (= c \.) (= c \~))))))))
+
+  (private chartab)
+  (hidden chartab)
+  (def chartab [\0 \1 \2 \3 \4 \5 \6 \7 \8 \9 \a \b \c \d \e \f])
+
+  (doc escape "URI escapes the string `s`.")
+  (defn escape [s]
+    (let-do [a (Array.repeat (* (length s) 3) &zero)
+             cs (chars s)
+             idx 0]
+      (for [i 0 (Array.length &cs)]
+        (let [c (Array.unsafe-nth &cs i)]
+          (if (unreserved? @c)
+            (do
+              (Array.aset! &a idx @c)
+              (set! idx (inc idx)))
+            (let-do [i (to-int @c)]
+              (Array.aset! &a idx \%)
+              (set! idx (inc idx))
+              (Array.aset! &a idx
+                            @(Array.unsafe-nth &chartab (bit-shift-right (bit-and i 240) 4)))
+              (set! idx (inc idx))
+              (Array.aset! &a idx @(Array.unsafe-nth &chartab (bit-and i 15)))
+              (set! idx (inc idx))))))
+      (from-chars &a)))
+
+  (doc escape "URI unescapes the string `s`.")
+  (defn unescape [s]
+    (let-do [a (Array.repeat (* (length s) 3) &zero)
+             n 0
+             cs (chars s)]
+      (for [i 0 (Array.length &cs)]
+        (let-do [c @(Array.unsafe-nth &cs i)]
+          (if (= \% c)
+            (do
+              (Array.aset! &a n
+                     (from-int
+                       (bit-or
+                         (bit-shift-left (decode-nibble @(Array.unsafe-nth &cs (inc i))) 4)
+                         (decode-nibble @(Array.unsafe-nth &cs (+ i 2))))))
+              (set! i (+ i 2)))
+            (Array.aset! &a n c))
+          (set! n (inc n))))
+      (from-chars &a)))
+)
+
+(deftype URIParser [
+  source String
+  offset Int
+])
+
+(defmodule URIParser
+  (use-all Char URI)
+
+  (defn from-string [s] (init @s 0))
+  (implements from-string URIParser.from-string)
+
+  (defn c [p] (char-at (source p) @(offset p)))
+  (defn nxt [p] (char-at (source p) (inc @(offset p))))
+  (defn alpha? [p] (Char.alpha? (c p)))
+  (defn num? [p] (Char.num? (c p)))
+  (defn end? [p] (= (length (source p)) @(offset p)))
+  (defn end-of-host? [p] (or* (= (c p) \/) (= (c p) \?) (= (c p) \#)))
+  (defn adv [p] (update-offset @p &inc))
+  (defn bck [p] (update-offset @p &dec))
+  (defn from [p frm] (slice (source p) frm @(offset p)))
+  (defn to [p t] (slice (source p) @(offset p) t))
+
+  (defn parse-authority [p res] res)
+  (defn parse-path [p res] res)
+
+  (defn parse-fragment [po res]
+    (let-do [p (adv &po)
+             pref &p
+             st @(offset &p)]
+      (while true
+        (cond
+          (end? &p)
+            (do
+              (set! res (map res &(fn [res]
+                (set-fragment res (Just (from pref st))))))
+              (break))
+          (set! p (adv &p))))
+      res))
+
+  (defn parse-query [po res]
+    (let-do [p (adv &po)
+             pref &p
+             st @(offset &p)]
+      (while true
+        (cond
+          (end? &p)
+            (do
+              (set! res (map res &(fn [res]
+                (set-query res (Just (from pref st))))))
+              (break))
+          (= (c &p) \#)
+              (do
+                (set! res (parse-fragment @pref
+                  (map res &(fn [res] (set-query res (Just (from pref st)))))))
+                (break))
+          (set! p (adv &p))))
+      res))
+
+  (defn parse-path [p res]
+    (let-do [st @(offset &p)
+             pref &p]
+      (while true
+        (if (end? &p)
+          (do
+            (set! res (map res &(fn [res] (set-path res (Just (from pref st))))))
+            (break))
+          (case (c &p)
+            \?
+              (do
+                (set! res (parse-query @&p
+                  (map res &(fn [res] (set-path res (Just (from pref st)))))))
+                (break))
+            \#
+              (do
+                (set! res (parse-fragment @&p
+                  (map res &(fn [res] (set-path res (Just (from pref st)))))))
+                (break))
+            (set! p (adv &p)))))
+      res))
+
+  (defn parse-relative-slash [p res]
+    (if (end? &p)
+      res
+      (if (= (nxt &p) \/)
+        (parse-authority (adv &p) res)
+        (parse-path (adv &p) res))))
+
+  (defn parse-relative [p res]
+    (if (end? &p)
+      res
+      (case (c &p)
+        \/ (parse-relative-slash p res)
+        \? (parse-query p res)
+        \# (parse-fragment p res)
+        (parse-path p res))))
+
+  (defn parse-port [p res]
+    (let-do [st @(offset &p)
+             pref &p]
+      (while true
+        (cond
+          (num? &p)
+            (set! p (adv &p))
+          (end-of-host? &p)
+            (do
+              (set! res (parse-path (adv &p)
+                (map res &(fn [res] (set-port res (Int.from-string &(from pref st)))))))
+              (break))
+          (do
+            (set! res (Error
+              (fmt "Invalid URI: bad port at character %d" @(offset &p))))
+            (break))))
+      res))
+
+  (defn parse-host [p res]
+    (if (= (c &p) \/)
+      (parse-path p res)
+      (let-do [bracket-flag false
+               st @(offset &p)
+               pref &p]
+        (while true
+          (cond
+            (and (= (c &p) \:) (not bracket-flag))
+              (do
+                (set! res (parse-port (adv &p)
+                  (map res &(fn [res] (set-host res (Just (from pref st)))))))
+                (break))
+            (end-of-host? &p)
+              (do
+                (set! res (parse-path (adv &p)
+                  (map res &(fn [res] (set-host res (Just (from pref st)))))))
+                (break))
+            (do
+              (when (= (c &p) \[) (set! bracket-flag true))
+              (when (= (c &p) \]) (set! bracket-flag false))
+              (set! p (adv &p)))))
+        res)))
+
+  (defn parse-userinfo [p res]
+    (let-do [pw-flag false
+             st @(offset &p)
+             pref &p]
+      (while true
+        (cond
+          (= (c &p) \@)
+            (do
+              (set! res (parse-host (adv &p)
+                (map res &(fn [res]
+                  (if pw-flag
+                    (set-password res (Just (from pref st)))
+                    (set-user res (Just (from pref st))))))))
+              (break))
+          (= (c &p) \:)
+            (do
+              (set! res (map res &(fn [res] (set-user res (Just (from pref st))))))
+              (set! pw-flag true)
+              (set! p (adv &p))
+              (set! st @(offset &p)))
+          (set! p (adv &p))))
+      res))
+
+  (defn parse-authority [po res]
+    (let-do [p (adv &po)
+             st @(offset &p)]
+      (while true
+        (cond
+          (= (c &p) \@)
+            (do
+              (set! res (parse-userinfo (set-offset @&p st) res))
+              (break))
+          (end-of-host? &p)
+            (do
+              (set! res (parse-host (set-offset @&p st) res))
+              (break))
+          (set! p (adv &p))))
+      res))
+
+  (defn parse-path-or-authority [p res]
+    (if (= (c &p) \/)
+      (parse-authority p res)
+      (parse-path (bck &p) res)))
+
+  (defn parse-no-scheme [p res]
+    (if (= (c &p) \#)
+      (parse-fragment p res)
+      (parse-relative p res)))
+
+  (defn parse-scheme [p res]
+    (let-do [st @(offset &p)
+             pref &p]
+      (while true
+        (cond
+          (or* (alpha? &p) (num? &p) (= (c &p) \-) (= (c &p) \.) (= (c &p) \+))
+            (set! p (adv &p))
+          (= (c &p) \:)
+            (do
+              (set! res (map res &(fn [res] (set-scheme res (Just (from pref st))))))
+              (if (= (nxt &p) \/)
+                (do
+                  (set! res
+                        (parse-path-or-authority
+                          (update-offset @&p &(fn [x] (+ x 2))) res))
+                  (break))
+                (do
+                  (set! res (map res &(fn [res] (set-opaque res
+                      (Just (from pref (dec (length (source pref)))))))))
+                  (break))))
+          (do
+            (set! res (parse-no-scheme (set-offset @&p 0) res))
+            (break))))
+      res))
+
+  (defn parse [p]
+    (let [res (Success (zero))]
+      (if (alpha? &p)
+        (parse-scheme p res)
+        (parse-no-scheme p res))))
+)
+
+(doc URI "is a simple `URI` datatype and parser for Carp.
+
+## Installation
+
+```
+(load \"git@github.com:carpentry-org/uri@0.0.9\")
+```
+
+## Usage
+
+To get started, you’ll most probably want to parse a `URI` from a string. To do
+so, you use `URI.parse`. This function will return a `URI` datatype for you to
+work with, or an error type if the URI string was invalid.
+
+If you havea a URI value the simplest operation is probably converting the URI
+back to a string using the `str` interface, which should be idempotent—i.e.
+you’ll get the original URI back.
+
+You can also ask the `URI` for its properties, like the scheme, the port, or
+the URI parameters.
+
+## Acknowledgements
+
+This datatype and parser was heavily inspired by the one in [the Crystal
+standard
+library](https://github.com/crystal-lang/crystal/blob/master/src/uri.cr).
+I cannot thank the people who worked on it enough; they saved me from going
+through a lot of pain and suffering!
+
+Similarly, [Janet’s URI library](https://github.com/andrewchambers/janet-uri/)
+inspired the escaping and unescaping mechanisms.")
+(defmodule URI
+  (doc parse "Parses a URI from a string `s`.")
+  (defn parse [s]
+    (URIParser.parse (URIParser.from-string s)))
+)
+
+(defmodule URICopy
+  (defn = [u1 u2]
+    (URI.= &u1 &u2))
+)
