@@ -51,6 +51,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Boo:** [Shammah/boo-sublime](https://github.com/Shammah/boo-sublime)
 - **Brainfuck:** [Drako/SublimeBrainfuck](https://github.com/Drako/SublimeBrainfuck)
 - **Brightscript:** [cmink/BrightScript.tmbundle](https://github.com/cmink/BrightScript.tmbundle)
+- **Browserslist:** [browserslist/browserslist-vscode](https://github.com/browserslist/browserslist-vscode)
 - **C:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **C#:** [atom/language-csharp](https://github.com/atom/language-csharp)
 - **C++:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
