@@ -231,7 +231,7 @@ disambiguations:
 - extensions: ['.inc']
   rules:
   - language: FreeBasic
-    pattern: '^\s*#(define|endif|endmacro|if|ifdef|ifndef|include|lang)\s'
+    pattern: '^[ \t]*#(?:define|endif|endmacro|ifn?def|if|include|lang)\s'
   - language: Motorola 68K Assembly
     named_pattern: m68k
   - language: PHP
