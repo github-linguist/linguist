@@ -81,7 +81,7 @@ AGS Script:
   codemirror_mode: clike
   codemirror_mime_type: text/x-c++src
   language_id: 2
-AL Code:
+AL:
   type: programming
   color: "#3AA2B5"
   extensions:
@@ -303,6 +303,7 @@ Apex:
   language_id: 17
 Apollo Guidance Computer:
   type: programming
+  color: "#0B3D91"
   group: Assembly
   extensions:
   - ".agc"
@@ -470,6 +471,7 @@ BibTeX:
   language_id: 982188347
 Bison:
   type: programming
+  color: "#6A463F"
   group: Yacc
   tm_scope: source.yacc
   extensions:
@@ -548,6 +550,15 @@ Brightscript:
   tm_scope: source.brightscript
   ace_mode: text
   language_id: 39
+Browserslist:
+  type: data
+  color: "#ffd539"
+  filenames:
+  - ".browserslistrc"
+  - browserslist
+  tm_scope: text.browserslist
+  ace_mode: text
+  language_id: 153503348
 C:
   type: programming
   color: "#555555"
@@ -905,6 +916,7 @@ ColdFusion:
   language_id: 64
 ColdFusion CFC:
   type: programming
+  color: "#ed2cd6"
   group: ColdFusion
   ace_mode: coldfusion
   aliases:
@@ -1276,6 +1288,7 @@ ECLiPSe:
   language_id: 94
 EJS:
   type: markup
+  color: "#a91e50"
   group: HTML
   extensions:
   - ".ejs"
@@ -1967,6 +1980,7 @@ Graph Modeling Language:
   language_id: 138
 GraphQL:
   type: data
+  color: "#e10098"
   extensions:
   - ".graphql"
   - ".gql"
@@ -2030,6 +2044,7 @@ HCL:
   - ".tfvars"
   - ".workflow"
   aliases:
+  - HashiCorp Configuration Language
   - terraform
   ace_mode: ruby
   codemirror_mode: ruby
@@ -2103,8 +2118,10 @@ HTML+EEX:
   group: HTML
   aliases:
   - eex
+  - leex
   extensions:
   - ".eex"
+  - ".html.leex"
   ace_mode: text
   codemirror_mode: htmlmixed
   codemirror_mime_type: text/html
@@ -2216,7 +2233,9 @@ Haskell:
   - ".hs-boot"
   - ".hsc"
   interpreters:
+  - runghc
   - runhaskell
+  - runhugs
   tm_scope: source.haskell
   ace_mode: haskell
   codemirror_mode: haskell
@@ -2432,6 +2451,7 @@ J:
   language_id: 172
 JFlex:
   type: programming
+  color: "#DBCA00"
   group: Lex
   extensions:
   - ".flex"
@@ -2502,6 +2522,7 @@ JSON with Comments:
   - ".jscsrc"
   - ".jshintrc"
   - ".jslintrc"
+  - devcontainer.json
   - jsconfig.json
   - language-configuration.json
   - tsconfig.json
@@ -2823,11 +2844,23 @@ LabVIEW:
   type: programming
   extensions:
   - ".lvproj"
+  - ".lvlib"
   tm_scope: text.xml
   ace_mode: xml
   codemirror_mode: xml
   codemirror_mime_type: text/xml
   language_id: 194
+Lark:
+  type: data
+  group: EBNF
+  color: "#0b130f"
+  extensions:
+  - ".lark"
+  tm_scope: source.lark
+  ace_mode: text
+  codemirror_mode: ebnf
+  codemirror_mime_type: text/x-ebnf
+  language_id: 758480799
 Lasso:
   type: programming
   color: "#999999"
@@ -3496,6 +3529,16 @@ NSIS:
   codemirror_mode: nsis
   codemirror_mime_type: text/x-nsis
   language_id: 242
+NWScript:
+  type: programming
+  color: "#111522"
+  extensions:
+  - ".nss"
+  tm_scope: source.c.nwscript
+  ace_mode: c_cpp
+  codemirror_mode: clike
+  codemirror_mime_type: text/x-csrc
+  language_id: 731233819
 Nearley:
   type: programming
   ace_mode: text
@@ -3639,6 +3682,7 @@ Nu:
   language_id: 253
 NumPy:
   type: programming
+  color: "#9C8AF9"
   group: Python
   extensions:
   - ".numpy"
@@ -3829,6 +3873,7 @@ OpenStep Property List:
   type: data
   extensions:
   - ".plist"
+  - ".glyphs"
   tm_scope: source.plist
   ace_mode: text
   language_id: 598917541
@@ -4142,7 +4187,7 @@ Pod:
 Pod 6:
   type: prose
   ace_mode: perl
-  tm_scope: source.perl6fe
+  tm_scope: source.raku
   wrap: true
   extensions:
   - ".pod"
@@ -4594,7 +4639,7 @@ Raku:
   aliases:
   - perl6
   - perl-6
-  tm_scope: source.perl6fe
+  tm_scope: source.raku
   ace_mode: perl
   codemirror_mode: perl
   codemirror_mime_type: text/x-perl
@@ -4616,6 +4661,18 @@ Raw token data:
   tm_scope: none
   ace_mode: text
   language_id: 318
+ReScript:
+  type: programming
+  color: "#ed5051"
+  ace_mode: rust
+  codemirror_mode: rust
+  codemirror_mime_type: text/x-rustsrc
+  extensions:
+  - ".res"
+  interpreters:
+  - ocaml
+  tm_scope: source.rescript
+  language_id: 501875647
 Readline Config:
   type: data
   group: INI
@@ -4637,8 +4694,6 @@ Reason:
   extensions:
   - ".re"
   - ".rei"
-  interpreters:
-  - ocaml
   tm_scope: source.reason
   language_id: 869538413
 Rebol:
@@ -5634,6 +5689,7 @@ Text:
   - README.1ST
   - README.me
   - README.mysql
+  - README.nss
   - click.me
   - delete.me
   - go.mod
@@ -5721,6 +5777,7 @@ TypeScript:
   language_id: 378
 Unified Parallel C:
   type: programming
+  color: "#4e3617"
   group: C
   ace_mode: c_cpp
   codemirror_mode: clike
@@ -6165,6 +6222,7 @@ XML:
   - ".psc1"
   - ".pt"
   - ".rdf"
+  - ".res"
   - ".resx"
   - ".rss"
   - ".sch"

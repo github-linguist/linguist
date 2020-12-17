@@ -28,27 +28,35 @@
 #
 ---
 disambiguations:
-- extensions: ['.1', '.1in', '.1m', '.1x', '.2', '.3', '.3in', '.3m', '.3p', '.3pm', '.3qt', '.3x', '.4', '.5', '.6', '.7', '.8', '.9', '.man', '.mdoc']
+- extensions: ['.1', '.2', '.3', '.4', '.5', '.6', '.7', '.8', '.9']
   rules:
-  # Document which uses mdoc(7) macros
   - language: Roff Manpage
     and:
-    - pattern: '^[.''][ \t]*Dd +(?:[^"\s]+|"[^"]+")'
-    - pattern: '^[.''][ \t]*Dt +(?:[^"\s]+|"[^"]+") +"?(?:[1-9]|@[^\s@]+@)'
-    - pattern: '^[.''][ \t]*Sh +(?:[^"\s]|"[^"]+")'
-
-  # Document which uses man(7) macros
+    - named_pattern: mdoc-date
+    - named_pattern: mdoc-title
+    - named_pattern: mdoc-heading
   - language: Roff Manpage
     and:
-    - pattern: '^[.''][ \t]*TH +(?:[^"\s]+|"[^"]+") +"?(?:[1-9]|@[^\s@]+@)'
-    - pattern: '^[.''][ \t]*SH +(?:[^"\s]+|"[^"\s]+)'
-
-  # Open-ended fallback to unrendered Roff source
+    - named_pattern: man-title
+    - named_pattern: man-heading
+  - language: Roff
+    pattern: '^\.(?:[A-Za-z]{2}(?:\s|$)|\\")'
+- extensions: ['.1in', '.1m', '.1x', '.3in', '.3m', '.3p', '.3pm', '.3qt', '.3x', '.man', '.mdoc']
+  rules:
+  - language: Roff Manpage
+    and:
+    - named_pattern: mdoc-date
+    - named_pattern: mdoc-title
+    - named_pattern: mdoc-heading
+  - language: Roff Manpage
+    and:
+    - named_pattern: man-title
+    - named_pattern: man-heading
   - language: Roff
 - extensions: ['.al']
   rules:
-  # AL Code pattern source from https://github.com/microsoft/AL/blob/master/grammar/alsyntax.tmlanguage - keyword.other.applicationobject.al
-  - language: AL Code
+  # AL pattern source from https://github.com/microsoft/AL/blob/master/grammar/alsyntax.tmlanguage - keyword.other.applicationobject.al
+  - language: AL
     and:
     - pattern: '\b(?i:(CODEUNIT|PAGE|PAGEEXTENSION|PAGECUSTOMIZATION|DOTNET|ENUM|ENUMEXTENSION|VALUE|QUERY|REPORT|TABLE|TABLEEXTENSION|XMLPORT|PROFILE|CONTROLADDIN))\b'
   # Open-ended fallback to Perl AutoLoader
@@ -56,8 +64,7 @@ disambiguations:
 - extensions: ['.as']
   rules:
   - language: ActionScript
-    pattern: '^\s*(package\s+[a-z0-9_\.]+|import\s+[a-zA-Z0-9_\.]+;|class\s+[A-Za-z0-9_]+\s+extends\s+[A-Za-z0-9_]+)'
-  - language: AngelScript
+    pattern: '^\s*(?:package(?:\s+[\w.]+)?\s+(?:{|$)|import\s+[\w.*]+\s*;|(?=.*?(?:intrinsic|extends))(intrinsic\s+)?class\s+[\w<>.]+(?:\s+extends\s+[\w<>.]+)?|(?:(?:public|protected|private|static)\s+)*(?:(?:var|const|local)\s+\w+\s*:\s*[\w<>.]+(?:\s*=.*)?\s*;|function\s+\w+\s*\((?:\s*\w+\s*:\s*[\w<>.]+\s*(,\s*\w+\s*:\s*[\w<>.]+\s*)*)?\)))'
 - extensions: ['.asc']
   rules:
   - language: Public Key
@@ -201,7 +208,9 @@ disambiguations:
   - language: GLSL
     pattern: '^#version\s+[0-9]+\b'
   - language: Gosu
-    pattern: '^uses java\.'
+    pattern: '^uses (java|gw)\.'
+  - language: Genie
+    pattern: '^\[indent=[0-9]+\]'
 - extensions: ['.h']
   rules:
   - language: Objective-C
@@ -439,6 +448,12 @@ disambiguations:
     pattern:
     - '^\s*#(?:(?:if|ifdef|define|pragma)\s+\w|\s*include\s+<[^>]+>)'
     - '^\s*template\s*<'
+- extensions: ['.res']
+  rules:
+  - language: ReScript
+    pattern: 
+    - '^\s*(let|module|type)\s+\w*\s+=\s+'
+    - '^\s*(?:include|open)\s+\w+\s*$'
 - extensions: ['.rno']
   rules:
   - language: RUNOFF
@@ -496,7 +511,7 @@ disambiguations:
   - language: Perl
     named_pattern: perl5
   - language: Raku
-    named_pattern: perl6
+    pattern: '^\s*(?:use\s+v6\b|\bmodule\b|\bmy\s+class\b)'
   - language: Turing
     pattern: '^\s*%[ \t]+|^\s*var\s+\w+(\s*:\s*\w+)?\s*:=\s*\w+'
 - extensions: ['.toc']
@@ -527,16 +542,16 @@ disambiguations:
     # The following RegExp is simply a collapsed and simplified form of the
     # VIM_MODELINE pattern in `./lib/linguist/strategy/modeline.rb`.
   - language: Vim Help File
-    pattern: '(?:(?:\s|^)vi(?:m[<=>]?\d+|m)?|\sex)(?=:(?=\s*set?\s[^\n:]+:)|:(?!\s* set?\s))(?:(?:\s|\s*:\s*)\w*(?:\s*=(?:[^\\\s]|\\.)*)?)*[\s:](?:filetype|ft|syntax)\s*=help(?=\s|:|$)'
+    pattern: '(?:(?:[ \t]|^)vi(?:m[<=>]?\d+|m)?|[ \t]ex)(?=:(?=[ \t]*set?[ \t][^\n:]+:)|:(?![ \t]* set?[ \t]))(?:(?:[ \t]|[ \t]*:[ \t]*)\w*(?:[ \t]*=(?:[^\\[ \t]]|\\.)*)?)*[[ \t]:](?:filetype|ft|syntax)[ \t]*=help(?=[ \t]|:|$)'
     # HACK: This is a contrived use of heuristics needed to address
     # an unusual edge-case. See https://git.io/JULye for discussion.
   - language: Text
 - extensions: ['.v']
   rules:
   - language: Coq
-    pattern: '\(\*.*?\*\)|(?:^|\s)(?:Proof|Qed)\.(?:$|\s)|(?:^|\s)Require[ \t]+Import\s'
+    pattern: '(?:^|\s)(?:Proof|Qed)\.(?:$|\s)|(?:^|\s)Require[ \t]+(Import|Export)\s'
   - language: Verilog
-    pattern: '^[ \t]*module\s+[^\s()]+\s+\#?\(|^[ \t]*`(?:ifdef|timescale)\s|^[ \t]*always[ \t]+@'
+    pattern: '^[ \t]*module\s+[^\s()]+\s+\#?\(|^[ \t]*`(?:define|ifdef|ifndef|include|timescale)|^[ \t]*always[ \t]+@|^[ \t]*initial[ \t]+(begin|@)'
   - language: V
     pattern: '\$(?:if|else)[ \t]|^[ \t]*fn\s+[^\s()]+\(.*?\).*?\{|^[ \t]*for\s*\{'
 - extensions: ['.vba']
@@ -584,6 +599,11 @@ named_patterns:
   - '(?im)^\s*move[mp](?:\.[wl])?\b'
   - '(?im)^\s*btst\b'
   - '(?im)^\s*dbra\b'
+  man-heading:  '^[.''][ \t]*SH +(?:[^"\s]+|"[^"\s]+)'
+  man-title:    '^[.''][ \t]*TH +(?:[^"\s]+|"[^"]+") +"?(?:[1-9]|@[^\s@]+@)'
+  mdoc-date:    '^[.''][ \t]*Dd +(?:[^"\s]+|"[^"]+")'
+  mdoc-heading: '^[.''][ \t]*Sh +(?:[^"\s]|"[^"]+")'
+  mdoc-title:   '^[.''][ \t]*Dt +(?:[^"\s]+|"[^"]+") +"?(?:[1-9]|@[^\s@]+@)'
   objectivec: '^\s*(@(interface|class|protocol|property|end|synchronised|selector|implementation)\b|#import\s+.+\.h[">])'
   perl5: '\buse\s+(?:strict\b|v?5\.)'
   perl6: '^\s*(?:use\s+v6\b|\bmodule\b|\b(?:my\s+)?class\b)'
