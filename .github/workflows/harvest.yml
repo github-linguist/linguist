@@ -1,0 +1,27 @@
+name: Harvest
+
+on:
+  workflow_dispatch:
+  schedule:
+    - 0 4 * * *
+
+jobs:
+  harvest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: pjquirk/harvest-action@main
+        name: Harvest extension candidates
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          candidatesFile: ./candidates.json
+          outputFile: ./extensions.md
+
+      - uses: EndBug/add-and-commit@2d77fa2c79bc4ea3abc933ecf12c270a5dc536b2
+        with:
+          message: "Updating extensions table"
+          add: ./extensions.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
