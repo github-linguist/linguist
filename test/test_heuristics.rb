@@ -334,6 +334,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_m4_by_heuristics
+    assert_heuristics(
+      "M4" => all_fixtures("M4", "*.m4"),
+      "M4Sugar" => all_fixtures("M4Sugar", "*.m4")
+    )
+  end
+
   def test_mask_by_heuristics
     assert_heuristics({
       "Unity3D Asset" => all_fixtures("Unity3D Asset", "*.mask")

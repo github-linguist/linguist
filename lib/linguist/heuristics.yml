@@ -284,6 +284,13 @@ disambiguations:
     pattern: '^\s*%'
   - language: Limbo
     pattern: '^\w+\s*:\s*module\s*{'
+- extensions: ['.m4']
+  rules:
+  - language: M4Sugar
+    pattern:
+    - 'AC_DEFUN|AC_PREREQ|AC_INIT'
+    - '^_?m4_'
+  - language: 'M4'
 - extensions: ['.mask']
   rules:
   - language: Unity3d Asset
