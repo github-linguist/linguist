@@ -81,7 +81,7 @@ class TestHeuristics < Minitest::Test
       "Perl" => all_fixtures("Perl", "*.al")
     })
   end
-  
+
   def test_as_by_heuristics
     assert_heuristics({
       "ActionScript" => all_fixtures("ActionScript", "*.as"),
@@ -147,6 +147,17 @@ class TestHeuristics < Minitest::Test
       "ObjectScript" => all_fixtures("ObjectScript", "*.cls"),
       # Missing heuristics
       nil => all_fixtures("Apex", "*.cls") + all_fixtures("OpenEdge ABL", "*.cls") + all_fixtures("VBA", "*.cls"),
+    })
+  end
+
+  def test_cmp_by_heuristics
+    assert_heuristics({
+      "Gerber Image" => all_fixtures("Gerber Image", "*"),
+      nil => all_fixtures("Text", "*"),
+    }, alt_name="test.cmp")
+    assert_heuristics({
+      "Gerber Image" => Dir.glob("#{fixtures_path}/Generic/cmp/Gerber Image/*"),
+      nil => Dir.glob("#{fixtures_path}/Generic/cmp/nil/*"),
     })
   end
 
@@ -382,15 +393,13 @@ class TestHeuristics < Minitest::Test
   end
 
   def test_ncl_by_heuristics
-    ambiguous = [
-      "#{samples_path}/Text/LIDARLite.ncl"
-    ]
     assert_heuristics({
-      "XML" => all_fixtures("XML", "*.ncl") - ambiguous,
-      "Text" => all_fixtures("Text", "*.ncl") - ambiguous,
+      "Gerber Image" => all_fixtures("Gerber Image", "*"),
+      "XML" => all_fixtures("XML", "*.ncl"),
+      "Text" => all_fixtures("Text", "*.ncl"),
       # Missing heuristic for NCL
-      nil => all_fixtures("NCL", "*.ncl") + ambiguous
-    })
+      nil => all_fixtures("NCL", "*.ncl")
+    }, alt_name="test.ncl")
   end
 
   def test_nl_by_heuristics
