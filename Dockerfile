@@ -1,4 +1,4 @@
-FROM ruby:alpine
+FROM ruby:2-alpine
 
 RUN apk --update add --virtual build_deps \
     build-base \

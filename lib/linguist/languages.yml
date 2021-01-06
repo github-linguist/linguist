@@ -971,9 +971,6 @@ Component Pascal:
   - ".cp"
   - ".cps"
   tm_scope: source.pascal
-  aliases:
-  - delphi
-  - objectpascal
   ace_mode: pascal
   codemirror_mode: pascal
   codemirror_mime_type: text/x-pascal
@@ -1800,6 +1797,7 @@ Gerber Image:
   - rs-274x
   extensions:
   - ".gbr"
+  - ".cmp"
   - ".gbl"
   - ".gbo"
   - ".gbp"
@@ -1812,6 +1810,7 @@ Gerber Image:
   - ".gto"
   - ".gtp"
   - ".gts"
+  - ".ncl"
   - ".sol"
   interpreters:
   - gerbv
@@ -4041,6 +4040,9 @@ Parrot Internal Representation:
 Pascal:
   type: programming
   color: "#E3F171"
+  aliases:
+  - delphi
+  - objectpascal
   extensions:
   - ".pas"
   - ".dfm"
