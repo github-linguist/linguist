@@ -492,7 +492,6 @@ class TestHeuristics < Minitest::Test
     })
   end
 
-
   def test_m_by_heuristics
     ambiguous = all_fixtures("Objective-C", "cocoa_monitor.m")
     assert_heuristics({
@@ -506,11 +505,11 @@ class TestHeuristics < Minitest::Test
       nil => ambiguous
     })
   end
-  
+
   def test_man_by_heuristics
     assert_heuristics({
       "Roff Manpage" => all_fixtures("Roff Manpage"),
-      "Roff" =>  all_fixtures("Roff")
+      "Roff" => all_fixtures("Roff")
     }, alt_name="man.man")
   end
 
