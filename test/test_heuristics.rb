@@ -484,6 +484,14 @@ class TestHeuristics < Minitest::Test
       "NewLisp" => all_fixtures("NewLisp", "*.lisp") + all_fixtures("NewLisp", "*.lsp")
     }, "main.lsp")
   end
+  
+  def test_m4_by_heuristics
+    assert_heuristics({
+      "M4" => all_fixtures("M4", "*.m4"),
+      "M4Sugar" => all_fixtures("M4Sugar", "*.m4")
+    })
+  end
+
 
   def test_m_by_heuristics
     ambiguous = all_fixtures("Objective-C", "cocoa_monitor.m")
@@ -496,13 +504,6 @@ class TestHeuristics < Minitest::Test
       "MATLAB" => all_fixtures("MATLAB", "create_ieee_paper_plots.m"),
       "Limbo" => all_fixtures("Limbo", "*.m"),
       nil => ambiguous
-    })
-  end
-
-  def test_m4_by_heuristics
-    assert_heuristics({
-      "M4" => all_fixtures("M4", "*.m4"),
-      "M4Sugar" => all_fixtures("M4Sugar", "*.m4")
     })
   end
   
