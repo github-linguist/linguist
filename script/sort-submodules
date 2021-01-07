@@ -10,6 +10,10 @@ def sort_entries(file_data)
   submodules = []
   file_data.scan(/(^\[submodule[^\n]+\n)((?:\t[^\n]+\n)+)/).each do |head, body|
     path = body.match(/^\tpath\s*=\s*\K(.+)$/)[0]
+    body = body.split(/\n/).each do |line|
+      key, value = line.split("=", 2)
+      "\t#{key.strip} = #{value.strip}"
+    end.sort.join("\n") + "\n"
     submodules << [path, head + body]
   end
   submodules.sort! { |a,b| a[0] <=> b[0] }
