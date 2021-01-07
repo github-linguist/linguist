@@ -105,7 +105,6 @@ end
 
 log "Registering new submodule: #{repo_new}"
 command('git', 'submodule', 'add', '--depth=1', '-f', https, repo_new)
-command('git', 'config', '-f', '.gitmodules', '--add', "submodule.#{repo_new}.shallow", true)
 command('script/grammar-compiler', 'add', repo_new)
 
 log "Caching grammar license"
