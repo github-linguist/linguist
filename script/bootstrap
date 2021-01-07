@@ -1,13 +1,33 @@
 #!/bin/sh
-
 set -e
 
-cd "$(dirname "$0")/.."
+# Resolve installation options
+bundle=1
+modules=1
 
-bundle config --local path vendor/gems
+case $1 in
+  -b | --bundle-only)  unset modules ;;
+  -m | --modules-only) unset bundle ;;
+  *?*)
+    status=1
+    case $1 in
+      -h | --help) status=0 ;;
+      -*) printf 'Invalid option: %s\n' "$1" ;;
+    esac
+    printf 'Usage: %s [-b|--bundle-only] [-m|--modules-only]\n' "$0"
+    exit $status
+  ;;
+esac
 
-bundle check > /dev/null 2>&1 || bundle install
+# Install missing gems
+if [ "$bundle" ]; then
+  bundle config --local path vendor/gems
+  bundle check > /dev/null 2>&1 || bundle install
+fi
 
-git submodule init
-git submodule sync --quiet
-script/fast-submodule-update
+# Fetch missing submodules
+if [ "$modules" ]; then
+  git submodule init
+  git submodule sync --quiet
+  git submodule update -j4 --depth 1
+fi

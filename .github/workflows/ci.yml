@@ -20,9 +20,7 @@ jobs:
       run: |
         git fetch origin master:master v2.0.0:v2.0.0 test/attributes:test/attributes test/master:test/master
         sed -i 's|git@github.com:|https://github.com/|' .gitmodules
-        git submodule init
-        git submodule sync --quiet
-        script/fast-submodule-update
+        script/bootstrap --modules-only
     - name: Run tests
       run: bundle exec rake
     - name: Check Licenses
