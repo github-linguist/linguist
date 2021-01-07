@@ -29,5 +29,5 @@ fi
 if [ "$modules" ]; then
   git submodule init
   git submodule sync --quiet
-  git submodule update -j4 --depth 1
+  git submodule update -j 4 --depth 1
 fi
