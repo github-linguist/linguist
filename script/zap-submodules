@@ -1,0 +1,10 @@
+#!/bin/sh
+set -e
+
+cd "${0%/*}/.."
+rm -rf vendor/grammars vendor/CodeMirror .git/modules
+{ sed -n < .git/config 's/^\[submodule *"\([^"]\{1,\}\)"\]/submodule.\1/p' \
+| xargs -n1 git config -f .git/config --remove-section
+} 2>&1 >/dev/null || :
+
+git checkout -- vendor
