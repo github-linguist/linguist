@@ -29,5 +29,10 @@ fi
 if [ "$modules" ]; then
   git submodule init
   git submodule sync --quiet
-  git submodule update -j 4 --depth 1
+  git submodule update -j 4 --depth 1 || status=$?
+
+  # TODO: Figure out why certain submodules are cloned with empty working trees
+  git submodule foreach 'git restore --staged --worktree .'
+
+  exit $status
 fi
