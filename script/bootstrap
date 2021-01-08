@@ -29,6 +29,10 @@ fi
 if [ "$modules" ]; then
   git submodule init
   git submodule sync --quiet
+
+  # HACK: BitBucket.org doesn't allow fetching of "unadvertised objects"
+  git submodule update vendor/grammars/sublime_cobol || git -C $_ fetch --unshallow
+
   git submodule update -j 4 --depth 1 || status=$?
 
   # TODO: Figure out why certain submodules are cloned with empty working trees
