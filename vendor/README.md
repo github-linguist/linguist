@@ -472,6 +472,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Wget Config:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **Windows Registry Entries:** [bsara/language-reg](https://github.com/bsara/language-reg)
 - **Wollok:** [uqbar-project/wollok-sublime](https://github.com/uqbar-project/wollok-sublime)
+- **Wonkey:** [wonkey-coders/wonkey-syntax](https://github.com/wonkey-coders/wonkey-syntax)
 - **World of Warcraft Addon Data:** [nebularg/language-toc-wow](https://github.com/nebularg/language-toc-wow)
 - **X BitMap:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **X Font Directory Index:** [Alhadis/language-fontforge](https://github.com/Alhadis/language-fontforge)
