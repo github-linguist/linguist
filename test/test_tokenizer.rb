@@ -31,20 +31,67 @@ class TestTokenizer < Minitest::Test
     assert_equal %w(G1 X55 Y5 F2000), tokenize('G1 X55 Y5 F2000')
   end
 
-  def test_skip_comments
+  def test_comments
+    assert_equal %w(#), tokenize("#\n")
+    assert_equal %w(##), tokenize("##\n")
     assert_equal %w(foo), tokenize("foo\n# Comment")
+    assert_equal %w(foo ## Comment), tokenize("foo\n## Comment")
     assert_equal %w(foo bar), tokenize("foo\n# Comment\nbar")
+
+    assert_equal %w(//), tokenize("//\n")
+    assert_equal %w(///), tokenize("///\n")
     assert_equal %w(foo), tokenize("foo\n// Comment")
+    assert_equal %w(foo /// Comment), tokenize("foo\n/// Comment")
+    assert_equal %w(foo // Comment), tokenize("foo\n//! Comment")
+
+    assert_equal %w(- -), tokenize("--\n")
     assert_equal %w(foo), tokenize("foo\n-- Comment")
+
+    assert_equal %w(), tokenize("\"\n")
     assert_equal %w(foo), tokenize("foo\n\" Comment")
+
+    assert_equal %w(;), tokenize(";\n")
+    assert_equal %w(; ;), tokenize(";;\n")
+    assert_equal %w(foo ; Comment), tokenize("foo\n; Comment")
+    assert_equal %w(foo ; ; Comment), tokenize("foo\n;; Comment")
+
     assert_equal %w(foo), tokenize("foo /* Comment */")
+    assert_equal %w(foo), tokenize("foo /*Comment*/")
     assert_equal %w(foo), tokenize("foo /* \nComment\n */")
+    assert_equal %w(foo), tokenize("foo /** Comment */")
+    assert_equal %w(foo), tokenize("foo /**Comment*/")
+    assert_equal %w(foo), tokenize("foo /*! Comment */")
+    assert_equal %w(foo), tokenize("foo /*!Comment*/")
+    assert_equal %w(), tokenize("/**/")
+    assert_equal %w(), tokenize("/*\n*\n*/")
+    assert_equal %w(), tokenize("/***/")
+    assert_equal %w(), tokenize("/****/")
+    assert_equal %w(), tokenize("/*!*/")
+
     assert_equal %w(foo), tokenize("foo <!-- Comment -->")
+    assert_equal %w(foo <!--Comment-->), tokenize("foo <!--Comment-->")
+    assert_equal %w(foo <!--Comment-->), tokenize("foo<!--Comment-->")
+    assert_equal %w(foo <!---->), tokenize("foo<!---->")
+
     assert_equal %w(foo), tokenize("foo {- Comment -}")
-    assert_equal %w(foo), tokenize("foo (* Comment *)")
+    assert_equal %w!foo!, tokenize("foo (* Comment *)")
+
+    assert_equal %w(%), tokenize("%\n")
+    assert_equal %w(% %), tokenize("%%\n")
     assert_equal %w(%), tokenize("2 % 10\n% Comment")
+
     assert_equal %w(foo bar), tokenize("foo\n\"\"\"\nComment\n\"\"\"\nbar")
     assert_equal %w(foo bar), tokenize("foo\n'''\nComment\n'''\nbar")
+
+    # Roff comments
+    assert_equal %w(. bar), tokenize(".\\\" foo\nbar")
+    assert_equal %w(. bar), tokenize(". \\\" foo\nbar")
+    assert_equal %w(bar), tokenize("'\\\" foo\nbar")
+    assert_equal %w(bar), tokenize("' \\\" foo\nbar")
+    assert_equal %w(.ig Comment ..), tokenize(".ig\nComment\n..")
+
+    # Easily mistaken with comment
+    assert_equal %w(*/), tokenize("1 */ 2")
   end
 
   def test_sgml_tags
@@ -55,20 +102,71 @@ class TestTokenizer < Minitest::Test
     assert_equal %w(<div> id= </div>), tokenize("<div id=\"foo bar\"></div>")
     assert_equal %w(<div> id= </div>), tokenize("<div id='foo bar'></div>")
     assert_equal %w(<?xml> version=), tokenize("<?xml version=\"1.0\"?>")
+    assert_equal %w(<!DOCTYPE> html), tokenize("<!DOCTYPE html>")
+    assert_equal %w(<a>), tokenize("<a>")
   end
 
   def test_operators
     assert_equal %w(+), tokenize("1 + 1")
+    assert_equal %w(+), tokenize("1+1")
     assert_equal %w(-), tokenize("1 - 1")
+    assert_equal %w(-), tokenize("1-1")
     assert_equal %w(*), tokenize("1 * 1")
+    assert_equal %w(1*1), tokenize("1*1")
+    assert_equal %w(a ** b), tokenize("a ** b")
+    assert_equal %w(1**2), tokenize("1**2")
+    assert_equal %w(a**b), tokenize("a**b")
     assert_equal %w(/), tokenize("1 / 1")
+    assert_equal %w(1/1), tokenize("1/1")
+    assert_equal %w(//), tokenize("1 // 1")
+    assert_equal %w(1//1), tokenize("1//1")
     assert_equal %w(%), tokenize("2 % 5")
+    assert_equal %w(%), tokenize("2%5")
     assert_equal %w(&), tokenize("1 & 1")
+    assert_equal %w(&), tokenize("1&1")
     assert_equal %w(&&), tokenize("1 && 1")
+    assert_equal %w(&&), tokenize("1&&1")
     assert_equal %w(|), tokenize("1 | 1")
+    assert_equal %w(|), tokenize("1|1")
     assert_equal %w(||), tokenize("1 || 1")
+    assert_equal %w(||), tokenize("1||1")
     assert_equal %w(<), tokenize("1 < 0x01")
+    assert_equal %w(<0x01>), tokenize("1<0x01")
     assert_equal %w(<<), tokenize("1 << 0x01")
+    assert_equal %w(<<), tokenize("1<<0x01")
+    assert_equal %w(<< <), tokenize("1 <<< 0x01") # FIXME
+    assert_equal %w(<< <0x01>), tokenize("1<<<0x01") # FIXME
+    assert_equal %w(), tokenize("1 > 0x01")
+    assert_equal %w(), tokenize("1>0x01")
+    assert_equal %w(), tokenize("1 >> 0x01")
+    assert_equal %w(), tokenize("1>>0x01")
+    assert_equal %w(), tokenize("1 >>> 0x01")
+    assert_equal %w(), tokenize("1>>>0x01")
+    assert_equal %w(a - -), tokenize("a--")
+    assert_equal %w(a + +), tokenize("a++")
+    assert_equal %w(- - a), tokenize("--a")
+    assert_equal %w(+ + a), tokenize("++a")
+    assert_equal %w(a - b), tokenize("a -> b")
+    assert_equal %w(a - b), tokenize("a->b")
+    assert_equal %w(a - - b), tokenize("a --> b")
+    assert_equal %w(a - - b), tokenize("a-->b")
+
+    assert_equal %w(a <-> b), tokenize("a <- b")
+    assert_equal %w(a <-b>), tokenize("a<-b")
+    assert_equal %w(a <--> b), tokenize("a <-- b")
+    assert_equal %w(a <--b>), tokenize("a<--b")
+
+    assert_equal %w(a b), tokenize("a = b")
+    assert_equal %w(a b), tokenize("a=b")
+    assert_equal %w(a b), tokenize("a == b")
+    assert_equal %w(a b), tokenize("a==b")
+    assert_equal %w(a b), tokenize("a === b")
+    assert_equal %w(a b), tokenize("a===b")
+    assert_equal %w(a b), tokenize("a !== b")
+    assert_equal %w(a b), tokenize("a!==b")
+    assert_equal %w(a b), tokenize("a ^ b")
+    assert_equal %w(a b), tokenize("a^b")
+    assert_equal %w(a), tokenize("~a")
   end
 
   def test_c_tokens
@@ -85,6 +183,10 @@ class TestTokenizer < Minitest::Test
     assert_equal %w(#import <Foundation/Foundation.h> @interface Foo NSObject { } @end), tokenize(:"Objective-C/Foo.h")
     assert_equal %w(#import @implementation Foo @end), tokenize(:"Objective-C/Foo.m")
     assert_equal %w(#import <Cocoa/Cocoa.h> int main \( int argc char *argv [ ] \) { NSLog \( @ \) ; return ; }), tokenize(:"Objective-C/hello.m")
+  end
+
+  def test_perl_tokens
+    assert_equal %w(package POSIX ; #line sub getchar { usage if @_ ; CORE getc \( STDIN \) ; } ;), tokenize(:"Perl/getchar.al")
   end
 
   def test_shebang
