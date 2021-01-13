@@ -1,0 +1,50 @@
+#!/usr/bin/env ruby
+
+require "optparse"
+
+ROOT = File.expand_path "../../", __FILE__
+
+
+# Extract and sort a list of submodules
+def sort_entries(file_data)
+  submodules = []
+  file_data.scan(/(^\[submodule[^\n]+\n)((?:\t[^\n]+\n)+)/).each do |head, body|
+    path = body.match(/^\tpath\s*=\s*\K(.+)$/)[0]
+    submodules << [path, head + body]
+  end
+  submodules.sort! { |a,b| a[0] <=> b[0] }
+  submodules.collect { |i| i[1] }
+end
+
+
+usage = <<-EOH
+Usage:
+  #{$0} [-t|--test] [-h|--help]
+
+Examples:
+  #{$0}         # Update .gitmodules file in-place
+  #{$0} --help  # Display this help message
+  #{$0} --test  # Exit with an error code if .gitmodules needs sorting
+EOH
+
+$testing = false
+OptionParser.new do |opts|
+  opts.banner = usage
+  opts.on("-h", "--help") do
+    puts usage
+    exit
+  end
+  opts.on("-t", "--test", "Don't update file; only test if it's unsorted") do
+    $testing = true
+  end
+end.parse!
+
+
+unsorted = File.read("#{ROOT}/.gitmodules")
+sorted = sort_entries(unsorted).join
+
+if $testing
+  exit unsorted == sorted
+else
+  File.write "#{ROOT}/.gitmodules", sorted
+end

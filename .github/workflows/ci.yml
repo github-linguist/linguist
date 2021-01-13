@@ -1,0 +1,42 @@
+name: Run Tests
+
+on: [push, pull_request]
+
+jobs:
+  run:
+    name: Ruby ${{ matrix.ruby }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby: [ 2.7, 2.6, 2.5 ]
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+        bundler-cache: true
+    - name: Fetch grammar submodules
+      run: |
+        git fetch origin master:master v2.0.0:v2.0.0 test/attributes:test/attributes test/master:test/master
+        sed -i 's|git@github.com:|https://github.com/|' .gitmodules
+        git submodule init
+        git submodule sync --quiet
+        script/fast-submodule-update
+    - name: Run tests
+      run: bundle exec rake
+    - name: Check Licenses
+      run: bundle exec licensed status -c vendor/licenses/config.yml
+  dockerfile:
+    name: Test Dockerfile
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build container
+      run: docker build -t linguist .
+    - name: Analyse current directory
+      run: docker run --rm -v $(pwd):$(pwd) -w $(pwd) -t linguist > output
+    - name: Confirm analysis
+      run: |
+        cat output
+        grep Ruby output

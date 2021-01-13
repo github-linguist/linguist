@@ -1,0 +1,66 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}OAuth Helper - Home{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row pt-5"><h1>OAuth Client Helper</h1></div>
+    <p>This is here to help make getting, setting and pushing OAuth tokens easier</p>
+    <p>TODO: add some more notes about WTF is actually going on here....</p>
+
+    <a class="btn btn-primary" href="/add-client" role="button">New Client ID</a>
+
+    <hr>
+
+    <h3>List of current clients configured and status summary</h3>
+    {% if 'client_id' in colnames %}
+    {# <pre><code>{{ client_data }}</code></pre> #}
+    <table class="table table-hover w-auto small">
+        <thead>
+            <tr>
+                {# First column is always client_id #}
+                <th scope="col">client_id</th>
+                {% set col_client_index = colnames.index('client_id') %}
+                {% for col in colnames %}
+                {% if col != "client_id" %}
+                {# Skipping the client_id column because we already added it #}
+                <th scope="col">{{ col }}</th>
+                {% endif %}
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for client_id_list in data[0] %}
+            {% set outer_loop = loop %}
+            <tr>
+                {# First column is always client_id #}
+                <td><a href="/client-detail/{{ data[col_client_index][loop.index0] }}">{{ data[col_client_index][loop.index0] }}</a></td>
+                {% for item in data %}
+                {% if colnames[loop.index0] == 'client_id' %}
+                {# nothing #}
+                {% elif colnames[loop.index0] == 'qs_params'%}
+                <td>
+                    {% if item[outer_loop.index0] is mapping %}
+                    <ul class="list-group">
+                        {% for key, val in item[outer_loop.index0].items() %}
+                        <li><code><pre>{{key}}: '{{val}}'</pre></code></li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    None
+                    {% endif %}
+                </td>
+                {% else %}
+                <td>{{ item[outer_loop.index0] }}</td>
+                {% endif %}
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    {# Seems there's no data #}
+    <p>No Data</p>
+    {% endif %}
+
+</div>
+{% endblock %}

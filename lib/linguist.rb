@@ -7,6 +7,8 @@ require 'linguist/repository'
 require 'linguist/samples'
 require 'linguist/shebang'
 require 'linguist/version'
+require 'linguist/strategy/manpage'
+require 'linguist/strategy/xml'
 
 class << Linguist
   # Public: Detects the Language of the blob.
@@ -52,7 +54,7 @@ class << Linguist
   #
   #   blob - An object that quacks like a blob.
   #   languages - An Array of candidate Language objects that were returned by the
-  #               previous strategy.
+  #               previous strategy.
   #
   # A strategy should return an Array of Language candidates.
   #
@@ -62,6 +64,8 @@ class << Linguist
     Linguist::Strategy::Filename,
     Linguist::Shebang,
     Linguist::Strategy::Extension,
+    Linguist::Strategy::XML,
+    Linguist::Strategy::Manpage,
     Linguist::Heuristics,
     Linguist::Classifier
   ]

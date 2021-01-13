@@ -1,0 +1,76 @@
+[project]
+name = Spyder Website
+themes = hugo-icon
+url_style = absolute
+url = https://www.spyder-ide.org
+
+[packages]
+lektor-webpack-support = 0.3
+lektor-markdown-header-anchors = 0.1
+lektor-disqus-comments = 0.2
+lektor-atom = 0.3
+
+[servers.develop]
+name = Develop
+target = ghpages+https://spyder-ide//website-develop?cname=develop.spyder-ide.org
+
+[servers.production]
+name = Production
+target = ghpages+https://spyder-ide//website-production?cname=www.spyder-ide.org
+
+[alternatives.en]
+name = English
+primary = yes
+locale = en_US
+
+[alternatives.es]
+name = Spanish
+url_prefix = /es/
+locale = es
+
+[alternatives.fr]
+name = French
+url_prefix = /fr/
+locale = fr
+
+[theme_settings]
+  author = "Spyder Team"
+  description = "Spyder Website"
+  other_css = "/static/css/styles.css"
+  content_lang = "en, es, fr"
+  hero_img = "../static/images/spyder_website_banner.png"
+  hero_title = ""
+  hero_description = ""
+  nav_mission = "Overview"
+  mission_2_nav = "download"
+  nav_services = "Components"
+  nav_team = "The Team"
+  nav_work = "Plugins"
+  spyder_nav_content = true
+  mission_enable = true
+  mission_images_enable = 
+  overview_enable = true
+  download_enable = true
+  services_enable = true
+  service_video_url = "https://www.youtube.com/watch?v=Hf07PmwQwPQ"
+  work_enable = true
+  team_enable = 
+  donate_enable = true
+  donate_name = Donate
+  donate_description = Help us to provide the best Scientific Python Development Environment!
+  footer_enable = true
+  footer_note = "<p>&copy; 2018 The Spyder Website Contributors <br> Icons by <a href="https://www.freepik.com/" target="_blank" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" target="_blank" title="Flaticon">Flaticon.com</a> <span class="pipe-red">|</span> <a href="https://freehtml5.co/icon-free-website-template-using-bootstrap/" target="_blank">Template</a> designed by <a href='https://freehtml5.co/' target='_blank'>FreeHTML5.co</a> <br>Hugo port by <a href='https://github.com/SteveLane/' target='_blank'>SteveLane</a> <span class="pipe-red">|</span> Lektor port by <a href='https://github.com/dalthviz/' target='_blank'>Dalthviz</a></p>"
+  footer_github = "https://github.com/spyder-ide/spyder"
+  footer_twitter = "https://twitter.com/spyder_ide"
+  footer_facebook = "https://www.facebook.com/SpyderIDE/"
+  footer_google = "https://groups.google.com/group/spyderlib"
+  extension_nav = true
+  ext_1_ref = "https://docs.spyder-ide.org/"
+  ext_1_title = "Docs"
+  ext_2_ref = "/blog"
+  ext_2_title = "Blog"
+  ext_3_ref = 
+  ext_3_title = "Community"
+  opencollective = spyder
+  gitter_room = "spyder-ide/public"
+  donate_nav = "Donate"

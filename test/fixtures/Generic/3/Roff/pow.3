@@ -1,0 +1,43 @@
+.tr |
+.th POW III 4/30/73
+.sh NAME
+pow \*- floating exponentiation
+.sh SYNOPSIS
+.ft B
+movf	x,fr0
+.br
+movf	y,fr1
+.br
+jsr	pc,pow
+.s3
+.nf
+double pow(x,y)
+double x, y;
+.fi
+.s3
+.ft R
+.sh DESCRIPTION
+.it Pow
+returns
+the value of
+\fIx\u\s8y\s10\d\fR
+(in fr0).
+.it "Pow(0,|y)"
+is 0 for any
+.it y.
+.it "Pow(\*-x,|y)"
+returns a result only if
+.it y
+is an integer.
+.sh "SEE ALSO"
+exp(III), log(III)
+.sh DIAGNOSTICS
+The
+carry bit is set on return in case of overflow,
+.it pow(0,|0),
+or
+.it pow(\*-x,|y)
+for non-integral
+.it y.
+From C there is no diagnostic.
+.sh BUGS

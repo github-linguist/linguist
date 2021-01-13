@@ -1,0 +1,20 @@
+syntax "nanorc" "nanorc$"
+header "^syntax +\""
+
+color green     "^i?color[[:space:]]*(bright)?(white|black|red|blue|green|yellow|magenta|cyan)?(,(white|black|red|blue|green|yellow|magenta|cyan))?\>"
+color brightwhite  "^(set|unset)[[:space:]]+(allow_insecure_backup|autoindent|backup|backupdir|backwards|boldtext|brackets|casesensitive|const|cut|fill|historylog|matchbrackets|morespace|mouse|multibuffer|noconvert|nofollow|nohelp|nonewlines|nowrap|operatingdir|poslog|preserve|punct)\>" "^[[:space:]]*(set|unset)[[:space:]]+(quickblank|quotestr|rebinddelete|rebindkeypad|regexp|smarthome|smooth|softwrap|speller|suspend|suspendenable|tabsize|tabstospaces|tempfile|undo|view|whitespace|wordbounds)\>"
+color brightwhite  "^(bind|i?color|set|unset|syntax|header|magic)\>"
+color red "^unbind\>"
+color brightwhite  "^i?color\>" "\<(start|end)="
+color brightyellow    "^include\>"
+
+color brightwhite  "^(PLAIN|TYPE|STRING|MACRO|NUMBER|VARIABLE|OPERATOR|~?KEYWORD):"
+color brightwhite  "^(BOOLEAN|SECTION|REGEXP|FUNCTION|ESCAPE|COMMENT|WARNING|JUMP):"
+color brightwhite  "^(TAG|ATTRIBUTE):"
+color brightyellow    "^\+(TODO|LINT|STRING|BOOLEAN|FUNCTION|INI|(C|HASH)COMMENT)$"
+
+color magenta   "\\.?"
+color cyan "(^|[[:space:]])#([^{].*)?$"
+color ,green "[[:space:]]+$"
+color ,red "	+ +| +	+"
+# +EXTRALINT

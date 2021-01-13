@@ -38,7 +38,7 @@ def parse_submodule(name)
   path
 end
 
-# Print debugging feedback to STDOUT if running with --verbose
+# Print debugging feedback to STDOUT if not running with --quiet
 def log(msg)
   puts msg if $verbose
 end
@@ -56,7 +56,7 @@ def command(*args)
 end
 
 usage = """Usage:
-  #{$0} [-v|--verbose] [--replace grammar] url
+  #{$0} [-q|--quiet] [--replace grammar] url
 Examples:
   #{$0} https://github.com/Alhadis/language-roff
   #{$0} --replace sublime-apl https://github.com/Alhadis/language-apl
@@ -84,6 +84,10 @@ unless $url
   exit 1;
 end
 
+# Exit early if docker isn't installed or running.
+log "Checking docker is installed and running"
+command('docker', 'ps')
+
 # Ensure the given URL is an HTTPS link
 parts    = parse_url $url
 https    = "https://#{parts[:host]}/#{parts[:user]}/#{parts[:repo]}"
@@ -103,13 +107,10 @@ log "Registering new submodule: #{repo_new}"
 command('git', 'submodule', 'add', '-f', https, repo_new)
 command('script/grammar-compiler', 'add', repo_new)
 
-log "Confirming license"
-if repo_old
-  command('script/licensed')
-else
-  command('script/licensed', '--module', repo_new)
-end
+log "Caching grammar license"
+command("bundle", "exec", "licensed", "cache", "-c", "vendor/licenses/config.yml")
 
 log "Updating grammar documentation in vendor/README.md"
 command('bundle', 'exec', 'rake', 'samples')
+command('script/sort-submodules')
 command('script/list-grammars')

@@ -1,0 +1,38 @@
+<h1>Workers</h1>
+
+<table class="workers">
+  <tr>
+    <th>Job server</th>
+    <th>IP</th>
+    <th>File descriptor</th>
+    <th>Client ID</th>
+    <th>Functions</th>
+  </tr>
+
+{% for server_info in server_infos %}
+  <tr {% if server_info['failed'] %} class="failure" {% endif %} >
+    
+    <th>{{ server_info['hostport'][0] }}:{{ server_info['hostport'][1] }}</th>
+    <th>
+      {%- if server_info['failed'] -%} Not responding! {%- endif -%}
+    </th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+  
+  {% if not server_info['failed'] %}
+    {% for worker in server_info['workers'] %}
+    <tr>
+      <td class="server"></td>
+      <td class="ip">{{ worker['ip'] }}</td>
+      <td class="file_descriptor">{{ worker['file_descriptor'] }}</td>
+      <td class="client_id">{{ worker['client_id'] }}</td>
+      <td class="functions">
+        {{ worker['tasks']|join(', ') }}
+      </td>
+    </tr>
+    {% endfor %}
+  {% endif %}
+{% endfor %}
+</table>

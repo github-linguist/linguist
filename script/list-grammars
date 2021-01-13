@@ -33,9 +33,7 @@ class GrammarList
 
   # Grab the name of each language, sorted case-insensitively
   def load_languages
-    Linguist::Language.all.map(&:name).sort do |a, b|
-      a.downcase() <=> b.downcase()
-    end
+    Linguist::Language.all.map(&:name).sort
   end
 
   # Load grammars.yml
@@ -78,11 +76,12 @@ class GrammarList
         short_url = "eregon/oz-tmbundle"
         long_url  = "https://github.com/eregon/oz-tmbundle"
       else
-        submodule = @submodules[@sources[scope].chomp("/")]
+        submodule = @submodules[(@sources[scope] || scope).chomp("/")]
         next unless submodule
         short_url = submodule[:short]
         long_url  = submodule[:url]
       end
+      item = item.gsub("*", "\\*")
       markdown += "- **#{item}:** [#{short_url}](#{long_url})\n"
     end
 

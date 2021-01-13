@@ -4,9 +4,8 @@ class TestLanguage < Minitest::Test
   include Linguist
 
   def test_find_by_alias
-    assert_equal Language['ASP'], Language.find_by_alias('asp')
-    assert_equal Language['ASP'], Language.find_by_alias('aspx')
-    assert_equal Language['ASP'], Language.find_by_alias('aspx-vb')
+    assert_equal Language['ASP.NET'], Language.find_by_alias('aspx')
+    assert_equal Language['ASP.NET'], Language.find_by_alias('aspx-vb')
     assert_equal Language['ActionScript'], Language.find_by_alias('as3')
     assert_equal Language['ApacheConf'], Language.find_by_alias('apache')
     assert_equal Language['Assembly'], Language.find_by_alias('nasm')
@@ -17,6 +16,7 @@ class TestLanguage < Minitest::Test
     assert_equal Language['C++'], Language.find_by_alias('c++')
     assert_equal Language['C++'], Language.find_by_alias('cpp')
     assert_equal Language['Chapel'], Language.find_by_alias('chpl')
+    assert_equal Language['Classic ASP'], Language.find_by_alias('asp')
     assert_equal Language['CoffeeScript'], Language.find_by_alias('coffee')
     assert_equal Language['CoffeeScript'], Language.find_by_alias('coffee-script')
     assert_equal Language['ColdFusion'], Language.find_by_alias('cfm')
@@ -63,13 +63,14 @@ class TestLanguage < Minitest::Test
     assert_equal Language['Vim script'], Language.find_by_alias('vim')
     assert_equal Language['Vim script'], Language.find_by_alias('viml')
     assert_equal Language['reStructuredText'], Language.find_by_alias('rst')
-    assert_equal Language['XPM'], Language.find_by_alias('xpm')
+    assert_equal Language['X BitMap'], Language.find_by_alias('xbm')
+    assert_equal Language['X PixMap'], Language.find_by_alias('xpm')
     assert_equal Language['YAML'], Language.find_by_alias('yml')
     assert_nil Language.find_by_alias(nil)
   end
 
-  # Note these are set by script/set-language-ids. If these tests fail then someone
-  # has changed the language_id fields set in languages.yml which is almost certainly
+  # Note these are set by `script/update-ids`. If these tests fail then someone
+  # has changed the `language_id` fields set in languages.yml which is almost certainly
   # not what you want to happen (these fields are used in GitHub's search indexes)
   def test_language_ids
     assert_equal 4, Language['ANTLR'].language_id
@@ -171,7 +172,7 @@ class TestLanguage < Minitest::Test
 
   def test_find_by_extension
     assert_equal [], Language.find_by_extension('.factor-rc')
-    assert_equal [Language['Limbo'], Language['M'], Language['MUF'], Language['Mathematica'], Language['Matlab'], Language['Mercury'], Language['Objective-C']], Language.find_by_extension('foo.m')
+    assert_equal [Language['Limbo'], Language['M'], Language['MATLAB'], Language['MUF'], Language['Mathematica'], Language['Mercury'], Language['Objective-C']], Language.find_by_extension('foo.m')
     assert_equal [Language['Ruby']], Language.find_by_extension('foo.rb')
     assert_equal [Language['Ruby']], Language.find_by_extension('foo/bar.rb')
     assert_equal [Language['Ruby']], Language.find_by_extension('PKGBUILD.rb')
@@ -366,6 +367,14 @@ class TestLanguage < Minitest::Test
     assert missing.empty?, message
   end
 
+  def test_all_languages_have_scopes
+    languages = YAML.load(File.read(File.expand_path("../../lib/linguist/languages.yml", __FILE__)))
+    missing = languages.reject { |name,language| language.has_key?('tm_scope') }
+    message = "The following languages do not have a `tm_scope` field defined. Use `tm_scope: none` if the language has no grammar.\n"
+    message << missing.keys.sort.join("\n")
+    assert missing.empty?, message
+  end
+
   def test_all_languages_have_type
     missing = Language.all.select { |language| language.type.nil? }
     message = "The following languages do not have a type listed in grammars.yml. Please add types for all new languages.\n"
@@ -378,15 +387,16 @@ class TestLanguage < Minitest::Test
   def test_all_languages_have_a_language_id_set
     missing = Language.all.select { |language| language.language_id.nil? }
 
-    message = "The following languages do not have a language_id listed in languages.yml. Please add language_id fields for all new languages.\n"
+    message = "The following languages do not have a language_id listed in languages.yml. Please run `script/update-ids` as per the contribution guidelines.\n"
     missing.each { |language| message << "#{language.name}\n" }
     assert missing.empty?, message
   end
 
   def test_all_languages_have_a_valid_id
-    invalid = Language.all.select { |language| language.language_id < 0 || language.language_id >= (2**31 - 1) }
+    deleted_language_ids = [21]  # Prevent re-use of deleted language IDs
+    invalid = Language.all.select { |language| language.language_id < 0 || deleted_language_ids.include?(language.language_id) || (language.language_id > 431 && language.language_id < 1024) || language.language_id >= (2**31 - 1) }
 
-    message = "The following languages do not have a valid language_id. Please use script/set-language-ids --update as per the contribution guidelines.\n"
+    message = "The following languages do not have a valid language_id. Please run `script/update-ids` as per the contribution guidelines.\n"
     invalid.each { |language| message << "#{language.name}\n" }
     assert invalid.empty?, message
   end
@@ -394,7 +404,7 @@ class TestLanguage < Minitest::Test
   def test_all_language_id_are_unique
     duplicates = Language.all.group_by{ |language| language.language_id }.select { |k, v| v.size > 1 }.map(&:first)
 
-    message = "The following language_id are used several times in languages.yml. Please use script/set-language-ids --update as per the contribution guidelines.\n"
+    message = "The following language_id are used several times in languages.yml. Please run `script/update-ids` as per the contribution guidelines.\n"
     duplicates.each { |language_id| message << "#{language_id}\n" }
     assert duplicates.empty?, message
   end
@@ -460,14 +470,6 @@ class TestLanguage < Minitest::Test
     assert missing.empty?, message
   end
 
-  def test_no_unused_colours
-    Language.all.each do |language|
-      next unless language.type == :data || language.type == :prose ||
-        language.group.to_s != language.name
-      assert !language.color, "Unused colour assigned to #{language.name}"
-    end
-  end
-
   def test_non_crash_on_comma
     assert_nil Language[',']
     assert_nil Language.find_by_name(',')
@@ -478,5 +480,13 @@ class TestLanguage < Minitest::Test
     blob = Linguist::FileBlob.new(File.join(samples_path, "Markdown/symlink.md"))
     match = Linguist.detect(blob)
     assert_equal Language["Markdown"], match
+  end
+
+  def test_fs_names
+    Language.all.each do |language|
+      next unless /[\\:*?"<>|]/.match(language.name)
+      assert language.fs_name, "#{language.name} needs an fs_name for Windows' file system."
+      assert !/[\\:*?"<>|]/.match(language.fs_name), "The fs_name for #{language.name} is invalid."
+    end
   end
 end

@@ -1,0 +1,54 @@
+{
+	// Tabs > spaces
+	"extends": "eslint:recommended",
+	"env": {
+		"browser": true,
+		"es6": true,
+		"mocha": true,
+		"node": true
+	},
+	"parserOptions": {
+		"ecmaVersion": 2017,
+		"sourceType": "module"
+	},
+	"rules": {
+		"indent": [
+			"error",
+			"tab",
+			{
+				"ignoreComments": true,
+				"SwitchCase": 1
+			}
+		],
+		"linebreak-style": [
+			"error",
+			"unix"
+		],
+		"no-fallthrough": [
+			"error",
+			{"commentPattern": "[Ff]alls?[-\\s]?through"}
+		],
+		"no-case-declarations": 0,
+		"no-cond-assign": 0,
+		"no-console": 0,
+		"no-empty": 0,
+		"quotes": [
+			"error",
+			"double",
+			{"avoidEscape": true}
+		],
+		"semi": [
+			"error",
+			"always"
+		],
+		"spaced-comment": [
+			"error",
+			"always"
+		],
+		"yoda": [
+			"error",
+			"always",
+			{"onlyEquality": true}
+		]
+	}
+}

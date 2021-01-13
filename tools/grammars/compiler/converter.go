@@ -18,7 +18,8 @@ import (
 )
 
 type Converter struct {
-	root string
+	root    string
+	version string
 
 	modified bool
 	grammars map[string][]string
@@ -63,7 +64,7 @@ func (conv *Converter) tmpScopes() map[string]bool {
 
 func (conv *Converter) AddGrammar(source string) error {
 	repo := conv.Load(source)
-	if len(repo.Files) == 0 {
+	if len(repo.Files) == 0 && len(repo.Errors) == 0 {
 		return fmt.Errorf("source '%s' contains no grammar files", source)
 	}
 
@@ -185,7 +186,6 @@ func (conv *Converter) writeJSONFile(path string, rule *grammar.Rule) error {
 	defer j.Close()
 
 	enc := json.NewEncoder(j)
-	enc.SetIndent("", "  ")
 	return enc.Encode(rule)
 }
 
@@ -193,6 +193,13 @@ func (conv *Converter) WriteJSON(rulePath string) error {
 	if err := os.MkdirAll(rulePath, os.ModePerm); err != nil {
 		return err
 	}
+
+	f, err := os.Create(path.Join(rulePath, "version"))
+	if err != nil {
+		return err
+	}
+	f.Write([]byte(conv.version))
+	f.Close()
 
 	for _, repo := range conv.Loaded {
 		for scope, file := range repo.Files {
@@ -249,12 +256,17 @@ func (conv *Converter) Report() error {
 }
 
 func NewConverter(root string) (*Converter, error) {
+	ver, err := ioutil.ReadFile(path.Join(root, "lib", "linguist", "VERSION"))
+	if err != nil {
+		return nil, err
+	}
+
 	yml, err := ioutil.ReadFile(path.Join(root, "grammars.yml"))
 	if err != nil {
 		return nil, err
 	}
 
-	conv := &Converter{root: root}
+	conv := &Converter{root: root, version: strings.TrimSpace(string(ver))}
 
 	if err := yaml.Unmarshal(yml, &conv.grammars); err != nil {
 		return nil, err

@@ -1,4 +1,6 @@
-whitelist:
+cache_path: "vendor/licenses"
+
+allowed:
   - apache-2.0
   - bsd-2-clause
   - bsd-3-clause
@@ -11,18 +13,14 @@ whitelist:
   - wtfpl
   - zlib
 
-# These dependencies are explicitly ignored
-ignored:
-  rubygem:
-    - bundler
-
 # These dependencies have been reviewed and approved.
 reviewed:
-  rubygem:
-    - mime-types
-  grammar:
-    - Sublime-Lasso
+  git_submodule:
+    - actionscript3-tmbundle # MIT
+    - creole          # License filename is not LICENSE(.*) but rather "The MIT License (MIT)"
+    - Sublime-Lasso   # No license file. License in README
+    - vscode-zil-language # MIT
 
 sources:
   npm: false
-  rubygem: false
+  bundler: false

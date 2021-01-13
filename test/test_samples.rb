@@ -9,7 +9,7 @@ class TestSamples < Minitest::Test
     assert latest = Samples.data
 
     # Just warn, it shouldn't scare people off by breaking the build.
-    if serialized['md5'] != latest['md5']
+    if serialized['sha256'] != latest['sha256']
       warn "Samples database is out of date. Run `bundle exec rake samples`."
 
       expected = Tempfile.new('expected.json')
@@ -38,6 +38,27 @@ class TestSamples < Minitest::Test
     Samples.each do |sample|
       if sample[:extname].to_s.empty? && !sample[:filename]
         assert sample[:interpreter], "#{sample[:path]} should have a file extension or a shebang, maybe it belongs in filenames/ subdir"
+      end
+    end
+  end
+
+  def test_filename_listed
+    Samples.each do |sample|
+      if sample[:filename]
+        listed_filenames = Language[sample[:language]].filenames
+        assert_includes listed_filenames, sample[:filename], "#{sample[:path]} isn't listed as a filename for #{sample[:language]} in languages.yml"
+      end
+    end
+  end
+
+  # Some named files are deliberately classified as Text without a corresponding sample as including
+  # the sample would affect the classifier leading to incorrect analysis and classification.
+  # This test ensures samples aren't added for those specific cases.
+  def test_no_text_samples
+    no_text_samples = ["go.mod", "go.sum"]
+    Samples.each do |sample|
+      if sample[:language] == "Text"
+        refute_includes no_text_samples, sample[:filename], "#{sample[:filename]} should NOT be added as a sample for #{sample[:language]}"
       end
     end
   end
@@ -73,7 +94,8 @@ class TestSamples < Minitest::Test
         # Check for samples if more than one language matches the given extension.
         if language_matches.length > 1
           language_matches.each do |match|
-            samples = "samples/#{match.name}/*#{extension}"
+            generic = Strategy::Extension.generic? extension
+            samples = generic ? "test/fixtures/Generic/#{extension.sub(/^\./, "")}/#{match.name}/*" : "samples/#{match.name}/*#{extension}"
             assert Dir.glob(samples, File::FNM_CASEFOLD).any?, "Missing samples in #{samples.inspect}. See https://github.com/github/linguist/blob/master/CONTRIBUTING.md"
           end
         end

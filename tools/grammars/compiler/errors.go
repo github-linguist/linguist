@@ -83,3 +83,13 @@ func (err *InvalidRegexError) Error() string {
 		"Invalid regex in grammar: %s contains a malformed regex (%s)",
 		err.File, err.Err)
 }
+
+type UndeclaredScopeError struct {
+	Path string
+}
+
+func (err *UndeclaredScopeError) Error() string {
+	return fmt.Sprintf(
+		"Undeclared scope in grammar: `%s` has no scope name",
+		err.Path)
+}
