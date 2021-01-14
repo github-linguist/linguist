@@ -971,9 +971,6 @@ Component Pascal:
   - ".cp"
   - ".cps"
   tm_scope: source.pascal
-  aliases:
-  - delphi
-  - objectpascal
   ace_mode: pascal
   codemirror_mode: pascal
   codemirror_mime_type: text/x-pascal
@@ -1800,6 +1797,7 @@ Gerber Image:
   - rs-274x
   extensions:
   - ".gbr"
+  - ".cmp"
   - ".gbl"
   - ".gbo"
   - ".gbp"
@@ -1812,6 +1810,7 @@ Gerber Image:
   - ".gto"
   - ".gtp"
   - ".gts"
+  - ".ncl"
   - ".sol"
   interpreters:
   - gerbv
@@ -2031,6 +2030,7 @@ HCL:
   - ".tfvars"
   - ".workflow"
   aliases:
+  - HashiCorp Configuration Language
   - terraform
   ace_mode: ruby
   codemirror_mode: ruby
@@ -2542,16 +2542,6 @@ JSONiq:
   - ".jq"
   tm_scope: source.jq
   language_id: 177
-JSX:
-  type: programming
-  group: JavaScript
-  extensions:
-  - ".jsx"
-  tm_scope: source.js.jsx
-  ace_mode: javascript
-  codemirror_mode: jsx
-  codemirror_mime_type: text/jsx
-  language_id: 178
 Jasmin:
   type: programming
   ace_mode: java
@@ -2615,6 +2605,7 @@ JavaScript:
   - ".jsfl"
   - ".jsm"
   - ".jss"
+  - ".jsx"
   - ".mjs"
   - ".njs"
   - ".pac"
@@ -4040,6 +4031,9 @@ Parrot Internal Representation:
 Pascal:
   type: programming
   color: "#E3F171"
+  aliases:
+  - delphi
+  - objectpascal
   extensions:
   - ".pas"
   - ".dfm"
@@ -5656,6 +5650,7 @@ Text:
   wrap: true
   aliases:
   - fundamental
+  - plain text
   extensions:
   - ".txt"
   - ".fr"
