@@ -268,6 +268,8 @@ disambiguations:
     - '^\s*(?:public\s+|private\s+|\s*)function\s+\w+\s*\([\w\s,]*\)\s*{'
   - language: POV-Ray SDL
     pattern: '^\s*#(declare|local|macro|while)\s'
+  - language: Pascal
+    pattern: '(?i:^\s*{\$(?:mode|ifdef|undef|define)[ ]+[a-z0-9_]+})'
 - extensions: ['.l']
   rules:
   - language: Common Lisp

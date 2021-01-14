@@ -463,20 +463,31 @@ class TestHeuristics < Minitest::Test
   end
 
   def test_inc_by_heuristics
+    ambiguous_pascal = [
+      "#{samples_path}/Pascal/cwindirs.pp",
+      "#{samples_path}/Pascal/image_url.inc",
+      "#{samples_path}/Pascal/large.pp",
+      "#{samples_path}/Pascal/libc.inc",
+      "#{samples_path}/Pascal/program.dpr",
+      "#{samples_path}/Pascal/tw27294.pp",
+      "#{samples_path}/Pascal/large.pp",
+      "#{samples_path}/Pascal/vmops_impl.inc"
+    ]
     assert_heuristics({
       "Motorola 68K Assembly" => all_fixtures("Motorola 68K Assembly", "*.inc"),
       "NASL" => all_fixtures("NASL", "*.inc"),
+      "Pascal" => all_fixtures("Pascal", "*") - ambiguous_pascal,
       "PHP" => all_fixtures("PHP", "*.inc"),
       "POV-Ray SDL" => all_fixtures("POV-Ray SDL", "*.inc"),
       nil => all_fixtures("Assembly", "*.inc") +
         all_fixtures("C++", "*.inc") +
         all_fixtures("HTML", "*.inc") +
-        all_fixtures("Pascal", "*.inc") +
+        ambiguous_pascal +
         all_fixtures("Pawn", "*.inc") +
         # SourcePawn has a pattern rule, but it does not match samples
         all_fixtures("SourcePawn", "*.inc") +
         all_fixtures("SQL", "*.inc")
-    })
+    }, alt_name="foo.inc")
   end
 
   def test_l_by_heuristics
