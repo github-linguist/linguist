@@ -3,6 +3,7 @@ require 'yaml'
 begin
   require 'yajl'
 rescue LoadError
+  require 'json'
 end
 
 require 'linguist/classifier'

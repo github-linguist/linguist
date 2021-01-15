@@ -1,7 +1,7 @@
 begin
   require 'yajl'
 rescue LoadError
-  require 'yaml'
+  require 'json'
 end
 
 require 'linguist/sha256'
