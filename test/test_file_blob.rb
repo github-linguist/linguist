@@ -300,6 +300,8 @@ class TestFileBlob < Minitest::Test
     # 'extern(al)' directory
     assert sample_blob("extern/util/__init__.py").vendored?
     assert sample_blob("external/jquery.min.js").vendored?
+    assert sample_blob("externals/fmt/CMakeLists.txt").vendored?
+    assert sample_blob("External/imgui/imgui.h").vendored?
 
     # C deps
     assert sample_blob("deps/http_parser/http_parser.c").vendored?
