@@ -1,28 +1,32 @@
-<!--- Provide a general summary of the issue in the Title above -->
+---
+name: Bug report
+about: Found a bug? Let us know. Please start with **Discussions** if your issue is regarding unexpected language analysis or statistics.
+title: ''
+labels: 'Bug'
+assignees: ''
+---
+<!-- 
+NOTE: Please use Discussions for all incorrect or unexpected language analysis or 
+      statistics behaviour BEFORE opening a bug.
 
-## Preliminary Steps
+      If you know how to fix this bug, please feel free to submit a Pull Request
+      with your fix; we don't need an issue first.
+-->
 
-Please confirm you have...
-- [ ] reviewed [How Linguist Works](https://github.com/github/linguist#how-linguist-works),
-- [ ] reviewed the [Troubleshooting](https://github.com/github/linguist#troubleshooting) docs,
-- [ ] considered implementing an [override](https://github.com/github/linguist#overrides),
-- [ ] verified an issue has not already been logged for your issue ([linguist issues](https://github.com/issues?utf8=%E2%9C%93&q=is%3Aissue+repo%3Agithub/linguist)).
+## Describe the bug
+<!-- 
+Please provide a clear and detailed explanation of the bug you've found, and why 
+you consider it to be a bug. 
 
-<!-- Please review these preliminary steps before logging your issue. You may find the information referenced may answer or explain the behaviour you are seeing. It'll help us to know you've reviewed this information. -->
+Ideally, please provide steps to reproduce the bug and include the output from 
+using `github-linguist` on the command line.
+-->
 
-<!-- Please review the "Changing the color of a language" section in CONTRIBUTING.md before asking for a language color to be changed. -->
+### Expected behaviour
+<!-- Please provide a clear and detailed explanation of what you expected. -->
 
-## Problem Description
+### Related discussion
+<!-- If this bug is related to a discussion, please link to that discussion here. -->
 
-<!--- Provide a more detailed introduction to the issue itself, and why you consider it to be a bug -->
-
-### URL of the affected repository:
-
-### Last modified on:
-<!-- YYYY-MM-DD -->
-
-### Expected language:
-<!-- expected language -->
-
-### Detected language:
-<!-- detected language -->
+### Additional context
+<!-- Feel free to add any additional context for the bug here -->
