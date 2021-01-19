@@ -51,6 +51,10 @@ gem install github-linguist
 
 #### Dependencies
 
+Linguist is a Ruby library so you will need a recent version of Ruby installed.
+There are known problems with the macOS/XCode supplied version of Ruby that causes problems installing some of the dependencies.
+Accordingly, we highly recommend you install a version of Ruby using Homebrew, `rbenv`, `rvm`, `ruby-build`, `asdf` or other packaging system, before attempting to install Linguist and the dependencies.
+
 Linguist uses [`charlock_holmes`](https://github.com/brianmario/charlock_holmes) for character encoding and [`rugged`](https://github.com/libgit2/rugged) for libgit2 bindings for Ruby.
 These components have their own dependencies.
 1. charlock_holmes

@@ -11,7 +11,11 @@ By participating, you are expected to uphold this code.
 
 The majority of contributions won't need to touch any Ruby code at all.
 
-### Dependencies
+## Dependencies
+
+Linguist is a Ruby library so you will need a recent version of Ruby installed.
+There are known problems with the macOS/XCode supplied version of Ruby that causes problems installing some of the dependencies.
+Accordingly, we highly recommend you install a version of Ruby using Homebrew, `rbenv`, `rvm`, `ruby-build`, `asdf` or other packaging system, before attempting to install Linguist and the dependencies.
 
 Linguist uses the [`charlock_holmes`](https://github.com/brianmario/charlock_holmes) character encoding detection library which in turn uses [ICU](http://site.icu-project.org/), and the libgit2 bindings for Ruby provided by [`rugged`](https://github.com/libgit2/rugged).
 [Bundler](https://bundler.io/) v1.10.0 or newer is required for installing the Ruby gem dependencies.
