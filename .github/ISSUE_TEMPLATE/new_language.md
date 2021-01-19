@@ -20,6 +20,9 @@ issue.
 ## URL of example repository
 
 
+## URL of syntax highlighting grammar
+
+
 ## Most popular extensions
 
 <!--
