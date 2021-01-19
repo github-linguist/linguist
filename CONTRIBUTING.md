@@ -205,38 +205,6 @@ As Linguist is a production dependency for GitHub we have a couple of workflow r
 - Releases are performed by GitHub staff so we can ensure GitHub.com always stays up to date with the latest release of Linguist and there are no regressions in production.
 
 
-### Releasing
-
-If you are the current maintainer of this gem:
-
-1. Create a branch for the release: `git checkout -b release-vxx.xx.xx`
-1. Make sure your local dependencies are up to date: `script/bootstrap`
-1. If grammar submodules have not been updated recently, update them: `git submodule update --remote`.
-   If any submodules are updated:
-    1. update the `grammars.yml`: `script/grammar-compiler update -f`
-    1. update the license cache: `bundle exec licensed cache -c vendor/licenses/config.yml`
-    1. double check no license problems found: `bundle exec licensed status -c vendor/licenses/config.yml`
-    1. confirm the updated grammars still compile and no new errors have been introduced and none have gone missing: `bundle exec rake check_grammars`
-    1. verify and fix any problems identified in the two steps above
-    1. commit all changes: `git commit -a`
-1. Ensure that samples are updated: `bundle exec rake samples`
-1. Ensure that tests are green: `bundle exec rake test`
-1. Build a test gem `GEM_VERSION=$(git describe --tags 2>/dev/null | sed 's/-/./g' | sed 's/v//') bundle exec rake build_gem`
-1. Test the test gem:
-   1. Bump the Gemfile and Gemfile.lock versions for an app which relies on this gem
-   1. Install the new gem locally
-   1. Test behavior locally, branch deploy, whatever needs to happen
-1. Bump gem version in `lib/linguist/VERSION`, [like this](https://github.com/github/linguist/commit/3212355400974ce5f7873a71eb8b85b1c5f4a6d2).
-1. Make a PR to github/linguist, [like this](https://github.com/github/linguist/pull/1238).
-1. Build a local gem: `bundle exec rake build_gem`
-1. Merge github/linguist PR
-1. Tag and push: `git tag vx.xx.xx; git push --tags`
-1. Create a GitHub release with the pushed tag (https://github.com/github/linguist/releases/new) and populate it with a list of the commits from `git log --pretty=format:"- %s" --reverse refs/tags/[OLD TAG]...refs/tags/[NEW TAG]` [like this](https://github.com/github/linguist/releases/tag/v7.2.0)
-1. Build a grammars tarball (`./script/build-grammars-tarball`) and attach it to the GitHub release
-1. Push to rubygems.pkg.github.com -- `gem push --key github --host https://rubygems.pkg.github.com/github github-linguist-3.0.0.gem`. See [Configuring RubyGems for use with GitHub Package Registry][gpr] for more details.
-1. Push to rubygems.org -- `gem push github-linguist-3.0.0.gem`
-
-
 [grammars]: /vendor/README.md
 [heuristic]: https://github.com/github/linguist/blob/master/lib/linguist/heuristics.rb
 [languages]: /lib/linguist/languages.yml
