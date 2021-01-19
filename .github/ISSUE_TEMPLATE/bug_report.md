@@ -23,10 +23,10 @@ using `github-linguist` on the command line.
 -->
 
 ### Expected behaviour
-<!-- Please provide a clear and detailed explanation of what you expected. -->
+<!-- What was it you expected to see? Be detailed and specific. -->
 
 ### Related discussion
-<!-- If this bug is related to a discussion, please link to that discussion here. -->
+<!-- Include links to related discussion threads, if any. -->
 
-### Additional context
-<!-- Feel free to add any additional context for the bug here -->
+### Additional notes
+<!-- Add any remaining details here; e.g., context, @‌mentions, external links, etc -->
