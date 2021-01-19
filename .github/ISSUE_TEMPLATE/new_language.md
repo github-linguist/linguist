@@ -6,7 +6,15 @@ labels: Add Language, Good First Issue
 assignees: ''
 ---
 
-## Language Name
+<!--
+
+If you would like to see support added for a new language, please feel free to
+submit a Pull Request adding support for your language; we don't need an issue
+first. If you don't have the time or resources, feel free to continue with this
+issue.
+
+-->
+## Language name
 
 
 ## URL of example repository
