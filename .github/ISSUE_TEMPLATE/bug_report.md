@@ -2,7 +2,7 @@
 name: Bug report
 about: Found a bug? Let us know. Please start with **Discussions** if your issue is regarding unexpected language analysis or statistics.
 title: ''
-labels: 'Bug'
+labels: Bug
 assignees: ''
 ---
 <!-- 
