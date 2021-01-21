@@ -8,10 +8,8 @@ assignees: ''
 
 <!--
 
-If you would like to see support added for a new language, please feel free to
-submit a Pull Request adding support for your language; we don't need an issue
-first. If you don't have the time or resources, feel free to continue with this
-issue.
+👋 If you have the time and know-how, send us a pull-request: everybody is welcome to contribute! 
+Otherwise, fill out the following fields as best you can.
 
 -->
 ## Language name
