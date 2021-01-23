@@ -2074,14 +2074,11 @@ HTML+Django:
   - ".jinja"
   - ".j2"
   - ".jinja2"
-  - ".njk"
   aliases:
   - django
   - html+django/jinja
   - html+jinja
   - htmldjango
-  - njk
-  - nunjucks
   ace_mode: django
   codemirror_mode: django
   codemirror_mime_type: text/x-django
@@ -3671,6 +3668,15 @@ NumPy:
   codemirror_mode: python
   codemirror_mime_type: text/x-python
   language_id: 254
+Nunjucks:
+  type: markup
+  color: "#3d8137"
+  extensions:
+  - ".njk"
+  aliases:
+  - njk
+  tm_scope: text.html.django
+  ace_mode: django
 OCaml:
   type: programming
   ace_mode: ocaml
