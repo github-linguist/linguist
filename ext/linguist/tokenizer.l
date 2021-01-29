@@ -58,7 +58,9 @@
 %}
 
 %option never-interactive yywrap reentrant nounput warn nodefault header-file="lex.linguist_yy.h" extra-type="VALUE*" prefix="linguist_yy"
-%x sgml c_comment xml_comment haskell_comment ocaml_comment python_dcomment python_scomment
+%x sgml c_comment xml_comment haskell_comment ocaml_comment python_dcomment python_scomment punct
+
+not_punct [^-!#$%&*+,./:;<=>?@\\^_`|~]
 
 %%
 
@@ -88,10 +90,12 @@
   }
 }
 
-^[ \t]*(\/\/|--|\#|%|\")" ".*   { /* nothing */ }
+^[ \t]*"//".*[\n]?                 { /* nothing */ }
+^[ \t]*(\/\/|--|\#|%|\")" ".*[\n]? {  /* nothing */ }
 
 "/*"                              { BEGIN(c_comment); }
-  /* See below for xml_comment start. */
+"/**"                             { BEGIN(c_comment); }
+"<!--"                            { BEGIN(xml_comment); }
 "{-"                              { BEGIN(haskell_comment); }
 "(*"                              { BEGIN(ocaml_comment); }
 "\"\"\""                          { BEGIN(python_dcomment); }
@@ -109,35 +113,28 @@
 \"                                { eat_until_unescaped('"'); }
 '                                 { eat_until_unescaped('\''); }
 (0x[0-9a-fA-F]([0-9a-fA-F]|\.)*|[0-9]([0-9]|\.)*)([uU][lL]{0,2}|([eE][-+][0-9]*)?[fFlL]*) { /* nothing */ }
-\<[[:alnum:]_!./?-]+              {
-    if (strcmp(yytext, "<!--") == 0) {
-     BEGIN(xml_comment);
-    } else {
-      FEED_SGML();
-      BEGIN(sgml);
-      return 1;
-    }
-  }
+
+\<[!?/]?[[:alnum:]_][[:alnum:]_./-]* { FEED_SGML(); BEGIN(sgml); return 1; }
 <sgml>[[:alnum:]_]+=\"            { FEED2(yytext, yyleng - 1); eat_until_unescaped('"'); return 1; }
 <sgml>[[:alnum:]_]+='             { FEED2(yytext, yyleng - 1); eat_until_unescaped('\''); return 1; }
 <sgml>[[:alnum:]_]+=[[:alnum:]_]* { FEED2(yytext, strchr(yytext, '=') - yytext + 1); return 1; }
 <sgml>[[:alnum:]_]+               { FEED(); return 1; }
 <sgml>\>                          { BEGIN(INITIAL); }
 <sgml>.|\n                        { /* nothing */ }
-;|\{|\}|\(|\)|\[|\]               { FEED(); return 1; }
-[[:alnum:]_.@#/*]+                {
-    if (strncmp(yytext, "/*", 2) == 0) {
-      if (yyleng >= 4 && strcmp(yytext + yyleng - 2, "*/") == 0) {
-        /* nothing */
-      } else {
-        BEGIN(c_comment);
-      }
-    } else {
-      FEED();
-      return 1;
-    }
-  }
-\<\<?|\+|\-|\*|\/|%|&&?|\|\|?     { FEED(); return 1; }
+
+[.@#]?[[:alnum:]_]+               { FEED(); return 1; }
+"()"|"{}"|"[]"                    { FEED(); return 1; }
+[({\[]|[)}\]]                     { FEED(); return 1; }
+
+<INITIAL,punct>[-!#$%&*+,.:;=>?@\\^_`|~]+/{not_punct}   { FEED(); BEGIN(INITIAL); return 1; }
+<INITIAL,punct>[-!#$%&*+,.:;=>?@\\^_`|~]+/("<!--"|"/*") { FEED(); BEGIN(INITIAL); return 1; }
+<INITIAL,punct>[</]+/{not_punct}          { FEED(); BEGIN(INITIAL); return 1; }
+<INITIAL,punct>[</]+/"<!--"               { FEED(); BEGIN(INITIAL); return 1; }
+<INITIAL,punct>[</]+/"/*"                 { FEED(); BEGIN(INITIAL); return 1; }
+<INITIAL,punct>[-!#$%&*+,.:;=>?@\\^_`|~]+ { yymore(); BEGIN(punct); }
+<INITIAL,punct>[</]                       { yymore(); BEGIN(punct); }
+<punct><<EOF>>                            { FEED2(yytext, yyleng - 1); BEGIN(INITIAL); return 1; }
+
 .|\n                              { /* nothing */ }
 
 %%
