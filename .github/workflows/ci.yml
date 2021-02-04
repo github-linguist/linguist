@@ -40,3 +40,17 @@ jobs:
       run: |
         cat output
         grep Ruby output
+  classifier:
+    name: Classifier cross-validation
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '2.7'
+        bundler-cache: true
+    - name: Build
+      run: bundle exec rake samples
+    - name: Run cross-validation
+      run: bundle exec script/cross-validation --test 2>&1
