@@ -110,6 +110,10 @@ disambiguations:
     pattern: '\\\w+{'
   - language: ObjectScript
     pattern: '^Class\s'
+- extensions: ['.cmp']
+  rules:
+  - language: Gerber Image
+    pattern: '^[DGMT][0-9]{2}\*\r?\n'
 - extensions: ['.cs']
   rules:
   - language: Smalltalk
@@ -193,7 +197,7 @@ disambiguations:
   - language: Graph Modeling Language
     pattern: '(?i:^\s*(graph|node)\s+\[$)'
   - language: Gerber Image
-    pattern: '\*\%$'
+    pattern: '^[DGMT][0-9]{2}\*$'
   - language: Game Maker Language
 - extensions: ['.gs']
   rules:
@@ -280,6 +284,13 @@ disambiguations:
     pattern: '^\s*%'
   - language: Limbo
     pattern: '^\w+\s*:\s*module\s*{'
+- extensions: ['.m4']
+  rules:
+  - language: M4Sugar
+    pattern:
+    - 'AC_DEFUN|AC_PREREQ|AC_INIT'
+    - '^_?m4_'
+  - language: 'M4'
 - extensions: ['.mask']
   rules:
   - language: Unity3d Asset
@@ -325,6 +336,8 @@ disambiguations:
   rules:
   - language: XML
     pattern: '^\s*<\?xml\s+version'
+  - language: Gerber Image
+    pattern: '^[DGMT][0-9]{2}\*\r?\n'
   - language: Text
     pattern: 'THE_TITLE'
 - extensions: ['.nl']
@@ -478,7 +491,7 @@ disambiguations:
   - language: Solidity
     pattern: '\bpragma\s+solidity\b|\b(?:abstract\s+)?contract\s+(?!\d)[a-zA-Z0-9$_]+(?:\s+is\s+(?:[a-zA-Z0-9$_][^\{]*?)?)?\s*\{'
   - language: Gerber Image
-    pattern: '^G75\*'
+    pattern: '^[DGMT][0-9]{2}\*\r?\n'
 - extensions: ['.sql']
   rules:
    # Postgres

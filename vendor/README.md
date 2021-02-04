@@ -206,7 +206,6 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **JSON5:** [atom/language-javascript](https://github.com/atom/language-javascript)
 - **JSONLD:** [atom/language-javascript](https://github.com/atom/language-javascript)
 - **JSONiq:** [wcandillon/language-jsoniq](https://github.com/wcandillon/language-jsoniq)
-- **JSX:** [github-linguist/babel-sublime](https://github.com/github-linguist/babel-sublime)
 - **Jasmin:** [atmarksharp/jasmin-sublime](https://github.com/atmarksharp/jasmin-sublime)
 - **Java:** [textmate/java.tmbundle](https://github.com/textmate/java.tmbundle)
 - **Java Properties:** [textmate/java.tmbundle](https://github.com/textmate/java.tmbundle)
