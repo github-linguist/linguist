@@ -532,6 +532,16 @@ Boo:
   ace_mode: text
   tm_scope: source.boo
   language_id: 37
+Boogie:
+  type: programming
+  color: "#c80fa0"
+  extensions:
+  - ".bpl"
+  interpreters:
+  - boogie
+  tm_scope: source.boogie
+  ace_mode: text
+  language_id: 955017407
 Brainfuck:
   type: programming
   color: "#2F2530"
@@ -2931,6 +2941,7 @@ Linux Kernel Module:
   language_id: 203
 Liquid:
   type: markup
+  color: "#67b8de"
   extensions:
   - ".liquid"
   tm_scope: text.html.liquid
@@ -3867,6 +3878,7 @@ OpenType Feature File:
   language_id: 374317347
 Org:
   type: prose
+  color: "#77aa99"
   wrap: true
   extensions:
   - ".org"
@@ -4613,6 +4625,8 @@ Raku:
   - ".pl6"
   - ".pm"
   - ".pm6"
+  - ".raku"
+  - ".rakumod"
   - ".t"
   interpreters:
   - perl6
