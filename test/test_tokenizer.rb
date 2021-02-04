@@ -32,64 +32,64 @@ class TestTokenizer < Minitest::Test
   end
 
   def test_comments
-    assert_equal %w(#), tokenize("#\n")
-    assert_equal %w(##), tokenize("##\n")
-    assert_equal %w(foo), tokenize("foo\n# Comment")
-    assert_equal %w(foo ## Comment), tokenize("foo\n## Comment")
-    assert_equal %w(foo bar), tokenize("foo\n# Comment\nbar")
+    assert_equal %w(COMMENT#), tokenize("#\n")
+    assert_equal %w(COMMENT#), tokenize("##\n")
+    assert_equal %w(foo COMMENT#), tokenize("foo\n# Comment")
+    assert_equal %w(foo COMMENT#), tokenize("foo\n## Comment")
+    assert_equal %w(foo COMMENT# bar), tokenize("foo\n# Comment\nbar")
 
-    assert_equal %w(), tokenize("//\n")
-    assert_equal %w(), tokenize("///\n")
-    assert_equal %w(foo), tokenize("foo\n// Comment")
-    assert_equal %w(foo), tokenize("foo\n/// Comment")
-    assert_equal %w(foo), tokenize("foo\n//! Comment")
-    assert_equal %w(), tokenize("//***\n")
+    assert_equal %w(COMMENT//), tokenize("//\n")
+    assert_equal %w(COMMENT//), tokenize("///\n")
+    assert_equal %w(foo COMMENT//), tokenize("foo\n// Comment")
+    assert_equal %w(foo COMMENT//), tokenize("foo\n/// Comment")
+    assert_equal %w(foo COMMENT//!), tokenize("foo\n//! Comment")
+    assert_equal %w(COMMENT//), tokenize("//***\n")
 
-    assert_equal %w(--), tokenize("--\n")
-    assert_equal %w(foo), tokenize("foo\n-- Comment")
+    assert_equal %w(COMMENT--), tokenize("--\n")
+    assert_equal %w(foo COMMENT--), tokenize("foo\n-- Comment")
 
-    assert_equal %w(), tokenize("\"\n")
-    assert_equal %w(foo), tokenize("foo\n\" Comment")
+    assert_equal %w(COMMENT"), tokenize("\"\n")
+    assert_equal %w(foo COMMENT"), tokenize("foo\n\" Comment")
 
-    assert_equal %w(;), tokenize(";\n")
-    assert_equal %w(;;), tokenize(";;\n")
-    assert_equal %w(foo ; Comment), tokenize("foo\n; Comment")
-    assert_equal %w(foo ;; Comment), tokenize("foo\n;; Comment")
+    assert_equal %w(COMMENT;), tokenize(";\n")
+    assert_equal %w(COMMENT;), tokenize(";;\n")
+    assert_equal %w(foo COMMENT;), tokenize("foo\n; Comment")
+    assert_equal %w(foo COMMENT;), tokenize("foo\n;; Comment")
 
-    assert_equal %w(foo), tokenize("foo /* Comment */")
-    assert_equal %w(foo), tokenize("foo /*Comment*/")
-    assert_equal %w(foo), tokenize("foo /* \nComment\n */")
-    assert_equal %w(foo), tokenize("foo /** Comment */")
-    assert_equal %w(foo), tokenize("foo /**Comment*/")
-    assert_equal %w(foo), tokenize("foo /*! Comment */")
-    assert_equal %w(foo), tokenize("foo /*!Comment*/")
-    assert_equal %w(), tokenize("/**/")
-    assert_equal %w(), tokenize("/*\n*\n*/")
-    assert_equal %w(), tokenize("/***/")
-    assert_equal %w(), tokenize("/****/")
-    assert_equal %w(), tokenize("/*!*/")
+    assert_equal %w(foo COMMENT/*), tokenize("foo /* Comment */")
+    assert_equal %w(foo COMMENT/*), tokenize("foo /*Comment*/")
+    assert_equal %w(foo COMMENT/*), tokenize("foo /* \nComment\n */")
+    assert_equal %w(foo COMMENT/**), tokenize("foo /** Comment */")
+    assert_equal %w(foo COMMENT/**), tokenize("foo /**Comment*/")
+    assert_equal %w(foo COMMENT/*!), tokenize("foo /*! Comment */")
+    assert_equal %w(foo COMMENT/*!), tokenize("foo /*!Comment*/")
+    assert_equal %w(COMMENT/*), tokenize("/**/")
+    assert_equal %w(COMMENT/*), tokenize("/*\n*\n*/")
+    assert_equal %w(COMMENT/**), tokenize("/***/")
+    assert_equal %w(COMMENT/**), tokenize("/****/")
+    assert_equal %w(COMMENT/*!), tokenize("/*!*/")
 
-    assert_equal %w(foo), tokenize("foo <!-- Comment -->")
-    assert_equal %w(foo), tokenize("foo <!--Comment-->")
-    assert_equal %w(foo), tokenize("foo<!--Comment-->")
-    assert_equal %w(foo), tokenize("foo<!---->")
+    assert_equal %w(foo COMMENT<!--), tokenize("foo <!-- Comment -->")
+    assert_equal %w(foo COMMENT<!--), tokenize("foo <!--Comment-->")
+    assert_equal %w(foo COMMENT<!--), tokenize("foo<!--Comment-->")
+    assert_equal %w(foo COMMENT<!--), tokenize("foo<!---->")
 
-    assert_equal %w(foo), tokenize("foo {- Comment -}")
-    assert_equal %w!foo!, tokenize("foo (* Comment *)")
+    assert_equal %w(foo COMMENT{-), tokenize("foo {- Comment -}")
+    assert_equal %w!foo COMMENT(*!, tokenize("foo (* Comment *)")
 
-    assert_equal %w(%), tokenize("%\n")
-    assert_equal %w(%%), tokenize("%%\n")
-    assert_equal %w(%), tokenize("2 % 10\n% Comment")
+    assert_equal %w(COMMENT%), tokenize("%\n")
+    assert_equal %w(COMMENT%), tokenize("%%\n")
+    assert_equal %w(% COMMENT%), tokenize("2 % 10\n% Comment")
 
-    assert_equal %w(foo bar), tokenize("foo\n\"\"\"\nComment\n\"\"\"\nbar")
-    assert_equal %w(foo bar), tokenize("foo\n'''\nComment\n'''\nbar")
+    assert_equal %w(foo COMMENT""" bar), tokenize("foo\n\"\"\"\nComment\n\"\"\"\nbar")
+    assert_equal %w(foo COMMENT''' bar), tokenize("foo\n'''\nComment\n'''\nbar")
 
     # Roff comments
-    assert_equal %w(.\\ bar), tokenize(".\\\" foo\nbar")
-    assert_equal %w(. \\ bar), tokenize(". \\\" foo\nbar")
-    assert_equal %w(bar), tokenize("'\\\" foo\nbar")
-    assert_equal %w(bar), tokenize("' \\\" foo\nbar")
-    assert_equal %w(.ig Comment ..), tokenize(".ig\nComment\n..")
+    assert_equal %w(COMMENT.\\" bar), tokenize(".\\\" foo\nbar")
+    assert_equal %w(COMMENT.\\" bar), tokenize(". \\\" foo\nbar")
+    assert_equal %w(COMMENT'\\" bar), tokenize("'\\\" foo\nbar")
+    assert_equal %w(COMMENT'\\" bar), tokenize("' \\\" foo\nbar")
+    assert_equal %w(COMMENT.ig), tokenize(".ig\nComment\n..")
 
     # Easily mistaken with comment
     assert_equal %w(*/), tokenize("1 */ 2")
@@ -192,7 +192,7 @@ class TestTokenizer < Minitest::Test
   end
 
   def test_perl_tokens
-    assert_equal %w(package POSIX ; #line sub getchar { usage if @_ != ; CORE :: getc \( STDIN \) ; } ;), tokenize(:"Perl/getchar.al")
+    assert_equal %w(COMMENT# COMMENT# COMMENT# package POSIX ; #line sub getchar { usage if @_ != ; CORE :: getc \( STDIN \) ; } COMMENT# ;), tokenize(:"Perl/getchar.al")
   end
 
   def test_shebang
