@@ -69,6 +69,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **COLLADA:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)
 - **CSON:** [atom/language-coffee-script](https://github.com/atom/language-coffee-script)
 - **CSS:** [atom/language-css](https://github.com/atom/language-css)
+- **CUE:** [cue-sh/vscode-cue](https://github.com/cue-sh/vscode-cue)
 - **Cabal Config:** [atom-haskell/language-haskell](https://github.com/atom-haskell/language-haskell)
 - **Cap'n Proto:** [textmate/capnproto.tmbundle](https://github.com/textmate/capnproto.tmbundle)
 - **CartoCSS:** [yohanboniface/carto-atom](https://github.com/yohanboniface/carto-atom)
