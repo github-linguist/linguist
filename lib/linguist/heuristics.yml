@@ -477,7 +477,7 @@ disambiguations:
   - language: RenderScript
     pattern: '#include|#pragma\s+(rs|version)|__attribute__'
   - language: XML
-    pattern: '<\?xml version="[\d.]+" encoding="[\w\d-]+"\?>'
+    pattern: '^\s*<\?xml'
 - extensions: ['.s']
   rules:
   - language: Motorola 68K Assembly
