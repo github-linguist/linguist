@@ -1,0 +1,14 @@
+// Copyright 2020 Intel Corporation
+// SPDX-License-Identifier: BSD-3-Clause
+
+#pragma once
+
+#ifndef ISPC_GPU
+#define DEFINE_CPU_ENTRY_POINT(fcn_name)                                                                               \
+    export void fcn_name##_cpu_entry_point(void *uniform parameters, uniform int dim0, uniform int dim1,               \
+                                           uniform int dim2) {                                                         \
+        launch[dim0, dim1, dim2] fcn_name(parameters);                                                                 \
+    }
+#else
+#define DEFINE_CPU_ENTRY_POINT(fcn_name)
+#endif
