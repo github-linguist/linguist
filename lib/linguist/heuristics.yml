@@ -511,6 +511,14 @@ disambiguations:
   rules:
   - language: SubRip Text
     pattern: '^(\d{2}:\d{2}:\d{2},\d{3})\s*(-->)\s*(\d{2}:\d{2}:\d{2},\d{3})$'
+- extensions: ['.st']
+  rules:
+  - language: StringTemplate
+    pattern:
+    - '</\w+>'
+    - '\$\w[($]'
+  - language: Smalltalk
+    pattern: '^[\[{"]|\w+\s*:=\s*\w+|class >> \w+|^Object\s+subclass:|^Class\s*{|if(?:True|False):\s*\['
 - extensions: ['.t']
   rules:
   - language: Perl
