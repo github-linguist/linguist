@@ -185,6 +185,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Harbour:** [hernad/atom-language-harbour](https://github.com/hernad/atom-language-harbour)
 - **Haskell:** [atom-haskell/language-haskell](https://github.com/atom-haskell/language-haskell)
 - **Haxe:** [vshaxe/haxe-TmLanguage](https://github.com/vshaxe/haxe-TmLanguage)
+- **High Level Assembly:** [Krebrov001/HLA-Projects](https://github.com/Krebrov001/HLA-Projects)
 - **HiveQL:** [adidonato/language-hql](https://github.com/adidonato/language-hql)
 - **HolyC:** [codingdandy/holyc.tmbundle](https://github.com/codingdandy/holyc.tmbundle)
 - **Hy:** [Slowki/hy.tmLanguage](https://github.com/Slowki/hy.tmLanguage)
