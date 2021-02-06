@@ -518,7 +518,7 @@ disambiguations:
     - '</\w+>'
     - '\$\w[($]'
   - language: Smalltalk
-    pattern: '\A[\[{('"\w\d#]|\w+\s*:=\s*\w+|class >> \w+|^\w+\s+\w+:|^Class\s*{|if(?:True|False):\s*\['
+    pattern: '\A[\[{(\'"\w\d#]|\w+\s*:=\s*\w+|class >> \w+|^\w+\s+\w+:|^Class\s*{|if(?:True|False):\s*\['
 - extensions: ['.t']
   rules:
   - language: Perl
