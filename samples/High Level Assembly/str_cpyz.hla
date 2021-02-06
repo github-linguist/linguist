@@ -1,0 +1,303 @@
+// https://github.com/mcandre/hla/blob/cea2b64754194e5dfb19e1961c1d1048d5221a52/windows-stdlib/strings/str_cpyz.hla
+// I, Randall Hyde, hereby agree to waive all claim of copyright (economic
+// and moral) in all content contributed by me, the user, and immediately
+// place any and all contributions by me into the public domain; I grant
+// anyone the right to use my work for any purpose, without any
+// conditions, to be changed or destroyed in any manner whatsoever
+// without any attribution or notice to the creator.  I also absolve myself
+// of any responsibility for the use of this code, the user assumes all
+// responsibilities for using this software in an appropriate manner.
+//
+// Notice of declaration of public domain, 7/12/2006, by Randall Hyde
+
+
+
+unit stringUnit;
+?@nodisplay := true;
+?@nostackalign := true;
+
+#include( "strings.hhf" )
+#include( "excepts.hhf" )
+
+/********************************************************************/
+/*                                                                 	*/
+/* cpyz-                                                      		*/
+/*                                                                 	*/
+/* zsrc is a zero-terminated string.  This function converts it to 	*/
+/* an HLA string and stores it into dest.                          	*/
+/*                                                                 	*/
+/********************************************************************/
+
+
+procedure str.cpyz( zstr:zstring; dest:string ); 
+	@noframe;
+	
+begin cpyz;
+
+	push( ebp );
+	mov( esp, ebp );
+	push( eax );
+	push( ecx );
+	push( edi );
+	push( esi );
+	pushfd();
+	
+	cld();
+	
+	// First, compute the length of the zero-terminated string
+	// so we can determine if we need to raise an exception.
+	//
+	// Start the length computation by aligning ourselves on
+	// a dword boundary:
+	
+	mov( zstr, ecx );
+	test( ecx, ecx );			// Make sure it's a non-NULL pointer
+	jz AttemptToDerefNULL;
+	
+	mov( ecx, eax );
+	and( %11, eax );
+	jz dwordAligned;
+	
+		cmp( (type byte [ecx]), 0 );
+		jz GotLen;
+		add( 1, ecx );
+		cmp( eax, %11 );
+		je dwordAligned;
+	
+		cmp( (type byte [ecx]), 0 );
+		jz GotLen;
+		add( 1, ecx );
+		cmp( eax, %10 );
+		je dwordAligned;
+	
+		cmp( (type byte [ecx]), 0 );
+		jz GotLen;
+		add( 1, ecx );
+	
+	
+	dwordAligned:
+	sub( 32, ecx );				// To counteract add immediately below.
+	ZeroLoop:
+		add( 32, ecx );			// Skip chars this loop just processed.
+	ZeroLoop2:
+		mov( [ecx], eax );		// Get next four chars into EAX.
+		and( $7f7f7f7f, eax );	// Clear H.O. bit (note:$80->$00!)
+		sub( $01010101, eax );	// $00 and $80->$FF, all others have pos val.
+		and( $80808080, eax );	// Test all H.O. bits.  If any are set, then
+		jnz MightBeZero0;		//  we've got a $00 or $80 byte.
+		
+		mov( [ecx+4], eax );	// The following are all in-line expansions
+		and( $7f7f7f7f, eax );	// of the above (we'll process 32 bytes on
+		sub( $01010101, eax );	// each iteration of this loop). 
+		and( $80808080, eax );
+		jnz MightBeZero4;
+		
+		mov( [ecx+8], eax );
+		and( $7f7f7f7f, eax );
+		sub( $01010101, eax );
+		and( $80808080, eax );
+		jnz MightBeZero8;
+		
+		mov( [ecx+12], eax );
+		and( $7f7f7f7f, eax );
+		sub( $01010101, eax );
+		and( $80808080, eax );
+		jnz MightBeZero12;
+		
+		mov( [ecx+16], eax );
+		and( $7f7f7f7f, eax );
+		sub( $01010101, eax );
+		and( $80808080, eax );
+		jnz MightBeZero16;
+		
+		mov( [ecx+20], eax );
+		and( $7f7f7f7f, eax );
+		sub( $01010101, eax );
+		and( $80808080, eax );
+		jnz MightBeZero20;
+		
+		mov( [ecx+24], eax );
+		and( $7f7f7f7f, eax );
+		sub( $01010101, eax );
+		and( $80808080, eax );
+		jnz MightBeZero24;
+		
+		mov( [ecx+28], eax );
+		and( $7f7f7f7f, eax );
+		sub( $01010101, eax );
+		and( $80808080, eax );
+		jz ZeroLoop;
+	
+	// The following code handles the case where we found a $80
+	// or a $00 byte.  We need to determine whether it was a zero
+	// byte and the exact position of the zero byte.  If it was a
+	// $80 byte, then we've got to continue processing characters
+	// in the string.
+	 
+	
+	// Okay, we've found a $00 or $80 byte in positions
+	// 28..31.  Check for the location of the zero byte, if any.
+		
+		add( 28, ecx );
+		jmp	MightBeZero0;
+
+	// If we get to this point, we've found a zero byte in
+	// positions 4..7:
+	
+	MightBeZero4:
+		add( 4, ecx );
+		jmp	MightBeZero0;
+
+	// If we get to this point, we've found a zero byte in
+	// positions 8..11:
+	
+	MightBeZero8:
+		add( 8, ecx );
+		jmp	MightBeZero0;
+
+	// If we get to this point, we've found a zero byte in
+	// positions 12..15:
+	
+	MightBeZero12:
+		add( 12, ecx );
+		jmp	MightBeZero0;
+
+	// If we get to this point, we've found a zero byte in
+	// positions 16..19:
+	
+	MightBeZero16:
+		add( 16, ecx );
+		jmp	MightBeZero0;
+
+	// If we get to this point, we've found a zero byte in
+	// positions 20..23:
+	
+	MightBeZero20:
+		add( 20, ecx );
+		jmp	MightBeZero0;
+
+	// If we get to this point, we've found a zero byte in
+	// positions 24..27:
+	
+	MightBeZero24:
+		add( 24, ecx );
+
+	// If we get to this point, we've found a zero byte in
+	// positions 0..3 or we've branched here from one of the
+	// above conditions
+	
+	MightBeZero0:
+		mov( [ecx], eax );			// Get the original four bytes.
+		cmp( al, 0 );				// See if the first byte contained zero.
+		je GotLen;
+		inc( ecx );
+		cmp( ah, 0 );				// See if the second byte contained zero.
+		je GotLen;
+		inc( ecx );
+		test( $FF_0000, eax );		// See if byte #2 contained a zero.
+		je GotLen;
+		inc( ecx );
+		test( $FF00_0000, eax );	// See if the H.O. byte contained zero.
+		je GotLen;
+		
+	// Well, it must have been a $80 byte we encountered.
+	// (Fortunately, they are rare in ASCII strings, so all this
+	// extra computation rarely occurs).  Jump back into the zero
+	// loop and continue processing.
+	
+		inc( ecx );		// Skip bytes we just processed.
+		jmp ZeroLoop2;	// Don't bother adding 32 in the ZeroLoop!
+		
+	// Compute the length of the string as the difference between
+	// the address of the zero byte and the start of the string.
+	
+	GotLen:
+		sub( zstr, ecx );
+		mov( zstr, esi );
+		mov( dest, edi );
+		
+	// Make sure our destination string pointer is non-null.
+	
+	test( edi, edi );
+	jz AttemptToDerefNULL;	
+	
+	// Make sure that the source string will fit in the destination string.
+	
+	cmp( ecx, (type str.strRec [edi]).maxlen );
+	ja StringOverflow;
+		
+	
+	// Save as the length of the destination string.
+	
+	mov( ecx, (type str.strRec [edi]).length );
+	
+	// Must have special cases for a length that is a multiple of two or four
+	// bytes:
+	
+	add( 1, ecx );			// Move zero terminating byte, too.
+	mov( ecx, eax );
+	and( %11, eax );
+	jz movsDword;
+	cmp( eax, %10 );
+	jz movsWord;
+	cmp( eax, %11 );
+	je move3;
+	
+		// The remainder of the length divided by four is 3.
+		// So we have to move a single byte and then we can
+		// use a dword move to handle everything else.
+		
+		movsb();
+		sub( 1, ecx );
+		jz allDone;
+		shr( 2, ecx );
+		rep.movsd();
+		jmp allDone;
+	
+	move3:
+		// The length to move is not divisible by two or four,
+		// and the remainder of the division by four is 1.
+		// so move three bytes here.
+		
+		movsb();
+		sub( 1, ecx );
+		jz allDone;
+		
+		// Fall through to move the next two bytes.
+	
+	
+	movsWord:
+	
+		// Compute the number of dwords to copy (rather than bytes).
+		// Then copy the data.
+		
+		movsw();
+		sub( 2, ecx );
+		jz allDone;
+	
+	movsDword:
+	
+		// Compute the number of dwords to copy (rather than bytes).
+		// Then copy the data.
+		
+		shr( 2, ecx );
+		rep.movsd();
+		
+	allDone:		
+	popfd();
+	pop( esi );
+	pop( edi );
+	pop( ecx );
+	pop( eax );
+	pop( ebp );
+	ret( _parms_ );
+			
+AttemptToDerefNULL:	
+	raise( ex.AttemptToDerefNULL );
+
+StringOverflow:
+		raise( ex.StringOverflow );
+
+end cpyz;
+	
+end stringUnit;
