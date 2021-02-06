@@ -759,7 +759,7 @@ class TestHeuristics < Minitest::Test
 
   def test_st_by_heuristics
     assert_heuristics({
-      "StringTemplate" => all_fixtures("StringTemplate", "*.st")
+      "StringTemplate" => all_fixtures("StringTemplate", "*.st"),
       "Smalltalk" => all_fixtures("Smalltalk", "*.st")
     })
   end
