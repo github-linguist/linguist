@@ -419,7 +419,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Standard ML:** [textmate/standard-ml.tmbundle](https://github.com/textmate/standard-ml.tmbundle)
 - **Starlark:** [MagicStack/MagicPython](https://github.com/MagicStack/MagicPython)
 - **Stata:** [pschumm/Stata.tmbundle](https://github.com/pschumm/Stata.tmbundle)
-- **StringTemplate:** [atom/language-html](https://github.com/atom/language-html)
+- **StringTemplate:** [dangmarm/stringtemplate-lang](https://github.com/dangmarm/stringtemplate-lang)
 - **Stylus:** [billymoon/Stylus](https://github.com/billymoon/Stylus)
 - **SubRip Text:** [314eter/atom-language-srt](https://github.com/314eter/atom-language-srt)
 - **SugarSS:** [hudochenkov/Syntax-highlighting-for-PostCSS](https://github.com/hudochenkov/Syntax-highlighting-for-PostCSS)
