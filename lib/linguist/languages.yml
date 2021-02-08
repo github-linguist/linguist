@@ -852,7 +852,7 @@ Clojure:
   language_id: 62
 Closure Templates:
   type: markup
-  group: HTML
+  color: "#0d948f"
   ace_mode: soy_template
   codemirror_mode: soy
   codemirror_mime_type: text/x-soy
@@ -1298,7 +1298,6 @@ ECLiPSe:
 EJS:
   type: markup
   color: "#a91e50"
-  group: HTML
   extensions:
   - ".ejs"
   - ".ect"
@@ -3225,6 +3224,7 @@ Markdown:
   - ".mkdn"
   - ".mkdown"
   - ".ronn"
+  - ".scd"
   - ".workbook"
   filenames:
   - contents.lr
@@ -3450,7 +3450,7 @@ Muse:
   - emacs muse
 Mustache:
   type: markup
-  group: HTML
+  color: "#724b3b"
   extensions:
   - ".mustache"
   tm_scope: text.html.smarty
@@ -5144,8 +5144,8 @@ Scala:
   - scala
   language_id: 341
 Scaml:
-  group: HTML
   type: markup
+  color: "#bd181a"
   extensions:
   - ".scaml"
   tm_scope: source.scaml
@@ -6231,6 +6231,7 @@ XML:
   - ".rdf"
   - ".res"
   - ".resx"
+  - ".rs"
   - ".rss"
   - ".sch"
   - ".scxml"
