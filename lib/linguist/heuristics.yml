@@ -476,6 +476,8 @@ disambiguations:
     pattern: '^(use |fn |mod |pub |macro_rules|impl|#!?\[)'
   - language: RenderScript
     pattern: '#include|#pragma\s+(rs|version)|__attribute__'
+  - language: XML
+    pattern: '^\s*<\?xml'
 - extensions: ['.s']
   rules:
   - language: Motorola 68K Assembly
