@@ -3,8 +3,8 @@
 This is the procedure for making a new release of Linguist. The entire process needs to be performed by a member of GitHub staff.
 
 1. Create a branch for the release: `git checkout -b release-vxx.xx.xx`
-2. Make sure your local dependencies are up to date: `script/bootstrap`
-3. If grammar submodules have not been updated recently, update them: `git submodule update --remote`.
+2. Make sure your local dependencies are up to date: `rm Gemfile.lock && script/bootstrap`
+3. If the grammar submodules have not been updated recently, update them: `git submodule update --remote`.
    If any submodules are updated:
     1. update the `grammars.yml`: `script/grammar-compiler update -f`
     2. update the license cache: `bundle exec licensed cache -c vendor/licenses/config.yml`

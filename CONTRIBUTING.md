@@ -206,7 +206,7 @@ As Linguist is a production dependency for GitHub we have a couple of workflow r
 
 
 [grammars]: /vendor/README.md
-[heuristic]: https://github.com/github/linguist/blob/master/lib/linguist/heuristics.rb
+[heuristic]: https://github.com/github/linguist/blob/master/lib/linguist/heuristics.yml
 [languages]: /lib/linguist/languages.yml
 [licenses]: https://github.com/github/linguist/blob/257425141d4e2a5232786bf0b13c901ada075f93/vendor/licenses/config.yml#L2-L11
 [new-issue]: https://github.com/github/linguist/issues/new

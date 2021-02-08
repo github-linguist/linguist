@@ -6,11 +6,11 @@ If the language stats bar is reporting a language that you don't expect:
 
 1. Click on the name of the language in the stats bar to see a list of the files that are identified as that language.
    Keep in mind this performs a search so the [code search restrictions][search-limits] may result in files identified in the language statistics not appearing in the search results.
-   [Installing Linguist locally](#usage) and running it from the [command line](#command-line-usage) will give you accurate results.
-1. If you see files that you didn't write in the search results, consider moving the files into one of the [paths for vendored code](/lib/linguist/vendor.yml), or use the [manual overrides](#overrides) feature to ignore them.
+   [Installing Linguist locally](/README.md/#installation) and running it from the [command line](/README.md#command-line-usage) will give you accurate results.
+1. If you see files that you didn't write in the search results, consider moving the files into one of the [paths for vendored code](/lib/linguist/vendor.yml), or use the [manual overrides](/docs/overrides.md) feature to ignore them.
 1. If the files are misclassified, search for [open issues][issues] to see if anyone else has already reported the issue.
    Any information you can add, especially links to public repositories, is helpful.
-   You can also use the [manual overrides](#overrides) feature to correctly classify them in your repository.
+   You can also use the [manual overrides](/docs/overrides.md) feature to correctly classify them in your repository.
 1. If there are no reported issues of this misclassification, [open an issue][new-issue] and include a link to the repository or a sample of the code that is being misclassified.
 
 [search-limits]: https://docs.github.com/github/searching-for-information-on-github/searching-code#considerations-for-code-search
@@ -20,7 +20,7 @@ If you have not made any changes to your repository in a while, you may find pus
 
 ## My repository isn't showing my language
 
-Linguist does not consider [vendored code](#vendored-code), [generated code](#generated-code), [documentation](#documentation), or `data` (e.g. SQL) or `prose` (e.g. Markdown) languages (as defined by the `type` attribute in [`languages.yml`](/lib/linguist/languages.yml)) when calculating the repository language statistics.
+Linguist does not consider [vendored code](/docs/overrides.md#vendored-code), [generated code](/docs/overrides.md#generated-code), [documentation](/docs/overrides.md#documentation), or `data` (e.g. SQL) or `prose` (e.g. Markdown) languages (as defined by the `type` attribute in [`languages.yml`](/lib/linguist/languages.yml)) when calculating the repository language statistics.
 
 If the language statistics bar is not showing your language at all, it could be for a few reasons:
 
@@ -29,7 +29,7 @@ If the language statistics bar is not showing your language at all, it could be 
 1. All the files in your repository fall into one of the categories listed above that Linguist excludes by default.
 
 If Linguist doesn't know about the language or the extension you're using, consider [contributing](CONTRIBUTING.md) to Linguist by opening a pull request to add support for your language or extension.
-For everything else, you can use the [manual overrides](#overrides) feature to tell Linguist to include your files in the language statistics.
+For everything else, you can use the [manual overrides](/docs/overrides.md) feature to tell Linguist to include your files in the language statistics.
 
 ## There's a problem with the syntax highlighting of a file
 
@@ -46,4 +46,9 @@ repositories and thus changes need to be committed as individual files don't sho
 As a work around you could initialise a temporary Git repository in your directory as demonstrated in this
 [script](https://gist.github.com/PuZZleDucK/a45fd1fac3758235ffed9fe0e8aab643).
 
-Alternatively you can run Linguist on individual files, see [above](#single-file).
+Alternatively you can run Linguist on individual files, see [above](/README.md#single-file).
+
+## I am unable to install Linguist on macOS
+
+There are several known issues with the version of Ruby shipped with macOS that cause problems when it comes to installing the charlock-holmes gem which is a Linguist dependency.
+As this is a problem with the Ruby shipped by Apple and not Linguist or charlock-holmes, we recommend you install a version of Ruby using Homebrew, `rbenv`, `rvm`, `ruby-build`, `asdf` or other packaging system, before attempting to install Linguist.

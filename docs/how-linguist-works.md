@@ -2,9 +2,9 @@
 
 Linguist takes the list of languages it knows from [`languages.yml`](/lib/linguist/languages.yml) and uses a number of methods to try and determine the language used by each file, and the overall repository breakdown.
 
-Linguist starts by going through all the files in a repository and excludes all files that it determines to be binary data, [vendored code](#vendored-code), [generated code](#generated-code), [documentation](#documentation), or are defined as `data` (e.g. SQL) or `prose` (e.g. Markdown) languages, whilst taking into account any [overrides](#overrides).
+Linguist starts by going through all the files in a repository and excludes all files that it determines to be binary data, [vendored code](/docs/overrides.md#vendored-code), [generated code](/docs/overrides.md#generated-code), [documentation](/docs/overrides.md#documentation), or are defined as `data` (e.g. SQL) or `prose` (e.g. Markdown) languages, whilst taking into account any [overrides](/docs/overrides.md).
 
-If an [explicit language override](#using-gitattributes) has been used, that language is used for the matching files.
+If an [explicit language override](/docs/overrides.md#using-gitattributes) has been used, that language is used for the matching files.
 The language of each remaining file is then determined using the following strategies, in order, with each step either identifying the precise language or reducing the number of likely languages passed down to the next strategy:
 
 - Vim or Emacs modeline,
