@@ -193,7 +193,6 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **INI:** [textmate/ini.tmbundle](https://github.com/textmate/ini.tmbundle)
 - **Idris:** [idris-hackers/idris-sublime](https://github.com/idris-hackers/idris-sublime)
 - **Ignore List:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
-- **ImageJ:** [davidbrown2324/language-ijm](https://github.com/davidbrown2324/language-ijm)
 - **Inform 7:** [erkyrath/language-inform7](https://github.com/erkyrath/language-inform7)
 - **Inno Setup:** [idleberg/atom-language-innosetup](https://github.com/idleberg/atom-language-innosetup)
 - **Io:** [textmate/io.tmbundle](https://github.com/textmate/io.tmbundle)
