@@ -39,7 +39,11 @@ module Linguist
     # Set LINGUIST_DEBUG=1 or =2 to see probabilities per-token or
     # per-language.  See also #dump_all_tokens, below.
     def self.train!(db, language, data)
-      tokens = Tokenizer.tokenize(data)
+      tokens = data
+      tokens = Tokenizer.tokenize(tokens) if tokens.is_a?(String)
+
+      counts = Hash.new(0)
+      tokens.each { |tok| counts[tok] += 1 }
 
       db['tokens_total'] ||= 0
       db['languages_total'] ||= 0
@@ -47,13 +51,13 @@ module Linguist
       db['language_tokens'] ||= {}
       db['languages'] ||= {}
 
-      tokens.each do |token|
+      counts.each do |token, count|
         db['tokens'][language] ||= {}
         db['tokens'][language][token] ||= 0
-        db['tokens'][language][token] += 1
+        db['tokens'][language][token] += count
         db['language_tokens'][language] ||= 0
-        db['language_tokens'][language] += 1
-        db['tokens_total'] += 1
+        db['language_tokens'][language] += count
+        db['tokens_total'] += count
       end
       db['languages'][language] ||= 0
       db['languages'][language] += 1
