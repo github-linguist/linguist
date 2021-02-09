@@ -294,7 +294,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Nit:** [R4PaSs/Sublime-Nit](https://github.com/R4PaSs/Sublime-Nit)
 - **Nix:** [wmertens/sublime-nix](https://github.com/wmertens/sublime-nix)
 - **Nu:** [jsallis/nu.tmbundle](https://github.com/jsallis/nu.tmbundle)
-- **Nunjucks:** [language-nunjucks](https://github.com/alohaas/language-nunjucks)
+- **Nunjucks:** [alohaas/language-nunjucks](https://github.com/alohaas/language-nunjucks)
 - **OCaml:** [textmate/ocaml.tmbundle](https://github.com/textmate/ocaml.tmbundle)
 - **ObjDump:** [nanoant/assembly.tmbundle](https://github.com/nanoant/assembly.tmbundle)
 - **Object Data Instance Notation:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
