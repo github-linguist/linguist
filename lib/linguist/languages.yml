@@ -532,6 +532,16 @@ Boo:
   ace_mode: text
   tm_scope: source.boo
   language_id: 37
+Boogie:
+  type: programming
+  color: "#c80fa0"
+  extensions:
+  - ".bpl"
+  interpreters:
+  - boogie
+  tm_scope: source.boogie
+  ace_mode: text
+  language_id: 955017407
 Brainfuck:
   type: programming
   color: "#2F2530"
@@ -583,6 +593,8 @@ C#:
   color: "#178600"
   aliases:
   - csharp
+  - cake
+  - cakescript
   extensions:
   - ".cs"
   - ".cake"
@@ -840,7 +852,7 @@ Clojure:
   language_id: 62
 Closure Templates:
   type: markup
-  group: HTML
+  color: "#0d948f"
   ace_mode: soy_template
   codemirror_mode: soy
   codemirror_mime_type: text/x-soy
@@ -1286,7 +1298,6 @@ ECLiPSe:
 EJS:
   type: markup
   color: "#a91e50"
-  group: HTML
   extensions:
   - ".ejs"
   - ".ect"
@@ -2368,6 +2379,7 @@ Ignore List:
   - ".coffeelintignore"
   - ".cvsignore"
   - ".dockerignore"
+  - ".eleventyignore"
   - ".eslintignore"
   - ".gitignore"
   - ".nodemonignore"
@@ -2488,6 +2500,7 @@ JSON:
   - ".tern-config"
   - ".tern-project"
   - ".watchmanconfig"
+  - Pipfile.lock
   - composer.lock
   - mcmod.info
   language_id: 174
@@ -2942,6 +2955,7 @@ Linux Kernel Module:
   language_id: 203
 Liquid:
   type: markup
+  color: "#67b8de"
   extensions:
   - ".liquid"
   tm_scope: text.html.liquid
@@ -3226,6 +3240,7 @@ Markdown:
   - ".mkdn"
   - ".mkdown"
   - ".ronn"
+  - ".scd"
   - ".workbook"
   filenames:
   - contents.lr
@@ -3451,7 +3466,7 @@ Muse:
   - emacs muse
 Mustache:
   type: markup
-  group: HTML
+  color: "#724b3b"
   extensions:
   - ".mustache"
   tm_scope: text.html.smarty
@@ -3878,6 +3893,7 @@ OpenType Feature File:
   language_id: 374317347
 Org:
   type: prose
+  color: "#77aa99"
   wrap: true
   extensions:
   - ".org"
@@ -4624,6 +4640,8 @@ Raku:
   - ".pl6"
   - ".pm"
   - ".pm6"
+  - ".raku"
+  - ".rakumod"
   - ".t"
   interpreters:
   - perl6
@@ -5132,8 +5150,8 @@ Scala:
   - scala
   language_id: 341
 Scaml:
-  group: HTML
   type: markup
+  color: "#bd181a"
   extensions:
   - ".scaml"
   tm_scope: source.scaml
@@ -5532,6 +5550,7 @@ TOML:
   filenames:
   - Cargo.lock
   - Gopkg.lock
+  - Pipfile
   - poetry.lock
   tm_scope: source.toml
   ace_mode: toml
@@ -6218,6 +6237,7 @@ XML:
   - ".rdf"
   - ".res"
   - ".resx"
+  - ".rs"
   - ".rss"
   - ".sch"
   - ".scxml"
