@@ -300,6 +300,8 @@ class TestFileBlob < Minitest::Test
     # 'extern(al)' directory
     assert sample_blob("extern/util/__init__.py").vendored?
     assert sample_blob("external/jquery.min.js").vendored?
+    assert sample_blob("externals/fmt/CMakeLists.txt").vendored?
+    assert sample_blob("External/imgui/imgui.h").vendored?
 
     # C deps
     assert sample_blob("deps/http_parser/http_parser.c").vendored?
@@ -641,11 +643,20 @@ class TestFileBlob < Minitest::Test
   end
 
   def test_language
+    # Failures are reasonable in some cases, such as when a file is fully valid in more than one language.
+    allowed_failures = {
+      "#{samples_path}/C++/rpc.h" => ["C", "C++"],
+    }
     Samples.each do |sample|
       blob = sample_blob(sample[:path])
       assert blob.language, "No language for #{sample[:path]}"
       fs_name = blob.language.fs_name ? blob.language.fs_name : blob.language.name
-      assert_equal sample[:language], fs_name, blob.name
+
+      if allowed_failures.has_key? sample[:path]
+        assert allowed_failures[sample[:path]].include?(sample[:language]), blob.name
+      else
+        assert_equal sample[:language], fs_name, blob.name
+      end
     end
 
     # Test language detection for files which shouldn't be used as samples

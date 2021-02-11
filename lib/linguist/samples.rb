@@ -1,7 +1,7 @@
 begin
   require 'yajl'
 rescue LoadError
-  require 'yaml'
+  require 'json'
 end
 
 require 'linguist/sha256'
@@ -24,7 +24,7 @@ module Linguist
 
     # Hash of serialized samples object, uncached
     def self.load_samples
-      serializer = defined?(Yajl) ? Yajl : YAML
+      serializer = defined?(Yajl) ? Yajl : JSON
       serializer.load(File.read(PATH, encoding: 'utf-8'))
     end
 

@@ -192,11 +192,6 @@ vendor/grammars/atom-editorconfig:
 - text.plain
 vendor/grammars/atom-firestore-grammar:
 - source.firestore
-vendor/grammars/atom-fsharp:
-- source.fsharp
-- source.fsharp.fsi
-- source.fsharp.fsl
-- source.fsharp.fsx
 vendor/grammars/atom-fstar:
 - source.fstar
 vendor/grammars/atom-language-1c-bsl:
@@ -219,9 +214,9 @@ vendor/grammars/atom-language-p4:
 - source.p4
 vendor/grammars/atom-language-perl6:
 - source.meta-info
-- source.perl6fe
-- source.quoting.perl6fe
-- source.regexp.perl6fe
+- source.quoting.raku
+- source.raku
+- source.regexp.raku
 vendor/grammars/atom-language-purescript:
 - source.purescript
 vendor/grammars/atom-language-rust:
@@ -242,15 +237,16 @@ vendor/grammars/avro.tmLanguage:
 - source.avro
 vendor/grammars/awk-sublime:
 - source.awk
-vendor/grammars/babel-sublime:
-- source.js.css
-- source.js.jsx
 vendor/grammars/ballerina-grammar:
 - source.ballerina
 vendor/grammars/blitzmax:
 - source.blitzmax
 vendor/grammars/boo:
 - source.boo
+vendor/grammars/boogie-vscode:
+- source.boogie
+vendor/grammars/browserslist-vscode:
+- text.browserslist
 vendor/grammars/c.tmbundle:
 - source.c
 - source.c++
@@ -364,6 +360,13 @@ vendor/grammars/io.tmbundle:
 - source.io
 vendor/grammars/ioke-outdated:
 - source.ioke
+vendor/grammars/ionide-fsgrammar:
+- source.fsharp
+- source.fsharp.fsi
+- source.fsharp.fsl
+- source.fsharp.fsx
+- source.paket.dependencies
+- source.paket.lock
 vendor/grammars/jade-tmbundle:
 - source.pyjade
 - text.jade
@@ -432,6 +435,7 @@ vendor/grammars/language-eml:
 vendor/grammars/language-etc:
 - etc
 - injections.etc
+- source.c.nwscript
 - source.curlrc
 - source.direct-x
 - source.dosbox-conf
@@ -453,6 +457,7 @@ vendor/grammars/language-etc:
 - source.odin-ehr
 - source.openbsd-pkg.contents
 - source.opts
+- source.record-jar
 - source.sieve
 - source.smpl
 - source.ssh-config
@@ -460,6 +465,7 @@ vendor/grammars/language-etc:
 - source.ucd.nameslist
 - source.ucd.unidata
 - source.wgetrc
+- text.checksums
 - text.openbsd-pkg.desc
 - text.xml.svg
 vendor/grammars/language-faust:
@@ -484,6 +490,8 @@ vendor/grammars/language-grammars:
 - source.abnf
 - source.bnf
 - source.ebnf
+- source.lark
+- source.lbnf
 - source.lex
 - source.lex.regexp
 - source.yacc
@@ -548,6 +556,9 @@ vendor/grammars/language-ncl:
 - source.ncl
 vendor/grammars/language-ninja:
 - source.ninja
+vendor/grammars/language-nunjucks:
+- source.nunjucks
+- text.html.nunjucks
 vendor/grammars/language-pan:
 - source.pan
 vendor/grammars/language-pcb:
@@ -648,7 +659,8 @@ vendor/grammars/latex.tmbundle:
 - text.tex.latex.memoir
 vendor/grammars/linter-lilypond:
 - source.lilypond
-vendor/grammars/liquid.tmbundle:
+vendor/grammars/liquid:
+- source.css.scss.liquid
 - text.html.liquid
 vendor/grammars/lisp.tmbundle:
 - source.lisp
@@ -745,6 +757,8 @@ vendor/grammars/rascal-syntax-highlighting:
 - source.rascal
 vendor/grammars/razor-plus:
 - text.html.cshtml
+vendor/grammars/rescript-vscode:
+- source.rescript
 vendor/grammars/riot-syntax-highlight:
 - text.html.riot
 vendor/grammars/ruby-slim.tmbundle:

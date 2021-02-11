@@ -451,6 +451,16 @@ Batchfile:
   ace_mode: batchfile
   color: "#C1F12E"
   language_id: 29
+Beef:
+  type: programming
+  color: "#a52f4e"
+  extensions:
+  - ".bf"
+  tm_scope: source.cs
+  ace_mode: csharp
+  codemirror_mode: clike
+  codemirror_mime_type: text/x-csharp
+  language_id: 545626333
 Befunge:
   type: programming
   extensions:
@@ -532,6 +542,16 @@ Boo:
   ace_mode: text
   tm_scope: source.boo
   language_id: 37
+Boogie:
+  type: programming
+  color: "#c80fa0"
+  extensions:
+  - ".bpl"
+  interpreters:
+  - boogie
+  tm_scope: source.boogie
+  ace_mode: text
+  language_id: 955017407
 Brainfuck:
   type: programming
   color: "#2F2530"
@@ -550,6 +570,15 @@ Brightscript:
   tm_scope: source.brightscript
   ace_mode: text
   language_id: 39
+Browserslist:
+  type: data
+  color: "#ffd539"
+  filenames:
+  - ".browserslistrc"
+  - browserslist
+  tm_scope: text.browserslist
+  ace_mode: text
+  language_id: 153503348
 C:
   type: programming
   color: "#555555"
@@ -574,6 +603,8 @@ C#:
   color: "#178600"
   aliases:
   - csharp
+  - cake
+  - cakescript
   extensions:
   - ".cs"
   - ".cake"
@@ -831,7 +862,7 @@ Clojure:
   language_id: 62
 Closure Templates:
   type: markup
-  group: HTML
+  color: "#0d948f"
   ace_mode: soy_template
   codemirror_mode: soy
   codemirror_mime_type: text/x-soy
@@ -962,9 +993,6 @@ Component Pascal:
   - ".cp"
   - ".cps"
   tm_scope: source.pascal
-  aliases:
-  - delphi
-  - objectpascal
   ace_mode: pascal
   codemirror_mode: pascal
   codemirror_mime_type: text/x-pascal
@@ -1280,7 +1308,6 @@ ECLiPSe:
 EJS:
   type: markup
   color: "#a91e50"
-  group: HTML
   extensions:
   - ".ejs"
   - ".ect"
@@ -1807,6 +1834,7 @@ Gerber Image:
   - rs-274x
   extensions:
   - ".gbr"
+  - ".cmp"
   - ".gbl"
   - ".gbo"
   - ".gbp"
@@ -1819,6 +1847,7 @@ Gerber Image:
   - ".gto"
   - ".gtp"
   - ".gts"
+  - ".ncl"
   - ".sol"
   interpreters:
   - gerbv
@@ -2038,6 +2067,7 @@ HCL:
   - ".tfvars"
   - ".workflow"
   aliases:
+  - HashiCorp Configuration Language
   - terraform
   ace_mode: ruby
   codemirror_mode: ruby
@@ -2081,14 +2111,11 @@ HTML+Django:
   - ".jinja"
   - ".j2"
   - ".jinja2"
-  - ".njk"
   aliases:
   - django
   - html+django/jinja
   - html+jinja
   - htmldjango
-  - njk
-  - nunjucks
   ace_mode: django
   codemirror_mode: django
   codemirror_mime_type: text/x-django
@@ -2111,8 +2138,10 @@ HTML+EEX:
   group: HTML
   aliases:
   - eex
+  - leex
   extensions:
   - ".eex"
+  - ".html.leex"
   ace_mode: text
   codemirror_mode: htmlmixed
   codemirror_mime_type: text/html
@@ -2360,6 +2389,7 @@ Ignore List:
   - ".coffeelintignore"
   - ".cvsignore"
   - ".dockerignore"
+  - ".eleventyignore"
   - ".eslintignore"
   - ".gitignore"
   - ".nodemonignore"
@@ -2374,6 +2404,16 @@ Ignore List:
   codemirror_mode: shell
   codemirror_mime_type: text/x-sh
   language_id: 74444240
+ImageJ Macro:
+  type: programming
+  color: "#99AAFF"
+  aliases:
+  - ijm
+  extensions:
+  - ".ijm"
+  ace_mode: text
+  tm_scope: none
+  language_id: 575143428
 Inform 7:
   type: programming
   wrap: true
@@ -2480,6 +2520,7 @@ JSON:
   - ".tern-config"
   - ".tern-project"
   - ".watchmanconfig"
+  - Pipfile.lock
   - composer.lock
   - mcmod.info
   language_id: 174
@@ -2513,6 +2554,7 @@ JSON with Comments:
   - ".jscsrc"
   - ".jshintrc"
   - ".jslintrc"
+  - devcontainer.json
   - jsconfig.json
   - language-configuration.json
   - tsconfig.json
@@ -2546,16 +2588,6 @@ JSONiq:
   - ".jq"
   tm_scope: source.jq
   language_id: 177
-JSX:
-  type: programming
-  group: JavaScript
-  extensions:
-  - ".jsx"
-  tm_scope: source.js.jsx
-  ace_mode: javascript
-  codemirror_mode: jsx
-  codemirror_mime_type: text/jsx
-  language_id: 178
 Jasmin:
   type: programming
   ace_mode: java
@@ -2619,6 +2651,7 @@ JavaScript:
   - ".jsfl"
   - ".jsm"
   - ".jss"
+  - ".jsx"
   - ".mjs"
   - ".njs"
   - ".pac"
@@ -2834,11 +2867,23 @@ LabVIEW:
   type: programming
   extensions:
   - ".lvproj"
+  - ".lvlib"
   tm_scope: text.xml
   ace_mode: xml
   codemirror_mode: xml
   codemirror_mime_type: text/xml
   language_id: 194
+Lark:
+  type: data
+  group: EBNF
+  color: "#0b130f"
+  extensions:
+  - ".lark"
+  tm_scope: source.lark
+  ace_mode: text
+  codemirror_mode: ebnf
+  codemirror_mime_type: text/x-ebnf
+  language_id: 758480799
 Lasso:
   type: programming
   color: "#999999"
@@ -2930,6 +2975,7 @@ Linux Kernel Module:
   language_id: 203
 Liquid:
   type: markup
+  color: "#67b8de"
   extensions:
   - ".liquid"
   tm_scope: text.html.liquid
@@ -3214,6 +3260,7 @@ Markdown:
   - ".mkdn"
   - ".mkdown"
   - ".ronn"
+  - ".scd"
   - ".workbook"
   filenames:
   - contents.lr
@@ -3439,7 +3486,7 @@ Muse:
   - emacs muse
 Mustache:
   type: markup
-  group: HTML
+  color: "#724b3b"
   extensions:
   - ".mustache"
   tm_scope: text.html.smarty
@@ -3507,6 +3554,16 @@ NSIS:
   codemirror_mode: nsis
   codemirror_mime_type: text/x-nsis
   language_id: 242
+NWScript:
+  type: programming
+  color: "#111522"
+  extensions:
+  - ".nss"
+  tm_scope: source.c.nwscript
+  ace_mode: c_cpp
+  codemirror_mode: clike
+  codemirror_mime_type: text/x-csrc
+  language_id: 731233819
 Nearley:
   type: programming
   ace_mode: text
@@ -3661,6 +3718,16 @@ NumPy:
   codemirror_mode: python
   codemirror_mime_type: text/x-python
   language_id: 254
+Nunjucks:
+  type: markup
+  color: "#3d8137"
+  extensions:
+  - ".njk"
+  aliases:
+  - njk
+  tm_scope: text.html.nunjucks
+  ace_mode: nunjucks
+  language_id: 461856962
 OCaml:
   type: programming
   ace_mode: ocaml
@@ -3841,6 +3908,7 @@ OpenStep Property List:
   type: data
   extensions:
   - ".plist"
+  - ".glyphs"
   tm_scope: source.plist
   ace_mode: text
   language_id: 598917541
@@ -3855,6 +3923,7 @@ OpenType Feature File:
   language_id: 374317347
 Org:
   type: prose
+  color: "#77aa99"
   wrap: true
   extensions:
   - ".org"
@@ -4021,6 +4090,9 @@ Parrot Internal Representation:
 Pascal:
   type: programming
   color: "#E3F171"
+  aliases:
+  - delphi
+  - objectpascal
   extensions:
   - ".pas"
   - ".dfm"
@@ -4154,7 +4226,7 @@ Pod:
 Pod 6:
   type: prose
   ace_mode: perl
-  tm_scope: source.perl6fe
+  tm_scope: source.raku
   wrap: true
   extensions:
   - ".pod"
@@ -4598,6 +4670,8 @@ Raku:
   - ".pl6"
   - ".pm"
   - ".pm6"
+  - ".raku"
+  - ".rakumod"
   - ".t"
   interpreters:
   - perl6
@@ -4606,7 +4680,7 @@ Raku:
   aliases:
   - perl6
   - perl-6
-  tm_scope: source.perl6fe
+  tm_scope: source.raku
   ace_mode: perl
   codemirror_mode: perl
   codemirror_mime_type: text/x-perl
@@ -4628,6 +4702,18 @@ Raw token data:
   tm_scope: none
   ace_mode: text
   language_id: 318
+ReScript:
+  type: programming
+  color: "#ed5051"
+  ace_mode: rust
+  codemirror_mode: rust
+  codemirror_mime_type: text/x-rustsrc
+  extensions:
+  - ".res"
+  interpreters:
+  - ocaml
+  tm_scope: source.rescript
+  language_id: 501875647
 Readline Config:
   type: data
   group: INI
@@ -4649,8 +4735,6 @@ Reason:
   extensions:
   - ".re"
   - ".rei"
-  interpreters:
-  - ocaml
   tm_scope: source.reason
   language_id: 869538413
 Rebol:
@@ -4665,6 +4749,16 @@ Rebol:
   ace_mode: text
   tm_scope: source.rebol
   language_id: 319
+Record Jar:
+  type: data
+  filenames:
+  - language-subtag-registry.txt
+  tm_scope: source.record-jar
+  codemirror_mode: properties
+  codemirror_mime_type: text/x-properties
+  ace_mode: text
+  color: "#0673ba"
+  language_id: 865765202
 Red:
   type: programming
   color: "#f50000"
@@ -5096,8 +5190,8 @@ Scala:
   - scala
   language_id: 341
 Scaml:
-  group: HTML
   type: markup
+  color: "#bd181a"
   extensions:
   - ".scaml"
   tm_scope: source.scaml
@@ -5496,6 +5590,7 @@ TOML:
   filenames:
   - Cargo.lock
   - Gopkg.lock
+  - Pipfile
   - poetry.lock
   tm_scope: source.toml
   ace_mode: toml
@@ -5627,6 +5722,7 @@ Text:
   wrap: true
   aliases:
   - fundamental
+  - plain text
   extensions:
   - ".txt"
   - ".fr"
@@ -5646,6 +5742,7 @@ Text:
   - README.1ST
   - README.me
   - README.mysql
+  - README.nss
   - click.me
   - delete.me
   - go.mod
@@ -6178,7 +6275,9 @@ XML:
   - ".psc1"
   - ".pt"
   - ".rdf"
+  - ".res"
   - ".resx"
+  - ".rs"
   - ".rss"
   - ".sch"
   - ".scxml"
