@@ -41,6 +41,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Awk:** [github-linguist/awk-sublime](https://github.com/github-linguist/awk-sublime)
 - **Ballerina:** [ballerina-platform/ballerina-grammar](https://github.com/ballerina-platform/ballerina-grammar)
 - **Batchfile:** [mmims/language-batchfile](https://github.com/mmims/language-batchfile)
+- **Beef:** [atom/language-csharp](https://github.com/atom/language-csharp)
 - **Befunge:** [johanasplund/sublime-befunge](https://github.com/johanasplund/sublime-befunge)
 - **BibTeX:** [textmate/latex.tmbundle](https://github.com/textmate/latex.tmbundle)
 - **Bison:** [Alhadis/language-grammars](https://github.com/Alhadis/language-grammars)
