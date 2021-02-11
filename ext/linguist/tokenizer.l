@@ -3,14 +3,13 @@
 #include "ruby.h"
 
 // Anything longer is unlikely to be useful.
-#define MAX_TOKEN_LEN 32
+#define MAX_TOKEN_LEN 16
 
 #define FEED2(s, l) do { \
     const char* __s = (s); \
     const size_t __l = (l); \
-    if ((__l) > MAX_TOKEN_LEN) \
-      break; \
-    *yyextra = rb_str_new(__s, __l); \
+    const size_t __cl = __l > MAX_TOKEN_LEN? MAX_TOKEN_LEN : __l; \
+    *yyextra = rb_str_new(__s, __cl); \
   } while(0)
 
 #define FEED1(s) FEED2(s, strlen(s))
@@ -21,10 +20,9 @@
 
 #define FEED_SHEBANG(s) do { \
     const size_t __l = strlen(s); \
-    if (__l > MAX_TOKEN_LEN) \
-      break; \
+    const size_t __cl = __l > MAX_TOKEN_LEN? MAX_TOKEN_LEN : __l; \
     *yyextra = rb_str_new("SHEBANG#!", sizeof("SHEBANG#!") - 1); \
-    rb_str_cat(*yyextra, s, __l); \
+    rb_str_cat(*yyextra, s, __cl); \
   } while(0)
 
 #define eat_until_eol() do { \
