@@ -186,7 +186,6 @@ func (conv *Converter) writeJSONFile(path string, rule *grammar.Rule) error {
 	defer j.Close()
 
 	enc := json.NewEncoder(j)
-	enc.SetIndent("", "  ")
 	return enc.Encode(rule)
 }
 

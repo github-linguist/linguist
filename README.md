@@ -1,6 +1,6 @@
 # Linguist
 
-[![Actions Status](https://wdp9fww0r9.execute-api.us-west-2.amazonaws.com/production/badge/github/linguist)](https://wdp9fww0r9.execute-api.us-west-2.amazonaws.com/production/results/github/linguist)
+[![Actions Status](https://github.com/github/linguist/workflows/Run%20Tests/badge.svg)](https://github.com/github/linguist/actions)
 
 [issues]: https://github.com/github/linguist/issues
 [new-issue]: https://github.com/github/linguist/issues/new
@@ -23,13 +23,14 @@ The language of each remaining file is then determined using the following strat
 - shell shebang,
 - file extension,
 - XML header,
+- man page section,
 - heuristics,
 - naïve Bayesian classification
 
 The result of this analysis is used to produce the language stats bar which displays the languages percentages for the files in the repository.
-The percentages are calculated based on the bytes of code for each language as reported by the [List Languages](https://developer.github.com/v3/repos/#list-languages) API.
+The percentages are calculated based on the bytes of code for each language as reported by the [List Languages](https://docs.github.com/rest/reference/repos#list-repository-languages) API.
 
-![language stats bar](https://user-images.githubusercontent.com/2346707/50930521-52f57e80-14b4-11e9-92de-0ee9c768ae46.png)
+![language stats bar](https://user-images.githubusercontent.com/2346707/91533656-9768b300-e953-11ea-808d-994cd50e6273.png)
 
 ### How Linguist works on GitHub.com
 
@@ -90,6 +91,8 @@ project.languages      #=> { "Ruby" => 119387 }
 
 ### Command line usage
 
+#### Git Repository
+
 A repository's languages stats can also be assessed from the command line using the `github-linguist` executable.
 Without any options, `github-linguist` will output the breakdown that correlates to what is shown in the language stats bar.
 The `--breakdown` flag will additionally show the breakdown of files by language.
@@ -102,7 +105,7 @@ github-linguist
 You can try running `github-linguist` on the root directory in this repository itself:
 
 ```console
-$ bundle exec bin/github-linguist --breakdown
+$ github-linguist --breakdown
 68.57%  Ruby
 22.90%  C
 6.93%   Go
@@ -120,6 +123,49 @@ lib/linguist.rb
 …
 ```
 
+#### Single file
+
+Alternatively you can find stats for a single file using the `github-linguist` executable.
+
+You can try running `github-linguist` on files in this repository itself:
+
+```console
+$ github-linguist grammars.yml
+grammars.yml: 884 lines (884 sloc)
+  type:      Text
+  mime type: text/x-yaml
+  language:  YAML
+```
+
+#### Docker
+
+If you have Docker installed you can build an image and run Linguist within a container:
+
+```console
+$ docker build -t linguist .
+$ docker run --rm -v $(pwd):$(pwd) -w $(pwd) -t linguist
+68.57%  Ruby
+22.90%  C
+6.93%   Go
+1.21%   Lex
+0.39%   Shell
+$ docker run --rm -v $(pwd):$(pwd) -w $(pwd) -t linguist github-linguist --breakdown
+68.57%  Ruby
+22.90%  C
+6.93%   Go
+1.21%   Lex
+0.39%   Shell
+
+Ruby:
+Gemfile
+Rakefile
+bin/git-linguist
+bin/github-linguist
+ext/linguist/extconf.rb
+github-linguist.gemspec
+lib/linguist.rb
+…
+```
 
 ## Troubleshooting
 
@@ -136,7 +182,7 @@ If the language stats bar is reporting a language that you don't expect:
    You can also use the [manual overrides](#overrides) feature to correctly classify them in your repository.
 1. If there are no reported issues of this misclassification, [open an issue][new-issue] and include a link to the repository or a sample of the code that is being misclassified.
 
-[search-limits]: https://help.github.com/articles/searching-code/#considerations-for-code-search
+[search-limits]: https://docs.github.com/github/searching-for-information-on-github/searching-code#considerations-for-code-search
 
 Keep in mind that the repository language stats are only [updated when you push changes](#how-linguist-works-on-githubcom), and the results are cached for the lifetime of your repository.
 If you have not made any changes to your repository in a while, you may find pushing another change will correct the stats.
@@ -161,6 +207,15 @@ Linguist detects the language of a file but the actual syntax-highlighting is po
 If you experience an issue with the syntax-highlighting on GitHub, **please report the issue to the upstream grammar repository, not here.**
 Grammars are updated every time we build the Linguist gem so upstream bug fixes are automatically incorporated as they are fixed.
 
+### I get an error when using Linguist on a directory that is not a Git repository
+
+Linguist only works on Git repositories and individual files. Its primary use is on GitHub.com which uses bare
+repositories and thus changes need to be committed as individual files don't show on the filesystem.
+
+As a work around you could initialise a temporary Git repository in your directory as demonstrated in this
+[script](https://gist.github.com/PuZZleDucK/a45fd1fac3758235ffed9fe0e8aab643).
+
+Alternatively you can run Linguist on individual files, see [above](#single-file).
 
 ## Overrides
 
@@ -179,6 +234,9 @@ File and folder paths inside `.gitattributes` are calculated relative to the pos
 ```gitattributes
 # Example of a `.gitattributes` file which reclassifies `.rb` files as Java:
 *.rb linguist-language=Java
+
+# Replace any whitespace in the language name with hyphens:
+*.glyphs linguist-language=OpenStep-Property-List
 ```
 
 #### Vendored code
@@ -190,7 +248,7 @@ Use the `linguist-vendored` attribute to vendor or un-vendor paths:
 
 ```gitattributes
 special-vendored-path/* linguist-vendored
-jquery.js linguist-vendored=false
+jquery.js -linguist-vendored
 ```
 
 #### Documentation
@@ -202,7 +260,7 @@ Use the `linguist-documentation` attribute to mark or unmark paths as documentat
 
 ```gitattributes
 project-docs/* linguist-documentation
-docs/formatter.rb linguist-documentation=false
+docs/formatter.rb -linguist-documentation
 ```
 
 #### Generated code
@@ -215,7 +273,7 @@ As an added bonus, unlike vendored and documentation files, these files are supp
 Use the `linguist-generated` attribute to mark or unmark paths as generated.
 
 ```gitattributes
-Api.elm linguist-generated=true
+Api.elm linguist-generated
 ```
 
 #### Detectable
@@ -226,9 +284,9 @@ Languages of a different type (as defined in [`languages.yml`](/lib/linguist/lan
 Use the `linguist-detectable` attribute to mark or unmark paths as detectable:
 
 ```gitattributes
-*.kicad_pcb linguist-detectable=true
-*.sch linguist-detectable=true
-tools/export_bom.py linguist-detectable=false
+*.kicad_pcb linguist-detectable
+*.sch linguist-detectable
+tools/export_bom.py -linguist-detectable
 ```
 
 ### Using Emacs or Vim modelines

@@ -1,0 +1,18 @@
+%import common.DIGIT
+%import common.INT
+%import common.LCASE_LETTER
+
+seal : "seal "  INT
+
+free_text.-2 : /./+ " "*
+
+?object: OBJECT | generic_object | fragment
+OBJECT: "tablet" | "envelope" | "prism" | "bulla"
+fragment: "fragment " free_text
+generic_object : "object " free_text
+
+?surface: SURFACE | generic_surface | face | edge
+SURFACE: "obverse" | "reverse" | "left" | "right" | "top" | "bottom"
+face: "face " LCASE_LETTER
+edge: "edge" (" " LCASE_LETTER)?
+generic_surface : "surface " free_text

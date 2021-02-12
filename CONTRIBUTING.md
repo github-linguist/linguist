@@ -4,7 +4,7 @@ Hi there!
 We're thrilled that you'd like to contribute to this project.
 Your help is essential for keeping it great.
 
-Contributions to this project are [released](https://help.github.com/articles/github-terms-of-service/#6-contributions-under-repository-license) to the public under the [project's open source license](LICENSE).
+Contributions to this project are [released](https://docs.github.com/github/site-policy/github-terms-of-service#6-contributions-under-repository-license) to the public under the [project's open source license](LICENSE).
 
 This project adheres to the [Contributor Covenant Code of Conduct](http://contributor-covenant.org/).
 By participating, you are expected to uphold this code.
@@ -29,7 +29,7 @@ On Ubuntu:
 apt-get install cmake pkg-config libicu-dev docker-ce
 ```
 
-The latest version of Bundler v1 can be installed with `gem install bundler -v "~>1.10"`.
+The latest version of Bundler can be installed with `gem install bundler`.
 
 ## Getting started
 
@@ -171,9 +171,6 @@ Please do this in a community forum or repository used and known by the wider co
 Once you've received consensus that the community is happy with your proposed color change, please feel free to open a PR making the change and link to the public discussion where this was agreed by the community.
 If there are official branding guidelines to support the colour choice, please link to those too.
 
-Please note that Linguist currently implements a [color proximity test][] to ensure colors are sufficiently different from one another so you may not be able to use the precise color you want - reds and blues are really popular.
-As such, we recommend you test the color change locally before making your plea to the wider language community.
-
 ## Testing
 
 You can run the tests locally with:
@@ -186,7 +183,7 @@ Sometimes getting the tests running can be too much work, especially if you don'
 It's okay: be lazy and let [GitHub Actions](https://github.com/features/actions) run the tests for you.
 Just open a pull request and the bot will start cranking away.
 
-Here's our current build status: [![Actions Status](https://wdp9fww0r9.execute-api.us-west-2.amazonaws.com/production/badge/github/linguist)](https://wdp9fww0r9.execute-api.us-west-2.amazonaws.com/production/results/github/linguist)
+Here's our current build status: [![Actions Status](https://github.com/github/linguist/workflows/Run%20Tests/badge.svg)](https://github.com/github/linguist/actions)
 
 
 ## Maintainers
@@ -194,14 +191,9 @@ Here's our current build status: [![Actions Status](https://wdp9fww0r9.execute-a
 Linguist is maintained with :heart: by:
 
 - **@Alhadis**
-- **@BenEddy** (GitHub staff)
-- **@Caged** (GitHub staff)
-- **@kivikakk** (GitHub staff)
 - **@larsbrinkhoff**
 - **@lildude** (GitHub staff)
 - **@pchaigno**
-- **@rafer** (GitHub staff)
-- **@shreyasjoshis** (GitHub staff)
 
 As Linguist is a production dependency for GitHub we have a couple of workflow restrictions:
 
@@ -218,8 +210,8 @@ If you are the current maintainer of this gem:
 1. If grammar submodules have not been updated recently, update them: `git submodule update --remote`.
    If any submodules are updated:
     1. update the `grammars.yml`: `script/grammar-compiler update -f`
-    1. update the license cache: `script/licensed`
-    1. double check no license problems found: `script/licensed status`
+    1. update the license cache: `bundle exec licensed cache -c vendor/licenses/config.yml`
+    1. double check no license problems found: `bundle exec licensed status -c vendor/licenses/config.yml`
     1. confirm the updated grammars still compile and no new errors have been introduced and none have gone missing: `bundle exec rake check_grammars`
     1. verify and fix any problems identified in the two steps above
     1. commit all changes: `git commit -a`
@@ -246,7 +238,6 @@ If you are the current maintainer of this gem:
 [languages]: /lib/linguist/languages.yml
 [licenses]: https://github.com/github/linguist/blob/257425141d4e2a5232786bf0b13c901ada075f93/vendor/licenses/config.yml#L2-L11
 [new-issue]: https://github.com/github/linguist/issues/new
-[color proximity test]: https://github.com/github/linguist/blob/master/test/test_color_proximity.rb
 [samples]: /samples
 [search-example]: https://github.com/search?utf8=%E2%9C%93&q=extension%3Aboot+NOT+nothack&type=Code&ref=searchresults
-[gpr]: https://help.github.com/en/articles/configuring-rubygems-for-use-with-github-package-registry
+[gpr]: https://docs.github.com/packages/using-github-packages-with-your-projects-ecosystem/configuring-rubygems-for-use-with-github-packages

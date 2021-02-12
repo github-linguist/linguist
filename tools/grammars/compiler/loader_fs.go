@@ -69,6 +69,11 @@ func (l *fsLoader) load() {
 			return
 		}
 
+		// Ignore all files under src directories
+		if ok, _ := filepath.Match("*/src/*", rel); ok {
+			continue
+		}
+
 		if IgnoredFiles[rel] {
 			continue
 		}
