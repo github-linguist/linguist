@@ -94,6 +94,16 @@ disambiguations:
     pattern: '(<^\s*; |End Function)'
   - language: BitBake
     pattern: '^\s*(# |include|require)\b'
+- extensions: ['.bf']
+  rules:
+  - language: Beef
+    pattern: '^using\s+(System|Beefy)(\.(.*))?;\s*$'
+  - language: HyPhy
+    pattern:
+    - '^\s*#include\s+".*";\s*$'
+    - '\sfprintf\s*\('
+  - language: Brainfuck
+    pattern: '(>\+>|>\+<)'
 - extensions: ['.bi']
   rules:
   - language: FreeBasic

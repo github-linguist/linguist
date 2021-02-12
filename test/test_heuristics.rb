@@ -271,6 +271,15 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_bf_by_heuristics
+    assert_heuristics({
+      "Beef" => all_fixtures("Beef", "*.bf"),
+      "Brainfuck" => all_fixtures("Brainfuck", "*.bf"),
+      "HyPhy" => all_fixtures("HyPhy", "*.bf"),
+      nil => all_fixtures("Befunge", "*.bf"),
+    })
+  end
+
   def test_bi_by_heuristics
     assert_heuristics({
       "FreeBasic" => all_fixtures("FreeBasic", "*.bi")
