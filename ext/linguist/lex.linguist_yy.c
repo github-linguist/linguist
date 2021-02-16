@@ -904,14 +904,13 @@ goto find_rule; \
 #include "ruby.h"
 
 // Anything longer is unlikely to be useful.
-#define MAX_TOKEN_LEN 32
+#define MAX_TOKEN_LEN 16
 
 #define FEED2(s, l) do { \
     const char* __s = (s); \
     const size_t __l = (l); \
-    if ((__l) > MAX_TOKEN_LEN) \
-      break; \
-    *yyextra = rb_str_new(__s, __l); \
+    const size_t __cl = __l > MAX_TOKEN_LEN? MAX_TOKEN_LEN : __l; \
+    *yyextra = rb_str_new(__s, __cl); \
   } while(0)
 
 #define FEED1(s) FEED2(s, strlen(s))
@@ -922,10 +921,9 @@ goto find_rule; \
 
 #define FEED_SHEBANG(s) do { \
     const size_t __l = strlen(s); \
-    if (__l > MAX_TOKEN_LEN) \
-      break; \
+    const size_t __cl = __l > MAX_TOKEN_LEN? MAX_TOKEN_LEN : __l; \
     *yyextra = rb_str_new("SHEBANG#!", sizeof("SHEBANG#!") - 1); \
-    rb_str_cat(*yyextra, s, __l); \
+    rb_str_cat(*yyextra, s, __cl); \
   } while(0)
 
 #define eat_until_eol() do { \
@@ -951,9 +949,9 @@ goto find_rule; \
       return 0; \
   } while (0)
 
-#line 955 "lex.linguist_yy.c"
+#line 953 "lex.linguist_yy.c"
 
-#line 957 "lex.linguist_yy.c"
+#line 955 "lex.linguist_yy.c"
 
 #define INITIAL 0
 #define c_comment 1
@@ -1237,10 +1235,10 @@ YY_DECL
 		}
 
 	{
-#line 60 "tokenizer.l"
+#line 58 "tokenizer.l"
 
 
-#line 1244 "lex.linguist_yy.c"
+#line 1242 "lex.linguist_yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1330,7 +1328,7 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 62 "tokenizer.l"
+#line 60 "tokenizer.l"
 {
   const char *off = strrchr(yytext, ' ');
   if (!off)
@@ -1344,7 +1342,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 73 "tokenizer.l"
+#line 71 "tokenizer.l"
 {
   const char *off = strrchr(yytext, '/');
   if (!off)
@@ -1363,183 +1361,183 @@ YY_RULE_SETUP
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 88 "tokenizer.l"
+#line 86 "tokenizer.l"
 { FEED_STATIC("COMMENT#"); return 1; }
 	YY_BREAK
 case 4:
 /* rule 4 can match eol */
 YY_RULE_SETUP
-#line 89 "tokenizer.l"
+#line 87 "tokenizer.l"
 { FEED_STATIC("COMMENT//!"); return 1; }
 	YY_BREAK
 case 5:
 /* rule 5 can match eol */
 YY_RULE_SETUP
-#line 90 "tokenizer.l"
+#line 88 "tokenizer.l"
 { FEED_STATIC("COMMENT//"); return 1; }
 	YY_BREAK
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
-#line 91 "tokenizer.l"
+#line 89 "tokenizer.l"
 { FEED_STATIC("COMMENT--"); return 1; }
 	YY_BREAK
 case 7:
 /* rule 7 can match eol */
 YY_RULE_SETUP
-#line 92 "tokenizer.l"
+#line 90 "tokenizer.l"
 { FEED_STATIC("COMMENT%"); return 1; }
 	YY_BREAK
 case 8:
 /* rule 8 can match eol */
 YY_RULE_SETUP
-#line 93 "tokenizer.l"
+#line 91 "tokenizer.l"
 { FEED_STATIC("COMMENT\""); return 1; }
 	YY_BREAK
 case 9:
 /* rule 9 can match eol */
 YY_RULE_SETUP
-#line 94 "tokenizer.l"
+#line 92 "tokenizer.l"
 { FEED_STATIC("COMMENT;"); return 1; }
 	YY_BREAK
 case 10:
 /* rule 10 can match eol */
 YY_RULE_SETUP
-#line 95 "tokenizer.l"
+#line 93 "tokenizer.l"
 { FEED_STATIC("COMMENT.\\\""); return 1; }
 	YY_BREAK
 case 11:
 /* rule 11 can match eol */
 YY_RULE_SETUP
-#line 96 "tokenizer.l"
+#line 94 "tokenizer.l"
 { FEED_STATIC("COMMENT'\\\""); return 1; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 98 "tokenizer.l"
+#line 96 "tokenizer.l"
 { FEED_STATIC("COMMENT/*"); return 1; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 99 "tokenizer.l"
+#line 97 "tokenizer.l"
 { FEED_STATIC("COMMENT/**"); BEGIN(c_comment); return 1; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 100 "tokenizer.l"
+#line 98 "tokenizer.l"
 { FEED_STATIC("COMMENT/*!"); BEGIN(c_comment); return 1; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 101 "tokenizer.l"
+#line 99 "tokenizer.l"
 { FEED_STATIC("COMMENT/*"); BEGIN(c_comment); return 1; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 102 "tokenizer.l"
+#line 100 "tokenizer.l"
 { FEED_STATIC("COMMENT<!--"); BEGIN(xml_comment); return 1; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 103 "tokenizer.l"
+#line 101 "tokenizer.l"
 { FEED_STATIC("COMMENT{-"); BEGIN(haskell_comment); return 1; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 104 "tokenizer.l"
+#line 102 "tokenizer.l"
 { FEED_STATIC("COMMENT(*"); BEGIN(ocaml_comment); return 1; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 105 "tokenizer.l"
+#line 103 "tokenizer.l"
 { FEED_STATIC("COMMENT\"\"\""); BEGIN(python_dcomment); return 1; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 106 "tokenizer.l"
+#line 104 "tokenizer.l"
 { FEED_STATIC("COMMENT'''"); BEGIN(python_scomment); return 1; }
 	YY_BREAK
 case 21:
 /* rule 21 can match eol */
 YY_RULE_SETUP
-#line 107 "tokenizer.l"
+#line 105 "tokenizer.l"
 { FEED_STATIC("COMMENT.ig"); BEGIN(roff_comment); return 1; }
 	YY_BREAK
 case 22:
 /* rule 22 can match eol */
 YY_RULE_SETUP
-#line 109 "tokenizer.l"
+#line 107 "tokenizer.l"
 { /* nothing */ }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 110 "tokenizer.l"
+#line 108 "tokenizer.l"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 111 "tokenizer.l"
+#line 109 "tokenizer.l"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 112 "tokenizer.l"
+#line 110 "tokenizer.l"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 113 "tokenizer.l"
+#line 111 "tokenizer.l"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 114 "tokenizer.l"
+#line 112 "tokenizer.l"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 115 "tokenizer.l"
+#line 113 "tokenizer.l"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case 29:
 /* rule 29 can match eol */
 YY_RULE_SETUP
-#line 116 "tokenizer.l"
+#line 114 "tokenizer.l"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 118 "tokenizer.l"
+#line 116 "tokenizer.l"
 { /* nothing */ }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 119 "tokenizer.l"
+#line 117 "tokenizer.l"
 { eat_until_unescaped('"'); }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 120 "tokenizer.l"
+#line 118 "tokenizer.l"
 { eat_until_unescaped('\''); }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 121 "tokenizer.l"
+#line 119 "tokenizer.l"
 { /* nothing */ }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 123 "tokenizer.l"
+#line 121 "tokenizer.l"
 { FEED(); return 1; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 124 "tokenizer.l"
+#line 122 "tokenizer.l"
 { FEED(); return 1; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 125 "tokenizer.l"
+#line 123 "tokenizer.l"
 { FEED(); return 1; }
 	YY_BREAK
 case 37:
@@ -1549,12 +1547,12 @@ YY_LINENO_REWIND_TO(yy_cp - 1);
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 127 "tokenizer.l"
+#line 125 "tokenizer.l"
 { FEED(); BEGIN(INITIAL); return 1; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 128 "tokenizer.l"
+#line 126 "tokenizer.l"
 { FEED(); BEGIN(INITIAL); return 1; }
 	YY_BREAK
 case 39:
@@ -1564,7 +1562,7 @@ YY_LINENO_REWIND_TO(yy_cp - 1);
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 129 "tokenizer.l"
+#line 127 "tokenizer.l"
 { FEED(); BEGIN(INITIAL); return 1; }
 	YY_BREAK
 case 40:
@@ -1572,7 +1570,7 @@ case 40:
 yyg->yy_c_buf_p = yy_cp -= 4;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 130 "tokenizer.l"
+#line 128 "tokenizer.l"
 { FEED(); BEGIN(INITIAL); return 1; }
 	YY_BREAK
 case 41:
@@ -1580,35 +1578,35 @@ case 41:
 yyg->yy_c_buf_p = yy_cp -= 2;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 131 "tokenizer.l"
+#line 129 "tokenizer.l"
 { FEED(); BEGIN(INITIAL); return 1; }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 132 "tokenizer.l"
+#line 130 "tokenizer.l"
 { yymore(); BEGIN(punct); }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 133 "tokenizer.l"
+#line 131 "tokenizer.l"
 { yymore(); BEGIN(punct); }
 	YY_BREAK
 case YY_STATE_EOF(punct):
-#line 134 "tokenizer.l"
+#line 132 "tokenizer.l"
 { FEED2(yytext, yyleng - 1); BEGIN(INITIAL); return 1; }
 	YY_BREAK
 case 44:
 /* rule 44 can match eol */
 YY_RULE_SETUP
-#line 136 "tokenizer.l"
+#line 134 "tokenizer.l"
 { /* nothing */ }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 138 "tokenizer.l"
+#line 136 "tokenizer.l"
 YY_FATAL_ERROR( "flex scanner jammed" );
 	YY_BREAK
-#line 1612 "lex.linguist_yy.c"
+#line 1610 "lex.linguist_yy.c"
 			case YY_STATE_EOF(INITIAL):
 			case YY_STATE_EOF(c_comment):
 			case YY_STATE_EOF(xml_comment):
@@ -2722,7 +2720,7 @@ void yyfree (void * ptr , yyscan_t yyscanner)
 
 #define YYTABLES_NAME "yytables"
 
-#line 138 "tokenizer.l"
+#line 136 "tokenizer.l"
 
 
 
