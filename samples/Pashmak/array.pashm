@@ -1,28 +1,5 @@
-#
-# array.pashm
-#
-# The Pashmak Project
-# Copyright 2020-2021 parsa shahmaleki <parsampsh@gmail.com>
-#
-# This file is part of Pashmak.
-#
-# Pashmak is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# Pashmak is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Pashmak.  If not, see <https://www.gnu.org/licenses/>.
-#########################################################################
+# Printing a list items one by one
 
-# We have a array from names. we in here print them one by one
-
-# declare $names array
 $names = ['parsa', 'pashmak', 'something']
 
 # set a counter for loop
@@ -32,3 +9,4 @@ while $i < len($names)
     println($names[$i])
     $i = $i + 1
 endwhile
+
