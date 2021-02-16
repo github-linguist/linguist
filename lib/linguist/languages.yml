@@ -65,8 +65,8 @@ ABAP CDS:
   type: programming
   color: "#555e25"
   extensions:
-    - ".asddls"
-  tm_scope: "source.abapcds"
+  - ".asddls"
+  tm_scope: source.abapcds
   language_id: 452681853
   ace_mode: text
 ABNF:
@@ -4100,6 +4100,15 @@ Pascal:
   codemirror_mode: pascal
   codemirror_mime_type: text/x-pascal
   language_id: 281
+Pashmak:
+  type: programming
+  tm_scope: source.pashm
+  color: "#3572A5"
+  extensions:
+  - ".pashm"
+  interpreters:
+  - pashmak
+  language_id: 4779457
 Pawn:
   type: programming
   color: "#dbb284"

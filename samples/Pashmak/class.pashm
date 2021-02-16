@@ -1,0 +1,45 @@
+#
+# class.pashm
+#
+# The Pashmak Project
+# Copyright 2020-2021 parsa shahmaleki <parsampsh@gmail.com>
+#
+# This file is part of Pashmak.
+#
+# Pashmak is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Pashmak is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Pashmak.  If not, see <https://www.gnu.org/licenses/>.
+#########################################################################
+
+class Human
+    $name
+    $age = 12
+
+    func say_hi()
+        println('hello. my name is ' + $this->name)
+    endfunc
+
+    func set_name(string $name)
+        $this->name = $name
+    endfunc
+endclass
+
+$someone = Human()
+$someone->name = 'parsa'
+
+println($someone->name)
+
+$someone->say_hi()
+
+$someone->set_name('Pashmak')
+
+$someone->say_hi()
