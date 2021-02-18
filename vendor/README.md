@@ -7,6 +7,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **1C Enterprise:** [xDrivenDevelopment/atom-language-1c-bsl](https://github.com/xDrivenDevelopment/atom-language-1c-bsl)
 - **4D:** [ayoubserti/lang-4d](https://github.com/ayoubserti/lang-4d)
 - **ABAP:** [pvl/abap.tmbundle](https://github.com/pvl/abap.tmbundle)
+- **ABAP CDS:** [FreHu/abap-cds-grammar](https://github.com/FreHu/abap-cds-grammar)
 - **ABNF:** [Alhadis/language-grammars](https://github.com/Alhadis/language-grammars)
 - **AGS Script:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **AL:** [microsoft/AL](https://github.com/microsoft/AL)
