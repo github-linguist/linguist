@@ -227,6 +227,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **KiCad Schematic:** [Alhadis/language-pcb](https://github.com/Alhadis/language-pcb)
 - **Kit:** [atom/language-html](https://github.com/atom/language-html)
 - **Kotlin:** [nishtahir/language-kotlin](https://github.com/nishtahir/language-kotlin)
+- **Kusto:** [josin/kusto-syntax-highlighting](https://github.com/josin/kusto-syntax-highlighting)
 - **LFE:** [textmate/lisp.tmbundle](https://github.com/textmate/lisp.tmbundle)
 - **LLVM:** [whitequark/llvm.tmbundle](https://github.com/whitequark/llvm.tmbundle)
 - **LSL:** [textmate/secondlife-lsl.tmbundle](https://github.com/textmate/secondlife-lsl.tmbundle)
