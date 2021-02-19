@@ -95,7 +95,7 @@ disambiguations:
 - extensions: ['.bi']
   rules:
   - language: FreeBasic
-    pattern: '^\s*#(define|endif|endmacro|if|ifdef|ifndef|include|lang|macro)\s'
+    pattern: '^[ \t]*#(?:define|endif|endmacro|ifn?def|if|include|lang|macro)\s'
 - extensions: ['.builds']
   rules:
   - language: XML
