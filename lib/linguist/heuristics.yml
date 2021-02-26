@@ -107,7 +107,7 @@ disambiguations:
 - extensions: ['.cls']
   rules:
   - language: TeX
-    pattern: '\\\w+{'
+    pattern: '^\s*\\(?:NeedsTeXFormat|ProvidesClass){'
   - language: ObjectScript
     pattern: '^Class\s'
 - extensions: ['.cmp']
@@ -120,6 +120,12 @@ disambiguations:
     pattern: '![\w\s]+methodsFor: '
   - language: 'C#'
     pattern: '^(\s*namespace\s*[\w\.]+\s*{|\s*\/\/)'
+- extensions: ['.csl']
+  rules:
+  - language: XML
+    pattern: '(?i:^\s*(\<\?xml|xmlns))'
+  - language: Kusto
+    pattern: '(^\|\s*(where|extend|project|limit|summarize))|(^\.\w+)'
 - extensions: ['.d']
   rules:
   - language: D
@@ -456,7 +462,7 @@ disambiguations:
 - extensions: ['.res']
   rules:
   - language: ReScript
-    pattern: 
+    pattern:
     - '^\s*(let|module|type)\s+\w*\s+=\s+'
     - '^\s*(?:include|open)\s+\w+\s*$'
 - extensions: ['.rno']

@@ -312,6 +312,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_csl_by_heuristics
+    assert_heuristics({
+      "Kusto" => all_fixtures("Kusto", "*.csl"),
+      "XML" => all_fixtures("XML", "*.csl")
+    })
+  end
+
   def test_d_by_heuristics
     assert_heuristics({
       "D" => all_fixtures("D"),
@@ -484,7 +491,7 @@ class TestHeuristics < Minitest::Test
       "NewLisp" => all_fixtures("NewLisp", "*.lisp") + all_fixtures("NewLisp", "*.lsp")
     }, "main.lsp")
   end
-  
+
   def test_m4_by_heuristics
     assert_heuristics({
       "M4" => all_fixtures("M4", "*.m4"),
