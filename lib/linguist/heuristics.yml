@@ -115,7 +115,7 @@ disambiguations:
 - extensions: ['.cls']
   rules:
   - language: TeX
-    pattern: '\\\w+{'
+    pattern: '^\s*\\(?:NeedsTeXFormat|ProvidesClass){'
   - language: ObjectScript
     pattern: '^Class\s'
 - extensions: ['.cmp']
