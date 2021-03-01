@@ -126,6 +126,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Emacs Lisp:** [Alhadis/language-emacs-lisp](https://github.com/Alhadis/language-emacs-lisp)
 - **EmberScript:** [atom/language-coffee-script](https://github.com/atom/language-coffee-script)
 - **Erlang:** [textmate/erlang.tmbundle](https://github.com/textmate/erlang.tmbundle)
+- **Euphoria:** [OpenEuphoria/vscode-euphoria](https://github.com/OpenEuphoria/vscode-euphoria)
 - **F#:** [ionide/ionide-fsgrammar](https://github.com/ionide/ionide-fsgrammar)
 - **F\*:** [FStarLang/atom-fstar](https://github.com/FStarLang/atom-fstar)
 - **FIGlet Font:** [Alhadis/language-fontforge](https://github.com/Alhadis/language-fontforge)

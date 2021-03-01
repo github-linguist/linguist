@@ -147,6 +147,19 @@ disambiguations:
     pattern: '# Microsoft Developer Studio Generated Build File'
   - language: Faust
     pattern: '\bprocess\s*[(=]|\b(library|import)\s*\(\s*"|\bdeclare\s+(name|version|author|copyright|license)\s+"'
+- extensions: ['.e']
+  rules:
+  - language: E
+    pattern:
+    - '^\s*(def|var)\s+(.+):='
+    - '^\s*(def|to)\s+(\w+)(\(.+\))?\s+{'
+    - '^\s*(when)\s+(\(.+\))\s+->\s+{'
+  - language: Eiffel
+    pattern:
+    - '^\s*{/\w+'
+    - '^\s*(across|elseif|feature|from|inherit|inspect|note|when)\s+'
+  - language: Euphoria
+    named_pattern: euphoria
 - extensions: ['.ecl']
   rules:
   - language: ECLiPSe
@@ -159,6 +172,15 @@ disambiguations:
     pattern: '^\s*(?:%%|main\s*\(.*?\)\s*->)'
   - language: JavaScript
     pattern: '(?m:\/\/|("|'')use strict\1|export\s+default\s|\/\*.*?\*\/)'
+- extensions: ['.ex']
+  rules:
+  - language: Elixir
+    pattern:
+    - '^\s*@moduledoc\s+'
+    - '^\s*(cond|import|quote|unless)\s+'
+    - '^\s*def(exception|impl|macro|module|protocol)(\(|\s+)'
+  - language: Euphoria
+    named_pattern: euphoria
 - extensions: ['.f']
   rules:
   - language: Forth
@@ -602,6 +624,11 @@ named_patterns:
   - '^[ \t]*(class|(using[ \t]+)?namespace)\s+\w+'
   - '^[ \t]*(private|public|protected):$'
   - 'std::\w+'
+  euphoria:
+  - '^\s*(namespace)\s+'
+  - '^\s*(?:(public)\s+)?(include)\s+'
+  - '^\s*(?:(public|export|global)\s+)?(constant|enum|atom|integer|sequence|object)\s+'
+  - '^\s*(?:(public|export|global)\s+)?(function|procedure|type)\s+'
   fortran: '^(?i:[c*][^abd-z]|      (subroutine|program|end|data)\s|\s*!)'
   key_equals_value: '^[^#!;][^=]*='
   m68k:
