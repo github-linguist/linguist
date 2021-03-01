@@ -363,6 +363,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **REXX:** [mblocker/rexx-sublime](https://github.com/mblocker/rexx-sublime)
 - **RMarkdown:** [atom/language-gfm](https://github.com/atom/language-gfm)
 - **RPC:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
+- **RPGLE:** [barrettotte/vscode-ibmi-languages](https://github.com/barrettotte/vscode-ibmi-languages)
 - **RPM Spec:** [waveclaw/language-rpm-spec](https://github.com/waveclaw/language-rpm-spec)
 - **RUNOFF:** [Alhadis/language-roff](https://github.com/Alhadis/language-roff)
 - **Racket:** [soegaard/racket-highlight-for-github](https://github.com/soegaard/racket-highlight-for-github)
