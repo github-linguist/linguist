@@ -102,7 +102,7 @@ vim: set ft=cpp:
 -*- c++ -*-
 ```
 
-[`documentation.yml`]: lib/linguist/documentation.yml
-[`languages.yml`]:     lib/linguist/languages.yml
-[`generated.yml`]:     lib/linguist/generated.yml
-[`vendor.yml`]:        lib/linguist/vendor.yml
+[`documentation.yml`]: https://github.com/github/linguist/blob/master/lib/linguist/documentation.yml
+[`languages.yml`]:     https://github.com/github/linguist/blob/master/lib/linguist/languages.yml
+[`generated.yml`]:     https://github.com/github/linguist/blob/master/lib/linguist/generated.yml
+[`vendor.yml`]:        https://github.com/github/linguist/blob/master/lib/linguist/vendor.yml
