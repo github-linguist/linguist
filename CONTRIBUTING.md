@@ -30,7 +30,7 @@ brew cask install docker
 
 On Ubuntu:
 ```bash
-apt-get install cmake pkg-config libicu-dev docker-ce
+apt-get install cmake pkg-config libicu-dev docker.io ruby ruby-dev libz-dev build-essential libssl-dev
 ```
 
 The latest version of Bundler can be installed with `gem install bundler`.
