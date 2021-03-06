@@ -63,6 +63,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **CLIPS:** [psicomante/CLIPS-sublime](https://github.com/psicomante/CLIPS-sublime)
 - **CMake:** [textmate/cmake.tmbundle](https://github.com/textmate/cmake.tmbundle)
 - **COBOL:** [bitbucket:bitlang/sublime_cobol](https://bitbucket.org/bitlang/sublime_cobol)
+- **CODEOWNERS:** [bmalehorn/codeowners-language](https://github.com/bmalehorn/codeowners-language)
 - **COLLADA:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)
 - **CSON:** [atom/language-coffee-script](https://github.com/atom/language-coffee-script)
 - **CSS:** [atom/language-css](https://github.com/atom/language-css)
