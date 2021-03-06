@@ -170,9 +170,10 @@ class TestTokenizer < Minitest::Test
     assert_equal %w(~ a), tokenize("~a")
 
     # Edge cases
-    assert_equal %w(-!#$%&*+,.:;<=>?@\\^_`|~), tokenize("-!#$%&*+,.:;<=>?@\\^_`|~")
-    assert_equal %w(-!#$%&*+,.:;<=>?@\\^_`|~*/), tokenize("-!#$%&*+,.:;<=>?@\\^_`|~*/")
-    assert_equal %w(/-!#$%&*+,.:;<=>?@\\^_`|~), tokenize("/-!#$%&*+,.:;<=>?@\\^_`|~")
+    assert_equal %w(-!#$%&*+,.:;<=>), tokenize("-!#$%&*+,.:;<=>")
+    assert_equal %w(-!#$%&?@\\^_`|~), tokenize("-!#$%&?@\\^_`|~")
+    assert_equal %w(-!#$%&*+,.:;<=>), tokenize("-!#$%&*+,.:;<=>")
+    assert_equal %w(/-!#$%&*+,.:;<>), tokenize("/-!#$%&*+,.:;<>")
   end
 
   def test_c_tokens
@@ -225,5 +226,9 @@ class TestTokenizer < Minitest::Test
   def test_ruby_tokens
     assert_equal %w(module Foo end), tokenize(:"Ruby/foo.rb")
     assert_equal %w(task : default do puts end), tokenize(:"Ruby/filenames/Rakefile")
+  end
+
+  def test_truncate
+    assert_equal ['a'*16], tokenize('a'*100)
   end
 end
