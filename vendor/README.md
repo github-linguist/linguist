@@ -384,6 +384,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Roff Manpage:** [Alhadis/language-roff](https://github.com/Alhadis/language-roff)
 - **Rouge:** [atom/language-clojure](https://github.com/atom/language-clojure)
 - **Ruby:** [atom/language-ruby](https://github.com/atom/language-ruby)
+- **Ruby Gemfile.lock:** [hmarr/gemfile-lock-tmlanguage](https://github.com/hmarr/gemfile-lock-tmlanguage)
 - **Rust:** [zargony/atom-language-rust](https://github.com/zargony/atom-language-rust)
 - **SAS:** [rpardee/sas.tmbundle](https://github.com/rpardee/sas.tmbundle)
 - **SCSS:** [atom/language-sass](https://github.com/atom/language-sass)

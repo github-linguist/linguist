@@ -4983,7 +4983,6 @@ Ruby:
   - Deliverfile
   - Fastfile
   - Gemfile
-  - Gemfile.lock
   - Guardfile
   - Jarfile
   - Mavenfile
@@ -4995,6 +4994,15 @@ Ruby:
   - Vagrantfile
   - buildfile
   language_id: 326
+Ruby Gemfile.lock:
+  type: data
+  color: "#701516"
+  searchable: false
+  tm_scope: source.gemfile-lock
+  ace_mode: text
+  filenames:
+  - Gemfile.lock
+  language_id: 907065713
 Rust:
   type: programming
   color: "#dea584"
