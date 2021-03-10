@@ -64,8 +64,8 @@ ABAP CDS:
   type: programming
   color: "#555e25"
   extensions:
-    - ".asddls"
-  tm_scope: "source.abapcds"
+  - ".asddls"
+  tm_scope: source.abapcds
   language_id: 452681853
   ace_mode: text
 ABNF:
@@ -1117,6 +1117,8 @@ Cython:
 D:
   type: programming
   color: "#ba595e"
+  aliases:
+  - Dlang
   extensions:
   - ".d"
   - ".di"
@@ -2576,7 +2578,7 @@ JSONiq:
   codemirror_mime_type: application/json
   extensions:
   - ".jq"
-  tm_scope: source.jq
+  tm_scope: source.jsoniq
   language_id: 177
 Jasmin:
   type: programming
@@ -2872,8 +2874,7 @@ LabVIEW:
   language_id: 194
 Lark:
   type: data
-  group: EBNF
-  color: "#0b130f"
+  color: "#2980B9"
   extensions:
   - ".lark"
   tm_scope: source.lark
@@ -3304,6 +3305,7 @@ Mathematica:
   language_id: 224
 Maven POM:
   type: data
+  group: XML
   tm_scope: text.xml.pom
   filenames:
   - pom.xml
@@ -6615,6 +6617,14 @@ fish:
   tm_scope: source.fish
   ace_mode: text
   language_id: 415
+jq:
+  color: "#c7254e"
+  ace_mode: text
+  type: programming
+  extensions:
+  - ".jq"
+  tm_scope: source.jq
+  language_id: 905371884
 mIRC Script:
   type: programming
   color: "#3d57c3"

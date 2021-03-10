@@ -511,6 +511,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **eC:** [ecere/ec.tmbundle](https://github.com/ecere/ec.tmbundle)
 - **edn:** [atom/language-clojure](https://github.com/atom/language-clojure)
 - **fish:** [l15n/fish-tmbundle](https://github.com/l15n/fish-tmbundle)
+- **jq:** [wader/language-jq](https://github.com/wader/language-jq)
 - **mIRC Script:** [gen-angry/language-msl](https://github.com/gen-angry/language-msl)
 - **mcfunction:** [Arcensoth/language-mcfunction](https://github.com/Arcensoth/language-mcfunction)
 - **mupad:** [ccreutzig/sublime-MuPAD](https://github.com/ccreutzig/sublime-MuPAD)
