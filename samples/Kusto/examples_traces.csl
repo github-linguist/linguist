@@ -1,0 +1,269 @@
+//For Building Regex patterns, try https://regex101.com/
+
+
+// CM Application Upgrades
+let appName = @'fabric:/NotificationProcessorServiceApplication';
+let exclusion1 = @'Phase=NotStarted';
+your_tablename_here
+| where Type contains @'CM.' 
+    or (Type contains strcat(@'HM.Entity_QueryCompleted@', appName))
+| where Type contains @'Start'
+    or Type contains @'End' 
+    or Type contains @'upgrade domain completed'   
+    or Type contains strcat(@'ApplicationUpgradeDomainComplete@', appName)
+    or Text contains @'Phase='
+    or Text contains @'failed'
+    or ((Type contains strcat(@'HM.Entity_QueryCompleted@', appName)) and (Text matches regex strcat('(?i:',@'is in Error',')') or Text matches regex strcat('(?i:',@'is in Warning',')')))
+| where Type !contains exclusion1 and Text !contains exclusion1
+| project Timestamp , TID , PID , NodeName , Level , Type , Text , FileType
+| order by Timestamp asc
+| limit 5000
+
+
+//HM Query (show services in error, extract partitionid's)
+let filterPattern = @'HM.Entity_QueryCompleted@(fabric):\/([\w_-]+)\/([\w_-]+)';
+let extractPattern_PartitionStats = @'(Partition:)\sok:\d+\/w:\d+\/e:\d+';
+let extractPattern_ReplicaStats = @'(Replica:)\sok:\d+\/w:\d+\/e:\d+';
+let extractPattern_PartitionId = @"(Partition\s\'[a-z0-9]{8}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{12})";
+let extractPattern_ServiceName = @'(fabric):\/([\w_-]+)\/([\w_-]+)';
+your_tablename_here
+| where Type contains @'HM.Entity_QueryCompleted'
+| where Type matches regex filterPattern
+  and (Text matches regex strcat('(?i:',@'is in Error',')') or Text matches regex strcat('(?i:',@'is in Warning',')'))
+| extend partitionStats = extract(extractPattern_PartitionStats, 0, Text, typeof(string))
+| extend replicaStats = extract(extractPattern_ReplicaStats, 0, Text, typeof(string))
+| extend serviceName = extract(extractPattern_ServiceName, 0, Text, typeof(string))
+| extend partitionId = extract_all(extractPattern_PartitionId, Text)
+| project Timestamp , TID , PID , NodeName , Level , Type , Text , FileType, partitionStats, replicaStats, serviceName, partitionId
+| order by Timestamp asc
+| limit 5000
+
+//HM Query (show code packages in error, program, arguments, servicepackageid)
+let filterPattern = @'HM.Entity_QueryCompleted@(fabric):\/([\w_-]+)\/([\w_-]+)';
+let extractPattern_ServiceName = @'(fabric):\/([\w_-]+)\+([\w_-]+)';
+let extractPattern_ExitCode = @'(exit code:)(\d+)';
+let extractPattern_ErrorCode = @'(ErrorCode=)(.+?[^,]*)';
+let extractPattern_Program = @'(Program\s=\s)(.+?\.[^.,]*)';
+let extractPattern_Arguments = @'(Arguments\s=\s)([^,]*)';
+let extractPattern_ServicePackageInstanceId = @'(ServicePackageInstanceId\s=\s)(.+?[^,]*)';
+let extractPattern_ = @'';
+your_tablename_here
+| where Text contains "CodePackage" and Text contains "error"
+| where Text contains "ErrorCode=FABRIC_E" or Text contains "There was an error" or Text contains "terminated with exitcode"
+| extend serviceName = extract(extractPattern_ServiceName, 0, Text, typeof(string))
+| extend exitCode = extract(extractPattern_ExitCode, 2, Text, typeof(string))
+| extend errorCode = extract(extractPattern_ErrorCode, 2, Text, typeof(string))
+| extend program = extract(extractPattern_Program, 2, Text, typeof(string))
+| extend arguments = extract(extractPattern_Arguments, 2, Text, typeof(string))
+| extend servicePackageId = extract(extractPattern_ServicePackageInstanceId, 2, Text, typeof(string))
+| project Timestamp , TID , PID , NodeName , Level , Type , Text , FileType, serviceName, exitCode, errorCode, program, arguments, servicePackageId
+| order by Timestamp asc
+| limit 5000
+
+// FM Application Upgrades
+let appName = @'fabric:/';
+your_tablename_here
+| where Type contains @'FM.AppUpgrade'
+| where Text matches regex strcat('(?i:',@'accepted',')')  
+    or Text matches regex strcat('(?i:',@'and moving to',')')  
+    or Text matches regex strcat('(?i:',@'Starting',')')   
+| project Timestamp , TID , PID , NodeName , Level , Type , Text , FileType
+| order by Timestamp asc
+| limit 5000
+
+// CM Application Upgrades
+let appName = @'fabric:/NotificationProcessorServiceApplication';
+let exclusion1 = @'Phase=NotStarted';
+your_tablename_here
+| where Type contains @'CM.' 
+    or (Type contains strcat(@'HM.Entity_QueryCompleted@', appName))
+| where Type contains @'Start'
+    or Type contains @'End' 
+    or Type contains @'upgrade domain completed'   
+    or Type contains strcat(@'ApplicationUpgradeDomainComplete@', appName)
+    or Text contains @'Phase='
+    or Text contains @'failed'
+    or ((Type contains strcat(@'HM.Entity_QueryCompleted@', appName)) and (Text matches regex strcat('(?i:',@'is in Error',')') or Text matches regex strcat('(?i:',@'is in Warning',')')))
+| where Type !contains exclusion1 and Text !contains exclusion1
+| project Timestamp , TID , PID , NodeName , Level , Type , Text , FileType
+| order by Timestamp asc
+| limit 5000
+
+// regex example with string match 'exception', case insensitive
+let filterPattern1 = @'exception';
+let regexPattern1 = strcat('(?i:',filterPattern1,')'); // re2 case insensitive
+your_tablename_here
+| where Type matches regex regexPattern1 or Text matches regex regexPattern1 
+| where Level !contains "Informational"
+| project Timestamp , TID , PID , NodeName , Level , Type , Text , FileType
+| order by Timestamp asc
+| limit 5000
+
+// display Types that are not informational (e.g. type~W|E)
+let exclusion1 = "chaos";
+your_tablename_here
+| order by Timestamp asc
+| where Level !contains "info" and Level !contains "unknown" and Level !contains "verbose"
+| where Type !contains exclusion1 and Text !contains exclusion1
+| project Timestamp , TID , PID , Level , Type , Text , NodeName , FileType
+| limit 5000
+//| summarize count() by xtime=bin(Timestamp,1m), NodeName
+//| render timechart;
+
+// ReverseProxy returns status code 
+let extractPattern_StatusCode = @'(status code\s=\s)(\d+)';
+your_tablename_here
+| where Type contains "ReverseProxy"
+| where Text contains "status code"
+| extend statusCode = extract(extractPattern_StatusCode, 2, Text, typeof(string))
+| project Timestamp , TID , PID , Level , Type , Text , NodeName , FileType, statusCode
+| limit 5000
+
+// ReverseProxy returns status code
+let extractPattern_requestId = @'([a-z0-9]{8}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{12})';
+let extractPattern_StatusCode = @'(status code\s=\s)(\d+)';
+your_tablename_here
+| where Type contains "ReverseProxy"
+| where Text contains "status code"
+| extend requestId = extract(extractPattern_requestId, 1, Text, typeof(string))
+| extend statusCode = extract(extractPattern_StatusCode, 2, Text, typeof(string))
+| project Timestamp , TID , PID , Level , Type , Text , NodeName , FileType, statusCode, requestId
+| limit 5000
+| summarize count() by requestId
+| order by count_
+//| summarize count() by xtime=bin(Timestamp,1m), requestId 
+//| render timechart;
+
+// ReverseProxy, investigate by requestId
+let filterPattern_requestId = @'106dcdd4-01e6-4497-bf47-577d94964649';
+let extractPattern_requestId = @'([a-z0-9]{8}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{12})';
+let extractPattern_ServiceUrl = @'((?:https?:\/\/[^,?]*))';
+your_tablename_here
+| extend requestId = extract(extractPattern_requestId, 1, Text, typeof(string))
+| extend serviceUrl = extract_all(extractPattern_ServiceUrl, Text)
+| where Type contains "ReverseProxy"
+| where Text !contains "status code"
+| where Type contains filterPattern_requestId or Text contains filterPattern_requestId
+| project Timestamp , TID , PID , Level , Type , Text , NodeName , FileType, requestId, serviceUrl
+| limit 5000
+| order by Timestamp asc
+//| summarize count() by tostring(serviceUrl)
+//| where count_ > 5
+//| render timechart;
+
+// ReverseProxy by URL
+let extractPattern_requestId = @'([a-z0-9]{8}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{12})';
+let extractPattern_ServiceUrl = @'((?:https?:\/\/[^,?]*))';
+let extractPattern_Verb = @'(verb\s=\s)([^,]*)';
+let extractPattern_Started = @'';
+let extractPattern_Finished = @'';
+your_tablename_here
+| where Type contains "ReverseProxy"
+| where Text !contains "status code"
+| extend requestId = extract(extractPattern_requestId, 1, Text, typeof(string))
+| extend serviceUrl = extract_all(extractPattern_ServiceUrl, Text)
+| extend verb = extract(extractPattern_Verb, 2, Text, typeof(string))
+| project Timestamp , TID , PID , Level , Type , Text , NodeName , FileType, requestId, serviceUrl, verb
+| limit 5000
+| order by Timestamp asc
+//| summarize count() by requestId
+//| where count_ > 1
+//| summarize count() by xtime=bin(Timestamp,10s), tostring(serviceUrl)
+//| where count_ > 5
+//| render timechart;
+
+// ReverseProxy, Count by distinct URL
+let extractPattern_requestId = @'([a-z0-9]{8}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{12})';
+let extractPattern_ServiceUrl = @'((?:https?:\/\/[^,?]*))';
+let extractPattern_Verb = @'(verb\s=\s)([^,]*)';
+let extractPattern_Started = @'';
+let extractPattern_Finished = @'';
+your_tablename_here
+| where Type contains "ReverseProxy"
+| where Text !contains "status code"
+| extend requestId = extract(extractPattern_requestId, 1, Text, typeof(string))
+| extend serviceUrl = extract_all(extractPattern_ServiceUrl, Text)
+| extend verb = extract(extractPattern_Verb, 2, Text, typeof(string))
+| project Timestamp , TID , PID , Level , Type , Text , NodeName , FileType, requestId, serviceUrl, verb
+| limit 5000
+| order by tostring(serviceUrl)
+| summarize count() by tostring(serviceUrl)
+| order by count_
+
+
+// ReverseProxy, Track numner of requests handled at reverse proxy
+your_tablename_here
+| where Type contains "ReverseProxy.RequestReceived"
+| limit 5000
+| summarize count() by xtime=bin(Timestamp,60s)
+| render timechart;
+
+// ReverseProxy, Track numner of requests handled at reverse proxy
+let extractPattern_ServiceUrl = @'((?:https?:\/\/[^,?]*))';
+your_tablename_here
+| where Type contains "ReverseProxy.RequestReceived"
+| extend serviceUrl = extract_all(extractPattern_ServiceUrl, Text)
+| limit 5000
+| summarize count() by xtime=bin(Timestamp,60s), tostring(serviceUrl)
+| render timechart;
+
+// Remoting, Check if customer was creating multiple ClientFactories which can lead to High MEM and CPU
+let extractPattern_partitionId = @'([a-z0-9]{8}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{12})';
+your_tablename_here
+| where Type contains "ClientFactory" 
+| where Text contains "Invalid Client Rsp found in Cache"
+| extend partitionId = extract(extractPattern_partitionId, 1, Text, typeof(string))
+| summarize count() by PID, partitionId
+| where count_ >1
+| limit 5000
+
+// Remoting, Check if we are seeing retry requests (6.5 runtime)
+let extractPattern_partitionId = @'([a-z0-9]{8}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{12})';
+your_tablename_here
+| where Type contains "ServicePartitionClient" or (Type contains "ClientFactory" and Text contains "Invalid")
+| extend partitionId = extract(extractPattern_partitionId, 1, Text, typeof(string))
+//| summarize count() by PID, partitionId
+| limit 5000
+
+// FM Partition
+let filterPattern_partitionId = @'0695ac22-b06c-47b3-bb99-a743d5a58f66';
+your_tablename_here
+| where (Type contains strcat("FM.Background_FTUpdate@", filterPattern_partitionId)) 
+     or (Type startswith "FM." and Type contains filterPattern_partitionId)
+| limit 1000
+
+// Native Transport taking long time to send the request over the wire
+// Remoting, we can correlate clientfactory traces and resolve traces based on thread and time request issued.
+// Get the service name for which request was being made. If possible also the partition Id for which request was being made.
+// (Type~"BeginResolve" && ~"StateStore") || type~"ClientFactory" && ~"6eaed5c3-a5cc-4e64-8a3a-1c9a05bab074" || type~"Enqueue" 
+let extractPattern_partitionId = @'([a-z0-9]{8}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{12})';
+your_tablename_here
+| where (Type contains "BeginResolve" and Text contains "StateStore") or (Type contains "ClientFactory" and Text contains "bfe07486-d0a4-4ed5-b9f4-d452692ebb9b") or (Type contains "Enqueue")
+| extend partitionId = extract(extractPattern_partitionId, 1, Text, typeof(string))
+//| summarize count() by PID, partitionId
+| limit 5000
+
+// FM Partition
+let filterPattern_partitionId = @'0695ac22-b06c-47b3-bb99-a743d5a58f66';
+your_tablename_here
+| where (Type contains strcat("FM.Background_FTUpdate@", filterPattern_partitionId)) 
+     or (Type startswith "FM." and Type contains filterPattern_partitionId)
+| limit 1000
+
+// Transport
+let extractPattern_TextId = @'(@)(.*)';
+let extractPattern_requestId = @'([a-z0-9]{8}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{12})';
+your_tablename_here
+| extend TextId = extract(extractPattern_TextId, 2, Type, typeof(string))
+| extend requestId = extract(extractPattern_requestId, 1, Text, typeof(string))
+| where Type contains "Transport.Enqueue" or Type contains "Transport.Activity_Dispatch" or Type contains "Transport.Msg_Dispatch" 
+| order by TextId, requestId, Timestamp asc 
+| limit 10000
+//| summarize count() by xtime=bin(Timestamp,60s), tostring(TextId)
+//| render timechart;
+
+// Query Transport for currently configured cluster certificate
+your_tablename_here
+| where Type contains "Transport.SecurityContextSsl"
+| where Text contains "incoming cert" or Text contains "usage" or Text contains "VerifyCertificate"
+| limit 5000

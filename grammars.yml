@@ -153,6 +153,8 @@ vendor/grammars/XojoSyntaxTM:
 - source.xojo
 vendor/grammars/ZenScript-tmLanguage:
 - source.zenscript
+vendor/grammars/abap-cds-grammar:
+- source.abapcds
 vendor/grammars/abap.tmbundle:
 - source.abap
 vendor/grammars/abl-tmlanguage:
@@ -382,6 +384,8 @@ vendor/grammars/jflex.tmbundle:
 - source.jflex
 vendor/grammars/json.tmbundle:
 - source.json
+vendor/grammars/kusto-syntax-highlighting:
+- source.kusto
 vendor/grammars/lang-4d:
 - source.4dm
 vendor/grammars/language-agc:
@@ -454,6 +458,7 @@ vendor/grammars/language-etc:
 - source.odin-ehr
 - source.openbsd-pkg.contents
 - source.opts
+- source.record-jar
 - source.sieve
 - source.smpl
 - source.ssh-config
@@ -461,6 +466,7 @@ vendor/grammars/language-etc:
 - source.ucd.nameslist
 - source.ucd.unidata
 - source.wgetrc
+- text.checksums
 - text.openbsd-pkg.desc
 - text.xml.svg
 vendor/grammars/language-faust:
@@ -525,8 +531,10 @@ vendor/grammars/language-jison:
 - source.jisonlex-injection
 vendor/grammars/language-jolie:
 - source.jolie
-vendor/grammars/language-jsoniq:
+vendor/grammars/language-jq:
 - source.jq
+vendor/grammars/language-jsoniq:
+- source.jsoniq
 - source.xq
 vendor/grammars/language-jsonnet:
 - source.jsonnet
@@ -534,9 +542,6 @@ vendor/grammars/language-kotlin:
 - source.kotlin
 vendor/grammars/language-less:
 - source.css.less
-vendor/grammars/language-liquid:
-- source.css.scss.liquid
-- text.html.liquid
 vendor/grammars/language-m68k:
 - source.m68k
 vendor/grammars/language-macaulay2:
@@ -554,6 +559,9 @@ vendor/grammars/language-ncl:
 - source.ncl
 vendor/grammars/language-ninja:
 - source.ninja
+vendor/grammars/language-nunjucks:
+- source.nunjucks
+- text.html.nunjucks
 vendor/grammars/language-pan:
 - source.pan
 vendor/grammars/language-pcb:
@@ -578,6 +586,7 @@ vendor/grammars/language-regexp:
 - hidden.regexp.injection-shell
 - source.regexp
 - source.regexp.extended
+- source.regexp.posix
 - source.sy
 vendor/grammars/language-renpy:
 - source.renpy
@@ -654,6 +663,8 @@ vendor/grammars/latex.tmbundle:
 - text.tex.latex.memoir
 vendor/grammars/linter-lilypond:
 - source.lilypond
+vendor/grammars/liquid:
+- text.html.liquid
 vendor/grammars/lisp.tmbundle:
 - source.lisp
 vendor/grammars/llvm.tmbundle:
@@ -886,6 +897,7 @@ vendor/grammars/vscode-hack:
 - markdown.hack.codeblock
 - source.hack
 vendor/grammars/vscode-lean:
+- markdown.lean.codeblock
 - source.lean
 - source.lean.markdown
 vendor/grammars/vscode-opa:
