@@ -2096,23 +2096,6 @@ HTML:
   - ".xht"
   - ".xhtml"
   language_id: 146
-HTML+Django:
-  type: markup
-  tm_scope: text.html.django
-  group: HTML
-  extensions:
-  - ".jinja"
-  - ".j2"
-  - ".jinja2"
-  aliases:
-  - django
-  - html+django/jinja
-  - html+jinja
-  - htmldjango
-  ace_mode: django
-  codemirror_mode: django
-  codemirror_mime_type: text/x-django
-  language_id: 147
 HTML+ECR:
   type: markup
   tm_scope: text.html.ecr
@@ -2676,6 +2659,17 @@ JavaScript+ERB:
   codemirror_mode: javascript
   codemirror_mime_type: application/javascript
   language_id: 914318960
+Jinja:
+  type: markup
+  tm_scope: text.html.django
+  extensions:
+  - ".jinja"
+  - ".j2"
+  - ".jinja2"
+  ace_mode: django
+  codemirror_mode: django
+  codemirror_mime_type: text/x-django
+  language_id: 147
 Jison:
   type: programming
   group: Yacc
