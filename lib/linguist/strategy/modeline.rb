@@ -1,47 +1,77 @@
 module Linguist
   module Strategy
     class Modeline
-      EMACS_MODELINE = /
+      EMACS_MODELINE = %r[
+        (?-m)
+
+        # Opening delimiter
         -\*-
+
         (?:
           # Short form: `-*- ruby -*-`
-          \s* (?= [^:;\s]+ \s* -\*-)
+          [ \t]*
+          (?=
+            [^:;\s]+  # Name of mode
+            [ \t]*    # Optional whitespace
+            -\*-      # Closing delimiter
+          )
           |
+
           # Longer form: `-*- foo:bar; mode: ruby; -*-`
           (?:
-            .*?       # Preceding variables: `-*- foo:bar bar:baz;`
-            [;\s]     # Which are delimited by spaces or semicolons
+            .*?[ \t;] # Preceding variables: `-*- foo:bar bar:baz;`
             |
             (?<=-\*-) # Not preceded by anything: `-*-mode:ruby-*-`
           )
-          mode        # Major mode indicator
-          \s*:\s*     # Allow whitespace around colon: `mode : ruby`
-        )
-        ([^:;\s]+)    # Name of mode
 
-        # Ensure the mode is terminated correctly
+          # Explicitly-named variable: `mode: ruby` or `mode  : ruby`
+          [ \t]* mode [ \t]* : [ \t]*
+        )
+
+        # Name of major-mode, which corresponds to syntax or filetype
+        ([^:;\s]+)
+
+        # Ensure the name is terminated correctly
         (?=
           # Followed by semicolon or whitespace
-          [\s;]
+          [ \t;]
           |
           # Touching the ending sequence: `ruby-*-`
           (?<![-*])   # Don't allow stuff like `ruby--*-` to match; it'll invalidate the mode
           -\*-        # Emacs has no problems reading `ruby --*-`, however.
         )
-        .*?           # Anything between a cleanly-terminated mode and the ending -*-
+
+        # If we've gotten this far, it means the modeline is valid.
+        # We gleefully skip past everything up until reaching "-*-"
+        .*?
+
+        # Closing delimiter
         -\*-
-      /xi
+      ]xi
 
-      VIM_MODELINE   = /
+      VIM_MODELINE = %r[
+        (?-m)
 
-        # Start modeline. Could be `vim:`, `vi:` or `ex:`
+        # Start of modeline (syntax documented in E520)
         (?:
-          (?:[ \t]|^)
-          vi
-          (?:m[<=>]?\d+|m)? # Version-specific modeline
+          # `vi:`, `vim:` or `Vim:`
+          (?:^|[ \t]) (?:vi|Vi(?=m))
+
+          # Check if specific Vim version(s) are requested (won't work in vi/ex)
+          (?:
+            # Versioned modeline. `vim<700:` targets Vim versions older than 7.0
+            m
+            [<=>]?    # If comparison operator is omitted, *only* this version is targeted
+            [0-9]+    # Version argument ≡ (MINOR_VERSION_NUMBER × 100) + MINOR_VERSION_NUMBER
+            |
+
+            # Unversioned modeline. `vim:` targets any version of Vim.
+            m
+          )?
           |
-          [\t\x20] # `ex:` requires whitespace, because "ex:" might be short for "example:"
-          ex
+
+          # `ex:`, which requires leading whitespace to avoid matching stuff like "lex:"
+          [ \t] ex
         )
 
         # If the option-list begins with `set ` or `se `, it indicates an alternative
@@ -49,7 +79,7 @@ module Linguist
         # serves as a terminator for an option sequence, delimited by whitespace.
         (?=
           # So we have to ensure the modeline ends with a colon
-          : (?=[ \t]* set? [ \t] [^\n:]+ :) |
+          : (?=[ \t]* set? [ \t] [^\r\n:]+ :) |
 
           # Otherwise, it isn't valid syntax and should be ignored
           : (?![ \t]* set? [ \t])
@@ -57,40 +87,42 @@ module Linguist
 
         # Possible (unrelated) `option=value` pairs to skip past
         (?:
-          # Option separator. Vim uses whitespace or colons to separate options (except if
-          # the alternate "vim: set " form is used, where only whitespace is used)
+          # Option separator, either
           (?:
-            [ \t]
+            # 1. A colon (possibly surrounded by whitespace)
+            [ \t]* : [ \t]*     # vim: noai :  ft=sh:noexpandtab
             |
-            [ \t]* : [ \t]* # Note that whitespace around colons is accepted too:
-          )                 # vim: noai :  ft=ruby:noexpandtab
+
+            # 2. At least one (horizontal) whitespace character
+            [ \t]               # vim: noai ft=sh noexpandtab
+          )
 
           # Option's name. All recognised Vim options have an alphanumeric form.
           \w*
 
           # Possible value. Not every option takes an argument.
           (?:
-            # Whitespace between name and value is allowed: `vim: ft   =ruby`
+            # Whitespace between name and value is allowed: `vim: ft   =sh`
             [ \t]*=
 
-            # Option's value. Might be blank; `vim: ft= ` says "use no filetype".
+            # Option's value. Might be blank; `vim: ft= ` means "use no filetype".
             (?:
-              [^\\[ \t]] # Beware of escaped characters: titlestring=\ ft=ruby
-              |          # will be read by Vim as { titlestring: " ft=ruby" }.
+              [^\\\s]    # Beware of escaped characters: titlestring=\ ft=sh
+              |          # will be read by Vim as { titlestring: " ft=sh" }.
               \\.
             )*
           )?
         )*
 
         # The actual filetype declaration
-        [[ \t]:] (?:filetype|ft|syntax) [ \t]*=
+        [ \t:] (?:filetype|ft|syntax) [ \t]*=
 
         # Language's name
         (\w+)
 
-        # Ensure it's followed by a legal separator
-        (?=[ \t]|:|$)
-      /xi
+        # Ensure it's followed by a legal separator (including EOL)
+        (?=$|\s|:)
+      ]x
 
       MODELINES = [EMACS_MODELINE, VIM_MODELINE]
 
