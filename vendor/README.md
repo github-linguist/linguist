@@ -520,6 +520,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **ooc:** [nilium/ooc.tmbundle](https://github.com/nilium/ooc.tmbundle)
 - **q:** [komsit37/sublime-q](https://github.com/komsit37/sublime-q)
 - **reStructuredText:** [Lukasa/language-restructuredtext](https://github.com/Lukasa/language-restructuredtext)
+- **robots.txt:** [Nixinova/tmLanguage](https://github.com/Nixinova/tmLanguage)
 - **sed:** [Alhadis/language-sed](https://github.com/Alhadis/language-sed)
 - **wdl:** [broadinstitute/wdl-sublime-syntax-highlighter](https://github.com/broadinstitute/wdl-sublime-syntax-highlighter)
 - **wisp:** [atom/language-clojure](https://github.com/atom/language-clojure)
