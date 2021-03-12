@@ -62,7 +62,7 @@ module Linguist
             # Versioned modeline. `vim<700:` targets Vim versions older than 7.0
             m
             [<=>]?    # If comparison operator is omitted, *only* this version is targeted
-            [0-9]+    # Version argument ≡ (MINOR_VERSION_NUMBER × 100) + MINOR_VERSION_NUMBER
+            [0-9]+    # Version argument = (MINOR_VERSION_NUMBER * 100) + MINOR_VERSION_NUMBER
             |
 
             # Unversioned modeline. `vim:` targets any version of Vim.
