@@ -3609,13 +3609,6 @@ NetLogo:
   codemirror_mode: commonlisp
   codemirror_mime_type: text/x-common-lisp
   language_id: 246
-Redirect Rules:
-  type: data
-  filenames:
-  - _redirects
-  tm_scope: text._redirects
-  ace_mode: text
-  language_id: 1020148948
 NewLisp:
   type: programming
   color: "#87AED7"
@@ -4784,6 +4777,15 @@ Redcode:
   tm_scope: none
   ace_mode: text
   language_id: 321
+Redirect Rules:
+  type: data
+  aliases:
+  - redirects
+  filenames:
+  - _redirects
+  tm_scope: text._redirects
+  ace_mode: text
+  language_id: 1020148948
 Regular Expression:
   type: data
   extensions:
