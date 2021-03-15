@@ -374,6 +374,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Rebol:** [Oldes/Sublime-REBOL](https://github.com/Oldes/Sublime-REBOL)
 - **Record Jar:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **Red:** [Oldes/Sublime-Red](https://github.com/Oldes/Sublime-Red)
+- **Redirect Rules:** [Nixinova/tmLanguage](https://github.com/Nixinova/tmLanguage)
 - **Regular Expression:** [Alhadis/language-regexp](https://github.com/Alhadis/language-regexp)
 - **Ren'Py:** [williamd1k0/language-renpy](https://github.com/williamd1k0/language-renpy)
 - **Rich Text Format:** [nwhetsell/language-rtf](https://github.com/nwhetsell/language-rtf)
