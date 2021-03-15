@@ -148,6 +148,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **GLSL:** [euler0/sublime-glsl](https://github.com/euler0/sublime-glsl)
 - **GN:** [devoncarew/language-gn](https://github.com/devoncarew/language-gn)
 - **Game Maker Language:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
+- **Gemfile.lock:** [hmarr/gemfile-lock-tmlanguage](https://github.com/hmarr/gemfile-lock-tmlanguage)
 - **Genshi:** [genshi.edgewall.org/query](https://genshi.edgewall.org/query)
 - **Gentoo Ebuild:** [atom/language-shellscript](https://github.com/atom/language-shellscript)
 - **Gentoo Eclass:** [atom/language-shellscript](https://github.com/atom/language-shellscript)
