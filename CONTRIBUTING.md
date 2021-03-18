@@ -63,7 +63,7 @@ bundle exec bin/github-linguist --breakdown
 ## Adding an extension to a language
 
 We try only to add new extensions once they have some usage on GitHub.
-In most cases we prefer that extensions be in use in at least 200 unique user/repo repositories before supporting them in Linguist.
+In most cases we prefer that each new file extension be in use in at least 200 unique `:user/:repo` repositories before supporting them in Linguist.
 
 To add support for a new extension:
 
@@ -88,7 +88,7 @@ Additionally, if this extension is already listed in [`languages.yml`][languages
 ## Adding a language
 
 We try only to add languages once they have some usage on GitHub.
-In most cases we prefer that each new file extension be in use in 200 unique user/repo repositories before supporting them in Linguist.
+In most cases we prefer that each new file extension be in use in at least 200 unique `:user/:repo` repositories before supporting them in Linguist.
 
 To add support for a new language:
 
