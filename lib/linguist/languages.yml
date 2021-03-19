@@ -697,6 +697,13 @@ COBOL:
   codemirror_mode: cobol
   codemirror_mime_type: text/x-cobol
   language_id: 48
+CODEOWNERS:
+  type: data
+  filenames:
+  - CODEOWNERS
+  tm_scope: text.codeowners
+  ace_mode: gitignore
+  language_id: 321684729
 COLLADA:
   type: data
   extensions:
@@ -2101,7 +2108,6 @@ HTML:
   - ".htm"
   - ".html.hl"
   - ".inc"
-  - ".st"
   - ".xht"
   - ".xhtml"
   language_id: 146
@@ -5516,6 +5522,16 @@ Stata:
   tm_scope: source.stata
   ace_mode: text
   language_id: 358
+StringTemplate:
+  type: markup
+  color: "#3fb34f"
+  extensions:
+  - ".st"
+  tm_scope: source.string-template
+  ace_mode: html
+  codemirror_mode: htmlmixed
+  codemirror_mime_type: text/html
+  language_id: 89855901
 Stylus:
   type: markup
   color: "#ff6347"
