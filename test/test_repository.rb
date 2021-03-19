@@ -74,10 +74,10 @@ class TestRepository < Minitest::Test
     assert !repo.breakdown_by_file["Ruby"].empty?
 
     # Ensures the filename that contains unicode char is UTF-8 encoded and invalid chars scrubbed
-    assert repo.breakdown_by_file.has_key?("Perl")
-    assert repo.breakdown_by_file["Perl"].include?("test/fixtures/ba�r/file_ã.pl")
-    assert_equal "UTF-8", repo.breakdown_by_file["Perl"].first.encoding.to_s
-    assert repo.breakdown_by_file["Perl"].first.valid_encoding?
+    assert repo.breakdown_by_file.has_key?("Raku")
+    assert repo.breakdown_by_file["Raku"].include?("test/fixtures/ba�r/file_ã.pl")
+    assert_equal "UTF-8", repo.breakdown_by_file["Raku"].first.encoding.to_s
+    assert repo.breakdown_by_file["Raku"].first.valid_encoding?
   end
 
   def test_commit_with_git_attributes_data
