@@ -64,8 +64,8 @@ ABAP CDS:
   type: programming
   color: "#555e25"
   extensions:
-    - ".asddls"
-  tm_scope: "source.abapcds"
+  - ".asddls"
+  tm_scope: source.abapcds
   language_id: 452681853
   ace_mode: text
 ABNF:
@@ -697,6 +697,13 @@ COBOL:
   codemirror_mode: cobol
   codemirror_mime_type: text/x-cobol
   language_id: 48
+CODEOWNERS:
+  type: data
+  filenames:
+  - CODEOWNERS
+  tm_scope: text.codeowners
+  ace_mode: gitignore
+  language_id: 321684729
 COLLADA:
   type: data
   extensions:
@@ -1117,6 +1124,8 @@ Cython:
 D:
   type: programming
   color: "#ba595e"
+  aliases:
+  - Dlang
   extensions:
   - ".d"
   - ".di"
@@ -1792,6 +1801,15 @@ Game Maker Language:
   codemirror_mode: clike
   codemirror_mime_type: text/x-c++src
   language_id: 125
+Gemfile.lock:
+  type: data
+  color: "#701516"
+  searchable: false
+  tm_scope: source.gemfile-lock
+  ace_mode: text
+  filenames:
+  - Gemfile.lock
+  language_id: 907065713
 Genie:
   type: programming
   ace_mode: text
@@ -2103,27 +2121,9 @@ HTML:
   - ".htm"
   - ".html.hl"
   - ".inc"
-  - ".st"
   - ".xht"
   - ".xhtml"
   language_id: 146
-HTML+Django:
-  type: markup
-  tm_scope: text.html.django
-  group: HTML
-  extensions:
-  - ".jinja"
-  - ".j2"
-  - ".jinja2"
-  aliases:
-  - django
-  - html+django/jinja
-  - html+jinja
-  - htmldjango
-  ace_mode: django
-  codemirror_mode: django
-  codemirror_mime_type: text/x-django
-  language_id: 147
 HTML+ECR:
   type: markup
   tm_scope: text.html.ecr
@@ -2590,7 +2590,7 @@ JSONiq:
   codemirror_mime_type: application/json
   extensions:
   - ".jq"
-  tm_scope: source.jq
+  tm_scope: source.jsoniq
   language_id: 177
 Jasmin:
   type: programming
@@ -2687,6 +2687,23 @@ JavaScript+ERB:
   codemirror_mode: javascript
   codemirror_mime_type: application/javascript
   language_id: 914318960
+Jinja:
+  type: markup
+  color: "#a52a22"
+  aliases:
+  - django
+  - html+django
+  - html+jinja
+  - htmldjango
+  extensions:
+  - ".jinja"
+  - ".j2"
+  - ".jinja2"
+  tm_scope: text.html.django
+  ace_mode: django
+  codemirror_mode: django
+  codemirror_mime_type: text/x-django
+  language_id: 147
 Jison:
   type: programming
   group: Yacc
@@ -2886,8 +2903,7 @@ LabVIEW:
   language_id: 194
 Lark:
   type: data
-  group: EBNF
-  color: "#0b130f"
+  color: "#2980B9"
   extensions:
   - ".lark"
   tm_scope: source.lark
@@ -3318,6 +3334,7 @@ Mathematica:
   language_id: 224
 Maven POM:
   type: data
+  group: XML
   tm_scope: text.xml.pom
   filenames:
   - pom.xml
@@ -4788,6 +4805,15 @@ Redcode:
   tm_scope: none
   ace_mode: text
   language_id: 321
+Redirect Rules:
+  type: data
+  aliases:
+  - redirects
+  filenames:
+  - _redirects
+  tm_scope: source.redirects
+  ace_mode: text
+  language_id: 1020148948
 Regular Expression:
   type: data
   extensions:
@@ -4964,6 +4990,7 @@ Ruby:
   - ".mspec"
   - ".pluginspec"
   - ".podspec"
+  - ".prawn"
   - ".rabl"
   - ".rake"
   - ".rbi"
@@ -4994,7 +5021,6 @@ Ruby:
   - Deliverfile
   - Fastfile
   - Gemfile
-  - Gemfile.lock
   - Guardfile
   - Jarfile
   - Mavenfile
@@ -5353,6 +5379,14 @@ Sieve:
   codemirror_mode: sieve
   codemirror_mime_type: application/sieve
   language_id: 208976687
+Singularity:
+  type: programming
+  color: "#64E6AD"
+  tm_scope: source.singularity
+  filenames:
+  - Singularity
+  ace_mode: text
+  language_id: 987024632
 Slash:
   type: programming
   color: "#007eff"
@@ -5509,6 +5543,16 @@ Stata:
   tm_scope: source.stata
   ace_mode: text
   language_id: 358
+StringTemplate:
+  type: markup
+  color: "#3fb34f"
+  extensions:
+  - ".st"
+  tm_scope: source.string-template
+  ace_mode: html
+  codemirror_mode: htmlmixed
+  codemirror_mime_type: text/html
+  language_id: 89855901
 Stylus:
   type: markup
   color: "#ff6347"
@@ -6426,6 +6470,16 @@ Xojo:
   tm_scope: source.xojo
   ace_mode: text
   language_id: 405
+Xonsh:
+  type: programming
+  color: "#285EEF"
+  extensions:
+  - ".xsh"
+  tm_scope: source.python
+  ace_mode: text
+  codemirror_mode: python
+  codemirror_mime_type: text/x-python
+  language_id: 614078284
 Xtend:
   type: programming
   extensions:
@@ -6619,6 +6673,14 @@ fish:
   tm_scope: source.fish
   ace_mode: text
   language_id: 415
+jq:
+  color: "#c7254e"
+  ace_mode: text
+  type: programming
+  extensions:
+  - ".jq"
+  tm_scope: source.jq
+  language_id: 905371884
 mIRC Script:
   type: programming
   color: "#3d57c3"
@@ -6692,6 +6754,16 @@ reStructuredText:
   codemirror_mode: rst
   codemirror_mime_type: text/x-rst
   language_id: 419
+robots.txt:
+  type: data
+  aliases:
+  - robots
+  - robots txt
+  filenames:
+  - robots.txt
+  ace_mode: text
+  tm_scope: text.robots-txt
+  language_id: 674736065
 sed:
   type: programming
   color: "#64b970"

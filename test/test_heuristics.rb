@@ -776,6 +776,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_st_by_heuristics
+    assert_heuristics({
+      "StringTemplate" => all_fixtures("StringTemplate", "*.st"),
+      "Smalltalk" => all_fixtures("Smalltalk", "*.st")
+    })
+  end
+
   def test_t_by_heuristics
     # Turing not fully covered.
     assert_heuristics({

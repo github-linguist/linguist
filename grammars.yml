@@ -57,6 +57,9 @@ vendor/grammars/NimLime:
 - source.nim.comment
 - source.nim_filter
 - source.nimcfg
+vendor/grammars/Nixinova-tmLanguage:
+- source.redirects
+- text.robots-txt
 vendor/grammars/ObjectScript.tmBundle:
 - source.objectscript
 - source.objectscript_class
@@ -319,6 +322,8 @@ vendor/grammars/fortran.tmbundle:
 - source.fortran.modern
 vendor/grammars/gap-tmbundle:
 - source.gap
+vendor/grammars/gemfile-lock-tmlanguage:
+- source.gemfile-lock
 vendor/grammars/gettext.tmbundle:
 - source.po
 vendor/grammars/gnuplot-tmbundle:
@@ -462,11 +467,13 @@ vendor/grammars/language-etc:
 - source.sieve
 - source.smpl
 - source.ssh-config
+- source.string-template
 - source.tags
 - source.ucd.nameslist
 - source.ucd.unidata
 - source.wgetrc
 - text.checksums
+- text.codeowners
 - text.openbsd-pkg.desc
 - text.xml.svg
 vendor/grammars/language-faust:
@@ -531,8 +538,10 @@ vendor/grammars/language-jison:
 - source.jisonlex-injection
 vendor/grammars/language-jolie:
 - source.jolie
-vendor/grammars/language-jsoniq:
+vendor/grammars/language-jq:
 - source.jq
+vendor/grammars/language-jsoniq:
+- source.jsoniq
 - source.xq
 vendor/grammars/language-jsonnet:
 - source.jsonnet
@@ -908,6 +917,8 @@ vendor/grammars/vscode-prisma:
 - source.prisma
 vendor/grammars/vscode-scala-syntax:
 - source.scala
+vendor/grammars/vscode-singularity:
+- source.singularity
 vendor/grammars/vscode-slice:
 - source.slice
 vendor/grammars/vscode-vlang:
