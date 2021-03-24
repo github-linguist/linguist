@@ -271,6 +271,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Mercury:** [sebgod/mercury-tmlanguage](https://github.com/sebgod/mercury-tmlanguage)
 - **Meson:** [TingPing/language-meson](https://github.com/TingPing/language-meson)
 - **Metal:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
+- **Microsoft Visual Studio Solution:** [Nixinova/tmLanguage](https://github.com/Nixinova/tmLanguage)
 - **Mirah:** [atom/language-ruby](https://github.com/atom/language-ruby)
 - **Modelica:** [BorisChumichev/modelicaSublimeTextPackage](https://github.com/BorisChumichev/modelicaSublimeTextPackage)
 - **Modula-2:** [harogaston/Sublime-Modula-2](https://github.com/harogaston/Sublime-Modula-2)
