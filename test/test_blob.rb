@@ -14,7 +14,7 @@ class TestBlob < Minitest::Test
   end
 
   def test_mime_type
-    assert_equal "application/postscript", fixture_blob_memory("Binary/octocat.ai").mime_type
+    assert_equal "application/pdf", fixture_blob_memory("Binary/octocat.ai").mime_type
     assert_equal "application/x-ruby", sample_blob_memory("Ruby/grit.rb").mime_type
     assert_equal "application/x-sh", sample_blob_memory("Shell/script.sh").mime_type
     assert_equal "text/plain", fixture_blob_memory("Data/README").mime_type
