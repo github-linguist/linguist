@@ -28,7 +28,7 @@ class TestFileBlob < Minitest::Test
   end
 
   def test_mime_type
-    assert_equal "application/postscript", fixture_blob("Binary/octocat.ai").mime_type
+    assert_equal "application/pdf", fixture_blob("Binary/octocat.ai").mime_type
     assert_equal "application/x-ruby", sample_blob("Ruby/grit.rb").mime_type
     assert_equal "application/x-sh", sample_blob("Shell/script.sh").mime_type
     assert_equal "application/xml", sample_blob("XML/bar.xml").mime_type
