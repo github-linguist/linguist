@@ -45,6 +45,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Beef:** [dotnet/csharp-tmLanguage](https://github.com/dotnet/csharp-tmLanguage)
 - **Befunge:** [johanasplund/sublime-befunge](https://github.com/johanasplund/sublime-befunge)
 - **BibTeX:** [textmate/latex.tmbundle](https://github.com/textmate/latex.tmbundle)
+- **Bicep:** [azure/bicep](https://github.com/azure/bicep)
 - **Bison:** [Alhadis/language-grammars](https://github.com/Alhadis/language-grammars)
 - **Blade:** [jawee/language-blade](https://github.com/jawee/language-blade)
 - **BlitzBasic:** [textmate/blitzmax.tmbundle](https://github.com/textmate/blitzmax.tmbundle)
