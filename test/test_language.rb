@@ -173,7 +173,7 @@ class TestLanguage < Minitest::Test
     assert_equal ['C', 'C++', 'Objective-C'], Language.find_by_extension('foo.h').map(&:name).sort
     assert_equal [], Language.find_by_extension('rb')
     assert_equal [], Language.find_by_extension('.null')
-    assert_equal [Language['HTML+Django']], Language.find_by_extension('index.jinja')
+    assert_equal [Language['Jinja']], Language.find_by_extension('index.jinja')
     assert_equal [Language['Chapel']], Language.find_by_extension('examples/hello.chpl')
     assert_equal [], Language.find_by_filename('F.I.L.E.')
   end
