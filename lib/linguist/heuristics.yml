@@ -111,7 +111,7 @@ disambiguations:
 - extensions: ['.cls']
   rules:
   - language: TeX
-    pattern: '\\\w+{'
+    pattern: '^\s*\\(?:NeedsTeXFormat|ProvidesClass){'
   - language: ObjectScript
     pattern: '^Class\s'
 - extensions: ['.cmp']
@@ -124,6 +124,12 @@ disambiguations:
     pattern: '![\w\s]+methodsFor: '
   - language: 'C#'
     pattern: '^(\s*namespace\s*[\w\.]+\s*{|\s*\/\/)'
+- extensions: ['.csl']
+  rules:
+  - language: XML
+    pattern: '(?i:^\s*(\<\?xml|xmlns))'
+  - language: Kusto
+    pattern: '(^\|\s*(where|extend|project|limit|summarize))|(^\.\w+)'
 - extensions: ['.d']
   rules:
   - language: D
@@ -460,7 +466,7 @@ disambiguations:
 - extensions: ['.res']
   rules:
   - language: ReScript
-    pattern: 
+    pattern:
     - '^\s*(let|module|type)\s+\w*\s+=\s+'
     - '^\s*(?:include|open)\s+\w+\s*$'
 - extensions: ['.rno']
@@ -480,6 +486,8 @@ disambiguations:
     pattern: '^(use |fn |mod |pub |macro_rules|impl|#!?\[)'
   - language: RenderScript
     pattern: '#include|#pragma\s+(rs|version)|__attribute__'
+  - language: XML
+    pattern: '^\s*<\?xml'
 - extensions: ['.s']
   rules:
   - language: Motorola 68K Assembly
@@ -515,6 +523,12 @@ disambiguations:
   rules:
   - language: SubRip Text
     pattern: '^(\d{2}:\d{2}:\d{2},\d{3})\s*(-->)\s*(\d{2}:\d{2}:\d{2},\d{3})$'
+- extensions: ['.st']
+  rules:
+  - language: StringTemplate
+    pattern: '\$\w+[($]|(.)!\s*.+?\s*!\1|<!\s*.+?\s*!>|\[!\s*.+?\s*!\]|\{!\s*.+?\s*!\}'
+  - language: Smalltalk
+    pattern: '\A\s*[\[{(^"''\w#]|[a-zA-Z_]\w*\s*:=\s*[a-zA-Z_]\w*|class\s*>>\s*[a-zA-Z_]\w*|^[a-zA-Z_]\w*\s+[a-zA-Z_]\w*:|^Class\s*{|if(?:True|False):\s*\['
 - extensions: ['.t']
   rules:
   - language: Perl

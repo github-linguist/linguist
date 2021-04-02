@@ -428,13 +428,13 @@ void yyfree ( void * , yyscan_t yyscanner );
 
 #ifdef YY_HEADER_EXPORT_START_CONDITIONS
 #define INITIAL 0
-#define sgml 1
-#define c_comment 2
-#define xml_comment 3
-#define haskell_comment 4
-#define ocaml_comment 5
-#define python_dcomment 6
-#define python_scomment 7
+#define c_comment 1
+#define xml_comment 2
+#define haskell_comment 3
+#define ocaml_comment 4
+#define python_dcomment 5
+#define python_scomment 6
+#define roff_comment 7
 #define punct 8
 
 #endif
@@ -695,7 +695,7 @@ extern int yylex (yyscan_t yyscanner);
 #undef yyTABLES_NAME
 #endif
 
-#line 140 "tokenizer.l"
+#line 136 "tokenizer.l"
 
 
 #line 702 "lex.linguist_yy.h"

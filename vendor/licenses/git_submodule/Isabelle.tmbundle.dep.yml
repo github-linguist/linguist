@@ -1,10 +1,12 @@
 ---
-type: git_submodule
 name: Isabelle.tmbundle
-version: 7d365839adb1257461733a9d32b49ef8c134ca01
+version: 745c337a0432270474f50d12fad7ea4aa9e0b169
+type: git_submodule
+homepage: https://github.com/lsf37/Isabelle.tmbundle
 license: bsd-2-clause
 licenses:
-- text: |-
+- sources: LICENSE.md
+  text: |+
     Copyright (c) 2014 Gerwin Klein and contributors.
     All rights reserved.
 
@@ -30,4 +32,8 @@ licenses:
     LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
     OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
     SUCH DAMAGE.
+
+- sources: README.md
+  text: The bundle is released under a BSD-style license. See [`LICENSE.md`](LICENSE.md)
 notices: []
+...
