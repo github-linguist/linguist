@@ -85,7 +85,7 @@ disambiguations:
 - extensions: ['.bas']
   rules:
   - language: FreeBasic
-    pattern: '(?i)(?:[ \t]*(dim[ \t]+as|dim[ \t]+shared|common|declare[ \t]+operator|short|zstring|wstring)|^[ \t]*#(?:define|endif|endmacro|ifn?def|if((^\sthen\s)*)|include|lang|macro))\s'
+    pattern: '(?i)(?:[ \t]*(dim[ \t]+as|dim[ \t]+shared|common|declare[ \t]+operator|short|zstring|wstring)|^[ \t]*#(?:define|endif|endmacro|ifn?def|if((^\sthen\s)*)|include|lang|macro)|^Attribute VB_Name)\s'
 - extensions: ['.bb']
   rules:
   - language: BlitzBasic
@@ -95,7 +95,7 @@ disambiguations:
 - extensions: ['.bi']
   rules:
   - language: FreeBasic
-    pattern: '(?i)(?:[ \t]*(dim[ \t]+as|dim[ \t]+shared|common|declare[ \t]+operator|short|zstring|wstring)|^[ \t]*#(?:define|endif|endmacro|ifn?def|if((^\sthen\s)*)|include|lang|macro))\s'
+    pattern: '(?i)(?:[ \t]*(dim[ \t]+as|dim[ \t]+shared|common|declare[ \t]+operator|short|zstring|wstring)|^[ \t]*#(?:define|endif|endmacro|ifn?def|if((^\sthen\s)*)|include|lang|macro)|^Attribute VB_Name)\s'
 - extensions: ['.builds']
   rules:
   - language: XML
