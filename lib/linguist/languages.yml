@@ -19,7 +19,6 @@
 #                         listed alphabetically)
 # filenames             - An Array of filenames commonly associated with the language
 # interpreters          - An Array of associated interpreters
-# searchable            - Boolean flag to enable searching (defaults to true)
 # language_id           - Integer used as a language-name-independent indexed field so that we can rename
 #                         languages in Linguist without reindexing all the code on GitHub. Must not be
 #                         changed for existing languages without the explicit permission of GitHub staff.
@@ -1879,7 +1878,6 @@ Gerber Image:
   language_id: 404627610
 Gettext Catalog:
   type: prose
-  searchable: false
   aliases:
   - pot
   extensions:
@@ -2500,7 +2498,6 @@ JSON:
   ace_mode: json
   codemirror_mode: javascript
   codemirror_mime_type: application/json
-  searchable: false
   extensions:
   - ".json"
   - ".avsc"
@@ -3327,6 +3324,10 @@ Mathematica:
   - ".wlt"
   aliases:
   - mma
+  - wolfram
+  - wolfram language
+  - wolfram lang
+  - wl
   tm_scope: source.mathematica
   ace_mode: text
   codemirror_mode: mathematica
@@ -3405,9 +3406,15 @@ Microsoft Developer Studio Project:
   tm_scope: none
   ace_mode: text
   language_id: 800983837
+Microsoft Visual Studio Solution:
+  type: data
+  extensions:
+  - ".sln"
+  tm_scope: source.solution
+  ace_mode: text
+  language_id: 849523096
 MiniD:
   type: programming
-  searchable: false
   extensions:
   - ".minid"
   tm_scope: none
@@ -4487,7 +4494,6 @@ Python:
 Python console:
   type: programming
   group: Python
-  searchable: false
   aliases:
   - pycon
   tm_scope: text.python.console
@@ -4496,7 +4502,6 @@ Python console:
 Python traceback:
   type: data
   group: Python
-  searchable: false
   extensions:
   - ".pytb"
   tm_scope: text.python.traceback
@@ -6369,6 +6374,7 @@ XML:
   - ".xliff"
   - ".xmi"
   - ".xml.dist"
+  - ".xmp"
   - ".xproj"
   - ".xsd"
   - ".xspec"
