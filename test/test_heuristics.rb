@@ -256,6 +256,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_bas_by_heuristics
+    assert_heuristics({
+      "BASIC" => all_fixtures("BASIC", "*.bas"),
+      nil => all_fixtures("VBA", "*.bas")
+    })
+  end
+
   def test_bb_by_heuristics
     assert_heuristics({
       "BitBake" => all_fixtures("BitBake", "*.bb"),
