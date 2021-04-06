@@ -7,11 +7,13 @@ This is the procedure for making a new release of Linguist. The entire process n
 3. If the grammar submodules have not been updated recently, update them: `git submodule update --remote`.
    If any submodules are updated:
     1. update the `grammars.yml`: `script/grammar-compiler update -f`
-    2. update the license cache: `bundle exec licensed cache -c vendor/licenses/config.yml`
-    3. double check no license problems found: `bundle exec licensed status -c vendor/licenses/config.yml`
-    4. confirm the updated grammars still compile and no new errors have been introduced and none have gone missing: `bundle exec rake check_grammars`
-    5. verify and fix any problems identified in the two steps above
-    6. commit all changes: `git commit -a`
+    2. confirm the updated grammars still compile and no new errors have been introduced and none have gone missing: `bundle exec rake check_grammars`
+    3. verify and fix any problems identified above
+    4. commit all changes: `git commit -a`
+    5. update the license cache: `bundle exec licensed cache -c vendor/licenses/config.yml`
+    6. double check no license problems found: `bundle exec licensed status -c vendor/licenses/config.yml`
+    7. verify and fix any problems identified above
+    8. commit all changes: `git commit -a`
 4. Ensure that samples are updated: `bundle exec rake samples`
 5. Ensure that tests are green: `bundle exec rake test`
 6. Build a test gem `GEM_VERSION=$(git describe --tags 2>/dev/null | sed 's/-/./g' | sed 's/v//') bundle exec rake build_gem`
