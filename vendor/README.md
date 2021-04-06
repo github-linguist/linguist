@@ -40,6 +40,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **AutoIt:** [AutoIt/SublimeAutoItScript](https://github.com/AutoIt/SublimeAutoItScript)
 - **Avro IDL:** [Jason3S/avro.tmLanguage](https://github.com/Jason3S/avro.tmLanguage)
 - **Awk:** [github-linguist/awk-sublime](https://github.com/github-linguist/awk-sublime)
+- **BASIC:** [telnet23/language-basic](https://github.com/telnet23/language-basic)
 - **Ballerina:** [ballerina-platform/ballerina-grammar](https://github.com/ballerina-platform/ballerina-grammar)
 - **Batchfile:** [mmims/language-batchfile](https://github.com/mmims/language-batchfile)
 - **Beef:** [dotnet/csharp-tmLanguage](https://github.com/dotnet/csharp-tmLanguage)

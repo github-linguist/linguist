@@ -82,6 +82,10 @@ disambiguations:
   - language: LTspice Symbol
     pattern: '^SymbolType[ \t]'
   - language: Asymptote
+- extensions: ['.bas']
+  rules:
+  - language: BASIC
+    pattern: '^\s*\d+'
 - extensions: ['.bb']
   rules:
   - language: BlitzBasic
