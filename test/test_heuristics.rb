@@ -258,7 +258,9 @@ class TestHeuristics < Minitest::Test
 
   def test_bas_by_heuristics
     assert_heuristics({
-      "FreeBasic" => all_fixtures("FreeBasic", "*.bas")
+      "FreeBasic" => all_fixtures("FreeBasic", "*.bas"),
+      "BASIC" => all_fixtures("BASIC", "*.bas"),
+      nil => all_fixtures("VBA", "*.bas")
     })
   end
   
