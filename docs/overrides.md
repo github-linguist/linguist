@@ -53,7 +53,7 @@ Just like vendored files, Linguist excludes documentation files from your projec
 Use the `linguist-documentation` attribute to mark or unmark paths as documentation:
 
 ```gitattributes
-project-docs/* linguist-documentation
+project-docs/** linguist-documentation
 docs/formatter.rb -linguist-documentation
 ```
 
