@@ -84,6 +84,8 @@ disambiguations:
   - language: Asymptote
 - extensions: ['.bas']
   rules:
+  - language: FreeBasic
+    pattern: '^[ \t]*#(?:define|endif|endmacro|ifn?def|if|include|lang|macro)\s'
   - language: BASIC
     pattern: '^\s*\d+'
 - extensions: ['.bb']
@@ -92,6 +94,10 @@ disambiguations:
     pattern: '(<^\s*; |End Function)'
   - language: BitBake
     pattern: '^\s*(# |include|require)\b'
+- extensions: ['.bi']
+  rules:
+  - language: FreeBasic
+    pattern: '^[ \t]*#(?:define|endif|endmacro|ifn?def|if|include|lang|macro)\s'
 - extensions: ['.builds']
   rules:
   - language: XML
