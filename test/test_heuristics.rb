@@ -845,7 +845,7 @@ class TestHeuristics < Minitest::Test
       "Vim script" => all_fixtures("Vim script", "*.vba")
     })
   end
-  
+ 
   def test_w_by_heuristics
     assert_heuristics({
       "CWeb" => all_fixtures("CWeb", "*.w"),
