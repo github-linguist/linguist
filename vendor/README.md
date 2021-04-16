@@ -10,6 +10,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **ABAP CDS:** [FreHu/abap-cds-grammar](https://github.com/FreHu/abap-cds-grammar)
 - **ABNF:** [Alhadis/language-grammars](https://github.com/Alhadis/language-grammars)
 - **AGS Script:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
+- **AIDL:** [google/aidl-language](https://github.com/google/aidl-language)
 - **AL:** [microsoft/AL](https://github.com/microsoft/AL)
 - **AMPL:** [ampl/sublime-ampl](https://github.com/ampl/sublime-ampl)
 - **ANTLR:** [textmate/antlr.tmbundle](https://github.com/textmate/antlr.tmbundle)
