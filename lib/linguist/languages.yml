@@ -3401,15 +3401,6 @@ Max:
   codemirror_mode: javascript
   codemirror_mime_type: application/json
   language_id: 227
-MediaWiki:
-  type: prose
-  wrap: true
-  extensions:
-  - ".mediawiki"
-  - ".wiki"
-  tm_scope: text.html.mediawiki
-  ace_mode: text
-  language_id: 228
 Mercury:
   type: programming
   color: "#ff2b2b"
@@ -6224,6 +6215,19 @@ Wget Config:
   tm_scope: source.wgetrc
   ace_mode: text
   language_id: 668457123
+Wikitext:
+  type: prose
+  wrap: true
+  aliases:
+  - mediawiki
+  - wiki
+  extensions:
+  - ".mediawiki"
+  - ".wiki"
+  - ".wikitext"
+  tm_scope: text.html.mediawiki
+  ace_mode: text
+  language_id: 228
 Windows Registry Entries:
   type: data
   extensions:
