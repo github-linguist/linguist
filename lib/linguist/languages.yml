@@ -5109,6 +5109,22 @@ SCSS:
   extensions:
   - ".scss"
   language_id: 329
+SELinux Policy:
+  aliases:
+  - "SELinux Kernel Policy Language"
+  - "sepolicy"
+  type: data
+  tm_scope: source.sepolicy
+  extensions:
+  - ".te"
+  filenames:
+  - "file_contexts"
+  - "genfs_contexts"
+  - "initial_sids"
+  - "port_contexts"
+  - "security_classes"
+  ace_mode: text
+  language_id: 880010326
 SMT:
   type: programming
   extensions:
