@@ -276,7 +276,7 @@ class TestHeuristics < Minitest::Test
       "FreeBasic" => all_fixtures("FreeBasic", "*.bi")
     })
   end
-  
+
   def test_builds_by_heuristics
     assert_heuristics({
       nil => all_fixtures("Text"),
@@ -796,6 +796,12 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_tlv_by_heuristics
+    assert_heuristics({
+      "TL-Verilog" => all_fixtures("TL-Verilog", "*.tlv"),
+    })
+  end
+
   def test_toc_by_heuristics
     assert_heuristics({
       "TeX" => all_fixtures("TeX", "*.toc"),
@@ -845,7 +851,7 @@ class TestHeuristics < Minitest::Test
       "Vim script" => all_fixtures("Vim script", "*.vba")
     })
   end
- 
+
   def test_w_by_heuristics
     assert_heuristics({
       "CWeb" => all_fixtures("CWeb", "*.w"),
