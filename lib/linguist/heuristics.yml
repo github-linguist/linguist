@@ -546,7 +546,7 @@ disambiguations:
 - extensions: ['.tlv']
   rules:
     - language: TL-Verilog
-      pattern: '^\\m4_TLV_version'
+      pattern: '^\\.{0,10}TLV_version'
 - extensions: ['.toc']
   rules:
   - language: World of Warcraft Addon Data
