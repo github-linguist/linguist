@@ -353,7 +353,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Processing:** [textmate/processing.tmbundle](https://github.com/textmate/processing.tmbundle)
 - **Prolog:** [alnkpa/sublimeprolog](https://github.com/alnkpa/sublimeprolog)
 - **Propeller Spin:** [bitbased/sublime-spintools](https://github.com/bitbased/sublime-spintools)
-- **Protocol Buffer:** [michaeledgar/protobuf-tmbundle](https://github.com/michaeledgar/protobuf-tmbundle)
+- **Protocol Buffer:** [zxh0/vscode-proto3](https://github.com/zxh0/vscode-proto3)
 - **Pug:** [davidrios/jade-tmbundle](https://github.com/davidrios/jade-tmbundle)
 - **Puppet:** [russCloak/SublimePuppet](https://github.com/russCloak/SublimePuppet)
 - **PureScript:** [purescript-contrib/atom-language-purescript](https://github.com/purescript-contrib/atom-language-purescript)
