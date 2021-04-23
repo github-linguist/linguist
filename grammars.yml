@@ -761,8 +761,6 @@ vendor/grammars/powershell:
 - source.powershell
 vendor/grammars/processing.tmbundle:
 - source.processing
-vendor/grammars/protobuf-tmbundle:
-- source.protobuf
 vendor/grammars/python-django.tmbundle:
 - source.python.django
 - text.html.django
@@ -792,6 +790,9 @@ vendor/grammars/scilab.tmbundle:
 - source.scilab
 vendor/grammars/secondlife-lsl:
 - source.lsl
+vendor/grammars/selinux-policy-languages:
+- source.cil
+- source.sepolicy
 vendor/grammars/shaders-tmLanguage:
 - source.hlsl
 - source.shaderlab
@@ -927,6 +928,9 @@ vendor/grammars/vscode-plantuml:
 vendor/grammars/vscode-prisma:
 - inline.prisma
 - source.prisma
+vendor/grammars/vscode-proto3:
+- markdown.proto.codeblock
+- source.protobuf
 vendor/grammars/vscode-scala-syntax:
 - source.scala
 vendor/grammars/vscode-singularity:
