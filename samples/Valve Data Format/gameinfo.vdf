@@ -1,0 +1,17 @@
+#base "default"
+"GameInfo"
+{
+	game		"Example"
+	title		"Example Game"
+	gamelogo	1 // true
+	FileSystem
+	{
+		SteamAppId	100
+		SearchPaths 	// search for game paths
+		{
+			Game	|default_path|
+			Game	|default_path|../game
+			Game	example
+		}
+	}
+}
