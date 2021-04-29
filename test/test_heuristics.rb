@@ -276,7 +276,7 @@ class TestHeuristics < Minitest::Test
       "FreeBasic" => all_fixtures("FreeBasic", "*.bi")
     })
   end
-  
+
   def test_builds_by_heuristics
     assert_heuristics({
       nil => all_fixtures("Text"),
@@ -391,6 +391,13 @@ class TestHeuristics < Minitest::Test
       "Forth" => all_fixtures("Forth", "*.fs"),
       "GLSL" => all_fixtures("GLSL", "*.fs")
     })
+  end
+
+  def test_ftl_by_heuristics
+    assert_heuristics({
+      "Fluent" => all_fixtures("Fluent", "*.ftl"),
+      "FreeMarker" => all_fixtures("FreeMarker", "*.ftl")
+    }, alt_name="main.ftl")
   end
 
   def test_gd_by_heuristics
@@ -845,7 +852,7 @@ class TestHeuristics < Minitest::Test
       "Vim script" => all_fixtures("Vim script", "*.vba")
     })
   end
- 
+
   def test_w_by_heuristics
     assert_heuristics({
       "CWeb" => all_fixtures("CWeb", "*.w"),
