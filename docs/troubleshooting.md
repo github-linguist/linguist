@@ -18,6 +18,12 @@ If the language stats bar is reporting a language that you don't expect:
 Keep in mind that the repository language stats are only [updated when you push changes](#how-linguist-works-on-githubcom), and the results are cached for the lifetime of your repository.
 If you have not made any changes to your repository in a while, you may find pushing another change will correct the stats.
 
+## My C/C++/Objective-C `.h` header file is detected as the wrong language
+
+Correctly detecting the language for the C-family `.h` header files is tough because Linguist detects the languages of files in isolation when analysing repositories and these header files, especially the smaller ones, can be used across all three languages without using any language-specific content.
+To try and reduce the number of false positives and keep some degree of predicatability for users, Linguist will assume all `.h` header files are C by default and will only identify a file as C++ or Objective-C if the content matches the specific heuristic for that language.
+This will mean you will need to implement an [override](/docs/overrides.md) for some of your header files if you wish for them to be classified as C++ or Objective-C if they do no contain language-specific content.
+
 ## My repository isn't showing my language
 
 Linguist does not consider [vendored code](/docs/overrides.md#vendored-code), [generated code](/docs/overrides.md#generated-code), [documentation](/docs/overrides.md#documentation), or `data` (e.g. SQL) or `prose` (e.g. Markdown) languages (as defined by the `type` attribute in [`languages.yml`](/lib/linguist/languages.yml)) when calculating the repository language statistics.
