@@ -1,0 +1,464 @@
+;; -*- mode: CIL; fill-column: 79; indent-tabs-mode: nil; -*-
+;; SPDX-FileCopyrightText: © 2021 Dominick Grift <dominick.grift@defensec.nl>
+;; SPDX-License-Identifier: Unlicense
+
+(in .file
+
+    (block cert
+
+           ;;
+           ;; Policy
+           ;;
+
+           (blockinherit file.obj_all_macro_template)
+
+           (call file.obj_type (obj_typeattr))
+
+           (call .xattr.associate_filesystems (obj_typeattr))
+
+           ;;
+           ;; Templates
+           ;;
+
+           (block obj_base_template
+
+                  ;;
+                  ;; Contexts
+                  ;;
+
+                  (context
+                   certfile_file_context
+                   (.u
+                    .r
+                    certfile
+                    (systemlow
+                     systemlow)))
+
+                  ;;
+                  ;; Policy
+                  ;;
+
+                  (blockabstract obj_base_template)
+
+                  (type
+                   certfile)
+
+                  (call .file.cert.obj_type (certfile)))
+
+           (block obj_macro_template
+
+                  ;;
+                  ;; Macros
+                  ;;
+
+                  (macro addname_certfile_dirs ((type ARG1))
+                         (allow ARG1 certfile addname_dir))
+
+                  (macro append_certfile_blk_files ((type ARG1))
+                         (allow ARG1 certfile append_blk_file))
+
+                  (macro append_certfile_chr_files ((type ARG1))
+                         (allow ARG1 certfile append_chr_file))
+
+                  (macro append_certfile_fifo_files ((type ARG1))
+                         (allow ARG1 certfile append_fifo_file))
+
+                  (macro append_certfile_files ((type ARG1))
+                         (allow ARG1 certfile append_file))
+
+                  (macro appendinherited_certfile_blk_files ((type ARG1))
+                         (allow ARG1 certfile appendinherited_blk_file))
+
+                  (macro appendinherited_certfile_chr_files ((type ARG1))
+                         (allow ARG1 certfile appendinherited_chr_file))
+
+                  (macro appendinherited_certfile_fifo_files ((type ARG1))
+                         (allow ARG1 certfile appendinherited_fifo_file))
+
+                  (macro appendinherited_certfile_files ((type ARG1))
+                         (allow ARG1 certfile appendinherited_file))
+
+                  (macro certfile_obj_type_transition
+                         ((type ARG1)(type ARG2)(class ARG3)(name ARG4))
+                         (typetransition ARG1 certfile ARG3 ARG4 ARG2)
+                         (call addname_certfile_dirs (ARG1)))
+
+                  (macro create_certfile ((type ARG1))
+                         (allow ARG1 certfile (allfiles (create))))
+
+                  (macro create_certfile_blk_files ((type ARG1))
+                         (allow ARG1 certfile create_blk_file))
+
+                  (macro create_certfile_chr_files ((type ARG1))
+                         (allow ARG1 certfile create_chr_file))
+
+                  (macro create_certfile_dirs ((type ARG1))
+                         (allow ARG1 certfile create_dir))
+
+                  (macro create_certfile_fifo_files ((type ARG1))
+                         (allow ARG1 certfile create_fifo_file))
+
+                  (macro create_certfile_files ((type ARG1))
+                         (allow ARG1 certfile create_file))
+
+                  (macro create_certfile_lnk_files ((type ARG1))
+                         (allow ARG1 certfile create_lnk_file))
+
+                  (macro create_certfile_sock_files ((type ARG1))
+                         (allow ARG1 certfile create_sock_file))
+
+                  (macro deletename_certfile_dirs ((type ARG1))
+                         (allow ARG1 certfile deletename_dir))
+
+                  (macro delete_certfile ((type ARG1))
+                         (allow ARG1 certfile (allfiles (delete))))
+
+                  (macro delete_certfile_blk_files ((type ARG1))
+                         (allow ARG1 certfile delete_blk_file))
+
+                  (macro delete_certfile_chr_files ((type ARG1))
+                         (allow ARG1 certfile delete_chr_file))
+
+                  (macro delete_certfile_dirs ((type ARG1))
+                         (allow ARG1 certfile delete_dir))
+
+                  (macro delete_certfile_fifo_files ((type ARG1))
+                         (allow ARG1 certfile delete_fifo_file))
+
+                  (macro delete_certfile_files ((type ARG1))
+                         (allow ARG1 certfile delete_file))
+
+                  (macro delete_certfile_lnk_files ((type ARG1))
+                         (allow ARG1 certfile delete_lnk_file))
+
+                  (macro delete_certfile_sock_files ((type ARG1))
+                         (allow ARG1 certfile delete_sock_file))
+
+                  (macro execute_certfile_files ((type ARG1))
+                         (allow ARG1 certfile execute_file))
+
+                  (macro list_certfile_dirs ((type ARG1))
+                         (allow ARG1 certfile list_dir))
+
+                  (macro listinherited_certfile_dirs ((type ARG1))
+                         (allow ARG1 certfile listinherited_dir))
+
+                  (macro load_certfile_files ((type ARG1))
+                         (allow ARG1 certfile (system (module_load))))
+
+                  (macro manage_certfile ((type ARG1))
+                         (allow ARG1 certfile (allfiles (manage))))
+
+                  (macro manage_certfile_blk_files ((type ARG1))
+                         (allow ARG1 certfile manage_blk_file))
+
+                  (macro manage_certfile_chr_files ((type ARG1))
+                         (allow ARG1 certfile manage_chr_file))
+
+                  (macro manage_certfile_dirs ((type ARG1))
+                         (allow ARG1 certfile manage_dir))
+
+                  (macro manage_certfile_fifo_files ((type ARG1))
+                         (allow ARG1 certfile manage_fifo_file))
+
+                  (macro manage_certfile_files ((type ARG1))
+                         (allow ARG1 certfile manage_file))
+
+                  (macro manage_certfile_lnk_files ((type ARG1))
+                         (allow ARG1 certfile manage_lnk_file))
+
+                  (macro manage_certfile_sock_files ((type ARG1))
+                         (allow ARG1 certfile manage_sock_file))
+
+                  (macro mapexecute_certfile_chr_files ((type ARG1))
+                         (allow ARG1 certfile mapexecute_chr_file))
+
+                  (macro mapexecute_certfile_files ((type ARG1))
+                         (allow ARG1 certfile mapexecute_file))
+
+                  (macro mounton_certfile ((type ARG1))
+                         (allow ARG1 certfile (allfiles (mounton))))
+
+                  (macro mounton_certfile_blk_files ((type ARG1))
+                         (allow ARG1 certfile mounton_blk_file))
+
+                  (macro mounton_certfile_chr_files ((type ARG1))
+                         (allow ARG1 certfile mounton_chr_file))
+
+                  (macro mounton_certfile_dirs ((type ARG1))
+                         (allow ARG1 certfile mounton_dir))
+
+                  (macro mounton_certfile_fifo_files ((type ARG1))
+                         (allow ARG1 certfile mounton_fifo_file))
+
+                  (macro mounton_certfile_files ((type ARG1))
+                         (allow ARG1 certfile mounton_file))
+
+                  (macro mounton_certfile_lnk_files ((type ARG1))
+                         (allow ARG1 certfile mounton_lnk_file))
+
+                  (macro mounton_certfile_sock_files ((type ARG1))
+                         (allow ARG1 certfile mounton_sock_file))
+
+                  (macro read_certfile ((type ARG1))
+                         (allow ARG1 certfile (allfiles (read))))
+
+                  (macro read_certfile_blk_files ((type ARG1))
+                         (allow ARG1 certfile read_blk_file))
+
+                  (macro read_certfile_chr_files ((type ARG1))
+                         (allow ARG1 certfile read_chr_file))
+
+                  (macro read_certfile_fifo_files ((type ARG1))
+                         (allow ARG1 certfile read_fifo_file))
+
+                  (macro read_certfile_files ((type ARG1))
+                         (allow ARG1 certfile read_file))
+
+                  (macro readinherited_certfile_blk_files ((type ARG1))
+                         (allow ARG1 certfile readinherited_blk_file))
+
+                  (macro readinherited_certfile_chr_files ((type ARG1))
+                         (allow ARG1 certfile readinherited_chr_file))
+
+                  (macro readinherited_certfile_fifo_files ((type ARG1))
+                         (allow ARG1 certfile readinherited_fifo_file))
+
+                  (macro readinherited_certfile_files ((type ARG1))
+                         (allow ARG1 certfile readinherited_file))
+
+                  (macro readinherited_certfile_sock_files ((type ARG1))
+                         (allow ARG1 certfile readinherited_sock_file))
+
+                  (macro read_certfile_lnk_files ((type ARG1))
+                         (allow ARG1 certfile read_lnk_file))
+
+                  (macro read_certfile_sock_files ((type ARG1))
+                         (allow ARG1 certfile read_sock_file))
+
+                  (macro readwrite_certfile ((type ARG1))
+                         (allow ARG1 certfile (allfiles (readwrite))))
+
+                  (macro readwrite_certfile_blk_files ((type ARG1))
+                         (allow ARG1 certfile readwrite_blk_file))
+
+                  (macro readwrite_certfile_chr_files ((type ARG1))
+                         (allow ARG1 certfile readwrite_chr_file))
+
+                  (macro readwrite_certfile_dirs ((type ARG1))
+                         (allow ARG1 certfile readwrite_dir))
+
+                  (macro readwrite_certfile_fifo_files ((type ARG1))
+                         (allow ARG1 certfile readwrite_fifo_file))
+
+                  (macro readwrite_certfile_files ((type ARG1))
+                         (allow ARG1 certfile readwrite_file))
+
+                  (macro readwriteinherited_certfile_blk_files ((type ARG1))
+                         (allow ARG1 certfile readwriteinherited_blk_file))
+
+                  (macro readwriteinherited_certfile_chr_files ((type ARG1))
+                         (allow ARG1 certfile readwriteinherited_chr_file))
+
+                  (macro readwriteinherited_certfile_dirs ((type ARG1))
+                         (allow ARG1 certfile readwriteinherited_dir))
+
+                  (macro readwriteinherited_certfile_fifo_files ((type ARG1))
+                         (allow ARG1 certfile readwriteinherited_fifo_file))
+
+                  (macro readwriteinherited_certfile_files ((type ARG1))
+                         (allow ARG1 certfile readwriteinherited_file))
+
+                  (macro readwriteinherited_certfile_sock_files ((type ARG1))
+                         (allow ARG1 certfile readwriteinherited_sock_file))
+
+                  (macro readwrite_certfile_lnk_files ((type ARG1))
+                         (allow ARG1 certfile readwrite_lnk_file))
+
+                  (macro readwrite_certfile_sock_files ((type ARG1))
+                         (allow ARG1 certfile readwrite_sock_file))
+
+                  (macro relabel_certfile ((type ARG1))
+                         (allow ARG1 certfile (allfiles (relabel))))
+
+                  (macro relabel_certfile_blk_files ((type ARG1))
+                         (allow ARG1 certfile relabel_blk_file))
+
+                  (macro relabel_certfile_chr_files ((type ARG1))
+                         (allow ARG1 certfile relabel_chr_file))
+
+                  (macro relabel_certfile_dirs ((type ARG1))
+                         (allow ARG1 certfile relabel_dir))
+
+                  (macro relabel_certfile_fifo_files ((type ARG1))
+                         (allow ARG1 certfile relabel_fifo_file))
+
+                  (macro relabel_certfile_files ((type ARG1))
+                         (allow ARG1 certfile relabel_file))
+
+                  (macro relabel_certfile_lnk_files ((type ARG1))
+                         (allow ARG1 certfile relabel_lnk_file))
+
+                  (macro relabel_certfile_sock_files ((type ARG1))
+                         (allow ARG1 certfile relabel_sock_file))
+
+                  (macro relabelfrom_certfile ((type ARG1))
+                         (allow ARG1 certfile (allfiles (relabelfrom))))
+
+                  (macro relabelfrom_certfile_blk_files ((type ARG1))
+                         (allow ARG1 certfile relabelfrom_blk_file))
+
+                  (macro relabelfrom_certfile_chr_files ((type ARG1))
+                         (allow ARG1 certfile relabelfrom_chr_file))
+
+                  (macro relabelfrom_certfile_dirs ((type ARG1))
+                         (allow ARG1 certfile relabelfrom_dir))
+
+                  (macro relabelfrom_certfile_fifo_files ((type ARG1))
+                         (allow ARG1 certfile relabelfrom_fifo_file))
+
+                  (macro relabelfrom_certfile_files ((type ARG1))
+                         (allow ARG1 certfile relabelfrom_file))
+
+                  (macro relabelfrom_certfile_lnk_files ((type ARG1))
+                         (allow ARG1 certfile relabelfrom_lnk_file))
+
+                  (macro relabelfrom_certfile_sock_files ((type ARG1))
+                         (allow ARG1 certfile relabelfrom_sock_file))
+
+                  (macro relabelto_certfile ((type ARG1))
+                         (allow ARG1 certfile (allfiles (relabelto))))
+
+                  (macro relabelto_certfile_blk_files ((type ARG1))
+                         (allow ARG1 certfile relabelto_blk_file))
+
+                  (macro relabelto_certfile_chr_files ((type ARG1))
+                         (allow ARG1 certfile relabelto_chr_file))
+
+                  (macro relabelto_certfile_dirs ((type ARG1))
+                         (allow ARG1 certfile relabelto_dir))
+
+                  (macro relabelto_certfile_fifo_files ((type ARG1))
+                         (allow ARG1 certfile relabelto_fifo_file))
+
+                  (macro relabelto_certfile_files ((type ARG1))
+                         (allow ARG1 certfile relabelto_file))
+
+                  (macro relabelto_certfile_lnk_files ((type ARG1))
+                         (allow ARG1 certfile relabelto_lnk_file))
+
+                  (macro relabelto_certfile_sock_files ((type ARG1))
+                         (allow ARG1 certfile relabelto_sock_file))
+
+                  (macro rename_certfile ((type ARG1))
+                         (allow ARG1 certfile (allfiles (rename))))
+
+                  (macro rename_certfile_blk_files ((type ARG1))
+                         (allow ARG1 certfile rename_blk_file))
+
+                  (macro rename_certfile_chr_files ((type ARG1))
+                         (allow ARG1 certfile rename_chr_file))
+
+                  (macro rename_certfile_dirs ((type ARG1))
+                         (allow ARG1 certfile rename_dir))
+
+                  (macro rename_certfile_fifo_files ((type ARG1))
+                         (allow ARG1 certfile rename_fifo_file))
+
+                  (macro rename_certfile_files ((type ARG1))
+                         (allow ARG1 certfile rename_file))
+
+                  (macro rename_certfile_lnk_files ((type ARG1))
+                         (allow ARG1 certfile rename_lnk_file))
+
+                  (macro rename_certfile_sock_files ((type ARG1))
+                         (allow ARG1 certfile rename_sock_file))
+
+                  (macro search_certfile_dirs ((type ARG1))
+                         (allow ARG1 certfile search_dir))
+
+                  (macro write_certfile ((type ARG1))
+                         (allow ARG1 certfile (allfiles (write))))
+
+                  (macro write_certfile_blk_files ((type ARG1))
+                         (allow ARG1 certfile write_blk_file))
+
+                  (macro write_certfile_chr_files ((type ARG1))
+                         (allow ARG1 certfile write_chr_file))
+
+                  (macro write_certfile_dirs ((type ARG1))
+                         (allow ARG1 certfile write_dir))
+
+                  (macro write_certfile_fifo_files ((type ARG1))
+                         (allow ARG1 certfile write_fifo_file))
+
+                  (macro write_certfile_files ((type ARG1))
+                         (allow ARG1 certfile write_file))
+
+                  (macro writeinherited_certfile_blk_files ((type ARG1))
+                         (allow ARG1 certfile writeinherited_blk_file))
+
+                  (macro writeinherited_certfile_chr_files ((type ARG1))
+                         (allow ARG1 certfile writeinherited_chr_file))
+
+                  (macro writeinherited_certfile_dirs ((type ARG1))
+                         (allow ARG1 certfile writeinherited_dir))
+
+                  (macro writeinherited_certfile_fifo_files ((type ARG1))
+                         (allow ARG1 certfile writeinherited_fifo_file))
+
+                  (macro writeinherited_certfile_files ((type ARG1))
+                         (allow ARG1 certfile writeinherited_file))
+
+                  (macro writeinherited_certfile_sock_files ((type ARG1))
+                         (allow ARG1 certfile writeinherited_sock_file))
+
+                  (macro write_certfile_lnk_files ((type ARG1))
+                         (allow ARG1 certfile write_lnk_file))
+
+                  (macro write_certfile_sock_files ((type ARG1))
+                         (allow ARG1 certfile write_sock_file))
+
+                  ;;
+                  ;; Policy
+                  ;;
+
+                  (blockabstract obj_macro_template))
+
+           (block obj_template
+
+                  ;;
+                  ;; Policy
+                  ;;
+
+                  (blockabstract obj_template)
+
+                  (blockinherit .file.cert.obj_base_template)
+                  (blockinherit .file.cert.obj_macro_template))
+
+           (block except
+
+                  ;;
+                  ;; Policy
+                  ;;
+
+                  (blockinherit obj_all_macro_template)
+
+                  (typeattributeset
+                   obj_typeattr
+                   (and
+                    cert.obj_typeattr
+                    (not
+                     (exception.obj_typeattr))))
+
+                  (optional certfile_opt_sandbox
+                            (call .file.sandboxexception.obj_type
+                                  (obj_typeattr))))
+
+           (block exception
+
+                  ;;
+                  ;; Policy
+                  ;;
+
+                  (blockinherit obj_all_macro_template))))

@@ -256,10 +256,24 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_bas_by_heuristics
+    assert_heuristics({
+      "FreeBasic" => all_fixtures("FreeBasic", "*.bas"),
+      "BASIC" => all_fixtures("BASIC", "*.bas"),
+      nil => all_fixtures("VBA", "*.bas")
+    })
+  end
+
   def test_bb_by_heuristics
     assert_heuristics({
       "BitBake" => all_fixtures("BitBake", "*.bb"),
       "BlitzBasic" => all_fixtures("BlitzBasic", "*.bb")
+    })
+  end
+
+  def test_bi_by_heuristics
+    assert_heuristics({
+      "FreeBasic" => all_fixtures("FreeBasic", "*.bi")
     })
   end
 
@@ -425,15 +439,11 @@ class TestHeuristics < Minitest::Test
   end
 
   def test_h_by_heuristics
-    ambiguous = [
-        "#{samples_path}/C++/Field.h",
-        "#{samples_path}/C++/rpc.h",
-    ]
     assert_heuristics({
       "Objective-C" => all_fixtures("Objective-C", "*.h"),
-      "C++" => all_fixtures("C++", "*.h") - ambiguous,
-      # no heuristic for C
-      nil => all_fixtures("C", "*.h")
+      "C++" => all_fixtures("C++", "*.h"),
+      # Default to C if the content is ambiguous
+      "C" => all_fixtures("C", "*.h")
     })
   end
 
@@ -776,6 +786,13 @@ class TestHeuristics < Minitest::Test
   def test_srt_by_heuristics
     assert_heuristics({
       "SubRip Text" => all_fixtures("SubRip Text", "*.srt")
+    })
+  end
+
+  def test_st_by_heuristics
+    assert_heuristics({
+      "StringTemplate" => all_fixtures("StringTemplate", "*.st"),
+      "Smalltalk" => all_fixtures("Smalltalk", "*.st")
     })
   end
 
