@@ -5111,18 +5111,18 @@ SCSS:
   language_id: 329
 SELinux Policy:
   aliases:
-  - "SELinux Kernel Policy Language"
-  - "sepolicy"
+  - SELinux Kernel Policy Language
+  - sepolicy
   type: data
   tm_scope: source.sepolicy
   extensions:
   - ".te"
   filenames:
-  - "file_contexts"
-  - "genfs_contexts"
-  - "initial_sids"
-  - "port_contexts"
-  - "security_classes"
+  - file_contexts
+  - genfs_contexts
+  - initial_sids
+  - port_contexts
+  - security_classes
   ace_mode: text
   language_id: 880010326
 SMT:
@@ -5883,6 +5883,18 @@ Text:
   tm_scope: none
   ace_mode: text
   language_id: 372
+TextMate Properties:
+  type: data
+  color: "#df66e4"
+  aliases:
+  - tm-properties
+  filenames:
+  - ".tm_properties"
+  ace_mode: properties
+  codemirror_mode: properties
+  codemirror_mime_type: text/x-properties
+  tm_scope: source.tm-properties
+  language_id: 981795023
 Textile:
   type: prose
   ace_mode: textile
