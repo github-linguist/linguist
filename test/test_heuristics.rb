@@ -431,15 +431,11 @@ class TestHeuristics < Minitest::Test
   end
 
   def test_h_by_heuristics
-    ambiguous = [
-        "#{samples_path}/C++/Field.h",
-        "#{samples_path}/C++/rpc.h",
-    ]
     assert_heuristics({
       "Objective-C" => all_fixtures("Objective-C", "*.h"),
-      "C++" => all_fixtures("C++", "*.h") - ambiguous,
-      # no heuristic for C
-      nil => all_fixtures("C", "*.h")
+      "C++" => all_fixtures("C++", "*.h"),
+      # Default to C if the content is ambiguous
+      "C" => all_fixtures("C", "*.h")
     })
   end
 
