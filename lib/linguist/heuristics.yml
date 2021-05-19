@@ -203,9 +203,9 @@ disambiguations:
 - extensions: ['.ftl']
   rules:
   - language: FreeMarker
-    pattern: '^(\<|[a-zA-Z-][a-zA-Z0-9_-]+ +\w)'
+    pattern: '^(?:<|[a-zA-Z-][a-zA-Z0-9_-]+[ \t]+\w)|\${\w+[^\n]*?}|^[ \t]*(?:<#--.*?-->|<#([a-z]+)(?=\s|>)[^>]*>.*?</#\1>|\[#--.*?--\]|\[#([a-z]+)(?=\s|\])[^\]]*\].*?\[#\2\])'
   - language: Fluent
-    pattern: '^-?[a-zA-Z][a-zA-Z0-9_-]* *='
+    pattern: '^-?[a-zA-Z][a-zA-Z0-9_-]* *=|\{\$-?[a-zA-Z][-\w]*(?:\.[a-zA-Z][-\w]*)?\}'
 - extensions: ['.gd']
   rules:
   - language: GAP
