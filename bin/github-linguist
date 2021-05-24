@@ -6,6 +6,7 @@ require 'linguist'
 require 'rugged'
 require 'json'
 require 'optparse'
+require 'pathname'
 
 path = ARGV[0] || Dir.pwd
 
@@ -48,7 +49,27 @@ if File.directory?(path)
     puts JSON.dump(repo.breakdown_by_file)
   end
 elsif File.file?(path)
-  blob = Linguist::FileBlob.new(path, Dir.pwd)
+
+  begin
+    # Check if this file is inside a git repository so we have things like
+    # `.gitattributes` applied.
+    pfile = Pathname.new File.join(Dir.pwd, path)
+    rugged = Rugged::Repository.discover(pfile)
+    pgit = Pathname.new rugged.workdir
+    pgitfile = String(pfile.relative_path_from pgit)
+
+    def get_path(tree, p)
+      tree.walk_blobs do |root, e|
+        if root+e[:name] == p
+          return root, e
+        end
+      end
+    end
+    _root, e = get_path(rugged.head.target.tree, pgitfile)
+    blob = Linguist::LazyBlob.new(rugged, e[:oid], pgitfile)
+  rescue Rugged::RepositoryError
+    blob = Linguist::FileBlob.new(path, Dir.pwd)
+  end
 
   type = if blob.text?
     'Text'
@@ -59,19 +80,19 @@ elsif File.file?(path)
   end
 
   if json_breakdown
-    puts JSON.generate( { blob.name =>  {
-                                          :lines => blob.loc,
-                                          :sloc => blob.sloc,
-                                          :type => type,
-                                          :mime_type => blob.mime_type,
-                                          :language => blob.language,
-                                          :large => blob.large?,
-                                          :generated => blob.generated?,
-                                          :vendored => blob.vendored?,
-                                        }
+    puts JSON.generate( { path =>  {
+                                      :lines => blob.loc,
+                                      :sloc => blob.sloc,
+                                      :type => type,
+                                      :mime_type => blob.mime_type,
+                                      :language => blob.language,
+                                      :large => blob.large?,
+                                      :generated => blob.generated?,
+                                      :vendored => blob.vendored?,
+                                    }
                         } )
   else
-    puts "#{blob.name}: #{blob.loc} lines (#{blob.sloc} sloc)"
+    puts "#{path}: #{blob.loc} lines (#{blob.sloc} sloc)"
     puts "  type:      #{type}"
     puts "  mime type: #{blob.mime_type}"
     puts "  language:  #{blob.language}"
