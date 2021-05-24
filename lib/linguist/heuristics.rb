@@ -4,7 +4,6 @@ module Linguist
   # A collection of simple heuristics that can be used to better analyze languages.
   class Heuristics
     HEURISTICS_CONSIDER_BYTES = 50 * 1024
-
     # Public: Use heuristics to detect language of the blob.
     #
     # blob               - An object that quacks like a blob.
@@ -46,7 +45,7 @@ module Linguist
         return
       end
 
-      data = YAML.load_file(File.expand_path("../heuristics.yml", __FILE__))
+      data = self.load_config
       named_patterns = data['named_patterns'].map { |k,v| [k, self.to_regex(v)] }.to_h
 
       data['disambiguations'].each do |disambiguation|
@@ -58,6 +57,10 @@ module Linguist
         end
         @heuristics << new(exts, rules)
       end
+    end
+
+    def self.load_config
+      YAML.load_file(File.expand_path("../heuristics.yml", __FILE__))
     end
 
     def self.parse_rule(named_patterns, rule)
@@ -160,6 +163,6 @@ module Linguist
     def match(input)
       return !@pat.match(input)
     end
-    
+
   end
 end

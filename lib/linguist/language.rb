@@ -27,13 +27,10 @@ module Linguist
     @name_index         = {}
     @alias_index        = {}
     @language_id_index  = {}
-
     @extension_index    = Hash.new { |h,k| h[k] = [] }
     @interpreter_index  = Hash.new { |h,k| h[k] = [] }
     @filename_index     = Hash.new { |h,k| h[k] = [] }
 
-    # Valid Languages types
-    TYPES = [:data, :markup, :programming, :prose]
 
     # Detect languages by a specific type
     #
@@ -262,10 +259,9 @@ module Linguist
       @name = attributes[:name] || raise(ArgumentError, "missing name")
 
       @fs_name = attributes[:fs_name]
-
       # Set type
       @type = attributes[:type] ? attributes[:type].to_sym : nil
-      if @type && !TYPES.include?(@type)
+      if @type && !get_types.include?(@type)
         raise ArgumentError, "invalid type: #{@type}"
       end
 
@@ -300,6 +296,11 @@ module Linguist
       else
         @group = self
       end
+    end
+
+    def get_types
+      # Valid Languages types
+      @types = [:data, :markup, :programming, :prose]
     end
 
     # Public: Get proper name
