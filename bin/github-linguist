@@ -64,7 +64,10 @@ elsif File.file?(path)
                                           :sloc => blob.sloc,
                                           :type => type,
                                           :mime_type => blob.mime_type,
-                                          :language => blob.language
+                                          :language => blob.language,
+                                          :large => blob.large?,
+                                          :generated => blob.generated?,
+                                          :vendored => blob.vendored?,
                                         }
                         } )
   else
