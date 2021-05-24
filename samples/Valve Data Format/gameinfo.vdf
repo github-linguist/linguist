@@ -1,0 +1,78 @@
+"GameInfo"
+{
+	game	"Lambda Fortress"
+	gamelogo 1
+	type 	multiplayer_only
+	icon	"resource/game"
+	nomodels 0
+	nohimodel 1
+	nocrosshair 1
+	hidden_maps
+	{
+		"test_speakers"		1
+		"test_hardware"		1
+	}
+	supportsvr	1
+	FileSystem
+	{
+		SteamAppId		243750	// Source SDK Base 2013 Multiplayer
+		SearchPaths
+		{
+			// Firstly, mount all user customizations.  This will search for VPKs and subfolders
+			// and mount them in alphabetical order.  The easiest way to distribute a mod is to
+			// pack up the custom content into a VPK.  To "install" a mod, just drop it in this
+			// folder.
+			// Note that this folder is scanned only when the game is booted.
+			game+mod			|gameinfo_path|custom/*
+
+			// Search game's files after any user customizations. This is also where any writes should go.
+			game+game_write+mod+mod_write+default_write_path		|gameinfo_path|.
+
+			// Where the game's binaries are.
+			gamebin				|gameinfo_path|bin
+
+			// Search shared VPK files.
+			game_lv				hl2/hl2_lv.vpk
+			game				|all_source_engine_paths|hl2/hl2_textures.vpk
+			game				|all_source_engine_paths|hl2/hl2_sound_vo_english.vpk
+			game				|all_source_engine_paths|hl2/hl2_sound_misc.vpk
+			game				|all_source_engine_paths|hl2/hl2_misc.vpk
+			platform			|all_source_engine_paths|platform/platform_misc.vpk
+
+			// Mount in shared loose files.
+			game				|all_source_engine_paths|hl2
+			platform			|all_source_engine_paths|platform
+
+			//TF2-HL1/HL2 COOP -- Leave EP1/EP2 stuff out until it's ready.
+			//game				"|all_source_engine_paths|../Half-Life 2/ep2/ep2_sound_vo_english.vpk"
+			//game				"|all_source_engine_paths|../Half-Life 2/ep2/ep2_pak.vpk"
+			//game				"|all_source_engine_paths|../Half-Life 2/ep2"
+			//game				"|all_source_engine_paths|../Half-Life 2/episodic/ep1_sound_vo_english.vpk"
+			//game				"|all_source_engine_paths|../Half-Life 2/episodic/ep1_pak.vpk"
+			//game				"|all_source_engine_paths|../Half-Life 2/episodic"
+			//game				"|all_source_engine_paths|../Half-Life 2/lostcoast/lostcoast_sound_vo_english.vpk"
+			//game				"|all_source_engine_paths|../Half-Life 2/lostcoast/lostcoast_pak.vpk"
+			//game				"|all_source_engine_paths|../Half-Life 2/lostcoast"
+			game				"|all_source_engine_paths|../Half-Life 2/hl2/hl2_pak.vpk"
+			game				"|all_source_engine_paths|../Half-Life 2/hl2"
+			//game				"|all_source_engine_paths|../Half-Life 2/hl1_hd/hl1_hd_pak.vpk"
+			//game				"|all_source_engine_paths|../Half-Life 2/hl1_hd/"
+			game				"|all_source_engine_paths|../Half-Life 2/hl1/hl1_pak.vpk"
+			game				"|all_source_engine_paths|../Half-Life 2/hl1/"
+			
+			
+			// Random files downloaded from gameservers go into a seperate directory, so
+			// that it's easy to keep those files segregated from the official game files
+			// or customizations intentially installed by the user.
+			//
+			// This directory is searched LAST.  If you visit a server and download
+			// a custom model, etc, we don't want that file to override the default
+			// game file indefinitely (after you have left the server).  Servers CAN have
+			// custom content that overrides the default game files, it just needs to be
+			// packed up in the .bsp file so that it will be mounted as a map search pack.
+			// The map search pack is mounted at the top of the search path list,
+			// but only while you are connected that server and on that map.
+			game+download			|gameinfo_path|download
+		}
+	}
+}

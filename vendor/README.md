@@ -477,6 +477,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **VCL:** [brandonwamboldt/sublime-varnish](https://github.com/brandonwamboldt/sublime-varnish)
 - **VHDL:** [textmate/vhdl.tmbundle](https://github.com/textmate/vhdl.tmbundle)
 - **Vala:** [technosophos/Vala-TMBundle](https://github.com/technosophos/Vala-TMBundle)
+- **Valve Data Format:** [Nixinova/Nova.tmLanguage](https://github.com/Nixinova/Nova.tmLanguage)
 - **Verilog:** [textmate/verilog.tmbundle](https://github.com/textmate/verilog.tmbundle)
 - **Vim Help File:** [Alhadis/language-viml](https://github.com/Alhadis/language-viml)
 - **Vim Snippet:** [Alhadis/language-viml](https://github.com/Alhadis/language-viml)
