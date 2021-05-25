@@ -160,7 +160,7 @@ module Linguist
     def initialize(pat)
       @pat = pat
     end
-    
+
     def match(input)
       return !@pat.match(input)
     end
