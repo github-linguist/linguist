@@ -4,6 +4,7 @@ module Linguist
   # A collection of simple heuristics that can be used to better analyze languages.
   class Heuristics
     HEURISTICS_CONSIDER_BYTES = 50 * 1024
+
     # Public: Use heuristics to detect language of the blob.
     #
     # blob               - An object that quacks like a blob.
@@ -159,7 +160,7 @@ module Linguist
     def initialize(pat)
       @pat = pat
     end
-
+    
     def match(input)
       return !@pat.match(input)
     end

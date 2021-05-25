@@ -27,6 +27,7 @@ module Linguist
     @name_index         = {}
     @alias_index        = {}
     @language_id_index  = {}
+
     @extension_index    = Hash.new { |h,k| h[k] = [] }
     @interpreter_index  = Hash.new { |h,k| h[k] = [] }
     @filename_index     = Hash.new { |h,k| h[k] = [] }
@@ -259,6 +260,7 @@ module Linguist
       @name = attributes[:name] || raise(ArgumentError, "missing name")
 
       @fs_name = attributes[:fs_name]
+
       # Set type
       @type = attributes[:type] ? attributes[:type].to_sym : nil
       if @type && !get_types.include?(@type)
