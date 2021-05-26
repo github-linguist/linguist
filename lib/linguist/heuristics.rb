@@ -46,7 +46,7 @@ module Linguist
         return
       end
 
-      data = YAML.load_file(File.expand_path("../heuristics.yml", __FILE__))
+      data = self.load_config
       named_patterns = data['named_patterns'].map { |k,v| [k, self.to_regex(v)] }.to_h
 
       data['disambiguations'].each do |disambiguation|
@@ -58,6 +58,10 @@ module Linguist
         end
         @heuristics << new(exts, rules)
       end
+    end
+
+    def self.load_config
+      YAML.load_file(File.expand_path("../heuristics.yml", __FILE__))
     end
 
     def self.parse_rule(named_patterns, rule)
@@ -160,6 +164,6 @@ module Linguist
     def match(input)
       return !@pat.match(input)
     end
-    
+
   end
 end
