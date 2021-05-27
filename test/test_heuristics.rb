@@ -393,6 +393,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_ftl_by_heuristics
+    assert_heuristics({
+      "Fluent" => all_fixtures("Fluent", "*.ftl"),
+      "FreeMarker" => all_fixtures("FreeMarker", "*.ftl")
+    }, alt_name="main.ftl")
+  end
+
   def test_gd_by_heuristics
     assert_heuristics({
       "GAP" => all_fixtures("GAP", "*.gd"),
