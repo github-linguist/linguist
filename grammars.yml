@@ -253,6 +253,7 @@ vendor/grammars/awk-sublime:
 vendor/grammars/ballerina-grammar:
 - source.ballerina
 vendor/grammars/bicep:
+- markdown.bicep.codeblock
 - source.bicep
 vendor/grammars/blitzmax:
 - source.blitzmax
@@ -356,6 +357,7 @@ vendor/grammars/haxe-TmLanguage:
 - documentation.markdown.injection.haxe
 - markdown.haxe.codeblock
 - markdown.hxml.codeblock
+- source.hlcode
 - source.hx
 - source.hx.argument
 - source.hx.type
@@ -474,6 +476,7 @@ vendor/grammars/language-etc:
 - source.openbsd-pkg.contents
 - source.opts
 - source.record-jar
+- source.shellcheckrc
 - source.sieve
 - source.smpl
 - source.ssh-config
@@ -937,8 +940,8 @@ vendor/grammars/vscode-prisma:
 - inline.prisma
 - source.prisma
 vendor/grammars/vscode-proto3:
-- markdown.proto.codeblock
-- source.protobuf
+- markdown.codeblock.proto
+- source.proto
 vendor/grammars/vscode-scala-syntax:
 - source.scala
 vendor/grammars/vscode-singularity:
