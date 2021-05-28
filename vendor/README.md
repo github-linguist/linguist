@@ -329,7 +329,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Ox:** [andreashetland/sublime-text-ox](https://github.com/andreashetland/sublime-text-ox)
 - **Oz:** [eregon/oz-tmbundle](https://github.com/eregon/oz-tmbundle)
 - **P4:** [TakeshiTseng/atom-language-p4](https://github.com/TakeshiTseng/atom-language-p4)
-- **PEG.js:** [alexstrat/PEGjs.tmbundle](https://github.com/alexstrat/PEGjs.tmbundle)
+- **PEG.js:** [Alhadis/language-grammars](https://github.com/Alhadis/language-grammars)
 - **PHP:** [textmate/php.tmbundle](https://github.com/textmate/php.tmbundle)
 - **PLpgSQL:** [textmate/sql.tmbundle](https://github.com/textmate/sql.tmbundle)
 - **POV-Ray SDL:** [c-lipka/language-povray](https://github.com/c-lipka/language-povray)
