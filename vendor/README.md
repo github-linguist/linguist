@@ -235,6 +235,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **KiCad Legacy Layout:** [Alhadis/language-pcb](https://github.com/Alhadis/language-pcb)
 - **KiCad Schematic:** [Alhadis/language-pcb](https://github.com/Alhadis/language-pcb)
 - **Kit:** [atom/language-html](https://github.com/atom/language-html)
+- **KoLMafia ASH:** [midgleyc/vscode-kolmafia-ash](https://github.com/midgleyc/vscode-kolmafia-ash)
 - **Kotlin:** [nishtahir/language-kotlin](https://github.com/nishtahir/language-kotlin)
 - **Kusto:** [josin/kusto-syntax-highlighting](https://github.com/josin/kusto-syntax-highlighting)
 - **LFE:** [textmate/lisp.tmbundle](https://github.com/textmate/lisp.tmbundle)
