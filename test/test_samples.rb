@@ -9,7 +9,7 @@ class TestSamples < Minitest::Test
     assert latest = Samples.data
 
     # Just warn, it shouldn't scare people off by breaking the build.
-    if serialized['md5'] != latest['md5']
+    if serialized['sha256'] != latest['sha256']
       warn "Samples database is out of date. Run `bundle exec rake samples`."
 
       expected = Tempfile.new('expected.json')
@@ -94,7 +94,8 @@ class TestSamples < Minitest::Test
         # Check for samples if more than one language matches the given extension.
         if language_matches.length > 1
           language_matches.each do |match|
-            samples = "samples/#{match.name}/*#{extension}"
+            generic = Strategy::Extension.generic? extension
+            samples = generic ? "test/fixtures/Generic/#{extension.sub(/^\./, "")}/#{match.name}/*" : "samples/#{match.name}/*#{extension}"
             assert Dir.glob(samples, File::FNM_CASEFOLD).any?, "Missing samples in #{samples.inspect}. See https://github.com/github/linguist/blob/master/CONTRIBUTING.md"
           end
         end

@@ -4,9 +4,8 @@ class TestLanguage < Minitest::Test
   include Linguist
 
   def test_find_by_alias
-    assert_equal Language['ASP'], Language.find_by_alias('asp')
-    assert_equal Language['ASP'], Language.find_by_alias('aspx')
-    assert_equal Language['ASP'], Language.find_by_alias('aspx-vb')
+    assert_equal Language['ASP.NET'], Language.find_by_alias('aspx')
+    assert_equal Language['ASP.NET'], Language.find_by_alias('aspx-vb')
     assert_equal Language['ActionScript'], Language.find_by_alias('as3')
     assert_equal Language['ApacheConf'], Language.find_by_alias('apache')
     assert_equal Language['Assembly'], Language.find_by_alias('nasm')
@@ -17,6 +16,7 @@ class TestLanguage < Minitest::Test
     assert_equal Language['C++'], Language.find_by_alias('c++')
     assert_equal Language['C++'], Language.find_by_alias('cpp')
     assert_equal Language['Chapel'], Language.find_by_alias('chpl')
+    assert_equal Language['Classic ASP'], Language.find_by_alias('asp')
     assert_equal Language['CoffeeScript'], Language.find_by_alias('coffee')
     assert_equal Language['CoffeeScript'], Language.find_by_alias('coffee-script')
     assert_equal Language['ColdFusion'], Language.find_by_alias('cfm')
@@ -142,12 +142,6 @@ class TestLanguage < Minitest::Test
     assert_equal :prose, Language['Org'].type
   end
 
-  def test_searchable
-    assert Language['Ruby'].searchable?
-    assert !Language['Gettext Catalog'].searchable?
-    assert Language['SQL'].searchable?
-  end
-
   def test_find_by_name
     assert_nil Language.find_by_name(nil)
     ruby = Language['Ruby']
@@ -179,7 +173,7 @@ class TestLanguage < Minitest::Test
     assert_equal ['C', 'C++', 'Objective-C'], Language.find_by_extension('foo.h').map(&:name).sort
     assert_equal [], Language.find_by_extension('rb')
     assert_equal [], Language.find_by_extension('.null')
-    assert_equal [Language['HTML+Django']], Language.find_by_extension('index.jinja')
+    assert_equal [Language['Jinja']], Language.find_by_extension('index.jinja')
     assert_equal [Language['Chapel']], Language.find_by_extension('examples/hello.chpl')
     assert_equal [], Language.find_by_filename('F.I.L.E.')
   end
@@ -468,14 +462,6 @@ class TestLanguage < Minitest::Test
     message = "The following languages are listed in lib/linguist/popular.yml but not in lib/linguist/languages.yml.\n"
     message << missing.sort.join("\n")
     assert missing.empty?, message
-  end
-
-  def test_no_unused_colours
-    Language.all.each do |language|
-      next unless language.type == :data || language.type == :prose ||
-        language.group.to_s != language.name
-      assert !language.color, "Unused colour assigned to #{language.name}"
-    end
   end
 
   def test_non_crash_on_comma
