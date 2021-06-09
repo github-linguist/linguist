@@ -7,6 +7,8 @@
 
 This library is used on GitHub.com to detect blob languages, ignore binary or vendored files, suppress generated files in diffs, and generate language breakdown graphs.
 
+readme change
+
 ## Documentation
 
 - [How Linguist works](/docs/how-linguist-works.md)
