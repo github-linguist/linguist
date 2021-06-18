@@ -463,30 +463,19 @@ class TestHeuristics < Minitest::Test
   end
 
   def test_inc_by_heuristics
-    ambiguous_pascal = [
-      "#{samples_path}/Pascal/cwindirs.pp",
-      "#{samples_path}/Pascal/image_url.inc",
-      "#{samples_path}/Pascal/large.pp",
-      "#{samples_path}/Pascal/libc.inc",
-      "#{samples_path}/Pascal/program.dpr",
-      "#{samples_path}/Pascal/tw27294.pp",
-      "#{samples_path}/Pascal/large.pp",
-      "#{samples_path}/Pascal/vmops_impl.inc"
-    ]
     assert_heuristics({
-      "Motorola 68K Assembly" => all_fixtures("Motorola 68K Assembly", "*.inc"),
-      "NASL" => all_fixtures("NASL", "*.inc"),
-      "Pascal" => all_fixtures("Pascal", "*") - ambiguous_pascal,
-      "PHP" => all_fixtures("PHP", "*.inc"),
-      "POV-Ray SDL" => all_fixtures("POV-Ray SDL", "*.inc"),
-      nil => all_fixtures("Assembly", "*.inc") +
+      "Motorola 68K Assembly" => all_fixtures("Motorola 68K Assembly", "*"),
+      "NASL" => all_fixtures("NASL", "*"),
+      "Pascal" => all_fixtures("Pascal", "*"),
+      "PHP" => all_fixtures("PHP", "*"),
+      "POV-Ray SDL" => all_fixtures("POV-Ray SDL", "*"),
+      nil => all_fixtures("Assembly", "*") +
         all_fixtures("C++", "*.inc") +
-        all_fixtures("HTML", "*.inc") +
-        ambiguous_pascal +
-        all_fixtures("Pawn", "*.inc") +
+        all_fixtures("HTML", "*") +
+        all_fixtures("Pawn", "*") +
         # SourcePawn has a pattern rule, but it does not match samples
-        all_fixtures("SourcePawn", "*.inc") +
-        all_fixtures("SQL", "*.inc")
+        all_fixtures("SourcePawn", "*") +
+        all_fixtures("SQL", "*")
     }, alt_name="foo.inc")
   end
 

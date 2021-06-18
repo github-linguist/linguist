@@ -269,7 +269,9 @@ disambiguations:
   - language: POV-Ray SDL
     pattern: '^\s*#(declare|local|macro|while)\s'
   - language: Pascal
-    pattern: '(?i:^\s*{\$(?:mode|ifdef|undef|define)[ ]+[a-z0-9_]+})'
+    pattern:
+    - '(?i:^\s*{\$(?:mode|ifdef|undef|define)[ ]+[a-z0-9_]+})'
+    - '^\s*end[.;]\s*$'
 - extensions: ['.l']
   rules:
   - language: Common Lisp
