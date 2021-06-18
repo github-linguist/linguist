@@ -26,7 +26,7 @@ module Linguist
     def self.load_samples
       serializer = defined?(Yajl) ? Yajl : JSON
       data = serializer.load(File.read(PATH, encoding: 'utf-8'))
-      # FIXME: JSON serialization does not allow integer keys, we fix them here
+      # JSON serialization does not allow integer keys, we fix them here
       for lang in data['centroids'].keys
         fixed = data['centroids'][lang].to_a.map { |k,v| [k.to_i, v] }
         data['centroids'][lang] = Hash[fixed]
