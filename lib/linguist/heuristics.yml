@@ -100,7 +100,7 @@ disambiguations:
     pattern: '^using\s+(System|Beefy)(\.(.*))?;\s*$'
   - language: HyPhy
     pattern:
-    - '^\s*#include\s+".*";\s*$'
+    - '(?-m)^\s*#include\s+".*";\s*$'
     - '\sfprintf\s*\('
   - language: Brainfuck
     pattern: '(>\+>|>\+<)'
