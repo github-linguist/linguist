@@ -78,7 +78,7 @@ class TestClassifier < Minitest::Test
       results = Classifier.classify(Samples.cache, File.read(sample[:path]), languages)
 
       if results.empty?
-        assert false,"no results for #{sample[:path]}"
+        assert false, "no results for #{sample[:path]}"
       elsif allowed_failures.has_key? sample[:path]
         assert allowed_failures[sample[:path]].include?(results.first[0]), "#{sample[:path]}\n#{results.inspect}"
       else
