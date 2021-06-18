@@ -97,7 +97,7 @@ disambiguations:
 - extensions: ['.bf']
   rules:
   - language: Beef
-    pattern: '^using\s+(System|Beefy)(\.(.*))?;\s*$'
+    pattern: '(?-m)^\s*using\s+(System|Beefy)(\.(.*))?;\s*$'
   - language: HyPhy
     pattern:
     - '(?-m)^\s*#include\s+".*";\s*$'
