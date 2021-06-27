@@ -97,7 +97,7 @@ class TestStrategies < Minitest::Test
     assert_modeline Language["JavaScript"], fixture_blob("Data/Modelines/iamjs.pl")
     assert_modeline Language["JavaScript"], fixture_blob("Data/Modelines/iamjs2.pl")
     assert_modeline Language["PHP"], fixture_blob("Data/Modelines/iamphp.inc")
-    assert_modeline nil, sample_blob("C/main.c")
+    assert_modeline nil, sample_blob("C++/runtime-compiler.cc")
   end
 
   def test_modeline_languages
