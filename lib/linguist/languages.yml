@@ -1341,6 +1341,19 @@ E:
   tm_scope: none
   ace_mode: text
   language_id: 92
+E-mail:
+  type: data
+  aliases:
+  - email
+  - eml
+  - mail
+  - mbox
+  extensions:
+  - ".eml"
+  - ".mbox"
+  tm_scope: text.eml.basic
+  ace_mode: text
+  language_id: 529653389
 EBNF:
   type: data
   extensions:
@@ -1379,14 +1392,6 @@ EJS:
   tm_scope: text.html.js
   ace_mode: ejs
   language_id: 95
-EML:
-  type: data
-  extensions:
-  - ".eml"
-  - ".mbox"
-  tm_scope: text.eml.basic
-  ace_mode: text
-  language_id: 529653389
 EQ:
   type: programming
   color: "#a78649"
