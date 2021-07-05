@@ -53,8 +53,12 @@ Just like vendored files, Linguist excludes documentation files from your projec
 Use the `linguist-documentation` attribute to mark or unmark paths as documentation:
 
 ```gitattributes
-project-docs/** linguist-documentation
+# Apply override to all files in the directory
+project-docs/* linguist-documentation
+# Apply override to a specific file
 docs/formatter.rb -linguist-documentation
+# Apply override to all files and directories in the directory
+ano-dir/** linguist-documentation
 ```
 
 ### Generated code
@@ -78,8 +82,12 @@ By default, Linguist treats all of the paths defined in [`vendor.yml`] as vendor
 Use the `linguist-vendored` attribute to vendor or un-vendor paths:
 
 ```gitattributes
-special-vendored-path/** linguist-vendored
+# Apply override to all files in the directory
+special-vendored-path/* linguist-vendored
+# Apply override to a specific file
 jquery.js -linguist-vendored
+# Apply override to all files and directories in the directory
+ano-dir/** linguist-vendored
 ```
 
 ## Using Emacs or Vim modelines
