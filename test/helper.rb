@@ -3,7 +3,7 @@ require "minitest/autorun"
 require "mocha/minitest"
 require "linguist"
 require "linguist/blob"
-require 'licensee'
+require "licensee"
 require "set"
 
 def fixtures_path
