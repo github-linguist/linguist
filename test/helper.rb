@@ -4,6 +4,7 @@ require "mocha/minitest"
 require "linguist"
 require "linguist/blob"
 require 'licensee'
+require "set"
 
 def fixtures_path
   File.expand_path("../fixtures", __FILE__)
