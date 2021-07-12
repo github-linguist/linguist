@@ -200,6 +200,12 @@ disambiguations:
     pattern: '^\s*(#version|precision|uniform|varying|vec[234])'
   - language: Filterscript
     pattern: '#include|#pragma\s+(rs|version)|__attribute__'
+- extensions: ['.ftl']
+  rules:
+  - language: FreeMarker
+    pattern: '^(?:<|[a-zA-Z-][a-zA-Z0-9_-]+[ \t]+\w)|\${\w+[^\n]*?}|^[ \t]*(?:<#--.*?-->|<#([a-z]+)(?=\s|>)[^>]*>.*?</#\1>|\[#--.*?--\]|\[#([a-z]+)(?=\s|\])[^\]]*\].*?\[#\2\])'
+  - language: Fluent
+    pattern: '^-?[a-zA-Z][a-zA-Z0-9_-]* *=|\{\$-?[a-zA-Z][-\w]*(?:\.[a-zA-Z][-\w]*)?\}'
 - extensions: ['.gd']
   rules:
   - language: GAP
@@ -439,7 +445,7 @@ disambiguations:
     - pattern: '^[#!]'
   - language: INI
     named_pattern: key_equals_value
-  - language: Java properties
+  - language: Java Properties
     pattern: '^[^#!][^:]*:'
 - extensions: ['.q']
   rules:
@@ -572,7 +578,7 @@ disambiguations:
     # The following RegExp is simply a collapsed and simplified form of the
     # VIM_MODELINE pattern in `./lib/linguist/strategy/modeline.rb`.
   - language: Vim Help File
-    pattern: '(?:(?:[ \t]|^)vi(?:m[<=>]?\d+|m)?|[ \t]ex)(?=:(?=[ \t]*set?[ \t][^\n:]+:)|:(?![ \t]* set?[ \t]))(?:(?:[ \t]|[ \t]*:[ \t]*)\w*(?:[ \t]*=(?:[^\\[ \t]]|\\.)*)?)*[[ \t]:](?:filetype|ft|syntax)[ \t]*=help(?=[ \t]|:|$)'
+    pattern: '(?:(?:^|[ \t])(?:vi|Vi(?=m))(?:m[<=>]?[0-9]+|m)?|[ \t]ex)(?=:(?=[ \t]*set?[ \t][^\r\n:]+:)|:(?![ \t]*set?[ \t]))(?:(?:[ \t]*:[ \t]*|[ \t])\w*(?:[ \t]*=(?:[^\\\s]|\\.)*)?)*[ \t:](?:filetype|ft|syntax)[ \t]*=(help)(?=$|\s|:)'
     # HACK: This is a contrived use of heuristics needed to address
     # an unusual edge-case. See https://git.io/JULye for discussion.
   - language: Text

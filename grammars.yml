@@ -253,6 +253,7 @@ vendor/grammars/awk-sublime:
 vendor/grammars/ballerina-grammar:
 - source.ballerina
 vendor/grammars/bicep:
+- markdown.bicep.codeblock
 - source.bicep
 vendor/grammars/blitzmax:
 - source.blitzmax
@@ -309,6 +310,8 @@ vendor/grammars/dylan.tmbundle:
 - source.makegen
 vendor/grammars/ec.tmbundle:
 - source.c.ec
+vendor/grammars/ecl-tmLanguage:
+- source.ecl
 vendor/grammars/eiffel.tmbundle:
 - source.eiffel
 vendor/grammars/ejs-tmbundle:
@@ -356,14 +359,13 @@ vendor/grammars/haxe-TmLanguage:
 - documentation.markdown.injection.haxe
 - markdown.haxe.codeblock
 - markdown.hxml.codeblock
+- source.hlcode
 - source.hx
 - source.hx.argument
 - source.hx.type
 - source.hxml
 vendor/grammars/holyc.tmbundle:
 - source.hc
-vendor/grammars/hy.tmLanguage:
-- source.hy
 vendor/grammars/idl.tmbundle:
 - source.idl
 - source.idl-dlm
@@ -474,6 +476,7 @@ vendor/grammars/language-etc:
 - source.openbsd-pkg.contents
 - source.opts
 - source.record-jar
+- source.shellcheckrc
 - source.sieve
 - source.smpl
 - source.ssh-config
@@ -514,6 +517,7 @@ vendor/grammars/language-grammars:
 - source.lbnf
 - source.lex
 - source.lex.regexp
+- source.pegjs
 - source.yacc
 vendor/grammars/language-graphql:
 - source.graphql
@@ -911,10 +915,14 @@ vendor/grammars/verilog.tmbundle:
 - source.verilog
 vendor/grammars/vhdl:
 - source.vhdl
+vendor/grammars/vsc-fennel:
+- source.fnl
 vendor/grammars/vscode-codeql:
 - source.ql
 vendor/grammars/vscode-cue:
 - source.cue
+vendor/grammars/vscode-fluent:
+- source.ftl
 vendor/grammars/vscode-gcode-syntax:
 - source.gcode
 vendor/grammars/vscode-gedcom:
@@ -922,6 +930,8 @@ vendor/grammars/vscode-gedcom:
 vendor/grammars/vscode-hack:
 - markdown.hack.codeblock
 - source.hack
+vendor/grammars/vscode-hy:
+- source.hy
 vendor/grammars/vscode-lean:
 - markdown.lean.codeblock
 - source.lean
@@ -935,8 +945,8 @@ vendor/grammars/vscode-prisma:
 - inline.prisma
 - source.prisma
 vendor/grammars/vscode-proto3:
-- markdown.proto.codeblock
-- source.protobuf
+- markdown.codeblock.proto
+- source.proto
 vendor/grammars/vscode-scala-syntax:
 - source.scala
 vendor/grammars/vscode-singularity:
