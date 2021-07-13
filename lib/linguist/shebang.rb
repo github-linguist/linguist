@@ -41,7 +41,7 @@ module Linguist
       # if /usr/bin/env type shebang then walk the string
       if script == 'env'
         s.scan(/\s+/)
-        while s.scan(/((-[i0uCSv]|--\S+)*(\s+\S+)?\s+)+/) || # skip over optional arguments e.g. -vS
+        while s.scan(/((-[i0uCSv]*|--\S+)\s+)+/) || # skip over optional arguments e.g. -vS
               s.scan(/(\S+=\S+\s+)+/) # skip over variable arguments e.g. foo=bar
           # do nothing
         end
