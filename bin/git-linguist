@@ -122,6 +122,17 @@ def git_linguist(args)
     wrapper.linguist do |linguist|
       puts JSON.dump(linguist.languages)
     end
+  when "detailed-stats"
+    wrapper.linguist do |linguist|
+      repo_size = linguist.size
+      languages = {}
+      linguist.languages.each do |language, size|
+        percentage = sprintf '%.2f' % ((size / repo_size.to_f) * 100)
+        languages.merge!({"#{language}": { percentage: "#{percentage}%", size: size } })
+      end
+
+      puts JSON.dump(languages)
+    end
   when "breakdown"
     wrapper.linguist do |linguist|
       puts JSON.dump(linguist.breakdown_by_file)
