@@ -19,14 +19,14 @@ HELP
 
 def github_linguist(args)
   breakdown = false
-  json_breakdown = false
+  json_output = false
   path = Dir.pwd
 
   parser = OptionParser.new do |opts|
     opts.banner = HELP_TEXT
 
     opts.on("-b", "--breakdown", "Breakdown stuff") { breakdown = true }
-    opts.on("-j", "--json", "Output results in JSON format") { json_breakdown = true }
+    opts.on("-j", "--json", "Output results in JSON format") { json_output = true }
     opts.on("-h", "--help", "Prints this help") do
       puts opts
       exit
@@ -54,7 +54,7 @@ def github_linguist(args)
       full_results.merge!({"#{language}": { size: size, percentage: percentage } })
     end
 
-    if !json_breakdown
+    if !json_output
       full_results.sort_by { |_, v| v[:size] }.reverse.each do |language, details|
         puts "%-7s %-10s %s" % ["#{details[:percentage]}%", details[:size], language]
       end
@@ -103,7 +103,7 @@ def github_linguist(args)
       'Binary'
     end
 
-    if json_breakdown
+    if json_output
       puts JSON.generate( { path =>  {
                                         :lines => blob.loc,
                                         :sloc => blob.sloc,
