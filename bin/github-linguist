@@ -51,12 +51,12 @@ def github_linguist(args)
     repo.languages.each do |language, size|
       percentage = ((size / repo.size.to_f) * 100)
       percentage = sprintf '%.2f' % percentage
-      full_results.merge!({"#{language}": { percentage: percentage } })
+      full_results.merge!({"#{language}": { size: size, percentage: percentage } })
     end
 
     if !json_breakdown
-      full_results.sort_by { |_, v| v[:percentage] }.reverse.each do |language, details|
-        puts "%-7s %s" % ["#{details[:percentage]}%", language]
+      full_results.sort_by { |_, v| v[:size] }.reverse.each do |language, details|
+        puts "%-7s %-10s %s" % ["#{details[:percentage]}%", details[:size], language]
       end
       if breakdown
         puts
