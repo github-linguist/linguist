@@ -8,22 +8,40 @@ require 'json'
 require 'optparse'
 require 'pathname'
 
-def github_linguist(args)
-  path = args[0] || Dir.pwd
+HELP_TEXT = <<~HELP
+Linguist v#{Linguist::VERSION}
+Detect language type and determine language breakdown for a given Git repository.
 
-  # special case if not given a directory
-  # but still given the --breakdown or --json options/
-  if path == "--breakdown"
-    path = Dir.pwd
-    breakdown = true
-  elsif path == "--json"
-    path = Dir.pwd
-    json_breakdown = true
+Usage: linguist <path>
+      linguist <path> [--breakdown] [--json]
+      linguist [--breakdown] [--json]
+HELP
+
+def github_linguist(args)
+  breakdown = false
+  json_breakdown = false
+  path = Dir.pwd
+
+  parser = OptionParser.new do |opts|
+    opts.banner = HELP_TEXT
+
+    opts.on("-b", "--breakdown", "Breakdown stuff") { breakdown = true }
+    opts.on("-j", "--json", "Output results in JSON format") { json_breakdown = true }
+    opts.on("-h", "--help", "Prints this help") do
+      puts opts
+      exit
+    end
   end
 
-  args.shift
-  breakdown = true if args[0] == "--breakdown"
-  json_breakdown = true if args[0] == "--json"
+  parser.parse!(args)
+
+  if !args.empty?
+    if File.directory?(args[0]) || File.file?(args[0])
+      path = args[0]
+    else
+      abort HELP_TEXT
+    end
+  end
 
   if File.directory?(path)
     rugged = Rugged::Repository.new(path)
