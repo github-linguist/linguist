@@ -47,25 +47,39 @@ def github_linguist(args)
     rugged = Rugged::Repository.new(path)
     repo = Linguist::Repository.new(rugged, rugged.head.target_id)
 
-    if !json_breakdown
-      repo.languages.sort_by { |_, size| size }.reverse.each do |language, size|
-        percentage = ((size / repo.size.to_f) * 100)
-        percentage = sprintf '%.2f' % percentage
-        puts "%-7s %s" % ["#{percentage}%", language]
-      end
+    full_results = {}
+    repo.languages.each do |language, size|
+      percentage = ((size / repo.size.to_f) * 100)
+      percentage = sprintf '%.2f' % percentage
+      full_results.merge!({"#{language}": { percentage: percentage } })
     end
-    if breakdown
-      puts
-      file_breakdown = repo.breakdown_by_file
-      file_breakdown.each do |lang, files|
-        puts "#{lang}:"
-        files.each do |file|
-          puts file
-        end
-        puts
+
+    if !json_breakdown
+      full_results.sort_by { |_, v| v[:percentage] }.reverse.each do |language, details|
+        puts "%-7s %s" % ["#{details[:percentage]}%", language]
       end
-    elsif json_breakdown
-      puts JSON.dump(repo.breakdown_by_file)
+      if breakdown
+        puts
+        file_breakdown = repo.breakdown_by_file
+        file_breakdown.each do |lang, files|
+          puts "#{lang}:"
+          files.each do |file|
+            puts file
+          end
+          puts
+        end
+      end
+    else
+      if !breakdown
+        puts JSON.dump(full_results)
+      else
+        combined_results = full_results.merge({})
+
+        repo.breakdown_by_file.each do |language, files|
+          combined_results[language.to_sym].update({"files": files})
+        end
+        puts JSON.dump(combined_results)
+      end
     end
   elsif File.file?(path)
 
