@@ -25,9 +25,9 @@ def github_linguist(args)
   parser = OptionParser.new do |opts|
     opts.banner = HELP_TEXT
 
-    opts.on("-b", "--breakdown", "Breakdown stuff") { breakdown = true }
-    opts.on("-j", "--json", "Output results in JSON format") { json_output = true }
-    opts.on("-h", "--help", "Prints this help") do
+    opts.on("-b", "--breakdown", "Analyze entire repository and display detailed usage statistics") { breakdown = true }
+    opts.on("-j", "--json", "Output results as JSON") { json_output = true }
+    opts.on("-h", "--help", "Display a short usage summary, then exit") do
       puts opts
       exit
     end
