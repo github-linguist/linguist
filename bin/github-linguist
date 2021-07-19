@@ -134,14 +134,7 @@ def github_linguist(args)
       end
     end
   else
-    abort <<-HELP
-    Linguist v#{Linguist::VERSION}
-    Detect language type for a file, or, given a repository, determine language breakdown.
-
-    Usage: linguist <path>
-          linguist <path> [--breakdown] [--json]
-          linguist [--breakdown] [--json]
-    HELP
+    abort HELP_TEXT
   end
 end
 
