@@ -92,7 +92,9 @@ $ github-linguist
 0.31%   1212       Dockerfile
 ```
 
-##### Additional options - Breakdown
+#### Additional options
+
+##### `--breakdown`
 The `--breakdown` or `-b` flag will additionally show the breakdown of files by language.
 
 You can try running `github-linguist` on the root directory in this repository itself:
@@ -117,7 +119,7 @@ lib/linguist.rb
 …
 ```
 
-##### Additional options - JSON
+##### `--json`
 The `--json` or `-j` flag output the data into JSON format.
 
 ```console
