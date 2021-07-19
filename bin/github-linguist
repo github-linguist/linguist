@@ -6,6 +6,7 @@ require 'linguist'
 require 'rugged'
 require 'json'
 require 'optparse'
+require 'pathname'
 
 path = ARGV[0] || Dir.pwd
 
@@ -48,7 +49,18 @@ if File.directory?(path)
     puts JSON.dump(repo.breakdown_by_file)
   end
 elsif File.file?(path)
-  blob = Linguist::FileBlob.new(path, Dir.pwd)
+
+  begin
+    # Check if this file is inside a git repository so we have things like
+    # `.gitattributes` applied.
+    file_full_path = File.realpath(path)
+    rugged = Rugged::Repository.discover(file_full_path)
+    file_rel_path = file_full_path.sub(rugged.workdir, '')
+    oid = -> { rugged.head.target.tree.walk_blobs { |r, b| return b[:oid] if r + b[:name] == file_rel_path } }
+    blob = Linguist::LazyBlob.new(rugged, oid.call, file_rel_path)
+  rescue Rugged::RepositoryError
+    blob = Linguist::FileBlob.new(path, Dir.pwd)
+  end
 
   type = if blob.text?
     'Text'
@@ -59,31 +71,34 @@ elsif File.file?(path)
   end
 
   if json_breakdown
-    puts JSON.generate( { blob.name =>  {
-                                          :lines => blob.loc,
-                                          :sloc => blob.sloc,
-                                          :type => type,
-                                          :mime_type => blob.mime_type,
-                                          :language => blob.language
-                                        }
+    puts JSON.generate( { path =>  {
+                                      :lines => blob.loc,
+                                      :sloc => blob.sloc,
+                                      :type => type,
+                                      :mime_type => blob.mime_type,
+                                      :language => blob.language,
+                                      :large => blob.large?,
+                                      :generated => blob.generated?,
+                                      :vendored => blob.vendored?,
+                                    }
                         } )
   else
-    puts "#{blob.name}: #{blob.loc} lines (#{blob.sloc} sloc)"
+    puts "#{path}: #{blob.loc} lines (#{blob.sloc} sloc)"
     puts "  type:      #{type}"
     puts "  mime type: #{blob.mime_type}"
     puts "  language:  #{blob.language}"
-  end
 
-  if blob.large?
-    puts "  blob is too large to be shown"
-  end
+    if blob.large?
+      puts "  blob is too large to be shown"
+    end
 
-  if blob.generated?
-    puts "  appears to be generated source code"
-  end
+    if blob.generated?
+      puts "  appears to be generated source code"
+    end
 
-  if blob.vendored?
-    puts "  appears to be a vendored file"
+    if blob.vendored?
+      puts "  appears to be a vendored file"
+    end
   end
 else
   abort <<-HELP

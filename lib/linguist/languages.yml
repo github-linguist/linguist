@@ -380,6 +380,16 @@ Assembly:
   tm_scope: source.assembly
   ace_mode: assembly_x86
   language_id: 24
+Astro:
+  type: markup
+  color: "#ff5a03"
+  extensions:
+  - ".astro"
+  tm_scope: text.html.astro
+  ace_mode: html
+  codemirror_mode: jsx
+  codemirror_mime_type: text/jsx
+  language_id: 578209015
 Asymptote:
   type: programming
   color: "#ff0000"
@@ -2862,6 +2872,19 @@ Kaitai Struct:
   - ".ksy"
   tm_scope: source.yaml
   language_id: 818804755
+KakouneScript:
+  type: programming
+  color: "#6f8042"
+  tm_scope: source.kakscript
+  aliases:
+  - kak
+  - kakscript
+  extensions:
+  - ".kak"
+  filenames:
+  - kakrc
+  ace_mode: text
+  language_id: 603336474
 KiCad Layout:
   type: data
   aliases:
@@ -5712,7 +5735,7 @@ Svelte:
   language_id: 928734530
 Swift:
   type: programming
-  color: "#ffac45"
+  color: "#F05138"
   extensions:
   - ".swift"
   tm_scope: source.swift
