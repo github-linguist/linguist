@@ -53,11 +53,10 @@ elsif File.file?(path)
   begin
     # Check if this file is inside a git repository so we have things like
     # `.gitattributes` applied.
-    file_full_path = Pathname.new File.join(Dir.pwd, path)
+    file_full_path = File.realpath(path)
     rugged = Rugged::Repository.discover(file_full_path)
-    file_rel_path = file_full_path.relative_path_from(rugged.workdir).to_s
+    file_rel_path = file_full_path.sub(rugged.workdir, '')
     oid = -> { rugged.head.target.tree.walk_blobs { |r, b| return b[:oid] if r + b[:name] == file_rel_path } }
-
     blob = Linguist::LazyBlob.new(rugged, oid.call, file_rel_path)
   rescue Rugged::RepositoryError
     blob = Linguist::FileBlob.new(path, Dir.pwd)
