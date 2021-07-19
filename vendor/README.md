@@ -232,6 +232,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Julia:** [JuliaEditorSupport/atom-language-julia](https://github.com/JuliaEditorSupport/atom-language-julia)
 - **Jupyter Notebook:** [textmate/json.tmbundle](https://github.com/textmate/json.tmbundle)
 - **Kaitai Struct:** [atom/language-yaml](https://github.com/atom/language-yaml)
+- **KakouneScript:** [kakoune-editor/language-kak](https://github.com/kakoune-editor/language-kak)
 - **KiCad Layout:** [Alhadis/language-pcb](https://github.com/Alhadis/language-pcb)
 - **KiCad Legacy Layout:** [Alhadis/language-pcb](https://github.com/Alhadis/language-pcb)
 - **KiCad Schematic:** [Alhadis/language-pcb](https://github.com/Alhadis/language-pcb)
