@@ -431,6 +431,7 @@ Avro IDL:
   language_id: 785497837
 Awk:
   type: programming
+  color: "#c30e9b"
   extensions:
   - ".awk"
   - ".auk"
@@ -1340,6 +1341,21 @@ E:
   tm_scope: none
   ace_mode: text
   language_id: 92
+E-mail:
+  type: data
+  aliases:
+  - email
+  - eml
+  - mail
+  - mbox
+  extensions:
+  - ".eml"
+  - ".mbox"
+  tm_scope: text.eml.basic
+  ace_mode: text
+  codemirror_mode: mbox
+  codemirror_mime_type: application/mbox
+  language_id: 529653389
 EBNF:
   type: data
   extensions:
@@ -1378,14 +1394,6 @@ EJS:
   tm_scope: text.html.js
   ace_mode: ejs
   language_id: 95
-EML:
-  type: data
-  extensions:
-  - ".eml"
-  - ".mbox"
-  tm_scope: text.eml.basic
-  ace_mode: text
-  language_id: 529653389
 EQ:
   type: programming
   color: "#a78649"
@@ -1635,6 +1643,16 @@ Faust:
   tm_scope: source.faust
   ace_mode: text
   language_id: 622529198
+Fennel:
+  type: programming
+  tm_scope: source.fnl
+  ace_mode: text
+  color: "#fff3d7"
+  interpreters:
+  - fennel
+  extensions:
+  - ".fnl"
+  language_id: 239946126
 Filebench WML:
   type: programming
   extensions:
@@ -1650,6 +1668,14 @@ Filterscript:
   tm_scope: none
   ace_mode: text
   language_id: 112
+Fluent:
+  type: programming
+  color: "#ffcc33"
+  extensions:
+  - ".ftl"
+  tm_scope: source.ftl
+  ace_mode: text
+  language_id: 206353404
 Formatted:
   type: data
   extensions:
@@ -2554,6 +2580,7 @@ JFlex:
   language_id: 173
 JSON:
   type: data
+  color: "#292929"
   tm_scope: source.json
   ace_mode: json
   codemirror_mode: javascript
@@ -2578,6 +2605,7 @@ JSON:
   filenames:
   - ".arcconfig"
   - ".htmlhintrc"
+  - ".imgbotconfig"
   - ".tern-config"
   - ".tern-project"
   - ".watchmanconfig"
@@ -2615,6 +2643,7 @@ JSON with Comments:
   - ".jscsrc"
   - ".jshintrc"
   - ".jslintrc"
+  - api-extractor.json
   - devcontainer.json
   - jsconfig.json
   - language-configuration.json
@@ -2665,6 +2694,7 @@ Java:
   color: "#b07219"
   extensions:
   - ".java"
+  - ".jav"
   language_id: 181
 Java Properties:
   type: data
@@ -2707,6 +2737,7 @@ JavaScript:
   - ".frag"
   - ".gs"
   - ".jake"
+  - ".javascript"
   - ".jsb"
   - ".jscad"
   - ".jsfl"
@@ -2843,6 +2874,19 @@ Kaitai Struct:
   - ".ksy"
   tm_scope: source.yaml
   language_id: 818804755
+KakouneScript:
+  type: programming
+  color: "#6f8042"
+  tm_scope: source.kakscript
+  aliases:
+  - kak
+  - kakscript
+  extensions:
+  - ".kak"
+  filenames:
+  - kakrc
+  ace_mode: text
+  language_id: 603336474
 KiCad Layout:
   type: data
   aliases:
@@ -2885,7 +2929,7 @@ Kit:
   language_id: 188
 Kotlin:
   type: programming
-  color: "#F18E33"
+  color: "#A97BFF"
   extensions:
   - ".kt"
   - ".ktm"
@@ -3025,6 +3069,7 @@ Lex:
   language_id: 199
 LilyPond:
   type: programming
+  color: "#9ccc7c"
   extensions:
   - ".ly"
   - ".ily"
@@ -4051,6 +4096,16 @@ P4:
   tm_scope: source.p4
   ace_mode: text
   language_id: 348895984
+PEG.js:
+  type: programming
+  color: "#234d6b"
+  extensions:
+  - ".pegjs"
+  tm_scope: source.pegjs
+  ace_mode: javascript
+  codemirror_mode: javascript
+  codemirror_mime_type: text/javascript
+  language_id: 81442128
 PHP:
   type: programming
   tm_scope: text.html.php
@@ -4437,7 +4492,7 @@ Protocol Buffer:
   - Protocol Buffers
   extensions:
   - ".proto"
-  tm_scope: source.protobuf
+  tm_scope: source.proto
   ace_mode: protobuf
   codemirror_mode: protobuf
   codemirror_mime_type: text/x-protobuf
@@ -4872,6 +4927,7 @@ Redirect Rules:
   language_id: 1020148948
 Regular Expression:
   type: data
+  color: "#009a00"
   extensions:
   - ".regexp"
   - ".regex"
@@ -5123,18 +5179,18 @@ SCSS:
   language_id: 329
 SELinux Policy:
   aliases:
-  - "SELinux Kernel Policy Language"
-  - "sepolicy"
+  - SELinux Kernel Policy Language
+  - sepolicy
   type: data
   tm_scope: source.sepolicy
   extensions:
   - ".te"
   filenames:
-  - "file_contexts"
-  - "genfs_contexts"
-  - "initial_sids"
-  - "port_contexts"
-  - "security_classes"
+  - file_contexts
+  - genfs_contexts
+  - initial_sids
+  - port_contexts
+  - security_classes
   ace_mode: text
   language_id: 880010326
 SMT:
@@ -5681,7 +5737,7 @@ Svelte:
   language_id: 928734530
 Swift:
   type: programming
-  color: "#ffac45"
+  color: "#F05138"
   extensions:
   - ".swift"
   tm_scope: source.swift
@@ -5895,6 +5951,18 @@ Text:
   tm_scope: none
   ace_mode: text
   language_id: 372
+TextMate Properties:
+  type: data
+  color: "#df66e4"
+  aliases:
+  - tm-properties
+  filenames:
+  - ".tm_properties"
+  ace_mode: properties
+  codemirror_mode: properties
+  codemirror_mime_type: text/x-properties
+  tm_scope: source.tm-properties
+  language_id: 981795023
 Textile:
   type: prose
   ace_mode: textile
@@ -6104,6 +6172,17 @@ Vala:
   tm_scope: source.vala
   ace_mode: vala
   language_id: 386
+Valve Data Format:
+  type: data
+  color: "#f26025"
+  aliases:
+  - keyvalues
+  - vdf
+  extensions:
+  - ".vdf"
+  ace_mode: text
+  tm_scope: source.keyvalues
+  language_id: 544060961
 Verilog:
   type: programming
   color: "#b2b7f8"
@@ -6118,6 +6197,7 @@ Verilog:
 Vim Help File:
   type: prose
   aliases:
+  - help
   - vimhelp
   extensions:
   - ".txt"
