@@ -1,0 +1,65 @@
+$date
+	Mon Dec 28 19:56:48 2020
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module test $end
+$var wire 1 ! RegWrite $end
+$var wire 1 " MemWrite $end
+$var wire 1 # MemToReg $end
+$var wire 1 $ MemRead $end
+$var wire 1 % Branch $end
+$var wire 1 & AluOp1 $end
+$var wire 1 ' AluOp0 $end
+$var wire 1 ( ALUsrc $end
+$var reg 7 ) opc [6:0] $end
+$scope module control_test $end
+$var wire 7 * Opc [6:0] $end
+$var reg 1 ( ALUsrc $end
+$var reg 1 ' AluOp0 $end
+$var reg 1 & AluOp1 $end
+$var reg 1 % Branch $end
+$var reg 1 $ MemRead $end
+$var reg 1 # MemToReg $end
+$var reg 1 " MemWrite $end
+$var reg 1 ! RegWrite $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+b110011 *
+b110011 )
+0(
+0'
+1&
+0%
+0$
+0#
+0"
+1!
+$end
+#1
+0&
+1$
+1#
+1(
+b11 )
+b11 *
+#2
+1"
+0$
+0!
+b100011 )
+b100011 *
+#3
+1'
+1%
+0"
+0(
+b1100011 )
+b1100011 *
