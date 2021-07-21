@@ -59,7 +59,7 @@ vendor/grammars/NimLime:
 - source.nim.comment
 - source.nim_filter
 - source.nimcfg
-vendor/grammars/Nova.tmLanguage:
+vendor/grammars/NovaGrammars:
 - source.keyvalues
 - source.redirects
 - source.solution
@@ -200,6 +200,8 @@ vendor/grammars/asp.tmbundle:
 vendor/grammars/assembly:
 - objdump.x86asm
 - source.x86asm
+vendor/grammars/astro:
+- text.html.astro
 vendor/grammars/atom-editorconfig:
 - source.editorconfig
 - text.plain
@@ -310,6 +312,8 @@ vendor/grammars/dylan.tmbundle:
 - source.makegen
 vendor/grammars/ec.tmbundle:
 - source.c.ec
+vendor/grammars/ecl-tmLanguage:
+- source.ecl
 vendor/grammars/eiffel.tmbundle:
 - source.eiffel
 vendor/grammars/ejs-tmbundle:
@@ -364,8 +368,6 @@ vendor/grammars/haxe-TmLanguage:
 - source.hxml
 vendor/grammars/holyc.tmbundle:
 - source.hc
-vendor/grammars/hy.tmLanguage:
-- source.hy
 vendor/grammars/idl.tmbundle:
 - source.idl
 - source.idl-dlm
@@ -561,6 +563,8 @@ vendor/grammars/language-jsoniq:
 - source.xq
 vendor/grammars/language-jsonnet:
 - source.jsonnet
+vendor/grammars/language-kak:
+- source.kakscript
 vendor/grammars/language-kotlin:
 - source.kotlin
 vendor/grammars/language-less:
@@ -915,6 +919,8 @@ vendor/grammars/verilog.tmbundle:
 - source.verilog
 vendor/grammars/vhdl:
 - source.vhdl
+vendor/grammars/vsc-fennel:
+- source.fnl
 vendor/grammars/vscode-codeql:
 - source.ql
 vendor/grammars/vscode-cue:
@@ -928,6 +934,8 @@ vendor/grammars/vscode-gedcom:
 vendor/grammars/vscode-hack:
 - markdown.hack.codeblock
 - source.hack
+vendor/grammars/vscode-hy:
+- source.hy
 vendor/grammars/vscode-lean:
 - markdown.lean.codeblock
 - source.lean
