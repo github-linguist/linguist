@@ -261,7 +261,7 @@ disambiguations:
     pattern:
     - '^public\s+(?:SharedPlugin(?:\s+|:)__pl_\w+\s*=(?:\s*{)?|(?:void\s+)?__pl_\w+_SetNTVOptional\(\)(?:\s*{)?)'
     - '^methodmap\s+\w+\s+<\s+\w+'
-    - '^(stock|forward|native)\s+(?:\w+\s+)\w+\('
+    - '^\s*MarkNativeAsOptional\s*\('
   - language: NASL
     pattern:
     - '^\s*include\s*\(\s*(?:"|'')[\\/\w\-\.:\s]+\.(?:nasl|inc)\s*(?:"|'')\s*\)\s*;'
