@@ -8,9 +8,9 @@ require (
 	github.com/groob/plist v0.0.0-20171013152701-7b367e0aa692
 	github.com/mattn/go-runewidth v0.0.2 // indirect
 	github.com/mitchellh/mapstructure v0.0.0-20171017171808-06020f85339e
-	github.com/urfave/cli v1.20.0
+	github.com/urfave/cli/v2 v2.3.0
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/cheggaaa/pb.v1 v1.0.18
-	gopkg.in/yaml.v2 v2.0.0-20171116090243-287cf08546ab
+	gopkg.in/yaml.v2 v2.2.3
 )
