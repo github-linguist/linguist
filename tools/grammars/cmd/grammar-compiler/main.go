@@ -65,6 +65,12 @@ func main() {
 					Aliases: []string{"f"},
 					Usage: "write grammars.yml even if grammars fail to compile",
 				},
+				&cli.BoolFlag{
+					Name:  "verbose",
+					Aliases: []string{"v"},
+					Usage: "show all warnings",
+					Value: false,
+				},
 			},
 			Action: func(c *cli.Context) error {
 				conv, err := compiler.NewConverter(c.String("linguist-path"))
@@ -74,7 +80,7 @@ func main() {
 				if err := conv.ConvertGrammars(true); err != nil {
 					return wrap(err)
 				}
-				if err := conv.Report(); err != nil {
+				if err := conv.Report(c.Bool("verbose")); err != nil {
 					if !c.Bool("force") {
 						return wrap(err)
 					}

@@ -227,7 +227,7 @@ func (conv *Converter) WriteGrammarList() error {
 	return ioutil.WriteFile(ymlpath, outyml, 0666)
 }
 
-func (conv *Converter) Report() error {
+func (conv *Converter) Report(verbose ...bool) error {
 	var failed []*Repository
 	for _, repo := range conv.Loaded {
 		if len(repo.Errors) > 0 {
@@ -241,16 +241,32 @@ func (conv *Converter) Report() error {
 
 	total := 0
 	for _, repo := range failed {
-		fmt.Fprintf(os.Stderr, "- [ ] %s (%d errors)\n", repo, len(repo.Errors))
-		for _, err := range repo.Errors {
-			fmt.Fprintf(os.Stderr, "    - [ ] %s\n", err)
+		n := 0
+		// Only show warning-like errors in verbose output
+		if ! verbose[0] {
+			for _, err := range repo.Errors {
+				switch err.(type) {
+				case *MissingIncludeError, *UnknownKeysError:
+					break
+				default:
+					repo.Errors[n] = err
+					n++
+				}
+			}
+			repo.Errors = repo.Errors[:n]
 		}
-		fmt.Fprintf(os.Stderr, "\n")
+		if len(repo.Errors) > 0 {
+			fmt.Fprintf(os.Stderr, "- [ ] %s (%d errors)\n", repo, len(repo.Errors))
+			for _, err := range repo.Errors {
+				fmt.Fprintf(os.Stderr, "    - [ ] %s\n", err)
+			}
+			fmt.Fprintf(os.Stderr, "\n")
+		}
 		total += len(repo.Errors)
 	}
 
 	if total > 0 {
-		return fmt.Errorf("the grammar library contains %d errors", total)
+		return fmt.Errorf("The grammar library contains %d errors", total)
 	}
 	return nil
 }
