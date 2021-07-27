@@ -75,13 +75,35 @@ func (conv *Converter) AddGrammar(source string) error {
 	repo.FixRules(knownScopes)
 
 	if len(repo.Errors) > 0 {
-		fmt.Fprintf(os.Stderr, "The new grammar %s contains %d errors:\n",
-			repo, len(repo.Errors))
-		for _, err := range repo.Errors {
-			fmt.Fprintf(os.Stderr, "    - %s\n", err)
+		// Split out warnings from errors
+		warnings := []error{}
+		errors := []error{}
+		for _, e := range repo.Errors {
+			switch e.(type) {
+			case *MissingIncludeError, *UnknownKeysError:
+				warnings = append(warnings, e)
+			default:
+				errors = append(errors, e)
+			}
 		}
-		fmt.Fprintf(os.Stderr, "\n")
-		return fmt.Errorf("failed to compile the given grammar")
+		if len(errors) > 0 {
+			fmt.Fprintf(os.Stderr, "The new grammar %s contains %d errors:\n",
+				repo, len(errors))
+			for _, err := range errors {
+				fmt.Fprintf(os.Stderr, "    - %s\n", err)
+			}
+			fmt.Fprintf(os.Stderr, "\n")
+			return fmt.Errorf("Failed to compile the given grammar")
+		}
+		if len(warnings) > 0 {
+			fmt.Fprintf(os.Stderr, "The new grammar %s contains %d warnings:\n",
+				repo, len(warnings))
+			for _, err := range warnings {
+				fmt.Fprintf(os.Stderr, "    - %s\n", err)
+			}
+			fmt.Fprintf(os.Stderr, "\n")
+			fmt.Println("These warnings are not fatal, but may mean the syntax highlighting may not be as expected.")
+		}
 	}
 
 	fmt.Printf("OK! added grammar source '%s'\n", source)
