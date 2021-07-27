@@ -36,6 +36,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **AsciiDoc:** [zuckschwerdt/asciidoc.tmbundle](https://github.com/zuckschwerdt/asciidoc.tmbundle)
 - **AspectJ:** [pchaigno/sublime-aspectj](https://github.com/pchaigno/sublime-aspectj)
 - **Assembly:** [Nessphoro/sublimeassembly](https://github.com/Nessphoro/sublimeassembly)
+- **Astro:** [snowpackjs/astro](https://github.com/snowpackjs/astro)
 - **Asymptote:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **AutoHotkey:** [ahkscript/SublimeAutoHotkey](https://github.com/ahkscript/SublimeAutoHotkey)
 - **AutoIt:** [AutoIt/SublimeAutoItScript](https://github.com/AutoIt/SublimeAutoItScript)
