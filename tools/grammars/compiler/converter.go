@@ -102,7 +102,7 @@ func (conv *Converter) AddGrammar(source string) error {
 				fmt.Fprintf(os.Stderr, "    - %s\n", err)
 			}
 			fmt.Fprintf(os.Stderr, "\n")
-			fmt.Println("These warnings are not fatal, but may mean the syntax highlighting may not be as expected.")
+			fmt.Fprintf(os.Stderr, "These warnings are not fatal, but may mean the syntax highlighting may not be as expected.\n")
 		}
 	}
 
