@@ -202,6 +202,7 @@ vendor/grammars/assembly:
 - source.x86asm
 vendor/grammars/astro:
 - text.html.astro
+- text.html.markdown.astro
 vendor/grammars/atom-editorconfig:
 - source.editorconfig
 - text.plain
@@ -457,6 +458,7 @@ vendor/grammars/language-etc:
 - source.curlrc
 - source.direct-x
 - source.dosbox-conf
+- source.dotenv
 - source.futhark
 - source.generic-db
 - source.gitattributes
@@ -487,6 +489,7 @@ vendor/grammars/language-etc:
 - source.wgetrc
 - text.checksums
 - text.codeowners
+- text.lesshst
 - text.openbsd-pkg.desc
 - text.xml.svg
 vendor/grammars/language-faust:
@@ -574,8 +577,8 @@ vendor/grammars/language-macaulay2:
 vendor/grammars/language-maxscript:
 - source.maxscript
 vendor/grammars/language-mcfunction:
+- markdown.mcfunction.codeblock
 - source.mcfunction
-- source.mcfunction-snapshot
 vendor/grammars/language-meson:
 - source.meson
 vendor/grammars/language-msl:
@@ -642,6 +645,7 @@ vendor/grammars/language-sass:
 - source.sass
 - source.sassdoc
 vendor/grammars/language-sed:
+- source.ed
 - source.sed
 vendor/grammars/language-shellscript:
 - source.shell
@@ -649,6 +653,7 @@ vendor/grammars/language-shellscript:
 vendor/grammars/language-supercollider:
 - source.supercollider
 vendor/grammars/language-texinfo:
+- text.info
 - text.texinfo
 vendor/grammars/language-toc-wow:
 - source.toc
@@ -790,7 +795,6 @@ vendor/grammars/riot-syntax-highlight:
 vendor/grammars/ruby-slim.tmbundle:
 - text.slim
 vendor/grammars/sas.tmbundle:
-- source.SASLog
 - source.sas
 vendor/grammars/scheme.tmbundle:
 - source.scheme
