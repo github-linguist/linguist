@@ -6,7 +6,15 @@
 		"dockerfile": "Dockerfile"
 	},
 	"settings": {
-
+		"files.watcherExclude": {
+      "**/vendor/gems": true,
+      "**/.git": true,
+      "**/tmp": true,
+      "**/node_modules": true,
+			"**/grammars": true,
+			"**/linguist-grammars": true,
+			".bundle": true
+    }
 	},
 	"remoteUser": "codespace",
 	"overrideCommand": false,
@@ -21,7 +29,9 @@
 
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
-		"GitHub.vscode-pull-request-github"
+		"GitHub.vscode-pull-request-github",
+		"misogi.ruby-rubocop",
+		"wingrunr21.vscode-ruby"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
