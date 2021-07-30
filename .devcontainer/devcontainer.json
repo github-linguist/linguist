@@ -1,0 +1,31 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.187.0/containers/codespaces-linux
+{
+	"name": "Linguist",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"settings": {
+
+	},
+	"remoteUser": "codespace",
+	"overrideCommand": false,
+	"mounts": ["source=codespaces-linux-var-lib-docker,target=/var/lib/docker,type=volume"],
+	"runArgs": [
+		"--cap-add=SYS_PTRACE",
+		"--security-opt",
+		"seccomp=unconfined",
+		"--privileged",
+		"--init"
+	],
+
+	// Add the IDs of extensions you want installed when the container is created.
+	"extensions": [
+		"GitHub.vscode-pull-request-github"
+	],
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+
+	"postCreateCommand": "script/bootstrap && bundle exec rake samples"
+}
