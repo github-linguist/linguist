@@ -11,7 +11,22 @@ By participating, you are expected to uphold this code.
 
 The majority of contributions won't need to touch any Ruby code at all.
 
-## Dependencies
+In order to contribute, you'll need to setup your development environment.
+You can use [Github Codespaces] (recommended) or configure your [local environment].
+
+## GitHub Codespaces
+
+Using GitHub Codespaces is the quickest and easiest method of configuring the development environment required for contributing the Linguist.
+The environment automatically installs all the necessary dependencies.
+
+There are two ways to get started with GitHub Codespaces:
+
+1. Clone this repository to your local host and create a new Codespace from within VSCode
+2. Click the buttons in the UI
+
+## Local Environment
+
+### Dependencies
 
 Linguist is a Ruby library so you will need a recent version of Ruby installed.
 There are known problems with the macOS/XCode supplied version of Ruby that causes problems installing some of the dependencies.
@@ -35,7 +50,7 @@ apt-get install cmake pkg-config libicu-dev docker.io ruby ruby-dev zlib1g-dev b
 
 The latest version of Bundler can be installed with `gem install bundler`.
 
-## Getting started
+### Getting started
 
 Before you can start contributing to Linguist, you'll need to set up your environment first.
 Clone the repo and run `script/bootstrap` to install its dependencies.
@@ -59,6 +74,8 @@ To run Linguist from the cloned repository:
 ```bash
 bundle exec bin/github-linguist --breakdown
 ```
+
+---
 
 ## Adding an extension to a language
 
