@@ -249,7 +249,7 @@ func (conv *Converter) WriteGrammarList() error {
 	return ioutil.WriteFile(ymlpath, outyml, 0666)
 }
 
-func (conv *Converter) Report(verbose ...bool) error {
+func (conv *Converter) Report(verbose bool) error {
 	var failed []*Repository
 	for _, repo := range conv.Loaded {
 		if len(repo.Errors) > 0 {
@@ -265,7 +265,7 @@ func (conv *Converter) Report(verbose ...bool) error {
 	for _, repo := range failed {
 		n := 0
 		// Only show warning-like errors in verbose output
-		if ! verbose[0] {
+		if ! verbose {
 			for _, err := range repo.Errors {
 				switch err.(type) {
 				case *MissingIncludeError, *UnknownKeysError:

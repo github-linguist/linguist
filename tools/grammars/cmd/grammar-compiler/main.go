@@ -116,7 +116,7 @@ func main() {
 						return cli.NewExitError(err, 1)
 					}
 				}
-				if err := conv.Report(); err != nil {
+				if err := conv.Report(false); err != nil {
 					return wrap(err)
 				}
 				return nil
