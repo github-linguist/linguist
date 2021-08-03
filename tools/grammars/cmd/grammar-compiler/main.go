@@ -13,7 +13,7 @@ func cwd() string {
 }
 
 func wrap(err error) error {
-	return cli.NewExitError(err, 255)
+	return cli.Exit(err, 255)
 }
 
 func main() {
@@ -101,19 +101,19 @@ func main() {
 			Action: func(c *cli.Context) error {
 				conv, err := compiler.NewConverter(c.String("linguist-path"))
 				if err != nil {
-					return cli.NewExitError(err, 1)
+					return cli.Exit(err, 1)
 				}
 				if err := conv.ConvertGrammars(false); err != nil {
-					return cli.NewExitError(err, 1)
+					return cli.Exit(err, 1)
 				}
 				if out := c.String("proto-out"); out != "" {
 					if err := conv.WriteProto(out); err != nil {
-						return cli.NewExitError(err, 1)
+						return cli.Exit(err, 1)
 					}
 				}
 				if out := c.String("out"); out != "" {
 					if err := conv.WriteJSON(out); err != nil {
-						return cli.NewExitError(err, 1)
+						return cli.Exit(err, 1)
 					}
 				}
 				if err := conv.Report(false); err != nil {
