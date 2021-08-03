@@ -43,7 +43,7 @@ def log(msg)
   puts msg if $verbose
 end
 
-def command(*args, show_warnings: true)
+def command(*args, hide_warnings: false)
   log "$ #{args.join(' ')}"
   stdout, stderr, status = Open3.capture3(*args)
   unless status.success?
@@ -54,11 +54,11 @@ def command(*args, show_warnings: true)
     warn "Command failed. Aborting."
     exit 1
   end
-  unless stderr.empty?
-    if show_warnings
-      stderr.each_line do |line|
-        log "  > #{line}"
-      end
+  return if stderr.empty?
+
+  unless hide_warnings
+    stderr.each_line do |line|
+      log "  > #{line}"
     end
   end
 end
@@ -108,7 +108,7 @@ if repo_old
   log "Deregistering: #{repo_old}"
   command('git', 'submodule', 'deinit', repo_old)
   command('git', 'rm', '-rf', repo_old)
-  command('script/grammar-compiler', 'update', '-f', show_warnings: false)
+  command('script/grammar-compiler', 'update', '-f', hide_warnings: true)
 end
 
 log "Registering new submodule: #{repo_new}"
@@ -119,6 +119,6 @@ log "Caching grammar license"
 command("bundle", "exec", "licensed", "cache", "-c", "vendor/licenses/config.yml")
 
 log "Updating grammar documentation in vendor/README.md"
-command('bundle', 'exec', 'rake', 'samples', show_warnings: false)
+command('bundle', 'exec', 'rake', 'samples', hide_warnings: true)
 command('script/sort-submodules')
 command('script/list-grammars')
