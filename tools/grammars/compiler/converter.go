@@ -87,19 +87,19 @@ func (conv *Converter) AddGrammar(source string) error {
 			}
 		}
 		if len(errors) > 0 {
-			fmt.Fprintf(os.Stderr, "The new grammar %s contains %d errors:\n",
-				repo, len(errors))
+			fmt.Fprintf(os.Stderr, "%d errors found in new grammar '%s':\n",
+				len(errors), repo)
 			for _, err := range errors {
-				fmt.Fprintf(os.Stderr, "    - %s\n", err)
+				fmt.Fprintf(os.Stderr, "- %s\n", err)
 			}
 			fmt.Fprintf(os.Stderr, "\n")
-			return fmt.Errorf("Failed to compile the given grammar")
+			return fmt.Errorf("Compilation failed. Aborting")
 		}
 		if len(warnings) > 0 {
-			fmt.Fprintf(os.Stderr, "The new grammar %s contains %d warnings:\n",
-				repo, len(warnings))
+			fmt.Fprintf(os.Stderr, "%d warnings found when compiling new grammar '%s':\n",
+				len(warnings), repo)
 			for _, err := range warnings {
-				fmt.Fprintf(os.Stderr, "    - %s\n", err)
+				fmt.Fprintf(os.Stderr, "- %s\n", err)
 			}
 			fmt.Fprintf(os.Stderr, "\n")
 			fmt.Fprintf(os.Stderr, "These warnings are not fatal, but may mean the syntax highlighting on GitHub.com may not be as expected.\n\n")
