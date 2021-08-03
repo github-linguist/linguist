@@ -280,7 +280,7 @@ func (conv *Converter) Report(verbose bool) error {
 		if len(repo.Errors) > 0 {
 			fmt.Fprintf(os.Stderr, "- [ ] %s (%d errors)\n", repo, len(repo.Errors))
 			for _, err := range repo.Errors {
-				fmt.Fprintf(os.Stderr, "    - [ ] %s\n", err)
+				fmt.Fprintf(os.Stderr, "  - %s\n", err)
 			}
 			fmt.Fprintf(os.Stderr, "\n")
 		}
