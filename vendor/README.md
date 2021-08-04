@@ -121,6 +121,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Dylan:** [textmate/dylan.tmbundle](https://github.com/textmate/dylan.tmbundle)
 - **E-mail:** [mariozaizar/language-eml](https://github.com/mariozaizar/language-eml)
 - **EBNF:** [Alhadis/language-grammars](https://github.com/Alhadis/language-grammars)
+- **ECL:** [hpcc-systems/ecl-tmLanguage](https://github.com/hpcc-systems/ecl-tmLanguage)
 - **ECLiPSe:** [alnkpa/sublimeprolog](https://github.com/alnkpa/sublimeprolog)
 - **EJS:** [gregory-m/ejs-tmbundle](https://github.com/gregory-m/ejs-tmbundle)
 - **EQ:** [dotnet/csharp-tmLanguage](https://github.com/dotnet/csharp-tmLanguage)
