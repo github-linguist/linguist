@@ -273,6 +273,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Macaulay2:** [Macaulay2/language-macaulay2](https://github.com/Macaulay2/language-macaulay2)
 - **Makefile:** [textmate/make.tmbundle](https://github.com/textmate/make.tmbundle)
 - **Mako:** [marconi/mako-tmbundle](https://github.com/marconi/mako-tmbundle)
+- **Manifest:** [atom/language-yaml](https://github.com/atom/language-yaml)
 - **Markdown:** [atom/language-gfm](https://github.com/atom/language-gfm)
 - **Marko:** [marko-js/marko-tmbundle](https://github.com/marko-js/marko-tmbundle)
 - **Mask:** [tenbits/sublime-mask](https://github.com/tenbits/sublime-mask)
