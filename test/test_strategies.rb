@@ -26,6 +26,7 @@ class TestStrategies < Minitest::Test
 
   def all_xml_fixtures(file="*")
     fixs = Dir.glob("#{samples_path}/XML/#{file}") -
+             ["#{samples_path}/XML/psd-data.xmp"] -
              ["#{samples_path}/XML/filenames"]
     fixs.reject { |f| File.symlink?(f) }
   end
@@ -96,7 +97,7 @@ class TestStrategies < Minitest::Test
     assert_modeline Language["JavaScript"], fixture_blob("Data/Modelines/iamjs.pl")
     assert_modeline Language["JavaScript"], fixture_blob("Data/Modelines/iamjs2.pl")
     assert_modeline Language["PHP"], fixture_blob("Data/Modelines/iamphp.inc")
-    assert_modeline nil, sample_blob("C/main.c")
+    assert_modeline nil, sample_blob("C++/runtime-compiler.cc")
   end
 
   def test_modeline_languages
@@ -165,6 +166,10 @@ class TestStrategies < Minitest::Test
     assert_interpreter "python", "#!/usr/bin/env foo=bar bar=foo python -cos=__import__(\"os\");"
     assert_interpreter "osascript", "#!/usr/bin/env osascript"
     assert_interpreter "osascript", "#!/usr/bin/osascript"
+
+    assert_interpreter "ruby", "#!/usr/bin/env -vS ruby -wKU\nputs ?t+?e+?s+?t"
+    assert_interpreter "sed", "#!/usr/bin/env --split-string sed -f\ny/a/A/"
+    assert_interpreter "deno", "#!/usr/bin/env -S GH_TOKEN=ghp_*** deno run --allow-net\nconsole.log(1);"
   end
 
   def test_xml

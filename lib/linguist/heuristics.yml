@@ -28,28 +28,43 @@
 #
 ---
 disambiguations:
-- extensions: ['.1', '.1in', '.1m', '.1x', '.2', '.3', '.3in', '.3m', '.3p', '.3pm', '.3qt', '.3x', '.4', '.5', '.6', '.7', '.8', '.9', '.man', '.mdoc']
+- extensions: ['.1', '.2', '.3', '.4', '.5', '.6', '.7', '.8', '.9']
   rules:
-  # Document which uses mdoc(7) macros
   - language: Roff Manpage
     and:
-    - pattern: '^[.''][ \t]*Dd +(?:[^"\s]+|"[^"]+")'
-    - pattern: '^[.''][ \t]*Dt +(?:[^"\s]+|"[^"]+") +"?(?:[1-9]|@[^\s@]+@)'
-    - pattern: '^[.''][ \t]*Sh +(?:[^"\s]|"[^"]+")'
-
-  # Document which uses man(7) macros
+    - named_pattern: mdoc-date
+    - named_pattern: mdoc-title
+    - named_pattern: mdoc-heading
   - language: Roff Manpage
     and:
-    - pattern: '^[.''][ \t]*TH +(?:[^"\s]+|"[^"]+") +"?(?:[1-9]|@[^\s@]+@)'
-    - pattern: '^[.''][ \t]*SH +(?:[^"\s]+|"[^"\s]+)'
-
-  # Open-ended fallback to unrendered Roff source
+    - named_pattern: man-title
+    - named_pattern: man-heading
   - language: Roff
+    pattern: '^\.(?:[A-Za-z]{2}(?:\s|$)|\\")'
+- extensions: ['.1in', '.1m', '.1x', '.3in', '.3m', '.3p', '.3pm', '.3qt', '.3x', '.man', '.mdoc']
+  rules:
+  - language: Roff Manpage
+    and:
+    - named_pattern: mdoc-date
+    - named_pattern: mdoc-title
+    - named_pattern: mdoc-heading
+  - language: Roff Manpage
+    and:
+    - named_pattern: man-title
+    - named_pattern: man-heading
+  - language: Roff
+- extensions: ['.al']
+  rules:
+  # AL pattern source from https://github.com/microsoft/AL/blob/master/grammar/alsyntax.tmlanguage - keyword.other.applicationobject.al
+  - language: AL
+    and:
+    - pattern: '\b(?i:(CODEUNIT|PAGE|PAGEEXTENSION|PAGECUSTOMIZATION|DOTNET|ENUM|ENUMEXTENSION|VALUE|QUERY|REPORT|TABLE|TABLEEXTENSION|XMLPORT|PROFILE|CONTROLADDIN))\b'
+  # Open-ended fallback to Perl AutoLoader
+  - language: Perl
 - extensions: ['.as']
   rules:
   - language: ActionScript
-    pattern: '^\s*(package\s+[a-z0-9_\.]+|import\s+[a-zA-Z0-9_\.]+;|class\s+[A-Za-z0-9_]+\s+extends\s+[A-Za-z0-9_]+)'
-  - language: AngelScript
+    pattern: '^\s*(?:package(?:\s+[\w.]+)?\s+(?:{|$)|import\s+[\w.*]+\s*;|(?=.*?(?:intrinsic|extends))(intrinsic\s+)?class\s+[\w<>.]+(?:\s+extends\s+[\w<>.]+)?|(?:(?:public|protected|private|static)\s+)*(?:(?:var|const|local)\s+\w+\s*:\s*[\w<>.]+(?:\s*=.*)?\s*;|function\s+\w+\s*\((?:\s*\w+\s*:\s*[\w<>.]+\s*(,\s*\w+\s*:\s*[\w<>.]+\s*)*)?\)))'
 - extensions: ['.asc']
   rules:
   - language: Public Key
@@ -67,17 +82,26 @@ disambiguations:
   - language: LTspice Symbol
     pattern: '^SymbolType[ \t]'
   - language: Asymptote
+- extensions: ['.bas']
+  rules:
+  - language: FreeBasic
+    pattern: '^[ \t]*#(?:define|endif|endmacro|ifn?def|if|include|lang|macro)\s'
+  - language: BASIC
+    pattern: '^\s*\d+'
 - extensions: ['.bb']
   rules:
   - language: BlitzBasic
     pattern: '(<^\s*; |End Function)'
   - language: BitBake
     pattern: '^\s*(# |include|require)\b'
+- extensions: ['.bi']
+  rules:
+  - language: FreeBasic
+    pattern: '^[ \t]*#(?:define|endif|endmacro|ifn?def|if|include|lang|macro)\s'
 - extensions: ['.builds']
   rules:
   - language: XML
     pattern: '^(\s*)(?i:<Project|<Import|<Property|<?xml|xmlns)'
-  - language: Text
 - extensions: ['.ch']
   rules:
   - language: xBase
@@ -93,15 +117,25 @@ disambiguations:
 - extensions: ['.cls']
   rules:
   - language: TeX
-    pattern: '\\\w+{'
+    pattern: '^\s*\\(?:NeedsTeXFormat|ProvidesClass){'
   - language: ObjectScript
     pattern: '^Class\s'
+- extensions: ['.cmp']
+  rules:
+  - language: Gerber Image
+    pattern: '^[DGMT][0-9]{2}\*\r?\n'
 - extensions: ['.cs']
   rules:
   - language: Smalltalk
     pattern: '![\w\s]+methodsFor: '
   - language: 'C#'
     pattern: '^(\s*namespace\s*[\w\.]+\s*{|\s*\/\/)'
+- extensions: ['.csl']
+  rules:
+  - language: XML
+    pattern: '(?i:^\s*(\<\?xml|xmlns))'
+  - language: Kusto
+    pattern: '(^\|\s*(where|extend|project|limit|summarize))|(^\.\w+)'
 - extensions: ['.d']
   rules:
   - language: D
@@ -166,6 +200,12 @@ disambiguations:
     pattern: '^\s*(#version|precision|uniform|varying|vec[234])'
   - language: Filterscript
     pattern: '#include|#pragma\s+(rs|version)|__attribute__'
+- extensions: ['.ftl']
+  rules:
+  - language: FreeMarker
+    pattern: '^(?:<|[a-zA-Z-][a-zA-Z0-9_-]+[ \t]+\w)|\${\w+[^\n]*?}|^[ \t]*(?:<#--.*?-->|<#([a-z]+)(?=\s|>)[^>]*>.*?</#\1>|\[#--.*?--\]|\[#([a-z]+)(?=\s|\])[^\]]*\].*?\[#\2\])'
+  - language: Fluent
+    pattern: '^-?[a-zA-Z][a-zA-Z0-9_-]* *=|\{\$-?[a-zA-Z][-\w]*(?:\.[a-zA-Z][-\w]*)?\}'
 - extensions: ['.gd']
   rules:
   - language: GAP
@@ -179,20 +219,23 @@ disambiguations:
   - language: Graph Modeling Language
     pattern: '(?i:^\s*(graph|node)\s+\[$)'
   - language: Gerber Image
-    pattern: '\*\%$'
+    pattern: '^[DGMT][0-9]{2}\*$'
   - language: Game Maker Language
 - extensions: ['.gs']
   rules:
   - language: GLSL
     pattern: '^#version\s+[0-9]+\b'
   - language: Gosu
-    pattern: '^uses java\.'
+    pattern: '^uses (java|gw)\.'
+  - language: Genie
+    pattern: '^\[indent=[0-9]+\]'
 - extensions: ['.h']
   rules:
   - language: Objective-C
     named_pattern: objectivec
   - language: C++
     named_pattern: cpp
+  - language: C
 - extensions: ['.hh']
   rules:
   - language: Hack
@@ -215,7 +258,10 @@ disambiguations:
   - language: PHP
     pattern: '^<\?(?:php)?'
   - language: SourcePawn
-    pattern: '^public\s+(?:SharedPlugin(?:\s+|:)__pl_\w+\s*=(?:\s*{)?|(?:void\s+)?__pl_\w+_SetNTVOptional\(\)(?:\s*{)?)'
+    pattern:
+    - '^public\s+(?:SharedPlugin(?:\s+|:)__pl_\w+\s*=(?:\s*{)?|(?:void\s+)?__pl_\w+_SetNTVOptional\(\)(?:\s*{)?)'
+    - '^methodmap\s+\w+\s+<\s+\w+'
+    - '^\s*MarkNativeAsOptional\s*\('
   - language: NASL
     pattern:
     - '^\s*include\s*\(\s*(?:"|'')[\\/\w\-\.:\s]+\.(?:nasl|inc)\s*(?:"|'')\s*\)\s*;'
@@ -225,6 +271,10 @@ disambiguations:
     - '^\s*(?:public\s+|private\s+|\s*)function\s+\w+\s*\([\w\s,]*\)\s*{'
   - language: POV-Ray SDL
     pattern: '^\s*#(declare|local|macro|while)\s'
+  - language: Pascal
+    pattern:
+    - '(?i:^\s*{\$(?:mode|ifdef|undef|define)[ ]+[a-z0-9_]+})'
+    - '^\s*end[.;]\s*$'
 - extensions: ['.l']
   rules:
   - language: Common Lisp
@@ -264,6 +314,13 @@ disambiguations:
     pattern: '^\s*%'
   - language: Limbo
     pattern: '^\w+\s*:\s*module\s*{'
+- extensions: ['.m4']
+  rules:
+  - language: M4Sugar
+    pattern:
+    - 'AC_DEFUN|AC_PREREQ|AC_INIT'
+    - '^_?m4_'
+  - language: 'M4'
 - extensions: ['.mask']
   rules:
   - language: Unity3d Asset
@@ -309,6 +366,8 @@ disambiguations:
   rules:
   - language: XML
     pattern: '^\s*<\?xml\s+version'
+  - language: Gerber Image
+    pattern: '^[DGMT][0-9]{2}\*\r?\n'
   - language: Text
     pattern: 'THE_TITLE'
 - extensions: ['.nl']
@@ -393,14 +452,8 @@ disambiguations:
     - pattern: '^[#!]'
   - language: INI
     named_pattern: key_equals_value
-  - language: Java properties
+  - language: Java Properties
     pattern: '^[^#!][^:]*:'
-- extensions: ['.props']
-  rules:
-  - language: XML
-    pattern: '^(\s*)(?i:<Project|<Import|<Property|<\?xml|xmlns)'
-  - language: INI
-    pattern: '(?i:\w+\s*=\s*)'
 - extensions: ['.q']
   rules:
   - language: q
@@ -419,6 +472,23 @@ disambiguations:
     pattern: '(?i:\bRebol\b)'
   - language: R
     pattern: '<-|^\s*#'
+- extensions: ['.re']
+  rules:
+  - language: Reason
+    pattern:
+    - '^\s*module\s+type\s'
+    - '^\s*(?:include|open)\s+\w+\s*;\s*$'
+    - '^\s*let\s+(?:module\s\w+\s*=\s*{|\w+:\s+.*=.*;\s*$)'
+  - language: C++
+    pattern:
+    - '^\s*#(?:(?:if|ifdef|define|pragma)\s+\w|\s*include\s+<[^>]+>)'
+    - '^\s*template\s*<'
+- extensions: ['.res']
+  rules:
+  - language: ReScript
+    pattern:
+    - '^\s*(let|module|type)\s+\w*\s+=\s+'
+    - '^\s*(?:include|open)\s+\w+\s*$'
 - extensions: ['.rno']
   rules:
   - language: RUNOFF
@@ -436,6 +506,8 @@ disambiguations:
     pattern: '^(use |fn |mod |pub |macro_rules|impl|#!?\[)'
   - language: RenderScript
     pattern: '#include|#pragma\s+(rs|version)|__attribute__'
+  - language: XML
+    pattern: '^\s*<\?xml'
 - extensions: ['.s']
   rules:
   - language: Motorola 68K Assembly
@@ -446,33 +518,43 @@ disambiguations:
     pattern: '(?i:\^(this|super)\.|^\s*~\w+\s*=\.)'
   - language: Scala
     pattern: '(^\s*import (scala|java)\.|^\s*class\b)'
+- extensions: ['.sol']
+  rules:
+  - language: Solidity
+    pattern: '\bpragma\s+solidity\b|\b(?:abstract\s+)?contract\s+(?!\d)[a-zA-Z0-9$_]+(?:\s+is\s+(?:[a-zA-Z0-9$_][^\{]*?)?)?\s*\{'
+  - language: Gerber Image
+    pattern: '^[DGMT][0-9]{2}\*\r?\n'
 - extensions: ['.sql']
   rules:
    # Postgres
   - language: PLpgSQL
-    pattern: '(?i:^\\i\b|AS \$\$|LANGUAGE ''?plpgsql''?|BEGIN( WORK )?;)'
+    pattern: '(?i:^\\i\b|AS\s+\$\$|LANGUAGE\s+''?plpgsql''?|BEGIN(\s+WORK)?\s*;)'
   # IBM db2
   - language: SQLPL
-    pattern: "(?i:alter module|MODE DB2SQL)"
+    pattern: '(?i:ALTER\s+MODULE|MODE\s+DB2SQL|\bSYS(CAT|PROC)\.|ASSOCIATE\s+RESULT\s+SET|\bEND!\s*$)'
   # Oracle
   - language: PLSQL
-    pattern: '(?i:\$\$PLSQL_|XMLTYPE|systimestamp|\.nextval|connect by|AUTHID (DEFINER|CURRENT_USER)|constructor\W+function)'
+    pattern: '(?i:\$\$PLSQL_|XMLTYPE|systimestamp|\.nextval|CONNECT\s+BY|AUTHID\s+(DEFINER|CURRENT_USER)|constructor\W+function)'
   # T-SQL
   - language: TSQL
-    pattern: '(?i:^\s*GO\b|BEGIN( TRY| CATCH)|OUTPUT INSERTED|DECLARE\s+@)'
-  # Generic SQL
+    pattern: '(?i:^\s*GO\b|BEGIN(\s+TRY|\s+CATCH)|OUTPUT\s+INSERTED|DECLARE\s+@|\[dbo\])'
   - language: SQL
-    negative_pattern: '(?i:begin|boolean|package|exception)'
 - extensions: ['.srt']
   rules:
   - language: SubRip Text
     pattern: '^(\d{2}:\d{2}:\d{2},\d{3})\s*(-->)\s*(\d{2}:\d{2}:\d{2},\d{3})$'
+- extensions: ['.st']
+  rules:
+  - language: StringTemplate
+    pattern: '\$\w+[($]|(.)!\s*.+?\s*!\1|<!\s*.+?\s*!>|\[!\s*.+?\s*!\]|\{!\s*.+?\s*!\}'
+  - language: Smalltalk
+    pattern: '\A\s*[\[{(^"''\w#]|[a-zA-Z_]\w*\s*:=\s*[a-zA-Z_]\w*|class\s*>>\s*[a-zA-Z_]\w*|^[a-zA-Z_]\w*\s+[a-zA-Z_]\w*:|^Class\s*{|if(?:True|False):\s*\['
 - extensions: ['.t']
   rules:
   - language: Perl
     named_pattern: perl5
   - language: Raku
-    named_pattern: perl6
+    pattern: '^\s*(?:use\s+v6\b|\bmodule\b|\bmy\s+class\b)'
   - language: Turing
     pattern: '^\s*%[ \t]+|^\s*var\s+\w+(\s*:\s*\w+)?\s*:=\s*\w+'
 - extensions: ['.toc']
@@ -498,12 +580,21 @@ disambiguations:
     pattern: '^\s*(import.+(from\s+|require\()[''"]react|\/\/\/\s*<reference\s)'
   - language: XML
     pattern: '(?i:^\s*<\?xml\s+version)'
+- extensions: ['.txt']
+  rules:
+    # The following RegExp is simply a collapsed and simplified form of the
+    # VIM_MODELINE pattern in `./lib/linguist/strategy/modeline.rb`.
+  - language: Vim Help File
+    pattern: '(?:(?:^|[ \t])(?:vi|Vi(?=m))(?:m[<=>]?[0-9]+|m)?|[ \t]ex)(?=:(?=[ \t]*set?[ \t][^\r\n:]+:)|:(?![ \t]*set?[ \t]))(?:(?:[ \t]*:[ \t]*|[ \t])\w*(?:[ \t]*=(?:[^\\\s]|\\.)*)?)*[ \t:](?:filetype|ft|syntax)[ \t]*=(help)(?=$|\s|:)'
+    # HACK: This is a contrived use of heuristics needed to address
+    # an unusual edge-case. See https://git.io/JULye for discussion.
+  - language: Text
 - extensions: ['.v']
   rules:
   - language: Coq
-    pattern: '\(\*.*?\*\)|(?:^|\s)(?:Proof|Qed)\.(?:$|\s)|(?:^|\s)Require[ \t]+Import\s'
+    pattern: '(?:^|\s)(?:Proof|Qed)\.(?:$|\s)|(?:^|\s)Require[ \t]+(Import|Export)\s'
   - language: Verilog
-    pattern: '^[ \t]*module\s+[^\s()]+\s+\#?\(|^[ \t]*`(?:ifdef|timescale)\s|^[ \t]*always[ \t]+@'
+    pattern: '^[ \t]*module\s+[^\s()]+\s+\#?\(|^[ \t]*`(?:define|ifdef|ifndef|include|timescale)|^[ \t]*always[ \t]+@|^[ \t]*initial[ \t]+(begin|@)'
   - language: V
     pattern: '\$(?:if|else)[ \t]|^[ \t]*fn\s+[^\s()]+\(.*?\).*?\{|^[ \t]*for\s*\{'
 - extensions: ['.vba']
@@ -551,6 +642,11 @@ named_patterns:
   - '(?im)^\s*move[mp](?:\.[wl])?\b'
   - '(?im)^\s*btst\b'
   - '(?im)^\s*dbra\b'
+  man-heading:  '^[.''][ \t]*SH +(?:[^"\s]+|"[^"\s]+)'
+  man-title:    '^[.''][ \t]*TH +(?:[^"\s]+|"[^"]+") +"?(?:[1-9]|@[^\s@]+@)'
+  mdoc-date:    '^[.''][ \t]*Dd +(?:[^"\s]+|"[^"]+")'
+  mdoc-heading: '^[.''][ \t]*Sh +(?:[^"\s]|"[^"]+")'
+  mdoc-title:   '^[.''][ \t]*Dt +(?:[^"\s]+|"[^"]+") +"?(?:[1-9]|@[^\s@]+@)'
   objectivec: '^\s*(@(interface|class|protocol|property|end|synchronised|selector|implementation)\b|#import\s+.+\.h[">])'
   perl5: '\buse\s+(?:strict\b|v?5\.)'
   perl6: '^\s*(?:use\s+v6\b|\bmodule\b|\b(?:my\s+)?class\b)'

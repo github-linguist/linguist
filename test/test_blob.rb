@@ -14,7 +14,7 @@ class TestBlob < Minitest::Test
   end
 
   def test_mime_type
-    assert_equal "application/postscript", fixture_blob_memory("Binary/octocat.ai").mime_type
+    assert_equal "application/pdf", fixture_blob_memory("Binary/octocat.ai").mime_type
     assert_equal "application/x-ruby", sample_blob_memory("Ruby/grit.rb").mime_type
     assert_equal "application/x-sh", sample_blob_memory("Shell/script.sh").mime_type
     assert_equal "text/plain", fixture_blob_memory("Data/README").mime_type
@@ -136,6 +136,8 @@ class TestBlob < Minitest::Test
 
   def test_generated
     assert !fixture_blob_memory("Data/README").generated?
+    # Catch generated checks that don't return a boolean when they don't match
+    refute_nil fixture_blob_memory("Data/README").generated?
 
     # Generated .NET Docfiles
     assert sample_blob_memory("XML/net_docfile.xml").generated?
@@ -236,6 +238,9 @@ class TestBlob < Minitest::Test
     assert sample_blob_memory("HTML/pages.html").generated?
     assert fixture_blob_memory("HTML/mandoc.html").generated?
     assert fixture_blob_memory("HTML/node78.html").generated?
+
+    # Generated Pascal _TLB file
+    assert sample_blob_memory("Pascal/lazcomlib_1_0_tlb.pas").generated?
   end
 
   def test_vendored
@@ -246,11 +251,20 @@ class TestBlob < Minitest::Test
   end
 
   def test_language
+    allowed_failures = {
+      "#{samples_path}/C++/rpc.h" => ["C", "C++"],
+    }
     Samples.each do |sample|
       blob = sample_blob_memory(sample[:path])
       assert blob.language, "No language for #{sample[:path]}"
       fs_name = blob.language.fs_name ? blob.language.fs_name : blob.language.name
-      assert_equal sample[:language], fs_name, blob.name
+
+      if allowed_failures.has_key? sample[:path]
+        # Failures are reasonable when a file is fully valid in more than one language.
+        assert allowed_failures[sample[:path]].include?(sample[:language]), blob.name
+      else
+        assert_equal sample[:language], fs_name, blob.name
+      end
     end
 
     # Test language detection for files which shouldn't be used as samples
@@ -272,6 +286,8 @@ class TestBlob < Minitest::Test
           assert blob.language.nil?, "A language was found for #{filepath}"
         elsif language == 'Generated'
           assert blob.generated?, "#{filepath} is not a generated file"
+        elsif language == 'Generic'
+          assert !blob.language, "#{filepath} should not match a language"
         else
           assert blob.language, "No language for #{filepath}"
           fs_name = blob.language.fs_name ? blob.language.fs_name : blob.language.name
