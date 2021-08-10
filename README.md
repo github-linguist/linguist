@@ -22,7 +22,7 @@ Install the gem:
 gem install github-linguist
 ```
 
-### Dependencies
+### Dependencies 
 
 Linguist is a Ruby library so you will need a recent version of Ruby installed.
 There are known problems with the macOS/XCode supplied version of Ruby that causes problems installing some of the dependencies.
