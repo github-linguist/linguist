@@ -1,124 +1,137 @@
-#!/usr/bin/env ruby
+#!/bin/sh
+set -e
 
-require "optparse"
-require "open3"
+usage="${0##*/} [-q|--quiet] [--replace submodule] url"
+unset replace quiet
 
-ROOT = File.expand_path("../../", __FILE__)
+# Print non-essential feedback
+log()([ "$quiet" ] || printf '%s\n' "$@")
 
+# Print an error message
+warn()(printf '%s: %s\n' "${0##*/}" "$@")
 
-# Break a repository URL into its separate components
-def parse_url(input)
-  hosts = "github\.com|bitbucket\.org|gitlab\.com"
-
-  # HTTPS/HTTP link pointing to recognised hosts
-  if input =~ /^(?:https?:\/\/)?(?:[^.@]+@)?(?:www\.)?(#{hosts})\/([^\/]+)\/([^\/]+)/i
-    { host: $1.downcase(), user: $2, repo: $3.sub(/\.git$/, "") }
-  # SSH
-  elsif input =~ /^git@(#{hosts}):([^\/]+)\/([^\/]+)\.git$/i
-    { host: $1.downcase(), user: $2, repo: $3 }
-  # provider:user/repo
-  elsif input =~ /^(github|bitbucket|gitlab):\/?([^\/]+)\/([^\/]+)\/?$/i
-    { host: $1.downcase(), user: $2, repo: $3 }
-  # user/repo - Common GitHub shorthand
-  elsif input =~ /^\/?([^\/]+)\/([^\/]+)\/?$/
-    { host: "github.com", user: $1, repo: $2 }
-  else
-    raise "Unsupported URL: #{input}"
-  end
-end
-
-# Isolate the vendor-name component of a submodule path
-def parse_submodule(name)
-  name =~ /^(?:.*(?:vendor\/)?grammars\/)?([^\/]+)/i
-  path = "vendor/grammars/#{$1}"
-  unless File.exist?("#{ROOT}/" + path)
-    warn "Submodule '#{path}' does not exist. Aborting."
-    exit 1
-  end
-  path
-end
-
-# Print debugging feedback to STDOUT if not running with --quiet
-def log(msg)
-  puts msg if $verbose
-end
-
-def command(*args, hide_warnings: false)
-  log "$ #{args.join(' ')}"
-  stdout, stderr, status = Open3.capture3(*args)
-  unless status.success?
-    output = stdout.strip + "\n" + stderr.strip
-    output.each_line do |line|
-      log "  > #{line}"
-    end
-    warn "Command failed. Aborting."
-    exit 1
-  end
-  return if stderr.empty?
-
-  unless hide_warnings
-    stderr.each_line do |line|
-      log "  > #{line}"
-    end
-  end
-end
-
-usage = """Usage:
-  #{$0} [-q|--quiet] [--replace grammar] url
-Examples:
-  #{$0} https://github.com/Alhadis/language-roff
-  #{$0} --replace sublime-apl https://github.com/Alhadis/language-apl
-"""
-
-$replace = nil
-$verbose = true
-
-OptionParser.new do |opts|
-  opts.banner = usage
-  opts.on("-q", "--quiet", "Do not print output unless there's a failure") do
-    $verbose = false
-  end
-  opts.on("-rSUBMODULE", "--replace=SUBMODDULE", "Replace an existing grammar submodule.") do |name|
-    $replace = name
-  end
-end.parse!
+# Display a shortened help summary and bail with an error code
+bad_invocation(){
+	printf '%s\n' "$usage" >&2
+	exit 2
+}
 
 
-$url = ARGV[0]
+# Parse options
+while [ -n "$1" ]; do case $1 in
 
-# No URL? Print a usage message and bail.
-unless $url
-  warn usage
-  exit 1;
-end
+	# Print an unabridged usage summary, then exit
+	-h|--help|-\?)
+		cat <<-HELP
+		Usage:
+		    $usage
 
-# Exit early if docker isn't installed or running.
-log "Checking docker is installed and running"
-command('docker', 'ps')
+		Options:
+		    -q, --quiet               Do not print output unless there's a failure.
+		    -r, --replace SUBMODDULE  Replace an existing grammar submodule.
+
+		Examples:
+		    $0 https://github.com/Alhadis/language-roff
+		    $0 --replace sublime-apl https://github.com/Alhadis/language-apl
+		HELP
+		exit ;;
+
+	# Hide non-essential feedback
+	-q | --quiet)
+		quiet=1
+		break ;;
+
+	# Replace an existing submodule
+	-r* | --replace | --replace=*)
+		case $1 in
+			-r|--replace) replace=$2; shift ;; # -r [module], --replace [module]
+			-r*)          replace=${1#??}   ;; # -r[module]
+			--replace=*)  replace=${1#*=}   ;; # --replace=[module]
+		esac ;;
+
+	# Double-dash: Terminate option parsing
+	--)
+		shift
+		break ;;
+
+	# Invalid option: abort
+	--* | -?*)
+		warn 'invalid option: "%s"' "${0##*/}" "$1" >&2
+		bad_invocation ;;
+
+	# Argument not prefixed with a dash
+	*) break ;;
+
+esac; shift
+done
+
+
+# Don't proceed any further if we don't have a URL
+[ "$1" ] || bad_invocation
+
+
+# Check upfront that executables we depend on are available
+for cmd in docker git sed ruby bundle; do
+	command -v "$cmd" >/dev/null 2>&1 || {
+		warn "Required command '$cmd' not found"
+		warn 'See CONTRIBUTING.md for help on getting started: https://git.io/J0eqy'
+		exit 1
+	}
+done
+
+# Make sure Docker's running
+log 'Checking Docker is installed and running'
+docker ps >/dev/null
+
+# Make sure we're running from checkout directory
+root=`git rev-parse --git-dir`
+root="${root%/.git}"
+if [ ! "$root" = .git ] && [ -d "$root" ] && ! [ . -ef "$root" ] >/dev/null 2>&1; then
+	log "Switching directory to $root"
+	cd "$root"
+fi
 
 # Ensure the given URL is an HTTPS link
-parts    = parse_url $url
-https    = "https://#{parts[:host]}/#{parts[:user]}/#{parts[:repo]}"
-repo_new = "vendor/grammars/#{parts[:repo]}"
-repo_old = parse_submodule($replace) if $replace
+url=`script/normalise-url --protocol=https "$1"`
 
-Dir.chdir(ROOT)
+# Make sure it's not already registered
+path="vendor/grammars/${url##*/}"
+path="${path%.git}"
+if [ -e "$path" ]; then
+	warn "Submodule '$path' already exists. Did you forget the '--replace' option?"
+	warn "Run '$0 --help' for invocation advice"
+	exit 1
+fi
 
-if repo_old
-  log "Deregistering: #{repo_old}"
-  command('git', 'submodule', 'deinit', repo_old)
-  command('git', 'rm', '-rf', repo_old)
-  command('script/grammar-compiler', 'update', '-f', hide_warnings: true)
-end
+# Remove the old submodule if we're `--replace`ing one
+if [ "$replace" ]; then
 
-log "Registering new submodule: #{repo_new}"
-command('git', 'submodule', 'add', '-f', https, repo_new)
-command('script/grammar-compiler', 'add', repo_new)
+	# Normalise submodule reference
+	replace=`printf %s "$replace" \
+		| tr '[A-Z]' '[a-z]' \
+		| sed 's/^\(.*\/\)\{0,1\}vendor\///; s/^grammars\///'`
+	replace=`git config --list \
+		| grep -Fi -m1 "submodule.vendor/grammars/$replace.url=" \
+		| sed 's/\.url=.*//; s/^submodule\.//' || :`
+	[ "$replace" ] || {
+		warn "Submodule '$replace' does not exist. Aborting."
+		exit 1
+	}
 
-log "Caching grammar license"
-command("bundle", "exec", "licensed", "cache", "-c", "vendor/licenses/config.yml")
+	log "Deregistering submodule: $replace"
+	git submodule deinit "$replace"
+	git rm -rf "$replace"
+	script/grammar-compiler update -f
+fi
 
-log "Updating grammar documentation in vendor/README.md"
-command('bundle', 'exec', 'rake', 'samples', hide_warnings: true)
-command('script/sort-submodules')
-command('script/list-grammars')
+log "Registering new submodule: $url"
+git submodule add -f "$url" "$path"
+script/grammar-compiler add "$path"
+
+log 'Caching grammar license'
+bundle exec licensed cache -c vendor/licenses/config.yml
+
+log 'Updating grammar documentation in vendor/README.md'
+bundle exec rake samples
+script/sort-submodules
+script/list-grammars
