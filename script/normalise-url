@@ -31,7 +31,7 @@ def parse_url(input)
     (?:www\.)?
     (?<host> #{hosts}) /+
     (?<user> [^:@/]+)  /+
-    (?<repo> [^:@/]+)
+    (?<repo> [^:@/]+?)
     (?:\.git)? (?=$|[/#])
   ]ix; {
     protocol: ($~[:protocol] or "https").downcase,
@@ -46,7 +46,7 @@ def parse_url(input)
     (?:www\.)?
     (?<host> #{hosts}) :/*
     (?<user> [^:@/]+) /+
-    (?<repo> [^:@/]+)
+    (?<repo> [^:@/]+?)
     (?:\.git)? /*$
   ]ix; {
     protocol: "ssh",
@@ -63,7 +63,7 @@ def parse_url(input)
       bb | bitbucket
     ) :/*
     (?<user> [^:@/]+) /+
-    (?<repo> [^:@/]+)
+    (?<repo> [^:@/]+?)
     (?:\.git)? /*$
   ]ix; {
     protocol: "https",
@@ -80,7 +80,7 @@ def parse_url(input)
   elsif input =~ %r[^
     /*
     (?<user> [^:@/]+) /+
-    (?<repo> [^:@/]+)
+    (?<repo> [^:@/]+?)
     (?:\.git)? /*$
   ]ix; {
     protocol: "https",
