@@ -844,7 +844,7 @@ class TestHeuristics < Minitest::Test
   def test_vba_by_heuristics
     assert_heuristics({
       "VBA" => all_fixtures("VBA", "*.vba"),
-      "Vim script" => all_fixtures("Vim script", "*.vba")
+      "Vim Script" => all_fixtures("Vim Script", "*.vba")
     })
   end
 
