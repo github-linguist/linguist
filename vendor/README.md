@@ -214,6 +214,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Isabelle:** [lsf37/Isabelle.tmbundle](https://github.com/lsf37/Isabelle.tmbundle)
 - **Isabelle ROOT:** [lsf37/Isabelle.tmbundle](https://github.com/lsf37/Isabelle.tmbundle)
 - **J:** [tikkanz/JSyntax](https://github.com/tikkanz/JSyntax)
+- **JAR Manifest:** [atom/language-yaml](https://github.com/atom/language-yaml)
 - **JFlex:** [jflex-de/jflex.tmbundle](https://github.com/jflex-de/jflex.tmbundle)
 - **JSON:** [textmate/json.tmbundle](https://github.com/textmate/json.tmbundle)
 - **JSON with Comments:** [atom/language-javascript](https://github.com/atom/language-javascript)
