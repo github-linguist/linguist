@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck disable=SC2006,SC2021
 set -e
 
 usage="${0##*/} [-q|--quiet] [--replace submodule] url"
@@ -86,6 +87,7 @@ docker ps >/dev/null
 # Make sure we're running from checkout directory
 root=`git rev-parse --git-dir`
 root="${root%/.git}"
+# shellcheck disable=SC3013
 if [ ! "$root" = .git ] && [ -d "$root" ] && ! [ . -ef "$root" ] >/dev/null 2>&1; then
 	log "Switching directory to $root"
 	cd "$root"
