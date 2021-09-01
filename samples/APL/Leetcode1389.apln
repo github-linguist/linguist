@@ -1,0 +1,26 @@
+:Namespace Leetcode1389Ns
+      ⎕IO←0
+      ⍝ it all started with this video by RGS: https://www.youtube.com/watch?v=S8nMHo3dIm4
+      ⍝ run all these examples with `idx f nums`
+      ⍝ all these solutions assumes that both params are already arrays
+      ⍝ aka instead of `0 f 1`, you need to do `(,0) sol (,1)`
+
+      ⍝ My (Garklein's) original solution
+      SolBad ← {⍵[⍋⍺++/¨⍵≥(⍳≢⍵)↓¨⊂⍺]}
+      ⍝ Thanks to dzaima for improvements (was originally {⍵[⍋⍺+1-⍨+/¨(⊃≥⊢)(⍳≢⍵)↓¨⊂⍺]})
+
+      ⍝ Bubbler's solution for sorting the indices: ⌽{⍵+⍺≤⍵}⍀⍤⌽
+      ⍝ putting this all together gives
+      SolBubbler ← {⍵[⍋⌽{⍵+⍺≤⍵}⍀⍤⌽⍺]}
+
+      ⍝ later, I realized my solution doesn't work, there are some edge cases
+      SolWorking ← {⍵[⍋(⊢+≤)/¨⌽¨(⍳≢⍵)↓¨⊂⍺]} ⍝ works :)
+      SolTacit ← (⍋(⊢+≤)/∘⌽⍤↓¨⍨∘⍳∘≢)∘⌷ ⍝ dzaima golfing a tacit solution
+      ⍝ the solution requires that the left argument is enclosed
+      ⍝ it also doesn't work with all the cases
+      ⍝ (I'm too lazy to debug though)
+
+      ⍝ by combining Bubbler's version and my fork, you get ⌽(⊢+≤)⍀⍤⌽
+      ⍝ with under, it can be (⊢+≤)⍀⍢⌽
+      SolBest ← {⍵[⍋⌽(⊢+≤)⍀⍤⌽⍺]}
+:EndNamespace

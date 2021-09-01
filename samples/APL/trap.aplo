@@ -1,0 +1,8 @@
+ r←(namespace trap fn)args
+ :Trap 0
+    ⍝ Attempt to run fn inside namespace with args
+     r←(namespace⍎fn) args
+ :Else
+    ⍝ Report if error occurs
+     r←,⊂#.config.error
+ :EndTrap

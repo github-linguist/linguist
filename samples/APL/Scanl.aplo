@@ -1,0 +1,9 @@
+ Scanl←{  ⍝ derived from discussion with Adám; https://chat.stackexchange.com/transcript/message/52811881#52811881
+     scanl_aux←⍺⍺{
+         (≢⍵)≤1-×⎕NC'⍺':⍵
+         0=⎕NC'⍺':r⊣⍺⍺⍨{r,←⊂⍵ ⍺⍺⊃⌽r}¨1↓⍵⊣r←⊂⊃⍵
+         r⊣⍺⍺⍨{r,←⊂⍵ ⍺⍺⊃⌽r}¨⍵⊣r←⊂⍺
+     }⍤1
+     0=⎕NC'⍺':scanl_aux ⍵
+     ⍺ scanl_aux ⍵
+ }

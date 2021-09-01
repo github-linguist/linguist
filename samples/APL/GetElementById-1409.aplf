@@ -1,0 +1,12 @@
+ GetElementById←{
+     done←0
+     r←⍺{done:''
+         0=80|⎕DR ⍺:''
+         e←0≠⍺.⎕NC'id'
+         n←⍺{⍵:⍺.id ⋄ ''}e
+         n≡⍵:⍺⊣done∨←1
+         ∊⍺.Content ∇¨⊂⍵
+     }⍵
+     done:↑∊r
+     0
+ }

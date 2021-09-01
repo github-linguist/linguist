@@ -1,0 +1,285 @@
+:Class HtmlFormBuilder 
+:Include ##.Utils
+ ⎕IO←0
+
+    :field private TITLE←''
+    :field private HEAD←'<meta charset="UTF-8">'
+    :field private STYLE←''
+    :field private HEADING←''
+    :field private BODY←''  
+    :field private SCRIPT←''  
+    :field private BTN_CAPTION←'OK'
+    :field private divCounter←¯1
+    :field private groupCounter←¯1 
+    :field private closeDiv←'</div>' 
+    :field public isForm←1 ⍝ Default yes    
+    :field private BR←'<BR>' ⍝ Line break 
+    :field public PAGE_CLASS←'page_class'
+
+    ∇ make    
+      :Access public  
+      :Implements constructor 
+      STYLE,←resetSpacing ''
+    ∇  
+
+    ∇ make2 fieldValues;fnames;quote
+    ⍝ ⍵ ←→ (1 item boolean indicating isForm or not) |
+    ⍝   (List of field values to copy into this instance)
+      :Access public  
+      :Implements constructor
+      STYLE,←resetSpacing '' 
+      :If 1=≢fieldValues
+        isForm←fieldValues
+      :Else
+      ⍝ Assign fields in this object with the passed in values
+        fnames←getFieldNames ''
+        quote←(' ','''')[isChar¨fieldValues] ⍝ Single quote if char, else blank 
+        ⍎⍕ fnames,'←',quote,¨(pairQuotes¨fieldValues),¨quote    
+      :EndIf
+    ∇    
+    
+    ∇ r←clone;fieldValues
+    :Access public
+      ⍝ Make a deep copy of this object
+      fieldValues←⍎¨getFieldNames ''
+      r←##.⎕NEW HtmlFormBuilder fieldValues
+    ∇                 
+
+    ∇ {r}←setTitle title
+      :Access public                
+      TITLE←'title' wrapTag ⍕title
+      r←0
+    ∇
+     
+    ∇ {r}←setBtnCaption caption
+      :Access public          
+      BTN_CAPTION←(isEmpty caption)⊃caption BTN_CAPTION              
+      r←0
+    ∇     
+   
+    ∇ {r}←setPageClass class
+      :Access public          
+      PAGE_CLASS←⍕class            
+      r←0
+    ∇ 
+    
+    ∇ {r}←addHead head
+      :Access public                
+      HEAD,←⍕head
+      r←0
+    ∇   
+
+    ∇ {r}←addStyle style
+      :Access public   
+      STYLE,←⍕style
+      r←0
+    ∇  
+    
+    ∇ {r}←addBody body
+      :Access public                
+      BODY,←⍕body
+      r←0
+    ∇        
+    
+    ∇ {r}←addParagraph p
+      :Access public
+      BODY,←'p' wrapTag ⍕p
+      r←0
+    ∇
+
+    ∇ {r}←addJavaScript script
+      :Access public
+      SCRIPT,←⍕script
+      r←0
+    ∇
+
+    ∇ r←getHTML;tempH;tempB;formStart;formEnd;tempS;pageDiv;doc
+      :Access public
+      ⍝ We do not overwrite the fields so that we can continue to add to the page after this call  
+      tempH←HEAD,TITLE,'style' wrapTag STYLE
+      tempH←'head' wrapTag tempH 
+      pageDiv←'<div class="',PAGE_CLASS,'">'
+      formStart formEnd ← ⊂''      
+      :If isForm   
+        formStart←pageDiv,'<form method="post" action="cb" id="mainForm">'
+        formEnd←'<input type="submit" id="btn" value="',BTN_CAPTION,'"></form>'
+      :EndIf
+      tempS←'script' wrapTag SCRIPT
+      tempB←'body' wrapTag (pageDiv,HEADING,formStart,BODY,formEnd,closeDiv,tempS)  
+      doc←'<!DOCTYPE html>'
+      r←⍕ escapeUnicode doc,('html' wrapTag (tempH,tempB))
+    ∇    
+   
+    ∇ {r}←{t} addHeading msg;header;h;m
+      :Access public    
+      :If msg≢''
+        m←⍕msg
+        h←{(2=⎕NC't'):t ⋄ ⍵}'h3'  
+        header← h wrapTag m     
+        HEADING←'header' wrapTag header,HEADING
+        ⍝ Keep the inputted header at the top   
+      :EndIf
+      r←0
+    ∇   
+    
+    ∇ {r}←addRadioInput args;s1;s2;s3;labels;values;gname 
+      :Access public  
+      values labels ← args  
+      BODY,←openNewDiv
+      gname←createNewGroup  
+      s1←'<input type="radio" name="'
+      s1,←gname,'" value="'
+      s2 s3←'">' '<br>'
+      BODY,← s1 s2 s3 link values labels
+      BODY,←closeDiv
+      r←0
+    ∇  
+
+    ∇ {r}←{m}addSelectInput args;gname;s1;s2;s3;labels;values   
+      :Access public    
+      labels←args
+      values←⍳≢labels  
+      :If 0=⎕NC 'm' ⋄ m←''⋄ :EndIf
+      BODY,←openNewDiv 
+      gname←createNewGroup
+      BODY,←'<select ',m,' class="s2" style="width:100%" name="',gname
+      BODY,←'" form="mainForm">'   
+      s1 s2 s3 ←'<option value ="' '">' '</option>'     
+      BODY,← s1 s2 s3 link values labels  
+      BODY,←'</select>'
+      BODY,←closeDiv
+      r←0
+    ∇   
+    
+    ∇ {r}←addCheckboxInput args;s1;s2;s3;gname;labels;values
+      :Access public       
+      labels←args
+      values←⍳≢labels
+      BODY,←openNewDiv 
+      gname←createNewGroup  
+      s1←'<input type ="checkbox" name="',gname,'" value="'
+      s2 s3←'">' '<br>'
+      BODY,← s1 s2 s3 link values labels
+      BODY,←closeDiv
+      r←0
+    ∇  
+
+    ∇ {r}←type addNotification msg;types;colors;msgBr
+      ⍝ Based off W3's notification examples  
+      ⍝ Matrix input will add line breaks to rows 
+      :Access public
+      types←'Danger' 'Success' 'Info' 'Warning'
+      colors←'#f44336' '#4CAF50' '#2196F3' '#ff9800'
+      STYLE,←'body{padding: 20px;text-align:center;'
+      STYLE,←'background-color: ',⍕colors[types⍳⊂type]
+      STYLE,←'; color: white; font-size:xx-large;}'
+      BODY,←'<div class ="alert">'  
+      msgBr←breakRows msg
+      BODY,←'strong' wrapTag msgBr
+      BODY,←'</div>'
+      r←0
+    ∇   
+    
+    ∇ {r}←{label} addProgressBar args;l;start;max
+      :Access public 
+      start max←⍕¨args   
+      l←{(2=⎕NC'label'):label ⋄ ⍵}''  
+      BODY,←l  
+      BODY,←'<progress value ="',start
+      BODY,←'" max ="',max,'"></progress>'
+      r←0 
+    ∇  
+     
+    ∇ {r}←addTextInput labels;iDef   
+      :Access public  
+      iDef←'<input type="text" name="'
+      iDef addInput labels
+      r←0
+    ∇ 
+
+    ∇ {r}←addDateInput labels;iDef
+      :Access public        
+      iDef←'<input type="date" name="' 
+      iDef addInput labels
+      r←0
+    ∇    
+    
+    ∇ {r}←addFileInput labels;iDef
+      :Access public        
+      iDef←'<input type="file" multiple name="'  
+      iDef addInput ⊂labels
+      r←0
+    ∇ 
+    
+    ∇ {r}←addNumberInput labels;iDef
+      :Access public        
+       iDef←'<input type="number" step="any" name="'  
+       iDef addInput labels
+       r←0
+    ∇   
+    
+    
+    ∇ {r}←iDef addInput labels;gname;iDef
+      :Access public        
+      BODY,←openNewDiv
+      gname←createNewGroup 
+      iDef,←gname,'">' 
+      BODY,←∊iDef∘label¨labels 
+      BODY,←closeDiv    
+      r←0
+    ∇  
+    
+    ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
+    ⍝ Private Utility Functions ⍝
+    ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
+     
+    wrapTag←{'<',⍺,'>',⍵,'</',⍺,'>'} 
+
+    pair←{↓⍺,[.5],⍵}
+    
+    getFieldNames←{⎕THIS.⎕nl ¯2.2}
+    
+    breakRows←{∊⍵(,⍤1)BR}   
+    
+    resetSpacing←{
+    ⍝ Default <p> uses up too much space
+    ' p{padding:0;margin:0;} '
+    } 
+     
+    ∇ r←openNewDiv
+      divCounter+←1
+      r←'<div id ="div',(⍕divCounter),'">'
+    ∇  
+   
+    ∇ r←createNewGroup
+      groupCounter+←1
+      r←'g',⍕groupCounter
+    ∇   
+    
+    catenateAll←{
+    ⍝ Use this function with ∇link
+    ⍝ ⍺ ←→ s1..s3
+    ⍝ ⍵ ←→ 2 item pair of a value and its label
+      value label ← ⍕¨⍵ 
+      s1 s2 s3 ← ⍺     
+      'label' wrapTag ,/ s1 value s2 label BR s3 
+    }
+    
+    link←{
+    ⍝ ⍺ ←→ s1..s3
+    ⍝ ⍵ ←→ values labels
+    ⍝ ← ←→ catenate this string to BODY      
+      values labels ← ⍵   
+      ∊ ⍺∘catenateAll¨ values pair labels   
+    } 
+    
+    label←{
+    ⍝ Catenate a label and the input type
+    ⍝ And add a line break after each item
+    ⍝ ⍵ ←→ label
+    ⍝ ⍺ ←→ input type string    
+      'label' wrapTag (⍕⍵),BR,⍺,BR
+    }       
+                                
+    
+:EndClass
