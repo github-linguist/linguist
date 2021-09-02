@@ -123,7 +123,7 @@ if [ "$replace" ]; then
 	log "Deregistering submodule: $replace"
 	git submodule deinit "$replace"
 	git rm -rf "$replace"
-	script/grammar-compiler update -f
+	script/grammar-compiler update -f >/dev/null 2>&1
 fi
 
 log "Registering new submodule: $url"
@@ -134,6 +134,6 @@ log 'Caching grammar license'
 bundle exec licensed cache -c vendor/licenses/config.yml
 
 log 'Updating grammar documentation in vendor/README.md'
-bundle exec rake samples
+bundle exec rake samples >/dev/null 2>&1
 script/sort-submodules
 script/list-grammars
