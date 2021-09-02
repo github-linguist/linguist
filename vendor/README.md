@@ -173,6 +173,8 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Glyph Bitmap Distribution Format:** [Alhadis/language-fontforge](https://github.com/Alhadis/language-fontforge)
 - **Gnuplot:** [mattfoster/gnuplot-tmbundle](https://github.com/mattfoster/gnuplot-tmbundle)
 - **Go:** [AlanQuatermain/go-tmbundle](https://github.com/AlanQuatermain/go-tmbundle)
+- **Go Checksums:** [golang/vscode-go](https://github.com/golang/vscode-go)
+- **Go Module:** [golang/vscode-go](https://github.com/golang/vscode-go)
 - **Golo:** [TypeUnsafe/sublime-golo](https://github.com/TypeUnsafe/sublime-golo)
 - **Gosu:** [jpcamara/Textmate-Gosu-Bundle](https://github.com/jpcamara/Textmate-Gosu-Bundle)
 - **Grace:** [zmthy/grace-tmbundle](https://github.com/zmthy/grace-tmbundle)
