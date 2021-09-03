@@ -34,7 +34,7 @@ If the language statistics bar is not showing your language at all, it could be 
 1. The extension you have chosen is not associated with your language in [`languages.yml`](/lib/linguist/languages.yml).
 1. All the files in your repository fall into one of the categories listed above that Linguist excludes by default.
 
-If Linguist doesn't know about the language or the extension you're using, consider [contributing](CONTRIBUTING.md) to Linguist by opening a pull request to add support for your language or extension.
+If Linguist doesn't know about the language or the extension you're using, consider [contributing](/CONTRIBUTING.md) to Linguist by opening a pull request to add support for your language or extension.
 For everything else, you can use the [manual overrides](/docs/overrides.md) feature to tell Linguist to include your files in the language statistics.
 
 ## There's a problem with the syntax highlighting of a file
