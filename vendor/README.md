@@ -439,7 +439,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Soong:** [flimberger/android-system-tools](https://github.com/flimberger/android-system-tools)
 - **SourcePawn:** [Dreae/sourcepawn-vscode](https://github.com/Dreae/sourcepawn-vscode)
 - **Spline Font Database:** [Alhadis/language-fontforge](https://github.com/Alhadis/language-fontforge)
-- **Squirrel:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
+- **Squirrel:** [mathewmariani/squirrel-language](https://github.com/mathewmariani/squirrel-language)
 - **Stan:** [jrnold/atom-language-stan](https://github.com/jrnold/atom-language-stan)
 - **Standard ML:** [textmate/standard-ml.tmbundle](https://github.com/textmate/standard-ml.tmbundle)
 - **Starlark:** [MagicStack/MagicPython](https://github.com/MagicStack/MagicPython)
