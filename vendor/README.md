@@ -229,6 +229,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Java Server Pages:** [textmate/java.tmbundle](https://github.com/textmate/java.tmbundle)
 - **JavaScript:** [atom/language-javascript](https://github.com/atom/language-javascript)
 - **JavaScript+ERB:** [atom/language-javascript](https://github.com/atom/language-javascript)
+- **Jest Snapshot:** [jest-community/vscode-jest](https://github.com/jest-community/vscode-jest)
 - **Jinja:** [textmate/python-django.tmbundle](https://github.com/textmate/python-django.tmbundle)
 - **Jison:** [cdibbs/language-jison](https://github.com/cdibbs/language-jison)
 - **Jison Lex:** [cdibbs/language-jison](https://github.com/cdibbs/language-jison)
