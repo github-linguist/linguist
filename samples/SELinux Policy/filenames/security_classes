@@ -1,0 +1,167 @@
+# FLASK
+
+#
+# Define the security object classes
+#
+
+# Classes marked as userspace are classes
+# for userspace object managers
+
+class security
+class process
+class system
+class capability
+
+# file-related classes
+class filesystem
+class file
+class anon_inode
+class dir
+class fd
+class lnk_file
+class chr_file
+class blk_file
+class sock_file
+class fifo_file
+
+# network-related classes
+class socket
+class tcp_socket
+class udp_socket
+class rawip_socket
+class node
+class netif
+class netlink_socket
+class packet_socket
+class key_socket
+class unix_stream_socket
+class unix_dgram_socket
+
+# sysv-ipc-related classes
+class sem
+class msg
+class msgq
+class shm
+class ipc
+
+# extended netlink sockets
+class netlink_route_socket
+class netlink_tcpdiag_socket
+class netlink_nflog_socket
+class netlink_xfrm_socket
+class netlink_selinux_socket
+class netlink_audit_socket
+class netlink_dnrt_socket
+
+# IPSec association
+class association
+
+# Updated Netlink class for KOBJECT_UEVENT family.
+class netlink_kobject_uevent_socket
+
+class appletalk_socket
+
+class packet
+
+# Kernel access key retention
+class key
+
+class dccp_socket
+
+class memprotect
+
+# network peer labels
+class peer
+
+# Capabilities >= 32
+class capability2
+
+# kernel services that need to override task security, e.g. cachefiles
+class kernel_service
+
+class tun_socket
+
+class binder
+
+# Updated netlink classes for more recent netlink protocols.
+class netlink_iscsi_socket
+class netlink_fib_lookup_socket
+class netlink_connector_socket
+class netlink_netfilter_socket
+class netlink_generic_socket
+class netlink_scsitransport_socket
+class netlink_rdma_socket
+class netlink_crypto_socket
+
+# Infiniband
+class infiniband_pkey
+class infiniband_endport
+
+# Capability checks when on a non-init user namespace
+class cap_userns
+class cap2_userns
+
+# New socket classes introduced by extended_socket_class policy capability.
+# These two were previously mapped to rawip_socket.
+class sctp_socket
+class icmp_socket
+# These were previously mapped to socket.
+class ax25_socket
+class ipx_socket
+class netrom_socket
+class atmpvc_socket
+class x25_socket
+class rose_socket
+class decnet_socket
+class atmsvc_socket
+class rds_socket
+class irda_socket
+class pppox_socket
+class llc_socket
+class can_socket
+class tipc_socket
+class bluetooth_socket
+class iucv_socket
+class rxrpc_socket
+class isdn_socket
+class phonet_socket
+class ieee802154_socket
+class caif_socket
+class alg_socket
+class nfc_socket
+class vsock_socket
+class kcm_socket
+class qipcrtr_socket
+class smc_socket
+
+class process2
+
+class bpf
+
+class xdp_socket
+
+class perf_event
+
+# Introduced in https://github.com/torvalds/linux/commit/59438b46471ae6cdfb761afc8c9beaf1e428a331
+class lockdown
+
+# Property service
+class property_service          # userspace
+
+# Service manager
+class service_manager           # userspace
+
+# hardware service manager      # userspace
+class hwservice_manager
+
+# Legacy Keystore key permissions
+class keystore_key              # userspace
+
+# Keystore 2.0 permissions
+class keystore2                 # userspace
+
+# Keystore 2.0 key permissions
+class keystore2_key             # userspace
+
+class drmservice                # userspace
+# FLASK

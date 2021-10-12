@@ -13,21 +13,14 @@ allowed:
   - wtfpl
   - zlib
 
-# These dependencies are explicitly ignored
-ignored:
-  rubygem:
-    - bundler
-
 # These dependencies have been reviewed and approved.
 reviewed:
-  rubygem:
-    - mime-types
-  grammar:
-    - blitzmax        # No license file. License in README
+  git_submodule:
+    - actionscript3-tmbundle # MIT
     - creole          # License filename is not LICENSE(.*) but rather "The MIT License (MIT)"
     - Sublime-Lasso   # No license file. License in README
     - vscode-zil-language # MIT
 
 sources:
   npm: false
-  rubygem: false
+  bundler: false
