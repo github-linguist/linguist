@@ -1,0 +1,47 @@
+@startuml PublicallyAccessibleReDirect
+' from https://github.com/newportg/newportg.github.io/blob/master/assets/PublicallyAccessibleReDirect.puml'
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+!define AzurePuml https://raw.githubusercontent.com/RicardoNiepel/Azure-PlantUML/release/2-1/dist
+!includeurl AzurePuml/AzureCommon.puml
+!includeurl AzurePuml/Identity/AzureActiveDirectory.puml
+!includeurl AzurePuml/Networking/AzureApplicationGateway.puml
+!includeurl AzurePuml/Networking/AzureVirtualNetwork.puml
+!includeurl AzurePuml/Compute/AzureFunction.puml
+!includeurl AzurePuml/Compute/AzureAppService.puml
+!includeurl AzurePuml/Web/AzureCDN.puml
+!includeurl AzurePuml/Storage/AzureBlobStorage.puml
+
+title Publically Accessible Re-Direct
+
+System_Boundary(off, "Office 365") {
+    Component(out, "", "Outlook", "Contact")
+}
+System_Boundary(ios, "Ios Contact") {
+    Component(ac, "", "Apple", "Contact")
+}
+
+System_Boundary(Az, "Azure") {
+    Container(asa, "apple-app-site-association", "","")
+
+    AzureCDN(cdn, "CDN","","")
+    AzureApplicationGateway(fd, "ApplicationGateway","","")
+    AzureFunction(afHb, "HeartBeat","","")
+    AzureAppService(afRw, "ReWrite","","")
+    AzureBlobStorage(bs, "Blob Storage","","Static Content")
+}
+
+Container(hub, "", "Hub", "")
+
+ac -down-> fd
+out -down-> fd
+
+fd -down-> afRw
+fd -down-> afHb
+fd -down-> cdn
+bs -up-> cdn
+
+afRw --> hub
+asa -up-> bs
+
+@enduml
