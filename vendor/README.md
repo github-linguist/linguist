@@ -203,7 +203,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Haxe:** [vshaxe/haxe-TmLanguage](https://github.com/vshaxe/haxe-TmLanguage)
 - **HiveQL:** [adidonato/language-hql](https://github.com/adidonato/language-hql)
 - **HolyC:** [codingdandy/holyc.tmbundle](https://github.com/codingdandy/holyc.tmbundle)
-- **Hy:** [leveson/vscode-hy](https://github.com/leveson/vscode-hy)
+- **Hy:** [tshakalekholoane/vscode-hy](https://github.com/tshakalekholoane/vscode-hy)
 - **IDL:** [mgalloy/idl.tmbundle](https://github.com/mgalloy/idl.tmbundle)
 - **IGOR Pro:** [byte-physics/language-igor](https://github.com/byte-physics/language-igor)
 - **INI:** [textmate/ini.tmbundle](https://github.com/textmate/ini.tmbundle)
