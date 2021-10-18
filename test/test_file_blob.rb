@@ -11,21 +11,6 @@ class TestFileBlob < Minitest::Test
     $VERBOSE = original_verbosity
   end
 
-  def setup
-    silence_warnings do
-      # git blobs are normally loaded as ASCII-8BIT since they may contain data
-      # with arbitrary encoding not known ahead of time
-      @original_external = Encoding.default_external
-      Encoding.default_external = Encoding.find("ASCII-8BIT")
-    end
-  end
-
-  def teardown
-    silence_warnings do
-      Encoding.default_external = @original_external
-    end
-  end
-
   def script_blob(name)
     blob = sample_blob(name)
     blob.instance_variable_set(:@name, 'script')
@@ -43,7 +28,7 @@ class TestFileBlob < Minitest::Test
   end
 
   def test_mime_type
-    assert_equal "application/postscript", fixture_blob("Binary/octocat.ai").mime_type
+    assert_equal "application/pdf", fixture_blob("Binary/octocat.ai").mime_type
     assert_equal "application/x-ruby", sample_blob("Ruby/grit.rb").mime_type
     assert_equal "application/x-sh", sample_blob("Shell/script.sh").mime_type
     assert_equal "application/xml", sample_blob("XML/bar.xml").mime_type
@@ -77,17 +62,9 @@ class TestFileBlob < Minitest::Test
   end
 
   def test_lines
-    assert_equal ["module Foo", "end", ""], sample_blob("Ruby/foo.rb").lines
-    assert_equal ["line 1", "line 2", ""], sample_blob("Text/mac.txt").lines
-    assert_equal 475, sample_blob("Emacs Lisp/ess-julia.el").lines.length
-  end
-
-  def test_lines_maintains_original_encoding
-    # Even if the file's encoding is detected as something like UTF-16LE,
-    # earlier versions of the gem made implicit guarantees that the encoding of
-    # each `line` is in the same encoding as the file was originally read (in
-    # practice, UTF-8 or ASCII-8BIT)
-    assert_equal Encoding.default_external, fixture_blob("Data/utf16le").lines.first.encoding
+    assert_equal ["module Foo", "end"], sample_blob("Ruby/foo.rb").lines
+    assert_equal ["line 1", "line 2"], sample_blob("Text/mac.txt").lines
+    assert_equal 474, sample_blob("Emacs Lisp/ess-julia.el").lines.length
   end
 
   def test_size
@@ -95,7 +72,7 @@ class TestFileBlob < Minitest::Test
   end
 
   def test_loc
-    assert_equal 3, sample_blob("Ruby/foo.rb").loc
+    assert_equal 2, sample_blob("Ruby/foo.rb").loc
   end
 
   def test_sloc
@@ -250,6 +227,7 @@ class TestFileBlob < Minitest::Test
     assert sample_blob("Python/protocol_buffer_pb2.py").generated?
     assert sample_blob("Go/api.pb.go").generated?
     assert sample_blob("Go/embedded.go").generated?
+    assert sample_blob("Go/oapi-codegen.go").generated?
 
     # Apache Thrift generated code
     assert sample_blob("Python/gen-py-linguist-thrift.py").generated?
@@ -322,6 +300,8 @@ class TestFileBlob < Minitest::Test
     # 'extern(al)' directory
     assert sample_blob("extern/util/__init__.py").vendored?
     assert sample_blob("external/jquery.min.js").vendored?
+    assert sample_blob("externals/fmt/CMakeLists.txt").vendored?
+    assert sample_blob("External/imgui/imgui.h").vendored?
 
     # C deps
     assert sample_blob("deps/http_parser/http_parser.c").vendored?
@@ -415,6 +395,10 @@ class TestFileBlob < Minitest::Test
     assert sample_blob("leaflet-plugins/Leaflet.Coordinates-0.5.0.src.js").vendored?
     assert sample_blob("leaflet-plugins/leaflet.draw-src.js").vendored?
     assert sample_blob("leaflet-plugins/leaflet.spin.js").vendored?
+
+    # VSCode
+    assert sample_blob(".vscode/settings.json").vendored?
+    assert !sample_blob("testing.vscode-testing").vendored?
 
     # MooTools
     assert sample_blob("public/javascripts/mootools-core-1.3.2-full-compat.js").vendored?
@@ -545,6 +529,10 @@ class TestFileBlob < Minitest::Test
     assert sample_blob("subproject/mvnw.cmd").vendored?
     assert sample_blob("subproject/.mvn/wrapper/maven-wrapper.properties").vendored?
 
+    # .DS_Store
+    assert sample_blob(".DS_Store").vendored?
+    assert sample_blob("another-dir/.DS_Store").vendored?
+
     # Octicons
     assert sample_blob("octicons.css").vendored?
     assert sample_blob("public/octicons.min.css").vendored?
@@ -562,6 +550,10 @@ class TestFileBlob < Minitest::Test
     # Sphinx docs
     assert sample_blob("docs/_build/asset.doc").vendored?
     assert sample_blob("docs/theme/file.css").vendored?
+
+    # ProGuard
+    assert sample_blob("proguard.pro").vendored?
+    assert sample_blob("proguard-rules.pro").vendored?
 
     # Vagrant
     assert sample_blob("puphpet/file.pp").vendored?
@@ -651,11 +643,20 @@ class TestFileBlob < Minitest::Test
   end
 
   def test_language
+    # Failures are reasonable in some cases, such as when a file is fully valid in more than one language.
+    allowed_failures = {
+      "#{samples_path}/C++/rpc.h" => ["C", "C++"],
+    }
     Samples.each do |sample|
       blob = sample_blob(sample[:path])
       assert blob.language, "No language for #{sample[:path]}"
       fs_name = blob.language.fs_name ? blob.language.fs_name : blob.language.name
-      assert_equal sample[:language], fs_name, blob.name
+
+      if allowed_failures.has_key? sample[:path]
+        assert allowed_failures[sample[:path]].include?(sample[:language]), blob.name
+      else
+        assert_equal sample[:language], fs_name, blob.name
+      end
     end
 
     # Test language detection for files which shouldn't be used as samples
@@ -677,6 +678,8 @@ class TestFileBlob < Minitest::Test
           assert blob.language.nil?, "A language was found for #{filepath}"
         elsif language == 'Generated'
           assert blob.generated?, "#{filepath} is not a generated file"
+        elsif language == 'Generic'
+          assert !blob.language, "#{filepath} should not match a language"
         else
           assert blob.language, "No language for #{filepath}"
           fs_name = blob.language.fs_name ? blob.language.fs_name : blob.language.name

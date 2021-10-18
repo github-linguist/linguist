@@ -1,0 +1,125 @@
+#title Monikop (and Pokinom)
+#subtitle rsync between unconnected hosts
+#author Bert Burgemeister
+
+* Usage
+
+Both Monikop and Pokinom will create automatically any directories they need.
+
+** Monikop
+
+Put removable disks into Monikop's host on Rover and switch it on. Immediately,
+Monikop starts pulling data from Sources it can reach. Monikop will
+notice additional Sources that become reachable later and will start
+pulling data there as well.
+
+For each Source, Monikop keeps starting over to see if there is new
+data. Only Monikop's shutdown or the disappearance of the data Source
+will end this cycle.
+
+One removable disk is sufficient for Monikop's correct
+operation, but if speed is important, putting in as many disks as
+there are data Sources may be beneficial as Monikop uses them in parallel.
+
+To end a session, press [F3] to shut down Monikop, and remove the
+disks. Monikop's display shows which disks are not yet used so you
+can avoid carrying empty disks around.
+
+
+
+** Pokinom
+
+Put removable disks into Pokinom's host in office and switch it
+on. Immediately, Pokinom starts pushing data to Destination. 
+Interrupting this by shutting down Pokinom early is not a problem as
+long as it is later given the opportunity to finish. Otherwise files,
+even those already copied to
+Destination, won't be deleted by Monikop from their removable disks
+during the next cycle.
+
+Press [F9] to toggle whether or not you want Pokinom to shut down
+when finished. 
+
+File permissions in Destination's receiving directory must not be
+changed in a way that prevents the rsync server from modifying.
+Best practice is to move anything out of this directory prior to any
+processing. 
+
+Pokinom needs a sufficient amount of free disk space on Destination; it
+must be rebooted once this temporarily hasn't been the case. 
+
+
+;   TODO: data transferred, but to ignore (probably none)
+
+
+; TODO:
+; ** fsck-pokinom
+;    - fsck-pokinom: to be run by root
+
+
+** Crash Recovery
+
+Removable disks may get lost before they reach Destination, or
+Destination may crash shortly after receiving fresh data. The
+following may help in these cases.
+
+*** Data Recovery from Source(s) on Rover
+
+On Monikop's host, stop Monikop and delete the log files whose
+directory and name prefix is set in [[installation#monikop.config][monikop.config]] by
+=$rsync_log_prefix= and =$finished_prefix=, and whose names resemble the
+Source they belong to.
+
+On next startup, Monikop will pull all data from this Source again.
+
+*** Data Loss on Destination: Recovery from Removable Disks
+
+Data on removable disks are deleted not until the disk is
+finished by Pokinom and re-inserted in
+Monikop. (Non-)deletability is expressed by directory names defined
+in both [[installation#monikop.config][monikop.config]] and
+[[installation#pokinom.config][pokinom.config]]:
+ - =$path_under_mount_point= sets the name of a directory fresh data
+   reside in on each removable disk. Once finished by Pokinom, it
+   is renamed into the name set by
+ - =$path_under_mount_point_backed_up=. You can simply rename it
+   back and Pokinom will push its content to Destination again.
+   If you don't, Monikop will rename it into the name set by
+ - =$path_under_mount_point_being_deleted= as soon as it sees it,
+   and start deleting it while a new =$path_under_mount_point= is
+   created and filled with fresh data.
+
+*** Disk Failure
+
+Suppose the system reports disk error on (say) /dev/sdb1. What is it's
+label?
+
+<example>
+ls -l /dev/disk/by-label
+</example>
+
+shows the mapping.
+
+
+* Bugs
+
+  - Monikop and Pokinom allow files on Sources to change at any time
+    and will reflect such changes in Destination. As a downside,
+    Monikop and Pokinom are unable to tell whether a file is transferred
+    completely. You should be able to assert completeness of your
+    files by other means.
+  - Empty directories on Sources are being ignored.
+  - Any directories on Sources whose names conflict with the setting
+    =$rsync_partial_dir_name= in [[installation#monikop][monikop.config]] are being ignored.
+  - Deletions on Sources won't propagate to Destination.
+  - For user information on progress, both Monikop and Pokinom rely on
+    Rsync's output which is not always reliable as to the total number
+    of files.
+  - During copying, occasionally obsolete versions of a file may
+    temporarily appear on Destination. This can happen with files that
+    have grown bigger after having been copied already.
+  - Frequent power cuts (as opposed to normal shutdown operations) may
+    compromise efficiency in terms of disk usage.
+  - By running multiple instances of Rsync, Monikop puts considerable
+    strain on the system. This may reveal previously unnoticed
+    hardware faults.

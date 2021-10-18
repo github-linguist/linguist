@@ -93,6 +93,11 @@ class TestGenerated < Minitest::Test
     generated_sample_without_loading_data("Dummy/npm-shrinkwrap.json")
     generated_sample_without_loading_data("Dummy/package-lock.json")
 
+    # Yarn Plug'n'Play file
+    generated_sample_without_loading_data(".pnp.js")
+    generated_sample_without_loading_data(".pnp.cjs")
+    generated_sample_without_loading_data(".pnp.mjs")
+
     # Godep saved dependencies
     generated_sample_without_loading_data("Godeps/Godeps.json")
     generated_sample_without_loading_data("Godeps/_workspace/src/github.com/kr/s3/sign.go")
@@ -105,11 +110,17 @@ class TestGenerated < Minitest::Test
     # Minified files
     generated_sample_loading_data("JavaScript/jquery-1.6.1.min.js")
 
-    # JS files with source map reference
+    # JavaScript with source-maps
     generated_sample_loading_data("JavaScript/namespace.js")
+    generated_fixture_loading_data("Generated/inline.js")
 
-    # Source Map
+    # CSS with source-maps
+    generated_fixture_loading_data("Generated/linked.css")
+    generated_fixture_loading_data("Generated/inline.css")
+
+    # Source-map
     generated_fixture_without_loading_data("Data/bootstrap.css.map")
+    generated_fixture_without_loading_data("Generated/linked.css.map")
     generated_fixture_loading_data("Data/sourcemap.v3.map")
     generated_fixture_loading_data("Data/sourcemap.v1.map")
 
@@ -157,8 +168,29 @@ class TestGenerated < Minitest::Test
     generated_fixture_loading_data("HTML/quotes-none.html")
     generated_fixture_loading_data("HTML/quotes-single.html")
     generated_fixture_loading_data("HTML/uppercase.html")
+    generated_fixture_loading_data("HTML/ronn.html")
     generated_fixture_loading_data("HTML/unknown.html", true)
+    generated_fixture_loading_data("HTML/no-content.html", true)
     generated_sample_loading_data("HTML/pages.html")
 
+    # GIMP
+    generated_fixture_loading_data("C/image.c")
+    generated_fixture_loading_data("C/image.h")
+
+    # Haxe
+    generated_fixture_loading_data("Generated/Haxe/main.js")
+    generated_fixture_loading_data("Generated/Haxe/main.py")
+    generated_fixture_loading_data("Generated/Haxe/main.lua")
+    generated_fixture_loading_data("Generated/Haxe/Main.cpp")
+    generated_fixture_loading_data("Generated/Haxe/Main.h")
+    generated_fixture_loading_data("Generated/Haxe/Main.java")
+    generated_fixture_loading_data("Generated/Haxe/Main.cs")
+    generated_fixture_loading_data("Generated/Haxe/Main.php")
+
+    # jOOQ
+    generated_sample_loading_data("Java/generated-jooq-table.java")
+
+    # poetry
+    generated_sample_without_loading_data("TOML/filenames/poetry.lock")
   end
 end

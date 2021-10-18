@@ -1,10 +1,10 @@
 begin
   require 'yajl'
 rescue LoadError
-  require 'yaml'
+  require 'json'
 end
 
-require 'linguist/md5'
+require 'linguist/sha256'
 require 'linguist/classifier'
 require 'linguist/shebang'
 
@@ -24,7 +24,7 @@ module Linguist
 
     # Hash of serialized samples object, uncached
     def self.load_samples
-      serializer = defined?(Yajl) ? Yajl : YAML
+      serializer = defined?(Yajl) ? Yajl : JSON
       serializer.load(File.read(PATH, encoding: 'utf-8'))
     end
 
@@ -106,7 +106,7 @@ module Linguist
         Classifier.train!(db, language_name, data)
       end
 
-      db['md5'] = Linguist::MD5.hexdigest(db)
+      db['sha256'] = Linguist::SHA256.hexdigest(db)
 
       db
     end
