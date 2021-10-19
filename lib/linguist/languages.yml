@@ -1340,11 +1340,14 @@ DirectX 3D File:
   language_id: 201049282
 Dockerfile:
   type: programming
+  aliases:
+  - Containerfile
   color: "#384d54"
   tm_scope: source.dockerfile
   extensions:
   - ".dockerfile"
   filenames:
+  - Containerfile
   - Dockerfile
   ace_mode: dockerfile
   codemirror_mode: dockerfile
@@ -6089,6 +6092,8 @@ Text:
   - ".ncl"
   - ".no"
   filenames:
+  - CITATION
+  - CITATIONS
   - COPYING
   - COPYING.regex
   - COPYRIGHT.regex
@@ -6861,6 +6866,7 @@ YAML:
   - ".clang-format"
   - ".clang-tidy"
   - ".gemrc"
+  - CITATION.cff
   - glide.lock
   - yarn.lock
   ace_mode: yaml
