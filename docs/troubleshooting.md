@@ -41,21 +41,6 @@ For everything else, you can use the [manual overrides](/docs/overrides.md) feat
 
 Linguist detects the language of a file but the actual syntax-highlighting is powered by a set of language grammars which are included in this project as a set of submodules [as listed here](/vendor/README.md).
 
-This doesn't apply to the following languages on GitHub, which are powered by [Tree-sitter](https://github.com/tree-sitter) grammars:
-
-* [CodeQL](https://github.com/tree-sitter/tree-sitter-ql)
-* [CSS](https://github.com/tree-sitter/tree-sitter-css)
-* [EJS](https://github.com/tree-sitter/tree-sitter-embedded-template)
-* [ERB](https://github.com/tree-sitter/tree-sitter-embedded-template)
-* [Go](https://github.com/tree-sitter/tree-sitter-go)
-* [HTML](https://github.com/tree-sitter/tree-sitter-html)
-* [JavaScript](https://github.com/tree-sitter/tree-sitter-javascript)
-* [Python](https://github.com/tree-sitter/tree-sitter-python)
-* [Ruby](https://github.com/tree-sitter/tree-sitter-ruby)
-* [TypeScript](https://github.com/tree-sitter/tree-sitter-typescript)
-
-The grammars associated with these languages [as listed here](/vendor/README.md) are still included with Linguist as they may be used by other languages or users of Linguist.
-
 If you experience an issue with the syntax-highlighting on GitHub, **please report the issue to the upstream grammar repository, not here.**
 All Linguist referenced grammars are updated every time we build the Linguist gem so upstream bug fixes are automatically incorporated as they are fixed.
 
