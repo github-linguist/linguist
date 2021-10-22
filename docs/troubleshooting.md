@@ -42,7 +42,7 @@ For everything else, you can use the [manual overrides](/docs/overrides.md) feat
 Linguist detects the language of a file but the actual syntax-highlighting is powered by a set of language grammars which are included in this project as a set of submodules [as listed here](/vendor/README.md).
 
 If you experience an issue with the syntax-highlighting on GitHub, **please report the issue to the upstream grammar repository, not here.**
-All Linguist-supplied grammars are updated every time we build the Linguist gem so upstream bug fixes are automatically incorporated as they are fixed.
+Grammars are updated every time we build the Linguist gem so upstream bug fixes are automatically incorporated as they are fixed.
 
 ## I get an error when using Linguist on a directory that is not a Git repository
 
