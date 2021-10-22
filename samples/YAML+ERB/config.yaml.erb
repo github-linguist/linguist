@@ -1,0 +1,23 @@
+version: 0.1
+storage:
+  filesystem:
+    rootdirectory: /registry_data
+  delete:
+    enabled: true
+http:
+  addr: 0.0.0.0:5000
+  debug:
+    addr: 0.0.0.0:5001
+auth:
+  token:
+    realm: http://<%= @ip %>:3000/v2/token
+    service: <%= @ip %>:5000
+    issuer: <%= @ip %>
+    rootcertbundle: /etc/docker/registry/portus.crt
+notifications:
+  endpoints:
+    - name: portus
+      url: http://<%= @ip %>:3000/v2/webhooks/events
+      timeout: 500ms
+      threshold: 5
+      backoff: 1s
