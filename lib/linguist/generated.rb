@@ -115,7 +115,10 @@ module Linguist
       ['.nib', '.xcworkspacedata', '.xcuserstate'].include?(extname)
     end
     
-    # Is the blob an IntelliJ IDEA file (IDE-specific files that are sometimes checked in)? 
+    # Internal: Is the blob an IntelliJ IDEA project file?
+    #
+    # JetBrains IDEs generate project files under an `.idea` directory
+    # that are sometimes checked into version control.
     #
     # Returns true or false.
     def intellij_file?
