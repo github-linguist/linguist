@@ -119,7 +119,7 @@ module Linguist
     #
     # Returns true or false.
     def intellij_file?
-      !!name.match(/.idea\//)
+      !!name.match(/(?:^|\/)\.idea\//)
     end
 
     # Internal: Is the blob part of Pods/, which contains dependencies not meant for humans in pull requests.
