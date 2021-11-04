@@ -161,6 +161,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **GEDCOM:** [fguitton/vscode-gedcom](https://github.com/fguitton/vscode-gedcom)
 - **GLSL:** [euler0/sublime-glsl](https://github.com/euler0/sublime-glsl)
 - **GN:** [devoncarew/language-gn](https://github.com/devoncarew/language-gn)
+- **GSC:** [Jake-NotTheMuss/CoDT7-Sublime](https://github.com/Jake-NotTheMuss/CoDT7-Sublime)
 - **Game Maker Language:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **Gemfile.lock:** [hmarr/gemfile-lock-tmlanguage](https://github.com/hmarr/gemfile-lock-tmlanguage)
 - **Genshi:** [genshi.edgewall.org/query](https://genshi.edgewall.org/query)

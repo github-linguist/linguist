@@ -229,6 +229,14 @@ disambiguations:
     pattern: '^uses (java|gw)\.'
   - language: Genie
     pattern: '^\[indent=[0-9]+\]'
+- extensions: ['.gsc', '.csc', '.gsh']
+  rules:
+  - language: GSC
+    pattern:
+    - '^\s*#\s*(using|insert|include|define|namespace)\s+\w+'
+    - '^\s*function\s+\w+\w*\('
+    - '^\s*[[:alpha:]_][[:alnum:]_]*\s*\('
+    - '^\s*#\s*(precache|using_animtree)\s*\('
 - extensions: ['.h']
   rules:
   - language: Objective-C
