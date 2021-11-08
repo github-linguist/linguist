@@ -567,6 +567,18 @@ disambiguations:
   rules:
   - language: XML
     pattern: '<TS\b'
+  - language: AssemblyScript
+    negative_pattern: 
+    - '\s+undefined\s+'
+    - '\s+any\s+'
+    - '\s+unknown\s+'
+    pattern:
+    - '@inline'
+    - '@final'
+    - '@unmanaged'
+    - '// @ts-ignore: decorator'
+    - '[iuf](8|16|32|64)'
+    - 'usize'
   - language: TypeScript
 - extensions: ['.tst']
   rules:
