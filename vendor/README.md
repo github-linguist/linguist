@@ -295,6 +295,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Modula-3:** [newgrammars/m3](https://github.com/newgrammars/m3)
 - **Monkey:** [gingerbeardman/monkey.tmbundle](https://github.com/gingerbeardman/monkey.tmbundle)
 - **MoonScript:** [leafo/moonscript-tmbundle](https://github.com/leafo/moonscript-tmbundle)
+- **Motoko:** [dfinity/vscode-motoko](https://github.com/dfinity/vscode-motoko)
 - **Motorola 68K Assembly:** [zerkman/language-m68k](https://github.com/zerkman/language-m68k)
 - **Muse:** [Alhadis/language-emacs-lisp](https://github.com/Alhadis/language-emacs-lisp)
 - **Mustache:** [textmate/php-smarty.tmbundle](https://github.com/textmate/php-smarty.tmbundle)
