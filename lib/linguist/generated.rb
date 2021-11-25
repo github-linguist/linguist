@@ -52,6 +52,7 @@ module Linguist
     # Return true or false
     def generated?
       xcode_file? ||
+      intellij_file? ||
       cocoapods? ||
       carthage_build? ||
       generated_graphql_relay? ||
@@ -111,6 +112,16 @@ module Linguist
     # Returns true or false.
     def xcode_file?
       ['.nib', '.xcworkspacedata', '.xcuserstate'].include?(extname)
+    end
+    
+    # Internal: Is the blob an IntelliJ IDEA project file?
+    #
+    # JetBrains IDEs generate project files under an `.idea` directory
+    # that are sometimes checked into version control.
+    #
+    # Returns true or false.
+    def intellij_file?
+      !!name.match(/(?:^|\/)\.idea\//)
     end
 
     # Internal: Is the blob part of Pods/, which contains dependencies not meant for humans in pull requests.
