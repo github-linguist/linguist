@@ -84,7 +84,6 @@ module Linguist
       generated_apache_thrift? ||
       generated_jni_header? ||
       vcr_cassette? ||
-      jest_snapshot? ||
       generated_antlr? ||
       generated_module? ||
       generated_unity3d_meta? ||
@@ -453,18 +452,6 @@ module Linguist
       return false unless lines.count > 2
       # VCR Cassettes have "recorded_with: VCR" in the second last line.
       return lines[-2].include?("recorded_with: VCR")
-    end
-
-    # Is this a Jest Snapshot?
-    #
-    # Jest Snapshots always start with:
-    # // Jest Snapshot v1 ...
-    #
-    # Returns true or false
-    def jest_snapshot?
-      return false unless extname == '.snap'
-      return false unless lines.count > 1
-      return lines[0].include?("// Jest Snapshot ")
     end
 
     # Is this a generated ANTLR file?
