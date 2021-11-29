@@ -128,6 +128,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **EJS:** [tree-sitter/tree-sitter-embedded-template](https://github.com/tree-sitter/tree-sitter-embedded-template) 🐌
 - **EQ:** [dotnet/csharp-tmLanguage](https://github.com/dotnet/csharp-tmLanguage)
 - **Eagle:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)
+- **Earthly:** [earthly/earthfile-grammar](https://github.com/earthly/earthfile-grammar)
 - **Easybuild:** [MagicStack/MagicPython](https://github.com/MagicStack/MagicPython)
 - **Ecere Projects:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
 - **EditorConfig:** [sindresorhus/atom-editorconfig](https://github.com/sindresorhus/atom-editorconfig)
