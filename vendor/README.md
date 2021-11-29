@@ -366,6 +366,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Prisma:** [prisma/vscode-prisma](https://github.com/prisma/vscode-prisma)
 - **Processing:** [textmate/processing.tmbundle](https://github.com/textmate/processing.tmbundle)
 - **Prolog:** [alnkpa/sublimeprolog](https://github.com/alnkpa/sublimeprolog)
+- **Promela:** [corbanmailloux/sublime-promela-spin](https://github.com/corbanmailloux/sublime-promela-spin)
 - **Propeller Spin:** [bitbased/sublime-spintools](https://github.com/bitbased/sublime-spintools)
 - **Protocol Buffer:** [zxh0/vscode-proto3](https://github.com/zxh0/vscode-proto3)
 - **Pug:** [davidrios/jade-tmbundle](https://github.com/davidrios/jade-tmbundle)
