@@ -432,6 +432,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Scilab:** [textmate/scilab.tmbundle](https://github.com/textmate/scilab.tmbundle)
 - **ShaderLab:** [tgjones/shaders-tmLanguage](https://github.com/tgjones/shaders-tmLanguage)
 - **Shell:** [atom/language-shellscript](https://github.com/atom/language-shellscript)
+- **ShellCheck Config:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **ShellSession:** [atom/language-shellscript](https://github.com/atom/language-shellscript)
 - **Shen:** [rkoeninger/sublime-shen](https://github.com/rkoeninger/sublime-shen)
 - **Sieve:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
