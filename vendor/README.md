@@ -462,6 +462,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **SystemVerilog:** [TheClams/SystemVerilog](https://github.com/TheClams/SystemVerilog)
 - **TLA:** [agentultra/TLAGrammar](https://github.com/agentultra/TLAGrammar)
 - **TOML:** [textmate/toml.tmbundle](https://github.com/textmate/toml.tmbundle)
+- **Toit:** [snxx-lppxx/toit-sublime](https://github.com/snxx-lppxx/toit-sublime)
 - **TSQL:** [beau-witter/language-tsql](https://github.com/beau-witter/language-tsql)
 - **TSV:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **TSX:** [Microsoft/TypeScript-TmLanguage](https://github.com/Microsoft/TypeScript-TmLanguage)
