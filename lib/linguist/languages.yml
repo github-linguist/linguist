@@ -3737,7 +3737,7 @@ MoonScript:
   language_id: 238
 Motoko:
   type: programming
-  color: '#fbb03b'
+  color: "#fbb03b"
   extensions:
   - ".mo"
   tm_scope: source.mo
@@ -5664,6 +5664,18 @@ Shell:
   codemirror_mode: shell
   codemirror_mime_type: text/x-sh
   language_id: 346
+ShellCheck Config:
+  type: data
+  color: "#cecfcb"
+  filenames:
+  - ".shellcheckrc"
+  aliases:
+  - shellcheckrc
+  tm_scope: source.shellcheckrc
+  ace_mode: ini
+  codemirror_mode: properties
+  codemirror_mime_type: text/x-properties
+  language_id: 687511714
 ShellSession:
   type: programming
   extensions:
