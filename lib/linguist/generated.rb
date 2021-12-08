@@ -490,7 +490,7 @@ module Linguist
     #
     # Returns true or false.
     def terraform_lock?
-      !!name.match(/\.terraform\.lock\.hcl/)
+      !!name.match(/(?:^|\/)\.terraform\.lock\.hcl$/)
     end
 
     # Internal: Is it a KiCAD or GFortran module file?
