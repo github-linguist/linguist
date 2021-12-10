@@ -66,6 +66,7 @@ module Linguist
       poetry_lock? ||
       esy_lock? ||
       npm_shrinkwrap_or_package_lock? ||
+      yarn_lock? ||
       generated_yarn_plugnplay? ||
       godeps? ||
       generated_by_zephir? ||
@@ -406,6 +407,13 @@ module Linguist
     # Returns true or false.
     def npm_shrinkwrap_or_package_lock?
       !!name.match(/npm-shrinkwrap\.json/) || !!name.match(/package-lock\.json/)
+    end
+
+    # Internal: Is the file a generated yarn.lock file?
+    # 
+    # Returns true or false
+    def yarn_lock?
+      !!name.match(/yarn.lock/)
     end
 
     # Internal: Is the blob a generated Yarn Plug'n'Play?
