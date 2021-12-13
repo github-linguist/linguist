@@ -52,6 +52,7 @@ module Linguist
     # Return true or false
     def generated?
       xcode_file? ||
+      intellij_file? ||
       cocoapods? ||
       carthage_build? ||
       generated_graphql_relay? ||
@@ -65,6 +66,7 @@ module Linguist
       poetry_lock? ||
       esy_lock? ||
       npm_shrinkwrap_or_package_lock? ||
+      terraform_lock? ||
       generated_yarn_plugnplay? ||
       godeps? ||
       generated_by_zephir? ||
@@ -83,7 +85,6 @@ module Linguist
       generated_apache_thrift? ||
       generated_jni_header? ||
       vcr_cassette? ||
-      jest_snapshot? ||
       generated_antlr? ||
       generated_module? ||
       generated_unity3d_meta? ||
@@ -112,6 +113,16 @@ module Linguist
     # Returns true or false.
     def xcode_file?
       ['.nib', '.xcworkspacedata', '.xcuserstate'].include?(extname)
+    end
+    
+    # Internal: Is the blob an IntelliJ IDEA project file?
+    #
+    # JetBrains IDEs generate project files under an `.idea` directory
+    # that are sometimes checked into version control.
+    #
+    # Returns true or false.
+    def intellij_file?
+      !!name.match(/(?:^|\/)\.idea\//)
     end
 
     # Internal: Is the blob part of Pods/, which contains dependencies not meant for humans in pull requests.
@@ -444,18 +455,6 @@ module Linguist
       return lines[-2].include?("recorded_with: VCR")
     end
 
-    # Is this a Jest Snapshot?
-    #
-    # Jest Snapshots always start with:
-    # // Jest Snapshot v1 ...
-    #
-    # Returns true or false
-    def jest_snapshot?
-      return false unless extname == '.snap'
-      return false unless lines.count > 1
-      return lines[0].include?("// Jest Snapshot ")
-    end
-
     # Is this a generated ANTLR file?
     #
     # Returns true or false
@@ -483,6 +482,13 @@ module Linguist
     # Returns true or false.
     def pipenv_lock?
       !!name.match(/Pipfile\.lock/)
+    end
+
+    # Internal: Is this a Terraform lock file?
+    #
+    # Returns true or false.
+    def terraform_lock?
+      !!name.match(/(?:^|\/)\.terraform\.lock\.hcl$/)
     end
 
     # Internal: Is it a KiCAD or GFortran module file?

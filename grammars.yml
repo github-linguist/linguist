@@ -64,6 +64,7 @@ vendor/grammars/NovaGrammars:
 - source.keyvalues
 - source.redirects
 - source.solution
+- source.ws
 - text.robots-txt
 vendor/grammars/ObjectScript.tmBundle:
 - source.objectscript
@@ -310,6 +311,8 @@ vendor/grammars/dylan.tmbundle:
 - source.dylan
 - source.lid
 - source.makegen
+vendor/grammars/earthfile-grammar:
+- source.earthfile
 vendor/grammars/ec.tmbundle:
 - source.c.ec
 vendor/grammars/ecl-tmLanguage:
@@ -453,8 +456,10 @@ vendor/grammars/language-eml:
 vendor/grammars/language-etc:
 - etc
 - injections.etc
+- source.bc
 - source.c.nwscript
 - source.curlrc
+- source.dc
 - source.direct-x
 - source.dosbox-conf
 - source.dotenv
@@ -861,6 +866,8 @@ vendor/grammars/sublime-opal:
 - source.opalsysdefs
 vendor/grammars/sublime-pony:
 - source.pony
+vendor/grammars/sublime-promela-spin:
+- source.promela
 vendor/grammars/sublime-q:
 - source.q
 - source.q_output
@@ -948,6 +955,8 @@ vendor/grammars/vscode-lean:
 - markdown.lean.codeblock
 - source.lean
 - source.lean.markdown
+vendor/grammars/vscode-motoko:
+- source.mo
 vendor/grammars/vscode-opa:
 - source.rego
 vendor/grammars/vscode-plantuml:
