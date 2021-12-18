@@ -130,6 +130,10 @@ disambiguations:
     pattern: '![\w\s]+methodsFor: '
   - language: 'C#'
     pattern: '^(\s*namespace\s*[\w\.]+\s*{|\s*\/\/)'
+- extensions: ['.csc']
+  rules:
+  - language: GSC
+    named_pattern: gsc
 - extensions: ['.csl']
   rules:
   - language: XML
@@ -229,14 +233,14 @@ disambiguations:
     pattern: '^uses (java|gw)\.'
   - language: Genie
     pattern: '^\[indent=[0-9]+\]'
-- extensions: ['.gsc', '.csc', '.gsh']
+- extensions: ['.gsc']
   rules:
   - language: GSC
-    pattern:
-    - '^\s*#\s*(using|insert|include|define|namespace)\s+\w+'
-    - '^\s*function\s+\w+\w*\('
-    - '^\s*[[:alpha:]_][[:alnum:]_]*\s*\('
-    - '^\s*#\s*(precache|using_animtree)\s*\('
+    named_pattern: gsc
+- extensions: ['.gsh']
+  rules:
+  - language: GSC
+    named_pattern: gsc
 - extensions: ['.h']
   rules:
   - language: Objective-C
@@ -642,6 +646,11 @@ named_patterns:
   - 'std::\w+'
   fortran: '^(?i:[c*][^abd-z]|      (subroutine|program|end|data)\s|\s*!)'
   key_equals_value: '^[^#!;][^=]*='
+  gsc:
+  - '^\s*#\s*(using|insert|include|define|namespace)\s+\w+'
+  - '^\s*((autoexec|private)\s+)*function\s+((autoexec|private)\s+)*\w+\w*\('
+  - '(level|self)\s+thread\s+(\[\[\s*(\w+\.)*\w+\s*\]\]|\w+)s*\([^\)]*\)\s*;'
+  - '^\s*#\s*(precache|using_animtree)\s*\('
   m68k:
   - '(?im)\bmoveq(?:\.l)?\s+#(?:\$-?[0-9a-f]{1,3}|%[0-1]{1,8}|-?[0-9]{1,3}),\s*d[0-7]\b'
   - '(?im)^\s*move(?:\.[bwl])?\s+(?:sr|usp),\s*[^\s]+'
