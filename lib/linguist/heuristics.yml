@@ -77,6 +77,10 @@ disambiguations:
   rules:
   - language: Motorola 68K Assembly
     named_pattern: m68k
+  - language: 6502 Assembly
+    and:
+    - named_pattern: ops6502
+    - negative_pattern: '(?i:^\s*move\?\b)'
 - extensions: ['.asy']
   rules:
   - language: LTspice Symbol
@@ -253,6 +257,10 @@ disambiguations:
   - language: Slice
 - extensions: ['.inc']
   rules:
+  - language: 6502 Assembly
+    and:
+    - named_pattern: ops6502
+    - negative_pattern: '(?i:^\s*move\?\b)'
   - language: Motorola 68K Assembly
     named_pattern: m68k
   - language: PHP
@@ -512,6 +520,10 @@ disambiguations:
   rules:
   - language: Motorola 68K Assembly
     named_pattern: m68k
+  - language: 6502 Assembly
+    and:
+    - named_pattern: ops6502
+    - negative_pattern: '(?i:^\s*move\?\b)'
 - extensions: ['.sc']
   rules:
   - language: SuperCollider
@@ -648,5 +660,9 @@ named_patterns:
   mdoc-heading: '^[.''][ \t]*Sh +(?:[^"\s]|"[^"]+")'
   mdoc-title:   '^[.''][ \t]*Dt +(?:[^"\s]+|"[^"]+") +"?(?:[1-9]|@[^\s@]+@)'
   objectivec: '^\s*(@(interface|class|protocol|property|end|synchronised|selector|implementation)\b|#import\s+.+\.h[">])'
+  ops6502:
+  - '(?im)^\s*ldy\b'
+  - '(?im)^\s*sty\b'
+  - '(?im)^\s*p[lh]a\b'
   perl5: '\buse\s+(?:strict\b|v?5\.)'
   perl6: '^\s*(?:use\s+v6\b|\bmodule\b|\b(?:my\s+)?class\b)'
