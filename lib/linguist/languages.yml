@@ -692,6 +692,7 @@ C++:
   - ".inl"
   - ".ino"
   - ".ipp"
+  - ".ixx"
   - ".re"
   - ".tcc"
   - ".tpp"
@@ -2325,9 +2326,11 @@ HTML+EEX:
   group: HTML
   aliases:
   - eex
+  - heex
   - leex
   extensions:
   - ".eex"
+  - ".html.heex"
   - ".html.leex"
   ace_mode: text
   codemirror_mode: htmlmixed
@@ -2536,6 +2539,7 @@ INI:
   - ".pro"
   - ".properties"
   filenames:
+  - ".flake8"
   - buildozer.spec
   tm_scope: source.ini
   aliases:
@@ -5634,6 +5638,7 @@ Shell:
   - ".env"
   - ".env.example"
   - ".flaskenv"
+  - ".kshrc"
   - ".login"
   - ".profile"
   - ".zlogin"
@@ -5649,6 +5654,7 @@ Shell:
   - bashrc
   - cshrc
   - gradlew
+  - kshrc
   - login
   - man
   - profile
@@ -5672,6 +5678,18 @@ Shell:
   codemirror_mode: shell
   codemirror_mime_type: text/x-sh
   language_id: 346
+ShellCheck Config:
+  type: data
+  color: "#cecfcb"
+  filenames:
+  - ".shellcheckrc"
+  aliases:
+  - shellcheckrc
+  tm_scope: source.shellcheckrc
+  ace_mode: ini
+  codemirror_mode: properties
+  codemirror_mime_type: text/x-properties
+  language_id: 687511714
 ShellSession:
   type: programming
   extensions:
@@ -6422,6 +6440,7 @@ Vim Script:
   extensions:
   - ".vim"
   - ".vba"
+  - ".vimrc"
   - ".vmb"
   filenames:
   - ".exrc"
