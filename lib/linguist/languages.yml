@@ -692,6 +692,7 @@ C++:
   - ".inl"
   - ".ino"
   - ".ipp"
+  - ".ixx"
   - ".re"
   - ".tcc"
   - ".tpp"
@@ -1340,11 +1341,14 @@ DirectX 3D File:
   language_id: 201049282
 Dockerfile:
   type: programming
+  aliases:
+  - Containerfile
   color: "#384d54"
   tm_scope: source.dockerfile
   extensions:
   - ".dockerfile"
   filenames:
+  - Containerfile
   - Dockerfile
   ace_mode: dockerfile
   codemirror_mode: dockerfile
@@ -1431,6 +1435,7 @@ EJS:
   extensions:
   - ".ejs"
   - ".ect"
+  - ".ejs.t"
   - ".jst"
   tm_scope: text.html.js
   ace_mode: ejs
@@ -1455,6 +1460,14 @@ Eagle:
   codemirror_mode: xml
   codemirror_mime_type: text/xml
   language_id: 97
+Earthly:
+  type: programming
+  color: "#2af0ff"
+  tm_scope: source.earthfile
+  ace_mode: text
+  filenames:
+  - Earthfile
+  language_id: 963512632
 Easybuild:
   type: data
   color: "#069406"
@@ -1892,6 +1905,8 @@ GLSL:
   - ".glslv"
   - ".gs"
   - ".gshader"
+  - ".rchit"
+  - ".rmiss"
   - ".shader"
   - ".tesc"
   - ".tese"
@@ -2303,9 +2318,11 @@ HTML+EEX:
   group: HTML
   aliases:
   - eex
+  - heex
   - leex
   extensions:
   - ".eex"
+  - ".html.heex"
   - ".html.leex"
   ace_mode: text
   codemirror_mode: htmlmixed
@@ -2514,6 +2531,7 @@ INI:
   - ".pro"
   - ".properties"
   filenames:
+  - ".flake8"
   - buildozer.spec
   tm_scope: source.ini
   aliases:
@@ -2880,6 +2898,16 @@ JavaScript+ERB:
   codemirror_mode: javascript
   codemirror_mime_type: application/javascript
   language_id: 914318960
+Jest Snapshot:
+  type: data
+  color: "#15c213"
+  tm_scope: source.jest.snap
+  extensions:
+  - ".snap"
+  ace_mode: javascript
+  codemirror_mode: javascript
+  codemirror_mime_type: application/javascript
+  language_id: 774635084
 Jinja:
   type: markup
   color: "#a52a22"
@@ -3711,6 +3739,14 @@ MoonScript:
   tm_scope: source.moonscript
   ace_mode: text
   language_id: 238
+Motoko:
+  type: programming
+  color: "#fbb03b"
+  extensions:
+  - ".mo"
+  tm_scope: source.mo
+  ace_mode: text
+  language_id: 202937027
 Motorola 68K Assembly:
   type: programming
   color: "#005daa"
@@ -4617,6 +4653,14 @@ Prolog:
   tm_scope: source.prolog
   ace_mode: prolog
   language_id: 295
+Promela:
+  type: programming
+  color: "#de0000"
+  tm_scope: source.promela
+  ace_mode: text
+  extensions:
+  - ".pml"
+  language_id: 441858312
 Propeller Spin:
   type: programming
   color: "#7fa2a7"
@@ -5594,6 +5638,7 @@ Shell:
   - ".env"
   - ".env.example"
   - ".flaskenv"
+  - ".kshrc"
   - ".login"
   - ".profile"
   - ".zlogin"
@@ -5609,6 +5654,7 @@ Shell:
   - bashrc
   - cshrc
   - gradlew
+  - kshrc
   - login
   - man
   - profile
@@ -5632,6 +5678,18 @@ Shell:
   codemirror_mode: shell
   codemirror_mime_type: text/x-sh
   language_id: 346
+ShellCheck Config:
+  type: data
+  color: "#cecfcb"
+  filenames:
+  - ".shellcheckrc"
+  aliases:
+  - shellcheckrc
+  tm_scope: source.shellcheckrc
+  ace_mode: ini
+  codemirror_mode: properties
+  codemirror_mime_type: text/x-properties
+  language_id: 687511714
 ShellSession:
   type: programming
   extensions:
@@ -6085,6 +6143,8 @@ Text:
   - ".ncl"
   - ".no"
   filenames:
+  - CITATION
+  - CITATIONS
   - COPYING
   - COPYING.regex
   - COPYRIGHT.regex
@@ -6380,6 +6440,7 @@ Vim Script:
   extensions:
   - ".vim"
   - ".vba"
+  - ".vimrc"
   - ".vmb"
   filenames:
   - ".exrc"
@@ -6649,6 +6710,7 @@ XML:
   - ".gmx"
   - ".grxml"
   - ".gst"
+  - ".hzp"
   - ".iml"
   - ".ivy"
   - ".jelly"
@@ -6857,6 +6919,7 @@ YAML:
   - ".clang-format"
   - ".clang-tidy"
   - ".gemrc"
+  - CITATION.cff
   - glide.lock
   - yarn.lock
   ace_mode: yaml
