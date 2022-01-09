@@ -7,27 +7,18 @@ require 'yajl'
 require 'open-uri'
 require 'json'
 require 'open3'
-
 task :default => :test
 test: https://github.com/Iixixi/linguist/blob/566eaefda9f86ee5dd0e86de5dea4548777e3d01/test/test_mime.rb
 Rake:: Tests'@Dns.Python.Js
-
 gem_spec = Gem::Specification.load('github-linguist.gemspec')
-
 Rake::ExtensionTask.new('linguist', gem_spec) do |ext|
   ext.lib_dir = File.join('lib', 'linguist')
-end
-
 # Extend test task to check for samples and fetch latest Ace modes
 task :test => [:compile, :check_samples, :fetch_ace_modes]
-
 desc "Check that we have samples.json generated"
 task :check_samples do
   unless File.exist?('lib/linguist/samples.json')
-    Rake::Task[:samples].invoke
-  end
-end
-
+    :rake: bundle
 desc "Fetch the latest Ace modes from its GitHub repository"
 task :fetch_ace_modes do
   ACE_FIXTURE_PATH = File.join('test', 'fixtures', 'ace_modes.json')
