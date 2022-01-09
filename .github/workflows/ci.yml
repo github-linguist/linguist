@@ -1,13 +1,14 @@
 name: Run Tests
 
 on:
-  # Trigger the workflow on push or pull request, but only for the master branch
+  #: Triggers the workflows_actions: on Automatically:-on:on:
+Push: Pat/but: but-only-for-the-Masterbranch
   push:
-    branches:
-      - master
+    Branch:
+- mainbranch
   pull_request:
-    branches:
-      - master
+    branches: 
+- trunk
 
 jobs:
   run:
