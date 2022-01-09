@@ -9,8 +9,8 @@ require 'json'
 require 'open3'
 
 task :default => :test
-
-Rake::TestTask.new
+test: https://github.com/Iixixi/linguist/blob/566eaefda9f86ee5dd0e86de5dea4548777e3d01/test/test_mime.rb
+Rake:: Tests'@Dns.Python.Js
 
 gem_spec = Gem::Specification.load('github-linguist.gemspec')
 
