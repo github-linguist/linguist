@@ -1,0 +1,72 @@
+# GitHub Lingust Sample File - 2
+# This will go over contacting the outside world, like databases, and using functions.
+# We'll also work with Skript Addons, which expand the usage of skript.
+
+# Like almost every skript, it probably needs an options area.
+# This sample requires the addon 'Skellet'.
+
+options:
+    # We'll only declare thre prefix, because usernames and passwords can't be stored here.
+    prefix: &3&lGitHub
+
+# On the Skript load, connect to the database.
+on load:
+    # Declare the user and password.
+    set {_user} to "test"
+    set {_password} to "test123!"
+    # Declare the Database name,
+    set {_database} to "mydatabase"
+    set {_ip} to "mydatabasehost.com"
+    set {_port} to 3306
+    # Wait one tick before we connect.
+    wait 1 tick
+    # Connecr to the database.
+    set {-database::connection} to the database "mysql://%{_ip}%:%{_port}%/%{_database}%?user=%{_user}%&password=%{_password}%&useSSL=false"
+    # Wait a tick before any action is taken
+    wait 1 tick
+    # Create the 'players' table if it doesn't exist. Part of this is NOT Skript, but instead SQL, so I won't go in depth here.
+    execute "CREATE TABLE IF NOT EXISTS players ( uuid VARCHAR(150) NOT NULL, username VARCHAR(150) NOT NULL" in {-database::connection}
+    # Throw our error function if something goes wrong.
+    db_error()
+
+# Our error function, which tells us if there's an error.
+function db_error():
+    # If there was an error
+    if last sql error is set:
+        # Send a chat message saying there was an error, but only if the player has operator permissions
+        send "{@prefix} &4Error occured with database connection!" to all players where [input is op]
+        # Send the error to all playerd with operator permissions.
+        send "&c%last sql error%" to all players where [input is op]
+
+# Now, we need some way to update the database. Let's do that here.
+
+# We'll declare a new function named db_updateData
+function db_updateData(p: offline player):
+    #Store player's UUID in the database
+    execute "SELECT username FROM players WHERE uuid = ""%{_p}'s UUID%""" in {-database::connection} and store in {_exists}
+    # Set username and UUID to a new variable.
+    set {_username} to "%{_p}%"
+    set {_uuid} to {_p}'s UUID
+    # If that player is online,
+    if {_p} is online:
+        # Set the online variable to TRUE
+        set {_online} to true
+    else:
+        # If not, make it false.
+        set {_online} to false
+    # If the player is new, and doesn't already exist in the database, add them to it.
+    if {_exists} is not set:
+        execute "INSERT INTO players (username, uuid, online) VALUES (%{_username}%, %{_uuid}%, %{_online}%;" in {-database::connection}
+    else:
+        # Or, just update their information.
+        execute "UPDATE players SET username = %{_username}%, online = %{_online}%, WHERE uuid = %{_uuid}%;" in {-database::connection}
+    # This is the function from earlier. If there's an error, throw it.
+    db_error()
+
+# More events! This time we'll use our function that we just made when the player joins and quits.
+on join:
+    $ thread
+    db_updateData(player)
+on quit:
+    $ thread
+    db_updateData(player)
