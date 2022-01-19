@@ -34,8 +34,10 @@ File and folder paths inside `.gitattributes` are calculated relative to the pos
 
 ### Detectable
 
-Only programming languages are included in the language statistics.
-Languages of a different type (as defined in [`languages.yml`]) are not "detectable" causing them not to be included in the language statistics.
+By default only languages of `type: programming` in [`languages.yml`] are included in the language statistics.
+Languages of a different type in [`languages.yml`] are not "detectable" by default, causing them not to be included in the language statistics,
+but can be made detectable as shown below.  Languages that are not yet mentioned in [`languages.yml`] will not be included in the language
+statistics, even if you specify something like `*.mycola linguist-language=MyCoolLang linguist-detectable` in the `.gitattributes` file.
 
 Use the `linguist-detectable` attribute to mark or unmark paths as detectable:
 

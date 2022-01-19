@@ -66,6 +66,7 @@ module Linguist
       poetry_lock? ||
       esy_lock? ||
       npm_shrinkwrap_or_package_lock? ||
+      terraform_lock? ||
       generated_yarn_plugnplay? ||
       godeps? ||
       generated_by_zephir? ||
@@ -481,6 +482,13 @@ module Linguist
     # Returns true or false.
     def pipenv_lock?
       !!name.match(/Pipfile\.lock/)
+    end
+
+    # Internal: Is this a Terraform lock file?
+    #
+    # Returns true or false.
+    def terraform_lock?
+      !!name.match(/(?:^|\/)\.terraform\.lock\.hcl$/)
     end
 
     # Internal: Is it a KiCAD or GFortran module file?
