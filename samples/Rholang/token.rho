@@ -1,0 +1,108 @@
+contract Token( message_sender, total_supply ) {
+
+    def transfer( message_sender, to, amount, rtn ) = {
+
+        for( balances <- balances_channel ) {
+
+              x!( *balances.get(message_sender) )
+            | y!( *balances.get(to) )
+            | for( balance_of_sender <- x ; balances_of_receiver <- y ) {
+
+                        match( *balance_of_sender >= _amount,
+                               _amount > 0,
+                               *balance_of_receiver + _amount > balance_of_receiver ) {
+
+                                    case( true, true, true ) => {
+
+                                        balances_channel!(
+                                            *balances
+                                            .update( message_sender, *balance_of_sender - _amount )
+                                            .update( to, *balance_of_receiver + _amount )
+                                        )
+                                        | rtn!(true)
+                                    }
+
+                                    case _ => {
+                                        balances_channel!(*balances) | rtn!(false)
+                                    }
+                         }
+              }
+         }
+    }
+
+    def transfer_from( message_sender, from, to, amount, rtn ) = {
+        
+        for ( balances <- balances_channel ; allowed <- allowed_channel ) {
+
+               x!(*balances.get(from))
+             | y!(*allowed.get(from, message_sender))
+             | z!(*balances.get(to))
+             | for( balance_of_sender <- x ; sender_allowed <- y ; balance_of_receiver <- z ) {
+                    
+                    match( *balance_of_sender >= _amount,
+                           *sender_allowed >= _amount,
+                           _amount > 0,
+                           *balance_of_receiver + _amount > *balance_of_receiver ) {
+                               
+                                case( true, true, true, true ) => {
+
+                                    balances_channel!(
+                                        *balances
+                                        .update(from, *balance_of_sender - _amount)
+                                        .update(to, *balance_of_receiver + _amount)
+                                    )
+
+                                    | allowed_channel!( *allowed.update(from, message_sender, *sender_allowed -_amount) )
+                                    | rtn!(true)
+                                }
+                                    
+                                case _ => {
+                                      balances_channel!(*balances) | allowed_channel!(*allowed) | rtn!(false)
+                                }
+                     }
+                }
+          }
+    }
+
+    def approve( message_sender, spender, amount, rtn ) {
+    
+        for ( allowed <- allowed_channel ) {
+        
+              allowed_channel!(*allowed.update(message_sender,spender,amount)) | rtn!(true)
+        }
+    }
+
+    def balance_of( owner, rtn ) = {
+    
+        for( balances <- balances_channel ) {
+        
+             rtn!(*balances.get(owner)) | balances_channel!(*balances)
+        }
+    }
+
+    def allowance( owner, spender, rtn ) = {
+    
+        for( allowed <- allowed_channel ) {
+        
+             allowed_channel!(*allowed) | rtn!(*allowed.get(owner,spender))
+        }
+    }
+
+    def contract_owner( rtn ) = {
+    
+        for( owner <- owner_channel ) {
+        
+             owner_channel!(*owner) | rtn!(*owner)
+        }
+    }
+
+    new allowed_channel, balances_channel, owner_channel in {
+        
+        allowed_channel!(Map()) | owner_channel!(message_sender) | balances_channel!(Map())
+        
+        | for( balances <- balances_channel ) {
+        
+            balances_channel!(*balances.update(message_sender, total_supply))
+        }
+    }
+}
