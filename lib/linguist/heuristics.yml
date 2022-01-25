@@ -645,12 +645,12 @@ named_patterns:
   - '^[ \t]*(private|public|protected):$'
   - 'std::\w+'
   fortran: '^(?i:[c*][^abd-z]|      (subroutine|program|end|data)\s|\s*!)'
-  key_equals_value: '^[^#!;][^=]*='
   gsc:
   - '^\s*#\s*(using|insert|include|define|namespace)\s+\w+'
-  - '^\s*((autoexec|private)\s+)*function\s+((autoexec|private)\s+)*\w+\w*\('
+  - '^\s*((autoexec|private)\s+)*function\s+((autoexec|private)\s+)*\w+\s*\('
   - '(level|self)\s+thread\s+(\[\[\s*(\w+\.)*\w+\s*\]\]|\w+)s*\([^\)]*\)\s*;'
   - '^\s*#\s*(precache|using_animtree)\s*\('
+  key_equals_value: '^[^#!;][^=]*='
   m68k:
   - '(?im)\bmoveq(?:\.l)?\s+#(?:\$-?[0-9a-f]{1,3}|%[0-1]{1,8}|-?[0-9]{1,3}),\s*d[0-7]\b'
   - '(?im)^\s*move(?:\.[bwl])?\s+(?:sr|usp),\s*[^\s]+'
