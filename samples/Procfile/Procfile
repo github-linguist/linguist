@@ -1,0 +1,6 @@
+web: bundle exec rails server -p $PORT
+release: node src/app/release.js
+demo: lein run -m demo.web $PORT
+jar: java -jar target/application-1.0.jar
+worker: bundle exec rake jobs:work
+urgent: env QUEUE=urgent bundle exec rake resque:work

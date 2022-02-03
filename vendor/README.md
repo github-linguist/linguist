@@ -365,6 +365,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **PowerShell:** [PowerShell/EditorSyntax](https://github.com/PowerShell/EditorSyntax)
 - **Prisma:** [prisma/vscode-prisma](https://github.com/prisma/vscode-prisma)
 - **Processing:** [textmate/processing.tmbundle](https://github.com/textmate/processing.tmbundle)
+- **Procfile:** [benspaulding/vscode-procfile](https://github.com/benspaulding/vscode-procfile)
 - **Prolog:** [alnkpa/sublimeprolog](https://github.com/alnkpa/sublimeprolog)
 - **Promela:** [corbanmailloux/sublime-promela-spin](https://github.com/corbanmailloux/sublime-promela-spin)
 - **Propeller Spin:** [bitbased/sublime-spintools](https://github.com/bitbased/sublime-spintools)
