@@ -1354,6 +1354,7 @@ Dockerfile:
   codemirror_mode: dockerfile
   codemirror_mime_type: text/x-dockerfile
   language_id: 89
+ 
 Dogescript:
   type: programming
   color: "#cca760"
@@ -7218,3 +7219,16 @@ xBase:
   tm_scope: source.harbour
   ace_mode: text
   language_id: 421
+  
+  Procfile:
+      type: programming
+  aliases:
+  - Containerfile
+  color: "#384d54"
+  tm_scope: source.procfile
+  extensions:
+  - ".dockerfile"
+  filenames:
+  - Procfile
+  ace_mode: procfile
+  language_id: 422
