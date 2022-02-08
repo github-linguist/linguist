@@ -27,15 +27,17 @@ File and folder paths inside `.gitattributes` are calculated relative to the pos
  |:-----------------------------------------------|:----------------------|:----------------------------------------------------------------|
  | `linguist-detectable`                          | [`languages.yml`]     | Included in stats, even if language's type is `data` or `prose` |
  | `linguist-documentation`                       | [`documentation.yml`] | Excluded from stats                                             |
- | `linguist-generated`                           | [`generated.yml`]     | Excluded from stats, hidden in diffs                            |
+ | `linguist-generated`                           | [`generated.rb`]      | Excluded from stats, hidden in diffs                            |
  | `linguist-language`=<var><ins>name</ins></var> | [`languages.yml`]     | Highlighted and classified as <var><ins>name</ins></var>        |
  | `linguist-vendored`                            | [`vendor.yml`]        | Excluded from stats                                             |
 <!------------------------------------------------------------------------------------------------------------------------------------------->
 
 ### Detectable
 
-Only programming languages are included in the language statistics.
-Languages of a different type (as defined in [`languages.yml`]) are not "detectable" causing them not to be included in the language statistics.
+By default only languages of `type: programming` in [`languages.yml`] are included in the language statistics.
+Languages of a different type in [`languages.yml`] are not "detectable" by default, causing them not to be included in the language statistics,
+but can be made detectable as shown below.  Languages that are not yet mentioned in [`languages.yml`] will not be included in the language
+statistics, even if you specify something like `*.mycola linguist-language=MyCoolLang linguist-detectable` in the `.gitattributes` file.
 
 Use the `linguist-detectable` attribute to mark or unmark paths as detectable:
 
@@ -53,8 +55,12 @@ Just like vendored files, Linguist excludes documentation files from your projec
 Use the `linguist-documentation` attribute to mark or unmark paths as documentation:
 
 ```gitattributes
+# Apply override to all files in the directory
 project-docs/* linguist-documentation
+# Apply override to a specific file
 docs/formatter.rb -linguist-documentation
+# Apply override to all files and directories in the directory
+ano-dir/** linguist-documentation
 ```
 
 ### Generated code
@@ -78,8 +84,12 @@ By default, Linguist treats all of the paths defined in [`vendor.yml`] as vendor
 Use the `linguist-vendored` attribute to vendor or un-vendor paths:
 
 ```gitattributes
+# Apply override to all files in the directory
 special-vendored-path/* linguist-vendored
+# Apply override to a specific file
 jquery.js -linguist-vendored
+# Apply override to all files and directories in the directory
+ano-dir/** linguist-vendored
 ```
 
 ## Using Emacs or Vim modelines
@@ -102,7 +112,7 @@ vim: set ft=cpp:
 -*- c++ -*-
 ```
 
-[`documentation.yml`]: lib/linguist/documentation.yml
-[`languages.yml`]:     lib/linguist/languages.yml
-[`generated.yml`]:     lib/linguist/generated.yml
-[`vendor.yml`]:        lib/linguist/vendor.yml
+[`documentation.yml`]: /lib/linguist/documentation.yml
+[`languages.yml`]:     /lib/linguist/languages.yml
+[`generated.rb`]:      /lib/linguist/generated.rb
+[`vendor.yml`]:        /lib/linguist/vendor.yml

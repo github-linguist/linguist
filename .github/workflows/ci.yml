@@ -1,6 +1,13 @@
 name: Run Tests
 
-on: [push, pull_request]
+on:
+  # Trigger the workflow on push or pull request, but only for the master branch
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
   run:
@@ -8,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby: [ 2.7, 2.6, 2.5 ]
+        ruby: [ '3.0', '2.7', '2.6', '2.5' ]
     steps:
     - uses: actions/checkout@v1
     - name: Set up Ruby
@@ -48,7 +55,7 @@ jobs:
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: '2.7'
+        ruby-version: '3.0'
         bundler-cache: true
     - name: Build
       run: bundle exec rake samples

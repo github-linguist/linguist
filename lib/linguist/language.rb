@@ -32,8 +32,6 @@ module Linguist
     @interpreter_index  = Hash.new { |h,k| h[k] = [] }
     @filename_index     = Hash.new { |h,k| h[k] = [] }
 
-    # Valid Languages types
-    TYPES = [:data, :markup, :programming, :prose]
 
     # Detect languages by a specific type
     #
@@ -265,7 +263,7 @@ module Linguist
 
       # Set type
       @type = attributes[:type] ? attributes[:type].to_sym : nil
-      if @type && !TYPES.include?(@type)
+      if @type && !get_types.include?(@type)
         raise ArgumentError, "invalid type: #{@type}"
       end
 
@@ -288,9 +286,8 @@ module Linguist
       @interpreters = attributes[:interpreters] || []
       @filenames    = attributes[:filenames]    || []
 
-      # Set popular, and searchable flags
+      # Set popular flag
       @popular    = attributes.key?(:popular)    ? attributes[:popular]    : false
-      @searchable = attributes.key?(:searchable) ? attributes[:searchable] : true
 
       # If group name is set, save the name so we can lazy load it later
       if attributes[:group_name]
@@ -301,6 +298,11 @@ module Linguist
       else
         @group = self
       end
+    end
+
+    def get_types
+      # Valid Languages types
+      @types = [:data, :markup, :programming, :prose]
     end
 
     # Public: Get proper name
@@ -314,8 +316,8 @@ module Linguist
     # Returns the name String
     attr_reader :name
 
-    # Public: 
-    # 
+    # Public:
+    #
     attr_reader :fs_name
 
     # Public: Get type.
@@ -464,16 +466,6 @@ module Linguist
       !popular?
     end
 
-    # Public: Is it searchable?
-    #
-    # Unsearchable languages won't by indexed by solr and won't show
-    # up in the code search dropdown.
-    #
-    # Returns true or false
-    def searchable?
-      @searchable
-    end
-
     # Public: Return name as String representation
     def to_s
       name
@@ -547,7 +539,6 @@ module Linguist
       :codemirror_mime_type => options['codemirror_mime_type'],
       :wrap              => options['wrap'],
       :group_name        => options['group'],
-      :searchable        => options.fetch('searchable', true),
       :language_id       => options['language_id'],
       :extensions        => Array(options['extensions']),
       :interpreters      => options['interpreters'].sort,
