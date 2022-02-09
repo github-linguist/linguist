@@ -1185,6 +1185,14 @@ Cue Sheet:
   tm_scope: source.cuesheet
   ace_mode: text
   language_id: 942714150
+Curry:
+  type: programming
+  color: "#531242"
+  extensions:
+  - ".curry"
+  tm_scope: source.curry
+  ace_mode: haskell
+  language_id: 439829048
 Cycript:
   type: programming
   extensions:
@@ -2797,6 +2805,18 @@ JSONiq:
   - ".jq"
   tm_scope: source.jsoniq
   language_id: 177
+Janet:
+  type: programming
+  color: "#0886a5"
+  extensions:
+  - ".janet"
+  tm_scope: source.janet
+  ace_mode: scheme
+  codemirror_mode: scheme
+  codemirror_mime_type: text/x-scheme
+  interpreters:
+  - janet
+  language_id: 1028705371
 Jasmin:
   type: programming
   color: "#d03600"
@@ -4939,6 +4959,18 @@ RPC:
   - ".x"
   tm_scope: source.c
   language_id: 1031374237
+RPGLE:
+  type: programming
+  ace_mode: text
+  color: "#2BDE21"
+  aliases:
+  - ile rpg
+  - sqlrpgle
+  extensions:
+  - ".rpgle"
+  - ".sqlrpgle"
+  tm_scope: source.rpgle
+  language_id: 609977990
 RPM Spec:
   type: data
   tm_scope: source.rpm-spec
