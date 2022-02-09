@@ -1470,6 +1470,8 @@ Eagle:
   language_id: 97
 Earthly:
   type: programming
+  aliases:
+  - Earthfile
   color: "#2af0ff"
   tm_scope: source.earthfile
   ace_mode: text
@@ -2080,6 +2082,14 @@ Git Config:
   codemirror_mime_type: text/x-properties
   tm_scope: source.gitconfig
   language_id: 807968997
+Gleam:
+  type: programming
+  color: "#ffaff3"
+  ace_mode: text
+  extensions:
+  - ".gleam"
+  tm_scope: source.gleam
+  language_id: 1054258749
 Glyph:
   type: programming
   color: "#c1ac7f"
@@ -3682,6 +3692,14 @@ MiniD:
   tm_scope: none
   ace_mode: text
   language_id: 231
+Mint:
+  type: programming
+  extensions:
+  - ".mint"
+  ace_mode: text
+  color: "#02b046"
+  tm_scope: source.mint
+  language_id: 968740319
 Mirah:
   type: programming
   color: "#c7a938"
@@ -4693,6 +4711,17 @@ Protocol Buffer:
   codemirror_mode: protobuf
   codemirror_mime_type: text/x-protobuf
   language_id: 297
+Protocol Buffer Text Format:
+  type: data
+  aliases:
+  - text proto
+  - protobuf text format
+  extensions:
+  - ".textproto"
+  - ".pbtxt"
+  tm_scope: source.textproto
+  ace_mode: text
+  language_id: 436568854
 Public Key:
   type: data
   extensions:
