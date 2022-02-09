@@ -1185,6 +1185,14 @@ Cue Sheet:
   tm_scope: source.cuesheet
   ace_mode: text
   language_id: 942714150
+Curry:
+  type: programming
+  color: "#531242"
+  extensions:
+  - ".curry"
+  tm_scope: source.curry
+  ace_mode: haskell
+  language_id: 439829048
 Cycript:
   type: programming
   extensions:
@@ -2072,6 +2080,14 @@ Git Config:
   codemirror_mime_type: text/x-properties
   tm_scope: source.gitconfig
   language_id: 807968997
+Gleam:
+  type: programming
+  color: "#ffaff3"
+  ace_mode: text
+  extensions:
+  - ".gleam"
+  tm_scope: source.gleam
+  language_id: 1054258749
 Glyph:
   type: programming
   color: "#c1ac7f"
@@ -2797,6 +2813,18 @@ JSONiq:
   - ".jq"
   tm_scope: source.jsoniq
   language_id: 177
+Janet:
+  type: programming
+  color: "#0886a5"
+  extensions:
+  - ".janet"
+  tm_scope: source.janet
+  ace_mode: scheme
+  codemirror_mode: scheme
+  codemirror_mime_type: text/x-scheme
+  interpreters:
+  - janet
+  language_id: 1028705371
 Jasmin:
   type: programming
   color: "#d03600"
@@ -3662,6 +3690,14 @@ MiniD:
   tm_scope: none
   ace_mode: text
   language_id: 231
+Mint:
+  type: programming
+  extensions:
+  - ".mint"
+  ace_mode: text
+  color: "#02b046"
+  tm_scope: source.mint
+  language_id: 968740319
 Mirah:
   type: programming
   color: "#c7a938"
@@ -4942,6 +4978,18 @@ RPC:
   - ".x"
   tm_scope: source.c
   language_id: 1031374237
+RPGLE:
+  type: programming
+  ace_mode: text
+  color: "#2BDE21"
+  aliases:
+  - ile rpg
+  - sqlrpgle
+  extensions:
+  - ".rpgle"
+  - ".sqlrpgle"
+  tm_scope: source.rpgle
+  language_id: 609977990
 RPM Spec:
   type: data
   tm_scope: source.rpm-spec

@@ -8,7 +8,7 @@ Add [a `.gitattributes` file](https://git-scm.com/docs/gitattributes) to your pr
 `.gitattributes` will be used to determine language statistics and will be used to syntax highlight files.
 You can also manually set syntax highlighting using [Vim or Emacs modelines](#using-emacs-or-vim-modelines).
 
-When testing with a local installation of Linguist, take note that the added attributes will not take effect until the `.gitattributes` file is committed to your repository.
+When testing with a local installation of Linguist, **take note that the added attributes will _not_ take effect until the `.gitattributes` file is committed to your repository.**
 
 File and folder paths inside `.gitattributes` are calculated relative to the position of the `.gitattributes` file.
 

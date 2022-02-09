@@ -25,7 +25,7 @@ These components have their own dependencies - `icu4c`, and `cmake` and `pkg-con
 For example, on macOS with [Homebrew](http://brew.sh/):
 ```bash
 brew install cmake pkg-config icu4c
-brew cask install docker
+brew install --cask docker
 ```
 
 On Ubuntu:
