@@ -484,12 +484,11 @@ class TestHeuristics < Minitest::Test
       "Pascal" => all_fixtures("Pascal", "*"),
       "PHP" => all_fixtures("PHP", "*"),
       "POV-Ray SDL" => all_fixtures("POV-Ray SDL", "*"),
+      "SourcePawn" => all_fixtures("SourcePawn", "*.inc"),
       nil => all_fixtures("Assembly", "*") +
         all_fixtures("C++", "*.inc") +
         all_fixtures("HTML", "*") +
         all_fixtures("Pawn", "*") +
-        # SourcePawn has a pattern rule, but it does not match samples
-        all_fixtures("SourcePawn", "*") +
         all_fixtures("SQL", "*")
     }, alt_name="foo.inc")
   end
@@ -860,7 +859,7 @@ class TestHeuristics < Minitest::Test
   def test_vba_by_heuristics
     assert_heuristics({
       "VBA" => all_fixtures("VBA", "*.vba"),
-      "Vim script" => all_fixtures("Vim script", "*.vba")
+      "Vim Script" => all_fixtures("Vim Script", "*.vba")
     })
   end
 
