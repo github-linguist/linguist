@@ -97,6 +97,7 @@ class TestGenerated < Minitest::Test
     generated_sample_without_loading_data(".pnp.js")
     generated_sample_without_loading_data(".pnp.cjs")
     generated_sample_without_loading_data(".pnp.mjs")
+    generated_sample_without_loading_data(".pnp.loader.mjs")
 
     # Godep saved dependencies
     generated_sample_without_loading_data("Godeps/Godeps.json")
