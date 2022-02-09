@@ -83,6 +83,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **ChucK:** [textmate/java.tmbundle](https://github.com/textmate/java.tmbundle)
 - **Cirru:** [Cirru/sublime-cirru](https://github.com/Cirru/sublime-cirru)
 - **Clarion:** [fushnisoft/SublimeClarion](https://github.com/fushnisoft/SublimeClarion)
+- **Clarity:** [hirosystems/clarity.tmbundle](https://github.com/hirosystems/clarity.tmbundle)
 - **Classic ASP:** [textmate/asp.tmbundle](https://github.com/textmate/asp.tmbundle)
 - **Clean:** [timjs/atom-language-clean](https://github.com/timjs/atom-language-clean)
 - **Click:** [stenverbois/language-click](https://github.com/stenverbois/language-click)
