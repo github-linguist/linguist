@@ -167,7 +167,7 @@ disambiguations:
   - language: Eiffel
     pattern:
     - '^\s*{/\w+'
-    - '^\s*(across|elseif|feature|from|inherit|inspect|note|when)\s+'
+    - '^\s*(?:across|elseif|feature|from|inherit|inspect|note|when)\s'
   - language: Euphoria
     named_pattern: euphoria
 - extensions: ['.ecl']
@@ -186,9 +186,9 @@ disambiguations:
   rules:
   - language: Elixir
     pattern:
-    - '^\s*@moduledoc\s+'
-    - '^\s*(cond|import|quote|unless)\s+'
-    - '^\s*def(exception|impl|macro|module|protocol)(\(|\s+)'
+    - '^\s*@moduledoc\s'
+    - '^\s*(?:cond|import|quote|unless)\s'
+    - '^\s*def(?:exception|impl|macro|module|protocol)[(\s]'
   - language: Euphoria
     named_pattern: euphoria
 - extensions: ['.f']
@@ -652,10 +652,9 @@ named_patterns:
   - '^[ \t]*(private|public|protected):$'
   - 'std::\w+'
   euphoria:
-  - '^\s*(namespace)\s+'
-  - '^\s*(?:(public)\s+)?(include)\s+'
-  - '^\s*(?:(public|export|global)\s+)?(constant|enum|atom|integer|sequence|object)\s+'
-  - '^\s*(?:(public|export|global)\s+)?(function|procedure|type)\s+'
+  - '^\s*namespace\s'
+  - '^\s*(?:public\s+)?include\s'
+  - '^\s*(?:(?:public|export|global)\s+)?(?:atom|constant|enum|function|integer|object|procedure|sequence|type)\s'
   fortran: '^(?i:[c*][^abd-z]|      (subroutine|program|end|data)\s|\s*!)'
   key_equals_value: '^[^#!;][^=]*='
   m68k:
