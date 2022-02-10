@@ -1,3 +1,6 @@
+--****
+-- == Debugging tools
+
 namespace debug
 
 include std/dll.e
@@ -6,59 +9,28 @@ include euphoria/symstruct.e
 
 without trace
 
---****
--- == Debugging tools
---
--- <<LEVELTOC level=2 depth=4>>
-
 constant M_CALL_STACK = 103
 
 --****
 -- === Call Stack Constants
 
 public enum
---** CS_ROUTINE_NAME: index of the routine name in the sequence returned by [[:call_stack]]
 	CS_ROUTINE_NAME,
---** CS_FILE_NAME: index of the file name in the sequence returned by [[:call_stack]]
 	CS_FILE_NAME,
---** CS_LINE_NO: index of the line number in the sequence returned by [[:call_stack]]
 	CS_LINE_NO,
---** CS_ROUTINE_SYM: (debugger only) Pointer to the routine symbol
 	CS_ROUTINE_SYM,
---** CS_PC: (debugger only) The program counter pointer for this routine
 	CS_PC,
---** CS_GLINE: (debugger only) The index into the global line array
-	CS_GLINE,
-	$
+	CS_GLINE
 
 --****
 --=== DEBUG_ROUTINE Enum Type
--- These constants are used to register euphoria routines that handle various debugger
--- tasks, displaying information or waiting for user input.
 
 public enum type DEBUG_ROUTINE
---****
--- SHOW_DEBUG
---Description: 
--- a procedure that takes an integer parameter that represents the current line in the global line table
 	SHOW_DEBUG,
---****
--- DISPLAY_VAR
--- Description:
--- A procedure that takes a pointer to the variable in the symbol table, and a flag to indicate whether the user requested this variable or not.  Euphoria generally
--- calls this when a variable is assigned to.
 	DISPLAY_VAR,
---****
--- UPDATE_GLOBALS
--- Description:
--- A procedure called when the debug screen should update the display of any non-private
--- variables
 	UPDATE_GLOBALS,
---** DEBUG_SCREEN: called when the debugger should finish displaying and wait for user input before continuing
 	DEBUG_SCREEN,
---** ERASE_PRIVATES: A procedure that takes a pointer to the routine  that has gone out of scope, and whose symbols should be removed from the display.
 	ERASE_PRIVATES,
---** ERASE_SYMBOL: A procedure that takes a pointer to the symbol that should be removed from the display
 	ERASE_SYMBOL
 end type
 
@@ -66,28 +38,17 @@ end type
 --=== Debugging Routines
 
 --**
--- Description:
 -- Returns information about the call stack of the code currently running.
--- 
--- Returns:
--- A sequence where each element represents one level in the call stack.  See the
--- [[:Call Stack Constants]] for constants that can be used to access the call stack
--- information.
--- # routine name
--- # file name
--- # line number
 public function call_stack()
 	return machine_func( M_CALL_STACK, {} )
 end function
-
 
 atom
 	symbol_table    = 0,
 	slist           = 0,
 	op_table        = 0,
 	data_buffer     = 0,
-	file_name_ptr   = 0,
-	$
+	file_name_ptr   = 0
 
 -- C routines for interfacing with the interpreter
 integer
@@ -101,8 +62,7 @@ integer
 	is_novalue_cid    = -1,
 	back_trace_cid    = -1,
 	call_stack_cid    = -1,
-	break_routine_cid = -1,
-	$
+	break_routine_cid = -1
 
 integer
 	show_debug_rid     = -1,
@@ -110,8 +70,7 @@ integer
 	update_globals_rid = -1,
 	debug_screen_rid   = -1,
 	erase_privates_rid = -1,
-	erase_symbol_rid   = -1,
-	$
+	erase_symbol_rid   = -1
 
 atom showing_line = -1
 
@@ -129,7 +88,6 @@ function display_var()
 	end if
 	return 0
 end function
-
 
 function update_globals()
 	if update_globals_rid != -1 then
@@ -161,7 +119,7 @@ end function
 
 public constant M_INIT_DEBUGGER  = 104
 
-enum type INIT_ACCESSORS 
+enum type INIT_ACCESSORS
 	IA_SYMTAB,
 	IA_SLIST,
 	IA_OPS,
@@ -175,8 +133,7 @@ enum type INIT_ACCESSORS
 	IA_GET_PC,
 	IA_IS_NOVALUE,
 	IA_CALL_STACK,
-	IA_BREAK_ROUTINE,
-	$
+	IA_BREAK_ROUTINE
 end type
 
 enum type INIT_PARAMS
@@ -187,21 +144,16 @@ enum type INIT_PARAMS
 	IP_DEBUG_SCREEN,
 	IP_ERASE_PRIVATE_NAMES,
 	IP_ERASE_SYMBOL,
-	IP_SIZE,
-	$
+	IP_SIZE
 end type
 
 --**
--- Description:
 -- Initializes an external debugger.  It can also be called
 -- from a debugger compiled into a DLL / SO.
--- 
--- Parameters:
--- # ##init_ptr## : The result of ##[[:machine_func]]( M_INIT_DEBUGGER, {} )##.
 public procedure initialize_debugger( atom init_ptr )
 	-- let the interpreter know that we're using an external debugger
 	data_buffer = allocate( sizeof( C_POINTER ) )
-	
+
 	sequence init_params = repeat( 0, IP_SIZE - 1 )
 	init_params[IP_BUFFER] = data_buffer
 	init_params[IP_SHOW_DEBUG]          = call_back( '+' & routine_id("show_debug") )
@@ -210,8 +162,7 @@ public procedure initialize_debugger( atom init_ptr )
 	init_params[IP_DEBUG_SCREEN]        = call_back( '+' & routine_id("debug_screen") )
 	init_params[IP_ERASE_PRIVATE_NAMES] = call_back( '+' & routine_id("erase_privates") )
 	init_params[IP_ERASE_SYMBOL]        = call_back( '+' & routine_id("erase_symbol") )
-	
-	
+
 	sequence init_data = c_func( define_c_func( "", { '+', init_ptr}, { E_SEQUENCE }, E_SEQUENCE ), { init_params } )
 	symbol_table       = init_data[IA_SYMTAB]
 	slist              = init_data[IA_SLIST]
@@ -222,23 +173,17 @@ public procedure initialize_debugger( atom init_ptr )
 	disable_trace_cid  = define_c_proc( "", { '+', init_data[IA_DISABLE_TRACE] }, {} )
 	step_over_cid      = define_c_proc( "", { '+', init_data[IA_STEP_OVER] }, {} )
 	abort_program_cid  = define_c_proc( "", { '+', init_data[IA_ABORT_PROGRAM] }, {} )
-	RTLookup_cid       = define_c_func( "", { '+', init_data[IA_RTLOOKUP] }, 
+	RTLookup_cid       = define_c_func( "", { '+', init_data[IA_RTLOOKUP] },
 			{ C_POINTER, C_INT, C_POINTER, C_POINTER, C_INT, C_ULONG}, C_POINTER )
 	get_pc_cid         = define_c_func( "", { '+', init_data[IA_GET_PC] }, {}, C_POINTER )
 	is_novalue_cid     = define_c_func( "", { '+', init_data[IA_IS_NOVALUE] }, { C_POINTER }, C_INT )
 	call_stack_cid     = define_c_func( "", { '+', init_data[IA_CALL_STACK] }, { C_INT }, E_OBJECT )
 	break_routine_cid  = define_c_func( "", { '+', init_data[IA_BREAK_ROUTINE] }, { C_POINTER, C_INT }, C_INT )
-	
+
 end procedure
 
-
 -- **
--- Description:
 -- Used to initialize the external debuggers handlers.
--- 
--- Parameters:
--- # ##rtn## : A [[:DEBUG_ROUTINE Enum Type]] enum that signifies which routine
--- # ##rid## : The routine id that will be called when a specified debugging routine is called
 public procedure set_debug_rid( DEBUG_ROUTINE rtn, integer rid )
 	switch rtn do
 		case SHOW_DEBUG then
@@ -282,7 +227,7 @@ end function
 
 public function symbol_lookup( sequence name, integer line = get_current_line(), atom pc = get_pc() )
 	atom name_ptr = allocate_string( name, 1 )
-	
+
 -- 	symtab_ptr RTLookup(char *name, int file, intptr_t *pc, symtab_ptr routine, int stlen, unsigned long current_line )
 	return c_func( RTLookup_cid, { name_ptr, get_file_no( line ), pc, 0, peek_pointer( symbol_table) , line } )
 end function
@@ -342,7 +287,7 @@ public function is_variable( atom sym_ptr )
 	if sym_ptr = 0 then
 		return 0
 	end if
-	
+
 	return -100 = peek4s( sym_ptr + ST_TOKEN )
 end function
 
