@@ -301,6 +301,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Modula-2:** [harogaston/Sublime-Modula-2](https://github.com/harogaston/Sublime-Modula-2)
 - **Modula-3:** [newgrammars/m3](https://github.com/newgrammars/m3)
 - **Monkey:** [gingerbeardman/monkey.tmbundle](https://github.com/gingerbeardman/monkey.tmbundle)
+- **Monkey C:** [ghisguth/vscode-monkey-c](https://github.com/ghisguth/vscode-monkey-c)
 - **MoonScript:** [leafo/moonscript-tmbundle](https://github.com/leafo/moonscript-tmbundle)
 - **Motoko:** [dfinity/vscode-motoko](https://github.com/dfinity/vscode-motoko)
 - **Motorola 68K Assembly:** [zerkman/language-m68k](https://github.com/zerkman/language-m68k)
