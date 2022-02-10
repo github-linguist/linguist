@@ -518,6 +518,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Wget Config:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **Wikitext:** [textmate/mediawiki.tmbundle](https://github.com/textmate/mediawiki.tmbundle)
 - **Windows Registry Entries:** [bsara/language-reg](https://github.com/bsara/language-reg)
+- **Witcher Script:** [ADawesomeguy/witcherscript-grammar](https://github.com/ADawesomeguy/witcherscript-grammar)
 - **Wollok:** [uqbar-project/wollok-sublime](https://github.com/uqbar-project/wollok-sublime)
 - **World of Warcraft Addon Data:** [nebularg/language-toc-wow](https://github.com/nebularg/language-toc-wow)
 - **X BitMap:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
