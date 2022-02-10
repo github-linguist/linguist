@@ -901,6 +901,14 @@ Clarion:
   - ".clw"
   tm_scope: source.clarion
   language_id: 59
+Clarity:
+  type: programming
+  color: "#5546ff"
+  ace_mode: lisp
+  extensions:
+  - ".clar"
+  tm_scope: source.clar
+  language_id: 91493841
 Classic ASP:
   type: programming
   color: "#6a40fd"
@@ -1941,6 +1949,18 @@ GN:
   codemirror_mode: python
   codemirror_mime_type: text/x-python
   language_id: 302957008
+GSC:
+  type: programming
+  color: "#FF6800"
+  extensions:
+  - ".gsc"
+  - ".csc"
+  - ".gsh"
+  tm_scope: source.gsc
+  ace_mode: c_cpp
+  codemirror_mode: clike
+  codemirror_mime_type: text/x-csrc
+  language_id: 257856279
 Game Maker Language:
   type: programming
   color: "#71b417"
@@ -4662,6 +4682,14 @@ Processing:
   tm_scope: source.processing
   ace_mode: text
   language_id: 294
+Procfile:
+  type: programming
+  color: "#3B2F63"
+  filenames:
+  - Procfile
+  tm_scope: source.procfile
+  ace_mode: batchfile
+  language_id: 305313959
 Proguard:
   type: data
   extensions:
@@ -5682,6 +5710,7 @@ Shell:
   - ".tmux"
   - ".tool"
   - ".zsh"
+  - ".zsh-theme"
   filenames:
   - ".bash_aliases"
   - ".bash_history"
@@ -7095,6 +7124,7 @@ desktop:
   extensions:
   - ".desktop"
   - ".desktop.in"
+  - ".service"
   tm_scope: source.desktop
   ace_mode: text
   language_id: 412
@@ -7141,6 +7171,14 @@ fish:
   tm_scope: source.fish
   ace_mode: text
   language_id: 415
+hoon:
+  type: programming
+  color: "#00b171"
+  tm_scope: source.hoon
+  ace_mode: text
+  extensions:
+  - ".hoon"
+  language_id: 560883276
 jq:
   color: "#c7254e"
   ace_mode: text
