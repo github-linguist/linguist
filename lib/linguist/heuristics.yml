@@ -165,9 +165,7 @@ disambiguations:
     - '^\s*(def|to)\s+(\w+)(\(.+\))?\s+{'
     - '^\s*(when)\s+(\(.+\))\s+->\s+{'
   - language: Eiffel
-    pattern:
-    - '^\s*{/\w+'
-    - '^\s*(?:across|elseif|feature|from|inherit|inspect|note|when)\s'
+    pattern: '^\s*(?:across|elseif|feature|from|inherit|inspect|note|when)\s'
   - language: Euphoria
     named_pattern: euphoria
 - extensions: ['.ecl']
