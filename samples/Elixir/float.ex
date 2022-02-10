@@ -3,41 +3,6 @@ import Kernel, except: [round: 1]
 defmodule Float do
   @moduledoc """
   Functions for working with floating-point numbers.
-
-  ## Kernel functions
-
-  There are functions related to floating-point numbers on the `Kernel` module
-  too. Here is a list of them:
-
-    * `Kernel.round/1`: rounds a number to the nearest integer.
-    * `Kernel.trunc/1`: returns the integer part of a number.
-
-  ## Known issues
-
-  There are some very well known problems with floating-point numbers
-  and arithmetics due to the fact most decimal fractions cannot be
-  represented by a floating-point binary and most operations are not exact,
-  but operate on approximations. Those issues are not specific
-  to Elixir, they are a property of floating point representation itself.
-
-  For example, the numbers 0.1 and 0.01 are two of them, what means the result
-  of squaring 0.1 does not give 0.01 neither the closest representable. Here is
-  what happens in this case:
-
-    * The closest representable number to 0.1 is 0.1000000014
-    * The closest representable number to 0.01 is 0.0099999997
-    * Doing 0.1 * 0.1 should return 0.01, but because 0.1 is actually 0.1000000014,
-      the result is 0.010000000000000002, and because this is not the closest
-      representable number to 0.01, you'll get the wrong result for this operation
-
-  There are also other known problems like flooring or rounding numbers. See
-  `round/2` and `floor/2` for more details about them.
-
-  To learn more about floating-point arithmetic visit:
-
-    * [0.30000000000000004.com](http://0.30000000000000004.com/)
-    * [What Every Programmer Should Know About Floating-Point Arithmetic](https://floating-point-gui.de/)
-
   """
 
   import Bitwise
@@ -48,38 +13,6 @@ defmodule Float do
 
   @doc """
   Computes `base` raised to power of `exponent`.
-
-  `base` must be a float and `exponent` can be any number.
-  However, if a negative base and a fractional exponent
-  are given, it raises `ArithmeticError`.
-
-  It always returns a float. See `Integer.pow/2` for
-  exponentiation that returns integers.
-
-  ## Examples
-
-      iex> Float.pow(2.0, 0)
-      1.0
-      iex> Float.pow(2.0, 1)
-      2.0
-      iex> Float.pow(2.0, 10)
-      1024.0
-      iex> Float.pow(2.0, -1)
-      0.5
-      iex> Float.pow(2.0, -3)
-      0.125
-
-      iex> Float.pow(3.0, 1.5)
-      5.196152422706632
-
-      iex> Float.pow(-2.0, 3)
-      -8.0
-      iex> Float.pow(-2.0, 4)
-      16.0
-
-      iex> Float.pow(-1.0, 0.5)
-      ** (ArithmeticError) bad argument in arithmetic expression
-
   """
   @doc since: "1.12.0"
   @spec pow(float, number) :: float
@@ -88,29 +21,6 @@ defmodule Float do
 
   @doc """
   Parses a binary into a float.
-
-  If successful, returns a tuple in the form of `{float, remainder_of_binary}`;
-  when the binary cannot be coerced into a valid float, the atom `:error` is
-  returned.
-
-  If the size of float exceeds the maximum size of `1.7976931348623157e+308`,
-  the `ArgumentError` exception is raised.
-
-  If you want to convert a string-formatted float directly to a float,
-  `String.to_float/1` can be used instead.
-
-  ## Examples
-
-      iex> Float.parse("34")
-      {34.0, ""}
-      iex> Float.parse("34.25")
-      {34.25, ""}
-      iex> Float.parse("56.5xyz")
-      {56.5, "xyz"}
-
-      iex> Float.parse("pi")
-      :error
-
   """
   @spec parse(binary) :: {float, binary} | :error
   def parse("-" <> binary) do
@@ -155,36 +65,6 @@ defmodule Float do
 
   @doc """
   Rounds a float to the largest number less than or equal to `num`.
-
-  `floor/2` also accepts a precision to round a floating-point value down
-  to an arbitrary number of fractional digits (between 0 and 15).
-  The operation is performed on the binary floating point, without a
-  conversion to decimal.
-
-  This function always returns a float. `Kernel.trunc/1` may be used instead to
-  truncate the result to an integer afterwards.
-
-  ## Known issues
-
-  The behaviour of `floor/2` for floats can be surprising. For example:
-
-      iex> Float.floor(12.52, 2)
-      12.51
-
-  One may have expected it to floor to 12.52. This is not a bug.
-  Most decimal fractions cannot be represented as a binary floating point
-  and therefore the number above is internally represented as 12.51999999,
-  which explains the behaviour above.
-
-  ## Examples
-
-      iex> Float.floor(34.25)
-      34.0
-      iex> Float.floor(-56.5)
-      -57.0
-      iex> Float.floor(34.259, 2)
-      34.25
-
   """
   @spec floor(float, precision_range) :: float
   def floor(number, precision \\ 0)
@@ -203,35 +83,6 @@ defmodule Float do
 
   @doc """
   Rounds a float to the smallest integer greater than or equal to `num`.
-
-  `ceil/2` also accepts a precision to round a floating-point value down
-  to an arbitrary number of fractional digits (between 0 and 15).
-
-  The operation is performed on the binary floating point, without a
-  conversion to decimal.
-
-  The behaviour of `ceil/2` for floats can be surprising. For example:
-
-      iex> Float.ceil(-12.52, 2)
-      -12.51
-
-  One may have expected it to ceil to -12.52. This is not a bug.
-  Most decimal fractions cannot be represented as a binary floating point
-  and therefore the number above is internally represented as -12.51999999,
-  which explains the behaviour above.
-
-  This function always returns floats. `Kernel.trunc/1` may be used instead to
-  truncate the result to an integer afterwards.
-
-  ## Examples
-
-      iex> Float.ceil(34.25)
-      35.0
-      iex> Float.ceil(-56.5)
-      -56.0
-      iex> Float.ceil(34.251, 2)
-      34.26
-
   """
   @spec ceil(float, precision_range) :: float
   def ceil(number, precision \\ 0)
@@ -251,44 +102,6 @@ defmodule Float do
   @doc """
   Rounds a floating-point value to an arbitrary number of fractional
   digits (between 0 and 15).
-
-  The rounding direction always ties to half up. The operation is
-  performed on the binary floating point, without a conversion to decimal.
-
-  This function only accepts floats and always returns a float. Use
-  `Kernel.round/1` if you want a function that accepts both floats
-  and integers and always returns an integer.
-
-  ## Known issues
-
-  The behaviour of `round/2` for floats can be surprising. For example:
-
-      iex> Float.round(5.5675, 3)
-      5.567
-
-  One may have expected it to round to the half up 5.568. This is not a bug.
-  Most decimal fractions cannot be represented as a binary floating point
-  and therefore the number above is internally represented as 5.567499999,
-  which explains the behaviour above. If you want exact rounding for decimals,
-  you must use a decimal library. The behaviour above is also in accordance
-  to reference implementations, such as "Correctly Rounded Binary-Decimal and
-  Decimal-Binary Conversions" by David M. Gay.
-
-  ## Examples
-
-      iex> Float.round(12.5)
-      13.0
-      iex> Float.round(5.5674, 3)
-      5.567
-      iex> Float.round(5.5675, 3)
-      5.567
-      iex> Float.round(-5.5674, 3)
-      -5.567
-      iex> Float.round(-5.5675)
-      -6.0
-      iex> Float.round(12.341444444444441, 15)
-      12.341444444444441
-
   """
   @spec round(float, precision_range) :: float
   # This implementation is slow since it relies on big integers.
@@ -435,24 +248,6 @@ defmodule Float do
   @doc """
   Returns a pair of integers whose ratio is exactly equal
   to the original float and with a positive denominator.
-
-  ## Examples
-
-      iex> Float.ratio(0.0)
-      {0, 1}
-      iex> Float.ratio(3.14)
-      {7070651414971679, 2251799813685248}
-      iex> Float.ratio(-3.14)
-      {-7070651414971679, 2251799813685248}
-      iex> Float.ratio(1.5)
-      {3, 2}
-      iex> Float.ratio(-1.5)
-      {-3, 2}
-      iex> Float.ratio(16.0)
-      {16, 1}
-      iex> Float.ratio(-16.0)
-      {-16, 1}
-
   """
   @doc since: "1.4.0"
   @spec ratio(float) :: {integer, pos_integer}
@@ -511,17 +306,6 @@ defmodule Float do
   @doc """
   Returns a charlist which corresponds to the text representation
   of the given float.
-
-  It uses the shortest representation according to algorithm described
-  in "Printing Floating-Point Numbers Quickly and Accurately" in
-  Proceedings of the SIGPLAN '96 Conference on Programming Language
-  Design and Implementation.
-
-  ## Examples
-
-      iex> Float.to_charlist(7.0)
-      '7.0'
-
   """
   @spec to_charlist(float) :: charlist
   def to_charlist(float) when is_float(float) do
@@ -531,17 +315,6 @@ defmodule Float do
   @doc """
   Returns a binary which corresponds to the text representation
   of the given float.
-
-  It uses the shortest representation according to algorithm described
-  in "Printing Floating-Point Numbers Quickly and Accurately" in
-  Proceedings of the SIGPLAN '96 Conference on Programming Language
-  Design and Implementation.
-
-  ## Examples
-
-      iex> Float.to_string(7.0)
-      "7.0"
-
   """
   @spec to_string(float) :: String.t()
   def to_string(float) when is_float(float) do
