@@ -646,10 +646,10 @@ named_patterns:
   - 'std::\w+'
   fortran: '^(?i:[c*][^abd-z]|      (subroutine|program|end|data)\s|\s*!)'
   gsc:
-  - '^\s*#\s*(using|insert|include|define|namespace)\s+\w+'
-  - '^\s*((autoexec|private)\s+)*function\s+((autoexec|private)\s+)*\w+\s*\('
-  - '(level|self)\s+thread\s+(\[\[\s*(\w+\.)*\w+\s*\]\]|\w+)s*\([^\)]*\)\s*;'
-  - '^\s*#\s*(precache|using_animtree)\s*\('
+  - '^\s*#\s*(?:using|insert|include|define|namespace)[ \t]+\w'
+  - '^\s*(?>(?:autoexec|private)\s+){0,2}function\s+(?>(?:autoexec|private)\s+){0,2}\w+\s*\('
+  - '\b(?:level|self)[ \t]+thread[ \t]+(?:\[\[[ \t]*(?>\w+\.)*\w+[ \t]*\]\]|\w+)[ \t]*\([^\r\n\)]*\)[ \t]*;'
+  - '^[ \t]*#[ \t]*(?:precache|using_animtree)[ \t]*\('
   key_equals_value: '^[^#!;][^=]*='
   m68k:
   - '(?im)\bmoveq(?:\.l)?\s+#(?:\$-?[0-9a-f]{1,3}|%[0-1]{1,8}|-?[0-9]{1,3}),\s*d[0-7]\b'
