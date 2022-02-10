@@ -1949,6 +1949,18 @@ GN:
   codemirror_mode: python
   codemirror_mime_type: text/x-python
   language_id: 302957008
+GSC:
+  type: programming
+  color: "#FF6800"
+  extensions:
+  - ".gsc"
+  - ".csc"
+  - ".gsh"
+  tm_scope: source.gsc
+  ace_mode: c_cpp
+  codemirror_mode: clike
+  codemirror_mime_type: text/x-csrc
+  language_id: 257856279
 Game Maker Language:
   type: programming
   color: "#71b417"
@@ -2613,6 +2625,7 @@ Ignore List:
   - ".npmignore"
   - ".prettierignore"
   - ".stylelintignore"
+  - ".vercelignore"
   - ".vscodeignore"
   - gitignore-global
   - gitignore_global
@@ -4734,6 +4747,7 @@ Protocol Buffer Text Format:
   - protobuf text format
   extensions:
   - ".textproto"
+  - ".pbt"
   - ".pbtxt"
   tm_scope: source.textproto
   ace_mode: text
@@ -6659,6 +6673,14 @@ Windows Registry Entries:
   codemirror_mode: properties
   codemirror_mime_type: text/x-properties
   language_id: 969674868
+Witcher Script:
+  type: programming
+  color: "#ff0000"
+  extensions:
+  - ".ws"
+  ace_mode: text
+  tm_scope: source.witcherscript
+  language_id: 686821385
 Wollok:
   type: programming
   color: "#a23738"
