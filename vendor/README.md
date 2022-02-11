@@ -553,6 +553,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **desktop:** [Mailaender/desktop.tmbundle](https://github.com/Mailaender/desktop.tmbundle)
 - **dircolors:** [jolkdarr/language-dircolors](https://github.com/jolkdarr/language-dircolors)
 - **eC:** [ecere/ec.tmbundle](https://github.com/ecere/ec.tmbundle)
+- **EdgeQL:** [edgedb/edgedb-editor-plugin](https://github.com/edgedb/edgedb-editor-plugin)
 - **edn:** [atom/language-clojure](https://github.com/atom/language-clojure)
 - **fish:** [l15n/fish-tmbundle](https://github.com/l15n/fish-tmbundle)
 - **hoon:** [pkova/hoon-grammar](https://github.com/pkova/hoon-grammar)
