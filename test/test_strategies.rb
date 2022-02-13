@@ -26,6 +26,7 @@ class TestStrategies < Minitest::Test
 
   def all_xml_fixtures(file="*")
     fixs = Dir.glob("#{samples_path}/XML/#{file}") -
+             ["#{samples_path}/XML/demo.hzp"] -
              ["#{samples_path}/XML/psd-data.xmp"] -
              ["#{samples_path}/XML/filenames"]
     fixs.reject { |f| File.symlink?(f) }

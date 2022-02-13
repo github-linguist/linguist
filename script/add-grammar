@@ -99,7 +99,7 @@ url=`script/normalise-url --protocol=https "$1"`
 # Make sure it's not already registered
 path="vendor/grammars/${url##*/}"
 path="${path%.git}"
-if [ -e "$path" ]; then
+if [ -e "$path" ] && [ -z "$replace" ]; then
 	warn "Submodule '$path' already exists. Did you forget the '--replace' option?"
 	warn "Run '$0 --help' for invocation advice"
 	exit 1
