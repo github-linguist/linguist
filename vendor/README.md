@@ -59,7 +59,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Boo:** [drslump/sublime-boo](https://github.com/drslump/sublime-boo)
 - **Boogie:** [boogie-org/boogie-vscode](https://github.com/boogie-org/boogie-vscode)
 - **Brainfuck:** [Drako/SublimeBrainfuck](https://github.com/Drako/SublimeBrainfuck)
-- **Brighterscript:** [RokuCommunity/vscode-brightscript-language](https://github.com/RokuCommunity/vscode-brightscript-language)
+- **BrighterScript:** [RokuCommunity/vscode-brightscript-language](https://github.com/RokuCommunity/vscode-brightscript-language)
 - **Brightscript:** [cmink/BrightScript.tmbundle](https://github.com/cmink/BrightScript.tmbundle)
 - **Browserslist:** [browserslist/browserslist-vscode](https://github.com/browserslist/browserslist-vscode)
 - **C:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
