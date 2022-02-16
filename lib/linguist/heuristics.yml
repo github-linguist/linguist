@@ -630,6 +630,12 @@ disambiguations:
     pattern: '^%(end|ctor|hook|group)\b'
   - language: Linker Script
     pattern: 'OUTPUT_ARCH\(|OUTPUT_FORMAT\(|SECTIONS'
+- extensions: ['.yaml']
+  rules:
+  - language: MiniYAML
+    pattern: '^\t+.*?[^\s:].*?:'
+    negative_pattern: '---'
+  - language: YAML
 - extensions: ['.yy']
   rules:
   - language: JSON

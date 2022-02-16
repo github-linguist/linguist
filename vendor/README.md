@@ -296,6 +296,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Meson:** [TingPing/language-meson](https://github.com/TingPing/language-meson)
 - **Metal:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **Microsoft Visual Studio Solution:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
+- **MiniYAML:** [OpenRA/atom-miniyaml](https://github.com/OpenRA/atom-miniyaml)
 - **Mint:** [mint-lang/mint-vscode](https://github.com/mint-lang/mint-vscode)
 - **Mirah:** [atom/language-ruby](https://github.com/atom/language-ruby)
 - **Modelica:** [BorisChumichev/modelicaSublimeTextPackage](https://github.com/BorisChumichev/modelicaSublimeTextPackage)
