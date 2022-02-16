@@ -897,6 +897,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_yaml_by_heuristics
+    assert_heuristics({
+      "MiniYAML" => all_fixtures("MiniYAML", "*.yaml"),
+      "YAML" => all_fixtures("YAML", "*.yaml"),
+    })
+  end
+
   def test_yy_by_heuristics
     assert_heuristics({
       "JSON" => all_fixtures("JSON", "*.yy"),

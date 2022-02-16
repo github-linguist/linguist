@@ -355,7 +355,7 @@ disambiguations:
   - language: 'M4'
 - extensions: ['.mask']
   rules:
-  - language: Unity3d Asset
+  - language: Unity3D Asset
     pattern: 'tag:unity3d.com'
 - extensions: ['.md']
   rules:
@@ -650,6 +650,12 @@ disambiguations:
     pattern: '^%(end|ctor|hook|group)\b'
   - language: Linker Script
     pattern: 'OUTPUT_ARCH\(|OUTPUT_FORMAT\(|SECTIONS'
+- extensions: ['.yaml']
+  rules:
+  - language: MiniYAML
+    pattern: '^\t+.*?[^\s:].*?:'
+    negative_pattern: '---'
+  - language: YAML
 - extensions: ['.yy']
   rules:
   - language: JSON
