@@ -326,6 +326,12 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_csc_by_heuristics
+    assert_heuristics({
+      "GSC" => all_fixtures("GSC", "*.csc")
+    })
+  end
+
   def test_csl_by_heuristics
     assert_heuristics({
       "Kusto" => all_fixtures("Kusto", "*.csl"),
@@ -428,6 +434,18 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       nil => all_fixtures("JavaScript")
     }, alt_name="test.gs")
+  end
+
+  def test_gsc_by_heuristics
+    assert_heuristics({
+      "GSC" => all_fixtures("GSC", "*.gsc")
+    })
+  end
+
+  def test_gsh_by_heuristics
+    assert_heuristics({
+      "GSC" => all_fixtures("GSC", "*.gsh")
+    })
   end
 
   def test_h_by_heuristics
@@ -861,6 +879,13 @@ class TestHeuristics < Minitest::Test
       "DirectX 3D File" => all_fixtures("DirectX 3D File", "*.x"),
       "Linker Script" => all_fixtures("Linker Script", "*.x"),
       "RPC" => all_fixtures("RPC", "*.x")
+    })
+  end
+
+  def test_yaml_by_heuristics
+    assert_heuristics({
+      "MiniYAML" => all_fixtures("MiniYAML", "*.yaml"),
+      "YAML" => all_fixtures("YAML", "*.yaml"),
     })
   end
 
