@@ -254,7 +254,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Kit:** [atom/language-html](https://github.com/atom/language-html)
 - **Kotlin:** [nishtahir/language-kotlin](https://github.com/nishtahir/language-kotlin)
 - **Kusto:** [josin/kusto-syntax-highlighting](https://github.com/josin/kusto-syntax-highlighting)
-- **Kvlang:** [p0lygun/kivy-language-grammer](https://github.com/p0lygun/kivy-language-grammer)
+- **kvlang:** [p0lygun/kivy-language-grammer](https://github.com/p0lygun/kivy-language-grammer)
 - **LFE:** [textmate/lisp.tmbundle](https://github.com/textmate/lisp.tmbundle)
 - **LLVM:** [whitequark/llvm.tmbundle](https://github.com/whitequark/llvm.tmbundle)
 - **LSL:** [textmate/secondlife-lsl.tmbundle](https://github.com/textmate/secondlife-lsl.tmbundle)
