@@ -121,7 +121,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Dart:** [dart-lang/dart-syntax-highlight](https://github.com/dart-lang/dart-syntax-highlight)
 - **DataWeave:** [mulesoft-labs/data-weave-tmLanguage](https://github.com/mulesoft-labs/data-weave-tmLanguage)
 - **Debian Package Control File:** [tsbarnes/language-debian](https://github.com/tsbarnes/language-debian)
-- **DenizenScript:** [BreadcrumbIsTaken/denizenscript-grammar](https://github.com/BreadcrumbIsTaken/denizenscript-grammar)
+- **DenizenScript:** [DenizenScript/denizenscript-grammar](https://github.com/DenizenScript/denizenscript-grammar)
 - **Dhall:** [atom-haskell/language-haskell](https://github.com/atom-haskell/language-haskell)
 - **Diff:** [textmate/diff.tmbundle](https://github.com/textmate/diff.tmbundle)
 - **Dockerfile:** [asbjornenge/Docker.tmbundle](https://github.com/asbjornenge/Docker.tmbundle)
