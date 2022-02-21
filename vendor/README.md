@@ -139,7 +139,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **EditorConfig:** [sindresorhus/atom-editorconfig](https://github.com/sindresorhus/atom-editorconfig)
 - **Edje Data Collection:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **Eiffel:** [textmate/eiffel.tmbundle](https://github.com/textmate/eiffel.tmbundle)
-- **Elixir:** [elixir-lang/elixir-tmbundle](https://github.com/elixir-lang/elixir-tmbundle)
+- **Elixir:** [elixir-lang/tree-sitter-elixir](https://github.com/elixir-lang/tree-sitter-elixir) 🐌
 - **Emacs Lisp:** [Alhadis/language-emacs-lisp](https://github.com/Alhadis/language-emacs-lisp)
 - **EmberScript:** [atom/language-coffee-script](https://github.com/atom/language-coffee-script)
 - **Erlang:** [textmate/erlang.tmbundle](https://github.com/textmate/erlang.tmbundle)
@@ -353,7 +353,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Oz:** [eregon/oz-tmbundle](https://github.com/eregon/oz-tmbundle)
 - **P4:** [TakeshiTseng/atom-language-p4](https://github.com/TakeshiTseng/atom-language-p4)
 - **PEG.js:** [Alhadis/language-grammars](https://github.com/Alhadis/language-grammars)
-- **PHP:** [ondrejmirtes/php.tmbundle](https://github.com/ondrejmirtes/php.tmbundle)
+- **PHP:** [tree-sitter/tree-sitter-php](https://github.com/tree-sitter/tree-sitter-php) 🐌
 - **PLpgSQL:** [textmate/sql.tmbundle](https://github.com/textmate/sql.tmbundle)
 - **POV-Ray SDL:** [c-lipka/language-povray](https://github.com/c-lipka/language-povray)
 - **Pan:** [quattor/language-pan](https://github.com/quattor/language-pan)
