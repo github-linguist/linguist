@@ -342,6 +342,7 @@ disambiguations:
   - language: Win32 Message File
     pattern: '(?i)MessageId=|^;'
   - language: Monkey C
+    pattern: '\b(?:using|module|function|class|var)\b\s+\w'
 - extensions: ['.md']
   rules:
   - language: Markdown
