@@ -3,10 +3,7 @@ dnl #
 dnl # This is the sendmail macro config file for m4. If you make changes to
 dnl # /etc/mail/sendmail.mc, you will need to regenerate the
 dnl # /etc/mail/sendmail.cf file by confirming that the sendmail-cf package is
-dnl # installed and then performing a
-dnl #
-dnl #     /etc/mail/make
-dnl #
+dnl # installed
 include(`/usr/share/sendmail-cf/m4/cf.m4')dnl
 VERSIONID(`setup for linux')dnl
 OSTYPE(`linux')dnl
@@ -19,12 +16,7 @@ dnl # default logging level is 9, you might want to set it higher to
 dnl # debug the configuration
 dnl #
 dnl define(`confLOG_LEVEL', `9')dnl
-dnl #
-dnl # Uncomment and edit the following line if your outgoing mail needs to
-dnl # be sent out through an external mail server:
-dnl #
 dnl define(`SMART_HOST', `smtp.your.provider')dnl
-dnl #
 define(`confDEF_USER_ID', ``8:12'')dnl
 dnl define(`confAUTO_REBUILD')dnl
 define(`confTO_CONNECT', `1m')dnl
@@ -42,13 +34,6 @@ dnl # The following allows relaying if the user authenticates, and disallows
 dnl # plaintext authentication (PLAIN/LOGIN) on non-TLS links
 dnl #
 dnl define(`confAUTH_OPTIONS', `A p')dnl
-dnl # 
-dnl # PLAIN is the preferred plaintext authentication method and used by
-dnl # Mozilla Mail and Evolution, though Outlook Express and other MUAs do
-dnl # use LOGIN. Other mechanisms should be used if the connection is not
-dnl # guaranteed secure.
-dnl # Please remember that saslauthd needs to be running for AUTH. 
-dnl #
 dnl TRUST_AUTH_MECH(`EXTERNAL DIGEST-MD5 CRAM-MD5 LOGIN PLAIN')dnl
 dnl define(`confAUTH_MECHANISMS', `EXTERNAL GSSAPI DIGEST-MD5 CRAM-MD5 LOGIN PLAIN')dnl
 dnl #
@@ -81,18 +66,7 @@ FEATURE(redirect)dnl
 FEATURE(always_add_domain)dnl
 FEATURE(use_cw_file)dnl
 FEATURE(use_ct_file)dnl
-dnl #
-dnl # The following limits the number of processes sendmail can fork to accept 
-dnl # incoming messages or process its message queues to 20.) sendmail refuses 
-dnl # to accept connections once it has reached its quota of child processes.
-dnl #
 dnl define(`confMAX_DAEMON_CHILDREN', `10')dnl
-dnl #
-dnl # Limits the number of new connections per second. This caps the overhead 
-dnl # incurred due to forking new sendmail processes. May be useful against 
-dnl # DoS attacks or barrages of spam. (As mentioned below, a per-IP address 
-dnl # limit would be useful but is not available as an option at this writing.)
-dnl #
 dnl define(`confCONNECTION_RATE_THROTTLE', `3')dnl
 dnl #
 dnl # The -t option will retry delivery if e.g. the user runs over his quota.
@@ -101,33 +75,9 @@ FEATURE(local_procmail, `', `procmail -t -Y -a $h -d $u')dnl
 FEATURE(`access_db', `hash -T<TMPF> -o /etc/mail/access.db')dnl
 FEATURE(`blacklist_recipients')dnl
 EXPOSED_USER(`root')dnl
-dnl #
-dnl # For using Cyrus-IMAPd as POP3/IMAP server through LMTP delivery uncomment
-dnl # the following 2 definitions and activate below in the MAILER section the
-dnl # cyrusv2 mailer.
-dnl #
 dnl define(`confLOCAL_MAILER', `cyrusv2')dnl
 dnl define(`CYRUSV2_MAILER_ARGS', `FILE /var/lib/imap/socket/lmtp')dnl
-dnl #
-dnl # The following causes sendmail to only listen on the IPv4 loopback address
-dnl # 127.0.0.1 and not on any other network devices. Remove the loopback
-dnl # address restriction to accept email from the internet or intranet.
-dnl #
-dnl # DAEMON_OPTIONS(`Port=smtp,Addr=127.0.0.1, Name=MTA')dnl
-dnl #
-dnl # The following causes sendmail to additionally listen to port 587 for
-dnl # mail from MUAs that authenticate. Roaming users who can't reach their
-dnl # preferred sendmail daemon due to port 25 being blocked or redirected find
-dnl # this useful.
-dnl #
 dnl DAEMON_OPTIONS(`Port=submission, Name=MSA, M=Ea')dnl
-dnl #
-dnl # The following causes sendmail to additionally listen to port 465, but
-dnl # starting immediately in TLS mode upon connecting. Port 25 or 587 followed
-dnl # by STARTTLS is preferred, but roaming clients using Outlook Express can't
-dnl # do STARTTLS on ports other than 25. Mozilla Mail can ONLY use STARTTLS
-dnl # and doesn't support the deprecated smtps; Evolution <1.1.1 uses smtps
-dnl # when SSL is enabled-- STARTTLS support is available in version 1.1.1.
 dnl #
 dnl # For this to work your OpenSSL certificates must be configured.
 dnl #
@@ -141,15 +91,10 @@ dnl #
 dnl # enable both ipv6 and ipv4 in sendmail:
 dnl #
 dnl DAEMON_OPTIONS(`Name=MTA-v4, Family=inet, Name=MTA-v6, Family=inet6')
-dnl #
-dnl # We strongly recommend not accepting unresolvable domains if you want to
-dnl # protect yourself from spam. However, the laptop and users on computers
-dnl # that do not have 24x7 DNS do need this.
-dnl #
 FEATURE(`accept_unresolvable_domains')dnl
 dnl #
 dnl FEATURE(`relay_based_on_MX')dnl
-dnl # 
+dnl #
 dnl # Also accept email sent to "localhost.localdomain" as local email.
 dnl # 
 LOCAL_DOMAIN(`localhost.localdomain')dnl
