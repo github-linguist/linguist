@@ -337,6 +337,11 @@ disambiguations:
   rules:
   - language: Unity3d Asset
     pattern: 'tag:unity3d.com'
+- extensions: ['.mc']
+  rules:
+  - language: Win32 Message File
+    pattern: '(?i)MessageId=|^;'
+  - language: MonkeyC
 - extensions: ['.md']
   rules:
   - language: Markdown

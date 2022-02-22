@@ -518,6 +518,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **WebVTT:** [weizhenye/language-vtt](https://github.com/weizhenye/language-vtt)
 - **Wget Config:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **Wikitext:** [textmate/mediawiki.tmbundle](https://github.com/textmate/mediawiki.tmbundle)
+- **Win32 Message File:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
 - **Windows Registry Entries:** [bsara/language-reg](https://github.com/bsara/language-reg)
 - **Witcher Script:** [ADawesomeguy/witcherscript-grammar](https://github.com/ADawesomeguy/witcherscript-grammar)
 - **Wollok:** [uqbar-project/wollok-sublime](https://github.com/uqbar-project/wollok-sublime)
