@@ -161,6 +161,20 @@ disambiguations:
     pattern: '# Microsoft Developer Studio Generated Build File'
   - language: Faust
     pattern: '\bprocess\s*[(=]|\b(library|import)\s*\(\s*"|\bdeclare\s+(name|version|author|copyright|license)\s+"'
+- extensions: ['.e']
+  rules:
+  - language: E
+    pattern:
+    - '^\s*(def|var)\s+(.+):='
+    - '^\s*(def|to)\s+(\w+)(\(.+\))?\s+{'
+    - '^\s*(when)\s+(\(.+\))\s+->\s+{'
+  - language: Eiffel
+    pattern:
+    - '^\s*\w+\s*(?:,\s*\w+)*[:]\s*\w+\s'
+    - '^\s*\w+\s*(?:\(\s*\w+[:][^)]+\))?(?:[:]\s*\w+)?(?:--.+\s+)*\s+(?:do|local)\s'
+    - '^\s*(?:across|deferred|elseif|ensure|feature|from|inherit|inspect|invariant|note|once|require|undefine|variant|when)\s*$'
+  - language: Euphoria
+    named_pattern: euphoria
 - extensions: ['.ecl']
   rules:
   - language: ECLiPSe
@@ -173,6 +187,15 @@ disambiguations:
     pattern: '^\s*(?:%%|main\s*\(.*?\)\s*->)'
   - language: JavaScript
     pattern: '(?m:\/\/|("|'')use strict\1|export\s+default\s|\/\*.*?\*\/)'
+- extensions: ['.ex']
+  rules:
+  - language: Elixir
+    pattern:
+    - '^\s*@moduledoc\s'
+    - '^\s*(?:cond|import|quote|unless)\s'
+    - '^\s*def(?:exception|impl|macro|module|protocol)[(\s]'
+  - language: Euphoria
+    named_pattern: euphoria
 - extensions: ['.f']
   rules:
   - language: Forth
@@ -335,7 +358,7 @@ disambiguations:
   - language: 'M4'
 - extensions: ['.mask']
   rules:
-  - language: Unity3d Asset
+  - language: Unity3D Asset
     pattern: 'tag:unity3d.com'
 - extensions: ['.mc']
   rules:
@@ -638,6 +661,12 @@ disambiguations:
     pattern: '^%(end|ctor|hook|group)\b'
   - language: Linker Script
     pattern: 'OUTPUT_ARCH\(|OUTPUT_FORMAT\(|SECTIONS'
+- extensions: ['.yaml']
+  rules:
+  - language: MiniYAML
+    pattern: '^\t+.*?[^\s:].*?:'
+    negative_pattern: '---'
+  - language: YAML
 - extensions: ['.yy']
   rules:
   - language: JSON
@@ -652,6 +681,10 @@ named_patterns:
   - '^[ \t]*(class|(using[ \t]+)?namespace)\s+\w+'
   - '^[ \t]*(private|public|protected):$'
   - 'std::\w+'
+  euphoria:
+  - '^\s*namespace\s'
+  - '^\s*(?:public\s+)?include\s'
+  - '^\s*(?:(?:public|export|global)\s+)?(?:atom|constant|enum|function|integer|object|procedure|sequence|type)\s'
   fortran: '^(?i:[c*][^abd-z]|      (subroutine|program|end|data)\s|\s*!)'
   gsc:
   - '^\s*#\s*(?:using|insert|include|define|namespace)[ \t]+\w'
