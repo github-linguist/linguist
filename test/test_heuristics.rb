@@ -562,7 +562,7 @@ class TestHeuristics < Minitest::Test
 
   def test_mc_by_heuristics
     assert_heuristics({
-      "MonkeyC" => all_fixtures("MonkeyC", "*.mc"),
+      "Monkey C" => all_fixtures("Monkey C", "*.mc"),
       "Win32 Message File" => all_fixtures("Win32 Message File", "*.mc")
     })
   end
