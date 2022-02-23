@@ -354,6 +354,14 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_e_by_heuristics
+    assert_heuristics({
+      "E" => all_fixtures("E", "*.E"),
+      "Eiffel" => all_fixtures("Eiffel", "*.e"),
+      "Euphoria" => all_fixtures("Euphoria", "*.e")
+    })
+  end
+
   def test_ecl_by_heuristics
     assert_heuristics({
       "ECL" => all_fixtures("ECL", "*.ecl"),
@@ -365,6 +373,13 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "Erlang" => all_fixtures("Erlang", "*.es"),
       "JavaScript" => all_fixtures("JavaScript", "*.es")
+    })
+  end
+
+  def test_ex_by_heuristics
+    assert_heuristics({
+      "Elixir" => all_fixtures("Elixir", "*.ex"),
+      "Euphoria" => all_fixtures("Euphoria", "*.ex")
     })
   end
 
@@ -879,6 +894,13 @@ class TestHeuristics < Minitest::Test
       "DirectX 3D File" => all_fixtures("DirectX 3D File", "*.x"),
       "Linker Script" => all_fixtures("Linker Script", "*.x"),
       "RPC" => all_fixtures("RPC", "*.x")
+    })
+  end
+
+  def test_yaml_by_heuristics
+    assert_heuristics({
+      "MiniYAML" => all_fixtures("MiniYAML", "*.yaml"),
+      "YAML" => all_fixtures("YAML", "*.yaml"),
     })
   end
 

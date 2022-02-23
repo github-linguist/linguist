@@ -189,6 +189,7 @@ class TestStrategies < Minitest::Test
       "#{samples_path}/XML/some-ideas.mm",
       "#{samples_path}/XML/GMOculus.project.gmx",
       "#{samples_path}/XML/obj_control.object.gmx",
+      "#{samples_path}/XML/MainView.axaml"
     ]
     assert_all_xml all_xml_fixtures("*") - no_root_tag
 
