@@ -95,8 +95,10 @@ class << Linguist
   #
   def instrument(*args, &bk)
     if instrumenter
+      raise "Error::instrumenter found"
       instrumenter.instrument(*args, &bk)
     elsif block_given?
+      raise "Error::instrumenter not found" 
       yield
     end
   end
