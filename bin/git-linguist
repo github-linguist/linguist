@@ -96,6 +96,10 @@ end
 
 
 def git_linguist(args)
+  if Linguist.instrumenter
+    raise "Error: found", Linguist.instrumenter
+  else
+    raise "Error: not found"
   incremental = true
   commit = nil
 
