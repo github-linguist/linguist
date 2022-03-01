@@ -11,7 +11,11 @@ By participating, you are expected to uphold this code.
 
 The majority of contributions won't need to touch any Ruby code at all.
 
-### Dependencies
+## Dependencies
+
+Linguist is a Ruby library so you will need a recent version of Ruby installed.
+There are known problems with the macOS/XCode supplied version of Ruby that causes problems installing some of the dependencies.
+Accordingly, we highly recommend you install a version of Ruby using Homebrew, `rbenv`, `rvm`, `ruby-build`, `asdf` or other packaging system, before attempting to install Linguist and the dependencies.
 
 Linguist uses the [`charlock_holmes`](https://github.com/brianmario/charlock_holmes) character encoding detection library which in turn uses [ICU](http://site.icu-project.org/), and the libgit2 bindings for Ruby provided by [`rugged`](https://github.com/libgit2/rugged).
 [Bundler](https://bundler.io/) v1.10.0 or newer is required for installing the Ruby gem dependencies.
@@ -21,12 +25,12 @@ These components have their own dependencies - `icu4c`, and `cmake` and `pkg-con
 For example, on macOS with [Homebrew](http://brew.sh/):
 ```bash
 brew install cmake pkg-config icu4c
-brew cask install docker
+brew install --cask docker
 ```
 
 On Ubuntu:
 ```bash
-apt-get install cmake pkg-config libicu-dev docker-ce
+apt-get install cmake pkg-config libicu-dev docker.io ruby ruby-dev zlib1g-dev build-essential libssl-dev
 ```
 
 The latest version of Bundler can be installed with `gem install bundler`.
@@ -59,7 +63,7 @@ bundle exec bin/github-linguist --breakdown
 ## Adding an extension to a language
 
 We try only to add new extensions once they have some usage on GitHub.
-In most cases we prefer that extensions be in use in hundreds of repositories before supporting them in Linguist.
+In most cases we prefer that each new file extension be in use in at least 200 unique `:user/:repo` repositories before supporting them in Linguist.
 
 To add support for a new extension:
 
@@ -84,7 +88,7 @@ Additionally, if this extension is already listed in [`languages.yml`][languages
 ## Adding a language
 
 We try only to add languages once they have some usage on GitHub.
-In most cases we prefer that each new file extension be in use in hundreds of repositories before supporting them in Linguist.
+In most cases we prefer that each new file extension be in use in at least 200 unique `:user/:repo` repositories before supporting them in Linguist.
 
 To add support for a new language:
 
@@ -146,7 +150,7 @@ Once the bug has been fixed upstream, we'll pick it up for GitHub in the next re
 ## Changing the source of a syntax highlighting grammar
 
 We'd like to ensure Linguist and GitHub.com are using the latest and greatest grammars that are consistent with the current usage but understand that sometimes a grammar can lag behind the evolution of a language or even stop being developed.
-This often results in someone grasping the opportunity to create a newer and better and more actively maintained grammar, and we'd love to use it and pass on it's functionality to our users.
+This often results in someone grasping the opportunity to create a newer and better and more actively maintained grammar, and we'd love to use it and pass on its functionality to our users.
 
 Switching the source of a grammar is really easy:
 
@@ -201,40 +205,8 @@ As Linguist is a production dependency for GitHub we have a couple of workflow r
 - Releases are performed by GitHub staff so we can ensure GitHub.com always stays up to date with the latest release of Linguist and there are no regressions in production.
 
 
-### Releasing
-
-If you are the current maintainer of this gem:
-
-1. Create a branch for the release: `git checkout -b release-vxx.xx.xx`
-1. Make sure your local dependencies are up to date: `script/bootstrap`
-1. If grammar submodules have not been updated recently, update them: `git submodule update --remote`.
-   If any submodules are updated:
-    1. update the `grammars.yml`: `script/grammar-compiler update -f`
-    1. update the license cache: `bundle exec licensed cache -c vendor/licenses/config.yml`
-    1. double check no license problems found: `bundle exec licensed status -c vendor/licenses/config.yml`
-    1. confirm the updated grammars still compile and no new errors have been introduced and none have gone missing: `bundle exec rake check_grammars`
-    1. verify and fix any problems identified in the two steps above
-    1. commit all changes: `git commit -a`
-1. Ensure that samples are updated: `bundle exec rake samples`
-1. Ensure that tests are green: `bundle exec rake test`
-1. Build a test gem `GEM_VERSION=$(git describe --tags 2>/dev/null | sed 's/-/./g' | sed 's/v//') bundle exec rake build_gem`
-1. Test the test gem:
-   1. Bump the Gemfile and Gemfile.lock versions for an app which relies on this gem
-   1. Install the new gem locally
-   1. Test behavior locally, branch deploy, whatever needs to happen
-1. Bump gem version in `lib/linguist/VERSION`, [like this](https://github.com/github/linguist/commit/3212355400974ce5f7873a71eb8b85b1c5f4a6d2).
-1. Make a PR to github/linguist, [like this](https://github.com/github/linguist/pull/1238).
-1. Build a local gem: `bundle exec rake build_gem`
-1. Merge github/linguist PR
-1. Tag and push: `git tag vx.xx.xx; git push --tags`
-1. Create a GitHub release with the pushed tag (https://github.com/github/linguist/releases/new) and populate it with a list of the commits from `git log --pretty=format:"- %s" --reverse refs/tags/[OLD TAG]...refs/tags/[NEW TAG]` [like this](https://github.com/github/linguist/releases/tag/v7.2.0)
-1. Build a grammars tarball (`./script/build-grammars-tarball`) and attach it to the GitHub release
-1. Push to rubygems.pkg.github.com -- `gem push --key github --host https://rubygems.pkg.github.com/github github-linguist-3.0.0.gem`. See [Configuring RubyGems for use with GitHub Package Registry][gpr] for more details.
-1. Push to rubygems.org -- `gem push github-linguist-3.0.0.gem`
-
-
 [grammars]: /vendor/README.md
-[heuristic]: https://github.com/github/linguist/blob/master/lib/linguist/heuristics.rb
+[heuristic]: https://github.com/github/linguist/blob/master/lib/linguist/heuristics.yml
 [languages]: /lib/linguist/languages.yml
 [licenses]: https://github.com/github/linguist/blob/257425141d4e2a5232786bf0b13c901ada075f93/vendor/licenses/config.yml#L2-L11
 [new-issue]: https://github.com/github/linguist/issues/new

@@ -1,0 +1,68 @@
+# Any fsck program run by init
+type fsck, domain;
+type fsck_exec, system_file_type, exec_type, file_type;
+
+# /dev/__null__ created by init prior to policy load,
+# open fd inherited by fsck.
+allow fsck tmpfs:chr_file { read write ioctl };
+
+# Inherit and use pty created by android_fork_execvp_ext().
+allow fsck devpts:chr_file { read write ioctl getattr };
+
+# Allow stdin/out back to vold
+allow fsck vold:fd use;
+allow fsck vold:fifo_file { read write getattr };
+
+# Run fsck on certain block devices
+allow fsck block_device:dir search;
+allow fsck userdata_block_device:blk_file rw_file_perms;
+allow fsck cache_block_device:blk_file rw_file_perms;
+allow fsck dm_device:blk_file rw_file_perms;
+userdebug_or_eng(`
+allow fsck system_block_device:blk_file rw_file_perms;
+')
+
+# For the block devices where we have ioctl access,
+# allow at a minimum the following common fsck ioctls.
+allowxperm fsck dev_type:blk_file ioctl {
+  BLKDISCARDZEROES
+  BLKROGET
+};
+
+# To determine if it is safe to run fsck on a filesystem, e2fsck
+# must first determine if the filesystem is mounted. To do that,
+# e2fsck scans through /proc/mounts and collects all the mounted
+# block devices. With that information, it runs stat() on each block
+# device, comparing the major and minor numbers to the filesystem
+# passed in on the command line. If there is a match, then the filesystem
+# is currently mounted and running fsck is dangerous.
+# Allow stat access to all block devices so that fsck can compare
+# major/minor values.
+allow fsck dev_type:blk_file getattr;
+
+allow fsck {
+  proc_mounts
+  proc_swaps
+}:file r_file_perms;
+allow fsck rootfs:dir r_dir_perms;
+
+###
+### neverallow rules
+###
+
+# fsck should never be run on these block devices
+neverallow fsck {
+  boot_block_device
+  frp_block_device
+  recovery_block_device
+  root_block_device
+  swap_block_device
+  system_block_device
+  userdebug_or_eng(`-system_block_device')
+  vold_device
+}:blk_file no_rw_file_perms;
+
+# Only allow entry from init or vold via fsck binaries
+neverallow { domain -init -vold } fsck:process transition;
+neverallow * fsck:process dyntransition;
+neverallow fsck { file_type fs_type -fsck_exec }:file entrypoint;
