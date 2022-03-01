@@ -3306,15 +3306,30 @@ Lex:
   tm_scope: source.lex
   ace_mode: text
   language_id: 199
-LigoLANG:
+LigoLANG-Cameligo:
+  type: programming
+  extensions:
+  - ".mligo"
+  tm_scope: source.mligo
+  ace_mode: text
+  group: LigoLANG
+  language_id: 829207807
+LigoLANG-Pascaligo:
   type: programming
   extensions:
   - ".ligo"
-  - ".mligo"
-  - ".religo"
-  tm_scope: source
+  tm_scope: source.ligo
   ace_mode: text
-  language_id: 722907202
+  group: LigoLANG
+  language_id: 1040646257
+LigoLANG-Reasonligo:
+  type: programming
+  extensions:
+  - ".religo"
+  tm_scope: source.religo
+  ace_mode: text
+  group: LigoLANG
+  language_id: 319002153
 LilyPond:
   type: programming
   color: "#9ccc7c"
