@@ -464,7 +464,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **SourcePawn:** [Dreae/sourcepawn-vscode](https://github.com/Dreae/sourcepawn-vscode)
 - **Spline Font Database:** [Alhadis/language-fontforge](https://github.com/Alhadis/language-fontforge)
 - **Squirrel:** [mathewmariani/squirrel-language](https://github.com/mathewmariani/squirrel-language)
-- **Stan:** [jrnold/atom-language-stan](https://github.com/jrnold/atom-language-stan)
+- **Stan:** [stan-dev/atom-language-stan](https://github.com/stan-dev/atom-language-stan)
 - **Standard ML:** [textmate/standard-ml.tmbundle](https://github.com/textmate/standard-ml.tmbundle)
 - **Starlark:** [MagicStack/MagicPython](https://github.com/MagicStack/MagicPython)
 - **Stata:** [pschumm/Stata.tmbundle](https://github.com/pschumm/Stata.tmbundle)
