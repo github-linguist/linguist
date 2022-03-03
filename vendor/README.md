@@ -222,6 +222,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Idris:** [idris-hackers/idris-sublime](https://github.com/idris-hackers/idris-sublime)
 - **Ignore List:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **Inform 7:** [erkyrath/language-inform7](https://github.com/erkyrath/language-inform7)
+- **Ink:** [inkle/ink](https://github.com/inkle/ink-tmlanguage)
 - **Inno Setup:** [idleberg/atom-language-innosetup](https://github.com/idleberg/atom-language-innosetup)
 - **Io:** [textmate/io.tmbundle](https://github.com/textmate/io.tmbundle)
 - **Ioke:** [vic/ioke-outdated](https://github.com/vic/ioke-outdated)
