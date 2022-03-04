@@ -13,7 +13,8 @@ Gem::Specification.new do |s|
     "github_repo" => "ssh://github.com/github/linguist"
   }
 
-  s.files = Dir['lib/**/*'] + Dir['ext/**/*'] + Dir['grammars/*'] + ['LICENSE']
+  s.files = Dir['lib/**/*', 'ext/**/*', 'grammars/*', 'LICENSE'].reject {|f| f.match(%r{lib/linguist/linguist\.(so|bundle)}) }
+  s.platform = Gem::Platform::RUBY
   s.executables = ['github-linguist', 'git-linguist']
   s.extensions = ['ext/linguist/extconf.rb']
   s.require_paths = ['lib', 'ext']
