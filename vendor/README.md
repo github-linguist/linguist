@@ -452,6 +452,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Shen:** [rkoeninger/sublime-shen](https://github.com/rkoeninger/sublime-shen)
 - **Sieve:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **Singularity:** [onnovalkering/vscode-singularity](https://github.com/onnovalkering/vscode-singularity)
+- **Skript:** [SkriptLang/skript-grammar](https://github.com/SkriptLang/skript-grammar)
 - **Slash:** [slash-lang/Slash.tmbundle](https://github.com/slash-lang/Slash.tmbundle)
 - **Slice:** [zeroc-ice/vscode-slice](https://github.com/zeroc-ice/vscode-slice)
 - **Slim:** [slim-template/ruby-slim.tmbundle](https://github.com/slim-template/ruby-slim.tmbundle)
