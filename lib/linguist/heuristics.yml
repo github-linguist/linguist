@@ -363,7 +363,7 @@ disambiguations:
 - extensions: ['.mc']
   rules:
   - language: Win32 Message File
-    pattern: '(?i)^[ \t]*(?>\/\*\s*)?MessageId=|^;'
+    pattern: '(?i)^[ \t]*(?>\/\*\s*)?MessageId=|^\.$'
   - language: M4
     pattern: '^dnl|^divert\((?:-?\d+)?\)|^\w+\(`[^\n]*?''[),]'
   - language: Monkey C
