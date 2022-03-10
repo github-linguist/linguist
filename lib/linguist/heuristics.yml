@@ -365,7 +365,7 @@ disambiguations:
   - language: Win32 Message File
     pattern: '(?i)^[ \t]*(?>\/\*\s*)?MessageId=|^;'
   - language: M4
-    pattern: '^dnl|^divert\((?:-?\d+)?\)|^\w+\(`[^\n]*?'[),]'
+    pattern: '^dnl|^divert\((?:-?\d+)?\)|^\w+\(`[^\n]*?''[),]'
   - language: Monkey C
     pattern: '\b(?:using|module|function|class|var)\s+\w'
 - extensions: ['.md']
