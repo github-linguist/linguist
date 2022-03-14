@@ -1,0 +1,271 @@
+feature {
+  name: "company"
+  value_count {
+    min: 1
+    max: 1
+  }
+  type: BYTES
+  domain: "company"
+  presence {
+    min_count: 1
+  }
+}
+feature {
+  name: "payment_type"
+  value_count {
+    min: 1
+    max: 1
+  }
+  type: BYTES
+  domain: "payment_type"
+  presence {
+    min_fraction: 1.0
+    min_count: 1
+  }
+}
+feature {
+  name: "dropoff_census_tract"
+  value_count {
+    min: 1
+    max: 1
+  }
+  type: INT
+  presence {
+    min_count: 1
+  }
+}
+feature {
+  name: "dropoff_community_area"
+  value_count {
+    min: 1
+    max: 1
+  }
+  type: INT
+  presence {
+    min_count: 1
+  }
+}
+feature {
+  name: "dropoff_latitude"
+  value_count {
+    min: 1
+    max: 1
+  }
+  type: FLOAT
+  presence {
+    min_count: 1
+  }
+}
+feature {
+  name: "dropoff_longitude"
+  value_count {
+    min: 1
+    max: 1
+  }
+  type: FLOAT
+  presence {
+    min_count: 1
+  }
+}
+feature {
+  name: "fare"
+  value_count {
+    min: 1
+    max: 1
+  }
+  type: FLOAT
+  presence {
+    min_fraction: 1.0
+    min_count: 1
+  }
+}
+feature {
+  name: "pickup_census_tract"
+  type: INT
+  presence {
+    min_count: 0
+  }
+}
+feature {
+  name: "pickup_community_area"
+  value_count {
+    min: 1
+    max: 1
+  }
+  type: INT
+  presence {
+    min_fraction: 1.0
+    min_count: 1
+  }
+}
+feature {
+  name: "pickup_latitude"
+  value_count {
+    min: 1
+    max: 1
+  }
+  type: FLOAT
+  presence {
+    min_fraction: 1.0
+    min_count: 1
+  }
+}
+feature {
+  name: "pickup_longitude"
+  value_count {
+    min: 1
+    max: 1
+  }
+  type: FLOAT
+  presence {
+    min_fraction: 1.0
+    min_count: 1
+  }
+}
+feature {
+  name: "tips"
+  value_count {
+    min: 1
+    max: 1
+  }
+  type: FLOAT
+  presence {
+    min_fraction: 1.0
+    min_count: 1
+  }
+}
+feature {
+  name: "trip_miles"
+  value_count {
+    min: 1
+    max: 1
+  }
+  type: FLOAT
+  presence {
+    min_fraction: 1.0
+    min_count: 1
+  }
+}
+feature {
+  name: "trip_seconds"
+  value_count {
+    min: 1
+    max: 1
+  }
+  type: INT
+  presence {
+    min_count: 1
+  }
+}
+feature {
+  name: "trip_start_day"
+  value_count {
+    min: 1
+    max: 1
+  }
+  type: INT
+  presence {
+    min_fraction: 1.0
+    min_count: 1
+  }
+}
+feature {
+  name: "trip_start_hour"
+  value_count {
+    min: 1
+    max: 1
+  }
+  type: INT
+  presence {
+    min_fraction: 1.0
+    min_count: 1
+  }
+}
+feature {
+  name: "trip_start_month"
+  value_count {
+    min: 1
+    max: 1
+  }
+  type: INT
+  presence {
+    min_fraction: 1.0
+    min_count: 1
+  }
+}
+feature {
+  name: "trip_start_timestamp"
+  value_count {
+    min: 1
+    max: 1
+  }
+  type: INT
+  presence {
+    min_fraction: 1.0
+    min_count: 1
+  }
+}
+string_domain {
+  name: "company"
+  value: "0118 - 42111 Godfrey S.Awir"
+  value: "0694 - 59280 Chinesco Trans Inc"
+  value: "2092 - 61288 Sbeih company"
+  value: "2192 - 73487 Zeymane Corp"
+  value: "2733 - 74600 Benny Jona"
+  value: "2823 - 73307 Seung Lee"
+  value: "3011 - 66308 JBL Cab Inc."
+  value: "3094 - 24059 G.L.B. Cab Co"
+  value: "3152 - 97284 Crystal Abernathy"
+  value: "3201 - C&D Cab Co Inc"
+  value: "3201 - CID Cab Co Inc"
+  value: "3253 - 91138 Gaither Cab Co."
+  value: "3319 - CD Cab Co"
+  value: "3385 - 23210 Eman Cab"
+  value: "3385 - Eman Cab"
+  value: "3623 - 72222 Arrington Enterprises"
+  value: "3897 - Ilie Malec"
+  value: "4053 - 40193 Adwar H. Nikola"
+  value: "4053 - Adwar H. Nikola"
+  value: "4197 - 41842 Royal Star"
+  value: "4197 - Royal Star"
+  value: "4615 - 83503 Tyrone Henderson"
+  value: "4623 - Jay Kim"
+  value: "5006 - 39261 Salifu Bawa"
+  value: "5006 - Salifu Bawa"
+  value: "5074 - 54002 Ahzmi Inc"
+  value: "5074 - Ahzmi Inc"
+  value: "5129 - 87128"
+  value: "5129 - 98755 Mengisti Taxi"
+  value: "5129 - Mengisti Taxi"
+  value: "5724 - KYVI Cab Inc"
+  value: "585 - 88805 Valley Cab Co"
+  value: "5864 - 73614 Thomas Owusu"
+  value: "5864 - Thomas Owusu"
+  value: "5874 - 73628 Sergey Cab Corp."
+  value: "5997 - 65283 AW Services Inc."
+  value: "6488 - 83287 Zuha Taxi"
+  value: "6742 - 83735 Tasha ride inc"
+  value: "Blue Ribbon Taxi Association Inc."
+  value: "C & D Cab Co Inc"
+  value: "Chicago Elite Cab Corp."
+  value: "Chicago Elite Cab Corp. (Chicago Carriag"
+  value: "Chicago Medallion Leasing INC"
+  value: "Chicago Medallion Management"
+  value: "Choice Taxi Association"
+  value: "Dispatch Taxi Affiliation"
+  value: "KOAM Taxi Association"
+  value: "Northwest Management LLC"
+  value: "Taxi Affiliation Services"
+  value: "Top Cab Affiliation"
+}
+string_domain {
+  name: "payment_type"
+  value: "Cash"
+  value: "Credit Card"
+  value: "Dispute"
+  value: "No Charge"
+  value: "Pcard"
+  value: "Prcard"
+  value: "Unknown"
+}
+# generate_legacy_feature_spec: false

@@ -25,7 +25,7 @@ These components have their own dependencies - `icu4c`, and `cmake` and `pkg-con
 For example, on macOS with [Homebrew](http://brew.sh/):
 ```bash
 brew install cmake pkg-config icu4c
-brew cask install docker
+brew install --cask docker
 ```
 
 On Ubuntu:
@@ -150,7 +150,7 @@ Once the bug has been fixed upstream, we'll pick it up for GitHub in the next re
 ## Changing the source of a syntax highlighting grammar
 
 We'd like to ensure Linguist and GitHub.com are using the latest and greatest grammars that are consistent with the current usage but understand that sometimes a grammar can lag behind the evolution of a language or even stop being developed.
-This often results in someone grasping the opportunity to create a newer and better and more actively maintained grammar, and we'd love to use it and pass on it's functionality to our users.
+This often results in someone grasping the opportunity to create a newer and better and more actively maintained grammar, and we'd love to use it and pass on its functionality to our users.
 
 Switching the source of a grammar is really easy:
 
