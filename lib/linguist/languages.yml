@@ -3306,6 +3306,16 @@ Lex:
   tm_scope: source.lex
   ace_mode: text
   language_id: 199
+LigoLANG:
+  type: programming
+  extensions:
+  - ".ligo"
+  tm_scope: source.ligo
+  ace_mode: pascal
+  codemirror_mode: pascal
+  codemirror_mime_type: text/x-pascal
+  group: LigoLANG
+  language_id: 1040646257
 CameLIGO:
   type: programming
   extensions:
@@ -3316,16 +3326,6 @@ CameLIGO:
   codemirror_mime_type: text/x-ocaml
   group: LigoLANG
   language_id: 829207807
-PascaLIGO:
-  type: programming
-  extensions:
-  - ".ligo"
-  tm_scope: source.ligo
-  ace_mode: pascal
-  codemirror_mode: pascal
-  codemirror_mime_type: text/x-pascal
-  group: LigoLANG
-  language_id: 1040646257
 ReasonLIGO:
   type: programming
   extensions:
