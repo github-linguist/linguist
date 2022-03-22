@@ -357,6 +357,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **PHP:** [tree-sitter/tree-sitter-php](https://github.com/tree-sitter/tree-sitter-php) 🐌
 - **PLpgSQL:** [textmate/sql.tmbundle](https://github.com/textmate/sql.tmbundle)
 - **POV-Ray SDL:** [c-lipka/language-povray](https://github.com/c-lipka/language-povray)
+- **Pact:** [kadena-io/pact-atom](https://github.com/kadena-io/pact-atom)
 - **Pan:** [quattor/language-pan](https://github.com/quattor/language-pan)
 - **Papyrus:** [Kapiainen/SublimePapyrus](https://github.com/Kapiainen/SublimePapyrus)
 - **Parrot Internal Representation:** [textmate/parrot.tmbundle](https://github.com/textmate/parrot.tmbundle)
