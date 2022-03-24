@@ -172,6 +172,8 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **GSC:** [Jake-NotTheMuss/CoDT7-Sublime](https://github.com/Jake-NotTheMuss/CoDT7-Sublime)
 - **Game Maker Language:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **Gemfile.lock:** [hmarr/gemfile-lock-tmlanguage](https://github.com/hmarr/gemfile-lock-tmlanguage)
+- **Genero:** [alienriver49/genero.tmbundle](https://github.com/alienriver49/genero.tmbundle)
+- **Genero Forms:** [alienriver49/genero.tmbundle](https://github.com/alienriver49/genero.tmbundle)
 - **Genshi:** [genshi.edgewall.org/query](https://genshi.edgewall.org/query)
 - **Gentoo Ebuild:** [atom/language-shellscript](https://github.com/atom/language-shellscript)
 - **Gentoo Eclass:** [atom/language-shellscript](https://github.com/atom/language-shellscript)
