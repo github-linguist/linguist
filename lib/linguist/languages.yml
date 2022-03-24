@@ -3475,6 +3475,7 @@ M4:
   type: programming
   extensions:
   - ".m4"
+  - ".mc"
   tm_scope: source.m4
   ace_mode: text
   language_id: 215
@@ -3840,6 +3841,16 @@ Monkey:
   ace_mode: text
   tm_scope: source.monkey
   language_id: 236
+Monkey C:
+  type: programming
+  color: "#8D6747"
+  extensions:
+  - ".mc"
+  tm_scope: source.mc
+  ace_mode: c_cpp
+  codemirror_mode: clike
+  codemirror_mime_type: text/x-csrc
+  language_id: 231751931
 Moocode:
   type: programming
   extensions:
@@ -6732,6 +6743,15 @@ Wikitext:
   tm_scope: text.html.mediawiki
   ace_mode: text
   language_id: 228
+Win32 Message File:
+  type: data
+  extensions:
+  - ".mc"
+  tm_scope: source.win32-messages
+  ace_mode: ini
+  codemirror_mode: properties
+  codemirror_mime_type: text/x-properties
+  language_id: 950967261
 Windows Registry Entries:
   type: data
   color: "#52d5ff"
