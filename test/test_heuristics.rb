@@ -575,6 +575,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_mc_by_heuristics
+    assert_heuristics({
+      "Monkey C" => all_fixtures("Monkey C", "*.mc"),
+      "Win32 Message File" => all_fixtures("Win32 Message File", "*.mc")
+    })
+  end
+
   def test_md_by_heuristics
     assert_heuristics({
       "Markdown" => all_fixtures("Markdown", "*.md"),
@@ -863,6 +870,13 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "Vim Help File" => all_fixtures("Vim Help File", "*.txt"),
       "Text" => all_fixtures("Text", "*.txt")
+    })
+  end
+
+  def test_url_by_heuristics
+    assert_heuristics({
+      "INI" => Dir.glob("#{fixtures_path}/Generic/url/INI/*"),
+      nil => Dir.glob("#{fixtures_path}/Generic/url/nil/*")
     })
   end
 
