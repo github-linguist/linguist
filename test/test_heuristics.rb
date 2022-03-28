@@ -873,6 +873,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_url_by_heuristics
+    assert_heuristics({
+      "INI" => Dir.glob("#{fixtures_path}/Generic/url/INI/*"),
+      nil => Dir.glob("#{fixtures_path}/Generic/url/nil/*")
+    })
+  end
+
   def test_v_by_heuristics
     assert_heuristics({
       "Coq" => all_fixtures("Coq", "*.v"),
