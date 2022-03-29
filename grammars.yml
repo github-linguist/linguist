@@ -206,7 +206,7 @@ vendor/grammars/assembly:
 - objdump.x86asm
 - source.x86asm
 vendor/grammars/astro:
-- text.html.astro
+- source.astro
 - text.html.markdown.astro
 vendor/grammars/atom-editorconfig:
 - source.editorconfig
@@ -264,6 +264,9 @@ vendor/grammars/awk-sublime:
 - source.awk
 vendor/grammars/ballerina-grammar:
 - source.ballerina
+vendor/grammars/berry-grammar:
+- source.berry
+- source.berry.bytecode
 vendor/grammars/bicep:
 - markdown.bicep.codeblock
 - source.bicep
@@ -960,6 +963,9 @@ vendor/grammars/vsc-fennel:
 - source.fnl
 vendor/grammars/vscode-TalonScript:
 - source.talon
+vendor/grammars/vscode-cadence:
+- markdown.cadence.codeblock
+- source.cadence
 vendor/grammars/vscode-codeql:
 - source.ql
 vendor/grammars/vscode-cue:
