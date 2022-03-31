@@ -33,7 +33,6 @@ This is the procedure for making a new release of Linguist. The entire process n
 17. Update and deploy the following repositories to use the new gem in production:
     - `github/github` - label for backporting to the latest version of GitHub Enterprise Server only.
     - `github/treelights` - this only needs the Linguist version updated to pull the compiled grammars from the Linguist release. Label for backporting to the latest version of GitHub Enterprise Server only.
-    - `github/lightshow`
 
     Note: syntax highlighting changes won't take effect until the updated `github/treelights` repo has been deployed.
 

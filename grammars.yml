@@ -210,7 +210,7 @@ vendor/grammars/assembly:
 - objdump.x86asm
 - source.x86asm
 vendor/grammars/astro:
-- text.html.astro
+- source.astro
 - text.html.markdown.astro
 vendor/grammars/atom-editorconfig:
 - source.editorconfig
@@ -965,6 +965,9 @@ vendor/grammars/vhdl:
 - source.vhdl
 vendor/grammars/vsc-fennel:
 - source.fnl
+vendor/grammars/vscode-cadence:
+- markdown.cadence.codeblock
+- source.cadence
 vendor/grammars/vscode-codeql:
 - source.ql
 vendor/grammars/vscode-cue:

@@ -39,7 +39,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **AsciiDoc:** [zuckschwerdt/asciidoc.tmbundle](https://github.com/zuckschwerdt/asciidoc.tmbundle)
 - **AspectJ:** [pchaigno/sublime-aspectj](https://github.com/pchaigno/sublime-aspectj)
 - **Assembly:** [Nessphoro/sublimeassembly](https://github.com/Nessphoro/sublimeassembly)
-- **Astro:** [withastro/astro](https://github.com/withastro/astro)
+- **Astro:** [withastro/language-tools](https://github.com/withastro/language-tools)
 - **Asymptote:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **AutoHotkey:** [ahkscript/SublimeAutoHotkey](https://github.com/ahkscript/SublimeAutoHotkey)
 - **AutoIt:** [AutoIt/SublimeAutoItScript](https://github.com/AutoIt/SublimeAutoItScript)
@@ -78,6 +78,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **CSS:** [tree-sitter/tree-sitter-css](https://github.com/tree-sitter/tree-sitter-css) 🐌
 - **CUE:** [cue-sh/vscode-cue](https://github.com/cue-sh/vscode-cue)
 - **Cabal Config:** [atom-haskell/language-haskell](https://github.com/atom-haskell/language-haskell)
+- **Cadence:** [onflow/vscode-cadence](https://github.com/onflow/vscode-cadence)
 - **Cairo:** [xshitaka/atom-language-cairo](https://github.com/xshitaka/atom-language-cairo)
 - **CameLIGO:** [pewulfman/Ligo-grammar](https://github.com/pewulfman/Ligo-grammar)
 - **Cap'n Proto:** [textmate/capnproto.tmbundle](https://github.com/textmate/capnproto.tmbundle)
