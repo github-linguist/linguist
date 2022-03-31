@@ -867,6 +867,17 @@ Cairo:
   extensions:
   - ".cairo"
   language_id: 620599567
+CameLIGO:
+  type: programming
+  color: "#3be133"
+  extensions:
+  - ".mligo"
+  tm_scope: source.mligo
+  ace_mode: ocaml
+  codemirror_mode: mllike
+  codemirror_mime_type: text/x-ocaml
+  group: LigoLANG
+  language_id: 829207807
 Cap'n Proto:
   type: programming
   color: "#c42727"
@@ -3343,6 +3354,17 @@ Lex:
   tm_scope: source.lex
   ace_mode: text
   language_id: 199
+LigoLANG:
+  type: programming
+  color: "#0e74ff"
+  extensions:
+  - ".ligo"
+  tm_scope: source.ligo
+  ace_mode: pascal
+  codemirror_mode: pascal
+  codemirror_mime_type: text/x-pascal
+  group: LigoLANG
+  language_id: 1040646257
 LilyPond:
   type: programming
   color: "#9ccc7c"
@@ -5256,6 +5278,17 @@ Reason:
   - ".rei"
   tm_scope: source.reason
   language_id: 869538413
+ReasonLIGO:
+  type: programming
+  color: "#ff5847"
+  ace_mode: rust
+  codemirror_mode: rust
+  codemirror_mime_type: text/x-rustsrc
+  group: LigoLANG
+  extensions:
+  - ".religo"
+  tm_scope: source.religo
+  language_id: 319002153
 Rebol:
   type: programming
   color: "#358a5b"
