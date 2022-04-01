@@ -71,7 +71,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **CIL:** [google/selinux-policy-languages](https://github.com/google/selinux-policy-languages)
 - **CLIPS:** [psicomante/CLIPS-sublime](https://github.com/psicomante/CLIPS-sublime)
 - **CMake:** [textmate/cmake.tmbundle](https://github.com/textmate/cmake.tmbundle)
-- **COBOL:** [bitbucket:bitlang/sublime_cobol](https://bitbucket.org/bitlang/sublime_cobol)
+- **COBOL:** [spgennard/vscode_cobol](https://github.com/spgennard/vscode_cobol)
 - **CODEOWNERS:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **COLLADA:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)
 - **CSON:** [atom/language-coffee-script](https://github.com/atom/language-coffee-script)
