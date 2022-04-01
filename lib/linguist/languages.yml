@@ -400,7 +400,7 @@ Astro:
   color: "#ff5a03"
   extensions:
   - ".astro"
-  tm_scope: text.html.astro
+  tm_scope: source.astro
   ace_mode: html
   codemirror_mode: jsx
   codemirror_mime_type: text/jsx
@@ -520,6 +520,16 @@ Befunge:
   tm_scope: source.befunge
   ace_mode: text
   language_id: 30
+Berry:
+  type: programming
+  extensions:
+  - ".be"
+  tm_scope: source.berry
+  ace_mode: text
+  color: "#15A13C"
+  aliases:
+  - be
+  language_id: 121855308
 BibTeX:
   type: markup
   color: "#778899"
@@ -841,6 +851,14 @@ Cabal Config:
   codemirror_mime_type: text/x-haskell
   tm_scope: source.cabal
   language_id: 677095381
+Cadence:
+  type: programming
+  color: "#00ef8b"
+  ace_mode: text
+  tm_scope: source.cadence
+  extensions:
+  - ".cdc"
+  language_id: 270184138
 Cairo:
   type: programming
   color: "#ff4a48"
@@ -849,6 +867,17 @@ Cairo:
   extensions:
   - ".cairo"
   language_id: 620599567
+CameLIGO:
+  type: programming
+  color: "#3be133"
+  extensions:
+  - ".mligo"
+  tm_scope: source.mligo
+  ace_mode: ocaml
+  codemirror_mode: mllike
+  codemirror_mime_type: text/x-ocaml
+  group: LigoLANG
+  language_id: 829207807
 Cap'n Proto:
   type: programming
   color: "#c42727"
@@ -2630,6 +2659,7 @@ INI:
   - ".prefs"
   - ".pro"
   - ".properties"
+  - ".url"
   filenames:
   - ".flake8"
   - buildozer.spec
@@ -3324,6 +3354,17 @@ Lex:
   tm_scope: source.lex
   ace_mode: text
   language_id: 199
+LigoLANG:
+  type: programming
+  color: "#0e74ff"
+  extensions:
+  - ".ligo"
+  tm_scope: source.ligo
+  ace_mode: pascal
+  codemirror_mode: pascal
+  codemirror_mime_type: text/x-pascal
+  group: LigoLANG
+  language_id: 1040646257
 LilyPond:
   type: programming
   color: "#9ccc7c"
@@ -5237,6 +5278,17 @@ Reason:
   - ".rei"
   tm_scope: source.reason
   language_id: 869538413
+ReasonLIGO:
+  type: programming
+  color: "#ff5847"
+  ace_mode: rust
+  codemirror_mode: rust
+  codemirror_mime_type: text/x-rustsrc
+  group: LigoLANG
+  extensions:
+  - ".religo"
+  tm_scope: source.religo
+  language_id: 319002153
 Rebol:
   type: programming
   color: "#358a5b"
@@ -6223,6 +6275,14 @@ TXL:
   tm_scope: source.txl
   ace_mode: text
   language_id: 366
+Talon:
+  type: programming
+  ace_mode: text
+  color: "#333333"
+  extensions:
+  - ".talon"
+  tm_scope: source.talon
+  language_id: 959889508
 Tcl:
   type: programming
   color: "#e4cc98"

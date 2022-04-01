@@ -142,7 +142,7 @@ You can also try to fix the bug yourself and submit a pull-request.
 [TextMate's documentation](https://manual.macromates.com/en/language_grammars) offers a good introduction on how to work with TextMate-compatible grammars.
 Note that Linguist uses [PCRE](https://www.pcre.org/) regular expressions, while TextMate uses [Oniguruma](https://github.com/kkos/oniguruma).
 Although they are mostly compatible there might be some differences in syntax and semantics between the two.
-You can test grammars using [Lightshow](https://github-lightshow.herokuapp.com).
+Linguist's grammar compiler will highlight any problems when the grammar is updated.
 
 Once the bug has been fixed upstream, we'll pick it up for GitHub in the next release of Linguist.
 
