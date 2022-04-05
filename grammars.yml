@@ -41,6 +41,10 @@ vendor/grammars/Isabelle.tmbundle:
 - source.isabelle.theory
 vendor/grammars/JSyntax:
 - source.j
+vendor/grammars/Ligo-grammar:
+- source.ligo
+- source.mligo
+- source.religo
 vendor/grammars/LiveScript.tmbundle:
 - source.livescript
 vendor/grammars/MATLAB-Language-grammar:
@@ -66,6 +70,7 @@ vendor/grammars/NovaGrammars:
 - source.keyvalues
 - source.redirects
 - source.solution
+- source.win32-messages
 - source.ws
 - text.robots-txt
 vendor/grammars/ObjectScript.tmBundle:
@@ -205,7 +210,7 @@ vendor/grammars/assembly:
 - objdump.x86asm
 - source.x86asm
 vendor/grammars/astro:
-- text.html.astro
+- source.astro
 - text.html.markdown.astro
 vendor/grammars/atom-editorconfig:
 - source.editorconfig
@@ -263,6 +268,9 @@ vendor/grammars/awk-sublime:
 - source.awk
 vendor/grammars/ballerina-grammar:
 - source.ballerina
+vendor/grammars/berry-grammar:
+- source.berry
+- source.berry.bytecode
 vendor/grammars/bicep:
 - markdown.bicep.codeblock
 - source.bicep
@@ -354,6 +362,9 @@ vendor/grammars/gap-tmbundle:
 - source.gap
 vendor/grammars/gemfile-lock-tmlanguage:
 - source.gemfile-lock
+vendor/grammars/genero.tmbundle:
+- source.genero
+- source.genero-forms
 vendor/grammars/gettext.tmbundle:
 - source.po
 vendor/grammars/gnuplot-tmbundle:
@@ -513,6 +524,7 @@ vendor/grammars/language-etc:
 - text.codeowners
 - text.lesshst
 - text.openbsd-pkg.desc
+- text.savane
 - text.xml.svg
 vendor/grammars/language-faust:
 - source.faust
@@ -914,11 +926,6 @@ vendor/grammars/sublime-varnish:
 - source.varnish.vcl
 vendor/grammars/sublime-zig-language:
 - source.zig
-vendor/grammars/sublime_cobol:
-- source.acucobol
-- source.cobol
-- source.jcl
-- source.opencobol
 vendor/grammars/sublimeassembly:
 - source.assembly
 vendor/grammars/sublimeprolog:
@@ -956,6 +963,11 @@ vendor/grammars/vhdl:
 - source.vhdl
 vendor/grammars/vsc-fennel:
 - source.fnl
+vendor/grammars/vscode-TalonScript:
+- source.talon
+vendor/grammars/vscode-cadence:
+- markdown.cadence.codeblock
+- source.cadence
 vendor/grammars/vscode-codeql:
 - source.ql
 vendor/grammars/vscode-cue:
@@ -1003,6 +1015,8 @@ vendor/grammars/vscode-lean:
 - markdown.lean.codeblock
 - source.lean
 - source.lean.markdown
+vendor/grammars/vscode-monkey-c:
+- source.mc
 vendor/grammars/vscode-motoko:
 - source.mo
 vendor/grammars/vscode-opa:
@@ -1012,6 +1026,7 @@ vendor/grammars/vscode-plantuml:
 - source.wsd
 vendor/grammars/vscode-prisma:
 - inline.prisma
+- markdown.prisma.codeblock
 - source.prisma
 vendor/grammars/vscode-procfile:
 - source.procfile
@@ -1031,6 +1046,24 @@ vendor/grammars/vscode-yara:
 vendor/grammars/vscode-zil-language:
 - source.zap
 - source.zil
+vendor/grammars/vscode_cobol:
+- source.acucobol
+- source.bms
+- source.bmsmap
+- source.cobol
+- source.cobol_acu_listfile
+- source.cobol_mf_listfile
+- source.cobol_mfprep
+- source.cobol_pcob_listfile
+- source.cobolit
+- source.cobsql_dir
+- source.dir
+- source.hlasm
+- source.jcl
+- source.mfu
+- source.mfupp_dir
+- source.pli
+- source.utreport
 vendor/grammars/vue-syntax-highlight:
 - text.html.vue
 vendor/grammars/wdl-sublime-syntax-highlighter:
