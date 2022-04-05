@@ -307,6 +307,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **MiniYAML:** [OpenRA/atom-miniyaml](https://github.com/OpenRA/atom-miniyaml)
 - **Mint:** [mint-lang/mint-vscode](https://github.com/mint-lang/mint-vscode)
 - **Mirah:** [atom/language-ruby](https://github.com/atom/language-ruby)
+- **ModSecurity SecRule:** [irvinlim/vscode-language-modsecurity](https://github.com/irvinlim/vscode-language-modsecurity)
 - **Modelica:** [BorisChumichev/modelicaSublimeTextPackage](https://github.com/BorisChumichev/modelicaSublimeTextPackage)
 - **Modula-2:** [harogaston/Sublime-Modula-2](https://github.com/harogaston/Sublime-Modula-2)
 - **Modula-3:** [newgrammars/m3](https://github.com/newgrammars/m3)
