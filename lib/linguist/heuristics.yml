@@ -98,6 +98,12 @@ disambiguations:
   rules:
   - language: FreeBasic
     pattern: '^[ \t]*#(?:define|endif|endmacro|ifn?def|if|include|lang|macro)\s'
+- extensions: ['.bs']
+  rules:
+  - language: BrighterScript
+    pattern: '(?i:(function|end function)|(sub|end sub)|(class|end class)|(import\s*"{1}.*"{1})|(for\s*each|end for)|(if|end if|else if|elseif|endif)|(while|end while)|(print)|(private)|(public)|(m\.)|(\$\{.*}))'
+  - language: Bikeshed
+    pattern: '(?i:<pre>|<\/pre>)|(?i:<pre class='metadata'>)|(?i:Status:|TR:|ED:|Shortname:|Level:|Editor:|Abstract:)\s.*'
 - extensions: ['.builds']
   rules:
   - language: XML
