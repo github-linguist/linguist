@@ -100,10 +100,10 @@ disambiguations:
     pattern: '^[ \t]*#(?:define|endif|endmacro|ifn?def|if|include|lang|macro)\s'
 - extensions: ['.bs']
   rules:
-  - language: BrighterScript
-    pattern: '(?:\w+\s*\(((?:[^()]*))?\s*\)(.*\n*\r*\s*)*?(end\s)(function|sub))'
   - language: Bikeshed
     pattern: '^(?i:<\/*pre>)|(?i:<pre class=.*>)'
+  - language: BrighterScript
+    pattern: '(?i:\w+\s*\(((?:[^()]*))?\s*\)(.*\n*\r*\s*)*?(end\s)(function|sub))'
 - extensions: ['.builds']
   rules:
   - language: XML
