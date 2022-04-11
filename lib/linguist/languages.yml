@@ -44,6 +44,14 @@
   tm_scope: source.bsl
   ace_mode: text
   language_id: 0
+2-Dimensional Array:
+  type: data
+  color: "#38761D"
+  extensions:
+  - ".2da"
+  tm_scope: source.2da
+  ace_mode: text
+  language_id: 387204628
 4D:
   type: programming
   color: "#004289"
@@ -392,7 +400,7 @@ Astro:
   color: "#ff5a03"
   extensions:
   - ".astro"
-  tm_scope: text.html.astro
+  tm_scope: source.astro
   ace_mode: html
   codemirror_mode: jsx
   codemirror_mime_type: text/jsx
@@ -512,6 +520,16 @@ Befunge:
   tm_scope: source.befunge
   ace_mode: text
   language_id: 30
+Berry:
+  type: programming
+  extensions:
+  - ".be"
+  tm_scope: source.berry
+  ace_mode: text
+  color: "#15A13C"
+  aliases:
+  - be
+  language_id: 121855308
 BibTeX:
   type: markup
   color: "#778899"
@@ -841,6 +859,33 @@ Cabal Config:
   codemirror_mime_type: text/x-haskell
   tm_scope: source.cabal
   language_id: 677095381
+Cadence:
+  type: programming
+  color: "#00ef8b"
+  ace_mode: text
+  tm_scope: source.cadence
+  extensions:
+  - ".cdc"
+  language_id: 270184138
+Cairo:
+  type: programming
+  color: "#ff4a48"
+  ace_mode: text
+  tm_scope: source.cairo
+  extensions:
+  - ".cairo"
+  language_id: 620599567
+CameLIGO:
+  type: programming
+  color: "#3be133"
+  extensions:
+  - ".mligo"
+  tm_scope: source.mligo
+  ace_mode: ocaml
+  codemirror_mode: mllike
+  codemirror_mime_type: text/x-ocaml
+  group: LigoLANG
+  language_id: 829207807
 Cap'n Proto:
   type: programming
   color: "#c42727"
@@ -1333,6 +1378,24 @@ DataWeave:
   ace_mode: text
   tm_scope: source.data-weave
   language_id: 974514097
+Debian Package Control File:
+  type: data
+  color: "#D70751"
+  extensions:
+  - ".dsc"
+  tm_scope: source.deb-control
+  ace_mode: text
+  language_id: 527438264
+DenizenScript:
+  type: programming
+  color: "#FBEE96"
+  ace_mode: yaml
+  codemirror_mode: yaml
+  codemirror_mime_type: text/x-yaml
+  extensions:
+  - ".dsc"
+  tm_scope: source.denizenscript
+  language_id: 435000929
 Dhall:
   type: programming
   color: "#dfafff"
@@ -1403,7 +1466,7 @@ E:
   type: programming
   color: "#ccce35"
   extensions:
-  - ".E"
+  - ".e"
   interpreters:
   - rune
   tm_scope: none
@@ -1631,6 +1694,18 @@ Erlang:
   interpreters:
   - escript
   language_id: 104
+Euphoria:
+  type: programming
+  color: "#FF790B"
+  extensions:
+  - ".e"
+  - ".ex"
+  interpreters:
+  - eui
+  - euiw
+  ace_mode: text
+  tm_scope: source.euphoria
+  language_id: 880693982
 F#:
   type: programming
   color: "#b845fc"
@@ -1988,6 +2063,22 @@ Gemfile.lock:
   filenames:
   - Gemfile.lock
   language_id: 907065713
+Genero:
+  type: programming
+  color: "#63408e"
+  extensions:
+  - ".4gl"
+  tm_scope: source.genero
+  ace_mode: text
+  language_id: 986054050
+Genero Forms:
+  type: markup
+  color: "#d8df39"
+  extensions:
+  - ".per"
+  tm_scope: source.genero-forms
+  ace_mode: text
+  language_id: 902995658
 Genie:
   type: programming
   ace_mode: text
@@ -2576,6 +2667,7 @@ INI:
   - ".prefs"
   - ".pro"
   - ".properties"
+  - ".url"
   filenames:
   - ".flake8"
   - buildozer.spec
@@ -2788,6 +2880,7 @@ JSON with Comments:
   - jsonc
   extensions:
   - ".jsonc"
+  - ".code-snippets"
   - ".sublime-build"
   - ".sublime-commands"
   - ".sublime-completions"
@@ -2922,7 +3015,9 @@ JavaScript:
   - ".jsb"
   - ".jscad"
   - ".jsfl"
+  - ".jslib"
   - ".jsm"
+  - ".jspre"
   - ".jss"
   - ".jsx"
   - ".mjs"
@@ -3244,6 +3339,8 @@ Lean:
 Less:
   type: markup
   color: "#1d365d"
+  aliases:
+  - less-css
   extensions:
   - ".less"
   tm_scope: source.css.less
@@ -3265,6 +3362,17 @@ Lex:
   tm_scope: source.lex
   ace_mode: text
   language_id: 199
+LigoLANG:
+  type: programming
+  color: "#0e74ff"
+  extensions:
+  - ".ligo"
+  tm_scope: source.ligo
+  ace_mode: pascal
+  codemirror_mode: pascal
+  codemirror_mime_type: text/x-pascal
+  group: LigoLANG
+  language_id: 1040646257
 LilyPond:
   type: programming
   color: "#9ccc7c"
@@ -3434,6 +3542,7 @@ M4:
   type: programming
   extensions:
   - ".m4"
+  - ".mc"
   tm_scope: source.m4
   ace_mode: text
   language_id: 215
@@ -3721,6 +3830,16 @@ MiniD:
   tm_scope: none
   ace_mode: text
   language_id: 231
+MiniYAML:
+  type: data
+  color: "#ff1111"
+  tm_scope: source.miniyaml
+  extensions:
+  - ".yaml"
+  ace_mode: yaml
+  codemirror_mode: yaml
+  codemirror_mime_type: text/x-yaml
+  language_id: 4896465
 Mint:
   type: programming
   extensions:
@@ -3789,6 +3908,16 @@ Monkey:
   ace_mode: text
   tm_scope: source.monkey
   language_id: 236
+Monkey C:
+  type: programming
+  color: "#8D6747"
+  extensions:
+  - ".mc"
+  tm_scope: source.mc
+  ace_mode: c_cpp
+  codemirror_mode: clike
+  codemirror_mime_type: text/x-csrc
+  language_id: 231751931
 Moocode:
   type: programming
   extensions:
@@ -5004,6 +5133,7 @@ RMarkdown:
   codemirror_mode: gfm
   codemirror_mime_type: text/x-gfm
   extensions:
+  - ".qmd"
   - ".rmd"
   tm_scope: source.gfm
   language_id: 313
@@ -5156,6 +5286,17 @@ Reason:
   - ".rei"
   tm_scope: source.reason
   language_id: 869538413
+ReasonLIGO:
+  type: programming
+  color: "#ff5847"
+  ace_mode: rust
+  codemirror_mode: rust
+  codemirror_mime_type: text/x-rustsrc
+  group: LigoLANG
+  extensions:
+  - ".religo"
+  tm_scope: source.religo
+  language_id: 319002153
 Rebol:
   type: programming
   color: "#358a5b"
@@ -5422,6 +5563,7 @@ Ruby:
   - Puppetfile
   - Rakefile
   - Snapfile
+  - Steepfile
   - Thorfile
   - Vagrantfile
   - buildfile
@@ -6132,6 +6274,14 @@ TXL:
   tm_scope: source.txl
   ace_mode: text
   language_id: 366
+Talon:
+  type: programming
+  ace_mode: text
+  color: "#333333"
+  extensions:
+  - ".talon"
+  tm_scope: source.talon
+  language_id: 959889508
 Tcl:
   type: programming
   color: "#e4cc98"
@@ -6481,7 +6631,7 @@ VHDL:
   language_id: 385
 Vala:
   type: programming
-  color: "#fbe5cd"
+  color: "#a56de2"
   extensions:
   - ".vala"
   - ".vapi"
@@ -6679,6 +6829,15 @@ Wikitext:
   tm_scope: text.html.mediawiki
   ace_mode: text
   language_id: 228
+Win32 Message File:
+  type: data
+  extensions:
+  - ".mc"
+  tm_scope: source.win32-messages
+  ace_mode: ini
+  codemirror_mode: properties
+  codemirror_mime_type: text/x-properties
+  language_id: 950967261
 Windows Registry Entries:
   type: data
   color: "#52d5ff"
@@ -6793,6 +6952,7 @@ XML:
   - ".adml"
   - ".admx"
   - ".ant"
+  - ".axaml"
   - ".axml"
   - ".builds"
   - ".ccproj"
@@ -7212,6 +7372,14 @@ jq:
   - ".jq"
   tm_scope: source.jq
   language_id: 905371884
+kvlang:
+  type: markup
+  ace_mode: text
+  extensions:
+  - ".kv"
+  color: "#1da6e0"
+  tm_scope: source.python.kivy
+  language_id: 970675279
 mIRC Script:
   type: programming
   color: "#3d57c3"
