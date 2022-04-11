@@ -101,9 +101,9 @@ disambiguations:
 - extensions: ['.bs']
   rules:
   - language: BrighterScript
-    pattern: '(?i:(function|end function)|(sub|end sub)|(class|end class)|(import\s*"{1}.*"{1})|(for\s*each|end for)|(if|end if|else if|elseif|endif)|(while|end while)|(print)|(private)|(public)|(m\.)|(\$\{.*}))'
+    pattern: '(?:\w+\s*\(((?:[^()]*))?\s*\)(.*\n*\r*\s*)*?(end\s)(function|sub))'
   - language: Bikeshed
-    pattern: '(?i:<pre>|<\/pre>)|(?i:<pre class='metadata'>)|(?i:Status:|TR:|ED:|Shortname:|Level:|Editor:|Abstract:)\s.*'
+    pattern: '^(?i:<\/*pre>)|(?i:<pre class=.*>)'
 - extensions: ['.builds']
   rules:
   - language: XML
