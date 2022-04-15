@@ -75,6 +75,8 @@ disambiguations:
     pattern: '^(\/\/.+|((import|export)\s+)?(function|int|float|char)\s+((room|repeatedly|on|game)_)?([A-Za-z]+[A-Za-z_0-9]+)\s*[;\(])'
 - extensions: ['.asm']
   rules:
+  - language: 6502 Assembly
+    named_pattern: asm_6502
   - language: Motorola 68K Assembly
     named_pattern: m68k
 - extensions: ['.asy']
@@ -265,6 +267,8 @@ disambiguations:
   - language: Slice
 - extensions: ['.inc']
   rules:
+  - language: 6502 Assembly
+    named_pattern: asm_6502
   - language: Motorola 68K Assembly
     named_pattern: m68k
   - language: PHP
@@ -522,6 +526,8 @@ disambiguations:
     pattern: '^\s*<\?xml'
 - extensions: ['.s']
   rules:
+  - language: 6502 Assembly
+    named_pattern: asm_6502
   - language: Motorola 68K Assembly
     named_pattern: m68k
 - extensions: ['.sc']
@@ -636,6 +642,9 @@ disambiguations:
     pattern: '\"modelName\"\:\s*\"GM'
   - language: Yacc
 named_patterns:
+  asm_6502:
+  - '(?i)^\s*(?:ora|and|eor|adc|sta|lda|cmp|sbc)\s+\([^),]+(?:,\s*X\)|\)\s*,\s*Y)\s*(?:$|;)'
+  - '(?i)^\s*p[hl]a\s*(?:$|;)'
   cpp:
   - '^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>'
   - '^\s*template\s*<'
