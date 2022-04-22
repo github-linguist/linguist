@@ -9,7 +9,8 @@ RUN apk --update add --virtual build_deps \
     && gem install github-linguist \
     && apk del build_deps build-base libc-dev linux-headers cmake
 
-RUN addgroup --gid 1024 linguist && adduser -D -G linguist linguist
+RUN addgroup linguist && adduser -D -G linguist linguist && \
+	mkdir -p /linguist && chown linguist:linguist /linguist
 USER linguist
 
 CMD ["github-linguist"]
