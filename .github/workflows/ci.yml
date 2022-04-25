@@ -42,7 +42,7 @@ jobs:
     - name: Build container
       run: docker build -t linguist .
     - name: Analyse current directory
-      run: docker run --rm -v $(pwd):/linguist -w linguist -t linguist | tee output
+      run: docker run --rm -v $(pwd):/linguist -w /linguist -t linguist | tee output
     - name: Confirm analysis
       run: |
         cat output
