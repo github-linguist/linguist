@@ -44,9 +44,7 @@ jobs:
     - name: Analyse current directory
       run: docker run --rm -v $(pwd):$(pwd) -w $(pwd) --user $(id -u) -t linguist | tee output
     - name: Confirm analysis
-      run: |
-        cat output
-        grep Ruby output
+      run: grep Ruby output
   classifier:
     name: Classifier cross-validation
     runs-on: ubuntu-latest
