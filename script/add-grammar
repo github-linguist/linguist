@@ -75,7 +75,7 @@ done
 for cmd in docker git sed ruby bundle; do
 	command -v "$cmd" >/dev/null 2>&1 || {
 		warn "Required command '$cmd' not found"
-		warn 'See CONTRIBUTING.md for help on getting started: https://git.io/J0eqy'
+		warn 'See CONTRIBUTING.md for help on getting started: https://github.com/github/linguist/blob/HEAD/CONTRIBUTING.md#dependencies'
 		exit 1
 	}
 done
