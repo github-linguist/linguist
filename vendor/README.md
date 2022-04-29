@@ -559,6 +559,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **YARA:** [infosec-intern/vscode-yara](https://github.com/infosec-intern/vscode-yara)
 - **YASnippet:** [Alhadis/language-emacs-lisp](https://github.com/Alhadis/language-emacs-lisp)
 - **Yacc:** [Alhadis/language-grammars](https://github.com/Alhadis/language-grammars)
+- **Yul:** [davidhq/SublimeEthereum](https://github.com/davidhq/SublimeEthereum)
 - **ZAP:** [tclem/vscode-zil-language](https://github.com/tclem/vscode-zil-language)
 - **ZIL:** [tclem/vscode-zil-language](https://github.com/tclem/vscode-zil-language)
 - **Zeek:** [zeek/zeek-sublime](https://github.com/zeek/zeek-sublime)
