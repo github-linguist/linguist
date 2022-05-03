@@ -636,7 +636,7 @@ disambiguations:
   - language: Vim Help File
     pattern: '(?:(?:^|[ \t])(?:vi|Vi(?=m))(?:m[<=>]?[0-9]+|m)?|[ \t]ex)(?=:(?=[ \t]*set?[ \t][^\r\n:]+:)|:(?![ \t]*set?[ \t]))(?:(?:[ \t]*:[ \t]*|[ \t])\w*(?:[ \t]*=(?:[^\\\s]|\\.)*)?)*[ \t:](?:filetype|ft|syntax)[ \t]*=(help)(?=$|\s|:)'
     # HACK: This is a contrived use of heuristics needed to address
-    # an unusual edge-case. See https://github.com/github/linguist/pull/4734#discussion_r479653547 for discussion.
+    # an unusual edge-case. See https://git.io/JULye for discussion.
   - language: Text
 - extensions: ['.url']
   rules:
