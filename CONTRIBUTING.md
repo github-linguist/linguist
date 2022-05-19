@@ -94,9 +94,8 @@ To add support for a new extension:
 
 Additionally, if this extension is already listed in [`languages.yml`][languages] and associated with another language, then sometimes a few more steps will need to be taken:
 
-1. Make sure that example `.yourextension` files are present in the [samples directory][samples] for each language that uses `.yourextension`.
-1. Test the performance of the Bayesian classifier with a relatively large number (1000s) of sample `.yourextension` files (ping **@lildude** to help with this).
-   This ensures we're not misclassifying files.
+1. Make sure that at least two example `.yourextension` files are present in the [samples directory][samples] for each language that uses `.yourextension`.
+1. Test the samples against the Bayesain classifier using `bundle exec rake cross_validate`.
 1. If the Bayesian classifier does a bad job with the sample `.yourextension` files then a [heuristic][] may need to be written to help.
 
 
@@ -124,9 +123,8 @@ To add support for a new language:
 
 In addition, if your new language defines an extension that's already listed in [`languages.yml`][languages] (such as `.foo`) then sometimes a few more steps will need to be taken:
 
-1. Make sure that example `.foo` files are present in the [samples directory][samples] for each language that uses `.foo`.
-1. Test the performance of the Bayesian classifier with a relatively large number (1000s) of sample `.foo` files (ping **@lildude** to help with this).
-   This ensures we're not misclassifying files.
+1. Make sure that at least two example `.foo` files are present in the [samples directory][samples] for each language that uses `.foo`.
+1. Test the samples against the Bayesain classifier using `bundle exec rake cross_validate`.
 1. If the Bayesian classifier does a bad job with the sample `.foo` files, then a [heuristic][] may need to be written to help.
 
 Remember, the goal here is to try and avoid false positives!
