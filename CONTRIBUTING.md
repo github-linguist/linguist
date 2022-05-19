@@ -12,17 +12,15 @@ By participating, you are expected to uphold this code.
 The majority of contributions won't need to touch any Ruby code at all.
 
 In order to contribute, you'll need to setup your development environment.
-You can use [Github Codespaces] (recommended) or configure your [local environment].
+You can use [Github Codespaces or VS Code Remove Containers](#github-codespaces-or-vs-code-remote-containers) or configure your [local environment](#local-environment).
 
-## GitHub Codespaces
+## GitHub Codespaces or VS Code Remote Containers
 
-Using GitHub Codespaces is the quickest and easiest method of configuring the development environment required for contributing the Linguist.
-The environment automatically installs all the necessary dependencies.
+Using GitHub Codespaces or VS Code Remote Containers is the quickest and easiest method of configuring the development environment required for contributing to Linguist.
 
-There are two ways to get started with GitHub Codespaces:
+You can [create a new Codespace](https://docs.github.com/en/codespaces/getting-started/quickstart) or clone this repository locally and [open the folder in a container](https://code.visualstudio.com/docs/remote/containers#_quick-start-open-an-existing-folder-in-a-container) and all the dependencies and submodules will be installed for you allowing you to start contributing quickly.
 
-1. Clone this repository to your local host and create a new Codespace from within VSCode
-2. Click the buttons in the UI
+See the [VS Code Remote Containers documentation](https://code.visualstudio.com/docs/remote/containers#_getting-started) for its requirements.
 
 ## Local Environment
 
