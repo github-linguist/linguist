@@ -569,6 +569,10 @@ class TestFileBlob < Minitest::Test
 
     # Jenkins
     assert sample_blob("Jenkinsfile").vendored?
+
+    # Bootstrap
+    assert !sample_blob("src/bootstraps/settings.js").vendored?
+    assert sample_blob("src/bootstrap-custom.js").vendored?
   end
 
   def test_documentation

@@ -130,6 +130,10 @@ disambiguations:
     pattern: '![\w\s]+methodsFor: '
   - language: 'C#'
     pattern: '^(\s*namespace\s*[\w\.]+\s*{|\s*\/\/)'
+- extensions: ['.csc']
+  rules:
+  - language: GSC
+    named_pattern: gsc
 - extensions: ['.csl']
   rules:
   - language: XML
@@ -157,6 +161,20 @@ disambiguations:
     pattern: '# Microsoft Developer Studio Generated Build File'
   - language: Faust
     pattern: '\bprocess\s*[(=]|\b(library|import)\s*\(\s*"|\bdeclare\s+(name|version|author|copyright|license)\s+"'
+- extensions: ['.e']
+  rules:
+  - language: E
+    pattern:
+    - '^\s*(def|var)\s+(.+):='
+    - '^\s*(def|to)\s+(\w+)(\(.+\))?\s+{'
+    - '^\s*(when)\s+(\(.+\))\s+->\s+{'
+  - language: Eiffel
+    pattern:
+    - '^\s*\w+\s*(?:,\s*\w+)*[:]\s*\w+\s'
+    - '^\s*\w+\s*(?:\(\s*\w+[:][^)]+\))?(?:[:]\s*\w+)?(?:--.+\s+)*\s+(?:do|local)\s'
+    - '^\s*(?:across|deferred|elseif|ensure|feature|from|inherit|inspect|invariant|note|once|require|undefine|variant|when)\s*$'
+  - language: Euphoria
+    named_pattern: euphoria
 - extensions: ['.ecl']
   rules:
   - language: ECLiPSe
@@ -169,6 +187,15 @@ disambiguations:
     pattern: '^\s*(?:%%|main\s*\(.*?\)\s*->)'
   - language: JavaScript
     pattern: '(?m:\/\/|("|'')use strict\1|export\s+default\s|\/\*.*?\*\/)'
+- extensions: ['.ex']
+  rules:
+  - language: Elixir
+    pattern:
+    - '^\s*@moduledoc\s'
+    - '^\s*(?:cond|import|quote|unless)\s'
+    - '^\s*def(?:exception|impl|macro|module|protocol)[(\s]'
+  - language: Euphoria
+    named_pattern: euphoria
 - extensions: ['.f']
   rules:
   - language: Forth
@@ -229,6 +256,14 @@ disambiguations:
     pattern: '^uses (java|gw)\.'
   - language: Genie
     pattern: '^\[indent=[0-9]+\]'
+- extensions: ['.gsc']
+  rules:
+  - language: GSC
+    named_pattern: gsc
+- extensions: ['.gsh']
+  rules:
+  - language: GSC
+    named_pattern: gsc
 - extensions: ['.h']
   rules:
   - language: Objective-C
@@ -323,8 +358,16 @@ disambiguations:
   - language: 'M4'
 - extensions: ['.mask']
   rules:
-  - language: Unity3d Asset
+  - language: Unity3D Asset
     pattern: 'tag:unity3d.com'
+- extensions: ['.mc']
+  rules:
+  - language: Win32 Message File
+    pattern: '(?i)^[ \t]*(?>\/\*\s*)?MessageId=|^\.$'
+  - language: M4
+    pattern: '^dnl|^divert\((?:-?\d+)?\)|^\w+\(`[^\n]*?''[),]'
+  - language: Monkey C
+    pattern: '\b(?:using|module|function|class|var)\s+\w'
 - extensions: ['.md']
   rules:
   - language: Markdown
@@ -589,6 +632,10 @@ disambiguations:
     # HACK: This is a contrived use of heuristics needed to address
     # an unusual edge-case. See https://git.io/JULye for discussion.
   - language: Text
+- extensions: ['.url']
+  rules:
+  - language: INI
+    pattern: '^\[InternetShortcut\]\R(?>[^\s\[][^\n]*\R)*URL='
 - extensions: ['.v']
   rules:
   - language: Coq
@@ -599,7 +646,7 @@ disambiguations:
     pattern: '\$(?:if|else)[ \t]|^[ \t]*fn\s+[^\s()]+\(.*?\).*?\{|^[ \t]*for\s*\{'
 - extensions: ['.vba']
   rules:
-  - language: Vim script
+  - language: Vim Script
     pattern: '^UseVimball'
   - language: VBA
 - extensions: ['.w']
@@ -618,6 +665,12 @@ disambiguations:
     pattern: '^%(end|ctor|hook|group)\b'
   - language: Linker Script
     pattern: 'OUTPUT_ARCH\(|OUTPUT_FORMAT\(|SECTIONS'
+- extensions: ['.yaml']
+  rules:
+  - language: MiniYAML
+    pattern: '^\t+.*?[^\s:].*?:'
+    negative_pattern: '---'
+  - language: YAML
 - extensions: ['.yy']
   rules:
   - language: JSON
@@ -632,7 +685,16 @@ named_patterns:
   - '^[ \t]*(class|(using[ \t]+)?namespace)\s+\w+'
   - '^[ \t]*(private|public|protected):$'
   - 'std::\w+'
+  euphoria:
+  - '^\s*namespace\s'
+  - '^\s*(?:public\s+)?include\s'
+  - '^\s*(?:(?:public|export|global)\s+)?(?:atom|constant|enum|function|integer|object|procedure|sequence|type)\s'
   fortran: '^(?i:[c*][^abd-z]|      (subroutine|program|end|data)\s|\s*!)'
+  gsc:
+  - '^\s*#\s*(?:using|insert|include|define|namespace)[ \t]+\w'
+  - '^\s*(?>(?:autoexec|private)\s+){0,2}function\s+(?>(?:autoexec|private)\s+){0,2}\w+\s*\('
+  - '\b(?:level|self)[ \t]+thread[ \t]+(?:\[\[[ \t]*(?>\w+\.)*\w+[ \t]*\]\]|\w+)[ \t]*\([^\r\n\)]*\)[ \t]*;'
+  - '^[ \t]*#[ \t]*(?:precache|using_animtree)[ \t]*\('
   key_equals_value: '^[^#!;][^=]*='
   m68k:
   - '(?im)\bmoveq(?:\.l)?\s+#(?:\$-?[0-9a-f]{1,3}|%[0-1]{1,8}|-?[0-9]{1,3}),\s*d[0-7]\b'

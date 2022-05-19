@@ -326,6 +326,12 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_csc_by_heuristics
+    assert_heuristics({
+      "GSC" => all_fixtures("GSC", "*.csc")
+    })
+  end
+
   def test_csl_by_heuristics
     assert_heuristics({
       "Kusto" => all_fixtures("Kusto", "*.csl"),
@@ -348,6 +354,14 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_e_by_heuristics
+    assert_heuristics({
+      "E" => all_fixtures("E", "*.E"),
+      "Eiffel" => all_fixtures("Eiffel", "*.e"),
+      "Euphoria" => all_fixtures("Euphoria", "*.e")
+    })
+  end
+
   def test_ecl_by_heuristics
     assert_heuristics({
       "ECL" => all_fixtures("ECL", "*.ecl"),
@@ -359,6 +373,13 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "Erlang" => all_fixtures("Erlang", "*.es"),
       "JavaScript" => all_fixtures("JavaScript", "*.es")
+    })
+  end
+
+  def test_ex_by_heuristics
+    assert_heuristics({
+      "Elixir" => all_fixtures("Elixir", "*.ex"),
+      "Euphoria" => all_fixtures("Euphoria", "*.ex")
     })
   end
 
@@ -428,6 +449,18 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       nil => all_fixtures("JavaScript")
     }, alt_name="test.gs")
+  end
+
+  def test_gsc_by_heuristics
+    assert_heuristics({
+      "GSC" => all_fixtures("GSC", "*.gsc")
+    })
+  end
+
+  def test_gsh_by_heuristics
+    assert_heuristics({
+      "GSC" => all_fixtures("GSC", "*.gsh")
+    })
   end
 
   def test_h_by_heuristics
@@ -539,6 +572,13 @@ class TestHeuristics < Minitest::Test
   def test_mask_by_heuristics
     assert_heuristics({
       "Unity3D Asset" => all_fixtures("Unity3D Asset", "*.mask")
+    })
+  end
+
+  def test_mc_by_heuristics
+    assert_heuristics({
+      "Monkey C" => all_fixtures("Monkey C", "*.mc"),
+      "Win32 Message File" => all_fixtures("Win32 Message File", "*.mc")
     })
   end
 
@@ -833,6 +873,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_url_by_heuristics
+    assert_heuristics({
+      "INI" => Dir.glob("#{fixtures_path}/Generic/url/INI/*"),
+      nil => Dir.glob("#{fixtures_path}/Generic/url/nil/*")
+    })
+  end
+
   def test_v_by_heuristics
     assert_heuristics({
       "Coq" => all_fixtures("Coq", "*.v"),
@@ -844,7 +891,7 @@ class TestHeuristics < Minitest::Test
   def test_vba_by_heuristics
     assert_heuristics({
       "VBA" => all_fixtures("VBA", "*.vba"),
-      "Vim script" => all_fixtures("Vim script", "*.vba")
+      "Vim Script" => all_fixtures("Vim Script", "*.vba")
     })
   end
 
@@ -861,6 +908,13 @@ class TestHeuristics < Minitest::Test
       "DirectX 3D File" => all_fixtures("DirectX 3D File", "*.x"),
       "Linker Script" => all_fixtures("Linker Script", "*.x"),
       "RPC" => all_fixtures("RPC", "*.x")
+    })
+  end
+
+  def test_yaml_by_heuristics
+    assert_heuristics({
+      "MiniYAML" => all_fixtures("MiniYAML", "*.yaml"),
+      "YAML" => all_fixtures("YAML", "*.yaml"),
     })
   end
 
