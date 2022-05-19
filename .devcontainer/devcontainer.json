@@ -32,7 +32,6 @@
 		"wingrunr21.vscode-ruby"
 	],
 
-  // Runs automatically after Prebuild Template environment is created.
-  "onCreateCommand": ".devcontainer/on-create-command.sh"
-	//"postCreateCommand": "script/bootstrap && bundle exec rake samples"
+  // Runs automatically after the container starts
+	"postCreateCommand": "script/bootstrap && bundle exec rake samples"
 }
