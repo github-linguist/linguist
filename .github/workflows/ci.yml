@@ -55,7 +55,5 @@ jobs:
       with:
         ruby-version: '3.0'
         bundler-cache: true
-    - name: Build
-      run: bundle exec rake samples
     - name: Run cross-validation
-      run: bundle exec script/cross-validation --test 2>&1
+      run: bundle exec rake cross_validation

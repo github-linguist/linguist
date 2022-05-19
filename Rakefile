@@ -55,6 +55,11 @@ task :flex do
   system "cd ext/linguist && flex tokenizer.l"
 end
 
+desc "Tests samples against the classifier"
+task :cross_validate => :samples do
+  system "script/cross-validation --test 2>&1"
+end
+
 # The error count will need to be adjusted here until such time as all grammars are 100% error free.
 desc "Check that compiling the grammars doesn't introduce any new unexpected errors"
 task :check_grammars do
