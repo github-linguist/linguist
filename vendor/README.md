@@ -235,6 +235,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **J:** [tikkanz/JSyntax](https://github.com/tikkanz/JSyntax)
 - **JAR Manifest:** [atom/language-yaml](https://github.com/atom/language-yaml)
 - **JFlex:** [jflex-de/jflex.tmbundle](https://github.com/jflex-de/jflex.tmbundle)
+- **JsLIGO** [pewulfman/Ligo-grammar](https://github.com/pewulfman/Ligo-grammar]
 - **JSON:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
 - **JSON with Comments:** [atom/language-javascript](https://github.com/atom/language-javascript)
 - **JSON5:** [atom/language-javascript](https://github.com/atom/language-javascript)
