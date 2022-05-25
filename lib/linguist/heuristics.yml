@@ -101,7 +101,7 @@ disambiguations:
 - extensions: ['.bs']
   rules:
   - language: Bikeshed
-    pattern: '^(?i:<\/*pre>)|(?i:<pre class=.*>)'
+    pattern: '^(?i:<pre\s+class)\s*=\s*('|"|\b)?metadata\1[^>\r\n]*>'
   - language: BrighterScript
     pattern: '(?i:\w+\s*\(((?:[^()]*))?\s*\)(.*\n*\r*\s*)*?(end\s)(function|sub))'
 - extensions: ['.builds']
