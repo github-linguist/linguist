@@ -2,9 +2,9 @@ FROM golang:1.16
 
 WORKDIR /go/src/github.com/github/linguist/tools/grammars
 
-RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - && \
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
 	apt-get update && \
-	apt-get install -y nodejs cmake npm && \
+	apt-get install -y nodejs cmake && \
 	npm install -g season && \
 	cd /tmp && git clone https://github.com/vmg/pcre && \
 	mkdir -p /tmp/pcre/build && cd /tmp/pcre/build && \
