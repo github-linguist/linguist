@@ -27,8 +27,7 @@
     - Sample source(s):
       - [URL to each sample source, if applicable]
     - Sample license(s):
-  <!-- Update the Lightshow URLs below to show the grammar in action if you included one. -->
-  - [ ] I have included a syntax highlighting grammar: https://github-lightshow.herokuapp.com/
+  - [ ] I have included a syntax highlighting grammar: [URL to grammar repo]
   - [ ] I have updated the heuristics to distinguish my language from others using the same extension.
 
 - [ ] **I am fixing a misclassified language**
@@ -39,9 +38,8 @@
   - [ ] I have included a change to the heuristics to distinguish my language from others using the same extension.
 
 - [ ] **I am changing the source of a syntax highlighting grammar**
-  <!-- Update the Lightshow URLs below to show the new and old grammars in action. -->
-  - Old: https://github-lightshow.herokuapp.com/
-  - New: https://github-lightshow.herokuapp.com/
+  - Old: [URL to grammar repo]
+  - New: [URL to grammar repo]
 
 - [ ] **I am updating a grammar submodule**
   <!-- That's not necessary, grammar submodules are updated automatically with each new release. -->

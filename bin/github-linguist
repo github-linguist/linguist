@@ -24,6 +24,7 @@ def github_linguist(args)
 
   parser = OptionParser.new do |opts|
     opts.banner = HELP_TEXT
+    opts.version = Linguist::VERSION
 
     opts.on("-b", "--breakdown", "Analyze entire repository and display detailed usage statistics") { breakdown = true }
     opts.on("-j", "--json", "Output results as JSON") { json_output = true }
