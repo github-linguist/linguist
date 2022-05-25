@@ -17,7 +17,7 @@ jobs:
       matrix:
         ruby: [ '3.0', '2.7', '2.6', '2.5' ]
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
@@ -38,20 +38,18 @@ jobs:
     name: Test Dockerfile
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
     - name: Build container
       run: docker build -t linguist .
     - name: Analyse current directory
-      run: docker run --rm -v $(pwd):$(pwd) -w $(pwd) -t linguist > output
+      run: docker run --rm -v $(pwd):$(pwd) -w $(pwd) --user $(id -u) -t linguist | tee output
     - name: Confirm analysis
-      run: |
-        cat output
-        grep Ruby output
+      run: grep Ruby output
   classifier:
     name: Classifier cross-validation
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
