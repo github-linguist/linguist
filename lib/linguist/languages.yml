@@ -3067,6 +3067,20 @@ Jest Snapshot:
   codemirror_mode: javascript
   codemirror_mime_type: application/javascript
   language_id: 774635084
+JetBrains MPS:
+  type: programming
+  aliases:
+  - mps
+  color: "#21D789"
+  extensions:
+  - ".mps"
+  - ".mpl"
+  - ".msd"
+  ace_mode: xml
+  codemirror_mode: xml
+  codemirror_mime_type: text/xml
+  tm_scope: none
+  language_id: 465165328
 Jinja:
   type: markup
   color: "#a52a22"
@@ -3211,6 +3225,7 @@ KiCad Schematic:
   aliases:
   - eeschema schematic
   extensions:
+  - ".kicad_sch"
   - ".sch"
   tm_scope: source.pcb.schematic
   ace_mode: text
@@ -3700,6 +3715,7 @@ Markdown:
   wrap: true
   extensions:
   - ".md"
+  - ".livemd"
   - ".markdown"
   - ".mdown"
   - ".mdwn"
@@ -6821,6 +6837,14 @@ Wget Config:
   tm_scope: source.wgetrc
   ace_mode: text
   language_id: 668457123
+Whiley:
+  type: programming
+  color: "#d5c397"  
+  extensions:
+  - ".whiley"
+  tm_scope: source.whiley
+  ace_mode: text
+  language_id: 888779559  
 Wikitext:
   type: prose
   color: "#fc5757"
