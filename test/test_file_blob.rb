@@ -573,6 +573,10 @@ class TestFileBlob < Minitest::Test
     # Bootstrap
     assert !sample_blob("src/bootstraps/settings.js").vendored?
     assert sample_blob("src/bootstrap-custom.js").vendored?
+
+    # GitHub.com
+    assert sample_blob(".github/CODEOWNERS").vendored?
+    assert sample_blob(".github/workflows/test.yml").vendored?
   end
 
   def test_documentation
