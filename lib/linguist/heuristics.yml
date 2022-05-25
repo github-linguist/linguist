@@ -103,7 +103,11 @@ disambiguations:
   - language: Bikeshed
     pattern: '^(?i:<pre\s+class)\s*=\s*(''|\"|\b)?metadata\1[^>\r\n]*>'
   - language: BrighterScript
-    pattern: '(?i:\w+\s*\(((?:[^()]*))?\s*\)|(end\sfunction|sub))'
+    pattern:
+    - (?i:^\s*(?=^sub\s)(?:sub\s*\w+\(.*?\))|(?::\s*sub\(.*?\))$)
+    - (?i:^\s*(end\ssub)$)
+    - (?i:^\s*(?=^function\s)(?:function\s*\w+\(.*?\)\s*as\s*\w*)|(?::\s*function\(.*?\)\s*as\s*\w*)$)
+    - (?i:^\s*(end\sfunction)$)
 - extensions: ['.builds']
   rules:
   - language: XML
