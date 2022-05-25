@@ -17,9 +17,7 @@ jobs:
       matrix:
         ruby: [ '3.0', '2.7', '2.6', '2.5' ]
     steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
+    - uses: actions/checkout@v1
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
@@ -40,7 +38,7 @@ jobs:
     name: Test Dockerfile
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v1
     - name: Build container
       run: docker build -t linguist .
     - name: Analyse current directory
@@ -51,7 +49,7 @@ jobs:
     name: Classifier cross-validation
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v2
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
