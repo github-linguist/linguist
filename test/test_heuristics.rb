@@ -827,6 +827,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_star_by_heuristics
+    assert_heuristics({
+      "STAR" => all_fixtures("STAR", "*.star"),
+      "Starlark" => all_fixtures("Starlark", "*.star")
+    })
+  end
+
   def test_t_by_heuristics
     # Turing not fully covered.
     assert_heuristics({
