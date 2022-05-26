@@ -372,7 +372,6 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Pod 6:** [perl6/atom-language-perl6](https://github.com/perl6/atom-language-perl6)
 - **PogoScript:** [featurist/PogoScript.tmbundle](https://github.com/featurist/PogoScript.tmbundle)
 - **Pony:** [CausalityLtd/sublime-pony](https://github.com/CausalityLtd/sublime-pony)
-- **Portugol:** [luisgbr1el/learnPortugol](https://github.com/luisgbr1el/learnPortugol)
 - **PostCSS:** [hudochenkov/Syntax-highlighting-for-PostCSS](https://github.com/hudochenkov/Syntax-highlighting-for-PostCSS)
 - **PostScript:** [Alhadis/Atom-PostScript](https://github.com/Alhadis/Atom-PostScript)
 - **PowerShell:** [PowerShell/EditorSyntax](https://github.com/PowerShell/EditorSyntax)
