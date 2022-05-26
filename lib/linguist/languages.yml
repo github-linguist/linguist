@@ -2861,6 +2861,10 @@ JSON:
   ace_mode: json
   codemirror_mode: javascript
   codemirror_mime_type: application/json
+  aliases:
+  - geojson
+  - jsonl
+  - topojson
   extensions:
   - ".json"
   - ".avsc"
@@ -6850,9 +6854,11 @@ WebIDL:
 WebVTT:
   type: data
   wrap: true
+  aliases:
+  - vtt
   extensions:
   - ".vtt"
-  tm_scope: source.vtt
+  tm_scope: text.vtt
   ace_mode: text
   language_id: 658679714
 Wget Config:
