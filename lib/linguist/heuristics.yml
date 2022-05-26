@@ -360,6 +360,14 @@ disambiguations:
   rules:
   - language: Unity3D Asset
     pattern: 'tag:unity3d.com'
+- extensions: ['.mc']
+  rules:
+  - language: Win32 Message File
+    pattern: '(?i)^[ \t]*(?>\/\*\s*)?MessageId=|^\.$'
+  - language: M4
+    pattern: '^dnl|^divert\((?:-?\d+)?\)|^\w+\(`[^\n]*?''[),]'
+  - language: Monkey C
+    pattern: '\b(?:using|module|function|class|var)\s+\w'
 - extensions: ['.md']
   rules:
   - language: Markdown
@@ -624,6 +632,10 @@ disambiguations:
     # HACK: This is a contrived use of heuristics needed to address
     # an unusual edge-case. See https://git.io/JULye for discussion.
   - language: Text
+- extensions: ['.url']
+  rules:
+  - language: INI
+    pattern: '^\[InternetShortcut\]\R(?>[^\s\[][^\n]*\R)*URL='
 - extensions: ['.v']
   rules:
   - language: Coq
