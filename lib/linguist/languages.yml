@@ -744,6 +744,16 @@ C2hs Haskell:
   codemirror_mode: haskell
   codemirror_mime_type: text/x-haskell
   language_id: 45
+CAP CDS:
+  type: programming
+  tm_scope: source.cds
+  color: "#0092d1"
+  aliases:
+  - cds
+  extensions:
+  - ".cds"
+  ace_mode: text
+  language_id: 390788699
 CIL:
   type: data
   tm_scope: source.cil
@@ -1730,6 +1740,7 @@ F*:
   - fstar
   extensions:
   - ".fst"
+  - ".fsti"
   tm_scope: source.fstar
   ace_mode: text
   language_id: 336943375
@@ -2842,6 +2853,10 @@ JSON:
   ace_mode: json
   codemirror_mode: javascript
   codemirror_mime_type: application/json
+  aliases:
+  - geojson
+  - jsonl
+  - topojson
   extensions:
   - ".json"
   - ".avsc"
@@ -4776,6 +4791,14 @@ Pony:
   tm_scope: source.pony
   ace_mode: text
   language_id: 290
+Portugol:
+  type: programming
+  color: "#f8bd00"
+  extensions:
+  - ".por"
+  tm_scope: source.portugol
+  ace_mode: text
+  language_id: 832391833
 PostCSS:
   type: markup
   color: "#dc3a0c"
@@ -6823,9 +6846,11 @@ WebIDL:
 WebVTT:
   type: data
   wrap: true
+  aliases:
+  - vtt
   extensions:
   - ".vtt"
-  tm_scope: source.vtt
+  tm_scope: text.vtt
   ace_mode: text
   language_id: 658679714
 Wget Config:
@@ -6840,12 +6865,12 @@ Wget Config:
   language_id: 668457123
 Whiley:
   type: programming
-  color: "#d5c397"  
+  color: "#d5c397"
   extensions:
   - ".whiley"
   tm_scope: source.whiley
   ace_mode: text
-  language_id: 888779559  
+  language_id: 888779559
 Wikitext:
   type: prose
   color: "#fc5757"
