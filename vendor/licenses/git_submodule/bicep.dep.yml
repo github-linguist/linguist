@@ -1,6 +1,6 @@
 ---
 name: bicep
-version: 864d3cafc2fb9ff1e7ed8417db45fd52b63941db
+version: 50be98ac63ea9eab949e282ce304e7600e24da43
 type: git_submodule
 homepage: https://github.com/azure/bicep
 license: mit
@@ -28,4 +28,9 @@ licenses:
         LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
         OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
         SOFTWARE
+- sources: README.md
+  text: |-
+    All files except for the [Azure Architecture SVG Icons](./src/vscode-bicep/src/visualizer/app/assets/icons/azure) in the repository are subject to the [MIT license](./LICENSE).
+
+    The [Azure Architecture SVG Icons](./src/vscode-bicep/src/visualizer/app/assets/icons/azure) used in the Bicep VS Code extension are subject to the [Terms of Use](https://docs.microsoft.com/azure/architecture/icons/#terms).
 notices: []

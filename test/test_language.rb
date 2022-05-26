@@ -60,8 +60,8 @@ class TestLanguage < Minitest::Test
     assert_equal Language['SuperCollider'], Language.find_by_alias('supercollider')
     assert_equal Language['TeX'], Language.find_by_alias('tex')
     assert_equal Language['TypeScript'], Language.find_by_alias('ts')
-    assert_equal Language['Vim script'], Language.find_by_alias('vim')
-    assert_equal Language['Vim script'], Language.find_by_alias('viml')
+    assert_equal Language['Vim Script'], Language.find_by_alias('vim')
+    assert_equal Language['Vim Script'], Language.find_by_alias('viml')
     assert_equal Language['reStructuredText'], Language.find_by_alias('rst')
     assert_equal Language['X BitMap'], Language.find_by_alias('xbm')
     assert_equal Language['X PixMap'], Language.find_by_alias('xpm')
@@ -96,7 +96,6 @@ class TestLanguage < Minitest::Test
     assert_equal Language['C'], Language['OpenCL'].group
     assert_equal Language['Haskell'], Language['Literate Haskell'].group
     assert_equal Language['Java'], Language['Java Server Pages'].group
-    assert_equal Language['Python'], Language['Cython'].group
     assert_equal Language['Python'], Language['NumPy'].group
     assert_equal Language['Shell'], Language['Gentoo Ebuild'].group
     assert_equal Language['Shell'], Language['Gentoo Eclass'].group

@@ -1,6 +1,13 @@
 name: Run Tests
 
-on: [push, pull_request]
+on:
+  # Trigger the workflow on push or pull request, but only for the master branch
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
   run:
@@ -35,11 +42,9 @@ jobs:
     - name: Build container
       run: docker build -t linguist .
     - name: Analyse current directory
-      run: docker run --rm -v $(pwd):$(pwd) -w $(pwd) -t linguist > output
+      run: docker run --rm -v $(pwd):$(pwd) -w $(pwd) --user $(id -u) -t linguist | tee output
     - name: Confirm analysis
-      run: |
-        cat output
-        grep Ruby output
+      run: grep Ruby output
   classifier:
     name: Classifier cross-validation
     runs-on: ubuntu-latest

@@ -8,7 +8,7 @@ Add [a `.gitattributes` file](https://git-scm.com/docs/gitattributes) to your pr
 `.gitattributes` will be used to determine language statistics and will be used to syntax highlight files.
 You can also manually set syntax highlighting using [Vim or Emacs modelines](#using-emacs-or-vim-modelines).
 
-When testing with a local installation of Linguist, take note that the added attributes will not take effect until the `.gitattributes` file is committed to your repository.
+When testing with a local installation of Linguist, **take note that the added attributes will _not_ take effect until the `.gitattributes` file is committed to your repository.**
 
 File and folder paths inside `.gitattributes` are calculated relative to the position of the `.gitattributes` file.
 
@@ -34,8 +34,10 @@ File and folder paths inside `.gitattributes` are calculated relative to the pos
 
 ### Detectable
 
-Only programming languages are included in the language statistics.
-Languages of a different type (as defined in [`languages.yml`]) are not "detectable" causing them not to be included in the language statistics.
+By default only languages of type `programming` or `markup` in [`languages.yml`] are included in the language statistics.
+Languages of a different type in [`languages.yml`] are not "detectable" by default, causing them not to be included in the language statistics,
+but can be made detectable as shown below.  Languages that are not yet mentioned in [`languages.yml`] will not be included in the language
+statistics, even if you specify something like `*.mycola linguist-language=MyCoolLang linguist-detectable` in the `.gitattributes` file.
 
 Use the `linguist-detectable` attribute to mark or unmark paths as detectable:
 
@@ -53,8 +55,12 @@ Just like vendored files, Linguist excludes documentation files from your projec
 Use the `linguist-documentation` attribute to mark or unmark paths as documentation:
 
 ```gitattributes
+# Apply override to all files in the directory
 project-docs/* linguist-documentation
+# Apply override to a specific file
 docs/formatter.rb -linguist-documentation
+# Apply override to all files and directories in the directory
+ano-dir/** linguist-documentation
 ```
 
 ### Generated code
@@ -78,8 +84,12 @@ By default, Linguist treats all of the paths defined in [`vendor.yml`] as vendor
 Use the `linguist-vendored` attribute to vendor or un-vendor paths:
 
 ```gitattributes
+# Apply override to all files in the directory
 special-vendored-path/* linguist-vendored
+# Apply override to a specific file
 jquery.js -linguist-vendored
+# Apply override to all files and directories in the directory
+ano-dir/** linguist-vendored
 ```
 
 ## Using Emacs or Vim modelines
