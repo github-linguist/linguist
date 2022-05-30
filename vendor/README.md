@@ -446,6 +446,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **SRecode Template:** [textmate/lisp.tmbundle](https://github.com/textmate/lisp.tmbundle)
 - **SSH Config:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **STAR:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
+- **STL:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **STON:** [tomas-stefano/smalltalk-tmbundle](https://github.com/tomas-stefano/smalltalk-tmbundle)
 - **SVG:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **SWIG:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
