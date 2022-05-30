@@ -834,6 +834,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_stl_by_heuristics
+    assert_heuristics({
+      "STL" => Dir.glob("#{fixtures_path}/Generic/stl/STL/*"),
+      nil => Dir.glob("#{fixtures_path}/Generic/stl/nil/*")
+    })
+  end
+
   def test_t_by_heuristics
     # Turing not fully covered.
     assert_heuristics({

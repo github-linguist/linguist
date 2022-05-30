@@ -114,7 +114,7 @@ class TestBlob < Minitest::Test
 
   def test_solid
     assert fixture_blob_memory("Binary/cube.stl").solid?
-    assert fixture_blob_memory("Data/cube.stl").solid?
+    assert fixture_blob_memory("Generic/stl/STL/cube2.stl").solid?
   end
 
   def test_csv
