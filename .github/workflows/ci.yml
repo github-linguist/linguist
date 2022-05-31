@@ -1,6 +1,13 @@
 name: Run Tests
 
-on: [push, pull_request]
+on:
+  # Trigger the workflow on push or pull request, but only for the master branch
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
   run:
@@ -8,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby: [ 2.7, 2.6, 2.5 ]
+        ruby: [ '3.0', '2.7', '2.6', '2.5' ]
     steps:
     - uses: actions/checkout@v1
     - name: Set up Ruby
@@ -35,8 +42,20 @@ jobs:
     - name: Build container
       run: docker build -t linguist .
     - name: Analyse current directory
-      run: docker run --rm -v $(pwd):$(pwd) -w $(pwd) -t linguist > output
+      run: docker run --rm -v $(pwd):$(pwd) -w $(pwd) --user $(id -u) -t linguist | tee output
     - name: Confirm analysis
-      run: |
-        cat output
-        grep Ruby output
+      run: grep Ruby output
+  classifier:
+    name: Classifier cross-validation
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.0'
+        bundler-cache: true
+    - name: Build
+      run: bundle exec rake samples
+    - name: Run cross-validation
+      run: bundle exec script/cross-validation --test 2>&1
