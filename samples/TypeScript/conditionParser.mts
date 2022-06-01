@@ -1,5 +1,7 @@
 const thisFile = import.meta.url;
 
+const waitOneTick = await Promise.resolve();
+
 export function parse(
     source: string
   ): {
