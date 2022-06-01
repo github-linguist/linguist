@@ -1,4 +1,4 @@
-const thisFile = await import.meta.url;
+const thisFile = import.meta.url;
 
 export function parse(
     source: string
