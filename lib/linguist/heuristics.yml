@@ -607,6 +607,10 @@ disambiguations:
   - language: STAR
     pattern: '^loop_\s*$'
   - language: Starlark
+- extensions: ['.stl']
+  rules:
+  - language: STL
+    pattern: '\A\s*solid(?=$|\s)(?m:.*?)\Rendsolid(?:$|\s)'
 - extensions: ['.t']
   rules:
   - language: Perl
