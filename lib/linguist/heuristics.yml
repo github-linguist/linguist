@@ -602,6 +602,15 @@ disambiguations:
     pattern: '\$\w+[($]|(.)!\s*.+?\s*!\1|<!\s*.+?\s*!>|\[!\s*.+?\s*!\]|\{!\s*.+?\s*!\}'
   - language: Smalltalk
     pattern: '\A\s*[\[{(^"''\w#]|[a-zA-Z_]\w*\s*:=\s*[a-zA-Z_]\w*|class\s*>>\s*[a-zA-Z_]\w*|^[a-zA-Z_]\w*\s+[a-zA-Z_]\w*:|^Class\s*{|if(?:True|False):\s*\['
+- extensions: ['.star']
+  rules:
+  - language: STAR
+    pattern: '^loop_\s*$'
+  - language: Starlark
+- extensions: ['.stl']
+  rules:
+  - language: STL
+    pattern: '\A\s*solid(?=$|\s)(?m:.*?)\Rendsolid(?:$|\s)'
 - extensions: ['.t']
   rules:
   - language: Perl
