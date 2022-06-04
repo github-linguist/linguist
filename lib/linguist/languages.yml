@@ -2176,16 +2176,6 @@ Git Attributes:
   codemirror_mode: shell
   codemirror_mime_type: text/x-sh
   language_id: 956324166
-Git Blame Ignore:
-  type: data
-  color: "#F44D27"
-  aliases:
-  - Git Blame Ignore Revs
-  filenames:
-  - ".git-blame-ignore-revs"
-  tm_scope: text.git-blame-ignore
-  ace_mode: text
-  language_id: 461881235
 Git Config:
   type: data
   color: "#F44D27"
@@ -2203,6 +2193,16 @@ Git Config:
   codemirror_mime_type: text/x-properties
   tm_scope: source.gitconfig
   language_id: 807968997
+Git Revision List:
+  type: data
+  color: "#F44D27"
+  aliases:
+  - Git Blame Ignore Revs
+  filenames:
+  - ".git-blame-ignore-revs"
+  tm_scope: source.git-revlist
+  ace_mode: text
+  language_id: 461881235
 Gleam:
   type: programming
   color: "#ffaff3"
