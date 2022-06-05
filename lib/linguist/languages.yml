@@ -734,6 +734,16 @@ C2hs Haskell:
   codemirror_mode: haskell
   codemirror_mime_type: text/x-haskell
   language_id: 45
+CAP CDS:
+  type: programming
+  tm_scope: source.cds
+  color: "#0092d1"
+  aliases:
+  - cds
+  extensions:
+  - ".cds"
+  ace_mode: text
+  language_id: 390788699
 CIL:
   type: data
   tm_scope: source.cil
@@ -1720,6 +1730,7 @@ F*:
   - fstar
   extensions:
   - ".fst"
+  - ".fsti"
   tm_scope: source.fstar
   ace_mode: text
   language_id: 336943375
@@ -2842,6 +2853,10 @@ JSON:
   ace_mode: json
   codemirror_mode: javascript
   codemirror_mime_type: application/json
+  aliases:
+  - geojson
+  - jsonl
+  - topojson
   extensions:
   - ".json"
   - ".avsc"
@@ -3226,6 +3241,7 @@ KiCad Schematic:
   aliases:
   - eeschema schematic
   extensions:
+  - ".kicad_sch"
   - ".sch"
   tm_scope: source.pcb.schematic
   ace_mode: text
@@ -4775,6 +4791,14 @@ Pony:
   tm_scope: source.pony
   ace_mode: text
   language_id: 290
+Portugol:
+  type: programming
+  color: "#f8bd00"
+  extensions:
+  - ".por"
+  tm_scope: source.portugol
+  ace_mode: text
+  language_id: 832391833
 PostCSS:
   type: markup
   color: "#dc3a0c"
@@ -5730,6 +5754,24 @@ SSH Config:
   ace_mode: text
   tm_scope: source.ssh-config
   language_id: 554920715
+STAR:
+  type: data
+  extensions:
+  - ".star"
+  tm_scope: source.star
+  ace_mode: text
+  language_id: 424510560
+STL:
+  type: data
+  color: "#373b5e"
+  aliases:
+  - ascii stl
+  - stla
+  extensions:
+  - ".stl"
+  tm_scope: source.stl
+  ace_mode: text
+  language_id: 455361735
 STON:
   type: data
   group: Smalltalk
@@ -6124,6 +6166,7 @@ Starlark:
   color: "#76d275"
   extensions:
   - ".bzl"
+  - ".star"
   filenames:
   - BUCK
   - BUILD
@@ -6822,9 +6865,11 @@ WebIDL:
 WebVTT:
   type: data
   wrap: true
+  aliases:
+  - vtt
   extensions:
   - ".vtt"
-  tm_scope: source.vtt
+  tm_scope: text.vtt
   ace_mode: text
   language_id: 658679714
 Wget Config:
@@ -6839,12 +6884,12 @@ Wget Config:
   language_id: 668457123
 Whiley:
   type: programming
-  color: "#d5c397"  
+  color: "#d5c397"
   extensions:
   - ".whiley"
   tm_scope: source.whiley
   ace_mode: text
-  language_id: 888779559  
+  language_id: 888779559
 Wikitext:
   type: prose
   color: "#fc5757"
