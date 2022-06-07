@@ -277,6 +277,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_bs_by_heuristics
+    assert_heuristics({
+      "BrighterScript" => all_fixtures("BrighterScript", "*.bs"),
+      "Bikeshed" => all_fixtures("Bikeshed", "*.bs")
+    })
+  end
+
   def test_builds_by_heuristics
     assert_heuristics({
       nil => all_fixtures("Text"),
