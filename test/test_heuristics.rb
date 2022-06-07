@@ -925,6 +925,12 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_xml_by_heuristics
+    assert_heuristics({
+      "Mule" => all_fixtures("Mule", "*.xml"),
+    })
+  end
+
   def test_yaml_by_heuristics
     assert_heuristics({
       "MiniYAML" => all_fixtures("MiniYAML", "*.yaml"),
