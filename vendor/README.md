@@ -186,6 +186,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Gherkin:** [cucumber/cucumber-tmbundle](https://github.com/cucumber/cucumber-tmbundle)
 - **Git Attributes:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **Git Config:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
+- **Git Revision List:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
 - **Gleam:** [gleam-lang/vscode-gleam](https://github.com/gleam-lang/vscode-gleam)
 - **Glyph:** [textmate/tcl.tmbundle](https://github.com/textmate/tcl.tmbundle)
 - **Glyph Bitmap Distribution Format:** [Alhadis/language-fontforge](https://github.com/Alhadis/language-fontforge)
