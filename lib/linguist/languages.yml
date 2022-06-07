@@ -2222,6 +2222,16 @@ Git Config:
   codemirror_mime_type: text/x-properties
   tm_scope: source.gitconfig
   language_id: 807968997
+Git Revision List:
+  type: data
+  color: "#F44D27"
+  aliases:
+  - Git Blame Ignore Revs
+  filenames:
+  - ".git-blame-ignore-revs"
+  tm_scope: source.git-revlist
+  ace_mode: text
+  language_id: 461881235
 Gleam:
   type: programming
   color: "#ffaff3"
@@ -6330,7 +6340,7 @@ TSV:
   language_id: 1035892117
 TSX:
   type: programming
-  color: "#2b7489"
+  color: "#3178c6"
   group: TypeScript
   extensions:
   - ".tsx"
@@ -6556,7 +6566,7 @@ Type Language:
   language_id: 632765617
 TypeScript:
   type: programming
-  color: "#2b7489"
+  color: "#3178c6"
   aliases:
   - ts
   interpreters:
@@ -6602,6 +6612,10 @@ Unix Assembly:
   extensions:
   - ".s"
   - ".ms"
+  aliases:
+  - gas
+  - gnu asm
+  - unix asm
   tm_scope: source.x86
   ace_mode: assembly_x86
   language_id: 120
