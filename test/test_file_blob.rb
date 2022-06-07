@@ -140,7 +140,7 @@ class TestFileBlob < Minitest::Test
 
   def test_solid
     assert fixture_blob("Binary/cube.stl").solid?
-    assert fixture_blob("Data/cube.stl").solid?
+    assert fixture_blob("Generic/stl/STL/cube2.stl").solid?
   end
 
   def test_csv
