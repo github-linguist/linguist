@@ -1,10 +1,12 @@
 ---
-type: git_submodule
 name: Dafny-VSCode
-version: 5bc7a499c41f8678845e2891cab89eb91bfc02c3
+version: 55044e501fe916d87fa6504c2dec6ac6012aaddf
+type: git_submodule
+homepage: https://github.com/DafnyVSCode/Dafny-VSCode
 license: mit
 licenses:
-- text: |-
+- sources: LICENSE
+  text: |
     MIT License
     Copyright (c) 2016 Jonathan Rosca
     Copyright (c) 2017 Markus Schaden, Rafael Krucker
@@ -15,4 +17,8 @@ licenses:
     The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+- sources: README.md
+  text: |-
+    Dafny VSCode is released under the [MIT License](https://github.com/DafnyVSCode/Dafny-VSCode/blob/develop/LICENSE).
+    Note that by submitting a Pull Request, you agree to release your changes under this license.
 notices: []
