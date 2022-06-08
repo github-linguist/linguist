@@ -94,6 +94,8 @@ disambiguations:
     pattern: '(<^\s*; |End Function)'
   - language: BitBake
     pattern: '^\s*(# |include|require)\b'
+  - language: Clojure
+    pattern: '\((def|defn|defmacro\let)\s'
 - extensions: ['.bi']
   rules:
   - language: FreeBasic
