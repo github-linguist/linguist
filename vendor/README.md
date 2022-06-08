@@ -89,6 +89,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **CartoCSS:** [yohanboniface/carto-atom](https://github.com/yohanboniface/carto-atom)
 - **Ceylon:** [jeancharles-roger/ceylon-sublimetext](https://github.com/jeancharles-roger/ceylon-sublimetext)
 - **Chapel:** [chapel-lang/chapel-tmbundle](https://github.com/chapel-lang/chapel-tmbundle)
+- **Checksums:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **ChucK:** [textmate/java.tmbundle](https://github.com/textmate/java.tmbundle)
 - **Cirru:** [Cirru/sublime-cirru](https://github.com/Cirru/sublime-cirru)
 - **Clarion:** [fushnisoft/SublimeClarion](https://github.com/fushnisoft/SublimeClarion)
