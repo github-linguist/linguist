@@ -95,7 +95,7 @@ disambiguations:
   - language: BitBake
     pattern: '^\s*(# |include|require)\b'
   - language: Clojure
-    pattern: '\((def|defn|defmacro\let)\s'
+    pattern: '\((def|defn|defmacro|let)\s'
 - extensions: ['.bi']
   rules:
   - language: FreeBasic
