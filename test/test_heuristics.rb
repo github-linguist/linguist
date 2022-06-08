@@ -277,6 +277,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_bs_by_heuristics
+    assert_heuristics({
+      "BrighterScript" => all_fixtures("BrighterScript", "*.bs"),
+      "Bikeshed" => all_fixtures("Bikeshed", "*.bs")
+    })
+  end
+
   def test_builds_by_heuristics
     assert_heuristics({
       nil => all_fixtures("Text"),
@@ -922,6 +929,12 @@ class TestHeuristics < Minitest::Test
       "DirectX 3D File" => all_fixtures("DirectX 3D File", "*.x"),
       "Linker Script" => all_fixtures("Linker Script", "*.x"),
       "RPC" => all_fixtures("RPC", "*.x")
+    })
+  end
+
+  def test_xml_by_heuristics
+    assert_heuristics({
+      "Mule" => all_fixtures("Mule", "*.xml"),
     })
   end
 
