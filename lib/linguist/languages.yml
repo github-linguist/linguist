@@ -305,6 +305,16 @@ Ant Build System:
   codemirror_mode: xml
   codemirror_mime_type: application/xml
   language_id: 15
+Antlers:
+  type: markup
+  color: "#ff269e"
+  extensions:
+  - ".antlers.html"
+  - ".antlers.php"
+  - ".antlers.xml"
+  tm_scope: text.html.statamic
+  ace_mode: text
+  language_id: 1067292663
 ApacheConf:
   type: data
   color: "#d12127"
@@ -550,6 +560,16 @@ Bicep:
   tm_scope: source.bicep
   ace_mode: text
   language_id: 321200902
+Bikeshed:
+  type: markup
+  color: "#5562ac"
+  extensions:
+  - ".bs"
+  tm_scope: source.csswg
+  ace_mode: html
+  codemirror_mode: htmlmixed
+  codemirror_mime_type: text/html
+  language_id: 1055528081
 Bison:
   type: programming
   color: "#6A463F"
@@ -637,12 +657,20 @@ Brainfuck:
   codemirror_mode: brainfuck
   codemirror_mime_type: text/x-brainfuck
   language_id: 38
+BrighterScript:
+  type: programming
+  color: "#66AABB"
+  extensions:
+  - ".bs"
+  tm_scope: source.brs
+  ace_mode: text
+  language_id: 943571030
 Brightscript:
   type: programming
   color: "#662D91"
   extensions:
   - ".brs"
-  tm_scope: source.brightscript
+  tm_scope: source.brs
   ace_mode: text
   language_id: 39
 Browserslist:
@@ -2205,6 +2233,16 @@ Git Config:
   codemirror_mime_type: text/x-properties
   tm_scope: source.gitconfig
   language_id: 807968997
+Git Revision List:
+  type: data
+  color: "#F44D27"
+  aliases:
+  - Git Blame Ignore Revs
+  filenames:
+  - ".git-blame-ignore-revs"
+  tm_scope: source.git-revlist
+  ace_mode: text
+  language_id: 461881235
 Gleam:
   type: programming
   color: "#ffaff3"
@@ -3987,6 +4025,16 @@ Motorola 68K Assembly:
   tm_scope: source.m68k
   ace_mode: assembly_x86
   language_id: 477582706
+Mule:
+  type: programming
+  color: "#00a1df"
+  tm_scope: text.xml
+  ace_mode: xml
+  codemirror_mode: xml
+  codemirror_mime_type: application/xml
+  extensions:
+  - ".xml"
+  language_id: 213085803
 Muse:
   type: prose
   extensions:
@@ -6313,7 +6361,7 @@ TSV:
   language_id: 1035892117
 TSX:
   type: programming
-  color: "#2b7489"
+  color: "#3178c6"
   group: TypeScript
   extensions:
   - ".tsx"
@@ -6539,7 +6587,7 @@ Type Language:
   language_id: 632765617
 TypeScript:
   type: programming
-  color: "#2b7489"
+  color: "#3178c6"
   aliases:
   - ts
   interpreters:
@@ -6547,6 +6595,8 @@ TypeScript:
   - ts-node
   extensions:
   - ".ts"
+  - ".cts"
+  - ".mts"
   tm_scope: source.ts
   ace_mode: typescript
   codemirror_mode: javascript
@@ -6585,6 +6635,10 @@ Unix Assembly:
   extensions:
   - ".s"
   - ".ms"
+  aliases:
+  - gas
+  - gnu asm
+  - unix asm
   tm_scope: source.x86
   ace_mode: assembly_x86
   language_id: 120
