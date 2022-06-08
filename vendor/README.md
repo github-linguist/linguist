@@ -191,7 +191,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Git Attributes:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **Git Config:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **Git Revision List:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
-- **Gleam:** [gleam-lang/vscode-gleam](https://github.com/gleam-lang/vscode-gleam)
+- **Gleam:** [gleam-lang/tree-sitter-gleam](https://github.com/gleam-lang/tree-sitter-gleam) 🐌
 - **Glyph:** [textmate/tcl.tmbundle](https://github.com/textmate/tcl.tmbundle)
 - **Glyph Bitmap Distribution Format:** [Alhadis/language-fontforge](https://github.com/Alhadis/language-fontforge)
 - **Gnuplot:** [mattfoster/gnuplot-tmbundle](https://github.com/mattfoster/gnuplot-tmbundle)
@@ -248,7 +248,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **JSONiq:** [wcandillon/language-jsoniq](https://github.com/wcandillon/language-jsoniq)
 - **Janet:** [janet-lang/vscode-janet](https://github.com/janet-lang/vscode-janet)
 - **Jasmin:** [atmarksharp/jasmin-sublime](https://github.com/atmarksharp/jasmin-sublime)
-- **Java:** [textmate/java.tmbundle](https://github.com/textmate/java.tmbundle)
+- **Java:** [tree-sitter/tree-sitter-java](https://github.com/tree-sitter/tree-sitter-java) 🐌
 - **Java Properties:** [textmate/java.tmbundle](https://github.com/textmate/java.tmbundle)
 - **Java Server Pages:** [textmate/java.tmbundle](https://github.com/textmate/java.tmbundle)
 - **JavaScript:** [tree-sitter/tree-sitter-javascript](https://github.com/tree-sitter/tree-sitter-javascript) 🐌
@@ -494,7 +494,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Svelte:** [umanghome/svelte-atom](https://github.com/umanghome/svelte-atom)
 - **Swift:** [textmate/swift.tmbundle](https://github.com/textmate/swift.tmbundle)
 - **SystemVerilog:** [TheClams/SystemVerilog](https://github.com/TheClams/SystemVerilog)
-- **TLA:** [agentultra/TLAGrammar](https://github.com/agentultra/TLAGrammar)
+- **TLA:** [tlaplus-community/tree-sitter-tlaplus](https://github.com/tlaplus-community/tree-sitter-tlaplus) 🐌
 - **TOML:** [textmate/toml.tmbundle](https://github.com/textmate/toml.tmbundle)
 - **TSQL:** [beau-witter/language-tsql](https://github.com/beau-witter/language-tsql)
 - **TSV:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
