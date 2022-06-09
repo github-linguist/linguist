@@ -686,10 +686,6 @@ disambiguations:
     pattern: '^%(end|ctor|hook|group)\b'
   - language: Linker Script
     pattern: 'OUTPUT_ARCH\(|OUTPUT_FORMAT\(|SECTIONS'
-- extensions: ['.xml']
-  rules:
-  - language: Mule
-    pattern: '<mule\s[^>]*xmlns="http:\/\/www\.mulesoft\.org\/schema\/mule\/core"'
 - extensions: ['.yaml']
   rules:
   - language: MiniYAML
