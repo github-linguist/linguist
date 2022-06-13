@@ -141,7 +141,7 @@ disambiguations:
   - language: Smalltalk
     pattern: '![\w\s]+methodsFor: '
   - language: 'C#'
-    pattern: '^(\s*namespace\s*[\w\.]+\s*{|\s*\/\/)'
+    pattern: '^(\s*namespace\s*[\w\.]+\s*(;|{|\s*\/\/))'
 - extensions: ['.csc']
   rules:
   - language: GSC
