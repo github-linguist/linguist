@@ -1,4 +1,4 @@
-require 'escape_utils'
+require 'cgi'
 require 'yaml'
 begin
   require 'yajl'
@@ -434,7 +434,7 @@ module Linguist
     #
     # Returns the escaped String.
     def escaped_name
-      EscapeUtils.escape_url(name).gsub('+', '%20')
+      CGI.escape(name).gsub('+', '%20')
     end
 
     # Public: Get default alias name
