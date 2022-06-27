@@ -1,10 +1,12 @@
 ---
-type: git_submodule
 name: powershell
-version: 4a0a076661d26473cac71b9a17e6a759e9b1c643
+version: c0372a1d2df136ca6b3d1a9f7b85031dedf117f9
+type: git_submodule
+homepage: https://github.com/PowerShell/EditorSyntax
 license: mit
 licenses:
-- text: |-
+- sources: LICENSE
+  text: |
     Copyright (c) Microsoft Corporation
 
     All rights reserved.
@@ -28,4 +30,9 @@ licenses:
     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
+- sources: README.md
+  text: |-
+    This extension is [licensed under the MIT License](LICENSE).  Please see the
+    [third-party notices](Third%20Party%20Notices.txt) file for details on the original
+    source of the TextMate definition that we use.
 notices: []

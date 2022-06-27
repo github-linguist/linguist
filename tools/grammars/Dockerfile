@@ -1,8 +1,8 @@
-FROM golang:1.9.2
+FROM golang:1.16
 
 WORKDIR /go/src/github.com/github/linguist/tools/grammars
 
-RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - && \
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
 	apt-get update && \
 	apt-get install -y nodejs cmake && \
 	npm install -g season && \
@@ -21,10 +21,9 @@ RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - && \
 		-G "Unix Makefiles" && \
     make && make install && \
 	rm -rf /tmp/pcre && \
-	cd /go && go get -u github.com/golang/dep/cmd/dep && \
 	rm -rf /var/lib/apt/lists/*
 
 COPY . .
-RUN dep ensure && go install ./cmd/grammar-compiler
+RUN go install ./cmd/grammar-compiler
 
 ENTRYPOINT ["grammar-compiler"]

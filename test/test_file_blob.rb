@@ -28,7 +28,7 @@ class TestFileBlob < Minitest::Test
   end
 
   def test_mime_type
-    assert_equal "application/postscript", fixture_blob("Binary/octocat.ai").mime_type
+    assert_equal "application/pdf", fixture_blob("Binary/octocat.ai").mime_type
     assert_equal "application/x-ruby", sample_blob("Ruby/grit.rb").mime_type
     assert_equal "application/x-sh", sample_blob("Shell/script.sh").mime_type
     assert_equal "application/xml", sample_blob("XML/bar.xml").mime_type
@@ -140,7 +140,7 @@ class TestFileBlob < Minitest::Test
 
   def test_solid
     assert fixture_blob("Binary/cube.stl").solid?
-    assert fixture_blob("Data/cube.stl").solid?
+    assert fixture_blob("Generic/stl/STL/cube2.stl").solid?
   end
 
   def test_csv
@@ -569,6 +569,14 @@ class TestFileBlob < Minitest::Test
 
     # Jenkins
     assert sample_blob("Jenkinsfile").vendored?
+
+    # Bootstrap
+    assert !sample_blob("src/bootstraps/settings.js").vendored?
+    assert sample_blob("src/bootstrap-custom.js").vendored?
+
+    # GitHub.com
+    assert sample_blob(".github/CODEOWNERS").vendored?
+    assert sample_blob(".github/workflows/test.yml").vendored?
   end
 
   def test_documentation
