@@ -94,10 +94,22 @@ disambiguations:
     pattern: '(<^\s*; |End Function)'
   - language: BitBake
     pattern: '^\s*(# |include|require)\b'
+  - language: Clojure
+    pattern: '\((def|defn|defmacro|let)\s'
 - extensions: ['.bi']
   rules:
   - language: FreeBasic
     pattern: '^[ \t]*#(?:define|endif|endmacro|ifn?def|if|include|lang|macro)\s'
+- extensions: ['.bs']
+  rules:
+  - language: Bikeshed
+    pattern: '^(?i:<pre\s+class)\s*=\s*(''|\"|\b)metadata\b\1[^>\r\n]*>'
+  - language: BrighterScript
+    pattern:
+    - (?i:^\s*(?=^sub\s)(?:sub\s*\w+\(.*?\))|(?::\s*sub\(.*?\))$)
+    - (?i:^\s*(end\ssub)$)
+    - (?i:^\s*(?=^function\s)(?:function\s*\w+\(.*?\)\s*as\s*\w*)|(?::\s*function\(.*?\)\s*as\s*\w*)$)
+    - (?i:^\s*(end\sfunction)$)
 - extensions: ['.builds']
   rules:
   - language: XML
@@ -129,7 +141,7 @@ disambiguations:
   - language: Smalltalk
     pattern: '![\w\s]+methodsFor: '
   - language: 'C#'
-    pattern: '^(\s*namespace\s*[\w\.]+\s*{|\s*\/\/)'
+    pattern: '^(\s*namespace\s*[\w\.]+\s*({|;)|\s*\/\/)'
 - extensions: ['.csc']
   rules:
   - language: GSC
@@ -592,6 +604,15 @@ disambiguations:
     pattern: '\$\w+[($]|(.)!\s*.+?\s*!\1|<!\s*.+?\s*!>|\[!\s*.+?\s*!\]|\{!\s*.+?\s*!\}'
   - language: Smalltalk
     pattern: '\A\s*[\[{(^"''\w#]|[a-zA-Z_]\w*\s*:=\s*[a-zA-Z_]\w*|class\s*>>\s*[a-zA-Z_]\w*|^[a-zA-Z_]\w*\s+[a-zA-Z_]\w*:|^Class\s*{|if(?:True|False):\s*\['
+- extensions: ['.star']
+  rules:
+  - language: STAR
+    pattern: '^loop_\s*$'
+  - language: Starlark
+- extensions: ['.stl']
+  rules:
+  - language: STL
+    pattern: '\A\s*solid(?=$|\s)(?m:.*?)\Rendsolid(?:$|\s)'
 - extensions: ['.t']
   rules:
   - language: Perl

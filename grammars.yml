@@ -10,9 +10,6 @@ vendor/grammars/Atom-PostScript:
 - source.postscript
 vendor/grammars/AutoHotkey:
 - source.ahk
-vendor/grammars/BrightScript.tmbundle:
-- source.brightauthorproject
-- source.brightscript
 vendor/grammars/CUE-Sheet_sublime:
 - source.cuesheet
 vendor/grammars/CoDT7-Sublime:
@@ -42,6 +39,7 @@ vendor/grammars/Isabelle.tmbundle:
 vendor/grammars/JSyntax:
 - source.j
 vendor/grammars/Ligo-grammar:
+- source.jsligo
 - source.ligo
 - source.mligo
 - source.religo
@@ -66,12 +64,14 @@ vendor/grammars/NimLime:
 - source.nim_filter
 - source.nimcfg
 vendor/grammars/NovaGrammars:
+- source.git-revlist
 - source.json
 - source.keyvalues
 - source.redirects
 - source.solution
 - source.win32-messages
 - source.ws
+- text.hash-commented
 - text.robots-txt
 vendor/grammars/ObjectScript.tmBundle:
 - source.objectscript
@@ -164,6 +164,8 @@ vendor/grammars/VBDotNetSyntax:
 - source.vbnet
 vendor/grammars/Vala-TMBundle:
 - source.vala
+vendor/grammars/WhileySyntaxBundle:
+- source.whiley
 vendor/grammars/X10:
 - source.x10
 vendor/grammars/XojoSyntaxTM:
@@ -249,8 +251,6 @@ vendor/grammars/atom-language-purescript:
 - source.purescript
 vendor/grammars/atom-language-rust:
 - source.rust
-vendor/grammars/atom-language-srt:
-- text.srt
 vendor/grammars/atom-language-stan:
 - source.stan
 vendor/grammars/atom-miniyaml:
@@ -275,6 +275,8 @@ vendor/grammars/berry-grammar:
 vendor/grammars/bicep:
 - markdown.bicep.codeblock
 - source.bicep
+vendor/grammars/bikeshed:
+- source.csswg
 vendor/grammars/blitzmax:
 - source.blitzmax
 vendor/grammars/boogie-vscode:
@@ -289,6 +291,8 @@ vendor/grammars/capnproto.tmbundle:
 - source.capnp
 vendor/grammars/carto-atom:
 - source.css.mss
+vendor/grammars/cds-textmate-grammar:
+- source.cds
 vendor/grammars/ceylon-sublimetext:
 - source.ceylon
 vendor/grammars/chapel-tmbundle:
@@ -373,7 +377,9 @@ vendor/grammars/gnuplot-tmbundle:
 vendor/grammars/go-tmbundle:
 - source.go
 vendor/grammars/godot-vscode-plugin:
+- source.gdresource
 - source.gdscript
+- source.gdshader
 vendor/grammars/grace:
 - source.grace
 vendor/grammars/gradle.tmbundle:
@@ -516,6 +522,8 @@ vendor/grammars/language-etc:
 - source.sieve
 - source.smpl
 - source.ssh-config
+- source.star
+- source.stl
 - source.string-template
 - source.tags
 - source.ucd.nameslist
@@ -686,6 +694,9 @@ vendor/grammars/language-sed:
 vendor/grammars/language-shellscript:
 - source.shell
 - text.shell-session
+vendor/grammars/language-subtitles:
+- text.srt
+- text.vtt
 vendor/grammars/language-supercollider:
 - source.supercollider
 vendor/grammars/language-texinfo:
@@ -703,8 +714,6 @@ vendor/grammars/language-viml:
 - source.vim-snippet
 - source.viml
 - text.vim-help
-vendor/grammars/language-vtt:
-- source.vtt
 vendor/grammars/language-wavefront:
 - source.wavefront.mtl
 - source.wavefront.obj
@@ -807,6 +816,8 @@ vendor/grammars/pig-latin:
 - source.pig_latin
 vendor/grammars/pike-textmate:
 - source.pike
+vendor/grammars/portugol-grammar:
+- source.portugol
 vendor/grammars/powershell:
 - source.powershell
 vendor/grammars/processing.tmbundle:
@@ -964,6 +975,10 @@ vendor/grammars/vsc-fennel:
 - source.fnl
 vendor/grammars/vscode-TalonScript:
 - source.talon
+vendor/grammars/vscode-antlers-language-server:
+- text.html.statamic
+vendor/grammars/vscode-brightscript-language:
+- source.brs
 vendor/grammars/vscode-cadence:
 - markdown.cadence.codeblock
 - source.cadence

@@ -305,6 +305,16 @@ Ant Build System:
   codemirror_mode: xml
   codemirror_mime_type: application/xml
   language_id: 15
+Antlers:
+  type: markup
+  color: "#ff269e"
+  extensions:
+  - ".antlers.html"
+  - ".antlers.php"
+  - ".antlers.xml"
+  tm_scope: text.html.statamic
+  ace_mode: text
+  language_id: 1067292663
 ApacheConf:
   type: data
   color: "#d12127"
@@ -550,6 +560,16 @@ Bicep:
   tm_scope: source.bicep
   ace_mode: text
   language_id: 321200902
+Bikeshed:
+  type: markup
+  color: "#5562ac"
+  extensions:
+  - ".bs"
+  tm_scope: source.csswg
+  ace_mode: html
+  codemirror_mode: htmlmixed
+  codemirror_mime_type: text/html
+  language_id: 1055528081
 Bison:
   type: programming
   color: "#6A463F"
@@ -637,12 +657,20 @@ Brainfuck:
   codemirror_mode: brainfuck
   codemirror_mime_type: text/x-brainfuck
   language_id: 38
+BrighterScript:
+  type: programming
+  color: "#66AABB"
+  extensions:
+  - ".bs"
+  tm_scope: source.brs
+  ace_mode: text
+  language_id: 943571030
 Brightscript:
   type: programming
   color: "#662D91"
   extensions:
   - ".brs"
-  tm_scope: source.brightscript
+  tm_scope: source.brs
   ace_mode: text
   language_id: 39
 Browserslist:
@@ -734,6 +762,16 @@ C2hs Haskell:
   codemirror_mode: haskell
   codemirror_mime_type: text/x-haskell
   language_id: 45
+CAP CDS:
+  type: programming
+  tm_scope: source.cds
+  color: "#0092d1"
+  aliases:
+  - cds
+  extensions:
+  - ".cds"
+  ace_mode: text
+  language_id: 390788699
 CIL:
   type: data
   tm_scope: source.cil
@@ -920,6 +958,39 @@ Charity:
   tm_scope: none
   ace_mode: text
   language_id: 56
+Checksums:
+  type: data
+  tm_scope: text.checksums
+  aliases:
+  - checksum
+  - hash
+  - hashes
+  - sum
+  - sums
+  filenames:
+  - MD5SUMS
+  - SHA1SUMS
+  - SHA256SUMS
+  - SHA256SUMS.txt
+  - SHA512SUMS
+  - checksums.txt
+  - cksums
+  - md5sum.txt
+  extensions:
+  - ".crc32"
+  - ".md2"
+  - ".md4"
+  - ".md5"
+  - ".sha1"
+  - ".sha2"
+  - ".sha224"
+  - ".sha256"
+  - ".sha256sum"
+  - ".sha3"
+  - ".sha384"
+  - ".sha512"
+  ace_mode: text
+  language_id: 372063053
 ChucK:
   type: programming
   color: "#3f8000"
@@ -990,6 +1061,7 @@ Clojure:
   color: "#db5855"
   extensions:
   - ".clj"
+  - ".bb"
   - ".boot"
   - ".cl2"
   - ".cljc"
@@ -1000,6 +1072,8 @@ Clojure:
   - ".hic"
   filenames:
   - riemann.config
+  interpreters:
+  - bb
   language_id: 62
 Closure Templates:
   type: markup
@@ -1720,6 +1794,7 @@ F*:
   - fstar
   extensions:
   - ".fst"
+  - ".fsti"
   tm_scope: source.fstar
   ace_mode: text
   language_id: 336943375
@@ -2193,6 +2268,16 @@ Git Config:
   codemirror_mime_type: text/x-properties
   tm_scope: source.gitconfig
   language_id: 807968997
+Git Revision List:
+  type: data
+  color: "#F44D27"
+  aliases:
+  - Git Blame Ignore Revs
+  filenames:
+  - ".git-blame-ignore-revs"
+  tm_scope: source.git-revlist
+  ace_mode: text
+  language_id: 461881235
 Gleam:
   type: programming
   color: "#ffaff3"
@@ -2661,8 +2746,11 @@ INI:
   - ".properties"
   - ".url"
   filenames:
+  - ".coveragerc"
   - ".flake8"
+  - ".pylintrc"
   - buildozer.spec
+  - pylintrc
   tm_scope: source.ini
   aliases:
   - dosini
@@ -2829,8 +2917,14 @@ JSON:
   ace_mode: json
   codemirror_mode: javascript
   codemirror_mime_type: application/json
+  aliases:
+  - geojson
+  - jsonl
+  - topojson
   extensions:
   - ".json"
+  - ".4DForm"
+  - ".4DProject"
   - ".avsc"
   - ".geojson"
   - ".gltf"
@@ -3055,6 +3149,20 @@ Jest Snapshot:
   codemirror_mode: javascript
   codemirror_mime_type: application/javascript
   language_id: 774635084
+JetBrains MPS:
+  type: programming
+  aliases:
+  - mps
+  color: "#21D789"
+  extensions:
+  - ".mps"
+  - ".mpl"
+  - ".msd"
+  ace_mode: xml
+  codemirror_mode: xml
+  codemirror_mime_type: text/xml
+  tm_scope: none
+  language_id: 465165328
 Jinja:
   type: markup
   color: "#a52a22"
@@ -3199,6 +3307,7 @@ KiCad Schematic:
   aliases:
   - eeschema schematic
   extensions:
+  - ".kicad_sch"
   - ".sch"
   tm_scope: source.pcb.schematic
   ace_mode: text
@@ -3688,6 +3797,7 @@ Markdown:
   wrap: true
   extensions:
   - ".md"
+  - ".livemd"
   - ".markdown"
   - ".mdown"
   - ".mdwn"
@@ -4747,6 +4857,14 @@ Pony:
   tm_scope: source.pony
   ace_mode: text
   language_id: 290
+Portugol:
+  type: programming
+  color: "#f8bd00"
+  extensions:
+  - ".por"
+  tm_scope: source.portugol
+  ace_mode: text
+  language_id: 832391833
 PostCSS:
   type: markup
   color: "#dc3a0c"
@@ -5702,6 +5820,24 @@ SSH Config:
   ace_mode: text
   tm_scope: source.ssh-config
   language_id: 554920715
+STAR:
+  type: data
+  extensions:
+  - ".star"
+  tm_scope: source.star
+  ace_mode: text
+  language_id: 424510560
+STL:
+  type: data
+  color: "#373b5e"
+  aliases:
+  - ascii stl
+  - stla
+  extensions:
+  - ".stl"
+  tm_scope: source.stl
+  ace_mode: text
+  language_id: 455361735
 STON:
   type: data
   group: Smalltalk
@@ -6096,6 +6232,7 @@ Starlark:
   color: "#76d275"
   extensions:
   - ".bzl"
+  - ".star"
   filenames:
   - BUCK
   - BUILD
@@ -6251,7 +6388,7 @@ TSV:
   language_id: 1035892117
 TSX:
   type: programming
-  color: "#2b7489"
+  color: "#3178c6"
   group: TypeScript
   extensions:
   - ".tsx"
@@ -6477,7 +6614,7 @@ Type Language:
   language_id: 632765617
 TypeScript:
   type: programming
-  color: "#2b7489"
+  color: "#3178c6"
   aliases:
   - ts
   interpreters:
@@ -6485,6 +6622,8 @@ TypeScript:
   - ts-node
   extensions:
   - ".ts"
+  - ".cts"
+  - ".mts"
   tm_scope: source.ts
   ace_mode: typescript
   codemirror_mode: javascript
@@ -6523,6 +6662,10 @@ Unix Assembly:
   extensions:
   - ".s"
   - ".ms"
+  aliases:
+  - gas
+  - gnu asm
+  - unix asm
   tm_scope: source.x86
   ace_mode: assembly_x86
   language_id: 120
@@ -6794,9 +6937,11 @@ WebIDL:
 WebVTT:
   type: data
   wrap: true
+  aliases:
+  - vtt
   extensions:
   - ".vtt"
-  tm_scope: source.vtt
+  tm_scope: text.vtt
   ace_mode: text
   language_id: 658679714
 Wget Config:
@@ -6809,6 +6954,14 @@ Wget Config:
   tm_scope: source.wgetrc
   ace_mode: text
   language_id: 668457123
+Whiley:
+  type: programming
+  color: "#d5c397"
+  extensions:
+  - ".whiley"
+  tm_scope: source.whiley
+  ace_mode: text
+  language_id: 888779559
 Wikitext:
   type: prose
   color: "#fc5757"

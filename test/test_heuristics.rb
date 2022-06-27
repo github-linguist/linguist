@@ -277,6 +277,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_bs_by_heuristics
+    assert_heuristics({
+      "BrighterScript" => all_fixtures("BrighterScript", "*.bs"),
+      "Bikeshed" => all_fixtures("Bikeshed", "*.bs")
+    })
+  end
+
   def test_builds_by_heuristics
     assert_heuristics({
       nil => all_fixtures("Text"),
@@ -824,6 +831,20 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "StringTemplate" => all_fixtures("StringTemplate", "*.st"),
       "Smalltalk" => all_fixtures("Smalltalk", "*.st")
+    })
+  end
+
+  def test_star_by_heuristics
+    assert_heuristics({
+      "STAR" => all_fixtures("STAR", "*.star"),
+      "Starlark" => all_fixtures("Starlark", "*.star")
+    })
+  end
+
+  def test_stl_by_heuristics
+    assert_heuristics({
+      "STL" => Dir.glob("#{fixtures_path}/Generic/stl/STL/*"),
+      nil => Dir.glob("#{fixtures_path}/Generic/stl/nil/*")
     })
   end
 
