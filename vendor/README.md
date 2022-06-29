@@ -548,6 +548,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Witcher Script:** [ADawesomeguy/witcherscript-grammar](https://github.com/ADawesomeguy/witcherscript-grammar)
 - **Wollok:** [uqbar-project/wollok-sublime](https://github.com/uqbar-project/wollok-sublime)
 - **World of Warcraft Addon Data:** [nebularg/language-toc-wow](https://github.com/nebularg/language-toc-wow)
+- **Wren:** [Nelarius/vscode-wren](https://github.com/Nelarius/vscode-wren)
 - **X BitMap:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **X Font Directory Index:** [Alhadis/language-fontforge](https://github.com/Alhadis/language-fontforge)
 - **X PixMap:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
