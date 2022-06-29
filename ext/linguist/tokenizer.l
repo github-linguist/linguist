@@ -12,8 +12,6 @@
     *yyextra = rb_str_new(__s, __cl); \
   } while(0)
 
-#define FEED1(s) FEED2(s, strlen(s))
-
 #define FEED() FEED2(yytext, yyleng)
 
 #define FEED_STATIC(s) FEED2(s, sizeof(s) - 1)
