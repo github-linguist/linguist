@@ -563,12 +563,6 @@ disambiguations:
     pattern: '#include|#pragma\s+(rs|version)|__attribute__'
   - language: XML
     pattern: '^\s*<\?xml'
-- extensions: ['.rsc']
-  rules:
-  - language: Rascal
-    pattern: '(?i:^module \w+|::|:=|<-|syntax|extend|lexical|@\w+{| \| |\\w+|start syntax|)'
-  - language: "RouterOS Script"
-    pattern: '(?i:\/interface|\/ip|:local|:global|:environment|:log)'
 - extensions: ['.s']
   rules:
   - language: Motorola 68K Assembly
