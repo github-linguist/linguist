@@ -1,0 +1,61 @@
+<!DOCTYPE qhelp PUBLIC "-//Semmle//qhelp//EN" "qhelp.dtd">
+<qhelp>
+
+<overview>
+<p>
+Deserializing untrusted data using any deserialization framework that
+allows the construction of arbitrary serializable objects is easily exploitable
+and in many cases allows an attacker to execute arbitrary code.  Even before a
+deserialized object is returned to the caller of a deserialization method a lot
+of code may have been executed, including static initializers, constructors,
+and finalizers.  Automatic deserialization of fields means that an attacker may
+craft a nested combination of objects on which the executed initialization code
+may have unforeseen effects, such as the execution of arbitrary code.
+</p>
+<p>
+There are many different serialization frameworks.  This query currently
+supports Pickle, Marshal and Yaml.
+</p>
+</overview>
+
+<recommendation>
+<p>
+Avoid deserialization of untrusted data if at all possible.  If the
+architecture permits it then use other formats instead of serialized objects,
+for example JSON.
+</p>
+</recommendation>
+
+<example>
+<p>
+The following example calls <code>pickle.loads</code> directly on a
+value provided by an incoming HTTP request. Pickle then creates a new value from untrusted data, and is
+therefore inherently unsafe.
+</p>
+<sample src="UnpicklingBad.py" />
+
+<p>
+Changing the code to use <code>json.loads</code> instead of <code>pickle.loads</code> removes the vulnerability.
+</p>
+<sample src="JsonGood.py" />
+
+</example>
+
+<references>
+
+<li>
+OWASP vulnerability description:
+<a href="https://www.owasp.org/index.php/Deserialization_of_untrusted_data">Deserialization of untrusted data</a>.
+</li>
+<li>
+OWASP guidance on deserializing objects:
+<a href="https://cheatsheetseries.owasp.org/cheatsheets/Deserialization_Cheat_Sheet.html">Deserialization Cheat Sheet</a>.
+</li>
+<li>
+Talks by Chris Frohoff &amp; Gabriel Lawrence:
+<a href="http://frohoff.github.io/appseccali-marshalling-pickles/">
+AppSecCali 2015: Marshalling Pickles - how deserializing objects will ruin your day</a>
+</li>
+</references>
+
+</qhelp>
