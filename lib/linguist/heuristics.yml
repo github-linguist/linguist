@@ -565,10 +565,10 @@ disambiguations:
     pattern: '^\s*<\?xml'
 - extensions: ['.rsc']
   rules:
-  - language: RouterOS Script
-    pattern: '\/interface|\/ip|:local|:global|:environment|:log'
   - language: Rascal
-    pattern: 'module \w+|::|:=|<-|syntax|extend'
+    pattern: '(?i:^module \w+|::|:=|<-|syntax|extend|lexical|@\w+{| \| |\\w+|start syntax|)'
+  - language: "RouterOS Script"
+    pattern: '(?i:\/interface|\/ip|:local|:global|:environment|:log)'
 - extensions: ['.s']
   rules:
   - language: Motorola 68K Assembly
