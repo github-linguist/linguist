@@ -343,7 +343,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Nim:** [nim-lang/NimLime](https://github.com/nim-lang/NimLime)
 - **Ninja:** [khyo/language-ninja](https://github.com/khyo/language-ninja)
 - **Nit:** [R4PaSs/Sublime-Nit](https://github.com/R4PaSs/Sublime-Nit)
-- **Nix:** [wmertens/sublime-nix](https://github.com/wmertens/sublime-nix)
+- **Nix:** [sambacha/nix-linguist](https://github.com/sambacha/nix-linguist)
 - **Nu:** [jsallis/nu.tmbundle](https://github.com/jsallis/nu.tmbundle)
 - **Nunjucks:** [alohaas/language-nunjucks](https://github.com/alohaas/language-nunjucks)
 - **OCaml:** [textmate/ocaml.tmbundle](https://github.com/textmate/ocaml.tmbundle)
