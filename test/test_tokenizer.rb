@@ -230,7 +230,7 @@ class TestTokenizer < Minitest::Test
   #
   # If this test fails, it means you've introduced a regression in the tokenizer in the form of an action that uses
   # REJECT or a rule with a trailing context which is effectively the same as REJECT. Both of these cause us problems
-  # because the introduce a fixed length buffer. This fixed buffer can cause the tokenizer to crash. This also has
+  # because they introduce a fixed length buffer. This fixed buffer can cause the tokenizer to crash. This also has
   # an impact on performance of the tokenizer.
   #
   # Please do not use rules with a trailing context or REJECT actions
