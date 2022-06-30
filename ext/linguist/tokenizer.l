@@ -49,9 +49,7 @@
 %}
 
 %option never-interactive yywrap reentrant nounput warn nodefault header-file="lex.linguist_yy.h" extra-type="VALUE*" prefix="linguist_yy"
-%x c_comment xml_comment haskell_comment ocaml_comment python_dcomment python_scomment roff_comment punct
-
-not_punct [^-!#$%&*+,./:;<=>?@\\^_`|~]
+%x c_comment xml_comment haskell_comment ocaml_comment python_dcomment python_scomment roff_comment
 
 %%
 
@@ -119,15 +117,6 @@ not_punct [^-!#$%&*+,./:;<=>?@\\^_`|~]
 [.@#]?[[:alnum:]_]+               { FEED(); return 1; }
 "()"|"{}"|"[]"                    { FEED(); return 1; }
 [({\[]|[)}\]]                     { FEED(); return 1; }
-
-<INITIAL,punct>[-!#$%&*+,.:;=>?@\\^_`|~]+/{not_punct}   { FEED(); BEGIN(INITIAL); return 1; }
-<INITIAL,punct>[-!#$%&*+,.:;=>?@\\^_`|~]+/("<!--"|"/*") { FEED(); BEGIN(INITIAL); return 1; }
-<INITIAL,punct>[</]+/{not_punct}          { FEED(); BEGIN(INITIAL); return 1; }
-<INITIAL,punct>[</]+/"<!--"               { FEED(); BEGIN(INITIAL); return 1; }
-<INITIAL,punct>[</]+/"/*"                 { FEED(); BEGIN(INITIAL); return 1; }
-<INITIAL,punct>[-!#$%&*+,.:;=>?@\\^_`|~]+ { yymore(); BEGIN(punct); }
-<INITIAL,punct>[</]                       { yymore(); BEGIN(punct); }
-<punct><<EOF>>                            { FEED2(yytext, yyleng - 1); BEGIN(INITIAL); return 1; }
 
 .|\n                              { /* nothing */ }
 
