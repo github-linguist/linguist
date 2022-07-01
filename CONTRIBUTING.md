@@ -142,7 +142,7 @@ You can also try to fix the bug yourself and submit a pull-request.
 [TextMate's documentation](https://manual.macromates.com/en/language_grammars) offers a good introduction on how to work with TextMate-compatible grammars.
 Note that Linguist uses [PCRE](https://www.pcre.org/) regular expressions, while TextMate uses [Oniguruma](https://github.com/kkos/oniguruma).
 Although they are mostly compatible there might be some differences in syntax and semantics between the two.
-You can test grammars using [Lightshow](https://github-lightshow.herokuapp.com).
+Linguist's grammar compiler will highlight any problems when the grammar is updated.
 
 Once the bug has been fixed upstream, we'll pick it up for GitHub in the next release of Linguist.
 
@@ -208,7 +208,7 @@ As Linguist is a production dependency for GitHub we have a couple of workflow r
 [grammars]: /vendor/README.md
 [heuristic]: https://github.com/github/linguist/blob/master/lib/linguist/heuristics.yml
 [languages]: /lib/linguist/languages.yml
-[licenses]: https://github.com/github/linguist/blob/257425141d4e2a5232786bf0b13c901ada075f93/vendor/licenses/config.yml#L2-L11
+[licenses]: https://github.com/github/linguist/blob/9b1023ed5d308cb3363a882531dea1e272b59977/vendor/licenses/config.yml#L4-L15
 [new-issue]: https://github.com/github/linguist/issues/new
 [samples]: /samples
 [search-example]: https://github.com/search?utf8=%E2%9C%93&q=extension%3Aboot+NOT+nothack&type=Code&ref=searchresults
