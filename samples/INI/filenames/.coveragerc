@@ -1,0 +1,30 @@
+[run]
+branch = True
+dynamic_context = test_function
+
+source =
+    warehouse
+
+omit =
+    # We don't want to get coverage information for our migrations.
+    warehouse/migrations/*
+
+    # We don't want to actually cover our __main__.py file because it is hard
+    # to cover and it really just acts as a tiny shim to a function.
+    warehouse/__main__.py
+
+    # Again, tiny shim code that we don't actually need to test and trying to
+    # do so would just get in the way.
+    warehouse/wsgi.py
+
+    # And again, tiny shim code.
+    warehouse/celery.py
+
+
+[report]
+exclude_lines =
+    pragma: no cover
+    class \w+\(Interface\):
+
+# Don't show us anything that's already 100% covered.
+skip_covered = True

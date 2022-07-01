@@ -1,0 +1,143 @@
+#!/usr/bin/env ruby
+
+require "English"
+
+# Whitelisted grammar providers
+HOSTS = %w[
+  github.com
+  gitlab.com
+  bitbucket.org
+]
+
+# Construct a well-formed URL from the output of `parse_url()`
+def build_url(hash)
+  path = "#{hash[:user]}/#{hash[:repo]}.git"
+  if hash[:protocol] == "ssh"
+    "git@#{hash[:host]}:#{path}"
+  else
+    "#{hash[:protocol]}://#{hash[:host]}/#{path}"
+  end
+end
+
+# Break a repository URL into its separate components
+def parse_url(input)
+  hosts = %r[#{HOSTS.map { |x| Regexp.escape x }.join "|"}]i
+
+  # HTTPS/HTTP link pointing to recognised hosts
+  case input
+  when %r[^
+    (?:
+      (?<protocol> https?|ssh|git)
+      (?:\+(?:git|ssh))? # Allowed, but deprecated
+    )? :* /*
+    (?:[^.@]*@)?
+    (?:www\.)?
+    (?<host> #{hosts}) /+
+    (?<user> [^:@/]+)  /+
+    (?<repo> [^:@/]+?)
+    (?:\.git)? (?=$|[/#])
+  ]ix; {
+    protocol: ($LAST_MATCH_INFO[:protocol] or "https").downcase,
+    host:      $LAST_MATCH_INFO[:host].downcase,
+    user:      $LAST_MATCH_INFO[:user],
+    repo:      $LAST_MATCH_INFO[:repo]
+  }
+
+  # SSH
+  when %r[^
+    git (?:\+(?:ssh|https?))? @
+    (?:www\.)?
+    (?<host> #{hosts}) :/*
+    (?<user> [^:@/]+) /+
+    (?<repo> [^:@/]+?)
+    (?:\.git)? /*$
+  ]ix; {
+    protocol: "ssh",
+    host: $LAST_MATCH_INFO[:host].downcase,
+    user: $LAST_MATCH_INFO[:user],
+    repo: $LAST_MATCH_INFO[:repo]
+  }
+
+  # provider:user/repo
+  when %r[^
+    (?<host>
+      gh | github |
+      gl | gitlab |
+      bb | bitbucket
+    ) :/*
+    (?<user> [^:@/]+) /+
+    (?<repo> [^:@/]+?)
+    (?:\.git)? /*$
+  ]ix; {
+    protocol: "https",
+    host: (case $LAST_MATCH_INFO[:host].downcase
+      when "gh", "github";    "github.com"
+      when "gl", "gitlab";    "gitlab.com"
+      when "bb", "bitbucket"; "bitbucket.org"
+    end),
+    user: $LAST_MATCH_INFO[:user],
+    repo: $LAST_MATCH_INFO[:repo]
+  }
+
+  # user/repo - Common GitHub shorthand
+  when %r[^
+    /*
+    (?<user> [^:@/]+) /+
+    (?<repo> [^:@/]+?)
+    (?:\.git)? /*$
+  ]ix; {
+    protocol: "https",
+    host: "github.com",
+    user: $LAST_MATCH_INFO[:user],
+    repo: $LAST_MATCH_INFO[:repo]
+  }
+
+  # Not something we recognise
+  else
+    raise "Unsupported URL: #{input}"
+  end
+end
+
+
+require "optparse"
+$json     = false
+$protocol = nil
+
+OptionParser.new do |opts|
+  opts.banner = <<~END
+  #{$PROGRAM_NAME}: Resolve a repository URL from various formats
+
+  Usage:
+      #{$PROGRAM_NAME} [-p|--protocol name] ...urls
+      #{$PROGRAM_NAME} [-j|--json] ...urls
+      #{$PROGRAM_NAME} [-h|--hosts]
+
+  Examples:
+     $ #{$PROGRAM_NAME} Alhadis/language-etc BB:user/name
+    => https://github.com/Alhadis/language-etc.git
+       https://bitbucket.org/user/name.git
+
+  Options:
+  END
+  opts.on("-h", "--hosts", "Print a list of whitelisted grammar hosts, then exit") do
+    puts HOSTS.join $RS
+    exit
+  end
+  opts.on("-j", "--json", "Output parsed URLs as an array of JSON objects") do
+    $json = true
+  end
+  opts.on("-pNAME", "--protocol=NAME", "Force URLs to use a protocol, even if different. Ignored for JSON output.") do |name|
+    $protocol = name.to_s.downcase
+  end
+end.parse!
+
+if $json
+  require "json"
+  puts JSON.pretty_generate ARGV.map { |x| parse_url x }, { indent: "\t" }
+else
+  ARGV.each do |arg|
+    url = parse_url arg
+    url[:protocol] = $protocol unless $protocol.nil?
+    puts build_url(url)
+  end
+end
