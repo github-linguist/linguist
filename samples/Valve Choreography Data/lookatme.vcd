@@ -1,0 +1,52 @@
+// Choreo version 1
+actor "Alyx"
+{
+  channel "audio"
+  {
+  }
+  channel "look-at"
+  {
+    event lookat "player"
+    {
+      time 0.066847 5.439229
+      param "!player"
+      event_ramp 
+      {
+        0.6947 0.8845
+        1.0000 0.9850
+        1.2474 0.9850
+        4.0903 0.9850
+        4.2903 0.9850
+        4.6166 0.8794
+      }
+    }
+  }
+  channel "face-to"
+  {
+    event lookat "player"
+    {
+      time 0.046847 5.063169
+      param "!player"
+      event_ramp 
+      {
+        0.6947 0.8845
+        1.0000 0.9850
+        1.2474 0.9850
+        3.7342 0.9850
+        3.9342 0.9850
+        4.2605 0.8794
+      }
+    }
+  }
+}
+
+scalesettings
+{
+  "CChoreoView" "88"
+  "RampTool" "100"
+  "ExpressionTool" "100"
+  "GestureTool" "100"
+  "SceneRampTool" "100"
+}
+fps 60
+snap off

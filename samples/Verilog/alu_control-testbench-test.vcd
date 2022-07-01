@@ -1,0 +1,69 @@
+$date
+	Mon Dec 28 22:02:07 2020
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module test $end
+$var wire 4 ! aluControl [3:0] $end
+$var reg 2 " aluOp [1:0] $end
+$var reg 3 # funct3 [2:0] $end
+$var reg 7 $ funct7 [6:0] $end
+$scope module alu_control_test $end
+$var wire 2 % aluOp [1:0] $end
+$var wire 3 & funct3 [2:0] $end
+$var wire 7 ' funct7 [6:0] $end
+$var reg 4 ( aluControl [3:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+bx (
+bx '
+bx &
+bx %
+bx $
+bx #
+bx "
+bx !
+$end
+#10
+b10 !
+b10 (
+b0 "
+b0 %
+#30
+b110 !
+b110 (
+b1 "
+b1 %
+#40
+b10 !
+b10 (
+b0 #
+b0 &
+b0 $
+b0 '
+b10 "
+b10 %
+#50
+b110 !
+b110 (
+b100000 $
+b100000 '
+#60
+b0 !
+b0 (
+b111 #
+b111 &
+b0 $
+b0 '
+#70
+b1 !
+b1 (
+b110 #
+b110 &
