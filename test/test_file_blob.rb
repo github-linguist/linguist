@@ -140,7 +140,7 @@ class TestFileBlob < Minitest::Test
 
   def test_solid
     assert fixture_blob("Binary/cube.stl").solid?
-    assert fixture_blob("Data/cube.stl").solid?
+    assert fixture_blob("Generic/stl/STL/cube2.stl").solid?
   end
 
   def test_csv
@@ -569,6 +569,14 @@ class TestFileBlob < Minitest::Test
 
     # Jenkins
     assert sample_blob("Jenkinsfile").vendored?
+
+    # Bootstrap
+    assert !sample_blob("src/bootstraps/settings.js").vendored?
+    assert sample_blob("src/bootstrap-custom.js").vendored?
+
+    # GitHub.com
+    assert sample_blob(".github/CODEOWNERS").vendored?
+    assert sample_blob(".github/workflows/test.yml").vendored?
   end
 
   def test_documentation
