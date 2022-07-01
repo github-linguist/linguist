@@ -97,6 +97,7 @@ class TestGenerated < Minitest::Test
     generated_sample_without_loading_data(".pnp.js")
     generated_sample_without_loading_data(".pnp.cjs")
     generated_sample_without_loading_data(".pnp.mjs")
+    generated_sample_without_loading_data(".pnp.loader.mjs")
 
     # Godep saved dependencies
     generated_sample_without_loading_data("Godeps/Godeps.json")
@@ -192,5 +193,17 @@ class TestGenerated < Minitest::Test
 
     # poetry
     generated_sample_without_loading_data("TOML/filenames/poetry.lock")
+  end
+
+  # We've whitelisted these files on purpose, even though they're machine-generated.
+  # Future contributors won't necessarily know that, so these checks are in-place to
+  # catch PRs that mark these files as generated (and prevent a forgetful maintainer
+  # from approving them).
+  def test_check_not_generated
+    # Jest snapshots (#3579)
+    generated_sample_without_loading_data("Jest Snapshot/css.test.tsx.snap", true)
+
+    # Yarn lockfiles (#4459)
+    generated_sample_without_loading_data("YAML/filenames/yarn.lock", true)
   end
 end

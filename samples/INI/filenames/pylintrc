@@ -1,0 +1,79 @@
+# The format of this file isn't really documented; just use --generate-rcfile
+
+[Messages Control]
+# C0111: Don't require docstrings on every method
+# C0301: Handled by pep8
+# C0325: Parens are required on print in py3x
+# F0401: Imports are check by other linters
+# W0511: TODOs in code comments are fine.
+# W0142: *args and **kwargs are fine.
+# W0622: Redefining id is fine.
+
+# TODO(browne): fix these in the future
+# C0103: invalid-name
+# C0201: consider-iterating-dictionary
+# C1801: len-as-condition
+# E1101: no-member
+# E1111: assignment-from-no-return
+# R0902: too-many-instance-attributes
+# R0912: too-many-branches
+# R0913: too-many-arguments
+# R0914: too-many-locals
+# R0915: too-many-statements
+# R1702: too-many-nested-blocks
+# R1705: no-else-return
+# R1710: inconsistent-return-statements
+# W0110: deprecated-lambda
+# W0141: bad-builtin
+# W0201: attribute-defined-outside-init
+# W0212: protected-access
+# W0401: wildcard-import
+# W0603: global-statement
+# W0613: unused-argument
+# W0621: redefined-outer-name
+# W0703: broad-except
+# W1201: logging-not-lazy
+# W1505: deprecated-method
+disable=C0111,C0201,C0301,C0325,C1801,F0401,W0511,W0142,W0622,C0103,E1101,E1111,R0902,R0912,R0913,R0914,R0915,R1702,R1705,R1710,W0110,W0141,W0201,W0401,W0603,W0212,W0613,W0621,W0703,W1201,W1505
+
+[Basic]
+# Variable names can be 1 to 31 characters long, with lowercase and underscores
+variable-rgx=[a-z_][a-z0-9_]{0,30}$
+
+# Argument names can be 2 to 31 characters long, with lowercase and underscores
+argument-rgx=[a-z_][a-z0-9_]{1,30}$
+
+# Method names should be at least 3 characters long
+# and be lowecased with underscores
+method-rgx=([a-z_][a-z0-9_]{2,50}|setUp|tearDown)$
+
+# Module names matching manila-* are ok (files in bin/)
+module-rgx=(([a-z_][a-z0-9_]*)|([A-Z][a-zA-Z0-9]+)|(manila-[a-z0-9_-]+))$
+
+# Don't require docstrings on tests.
+no-docstring-rgx=((__.*__)|([tT]est.*)|setUp|tearDown)$
+
+[Design]
+max-public-methods=100
+min-public-methods=0
+max-args=6
+
+[Variables]
+
+# List of additional names supposed to be defined in builtins. Remember that
+# you should avoid to define new builtins when possible.
+# _ is used by our localization
+additional-builtins=_
+
+[Similarities]
+# Minimum lines number of a similarity.
+min-similarity-lines=10
+
+# Ignore comments when computing similarities.
+ignore-comments=yes
+
+# Ignore docstrings when computing similarities.
+ignore-docstrings=yes
+
+# Ignore imports when computing similarities.
+ignore-imports=yes
