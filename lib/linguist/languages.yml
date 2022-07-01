@@ -401,6 +401,7 @@ Assembly:
   - ".a51"
   - ".i"
   - ".inc"
+  - ".nas"
   - ".nasm"
   tm_scope: source.assembly
   ace_mode: assembly_x86
@@ -4062,6 +4063,14 @@ Motorola 68K Assembly:
   tm_scope: source.m68k
   ace_mode: assembly_x86
   language_id: 477582706
+Move:
+  type: programming
+  color: "#4a137a"
+  extensions:
+    - ".move"
+  tm_scope: source.move
+  ace_mode: text
+  language_id: 638334599
 Muse:
   type: prose
   extensions:
@@ -4154,6 +4163,14 @@ NWScript:
   codemirror_mode: clike
   codemirror_mime_type: text/x-csrc
   language_id: 731233819
+Nasal:
+  type: programming
+  color: "#1d2c4e"
+  extensions:
+  - ".nas"
+  tm_scope: none
+  ace_mode: text
+  language_id: 178322513
 Nearley:
   type: programming
   ace_mode: text
@@ -5613,6 +5630,16 @@ Rouge:
   - ".rg"
   tm_scope: source.clojure
   language_id: 325
+RouterOS Script:
+  type: programming
+  ace_mode: text
+  extensions:
+  - ".rsc"
+  interpreters:
+  - RouterOS
+  color: "#DE3941"
+  tm_scope: none
+  language_id: 592853203
 Ruby:
   type: programming
   tm_scope: source.ruby
@@ -7032,6 +7059,16 @@ World of Warcraft Addon Data:
   tm_scope: source.toc
   ace_mode: text
   language_id: 396
+Wren:
+  type: programming
+  color: "#383838"
+  aliases:
+  - wrenlang
+  extensions:
+  - ".wren"
+  tm_scope: source.wren
+  ace_mode: text
+  language_id: 713580619
 X BitMap:
   type: data
   group: C
