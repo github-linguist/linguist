@@ -5,3 +5,40 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+  # Ignore /samples
+  - package-ecosystem: "bundler"
+    directory: "/samples"
+    schedule:
+      interval: "monthly"
+    ignore:
+    - dependency-name: "*"
+  - package-ecosystem: "maven"
+    directory: "/samples"
+    schedule:
+      interval: "monthly"
+    ignore:
+    - dependency-name: "*"
+  - package-ecosystem: "cargo"
+    directory: "/samples"
+    schedule:
+      interval: "monthly"
+    ignore:
+    - dependency-name: "*"
+  - package-ecosystem: "pip"
+    directory: "/samples"
+    schedule:
+      interval: "monthly"
+    ignore:
+    - dependency-name: "*"
+  - package-ecosystem: "composer"
+    directory: "/samples"
+    schedule:
+      interval: "monthly"
+    ignore:
+    - dependency-name: "*"
+  - package-ecosystem: "bundler"
+    directory: "/samples"
+    schedule:
+      interval: "monthly"
+    ignore:
+    - dependency-name: "*"
