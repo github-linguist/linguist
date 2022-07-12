@@ -293,4 +293,18 @@ class TestTokenizer < Minitest::Test
   def test_truncate
     assert_equal ['a'*16], tokenize('a'*100)
   end
+
+  # This is a terrible way to test this, but it does the job.
+  #
+  # If this test fails, it means you've introduced a regression in the tokenizer in the form of an action that uses
+  # REJECT or a rule with a trailing context which is effectively the same as REJECT. Both of these cause us problems
+  # because they introduce a fixed length buffer. This fixed buffer can cause the tokenizer to crash. This also has
+  # an impact on performance of the tokenizer.
+  #
+  # Please do not use rules with a trailing context or REJECT actions
+  #
+  def test_file_with_very_long_token
+    refute File.open("ext/linguist/lex.linguist_yy.c").grep(/#define REJECT reject_used_but_not_detected/).empty?, \
+      "Tokenizer should not use rules with a trailing context or REJECT actions"
+  end
 end
