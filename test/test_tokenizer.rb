@@ -294,6 +294,10 @@ class TestTokenizer < Minitest::Test
     assert_equal ['a'*16], tokenize('a'*100)
   end
 
+  def test_long_token
+    assert_equal ["." * 16], tokenize("." * (32*1024+1))
+  end
+
   # This is a terrible way to test this, but it does the job.
   #
   # If this test fails, it means you've introduced a regression in the tokenizer in the form of an action that uses
@@ -303,7 +307,7 @@ class TestTokenizer < Minitest::Test
   #
   # Please do not use rules with a trailing context or REJECT actions
   #
-  def test_file_with_very_long_token
+  def test_flex_no_reject
     refute File.open("ext/linguist/lex.linguist_yy.c").grep(/#define REJECT reject_used_but_not_detected/).empty?, \
       "Tokenizer should not use rules with a trailing context or REJECT actions"
   end
