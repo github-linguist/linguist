@@ -428,6 +428,13 @@ class TestHeuristics < Minitest::Test
     }, alt_name="main.ftl")
   end
 
+  def test_g_by_heuristics
+    assert_heuristics({
+      "GAP" => all_fixtures("GAP", "*.g*"),
+      "G-code" => all_fixtures("G-code", "*.g")
+    }, alt_name="test.g")
+  end
+
   def test_gd_by_heuristics
     assert_heuristics({
       "GAP" => all_fixtures("GAP", "*.gd"),
