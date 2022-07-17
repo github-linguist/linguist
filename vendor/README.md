@@ -263,6 +263,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Jupyter Notebook:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
 - **Kaitai Struct:** [atom/language-yaml](https://github.com/atom/language-yaml)
 - **KakouneScript:** [kakoune-editor/language-kak](https://github.com/kakoune-editor/language-kak)
+- **KerboScript:** [KSP-KOS/language-kerboscript](https://github.com/KSP-KOS/language-kerboscript)
 - **KiCad Layout:** [Alhadis/language-pcb](https://github.com/Alhadis/language-pcb)
 - **KiCad Legacy Layout:** [Alhadis/language-pcb](https://github.com/Alhadis/language-pcb)
 - **KiCad Schematic:** [Alhadis/language-pcb](https://github.com/Alhadis/language-pcb)
