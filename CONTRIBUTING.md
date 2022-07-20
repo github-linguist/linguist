@@ -116,6 +116,9 @@ In addition, if your new language defines an extension that's already listed in 
 
 Remember, the goal here is to try and avoid false positives!
 
+Note: New languages will not appear in GitHub's search results for some time after the pull request has been merged and the new Linguist release deployed to GitHub.com.
+This is because GitHub's search uses [go-enry](https://github.com/go-enry/go-enry) for language detection but tends to lag behind Linguist by a few weeks to months.
+This in turn requires an update to the underlying search code once go-enry is inline with Linguist.
 
 ## Fixing a misclassified language
 
