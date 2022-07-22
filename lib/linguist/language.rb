@@ -291,12 +291,11 @@ module Linguist
 
       # If group name is set, save the name so we can lazy load it later
       if attributes[:group_name]
-        @group = nil
         @group_name = attributes[:group_name]
 
       # Otherwise we can set it to self now
       else
-        @group = self
+        @group_name = self.name
       end
     end
 
