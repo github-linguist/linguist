@@ -1,0 +1,8 @@
+// Script interactive game.
+var walkCount = 0;
+func interact(a) { if (a == "walk") { walkCount = walkCount + 1; write "You walked."; write "Walk count."; write walkCount;} if (a == "look") { }}
+write "You can interact with this game inside the source file!";
+interact("walk");
+interact("walk");
+interact("walk");
+ 
