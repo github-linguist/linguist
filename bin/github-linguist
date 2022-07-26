@@ -21,6 +21,7 @@ def github_linguist(args)
   breakdown = false
   json_output = false
   path = Dir.pwd
+  read_from_stdin = false
 
   parser = OptionParser.new do |opts|
     opts.banner = HELP_TEXT
@@ -32,19 +33,20 @@ def github_linguist(args)
       puts opts
       exit
     end
+    opts.on("-s", "--stdin", "Read file contents from stdin") { read_from_stdin = true }
   end
 
   parser.parse!(args)
 
   if !args.empty?
-    if File.directory?(args[0]) || File.file?(args[0])
+    if read_from_stdin || File.directory?(args[0]) || File.file?(args[0])
       path = args[0]
     else
       abort HELP_TEXT
     end
   end
 
-  if File.directory?(path)
+  if !read_from_stdin && File.directory?(path)
     rugged = Rugged::Repository.new(path)
     repo = Linguist::Repository.new(rugged, rugged.head.target_id)
 
@@ -82,18 +84,22 @@ def github_linguist(args)
         puts JSON.dump(combined_results)
       end
     end
-  elsif File.file?(path)
-
-    begin
-      # Check if this file is inside a git repository so we have things like
-      # `.gitattributes` applied.
-      file_full_path = File.realpath(path)
-      rugged = Rugged::Repository.discover(file_full_path)
-      file_rel_path = file_full_path.sub(rugged.workdir, '')
-      oid = -> { rugged.head.target.tree.walk_blobs { |r, b| return b[:oid] if r + b[:name] == file_rel_path } }
-      blob = Linguist::LazyBlob.new(rugged, oid.call, file_rel_path)
-    rescue Rugged::RepositoryError
-      blob = Linguist::FileBlob.new(path, Dir.pwd)
+  elsif read_from_stdin || File.file?(path)
+    if read_from_stdin
+      ARGV.clear()
+      blob = Linguist::Blob.new(path, ARGF.read())
+    else
+      begin
+        # Check if this file is inside a git repository so we have things like
+        # `.gitattributes` applied.
+        file_full_path = File.realpath(path)
+        rugged = Rugged::Repository.discover(file_full_path)
+        file_rel_path = file_full_path.sub(rugged.workdir, '')
+        oid = -> { rugged.head.target.tree.walk_blobs { |r, b| return b[:oid] if r + b[:name] == file_rel_path } }
+        blob = Linguist::LazyBlob.new(rugged, oid.call, file_rel_path)
+      rescue Rugged::RepositoryError
+        blob = Linguist::FileBlob.new(path, Dir.pwd)
+      end
     end
 
     type = if blob.text?
