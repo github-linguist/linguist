@@ -1,18 +1,19 @@
 
-# Linguist [![Badge License]][License] [![Badge Status]][Actions]
+# Linguist   [![Badge License]][License]   [![Badge Status]][Actions]
 
 *Language analyzer library used by **GitHub**.*
 
 <br>
 <br>
+<br>
 
 <div align = center>
 
-[![Button Install]][Install] 
-[![Button Usage]][Usage] 
+[![Button Install]][Install]   
+[![Button Usage]][Usage]   
 [![Button Design]][Design]
 
-[![Button Troubleshooting]][Troubleshooting] 
+[![Button Troubleshooting]][Troubleshooting]   
 [![Button Contribute]][Contribute]
 
 <br>
