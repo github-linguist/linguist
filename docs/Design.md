@@ -2,16 +2,15 @@
 # How Linguist Works
 
 Linguist uses the list of known [`languages.yml`] as well as a <br>
-number of methods to try to determine a file's language or <br>
-a repository's breakdown graph.
+number of methods to try to determine a file's language or a <br>
+repository's breakdown graph.
 
 <br>
 
 ## Files
 
-Linguist starts by going through all files in a repository <br>
-and excluding the following, while taking into account <br>
-any **[Overrides]**.
+Linguist starts by going through all files in a repository, excluding <br>
+the following types and taking into account any **[Overrides]**.
 
 -   **[Generated Code]**
 
@@ -46,6 +45,8 @@ The language of a file is determined using the following <br>
 steps - in order - whereas each step either identifies the <br>
 precise language or reduces the number of likely ones.
 
+<br>
+
 1.  ***Vim / Emacs Modeline***
 
 2.  ***Commonly Used Filename***
@@ -73,6 +74,8 @@ files in a repository.
 
 The percentages are calculated based on the bytes of code <br>
 for each language as reported by the **[List Languages]** API.
+
+<br>
 
 <img
     src = 'https://user-images.githubusercontent.com/2346707/91533656-9768b300-e953-11ea-808d-994cd50e6273.png'
