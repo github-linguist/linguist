@@ -1,32 +1,47 @@
-## Usage
 
-### Application usage
+# Usage
 
-Linguist can be used in your application as follows:
+<br>
+
+## Application
+
+*Linguist can be used in your application as follows.*
 
 ```ruby
 require 'rugged'
 require 'linguist'
 
 repo = Rugged::Repository.new('.')
-project = Linguist::Repository.new(repo, repo.head.target_id)
+
+project = Linguist::Repository.new(repo,repo.head.target_id)
 project.language       #=> "Ruby"
 project.languages      #=> { "Ruby" => 119387 }
 ```
 
-### Command line usage
+<br>
+<br>
 
-#### Git Repository
+## Command Line
 
-A repository's languages stats can also be assessed from the command line using the `github-linguist` executable.
-Without any options, `github-linguist` will output the language breakdown by percentage and file size.
+### Git Repository
 
-```bash
+A repository's languages stats can also be assessed from <br>
+the command line using the `github-linguist` executable.
+
+Without any options, `github-linguist` will output <br>
+the language breakdown by percentage and file size.
+
+```shell
 cd /path-to-repository
 github-linguist
 ```
 
-You can try running `github-linguist` on the root directory in this repository itself:
+<br>
+
+#### Example
+
+You can try running `github-linguist` on <br>
+the root directory of this repository itself:
 
 ```console
 $ github-linguist
@@ -38,12 +53,15 @@ $ github-linguist
 0.31%   1212       Dockerfile
 ```
 
-#### Additional options
+<br>
 
-##### `--breakdown`
-The `--breakdown` or `-b` flag will additionally show the breakdown of files by language.
+### Options
 
-You can try running `github-linguist` on the root directory in this repository itself:
+#### `-b`  `--breakdown`
+
+Shows a breakdown of files by language.
+
+<details><summary><b>Example</b></summary>
 
 ```console
 $ github-linguist --breakdown
@@ -65,26 +83,45 @@ lib/linguist.rb
 …
 ```
 
-##### `--json`
-The `--json` or `-j` flag output the data into JSON format.
+</details>
+
+<br>
+
+#### `-j`  `--json`
+
+Outputs the data in JSON format.
+
+<details><summary><b>Example</b></summary>
 
 ```console
 $ github-linguist --json
 {"Dockerfile":{"size":1212,"percentage":"0.31"},"Ruby":{"size":264519,"percentage":"66.84"},"C":{"size":97685,"percentage":"24.68"},"Lex":{"size":5098,"percentage":"1.29"},"Shell":{"size":1257,"percentage":"0.32"},"Go":{"size":25999,"percentage":"6.57"}}
 ```
 
-This option can be used in conjunction with `--breakdown` to get a full list of files along with the size and percentage data.
+</details>
+
+<br>
+
+*Can be combined with the breakdown option.*
+
+<details><summary><b>Example</b></summary>
+
 ```console
 $ github-linguist --breakdown --json
 {"Dockerfile":{"size":1212,"percentage":"0.31","files":["Dockerfile","tools/grammars/Dockerfile"]},"Ruby":{"size":264519,"percentage":"66.84","files":["Gemfile","Rakefile","bin/git-linguist","bin/github-linguist","ext/linguist/extconf.rb","github-linguist.gemspec","lib/linguist.rb",...]}}
 
 ```
 
-#### Single file
+</details>
 
-Alternatively you can find stats for a single file using the `github-linguist` executable.
+<br>
 
-You can try running `github-linguist` on files in this repository itself:
+### Single File
+
+To only process a single file, simply <br>
+call Linguist with the path / filename.
+
+<details><summary><b>Example</b></summary>
 
 ```console
 $ github-linguist grammars.yml
@@ -94,9 +131,14 @@ grammars.yml: 884 lines (884 sloc)
   language:  YAML
 ```
 
-#### Docker
+</details>
 
-If you have Docker installed you can build an image and run Linguist within a container:
+<br>
+
+### Docker
+
+If you have Docker installed you can build an <br>
+image and run Linguist within a container:
 
 ```console
 $ docker build -t linguist .
@@ -107,6 +149,9 @@ $ docker run --rm -v $(pwd):$(pwd) -w $(pwd) -t linguist
 1.29%   5098       Lex
 0.32%   1257       Shell
 0.31%   1212       Dockerfile
+```
+
+```console
 $ docker run --rm -v $(pwd):$(pwd) -w $(pwd) -t linguist github-linguist --breakdown
 66.84%  264519     Ruby
 24.68%  97685      C
@@ -125,3 +170,5 @@ github-linguist.gemspec
 lib/linguist.rb
 …
 ```
+
+<br>
