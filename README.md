@@ -1,28 +1,70 @@
-# Linguist
 
-[![Actions Status](https://github.com/github/linguist/workflows/Run%20Tests/badge.svg)](https://github.com/github/linguist/actions)
+# Linguist [![Badge License]][License] [![Badge Status]][Actions]
 
-[issues]: https://github.com/github/linguist/issues
-[new-issue]: https://github.com/github/linguist/issues/new
+*Language analyzer library used by **GitHub**.*
 
-This library is used on GitHub.com to detect blob languages, ignore binary or vendored files, suppress generated files in diffs, and generate language breakdown graphs.
+<br>
+<br>
 
-## Documentation
+<div align = center>
 
-- [How Linguist works](/docs/how-linguist-works.md)
-- [Change Linguist's behaviour with overrides](/docs/overrides.md)
-- [Troubleshooting](/docs/troubleshooting.md)
-- [Contributing guidelines](CONTRIBUTING.md)
+[![Button Install]][Install] 
+[![Button Usage]][Usage] 
+[![Button Design]][Design]
 
+[![Button Troubleshooting]][Troubleshooting] 
+[![Button Contribute]][Contribute]
 
-## Contributing
+<br>
+<br>
 
-Please check out our [contributing guidelines](CONTRIBUTING.md).
+</div>
 
+## Uses
+
+- Detect Blob Languages
+
+- Ignore Binaries / Vendor Files
+
+- Suppress Generated Files In Diffs
+
+- Generate Language Breakdown Graphs
+
+<br>
+<br>
 
 ## License
 
-The language grammars included in this gem are covered by their repositories' respective licenses.
-[`vendor/README.md`](/vendor/README.md) lists the repository for each grammar.
+Grammars included in this gem are covered under <br>
+their respective licenses, check the list of **[Vendors]** <br>
+for more information.
 
-All other files are covered by the MIT license, see [`LICENSE`](./LICENSE).
+<br>
+
+
+<!----------------------------------------------------------------------------->
+
+[Actions]: https://github.com/github/linguist/actions
+
+[Troubleshooting]: docs/Troubleshooting.md
+[Contribute]: .github/CONTRIBUTING.md
+[Install]: docs/Installation.md
+[Vendors]: vendor/README.md
+[License]: LICENSE
+[Design]: docs/Design.md
+[Usage]: docs/Usage.md
+
+
+<!----------------------------------[ Badges ]--------------------------------->
+
+[Badge License]: https://img.shields.io/badge/License-MIT-ac8b11.svg?style=for-the-badge&labelColor=yellow
+[Badge Status]: https://img.shields.io/github/workflow/status/github/linguist/Run%20Tests?style=for-the-badge&labelColor=179287&logoColor=white&logo=GitHub&color=12726a
+
+
+<!---------------------------------[ Buttons ]--------------------------------->
+
+[Button Troubleshooting]: https://img.shields.io/badge/Troubleshooting-E97627?style=for-the-badge&logoColor=white&logo=OpenStreetMap
+[Button Contribute]: https://img.shields.io/badge/Contribute-BA478F?style=for-the-badge&logoColor=white&logo=GitExtensions
+[Button Install]: https://img.shields.io/badge/Installation-D9232E?style=for-the-badge&logoColor=white&logo=DocuSign
+[Button Design]: https://img.shields.io/badge/Design-47A248?style=for-the-badge&logoColor=white&logo=Elm
+[Button Usage]: https://img.shields.io/badge/Usage-3D90CE?style=for-the-badge&logoColor=white&logo=Leanpub
