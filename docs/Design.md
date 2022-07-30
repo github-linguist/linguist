@@ -106,9 +106,9 @@ language statistics bar to reflect your changes.
 
 [List Languages]: https://docs.github.com/rest/reference/repos#list-repository-languages
 
-[Language Override]: docs/overrides.md#using-gitattributes
-[`languages.yml`]: lib/linguist/languages.yml
-[Generated Code]: docs/overrides.md#generated-code
-[Vendored Code]: docs/overrides.md#vendored-code    
-[Documentation]: docs/overrides.md#documentation
-[Overrides]: docs/overrides.md
+[Language Override]: Overrides.md#using-gitattributes
+[`languages.yml`]: ../lib/linguist/languages.yml
+[Generated Code]: Overrides.md#generated-code
+[Vendored Code]: Overrides.md#vendored-code    
+[Documentation]: Overrides.md#documentation
+[Overrides]: Overrides.md
