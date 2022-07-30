@@ -49,7 +49,7 @@ Used for character encoding.
 
 ### [Rugged]
 
-Ruby bindings for libgit2
+Ruby bindings for libgit2.
 
 -   **[OpenSSL]**
 -   **[libcurl]**
