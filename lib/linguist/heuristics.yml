@@ -651,9 +651,8 @@ disambiguations:
   - language: Vim Help File
     pattern: '(?:(?:^|[ \t])(?:vi|Vi(?=m))(?:m[<=>]?[0-9]+|m)?|[ \t]ex)(?=:(?=[ \t]*set?[ \t][^\r\n:]+:)|:(?![ \t]*set?[ \t]))(?:(?:[ \t]*:[ \t]*|[ \t])\w*(?:[ \t]*=(?:[^\\\s]|\\.)*)?)*[ \t:](?:filetype|ft|syntax)[ \t]*=(help)(?=$|\s|:)'
   - language: Adblock Filter List
-    pattern:
-    - '\A((!|#)\s?)?\[(((A|a)d(b|B)lock(\s(P|p)lus)?)|(u(B|b)lock(\s(O|o)rigin)?)|(A|a)d(G|g)uard)(\s(\d+(\.(?=\d))?)+)?(\s?;\s?(((A|a)d(b|B)lock(\s(P|p)lus)?)|(u(B|b)lock(\s(O|o)rigin)?)|(A|a)d(G|g)uard)(\s(\d+(\.(?=\d))?)+)?)*\]'
-    - '\A(\[[^\]]*\]\r?\n)?(((!|#)[^\r?\n]*\r?\n)|\r?\n)*(!|#)\s(Version|Title|Checksum|Last\s(M|m)odified|Time\s(U|u)pdated|Expires|Homepage|Licen(c|s)e):\s[^\r?\n]+\r?\n(?=((((!|#)[^\r?\n]*\r?\n)|\r?\n)*(!|#)\s(Version|Title|Checksum|Last\s(M|m)odified|Time\s(U|u)pdated|Expires|Homepage|Licen(c|s)e):\s[^\r?\n]+\r?\n))'
+    # File starts with [Adblock Plus], [Adblock Plus 2.0], [Adblock Plus 1.0.0] [AdGuard 1.0], [Adblock Plus 2.0; AdGuard 1.0], [Adblock Plus 2.0; uBlock Origin 1.0] etc.
+    pattern: '\A\[(((A|a)d(b|B)lock(\s(P|p)lus)?)|(u(B|b)lock(\s(O|o)rigin)?)|(A|a)d(G|g)uard)(\s(\d+(\.(?=\d))?)+)?(\s?;\s?(((A|a)d(b|B)lock(\s(P|p)lus)?)|(u(B|b)lock(\s(O|o)rigin)?)|(A|a)d(G|g)uard)(\s(\d+(\.(?=\d))?)+)?)*\]'
     # HACK: This is a contrived use of heuristics needed to address
     # an unusual edge-case. See https://git.io/JULye for discussion.
   - language: Text
