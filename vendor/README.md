@@ -441,7 +441,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Roff Manpage:** [Alhadis/language-roff](https://github.com/Alhadis/language-roff)
 - **Rouge:** [atom/language-clojure](https://github.com/atom/language-clojure)
 - **Ruby:** [tree-sitter/tree-sitter-ruby](https://github.com/tree-sitter/tree-sitter-ruby) 🐌
-- **Rust:** [zargony/atom-language-rust](https://github.com/zargony/atom-language-rust)
+- **Rust:** [tree-sitter/tree-sitter-rust](https://github.com/tree-sitter/tree-sitter-rust) 🐌
 - **SAS:** [rpardee/sas.tmbundle](https://github.com/rpardee/sas.tmbundle)
 - **SCSS:** [atom/language-sass](https://github.com/atom/language-sass)
 - **SELinux Policy:** [google/selinux-policy-languages](https://github.com/google/selinux-policy-languages)
