@@ -25,7 +25,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **ATS:** [steinwaywhw/ats-mode-sublimetext](https://github.com/steinwaywhw/ats-mode-sublimetext)
 - **ActionScript:** [simongregory/actionscript3-tmbundle](https://github.com/simongregory/actionscript3-tmbundle)
 - **Ada:** [textmate/ada.tmbundle](https://github.com/textmate/ada.tmbundle)
-- **Adblock Filters:** [ameshkov/VscodeAdblockSyntax](https://github.com/ameshkov/VscodeAdblockSyntax)
+- **Adblock Filter List:** [ameshkov/VscodeAdblockSyntax](https://github.com/ameshkov/VscodeAdblockSyntax)
 - **Adobe Font Metrics:** [Alhadis/language-fontforge](https://github.com/Alhadis/language-fontforge)
 - **Agda:** [agda/agda-github-syntax-highlighting](https://github.com/agda/agda-github-syntax-highlighting)
 - **Alloy:** [macekond/Alloy.tmbundle](https://github.com/macekond/Alloy.tmbundle)

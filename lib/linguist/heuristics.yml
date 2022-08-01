@@ -650,8 +650,10 @@ disambiguations:
     # VIM_MODELINE pattern in `./lib/linguist/strategy/modeline.rb`.
   - language: Vim Help File
     pattern: '(?:(?:^|[ \t])(?:vi|Vi(?=m))(?:m[<=>]?[0-9]+|m)?|[ \t]ex)(?=:(?=[ \t]*set?[ \t][^\r\n:]+:)|:(?![ \t]*set?[ \t]))(?:(?:[ \t]*:[ \t]*|[ \t])\w*(?:[ \t]*=(?:[^\\\s]|\\.)*)?)*[ \t:](?:filetype|ft|syntax)[ \t]*=(help)(?=$|\s|:)'
-  - language: Adblock Filters
-    pattern: '\[(A|a)dblock (P|p)lus (\d\.?)+\]|! ?Version: ?\d{4,}|! ?Last modified: \d{2} [a-zA-Z]{3} \d{4}|! ?Expires:[^\n\(]+\(update frequency\)|! ?Homepage: https:\/\/|\!#(if|include|endif|safari_cb_affinity)|##\+js\(|##[^\:\n]*\:style\(|(?<![\t ])(#@?#|#@?\?#|\$@?\$|##\^|#@?\$\?#|#@?%#|#@?\$#)[\w\.#\~\{\}\/\-\>\+\[\] ]+|!\+ ?NOT_OPTIMIZED|(@@)?\|\|(([a-z0-9|-]+\.)*[a-z0-9|-]+\.[a-z]+)\^?|((?<![\t \(])\$\~?((third|first)\-party|match\-case|important|domain\=|denyallow|elemhide|generichide|specifichide|genericblock|jsinject|urlblock|content|document|stealth|popup|empty|mp4|script|stylesheet|subdocument|object|image|xmlhttprequest|media|font|websocket|ping|webrtc|badfilter|csp|replace|cookie|redirect(-rule)?|remove(param|header)|app\=|network|extension|client\=|dnstype\=|dnsrewrite\=|ctag|xhr|inline-(script|font)|all|3p|1p|css|frame|ghide|ehide|shide|queryprune|popunder))'
+  - language: Adblock Filter List
+    pattern:
+    - '\A((!|#)\s?)?\[(((A|a)d(b|B)lock(\s(P|p)lus)?)|(u(B|b)lock(\s(O|o)rigin)?)|(A|a)d(G|g)uard)(\s(\d+(\.(?=\d))?)+)?(\s?;\s?(((A|a)d(b|B)lock(\s(P|p)lus)?)|(u(B|b)lock(\s(O|o)rigin)?)|(A|a)d(G|g)uard)(\s(\d+(\.(?=\d))?)+)?)*\]'
+    - '\A(\[[^\]]*\]\r?\n)?(((!|#)[^\r?\n]*\r?\n)|\r?\n)*(!|#)\s(Version|Title|Checksum|Last\s(M|m)odified|Time\s(U|u)pdated|Expires|Homepage|Licen(c|s)e):\s[^\r?\n]+\r?\n(?=((((!|#)[^\r?\n]*\r?\n)|\r?\n)*(!|#)\s(Version|Title|Checksum|Last\s(M|m)odified|Time\s(U|u)pdated|Expires|Homepage|Licen(c|s)e):\s[^\r?\n]+\r?\n))'
     # HACK: This is a contrived use of heuristics needed to address
     # an unusual edge-case. See https://git.io/JULye for discussion.
   - language: Text
