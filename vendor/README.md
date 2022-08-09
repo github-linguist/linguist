@@ -203,7 +203,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Grace:** [zmthy/grace-tmbundle](https://github.com/zmthy/grace-tmbundle)
 - **Gradle:** [alkemist/gradle.tmbundle](https://github.com/alkemist/gradle.tmbundle)
 - **Grammatical Framework:** [johnjcamilleri/language-gf](https://github.com/johnjcamilleri/language-gf)
-- **GraphQL:** [rmosolgo/language-graphql](https://github.com/rmosolgo/language-graphql)
+- **GraphQL:** [graphql/graphiql](https://github.com/graphql/graphiql)
 - **Graphviz (DOT):** [textmate/graphviz.tmbundle](https://github.com/textmate/graphviz.tmbundle)
 - **Groovy:** [textmate/groovy.tmbundle](https://github.com/textmate/groovy.tmbundle)
 - **Groovy Server Pages:** [textmate/java.tmbundle](https://github.com/textmate/java.tmbundle)
