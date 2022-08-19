@@ -15,6 +15,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **AGS Script:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **AIDL:** [google/aidl-language](https://github.com/google/aidl-language)
 - **AL:** [microsoft/AL](https://github.com/microsoft/AL)
+- **Aleo:** [AleoHQ/aleo-instructions-syntax-vscode](https://github.com/AleoHQ/aleo-instructions-syntax-vscode)
 - **AMPL:** [ampl/sublime-ampl](https://github.com/ampl/sublime-ampl)
 - **ANTLR:** [textmate/antlr.tmbundle](https://github.com/textmate/antlr.tmbundle)
 - **API Blueprint:** [apiaryio/api-blueprint-sublime-plugin](https://github.com/apiaryio/api-blueprint-sublime-plugin)
