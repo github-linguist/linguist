@@ -192,21 +192,6 @@ Just open a pull request and the bot will start cranking away.
 
 Here's our current build status: [![Actions Status](https://github.com/github/linguist/workflows/Run%20Tests/badge.svg)](https://github.com/github/linguist/actions)
 
-### Testing on your fork with github actions
-
-#### Enable github action on your fork
-https://github.com/github/linguist/actions
-
-#### Run commands to get tags and needed branches
-```bash
-git checkout master
-git fetch --tags git@github.com:github/linguist.git
-git fetch git@github.com:github/linguist.git master:master v2.0.0:v2.0.0 test/attributes:test/attributes test/master:test/master
-git push --tags 
-git push --all
-```
-
-#### Create a pull request to your forks master branch, debug your runs
 
 ## Maintainers
 
