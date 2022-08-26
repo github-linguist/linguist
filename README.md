@@ -5,7 +5,7 @@
 [issues]: https://github.com/github/linguist/issues
 [new-issue]: https://github.com/github/linguist/issues/new
 
-This library is used on GitHub.com to detect blob languages, ignore binary or vendored files, suppress generated files in diffs, and generate language breakdown graphs.
+This library is used on GitHub.com to detect blob languages, ignore binary or vendored files, suppress generated files in GitHub.com diffs (not local diffs), and generate language breakdown graphs.
 
 ## Documentation
 
