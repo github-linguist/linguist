@@ -198,6 +198,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Go:** [tree-sitter/tree-sitter-go](https://github.com/tree-sitter/tree-sitter-go) 🐌
 - **Go Checksums:** [golang/vscode-go](https://github.com/golang/vscode-go)
 - **Go Module:** [golang/vscode-go](https://github.com/golang/vscode-go)
+- **Go+:** [goplus/vscode-goplus](https://github.com/goplus/vscode-goplus)
 - **Golo:** [TypeUnsafe/sublime-golo](https://github.com/TypeUnsafe/sublime-golo)
 - **Gosu:** [jpcamara/Textmate-Gosu-Bundle](https://github.com/jpcamara/Textmate-Gosu-Bundle)
 - **Grace:** [zmthy/grace-tmbundle](https://github.com/zmthy/grace-tmbundle)

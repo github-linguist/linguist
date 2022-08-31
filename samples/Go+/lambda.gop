@@ -1,0 +1,14 @@
+func transform(a []float64, f func(float64) float64) []float64 {
+    return [f(x) for x <- a]
+}
+
+y := transform([1, 2, 3], x => x*x)
+println y // [1 4 9]
+
+z := transform([-3, 1, -5], x => {
+    if x < 0 {
+        return -x
+    }
+    return x
+})
+println z // [3 1 5]
