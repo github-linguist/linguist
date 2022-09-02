@@ -35,8 +35,9 @@ task :fetch_ace_modes do
   File.delete(ACE_FIXTURE_PATH) if File.exist?(ACE_FIXTURE_PATH)
 
   begin
-    ace_github_modes = URI.open("https://api.github.com/repos/ajaxorg/ace/contents/lib/ace/mode").read
-    File.write(ACE_FIXTURE_PATH, ace_github_modes)
+    ace_github_modes_lib = URI.open("https://api.github.com/repos/ajaxorg/ace/contents/lib/ace/mode").read
+    ace_github_modes_src = URI.open("https://api.github.com/repos/ajaxorg/ace/contents/src/mode").read
+    File.write(ACE_FIXTURE_PATH, "[#{ace_github_modes_lib},#{ace_github_modes_src}]")
   rescue OpenURI::HTTPError, SocketError
       # no internet? no problem.
   end
