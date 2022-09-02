@@ -96,6 +96,16 @@ disambiguations:
     pattern: '^\s*(# |include|require)\b'
   - language: Clojure
     pattern: '\((def|defn|defmacro|let)\s'
+- extensions: ['.bf']
+  rules:
+  - language: Beef
+    pattern: '(?-m)^\s*using\s+(System|Beefy)(\.(.*))?;\s*$'
+  - language: HyPhy
+    pattern:
+    - '(?-m)^\s*#include\s+".*";\s*$'
+    - '\sfprintf\s*\('
+  - language: Brainfuck
+    pattern: '(>\+>|>\+<)'
 - extensions: ['.bi']
   rules:
   - language: FreeBasic
@@ -141,7 +151,7 @@ disambiguations:
   - language: Smalltalk
     pattern: '![\w\s]+methodsFor: '
   - language: 'C#'
-    pattern: '^(\s*namespace\s*[\w\.]+\s*({|;)|\s*\/\/)'
+    pattern: '^\s*(using\s+[A-Z][\s\w.]+;|namespace\s*[\w\.]+\s*({|;)|\/\/)'
 - extensions: ['.csc']
   rules:
   - language: GSC
@@ -245,6 +255,12 @@ disambiguations:
     pattern: '^(?:<|[a-zA-Z-][a-zA-Z0-9_-]+[ \t]+\w)|\${\w+[^\n]*?}|^[ \t]*(?:<#--.*?-->|<#([a-z]+)(?=\s|>)[^>]*>.*?</#\1>|\[#--.*?--\]|\[#([a-z]+)(?=\s|\])[^\]]*\].*?\[#\2\])'
   - language: Fluent
     pattern: '^-?[a-zA-Z][a-zA-Z0-9_-]* *=|\{\$-?[a-zA-Z][-\w]*(?:\.[a-zA-Z][-\w]*)?\}'
+- extensions: ['.g']
+  rules:
+  - language: GAP
+    pattern: '\s*(Declare|BindGlobal|KeyDependentOperation|Install(Method|GlobalFunction)|SetPackageInfo)'
+  - language: G-code
+    pattern: '^[MG][0-9]+\n'
 - extensions: ['.gd']
   rules:
   - language: GAP
@@ -494,7 +510,7 @@ disambiguations:
     - pattern: HEADERS
     - pattern: SOURCES
   - language: IDL
-    pattern: '^\s*function[ \w,]+$'
+    pattern: '^\s*(?i:function|pro|compile_opt) \w[ \w,:]*$'
 - extensions: ['.properties']
   rules:
   - language: INI
@@ -573,6 +589,13 @@ disambiguations:
     pattern: '(?i:\^(this|super)\.|^\s*~\w+\s*=\.)'
   - language: Scala
     pattern: '(^\s*import (scala|java)\.|^\s*class\b)'
+- extensions: ['.scd']
+  rules:
+  - language: SuperCollider
+    pattern: '(?i:\^(this|super)\.|^\s*(~\w+\s*=\.|SynthDef\b))'
+  - language: Markdown
+    # Markdown syntax for scdoc
+    pattern: '^#+\s+(NAME|SYNOPSIS|DESCRIPTION)'
 - extensions: ['.sol']
   rules:
   - language: Solidity
