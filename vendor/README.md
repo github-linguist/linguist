@@ -25,6 +25,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **ATS:** [steinwaywhw/ats-mode-sublimetext](https://github.com/steinwaywhw/ats-mode-sublimetext)
 - **ActionScript:** [simongregory/actionscript3-tmbundle](https://github.com/simongregory/actionscript3-tmbundle)
 - **Ada:** [textmate/ada.tmbundle](https://github.com/textmate/ada.tmbundle)
+- **Adblock Filter List:** [ameshkov/VscodeAdblockSyntax](https://github.com/ameshkov/VscodeAdblockSyntax)
 - **Adobe Font Metrics:** [Alhadis/language-fontforge](https://github.com/Alhadis/language-fontforge)
 - **Agda:** [agda/agda-github-syntax-highlighting](https://github.com/agda/agda-github-syntax-highlighting)
 - **Alloy:** [macekond/Alloy.tmbundle](https://github.com/macekond/Alloy.tmbundle)
@@ -440,7 +441,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Roff Manpage:** [Alhadis/language-roff](https://github.com/Alhadis/language-roff)
 - **Rouge:** [atom/language-clojure](https://github.com/atom/language-clojure)
 - **Ruby:** [tree-sitter/tree-sitter-ruby](https://github.com/tree-sitter/tree-sitter-ruby) 🐌
-- **Rust:** [zargony/atom-language-rust](https://github.com/zargony/atom-language-rust)
+- **Rust:** [tree-sitter/tree-sitter-rust](https://github.com/tree-sitter/tree-sitter-rust) 🐌
 - **SAS:** [rpardee/sas.tmbundle](https://github.com/rpardee/sas.tmbundle)
 - **SCSS:** [atom/language-sass](https://github.com/atom/language-sass)
 - **SELinux Policy:** [google/selinux-policy-languages](https://github.com/google/selinux-policy-languages)

@@ -437,6 +437,13 @@ class TestHeuristics < Minitest::Test
     }, alt_name="main.ftl")
   end
 
+  def test_g_by_heuristics
+    assert_heuristics({
+      "GAP" => all_fixtures("GAP", "*.g*"),
+      "G-code" => all_fixtures("G-code", "*.g")
+    }, alt_name="test.g")
+  end
+
   def test_gd_by_heuristics
     assert_heuristics({
       "GAP" => all_fixtures("GAP", "*.gd"),
@@ -813,6 +820,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_scd_by_heuristics
+    assert_heuristics({
+      "SuperCollider" => all_fixtures("SuperCollider", "*"),
+      "Markdown" => all_fixtures("Markdown", "*.scd")
+    }, alt_name="test.scd")
+  end
+
   def test_sol_by_heuristics
     assert_heuristics({
       "Gerber Image" => Dir.glob("#{fixtures_path}/Generic/sol/Gerber Image/*"),
@@ -898,6 +912,7 @@ class TestHeuristics < Minitest::Test
 
   def test_txt_by_heuristics
     assert_heuristics({
+      "Adblock Filter List" => all_fixtures("Adblock Filter List", "*.txt"),
       "Vim Help File" => all_fixtures("Vim Help File", "*.txt"),
       "Text" => all_fixtures("Text", "*.txt")
     })
