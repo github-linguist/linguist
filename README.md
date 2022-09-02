@@ -49,7 +49,7 @@ brew install cmake pkg-config icu4c
 On Ubuntu:
 
 ```bash
-sudo apt-get install cmake pkg-config libicu-dev zlib1g-dev libcurl4-openssl-dev libssl-dev ruby-dev
+sudo apt-get install build-essential cmake pkg-config libicu-dev zlib1g-dev libcurl4-openssl-dev libssl-dev ruby-dev
 ```
 
 ## Usage
