@@ -227,6 +227,19 @@ Ada:
   tm_scope: source.ada
   ace_mode: ada
   language_id: 11
+Adblock Filter List:
+  type: data
+  color: "#800000"
+  ace_mode: text
+  extensions:
+  - ".txt"
+  aliases:
+  - ad block filters
+  - ad block
+  - adb
+  - adblock
+  tm_scope: text.adblock
+  language_id: 884614762
 Adobe Font Metrics:
   type: data
   color: "#fa0f00"
@@ -528,6 +541,7 @@ Befunge:
   type: programming
   extensions:
   - ".befunge"
+  - ".bf"
   tm_scope: source.befunge
   ace_mode: text
   language_id: 30
@@ -2495,6 +2509,14 @@ HLSL:
   ace_mode: text
   tm_scope: source.hlsl
   language_id: 145
+HOCON:
+  type: data
+  color: "#9ff8ee"
+  extensions:
+  - ".hocon"
+  tm_scope: source.hocon
+  ace_mode: text
+  language_id: 679725279
 HTML:
   type: markup
   tm_scope: text.html.basic
