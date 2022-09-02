@@ -1,0 +1,446 @@
+# Kristall Help
+
+This is the user manual for the Kristall small-internet browser. It contains explanations on how to use the program, what each setting means and other information about the browser.
+
+## The Mission
+
+Kristall tries to fill the hole of graphical browsers for alternative internet protocols with a high usability and feature richness.
+
+## The main interface
+
+The main interface of Kristall consists of three parts:
+
+* the navigation bar on top,
+* the content view in the center
+* and the status bar on the bottom
+
+### Navigation bar
+
+In the navigation bar, you have some buttons and your URL bar.
+
+You can enter any supported URL in the URL bar, press *Return* and Kristall will then load the page in the content view. You usually need to specify the url scheme to navigate to a specific site, but you can omit the gemini:// prefix for gemini pages. If you enter a URL with no scheme, and it looks like a URL (e.g "tilde.pink"), Kristall will assume that it is in fact a gemini URL. If you enter something in the URL bar that *doesn't* look like a URL (e.g "i like dogs"), it will be assumed a search query, and will be forwarded to the search engine that is set in the Settings.
+
+The two buttons on the left of the navigation bar that give you the ability to navigate back and forth in your browsing history. The button with the round arrow is the refresh button and allows you to reload the currently displayed site. While a site is loading, it is replaced with the stop button (square icon) that allows you to cancel the current request. Tip: Some additional buttons can also be enabled in the settings, to quickly navigate to the home page, and even the 'root' and 'parent' of the current URL! (See [Additional Toolbar Items] in Settings)
+
+On the right side of the URL bar you will find two buttons:
+* The button with the small heart icon in it will add or remove this page to your favourites, this can be done as well by pressing *Ctrl-D*. When the heart on the button is filled, the site is contained in your favourites. If not, the heart has only a outline display. Clicking this button will open a small menu to allow you to quickly place the favourite in a folder of your choosing (by default 'Unsorted'). You can press *Return* in this menu to quickly affirm the options displayed in it.
+* The button with the shield icon toggles the use of client certificates. Pressing it when no client certificate is enabled, a dialog will pop up asking you to select or create a certificate. When a certificate is enabled, the button will have a filled shield with a small lock in it. Pressing the button now will disable the currently used certificate. Note that if you're using a transient certificate, Kristall will ask you a safety question before destroying the certificate.
+
+### Content view
+
+The content view renders the requested document. For hypertext documents (i.e gemtext, markdown, etc), you get a nicely rendered version of those documents, other text files are displayed in monospace. Audio and video files are played in a small built-in media player that allows you to play/pause the media, scroll around in the time line and mute/unmute audio. Images are rendered in an interactive view where you can drag the image around and zoom in/out with the mouse wheel.
+
+Documents that can't be rendered will be displayed with file size and mime type, so you can save them to disk and open the files with another program.
+
+Right-clicking in the content view will produce a menu which allows you to copy text, navigate back/forward in history, and copy or open links which are being hovered over. If you right click a HTTP/S link you will also see an option "Open with external web browser" which allows you to open these pages in your default WWW browser.
+
+### Status bar
+
+The status bar displays auxiliary information:
+On the left, you can see the link target when you hover a link. On the right, you can see the document size, time needed to load the document and the mime type of the content. This is especially important when Kristall is not able to render the document nicely. A "(cached)" indicator will appear to the left of the mime type, indicating that the page has been read from cache.
+
+## Menus
+
+This chapter explains what each menu button does. I hope that most stuff isn't surprising 😉
+
+### File
+
+[New Tab] will open a new tab to surf.
+
+[New Window] will open a new window to browse in.
+
+[Save as] allows you to save the currently displayed file to your disk.
+
+[Close Tab] will close the current tab. Does the same as clicking the small (×) button on the tab itself.
+
+[Manage Certificates] will bring up a dialog that allows you to create, delete or change client certificates.
+
+[Settings] will open a dialog that helps you configure Kristall to your likings.
+
+[Quit] will close Kristall.
+
+### Navigation
+
+This menu contains means to navigate the internet.
+
+[Go to home] will navigate your current tab to your home page.
+
+[Backward] will navigate one page back in your history.
+
+[Foreward] will navigate one page foreward in your history.
+
+[Root] will take you to the root directory of the current site. e.g if you are currently at gemini://example.com/gemlog/some-document.gmi, you will be taken to gemini://example.com/
+
+[Parent] will take you to the 'parent' directory of the current site. e.g if you are at gemini://example.com/parent/some-document.gmi, you will be taken to gemini://example.com/parent/
+
+[Refresh] will reload the current page. This may be necessary for CGI scripts or other interactive content.
+
+[Add to favourites] will add or remove the current page to/from your list of favourites.
+
+### View
+
+This menu allows you to show/hide dockable dialogs.
+
+[Document Outline] toggles the document outline. Documents with text/gemini get an automatic outline generation that can be used to navigate larger documents quicker. If you're reading this help document inside of Kristall, this is a good place to try this feature out!
+
+[Favourites] opens a dock containing a list of all your favourite (a.k.a bookmarked) sites. Open your favourites into a new tab by double-clicking or pressing *Return* on the entries. If you right click on an entry you will be presented with a menu in which you can edit the name or location of the entry, or delete it. Right-clicking in the window (not on an entry, not on a group) will allow you to create a new "group" of entries. Right clicking on a group will allow you to rename the group, or recursively delete it (be careful!).
+
+[History] shows the surfing history of the current tab. Double-clicking an entry navigates back and forth in your history without disturbing the list.
+
+### Help
+
+This menu contains some stuff that provides help or information about Kristall.
+
+[Help] displays the help manual (this document).
+
+[Changelog] will open a document that lists the changes in Kristall in a bulleted list.
+
+[About] shows a dialog with some information about Kristall.
+
+[About Qt] shows a dialog containing legal information about the Qt version used.
+
+## Settings
+
+Kristall offers a vast amount of settings. You can style the documents to your liking, changing fonts and colors. You can also fine-tune the behaviour of Kristall to match your likings and keep track of your trusted pages. Please note that Kristall has been designed mostly for browsing geminispace, thus many of these settings are specific or exclusive to Gemini only.
+
+### Generic
+
+This tab contains an unsorted list of settings that allow you to tweak Kristalls behaviour.
+
+[Start Page] is the URL to the page that will be loaded for new tabs and windows. Default is [about:favourites].
+
+[Search Engine] is the search engine to use when typing non-URLs in the URL bar. A handful of Gemini search engines are provided as a drop-down. If you would like to specify your own, specify it in a format similar to the following:
+
+```
+gemini://example.com/search?%1
+```
+
+Note the "%1" at the end of the URL. This is where search queries will be inserted. This *must* be provided in order for Kristall to work with the search engine correctly. Be aware that search engine URLs can vary. For example, a different search engine may appear like so:
+
+```
+gemini://example2.com/search/another/%1
+```
+
+[Additional Toolbar Items] contains various additional toolbar items which some may find useful.
+
+* [Home] button opens the configured home page in the current tab.
+* [New tab] button appears to the right of the tab bar. This simply adds a new tab to the current window.
+* [Root] button takes you to the root directory of the current site. (See Menus>Navigation section for explanation of what this does).
+* [Parent] button takes you to the parent directory of the current site. (See Menus>Navigation section for explanation of what this does).
+
+[UI Theme] controls whether the Qt interface is displayed in a dark or a light theme. Selecting [Light] or [Dark] will use the provided Qt light/dark themes. [OS Default] will use your system theme.
+
+[Icon Theme] controls the specific icon set that the Qt interface will use. Usually, the default [Auto] option should be good enough, however for those using the [OS Default] UI theme, this option may be useful.
+
+[UI Density] controls the margin of the toolbar buttons.
+
+* [Compact] has a very low margin
+* [Classic] has the original big margin
+
+[Enabled Protocols] allows you to fine-tune which protocols are fetched by Kristall. By default, only Gemini is enabled, all other protocols are disabled. Disabled protocols are either not served, and produce an error message, or are forwarded to your OS handler for that URL scheme.
+
+[Unknown Scheme] changes the behaviour how Kristall handles unknown/disabled URL schemes. [Use OS default handler] will invoke your OS default, [Display error message] will just pop up a message box and tell you that Kristall cannot handle this URL.
+
+[Max. Number of Redirections] is a setting that allows you to restrict sites to redirect you only a certain number of times before erroring out. Setting this to 0 will disable redirections completely, displaying an error with the target URL.
+
+[Redirection Handling] allows you to fine-tune the way Kristall allows redirections. Each of the options defines if Kristall should ask you to allow the redirect or do it silently. [Ask for cross-scheme redirection] will pop up a message box if a host tries to redirect you from one URL scheme to another, e.g. when a web server redirects you from HTTP to HTTPS. [Ask for cross-host redirection] will pop up the message box for all redirections through host boundaries, e.g. when example.com redirects you to www.example.com. [Ask for cross-scheme or cross-host redirection] will enable both of the previous behaviours, asking when any cross-boundary redirection happens. [Ask for all redirections] will pop up a message box every time a server tries to redirect you, keeping you in full control over all redirections. [Silently redirect everything] is the exact oppositve of that, accepting all redirections without warning or notice.
+
+[Network Timeout] is the time a server is allowed to *not respond anything* before a error message appears. As long as a server dripples some bytes to Kristall, no timeout will happen, so having a slow or bad connection shouldn't yield timeouts.
+
+### Display
+
+This tabs contains tweaks you can apply to the display behaviour. Change text effects or rendering of documents.
+
+[Render emojis] allows you to toggle whether to render emojis using installed emoji fonts. Disabling this can help prevent text rendering issues due to emojis. Note that emojis are only supported in Kristall builds with Qt 5.13 or later.
+
+[URL bar highlights] sets whether the URL bar should use "fancy" highlights. The highlighting simply makes the domain of the site more prominent/visible, and the text around it slightly dimmed. This is purely a cosmetic feature.
+
+[Text Rendering] allows one to control whether Kristall parses text input files or not. This is usually set to [Fancy] which renders text/html, text/gemini, text/markdown and text/gophermap to a nice, hyperlinked display. When set to [Always plain text], Kristall will display all text/* files as plaintext files instead. This may be inconvenient, but necessary for misparsed sites.
+
+[Use typographer's quotes] sets whether to replace regular quotation marks, that is:
+```
+"these", and 'these'
+```
+with fancy Unicode quotes, which include the following:
+```
+“these”, and ‘these’
+```
+This is a purely cosmetic feature that may aid in readability.
+
+[ANSI Escape Sequences] determines the method of handling ANSI escape codes. This allows a document to alter some of the format (colour, etc) of text.
+* [Ignore] ignores ANSI sequences and leaves them in the text. This option will often create eyesores out of pages that have fancy ANSI art!
+* [Interpret (preformatted text only)] will allow Kristall to interpret ANSI escape sequences in *preformatted* text blocks.
+* [Strip] is a hybrid of the above. It strips ANSI sequences from the text, and displays the text normally, as if the escape sequences were not there.
+
+[Enable text highlights] allows you to enable *bolding* and _underlining_ in text/gemini documents. Bolding **like this** also works.
+
+[Gopher Map] allows you to chose a modern iconized style for gopher maps or, if you are an old schooler, just use a textual description of the item types in the map.
+
+[Hidden files in file:// directories] determines whether hidden files will display in local directory listings (i.e file:// URLs which do not point to a specific document but rather a directory).
+
+[Strip <nav> from HTML pages] allows you to remove the <nav> tag from HTML pages. This might make certain pages more readable, others completly unusable.
+
+### Cache
+
+Kristall employs a small cache system that makes forward/backward navigation much quicker. This tab provides controls to tweak the caching behaviour.
+
+[Total cache size limit] sets the total amount of memory that can be used by Kristall to cache pages. By default this is set to 500 KiB, but can be set to 0 to completely disable the caching system. The larger this number is, the more memory you are allowing Kristall to use.
+
+[Cached item size threshold] is the maximum size of a single cached item. By default this is set to 400 KiB. This prevents Kristall from caching any pages that are large from clogging up the in-memory cache.
+
+[Cached item life] is the amount of time in minutes before a single cached item is considered "expired." When a cached item is "expired", it is not read from cache, but instead re-retreived from the server. Cache life can be disabled by enabling the [Unlimited item life] option. Note: [Cached item life] is only recommended if you desperately want to keep your memory usage to a minimum, otherwise, having [Unlimited item life] is usually a great convenience, and due to the usually very small size of pages in geminispace, gopherspace, etc - it doesn't require much memory.
+
+### Style
+
+In this tab, you can customise the document rendering in Kristall. The left pane contains a vast array of options to tweak, and the right pane displays a preview of your currently-selected style.
+Many items in the *Style* category have either a [Font], [Color], or both buttons. Click these to change the respective value.
+
+[Background Color] is the color that fills the empty space in a document.
+
+[Standard Font] allows you to change the font that is used for all non-preformatted and non-heading text. Choose the color and font family/size/style.
+
+[Preformatted Font] is the font and text color that is used for all <pre> tags in HTML or preformatted blocks in text/gemini. This should be a monospace font, otherwise ASCII art will break horribly. Note to MacOS X users: "Andale Mono" is a good font choice here.
+
+[H1 Font] allows you to change the font and color for primary headings in documents.
+
+[H2 Font] allows you to change the font and color for secondary headings in documents.
+
+[H3 Font] allows you to change the font and color for ternary headings in documents.
+
+[Blockquote Font] allows you to change the font and colour for blockquotes in documents.
+
+[Local Link Color] is the color in which links that refer to the same host *and* protocol are rendered.
+
+[Foreign Link Color] is the color in which links that refer to another host, but the same protocol are rendered. This helps to recognize when you change the content provider with a link.
+
+[Cross-Scheme-Color] is used for all links that change protocol. For example: If you are currently visiting a gemini-served page and are referred to a page in gopher space, this color will be used. This gives you more control over your surfing experience.
+
+[Local Link Prefix] is a small string that is placed before a link to the same host.
+
+[Extern Link Prefix] is a small string that is placed before a link to a different host.
+
+[Block Quote Color] is the background color that allows you to highlight block quotes.
+
+[Auto-Theme Generation] is an experimental feature that can be set to [Disabled], [Light Theme] and [Dark Theme]. When not set to [Disabled], Kristall will ignore all your beautiful color settings and tries to create a color scheme based on the current pages host name. This allows different styles for each host visited and brings some recognizability in gemini and gopher space.
+
+[Left/right Page Margin] is the distance of horizontal page content to the left/right borders. If you have [Enable text width limit] enabled this value is only used when the window size is less than the set maximum text width.
+
+[Top/bottom Page Margin] is the distance of vertical page content to the top/bottom borders.
+
+[Other options] are a set of extra options to enhance your reading experience (and just look cool in general).
+
+* [Justify text] will make text fill the lines they are on. Note that this only works on gemtext pages.
+* [Centre first H1] will centre-align the first top-level heading in gemtext pages. This can look really cool with [Text width limit] enabled!
+
+[Text width limit] sets the maximum line length of text. By default this is set to 900px. If the window itself is smaller in width than the text width limit, the text width limit is "adjusted" to fit inside the window. As mentioned above, horizontal margins will also be applied here. The [Enabled] checkbox to the right of this option toggles whether this option is enabled or not. (Enabled by default)
+
+[Line height (paragraph)] is an additional spacing between paragraph text lines. By default this is set to 5px, and can help with readability. (Gemtext-only feature)
+
+[Line height (header)] is an additional spacing between header text lines. By default this is set to 5px. (Gemtext-only feature)
+
+[Indentation] is a set of options that control the level of indent in certain text parts in Gemini pages.
+
+* [Par] controls indent size of paragraphs (default: 1)
+* [Hea] controls indent size of headings (default: 0)
+* [Quo] controls indent size of blockquotes (default: 1)
+* [Lst] controls indent size of unordered lists (default: 2)
+
+[Indent Size] is the size in pixels of a single indent. This affects how much of an effect the above [Indentation] settings have on the layout (default 15).
+
+[List item marker] simply lets you set what symbol is used in list items. By default this is set to Filled Circle.
+
+[Presets] is a cool feature to save, restore and share your color themes. The dropdown contains a list of all previously created colors schemes. With the [+] button you can create a scheme with a unique name. The floppy disk button will override the currently selected preset with all the settings displayed above. The folder button will restore a previously saved preset. The last two buttons allow you to import/export presets to disk and share them with your friends! Share all your beautiful color schemes with the world!
+
+The lone text with with the [host.name] text in it can be used to preview some auto-generated themes. It only refreshes the preview and seeds the auto generator with a new host name.
+
+### Gemini TLS and HTTPS TLS
+
+These two sites contain the TLS settings for either Gemini or HTTPS. Both protocols are handled in the same way, but with different data sets, so each one has its own settings page.
+
+[Trust Level] defines how you trust hosts. [Trust on first encounter] is also known as *Trust On First Use* (or TOFU) and will store the servers public key in Kristalls database of trusted hosts. If a host is later encountered that has changed its public key, an error will be displayed to the user that this host may be compromised (as the changing of a public key can be a man-in-the-middle attack). [Trust everything] will just happily accept every TLS server, ignoring the certificate issuer completely. [Manually verify fingerprints] allows you to chose whether you trust a server or not based on its fingerprint. This will be displayed in the error page as well as the option to add that server to your list of trusted hosts.
+
+[Certificate Authorities] allows you to enable/disable the use of your systems CA trust store. Sites that can be enabled via the CA system will not be added to the list of trusted hosts (as it is only meant for TOFU/manual implementation), but will not error out. [Use local certificate authorities] will enable that behaviour, [Don't use local certificate authorities] will disable it.
+
+[Trusted Hosts] displays your database of currently trusted hosts for either Gemini or HTTPS servers. You can see the host name (which is used for identification), the date when you trusted the server and the type of the key that server is using.
+
+[Revoke trust] allows you to remove a server from your database. Select a server in the list and click the button. Kristall will now act as it hasn't ever seen that server before and will now handle the server as an unknown one.
+
+## Certificate Manager
+
+This dialog allows you to manage your client certificates. There are options to import, export, delete and create new certificates as well as manage your existing ones.
+
+The window is separated in two halves:
+The left half is the overview over your certificates and your available actions.
+The right half contains information about the currently selected certificate.
+
+The overview displays your certificates managed in groups. Each certificate is contained in a group that allows you to structure your certificates better. Good groups for example is *Accounts*, *Access Token*, *Games*, ... You can move certificates between different groups by using drag'n'drop. Just click the certificate and drag it over into another group.
+When selecting a certificate, its details are displayed on the right side of the screen:
+[Display Name] is the text you will see in the overview on the left and on the smaller dialog selection screen. You can type in here whatever you want, it's just for you. It's possible to edit this value.
+[Common Name] is the CN value that was used when creating the certificate. Its used as a identifier and the only required field when creating the cert. You cannot change this.
+[Expiration Date] is the date when your certificate expires.
+[Expires in] shows the numbe of days until your certificate expires. This may be more intuitive to work with, but communicating the expiration date is recommended.
+[Host Filter] is a security-measurement to shield you from accidental identity exposure. You can type in a URL with wildcards, using ? for a single character, * for any number of characters, including zero and […] for allowing a set of certain characters to be matched. When you try activating the certificate on a URL that does not match your Host Filter, Kristall will ask you if you really want to enable the certificate. This prevents you from accidentally using the certificate on a host or URL where it shouldn't be used.
+[Auto-Enable Certificate] is built on top of the Host Filter. When you don't have a client certificate enabled *and* you visit a URL that matches the Host Filter property, Kristall will ask you if you want to enable that certificate. This is convenient when you need a certificate to visit that location anyways and this allows you to quickly enable your default certificate.
+[Fingerprint] is the SHA256 fingerprint of this certificate.
+[Notes] is a free-form text field for your private use. Kristall does not use this value what-so-ever. Use this field to make notes about that certificate.
+
+You can find more information about the wildcard syntax here:
+=> https://doc.qt.io/qt-5/qregexp.html#qregexp-wildcard-matching Wildcard Matching
+
+Below the certificate overview are four buttons, described from left to the right:
+[Create certificate] will open up the certificate creation dialog and allows you to create a new certificate.
+[Import certificate] will open up the certificate i/o dialog. This allows you to import a existing certificate/key pair, supporting RSA and EC cryptography as well as PEM/DER encoded files.
+[Export certificate] will open up the certificate i/o dialog. This allows you to export the currently selected certificate into a certificate/key pair. This allows PEM/DER encoded files and you should remember/note what kind of format your key has. Exporting allows you to back up you keys, change to another browser or share them with your friends (don't!).
+[Delete certificate] will delete the currently selected certificate or group. You will get a security pop-up when deleting a certificate as this is a non-reversable operation (unless you made a back-up). Deleting empty groups is always allowed without pop-up, deleting non-empty groups is not allowed.
+
+Using passphrases for importing/exporting certificates is currently not supported.
+
+Please note that changes in this dialog are immediaty applied and there is no way back when doing an action. This may change in the future, but will stay like this for now.
+
+## Certificate Selection Dialog
+
+This dialog allows you to enable client certificates. It is opened by clicking the shield button in the navigation bar or it will automatically pop up when a site requests the use of a client certificate.
+
+In the upper part, this dialog provides you with a list of all your persistent certificates. If you want to use one of those, select the certificate and click [Use]. Or simply double-click a certificate to chose it.
+You can also ad-hoc create a new certificate with the click on [Create new identity]. This will open up the certificate creation dialog which allows you to create new identities.
+On the lower part you can create temporary certificates that have a short lifespan and will be destroyed as soon as you disable the certificate or close your client.
+
+## Certificate Creation Dialog
+
+This dialog provides means to create a new persistent identity.
+
+[Group] is the name of the group where this certificate should be stored. You can either chose an existing group from the drop down or just enter a non-existing name to create a new group ad-hoc.
+[Display Name] is the title of the certificate that Kristall will show you. It will not be sent to a server ever.
+[Common Name] is the CN field in the X509 certificate. It's required for identitication to the hosts.
+[Expiration Date] is the date when your certificate becomes invalid. Kristall choses a default of "1 year from now on", but you can chose any time you want, even just 30 minutes. Better chose a long time though if you don't know how long you need that certificate.
+
+With a click on [OK], Kristall will create a new certificate and put it in your certificate store. It can then be selected from the certificate selection dialog or certificate manager.
+
+## Certificate I/O Dialog
+
+This dialog enables you to import or export certificate-key-pairs into or from Kristall.
+
+[Key Type] contains the type of your key. If you import, you need to select the correct key type there, if you export, it will be disabled, but shows the correct type of key for your identity.
+[Key File] needs to be a full path to either a .der or .pem file where Kristall will load/store the key from/to.
+[Certificate File] needs to be a full path to either a .der or .pem file where Kristall will load/store the certificate from/to.
+
+## Shortcuts
+
+The following list contains all of Kristall's built-in shortcuts:
+
+* Ctrl+T ⇒ New tab
+* Ctrl+N ⇒ New window
+* Ctrl+W ⇒ Close tab
+* Ctrl+D ⇒ Quick add/remove from favourites
+* Ctrl+L ⇒ Focus URL bar
+* Ctrl+S ⇒ Save current file
+* Ctrl+B ⇒ Toggle favourites dock
+* Ctrl+H ⇒ Toggle history dock
+* Ctrl+M ⇒ Toggle document outline dock
+* Ctrl+U ⇒ View document source
+* Ctrl+Q ⇒ Quit Kristall
+* Ctrl+, ⇒ Open settings window
+* Alt+Left ⇒ Navigate one page back
+* Alt+Right ⇒ Navigate one page forward
+* Alt+Up ⇒ Navigate to parent directory
+* Alt+Home ⇒ Go to home page
+* Alt+/ ⇒ Navigate to root directory
+* F1 ⇒ Open help manual
+* F5 ⇒ Refresh current tab
+
+## Protocol support
+
+These protocols are currently supported via their respective URL schemes:
+=> https://gemini.circumlunar.space/ Gemini
+=> https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol HTTP/HTTPS
+=> https://en.wikipedia.org/wiki/Gopher_(protocol) Gopher
+=> https://en.wikipedia.org/wiki/Finger_protocol Finger
+
+### Gemini
+
+Kristall tries to implement the current feature set of the gemini specification. All response types of a gemini server are relayed to the user and the user choses when to do certain actions or not. Redirections are followed automatically, and you will be prompted depending on your configured Settings.
+
+### Gopher
+
+Kristall provides access to gopherspace and supports most modern/common file types:
+* Gophermaps / Directories
+* Text
+* Sound / Audio / Music
+* Images / GIFs
+* HTML
+* Mirrors
+
+There is currently no support for automatic redirection on URL: resources or special/oldschool file types like DOS/HexBin/UUencoded data.
+
+### Local file browsing
+
+The file:// scheme can be used to browse local files and directories on your system. (This feature has not been well-tested on Windows systems)
+
+Browsing to a local directory, such as file:///home/user will create a "directory listing", with links allowing you to navigate the file structure.
+
+Browsing to an actual file, such as file:///home/user/file.txt will cause Kristall to attempt to display that file.
+
+### Built-in sites
+
+There is also the scheme about: which can be used to access internal sites for configuration, usability or help (this is one of them!):
+=> about:blank
+=> about:favourites
+=> about:help
+=> about:updates
+=> about:style-preview
+=> about:style-display
+=> about:cache
+
+## Security Concept
+
+Kristall has some built-in security measures to make your browsing experience safe and sane.
+
+### Philosophy
+
+Kristall will always try to warn or ask you if anything critical will happen.
+Sneakily redirecting you to another host?
+You missed disabling your client certficiate when switching hosts?
+Kristall will ask you whether you want to keep your current settings and continue or if you want to disable that feature. These security measures are quite non-intrusive and help you "not missing the click".
+
+It will also make some artificial hurdles when you can *really* make something that is critical, like visiting a host with a mistrusted certificate or deleting your client certificates.
+
+### Security Measures
+
+* Client certificates will be disabled when doing a host or protocol switch
+* Client certificates allow host filtering to double-opt-in for non-planned hosts
+* Redirects check for cross-scheme or cross-host redirections.
+* Fine-grained customizations
+* Trusting TLS connections based on manually built lists, TOFU method or using the certificate authority system
+
+## Caching
+
+Kristall has an in-memory page caching system enabled by default. This allows for quick loading of pages that have already been visited. Currently, this cache is cleared when Kristall is exited.
+
+The caching system is fairly basic; when a page is loaded, it is pushed to the cache (if it is smaller than [Cached item size threshold]). If the cache exceeds the [Total cache size limit], the oldest item in the cache is removed. The [Cached item life] determines how long this cached pages will be valid for.
+
+When a page is read from cache, it is indicated in the Status Bar, to the left of the mime type.
+
+If you would like to disable page caching, set the [Total cache size limit] to 0. See *Settings* for more information
+
+## Supported Media Types
+
+* text/plain
+* text/gemini
+* text/html
+* application/xhtml+xml
+* text/markdown
+* text/gophermap
+* image/*
+* audio/* via Qt multimedia
+* video/* via Qt multimedia
+
+All unrecognized text files will be rendered as text/plain documents with a monospaced font.
+
+## Contact me
+
+I'm eager to hear from your experience! Did everything work? Is something especially cool or bad? Tell me what you think or what annoys you!
+
+Please note that everything here is still work-in-progress and may crash!
+
+Mail:   kristall@mq32.de
+GitHub: https://github.com/MasterQ32/kristall
