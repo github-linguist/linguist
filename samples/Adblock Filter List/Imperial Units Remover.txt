@@ -1,0 +1,20 @@
+[Adblock Plus 3.13]
+! Title: 📏 Imperial Units Remover
+! Version: 23May2022v1-Alpha
+! Expires: 10 days
+! Description: Are you pro-metric and are tired of seeing imperial unites all over the English-language parts of the internet? If so, then here's a list for you.
+! Homepage: https://github.com/DandelionSprout/adfilt/blob/master/Wiki/General-info.md#english
+
+! Removing miles from dual-unit distance measurements in Google Maps (uBO and AdGuard only)
+google.*##html[lang$=US] #ruler span:first-of-type
+google.*##html[lang=en] #ruler span:first-of-type
+google.*##html:not([lang$=US], [lang=en]) #ruler span:nth-of-type(2)
+
+! Removes imperial measurements from multi-unit displays
+weather.gov###myfcst-tempf
+weather.gov#?#p[class^=myforecast-current-]:has-text(°F)
+holiday-weather.com#?#.temperature_data_container > :has-text(°F)
+holiday-weather.com#?#.distance_data_container > :has-text(miles)
+lematin.ma##.meteo-bloc span
+sveip.no##.wmsb_f
+gismeteo.de##.ifnoie
