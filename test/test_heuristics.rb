@@ -804,6 +804,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_scd_by_heuristics
+    assert_heuristics({
+      "SuperCollider" => all_fixtures("SuperCollider", "*"),
+      "Markdown" => all_fixtures("Markdown", "*.scd")
+    }, alt_name="test.scd")
+  end
+
   def test_sol_by_heuristics
     assert_heuristics({
       "Gerber Image" => Dir.glob("#{fixtures_path}/Generic/sol/Gerber Image/*"),

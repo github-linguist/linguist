@@ -573,6 +573,13 @@ disambiguations:
     pattern: '(?i:\^(this|super)\.|^\s*~\w+\s*=\.)'
   - language: Scala
     pattern: '(^\s*import (scala|java)\.|^\s*class\b)'
+- extensions: ['.scd']
+  rules:
+  - language: SuperCollider
+    pattern: '(?i:\^(this|super)\.|^\s*(~\w+\s*=\.|SynthDef\b))'
+  - language: Markdown
+    # Markdown syntax for scdoc
+    pattern: '^#+\s+(NAME|SYNOPSIS|DESCRIPTION)'
 - extensions: ['.sol']
   rules:
   - language: Solidity
