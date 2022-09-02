@@ -211,6 +211,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **HAProxy:** [abulimov/atom-language-haproxy](https://github.com/abulimov/atom-language-haproxy)
 - **HCL:** [alexlouden/Terraform.tmLanguage](https://github.com/alexlouden/Terraform.tmLanguage)
 - **HLSL:** [tgjones/shaders-tmLanguage](https://github.com/tgjones/shaders-tmLanguage)
+- **HOCON:** [jacobwgillespie/language-hocon](https://github.com/jacobwgillespie/language-hocon)
 - **HTML:** [tree-sitter/tree-sitter-html](https://github.com/tree-sitter/tree-sitter-html) 🐌
 - **HTML+ECR:** [atom-crystal/language-crystal](https://github.com/atom-crystal/language-crystal)
 - **HTML+EEX:** [elixir-lang/elixir-tmbundle](https://github.com/elixir-lang/elixir-tmbundle)
