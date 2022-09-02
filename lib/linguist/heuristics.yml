@@ -96,6 +96,16 @@ disambiguations:
     pattern: '^\s*(# |include|require)\b'
   - language: Clojure
     pattern: '\((def|defn|defmacro|let)\s'
+- extensions: ['.bf']
+  rules:
+  - language: Beef
+    pattern: '(?-m)^\s*using\s+(System|Beefy)(\.(.*))?;\s*$'
+  - language: HyPhy
+    pattern:
+    - '(?-m)^\s*#include\s+".*";\s*$'
+    - '\sfprintf\s*\('
+  - language: Brainfuck
+    pattern: '(>\+>|>\+<)'
 - extensions: ['.bi']
   rules:
   - language: FreeBasic
