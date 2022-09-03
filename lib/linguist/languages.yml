@@ -541,6 +541,7 @@ Befunge:
   type: programming
   extensions:
   - ".befunge"
+  - ".bf"
   tm_scope: source.befunge
   ace_mode: text
   language_id: 30
@@ -1714,6 +1715,16 @@ Elm:
   codemirror_mode: elm
   codemirror_mime_type: text/x-elm
   language_id: 101
+Elvish:
+  type: programming
+  ace_mode: text
+  extensions:
+  - ".elv"
+  interpreters:
+  - elvish
+  tm_scope: source.elvish
+  color: "#55BB55"
+  language_id: 570996448
 Emacs Lisp:
   type: programming
   tm_scope: source.emacs.lisp
@@ -2144,6 +2155,17 @@ Gemfile.lock:
   filenames:
   - Gemfile.lock
   language_id: 907065713
+Gemini:
+  type: prose
+  color: "#ff6900"
+  ace_mode: text
+  extensions:
+  - ".gmi"
+  aliases:
+  - gemtext
+  wrap: true
+  tm_scope: source.gemini
+  language_id: 310828396
 Genero:
   type: programming
   color: "#63408e"
@@ -2508,6 +2530,14 @@ HLSL:
   ace_mode: text
   tm_scope: source.hlsl
   language_id: 145
+HOCON:
+  type: data
+  color: "#9ff8ee"
+  extensions:
+  - ".hocon"
+  tm_scope: source.hocon
+  ace_mode: text
+  language_id: 679725279
 HTML:
   type: markup
   tm_scope: text.html.basic
@@ -3352,6 +3382,7 @@ Kusto:
   type: data
   extensions:
   - ".csl"
+  - ".kql"
   tm_scope: source.kusto
   ace_mode: text
   language_id: 225697190
@@ -6328,7 +6359,6 @@ SugarSS:
   type: markup
   color: "#2fcc9f"
   tm_scope: source.css.postcss.sugarss
-  group: CSS
   extensions:
   - ".sss"
   ace_mode: text
