@@ -647,7 +647,7 @@ disambiguations:
 - extensions: ['.tag']
   rules:
   - language: Java Server Pages
-    pattern: '\s*<%@.?(taglib|tag|include|attribute|variable)\s'
+    pattern: '<%[@!=\s]?\s*(taglib|tag|include|attribute|variable)\s'
 - extensions: ['.toc']
   rules:
   - language: World of Warcraft Addon Data
