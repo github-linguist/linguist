@@ -644,6 +644,10 @@ disambiguations:
     pattern: '^\s*(?:use\s+v6\b|\bmodule\b|\bmy\s+class\b)'
   - language: Turing
     pattern: '^\s*%[ \t]+|^\s*var\s+\w+(\s*:\s*\w+)?\s*:=\s*\w+'
+- extensions: ['.tag']
+  rules:
+  - language: Java Server Pages
+    pattern: '<%[@!=\s]?\s*(taglib|tag|include|attribute|variable)\s'
 - extensions: ['.toc']
   rules:
   - language: World of Warcraft Addon Data
