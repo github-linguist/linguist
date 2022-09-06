@@ -355,6 +355,8 @@ vendor/grammars/elixir-tmbundle:
 - text.html.elixir
 vendor/grammars/elvish:
 - source.elvish
+- source.elvish-transcript
+- source.elvish.in.markdown
 vendor/grammars/erlang.tmbundle:
 - source.erlang
 - text.html.erlang.yaws
@@ -535,6 +537,7 @@ vendor/grammars/language-etc:
 - source.openbsd-pkg.contents
 - source.opts
 - source.record-jar
+- source.sexp
 - source.shellcheckrc
 - source.sieve
 - source.smpl
@@ -685,6 +688,7 @@ vendor/grammars/language-ring:
 - source.ring
 vendor/grammars/language-roff:
 - hidden.manref
+- source.context
 - source.ditroff
 - source.ditroff.desc
 - source.gremlin
@@ -854,6 +858,7 @@ vendor/grammars/rascal-syntax-highlighting:
 vendor/grammars/razor-plus:
 - text.html.cshtml
 vendor/grammars/rescript-vscode:
+- markdown.rescript.codeblock
 - source.rescript
 vendor/grammars/riot-syntax-highlight:
 - text.html.riot
@@ -1063,6 +1068,7 @@ vendor/grammars/vscode-prisma:
 - inline.prisma
 - markdown.prisma.codeblock
 - source.prisma
+- source.ts.prismaClientRawSQL
 vendor/grammars/vscode-procfile:
 - source.procfile
 vendor/grammars/vscode-proto3:
