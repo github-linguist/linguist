@@ -882,6 +882,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_tag_by_heuristics
+    assert_heuristics({
+      "Java Server Pages" => Dir.glob("#{fixtures_path}/Generic/tag/Java Server Pages/*"),
+      nil => Dir.glob("#{fixtures_path}/Generic/tag/nil/*")
+    })
+  end
+
   def test_toc_by_heuristics
     assert_heuristics({
       "TeX" => all_fixtures("TeX", "*.toc"),
