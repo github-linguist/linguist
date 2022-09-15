@@ -46,7 +46,6 @@ For example, on macOS with [Homebrew](http://brew.sh/):
 brew install cmake pkg-config icu4c
 ```
 
-If you are on macOS and run `script/bootstrap` in this repository, those dependencies will be installed for you provided Homebrew is available.
 
 On Ubuntu:
 
