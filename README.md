@@ -46,7 +46,6 @@ For example, on macOS with [Homebrew](http://brew.sh/):
 brew install cmake pkg-config icu4c
 ```
 
-
 On Ubuntu:
 
 ```bash
