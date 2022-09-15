@@ -84,7 +84,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **CUE:** [cue-sh/vscode-cue](https://github.com/cue-sh/vscode-cue)
 - **Cabal Config:** [atom-haskell/language-haskell](https://github.com/atom-haskell/language-haskell)
 - **Cadence:** [onflow/vscode-cadence](https://github.com/onflow/vscode-cadence)
-- **Cairo:** [xshitaka/atom-language-cairo](https://github.com/xshitaka/atom-language-cairo)
+- **Cairo:** [0xHyoga/atom-language-cairov0.1](https://github.com/0xHyoga/atom-language-cairov0.1)
 - **CameLIGO:** [pewulfman/Ligo-grammar](https://github.com/pewulfman/Ligo-grammar)
 - **Cap'n Proto:** [textmate/capnproto.tmbundle](https://github.com/textmate/capnproto.tmbundle)
 - **CartoCSS:** [yohanboniface/carto-atom](https://github.com/yohanboniface/carto-atom)
