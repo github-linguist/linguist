@@ -22,11 +22,7 @@ Linguist uses the [`charlock_holmes`](https://github.com/brianmario/charlock_hol
 [Docker](https://www.docker.com/) is also required when adding or updating grammars.
 These components have their own dependencies - `icu4c`, and `cmake` and `pkg-config` respectively - which you may need to install before you can install Linguist.
 
-For example, on macOS with [Homebrew](http://brew.sh/):
-```bash
-brew install cmake pkg-config icu4c
-brew install --cask docker
-```
+On macOS with [Homebrew](http://brew.sh/) the instructions below under Getting started will install these dependencies for you.
 
 On Ubuntu:
 ```bash
