@@ -1,0 +1,345 @@
+{
+  "$schema": "https://www.speedscope.app/file-format-schema.json",
+  "exporter": "ruby-prof-speedscope",
+  "shared": {
+    "frames": [
+{
+  "name": "[global]#",
+  "file": "benchmark.rb",
+  "line": "19"
+},
+{
+  "name": "Linguist::BlobCounter#count",
+  "file": "/Users/gabriel-amaral/workspace/github/linguist/lib/linguist/blob_counter.rb",
+  "line": "29"
+},
+{
+  "name": "Linguist::BlobCounter#repository",
+  "file": "",
+  "line": "0"
+},
+{
+  "name": "Rugged::Repository#index",
+  "file": "",
+  "line": "0"
+},
+{
+  "name": "Rugged::Index#each",
+  "file": "",
+  "line": "0"
+},
+{
+  "name": "Integer#>",
+  "file": "",
+  "line": "0"
+},
+{
+  "name": "Hash#[]",
+  "file": "",
+  "line": "0"
+},
+{
+  "name": "Linguist::BlobCounter#countable?",
+  "file": "/Users/gabriel-amaral/workspace/github/linguist/lib/linguist/blob_counter.rb",
+  "line": "42"
+},
+{
+  "name": "Linguist::BlobCounter#git_attributes",
+  "file": "/Users/gabriel-amaral/workspace/github/linguist/lib/linguist/blob_counter.rb",
+  "line": "38"
+},
+{
+  "name": "Rugged::Repository#fetch_attributes",
+  "file": "",
+  "line": "0"
+},
+{
+  "name": "Linguist::BlobCounter#vendored?",
+  "file": "/Users/gabriel-amaral/workspace/github/linguist/lib/linguist/blob_counter.rb",
+  "line": "72"
+},
+{
+  "name": "NilClass#nil?",
+  "file": "",
+  "line": "0"
+},
+{
+  "name": "BasicObject#!",
+  "file": "",
+  "line": "0"
+},
+{
+  "name": "Regexp#match?",
+  "file": "",
+  "line": "0"
+},
+{
+  "name": "Linguist::BlobCounter#documentation?",
+  "file": "/Users/gabriel-amaral/workspace/github/linguist/lib/linguist/blob_counter.rb",
+  "line": "55"
+},
+{
+  "name": "Linguist::BlobCounter#generated?",
+  "file": "/Users/gabriel-amaral/workspace/github/linguist/lib/linguist/blob_counter.rb",
+  "line": "63"
+},
+{
+  "name": "Integer#+",
+  "file": "",
+  "line": "0"
+},
+{"name": "dummy_trailing_comma"}
+]
+},
+"profiles": [
+{
+  "type": "evented",
+  "name": "Thread: 1340, Fiber: 1320",
+  "unit": "seconds",
+  "startValue": 0,
+  "endValue": 11.124877228983678,
+  "events": [
+{
+  "type": "O",
+  "frame": 0,
+  "at": 0.0
+},
+{
+  "type": "O",
+  "frame": 1,
+  "at": 1.2299977242946625e-05
+},
+{
+  "type": "O",
+  "frame": 2,
+  "at": 1.918798079714179e-05
+},
+{
+  "type": "C",
+  "frame": 2,
+  "at": 1.9761966541409492e-05
+},
+{
+  "type": "O",
+  "frame": 3,
+  "at": 1.9761966541409492e-05
+},
+{
+  "type": "C",
+  "frame": 3,
+  "at": 0.12083503598114476
+},
+{
+  "type": "O",
+  "frame": 4,
+  "at": 0.12083503598114476
+},
+{
+  "type": "O",
+  "frame": 5,
+  "at": 0.2912822506041266
+},
+{
+  "type": "C",
+  "frame": 5,
+  "at": 0.2983736526512075
+},
+{
+  "type": "O",
+  "frame": 6,
+  "at": 0.2983736526512075
+},
+{
+  "type": "C",
+  "frame": 6,
+  "at": 0.3062137907545548
+},
+{
+  "type": "O",
+  "frame": 7,
+  "at": 0.3062137907545548
+},
+{
+  "type": "O",
+  "frame": 8,
+  "at": 0.37350137674366124
+},
+{
+  "type": "O",
+  "frame": 2,
+  "at": 0.4030072010064032
+},
+{
+  "type": "C",
+  "frame": 2,
+  "at": 0.41063065716298297
+},
+{
+  "type": "O",
+  "frame": 9,
+  "at": 0.41063065716298297
+},
+{
+  "type": "C",
+  "frame": 9,
+  "at": 3.797030693589477
+},
+{
+  "type": "C",
+  "frame": 8,
+  "at": 3.797030693589477
+},
+{
+  "type": "O",
+  "frame": 10,
+  "at": 3.797030693589477
+},
+{
+  "type": "O",
+  "frame": 11,
+  "at": 3.8427574256202206
+},
+{
+  "type": "C",
+  "frame": 11,
+  "at": 3.8509011364076287
+},
+{
+  "type": "O",
+  "frame": 12,
+  "at": 3.8509011364076287
+},
+{
+  "type": "C",
+  "frame": 12,
+  "at": 3.8571015597553924
+},
+{
+  "type": "O",
+  "frame": 13,
+  "at": 3.8571015597553924
+},
+{
+  "type": "C",
+  "frame": 13,
+  "at": 10.62471760698827
+},
+{
+  "type": "C",
+  "frame": 10,
+  "at": 10.62471760698827
+},
+{
+  "type": "O",
+  "frame": 12,
+  "at": 10.62471760698827
+},
+{
+  "type": "C",
+  "frame": 12,
+  "at": 10.636616756761214
+},
+{
+  "type": "O",
+  "frame": 14,
+  "at": 10.636616756761214
+},
+{
+  "type": "O",
+  "frame": 11,
+  "at": 10.653988460631808
+},
+{
+  "type": "C",
+  "frame": 11,
+  "at": 10.657302575331414
+},
+{
+  "type": "O",
+  "frame": 12,
+  "at": 10.657302575331414
+},
+{
+  "type": "C",
+  "frame": 12,
+  "at": 10.660462031140924
+},
+{
+  "type": "O",
+  "frame": 13,
+  "at": 10.660462031140924
+},
+{
+  "type": "C",
+  "frame": 13,
+  "at": 11.09960265524569
+},
+{
+  "type": "C",
+  "frame": 14,
+  "at": 11.09960265524569
+},
+{
+  "type": "O",
+  "frame": 15,
+  "at": 11.09960265524569
+},
+{
+  "type": "O",
+  "frame": 11,
+  "at": 11.114156303927302
+},
+{
+  "type": "C",
+  "frame": 11,
+  "at": 11.117842369014397
+},
+{
+  "type": "O",
+  "frame": 12,
+  "at": 11.117842369014397
+},
+{
+  "type": "C",
+  "frame": 12,
+  "at": 11.120998916972894
+},
+{
+  "type": "C",
+  "frame": 15,
+  "at": 11.120998916972894
+},
+{
+  "type": "C",
+  "frame": 7,
+  "at": 11.120998916972894
+},
+{
+  "type": "O",
+  "frame": 16,
+  "at": 11.120998916972894
+},
+{
+  "type": "C",
+  "frame": 16,
+  "at": 11.124877228983678
+},
+{
+  "type": "C",
+  "frame": 4,
+  "at": 11.124877228983678
+},
+{
+  "type": "C",
+  "frame": 1,
+  "at": 11.124877228983678
+},
+{
+  "type": "C",
+  "frame": 0,
+  "at": 11.124877228983678
+}
+]
+}
+]
+}
