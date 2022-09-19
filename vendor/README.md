@@ -265,6 +265,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Jsonnet:** [google/language-jsonnet](https://github.com/google/language-jsonnet)
 - **Julia:** [JuliaEditorSupport/atom-language-julia](https://github.com/JuliaEditorSupport/atom-language-julia)
 - **Jupyter Notebook:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
+- **Justfile:** [skellock/vscode-just](https://github.com/skellock/vscode-just)
 - **Kaitai Struct:** [atom/language-yaml](https://github.com/atom/language-yaml)
 - **KakouneScript:** [kakoune-editor/language-kak](https://github.com/kakoune-editor/language-kak)
 - **KiCad Layout:** [Alhadis/language-pcb](https://github.com/Alhadis/language-pcb)
