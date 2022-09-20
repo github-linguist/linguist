@@ -60,7 +60,7 @@ bundle exec bin/github-linguist --breakdown
 
 We try only to add new extensions once they have some usage on GitHub.
 In most cases we prefer that each new file extension be in use in at least 200 unique `:user/:repo` repositories before supporting them in Linguist
-(but see [#5756][5756] for a temporary change in the criteria).
+(but see [#5756][] for a temporary change in the criteria).
 
 To add support for a new extension:
 
@@ -86,7 +86,7 @@ Additionally, if this extension is already listed in [`languages.yml`][languages
 
 We try only to add languages once they have some usage on GitHub.
 In most cases we prefer that each new file extension be in use in at least 200 unique `:user/:repo` repositories before supporting them in Linguist
-(but see [#5756][5756] for a temporary change in the criteria).
+(but see [#5756][] for a temporary change in the criteria).
 
 To add support for a new language:
 
@@ -214,4 +214,4 @@ As Linguist is a production dependency for GitHub we have a couple of workflow r
 [samples]: /samples
 [search-example]: https://github.com/search?utf8=%E2%9C%93&q=extension%3Aboot+NOT+nothack&type=Code&ref=searchresults
 [gpr]: https://docs.github.com/packages/using-github-packages-with-your-projects-ecosystem/configuring-rubygems-for-use-with-github-packages
-[5756]: https://github.com/github/linguist/issues/5756
+[#5756]: https://github.com/github/linguist/issues/5756
