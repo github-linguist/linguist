@@ -3289,21 +3289,6 @@ Jupyter Notebook:
   aliases:
   - IPython Notebook
   language_id: 185
-Justfile:
-  type: programming
-  aliases:
-  - Justfile
-  color: "#384d54"
-  tm_scope: source.justfile
-  extensions:
-  - ".justfile"
-  filenames:
-  - Justfile
-  - justfile
-  ace_mode: justfile
-  codemirror_mode: justfile
-  codemirror_mime_type: text/x-justfile
-  language_id: 20220919 #todo: how to set this?!
 KRL:
   type: programming
   color: "#28430A"
@@ -7637,6 +7622,20 @@ jq:
   - ".jq"
   tm_scope: source.jq
   language_id: 905371884
+justfile:
+  type: programming
+  aliases:
+  - Justfile
+  color: "#384d54"
+  tm_scope: source.justfile
+  extensions:
+  - "justfile"
+  filenames:
+  - Justfile
+  ace_mode: justfile
+  codemirror_mode: justfile
+  codemirror_mime_type: text/x-justfile
+  language_id: 20220919 #todo: how to set this?!
 kvlang:
   type: markup
   ace_mode: text
