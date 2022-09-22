@@ -29,7 +29,10 @@ On Ubuntu:
 apt-get install cmake pkg-config libicu-dev docker.io ruby ruby-dev zlib1g-dev build-essential libssl-dev
 ```
 
-The latest version of Bundler can be installed with `gem install bundler`.
+If you don't have it yet, please install `Bundler`:
+```bash
+gem install bundler
+```
 
 ## Getting started
 
