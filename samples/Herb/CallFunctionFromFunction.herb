@@ -1,0 +1,8 @@
+func Hello(){ write "Hello!";}
+
+func returnFunc(a){ a();}
+
+func callFunc(){ returnFunc(Hello);}
+
+callFunc();
+ 
