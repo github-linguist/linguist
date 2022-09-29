@@ -368,6 +368,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **OpenSCAD:** [tbuser/openscad.tmbundle](https://github.com/tbuser/openscad.tmbundle)
 - **OpenStep Property List:** [atom/language-property-list](https://github.com/atom/language-property-list)
 - **OpenType Feature File:** [Alhadis/language-fontforge](https://github.com/Alhadis/language-fontforge)
+- **Ott:** [JoeyEremondi/vscode-ott](https://github.com/JoeyEremondi/vscode-ott)
 - **Ox:** [andreashetland/sublime-text-ox](https://github.com/andreashetland/sublime-text-ox)
 - **Oz:** [eregon/oz-tmbundle](https://github.com/eregon/oz-tmbundle)
 - **P4:** [TakeshiTseng/atom-language-p4](https://github.com/TakeshiTseng/atom-language-p4)

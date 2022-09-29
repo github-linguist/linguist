@@ -1,0 +1,41 @@
+metavar x ::=
+metavar X ::=
+
+grammar
+  t :: 'Tm_' ::=                       
+    | x              :: :: var 
+    | \ x : T . t    :: :: lam 
+    | t t'           :: :: app 
+
+  T :: 'Ty_' ::=                                    
+    | X              :: :: var                   
+    | T -> T'        :: :: fn
+
+  G :: 'G_' ::= 
+    | empty          :: :: emp 
+    | G , x : T      :: :: cons
+
+  formula :: 'formula_' ::=        
+    | judgement      :: :: judgement
+    | x : T in G     :: :: xTG 
+
+defns
+  Jtype :: '' ::= 
+
+defn
+  G |- t : T :: :: GtT :: GtT_ by
+      
+  x:T in G
+  -------- :: var
+  G |- x:T
+
+  G |- t : T1->T2
+  G |- t' : T1 
+  --------------- :: app
+  G |- t t' : T2
+
+  G,x1:T1 |- t : T2
+  ---------------------- :: lam
+  G |- \x1:T1.t : T1->T2
+
+
