@@ -481,6 +481,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Smali:** [ShaneWilton/sublime-smali](https://github.com/ShaneWilton/sublime-smali)
 - **Smalltalk:** [tomas-stefano/smalltalk-tmbundle](https://github.com/tomas-stefano/smalltalk-tmbundle)
 - **Smarty:** [textmate/php-smarty.tmbundle](https://github.com/textmate/php-smarty.tmbundle)
+- **Smithy:** [awslabs/smithy-vscode](https://github.com/awslabs/smithy-vscode)
 - **Solidity:** [davidhq/SublimeEthereum](https://github.com/davidhq/SublimeEthereum)
 - **Soong:** [flimberger/android-system-tools](https://github.com/flimberger/android-system-tools)
 - **SourcePawn:** [Dreae/sourcepawn-vscode](https://github.com/Dreae/sourcepawn-vscode)
