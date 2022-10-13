@@ -3986,6 +3986,7 @@ MiniYAML:
   tm_scope: source.miniyaml
   extensions:
   - ".yaml"
+  - ".yml"
   ace_mode: yaml
   codemirror_mode: yaml
   codemirror_mime_type: text/x-yaml
@@ -4112,7 +4113,7 @@ Move:
   type: programming
   color: "#4a137a"
   extensions:
-    - ".move"
+  - ".move"
   tm_scope: source.move
   ace_mode: text
   language_id: 638334599
@@ -4381,6 +4382,52 @@ Nunjucks:
   tm_scope: text.html.nunjucks
   ace_mode: nunjucks
   language_id: 461856962
+OASv2-json:
+  type: data
+  color: "#85ea2d"
+  extensions:
+  - ".json"
+  group: OpenAPI Specification v2
+  tm_scope: source.json
+  ace_mode: json
+  codemirror_mode: javascript
+  codemirror_mime_type: application/json
+  language_id: 834374816
+OASv2-yaml:
+  type: data
+  color: "#85ea2d"
+  extensions:
+  - ".yaml"
+  - ".yml"
+  group: OpenAPI Specification v2
+  tm_scope: source.yaml
+  ace_mode: yaml
+  codemirror_mode: yaml
+  codemirror_mime_type: text/x-yaml
+  language_id: 105187618
+OASv3-json:
+  type: data
+  color: "#85ea2d"
+  extensions:
+  - ".json"
+  group: OpenAPI Specification v3
+  tm_scope: source.json
+  ace_mode: json
+  codemirror_mode: javascript
+  codemirror_mime_type: application/json
+  language_id: 980062566
+OASv3-yaml:
+  type: data
+  color: "#85ea2d"
+  extensions:
+  - ".yaml"
+  - ".yml"
+  group: OpenAPI Specification v3
+  tm_scope: source.yaml
+  ace_mode: yaml
+  codemirror_mode: yaml
+  codemirror_mime_type: text/x-yaml
+  language_id: 51239111
 OCaml:
   type: programming
   ace_mode: ocaml
@@ -4507,6 +4554,22 @@ Open Policy Agent:
   - ".rego"
   language_id: 840483232
   tm_scope: source.rego
+OpenAPI Specification v2:
+  aliases:
+    - oasv2
+  type: data
+  color: "#85ea2d"
+  tm_scope: none
+  ace_mode: text
+  language_id: 848295328
+OpenAPI Specification v3:
+  aliases:
+    - oasv3
+  type: data
+  color: "#85ea2d"
+  tm_scope: none
+  ace_mode: text
+  language_id: 557959099
 OpenCL:
   type: programming
   color: "#ed2e2d"

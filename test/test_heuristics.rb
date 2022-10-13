@@ -534,6 +534,12 @@ class TestHeuristics < Minitest::Test
     }, alt_name="foo.inc")
   end
 
+  def test_json_by_heuristics
+    assert_heuristics({
+      "JSON" => all_fixtures("JSON", "*.json"),
+    })
+  end
+
   def test_l_by_heuristics
     assert_heuristics({
       "Common Lisp" => all_fixtures("Common Lisp", "*.l"),
@@ -967,6 +973,13 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "MiniYAML" => all_fixtures("MiniYAML", "*.yaml"),
       "YAML" => all_fixtures("YAML", "*.yaml"),
+    })
+  end
+
+  def test_yml_by_heuristics
+    assert_heuristics({
+      "MiniYAML" => all_fixtures("MiniYAML", "*.yml"),
+      "YAML" => all_fixtures("YAML", "*.yml"),
     })
   end
 
