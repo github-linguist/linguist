@@ -1,0 +1,85 @@
+body = {
+    g: 10g,
+    b: 3b,
+}
+
+ground = 4b
+side = 6b
+
+lava = 5b
+spawn_point = 119g
+
+gs = import gamescene
+
+move_body = (m: [@counter], fac = 1) {
+    m[1].clone().reset(for_each = x => body.g.move(0, x * fac))
+    m[0].clone().reset(for_each = x => body.g.move(x * fac, 0)) 
+}
+
+pos = [counter(100), counter(0)]
+vel = [counter(0), counter(0)]
+
+
+button_a = counter(false)
+button_b = counter(false)
+
+on(gs.button_a(), !{
+    button_a = true
+})
+on(gs.button_a_end(), !{
+    button_a = false
+})
+
+on(gs.button_b(), !{
+    button_b = true
+})
+on(gs.button_b_end(), !{
+    button_b = false
+})
+
+on(collision(body.b, lava), !{
+    body.g.move_to(spawn_point)
+})
+
+is_in_ground = counter(body.b.create_tracker_item(ground), bits = 1)
+is_in_side_wall = counter(side.create_tracker_item(body.b), bits = 1)
+
+x_vel_max = 5
+max_fall_speed = 10
+
+-> while_loop(() => true, () {
+    if @bool(is_in_ground) {
+        vel[1] *= -1
+        if vel[1] < max_fall_speed {
+            vel[1] = max_fall_speed
+        }
+        //move_body(pos, -1)
+    } else {
+        if vel[1] > -max_fall_speed {
+            vel[1] -= 1
+        }
+    }
+
+    
+    if @bool(is_in_side_wall) {
+        vel[0] *= -1
+    } else {
+        if @bool(button_b) && vel[0] < x_vel_max {
+            vel[0] += 1
+        } else if vel[0] > 0 {
+            vel[0] -= 1
+        }
+        
+        if @bool(button_a) && vel[0] > -x_vel_max  {
+            vel[0] -= 1
+        } else if vel[0] < 0 {
+            vel[0] += 1
+        }
+        
+    }
+    
+    pos[1] += vel[1]
+    pos[0] += vel[0]
+
+    move_body(vel)
+})

@@ -1,0 +1,85 @@
+
+sqrt = (n: @counter, result: @counter) {
+    result = n
+    y = counter(1, bits = 10)
+    
+
+    while_loop(() => result > y, () {
+        result = (result + y) / 2
+        wait(0.05)
+        y = n / result
+    })
+}
+
+buttons = (1g..12g) + (13g..20g)
+$.print(buttons.length)
+selected = counter(0)
+selector = 12g
+
+gamescene = import gamescene
+
+main = counter(1i, bits = 17)
+sec = counter(2i, bits = 17)
+
+
+on(gamescene.button_b(), !{
+    selected += 1
+    if selected == buttons.length {
+        selected = 0
+    }
+    selector.move_to(buttons[selected.to_const(..buttons.length)])
+})
+
+current_op = counter()
+res = counter(3i)
+
+main10 = counter(bits = 12)
+sec10 = counter(bits = 12)
+
+on(gamescene.button_a(), !{
+    if selected <= 9 {
+        //number
+        main = main * 10 + selected
+    } else if selected == 10 {
+        main = 0
+    } else if selected == 11 {
+        //solve
+        if current_op == 0 {
+            //plus
+            main += sec
+        } else if current_op == 1 {
+            //minus
+            sec -= main
+            main = sec
+        } else if current_op == 2 {
+            //mult
+            main *= sec
+        } else if current_op == 3 {
+            //div
+            sec /= main
+            main = sec
+        } else if current_op == 4 {
+            res = 1
+            while_loop(() => main > 0, () {
+                res *= sec
+                main--
+            })
+            wait(0.1)
+            main = res
+        }
+        sec = 0
+    } else if selected == 17 {
+        //-> BG.pulse(255, 0, 0, fade_out = 0.5)
+        main10 = main
+        sec10 = sec
+        sqrt(main10, sec10)
+        main = sec10
+    } else {
+        //operator
+        button = selected.to_const(12..18)
+        -> buttons[button].pulse(0, 255, 0, fade_out = 3)
+        current_op = button - 12
+        sec = main
+        main = 0
+    }
+})

@@ -1,0 +1,7 @@
+range = 0..=10
+for i in range { $.print(i) }
+$.print(range)
+
+range_step = 0..2..=10
+for i in range_step { $.print(i) }
+$.print(range_step)
