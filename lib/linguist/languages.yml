@@ -4587,6 +4587,20 @@ OpenType Feature File:
   tm_scope: source.opentype
   ace_mode: text
   language_id: 374317347
+Option List:
+  type: data
+  color: "#476732"
+  aliases:
+  - opts
+  - ackrc
+  filenames:
+  - ".ackrc"
+  - "ackrc"
+  tm_scope: source.opts
+  ace_mode: sh
+  codemirror_mode: shell
+  codemirror_mime_type: text/x-sh
+  language_id: 723589315
 Org:
   type: prose
   color: "#77aa99"
@@ -4823,10 +4837,12 @@ Perl:
   - ".psgi"
   - ".t"
   filenames:
+  - .latexmkrc
   - Makefile.PL
   - Rexfile
   - ack
   - cpanfile
+  - latexmkrc
   interpreters:
   - cperl
   - perl
@@ -6164,6 +6180,19 @@ Sieve:
   codemirror_mode: sieve
   codemirror_mime_type: application/sieve
   language_id: 208976687
+Simple File Verification:
+  type: data
+  group: Checksums
+  color: "#C9BFED"
+  extensions:
+  - ".sfv"
+  aliases:
+  - sfv
+  tm_scope: source.sfv
+  ace_mode: ini
+  codemirror_mode: properties
+  codemirror_mime_type: text/x-properties
+  language_id: 735623761
 Singularity:
   type: programming
   color: "#64E6AD"
