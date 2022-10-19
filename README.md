@@ -94,6 +94,35 @@ $ github-linguist
 
 #### Additional options
 
+##### `--rev REV`
+The `--rev REV` flag will change the git revision being analyzed to any [gitrevisions(1)](https://git-scm.com/docs/gitrevisions#_specifying_revisions) compatible revision you specify.
+
+This is useful to analyze the makeup of a repo as of a certain tag, or in a certain branch.
+
+For example, here is the popular [Jekyll open source project](https://github.com/jekyll/jekyll).
+
+```console
+$ github-linguist jekyll
+
+70.64%  709959     Ruby
+23.04%  231555     Gherkin
+3.80%   38178      JavaScript
+1.19%   11943      HTML
+0.79%   7900       Shell
+0.23%   2279       Dockerfile
+0.13%   1344       Earthly
+0.10%   1019       CSS
+0.06%   606        SCSS
+0.02%   234        CoffeeScript
+0.01%   90         Hack
+```
+
+And here is Jekyll's published website, from the gh-pages branch inside their repository.
+```console
+$ github-linguist jekyll --rev origin/gh-pages
+100.00% 2568354    HTML
+```
+
 ##### `--breakdown`
 The `--breakdown` or `-b` flag will additionally show the breakdown of files by language.
 
