@@ -1,0 +1,28 @@
+# lexically sort filenames
+--sort-files
+
+--type-add=ruby=rake,haml,erb
+--type-add=vim=vimrc
+--type-add=js=json
+--type-set=css=sass
+
+# add types ack doesn't know about
+--type-set=MARKDOWN=md,mkd,markdown
+--type-set=RDOC=rdoc
+
+# useful options, almost same as defined in vimrc
+-H
+--smart-case
+
+# ackignore
+--ignore-dir=.binstubs
+--ignore-dir=vendor/bundle
+--ignore-dir=vendor/cache
+--ignore-dir=bower_components
+--ignore-dir=node_modules
+--ignore-dir=dist
+--ignore-dir=log
+--ignore-dir=tmp
+--ignore-dir=vim/bundle
+--ignore-file=is:Session.vim
+--ignore-file=is:tags
