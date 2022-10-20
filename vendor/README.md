@@ -391,6 +391,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **PlantUML:** [qjebbs/vscode-plantuml](https://github.com/qjebbs/vscode-plantuml)
 - **Pod 6:** [perl6/atom-language-perl6](https://github.com/perl6/atom-language-perl6)
 - **PogoScript:** [featurist/PogoScript.tmbundle](https://github.com/featurist/PogoScript.tmbundle)
+- **Polar:** [osohq/polar-grammar](https://github.com/osohq/polar-grammar)
 - **Pony:** [CausalityLtd/sublime-pony](https://github.com/CausalityLtd/sublime-pony)
 - **Portugol:** [luisgbr1el/portugol-grammar](https://github.com/luisgbr1el/portugol-grammar)
 - **PostCSS:** [hudochenkov/Syntax-highlighting-for-PostCSS](https://github.com/hudochenkov/Syntax-highlighting-for-PostCSS)
