@@ -121,6 +121,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Cue Sheet:** [relikd/CUE-Sheet_sublime](https://github.com/relikd/CUE-Sheet_sublime)
 - **Curry:** [fwcd/vscode-curry](https://github.com/fwcd/vscode-curry)
 - **Cycript:** [atom/language-javascript](https://github.com/atom/language-javascript)
+- **Cypher:** [fredbenenson/sublime-cypher](https://github.com/fredbenenson/sublime-cypher)
 - **Cython:** [textmate/cython.tmbundle](https://github.com/textmate/cython.tmbundle)
 - **D:** [textmate/d.tmbundle](https://github.com/textmate/d.tmbundle)
 - **D-ObjDump:** [nanoant/assembly.tmbundle](https://github.com/nanoant/assembly.tmbundle)
@@ -372,6 +373,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Ox:** [andreashetland/sublime-text-ox](https://github.com/andreashetland/sublime-text-ox)
 - **Oz:** [eregon/oz-tmbundle](https://github.com/eregon/oz-tmbundle)
 - **P4:** [TakeshiTseng/atom-language-p4](https://github.com/TakeshiTseng/atom-language-p4)
+- **PDDL:** [jan-dolejsi/vscode-pddl](https://github.com/jan-dolejsi/vscode-pddl)
 - **PEG.js:** [Alhadis/language-grammars](https://github.com/Alhadis/language-grammars)
 - **PHP:** [tree-sitter/tree-sitter-php](https://github.com/tree-sitter/tree-sitter-php) 🐌
 - **PLpgSQL:** [textmate/sql.tmbundle](https://github.com/textmate/sql.tmbundle)
@@ -390,6 +392,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **PlantUML:** [qjebbs/vscode-plantuml](https://github.com/qjebbs/vscode-plantuml)
 - **Pod 6:** [perl6/atom-language-perl6](https://github.com/perl6/atom-language-perl6)
 - **PogoScript:** [featurist/PogoScript.tmbundle](https://github.com/featurist/PogoScript.tmbundle)
+- **Polar:** [osohq/polar-grammar](https://github.com/osohq/polar-grammar)
 - **Pony:** [CausalityLtd/sublime-pony](https://github.com/CausalityLtd/sublime-pony)
 - **Portugol:** [luisgbr1el/portugol-grammar](https://github.com/luisgbr1el/portugol-grammar)
 - **PostCSS:** [hudochenkov/Syntax-highlighting-for-PostCSS](https://github.com/hudochenkov/Syntax-highlighting-for-PostCSS)

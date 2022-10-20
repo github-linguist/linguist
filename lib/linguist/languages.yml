@@ -1344,6 +1344,15 @@ Cycript:
   codemirror_mode: javascript
   codemirror_mime_type: text/javascript
   language_id: 78
+Cypher:
+  type: programming
+  color: "#34c0eb"
+  extensions:
+  - ".cyp"
+  - ".cypher"
+  tm_scope: source.cypher
+  ace_mode: text
+  language_id: 850806976
 Cython:
   type: programming
   color: "#fedf5b"
@@ -3098,6 +3107,7 @@ Java:
   extensions:
   - ".java"
   - ".jav"
+  - ".jsh"
   language_id: 181
 Java Properties:
   type: data
@@ -4636,6 +4646,14 @@ P4:
   tm_scope: source.p4
   ace_mode: text
   language_id: 348895984
+PDDL:
+  type: programming
+  color: "#0d00ff"
+  extensions:
+  - ".pddl"
+  tm_scope: source.pddl
+  ace_mode: text
+  language_id: 736235603
 PEG.js:
   type: programming
   color: "#234d6b"
@@ -4928,6 +4946,14 @@ PogoScript:
   tm_scope: source.pogoscript
   ace_mode: text
   language_id: 289
+Polar:
+  type: programming
+  color: "#ae81ff"
+  extensions:
+  - ".polar"
+  tm_scope: source.polar
+  ace_mode: text
+  language_id: 839112914
 Pony:
   type: programming
   extensions:
@@ -6340,6 +6366,7 @@ Starlark:
   - BUILD.bazel
   - Tiltfile
   - WORKSPACE
+  - WORKSPACE.bazel
   aliases:
   - bazel
   - bzl
@@ -6519,8 +6546,13 @@ Tcl:
   extensions:
   - ".tcl"
   - ".adp"
+  - ".sdc"
   - ".tcl.in"
   - ".tm"
+  - ".xdc"
+  aliases:
+  - sdc
+  - xdc
   filenames:
   - owh
   - starfield
