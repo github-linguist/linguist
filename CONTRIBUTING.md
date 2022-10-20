@@ -73,6 +73,7 @@ Additionally, if this extension is already listed in [`languages.yml`][languages
    This ensures we're not misclassifying files.
 1. If the Bayesian classifier does a bad job with the sample `.yourextension` files then a [heuristic][] may need to be written to help.
 
+
 ## Adding a language
 
 We try only to add languages once they have some usage on GitHub.
@@ -173,12 +174,6 @@ You can run the tests locally with:
 
 ```bash
 bundle exec rake test
-```
-
-If the tests indicate the samples are out of date, you can update them with:
-
-```bash
-bundle exec rake samples
 ```
 
 Sometimes getting the tests running can be too much work, especially if you don't have much Ruby experience.
