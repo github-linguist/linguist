@@ -1344,6 +1344,15 @@ Cycript:
   codemirror_mode: javascript
   codemirror_mime_type: text/javascript
   language_id: 78
+Cypher:
+  type: programming
+  color: "#34c0eb"
+  extensions:
+  - ".cyp"
+  - ".cypher"
+  tm_scope: source.cypher
+  ace_mode: text
+  language_id: 850806976
 Cython:
   type: programming
   color: "#fedf5b"
@@ -3098,6 +3107,7 @@ Java:
   extensions:
   - ".java"
   - ".jav"
+  - ".jsh"
   language_id: 181
 Java Properties:
   type: data
@@ -6527,8 +6537,13 @@ Tcl:
   extensions:
   - ".tcl"
   - ".adp"
+  - ".sdc"
   - ".tcl.in"
   - ".tm"
+  - ".xdc"
+  aliases:
+  - sdc
+  - xdc
   filenames:
   - owh
   - starfield
