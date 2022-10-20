@@ -596,6 +596,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **fish:** [l15n/fish-tmbundle](https://github.com/l15n/fish-tmbundle)
 - **hoon:** [pkova/hoon-grammar](https://github.com/pkova/hoon-grammar)
 - **jq:** [wader/language-jq](https://github.com/wader/language-jq)
+- **just:** [skellock/vscode-just](https://github.com/skellock/vscode-just)
 - **kvlang:** [p0lygun/kivy-language-grammer](https://github.com/p0lygun/kivy-language-grammer)
 - **mIRC Script:** [gen-angry/language-msl](https://github.com/gen-angry/language-msl)
 - **mcfunction:** [Arcensoth/language-mcfunction](https://github.com/Arcensoth/language-mcfunction)
