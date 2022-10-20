@@ -42,14 +42,6 @@ cd linguist/
 script/bootstrap
 ```
 
-To run Linguist from the cloned repository, you will need to generate the code samples first:
-
-```bash
-bundle exec rake samples
-```
-
-Run this command each time a [sample][samples] has been modified.
-
 To run Linguist from the cloned repository:
 
 ```bash
@@ -80,7 +72,6 @@ Additionally, if this extension is already listed in [`languages.yml`][languages
 1. Test the performance of the Bayesian classifier with a relatively large number (1000s) of sample `.yourextension` files (ping **@lildude** to help with this).
    This ensures we're not misclassifying files.
 1. If the Bayesian classifier does a bad job with the sample `.yourextension` files then a [heuristic][] may need to be written to help.
-
 
 ## Adding a language
 
@@ -182,6 +173,12 @@ You can run the tests locally with:
 
 ```bash
 bundle exec rake test
+```
+
+If the tests indicate the samples are out of date, you can update them with:
+
+```bash
+bundle exec rake samples
 ```
 
 Sometimes getting the tests running can be too much work, especially if you don't have much Ruby experience.
