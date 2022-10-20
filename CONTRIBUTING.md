@@ -22,11 +22,7 @@ Linguist uses the [`charlock_holmes`](https://github.com/brianmario/charlock_hol
 [Docker](https://www.docker.com/) is also required when adding or updating grammars.
 These components have their own dependencies - `icu4c`, and `cmake` and `pkg-config` respectively - which you may need to install before you can install Linguist.
 
-For example, on macOS with [Homebrew](http://brew.sh/):
-```bash
-brew install cmake pkg-config icu4c
-brew install --cask docker
-```
+On macOS with [Homebrew](http://brew.sh/) the instructions below under Getting started will install these dependencies for you.
 
 On Ubuntu:
 ```bash
@@ -63,7 +59,8 @@ bundle exec bin/github-linguist --breakdown
 ## Adding an extension to a language
 
 We try only to add new extensions once they have some usage on GitHub.
-In most cases we prefer that each new file extension be in use in at least 200 unique `:user/:repo` repositories before supporting them in Linguist.
+In most cases we prefer that each new file extension be in use in at least 200 unique `:user/:repo` repositories before supporting them in Linguist
+(but see [#5756][] for a temporary change in the criteria).
 
 To add support for a new extension:
 
@@ -88,7 +85,8 @@ Additionally, if this extension is already listed in [`languages.yml`][languages
 ## Adding a language
 
 We try only to add languages once they have some usage on GitHub.
-In most cases we prefer that each new file extension be in use in at least 200 unique `:user/:repo` repositories before supporting them in Linguist.
+In most cases we prefer that each new file extension be in use in at least 200 unique `:user/:repo` repositories before supporting them in Linguist
+(but see [#5756][] for a temporary change in the criteria).
 
 To add support for a new language:
 
@@ -116,6 +114,9 @@ In addition, if your new language defines an extension that's already listed in 
 
 Remember, the goal here is to try and avoid false positives!
 
+Note: New languages will not appear in GitHub's search results for some time after the pull request has been merged and the new Linguist release deployed to GitHub.com.
+This is because GitHub's search uses [go-enry](https://github.com/go-enry/go-enry) for language detection but tends to lag behind Linguist by a few weeks to months.
+This in turn requires an update to the underlying search code once go-enry is inline with Linguist.
 
 ## Fixing a misclassified language
 
@@ -213,3 +214,4 @@ As Linguist is a production dependency for GitHub we have a couple of workflow r
 [samples]: /samples
 [search-example]: https://github.com/search?utf8=%E2%9C%93&q=extension%3Aboot+NOT+nothack&type=Code&ref=searchresults
 [gpr]: https://docs.github.com/packages/using-github-packages-with-your-projects-ecosystem/configuring-rubygems-for-use-with-github-packages
+[#5756]: https://github.com/github/linguist/issues/5756

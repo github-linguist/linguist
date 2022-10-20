@@ -1,6 +1,6 @@
 require 'linguist/generated'
+require 'cgi'
 require 'charlock_holmes'
-require 'escape_utils'
 require 'mini_mime'
 require 'yaml'
 
@@ -94,7 +94,7 @@ module Linguist
       elsif name.nil?
         "attachment"
       else
-        "attachment; filename=#{EscapeUtils.escape_url(name)}"
+        "attachment; filename=#{CGI.escape(name)}"
       end
     end
 
