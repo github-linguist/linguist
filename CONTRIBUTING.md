@@ -42,14 +42,6 @@ cd linguist/
 script/bootstrap
 ```
 
-To run Linguist from the cloned repository, you will need to generate the code samples first:
-
-```bash
-bundle exec rake samples
-```
-
-Run this command each time a [sample][samples] has been modified.
-
 To run Linguist from the cloned repository:
 
 ```bash
