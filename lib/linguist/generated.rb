@@ -64,6 +64,7 @@ module Linguist
       go_vendor? ||
       go_lock? ||
       poetry_lock? ||
+      pdm_lock? ||
       esy_lock? ||
       npm_shrinkwrap_or_package_lock? ||
       terraform_lock? ||
@@ -405,6 +406,13 @@ module Linguist
     # Returns true or false.
     def poetry_lock?
       !!name.match(/poetry\.lock/)
+    end
+
+    # Internal: Is the blob a generated pdm.lock?
+    #
+    # Returns true or false.
+    def pdm_lock?
+      !!name.match(/pdm\.lock/)
     end
 
     # Internal: Is the blob a generated esy lock file?
