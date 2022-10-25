@@ -20,7 +20,7 @@ die(){
 	printf >&2 "%s: " "$0";
 	printf >&2 "$@"
 	printf >&2 '\n'
-	return "${status:-1}"
+	exit "${status:-1}"
 }
 
 # Print a formatted heading of the form “=> Foo…”
@@ -36,9 +36,13 @@ h1(){
 # shellcheck disable=SC2059
 verb(){
 	[ "$verbose" ] || return
-	printf '\e[2m'
-	printf -- "$@"
-	printf '\e[0m\n'
+	if [ -t 1 ]; then
+		printf '\e[2m'
+		printf -- "$@"
+		printf '\e[0m\n'
+	else
+		printf -- "$@"
+	fi
 }
 
 # Verify that each of the named executables exists in the user's $PATH
@@ -47,7 +51,6 @@ have(){
 		if command -v "$1" >/dev/null 2>&1; then
 			verb "- have executable '%s': \e[32myes\e[39m" "$1"
 			shift
-			continue
 		else
 			verb "- have executable '%s': \e[31mno\e[39m" "$1"
 			if [ "$dry_run" ]; then shift; else
@@ -125,7 +128,8 @@ cmd "cd '$root'"
 
 # Ensure the user has the bare essentials installed
 h1 "Checking dependencies…"
-have ruby gem bundle git
+have ruby gem git
+have bundle || cmd 'gem install bundler'
 
 # Require Ruby v2.5+ and Bundler v1.10.0+
 unset ruby_outdated
