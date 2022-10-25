@@ -17,9 +17,7 @@ die(){
 		--code=*)  status="${1#*=}"; shift ;;
 		-c|--code) status=$2; shift 2 ;;
 	esac
-	printf >&2 "%s: " "$0";
-	printf >&2 "$@"
-	printf >&2 '\n'
+	warn "$@"
 	exit "${status:-1}"
 }
 
@@ -45,6 +43,16 @@ verb(){
 	fi
 }
 
+# Print a formatted error message to stderr
+# shellcheck disable=SC2015,SC2059
+warn(){
+	[ -t 1 ] && printf '\e[31m' || :
+	printf >&2 "%s: " "$0";
+	printf >&2 -- "$@"
+	[ -t 1 ] && printf '\e[0m' || :
+	printf >&2 '\n'
+}
+
 # Verify that each of the named executables exists in the user's $PATH
 have(){
 	while [ $# -gt 0 ]; do
@@ -54,7 +62,8 @@ have(){
 		else
 			verb "- have executable '%s': \e[31mno\e[39m" "$1"
 			if [ "$dry_run" ]; then shift; else
-				die 'Required command `%s` not found' "$1"
+				warn 'Required command `%s` not found' "$1"
+				return 1
 			fi
 		fi
 	done
