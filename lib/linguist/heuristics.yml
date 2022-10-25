@@ -338,6 +338,13 @@ disambiguations:
     pattern:
     - '(?i:^\s*{\$(?:mode|ifdef|undef|define)[ ]+[a-z0-9_]+})'
     - '^\s*end[.;]\s*$'
+- extensions: ['.json']
+  rules:
+  - language: OASv2-json
+    pattern: '"swagger":\s?"2.[0-9.]+"'
+  - language: OASv3-json
+    pattern: '"openapi":\s?"3.[0-9.]+"'
+  - language: JSON
 - extensions: ['.l']
   rules:
   - language: Common Lisp
@@ -476,7 +483,7 @@ disambiguations:
 - extensions: ['.plist']
   rules:
   - language: XML Property List
-    pattern: '<!DOCTYPE\s+plist'
+    pattern: '^\s*(?:<\?xml\s|<!DOCTYPE\s+plist|<plist(?:\s+version\s*=\s*(["''])\d+(?:\.\d+)?\1)?\s*>\s*$)'
   - language: OpenStep Property List
 - extensions: ['.pm']
   rules:
@@ -734,11 +741,15 @@ disambiguations:
     pattern: '^%(end|ctor|hook|group)\b'
   - language: Linker Script
     pattern: 'OUTPUT_ARCH\(|OUTPUT_FORMAT\(|SECTIONS'
-- extensions: ['.yaml']
+- extensions: ['.yaml', '.yml']
   rules:
   - language: MiniYAML
     pattern: '^\t+.*?[^\s:].*?:'
     negative_pattern: '---'
+  - language: OASv2-yaml
+    pattern: 'swagger:\s?''?"?2.[0-9.]+''?"?'
+  - language: OASv3-yaml
+    pattern: 'openapi:\s?''?"?3.[0-9.]+''?"?'
   - language: YAML
 - extensions: ['.yy']
   rules:
