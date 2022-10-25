@@ -21,12 +21,19 @@ h1(){
 have(){
 	while [ $# -gt 0 ]; do
 		if command -v "$1" >/dev/null 2>&1; then
+			if [ "$verbose" ]; then
+				printf "\e[2m- have executable '%s': \e[32myes\e[39m\e[22m\n" "$1"
+			fi
 			shift
 			continue
 		else
-			# shellcheck disable=SC2016
-			printf >&2 'Required command `%s` not found\n' "$1";
-			return 1
+			! [ "$verbose" ] || printf "\e[2m- have executable '%s': \e[31mno\e[39m\e[22m\n" "$1"
+
+			if [ "$dry_run" ]; then shift; else
+				# shellcheck disable=SC2016
+				printf >&2 'Required command `%s` not found\n' "$1";
+				return 1
+			fi
 		fi
 	done
 }
