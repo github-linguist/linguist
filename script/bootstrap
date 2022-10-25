@@ -1,24 +1,166 @@
 #!/bin/sh
-
+# shellcheck disable=SC2006,SC2021
 set -e
 
-cd "$(dirname "$0")/.."
+# Echo and/or execute a shell command
+cmd(){
+	[ -z "$verbose" ] || printf '\e[2m\e[32m$\e[39m %s\e[22m\n' "$1"
+	[ -n "$dry_run" ] || eval "$1"
+}
 
-if [ -f "Brewfile" ] && [ "$(uname -s)" = "Darwin" ]; then
-  brew bundle check >/dev/null 2>&1  || {
-    echo "==> Installing Homebrew dependencies…"
-    brew bundle
-  }
+# Print a colourful heading on stdout, unless redirected
+h1(){
+	if [ -t 1 ]; then
+		printf '\e[32m==>\e[39m \e[1m%s\e[22m\n' "$*"
+	else
+		printf '==> %s\n' "$*"
+	fi
+}
+
+# Verify that each of the named executables exists in the user's $PATH
+have(){
+	while [ $# -gt 0 ]; do
+		if command -v "$1" >/dev/null 2>&1; then
+			shift
+			continue
+		else
+			# shellcheck disable=SC2016
+			printf >&2 'Required command `%s` not found\n' "$1";
+			return 1
+		fi
+	done
+}
+
+# Verify that a version string ($1) is >= the given minimum version ($2)
+vercmp(){
+	# Trim "v" prefixes
+	set -- "${1#v}" "${2#v}"
+	set -- "${1#V}" "${2#V}"
+
+	# Extract components of minimum version
+	IFS=.- read -r min_major min_minor min_patch <<-EOF
+		`printf '%s\n' "$2"`
+	EOF
+	min_major=${min_major:-0}
+	min_minor=${min_minor:-0}
+	min_patch=${min_patch:-0}
+
+	# Extract components of version string to compare
+	IFS=.- read -r major minor patch <<-EOF
+		`printf '%s\n' "$1"`
+	EOF
+	major=${major:-0}
+	minor=${minor:-0}
+	patch=${patch:-0}
+
+	# Perform the comparison
+	[ "$major" -ge "$((min_major+1))" ] || {
+		[ "$major" -eq "$min_major" ] && \
+		[ "$minor" -gt "$min_minor" ]
+	} || {
+		[ "$major" -eq "$min_major" ] && \
+		[ "$minor" -eq "$min_minor" ] && \
+		[ "$patch" -ge "$min_patch" ]
+	}
+}
+
+# Parse command-line switches
+usage="${0##*/} [-n|--dry-run] [-v|--verbose]"
+unset dry_run verbose invalid_opt
+while getopts nv-: opt; do
+	case $opt in
+		n) dry_run=1 ;;
+		v) verbose=1 ;;
+		-) case $OPTARG in
+			-help|-usage|-\?)
+				printf 'Usage: %s\n' "$usage"
+				exit
+			;;
+			-dry-run) dry_run=1 ;;
+			-verbose) verbose=1 ;;
+			-) break 2 ;;
+			-?*) invalid_opt="-$OPTARG" ;;
+		esac ;;
+		*) invalid_opt="-$opt" ;;
+	esac
+	if [ "$invalid_opt" ]; then
+		printf >&2 'Invalid option: %s\n' "$invalid_opt"
+		printf >&2 'Usage: %s\n' "$usage"
+		exit 1
+	fi
+done
+shift $((OPTIND - 1))
+
+
+# Switch to root directory of Linguist checkout
+root="`dirname "$0"`/.."
+! have realpath || root=`realpath "$root"`
+cmd "cd '$root'"
+
+# Ensure the user has the bare essentials installed
+have ruby gem bundle git
+
+# Require Ruby v2.5+ and Bundler v1.10.0+
+unset ruby_outdated
+unset bundle_outdated
+ruby_version=`ruby -e 'puts RUBY_VERSION'`
+bundle_version=`bundle --version`
+bundle_version="${bundle_version##* }"
+vercmp "$ruby_version"   v2.5    || ruby_outdated=1
+vercmp "$bundle_version" v1.10.0 || bundle_outdated=1
+
+# Handle missing dependencies
+case `uname -s` in
+	# macOS
+	Darwin)
+		# Homebrew
+		if have brew; then
+			cmd 'brew bundle check >/dev/null 2>&1' || {
+				h1 "Installing dependencies with Homebrew…"
+				cmd 'brew bundle'
+			}
+			[ -z "$ruby_outdated" ] || {
+				h1 "Installing Ruby with Homebrew…"
+				cmd 'brew install ruby'
+			}
+
+		# MacPorts
+		elif have ports; then
+			h1 "Installing dependencies with MacPorts…"
+			cmd 'sudo port -NR selfupdate'
+			cmd 'sudo port -N install cmake pkgconfig icu docker'
+
+		# No package manager installed; check for dependencies instead
+		else
+			have cmake pkg-config docker
+		fi
+	;;
+
+	# Linux-based OS
+	Linux)
+		# Ubuntu/Debian-based distros
+		if have apt-get; then
+			set -- cmake pkg-config libicu-dev docker.io ruby ruby-dev zlib1g-dev build-essential libssl-dev
+			cmd 'sudo apt-get update'
+			cmd "sudo apt-get install $*"
+		fi
+	;;
+esac
+
+# Upgrade Bundler, if needed
+if [ "$bundle_outdated" ]; then
+	h1 "Upgrading Bundler…"
+	cmd 'gem install bundler'
 fi
 
-bundle config --local path vendor/gems
+h1 "Installing gems…"
+cmd 'bundle config --local path vendor/gems'
+cmd 'bundle check >/dev/null 2>&1 || bundle install'
 
-bundle check > /dev/null 2>&1 || bundle install
+h1 "Initialising submodules…"
+cmd 'git submodule init'
+cmd 'git submodule sync --quiet'
+cmd 'script/fast-submodule-update'
 
-echo "==> Initialising submodules…"
-git submodule init
-git submodule sync --quiet
-script/fast-submodule-update
-
-echo "==> Generating samples…"
-bundle exec rake samples > /dev/null 2>&1
+h1 "Generating samples…"
+cmd 'bundle exec rake samples >/dev/null 2>&1'
