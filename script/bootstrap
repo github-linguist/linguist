@@ -1,5 +1,5 @@
 #!/bin/sh
-# shellcheck disable=SC2006,SC2021
+# shellcheck disable=SC2006,SC2021,SC2016
 set -e
 
 # Echo and/or execute a shell command
@@ -8,7 +8,22 @@ cmd(){
 	[ -n "$dry_run" ] || eval "$1"
 }
 
-# Print a colourful heading on stdout, unless redirected
+# Terminate script with an error message
+# - Usage: `die [-c exit-code] message`
+# shellcheck disable=SC2059
+die(){
+	unset status
+	[ $# -gt 1 ] && case $1 in
+		--code=*)  status="${1#*=}"; shift ;;
+		-c|--code) status=$2; shift 2 ;;
+	esac
+	printf >&2 "%s: " "$0";
+	printf >&2 "$@"
+	printf >&2 '\n'
+	return "${status:-1}"
+}
+
+# Print a formatted heading of the form “=> Foo…”
 h1(){
 	if [ -t 1 ]; then
 		printf '\e[32m==>\e[39m \e[1m%s\e[22m\n' "$*"
@@ -17,22 +32,26 @@ h1(){
 	fi
 }
 
+# Print a formatted message to stdout if running verbosely
+# shellcheck disable=SC2059
+verb(){
+	[ "$verbose" ] || return
+	printf '\e[2m'
+	printf -- "$@"
+	printf '\e[0m\n'
+}
+
 # Verify that each of the named executables exists in the user's $PATH
 have(){
 	while [ $# -gt 0 ]; do
 		if command -v "$1" >/dev/null 2>&1; then
-			if [ "$verbose" ]; then
-				printf "\e[2m- have executable '%s': \e[32myes\e[39m\e[22m\n" "$1"
-			fi
+			verb "- have executable '%s': \e[32myes\e[39m" "$1"
 			shift
 			continue
 		else
-			! [ "$verbose" ] || printf "\e[2m- have executable '%s': \e[31mno\e[39m\e[22m\n" "$1"
-
+			verb "- have executable '%s': \e[31mno\e[39m" "$1"
 			if [ "$dry_run" ]; then shift; else
-				# shellcheck disable=SC2016
-				printf >&2 'Required command `%s` not found\n' "$1";
-				return 1
+				die 'Required command `%s` not found' "$1"
 			fi
 		fi
 	done
@@ -105,13 +124,14 @@ root="`dirname "$0"`/.."
 cmd "cd '$root'"
 
 # Ensure the user has the bare essentials installed
+h1 "Checking dependencies…"
 have ruby gem bundle git
 
 # Require Ruby v2.5+ and Bundler v1.10.0+
 unset ruby_outdated
 unset bundle_outdated
 ruby_version=`ruby -e 'puts RUBY_VERSION'`
-bundle_version=`bundle --version`
+bundle_version=`bundle --version || :`
 bundle_version="${bundle_version##* }"
 vercmp "$ruby_version"   v2.5    || ruby_outdated=1
 vercmp "$bundle_version" v1.10.0 || bundle_outdated=1
