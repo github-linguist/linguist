@@ -258,19 +258,34 @@ warn(){
 
 # Parse verbosity-related options, unless $VERBOPTS_NO_AUTOPARSE is set
 if [ ! "$VERBOPTS_NO_AUTOPARSE" ]; then
+
+	# Recover options parsed from a calling script
+	if [ "$VERBOPTS_PARSED_OPTS" ]; then
+		set -- "$VERBOPTS_PARSED_OPTS" "$@"
+	fi
+
 	unset dry_run  # Enable with '-n' or '--dry-run'
 	unset verbose  # Enable with '-v' or '--verbose'
 
 	while [ $# -gt 0 ]; do
 		case $1 in
-			--dry-run) dry_run=1; ;;
-			--verbose) verbose=1; ;;
-			-nv|-vn)   dry_run=1; verbose=1 ;;
-			-n)        dry_run=1; ;;
-			-v)        verbose=1; ;;
+			--dry-run) VERBOPTS_PARSED_OPTS='-n';  dry_run=1; ;;
+			--verbose) VERBOPTS_PARSED_OPTS='-v';  verbose=1; ;;
+			-nv|-vn)   VERBOPTS_PARSED_OPTS='-nv'; dry_run=1; verbose=1 ;;
+			-n)        VERBOPTS_PARSED_OPTS='-n';  dry_run=1; ;;
+			-v)        VERBOPTS_PARSED_OPTS='-v';  verbose=1; ;;
 			--)        shift; break ;;
 			*)         break ;;
 		esac
 		shift
 	done
+
+	# Record parsed options in an environment variable for passing to subshells
+	unset VERBOPTS_PARSED_OPTS
+	case ${dry_run}:${verbose} in
+		1:1) VERBOPTS_PARSED_OPTS='-nv' ;;
+		:1)  VERBOPTS_PARSED_OPTS='-v'  ;;
+		1:)  VERBOPTS_PARSED_OPTS='-n'  ;;
+	esac
+	export VERBOPTS_PARSED_OPTS
 fi
