@@ -3002,6 +3002,7 @@ JSON:
   - ".yy"
   - ".yyp"
   filenames:
+  - ".all-contributorsrc"
   - ".arcconfig"
   - ".auto-changelog"
   - ".c8rc"
@@ -3958,6 +3959,17 @@ Mercury:
   - ".moo"
   tm_scope: source.mercury
   language_id: 229
+Mermaid:
+  type: markup
+  color: "#ff3670"
+  aliases:
+  - mermaid example
+  extensions:
+  - ".mmd"
+  - ".mermaid"
+  tm_scope: source.mermaid
+  ace_mode: text
+  language_id: 385992043
 Meson:
   type: programming
   color: "#007800"
@@ -4574,7 +4586,7 @@ Open Policy Agent:
   tm_scope: source.rego
 OpenAPI Specification v2:
   aliases:
-    - oasv2
+  - oasv2
   type: data
   color: "#85ea2d"
   tm_scope: none
@@ -4582,7 +4594,7 @@ OpenAPI Specification v2:
   language_id: 848295328
 OpenAPI Specification v3:
   aliases:
-    - oasv3
+  - oasv3
   type: data
   color: "#85ea2d"
   tm_scope: none
@@ -4668,6 +4680,7 @@ Option List:
   filenames:
   - ".ackrc"
   - "ackrc"
+  - "mocha.opts"
   tm_scope: source.opts
   ace_mode: sh
   codemirror_mode: shell
@@ -4917,7 +4930,7 @@ Perl:
   - ".psgi"
   - ".t"
   filenames:
-  - .latexmkrc
+  - ".latexmkrc"
   - Makefile.PL
   - Rexfile
   - ack
