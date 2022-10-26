@@ -20,10 +20,26 @@ cd_root(){
 # If running verbosely, the command will be echoed to stdout
 # with a prompt-symbol prepended.
 #
-# Example:
-#     cmd 'gem install bundler'
+# Any additional arguments will be single-quoted and appended to the end of
+# the first argument. This allows for the safe handling of strings that may
+# contain unsafe characters; consider something like
+#
+#    dir=~/John\'s\ Junk\;\ worth\ \$0.00\ AUD
+#    cmd 'rm -rf' "$dir"    # Safe
+#    cmd "rm -rf '$dir'"    # UNSAFE: chokes on apostrophe and semicolon
+#    cmd 'rm -rf "'"$dir"\' # UNSAFE: interpolates '$0'
+#
+# Examples:
+#    cmd 'gem install bundler'
+#    cmd 'rm -rf' "$string_with_unsafe_characters"
 #
 cmd(){
+	while [ $# -gt 1 ]; do
+		cmd="$1 `sq "$2"`"
+		shift 2
+		set -- "$cmd" "$@"
+		unset cmd
+	done
 	if [ "$verbose" ]; then
 		set -- '$' "$1"
 		if [ -t 1 ]; then
@@ -144,6 +160,23 @@ sgr(){
 
 	# Generate the final sequence, stripping any erroneous newlines added by older sed(1) versions
 	printf '\033[%sm' "$*" | sed 's/  */;/g' | tr -d '\n'
+}
+
+
+# Quote argument as a single-quoted string for shell consumption.
+#
+# Existing single-quotes are escaped as '\''.
+#
+# Example:
+#     sq "/usr/local/Homebrew/docs/Tips-N'-Tricks.md"
+#  => '/usr/local/Homebrew/docs/Tips-N'\''-Tricks.md'
+#
+sq(){
+	printf %s "$1" | sed "
+		s/'/'\\\\''/g
+		1 s/^/'/
+		$ s/$/'/
+	"
 }
 
 
