@@ -31,7 +31,7 @@ def github_linguist(args)
     opts.on("-j", "--json", "Output results as JSON") { json_output = true }
     opts.on("-r", "--rev REV", String,
             "Analyze specific git revision",
-            "defaults to HEAD, see gitrevisions(1) for alternatives") { |r| rev = r }
+            "defaults to HEAD, see gitrevisions(7) for alternatives") { |r| rev = r }
     opts.on("-h", "--help", "Display a short usage summary, then exit") do
       puts opts
       exit

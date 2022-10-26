@@ -95,7 +95,7 @@ $ github-linguist
 #### Additional options
 
 ##### `--rev REV`
-The `--rev REV` flag will change the git revision being analyzed to any [gitrevisions(1)](https://git-scm.com/docs/gitrevisions#_specifying_revisions) compatible revision you specify.
+The `--rev REV` flag will change the git revision being analyzed to any [gitrevisions(7)](https://git-scm.com/docs/gitrevisions#_specifying_revisions) compatible revision you specify.
 
 This is useful to analyze the makeup of a repo as of a certain tag, or in a certain branch.
 
