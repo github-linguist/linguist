@@ -13,13 +13,14 @@ Linguist v#{Linguist::VERSION}
 Detect language type and determine language breakdown for a given Git repository.
 
 Usage: linguist <path>
-       linguist <path> [--breakdown] [--json]
-       linguist [--breakdown] [--json]
+       linguist <path> [--rev REV] [--breakdown] [--json]
+       linguist [--rev REV] [--breakdown] [--json]
 HELP
 
 def github_linguist(args)
   breakdown = false
   json_output = false
+  rev = 'HEAD'
   path = Dir.pwd
   read_from_stdin = false
 
@@ -29,6 +30,9 @@ def github_linguist(args)
 
     opts.on("-b", "--breakdown", "Analyze entire repository and display detailed usage statistics") { breakdown = true }
     opts.on("-j", "--json", "Output results as JSON") { json_output = true }
+    opts.on("-r", "--rev REV", String,
+            "Analyze specific git revision",
+            "defaults to HEAD, see gitrevisions(1) for alternatives") { |r| rev = r }
     opts.on("-h", "--help", "Display a short usage summary, then exit") do
       puts opts
       exit
@@ -48,7 +52,13 @@ def github_linguist(args)
 
   if !read_from_stdin && File.directory?(path)
     rugged = Rugged::Repository.new(path)
-    repo = Linguist::Repository.new(rugged, rugged.head.target_id)
+    begin
+      target_oid = rugged.rev_parse_oid(rev)
+    rescue
+      puts "invalid revision '#{rev}' for repo '#{path}'"
+      exit 1
+    end
+    repo = Linguist::Repository.new(rugged, target_oid)
 
     full_results = {}
     repo.languages.each do |language, size|

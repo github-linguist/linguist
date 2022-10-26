@@ -9,6 +9,9 @@ on:
     branches:
       - master
 
+permissions:
+  contents: read
+
 jobs:
   run:
     name: Ruby ${{ matrix.ruby }}

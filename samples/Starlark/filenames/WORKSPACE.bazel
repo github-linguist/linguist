@@ -1,0 +1,381 @@
+workspace(name = "skia")
+
+load("//toolchain:download_toolchains.bzl", "download_toolchains_for_skia")
+
+download_toolchains_for_skia("clang_linux_amd64", "clang_mac")
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+# See https://github.com/emscripten-core/emsdk/tree/85d27a4a2a60d591613a305b14ae438c2bb3ce11/bazel#setup-instructions
+http_archive(
+    name = "emsdk",
+    sha256 = "74c7c54b3544555ec38d1e9dcc7e90b9f49ed0e04f2cc3fd44663c598af24124",
+    strip_prefix = "emsdk-3.1.15/bazel",
+    urls = [
+        "https://github.com/emscripten-core/emsdk/archive/refs/tags/3.1.15.tar.gz",
+        "https://storage.googleapis.com/skia-world-readable/bazel/74c7c54b3544555ec38d1e9dcc7e90b9f49ed0e04f2cc3fd44663c598af24124.tar.gz",
+    ],
+)
+
+load("@emsdk//:deps.bzl", emsdk_deps = "deps")
+
+# One of the deps here is build_bazel_rules_nodejs, currently version 4.4.1
+# If we try to install it ourselves after this, it won't work.
+emsdk_deps()
+
+load("@emsdk//:emscripten_deps.bzl", emsdk_emscripten_deps = "emscripten_deps")
+
+emsdk_emscripten_deps(emscripten_version = "3.1.9")
+
+http_archive(
+    name = "bazel_skylib",
+    sha256 = "c6966ec828da198c5d9adbaa94c05e3a1c7f21bd012a0b29ba8ddbccb2c93b0d",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/1.1.1/bazel-skylib-1.1.1.tar.gz",
+        "https://github.com/bazelbuild/bazel-skylib/releases/download/1.1.1/bazel-skylib-1.1.1.tar.gz",
+    ],
+)
+
+load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
+
+bazel_skylib_workspace()
+
+http_archive(
+    name = "bazel_toolchains",
+    sha256 = "e52789d4e89c3e2dc0e3446a9684626a626b6bec3fde787d70bae37c6ebcc47f",
+    strip_prefix = "bazel-toolchains-5.1.1",
+    urls = [
+        "https://github.com/bazelbuild/bazel-toolchains/archive/refs/tags/v5.1.1.tar.gz",
+        "https://storage.googleapis.com/skia-world-readable/bazel/e52789d4e89c3e2dc0e3446a9684626a626b6bec3fde787d70bae37c6ebcc47f.tar.gz",
+    ],
+)
+
+load("@bazel_toolchains//repositories:repositories.bzl", bazel_toolchains_repositories = "repositories")
+
+bazel_toolchains_repositories()
+
+#######################################################################################
+# Python
+#######################################################################################
+
+# https://github.com/bazelbuild/rules_python
+http_archive(
+    name = "rules_python",
+    sha256 = "5fa3c738d33acca3b97622a13a741129f67ef43f5fdfcec63b29374cc0574c29",
+    strip_prefix = "rules_python-0.9.0",
+    urls = [
+        "https://github.com/bazelbuild/rules_python/archive/refs/tags/0.9.0.tar.gz",
+        "https://storage.googleapis.com/skia-world-readable/bazel/5fa3c738d33acca3b97622a13a741129f67ef43f5fdfcec63b29374cc0574c29.tar.gz",
+    ],
+)
+
+# This sets up a hermetic python3, rather than depending on what is installed.
+load("@rules_python//python:repositories.bzl", "python_register_toolchains")
+
+python_register_toolchains(
+    name = "python3_9",
+    # https://github.com/bazelbuild/rules_python/blob/main/python/versions.bzl
+    python_version = "3.9",
+)
+
+load("@python3_9//:defs.bzl", "interpreter")
+load("@rules_python//python:pip.bzl", "pip_install")
+
+pip_install(
+    name = "py_deps",
+    python_interpreter_target = interpreter,
+    requirements = "//:requirements.txt",
+)
+
+#######################################################################################
+# Gazelle
+#######################################################################################
+http_archive(
+    name = "io_bazel_rules_go",
+    sha256 = "2b1641428dff9018f9e85c0384f03ec6c10660d935b750e3fa1492a281a53b0f",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_go/releases/download/v0.29.0/rules_go-v0.29.0.zip",
+        "https://github.com/bazelbuild/rules_go/releases/download/v0.29.0/rules_go-v0.29.0.zip",
+    ],
+)
+
+http_archive(
+    name = "bazel_gazelle",
+    sha256 = "de69a09dc70417580aabf20a28619bb3ef60d038470c7cf8442fafcf627c21cb",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/bazel-gazelle/releases/download/v0.24.0/bazel-gazelle-v0.24.0.tar.gz",
+        "https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.24.0/bazel-gazelle-v0.24.0.tar.gz",
+    ],
+)
+
+load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
+load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
+load("//:go_repositories.bzl", "go_repositories")
+
+# gazelle:repository_macro go_repositories.bzl%go_repositories
+go_repositories()
+
+go_rules_dependencies()
+
+go_register_toolchains(version = "1.18")
+
+gazelle_dependencies(go_repository_default_config = "//:WORKSPACE.bazel")
+
+# Because the skia infra repo has a dependency on google.golang.org/grpc (aka
+# @org_golang_google_grpc), we need to have this library available to build protos.
+# https://github.com/bazelbuild/rules_go#protobuf-and-grpc
+http_archive(
+    name = "com_google_protobuf",
+    sha256 = "d0f5f605d0d656007ce6c8b5a82df3037e1d8fe8b121ed42e536f569dec16113",
+    strip_prefix = "protobuf-3.14.0",
+    urls = [
+        "https://mirror.bazel.build/github.com/protocolbuffers/protobuf/archive/v3.14.0.tar.gz",
+        "https://github.com/protocolbuffers/protobuf/archive/v3.14.0.tar.gz",
+    ],
+)
+
+load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
+
+protobuf_deps()
+
+###################################################
+# JavaScript / TypeScript rules and dependencies. #
+###################################################
+
+# The npm_install rule runs anytime the package.json or package-lock.json file changes. It also
+# extracts any Bazel rules distributed in an npm package.
+load("@build_bazel_rules_nodejs//:index.bzl", "npm_install")
+
+# Manages the node_modules directory.
+npm_install(
+    name = "npm",
+    package_json = "//:package.json",
+    package_lock_json = "//:package-lock.json",
+)
+
+# io_bazel_rules_webtesting allows us to download browsers in a hermetic, repeatable way. This
+# currently includes Chromium and Firefox. Note that the version on this does not necessarily
+# match the version below of the browsers-X.Y.Z below that is available.
+http_archive(
+    name = "io_bazel_rules_webtesting",
+    sha256 = "e9abb7658b6a129740c0b3ef6f5a2370864e102a5ba5ffca2cea565829ed825a",
+    urls = [
+        "https://github.com/bazelbuild/rules_webtesting/releases/download/0.3.5/rules_webtesting.tar.gz",
+        "https://storage.googleapis.com/skia-world-readable/bazel/e9abb7658b6a129740c0b3ef6f5a2370864e102a5ba5ffca2cea565829ed825a.tar.gz",
+    ],
+)
+
+# https://github.com/bazelbuild/rules_webtesting/blob/e9cf17123068b1123c68219edf9b274bf057b9cc/web/versioned/browsers-0.3.3.bzl
+load("@io_bazel_rules_webtesting//web/versioned:browsers-0.3.3.bzl", "browser_repositories")
+
+browser_repositories(
+    chromium = True,
+    firefox = True,
+)
+
+###################################################
+# External C++ deps with Bazel support            #
+###################################################
+# https://bazel.build/reference/be/workspace#local_repository
+local_repository(
+    name = "abseil_cpp",
+    path = "third_party/externals/abseil-cpp",
+)
+
+local_repository(
+    name = "brotli",
+    path = "third_party/externals/brotli",
+)
+
+local_repository(
+    name = "highway",
+    path = "third_party/externals/highway",
+)
+
+local_repository(
+    name = "spirv_tools",
+    path = "third_party/externals/spirv-tools",
+)
+
+local_repository(
+    # This name is important because spirv_tools expects @spirv_headers to exist by that name.
+    name = "spirv_headers",
+    path = "third_party/externals/spirv-headers",
+)
+
+###############################################################################
+# External C++ deps with NO Bazel support                                     #
+# In this case, we need to supply a BUILD file which exposes targets/files    #
+# we need. If these deps depend on other deps (e.g. @dawn -> @spirv_tools),   #
+# then we need to specify those here as well. The workspace_file_content is   #
+# generally ignored; external repos (i.e. the ones starting with @) will be   #
+# resolved with Skia's version of those repos, which is how Bazel avoids      #
+# multiple versions of the same project being compiled together.              #
+###############################################################################
+# https://bazel.build/reference/be/workspace#new_local_repository
+new_local_repository(
+    name = "dawn",
+    build_file = "bazel/external/dawn/BUILD.bazel",
+    path = "third_party/externals/dawn",
+    workspace_file_content = "",
+)
+
+new_local_repository(
+    name = "dng_sdk",
+    build_file = "bazel/external/dng_sdk/BUILD.bazel",
+    path = "third_party/externals/dng_sdk",
+    workspace_file_content = "",
+)
+
+new_local_repository(
+    name = "expat",
+    build_file = "bazel/external/expat/BUILD.bazel",
+    path = "third_party/externals/expat",
+    workspace_file_content = "",
+)
+
+new_local_repository(
+    name = "freetype",
+    build_file = "bazel/external/freetype/BUILD.bazel",
+    path = "third_party/externals/freetype",
+    workspace_file_content = "",
+)
+
+# In order to copy the Freetype configurations into the checked out Freetype folder,
+# it is easiest to treat them as a third-party dependency from the perspective of Freetype.
+# To do that, we put them in their own Bazel workspace and then have our injected BUILD.bazel
+# for Freetype reference this workspace.
+local_repository(
+    name = "freetype_config",
+    path = "bazel/external/freetype/config",
+)
+
+new_local_repository(
+    name = "harfbuzz",
+    build_file = "bazel/external/harfbuzz/BUILD.bazel",
+    path = "third_party/externals/harfbuzz",
+    workspace_file_content = "",
+)
+
+local_repository(
+    name = "harfbuzz_config",
+    path = "bazel/external/harfbuzz/config",
+)
+
+new_local_repository(
+    name = "icu",
+    build_file = "bazel/external/icu/BUILD.bazel",
+    path = "third_party/externals/icu",
+    workspace_file_content = "",
+)
+
+local_repository(
+    name = "icu_utils",
+    path = "bazel/external/icu/utils",
+)
+
+new_local_repository(
+    name = "libavif",
+    build_file = "bazel/external/libavif/BUILD.bazel",
+    path = "third_party/externals/libavif",
+    workspace_file_content = "",
+)
+
+new_local_repository(
+    name = "libgav1",
+    build_file = "bazel/external/libgav1/BUILD.bazel",
+    path = "third_party/externals/libgav1",
+    workspace_file_content = "",
+)
+
+new_local_repository(
+    name = "libjpeg_turbo",
+    build_file = "bazel/external/libjpeg_turbo/BUILD.bazel",
+    path = "third_party/externals/libjpeg-turbo",
+    workspace_file_content = "",
+)
+
+new_local_repository(
+    name = "libjxl",
+    build_file = "bazel/external/libjxl/BUILD.bazel",
+    path = "third_party/externals/libjxl",
+    workspace_file_content = "",
+)
+
+new_local_repository(
+    name = "libpng",
+    build_file = "bazel/external/libpng/BUILD.bazel",
+    path = "third_party/externals/libpng",
+    workspace_file_content = "",
+)
+
+new_local_repository(
+    name = "libwebp",
+    build_file = "bazel/external/libwebp/BUILD.bazel",
+    path = "third_party/externals/libwebp",
+    workspace_file_content = "",
+)
+
+new_local_repository(
+    name = "libyuv",
+    build_file = "bazel/external/libyuv/BUILD.bazel",
+    path = "third_party/externals/libyuv",
+    workspace_file_content = "",
+)
+
+new_local_repository(
+    name = "spirv_cross",
+    build_file = "bazel/external/spirv_cross/BUILD.bazel",
+    path = "third_party/externals/spirv-cross",
+    workspace_file_content = "",
+)
+
+new_local_repository(
+    name = "perfetto",
+    build_file = "bazel/external/perfetto/BUILD.bazel",
+    path = "third_party/externals/perfetto",
+    workspace_file_content = "",
+)
+
+new_local_repository(
+    name = "piex",
+    build_file = "bazel/external/piex/BUILD.bazel",
+    path = "third_party/externals/piex",
+    workspace_file_content = "",
+)
+
+new_local_repository(
+    name = "vulkan_headers",
+    build_file = "bazel/external/vulkan_headers/BUILD.bazel",
+    path = "third_party/externals/vulkan-headers",
+    workspace_file_content = "",
+)
+
+new_local_repository(
+    name = "vulkan_tools",
+    build_file = "bazel/external/vulkan_tools/BUILD.bazel",
+    path = "third_party/externals/vulkan-tools",
+    workspace_file_content = "",
+)
+
+new_local_repository(
+    name = "vulkanmemoryallocator",
+    build_file = "bazel/external/vulkanmemoryallocator/BUILD.bazel",
+    path = "third_party/externals/vulkanmemoryallocator",
+    workspace_file_content = "",
+)
+
+new_local_repository(
+    name = "wuffs",
+    build_file = "bazel/external/wuffs/BUILD.bazel",
+    path = "third_party/externals/wuffs",
+    workspace_file_content = "",
+)
+
+new_local_repository(
+    # Some other dependency downloads zlib but with their own rules
+    name = "zlib_skia",
+    build_file = "bazel/external/zlib/BUILD.bazel",
+    path = "third_party/externals/zlib",
+    workspace_file_content = "",
+)
