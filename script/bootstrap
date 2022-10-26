@@ -2,12 +2,7 @@
 # shellcheck disable=SC2016
 set -e
 . "${0%/*}/includes.sh"
-
-
-# Switch to root directory of Linguist checkout
-root="`dirname "$0"`/.."
-! have realpath || root=`realpath "$root"`
-cmd "cd '$root'"
+cd_root
 
 # Ensure the user has the bare essentials installed
 h1 "Checking dependencies…"

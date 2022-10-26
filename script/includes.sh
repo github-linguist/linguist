@@ -7,6 +7,14 @@ unset dry_run  # Enable with '-n' or '--dry-run'
 unset verbose  # Enable with '-v' or '--verbose'
 
 
+# Switch to root directory of Linguist checkout
+cd_root(){
+	root="`dirname "$0"`/.."
+	! have realpath || root=`realpath "$root"`
+	cmd "cd '$root'"
+}
+
+
 # Execute string as a shell command.
 #
 # If running verbosely, the command will be echoed to stdout
