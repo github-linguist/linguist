@@ -3,9 +3,6 @@
 #
 set -e
 
-unset dry_run  # Enable with '-n' or '--dry-run'
-unset verbose  # Enable with '-v' or '--verbose'
-
 
 # Switch to root directory of Linguist checkout
 cd_root(){
@@ -261,6 +258,9 @@ warn(){
 
 # Parse verbosity-related options, unless $VERBOPTS_NO_AUTOPARSE is set
 if [ ! "$VERBOPTS_NO_AUTOPARSE" ]; then
+	unset dry_run  # Enable with '-n' or '--dry-run'
+	unset verbose  # Enable with '-v' or '--verbose'
+
 	while [ $# -gt 0 ]; do
 		case $1 in
 			--dry-run) dry_run=1; ;;
