@@ -1,0 +1,21 @@
+class bookish { 
+    int x = 1;
+    bool isTrue = false;
+
+    func Example() {
+        
+        if (x == 1) {
+            isTrue = true;
+            print "True";
+        }
+        else {
+            isTrue = false;
+            print "False";
+        }
+        
+    }
+}        
+
+bookish bksh = new bookish();
+
+bksh.Example(); 
