@@ -37,7 +37,7 @@ def github_linguist(args)
       puts opts
       exit
     end
-    opts.on("-s", "--stdin", "Read file contents from stdin") { read_from_stdin = true }
+    opts.on("-s", "--stdin", "Read file contents from stdin, <path> must still be specified.") { read_from_stdin = true }
   end
 
   parser.parse!(args)

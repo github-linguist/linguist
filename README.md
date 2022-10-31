@@ -163,6 +163,19 @@ $ github-linguist --breakdown --json
 
 ```
 
+##### `--stdin`
+The `--stdin` or `-s` flag will read the file contents from stdin.
+This option can be used for invoking Linguist from another program when the file contents do not exist on disk.
+The file name must still be passed as the name may be used for language detection.
+
+```console
+$ github-linguist --stdin grammars.yml < grammars.yml
+grammars.yml: 1155 lines (1155 sloc)
+  type:      Text
+  mime type: text/x-yaml
+  language:  YAML
+```
+
 #### Single file
 
 Alternatively you can find stats for a single file using the `github-linguist` executable.
