@@ -315,6 +315,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Maven POM:** [textmate/maven.tmbundle](https://github.com/textmate/maven.tmbundle)
 - **Max:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
 - **Mercury:** [sebgod/mercury-tmlanguage](https://github.com/sebgod/mercury-tmlanguage)
+- **Mermaid:** [Alhadis/language-mermaid](https://github.com/Alhadis/language-mermaid)
 - **Meson:** [TingPing/language-meson](https://github.com/TingPing/language-meson)
 - **Metal:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **Microsoft Visual Studio Solution:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
