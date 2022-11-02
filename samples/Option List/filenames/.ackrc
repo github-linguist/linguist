@@ -1,0 +1,17 @@
+--smart-case
+--follow
+
+# Always use coloured output
+--colour
+
+--ignore-directory=is:.bundle
+--ignore-directory=is:tmp
+--ignore-file=is:samples.json
+
+--type-add=coffeescript=.cson
+--type-add=ruby=Gemfile,Rubyfile
+--type-add=xml=.xmp,.dae,.plist
+--type-add=yaml=.yaml-tmlanguage,.sublime-syntax
+--type-add=js=.mjs,.cjs
+--type-add=ts=.mts,.cts
+--type-add=json=.jsonc
