@@ -319,7 +319,6 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "Visual Basic 6.0" => all_fixtures("Visual Basic 6.0", "*.cls"),
       "VBA" => all_fixtures("VBA", "*.cls"),
-      "ObjectScript" => all_fixtures("ObjectScript", "*.cls"),
       "TeX" => all_fixtures("TeX", "*.cls"),
       "ObjectScript" => all_fixtures("ObjectScript", "*.cls"),
       nil => all_fixtures("Apex", "*.cls") + all_fixtures("OpenEdge ABL", "*.cls"),
