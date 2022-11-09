@@ -321,6 +321,7 @@ class TestHeuristics < Minitest::Test
       "VBA" => all_fixtures("VBA", "*.cls"),
       "TeX" => all_fixtures("TeX", "*.cls"),
       "ObjectScript" => all_fixtures("ObjectScript", "*.cls"),
+      # Missing heuristics
       nil => all_fixtures("Apex", "*.cls") + all_fixtures("OpenEdge ABL", "*.cls"),
     })
   end
