@@ -303,6 +303,11 @@ disambiguations:
   rules:
   - language: Hack
     pattern: '<\?hh'
+- extensions: ['.html']
+  rules:
+  - language: Ecmarkup
+    pattern: '<emu-(?:alg|annex|biblio|clause|eqn|example|figure|gann|gmod|gprose|grammar|intro|not-ref|note|nt|prodref|production|rhs|table|t|xref)(?:$|\s|>)'
+  - language: HTML
 - extensions: ['.i']
   rules:
   - language: Motorola 68K Assembly
