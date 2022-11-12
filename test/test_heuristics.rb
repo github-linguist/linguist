@@ -502,6 +502,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_html_by_heuristics
+    assert_heuristics({
+      "Ecmarkup" => all_fixtures("Ecmarkup", "*.html"),
+      "HTML" => all_fixtures("HTML", "*.html")
+    })
+  end
+
   def test_i_by_heuristics
     assert_heuristics({
       "Motorola 68K Assembly" => all_fixtures("Motorola 68K Assembly", "*.i"),
