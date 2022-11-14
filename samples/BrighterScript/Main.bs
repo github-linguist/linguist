@@ -1,0 +1,64 @@
+' *********************************************************
+' **  BrighterScript demonstration file
+' **  Nov 2021
+' **  Using Roku's SimpleGrid example
+' *********************************************************
+
+'************************************************************
+'** Import statement
+'************************************************************
+import "SimpleGrid.bs"
+
+'************************************************************
+'** New Functionalitys examples
+'************************************************************
+function Main() as Void
+    app = new ApplicationClass()
+end function
+
+class ApplicationClass
+    public thisIsATernaryExample as string
+    public thisIsAStringTemplateExample as string
+    public user as Dynamic
+    public aNode as Object
+
+    public function new() as Void
+        m.init()
+    end function
+
+    private function init()
+        'Run imported SimpleGrid StartApp()
+        StartApp()
+
+        'Ternary operator
+        m.thisIsATernaryExample = 1 = 1 ? "1 equals 1" : "1 is different from 1"
+        print "Ternary example: ", m.thisIsATernaryExample
+
+        'Template Strings
+        m.thisIsAStringTemplateExample = `The result from ternary example is ${m.thisIsATernaryExample}`
+        print "Template strings example: ", m.thisIsAStringTemplateExample
+
+        'Null-coalescing operator
+        user = m.user ?? "User is null/invalid, got this string instead"
+        print "Null-coalescing operator: ", user
+
+        'Regular Expression Literals
+        '   Gets transpiled to -> print CreateObject("roRegex", "hello world", "ig")
+        print /hello world/ig
+
+        'Source Literals
+        '   prints "file :///PATH.bs"
+        print SOURCE_FILE_PATH
+        '   prints the "print SOURCE_LINE_NUM" line's number
+        print SOURCE_LINE_NUM
+        '   prints function's name
+        print FUNCTION_NAME
+        '   prints function's name, namespaced, ex: class.functionName
+        print SOURCE_FUNCTION_NAME
+        '   prints a combination of SOURCE_FILE_PATH and SOURCE_LINE_NUM. ex: "file :///PATH.bs"
+        print SOURCE_LOCATION
+        '   prints The pkg path of the file. ex: "pkg:/source/main.brs"
+        print PKG_PATH
+    end function
+
+end class
