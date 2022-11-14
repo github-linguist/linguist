@@ -1669,10 +1669,25 @@ Ecere Projects:
   codemirror_mode: javascript
   codemirror_mime_type: application/json
   language_id: 98
+Ecmarkup:
+  type: markup
+  color: "#eb8131"
+  group: HTML
+  extensions:
+  - ".html"
+  tm_scope: text.html.ecmarkup
+  ace_mode: html
+  codemirror_mode: htmlmixed
+  codemirror_mime_type: text/html
+  aliases:
+  - ecmarkdown
+  language_id: 844766630
 EditorConfig:
   type: data
   color: "#fff1f2"
   group: INI
+  extensions:
+  - ".editorconfig"
   filenames:
   - ".editorconfig"
   aliases:
@@ -2897,6 +2912,14 @@ Inform 7:
   - inform7
   ace_mode: text
   language_id: 166
+Ink:
+  type: programming
+  wrap: true
+  extensions:
+  - ".ink"
+  tm_scope: source.ink
+  ace_mode: text
+  language_id: 838252715
 Inno Setup:
   type: programming
   color: "#264b99"
@@ -4679,8 +4702,8 @@ Option List:
   - ackrc
   filenames:
   - ".ackrc"
-  - "ackrc"
-  - "mocha.opts"
+  - ackrc
+  - mocha.opts
   tm_scope: source.opts
   ace_mode: sh
   codemirror_mode: shell
@@ -6954,7 +6977,6 @@ VBA:
   - ".bas"
   - ".cls"
   - ".frm"
-  - ".frx"
   - ".vba"
   tm_scope: source.vbnet
   aliases:
@@ -7112,8 +7134,10 @@ Visual Basic 6.0:
   type: programming
   color: "#2c6353"
   extensions:
+  - ".cls"
   - ".ctl"
   - ".Dsr"
+  - ".frm"
   tm_scope: source.vbnet
   aliases:
   - vb6
