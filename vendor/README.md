@@ -240,6 +240,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Ignore List:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **Imba:** [imba/imba-linguist-grammar](https://github.com/imba/imba-linguist-grammar)
 - **Inform 7:** [iftechfoundation/language-inform7](https://github.com/iftechfoundation/language-inform7)
+- **Ink:** [inkle/ink-tmlanguage](https://github.com/inkle/ink-tmlanguage)
 - **Inno Setup:** [idleberg/atom-language-innosetup](https://github.com/idleberg/atom-language-innosetup)
 - **Io:** [textmate/io.tmbundle](https://github.com/textmate/io.tmbundle)
 - **Ioke:** [vic/ioke-outdated](https://github.com/vic/ioke-outdated)
