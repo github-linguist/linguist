@@ -147,6 +147,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Earthly:** [earthly/earthfile-grammar](https://github.com/earthly/earthfile-grammar)
 - **Easybuild:** [MagicStack/MagicPython](https://github.com/MagicStack/MagicPython)
 - **Ecere Projects:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
+- **Ecmarkup:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **EditorConfig:** [sindresorhus/atom-editorconfig](https://github.com/sindresorhus/atom-editorconfig)
 - **Edje Data Collection:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **Eiffel:** [textmate/eiffel.tmbundle](https://github.com/textmate/eiffel.tmbundle)

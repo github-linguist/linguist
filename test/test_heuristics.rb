@@ -317,10 +317,12 @@ class TestHeuristics < Minitest::Test
 
   def test_cls_by_heuristics
     assert_heuristics({
+      "Visual Basic 6.0" => all_fixtures("Visual Basic 6.0", "*.cls"),
+      "VBA" => all_fixtures("VBA", "*.cls"),
       "TeX" => all_fixtures("TeX", "*.cls"),
       "ObjectScript" => all_fixtures("ObjectScript", "*.cls"),
       # Missing heuristics
-      nil => all_fixtures("Apex", "*.cls") + all_fixtures("OpenEdge ABL", "*.cls") + all_fixtures("VBA", "*.cls"),
+      nil => all_fixtures("Apex", "*.cls") + all_fixtures("OpenEdge ABL", "*.cls"),
     })
   end
 
@@ -421,6 +423,13 @@ class TestHeuristics < Minitest::Test
       "Text" => all_fixtures("Text", "*.fr")
     })
   end
+  
+  def test_frm_by_heuristics
+    assert_heuristics({
+      "VBA" => all_fixtures("VBA", "*.frm"),
+      "Visual Basic 6.0" => all_fixtures("Visual Basic 6.0", "*.frm"),
+    })
+  end
 
   def test_fs_by_heuristics
     assert_heuristics({
@@ -499,6 +508,13 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "Hack" => all_fixtures("Hack", "*.hh"),
       nil => all_fixtures("C++", "*.hh")
+    })
+  end
+
+  def test_html_by_heuristics
+    assert_heuristics({
+      "Ecmarkup" => all_fixtures("Ecmarkup", "*.html"),
+      "HTML" => all_fixtures("HTML", "*.html")
     })
   end
 
