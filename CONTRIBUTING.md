@@ -65,6 +65,7 @@ To add support for a new extension:
 1. Open a pull request, linking to a [GitHub search result][search-example] showing in-the-wild usage.
    If you are adding a sample, please state clearly the license covering the code.
    If possible, link to the original source of the sample.
+   If you wrote the sample specifically for the PR and are happy for it to be included under the MIT license that covers Linguist, you can state this instead.
 
 Additionally, if this extension is already listed in [`languages.yml`][languages] and associated with another language, then sometimes a few more steps will need to be taken:
 
@@ -73,6 +74,7 @@ Additionally, if this extension is already listed in [`languages.yml`][languages
    This ensures we're not misclassifying files.
 1. If the Bayesian classifier does a bad job with the sample `.yourextension` files then a [heuristic][] may need to be written to help.
 
+See [My Linguist PR has been merged but GitHub doesn't reflect my changes][merged-pr] for details on when your changes will appear on GitHub after your PR has been merged.
 
 ## Adding a language
 
@@ -96,6 +98,7 @@ To add support for a new language:
 1. Open a pull request, linking to [GitHub search results][search-example] showing in-the-wild usage.
    Please state clearly the license covering the code in the samples.
    Link directly to the original source if possible.
+   If you wrote the sample specifically for the PR and are happy for it to be included under the MIT license that covers Linguist, you can state this instead.
 
 In addition, if your new language defines an extension that's already listed in [`languages.yml`][languages] (such as `.foo`) then sometimes a few more steps will need to be taken:
 
@@ -106,9 +109,7 @@ In addition, if your new language defines an extension that's already listed in 
 
 Remember, the goal here is to try and avoid false positives!
 
-Note: New languages will not appear in GitHub's search results for some time after the pull request has been merged and the new Linguist release deployed to GitHub.com.
-This is because GitHub's search uses [go-enry](https://github.com/go-enry/go-enry) for language detection but tends to lag behind Linguist by a few weeks to months.
-This in turn requires an update to the underlying search code once go-enry is inline with Linguist.
+See [My Linguist PR has been merged but GitHub doesn't reflect my changes][merged-pr] for details on when your changes will appear on GitHub after your PR has been merged.
 
 ## Fixing a misclassified language
 
@@ -139,6 +140,7 @@ Linguist's grammar compiler will highlight any problems when the grammar is upda
 
 Once the bug has been fixed upstream, we'll pick it up for GitHub in the next release of Linguist.
 
+See [My Linguist PR has been merged but GitHub doesn't reflect my changes][merged-pr] for details on when the upstream changes will appear on GitHub.
 
 ## Changing the source of a syntax highlighting grammar
 
@@ -158,6 +160,8 @@ If problems are found, please report these problems to the grammar maintainer as
 
 Please then open a pull request for the updated grammar.
 
+See [My Linguist PR has been merged but GitHub doesn't reflect my changes][merged-pr] for details on when your changes will appear on GitHub after your PR has been merged.
+
 ## Changing the color associated with a language
 
 Many of the colors associated with the languages within Linguist have been in place for a very long time.
@@ -174,6 +178,12 @@ You can run the tests locally with:
 
 ```bash
 bundle exec rake test
+```
+
+You can test the classifier locally with:
+
+```bash
+bundle exec script/cross-validation --test
 ```
 
 Sometimes getting the tests running can be too much work, especially if you don't have much Ruby experience.
@@ -207,3 +217,5 @@ As Linguist is a production dependency for GitHub we have a couple of workflow r
 [search-example]: https://github.com/search?utf8=%E2%9C%93&q=extension%3Aboot+NOT+nothack&type=Code&ref=searchresults
 [gpr]: https://docs.github.com/packages/using-github-packages-with-your-projects-ecosystem/configuring-rubygems-for-use-with-github-packages
 [#5756]: https://github.com/github/linguist/issues/5756
+[merged-pr]: /docs/troubleshooting.md#my-linguist-pr-has-been-merged-but-gitHub-doesnt-reflect-my-changes
+[allow-edits]: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/allowing-changes-to-a-pull-request-branch-created-from-a-fork
