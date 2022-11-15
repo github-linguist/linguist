@@ -58,3 +58,16 @@ Alternatively you can run Linguist on individual files, see [here](/README.md#si
 
 There are several known issues with the version of Ruby shipped with macOS that cause problems when it comes to installing the charlock-holmes gem which is a Linguist dependency.
 As this is a problem with the Ruby shipped by Apple and not Linguist or charlock-holmes, we recommend you install a version of Ruby using Homebrew, `rbenv`, `rvm`, `ruby-build`, `asdf` or other packaging system, before attempting to install Linguist.
+
+## My Linguist PR has been merged but GitHub doesn't reflect my changes
+
+Changes to Linguist will only appear on GitHub when a new Linguist release is made and this is deployed to GitHub.com.
+There is no set release timeframe, but the intention is at least once every three-to-four months so the latest version ships with each new major version of GitHub Enterprise Server.
+A PR like [this](https://github.com/github/linguist/pull/6051) will be created for the release with checkmarks for each stage of the release process.
+
+All syntax highlighting grammars will also be updated in all major and minor releases.
+Grammars will only be updated in patch releases if the patch release is specifically for that language and it requires a grammar update to address the issue.
+
+Note: New languages will not appear in GitHub's search results for some time after the pull request has been merged and the new Linguist release deployed to GitHub.com.
+This is because GitHub's search uses [go-enry](https://github.com/go-enry/go-enry) for language detection which tends to lag behind Linguist by a few weeks to months.
+This in turn requires an update to the underlying search code once go-enry is inline with Linguist.
