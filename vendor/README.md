@@ -142,6 +142,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **ECL:** [hpcc-systems/ecl-tmLanguage](https://github.com/hpcc-systems/ecl-tmLanguage)
 - **ECLiPSe:** [alnkpa/sublimeprolog](https://github.com/alnkpa/sublimeprolog)
 - **EJS:** [tree-sitter/tree-sitter-embedded-template](https://github.com/tree-sitter/tree-sitter-embedded-template) 🐌
+- **EOLANG:** [objectionary/eo.tmbundle](https://github.com/objectionary/eo.tmbundle)
 - **EQ:** [dotnet/csharp-tmLanguage](https://github.com/dotnet/csharp-tmLanguage)
 - **Eagle:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)
 - **Earthly:** [earthly/earthfile-grammar](https://github.com/earthly/earthfile-grammar)

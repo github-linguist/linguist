@@ -1,0 +1,371 @@
+# The MIT License (MIT)
+#
+#  2016-2022 Objectionary.com
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
++alias org.eolang.collections.bytes-as-array
++alias org.eolang.collections.list
++alias org.eolang.txt.sscanf
++architect yegor256@gmail.com
++home https://github.com/objectionary/eo-strings
++package org.eolang.txt
++rt jvm org.eolang:eo-strings:0.0.0
++version 0.0.0
+
+[s] > text
+
+  s > @
+
+  [start len] > slice
+    text > @
+      ^.s.slice start len
+
+  # Trim it from both sides
+  # @todo #97:30min Current implementation trims only left part of spaces in the given string.
+  #  We should increase realization and trim right part of spaces also.
+  #  After than we should unwrap disabled trim tests
+  [] > trimmed
+    reducedi. > spaces!
+      list
+        bytes-as-array
+          as-bytes.
+            s
+      *
+      [a i x]
+        up-cased.ascii > code!
+          x
+        32 > space-code!
+        if. > @
+          eq.
+            code
+            space-code
+          with.
+            a
+            i
+          a
+    reduced. > left-pos!
+      list
+        spaces
+      0
+      [a x]
+        if. > @
+          eq.
+            a
+            x
+          plus.
+            a
+            1
+          a
+    slice. > @
+      s
+      left-pos
+      minus.
+        length.
+          s
+        left-pos
+
+  # Joins an array of strings, using current string
+  # as a delimiter
+  [items] > joined
+    reducedi. > res!
+      list
+        items
+      ("".as-bytes)
+      [acc i x]
+        if. > @
+          i.eq ((items.length).minus 1)
+          (acc.concat (x.as-bytes))
+          ((acc.concat (x.as-bytes)).concat (s.as-bytes))
+    res.as-string > @
+
+  # Checks that string contains substr
+  [substr] > contains
+    index-of. > idx!
+      text
+        s
+      substr
+    gt. > @
+      idx
+      -1
+
+  # Checks that string ends with substr
+  [substr] > ends-with
+    index-of.check-if-starts-from-index > @
+      s
+      substr
+      minus.
+        s.length
+        substr.length
+
+  # Checks that the text starts with substr
+  [substr] > starts-with
+    index-of.check-if-starts-from-index > @
+      s
+      substr
+      0
+
+  # Returns index of substr in string,
+  # if no element was found, it returns -1
+  [substr] > index-of
+    bytes-as-array > bytes-view!
+      as-bytes.
+        s
+    reducedi. > @
+      list
+        bytes-view
+      -1
+      [a i x]
+        check-if-starts-from-index > res!
+          s
+          substr
+          i
+        if. > @
+          eq.
+            a
+            -1
+          if.
+            res
+            i
+            a
+          a
+
+    # Method accepts a string and a substring as an array of bytes
+    # and checks if the string contains a substring in the passed position
+    # @todo #65:30min Current implementation works only with short strings.
+    #  We should have posibility to find substrings in bigger that 2-letter strings.
+    #  Also we should unwrap test 'text-index-of-2' from nop object
+    [str substr index] > check-if-starts-from-index
+      str.length > lstr!
+      substr.length > lsub!
+      if. > @
+        gt.
+          plus.
+            index
+            lsub
+          lstr
+        FALSE
+        eq.
+          substr
+          slice.
+            str
+            index
+            lsub
+
+  # Returns text in lower case
+  # @todo #57:30min Current implementation using Java.
+  #  We should implement casting string to lower case
+  #  only via EOLANG code. We can do it by using reduce method.
+  [] > low-cased /text
+
+  # Returns last index of substr in string,
+  # if no element was found, it returns -1
+  [substr] > last-index-of
+    bytes-as-array > bytes-view!
+      as-bytes.
+        s
+    reducedi. > @
+      list
+        bytes-view
+      -1
+      [a i x]
+        index-of.check-if-starts-from-index > res!
+          s
+          substr
+          i
+        if. > @
+          res
+          i
+          a
+
+  # Returns text in upper case
+  [] > up-cased
+    ascii "z" > ascii-z!
+    ascii "a" > ascii-a!
+    text > @
+      as-string.
+        reduced.
+          list
+            bytes-as-array
+              s.as-bytes
+          --
+          [a x]
+            ascii x > ascii-x!
+            concat. > @
+              a
+              if.
+                and.
+                  lte.
+                    ascii-x
+                    ascii-z
+                  gte.
+                    ascii-x
+                    ascii-a
+                slice.
+                  as-bytes.
+                    minus.
+                      ascii
+                        x
+                      distance
+                  7
+                  1
+                x
+
+    [c] > ascii
+      as-int. > @
+        concat.
+          00-00-00-00-00-00-00
+          as-bytes.
+            c
+    minus. > distance!
+      ascii
+        "a"
+      ascii
+        "A"
+
+  [i] > at
+    ^.slice i 1 > @
+
+  # Returns text where all regexp
+  # target changed to replacement
+  [target replacement] > replaced /text
+
+  # Returns the text as integer
+  [] > as-int
+    at. > @
+      sscanf
+        "%d"
+        s
+      0
+
+  # Returns the text as float
+  [] > as-float
+    at. > @
+      sscanf
+        "%f"
+        s
+      0
+
+  # Compares two strings in lexicographic order.
+  # Returns 0 if two strings are equal,
+  # a negative number if the first string comes before the argument,
+  # a positive number if the first string comes after the argument
+  [other] > compare
+    bytes-as-array > b1!
+      as-bytes.
+        s
+    bytes-as-array > b2!
+      as-bytes.
+        other
+    if. > @
+      eq.
+        length.
+          s
+        length.
+          other
+      reducedi.
+        list
+          b1
+        0
+        [a i x]
+          if. > res!
+            eq.
+              at.
+                b1
+                i
+              at.
+                b2
+                i
+            0
+            if.
+              gt.
+                as-int.
+                  is-alphabetic.bytes-1-to-8
+                    at.
+                      b1
+                      i
+                as-int.
+                  is-alphabetic.bytes-1-to-8
+                    at.
+                      b2
+                      i
+              1
+              -1
+          if. > @
+            eq.
+              a
+              0
+            res
+            a
+      minus.
+        length.
+          s
+        length.
+          other
+
+  # Returns an array of strings, separated by a given string
+  # @todo #22:30min Current implementation using Java.
+  #  We should implement splitting string to array of strings
+  #  only via EOLANG code. We can do it by using reduce method.
+  [delimiter] > split /array
+
+  # Check that all signs in string are letters.
+  # Works only for english letters
+  [] > is-alphabetic
+    reduced. > @
+      list
+        bytes-as-array
+          as-bytes.
+            low-cased.
+              text
+                s
+      TRUE
+      [a x]
+        as-int. > value!
+          bytes-1-to-8
+            as-bytes.
+              x
+        and. > @
+          a
+          int-is-alpha
+            value
+
+    [b] > int-is-alpha
+      and. > @
+        gte.
+          b
+          97
+        lte.
+          b
+          122
+
+    [b] > bytes-1-to-8
+      concat. > @
+        00-00-00-00-00-00-00
+        b
+
+  # Returns concatenaion of two strings
+  [other] > chained
+    text > @
+      as-string.
+        concat.
+          as-bytes.
+            s
+          as-bytes.
+            other

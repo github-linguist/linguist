@@ -1,0 +1,268 @@
+# The MIT License (MIT)
+#
+# Copyright (c) 2016-2022 Yegor Bugayenko
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
++home https://github.com/objectionary/eo-collections
++package org.eolang.collections
++rt jvm org.eolang:eo-collections:0.0.0
++version 0.0.0
+
+[arr] > list
+  arr > @
+
+  # Is it empty?
+  [] > is-empty
+    eq. > @
+      arr.length
+      0
+
+  # Create a new list with this element added to
+  # the end of it.
+  [x] > with
+    list > @
+      with.
+        arr
+        x
+
+  # Reduce with index from start "a" using the function "f".
+  # Here "f" must be an abstract
+  # object with three free attributes. The first
+  # one for the accumulator, the second one
+  # for the index and the third one for the element
+  # of the array.
+  [a f] > reducedi
+    if. > @
+      eq.
+        0
+        length.
+          arr
+      a
+      rec-reduced
+        (* a 0)
+        f
+        arr
+
+    [acc-index func carr] > rec-reduced
+      (acc-index.at 0) > acc
+      (acc-index.at 1) > index
+      seq > @
+        func > new-acc!
+          acc
+          index
+          (carr.at index)
+        if.
+          ((index.plus 1).eq (carr.length))
+          new-acc
+          rec-reduced
+            *
+              func
+                acc
+                index
+                (carr.at index)
+              (index.plus 1)
+            func
+            carr
+
+  # Reduce from start "a" using the function "f"
+  [a f] > reduced
+    ^.reducedi > @
+      a
+      [a idx item]
+        &.f > @
+          a
+          item
+
+  # Map with index. Here "f" must be an abstract
+  # object with two free attributes. The first
+  # one for the element of the array, the second one
+  # for the index.
+  [f] > mappedi
+    list > @
+      ^.reducedi
+        *
+        [a idx item]
+          with. > @
+            a
+            &.f item idx
+
+  # Map without index. Here "f" must be an abstract
+  # object with one free attribute, for the element
+  # of the array.
+  [f] > mapped
+    ^.mappedi > @
+      [x idx]
+        &.f x > @
+
+  # For each array element dataize the object
+  # Here "f" must be an abstract object with
+  # one free attribute, the element of the
+  # array.
+  [f] > each
+    seq > @
+      memory 0 > idx
+      while.
+        lt.
+          idx
+          arr.length
+        [i]
+          seq > @
+            f (arr.at i)
+            idx.write (i.plus 1)
+      TRUE
+
+  # Create a new list without the i-th element
+  [i] > without
+    ^.reducedi > @
+      *
+      [a idx item]
+        if. > @
+          idx.eq i
+          a
+          a.with item
+
+  # Equal to another object?
+  [x] > eq
+    if. > @
+      eq.
+        arr.length
+        x.length
+      ^.reducedi
+        TRUE
+        [a idx item]
+          and. > @
+            a
+            eq.
+              item
+              x.at idx
+      FALSE
+
+  # Returns the combined current and passed arrays
+  [passed] > concat
+    reduced. > @!
+      list
+        passed
+      ^
+      [a x]
+        a.with x > @
+
+  # Returns index of the first particular item in list.
+  # If the list has no this item, found returns -1
+  [wanted] > found
+    ^.reducedi > @
+      -1
+      [acc i item]
+        if. > @
+          and.
+            eq.
+              acc
+              -1
+            eq.
+              item
+              wanted
+          i
+          acc.plus 0
+
+  # Returns a new list sorted via lt method
+  [] > sorted
+    reducedi. > res!
+      ^
+      *
+      [a i x]
+        a.with (memory i) > @
+    memory 0 > i
+    memory 0 > j
+    while. > sorting-process!
+      (i.lt (res.length))
+      [iter-i]
+        seq > @
+          j.write 0
+          i.write (i.plus 1)
+          while.
+            ((j.plus 1).lt (res.length))
+            [iter-j]
+              seq > @
+                if.
+                  lt.
+                    arr.at (res.at (j.plus 1))
+                    arr.at (res.at j)
+                  swap (res.at j) (res.at (j.plus 1))
+                  TRUE
+                j.write (j.plus 1)
+    seq > @
+      sorting-process
+      reduced.
+        list
+          res
+        *
+        [a x]
+          a.with (arr.at x) > @
+
+    [a b] > swap
+      seq > @
+        a > temp!
+        a.write b
+        b.write temp
+
+  # Filter list with index with the function "f".
+  # Here "f" must be an abstract
+  # object with two attributes. The first
+  # one for the element, the second one
+  # for the index. The result of dataization
+  # the "f" should be boolean, that is TRUE or FALSE.
+
+  # @todo #31:30min We need to implement "filtered"
+  #  object too. It should filter list with the function
+  #  "f", without using index. So the function "f"
+  #  should have only one attribute.
+
+  [f] > filteredi
+    if. > @
+      eq.
+        0
+        length.
+          arr
+      list *
+      rec-filtered
+        (* 0 arr)
+        f
+        list *
+
+    [index-carr func new-list] > rec-filtered
+      (index-carr.at 0) > index
+      (index-carr.at 1) > carr
+      (carr.at index) > item
+      seq > @
+        func > acc!
+          item
+          index
+        if. > filt-list
+          eq.
+            acc
+            TRUE
+          new-list.with item
+          new-list
+        if.
+          ((index.plus 1).eq (carr.length))
+          filt-list
+          rec-filtered
+            (* (index.plus 1) carr)
+            func
+            filt-list
