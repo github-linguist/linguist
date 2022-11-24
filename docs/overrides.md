@@ -19,11 +19,11 @@ File and folder paths inside `.gitattributes` are calculated relative to the pos
 # Replace any whitespace in the language name with hyphens:
 *.glyphs linguist-language=OpenStep-Property-List
 
-# Language names are case-insensitive. Hence, the line above is equivalent to:
-*.glyphs linguist-language=openstep-property-list
-
-# You can also use an alias of the language (eg. js instead of JavaScript)
-*.cshtml linguist-language=js
+# Language names are case-insensitive and may be specified using an alias.
+# So, the following three lines are all functionally equivalent:
+*.es linguist-language=js
+*.es linguist-language=JS
+*.es linguist-language=JAVASCRIPT
 ```
 
 ### Summary
