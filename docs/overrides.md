@@ -18,6 +18,9 @@ File and folder paths inside `.gitattributes` are calculated relative to the pos
 
 # Replace any whitespace in the language name with hyphens:
 *.glyphs linguist-language=OpenStep-Property-List
+
+# You can also use an alias of the language (eg. js instead of JavaScript)
+*.cshtml linguist-language=js
 ```
 
 ### Summary
