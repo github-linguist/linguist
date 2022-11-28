@@ -17,7 +17,7 @@ This is the procedure for making a new release of Linguist. The entire process n
 4. Ensure that samples are updated: `bundle exec rake samples`
 5. Ensure that tests are green: `bundle exec rake test`
 6. Build a test gem `GEM_VERSION=$(git describe --tags 2>/dev/null | sed 's/-/./g' | sed 's/v//') bundle exec rake build_gem`
-7. Test the test ge
+7. Test the test gem:
    1. Bump the Gemfile and Gemfile.lock versions for an app which relies on this gem
    2. Install the new gem locally
    3. Test behavior locally, branch deploy, whatever needs to happen
