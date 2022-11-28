@@ -17,7 +17,7 @@ This is the procedure for making a new release of Linguist. The entire process n
 4. Ensure that samples are updated: `bundle exec rake samples`
 5. Ensure that tests are green: `bundle exec rake test`
 6. Build a test gem `GEM_VERSION=$(git describe --tags 2>/dev/null | sed 's/-/./g' | sed 's/v//') bundle exec rake build_gem`
-7. Test the test gem:
+7. Test the test ge
    1. Bump the Gemfile and Gemfile.lock versions for an app which relies on this gem
    2. Install the new gem locally
    3. Test behavior locally, branch deploy, whatever needs to happen
@@ -26,13 +26,13 @@ This is the procedure for making a new release of Linguist. The entire process n
 10. Build a local gem: `bundle exec rake build_gem`
 11. Merge the `github/linguist` PR
 12. Tag and push: `git tag vx.xx.xx; git push --tags`
-13. Create a GitHub release with the pushed tag (https://github.com/github/linguist/releases/new) and populate it with a list of the commits from `git log --pretty=format:"- %s" --reverse refs/tags/[OLD TAG]...refs/tags/[NEW TAG]` [like this](https://github.com/github/linguist/releases/tag/v7.2.0)
+13. Create a GitHub release with the pushed tag (https://github.com/github/linguist/releases/new) and populate it using the "Generate release notes" button.
 14. Build a grammars tarball (`./script/build-grammars-tarball`) and attach it to the GitHub release
 15. Push to rubygems.pkg.github.com -- `gem push --key github --host https://rubygems.pkg.github.com/github github-linguist-3.0.0.gem`. See [Working with the RubyGems registry][gpr] for more details.
 16. Push to rubygems.org -- `gem push github-linguist-3.0.0.gem`
 17. Update and deploy the following repositories to use the new gem in production:
-    - `github/github` - label for backporting to the latest version of GitHub Enterprise Server only.
-    - `github/treelights` - this only needs the Linguist version updated to pull the compiled grammars from the Linguist release. Label for backporting to the latest version of GitHub Enterprise Server only.
+    - `github/github` - if backporting, label for backporting to the latest version of GitHub Enterprise Server only.
+    - `github/treelights` - this only needs the Linguist version updated to pull the compiled grammars from the Linguist release. If backporting, label for backporting to the latest version of GitHub Enterprise Server only.
 
     Note: syntax highlighting changes won't take effect until the updated `github/treelights` repo has been deployed.
 
