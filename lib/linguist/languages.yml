@@ -1539,16 +1539,6 @@ Dogescript:
   tm_scope: none
   ace_mode: text
   language_id: 90
-Dotenv:
-  type: data
-  extensions:
-  - ".env"
-  filenames:
-  - ".env"
-  - ".env.example"
-  tm_scope: source.dotenv
-  ace_mode: text
-  language_id: 111148035
 Dylan:
   type: programming
   color: "#6c616e"
@@ -6225,6 +6215,7 @@ Shell:
   - ".bats"
   - ".cgi"
   - ".command"
+  - ".env"
   - ".fcgi"
   - ".ksh"
   - ".sh.in"
@@ -6239,6 +6230,8 @@ Shell:
   - ".bash_profile"
   - ".bashrc"
   - ".cshrc"
+  - ".env"
+  - ".env.example"
   - ".flaskenv"
   - ".kshrc"
   - ".login"
