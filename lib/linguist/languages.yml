@@ -1546,7 +1546,16 @@ Dotenv:
   - ".env"
   filenames:
   - ".env"
+  - ".env.dev"
+  - ".env.development"
+  - ".env.development.local"
   - ".env.example"
+  - ".env.local"
+  - ".env.prod"
+  - ".env.production"
+  - ".env.staging"
+  - ".env.test"
+  - ".env.testing"
   tm_scope: source.dotenv
   ace_mode: text
   language_id: 111148035
