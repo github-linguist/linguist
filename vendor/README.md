@@ -92,6 +92,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Chapel:** [chapel-lang/chapel-tmbundle](https://github.com/chapel-lang/chapel-tmbundle)
 - **Checksums:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **ChucK:** [textmate/java.tmbundle](https://github.com/textmate/java.tmbundle)
+- **Circom:** [iden3/circom-highlighting-vscode](https://github.com/iden3/circom-highlighting-vscode)
 - **Cirru:** [Cirru/sublime-cirru](https://github.com/Cirru/sublime-cirru)
 - **Clarion:** [fushnisoft/SublimeClarion](https://github.com/fushnisoft/SublimeClarion)
 - **Clarity:** [hirosystems/clarity.tmbundle](https://github.com/hirosystems/clarity.tmbundle)
