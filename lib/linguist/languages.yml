@@ -1669,10 +1669,25 @@ Ecere Projects:
   codemirror_mode: javascript
   codemirror_mime_type: application/json
   language_id: 98
+Ecmarkup:
+  type: markup
+  color: "#eb8131"
+  group: HTML
+  extensions:
+  - ".html"
+  tm_scope: text.html.ecmarkup
+  ace_mode: html
+  codemirror_mode: htmlmixed
+  codemirror_mime_type: text/html
+  aliases:
+  - ecmarkdown
+  language_id: 844766630
 EditorConfig:
   type: data
   color: "#fff1f2"
   group: INI
+  extensions:
+  - ".editorconfig"
   filenames:
   - ".editorconfig"
   aliases:
@@ -2897,6 +2912,14 @@ Inform 7:
   - inform7
   ace_mode: text
   language_id: 166
+Ink:
+  type: programming
+  wrap: true
+  extensions:
+  - ".ink"
+  tm_scope: source.ink
+  ace_mode: text
+  language_id: 838252715
 Inno Setup:
   type: programming
   color: "#264b99"
@@ -3002,6 +3025,7 @@ JSON:
   - ".yy"
   - ".yyp"
   filenames:
+  - ".all-contributorsrc"
   - ".arcconfig"
   - ".auto-changelog"
   - ".c8rc"
@@ -3966,6 +3990,17 @@ Mercury:
   - ".moo"
   tm_scope: source.mercury
   language_id: 229
+Mermaid:
+  type: markup
+  color: "#ff3670"
+  aliases:
+  - mermaid example
+  extensions:
+  - ".mmd"
+  - ".mermaid"
+  tm_scope: source.mermaid
+  ace_mode: text
+  language_id: 385992043
 Meson:
   type: programming
   color: "#007800"
@@ -4582,7 +4617,7 @@ Open Policy Agent:
   tm_scope: source.rego
 OpenAPI Specification v2:
   aliases:
-    - oasv2
+  - oasv2
   type: data
   color: "#85ea2d"
   tm_scope: none
@@ -4590,7 +4625,7 @@ OpenAPI Specification v2:
   language_id: 848295328
 OpenAPI Specification v3:
   aliases:
-    - oasv3
+  - oasv3
   type: data
   color: "#85ea2d"
   tm_scope: none
@@ -4675,7 +4710,8 @@ Option List:
   - ackrc
   filenames:
   - ".ackrc"
-  - "ackrc"
+  - ackrc
+  - mocha.opts
   tm_scope: source.opts
   ace_mode: sh
   codemirror_mode: shell
@@ -4925,7 +4961,7 @@ Perl:
   - ".psgi"
   - ".t"
   filenames:
-  - .latexmkrc
+  - ".latexmkrc"
   - Makefile.PL
   - Rexfile
   - ack
@@ -6373,6 +6409,16 @@ Smarty:
   codemirror_mime_type: text/x-smarty
   tm_scope: text.html.smarty
   language_id: 353
+Smithy:
+  type: programming
+  ace_mode: text
+  codemirror_mode: clike
+  codemirror_mime_type: text/x-csrc
+  tm_scope: source.smithy
+  color: "#c44536"
+  extensions:
+  - ".smithy"
+  language_id: 1027892786
 Solidity:
   type: programming
   color: "#AA6746"
@@ -6580,6 +6626,7 @@ TOML:
   - Cargo.lock
   - Gopkg.lock
   - Pipfile
+  - pdm.lock
   - poetry.lock
   tm_scope: source.toml
   ace_mode: toml
@@ -6941,7 +6988,6 @@ VBA:
   - ".bas"
   - ".cls"
   - ".frm"
-  - ".frx"
   - ".vba"
   tm_scope: source.vbnet
   aliases:
@@ -7099,8 +7145,10 @@ Visual Basic 6.0:
   type: programming
   color: "#2c6353"
   extensions:
+  - ".cls"
   - ".ctl"
   - ".Dsr"
+  - ".frm"
   tm_scope: source.vbnet
   aliases:
   - vb6
