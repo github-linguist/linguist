@@ -144,7 +144,13 @@ module Linguist
     # Returns all matching Languages or [] if none were found.
     def self.find_by_filename(filename)
       basename = File.basename(filename)
-      @filename_index[basename]
+      languages = @filename_index[basename]
+
+      if languages.empty? && @filename_index.key?(filename)
+        @filename_index[filename]
+      else
+        languages
+      end
     end
 
     # Public: Look up Languages by file extension.

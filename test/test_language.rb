@@ -198,6 +198,8 @@ class TestLanguage < Minitest::Test
     assert_equal [Language['Shell']], Language.find_by_filename('bash_profile')
     assert_equal [Language['Shell']], Language.find_by_filename('.zshrc')
     assert_equal [Language['Clojure']], Language.find_by_filename('riemann.config')
+    assert_equal [Language['JSON with Comments']], Language.find_by_filename('tsconfig.json')
+    assert_equal [Language['JSON with Comments']], Language.find_by_filename('.vscode/settings.json')
   end
 
   def test_find_by_interpreter
