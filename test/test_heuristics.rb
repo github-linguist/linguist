@@ -734,6 +734,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_plt_by_heuristics
+    assert_heuristics({
+      "Prolog" => all_fixtures("Prolog", "*.plt"),
+      "Gnuplot" => all_fixtures("Gnuplot", "*.plt")
+    })
+  end
+
   def test_pm_by_heuristics
     assert_heuristics({
       "Perl" => all_fixtures("Perl", "*.pm"),
