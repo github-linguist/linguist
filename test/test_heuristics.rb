@@ -737,7 +737,8 @@ class TestHeuristics < Minitest::Test
   def test_plt_by_heuristics
     assert_heuristics({
       "Prolog" => all_fixtures("Prolog", "*.plt"),
-      "Gnuplot" => all_fixtures("Gnuplot", "*.plt")
+      # Gnuplot lacks a heuristic
+      nil => all_fixtures("Gnuplot", "*.plt")
     })
   end
 
