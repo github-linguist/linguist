@@ -5330,6 +5330,39 @@ Python traceback:
   tm_scope: text.python.traceback
   ace_mode: text
   language_id: 304
+Pylar:
+  type: programming
+  color: #ff6633
+  extensions:
+  - ".pyl"
+  - ".pylar"
+  - ".teide"
+  filesnames:
+  - Import-Libraries
+  - Loop-Label-end
+  - Loop-Label pass
+  - dijkstra
+  - for-end
+  - for-pass
+  - run-server
+  - while-end
+  - while-pass
+  interpreters:
+  - pylar
+  aliases:
+  - pylar
+  - pyl
+  - teide
+  - pyrus
+  extensions:
+    - ".pylar"
+    - ".pyl"
+    - ".teide"
+    - ".pyrus"
+  color: "#fed659"
+  ace_mode: text
+  tm_scope: source.pylar
+  language_id: 21
 Q#:
   type: programming
   extensions:
@@ -7861,6 +7894,33 @@ mcfunction:
   tm_scope: source.mcfunction
   ace_mode: text
   language_id: 462488745
+Pencil:
+  type: prose
+  color: "#ff6633"
+  aliases:
+    - mdp
+    - penc
+    - pencil
+    - xpro
+    - mdpro
+  ace_mode: markdown
+  codemirror_mode: gfm
+  codemirror_mime_type: text/x-gfm
+  wrap: true
+  extensions:
+    - ".mdp"
+    - ".penc"
+    - ".pencil"
+    - ".xpro"
+    - ".mdpro"
+  filenames:
+    - style1.mdp
+    - style2.mdp
+    - style3.mdp
+    - example.mdp
+    - example.mdp
+  tm_scope: source.mdp
+  language_id: 178
 mupad:
   type: programming
   color: "#244963"

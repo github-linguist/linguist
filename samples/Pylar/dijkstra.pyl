@@ -1,0 +1,71 @@
+# Here is an example of how you could write Dijkstra's algorithm in Pylar:
+# Define a graph
+
+let graph = {
+"start": {"a": 6, "b": 2},
+"a": {"fin": 1},
+"b": {"a": 3, "fin": 5},
+"fin": {}
+}
+
+# Define the costs table
+
+let costs = {
+"a": 6,
+"b": 2,
+"fin": float("inf")
+}
+
+# Define the parents table
+
+let parents = {
+"a": "start",
+"b": "start",
+"fin": None
+}
+
+# Define a list of processed nodes
+
+let processed = []
+
+# Find the lowest cost node
+
+def find_lowest_cost_node(costs):
+lowest_cost = float("inf")
+lowest_cost_node = None
+for node in costs:
+cost = costs[node]
+if cost < lowest_cost and node not in processed:
+lowest_cost = cost
+lowest_cost_node = node
+return lowest_cost_node
+
+# Dijkstra's algorithm
+
+do(dijkstra) is
+
+# Find the lowest cost node that you haven't processed yet
+node = find_lowest_cost_node(costs)
+# If you've processed all the nodes, this while loop is done
+while node is not None:
+cost = costs[node]
+neighbors = graph[node]
+for n in neighbors.keys():
+new_cost = cost + neighbors[n]
+if costs[n] > new_cost:
+costs[n] = new_cost
+parents[n] = node
+processed.append(node)
+node = find_lowest_cost_node(costs)
+Run Dijkstra's algorithm
+
+dijkstra now
+
+# Print the results
+
+say(costs)
+say(parents)
+
+# This Pylar code defines a graph, costs table, and parents table, and then uses Dijkstra's algorithm to find the lowest cost path from the start node to the finish node. The 'find_lowest_cost_node' function is used to find the lowest cost node that has not yet been processed, and the 'dijkstra' action is used to run the algorithm. The 'say' action is used to print the results of the algorithm, including the costs table and the parents table.
+
+# Pylar is designed to be easy to read and understand, and is intended to be familiar to people who have experience reading and writing books and literature. It is also designed to be super secure, combining the best parts of Rust and Python to create a new language that is optimized for AI and ML.

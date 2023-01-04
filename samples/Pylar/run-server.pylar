@@ -1,0 +1,17 @@
+# To run a server with Pylar, you would need to use the following code:
+
+grab stdlib* then do(server) is listen(5000) now
+
+#
+This code would grab the necessary standard libraries and then execute the 'server' action, which would listen for incoming connections on port 5000.
+
+To make the server more functional, you could add additional actions such as 'route' to handle incoming requests and 'respond' to send responses back to the client. For example:
+#
+
+grab stdlib* then do(server) is listen(5000) & route(fn) is respond("Hello, world!") now
+
+#
+This code would listen for incoming connections on port 5000, and when a request is received, it would execute the 'route' action which would handle the request and send a response back to the client with the message "Hello, world!".
+
+Pylar is designed to be easy to read and understand, and is intended to be familiar to people who have experience reading and writing books and literature. It is also designed to be super secure, combining the best parts of Rust and Python to create a new language that is optimized for AI and ML.
+#
