@@ -1,0 +1,17 @@
+//HERC02CP JOB (ACCNT),'IEBCOPY',CLASS=A,MSGCLASS=H
+//* USER=HERC02,PASSWORD=xxxxxxxx
+//*
+//********************************************************************
+//* COPY A MEMBER FROM ONE DATA SET TO ANOTHER.  SPECIFY THE TO
+//* AND FROM MEMBER NAMES IN THE "S M=" OF THE SYSIN DATA
+//* NOTE THE TWO NAMES CANNOT BE THE SAME
+//********************************************************************
+//*
+//COPYBR14 EXEC PGM=IEBCOPY
+//SYSPRINT DD  SYSOUT=*
+//SYSUT1   DD  DISP=SHR,DSN=HERC02.AOK.JCLLIB
+//SYSUT2   DD  DISP=SHR,DSN=HERC02.TEST.JCL
+//SYSIN    DD  *
+ C I=((SYSUT1,R)),O=SYSUT2
+ S M=((IEBUPDTE,IEBUPDT2))
+//*

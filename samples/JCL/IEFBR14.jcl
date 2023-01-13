@@ -1,0 +1,15 @@
+//CREATEPS JOB (345),’TUTORIALBRAIN,CLASS=A,MSGCLASS=A,MSGLEVEL=(1,1),
+// NOTIFY=&SYSUID
+//************************************************************
+//* ALLOCATE PS DATA SET USING IEFBR14 UTILITY
+//************************************************************
+//STEP10 EXEC PGM=IEFBR14
+//SYSPRINT DD SYSOUT=*
+//SYSOUT DD SYSOUT=*
+//SYSDUMP DD SYSOUT=*
+//DD1 DD DSN=MATEKS.TEST.PS,
+//DISP=(NEW,CATLG,DELETE),
+//SPACE=(TRK,(1,1),RLSE),
+//UNIT=SYSDA,
+//DCB=(DSORG=PS,RECFM=FB,LRECL=80,BLKSIZE=800)
+//*
