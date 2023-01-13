@@ -248,6 +248,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Isabelle ROOT:** [lsf37/Isabelle.tmbundle](https://github.com/lsf37/Isabelle.tmbundle)
 - **J:** [tikkanz/JSyntax](https://github.com/tikkanz/JSyntax)
 - **JAR Manifest:** [atom/language-yaml](https://github.com/atom/language-yaml)
+- **JCL:** [spgennard/vscode_cobol](https://github.com/spgennard/vscode_cobol)
 - **JFlex:** [jflex-de/jflex.tmbundle](https://github.com/jflex-de/jflex.tmbundle)
 - **JSON:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
 - **JSON with Comments:** [atom/language-javascript](https://github.com/atom/language-javascript)
