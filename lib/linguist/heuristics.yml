@@ -1,23 +1,23 @@
 # A collection of simple regexp-based rules that can be applied to content
 # to disambiguate languages with the same file extension.
 #
-# There two top-level keys: disambiguations and named_patterns.
+# There are two top-level keys: disambiguations and named_patterns.
 #
 # disambiguations     - a list of disambiguation rules, one for each
 #                       extension or group of extensions.
 # extensions          - an array of file extensions that this block applies to.
 # rules               - list of rules that are applied in order to the content
-#                       of a file with matching extension. Rules are evaluated
+#                       of a file with a matching extension. Rules are evaluated
 #                       until one of them matches. If none matches, no language
 #                       is returned.
 # language            - Language to be returned if the rule matches.
 # pattern             - Ruby-compatible regular expression that makes the rule
-#                       match. If no pattern is specified, the rule always match.
+#                       match. If no pattern is specified, the rule always matches.
 #                       Pattern can be a string with a single regular expression
 #                       or an array of strings that will be merged in a single
 #                       regular expression (with union).
 # and                 - An and block merges multiple rules and checks that all of
-#                       of them must match.
+#                       them must match.
 # negative_pattern    - Same as pattern, but checks for absence of matches.
 # named_pattern       - A pattern can be reused by specifying it in the
 #                       named_patterns section and referencing it here by its
