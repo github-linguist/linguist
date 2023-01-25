@@ -498,9 +498,9 @@ disambiguations:
   - language: Prolog
     pattern: '^[^#]*:-'
   - language: Perl
-    named_pattern: perl5
+    named_pattern: perl
   - language: Raku
-    named_pattern: perl6
+    named_pattern: raku
 - extensions: ['.plist']
   rules:
   - language: XML Property List
@@ -509,9 +509,9 @@ disambiguations:
 - extensions: ['.pm']
   rules:
   - language: Perl
-    named_pattern: perl5
+    named_pattern: perl
   - language: Raku
-    named_pattern: perl6
+    named_pattern: raku
   - language: X PixMap
     pattern: '^\s*\/\* XPM \*\/'
 - extensions: ['.pod']
@@ -667,7 +667,7 @@ disambiguations:
 - extensions: ['.t']
   rules:
   - language: Perl
-    named_pattern: perl5
+    named_pattern: perl
   - language: Raku
     pattern: '^\s*(?:use\s+v6\b|\bmodule\b|\bmy\s+class\b)'
   - language: Turing
@@ -811,7 +811,7 @@ named_patterns:
   mdoc-heading: '^[.''][ \t]*Sh +(?:[^"\s]|"[^"]+")'
   mdoc-title:   '^[.''][ \t]*Dt +(?:[^"\s]+|"[^"]+") +"?(?:[1-9]|@[^\s@]+@)'
   objectivec: '^\s*(@(interface|class|protocol|property|end|synchronised|selector|implementation)\b|#import\s+.+\.h[">])'
-  perl5: '\buse\s+(?:strict\b|v?5\.)'
-  perl6: '^\s*(?:use\s+v6\b|\bmodule\b|\b(?:my\s+)?class\b)'
+  perl: '\buse\s+(?:strict\b|v?5\.)'
+  raku: '^\s*(?:use\s+v6\b|\bmodule\b|\b(?:my\s+)?class\b)'
   vb-class: '^\s*VERSION\s+[0-9]\.[0-9]\s+CLASS'
   vb-form: '^\s*VERSION\s+[0-9]\.[0-9]{2}'
