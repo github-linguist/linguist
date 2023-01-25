@@ -498,7 +498,9 @@ disambiguations:
   - language: Prolog
     pattern: '^[^#]*:-'
   - language: Perl
-    named_pattern: perl
+    and:
+      - negative_pattern: '^\s*use\s+v6\b'
+      - named_pattern: perl
   - language: Raku
     named_pattern: raku
 - extensions: ['.plist']
@@ -509,7 +511,9 @@ disambiguations:
 - extensions: ['.pm']
   rules:
   - language: Perl
-    named_pattern: perl
+    and:
+      - negative_pattern: '^\s*use\s+v6\b'
+      - named_pattern: perl
   - language: Raku
     named_pattern: raku
   - language: X PixMap
@@ -667,7 +671,9 @@ disambiguations:
 - extensions: ['.t']
   rules:
   - language: Perl
-    named_pattern: perl
+    and:
+      - negative_pattern: '^\s*use\s+v6\b'
+      - named_pattern: perl
   - language: Raku
     pattern: '^\s*(?:use\s+v6\b|\bmodule\b|\bmy\s+class\b)'
   - language: Turing
