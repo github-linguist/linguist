@@ -5292,7 +5292,6 @@ Python:
   - ".pyt"
   - ".pyw"
   - ".rpy"
-  - ".smk"
   - ".spec"
   - ".tac"
   - ".wsgi"
@@ -5302,7 +5301,6 @@ Python:
   - DEPS
   - SConscript
   - SConstruct
-  - Snakefile
   - wscript
   interpreters:
   - python
@@ -6411,6 +6409,21 @@ Smithy:
   extensions:
   - ".smithy"
   language_id: 1027892786
+Snakefile:
+  type: programming
+  group: Python
+  tm_scope: source.python
+  ace_mode: python
+  codemirror_mode: python
+  codemirror_mime_type: text/x-python
+  color: "#33c68a"
+  extensions:
+  - ".smk"
+  - ".snakefile"
+  filenames:
+  - Snakefile
+  aliases:
+  - snakemake
 Solidity:
   type: programming
   color: "#AA6746"
