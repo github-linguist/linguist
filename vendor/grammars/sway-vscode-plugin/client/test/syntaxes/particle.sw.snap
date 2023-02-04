@@ -1,0 +1,262 @@
+>script;
+#^^^^^^ source.sway source.sway meta.attribute.sway
+#      ^ source.sway
+>
+>/// A simple Particle struct
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.sway comment.line.documentation.sway
+>pub struct Particle {
+#^^^ source.sway keyword.other.sway
+#   ^ source.sway
+#    ^^^^^^ source.sway keyword.declaration.struct.sway
+#          ^ source.sway
+#           ^^^^^^^^ source.sway entity.name.type.struct.sway
+#                   ^ source.sway
+#                    ^ source.sway punctuation.brackets.curly.sway
+>    position: [u64; 3],
+#^^^^ source.sway
+#    ^^^^^^^^ source.sway variable.other.sway
+#            ^ source.sway keyword.operator.key-value.sway
+#             ^ source.sway
+#              ^ source.sway punctuation.brackets.square.sway
+#               ^^^ source.sway entity.name.type.numeric.sway
+#                  ^ source.sway punctuation.semi.sway
+#                   ^ source.sway
+#                    ^ source.sway constant.numeric.decimal.sway
+#                     ^ source.sway punctuation.brackets.square.sway
+#                      ^ source.sway punctuation.comma.sway
+>    velocity: [u64; 3],
+#^^^^ source.sway
+#    ^^^^^^^^ source.sway variable.other.sway
+#            ^ source.sway keyword.operator.key-value.sway
+#             ^ source.sway
+#              ^ source.sway punctuation.brackets.square.sway
+#               ^^^ source.sway entity.name.type.numeric.sway
+#                  ^ source.sway punctuation.semi.sway
+#                   ^ source.sway
+#                    ^ source.sway constant.numeric.decimal.sway
+#                     ^ source.sway punctuation.brackets.square.sway
+#                      ^ source.sway punctuation.comma.sway
+>    acceleration: [u64; 3],
+#^^^^ source.sway
+#    ^^^^^^^^^^^^ source.sway variable.other.sway
+#                ^ source.sway keyword.operator.key-value.sway
+#                 ^ source.sway
+#                  ^ source.sway punctuation.brackets.square.sway
+#                   ^^^ source.sway entity.name.type.numeric.sway
+#                      ^ source.sway punctuation.semi.sway
+#                       ^ source.sway
+#                        ^ source.sway constant.numeric.decimal.sway
+#                         ^ source.sway punctuation.brackets.square.sway
+#                          ^ source.sway punctuation.comma.sway
+>    mass: u64,
+#^^^^ source.sway
+#    ^^^^ source.sway variable.other.sway
+#        ^ source.sway keyword.operator.key-value.sway
+#         ^ source.sway
+#          ^^^ source.sway entity.name.type.numeric.sway
+#             ^ source.sway punctuation.comma.sway
+>}
+#^ source.sway punctuation.brackets.curly.sway
+>
+>impl Particle {
+#^^^^ source.sway keyword.other.sway
+#    ^ source.sway
+#     ^^^^^^^^ source.sway entity.name.type.sway
+#             ^ source.sway
+#              ^ source.sway punctuation.brackets.curly.sway
+>    /// Creates a new Particle with the given position, velocity, acceleration, and mass
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.sway comment.line.documentation.sway
+>    fn new(position: [u64; 3], velocity: [u64; 3], acceleration: [u64; 3], mass: u64) -> Particle {
+#^^^^ source.sway
+#    ^^ source.sway meta.function.definition.sway keyword.other.fn.sway
+#      ^ source.sway meta.function.definition.sway
+#       ^^^ source.sway meta.function.definition.sway entity.name.function.sway
+#          ^ source.sway meta.function.definition.sway punctuation.brackets.round.sway
+#           ^^^^^^^^ source.sway meta.function.definition.sway variable.other.sway
+#                   ^ source.sway meta.function.definition.sway keyword.operator.key-value.sway
+#                    ^ source.sway meta.function.definition.sway
+#                     ^ source.sway meta.function.definition.sway punctuation.brackets.square.sway
+#                      ^^^ source.sway meta.function.definition.sway entity.name.type.numeric.sway
+#                         ^ source.sway meta.function.definition.sway punctuation.brackets.curly.sway
+#                          ^ source.sway
+#                           ^ source.sway constant.numeric.decimal.sway
+#                            ^ source.sway punctuation.brackets.square.sway
+#                             ^ source.sway punctuation.comma.sway
+#                              ^ source.sway
+#                               ^^^^^^^^ source.sway variable.other.sway
+#                                       ^ source.sway keyword.operator.key-value.sway
+#                                        ^ source.sway
+#                                         ^ source.sway punctuation.brackets.square.sway
+#                                          ^^^ source.sway entity.name.type.numeric.sway
+#                                             ^ source.sway punctuation.semi.sway
+#                                              ^ source.sway
+#                                               ^ source.sway constant.numeric.decimal.sway
+#                                                ^ source.sway punctuation.brackets.square.sway
+#                                                 ^ source.sway punctuation.comma.sway
+#                                                  ^ source.sway
+#                                                   ^^^^^^^^^^^^ source.sway variable.other.sway
+#                                                               ^ source.sway keyword.operator.key-value.sway
+#                                                                ^ source.sway
+#                                                                 ^ source.sway punctuation.brackets.square.sway
+#                                                                  ^^^ source.sway entity.name.type.numeric.sway
+#                                                                     ^ source.sway punctuation.semi.sway
+#                                                                      ^ source.sway
+#                                                                       ^ source.sway constant.numeric.decimal.sway
+#                                                                        ^ source.sway punctuation.brackets.square.sway
+#                                                                         ^ source.sway punctuation.comma.sway
+#                                                                          ^ source.sway
+#                                                                           ^^^^ source.sway variable.other.sway
+#                                                                               ^ source.sway keyword.operator.key-value.sway
+#                                                                                ^ source.sway
+#                                                                                 ^^^ source.sway entity.name.type.numeric.sway
+#                                                                                    ^ source.sway punctuation.brackets.round.sway
+#                                                                                     ^ source.sway
+#                                                                                      ^^ source.sway keyword.operator.arrow.skinny.sway
+#                                                                                        ^ source.sway
+#                                                                                         ^^^^^^^^ source.sway entity.name.type.sway
+#                                                                                                 ^ source.sway
+#                                                                                                  ^ source.sway punctuation.brackets.curly.sway
+>        Particle {
+#^^^^^^^^ source.sway
+#        ^^^^^^^^ source.sway entity.name.type.sway
+#                ^ source.sway
+#                 ^ source.sway punctuation.brackets.curly.sway
+>            position: position,
+#^^^^^^^^^^^^ source.sway
+#            ^^^^^^^^ source.sway variable.other.sway
+#                    ^ source.sway keyword.operator.key-value.sway
+#                     ^ source.sway
+#                      ^^^^^^^^ source.sway variable.other.sway
+#                              ^ source.sway punctuation.comma.sway
+>            velocity: velocity,
+#^^^^^^^^^^^^ source.sway
+#            ^^^^^^^^ source.sway variable.other.sway
+#                    ^ source.sway keyword.operator.key-value.sway
+#                     ^ source.sway
+#                      ^^^^^^^^ source.sway variable.other.sway
+#                              ^ source.sway punctuation.comma.sway
+>            acceleration: acceleration,
+#^^^^^^^^^^^^ source.sway
+#            ^^^^^^^^^^^^ source.sway variable.other.sway
+#                        ^ source.sway keyword.operator.key-value.sway
+#                         ^ source.sway
+#                          ^^^^^^^^^^^^ source.sway variable.other.sway
+#                                      ^ source.sway punctuation.comma.sway
+>            mass: mass,
+#^^^^^^^^^^^^ source.sway
+#            ^^^^ source.sway variable.other.sway
+#                ^ source.sway keyword.operator.key-value.sway
+#                 ^ source.sway
+#                  ^^^^ source.sway variable.other.sway
+#                      ^ source.sway punctuation.comma.sway
+>        }
+#^^^^^^^^ source.sway
+#        ^ source.sway punctuation.brackets.curly.sway
+>    }
+#^^^^ source.sway
+#    ^ source.sway punctuation.brackets.curly.sway
+>}
+#^ source.sway punctuation.brackets.curly.sway
+>
+>fn main() {
+#^^ source.sway meta.function.definition.sway keyword.other.fn.sway
+#  ^ source.sway meta.function.definition.sway
+#   ^^^^ source.sway meta.function.definition.sway entity.name.function.sway
+#       ^ source.sway meta.function.definition.sway punctuation.brackets.round.sway
+#        ^ source.sway meta.function.definition.sway punctuation.brackets.round.sway
+#         ^ source.sway meta.function.definition.sway
+#          ^ source.sway meta.function.definition.sway punctuation.brackets.curly.sway
+>    let position = [0, 0, 0];
+#^^^^ source.sway
+#    ^^^ source.sway storage.modifier.sway
+#       ^ source.sway
+#        ^^^^^^^^ source.sway variable.other.sway
+#                ^ source.sway
+#                 ^ source.sway keyword.operator.assignment.equal.sway
+#                  ^ source.sway
+#                   ^ source.sway punctuation.brackets.square.sway
+#                    ^ source.sway constant.numeric.decimal.sway
+#                     ^ source.sway punctuation.comma.sway
+#                      ^ source.sway
+#                       ^ source.sway constant.numeric.decimal.sway
+#                        ^ source.sway punctuation.comma.sway
+#                         ^ source.sway
+#                          ^ source.sway constant.numeric.decimal.sway
+#                           ^ source.sway punctuation.brackets.square.sway
+#                            ^ source.sway punctuation.semi.sway
+>    let velocity = [0, 1, 0];
+#^^^^ source.sway
+#    ^^^ source.sway storage.modifier.sway
+#       ^ source.sway
+#        ^^^^^^^^ source.sway variable.other.sway
+#                ^ source.sway
+#                 ^ source.sway keyword.operator.assignment.equal.sway
+#                  ^ source.sway
+#                   ^ source.sway punctuation.brackets.square.sway
+#                    ^ source.sway constant.numeric.decimal.sway
+#                     ^ source.sway punctuation.comma.sway
+#                      ^ source.sway
+#                       ^ source.sway constant.numeric.decimal.sway
+#                        ^ source.sway punctuation.comma.sway
+#                         ^ source.sway
+#                          ^ source.sway constant.numeric.decimal.sway
+#                           ^ source.sway punctuation.brackets.square.sway
+#                            ^ source.sway punctuation.semi.sway
+>    let acceleration = [1, 1, position[1]];
+#^^^^ source.sway
+#    ^^^ source.sway storage.modifier.sway
+#       ^ source.sway
+#        ^^^^^^^^^^^^ source.sway variable.other.sway
+#                    ^ source.sway
+#                     ^ source.sway keyword.operator.assignment.equal.sway
+#                      ^ source.sway
+#                       ^ source.sway punctuation.brackets.square.sway
+#                        ^ source.sway constant.numeric.decimal.sway
+#                         ^ source.sway punctuation.comma.sway
+#                          ^ source.sway
+#                           ^ source.sway constant.numeric.decimal.sway
+#                            ^ source.sway punctuation.comma.sway
+#                             ^ source.sway
+#                              ^^^^^^^^ source.sway variable.other.sway
+#                                      ^ source.sway punctuation.brackets.square.sway
+#                                       ^ source.sway constant.numeric.decimal.sway
+#                                        ^ source.sway punctuation.brackets.square.sway
+#                                         ^ source.sway punctuation.brackets.square.sway
+#                                          ^ source.sway punctuation.semi.sway
+>    let mass = 10;
+#^^^^ source.sway
+#    ^^^ source.sway storage.modifier.sway
+#       ^ source.sway
+#        ^^^^ source.sway variable.other.sway
+#            ^ source.sway
+#             ^ source.sway keyword.operator.assignment.equal.sway
+#              ^ source.sway
+#               ^^ source.sway constant.numeric.decimal.sway
+#                 ^ source.sway punctuation.semi.sway
+>    let p = ~Particle::new(position, velocity, acceleration, mass);
+#^^^^ source.sway
+#    ^^^ source.sway storage.modifier.sway
+#       ^ source.sway
+#        ^ source.sway variable.other.sway
+#         ^ source.sway
+#          ^ source.sway keyword.operator.assignment.equal.sway
+#           ^^ source.sway
+#             ^^^^^^^^ source.sway entity.name.type.sway
+#                     ^^ source.sway keyword.operator.namespace.sway
+#                       ^^^ source.sway meta.function.call.sway entity.name.function.sway
+#                          ^ source.sway meta.function.call.sway punctuation.brackets.round.sway
+#                           ^^^^^^^^ source.sway meta.function.call.sway variable.other.sway
+#                                   ^ source.sway meta.function.call.sway punctuation.comma.sway
+#                                    ^ source.sway meta.function.call.sway
+#                                     ^^^^^^^^ source.sway meta.function.call.sway variable.other.sway
+#                                             ^ source.sway meta.function.call.sway punctuation.comma.sway
+#                                              ^ source.sway meta.function.call.sway
+#                                               ^^^^^^^^^^^^ source.sway meta.function.call.sway variable.other.sway
+#                                                           ^ source.sway meta.function.call.sway punctuation.comma.sway
+#                                                            ^ source.sway meta.function.call.sway
+#                                                             ^^^^ source.sway meta.function.call.sway variable.other.sway
+#                                                                 ^ source.sway meta.function.call.sway punctuation.brackets.round.sway
+#                                                                  ^ source.sway punctuation.semi.sway
+>}
+#^ source.sway punctuation.brackets.curly.sway
+>

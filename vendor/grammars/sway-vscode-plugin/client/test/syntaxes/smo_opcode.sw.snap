@@ -1,0 +1,76 @@
+>script;
+#^^^^^^ source.sway source.sway meta.attribute.sway
+#      ^ source.sway
+>
+>use std::constants::ZERO_B256;
+#^^^ source.sway meta.use.sway keyword.other.sway
+#   ^ source.sway meta.use.sway
+#    ^^^ source.sway meta.use.sway entity.name.namespace.sway
+#       ^^ source.sway meta.use.sway keyword.operator.namespace.sway
+#         ^^^^^^^^^ source.sway meta.use.sway entity.name.namespace.sway
+#                  ^^ source.sway meta.use.sway keyword.operator.namespace.sway
+#                    ^^^^^^^^^ source.sway meta.use.sway
+#                             ^ source.sway meta.use.sway punctuation.semi.sway
+>
+>fn main() -> bool {
+#^^ source.sway meta.function.definition.sway keyword.other.fn.sway
+#  ^ source.sway meta.function.definition.sway
+#   ^^^^ source.sway meta.function.definition.sway entity.name.function.sway
+#       ^ source.sway meta.function.definition.sway punctuation.brackets.round.sway
+#        ^ source.sway meta.function.definition.sway punctuation.brackets.round.sway
+#         ^ source.sway meta.function.definition.sway
+#          ^^ source.sway meta.function.definition.sway keyword.operator.arrow.skinny.sway
+#            ^ source.sway meta.function.definition.sway
+#             ^^^^ source.sway meta.function.definition.sway entity.name.type.primitive.sway
+#                 ^ source.sway meta.function.definition.sway
+#                  ^ source.sway meta.function.definition.sway punctuation.brackets.curly.sway
+>    asm(recipient: ZERO_B256, msg_len: 0, output: 0, coins: 0) {
+#^^^^ source.sway
+#    ^^^ source.sway meta.asm.definition.sway meta.attribute.asm.sway
+#       ^ source.sway meta.asm.definition.sway punctuation.brackets.round.sway
+#        ^^^^^^^^^ source.sway meta.asm.definition.sway variable.other.sway
+#                 ^ source.sway meta.asm.definition.sway keyword.operator.key-value.sway
+#                  ^ source.sway meta.asm.definition.sway
+#                   ^^^^^^^^^ source.sway meta.asm.definition.sway constant.other.caps.sway
+#                            ^ source.sway meta.asm.definition.sway punctuation.comma.sway
+#                             ^ source.sway meta.asm.definition.sway
+#                              ^^^^^^^ source.sway meta.asm.definition.sway variable.other.sway
+#                                     ^ source.sway meta.asm.definition.sway keyword.operator.key-value.sway
+#                                      ^ source.sway meta.asm.definition.sway
+#                                       ^ source.sway meta.asm.definition.sway constant.numeric.decimal.sway
+#                                        ^ source.sway meta.asm.definition.sway punctuation.comma.sway
+#                                         ^ source.sway meta.asm.definition.sway
+#                                          ^^^^^^ source.sway meta.asm.definition.sway variable.other.sway
+#                                                ^ source.sway meta.asm.definition.sway keyword.operator.key-value.sway
+#                                                 ^ source.sway meta.asm.definition.sway
+#                                                  ^ source.sway meta.asm.definition.sway constant.numeric.decimal.sway
+#                                                   ^ source.sway meta.asm.definition.sway punctuation.comma.sway
+#                                                    ^ source.sway meta.asm.definition.sway
+#                                                     ^^^^^ source.sway meta.asm.definition.sway variable.other.sway
+#                                                          ^ source.sway meta.asm.definition.sway keyword.operator.key-value.sway
+#                                                           ^ source.sway meta.asm.definition.sway
+#                                                            ^ source.sway meta.asm.definition.sway constant.numeric.decimal.sway
+#                                                             ^ source.sway meta.asm.definition.sway punctuation.brackets.round.sway
+#                                                              ^ source.sway meta.asm.definition.sway
+#                                                               ^ source.sway meta.asm.definition.sway punctuation.brackets.curly.sway
+>        smo recipient msg_len coins output;
+#^^^^^^^^ source.sway
+#        ^^^ source.sway variable.other.sway
+#           ^ source.sway
+#            ^^^^^^^^^ source.sway variable.other.sway
+#                     ^ source.sway
+#                      ^^^^^^^ source.sway variable.other.sway
+#                             ^ source.sway
+#                              ^^^^^ source.sway variable.other.sway
+#                                   ^ source.sway
+#                                    ^^^^^^ source.sway variable.other.sway
+#                                          ^ source.sway punctuation.semi.sway
+>    }
+#^^^^ source.sway
+#    ^ source.sway punctuation.brackets.curly.sway
+>    true
+#^^^^ source.sway
+#    ^^^^ source.sway constant.language.bool.sway
+>}
+#^ source.sway punctuation.brackets.curly.sway
+>

@@ -1,0 +1,22 @@
+>predicate;
+#^^^^^^^^^ source.sway source.sway meta.attribute.sway
+#         ^ source.sway
+>
+>fn main() -> bool {
+#^^ source.sway meta.function.definition.sway keyword.other.fn.sway
+#  ^ source.sway meta.function.definition.sway
+#   ^^^^ source.sway meta.function.definition.sway entity.name.function.sway
+#       ^ source.sway meta.function.definition.sway punctuation.brackets.round.sway
+#        ^ source.sway meta.function.definition.sway punctuation.brackets.round.sway
+#         ^ source.sway meta.function.definition.sway
+#          ^^ source.sway meta.function.definition.sway keyword.operator.arrow.skinny.sway
+#            ^ source.sway meta.function.definition.sway
+#             ^^^^ source.sway meta.function.definition.sway entity.name.type.primitive.sway
+#                 ^ source.sway meta.function.definition.sway
+#                  ^ source.sway meta.function.definition.sway punctuation.brackets.curly.sway
+>    true
+#^^^^ source.sway
+#    ^^^^ source.sway constant.language.bool.sway
+>}
+#^ source.sway punctuation.brackets.curly.sway
+>

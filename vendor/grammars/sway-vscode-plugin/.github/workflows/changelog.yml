@@ -1,0 +1,19 @@
+name: Update Changelog
+on:
+  # Manually triggered
+  workflow_dispatch:
+
+jobs:
+  update-changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Generate changelog and push
+        uses: BobAnkh/auto-generate-changelog@v1.2.3
+        with:
+          ACCESS_TOKEN: ${{secrets.FUEL_BOT_PAT}}
+          COMMIT_MESSAGE: 'docs(CHANGELOG): Update release notes'
+          PATH: 'CHANGELOG.md'
+          TYPE: 'feat:Feature,fix:Bug Fixes,docs:Documentation,refactor:Refactor,perf:Performance Improvements,chore:Chores'

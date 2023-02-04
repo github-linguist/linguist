@@ -1,0 +1,164 @@
+>script;
+#^^^^^^ source.sway source.sway meta.attribute.sway
+#      ^ source.sway
+>
+>struct MyStruct {
+#^^^^^^ source.sway keyword.declaration.struct.sway
+#      ^ source.sway
+#       ^^^^^^^^ source.sway entity.name.type.struct.sway
+#               ^ source.sway
+#                ^ source.sway punctuation.brackets.curly.sway
+>    a: u64,
+#^^^^ source.sway
+#    ^ source.sway variable.other.sway
+#     ^ source.sway keyword.operator.key-value.sway
+#      ^ source.sway
+#       ^^^ source.sway entity.name.type.numeric.sway
+#          ^ source.sway punctuation.comma.sway
+>    b: u64,
+#^^^^ source.sway
+#    ^ source.sway variable.other.sway
+#     ^ source.sway keyword.operator.key-value.sway
+#      ^ source.sway
+#       ^^^ source.sway entity.name.type.numeric.sway
+#          ^ source.sway punctuation.comma.sway
+>}
+#^ source.sway punctuation.brackets.curly.sway
+>
+>enum MyEnum {
+#^^^^ source.sway keyword.declaration.enum.sway
+#    ^ source.sway
+#     ^^^^^^ source.sway entity.name.type.enum.sway
+#           ^ source.sway
+#            ^ source.sway punctuation.brackets.curly.sway
+>    Variant1: (),
+#^^^^ source.sway
+#    ^^^^^^^^ source.sway entity.name.type.sway
+#            ^ source.sway keyword.operator.key-value.sway
+#             ^ source.sway
+#              ^ source.sway punctuation.brackets.round.sway
+#               ^ source.sway punctuation.brackets.round.sway
+#                ^ source.sway punctuation.comma.sway
+>    Variant2: u64,
+#^^^^ source.sway
+#    ^^^^^^^^ source.sway entity.name.type.sway
+#            ^ source.sway keyword.operator.key-value.sway
+#             ^ source.sway
+#              ^^^ source.sway entity.name.type.numeric.sway
+#                 ^ source.sway punctuation.comma.sway
+>    Variant3: MyStruct,
+#^^^^ source.sway
+#    ^^^^^^^^ source.sway entity.name.type.sway
+#            ^ source.sway keyword.operator.key-value.sway
+#             ^ source.sway
+#              ^^^^^^^^ source.sway entity.name.type.sway
+#                      ^ source.sway punctuation.comma.sway
+>}
+#^ source.sway punctuation.brackets.curly.sway
+>
+>fn main() -> u64 {
+#^^ source.sway meta.function.definition.sway keyword.other.fn.sway
+#  ^ source.sway meta.function.definition.sway
+#   ^^^^ source.sway meta.function.definition.sway entity.name.function.sway
+#       ^ source.sway meta.function.definition.sway punctuation.brackets.round.sway
+#        ^ source.sway meta.function.definition.sway punctuation.brackets.round.sway
+#         ^ source.sway meta.function.definition.sway
+#          ^^ source.sway meta.function.definition.sway keyword.operator.arrow.skinny.sway
+#            ^ source.sway meta.function.definition.sway
+#             ^^^ source.sway meta.function.definition.sway entity.name.type.numeric.sway
+#                ^ source.sway meta.function.definition.sway
+#                 ^ source.sway meta.function.definition.sway punctuation.brackets.curly.sway
+>    let x = MyEnum::Variant1;
+#^^^^ source.sway
+#    ^^^ source.sway storage.modifier.sway
+#       ^ source.sway
+#        ^ source.sway variable.other.sway
+#         ^ source.sway
+#          ^ source.sway keyword.operator.assignment.equal.sway
+#           ^ source.sway
+#            ^^^^^^ source.sway entity.name.type.sway
+#                  ^^ source.sway keyword.operator.namespace.sway
+#                    ^^^^^^^^ source.sway entity.name.type.sway
+#                            ^ source.sway punctuation.semi.sway
+>    let y = MyEnum::Variant2(5);
+#^^^^ source.sway
+#    ^^^ source.sway storage.modifier.sway
+#       ^ source.sway
+#        ^ source.sway variable.other.sway
+#         ^ source.sway
+#          ^ source.sway keyword.operator.assignment.equal.sway
+#           ^ source.sway
+#            ^^^^^^ source.sway entity.name.type.sway
+#                  ^^ source.sway keyword.operator.namespace.sway
+#                    ^^^^^^^^ source.sway meta.function.call.sway entity.name.function.sway
+#                            ^ source.sway meta.function.call.sway punctuation.brackets.round.sway
+#                             ^ source.sway meta.function.call.sway constant.numeric.decimal.sway
+#                              ^ source.sway meta.function.call.sway punctuation.brackets.round.sway
+#                               ^ source.sway punctuation.semi.sway
+>    let z = MyEnum::Variant3(MyStruct {
+#^^^^ source.sway
+#    ^^^ source.sway storage.modifier.sway
+#       ^ source.sway
+#        ^ source.sway variable.other.sway
+#         ^ source.sway
+#          ^ source.sway keyword.operator.assignment.equal.sway
+#           ^ source.sway
+#            ^^^^^^ source.sway entity.name.type.sway
+#                  ^^ source.sway keyword.operator.namespace.sway
+#                    ^^^^^^^^ source.sway meta.function.call.sway entity.name.function.sway
+#                            ^ source.sway meta.function.call.sway punctuation.brackets.round.sway
+#                             ^^^^^^^^ source.sway meta.function.call.sway entity.name.type.sway
+#                                     ^ source.sway meta.function.call.sway
+#                                      ^ source.sway meta.function.call.sway punctuation.brackets.curly.sway
+>        a: 0, b: 1
+#^^^^^^^^ source.sway meta.function.call.sway
+#        ^ source.sway meta.function.call.sway variable.other.sway
+#         ^ source.sway meta.function.call.sway keyword.operator.key-value.sway
+#          ^ source.sway meta.function.call.sway
+#           ^ source.sway meta.function.call.sway constant.numeric.decimal.sway
+#            ^ source.sway meta.function.call.sway punctuation.comma.sway
+#             ^ source.sway meta.function.call.sway
+#              ^ source.sway meta.function.call.sway variable.other.sway
+#               ^ source.sway meta.function.call.sway keyword.operator.key-value.sway
+#                ^ source.sway meta.function.call.sway
+#                 ^ source.sway meta.function.call.sway constant.numeric.decimal.sway
+>    });
+#^^^^ source.sway meta.function.call.sway
+#    ^ source.sway meta.function.call.sway punctuation.brackets.curly.sway
+#     ^ source.sway meta.function.call.sway punctuation.brackets.round.sway
+#      ^ source.sway punctuation.semi.sway
+>
+>    match y {
+#^^^^ source.sway
+#    ^^^^^ source.sway keyword.control.sway
+#         ^ source.sway
+#          ^ source.sway variable.other.sway
+#           ^ source.sway
+#            ^ source.sway punctuation.brackets.curly.sway
+>        MyEnum::Variant2(y) => y, _ => 10, 
+#^^^^^^^^ source.sway
+#        ^^^^^^ source.sway entity.name.type.sway
+#              ^^ source.sway keyword.operator.namespace.sway
+#                ^^^^^^^^ source.sway meta.function.call.sway entity.name.function.sway
+#                        ^ source.sway meta.function.call.sway punctuation.brackets.round.sway
+#                         ^ source.sway meta.function.call.sway variable.other.sway
+#                          ^ source.sway meta.function.call.sway punctuation.brackets.round.sway
+#                           ^ source.sway
+#                            ^^ source.sway keyword.operator.arrow.fat.sway
+#                              ^ source.sway
+#                               ^ source.sway variable.other.sway
+#                                ^ source.sway punctuation.comma.sway
+#                                 ^ source.sway
+#                                  ^ source.sway variable.other.sway
+#                                   ^ source.sway
+#                                    ^^ source.sway keyword.operator.arrow.fat.sway
+#                                      ^ source.sway
+#                                       ^^ source.sway constant.numeric.decimal.sway
+#                                         ^ source.sway punctuation.comma.sway
+#                                          ^^ source.sway
+>    }
+#^^^^ source.sway
+#    ^ source.sway punctuation.brackets.curly.sway
+>}
+#^ source.sway punctuation.brackets.curly.sway
+>

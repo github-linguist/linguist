@@ -1,0 +1,180 @@
+>script;
+#^^^^^^ source.sway source.sway meta.attribute.sway
+#      ^ source.sway
+>
+>enum Result<T, E> {
+#^^^^ source.sway keyword.declaration.enum.sway
+#    ^ source.sway
+#     ^^^^^^ source.sway entity.name.type.enum.sway
+#           ^ source.sway punctuation.brackets.angle.sway
+#            ^ source.sway entity.name.type.sway
+#             ^ source.sway punctuation.comma.sway
+#              ^ source.sway
+#               ^ source.sway entity.name.type.sway
+#                ^ source.sway punctuation.brackets.angle.sway
+#                 ^ source.sway
+#                  ^ source.sway punctuation.brackets.curly.sway
+>    Ok: T,
+#^^^^ source.sway
+#    ^^ source.sway entity.name.type.result.sway
+#      ^ source.sway keyword.operator.key-value.sway
+#       ^ source.sway
+#        ^ source.sway entity.name.type.sway
+#         ^ source.sway punctuation.comma.sway
+>    Err: E,
+#^^^^ source.sway
+#    ^^^ source.sway entity.name.type.result.sway
+#       ^ source.sway keyword.operator.key-value.sway
+#        ^ source.sway
+#         ^ source.sway entity.name.type.sway
+#          ^ source.sway punctuation.comma.sway
+>}
+#^ source.sway punctuation.brackets.curly.sway
+>
+>// should return 5
+#^^^^^^^^^^^^^^^^^^ source.sway comment.line.double-slash.sway
+>fn main() -> u64 {
+#^^ source.sway meta.function.definition.sway keyword.other.fn.sway
+#  ^ source.sway meta.function.definition.sway
+#   ^^^^ source.sway meta.function.definition.sway entity.name.function.sway
+#       ^ source.sway meta.function.definition.sway punctuation.brackets.round.sway
+#        ^ source.sway meta.function.definition.sway punctuation.brackets.round.sway
+#         ^ source.sway meta.function.definition.sway
+#          ^^ source.sway meta.function.definition.sway keyword.operator.arrow.skinny.sway
+#            ^ source.sway meta.function.definition.sway
+#             ^^^ source.sway meta.function.definition.sway entity.name.type.numeric.sway
+#                ^ source.sway meta.function.definition.sway
+#                 ^ source.sway meta.function.definition.sway punctuation.brackets.curly.sway
+>    let result_a = Result::Ok::<u64, bool>(5u64);
+#^^^^ source.sway
+#    ^^^ source.sway storage.modifier.sway
+#       ^ source.sway
+#        ^^^^^^^^ source.sway variable.other.sway
+#                ^ source.sway
+#                 ^ source.sway keyword.operator.assignment.equal.sway
+#                  ^ source.sway
+#                   ^^^^^^ source.sway entity.name.type.sway
+#                         ^^ source.sway keyword.operator.namespace.sway
+#                           ^^ source.sway entity.name.type.result.sway
+#                             ^^ source.sway keyword.operator.namespace.sway
+#                               ^ source.sway punctuation.brackets.angle.sway
+#                                ^^^ source.sway entity.name.type.numeric.sway
+#                                   ^ source.sway punctuation.comma.sway
+#                                    ^ source.sway
+#                                     ^^^^ source.sway entity.name.type.primitive.sway
+#                                         ^ source.sway punctuation.brackets.angle.sway
+#                                          ^ source.sway punctuation.brackets.round.sway
+#                                           ^ source.sway constant.numeric.decimal.sway
+#                                            ^^^ source.sway constant.numeric.decimal.sway entity.name.type.numeric.sway
+#                                               ^ source.sway punctuation.brackets.round.sway
+#                                                ^ source.sway punctuation.semi.sway
+>    let result_b = Result::Err::<u64, bool>(false);
+#^^^^ source.sway
+#    ^^^ source.sway storage.modifier.sway
+#       ^ source.sway
+#        ^^^^^^^^ source.sway variable.other.sway
+#                ^ source.sway
+#                 ^ source.sway keyword.operator.assignment.equal.sway
+#                  ^ source.sway
+#                   ^^^^^^ source.sway entity.name.type.sway
+#                         ^^ source.sway keyword.operator.namespace.sway
+#                           ^^^ source.sway entity.name.type.result.sway
+#                              ^^ source.sway keyword.operator.namespace.sway
+#                                ^ source.sway punctuation.brackets.angle.sway
+#                                 ^^^ source.sway entity.name.type.numeric.sway
+#                                    ^ source.sway punctuation.comma.sway
+#                                     ^ source.sway
+#                                      ^^^^ source.sway entity.name.type.primitive.sway
+#                                          ^ source.sway punctuation.brackets.angle.sway
+#                                           ^ source.sway punctuation.brackets.round.sway
+#                                            ^^^^^ source.sway constant.language.bool.sway
+#                                                 ^ source.sway punctuation.brackets.round.sway
+#                                                  ^ source.sway punctuation.semi.sway
+>
+>    if let Result::Err(a) = result_a {
+#^^^^ source.sway
+#    ^^ source.sway keyword.control.sway
+#      ^ source.sway
+#       ^^^ source.sway storage.modifier.sway
+#          ^ source.sway
+#           ^^^^^^ source.sway entity.name.type.sway
+#                 ^^ source.sway keyword.operator.namespace.sway
+#                   ^^^ source.sway entity.name.type.result.sway
+#                      ^ source.sway punctuation.brackets.round.sway
+#                       ^ source.sway variable.other.sway
+#                        ^ source.sway punctuation.brackets.round.sway
+#                         ^ source.sway
+#                          ^ source.sway keyword.operator.assignment.equal.sway
+#                           ^ source.sway
+#                            ^^^^^^^^ source.sway variable.other.sway
+#                                    ^ source.sway
+#                                     ^ source.sway punctuation.brackets.curly.sway
+>        6
+#^^^^^^^^ source.sway
+#        ^ source.sway constant.numeric.decimal.sway
+>    } else if let Result::Ok(num) = result_b {
+#^^^^ source.sway
+#    ^ source.sway punctuation.brackets.curly.sway
+#     ^ source.sway
+#      ^^^^ source.sway keyword.control.sway
+#          ^ source.sway
+#           ^^ source.sway keyword.control.sway
+#             ^ source.sway
+#              ^^^ source.sway storage.modifier.sway
+#                 ^ source.sway
+#                  ^^^^^^ source.sway entity.name.type.sway
+#                        ^^ source.sway keyword.operator.namespace.sway
+#                          ^^ source.sway entity.name.type.result.sway
+#                            ^ source.sway punctuation.brackets.round.sway
+#                             ^^^ source.sway variable.other.sway
+#                                ^ source.sway punctuation.brackets.round.sway
+#                                 ^ source.sway
+#                                  ^ source.sway keyword.operator.assignment.equal.sway
+#                                   ^ source.sway
+#                                    ^^^^^^^^ source.sway variable.other.sway
+#                                            ^ source.sway
+#                                             ^ source.sway punctuation.brackets.curly.sway
+>        10
+#^^^^^^^^ source.sway
+#        ^^ source.sway constant.numeric.decimal.sway
+>    } else if let Result::Ok(num) = result_a {
+#^^^^ source.sway
+#    ^ source.sway punctuation.brackets.curly.sway
+#     ^ source.sway
+#      ^^^^ source.sway keyword.control.sway
+#          ^ source.sway
+#           ^^ source.sway keyword.control.sway
+#             ^ source.sway
+#              ^^^ source.sway storage.modifier.sway
+#                 ^ source.sway
+#                  ^^^^^^ source.sway entity.name.type.sway
+#                        ^^ source.sway keyword.operator.namespace.sway
+#                          ^^ source.sway entity.name.type.result.sway
+#                            ^ source.sway punctuation.brackets.round.sway
+#                             ^^^ source.sway variable.other.sway
+#                                ^ source.sway punctuation.brackets.round.sway
+#                                 ^ source.sway
+#                                  ^ source.sway keyword.operator.assignment.equal.sway
+#                                   ^ source.sway
+#                                    ^^^^^^^^ source.sway variable.other.sway
+#                                            ^ source.sway
+#                                             ^ source.sway punctuation.brackets.curly.sway
+>        num
+#^^^^^^^^ source.sway
+#        ^^^ source.sway variable.other.sway
+>    } else {
+#^^^^ source.sway
+#    ^ source.sway punctuation.brackets.curly.sway
+#     ^ source.sway
+#      ^^^^ source.sway keyword.control.sway
+#          ^ source.sway
+#           ^ source.sway punctuation.brackets.curly.sway
+>        42
+#^^^^^^^^ source.sway
+#        ^^ source.sway constant.numeric.decimal.sway
+>    }
+#^^^^ source.sway
+#    ^ source.sway punctuation.brackets.curly.sway
+>}
+#^ source.sway punctuation.brackets.curly.sway
+>

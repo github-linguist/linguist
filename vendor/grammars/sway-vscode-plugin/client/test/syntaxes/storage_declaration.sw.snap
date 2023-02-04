@@ -1,0 +1,58 @@
+>contract;
+#^^^^^^^^ source.sway source.sway meta.attribute.sway
+#        ^ source.sway
+>storage {
+#^^^^^^^ source.sway variable.other.sway
+#       ^ source.sway
+#        ^ source.sway punctuation.brackets.curly.sway
+>    supply: u64 = 0,
+#^^^^ source.sway
+#    ^^^^^^ source.sway variable.other.sway
+#          ^ source.sway keyword.operator.key-value.sway
+#           ^ source.sway
+#            ^^^ source.sway entity.name.type.numeric.sway
+#               ^ source.sway
+#                ^ source.sway keyword.operator.assignment.equal.sway
+#                 ^ source.sway
+#                  ^ source.sway constant.numeric.decimal.sway
+#                   ^ source.sway punctuation.comma.sway
+>    demand: u64 = 0,
+#^^^^ source.sway
+#    ^^^^^^ source.sway variable.other.sway
+#          ^ source.sway keyword.operator.key-value.sway
+#           ^ source.sway
+#            ^^^ source.sway entity.name.type.numeric.sway
+#               ^ source.sway
+#                ^ source.sway keyword.operator.assignment.equal.sway
+#                 ^ source.sway
+#                  ^ source.sway constant.numeric.decimal.sway
+#                   ^ source.sway punctuation.comma.sway
+>    name: str[4] = "test",
+#^^^^ source.sway
+#    ^^^^ source.sway variable.other.sway
+#        ^ source.sway keyword.operator.key-value.sway
+#         ^ source.sway
+#          ^^^ source.sway entity.name.type.primitive.sway
+#             ^ source.sway punctuation.brackets.square.sway
+#              ^ source.sway constant.numeric.decimal.sway
+#               ^ source.sway punctuation.brackets.square.sway
+#                ^ source.sway
+#                 ^ source.sway keyword.operator.assignment.equal.sway
+#                  ^ source.sway
+#                   ^ source.sway string.quoted.double.sway punctuation.definition.string.sway
+#                    ^^^^ source.sway string.quoted.double.sway
+#                        ^ source.sway string.quoted.double.sway punctuation.definition.string.sway
+#                         ^ source.sway punctuation.comma.sway
+>}
+#^ source.sway punctuation.brackets.curly.sway
+>fn main() {
+#^^ source.sway meta.function.definition.sway keyword.other.fn.sway
+#  ^ source.sway meta.function.definition.sway
+#   ^^^^ source.sway meta.function.definition.sway entity.name.function.sway
+#       ^ source.sway meta.function.definition.sway punctuation.brackets.round.sway
+#        ^ source.sway meta.function.definition.sway punctuation.brackets.round.sway
+#         ^ source.sway meta.function.definition.sway
+#          ^ source.sway meta.function.definition.sway punctuation.brackets.curly.sway
+>}
+#^ source.sway punctuation.brackets.curly.sway
+>

@@ -1,0 +1,49 @@
+>script;
+#^^^^^^ source.sway source.sway meta.attribute.sway
+#      ^ source.sway
+>
+>const GLOBAL_VAL: u64 = 99;
+#^^^^^ source.sway storage.type.sway
+#     ^ source.sway
+#      ^^^^^^^^^^ source.sway constant.other.caps.sway
+#                ^ source.sway keyword.operator.key-value.sway
+#                 ^ source.sway
+#                  ^^^ source.sway entity.name.type.numeric.sway
+#                     ^ source.sway
+#                      ^ source.sway keyword.operator.assignment.equal.sway
+#                       ^ source.sway
+#                        ^^ source.sway constant.numeric.decimal.sway
+#                          ^ source.sway punctuation.semi.sway
+>
+>fn main() -> u64 {
+#^^ source.sway meta.function.definition.sway keyword.other.fn.sway
+#  ^ source.sway meta.function.definition.sway
+#   ^^^^ source.sway meta.function.definition.sway entity.name.function.sway
+#       ^ source.sway meta.function.definition.sway punctuation.brackets.round.sway
+#        ^ source.sway meta.function.definition.sway punctuation.brackets.round.sway
+#         ^ source.sway meta.function.definition.sway
+#          ^^ source.sway meta.function.definition.sway keyword.operator.arrow.skinny.sway
+#            ^ source.sway meta.function.definition.sway
+#             ^^^ source.sway meta.function.definition.sway entity.name.type.numeric.sway
+#                ^ source.sway meta.function.definition.sway
+#                 ^ source.sway meta.function.definition.sway punctuation.brackets.curly.sway
+>    const LOCAL_VAL = 1;
+#^^^^ source.sway
+#    ^^^^^ source.sway storage.type.sway
+#         ^ source.sway
+#          ^^^^^^^^^ source.sway constant.other.caps.sway
+#                   ^ source.sway
+#                    ^ source.sway keyword.operator.assignment.equal.sway
+#                     ^ source.sway
+#                      ^ source.sway constant.numeric.decimal.sway
+#                       ^ source.sway punctuation.semi.sway
+>    GLOBAL_VAL + LOCAL_VAL
+#^^^^ source.sway
+#    ^^^^^^^^^^ source.sway constant.other.caps.sway
+#              ^ source.sway
+#               ^ source.sway keyword.operator.math.sway
+#                ^ source.sway
+#                 ^^^^^^^^^ source.sway constant.other.caps.sway
+>}
+#^ source.sway punctuation.brackets.curly.sway
+>
