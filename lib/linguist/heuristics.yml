@@ -664,6 +664,10 @@ disambiguations:
   rules:
   - language: STL
     pattern: '\A\s*solid(?=$|\s)(?m:.*?)\Rendsolid(?:$|\s)'
+- extensions: ['.sw']
+  rules:
+  - language: Sway
+    pattern: '^(dep |fn |mod |pub |trait |impl |abi #!?\[)'
 - extensions: ['.t']
   rules:
   - language: Perl

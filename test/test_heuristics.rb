@@ -895,6 +895,12 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_sw_by_heuristics
+    assert_heuristics({
+      "Sway" => all_fixtures("Sway", "*.sw"),
+    })
+  end
+
   def test_t_by_heuristics
     # Turing not fully covered.
     assert_heuristics({
