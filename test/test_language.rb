@@ -294,7 +294,7 @@ class TestLanguage < Minitest::Test
     assert_equal '#701516', Language['Ruby'].color
     assert_equal '#3572A5', Language['Python'].color
     assert_equal '#f1e05a', Language['JavaScript'].color
-    assert_equal '#2b7489', Language['TypeScript'].color
+    assert_equal '#3178c6', Language['TypeScript'].color
     assert_equal '#3d9970', Language['LSL'].color
   end
 
@@ -406,7 +406,8 @@ class TestLanguage < Minitest::Test
     ace_fixture_path = File.join('test', 'fixtures', 'ace_modes.json')
     skip("No ace_modes.json file") unless File.exist?(ace_fixture_path)
 
-    ace_github_modes = Yajl.load(File.read(ace_fixture_path))
+    ace_modes = Yajl.load(File.read(ace_fixture_path))
+    ace_github_modes = ace_modes[0].concat(ace_modes[1])
     existing_ace_modes = ace_github_modes.map do |ace_github_mode|
       File.basename(ace_github_mode["name"], ".js") if ace_github_mode["name"]  !~ /_highlight_rules|_test|_worker/
     end.compact.uniq.sort.map(&:downcase)

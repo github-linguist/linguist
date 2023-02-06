@@ -63,4 +63,5 @@ var IgnoredFiles = map[string]bool{
 	"liquid-tm-grammar/tests/syntaxes/html.tmLanguage.json":       true,
 	"liquid-tm-grammar/tests/syntaxes/javascript.tmLanguage.json": true,
 	"liquid-tm-grammar/tests/syntaxes/json.tmLanguage.json":       true,
+	"godot-vscode-plugin/syntaxes/.prettierrc.json":               true,
 }

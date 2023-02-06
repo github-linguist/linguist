@@ -94,10 +94,32 @@ disambiguations:
     pattern: '(<^\s*; |End Function)'
   - language: BitBake
     pattern: '^\s*(# |include|require)\b'
+  - language: Clojure
+    pattern: '\((def|defn|defmacro|let)\s'
+- extensions: ['.bf']
+  rules:
+  - language: Beef
+    pattern: '(?-m)^\s*using\s+(System|Beefy)(\.(.*))?;\s*$'
+  - language: HyPhy
+    pattern:
+    - '(?-m)^\s*#include\s+".*";\s*$'
+    - '\sfprintf\s*\('
+  - language: Brainfuck
+    pattern: '(>\+>|>\+<)'
 - extensions: ['.bi']
   rules:
   - language: FreeBasic
     pattern: '^[ \t]*#(?:define|endif|endmacro|ifn?def|if|include|lang|macro)\s'
+- extensions: ['.bs']
+  rules:
+  - language: Bikeshed
+    pattern: '^(?i:<pre\s+class)\s*=\s*(''|\"|\b)metadata\b\1[^>\r\n]*>'
+  - language: BrighterScript
+    pattern:
+    - (?i:^\s*(?=^sub\s)(?:sub\s*\w+\(.*?\))|(?::\s*sub\(.*?\))$)
+    - (?i:^\s*(end\ssub)$)
+    - (?i:^\s*(?=^function\s)(?:function\s*\w+\(.*?\)\s*as\s*\w*)|(?::\s*function\(.*?\)\s*as\s*\w*)$)
+    - (?i:^\s*(end\sfunction)$)
 - extensions: ['.builds']
   rules:
   - language: XML
@@ -116,6 +138,12 @@ disambiguations:
     pattern: '\/\* |\/\/ |^\}'
 - extensions: ['.cls']
   rules:
+  - language: Visual Basic 6.0
+    and:
+    - named_pattern: vb-class
+    - pattern: '^\s*BEGIN\R\s*MultiUse\s*=.*\R\s*Persistable\s*='
+  - language: VBA
+    named_pattern: vb-class  
   - language: TeX
     pattern: '^\s*\\(?:NeedsTeXFormat|ProvidesClass){'
   - language: ObjectScript
@@ -129,7 +157,7 @@ disambiguations:
   - language: Smalltalk
     pattern: '![\w\s]+methodsFor: '
   - language: 'C#'
-    pattern: '^(\s*namespace\s*[\w\.]+\s*{|\s*\/\/)'
+    pattern: '^\s*(using\s+[A-Z][\s\w.]+;|namespace\s*[\w\.]+\s*({|;)|\/\/)'
 - extensions: ['.csc']
   rules:
   - language: GSC
@@ -217,6 +245,16 @@ disambiguations:
   - language: Frege
     pattern: '^\s*(import|module|package|data|type) '
   - language: Text
+- extensions: ['.frm']
+  rules:
+  - language: VBA
+    and:
+    - named_pattern: vb-form
+    - pattern: '^\s*Begin\s+{[0-9A-Z\-]*}\s?'
+  - language: Visual Basic 6.0
+    and:
+    - named_pattern: vb-form
+    - pattern: '^\s*Begin\s+VB\.Form\s+'  
 - extensions: ['.fs']
   rules:
   - language: Forth
@@ -233,6 +271,12 @@ disambiguations:
     pattern: '^(?:<|[a-zA-Z-][a-zA-Z0-9_-]+[ \t]+\w)|\${\w+[^\n]*?}|^[ \t]*(?:<#--.*?-->|<#([a-z]+)(?=\s|>)[^>]*>.*?</#\1>|\[#--.*?--\]|\[#([a-z]+)(?=\s|\])[^\]]*\].*?\[#\2\])'
   - language: Fluent
     pattern: '^-?[a-zA-Z][a-zA-Z0-9_-]* *=|\{\$-?[a-zA-Z][-\w]*(?:\.[a-zA-Z][-\w]*)?\}'
+- extensions: ['.g']
+  rules:
+  - language: GAP
+    pattern: '\s*(Declare|BindGlobal|KeyDependentOperation|Install(Method|GlobalFunction)|SetPackageInfo)'
+  - language: G-code
+    pattern: '^[MG][0-9]+\n'
 - extensions: ['.gd']
   rules:
   - language: GAP
@@ -275,6 +319,11 @@ disambiguations:
   rules:
   - language: Hack
     pattern: '<\?hh'
+- extensions: ['.html']
+  rules:
+  - language: Ecmarkup
+    pattern: '<emu-(?:alg|annex|biblio|clause|eqn|example|figure|gann|gmod|gprose|grammar|intro|not-ref|note|nt|prodref|production|rhs|table|t|xref)(?:$|\s|>)'
+  - language: HTML
 - extensions: ['.i']
   rules:
   - language: Motorola 68K Assembly
@@ -310,6 +359,13 @@ disambiguations:
     pattern:
     - '(?i:^\s*{\$(?:mode|ifdef|undef|define)[ ]+[a-z0-9_]+})'
     - '^\s*end[.;]\s*$'
+- extensions: ['.json']
+  rules:
+  - language: OASv2-json
+    pattern: '"swagger":\s?"2.[0-9.]+"'
+  - language: OASv3-json
+    pattern: '"openapi":\s?"3.[0-9.]+"'
+  - language: JSON
 - extensions: ['.l']
   rules:
   - language: Common Lisp
@@ -360,6 +416,14 @@ disambiguations:
   rules:
   - language: Unity3D Asset
     pattern: 'tag:unity3d.com'
+- extensions: ['.mc']
+  rules:
+  - language: Win32 Message File
+    pattern: '(?i)^[ \t]*(?>\/\*\s*)?MessageId=|^\.$'
+  - language: M4
+    pattern: '^dnl|^divert\((?:-?\d+)?\)|^\w+\(`[^\n]*?''[),]'
+  - language: Monkey C
+    pattern: '\b(?:using|module|function|class|var)\s+\w'
 - extensions: ['.md']
   rules:
   - language: Markdown
@@ -440,7 +504,7 @@ disambiguations:
 - extensions: ['.plist']
   rules:
   - language: XML Property List
-    pattern: '<!DOCTYPE\s+plist'
+    pattern: '^\s*(?:<\?xml\s|<!DOCTYPE\s+plist|<plist(?:\s+version\s*=\s*(["''])\d+(?:\.\d+)?\1)?\s*>\s*$)'
   - language: OpenStep Property List
 - extensions: ['.pm']
   rules:
@@ -474,7 +538,7 @@ disambiguations:
     - pattern: HEADERS
     - pattern: SOURCES
   - language: IDL
-    pattern: '^\s*function[ \w,]+$'
+    pattern: '^\s*(?i:function|pro|compile_opt) \w[ \w,:]*$'
 - extensions: ['.properties']
   rules:
   - language: INI
@@ -553,6 +617,13 @@ disambiguations:
     pattern: '(?i:\^(this|super)\.|^\s*~\w+\s*=\.)'
   - language: Scala
     pattern: '(^\s*import (scala|java)\.|^\s*class\b)'
+- extensions: ['.scd']
+  rules:
+  - language: SuperCollider
+    pattern: '(?i:\^(this|super)\.|^\s*(~\w+\s*=\.|SynthDef\b))'
+  - language: Markdown
+    # Markdown syntax for scdoc
+    pattern: '^#+\s+(NAME|SYNOPSIS|DESCRIPTION)'
 - extensions: ['.sol']
   rules:
   - language: Solidity
@@ -584,6 +655,15 @@ disambiguations:
     pattern: '\$\w+[($]|(.)!\s*.+?\s*!\1|<!\s*.+?\s*!>|\[!\s*.+?\s*!\]|\{!\s*.+?\s*!\}'
   - language: Smalltalk
     pattern: '\A\s*[\[{(^"''\w#]|[a-zA-Z_]\w*\s*:=\s*[a-zA-Z_]\w*|class\s*>>\s*[a-zA-Z_]\w*|^[a-zA-Z_]\w*\s+[a-zA-Z_]\w*:|^Class\s*{|if(?:True|False):\s*\['
+- extensions: ['.star']
+  rules:
+  - language: STAR
+    pattern: '^loop_\s*$'
+  - language: Starlark
+- extensions: ['.stl']
+  rules:
+  - language: STL
+    pattern: '\A\s*solid(?=$|\s)(?m:.*?)\Rendsolid(?:$|\s)'
 - extensions: ['.t']
   rules:
   - language: Perl
@@ -592,6 +672,10 @@ disambiguations:
     pattern: '^\s*(?:use\s+v6\b|\bmodule\b|\bmy\s+class\b)'
   - language: Turing
     pattern: '^\s*%[ \t]+|^\s*var\s+\w+(\s*:\s*\w+)?\s*:=\s*\w+'
+- extensions: ['.tag']
+  rules:
+  - language: Java Server Pages
+    pattern: '<%[@!=\s]?\s*(taglib|tag|include|attribute|variable)\s'
 - extensions: ['.toc']
   rules:
   - language: World of Warcraft Addon Data
@@ -621,9 +705,34 @@ disambiguations:
     # VIM_MODELINE pattern in `./lib/linguist/strategy/modeline.rb`.
   - language: Vim Help File
     pattern: '(?:(?:^|[ \t])(?:vi|Vi(?=m))(?:m[<=>]?[0-9]+|m)?|[ \t]ex)(?=:(?=[ \t]*set?[ \t][^\r\n:]+:)|:(?![ \t]*set?[ \t]))(?:(?:[ \t]*:[ \t]*|[ \t])\w*(?:[ \t]*=(?:[^\\\s]|\\.)*)?)*[ \t:](?:filetype|ft|syntax)[ \t]*=(help)(?=$|\s|:)'
+  - language: Adblock Filter List
+    pattern: |-
+      (?x)\A
+      \[
+      (?<version>
+        (?:
+          [Aa]d[Bb]lock
+          (?:[ \t][Pp]lus)?
+          |
+          u[Bb]lock
+          (?:[ \t][Oo]rigin)?
+          |
+          [Aa]d[Gg]uard
+        )
+        (?:[ \t] \d+(?:\.\d+)*+)?
+      )
+      (?:
+        [ \t]?;[ \t]?
+        \g<version>
+      )*+
+      \]
     # HACK: This is a contrived use of heuristics needed to address
     # an unusual edge-case. See https://git.io/JULye for discussion.
   - language: Text
+- extensions: ['.url']
+  rules:
+  - language: INI
+    pattern: '^\[InternetShortcut\]\R(?>[^\s\[][^\n]*\R)*URL='
 - extensions: ['.v']
   rules:
   - language: Coq
@@ -653,11 +762,15 @@ disambiguations:
     pattern: '^%(end|ctor|hook|group)\b'
   - language: Linker Script
     pattern: 'OUTPUT_ARCH\(|OUTPUT_FORMAT\(|SECTIONS'
-- extensions: ['.yaml']
+- extensions: ['.yaml', '.yml']
   rules:
   - language: MiniYAML
     pattern: '^\t+.*?[^\s:].*?:'
     negative_pattern: '---'
+  - language: OASv2-yaml
+    pattern: 'swagger:\s?''?"?2.[0-9.]+''?"?'
+  - language: OASv3-yaml
+    pattern: 'openapi:\s?''?"?3.[0-9.]+''?"?'
   - language: YAML
 - extensions: ['.yy']
   rules:
@@ -700,3 +813,5 @@ named_patterns:
   objectivec: '^\s*(@(interface|class|protocol|property|end|synchronised|selector|implementation)\b|#import\s+.+\.h[">])'
   perl5: '\buse\s+(?:strict\b|v?5\.)'
   perl6: '^\s*(?:use\s+v6\b|\bmodule\b|\b(?:my\s+)?class\b)'
+  vb-class: '^\s*VERSION\s+[0-9]\.[0-9]\s+CLASS'
+  vb-form: '^\s*VERSION\s+[0-9]\.[0-9]{2}'
