@@ -1,0 +1,328 @@
+(ns phel\test
+  (:use Phel\Lang\Symbol)
+  (:use Phel\Lang\Registry)
+  (:use Phel\Compiler\Infrastructure\Munge)
+  (:use Phel\Command\CommandFacade))
+
+# ------
+# Report
+# ------
+
+(def- stats (var {:failed []
+                  :counts {:failed 0
+                           :error 0
+                           :pass 0
+                           :total 0}}))
+
+(defn- print-report-state [state]
+  (print (case state
+           :failed "F"
+           :pass "."
+           :error "E")))
+
+(defn- should-report-println? [total-columns]
+  (= (% (get-in (deref stats) [:counts :total]) total-columns) 0))
+
+(defn report [data]
+  (let [{:state state :type type} data
+        ok (= state :pass)
+        total-columns 80]
+    (print-report-state state)
+    (swap! stats update-in [:counts :total] inc)
+    (swap! stats update-in [:counts state] inc)
+    (when (should-report-println? total-columns) (println))
+    (when-not ok
+      (swap! stats update-in [:failed] push data))))
+
+
+# ---------------------------
+# `is` macro and its asserts
+# ---------------------------
+
+(defn- location [form]
+  (let [loc (php/-> form (getStartLocation))]
+    (when loc
+      {:file (php/-> loc (getFile))
+       :line (php/-> loc (getLine))
+       :column (php/-> loc (getColumn))})))
+
+(defn- assert-predicate [form message negated]
+  (let [pred (first form)
+        value (second form)
+        value-evaluated (gensym)
+        type (if negated :predicate-not :predicate)
+        loc (location form)
+        result (gensym)
+        report-data (gensym)]
+    `(let [,value-evaluated ,value
+           ,result (,pred ,value-evaluated)
+           ,result (if ,negated (not ,result) ,result)
+           ,report-data {:type ,type
+                         :message ,message
+                         :location ,loc
+                         :pred ',pred
+                         :value ',value
+                         :form ',form
+                         :result ,value-evaluated}]
+       (if ,result
+         (report (merge ,report-data {:state :pass}))
+         (report (merge ,report-data {:state :failed}))))))
+
+(defn- assert-binary [form message negated]
+  (let [pred (first form)
+        expected (second form)
+        actual (second (next form))
+        type (if negated :binary :binary-not)
+        loc (location form)
+        expected-evaluated (gensym)
+        actual-evaluated (gensym)
+        result (gensym)
+        report-data (gensym)]
+    `(let [,expected-evaluated ,expected
+           ,actual-evaluated ,actual
+           ,result (,pred ,expected-evaluated ,actual-evaluated)
+           ,result (if ,negated (not ,result) ,result)
+           ,report-data {:type ,type
+                         :message ,message
+                         :location ,loc
+                         :pred ',pred
+                         :expected ,expected-evaluated
+                         :actual ',actual
+                         :form ',form
+                         :result ,actual-evaluated}]
+       (if ,result
+         (report (merge ,report-data {:type :binary :state :pass}))
+         (report (merge ,report-data {:type :binary :state :failed}))))))
+
+(defn- assert-output [form message]
+  (let [expected (second form)
+        body (second (next form))]
+    (assert-binary `(= ,expected (with-output-buffer ,body)) message false)))
+
+(defn- assert-thrown [form message]
+  (let [exception-symbol (second form)
+        body (nnext form)
+        loc (location form)
+        report-data (gensym)
+        e (gensym)]
+    `(let [,report-data {:type :thrown
+                         :location ,loc
+                         :form ',form
+                         :exception-symbol ,(str exception-symbol)
+                         :message ,message}]
+       (try
+         ,@body
+         (report (merge ,report-data {:state :failed}))
+         (catch ,exception-symbol ,e
+           (report (merge ,report-data {:state :pass})))))))
+
+(defn- assert-thrown-with-msg [form message]
+  (let [exception-symbol (second form)
+        expected-message (second (next form))
+        body (next (nnext form))
+        loc (location form)
+        actual-message (gensym)
+        report-data (gensym)
+        e (gensym)]
+    `(let [,report-data {:type :thrown-with-msg
+                         :form ',form
+                         :location ,loc
+                         :exception-symbol ,(str exception-symbol)
+                         :expected-message ,expected-message
+                         :message ,message}]
+       (try
+         ,@body
+         (report (merge ,report-data {:state :failed :actual-message nil}))
+         (catch ,exception-symbol ,e
+           (let [,actual-message (php/-> ,e (getMessage))]
+             (if (= ,expected-message ,actual-message)
+               (report (merge ,report-data {:state :pass :actual-message ,actual-message}))
+               (report (merge ,report-data {:state :failed :actual-message ,actual-message})))))))))
+
+(defn- assert-any [form message]
+  (let [loc (location form)
+        result (gensym)
+        report-data (gensym)]
+    `(let [,result ,form
+           ,report-data {:type :any
+                         :message ,message
+                         :location ,loc
+                         :form ',form
+                         :result ,result}]
+       (if ,result
+         (report (merge ,report-data {:state :pass}))
+         (report (merge ,report-data {:state :failed}))))))
+
+(defn- assert-expr [form message]
+  (cond
+    (and (list? form) (= (first form) 'not) (list? (second form)) (= 3 (count (second form))))
+    (assert-binary form message true)
+    (and (list? form) (= (first form) 'not) (list? (second form)) (= 2 (count (second form))))
+    (assert-predicate form message true)
+    (and (list? form) (= (first form) 'thrown?))
+    (assert-thrown form message)
+    (and (list? form) (= (first form) 'thrown-with-msg?))
+    (assert-thrown-with-msg form message)
+    (and (list? form) (= (first form) 'output?))
+    (assert-output form message)
+    (and (list? form) (= 3 (count form)))
+    (assert-binary form message false)
+    (and (list? form) (= 2 (count form)))
+    (assert-predicate form message false)
+    (assert-any form message)))
+
+(defmacro is
+  "Generic assertion macro."
+  [form & [message]]
+  (let [loc (location form) e (gensym)]
+    `(try ,(assert-expr form message)
+          (catch \Throwable ,e
+            (report {:state :error
+                     :location ,loc
+                     :message ,message
+                     :form ',form
+                     :exception ,e})))))
+
+# --------------
+# Defining tests
+# --------------
+
+(defmacro deftest
+  "Defines a test function with no arguments."
+  [test-name & body]
+  `(defn ,test-name {:test true :test-name ,(name test-name)} []
+     ,@body))
+
+# ---------------------
+# error/failure printer
+# ---------------------
+
+(defn- print-headline [prefix {:message message :location location}]
+  (print prefix)
+  (when message
+    (print (str " in '" message "'")))
+  (when location
+    (print (str " (" (php/realpath (get location :file)) ":" (get location :line) ")")))
+  (println))
+
+(defn- print-failure-headline [data]
+  (print-headline "Failure" data))
+
+(defn- print-error-headline [data]
+  (print-headline "Error" data))
+
+(defn- print-error [data]
+  (print-error-headline data)
+  (let [{:exception exception :form form} data
+        command-facade (php/new CommandFacade)
+        printer (php/-> command-facade (getExceptionPrinter))]
+    (println "              Test:" form)
+    (println "   threw exception:" (php/get_class exception))
+    (println)
+    (php/-> printer (printStackTrace exception))))
+
+(defn- print-predicate-failure [{:pred pred :value value :result result}]
+  (println "                 Test:" value)
+  (println "         evaluated to:" result)
+  (println "  but doesn't satisfy:" pred))
+
+(defn- print-predicate-not-failure [{:pred pred :value value :result result}]
+  (println "              Test:" value)
+  (println "      evaluated to:" result)
+  (println "  but does satisfy:" pred " (it shouldn't)"))
+
+(defn- print-binary-failure [{:pred pred :expected expected :actual actual :result result}]
+  (println "          Test:" actual)
+  (println "  evaluated to:" result)
+  (println "    but is not:" pred "to" expected))
+
+(defn- print-binary-not-failure [{:pred pred :expected expected :actual actual :result result}]
+  (println "          Test:" actual)
+  (println "  evaluated to:" result)
+  (println "        but is:" pred "to" expected "(it shouldn't be)"))
+
+(defn- print-thrown-failure [{:form form :exception-symbol exception-symbol}]
+  (println "    expected:" form)
+  (println "  to throw a:" exception-symbol "(it didn't)"))
+
+(defn- print-thrown-with-msg-failure [{:form form :exception-symbol exception-symbol :expected-message expected-message :actual-message actual-message}]
+  (if (nil? actual-message)
+    (do
+      (println "    expected:" form)
+      (println "  to throw a:" exception-symbol "(it didn't)")
+      (do
+        (println "      expected:" form)
+        (println "    to throw a:" exception-symbol)
+        (println "  with message:" expected-message)
+        (println "       but got:" actual-message)))))
+
+(defn- print-any-failure [{:form form :result result}]
+  (println "          Test:" form)
+  (println "  evaluated to:" result "(which is not truthy)"))
+
+(defn- print-failure [data]
+  (print-failure-headline data)
+  (case (get data :type)
+    :predicate (print-predicate-failure data)
+    :predicate-not (print-predicate-not-failure data)
+    :binary (print-binary-failure data)
+    :binary-not (print-binary-not-failure data)
+    :thrown (print-thrown-failure data)
+    :thrown-with-msg (print-thrown-with-msg-failure data)
+    :any (print-any-failure data)))
+
+(defn- print-failure-or-error [data]
+  (case (get data :state)
+    :error (print-error data)
+    :failed (print-failure data)))
+
+(defn print-summary
+  "Prints the summary of the test suite."
+  []
+  (println)
+  (println)
+  (for [data :in (get (deref stats) :failed)]
+    (println "~~~~~~~~~~")
+    (print-failure-or-error data))
+
+  (println)
+  (println)
+
+  (let [{:failed failed :error error :pass pass} (get (deref stats) :counts)
+        total (+ failed error pass)]
+    (println "Passed:" pass)
+    (println "Failed:" failed)
+    (println "Error:" error)
+    (println "Total:" total)))
+
+# -------------
+# Running tests
+# -------------
+
+(defn- find-test-fns [ns {:filter filter}]
+  (let [munge (php/new Munge)
+        munge-ns (php/-> munge (encodeNs ns))
+        registry (php/:: Registry (getInstance))]
+    (for [fn-name :keys (php/-> registry (getDefinitionInNamespace munge-ns))
+          :let [meta (php/-> registry (getDefinitionMetaData munge-ns fn-name))]
+          :when (and (:test meta) (or (nil? filter) (str-contains? (:test-name meta) filter)))]
+      (php/-> registry (getDefinition munge-ns fn-name)))))
+
+(defn- run-test [options ns]
+  (let [tests (find-test-fns ns options)]
+    (dofor [test :in tests]
+      (test))))
+
+(defn run-tests
+  "Runs all test functions in the given namespaces."
+  [options & namespaces]
+  (dofor [namespace :in namespaces
+          :let [ns-name (name namespace)]]
+    (run-test options ns-name))
+  (print-summary))
+
+(defn successful?
+  "Checks if all tests have passed."
+  []
+  (let [{:failed failed :error error} (get (deref stats) :counts)]
+    (zero? (+ failed error))))

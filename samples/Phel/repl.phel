@@ -1,0 +1,127 @@
+(ns phel\repl
+  (:use Phel\Lang\Symbol)
+  (:use Phel\Lang\Registry)
+  (:use Phel\Build\BuildFacade)
+  (:use Phel\Compiler\CompilerFacade)
+  (:use Phel\Compiler\Infrastructure\CompileOptions)
+  (:use Phel\Compiler\Infrastructure\GlobalEnvironmentSingleton)
+  (:use Phel\Compiler\Analyzer\Environment\NodeEnvironment)
+  (:use Phel\Printer\Printer))
+
+(def build-facade (php/new BuildFacade))
+
+(def- src-dirs (php/array)) # Will be set by the repl command
+
+(defn- get-global-env []
+  (php/:: GlobalEnvironmentSingleton (getInstance)))
+
+(defn- loaded-namespaces []
+  (php/-> (php/:: Registry (getInstance)) (getNamespaces)))
+
+(defn- eval-file [file]
+  (php/-> build-facade (evalFile file)))
+
+(defn- eval-namespace [namespace]
+  (let [dependencies (php/-> build-facade (getDependenciesForNamespace src-dirs (php/array namespace)))]
+    (foreach [dep dependencies]
+      (when-not (php/in_array (php/-> dep (getNamespace)) (loaded-namespaces))
+        (eval-file (php/-> dep (getFile)))))))
+
+(defn resolve
+  "Resolves the given symbol in the current environment and returns a
+   resolved Symbol with the absolute namespace or nil if it cannot be resolved."
+  [sym]
+  (-> (get-global-env)
+      (php/-> (resolveAsSymbol sym (php/:: NodeEnvironment (empty))))))
+
+(defn- clean-doc [str]
+  (php/trim (php/str_replace (php/array "```phel\n" "```") "" str)))
+
+(defn- find-doc [namespace name]
+  (let [registry (php/:: Registry (getInstance))
+        meta (php/-> registry (getDefinitionMetaData namespace name))]
+    (when meta
+      (clean-doc (get meta :doc)))))
+
+(defmacro doc
+  "Prints the documentation for the given symbol."
+  [sym]
+  (let [resolved-sym (resolve sym)]
+    (when resolved-sym
+      `(println (find-doc ,(namespace resolved-sym) ,(name resolved-sym))))))
+
+(defn- extract-alias [sym options]
+  (if (:as options)
+    (:as options)
+    (let [parts (php/explode "\\" (name sym))
+          last (pop parts)]
+      (php/:: Symbol (create last)))))
+
+(defn- set-ns [namespace]
+  (set-var *ns* namespace))
+
+(defn- require-namespace
+  [namespace alias refers]
+  (let [env (get-global-env)
+        current-ns *ns*]
+    (php/-> env (addRequireAlias current-ns alias namespace))
+    (foreach [r refers]
+      (php/-> env (addRefer current-ns r namespace)))
+    (eval-namespace namespace)
+    (php/-> (get-global-env) (setNs current-ns))
+    (set-ns current-ns)
+    namespace))
+
+(defmacro require
+  "Requires a Phel module into the environment."
+  [sym & args]
+  (let [options (apply hash-map args)
+        alias (extract-alias sym options)
+        refers (or (:refer options) [])]
+    `(require-namespace ',sym ',alias ',refers)))
+
+(defn- use-namespace
+  [namespace alias]
+  (php/-> (get-global-env) (addUseAlias *ns* alias namespace))
+  namespace)
+
+(defmacro use
+  "Adds a use statement to the environment."
+  [sym & args]
+  (let [options (apply hash-map args)
+        alias (extract-alias sym options)]
+    `(use-namespace ',sym ',alias)))
+
+(defn- print-colorful-str
+  "Same as print-str from core, but with color."
+  [& xs]
+  (let [len (count xs)
+        printer (php/:: Printer (nonReadableWithColor))
+        pp |(php/-> printer (print $))]
+    (case (count xs)
+      0 ""
+      1 (pp (first xs))
+      (loop [res (pp (first xs))
+             seq (next xs)]
+        (if seq
+          (recur (str res " " (pp (first seq))) (next seq))
+          res)))))
+
+(defn print-colorful
+  "Colored print."
+  [& xs]
+  (php/print (apply print-colorful-str xs))
+  nil)
+
+(defn println-colorful
+  "Colored println."
+  [& xs]
+  (apply print-colorful xs)
+  (php/print "\n")
+  nil)
+
+(defn compile-str [s]
+  (let [cf (php/new CompilerFacade)
+        opts (php/new CompileOptions)
+        res (php/-> cf (compile s opts))]
+    (php/-> res (getCode))))
