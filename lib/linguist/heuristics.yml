@@ -58,7 +58,7 @@ disambiguations:
   # AL pattern source from https://github.com/microsoft/AL/blob/master/grammar/alsyntax.tmlanguage - keyword.other.applicationobject.al
   - language: AL
     and:
-    - pattern: '\b(?i:(CODEUNIT|PAGE|PAGEEXTENSION|PAGECUSTOMIZATION|DOTNET|ENUM|ENUMEXTENSION|VALUE|QUERY|REPORT|TABLE|TABLEEXTENSION|XMLPORT|PROFILE|CONTROLADDIN))\b'
+    - pattern: '\b(?i:(CODEUNIT|PAGE|PAGEEXTENSION|PAGECUSTOMIZATION|DOTNET|ENUM|ENUMEXTENSION|VALUE|QUERY|REPORT|TABLE|TABLEEXTENSION|XMLPORT|PROFILE|CONTROLADDIN|REPORTEXTENSION|INTERFACE|PERMISSIONSET|PERMISSIONSETEXTENSION|ENTITLEMENT))\b'
   # Open-ended fallback to Perl AutoLoader
   - language: Perl
 - extensions: ['.as']
@@ -506,6 +506,10 @@ disambiguations:
   - language: XML Property List
     pattern: '^\s*(?:<\?xml\s|<!DOCTYPE\s+plist|<plist(?:\s+version\s*=\s*(["''])\d+(?:\.\d+)?\1)?\s*>\s*$)'
   - language: OpenStep Property List
+- extensions: ['.plt']
+  rules:
+  - language: Prolog
+    pattern: '^\s*:-'
 - extensions: ['.pm']
   rules:
   - language: Perl

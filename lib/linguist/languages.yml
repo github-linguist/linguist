@@ -1016,6 +1016,14 @@ ChucK:
   codemirror_mode: clike
   codemirror_mime_type: text/x-java
   language_id: 57
+Circom:
+  type: programming
+  ace_mode: text
+  extensions:
+  - ".circom"
+  color: "#707575"
+  tm_scope: source.circom
+  language_id: 1042332086
 Cirru:
   type: programming
   color: "#ccccff"
@@ -1539,6 +1547,27 @@ Dogescript:
   tm_scope: none
   ace_mode: text
   language_id: 90
+Dotenv:
+  type: data
+  color: "#e5d559"
+  extensions:
+  - ".env"
+  filenames:
+  - ".env"
+  - ".env.ci"
+  - ".env.dev"
+  - ".env.development"
+  - ".env.development.local"
+  - ".env.example"
+  - ".env.local"
+  - ".env.prod"
+  - ".env.production"
+  - ".env.staging"
+  - ".env.test"
+  - ".env.testing"
+  tm_scope: source.dotenv
+  ace_mode: text
+  language_id: 111148035
 Dylan:
   type: programming
   color: "#6c616e"
@@ -1995,7 +2024,7 @@ Fortran Free Form:
   language_id: 761352333
 FreeBasic:
   type: programming
-  color: "#867db1"
+  color: "#141AC9"
   extensions:
   - ".bi"
   - ".bas"
@@ -2412,6 +2441,19 @@ Go Module:
   tm_scope: go.mod
   ace_mode: text
   language_id: 947461016
+Godot Resource:
+  type: data
+  color: "#355570"
+  extensions:
+  - ".gdnlib"
+  - ".gdns"
+  - ".tres"
+  - ".tscn"
+  filenames:
+  - project.godot
+  tm_scope: source.gdresource
+  ace_mode: text
+  language_id: 738107771
 Golo:
   type: programming
   color: "#88562A"
@@ -3037,6 +3079,7 @@ JSON:
   - ".watchmanconfig"
   - Pipfile.lock
   - composer.lock
+  - flake.lock
   - mcmod.info
   language_id: 174
 JSON with Comments:
@@ -3331,6 +3374,18 @@ Jupyter Notebook:
   aliases:
   - IPython Notebook
   language_id: 185
+Just:
+  type: programming
+  aliases:
+  - Justfile
+  color: "#384d54"
+  tm_scope: source.just
+  filenames:
+  - JUSTFILE
+  - Justfile
+  - justfile
+  ace_mode: text
+  language_id: 128447695
 KRL:
   type: programming
   color: "#28430A"
@@ -3364,6 +3419,14 @@ KakouneScript:
   - kakrc
   ace_mode: text
   language_id: 603336474
+KerboScript:
+  type: programming
+  ace_mode: text
+  extensions:
+  - ".ks"
+  color: "#41adf0"
+  tm_scope: "source.kerboscript"
+  language_id: 59716426
 KiCad Layout:
   type: data
   color: "#2f4aab"
@@ -3399,6 +3462,13 @@ KiCad Schematic:
   tm_scope: source.pcb.schematic
   ace_mode: text
   language_id: 622447435
+Kickstart:
+  type: data
+  ace_mode: text
+  extensions:
+  - ".ks"
+  tm_scope: source.kickstart
+  language_id: 692635484
 Kit:
   type: markup
   ace_mode: html
@@ -5163,6 +5233,7 @@ Prolog:
   color: "#74283c"
   extensions:
   - ".pl"
+  - ".plt"
   - ".pro"
   - ".prolog"
   - ".yap"
@@ -5316,6 +5387,9 @@ Python:
   - python
   - python2
   - python3
+  - py
+  - pypy
+  - pypy3
   aliases:
   - python3
   - rusthon
@@ -6223,7 +6297,6 @@ Shell:
   - ".bats"
   - ".cgi"
   - ".command"
-  - ".env"
   - ".fcgi"
   - ".ksh"
   - ".sh.in"
@@ -6238,8 +6311,6 @@ Shell:
   - ".bash_profile"
   - ".bashrc"
   - ".cshrc"
-  - ".env"
-  - ".env.example"
   - ".flaskenv"
   - ".kshrc"
   - ".login"
@@ -7835,16 +7906,6 @@ jq:
   - ".jq"
   tm_scope: source.jq
   language_id: 905371884
-just:
-  type: programming
-  aliases:
-  - Justfile
-  color: "#384d54"
-  tm_scope: source.just
-  filenames:
-  - Justfile
-  ace_mode: text
-  language_id: 128447695
 kvlang:
   type: markup
   ace_mode: text
