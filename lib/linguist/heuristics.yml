@@ -506,6 +506,10 @@ disambiguations:
   - language: XML Property List
     pattern: '^\s*(?:<\?xml\s|<!DOCTYPE\s+plist|<plist(?:\s+version\s*=\s*(["''])\d+(?:\.\d+)?\1)?\s*>\s*$)'
   - language: OpenStep Property List
+- extensions: ['.plt']
+  rules:
+  - language: Prolog
+    pattern: '^\s*:-'
 - extensions: ['.pm']
   rules:
   - language: Perl
