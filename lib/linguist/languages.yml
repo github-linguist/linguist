@@ -1539,6 +1539,27 @@ Dogescript:
   tm_scope: none
   ace_mode: text
   language_id: 90
+Dotenv:
+  type: data
+  color: "#e5d559"
+  extensions:
+  - ".env"
+  filenames:
+  - ".env"
+  - ".env.ci"
+  - ".env.dev"
+  - ".env.development"
+  - ".env.development.local"
+  - ".env.example"
+  - ".env.local"
+  - ".env.prod"
+  - ".env.production"
+  - ".env.staging"
+  - ".env.test"
+  - ".env.testing"
+  tm_scope: source.dotenv
+  ace_mode: text
+  language_id: 111148035
 Dylan:
   type: programming
   color: "#6c616e"
@@ -6260,7 +6281,6 @@ Shell:
   - ".bats"
   - ".cgi"
   - ".command"
-  - ".env"
   - ".fcgi"
   - ".ksh"
   - ".sh.in"
@@ -6275,8 +6295,6 @@ Shell:
   - ".bash_profile"
   - ".bashrc"
   - ".cshrc"
-  - ".env"
-  - ".env.example"
   - ".flaskenv"
   - ".kshrc"
   - ".login"
