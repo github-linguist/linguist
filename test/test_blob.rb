@@ -163,6 +163,9 @@ class TestBlob < Minitest::Test
     # Composer generated composer.lock file
     assert sample_blob_memory("JSON/filenames/composer.lock").generated?
 
+    # Nix generated flake.lock file
+    assert sample_blob_memory("JSON/filenames/flake.lock").generated?
+
     # PEG.js-generated parsers
     assert sample_blob_memory("JavaScript/parser.js").generated?
 
