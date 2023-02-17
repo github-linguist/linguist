@@ -1,23 +1,23 @@
 # A collection of simple regexp-based rules that can be applied to content
 # to disambiguate languages with the same file extension.
 #
-# There two top-level keys: disambiguations and named_patterns.
+# There are two top-level keys: disambiguations and named_patterns.
 #
 # disambiguations     - a list of disambiguation rules, one for each
 #                       extension or group of extensions.
 # extensions          - an array of file extensions that this block applies to.
 # rules               - list of rules that are applied in order to the content
-#                       of a file with matching extension. Rules are evaluated
+#                       of a file with a matching extension. Rules are evaluated
 #                       until one of them matches. If none matches, no language
 #                       is returned.
 # language            - Language to be returned if the rule matches.
 # pattern             - Ruby-compatible regular expression that makes the rule
-#                       match. If no pattern is specified, the rule always match.
+#                       match. If no pattern is specified, the rule always matches.
 #                       Pattern can be a string with a single regular expression
 #                       or an array of strings that will be merged in a single
 #                       regular expression (with union).
 # and                 - An and block merges multiple rules and checks that all of
-#                       of them must match.
+#                       them must match.
 # negative_pattern    - Same as pattern, but checks for absence of matches.
 # named_pattern       - A pattern can be reused by specifying it in the
 #                       named_patterns section and referencing it here by its
@@ -498,9 +498,11 @@ disambiguations:
   - language: Prolog
     pattern: '^[^#]*:-'
   - language: Perl
-    named_pattern: perl5
+    and:
+      - negative_pattern: '^\s*use\s+v6\b'
+      - named_pattern: perl
   - language: Raku
-    named_pattern: perl6
+    named_pattern: raku
 - extensions: ['.plist']
   rules:
   - language: XML Property List
@@ -513,9 +515,11 @@ disambiguations:
 - extensions: ['.pm']
   rules:
   - language: Perl
-    named_pattern: perl5
+    and:
+      - negative_pattern: '^\s*use\s+v6\b'
+      - named_pattern: perl
   - language: Raku
-    named_pattern: perl6
+    named_pattern: raku
   - language: X PixMap
     pattern: '^\s*\/\* XPM \*\/'
 - extensions: ['.pod']
@@ -671,7 +675,9 @@ disambiguations:
 - extensions: ['.t']
   rules:
   - language: Perl
-    named_pattern: perl5
+    and:
+      - negative_pattern: '^\s*use\s+v6\b'
+      - named_pattern: perl
   - language: Raku
     pattern: '^\s*(?:use\s+v6\b|\bmodule\b|\bmy\s+class\b)'
   - language: Turing
@@ -815,7 +821,12 @@ named_patterns:
   mdoc-heading: '^[.''][ \t]*Sh +(?:[^"\s]|"[^"]+")'
   mdoc-title:   '^[.''][ \t]*Dt +(?:[^"\s]+|"[^"]+") +"?(?:[1-9]|@[^\s@]+@)'
   objectivec: '^\s*(@(interface|class|protocol|property|end|synchronised|selector|implementation)\b|#import\s+.+\.h[">])'
-  perl5: '\buse\s+(?:strict\b|v?5\.)'
-  perl6: '^\s*(?:use\s+v6\b|\bmodule\b|\b(?:my\s+)?class\b)'
+  perl:
+  - '\buse\s+(?:strict\b|v?5\b)'
+  - '^\s*use\s+(?:constant|overload)\b'
+  - '^\s*(?:\*|(?:our\s*)?@)EXPORT\s*='
+  - '^\s*package\s+[^\W\d]\w*(?:::\w+)*\s*(?:[;{]|\sv?\d)'
+  - '[\s$][^\W\d]\w*(?::\w+)*->[a-zA-Z_\[({]'
+  raku: '^\s*(?:use\s+v6\b|\bmodule\b|\b(?:my\s+)?class\b)'
   vb-class: '^\s*VERSION\s+[0-9]\.[0-9]\s+CLASS'
   vb-form: '^\s*VERSION\s+[0-9]\.[0-9]{2}'
