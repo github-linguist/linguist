@@ -60,6 +60,7 @@ module Linguist
       generated_net_specflow_feature_file? ||
       composer_lock? ||
       cargo_lock? ||
+      flake_lock? ||
       node_modules? ||
       go_vendor? ||
       go_lock? ||
@@ -464,6 +465,13 @@ module Linguist
     # Returns true or false.
     def cargo_lock?
       !!name.match(/Cargo\.lock/)
+    end
+
+    # Internal: Is the blob a generated Nix flakes lock file?
+    #
+    # Returns true or false
+    def flake_lock?
+      !!name.match(/(^|\/)flake\.lock$/)
     end
 
     # Is the blob a VCR Cassette file?
