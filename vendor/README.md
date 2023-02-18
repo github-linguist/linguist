@@ -427,6 +427,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Python:** [tree-sitter/tree-sitter-python](https://github.com/tree-sitter/tree-sitter-python) 🐌
 - **Python console:** [MagicStack/MagicPython](https://github.com/MagicStack/MagicPython)
 - **Python traceback:** [MagicStack/MagicPython](https://github.com/MagicStack/MagicPython)
+- **PythOwO** [virejdasani/PythOwO](https://github.com/virejdasani/PythOwO)
 - **Q#:** [microsoft/qsharp-compiler](https://github.com/microsoft/qsharp-compiler)
 - **QML:** [skozlovf/Sublime-QML](https://github.com/skozlovf/Sublime-QML)
 - **QMake:** [textmate/cpp-qt.tmbundle](https://github.com/textmate/cpp-qt.tmbundle)
