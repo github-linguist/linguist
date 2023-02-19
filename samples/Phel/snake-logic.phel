@@ -1,0 +1,69 @@
+(ns phel-snake\full-version\snake-logic)
+
+(defstruct board [width height])
+(defstruct board-style [horizontal vertical corner])
+(defstruct snake [direction speed head tail])
+
+# Hexadecimal keys
+(def key-space "20")
+(def- key-left-arrow "1b5b44")
+(def- key-down-arrow "1b5b42")
+(def- key-right-arrow "1b5b43")
+(def- key-up-arrow "1b5b41")
+
+(def directions
+  {key-left-arrow :left
+   key-down-arrow :down
+   key-right-arrow :right
+   key-up-arrow :up})
+
+(defn grow-snake [snake]
+  (let [sn1 (case (snake :direction)
+              :left (update-in snake [:head :x] dec)
+              :right (update-in snake [:head :x] inc)
+              :up (update-in snake [:head :y] dec)
+              :down (update-in snake [:head :y] inc))]
+    # add head to the tail
+    (update sn1 :tail |(push $ (snake :head)))))
+
+(defn move-snake [s next-direction]
+  (if (nil? next-direction)
+    (recur s (s :direction))
+    (let [s2 (case next-direction
+               :left (update-in s [:head :x] dec)
+               :right (update-in s [:head :x] inc)
+               :up (update-in s [:head :y] dec)
+               :down (update-in s [:head :y] inc))
+          new-tail (push (drop 1 (s2 :tail)) (s :head))
+          s3 (put s2 :tail new-tail)]
+      (put s3 :direction next-direction))))
+
+(defn collision-with-board? [b s]
+  (or
+   (>= 1 (get-in s [:head :x]))
+   (>= 0 (get-in s [:head :y]))
+   (= (b :width) (get-in s [:head :x]))
+   (= (dec (b :height)) (get-in s [:head :y]))))
+
+(defn generate-new-goal [{:width width :height height}]
+  (let [pos {:x (dec (rand-int width))
+             :y (dec (rand-int height))}]
+    (if (or (<= (pos :x) 1)
+            (>= (pos :x) (dec width))
+            (<= (pos :y) 1)
+            (>= (pos :y) (dec height)))
+      (recur {:width width :height height})
+      pos)))
+
+(defn generate-snake-head [{:height height}]
+  (generate-new-goal {:width 5 :height height}))
+
+(defn- snake-reach-goal? [snake goal]
+  (and
+   (= (get-in snake [:head :x]) (goal :x))
+   (= (get-in snake [:head :y]) (goal :y))))
+
+(defn update-goal [s g b]
+  (if (snake-reach-goal? s g)
+    (generate-new-goal b)
+    g))

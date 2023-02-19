@@ -1,0 +1,126 @@
+#########################################################################################
+# This is a full version of the snake-cli-game, with the following elements:
+# - A snake that increases the speed for each apple/goal that it reaches
+# - A randomize apple/goal that appears after the snake eat it
+# - A custom key to increase the speed or to disable increasing the speed
+# - A custom parameter to disable increasing the speed
+# - A debug parameter to see the internal debug status of the game
+# - The game ends when the snake touches the board
+#########################################################################################
+# Try it out: vendor/bin/phel run src/full-version/snake-game.phel
+#########################################################################################
+(ns phel-snake\full-version\snake-game
+  (:use RuntimeException)
+  (:require phel-cli-gui\terminal-gui :as gui)
+  (:require phel-snake\full-version\snake-logic :as l)
+  (:require phel-snake\util :refer [get-from-list]))
+
+(gui/add-output-formatter {:style-name "snake-head" :foreground "black" :background "red" :options ["bold"]})
+(gui/add-output-formatter {:style-name "snake-tail" :foreground "black" :background "green" :options ["bold"]})
+(gui/add-output-formatter {:style-name "goal" :foreground "black" :background "magenta" :options ["bold"]})
+
+(def board-width (get-from-list argv "width" 42))
+(def board-height (get-from-list argv "height" 22))
+(def board (l/board board-width board-height))
+
+(def difficulty "The higher the faster the speed will increase on each level." 10000)
+(def nano-seconds-delay-base 140000)
+(def start-time (php/microtime true))
+(def goal-icon {:text " " :style "goal"})
+(def snake-head-icon {:text " " :style "snake-head"})
+(def snake-tail-icon {:text " " :style "snake-tail"})
+
+(def debug? (php/in_array "debug" argv))
+(def god-mode? (php/in_array "god-mode" argv))
+(def accelerate-counter "A counter to accelerate the sleeping render" (var 0))
+
+(defn normalize-velocity [snake]
+  (case (snake :direction)
+    :left 2 :right 2
+    :up 1 :down 1))
+
+(defn sleep-delay [snake]
+  (if (> (deref accelerate-counter) 0)
+    (do (php/usleep 0) (set! accelerate-counter (dec (deref accelerate-counter))))
+    (if god-mode?
+      (php/usleep 140000)
+      (let [velocity (* (snake :speed) difficulty)
+            nano-sec (- nano-seconds-delay-base velocity)
+            sleep-time (/ nano-sec (normalize-velocity snake))]
+        (if debug? (println "# sleep-time:" sleep-time))
+        (php/usleep sleep-time)))))
+
+(defn render-snake [snake]
+  (for [t :in (snake :tail)]
+    (gui/render (t :x) (t :y) (snake-tail-icon :text) (snake-tail-icon :style)))
+  (let [h (snake :head)]
+    (gui/render (h :x) (h :y) (snake-head-icon :text) (snake-head-icon :style))))
+
+(defn clear-snake [snake]
+  (when-not (nil? (snake :tail))
+    (for [t :in (snake :tail)]
+      (gui/render (t :x) (t :y) " "))
+    (let [h (snake :head)]
+      (gui/render (h :x) (h :y) " "))))
+
+(defn render-goal [goal]
+  (gui/render (goal :x) (goal :y) (goal-icon :text) (goal-icon :style)))
+
+(defn game-over [board snake]
+  (let [game-over-text "GAME OVER"
+        game-over-text-len (php/strlen game-over-text)
+        x-center (php/round (- (/ (board :width) 2) (/ game-over-text-len 2)))
+        y-center (php/round (/ (board :height) 2))]
+    (render-snake snake)
+    (gui/render x-center y-center game-over-text)
+    (gui/render x-center (inc y-center) (format "Points: %d" (snake :speed)))
+    (if debug? (gui/clear-line (+ 3 (board :height))))
+    (php/exit)))
+
+(defn render-stats [board snake]
+  (println (format "Speed: %d" (count (snake :tail))))
+  (let [diff-time (- (php/microtime true) start-time)]
+    (println (format "Time: %d secs" (php/round diff-time)))))
+
+(defn render-game [old-snake new-snake goal]
+  (clear-snake old-snake)
+  (render-snake new-snake)
+  (render-goal goal)
+  (render-stats board new-snake)
+  (if debug? (println (str "$ " board "\n$ " new-snake))))
+
+(defn full-game []
+  (gui/clear-screen)
+  (gui/render-board board {:horizontal "---" :vertical "|" :corner "+"})
+  (println)
+  (println)
+  (println)
+
+  (loop [snake {:old {}
+                :current (l/snake :right 1 (l/generate-snake-head board) [])}
+         goal (l/generate-new-goal board)]
+
+    (println "playing...")
+    (println "# god-mode?" god-mode?)
+    (println "# Use <space-key> to accelerate-counter 1 sec the snake")
+
+    (sleep-delay (snake :current))
+    (gui/clear-output)
+
+    (let [{:hex in} (gui/read-input 3)
+          next-direction (l/directions in)
+          updated-goal (l/update-goal (snake :current) goal board)
+          snake2 (l/move-snake (snake :current) next-direction)]
+
+      (if (= in l/key-space)
+        (set! accelerate-counter 3))
+
+      (if (l/collision-with-board? board (snake :current))
+        (game-over board (snake :current)))
+
+      (render-game (snake :old) snake2 updated-goal)
+
+      (let [new-goal? (not= goal updated-goal)
+            snake3 (if new-goal? (update snake2 :speed inc) snake2)
+            updated-snake (if new-goal? (l/grow-snake snake3) snake3)]
+        (recur {:old (snake :current) :current updated-snake} updated-goal)))))
