@@ -675,7 +675,7 @@ disambiguations:
 - extensions: ['.sw']
   rules:
   - language: Sway
-    pattern: '^(dep |fn |mod |pub |trait |impl |abi |#\[)'
+    pattern: '^\s*(?:(?:abi|dep|fn|impl|mod|pub|trait)\s|#\[)'
   - language: XML
     pattern: '^\s*<\?xml\s+version'
 - extensions: ['.t']
