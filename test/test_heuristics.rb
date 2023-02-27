@@ -906,6 +906,7 @@ class TestHeuristics < Minitest::Test
   def test_sw_by_heuristics
     assert_heuristics({
       "Sway" => all_fixtures("Sway", "*.sw"),
+      "XML" => all_fixtures("XML", "*.sw")
     })
   end
 
