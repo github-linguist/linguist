@@ -5,7 +5,7 @@
 
 ## Checklist:
 <!--- Go over all the following points, and put an `x` in all the boxes that apply. -->
-<!--- Feel free to remove whole sections, not points within the sections, that do not apply -->
+<!--- Please remove whole sections, not points within the sections, that do not apply -->
 <!--- If you're unsure about any of these, don't hesitate to ask. We're here to help! -->
 - [ ] **I am associating a language with a new file extension.**
   - [ ] The new extension is used in hundreds of repositories on GitHub.com
@@ -28,6 +28,9 @@
       - [URL to each sample source, if applicable]
     - Sample license(s):
   - [ ] I have included a syntax highlighting grammar: [URL to grammar repo]
+      <!-- Setting a color is only needed for 'programming' and 'markup' languages and will default to `#cccccc` if not specified. -->
+  - [ ] I have added a color: [Enter color in hex as `#123456` so the color can be seen in the PR body]
+    - I chose this color because: [Please specify why you chose this color. It helps in future if there is a request to change the color.]
   - [ ] I have updated the heuristics to distinguish my language from others using the same extension.
 
 - [ ] **I am fixing a misclassified language**
