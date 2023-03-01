@@ -1,0 +1,67 @@
+# coding: UTF-8
+
+import sys
+import os.path
+
+# get the path of the current python script
+current_path = os.path.dirname(os.path.realpath(__file__))
+
+# check if this path belongs to the PYTHONPATH variable and if not add it
+if not sys.path.__contains__(str(current_path)):
+    sys.path.append(str(current_path))
+
+from FreeCAD import Console, Gui, activeDocument
+from PySide2.QtWidgets import QMessageBox
+from PySide2.QtCore import Qt
+from Legify.Common import *
+
+if not Gui.activeDocument():
+
+    Console.PrintMessage("No active document!\n")
+    dialog = QMessageBox(QMessageBox.Warning, 'No active document!', "There is no active document!")
+    dialog.setWindowModality(Qt.ApplicationModal)
+    dialog.exec_()
+
+    exit(1)
+
+selection = Gui.Selection.getSelection()
+
+if not selection:
+
+    Console.PrintMessage("No selection!\n")
+    dialog = QMessageBox(QMessageBox.Warning, 'No selection!', "Please select a Body and Datum Line!")
+    dialog.setWindowModality(Qt.ApplicationModal)
+    dialog.exec_()
+
+    exit(1)
+
+if not isinstance(selection, list) or len(selection) < 2:
+
+    Console.PrintMessage("Only one item selected!\n")
+    dialog = QMessageBox(QMessageBox.Warning, 'Only one item selected!', "Please select a Body and Datum Line!")
+    dialog.setWindowModality(Qt.ApplicationModal)
+    dialog.exec_()
+
+    exit(1)
+
+if not selection[0]:
+
+    Console.PrintMessage("No selected Body!\n")
+    dialog = QMessageBox(QMessageBox.Warning, 'No selected Body!', "Please select a Body and Datum Line!")
+    dialog.setWindowModality(Qt.ApplicationModal)
+    dialog.exec_()
+
+    exit(1)
+
+if not selection[1]:
+    Console.PrintMessage("No selected Datum Line!\n")
+    dialog = QMessageBox(QMessageBox.Warning, 'No selected Datum Line!', "Please select a Body and Datum Line!")
+    dialog.setWindowModality(Qt.ApplicationModal)
+    dialog.exec_()
+
+    exit(1)
+
+render_pin('Pin', selection[1], selection[0], activeDocument())
+
+Gui.activeDocument().activeView().viewAxonometric()
+Gui.SendMsgToActiveView("ViewFit")
