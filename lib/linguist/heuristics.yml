@@ -672,6 +672,12 @@ disambiguations:
   rules:
   - language: STL
     pattern: '\A\s*solid(?=$|\s)(?m:.*?)\Rendsolid(?:$|\s)'
+- extensions: ['.sw']
+  rules:
+  - language: Sway
+    pattern: '^\s*(?:(?:abi|dep|fn|impl|mod|pub|trait)\s|#\[)'
+  - language: XML
+    pattern: '^\s*<\?xml\s+version'
 - extensions: ['.t']
   rules:
   - language: Perl

@@ -520,6 +520,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **SugarSS:** [hudochenkov/Syntax-highlighting-for-PostCSS](https://github.com/hudochenkov/Syntax-highlighting-for-PostCSS)
 - **SuperCollider:** [supercollider/language-supercollider](https://github.com/supercollider/language-supercollider)
 - **Svelte:** [sebastinez/svelte-atom](https://github.com/sebastinez/svelte-atom)
+- **Sway:** [FuelLabs/sway-vscode-plugin](https://github.com/FuelLabs/sway-vscode-plugin)
 - **Swift:** [textmate/swift.tmbundle](https://github.com/textmate/swift.tmbundle)
 - **SystemVerilog:** [TheClams/SystemVerilog](https://github.com/TheClams/SystemVerilog)
 - **TLA:** [tlaplus-community/tree-sitter-tlaplus](https://github.com/tlaplus-community/tree-sitter-tlaplus) 🐌
