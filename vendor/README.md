@@ -155,7 +155,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Eiffel:** [textmate/eiffel.tmbundle](https://github.com/textmate/eiffel.tmbundle)
 - **Elixir:** [elixir-lang/tree-sitter-elixir](https://github.com/elixir-lang/tree-sitter-elixir) 🐌
 - **Elvish:** [elves/elvish](https://github.com/elves/elvish)
-- **Elvish transcript:** [elves/elvish](https://github.com/elves/elvish)
+- **Elvish Transcript:** [elves/elvish](https://github.com/elves/elvish)
 - **Emacs Lisp:** [Alhadis/language-emacs-lisp](https://github.com/Alhadis/language-emacs-lisp)
 - **EmberScript:** [atom/language-coffee-script](https://github.com/atom/language-coffee-script)
 - **Erlang:** [textmate/erlang.tmbundle](https://github.com/textmate/erlang.tmbundle)
