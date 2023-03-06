@@ -1,0 +1,50 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+[application]
+
+config/name="Game Pad Client"
+run/main_scene="res://JoinServer/JoinServerControl.tscn"
+boot_splash/image="res://Images/Background.png"
+boot_splash/bg_color=Color( 0.101961, 0.101961, 0.12549, 1 )
+config/icon="res://Icons/1024Icon.png"
+
+[autoload]
+
+Client="*res://Client/Client.gd"
+UdpBroadcast="*res://UDP_Broadcast.gd"
+
+[debug]
+
+gdscript/completion/autocomplete_setters_and_getters=true
+
+[display]
+
+window/size/width=1920
+window/size/height=1080
+window/size/test_width=960
+window/size/test_height=540
+window/stretch/mode="2d"
+window/stretch/aspect="expand"
+
+[global]
+
+delay=false
+simulate=false
+
+[input_devices]
+
+pointing/ios/touch_delay=0.0
+pointing/emulate_touch_from_mouse=true
+
+[rendering]
+
+environment/default_clear_color=Color( 0.101961, 0.101961, 0.12549, 1 )
+environment/default_environment="res://default_env.tres"

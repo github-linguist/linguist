@@ -734,6 +734,14 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_plt_by_heuristics
+    assert_heuristics({
+      "Prolog" => all_fixtures("Prolog", "*.plt"),
+      # Gnuplot lacks a heuristic
+      nil => all_fixtures("Gnuplot", "*.plt")
+    })
+  end
+
   def test_pm_by_heuristics
     assert_heuristics({
       "Perl" => all_fixtures("Perl", "*.pm"),
@@ -892,6 +900,13 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "STL" => Dir.glob("#{fixtures_path}/Generic/stl/STL/*"),
       nil => Dir.glob("#{fixtures_path}/Generic/stl/nil/*")
+    })
+  end
+
+  def test_sw_by_heuristics
+    assert_heuristics({
+      "Sway" => all_fixtures("Sway", "*.sw"),
+      "XML" => all_fixtures("XML", "*.sw")
     })
   end
 

@@ -60,10 +60,12 @@ module Linguist
       generated_net_specflow_feature_file? ||
       composer_lock? ||
       cargo_lock? ||
+      flake_lock? ||
       node_modules? ||
       go_vendor? ||
       go_lock? ||
       poetry_lock? ||
+      pdm_lock? ||
       esy_lock? ||
       npm_shrinkwrap_or_package_lock? ||
       terraform_lock? ||
@@ -408,6 +410,13 @@ module Linguist
       !!name.match(/poetry\.lock/)
     end
 
+    # Internal: Is the blob a generated pdm.lock?
+    #
+    # Returns true or false.
+    def pdm_lock?
+      !!name.match(/pdm\.lock/)
+    end
+
     # Internal: Is the blob a generated esy lock file?
     #
     # Returns true or false.
@@ -456,6 +465,13 @@ module Linguist
     # Returns true or false.
     def cargo_lock?
       !!name.match(/Cargo\.lock/)
+    end
+
+    # Internal: Is the blob a generated Nix flakes lock file?
+    #
+    # Returns true or false
+    def flake_lock?
+      !!name.match(/(^|\/)flake\.lock$/)
     end
 
     # Is the blob a VCR Cassette file?
