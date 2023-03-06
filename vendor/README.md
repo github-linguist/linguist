@@ -251,6 +251,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Isabelle ROOT:** [lsf37/Isabelle.tmbundle](https://github.com/lsf37/Isabelle.tmbundle)
 - **J:** [tikkanz/JSyntax](https://github.com/tikkanz/JSyntax)
 - **JAR Manifest:** [atom/language-yaml](https://github.com/atom/language-yaml)
+- **JCL:** [spgennard/vscode_cobol](https://github.com/spgennard/vscode_cobol)
 - **JFlex:** [jflex-de/jflex.tmbundle](https://github.com/jflex-de/jflex.tmbundle)
 - **JSON:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
 - **JSON with Comments:** [atom/language-javascript](https://github.com/atom/language-javascript)
@@ -519,6 +520,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **SugarSS:** [hudochenkov/Syntax-highlighting-for-PostCSS](https://github.com/hudochenkov/Syntax-highlighting-for-PostCSS)
 - **SuperCollider:** [supercollider/language-supercollider](https://github.com/supercollider/language-supercollider)
 - **Svelte:** [sebastinez/svelte-atom](https://github.com/sebastinez/svelte-atom)
+- **Sway:** [FuelLabs/sway-vscode-plugin](https://github.com/FuelLabs/sway-vscode-plugin)
 - **Swift:** [textmate/swift.tmbundle](https://github.com/textmate/swift.tmbundle)
 - **SystemVerilog:** [TheClams/SystemVerilog](https://github.com/TheClams/SystemVerilog)
 - **TLA:** [tlaplus-community/tree-sitter-tlaplus](https://github.com/tlaplus-community/tree-sitter-tlaplus) 🐌

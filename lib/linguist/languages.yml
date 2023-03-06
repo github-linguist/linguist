@@ -3027,6 +3027,14 @@ JAR Manifest:
   tm_scope: source.yaml
   ace_mode: text
   language_id: 447261135
+JCL:
+  type: programming
+  color: "#d90e09"
+  extensions:
+  - ".jcl"
+  tm_scope: source.jcl
+  ace_mode: text
+  language_id: 316620079
 JFlex:
   type: programming
   color: "#DBCA00"
@@ -6587,6 +6595,7 @@ Starlark:
   - BUCK
   - BUILD
   - BUILD.bazel
+  - MODULE.bazel
   - Tiltfile
   - WORKSPACE
   - WORKSPACE.bazel
@@ -6664,6 +6673,16 @@ Svelte:
   extensions:
   - ".svelte"
   language_id: 928734530
+Sway:
+  type: programming
+  color: "#dea584"
+  extensions:
+  - ".sw"
+  tm_scope: source.sway
+  ace_mode: rust
+  codemirror_mode: rust
+  codemirror_mime_type: text/x-rustsrc
+  language_id: 271471144
 Swift:
   type: programming
   color: "#F05138"
@@ -7559,6 +7578,7 @@ XML:
   - ".srdf"
   - ".storyboard"
   - ".sublime-snippet"
+  - ".sw"
   - ".targets"
   - ".tml"
   - ".ts"
