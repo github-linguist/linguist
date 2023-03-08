@@ -505,6 +505,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Smalltalk:** [tomas-stefano/smalltalk-tmbundle](https://github.com/tomas-stefano/smalltalk-tmbundle)
 - **Smarty:** [textmate/php-smarty.tmbundle](https://github.com/textmate/php-smarty.tmbundle)
 - **Smithy:** [awslabs/smithy-vscode](https://github.com/awslabs/smithy-vscode)
+- **Snakemake:** [MagicStack/MagicPython](https://github.com/MagicStack/MagicPython)
 - **Solidity:** [davidhq/SublimeEthereum](https://github.com/davidhq/SublimeEthereum)
 - **Soong:** [flimberger/android-system-tools](https://github.com/flimberger/android-system-tools)
 - **SourcePawn:** [Dreae/sourcepawn-vscode](https://github.com/Dreae/sourcepawn-vscode)
