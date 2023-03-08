@@ -25,6 +25,7 @@ These components have their own dependencies - `icu4c`, and `cmake` and `pkg-con
 On macOS with [Homebrew](http://brew.sh/) the instructions below under Getting started will install these dependencies for you.
 
 On Ubuntu:
+
 ```bash
 apt-get install cmake pkg-config libicu-dev docker.io ruby ruby-dev zlib1g-dev build-essential libssl-dev
 ```
@@ -62,17 +63,19 @@ To add support for a new extension:
 1. Add at least one sample for your extension to the [samples directory][samples] in the correct subdirectory.
    We prefer examples of real-world code showing common usage.
    The more representative of the structure of the language, the better.
+
+   **"Hello world" examples will not be accepted.**
 1. Open a pull request, linking to a [GitHub search result][search-example] showing in-the-wild usage.
    If you are adding a sample, please state clearly the license covering the code.
    If possible, link to the original source of the sample.
    If you wrote the sample specifically for the PR and are happy for it to be included under the MIT license that covers Linguist, you can state this instead.
 
-Additionally, if this extension is already listed in [`languages.yml`][languages] and associated with another language, then sometimes a few more steps will need to be taken:
+Additionally, if this extension is already listed in [`languages.yml`][languages] and associated with another language, then a few more steps will need to be taken:
 
-1. Make sure that example `.yourextension` files are present in the [samples directory][samples] for each language that uses `.yourextension`.
-1. Test the performance of the Bayesian classifier with a relatively large number (1000s) of sample `.yourextension` files (ping **@lildude** to help with this).
-   This ensures we're not misclassifying files.
-1. If the Bayesian classifier does a bad job with the sample `.yourextension` files then a [heuristic][] may need to be written to help.
+1. Make sure that at least two example `.yourextension` files are present in the [samples directory][samples] for each language that uses `.yourextension`.
+1. If the two languages look vaguely similar, or one of the languages has uniquely identifiable characteristics, consider writing a [heuristic][] to help with the classification.
+
+Remember, the goal here is to try and avoid false positives!
 
 See [My Linguist PR has been merged but GitHub doesn't reflect my changes][merged-pr] for details on when your changes will appear on GitHub after your PR has been merged.
 
@@ -87,25 +90,30 @@ To add support for a new language:
 1. Add an entry for your language to [`languages.yml`][languages].
    Omit the `language_id` field for now.
 1. Add a syntax-highlighting grammar for your language using:
+
    ```bash
    script/add-grammar https://github.com/JaneSmith/MyGrammar
    ```
+
    This command will analyze the grammar and, if no problems are found, add it to the repository.
    If problems are found, please report them to the grammar maintainer as you will otherwise be unable to add it.
+
    **Please only add grammars that have [one of these licenses][licenses].**
 1. Add samples for your language to the [samples directory][samples] in the correct subdirectory.
+   We prefer examples of real-world code showing common usage.
+   The more representative of the structure of the language, the better.
+
+   **"Hello world" examples will not be accepted.**
 1. Generate a unique ID for your language by running `script/update-ids`.
 1. Open a pull request, linking to [GitHub search results][search-example] showing in-the-wild usage.
    Please state clearly the license covering the code in the samples.
    Link directly to the original source if possible.
    If you wrote the sample specifically for the PR and are happy for it to be included under the MIT license that covers Linguist, you can state this instead.
 
-In addition, if your new language defines an extension that's already listed in [`languages.yml`][languages] (such as `.foo`) then sometimes a few more steps will need to be taken:
+In addition, if your new language defines an extension that is already listed in [`languages.yml`][languages] and associated with another language, then a few more steps will need to be taken:
 
-1. Make sure that example `.foo` files are present in the [samples directory][samples] for each language that uses `.foo`.
-1. Test the performance of the Bayesian classifier with a relatively large number (1000s) of sample `.foo` files (ping **@lildude** to help with this).
-   This ensures we're not misclassifying files.
-1. If the Bayesian classifier does a bad job with the sample `.foo` files, then a [heuristic][] may need to be written to help.
+1. Make sure that at least two example `.foo` files are present in the [samples directory][samples] for each language that uses `.foo`.
+1. If the two languages look vaguely similar, or one of the languages has uniquely identifiable characteristics, consider writing a [heuristic][] to help with the classification.
 
 Remember, the goal here is to try and avoid false positives!
 
@@ -118,7 +126,6 @@ For disambiguating between files with common extensions, Linguist applies some [
 This process can help differentiate between, for example, `.h` files which could be either C, C++, or Obj-C.
 
 Misclassifications can often be solved by either adding a new filename or extension for the language or adding more [samples][] to make the classifier smarter.
-
 
 ## Fixing syntax highlighting
 
@@ -198,23 +205,18 @@ Here's our current build status: [![Actions Status](https://github.com/github/li
 Linguist is maintained with :heart: by:
 
 - **@Alhadis**
-- **@larsbrinkhoff**
 - **@lildude** (GitHub staff)
-- **@pchaigno**
 
 As Linguist is a production dependency for GitHub we have a couple of workflow restrictions:
 
 - Anyone with commit rights can merge Pull Requests provided that there is a :+1: from a GitHub staff member.
 - Releases are performed by GitHub staff so we can ensure GitHub.com always stays up to date with the latest release of Linguist and there are no regressions in production.
 
-
 [grammars]: /vendor/README.md
 [heuristic]: https://github.com/github/linguist/blob/master/lib/linguist/heuristics.yml
 [languages]: /lib/linguist/languages.yml
 [licenses]: https://github.com/github/linguist/blob/9b1023ed5d308cb3363a882531dea1e272b59977/vendor/licenses/config.yml#L4-L15
-[new-issue]: https://github.com/github/linguist/issues/new
 [samples]: /samples
 [search-example]: https://github.com/search?utf8=%E2%9C%93&q=extension%3Aboot+NOT+nothack&type=Code&ref=searchresults
-[gpr]: https://docs.github.com/packages/using-github-packages-with-your-projects-ecosystem/configuring-rubygems-for-use-with-github-packages
 [#5756]: https://github.com/github/linguist/issues/5756
 [merged-pr]: /docs/troubleshooting.md#my-linguist-pr-has-been-merged-but-gitHub-doesnt-reflect-my-changes
