@@ -7,7 +7,7 @@
 <!--- Go over all the following points, and put an `x` in all the boxes that apply. -->
 <!--- Please remove whole sections, not points within the sections, that do not apply -->
 <!--- If you're unsure about any of these, don't hesitate to ask. We're here to help! -->
-- [ ] **I am associating a language with a new file extension.**
+- [ ] **I am adding a new extension to a language.**
   - [ ] The new extension is used in hundreds of repositories on GitHub.com
     - Search results for each extension:
       <!-- Replace FOOBAR with the new extension, and KEYWORDS with keywords unique to the language. Repeat for each extension added. -->
