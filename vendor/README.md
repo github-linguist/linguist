@@ -155,6 +155,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Eiffel:** [textmate/eiffel.tmbundle](https://github.com/textmate/eiffel.tmbundle)
 - **Elixir:** [elixir-lang/tree-sitter-elixir](https://github.com/elixir-lang/tree-sitter-elixir) 🐌
 - **Elvish:** [elves/elvish](https://github.com/elves/elvish)
+- **Elvish Transcript:** [elves/elvish](https://github.com/elves/elvish)
 - **Emacs Lisp:** [Alhadis/language-emacs-lisp](https://github.com/Alhadis/language-emacs-lisp)
 - **EmberScript:** [atom/language-coffee-script](https://github.com/atom/language-coffee-script)
 - **Erlang:** [textmate/erlang.tmbundle](https://github.com/textmate/erlang.tmbundle)
@@ -504,6 +505,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Smalltalk:** [tomas-stefano/smalltalk-tmbundle](https://github.com/tomas-stefano/smalltalk-tmbundle)
 - **Smarty:** [textmate/php-smarty.tmbundle](https://github.com/textmate/php-smarty.tmbundle)
 - **Smithy:** [awslabs/smithy-vscode](https://github.com/awslabs/smithy-vscode)
+- **Snakemake:** [MagicStack/MagicPython](https://github.com/MagicStack/MagicPython)
 - **Solidity:** [davidhq/SublimeEthereum](https://github.com/davidhq/SublimeEthereum)
 - **Soong:** [flimberger/android-system-tools](https://github.com/flimberger/android-system-tools)
 - **SourcePawn:** [Dreae/sourcepawn-vscode](https://github.com/Dreae/sourcepawn-vscode)
