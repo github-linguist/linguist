@@ -60,12 +60,12 @@ To add support for a new extension:
 1. Add your extension to the language entry in [`languages.yml`][languages].
    Keep the extensions in alphabetical order, sorted case-sensitively (uppercase before lowercase).
    The exception is the primary extension: it should always be first.
-1. Add at least one sample for your extension to the [samples directory][samples] in the correct subdirectory.
+2. Add at least one sample for your extension to the [samples directory][samples] in the correct subdirectory.
    We prefer examples of real-world code showing common usage.
    The more representative of the structure of the language, the better.
 
    **"Hello world" examples will not be accepted.**
-1. Open a pull request, linking to a [GitHub search result][search-example] showing in-the-wild usage.
+3. Open a pull request, linking to a [GitHub search result][search-example] showing in-the-wild usage.
    If you are adding a sample, please state clearly the license covering the code.
    If possible, link to the original source of the sample.
    If you wrote the sample specifically for the PR and are happy for it to be included under the MIT license that covers Linguist, you can state this instead.
@@ -73,7 +73,7 @@ To add support for a new extension:
 Additionally, if this extension is already listed in [`languages.yml`][languages] and associated with another language, then a few more steps will need to be taken:
 
 1. Make sure that at least two example `.yourextension` files are present in the [samples directory][samples] for each language that uses `.yourextension`.
-1. If the two languages look vaguely similar, or one of the languages has uniquely identifiable characteristics, consider writing a [heuristic][] to help with the classification.
+2. If the two languages look vaguely similar, or one of the languages has uniquely identifiable characteristics, consider writing a [heuristic][] to help with the classification.
 
 Remember, the goal here is to try and avoid false positives!
 
@@ -89,7 +89,7 @@ To add support for a new language:
 
 1. Add an entry for your language to [`languages.yml`][languages].
    Omit the `language_id` field for now.
-1. Add a syntax-highlighting grammar for your language using:
+2. Add a syntax-highlighting grammar for your language using:
 
    ```bash
    script/add-grammar https://github.com/JaneSmith/MyGrammar
@@ -99,13 +99,13 @@ To add support for a new language:
    If problems are found, please report them to the grammar maintainer as you will otherwise be unable to add it.
 
    **Please only add grammars that have [one of these licenses][licenses].**
-1. Add samples for your language to the [samples directory][samples] in the correct subdirectory.
+3. Add samples for your language to the [samples directory][samples] in the correct subdirectory.
    We prefer examples of real-world code showing common usage.
    The more representative of the structure of the language, the better.
 
    **"Hello world" examples will not be accepted.**
-1. Generate a unique ID for your language by running `script/update-ids`.
-1. Open a pull request, linking to [GitHub search results][search-example] showing in-the-wild usage.
+4. Generate a unique ID for your language by running `script/update-ids`.
+5. Open a pull request, linking to [GitHub search results][search-example] showing in-the-wild usage.
    Please state clearly the license covering the code in the samples.
    Link directly to the original source if possible.
    If you wrote the sample specifically for the PR and are happy for it to be included under the MIT license that covers Linguist, you can state this instead.
@@ -113,7 +113,7 @@ To add support for a new language:
 In addition, if your new language defines an extension that is already listed in [`languages.yml`][languages] and associated with another language, then a few more steps will need to be taken:
 
 1. Make sure that at least two example `.foo` files are present in the [samples directory][samples] for each language that uses `.foo`.
-1. If the two languages look vaguely similar, or one of the languages has uniquely identifiable characteristics, consider writing a [heuristic][] to help with the classification.
+2. If the two languages look vaguely similar, or one of the languages has uniquely identifiable characteristics, consider writing a [heuristic][] to help with the classification.
 
 Remember, the goal here is to try and avoid false positives!
 
