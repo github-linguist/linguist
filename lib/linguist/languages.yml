@@ -8059,14 +8059,6 @@ sed:
   ace_mode: text
   tm_scope: source.sed
   language_id: 847830017
-wdl:
-  type: programming
-  color: "#42f1f4"
-  extensions:
-  - ".wdl"
-  tm_scope: source.wdl
-  ace_mode: text
-  language_id: 374521672
 wisp:
   type: programming
   ace_mode: clojure
@@ -8077,6 +8069,19 @@ wisp:
   - ".wisp"
   tm_scope: source.clojure
   language_id: 420
+Workflow Description Language:
+  aliases:
+  - wdl
+  type: programming
+  color: "#42f1f4"
+  extensions:
+  - ".wdl"
+  interpreters:
+  - miniwdl
+  - Cromwell
+  tm_scope: source.wdl
+  ace_mode: text
+  language_id: 374521672
 xBase:
   type: programming
   color: "#403a40"
