@@ -580,6 +580,10 @@ class TestFileBlob < Minitest::Test
     # GitHub.com
     assert sample_blob(".github/CODEOWNERS").vendored?
     assert sample_blob(".github/workflows/test.yml").vendored?
+    
+    # obsidian.md settings
+    assert sample_blob(".obsidian/app.json").vendored?
+    assert sample_blob(".obsidian/plugins/templater-obsidian/main.js").vendored?
   end
 
   def test_documentation

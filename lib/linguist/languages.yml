@@ -743,6 +743,7 @@ C++:
   - ".c++"
   - ".cc"
   - ".cp"
+  - ".cppm"
   - ".cxx"
   - ".h"
   - ".h++"
@@ -1778,6 +1779,13 @@ Elvish:
   tm_scope: source.elvish
   color: "#55BB55"
   language_id: 570996448
+Elvish Transcript:
+  type: programming
+  group: Elvish
+  ace_mode: text
+  tm_scope: source.elvish-transcript
+  color: "#55BB55"
+  language_id: 452025714
 Emacs Lisp:
   type: programming
   tm_scope: source.emacs.lisp
@@ -2850,6 +2858,7 @@ INI:
   extensions:
   - ".ini"
   - ".cfg"
+  - ".cnf"
   - ".dof"
   - ".lektorproject"
   - ".prefs"
@@ -3434,7 +3443,7 @@ KerboScript:
   extensions:
   - ".ks"
   color: "#41adf0"
-  tm_scope: "source.kerboscript"
+  tm_scope: source.kerboscript
   language_id: 59716426
 KiCad Layout:
   type: data
@@ -5381,7 +5390,6 @@ Python:
   - ".pyt"
   - ".pyw"
   - ".rpy"
-  - ".smk"
   - ".spec"
   - ".tac"
   - ".wsgi"
@@ -5391,7 +5399,6 @@ Python:
   - DEPS
   - SConscript
   - SConstruct
-  - Snakefile
   - wscript
   interpreters:
   - python
@@ -6501,6 +6508,22 @@ Smithy:
   extensions:
   - ".smithy"
   language_id: 1027892786
+Snakemake:
+  type: programming
+  group: Python
+  tm_scope: source.python
+  ace_mode: python
+  codemirror_mode: python
+  codemirror_mime_type: text/x-python
+  color: "#419179"
+  extensions:
+  - ".smk"
+  - ".snakefile"
+  filenames:
+  - Snakefile
+  aliases:
+  - snakefile
+  language_id: 151241392
 Solidity:
   type: programming
   color: "#AA6746"
@@ -6659,6 +6682,16 @@ Svelte:
   extensions:
   - ".svelte"
   language_id: 928734530
+Sway:
+  type: programming
+  color: "#dea584"
+  extensions:
+  - ".sw"
+  tm_scope: source.sway
+  ace_mode: rust
+  codemirror_mode: rust
+  codemirror_mime_type: text/x-rustsrc
+  language_id: 271471144
 Swift:
   type: programming
   color: "#F05138"
@@ -7554,6 +7587,7 @@ XML:
   - ".srdf"
   - ".storyboard"
   - ".sublime-snippet"
+  - ".sw"
   - ".targets"
   - ".tml"
   - ".ts"
