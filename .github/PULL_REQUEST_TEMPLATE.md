@@ -28,9 +28,10 @@
       - [URL to each sample source, if applicable]
     - Sample license(s):
   - [ ] I have included a syntax highlighting grammar: [URL to grammar repo]
-      <!-- Setting a color is only needed for 'programming' and 'markup' languages and will default to `#cccccc` if not specified. -->
-  - [ ] I have added a color: [Enter color in hex as `#123456` so the color can be seen in the PR body]
-    - I chose this color because: [Please specify why you chose this color. It helps in future if there is a request to change the color.]
+      <!-- Setting a color is strongly recommended, but optional: `#cccccc` is used by default -->
+  - [ ] I have added a color
+    - Hex value: `#RRGGBB`
+    - Rationale: <!-- Please specify why you chose this color (if it was randomly selected, please say so); it helps arbitrate future requests to change a language's color -->
   - [ ] I have updated the heuristics to distinguish my language from others using the same extension.
 
 - [ ] **I am fixing a misclassified language**
