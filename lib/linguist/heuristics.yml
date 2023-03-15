@@ -61,6 +61,10 @@ disambiguations:
     - pattern: '\b(?i:(CODEUNIT|PAGE|PAGEEXTENSION|PAGECUSTOMIZATION|DOTNET|ENUM|ENUMEXTENSION|VALUE|QUERY|REPORT|TABLE|TABLEEXTENSION|XMLPORT|PROFILE|CONTROLADDIN|REPORTEXTENSION|INTERFACE|PERMISSIONSET|PERMISSIONSETEXTENSION|ENTITLEMENT))\b'
   # Open-ended fallback to Perl AutoLoader
   - language: Perl
+- extensions: ['.app']
+  rules:
+  - language: Erlang
+    pattern: '(?m)^{\s*(?:application|''application'')\s*,\s*(?:[a-z]+[\w@]*|''[^'']+'')\s*,\s*\[.*?\]\s*}\.[ \t]*$'
 - extensions: ['.as']
   rules:
   - language: ActionScript
