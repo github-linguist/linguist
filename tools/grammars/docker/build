@@ -3,7 +3,7 @@
 set -e
 cd "$(dirname "$0")/.."
 
-image=linguist/grammar-compiler
+image=ghcr.io/github/linguist/grammar-compiler
 docker build -t $image .
 
 if [ "$1" = "--push" ]; then
