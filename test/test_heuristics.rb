@@ -226,6 +226,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_app_by_heuristics
+    assert_heuristics({
+      "Erlang" => Dir.glob("#{fixtures_path}/Generic/app/Erlang/*"),
+      nil => Dir.glob("#{fixtures_path}/Generic/app/nil/*")
+    })
+  end
+
   def test_as_by_heuristics
     assert_heuristics({
       "ActionScript" => all_fixtures("ActionScript", "*.as"),
