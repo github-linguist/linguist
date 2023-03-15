@@ -5,9 +5,9 @@
 
 ## Checklist:
 <!--- Go over all the following points, and put an `x` in all the boxes that apply. -->
-<!--- Feel free to remove whole sections, not points within the sections, that do not apply -->
+<!--- Please remove whole sections, not points within the sections, that do not apply -->
 <!--- If you're unsure about any of these, don't hesitate to ask. We're here to help! -->
-- [ ] **I am associating a language with a new file extension.**
+- [ ] **I am adding a new extension to a language.**
   - [ ] The new extension is used in hundreds of repositories on GitHub.com
     - Search results for each extension:
       <!-- Replace FOOBAR with the new extension, and KEYWORDS with keywords unique to the language. Repeat for each extension added. -->
@@ -28,6 +28,10 @@
       - [URL to each sample source, if applicable]
     - Sample license(s):
   - [ ] I have included a syntax highlighting grammar: [URL to grammar repo]
+      <!-- Setting a color is strongly recommended, but optional: `#cccccc` is used by default -->
+  - [ ] I have added a color
+    - Hex value: `#RRGGBB`
+    - Rationale: <!-- Please specify why you chose this color (if it was randomly selected, please say so); it helps arbitrate future requests to change a language's color -->
   - [ ] I have updated the heuristics to distinguish my language from others using the same extension.
 
 - [ ] **I am fixing a misclassified language**
