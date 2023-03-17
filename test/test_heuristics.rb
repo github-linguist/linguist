@@ -226,6 +226,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_app_by_heuristics
+    assert_heuristics({
+      "Erlang" => Dir.glob("#{fixtures_path}/Generic/app/Erlang/*"),
+      nil => Dir.glob("#{fixtures_path}/Generic/app/nil/*")
+    })
+  end
+
   def test_as_by_heuristics
     assert_heuristics({
       "ActionScript" => all_fixtures("ActionScript", "*.as"),
@@ -317,10 +324,12 @@ class TestHeuristics < Minitest::Test
 
   def test_cls_by_heuristics
     assert_heuristics({
+      "Visual Basic 6.0" => all_fixtures("Visual Basic 6.0", "*.cls"),
+      "VBA" => all_fixtures("VBA", "*.cls"),
       "TeX" => all_fixtures("TeX", "*.cls"),
       "ObjectScript" => all_fixtures("ObjectScript", "*.cls"),
       # Missing heuristics
-      nil => all_fixtures("Apex", "*.cls") + all_fixtures("OpenEdge ABL", "*.cls") + all_fixtures("VBA", "*.cls"),
+      nil => all_fixtures("Apex", "*.cls") + all_fixtures("OpenEdge ABL", "*.cls"),
     })
   end
 
@@ -421,6 +430,13 @@ class TestHeuristics < Minitest::Test
       "Text" => all_fixtures("Text", "*.fr")
     })
   end
+  
+  def test_frm_by_heuristics
+    assert_heuristics({
+      "VBA" => all_fixtures("VBA", "*.frm"),
+      "Visual Basic 6.0" => all_fixtures("Visual Basic 6.0", "*.frm"),
+    })
+  end
 
   def test_fs_by_heuristics
     assert_heuristics({
@@ -499,6 +515,13 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "Hack" => all_fixtures("Hack", "*.hh"),
       nil => all_fixtures("C++", "*.hh")
+    })
+  end
+
+  def test_html_by_heuristics
+    assert_heuristics({
+      "Ecmarkup" => all_fixtures("Ecmarkup", "*.html"),
+      "HTML" => all_fixtures("HTML", "*.html")
     })
   end
 
@@ -718,6 +741,14 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_plt_by_heuristics
+    assert_heuristics({
+      "Prolog" => all_fixtures("Prolog", "*.plt"),
+      # Gnuplot lacks a heuristic
+      nil => all_fixtures("Gnuplot", "*.plt")
+    })
+  end
+
   def test_pm_by_heuristics
     assert_heuristics({
       "Perl" => all_fixtures("Perl", "*.pm"),
@@ -876,6 +907,13 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "STL" => Dir.glob("#{fixtures_path}/Generic/stl/STL/*"),
       nil => Dir.glob("#{fixtures_path}/Generic/stl/nil/*")
+    })
+  end
+
+  def test_sw_by_heuristics
+    assert_heuristics({
+      "Sway" => all_fixtures("Sway", "*.sw"),
+      "XML" => all_fixtures("XML", "*.sw")
     })
   end
 

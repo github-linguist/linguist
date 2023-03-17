@@ -63,7 +63,6 @@ vendor/grammars/NSIS:
 - source.nsis
 vendor/grammars/NimLime:
 - source.nim
-- source.nim.comment
 - source.nim_filter
 - source.nimcfg
 vendor/grammars/NovaGrammars:
@@ -256,8 +255,6 @@ vendor/grammars/atom-language-perl6:
 - source.regexp.raku
 vendor/grammars/atom-language-purescript:
 - source.purescript
-vendor/grammars/atom-language-rust:
-- source.rust
 vendor/grammars/atom-language-stan:
 - source.stan
 vendor/grammars/atom-miniyaml:
@@ -304,6 +301,8 @@ vendor/grammars/ceylon-sublimetext:
 - source.ceylon
 vendor/grammars/chapel-tmbundle:
 - source.chapel
+vendor/grammars/circom-highlighting-vscode:
+- source.circom
 vendor/grammars/clarity.tmbundle:
 - source.clar
 vendor/grammars/cmake.tmbundle:
@@ -432,6 +431,8 @@ vendor/grammars/imba-linguist-grammar:
 - source.imba
 vendor/grammars/ini.tmbundle:
 - source.ini
+vendor/grammars/ink-tmlanguage:
+- source.ink
 vendor/grammars/io.tmbundle:
 - source.io
 vendor/grammars/ioke-outdated:
@@ -523,6 +524,7 @@ vendor/grammars/language-etc:
 - source.dosbox-conf
 - source.dotenv
 - source.futhark
+- source.generic-config
 - source.generic-db
 - source.gitattributes
 - source.gitconfig
@@ -556,6 +558,7 @@ vendor/grammars/language-etc:
 - source.wgetrc
 - text.checksums
 - text.codeowners
+- text.html.ecmarkup
 - text.lesshst
 - text.openbsd-pkg.desc
 - text.savane
@@ -592,6 +595,7 @@ vendor/grammars/language-grammars:
 - source.lex.regexp
 - source.pegjs
 - source.yacc
+- text.grammarkdown
 vendor/grammars/language-haml:
 - text.haml
 - text.hamlc
@@ -636,6 +640,10 @@ vendor/grammars/language-jsonnet:
 - source.jsonnet
 vendor/grammars/language-kak:
 - source.kakscript
+vendor/grammars/language-kerboscript:
+- source.kerboscript
+vendor/grammars/language-kickstart:
+- source.kickstart
 vendor/grammars/language-kotlin:
 - source.kotlin
 vendor/grammars/language-less:
@@ -657,6 +665,7 @@ vendor/grammars/language-mermaid:
 - source.mermaid.flowchart
 - source.mermaid.gantt
 - source.mermaid.gitgraph
+- source.mermaid.mindmap
 - source.mermaid.pie-chart
 - source.mermaid.requirement-diagram
 - source.mermaid.sequence-diagram
@@ -686,6 +695,8 @@ vendor/grammars/language-povray:
 vendor/grammars/language-property-list:
 - source.plist
 - text.xml.plist
+vendor/grammars/language-pyret:
+- source.arr
 vendor/grammars/language-qasm:
 - source.qasm
 vendor/grammars/language-reason:
@@ -885,6 +896,8 @@ vendor/grammars/riot-syntax-highlight:
 - text.html.riot
 vendor/grammars/ruby-slim.tmbundle:
 - text.slim
+vendor/grammars/rust-syntax:
+- source.rust
 vendor/grammars/sas.tmbundle:
 - source.sas
 vendor/grammars/scheme.tmbundle:
@@ -903,6 +916,8 @@ vendor/grammars/smali-sublime:
 - source.smali
 vendor/grammars/smalltalk-tmbundle:
 - source.smalltalk
+vendor/grammars/smithy-vscode:
+- source.smithy
 vendor/grammars/sourcepawn-vscode:
 - source.sourcepawn
 vendor/grammars/sql.tmbundle:
@@ -993,6 +1008,8 @@ vendor/grammars/sublimetext-nasl:
 - source.tnsaudit
 vendor/grammars/svelte-atom:
 - source.svelte
+vendor/grammars/sway-vscode-plugin:
+- source.sway
 vendor/grammars/swift.tmbundle:
 - source.swift
 vendor/grammars/tcl.tmbundle:
@@ -1048,6 +1065,7 @@ vendor/grammars/vscode-gleam:
 vendor/grammars/vscode-go:
 - go.mod
 - go.sum
+- govulncheck
 vendor/grammars/vscode-hack:
 - markdown.hack.codeblock
 - source.hack
