@@ -267,7 +267,8 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "FreeBasic" => all_fixtures("FreeBasic", "*.bas"),
       "BASIC" => all_fixtures("BASIC", "*.bas"),
-      nil => all_fixtures("VBA", "*.bas")
+      "VBA" => all_fixtures("VBA", "*.bas"),
+      "Visual Basic 6.0" => all_fixtures("Visual Basic 6.0", "*.bas")
     })
   end
 
