@@ -848,11 +848,17 @@ named_patterns:
   vb-form: '^\s*VERSION\s+[0-9]\.[0-9]{2}'
   vb-module: '^\s*Attribute\s+VB_Name\s+=\s+'
   vba:
-  - '^\s*#If\s+(:?VBA7|Win64)'
-  - '^\s*(?:Public|Private)?\s+Declare\s+PtrSafe\s+(?:Sub|Function)'
-  - '^\s*Dim\s+[0-9a-zA-Z_]*\s+As\s+(?:LongPtr|LongLong)'
-  - '\sVBA.(?:vb|[A-Z])'
-  - '\s(?:Excel.[a-zA-Z]|ThisWorkbook|ActiveWorkbook|ActiveSheet|ActiveChart|ActiveCell|WorksheetFunction)'
-  - '\s(?:Word.[a-zA-Z]|ActiveDocument)'
-  - '\s(?:PowerPoint.[a-zA-Z]|ActivePresentation)'
-  - '\s(?:Outlook.[a-zA-Z]|ActiveExplorer|ActiveInspector)'
+  # VBA7 new 64-bit features (https://learn.microsoft.com/en-us/office/vba/language/concepts/getting-started/64-bit-visual-basic-for-applications-overview)
+  - '^\s*(?:Public|Private)?\s+Declare\s+PtrSafe\s+(?:Sub|Function)\b'
+  - '^\s*#If\s(:?VBA7|Win64)\b'
+  - '^\s*Dim\s[0-9a-zA-Z_]*\sAs\s(?:LongPtr|LongLong)\b'
+  # Top module declarations unique to VBA
+  - '^\s*Option\sPrivate\sModule\b'
+  - '^\s*Option\sCompare\sDatabase\b'
+  # Libraries/Objects preloaded with VBA
+  - '(?:\s|\()(?:VBA|Access|Excel|Outlook|PowerPoint|Visio|Word)\.\w+' # VBA Libraries invocation
+  - '\b(?:ThisDrawing|AcadObject)\b' # AutoCAD
+  - '\b(?:ThisWorkbook|ActiveWorkbook|ActiveSheet|ActiveChart|ActiveCell|Range\("[0-9a-zA-Z:]*"\)|WorksheetFunction)\b' # Excel
+  - '\b(?:ActiveExplorer|ActiveInspector)\b' # Outlook
+  - '\b(?:ActiveWindow\.Presentation|ActivePresentation)\b' # PowerPoint
+  - '\b(?:ActiveDocument|Selection\.Find|Selection\.Paragraphs)\b' # Word
