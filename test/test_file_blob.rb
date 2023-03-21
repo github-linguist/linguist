@@ -580,10 +580,15 @@ class TestFileBlob < Minitest::Test
     # GitHub.com
     assert sample_blob(".github/CODEOWNERS").vendored?
     assert sample_blob(".github/workflows/test.yml").vendored?
-    
+
     # obsidian.md settings
     assert sample_blob(".obsidian/app.json").vendored?
     assert sample_blob(".obsidian/plugins/templater-obsidian/main.js").vendored?
+
+    # teamcity ci configuration
+    assert sample_blob(".teamcity/Project_Name_CI/Project.kt").vendored?
+    assert sample_blob(".teamcity/Project_Name_CI/settings.kts").vendored?
+    assert sample_blob(".teamcity/Project_Name_CI/patches/projects/3b71d400-c5d6-4628-8164-c50b1254cf1d.kts").vendored?
   end
 
   def test_documentation
