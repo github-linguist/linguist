@@ -63,7 +63,6 @@ vendor/grammars/NSIS:
 - source.nsis
 vendor/grammars/NimLime:
 - source.nim
-- source.nim.comment
 - source.nim_filter
 - source.nimcfg
 vendor/grammars/NovaGrammars:
@@ -525,6 +524,7 @@ vendor/grammars/language-etc:
 - source.dosbox-conf
 - source.dotenv
 - source.futhark
+- source.generic-config
 - source.generic-db
 - source.gitattributes
 - source.gitconfig
@@ -665,6 +665,7 @@ vendor/grammars/language-mermaid:
 - source.mermaid.flowchart
 - source.mermaid.gantt
 - source.mermaid.gitgraph
+- source.mermaid.mindmap
 - source.mermaid.pie-chart
 - source.mermaid.requirement-diagram
 - source.mermaid.sequence-diagram
@@ -1064,6 +1065,7 @@ vendor/grammars/vscode-gleam:
 vendor/grammars/vscode-go:
 - go.mod
 - go.sum
+- govulncheck
 vendor/grammars/vscode-hack:
 - markdown.hack.codeblock
 - source.hack
