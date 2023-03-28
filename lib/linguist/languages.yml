@@ -7317,6 +7317,19 @@ Wavefront Object:
   tm_scope: source.wavefront.obj
   ace_mode: text
   language_id: 393
+WDL:
+  aliases:
+  - Workflow Description Language
+  type: programming
+  color: "#42f1f4"
+  extensions:
+  - ".wdl"
+  interpreters:
+  - miniwdl
+  - Cromwell
+  tm_scope: source.wdl
+  ace_mode: text
+  language_id: 374521672
 Web Ontology Language:
   type: data
   color: "#5b70bd"
@@ -8060,19 +8073,6 @@ sed:
   ace_mode: text
   tm_scope: source.sed
   language_id: 847830017
-WDL:
-  aliases:
-  - Workflow Description Language
-  type: programming
-  color: "#42f1f4"
-  extensions:
-  - ".wdl"
-  interpreters:
-  - miniwdl
-  - Cromwell
-  tm_scope: source.wdl
-  ace_mode: text
-  language_id: 374521672
 wisp:
   type: programming
   ace_mode: clojure
