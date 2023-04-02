@@ -857,8 +857,9 @@ named_patterns:
   - '^\s*Option\sCompare\sDatabase\b'
   # Libraries/Objects preloaded with VBA
   - '(?:\s|\()(?:VBA|Access|Excel|Outlook|PowerPoint|Visio|Word)\.\w+' # VBA Libraries invocation
-  - '\b(?:ThisDrawing|AcadObject)\b' # AutoCAD
-  - '\b(?:ThisWorkbook|ActiveWorkbook|ActiveSheet|ActiveChart|ActiveCell|Range\("[0-9a-zA-Z:]*"\)|WorksheetFunction)\b' # Excel
-  - '\b(?:ActiveExplorer|ActiveInspector)\b' # Outlook
-  - '\b(?:ActiveWindow\.Presentation|ActivePresentation)\b' # PowerPoint
-  - '\b(?:ActiveDocument|Selection\.Find|Selection\.Paragraphs)\b' # Word
+  - '\b(?:ThisDrawing|AcadObject)\b' # AutoCAD Objects
+  - '\b(?:ThisWorkbook|ActiveWorkbook|ActiveSheet|ActiveChart|ActiveCell|WorksheetFunction)\b' # Excel Objects
+  - '\bRange\("(?:[a-zA-Z]+\d+|[a-zA-Z]+\d+:[a-zA-Z]+\d+|[a-zA-Z]+:[a-zA-Z]+|\d+:\d+)"\)' # Excel range
+  - '\b(?:ActiveExplorer|ActiveInspector)\b' # Outlook Objects
+  - '\b(?:ActiveWindow\.Presentation|ActivePresentation)\b' # PowerPoint Objects
+  - '\b(?:ActiveDocument|Selection\.Find|Selection\.Paragraphs)\b' # Word Objects
