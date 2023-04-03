@@ -853,8 +853,7 @@ named_patterns:
   - '^\s*#If\s(:?VBA7|Win64)\b'
   - '^\s*Dim\s[0-9a-zA-Z_]*\sAs\s(?:LongPtr|LongLong)\b'
   # Top module declarations unique to VBA
-  - '^\s*Option\sPrivate\sModule\b'
-  - '^\s*Option\sCompare\sDatabase\b'
+  - '^\s*Option\s+(?:Private\s+Module|Compare\s+Database)\b'
   # Libraries/Objects preloaded with VBA
   - '(?:\s|\()(?:VBA|Access|Excel|Outlook|PowerPoint|Visio|Word)\.\w+' # VBA Libraries invocation
   - '\b(?:ThisDrawing|AcadObject)\b' # AutoCAD Objects
