@@ -851,7 +851,7 @@ named_patterns:
   # VBA7 new 64-bit features (https://learn.microsoft.com/en-us/office/vba/language/concepts/getting-started/64-bit-visual-basic-for-applications-overview)
   - '^\s*(?:Public|Private)?\s+Declare\s+PtrSafe\s+(?:Sub|Function)\b'
   - '^\s*#If\s(:?VBA7|Win64)\b'
-  - '^\s*Dim\s[0-9a-zA-Z_]*\sAs\s(?:LongPtr|LongLong)\b'
+  - '^\s*Dim\s[0-9a-zA-Z_]*\sAs\sLong(?:Ptr|Long)\b'
   # Top module declarations unique to VBA
   - '^\s*Option\s+(?:Private\s+Module|Compare\s+Database)\b'
   # Libraries/Objects preloaded with VBA
