@@ -854,11 +854,16 @@ named_patterns:
   - '^\s*Dim\s[0-9a-zA-Z_]*\sAs\sLong(?:Ptr|Long)\b'
   # Top module declarations unique to VBA
   - '^\s*Option\s+(?:Private\s+Module|Compare\s+Database)\b'
-  # Libraries/Objects preloaded with VBA
-  - '(?:\s|\()(?:VBA|Access|Excel|Outlook|PowerPoint|Visio|Word)\.\w' # VBA Libraries invocation
-  - '\b(?:ThisDrawing|AcadObject)\b' # AutoCAD Objects
-  - '\b(?:ThisWorkbook|ActiveWorkbook|ActiveSheet|ActiveChart|ActiveCell|WorksheetFunction)\b' # Excel Objects
-  - '\bRange\("(?:[a-zA-Z]+\d+|[a-zA-Z]+\d+:[a-zA-Z]+\d+|[a-zA-Z]+:[a-zA-Z]+|\d+:\d+)"\)' # Excel range
-  - '\b(?:ActiveExplorer|ActiveInspector)\b' # Outlook Objects
-  - '\b(?:ActiveWindow\.Presentation|ActivePresentation)\b' # PowerPoint Objects
-  - '\b(?:ActiveDocument|Selection\.Find|Selection\.Paragraphs)\b' # Word Objects
+  # VBA Libraries invocation
+  - '(?:\s|\()(?:VBA|Access|Excel|Outlook|PowerPoint|Visio|Word)\.\w'
+  # AutoCAD Objects
+  - '\b(?:ThisDrawing|AcadObject)\b'
+  # Excel Objects
+  - '\b(?:ThisWorkbook|ActiveWorkbook|ActiveSheet|ActiveChart|ActiveCell|WorksheetFunction)\b'
+  - '\bRange\("(?:[a-zA-Z]+\d+|[a-zA-Z]+\d+:[a-zA-Z]+\d+|[a-zA-Z]+:[a-zA-Z]+|\d+:\d+)"\)'
+  # Outlook Objects
+  - '\b(?:ActiveExplorer|ActiveInspector)\b'
+  # PowerPoint Objects
+  - '\b(?:ActiveWindow\.Presentation|ActivePresentation)\b'
+  # Word Objects
+  - '\b(?:ActiveDocument|Selection\.Find|Selection\.Paragraphs)\b'
