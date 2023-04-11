@@ -21,8 +21,8 @@ If you have not made any changes to your repository in a while, you may find pus
 ## My C/C++/Objective-C `.h` header file is detected as the wrong language
 
 Correctly detecting the language for the C-family `.h` header files is tough because Linguist detects the languages of files in isolation when analysing repositories and these header files, especially the smaller ones, can be used across all three languages without using any language-specific content.
-To try and reduce the number of false positives and keep some degree of predicatability for users, Linguist will assume all `.h` header files are C by default and will only identify a file as C++ or Objective-C if the content matches the specific heuristic for that language.
-This will mean you will need to implement an [override](/docs/overrides.md) for some of your header files if you wish for them to be classified as C++ or Objective-C if they do no contain language-specific content.
+To try and reduce the number of false positives and keep some degree of predictability for users, Linguist will assume all `.h` header files are C by default and will only identify a file as C++ or Objective-C if the content matches the specific heuristic for that language.
+This will mean you will need to implement an [override](/docs/overrides.md) for some of your header files if you wish for them to be classified as C++ or Objective-C if they do not contain language-specific content.
 
 ## My repository isn't showing my language
 
@@ -70,4 +70,4 @@ Grammars will only be updated in patch releases if the patch release is specific
 
 Note: New languages will not appear in GitHub's search results for some time after the pull request has been merged and the new Linguist release deployed to GitHub.com.
 This is because GitHub's search uses [go-enry](https://github.com/go-enry/go-enry) for language detection which tends to lag behind Linguist by a few weeks to months.
-This in turn requires an update to the underlying search code once go-enry is inline with Linguist.
+This in turn requires an update to the underlying search code once go-enry is inline with Linguist (See also go-enry's list of [divergences from Linguist](https://github.com/go-enry/go-enry#divergences-from-linguist)).
