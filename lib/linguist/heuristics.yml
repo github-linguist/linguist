@@ -92,8 +92,6 @@ disambiguations:
     pattern: '^[ \t]*#(?i)(?:define|endif|endmacro|ifn?def|include|lang|macro)\s'
   - language: BASIC
     pattern: '^\A\s*\d+'
-  - language: VBA
-    pattern: '^\s*Attribute VB_Name = '
 - extensions: ['.bb']
   rules:
   - language: BlitzBasic
