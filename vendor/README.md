@@ -436,6 +436,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Quake:** [newgrammars/quake](https://github.com/newgrammars/quake)
 - **R:** [textmate/r.tmbundle](https://github.com/textmate/r.tmbundle)
 - **RAML:** [atom/language-yaml](https://github.com/atom/language-yaml)
+- **RBS:** [soutaro/vscode-rbs-syntax](https://github.com/soutaro/vscode-rbs-syntax)
 - **RDoc:** [joshaven/RDoc.tmbundle](https://github.com/joshaven/RDoc.tmbundle)
 - **REALbasic:** [peters-ben-0007/VBDotNetSyntax](https://github.com/peters-ben-0007/VBDotNetSyntax)
 - **REXX:** [mblocker/rexx-sublime](https://github.com/mblocker/rexx-sublime)
