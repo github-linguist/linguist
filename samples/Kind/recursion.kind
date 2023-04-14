@@ -1,0 +1,16 @@
+// Checks if a number is even recursively
+Example.recursion (n: Nat) : Bool
+Example.recursion (Nat.succ pred) = Bool.not (Example.recursion pred)
+Example.recursion Nat.zero        = Bool.true
+
+Main (a: Nat) {
+  let n = Nat.succ (Nat.succ (Nat.succ Nat.zero))
+  (List.cons n
+  (List.cons n
+  (List.cons a
+  (List.cons a
+  (List.cons a
+  (List.cons a
+  (List.cons a
+  List.nil)))))))
+}

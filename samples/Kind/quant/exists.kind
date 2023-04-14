@@ -1,0 +1,20 @@
+// The proposition we will verify is:
+// p(x) = (Equal (Nat.succ x) (Nat.succ (Nat.succ (Nat.succ Nat.zero))))
+// "there exists a X such that x + 1 = 3"
+Example.quant.exists (exists: (x: Nat) -> (Not (Equal Nat (Nat.succ x) (Nat.succ (Nat.succ (Nat.succ Nat.zero)))))): Empty
+
+Example.quant.exists exists =
+	// We can prove such a value exists
+	// because p(2) is true
+	
+	// We use "exists" to build (2 + 1 == 3) -> Empty
+	let proposition = (exists (Nat.succ (Nat.succ Nat.zero)))
+	
+	// We build 2 + 1 == 3
+	let refl = (Equal.refl Nat (Nat.succ (Nat.succ (Nat.succ Nat.zero))))
+	
+	// We can create Empty with it
+	(Not.contradict proposition refl)
+	
+Example.quant.exists.build: (Quantifier.Exists Nat (x => Equal Nat (Nat.succ x) (Nat.succ (Nat.succ (Nat.succ Nat.zero)))))
+Example.quant.exists.build = (x => Example.quant.exists x)

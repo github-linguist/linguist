@@ -1,0 +1,11 @@
+Example.Kindelia.io : Kindelia.IO U60 {
+  do Kindelia.IO {
+    Kindelia.IO.save U60 1337
+    ask x = (Kindelia.IO.take U60)
+    return (+ x x)
+  }
+}
+
+Main {
+  Example.Kindelia.io
+}

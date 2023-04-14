@@ -1,0 +1,12 @@
+Example.match : U60 {
+  let list = List.cons (+ 5 7) (List.nil)
+  let head = match List list {
+    nil  => 0
+    cons => list.head
+  }
+  head
+}
+
+Main {
+  Example.match
+}

@@ -1,0 +1,12 @@
+Example.list_monad : List (List U60) {
+  do List {
+    ask x = [ 1,  2,  3]
+    ask y = [10, 20, 30]
+    let z = 42
+    return [x, y, z]
+  }
+}
+
+Main {
+  Example.list_monad
+}

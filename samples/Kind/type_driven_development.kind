@@ -1,0 +1,68 @@
+List.sum (n: List Nat) : Nat
+List.sum (List.nil t)       = Nat.zero
+List.sum (List.cons t x xs) = Nat.add x (List.sum xs)
+
+// O que eu quero que o cara implemente
+Blastoise.requisito.type : Type 
+Blastoise.requisito.type = ((x: Nat) -> (List Nat))
+
+// As restrições que eu estou impondo na função que ele vai implementar
+Blastoise.requisito.spec : (f: Blastoise.requisito.type) -> Type
+Blastoise.requisito.spec = f => (input: Nat) ->
+  // Aplica a função no input
+  let list = f input
+
+  // Primeiro requisito: o tamanho da lista é igual a input
+  let req_0 = Equal Nat (List.length Nat list) input
+
+  // Segundo requisito: o somatório dos números da lista é igual a input
+  let req_1 = Equal Nat (List.sum list) input
+  
+  (Pair req_0 req_1)
+
+Blastoise.requisito : Type
+Blastoise.requisito = Sigma Blastoise.requisito.type Blastoise.requisito.spec
+
+// -----------------------------------------------------------------------------
+
+// Sipher's function attempt
+
+Sipher.blastoise.fun.aux (n: Nat) : List Nat
+Sipher.blastoise.fun.aux Nat.zero          = List.nil
+Sipher.blastoise.fun.aux (Nat.succ n.pred) = List.cons (Nat.succ Nat.zero) (Sipher.blastoise.fun.aux n.pred)
+
+Sipher.blastoise.fun : Blastoise.requisito.type
+Sipher.blastoise.fun = x => (Sipher.blastoise.fun.aux x)
+
+Sipher.blastoise.proof.aux._0 (n: Nat) : Equal Nat (List.length Nat (Sipher.blastoise.fun.aux n)) n
+Sipher.blastoise.proof.aux._0 Nat.zero = Equal.refl
+Sipher.blastoise.proof.aux._0 (Nat.succ n.pred) =
+  let ind = Sipher.blastoise.proof.aux._0 n.pred
+  let prf = Equal.apply (x => Nat.succ x) ind
+  prf
+
+Sipher.blastoise.proof.aux._1 (n: Nat) : Equal Nat (List.sum (Sipher.blastoise.fun.aux n)) n
+Sipher.blastoise.proof.aux._1 Nat.zero = Equal.refl
+Sipher.blastoise.proof.aux._1 (Nat.succ n.pred) =
+  let ind = Sipher.blastoise.proof.aux._1 n.pred
+  let prf = Equal.apply (x => Nat.succ x) ind
+  prf
+
+Sipher.blastoise.proof : ((Blastoise.requisito.spec) Sipher.blastoise.fun)
+Sipher.blastoise.proof = input =>
+  let req_0_proof = Sipher.blastoise.proof.aux._0 input
+  let req_1_proof = Sipher.blastoise.proof.aux._1 input
+  (Pair.new 
+    (Equal Nat (List.length Nat (Sipher.blastoise.fun.aux input)) input)
+    (Equal Nat (List.sum (Sipher.blastoise.fun.aux input)) input)
+    req_0_proof
+    req_1_proof)
+
+Sipher.blastoise : Blastoise.requisito {
+  (Sigma.new
+    Blastoise.requisito.type // o tipo do programa que o victor pediu
+    Blastoise.requisito.spec // as restrições adicionais que o victor pediu
+    Sipher.blastoise.fun     // o programa que ele implementou
+    Sipher.blastoise.proof   // a prova que a função satisfaz o requisito
+  )
+}

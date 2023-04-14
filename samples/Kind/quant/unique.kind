@@ -1,0 +1,30 @@
+// Proof of this:
+// let p(x) := x + 1 == 3
+// there exists at most one x in Nat such that p(x) is true
+// to do this, we will prove that for all a and b, if p(a) and p(b), a == b
+
+Equal.quant.unique.helper (a: Nat): Nat
+Equal.quant.unique.helper Nat.zero = Nat.zero
+Equal.quant.unique.helper (Nat.succ a) = a
+
+Example.quant.unique (a: Nat) (b: Nat) (c: (Pair 
+	// p(a) := a + 1 = 3
+	(Equal Nat (Nat.succ a) (Nat.succ (Nat.succ (Nat.succ Nat.zero))))
+	// p(b) := bs + 1 = 3
+	(Equal Nat (Nat.succ b) (Nat.succ (Nat.succ (Nat.succ Nat.zero))))
+)): (Equal Nat a b)
+
+Example.quant.unique a b pair = 
+	// a + 1 == 3
+	let fst = (Pair.fst pair)
+	// b + 1 == 3
+	let snd = (Pair.snd pair)
+	// therefore, a + 1 == b + 1
+	let trans = (Equal.chain fst (Equal.mirror snd))
+	// subtract one from each side
+	let trans = (Equal.apply (x => Equal.quant.unique.helper x) trans)
+	// we get a == b
+	trans
+	
+Example.quant.unique.build: (Quantifier.Unique Nat (x => Equal Nat (Nat.succ x) (Nat.succ (Nat.succ (Nat.succ Nat.zero)))))
+Example.quant.unique.build = (a => b => c => Example.quant.unique a b c)

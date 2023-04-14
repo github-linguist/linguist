@@ -1,0 +1,48 @@
+// Example IO app running on the terminal
+// To try it, go to `/wikind` and enter:
+// $ kind2 run Example/input_output.kind2
+
+Example.input_output: (IO U60) {
+  do IO {
+    IO.output Example.ask_name
+    ask name = IO.input
+    IO.output (Example.greet name)
+    return 42
+  }
+}
+
+Main {
+  Example.input_output
+}
+
+// ----------------------------------------------
+// TODO: update below when we add string literals
+// ----------------------------------------------
+
+// "Hello, <name>"
+Example.greet (name: String) : String {
+  (String.cons 72
+  (String.cons 101
+  (String.cons 108
+  (String.cons 108
+  (String.cons 111
+  (String.cons 33
+  (String.cons 32
+  name)))))))
+}
+
+// "Your name: "
+Example.ask_name : String {
+  (String.cons 89
+  (String.cons 111
+  (String.cons 117
+  (String.cons 114
+  (String.cons 32
+  (String.cons 110
+  (String.cons 97
+  (String.cons 109
+  (String.cons 101
+  (String.cons 58
+  (String.cons 32
+  String.nil)))))))))))
+}

@@ -1,0 +1,14 @@
+// Proof by contradiction that 2 + 2 != 5
+Nat.two_two_not_five <n: Nat>
+  (e: Equal Nat (Nat.add (U60.to_nat 2) (U60.to_nat 2)) (U60.to_nat 5))
+: Empty
+
+Nat.two_two_not_five n e = 
+
+	// If 2 + 2 == 5, then we can apply f(x) = x == 4 on both sides
+	let e = Equal.apply (x => Nat.equal x (U60.to_nat 4)) e
+
+	// Kind2 turns this to Bool.true == Bool.false, which can be turned into Empty
+	(Bool.true_not_false e)
+	
+	

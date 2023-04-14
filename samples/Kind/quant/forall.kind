@@ -1,0 +1,7 @@
+// Proof that "for all a in Nat, (a + 1) == (a + 1)" (this is sort of obvious)
+
+Example.quant.forall (a: Nat): Equal Nat (Nat.succ a) (Nat.succ a)
+Example.quant.forall a = Equal.refl
+
+Example.quant.forall_constr: Quantifier.Forall Nat (x => Equal Nat (Nat.succ x) (Nat.succ x))
+Example.quant.forall_constr = (x => Example.quant.forall x)

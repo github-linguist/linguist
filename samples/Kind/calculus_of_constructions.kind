@@ -1,0 +1,650 @@
+Env (r: Type) : Type
+Env r = U60 -> (Pair U60 r)
+
+Env.bind <a: Type> <b: Type> (ma: (Env a)) (mb: a -> (Env b)) : (Env b)
+Env.bind a b ma mb = count =>
+  match Pair x = ma count {
+    new => (mb x.snd) x.fst
+  }
+
+Env.pure <a: Type> (x: a) : (Env a)
+Env.pure a x = count => (Pair.new count x)
+
+Env.run <a: Type> (env: (Env a)) : a
+Env.run a env = (Pair.snd (env 0))
+
+// Expression
+// ----------
+
+Name : Type
+Name = String
+  
+Term : Type
+
+  // Universes
+  Typ : Term
+
+  // Arithmetic
+  Num : Term
+  Val (numb: U60) : Term
+  Add (val0: Term) (val1: Term) : Term
+  Sub (val0: Term) (val1: Term) : Term
+  Mul (val0: Term) (val1: Term) : Term
+  Div (val0: Term) (val1: Term) : Term
+  If  (cond: Term) (if_t: Term) (if_f: Term) : Term // if_t: true case, if_f: false case
+
+  // Lambda Calculus
+  Var (name: Name) : Term
+  App (func: Term) (argm: Term) : Term
+  Lam (name: Name) (bind: Term) (body: Term) : Term
+  All (name: Name) (bind: Term) (body: Term) : Term
+
+// Reducer
+// -------
+
+Reduce (term: Term) : (Env Term)
+
+Reduce Typ = 
+  do Env {
+    return Typ
+  }
+
+Reduce Num =
+  do Env {
+    return Num
+  }
+
+Reduce (Val numb) =
+  do Env {
+    return (Val numb)
+  }
+
+Reduce (Add val0 val1) =
+  do Env {
+    ask val0 = (Reduce val0)
+    ask val1 = (Reduce val1)
+    ask done = (Reduce.add val0 val1)
+    return done
+  }
+
+Reduce (If cond if_t if_f) =
+  do Env {
+    ask cond = (Reduce cond)
+    ask done = (Reduce.if cond if_t if_f)
+    ask done = (Reduce done)
+    return done
+  }
+
+Reduce (Var name) =
+  do Env {
+    return (Var name)
+  }
+
+Reduce (Lam name bind body) =
+  do Env {
+    return (Lam name bind body)
+  }
+
+Reduce (All name bind body) =
+  do Env {
+    return (All name bind body)
+  }
+
+Reduce (App func argm) =
+  do Env {
+    ask func = (Reduce func)
+    ask done = (Reduce.app func argm)
+    return done
+  }
+
+// (Add (Val val0) (Val val1))
+// --------------------------- add-val-val
+// (Val (+ val0 val1))
+Reduce.add (val0: Term) (val1: Term) : (Env Term)
+Reduce.add (Val val0) (Val val1) = do Env {
+  return (Val (+ val0 val1))
+}
+
+// (Sub (Val val0) (Val val1))
+// --------------------------- sub-val-val
+// (Val (- val0 val1))
+Reduce.sub (val0: Term) (val1: Term) : (Env Term)
+Reduce.sub (Val val0) (Val val1) = do Env {
+  return (Val (+ val0 val1))
+}
+
+// (Mul (Val val0) (Val val1))
+// --------------------------- mul-val-val
+// (Val (* val0 val1))
+Reduce.mul (val0: Term) (val1: Term) : (Env Term)
+Reduce.mul (Val val0) (Val val1) = do Env {
+  return (Val (+ val0 val1))
+}
+
+// (Div (Val val0) (Val val1))
+// --------------------------- div-val-val
+// (Val (/ val0 val1))
+Reduce.div (val0: Term) (val1: Term) : (Env Term)
+Reduce.div (Val val0) (Val val1) = do Env {
+  return (Val (+ val0 val1))
+}
+
+// (If (Val cond) if_t if_f)
+// ----------------------------------- if-u60
+// if cond == 0 { if_f } else { if_t }
+Reduce.if (cond: Term) (if_t: Term) (if_f: Term) : (Env Term)
+Reduce.if (Val cond) if_t if_f = do Env {
+  return (if (U60.to_bool cond) { if_t } else { if_f })
+}
+  
+// ((λx -> body) argm)
+// ------------------- app-lam (aka beta-function, aka function application)
+// body[x <- argm] 
+Reduce.app (func: Term) (argm: Term) : (Env Term)
+Reduce.app (Lam name bind body) argm = do Env {
+  ask body = (Reduce.sanitize body [])
+  ask body = (Reduce.subst name argm body)
+  ask done = (Reduce body)
+  return done
+}
+Reduce.app func argm = do Env {
+  return (App func argm)
+}
+
+Reduce.subst (name: Name) (value: Term) (expr: Term) : (Env Term)
+Reduce.subst name value Typ = do Env {
+  return Typ
+}
+Reduce.subst name value Num = do Env {
+  return Num
+}
+Reduce.subst name value (Val numb) = do Env {
+  return (Val numb)
+}
+Reduce.subst name value (Add val0 val1) = do Env {
+  ask val0 = (Reduce.subst name value val0)
+  ask val1 = (Reduce.subst name value val1)
+  return (Add val0 val1)
+}
+Reduce.subst name value (Sub val0 val1) = do Env {
+  ask val0 = (Reduce.subst name value val0)
+  ask val1 = (Reduce.subst name value val1)
+  return (Sub val0 val1)
+}
+Reduce.subst name value (Mul val0 val1) = do Env {
+  ask val0 = (Reduce.subst name value val0)
+  ask val1 = (Reduce.subst name value val1)
+  return (Mul val0 val1)
+}
+Reduce.subst name value (Div val0 val1) = do Env {
+  ask val0 = (Reduce.subst name value val0)
+  ask val1 = (Reduce.subst name value val1)
+  return (Div val0 val1)
+}
+Reduce.subst name value (If cond if_t if_f) = do Env {
+  ask cond = (Reduce.subst name value cond)
+  ask if_t = (Reduce.subst name value if_t)
+  ask if_f = (Reduce.subst name value if_f)
+  return (If cond if_t if_f)
+}
+Reduce.subst name value (Var var_name) =
+  if (String.equal name var_name) {
+    do Env {
+      ask new_value = (Reduce.sanitize value [])
+      return new_value
+    }
+  } else {
+    do Env {
+      return (Var var_name)
+    }
+  }
+Reduce.subst name value (Lam lam_name lam_bind body) =
+  if (String.equal name lam_name) {
+    do Env {
+      ask lam_bind = (Reduce.subst name value lam_bind)
+      return (Lam lam_name lam_bind body)
+    }
+  } else {
+    do Env {
+      ask lam_bind = (Reduce.subst name value lam_bind)
+      ask body = (Reduce.subst name value body)
+      return (Lam lam_name lam_bind body)
+    }
+  }
+Reduce.subst name value (All lam_name lam_bind body) =
+  if (String.equal name lam_name) {
+    do Env {
+      ask lam_bind = (Reduce.subst name value lam_bind)
+      return (All lam_name lam_bind body)
+    }
+  } else {
+    do Env {
+      ask lam_bind = (Reduce.subst name value lam_bind)
+      ask body = (Reduce.subst name value body)
+      return (All lam_name lam_bind body)
+    }
+  }
+Reduce.subst name value (App func argm) = do Env {
+  ask func = (Reduce.subst name value func)
+  ask argm = (Reduce.subst name value argm)
+  return (App func argm)
+}
+
+// Sanitizer
+// ---------
+  
+Reduce.fresh : (Env String)
+Reduce.fresh = count =>
+  let new_count = (+ count 1)
+  let new_name  = (Format "x.%") count
+  Pair.new new_count new_name
+
+Reduce.sanitize (term: Term) (renames: (List (Pair String String))) : (Env Term)
+Reduce.sanitize Typ renames = do Env {
+  return Typ
+}
+Reduce.sanitize Num renames = do Env {
+  return Num
+}
+Reduce.sanitize (Val numb) renames = do Env {
+  return Val numb
+}
+Reduce.sanitize (Add val0 val1) renames = do Env {
+  ask val0 = Reduce.sanitize val0 renames
+  ask val1 = Reduce.sanitize val1 renames
+  return Add val0 val1
+}
+Reduce.sanitize (Sub val0 val1) renames = do Env {
+  ask val0 = (Reduce.sanitize val0 renames)
+  ask val1 = (Reduce.sanitize val1 renames)
+  return (Sub val0 val1)
+}
+Reduce.sanitize (Mul val0 val1) renames = do Env {
+  ask val0 = (Reduce.sanitize val0 renames)
+  ask val1 = (Reduce.sanitize val1 renames)
+  return (Mul val0 val1)
+}
+Reduce.sanitize (Div val0 val1) renames = do Env {
+  ask val0 = (Reduce.sanitize val0 renames)
+  ask val1 = (Reduce.sanitize val1 renames)
+  return (Div val0 val1)
+}
+Reduce.sanitize (If cond if_t if_f) renames = do Env {
+  ask cond = (Reduce.sanitize cond renames)
+  ask if_t = (Reduce.sanitize if_t renames)
+  ask if_f = (Reduce.sanitize if_f renames)
+  return (If cond if_t if_f)
+}
+Reduce.sanitize (Var name) renames =
+  match Maybe got = (List.find renames (renamer => (String.equal name (Pair.fst renamer)))) {
+    none => do Env {
+      return (Var name)
+    }
+    some => do Env {
+      return (Var (Pair.snd got.value))
+    }
+  }: (Env Term)
+Reduce.sanitize (Lam old_name bind body) renames = do Env {
+  ask new_name    = Reduce.fresh
+  let new_renames = (List.cons (Pair.new old_name new_name) renames)
+  ask bind        = (Reduce.sanitize bind renames)
+  ask body        = (Reduce.sanitize body new_renames)
+  return (Lam new_name bind body)
+}
+Reduce.sanitize (All old_name bind body) renames = do Env {
+  ask new_name    = Reduce.fresh
+  let new_renames = (List.cons (Pair.new old_name new_name) renames)
+  ask bind        = (Reduce.sanitize bind renames)
+  ask body        = (Reduce.sanitize body new_renames)
+  return (All new_name bind body)
+}
+Reduce.sanitize (App func argm) renames = do Env {
+  ask func = (Reduce.sanitize func renames)
+  ask argm = (Reduce.sanitize argm renames)
+  return (App func argm)
+}
+
+// Normalizer
+// ----------
+
+Normalize (term: Term) : (Env Term)
+Normalize term = do Env {
+  ask term = (Reduce term)
+  ask done = (Normalize.go term)
+  return done
+}
+
+Normalize.go (term: Term) : (Env Term)
+
+Normalize.go Typ = do Env {
+  return Typ
+}
+
+Normalize.go Num = do Env {
+  return Num
+}
+
+Normalize.go (Val numb) = do Env {
+  return (Val numb)
+}
+
+Normalize.go (Add val0 val1) = do Env {
+  ask val0 = (Normalize val0)
+  ask val1 = (Normalize val1)
+  return (Add val0 val1)
+}
+
+Normalize.go (Sub val0 val1) = do Env {
+  ask val0 = (Normalize val0)
+  ask val1 = (Normalize val1)
+  return (Sub val0 val1)
+}
+
+Normalize.go (Mul val0 val1) = do Env {
+  ask val0 = (Normalize val0)
+  ask val1 = (Normalize val1)
+  return (Mul val0 val1)
+}
+
+Normalize.go (Div val0 val1) = do Env {
+  ask val0 = (Normalize val0)
+  ask val1 = (Normalize val1)
+  return (Div val0 val1)
+}
+
+Normalize.go (If cond if_t if_f) = do Env {
+  ask cond = (Normalize cond)
+  ask if_t = (Normalize if_t)
+  ask if_f = (Normalize if_f)
+  return (If cond if_t if_f)
+}
+
+Normalize.go (Lam name bind body) = do Env {
+  ask bind = (Normalize bind)
+  ask body = (Normalize body)
+  return (Lam name bind body)
+}
+
+Normalize.go (All name bind body) = do Env {
+  ask bind = (Normalize bind)
+  ask body = (Normalize body)
+  return (All name bind body)
+}
+
+Normalize.go (App func argm) = do Env {
+  ask func = (Normalize func)
+  ask argm = (Normalize argm)
+  return (App func argm)
+}
+
+Normalize.go (Var name) = do Env {
+  return (Var name)
+}
+
+// Equal
+// -----
+
+Term.equal (a: Term) (b: Term) (lvl: U60) : Bool
+Term.equal Typ Typ lvl =
+  Bool.true
+Term.equal Num Num lvl =
+  Bool.true
+Term.equal (Val a.numb) (Val b.numb) lvl =
+  (U60.to_bool (== a.numb b.numb))
+Term.equal (Add a.val0 a.val1) (Add b.val0 b.val1) lvl =
+  let val0 = (Term.equal a.val0 b.val0 lvl)
+  let val1 = (Term.equal a.val1 b.val1 lvl)
+  (Bool.and val0 val1)
+Term.equal (Sub a.val0 a.val1) (Sub b.val0 b.val1) lvl =
+  let val0 = (Term.equal a.val0 b.val0 lvl)
+  let val1 = (Term.equal a.val1 b.val1 lvl)
+  (Bool.and val0 val1)
+Term.equal (Mul a.val0 a.val1) (Mul b.val0 b.val1) lvl =
+  let val0 = (Term.equal a.val0 b.val0 lvl)
+  let val1 = (Term.equal a.val1 b.val1 lvl)
+  (Bool.and val0 val1)
+Term.equal (Div a.val0 a.val1) (Div b.val0 b.val1) lvl =
+  let val0 = (Term.equal a.val0 b.val0 lvl)
+  let val1 = (Term.equal a.val1 b.val1 lvl)
+  (Bool.and val0 val1)
+Term.equal (If a.cond a.if_t a.if_f) (If b.cond b.if_t b.if_f) lvl =
+  let cond = (Term.equal a.cond b.cond lvl)
+  let if_t = (Term.equal a.if_t b.if_t lvl)
+  let if_f = (Term.equal a.if_f b.if_f lvl)
+  (Bool.and cond (Bool.and if_t if_f))
+Term.equal (Var a.name) (Var b.name) lvl =
+  (String.equal a.name b.name)
+Term.equal (App a.func a.argm) (App b.func b.argm) lvl =
+  let func = (Term.equal a.func b.func lvl)
+  let argm = (Term.equal a.argm b.argm lvl)
+  (Bool.and func argm)
+Term.equal (Lam a.name a.bind a.body) (Lam b.name b.bind b.body) lvl =
+  let name = ((Format "v.%") lvl)
+  let bind = (Term.equal a.bind b.bind lvl)
+  let body = (Term.equal (Env.run (Reduce.subst a.name (Var name) a.body)) (Env.run (Reduce.subst b.name (Var name) b.body)) (+ lvl 1))
+  (Bool.and bind body)
+Term.equal (All a.name a.bind a.body) (All b.name b.bind b.body) lvl =
+  let name = ((Format "v.%") lvl)
+  let bind = (Term.equal a.bind b.bind lvl)
+  let body = (Term.equal (Env.run (Reduce.subst a.name (Var name) a.body)) (Env.run (Reduce.subst b.name (Var name) b.body)) (+ lvl 1))
+  (Bool.and bind body)
+Term.equal a b lvl =
+  Bool.false
+
+// Type-Checker
+// ------------
+
+// Causes a type error if a != b
+Check.compare (a: Term) (b: Term) : (Maybe U60)
+Check.compare a b =
+  let a_nf = (Env.run (Normalize a))
+  let b_nf = (Env.run (Normalize b))
+  if (Term.equal a_nf b_nf 0) {
+    (Maybe.some 0)
+  } else {
+    (Maybe.none)
+  }
+
+Check.proof_is_correct (t: Term) (p: Term) : (Maybe Term)
+Check.proof_is_correct type p = do Maybe {
+  ask p_type = (Check p [])
+  Check.compare p_type type
+  return (Var "deu bom")
+}
+  
+Check (term: Term) (ctx: (List (Pair String Term))) : (Maybe Term)
+
+// 
+// ---------------- typ
+// ctx |- Typ : Typ
+Check Typ ctx = do Maybe {
+  return Typ
+}
+
+// 
+// ---------------- num
+// ctx |- Num : Typ
+Check Num ctx = do Maybe {
+  return Typ
+}
+
+// 
+// -------------------- val
+// ctx |- (Val n) : Num
+Check (Val n) ctx = do Maybe {
+  return Num
+}
+
+// ctx |- a : Num    ctx |- b : Num
+// -------------------------------- add
+// ctx |- (Add a b) : Num
+Check (Add a b) ctx = do Maybe {
+  ask a_type = (Check a ctx)
+  ask b_type = (Check b ctx)
+  Check.compare a_type Num
+  Check.compare b_type Num
+  return Num
+}
+
+// ctx |- cond : Num   ctx |- if_t : R   ctx |- if_f : R
+// ----------------------------------------------------- if
+// ctx |- (If cond if_t if_f) : R
+Check (If cond if_t if_f) ctx = do Maybe {
+  ask cond_type = (Check cond ctx)
+  ask if_t_type = (Check if_t ctx)
+  ask if_f_type = (Check if_f ctx)
+  Check.compare cond_type Num
+  Check.compare if_t_type if_f_type
+  return if_t_type
+}
+
+// ctx |- A : Typ   ctx, x : A |- B : Typ
+// -------------------------------------- forall
+// ctx |- (All x A B) : Typ
+Check (All x a b) ctx = do Maybe {
+  ask a_type = (Check a ctx)
+  ask b_type = (Check b (List.cons (Pair.new x a) ctx))
+  Check.compare a_type Typ
+  Check.compare b_type Typ
+  return Typ
+}
+
+// ctx |- A : Typ   ctx, x : A |- b : B
+// ------------------------------------ lambda
+// ctx |- (Lam x A b) : (All x A B)
+// 
+// Concrete example:
+// ctx |- Num : Typ   ctx, x : Num |- b : Num
+// ------------------------------------------------- lambda
+// ctx |- (λ(x: Num) -> (+ x x)) : (∀(x:Num) -> Num)
+Check (Lam x a b) ctx = do Maybe {
+  ask a_type = (Check a ctx)
+  ask b_type = (Check b (List.cons (Pair.new x a) ctx)) // B
+  Check.compare a_type Typ
+  return (All x a b_type)
+}
+
+// ctx |- f : (All x A B)   ctx |- a : A
+// ------------------------------------- app
+// ctx |- (App f a) : B[x <- a]
+Check (App f a) ctx = do Maybe { 
+  ask f_type = (Check f ctx)
+  ask a_type = (Check a ctx)
+  ask done   = (Check.app (Env.run (Reduce f_type)) a_type f a ctx)
+  return done
+}
+
+// (x : A) ∈ ctx 
+// ------------------ var
+// ctx |- (Var x) : A
+Check (Var name) ctx = do Maybe {
+  ask found = (List.find ctx (ann => (String.equal (Pair.fst ann) name)))
+  return (Pair.snd found)
+}
+
+// Aux function (TODO: use match instead)
+Check.app (f_type: Term) (a_tyepe: Term) (f: Term) (a: Term) (ctx: (List (Pair String Term))) : (Maybe Term)
+Check.app (All x at bt) a_type f a ctx = do Maybe {
+  Check.compare at a_type
+  return (Env.run (Reduce.subst x a bt))
+}
+Check.app other a_type f a ctx = Maybe.none
+
+// Test
+// ----
+
+LAM (name: String) (term: Term) : Term
+LAM name term = (Lam name Typ term)
+
+Main {
+
+  // λx (+ x 10)
+  //let add_10 = (LAM "x" (Add (Var "x") (Val 10)))
+
+  //// λx (+ x x)
+  //let double = (LAM "x" (Add (Var "x") (Var "x")))
+
+  //// λx (if x { x + y } else { 42 })
+  //let foo = (LAM "x" (LAM "y" (If (Var "x") (Add (Var "x") (Var "y")) (Val 42))))
+
+  //// λf λx (f (f x))
+  //let n2 = (LAM "f" (LAM "x" (App (Var "f") (App (Var "f") (Var "x")))))
+
+  //let boss.0 = (App n2 (LAM "x" (Var "x"))) // λx x
+  //let boss.1 = (App (App n2 (LAM "x" (Add (Var "x") (Val 1)))) (Val 100)) // 102
+  //let boss.2 = (App n2 n2) // λf λx (f (f (f (f x))))
+
+  //let test.0 = (Add (Add (Val 2) (Val 2)) (Val 1))
+  //let test.1 = (If (Add (Val 1) (Val 1)) (Add (Val 2) (Val 2)) (Val 0))
+  //let test.2 = (Reduce.subst "x" (Val 4) (App (Var "f") (Add (Val 3) (Var "x"))))
+  //let test.3 = (Reduce.subst "x" (Val 4) (LAM "x" (Add (Var "x") (Var "x"))))
+  //let test.4 = (Env.run do Env {
+    //ask body = (Reduce.subst "y" (Add (Var "x") (Val 1)) (LAM "x" (App (Var "x") (Var "y"))))
+    //return (LAM "x" body)
+  //})
+  //let test.5 = (Env.run (Reduce.sanitize (LAM "x" (LAM "y" (App (App (Var "x") (Var "y")) (App (Var "x") (Var "y"))))) []))
+
+  // λx ( ..... subst y (+ x 1) (λx (x y))  ...... )
+  // --------------------------------------------------
+  // λx ( ..... (λx (x (+ x 1)))  ...... ) <- ERRADO
+  // -------------------------------------
+  // λx ( ..... (λz (z (+ x 1)))  ...... ) <- CORRETO
+
+  //let test.6 = do Env {
+    //let done = boss.2
+    //ask done = (Normalize done)
+    //return done
+  //}
+  //(Env.run test.6)
+
+  // λ (a: Typ)
+  // λ (b: Typ)
+  // λ (f: ∀(x: a) -> b)
+  // λ (g: ∀(x: b) -> a)
+  // λ (x: a)
+  // (f x)
+  // -------------------
+  // ∀ (a: Typ)
+  // ∀ (b: Typ)
+  // ∀ (f: ∀(x: a) -> b)
+  // ∀ (g: ∀(x: b) -> a)
+  // ∀ (x: a)
+  // b
+  let test._7 = (
+    Lam "a" Typ (
+    Lam "b" Typ (
+    Lam "f" (All "x" (Var "a") (Var "b")) (
+    Lam "g" (All "x" (Var "b") (Var "a")) (
+    Lam "x" (Var "a") (
+    App (Var "g") (Var "x")))))))
+
+  let equal =
+    Lam "t" Typ (                          // λ (t: Type)
+    Lam "a" (Var "t") (                    // λ (a: t)
+    Lam "b" (Var "t") (                    // λ (b: t)
+    All "p" (All "" (Var "t") Typ) (       // ∀ (p : t -> Type)
+    All "refl" (App (Var "p") (Var "a")) ( // ∀ (refl : p a)
+    App (Var "p") (Var "b"))))))           // (p b)
+
+  let refl.type =
+    All "t" Typ (
+    All "x" (Var "t") (
+    App (App (App equal (Var "t")) (Var "x")) (Var "x")))
+  let refl =
+    Lam "t" Typ (
+    Lam "a" (Var "t") (
+    Lam "p" (All "" (Var "t") Typ) (
+    Lam "refl" (App (Var "p") (Var "a")) (
+    (Var "refl")))))
+
+  // teorema : 3 + 3 == 6
+  // prova   : refl
+  let theorem._0 = (App (App (App equal Num) (Add (Val 3) (Val 3))) (Val 6))
+  let proof._0   = (App (App refl Num) (Val 6))
+
+  match Maybe x = (Check.proof_is_correct theorem._0 proof._0) {
+    none => (Var "deu ruim")
+    some => x.value
+  }
+  
+}
