@@ -571,6 +571,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Wavefront Object:** [Alhadis/language-wavefront](https://github.com/Alhadis/language-wavefront)
 - **Web Ontology Language:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)
 - **WebAssembly:** [Alhadis/language-webassembly](https://github.com/Alhadis/language-webassembly)
+- **WebAssembly Interface Type:** [bytecodealliance/vscode-wit](https://github.com/bytecodealliance/vscode-wit)
 - **WebIDL:** [andik/IDL-Syntax](https://github.com/andik/IDL-Syntax)
 - **WebVTT:** [Alhadis/language-subtitles](https://github.com/Alhadis/language-subtitles)
 - **Wget Config:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
