@@ -749,6 +749,13 @@ disambiguations:
     # HACK: This is a contrived use of heuristics needed to address
     # an unusual edge-case. See https://git.io/JULye for discussion.
   - language: Text
+- extensions: ['.typ']
+  rules:
+  - language: Typst
+    pattern: '^#(import|show|let|set)'
+- extensions: ['.typst']
+  rules:
+  - language: Typst
 - extensions: ['.url']
   rules:
   - language: INI
