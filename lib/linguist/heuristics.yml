@@ -751,9 +751,9 @@ disambiguations:
   - language: Text
 - extensions: ['.typ']
   rules:
-  - language: XML
   - language: Typst
     pattern: '^#(import|show|let|set)'
+  - language: XML
 - extensions: ['.url']
   rules:
   - language: INI
