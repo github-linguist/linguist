@@ -430,7 +430,7 @@ class TestHeuristics < Minitest::Test
       "Text" => all_fixtures("Text", "*.fr")
     })
   end
-  
+
   def test_frm_by_heuristics
     assert_heuristics({
       "VBA" => all_fixtures("VBA", "*.frm"),
@@ -968,6 +968,13 @@ class TestHeuristics < Minitest::Test
       "Adblock Filter List" => all_fixtures("Adblock Filter List", "*.txt"),
       "Vim Help File" => all_fixtures("Vim Help File", "*.txt"),
       "Text" => all_fixtures("Text", "*.txt")
+    })
+  end
+
+  def test_typ_by_heuristics
+    assert_heuristics({
+      "Typst" => all_fixtures("Typst", "*.typ"),
+      "XML" => all_fixtures("XML", "*.typ")
     })
   end
 
