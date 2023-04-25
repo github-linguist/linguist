@@ -70,4 +70,4 @@ Grammars will only be updated in patch releases if the patch release is specific
 
 Note: New languages will not appear in GitHub's search results for some time after the pull request has been merged and the new Linguist release deployed to GitHub.com.
 This is because GitHub's search uses [go-enry](https://github.com/go-enry/go-enry) for language detection which tends to lag behind Linguist by a few weeks to months.
-This in turn requires an update to the underlying search code once go-enry is inline with Linguist (See also go-enry's list of [divergences from Linguist](https://github.com/go-enry/go-enry#divergences-from-linguist)).
+This in turn requires an update to the underlying search code once go-enry is inline with Linguist.
