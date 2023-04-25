@@ -113,7 +113,7 @@ disambiguations:
 - extensions: ['.bi']
   rules:
   - language: FreeBasic
-    pattern: '^[ \t]*#(?i)(?:define|endif|endmacro|ifn?def|if|include|lang|macro)\s'
+    pattern: '^[ \t]*#(?i)(?:define|endif|endmacro|ifn?def|if|include|lang|macro)(?:$|\s)'
 - extensions: ['.bs']
   rules:
   - language: Bikeshed
