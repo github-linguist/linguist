@@ -7,11 +7,11 @@ If the language stats bar is reporting a language that you don't expect:
 1. Click on the name of the language in the stats bar to see a list of the files that are identified as that language.
    Keep in mind this performs a search so the [code search restrictions][search-limits] may result in files identified in the language statistics not appearing in the search results.
    [Installing Linguist locally](/README.md/#installation) and running it from the [command line](/README.md#command-line-usage) will give you accurate results.
-1. If you see files that you didn't write in the search results, consider moving the files into one of the [paths for vendored code](/lib/linguist/vendor.yml), or use the [manual overrides](/docs/overrides.md) feature to ignore them.
-1. If the files are misclassified, search for [open issues](https://github.com/github/linguist/issues) to see if anyone else has already reported the issue.
+2. If you see files that you didn't write in the search results, consider moving the files into one of the [paths for vendored code](/lib/linguist/vendor.yml), or use the [manual overrides](/docs/overrides.md) feature to ignore them.
+3. If the files are misclassified, search for [open issues](https://github.com/github/linguist/issues) to see if anyone else has already reported the issue.
    Any information you can add, especially links to public repositories, is helpful.
    You can also use the [manual overrides](/docs/overrides.md) feature to correctly classify them in your repository.
-1. If there are no reported issues of this misclassification, [open an issue](https://github.com/github/linguist/issues/new) and include a link to the repository or a sample of the code that is being misclassified.
+4. If there are no reported issues of this misclassification, [open an issue](https://github.com/github/linguist/issues/new) and include a link to the repository or a sample of the code that is being misclassified.
 
 [search-limits]: https://docs.github.com/github/searching-for-information-on-github/searching-code#considerations-for-code-search
 
@@ -31,8 +31,8 @@ Linguist does not consider [vendored code](/docs/overrides.md#vendored-code), [g
 If the language statistics bar is not showing your language at all, it could be for a few reasons:
 
 1. Linguist doesn't know about your language.
-1. The extension you have chosen is not associated with your language in [`languages.yml`](/lib/linguist/languages.yml).
-1. All the files in your repository fall into one of the categories listed above that Linguist excludes by default.
+2. The extension you have chosen is not associated with your language in [`languages.yml`](/lib/linguist/languages.yml).
+3. All the files in your repository fall into one of the categories listed above that Linguist excludes by default.
 
 If Linguist doesn't know about the language or the extension you're using, consider [contributing](/CONTRIBUTING.md) to Linguist by opening a pull request to add support for your language or extension.
 For everything else, you can use the [manual overrides](/docs/overrides.md) feature to tell Linguist to include your files in the language statistics.
