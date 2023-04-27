@@ -430,7 +430,7 @@ class TestHeuristics < Minitest::Test
       "Text" => all_fixtures("Text", "*.fr")
     })
   end
-  
+
   def test_frm_by_heuristics
     assert_heuristics({
       "VBA" => all_fixtures("VBA", "*.frm"),
@@ -702,6 +702,12 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "NewLisp" => all_fixtures("NewLisp", "*.nl"),
       "NL" => all_fixtures("NL", "*.nl")
+    })
+  end
+
+  def test_nu_by_heuristics
+    assert_heuristics({
+      "Nushell" => all_fixtures("Nushell", "*.nu")
     })
   end
 

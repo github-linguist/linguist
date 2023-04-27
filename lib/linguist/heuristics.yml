@@ -147,7 +147,7 @@ disambiguations:
     - named_pattern: vb-class
     - pattern: '^\s*BEGIN\R\s*MultiUse\s*=.*\R\s*Persistable\s*='
   - language: VBA
-    named_pattern: vb-class  
+    named_pattern: vb-class
   - language: TeX
     pattern: '^\s*\\(?:NeedsTeXFormat|ProvidesClass){'
   - language: ObjectScript
@@ -258,7 +258,7 @@ disambiguations:
   - language: Visual Basic 6.0
     and:
     - named_pattern: vb-form
-    - pattern: '^\s*Begin\s+VB\.Form\s+'  
+    - pattern: '^\s*Begin\s+VB\.Form\s+'
 - extensions: ['.fs']
   rules:
   - language: Forth
@@ -478,6 +478,10 @@ disambiguations:
   - language: NL
     pattern: '^(b|g)[0-9]+ '
   - language: NewLisp
+- extensions: ['.nu']
+  rules:
+  - language: Nushell
+    pattern: '^\s*(import|export|module|def|let|let-env) '
 - extensions: ['.odin']
   rules:
   - language: Object Data Instance Notation

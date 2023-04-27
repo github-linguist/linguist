@@ -363,6 +363,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Nix:** [sambacha/nix-linguist](https://github.com/sambacha/nix-linguist)
 - **Nu:** [jsallis/nu.tmbundle](https://github.com/jsallis/nu.tmbundle)
 - **Nunjucks:** [alohaas/language-nunjucks](https://github.com/alohaas/language-nunjucks)
+- **Nushell:** [atom/language-shellscript](https://github.com/atom/language-shellscript)
 - **OASv2-json:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
 - **OASv2-yaml:** [atom/language-yaml](https://github.com/atom/language-yaml)
 - **OASv3-json:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
