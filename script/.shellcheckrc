@@ -1,0 +1,8 @@
+shell=sh
+enable=deprecate-which
+external-sources=true
+source-path=SCRIPTDIR
+
+# Solaris 8-9 compatibility
+disable=SC2006  # Don't suggest $(…) instead of `…`
+disable=SC2021  # Ignore bracketed tr(1) ranges
