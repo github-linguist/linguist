@@ -695,6 +695,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_mojo_by_heuristics
+    assert_heuristics({
+      "Mojo" => all_fixtures("Mojo", "*.mojo"),
+      "XML" => all_fixtures("XML", "*.mojo"),
+    })
+  end
+
   def test_ms_by_heuristics
     assert_heuristics({
       "Roff" => all_fixtures("Roff", "*.ms"),
