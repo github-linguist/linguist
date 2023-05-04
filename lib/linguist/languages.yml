@@ -4529,12 +4529,13 @@ Nushell:
   color: "#5EA602"
   extensions:
   - ".nu"
+  - ".nush"
   interpreters:
   - nu
   aliases:
   - nu-script
   - nushell-script
-  tm_scope: source.shell
+  tm_scope: source.nushell
   ace_mode: sh
   codemirror_mode: shell
   codemirror_mime_type: text/x-sh
