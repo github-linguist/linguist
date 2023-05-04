@@ -707,7 +707,8 @@ class TestHeuristics < Minitest::Test
 
   def test_nu_by_heuristics
     assert_heuristics({
-      "Nushell" => all_fixtures("Nushell", "*.nu")
+      "Nushell" => all_fixtures("Nushell", "*.nu"),
+      "Nu" => all_fixtures("Nu", "*.nu")
     })
   end
 
