@@ -46,6 +46,9 @@ class TestSamples < Minitest::Test
     Samples.each do |sample|
       if sample[:filename]
         listed_filenames = Language[sample[:language]].filenames
+        if sample[:language] == "Hosts File" # Kludge for https://bit.ly/41EyUkU
+          listed_filenames -= ["HOSTS"]
+        end
         assert_includes listed_filenames, sample[:filename], "#{sample[:path]} isn't listed as a filename for #{sample[:language]} in languages.yml"
       end
     end
@@ -99,7 +102,7 @@ class TestSamples < Minitest::Test
       end
     end
   end
-  
+
   def case_insensitive_glob(extension)
     glob = ""
     extension.each_char do |c|
