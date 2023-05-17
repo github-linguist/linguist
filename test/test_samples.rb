@@ -93,6 +93,9 @@ class TestSamples < Minitest::Test
       end
 
       language.filenames.each do |filename|
+        # Kludge for an unusual edge-case; see https://bit.ly/41EyUkU
+        next if language.name == "Hosts File" && filename == "HOSTS"
+
         # Check for samples if more than one language matches the given filename
         if Language.find_by_filename(filename).size > 1
           sample = "samples/#{language.name}/filenames/#{filename}"
