@@ -145,7 +145,7 @@ disambiguations:
   - language: Visual Basic 6.0
     and:
     - named_pattern: vb-class
-    - pattern: '^\s*BEGIN\R\s*MultiUse\s*=.*\R\s*Persistable\s*='
+    - pattern: '^\s*BEGIN\r?\n\s*MultiUse\s*=.*\r?\n\s*Persistable\s*='
   - language: VBA
     named_pattern: vb-class  
   - language: TeX
@@ -675,7 +675,7 @@ disambiguations:
 - extensions: ['.stl']
   rules:
   - language: STL
-    pattern: '\A\s*solid(?=$|\s)(?m:.*?)\Rendsolid(?:$|\s)'
+    pattern: '\A\s*solid(?=$|\s)(?m:.*?)^endsolid(?:$|\s)'
 - extensions: ['.sw']
   rules:
   - language: Sway
@@ -752,7 +752,7 @@ disambiguations:
 - extensions: ['.url']
   rules:
   - language: INI
-    pattern: '^\[InternetShortcut\]\R(?>[^\s\[][^\n]*\R)*URL='
+    pattern: '^\[InternetShortcut\]\r?\n(?>[^\s\[][^\n]*\r?\n)*URL='
 - extensions: ['.v']
   rules:
   - language: Coq
