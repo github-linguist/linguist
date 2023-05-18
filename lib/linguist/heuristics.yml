@@ -64,7 +64,7 @@ disambiguations:
 - extensions: ['.app']
   rules:
   - language: Erlang
-    pattern: '(?m)^\{\s*(?:application|''application'')\s*,\s*(?:[a-z]+[\w@]*|''[^'']+'')\s*,\s*\[.*?\]\s*\}\.[ \t]*$'
+    pattern: '^\{\s*(?:application|''application'')\s*,\s*(?:[a-z]+[\w@]*|''[^'']+'')\s*,\s*\[(?:.|\n)*\]\s*\}\.[ \t]*$'
 - extensions: ['.as']
   rules:
   - language: ActionScript
@@ -218,7 +218,7 @@ disambiguations:
   - language: Erlang
     pattern: '^\s*(?:%%|main\s*\(.*?\)\s*->)'
   - language: JavaScript
-    pattern: '(?m:\/\/|("|'')use strict\1|export\s+default\s|\/\*.*?\*\/)'
+    pattern: '\/\/|("|'')use strict\1|export\s+default\s|\/\*(?:.|\n)*?\*\/'
 - extensions: ['.ex']
   rules:
   - language: Elixir
@@ -609,7 +609,7 @@ disambiguations:
 - extensions: ['.rpy']
   rules:
   - language: Python
-    pattern: '(?m:^(import|from|class|def)\s)'
+    pattern: '^(import|from|class|def)\s'
   - language: "Ren'Py"
 - extensions: ['.rs']
   rules:
@@ -675,7 +675,7 @@ disambiguations:
 - extensions: ['.stl']
   rules:
   - language: STL
-    pattern: '\A\s*solid(?=$|\s)(?m:.*?)^endsolid(?:$|\s)'
+    pattern: '\A\s*solid(?=$|\s)(?:.|\n)*?^endsolid(?:$|\s)'
 - extensions: ['.sw']
   rules:
   - language: Sway
