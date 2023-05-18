@@ -169,7 +169,7 @@ disambiguations:
 - extensions: ['.csl']
   rules:
   - language: XML
-    pattern: '(?i:^\s*(\<\?xml|xmlns))'
+    pattern: '(?i:^\s*(<\?xml|xmlns))'
   - language: Kusto
     pattern: '(^\|\s*(where|extend|project|limit|summarize))|(^\.\w+)'
 - extensions: ['.d']
@@ -290,7 +290,7 @@ disambiguations:
 - extensions: ['.gml']
   rules:
   - language: XML
-    pattern: '(?i:^\s*(\<\?xml|xmlns))'
+    pattern: '(?i:^\s*(<\?xml|xmlns))'
   - language: Graph Modeling Language
     pattern: '(?i:^\s*(graph|node)\s+\[$)'
   - language: Gerber Image
