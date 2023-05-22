@@ -11,7 +11,7 @@
   - [ ] The new extension is used in hundreds of repositories on GitHub.com
     - Search results for each extension:
       <!-- Replace FOOBAR with the new extension, and KEYWORDS with keywords unique to the language. Repeat for each extension added. -->
-      - https://github.com/search?utf8=%E2%9C%93&type=Code&ref=searchresults&q=extension%3AFOOBAR+KEYWORDS+NOT+nothack
+      - https://github.com/search?q=path%3A*.FOOBAR+KEYWORDS+NOT+is%3Afork&type=code
   - [ ] I have included a real-world usage sample for all extensions added in this PR:
     - Sample source(s):
       - [URL to each sample source, if applicable]
@@ -22,7 +22,7 @@
   - [ ] The extension of the new language is used in hundreds of repositories on GitHub.com.
     - Search results for each extension:
       <!-- Replace FOOBAR with the new extension, and KEYWORDS with keywords unique to the language. Repeat for each extension added. -->
-      -  https://github.com/search?utf8=%E2%9C%93&type=Code&ref=searchresults&q=extension%3AFOOBAR+KEYWORDS+NOT+nothack
+      -  https://github.com/search?q=path%3A*.FOOBAR+KEYWORDS+NOT+is%3Afork&type=code
   - [ ] I have included a real-world usage sample for all extensions added in this PR:
     - Sample source(s):
       - [URL to each sample source, if applicable]
