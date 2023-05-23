@@ -145,7 +145,7 @@ disambiguations:
   - language: Visual Basic 6.0
     and:
     - named_pattern: vb-class
-    - pattern: '^\s*BEGIN\R\s*MultiUse\s*=.*\R\s*Persistable\s*='
+    - pattern: '^\s*BEGIN\r?\n\s*MultiUse\s*=.*\r?\n\s*Persistable\s*='
   - language: VBA
     named_pattern: vb-class  
   - language: TeX
