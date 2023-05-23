@@ -46,9 +46,7 @@ class TestSamples < Minitest::Test
     Samples.each do |sample|
       if sample[:filename]
         listed_filenames = Language[sample[:language]].filenames
-        if sample[:language] == "Hosts File" # Kludge for https://bit.ly/41EyUkU
-          listed_filenames -= ["HOSTS"]
-        end
+        listed_filenames -= ["HOSTS"] if ["Hosts File", "INI"].include?(sample[:language])
         assert_includes listed_filenames, sample[:filename], "#{sample[:path]} isn't listed as a filename for #{sample[:language]} in languages.yml"
       end
     end
@@ -94,7 +92,7 @@ class TestSamples < Minitest::Test
 
       language.filenames.each do |filename|
         # Kludge for an unusual edge-case; see https://bit.ly/41EyUkU
-        next if language.name == "Hosts File" && filename == "HOSTS"
+        next if ["Host File", "INI"].include?(language.name) && filename == "HOSTS"
 
         # Check for samples if more than one language matches the given filename
         if Language.find_by_filename(filename).size > 1
