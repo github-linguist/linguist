@@ -478,6 +478,11 @@ disambiguations:
   - language: NL
     pattern: '^(b|g)[0-9]+ '
   - language: NewLisp
+- extensions: ['.nr']
+  rules:
+  - language: Noir
+    pattern: '^fn .*\(.*'
+    negative_pattern: '^.'
 - extensions: ['.odin']
   rules:
   - language: Object Data Instance Notation
