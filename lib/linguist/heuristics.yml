@@ -64,7 +64,7 @@ disambiguations:
 - extensions: ['.app']
   rules:
   - language: Erlang
-    pattern: '^\{\s*(?:application|''application'')\s*,\s*(?:[a-z]+[\w@]*|''[^'']+'')\s*,\s*\[(?:.|\n)*\]\s*\}\.[ \t]*$'
+    pattern: '^\{\s*(?:application|''application'')\s*,\s*(?:[a-z]+[\w@]*|''[^'']+'')\s*,\s*\[(?:.|[\r\n])*\]\s*\}\.[ \t]*$'
 - extensions: ['.as']
   rules:
   - language: ActionScript
@@ -218,7 +218,7 @@ disambiguations:
   - language: Erlang
     pattern: '^\s*(?:%%|main\s*\(.*?\)\s*->)'
   - language: JavaScript
-    pattern: '\/\/|("|'')use strict\1|export\s+default\s|\/\*(?:.|\n)*?\*\/'
+    pattern: '\/\/|("|'')use strict\1|export\s+default\s|\/\*(?:.|[\r\n])*?\*\/'
 - extensions: ['.ex']
   rules:
   - language: Elixir
@@ -675,7 +675,7 @@ disambiguations:
 - extensions: ['.stl']
   rules:
   - language: STL
-    pattern: '\A\s*solid(?=$|\s)(?:.|\n)*?^endsolid(?:$|\s)'
+    pattern: '\A\s*solid(?=$|\s)(?:.|[\r\n])*?^endsolid(?:$|\s)'
 - extensions: ['.sw']
   rules:
   - language: Sway
