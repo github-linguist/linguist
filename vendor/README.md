@@ -287,6 +287,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Kusto:** [mmanela/kusto-sublime](https://github.com/mmanela/kusto-sublime)
 - **LFE:** [textmate/lisp.tmbundle](https://github.com/textmate/lisp.tmbundle)
 - **LLVM:** [whitequark/llvm.tmbundle](https://github.com/whitequark/llvm.tmbundle)
+- **LOLCODE:** [KrazIvan/LOLCODE-grammar-vscode](https://github.com/KrazIvan/LOLCODE-grammar-vscode)
 - **LSL:** [textmate/secondlife-lsl.tmbundle](https://github.com/textmate/secondlife-lsl.tmbundle)
 - **LTspice Symbol:** [Alhadis/language-pcb](https://github.com/Alhadis/language-pcb)
 - **LabVIEW:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)
