@@ -1,0 +1,113 @@
+{
+	"Module": {
+		"prefix": "mod",
+		"body": [
+			"mod ${1:name};"
+		],
+		"description": "Declare a module."
+	},
+	"Use Module": {
+		"prefix": "use",
+		"body": [
+			"use ${1:name};"
+		],
+		"description": "Use a module."
+	},
+	"Function": {
+		"prefix": "fn",
+		"body": [
+			"fn ${1:name} () {",
+			"\t$0",
+			"}"
+		],
+		"description": "Declare a function."
+	},
+	"Function Main": {
+		"prefix": "fnmain",
+		"body": [
+			"fn main () {",
+			"\t$0",
+			"}"
+		],
+		"description": "Declare a function."
+	},
+	"Struct": {
+		"prefix": "struct",
+		"body": [
+			"struct ${1:name} {",
+			"\t$0",
+			"}"
+		],
+		"description": "Declare a struct."
+	},
+	"Let": {
+		"prefix": "let",
+		"body": [
+			"let ${1:variable} = $0"
+		],
+		"description": "Declare a variable."
+	},
+	"Let = For": {
+		"prefix": "letfor",
+		"body": [
+			"let ${1:array} = for ${2:start} .. ${3:end} {",
+			"\t$0",
+			"}"
+		],
+		"description": "Declare an array defined by a for-loop."
+	},
+	"Let = For .. In": {
+		"prefix": "letforin",
+		"body": [
+			"let ${1:array} = for ${2:index} in ${3:start} .. ${4:end} {",
+			"\t$0",
+			"}"
+		],
+		"description": "Declare an array defined by a for-in-loop."
+	},
+	"For": {
+		"prefix": "for",
+		"body": [
+			"for ${2:start} .. ${3:end} {",
+			"\t$0",
+			"}"
+		],
+		"description": "Declare an array defined by a for-loop."
+	},
+	"For .. In": {
+		"prefix": "forin",
+		"body": [
+			"for ${2:index} in ${3:start} .. ${4:end} {",
+			"\t$0",
+			"}"
+		],
+		"description": "Declare an array defined by a for-in-loop."
+	},
+	"If-Statement": {
+		"prefix": "if",
+		"body": [
+			"if ${1:condition} {",
+			"\t$0",
+			"}"
+		],
+		"description": "Declare an if-statement"
+	},
+	"Elseif-Statement": {
+		"prefix": "elseif",
+		"body": [
+			"else if ${1:condition} {",
+			"\t$0",
+			"}"
+		],
+		"description": "Declare a else-if-statement"
+	},
+	"Else-Statement": {
+		"prefix": "else",
+		"body": [
+			"else {",
+			"\t$0",
+			"}"
+		],
+		"description": "Declare a else-statement"
+	}
+}

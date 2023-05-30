@@ -1,0 +1,268 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "The Noir Programming Language",
+	"patterns": [{
+		"include": "#code"
+	}],
+	"repository": {
+		"code": {
+			"patterns": [{
+					"include": "#comments"
+				},
+				{
+					"include": "#strings"
+				},
+				{
+					"include": "#numeric"
+				},
+				{
+					"include": "#syntax"
+				},
+				{
+					"include": "#attribute"
+				},
+				{
+					"include": "#keywords"
+				},
+				{
+					"include": "#input"
+				}
+			]
+		},
+		"comments": {
+			"patterns": [{
+				"begin": "\\/\\*",
+				"end": "\\*\\/",
+				"name": "comment.block.nr",
+				"patterns": [{
+					"include": "#comments"
+				}]
+			}, {
+				"match": "\\/\\/.*\n",
+				"name": "comment.line.double-slash.nr"
+			}]
+		},
+		"strings": {
+			"name": "string.quoted.double.nr",
+			"match": "\"(.*?)(\n|(?<!\\\\)\")",
+			"captures": {
+				"1": {
+					"patterns": [{
+						"name": "constant.character.escape.nr",
+						"match": "\\\\."
+					}]
+				}
+			}
+		},
+		"numeric": {
+			"patterns": [{
+				"name": "token.error-token.nr",
+				"match": "(\\-)?\\d+\\.\\d+(\\.|[a-zA-Z])"
+			}, {
+				"name": "constant.numeric.nr",
+				"match": "(\\-)?\\d+(\\.\\d+)?"
+			}]
+		},
+		"syntax": {
+			"patterns": [{
+					"begin": "\\b(mod|use)\\s+([a-zA-Z_][a-zA-Z0-9_]*(::[a-zA-Z_][a-zA-Z0-9_]*)*::)\\{",
+					"end": "\\}",
+					"beginCaptures": {
+						"1": {
+							"name": "keyword.control.nr"
+						},
+						"2": {
+							"name": "support.type.nr"
+						}
+					},
+					"patterns": [{
+						"match": "[a-zA-Z_(::)][a-zA-Z0-9_]*",
+						"name": "support.type.nr"
+					}]
+				}, {
+					"match": "\\b(mod|use)\\s+([a-zA-Z_][a-zA-Z0-9_]*(::[a-zA-Z_][a-zA-Z0-9_]*)*)",
+					"captures": {
+						"1": {
+							"name": "keyword.control.nr"
+						},
+						"2": {
+							"name": "support.type.nr"
+						}
+					}
+				},
+				{
+					"match": "\\b(fn)\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+					"captures": {
+						"1": {
+							"name": "keyword.control.nr"
+						},
+						"2": {
+							"name": "support.function.nr"
+						}
+					}
+				},
+				{
+					"match": "\\b(let)\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+					"captures": {
+						"1": {
+							"name": "keyword.nr"
+						},
+						"2": {
+							"name": "variable.nr"
+						}
+					}
+				},
+				{
+					"match": "\\b(for)\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\s+(in)\\b",
+					"captures": {
+						"1": {
+							"name": "keyword.control.nr"
+						},
+						"2": {
+							"name": "variable.nr"
+						},
+						"3": {
+							"name": "keyword.nr"
+						}
+					}
+				},
+				{
+					"begin": "\\b(struct)\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\s*\\{",
+					"end": "\\}",
+					"beginCaptures": {
+						"1": {
+							"name": "keyword.control.nr"
+						},
+						"2": {
+							"name": "support.type.nr"
+						}
+					},
+					"patterns": [{
+						"include": "#--struct-content"
+					}]
+				},
+				{
+					"begin": "\\b(struct)\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\s*\\(",
+					"end": "\\)",
+					"beginCaptures": {
+						"1": {
+							"name": "keyword.control.nr"
+						},
+						"2": {
+							"name": "support.type.nr"
+						}
+					},
+					"patterns": [{
+						"include": "#--struct-content"
+					}]
+				},
+				{
+					"match": "\\b(struct)\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+					"captures": {
+						"1": {
+							"name": "keyword.control.nr"
+						},
+						"2": {
+							"name": "support.type.nr"
+						}
+					}
+				},
+				{
+					"match": "(\\->)\\s*([a-zA-Z_][a-zA-Z0-9_]*)",
+					"captures": {
+						"1": {
+							"name": "keyword.control.nr"
+						},
+						"2": {
+							"name": "support.type.nr"
+						}
+					}
+				}
+			]
+		},
+		"attribute": {
+			"begin": "#\\[",
+			"end": "\\]",
+			"patterns": [{
+				"begin": "[a-zA-Z_][a-zA-Z0-9_]\\s*\\(",
+				"end": "\\)"
+			}, {
+				"match": "[a-zA-Z_][a-zA-Z0-9_]"
+			}]
+		},
+		"keywords": {
+			"patterns": [{
+				"name": "keyword.control.nr",
+				"match": "\\b(fn|mod|use|struct|if|else|for|constrain)\\b"
+			}, {
+				"name": "keyword.nr",
+				"match": "\\b(global|comptime|pub|in|as|let|true|false)\\b"
+			}]
+		},
+		"input": {
+			"patterns": [{
+				"name": "support.type.nr",
+				"match": "\\b((u|i)\\d+|str|bool|Field|Witness)\\b"
+			}, {
+				"name": "support.type.nr",
+				"match": "\\b(_*[A-Z][a-zA-Z0-9_]*|[a-zA-Z_][a-zA-Z0-9_]*::)\\b"
+			}, {
+				"begin": "\\b([a-z_][a-zA-Z0-9_]*)\\s*\\(",
+				"end": "\\)",
+				"beginCaptures": {
+					"1": {
+						"name": "support.function.nr"
+					}
+				},
+				"patterns": [{
+					"include": "#code"
+				}]
+			}, {
+				"name": "variable.nr",
+				"match": "\\b[a-z_][a-zA-Z0-9_]*\\b"
+			}]
+		},
+		"--struct-content": {
+			"patterns": [{
+				"begin": "[a-zA-Z_][a-zA-Z0-9_]*",
+				"end": "([a-zA-Z_][a-zA-Z0-9_]*)|,",
+				"beginCaptures": {
+					"0": {
+						"name": "support.type.property-name.nr"
+					}
+				},
+				"endCaptures": {
+					"1": {
+						"name": "support.type.nr"
+					}
+				},
+				"patterns": [{
+					"include": "#comments"
+				}]
+			}, {
+				"begin": "<",
+				"end": ">",
+				"patterns": [{
+					"include": "#--struct-types"
+				}]
+			}, {
+				"include": "#comments"
+			}]
+		},
+		"--struct-types": {
+			"patterns": [{
+				"match": "[a-zA-Z_][a-zA-Z0-9_]*",
+				"name": "support.type.nr"
+			}, {
+				"begin": "<",
+				"end": ">",
+				"patterns": [{
+					"include": "#--struct-types"
+				}]
+			}, {
+				"include": "#comments"
+			}]
+		}
+	},
+	"scopeName": "source.nr"
+}

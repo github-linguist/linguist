@@ -1,0 +1,31 @@
+{
+    "name": "noir-programming-language-syntax-highlighter",
+    "displayName": "Noir Programming Language Syntax Highlighter",
+    "description": "A syntax highlighter for the Noir Programming Language",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.60.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "snippets": [
+            {
+                "language": "nr",
+                "path": "./src/snippets.json"
+            }
+        ],
+        "languages": [{
+            "id": "nr",
+            "aliases": ["The Noir Programming Language", "nr"],
+            "extensions": [".nr"],
+            "configuration": "./src/config.json"
+        }],
+        "grammars": [{
+            "language": "nr",
+            "scopeName": "source.nr",
+            "path": "./src/noir.tmLanguage.json"
+        }]
+    }
+}
