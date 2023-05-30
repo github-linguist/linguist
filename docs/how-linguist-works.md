@@ -23,7 +23,7 @@ The percentages are calculated based on the bytes of code for each language as r
 
 ## How Linguist works on GitHub.com
 
-When you push changes to a repository on GitHub.com, a low priority background job is enqueued to analyze your repository as explained above.
+When you push changes to a repository on GitHub.com,
+a low priority background job is enqueued to analyze the [default branch](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-branches#about-the-default-branch) of your repository as explained above.
 The results of this analysis are cached for the lifetime of your repository and are only updated when the repository is updated.
 As this analysis is performed by a low priority background job, it can take a while, particularly during busy periods, for your language statistics bar to reflect your changes.
-

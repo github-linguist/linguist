@@ -18,6 +18,12 @@ File and folder paths inside `.gitattributes` are calculated relative to the pos
 
 # Replace any whitespace in the language name with hyphens:
 *.glyphs linguist-language=OpenStep-Property-List
+
+# Language names are case-insensitive and may be specified using an alias.
+# So, the following three lines are all functionally equivalent:
+*.es linguist-language=js
+*.es linguist-language=JS
+*.es linguist-language=JAVASCRIPT
 ```
 
 ### Summary
@@ -34,7 +40,7 @@ File and folder paths inside `.gitattributes` are calculated relative to the pos
 
 ### Detectable
 
-By default only languages of `type: programming` in [`languages.yml`] are included in the language statistics.
+By default only languages of type `programming` or `markup` in [`languages.yml`] are included in the language statistics.
 Languages of a different type in [`languages.yml`] are not "detectable" by default, causing them not to be included in the language statistics,
 but can be made detectable as shown below.  Languages that are not yet mentioned in [`languages.yml`] will not be included in the language
 statistics, even if you specify something like `*.mycola linguist-language=MyCoolLang linguist-detectable` in the `.gitattributes` file.

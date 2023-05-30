@@ -1,0 +1,34 @@
+---
+name: elvish
+version: 89bf04a802a5162f963085aa70345157b6624c27
+type: git_submodule
+homepage: https://github.com/elves/elvish.git
+license: bsd-2-clause
+licenses:
+- sources: LICENSE
+  text: |
+    Copyright (c) Elvish developers and contributors. All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+    Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+- sources: README.md
+  text: |-
+    All source files use the BSD 2-clause license (see [LICENSE](LICENSE)), except
+    for the following:
+
+    -   Files in [pkg/diff](pkg/diff) and [pkg/rpc](pkg/rpc) are released under the
+        BSD 3-clause license, since they are copied from
+        [Go's source code](https://github.com/golang/go). See
+        [pkg/diff/LICENSE](pkg/diff/LICENSE) and [pkg/rpc/LICENSE](pkg/rpc/LICENSE).
+
+    -   Files in [pkg/persistent](pkg/persistent) and its subdirectories are
+        released under EPL 1.0, since they are partially derived from
+        [Clojure's source code](https://github.com/clojure/clojure). See
+        [pkg/persistent/LICENSE](pkg/persistent/LICENSE).
+
+    -   Files in [pkg/md/spec](pkg/md/spec) are released under the Creative Commons
+        CC-BY-SA 4.0 license, since they are derived from
+        [the CommonMark spec](https://github.com/commonmark/commonmark-spec). See
+        [pkg/md/spec/LICENSE](pkg/md/spec/LICENSE).
+notices: []
