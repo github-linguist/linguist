@@ -3862,6 +3862,17 @@ MAXScript:
   tm_scope: source.maxscript
   ace_mode: text
   language_id: 217
+MDX:
+  type: markup
+  color: "#fcb32c"
+  ace_mode: markdown
+  codemirror_mode: gfm
+  codemirror_mime_type: text/x-gfm
+  wrap: true
+  extensions:
+  - ".mdx"
+  tm_scope: source.mdx
+  language_id: 512838272
 MLIR:
   type: programming
   color: "#5EC8DB"
@@ -3980,7 +3991,6 @@ Markdown:
   - ".markdown"
   - ".mdown"
   - ".mdwn"
-  - ".mdx"
   - ".mkd"
   - ".mkdn"
   - ".mkdown"

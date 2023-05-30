@@ -311,6 +311,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **M4Sugar:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **MATLAB:** [mathworks/MATLAB-Language-grammar](https://github.com/mathworks/MATLAB-Language-grammar)
 - **MAXScript:** [Alhadis/language-maxscript](https://github.com/Alhadis/language-maxscript)
+- **MDX:** [wooorm/markdown-tm-language](https://github.com/wooorm/markdown-tm-language)
 - **MLIR:** [jpienaar/mlir-grammar](https://github.com/jpienaar/mlir-grammar)
 - **MQL4:** [mqsoft/MQL5-sublime](https://github.com/mqsoft/MQL5-sublime)
 - **MQL5:** [mqsoft/MQL5-sublime](https://github.com/mqsoft/MQL5-sublime)
