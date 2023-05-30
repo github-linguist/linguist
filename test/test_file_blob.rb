@@ -572,7 +572,12 @@ class TestFileBlob < Minitest::Test
 
     # Bootstrap
     assert !sample_blob("src/bootstraps/settings.js").vendored?
+    assert !sample_blob("bootstrap/misc/other/reset.css").vendored?
+    assert sample_blob("bootstrap-1.4/misc/other/reset.css").vendored?
+    assert sample_blob("bootstrap.10.4/misc/other/reset.css").vendored?
+    assert sample_blob("src/bootstrap-5.4.1-beta-dist/js/bundle.js").vendored?
     assert sample_blob("src/bootstrap-custom.js").vendored?
+    assert sample_blob("src/bootstrap-1.4.js").vendored?
     assert sample_blob("src/bootstrap-5.4.1-beta-dist/js/bootstrap.bundle.js").vendored?
     assert sample_blob("src/bootstrap-5.4.1-beta-dist/js/bootstrap.esm.js").vendored?
     assert sample_blob("src/bootstrap-5.4.1-beta-dist/css/bootstrap.rtl.css").vendored?
