@@ -1,4 +1,4 @@
-require 'escape_utils'
+require 'cgi'
 require 'yaml'
 begin
   require 'yajl'
@@ -32,8 +32,6 @@ module Linguist
     @interpreter_index  = Hash.new { |h,k| h[k] = [] }
     @filename_index     = Hash.new { |h,k| h[k] = [] }
 
-    # Valid Languages types
-    TYPES = [:data, :markup, :programming, :prose]
 
     # Detect languages by a specific type
     #
@@ -265,7 +263,7 @@ module Linguist
 
       # Set type
       @type = attributes[:type] ? attributes[:type].to_sym : nil
-      if @type && !TYPES.include?(@type)
+      if @type && !get_types.include?(@type)
         raise ArgumentError, "invalid type: #{@type}"
       end
 
@@ -293,13 +291,17 @@ module Linguist
 
       # If group name is set, save the name so we can lazy load it later
       if attributes[:group_name]
-        @group = nil
         @group_name = attributes[:group_name]
 
       # Otherwise we can set it to self now
       else
-        @group = self
+        @group_name = self.name
       end
+    end
+
+    def get_types
+      # Valid Languages types
+      @types = [:data, :markup, :programming, :prose]
     end
 
     # Public: Get proper name
@@ -431,7 +433,7 @@ module Linguist
     #
     # Returns the escaped String.
     def escaped_name
-      EscapeUtils.escape_url(name).gsub('+', '%20')
+      CGI.escape(name).gsub('+', '%20')
     end
 
     # Public: Get default alias name

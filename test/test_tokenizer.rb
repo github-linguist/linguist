@@ -91,8 +91,11 @@ class TestTokenizer < Minitest::Test
     assert_equal %w(COMMENT'\\" bar), tokenize("' \\\" foo\nbar")
     assert_equal %w(COMMENT.ig), tokenize(".ig\nComment\n..")
 
+    # DIGITAL Command Language comments
+    assert_equal %w(COMMENT$!), tokenize("$! Foo")
+
     # Easily mistaken with comment
-    assert_equal %w(*/), tokenize("1 */ 2")
+    assert_equal %w(* /), tokenize("1 */ 2")
   end
 
   def test_sgml_tags
@@ -105,6 +108,11 @@ class TestTokenizer < Minitest::Test
     assert_equal %w(<? xml version = ?>), tokenize("<?xml version=\"1.0\"?>")
     assert_equal %w(<! DOCTYPE html >), tokenize("<!DOCTYPE html>")
     assert_equal %w(< a >), tokenize("<a>")
+  end
+
+  def test_freemarker_tags
+    assert_equal %w(<# a > b </# a >), tokenize("<#a>b</#a>")
+    assert_equal %w(<@ a > b </@ a >), tokenize("<@a>b</@a>")
   end
 
   def test_operators
@@ -165,15 +173,44 @@ class TestTokenizer < Minitest::Test
     assert_equal %w(a === b), tokenize("a===b")
     assert_equal %w(a !== b), tokenize("a !== b")
     assert_equal %w(a !== b), tokenize("a!==b")
+    assert_equal %w(a >= b), tokenize("a>=b")
+    assert_equal %w(a <= b), tokenize("a<=b")
+    assert_equal %w(a <> b), tokenize("a<>b")
     assert_equal %w(a ^ b), tokenize("a ^ b")
     assert_equal %w(a ^ b), tokenize("a^b")
     assert_equal %w(~ a), tokenize("~a")
 
+    assert_equal %w(a := b), tokenize("a:=b")
+    assert_equal %w(a :== b), tokenize("a:==b")
+    assert_equal %w(a += b), tokenize("a+=b")
+    assert_equal %w(a -= b), tokenize("a-=b")
+    assert_equal %w(a *= b), tokenize("a*=b")
+    assert_equal %w(a /= b), tokenize("a/=b")
+    assert_equal %w(a %= b), tokenize("a%=b")
+    assert_equal %w(a ^= b), tokenize("a^=b")
+    assert_equal %w(a &= b), tokenize("a&=b")
+    assert_equal %w(a |= b), tokenize("a|=b")
+    assert_equal %w(a ~= b), tokenize("a~=b")
+    assert_equal %w(a =~ b), tokenize("a=~b")
+    assert_equal %w(a !~ b), tokenize("a!~b")
+
+    # Regexps/Globs
+    assert_equal %w(.*), tokenize(".*")
+    assert_equal %w(.*?), tokenize(".*?")
+    assert_equal %w(.**), tokenize(".**")
+    assert_equal %w(.+), tokenize(".+")
+    assert_equal %w(.+?), tokenize(".+?")
+    assert_equal %w(.++), tokenize(".++")
+    assert_equal %w((?: a )), tokenize("(?:a)")
+
+    assert_equal %w([[ a ]]), tokenize("[[a]]")
+    assert_equal %w([[ a ]]), tokenize("[[ a ]]")
+
     # Edge cases
-    assert_equal %w(-!#$%&*+,.:;<=>), tokenize("-!#$%&*+,.:;<=>")
-    assert_equal %w(-!#$%&?@\\^_`|~), tokenize("-!#$%&?@\\^_`|~")
-    assert_equal %w(-!#$%&*+,.:;<=>), tokenize("-!#$%&*+,.:;<=>")
-    assert_equal %w(/-!#$%&*+,.:;<>), tokenize("/-!#$%&*+,.:;<>")
+    assert_equal %w(- ! # $ % & * + , . : ; <=>), tokenize("-!#$%&*+,.:;<=>")
+    assert_equal %w(- ! # $ % & ? @ \\ ^ _ ` | ~), tokenize("-!#$%&?@\\^_`|~")
+    assert_equal %w(- ! # $ % & * + , . : ; <=>), tokenize("-!#$%&*+,.:;<=>")
+    assert_equal %w(/ - ! # $ % & * + , . : ; <>), tokenize("/-!#$%&*+,.:;<>")
   end
 
   def test_c_tokens
@@ -186,6 +223,10 @@ class TestTokenizer < Minitest::Test
     assert_equal %w(#include < iostream > using namespace std ; int main \(\) { cout << << endl ; }), tokenize(:"C++/hello.cpp")
   end
 
+  def test_lua_tokens
+    assert_equal %w({...}), tokenize("{...}")
+  end
+
   def test_objective_c_tokens
     assert_equal %w(#import < Foundation / Foundation .h > @interface Foo : NSObject { } @end), tokenize(:"Objective-C/Foo.h")
     assert_equal %w(#import @implementation Foo @end), tokenize(:"Objective-C/Foo.m")
@@ -194,11 +235,17 @@ class TestTokenizer < Minitest::Test
 
   def test_perl_tokens
     assert_equal %w(COMMENT# COMMENT# COMMENT# package POSIX ; #line sub getchar { usage if @_ != ; CORE :: getc \( STDIN \) ; } COMMENT# ;), tokenize(:"Perl/getchar.al")
+    assert_equal %w(@_), tokenize("@_")
+    assert_equal %w($_), tokenize("$_")
   end
 
   def test_php_tokens
     assert_equal %w(<? php echo ( ) ; ?>), tokenize("<?php echo('hello world'); ?>")
     assert_equal %w(<? php COMMENT/* ?>), tokenize("<?php /* comment */ ?>")
+  end
+
+  def test_prolog_tokens
+    assert_equal %w(a ( A , B ) :- f .), tokenize("a(A, B) :- f.")
   end
 
   def test_shebang
@@ -228,7 +275,40 @@ class TestTokenizer < Minitest::Test
     assert_equal %w(task : default do puts end), tokenize(:"Ruby/filenames/Rakefile")
   end
 
+  def test_shell_tokens
+    # Bash
+    assert_equal %w(&>), tokenize("&>")
+    assert_equal %w(|&), tokenize("|&")
+    assert_equal %w(<&), tokenize("<&")
+    assert_equal %w(>&), tokenize(">&")
+    assert_equal %w(${ a }), tokenize("${a}")
+    assert_equal %w($( a )), tokenize("$( a )")
+    assert_equal %w($(( + ))), tokenize("$(( 1+1 ))")
+
+    # Fish
+    assert_equal %w(<&-), tokenize("<&-")
+    assert_equal %w(&|), tokenize("&|")
+  end
+
   def test_truncate
     assert_equal ['a'*16], tokenize('a'*100)
+  end
+
+  def test_long_token
+    assert_equal ["." * 16], tokenize("." * (32*1024+1))
+  end
+
+  # This is a terrible way to test this, but it does the job.
+  #
+  # If this test fails, it means you've introduced a regression in the tokenizer in the form of an action that uses
+  # REJECT or a rule with a trailing context which is effectively the same as REJECT. Both of these cause us problems
+  # because they introduce a fixed length buffer. This fixed buffer can cause the tokenizer to crash. This also has
+  # an impact on performance of the tokenizer.
+  #
+  # Please do not use rules with a trailing context or REJECT actions
+  #
+  def test_flex_no_reject
+    refute File.open("ext/linguist/lex.linguist_yy.c").grep(/#define REJECT reject_used_but_not_detected/).empty?, \
+      "Tokenizer should not use rules with a trailing context or REJECT actions"
   end
 end

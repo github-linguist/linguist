@@ -49,6 +49,7 @@ module Linguist
         -\*-
       ]xi
 
+      # NOTE: When changing this regex, be sure to keep the Vim Help heuristic updated too (#5347)
       VIM_MODELINE = %r[
         (?-m)
 
@@ -144,6 +145,9 @@ module Linguist
         return [] if blob.symlink?
 
         header = blob.first_lines(SEARCH_SCOPE).join("\n")
+        # Return early for Vimball files as their modeline will not reflect their filetype.
+        return [] if header.include?("UseVimball")
+
         footer = blob.last_lines(SEARCH_SCOPE).join("\n")
         Array(Language.find_by_alias(modeline(header + footer)))
       end
