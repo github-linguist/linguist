@@ -484,6 +484,11 @@ disambiguations:
   - language: NL
     pattern: '^(b|g)[0-9]+ '
   - language: NewLisp
+- extensions: ['.nu']
+  rules:
+  - language: Nushell
+    pattern: '^\s*(import|export|module|def|let|let-env) '
+  - language: Nu
 - extensions: ['.odin']
   rules:
   - language: Object Data Instance Notation

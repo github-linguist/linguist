@@ -706,6 +706,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_nu_by_heuristics
+    assert_heuristics({
+      "Nushell" => all_fixtures("Nushell", "*.nu"),
+      "Nu" => all_fixtures("Nu", "*.nu")
+    })
+  end
+
   def test_odin_by_heuristics
     assert_heuristics({
       "Object Data Instance Notation" => all_fixtures("Object Data Instance Notation", "*.odin"),
