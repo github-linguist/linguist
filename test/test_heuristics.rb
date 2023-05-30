@@ -705,6 +705,12 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_noir_by_heuristics
+    assert_heuristics({
+      "Noir" => all_fixtures("Noir", "*.nr"),
+    })
+  end
+
   def test_odin_by_heuristics
     assert_heuristics({
       "Object Data Instance Notation" => all_fixtures("Object Data Instance Notation", "*.odin"),
