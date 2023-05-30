@@ -349,7 +349,8 @@ Apex:
   color: "#1797c0"
   extensions:
   - ".cls"
-  tm_scope: source.java
+  - ".trigger"
+  tm_scope: source.apex
   ace_mode: java
   codemirror_mode: clike
   codemirror_mime_type: text/x-java
@@ -6320,6 +6321,7 @@ Shell:
   - ".sh.in"
   - ".tmux"
   - ".tool"
+  - ".trigger"
   - ".zsh"
   - ".zsh-theme"
   filenames:
