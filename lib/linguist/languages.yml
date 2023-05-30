@@ -349,7 +349,8 @@ Apex:
   color: "#1797c0"
   extensions:
   - ".cls"
-  tm_scope: source.java
+  - ".trigger"
+  tm_scope: source.apex
   ace_mode: java
   codemirror_mode: clike
   codemirror_mime_type: text/x-java
@@ -758,6 +759,7 @@ C++:
   - ".re"
   - ".tcc"
   - ".tpp"
+  - ".txx"
   language_id: 43
 C-ObjDump:
   type: data
@@ -1396,6 +1398,16 @@ D-ObjDump:
   tm_scope: objdump.x86asm
   ace_mode: assembly_x86
   language_id: 81
+D2:
+  type: markup
+  color: "#526ee8"
+  extensions:
+  - ".d2"
+  aliases:
+  - d2lang
+  tm_scope: source.d2
+  ace_mode: text
+  language_id: 37531557
 DIGITAL Command Language:
   type: programming
   aliases:
@@ -2434,8 +2446,11 @@ Go Checksums:
   aliases:
   - go.sum
   - go sum
+  - go.work.sum
+  - go work sum
   filenames:
   - go.sum
+  - go.work.sum
   tm_scope: go.sum
   ace_mode: text
   language_id: 1054391671
@@ -2450,6 +2465,17 @@ Go Module:
   tm_scope: go.mod
   ace_mode: text
   language_id: 947461016
+Go Workspace:
+  type: data
+  color: "#00ADD8"
+  aliases:
+  - go.work
+  - go work
+  filenames:
+  - go.work
+  tm_scope: go.mod
+  ace_mode: text
+  language_id: 934546256
 Godot Resource:
   type: data
   color: "#355570"
@@ -2611,6 +2637,9 @@ HOCON:
   color: "#9ff8ee"
   extensions:
   - ".hocon"
+  filenames:
+  - .scalafix.conf
+  - .scalafmt.conf
   tm_scope: source.hocon
   ace_mode: text
   language_id: 679725279
@@ -2872,6 +2901,7 @@ INI:
   - ".pylintrc"
   - buildozer.spec
   - pylintrc
+  - vlcrc
   tm_scope: source.ini
   aliases:
   - dosini
@@ -3134,6 +3164,7 @@ JSON with Comments:
   - ".jscsrc"
   - ".jshintrc"
   - ".jslintrc"
+  - ".swcrc"
   - api-extractor.json
   - devcontainer.json
   - jsconfig.json
@@ -3540,7 +3571,7 @@ LOLCODE:
   extensions:
   - ".lol"
   color: "#cc9900"
-  tm_scope: none
+  tm_scope: source.lolcode
   ace_mode: text
   language_id: 192
 LSL:
@@ -3860,6 +3891,17 @@ MAXScript:
   tm_scope: source.maxscript
   ace_mode: text
   language_id: 217
+MDX:
+  type: markup
+  color: "#fcb32c"
+  ace_mode: markdown
+  codemirror_mode: gfm
+  codemirror_mime_type: text/x-gfm
+  wrap: true
+  extensions:
+  - ".mdx"
+  tm_scope: source.mdx
+  language_id: 512838272
 MLIR:
   type: programming
   color: "#5EC8DB"
@@ -3967,6 +4009,7 @@ Markdown:
   type: prose
   color: "#083fa1"
   aliases:
+  - md
   - pandoc
   ace_mode: markdown
   codemirror_mode: gfm
@@ -3978,7 +4021,6 @@ Markdown:
   - ".markdown"
   - ".mdown"
   - ".mdwn"
-  - ".mdx"
   - ".mkd"
   - ".mkdn"
   - ".mkdown"
@@ -3987,7 +4029,7 @@ Markdown:
   - ".workbook"
   filenames:
   - contents.lr
-  tm_scope: source.gfm
+  tm_scope: text.md
   language_id: 222
 Marko:
   type: markup
@@ -4356,7 +4398,7 @@ Nasal:
   color: "#1d2c4e"
   extensions:
   - ".nas"
-  tm_scope: none
+  tm_scope: source.nasal
   ace_mode: text
   language_id: 178322513
 Nearley:
@@ -4524,6 +4566,21 @@ Nunjucks:
   tm_scope: text.html.nunjucks
   ace_mode: nunjucks
   language_id: 461856962
+Nushell:
+  type: programming
+  color: "#4E9906"
+  extensions:
+  - ".nu"
+  interpreters:
+  - nu
+  aliases:
+  - nu-script
+  - nushell-script
+  tm_scope: source.nushell
+  ace_mode: sh
+  codemirror_mode: shell
+  codemirror_mime_type: text/x-sh
+  language_id: 446573572
 OASv2-json:
   type: data
   color: "#85ea2d"
@@ -4575,7 +4632,7 @@ OCaml:
   ace_mode: ocaml
   codemirror_mode: mllike
   codemirror_mime_type: text/x-ocaml
-  color: "#3be133"
+  color: "#ef7a08"
   extensions:
   - ".ml"
   - ".eliom"
@@ -5290,6 +5347,7 @@ Propeller Spin:
 Protocol Buffer:
   type: data
   aliases:
+  - proto
   - protobuf
   - Protocol Buffers
   extensions:
@@ -5520,6 +5578,17 @@ RAML:
   extensions:
   - ".raml"
   language_id: 308
+RBS:
+  type: data
+  ace_mode: ruby
+  codemirror_mode: ruby
+  codemirror_mime_type: text/x-ruby
+  extensions:
+  - ".rbs"
+  color: "#701516"
+  tm_scope: source.rbs
+  group: Ruby
+  language_id: 899227493
 RDoc:
   type: prose
   color: "#701516"
@@ -5566,7 +5635,7 @@ RMarkdown:
   extensions:
   - ".qmd"
   - ".rmd"
-  tm_scope: source.gfm
+  tm_scope: text.md
   language_id: 313
 RPC:
   type: programming
@@ -6021,6 +6090,8 @@ Rust:
   ace_mode: rust
   codemirror_mode: rust
   codemirror_mime_type: text/x-rustsrc
+  interpreters:
+  - rust-script
   language_id: 327
 SAS:
   type: programming
@@ -6328,6 +6399,7 @@ Shell:
   - ".sh.in"
   - ".tmux"
   - ".tool"
+  - ".trigger"
   - ".zsh"
   - ".zsh-theme"
   filenames:
@@ -6734,6 +6806,14 @@ TI Program:
   - ".8xp.txt"
   language_id: 422
   tm_scope: none
+TL-Verilog:
+  type: programming
+  extensions:
+    - ".tlv"
+  tm_scope: source.tlverilog
+  ace_mode: verilog
+  color: "#C40023"
+  language_id: 118656070
 TLA:
   type: programming
   color: "#4b0079"
@@ -7270,6 +7350,7 @@ Visual Basic 6.0:
   type: programming
   color: "#2c6353"
   extensions:
+  - ".bas"
   - ".cls"
   - ".ctl"
   - ".Dsr"
@@ -7347,6 +7428,18 @@ WebAssembly:
   codemirror_mode: commonlisp
   codemirror_mime_type: text/x-common-lisp
   language_id: 956556503
+WebAssembly Interface Type:
+  type: data
+  color: "#6250e7"
+  extensions:
+  - ".wit"
+  aliases:
+  - wit
+  ace_mode: text
+  tm_scope: source.wit
+  codemirror_mode: webidl
+  codemirror_mime_type: text/x-webidl
+  language_id: 134534086
 WebIDL:
   type: programming
   extensions:
