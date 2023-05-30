@@ -147,7 +147,7 @@ disambiguations:
     - named_pattern: vb-class
     - pattern: '^\s*BEGIN\R\s*MultiUse\s*=.*\R\s*Persistable\s*='
   - language: VBA
-    named_pattern: vb-class  
+    named_pattern: vb-class
   - language: TeX
     pattern: '^\s*\\(?:NeedsTeXFormat|ProvidesClass){'
   - language: ObjectScript
@@ -258,7 +258,7 @@ disambiguations:
   - language: Visual Basic 6.0
     and:
     - named_pattern: vb-form
-    - pattern: '^\s*Begin\s+VB\.Form\s+'  
+    - pattern: '^\s*Begin\s+VB\.Form\s+'
 - extensions: ['.fs']
   rules:
   - language: Forth
@@ -696,6 +696,10 @@ disambiguations:
   rules:
   - language: Java Server Pages
     pattern: '<%[@!=\s]?\s*(taglib|tag|include|attribute|variable)\s'
+- extensions: ['.tlv']
+  rules:
+  - language: TL-Verilog
+    pattern: '^\\.{0,10}TLV_version'
 - extensions: ['.toc']
   rules:
   - language: World of Warcraft Addon Data

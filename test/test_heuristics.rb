@@ -430,7 +430,7 @@ class TestHeuristics < Minitest::Test
       "Text" => all_fixtures("Text", "*.fr")
     })
   end
-  
+
   def test_frm_by_heuristics
     assert_heuristics({
       "VBA" => all_fixtures("VBA", "*.frm"),
@@ -932,6 +932,12 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "Java Server Pages" => Dir.glob("#{fixtures_path}/Generic/tag/Java Server Pages/*"),
       nil => Dir.glob("#{fixtures_path}/Generic/tag/nil/*")
+    })
+  end
+
+  def test_tlv_by_heuristics
+    assert_heuristics({
+      "TL-Verilog" => all_fixtures("TL-Verilog", "*.tlv"),
     })
   end
 
