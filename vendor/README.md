@@ -126,6 +126,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Cython:** [textmate/cython.tmbundle](https://github.com/textmate/cython.tmbundle)
 - **D:** [textmate/d.tmbundle](https://github.com/textmate/d.tmbundle)
 - **D-ObjDump:** [nanoant/assembly.tmbundle](https://github.com/nanoant/assembly.tmbundle)
+- **D2:** [terrastruct/d2-vscode](https://github.com/terrastruct/d2-vscode)
 - **DM:** [PJB3005/atomic-dreams](https://github.com/PJB3005/atomic-dreams)
 - **DNS Zone:** [sixty4k/st2-zonefile](https://github.com/sixty4k/st2-zonefile)
 - **DTrace:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
