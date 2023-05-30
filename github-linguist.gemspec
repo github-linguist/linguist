@@ -7,10 +7,10 @@ Gem::Specification.new do |s|
   s.description = 'We use this library at GitHub to detect blob languages, highlight code, ignore binary files, suppress generated files in diffs, and generate language breakdown graphs.'
 
   s.authors  = "GitHub"
-  s.homepage = "https://github.com/github/linguist"
+  s.homepage = "https://github.com/github-linguist/linguist"
   s.license  = "MIT"
   s.metadata = {
-    "github_repo" => "ssh://github.com/github/linguist"
+    "github_repo" => "ssh://github.com/github-linguist/linguist"
   }
 
   s.files = Dir['{lib,ext}/**/*', 'grammars/*', 'LICENSE'] - Dir['lib/linguist/linguist.{so,bundle}']
