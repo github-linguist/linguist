@@ -89,7 +89,7 @@ disambiguations:
 - extensions: ['.bas']
   rules:
   - language: FreeBasic
-    pattern: '^[ \t]*#(?:define|endif|endmacro|ifn?def|if|include|lang|macro)\s'
+    pattern: '^[ \t]*#(?i)(?:define|endif|endmacro|ifn?def|include|lang|macro)(?:$|\s)'
   - language: BASIC
     pattern: '\A\s*\d'
   - language: VBA
@@ -119,7 +119,7 @@ disambiguations:
 - extensions: ['.bi']
   rules:
   - language: FreeBasic
-    pattern: '^[ \t]*#(?:define|endif|endmacro|ifn?def|if|include|lang|macro)\s'
+    pattern: '^[ \t]*#(?i)(?:define|endif|endmacro|ifn?def|if|include|lang|macro)(?:$|\s)'
 - extensions: ['.bs']
   rules:
   - language: Bikeshed
