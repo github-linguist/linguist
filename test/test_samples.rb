@@ -99,7 +99,7 @@ class TestSamples < Minitest::Test
       end
     end
   end
-  
+
   def case_insensitive_glob(extension)
     glob = ""
     extension.each_char do |c|

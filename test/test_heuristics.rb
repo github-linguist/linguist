@@ -267,7 +267,8 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "FreeBasic" => all_fixtures("FreeBasic", "*.bas"),
       "BASIC" => all_fixtures("BASIC", "*.bas"),
-      nil => all_fixtures("VBA", "*.bas")
+      "VBA" => all_fixtures("VBA", "*.bas"),
+      "Visual Basic 6.0" => all_fixtures("Visual Basic 6.0", "*.bas")
     })
   end
 
@@ -430,7 +431,7 @@ class TestHeuristics < Minitest::Test
       "Text" => all_fixtures("Text", "*.fr")
     })
   end
-  
+
   def test_frm_by_heuristics
     assert_heuristics({
       "VBA" => all_fixtures("VBA", "*.frm"),
@@ -705,6 +706,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_nu_by_heuristics
+    assert_heuristics({
+      "Nushell" => all_fixtures("Nushell", "*.nu"),
+      "Nu" => all_fixtures("Nu", "*.nu")
+    })
+  end
+
   def test_odin_by_heuristics
     assert_heuristics({
       "Object Data Instance Notation" => all_fixtures("Object Data Instance Notation", "*.odin"),
@@ -932,6 +940,12 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "Java Server Pages" => Dir.glob("#{fixtures_path}/Generic/tag/Java Server Pages/*"),
       nil => Dir.glob("#{fixtures_path}/Generic/tag/nil/*")
+    })
+  end
+
+  def test_tlv_by_heuristics
+    assert_heuristics({
+      "TL-Verilog" => all_fixtures("TL-Verilog", "*.tlv"),
     })
   end
 
