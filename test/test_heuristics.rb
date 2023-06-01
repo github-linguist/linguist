@@ -709,6 +709,8 @@ class TestHeuristics < Minitest::Test
   def test_noir_by_heuristics
     assert_heuristics({
       "Noir" => all_fixtures("Noir", "*.nr"),
+    })
+  end
 
   def test_nu_by_heuristics
     assert_heuristics({
