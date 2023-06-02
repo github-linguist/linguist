@@ -487,8 +487,10 @@ disambiguations:
 - extensions: ['.nr']
   rules:
   - language: Noir
-    pattern: '^fn .*\(.*'
-    negative_pattern: '^.'
+    and:
+    - negative_pattern: '^\.'
+    - pattern: '^\s*fn .*\(.*'
+  - language: Roff
 - extensions: ['.nu']
   rules:
   - language: Nushell
