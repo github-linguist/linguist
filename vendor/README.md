@@ -577,6 +577,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Vue:** [vuejs/vue-syntax-highlight](https://github.com/vuejs/vue-syntax-highlight)
 - **Vyper:** [davidhq/SublimeEthereum](https://github.com/davidhq/SublimeEthereum)
 - **WDL:** [broadinstitute/wdl-sublime-syntax-highlighter](https://github.com/broadinstitute/wdl-sublime-syntax-highlighter)
+- **WGSL:** [wgsl-analyzer/wgsl-analyzer](https://github.com/wgsl-analyzer/wgsl-analyzer)
 - **Wavefront Material:** [Alhadis/language-wavefront](https://github.com/Alhadis/language-wavefront)
 - **Wavefront Object:** [Alhadis/language-wavefront](https://github.com/Alhadis/language-wavefront)
 - **Web Ontology Language:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)
