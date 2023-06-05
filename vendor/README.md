@@ -642,3 +642,4 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **wdl:** [broadinstitute/wdl-sublime-syntax-highlighter](https://github.com/broadinstitute/wdl-sublime-syntax-highlighter)
 - **wisp:** [atom/language-clojure](https://github.com/atom/language-clojure)
 - **xBase:** [hernad/atom-language-harbour](https://github.com/hernad/atom-language-harbour)
+- **WGSL:** [joaogabrielzo/wgsl-grammar](https://github.com/joaogabrielzo/wgsl-grammar)
