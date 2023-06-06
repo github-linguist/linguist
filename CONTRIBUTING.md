@@ -130,7 +130,7 @@ Misclassifications can often be solved by either adding a new filename or extens
 ## Fixing syntax highlighting
 
 Syntax highlighting in GitHub is performed using TextMate-compatible grammars.
-These are the same grammars used by TextMate, Sublime Text, and Atom.
+These are the same grammars used by VS Code, TextMate, Sublime Text 2, and Atom.
 Every language in [`languages.yml`][languages] is mapped to its corresponding TextMate `scopeName`.
 This scope name will be used when picking up a grammar for highlighting.
 
