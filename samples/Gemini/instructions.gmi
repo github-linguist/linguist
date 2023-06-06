@@ -1,0 +1,77 @@
+# Astrobotany - FAQ
+
+```
+             .--'}        _   ,
+          ,<{.-'{:} -====;o`\/ }
+      __ ((  '--.}        \-`\-'----.
+      \_\ \\   __          \ |-..-'`
+      ___\_))_/_/          /\/\
+     /_/  ((               `--`
+       jgs \\
+```
+
+=> / 🚶 Go back
+
+## Creating an Account
+
+Astrobotany uses self-signed (TOFU) client certificates for authentication. In order to join in the fun, use your preferred gemini client to generate a new certificate. The subject fields in the certificate (name, location, email, CN, ...) don't matter. You can either leave them blank, or you can enter in values for your own records.
+
+Once you have generated your certificate, attempt to login and you will be guided through the process of creating an account.
+
+## Gardening Basics
+
+You've been given a seed that will grow into a beautiful plant!
+
+* Check back every 24 hours to water your plant.
+* Your score will increase as long as the soil remains damp.
+* Your plant will die after 5 days without water.
+
+## Plant Stages
+
+Your plant will continue to grow and evolve over time.
+
+* seed (0 days)
+* seedling (3 day)
+* young (3 days)
+* mature (10 days)
+* flowering (20 days)
+* seed-bearing (30 days)
+
+## Generations
+
+Once your plant reaches the seed-bearing stage, you will be given the option to either keep going or harvest your plant. If you chose to harvest, your score will reset and you will start over with a generation score multiplier.
+
+```
+generation | multiplier
+---------- | ----------
+1          | 1.00
+2          | 1.20
+3          | 1.40
+4          | 1.60
+5          | 1.80
+6          | 2.00
+7          | 2.20
+8          | 2.40
+9          | 2.60
+10         | 2.80
+```
+
+## Registration (Legacy)
+
+The original guide for astrobotany user registration involved using certificate signing requests (CSRs). It's documented here for historical reference.
+
+=> /static/register_old.gmi Legacy Registration Guide
+
+## Credits
+
+Astrobotany is a fork of the tilde.town pubnix game, botany.
+
+Botany, by Jake Funke
+=> https://github.com/jifunks/botany
+
+Astrobotany, by Michael Lazar
+=> https://github.com/michael-lazar/astrobotany
+
+Most of the ASCII art on this capsule (besides the plants) was created by Joan G. Stark. ANSI colorization added by Michael Lazar.
+
+=> https://web.archive.org/web/20091028031718/http://www.geocities.com/SoHo/7373/indexother.htm jgs geocities site (internet archive)

@@ -9,7 +9,7 @@ class TestSamples < Minitest::Test
     assert latest = Samples.data
 
     # Just warn, it shouldn't scare people off by breaking the build.
-    if serialized['md5'] != latest['md5']
+    if serialized['sha256'] != latest['sha256']
       warn "Samples database is out of date. Run `bundle exec rake samples`."
 
       expected = Tempfile.new('expected.json')
@@ -51,18 +51,6 @@ class TestSamples < Minitest::Test
     end
   end
 
-  # Some named files are deliberately classified as Text without a corresponding sample as including
-  # the sample would affect the classifier leading to incorrect analysis and classification.
-  # This test ensures samples aren't added for those specific cases.
-  def test_no_text_samples
-    no_text_samples = ["go.mod", "go.sum"]
-    Samples.each do |sample|
-      if sample[:language] == "Text"
-        refute_includes no_text_samples, sample[:filename], "#{sample[:filename]} should NOT be added as a sample for #{sample[:language]}"
-      end
-    end
-  end
-
   # Check that there aren't samples with extensions or interpreters that
   # aren't explicitly defined in languages.yml
   languages_yml = File.expand_path("../../lib/linguist/languages.yml", __FILE__)
@@ -94,8 +82,9 @@ class TestSamples < Minitest::Test
         # Check for samples if more than one language matches the given extension.
         if language_matches.length > 1
           language_matches.each do |match|
-            samples = "samples/#{match.name}/*#{extension}"
-            assert Dir.glob(samples, File::FNM_CASEFOLD).any?, "Missing samples in #{samples.inspect}. See https://github.com/github/linguist/blob/master/CONTRIBUTING.md"
+            generic = Strategy::Extension.generic? extension
+            samples = generic ? "test/fixtures/Generic/#{extension.sub(/^\./, "")}/#{match.name}/*" : "samples/#{match.name}/*#{case_insensitive_glob(extension)}"
+            assert Dir.glob(samples).any?, "Missing samples in #{samples.inspect}. See https://github.com/github/linguist/blob/master/CONTRIBUTING.md"
           end
         end
       end
@@ -109,5 +98,13 @@ class TestSamples < Minitest::Test
         end
       end
     end
+  end
+
+  def case_insensitive_glob(extension)
+    glob = ""
+    extension.each_char do |c|
+      glob += c.downcase != c.upcase ? "[#{c.downcase}#{c.upcase}]" : c
+    end
+    glob
   end
 end

@@ -4,6 +4,7 @@ allowed:
   - apache-2.0
   - bsd-2-clause
   - bsd-3-clause
+  - cc0-1.0
   - isc
   - mit
   - mpl-2.0
@@ -13,21 +14,15 @@ allowed:
   - wtfpl
   - zlib
 
-# These dependencies are explicitly ignored
-ignored:
-  rubygem:
-    - bundler
-
 # These dependencies have been reviewed and approved.
 reviewed:
-  rubygem:
-    - mime-types
-  grammar:
-    - blitzmax        # No license file. License in README
+  git_submodule:
+    - actionscript3-tmbundle # MIT
     - creole          # License filename is not LICENSE(.*) but rather "The MIT License (MIT)"
+    - bikeshed        # Creative Commons Zero v1.0
     - Sublime-Lasso   # No license file. License in README
     - vscode-zil-language # MIT
 
 sources:
   npm: false
-  rubygem: false
+  bundler: false

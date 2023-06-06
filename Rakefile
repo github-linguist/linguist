@@ -35,8 +35,9 @@ task :fetch_ace_modes do
   File.delete(ACE_FIXTURE_PATH) if File.exist?(ACE_FIXTURE_PATH)
 
   begin
-    ace_github_modes = open("https://api.github.com/repos/ajaxorg/ace/contents/lib/ace/mode").read
-    File.write(ACE_FIXTURE_PATH, ace_github_modes)
+    ace_github_modes_lib = URI.open("https://api.github.com/repos/ajaxorg/ace/contents/lib/ace/mode").read
+    ace_github_modes_src = URI.open("https://api.github.com/repos/ajaxorg/ace/contents/src/mode").read
+    File.write(ACE_FIXTURE_PATH, "[#{ace_github_modes_lib},#{ace_github_modes_src}]")
   rescue OpenURI::HTTPError, SocketError
       # no internet? no problem.
   end
@@ -44,7 +45,7 @@ end
 
 task :samples => :compile do
   require 'linguist/samples'
-  json = Yajl.dump(Linguist::Samples.data, :pretty => true)
+  json = Yajl.dump(Linguist::Samples.data, :pretty => false)
   File.write 'lib/linguist/samples.json', json
 end
 
@@ -58,10 +59,10 @@ end
 # The error count will need to be adjusted here until such time as all grammars are 100% error free.
 desc "Check that compiling the grammars doesn't introduce any new unexpected errors"
 task :check_grammars do
-  expected_error_count = 35  # This count should only ever go down. If it goes up, there's a new issue that needs to be addressed before updating the grammar.
+  expected_error_count = 30  # This count should only ever go down. If it goes up, there's a new issue that needs to be addressed before updating the grammar.
   rm_rf "linguist-grammars"
   output, status = Open3.capture2e("script/grammar-compiler", "compile", "-o", "linguist-grammars")
-  errors_found = output[/the grammar library contains ([0-9]+) errors/, 1].to_i
+  errors_found = output[/The grammar library contains ([0-9]+) errors/, 1].to_i
   missing_grammars = output.scan(/Missing scope in repository: `([^`].+)` is listed in grammars.yml but cannot be found/)
 
   unless missing_grammars.empty?

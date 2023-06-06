@@ -32,13 +32,21 @@ module Linguist
       [] # No heuristics matched
     end
 
+    # Public: Get all heuristic definitions
+    #
+    # Returns an Array of heuristic objects.
+    def self.all
+      self.load()
+      @heuristics
+    end
+
     # Internal: Load heuristics from 'heuristics.yml'.
     def self.load()
       if @heuristics.any?
         return
       end
 
-      data = YAML.load_file(File.expand_path("../heuristics.yml", __FILE__))
+      data = self.load_config
       named_patterns = data['named_patterns'].map { |k,v| [k, self.to_regex(v)] }.to_h
 
       data['disambiguations'].each do |disambiguation|
@@ -50,6 +58,10 @@ module Linguist
         end
         @heuristics << new(exts, rules)
       end
+    end
+
+    def self.load_config
+      YAML.load_file(File.expand_path("../heuristics.yml", __FILE__))
     end
 
     def self.parse_rule(named_patterns, rule)
@@ -84,9 +96,21 @@ module Linguist
     @heuristics = []
 
     # Internal
-    def initialize(exts_and_langs, rules)
-      @exts_and_langs = exts_and_langs
+    def initialize(exts, rules)
+      @exts = exts
       @rules = rules
+    end
+
+    # Internal: Return the heuristic's target extensions
+    def extensions
+      @exts
+    end
+
+    # Internal: Return the heuristic's candidate languages
+    def languages
+      @rules.map do |rule|
+        [rule['language']].flatten(2).map { |name| Language[name] }
+      end.flatten.uniq
     end
 
     # Internal: Check if this heuristic matches the candidate filenames or
@@ -94,7 +118,7 @@ module Linguist
     def matches?(filename, candidates)
       filename = filename.downcase
       candidates = candidates.compact.map(&:name)
-      @exts_and_langs.any? { |ext| filename.end_with?(ext) }
+      @exts.any? { |ext| filename.end_with?(ext) }
     end
 
     # Internal: Perform the heuristic
@@ -140,6 +164,6 @@ module Linguist
     def match(input)
       return !@pat.match(input)
     end
-    
+
   end
 end
