@@ -1,0 +1,269 @@
+@namespace("keybase.1")
+protocol user {
+  import idl "common.avdl";
+
+  record TrackProof {
+    string proofType;
+    string proofName;
+    string idString;
+  }
+
+  record WebProof {
+    string hostname;
+    array<string> protocols;
+  }
+
+  record Proofs {
+    array<TrackProof> social;
+    array<WebProof> web;
+    array<PublicKey> publicKeys;
+  }
+
+  record UserSummary {
+    UID uid;
+    string username;
+    string fullName;
+    union { null, LinkID } linkID;
+  }
+
+  record UserSummarySet {
+    array<UserSummary> users;
+    Time time;
+    int version;
+  }
+
+  /**
+    listTracking gets verified data from the tracking statements in the user's
+    sigchain. However, it does not check to make sure the tracked users have
+    not reset since the track statement.
+
+    If assertion is empty, it will use the current logged in user.
+    */
+  UserSummarySet listTracking(int sessionID, string filter, string assertion);
+  string listTrackingJSON(int sessionID, string filter, boolean verbose, string assertion);
+
+  /**
+    listTrackersUnverified returns the users following the given user, and is unverified
+    and server-trust.
+  */
+  UserSummarySet listTrackersUnverified(int sessionID, string assertion);
+
+  @typedef("string")
+  record EmailAddress {}
+
+  record Email {
+    EmailAddress email;
+    boolean isVerified;
+    boolean isPrimary;
+    IdentityVisibility visibility;
+    UnixTime lastVerifyEmailDate;
+  }
+
+  record UserSettings {
+    array<Email> emails;
+    array<UserPhoneNumber> phoneNumbers;
+  }
+
+  /**
+    Load a user from the server.
+    */
+  User loadUser(int sessionID, UID uid);
+  User loadUserByName(int sessionID, string username);
+
+  /**
+    Load a user + device keys from the server.
+    */
+  UserPlusKeys loadUserPlusKeys(int sessionID, UID uid, KID pollForKID);
+  UserPlusKeysV2AllIncarnations loadUserPlusKeysV2(
+    int sessionID,
+    UID uid,
+    KID pollForKID,
+    OfflineAvailability oa
+  );
+
+  /**
+    Load public keys for a user.
+    */
+  array<PublicKey> loadPublicKeys(int sessionID, UID uid);
+
+  /**
+    Load my public keys (for logged in user).
+    */
+  array<PublicKey> loadMyPublicKeys(int sessionID);
+
+  /**
+    Load user settings (for logged in user).
+    */
+  UserSettings loadMySettings(int sessionID);
+
+  /**
+    Load all the user's public keys (even those in reset key families)
+    from the server with no verification
+    */
+  array<PublicKey> loadAllPublicKeysUnverified(int sessionID, UID uid);
+
+  void profileEdit(int sessionID, string fullName, string location, string bio);
+
+  record InterestingPerson {
+    UID uid;
+    string username;
+    string fullname;
+    map<string, string> serviceMap;
+  }
+  array<InterestingPerson> interestingPeople(int maxUsers, string namespace);
+
+  UserVersion meUserVersion(int sessionID, boolean forcePoll);
+
+  /**
+   getUPAK returns a UPAK. Used mainly for debugging.
+  */
+  @lint("ignore")
+  UPAKVersioned getUPAK(UID uid, boolean unstubbed);
+
+  /**
+   getUPAKLite returns a UPKLiteV1AllIncarnations. Used mainly for debugging.
+  */
+  @lint("ignore")
+  UPKLiteV1AllIncarnations getUPAKLite(UID uid);
+
+  void uploadUserAvatar(string filename, union { null, ImageCropRect } crop);
+
+  ProofSuggestionsRes proofSuggestions(int sessionID);
+  record ProofSuggestionsRes{
+    array<ProofSuggestion> suggestions;
+    boolean showMore;
+  }
+
+  // A proof the user doesn't have.
+  record ProofSuggestion {
+    string key;
+    boolean belowFold;
+    string profileText; // "Prove your Twitter", "Add a PGP key"
+    array<SizedImage> profileIcon;
+    array<SizedImage> profileIconDarkmode;
+    string pickerText; // "Twitter", "Your own website", "octodon.xyz"
+    string pickerSubtext; // "twitter.com", "Mastodon instance"
+    array<SizedImage> pickerIcon;
+    array<SizedImage> pickerIconDarkmode;
+    array<Identify3RowMeta> metas; // for 'new' proof types
+  }
+
+  record NextMerkleRootRes {
+    union { null, MerkleRootV2 } res;
+  }
+
+  /**
+   FindNextMerkleRootAfterRevoke finds the first Merkle Root that contains the UID/KID
+   revocation at the given SigChainLocataion. The MerkleRootV2 prev is a hint as to where
+   we'll start our search. Usually it's the next one, but not always
+  */
+  NextMerkleRootRes findNextMerkleRootAfterRevoke(UID uid, KID kid, SigChainLocation loc, MerkleRootV2 prev);
+
+  /**
+   FindNextMerkleRootAfterReset finds the first Merkle root that contains the UID reset
+   at resetSeqno. You should pass it prev, which was the last known Merkle root at the time of
+   the reset. Usually, we'll just turn up the next Merkle root, but not always.
+  */
+  NextMerkleRootRes findNextMerkleRootAfterReset(UID uid, Seqno resetSeqno, ResetMerkleRoot prev);
+
+  /**
+   PassphraseState values are used in .config.json, so should not be changed without a migration strategy
+  */
+  enum PassphraseState {
+    KNOWN_0,
+    RANDOM_1
+  }
+
+  record CanLogoutRes {
+    boolean canLogout;
+    string reason;
+    PassphraseState passphraseState;
+  }
+  CanLogoutRes canLogout(int sessionID);
+
+  PassphraseState loadPassphraseState(int sessionID);
+
+  union { null, UserCard } userCard(int sessionID, string username, boolean useSession);
+
+  // user.passphrase_state gregor message body
+  @lint("ignore")
+  record UserPassphraseStateMsg {
+    @jsonkey("state")
+    PassphraseState passphraseState;
+  }
+
+  record UserBlockedRow {
+    @jsonkey("block_uid")
+    UID uid;
+    @jsonkey("block_username")
+    string username;
+    @jsonkey("chat")
+    union { null, boolean } chat;
+    @jsonkey("follow")
+    union { null, boolean } follow;
+  }
+
+  enum UserBlockType {
+    CHAT_0,
+    FOLLOW_1
+  }
+
+  // user.blocked gregor message body
+  record UserBlockedBody {
+    @jsonkey("blocks")
+    array<UserBlockedRow> blocks;
+    // The user who blocked (should be the currently logged-in user).
+    @jsonkey("blocker_uid")
+    UID uid;
+    @jsonkey("blocker_username")
+    string username;
+  }
+
+  record UserBlockState {
+    UserBlockType blockType;
+    boolean blocked;
+  }
+
+  record UserBlockedSummary {
+    string blocker;
+    map<string, array<UserBlockState>> blocks;
+  }
+
+  // User Blocking
+
+  record UserBlock {
+    string username;
+    boolean chatBlocked;
+    boolean followBlocked;
+    union { null, Time } createTime;
+    union { null, Time } modifyTime;
+  }
+
+  record UserBlockArg {
+    string username;
+    union { null, boolean } setChatBlock;
+    union { null, boolean } setFollowBlock;
+  }
+
+  void setUserBlocks(int sessionID, array<UserBlockArg> blocks);
+  array<UserBlock> getUserBlocks(int sessionID, array<string> usernames);
+
+  void reportUser(int sessionID, string username, string reason, string comment,
+    boolean includeTranscript, union { null, string } convID);
+
+  void dismissBlockButtons(TLFID tlfID);
+
+  // Legacy user blocking:
+  void blockUser(string username);
+  void unblockUser(string username);
+
+  // Team blocking
+  record TeamBlock {
+    @jsonkey("fq_name")
+    string teamName;
+    @jsonkey("ctime")
+    Time createTime;
+  }
+
+  array<TeamBlock> getTeamBlocks(int sessionID);
+}

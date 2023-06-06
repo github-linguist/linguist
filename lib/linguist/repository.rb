@@ -96,7 +96,7 @@ module Linguist
       @file_breakdown ||= begin
         breakdown = Hash.new { |h,k| h[k] = Array.new }
         cache.each do |filename, (language, _)|
-          breakdown[language] << filename
+          breakdown[language] << filename.dup.force_encoding("UTF-8").scrub
         end
         breakdown
       end
@@ -161,15 +161,19 @@ module Linguist
 
           blob = Linguist::LazyBlob.new(repository, delta.new_file[:oid], new, mode.to_s(8))
 
-          if blob.include_in_language_stats?
-            file_map[new] = [blob.language.group.name, blob.size]
-          end
+          update_file_map(blob, file_map, new)
 
           blob.cleanup!
         end
       end
 
       file_map
+    end
+
+    def update_file_map(blob, file_map, key)
+      if blob.include_in_language_stats?
+        file_map[key] = [blob.language.group.name, blob.size]
+      end
     end
   end
 end

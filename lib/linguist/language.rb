@@ -1,8 +1,9 @@
-require 'escape_utils'
+require 'cgi'
 require 'yaml'
 begin
   require 'yajl'
 rescue LoadError
+  require 'json'
 end
 
 require 'linguist/classifier'
@@ -31,8 +32,6 @@ module Linguist
     @interpreter_index  = Hash.new { |h,k| h[k] = [] }
     @filename_index     = Hash.new { |h,k| h[k] = [] }
 
-    # Valid Languages types
-    TYPES = [:data, :markup, :programming, :prose]
 
     # Detect languages by a specific type
     #
@@ -260,9 +259,11 @@ module Linguist
       # @name is required
       @name = attributes[:name] || raise(ArgumentError, "missing name")
 
+      @fs_name = attributes[:fs_name]
+
       # Set type
       @type = attributes[:type] ? attributes[:type].to_sym : nil
-      if @type && !TYPES.include?(@type)
+      if @type && !get_types.include?(@type)
         raise ArgumentError, "invalid type: #{@type}"
       end
 
@@ -271,17 +272,7 @@ module Linguist
       # Set aliases
       @aliases = [default_alias] + (attributes[:aliases] || [])
 
-      # Load the TextMate scope name or try to guess one
-      @tm_scope = attributes[:tm_scope] || begin
-        context = case @type
-                  when :data, :markup, :prose
-                    'text'
-                  when :programming, nil
-                    'source'
-                  end
-        "#{context}.#{@name.downcase}"
-      end
-
+      @tm_scope = attributes[:tm_scope] || 'none'
       @ace_mode = attributes[:ace_mode]
       @codemirror_mode = attributes[:codemirror_mode]
       @codemirror_mime_type = attributes[:codemirror_mime_type]
@@ -295,19 +286,22 @@ module Linguist
       @interpreters = attributes[:interpreters] || []
       @filenames    = attributes[:filenames]    || []
 
-      # Set popular, and searchable flags
+      # Set popular flag
       @popular    = attributes.key?(:popular)    ? attributes[:popular]    : false
-      @searchable = attributes.key?(:searchable) ? attributes[:searchable] : true
 
       # If group name is set, save the name so we can lazy load it later
       if attributes[:group_name]
-        @group = nil
         @group_name = attributes[:group_name]
 
       # Otherwise we can set it to self now
       else
-        @group = self
+        @group_name = self.name
       end
+    end
+
+    def get_types
+      # Valid Languages types
+      @types = [:data, :markup, :programming, :prose]
     end
 
     # Public: Get proper name
@@ -320,6 +314,10 @@ module Linguist
     #
     # Returns the name String
     attr_reader :name
+
+    # Public:
+    #
+    attr_reader :fs_name
 
     # Public: Get type.
     #
@@ -435,7 +433,7 @@ module Linguist
     #
     # Returns the escaped String.
     def escaped_name
-      EscapeUtils.escape_url(name).gsub('+', '%20')
+      CGI.escape(name).gsub('+', '%20')
     end
 
     # Public: Get default alias name
@@ -467,16 +465,6 @@ module Linguist
       !popular?
     end
 
-    # Public: Is it searchable?
-    #
-    # Unsearchable languages won't by indexed by solr and won't show
-    # up in the code search dropdown.
-    #
-    # Returns true or false
-    def searchable?
-      @searchable
-    end
-
     # Public: Return name as String representation
     def to_s
       name
@@ -499,15 +487,17 @@ module Linguist
     end
   end
 
-  extensions   = Samples.cache['extnames']
-  interpreters = Samples.cache['interpreters']
+  samples      = Samples.load_samples
+  extensions   = samples['extnames']
+  interpreters = samples['interpreters']
   popular      = YAML.load_file(File.expand_path("../popular.yml", __FILE__))
 
   languages_yml  = File.expand_path("../languages.yml",  __FILE__)
   languages_json = File.expand_path("../languages.json", __FILE__)
 
-  if File.exist?(languages_json) && defined?(Yajl)
-    languages = Yajl.load(File.read(languages_json))
+  if File.exist?(languages_json)
+    serializer = defined?(Yajl) ? Yajl : JSON
+    languages = serializer.load(File.read(languages_json))
   else
     languages = YAML.load_file(languages_yml)
   end
@@ -538,6 +528,7 @@ module Linguist
 
     Language.create(
       :name              => name,
+      :fs_name           => options['fs_name'],
       :color             => options['color'],
       :type              => options['type'],
       :aliases           => options['aliases'],
@@ -547,7 +538,6 @@ module Linguist
       :codemirror_mime_type => options['codemirror_mime_type'],
       :wrap              => options['wrap'],
       :group_name        => options['group'],
-      :searchable        => options.fetch('searchable', true),
       :language_id       => options['language_id'],
       :extensions        => Array(options['extensions']),
       :interpreters      => options['interpreters'].sort,

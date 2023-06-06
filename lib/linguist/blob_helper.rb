@@ -1,7 +1,7 @@
 require 'linguist/generated'
+require 'cgi'
 require 'charlock_holmes'
-require 'escape_utils'
-require 'mime/types'
+require 'mini_mime'
 require 'yaml'
 
 module Linguist
@@ -26,19 +26,14 @@ module Linguist
       File.extname(name.to_s)
     end
 
-    # Internal: Lookup mime type for extension.
+    # Internal: Lookup mime type for filename.
     #
     # Returns a MIME::Type
     def _mime_type
       if defined? @_mime_type
         @_mime_type
       else
-        guesses = ::MIME::Types.type_for(extname.to_s)
-
-        # Prefer text mime types over binary
-        @_mime_type = guesses.detect { |type| type.ascii? } ||
-          # Otherwise use the first guess
-          guesses.first
+        @_mime_type = MiniMime.lookup_by_filename(name.to_s)
       end
     end
 
@@ -51,7 +46,7 @@ module Linguist
     #
     # Returns a mime type String.
     def mime_type
-      _mime_type ? _mime_type.to_s : 'text/plain'
+      _mime_type ? _mime_type.content_type : 'text/plain'
     end
 
     # Internal: Is the blob binary according to its mime type
@@ -99,7 +94,7 @@ module Linguist
       elsif name.nil?
         "attachment"
       else
-        "attachment; filename=#{EscapeUtils.escape_url(name)}"
+        "attachment; filename=#{CGI.escape(name)}"
       end
     end
 
@@ -275,8 +270,10 @@ module Linguist
           # also--importantly--without having to duplicate many (potentially
           # large) strings.
           begin
-            
-            data.split(encoded_newlines_re, -1)
+            # `data` is split after having its last `\n` removed by
+            # chomp (if any). This prevents the creation of an empty
+            # element after the final `\n` character on POSIX files.
+            data.chomp.split(encoded_newlines_re, -1)
           rescue Encoding::ConverterNotFoundError
             # The data is not splittable in the detected encoding.  Assume it's
             # one big line.

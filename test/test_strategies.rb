@@ -26,8 +26,16 @@ class TestStrategies < Minitest::Test
 
   def all_xml_fixtures(file="*")
     fixs = Dir.glob("#{samples_path}/XML/#{file}") -
+             ["#{samples_path}/XML/demo.hzp"] -
+             ["#{samples_path}/XML/psd-data.xmp"] -
              ["#{samples_path}/XML/filenames"]
     fixs.reject { |f| File.symlink?(f) }
+  end
+
+  def assert_manpage(blob)
+    languages = Linguist::Strategy::Manpage.call(blob)
+    assert_equal Language["Roff Manpage"], languages[0], "#{blob} not detected as manpage"
+    assert_equal Language["Roff"], languages[1], "#{blob} should include Roff as candidate language"
   end
 
   def assert_xml(blob)
@@ -39,6 +47,23 @@ class TestStrategies < Minitest::Test
     Array(blobs).each do |blob|
       assert_xml blob
     end
+  end
+
+  def test_manpage_strategy
+    assert_manpage fixture_blob("Data/Manpages/bsdmalloc.3malloc")
+    assert_manpage fixture_blob("Data/Manpages/dirent.h.0p")
+    assert_manpage fixture_blob("Data/Manpages/linguist.1gh")
+    assert_manpage fixture_blob("Data/Manpages/test.1.in")
+    assert_manpage fixture_blob("Data/Manpages/test.2.in")
+    assert_manpage fixture_blob("Data/Manpages/test.3.in")
+    assert_manpage fixture_blob("Data/Manpages/test.4.in")
+    assert_manpage fixture_blob("Data/Manpages/test.5.in")
+    assert_manpage fixture_blob("Data/Manpages/test.6.in")
+    assert_manpage fixture_blob("Data/Manpages/test.7.in")
+    assert_manpage fixture_blob("Data/Manpages/test.8.in")
+    assert_manpage fixture_blob("Data/Manpages/test.9.in")
+    assert_manpage fixture_blob("Data/Manpages/test.man.in")
+    assert_manpage fixture_blob("Data/Manpages/test.mdoc.in")
   end
 
   def test_modeline_strategy
@@ -73,7 +98,7 @@ class TestStrategies < Minitest::Test
     assert_modeline Language["JavaScript"], fixture_blob("Data/Modelines/iamjs.pl")
     assert_modeline Language["JavaScript"], fixture_blob("Data/Modelines/iamjs2.pl")
     assert_modeline Language["PHP"], fixture_blob("Data/Modelines/iamphp.inc")
-    assert_modeline nil, sample_blob("C/main.c")
+    assert_modeline nil, sample_blob("C++/runtime-compiler.cc")
   end
 
   def test_modeline_languages
@@ -113,6 +138,11 @@ class TestStrategies < Minitest::Test
     assert_interpreter nil, "#!"
     assert_interpreter nil, "#! "
     assert_interpreter nil, "#!/usr/bin/env"
+    assert_interpreter nil, "#!/usr/bin/env osascript -l JavaScript"
+    assert_interpreter nil, "#!/usr/bin/env osascript -l AppleScript"
+    assert_interpreter nil, "#!/usr/bin/env osascript -l foobar"
+    assert_interpreter nil, "#!/usr/bin/osascript -l JavaScript"
+    assert_interpreter nil, "#!/usr/bin/osascript -l foobar"
 
     assert_interpreter "ruby", "#!/usr/sbin/ruby\n# bar"
     assert_interpreter "ruby", "#!/usr/bin/ruby\n# foo"
@@ -134,6 +164,13 @@ class TestStrategies < Minitest::Test
     assert_interpreter "ruby", "#!/bin/sh\n\n\nexec ruby $0 $@"
 
     assert_interpreter "sh", "#! /usr/bin/env A=003 B=149 C=150 D=xzd E=base64 F=tar G=gz H=head I=tail sh"
+    assert_interpreter "python", "#!/usr/bin/env foo=bar bar=foo python -cos=__import__(\"os\");"
+    assert_interpreter "osascript", "#!/usr/bin/env osascript"
+    assert_interpreter "osascript", "#!/usr/bin/osascript"
+
+    assert_interpreter "ruby", "#!/usr/bin/env -vS ruby -wKU\nputs ?t+?e+?s+?t"
+    assert_interpreter "sed", "#!/usr/bin/env --split-string sed -f\ny/a/A/"
+    assert_interpreter "deno", "#!/usr/bin/env -S GH_TOKEN=ghp_*** deno run --allow-net\nconsole.log(1);"
   end
 
   def test_xml
@@ -152,6 +189,7 @@ class TestStrategies < Minitest::Test
       "#{samples_path}/XML/some-ideas.mm",
       "#{samples_path}/XML/GMOculus.project.gmx",
       "#{samples_path}/XML/obj_control.object.gmx",
+      "#{samples_path}/XML/MainView.axaml"
     ]
     assert_all_xml all_xml_fixtures("*") - no_root_tag
 

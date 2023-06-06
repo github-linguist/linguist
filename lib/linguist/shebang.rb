@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Linguist
   class Shebang
     # Public: Use shebang to detect language of the blob.
@@ -23,10 +25,10 @@ module Linguist
     #
     # Returns a String or nil
     def self.interpreter(data)
-      shebang = data.lines.first
-
       # First line must start with #!
-      return unless shebang && shebang.start_with?("#!")
+      return unless data.start_with?("#!")
+
+      shebang = data[0, data.index($/) || data.length]
 
       s = StringScanner.new(shebang)
 
@@ -39,7 +41,10 @@ module Linguist
       # if /usr/bin/env type shebang then walk the string
       if script == 'env'
         s.scan(/\s+/)
-        s.scan(/.*=[^\s]+\s+/) # skip over variable arguments e.g. foo=bar
+        while s.scan(/((-[i0uCSv]*|--\S+)\s+)+/) || # skip over optional arguments e.g. -vS
+              s.scan(/(\S+=\S+\s+)+/) # skip over variable arguments e.g. foo=bar
+          # do nothing
+        end
         script = s.scan(/\S+/)
       end
 
@@ -56,6 +61,12 @@ module Linguist
       if script == 'sh' &&
         data.lines.first(5).any? { |l| l.match(/exec (\w+).+\$0.+\$@/) }
         script = $1
+      end
+
+      # osascript can be called with an optional `-l <language>` argument, which may not be a language with an interpreter.
+      # In this case, return and rely on the subsequent strategies to determine the language.
+      if script == 'osascript'
+        return if s.scan_until(/\-l\s?/)
       end
 
       File.basename(script)

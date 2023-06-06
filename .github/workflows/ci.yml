@@ -1,0 +1,65 @@
+name: Run Tests
+
+on:
+  # Trigger the workflow on push or pull request, but only for the master branch
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  merge_group:
+
+permissions:
+  contents: read
+
+jobs:
+  run:
+    name: Ruby ${{ matrix.ruby }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby: [ '3.2', '3.1', '3.0' ]
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+        bundler-cache: true
+    - name: Fetch grammar submodules
+      run: |
+        git fetch origin master:master v2.0.0:v2.0.0 test/attributes:test/attributes test/master:test/master
+        sed -i 's|git@github.com:|https://github.com/|' .gitmodules
+        git submodule init
+        git submodule sync --quiet
+        script/fast-submodule-update
+    - name: Run tests
+      run: bundle exec rake
+    - name: Check Licenses
+      run: bundle exec licensed status -c vendor/licenses/config.yml
+  dockerfile:
+    name: Test Dockerfile
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build container
+      run: docker build -t linguist .
+    - name: Analyse current directory
+      run: docker run --rm -v $(pwd):$(pwd) -w $(pwd) --user $(id -u) -t linguist | tee output
+    - name: Confirm analysis
+      run: grep Ruby output
+  classifier:
+    name: Classifier cross-validation
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.2'
+        bundler-cache: true
+    - name: Build
+      run: bundle exec rake samples
+    - name: Run cross-validation
+      run: bundle exec script/cross-validation --test 2>&1

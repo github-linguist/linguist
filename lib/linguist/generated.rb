@@ -52,6 +52,7 @@ module Linguist
     # Return true or false
     def generated?
       xcode_file? ||
+      intellij_file? ||
       cocoapods? ||
       carthage_build? ||
       generated_graphql_relay? ||
@@ -59,10 +60,16 @@ module Linguist
       generated_net_specflow_feature_file? ||
       composer_lock? ||
       cargo_lock? ||
+      flake_lock? ||
       node_modules? ||
       go_vendor? ||
       go_lock? ||
+      poetry_lock? ||
+      pdm_lock? ||
+      esy_lock? ||
       npm_shrinkwrap_or_package_lock? ||
+      terraform_lock? ||
+      generated_yarn_plugnplay? ||
       godeps? ||
       generated_by_zephir? ||
       minified_files? ||
@@ -73,24 +80,33 @@ module Linguist
       generated_net_docfile? ||
       generated_postscript? ||
       compiled_cython_file? ||
+      pipenv_lock? ||
       generated_go? ||
+      generated_protocol_buffer_from_go? ||
       generated_protocol_buffer? ||
       generated_javascript_protocol_buffer? ||
       generated_apache_thrift? ||
       generated_jni_header? ||
       vcr_cassette? ||
+      generated_antlr? ||
       generated_module? ||
       generated_unity3d_meta? ||
       generated_racc? ||
       generated_jflex? ||
       generated_grammarkit? ||
       generated_roxygen2? ||
+      generated_html? ||
       generated_jison? ||
-      generated_yarn_lock? ||
       generated_grpc_cpp? ||
       generated_dart? ||
       generated_perl_ppport_header? ||
-      generated_gamemakerstudio?
+      generated_gamemakerstudio? ||
+      generated_gimp? ||
+      generated_visualstudio6? ||
+      generated_haxe? ||
+      generated_jooq? ||
+      generated_pascal_tlb? ||
+      generated_sorbet_rbi?
     end
 
     # Internal: Is the blob an Xcode file?
@@ -98,9 +114,19 @@ module Linguist
     # Generated if the file extension is an Xcode
     # file extension.
     #
-    # Returns true of false.
+    # Returns true or false.
     def xcode_file?
       ['.nib', '.xcworkspacedata', '.xcuserstate'].include?(extname)
+    end
+
+    # Internal: Is the blob an IntelliJ IDEA project file?
+    #
+    # JetBrains IDEs generate project files under an `.idea` directory
+    # that are sometimes checked into version control.
+    #
+    # Returns true or false.
+    def intellij_file?
+      !!name.match(/(?:^|\/)\.idea\//)
     end
 
     # Internal: Is the blob part of Pods/, which contains dependencies not meant for humans in pull requests.
@@ -117,7 +143,14 @@ module Linguist
       !!name.match(/(^|\/)Carthage\/Build\//)
     end
 
-    # Internal: Is the blob minified files?
+    # Internal: Does extname indicate a filetype which is commonly minified?
+    #
+    # Returns true or false.
+    def maybe_minified?
+      ['.js', '.css'].include? extname.downcase
+    end
+
+    # Internal: Is the blob a minified file?
     #
     # Consider a file minified if the average line length is
     # greater then 110c.
@@ -126,32 +159,29 @@ module Linguist
     #
     # Returns true or false.
     def minified_files?
-      return unless ['.js', '.css'].include? extname
-      if lines.any?
+      if maybe_minified? and lines.any?
         (lines.inject(0) { |n, l| n += l.length } / lines.length) > 110
       else
         false
       end
     end
 
-    # Internal: Does the blob contain a source map reference?
+    # Internal: Does the blob contain a source-map reference?
     #
-    # We assume that if one of the last 2 lines starts with a source map
+    # We assume that if one of the last 2 lines starts with a source-map
     # reference, then the current file was generated from other files.
     #
     # We use the last 2 lines because the last line might be empty.
     #
-    # We only handle JavaScript, no CSS support yet.
-    #
     # Returns true or false.
     def has_source_map?
-      return false unless extname.downcase == '.js'
-      lines.last(2).any? { |line| line.start_with?('//# sourceMappingURL') }
+      return false unless maybe_minified?
+      lines.last(2).any? { |l| l.match(/^\/[*\/][\#@] source(?:Mapping)?URL|sourceURL=/) }
     end
 
-    # Internal: Is the blob a generated source map?
+    # Internal: Is the blob a generated source-map?
     #
-    # Source Maps usually have .css.map or .js.map extensions. In case they
+    # Source-maps usually have .css.map or .js.map extensions. In case they
     # are not following the name convention, detect them based on the content.
     #
     # Returns true or false.
@@ -228,7 +258,7 @@ module Linguist
     #
     # Returns true or false
     def generated_net_designer_file?
-      name.downcase =~ /\.designer\.(cs|vb)$/
+      !!name.match(/\.designer\.(cs|vb)$/i)
     end
 
     # Internal: Is this a codegen file for Specflow feature file?
@@ -239,7 +269,7 @@ module Linguist
     #
     # Returns true or false
     def generated_net_specflow_feature_file?
-      name.downcase =~ /\.feature\.cs$/
+      !!name.match(/\.feature\.cs$/i)
     end
 
     # Internal: Is the blob of JS a parser generated by PEG.js?
@@ -292,26 +322,37 @@ module Linguist
       return false unless extname == '.go'
       return false unless lines.count > 1
 
-      return lines[0].include?("Code generated by")
+      return lines.first(40).any? { |l| l =~ %r{^// Code generated .*} }
     end
 
-    PROTOBUF_EXTENSIONS = ['.py', '.java', '.h', '.cc', '.cpp', '.rb']
+    # Internal: Is the blob a protocol buffer file generated by the
+    # go-to-protobuf tool?
+    #
+    # Returns true or false
+    def generated_protocol_buffer_from_go?
+      return false unless extname == '.proto'
+      return false unless lines.count > 1
+
+      return lines.first(20).any? { |l| l.include? "This file was autogenerated by go-to-protobuf" }
+    end
+
+    PROTOBUF_EXTENSIONS = ['.py', '.java', '.h', '.cc', '.cpp', '.m', '.rb', '.php']
 
     # Internal: Is the blob a C++, Java or Python source file generated by the
     # Protocol Buffer compiler?
     #
-    # Returns true of false.
+    # Returns true or false.
     def generated_protocol_buffer?
       return false unless PROTOBUF_EXTENSIONS.include?(extname)
       return false unless lines.count > 1
 
-      return lines[0].include?("Generated by the protocol buffer compiler.  DO NOT EDIT!")
+      return lines.first(3).any? { |l| l.include?("Generated by the protocol buffer compiler.  DO NOT EDIT!") }
     end
 
     # Internal: Is the blob a Javascript source file generated by the
     # Protocol Buffer compiler?
     #
-    # Returns true of false.
+    # Returns true or false.
     def generated_javascript_protocol_buffer?
       return false unless extname == ".js"
       return false unless lines.count > 6
@@ -331,7 +372,7 @@ module Linguist
 
     # Internal: Is the blob a C/C++ header generated by the Java JNI tool javah?
     #
-    # Returns true of false.
+    # Returns true or false.
     def generated_jni_header?
       return false unless extname == '.h'
       return false unless lines.count > 2
@@ -362,11 +403,39 @@ module Linguist
       !!name.match(/(Gopkg|glide)\.lock/)
     end
 
+    # Internal: Is the blob a generated poetry.lock?
+    #
+    # Returns true or false.
+    def poetry_lock?
+      !!name.match(/poetry\.lock/)
+    end
+
+    # Internal: Is the blob a generated pdm.lock?
+    #
+    # Returns true or false.
+    def pdm_lock?
+      !!name.match(/pdm\.lock/)
+    end
+
+    # Internal: Is the blob a generated esy lock file?
+    #
+    # Returns true or false.
+    def esy_lock?
+      !!name.match(/(^|\/)(\w+\.)?esy.lock$/)
+    end
+
     # Internal: Is the blob a generated npm shrinkwrap or package lock file?
     #
     # Returns true or false.
     def npm_shrinkwrap_or_package_lock?
-      name.match(/npm-shrinkwrap\.json/) || name.match(/package-lock\.json/)
+      !!name.match(/npm-shrinkwrap\.json/) || !!name.match(/package-lock\.json/)
+    end
+
+    # Internal: Is the blob a generated Yarn Plug'n'Play?
+    #
+    # Returns true or false.
+    def generated_yarn_plugnplay?
+      !!name.match(/(^|\/)\.pnp\..*$/)
     end
 
     # Internal: Is the blob part of Godeps/,
@@ -398,6 +467,13 @@ module Linguist
       !!name.match(/Cargo\.lock/)
     end
 
+    # Internal: Is the blob a generated Nix flakes lock file?
+    #
+    # Returns true or false
+    def flake_lock?
+      !!name.match(/(^|\/)flake\.lock$/)
+    end
+
     # Is the blob a VCR Cassette file?
     #
     # Returns true or false
@@ -406,6 +482,15 @@ module Linguist
       return false unless lines.count > 2
       # VCR Cassettes have "recorded_with: VCR" in the second last line.
       return lines[-2].include?("recorded_with: VCR")
+    end
+
+    # Is this a generated ANTLR file?
+    #
+    # Returns true or false
+    def generated_antlr?
+      return false unless extname == '.g'
+      return false unless lines.count > 2
+      return lines[1].include?("generated by Xtest")
     end
 
     # Internal: Is this a compiled C/C++ file from Cython?
@@ -421,6 +506,20 @@ module Linguist
       return lines[0].include?("Generated by Cython")
     end
 
+    # Internal: Is this a Pipenv lock file?
+    #
+    # Returns true or false.
+    def pipenv_lock?
+      !!name.match(/Pipfile\.lock/)
+    end
+
+    # Internal: Is this a Terraform lock file?
+    #
+    # Returns true or false.
+    def terraform_lock?
+      !!name.match(/(?:^|\/)\.terraform\.lock\.hcl$/)
+    end
+
     # Internal: Is it a KiCAD or GFortran module file?
     #
     # KiCAD module files contain:
@@ -431,7 +530,7 @@ module Linguist
     # GFORTRAN module version 'x' created from
     # on the first line.
     #
-    # Return true of false
+    # Return true or false
     def generated_module?
       return false unless extname == '.mod'
       return false unless lines.count > 1
@@ -524,15 +623,6 @@ module Linguist
              lines[0].start_with?("/* generated by jison-lex ")
     end
 
-    # Internal: Is the blob a generated yarn lockfile?
-    #
-    # Returns true or false.
-    def generated_yarn_lock?
-      return false unless name.match(/yarn\.lock/)
-      return false unless lines.count > 0
-      return lines[0].include?("# THIS IS AN AUTOGENERATED FILE")
-    end
-
     # Internal: Is this a protobuf/grpc-generated C++ file?
     #
     # A generated file contains:
@@ -545,7 +635,7 @@ module Linguist
       return false unless lines.count > 1
       return lines[0].start_with?("// Generated by the gRPC")
     end
-    
+
     # Internal: Is this a generated Dart file?
     #
     # A dart-lang/appengine generated file contains:
@@ -571,7 +661,7 @@ module Linguist
         return false unless lines.count > 10
         return lines[8].include?("Automatically created by Devel::PPPort")
     end
-        
+
     # Internal: Is this a relay-compiler generated graphql file?
     #
     # Return true or false
@@ -588,7 +678,142 @@ module Linguist
     def generated_gamemakerstudio?
       return false unless ['.yy', '.yyp'].include? extname
       return false unless lines.count > 3
-      return lines[2].match(/\"modelName\"\:\s*\"GM/)
+      return lines[2].match(/\"modelName\"\:\s*\"GM/) ||
+             lines[0] =~ /^\d\.\d\.\d.+\|\{/
+    end
+
+    # Internal: Is this a generated GIMP C image file?
+    #
+    # GIMP saves C sources with one of two comment forms:
+    # * `/* GIMP RGB C-Source image dump (<filename>.c) */` (C source export)
+    # * `/*  GIMP header image file format (RGB): <filename>.h  */` (Header export)
+    #
+    # Return true or false
+    def generated_gimp?
+      return false unless ['.c', '.h'].include? extname
+      return false unless lines.count > 0
+      return lines[0].match(/\/\* GIMP [a-zA-Z0-9\- ]+ C\-Source image dump \(.+?\.c\) \*\//) ||
+             lines[0].match(/\/\*  GIMP header image file format \([a-zA-Z0-9\- ]+\)\: .+?\.h  \*\//)
+    end
+
+    # Internal: Is this a generated Microsoft Visual Studio 6.0 build file?
+    #
+    # Return true or false
+    def generated_visualstudio6?
+      return false unless extname.downcase == '.dsp'
+      lines.first(3).any? { |l| l.include? '# Microsoft Developer Studio Generated Build File' }
+    end
+
+    HAXE_EXTENSIONS = ['.js', '.py', '.lua', '.cpp', '.h', '.java', '.cs', '.php']
+
+    # Internal: Is this a generated Haxe-generated source file?
+    #
+    # Return true or false
+    def generated_haxe?
+      return false unless HAXE_EXTENSIONS.include?(extname)
+      return lines.first(3).any? { |l| l.include?("Generated by Haxe") }
+    end
+
+    # Internal: Is this a generated HTML file?
+    #
+    # HTML documents generated by authoring tools often include a
+    # a <meta> tag in the header of the form:
+    #
+    #    <meta name="generator" content="DocGen v5.0.1" />
+    #
+    # Return true or false
+    def generated_html?
+      return false unless ['.html', '.htm', '.xhtml'].include? extname.downcase
+      return false unless lines.count > 1
+
+      # Pkgdown
+      return true if lines[0..1].any? do |line|
+        line.match(/<!-- Generated by pkgdown: do not edit by hand -->/)
+      end
+
+      # Mandoc
+      return true if lines.count > 2 && lines[2].start_with?('<!-- This is an automatically generated file.')
+
+      # Doxygen
+      return true if lines[0..30].any? do |line|
+        line.match(/<!--\s+Generated by Doxygen\s+[.0-9]+\s*-->/i)
+      end
+
+      # HTML tag: <meta name="generator" content="…" />
+      matches = lines[0..30].join(' ').scan(/<meta(\s+[^>]++)>/i)
+      return false if matches.empty?
+      return matches.map {|x| extract_html_meta(x) }.any? do |attr|
+        attr["name"].to_s.downcase == 'generator' &&
+        [attr["content"], attr["value"]].any? do |cv|
+          !cv.nil? &&
+          cv.match(/^
+            ( org \s+ mode
+            | j?latex2html
+            | groff
+            | makeinfo
+            | texi2html
+            | ronn
+            ) \b
+          /ix)
+        end
+      end
+    end
+
+    # Internal: Is this a generated jOOQ file?
+    #
+    # Return true or false
+    def generated_jooq?
+      return false unless extname.downcase == '.java'
+      lines.first(2).any? { |l| l.include? 'This file is generated by jOOQ.' }
+    end
+
+    # Internal: Is this a generated Delphi Interface file for a type library?
+    #
+    # Delphi Type Library Import tool generates *_TLB.pas files based on .ridl files.
+    # They are not meant to be altered by humans.
+    #
+    # Returns true or false
+    def generated_pascal_tlb?
+      !!name.match(/_tlb\.pas$/i)
+    end
+
+    # Internal: Is this a Sorbet RBI file generated by Tapioca?
+    #
+    # Tapioca generates non-human-editable .rbi files in several different
+    # ways:
+    #
+    # 1. `tapioca gem` uses reflection to generate generic .rbi for gems.
+    # 2. `tapioca dsl` uses DSL compilers to generate .rbi for modules/classes.
+    # 3. `tapioca annotations` pulls .rbi from remote sources.
+    #
+    # All are marked with similar wording.
+    #
+    # Returns true or false
+    def generated_sorbet_rbi?
+      return false unless extname.downcase == '.rbi'
+      return false unless lines.count >= 5
+      lines[0].match?(/^# typed:/) &&
+      lines[2].include?("DO NOT EDIT MANUALLY") &&
+      lines[4].match?(/^# Please.*run.*`.*tapioca/)
+    end
+
+    # Internal: Extract a Hash of name/content pairs from an HTML <meta> tag
+    def extract_html_meta(match)
+      (match.last.sub(/\/\Z/, "").strip.scan(/
+        (?<=^|\s)              # Check for preceding whitespace
+        (name|content|value)   # Attribute names we're interested in
+        \s* = \s*              # Key-value separator
+
+        # Attribute value
+        ( "[^"]+"        # name="value"
+        | '[^']+'        # name='value'
+        |  [^\s"']+      # name=value
+        )
+      /ix)).map do |match|
+        key = match[0].downcase
+        val = match[1].gsub(/\A["']|["']\Z/, '')
+        [key, val]
+      end.select { |x| x.length == 2 }.to_h
     end
   end
 end

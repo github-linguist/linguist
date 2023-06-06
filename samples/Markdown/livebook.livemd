@@ -1,0 +1,22 @@
+<!-- livebook:{"persist_outputs":true} -->
+
+# Sample Livebook
+
+## Section
+
+### Markdown
+
+Notebooks are .livemd files, a subset of Markdown with support for equations and annotations.
+
+<!-- livebook:{"livebook_object":"cell_input","name":"plus","type":"number","value":"1"} -->
+
+```elixir
+{plus, _} = IO.gets("plus") |> Integer.parse()
+
+[1, 2, 3]
+|> Enum.map(&(&1 + plus))
+```
+
+```output
+[2, 3, 4]
+```

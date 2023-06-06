@@ -1,0 +1,4 @@
+// NodeName and LogType are *not* currently part of CSV data located in sflogs storage account dtr.zip
+// these fields are generated manually from collectsfdata at time of ingest based on blob path
+
+.create table ['trace_serviceFabricLogs'] (Timestamp: datetime, Level: string, TID: int, PID: int, Type: string, Text: string, NodeName: string, LogType: string) 

@@ -64,7 +64,7 @@ func (conv *Converter) tmpScopes() map[string]bool {
 
 func (conv *Converter) AddGrammar(source string) error {
 	repo := conv.Load(source)
-	if len(repo.Files) == 0 {
+	if len(repo.Files) == 0 && len(repo.Errors) == 0 {
 		return fmt.Errorf("source '%s' contains no grammar files", source)
 	}
 
@@ -75,13 +75,35 @@ func (conv *Converter) AddGrammar(source string) error {
 	repo.FixRules(knownScopes)
 
 	if len(repo.Errors) > 0 {
-		fmt.Fprintf(os.Stderr, "The new grammar %s contains %d errors:\n",
-			repo, len(repo.Errors))
-		for _, err := range repo.Errors {
-			fmt.Fprintf(os.Stderr, "    - %s\n", err)
+		// Split out warnings from errors
+		warnings := []error{}
+		errors := []error{}
+		for _, e := range repo.Errors {
+			switch e.(type) {
+			case *MissingIncludeError, *UnknownKeysError:
+				warnings = append(warnings, e)
+			default:
+				errors = append(errors, e)
+			}
 		}
-		fmt.Fprintf(os.Stderr, "\n")
-		return fmt.Errorf("failed to compile the given grammar")
+		if len(errors) > 0 {
+			fmt.Fprintf(os.Stderr, "%d errors found in new grammar '%s':\n",
+				len(errors), repo)
+			for _, err := range errors {
+				fmt.Fprintf(os.Stderr, "- %s\n", err)
+			}
+			fmt.Fprintf(os.Stderr, "\n")
+			return fmt.Errorf("Compilation failed. Aborting")
+		}
+		if len(warnings) > 0 {
+			fmt.Fprintf(os.Stderr, "%d warnings found when compiling new grammar '%s':\n",
+				len(warnings), repo)
+			for _, err := range warnings {
+				fmt.Fprintf(os.Stderr, "- %s\n", err)
+			}
+			fmt.Fprintf(os.Stderr, "\n")
+			fmt.Fprintf(os.Stderr, "These warnings are not fatal, but may mean the syntax highlighting on GitHub.com may not be as expected.\n\n")
+		}
 	}
 
 	fmt.Printf("OK! added grammar source '%s'\n", source)
@@ -186,7 +208,6 @@ func (conv *Converter) writeJSONFile(path string, rule *grammar.Rule) error {
 	defer j.Close()
 
 	enc := json.NewEncoder(j)
-	enc.SetIndent("", "  ")
 	return enc.Encode(rule)
 }
 
@@ -228,7 +249,7 @@ func (conv *Converter) WriteGrammarList() error {
 	return ioutil.WriteFile(ymlpath, outyml, 0666)
 }
 
-func (conv *Converter) Report() error {
+func (conv *Converter) Report(verbose bool) error {
 	var failed []*Repository
 	for _, repo := range conv.Loaded {
 		if len(repo.Errors) > 0 {
@@ -242,16 +263,32 @@ func (conv *Converter) Report() error {
 
 	total := 0
 	for _, repo := range failed {
-		fmt.Fprintf(os.Stderr, "- [ ] %s (%d errors)\n", repo, len(repo.Errors))
-		for _, err := range repo.Errors {
-			fmt.Fprintf(os.Stderr, "    - [ ] %s\n", err)
+		n := 0
+		// Only show warning-like errors in verbose output
+		if ! verbose {
+			for _, err := range repo.Errors {
+				switch err.(type) {
+				case *MissingIncludeError, *UnknownKeysError:
+					break
+				default:
+					repo.Errors[n] = err
+					n++
+				}
+			}
+			repo.Errors = repo.Errors[:n]
 		}
-		fmt.Fprintf(os.Stderr, "\n")
+		if len(repo.Errors) > 0 {
+			fmt.Fprintf(os.Stderr, "- [ ] %s (%d errors)\n", repo, len(repo.Errors))
+			for _, err := range repo.Errors {
+				fmt.Fprintf(os.Stderr, "  - %s\n", err)
+			}
+			fmt.Fprintf(os.Stderr, "\n")
+		}
 		total += len(repo.Errors)
 	}
 
 	if total > 0 {
-		return fmt.Errorf("the grammar library contains %d errors", total)
+		return fmt.Errorf("The grammar library contains %d errors", total)
 	}
 	return nil
 }

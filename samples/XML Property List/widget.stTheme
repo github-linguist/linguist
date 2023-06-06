@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>author</key>
+	<string><%= author %></string>
+  <key>comment</key>
+  <string><%= comment %></string>
+	<key>name</key>
+	<string><%= name %></string>
+	<key>colorSpaceName</key>
+	<string>sRGB</string>
+	<key>settings</key>
+	<array>
+		<dict>
+			<key>settings</key>
+			<dict>
+				<key>background</key>
+				<string><%= ui.background.primary.hex %></string>
+				<key>caret</key>
+				<string><%= scheme.caret %></string>
+				<key>foreground</key>
+				<string><%= scheme.foreground %></string>
+				<key>invisibles</key>
+				<string><%= scheme.invisibles %></string>
+				<key>lineHighlight</key>
+				<string><%= scheme.highlight %></string>
+				<key>selection</key>
+				<string><%= scheme.selection %></string>
+				<key>selectionBorder</key>
+				<string><%= scheme.selection %></string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Comment</string>
+			<key>scope</key>
+			<string>comment</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>italic</string>
+				<key>foreground</key>
+				<string><%= scheme.comments %></string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Keyword</string>
+			<key>scope</key>
+			<string>keyword, storage</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string><%= scheme.keyword %></string>
+			</dict>
+		</dict>
+		<dict>
+		  <key>scope</key>
+		  <string>keyword.control.character-class</string>
+		  <key>settings</key>
+		  <dict>
+		    <key>foreground</key>
+		    <string><%= scheme.base.red %></string>
+		  </dict>
+		</dict>
+		<dict>
+			<key>scope</key>
+			<string>constant</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string><%= scheme.constant %></string>
+			</dict>
+		</dict>
+		<dict>
+			<key>scope</key>
+			<string>string, keyword.operator.quantifier</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string><%= scheme.string %></string>
+			</dict>
+		</dict>
+		<dict>
+			<key>scope</key>
+			<string>constant.character.escape</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string><%= scheme.constantEscape %></string>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>

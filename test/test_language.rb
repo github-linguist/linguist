@@ -4,9 +4,8 @@ class TestLanguage < Minitest::Test
   include Linguist
 
   def test_find_by_alias
-    assert_equal Language['ASP'], Language.find_by_alias('asp')
-    assert_equal Language['ASP'], Language.find_by_alias('aspx')
-    assert_equal Language['ASP'], Language.find_by_alias('aspx-vb')
+    assert_equal Language['ASP.NET'], Language.find_by_alias('aspx')
+    assert_equal Language['ASP.NET'], Language.find_by_alias('aspx-vb')
     assert_equal Language['ActionScript'], Language.find_by_alias('as3')
     assert_equal Language['ApacheConf'], Language.find_by_alias('apache')
     assert_equal Language['Assembly'], Language.find_by_alias('nasm')
@@ -17,6 +16,7 @@ class TestLanguage < Minitest::Test
     assert_equal Language['C++'], Language.find_by_alias('c++')
     assert_equal Language['C++'], Language.find_by_alias('cpp')
     assert_equal Language['Chapel'], Language.find_by_alias('chpl')
+    assert_equal Language['Classic ASP'], Language.find_by_alias('asp')
     assert_equal Language['CoffeeScript'], Language.find_by_alias('coffee')
     assert_equal Language['CoffeeScript'], Language.find_by_alias('coffee-script')
     assert_equal Language['ColdFusion'], Language.find_by_alias('cfm')
@@ -60,8 +60,8 @@ class TestLanguage < Minitest::Test
     assert_equal Language['SuperCollider'], Language.find_by_alias('supercollider')
     assert_equal Language['TeX'], Language.find_by_alias('tex')
     assert_equal Language['TypeScript'], Language.find_by_alias('ts')
-    assert_equal Language['Vim script'], Language.find_by_alias('vim')
-    assert_equal Language['Vim script'], Language.find_by_alias('viml')
+    assert_equal Language['Vim Script'], Language.find_by_alias('vim')
+    assert_equal Language['Vim Script'], Language.find_by_alias('viml')
     assert_equal Language['reStructuredText'], Language.find_by_alias('rst')
     assert_equal Language['X BitMap'], Language.find_by_alias('xbm')
     assert_equal Language['X PixMap'], Language.find_by_alias('xpm')
@@ -96,7 +96,6 @@ class TestLanguage < Minitest::Test
     assert_equal Language['C'], Language['OpenCL'].group
     assert_equal Language['Haskell'], Language['Literate Haskell'].group
     assert_equal Language['Java'], Language['Java Server Pages'].group
-    assert_equal Language['Python'], Language['Cython'].group
     assert_equal Language['Python'], Language['NumPy'].group
     assert_equal Language['Shell'], Language['Gentoo Ebuild'].group
     assert_equal Language['Shell'], Language['Gentoo Eclass'].group
@@ -142,12 +141,6 @@ class TestLanguage < Minitest::Test
     assert_equal :prose, Language['Org'].type
   end
 
-  def test_searchable
-    assert Language['Ruby'].searchable?
-    assert !Language['Gettext Catalog'].searchable?
-    assert Language['SQL'].searchable?
-  end
-
   def test_find_by_name
     assert_nil Language.find_by_name(nil)
     ruby = Language['Ruby']
@@ -172,14 +165,14 @@ class TestLanguage < Minitest::Test
 
   def test_find_by_extension
     assert_equal [], Language.find_by_extension('.factor-rc')
-    assert_equal [Language['Limbo'], Language['M'], Language['MUF'], Language['Mathematica'], Language['Matlab'], Language['Mercury'], Language['Objective-C']], Language.find_by_extension('foo.m')
+    assert_equal [Language['Limbo'], Language['M'], Language['MATLAB'], Language['MUF'], Language['Mathematica'], Language['Mercury'], Language['Objective-C']], Language.find_by_extension('foo.m')
     assert_equal [Language['Ruby']], Language.find_by_extension('foo.rb')
     assert_equal [Language['Ruby']], Language.find_by_extension('foo/bar.rb')
     assert_equal [Language['Ruby']], Language.find_by_extension('PKGBUILD.rb')
     assert_equal ['C', 'C++', 'Objective-C'], Language.find_by_extension('foo.h').map(&:name).sort
     assert_equal [], Language.find_by_extension('rb')
     assert_equal [], Language.find_by_extension('.null')
-    assert_equal [Language['HTML+Django']], Language.find_by_extension('index.jinja')
+    assert_equal [Language['Jinja']], Language.find_by_extension('index.jinja')
     assert_equal [Language['Chapel']], Language.find_by_extension('examples/hello.chpl')
     assert_equal [], Language.find_by_filename('F.I.L.E.')
   end
@@ -301,7 +294,7 @@ class TestLanguage < Minitest::Test
     assert_equal '#701516', Language['Ruby'].color
     assert_equal '#3572A5', Language['Python'].color
     assert_equal '#f1e05a', Language['JavaScript'].color
-    assert_equal '#2b7489', Language['TypeScript'].color
+    assert_equal '#3178c6', Language['TypeScript'].color
     assert_equal '#3d9970', Language['LSL'].color
   end
 
@@ -367,6 +360,14 @@ class TestLanguage < Minitest::Test
     assert missing.empty?, message
   end
 
+  def test_all_languages_have_scopes
+    languages = YAML.load(File.read(File.expand_path("../../lib/linguist/languages.yml", __FILE__)))
+    missing = languages.reject { |name,language| language.has_key?('tm_scope') }
+    message = "The following languages do not have a `tm_scope` field defined. Use `tm_scope: none` if the language has no grammar.\n"
+    message << missing.keys.sort.join("\n")
+    assert missing.empty?, message
+  end
+
   def test_all_languages_have_type
     missing = Language.all.select { |language| language.type.nil? }
     message = "The following languages do not have a type listed in grammars.yml. Please add types for all new languages.\n"
@@ -379,13 +380,14 @@ class TestLanguage < Minitest::Test
   def test_all_languages_have_a_language_id_set
     missing = Language.all.select { |language| language.language_id.nil? }
 
-    message = "The following languages do not have a language_id listed in languages.yml. Please add language_id fields for all new languages.\n"
+    message = "The following languages do not have a language_id listed in languages.yml. Please run `script/update-ids` as per the contribution guidelines.\n"
     missing.each { |language| message << "#{language.name}\n" }
     assert missing.empty?, message
   end
 
   def test_all_languages_have_a_valid_id
-    invalid = Language.all.select { |language| language.language_id < 0 || language.language_id >= (2**31 - 1) }
+    deleted_language_ids = [21]  # Prevent re-use of deleted language IDs
+    invalid = Language.all.select { |language| language.language_id < 0 || deleted_language_ids.include?(language.language_id) || (language.language_id > 431 && language.language_id < 1024) || language.language_id >= (2**31 - 1) }
 
     message = "The following languages do not have a valid language_id. Please run `script/update-ids` as per the contribution guidelines.\n"
     invalid.each { |language| message << "#{language.name}\n" }
@@ -404,7 +406,8 @@ class TestLanguage < Minitest::Test
     ace_fixture_path = File.join('test', 'fixtures', 'ace_modes.json')
     skip("No ace_modes.json file") unless File.exist?(ace_fixture_path)
 
-    ace_github_modes = Yajl.load(File.read(ace_fixture_path))
+    ace_modes = Yajl.load(File.read(ace_fixture_path))
+    ace_github_modes = ace_modes[0].concat(ace_modes[1])
     existing_ace_modes = ace_github_modes.map do |ace_github_mode|
       File.basename(ace_github_mode["name"], ".js") if ace_github_mode["name"]  !~ /_highlight_rules|_test|_worker/
     end.compact.uniq.sort.map(&:downcase)
@@ -461,14 +464,6 @@ class TestLanguage < Minitest::Test
     assert missing.empty?, message
   end
 
-  def test_no_unused_colours
-    Language.all.each do |language|
-      next unless language.type == :data || language.type == :prose ||
-        language.group.to_s != language.name
-      assert !language.color, "Unused colour assigned to #{language.name}"
-    end
-  end
-
   def test_non_crash_on_comma
     assert_nil Language[',']
     assert_nil Language.find_by_name(',')
@@ -479,5 +474,13 @@ class TestLanguage < Minitest::Test
     blob = Linguist::FileBlob.new(File.join(samples_path, "Markdown/symlink.md"))
     match = Linguist.detect(blob)
     assert_equal Language["Markdown"], match
+  end
+
+  def test_fs_names
+    Language.all.each do |language|
+      next unless /[\\:*?"<>|]/.match(language.name)
+      assert language.fs_name, "#{language.name} needs an fs_name for Windows' file system."
+      assert !/[\\:*?"<>|]/.match(language.fs_name), "The fs_name for #{language.name} is invalid."
+    end
   end
 end
