@@ -489,7 +489,7 @@ disambiguations:
   - language: Noir
     and:
     - negative_pattern: '^\.'
-    - pattern: '^\s*fn .*\(.*'
+    - pattern: '^\s*fn[ \t]+[^\(\s].*?\('
   - language: Roff
 - extensions: ['.nu']
   rules:
