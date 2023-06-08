@@ -1,0 +1,13 @@
+[dev]
+dev-rhel8-55 ansible_host=192.168.100.4 
+
+[nodes]
+node1 ansible_host=192.168.56.25
+
+[nodes:vars] 
+ansible_ssh_private_key_file=/home/ansible/.ssh/id_rsa  
+ansible_user=devops 
+
+[dev:vars]
+ansible_ssh_private_key_file=/home/ansible/.ssh/id_rsa 
+ansible_user=devops
