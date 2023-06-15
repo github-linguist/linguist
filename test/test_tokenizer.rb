@@ -10,14 +10,14 @@ class TestTokenizer < Minitest::Test
 
   def test_skip_string_literals
     assert_equal %w(print), tokenize('print ""')
-    assert_equal %w(print), tokenize('print "Josh"')
+    assert_equal %w(print), tokenize('print "Yetaroo"')
     assert_equal %w(print), tokenize("print 'Josh'")
-    assert_equal %w(print), tokenize('print "Hello \"Josh\""')
-    assert_equal %w(print), tokenize("print 'Hello \\'Josh\\''")
-    assert_equal %w(print ,), tokenize("print \"Hello\", \"Josh\"")
-    assert_equal %w(print ,), tokenize("print 'Hello', 'Josh'")
-    assert_equal %w(print , ,), tokenize("print \"Hello\", \"\", \"Josh\"")
-    assert_equal %w(print , ,), tokenize("print 'Hello', '', 'Josh'")
+    assert_equal %w(print), tokenize('print "Hello \"Yetaro\""')
+    assert_equal %w(print), tokenize("print 'Hello \\'Yetaroo\\''")
+    assert_equal %w(print ,), tokenize("print \"Hello\", \"Yetaroo\"")
+    assert_equal %w(print ,), tokenize("print 'Hello', 'Yetaroo'")
+    assert_equal %w(print , ,), tokenize("print \"Hello\", \"\", \"Yetaroo\"")
+    assert_equal %w(print , ,), tokenize("print 'Hello', '', 'Yetaroo'")
   end
 
   def test_skip_number_literals
