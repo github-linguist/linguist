@@ -212,6 +212,8 @@ lib/linguist.rb
 …
 ```
 
+If you are getting permission errors ("repository path is not owned by current user"), specify your current UID and GID with `-u` option: `-u$(id -u):$(id -g)`.
+
 ## Contributing
 
 Please check out our [contributing guidelines](CONTRIBUTING.md).
