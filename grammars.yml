@@ -41,6 +41,8 @@ vendor/grammars/Isabelle.tmbundle:
 - source.isabelle.theory
 vendor/grammars/JSyntax:
 - source.j
+vendor/grammars/LOLCODE-grammar-vscode:
+- source.lolcode
 vendor/grammars/Ligo-grammar:
 - source.jsligo
 - source.ligo
@@ -61,9 +63,10 @@ vendor/grammars/Modelica:
 - source.modelica
 vendor/grammars/NSIS:
 - source.nsis
+vendor/grammars/Nasal.tmbundle:
+- source.nasal
 vendor/grammars/NimLime:
 - source.nim
-- source.nim_filter
 - source.nimcfg
 vendor/grammars/NovaGrammars:
 - source.git-revlist
@@ -205,6 +208,9 @@ vendor/grammars/antlr.tmbundle:
 vendor/grammars/apache.tmbundle:
 - source.apache-config
 - source.apache-config.mod_perl
+vendor/grammars/apex-tmLanguage:
+- source.apex
+- source.soql
 vendor/grammars/api-blueprint-sublime-plugin:
 - text.html.markdown.source.gfm.apib
 - text.html.markdown.source.gfm.mson
@@ -326,6 +332,9 @@ vendor/grammars/cython:
 - source.cython
 vendor/grammars/d.tmbundle:
 - source.d
+vendor/grammars/d2-vscode:
+- source.d2
+- text.html.markdown.d2
 vendor/grammars/dart-syntax-highlight:
 - source.dart
 vendor/grammars/data-weave-tmLanguage:
@@ -402,6 +411,7 @@ vendor/grammars/graphiql:
 - inline.graphql.python
 - inline.graphql.re
 - inline.graphql.res
+- inline.graphql.scala
 - markdown.graphql.codeblock
 - source.graphql
 vendor/grammars/graphviz.tmbundle:
@@ -580,8 +590,6 @@ vendor/grammars/language-fontforge:
 - text.sfd
 vendor/grammars/language-gf:
 - source.gf
-vendor/grammars/language-gfm:
-- source.gfm
 vendor/grammars/language-gn:
 - source.gn
 vendor/grammars/language-grammars:
@@ -713,6 +721,7 @@ vendor/grammars/language-regexp:
 vendor/grammars/language-renpy:
 - source.renpy
 vendor/grammars/language-restructuredtext:
+- text.pseudoxml
 - text.restructuredtext
 vendor/grammars/language-ring:
 - source.ring
@@ -806,6 +815,9 @@ vendor/grammars/make.tmbundle:
 - source.makefile
 vendor/grammars/mako-tmbundle:
 - text.html.mako
+vendor/grammars/markdown-tm-language:
+- source.mdx
+- text.md
 vendor/grammars/marko-tmbundle:
 - text.marko
 vendor/grammars/mathematica-tmbundle:
@@ -830,6 +842,8 @@ vendor/grammars/nesC:
 - source.nesc
 vendor/grammars/nix-linguist:
 - source.nix
+vendor/grammars/nu-grammar:
+- source.nushell
 vendor/grammars/nu.tmbundle:
 - source.nu
 vendor/grammars/objective-c.tmbundle:
@@ -850,6 +864,8 @@ vendor/grammars/openscad.tmbundle:
 - source.scad
 vendor/grammars/oz-tmbundle:
 - source.oz
+vendor/grammars/pact-atom:
+- source.pact
 vendor/grammars/parrot:
 - source.parrot.pir
 vendor/grammars/pascal.tmbundle:
@@ -1024,6 +1040,8 @@ vendor/grammars/textproto-grammar:
 - source.textproto
 vendor/grammars/thrift.tmbundle:
 - source.thrift
+vendor/grammars/tlv-vscode:
+- source.tlverilog
 vendor/grammars/toml.tmbundle:
 - source.toml
 vendor/grammars/turtle.tmbundle:
@@ -1038,6 +1056,7 @@ vendor/grammars/vhdl:
 vendor/grammars/vsc-fennel:
 - source.fnl
 vendor/grammars/vscode-TalonScript:
+- markdown.talon.codeblock
 - source.talon
 vendor/grammars/vscode-antlers-language-server:
 - text.html.statamic
@@ -1099,6 +1118,7 @@ vendor/grammars/vscode-lean:
 vendor/grammars/vscode-monkey-c:
 - source.mc
 vendor/grammars/vscode-motoko:
+- source.did
 - source.mo
 vendor/grammars/vscode-move-syntax:
 - source.move
@@ -1121,14 +1141,21 @@ vendor/grammars/vscode-procfile:
 vendor/grammars/vscode-proto3:
 - markdown.codeblock.proto
 - source.proto
+vendor/grammars/vscode-rbs-syntax:
+- source.rbs
 vendor/grammars/vscode-scala-syntax:
 - source.scala
 vendor/grammars/vscode-singularity:
 - source.singularity
 vendor/grammars/vscode-slice:
 - source.slice
+vendor/grammars/vscode-vba-json:
+- source.vba
+- source.wwb
 vendor/grammars/vscode-vlang:
 - source.v
+vendor/grammars/vscode-wit:
+- source.wit
 vendor/grammars/vscode-wren:
 - source.wren
 vendor/grammars/vscode-yara:
@@ -1153,6 +1180,7 @@ vendor/grammars/vscode_cobol:
 - source.mfu
 - source.mfupp_dir
 - source.pli
+- source.rmcobol
 - source.utreport
 vendor/grammars/vscode_mikrotik_routeros_script:
 - source.rsc
@@ -1160,6 +1188,8 @@ vendor/grammars/vue-syntax-highlight:
 - text.html.vue
 vendor/grammars/wdl-sublime-syntax-highlighter:
 - source.wdl
+vendor/grammars/wgsl-analyzer:
+- source.wgsl
 vendor/grammars/witcherscript-grammar:
 - source.witcherscript
 vendor/grammars/wollok-sublime:
