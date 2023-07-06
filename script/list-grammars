@@ -6,8 +6,6 @@ require "json"
 require "yaml"
 
 TREE_SITTER_GRAMMARS = {
-  "C" => "https://github.com/tree-sitter/tree-sitter-c",
-  "C#" => "https://github.com/tree-sitter/tree-sitter-c-sharp",
   "CodeQL" => "https://github.com/tree-sitter/tree-sitter-ql",
   "CSS" => "https://github.com/tree-sitter/tree-sitter-css",
   "EJS" => "https://github.com/tree-sitter/tree-sitter-embedded-template",
@@ -18,10 +16,8 @@ TREE_SITTER_GRAMMARS = {
   "HTML" => "https://github.com/tree-sitter/tree-sitter-html",
   "Java" => "https://github.com/tree-sitter/tree-sitter-java",
   "JavaScript" => "https://github.com/tree-sitter/tree-sitter-javascript",
-  "Nix" => "https://github.com/nix-community/tree-sitter-nix",
   "PHP" => "https://github.com/tree-sitter/tree-sitter-php",
   "Python" => "https://github.com/tree-sitter/tree-sitter-python",
-  "Regular Expression" => "https://github.com/tree-sitter/tree-sitter-regex",
   "Ruby" => "https://github.com/tree-sitter/tree-sitter-ruby",
   "Rust" => "https://github.com/tree-sitter/tree-sitter-rust",
   "TLA" => "https://github.com/tlaplus-community/tree-sitter-tlaplus",
