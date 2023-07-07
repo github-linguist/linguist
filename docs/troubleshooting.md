@@ -18,6 +18,14 @@ If the language stats bar is reporting a language that you don't expect:
 Keep in mind that the repository language stats are only [updated when you push changes](how-linguist-works.md#how-linguist-works-on-githubcom), and the results are cached for the lifetime of your repository.
 If you have not made any changes to your repository in a while, you may find pushing another change will correct the stats.
 
+## When I click on a language present in the language stats bar, I get a message saying "Your search did not match any code"
+
+There are a few reasons that could lead to this outcome:
+
+1. If you are making an override via the `linguist-language` attribute, it will not be taken into account in GitHub's search results since GitHub Search relies on [go-enry](https://github.com/go-enry/go-enry) which doesn't support overrides at the moment ([More info](https://github.com/src-d/enry/issues/18)).
+2. It could be due to the fact that go-enry isn't using the latest version of Linguist which means that files could be detected differently in search compared to what Linguist detects for the status bar (see also the note at the end of [this section]([#my-linguist-pr-has-been-merged-but-github-doesnt-reflect-my-changes)).
+3. Rarely, it can be that the files are associated to a language that is part of a group, this means that they will be counted as the parent language in the language stats bar, but as the actual language in search. For instance, a file ending with `.f90`, it is considered to be a "Fortran" in the stats bar, but "Fortran Free Form" in search.
+
 ## My C/C++/Objective-C `.h` header file is detected as the wrong language
 
 Correctly detecting the language for the C-family `.h` header files is tough because Linguist detects the languages of files in isolation when analysing repositories and these header files, especially the smaller ones, can be used across all three languages without using any language-specific content.
@@ -69,5 +77,5 @@ All syntax highlighting grammars will also be updated in all major and minor rel
 Grammars will only be updated in patch releases if the patch release is specifically for that language and it requires a grammar update to address the issue.
 
 Note: New languages will not appear in GitHub's search results for some time after the pull request has been merged and the new Linguist release deployed to GitHub.com.
-This is because GitHub's search uses [go-enry](https://github.com/go-enry/go-enry) for language detection which tends to lag behind Linguist by a few weeks to months.
+This is because GitHub's search uses go-enry for language detection which tends to lag behind Linguist by a few weeks to months.
 This in turn requires an update to the underlying search code once go-enry is inline with Linguist.
