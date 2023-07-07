@@ -22,9 +22,10 @@ If you have not made any changes to your repository in a while, you may find pus
 
 There are a few reasons that could lead to this outcome:
 
-1. If you are making an override via the `linguist-language` attribute, it will not be taken into account in GitHub's search results since GitHub Search relies on [go-enry](https://github.com/go-enry/go-enry) which doesn't support overrides at the moment ([More info](https://github.com/src-d/enry/issues/18)).
+1. If the repository implements an override via the `linguist-language` attribute, it will not be taken into account in GitHub's search results since GitHub Search relies on [go-enry](https://github.com/go-enry/go-enry) which doesn't support overrides at the moment ([More info](https://github.com/src-d/enry/issues/18)).
 2. It could be due to the fact that go-enry isn't using the latest version of Linguist which means that files could be detected differently in search compared to what Linguist detects for the status bar (see also the note at the end of [this section](#my-linguist-pr-has-been-merged-but-github-doesnt-reflect-my-changes)).
-3. Rarely, it can be that the files are associated to a language that is part of a group, this means that they will be counted as the parent language in the language stats bar, but as the actual language in search. For instance, a file ending with `.f90`, it is considered to be a "Fortran" in the stats bar, but "Fortran Free Form" in search.
+3. Rarely, it can be that the files are associated to a language that is part of a group, this means that they will be counted as the parent language in the language stats bar, but as the actual language in search. For instance, a file ending with `.f90` is considered to be a "Fortran" in the stats bar, but "Fortran Free Form" in search.
+4. Finally, this can be caused by [code search limitations](https://docs.github.com/en/search-github/github-code-search/about-github-code-search#limitations) that are unrelated to Linguist.
 
 ## My C/C++/Objective-C `.h` header file is detected as the wrong language
 
