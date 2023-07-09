@@ -1,0 +1,70 @@
+/// @title ERC20
+/// @notice SPDX-License-Identifier: MIT
+/// @author asnared <https://github.com/abigger87>
+/// @notice An instantiable ERC20 token contract built with huffmate.
+/// @notice Built with Huffmate (https://github.com/pentagonxyz/huffmate/blob/main/src/tokens/ERC20.huff)
+
+// Imports
+#include "huffmate/tokens/ERC20.huff"
+
+// Additional Functions
+#define function mint(address, uint256) nonpayable returns ()
+#define function burn(address, uint256) nonpayable returns ()
+
+// Constructor
+#define macro CONSTRUCTOR() = takes (0) returns (0) {
+    ERC20_CONSTRUCTOR()
+}
+
+/// @notice Burn
+/// @param account The account to burn from
+/// @param amount The amount to burn
+#define macro BURN() = takes (0) returns (0) {
+    NON_PAYABLE()
+    // Setup the stack for the burn function.
+    0x04 calldataload   // [from]
+    0x24 calldataload   // [value, from]
+
+    // Call ERC20.huff's _BURN macro
+    _BURN()             // []
+
+    // Stop Execution
+    stop                // []
+}
+
+/// @notice Mint
+/// @param account The account to mint to
+/// @param amount The amount to mint
+#define macro MINT() = takes (0) returns (0) {
+    NON_PAYABLE()
+
+    // Setup the stack for the mint function.
+    0x04 calldataload   // [to]
+    0x24 calldataload   // [value, to]
+
+    // Call ERC20.huff's _MINT macro
+    _MINT()             // []
+
+    // Stop Execution
+    stop                // []
+}
+
+// The main function dispatcher
+#define macro MAIN() = takes (0) returns (0) {
+    // Load the function selector
+    pc calldataload 0xE0 shr    // [sig]
+
+    dup1 __FUNC_SIG(mint) eq mint jumpi
+    dup1 __FUNC_SIG(burn) eq burn jumpi
+
+    // Use the builtin erc20 dispatcher
+    ERC20_MAIN()                // [sig]
+
+    // Revert if we don't recognize the function selector
+    0x00 dup1 revert
+
+    mint:
+        MINT()
+    burn:
+        BURN()
+}

@@ -239,6 +239,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **HiveQL:** [adidonato/language-hql](https://github.com/adidonato/language-hql)
 - **HolyC:** [codingdandy/holyc.tmbundle](https://github.com/codingdandy/holyc.tmbundle)
 - **Hosts File:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
+- **Huff:** [sambacha/huff-ghlang](https://github.com/sambacha/huff-ghlang)
 - **Hy:** [tshakalekholoane/vscode-hy](https://github.com/tshakalekholoane/vscode-hy)
 - **IDL:** [mgalloy/idl.tmbundle](https://github.com/mgalloy/idl.tmbundle)
 - **IGOR Pro:** [byte-physics/language-igor](https://github.com/byte-physics/language-igor)
