@@ -1,0 +1,45 @@
+/// SPDX-License-Identifier: MIT
+
+//  @source {@link https://github.com/clabby/solady-vs-huffidity/blob/9ad2a3ebe9d5babd04e7235b22309e073b368d39/src/MulDiv.hf}
+//  @comment the `.hf` extenstion is for vendor library dependencies
+
+/// @author clabby <https://github.com/clabby>
+/// @author Vectorized <https://github.com/Vectorized>
+/// @author Solady peeps <https://github.com/Vectorized/solady>
+/// @notice Size of the solidity code (in bytes)
+#define constant SOL_SIZE = 0xCD
+
+#define macro MAIN() = takes(0) returns(0) {
+    // Entry stack: [b, a, return_dest]
+
+    jumpdest
+    MUL_DIV_DOWN()
+
+    // Exit stack:  [b + a]
+}
+
+// https://github.com/Vectorized/solady/blob/main/src/utils/FixedPointMathLib.sol#L391
+#define macro MUL_DIV_DOWN() = takes (3) returns (1) {
+    // Input stack:      [denominator, y, x, return_dest]
+    dup2              // [y, denominator, y, x, return_dest]
+    0x00 not          // [~0x00, y, denominator, y, x, return_dest]
+    div               // [~0x00 / y, denominator, y, x, return_dest]
+    dup4              // [x, ~0x00 / y, denominator, y, x, return_dest]
+    gt                // [x > ~0x00 / y, denominator, y, x, return_dest]
+    dup3 mul          // [y * (x > ~0x00 / y), denominator, y, x, return_dest]
+    iszero            // [iszero(y * (x > ~0x00 / y)), denominator, y, x, return_dest]
+    dup2 mul iszero   // [iszero(denominator * iszero(y * (x > ~0x00 / y))), denominator, y, x, return_dest]
+    fail [SOL_SIZE]   // [SOL_SIZE, fail_dest, iszero(denominator * iszero(y * (x > ~0x00 / y))), denominator, y, x, return_dest]
+    add jumpi         // [denominator, y, x, return_dest]
+
+    swap2 mul         // [x * y, denominator, return_dest]
+    div               // [(x * y) / denominator, return_dest]
+
+    swap1 jump        // [(x * y) / denominator]
+
+    // Exit stack:       [(x * y) / denominator]
+
+    fail:
+        0xAD251C27 0x00 mstore
+        0x04 0x1C revert
+}
