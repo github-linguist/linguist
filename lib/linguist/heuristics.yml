@@ -130,6 +130,8 @@ disambiguations:
     - (?i:^\s*(end\ssub)$)
     - (?i:^\s*(?=^function\s)(?:function\s*\w+\(.*?\)\s*as\s*\w*)|(?::\s*function\(.*?\)\s*as\s*\w*)$)
     - (?i:^\s*(end\sfunction)$)
+  - language: Bluespec BH
+    pattern: '^package\s+[A-Za-z_][A-Za-z0-9_'']*(?:\s*\(|\s+where)'
 - extensions: ['.builds']
   rules:
   - language: XML
