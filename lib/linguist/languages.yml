@@ -636,14 +636,33 @@ BlitzMax:
   tm_scope: source.blitzmax
   ace_mode: text
   language_id: 35
-Bluespec:
+Bluespec BSV:
   type: programming
+  group: Bluespec
   color: "#12223c"
   extensions:
   - ".bsv"
+  aliases:
+  - bsv
   tm_scope: source.bsv
   ace_mode: verilog
+  codemirror_mode: verilog
+  codemirror_mime_type: text/x-systemverilog
   language_id: 36
+Bluespec BH:
+  type: programming
+  group: Bluespec
+  color: "#12223c"
+  extensions:
+  - ".bs"
+  aliases:
+  - bh
+  - bluespec classic
+  tm_scope: source.haskell
+  ace_mode: haskell
+  codemirror_mode: haskell
+  codemirror_mime_type: text/x-haskell
+  language_id: 626c75650
 Boo:
   type: programming
   color: "#d4bec1"
