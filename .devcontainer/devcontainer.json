@@ -1,7 +1,12 @@
 {
   "name": "Ruby",
-  // Available versions: https://github.com/devcontainers/images/tree/main/src/ruby
-  "image": "mcr.microsoft.com/devcontainers/ruby",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/go:1": {}
+  },
   "customizations": {
     "codespaces": {
       "openFiles": ["CONTRIBUTING.md", "lib/linguist/languages.yml"]
@@ -10,5 +15,6 @@
       "extensions": ["EditorConfig.EditorConfig", "rebornix.Ruby"]
     }
   },
+  "postCreateCommand": "script/bootstrap",
   "remoteUser": "vscode"
 }
