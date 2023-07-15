@@ -1,0 +1,14 @@
+{
+  "name": "Ruby",
+  // Available versions: https://github.com/devcontainers/images/tree/main/src/ruby
+  "image": "mcr.microsoft.com/devcontainers/ruby",
+  "customizations": {
+    "codespaces": {
+      "openFiles": ["CONTRIBUTING.md", "lib/linguist/languages.yml"]
+    },
+    "vscode": {
+      "extensions": ["EditorConfig.EditorConfig", "rebornix.Ruby"]
+    }
+  },
+  "remoteUser": "vscode"
+}
