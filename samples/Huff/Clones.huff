@@ -1,0 +1,156 @@
+/// @title Clones
+/// @notice SPDX-License-Identifier: MIT
+/// @author Maddiaa <https://github.com/cheethas>
+/// @author asnared <https://github.com/abigger87>
+/// @notice https://eips.ethereum.org/EIPS/eip-1167[EIP 1167] is a standard for deploying minimal proxy contracts, also known as "clones".
+/// @notice To simply and cheaply clone contract functionality in an immutable way, this standard specifies
+///         a minimal bytecode implementation that delegates all calls to a known, fixed address.
+///
+/// @notice The library includes functions to deploy a proxy using either `create` (traditional deployment) or `create2`
+///         (salted deterministic deployment). It also includes functions to predict the addresses of clones deployed using the
+///         deterministic method.
+/// @notice Adapted from OpenZeppelin (https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/proxy/Clones.sol)
+
+// Linguist TODO: Replace the example huff files with a purpose-written file 
+
+#include "./ERC1967Upgrade.huff"
+#include "../utils/CommonErrors.huff"
+
+// BEFORE ADDRESS
+//--------------------------------------------------------------------------------//
+// Opcode     | Opcode + Arguments    | Description      | Stack View             //
+//--------------------------------------------------------------------------------//
+// 0x3d       |  0x36                 | RETURNDATASIZE   | 0                      //
+// 0x60       |  0x602d               | PUSH1 0x2d       | 0x2d 0                 //
+// 0x80       |  0x36                 | DUP1             | 0x2d 0x2d 0            //
+// 0x60       |  0x600a               | PUSH1 0x0a       | 0x0a 0x2d 0x2d 0       //
+// 0x3d       |  0x3d                 | RETURNDATASIZE   | 0 0x0a 0x2d 0x2d 0     //
+// 0x39       |  0x39                 | CODECOPY         | 0x2d 0                 //
+// 0x81       |  0x81                 | DUP2             | 0 0x2d 0               //
+// 0xf3       |  0xf3                 | RETURN           | 0                      //
+
+// 0x36       |  0x36                 | CALLDATASIZE     | size                   //
+// 0x3d       |  0x3d                 | RETURNDATASIZE   | 0 size                 //
+// 0x3d       |  0x3d                 | RETURNDATASIZE   | 0 0 size               //
+// 0x37       |  0x37                 | CALLDATACOPY     |                        //
+// 0x3d       |  0x3d                 | RETURNDATASIZE   | 0                      //
+// 0x3d       |  0x3d                 | RETURNDATASIZE   | 0 0                    //
+// 0x3d       |  0x3d                 | RETURNDATASIZE   | 0 0 0                  //
+// 0x36       |  0x36                 | CALLDATASIZE     | size 0 0 0             //
+// 0x3d       |  0x3d                 | RETURNDATASIZE   | 0 size 0 0 0           //
+// 0x73       |  0x73                 | PUSH20 <addr>    | addr 0 size 0 0 0      //
+
+// AFTER ADDRESS
+//--------------------------------------------------------------------------------//
+// Opcode     | Opcode + Arguments    | Description      | Stack View             //
+//--------------------------------------------------------------------------------//
+// 0x5a       |  0x5a                 | GAS              | gas addr 0 size 0 0 0  //
+// 0xf4       |  0xf4                 | DELEGATECALL     | success 0              //
+// 0x3d       |  0x3d                 | RETURNDATASIZE   | rds success 0          //
+// 0x82       |  0x82                 | DUP3             | 0 rds success 0        //
+// 0x80       |  0x80                 | DUP1             | 0 0 rds success 0      //
+// 0x3e       |  0x3e                 | RETURNDATACOPY   | success 0              //
+// 0x90       |  0x90                 | SWAP1            | 0 success              //
+// 0x3d       |  0x3d                 | RETURNDATASIZE   | rds 0 success          //
+// 0x91       |  0x91                 | SWAP2            | success rds 0          //
+// 0x60       |  0x602b               | PUSH1 0x2b       | 0x2b success rds 0     //
+// 0x57       |  0x57                 | JUMPI            | Revert if success == 0 //
+// 0xfd       |  0xfd                 | REVERT           |                        //
+// 0x5b       |  0x5b                 | JUMPDEST         |                        //
+// 0xf3       |  0xf3                 | RETURN           |                        //
+//--------------------------------------------------------------------------------//
+
+#define constant BYTECODE_BEFORE_ADDRESS = 0x3d602d80600a3d3981f3363d3d373d3d3d363d73000000
+#define constant BYTECODE_AFTER_ADDRESS = 0x5af43d82803e903d91602b57fd5bf3
+
+/// @notice Clone a contract using `create`.
+/// @param {Stack} Implementation - address of the contract to clone.
+#define macro CLONE() = takes (1) returns (1) {
+    CLONE_MACRO(create)
+}
+
+/// @notice Clone a contract to a deterministic address using `create2`.
+/// @param {Stack} Implementation - address of the contract to clone.
+/// @param {Stack} Salt - The salt to be added to create2.
+#define macro CLONE_DETERMINISTIC() = takes (2) returns (1) {
+    CLONE_MACRO(create2)
+}
+
+/// @dev Can remain inside the scratch space therefore no memory pointer is required
+#define macro CLONE_MACRO(deploy_opcode) = takes (2) returns (1) {
+    // Input Stack: [implementation, salt [optional]]
+
+    // Store the prefix
+    __RIGHTPAD(0x3d602d80600a3d3981f3363d3d373d3d3d363d73)      // [prefix, implementation, salt]
+    0x00 mstore                                                 // [implementation, salt]
+
+    // Place the implementation at memory byte 20
+    0x60 shl                                                    // [rightpad(implementation), salt]
+    0x14 mstore                                                 // [salt]
+
+    // Add the suffix after the implementation at byte 40
+    __RIGHTPAD(0x5af43d82803e903d91602b57fd5bf3)                // [suffix, salt]
+    0x28 mstore                                                 // [salt]
+
+    // Create the contract
+    0x37                                                        // [0x37, salt]
+    0x00                                                        // [0x00, 0x37, salt]
+    0x00                                                        // [0x00, 0x00, 0x37, salt]
+    <deploy_opcode>                                             // [address] * This will be create | create2
+
+    // Throw exception if deployment fails
+    dup1 iszero create_failed jumpi                             // [address]
+    continue jump
+
+    create_failed:
+        DEPLOYMENT_FAILED(0x00)
+
+    continue:
+}
+
+
+/// @dev Memory pointer required as this function nukes memory and this is part of a library
+#define macro PREDICT_DETERMINISTIC_ADDRESS(ptr) = takes (3) returns (1) {
+    // Input Stack: [implementation, salt, deployer]
+    swap1 swap2 swap1                                           // [implementation, deployer, salt]
+
+    // Store the creation code prefix at memory byte 0
+    __RIGHTPAD(0x3d602d80600a3d3981f3363d3d373d3d3d363d73)      // [prefix, implementation, deployer, salt]
+    <ptr> mstore                                                // [implementation, deployer, salt]
+
+    // Store the implementation address at memory byte 20
+    0x60 shl                                                    // [rightpad(implementation), deployer, salt]
+    <ptr> 0x14 add                                              // [ptr + 0x14, implementation, deployer, salt]
+    mstore                                                      // [deployer, salt]
+
+    // Store the creation code suffix at memory byte 40
+    __RIGHTPAD(0x5af43d82803e903d91602b57fd5bf3ff)              // [bytecode_after, deployer, salt]
+    <ptr> 0x28 add                                              // [ptr + 0x28, bytecode_after, deployer, salt]
+    mstore                                                      // [deployer, salt]
+
+    // mstore(add(ptr, 0x38), deployer)
+    0x60 shl                                                    // [rightpad(deployer), salt]
+    <ptr> 0x38 add                                              // [ptr + 0x38, deployer, salt]
+    mstore                                                      // [salt]
+
+    // mstore(add(ptr, 0x58), salt)
+    <ptr> 0x4c add                                              // [ptr + 0x58, salt]
+    mstore                                                      // []
+
+    // Hash and then store in memory
+    0x37                                                        // [0x37]
+    <ptr>                                                       // [ptr, 0x37]
+    sha3                                                        // [hash]
+
+    <ptr> 0x6c add                                              // [ptr + 0x6c, hash]
+    mstore                                                      // []
+
+    // Hash the rest of the data
+    0x55                                                        // [0x55]
+    <ptr> 0x37 add                                              // [ptr + 0x37, 0x55]
+    sha3                                                        // [hash]
+
+    // Clean the upper 96 bits (12 bytes) of the hash
+    // The remaining 160 bits (20 bytes) are the address
+    0x60 shl 0x60 shr                                           // [clean(hash)]
+}
