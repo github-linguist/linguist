@@ -78,5 +78,5 @@ All syntax highlighting grammars will also be updated in all major and minor rel
 Grammars will only be updated in patch releases if the patch release is specifically for that language and it requires a grammar update to address the issue.
 
 Note: New languages will not appear in GitHub's search results for some time after the pull request has been merged and the new Linguist release deployed to GitHub.com.
-This is because GitHub's search uses go-enry for language detection which tends to lag behind Linguist by a few weeks to months.
+This is because GitHub's search uses [go-enry](https://github.com/go-enry/go-enry) for language detection which tends to lag behind Linguist by a few weeks to months.
 This in turn requires an update to the underlying search code once go-enry is inline with Linguist.
