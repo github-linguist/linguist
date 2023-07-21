@@ -121,4 +121,5 @@ vim: set ft=cpp:
 [`documentation.yml`]: /lib/linguist/documentation.yml
 [`languages.yml`]:     /lib/linguist/languages.yml
 [`generated.rb`]:      /lib/linguist/generated.rb
-[`vendor.yml`]:        /lib/linguist/vendor.yml
+[`vendor.yml`]:        /lib/linguist/vendor.yml 
+appoint vendor: import process/properties 
