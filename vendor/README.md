@@ -61,6 +61,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **BlitzBasic:** [textmate/blitzmax.tmbundle](https://github.com/textmate/blitzmax.tmbundle)
 - **BlitzMax:** [textmate/blitzmax.tmbundle](https://github.com/textmate/blitzmax.tmbundle)
 - **Bluespec:** [thotypous/sublime-bsv](https://github.com/thotypous/sublime-bsv)
+- **Bluespec BH:** [atom-haskell/language-haskell](https://github.com/atom-haskell/language-haskell)
 - **Boo:** [drslump/sublime-boo](https://github.com/drslump/sublime-boo)
 - **Boogie:** [boogie-org/boogie-vscode](https://github.com/boogie-org/boogie-vscode)
 - **Brainfuck:** [Drako/SublimeBrainfuck](https://github.com/Drako/SublimeBrainfuck)
