@@ -1,0 +1,190 @@
+#% text_encoding = utf8
+_package sw
+
+def_slotted_exemplar(:goworld,
+	##
+	## Class to communicate with goworld worker
+	## example of usage:
+	##
+	## start_goworld_worker(WOKER_NAME, PATH_TO_EXE_FILE, PATH_TO_CONF_FILE, PATH_TO_LOG_FILE)
+	##
+	{
+		{:name, _unset }
+	},
+	{:user_acp})
+$
+
+goworld.define_shared_variable(:protocols,
+	##
+	## Map protocol name to appropriate method
+	## 
+	equality_property_list.new_with("list", :|list_protocol()|), 
+	:public)
+$
+
+goworld.define_shared_constant(:success_code, 0, :public)
+$
+
+_method goworld.new(name,  exe_path, conf_path, log_path)
+##
+## Create new instance
+##
+	>> _clone.init(name,  exe_path, conf_path, log_path)
+_endmethod
+$
+
+_private _method goworld.init(name,  exe_path, conf_path, log_path)
+    ##
+	## Init exemplar
+	##
+	_self.init_copy()
+	.name << name
+	.command << {write_string(exe_path,"  -n ", name, " -t worker  -c ", conf_path, " -l ", log_path )}
+	print(.command)
+	.program_ident << name
+	# First version, so min and max protocols are both zero
+	.minimum_protocol << 0
+	.maximum_protocol << 1
+	>> _self
+_endmethod
+$
+
+_method goworld.select_protocol(number)
+	## do nothing - always 0 anyway
+_endmethod
+$
+
+
+_method goworld.register_protocol(protocol_name, method_name)
+	##
+	## Method to register protocol name and method name to handle this protocol
+	##
+	_self.protocols[protocol_name] << method_name
+_endmethod
+
+
+_method goworld.send_error_message(code, message)
+	##
+	## Sends error code and error message to goworld worker
+	##
+	_self.put_unsigned_byte(code)
+	_self.put_chars(message)
+	_return 
+_endmethod
+$
+
+_method goworld.send_success_status()
+	##
+	## Sends success code to goworld worker 
+	##
+	_self.put_unsigned_byte(_self.success_code)
+_endmethod
+$
+
+_method goworld.start()
+	##
+	## Starts ACP and worker
+	##
+	write("starting workers: ", .name)
+	_protect
+		_self.lock()
+		_loop
+			_local protocol_name << _self.get_chars()
+			_local method_name << _self.protocols[protocol_name]
+			_if method_name _is _unset 
+			_then 
+				_self.send_error_message(1, "Magik side. Unknown protocol")
+				_return
+			_endif 
+			_self.perform(method_name)
+		_endloop
+	_protection
+		_self.close()	
+		_self.unlock()  	# release the lock
+	_endprotect 
+_endmethod
+$
+
+
+
+_method goworld.list_protocol()
+	## 
+	##
+	## 
+		_local path << _self.get_chars()
+		_local vars << rope.new_from(path.split_by("/"))
+		_if vars.size < 3
+		_then
+			_self.send_error_message(1, "No dataset, collection of field")
+			_return
+		_endif
+		_local dataset_name << vars.remove_first().as_symbol()
+		_local collection_name << vars.remove_first().as_symbol()
+		_local records_to_get << vars.remove_first()
+
+		_local ds << gis_program_manager.databases[dataset_name]
+		_if ds _is _unset
+		_then
+			_self.send_error_message(1, write_string("Dataset ", dataset_name, " does not exists"))
+			_return 
+		_endif 
+		_local collection << ds.collections[collection_name]
+		_if collection _is _unset
+		_then
+			_self.send_error_message(1, write_string("Collection ", collection_name, " does not exists"))
+			_return 
+		_endif
+		records_to_get << integer.from_write_string(records_to_get)
+		_if records_to_get _is _unset
+		_then
+			_self.send_error_message(1, "Invalid records number")
+			_return 
+		_endif
+		_self.send_success_status()
+		_if records_to_get > 0
+		_then 
+				records_to_get << min(records_to_get, collection.size)
+		_else
+			records_to_get << collection.size
+		_endif 
+		_self.put_unsigned_int(records_to_get)
+		_self.put_unsigned_int(vars.size)
+		_local i << 0
+		_for rec  _over collection.fast_elements()
+		_loop
+			_if records_to_get > 0 _andif i = records_to_get  
+			_then
+				_leave 
+			_endif
+			_for var _over vars.fast_elements()
+			_loop
+				_self.put_chars(var)
+				_try _with exc
+					_self.put_chars(write_string(rec.perform(var.as_symbol())))
+					_self.flush()
+				_when error
+					_self.put_chars(write_string(exc))
+					_self.flush()						
+				_endtry 
+			_endloop
+			i +<< 1
+		_endloop
+_endmethod
+$
+
+
+
+
+
+_global start_goworld_worker<< _proc(name, exe, conf, log)
+				 _local pp << _proc()
+								  _import name, exe, conf, log
+								  _local g << goworld.new(name, exe, conf, log)
+								  g.start()
+							  _endproc.fork_at(light_thread.vm_priority - 1)
+			 _endproc 
+$
+
+
+
+

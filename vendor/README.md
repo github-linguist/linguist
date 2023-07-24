@@ -321,6 +321,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **MQL5:** [mqsoft/MQL5-sublime](https://github.com/mqsoft/MQL5-sublime)
 - **MTML:** [atom/language-html](https://github.com/atom/language-html)
 - **Macaulay2:** [Macaulay2/language-macaulay2](https://github.com/Macaulay2/language-macaulay2)
+- **Magik:** [OpenSmallworld/magik-vscode](https://github.com/OpenSmallworld/magik-vscode)
 - **Makefile:** [textmate/make.tmbundle](https://github.com/textmate/make.tmbundle)
 - **Mako:** [marconi/mako-tmbundle](https://github.com/marconi/mako-tmbundle)
 - **Markdown:** [wooorm/markdown-tm-language](https://github.com/wooorm/markdown-tm-language)

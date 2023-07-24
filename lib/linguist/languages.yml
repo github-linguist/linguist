@@ -2638,8 +2638,8 @@ HOCON:
   extensions:
   - ".hocon"
   filenames:
-  - .scalafix.conf
-  - .scalafmt.conf
+  - ".scalafix.conf"
+  - ".scalafmt.conf"
   tm_scope: source.hocon
   ace_mode: text
   language_id: 679725279
@@ -3971,6 +3971,14 @@ Macaulay2:
   tm_scope: source.m2
   color: "#d8ffff"
   language_id: 34167825
+Magik:
+  type: programming
+  extensions:
+  - ".magik"
+  ace_mode: text
+  tm_scope: source.magik
+  color: "#005E60"
+  language_id: 45319060
 Makefile:
   type: programming
   color: "#427819"
@@ -6819,7 +6827,7 @@ TI Program:
 TL-Verilog:
   type: programming
   extensions:
-    - ".tlv"
+  - ".tlv"
   tm_scope: source.tlverilog
   ace_mode: verilog
   color: "#C40023"
