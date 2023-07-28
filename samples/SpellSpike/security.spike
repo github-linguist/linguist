@@ -1,0 +1,48 @@
+// 1. Secure.protectFromXSS(input): This function is used to protect against XSS (Cross-Site Scripting) attacks. You must pass the user input as argument.
+
+let userInput = "<script>malicious code</script>";
+let safeInput = Secure.protectFromXSS(userInput);
+
+//2. Secure.protectFromCSRF(token): This function is used to protect against CSRF (Cross-Site Request Forgery) attacks. You must pass the CSRF token as argument.
+
+let csrfToken = "your_csrf_token";
+Secure.protectFromCSRF(csrfToken);
+
+//3. Secure.protectFromSQLInjection(input): This function is used to protect against SQL injection attacks. You must pass the user input as argument.
+
+let userInput = "'; DROP TABLE users; --";
+let safeInput = Secure.protectFromSQLInjection(userInput);
+
+//4. Secure.protectFromClickjacking(): This function is used to protect against Clickjacking attacks. It requires no arguments.
+
+Secure.protectFromClickjacking();
+
+//5. Secure.protectFromMITM(): This function is used to protect against Man-in-the-Middle attacks. It requires no arguments.
+
+Secure.protectFromMITM();
+
+//6. Secure.protectFromPhishing(): This function is used to protect against Phishing attacks. It requires no arguments.
+
+Secure.protectFromPhishing();
+
+//7. Secure.protectFromDDoS(): This function is used to protect against DDoS (Distributed Denial of Service) attacks. It requires no arguments.
+
+Secure.protectFromDDoS();
+
+//8. Secure.protectFromBruteForce(): This function is used to protect against Brute Force attacks. It requires no arguments.
+
+Secure.protectFromBruteForce();
+
+//9. Secure.protectFromDirectoryTraversal(path): This function is used to protect against Directory Traversal attacks. You must pass the file path as argument.
+
+let filePath = "../etc/passwd";
+let safePath = Secure.protectFromDirectoryTraversal(filePath);
+
+// 10. Secure.protectFromRFI(url): This function is used to protect against Remote File Inclusion attacks. You must pass the URL as argument.
+
+let url = "http://malicious.com/malicious.js";
+let isSafe = Secure.protectFromRFI(url);
+//11. Secure.protectFromLFI(path): This function is used to protect against Local File Inclusion attacks. You must pass the file path as argument.
+
+let filePath = "/etc/passwd";
+let isSafe = Secure.protectFromLFI(filePath);

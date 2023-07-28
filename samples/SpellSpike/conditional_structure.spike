@@ -1,0 +1,12 @@
+if (num === 1) {
+   result = 2;
+}
+ maybe(num > 4, function() {
+   result = 3;
+});
+maybe(num < 9, function() {
+   result = 5;
+});
+else {
+   result = 1;
+}

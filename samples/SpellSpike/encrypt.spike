@@ -1,0 +1,9 @@
+// Set a global variable called 'message' with the value you want to encrypt
+window.message = "Hello, world!";
+
+// Call the function 'crypto' to encrypt the value of the variable 'message'
+// The encrypted value will be stored in a new global variable called 'encryptedMessage'
+crypto({ target: "message", convert: "encryptedMessage", mode: "encrypt" });
+
+// Now, 'encryptedMessage' contains the encrypted value of 'message'
+log(window.encryptedMessage);

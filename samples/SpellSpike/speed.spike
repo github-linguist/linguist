@@ -1,0 +1,37 @@
+// Example usage of memoize
+const factorial = memoize(
+  (x) => {
+    if (x === 0) {
+      return 1;
+    } else {
+      return x * factorial(x - 1);
+    }
+  }
+);
+
+console.log(factorial(5)); // Output: 120
+console.log(factorial(5)); // Output: Fetching from cache, 120
+
+// Example usage of debounce
+let counter = 0;
+const incrementCounter = debounce(() => {
+  counter++;
+  console.log(counter);
+}, 2000);
+
+incrementCounter();
+incrementCounter();
+incrementCounter();
+// Output: 1 (after 2 seconds, despite calling the function three times)
+
+// Example usage of throttle
+let count = 0;
+const incrementCount = throttle(() => {
+  count++;
+  console.log(count);
+}, 2000);
+
+incrementCount();
+setTimeout(incrementCount, 1000); // This call will be ignored because of throttle limit
+setTimeout(incrementCount, 3000); // This call will execute after 3 seconds
+// Output: 1 (immediately), 2 (after 3 seconds)

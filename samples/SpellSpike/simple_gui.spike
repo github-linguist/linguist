@@ -1,0 +1,9 @@
+SPKCreateElement("input", {type: "text", value: "Hello World", id: "test", class: "main", placeholder: "Hello men!"});
+
+vlu("welcomemsg", "Thanks!")
+
+timeout({time: 1000, func: "Welcome", name: "timetest"});
+
+function Welcome() {
+    log("Welcome to SpellSpike, " + welcomemsg)
+}
