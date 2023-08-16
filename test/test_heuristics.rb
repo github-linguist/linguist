@@ -35,6 +35,8 @@ class TestHeuristics < Minitest::Test
   end
 
   def test_no_match_if_regexp_timeout
+    skip("This test requires Ruby 3.2.0 or later") if Gem::Version.new(RUBY_VERSION) < Gem::Version.new('3.2.0')
+
     Regexp.any_instance.stubs(:match).raises(Regexp::TimeoutError)
     assert_equal [], Heuristics.call(file_blob("#{fixtures_path}/Generic/stl/STL/cube1.stl"), [Language["STL"]])
   end
