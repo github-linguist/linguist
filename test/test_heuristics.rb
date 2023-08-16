@@ -34,6 +34,11 @@ class TestHeuristics < Minitest::Test
     assert_equal [], Heuristics.call(file_blob("Markdown/symlink.md"), [Language["Markdown"]])
   end
 
+  def test_no_match_if_regexp_timeout
+    Regexp.any_instance.stubs(:match).raises(Regexp::TimeoutError)
+    assert_equal [], Heuristics.call(file_blob("#{fixtures_path}/Generic/stl/STL/cube1.stl"), [Language["STL"]])
+  end
+
   # alt_name is a file name that will be used instead of the file name of the
   # original sample. This is used to force a sample to go through a specific
   # heuristic even if its extension doesn't match.
