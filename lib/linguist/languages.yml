@@ -261,6 +261,14 @@ Agda:
   tm_scope: source.agda
   ace_mode: text
   language_id: 12
+Aiken:
+  type: programming
+  color: "#604185"
+  extensions:
+  - ".ak"
+  tm_scope: source.ak
+  ace_mode: text
+  language_id: 899409497
 Alloy:
   type: programming
   color: "#64C800"
@@ -2638,8 +2646,8 @@ HOCON:
   extensions:
   - ".hocon"
   filenames:
-  - .scalafix.conf
-  - .scalafmt.conf
+  - ".scalafix.conf"
+  - ".scalafmt.conf"
   tm_scope: source.hocon
   ace_mode: text
   language_id: 679725279
@@ -6819,7 +6827,7 @@ TI Program:
 TL-Verilog:
   type: programming
   extensions:
-    - ".tlv"
+  - ".tlv"
   tm_scope: source.tlverilog
   ace_mode: verilog
   color: "#C40023"
