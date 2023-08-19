@@ -72,7 +72,7 @@ module Linguist
       generated_yarn_plugnplay? ||
       godeps? ||
       generated_by_zephir? ||
-      coveragepy_htmlcov_file? ||
+      htmlcov? ||
       minified_files? ||
       has_source_map? ||
       source_map? ||
