@@ -1,0 +1,21 @@
+<template>
+  <div>
+    <h2 class="scoped-class">Hello, world!</h2>
+  </div>
+</template>
+
+<script>
+echo "Hello from Nim programming language"
+
+props:
+  additionalContext: string = ""
+
+proc doSomething*() =
+  echo "you can call it with self.doSomething()"
+</script>
+
+<style>
+  .scoped-class {
+    background: red;  
+  }
+</style>
