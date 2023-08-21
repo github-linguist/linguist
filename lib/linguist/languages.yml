@@ -2638,8 +2638,8 @@ HOCON:
   extensions:
   - ".hocon"
   filenames:
-  - .scalafix.conf
-  - .scalafmt.conf
+  - ".scalafix.conf"
+  - ".scalafmt.conf"
   tm_scope: source.hocon
   ace_mode: text
   language_id: 679725279
@@ -5886,6 +5886,14 @@ RenderScript:
   tm_scope: none
   ace_mode: text
   language_id: 323
+Rez:
+  type: programming
+  extensions:
+  - ".r"
+  - ".rez"
+  tm_scope: source.rez
+  ace_mode: text
+  language_id: 498022874
 Rich Text Format:
   type: markup
   extensions:
@@ -6819,7 +6827,7 @@ TI Program:
 TL-Verilog:
   type: programming
   extensions:
-    - ".tlv"
+  - ".tlv"
   tm_scope: source.tlverilog
   ace_mode: verilog
   color: "#C40023"
