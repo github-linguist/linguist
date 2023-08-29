@@ -686,7 +686,7 @@ disambiguations:
 - extensions: ['.stl']
   rules:
   - language: STL
-    pattern: '\A\s*solid[\s\S]*^endsolid(?:$|\s)'
+    pattern: '\A\s*solid(?:$|\s)[\s\S]*^endsolid(?:$|\s)'
 - extensions: ['.sw']
   rules:
   - language: Sway
