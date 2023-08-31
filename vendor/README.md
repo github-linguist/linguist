@@ -67,8 +67,8 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **BrighterScript:** [rokucommunity/vscode-brightscript-language](https://github.com/rokucommunity/vscode-brightscript-language)
 - **Brightscript:** [rokucommunity/vscode-brightscript-language](https://github.com/rokucommunity/vscode-brightscript-language)
 - **Browserslist:** [browserslist/browserslist-vscode](https://github.com/browserslist/browserslist-vscode)
-- **C:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
-- **C#:** [dotnet/csharp-tmLanguage](https://github.com/dotnet/csharp-tmLanguage)
+- **C:** [tree-sitter/tree-sitter-c](https://github.com/tree-sitter/tree-sitter-c) 🐌
+- **C#:** [tree-sitter/tree-sitter-c-sharp](https://github.com/tree-sitter/tree-sitter-c-sharp) 🐌
 - **C++:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **C-ObjDump:** [nanoant/assembly.tmbundle](https://github.com/nanoant/assembly.tmbundle)
 - **C2hs Haskell:** [atom-haskell/language-haskell](https://github.com/atom-haskell/language-haskell)
@@ -238,6 +238,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Haxe:** [vshaxe/haxe-TmLanguage](https://github.com/vshaxe/haxe-TmLanguage)
 - **HiveQL:** [adidonato/language-hql](https://github.com/adidonato/language-hql)
 - **HolyC:** [codingdandy/holyc.tmbundle](https://github.com/codingdandy/holyc.tmbundle)
+- **Hosts File:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **Hy:** [tshakalekholoane/vscode-hy](https://github.com/tshakalekholoane/vscode-hy)
 - **IDL:** [mgalloy/idl.tmbundle](https://github.com/mgalloy/idl.tmbundle)
 - **IGOR Pro:** [byte-physics/language-igor](https://github.com/byte-physics/language-igor)
@@ -365,7 +366,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Nim:** [nim-lang/NimLime](https://github.com/nim-lang/NimLime)
 - **Ninja:** [khyo/language-ninja](https://github.com/khyo/language-ninja)
 - **Nit:** [R4PaSs/Sublime-Nit](https://github.com/R4PaSs/Sublime-Nit)
-- **Nix:** [sambacha/nix-linguist](https://github.com/sambacha/nix-linguist)
+- **Nix:** [nix-community/tree-sitter-nix](https://github.com/nix-community/tree-sitter-nix) 🐌
 - **Nu:** [jsallis/nu.tmbundle](https://github.com/jsallis/nu.tmbundle)
 - **Nunjucks:** [alohaas/language-nunjucks](https://github.com/alohaas/language-nunjucks)
 - **Nushell:** [hustcer/nu-grammar](https://github.com/hustcer/nu-grammar)
@@ -463,7 +464,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Record Jar:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **Red:** [Oldes/Sublime-Red](https://github.com/Oldes/Sublime-Red)
 - **Redirect Rules:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
-- **Regular Expression:** [Alhadis/language-regexp](https://github.com/Alhadis/language-regexp)
+- **Regular Expression:** [tree-sitter/tree-sitter-regex](https://github.com/tree-sitter/tree-sitter-regex) 🐌
 - **Ren'Py:** [williamd1k0/language-renpy](https://github.com/williamd1k0/language-renpy)
 - **Rich Text Format:** [nwhetsell/language-rtf](https://github.com/nwhetsell/language-rtf)
 - **Ring:** [MahmoudFayed/atom-language-ring](https://github.com/MahmoudFayed/atom-language-ring)

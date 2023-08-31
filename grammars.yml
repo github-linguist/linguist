@@ -67,7 +67,6 @@ vendor/grammars/Nasal.tmbundle:
 - source.nasal
 vendor/grammars/NimLime:
 - source.nim
-- source.nim_filter
 - source.nimcfg
 vendor/grammars/NovaGrammars:
 - source.git-revlist
@@ -412,6 +411,7 @@ vendor/grammars/graphiql:
 - inline.graphql.python
 - inline.graphql.re
 - inline.graphql.res
+- inline.graphql.scala
 - markdown.graphql.codeblock
 - source.graphql
 vendor/grammars/graphviz.tmbundle:
@@ -721,6 +721,7 @@ vendor/grammars/language-regexp:
 vendor/grammars/language-renpy:
 - source.renpy
 vendor/grammars/language-restructuredtext:
+- text.pseudoxml
 - text.restructuredtext
 vendor/grammars/language-ring:
 - source.ring
@@ -1053,6 +1054,7 @@ vendor/grammars/vhdl:
 vendor/grammars/vsc-fennel:
 - source.fnl
 vendor/grammars/vscode-TalonScript:
+- markdown.talon.codeblock
 - source.talon
 vendor/grammars/vscode-antlers-language-server:
 - text.html.statamic
@@ -1114,6 +1116,7 @@ vendor/grammars/vscode-lean:
 vendor/grammars/vscode-monkey-c:
 - source.mc
 vendor/grammars/vscode-motoko:
+- source.did
 - source.mo
 vendor/grammars/vscode-move-syntax:
 - source.move
@@ -1175,6 +1178,7 @@ vendor/grammars/vscode_cobol:
 - source.mfu
 - source.mfupp_dir
 - source.pli
+- source.rmcobol
 - source.utreport
 vendor/grammars/vscode_mikrotik_routeros_script:
 - source.rsc

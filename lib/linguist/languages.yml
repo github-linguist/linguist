@@ -2841,6 +2841,15 @@ HolyC:
   codemirror_mode: clike
   codemirror_mime_type: text/x-csrc
   language_id: 928121743
+Hosts File:
+  type: data
+  color: "#308888"
+  filenames:
+  - HOSTS
+  - hosts
+  tm_scope: source.hosts
+  ace_mode: text
+  language_id: 231021894
 Hy:
   type: programming
   ace_mode: text
@@ -2899,7 +2908,9 @@ INI:
   - ".coveragerc"
   - ".flake8"
   - ".pylintrc"
+  - HOSTS
   - buildozer.spec
+  - hosts
   - pylintrc
   - vlcrc
   tm_scope: source.ini
