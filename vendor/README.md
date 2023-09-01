@@ -367,6 +367,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Ninja:** [khyo/language-ninja](https://github.com/khyo/language-ninja)
 - **Nit:** [R4PaSs/Sublime-Nit](https://github.com/R4PaSs/Sublime-Nit)
 - **Nix:** [nix-community/tree-sitter-nix](https://github.com/nix-community/tree-sitter-nix) 🐌
+- **Noir:** [noir-lang/vscode-noir](https://github.com/noir-lang/vscode-noir)
 - **Nu:** [jsallis/nu.tmbundle](https://github.com/jsallis/nu.tmbundle)
 - **Nunjucks:** [alohaas/language-nunjucks](https://github.com/alohaas/language-nunjucks)
 - **Nushell:** [hustcer/nu-grammar](https://github.com/hustcer/nu-grammar)
