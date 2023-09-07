@@ -466,6 +466,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Redirect Rules:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
 - **Regular Expression:** [tree-sitter/tree-sitter-regex](https://github.com/tree-sitter/tree-sitter-regex) 🐌
 - **Ren'Py:** [williamd1k0/language-renpy](https://github.com/williamd1k0/language-renpy)
+- **Rez:** [textmate/rez.tmbundle](https://github.com/textmate/rez.tmbundle)
 - **Rich Text Format:** [nwhetsell/language-rtf](https://github.com/nwhetsell/language-rtf)
 - **Ring:** [MahmoudFayed/atom-language-ring](https://github.com/MahmoudFayed/atom-language-ring)
 - **Riot:** [riot/syntax-highlight](https://github.com/riot/syntax-highlight)
