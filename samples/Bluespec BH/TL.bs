@@ -1,0 +1,168 @@
+package TL (TL(..), sysTL) where
+
+import Vector
+
+interface TL =
+    ped_button_push :: Prelude.Action
+
+    set_car_state_N :: Bool -> Prelude.Action {-# always_enabled  #-}
+    set_car_state_S :: Bool -> Prelude.Action {-# always_enabled  #-}
+    set_car_state_E :: Bool -> Prelude.Action {-# always_enabled  #-}
+    set_car_state_W :: Bool -> Prelude.Action {-# always_enabled  #-}
+
+    lampRedNS   :: Bool 
+    lampAmberNS :: Bool
+    lampGreenNS :: Bool
+
+    lampRedE   :: Bool
+    lampAmberE :: Bool
+    lampGreenE :: Bool
+
+    lampRedW   :: Bool
+    lampAmberW :: Bool
+    lampGreenW :: Bool
+
+    lampRedPed   :: Bool
+    lampAmberPed :: Bool
+    lampGreenPed :: Bool
+ 
+data TLstates = AllRed
+              | GreenNS  | AmberNS
+              | GreenE   | AmberE
+              | GreenW   | AmberW
+              | GreenPed | AmberPed
+  deriving (Eq, Bits)
+
+type Time32 = UInt 5
+type CtrSize = UInt 20
+
+{-# properties sysTL = { verilog } #-}
+sysTL :: Module TL
+sysTL = 
+    module
+      let allRedDelay :: Time32 = 2
+          amberDelay  :: Time32 = 4
+          nsGreenDelay :: Time32 = 20
+          ewGreenDelay :: Time32 = 10
+          pedGreenDelay :: Time32 = 10
+          pedAmberDelay :: Time32 = 6
+
+          clocks_per_sec :: CtrSize = 100
+
+      state :: Reg TLstates <- mkReg AllRed
+      next_green :: Reg TLstates <- mkReg GreenNS
+      secs :: Reg Time32 <- mkReg 0
+      ped_button_pushed :: Reg Bool <- mkReg False
+      car_present_N :: Reg Bool <- mkReg True
+      car_present_S :: Reg Bool <- mkReg True
+      car_present_E :: Reg Bool <- mkReg True
+      car_present_W :: Reg Bool <- mkReg True
+      let car_present_NS :: Bool
+          car_present_NS = car_present_N || car_present_S
+      cycle_ctr :: Reg CtrSize <- mkReg 0
+
+      rules
+           "dec_cycle_ctr":  when cycle_ctr /= 0
+                              ==>
+                                cycle_ctr := cycle_ctr - 1
+
+      let low_priority_rule :: Rules
+          low_priority_rule = 
+                   rules
+                     "inc_sec":  when cycle_ctr == 0
+                                  ==>
+                                    action
+                                      secs := secs + 1
+                                      cycle_ctr := clocks_per_sec
+
+          next_state :: TLstates -> Prelude.Action
+          next_state ns = action { state := ns; secs := 0; }
+
+          green_seq :: TLstates -> TLstates
+          green_seq GreenNS = GreenE
+          green_seq GreenE  = GreenW
+          green_seq GreenW  = GreenNS
+
+          car_present :: TLstates -> Bool
+          car_present GreenNS = car_present_NS
+          car_present GreenE  = car_present_E
+          car_present GreenW  = car_present_W
+
+          make_from_green_rule :: TLstates -> Time32 -> Bool -> TLstates -> Rules
+          make_from_green_rule green_state delay car_is_present ns =
+                rules
+                  "from_green":  when (state == green_state) &&
+                                       ((secs >= delay) || (not car_is_present))
+                                  ==>
+                                    next_state ns
+
+          make_from_amber_rule :: TLstates -> TLstates -> Rules
+          make_from_amber_rule amber_state ng = 
+                rules
+                  "from_amber":  when (state == amber_state) &&
+                                      (secs >= amberDelay)
+                                  ==>
+                                    action
+                                      next_state AllRed
+                                      next_green := ng
+
+          hpr0 :: Rules
+          hpr0 = rules
+                        "fromAllRed":  when (state == AllRed) &&
+                                            (secs >= allRedDelay)
+                                        ==>
+                                          if ped_button_pushed then
+                                            action
+                                              ped_button_pushed := False
+                                              next_state GreenPed
+                                          else if car_present next_green then
+                                            next_state next_green
+                                          else if car_present (green_seq next_green) then
+                                            next_state (green_seq next_green)
+                                          else if car_present (green_seq (green_seq next_green)) then
+                                            next_state (green_seq (green_seq next_green))
+                                          else
+                                            noAction
+
+          hpr1 :: Rules = make_from_green_rule GreenNS nsGreenDelay car_present_NS AmberNS
+	  hpr2 :: Rules = make_from_amber_rule AmberNS GreenE
+	  hpr3 :: Rules = make_from_green_rule GreenE ewGreenDelay car_present_E AmberE
+	  hpr4 :: Rules = make_from_amber_rule AmberE GreenW
+	  hpr5 :: Rules = make_from_green_rule GreenW ewGreenDelay car_present_W AmberW
+	  hpr6 :: Rules = make_from_amber_rule AmberW GreenNS
+
+          hprs :: Vector 7 Rules
+          hprs = Vector.cons hpr0
+                  (Vector.cons hpr1
+                    (Vector.cons hpr2
+                      (Vector.cons hpr3
+                        (Vector.cons hpr4
+                          (Vector.cons hpr5
+                            (Vector.cons hpr6
+                              Vector.nil))))))
+
+          high_priority_rules :: Rules
+          high_priority_rules = Vector.foldl1 rJoin hprs
+
+      addRules (preempts high_priority_rules low_priority_rule)
+
+      interface
+           ped_button_push =    ped_button_pushed := True
+
+           set_car_state_N b =  car_present_N := b
+           set_car_state_S b =  car_present_S := b
+           set_car_state_E b =  car_present_E := b
+           set_car_state_W b =  car_present_W := b
+
+           lampRedNS = not (state == GreenNS || state == AmberNS)
+           lampAmberNS =  state == AmberNS
+           lampGreenNS =  state == GreenNS
+           lampRedE =  not (state == GreenE || state == AmberE)
+           lampAmberE =  state == AmberE
+           lampGreenE =  state == GreenE
+           lampRedW = not (state == GreenW || state == AmberW)
+           lampAmberW =  state == AmberW
+           lampGreenW =  state == GreenW
+           lampRedPed = not (state == GreenPed || state == AmberPed)
+           lampAmberPed =  state == AmberPed
+           lampGreenPed =  state == GreenPed
