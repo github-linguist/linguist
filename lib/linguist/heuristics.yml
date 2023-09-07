@@ -74,7 +74,7 @@ disambiguations:
   - language: Public Key
     pattern: '^(----[- ]BEGIN|ssh-(rsa|dss)) '
   - language: AsciiDoc
-    pattern: '^[=-]+[\s\r\n]|\{\{[A-Za-z]'
+    pattern: '^[=-]+\s|\{\{[A-Za-z]'
   - language: AGS Script
     pattern: '^(\/\/.+|((import|export)\s+)?(function|int|float|char)\s+((room|repeatedly|on|game)_)?([A-Za-z]+[A-Za-z_0-9]+)\s*[;\(])'
 - extensions: ['.asm']
