@@ -11,7 +11,31 @@ By participating, you are expected to uphold this code.
 
 The majority of contributions won't need to touch any Ruby code at all.
 
-## Dependencies
+## Setting up a working environment
+
+In order to start contributing to Linguist, you will need to setup your working environment.
+We detail three methods below and recommend using GitHub Codespaces as it is the easiest and quickest method that will provide you with a consistent pre-configured environment ready for you to start contributing.
+
+### Using GitHub Codespaces
+
+Using GitHub Codespaces is the easiest and quickest method to start contributing.
+The Free and Pro plans for personal accounts include free use of GitHub Codespaces up to a fixed amount of usage every month.
+For more info on GitHub Codespaces billing, see [this help page](https://docs.github.com/en/billing/managing-billing-for-github-codespaces/about-billing-for-github-codespaces).
+
+To get started, click this button: [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new/github-linguist/linguist)
+
+### Using the dev container locally
+
+To open locally in VS Code using a dev container, follow the [Visual Studio Code Dev Containers installation instructions](https://code.visualstudio.com/docs/remote/containers#_installation) to configure dev container support.
+Close the repo and open it in VS Code.
+VS Code will automatically offer to run this project in a dev container when the project is opened.
+No additional setup will be required.
+
+### Using your local system without the dev container
+
+This is the longest and most involved and error-prone approach and is documented for those who can't use one of the methods above or prefer to do everything within the native operating system environment.
+
+#### Dependencies
 
 Linguist is a Ruby library so you will need a recent version of Ruby installed.
 There are known problems with the macOS/XCode supplied version of Ruby that causes problems installing some of the dependencies.
@@ -32,7 +56,7 @@ apt-get install cmake pkg-config libicu-dev docker.io ruby ruby-dev zlib1g-dev b
 
 The latest version of Bundler can be installed with `gem install bundler`.
 
-## Getting started
+#### Getting started
 
 Before you can start contributing to Linguist, you'll need to set up your environment first.
 Clone the repo and run `script/bootstrap` to install its dependencies.
