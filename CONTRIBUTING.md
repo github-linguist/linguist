@@ -22,7 +22,7 @@ Using GitHub Codespaces is the easiest and quickest method to start contributing
 The Free and Pro plans for personal accounts include free use of GitHub Codespaces up to a fixed amount of usage every month.
 For more info on GitHub Codespaces billing, see [this help page](https://docs.github.com/en/billing/managing-billing-for-github-codespaces/about-billing-for-github-codespaces).
 
-To get started, click this button: [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new/github-linguist/linguist)
+To get started, click this button: [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/github-linguist/linguist)
 
 ### Using the dev container locally
 
