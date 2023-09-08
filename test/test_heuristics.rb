@@ -34,6 +34,13 @@ class TestHeuristics < Minitest::Test
     assert_equal [], Heuristics.call(file_blob("Markdown/symlink.md"), [Language["Markdown"]])
   end
 
+  def test_no_match_if_regexp_timeout
+    skip("This test requires Ruby 3.2.0 or later") if Gem::Version.new(RUBY_VERSION) < Gem::Version.new('3.2.0')
+
+    Regexp.any_instance.stubs(:match).raises(Regexp::TimeoutError)
+    assert_equal [], Heuristics.call(file_blob("#{fixtures_path}/Generic/stl/STL/cube1.stl"), [Language["STL"]])
+  end
+
   # alt_name is a file name that will be used instead of the file name of the
   # original sample. This is used to force a sample to go through a specific
   # heuristic even if its extension doesn't match.
@@ -226,6 +233,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_app_by_heuristics
+    assert_heuristics({
+      "Erlang" => Dir.glob("#{fixtures_path}/Generic/app/Erlang/*"),
+      nil => Dir.glob("#{fixtures_path}/Generic/app/nil/*")
+    })
+  end
+
   def test_as_by_heuristics
     assert_heuristics({
       "ActionScript" => all_fixtures("ActionScript", "*.as"),
@@ -260,7 +274,8 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "FreeBasic" => all_fixtures("FreeBasic", "*.bas"),
       "BASIC" => all_fixtures("BASIC", "*.bas"),
-      nil => all_fixtures("VBA", "*.bas")
+      "VBA" => all_fixtures("VBA", "*.bas"),
+      "Visual Basic 6.0" => all_fixtures("Visual Basic 6.0", "*.bas")
     })
   end
 
@@ -423,7 +438,7 @@ class TestHeuristics < Minitest::Test
       "Text" => all_fixtures("Text", "*.fr")
     })
   end
-  
+
   def test_frm_by_heuristics
     assert_heuristics({
       "VBA" => all_fixtures("VBA", "*.frm"),
@@ -698,6 +713,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_nu_by_heuristics
+    assert_heuristics({
+      "Nushell" => all_fixtures("Nushell", "*.nu"),
+      "Nu" => all_fixtures("Nu", "*.nu")
+    })
+  end
+
   def test_odin_by_heuristics
     assert_heuristics({
       "Object Data Instance Notation" => all_fixtures("Object Data Instance Notation", "*.odin"),
@@ -925,6 +947,12 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "Java Server Pages" => Dir.glob("#{fixtures_path}/Generic/tag/Java Server Pages/*"),
       nil => Dir.glob("#{fixtures_path}/Generic/tag/nil/*")
+    })
+  end
+
+  def test_tlv_by_heuristics
+    assert_heuristics({
+      "TL-Verilog" => all_fixtures("TL-Verilog", "*.tlv"),
     })
   end
 

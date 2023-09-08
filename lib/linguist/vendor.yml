@@ -74,7 +74,7 @@
 - ([^\s]*)import\.(css|less|scss|styl)$
 
 # Bootstrap css and js
-- (^|/)bootstrap([^/.]*)(?=\.).*\.(js|css|less|scss|styl)$
+- (^|/)bootstrap([^/.]*)(\..*)?\.(js|css|less|scss|styl)$
 - (^|/)custom\.bootstrap([^\s]*)(js|css|less|scss|styl)$
 
 # Font Awesome
@@ -385,3 +385,9 @@
 
 # GitHub.com
 - (^|/)\.github/
+
+# obsidian.md settings
+- (^|/)\.obsidian/
+
+# teamcity CI configuration
+- (^|/)\.teamcity/
