@@ -1,18 +1,16 @@
 % File src/library/utils/vignettes/Sweave.Rnw
 % Part of the R package, https://www.R-project.org
-% Copyright 2002-2014 Friedrich Leisch and the R Core Team
+% Copyright 2002-2022 Friedrich Leisch and the R Core Team
 % Distributed under GPL 2 or later
 
 \documentclass[a4paper]{article}
 
 %\VignetteIndexEntry{Sweave User Manual}
 %\VignettePackage{utils}
-%\VignetteDepends{tools}
-%\VignetteDepends{datasets}
-%\VignetteDepends{stats}
+%\VignetteDepends{tools, datasets, stats, graphics}
 
 \title{Sweave User Manual}
-\author{Friedrich Leisch and R-core}
+\author{Friedrich Leisch and R Core Team}
 
 \usepackage[round]{natbib}
 \usepackage{graphicx, Rd}
@@ -32,7 +30,7 @@ urlcolor=Blue,%
 pdfstartview={XYZ null null 1},%
 pdfview={XYZ null null null},%
 pdfpagemode=UseNone,% for no outline
-pdfauthor={Friedrich Leisch and R-core},%
+pdfauthor={Friedrich Leisch and R Core Team},%
 pdftitle={Sweave User Manual},%
 pdfsubject={R vignette documentation system}%
 }
@@ -58,7 +56,7 @@ final document containing
 This allows the re-generation of a report if the input data change and
 documents the code to reproduce the analysis in the same file that
 contains the report. The \R{} code of the complete analysis is embedded
-into a \LaTeX{} document\footnote{\url{http://www.ctan.org}} using the
+into a \LaTeX{} document\footnote{\url{https://www.ctan.org}} using the
 \texttt{noweb} syntax \citep{flm:Ramsey:1998} which is usually used
 for literate programming \cite{fla:Knuth:1984}.  Hence, the full power
 of \LaTeX{} (for high-quality typesetting) and \R{} (for data analysis)
@@ -70,7 +68,7 @@ Sweave uses a modular concept using different drivers for the actual
 translations. Obviously different drivers are needed for different
 text markup languages (\LaTeX{}, HTML, \ldots). Several packages on
 CRAN provide support for other word processing systems (see
-Appendix~A).
+Appendix~\ref{sec:faq}).
 
 
 \section{Noweb files}
@@ -91,7 +89,7 @@ of code and documentation segments, called \emph{chunks}:
   the contents of documentation chunks, and so will identify chunk
   indicators even inside \LaTeX{} verbatim environments.
 
-\item[Code chunks] start with \verb|<<options>>=| at the beginning of
+\item[Code chunks] start with \verb|<<|\texttt{\textsl{options}}\verb|>>=| at the beginning of
   a line; again the rest of the line is a comment and ignored.
 \end{description}
 The default for the first chunk is documentation.
@@ -100,7 +98,7 @@ In the simplest usage of \texttt{noweb}, the options (if present) of
 the code chunks give the names of source code files, and the tool
 \texttt{notangle} can be used to extract the code chunks from the
 \texttt{noweb} file. Multiple code chunks can have the same name, the
-corresponding code chunks are the concatenated when the source code is
+corresponding code chunks are then concatenated when the source code is
 extracted. \texttt{noweb} has some additional mechanisms to
 cross-reference code chunks (the \verb|[[...]]| operator, etc.),
 Sweave does currently not use nor support these features, so they are
@@ -158,14 +156,17 @@ transfers both the \R{} commands and their respective output to the \LaTeX{}
 file, embedded in \texttt{Sinput} and \texttt{Soutput} environments,
 respectively.
 
-The second code chunk shows one of the Sweave extension to the
+The second and third code chunks show one of the Sweave extensions to the
 \texttt{noweb} syntax: Code chunk names can be used to pass options to
 Sweave which control the final output.
 \begin{itemize}
-\item The chunk is marked as a figure chunk (\texttt{fig=TRUE}) such
+\item The option \texttt{eval=FALSE} for the second chunk indicates that
+  the code should not be evaluated (yet). The code is reused in the third
+  chunk (details follow in Section~\ref{sec:chunkrefs}).
+\item The third chunk is marked as a figure chunk (\texttt{fig=TRUE}) such
   that Sweave creates (by default) a PDF file of the plot created by
   the commands in the chunk. Furthermore, a
-  \verb|\includegraphics{example-1-002}| statement is inserted into
+  \verb|\includegraphics{example-1-003}| statement is inserted into
   the \LaTeX{} file (details on the choice of file names for figures
   follow later in this manual).
 \item Option \texttt{echo=FALSE} indicates that the \R{} input should not
@@ -197,7 +198,7 @@ Sweave which control the final output.
 
 Options control how code chunks and their output (text, figures) are
 transferred from the \file{.Rnw} file to the \file{.tex} file. All
-options have the form \texttt{key=value}, where \texttt{value} can be
+options have the form \texttt{\textsl{key}=\textsl{value}}, where \texttt{\textsl{value}} can be
 a number, string or logical value.  Several options can be specified at
 once (separated by commas), all options must take a value (which must
 not contain a comma or equal sign). Logical options can take the
@@ -210,7 +211,7 @@ In the \file{.Rnw} file options can be specified either
   modifying the behaviour \emph{only for this chunk}, or
  \item anywhere in a documentation chunk using the command %
   \begin{quote}
-    \verb|\SweaveOpts{opt1=value1, opt2=value2, ..., optN=valueN}|
+    \verb|\SweaveOpts{|\texttt{\textsl{opt1}=\textsl{value1}, \textsl{opt2}=\textsl{value2}, ..., \textsl{optN}=\textsl{valueN}}\verb|}|
   \end{quote}
   which modifies the defaults for the rest of the document, i.e.,
   \emph{all code chunks after the statement}. Hence, an
@@ -218,7 +219,7 @@ In the \file{.Rnw} file options can be specified either
   defaults for all code chunks.
 \end{enumerate}
 Further, global options can be specified (as a comma-separated list of
-\texttt{key=value} items) in the environment variable
+\texttt{\textsl{key}=\textsl{value}} items) in the environment variable
 \verb|SWEAVE_OPTIONS|, and via the \verb|--options=| flag of
 \verb|R CMD Sweave|.
 
@@ -269,16 +270,16 @@ The help pages for \texttt{RweaveLatex} and \texttt{Rtangle} list the
 options supported by the default Sweave and Stangle drivers.
 
 Now for the promised details on the file names corresponding to
-figures.  These are of the form \texttt{prefix-label.ext}.  Here
-\texttt{prefix} can be set by the option \texttt{prefix.string},
+figures.  These are of the form \texttt{\textsl{prefix}-\textsl{label}.\textsl{ext}}.  Here
+\texttt{\textsl{prefix}} can be set by the option \texttt{prefix.string},
 otherwise is the basename of the output file (which unless specified
-otherwise is the basename of the input file).  \texttt{label} is the
+otherwise is the basename of the input file).  \texttt{\textsl{label}} is the
 label of the code chunk if it has one, otherwise the number of the
-code chunk in the range \texttt{001} to \texttt{999}.  \texttt{ext} is
+code chunk in the range \texttt{001} to \texttt{999}.  \texttt{\textsl{ext}} is
 the appropriate extension for the type of graphics, e.g.{}
 \texttt{pdf}, \texttt{eps}, \ldots{}.  So for the
 \file{example-1.Rnw} file, the PDF version of the boxplot is
-\file{example-1-002.pdf}, since it is the second code chunk in the
+\file{example-1-003.pdf}, since it is the third code chunk in the
 document.  Note that if \texttt{prefix.string} is used it can specify
 a directory as part of the prefix, so that for example if
 \verb|\SweaveOpts{prefix.string=figures/fig}|, the auto-generated
@@ -315,6 +316,7 @@ computations can be easily done in a hidden code chunk and the result
 then be used inside a \verb|\Sexpr|.)
 
 \subsection{Code chunk reuse}
+\label{sec:chunkrefs}
 
 Named code chunks can be reused in other code chunks following later
 in the document. Consider the simple example
@@ -332,7 +334,7 @@ in the document. Consider the simple example
  <<a>>
  y <- 20
  <<b>>
-@
+ @
 \end{verbatim}
 \end{quote}
 which is equivalent to defining the last code chunk as
@@ -377,7 +379,7 @@ SweaveSyntConv(rnwfile, SweaveSyntaxLatex)
 
 Code chunks are now enclosed in \texttt{Scode}
 environments, code chunk reuse is performed using
-\verb|\Scoderef{chunkname}|. All other operators are the same as in
+\verb|\Scoderef{|\texttt{\textsl{chunkname}}\verb|}|. All other operators are the same as in
 the noweb-style syntax.
 
 Which syntax is used for a document is determined by the extension of
@@ -396,8 +398,7 @@ or
 at the beginning of a line within a documentation chunk. Syntax
 definitions are simply lists of regular expression for several Sweave
 commands: see the two default definitions mentioned above for
-examples.  (More detailed instructions will follow once the API has
-stabilized).
+examples.
 
 \subsection{Encoding}
 
@@ -443,14 +444,14 @@ figures. It is the user's responsibility that the text inclusions are
 covered by the declared input encoding.  \LaTeX{} allows the input
 encoding to be changed by
 \begin{quote}
-  \verb|\inputencoding{something}|
+  \verb|\inputencoding{|\texttt{\textsl{something}}\verb|}|
 \end{quote}
 statements: these may not work well in Sweave processing.  Since
 \verb|\usepackage[latin1]{inputenc}| is typically not legal \LaTeX{} code
 in an included file, it is easiest to declare the encoding to Sweave
 using the \verb|%\SweaveUTF8| comment.
 
-It is all too easy for BiBTeX to pick up UTF-8-encoded references for
+It is all too easy for BibTeX to pick up UTF-8-encoded references for
 a Latin-1 document, or \emph{vice versa}.
 
 R output is again to a large extent under the user's control.  If a
@@ -459,8 +460,8 @@ a UTF-8 document is processed in a UTF-8 locale, the only problems
 which are likely to arise are from handling data in another encoding,
 but it may be necessary to declare the document's encoding to cover
 the \R{} output which is generated even if the document is itself ASCII.
-One common problem is the quotes produced by \verb|\sQuote()| and
-\verb|\dQuote()|: these will be in UTF-8 when \R{} is run in a UTF-8
+One common problem is the quotes produced by \texttt{sQuote()} and
+\texttt{dQuote()}: these will be in UTF-8 when \R{} is run in a UTF-8
 locale, and will be in CP1252 when Sweave is run from \verb|Rgui.exe|
 on Windows.  Two possible solutions are to suppress fancy quotes by
 \verb|options(useFancyQuotes=FALSE)| or to force UTF-8 by
@@ -666,7 +667,7 @@ encoding used for the text to be processed.
     in Sweave format?}
 
   Recent versions of ESS (Emacs speaks statistics,
-  \url{http://ess.R-project.org}) automatically recognize files with
+  \url{https://ESS.R-project.org/}) automatically recognize files with
   extension \file{.Rnw} as Sweave files and turn on the correct
   modes. Please follow the instructions on the ESS homepage on how to
   install ESS on your computer.
@@ -718,7 +719,7 @@ R CMD Sweave file.Rnw
    Answer by Deepayan Sarkar: I'd do something like this as part of
    the initialization:
 \begin{verbatim}
- <<...>>
+ <<...>>=
  library(lattice)
  ltheme <- canonical.theme(color = FALSE)     ## in-built B&W theme
  ltheme$strip.background$col <- "transparent" ## change strip bg
@@ -732,7 +733,7 @@ R CMD Sweave file.Rnw
    Consider that you want to create several graphs in a loop similar
    to
 \begin{verbatim}
- <<fig=TRUE>>
+ <<fig=TRUE>>=
  for (i in 1:4) plot(rnorm(100)+i)
  @
 \end{verbatim}
@@ -790,15 +791,18 @@ R CMD Sweave file.Rnw
    characters (if possible).
 
 
-  \subsection{Can I use Sweave for Word files?}
+   \subsection{Can I use Sweave for Word files?}
 
-  Not directly, but package~\pkg{SWord} provides similar
-  functionality for Microsoft Word on Windows platforms.
+   Not directly, but package~\CRANpkg{officer} provides
+   functionality to manipulate Microsoft Word documents from R.
 
-  \subsection{Can I use Sweave for OpenOffice files?}
+   \subsection{Can I use Sweave for OpenDocument files?}
 
-   Yes, package \CRANpkg{odfWeave} provides functions for using Sweave in
+   Not directly. Package \CRANpkg{odfWeave} (archived in 2018) provided functions for using Sweave in
    combination with OpenOffice Writer rather than \LaTeX.
+   See the \href{https://CRAN.R-project.org/view=ReproducibleResearch}{CRAN
+     Task View: Reproducible Research} for an up-to-date list of related
+   developments.
 
    \subsection{Can I use Sweave for HTML files?}
 
