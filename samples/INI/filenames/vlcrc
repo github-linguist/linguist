@@ -1,0 +1,457 @@
+# VLC 3.0.18 configuration
+
+[macosx]
+
+# Enable dark mode
+macosx-interfacestyle=0
+
+# Native full-screen mode
+macosx-nativefullscreenmode=0
+
+# Hide VLC icon in status-bar
+macosx-statusicon=0
+
+# Prevent automatic icon changes
+macosx-icon-change=0
+
+# Hide buttons for rarely-used functions
+macosx-show-playback-buttons=0
+macosx-show-playmode-buttons=0
+macosx-show-effects-button=0
+
+# Maximum volume displayed
+macosx-max-volume=125
+
+# Enlargen list-view text
+macosx-large-text=0
+
+# Play files immediately after opening
+macosx-autoplay=1
+
+# Don't retain list of recently-played media
+macosx-recentitems=0
+
+# Show full-screen controller
+macosx-fspanel=1
+
+# Resize window to video's intrinsic size
+macosx-video-autoresize=1
+
+# Pause video playback when minimising window
+macosx-pause-minimized=1
+
+# Lock aspect ratio
+macosx-lock-aspect-ratio=1
+
+# Dim keyboard backlight during full-screen playback
+macosx-dim-keyboard=1
+
+# Leave other media players alone
+macosx-control-itunes=0
+
+# Continue playback from last session
+macosx-continue-playback=2
+
+# Deny access to Apple Remote devices
+macosx-appleremote=0
+macosx-appleremote-prevnext=0
+macosx-appleremote-sysvol=0
+
+# Allow standard media keys to control playback
+macosx-mediakeys=1
+
+
+[core]
+
+# Show advanced options
+advanced=1
+
+# Show files whose names begin with "."
+show-hiddenfiles=1
+
+# Default subtitle language
+sub-language=English
+
+# Disable telemetry
+stats=0
+
+# Toggle full-screen
+global-key-toggle-fullscreen=
+key-toggle-fullscreen=Command+f
+
+# Exit full-screen
+global-key-leave-fullscreen=
+key-leave-fullscreen=Esc
+
+# Play/pause
+global-key-play-pause=
+key-play-pause=Space
+
+# Pause
+global-key-pause=
+key-pause=
+
+# Play
+global-key-play=
+key-play=
+
+# Adjust playback speed
+global-key-faster=
+global-key-slower=
+global-key-rate-faster-fine=
+global-key-rate-slower-fine=
+key-faster=Command+=
+key-slower=Command+-
+key-rate-faster-fine=
+key-rate-slower-fine=
+
+# Reset playback speed
+global-key-rate-normal=
+key-rate-normal=
+
+# Next/previous playlist entry
+global-key-next=
+global-key-prev=
+key-next=Command+Right
+key-prev=Command+Left
+
+# Stop
+global-key-stop=
+key-stop=
+
+# Position
+global-key-position=
+key-position=t
+
+# Very short jump
+global-key-jump+extrashort=
+global-key-jump-extrashort=
+key-jump+extrashort=
+key-jump-extrashort=
+
+# Short jump
+global-key-jump+short=
+global-key-jump-short=
+key-jump+short=
+key-jump-short=
+
+# Medium-length jump
+global-key-jump+medium=
+global-key-jump-medium=
+key-jump+medium=
+key-jump-medium=
+
+# Long jump
+global-key-jump+long=
+global-key-jump-long=
+key-jump+long=
+key-jump-long=
+
+# Next frame
+global-key-frame-next=
+key-frame-next=
+
+# Activate
+global-key-nav-activate=
+key-nav-activate=Enter
+
+# Navigation
+global-key-nav-left=
+global-key-nav-right=
+global-key-nav-down=
+global-key-nav-up=
+key-nav-left=Left
+key-nav-right=Right
+key-nav-down=Down
+key-nav-up=Up
+
+# Navigate to DVD menu
+global-key-disc-menu=
+key-disc-menu=
+
+# Select previous/next DVD title
+global-key-title-prev=
+global-key-title-next=
+key-title-prev=
+key-title-next=
+
+# Select previous/next DVD chapter
+global-key-chapter-prev=
+global-key-chapter-next=
+key-chapter-prev=
+key-chapter-next=
+
+# Quit
+global-key-quit=
+key-quit=Command+q
+
+# Volume adjustment
+global-key-vol-up=
+global-key-vol-down=
+key-vol-up=
+key-vol-down=
+
+# Mute
+global-key-vol-mute=
+key-vol-mute=
+
+# Adjust audio delay
+global-key-audiodelay-up=
+global-key-audiodelay-down=
+key-audiodelay-up=
+key-audiodelay-down=
+
+# Adjust subtitle delay
+global-key-subdelay-up=
+global-key-subdelay-down=
+key-subdelay-down=
+key-subdelay-up=
+
+# Adjust subtitle position
+global-key-subpos-up=
+global-key-subpos-down=
+key-subpos-up=
+key-subpos-down=
+
+# Bookmark timestamp
+global-key-subsync-markaudio=
+global-key-subsync-marksub=
+key-subsync-markaudio=
+key-subsync-marksub=
+
+# Synchronise timestamps
+global-key-subsync-apply=
+key-subsync-apply=Shift+k
+
+# Reset audio/subtitle synchronisation
+global-key-subsync-reset=
+key-subsync-reset=Command+Shift+k
+
+# Cycle audio tracks
+global-key-audio-track=
+key-audio-track=
+
+# Cycle audio devices
+global-key-audiodevice-cycle=
+key-audiodevice-cycle=
+
+# Cycle next/previous subtitle tracks
+global-key-subtitle-track=
+global-key-subtitle-revtrack=
+key-subtitle-track=
+key-subtitle-revtrack=
+
+# Cycle next/previous program Service ID
+global-key-program-sid-next=
+global-key-program-sid-prev=
+key-program-sid-next=
+key-program-sid-prev=
+
+# Cycle source aspect ratios
+global-key-aspect-ratio=
+key-aspect-ratio=
+
+# Cycle video crop modes
+global-key-crop=
+key-crop=
+
+# Increase/decrease scale factor
+global-key-incr-scalefactor=
+global-key-decr-scalefactor=
+key-incr-scalefactor=
+key-decr-scalefactor=
+
+# Cycle deinterlace modes
+global-key-deinterlace-mode=
+key-deinterlace-mode=
+
+# Show controller in full-screen
+global-key-intf-show=
+key-intf-show=i
+
+# Boss key
+global-key-intf-boss=
+key-intf-boss=
+
+# Context menu
+global-key-intf-popup-menu=
+key-intf-popup-menu=Menu
+
+# Save current video frame
+global-key-snapshot=
+key-snapshot=
+
+# Record
+global-key-record=
+key-record=
+
+# Zoom
+global-key-zoom=
+global-key-unzoom=
+key-zoom=
+key-unzoom=
+
+# Contract video's edge by one pixel
+global-key-crop-bottom=
+global-key-crop-right=
+global-key-crop-left=
+global-key-crop-top=
+key-crop-bottom=
+key-crop-right=
+key-crop-left=
+key-crop-top=
+
+# Extend video's edge by one pixel
+global-key-uncrop-bottom=
+global-key-uncrop-right=
+global-key-uncrop-left=
+global-key-uncrop-top=
+key-uncrop-bottom=
+key-uncrop-right=
+key-uncrop-left=
+key-uncrop-top=
+
+# Toggle subtitles
+global-key-subtitle-toggle=
+key-subtitle-toggle=s
+
+# Toggle autoscaling
+global-key-toggle-autoscale=
+key-toggle-autoscale=
+
+# Toggle deinterlacing
+global-key-deinterlace=
+key-deinterlace=
+
+# Toggle wallpaper mode in video output
+global-key-wallpaper=
+key-wallpaper=
+
+# Toggle playlist randomisation
+global-key-random=
+key-random=
+
+# Toggle looped playback
+global-key-loop=
+key-loop=
+
+# Increase/decrease viewpoint field-of-view
+global-key-viewpoint-fov-in=
+global-key-viewpoint-fov-out=
+key-viewpoint-fov-in=Page Up
+key-viewpoint-fov-out=Page Down
+
+# Roll viewpoint 360°
+global-key-viewpoint-roll-clock=
+global-key-viewpoint-roll-anticlock=
+key-viewpoint-roll-clock=
+key-viewpoint-roll-anticlock=
+
+# 1:4 quarter
+global-key-zoom-quarter=
+key-zoom-quarter=
+
+# 1:2 half
+global-key-zoom-half=
+key-zoom-half=
+
+# 1:1 original
+global-key-zoom-original=
+key-zoom-original=
+
+# 2:1 double
+global-key-zoom-double=
+key-zoom-double=
+
+# Jump lengths
+extrashort-jump-size=3
+short-jump-size=10
+medium-jump-size=60
+long-jump-size=300
+
+# Set playlist bookmarks
+global-key-set-bookmark1=
+global-key-set-bookmark2=
+global-key-set-bookmark3=
+global-key-set-bookmark4=
+global-key-set-bookmark5=
+global-key-set-bookmark6=
+global-key-set-bookmark7=
+global-key-set-bookmark8=
+global-key-set-bookmark9=
+global-key-set-bookmark10=
+key-set-bookmark1=
+key-set-bookmark2=
+key-set-bookmark3=
+key-set-bookmark4=
+key-set-bookmark5=
+key-set-bookmark6=
+key-set-bookmark7=
+key-set-bookmark8=
+key-set-bookmark9=
+key-set-bookmark10=
+
+# Play playlist bookmarks
+global-key-play-bookmark1=
+global-key-play-bookmark2=
+global-key-play-bookmark3=
+global-key-play-bookmark4=
+global-key-play-bookmark5=
+global-key-play-bookmark6=
+global-key-play-bookmark7=
+global-key-play-bookmark8=
+global-key-play-bookmark9=
+global-key-play-bookmark10=
+key-play-bookmark1=
+key-play-bookmark2=
+key-play-bookmark3=
+key-play-bookmark4=
+key-play-bookmark5=
+key-play-bookmark6=
+key-play-bookmark7=
+key-play-bookmark8=
+key-play-bookmark9=
+key-play-bookmark10=
+
+# Clear playlist
+global-key-clear-playlist=
+key-clear-playlist=
+
+# Reset subtitle size
+global-key-subtitle-text-scale-normal=
+key-subtitle-text-scale-normal=Command+0
+
+# Decrease subtitle size
+global-key-subtitle-text-scale-up=
+key-subtitle-text-scale-up=Command+Mouse Wheel Up
+
+# Increase subtitle size
+global-key-subtitle-text-scale-down=
+key-subtitle-text-scale-down=Command+Mouse Wheel Down
+
+# Playlist bookmarks 1-10
+bookmark1=
+bookmark2=
+bookmark3=
+bookmark4=
+bookmark5=
+bookmark6=
+bookmark7=
+bookmark8=
+bookmark9=
+bookmark10=
+
+
+[audiobargraph_v]
+audiobargraph_v-x=0
+audiobargraph_v-y=0
+audiobargraph_v-transparency=255
+audiobargraph_v-position=0
+audiobargraph_v-barWidth=10
+audiobargraph_v-barHeight=400
+
+[filesystem]
+list-special-files=1
+
+[freetype]
+freetype-rel-fontsize=20
