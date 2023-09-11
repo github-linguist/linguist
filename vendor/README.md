@@ -214,6 +214,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Gosu:** [jpcamara/Textmate-Gosu-Bundle](https://github.com/jpcamara/Textmate-Gosu-Bundle)
 - **Grace:** [zmthy/grace-tmbundle](https://github.com/zmthy/grace-tmbundle)
 - **Gradle:** [alkemist/gradle.tmbundle](https://github.com/alkemist/gradle.tmbundle)
+- **Gradle Kotlin DSL:** [nishtahir/language-kotlin](https://github.com/nishtahir/language-kotlin)
 - **Grammatical Framework:** [johnjcamilleri/language-gf](https://github.com/johnjcamilleri/language-gf)
 - **GraphQL:** [graphql/graphiql](https://github.com/graphql/graphiql)
 - **Graphviz (DOT):** [textmate/graphviz.tmbundle](https://github.com/textmate/graphviz.tmbundle)
