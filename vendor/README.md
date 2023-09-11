@@ -551,6 +551,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Texinfo:** [Alhadis/language-texinfo](https://github.com/Alhadis/language-texinfo)
 - **TextMate Properties:** [textmate/textmate.tmbundle](https://github.com/textmate/textmate.tmbundle)
 - **Thrift:** [textmate/thrift.tmbundle](https://github.com/textmate/thrift.tmbundle)
+- **Toit:** [toitware/ide-tools](https://github.com/toitware/ide-tools)
 - **Turing:** [Alhadis/language-turing](https://github.com/Alhadis/language-turing)
 - **Turtle:** [peta/turtle.tmbundle](https://github.com/peta/turtle.tmbundle)
 - **Twig:** [Anomareh/PHP-Twig.tmbundle](https://github.com/Anomareh/PHP-Twig.tmbundle)
