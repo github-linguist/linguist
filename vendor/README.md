@@ -556,6 +556,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Twig:** [Anomareh/PHP-Twig.tmbundle](https://github.com/Anomareh/PHP-Twig.tmbundle)
 - **Type Language:** [goodmind/language-typelanguage](https://github.com/goodmind/language-typelanguage)
 - **TypeScript:** [tree-sitter/tree-sitter-typescript](https://github.com/tree-sitter/tree-sitter-typescript) 🐌
+- **Typst:** [michidk/typst-grammar](https://github.com/michidk/typst-grammar)
 - **Unified Parallel C:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **Unity3D Asset:** [atom/language-yaml](https://github.com/atom/language-yaml)
 - **Unix Assembly:** [calculuswhiz/Assembly-Syntax-Definition](https://github.com/calculuswhiz/Assembly-Syntax-Definition)

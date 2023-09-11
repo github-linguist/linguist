@@ -992,6 +992,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_typ_by_heuristics
+    assert_heuristics({
+      "Typst" => all_fixtures("Typst", "*.typ"),
+      "XML" => all_fixtures("XML", "*.typ")
+    })
+  end
+
   def test_url_by_heuristics
     assert_heuristics({
       "INI" => Dir.glob("#{fixtures_path}/Generic/url/INI/*"),
