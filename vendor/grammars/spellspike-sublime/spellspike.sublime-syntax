@@ -1,0 +1,22 @@
+# spellspike.sublime-syntax
+# Language: SpellSpike
+# Description: An easy, modern, secure and extremely fast language based on JavaScript (Web Version) and Python (Together with JavaScript and Go in the Native Version).
+# Author: SwankyNoob
+
+%YAML 1.2
+---
+name: SpellSpike
+scope: source.spike
+
+contexts:
+  main:
+    - match: \b(if|else|while|for)\b
+      scope: keyword.control.spellspike
+    - match: \b(true|false)\b
+      scope: constant.language.spellspike
+    - match: \b\d+\b
+      scope: constant.numeric.spellspike
+    - match: "[a-zA-Z_][a-zA-Z0-9_]*"
+      scope: variable.other.spellspike
+    - match: "#.*"
+      scope: comment.line.number-sign.spellspike

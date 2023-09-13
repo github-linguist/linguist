@@ -1,0 +1,15 @@
+// Example usage:
+// Define a contract for a function that adds two numbers
+const addContract = new Contract(
+  // Precondition: both arguments should be numbers
+  (a, b) => typeof a === 'number' && typeof b === 'number',
+  // Postcondition: the result should be a number
+  result => typeof result === 'number'
+);
+
+// Define a function that adds two numbers and checks the contract
+function add(a, b) {
+  const result = a + b;
+  checkContract(addContract, [a, b], result);
+  return result;
+}

@@ -1,0 +1,17 @@
+match(myVariable) {
+  case "hello" => {
+    log("The variable contains the word 'hello'.");
+  }
+  case 42 => {
+    log("The variable is equal to 42.");
+  }
+  case [x, y] => {
+    log("The variable is a list with two elements: " + x + " and " + y + ".");
+  }
+  case {name: n, age: a} => {
+    log("The variable is an object with name: " + n + " and age: " + a + ".");
+  }
+  default => {
+    log("The variable does not match any of the specified patterns.");
+  }
+}

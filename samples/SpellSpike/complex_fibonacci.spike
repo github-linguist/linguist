@@ -1,0 +1,17 @@
+sta("startTime", performance.now()),
+    sta(
+        "result",
+        (function (e) {
+            let t = 0,
+                i = 1;
+            for (let n = 2; n <= e; n++) {
+                let e = t + i;
+                (t = i), (i = e);
+            }
+            return i;
+        })(4500)
+    ),
+    sta("endTime", performance.now()),
+    sta("elapsedTime", endTime - startTime),
+    log(`Fibonacci(4500) = ${result.toString()}`),
+    log(`Time taken: ${elapsedTime.toFixed(2)} milliseconds`);
