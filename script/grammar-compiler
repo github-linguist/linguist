@@ -3,7 +3,7 @@
 set -e
 cd "$(dirname "$0")/.."
 
-image="linguist/grammar-compiler:latest"
+image="ghcr.io/github/linguist/grammar-compiler:latest"
 mkdir -p grammars
 
 if [ -z "$REBUILD" ]; then

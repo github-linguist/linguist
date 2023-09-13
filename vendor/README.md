@@ -533,6 +533,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **SuperCollider:** [supercollider/language-supercollider](https://github.com/supercollider/language-supercollider)
 - **Svelte:** [sebastinez/svelte-atom](https://github.com/sebastinez/svelte-atom)
 - **Sway:** [FuelLabs/sway-vscode-plugin](https://github.com/FuelLabs/sway-vscode-plugin)
+- **Sweave:** [textmate/sweave.tmbundle](https://github.com/textmate/sweave.tmbundle)
 - **Swift:** [textmate/swift.tmbundle](https://github.com/textmate/swift.tmbundle)
 - **SystemVerilog:** [TheClams/SystemVerilog](https://github.com/TheClams/SystemVerilog)
 - **TL-Verilog:** [adamint/tlv-vscode](https://github.com/adamint/tlv-vscode)
@@ -556,6 +557,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Twig:** [Anomareh/PHP-Twig.tmbundle](https://github.com/Anomareh/PHP-Twig.tmbundle)
 - **Type Language:** [goodmind/language-typelanguage](https://github.com/goodmind/language-typelanguage)
 - **TypeScript:** [tree-sitter/tree-sitter-typescript](https://github.com/tree-sitter/tree-sitter-typescript) 🐌
+- **Typst:** [michidk/typst-grammar](https://github.com/michidk/typst-grammar)
 - **Unified Parallel C:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **Unity3D Asset:** [atom/language-yaml](https://github.com/atom/language-yaml)
 - **Unix Assembly:** [calculuswhiz/Assembly-Syntax-Definition](https://github.com/calculuswhiz/Assembly-Syntax-Definition)
