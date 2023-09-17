@@ -74,7 +74,7 @@ disambiguations:
   - language: Public Key
     pattern: '^(----[- ]BEGIN|ssh-(rsa|dss)) '
   - language: AsciiDoc
-    pattern: '^[=-]+(\s|\n)|\{\{[A-Za-z]'
+    pattern: '^[=-]+\s|\{\{[A-Za-z]'
   - language: AGS Script
     pattern: '^(\/\/.+|((import|export)\s+)?(function|int|float|char)\s+((room|repeatedly|on|game)_)?([A-Za-z]+[A-Za-z_0-9]+)\s*[;\(])'
 - extensions: ['.asm']
@@ -130,6 +130,8 @@ disambiguations:
     - (?i:^\s*(end\ssub)$)
     - (?i:^\s*(?=^function\s)(?:function\s*\w+\(.*?\)\s*as\s*\w*)|(?::\s*function\(.*?\)\s*as\s*\w*)$)
     - (?i:^\s*(end\sfunction)$)
+  - language: Bluespec BH
+    pattern: '^package\s+[A-Za-z_][A-Za-z0-9_'']*(?:\s*\(|\s+where)'
 - extensions: ['.builds']
   rules:
   - language: XML
@@ -161,7 +163,7 @@ disambiguations:
 - extensions: ['.cmp']
   rules:
   - language: Gerber Image
-    pattern: '^[DGMT][0-9]{2}\*\r?\n'
+    pattern: '^[DGMT][0-9]{2}\*(?:\r?\n|\r)'
 - extensions: ['.cs']
   rules:
   - language: Smalltalk
@@ -278,7 +280,7 @@ disambiguations:
 - extensions: ['.ftl']
   rules:
   - language: FreeMarker
-    pattern: '^(?:<|[a-zA-Z-][a-zA-Z0-9_-]+[ \t]+\w)|\$\{\w+[^\n]*?\}|^[ \t]*(?:<#--.*?-->|<#([a-z]+)(?=\s|>)[^>]*>.*?</#\1>|\[#--.*?--\]|\[#([a-z]+)(?=\s|\])[^\]]*\].*?\[#\2\])'
+    pattern: '^(?:<|[a-zA-Z-][a-zA-Z0-9_-]+[ \t]+\w)|\$\{\w+[^\r\n]*?\}|^[ \t]*(?:<#--.*?-->|<#([a-z]+)(?=\s|>)[^>]*>.*?</#\1>|\[#--.*?--\]|\[#([a-z]+)(?=\s|\])[^\]]*\].*?\[#\2\])'
   - language: Fluent
     pattern: '^-?[a-zA-Z][a-zA-Z0-9_-]* *=|\{\$-?[a-zA-Z][-\w]*(?:\.[a-zA-Z][-\w]*)?\}'
 - extensions: ['.g']
@@ -286,7 +288,7 @@ disambiguations:
   - language: GAP
     pattern: '\s*(Declare|BindGlobal|KeyDependentOperation|Install(Method|GlobalFunction)|SetPackageInfo)'
   - language: G-code
-    pattern: '^[MG][0-9]+\n'
+    pattern: '^[MG][0-9]+(?:\r?\n|\r)'
 - extensions: ['.gd']
   rules:
   - language: GAP
@@ -431,7 +433,7 @@ disambiguations:
   - language: Win32 Message File
     pattern: '(?i)^[ \t]*(?>\/\*\s*)?MessageId=|^\.$'
   - language: M4
-    pattern: '^dnl|^divert\((?:-?\d+)?\)|^\w+\(`[^\n]*?''[),]'
+    pattern: '^dnl|^divert\((?:-?\d+)?\)|^\w+\(`[^\r\n]*?''[),]'
   - language: Monkey C
     pattern: '\b(?:using|module|function|class|var)\s+\w'
 - extensions: ['.md']
@@ -476,7 +478,7 @@ disambiguations:
   - language: XML
     pattern: '^\s*<\?xml\s+version'
   - language: Gerber Image
-    pattern: '^[DGMT][0-9]{2}\*\r?\n'
+    pattern: '^[DGMT][0-9]{2}\*(?:\r?\n|\r)'
   - language: Text
     pattern: 'THE_TITLE'
 - extensions: ['.nl']
@@ -540,7 +542,7 @@ disambiguations:
 - extensions: ['.pod']
   rules:
   - language: Pod 6
-    pattern: '^[\s&&[^\n]]*=(comment|begin pod|begin para|item\d+)'
+    pattern: '^[\s&&[^\r\n]]*=(comment|begin pod|begin para|item\d+)'
   - language: Pod
 - extensions: ['.pp']
   rules:
@@ -579,7 +581,7 @@ disambiguations:
 - extensions: ['.q']
   rules:
   - language: q
-    pattern: '((?i:[A-Z.][\w.]*:\{)|(^|\n)\\(cd?|d|l|p|ts?) )'
+    pattern: '((?i:[A-Z.][\w.]*:\{)|^\\(cd?|d|l|p|ts?) )'
   - language: HiveQL
     pattern: '(?i:SELECT\s+[\w*,]+\s+FROM|(CREATE|ALTER|DROP)\s(DATABASE|SCHEMA|TABLE))'
 - extensions: ['.qs']
@@ -592,6 +594,8 @@ disambiguations:
   rules:
   - language: Rebol
     pattern: '(?i:\bRebol\b)'
+  - language: Rez
+    pattern: '(#include\s+["<](Types\.r|Carbon\/Carbon\.r)[">])|((resource|data|type)\s+''[A-Za-z0-9]{4}''\s+((\(.*\)\s+){0,1}){)'
   - language: R
     pattern: '<-|^\s*#'
 - extensions: ['.re']
@@ -652,7 +656,7 @@ disambiguations:
   - language: Solidity
     pattern: '\bpragma\s+solidity\b|\b(?:abstract\s+)?contract\s+(?!\d)[a-zA-Z0-9$_]+(?:\s+is\s+(?:[a-zA-Z0-9$_][^\{]*?)?)?\s*\{'
   - language: Gerber Image
-    pattern: '^[DGMT][0-9]{2}\*\r?\n'
+    pattern: '^[DGMT][0-9]{2}\*(?:\r?\n|\r)'
 - extensions: ['.sql']
   rules:
    # Postgres
@@ -686,7 +690,7 @@ disambiguations:
 - extensions: ['.stl']
   rules:
   - language: STL
-    pattern: '\A\s*solid(?=$|\s)(?:.|[\r\n])*?^endsolid(?:$|\s)'
+    pattern: '\A\s*solid(?:$|\s)[\s\S]*^endsolid(?:$|\s)'
 - extensions: ['.sw']
   rules:
   - language: Sway
@@ -764,10 +768,15 @@ disambiguations:
     # HACK: This is a contrived use of heuristics needed to address
     # an unusual edge-case. See https://git.io/JULye for discussion.
   - language: Text
+- extensions: ['.typ']
+  rules:
+  - language: Typst
+    pattern: '^#(import|show|let|set)'
+  - language: XML
 - extensions: ['.url']
   rules:
   - language: INI
-    pattern: '^\[InternetShortcut\](?:\r?\n|\r)(?>[^\s\[][^\n]*(?:\r?\n|\r))*URL='
+    pattern: '^\[InternetShortcut\](?:\r?\n|\r)(?>[^\s\[][^\r\n]*(?:\r?\n|\r))*URL='
 - extensions: ['.v']
   rules:
   - language: Coq

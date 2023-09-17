@@ -641,9 +641,28 @@ Bluespec:
   color: "#12223c"
   extensions:
   - ".bsv"
+  aliases:
+  - bluespec bsv
+  - bsv
   tm_scope: source.bsv
   ace_mode: verilog
+  codemirror_mode: verilog
+  codemirror_mime_type: text/x-systemverilog
   language_id: 36
+Bluespec BH:
+  type: programming
+  group: Bluespec
+  color: "#12223c"
+  extensions:
+  - ".bs"
+  aliases:
+  - bh
+  - bluespec classic
+  tm_scope: source.haskell
+  ace_mode: haskell
+  codemirror_mode: haskell
+  codemirror_mime_type: text/x-haskell
+  language_id: 641580358
 Boo:
   type: programming
   color: "#d4bec1"
@@ -2179,6 +2198,7 @@ GLSL:
   - ".tese"
   - ".vert"
   - ".vrx"
+  - ".vs"
   - ".vsh"
   - ".vshader"
   tm_scope: source.glsl
@@ -2524,6 +2544,15 @@ Gradle:
   tm_scope: source.groovy.gradle
   ace_mode: text
   language_id: 136
+Gradle Kotlin DSL:
+  group: Gradle
+  type: data
+  color: "#02303a"
+  extensions:
+  - ".gradle.kts"
+  ace_mode: text
+  tm_scope: source.kotlin
+  language_id: 432600901
 Grammatical Framework:
   type: programming
   aliases:
@@ -2847,6 +2876,8 @@ Hosts File:
   filenames:
   - HOSTS
   - hosts
+  aliases:
+  - hosts
   tm_scope: source.hosts
   ace_mode: text
   language_id: 231021894
@@ -3163,6 +3194,7 @@ JSON with Comments:
   extensions:
   - ".jsonc"
   - ".code-snippets"
+  - ".code-workspace"
   - ".sublime-build"
   - ".sublime-commands"
   - ".sublime-completions"
@@ -4866,6 +4898,8 @@ Option List:
   - ackrc
   filenames:
   - ".ackrc"
+  - ".rspec"
+  - ".yardopts"
   - ackrc
   - mocha.opts
   tm_scope: source.opts
@@ -5144,6 +5178,8 @@ Pic:
   extensions:
   - ".pic"
   - ".chem"
+  aliases:
+  - pikchr
   ace_mode: text
   codemirror_mode: troff
   codemirror_mime_type: text/troff
@@ -5894,6 +5930,14 @@ RenderScript:
   tm_scope: none
   ace_mode: text
   language_id: 323
+Rez:
+  type: programming
+  extensions:
+  - ".r"
+  tm_scope: source.rez
+  ace_mode: text
+  color: "#FFDAB3"
+  language_id: 498022874
 Rich Text Format:
   type: markup
   extensions:
@@ -6791,6 +6835,14 @@ Sway:
   codemirror_mode: rust
   codemirror_mime_type: text/x-rustsrc
   language_id: 271471144
+Sweave:
+  type: prose
+  color: "#198ce7"
+  extensions:
+  - ".rnw"
+  tm_scope: text.tex.latex.sweave
+  ace_mode: tex
+  language_id: 558779190
 Swift:
   type: programming
   color: "#F05138"
@@ -7120,6 +7172,16 @@ TypeScript:
   codemirror_mode: javascript
   codemirror_mime_type: application/typescript
   language_id: 378
+Typst:
+  type: programming
+  color: "#239dad"
+  aliases:
+  - typ
+  extensions:
+  - ".typ"
+  tm_scope: source.typst
+  ace_mode: text
+  language_id: 704730682
 Unified Parallel C:
   type: programming
   color: "#4e3617"
@@ -7730,6 +7792,7 @@ XML:
   - ".tml"
   - ".ts"
   - ".tsx"
+  - ".typ"
   - ".ui"
   - ".urdf"
   - ".ux"

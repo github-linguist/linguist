@@ -26,7 +26,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'minitest', '~> 5.15'
   s.add_development_dependency 'rake-compiler', '~> 0.9'
-  s.add_development_dependency 'mocha', '~> 1.3'
+  s.add_development_dependency 'mocha', '~> 2.1'
   s.add_development_dependency 'plist', '~>3.1'
   s.add_development_dependency 'pry', '~> 0.14'
   s.add_development_dependency 'rake', '~> 13.0'

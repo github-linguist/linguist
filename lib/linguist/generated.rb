@@ -72,6 +72,7 @@ module Linguist
       generated_yarn_plugnplay? ||
       godeps? ||
       generated_by_zephir? ||
+      htmlcov? ||
       minified_files? ||
       has_source_map? ||
       source_map? ||
@@ -795,6 +796,15 @@ module Linguist
       lines[0].match?(/^# typed:/) &&
       lines[2].include?("DO NOT EDIT MANUALLY") &&
       lines[4].match?(/^# Please.*run.*`.*tapioca/)
+    end
+
+    # Internal: Is this an HTML coverage report?
+    #
+    # Tools like coverage.py generate HTML reports under an `htmlcov` directory.
+    #
+    # Returns true or false.
+    def htmlcov?
+      !!name.match(/(?:^|\/)htmlcov\//)
     end
 
     # Internal: Extract a Hash of name/content pairs from an HTML <meta> tag
