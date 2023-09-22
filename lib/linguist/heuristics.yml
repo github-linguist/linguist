@@ -320,6 +320,12 @@ disambiguations:
   rules:
   - language: GSC
     named_pattern: gsc
+- extensions: ['.gts']
+  rules:
+  - language: Gerber Image
+    pattern: '^G0.'
+  - language: Glimmer
+    negative_pattern: '^G0.'
 - extensions: ['.h']
   rules:
   - language: Objective-C
