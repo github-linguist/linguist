@@ -510,6 +510,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_gts_by_heuristics
+    assert_heuristics({
+      "Gerber Image" => all_fixtures("Gerber Image", "*.gts"),
+      "Glimmer TS" => all_fixtures("Glimmer TS", "*.gts"),
+    })
+  end
+
   def test_h_by_heuristics
     assert_heuristics({
       "Objective-C" => all_fixtures("Objective-C", "*.h"),
