@@ -6851,7 +6851,9 @@ SystemVerilog:
   extensions:
   - ".sv"
   - ".svh"
-  - ".vh"
+  - ".svi"
+  - ".svp"
+  - ".vlib"
   tm_scope: source.systemverilog
   ace_mode: verilog
   codemirror_mode: verilog
@@ -7346,7 +7348,17 @@ Verilog:
   color: "#b2b7f8"
   extensions:
   - ".v"
+  - ".v95"
+  - ".v95p"
+  - ".vcfg"
   - ".veo"
+  - ".verilog"
+  - ".vh"
+  - ".vlg"
+  - ".vlt"
+  - ".vp"
+  - ".vs"
+  - ".vt"
   tm_scope: source.verilog
   ace_mode: verilog
   codemirror_mode: verilog
