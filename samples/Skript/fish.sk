@@ -1,0 +1,62 @@
+
+#
+# An example of opening a chest inventory with an item.
+# Players will be able to take the item out.
+#
+
+command /simplechest:
+    permission: skript.example.chest
+    trigger:
+        set {_chest} to a new chest inventory named "Simple Chest"
+        set slot 0 of {_chest} to apple # Slots are numbered 0, 1, 2...
+        open {_chest} to player
+
+#
+# An example of listening for click events in a chest inventory.
+# This can be used to create fancy button-style interfaces for users.
+#
+
+command /chestmenu:
+    permission: skript.example.menu
+    trigger:
+        set {_menu} to a new chest inventory with 1 row named "Simple Menu"
+        set slot 4 of {_menu} to stone named "Button" # Slots are numbered 0, 1, 2...
+        open {_menu} to player
+
+on inventory click: # Listen for players clicking in an inventory.
+    name of event-inventory is "Simple Menu" # Make sure it's our menu.
+    cancel event
+    if index of event-slot is 4: # The button slot.
+        send "You clicked the button."
+    else:
+        send "You didn't click the button."
+
+#
+# An example of making and filling a fancy inventory with a function.
+# This demonstrates another way you can use chest inventories, and a safe way of listening to specific ones.
+#
+
+aliases:
+    menu items = TNT, lava bucket, string, coal, oak planks
+
+function makeMenu(name: text, rows: number) :: inventory:
+    set {_gui} to a new chest inventory with {_rows} rows with name {_name}
+    loop {_rows} * 9 times: # Fill the inventory with random items.
+        set slot loop-number - 1 of {_gui} to random item out of menu items
+    return {_gui}
+
+command /fancymenu:
+    permission: skript.example.menu
+    trigger:
+        set {_menu} to makeMenu("hello", 4)
+        add {_menu} to {my inventories::*} # Prepare to listen to this inventory.
+        open {_menu} to player
+
+on inventory click: # Listen for players clicking in any inventory.
+    if {my inventories::*} contains event-inventory: # Make sure it's our menu.
+        cancel event
+        send "You clicked slot %index of event-slot%!"
+
+on inventory close: # No longer need to listen to this inventory.
+    {my inventories::*} contains event-inventory
+    remove event-inventory from {my inventories::*}

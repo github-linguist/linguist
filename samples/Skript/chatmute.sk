@@ -1,0 +1,21 @@
+#This skript is made by XI_DEMO_IX!
+#If you have any issuses please contact X̸I̶_̵D̷E̷M̷O̷_̸I̸X̴#8207 on discord!
+
+command /mutechat:
+    permission: mute.chat
+    permission message: "&cYou do not have permission!"
+    trigger:
+        if {chatMuted} is true:
+            set {chatMuted} to false
+            broadcast "&b[&cServerName&b]&r &6Chat has been unmuted by %player%!"
+        else:
+            set {chatMuted} to true
+            broadcast "&b[&cServerName&b]&r &6Chat has been muted by %player%!"
+
+on chat:
+    if {chatMuted} is true:
+        player doesn't have permission "mute.talk":
+            send "&b[&cServerName&b]&r &6Chat is currently muted!"
+            cancel event
+        else if player has permission "mute.talk":
+            uncancel event
