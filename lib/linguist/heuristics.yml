@@ -615,6 +615,11 @@ disambiguations:
     pattern:
     - '^\s*(let|module|type)\s+\w*\s+=\s+'
     - '^\s*(?:include|open)\s+\w+\s*$'
+- extension: ['.resource']
+  rules:
+  - language: RobotFramework
+    pattern:
+    - '^\*{3} (Settings|Variables|Keywords) \*{3}$'
 - extensions: ['.rno']
   rules:
   - language: RUNOFF
