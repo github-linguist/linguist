@@ -1,30 +1,38 @@
 /* This program follows the GPUv3 license outlined, here: https://github.com/AleoHQ/snarkVM/blob/testnet3/LICENSE.md */
 
-program twoadicity.aleo {
-    // This function calculates the number of powers of two ("twoadicity")
-    // in the prime factorization of the input number `n`.
-    transition main(public n: field) -> u8 {
-        let remaining_n: field = n;
-        let powers_of_two: u8 = 0u8;
-        // Since field ints are 253 bits or fewer, any number in the field
-        // will have at most 252 powers of two in its prime factoring.
-        for i:u8 in 0u8..252u8 {
-            if is_even_and_nonzero(remaining_n) {
-                remaining_n = remaining_n / 2field;
-                powers_of_two = powers_of_two + 1u8;
-            }
-        }
-        return powers_of_two;
-    }
+program arrays_in_finalize.aleo;
 
-    /* We define the is_even predicate on fields as follows.
-       If n is even and nonzero, clearly n/2 < n.
-       If n is odd, n-p is a field-equivalent negative number that is even, and
-       (n-p)/2 is a field-equivalent negative number closer to 0, greater than n-p.
-       If we add p to both of these negative numbers, we have
-       n/2 = (n-p)/2 + p = (n+p)/2 is greater than n and still less than p.
-    */
-    function is_even_and_nonzero (n: field) -> bool {
-        return n / 2field < n;
-    }
-}
+struct tree:
+    left as [[boolean; 4u32]; 1u32];
+    right as [[boolean; 4u32]; 1u32];
+
+function test_arrays:
+    input r0 as [[boolean; 4u32]; 1u32].public;
+    input r1 as [[boolean; 4u32]; 1u32].public;
+    cast r0 r1 into r2 as tree;
+    and r2.left[0u32][0u32] r2.right[0u32][0u32] into r3;
+    and r2.left[0u32][1u32] r2.right[0u32][1u32] into r4;
+    and r2.left[0u32][2u32] r2.right[0u32][2u32] into r5;
+    and r2.left[0u32][3u32] r2.right[0u32][3u32] into r6;
+    cast r3 r4 r5 r6 into r7 as [boolean; 4u32];
+    cast r7 into r8 as [[boolean; 4u32]; 1u32];
+    async test_arrays r0 r1 into r9;
+    output r0 as [[boolean; 4u32]; 1u32].public;
+    output r1 as [[boolean; 4u32]; 1u32].public;
+    output r8 as [[boolean; 4u32]; 1u32].public;
+    output r2 as tree.private;
+    output r9 as arrays_in_finalize.aleo/test_arrays.future;
+
+finalize test_arrays:
+    input r0 as [[boolean; 4u32]; 1u32].public;
+    input r1 as [[boolean; 4u32]; 1u32].public;
+    and r0[0u32][0u32] r1[0u32][0u32] into r2;
+    and r0[0u32][1u32] r1[0u32][1u32] into r3;
+    and r0[0u32][2u32] r1[0u32][2u32] into r4;
+    and r0[0u32][3u32] r1[0u32][3u32] into r5;
+    cast r2 r3 r4 r5 into r6 as [boolean; 4u32];
+    cast r6 into r7 as [[boolean; 4u32]; 1u32];
+    assert.eq r7[0u32][0u32] false;
+    assert.eq r7[0u32][1u32] false;
+    assert.eq r7[0u32][2u32] false;
+    assert.eq r7[0u32][3u32] false;
