@@ -1,4 +1,4 @@
-/* This program follows the GPUv3 license outlined, here: https://github.com/AleoHQ/snarkVM/blob/testnet3/LICENSE.md */
+/* This program follows the license outlined, here: https://github.com/AleoHQ/snarkVM/blob/testnet3/LICENSE.md */
 
 program sign_verify.aleo;
 

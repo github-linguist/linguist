@@ -1,4 +1,4 @@
-// This program follows the GPUv3 license outlined, here: https://github.com/AleoHQ/leo/blob/testnet3/LICENSE.md
+// This program follows the license outlined, here: https://github.com/AleoHQ/leo/blob/testnet3/LICENSE.md
 
 program twoadicity.aleo {
     // This function calculates the number of powers of two ("twoadicity")
