@@ -46,13 +46,13 @@ class TestPedantic < Minitest::Test
 
   def test_heuristics_tests_are_sorted
     file = File.expand_path("../test_heuristics.rb", __FILE__)
-    tests = open(file).each.grep(/^ *def test_[0-9a-z_]+_by_heuristics/)
+    tests = File.open(file).each.grep(/^ *def test_[0-9a-z_]+_by_heuristics/)
     assert_sorted tests
   end
 
   def test_heuristics_tests_are_exhaustive
     file = File.expand_path("../test_heuristics.rb", __FILE__)
-    tests = open(file).each.grep(/^ *def test_[0-9a-z_]+_by_heuristics/)
+    tests = File.open(file).each.grep(/^ *def test_[0-9a-z_]+_by_heuristics/)
     tests = tests.map { |s| s.match(/test_(.*)_by_heuristic/).captures[0] }
 
     extensions = HEURISTICS['disambiguations'].map { |r| r['extensions'] }
