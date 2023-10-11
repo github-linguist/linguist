@@ -386,7 +386,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Odin:** [odin-lang/sublime-odin](https://github.com/odin-lang/sublime-odin)
 - **Opa:** [mads379/opa.tmbundle](https://github.com/mads379/opa.tmbundle)
 - **Opal:** [artifactz/sublime-opal](https://github.com/artifactz/sublime-opal)
-- **Open Policy Agent:** [tsandall/vscode-opa](https://github.com/tsandall/vscode-opa)
+- **Open Policy Agent:** [open-policy-agent/vscode-opa](https://github.com/open-policy-agent/vscode-opa)
 - **OpenCL:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **OpenEdge ABL:** [chriscamicas/abl-tmlanguage](https://github.com/chriscamicas/abl-tmlanguage)
 - **OpenQASM:** [tareqdandachi/language-qasm](https://github.com/tareqdandachi/language-qasm)
