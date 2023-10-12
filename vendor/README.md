@@ -202,6 +202,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Git Config:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **Git Revision List:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
 - **Gleam:** [gleam-lang/tree-sitter-gleam](https://github.com/gleam-lang/tree-sitter-gleam) 🐌
+- **Glimmer JS:** [lifeart/vsc-ember-syntax](https://github.com/lifeart/vsc-ember-syntax)
 - **Glyph:** [textmate/tcl.tmbundle](https://github.com/textmate/tcl.tmbundle)
 - **Glyph Bitmap Distribution Format:** [Alhadis/language-fontforge](https://github.com/Alhadis/language-fontforge)
 - **Gnuplot:** [mattfoster/gnuplot-tmbundle](https://github.com/mattfoster/gnuplot-tmbundle)
