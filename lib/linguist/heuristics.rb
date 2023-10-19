@@ -30,6 +30,8 @@ module Linguist
       end
 
       [] # No heuristics matched
+    rescue Regexp::TimeoutError
+      [] # Return nothing if we have a bad regexp which leads to a timeout enforced by Regexp.timeout in Ruby 3.2 or later
     end
 
     # Public: Get all heuristic definitions
