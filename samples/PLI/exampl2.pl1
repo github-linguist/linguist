@@ -1,0 +1,235 @@
+ SOIPLCV: PROC(L_PARMS)   OPTIONS(MAIN) REORDER;
+
+    DCL L_PARMS               CHAR(100) VARYING;
+
+ /********************************************************************/
+ /* COMPOPT: X(F),SOURCE,GN                                          */
+ /* LINKOPT: LIST                                                    */
+ /********************************************************************/
+
+ /********************************************************************/
+ /*                                                                  */
+ /*       INPUT/OUTPUT FILES                                         */
+ /*                                                                  */
+ /********************************************************************/
+ DCL SOINIPLN            SEQUENTIAL RECORD FILE INPUT;
+ DCL SOINOPLT            SEQUENTIAL RECORD FILE OUTPUT;
+ DCL SYSPRINT            STREAM OUTPUT;
+
+ DCL SOISG02             EXTERNAL ENTRY;
+
+       ++INCLUDE SOIYCYR
+       ++INCLUDE SOIYIPLT
+       ++INCLUDE PSQY5INF
+
+ /*********************************************************************/
+ /*                                                                   */
+ /*                       C O N S T A N T S                           */
+ /*                                                                   */
+ /*********************************************************************/
+ DCL C_COMMA               CHAR(01) VALUE(',');
+ DCL C_EQUAL               CHAR(01) VALUE('=');
+ DCL C_YES                 BIT(01)  VALUE('1'B);
+
+
+ /*********************************************************************/
+ /*                                                                   */
+ /*  WORKING STORAGE VARIABLES                                        */
+ /*                                                                   */
+ /*********************************************************************/
+ DCL W_TRACE               CHAR(01)      INIT('N');
+ DCL W_TYPE                CHAR(01)      INIT('P');
+ DCL III                   FIXED BIN(31) INIT(0);
+ DCL S_EOF_PLT             BIT(01)       INIT('0'B);
+ DCL W_DATE_YR             PIC '9999';
+ DCL W_YEAR1               CHAR(01)      INIT(' ');
+ DCL W_YEAR4               CHAR(04)      INIT(' ');
+ DCL W_RC                  FIXED BIN(31) INIT(0);
+
+ /*********************************************************************/
+ /*                                                                   */
+ /*                        A C C U M U L A T O R S                    */
+ /*                                                                   */
+ /*********************************************************************/
+ DCL A_READ_CNT            FIXED BIN(31) INIT(0);
+ DCL A_WRITE_CNT           FIXED BIN(31) INIT(0);
+
+
+ /*********************************************************************/
+ /*                                                                   */
+ /*      BUILTIN FUNCTIONS                                            */
+ /*                                                                   */
+ /*********************************************************************/
+
+ DCL ADDR         BUILTIN;
+ DCL INDEX        BUILTIN;
+ DCL NULL         BUILTIN;
+ DCL PLIRETC      BUILTIN;
+ DCL PLIRETV      BUILTIN;
+ DCL SUBSTR       BUILTIN;
+ DCL DATETIME     BUILTIN;
+
+ /*********************************************************************/
+ /*                                                                   */
+ /*  ERROR ROUTINES                                                   */
+ /*                                                                   */
+ /*********************************************************************/
+
+ ON ERROR
+ SNAP
+ BEGIN;
+    ON ERROR SYSTEM;                /* TO AVOID ERROR LOOP        */
+    SIGNAL ERROR;                  /* TERMINATE PROGRAM           */
+ END;
+
+ ON ENDFILE(SOINIPLN) S_EOF_PLT = C_YES;
+
+ /*********************************************************************/
+ /*                                                                   */
+1/*  INITIALIZATION                                                   */
+ /*                                                                   */
+ /*********************************************************************/
+
+ PUT SKIP LIST('ENTERED PROGRAM SOIPPLCV');
+ OPEN FILE(SOINIPLN),
+      FILE(SOINOPLT);
+
+ CALL PARM_PARSE;
+
+ W_DATE_YR = SUBSTR(DATETIME,1,4);
+
+ READ FILE(SOINIPLN) INTO (SEQ_INFO_REC);
+
+ IF S_EOF_PLT THEN
+   DO;
+     PUT SKIP LIST('EMPTY INPUT FILE!!!!');
+     W_RC = 4;
+     GOTO FINALIZATION;
+   END;
+
+
+ /*********************************************************************/
+ /*                                                                   */
+ /*  MAIN PROCESSING                                                  */
+ /*                                                                   */
+ /*********************************************************************/
+
+ DO WHILE(^S_EOF_PLT);
+   PLANT_FILE_REC = '';
+   A_READ_CNT     = A_READ_CNT + 1;
+   IF SIR_SEQ_IN_PROCESS = '1' THEN
+     PFR_SEQINPROC = 'Y';
+   ELSE
+     PFR_SEQINPROC = 'N';
+
+   PFR_CPL       = SIR_CPL;
+   PFR_PRODYEAR  = SIR_PROD_YR4;
+   PFR_MGOFLAG   = SIR_ISP_FLAG;
+   PFR_LCAFLAG   = SIR_LCA_FLAG;
+   PFR_PLANTNAME = SIR_PLANT_NAME;
+   PFR_VTIMS_IND = SIR_FILLER6;
+   PFR_LGS#      = 0;
+   PFR_INITSEQ#  = 0;
+   PFR_MAXSEQ#   = 0;
+   PFR_THRESHOLD = 0;
+   PFR_AUTO_ROLL = 'N';
+   PFR_DATA_TYPE = W_TYPE;
+   PFR_OECFLAG   = SIR_OEC_FLAG;
+   PFR_RPO       = SIR_RPO;
+
+   DO III = 1 TO SIR_BOOK_COUNT;
+     W_YEAR1       = SIR_BI_YEAR(III);
+     CALL SOISCYR(W_DATE_YR,W_YEAR1,W_YEAR4);
+
+     PFR_MODELYEAR = W_YEAR4;
+     PFR_POMSBOOK  = SIR_BI_BOOK(III);
+     A_WRITE_CNT   = A_WRITE_CNT + 1;
+
+     IF W_TRACE = 'Y' THEN
+       DO;
+         PUT SKIP LIST('YEAR    = ',PFR_MODELYEAR);
+         PUT SKIP LIST('BOOK    = ',PFR_POMSBOOK);
+         PUT SKIP LIST('FOR CPL = ',PFR_CPL);
+         PUT SKIP;
+       END;
+
+     WRITE FILE(SOINOPLT) FROM(PLANT_FILE_REC);
+   END; /* DO WHILE */
+
+   READ FILE(SOINIPLN) INTO (SEQ_INFO_REC);
+ END; /* DO WHILE */
+
+ FINALIZATION:
+
+ PUT SKIP LIST('*******************************************');
+ PUT SKIP LIST(' # OF INPUT RECORDS READ    : ',A_READ_CNT);
+ PUT SKIP LIST(' # OF OUTPUT RECORDS WRITTEN: ',A_WRITE_CNT);
+ PUT SKIP LIST('*******************************************');
+
+ PUT SKIP LIST('LEAVING PROGRAM SOIPPLCV');
+
+ CALL PLIRETC(W_RC);
+
+ CLOSE FILE(SOINIPLN),
+       FILE(SOINOPLT),
+       FILE(SYSPRINT);
+
+ /********************************************************************/
+ /*    THIS ROUTINE WILL PARSE THE PARM STRING AND SET CONTROLLING   */
+ /*  VARIABLES ACCORDINGLY.                                          */
+ /********************************************************************/
+ PARM_PARSE: PROC;
+
+ DECLARE
+   W_CURRENT                  CHARACTER(100) VARYING,
+   W_REST                     CHARACTER(100) VARYING,
+   W_PARM                     CHARACTER(100) VARYING,
+   W_VALUE                    CHARACTER(100) VARYING;
+
+ CALL SOISG02(L_PARMS,C_COMMA,W_CURRENT,W_REST);
+ DO WHILE (W_CURRENT||W_REST ^= '');
+   CALL SOISG02(W_CURRENT,C_EQUAL,W_PARM,W_VALUE);
+   SELECT (W_PARM);
+     WHEN ('TRACE') DO;
+       W_TRACE                 = W_VALUE;
+     END;
+     WHEN ('TYPE') DO;
+       IF W_VALUE ^= ' ' THEN
+          W_TYPE                  = W_VALUE;
+     END;
+     OTHERWISE DO;
+       PUT SKIP LIST ('** WARNING ** --> INVALID PARM IGNORED',
+                      W_CURRENT);
+     END;
+   END;
+   CALL SOISG02(W_REST,C_COMMA,W_CURRENT,W_REST);
+ END;
+
+ IF W_TYPE ^= 'P' &
+    W_TYPE ^= 'M' &
+    W_TYPE ^= 'B' THEN
+   DO;
+     PUT SKIP LIST('********************************');
+     PUT SKIP LIST('ERROR!!!! INVALID TYPE PARAMETER');
+     PUT SKIP LIST('VALID PARAMETERS ARE: P/M/B ');
+     PUT SKIP LIST('********************************');
+           DISPLAY('********************************');
+           DISPLAY('ERROR!!!! INVALID TYPE PARAMETER');
+           DISPLAY('VALID PARAMETERS ARE: P/M/B ');
+           DISPLAY('********************************');
+     SIGNAL ERROR;
+   END;
+
+ IF W_TRACE ^= 'Y' &
+    W_TRACE ^= 'N' THEN
+   DO;
+     W_TRACE = 'N';
+     PUT SKIP LIST('*********************************');
+     PUT SKIP LIST('WARNING!! TRACE PARAMETER INVALID');
+     PUT SKIP LIST('TRACE CONVERTED TO "N"');
+     PUT SKIP LIST('*********************************');
+   END;
+
+ END PARM_PARSE;
+
+ END; /* SOIPLCV */

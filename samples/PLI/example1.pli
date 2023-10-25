@@ -1,0 +1,204 @@
+SOISEQ6: PROC OPTIONS(MAIN) REORDER;
+
+ /********************************************************************/
+ /* COMPOPT: X(F),SOURCE                                             */
+ /* LINKOPT: MAP                                                     */
+ 
+1/********************************************************************/
+ /*     BUILTIN FUNCTIONS                                            */
+ /********************************************************************/
+ DCL (SUBSTR,STRING,ADDR,VERIFY,PLIRETV,PLIRETC)          BUILTIN;
+ DCL (LOW,HIGH,LENGTH,INDX)                               BUILTIN;
+
+ DCL NULL                                                 BUILTIN;
+
+ /********************************************************************/
+ /*      EXTERNAL  REFERENCE                                         */
+ /********************************************************************/
+ DCL SOIS5VI             EXTERNAL ENTRY;
+
+ /********************************************************************/
+ /*        FILES                                                     */
+ /********************************************************************/
+ DCL SYSPRINT             FILE PRINT;
+ DCL ICOMTXN              FILE RECORD  INPUT;
+ DCL OE33TXN              FILE RECORD OUTPUT;
+
+ /********************************************************************/
+ /*                 D A T E  R O U T I N E S                         */
+ /********************************************************************/
+       ++INCLUDE SOIYDTX
+
+ /********************************************************************/
+ /*    FILE   LAYOUTS                                                */
+ /********************************************************************/
+       ++INCLUDE SOIYCOMS
+
+       ++INCLUDE SOIY660A
+
+       ++INCLUDE SOIY660Z
+
+       ++INCLUDE SOIY560
+
+ DCL 01 OUT_REC_AREA,
+       05  OUT_AREA       CHAR(2704) VARYING;
+ /********************************************************************/
+ /*   SWITCHES                                                       */
+ /********************************************************************/
+ DCL S_EOF_INPUT          BIT(1)        INIT('0'B);
+
+ /********************************************************************/
+ /*   WORK AREAS                                                     */
+ /********************************************************************/
+
+ DCL W_RETURN_CODE        FIXED BIN(31) INIT(0);
+ DCL W_RD_CNT             FIXED BIN(31) INIT(0);
+ DCL W_WR_CNT             FIXED BIN(31) INIT(0);
+
+ DCL W_CHECK_FUNC      CHAR(04)      INIT('CALC');
+ DCL W_CHECK_KEY       CHAR(06)      INIT(' ');
+ DCL W_PARTIAL_        CHAR(11)      INIT(' ');
+ DCL W_SERIAL_CHAR        CHAR(06);
+ DCL W_CHECK_DIGIT        CHAR(01);
+ DCL W_MODEL_YEAR         CHAR(01);
+ DCL W_PBOOK           CHAR(02);
+
+ /*******************************************************************/
+ /*      ONCODE   HANDLING   SECTION                                */
+ /*******************************************************************/
+  ON ERROR BEGIN;
+        ON ERROR SYSTEM;
+        DISPLAY ('***    ( SOIPSEQ6 ABENDED )            ***');
+        DISPLAY ('***      INPUT  TOTAL   : '||W_RD_CNT);
+        DISPLAY ('***      OUTPUT TOTAL   : '||W_WR_CNT);
+        PUT SKIP LIST('***    ( SOIPSEQ6 ABENDED )              ***');
+      END;
+
+  ON ENDFILE(ICOMTXN)  BEGIN;
+                        S_EOF_INPUT = '1'B;
+                        IF W_RD_CNT = 0 THEN
+                           DO;
+                             PUT SKIP LIST('*** THE TXN FILE IS EMPTY'||
+                                           '***');
+                             W_RETURN_CODE = 4;
+                           END;
+                       END;
+
+ /********************************************************************/
+ /*    INITIALIZATION                                                */
+ /********************************************************************/
+  OPEN FILE(ICOMTXN);
+  OPEN FILE(OE33TXN);
+
+  @SOIY660    = ADDR(OUT_REC_AREA);
+
+  READ FILE(ICOMTXN)   SET(@SOIYCOMS);      /* READ FIRST INPUT */
+
+ /********************************************************************/
+ /*   MAINLINE                                                       */
+ /********************************************************************/
+  DO WHILE ( ^S_EOF_INPUT );
+
+      W_RD_CNT          =  W_RD_CNT + 1;
+      W_MODEL_YEAR      =  SUBSTR(GCM_MODEL_YEAR,4,1);
+      W_PBOOK        =  GCM_PBOOK;
+
+     /*** CHECK  SERIAL NUMBER ****/
+      IF GCM__SERIAL             ^= ' ' THEN
+          DO;
+            CALL C1000_REFORMATTED_INFO;
+
+            WRITE FILE(OE33TXN)  FROM(_ASSIGN_TXN);
+            W_WR_CNT          =  W_WR_CNT + 1;
+            _ASSIGN_TXN    = '';
+          END;
+
+      READ FILE(ICOMTXN)   SET(@SOIYCOMS);
+
+  END;
+
+ /*******************************************************************/
+ /*     FINALIZATION                                                */
+ /*******************************************************************/
+  PUT SKIP LIST('****** SOIPSEQ6 ( COMPLETED ) *********');
+  PUT SKIP EDIT('****      INPUT  TOTAL  : ' || W_RD_CNT  )(A);
+  PUT SKIP EDIT('****      OUTPUT TOTAL  : ' || W_WR_CNT  )(A);
+
+  CLOSE FILE(ICOMTXN);
+  CLOSE FILE(OE33TXN);
+
+  CALL PLIRETC(W_RETURN_CODE);
+
+ C1000_REFORMATTED_INFO: PROC REORDER;
+
+      PTK_KEY                    =  GCM_ORDER_NBR;
+      PTK_ACTIVITY               =  C_ASSIGN_VEH_ID#;
+      /*** GET BINARY DATE **********/
+      IF GCM_E33_DATE = '  ' THEN
+           DO;
+             PTK_DATE   = 0;
+           END;
+      ELSE DO;
+             DTX_GREGORIAN = SUBSTR(GCM_E33_DATE,5,4) ||
+                             SUBSTR(GCM_E33_DATE,3,2);
+             DTX.REQUEST_CODE = 'GB';
+             CALL SOISDTX(DTX);
+             IF PLIRETV() > 0  THEN DO;
+                                     PTK_DATE   = 0;
+                                    END;
+                               ELSE DO;
+                                     PTK_DATE   = DAY_TOTAL;
+                                    END;
+         END;
+
+      PTK_SOURCE                 =  GCM_SELL_DIV;
+      PTK_BBY                    =  W_PBOOK||W_MODEL_YEAR;
+      ACT__BBY                =  W_PBOOK||W_MODEL_YEAR;
+      ACT__FRAME              =  GCM__SERIAL;
+
+      /********************************************/
+      /* CHECK DIGIT - FOR NA  STYLES, DO A    */
+      /* CHECK DIGIT CALC, OTHERWISE USE CURRENT  */
+      /* VALUE.                                   */
+      /********************************************/
+
+      IF GCM__STYLE_IND = 'N' THEN
+         DO;
+
+            SUBSTR(W_CHECK_KEY,1,3) =  GCM_CPL;
+            SUBSTR(W_CHECK_KEY,4,2) =  'BB';
+            SUBSTR(W_CHECK_KEY,6,1) =  GCM__MANUFACTURER;
+            W_PARTIAL_              =  GCM__COUNTRY ||
+                                          GCM__MANUFACTURER ||
+                                          GCM__MAKE    ||
+                                          GCM__MODEL   ||
+                                          ' '             ||
+                                          GCM__YR      ||
+                                          GCM__PLT;
+
+            W_SERIAL_CHAR              =  GCM__SERIAL;
+
+           /* GET CHECK DIGIT BY -SERIAL-NUMBER */
+            CALL SOIS5VI(W_CHECK_FUNC,
+                         W_CHECK_KEY,
+                         W_PARTIAL_,
+                         W_SERIAL_CHAR,
+                         W_CHECK_DIGIT);
+
+            IF PLIRETV() = 0  THEN
+                 DO;
+                   ACT__CHECK_DIGIT = W_CHECK_DIGIT;
+                 END;
+             ELSE DO;
+                   ACT__CHECK_DIGIT = ' ';
+                 END;
+         END;
+      ELSE
+         DO;
+            ACT__CHECK_DIGIT = GCM_CHECK_DIGIT_FILLER;
+         END;
+
+ END C1000_REFORMATTED_INFO;
+
+ END SOISEQ6;
+ 
