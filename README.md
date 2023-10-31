@@ -1,226 +1,104 @@
-# Linguist
+import { createMiddlewareSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import type { NextRequest, NextResponse } from 'next/server';
 
-[![Actions Status](https://github.com/github/linguist/workflows/Run%20Tests/badge.svg)](https://github.com/github/linguist/actions) 
+import { getOrRefreshAccessToken } from '@/lib/integrations/github.edge';
+import { OAuthToken } from '@/types/types';
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/github-linguist/linguist)
+export const config = {
+  runtime: 'edge',
+  maxDuration: 300,
+};
 
-This library is used on GitHub.com to detect blob languages, ignore binary or vendored files, suppress generated files in diffs, and generate language breakdown graphs.
+const allowedMethods = ['POST'];
 
-## Documentation
+const fetchArchiveStream = async (
+  owner: string,
+  repo: string,
+  branch: string,
+  accessToken: string | undefined,
+) => {
+  return fetch(
+    `https://api.github.com/repos/${owner}/${repo}/zipball/${branch}`,
+    {
+      headers: {
+        Accept: 'application/vnd.github+json',
+        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
+    },
+  );
+};
 
-- [How Linguist works](/docs/how-linguist-works.md)
-- [Change Linguist's behaviour with overrides](/docs/overrides.md)
-- [Troubleshooting](/docs/troubleshooting.md)
-- [Contributing guidelines](CONTRIBUTING.md)
+export default async function handler(req: NextRequest, res: NextResponse) {
+  if (!req.method || !allowedMethods.includes(req.method)) {
+    const headers = new Headers();
+    headers.append('Allow', JSON.stringify(allowedMethods));
+    return new Response(`Method ${req.method} Not Allowed`, {
+      status: 405,
+      headers,
+    });
+  }
 
-## Installation
+  const supabase = createMiddlewareSupabaseClient({ req, res });
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
 
-Install the gem:
+  if (!session?.user) {
+    return new Response('Forbidden', { status: 403 });
+  }
 
-```bash
-gem install github-linguist
-```
+  let accessToken: OAuthToken | undefined = undefined;
+  try {
+    accessToken = await getOrRefreshAccessToken(session.user.id, supabase);
+  } catch {
+    // Do nothing
+  }
 
-### Dependencies
+  let archiveStream;
+  const params = await req.json();
 
-Linguist is a Ruby library so you will need a recent version of Ruby installed.
-There are known problems with the macOS/Xcode supplied version of Ruby that causes problems installing some of the dependencies.
-Accordingly, we highly recommend you install a version of Ruby using Homebrew, `rbenv`, `rvm`, `ruby-build`, `asdf` or other packaging system, before attempting to install Linguist and the dependencies.
+  const branchToFetch = params.branch || 'main';
+  try {
+    console.info(
+      `Trying to fetch ${branchToFetch} branch of ${params.owner}/${params.repo}...`,
+    );
 
-Linguist uses [`charlock_holmes`](https://github.com/brianmario/charlock_holmes) for character encoding and [`rugged`](https://github.com/libgit2/rugged) for libgit2 bindings for Ruby.
-These components have their own dependencies.
+    // Fetch branch. If none is specified, fetch main branch.
+    archiveStream = await fetchArchiveStream(
+      params.owner,
+      params.repo,
+      branchToFetch,
+      accessToken?.access_token || undefined,
+    );
+  } catch (e) {
+    console.error(`Error fetching ${branchToFetch} branch:`, e);
+  }
 
-1. charlock_holmes
-    * cmake
-    * pkg-config
-    * [ICU](http://site.icu-project.org/)
-    * [zlib](https://zlib.net/)
-2. rugged
-    * [libcurl](https://curl.haxx.se/libcurl/)
-    * [OpenSSL](https://www.openssl.org)
+  if (!archiveStream?.ok && branchToFetch === 'main') {
+    // If the previous fetch failed, fallback to the master branch,
+    // but only we were trying to fetch the main branch. If another
+    // branch was specified explicitly, we should error.
+    try {
+      console.info('Trying master branch instead...');
+      // If main branch doesn't exist, fallback to master
+      archiveStream = await fetchArchiveStream(
+        params.owner,
+        params.repo,
+        'master',
+        accessToken?.access_token || undefined,
+      );
+    } catch (e) {
+      console.error('Error fetching master branch:', e);
+    }
+  }
 
-You may need to install missing dependencies before you can install Linguist.
-For example, on macOS with [Homebrew](http://brew.sh/):
+  if (!archiveStream?.ok || !archiveStream.body) {
+    return new Response(
+      'Failed to download repository. Make sure the "main" or "master" branch is accessible, or specify a branch explicitly.',
+      { status: 404 },
+    );
+  }
 
-```bash
-brew install cmake pkg-config icu4c
-```
-
-On Ubuntu:
-
-```bash
-sudo apt-get install build-essential cmake pkg-config libicu-dev zlib1g-dev libcurl4-openssl-dev libssl-dev ruby-dev
-```
-
-## Usage
-
-### Application usage
-
-Linguist can be used in your application as follows:
-
-```ruby
-require 'rugged'
-require 'linguist'
-
-repo = Rugged::Repository.new('.')
-project = Linguist::Repository.new(repo, repo.head.target_id)
-project.language       #=> "Ruby"
-project.languages      #=> { "Ruby" => 119387 }
-```
-
-### Command line usage
-
-#### Git Repository
-
-A repository's languages stats can also be assessed from the command line using the `github-linguist` executable.
-Without any options, `github-linguist` will output the language breakdown by percentage and file size.
-
-```bash
-cd /path-to-repository
-github-linguist
-```
-
-You can try running `github-linguist` on the root directory in this repository itself:
-
-```console
-$ github-linguist
-66.84%  264519     Ruby
-24.68%  97685      C
-6.57%   25999      Go
-1.29%   5098       Lex
-0.32%   1257       Shell
-0.31%   1212       Dockerfile
-```
-
-#### Additional options
-
-##### `--rev REV`
-
-The `--rev REV` flag will change the git revision being analyzed to any [gitrevisions(1)](https://git-scm.com/docs/gitrevisions#_specifying_revisions) compatible revision you specify.
-
-This is useful to analyze the makeup of a repo as of a certain tag, or in a certain branch.
-
-For example, here is the popular [Jekyll open source project](https://github.com/jekyll/jekyll).
-
-```console
-$ github-linguist jekyll
-
-70.64%  709959     Ruby
-23.04%  231555     Gherkin
-3.80%   38178      JavaScript
-1.19%   11943      HTML
-0.79%   7900       Shell
-0.23%   2279       Dockerfile
-0.13%   1344       Earthly
-0.10%   1019       CSS
-0.06%   606        SCSS
-0.02%   234        CoffeeScript
-0.01%   90         Hack
-```
-
-And here is Jekyll's published website, from the gh-pages branch inside their repository.
-
-```console
-$ github-linguist jekyll --rev origin/gh-pages
-100.00% 2568354    HTML
-```
-
-##### `--breakdown`
-
-The `--breakdown` or `-b` flag will additionally show the breakdown of files by language.
-
-You can try running `github-linguist` on the root directory in this repository itself:
-
-```console
-$ github-linguist --breakdown
-66.84%  264519     Ruby
-24.68%  97685      C
-6.57%   25999      Go
-1.29%   5098       Lex
-0.32%   1257       Shell
-0.31%   1212       Dockerfile
-
-Ruby:
-Gemfile
-Rakefile
-bin/git-linguist
-bin/github-linguist
-ext/linguist/extconf.rb
-github-linguist.gemspec
-lib/linguist.rb
-…
-```
-
-##### `--json`
-
-The `--json` or `-j` flag output the data into JSON format.
-
-```console
-$ github-linguist --json
-{"Dockerfile":{"size":1212,"percentage":"0.31"},"Ruby":{"size":264519,"percentage":"66.84"},"C":{"size":97685,"percentage":"24.68"},"Lex":{"size":5098,"percentage":"1.29"},"Shell":{"size":1257,"percentage":"0.32"},"Go":{"size":25999,"percentage":"6.57"}}
-```
-
-This option can be used in conjunction with `--breakdown` to get a full list of files along with the size and percentage data.
-
-```console
-$ github-linguist --breakdown --json
-{"Dockerfile":{"size":1212,"percentage":"0.31","files":["Dockerfile","tools/grammars/Dockerfile"]},"Ruby":{"size":264519,"percentage":"66.84","files":["Gemfile","Rakefile","bin/git-linguist","bin/github-linguist","ext/linguist/extconf.rb","github-linguist.gemspec","lib/linguist.rb",...]}}
-
-```
-
-#### Single file
-
-Alternatively you can find stats for a single file using the `github-linguist` executable.
-
-You can try running `github-linguist` on files in this repository itself:
-
-```console
-$ github-linguist grammars.yml
-grammars.yml: 884 lines (884 sloc)
-  type:      Text
-  mime type: text/x-yaml
-  language:  YAML
-```
-
-#### Docker
-
-If you have Docker installed you can build an image and run Linguist within a container:
-
-```console
-$ docker build -t linguist .
-$ docker run --rm -v $(pwd):$(pwd) -w $(pwd) -t linguist
-66.84%  264519     Ruby
-24.68%  97685      C
-6.57%   25999      Go
-1.29%   5098       Lex
-0.32%   1257       Shell
-0.31%   1212       Dockerfile
-$ docker run --rm -v $(pwd):$(pwd) -w $(pwd) -t linguist github-linguist --breakdown
-66.84%  264519     Ruby
-24.68%  97685      C
-6.57%   25999      Go
-1.29%   5098       Lex
-0.32%   1257       Shell
-0.31%   1212       Dockerfile
-
-Ruby:
-Gemfile
-Rakefile
-bin/git-linguist
-bin/github-linguist
-ext/linguist/extconf.rb
-github-linguist.gemspec
-lib/linguist.rb
-…
-```
-
-## Contributing
-
-Please check out our [contributing guidelines](CONTRIBUTING.md).
-
-## License
-
-The language grammars included in this gem are covered by their repositories' respective licenses.
-[`vendor/README.md`](/vendor/README.md) lists the repository for each grammar.
-
-All other files are covered by the MIT license, see [`LICENSE`](./LICENSE).
+  return new Response(archiveStream.body as ReadableStream);
+}
