@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+
+truncate -s0 /etc/motd
+rc-update add machine-id boot
+/etc/init.d/machine-id start
+
+%{if worker}
+rc-update add cgroups boot
+/etc/init.d/cgroups start
+%{endif}
