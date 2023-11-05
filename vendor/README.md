@@ -535,7 +535,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Svelte:** [sebastinez/svelte-atom](https://github.com/sebastinez/svelte-atom)
 - **Sway:** [FuelLabs/sway-vscode-plugin](https://github.com/FuelLabs/sway-vscode-plugin)
 - **Sweave:** [textmate/sweave.tmbundle](https://github.com/textmate/sweave.tmbundle)
-- **Swift:** [textmate/swift.tmbundle](https://github.com/textmate/swift.tmbundle)
+- **Swift:** [jtbandes/swift-tmlanguage](https://github.com/jtbandes/swift-tmlanguage)
 - **SystemVerilog:** [TheClams/SystemVerilog](https://github.com/TheClams/SystemVerilog)
 - **TL-Verilog:** [adamint/tlv-vscode](https://github.com/adamint/tlv-vscode)
 - **TLA:** [tlaplus-community/tree-sitter-tlaplus](https://github.com/tlaplus-community/tree-sitter-tlaplus) 🐌
