@@ -269,6 +269,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Java:** [tree-sitter/tree-sitter-java](https://github.com/tree-sitter/tree-sitter-java) 🐌
 - **Java Properties:** [textmate/java.tmbundle](https://github.com/textmate/java.tmbundle)
 - **Java Server Pages:** [textmate/java.tmbundle](https://github.com/textmate/java.tmbundle)
+- **Java Template Engine:** [maj2c/jte-template-syntax-highlight](https://github.com/maj2c/jte-template-syntax-highlight)
 - **JavaScript:** [tree-sitter/tree-sitter-javascript](https://github.com/tree-sitter/tree-sitter-javascript) 🐌
 - **JavaScript+ERB:** [atom/language-javascript](https://github.com/atom/language-javascript)
 - **Jest Snapshot:** [jest-community/vscode-jest](https://github.com/jest-community/vscode-jest)
