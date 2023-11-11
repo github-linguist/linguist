@@ -34,7 +34,6 @@
 # test changes in `test/test_blob.rb`.
 #
 # Please keep this list alphabetized. Capitalization comes before lowercase.
----
 1C Enterprise:
   type: programming
   color: "#814CCC"
@@ -3879,6 +3878,17 @@ Lua:
   interpreters:
   - lua
   language_id: 213
+Luau:
+  type: programming
+  tm_scope: source.luau
+  ace_mode: lua
+  codemirror_mode: lua
+  codemirror_mime_type: text/x-lua
+  color: "#14a5ff"
+  extensions:
+  - ".luau"
+  interpreters:
+  - lua
 M:
   type: programming
   aliases:
