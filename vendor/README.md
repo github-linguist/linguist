@@ -313,6 +313,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **LookML:** [atom/language-yaml](https://github.com/atom/language-yaml)
 - **LoomScript:** [ambethia/Sublime-Loom](https://github.com/ambethia/Sublime-Loom)
 - **Lua:** [textmate/lua.tmbundle](https://github.com/textmate/lua.tmbundle)
+- **Luau:** [JohnnyMorganz/Luau.tmLanguage](https://github.com/JohnnyMorganz/Luau.tmLanguage)
 - **M4:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **M4Sugar:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **MATLAB:** [mathworks/MATLAB-Language-grammar](https://github.com/mathworks/MATLAB-Language-grammar)
