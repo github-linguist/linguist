@@ -1,6 +1,6 @@
 --// Authored by @benbrimeyer (https://github.com/benbrimeyer)
 --// Fetched from (https://github.com/duckarmor/Freeze/blob/670bb6593d8cc54cdcbb96cd94d1273ee0420abb/source/List/toSet.luau)
---// Licensed under the MIT License (hhttps://github.com/duckarmor/Freeze/blob/670bb6593d8cc54cdcbb96cd94d1273ee0420abb/LICENSE)
+--// Licensed under the MIT License (https://github.com/duckarmor/Freeze/blob/670bb6593d8cc54cdcbb96cd94d1273ee0420abb/LICENSE)
 
 --!strict
 
