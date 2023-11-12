@@ -1,0 +1,390 @@
+# Copyright (C) 2002-2023 Free Software Foundation, Inc.
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with GCC; see the file COPYING3.  If not see
+# <http://www.gnu.org/licenses/>.
+
+# This file was written by Janis Johnson, <janis187@us.ibm.com>
+
+
+# Test interoperability of two compilers that follow the same ABI, or
+# compatibility of two versions of GCC.
+#
+# Each test has a main program that does nothing but call a function,
+# plus two additional source files that contain parts of a program that
+# rely on the ABI.  those source files are compiled into relocatable
+# object files with both compilers.  Executables are built using various
+# combinations of those object files, with the main program compiled
+# with the compiler under test and using that compiler's runtime support.
+
+# The including .exp file must define these callback procedures.
+if [string match "" [info procs "compat-use-alt-compiler"]] then {
+    error "Proc compat-use-alt-compiler is not defined."
+}
+if [string match "" [info procs "compat-use-tst-compiler"]] then {
+    error "Proc compat-use-tst-compiler is not defined."
+}
+
+# Each test is run with each pair of compiler options from this list.
+# The first set of options in each pair is used by the compiler under
+# test, and the second set is used by the alternate compiler.
+# The default option lists can be overridden by
+# COMPAT_OPTIONS="[list [list {tst_1} {alt_1}]...[list {tst_n} {alt_n}]]"
+# where tst_i and alt_i are lists of options.  You can put this in the
+# environment before site.exp is written or add it to site.exp directly.
+if ![info exists COMPAT_OPTIONS] {
+    set COMPAT_OPTIONS [list \
+	[list {} {}]]
+}
+
+set compat_option_list $COMPAT_OPTIONS
+
+# Subsets of tests can be selectively disabled by members of this list:
+#  - ATTRIBUTE: disable all tests using the __attribute__ extension,
+#  - COMPLEX: disable all tests using the complex types feature,
+#  - COMPLEX_INT: disable all tests using the complex integral types extension,
+#  - VA: disable all tests using the variable number of arguments feature,
+#  - VLA_IN_STRUCT: disable all tests using the variable-length arrays as
+#    structure members extension,
+#  - ZERO_ARRAY: disable all tests using the zero-sized arrays extension.
+# The default skip lists can be overriden by
+# COMPAT_SKIPS="[list {skip_1}...{skip_n}]"
+# where skip_i are skip identifiers.  You can put this in the environment
+# before site.exp is written or add it to site.exp directly.
+if ![info exists COMPAT_SKIPS] {
+    set COMPAT_SKIPS [list {}]
+}
+
+global compat_skip_list
+set compat_skip_list $COMPAT_SKIPS
+
+load_lib dg.exp
+load_lib gcc-dg.exp
+
+#
+# compat-obj -- compile to an object file
+#
+# SOURCE is the source file
+# DEST is the object file
+# OPTALL is the list of compiler options to use with all tests
+# OPTFILE is the list of compiler options to use with this file
+# OPTSTR is the options to print with test messages
+# XFAILDATA is the xfail data to be passed to the compiler
+#
+proc compat-obj { source dest optall optfile optstr xfaildata } {
+    global testcase
+    global tool
+    global compiler_conditional_xfail_data
+    global compat_skip_list
+
+    # Add the skip specifiers.
+    foreach skip $compat_skip_list {
+	if { ![string match $skip ""] } {
+	    lappend optall "-DSKIP_$skip"
+	}
+    }
+
+    # Set up the options for compiling this file.
+    set options ""
+    lappend options "additional_flags=$optfile $optall"
+
+    set compiler_conditional_xfail_data $xfaildata
+    set comp_output [${tool}_target_compile "$source" "$dest" object $options]
+    ${tool}_check_compile "$testcase $dest compile" $optstr $dest $comp_output
+}
+
+# compat-run -- link and run an executable
+#
+# TESTNAME is the mixture of object files to link
+# OBJLIST is the list of object files to link
+# DEST is the name of the executable
+# OPTALL is a list of compiler and linker options to use for all tests
+# OPTFILE is a list of compiler and linker options to use for this test
+# OPTSTR is the list of options to list in messages
+#
+proc compat-run { testname objlist dest optall optfile optstr } {
+    global testcase
+    global tool
+
+    # Check that all of the objects were built successfully.
+    foreach obj [split $objlist] {
+	if ![file_on_host exists $obj] then {
+	    unresolved "$testcase $testname link $optstr"
+	    unresolved "$testcase $testname execute $optstr"
+	    return
+	}
+    }
+
+    # Set up the options for linking this test.
+    set options ""
+    lappend options "additional_flags=$optfile $optall"
+
+    # Link the objects into an executable.
+    set comp_output [${tool}_target_compile "$objlist" $dest executable \
+		     "$options"]
+    if ![${tool}_check_compile "$testcase $testname link" "" \
+	 $dest $comp_output] then {
+	return
+    }
+
+    # Run the self-checking executable.
+    if ![string match "*/*" $dest] then {
+	set dest "./$dest"
+    }
+    set result [${tool}_load $dest "" ""]
+    set status [lindex $result 0]
+    if { $status == "pass" } then {
+	file_on_host delete $dest
+    }
+    $status "$testcase $testname execute $optstr"
+}
+
+#
+# compat-get-options-main -- get target requirements for a test and
+# options for the primary source file and the test as a whole
+#
+# SRC is the full pathname of the primary source file.
+#
+proc compat-get-options-main { src } {
+    # dg-options sets a variable called dg-extra-tool-flags.
+    set dg-extra-tool-flags ""
+    # dg-options sets a variable called tool_flags.
+    set tool_flags ""
+
+    # dg-require-* sets dg-do-what.
+    upvar dg-do-what dg-do-what 
+
+    set tmp [dg-get-options $src]
+    foreach op $tmp {
+	set cmd [lindex $op 0]
+	if { ![string compare "dg-options" $cmd] \
+	     || [string match "dg-prune-output" $cmd] \
+	     || [string match "dg-skip-if" $cmd] \
+	     || [string match "dg-require-*" $cmd] \
+	     || [string match "dg-timeout-factor" $cmd]  } {
+	    set status [catch "$op" errmsg]
+	    if { $status != 0 } {
+		perror "src: $errmsg for \"$op\"\n"
+		unresolved "$src: $errmsg for \"$op\""
+		return
+	    }
+	} elseif { ![string compare "dg-xfail-if" $cmd] } {
+	    warning "compat.exp does not support $cmd in primary source file"
+	} else {
+	    # Ignore unrecognized dg- commands, but warn about them.
+	    warning "compat.exp does not support $cmd"
+	}
+    }
+
+    # Return flags to use for compiling the primary source file and for
+    # linking.
+    return ${dg-extra-tool-flags}
+}
+
+#
+# compat-get-options -- get special tool flags to use for a secondary
+# source file
+#
+# SRC is the full pathname of the source file.
+# The result is a list of options to use.
+#
+# This code is copied from proc dg-test in dg.exp from DejaGNU.
+#
+proc compat-get-options { src } {
+    # dg-options sets a variable called dg-extra-tool-flags.
+    set dg-extra-tool-flags ""
+
+    # dg-xfail-if sets compiler_conditional_xfail_data.
+    global compiler_conditional_xfail_data
+    set compiler_conditional_xfail_data ""
+
+    # dg-xfail-if needs access to dg-do-what.
+    upvar dg-do-what dg-do-what 
+
+    set tmp [dg-get-options $src]
+    foreach op $tmp {
+	set cmd [lindex $op 0]
+	if { ![string compare "dg-options" $cmd] \
+	     || ![string compare "dg-prune-output" $cmd] \
+	     || ![string compare "dg-xfail-if" $cmd] \
+	     || ![string compare "dg-timeout-factor" $cmd] } {
+	    set status [catch "$op" errmsg]
+	    if { $status != 0 } {
+		perror "src: $errmsg for \"$op\"\n"
+		unresolved "$src: $errmsg for \"$op\""
+		return
+	    }
+	} elseif { [string match "dg-require-*" $cmd] } {
+	    warning "compat.exp does not support $cmd in secondary source files"
+	} else {
+	    # Ignore unrecognized dg- commands, but warn about them.
+	    warning "compat.exp does not support $cmd"
+	}
+    }
+
+    return ${dg-extra-tool-flags}
+}
+
+#
+# compat-execute -- compile with compatible compilers
+#
+# SRC1 is the full pathname of the main file of the testcase.
+# SID identifies a test suite in the names of temporary files.
+# USE_ALT is nonzero if we're using an alternate compiler as well as
+#   the compiler under test.
+#
+proc compat-execute { src1 sid use_alt } {
+    global srcdir tmpdir
+    global compat_option_list
+    global tool
+    global verbose
+    global testcase
+    global gluefile
+    global compiler_conditional_xfail_data
+    global dg-do-what-default
+
+    # Get extra flags for this test from the primary source file, and
+    # process other dg-* options that this suite supports.  Warn about
+    # unsupported flags.
+    verbose "compat-execute: $src1" 1
+    set dg-do-what [list ${dg-do-what-default} "" P]
+    set extra_flags_1 [compat-get-options-main $src1]
+
+    # Set up the names of the other source files.
+    set dir [file dirname $src1]
+    set ext [file extension $src1]
+    set base [file rootname $src1]
+    set base [string range $base [string length $dir] end]
+    regsub "_main" $base "" base
+    set src2 "${dir}/${base}_x${ext}"
+    set src3 "${dir}/${base}_y${ext}"
+
+    # Use the dg-options mechanism to specify extra flags for this test. 
+    # The extra flags in each file are used to compile that file, and the
+    # extra flags in *_main.* are also used for linking.
+    set extra_flags_2 [compat-get-options $src2]
+    set compile_xfail_2 $compiler_conditional_xfail_data
+    set extra_flags_3 [compat-get-options $src3]
+    set compile_xfail_3 $compiler_conditional_xfail_data
+
+    # Define the names of the object files.
+    regsub "sid" "sid_main_tst.o" $sid obj1
+    regsub "sid" "sid_x_tst.o" $sid obj2_tst
+    regsub "sid" "sid_x_alt.o" $sid obj2_alt
+    regsub "sid" "sid_y_tst.o" $sid obj3_tst
+    regsub "sid" "sid_y_alt.o" $sid obj3_alt
+
+    # Get the base name of this test, for use in messages.
+    set testcase "$src1"
+    # Remove the $srcdir and $tmpdir prefixes from $src1.  (It would
+    # be possible to use "regsub" here, if we were careful to escape
+    # all regular expression characters in $srcdir and $tmpdir, but
+    # that would be more complicated that this approach.) 
+    if {[string first "$srcdir/" "$src1"] == 0} {
+	set testcase [string range "$src1" [string length "$srcdir/"] end]
+    }
+    if {[string first "$tmpdir/" "$testcase"] == 0} {
+	set testcase [string range "$testcase" [string length "$tmpdir/"] end]
+	set testcase "tmpdir-$testcase"
+    }
+    # If we couldn't rip $srcdir out of `src1' then just do the best we can.
+    # The point is to reduce the unnecessary noise in the logs.  Don't strip
+    # out too much because different testcases with the same name can confuse
+    # `test-tool'.
+    if [string match "/*" $testcase] then {
+        set testcase "[file tail [file dirname $src1]]/[file tail $src1]"
+    }
+
+    # Check whether this test is supported for this target.
+    if { [lindex ${dg-do-what} 1 ] == "N" } {
+	unsupported "$testcase"
+	verbose "$testcase not supported on this target, skipping it" 3
+	return
+    }
+
+    regsub "_main.*" $testcase "" testcase
+    # Set up the base name of executable files so they'll be unique.
+    regsub -all "\[./\]" $testcase "-" execbase
+
+    # Loop through all of the option lists used for this test.
+
+    set count 0
+    foreach option_pair $compat_option_list {
+
+	# Pick out each set of options.
+	set tst_option [lindex $option_pair 0]
+	set alt_option [lindex $option_pair 1]
+	set optstr ""
+	if { ![string match $tst_option ""] \
+	     || ![string match $alt_option ""] } then {
+	    set optstr "\"$tst_option\",\"$alt_option\""
+	}
+	verbose "Testing $testcase, $optstr" 1
+
+	# There's a unique name for each executable we generate, based on
+	# the set of options and how the pieces of the tests are compiled.
+	set execname1 "${execbase}-${count}1.exe"
+	set execname2 "${execbase}-${count}2.exe"
+	set execname3 "${execbase}-${count}3.exe"
+	set execname4 "${execbase}-${count}4.exe"
+	incr count
+
+	file_on_host delete $execname1
+	file_on_host delete $execname2
+	file_on_host delete $execname3
+	file_on_host delete $execname4
+
+	# Compile pieces with the alternate compiler; we'll catch problems
+	# later.  Skip this if we don't have an alternate compiler.
+	if { $use_alt != 0 } then {
+	    compat-use-alt-compiler
+	    compat-obj "$src2" "$obj2_alt" $alt_option $extra_flags_2 \
+		       $optstr $compile_xfail_2
+	    compat-obj "$src3" "$obj3_alt" $alt_option $extra_flags_3 \
+		       $optstr $compile_xfail_3
+	}
+
+	# Compile pieces with the compiler under test.
+	compat-use-tst-compiler
+	compat-obj "$src1" "$obj1" $tst_option $extra_flags_1 $optstr ""
+	compat-obj "$src2" "$obj2_tst" $tst_option $extra_flags_2 \
+		   $optstr $compile_xfail_2
+	compat-obj "$src3" "$obj3_tst" $tst_option $extra_flags_3 \
+		   $optstr $compile_xfail_3
+
+	# Link (using the compiler under test), run, and clean up tests.
+	compat-run "${obj2_tst}-${obj3_tst}" \
+	    "$obj1 $obj2_tst $obj3_tst" $execname1 \
+	    $tst_option $extra_flags_1 $optstr
+
+	# If we've got an alternate compiler try some combinations.
+	if { $use_alt != 0 } then {
+	    compat-run "${obj2_tst}-${obj3_alt}" "$obj1 $obj2_tst $obj3_alt" \
+		       $execname2 $tst_option $extra_flags_1 $optstr
+	    compat-run "${obj2_alt}-${obj3_tst}" "$obj1 $obj2_alt $obj3_tst" \
+		       $execname3 $tst_option $extra_flags_1 $optstr
+	    compat-run "${obj2_alt}-${obj3_alt}" "$obj1 $obj2_alt $obj3_alt" \
+		       $execname4 $tst_option $extra_flags_1 $optstr
+	}
+
+	# Clean up object files.
+	set files [glob -nocomplain ${sid}_*.o]
+	if { $files != "" } {
+	    foreach objfile $files {
+		if { ![info exists gluefile] || $objfile != $gluefile } {
+		    eval "file_on_host delete $objfile"
+		}
+	    }
+	}
+    }
+}
