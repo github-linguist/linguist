@@ -393,6 +393,12 @@ disambiguations:
   - language: LoomScript
     pattern: '^\s*package\s*[\w\.\/\*\s]*\s*\{'
   - language: LiveScript
+- extensions: ['.lean']
+  rules:
+  - language: Lean
+    pattern: '^import [a-z]'
+  - language: Lean 4
+    pattern: '^import [A-Z]'
 - extensions: ['.lsp', '.lisp']
   rules:
   - language: Common Lisp
