@@ -236,6 +236,11 @@ disambiguations:
     - '^\s*def(?:exception|impl|macro|module|protocol)[(\s]'
   - language: Euphoria
     named_pattern: euphoria
+- extensions: ['.exp']
+  rules:
+  - language: Tcl
+    pattern:
+    - '^\s*(?:set|expect|proc)\s'
 - extensions: ['.f']
   rules:
   - language: Forth
