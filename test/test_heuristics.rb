@@ -416,6 +416,12 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_exp_by_heuristics
+    assert_heuristics({
+      "Tcl" => all_fixtures("Tcl", "*.exp"),
+    })
+  end
+
   def test_f_by_heuristics
     assert_heuristics({
       "Fortran" => all_fixtures("Fortran", "*.f") + all_fixtures("Fortran", "*.for"),
