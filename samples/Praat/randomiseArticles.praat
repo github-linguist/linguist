@@ -1,4 +1,4 @@
-orm Querying
+form Querying
     integer tier 1
     integer nrFormants 10
 endform
