@@ -12,28 +12,28 @@
 // PERFORMANCE OF THIS SOFTWARE.
 
 import gpio
-import one_wire
-import one_wire.family as one_wire
+import one-wire
+import one-wire.family as one-wire
 
-DATA_PIN ::= 32
+DATA-PIN ::= 32
 
 main:
-  bus := one_wire.Bus (gpio.Pin 32)
+  bus := one-wire.Bus (gpio.Pin 32)
   print "Listing all devices on bus:"
   bus.do:
-    family_id := one_wire.family_id --device_id=it
-    print "  $(%x it): $(one_wire.family_to_string family_id)"
+    family-id := one-wire.family-id --device-id=it
+    print "  $(%x it): $(one-wire.family-to-string family-id)"
 
   print "Listing only ds18b20 devices on bus:"
   // Only list ds18b20 devices.
-  bus.do --family=one_wire.FAMILY_DS18B20:
+  bus.do --family=one-wire.FAMILY-DS18B20:
     print "  $(%x it)"
 
   print "Demonstrating how to skip families."
   // Skip families.
   bus.do:
-    family_id := one_wire.family_id --device_id=it
-    print "  Got called with id: $(%x it) - $(one_wire.family_to_string family_id)"
-    if family_id == one_wire.FAMILY_DS18B20:
+    family-id := one-wire.family-id --device-id=it
+    print "  Got called with id: $(%x it) - $(one-wire.family-to-string family-id)"
+    if family-id == one-wire.FAMILY-DS18B20:
       print "    Skipping remaining devices of this family."
-      continue.do one_wire.Bus.SKIP_FAMILY
+      continue.do one-wire.Bus.SKIP-FAMILY

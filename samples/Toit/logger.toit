@@ -18,42 +18,42 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import certificate_roots
+import certificate-roots
 import gpio
 import monitor
 import uart
 import supabase
 
 // After 5s offload the data. Even if the device is not quiet.
-MAX_OFFLOAD_DELAY ::= Duration --s=5
+MAX-OFFLOAD-DELAY ::= Duration --s=5
 // Offload if we accumulate more than 2kb of data.
-MAX_BUFFERED_DATA ::= 2000
+MAX-BUFFERED-DATA ::= 2000
 // Offload if we have not received any data for 500ms.
-MAX_QUIET_FOR_OFFLOAD ::= Duration --ms=500
+MAX-QUIET-FOR-OFFLOAD ::= Duration --ms=500
 
-LOGS_TABLE ::= "logs"
+LOGS-TABLE ::= "logs"
 
 class LogForwarder:
   pin_/gpio.Pin
   port_/uart.Port
   buffered_/List := [] // Of ByteArray.
-  buffered_size_/int := 0
-  offload_task_/Task? := null
+  buffered-size_/int := 0
+  offload-task_/Task? := null
   upload_/Lambda
 
-  constructor pin_number/int --upload/Lambda:
-    pin_ = gpio.Pin pin_number
-    port_ = uart.Port --rx=pin_ --tx=null --baud_rate=115200
+  constructor pin-number/int --upload/Lambda:
+    pin_ = gpio.Pin pin-number
+    port_ = uart.Port --rx=pin_ --tx=null --baud-rate=115200
     upload_ = upload
-    offload_task_ = task::
+    offload-task_ = task::
       offload_
 
   close:
-    if offload_task_:
-      offload_task_.cancel
+    if offload-task_:
+      offload-task_.cancel
       port_.close
       pin_.close
-      offload_task_ = null
+      offload-task_ = null
 
   listen:
     while true:
@@ -61,57 +61,57 @@ class LogForwarder:
       buffer_ chunk
 
   buffer_ data/ByteArray:
-    print "Received $data.to_string_non_throwing"
+    print "Received $data.to-string-non-throwing"
     buffered_.add data
-    buffered_size_ += data.size
-    if buffered_size_ > MAX_BUFFERED_DATA:
+    buffered-size_ += data.size
+    if buffered-size_ > MAX-BUFFERED-DATA:
       offload_
 
   offload_:
-    last_offload := Time.now
+    last-offload := Time.now
     while true:
-      last_message := Time.now
-      old_size := buffered_size_
-      while (Duration.since last_message) < MAX_QUIET_FOR_OFFLOAD:
+      last-message := Time.now
+      old-size := buffered-size_
+      while (Duration.since last-message) < MAX-QUIET-FOR-OFFLOAD:
         sleep --ms=20
 
-        if buffered_size_ == 0:
+        if buffered-size_ == 0:
           // Reset the timer.
-          last_offload = Time.now
-          last_message = last_offload
+          last-offload = Time.now
+          last-message = last-offload
           continue
 
-        if (Duration.since last_offload) > MAX_OFFLOAD_DELAY:
+        if (Duration.since last-offload) > MAX-OFFLOAD-DELAY:
           break
 
-        if buffered_size_ == old_size:
+        if buffered-size_ == old-size:
           continue
 
-        if buffered_size_ > MAX_BUFFERED_DATA:
+        if buffered-size_ > MAX-BUFFERED-DATA:
           print "too much data"
           break
 
-        last_message = Time.now
-        old_size = buffered_size_
+        last-message = Time.now
+        old-size = buffered-size_
 
       print "Offloading"
-      total := ByteArray buffered_size_
+      total := ByteArray buffered-size_
       offset := 0
       buffered_.do:
         total.replace offset it
         offset += it.size
-      to_upload := total.to_string_non_throwing
+      to-upload := total.to-string-non-throwing
       buffered_.clear
-      buffered_size_ = 0
-      print "Uploading: $to_upload"
-      upload_.call to_upload
+      buffered-size_ = 0
+      print "Uploading: $to-upload"
+      upload_.call to-upload
 
 main
-    --supabase_project/string
-    --supabase_anon/string
-    --device_id/string
-    --pin_rx1/int
-    --pin_rx2/int?:
+    --supabase-project/string
+    --supabase-anon/string
+    --device-id/string
+    --pin-rx1/int
+    --pin-rx2/int?:
 
   client/supabase.Client? := null
   forwarder1/LogForwarder? := null
@@ -121,28 +121,28 @@ main
     // Trying to work around https://github.com/toitlang/pkg-http/issues/89
     catch --trace:
       client = supabase.Client.tls
-          --host="$(supabase_project).supabase.co"
-          --anon=supabase_anon
-          --root_certificates=[certificate_roots.BALTIMORE_CYBERTRUST_ROOT]
+          --host="$(supabase-project).supabase.co"
+          --anon=supabase-anon
+          --root-certificates=[certificate-roots.BALTIMORE-CYBERTRUST-ROOT]
 
       mutex := monitor.Mutex
 
-      offload := :: | uart_pin/int data/string |
+      offload := :: | uart-pin/int data/string |
         mutex.do:
-          client.rest.insert --no-return_inserted LOGS_TABLE {
-            "device_id": device_id,
-            "uart_pin": uart_pin,
+          client.rest.insert --no-return-inserted LOGS-TABLE {
+            "device_id": device-id,
+            "uart_pin": uart-pin,
             "data": data,
           }
 
-      if pin_rx2:
+      if pin-rx2:
         task::
-          forwarder2 = LogForwarder pin_rx2 --upload=:: | data/string |
-            offload.call pin_rx2 data
+          forwarder2 = LogForwarder pin-rx2 --upload=:: | data/string |
+            offload.call pin-rx2 data
           forwarder2.listen
 
-      forwarder1 = LogForwarder pin_rx1 --upload=:: | data/string |
-        offload.call pin_rx1 data
+      forwarder1 = LogForwarder pin-rx1 --upload=:: | data/string |
+        offload.call pin-rx1 data
       forwarder1.listen
 
     if forwarder1: forwarder1.close
