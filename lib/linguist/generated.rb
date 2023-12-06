@@ -301,7 +301,7 @@ module Linguist
 
       # Type 1 and Type 42 fonts converted to PostScript are stored as hex-encoded byte streams; these
       # streams are always preceded the `eexec` operator (if Type 1), or the `/sfnts` key (if Type 42).
-      return true if data =~ /(\n|\r\n|\r)\s*(?:currentfile eexec\s+|\/sfnts\s+\[\1<)\h{8,}\1/
+      return true if data =~ /^\s*(?:currentfile eexec\s+|\/sfnts\s+\[\s<)/
 
       # We analyze the "%%Creator:" comment, which contains the author/generator
       # of the file. If there is one, it should be in one of the first few lines.
@@ -693,8 +693,8 @@ module Linguist
     def generated_gimp?
       return false unless ['.c', '.h'].include? extname
       return false unless lines.count > 0
-      return lines[0].match(/\/\* GIMP [a-zA-Z0-9\- ]+ C\-Source image dump \(.+?\.c\) \*\//) ||
-             lines[0].match(/\/\*  GIMP header image file format \([a-zA-Z0-9\- ]+\)\: .+?\.h  \*\//)
+      return lines[0].match(/^\/\* GIMP [a-zA-Z0-9\- ]+ C\-Source image dump \(.+?\.c\) \*\//) ||
+             lines[0].match(/^\/\*  GIMP header image file format \([a-zA-Z0-9\- ]+\)\: .+?\.h  \*\//)
     end
 
     # Internal: Is this a generated Microsoft Visual Studio 6.0 build file?
@@ -795,7 +795,7 @@ module Linguist
       return false unless lines.count >= 5
       lines[0].match?(/^# typed:/) &&
       lines[2].include?("DO NOT EDIT MANUALLY") &&
-      lines[4].match?(/^# Please.*run.*`.*tapioca/)
+      lines[4].match?(/^# Please (run|instead update this file by running) `bin\/tapioca/)
     end
 
     # Internal: Is this an HTML coverage report?

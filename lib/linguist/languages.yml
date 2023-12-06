@@ -1669,7 +1669,7 @@ ECL:
 ECLiPSe:
   type: programming
   color: "#001d9d"
-  group: prolog
+  group: Prolog
   extensions:
   - ".ecl"
   tm_scope: source.prolog.eclipse
@@ -1751,6 +1751,17 @@ Ecmarkup:
   aliases:
   - ecmarkdown
   language_id: 844766630
+EdgeQL:
+  type: programming
+  color: "#31A7FF"
+  aliases:
+  - esdl
+  extensions:
+  - ".edgeql"
+  - ".esdl"
+  ace_mode: text
+  tm_scope: source.edgeql
+  language_id: 925235833
 EditorConfig:
   type: data
   color: "#fff1f2"
@@ -2379,7 +2390,6 @@ Gherkin:
 Git Attributes:
   type: data
   color: "#F44D27"
-  group: INI
   aliases:
   - gitattributes
   filenames:
@@ -2984,7 +2994,6 @@ Idris:
 Ignore List:
   type: data
   color: "#000000"
-  group: INI
   aliases:
   - ignore
   - gitignore
@@ -3178,6 +3187,7 @@ JSON:
   - ".watchmanconfig"
   - Pipfile.lock
   - composer.lock
+  - deno.lock
   - flake.lock
   - mcmod.info
   language_id: 174
@@ -4458,7 +4468,7 @@ Nasal:
   extensions:
   - ".nas"
   tm_scope: source.nasal
-  ace_mode: text
+  ace_mode: nasal
   language_id: 178322513
 Nearley:
   type: programming
@@ -5345,6 +5355,14 @@ PowerShell:
   interpreters:
   - pwsh
   language_id: 293
+Praat:
+  type: programming
+  color: "#c8506d"
+  tm_scope: source.praat
+  ace_mode: praat
+  extensions:
+  - ".praat"
+  language_id: 106029007
 Prisma:
   type: data
   color: "#0c344b"
@@ -6836,7 +6854,7 @@ Svelte:
   language_id: 928734530
 Sway:
   type: programming
-  color: "#dea584"
+  color: "#00F58C"
   extensions:
   - ".sw"
   tm_scope: source.sway
@@ -7127,6 +7145,14 @@ Thrift:
   - ".thrift"
   ace_mode: text
   language_id: 374
+Toit:
+  type: programming
+  color: "#c2c9fb"
+  extensions:
+  - ".toit"
+  tm_scope: source.toit
+  ace_mode: text
+  language_id: 356554395
 Turing:
   type: programming
   color: "#cf142b"
