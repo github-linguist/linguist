@@ -102,6 +102,7 @@ class TestTokenizer < Minitest::Test
     assert_equal %w(COMMENT/-), tokenize("/-*-/")
     assert_equal %w(COMMENT/-), tokenize("/-**-/")
     assert_equal %w(COMMENT/-), tokenize("/-!-/")
+    assert_equal %w(COMMENT/-), tokenize("/--/ -/")
 
     # Roff comments
     assert_equal %w(COMMENT.\\" bar), tokenize(".\\\" foo\nbar")

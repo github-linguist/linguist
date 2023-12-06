@@ -102,6 +102,7 @@
 "\"\"\""                 { FEED_STATIC("COMMENT\"\"\""); BEGIN(python_dcomment); return 1; }
 "'''"                    { FEED_STATIC("COMMENT'''"); BEGIN(python_scomment); return 1; }
 ^".ig"\n                 { FEED_STATIC("COMMENT.ig"); BEGIN(roff_comment); return 1; }
+"/--"                     { FEED_STATIC("COMMENT/-"); BEGIN(lean_comment); return 1; }
 "/-"                     { FEED_STATIC("COMMENT/-"); BEGIN(lean_comment); return 1; }
 
 <c_comment,xml_comment,haskell_comment,ocaml_comment,python_dcomment,python_scomment,roff_comment,lean_comment>.|\n { /* nothing */ }
