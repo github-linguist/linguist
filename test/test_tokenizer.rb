@@ -84,6 +84,7 @@ class TestTokenizer < Minitest::Test
     assert_equal %w(foo COMMENT""" bar), tokenize("foo\n\"\"\"\nComment\n\"\"\"\nbar")
     assert_equal %w(foo COMMENT''' bar), tokenize("foo\n'''\nComment\n'''\nbar")
 
+    # Lean comments
     assert_equal %w(foo COMMENT/-), tokenize("foo /- Comment -/")
     assert_equal %w(foo COMMENT/-), tokenize("foo /-Comment-/")
     assert_equal %w(foo COMMENT/-), tokenize("foo /- \nComment\n -/")
@@ -97,7 +98,9 @@ class TestTokenizer < Minitest::Test
     assert_equal %w(foo COMMENT/- bar), tokenize("foo /-\nComment\n-/ bar")
     assert_equal %w(foo COMMENT/- bar), tokenize("foo /-\nComment\n-/\nbar")
     assert_equal %w(foo COMMENT/- bar), tokenize("foo\n/-\nComment\n-/\nbar")
+    # Nested comments are not processed correctly as it's rarely used and adds unnecessary complexity
     assert_equal %w(foo COMMENT/- bar), tokenize("foo /- Comment /- Still Comment /- And Still Comment -/ bar")
+    assert_equal %w(foo COMMENT/- comment3 - / bar), tokenize("foo /- comment1 /- comment2 -/ comment3 -/ bar")
     assert_equal %w(COMMENT/-), tokenize("/-\n*\n-/")
     assert_equal %w(COMMENT/-), tokenize("/-*-/")
     assert_equal %w(COMMENT/-), tokenize("/-**-/")
