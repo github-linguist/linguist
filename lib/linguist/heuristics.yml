@@ -388,6 +388,12 @@ disambiguations:
     pattern: '^\.[A-Za-z]{2}(\s|$)'
   - language: PicoLisp
     pattern: '^\((de|class|rel|code|data|must)\s'
+- extensions: ['.lean']
+  rules:
+  - language: Lean
+    pattern: '^import [a-z]'
+  - language: Lean 4
+    pattern: '^import [A-Z]'
 - extensions: ['.ls']
   rules:
   - language: LoomScript
