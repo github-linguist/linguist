@@ -2271,20 +2271,20 @@ Gemini:
   wrap: true
   tm_scope: source.gemini
   language_id: 310828396
-Genero:
+Genero 4gl:
   type: programming
   color: "#63408e"
   extensions:
   - ".4gl"
-  tm_scope: source.genero
+  tm_scope: source.genero-4gl
   ace_mode: text
   language_id: 986054050
-Genero Forms:
+Genero per:
   type: markup
   color: "#d8df39"
   extensions:
   - ".per"
-  tm_scope: source.genero-forms
+  tm_scope: source.genero-per
   ace_mode: text
   language_id: 902995658
 Genie:
@@ -3709,6 +3709,14 @@ Lean:
   tm_scope: source.lean
   ace_mode: text
   language_id: 197
+Lean 4:
+  type: programming
+  group: Lean
+  extensions:
+  - ".lean"
+  tm_scope: source.lean4
+  ace_mode: text
+  language_id: 455147478
 Less:
   type: markup
   color: "#1d365d"
