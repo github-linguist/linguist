@@ -358,6 +358,7 @@ vendor/grammars/ec.tmbundle:
 vendor/grammars/ecl-tmLanguage:
 - source.ecl
 vendor/grammars/edgedb-editor-plugin:
+- inline.edgeql
 - source.edgeql
 vendor/grammars/eiffel.tmbundle:
 - source.eiffel
@@ -1106,7 +1107,6 @@ vendor/grammars/vscode-gleam:
 vendor/grammars/vscode-go:
 - go.mod
 - go.sum
-- govulncheck
 vendor/grammars/vscode-hack:
 - markdown.hack.codeblock
 - source.hack
@@ -1145,6 +1145,8 @@ vendor/grammars/vscode-motoko:
 - source.did
 - source.mo
 vendor/grammars/vscode-move-syntax:
+- markdown.move.codeblock
+- mdx.LANGUAGE.codeblock
 - source.move
 vendor/grammars/vscode-opa:
 - source.rego
@@ -1172,6 +1174,7 @@ vendor/grammars/vscode-scala-syntax:
 vendor/grammars/vscode-singularity:
 - source.singularity
 vendor/grammars/vscode-slice:
+- source.ice
 - source.slice
 vendor/grammars/vscode-vba-json:
 - source.vba
