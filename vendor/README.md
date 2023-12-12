@@ -477,6 +477,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Ring:** [MahmoudFayed/atom-language-ring](https://github.com/MahmoudFayed/atom-language-ring)
 - **Riot:** [riot/syntax-highlight](https://github.com/riot/syntax-highlight)
 - **RobotFramework:** [shellderp/sublime-robot-plugin](https://github.com/shellderp/sublime-robot-plugin)
+- **Roc:** [ivan-demchenko/roc-vscode-unofficial](https://github.com/ivan-demchenko/roc-vscode-unofficial)
 - **Roff:** [Alhadis/language-roff](https://github.com/Alhadis/language-roff)
 - **Roff Manpage:** [Alhadis/language-roff](https://github.com/Alhadis/language-roff)
 - **Rouge:** [atom/language-clojure](https://github.com/atom/language-clojure)
