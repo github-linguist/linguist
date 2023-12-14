@@ -1,0 +1,32 @@
+// Function to compute fibonacci numbers recursively
+f<int> fib(int n) {
+    if n <= 2 {
+        return 1;
+    }
+    return fib(n - 1) + fib(n - 2);
+}
+
+// Function to compute factorial numbers recursively
+f<int> fac(int input) {
+    if input < 2 {
+        return 1;
+    }
+    result = input * fac(input - 1);
+}
+
+/*
+* Entry point of the program
+*/
+f<int> main() {
+    short number = 10s;
+    printf("Fibonacci of %d: %d\n", number, fib((int) number));
+    long base = (long) number;
+    base += 1;
+    base <<= 1;
+    base >>= 3 - 1;
+    base -= 1;
+    printf("Faculty of %d: %d\n", base + 7, fac((int) base + 7));
+    // Sizeof usage
+    int size = sizeof('T');
+    printf("Size of char is %d, %d\n", size, true);
+}
