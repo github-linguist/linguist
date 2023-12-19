@@ -582,6 +582,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_lean_by_heuristics
+    assert_heuristics({
+      "Lean" => all_fixtures("Lean", "*.lean"),
+      "Lean 4" => all_fixtures("Lean 4", "*.lean")
+    })
+  end
+
   def test_lisp_by_heuristics
     assert_heuristics({
       "Common Lisp" => all_fixtures("Common Lisp", "*.lisp") + all_fixtures("Common Lisp", "*.lsp"),
