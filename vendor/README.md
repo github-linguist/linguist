@@ -571,6 +571,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Uno:** [dotnet/csharp-tmLanguage](https://github.com/dotnet/csharp-tmLanguage)
 - **UnrealScript:** [textmate/java.tmbundle](https://github.com/textmate/java.tmbundle)
 - **UrWeb:** [gwalborn/UrWeb-Language-Definition](https://github.com/gwalborn/UrWeb-Language-Definition)
+- **Uxntal:** [bellinitte/uxntal-vscode](https://github.com/bellinitte/uxntal-vscode)
 - **V:** [0x9ef/vscode-vlang](https://github.com/0x9ef/vscode-vlang)
 - **VBA:** [tiabeast/vscode-vba-json](https://github.com/tiabeast/vscode-vba-json)
 - **VBScript:** [peters-ben-0007/VBDotNetSyntax](https://github.com/peters-ben-0007/VBDotNetSyntax)
