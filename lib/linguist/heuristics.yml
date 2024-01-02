@@ -103,7 +103,7 @@ disambiguations:
   - language: BlitzBasic
     pattern: '(<^\s*; |End Function)'
   - language: BitBake
-    pattern: '^\s*(# |include|require)\b'
+    pattern: '^(# |include|require|inherit)\b'
   - language: Clojure
     pattern: '\((def|defn|defmacro|let)\s'
 - extensions: ['.bf']
@@ -371,6 +371,8 @@ disambiguations:
     pattern:
     - '(?i:^\s*\{\$(?:mode|ifdef|undef|define)[ ]+[a-z0-9_]+\})'
     - '^\s*end[.;]\s*$'
+  - language: BitBake
+    pattern: '^inherit(\s+[\w.-]+)+\s*$'
 - extensions: ['.json']
   rules:
   - language: OASv2-json
