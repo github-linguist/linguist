@@ -195,6 +195,10 @@ disambiguations:
     #  : dependency
     # path/file.ext1 : some/path/../file.ext2
     pattern: '([\/\\].*:\s+.*\s\\$|: \\$|^[ %]:|^[\w\s\/\\.]+\w+\.\w+\s*:\s+[\w\s\/\\.]+\w+\.\w+)'
+- extensions: ['.def']
+  rules:
+  - language: Modula-2
+    pattern: '^\s*DEFINITION\s+MODULE\s+[[:alpha:]][[:alnum:]]*\s*;'
 - extensions: ['.dsp']
   rules:
   - language: Microsoft Developer Studio Project
@@ -462,7 +466,7 @@ disambiguations:
   - language: XML
     pattern: '<!ENTITY '
   - language: Modula-2
-    pattern: '^\s*(?i:MODULE|END) [\w\.]+;'
+    pattern: '^\s*(?:IMPLEMENTATION\s+)?MODULE\s+[[:alpha:]][[:alnum:]]*\s*;'
   - language: [Linux Kernel Module, AMPL]
 - extensions: ['.ms']
   rules:
