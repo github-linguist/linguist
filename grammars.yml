@@ -32,6 +32,9 @@ vendor/grammars/Elm/Syntaxes:
 - text.html.mediawiki.elm-documentation
 vendor/grammars/FreeMarker.tmbundle:
 - text.html.ftl
+vendor/grammars/GeneroFgl.tmbundle:
+- source.genero-4gl
+- source.genero-per
 vendor/grammars/Handlebars:
 - text.html.handlebars
 vendor/grammars/IDL-Syntax:
@@ -267,9 +270,6 @@ vendor/grammars/atom-miniyaml:
 vendor/grammars/atom-salt:
 - source.python.salt
 - source.yaml.salt
-vendor/grammars/atomic-dreams:
-- source.dm
-- source.dmf
 vendor/grammars/ats:
 - source.ats
 vendor/grammars/avro.tmLanguage:
@@ -347,6 +347,8 @@ vendor/grammars/desktop.tmbundle:
 - source.desktop
 vendor/grammars/diff.tmbundle:
 - source.diff
+vendor/grammars/dm-syntax:
+- source.dm
 vendor/grammars/dylan.tmbundle:
 - source.dylan
 - source.lid
@@ -357,6 +359,9 @@ vendor/grammars/ec.tmbundle:
 - source.c.ec
 vendor/grammars/ecl-tmLanguage:
 - source.ecl
+vendor/grammars/edgedb-editor-plugin:
+- inline.edgeql
+- source.edgeql
 vendor/grammars/eiffel.tmbundle:
 - source.eiffel
 vendor/grammars/ejs-tmbundle:
@@ -390,9 +395,6 @@ vendor/grammars/gemfile-lock-tmlanguage:
 - source.gemfile-lock
 vendor/grammars/gemini-vscode:
 - source.gemini
-vendor/grammars/genero.tmbundle:
-- source.genero
-- source.genero-forms
 vendor/grammars/gettext.tmbundle:
 - source.po
 vendor/grammars/gnuplot-tmbundle:
@@ -433,6 +435,8 @@ vendor/grammars/holyc.tmbundle:
 - source.hc
 vendor/grammars/hoon-grammar:
 - source.hoon
+vendor/grammars/ide-tools:
+- source.toit
 vendor/grammars/idl.tmbundle:
 - source.idl
 - source.idl-dlm
@@ -891,6 +895,9 @@ vendor/grammars/portugol-grammar:
 - source.portugol
 vendor/grammars/powershell:
 - source.powershell
+vendor/grammars/praatvscode:
+- source.praat
+- source.textgrid
 vendor/grammars/processing.tmbundle:
 - source.processing
 vendor/grammars/python-django.tmbundle:
@@ -1032,8 +1039,12 @@ vendor/grammars/sway-vscode-plugin:
 - source.sway
 vendor/grammars/sweave.tmbundle:
 - text.tex.latex.sweave
-vendor/grammars/swift.tmbundle:
+vendor/grammars/swift-tmlanguage:
 - source.swift
+vendor/grammars/syntax:
+- source.hcl
+- source.hcl.terraform
+- source.sentinel
 vendor/grammars/tcl.tmbundle:
 - source.tcl
 - text.html.tcl
@@ -1059,6 +1070,12 @@ vendor/grammars/verilog.tmbundle:
 - source.verilog
 vendor/grammars/vhdl:
 - source.vhdl
+vendor/grammars/vsc-ember-syntax:
+- inline.hbs
+- inline.template
+- source.gjs
+- source.gts
+- text.html.ember-handlebars
 vendor/grammars/vsc-fennel:
 - source.fnl
 vendor/grammars/vscode-TalonScript:
@@ -1092,7 +1109,6 @@ vendor/grammars/vscode-gleam:
 vendor/grammars/vscode-go:
 - go.mod
 - go.sum
-- govulncheck
 vendor/grammars/vscode-hack:
 - markdown.hack.codeblock
 - source.hack
@@ -1121,12 +1137,18 @@ vendor/grammars/vscode-lean:
 - markdown.lean.codeblock
 - source.lean
 - source.lean.markdown
+vendor/grammars/vscode-lean4:
+- markdown.lean4.codeblock
+- source.lean4
+- source.lean4.markdown
 vendor/grammars/vscode-monkey-c:
 - source.mc
 vendor/grammars/vscode-motoko:
 - source.did
 - source.mo
 vendor/grammars/vscode-move-syntax:
+- markdown.move.codeblock
+- mdx.LANGUAGE.codeblock
 - source.move
 vendor/grammars/vscode-opa:
 - source.rego
@@ -1154,6 +1176,7 @@ vendor/grammars/vscode-scala-syntax:
 vendor/grammars/vscode-singularity:
 - source.singularity
 vendor/grammars/vscode-slice:
+- source.ice
 - source.slice
 vendor/grammars/vscode-vba-json:
 - source.vba
