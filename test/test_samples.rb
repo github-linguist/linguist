@@ -46,6 +46,7 @@ class TestSamples < Minitest::Test
     Samples.each do |sample|
       if sample[:filename]
         listed_filenames = Language[sample[:language]].filenames
+        listed_filenames -= ["HOSTS"] if ["Hosts File", "INI"].include?(sample[:language])
         assert_includes listed_filenames, sample[:filename], "#{sample[:path]} isn't listed as a filename for #{sample[:language]} in languages.yml"
       end
     end
@@ -90,6 +91,9 @@ class TestSamples < Minitest::Test
       end
 
       language.filenames.each do |filename|
+        # Kludge for an unusual edge-case; see https://bit.ly/41EyUkU
+        next if ["Hosts File", "INI"].include?(language.name) && filename == "HOSTS"
+
         # Check for samples if more than one language matches the given filename
         if Language.find_by_filename(filename).size > 1
           sample = "samples/#{language.name}/filenames/#{filename}"
@@ -99,7 +103,7 @@ class TestSamples < Minitest::Test
       end
     end
   end
-  
+
   def case_insensitive_glob(extension)
     glob = ""
     extension.each_char do |c|

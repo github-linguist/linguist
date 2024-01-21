@@ -1,9 +1,8 @@
 # Linguist
 
-[![Actions Status](https://github.com/github/linguist/workflows/Run%20Tests/badge.svg)](https://github.com/github/linguist/actions)
+[![Actions Status](https://github.com/github/linguist/workflows/Run%20Tests/badge.svg)](https://github.com/github/linguist/actions) 
 
-[issues]: https://github.com/github/linguist/issues
-[new-issue]: https://github.com/github/linguist/issues/new
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/github-linguist/linguist)
 
 This library is used on GitHub.com to detect blob languages, ignore binary or vendored files, suppress generated files in diffs, and generate language breakdown graphs.
 
@@ -30,6 +29,7 @@ Accordingly, we highly recommend you install a version of Ruby using Homebrew, `
 
 Linguist uses [`charlock_holmes`](https://github.com/brianmario/charlock_holmes) for character encoding and [`rugged`](https://github.com/libgit2/rugged) for libgit2 bindings for Ruby.
 These components have their own dependencies.
+
 1. charlock_holmes
     * cmake
     * pkg-config
@@ -95,6 +95,7 @@ $ github-linguist
 #### Additional options
 
 ##### `--rev REV`
+
 The `--rev REV` flag will change the git revision being analyzed to any [gitrevisions(1)](https://git-scm.com/docs/gitrevisions#_specifying_revisions) compatible revision you specify.
 
 This is useful to analyze the makeup of a repo as of a certain tag, or in a certain branch.
@@ -118,12 +119,14 @@ $ github-linguist jekyll
 ```
 
 And here is Jekyll's published website, from the gh-pages branch inside their repository.
+
 ```console
 $ github-linguist jekyll --rev origin/gh-pages
 100.00% 2568354    HTML
 ```
 
 ##### `--breakdown`
+
 The `--breakdown` or `-b` flag will additionally show the breakdown of files by language.
 
 You can try running `github-linguist` on the root directory in this repository itself:
@@ -149,6 +152,7 @@ lib/linguist.rb
 ```
 
 ##### `--json`
+
 The `--json` or `-j` flag output the data into JSON format.
 
 ```console
@@ -157,6 +161,7 @@ $ github-linguist --json
 ```
 
 This option can be used in conjunction with `--breakdown` to get a full list of files along with the size and percentage data.
+
 ```console
 $ github-linguist --breakdown --json
 {"Dockerfile":{"size":1212,"percentage":"0.31","files":["Dockerfile","tools/grammars/Dockerfile"]},"Ruby":{"size":264519,"percentage":"66.84","files":["Gemfile","Rakefile","bin/git-linguist","bin/github-linguist","ext/linguist/extconf.rb","github-linguist.gemspec","lib/linguist.rb",...]}}
@@ -212,7 +217,6 @@ lib/linguist.rb
 ## Contributing
 
 Please check out our [contributing guidelines](CONTRIBUTING.md).
-
 
 ## License
 

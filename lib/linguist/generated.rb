@@ -60,6 +60,7 @@ module Linguist
       generated_net_specflow_feature_file? ||
       composer_lock? ||
       cargo_lock? ||
+      flake_lock? ||
       node_modules? ||
       go_vendor? ||
       go_lock? ||
@@ -71,6 +72,7 @@ module Linguist
       generated_yarn_plugnplay? ||
       godeps? ||
       generated_by_zephir? ||
+      htmlcov? ||
       minified_files? ||
       has_source_map? ||
       source_map? ||
@@ -299,7 +301,7 @@ module Linguist
 
       # Type 1 and Type 42 fonts converted to PostScript are stored as hex-encoded byte streams; these
       # streams are always preceded the `eexec` operator (if Type 1), or the `/sfnts` key (if Type 42).
-      return true if data =~ /(\n|\r\n|\r)\s*(?:currentfile eexec\s+|\/sfnts\s+\[\1<)\h{8,}\1/
+      return true if data =~ /^\s*(?:currentfile eexec\s+|\/sfnts\s+\[\s<)/
 
       # We analyze the "%%Creator:" comment, which contains the author/generator
       # of the file. If there is one, it should be in one of the first few lines.
@@ -464,6 +466,13 @@ module Linguist
     # Returns true or false.
     def cargo_lock?
       !!name.match(/Cargo\.lock/)
+    end
+
+    # Internal: Is the blob a generated Nix flakes lock file?
+    #
+    # Returns true or false
+    def flake_lock?
+      !!name.match(/(^|\/)flake\.lock$/)
     end
 
     # Is the blob a VCR Cassette file?
@@ -684,8 +693,8 @@ module Linguist
     def generated_gimp?
       return false unless ['.c', '.h'].include? extname
       return false unless lines.count > 0
-      return lines[0].match(/\/\* GIMP [a-zA-Z0-9\- ]+ C\-Source image dump \(.+?\.c\) \*\//) ||
-             lines[0].match(/\/\*  GIMP header image file format \([a-zA-Z0-9\- ]+\)\: .+?\.h  \*\//)
+      return lines[0].match(/^\/\* GIMP [a-zA-Z0-9\- ]+ C\-Source image dump \(.+?\.c\) \*\//) ||
+             lines[0].match(/^\/\*  GIMP header image file format \([a-zA-Z0-9\- ]+\)\: .+?\.h  \*\//)
     end
 
     # Internal: Is this a generated Microsoft Visual Studio 6.0 build file?
@@ -786,7 +795,16 @@ module Linguist
       return false unless lines.count >= 5
       lines[0].match?(/^# typed:/) &&
       lines[2].include?("DO NOT EDIT MANUALLY") &&
-      lines[4].match?(/^# Please.*run.*`.*tapioca/)
+      lines[4].match?(/^# Please (run|instead update this file by running) `bin\/tapioca/)
+    end
+
+    # Internal: Is this an HTML coverage report?
+    #
+    # Tools like coverage.py generate HTML reports under an `htmlcov` directory.
+    #
+    # Returns true or false.
+    def htmlcov?
+      !!name.match(/(?:^|\/)htmlcov\//)
     end
 
     # Internal: Extract a Hash of name/content pairs from an HTML <meta> tag
