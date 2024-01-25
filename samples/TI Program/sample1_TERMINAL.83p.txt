@@ -1,0 +1,102 @@
+StorePic 0:StoreGDB 1
+ClrHome:ClrDraw
+0->Ymax:~62->Ymin:0->Y
+0->Xmin:94->Xmax:0->X
+AxesOff:GridOff:PlotsOff 
+Lbl A
+length(Str1->U
+If Y:Y+6->Y:0->X:0->K
+Text(Y,X,Str1
+X+4length(Str1->X
+While K!=105
+	0->K
+	Repeat K
+		For(I,1,30
+			getKey->K
+			I+4K->I
+			Line(X,~(Y+5),X+2,~(Y+5),I<15
+		End
+	End
+	If K=23 and U<length(Str1:Then
+		sub(Str1,1,length(Str1)-1->Str1
+		If X:Then
+			Text(Y,X-4,"    "
+			X-4->X		
+		End
+		If X<4:Then
+			88->X:Y-6->Y
+			Text(Y,X,"    
+		End
+	End
+	If K=105:Then
+		sub(Str1,1,U->Str0
+		sub(Str1,U+1,length(Str1)-U->Str1
+		If Str1="EXIT()":Goto Q
+		prgmCL
+		Goto O
+	End
+	K-5int(.1K)-20->K
+	If K>0 and K<35:Then
+		Str1+sub("ABC()DEFGHIJKLMNOPQRSTUVWXYZtheta'  ,?",Ans,1->Str1
+		Text(Y,X+4,sub(Str1,length(Str1),1
+		X+4->X
+	End
+	If K>~15 and K<~9:Then
+		K+15->K
+		Str1+sub("/*-+.",K,1->Str1
+		
+		If sub(Str1,length(Str1),1)="*":Then
+			Text(Y,X+4,"X
+		Else
+			Text(Y,X+4,sub(Str1,length(Str1),1
+		End
+		X+4->X
+	End
+	If X>89:Then
+		0->X:Y+6->Y
+	End
+	If Y>57:Then
+		ClrDraw
+		0->X:0->Y
+	End
+End
+Lbl O
+Y+6->Y:0->X
+If Y>=54:Then
+	ClrDraw:0->X:0->Y
+End
+For(A,1,length(Str1
+	If X<90
+	Text(Y,X,sub(Str1,A,1
+	If X>89:Then
+		If Y>53:Then
+			For(O,1,100
+			End
+			DelVar OClrDraw
+			0->X:0->Y
+		Else
+			0->X:Y+6->Y
+		End
+		If sub(Str1,A,1)=" ":A+1->A
+		Text(Y,X,sub(Str1,A,1
+	End
+	X+4->X
+End
+Str0->Str1:DelVar Str0
+Lbl Q
+If Str1="EXIT()":Then
+	Str0->Str1:DelVar Str0
+	Y+6->Y:0->X
+	If Y>=54:Then
+		ClrDraw
+		0->X:0->Y
+	End
+	Text(Y,X,"USER:"+sub(Str1,1,length(Str1)-1)+" LOGGED OUT"
+	Pause :ClrDraw
+	DelVar UDelVar XDelVar YDelVar ADelVar K
+	RecallPic 0
+	RecallGDB 1
+	DelVar GDB1DelVar Pic0
+Else
+	Goto A
+End
