@@ -541,6 +541,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Sweave:** [textmate/sweave.tmbundle](https://github.com/textmate/sweave.tmbundle)
 - **Swift:** [jtbandes/swift-tmlanguage](https://github.com/jtbandes/swift-tmlanguage)
 - **SystemVerilog:** [TheClams/SystemVerilog](https://github.com/TheClams/SystemVerilog)
+- **TI Program:** [TIny-Hacker/language-ti-basic](https://github.com/TIny-Hacker/language-ti-basic)
 - **TL-Verilog:** [adamint/tlv-vscode](https://github.com/adamint/tlv-vscode)
 - **TLA:** [tlaplus-community/tree-sitter-tlaplus](https://github.com/tlaplus-community/tree-sitter-tlaplus) 🐌
 - **TOML:** [textmate/toml.tmbundle](https://github.com/textmate/toml.tmbundle)
