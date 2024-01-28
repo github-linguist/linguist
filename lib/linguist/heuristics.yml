@@ -713,6 +713,11 @@ disambiguations:
     pattern: '^\s*(?:use\s+v6\b|\bmodule\b|\bmy\s+class\b)'
   - language: Turing
     pattern: '^\s*%[ \t]+|^\s*var\s+\w+(\s*:\s*\w+)?\s*:=\s*\w+'
+- extensions: ['.tact']
+  rules:
+  - language: JSON
+    pattern: '\A\s*\{\"project\"\:'
+  - language: Tact
 - extensions: ['.tag']
   rules:
   - language: Java Server Pages
