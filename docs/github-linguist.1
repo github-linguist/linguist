@@ -1,0 +1,176 @@
+'\" te
+.if '\*(.T'utf8' .tr -\-~\(ti^\(ha
+.Dd October 27, 2022
+.Dt GITHUB-LINGUIST 1
+.Os
+.Sh NAME
+.Nm github-linguist
+.Nd detect language type and determine language breakdown for a given Git repository
+.
+.Sh SYNOPSIS
+.Nm
+.Op Fl -rev Ar REV
+.Op Fl -breakdown
+.Op Fl -json
+.Op Ar directory
+.
+.Nm
+.Op Fl -json
+.Ar file
+.
+.Sh DESCRIPTION
+In the first invocation,
+.Nm
+displays a language breakdown report for the Git repository at
+.Ar directory ,
+or that of the current directory if none is specified.
+.
+.Pp
+In the second invocation,
+.Nm
+reports the language detected for a single
+.Ar file ,
+which need not reside within a Git repository.
+In addition,
+it indicates whether the file appears to be generated or vendored source-code.
+.
+.Bl -tag -width 4n
+.It Fl b , Fl -breakdown
+Analyse a Git repository at
+.Ar directory
+and display detailed usage statistics.
+.
+.It Fl h , Fl -help
+Display a short usage summary, then exit.
+.
+.It Fl j , Fl -json
+Output results as JSON.
+.
+.It Fl r , Fl -rev Op Ar revision
+Analyse the specified Git
+.Ar revision ,
+falling back to
+.Sy HEAD
+if one isn't provided.
+See
+.Xr gitrevisions 7
+for a discussion of alternative revision formats.
+.El
+.
+.Sh ENVIRONMENT
+.Bl -tag -width 1n
+.It Ev LINGUIST_DEBUG
+An integer representing the verbosity level of classifier output.
+Used only when analysing a specific file;
+ignored when calculating repository statistics.
+.sp
+.Bl -tag -width 2n
+.It Sy 0
+Do not display details of classification (default).
+.It Sy 1
+Display the computed probabilities of each language that matches the subject.
+Candidates are listed in the following format:
+.Bd -literal -compact -offset 2n
+.Ar name No = Ar token-probability No + Ar language-probability No = Ar score
+.Ed
+where
+.Bd -ragged -compact -offset 2n
+.TS
+tab(@);
+li lb lx .
+token-probability@:=@T{
+the sum of each token's probability of occurring in a particular language:
+.EQ
+P(D | C)
+.EN
+T}
+language-probability@:=@T{
+the likelihood of a language occurring:
+.EQ
+P(C)
+.EN
+T}
+score@:=@T{
+the sum of both variables.
+T}
+.TE
+.Ed
+.
+.It Sy 2
+In addition to the above, display a table of probabilities for each
+.Brq Vt token , Ns Vt language
+pair.
+The number in each table entry is the number of
+.Dq points
+that each token contributes toward the belief that the \
+subject file is of a particular language.
+Points are additive.
+.Pp
+Points are the number of times a token appears in the file,
+times how much more likely
+.Pq Xr log 3 No of probability ratio
+that token is to appear in one language versus the least-likely language.
+Dashes indicate the least-likely language (and zero points) for each token.
+.El
+.El
+.
+.Sh EXIT STATUS
+.Ex -std
+.
+.Sh EXAMPLES
+Display the language statistics of a Git repository in another directory:
+.Dl Nm Pa ~/Forks/GitHub-Linguist
+Output:
+.Bd -literal -compact -offset indent
+\&66.67%  274359     Ruby
+\&23.50%  96694      C
+\&6.71%   27627      Go
+\&1.63%   6696       Lex
+\&1.22%   5032       Shell
+\&0.27%   1096       Dockerfile
+.Ed
+.Pp
+Display the language stats at the time of a past commit:
+.Dl Nm Fl -rev Ar c5ee547 Pa ~/Labs/file-icons/atom
+.
+.Pp
+Identify the format of a particular file:
+.Dl Nm Pa ~/Labs/Inspect.ps/inspect.ps
+Output:
+.Bd -literal -compact -offset indent
+\&/Users/Alhadis/Labs/Inspect.ps/inspect.ps: 211 lines (205 sloc)
+\&  type:      Text
+\&  mime type: application/postscript
+\&  language:  PostScript
+.Ed
+.Pp
+As above, except as JSON data:
+.Dl Nm Fl -json Pa inspect.ps
+Output (pretty-printed for readability):
+.Bd -literal -compact -offset indent
+\&{
+\&    "inspect.ps": {
+\&        "lines": 211,
+\&        "sloc": 205,
+\&        "type": "Text",
+\&        "mime_type": "application/postscript",
+\&        "language": "PostScript",
+\&        "large": false,
+\&        "generated": false,
+\&        "vendored": false
+\&    }
+\&}
+.Ed
+.
+.Sh SEE ALSO
+.Xr file 1 ,
+.Xr git-linguist 1 ,
+.Xr git-rev-parse 1
+.Pp
+.Lk https://github.com/github/linguist "GitHub repository"
+.br
+.Lk https://rubygems.org/gems/github-linguist RubyGems
+.
+.Sh AUTHORS
+Copyright \(co 2011-2022 GitHub, Inc.
+All rights reserved.
