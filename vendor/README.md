@@ -387,6 +387,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Objective-C++:** [textmate/objective-c.tmbundle](https://github.com/textmate/objective-c.tmbundle)
 - **Objective-J:** [textmate/javascript-objective-j.tmbundle](https://github.com/textmate/javascript-objective-j.tmbundle)
 - **Odin:** [odin-lang/sublime-odin](https://github.com/odin-lang/sublime-odin)
+- **Ohm:** [novusnota/vscode-ohm](https://github.com/novusnota/vscode-ohm)
 - **Opa:** [mads379/opa.tmbundle](https://github.com/mads379/opa.tmbundle)
 - **Opal:** [artifactz/sublime-opal](https://github.com/artifactz/sublime-opal)
 - **Open Policy Agent:** [open-policy-agent/vscode-opa](https://github.com/open-policy-agent/vscode-opa)
