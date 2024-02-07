@@ -657,6 +657,12 @@ disambiguations:
   - language: Markdown
     # Markdown syntax for scdoc
     pattern: '^#+\s+(NAME|SYNOPSIS|DESCRIPTION)'
+- extensions: ['.sl']
+  rules:
+  - language: Sci-Lisp
+    pattern: '\(\s*(macro|while|set!|defn|def|method|struct|let|for|cond|if|import|export|enum|switch)\s+.*'
+  - language: Slash
+    pattern: 'class\s+\w+\s*\{|def\s+\w+\(.*\)\s*\{'
 - extensions: ['.sol']
   rules:
   - language: Solidity
