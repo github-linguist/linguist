@@ -28,7 +28,7 @@ class TestGenerated < Minitest::Test
       Generated.generated?(blob, lambda { raise DataLoadedError.new })
     end
     expected = !negate
-    actual = Generated.generated?(blob, lambda { IO.read(blob) })
+    actual = Generated.generated?(blob, lambda { File.read(blob) })
     assert(expected == !!actual, error_message(blob, negate))
   end
 
