@@ -15,4 +15,4 @@
 
 (._; >;); // recurse
 
-out meta ql;
+out skel qt;
