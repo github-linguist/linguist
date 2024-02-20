@@ -1,4 +1,5 @@
-# Grammar index
+Grammar index
+=============
 
 This is a list of grammars that Linguist selects to provide syntax highlighting on GitHub. If you've encountered an error with highlighting, please find the grammar in the list below and report it to the appropriate repository.
 
