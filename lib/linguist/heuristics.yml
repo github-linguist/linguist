@@ -524,6 +524,13 @@ disambiguations:
     pattern: '<\?hh'
   - language: PHP
     pattern: '<\?[^h]'
+- extensions: ['.pkl']
+  rules:
+    - language: Pkl
+      pattern:
+      - '^\s*(module|import|amends|extends|local|const|fixed|abstract|open|class|typealias|@\w+)\b'
+      - '^\s*[a-zA-Z0-9_$]+\s*(=|{|:)|^\s*`[^`]+`\s*(=|{|:)|for\s*\(|when\s*\('
+    - language: Pickle
 - extensions: ['.pl']
   rules:
   - language: Prolog
