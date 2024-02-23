@@ -835,7 +835,7 @@ named_patterns:
   - '^[ \t]*catch\s*\('
   - '^[ \t]*(class|(using[ \t]+)?namespace)\s+\w+'
   - '^[ \t]*(private|public|protected):$'
-  - '__has_cpp_attribute|__cplusplus'
+  - '__has_cpp_attribute|__cplusplus >'
   - 'std::\w+'
   euphoria:
   - '^\s*namespace\s'
