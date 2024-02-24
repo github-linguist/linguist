@@ -516,6 +516,11 @@ disambiguations:
     pattern: '<\?hh'
   - language: PHP
     pattern: '<\?[^h]'
+- extensions: ['.pkl']
+  rules:
+  - language: Pkl
+    pattern: 'new|class|function|import|module|(\w+\s*({|=))'
+  - language: Pickle
 - extensions: ['.pl']
   rules:
   - language: Prolog
