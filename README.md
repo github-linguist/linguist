@@ -24,7 +24,7 @@
  $ python3 -m Uputt
 ## Heroku Deploy!
 <h3 align="center">Click The Button</h3>
-<a href="https://heroku.com/deploy?template=https://github.com/Marszyygreat/Medoy-Userbot-"><img src="https://www.herokucdn.com/deploy/button.svg"></a>
+<a href="https://heroku.com/deploy?template=https://github.com/Marszyygreat/Bhedoy-Userbot-"><img src="https://www.herokucdn.com/deploy/button.svg"></a>
 </div>
 
 
