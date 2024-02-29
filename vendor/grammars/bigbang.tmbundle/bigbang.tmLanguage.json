@@ -1,0 +1,556 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "bigbang",
+  "scopeName": "source.big",
+  "uuid": "f9e9871d-2ea6-4be0-afd2-fc382d704716",
+  "patterns": [
+    { "include": "#expression" },
+    { "include": "#define-constant" },
+    { "include": "#define-data-var" },
+    { "include": "#define-map" },
+    { "include": "#define-function" },
+    { "include": "#define-fungible-token" },
+    { "include": "#define-non-fungible-token" },
+    { "include": "#define-trait" },
+    { "include": "#use-trait" }
+  ],
+  "repository": {
+    "comment": {
+      "name": "comment.line.semicolon.big",
+      "match": "(?x) (?<=^|[()\\[\\]{}\",'`;\\s]) (;) .* $"
+    },
+    "expression": {
+      "patterns": [
+        { "include": "#comment" },
+        { "include": "#keyword" },
+        { "include": "#literal" },
+        { "include": "#let-func" },
+        { "include": "#built-in-func" },
+        { "include": "#get-set-func" }
+      ]
+    },
+    "keyword": {
+      "name": "constant.language.big",
+      "match": "(?<!\\S)(?!-)\\b(?:block-height|burn-block-height|chain-id|contract-caller|is-in-regtest|stx-liquid-supply|tx-sender|tx-sponsor?)\\b(?!\\s*-)"
+    },
+    "define-function": {
+      "begin": "(?x) (\\() \\s* (define-(?:public|private|read-only)) \\s+",
+      "end": "(\\))",
+      "beginCaptures": {
+        "1": { "name": "punctuation.define-function.start.big" },
+        "2": { "name": "keyword.declaration.define-function.big" }
+      },
+      "endCaptures": {
+        "1": { "name": "punctuation.define-function.end.big" }
+      },
+      "name": "meta.define-function",
+      "patterns": [
+        { "include": "#expression" },
+        {
+          "begin": "(?x) (\\() \\s* ([a-zA-Z][\\w\\?\\!\\-]*) \\s*",
+          "end": "(\\))",
+          "beginCaptures": {
+            "1": { "name": "punctuation.function-signature.start.big" },
+            "2": { "name": "entity.name.function.big" }
+          },
+          "endCaptures": {
+            "1": { "name": "punctuation.function-signature.end.big" }
+          },
+          "name": "meta.define-function-signature",
+          "patterns": [
+            {
+              "begin": "(?x) (\\() \\s* ([a-zA-Z][\\w\\?\\!\\-]*) \\s+",
+              "end": "(\\))",
+              "beginCaptures": {
+                "1": { "name": "punctuation.function-argument.start.big" },
+                "2": { "name": "variable.parameter.big" }
+              },
+              "endCaptures": {
+                "1": { "name": "punctuation.function-argument.end.big" }
+              },
+              "name": "meta.function-argument",
+              "patterns": [{ "include": "#data-type" }]
+            }
+          ]
+        },
+        { "include": "#user-func" }
+      ]
+    },
+    "define-fungible-token": {
+      "match": "(?x) (\\() \\s* (define-fungible-token) \\s+ ([a-zA-Z][\\w\\?\\!\\-]*) (?:\\s+(u\\d+))?",
+      "captures": {
+        "1": { "name": "punctuation.define-fungible-token.start.big" },
+        "2": { "name": "keyword.declaration.define-fungible-token.big" },
+        "3": {
+          "name": "entity.name.fungible-token-name.big variable.other.big"
+        },
+        "4": { "name": "constant.numeric.fungible-token-total-supply.big" },
+        "5": { "name": "punctuation.define-fungible-token.end.big" }
+      }
+    },
+    "define-non-fungible-token": {
+      "begin": "(?x) (\\() \\s* (define-non-fungible-token) \\s+ ([a-zA-Z][\\w\\?\\!\\-]*) \\s+",
+      "end": "(\\))",
+      "beginCaptures": {
+        "1": { "name": "punctuation.define-non-fungible-token.start.big" },
+        "2": {
+          "name": "keyword.declaration.define-non-fungible-token.big"
+        },
+        "3": {
+          "name": "entity.name.non-fungible-token-name.big variable.other.big"
+        }
+      },
+      "endCaptures": {
+        "1": { "name": "punctuation.define-non-fungible-token.end.big" }
+      },
+      "name": "meta.define-non-fungible-token",
+      "patterns": [{ "include": "#data-type" }]
+    },
+    "define-trait": {
+      "begin": "(?x) (\\() \\s* (define-trait) \\s+ ([a-zA-Z][\\w\\?\\!\\-]*) \\s+",
+      "end": "(\\))",
+      "beginCaptures": {
+        "1": { "name": "punctuation.define-trait.start.big" },
+        "2": { "name": "keyword.declaration.define-trait.big" },
+        "3": { "name": "entity.name.trait-name.big variable.other.big" }
+      },
+      "endCaptures": {
+        "1": { "name": "punctuation.define-trait.end.big" }
+      },
+      "name": "meta.define-trait",
+      "patterns": [
+        {
+          "begin": "(?x) (\\() \\s*",
+          "end": "(\\))",
+          "beginCaptures": {
+            "1": { "name": "punctuation.define-trait-body.start.big" }
+          },
+          "endCaptures": {
+            "1": { "name": "punctuation.define-trait-body.end.big" }
+          },
+          "name": "meta.define-trait-body",
+          "patterns": [
+            { "include": "#expression" },
+            {
+              "begin": "(?x) (\\() \\s* ([a-zA-Z][\\w\\!\\?\\-]*) \\s+",
+              "end": "(\\))",
+              "beginCaptures": {
+                "1": { "name": "punctuation.trait-function.start.big" },
+                "2": {
+                  "name": "entity.name.function.big"
+                }
+              },
+              "endCaptures": {
+                "1": { "name": "punctuation.trait-function.end.big" }
+              },
+              "name": "meta.trait-function",
+              "patterns": [
+                { "include": "#data-type" },
+                {
+                  "begin": "(?x) (\\() \\s*",
+                  "end": "(\\))",
+                  "beginCaptures": {
+                    "1": {
+                      "name": "punctuation.trait-function-args.start.big"
+                    }
+                  },
+                  "endCaptures": {
+                    "1": {
+                      "name": "punctuation.trait-function-args.end.big"
+                    }
+                  },
+                  "name": "meta.trait-function-args",
+                  "patterns": [{ "include": "#data-type" }]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "use-trait": {
+      "begin": "(?x) (\\() \\s* (use-trait) \\s+ ([a-zA-Z][\\w\\?\\!\\-]*) \\s+",
+      "end": "(\\))",
+      "beginCaptures": {
+        "1": { "name": "punctuation.use-trait.start.big" },
+        "2": { "name": "keyword.declaration.use-trait.big" },
+        "3": {
+          "name": "entity.name.trait-alias.big variable.other.big"
+        }
+      },
+      "endCaptures": {
+        "1": { "name": "punctuation.use-trait.end.big" }
+      },
+      "name": "meta.use-trait",
+      "patterns": [{ "include": "#literal" }]
+    },
+    "define-constant": {
+      "begin": "(?x) (\\() \\s* (define-constant) \\s+ ([a-zA-Z][\\w\\?\\!\\-]*) \\s+",
+      "end": "(\\))",
+      "beginCaptures": {
+        "1": { "name": "punctuation.define-constant.start.big" },
+        "2": { "name": "keyword.declaration.define-constant.big" },
+        "3": {
+          "name": "entity.name.constant-name.big variable.other.big"
+        }
+      },
+      "endCaptures": {
+        "1": { "name": "punctuation.define-constant.end.big" }
+      },
+      "name": "meta.define-constant",
+      "patterns": [{ "include": "#expression" }]
+    },
+    "define-data-var": {
+      "begin": "(?x) (\\() \\s* (define-data-var) \\s+ ([a-zA-Z][\\w\\?\\!\\-]*) \\s+",
+      "end": "(\\))",
+      "beginCaptures": {
+        "1": { "name": "punctuation.define-data-var.start.big" },
+        "2": { "name": "keyword.declaration.define-data-var.big" },
+        "3": {
+          "name": "entity.name.data-var-name.big variable.other.big"
+        }
+      },
+      "endCaptures": {
+        "1": { "name": "punctuation.define-data-var.end.big" }
+      },
+      "name": "meta.define-data-var",
+      "patterns": [{ "include": "#data-type" }, { "include": "#expression" }]
+    },
+    "define-map": {
+      "begin": "(?x) (\\() \\s* (define-map) \\s+ ([a-zA-Z][\\w\\?\\!\\-]*) \\s+",
+      "end": "(\\))",
+      "beginCaptures": {
+        "1": { "name": "punctuation.define-map.start.big" },
+        "2": { "name": "keyword.declaration.define-map.big" },
+        "3": { "name": "entity.name.map-name.big variable.other.big" }
+      },
+      "endCaptures": {
+        "1": { "name": "punctuation.define-map.end.big" }
+      },
+      "name": "meta.define-map",
+      "patterns": [{ "include": "#data-type" }, { "include": "#expression" }]
+    },
+    "literal": {
+      "patterns": [
+        { "include": "#number-literal" },
+        { "include": "#bool-literal" },
+        { "include": "#string-literal" },
+        { "include": "#tuple-literal" },
+        { "include": "#principal-literal" },
+        { "include": "#list-literal" },
+        { "include": "#optional-literal" },
+        { "include": "#response-literal" }
+      ],
+      "repository": {
+        "number-literal": {
+          "patterns": [
+            {
+              "comment": "unsigned integers",
+              "name": "constant.numeric.uint.big",
+              "match": "(?<!\\S)(?!-)\\bu\\d+\\b(?!\\s*-)"
+            },
+            {
+              "comment": "signed integers",
+              "name": "constant.numeric.int.big",
+              "match": "(?<!\\S)(?!-)\\b\\d+\\b(?!\\s*-)"
+            },
+            {
+              "comment": "hexadecimals",
+              "name": "constant.numeric.hex.big",
+              "match": "(?<!\\S)(?!-)\\b0x[0-9a-f]*\\b(?!\\s*-)"
+            }
+          ]
+        },
+        "bool-literal": {
+          "name": "constant.language.bool.big",
+          "match": "(?<!\\S)(?!-)\\b(true|false)\\b(?!\\s*-)"
+        },
+        "string-literal": {
+          "patterns": [
+            {
+              "name": "string.quoted.double.big",
+              "begin": "(u?)(\")",
+              "beginCaptures": {
+                "1": { "name": "string.quoted.utf8.big" },
+                "2": { "name": "punctuation.definition.string.begin.big" }
+              },
+              "end": "\"",
+              "endCaptures": {
+                "1": { "name": "punctuation.definition.string.end.big" }
+              },
+              "patterns": [
+                {
+                  "name": "constant.character.escape.quote",
+                  "match": "\\\\."
+                }
+              ]
+            }
+          ]
+        },
+        "tuple-literal": {
+          "begin": "(\\{)",
+          "end": "(\\})",
+          "beginCaptures": {
+            "1": { "name": "punctuation.tuple.start.big" }
+          },
+          "endCaptures": {
+            "1": { "name": "punctuation.tuple.end.big" }
+          },
+          "name": "meta.tuple",
+          "patterns": [
+            {
+              "name": "entity.name.tag.tuple-key.big",
+              "match": "([a-zA-Z][\\w\\?\\!\\-]*)(?=:)"
+            },
+            { "include": "#expression" },
+            { "include": "#user-func" }
+          ]
+        },
+        "principal-literal": {
+          "name": "constant.other.principal.big",
+          "match": "(?x)  \\'[0-9A-Z]{28,41}(:?\\.[a-zA-Z][a-zA-Z0-9\\-]+){0,2} | (\\.[a-zA-Z][a-zA-Z0-9\\-]*){1,2} (?=[\\s(){},]|$)"
+        },
+        "list-literal": {
+          "begin": "(?x) (\\() \\s* (list) \\s+",
+          "end": "(\\))",
+          "beginCaptures": {
+            "1": { "name": "punctuation.list.start.big" },
+            "2": { "name": "entity.name.type.list.big" }
+          },
+          "endCaptures": {
+            "1": { "names": "punctuation.list.end.big" }
+          },
+          "name": "meta.list",
+          "patterns": [
+            { "include": "#expression" },
+            { "include": "#user-func" }
+          ]
+        },
+        "optional-literal": {
+          "patterns": [
+            {
+              "match": "(?<!\\S)(?!-)\\b(none)\\b(?!\\s*-)",
+              "name": "constant.language.none.big"
+            },
+            {
+              "begin": "(?x) (\\() \\s* (some) \\s+",
+              "end": "(\\))",
+              "beginCaptures": {
+                "1": { "name": "punctuation.some.start.big" },
+                "2": { "name": "constant.language.some.big" }
+              },
+              "endCaptures": {
+                "1": { "name": "punctuation.some.end.big" }
+              },
+              "name": "meta.some",
+              "patterns": [{ "include": "#expression" }]
+            }
+          ]
+        },
+        "response-literal": {
+          "begin": "(?x) (\\() \\s* (ok|err) \\s+",
+          "end": "(\\))",
+          "beginCaptures": {
+            "1": { "name": "punctuation.response.start.big" },
+            "2": { "name": "constant.language.ok-err.big" }
+          },
+          "endCaptures": {
+            "1": { "name": "punctuation.response.end.big" }
+          },
+          "name": "meta.response",
+          "patterns": [
+            { "include": "#expression" },
+            { "include": "#user-func" }
+          ]
+        }
+      }
+    },
+    "data-type": {
+      "patterns": [
+        { "include": "#comment" },
+        {
+          "comment": "numerics",
+          "name": "entity.name.type.numeric.big",
+          "match": "\\b(uint|int)\\b"
+        },
+        {
+          "comment": "principal",
+          "name": "entity.name.type.principal.big",
+          "match": "\\b(principal)\\b"
+        },
+        {
+          "comment": "bool",
+          "name": "entity.name.type.bool.big",
+          "match": "\\b(bool)\\b"
+        },
+        {
+          "match": "(?x) (\\() \\s* (?:(string-ascii|string-utf8)\\s+(\\d+)) \\s* (\\))",
+          "captures": {
+            "1": { "name": "punctuation.string_type-def.start.big" },
+            "2": { "name": "entity.name.type.string_type.big" },
+            "3": { "name": "constant.numeric.string_type-len.big" },
+            "4": { "name": "punctuation.string_type-def.end.big" }
+          }
+        },
+        {
+          "match": "(?x) (\\() \\s* (buff)\\s+(\\d+)\\s* (\\))",
+          "captures": {
+            "1": { "name": "punctuation.buff-def.start.big" },
+            "2": { "name": "entity.name.type.buff.big" },
+            "3": { "name": "constant.numeric.buf-len.big" },
+            "4": { "name": "punctuation.buff-def.end.big" }
+          }
+        },
+        {
+          "comment": "optional",
+          "begin": "(?x) (\\() \\s* (optional)\\s+",
+          "beginCaptures": {
+            "1": { "name": "punctuation.optional-def.start.big" },
+            "2": { "name": "storage.type.modifier" }
+          },
+          "end": "(\\))",
+          "endCaptures": {
+            "1": { "name": "punctuation.optional-def.end.big" }
+          },
+          "name": "meta.optional-def",
+          "patterns": [{ "include": "#data-type" }]
+        },
+        {
+          "comment": "response",
+          "begin": "(?x) (\\() \\s* (response)\\s+",
+          "beginCaptures": {
+            "1": { "name": "punctuation.response-def.start.big" },
+            "2": { "name": "storage.type.modifier" }
+          },
+          "end": "(\\))",
+          "endCaptures": {
+            "1": { "name": "punctuation.response-def.end.big" }
+          },
+          "name": "meta.response-def",
+          "patterns": [{ "include": "#data-type" }]
+        },
+        {
+          "comment": "list",
+          "begin": "(?x) (\\() \\s* (list) \\s+ (\\d+) \\s+",
+          "end": "(\\))",
+          "beginCaptures": {
+            "1": { "name": "punctuation.list-def.start.big" },
+            "2": { "name": "entity.name.type.list.big" },
+            "3": { "name": "constant.numeric.list-len.big" }
+          },
+          "endCaptures": {
+            "1": { "name": "punctuation.list-def.end.big" }
+          },
+          "name": "meta.list-def",
+          "patterns": [{ "include": "#data-type" }]
+        },
+        {
+          "begin": "(\\{)",
+          "beginCaptures": {
+            "1": { "name": "punctuation.tuple-def.start.big" }
+          },
+          "end": "(\\})",
+          "endCaptures": {
+            "1": { "name": "punctuation.tuple-def.end.big" }
+          },
+          "name": "meta.tuple-def",
+          "patterns": [
+            {
+              "name": "entity.name.tag.tuple-data-type-key.big",
+              "match": "([a-zA-Z][\\w\\?\\!\\-]*)(?=:)"
+            },
+            { "include": "#data-type" }
+          ]
+        }
+      ]
+    },
+    "built-in-func": {
+      "begin": "(?x) (\\() \\s* (\\-|\\+|<\\=|>\\=|<|>|\\*|/|and|append|as-contract|as-max-len\\?|asserts!|at-block|begin|bit-and|bit-not|bit-or|bit-shift-left|bit-shift-right|bit-xor|buff-to-int-be|buff-to-int-le|buff-to-uint-be|buff-to-uint-le|concat|contract-call\\?|contract-of|default-to|element-at|element-at\\?|filter|fold|from-consensus-buff\\?|ft-burn\\?|ft-get-balance|ft-get-supply|ft-mint\\?|ft-transfer\\?|get-block-info\\?|get-burn-block-info\\?|hash160|if|impl-trait|index-of|index-of\\?|int-to-ascii|int-to-utf8|is-eq|is-err|is-none|is-ok|is-some|is-standard|keccak256|len|log2|map|match|merge|mod|nft-burn\\?|nft-get-owner\\?|nft-mint\\?|nft-transfer\\?|not|or|pow|principal-construct\\?|principal-destruct\\?|principal-of\\?|print|replace-at\\?|secp256k1-recover\\?|secp256k1-verify|sha256|sha512|sha512/256|slice\\?|sqrti|string-to-int\\?|string-to-uint\\?|stx-account|stx-burn\\?|stx-get-balance|stx-transfer-memo\\?|stx-transfer\\?|to-consensus-buff\\?|to-int|to-uint|try!|unwrap!|unwrap-err!|unwrap-err-panic|unwrap-panic|xor) \\s+",
+      "end": "(\\))",
+      "beginCaptures": {
+        "1": { "name": "punctuation.built-in-function.start.big" },
+        "2": { "name": "keyword.declaration.built-in-function.big" }
+      },
+      "endCaptures": {
+        "1": { "name": "punctuation.built-in-function.end.big" }
+      },
+      "name": "meta.built-in-function",
+      "patterns": [{ "include": "#expression" }, { "include": "#user-func" }]
+    },
+    "get-set-func": {
+      "name": "meta.get-set-func",
+      "begin": "(?x) (\\() \\s* (var-get|var-set|map-get\\?|map-set|map-insert|map-delete|get) \\s+ ([a-zA-Z][\\w\\?\\!\\-]*) \\s*",
+      "end": "(\\))",
+      "beginCaptures": {
+        "1": { "name": "punctuation.get-set-func.start.big" },
+        "2": { "name": "keyword.control.big" },
+        "3": { "name": "variable.other.big" }
+      },
+      "endCaptures": {
+        "1": { "name": "punctuation.get-set-func.end.big" }
+      },
+      "patterns": [{ "include": "#expression" }]
+    },
+    "let-func": {
+      "begin": "(?x) (\\() \\s* (let) \\s*",
+      "end": "(\\))",
+      "beginCaptures": {
+        "1": { "name": "punctuation.let-function.start.big" },
+        "2": { "name": "keyword.declaration.let-function.big" }
+      },
+      "endCaptures": {
+        "1": { "name": "punctuation.let-function.end.big" }
+      },
+      "name": "meta.let-function",
+      "patterns": [
+        { "include": "#expression" },
+        { "include": "#user-func" },
+        {
+          "begin": "(?x) (\\() \\s*",
+          "end": "(\\))",
+          "beginCaptures": {
+            "1": { "name": "punctuation.let-var.start.big" }
+          },
+          "endCaptures": {
+            "1": { "name": "punctuation.let-var.end.big" }
+          },
+          "name": "meta.let-var",
+          "patterns": [
+            {
+              "begin": "(?x) (\\() ([a-zA-Z][\\w\\?\\!\\-]*) \\s+",
+              "end": "(\\))",
+              "beginCaptures": {
+                "1": { "name": "punctuation.let-local-var.start.big" },
+                "2": {
+                  "name": "entity.name.let-local-var-name.big variable.parameter.big"
+                }
+              },
+              "endCaptures": {
+                "1": { "name": "punctuation.let-local-var.end.big" }
+              },
+              "name": "meta.let-local-var",
+              "patterns": [
+                { "include": "#expression" },
+                { "include": "#user-func" }
+              ]
+            },
+            { "include": "#expression" }
+          ]
+        }
+      ]
+    },
+    "user-func": {
+      "begin": "(?x) (\\() \\s* (([a-zA-Z][\\w\\?\\!\\-]*)) \\s*",
+      "end": "(\\))",
+      "beginCaptures": {
+        "1": { "name": "punctuation.user-function.start.big" },
+        "2": { "name": "entity.name.function.big" }
+      },
+      "endCaptures": {
+        "1": { "name": "punctuation.user-function.end.big" }
+      },
+      "name": "meta.user-function",
+      "patterns": [{ "include": "#expression" }, { "include": "$self" }]
+    }
+  }
+}
