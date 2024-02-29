@@ -108,7 +108,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **CoffeeScript:** [atom/language-coffee-script](https://github.com/atom/language-coffee-script)
 - **ColdFusion:** [SublimeText/ColdFusion](https://github.com/SublimeText/ColdFusion)
 - **ColdFusion CFC:** [SublimeText/ColdFusion](https://github.com/SublimeText/ColdFusion)
-- **Common Lisp:** [textmate/lisp.tmbundle](https://github.com/textmate/lisp.tmbundle)
+- **Common Lisp:** [qingpeng9802/common-lisp-tmlanguage](https://github.com/qingpeng9802/common-lisp-tmlanguage)
 - **Common Workflow Language:** [manabuishii/language-cwl](https://github.com/manabuishii/language-cwl)
 - **Component Pascal:** [textmate/pascal.tmbundle](https://github.com/textmate/pascal.tmbundle)
 - **Cool:** [anunayk/cool-tmbundle](https://github.com/anunayk/cool-tmbundle)
