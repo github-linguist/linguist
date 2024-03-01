@@ -1,0 +1,20 @@
+{{ layout "./base.vto" }}
+<div class="doc">
+  {{ include "templates/header.vto" }}
+
+  <main class="doc-content">
+    <header class="doc-header">
+      <h1>
+        {{ title }}
+      </h1>
+      {{ description |> md }}
+
+      {{ include "templates/toc.vto" }}
+    </header>
+
+    <div class="doc-body">
+      {{ content |> md }}
+    </div>
+  </main>
+</div>
+{{ /layout }}
