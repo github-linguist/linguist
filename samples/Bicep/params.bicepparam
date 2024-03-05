@@ -1,36 +1,25 @@
-/*
-This is a
-multiline comment!
-*/
+using 'br/public:ai/cognitiveservices:1.1.1'
 
-// This is a single line comment
+var suffix = 'ac9h8d'
 
-// using keyword for specifying a Bicep file
-using './params_main.bicep'
-
-// parameter assignment to literals
-param myString = 'hello world!!'
-param myInt = 42
-param myBool = true
-
-// parameter assignment to objects
-param password = 'strongPassword'
-param secretObject = {
-  name : 'vm2'
-  location : 'westus'
-}
-param storageSku = 'Standard_LRS'
-param storageName = 'myStorage'
-param someArray = [
-  'a'
-  'b'
-  'c'
-  'd'
+param skuName = 'S0'
+param kind = 'OpenAI'
+param name = 'openai-${suffix}'
+param location = 'westus2'
+param deployments = [
+  {
+    name: 'model-deployment-${suffix}'
+    sku: {
+      name: 'Standard'
+      capacity: 120
+    }
+    properties: {
+      model: {
+        format: 'OpenAI'
+        name: 'text-davinci-002'
+        version: 1
+      }
+      raiPolicyName: 'Microsoft.Default'
+    }
+  }
 ]
-param emptyMetadata = 'empty!'
-param description = 'descriptive description'
-param description2 = 'also descriptive'
-param additionalMetadata = 'more metadata'
-param someParameter = 'three'
-param stringLiteral = 'abc'
-param decoratedString = 'Apple'
