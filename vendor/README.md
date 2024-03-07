@@ -548,6 +548,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **TSV:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **TSX:** [Microsoft/TypeScript-TmLanguage](https://github.com/Microsoft/TypeScript-TmLanguage)
 - **TXL:** [MikeHoffert/Sublime-Text-TXL-syntax](https://github.com/MikeHoffert/Sublime-Text-TXL-syntax)
+- **Tact:** [tact-lang/tact-vscode](https://github.com/tact-lang/tact-vscode)
 - **Talon:** [mrob95/vscode-TalonScript](https://github.com/mrob95/vscode-TalonScript)
 - **Tcl:** [textmate/tcl.tmbundle](https://github.com/textmate/tcl.tmbundle)
 - **Tcsh:** [atom/language-shellscript](https://github.com/atom/language-shellscript)
