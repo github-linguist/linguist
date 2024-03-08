@@ -599,9 +599,12 @@ Bison:
 BitBake:
   type: programming
   color: "#00bce4"
-  tm_scope: none
+  tm_scope: source.bb
   extensions:
   - ".bb"
+  - ".bbappend"
+  - ".bbclass"
+  - ".inc"
   ace_mode: text
   language_id: 32
 Blade:

@@ -57,6 +57,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Bicep:** [azure/bicep](https://github.com/azure/bicep)
 - **Bikeshed:** [tabatkins/bikeshed](https://github.com/tabatkins/bikeshed)
 - **Bison:** [Alhadis/language-grammars](https://github.com/Alhadis/language-grammars)
+- **BitBake:** [yoctoproject/vscode-bitbake](https://github.com/yoctoproject/vscode-bitbake)
 - **Blade:** [jawee/language-blade](https://github.com/jawee/language-blade)
 - **BlitzBasic:** [textmate/blitzmax.tmbundle](https://github.com/textmate/blitzmax.tmbundle)
 - **BlitzMax:** [textmate/blitzmax.tmbundle](https://github.com/textmate/blitzmax.tmbundle)
