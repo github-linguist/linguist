@@ -670,7 +670,7 @@ class TestFileBlob < Minitest::Test
   def test_language
     # Failures are reasonable in some cases, such as when a file is fully valid in more than one language.
     allowed_failures = {
-      "#{samples_path}/C++/rpc.h" => ["C", "C++"],
+      "#{samples_path}/C/rpc.h" => ["C", "C++"],
     }
     Samples.each do |sample|
       blob = sample_blob(sample[:path])
