@@ -153,6 +153,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Easybuild:** [MagicStack/MagicPython](https://github.com/MagicStack/MagicPython)
 - **Ecere Projects:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
 - **Ecmarkup:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
+- **Edge:** [edge-js/edge-vscode](https://github.com/edge-js/edge-vscode)
 - **EdgeQL:** [edgedb/edgedb-editor-plugin](https://github.com/edgedb/edgedb-editor-plugin)
 - **EditorConfig:** [sindresorhus/atom-editorconfig](https://github.com/sindresorhus/atom-editorconfig)
 - **Edje Data Collection:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
