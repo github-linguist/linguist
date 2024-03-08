@@ -560,6 +560,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Terra:** [pyk/sublime-terra](https://github.com/pyk/sublime-terra)
 - **Terraform Template:** [hashicorp/syntax](https://github.com/hashicorp/syntax)
 - **Texinfo:** [Alhadis/language-texinfo](https://github.com/Alhadis/language-texinfo)
+- **TextGrid:** [orhunulusahin/praatvscode](https://github.com/orhunulusahin/praatvscode)
 - **TextMate Properties:** [textmate/textmate.tmbundle](https://github.com/textmate/textmate.tmbundle)
 - **Thrift:** [textmate/thrift.tmbundle](https://github.com/textmate/thrift.tmbundle)
 - **Toit:** [toitware/ide-tools](https://github.com/toitware/ide-tools)
