@@ -887,7 +887,7 @@ named_patterns:
   - '^[ ]*#If Win64\b'
   - '^[ ]*(?:Dim|Const) [0-9a-zA-Z_]*[ ]*As Long(?:Ptr|Long)\b'
   # Top module declarations unique to VBA
-  - '^[ ]*Option (?:Private Module|Compare Database)\b'
+  - '^[ ]*Option (?:Private Module|Compare (?:Database|Text))\b'
   # General VBA libraries and objects
   - '(?: |\()(?:Access|Excel|Outlook|PowerPoint|Visio|Word|VBIDE)\.\w'
   - '\b(?:(?:Active)?VBProjects?|VBComponents?|Application\.(?:VBE|ScreenUpdating))\b'
