@@ -167,7 +167,7 @@ class TestBlob < Minitest::Test
     assert sample_blob_memory("JSON/filenames/flake.lock").generated?
 
     # pnpm lockfile
-    assert sample_blob_memory("YAML/filenames/pnpm-lock.yaml").generated?
+    assert fixture_blob_memory("YAML/pnpm-lock.yaml").generated?
 
     # PEG.js-generated parsers
     assert sample_blob_memory("JavaScript/parser.js").generated?
