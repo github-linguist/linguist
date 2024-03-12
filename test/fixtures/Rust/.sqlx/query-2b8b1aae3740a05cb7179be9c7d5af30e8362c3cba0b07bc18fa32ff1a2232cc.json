@@ -1,0 +1,23 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT releases.files\n            FROM releases\n            INNER JOIN crates ON crates.id = releases.crate_id\n            WHERE crates.name = $1 AND releases.version = $2",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "files",
+        "type_info": "Json"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": [
+      true
+    ]
+  },
+  "hash": "2b8b1aae3740a05cb7179be9c7d5af30e8362c3cba0b07bc18fa32ff1a2232cc"
+}

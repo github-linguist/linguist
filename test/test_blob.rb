@@ -249,6 +249,9 @@ class TestBlob < Minitest::Test
     assert sample_blob_memory("Ruby/rails@7.0.3.1.rbi").generated?
     assert sample_blob_memory("Ruby/rendering.rbi").generated?
     assert sample_blob_memory("Ruby/actionmailer.rbi").generated?
+
+    # SQLx query files
+    assert fixture_blob_memory("Rust/.sqlx/query-2b8b1aae3740a05cb7179be9c7d5af30e8362c3cba0b07bc18fa32ff1a2232cc.json").generated?
   end
 
   def test_vendored

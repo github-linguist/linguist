@@ -107,7 +107,8 @@ module Linguist
       generated_haxe? ||
       generated_jooq? ||
       generated_pascal_tlb? ||
-      generated_sorbet_rbi?
+      generated_sorbet_rbi? ||
+      generated_sqlx_query?
     end
 
     # Internal: Is the blob an Xcode file?
@@ -824,6 +825,19 @@ module Linguist
         val = match[1].gsub(/\A["']|["']\Z/, '')
         [key, val]
       end.select { |x| x.length == 2 }.to_h
+    end
+
+    # Internal: Is this a generated SQLx query file?
+    #
+    # SQLx is a Rust SQL library which generates `**/.sqlx/query-*.json` files
+    # in offline mode (enabled by default).
+    #
+    # These are used to be able to compile a project without requiring
+    # the development database to be online.
+    #
+    # Returns true or false.
+    def generated_sqlx_query?
+      !!name.match(/(?:^|.*\/)\.sqlx\/query-.+\.json$/)
     end
   end
 end
