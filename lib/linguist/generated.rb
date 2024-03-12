@@ -829,7 +829,7 @@ module Linguist
 
     # Internal: Is this a generated SQLx query file?
     #
-    # SQLx is a Rust SQL library which generates `**/.sqlx/queries-*.json` files
+    # SQLx is a Rust SQL library which generates `**/.sqlx/query-*.json` files
     # in offline mode (enabled by default).
     #
     # These are used to be able to compile a project without requiring
@@ -837,7 +837,7 @@ module Linguist
     #
     # Returns true or false.
     def generated_sqlx_query?
-      !!name.match(/^.*\.sqlx\/queries-.+\.json$/)
+      !!name.match(/^.*\.sqlx\/query-.+\.json$/)
     end
   end
 end
