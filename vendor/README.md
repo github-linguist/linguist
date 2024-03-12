@@ -318,7 +318,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Logtalk:** [textmate/logtalk.tmbundle](https://github.com/textmate/logtalk.tmbundle)
 - **LookML:** [atom/language-yaml](https://github.com/atom/language-yaml)
 - **LoomScript:** [ambethia/Sublime-Loom](https://github.com/ambethia/Sublime-Loom)
-- **Lua:** [textmate/lua.tmbundle](https://github.com/textmate/lua.tmbundle)
+- **Lua:** [LuaLS/lua.tmbundle](https://github.com/LuaLS/lua.tmbundle)
 - **M4:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **M4Sugar:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **MATLAB:** [mathworks/MATLAB-Language-grammar](https://github.com/mathworks/MATLAB-Language-grammar)
