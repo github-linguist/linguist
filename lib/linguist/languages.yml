@@ -573,6 +573,7 @@ Bicep:
   color: "#519aba"
   extensions:
   - ".bicep"
+  - ".bicepparam"
   tm_scope: source.bicep
   ace_mode: text
   language_id: 321200902
@@ -598,9 +599,12 @@ Bison:
 BitBake:
   type: programming
   color: "#00bce4"
-  tm_scope: none
+  tm_scope: source.bb
   extensions:
   - ".bb"
+  - ".bbappend"
+  - ".bbclass"
+  - ".inc"
   ace_mode: text
   language_id: 32
 Blade:
@@ -658,7 +662,7 @@ Bluespec BH:
   aliases:
   - bh
   - bluespec classic
-  tm_scope: source.haskell
+  tm_scope: source.bh
   ace_mode: haskell
   codemirror_mode: haskell
   codemirror_mime_type: text/x-haskell
@@ -746,6 +750,7 @@ C#:
   extensions:
   - ".cs"
   - ".cake"
+  - ".cs.pp"
   - ".csx"
   - ".linq"
   language_id: 42
@@ -1211,7 +1216,7 @@ ColdFusion CFC:
   language_id: 65
 Common Lisp:
   type: programming
-  tm_scope: source.lisp
+  tm_scope: source.commonlisp
   color: "#3fb68b"
   aliases:
   - lisp
@@ -1594,6 +1599,7 @@ Dotenv:
   - ".env.local"
   - ".env.prod"
   - ".env.production"
+  - ".env.sample"
   - ".env.staging"
   - ".env.test"
   - ".env.testing"
@@ -1743,6 +1749,14 @@ Ecmarkup:
   aliases:
   - ecmarkdown
   language_id: 844766630
+Edge:
+  type: markup
+  color: "#0dffe0"
+  extensions:
+  - ".edge"
+  tm_scope: text.html.edge
+  ace_mode: html
+  language_id: 460509620
 EdgeQL:
   type: programming
   color: "#31A7FF"
@@ -2435,6 +2449,15 @@ Glimmer JS:
   tm_scope: source.gjs
   group: JavaScript
   language_id: 5523150
+Glimmer TS:
+  type: programming
+  extensions:
+  - ".gts"
+  ace_mode: typescript
+  color: "#3178c6"
+  tm_scope: source.gts
+  group: TypeScript
+  language_id: 95110458
 Glyph:
   type: programming
   color: "#c1ac7f"
@@ -3155,6 +3178,7 @@ JSON:
   aliases:
   - geojson
   - jsonl
+  - sarif
   - topojson
   extensions:
   - ".json"
@@ -3168,6 +3192,7 @@ JSON:
   - ".JSON-tmLanguage"
   - ".jsonl"
   - ".mcmeta"
+  - ".sarif"
   - ".tfstate"
   - ".tfstate.backup"
   - ".topojson"
@@ -5240,6 +5265,15 @@ Pike:
   tm_scope: source.pike
   ace_mode: text
   language_id: 287
+Pip Requirements:
+  type: data
+  color: "#FFD343"
+  filenames:
+  - requirements-dev.txt
+  - requirements.txt
+  ace_mode: text
+  tm_scope: source.pip-requirements
+  language_id: 684385621
 PlantUML:
   type: data
   color: "#fbbd16"
@@ -5632,7 +5666,6 @@ R:
   type: programming
   color: "#198CE7"
   aliases:
-  - R
   - Rscript
   - splus
   extensions:
@@ -5996,6 +6029,14 @@ RobotFramework:
   tm_scope: text.robot
   ace_mode: text
   language_id: 324
+Roc:
+  type: programming
+  color: "#7c38f5"
+  extensions:
+  - ".roc"
+  tm_scope: source.roc
+  ace_mode: text
+  language_id: 440182480
 Roff:
   type: markup
   color: "#ecdebe"
@@ -6503,6 +6544,7 @@ Shell:
   - ".kshrc"
   - ".login"
   - ".profile"
+  - ".tmux.conf"
   - ".zlogin"
   - ".zlogout"
   - ".zprofile"
@@ -6520,6 +6562,7 @@ Shell:
   - login
   - man
   - profile
+  - tmux.conf
   - zlogin
   - zlogout
   - zprofile
@@ -6613,7 +6656,7 @@ Slash:
 Slice:
   type: programming
   color: "#003fa2"
-  tm_scope: source.slice
+  tm_scope: source.ice
   ace_mode: text
   extensions:
   - ".ice"
@@ -6898,11 +6941,9 @@ TI Program:
   color: "#A0AA87"
   extensions:
   - ".8xp"
-  - ".8xk"
-  - ".8xk.txt"
   - ".8xp.txt"
   language_id: 422
-  tm_scope: none
+  tm_scope: source.8xp
 TL-Verilog:
   type: programming
   extensions:
@@ -7125,6 +7166,14 @@ Text:
   tm_scope: none
   ace_mode: text
   language_id: 372
+TextGrid:
+  type: data
+  color: "#c8506d"
+  tm_scope: source.textgrid
+  ace_mode: text
+  extensions:
+  - ".TextGrid"
+  language_id: 965696054
 TextMate Properties:
   type: data
   color: "#df66e4"
@@ -8197,6 +8246,13 @@ jq:
   type: programming
   extensions:
   - ".jq"
+  interpreters:
+  - gojq
+  - jaq
+  - jq
+  - jqjq
+  - jqq
+  - query-json
   tm_scope: source.jq
   language_id: 905371884
 kvlang:

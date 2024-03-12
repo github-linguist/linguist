@@ -260,7 +260,7 @@ class TestBlob < Minitest::Test
 
   def test_language
     allowed_failures = {
-      "#{samples_path}/C++/rpc.h" => ["C", "C++"],
+      "#{samples_path}/C/rpc.h" => ["C", "C++"],
     }
     Samples.each do |sample|
       blob = sample_blob_memory(sample[:path])
