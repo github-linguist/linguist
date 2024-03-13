@@ -506,6 +506,13 @@ disambiguations:
   - language: NL
     pattern: '^(b|g)[0-9]+ '
   - language: NewLisp
+- extensions: ['.nr']
+  rules:
+  - language: Noir
+    and:
+    - negative_pattern: '^\.'
+    - pattern: '^\s*fn[ \t]+[^\(\s].*?\('
+  - language: Roff
 - extensions: ['.nu']
   rules:
   - language: Nushell
