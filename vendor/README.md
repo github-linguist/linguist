@@ -384,6 +384,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **OASv3-json:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
 - **OASv3-yaml:** [atom/language-yaml](https://github.com/atom/language-yaml)
 - **OCaml:** [textmate/ocaml.tmbundle](https://github.com/textmate/ocaml.tmbundle)
+- **Oberon:** [harogaston/Sublime-Modula-2](https://github.com/harogaston/Sublime-Modula-2)
 - **ObjDump:** [nanoant/assembly.tmbundle](https://github.com/nanoant/assembly.tmbundle)
 - **Object Data Instance Notation:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **ObjectScript:** [intersystems-community/ObjectScript.tmBundle](https://github.com/intersystems-community/ObjectScript.tmBundle)
