@@ -380,6 +380,12 @@ class TestHeuristics < Minitest::Test
     }, "test.d")
   end
 
+  def test_def_by_heuristics
+    assert_heuristics({
+      "Modula-2" => all_fixtures("Modula-2", "*.def")
+    })
+  end
+
   def test_dsp_by_heuristics
     assert_heuristics({
       "Faust" => all_fixtures("Faust", "*.dsp"),
