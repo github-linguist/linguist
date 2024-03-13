@@ -46,6 +46,7 @@ class TestSamples < Minitest::Test
     Samples.each do |sample|
       if sample[:filename]
         listed_filenames = Language[sample[:language]].filenames
+        listed_filenames -= ["HOSTS"] if ["Hosts File", "INI"].include?(sample[:language])
         assert_includes listed_filenames, sample[:filename], "#{sample[:path]} isn't listed as a filename for #{sample[:language]} in languages.yml"
       end
     end
@@ -83,13 +84,16 @@ class TestSamples < Minitest::Test
         if language_matches.length > 1
           language_matches.each do |match|
             generic = Strategy::Extension.generic? extension
-            samples = generic ? "test/fixtures/Generic/#{extension.sub(/^\./, "")}/#{match.name}/*" : "samples/#{match.name}/*#{extension}"
-            assert Dir.glob(samples, File::FNM_CASEFOLD).any?, "Missing samples in #{samples.inspect}. See https://github.com/github/linguist/blob/master/CONTRIBUTING.md"
+            samples = generic ? "test/fixtures/Generic/#{extension.sub(/^\./, "")}/#{match.name}/*" : "samples/#{match.name}/*#{case_insensitive_glob(extension)}"
+            assert Dir.glob(samples).any?, "Missing samples in #{samples.inspect}. See https://github.com/github/linguist/blob/master/CONTRIBUTING.md"
           end
         end
       end
 
       language.filenames.each do |filename|
+        # Kludge for an unusual edge-case; see https://bit.ly/41EyUkU
+        next if ["Hosts File", "INI"].include?(language.name) && filename == "HOSTS"
+
         # Check for samples if more than one language matches the given filename
         if Language.find_by_filename(filename).size > 1
           sample = "samples/#{language.name}/filenames/#{filename}"
@@ -98,5 +102,13 @@ class TestSamples < Minitest::Test
         end
       end
     end
+  end
+
+  def case_insensitive_glob(extension)
+    glob = ""
+    extension.each_char do |c|
+      glob += c.downcase != c.upcase ? "[#{c.downcase}#{c.upcase}]" : c
+    end
+    glob
   end
 end

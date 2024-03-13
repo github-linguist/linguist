@@ -1,0 +1,50 @@
+---
+openapi: 3.1.0
+info:
+  version: 1.1.4
+  title: GitHub v3 REST API
+  description: GitHub's v3 REST API.
+  license:
+    name: MIT
+    url: https://spdx.org/licenses/MIT
+  termsOfService: https://docs.github.com/articles/github-terms-of-service
+  contact:
+    name: Support
+    url: https://support.github.com/contact?tags=dotcom-rest-api
+servers:
+- url: "{protocol}://{hostname}/api/v3"
+  variables:
+    hostname:
+      description: Self-hosted Enterprise Server or Enterprise Cloud hostname
+      default: HOSTNAME
+    protocol:
+      description: Self-hosted Enterprise Server or Enterprise Cloud protocol
+      default: http
+externalDocs:
+  description: GitHub Enterprise Developer Docs
+  url: https://docs.github.com/enterprise-server@3.4/rest/
+paths:
+  "/":
+    get:
+      summary: GitHub API Root
+      description: Get Hypermedia links to resources accessible in GitHub's REST API
+      tags:
+      - meta
+      operationId: meta/root
+      responses:
+        '200':
+          description: Response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/root"
+              examples:
+                default:
+                  "$ref": "#/components/examples/root"
+      x-github:
+        githubCloudOnly: false
+        enabledForGitHubApps: true
+        category: meta
+      externalDocs:
+        description: API method documentation
+        url: https://docs.github.com/enterprise-server@3.4/rest/overview/resources-in-the-rest-api#root-endpoint

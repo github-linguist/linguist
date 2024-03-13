@@ -140,7 +140,7 @@ class TestFileBlob < Minitest::Test
 
   def test_solid
     assert fixture_blob("Binary/cube.stl").solid?
-    assert fixture_blob("Data/cube.stl").solid?
+    assert fixture_blob("Generic/stl/STL/cube2.stl").solid?
   end
 
   def test_csv
@@ -569,6 +569,31 @@ class TestFileBlob < Minitest::Test
 
     # Jenkins
     assert sample_blob("Jenkinsfile").vendored?
+
+    # Bootstrap
+    assert !sample_blob("src/bootstraps/settings.js").vendored?
+    assert !sample_blob("bootstrap/misc/other/reset.css").vendored?
+    assert sample_blob("bootstrap-1.4/misc/other/reset.css").vendored?
+    assert sample_blob("bootstrap.10.4/misc/other/reset.css").vendored?
+    assert sample_blob("src/bootstrap-5.4.1-beta-dist/js/bundle.js").vendored?
+    assert sample_blob("src/bootstrap-custom.js").vendored?
+    assert sample_blob("src/bootstrap-1.4.js").vendored?
+    assert sample_blob("src/bootstrap-5.4.1-beta-dist/js/bootstrap.bundle.js").vendored?
+    assert sample_blob("src/bootstrap-5.4.1-beta-dist/js/bootstrap.esm.js").vendored?
+    assert sample_blob("src/bootstrap-5.4.1-beta-dist/css/bootstrap.rtl.css").vendored?
+
+    # GitHub.com
+    assert sample_blob(".github/CODEOWNERS").vendored?
+    assert sample_blob(".github/workflows/test.yml").vendored?
+
+    # obsidian.md settings
+    assert sample_blob(".obsidian/app.json").vendored?
+    assert sample_blob(".obsidian/plugins/templater-obsidian/main.js").vendored?
+
+    # teamcity ci configuration
+    assert sample_blob(".teamcity/Project_Name_CI/Project.kt").vendored?
+    assert sample_blob(".teamcity/Project_Name_CI/settings.kts").vendored?
+    assert sample_blob(".teamcity/Project_Name_CI/patches/projects/3b71d400-c5d6-4628-8164-c50b1254cf1d.kts").vendored?
   end
 
   def test_documentation
@@ -645,7 +670,7 @@ class TestFileBlob < Minitest::Test
   def test_language
     # Failures are reasonable in some cases, such as when a file is fully valid in more than one language.
     allowed_failures = {
-      "#{samples_path}/C++/rpc.h" => ["C", "C++"],
+      "#{samples_path}/C/rpc.h" => ["C", "C++"],
     }
     Samples.each do |sample|
       blob = sample_blob(sample[:path])
