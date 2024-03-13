@@ -510,6 +510,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_gts_by_heuristics
+    assert_heuristics({
+      "Gerber Image" => all_fixtures("Gerber Image", "*.gts"),
+      "Glimmer TS" => all_fixtures("Glimmer TS", "*.gts"),
+    })
+  end
+
   def test_h_by_heuristics
     assert_heuristics({
       "Objective-C" => all_fixtures("Objective-C", "*.h"),
@@ -579,6 +586,13 @@ class TestHeuristics < Minitest::Test
       "Lex" => all_fixtures("Lex", "*.l"),
       "Roff" => all_fixtures("Roff", "*.l"),
       "PicoLisp" => all_fixtures("PicoLisp", "*.l")
+    })
+  end
+
+  def test_lean_by_heuristics
+    assert_heuristics({
+      "Lean" => all_fixtures("Lean", "*.lean"),
+      "Lean 4" => all_fixtures("Lean 4", "*.lean")
     })
   end
 
@@ -678,6 +692,13 @@ class TestHeuristics < Minitest::Test
       "XML" => all_fixtures("XML", "*.mod"),
       ["Linux Kernel Module", "AMPL"] => all_fixtures("Linux Kernel Module", "*.mod"),
       ["Linux Kernel Module", "AMPL"] => all_fixtures("AMPL", "*.mod"),
+    })
+  end
+
+  def test_mojo_by_heuristics
+    assert_heuristics({
+      "Mojo" => all_fixtures("Mojo", "*.mojo"),
+      "XML" => all_fixtures("XML", "*.mojo"),
     })
   end
 
