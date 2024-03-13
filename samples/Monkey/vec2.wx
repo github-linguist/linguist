@@ -1,0 +1,26 @@
+struct Vec2<T>
+  field x:T
+  field y:T
+
+  method new( x:T, y:T )
+	  self.x = x
+	  self.y = y
+  end
+
+  operator+:Vec2( v:Vec2 )
+    return new Vec2( x + v.x, y + v.y )
+  end
+
+  operator to:string()
+    return "Vec2(" + x + ", " + y + ")"
+  end
+end
+
+alias Vec2<float> Vec2f
+
+'main entry
+function main()
+  local v0:= new Vec2f( 10,20 )
+  local v1:= new Vec2f( 30,40 )
+  print v0 + v1
+end
