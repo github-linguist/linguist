@@ -404,6 +404,8 @@ disambiguations:
     pattern: '^import [A-Z]'
 - extensions: ['.ls']
   rules:
+  - language: Lingo
+    pattern: '^on\s\w+([\s\S]*?)\nend$'
   - language: LoomScript
     pattern: '^\s*package\s*[\w\.\/\*\s]*\s*\{'
   - language: LiveScript

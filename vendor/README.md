@@ -310,6 +310,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Lex:** [Alhadis/language-grammars](https://github.com/Alhadis/language-grammars)
 - **LigoLANG:** [pewulfman/Ligo-grammar](https://github.com/pewulfman/Ligo-grammar)
 - **LilyPond:** [nwhetsell/linter-lilypond](https://github.com/nwhetsell/linter-lilypond)
+- **Lingo:** [markhughes/vscode-lingo-director](https://github.com/markhughes/vscode-lingo-director)
 - **Liquid:** [Shopify/liquid-tm-grammar](https://github.com/Shopify/liquid-tm-grammar)
 - **Literate CoffeeScript:** [atom/language-coffee-script](https://github.com/atom/language-coffee-script)
 - **Literate Haskell:** [atom-haskell/language-haskell](https://github.com/atom-haskell/language-haskell)
