@@ -187,7 +187,7 @@ i_DECLIMEX_ int32_t rfFReadLine_UTF32LE(FILE* f,char** utf8,uint32_t* byteLength
 // Since the function null terminates the buffer the given @c buff needs to be of at least
 // @c num+7 size to cater for the worst case.
 //
-// The final bytestream stored inside @c buff is in the endianess of the system.
+// The final bytestream stored inside @c buff is in the endianness of the system.
 //
 // If right after the last character read comes the EOF, the function
 // shall detect so and assign @c true to @c eof.
@@ -226,7 +226,7 @@ i_DECLIMEX_ int32_t rfFgets_UTF32BE(char* buff,uint32_t num,FILE* f,char* eof);
 // Since the function null terminates the buffer the given @c buff needs to be of at least
 // @c num+7 size to cater for the worst case.
 //
-// The final bytestream stored inside @c buff is in the endianess of the system.
+// The final bytestream stored inside @c buff is in the endianness of the system.
 //
 // If right after the last character read comes the EOF, the function
 // shall detect so and assign @c true to @c eof.
@@ -266,7 +266,7 @@ i_DECLIMEX_ int32_t rfFgets_UTF32LE(char* buff,uint32_t num,FILE* f,char* eof);
 // Since the function null terminates the buffer the given @c buff needs to be of at least
 // @c num+5 size to cater for the worst case.
 //
-// The final bytestream stored inside @c buff is in the endianess of the system.
+// The final bytestream stored inside @c buff is in the endianness of the system.
 //
 // If right after the last character read comes the EOF, the function
 // shall detect so and assign @c true to @c eof.
@@ -305,7 +305,7 @@ i_DECLIMEX_ int32_t rfFgets_UTF16BE(char* buff,uint32_t num,FILE* f,char* eof);
 // Since the function null terminates the buffer the given @c buff needs to be of at least
 // @c num+5 size to cater for the worst case.
 //
-// The final bytestream stored inside @c buff is in the endianess of the system.
+// The final bytestream stored inside @c buff is in the endianness of the system.
 //
 // If right after the last character read comes the EOF, the function
 // shall detect so and assign @c true to @c eof.

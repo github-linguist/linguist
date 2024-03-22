@@ -274,10 +274,10 @@ i_DECLIMEX_ char rfString_Init_f(RF_String* str,float f);
 // @notinherited{StringX}
 // Given characters have to be in UTF-16
 // @param s The sequence of bytes for the characters in UTF-16.
-// @param endianess A flag that determined in what endianess the sequence of UTF-16 bytes is in. Possible values here is
+// @param endianness A flag that determined in what endianness the sequence of UTF-16 bytes is in. Possible values here is
 // @c RF_LITTLE_ENDIAN and @c RF_BIG_ENDIAN.
-// @return Returns the initialized RF_string or null in case of failure to initialize, due to invalid utf-16 sequence or illegal endianess value
-i_DECLIMEX_ RF_String* rfString_Create_UTF16(const char* s,char endianess);
+// @return Returns the initialized RF_string or null in case of failure to initialize, due to invalid utf-16 sequence or illegal endianness value
+i_DECLIMEX_ RF_String* rfString_Create_UTF16(const char* s,char endianness);
 // @memberof RF_String
 // @brief Initializes a string with the given UTF-16 byte sequence.
 //
@@ -285,10 +285,10 @@ i_DECLIMEX_ RF_String* rfString_Create_UTF16(const char* s,char endianess);
 // Given characters have to be in UTF-16
 // @param str The string to initialize
 // @param s The sequence of bytes for the characters in UTF-16.
-// @param endianess A flag that determined in what endianess the sequence of UTF-16 bytes is in. Possible values here is
+// @param endianness A flag that determined in what endianness the sequence of UTF-16 bytes is in. Possible values here is
 // @c RF_LITTLE_ENDIAN and @c RF_BIG_ENDIAN.
-// @return Returns true for succesfull initialization and false otherwise due to invalid utf-16 sequence or illegal endianess value
-i_DECLIMEX_ char rfString_Init_UTF16(RF_String* str,const char* s,char endianess);
+// @return Returns true for succesfull initialization and false otherwise due to invalid utf-16 sequence or illegal endianness value
+i_DECLIMEX_ char rfString_Init_UTF16(RF_String* str,const char* s,char endianness);
 
 // @memberof RF_String
 // @cppnotctor
@@ -391,7 +391,7 @@ i_DECLIMEX_ const char* rfString_ToUTF8(RF_String* s);
 //
 // @isinherited{StringX}
 // This function allocates a UTF-16 buffer in which the string's
-// UTF-8 contents are encoded as UTF-16. The endianess of the buffer
+// UTF-8 contents are encoded as UTF-16. The endianness of the buffer
 // is that of the system. The returned buffer needs to be freed by the user
 // later.
 // @param[in] s The string in question
@@ -405,7 +405,7 @@ i_DECLIMEX_ uint16_t* rfString_ToUTF16(RF_String* s,uint32_t* length);
 //
 // @isinherited{StringX}
 // This function allocates a UTF-32 buffer in which the string's
-// UTF-8 contents are encoded as UTF-32. The endianess of the buffer
+// UTF-8 contents are encoded as UTF-32. The endianness of the buffer
 // is that of the system. The returned buffer needs to be freed by the user
 // later.
 // @param[in] s The string in question
@@ -1298,11 +1298,11 @@ i_DECLIMEX_ int32_t rfString_Append_fUTF8(RF_String* str,FILE* f, char* eof);
 // Read the file stream @c f until either a newline character or the EOF is reached and saves it as an RF_StringX
 // The file's encoding must be UTF-16.If for some reason (like EOF reached) no string can be read then null is returned. A check for a valid sequence of bytes is performed.
 // @param f A valid and open file pointer in read mode from which to read the string. The file's encoding must be UTF-16.
-// @param endianess A flag that determines in what endianess the UTF-16 file is encoded in. Possible values here are
+// @param endianness A flag that determines in what endianness the UTF-16 file is encoded in. Possible values here are
 // @c RF_LITTLE_ENDIAN and @c RF_BIG_ENDIAN.
 // @param[out] eof Pass a pointer to a char to receive a true or false value in case the end of file was reached with this initialization
 // @return The initialized string or null pointer in case of failure to read the file
-i_DECLIMEX_ RF_String* rfString_Create_fUTF16(FILE* f, char endianess,char* eof);
+i_DECLIMEX_ RF_String* rfString_Create_fUTF16(FILE* f, char endianness,char* eof);
 // @memberof RF_String
 // @brief Initializes a string from UTF-16 file parsing
 //
@@ -1311,12 +1311,12 @@ i_DECLIMEX_ RF_String* rfString_Create_fUTF16(FILE* f, char endianess,char* eof)
 // The file's encoding must be UTF-16.If for some reason (like EOF reached) no string can be read then null is returned. A check for a valid sequence of bytes is performed.
 // @param str The extended string to initialize
 // @param f A valid and open file pointer in read mode from which to read the string. The file's encoding must be UTF-16.
-// @param endianess A flag that determines in what endianess the UTF-16 file is encoded in. Possible values here are
+// @param endianness A flag that determines in what endianness the UTF-16 file is encoded in. Possible values here are
 // @c RF_LITTLE_ENDIAN and @c RF_BIG_ENDIAN.
 // @param[out] eof Pass a pointer to a char to receive a true or false value in case the end of file was reached with this initialization
 // @return Returns either a positive number for succesfull initialization that represents the bytes read from the file.
 // If there was a problem an error is returned. Possible errors are any of those that @ref rfFReadLine_UTF16LE() can produce.
-i_DECLIMEX_ int32_t rfString_Init_fUTF16(RF_String* str,FILE* f, char endianess,char* eof);
+i_DECLIMEX_ int32_t rfString_Init_fUTF16(RF_String* str,FILE* f, char endianness,char* eof);
 
 // @memberof RF_String
 // @brief Appends the contents of a UTF-16 file a String
@@ -1326,12 +1326,12 @@ i_DECLIMEX_ int32_t rfString_Init_fUTF16(RF_String* str,FILE* f, char endianess,
 // The file's encoding must be UTF-16.If for some reason (like EOF reached) no string can be read then null is returned. A check for a valid sequence of bytes is performed.
 // @param str The extended string to append to
 // @param f A valid and open file pointer in read mode from which to read the string. The file's encoding must be UTF-16.
-// @param endianess A flag that determines in what endianess the UTF-16 file is encoded in. Possible values here are
+// @param endianness A flag that determines in what endianness the UTF-16 file is encoded in. Possible values here are
 // @c RF_LITTLE_ENDIAN and @c RF_BIG_ENDIAN.
 // @param[out] eof Pass a pointer to a char to receive a true or false value in case the end of file was reached with this appending
 // @return Returns either a positive number for succesfull appending that represents the bytes read from the file.
 // If there was a problem an error is returned. Possible errors are any of those that @ref rfFReadLine_UTF16LE() can produce.
-i_DECLIMEX_ int32_t rfString_Append_fUTF16(RF_String* str,FILE* f, char endianess,char* eof);
+i_DECLIMEX_ int32_t rfString_Append_fUTF16(RF_String* str,FILE* f, char endianness,char* eof);
 // @memberof RF_String
 // @brief Assigns the contents of a UTF-16 file to an already initialized string
 //
@@ -1340,12 +1340,12 @@ i_DECLIMEX_ int32_t rfString_Append_fUTF16(RF_String* str,FILE* f, char endianes
 // The file's encoding must be UTF-16.If for some reason (like EOF reached) no string can be read then null is returned. A check for a valid sequence of bytes is performed.
 // @param str The extended string to assign to
 // @param f A valid and open file pointer in read mode from which to read the string. The file's encoding must be UTF-16.
-// @param endianess A flag that determines in what endianess the UTF-16 file is encoded in. Possible values here are
+// @param endianness A flag that determines in what endianness the UTF-16 file is encoded in. Possible values here are
 // @c RF_LITTLE_ENDIAN and @c RF_BIG_ENDIAN.
 // @param[out] eof Pass a pointer to a char to receive a true or false value in case the end of file was reached with this assignment
 // @return Returns either a positive number for succesfull assignment that represents the bytes read from the file.
 // If there was a problem an error is returned. Possible errors are any of those that @ref rfFReadLine_UTF16LE() can produce.
-i_DECLIMEX_ int32_t rfString_Assign_fUTF16(RF_String* str,FILE* f, char endianess,char* eof);
+i_DECLIMEX_ int32_t rfString_Assign_fUTF16(RF_String* str,FILE* f, char endianness,char* eof);
 
 // @memberof RF_String
 // @cppnotctor
@@ -1355,11 +1355,11 @@ i_DECLIMEX_ int32_t rfString_Assign_fUTF16(RF_String* str,FILE* f, char endianes
 // Read the file stream @c f until either a newline character or the EOF is reached and saves it as an RF_StringX
 // The file's encoding must be UTF-32.If for some reason (like EOF reached) no string can be read then null is returned. A check for a valid sequence of bytes is performed.
 // @param f A valid and open file pointer in read mode from which to read the string. The file's encoding must be UTF-32.
-// @param endianess A flag that determines in what endianess the UTF-32 file is encoded in. Possible values here are
+// @param endianness A flag that determines in what endianness the UTF-32 file is encoded in. Possible values here are
 // @c RF_LITTLE_ENDIAN and @c RF_BIG_ENDIAN.
 // @param[out] eof Pass a pointer to a char to receive a true or false value in case the end of file was reached with this initialization
 // @return The initialized string or null pointer in case of failure to read the file
-i_DECLIMEX_ RF_String* rfString_Create_fUTF32(FILE* f,char endianess, char* eof);
+i_DECLIMEX_ RF_String* rfString_Create_fUTF32(FILE* f,char endianness, char* eof);
 // @memberof RF_String
 // @brief Initializes a string from UTF-32 file parsing
 //
@@ -1368,12 +1368,12 @@ i_DECLIMEX_ RF_String* rfString_Create_fUTF32(FILE* f,char endianess, char* eof)
 // The file's encoding must be UTF-32.If for some reason (like EOF reached) no string can be read then null is returned. A check for a valid sequence of bytes is performed.
 // @param str The extended string to initialize
 // @param f A valid and open file pointer in read mode from which to read the string. The file's encoding must be UTF-32.
-// @param endianess A flag that determines in what endianess the UTF-32 file is encoded in. Possible values here are
+// @param endianness A flag that determines in what endianness the UTF-32 file is encoded in. Possible values here are
 // @c RF_LITTLE_ENDIAN and @c RF_BIG_ENDIAN.
 // @param[out] eof Pass a pointer to a char to receive a true or false value in case the end of file was reached with this initialization
 // @return Returns either a positive number for succesfull initialization that represents the bytes read from the file.
 // If there was a problem an error is returned. Possible errors are any of those that @ref rfFReadLine_UTF32LE() can produce.
-i_DECLIMEX_ int32_t rfString_Init_fUTF32(RF_String* str,FILE* f,char endianess, char* eof);
+i_DECLIMEX_ int32_t rfString_Init_fUTF32(RF_String* str,FILE* f,char endianness, char* eof);
 // @memberof RF_String
 // @brief Assigns the contents of a UTF-32 file to a string
 //
@@ -1382,12 +1382,12 @@ i_DECLIMEX_ int32_t rfString_Init_fUTF32(RF_String* str,FILE* f,char endianess, 
 // The file's encoding must be UTF-32.If for some reason (like EOF reached) no string can be read then null is returned. A check for a valid sequence of bytes is performed.
 // @param str The extended string to assign to
 // @param f A valid and open file pointer in read mode from which to read the string. The file's encoding must be UTF-32.
-// @param endianess A flag that determines in what endianess the UTF-32 file is encoded in. Possible values here are
+// @param endianness A flag that determines in what endianness the UTF-32 file is encoded in. Possible values here are
 // @c RF_LITTLE_ENDIAN and @c RF_BIG_ENDIAN.
 // @param[out] eof Pass a pointer to a char to receive a true or false value in case the end of file was reached with this assignment
 // @return Returns either a positive number for succesfull assignment that represents the bytes read from the file.
 // If there was a problem an error is returned. Possible errors are any of those that @ref rfFReadLine_UTF32LE() can produce.
-i_DECLIMEX_ int32_t rfString_Assign_fUTF32(RF_String* str,FILE* f,char endianess, char* eof);
+i_DECLIMEX_ int32_t rfString_Assign_fUTF32(RF_String* str,FILE* f,char endianness, char* eof);
 // @memberof RF_String
 // @brief Appends the contents of a UTF-32 file to a string
 //
@@ -1396,12 +1396,12 @@ i_DECLIMEX_ int32_t rfString_Assign_fUTF32(RF_String* str,FILE* f,char endianess
 // The file's encoding must be UTF-32.If for some reason (like EOF reached) no string can be read then null is returned. A check for a valid sequence of bytes is performed.
 // @param str The extended string to append to
 // @param f A valid and open file pointer in read mode from which to read the string. The file's encoding must be UTF-32.
-// @param endianess A flag that determines in what endianess the UTF-32 file is encoded in. Possible values here are
+// @param endianness A flag that determines in what endianness the UTF-32 file is encoded in. Possible values here are
 // @c RF_LITTLE_ENDIAN and @c RF_BIG_ENDIAN.
 // @param[out] eof Pass a pointer to a char to receive a true or false value in case the end of file was reached with this appending
 // @return Returns either a positive number for succesfull appending that represents the bytes read from the file.
 // If there was a problem an error is returned. Possible errors are any of those that @ref rfFReadLine_UTF32LE() can produce.
-i_DECLIMEX_ int32_t rfString_Append_fUTF32(RF_String* str,FILE* f,char endianess, char* eof);
+i_DECLIMEX_ int32_t rfString_Append_fUTF32(RF_String* str,FILE* f,char endianness, char* eof);
 
 // @memberof RF_String
 // @brief Writes a string to a file depending on the given encoding
@@ -1413,10 +1413,10 @@ i_DECLIMEX_ int32_t rfString_Append_fUTF32(RF_String* str,FILE* f,char endianess
 // @param f A valid and open file pointer into which to write the string.
 // @param encoding \rfoptional{@c RF_UTF8} The encoding of the file. Default is @c RF_UTF8. Can be one of:
 // + @c RF_UTF8: For Unicode UTF-8 encoding
-// + @c RF_UTF16_BE: For Unicode UTF-16 encoding in Big Endian endianess
-// + @c RF_UTF16_LE: For Unicode UTF-16 encoding in Little Endian endianess
-// + @c RF_UTF32_BE: For Unicode UTF-32 encoding in Big Endian endianess
-// + @c RF_UTF32_LE: For Unicode UTF-32 encoding in Little Endian endianess
+// + @c RF_UTF16_BE: For Unicode UTF-16 encoding in Big Endian endianness
+// + @c RF_UTF16_LE: For Unicode UTF-16 encoding in Little Endian endianness
+// + @c RF_UTF32_BE: For Unicode UTF-32 encoding in Big Endian endianness
+// + @c RF_UTF32_LE: For Unicode UTF-32 encoding in Little Endian endianness
 // @return Returns @c RF_SUCCESS for succesfull writting and error otherwise. Possible errors are:
 // + @c RE_FILE_WRITE: There was an unknown write error
 // + @c RE_FILE_WRITE_BLOCK: The write failed because the file was occupied by another thread and the no block flag was set

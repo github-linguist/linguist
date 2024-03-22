@@ -884,7 +884,7 @@ int32_t rfFgetc_UTF16BE(FILE* f,uint32_t *c,char cp)
     char swapE=false;
     uint16_t v1,v2;
     // check if we need to be swapping
-    if(rfUTILS_Endianess() == RF_LITTLE_ENDIAN)
+    if(rfUTILS_Endianness() == RF_LITTLE_ENDIAN)
             swapE = true;
     // read the first 2 bytes
     if(fread(&v1,2,1,f) != 1)
@@ -893,7 +893,7 @@ int32_t rfFgetc_UTF16BE(FILE* f,uint32_t *c,char cp)
         else
             return RE_FILE_EOF;
     }
-    if(swapE)// swap endianess if needed
+    if(swapE)// swap endianness if needed
         rfUTILS_SwapEndianUS(&v1);
     /* If the value is in the surrogate area */
     if(RF_HEXGE_US(v1,0xD800) && RF_HEXLE_US(v1,0xDFFF))
@@ -913,7 +913,7 @@ int32_t rfFgetc_UTF16BE(FILE* f,uint32_t *c,char cp)
                 return RE_FILE_EOF;
             }
         }
-        if(swapE)// swap endianess if needed
+        if(swapE)// swap endianness if needed
             rfUTILS_SwapEndianUS(&v2);
         if(RF_HEXL_US(v2,0xDC00) || RF_HEXG_US(v2,0xDFFF))
         {
@@ -943,7 +943,7 @@ int32_t rfFgetc_UTF16LE(FILE* f,uint32_t *c,char cp)
     char swapE=false;
     uint16_t v1,v2;
     // check if we need to be swapping
-    if(rfUTILS_Endianess() == RF_BIG_ENDIAN)
+    if(rfUTILS_Endianness() == RF_BIG_ENDIAN)
             swapE = true;
     // read the first 2 bytes
     if(fread(&v1,2,1,f) != 1)
@@ -952,7 +952,7 @@ int32_t rfFgetc_UTF16LE(FILE* f,uint32_t *c,char cp)
         else
             return RE_FILE_EOF;
     }
-    if(swapE)// swap endianess if needed
+    if(swapE)// swap endianness if needed
         rfUTILS_SwapEndianUS(&v1);
     /* If the value is in the surrogate area */
     if(RF_HEXGE_US(v1,0xD800) && RF_HEXLE_US(v1,0xDFFF))
@@ -972,7 +972,7 @@ int32_t rfFgetc_UTF16LE(FILE* f,uint32_t *c,char cp)
                 return RE_FILE_EOF;
             }
         }
-        if(swapE)// swap endianess if needed
+        if(swapE)// swap endianness if needed
             rfUTILS_SwapEndianUS(&v2);
         if(RF_HEXL_US(v2,0xDC00) || RF_HEXG_US(v2,0xDFFF))
         {
@@ -1007,7 +1007,7 @@ int32_t rfFgetc_UTF32LE(FILE* f,uint32_t *c)
             return RE_FILE_EOF;
     }
     // check if we need to be swapping
-    if(rfUTILS_Endianess() == RF_BIG_ENDIAN)
+    if(rfUTILS_Endianness() == RF_BIG_ENDIAN)
             rfUTILS_SwapEndianUI(c);
     return RF_SUCCESS;
 }
@@ -1022,7 +1022,7 @@ int32_t rfFgetc_UTF32BE(FILE* f,uint32_t *c)
             return RE_FILE_EOF;
     }
     // check if we need to be swapping
-    if(rfUTILS_Endianess() == RF_LITTLE_ENDIAN)
+    if(rfUTILS_Endianness() == RF_LITTLE_ENDIAN)
             rfUTILS_SwapEndianUI(c);
     return RF_SUCCESS;
 }
@@ -1044,7 +1044,7 @@ int32_t rfFback_UTF32BE(FILE* f,uint32_t *c)
         i_FSEEK_CHECK("Going backwards in a Big Endian UTF-32 file stream")
     }
     // check if we need to be swapping
-    if(rfUTILS_Endianess() == RF_LITTLE_ENDIAN)
+    if(rfUTILS_Endianness() == RF_LITTLE_ENDIAN)
             rfUTILS_SwapEndianUI(c);
     return RF_SUCCESS;
 }
@@ -1065,7 +1065,7 @@ int32_t rfFback_UTF32LE(FILE* f,uint32_t *c)
         i_FSEEK_CHECK("Going backwards in a Big Endian UTF-32 file stream")
     }
     // check if we need to be swapping
-    if(rfUTILS_Endianess() == RF_BIG_ENDIAN)
+    if(rfUTILS_Endianness() == RF_BIG_ENDIAN)
             rfUTILS_SwapEndianUI(c);
     return RF_SUCCESS;
 }
@@ -1075,7 +1075,7 @@ int32_t rfFback_UTF16BE(FILE* f,uint32_t *c)
     char swapE=false;
     uint16_t v1,v2;
     // check if we need to be swapping
-    if(rfUTILS_Endianess() == RF_LITTLE_ENDIAN)
+    if(rfUTILS_Endianness() == RF_LITTLE_ENDIAN)
             swapE = true;
     // go back and read the last 2 bytes
     if(fseek(f,-2,SEEK_CUR) != 0)
@@ -1090,7 +1090,7 @@ int32_t rfFback_UTF16BE(FILE* f,uint32_t *c)
     {
         i_FSEEK_CHECK("Going backwards in a Big Endian UTF-16 file stream")
     }
-    if(swapE)// swap endianess if needed
+    if(swapE)// swap endianness if needed
         rfUTILS_SwapEndianUS(&v1);
     /* If the word is a surrogate pair */
     if(RF_HEXGE_US(v1,0xDC00) && RF_HEXLE_US(v1,0xDFFF))
@@ -1108,7 +1108,7 @@ int32_t rfFback_UTF16BE(FILE* f,uint32_t *c)
         {
             i_FSEEK_CHECK("Going backwards in a Big Endian UTF-16 file stream")
         }
-        if(swapE)// swap endianess if needed
+        if(swapE)// swap endianness if needed
             rfUTILS_SwapEndianUS(&v2);
         if(RF_HEXL_US(v2,0xD800) || RF_HEXG_US(v2,0xDBFF))
         {
@@ -1142,7 +1142,7 @@ int32_t rfFback_UTF16LE(FILE* f,uint32_t *c)
     char swapE=false;
     uint16_t v1,v2;
     // check if we need to be swapping
-    if(rfUTILS_Endianess() == RF_BIG_ENDIAN)
+    if(rfUTILS_Endianness() == RF_BIG_ENDIAN)
             swapE = true;
     // go back and read the last 2 bytes
     if(fseek(f,-2,SEEK_CUR) != 0)
@@ -1157,7 +1157,7 @@ int32_t rfFback_UTF16LE(FILE* f,uint32_t *c)
     {
         i_FSEEK_CHECK("Going backwards in a Big Endian UTF-16 file stream")
     }
-    if(swapE)// swap endianess if needed
+    if(swapE)// swap endianness if needed
         rfUTILS_SwapEndianUS(&v1);
     /* If the word is a surrogate pair */
     if(RF_HEXGE_US(v1,0xDC00) && RF_HEXLE_US(v1,0xDFFF))
@@ -1175,7 +1175,7 @@ int32_t rfFback_UTF16LE(FILE* f,uint32_t *c)
         {
             i_FSEEK_CHECK("Going backwards in a Big Endian UTF-16 file stream")
         }
-        if(swapE)// swap endianess if needed
+        if(swapE)// swap endianness if needed
             rfUTILS_SwapEndianUS(&v2);
         if(RF_HEXL_US(v2,0xD800) || RF_HEXG_US(v2,0xDBFF))
         {

@@ -119,7 +119,7 @@ RF_String* i_rfString_CreateLocal1(const char* s,...)
     RF_MALLOC(codepoints,i)
 #endif
 #if (RF_OPTION_SOURCE_ENCODING  ==  RF_UTF16_LE)// decode the UTF16
-    if(rfUTILS_Endianess() == RF_LITTLE_ENDIAN)
+    if(rfUTILS_Endianness() == RF_LITTLE_ENDIAN)
         if(rfUTF16_Decode(buff,&characterLength,codepoints) == false)
             goto cleanup;
     else
@@ -127,7 +127,7 @@ RF_String* i_rfString_CreateLocal1(const char* s,...)
             goto cleanup;
 
 #elif RF_OPTION_SOURCE_ENCODING == RF_UTF16_BE// decode the UTF16
-    if(rfUTILS_Endianess() == RF_LITTLE_ENDIAN)
+    if(rfUTILS_Endianness() == RF_LITTLE_ENDIAN)
         if(rfUTF16_Decode_swap(buff,&characterLength,codepoints) == false)
             goto cleanup;
     else
@@ -135,7 +135,7 @@ RF_String* i_rfString_CreateLocal1(const char* s,...)
             goto cleanup;
 #elif RF_OPTION_SOURCE_ENCODING == RF_UTF32_LE// copy the UTF32 into the codepoint
     memcpy(codepoints,buff,i);
-    if(rfUTILS_Endianess != RF_LITTLE_ENDIAN)
+    if(rfUTILS_Endianness != RF_LITTLE_ENDIAN)
     {
         for(j=0;j<i;j+=4)
         {
@@ -144,7 +144,7 @@ RF_String* i_rfString_CreateLocal1(const char* s,...)
     }
 #elif RF_OPTION_SOURCE_ENCODING == RF_UTF32_BE// copy the UTF32 into the codepoint
     memcpy(codepoints,buff,i);
-    if(rfUTILS_Endianess !RF_BIG_ENDIAN RF_LITTLE_ENDIAN)
+    if(rfUTILS_Endianness !RF_BIG_ENDIAN RF_LITTLE_ENDIAN)
     {
         for(j=0;j<i;j+=4)
         {
@@ -240,7 +240,7 @@ RF_String* i_NVrfString_CreateLocal(const char* s)
     RF_MALLOC(codepoints,i)
 #endif
 #if (RF_OPTION_SOURCE_ENCODING  ==  RF_UTF16_LE)// decode the UTF16
-    if(rfUTILS_Endianess() == RF_LITTLE_ENDIAN)
+    if(rfUTILS_Endianness() == RF_LITTLE_ENDIAN)
         if(rfUTF16_Decode(s,&characterLength,codepoints) == false)
             goto cleanup;
     else
@@ -248,7 +248,7 @@ RF_String* i_NVrfString_CreateLocal(const char* s)
             goto cleanup;
 
 #elif RF_OPTION_SOURCE_ENCODING == RF_UTF16_BE// decode the UTF16
-    if(rfUTILS_Endianess() == RF_LITTLE_ENDIAN)
+    if(rfUTILS_Endianness() == RF_LITTLE_ENDIAN)
         if(rfUTF16_Decode_swap(s,&characterLength,codepoints) == false)
             goto cleanup;
     else
@@ -256,7 +256,7 @@ RF_String* i_NVrfString_CreateLocal(const char* s)
             goto cleanup;
 #elif RF_OPTION_SOURCE_ENCODING == RF_UTF32_LE// copy the UTF32 into the codepoint
     memcpy(codepoints,s,i);
-    if(rfUTILS_Endianess != RF_LITTLE_ENDIAN)
+    if(rfUTILS_Endianness != RF_LITTLE_ENDIAN)
     {
         for(j=0;j<i;j+=4)
         {
@@ -265,7 +265,7 @@ RF_String* i_NVrfString_CreateLocal(const char* s)
     }
 #elif RF_OPTION_SOURCE_ENCODING == RF_UTF32_BE// copy the UTF32 into the codepoint
     memcpy(codepoints,s,i);
-    if(rfUTILS_Endianess !RF_BIG_ENDIAN RF_LITTLE_ENDIAN)
+    if(rfUTILS_Endianness !RF_BIG_ENDIAN RF_LITTLE_ENDIAN)
     {
         for(j=0;j<i;j+=4)
         {
@@ -535,11 +535,11 @@ char rfString_Init_f(RF_String* str,float f)
 }
 
 // Allocates and returns a string with the given UTF-16 byte sequence. Given characters have to be in UTF-16. A check for valid sequence of bytes is performed.<b>Can't be used with RF_StringX</b>
-RF_String* rfString_Create_UTF16(const char* s,char endianess)
+RF_String* rfString_Create_UTF16(const char* s,char endianness)
 {
     RF_String* ret;
     RF_MALLOC(ret,sizeof(RF_String));
-    if(rfString_Init_UTF16(ret,s,endianess)==false)
+    if(rfString_Init_UTF16(ret,s,endianness)==false)
     {
         free(ret);
         return 0;
@@ -547,7 +547,7 @@ RF_String* rfString_Create_UTF16(const char* s,char endianess)
     return ret;
 }
 // Initializes a string with the given UTF-16 byte sequence. Given characters have to be in UTF-16. A check for valid sequence of bytes is performed.<b>Can't be used with RF_StringX</b>
-char rfString_Init_UTF16(RF_String* str,const char* s,char endianess)
+char rfString_Init_UTF16(RF_String* str,const char* s,char endianness)
 {
     // decode the utf-16 and get the code points
     uint32_t* codepoints;
@@ -560,12 +560,12 @@ char rfString_Init_UTF16(RF_String* str,const char* s,char endianess)
     }
     byteLength+=3;// for the last utf-16 null termination character
     RF_MALLOC(codepoints,byteLength*2) // allocate the codepoints
-    // parse the given byte stream depending on the endianess parameter
-    switch(endianess)
+    // parse the given byte stream depending on the endianness parameter
+    switch(endianness)
     {
         case RF_LITTLE_ENDIAN:
         case RF_BIG_ENDIAN:
-            if(rfUTILS_Endianess() == endianess)// same endianess as the local
+            if(rfUTILS_Endianness() == endianness)// same endianness as the local
             {
                 if(rfUTF16_Decode(s,&characterLength,codepoints) == false)
                 {
@@ -585,7 +585,7 @@ char rfString_Init_UTF16(RF_String* str,const char* s,char endianess)
             }
         break;
         default:
-            LOG_ERROR("Illegal endianess value provided",RE_INPUT);
+            LOG_ERROR("Illegal endianness value provided",RE_INPUT);
             free(codepoints);
             return false;
         break;
@@ -629,21 +629,21 @@ char rfString_Init_UTF32(RF_String* str,const char* s)
     // first of all check for existence of BOM in the beginning of the sequence
     if(RF_HEXEQ_UI(codeBuffer[0],0xFEFF))// big endian
     {
-        if(rfUTILS_Endianess()==RF_LITTLE_ENDIAN)
+        if(rfUTILS_Endianness()==RF_LITTLE_ENDIAN)
             swapE = true;
     }
     if(RF_HEXEQ_UI(codeBuffer[0],0xFFFE0000))// little
     {
-        if(rfUTILS_Endianess()==RF_BIG_ENDIAN)
+        if(rfUTILS_Endianness()==RF_BIG_ENDIAN)
             swapE = true;
     }
     else// according to the standard no BOM means big endian
     {
-        if(rfUTILS_Endianess() == RF_LITTLE_ENDIAN)
+        if(rfUTILS_Endianness() == RF_LITTLE_ENDIAN)
             swapE = true;
     }
 
-    // if we need to have endianess swapped do it
+    // if we need to have endianness swapped do it
     if(swapE==true)
     {
         while(codeBuffer[i] != 0)
@@ -2055,20 +2055,20 @@ int32_t rfString_Append_fUTF8(RF_String* str,FILE*f,char* eof)
 }
 
 // Allocates and returns a string from file parsing. The file's encoding must be UTF-16.If for some reason (like EOF reached) no string can be read then null is returned. A check for a valid sequence of bytes is performed.
-RF_String* rfString_Create_fUTF16(FILE* f,char endianess,char* eof)
+RF_String* rfString_Create_fUTF16(FILE* f,char endianness,char* eof)
 {
     RF_String* ret;
     RF_MALLOC(ret,sizeof(RF_String));
-    if(rfString_Init_fUTF16(ret,f,endianess,eof) < 0)
+    if(rfString_Init_fUTF16(ret,f,endianness,eof) < 0)
         return 0;
     return ret;
 }
 // Initializes a string from file parsing. The file's encoding must be UTF-16.If for some reason (like EOF reached) no string can be read then null is returned. A check for a valid sequence of bytes is performed.
-int32_t rfString_Init_fUTF16(RF_String* str,FILE* f, char endianess,char* eof)
+int32_t rfString_Init_fUTF16(RF_String* str,FILE* f, char endianness,char* eof)
 {
     int32_t bytesN;
-    // depending on the file's endianess
-    if(endianess == RF_LITTLE_ENDIAN)
+    // depending on the file's endianness
+    if(endianness == RF_LITTLE_ENDIAN)
     {
         if((bytesN=rfFReadLine_UTF16LE(f,&str->bytes,&str->byteLength,eof)) < 0)
         {
@@ -2089,14 +2089,14 @@ int32_t rfString_Init_fUTF16(RF_String* str,FILE* f, char endianess,char* eof)
 }
 
 // Assigns to an already initialized String from File parsing
-int32_t rfString_Assign_fUTF16(RF_String* str,FILE* f, char endianess,char* eof)
+int32_t rfString_Assign_fUTF16(RF_String* str,FILE* f, char endianness,char* eof)
 {
 
     uint32_t utf8ByteLength;
     int32_t bytesN;
     char* utf8 = 0;
-    // depending on the file's endianess
-    if(endianess == RF_LITTLE_ENDIAN)
+    // depending on the file's endianness
+    if(endianness == RF_LITTLE_ENDIAN)
     {
         if((bytesN=rfFReadLine_UTF16LE(f,&utf8,&utf8ByteLength,eof)) < 0)
         {
@@ -2126,13 +2126,13 @@ int32_t rfString_Assign_fUTF16(RF_String* str,FILE* f, char endianess,char* eof)
 }
 
 // Appends to an already initialized String from File parsing
-int32_t rfString_Append_fUTF16(RF_String* str,FILE* f, char endianess,char* eof)
+int32_t rfString_Append_fUTF16(RF_String* str,FILE* f, char endianness,char* eof)
 {
     char*utf8;
     uint32_t utf8ByteLength;
     int32_t bytesN;
-    // depending on the file's endianess
-    if(endianess == RF_LITTLE_ENDIAN)
+    // depending on the file's endianness
+    if(endianness == RF_LITTLE_ENDIAN)
     {
         if((bytesN=rfFReadLine_UTF16LE(f,&utf8,&utf8ByteLength,eof)) < 0)
         {
@@ -2155,11 +2155,11 @@ int32_t rfString_Append_fUTF16(RF_String* str,FILE* f, char endianess,char* eof)
 }
 
 // Allocates and returns a string from file parsing. The file's encoding must be UTF-32.If for some reason (like EOF reached) no string can be read then null is returned. A check for a valid sequence of bytes is performed.
-RF_String* rfString_Create_fUTF32(FILE* f,char endianess,char* eof)
+RF_String* rfString_Create_fUTF32(FILE* f,char endianness,char* eof)
 {
     RF_String* ret;
     RF_MALLOC(ret,sizeof(RF_String));
-    if(rfString_Init_fUTF32(ret,f,endianess,eof) < 0)
+    if(rfString_Init_fUTF32(ret,f,endianness,eof) < 0)
     {
         free(ret);
         return 0;
@@ -2167,11 +2167,11 @@ RF_String* rfString_Create_fUTF32(FILE* f,char endianess,char* eof)
     return ret;
 }
 // Initializes a string from file parsing. The file's encoding must be UTF-32.If for some reason (like EOF reached) no string can be read then null is returned. A check for a valid sequence of bytes is performed.
-int32_t rfString_Init_fUTF32(RF_String* str,FILE* f,char endianess,char* eof)
+int32_t rfString_Init_fUTF32(RF_String* str,FILE* f,char endianness,char* eof)
 {
     int32_t bytesN;
-    // depending on the file's endianess
-    if(endianess == RF_LITTLE_ENDIAN)
+    // depending on the file's endianness
+    if(endianness == RF_LITTLE_ENDIAN)
     {
         if((bytesN=rfFReadLine_UTF32LE(f,&str->bytes,&str->byteLength,eof)) <0)
         {
@@ -2191,13 +2191,13 @@ int32_t rfString_Init_fUTF32(RF_String* str,FILE* f,char endianess,char* eof)
     return bytesN;
 }
 // Assigns the contents of a UTF-32 file to a string
-int32_t rfString_Assign_fUTF32(RF_String* str,FILE* f,char endianess, char* eof)
+int32_t rfString_Assign_fUTF32(RF_String* str,FILE* f,char endianness, char* eof)
 {
     int32_t bytesN;
     char*utf8;
     uint32_t utf8ByteLength;
-    // depending on the file's endianess
-    if(endianess == RF_LITTLE_ENDIAN)
+    // depending on the file's endianness
+    if(endianness == RF_LITTLE_ENDIAN)
     {
         if((bytesN=rfFReadLine_UTF32LE(f,&utf8,&utf8ByteLength,eof)) < 0)
         {
@@ -2226,13 +2226,13 @@ int32_t rfString_Assign_fUTF32(RF_String* str,FILE* f,char endianess, char* eof)
     return bytesN;
 }
 // Appends the contents of a UTF-32 file to a string
-int32_t rfString_Append_fUTF32(RF_String* str,FILE* f,char endianess, char* eof)
+int32_t rfString_Append_fUTF32(RF_String* str,FILE* f,char endianness, char* eof)
 {
     int32_t bytesN;
     char*utf8;
     uint32_t utf8ByteLength;
-    // depending on the file's endianess
-    if(endianess == RF_LITTLE_ENDIAN)
+    // depending on the file's endianness
+    if(endianness == RF_LITTLE_ENDIAN)
     {
         if((bytesN=rfFReadLine_UTF32LE(f,&utf8,&utf8ByteLength,eof)) < 0)
         {
@@ -2273,7 +2273,7 @@ int32_t i_rfString_Fwrite(void* sP,FILE* f,char* encodingP)
         break;
         case RF_UTF16_LE:
             utf16 = rfString_ToUTF16(s,&length);
-            if(rfUTILS_Endianess() != RF_LITTLE_ENDIAN)
+            if(rfUTILS_Endianness() != RF_LITTLE_ENDIAN)
             {
                 for(i=0;i<length;i++)
                 {
@@ -2290,7 +2290,7 @@ int32_t i_rfString_Fwrite(void* sP,FILE* f,char* encodingP)
         break;
         case RF_UTF16_BE:
             utf16 = rfString_ToUTF16(s,&length);
-            if(rfUTILS_Endianess() != RF_BIG_ENDIAN)
+            if(rfUTILS_Endianness() != RF_BIG_ENDIAN)
             {
                 for(i=0;i<length;i++)
                 {
@@ -2307,7 +2307,7 @@ int32_t i_rfString_Fwrite(void* sP,FILE* f,char* encodingP)
         break;
         case RF_UTF32_LE:
             utf32 = rfString_ToUTF32(s,&length);
-            if(rfUTILS_Endianess() != RF_LITTLE_ENDIAN)
+            if(rfUTILS_Endianness() != RF_LITTLE_ENDIAN)
             {
                 for(i=0;i<length;i++)
                 {
@@ -2324,7 +2324,7 @@ int32_t i_rfString_Fwrite(void* sP,FILE* f,char* encodingP)
         break;
         case RF_UTF32_BE:
             utf32 = rfString_ToUTF32(s,&length);
-            if(rfUTILS_Endianess() != RF_BIG_ENDIAN)
+            if(rfUTILS_Endianness() != RF_BIG_ENDIAN)
             {
                 for(i=0;i<length;i++)
                 {
