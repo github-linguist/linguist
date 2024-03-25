@@ -472,6 +472,12 @@ disambiguations:
   - language: Modula-2
     pattern: '^\s*(?i:MODULE|END) [\w\.]+;'
   - language: [Linux Kernel Module, AMPL]
+- extensions: ['.mojo']
+  rules:
+  - language: Mojo
+    pattern: '^\s*(alias|def|from|fn|import|struct|trait)\s'
+  - language: XML
+    pattern: '^\s*<\?xml'
 - extensions: ['.ms']
   rules:
   - language: Roff

@@ -414,12 +414,13 @@ vendor/grammars/gradle.tmbundle:
 - source.groovy.gradle
 vendor/grammars/graphiql:
 - inline.graphql
+- inline.graphql.markdown.codeblock
 - inline.graphql.php
 - inline.graphql.python
+- inline.graphql.rb
 - inline.graphql.re
 - inline.graphql.res
 - inline.graphql.scala
-- markdown.graphql.codeblock
 - source.graphql
 vendor/grammars/graphviz.tmbundle:
 - source.dot
@@ -845,6 +846,8 @@ vendor/grammars/mint-vscode:
 - source.mint
 vendor/grammars/mlir-grammar:
 - source.mlir
+vendor/grammars/mojo-syntax:
+- source.mojo
 vendor/grammars/monkey:
 - source.monkey
 vendor/grammars/moonscript-tmbundle:
@@ -950,6 +953,8 @@ vendor/grammars/selinux-policy-languages:
 vendor/grammars/shaders-tmLanguage:
 - source.hlsl
 - source.shaderlab
+vendor/grammars/slint-tmLanguage:
+- source.slint
 vendor/grammars/smali-sublime:
 - source.smali
 vendor/grammars/smalltalk-tmbundle:
@@ -1088,6 +1093,7 @@ vendor/grammars/vhdl:
 vendor/grammars/vsc-ember-syntax:
 - inline.hbs
 - inline.template
+- markdown.glimmer.codeblock
 - source.gjs
 - source.gts
 - text.html.ember-handlebars
