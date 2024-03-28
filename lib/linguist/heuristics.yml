@@ -841,6 +841,10 @@ disambiguations:
   - language: JSON
     pattern: '\"modelName\"\:\s*\"GM'
   - language: Yacc
+- extensions: ['.tsp']
+  rules:
+  - language: TypeSpec
+    pattern: '^(import|using|namespace|interface|op|model|scalar|alias|union|enum)\s'
 named_patterns:
   cpp:
   - '^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>'
