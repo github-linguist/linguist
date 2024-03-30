@@ -469,6 +469,8 @@ disambiguations:
   rules:
   - language: XML
     pattern: '<!ENTITY '
+  - language: NMODL
+    pattern: '\b(NEURON|INITIAL|UNITS)\b'
   - language: Modula-2
     pattern: '^\s*(?i:MODULE|END) [\w\.]+;'
   - language: [Linux Kernel Module, AMPL]
