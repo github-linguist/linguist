@@ -845,6 +845,8 @@ disambiguations:
   rules:
   - language: TypeSpec
     pattern: '^(import|using|namespace|interface|op|model|scalar|alias|union|enum)\s'
+  - language: TravelingSalesmanProblem
+    pattern: '^(NAME|TYPE|DIMENSION|EDGE_WEIGHT_TYPE|EDGE_WEIGHT_FORMAT)\s*:'
 named_patterns:
   cpp:
   - '^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>'
