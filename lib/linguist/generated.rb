@@ -61,6 +61,7 @@ module Linguist
       composer_lock? ||
       cargo_lock? ||
       flake_lock? ||
+      bazel_lock? ||
       node_modules? ||
       go_vendor? ||
       go_lock? ||
@@ -482,6 +483,13 @@ module Linguist
     # Returns true or false
     def flake_lock?
       !!name.match(/(^|\/)flake\.lock$/)
+    end
+
+    # Internal: Is the blob a Bazel generated bzlmod lockfile?
+    #
+    # Returns true or false
+    def bazel_lock?
+      !!name.match(/(^|\/)MODULE\.bazel\.lock$/)
     end
 
     # Is the blob a VCR Cassette file?
