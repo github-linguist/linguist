@@ -746,6 +746,12 @@ disambiguations:
   - language: XML
     pattern: '<TS\b'
   - language: TypeScript
+- extensions: ['.tsp']
+  rules:
+  - language: TypeSpec
+    pattern: '^(import|using|namespace|interface|op|model|scalar|alias|union|enum)\s'
+  - language: TSPLIB data
+    pattern: '^(NAME|TYPE|DIMENSION|EDGE_WEIGHT_TYPE|EDGE_WEIGHT_FORMAT)\s*:'
 - extensions: ['.tst']
   rules:
   - language: GAP
@@ -841,12 +847,6 @@ disambiguations:
   - language: JSON
     pattern: '\"modelName\"\:\s*\"GM'
   - language: Yacc
-- extensions: ['.tsp']
-  rules:
-  - language: TypeSpec
-    pattern: '^(import|using|namespace|interface|op|model|scalar|alias|union|enum)\s'
-  - language: TSPLIB data
-    pattern: '^(NAME|TYPE|DIMENSION|EDGE_WEIGHT_TYPE|EDGE_WEIGHT_FORMAT)\s*:'
 named_patterns:
   cpp:
   - '^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>'

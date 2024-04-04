@@ -7001,6 +7001,16 @@ TOML:
   codemirror_mode: toml
   codemirror_mime_type: text/x-toml
   language_id: 365
+TSPLIB data:
+  aliases:
+  - travelling salesman problem
+  - traveling salesman problem
+  type: data
+  extensions:
+  - ".tsp"
+  tm_scope: none
+  ace_mode: text
+  language_id: 89289301
 TSQL:
   type: programming
   color: "#e38c00"
@@ -7292,6 +7302,16 @@ TypeScript:
   codemirror_mode: javascript
   codemirror_mime_type: application/typescript
   language_id: 378
+TypeSpec:
+  type: programming
+  color: "#4A3665"
+  aliases:
+  - tsp
+  extensions:
+  - ".tsp"
+  tm_scope: source.tsp
+  ace_mode: text
+  language_id: 952272597
 Typst:
   type: programming
   color: "#239dad"
@@ -8412,22 +8432,3 @@ xBase:
   tm_scope: source.harbour
   ace_mode: text
   language_id: 421
-TypeSpec:
-  type: programming
-  color: "#4A3665"
-  aliases:
-  - tsp
-  extensions:
-  - ".tsp"
-  tm_scope: source.tsp
-  ace_mode: text
-  language_id: 952272597
-TSPLIB data:
-  aliases:
-  - travelling salesman problem
-  - traveling salesman problem
-  type: data
-  extensions:
-  - ".tsp"
-  ace_mode: text
-  language_id: 89289301
