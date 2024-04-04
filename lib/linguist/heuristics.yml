@@ -77,6 +77,10 @@ disambiguations:
     pattern: '^[=-]+\s|\{\{[A-Za-z]'
   - language: AGS Script
     pattern: '^(\/\/.+|((import|export)\s+)?(function|int|float|char)\s+((room|repeatedly|on|game)_)?([A-Za-z]+[A-Za-z_0-9]+)\s*[;\(])'
+- extensions: ['.ash']
+  rules:
+  - language: KoLmafia ASH
+    pattern: '(\$[a-zA-Z]+\[|visitUrl|since r\d+)'
 - extensions: ['.asm']
   rules:
   - language: Motorola 68K Assembly
