@@ -124,6 +124,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Cue Sheet:** [relikd/CUE-Sheet_sublime](https://github.com/relikd/CUE-Sheet_sublime)
 - **Curry:** [fwcd/vscode-curry](https://github.com/fwcd/vscode-curry)
 - **Cycript:** [atom/language-javascript](https://github.com/atom/language-javascript)
+- **Cylc:** [cylc/Cylc.tmbundle](https://github.com/cylc/Cylc.tmbundle)
 - **Cypher:** [fredbenenson/sublime-cypher](https://github.com/fredbenenson/sublime-cypher)
 - **Cython:** [textmate/cython.tmbundle](https://github.com/textmate/cython.tmbundle)
 - **D:** [textmate/d.tmbundle](https://github.com/textmate/d.tmbundle)
