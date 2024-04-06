@@ -313,6 +313,9 @@ vendor/grammars/clarity.tmbundle:
 vendor/grammars/cmake.tmbundle:
 - source.cache.cmake
 - source.cmake
+vendor/grammars/common-lisp-tmlanguage:
+- markdown.commonlisp.codeblock
+- source.commonlisp
 vendor/grammars/conllu-linguist-grammar:
 - text.conllu
 vendor/grammars/cool-tmbundle:
@@ -357,6 +360,8 @@ vendor/grammars/ec.tmbundle:
 - source.c.ec
 vendor/grammars/ecl-tmLanguage:
 - source.ecl
+vendor/grammars/edge-vscode:
+- text.html.edge
 vendor/grammars/edgedb-editor-plugin:
 - inline.edgeql
 - source.edgeql
@@ -409,12 +414,13 @@ vendor/grammars/gradle.tmbundle:
 - source.groovy.gradle
 vendor/grammars/graphiql:
 - inline.graphql
+- inline.graphql.markdown.codeblock
 - inline.graphql.php
 - inline.graphql.python
+- inline.graphql.rb
 - inline.graphql.re
 - inline.graphql.res
 - inline.graphql.scala
-- markdown.graphql.codeblock
 - source.graphql
 vendor/grammars/graphviz.tmbundle:
 - source.dot
@@ -492,6 +498,8 @@ vendor/grammars/language-basic:
 - source.basic
 vendor/grammars/language-batchfile:
 - source.batchfile
+vendor/grammars/language-bh:
+- source.bh
 vendor/grammars/language-blade:
 - source.gfm.blade
 - text.html.php.blade
@@ -766,6 +774,8 @@ vendor/grammars/language-supercollider:
 vendor/grammars/language-texinfo:
 - text.info
 - text.texinfo
+vendor/grammars/language-ti-basic:
+- source.8xp
 vendor/grammars/language-toc-wow:
 - source.toc
 vendor/grammars/language-tsql:
@@ -836,6 +846,8 @@ vendor/grammars/mint-vscode:
 - source.mint
 vendor/grammars/mlir-grammar:
 - source.mlir
+vendor/grammars/mojo-syntax:
+- source.mojo
 vendor/grammars/monkey:
 - source.monkey
 vendor/grammars/moonscript-tmbundle:
@@ -919,6 +931,8 @@ vendor/grammars/rez.tmbundle:
 - source.rez
 vendor/grammars/riot-syntax-highlight:
 - text.html.riot
+vendor/grammars/roc-vscode-unofficial:
+- source.roc
 vendor/grammars/ruby-slim.tmbundle:
 - text.slim
 vendor/grammars/rust-syntax:
@@ -937,6 +951,8 @@ vendor/grammars/selinux-policy-languages:
 vendor/grammars/shaders-tmLanguage:
 - source.hlsl
 - source.shaderlab
+vendor/grammars/slint-tmLanguage:
+- source.slint
 vendor/grammars/smali-sublime:
 - source.smali
 vendor/grammars/smalltalk-tmbundle:
@@ -944,7 +960,11 @@ vendor/grammars/smalltalk-tmbundle:
 vendor/grammars/smithy-vscode:
 - source.smithy
 vendor/grammars/sourcepawn-vscode:
+- source.amxxpawn
 - source.sourcepawn
+- sp-jsdoc.injection
+- text.valve-cfg
+- text.valve-kv
 vendor/grammars/sql.tmbundle:
 - source.sql
 vendor/grammars/squirrel-language:
@@ -1073,6 +1093,7 @@ vendor/grammars/vhdl:
 vendor/grammars/vsc-ember-syntax:
 - inline.hbs
 - inline.template
+- markdown.glimmer.codeblock
 - source.gjs
 - source.gts
 - text.html.ember-handlebars
@@ -1083,6 +1104,8 @@ vendor/grammars/vscode-TalonScript:
 - source.talon
 vendor/grammars/vscode-antlers-language-server:
 - text.html.statamic
+vendor/grammars/vscode-bitbake:
+- source.bb
 vendor/grammars/vscode-brightscript-language:
 - source.brs
 vendor/grammars/vscode-cadence:
@@ -1169,6 +1192,8 @@ vendor/grammars/vscode-procfile:
 vendor/grammars/vscode-proto3:
 - markdown.codeblock.proto
 - source.proto
+vendor/grammars/vscode-python:
+- source.pip-requirements
 vendor/grammars/vscode-rbs-syntax:
 - source.rbs
 vendor/grammars/vscode-scala-syntax:
