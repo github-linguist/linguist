@@ -663,5 +663,6 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **reStructuredText:** [Lukasa/language-restructuredtext](https://github.com/Lukasa/language-restructuredtext)
 - **robots.txt:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
 - **sed:** [Alhadis/language-sed](https://github.com/Alhadis/language-sed)
+- **templ:** [templ-go/templ-vscode](https://github.com/templ-go/templ-vscode)
 - **wisp:** [atom/language-clojure](https://github.com/atom/language-clojure)
 - **xBase:** [hernad/atom-language-harbour](https://github.com/hernad/atom-language-harbour)
