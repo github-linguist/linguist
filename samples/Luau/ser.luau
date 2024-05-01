@@ -1,14 +1,11 @@
---// Authored by @Sleitnick (https://github.com/sleitnick)
---// Fetched from (https://github.com/Sleitnick/RbxUtil/blob/main/modules/ser/init.lua)
---// Licensed under the MIT License (https://github.com/Sleitnick/RbxUtil/blob/main/LICENSE.md)
-
 --!optimize 2
 --!strict
 --!native
 
--- Ser
--- Stephen Leitnick
--- August 28, 2020
+--// Ser v1.0.5
+--// Authored by @sleitnick and modified by @robloxiandemo
+--// Fetched from (https://github.com/Sleitnick/RbxUtil/blob/main/modules/ser/init.lua)
+--// Licensed under the MIT License (https://github.com/Sleitnick/RbxUtil/blob/main/LICENSE.md)
 
 --[[
 
@@ -39,7 +36,7 @@ type Args = {
 	[any]: any,
 }
 
-local Option = require(script.Parent.Option)
+local Option = require("samples/Luau/Option.luau")
 
 --[=[
 	@class Ser
@@ -89,7 +86,7 @@ Ser.Classes = {
 	Serializes the arguments and returns the serialized values in a table.
 ]=]
 function Ser.SerializeArgs(...: any): Args
-	local args = table.pack(...)
+	local args = { (...) }
 	for i, arg in ipairs(args) do
 		if type(arg) == "table" then
 			local ser = Ser.Classes[arg.ClassName]
@@ -108,7 +105,7 @@ end
 ]=]
 function Ser.SerializeArgsAndUnpack(...: any): ...any
 	local args = Ser.SerializeArgs(...)
-	return table.unpack(args, 1, args.n)
+	return unpack(args, 1, args.n)
 end
 
 --[=[
@@ -117,7 +114,7 @@ end
 	Deserializes the arguments and returns the deserialized values in a table.
 ]=]
 function Ser.DeserializeArgs(...: any): Args
-	local args = table.pack(...)
+	local args = { (...) }
 	for i, arg in ipairs(args) do
 		if type(arg) == "table" then
 			local ser = Ser.Classes[arg.ClassName]
@@ -136,7 +133,7 @@ end
 ]=]
 function Ser.DeserializeArgsAndUnpack(...: any): ...any
 	local args = Ser.DeserializeArgs(...)
-	return table.unpack(args, 1, args.n)
+	return unpack(args, 1, args.n)
 end
 
 --[=[
@@ -175,7 +172,7 @@ end
 	Unpacks the arguments returned by either `SerializeArgs` or `DeserializeArgs`.
 ]=]
 function Ser.UnpackArgs(value: Args): ...any
-	return table.unpack(value, 1, value.n)
+	return unpack(value, 1, value.n)
 end
 
 return Ser
