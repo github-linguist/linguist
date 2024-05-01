@@ -10,9 +10,11 @@ module Linguist
   class Repository
     attr_reader :repository
 
+    MAX_TREE_SIZE = 100_000
+
     # Public: Create a new Repository based on the stats of
     # an existing one
-    def self.incremental(repo, commit_oid, old_commit_oid, old_stats, max_tree_size = 100_000)
+    def self.incremental(repo, commit_oid, old_commit_oid, old_stats, max_tree_size = MAX_TREE_SIZE)
       repo = self.new(repo, commit_oid, max_tree_size)
       repo.load_existing_stats(old_commit_oid, old_stats)
       repo
@@ -24,10 +26,10 @@ module Linguist
     # repo - a Rugged::Repository object
     # commit_oid - the sha1 of the commit that will be analyzed;
     #              this is usually the master branch
-    # max_tree_size - the maximum tree size to consider for analysis (default: 100,000)
+    # max_tree_size - the maximum tree size to consider for analysis (default: MAX_TREE_SIZE)
     #
     # Returns a Repository
-    def initialize(repo, commit_oid, max_tree_size = 100_000)
+    def initialize(repo, commit_oid, max_tree_size = MAX_TREE_SIZE)
       @repository = repo
       @commit_oid = commit_oid
       @max_tree_size = max_tree_size
@@ -131,7 +133,6 @@ module Linguist
     end
 
     protected
-
     def compute_stats(old_commit_oid, cache = nil)
       return {} if current_tree.count_recursive(@max_tree_size) >= @max_tree_size
 
