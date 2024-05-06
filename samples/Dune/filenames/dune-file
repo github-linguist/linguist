@@ -1,0 +1,52 @@
+(dirs _boot :standard \ result)
+
+(data_only_dirs _boot)
+
+(rule
+ (copy dune-private-libs.opam.template dune-configurator.opam.template))
+
+(rule
+ (copy dune-private-libs.opam.template dune-glob.opam.template))
+
+(rule
+ (copy dune-private-libs.opam.template dune-action-plugin.opam.template))
+
+(rule
+ (copy dune-private-libs.opam.template dune-build-info.opam.template))
+
+(rule
+ (copy dune-private-libs.opam.template dune-site.opam.template))
+
+(rule
+ (copy dune-private-libs.opam.template dune-rpc.opam.template))
+
+(rule
+ (copy dune-private-libs.opam.template stdune.opam.template))
+
+(rule
+ (copy dune-private-libs.opam.template dyn.opam.template))
+
+(rule
+ (copy dune-private-libs.opam.template ordering.opam.template))
+
+(rule
+ (copy dune-private-libs.opam.template dune-rpc-lwt.opam.template))
+
+(rule
+ (copy dune-private-libs.opam.template fiber.opam.template))
+
+(rule
+ (copy dune-private-libs.opam.template xdg.opam.template))
+
+(rule
+ (copy dune-private-libs.opam.template ocamlc-loc.opam.template))
+
+(rule
+ (copy dune-private-libs.opam.template chrome-trace.opam.template))
+
+(env
+ (_
+  (flags :standard -alert -unstable)
+  (env-vars
+   ; Workaround for #6607
+   (CLICOLOR_FORCE 0))))
