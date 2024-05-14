@@ -1,0 +1,60 @@
+.if '\*(.T'utf8' .tr -\-~\(ti^\(ha
+.Dd October 27, 2022
+.Dt GIT-LINGUIST 1
+.Os
+.Sh NAME
+.Nm git\-linguist
+.Nd external Git command for integrating with Linguist
+.
+.Sh SYNOPSIS
+.de ''
+.  \" DRY alternative to copy+pasting shared options
+.  Nm git linguist
+.  Op Fl -force
+.  Op Fl -commit Ns Pf = Ar COMMIT
+.  Cm \\$1
+..
+.'' stats
+.'' breakdown
+.'' dump-cache
+.'' clear
+.'' disable
+.
+.Sh DESCRIPTION
+.Nm
+is an external
+.Xr git 1
+command for running GitHub Linguist on the current repository.
+It is executed the same as an ordinary Git subcommand:
+.Ql Nm git Cm linguist .
+.
+.Bl -tag -width 4n
+.It Fl f , Fl -force
+Force a full rescan.
+.
+.It Fl c , Fl -commit Ns Pf = Ar COMMIT
+Specify the
+.Ar COMMIT
+to be indexed.
+.
+.It Cm stats , Cm breakdown , dump-cache
+Print various language or cache statistics in JSON format.
+.
+.It Cm clear
+Flush cached language statistics.
+.
+.It Cm disable
+Disable language statistic generation.
+.El
+.
+.Sh FILES
+.Bl -tag -width 4n
+.It Sy $GIT_DIR Ns Pa /language-stats.cache
+Location of cached language data.
+.El
+.
+.Sh EXIT STATUS
+.Ex -std
+.
+.Sh SEE ALSO
+.Xr github-linguist 1
