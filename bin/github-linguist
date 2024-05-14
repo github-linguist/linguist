@@ -33,7 +33,7 @@ def github_linguist(args)
     opts.on("-r", "--rev REV", String,
             "Analyze specific git revision",
             "defaults to HEAD, see gitrevisions(1) for alternatives") { |r| rev = r }
-    opts.on("-t", "--tree-size=NUMBER", "Maximum number of files scanned to detect languages (default: 100,000)") { |t| tree_size = t }
+    opts.on("-t", "--tree-size=NUMBER", Integer, "Maximum number of files scanned to detect languages (default: 100,000)") { |t| tree_size = t }
     opts.on("-h", "--help", "Display a short usage summary, then exit") do
       puts opts
       exit
