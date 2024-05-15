@@ -10,7 +10,7 @@ require 'tempfile'
 require 'zlib'
 
 class GitLinguist
-  def initialize(path, commit_oid, incremental = true, tree_size = 100_000)
+  def initialize(path, commit_oid, incremental = true, tree_size = Linguist::Repository.MAX_TREE_SIZE)
     @repo_path = path
     @commit_oid = commit_oid
     @incremental = incremental
@@ -99,7 +99,7 @@ end
 def git_linguist(args)
   incremental = true
   commit = nil
-  tree_size = 100_000
+  tree_size = Linguist::Repository::MAX_TREE_SIZE
 
   parser = OptionParser.new do |opts|
     opts.banner = <<~HELP
