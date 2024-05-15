@@ -112,7 +112,8 @@ def git_linguist(args)
 
     opts.on("-f", "--force", "Force a full rescan") { incremental = false }
     opts.on("-c", "--commit=COMMIT", "Commit to index") { |v| commit = v}
-    opts.on("-t", "--tree-size=NUMBER", Integer, "Maximum number of files scanned to detect languages (default: 100,000)" ) { |t| tree_size = t }
+    opts.on("-t", "--tree-size=NUMBER", Integer,
+            "Maximum number of files scanned to detect languages (default: #{Linguist::Repository::MAX_TREE_SIZE})" ) { |t| tree_size = t }
   end
 
   parser.parse!(args)
