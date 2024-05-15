@@ -20,7 +20,7 @@ HELP
 def github_linguist(args)
   breakdown = false
   json_output = false
-  tree_size = 100_000
+  tree_size = Linguist::Repository::MAX_TREE_SIZE
   rev = 'HEAD'
   path = Dir.pwd
 
@@ -33,7 +33,8 @@ def github_linguist(args)
     opts.on("-r", "--rev REV", String,
             "Analyze specific git revision",
             "defaults to HEAD, see gitrevisions(1) for alternatives") { |r| rev = r }
-    opts.on("-t", "--tree-size=NUMBER", Integer, "Maximum number of files scanned to detect languages (default: 100,000)") { |t| tree_size = t }
+    opts.on("-t", "--tree-size=NUMBER", Integer,
+            "Maximum number of files scanned to detect languages (default: #{Linguist::Repository::MAX_TREE_SIZE})") { |t| tree_size = t }
     opts.on("-h", "--help", "Display a short usage summary, then exit") do
       puts opts
       exit
