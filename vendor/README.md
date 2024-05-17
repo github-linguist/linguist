@@ -313,6 +313,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Liquid:** [Shopify/liquid-tm-grammar](https://github.com/Shopify/liquid-tm-grammar)
 - **Literate CoffeeScript:** [atom/language-coffee-script](https://github.com/atom/language-coffee-script)
 - **Literate Haskell:** [atom-haskell/language-haskell](https://github.com/atom-haskell/language-haskell)
+- **LiveCode Script:** [Ferruslogic/vscode-livecodescript](https://github.com/Ferruslogic/vscode-livecodescript)
 - **LiveScript:** [paulmillr/LiveScript.tmbundle](https://github.com/paulmillr/LiveScript.tmbundle)
 - **Logos:** [Cykey/Sublime-Logos](https://github.com/Cykey/Sublime-Logos)
 - **Logtalk:** [textmate/logtalk.tmbundle](https://github.com/textmate/logtalk.tmbundle)
