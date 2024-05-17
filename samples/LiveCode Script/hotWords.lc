@@ -1,0 +1,284 @@
+﻿script "com.ferruslogic.library.HotWords"
+---------------------------------------------------------------------
+# Name: HotWords
+# Type: Library
+# Author: FerrusLogic
+# Code repository: https://github.com/Ferruslogic/HotWords
+# Web: www.ferruslogic.com
+# License: MIT
+---------------------------------------------------------------------
+
+on extensionInitialize
+   if the target is not me then
+      pass "extensionInitialize"
+   end if
+
+   if the environment begins with "development" then
+      set the _ideOverride of me to true
+   end if
+
+   insert the script of me into back
+end extensionInitialize
+
+
+on extensionFinalize
+   if the target is not me then
+      pass extensionFinalize
+   end if
+
+   remove the script of me from back
+end extensionFinalize
+
+
+/**
+Type: library
+
+Title: HotWords
+
+Version: 1.0.2
+
+Author: LiveCode
+
+SVGIcon: M3.9,12C3.9,10.29 5.29,8.9 7,8.9H11V7H7A5,5 0 0,0 2,12A5,5 0 0,0 7,17H11V15.1H7C5.29,15.1 3.9,13.71 3.9,12M8,13H16V11H8V13M17,7H13V8.9H17C18.71,8.9 20.1,10.29 20.1,12C20.1,13.71 18.71,15.1 17,15.1H13V17H17A5,5 0 0,0 22,12A5,5 0 0,0 17,7Z
+
+OS: mac, windows, Linux, ios, android
+
+Platforms: desktop, mobile, web
+
+Description:
+This mini library heats up the words in a LiveCode field found within a
+provided glossary.
+
+It consists only a HotWords command to heat the words and a message that is
+fired in the field when the words finish heating.
+
+> **Tips:**
+Though it would free him up, it heats up the words relatively quickly.
+It will always be faster if you use this library to generate the HTML code
+and save it to a database and then extract it from there.
+
+Tags: text, words
+*/
+
+
+/**
+Name: HotWords
+
+Type: command
+
+Syntax: HotWords <pLongIdFld>, <pGlossary>'[, <pOne>, <pTextStyle>, <pTextColor>]
+Summary: Use the command to warm up the field words found in the glossary
+
+OS: mac, windows, Linux, ios, android
+
+Platforms: desktop, server, mobile
+
+Description: Use the command to warm up the field words found in the glossary. At the end of this command, the HotWordsDone message is triggered in the field.
+
+Example:
+hotWords the long id of field "Content", gGlossary, false, "bold", "#fc4c02"
+
+
+Parameters:
+
+pLongIdFld: It is the id or the long name of the field to which we want to heat the words.
+
+pGlossary: The glossary is a list of words or phrases, one for each line, which will be searched within the field. Matches will be highlighted and their linkText will be the word or word from the glossary.
+
+pOne: Indicates if only one word is heated, the first time it appears. True or false.
+
+pTextStyle: It is the style of the text of the hot words.
+
+pTextColor: It is the color of the text of the hot words.
+
+Returns: New html of the field is found under it
+
+*/
+command hotWords pLongIdFld, pGlossary, pOne, pTextStyle, pTextColor
+   local tStartWord = 1
+   local tNumWords
+   local tTempField
+   local tText
+   local tHotWords
+   local tWord
+   local tLink
+   local tWordSought
+   local tTermGlossary
+   local tNumLine
+   local tNombre
+   local tLinkText
+   local tWordEnd
+   local tTrueWord
+   local tHTML
+   local tGlossaryLinks
+
+   if there is not a pLongIdFld then
+      throw "Error: The control passed to the hotWords function does not exist."
+   end if
+
+   if word 1 of pLongIdFld is not "field" then
+      throw \
+      "Error: The control passed to the hotWords function is not a text field."
+   end if
+
+   if pGlossary is empty then
+      throw "Error: The glossary provided is empty."
+   end if
+
+   if pOne is not among the items of "0,false" then
+      put true into pOne
+   end if
+
+   if pTextStyle is empty then
+      put "link" into pTextStyle
+   end if
+
+   if pTextColor is empty then
+      put "blue" into pTextColor
+   end if
+
+   lock screen
+   lock messages
+
+   /* Getting the link for each word. */
+   set the itemDel to tab
+
+   repeat for each line tLine in pGlossary
+      if first word of tLine is empty then
+         next repeat
+      end if
+
+      put the item 1 of tLine into tWord
+      put the item 2 to - 1 of tLine into tLink
+      put tWord & cr after tHotWords
+
+      if tLink is not empty then
+         put tLink into tGlossaryLinks[tWord]
+       else
+         put tWord into tGlossaryLinks[tWord]
+      end if
+      wait 0 with messages
+   end repeat
+
+   if char - 1 of tHotWords is cr then
+      delete char - 1 of tHotWords
+   end if
+
+   put tHotWords into pGlossary
+
+   create invisible fld "HotWords" in card 1 of stack (the short name of me)
+   put it into tTempField
+
+   set the htmlText of tTempField to the htmlText of pLongIdFld
+   put the text of pLongIdFld into tText
+
+   replace "." with "" in tText
+
+   put the num of trueWords of tText into tNumWords
+
+   repeat forever
+      put trueWord tStartWord of tText into tWordSought
+      if tNumWords < tStartWord then
+         exit repeat
+      end if
+      put trueWord 1 of tWordSought into tWordSought
+
+      if tWordSought is empty or pGlossary is empty then
+         put "" into tTermGlossary
+       else
+         filter lines of pGlossary with wildcard pattern(tWordSought & "*") into tTermGlossary
+      end if
+
+      if tTermGlossary is empty then
+         add 1 to tStartWord
+         next repeat
+      end if
+
+      repeat for each lines tContainer in tTermGlossary
+         put the lineOffset(tContainer, pGlossary) into tNumLine
+         put tContainer into tNombre
+         put tGlossaryLinks[tContainer] into tLinkText
+
+         if tLinkText is empty then
+            put tNombre into tLinkText
+         end if
+
+         if tWordSought <> word 1 of tNombre then
+            next repeat
+         end if
+
+         if tNombre <> "" then
+            put the num of words of tNombre into tWordEnd
+
+            if tWordEnd <> 1 then
+               put tStartWord + tWordEnd - 1 into tWordEnd
+               put word tStartWord to tWordEnd of tText into tTrueWord
+
+               if trueWord 1 to - 1 of tTrueWord is tNombre then
+                  set the linkText of trueWord tStartWord to tWordEnd of tTempField to tLinkText
+                  set the textStyle of trueWord tStartWord to tWordEnd of tTempField to pTextStyle
+                  set the textColor of trueWord tStartWord to tWordEnd of tTempField to pTextColor
+
+                  put tWordEnd into tStartWord
+
+                  if pOne then
+                     delete line tNumLine of pGlossary
+                  end if
+                  exit repeat
+               end if
+             else
+               set the linkText of trueWord tStartWord of tTempField to tLinkText
+               set the textStyle of trueWord tStartWord of tTempField to pTextStyle
+               set the textColor of trueWord tStartWord of tTempField to pTextColor
+
+               if pOne then
+                  delete line tNumLine of pGlossary
+               end if
+               exit repeat
+            end if
+          else
+            next repeat
+         end if
+         wait 0 with messages
+      end repeat
+
+      add 1 to tStartWord
+
+      wait 0
+   end repeat
+
+   put the htmlText of tTempField into tHTML
+   delete tTempField
+
+   set the htmlText of pLongIdFld to tHTML
+
+   unlock messages
+   unlock screen
+
+   dispatch "hotWordsDone" to pLongIdFld
+
+   return tHTML for value
+end HotWords
+
+
+/**
+Name: hotWordsDone
+
+Type: message
+
+Syntax: hotWordsDone
+
+OS: mac, windows, Linux, ios, android
+
+Platforms: desktop, server, mobile
+
+Edition: Community
+
+Summary: hotWordsDone
+
+Description: This message is triggered to the field that the words are heating up when it is finished.
+
+*/
+on hotWordsDone
+
+end hotWordsDone
