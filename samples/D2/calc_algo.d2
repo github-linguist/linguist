@@ -1,0 +1,148 @@
+
+cTrnDao: CalcTrnDao {
+    q: Query {
+        ByTime
+        ByCategory
+        ByAccount
+        ByPurpose
+    }
+    sql: "SQL: O(trns.count) time | O(trns.notDel.count) space" {
+        "SELECT amount, currency, type FROM transactions WHERE ..."
+    }
+    trns: "List<CalcTrn>" {
+        CalcTrn {
+            shape: class
+
+            amount: Double
+            currency: String
+            type: TransactionType
+        }
+    }
+
+    q -> sql -> trns
+}
+
+rawStatsFlow: RawStatsFlow {
+    in: Input {
+        shape: class
+        trns: List<CalcTrn>
+    }
+
+    p: "Process: O(trns.count) time | O(currs.unique.count) space" {
+        "trns.forEach { aggregate incomes, expense by currencies + count them }"
+    }
+
+    out: RawStats {
+        shape: class
+        incomes: Map<CurrencyCode, Double>
+        expenses: Map<CurrencyCode, Double>
+        incomesCount: Int
+        expensesCount: Int
+    }
+
+    in -> p -> out
+}
+
+cTrndao.trns -> rawStatsFlow.in.trns
+
+# RatesFlow
+ratesDao: RatesDao {
+    sql: "SQL: O(rates.count) time | O(rates.baseCurr.count) space" {
+        "SELECT rate, currency FROM exchange_rates WHERE baseCurrency = ?"
+    }
+    out: "List<Rate>" {
+        Rate {
+            shape: class
+            rate: Double
+            currency: String
+        }
+    }
+    sql -> out
+}
+
+ratesOverrideDao: RateOverrideDao {
+    sql: "SQL: O(rates.override.count) time | O(rates.override.baseCurr.count) space" {
+        "SELECT rate, currency FROM exchange_rates_override WHERE baseCurrency = ? AND sync != $DELETING"
+    }
+    out: "List<Rate>" {
+        Rate {
+            shape: class
+            rate: Double
+            currency: String
+        }
+    }
+    sql -> out
+}
+
+ratesFlow: RatesFlow {
+    deps: Dependencies {
+        ratesDao
+        ratesOverrideDao
+        baseCurrencyFlow
+    }
+    p: "Process: O(rates.override.count) time | O(1) space" {
+        1: "baseCurrency.flatMapLatest {}"
+        2: "combine(rateDao.findByBaseCurr(), ratesOverridedao.findByBaseCurr())"
+        3: "Override rate with the manual set ones"
+
+        1 -> 2 -> 3
+
+    }
+    out: "RatesData" {
+        shape: class
+        baseCurrency: String
+        rates: Map<CurrencyCode, Double>
+    }
+
+    deps.ratesDao -> p: Reacts
+    deps.ratesOverrideDao -> p: Reacts
+    deps.baseCurrencyFlow -> p: Reacts
+    p -> out
+}
+
+ratesDao -> ratesFlow.deps
+ratesOverrideDao -> ratesFlow.deps
+
+
+# ExchangeStatsFlow
+exFlow: ExchangeStatsFlow {
+    deps: Dependencies {
+        ratesFlow: "rates: RatesFlow"
+    }
+
+    in: Input {
+        shape: class
+        rawStats: RawStats
+        outputCurrency: String
+    }
+
+    p: "Process: O(curr.unique.count) space-time" {
+        incs_loop: "rawStats.incomes.forEach {}"
+        incs_exchange: "exchange to output currency"
+        incs_sum: "sum & count"
+
+        incs_loop -> incs_exchange -> incs_sum
+
+        exps_loop: "rawStats.expenses.forEach {}"
+        exps_exchange: "exchange to output currency"
+        exps_sum: "sum & count"
+
+        exps_loop -> exps_exchange -> exps_sum
+    }
+
+    out: Stats {
+        shape: class
+        income: Value
+        expense: Value
+        incomesCount: Int
+        expensesCount: Int
+    }
+
+    deps.ratesFlow -> p: Reacts to rates changes
+    in.rawStats -> p
+    p.incs_sum -> out
+    p.exps_sum -> out
+}
+
+ratesFlow.out -> exFlow.deps.ratesFlow: Reacts
+rawStatsFlow.out -> exFlow.in.rawStats

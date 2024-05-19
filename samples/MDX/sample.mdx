@@ -1,0 +1,199 @@
+---
+title: Hello!
+---
+
+# Last year’s snowfall
+
+In {year}, the snowfall was above average.
+It was followed by a warm spring which caused
+flood conditions in many of the nearby rivers.
+
+# Extension: ESM
+
+import {Chart} from './chart.js'
+import population from './population.js'
+import {External} from './some/place.js'
+
+export const year = 2018
+export const pi = 3.14
+
+export function SomeComponent(props) {
+  const name = (props || {}).name || 'world'
+
+  return <div>
+    <p>Hi, {name}!</p>
+
+    <p>and some more things</p>
+  </div>
+}
+
+export function Local(props) {
+  return <span style={{color: 'red'}} {...props} />
+}
+
+## Extension: jsx tags
+
+<Chart year={year} color="#fcb32c" />
+
+<div className="note">
+  > Some notable things in a block quote!
+</div>
+
+<Component
+  open
+  x={1}
+  label={'this is a string, *not* markdown!'}
+  icon={<Icon />}
+/>
+
+## Extension: expressions
+
+Two 🍰 is: {Math.PI * 2}
+
+{(function () {
+  const guess = Math.random()
+
+  if (guess > 0.66) {
+    return <span style={{color: 'tomato'}}>Look at us.</span>
+  }
+
+  if (guess > 0.33) {
+    return <span style={{color: 'violet'}}>Who would have guessed?!</span>
+  }
+
+  return <span style={{color: 'goldenrod'}}>Not me.</span>
+})()}
+
+{/* A comment! */}
+
+Attention (emphasis): *hi* / _hi_
+Attention (strong): **hi** / __hi__
+Attention (strong & emphasis): ***hi*** / ___hi___.
+Attention (strikethrough): ~hi~ ~~hi~~.
+Character escape: \-, \&.
+Character reference: &amp; &#123; &#x123;.
+Code (text): `hi` and `` ` ``.
+Label end (resource): [a](https://example&dot;com 'title').
+Label end (reference, full): [a][b].
+Label end (reference, collapsed, shortcut): [a][], [a].
+
+## Definitions
+
+[a]: <https://example\.com> "b"
+[a]: https://example&dot;com 'b'
+[a]: # (b\&c)
+[a&amp;b]: <>
+
+## Heading (setext)
+
+alpha
+=====
+
+*bravo
+charlie*
+--------
+
+## Heading (atx)
+#
+## A ##
+### B
+#### C
+##### D
+###### E
+####### ?
+
+## Thematic break
+
+***
+
+## Code (fenced)
+
+````markdown
+```css
+em { color: red } /* What! */
+```
+````
+
+~~~js eval
+alert(true + 2 + '3')
+~~~
+
+## Block quote
+
+> # asd
+
+> **asd
+qwe**
+
+> ~~~js
+> console.log(1)
+> ~~~
+
+## List
+
+1. # asd
+
+* **asd
+qwe**
+
+* ~~~js
+  console.log('hi!')
+  ~~~
+
+123456789.    ```js
+              asd + 123
+
+## Extension: math
+
+Math (text): $$hi$$ and $$ $ $$.
+Math (flow):
+
+$$
+L = \frac{1}{2} \rho v^2 S C_L
+$$
+
+## Extension: GFM autolink literals
+
+a a@b.com/ ("aasd@example.com") mailto:a+b@c.com xmpp:a+b@c.com.
+
+a www.example.com/a(b) www.example.com/a(b(c)), wWw.example.com/a(b(c(d))).
+
+ahttps://example.com https://example.com/a(b) hTTp://example.com/a(b(c(d))).
+
+## Extension: GFM footnotes
+
+a[^b], [^c d].
+
+[^b]: *Lorem
+    dolor*.
+
+[^b]:
+    ??
+
+[^b]: ~~~js
+    console.log(1)
+    ~~~
+
+## Extension: GFM task list
+
+*  [ ] not done
+1. [x] done
+
+## Extension: GFM table
+
+| Stuff? | stuff! |
+| - | ----- |
+| asdasda | https://example.com |
+what&not; | qweeeeeeeeeee
+
+## Extension: GitHub gemoji
+
+:+1: :100:
+
+## Extension: GitHub mention
+
+@username @org/team.
+
+## Extension: GitHub reference
+
+GH-123, #123, GHSA-123asdzxc, cve-123asdzxc, user#123, user/project#123.

@@ -18,11 +18,20 @@ If the language stats bar is reporting a language that you don't expect:
 Keep in mind that the repository language stats are only [updated when you push changes](how-linguist-works.md#how-linguist-works-on-githubcom), and the results are cached for the lifetime of your repository.
 If you have not made any changes to your repository in a while, you may find pushing another change will correct the stats.
 
+## When I click on a language present in the language stats bar, I get a message saying "Your search did not match any code"
+
+There are a few reasons that could lead to this outcome:
+
+1. If the repository implements an override via the `linguist-language` attribute, it won't be taken into account in GitHub's search results since GitHub Search relies on [go-enry](https://github.com/go-enry/go-enry) which doesn't support overrides at the moment ([More info](https://github.com/src-d/enry/issues/18)).
+2. go-enry might not be using the latest version of Linguist which means that files could be detected differently in search compared to Linguist (see also the note at the end of [this section](#my-linguist-pr-has-been-merged-but-github-doesnt-reflect-my-changes)).
+3. It could be that files are associated to a language that is part of a group. This means that they are counted as the parent language in the language stats bar, but as the actual language in search. For instance, a file ending with `.f90` is considered to be  "Fortran" in the stats bar, but "Fortran Free Form" in search.
+4. Finally, this can be caused by [code search limitations](https://docs.github.com/en/search-github/github-code-search/about-github-code-search#limitations) that are unrelated to Linguist.
+
 ## My C/C++/Objective-C `.h` header file is detected as the wrong language
 
 Correctly detecting the language for the C-family `.h` header files is tough because Linguist detects the languages of files in isolation when analysing repositories and these header files, especially the smaller ones, can be used across all three languages without using any language-specific content.
-To try and reduce the number of false positives and keep some degree of predicatability for users, Linguist will assume all `.h` header files are C by default and will only identify a file as C++ or Objective-C if the content matches the specific heuristic for that language.
-This will mean you will need to implement an [override](/docs/overrides.md) for some of your header files if you wish for them to be classified as C++ or Objective-C if they do no contain language-specific content.
+To try and reduce the number of false positives and keep some degree of predictability for users, Linguist will assume all `.h` header files are C by default and will only identify a file as C++ or Objective-C if the content matches the specific heuristic for that language.
+This will mean you will need to implement an [override](/docs/overrides.md) for some of your header files if you wish for them to be classified as C++ or Objective-C if they do not contain language-specific content.
 
 ## My repository isn't showing my language
 

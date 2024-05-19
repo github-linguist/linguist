@@ -1,0 +1,373 @@
+-- Copyright (c) 2020 Bluespec, Inc. All rights reserved.
+--
+-- Redistribution and use in source and binary forms, with or without
+-- modification, are permitted provided that the following conditions are
+-- met:
+--
+-- 1. Redistributions of source code must retain the above copyright
+--    notice, this list of conditions and the following disclaimer.
+--
+-- 2. Redistributions in binary form must reproduce the above copyright
+--    notice, this list of conditions and the following disclaimer in the
+--    documentation and/or other materials provided with the
+--    distribution.
+--
+-- 3. Neither the name of the copyright holder nor the names of its
+--    contributors may be used to endorse or promote products derived
+--    from this software without specific prior written permission.
+--
+-- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+-- "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+-- LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+-- A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+-- HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+-- SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+-- LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+-- DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+-- THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+-- (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+-- OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+package CGetPut(CGet, CPut, CGetS, CPutS,
+         CGetPut, GetCPut, mkCGetPut, mkGetCPut, mkCGetCPut, CClientServer, ClientCServer,
+         CClient, CServer, CClientS(..), CServerS(..), mkCClientServer, mkClientCServer) where
+import FIFOF
+import ConfigReg
+import Connectable
+import GetPut
+import ClientServer
+import Vector
+import RegTwo
+
+--@ \subsubsection{CGetPut}
+--@ \index{CGetPut@\te{CGetPut} (package)|textbf}
+--@
+--@ The interfaces \te{CGet} and \te{CPut} are similar to
+--@ \te{Get} and \te{Put}, but the interconnection of them
+--@ (via \te{Connectable}) is implemented with a credit based
+--@ FIFO.  This means that the \te{CGet} and \te{CPut} interfaces
+--@ have completely registered input and outputs, and furthermore
+--@ that additional register buffers can be introduced in the connection path
+--@ without any ill effect (except an increase in latency, of course).
+
+interface (CGetS :: # -> * -> # -> *) n a sa =
+    gvalue   :: Bit sa
+    gpresent :: Bool
+    gcredit  :: Bool -> Action
+
+interface (CPutS :: # -> * -> # -> *) n a sa =
+    pvalue   :: Bit sa -> Action
+    ppresent :: Bool -> Action
+    pcredit  :: Bool
+
+--@ The interface types are abstract (to avoid any non-proper use of
+--@ the credit signaling protocol).
+--@
+--@ In the absence of additional register buffers, the round-trip time for communication
+--@ between the two interfaces is 4 clock cycles.  Call this number $r$.  The first argument
+--@ to the type, $n$, specifies that transfers will occur for a fraction $n/r$ of clock
+--@ cycles (note that the used cycles will not necessarily be evenly spaced).  $n$ also
+--@ specifies the depth of the buffer used in the receiving interface (the transmitter side
+--@ always has only a single buffer).  So (in the absence of additional buffers) use $n=4$
+--@ to allow full-bandwidth transmission, at the cost of sufficient registers for quadruple
+--@ buffering at one end; use $n=1$ for minimal use of registers, at the cost of reducing
+--@ the bandwidth to one quarter; use intermediate values to select the optimal trade-off if
+--@ appropriate.
+--@
+--@ \note{For compiler reasons the actual interfaces are called \te{CGetS} and \te{CPutS}
+--@ with \te{CGet} and \te{CPut} being type abbreviations.  Hopefully this will
+--@ be fixed soon.}
+--@ \begin{libverbatim}
+--@ typedef CGetS#(n, a, SizeOf#(a)) CGet #(type n, type a);
+--@ \end{libverbatim}
+type CGet n a = CGetS n a (SizeOf a)
+
+--@ \lineup
+--@ \begin{libverbatim}
+--@ typedef CPutS#(n, a, SizeOf#(a)) CPut #(type n, type a);
+--@ \end{libverbatim}
+type CPut n a = CPutS n a (SizeOf a)
+
+type CGetPut n a = (CGet n a, Put a)
+type GetCPut n a = (Get a, CPut n a)
+
+--@ Create one end of the credit based FIFO.  Access to it is via a \te{Put} interface.
+--@ \index{mkCGetPut@\te{mkCGetPut} (function)|textbf}
+--@ \begin{libverbatim}
+--@ module mkCGetPut(Tuple2 #(CGetS#(n, a, sa), Put#(a)))
+--@   provisos (Bits#(a, sa), Add#(1, k, n), Add#(n, 1, n1), Log#(n1, ln));
+--@ \end{libverbatim}
+mkCGetPut :: (IsModule m c, Bits a sa, Add 1 k n, Add n 1 n1, Log n1 ln) => m (CGetS n a sa, Put a)
+mkCGetPut =
+  module
+    putbuf :: FIFOF (Bit sa) <- mkUGLFIFOF
+    credits :: FIFOF () <- mkUGLSizedFIFOF (valueOf n - 1)
+    free :: Reg Bool <- mkConfigReg False
+    let hasData = putbuf.notEmpty
+    rules
+          {-# ASSERT no implicit conditions #-}
+          {-# ASSERT fire when enabled #-}
+          "deq":
+            when hasData
+             ==> putbuf.deq
+          {-# ASSERT no implicit conditions #-}
+          {-# ASSERT fire when enabled #-}
+          "free":
+            when free
+             ==> credits.deq
+    interface -- Pair
+       (interface CGetS
+            gvalue = putbuf.first
+            gpresent = hasData
+            gcredit b = free := b
+        ,
+        interface Put
+            put x = action
+                        putbuf.enq (pack x)
+                        credits.enq ()
+                when (credits.notFull || free)
+       )
+--@ Create the other end of the credit based FIFO.  Access to it is via a \te{Get} interface.
+--@ \index{mkGetCPut@\te{mkGetCPut} (function)|textbf}
+--@ \begin{libverbatim}
+--@ module mkGetCPut(Tuple2 #(Get#(a), CPutS#(n, a, sa)))
+--@   provisos (Bits#(a, sa), Add#(1, k, n), Log#(n, ln));
+--@ \end{libverbatim}
+mkGetCPut :: (IsModule m c, Bits a sa, Add 1 k n, Log n ln) => m (Get a, CPutS n a sa)
+mkGetCPut =
+  if valueOf n > 1 then
+    module
+      buff :: Vector n (Reg (Bit sa)) <- genWithM $ const mkConfigRegU
+      gotPresent :: Reg Bool <- mkConfigReg False
+      present :: Vector n (Reg Bool) <- genWithM $ const $ mkConfigReg False
+      ptr :: Reg (Bit ln) <- mkConfigReg 0
+      crd :: FIFOF () <- mkUGLFIFOF
+      let
+        presentEffective :: Vector n Bool
+        presentEffective = zipWith (\idx p -> if idx == 0 then gotPresent || p else p) genList (map readReg present)
+
+--        allAheadTrue :: Vector n Bool -> Vector n Bool
+--        allAheadTrue bs = let (_, result) = mapAccumR (\aat b -> (aat && b, aat && b)) True bs
+
+
+
+        bubble :: (Action, Vector n Bool)
+        bubble = let f :: (Integer, Bool, Action) -> (Reg Bool, Bool, Reg (Bit sa)) -> ((Integer, Bool, Action), Bool)
+                     f (idx, filled, upds) (p, pe, b) =
+                       (
+                        (idx-1
+                        ,
+                         filled && pe
+                        ,
+                         action {upds; if not (filled && pe) then (if idx /= 0 then action {p := presentEffective !! (idx-1); b := (buff !! (idx-1))._read} else action {p := False}) else action {}}
+                        )
+                       ,
+                        if not (filled && pe) then (if idx /= 0 then presentEffective !! (idx-1) else False) else pe
+                       )
+                     ((_, _, b_updates), b_presentNext) = mapAccumR f (valueOf n - 1, True, action {}) (zip3 present presentEffective buff)
+                 in (b_updates, b_presentNext)
+        presentNext :: Vector n Bool
+        presentNext = bubble.snd
+        updates :: Action
+        updates = bubble.fst
+--        updates :: Vector n Bool -> (Vector n Bool, Vector n Action)
+--        updates bs = let f idx (pag, aap, b) = case idx of
+--                                            0 -> if not aap then (False, noAction) else (pag, noAction)
+--                                            _ -> if not aap then (select presentAfterGet (idx-1), b := (select buff (idx-1))._read) else (pag, noAction)
+--                  in unzip $ zipWith f genList (zip3 presentAfterGet allAheadPresent buff)
+
+        clearLastTrue :: Vector n Bool -> Vector n Bool
+        clearLastTrue bs = let (_, result) = mapAccumR (\found b -> if (not found && b) then (True, False) else (found, b)) False bs
+                           in result
+        lastTrueIdx :: Vector n Bool -> Bit ln
+        lastTrueIdx bs = let f (idx, h) b = if b then (idx+1, idx) else (idx+1, h)
+                             (_, result) = foldl f (0, 0) bs
+                         in result
+
+      rw :: RWire ()
+      rw <- mkRWire
+
+      rules
+          {-# ASSERT no implicit conditions #-}
+          "update":
+            when rw.wget == Nothing
+             ==> action updates
+                        ptr := lastTrueIdx presentNext
+          {-# ASSERT no implicit conditions #-}
+          {-# ASSERT fire when enabled #-}
+          "deq-crd":
+            when crd.notEmpty
+             ==> crd.deq
+      interface -- Pair
+        (interface Get
+           get = do rw.wset()
+                    crd.enq ()
+                    joinActions $ zipWith writeReg present (cons False (init $ clearLastTrue presentEffective))
+                    joinActions $ zipWith writeReg (tail buff) (init $ map readReg buff)
+                    ptr._write $ lastTrueIdx $ cons False (init $ clearLastTrue presentEffective)
+                    return $ unpack (select buff ptr)._read
+             when (fold (||) presentEffective)
+        ,
+         interface CPutS
+           pvalue v = (head buff)._write v
+           ppresent p = gotPresent := p
+           pcredit = crd.notEmpty
+        )
+  else
+    module
+      buff :: Reg (Bit sa) <- mkConfigRegU
+      present :: RegTwo Bool <- mkRegTwo False
+      gotPresent :: Reg Bool <- mkConfigReg False
+      crd :: FIFOF () <- mkUGLFIFOF
+      rules
+        {-# ASSERT no implicit conditions #-}
+        {-# ASSERT fire when enabled #-}
+        "deq-crd":
+          when crd.notEmpty ==> crd.deq
+        {-# ASSERT no implicit conditions #-}
+        {-# ASSERT fire when enabled #-}
+        "save":
+          when gotPresent ==> present.setB True
+      interface -- Pair
+        (interface Get
+           get = do crd.enq ()
+                    present.setA False
+                    return $ unpack buff
+             when (gotPresent || present.get)
+        ,
+         interface CPutS
+           pvalue v = buff := v
+           ppresent p = gotPresent := p
+           pcredit = crd.notEmpty
+        )
+
+--@ Create a buffer that can be inserted along a connection path.
+--@ \index{mkCGetCPut@\te{mkCGetCPut} (function)|textbf}
+--@ \begin{libverbatim}
+--@ module mkCGetCPut(Tuple2 #(CGetS#(n, a, sa), CPutS#(n, a, sa)))
+--@   provisos (Bits#(a, sa));
+--@ \end{libverbatim}
+mkCGetCPut :: (IsModule m c, Bits a sa) => m (CGetS n a sa, CPutS n a sa)
+mkCGetCPut =
+  module
+    val :: Reg (Bit sa) <- mkConfigRegU
+    prs :: Reg Bool <- mkConfigReg False
+    crd :: Reg Bool <- mkConfigReg False
+    interface --  Pair
+       (interface CGetS
+            gvalue = val
+            gpresent = prs
+            gcredit b = crd := b
+        ,
+        interface CPutS
+            pvalue v = val := v
+            ppresent p = prs := p
+            pcredit = crd
+        )
+
+--@ The \te{CGet} and \te{CPut} interface are connectable.
+--@ \begin{libverbatim}
+--@ instance Connectable #(CGetS#(n, a, sa), CPutS#(n, a, sa));
+--@ \end{libverbatim}
+instance Connectable (CGetS n a sa) (CPutS n a sa)
+   where
+    mkConnection :: (IsModule m c) => CGetS n a sa -> CPutS n a sa -> m Empty
+    mkConnection g p =
+      module
+        rules
+          {-# ASSERT no implicit conditions #-}
+          {-# ASSERT fire when enabled #-}
+          "moveCGetPut":
+            when True
+             ==> action
+                    p.pvalue g.gvalue
+                    p.ppresent g.gpresent
+                    g.gcredit p.pcredit
+
+--@ \lineup
+--@ \begin{libverbatim}
+--@ instance Connectable #(CPutS#(n, a, sa), CGetS#(n, a, sa));
+--@ \end{libverbatim}
+instance Connectable (CPutS n a sa) (CGetS n a sa)
+   where
+    mkConnection p g = mkConnection g p
+
+--@ The same idea may be extended  to clients and servers.
+
+interface CClientS n a sa b sb =
+   request :: CGetS n a sa
+   response:: CPutS n b sb
+
+interface CServerS n a sa b sb =
+   request  :: CPutS n a sa
+   response :: CGetS n b sb
+
+--@ \begin{libverbatim}
+--@ typedef CClientS#(n, a, SizeOf#(a), b, SizeOf#(b))
+--@                                           CClient #(type n, type a, type b);
+--@ typedef CServerS#(n, a, SizeOf#(a), b, SizeOf#(b))
+--@                                           CServer #(type n, type a, type b);
+--@ \end{libverbatim}
+type CClient n a b = CClientS n a (SizeOf a) b (SizeOf b)
+type CServer n a b = CServerS n a (SizeOf a) b (SizeOf b)
+
+type CClientServer n a b = (CClient n a b, Server a b)
+type ClientCServer n a b = (Client a b, CServer n a b)
+
+instance Connectable (CClientS n a sa b sb)
+                     (CServerS n a sa b sb)
+   where
+    mkConnection :: (IsModule m c) =>
+               (CClientS n a sa b sb) ->
+               (CServerS n a sa b sb) -> m Empty
+    mkConnection cc cs =
+      module
+          cc.request <-> cs.request
+          cc.response <-> cs.response
+
+instance Connectable (CServerS n a sa b sb)
+                     (CClientS n a sa b sb)
+   where
+    mkConnection cs cc = mkConnection cc cs
+
+--@ \index{mkClientCServer@\te{mkClientCServer} (function)|textbf}
+--@ \begin{libverbatim}
+--@ module mkClientCServer(Tuple2 #(Client#(a, b), CServerS#(n, a, sa, b, sb)))
+--@   provisos (Bits#(a, sa), Bits#(b, sb), Add#(1, k, n));
+--@ \end{libverbatim}
+mkClientCServer :: (IsModule m c, Bits a sa, Bits b sb, Add 1 k n) =>
+                               m (Client a b, CServerS n a sa b sb)
+mkClientCServer =
+  module
+    (g, cp) <- mkGetCPut
+    (cg, p) <- mkCGetPut
+    interface
+     (interface Client
+        request = g
+        response = p
+      ,
+      interface CServerS
+        request = cp
+        response = cg
+     )
+
+--@ \index{mkCClientServer@\te{mkCClientServer} (function)|textbf}
+--@ \begin{libverbatim}
+--@ module mkCClientServer(Tuple2 #(CClientS#(n, a, sa, b, sb), Server#(a, b)))
+--@   provisos (Bits#(a, sa), Bits#(b, sb), Add#(1, k, n));
+--@ \end{libverbatim}
+mkCClientServer :: (IsModule m c, Bits a sa, Bits b sb, Add 1 k n) =>
+                               m (CClientS n a sa b sb, Server a b)
+mkCClientServer =
+  module
+    (g, cp) <- mkGetCPut
+    (cg, p) <- mkCGetPut
+    interface
+     (interface CClientS
+        request = cg
+        response = cp
+      ,
+      interface Server
+        request = p
+        response = g
+     )

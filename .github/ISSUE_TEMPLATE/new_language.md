@@ -8,7 +8,7 @@ assignees: ''
 
 <!--
 
-👋 If you have the time and know-how, send us a pull-request: everybody is welcome to contribute! 
+👋 If you have the time and know-how, send us a pull-request: everybody is welcome to contribute!
 Otherwise, fill out the following fields as best you can.
 
 -->

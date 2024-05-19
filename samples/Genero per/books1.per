@@ -1,0 +1,38 @@
+SCHEMA library
+
+LAYOUT
+HBOX ( ORIENTATION@SMALL = VERTICAL )
+TABLE
+{
+[c1                |c2               |c3                |c4          |c5    ]
+}
+END
+GRID
+{
+Plot
+[f1                 ]
+[                   ]
+[                   ]
+}
+END
+END
+END
+
+TABLES
+book
+END
+
+ATTRIBUTES
+ PHANTOM book.book_id;
+    EDIT c1 = book.b_title,    TITLE="Name", SCROLL;
+COMBOBOX c2 = book.b_author,   TITLE="Author", INITIALIZER=init_authors;
+    EDIT c3 = book.b_isbn,     TITLE="ISBN", SCROLL;
+DATEEDIT c4 = book.b_pub_date, TITLE="Publication";
+    EDIT c5 = book.b_price,    TITLE="Price";
+TEXTEDIT f1 = FORMONLY.f_plot, STRETCH=BOTH;
+ PHANTOM book.b_plot;
+END
+
+INSTRUCTIONS
+SCREEN RECORD sr1(book.*);
+END

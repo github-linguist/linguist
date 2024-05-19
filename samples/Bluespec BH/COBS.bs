@@ -1,0 +1,123 @@
+-- This file is copied from https://github.com/B-Lang-org/bsc-contrib
+-- SPDX-License-Identifier: BSD-3-Clause
+
+package COBS where
+
+import FIFO
+import GetPut
+import Vector
+
+-- Implementation of Consistent Overhead Byte Stuffing (COBS) encoding of messages into a byte stream.
+-- See https://en.wikipedia.org/wiki/Consistent_Overhead_Byte_Stuffing
+
+interface (COBSEncoder :: # -> *) n =
+  msg :: Put (UInt (TLog (TAdd 1 n)), Vector n (Bit 8))
+  byte :: Get (Bit 8)
+
+mkCOBSEncoder :: (Log (TAdd 1 n) sizeWidth) => Module (COBSEncoder n)
+mkCOBSEncoder = module
+  msgs :: FIFO (UInt sizeWidth, Vector n (Bit 8)) <- mkFIFO
+  bytes :: FIFO (Bit 8) <- mkFIFO
+
+  let size :: UInt (TMax sizeWidth 8) = zeroExtend msgs.first.fst
+  let msg :: Vector n (Bit 8) = msgs.first.snd
+
+  -- Index of the next byte to encode
+  i :: Reg (UInt (TMax sizeWidth 8)) <- mkReg 0
+  -- Distance from i to the next zero / overhead / end of message byte
+  j :: Reg (UInt 8) <- mkReg 0
+  -- Index of the next overhead byte to be inserted
+  nextOverhead :: Reg (Maybe (UInt (TMax sizeWidth 8))) <- mkReg $ Just 0
+
+  let byteI = select msg i
+  let foundNextZero =
+        j == (if nextOverhead == Just i then 0xfe else 0xff) ||
+        i + zeroExtend j >= size || select msg (i + zeroExtend j) == 0
+
+  rules
+    "next_msg": when i >= size ==> do
+      -- $display "next_msg"
+      msgs.deq
+      bytes.enq 0
+      i := 0
+      j := 0
+      nextOverhead := Just 0
+
+    "find_next_zero": when i < size && not foundNextZero ==> j := j + 1
+
+    "encode_overhead": when nextOverhead == Just i && i < size && foundNextZero ==> do
+      -- $display "encode_overhead %x" (j + 1)
+      bytes.enq $ pack (j + 1)
+      nextOverhead := if j == 0xfe then Just (i + 0xfe) else Nothing
+      j := 1
+
+    "encode_zero": when nextOverhead /= Just i && i < size && byteI == 0 && foundNextZero ==> do
+      -- $display "encode_zero %x" j
+      bytes.enq $ pack j
+      nextOverhead := if j == 0xfe then Just (i + 0xfe) else Nothing
+      i := i + 1
+      j := 1
+
+    "encode_nonzero": when nextOverhead /= Just i && i < size && byteI /= 0 && foundNextZero ==> do
+      -- $display "encode_nonzero %x" byteI
+      bytes.enq byteI
+      i := i + 1
+      j := if j > 1 || nextOverhead == Just (i + 1) then j - 1 else 1  -- Ensure that j > 0 if the next byte is not an overhead byte
+
+  interface
+    msg = toPut msgs
+    byte = toGet bytes
+
+
+interface (COBSDecoder :: # -> *) n =
+  msg :: Get (UInt (TLog (TAdd 1 n)), Vector n (Bit 8))
+  byte :: Put (Bit 8)
+
+mkCOBSDecoder :: (Log (TAdd 1 n) sizeWidth) => Module (COBSDecoder n)
+mkCOBSDecoder = module
+  msgs :: FIFO (UInt sizeWidth, Vector n (Bit 8)) <- mkFIFO
+  bytes :: FIFO (Bit 8) <- mkFIFO
+
+  -- Index of the next result byte to be decoded
+  i :: Reg (UInt sizeWidth) <- mkReg 0
+  -- Distance to the next zero / overhead / end of message byte
+  j :: Reg (UInt 8) <- mkReg 0
+  -- Is the next zero / overhead / end of message byte an overhead byte?
+  isOverhead :: Reg Bool <- mkReg True
+  -- Vector of registers containing partially-decoded message
+  msg :: Vector n (Reg (Bit 8)) <- replicateM $ mkReg 0
+
+  rules
+    "next_msg": when bytes.first == 0 ==> do
+      -- $display "next_msg"
+      bytes.deq
+      msgs.enq (i, map readReg msg)
+      i := 0
+      j := 0
+      isOverhead := True
+      writeVReg msg $ replicate 0
+
+    "decode_overhead": when bytes.first /= 0 && j == 0 && isOverhead ==> do
+      -- $display "decode_overhead %x" bytes.first
+      j := unpack bytes.first - 1
+      isOverhead := bytes.first == 0xff
+      bytes.deq
+
+    "decode_zero": when bytes.first /= 0 && j == 0 && not isOverhead ==> do
+      -- $display "decode_zero %x" bytes.first
+      select msg i := 0
+      i := i + 1
+      j := if bytes.first == 0xff then 0xff else unpack bytes.first - 1
+      isOverhead := bytes.first == 0xff
+      bytes.deq
+
+    "decode_nonzero": when bytes.first /= 0 && j > 0 ==> do
+      -- $display "decode_nonzero %x" bytes.first
+      select msg i := bytes.first
+      i := i + 1
+      j := j - 1
+      bytes.deq
+
+  interface
+    msg = toGet msgs
+    byte = toPut bytes

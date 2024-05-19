@@ -1,0 +1,122 @@
+package TbTL where
+
+import Vector
+
+import TL
+
+
+interface Lamp =
+    changed :: Bool
+    show_offs :: Action
+    show_ons :: Action
+    reset :: Action
+ 
+mkLamp :: String -> Bool -> Module Lamp
+mkLamp name lamp =
+    module
+      prev :: Reg Bool <- mkReg False
+      interface
+           changed =  prev /= lamp
+
+           show_offs =
+               if prev && not lamp then
+                  $write (name + " off, ")
+               else
+                  noAction
+
+           show_ons =
+               if not prev && lamp then
+                  $write (name + " on, ")
+               else
+                  noAction
+
+           reset =  prev := lamp
+
+
+{-# properties mkTest = { verilog } #-}
+mkTest :: Module Empty
+mkTest = 
+    module
+      dut <- sysTL
+
+      ctr :: Reg (Bit 16) <- mkReg 0
+
+      carN :: Reg Bool <- mkReg False
+      carS :: Reg Bool <- mkReg False
+      carE :: Reg Bool <- mkReg False
+      carW :: Reg Bool <- mkReg False
+
+      lamp0 :: Lamp <- mkLamp "0:  NS  red  " dut.lampRedNS
+      lamp1 :: Lamp <- mkLamp "1:  NS  amber" dut.lampAmberNS
+      lamp2 :: Lamp <- mkLamp "2:  NS  green" dut.lampGreenNS
+      lamp3 :: Lamp <- mkLamp "3:  E   red  " dut.lampRedE
+      lamp4 :: Lamp <- mkLamp "4:  E   amber" dut.lampAmberE
+      lamp5 :: Lamp <- mkLamp "5:  E   green" dut.lampGreenE
+      lamp6 :: Lamp <- mkLamp "6:  W   red  " dut.lampRedW
+      lamp7 :: Lamp <- mkLamp "7:  W   amber" dut.lampAmberW
+      lamp8 :: Lamp <- mkLamp "8:  W   green" dut.lampGreenW
+
+      lamp9 :: Lamp <- mkLamp "9:  Ped red  " dut.lampRedPed
+      lamp10 :: Lamp <- mkLamp "10: Ped amber" dut.lampAmberPed
+      lamp11 :: Lamp <- mkLamp "11: Ped green" dut.lampGreenPed
+
+      let lamps :: Vector 12 Lamp
+          lamps = Vector.cons lamp0
+                   (Vector.cons lamp1
+                     (Vector.cons lamp2
+                       (Vector.cons lamp3
+                         (Vector.cons lamp4
+                           (Vector.cons lamp5
+                             (Vector.cons lamp6
+                               (Vector.cons lamp7
+                                 (Vector.cons lamp8
+                                   (Vector.cons lamp9
+                                     (Vector.cons lamp10
+                                       (Vector.cons lamp11 nil)))))))))))
+
+      rules
+           "start":  when ctr == 0   ==> $dumpvars
+           
+           "detect_cars":  when True
+                            ==>
+                              action
+                                dut.set_car_state_N carN
+                                dut.set_car_state_S carS
+                                dut.set_car_state_E carE
+                                dut.set_car_state_W carW
+           
+           "go":  when True
+                   ==>
+                     action
+                       ctr := (ctr + 1)
+                       if ctr == 5000 then
+                          carN := True
+                        else if ctr == 6500 then
+                          carN := False
+                        else if ctr == 12000 then
+                          dut.ped_button_push
+                        else
+                          noAction
+           
+           "stop":  when ctr > 32768   ==> action
+                                             $display "TESTS FINISHED"
+                                             $finish 0
+
+      let do_offs  l =  l.show_offs
+          do_ons   l =  l.show_ons
+          do_reset l =  l.reset
+          changed  l =  l.changed
+
+          do_it f = Vector.mapM_ f lamps
+
+          any_changes = Vector.any changed lamps
+
+      rules
+           "show":  when any_changes
+                     ==>
+                       action
+                         do_it do_offs
+                         do_it do_ons
+                         do_it do_reset
+                         $display "(at time %d)" ($time)
+

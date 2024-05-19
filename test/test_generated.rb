@@ -28,7 +28,7 @@ class TestGenerated < Minitest::Test
       Generated.generated?(blob, lambda { raise DataLoadedError.new })
     end
     expected = !negate
-    actual = Generated.generated?(blob, lambda { IO.read(blob) })
+    actual = Generated.generated?(blob, lambda { File.read(blob) })
     assert(expected == !!actual, error_message(blob, negate))
   end
 
@@ -92,6 +92,9 @@ class TestGenerated < Minitest::Test
     # npm shrinkwrap file
     generated_sample_without_loading_data("Dummy/npm-shrinkwrap.json")
     generated_sample_without_loading_data("Dummy/package-lock.json")
+
+    # pnpm lockfile
+    generated_sample_without_loading_data("Dummy/pnpm-lock.yaml")
 
     # Yarn Plug'n'Play file
     generated_sample_without_loading_data(".pnp.js")
@@ -196,6 +199,16 @@ class TestGenerated < Minitest::Test
 
     # pdm
     generated_sample_without_loading_data("TOML/filenames/pdm.lock")
+
+    # coverage.py `coverage html` output
+    generated_sample_without_loading_data("htmlcov/index.html")
+    generated_sample_without_loading_data("htmlcov/coverage_html.js")
+    generated_sample_without_loading_data("htmlcov/style.css")
+    generated_sample_without_loading_data("htmlcov/status.json")
+    generated_sample_without_loading_data("Dummy/htmlcov/index.html")
+    generated_sample_without_loading_data("Dummy/htmlcov/coverage_html.js")
+    generated_sample_without_loading_data("Dummy/htmlcov/style.css")
+    generated_sample_without_loading_data("Dummy/htmlcov/status.json")
   end
 
   # We've whitelisted these files on purpose, even though they're machine-generated.

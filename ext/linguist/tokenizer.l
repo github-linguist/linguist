@@ -51,7 +51,7 @@
 %}
 
 %option never-interactive yywrap reentrant nounput warn nodefault header-file="lex.linguist_yy.h" extra-type="VALUE*" prefix="linguist_yy"
-%x c_comment xml_comment haskell_comment ocaml_comment python_dcomment python_scomment roff_comment
+%x c_comment xml_comment haskell_comment ocaml_comment python_dcomment python_scomment roff_comment lean_comment
 
 %%
 
@@ -102,8 +102,10 @@
 "\"\"\""                 { FEED_STATIC("COMMENT\"\"\""); BEGIN(python_dcomment); return 1; }
 "'''"                    { FEED_STATIC("COMMENT'''"); BEGIN(python_scomment); return 1; }
 ^".ig"\n                 { FEED_STATIC("COMMENT.ig"); BEGIN(roff_comment); return 1; }
+"/--"                     { FEED_STATIC("COMMENT/-"); BEGIN(lean_comment); return 1; }
+"/-"                     { FEED_STATIC("COMMENT/-"); BEGIN(lean_comment); return 1; }
 
-<c_comment,xml_comment,haskell_comment,ocaml_comment,python_dcomment,python_scomment,roff_comment>.|\n { /* nothing */ }
+<c_comment,xml_comment,haskell_comment,ocaml_comment,python_dcomment,python_scomment,roff_comment,lean_comment>.|\n { /* nothing */ }
 <c_comment>"*/"                   { BEGIN(INITIAL); }
 <xml_comment>"-->"                { BEGIN(INITIAL); }
 <haskell_comment>"-}"             { BEGIN(INITIAL); }
@@ -111,6 +113,7 @@
 <python_dcomment>"\"\"\""         { BEGIN(INITIAL); }
 <python_scomment>"'''"            { BEGIN(INITIAL); }
 <roff_comment>".."\n              { BEGIN(INITIAL); }
+<lean_comment>"-/"                { BEGIN(INITIAL); }
 
 \"\"|''                           { /* nothing */ }
 \"                                { eat_until_unescaped('"'); }
@@ -171,4 +174,3 @@
 .|\n                              { /* nothing */ }
 
 %%
-
