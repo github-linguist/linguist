@@ -168,6 +168,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **F#:** [ionide/ionide-fsgrammar](https://github.com/ionide/ionide-fsgrammar)
 - **F\*:** [FStarLang/atom-fstar](https://github.com/FStarLang/atom-fstar)
 - **FIGlet Font:** [Alhadis/language-fontforge](https://github.com/Alhadis/language-fontforge)
+- **FIRRTL:** [chipsalliance/firrtl-syntax](https://github.com/chipsalliance/firrtl-syntax)
 - **Factor:** [slavapestov/factor](https://github.com/slavapestov/factor)
 - **Fancy:** [fancy-lang/fancy-tmbundle](https://github.com/fancy-lang/fancy-tmbundle)
 - **Fantom:** [rkoeninger/sublime-fantom](https://github.com/rkoeninger/sublime-fantom)
