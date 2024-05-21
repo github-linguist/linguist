@@ -423,12 +423,6 @@ class TestHeuristics < Minitest::Test
     }, alt_name="main.f")
   end
 
-  def test_fir_by_heuristics
-    assert_heuristics({
-      "FIRRTL" => all_fixtures("FIRRTL", "*.fir")
-    })
-  end
-
   def test_for_by_heuristics
     assert_heuristics({
       "Fortran" => all_fixtures("Fortran", "*.f") + all_fixtures("Fortran", "*.for"),

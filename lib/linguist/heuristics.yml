@@ -244,11 +244,6 @@ disambiguations:
     pattern: 'flowop'
   - language: Fortran
     named_pattern: fortran
-- extensions: ['.fir']
-  rules:
-  - language: FIRRTL
-    pattern:
-    - "^(circuit|FIRRTL version)"
 - extensions: ['.for']
   rules:
   - language: Forth
