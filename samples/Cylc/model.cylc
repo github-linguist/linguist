@@ -1,5 +1,3 @@
-#!Jinja2
-
 {% set BUILD_DIR = "$CYLC_WORKFLOW_RUN_DIR/share/build"
 {% set initial_cycle_point = initial_cycle_point | default('2000') %}
 {% set final_cycle_point = final_cycle_point | default('') %}
