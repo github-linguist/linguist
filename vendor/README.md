@@ -85,6 +85,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **CSS:** [tree-sitter/tree-sitter-css](https://github.com/tree-sitter/tree-sitter-css) 🐌
 - **CUE:** [cue-sh/vscode-cue](https://github.com/cue-sh/vscode-cue)
 - **Cabal Config:** [atom-haskell/language-haskell](https://github.com/atom-haskell/language-haskell)
+- **Caddyfile:** [caddyserver/vscode-caddyfile](https://github.com/caddyserver/vscode-caddyfile)
 - **Cadence:** [onflow/vscode-cadence](https://github.com/onflow/vscode-cadence)
 - **Cairo:** [xshitaka/atom-language-cairo](https://github.com/xshitaka/atom-language-cairo)
 - **CameLIGO:** [pewulfman/Ligo-grammar](https://github.com/pewulfman/Ligo-grammar)
