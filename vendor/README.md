@@ -285,6 +285,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Jolie:** [fmontesi/language-jolie](https://github.com/fmontesi/language-jolie)
 - **Jsonnet:** [google/language-jsonnet](https://github.com/google/language-jsonnet)
 - **Julia:** [JuliaEditorSupport/atom-language-julia](https://github.com/JuliaEditorSupport/atom-language-julia)
+- **Julia REPL:** [JuliaEditorSupport/atom-language-julia](https://github.com/JuliaEditorSupport/atom-language-julia)
 - **Jupyter Notebook:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
 - **Just:** [skellock/vscode-just](https://github.com/skellock/vscode-just)
 - **Kaitai Struct:** [atom/language-yaml](https://github.com/atom/language-yaml)
