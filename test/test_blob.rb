@@ -166,6 +166,9 @@ class TestBlob < Minitest::Test
     # Nix generated flake.lock file
     assert sample_blob_memory("JSON/filenames/flake.lock").generated?
 
+    # Bazel generated bzlmod lockfile
+    assert sample_blob_memory("JSON/filenames/MODULE.bazel.lock").generated?
+
     # pnpm lockfile
     assert fixture_blob_memory("YAML/pnpm-lock.yaml").generated?
 

@@ -689,6 +689,7 @@ class TestHeuristics < Minitest::Test
   def test_mod_by_heuristics
     assert_heuristics({
       "Modula-2" => all_fixtures("Modula-2", "*.mod"),
+      "NMODL" => all_fixtures("NMODL", "*.mod"),
       "XML" => all_fixtures("XML", "*.mod"),
       ["Linux Kernel Module", "AMPL"] => all_fixtures("Linux Kernel Module", "*.mod"),
       ["Linux Kernel Module", "AMPL"] => all_fixtures("AMPL", "*.mod"),
@@ -759,6 +760,13 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "Hack" => all_fixtures("Hack", "*.php"),
       "PHP" => all_fixtures("PHP", "*.php")
+    })
+  end
+
+  def test_pkl_by_heuristics
+    assert_heuristics({
+      "Pkl" => all_fixtures("Pkl", "*.pkl"),
+      "Pickle" => all_fixtures("Pickle", "*.pkl")
     })
   end
 

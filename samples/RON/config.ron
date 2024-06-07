@@ -1,0 +1,15 @@
+Config(
+    root: ".",
+    color: Auto,
+    include_hidden: false,
+    max_rows: 10,
+    exclude: [
+        "target/*",
+        "assets/*",
+    ],
+    output: Output(
+        path: Some("out"),
+        format: Pretty,
+    ),
+    timeout: 3600.0,
+)
