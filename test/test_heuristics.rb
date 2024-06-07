@@ -762,6 +762,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_pkl_by_heuristics
+    assert_heuristics({
+      "Pkl" => all_fixtures("Pkl", "*.pkl"),
+      "Pickle" => all_fixtures("Pickle", "*.pkl")
+    })
+  end
+
   def test_pl_by_heuristics
     assert_heuristics({
       "Prolog" => all_fixtures("Prolog", "*.pl"),
