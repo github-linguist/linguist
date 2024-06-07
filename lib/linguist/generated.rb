@@ -60,6 +60,7 @@ module Linguist
       generated_net_specflow_feature_file? ||
       composer_lock? ||
       cargo_lock? ||
+      cargo_orig? ||
       flake_lock? ||
       bazel_lock? ||
       node_modules? ||
@@ -476,6 +477,13 @@ module Linguist
     # Returns true or false.
     def cargo_lock?
       !!name.match(/Cargo\.lock/)
+    end
+
+    # Internal: Is the blob a generated Rust Cargo original file?
+    #
+    # Returns true or false.
+    def cargo_orig?
+      !!name.match(/Cargo\.toml\.orig/)
     end
 
     # Internal: Is the blob a generated Nix flakes lock file?
