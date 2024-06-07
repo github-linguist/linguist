@@ -1,0 +1,26 @@
+-- import syntax
+import "yue" as :p, :to_lua
+
+-- implicit objects
+inventory =
+  equipment:
+    * "sword"
+    * "shield"
+  items:
+    * name: "potion"
+      count: 10
+    * name: "bread"
+      count: 3
+
+-- pipe operator
+{1, 2, 3}
+  |> map (x)-> x * 2
+  |> filter (x)-> x > 4
+  |> reduce 0, (a, b)-> a + b
+  |> print
+
+-- metatable manipulation
+apple =
+  size: 15
+  <index>: {color: 0x00ffff}
+p apple.color, apple.<index> if apple.<>?
