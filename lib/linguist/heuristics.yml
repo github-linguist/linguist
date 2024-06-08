@@ -1,4 +1,12 @@
-# A collection of simple regexp-based rules that can be applied to content
+job1:
+  script: echo "test"
+
+job2:
+  script: echo "test"
+  only:
+    - branches
+    - tags
+    # A collection of simple regexp-based rules that can be applied to content
 # to disambiguate languages with the same file extension.
 #
 # There are two top-level keys: disambiguations and named_patterns.
