@@ -28,7 +28,7 @@ class TestGenerated < Minitest::Test
       Generated.generated?(blob, lambda { raise DataLoadedError.new })
     end
     expected = !negate
-    actual = Generated.generated?(blob, lambda { IO.read(blob) })
+    actual = Generated.generated?(blob, lambda { File.read(blob) })
     assert(expected == !!actual, error_message(blob, negate))
   end
 
@@ -92,6 +92,9 @@ class TestGenerated < Minitest::Test
     # npm shrinkwrap file
     generated_sample_without_loading_data("Dummy/npm-shrinkwrap.json")
     generated_sample_without_loading_data("Dummy/package-lock.json")
+
+    # pnpm lockfile
+    generated_sample_without_loading_data("Dummy/pnpm-lock.yaml")
 
     # Yarn Plug'n'Play file
     generated_sample_without_loading_data(".pnp.js")
@@ -187,6 +190,9 @@ class TestGenerated < Minitest::Test
     generated_fixture_loading_data("Generated/Haxe/Main.java")
     generated_fixture_loading_data("Generated/Haxe/Main.cs")
     generated_fixture_loading_data("Generated/Haxe/Main.php")
+
+    # Cargo
+    generated_sample_without_loading_data("TOML/filenames/Cargo.toml.orig")
 
     # jOOQ
     generated_sample_loading_data("Java/generated-jooq-table.java")

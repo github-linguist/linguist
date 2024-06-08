@@ -49,7 +49,7 @@ class TestClassifier < Minitest::Test
     # Failures are reasonable in some cases, such as when a file is fully valid in more than one language.
     allowed_failures = {
       # Valid C and C++
-      "#{samples_path}/C++/rpc.h" => ["C", "C++"],
+      "#{samples_path}/C/rpc.h" => ["C", "C++"],
       # Tricky samples
       "#{samples_path}/C/syscalldefs.h" => ["C", "C++"],
       "#{samples_path}/C++/Types.h" => ["C", "C++"],

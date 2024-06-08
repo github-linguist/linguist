@@ -510,6 +510,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_gts_by_heuristics
+    assert_heuristics({
+      "Gerber Image" => all_fixtures("Gerber Image", "*.gts"),
+      "Glimmer TS" => all_fixtures("Glimmer TS", "*.gts"),
+    })
+  end
+
   def test_h_by_heuristics
     assert_heuristics({
       "Objective-C" => all_fixtures("Objective-C", "*.h"),
@@ -579,6 +586,13 @@ class TestHeuristics < Minitest::Test
       "Lex" => all_fixtures("Lex", "*.l"),
       "Roff" => all_fixtures("Roff", "*.l"),
       "PicoLisp" => all_fixtures("PicoLisp", "*.l")
+    })
+  end
+
+  def test_lean_by_heuristics
+    assert_heuristics({
+      "Lean" => all_fixtures("Lean", "*.lean"),
+      "Lean 4" => all_fixtures("Lean 4", "*.lean")
     })
   end
 
@@ -675,9 +689,17 @@ class TestHeuristics < Minitest::Test
   def test_mod_by_heuristics
     assert_heuristics({
       "Modula-2" => all_fixtures("Modula-2", "*.mod"),
+      "NMODL" => all_fixtures("NMODL", "*.mod"),
       "XML" => all_fixtures("XML", "*.mod"),
       ["Linux Kernel Module", "AMPL"] => all_fixtures("Linux Kernel Module", "*.mod"),
       ["Linux Kernel Module", "AMPL"] => all_fixtures("AMPL", "*.mod"),
+    })
+  end
+
+  def test_mojo_by_heuristics
+    assert_heuristics({
+      "Mojo" => all_fixtures("Mojo", "*.mojo"),
+      "XML" => all_fixtures("XML", "*.mojo"),
     })
   end
 
@@ -738,6 +760,13 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "Hack" => all_fixtures("Hack", "*.php"),
       "PHP" => all_fixtures("PHP", "*.php")
+    })
+  end
+
+  def test_pkl_by_heuristics
+    assert_heuristics({
+      "Pkl" => all_fixtures("Pkl", "*.pkl"),
+      "Pickle" => all_fixtures("Pickle", "*.pkl")
     })
   end
 
@@ -989,6 +1018,13 @@ class TestHeuristics < Minitest::Test
       "Adblock Filter List" => all_fixtures("Adblock Filter List", "*.txt"),
       "Vim Help File" => all_fixtures("Vim Help File", "*.txt"),
       "Text" => all_fixtures("Text", "*.txt")
+    })
+  end
+
+  def test_typ_by_heuristics
+    assert_heuristics({
+      "Typst" => all_fixtures("Typst", "*.typ"),
+      "XML" => all_fixtures("XML", "*.typ")
     })
   end
 
