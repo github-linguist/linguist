@@ -73,6 +73,21 @@ To run Linguist from the cloned repository:
 bundle exec bin/github-linguist --breakdown
 ```
 
+<details><summary>Running into issues?</summary>
+If you're getting output like below, you might have a misconfigured gitconfig.
+  
+```
+error: object 3d17195eea43812fce7db6620ce27a5f854f1a20: zeroPaddedFilemode: contains zero-padded file modes
+fatal: fsck error in packed object
+fatal: fetch-pack: invalid index-pack output
+fatal: clone of 'https://github.com/cucumber/cucumber-tmbundle' into submodule path '/Users/username/Developer/linguist/vendor/grammars/cucumber-tmbundle' failed
+Failed to clone 'vendor/grammars/cucumber-tmbundle'. Retry scheduled
+```
+
+To fix this particular issue, run `git config fetch.fsckobjects false`.
+
+</details>
+
 ## Adding an extension to a language
 
 We try only to add new extensions once they have some usage on GitHub.
