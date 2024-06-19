@@ -605,6 +605,7 @@ class TestHeuristics < Minitest::Test
 
   def test_ls_by_heuristics
     assert_heuristics({
+      "Lingo" => all_fixtures("Lingo", "*.ls"),
       "LiveScript" => all_fixtures("LiveScript", "*.ls"),
       "LoomScript" => all_fixtures("LoomScript", "*.ls")
     })
