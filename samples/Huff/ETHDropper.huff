@@ -1,0 +1,214 @@
+// SPDX-License-Identifier: MIT
+// @author https://github.com/Philogy/mega-dropper/blob/main/src/ERC20Dropper.huff
+
+#define constant AMT_OFFSET = 0xa0 // 160
+
+#define macro WORD_2() = takes(0) returns(2) { msize msize }
+#define macro WORD_4() = takes(0) returns(4) { WORD_2() WORD_2() }
+#define macro WORD_8() = takes(0) returns(8) { WORD_4() WORD_4() }
+#define macro WORD_16() = takes(0) returns(16) { WORD_8() WORD_8() }
+#define macro WORD_32() = takes(0) returns(32) { WORD_16() WORD_16() }
+#define macro WORD_64() = takes(0) returns(64) { WORD_32() WORD_32() }
+#define macro WORD_128() = takes(0) returns(128) { WORD_64() WORD_64() }
+#define macro WORD_256() = takes(0) returns(256) { WORD_128() WORD_128() }
+#define macro WORD_512() = takes(0) returns(512) { WORD_256() WORD_256() }
+
+#define macro NO_FAILS() = takes(0) returns(1) {
+    msize         // [msize]
+    0x20          // [msize, 0x20]
+    eq            // [msize == x020]
+}
+
+#define macro SEND_ETH() = takes(1) returns(1) {
+    // takes:             [cd_offset]
+    calldataload       // [send_data]
+    0x0 0x0 0x0        // [send_data, 0, 0, 0]
+    dup4               // [send_data, 0, 0, 0, send_data]
+    [AMT_OFFSET]       // [send_data, 0, 0, 0, send_data, offset]
+    shr                // [send_data, 0, 0, 0, amount]
+    0x0                // [send_data, 0, 0, 0, amount, 0]
+    swap5              // [0,         0, 0, 0, amount, send_data]
+    gas                // [0,         0, 0, 0, amount, send_data, gas]
+    // Packed paramaters can directly be used as address because CALL ignores dirty bits.
+    call               // [suc]
+    // returns:           [suc]
+}
+
+#define macro SEND_ETH_STEP() = takes(2) returns(1) {
+    // takes:             [word_size, size]
+    sub                // [size']
+    dup1               // [size', size']
+    SEND_ETH()         // [size', suc]
+    // Chain `success` check, sets MSIZE to 0x40 if false.
+    iszero             // [size', !suc]
+    mload              // [size', _]
+    pop                // [size']
+    // returns:           [size']
+}
+
+#define macro SEND_ETH_STEP_2()   = takes(3)  returns(1) { SEND_ETH_STEP()     SEND_ETH_STEP()     }
+#define macro SEND_ETH_STEP_4()   = takes(4)  returns(1) { SEND_ETH_STEP_2()   SEND_ETH_STEP_2()   }
+#define macro SEND_ETH_STEP_8()   = takes(5)  returns(1) { SEND_ETH_STEP_4()   SEND_ETH_STEP_4()   }
+#define macro SEND_ETH_STEP_16()  = takes(6)  returns(1) { SEND_ETH_STEP_8()   SEND_ETH_STEP_8()   }
+#define macro SEND_ETH_STEP_32()  = takes(7)  returns(1) { SEND_ETH_STEP_16()  SEND_ETH_STEP_16()  }
+#define macro SEND_ETH_STEP_64()  = takes(8)  returns(1) { SEND_ETH_STEP_32()  SEND_ETH_STEP_32()  }
+#define macro SEND_ETH_STEP_128() = takes(9)  returns(1) { SEND_ETH_STEP_64()  SEND_ETH_STEP_64()  }
+#define macro SEND_ETH_STEP_256() = takes(10) returns(1) { SEND_ETH_STEP_128() SEND_ETH_STEP_128() }
+#define macro SEND_ETH_STEP_512() = takes(11) returns(1) { SEND_ETH_STEP_256() SEND_ETH_STEP_256() }
+
+#define macro MAIN() = takes(0) returns(0) {
+    // No ABI selector or params, only function is to transfer ETH to a bunch of addresses.
+    // (Address, amount) pairs should be encoded packed as (uint96, address) in 32-byte chunks. No
+    // ABI-style offset/length.
+
+
+    // Sets `msize = 0x20`.
+    0x0 mload               // [0]
+
+    calldatasize            // [0, cdz]
+    calldatasize            // [0, cdz, cdz]
+    0x4000                  // [0, cdz, cdz, 1 << 14]
+    gt                      // [0, cdz, 1 << 14 > cdz]
+    send256 jumpi           // [0, cdz]
+    loop512:                // [0, size_left]
+        0x0                 // [0, size_left, 0]
+        mstore              // [0, ]
+        WORD_512()          // [0, 0x20 ...]
+        0x0                 // [0, 0x20 ..., 0]
+        mload               // [0, 0x20 ..., size_left]
+        SEND_ETH_STEP_512() // [0, size_left']
+
+        // Do-while loop check.
+        dup1                // [0, size_left', size_left']
+        0x3fff              // [0, size_left', size_left', 512*0x20 - 1]
+        lt                  // [0, size_left', size_left' >= 512*0x20]
+        loop512 jumpi       // [0, size_left]
+    send256:                // [0, size_left]
+        dup1                // [0, size_left, size_left]
+        0x2000              // [0, size_left, size_left, 256*0x20]
+        and                 // [0, size_left, section_bit_set]
+        iszero              // [0, size_left, skip_section]
+        send128 jumpi       // [0, size_left]
+        0x0                 // [0, size_left, 0]
+        mstore              // [0, ]
+        WORD_256()          // [0, 0x20 ...]
+        0x0                 // [0, 0x20 ..., 0]
+        mload               // [0, 0x20 ..., size_left]
+        SEND_ETH_STEP_256() // [0, size_left']
+    send128:                // [0, size_left]
+        dup1                // [0, size_left, size_left]
+        0x1000              // [0, size_left, size_left, 128*0x20]
+        and                 // [0, size_left, section_bit_set]
+        iszero              // [0, size_left, skip_section]
+        send64 jumpi        // [0, size_left]
+        0x0                 // [0, size_left, 0]
+        mstore              // [0, ]
+        WORD_128()          // [0, 0x20 ...]
+        0x0                 // [0, 0x20 ..., 0]
+        mload               // [0, 0x20 ..., size_left]
+        SEND_ETH_STEP_128() // [0, size_left']
+    send64:                 // [0, size_left]
+        dup1                // [0, size_left, size_left]
+        0x800               // [0, size_left, size_left, 64*0x20]
+        and                 // [0, size_left, section_bit_set]
+        iszero              // [0, size_left, skip_section]
+        send32 jumpi        // [0, size_left]
+        0x0                 // [0, size_left, 0]
+        mstore              // [0, ]
+        WORD_64()           // [0, 0x20 ...]
+        0x0                 // [0, 0x20 ..., 0]
+        mload               // [0, 0x20 ..., size_left]
+        SEND_ETH_STEP_64()  // [0, size_left']
+    send32:                 // [0, size_left]
+        dup1                // [0, size_left, size_left]
+        0x400               // [0, size_left, size_left, 32*0x20]
+        and                 // [0, size_left, section_bit_set]
+        iszero              // [0, size_left, skip_section]
+        send16 jumpi        // [0, size_left]
+        WORD_16()           // [0, size_left, 0x20 ...]
+        swap16              // [0, 0x20 ..., size_left]
+        WORD_16()           // [0, 0x20 ..., size_left, 0x20 ...]
+        swap16              // [0, 0x20 ..., size_left]
+        SEND_ETH_STEP_32()  // [0, size_left']
+    send16:                 // [0, size_left]
+        dup1                // [0, size_left, size_left]
+        0x200               // [0, size_left, size_left, 16*0x20]
+        and                 // [0, size_left, section_bit_set]
+        iszero              // [0, size_left, skip_section]
+        send8 jumpi         // [0, size_left]
+        WORD_16()           // [0, size_left, 0x20 ...]
+        swap16              // [0, 0x20 ..., size_left]
+        SEND_ETH_STEP_16()  // [0, size_left']
+    send8:                  // [0, size_left]
+        dup1                // [0, size_left, size_left]
+        0x100               // [0, size_left, size_left, 8*0x20]
+        and                 // [0, size_left, section_bit_set]
+        iszero              // [0, size_left, skip_section]
+        send4 jumpi         // [0, size_left]
+        WORD_8()            // [0, size_left, 0x20 ...]
+        swap8               // [0, 0x20 ..., size_left]
+        SEND_ETH_STEP_8()   // [0, size_left']
+    send4:                  // [0, size_left]
+        dup1                // [0, size_left, size_left]
+        0x80                // [0, size_left, size_left, 4*0x20]
+        and                 // [0, size_left, section_bit_set]
+        iszero              // [0, size_left, skip_section]
+        send2 jumpi         // [0, size_left]
+        WORD_4()            // [0, size_left, 0x20 ...]
+        swap4               // [0, 0x20 ..., size_left]
+        SEND_ETH_STEP_4()   // [0, size_left']
+    send2:                  // [0, size_left]
+        dup1                // [0, size_left, size_left]
+        0x40                // [0, size_left, size_left, 2*0x20]
+        and                 // [0, size_left, section_bit_set]
+        iszero              // [0, size_left, skip_section]
+        send1 jumpi         // [0, size_left]
+        WORD_2()            // [0, size_left, 0x20 ...]
+        swap2               // [0, 0x20 ..., size_left]
+        SEND_ETH_STEP_2()   // [0, size_left']
+    send1:                  // [0, size_left]
+        0x20                // [0, size_left, 0x20]
+        and                 // [0, section_bit_set]
+        iszero              // [0, skip_section]
+        no_last_send jumpi  // [0]
+        SEND_ETH()          // [suc]
+        selfbalance         // [suc, this.bal]
+        leftover1 jumpi     // [suc]
+            NO_FAILS()      // [suc, no_fail]
+            and             // [no_fail]
+        done jumpi          // []
+            0x0 0x0         // [0, 0]
+            revert          // [] -- end
+    no_last_send:           // [0]
+        selfbalance         // [0, this.bal]
+        leftover0 jumpi     // [0]
+        NO_FAILS()          // [0, no_fails]
+        done jumpi          // [0]
+            0x0             // [0, 0]
+            revert          // [] -- end
+    leftover0:              // [0]
+        0x0 0x0 0x0         // [0, 0, 0, 0]
+        selfbalance         // [0, 0, 0, 0, this.bal]
+        caller              // [0, 0, 0, 0, this.bal, msg.sender]
+        gas                 // [0, 0, 0, 0, this.bal, msg.sender, gas]
+        call                // [suc]
+        NO_FAILS()          // [suc, no_fail]
+        and                 // [no_fail]
+        done jumpi          // []
+            0x0 0x0         // [0, 0]
+            revert          // [] -- end
+    leftover1:              // [suc1]
+        0x0 0x0 0x0 0x0     // [suc1, 0, 0, 0, 0]
+        selfbalance         // [suc1, 0, 0, 0, 0, this.bal]
+        caller              // [suc1, 0, 0, 0, 0, this.bal, msg.sender]
+        gas                 // [suc1, 0, 0, 0, 0, this.bal, msg.sender, gas]
+        call                // [suc1, suc2]
+        NO_FAILS()          // [suc1, suc2, no_fail]
+        and                 // [suc1, no_fail]
+        and                 // [no_fail]
+        done jumpi          // []
+            0x0 0x0         // [0, 0]
+            revert          // [] -- end
+    done:                   // [...]
+        stop                // [...] -- end
+}
