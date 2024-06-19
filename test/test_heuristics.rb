@@ -735,6 +735,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_nr_by_heuristics
+    assert_heuristics({
+      "Noir" => all_fixtures("Noir", "*.nr"),
+      "Roff" => all_fixtures("Roff", "*.nr")
+    })
+  end
+
   def test_nu_by_heuristics
     assert_heuristics({
       "Nushell" => all_fixtures("Nushell", "*.nu"),
