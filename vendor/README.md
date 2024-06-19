@@ -438,6 +438,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Portugol:** [luisgbr1el/portugol-grammar](https://github.com/luisgbr1el/portugol-grammar)
 - **PostCSS:** [hudochenkov/Syntax-highlighting-for-PostCSS](https://github.com/hudochenkov/Syntax-highlighting-for-PostCSS)
 - **PostScript:** [Alhadis/Atom-PostScript](https://github.com/Alhadis/Atom-PostScript)
+- **PowerBuilder:** [micha4w/PowerBuilder.tmbundle](https://github.com/micha4w/PowerBuilder.tmbundle)
 - **PowerShell:** [PowerShell/EditorSyntax](https://github.com/PowerShell/EditorSyntax)
 - **Praat:** [orhunulusahin/praatvscode](https://github.com/orhunulusahin/praatvscode)
 - **Prisma:** [prisma/vscode-prisma](https://github.com/prisma/vscode-prisma)
