@@ -1,0 +1,6 @@
+real unit_johnson_lpdf(vector x, real mu, real sigma) {
+  int N = num_elements(x);
+  return N * log(sigma)
+         - sum(log(x) + log1m(x) + 0.5 * log1p(square(logit(x))))
+         + std_normal_lpdf(mu + sigma * asinh(logit(x)) | );
+}
