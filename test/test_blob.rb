@@ -169,6 +169,9 @@ class TestBlob < Minitest::Test
     # Bazel generated bzlmod lockfile
     assert sample_blob_memory("JSON/filenames/MODULE.bazel.lock").generated?
 
+    # Deno generated deno.lock file
+    assert sample_blob_memory("JSON/filenames/deno.lock").generated?
+
     # pnpm lockfile
     assert fixture_blob_memory("YAML/pnpm-lock.yaml").generated?
 

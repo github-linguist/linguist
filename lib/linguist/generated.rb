@@ -61,6 +61,7 @@ module Linguist
       composer_lock? ||
       cargo_lock? ||
       cargo_orig? ||
+      deno_lock? ||
       flake_lock? ||
       bazel_lock? ||
       node_modules? ||
@@ -427,6 +428,13 @@ module Linguist
     # Returns true or false.
     def esy_lock?
       !!name.match(/(^|\/)(\w+\.)?esy.lock$/)
+    end
+
+    # Internal: Is the blob a generated deno lockfile, which are not meant for humans in pull requests.
+    #
+    # Returns true or false.
+    def deno_lock?
+      !!name.match(/deno\.lock/)
     end
 
     # Internal: Is the blob a generated npm shrinkwrap or package lock file?
