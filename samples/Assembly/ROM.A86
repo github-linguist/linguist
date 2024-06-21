@@ -1,0 +1,442 @@
+	title 'SBC86/12 w/ SBC204 Bootstrap EPROM'
+;
+; ROM bootstrap for CP/M-86 on an iSBC86/12
+;		with the
+;   Intel SBC 204 Floppy Disk Controller
+;
+
+;	Copyright (C) 1980,1981
+;	Digital Research, Inc.
+;	Box 579, Pacific Grove
+;	California, 93950
+;
+;********************************************
+;* This is the BOOT ROM which is initiated  *
+;* by a system reset.  First, the ROM moves *
+;* a copy of its data area to RAM at loca-  *
+;* tion 00000H, then initializes the segment*
+;* registers and the stack pointer.  The    *
+;* various peripheral interface chips on the*
+;* SBC 86/12 are initialized.  The 8251     *
+;* serial interface is configured for a 9600*
+;* baud asynchronous terminal, and the in-  *
+;* terrupt controller is setup for inter-   *
+;* rupts 10H-17H (vectors at 00040H-0005FH) *
+;* and edge-triggered auto-EOI (end of in-  *
+;* terrupt) mode with all interrupt levels  *
+;* masked-off.  Next, the SBC 204 Diskette  *
+;* controller is initialized, and track 1   *
+;* sector 1 is read to determine the target *
+;* paragraph address for LOADER.  Finally,  *
+;* the LOADER on track 0 sectors 2-26 and   *
+;* track 1 sectors 1-26 is read into the    *
+;* target address.  Control then transfers  *
+;* to LOADER.  This program resides in two  *
+;* 2716 EPROM's (2K each) at location       *
+;* 0FF000H on the SBC 86/12 CPU board.  ROM *
+;* 0 contains the even memory locations, and*
+;* ROM 1 contains the odd addresses.  BOOT  *
+;* ROM uses RAM between 00000H and 000FFH   *
+;* (absolute) for a scratch area, along with*
+;* the sector 1 buffer.                     *
+;********************************************
+true		equ	0ffh		
+false		equ	not true
+;
+debug		equ	true
+;debug = true indicates bootstrap is in same roms
+;with SBC 957 "Execution Vehicle" monitor
+;at FE00:0 instead of FF00:0
+;
+cr		equ	13
+lf		equ	10
+;
+;	disk ports and commands
+;
+base204		equ	0a0h
+fdccom		equ	base204+0
+fdcstat		equ	base204+0
+fdcparm		equ	base204+1
+fdcrslt		equ	base204+1
+fdcrst		equ	base204+2
+dmacadr		equ	base204+4
+dmaccont	equ	base204+5
+dmacscan	equ	base204+6
+dmacsadr	equ	base204+7
+dmacmode	equ	base204+8
+dmacstat	equ	base204+8
+fdcsel		equ	base204+9
+fdcsegment	equ	base204+10
+reset204	equ	base204+15
+;
+;actual console baud rate
+baud_rate	equ	9600	
+;value for 8253 baud counter
+baud		equ	768/(baud_rate/100)
+;
+csts		equ	0DAh	;i8251 status port	
+cdata		equ	0D8h	; "    data port
+;
+tch0		equ	0D0h	;8253 PIC channel 0 port
+tch1		equ	tch0+2	;ch 1 port
+tch2		equ	tch0+4	;ch 2 port
+tcmd		equ	tch0+6	;8253 command port
+;
+icp1		equ	0C0h	;8259a port 0
+icp2		equ	0C2h	;8259a port 1
+;
+;
+	IF NOT DEBUG
+ROMSEG		EQU	0FF00H	;normal
+	ENDIF
+;
+	IF DEBUG		;share prom with SBC 957
+ROMSEG		EQU	0FE00H
+	ENDIF
+;
+;
+;	This long jump prom'd in by hand
+;	cseg	0ffffh		;reset goes to here (ffff0h)
+;	JMPF	BOTTOM		;boot is at bottom of PROM
+;	EA 00 00 00 FF		;cs = bottom of prom (ff000h)
+;					  ip = 0	
+;	EVEN PROM	ODD PROM
+;	7F8 - EA	7F8 - 00
+;	7F9 - 00	7F9 - 00
+;	7FA - FF		;this is not done if special = true
+;
+	cseg	romseg
+;
+;First, move our data area into RAM at 0000:0200
+;
+	mov ax,cs
+	mov ds,ax	;point DS to CS for source
+	mov SI,drombegin	;start of data
+	mov DI,offset ram_start	;offset of destination
+	mov ax,0
+	mov es,ax	;destination segment is 0000
+	mov CX,data_length	;how much to move in bytes
+    	rep movs al,al		;move out of eprom a byte at a time
+;
+	mov ax,0
+	mov ds,ax	;data segment now in RAM
+	mov ss,ax
+	mov sp,stack_offset	;Initialize stack segment/pointer
+	cld			;clear the direction flag
+;
+	IF NOT DEBUG
+;
+;Now, initialize the console USART and baud rate
+;
+	mov al,0Eh
+	out csts,al	;give 8251 dummy mode
+	mov al,40h
+	out csts,al	;reset 8251 to accept mode
+	mov al,4Eh
+	out csts,al	;normal 8 bit asynch mode, * 16
+	mov al,37h
+	out csts,al	;enable Tx & Rx
+	mov al,0B6h
+	out tcmd,al	;8253 ch.2 square wave mode
+	mov ax,baud
+	out tch2,al	;low of the baud rate
+	mov al,ah 
+	out tch2,al	;high of the baud rate
+;
+	ENDIF
+;
+;Setup the 8259 Programmable Interrupt Controller
+;
+	mov al,13h
+	out icp1,al	;8259a ICW 1  8086 mode
+	mov al,10h
+	out icp2,al	;8259a ICW 2  vector @ 40-5F
+	mov al,1Fh
+	out icp2,al	;8259a ICW 4  auto EOI master
+	mov al,0FFh
+	out icp2,al	;8259a OCW 1  mask all levels off
+;
+;Reset and initialize the iSBC 204 Diskette Interface
+;
+restart:	;also come back here on fatal errors
+	out reset204,AL	;reset iSBC 204 logic and
+	mov AL,1
+	out fdcrst,AL	;give 8271 FDC
+	mov al,0
+	out fdcrst,AL	;  a reset command
+	mov BX,offset specs1
+	CALL sendcom  ;program
+	mov BX,offset specs2
+	CALL sendcom  ;  Shugart SA-800 drive
+	mov BX,offset specs3
+	call sendcom  ;    characteristics
+homer:	mov BX,offset home
+	CALL execute    ;home drive 0
+;
+	mov bx,sector1	;offset for first sector DMA
+	mov ax,0
+	mov es,ax	;segment "    "     "     "
+	call setup_dma
+;
+	mov bx,offset read0
+	call execute	;get T0 S1
+;
+	mov es,ABS
+	mov bx,0	;get loader load address
+	call setup_dma	;setup DMA to read loader
+;
+	mov bx,offset read1
+	call execute	;read track 0
+	mov bx,offset read2
+	call execute	;read track 1
+;
+	mov leap_segment,ES
+;	setup far jump vector
+	mov leap_offset,0
+;
+;	enter LOADER
+	jmpf dword ptr leap_offset
+;
+pmsg:
+	mov cl,[BX]
+	test cl,cl
+	jz return
+	call conout
+	inc BX
+	jmp pmsg
+;
+conout:
+	in al,csts
+	test al,1
+	jz conout
+	mov al,cl
+	out cdata,al
+	ret
+;
+conin:
+	in al,csts
+	test al,2
+	jz conin
+	in al,cdata
+	and al,7Fh
+	ret
+;
+;
+;
+execute:	;execute command string @ [BX]
+		;<BX> points to length,
+		;followed by Command byte
+		;followed by length-1 parameter bytes
+;
+	mov	lastcom,BX	;remember what it was
+retry:				;retry if not ready drive
+	call	sendcom		;execute the command
+				;now, let's see what type
+				;of status poll was necessary
+				;for that command type . . .
+	mov	BX,lastcom	;point to command string
+	mov	AL,1[BX]	;get command op code
+	and	AL,3fh		;drop drive code bits
+	mov	CX,0800h	;mask if it will be "int req"
+	cmp	AL,2ch		;see if interrupt type
+	jb	execpoll
+	mov	CX,8080h	;else we use "not command busy"
+	and	AL,0fh		;unless . . .
+	cmp	AL,0ch		;there isn't
+	mov AL,0
+	ja return		;any result at all
+;
+execpoll:	;poll for bit in b, toggled with c
+	in AL,FDCSTAT
+	and AL,CH
+	xor AL,CL ! JZ execpoll
+;
+	in	AL,fdcrslt	;get result register
+	and	AL,1eh		;look only at result type & code
+	jz	return		;zero means it was a good operation
+;
+	cmp al,10h
+	jne fatal		;if other than "Not Ready", stop
+;
+	mov bx,offset rdstat
+	call sendcom		;perform read status command
+rd_poll:
+	in al,fdc_stat
+	test al,80h		;wait for command not busy
+	jnz rd_poll
+	mov bx,last_com		;recover last attempted command
+	jmp retry		;and try it over again
+;
+fatal:				; fatal error
+	mov ah,0
+	mov bx,ax		;make 16 bits
+	mov bx,errtbl[BX]
+;	print appropriate error message
+	call pmsg
+	call conin		;wait for key strike
+	pop ax			;discard unused item
+	jmp restart		;then start all over
+;
+return:
+	RET			;return from EXECUTE
+;
+setupdma:
+	mov AL,04h
+	out dmacmode,AL		;enable dmac
+	mov al,0
+	out dmaccont,AL		;set first (dummy) byte to 
+	mov AL,40h
+	out dmaccont,AL		;force read data mode
+	mov AX,ES
+	out fdcsegment,AL
+	mov AL,AH
+	out fdcsegment,AL
+	mov AX,BX
+	out dmacadr,AL
+	mov AL,AH
+	out dmacadr,AL
+	RET
+;
+;
+;
+sendcom:	;routine to send a command string to SBC204
+	in AL,fdcstat
+	and AL,80h
+	jnz sendcom	;insure command not busy
+	mov CL,[BX]	;get count
+	inc BX
+	mov al,[BX]	;point to and fetch command byte
+	out fdccom,AL	;send command
+parmloop:
+	dec CL
+	jz return	;see if any (more) parameters
+	inc BX		;point to next parameter
+parmpoll:
+	in AL,fdcstat
+	and AL,20h
+	jnz parmpoll	;loop until parm not full
+	mov AL,[BX]
+	out fdcparm,AL	;output next parameter
+	jmp parmloop	;go see about another
+;
+;
+;	Image of data to be moved to RAM
+;
+drombegin equ offset $
+;
+clastcom	dw	0000h	;last command
+;
+creadstring	db	3	;length
+		db	52h	;read function code for drive 0
+		db	0	;track #
+		db	1	;sector #
+;
+creadtrk0	db	4
+		db	53h	;read multiple
+		db	0	;track 0
+		db	2	;sectors 2
+		db	25	;through 26
+;
+creadtrk1	db	4
+		db	53h
+		db	1	;track 1
+		db	1	;sectors 1
+		db	26	;through 26
+;
+chome0		db	2,69h,0
+crdstat0 	db	1,6ch
+cspecs1		db	5,35h,0dh
+		db	08h,08h,0e9h
+cspecs2		db	5,35h,10h
+		db	255,255,255
+cspecs3		db	5,35h,18h
+		db	255,255,255
+;
+cerrtbl	dw	offset er0
+	dw	offset er1
+	dw	offset er2
+	dw	offset er3
+	dw	offset er4
+	dw	offset er5
+	dw	offset er6
+	dw	offset er7
+	dw	offset er8
+	dw	offset er9
+	dw	offset erA
+	dw	offset erB
+	dw	offset erC
+	dw	offset erD
+	dw	offset erE
+	dw	offset erF
+;
+Cer0	db	cr,lf,'Null Error ??',0
+Cer1	equ	cer0
+Cer2	equ	cer0
+Cer3	equ	cer0
+Cer4	db	cr,lf,'Clock Error',0
+Cer5	db	cr,lf,'Late DMA',0
+Cer6	db	cr,lf,'ID CRC Error',0
+Cer7	db	cr,lf,'Data CRC Error',0
+Cer8	db	cr,lf,'Drive Not Ready',0
+Cer9	db	cr,lf,'Write Protect',0
+CerA	db	cr,lf,'Trk 00 Not Found',0
+CerB	db	cr,lf,'Write Fault',0
+CerC	db	cr,lf,'Sector Not Found',0
+CerD	equ	cer0
+CerE	equ	cer0
+CerF	equ	cer0
+;
+dromend	equ offset $
+;
+data_length	equ dromend-drombegin
+;
+;	reserve space in RAM for data area
+;	(no hex records generated here)
+;
+	dseg	0
+	org	0200h
+;
+ram_start	equ	$
+lastcom		rw	1	;last command
+read0		rb	4	;read track 0 sector 1
+read1		rb	5	;read T0 S2-26
+read2		rb	5	;read T1 S1-26
+home		rb	3	;home drive 0
+rdstat	 	rb	2	;read status
+specs1		rb	6
+specs2		rb	6
+specs3		rb	6
+errtbl		rw	16
+er0		rb	length cer0	;16
+er1		equ	er0
+er2		equ	er0
+er3		equ	er0
+er4		rb	length cer4	;14
+er5		rb	length cer5	;11
+er6		rb	length cer6	;15
+er7		rb	length cer7	;17
+er8		rb	length cer8	;18
+er9		rb	length cer9	;16
+erA		rb	length cerA	;19
+erB		rb	length cerB	;14
+erC		rb	length cerC	;19
+erD		equ	er0
+erE		equ	er0
+erF		equ	er0
+;
+leap_offset	rw	1
+leap_segment	rw	1
+;
+;
+		rw	32	;local stack
+stack_offset	equ	offset $;stack from here down
+;
+;		T0 S1 read in here 
+sector1		equ offset $
+;
+Ty		rb	1
+Len		rw	1
+Abs		rw	1	;ABS is all we care about
+Min		rw	1
+Max		rw	1
+		end
