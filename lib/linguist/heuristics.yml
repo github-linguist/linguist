@@ -226,7 +226,7 @@ disambiguations:
   - language: Erlang
     pattern: '^\s*(?:%%|main\s*\(.*?\)\s*->)'
   - language: JavaScript
-    pattern: '\/\/|("|'')use strict\1|export\s+default\s|\/\*(?:.|[\r\n])*?\*\/'
+    pattern: '\/\/|["'']use strict["'']|export\s+default\s|\/\*(?:.|[\r\n])*?\*\/'
 - extensions: ['.ex']
   rules:
   - language: Elixir
@@ -552,7 +552,7 @@ disambiguations:
 - extensions: ['.plist']
   rules:
   - language: XML Property List
-    pattern: '^\s*(?:<\?xml\s|<!DOCTYPE\s+plist|<plist(?:\s+version\s*=\s*(["''])\d+(?:\.\d+)?\1)?\s*>\s*$)'
+    pattern: '^\s*(?:<\?xml\s|<!DOCTYPE\s+plist|<plist(?:\s+version\s*=\s*["'']\d+(?:\.\d+)?["''])?\s*>\s*$)'
   - language: OpenStep Property List
 - extensions: ['.plt']
   rules:
