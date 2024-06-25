@@ -3160,19 +3160,6 @@ Isabelle ROOT:
   tm_scope: source.isabelle.root
   ace_mode: text
   language_id: 171
-iCalendar:
-  type: data
-  color: "#ec564c"
-  extensions:
-  - ".ics"
-  - ".ical"
-  tm_scope: source.iCalendar
-  aliases:
-  - iCal
-  ace_mode: text
-  codemirror_mode: properties
-  codemirror_mime_type: text/calendar
-  language_id: 98384424
 J:
   type: programming
   color: "#9EEDFF"
@@ -8375,6 +8362,19 @@ hoon:
   extensions:
   - ".hoon"
   language_id: 560883276
+iCalendar:
+  type: data
+  color: "#ec564c"
+  extensions:
+  - ".ics"
+  - ".ical"
+  tm_scope: source.iCalendar
+  aliases:
+  - iCal
+  ace_mode: text
+  codemirror_mode: properties
+  codemirror_mime_type: text/x-properties
+  language_id: 98384424
 jq:
   color: "#c7254e"
   ace_mode: text
