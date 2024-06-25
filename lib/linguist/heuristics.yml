@@ -103,7 +103,7 @@ disambiguations:
   - language: BlitzBasic
     pattern: '(<^\s*; |End Function)'
   - language: BitBake
-    pattern: '^\s*(# |include|require)\b'
+    pattern: '^(# |include|require|inherit)\b'
   - language: Clojure
     pattern: '\((def|defn|defmacro|let)\s'
 - extensions: ['.bf']
@@ -320,6 +320,12 @@ disambiguations:
   rules:
   - language: GSC
     named_pattern: gsc
+- extensions: ['.gts']
+  rules:
+  - language: Gerber Image
+    pattern: '^G0.'
+  - language: Glimmer TS
+    negative_pattern: '^G0.'
 - extensions: ['.h']
   rules:
   - language: Objective-C
@@ -371,6 +377,8 @@ disambiguations:
     pattern:
     - '(?i:^\s*\{\$(?:mode|ifdef|undef|define)[ ]+[a-z0-9_]+\})'
     - '^\s*end[.;]\s*$'
+  - language: BitBake
+    pattern: '^inherit(\s+[\w.-]+)+\s*$'
 - extensions: ['.json']
   rules:
   - language: OASv2-json
@@ -461,9 +469,17 @@ disambiguations:
   rules:
   - language: XML
     pattern: '<!ENTITY '
+  - language: NMODL
+    pattern: '\b(NEURON|INITIAL|UNITS)\b'
   - language: Modula-2
     pattern: '^\s*(?i:MODULE|END) [\w\.]+;'
   - language: [Linux Kernel Module, AMPL]
+- extensions: ['.mojo']
+  rules:
+  - language: Mojo
+    pattern: '^\s*(alias|def|from|fn|import|struct|trait)\s'
+  - language: XML
+    pattern: '^\s*<\?xml'
 - extensions: ['.ms']
   rules:
   - language: Roff
@@ -516,6 +532,13 @@ disambiguations:
     pattern: '<\?hh'
   - language: PHP
     pattern: '<\?[^h]'
+- extensions: ['.pkl']
+  rules:
+    - language: Pkl
+      pattern:
+      - '^\s*(module|import|amends|extends|local|const|fixed|abstract|open|class|typealias|@\w+)\b'
+      - '^\s*[a-zA-Z0-9_$]+\s*(=|{|:)|^\s*`[^`]+`\s*(=|{|:)|for\s*\(|when\s*\('
+    - language: Pickle
 - extensions: ['.pl']
   rules:
   - language: Prolog
@@ -840,6 +863,7 @@ named_patterns:
   - '^[ \t]*catch\s*\('
   - '^[ \t]*(class|(using[ \t]+)?namespace)\s+\w+'
   - '^[ \t]*(private|public|protected):$'
+  - '__has_cpp_attribute|__cplusplus >'
   - 'std::\w+'
   euphoria:
   - '^\s*namespace\s'
@@ -883,7 +907,7 @@ named_patterns:
   - '^[ ]*#If Win64\b'
   - '^[ ]*(?:Dim|Const) [0-9a-zA-Z_]*[ ]*As Long(?:Ptr|Long)\b'
   # Top module declarations unique to VBA
-  - '^[ ]*Option (?:Private Module|Compare Database)\b'
+  - '^[ ]*Option (?:Private Module|Compare (?:Database|Text|Binary))\b'
   # General VBA libraries and objects
   - '(?: |\()(?:Access|Excel|Outlook|PowerPoint|Visio|Word|VBIDE)\.\w'
   - '\b(?:(?:Active)?VBProjects?|VBComponents?|Application\.(?:VBE|ScreenUpdating))\b'

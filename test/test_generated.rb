@@ -93,6 +93,9 @@ class TestGenerated < Minitest::Test
     generated_sample_without_loading_data("Dummy/npm-shrinkwrap.json")
     generated_sample_without_loading_data("Dummy/package-lock.json")
 
+    # pnpm lockfile
+    generated_sample_without_loading_data("Dummy/pnpm-lock.yaml")
+
     # Yarn Plug'n'Play file
     generated_sample_without_loading_data(".pnp.js")
     generated_sample_without_loading_data(".pnp.cjs")
@@ -187,6 +190,9 @@ class TestGenerated < Minitest::Test
     generated_fixture_loading_data("Generated/Haxe/Main.java")
     generated_fixture_loading_data("Generated/Haxe/Main.cs")
     generated_fixture_loading_data("Generated/Haxe/Main.php")
+
+    # Cargo
+    generated_sample_without_loading_data("TOML/filenames/Cargo.toml.orig")
 
     # jOOQ
     generated_sample_loading_data("Java/generated-jooq-table.java")
