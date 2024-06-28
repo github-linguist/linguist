@@ -662,7 +662,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **jq:** [wader/language-jq](https://github.com/wader/language-jq)
 - **kvlang:** [p0lygun/kivy-language-grammer](https://github.com/p0lygun/kivy-language-grammer)
 - **mIRC Script:** [gen-angry/language-msl](https://github.com/gen-angry/language-msl)
-- **mcfunction:** [Arcensoth/language-mcfunction](https://github.com/Arcensoth/language-mcfunction)
+- **mcfunction:** [MinecraftCommands/syntax-mcfunction](https://github.com/MinecraftCommands/syntax-mcfunction)
 - **mupad:** [ccreutzig/sublime-MuPAD](https://github.com/ccreutzig/sublime-MuPAD)
 - **nanorc:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **nesC:** [cdwilson/nesC.tmbundle](https://github.com/cdwilson/nesC.tmbundle)
