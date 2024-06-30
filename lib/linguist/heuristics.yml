@@ -417,6 +417,8 @@ disambiguations:
   rules:
   - language: Objective-C
     named_pattern: objectivec
+  - language: Octave
+    pattern: '^\s*##'
   - language: Mercury
     pattern: ':- module'
   - language: MUF
