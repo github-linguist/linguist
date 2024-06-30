@@ -4020,15 +4020,11 @@ M4Sugar:
 MATLAB:
   type: programming
   color: "#e16737"
-  aliases:
-  - octave
   extensions:
   - ".matlab"
   - ".m"
   tm_scope: source.matlab
   ace_mode: matlab
-  codemirror_mode: octave
-  codemirror_mime_type: text/x-octave
   language_id: 225
 MAXScript:
   type: programming
@@ -4884,6 +4880,14 @@ Objective-J:
   tm_scope: source.js.objj
   ace_mode: text
   language_id: 259
+Octave:
+  type: programming
+  color: "#2299c4"
+  extensions:
+  - ".m"
+  tm_scope: source.octave
+  ace_mode: octave
+  language_id: 312
 Odin:
   type: programming
   color: "#60AFFE"
