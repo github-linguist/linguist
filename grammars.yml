@@ -53,6 +53,8 @@ vendor/grammars/Ligo-grammar:
 - source.religo
 vendor/grammars/LiveScript.tmbundle:
 - source.livescript
+vendor/grammars/Luau.tmLanguage:
+- source.luau
 vendor/grammars/MATLAB-Language-grammar:
 - source.matlab
 vendor/grammars/MQL5-sublime:
@@ -158,8 +160,6 @@ vendor/grammars/TLA:
 - source.tla
 vendor/grammars/TXL:
 - source.txl
-vendor/grammars/Terraform.tmLanguage:
-- source.terraform
 vendor/grammars/Textmate-Gosu-Bundle:
 - source.gosu.2
 vendor/grammars/TypeScript-TmLanguage:
@@ -290,6 +290,8 @@ vendor/grammars/blitzmax:
 - source.blitzmax
 vendor/grammars/boogie-vscode:
 - source.boogie
+vendor/grammars/bqn-vscode:
+- source.bqn
 vendor/grammars/browserslist-vscode:
 - text.browserslist
 vendor/grammars/c.tmbundle:
@@ -325,6 +327,8 @@ vendor/grammars/cpp-qt.tmbundle:
 - source.qmake
 vendor/grammars/creole:
 - text.html.creole
+vendor/grammars/cron.tmbundle:
+- text.crontab
 vendor/grammars/csharp-tmLanguage:
 - source.cs
 vendor/grammars/cucumber-tmbundle:
@@ -385,6 +389,8 @@ vendor/grammars/factor:
 - text.html.factor
 vendor/grammars/fancy-tmbundle:
 - source.fancy
+vendor/grammars/firrtl-syntax:
+- source.firrtl
 vendor/grammars/fish-tmbundle:
 - source.fish
 vendor/grammars/forth:
@@ -417,7 +423,6 @@ vendor/grammars/graphiql:
 - inline.graphql.markdown.codeblock
 - inline.graphql.php
 - inline.graphql.python
-- inline.graphql.rb
 - inline.graphql.re
 - inline.graphql.res
 - inline.graphql.scala
@@ -899,6 +904,8 @@ vendor/grammars/pig-latin:
 - source.pig_latin
 vendor/grammars/pike-textmate:
 - source.pike
+vendor/grammars/pkl.tmbundle:
+- source.pkl
 vendor/grammars/polar-grammar:
 - source.polar
 vendor/grammars/portugol-grammar:
@@ -1066,6 +1073,8 @@ vendor/grammars/syntax:
 vendor/grammars/tcl.tmbundle:
 - source.tcl
 - text.html.tcl
+vendor/grammars/templ-vscode:
+- source.templ
 vendor/grammars/textmate.tmbundle:
 - source.regexp.oniguruma
 - source.tm-properties
@@ -1106,6 +1115,10 @@ vendor/grammars/vscode-bitbake:
 - source.bb
 vendor/grammars/vscode-brightscript-language:
 - source.brs
+vendor/grammars/vscode-caddyfile:
+- source.Caddyfile
+- source.Caddyfile-test
+- source.markdown.caddy.codeblock
 vendor/grammars/vscode-cadence:
 - markdown.cadence.codeblock
 - source.cadence
@@ -1126,6 +1139,7 @@ vendor/grammars/vscode-gcode-syntax:
 vendor/grammars/vscode-gedcom:
 - source.gedcom
 vendor/grammars/vscode-gleam:
+- markdown.gleam.codeblock
 - source.gleam
 vendor/grammars/vscode-go:
 - go.mod
@@ -1172,6 +1186,7 @@ vendor/grammars/vscode-move-syntax:
 - mdx.LANGUAGE.codeblock
 - source.move
 vendor/grammars/vscode-opa:
+- markdown.rego.codeblock
 - source.rego
 vendor/grammars/vscode-pddl:
 - source.pddl
@@ -1194,6 +1209,8 @@ vendor/grammars/vscode-python:
 - source.pip-requirements
 vendor/grammars/vscode-rbs-syntax:
 - source.rbs
+vendor/grammars/vscode-ron:
+- source.ron
 vendor/grammars/vscode-scala-syntax:
 - source.scala
 vendor/grammars/vscode-singularity:
