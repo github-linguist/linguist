@@ -633,7 +633,7 @@ class TestHeuristics < Minitest::Test
       "M" => all_fixtures("M", "MDB.m"),
       "Mathematica" => all_fixtures("Mathematica", "*.m") - all_fixtures("Mathematica", "Problem12.m"),
       "MATLAB" => all_fixtures("MATLAB", "create_ieee_paper_plots.m"),
-      "Octave" => all_fixtures("Octave", "accumarray.m"),
+      "Octave" => all_fixtures("Octave", "*.m"),
       "Limbo" => all_fixtures("Limbo", "*.m"),
       nil => ambiguous
     })
