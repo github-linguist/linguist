@@ -318,8 +318,7 @@ class TestHeuristics < Minitest::Test
   def test_cairo_by_heuristics
     assert_heuristics({
       "Cairo 0" => all_fixtures("Cairo 0"),
-      # The classifier is relied as final disambiguator
-      nil => all_fixtures("Cairo")
+      "Cairo" => all_fixtures("Cairo")
     })
   end
 

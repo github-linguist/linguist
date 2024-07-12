@@ -139,7 +139,7 @@ disambiguations:
 - extensions: ['.cairo']
   rules:
     - language: Cairo 0
-      pattern: '(^(\s*)%lang(\s+)([A-Za-z0-9_]+))|(^(\s*)%builtins(\s+)([A-Za-z0-9_]+\s*)*$)|(^(\s*)from(\s+)starkware\.(cairo|starknet)\.([A-Za-z0-9_.\s]+?)import)'
+      pattern: '(^(\s*)%lang(\s+)([A-Za-z0-9_]+))|(^(\s*)%builtins(\s+)([A-Za-z0-9_]+\s*)*$)|(^(\s*)from(\s+)starkware\.(cairo|starknet)\.([A-Za-z0-9_.\s]+?)import)|(,\s*ap\+\+;$)|(;\s*ap\+\+$)'
 - extensions: ['.ch']
   rules:
   - language: xBase
