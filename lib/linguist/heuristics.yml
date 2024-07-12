@@ -140,6 +140,7 @@ disambiguations:
   rules:
     - language: Cairo 0
       pattern: '(^(\s*)%lang(\s+)([A-Za-z0-9_]+))|(^(\s*)%builtins(\s+)([A-Za-z0-9_]+\s*)*$)|(^(\s*)from(\s+)starkware\.(cairo|starknet)\.([A-Za-z0-9_.\s]+?)import)|(,\s*ap\+\+;$)|(;\s*ap\+\+$)'
+    - language: Cairo
 - extensions: ['.ch']
   rules:
   - language: xBase
