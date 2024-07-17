@@ -1050,6 +1050,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_vcf_by_heuristics
+    assert_heuristics({
+      "TSV" => all_fixtures("TSV", "*.vcf"),
+      "vCard" => all_fixtures("vCard", "*.vcf")
+    })
+  end
+
   def test_w_by_heuristics
     assert_heuristics({
       "CWeb" => all_fixtures("CWeb", "*.w"),
