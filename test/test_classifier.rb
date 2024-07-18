@@ -46,7 +46,7 @@ class TestClassifier < Minitest::Test
   def test_classify_ambiguous_languages
     # Failures are reasonable in some cases, such as when a file is fully valid in more than one language.
     allowed_failures = {
-      "#{samples_path}/C++/rpc.h" => ["C", "C++"],
+      "#{samples_path}/C/rpc.h" => ["C", "C++"],
     }
 
     # Skip extensions with catch-all rule

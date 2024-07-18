@@ -60,7 +60,9 @@ module Linguist
       generated_net_specflow_feature_file? ||
       composer_lock? ||
       cargo_lock? ||
+      cargo_orig? ||
       flake_lock? ||
+      bazel_lock? ||
       node_modules? ||
       go_vendor? ||
       go_lock? ||
@@ -68,6 +70,7 @@ module Linguist
       pdm_lock? ||
       esy_lock? ||
       npm_shrinkwrap_or_package_lock? ||
+      pnpm_lock? ||
       terraform_lock? ||
       generated_yarn_plugnplay? ||
       godeps? ||
@@ -107,7 +110,8 @@ module Linguist
       generated_haxe? ||
       generated_jooq? ||
       generated_pascal_tlb? ||
-      generated_sorbet_rbi?
+      generated_sorbet_rbi? ||
+      generated_sqlx_query?
     end
 
     # Internal: Is the blob an Xcode file?
@@ -301,7 +305,7 @@ module Linguist
 
       # Type 1 and Type 42 fonts converted to PostScript are stored as hex-encoded byte streams; these
       # streams are always preceded the `eexec` operator (if Type 1), or the `/sfnts` key (if Type 42).
-      return true if data =~ /(\n|\r\n|\r)\s*(?:currentfile eexec\s+|\/sfnts\s+\[\1<)\h{8,}\1/
+      return true if data =~ /^\s*(?:currentfile eexec\s+|\/sfnts\s+\[\s<)/
 
       # We analyze the "%%Creator:" comment, which contains the author/generator
       # of the file. If there is one, it should be in one of the first few lines.
@@ -432,6 +436,13 @@ module Linguist
       !!name.match(/npm-shrinkwrap\.json/) || !!name.match(/package-lock\.json/)
     end
 
+    # Internal: Is the blob a generated pnpm lockfile?
+    #
+    # Returns true or false.
+    def pnpm_lock?
+      !!name.match(/pnpm-lock\.yaml/)
+    end
+
     # Internal: Is the blob a generated Yarn Plug'n'Play?
     #
     # Returns true or false.
@@ -468,11 +479,25 @@ module Linguist
       !!name.match(/Cargo\.lock/)
     end
 
+    # Internal: Is the blob a generated Rust Cargo original file?
+    #
+    # Returns true or false.
+    def cargo_orig?
+      !!name.match(/Cargo\.toml\.orig/)
+    end
+
     # Internal: Is the blob a generated Nix flakes lock file?
     #
     # Returns true or false
     def flake_lock?
       !!name.match(/(^|\/)flake\.lock$/)
+    end
+
+    # Internal: Is the blob a Bazel generated bzlmod lockfile?
+    #
+    # Returns true or false
+    def bazel_lock?
+      !!name.match(/(^|\/)MODULE\.bazel\.lock$/)
     end
 
     # Is the blob a VCR Cassette file?
@@ -693,8 +718,8 @@ module Linguist
     def generated_gimp?
       return false unless ['.c', '.h'].include? extname
       return false unless lines.count > 0
-      return lines[0].match(/\/\* GIMP [a-zA-Z0-9\- ]+ C\-Source image dump \(.+?\.c\) \*\//) ||
-             lines[0].match(/\/\*  GIMP header image file format \([a-zA-Z0-9\- ]+\)\: .+?\.h  \*\//)
+      return lines[0].match(/^\/\* GIMP [a-zA-Z0-9\- ]+ C\-Source image dump \(.+?\.c\) \*\//) ||
+             lines[0].match(/^\/\*  GIMP header image file format \([a-zA-Z0-9\- ]+\)\: .+?\.h  \*\//)
     end
 
     # Internal: Is this a generated Microsoft Visual Studio 6.0 build file?
@@ -795,7 +820,7 @@ module Linguist
       return false unless lines.count >= 5
       lines[0].match?(/^# typed:/) &&
       lines[2].include?("DO NOT EDIT MANUALLY") &&
-      lines[4].match?(/^# Please.*run.*`.*tapioca/)
+      lines[4].match?(/^# Please (run|instead update this file by running) `bin\/tapioca/)
     end
 
     # Internal: Is this an HTML coverage report?
@@ -824,6 +849,19 @@ module Linguist
         val = match[1].gsub(/\A["']|["']\Z/, '')
         [key, val]
       end.select { |x| x.length == 2 }.to_h
+    end
+
+    # Internal: Is this a generated SQLx query file?
+    #
+    # SQLx is a Rust SQL library which generates `**/.sqlx/query-*.json` files
+    # in offline mode (enabled by default).
+    #
+    # These are used to be able to compile a project without requiring
+    # the development database to be online.
+    #
+    # Returns true or false.
+    def generated_sqlx_query?
+      !!name.match(/(?:^|.*\/)\.sqlx\/query-.+\.json$/)
     end
   end
 end
