@@ -89,7 +89,7 @@ disambiguations:
 - extensions: ['.bas']
   rules:
   - language: B4X
-    pattern: '\A\s*B4(J|A|R|i)=true'
+    pattern: '\A\s*B4(?:J|A|R|i)=true'
   - language: FreeBasic
     pattern: '^[ \t]*#(?i)(?:define|endif|endmacro|ifn?def|include|lang|macro)(?:$|\s)'
   - language: BASIC
