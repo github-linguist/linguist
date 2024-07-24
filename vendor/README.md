@@ -82,6 +82,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **COBOL:** [spgennard/vscode_cobol](https://github.com/spgennard/vscode_cobol)
 - **CODEOWNERS:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **COLLADA:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)
+- **CQL:** [cqframework/vscode-cql](https://github.com/cqframework/vscode-cql)
 - **CSON:** [atom/language-coffee-script](https://github.com/atom/language-coffee-script)
 - **CSS:** [tree-sitter/tree-sitter-css](https://github.com/tree-sitter/tree-sitter-css) 🐌
 - **CUE:** [cue-sh/vscode-cue](https://github.com/cue-sh/vscode-cue)
