@@ -848,7 +848,7 @@ disambiguations:
 - extensions: ['.yy']
   rules:
   - language: JSON
-    pattern: '\"modelName\"\:\s*\"GM'
+    pattern: '\"(modelName|resourceType)\"\:\s*\"GM'
   - language: Yacc
 named_patterns:
   cpp:
