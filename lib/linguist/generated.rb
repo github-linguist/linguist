@@ -698,13 +698,13 @@ module Linguist
     # Internal: Is this a generated Game Maker Studio (2) metadata file?
     #
     # All Game Maker Studio 2 generated files will be JSON, .yy or .yyp, and have
-    # a part that looks like "modelName: GMname" on the 3rd line
+    # a line that looks like "modelName: GMname" or "resourceType: GMname"
     #
     # Return true or false
     def generated_gamemakerstudio?
       return false unless ['.yy', '.yyp'].include? extname
       return false unless lines.count > 3
-      return lines[2].match(/\"(modelName|resourceType)\"\:\s*\"GM/) ||
+      return lines.any? { |line| line.match(/\"(modelName|resourceType)\"\:\s*\"GM/) } ||
              lines[0] =~ /^\d\.\d\.\d.+\|\{/
     end
 
