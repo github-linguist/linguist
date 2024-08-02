@@ -704,7 +704,7 @@ module Linguist
     def generated_gamemakerstudio?
       return false unless ['.yy', '.yyp'].include? extname
       return false unless lines.count > 3
-      return lines.any? { |line| line.match(/\"(modelName|resourceType)\"\:\s*\"GM/) } ||
+      return lines.first(3).join('').match?(/^\s*[\{\[]/) ||
              lines[0] =~ /^\d\.\d\.\d.+\|\{/
     end
 
