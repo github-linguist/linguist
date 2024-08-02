@@ -697,9 +697,6 @@ module Linguist
 
     # Internal: Is this a generated Game Maker Studio (2) metadata file?
     #
-    # All Game Maker Studio 2 generated files will be JSON, .yy or .yyp, and have
-    # a line that looks like "modelName: GMname" or "resourceType: GMname"
-    #
     # Return true or false
     def generated_gamemakerstudio?
       return false unless ['.yy', '.yyp'].include? extname
