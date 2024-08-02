@@ -317,7 +317,7 @@ class TestHeuristics < Minitest::Test
 
   def test_cairo_by_heuristics
     assert_heuristics({
-      "Cairo 0" => all_fixtures("Cairo 0"),
+      "Cairo Zero" => all_fixtures("Cairo Zero"),
       "Cairo" => all_fixtures("Cairo")
     })
   end

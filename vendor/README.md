@@ -89,7 +89,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Caddyfile:** [caddyserver/vscode-caddyfile](https://github.com/caddyserver/vscode-caddyfile)
 - **Cadence:** [onflow/vscode-cadence](https://github.com/onflow/vscode-cadence)
 - **Cairo:** [software-mansion-labs/cairo-tm-grammar](https://github.com/software-mansion-labs/cairo-tm-grammar)
-- **Cairo 0:** [software-mansion-labs/cairo-tm-grammar](https://github.com/software-mansion-labs/cairo-tm-grammar)
+- **Cairo Zero:** [software-mansion-labs/cairo-tm-grammar](https://github.com/software-mansion-labs/cairo-tm-grammar)
 - **CameLIGO:** [pewulfman/Ligo-grammar](https://github.com/pewulfman/Ligo-grammar)
 - **Cap'n Proto:** [textmate/capnproto.tmbundle](https://github.com/textmate/capnproto.tmbundle)
 - **CartoCSS:** [yohanboniface/carto-atom](https://github.com/yohanboniface/carto-atom)
