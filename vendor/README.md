@@ -605,7 +605,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Volt:** [textmate/d.tmbundle](https://github.com/textmate/d.tmbundle)
 - **Vue:** [vuejs/vue-syntax-highlight](https://github.com/vuejs/vue-syntax-highlight)
 - **Vyper:** [davidhq/SublimeEthereum](https://github.com/davidhq/SublimeEthereum)
-- **WDL:** [broadinstitute/wdl-sublime-syntax-highlighter](https://github.com/broadinstitute/wdl-sublime-syntax-highlighter)
+- **WDL:** [stjude-rust-labs/sprocket-vscode](https://github.com/stjude-rust-labs/sprocket-vscode)
 - **WGSL:** [wgsl-analyzer/wgsl-analyzer](https://github.com/wgsl-analyzer/wgsl-analyzer)
 - **Wavefront Material:** [Alhadis/language-wavefront](https://github.com/Alhadis/language-wavefront)
 - **Wavefront Object:** [Alhadis/language-wavefront](https://github.com/Alhadis/language-wavefront)
