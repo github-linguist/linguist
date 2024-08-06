@@ -285,9 +285,7 @@ class TestBlob < Minitest::Test
     end
 
     # Test language detection for files which shouldn't be used as samples
-
     root = File.expand_path('../fixtures', __FILE__)
-
     Dir.entries(root).each do |language|
       next if language == '.' || language == '..' || language == 'Binary' ||
         File.basename(language) == 'ace_modes.json'
