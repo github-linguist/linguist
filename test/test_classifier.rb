@@ -53,7 +53,6 @@ class TestClassifier < Minitest::Test
       # Tricky samples
       "#{samples_path}/C/syscalldefs.h" => ["C", "C++"],
       "#{samples_path}/C++/Types.h" => ["C", "C++"],
-      "#{samples_path}/R/hello-r.R" => ["R", "Rebol"],
     }
 
     # Skip extensions with catch-all rule

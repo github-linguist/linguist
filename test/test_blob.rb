@@ -288,11 +288,6 @@ class TestBlob < Minitest::Test
 
     root = File.expand_path('../fixtures', __FILE__)
 
-    # FIXME: These currently fail, but they shouldn't.
-    allowed_failures = {
-      "#{root}/AngelScript/ClassDef.as" => ["ActionScript", "AngelScript"],
-    }
-
     Dir.entries(root).each do |language|
       next if language == '.' || language == '..' || language == 'Binary' ||
         File.basename(language) == 'ace_modes.json'
