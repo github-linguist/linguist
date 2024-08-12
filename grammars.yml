@@ -67,7 +67,6 @@ vendor/grammars/Nasal.tmbundle:
 - source.nasal
 vendor/grammars/NimLime:
 - source.nim
-- source.nimcfg
 vendor/grammars/NovaGrammars:
 - source.git-revlist
 - source.json
@@ -333,6 +332,7 @@ vendor/grammars/cython:
 vendor/grammars/d.tmbundle:
 - source.d
 vendor/grammars/d2-vscode:
+- markdown.d2.codeblock
 - source.d2
 - text.html.markdown.d2
 vendor/grammars/dart-syntax-highlight:
@@ -431,6 +431,8 @@ vendor/grammars/holyc.tmbundle:
 - source.hc
 vendor/grammars/hoon-grammar:
 - source.hoon
+vendor/grammars/ical-rfc5545:
+- source.icalendar
 vendor/grammars/idl.tmbundle:
 - source.idl
 - source.idl-dlm
@@ -908,6 +910,8 @@ vendor/grammars/razor-plus:
 vendor/grammars/rescript-vscode:
 - markdown.rescript.codeblock
 - source.rescript
+vendor/grammars/rez.tmbundle:
+- source.rez
 vendor/grammars/riot-syntax-highlight:
 - text.html.riot
 vendor/grammars/ruby-slim.tmbundle:
@@ -1026,6 +1030,8 @@ vendor/grammars/svelte-atom:
 - source.svelte
 vendor/grammars/sway-vscode-plugin:
 - source.sway
+vendor/grammars/sweave.tmbundle:
+- text.tex.latex.sweave
 vendor/grammars/swift.tmbundle:
 - source.swift
 vendor/grammars/tcl.tmbundle:
@@ -1047,6 +1053,8 @@ vendor/grammars/toml.tmbundle:
 vendor/grammars/turtle.tmbundle:
 - source.sparql
 - source.turtle
+vendor/grammars/typst-grammar:
+- source.typst
 vendor/grammars/verilog.tmbundle:
 - source.verilog
 vendor/grammars/vhdl:
@@ -1173,6 +1181,7 @@ vendor/grammars/vscode_cobol:
 - source.cobolit
 - source.cobsql_dir
 - source.dir
+- source.directivesmf
 - source.hlasm
 - source.jcl
 - source.mfu
