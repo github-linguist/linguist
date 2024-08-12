@@ -6,6 +6,7 @@ require "json"
 require "yaml"
 
 TREE_SITTER_GRAMMARS = {
+  "Aiken" => "https://github.com/aiken-lang/tree-sitter-aiken",
   "C" => "https://github.com/tree-sitter/tree-sitter-c",
   "C#" => "https://github.com/tree-sitter/tree-sitter-c-sharp",
   "CodeQL" => "https://github.com/tree-sitter/tree-sitter-ql",
