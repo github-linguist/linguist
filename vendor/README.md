@@ -28,7 +28,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Adblock Filter List:** [AdguardTeam/VscodeAdblockSyntax](https://github.com/AdguardTeam/VscodeAdblockSyntax)
 - **Adobe Font Metrics:** [Alhadis/language-fontforge](https://github.com/Alhadis/language-fontforge)
 - **Agda:** [agda/agda-github-syntax-highlighting](https://github.com/agda/agda-github-syntax-highlighting)
-- **Aiken:** [aiken-lang/tree-sitter-aiken](https://github.com/aiken-lang/tree-sitter-aiken) 🐌
+- **Aiken:** [aiken-lang/vscode-aiken](https://github.com/aiken-lang/vscode-aiken)
 - **Alloy:** [macekond/Alloy.tmbundle](https://github.com/macekond/Alloy.tmbundle)
 - **Alpine Abuild:** [atom/language-shellscript](https://github.com/atom/language-shellscript)
 - **Altium Designer:** [textmate/ini.tmbundle](https://github.com/textmate/ini.tmbundle)
@@ -588,6 +588,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Unix Assembly:** [calculuswhiz/Assembly-Syntax-Definition](https://github.com/calculuswhiz/Assembly-Syntax-Definition)
 - **Uno:** [dotnet/csharp-tmLanguage](https://github.com/dotnet/csharp-tmLanguage)
 - **UnrealScript:** [textmate/java.tmbundle](https://github.com/textmate/java.tmbundle)
+- **Untyped Plutus Core:** [aiken-lang/vscode-aiken](https://github.com/aiken-lang/vscode-aiken)
 - **UrWeb:** [gwalborn/UrWeb-Language-Definition](https://github.com/gwalborn/UrWeb-Language-Definition)
 - **V:** [0x9ef/vscode-vlang](https://github.com/0x9ef/vscode-vlang)
 - **VBA:** [serkonda7/vscode-vba](https://github.com/serkonda7/vscode-vba)
