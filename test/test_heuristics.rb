@@ -691,6 +691,9 @@ class TestHeuristics < Minitest::Test
       "Modula-2" => all_fixtures("Modula-2", "*.mod"),
       "NMODL" => all_fixtures("NMODL", "*.mod"),
       "XML" => all_fixtures("XML", "*.mod"),
+      "Go Module" => Dir.glob("#{fixtures_path}/Go Module/multiline/go.mod") +
+        Dir.glob("#{fixtures_path}/Go Module/quoted/go.mod") +
+        Dir.glob("#{fixtures_path}/Go Module/unquoted/go.mod"),
       ["Linux Kernel Module", "AMPL"] => all_fixtures("Linux Kernel Module", "*.mod"),
       ["Linux Kernel Module", "AMPL"] => all_fixtures("AMPL", "*.mod"),
     })

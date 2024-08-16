@@ -471,6 +471,8 @@ disambiguations:
     pattern: '<!ENTITY '
   - language: NMODL
     pattern: '\b(NEURON|INITIAL|UNITS)\b'
+  - language: Go Module
+    pattern: '^\s*module\s+(\(|[\w\-./]+|"[^"]*")\s*$'
   - language: Modula-2
     pattern: '^\s*(?i:MODULE|END) [\w\.]+;'
   - language: [Linux Kernel Module, AMPL]
