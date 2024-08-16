@@ -153,6 +153,10 @@ class TestBlob < Minitest::Test
     assert sample_blob_memory("JavaScript/jquery-1.6.1.min.js").generated?
     assert sample_blob_memory("JavaScript/jquery-1.4.2.min.js").generated?
 
+    # Go sum
+    assert sample_blob_memory("Go Checksums/filenames/go.sum").generated?
+    assert sample_blob_memory("Go Checksums/filenames/go.work.sum").generated?
+
     # Go lockfiles
     assert sample_blob_memory("TOML/filenames/Gopkg.lock").generated?
     assert sample_blob_memory("YAML/filenames/glide.lock").generated?

@@ -64,6 +64,7 @@ module Linguist
       flake_lock? ||
       bazel_lock? ||
       node_modules? ||
+      go_sum? ||
       go_vendor? ||
       go_lock? ||
       poetry_lock? ||
@@ -391,6 +392,13 @@ module Linguist
     # Returns true or false.
     def node_modules?
       !!name.match(/node_modules\//)
+    end
+
+    # Internal: Is the blob a generated Go sum file?
+    #
+    # Returns true or false.
+    def go_sum?
+      !!name.match(/go(\.work)?\.sum$/)
     end
 
     # Internal: Is the blob part of the Go vendor/ tree,
