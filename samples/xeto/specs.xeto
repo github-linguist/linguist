@@ -1,0 +1,51 @@
+// CrewAI Agent Scheme
+Agents : Dict {
+    role: Str
+    goal: Str
+    backstory: Str
+    verbose: Bool
+    allow_delegation: Bool
+    llm: Str
+}
+
+// CrewAI Task Scheme
+Tasks: Dict{
+    description: Str
+    agent: Agents
+    expected_output: Str
+}
+
+// CrewAI Instance
+Crew: Dict{
+    agents: List<of: Agents>
+    tasks: List<of: Tasks>
+    verbose: Number
+    process: Str?
+}
+
+// CrewAI Agent Lib
+@learning_agent: Agents{
+    role: "teacher"
+    goal: "from your memory, gather relevant information, abut how an expert at python would teach me variables"
+    backstory: "You are an AI teacher, who teaches me python from very basic to very advanced"
+    verbose
+    llm: "dolphin_mixtral"
+}
+
+// CrewAI Task Lib
+@gather_info: Tasks{
+    description: "from our knowledge base, collect relevant infomation about variables in python as an expert",
+    agent: @learning_agent
+    expected_output: "A clear list of key points related to variables in python"
+}
+
+// Crew Instance Lib
+@crew_instance: Crew{
+    agents: {
+        @learning_agent 
+    }
+    tasks: {
+        @gather_info 
+    }
+    verbose: 2
+}
