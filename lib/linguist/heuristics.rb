@@ -146,7 +146,7 @@ module Linguist
     end
 
     def match?(input)
-      return !@pats.any? { |pat| !pat.match?(input) }
+      return @pats.all? { |pat| pat.match?(input) }
     end
 
   end
