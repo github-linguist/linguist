@@ -494,11 +494,9 @@ disambiguations:
   - language: NewLisp
 - extensions: ['.nr']
   rules:
-  - language: Noir
-    and:
-    - negative_pattern: '^\.'
-    - pattern: '^\s*fn[ \t]+[^\(\s].*?\('
   - language: Roff
+    pattern: '^\.'
+  - language: Noir
 - extensions: ['.nu']
   rules:
   - language: Nushell
