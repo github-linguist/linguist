@@ -203,6 +203,9 @@ class TestGenerated < Minitest::Test
     # pdm
     generated_sample_without_loading_data("TOML/filenames/pdm.lock")
 
+    # uv
+    generated_sample_without_loading_data("TOML/filenames/uv.lock")
+
     # coverage.py `coverage html` output
     generated_sample_without_loading_data("htmlcov/index.html")
     generated_sample_without_loading_data("htmlcov/coverage_html.js")
