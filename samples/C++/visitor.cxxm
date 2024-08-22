@@ -1,0 +1,116 @@
+export module main;
+
+import std;
+
+struct A;
+struct B;
+struct C;
+
+using NodeVariant = std::variant<A, B, C>;
+using Children = std::vector<NodeVariant>;
+
+struct Node
+{
+    Children children{};
+};
+
+struct A : Node
+{
+};
+
+struct B : Node
+{
+};
+
+struct C : Node
+{
+};
+
+class PrintVisitor
+{
+    struct ScopedDepth
+    {
+        std::size_t &depth;
+
+        constexpr ScopedDepth(std::size_t &depth) noexcept : depth{depth}
+        {
+            ++this->depth;
+        }
+        
+        constexpr ~ScopedDepth()
+        {
+            --this->depth;
+        }
+    };
+
+    std::size_t depth{0};
+
+    auto print(this auto const &self, std::string_view str) -> void
+    {
+        constexpr auto indent_spaces{4u};
+        auto const indentation{self.depth * indent_spaces};
+
+        std::println("{}{}", std::string(indentation, ' '), str);
+    }
+
+    auto recurse(this auto &self, std::span<NodeVariant const> children) -> void
+    {
+        std::ranges::for_each(
+            children,
+            [&](NodeVariant const &node)
+            {
+                std::visit(self, node);
+            }
+        );
+    }
+
+public:
+
+    auto operator()(this auto &self, A const &node) -> void
+    {
+        self.print("A");
+        ScopedDepth depth{self.depth};
+        self.recurse(node.children);
+    }
+
+    template <typename T>
+        requires std::same_as<T, B> or std::same_as<T, C>
+    auto operator()(this auto &self, T const &node) -> void
+    {
+        self.print("B|C");
+        ScopedDepth depth{self.depth};
+        self.recurse(node.children);
+    }
+
+    auto operator()(this auto const &self, auto const &other) -> void
+    {
+        std::println("Unknown type: {}", typeid(other).name());
+    }
+};
+
+auto main() -> int
+{
+    NodeVariant root{A{Children{
+        B{Children{
+            C{}, 
+            B{}, 
+            A{}
+        }}, 
+        A{}, 
+        A{Children{
+            B{}, 
+            C{}
+        }},
+        B{Children{
+            C{Children{
+                A{},
+                B{},
+                B{},
+                C{}
+            }}
+        }}
+    }}};
+
+    PrintVisitor visitor{};
+    std::visit(visitor, root);
+}

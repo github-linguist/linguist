@@ -1,0 +1,57 @@
+module;
+
+#include <functional>
+#include <iostream>
+#include <thread>
+
+#include <boost/asio.hpp>
+
+export module timer;
+
+class Printer {
+public:
+    explicit Printer(boost::asio::io_context& io)
+        : strand{boost::asio::make_strand(io)},
+            timer1{io, boost::asio::chrono::seconds{1}},
+            timer2{io, boost::asio::chrono::seconds{1}} {
+        this->timer1.async_wait(boost::asio::bind_executor(this->strand, std::bind(&Printer::print1, this)));
+        this->timer2.async_wait(boost::asio::bind_executor(this->strand, std::bind(&Printer::print2, this)));
+    }
+
+    ~Printer() {
+        std::cout << "Final count is " << this->count << std::endl;
+    }
+
+    auto print1() -> void {
+        if (this->count >= 10) {
+            return;
+        }
+
+        std::cout << "Timer 1: " << this->count << std::endl;
+
+        ++this->count;
+
+        this->timer1.expires_at(this->timer1.expiry() + boost::asio::chrono::seconds{1});
+
+        this->timer1.async_wait(boost::asio::bind_executor(this->strand, std::bind(&Printer::print1, this)));
+    }
+
+    auto print2() -> void {
+        if (this->count >= 10) {
+            return;
+        }
+
+        std::cout << "Timer 2: " << this->count << std::endl;
+
+        ++this->count;
+
+        this->timer2.expires_at(this->timer2.expiry() + boost::asio::chrono::seconds{1});
+
+        this->timer2.async_wait(boost::asio::bind_executor(this->strand, std::bind(&Printer::print2, this)));
+    }
+
+private:
+    boost::asio::strand<boost::asio::io_context::executor_type> strand;
+    boost::asio::steady_timer timer1, timer2;
+    int count{0};
+};
