@@ -188,6 +188,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Fantom:** [rkoeninger/sublime-fantom](https://github.com/rkoeninger/sublime-fantom)
 - **Faust:** [jpcima/language-faust](https://github.com/jpcima/language-faust)
 - **Fennel:** [kongeor/vsc-fennel](https://github.com/kongeor/vsc-fennel)
+- **Flix:** [flix/vscode-flix](https://github.com/flix/vscode-flix)
 - **Fluent:** [macabeus/vscode-fluent](https://github.com/macabeus/vscode-fluent)
 - **Forth:** [textmate/forth.tmbundle](https://github.com/textmate/forth.tmbundle)
 - **Fortran:** [textmate/fortran.tmbundle](https://github.com/textmate/fortran.tmbundle)
