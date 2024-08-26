@@ -91,6 +91,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Cairo:** [xshitaka/atom-language-cairo](https://github.com/xshitaka/atom-language-cairo)
 - **CameLIGO:** [pewulfman/Ligo-grammar](https://github.com/pewulfman/Ligo-grammar)
 - **Cap'n Proto:** [textmate/capnproto.tmbundle](https://github.com/textmate/capnproto.tmbundle)
+- **Carbon:** [0x9ef/vscode-vlang](https://github.com/0x9ef/vscode-vlang)
 - **CartoCSS:** [yohanboniface/carto-atom](https://github.com/yohanboniface/carto-atom)
 - **Ceylon:** [jeancharles-roger/ceylon-sublimetext](https://github.com/jeancharles-roger/ceylon-sublimetext)
 - **Chapel:** [chapel-lang/chapel-tmbundle](https://github.com/chapel-lang/chapel-tmbundle)
