@@ -773,6 +773,32 @@ disambiguations:
     # VIM_MODELINE pattern in `./lib/linguist/strategy/modeline.rb`.
   - language: Vim Help File
     pattern: '(?:(?:^|[ \t])(?:vi|Vi(?=m))(?:m[<=>]?[0-9]+|m)?|[ \t]ex)(?=:(?=[ \t]*set?[ \t][^\r\n:]+:)|:(?![ \t]*set?[ \t]))(?:(?:[ \t]*:[ \t]*|[ \t])\w*(?:[ \t]*=(?:[^\\\s]|\\.)*)?)*[ \t:](?:filetype|ft|syntax)[ \t]*=(help)(?=$|\s|:)'
+  - language: Hosts File
+    pattern: |-
+      (?xi) ^
+
+      # IPv4 address
+      (?<ipv4>
+        (?!\.)
+        (?:\.?
+          (?: 25[0-5]  # 250-255
+          |   2[0-4]\d # 200-249
+          |   1\d\d    # 100-199
+          |   [1-9]?\d # 0-99
+          )\b
+      ){4})
+
+      # CIDR notation: /[0-32]
+      (?<cidr>/(3[0-2]|[12]?\d)\b)?
+
+      # Domains list
+      (?<domains>
+        [ \t]+
+        \w[-\w]* (?:\.\w[-\w]*)*
+        (?<!-)\b
+      )*+
+
+      (?=$|\s)
   - language: Adblock Filter List
     pattern: |-
       (?x)\A
