@@ -678,5 +678,6 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **robots.txt:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
 - **sed:** [Alhadis/language-sed](https://github.com/Alhadis/language-sed)
 - **templ:** [templ-go/templ-vscode](https://github.com/templ-go/templ-vscode)
+- **vCard:** [cstrachan88/vscode-vcard](https://github.com/cstrachan88/vscode-vcard)
 - **wisp:** [atom/language-clojure](https://github.com/atom/language-clojure)
 - **xBase:** [hernad/atom-language-harbour](https://github.com/hernad/atom-language-harbour)

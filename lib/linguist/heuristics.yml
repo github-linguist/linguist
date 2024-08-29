@@ -829,6 +829,12 @@ disambiguations:
   - language: Vim Script
     pattern: '^UseVimball'
   - language: VBA
+- extensions: ['.vcf']
+  rules:
+  - language: TSV
+    pattern: '\A##fileformat=VCF'
+  - language: vCard
+    pattern: '\ABEGIN:VCARD'
 - extensions: ['.w']
   rules:
   - language: OpenEdge ABL
