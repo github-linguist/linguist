@@ -315,6 +315,13 @@ class TestHeuristics < Minitest::Test
     }, "test.builds")
   end
 
+  def test_cairo_by_heuristics
+    assert_heuristics({
+      "Cairo Zero" => all_fixtures("Cairo Zero"),
+      "Cairo" => all_fixtures("Cairo")
+    })
+  end
+
   def test_ch_by_heuristics
     assert_heuristics({
       "xBase" => all_fixtures("xBase", "*.ch"),
