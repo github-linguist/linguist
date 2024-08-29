@@ -28,10 +28,13 @@ class TestSamples < Minitest::Test
   def test_verify
     assert data = Samples.cache
 
-    assert_equal data['languages_total'], data['languages'].inject(0) { |n, (_, c)| n += c }
-    assert_equal data['tokens_total'], data['language_tokens'].inject(0) { |n, (_, c)| n += c }
-    assert_equal data['tokens_total'], data['tokens'].inject(0) { |n, (_, ts)| n += ts.inject(0) { |m, (_, c)| m += c } }
+    assert !data["vocabulary"].empty?
+    assert !data["icf"].empty?
+    assert !data["centroids"].empty?
+    assert_equal data["icf"].size, data["vocabulary"].size
+    assert !data["extnames"].empty?
     assert !data["interpreters"].empty?
+    assert !data["filenames"].empty?
   end
 
   def test_ext_or_shebang
