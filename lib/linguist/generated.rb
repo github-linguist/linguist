@@ -69,6 +69,7 @@ module Linguist
       go_lock? ||
       poetry_lock? ||
       pdm_lock? ||
+      uv_lock? ||
       esy_lock? ||
       npm_shrinkwrap_or_package_lock? ||
       pnpm_lock? ||
@@ -421,6 +422,13 @@ module Linguist
     # Returns true or false.
     def pdm_lock?
       !!name.match(/pdm\.lock/)
+    end
+
+    # Internal: Is the blob a generated uv.lock?
+    #
+    # Returns true or false.
+    def uv_lock?
+      !!name.match(/uv\.lock/)
     end
 
     # Internal: Is the blob a generated esy lock file?
