@@ -191,6 +191,9 @@ class TestGenerated < Minitest::Test
     generated_fixture_loading_data("Generated/Haxe/Main.cs")
     generated_fixture_loading_data("Generated/Haxe/Main.php")
 
+    # Cargo
+    generated_sample_without_loading_data("TOML/filenames/Cargo.toml.orig")
+
     # jOOQ
     generated_sample_loading_data("Java/generated-jooq-table.java")
 
