@@ -508,6 +508,11 @@ disambiguations:
   - language: NL
     pattern: '^(b|g)[0-9]+ '
   - language: NewLisp
+- extensions: ['.nr']
+  rules:
+  - language: Roff
+    pattern: '^\.'
+  - language: Noir
 - extensions: ['.nu']
   rules:
   - language: Nushell
