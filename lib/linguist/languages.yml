@@ -943,11 +943,11 @@ Caddyfile:
   type: data
   color: "#22b638"
   aliases:
-    - Caddy
+  - Caddy
   extensions:
-    - ".caddyfile"
+  - ".caddyfile"
   filenames:
-    - Caddyfile
+  - Caddyfile
   ace_mode: text
   tm_scope: source.Caddyfile
   language_id: 615465151
@@ -5403,7 +5403,7 @@ Pkl:
   extensions:
   - ".pkl"
   interpreters:
-    - pkl
+  - pkl
   tm_scope: source.pkl
   ace_mode: text
   language_id: 288822799
@@ -8406,6 +8406,19 @@ hoon:
   extensions:
   - ".hoon"
   language_id: 560883276
+iCalendar:
+  type: data
+  color: "#ec564c"
+  extensions:
+  - ".ics"
+  - ".ical"
+  tm_scope: source.iCalendar
+  aliases:
+  - iCal
+  ace_mode: properties
+  codemirror_mode: properties
+  codemirror_mime_type: text/x-properties
+  language_id: 98384424
 jq:
   color: "#c7254e"
   ace_mode: text

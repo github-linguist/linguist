@@ -664,6 +664,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **edn:** [atom/language-clojure](https://github.com/atom/language-clojure)
 - **fish:** [l15n/fish-tmbundle](https://github.com/l15n/fish-tmbundle)
 - **hoon:** [pkova/hoon-grammar](https://github.com/pkova/hoon-grammar)
+- **iCalendar:** [kimsey0/iCalendar-sublime](https://github.com/kimsey0/iCalendar-sublime)
 - **jq:** [wader/language-jq](https://github.com/wader/language-jq)
 - **kvlang:** [p0lygun/kivy-language-grammer](https://github.com/p0lygun/kivy-language-grammer)
 - **mIRC Script:** [gen-angry/language-msl](https://github.com/gen-angry/language-msl)
