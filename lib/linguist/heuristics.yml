@@ -358,7 +358,7 @@ disambiguations:
 - extensions: ['.ice']
   rules:
   - language: JSON
-    pattern: '\A\s*[{\[]'
+    named_pattern: json
   - language: Slice
 - extensions: ['.inc']
   rules:
@@ -866,7 +866,7 @@ disambiguations:
 - extensions: ['.yy']
   rules:
   - language: JSON
-    pattern: '\"modelName\"\:\s*\"GM'
+    named_pattern: json
   - language: Yacc
 named_patterns:
   cpp:
@@ -888,6 +888,7 @@ named_patterns:
   - '^\s*(?>(?:autoexec|private)\s+){0,2}function\s+(?>(?:autoexec|private)\s+){0,2}\w+\s*\('
   - '\b(?:level|self)[ \t]+thread[ \t]+(?:\[\[[ \t]*(?>\w+\.)*\w+[ \t]*\]\]|\w+)[ \t]*\([^\r\n\)]*\)[ \t]*;'
   - '^[ \t]*#[ \t]*(?:precache|using_animtree)[ \t]*\('
+  json: '\A\s*[{\[]'
   key_equals_value: '^[^#!;][^=]*='
   m68k:
   - '(?im)\bmoveq(?:\.l)?\s+#(?:\$-?[0-9a-f]{1,3}|%[0-1]{1,8}|-?[0-9]{1,3}),\s*d[0-7]\b'
