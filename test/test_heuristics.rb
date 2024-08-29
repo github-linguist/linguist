@@ -73,7 +73,10 @@ class TestHeuristics < Minitest::Test
   def test_all_extensions_are_listed
     Heuristics.all.all? do |rule|
       rule.languages.each do |lang|
-        unlisted = rule.extensions.reject { |ext| lang.extensions.include? ext }
+        unlisted = rule.extensions.reject do |ext|
+          lang.extensions.include?(ext) or
+          lang.filenames.select {|n| n.downcase.end_with? ext.downcase}
+        end
         assert_equal [], unlisted, (<<~EOF).chomp
           The extension '#{unlisted.first}' is not assigned to #{lang.name}.
           Add it to `languages.yml` or update the heuristic which uses it
