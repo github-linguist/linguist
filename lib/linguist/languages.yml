@@ -498,6 +498,18 @@ Awk:
   tm_scope: source.awk
   ace_mode: text
   language_id: 28
+B4X:
+  type: programming
+  color: "#00e4ff"
+  extensions:
+  - ".bas"
+  tm_scope: source.vba
+  aliases:
+  - basic for android
+  ace_mode: text
+  codemirror_mode: vb
+  codemirror_mime_type: text/x-vb
+  language_id: 96642275
 BASIC:
   type: programming
   extensions:
@@ -943,11 +955,11 @@ Caddyfile:
   type: data
   color: "#22b638"
   aliases:
-    - Caddy
+  - Caddy
   extensions:
-    - ".caddyfile"
+  - ".caddyfile"
   filenames:
-    - Caddyfile
+  - Caddyfile
   ace_mode: text
   tm_scope: source.Caddyfile
   language_id: 615465151
@@ -966,7 +978,17 @@ Cairo:
   tm_scope: source.cairo
   extensions:
   - ".cairo"
+  group: Cairo
   language_id: 620599567
+Cairo Zero:
+  type: programming
+  color: "#ff4a48"
+  ace_mode: text
+  tm_scope: source.cairo0
+  extensions:
+  - ".cairo"
+  group: Cairo
+  language_id: 891399890
 CameLIGO:
   type: programming
   color: "#3be133"
@@ -986,6 +1008,16 @@ Cap'n Proto:
   - ".capnp"
   ace_mode: text
   language_id: 52
+Carbon:
+  type: programming
+  color: "#222222"
+  extensions:
+  - ".carbon"
+  ace_mode: golang
+  codemirror_mode: go
+  codemirror_mime_type: text/x-go
+  tm_scope: source.v
+  language_id: 55627273
 CartoCSS:
   type: programming
   aliases:
@@ -1399,6 +1431,17 @@ Cycript:
   codemirror_mode: javascript
   codemirror_mime_type: text/javascript
   language_id: 78
+Cylc:
+  type: data
+  color: "#00b3fd"
+  extensions:
+  - ".cylc"
+  filenames:
+  - suite.rc
+  tm_scope: source.cylc
+  ace_mode: ini
+  group: INI
+  language_id: 476447814
 Cypher:
   type: programming
   color: "#34c0eb"
@@ -1626,6 +1669,14 @@ Dotenv:
   tm_scope: source.dotenv
   ace_mode: text
   language_id: 111148035
+Dune:
+  type: programming
+  ace_mode: lisp
+  filenames:
+  - dune-project
+  tm_scope: source.dune
+  color: "#89421e"
+  language_id: 754574151
 Dylan:
   type: programming
   color: "#6c616e"
@@ -2946,6 +2997,7 @@ Hosts File:
   filenames:
   - HOSTS
   - hosts
+  - hosts.txt
   aliases:
   - hosts
   tm_scope: source.hosts
@@ -3375,6 +3427,17 @@ Java Server Pages:
   codemirror_mode: htmlembedded
   codemirror_mime_type: application/x-jsp
   language_id: 182
+Java Template Engine:
+  type: programming
+  color: "#2A6277"
+  group: Java
+  aliases:
+  - jte
+  extensions:
+  - ".jte"
+  ace_mode: text
+  tm_scope: text.html.jte
+  language_id: 599494012
 JavaScript:
   type: programming
   tm_scope: source.js
@@ -3900,6 +3963,14 @@ Literate Haskell:
   codemirror_mode: haskell-literate
   codemirror_mime_type: text/x-literate-haskell
   language_id: 207
+LiveCode Script:
+  type: programming
+  color: "#0c5ba5"
+  extensions:
+  - ".livecodescript"
+  tm_scope: source.livecodescript
+  ace_mode: text
+  language_id: 891017
 LiveScript:
   type: programming
   color: "#499886"
@@ -4693,6 +4764,18 @@ Nix:
   tm_scope: source.nix
   ace_mode: nix
   language_id: 252
+Noir:
+  type: programming
+  aliases:
+  - nargo
+  ace_mode: rust
+  codemirror_mode: rust
+  codemirror_mime_type: text/x-rustsrc
+  extensions:
+  - ".nr"
+  color: "#2f1f49"
+  tm_scope: source.nr
+  language_id: 813068465
 Nu:
   type: programming
   color: "#c9df40"
@@ -5087,7 +5170,8 @@ PEG.js:
   color: "#234d6b"
   extensions:
   - ".pegjs"
-  tm_scope: source.pegjs
+  - ".peggy"
+  tm_scope: source.peggy
   ace_mode: javascript
   codemirror_mode: javascript
   codemirror_mime_type: text/javascript
@@ -5359,7 +5443,7 @@ Pkl:
   extensions:
   - ".pkl"
   interpreters:
-    - pkl
+  - pkl
   tm_scope: source.pkl
   ace_mode: text
   language_id: 288822799
@@ -5458,7 +5542,7 @@ PowerBuilder:
   - ".sra"
   - ".sru"
   - ".srw"
-  tm_scope: none
+  tm_scope: source.powerbuilder
   ace_mode: text
   language_id: 292
 PowerShell:
@@ -7080,6 +7164,7 @@ TOML:
   - Pipfile
   - pdm.lock
   - poetry.lock
+  - uv.lock
   tm_scope: source.toml
   ace_mode: toml
   codemirror_mode: toml
@@ -7100,6 +7185,9 @@ TSV:
   tm_scope: source.generic-db
   extensions:
   - ".tsv"
+  - ".vcf"
+  aliases:
+  - tab-seperated values
   language_id: 1035892117
 TSX:
   type: programming
@@ -7584,6 +7672,7 @@ Vim Script:
   - vim
   - viml
   - nvim
+  - vimscript
   extensions:
   - ".vim"
   - ".vba"
@@ -7640,7 +7729,7 @@ Visual Basic 6.0:
   - ".ctl"
   - ".Dsr"
   - ".frm"
-  tm_scope: source.vbnet
+  tm_scope: source.vba
   aliases:
   - vb6
   - vb 6
@@ -8363,6 +8452,19 @@ hoon:
   extensions:
   - ".hoon"
   language_id: 560883276
+iCalendar:
+  type: data
+  color: "#ec564c"
+  extensions:
+  - ".ics"
+  - ".ical"
+  tm_scope: source.iCalendar
+  aliases:
+  - iCal
+  ace_mode: properties
+  codemirror_mode: properties
+  codemirror_mime_type: text/x-properties
+  language_id: 98384424
 jq:
   color: "#c7254e"
   ace_mode: text
@@ -8493,6 +8595,19 @@ templ:
   ace_mode: text
   tm_scope: source.templ
   language_id: 795579337
+vCard:
+  type: data
+  color: "#ee2647"
+  extensions:
+  - ".vcf"
+  tm_scope: source.vcard
+  aliases:
+  - virtual contact file
+  - electronic business card
+  ace_mode: properties
+  codemirror_mode: properties
+  codemirror_mime_type: text/x-properties
+  language_id: 851476558
 wisp:
   type: programming
   ace_mode: clojure

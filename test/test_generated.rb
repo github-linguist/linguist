@@ -152,6 +152,7 @@ class TestGenerated < Minitest::Test
     # Game Maker Studio 2
     generated_sample_loading_data("JSON/GMS2_Project.yyp")
     generated_sample_loading_data("JSON/2ea73365-b6f1-4bd1-a454-d57a67e50684.yy")
+    generated_sample_loading_data("JSON/VCT.yy")
     generated_fixture_loading_data("Generated/options_main.inherited.yy")
 
     # Pipenv
@@ -202,6 +203,9 @@ class TestGenerated < Minitest::Test
 
     # pdm
     generated_sample_without_loading_data("TOML/filenames/pdm.lock")
+
+    # uv
+    generated_sample_without_loading_data("TOML/filenames/uv.lock")
 
     # coverage.py `coverage html` output
     generated_sample_without_loading_data("htmlcov/index.html")
