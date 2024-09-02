@@ -1,0 +1,108 @@
+! A simple Tic-Tac-Toe game. License: MIT;
+begin
+    ref(TicTacToe) game;
+    character player;
+    
+    class TicTacToe;
+    begin
+        character array board(1:9);
+        
+        procedure placeMark(mark, position);
+            value mark, position;
+            character mark; integer position;
+        begin
+            board(position) := mark;
+        end-of-place-mark;
+
+        boolean procedure checkWinner(player);
+            value player;
+            character player;
+        begin
+            integer position;
+            comment
+            There are 8 possible ways to win: 3 rows, 3 columns, and 2 diagonals.
+            For reasons of laziness, we just AI-generate them:
+            ;
+            if board(1) = player and board(2) = player and board(3) = player then
+                checkWinner := true
+            else if board(4) = player and board(5) = player and board(6) = player then
+                checkWinner := true
+            else if board(7) = player and board(8) = player and board(9) = player then
+                checkWinner := true
+            else if board(1) = player and board(4) = player and board(7) = player then
+                checkWinner := true
+            else if board(2) = player and board(5) = player and board(8) = player then
+                checkWinner := true
+            else if board(3) = player and board(6) = player and board(9) = player then
+                checkWinner := true
+            else if board(1) = player and board(5) = player and board(9) = player then
+                checkWinner := true
+            else if board(3) = player and board(5) = player and board(7) = player then
+                checkWinner := true
+            else
+                checkWinner := false;
+        end-of-checkWinner;
+
+        character procedure winner;
+        begin
+            if checkWinner('X') then winner := 'X'
+            else if checkWinner('O') then winner := 'O'
+            else winner := ' ';
+        end-of-winner;
+        
+        procedure DrawTopBottom; begin
+            OutText("+---+---+---+");
+            OutImage;
+        end;
+
+        procedure draw;
+        begin
+            integer row;
+            OutImage;
+            DrawTopBottom;
+            for row := 0 step 1 until 2 do begin
+                OutText("| " );
+                OutChar(board(row * 3  + 1));
+                OutText(" | " );
+                OutChar(board(row * 3 + 2));
+                OutText(" | " );
+                OutChar(board(row * 3 + 3));
+                OutText(" |");
+                OutImage;
+                DrawTopBottom;
+            end
+        end-of-draw;
+        
+        !populate the board with number placeholders;
+        board(1) := '1';
+        board(2) := '2';
+        board(3) := '3';
+        board(4) := '4';
+        board(5) := '5';
+        board(6) := '6';
+        board(7) := '7';
+        board(8) := '8';
+        board(9) := '9';
+    end-of-TicTacToe;
+    
+
+    game :- new TicTacToe;
+    player := 'X';
+
+    while game.winner <> 'X' and game.winner <> 'O' do
+    begin
+        game.draw;
+        OutText("Player ");
+        OutChar(player);
+        OutText(" enter position: ");
+        OutImage;
+        game.placeMark(player, InInt);    
+        if player = 'X' then player := 'O' else player := 'X';
+    end;
+    
+    game.draw;
+
+    OutText("The winner is: player ");
+    OutChar(game.winner);
+    OutImage;
+end-of-program

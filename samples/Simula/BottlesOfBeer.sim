@@ -1,0 +1,17 @@
+! License: MIT;
+begin
+    integer i;
+    for i := 99 step -1 until 1 do
+    begin
+        outint(i, 2);
+        outtext(" bottles of beer on the wall, ");
+        outint(i, 2);
+        outtext(" bottles of beer.");
+        outimage;
+        outtext("Take one down and pass it around, ");
+        outint(i - 1, 2);
+        outtext(" bottles of beer on the wall.");
+        outimage;
+    end;
+    outtext("No more bottles of beer on the wall, no more bottles of beer.");
+end-let's-drink;
