@@ -496,6 +496,10 @@ disambiguations:
       - negative_pattern: '/\*'
       - pattern: '^\s*\.(?:include\s|globa?l\s|[A-Za-z][_A-Za-z0-9]*:)'
   - language: MAXScript
+- extensions: ['.msg']
+  rules:
+  - language: omnetpp-msg
+    pattern: '^cplusplus \{\{|^namespace[\s]*([^.\s]*\.)*[^.\s]*;|^struct \{|^message [\S]* (extends)? [\S]*[\s]*\{|^packet \{|^class (extends) [\S]*[\s]*\{|^enum \{|^import ([^.\s]*\.)*[^.\s]*;'
 - extensions: ['.n']
   rules:
   - language: Roff
