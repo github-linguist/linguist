@@ -885,6 +885,12 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_resource_by_heuristics
+    assert_heuristics({
+      "RobotFramework" => all_fixtures("RobotFramework", "*.resource")
+    })
+  end
+
   def test_rno_by_heuristics
     assert_heuristics({
       "RUNOFF" => all_fixtures("RUNOFF", "*.rno"),
