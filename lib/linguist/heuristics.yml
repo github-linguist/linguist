@@ -88,6 +88,8 @@ disambiguations:
   - language: Asymptote
 - extensions: ['.bas']
   rules:
+  - language: B4X
+    pattern: '\A\W{0,3}(?:.*(?:\r?\n|\r)){0,9}B4(?:J|A|R|i)=true'
   - language: FreeBasic
     pattern: '^[ \t]*#(?i)(?:define|endif|endmacro|ifn?def|include|lang|macro)(?:$|\s)'
   - language: BASIC
@@ -136,6 +138,11 @@ disambiguations:
   rules:
   - language: XML
     pattern: '^(\s*)(?i:<Project|<Import|<Property|<?xml|xmlns)'
+- extensions: ['.cairo']
+  rules:
+    - language: Cairo Zero
+      pattern: '(^(\s*)%lang(\s+)([A-Za-z0-9_]+))|(^(\s*)%builtins(\s+)([A-Za-z0-9_]+\s*)*$)|(^(\s*)from(\s+)starkware\.(cairo|starknet)\.([A-Za-z0-9_.\s]+?)import)|(,\s*ap\+\+;$)|(;\s*ap\+\+$)'
+    - language: Cairo
 - extensions: ['.ch']
   rules:
   - language: xBase
@@ -226,7 +233,7 @@ disambiguations:
   - language: Erlang
     pattern: '^\s*(?:%%|main\s*\(.*?\)\s*->)'
   - language: JavaScript
-    pattern: '\/\/|("|'')use strict\1|export\s+default\s|\/\*(?:.|[\r\n])*?\*\/'
+    pattern: '\/\/|["'']use strict["'']|export\s+default\s|\/\*(?:.|[\r\n])*?\*\/'
 - extensions: ['.ex']
   rules:
   - language: Elixir
@@ -351,7 +358,7 @@ disambiguations:
 - extensions: ['.ice']
   rules:
   - language: JSON
-    pattern: '\A\s*[{\[]'
+    named_pattern: json
   - language: Slice
 - extensions: ['.inc']
   rules:
@@ -508,6 +515,11 @@ disambiguations:
   - language: NL
     pattern: '^(b|g)[0-9]+ '
   - language: NewLisp
+- extensions: ['.nr']
+  rules:
+  - language: Roff
+    pattern: '^\.'
+  - language: Noir
 - extensions: ['.nu']
   rules:
   - language: Nushell
@@ -552,7 +564,7 @@ disambiguations:
 - extensions: ['.plist']
   rules:
   - language: XML Property List
-    pattern: '^\s*(?:<\?xml\s|<!DOCTYPE\s+plist|<plist(?:\s+version\s*=\s*(["''])\d+(?:\.\d+)?\1)?\s*>\s*$)'
+    pattern: '^\s*(?:<\?xml\s|<!DOCTYPE\s+plist|<plist(?:\s+version\s*=\s*["'']\d+(?:\.\d+)?["''])?\s*>\s*$)'
   - language: OpenStep Property List
 - extensions: ['.plt']
   rules:
@@ -644,6 +656,11 @@ disambiguations:
     pattern:
     - '^\s*(let|module|type)\s+\w*\s+=\s+'
     - '^\s*(?:include|open)\s+\w+\s*$'
+- extensions: ['.resource']
+  rules:
+  - language: RobotFramework
+    pattern:
+    - '^\*{3} (Settings|Variables|Keywords) \*{3}$'
 - extensions: ['.rno']
   rules:
   - language: RUNOFF
@@ -773,6 +790,32 @@ disambiguations:
     # VIM_MODELINE pattern in `./lib/linguist/strategy/modeline.rb`.
   - language: Vim Help File
     pattern: '(?:(?:^|[ \t])(?:vi|Vi(?=m))(?:m[<=>]?[0-9]+|m)?|[ \t]ex)(?=:(?=[ \t]*set?[ \t][^\r\n:]+:)|:(?![ \t]*set?[ \t]))(?:(?:[ \t]*:[ \t]*|[ \t])\w*(?:[ \t]*=(?:[^\\\s]|\\.)*)?)*[ \t:](?:filetype|ft|syntax)[ \t]*=(help)(?=$|\s|:)'
+  - language: Hosts File
+    pattern: |-
+      (?xi) ^
+
+      # IPv4 address
+      (?<ipv4>
+        (?!\.)
+        (?:\.?
+          (?: 25[0-5]  # 250-255
+          |   2[0-4]\d # 200-249
+          |   1\d\d    # 100-199
+          |   [1-9]?\d # 0-99
+          )\b
+      ){4})
+
+      # CIDR notation: /[0-32]
+      (?<cidr>/(3[0-2]|[12]?\d)\b)?
+
+      # Domains list
+      (?<domains>
+        [ \t]+
+        \w[-\w]* (?:\.\w[-\w]*)*
+        (?<!-)\b
+      )*+
+
+      (?=$|\s)
   - language: Adblock Filter List
     pattern: |-
       (?x)\A
@@ -819,6 +862,12 @@ disambiguations:
   - language: Vim Script
     pattern: '^UseVimball'
   - language: VBA
+- extensions: ['.vcf']
+  rules:
+  - language: TSV
+    pattern: '\A##fileformat=VCF'
+  - language: vCard
+    pattern: '\ABEGIN:VCARD'
 - extensions: ['.w']
   rules:
   - language: OpenEdge ABL
@@ -848,7 +897,7 @@ disambiguations:
 - extensions: ['.yy']
   rules:
   - language: JSON
-    pattern: '\"modelName\"\:\s*\"GM'
+    named_pattern: json
   - language: Yacc
 named_patterns:
   cpp:
@@ -870,6 +919,7 @@ named_patterns:
   - '^\s*(?>(?:autoexec|private)\s+){0,2}function\s+(?>(?:autoexec|private)\s+){0,2}\w+\s*\('
   - '\b(?:level|self)[ \t]+thread[ \t]+(?:\[\[[ \t]*(?>\w+\.)*\w+[ \t]*\]\]|\w+)[ \t]*\([^\r\n\)]*\)[ \t]*;'
   - '^[ \t]*#[ \t]*(?:precache|using_animtree)[ \t]*\('
+  json: '\A\s*[{\[]'
   key_equals_value: '^[^#!;][^=]*='
   m68k:
   - '(?im)\bmoveq(?:\.l)?\s+#(?:\$-?[0-9a-f]{1,3}|%[0-1]{1,8}|-?[0-9]{1,3}),\s*d[0-7]\b'

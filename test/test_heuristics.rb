@@ -37,7 +37,7 @@ class TestHeuristics < Minitest::Test
   def test_no_match_if_regexp_timeout
     skip("This test requires Ruby 3.2.0 or later") if Gem::Version.new(RUBY_VERSION) < Gem::Version.new('3.2.0')
 
-    Regexp.any_instance.stubs(:match).raises(Regexp::TimeoutError)
+    Regexp.any_instance.stubs(:match?).raises(Regexp::TimeoutError)
     assert_equal [], Heuristics.call(file_blob("#{fixtures_path}/Generic/stl/STL/cube1.stl"), [Language["STL"]])
   end
 
@@ -73,7 +73,10 @@ class TestHeuristics < Minitest::Test
   def test_all_extensions_are_listed
     Heuristics.all.all? do |rule|
       rule.languages.each do |lang|
-        unlisted = rule.extensions.reject { |ext| lang.extensions.include? ext }
+        unlisted = rule.extensions.reject do |ext|
+          lang.extensions.include?(ext) or
+          lang.filenames.select {|n| n.downcase.end_with? ext.downcase}
+        end
         assert_equal [], unlisted, (<<~EOF).chomp
           The extension '#{unlisted.first}' is not assigned to #{lang.name}.
           Add it to `languages.yml` or update the heuristic which uses it
@@ -272,6 +275,7 @@ class TestHeuristics < Minitest::Test
 
   def test_bas_by_heuristics
     assert_heuristics({
+      "B4X" => all_fixtures("B4X", "*.bas"),
       "FreeBasic" => all_fixtures("FreeBasic", "*.bas"),
       "BASIC" => all_fixtures("BASIC", "*.bas"),
       "VBA" => all_fixtures("VBA", "*.bas"),
@@ -313,6 +317,13 @@ class TestHeuristics < Minitest::Test
       nil => all_fixtures("Text"),
       "XML" => all_fixtures("XML", "*.builds")
     }, "test.builds")
+  end
+
+  def test_cairo_by_heuristics
+    assert_heuristics({
+      "Cairo Zero" => all_fixtures("Cairo Zero"),
+      "Cairo" => all_fixtures("Cairo")
+    })
   end
 
   def test_ch_by_heuristics
@@ -735,6 +746,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_nr_by_heuristics
+    assert_heuristics({
+      "Noir" => all_fixtures("Noir", "*.nr"),
+      "Roff" => all_fixtures("Roff", "*.nr")
+    })
+  end
+
   def test_nu_by_heuristics
     assert_heuristics({
       "Nushell" => all_fixtures("Nushell", "*.nu"),
@@ -864,6 +882,12 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "ReScript" => all_fixtures("ReScript", "*.res"),
       nil => all_fixtures("XML", "*.res")
+    })
+  end
+
+  def test_resource_by_heuristics
+    assert_heuristics({
+      "RobotFramework" => all_fixtures("RobotFramework", "*.resource")
     })
   end
 
@@ -1047,6 +1071,13 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "VBA" => all_fixtures("VBA", "*.vba"),
       "Vim Script" => all_fixtures("Vim Script", "*.vba")
+    })
+  end
+
+  def test_vcf_by_heuristics
+    assert_heuristics({
+      "TSV" => all_fixtures("TSV", "*.vcf"),
+      "vCard" => all_fixtures("vCard", "*.vcf")
     })
   end
 

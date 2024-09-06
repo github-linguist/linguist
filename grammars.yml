@@ -22,6 +22,8 @@ vendor/grammars/ColdFusion:
 - source.cfscript.cfc
 - text.cfml.basic
 - text.html.cfm
+vendor/grammars/Cylc.tmbundle:
+- source.cylc
 vendor/grammars/Dafny-VSCode:
 - text.dfy.dafny
 vendor/grammars/Docker.tmbundle:
@@ -91,6 +93,8 @@ vendor/grammars/PHP-Twig.tmbundle:
 - text.html.twig
 vendor/grammars/PogoScript.tmbundle:
 - source.pogoscript
+vendor/grammars/PowerBuilder.tmbundle:
+- source.powerbuilder
 vendor/grammars/RDoc.tmbundle:
 - text.rdoc
 vendor/grammars/Racket:
@@ -229,6 +233,7 @@ vendor/grammars/assembly:
 vendor/grammars/astro:
 - source.astro
 - text.html.markdown.astro
+- text.mdx.astro.codeblock
 vendor/grammars/atom-editorconfig:
 - source.editorconfig
 - text.plain
@@ -239,8 +244,6 @@ vendor/grammars/atom-fstar:
 vendor/grammars/atom-language-1c-bsl:
 - source.bsl
 - source.sdbl
-vendor/grammars/atom-language-cairo:
-- source.cairo
 vendor/grammars/atom-language-clean:
 - source.clean
 - text.restructuredtext.clean
@@ -298,6 +301,9 @@ vendor/grammars/c.tmbundle:
 - source.c
 - source.c++
 - source.c.platform
+vendor/grammars/cairo-tm-grammar:
+- source.cairo
+- source.cairo0
 vendor/grammars/capnproto.tmbundle:
 - source.capnp
 vendor/grammars/carto-atom:
@@ -315,6 +321,9 @@ vendor/grammars/clarity.tmbundle:
 vendor/grammars/cmake.tmbundle:
 - source.cache.cmake
 - source.cmake
+vendor/grammars/code-peggy-language:
+- inline.peggy
+- source.peggy
 vendor/grammars/common-lisp-tmlanguage:
 - markdown.commonlisp.codeblock
 - source.commonlisp
@@ -444,6 +453,8 @@ vendor/grammars/holyc.tmbundle:
 - source.hc
 vendor/grammars/hoon-grammar:
 - source.hoon
+vendor/grammars/iCalendar-sublime:
+- source.iCalendar
 vendor/grammars/ide-tools:
 - source.toit
 vendor/grammars/idl.tmbundle:
@@ -485,6 +496,8 @@ vendor/grammars/javascript-objective-j.tmbundle:
 - source.js.objj
 vendor/grammars/jflex.tmbundle:
 - source.jflex
+vendor/grammars/jte-template-syntax-highlight:
+- text.html.jte
 vendor/grammars/kivy-language-grammer:
 - source.python.kivy
 vendor/grammars/kusto-sublime:
@@ -679,9 +692,6 @@ vendor/grammars/language-macaulay2:
 - source.m2
 vendor/grammars/language-maxscript:
 - source.maxscript
-vendor/grammars/language-mcfunction:
-- markdown.mcfunction.codeblock
-- source.mcfunction
 vendor/grammars/language-mermaid:
 - source.mermaid
 - source.mermaid.c4c-diagram
@@ -920,7 +930,7 @@ vendor/grammars/processing.tmbundle:
 vendor/grammars/python-django.tmbundle:
 - source.python.django
 - text.html.django
-vendor/grammars/qsharp-compiler:
+vendor/grammars/qsharp:
 - source.qsharp
 vendor/grammars/quake:
 - source.quake
@@ -972,6 +982,8 @@ vendor/grammars/sourcepawn-vscode:
 - sp-jsdoc.injection
 - text.valve-cfg
 - text.valve-kv
+vendor/grammars/sprocket-vscode:
+- source.wdl
 vendor/grammars/sql.tmbundle:
 - source.sql
 vendor/grammars/squirrel-language:
@@ -1070,6 +1082,8 @@ vendor/grammars/syntax:
 - source.hcl
 - source.hcl.terraform
 - source.sentinel
+vendor/grammars/syntax-mcfunction:
+- source.mcfunction
 vendor/grammars/tcl.tmbundle:
 - source.tcl
 - text.html.tcl
@@ -1130,6 +1144,8 @@ vendor/grammars/vscode-curry:
 - markdown.curry.codeblock
 - source.curry
 - source.icurry
+vendor/grammars/vscode-dune:
+- source.dune
 vendor/grammars/vscode-euphoria:
 - source.euphoria
 vendor/grammars/vscode-fluent:
@@ -1176,6 +1192,9 @@ vendor/grammars/vscode-lean4:
 - markdown.lean4.codeblock
 - source.lean4
 - source.lean4.markdown
+vendor/grammars/vscode-livecodescript:
+- source.lcb
+- source.livecodescript
 vendor/grammars/vscode-monkey-c:
 - source.mc
 vendor/grammars/vscode-motoko:
@@ -1183,8 +1202,10 @@ vendor/grammars/vscode-motoko:
 - source.mo
 vendor/grammars/vscode-move-syntax:
 - markdown.move.codeblock
-- mdx.LANGUAGE.codeblock
+- mdx.move.codeblock
 - source.move
+vendor/grammars/vscode-noir:
+- source.nr
 vendor/grammars/vscode-opa:
 - markdown.rego.codeblock
 - source.rego
@@ -1221,6 +1242,8 @@ vendor/grammars/vscode-slice:
 vendor/grammars/vscode-vba:
 - source.vba
 - source.wwb
+vendor/grammars/vscode-vcard:
+- source.vcard
 vendor/grammars/vscode-vlang:
 - source.v
 vendor/grammars/vscode-wit:
@@ -1256,8 +1279,6 @@ vendor/grammars/vscode_mikrotik_routeros_script:
 - source.rsc
 vendor/grammars/vue-syntax-highlight:
 - text.html.vue
-vendor/grammars/wdl-sublime-syntax-highlighter:
-- source.wdl
 vendor/grammars/wgsl-analyzer:
 - source.wgsl
 vendor/grammars/witcherscript-grammar:
