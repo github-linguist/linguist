@@ -246,7 +246,7 @@
 #if defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
 
 /* C99 says to define __STDC_LIMIT_MACROS before including stdint.h,
- * if you want the limit (max/min) macros for int types.
+ * if you want the limit (max/min) macros for int types. 
  */
 #ifndef __STDC_LIMIT_MACROS
 #define __STDC_LIMIT_MACROS 1
@@ -263,7 +263,7 @@ typedef uint32_t flex_uint32_t;
 typedef signed char flex_int8_t;
 typedef short int flex_int16_t;
 typedef int flex_int32_t;
-typedef unsigned char flex_uint8_t;
+typedef unsigned char flex_uint8_t; 
 typedef unsigned short int flex_uint16_t;
 typedef unsigned int flex_uint32_t;
 
@@ -435,6 +435,7 @@ void yyfree ( void * , yyscan_t yyscanner );
 #define python_dcomment 5
 #define python_scomment 6
 #define roff_comment 7
+#define lean_comment 8
 
 #endif
 
@@ -694,9 +695,9 @@ extern int yylex (yyscan_t yyscanner);
 #undef yyTABLES_NAME
 #endif
 
-#line 173 "tokenizer.l"
+#line 176 "tokenizer.l"
 
 
-#line 701 "lex.linguist_yy.h"
+#line 702 "lex.linguist_yy.h"
 #undef linguist_yyIN_HEADER
 #endif /* linguist_yyHEADER_H */

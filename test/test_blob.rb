@@ -166,6 +166,15 @@ class TestBlob < Minitest::Test
     # Nix generated flake.lock file
     assert sample_blob_memory("JSON/filenames/flake.lock").generated?
 
+    # Bazel generated bzlmod lockfile
+    assert sample_blob_memory("JSON/filenames/MODULE.bazel.lock").generated?
+
+    # Deno generated deno.lock file
+    assert sample_blob_memory("JSON/filenames/deno.lock").generated?
+
+    # pnpm lockfile
+    assert fixture_blob_memory("YAML/pnpm-lock.yaml").generated?
+
     # PEG.js-generated parsers
     assert sample_blob_memory("JavaScript/parser.js").generated?
 
@@ -249,6 +258,9 @@ class TestBlob < Minitest::Test
     assert sample_blob_memory("Ruby/rails@7.0.3.1.rbi").generated?
     assert sample_blob_memory("Ruby/rendering.rbi").generated?
     assert sample_blob_memory("Ruby/actionmailer.rbi").generated?
+
+    # SQLx query files
+    assert fixture_blob_memory("Rust/.sqlx/query-2b8b1aae3740a05cb7179be9c7d5af30e8362c3cba0b07bc18fa32ff1a2232cc.json").generated?
   end
 
   def test_vendored
@@ -260,7 +272,7 @@ class TestBlob < Minitest::Test
 
   def test_language
     allowed_failures = {
-      "#{samples_path}/C++/rpc.h" => ["C", "C++"],
+      "#{samples_path}/C/rpc.h" => ["C", "C++"],
     }
     Samples.each do |sample|
       blob = sample_blob_memory(sample[:path])
@@ -279,7 +291,7 @@ class TestBlob < Minitest::Test
     root = File.expand_path('../fixtures', __FILE__)
     Dir.entries(root).each do |language|
       next if language == '.' || language == '..' || language == 'Binary' ||
-              File.basename(language) == 'ace_modes.json'
+        File.basename(language) == 'ace_modes.json'
 
       # Each directory contains test files of a language
       dirname = File.join(root, language)
@@ -297,9 +309,13 @@ class TestBlob < Minitest::Test
         elsif language == 'Generic'
           assert !blob.language, "#{filepath} should not match a language"
         else
-          assert blob.language, "No language for #{filepath}"
           fs_name = blob.language.fs_name ? blob.language.fs_name : blob.language.name
-          assert_equal language, fs_name, blob.name
+          if allowed_failures.has_key? filepath
+            assert allowed_failures[filepath].include?(fs_name), filepath
+          else
+            assert blob.language, "No language for #{filepath}"
+            assert_equal language, fs_name, filepath
+          end
         end
       end
     end
