@@ -340,6 +340,18 @@ disambiguations:
   - language: C++
     named_pattern: cpp
   - language: C
+- extensions: ['.c3', '.c3i', '.c3t']
+  rules:
+  - language: C3
+    pattern: module [^;]*;
+  - language: C3
+    pattern: import [^;]*;
+  - language: C3
+    # fn <return_type> <name>(<argType> <argName>, ...)
+    pattern: ^fn\s+[a-zA-Z_][a-zA-Z0-9_]*\s*\([^;]*\)\s*\{
+  - language: C3
+    # def {name} = {definition};
+    pattern: ^def\s+[a-zA-Z_][a-zA-Z0-9_]*\s*=\s*\{[^;]*\}
 - extensions: ['.hh']
   rules:
   - language: Hack
