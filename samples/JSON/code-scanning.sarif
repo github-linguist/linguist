@@ -1,0 +1,250 @@
+{
+  "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "Tool Name",
+          "semanticVersion": "2.0.0",
+          "rules": [
+            {
+              "id": "3f292041e51d22005ce48f39df3585d44ce1b0ad",
+              "name": "js/unused-local-variable",
+              "shortDescription": {
+                "text": "Unused variable, import, function or class"
+              },
+              "fullDescription": {
+                "text": "Unused variables, imports, functions or classes may be a symptom of a bug and should be examined carefully."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "properties": {
+                "tags": [
+                  "maintainability"
+                ],
+                "precision": "very-high"
+              }
+            },
+            {
+              "id": "d5b664aefd5ca4b21b52fdc1d744d7d6ab6886d0",
+              "name": "js/inconsistent-use-of-new",
+              "shortDescription": {
+                "text": "Inconsistent use of 'new'"
+              },
+              "fullDescription": {
+                "text": "If a function is intended to be a constructor, it should always be invoked with 'new'. Otherwise, it should always be invoked as a normal function, that is, without 'new'."
+              },
+              "properties": {
+                "tags": [
+                  "reliability",
+                  "correctness",
+                  "language-features"
+                ],
+                "precision": "very-high"
+              }
+            },
+            {
+              "id": "R01"
+            }
+          ]
+        }
+      },
+      "automationDetails": {
+        "id": "my-category/"
+      },
+      "results": [
+        {
+          "ruleId": "3f292041e51d22005ce48f39df3585d44ce1b0ad",
+          "ruleIndex": 0,
+          "message": {
+            "text": "Unused variable foo."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "main.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 2,
+                  "startColumn": 7,
+                  "endColumn": 10
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "primaryLocationLineHash": "39fa2ee980eb94b0:1",
+            "primaryLocationStartColumnFingerprint": "4"
+          }
+        },
+        {
+          "ruleId": "d5b664aefd5ca4b21b52fdc1d744d7d6ab6886d0",
+          "ruleIndex": 1,
+          "message": {
+            "text": "Function resolvingPromise is sometimes invoked as a constructor (for example [here](1)), and sometimes as a normal function (for example [here](2))."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/promises.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 2
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "primaryLocationLineHash": "5061c3315a741b7d:1",
+            "primaryLocationStartColumnFingerprint": "7"
+          },
+          "relatedLocations": [
+            {
+              "id": 1,
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/ParseObject.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 2281,
+                  "startColumn": 33,
+                  "endColumn": 55
+                }
+              },
+              "message": {
+                "text": "here"
+              }
+            },
+            {
+              "id": 2,
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/LiveQueryClient.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 166
+                }
+              },
+              "message": {
+                "text": "here"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "R01",
+          "message": {
+            "text": "Specifying both [ruleIndex](1) and [ruleID](2) might lead to inconsistencies."
+          },
+          "level": "error",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "full.sarif",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 54,
+                  "startColumn": 10,
+                  "endLine": 55,
+                  "endColumn": 25
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "id": 1,
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "full.sarif"
+                },
+                "region": {
+                  "startLine": 81,
+                  "startColumn": 10,
+                  "endColumn": 18
+                }
+              },
+              "message": {
+                "text": "here"
+              }
+            },
+            {
+              "id": 2,
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "full.sarif"
+                },
+                "region": {
+                  "startLine": 82,
+                  "startColumn": 10,
+                  "endColumn": 21
+                }
+              },
+              "message": {
+                "text": "here"
+              }
+            }
+          ],
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "region": {
+                            "startLine": 11,
+                            "endLine": 29,
+                            "startColumn": 10,
+                            "endColumn": 18
+                          },
+                          "artifactLocation": {
+                            "uriBaseId": "%SRCROOT%",
+                            "uri": "full.sarif"
+                          }
+                        },
+                        "message": {
+                          "text": "Rule has index 0"
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "region": {
+                            "endColumn": 47,
+                            "startColumn": 12,
+                            "startLine": 12
+                          },
+                          "artifactLocation": {
+                            "uriBaseId": "%SRCROOT%",
+                            "uri": "full.sarif"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "partialFingerprints": {
+            "primaryLocationLineHash": "ABC:2"
+          }
+        }
+      ],
+      "columnKind": "utf16CodeUnits"
+    }
+  ]
+}

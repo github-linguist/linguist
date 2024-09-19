@@ -74,10 +74,10 @@ class TestRepository < Minitest::Test
     assert !repo.breakdown_by_file["Ruby"].empty?
 
     # Ensures the filename that contains unicode char is UTF-8 encoded and invalid chars scrubbed
-    assert repo.breakdown_by_file.has_key?("Perl")
-    assert repo.breakdown_by_file["Perl"].include?("test/fixtures/ba�r/file_ã.pl")
-    assert_equal "UTF-8", repo.breakdown_by_file["Perl"].first.encoding.to_s
-    assert repo.breakdown_by_file["Perl"].first.valid_encoding?
+    assert repo.breakdown_by_file.has_key?("Raku")
+    assert repo.breakdown_by_file["Raku"].include?("test/fixtures/ba�r/file_ã.pl")
+    assert_equal "UTF-8", repo.breakdown_by_file["Raku"].first.encoding.to_s
+    assert repo.breakdown_by_file["Raku"].first.valid_encoding?
   end
 
   def test_commit_with_git_attributes_data
@@ -87,8 +87,8 @@ class TestRepository < Minitest::Test
 
     # With some .gitattributes data
     attr_commit = '7ee006cbcb2d7261f9e648510a684ee9ac64126b'
-    # It's incremental but should bust the cache
-    new_repo = Linguist::Repository.incremental(rugged_repository, attr_commit, old_commit, old_repo.cache)
+    # It's incremental but now is scanning more data and should bust the cache
+    new_repo = Linguist::Repository.incremental(rugged_repository, attr_commit, old_commit, old_repo.cache, 350_000)
 
     assert new_repo.breakdown_by_file["Java"].include?("lib/linguist.rb")
   end
