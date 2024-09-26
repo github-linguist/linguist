@@ -1,13 +1,13 @@
 name: Run Tests
 
 on:
-  # Trigger the workflow on push or pull request, but only for the master branch
+  # Trigger the workflow on push or pull request, but only for the main branch
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
   merge_group:
 
 permissions:
@@ -29,7 +29,7 @@ jobs:
         bundler-cache: true
     - name: Fetch grammar submodules
       run: |
-        git fetch origin master:master v2.0.0:v2.0.0 test/attributes:test/attributes test/master:test/master
+        git fetch origin main:main v2.0.0:v2.0.0 test/attributes:test/attributes test/main:test/main
         sed -i 's|git@github.com:|https://github.com/|' .gitmodules
         git submodule init
         git submodule sync --quiet
