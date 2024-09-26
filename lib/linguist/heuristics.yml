@@ -772,6 +772,12 @@ disambiguations:
   - language: XML
     pattern: '<TS\b'
   - language: TypeScript
+- extensions: ['.tsp']
+  rules:
+  - language: TypeSpec
+    pattern: '^(import|using|namespace|interface|op|model|scalar|alias|union|enum)\s'
+  - language: TSPLIB data
+    pattern: '^(NAME|TYPE|DIMENSION|EDGE_WEIGHT_TYPE|EDGE_WEIGHT_FORMAT)\s*:'
 - extensions: ['.tst']
   rules:
   - language: GAP
