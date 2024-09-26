@@ -79,7 +79,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **CAP CDS:** [SAP/cds-textmate-grammar](https://github.com/SAP/cds-textmate-grammar)
 - **CIL:** [google/selinux-policy-languages](https://github.com/google/selinux-policy-languages)
 - **CLIPS:** [psicomante/CLIPS-sublime](https://github.com/psicomante/CLIPS-sublime)
-- **CMake:** [textmate/cmake.tmbundle](https://github.com/textmate/cmake.tmbundle)
+- **CMake:** [microsoft/vscode-cmake-tools](https://github.com/microsoft/vscode-cmake-tools)
 - **COBOL:** [spgennard/vscode_cobol](https://github.com/spgennard/vscode_cobol)
 - **CODEOWNERS:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **COLLADA:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)
