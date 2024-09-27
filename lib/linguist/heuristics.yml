@@ -340,6 +340,11 @@ disambiguations:
   - language: C++
     named_pattern: cpp
   - language: C
+- extensions: ['.hb']
+  rules:
+  - language: Handlebars
+    pattern: '\{\{'
+  - language: Harbour
 - extensions: ['.hh']
   rules:
   - language: Hack
