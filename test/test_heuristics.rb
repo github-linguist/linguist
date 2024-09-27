@@ -537,6 +537,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_hb_by_heuristics
+    assert_heuristics({
+      "Handlebars" => all_fixtures("Handlebars", "*.hb"),
+      "Harbour" => all_fixtures("Harbour", "*.hb")
+    })
+  end
+
   def test_hh_by_heuristics
     assert_heuristics({
       "Hack" => all_fixtures("Hack", "*.hh"),
