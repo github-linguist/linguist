@@ -697,6 +697,12 @@ disambiguations:
   - language: Markdown
     # Markdown syntax for scdoc
     pattern: '^#+\s+(NAME|SYNOPSIS|DESCRIPTION)'
+- extensions: ['.sim']
+  rules:
+  - language: Simula
+    pattern: '(?i)\bbegin\b.*?\bend\b'
+  - language: YAML
+    pattern: '^[\{\[]'
 - extensions: ['.sol']
   rules:
   - language: Solidity
