@@ -2933,6 +2933,7 @@ Handlebars:
   - htmlbars
   extensions:
   - ".handlebars"
+  - ".hb"
   - ".hbs"
   tm_scope: text.html.handlebars
   ace_mode: handlebars
@@ -2945,6 +2946,8 @@ Harbour:
   tm_scope: source.harbour
   ace_mode: text
   language_id: 156
+  interpreters:
+  - hbmk2
 Haskell:
   type: programming
   color: "#5e5086"
