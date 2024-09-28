@@ -658,7 +658,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **ZIL:** [tclem/vscode-zil-language](https://github.com/tclem/vscode-zil-language)
 - **Zeek:** [zeek/zeek-sublime](https://github.com/zeek/zeek-sublime)
 - **ZenScript:** [CraftTweaker/ZenScript-tmLanguage](https://github.com/CraftTweaker/ZenScript-tmLanguage)
-- **ZenStack:** [prisma/vscode-prisma](https://github.com/prisma/vscode-prisma)
+- **ZenStack:** [zenstackhq/zenstack](https://github.com/zenstackhq/zenstack)
 - **Zephir:** [phalcon/zephir-sublime](https://github.com/phalcon/zephir-sublime)
 - **Zig:** [ziglang/sublime-zig-language](https://github.com/ziglang/sublime-zig-language)
 - **cURL Config:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
