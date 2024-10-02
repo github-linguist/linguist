@@ -90,7 +90,7 @@ disambiguations:
   rules:
   - language: B4X
     pattern: '\A\W{0,3}(?:.*(?:\r?\n|\r)){0,9}B4(?:J|A|R|i)=true'
-  - language: FreeBasic
+  - language: FreeBASIC
     pattern: '^[ \t]*#(?i)(?:define|endif|endmacro|ifn?def|include|lang|macro)(?:$|\s)'
   - language: BASIC
     pattern: '\A\s*\d'
@@ -120,7 +120,7 @@ disambiguations:
     pattern: '(>\+>|>\+<)'
 - extensions: ['.bi']
   rules:
-  - language: FreeBasic
+  - language: FreeBASIC
     pattern: '^[ \t]*#(?i)(?:define|endif|endmacro|ifn?def|if|include|lang|macro)(?:$|\s)'
 - extensions: ['.bs']
   rules:
