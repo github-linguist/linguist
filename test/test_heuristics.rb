@@ -276,7 +276,7 @@ class TestHeuristics < Minitest::Test
   def test_bas_by_heuristics
     assert_heuristics({
       "B4X" => all_fixtures("B4X", "*.bas"),
-      "FreeBasic" => all_fixtures("FreeBasic", "*.bas"),
+      "FreeBASIC" => all_fixtures("FreeBASIC", "*.bas"),
       "BASIC" => all_fixtures("BASIC", "*.bas"),
       "VBA" => all_fixtures("VBA", "*.bas"),
       "Visual Basic 6.0" => all_fixtures("Visual Basic 6.0", "*.bas")
@@ -301,7 +301,7 @@ class TestHeuristics < Minitest::Test
 
   def test_bi_by_heuristics
     assert_heuristics({
-      "FreeBasic" => all_fixtures("FreeBasic", "*.bi")
+      "FreeBASIC" => all_fixtures("FreeBASIC", "*.bi")
     })
   end
 
