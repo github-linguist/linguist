@@ -95,9 +95,7 @@ disambiguations:
   - language: BASIC
     pattern: '\A\s*\d'
   - language: VBA
-    and:
-    - named_pattern: vb-module
-    - named_pattern: vba
+    named_pattern: vba
   - language: Visual Basic 6.0
     named_pattern: vb-module
 - extensions: ['.bb']
