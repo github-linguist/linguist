@@ -469,6 +469,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **QMake:** [textmate/cpp-qt.tmbundle](https://github.com/textmate/cpp-qt.tmbundle)
 - **Qt Script:** [atom/language-javascript](https://github.com/atom/language-javascript)
 - **Quake:** [newgrammars/quake](https://github.com/newgrammars/quake)
+- **QuickBASIC:** [QB64Official/vscode](https://github.com/QB64Official/vscode)
 - **R:** [textmate/r.tmbundle](https://github.com/textmate/r.tmbundle)
 - **RAML:** [atom/language-yaml](https://github.com/atom/language-yaml)
 - **RBS:** [soutaro/vscode-rbs-syntax](https://github.com/soutaro/vscode-rbs-syntax)

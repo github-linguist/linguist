@@ -279,7 +279,8 @@ class TestHeuristics < Minitest::Test
       "FreeBASIC" => all_fixtures("FreeBASIC", "*.bas"),
       "BASIC" => all_fixtures("BASIC", "*.bas"),
       "VBA" => all_fixtures("VBA", "*.bas"),
-      "Visual Basic 6.0" => all_fixtures("Visual Basic 6.0", "*.bas")
+      "Visual Basic 6.0" => all_fixtures("Visual Basic 6.0", "*.bas"),
+      "QuickBASIC" => all_fixtures("QuickBASIC", "*.bas")
     })
   end
 
