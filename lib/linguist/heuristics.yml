@@ -94,6 +94,18 @@ disambiguations:
     pattern: '^[ \t]*#(?i)(?:define|endif|endmacro|ifn?def|include|lang|macro)(?:$|\s)'
   - language: BASIC
     pattern: '\A\s*\d'
+  - language: QuickBASIC
+    pattern:
+    - '#?lang:?\s*"?qb"?'
+    - '^[ ]*CLS[ ]*(:|$)'
+    - '^[ ]*OPTION _EXPLICIT'
+    - ' As _(Byte|Offset|MEM)'
+    - '^[ ]*_(DISPLAY|DEST|CONSOLE|SOURCE|FREEIMAGE|PALETTECOLOR|PRINTSTRING|LOADFONT|PUTIMAGE)'
+    - '^[ ]*_(TITLE|PLAYMOD) "'
+    - '^[ ]*_(LIMIT|SCREEN|DELAY) \.?\d+'
+    - '\b_(MOUSEBUTTON|NEWIMAGE|KEYDOWN|WIDTH|HEIGHT)\('
+    - '^[ ]*\$(CONSOLE|CHECKING):'
+    - '^[ ]*\$(FULLSCREEN|RESIZE|STATIC|DYNAMIC|NOPREFIX|SCREENSHOW|SCREENHIDE|EXEICON)\b'
   - language: VBA
     and:
     - named_pattern: vb-module
