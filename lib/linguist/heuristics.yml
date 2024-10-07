@@ -97,7 +97,8 @@ disambiguations:
   - language: QuickBASIC
     pattern:
     - '(#|$)lang:?\s*"?qb"?'
-    - "(?i)^[ ]*CLS[ ]*('|:|$)"
+    - "(?i)'\\$INCLUDE:"
+    - "(?i)^[ ]*CLS[ ]*(''|:|$)"
     - '(?i)^[ ]*OPTION _EXPLICIT'
     - '(?i) As _(Byte|Offset|MEM)'
     - '(?i)^[ ]*_(DISPLAY|DEST|CONSOLE|SOURCE|FREEIMAGE|PALETTECOLOR|PRINTSTRING|LOADFONT|PUTIMAGE)'
@@ -112,6 +113,11 @@ disambiguations:
     - named_pattern: vba
   - language: Visual Basic 6.0
     named_pattern: vb-module
+  # If no other language is matched, we default to QuickBASIC as long as
+  # there is one upppercase QuickBASIC command.
+  - language: QuickBASIC
+    pattern:
+    - '^[ ]*(DIM|REDIM|DEFINT|PRINT|DECLARE (SUB|FUNCTION)|FUNCTION|SUB) '
 - extensions: ['.bb']
   rules:
   - language: BlitzBasic
