@@ -202,6 +202,7 @@ class TestBlob < Minitest::Test
     assert sample_blob_memory("Go/embedded.go").generated?
     assert sample_blob_memory("Go/oapi-codegen.go").generated?
     assert sample_blob_memory("JavaScript/proto.js").generated?
+    assert sample_blob_memory("TypeScript/proto.ts").generated?
     assert sample_blob_memory("PHP/ProtobufGenerated.php").generated?
 
     # Apache Thrift generated code
