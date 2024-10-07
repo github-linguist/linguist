@@ -96,16 +96,16 @@ disambiguations:
     pattern: '\A\s*\d'
   - language: QuickBASIC
     pattern:
-    - '#?lang:?\s*"?qb"?'
-    - '^[ ]*CLS[ ]*(:|$)'
-    - '^[ ]*OPTION _EXPLICIT'
-    - ' As _(Byte|Offset|MEM)'
-    - '^[ ]*_(DISPLAY|DEST|CONSOLE|SOURCE|FREEIMAGE|PALETTECOLOR|PRINTSTRING|LOADFONT|PUTIMAGE)'
-    - '^[ ]*_(TITLE|PLAYMOD) "'
-    - '^[ ]*_(LIMIT|SCREEN|DELAY) \.?\d+'
-    - '\b_(MOUSEBUTTON|NEWIMAGE|KEYDOWN|WIDTH|HEIGHT)\('
-    - '^[ ]*\$(CONSOLE|CHECKING):'
-    - '^[ ]*\$(FULLSCREEN|RESIZE|STATIC|DYNAMIC|NOPREFIX|SCREENSHOW|SCREENHIDE|EXEICON)\b'
+    - '(#|$)lang:?\s*"?qb"?'
+    - '(?i)^[ ]*CLS[ ]*(:|$)'
+    - '(?i)^[ ]*OPTION _EXPLICIT'
+    - '(?i) As _(Byte|Offset|MEM)'
+    - '(?i)^[ ]*_(DISPLAY|DEST|CONSOLE|SOURCE|FREEIMAGE|PALETTECOLOR|PRINTSTRING|LOADFONT|PUTIMAGE)'
+    - '(?i)^[ ]*_(TITLE|PLAYMOD) "'
+    - '(?i)^[ ]*_(LIMIT|SCREEN|DELAY) \.?\d+'
+    - '(?i)\b_(MOUSEBUTTON|NEWIMAGE|KEYDOWN|WIDTH|HEIGHT)\('
+    - '(?i)^[ ]*\$(CONSOLE|CHECKING):'
+    - '(?i)^[ ]*\$(FULLSCREEN|RESIZE|STATIC|DYNAMIC|NOPREFIX|SCREENSHOW|SCREENHIDE|EXEICON)\b'
   - language: VBA
     and:
     - named_pattern: vb-module
