@@ -117,7 +117,10 @@ disambiguations:
   # there is one upppercase QuickBASIC command.
   - language: QuickBASIC
     pattern:
-    - '^[ ]*(DIM|REDIM|DEFINT|PRINT|DECLARE (SUB|FUNCTION)|FUNCTION|SUB) '
+    - '^[ ]*(CONST|DIM|REDIM|DEFINT|PRINT|DECLARE (SUB|FUNCTION)|FUNCTION|SUB) '
+  # Otherwise, we default to VBA as long as there is a proper Sub or Function definition.
+  - language: VBA
+    pattern: '^[ ]*(Private |Public )?(Sub|Function) '
 - extensions: ['.bb']
   rules:
   - language: BlitzBasic
