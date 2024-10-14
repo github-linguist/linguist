@@ -23,12 +23,7 @@ module Linguist
         return candidates if candidates.any?
 
         header = blob.first_lines(SEARCH_SCOPE).join("\n")
-
-        if /<\?xml version=/.match(header) || /<(Solution|Project)/.match(header)
-          [Language["XML"]]
-        else
-          []
-        end
+        /<?xml version=/.match(header) ? [Language["XML"]] : []
       end
     end
   end
