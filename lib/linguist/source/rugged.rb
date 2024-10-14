@@ -86,6 +86,10 @@ module Linguist
         @tree_map[commit_id] = Rugged::Commit.lookup(@rugged, commit_id).tree
         @tree_map[commit_id]
       end
+
+      def method_missing(method_name, *args, &block)
+        @rugged.send(method_name, *args, &block)
+      end
     end
   end
 end
