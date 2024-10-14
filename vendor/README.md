@@ -685,3 +685,4 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **vCard:** [cstrachan88/vscode-vcard](https://github.com/cstrachan88/vscode-vcard)
 - **wisp:** [atom/language-clojure](https://github.com/atom/language-clojure)
 - **xBase:** [hernad/atom-language-harbour](https://github.com/hernad/atom-language-harbour)
+- **Yooz:** [Yooz/Yooz.tmbundle](https://github.com/ai-yooz/simple-yooz-code)
