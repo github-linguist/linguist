@@ -612,6 +612,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Visual Basic .NET:** [peters-ben-0007/VBDotNetSyntax](https://github.com/peters-ben-0007/VBDotNetSyntax)
 - **Visual Basic 6.0:** [serkonda7/vscode-vba](https://github.com/serkonda7/vscode-vba)
 - **Volt:** [textmate/d.tmbundle](https://github.com/textmate/d.tmbundle)
+- **Vue:** [vuejs/language-tools](https://github.com/vuejs/language-tools)
 - **Vyper:** [davidhq/SublimeEthereum](https://github.com/davidhq/SublimeEthereum)
 - **WDL:** [stjude-rust-labs/sprocket-vscode](https://github.com/stjude-rust-labs/sprocket-vscode)
 - **WGSL:** [wgsl-analyzer/wgsl-analyzer](https://github.com/wgsl-analyzer/wgsl-analyzer)
