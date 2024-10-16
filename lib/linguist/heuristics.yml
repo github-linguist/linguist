@@ -106,9 +106,6 @@ disambiguations:
     - named_pattern: vba
   - language: Visual Basic 6.0
     named_pattern: vb-module
-  # Otherwise, we default to VBA as long as there is a proper Sub or Function definition.
-  - language: VBA
-    pattern: '^[ ]*(Private |Public )?(Sub|Function) '
 - extensions: ['.bb']
   rules:
   - language: BlitzBasic
