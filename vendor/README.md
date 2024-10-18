@@ -363,6 +363,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Mojo:** [modularml/mojo-syntax](https://github.com/modularml/mojo-syntax)
 - **Monkey:** [gingerbeardman/monkey.tmbundle](https://github.com/gingerbeardman/monkey.tmbundle)
 - **Monkey C:** [ghisguth/vscode-monkey-c](https://github.com/ghisguth/vscode-monkey-c)
+- **MoonBit:** [moonbitlang/moonbit-tmLanguage](https://github.com/moonbitlang/moonbit-tmLanguage)
 - **MoonScript:** [leafo/moonscript-tmbundle](https://github.com/leafo/moonscript-tmbundle)
 - **Motoko:** [dfinity/vscode-motoko](https://github.com/dfinity/vscode-motoko)
 - **Motorola 68K Assembly:** [zerkman/language-m68k](https://github.com/zerkman/language-m68k)
