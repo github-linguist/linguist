@@ -70,6 +70,7 @@ module Linguist
       poetry_lock? ||
       pdm_lock? ||
       uv_lock? ||
+      pixi_lock? ||
       esy_lock? ||
       npm_shrinkwrap_or_package_lock? ||
       pnpm_lock? ||
@@ -429,6 +430,13 @@ module Linguist
     # Returns true or false.
     def uv_lock?
       !!name.match(/uv\.lock/)
+    end
+
+    # Internal: Is the blob a generated pixi lock file?
+    #
+    # Returns true or false.
+    def pixi_lock?
+      !!name.match(/pixi\.lock/)
     end
 
     # Internal: Is the blob a generated esy lock file?
