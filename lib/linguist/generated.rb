@@ -74,6 +74,7 @@ module Linguist
       npm_shrinkwrap_or_package_lock? ||
       pnpm_lock? ||
       terraform_lock? ||
+      insta_snap? ||
       generated_yarn_plugnplay? ||
       godeps? ||
       generated_by_zephir? ||
@@ -562,6 +563,17 @@ module Linguist
       !!name.match(/(?:^|\/)\.terraform\.lock\.hcl$/)
     end
 
+    # Internal: Is this a Rust test snapshot file by Insta?
+    # 
+    # By default these files are stored in `.../snapshots/*.snap`,
+    # but user may modify the location.
+    # See <https://insta.rs/docs/snapshot-files/>
+    #
+    # Returns true or false.
+    def insta_snap?
+      !!name.match(/(?:^|\/)\.snap$/)
+    end
+        
     # Internal: Is it a KiCAD or GFortran module file?
     #
     # KiCAD module files contain:
