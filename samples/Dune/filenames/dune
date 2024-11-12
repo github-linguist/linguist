@@ -1,0 +1,101 @@
+(ocamllex
+ (modules reason_declarative_lexer))
+
+; Use select.exe from janestreet/ppx_ast to choose ocaml_util.ml based on ocaml version
+
+(rule
+ (targets ocaml_util.ml)
+ (deps ocaml_util.cppo.ml)
+ (action
+  (run %{bin:cppo} -V OCAML:%{ocaml_version} %{deps} -o %{targets})))
+
+(menhir
+ (flags --strict --inspection --unused-tokens --table --cmly)
+ (modules reason_parser))
+
+; Previously, make preprocess.
+; (rule
+;  (targets reason_parser.cmly reason_parser.ml reason_parser.mli)
+;  (deps reason_parser.mly)
+;  (action
+;   (run menhir --strict --inspection --infer
+;        --unused-tokens
+;        --fixed-exception
+;        --table
+;        --cmly reason_parser.mly)))
+
+(executables
+ (names menhir_error_processor)
+ (modules menhir_error_processor)
+ (libraries unix menhirSdk))
+
+(rule
+ (targets reason_parser_explain_raw.ml)
+ (deps reason_parser.cmly)
+ (action
+  (with-stdout-to
+   %{targets}
+   (run ./menhir_error_processor.exe reason_parser.cmly))))
+
+(rule
+ (targets reason_parser_recover.ml)
+ (deps reason_parser.cmly)
+ (action
+  (with-stdout-to
+   %{targets}
+   (run ../menhir-recover/main.exe reason_parser.cmly))))
+
+(rule
+ (targets reason_syntax_util.ml)
+ (deps reason_syntax_util.cppo.ml)
+ (action
+  (run %{bin:cppo} -V OCAML:%{ocaml_version} %{deps} -o %{targets})))
+
+(rule
+ (targets reason_syntax_util.mli)
+ (deps reason_syntax_util.cppo.mli)
+ (action
+  (run %{bin:cppo} -V OCAML:%{ocaml_version} %{deps} -o %{targets})))
+
+(library
+ (name reason)
+ ; Uncomment to allow make coverage target to work
+ ; requires you to have run $ opam install bisect_ppx
+ ;  (preprocess (pps (bisect_ppx)))
+ (public_name reason)
+ (wrapped false)
+ (flags
+  (:standard -w -9-52 -safe-string))
+ (modules
+  ocaml_util
+  reason_syntax_util
+  reason_comment
+  reason_attributes
+  reason_layout
+  reason_heuristics
+  reason_location
+  reason_toolchain_conf
+  reason_toolchain_reason
+  reason_toolchain_ocaml
+  reason_toolchain
+  reason_config
+  reason_pprint_ast
+  reason_errors
+  reason_parser_def
+  reason_parser
+  reason_single_parser
+  reason_multi_parser
+  merlin_recovery
+  reason_recover_parser
+  reason_declarative_lexer
+  reason_lexer
+  reason_oprint
+  reason_parser_explain_raw
+  reason_parser_explain
+  reason_parser_recover)
+ (modules_without_implementation reason_parser_def)
+ (libraries
+  reason.ocaml-migrate-parsetree
+  menhirLib
+  reason.easy_format
+  ppxlib))
