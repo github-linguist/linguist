@@ -676,6 +676,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **mupad:** [ccreutzig/sublime-MuPAD](https://github.com/ccreutzig/sublime-MuPAD)
 - **nanorc:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **nesC:** [cdwilson/nesC.tmbundle](https://github.com/cdwilson/nesC.tmbundle)
+- **omnetpp-ned:** [omnetpp/omnetpp-textmate-ned](https://github.com/omnetpp/omnetpp-textmate-ned)
 - **ooc:** [nilium/ooc.tmbundle](https://github.com/nilium/ooc.tmbundle)
 - **q:** [komsit37/sublime-q](https://github.com/komsit37/sublime-q)
 - **reStructuredText:** [Lukasa/language-restructuredtext](https://github.com/Lukasa/language-restructuredtext)
