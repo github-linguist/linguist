@@ -172,6 +172,9 @@ class TestBlob < Minitest::Test
     # Deno generated deno.lock file
     assert sample_blob_memory("JSON/filenames/deno.lock").generated?
 
+    # pixi lockfile
+    assert sample_blob_memory("YAML/filenames/pixi.lock").generated?
+
     # pnpm lockfile
     assert fixture_blob_memory("YAML/pnpm-lock.yaml").generated?
 
