@@ -1,0 +1,43 @@
+class WordFrequencyAnalyzer
+  attr_reader :text
+
+  def initialize(text)
+    @text = text
+  end
+
+  def word_count
+    words = @text.downcase.scan(/\w+/)
+    frequency = Hash.new(0)
+
+    words.each do |word|
+      frequency[word] += 1
+    end
+
+    frequency
+  end
+
+  def top_n_words(n)
+    word_count.sort_by { |word, count| -count }.first(n).to_h
+  end
+
+  def print_word_frequencies
+    word_count.each do |word, count|
+      puts "#{word}: #{count}"
+    end
+  end
+end
+
+# Example usage
+text_input = <<~TEXT
+  In the world of linguistics, the study of language is paramount.
+  Language is a system of communication that involves sounds, words, and grammar.
+  Linguists analyze language structure and meaning.
+TEXT
+
+analyzer = WordFrequencyAnalyzer.new(text_input)
+
+puts "Word Frequencies:"
+analyzer.print_word_frequencies
+
+puts "\nTop 3 Words:"
+puts analyzer.top_n_words(3)
