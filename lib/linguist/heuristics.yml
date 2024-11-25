@@ -786,10 +786,9 @@ disambiguations:
   - language: Scilab
 - extensions: ['.tsx']
   rules:
-  - language: TSX
-    pattern: '^\s*(import.+(from\s+|require\()[''"]react|\/\/\/\s*<reference\s)'
   - language: XML
     pattern: '(?i:^\s*<\?xml\s+version)'
+  - language: TSX
 - extensions: ['.txt']
   rules:
     # The following RegExp is simply a collapsed and simplified form of the
