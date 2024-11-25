@@ -996,6 +996,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_tact_by_heuristics
+    assert_heuristics({
+      "Tact" => all_fixtures("Tact", "*.tact"),
+      "JSON" => all_fixtures("JSON", "*.tact"),
+    })
+  end
+
   def test_tag_by_heuristics
     assert_heuristics({
       "Java Server Pages" => Dir.glob("#{fixtures_path}/Generic/tag/Java Server Pages/*"),
