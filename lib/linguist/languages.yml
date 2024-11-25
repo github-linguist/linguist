@@ -1632,6 +1632,7 @@ Dockerfile:
   tm_scope: source.dockerfile
   extensions:
   - ".dockerfile"
+  - ".containerfile"
   filenames:
   - Containerfile
   - Dockerfile
@@ -3114,6 +3115,7 @@ Ignore List:
   - ".eleventyignore"
   - ".eslintignore"
   - ".gitignore"
+  - ".ignore"
   - ".markdownlintignore"
   - ".nodemonignore"
   - ".npmignore"
@@ -6523,6 +6525,11 @@ SRecode Template:
 SSH Config:
   type: data
   group: INI
+  aliases:
+  - sshconfig
+  - sshdconfig
+  - ssh_config
+  - sshd_config
   filenames:
   - ssh-config
   - ssh_config
@@ -7171,6 +7178,16 @@ TOML:
   codemirror_mode: toml
   codemirror_mime_type: text/x-toml
   language_id: 365
+TSPLIB data:
+  aliases:
+  - travelling salesman problem
+  - traveling salesman problem
+  type: data
+  extensions:
+  - ".tsp"
+  tm_scope: none
+  ace_mode: text
+  language_id: 89289301
 TSQL:
   type: programming
   color: "#e38c00"
@@ -7474,6 +7491,16 @@ TypeScript:
   codemirror_mode: javascript
   codemirror_mime_type: application/typescript
   language_id: 378
+TypeSpec:
+  type: programming
+  color: "#4A3665"
+  aliases:
+  - tsp
+  extensions:
+  - ".tsp"
+  tm_scope: source.tsp
+  ace_mode: text
+  language_id: 952272597
 Typst:
   type: programming
   color: "#239dad"
@@ -8263,6 +8290,7 @@ YAML:
   filenames:
   - ".clang-format"
   - ".clang-tidy"
+  - ".clangd"
   - ".gemrc"
   - CITATION.cff
   - glide.lock
@@ -8541,6 +8569,14 @@ nesC:
   ace_mode: text
   tm_scope: source.nesc
   language_id: 417
+omnetpp-ned:
+  type: programming
+  extensions:
+  - ".ned"
+  color: "#08607c"
+  tm_scope: source.ned
+  ace_mode: text
+  language_id: 924868392
 ooc:
   type: programming
   color: "#b0b77e"

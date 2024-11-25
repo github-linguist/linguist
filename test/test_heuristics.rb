@@ -1030,6 +1030,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_tsp_by_heuristics
+    assert_heuristics({
+      "TypeSpec" => all_fixtures("TypeSpec", "*.tsp"),
+      "TSPLIB data" => all_fixtures("TSPLIB data", "*.tsp")
+    })
+  end
+
   def test_tst_by_heuristics
     assert_heuristics({
       "GAP" => all_fixtures("GAP", "*.tst"),

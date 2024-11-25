@@ -777,6 +777,12 @@ disambiguations:
   - language: XML
     pattern: '<TS\b'
   - language: TypeScript
+- extensions: ['.tsp']
+  rules:
+  - language: TypeSpec
+    pattern: '^(import|using|namespace|interface|op|model|scalar|alias|union|enum)\s'
+  - language: TSPLIB data
+    pattern: '^(NAME|TYPE|DIMENSION|EDGE_WEIGHT_TYPE|EDGE_WEIGHT_FORMAT)\s*:'
 - extensions: ['.tst']
   rules:
   - language: GAP
@@ -785,10 +791,9 @@ disambiguations:
   - language: Scilab
 - extensions: ['.tsx']
   rules:
-  - language: TSX
-    pattern: '^\s*(import.+(from\s+|require\()[''"]react|\/\/\/\s*<reference\s)'
   - language: XML
     pattern: '(?i:^\s*<\?xml\s+version)'
+  - language: TSX
 - extensions: ['.txt']
   rules:
     # The following RegExp is simply a collapsed and simplified form of the
