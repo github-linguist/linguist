@@ -60,12 +60,16 @@ module Linguist
       generated_net_specflow_feature_file? ||
       composer_lock? ||
       cargo_lock? ||
+      cargo_orig? ||
+      deno_lock? ||
       flake_lock? ||
+      bazel_lock? ||
       node_modules? ||
       go_vendor? ||
       go_lock? ||
       poetry_lock? ||
       pdm_lock? ||
+      uv_lock? ||
       esy_lock? ||
       npm_shrinkwrap_or_package_lock? ||
       pnpm_lock? ||
@@ -420,11 +424,25 @@ module Linguist
       !!name.match(/pdm\.lock/)
     end
 
+    # Internal: Is the blob a generated uv.lock?
+    #
+    # Returns true or false.
+    def uv_lock?
+      !!name.match(/uv\.lock/)
+    end
+
     # Internal: Is the blob a generated esy lock file?
     #
     # Returns true or false.
     def esy_lock?
       !!name.match(/(^|\/)(\w+\.)?esy.lock$/)
+    end
+
+    # Internal: Is the blob a generated deno lockfile, which are not meant for humans in pull requests.
+    #
+    # Returns true or false.
+    def deno_lock?
+      !!name.match(/deno\.lock/)
     end
 
     # Internal: Is the blob a generated npm shrinkwrap or package lock file?
@@ -477,11 +495,25 @@ module Linguist
       !!name.match(/Cargo\.lock/)
     end
 
+    # Internal: Is the blob a generated Rust Cargo original file?
+    #
+    # Returns true or false.
+    def cargo_orig?
+      !!name.match(/Cargo\.toml\.orig/)
+    end
+
     # Internal: Is the blob a generated Nix flakes lock file?
     #
     # Returns true or false
     def flake_lock?
       !!name.match(/(^|\/)flake\.lock$/)
+    end
+
+    # Internal: Is the blob a Bazel generated bzlmod lockfile?
+    #
+    # Returns true or false
+    def bazel_lock?
+      !!name.match(/(^|\/)MODULE\.bazel\.lock$/)
     end
 
     # Is the blob a VCR Cassette file?
@@ -681,14 +713,11 @@ module Linguist
 
     # Internal: Is this a generated Game Maker Studio (2) metadata file?
     #
-    # All Game Maker Studio 2 generated files will be JSON, .yy or .yyp, and have
-    # a part that looks like "modelName: GMname" on the 3rd line
-    #
     # Return true or false
     def generated_gamemakerstudio?
       return false unless ['.yy', '.yyp'].include? extname
       return false unless lines.count > 3
-      return lines[2].match(/\"modelName\"\:\s*\"GM/) ||
+      return lines.first(3).join('').match?(/^\s*[\{\[]/) ||
              lines[0] =~ /^\d\.\d\.\d.+\|\{/
     end
 
