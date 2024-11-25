@@ -1,0 +1,29 @@
+comment License: program borrowed from S-PORT https://github.com/portablesimula/S-PORT;
+begin
+! klant 1
+beschrijving van een winkel
+copyright H.G.Sol;
+
+external class Demos;
+
+Demos begin
+    Entity class Klant;
+    begin
+        Bediendes.Acquire(1);
+        Hold(5);
+        Bediendes.Release(1);
+        Kassieres.Acquire(1);
+        Hold(2);
+        Kassieres.Release(1);
+    end;
+    ref(Res) Bediendes,Kassieres;
+    Bediendes:- new Res("bediendes",2);
+    Kassieres:- new Res("kassieres",1);
+    Trace;
+    new Klant("klant").Schedule(1);
+    new Klant("klant").Schedule(2);
+    new Klant("klant").Schedule(5);
+    new Klant("klant").Schedule(6);
+    Hold(40);
+end;
+end;

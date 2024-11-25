@@ -1,0 +1,91 @@
+comment License: program borrowed from S-PORT https://github.com/portablesimula/S-PORT;
+begin
+comment this program computes the "best" powers of ten re U1100;
+integer lower, upper, minlim, ee, pp;
+
+procedure outpower(exp_param,power_param);   name exp_param;
+integer exp_param,power_param;
+begin 
+      integer exp, power;
+      integer array digits(lower:upper);
+      integer max,min,digit;
+
+procedure divide(exp);  integer exp;
+begin integer i, rem;
+while exp>0 do begin
+   exp := exp-1;  rem := 0;
+   i := max+1;
+   while i>min do begin
+      i := i-1;
+      digit := digits(i)//2;
+      if digits(i)-2*digit>0 then digits(i-1):=digits(i-1)+10;
+      digits(i):=digit;
+   end;
+   if digits(min-1)>0 then begin
+      min := min-1;  digits(min) := 5;
+   end;
+   if digits(max)=0 then max:=max-1;
+end while;
+if max<>0 then begin exp_param:=exp_param+1; goto RETRY end;
+end divide;
+
+procedure output;
+begin integer i, j, first, last, carry, borrow;
+! the number to be output is in digits(min:max);
+   last := min;
+   first := max+1;
+   while first>min do begin
+      first := first-1;
+      carry:=borrow:=0;
+      i := last-1;
+      while i<first do begin
+         i := i+1;
+         digit:=digits(i)*2+carry;
+         if digit>10 then begin carry:=1; digit:=digit-10 end
+         else                   carry:=0;
+         digit:=digits(i-1)-digit-borrow;
+         if digit<0 then begin borrow:=1; digit:=digit+10 end
+         else                  borrow:=0;
+         digits(i-1):=digit;
+      end;
+      digits(first) := digits(first)-borrow-carry;
+      if digits(last)<>0 then last:=last-1;
+   end first;
+   if digits(0)<4 then begin exp_param:=exp_param-1; goto RETRY end;
+   if digits(-20)=7
+   then begin
+    outint(exp_param,4); outint(power_param,4); outchar(':');
+    for i:= -20 step -1 until  -22 do outchar(char(rank('0')+digits(i)));
+    outimage;
+    end
+   else if digits(-20)=0
+   then begin
+    outint(exp_param,4); outint(power_param,4); outchar(':');
+    for i:= -20 step -1 until  -22 do outchar(char(rank('0')+digits(i)));
+    outimage;
+   end if;
+end output;
+
+RETRY:  ! here when the exponent has been corrected;
+   exp := exp_param;  power := power_param;
+   max:= power+1;  !one sign. digit only;
+   min:= max;      !one sign. digit only;
+   digits(max):=1;
+   divide(exp);
+   output;
+end outpower;
+
+!outtext("51634306575354226427"); ! outimage;
+!outpower(665,200);
+!outpower(608,183);  ! 75 - denne er best;
+!outtext("44446551131230337166"); ! outimage;
+!outpower(326,098); ! 74 - denne er best;
+!outtext("42154166127714446321");  outimage;
+!outpower(167,050); ! 76 - denne er best;
+
+ee := 1026;  pp := 308;
+while pp>0 do
+begin  upper := pp; lower := -3.4*upper;
+       ee := ee-3; pp := pp-1; outpower(ee,pp) end;
+
+end;

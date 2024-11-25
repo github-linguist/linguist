@@ -1,0 +1,642 @@
+comment License: program borrowed from S-PORT https://github.com/portablesimula/S-PORT;
+begin Boolean Listing;                  ! Output Listing Indicator ;
+      Ref(InByteFile) Inpt;             ! NRF-Input File ;
+      Ref(OutFile) Oupt;                ! Created Output File ;
+
+      Text array Names(1:100);          ! Global Name Table ;
+      Integer nnam;                     ! Table length ;
+
+      Ref(SEGDEF) array Seg(1:100);     ! Global Segment Table ;
+      Integer nseg;                     ! Table length ;
+
+      Ref(GRPDEF) array Grp(1:100);     ! Global Group Table ;
+      Integer ngrp;                     ! Table length ;
+
+      Ref(EXTDEF) array Ext(1:100);     ! Global External Table ;
+      Integer next;                     ! Table length ;
+
+      Ref(Thread) array ImpTarget(0:3); ! Implicit Target Table ;
+      Ref(Thread) array ImpFrame(0:3);  ! Implicit Frame  Table ;
+
+      Integer CurSeg;                   ! Current Segment Index ;
+      Integer CurOfst;                  ! Current Segment Offset ;
+
+      Integer Sequ;                     ! Input byte number ;
+      Integer Lng;                      ! Length of current record ;
+      Integer ChkSum;                   ! Check-sum of current record ;
+      Integer Start;                    ! Start byte number ;
+      Integer Count;                    ! Count byte number ;
+      Integer Code;                     ! Current Record Code ;
+
+      Class Thread(Code,Val); integer Code,Val;
+      begin   end;
+
+%page
+      Text Procedure Prompt(ms,meny); value ms,meny; text ms,meny;
+      begin text R; L: OutText(Cat(ms,": ")); BreakOutImage; inimage;
+            R:-SysIn.image.strip; R.SetPos(R.length);
+            if if R==notext then true else R.GetChar='?' then
+            begin OutText("Input Format: "); OutText(meny);
+                  OutImage; goto L;
+            end;  Prompt:-copy(R); SysIn.SetPos(SysIn.length+1);
+            OutText(R); OutImage;
+      end *** Prompt ***;
+
+      Procedure InputFile;
+      begin text F; S: F:-Prompt("Input File","Standard NORD File Format");
+            F:-Cat(F,":OBJ"); Inpt:-new InByteFile(F);
+            if not Inpt.Open then
+            begin OutImage; OutText("The File """); OutText(F);
+                  OutText(""" does not exist or is not accessible");
+                  OutImage; OutImage; goto S;
+            end;
+      end;
+
+      Procedure OutputFile;
+      begin text F; S: F:-Prompt("Output File","Standard NORD File Format");
+            if F="TERM" then Oupt:-SysOut else
+            begin F:-Cat(F,":SYMB"); Oupt:-new OutFile(F);
+                  if not Oupt.Open(Blanks(100)) then
+                  begin OutImage; OutText("The File """); OutText(F);
+                        OutText(""" does not exist or is not accessible");
+                        OutImage; OutImage; goto S;
+                  end;
+            end;
+      end;
+
+      Procedure ERROR(msg); value msg; text msg;
+      begin OutImage; OutText("Byte"); OutInt(Sequ,6);
+            OutText(":  ***ERROR***   "); OutText(msg); OutImage;
+      end;
+
+      Text Procedure Cat(t1,t2); value t1,t2; text t1,t2;
+      begin text t; Cat:-t:-Blanks(t1.length+t2.length);
+            t:=t1; t.Sub(t1.length+1,t2.length):=t2;
+      end *** Cat ***;
+
+%page
+
+      Integer Procedure InByte;
+      begin integer n; InByte:=n:=Inpt.InByte;
+            Lng:=Lng-1; Sequ:=Sequ+1;
+            ChkSum:=mod(ChkSum+n,256);
+      end;
+
+      Procedure OutByte(n); integer n; inspect Oupt do
+      begin integer a,b,c; a:=n//64;
+            b:=mod(n,64)//8; c:=mod(n,8);
+            OutChar(' '); OutInt(a,1); OutInt(b,1); OutInt(c,1);
+      end;
+
+      Procedure PrtInt(n); integer n;
+      begin if n<10           then Oupt.OutInt(n,1)
+       else if n<100          then Oupt.OutInt(n,2)
+       else if n<1000         then Oupt.OutInt(n,3)
+       else if n<10000        then Oupt.OutInt(n,4)
+       else if n<100000       then Oupt.OutInt(n,5)
+       else                        Oupt.OutInt(n,12)
+      end;
+
+      Procedure PrtNam(n); integer n;
+      begin if n>0 and n<=nnam then Oupt.OutText(Names(n))
+            else Oupt.OutText("????");
+      end;
+
+      Procedure PrtSeg(n); integer n;
+      begin Oupt.OutText("Seg"); PrtInt(n); Oupt.OutChar(':');
+            if n>0 and n<=nseg then PrtNam(Seg(n).SegmentNameIndex)
+            else Oupt.OutText("????");
+      end;
+
+      Procedure PrtGrp(n); integer n;
+      begin Oupt.OutText("Grp"); PrtInt(n); Oupt.OutChar(':');
+            if n>0 and n<=ngrp then PrtNam(Grp(n).GroupNameIndex)
+            else Oupt.OutText("????");
+      end;
+
+      Procedure PrtExt(n); integer n;
+      begin Oupt.OutText("Ext"); PrtInt(n); Oupt.OutChar(':');
+            if n>0 and n<=next then Oupt.OutText(Ext(n).ExternalName)
+            else Oupt.OutText("????");
+      end;
+
+      Procedure PrtIdent(Code,Val); integer Code,Val;
+      begin if Code=0 then PrtSeg(Val)
+       else if Code=1 then PrtGrp(Val)
+       else if Code=2 then PrtExt(Val)
+       else if Code=3 then begin Oupt.OutText("Abs:"); PrtInt(Val) end
+       else begin Oupt.OutText("????:"); PrtInt(Code);
+                  Oupt.OutChar(':'); PrtInt(Val);
+            end;
+      end;
+
+%page
+
+      Integer Procedure ScanByte(id); text id;
+      begin integer n; n:=InByte;
+            Oupt.OutChar(' '); Oupt.OutText(id); Oupt.OutChar(':');
+            OutByte(n); ScanByte:=n;
+      end;
+
+      Procedure ScanBytes(id,n); text id; integer n;
+      begin Oupt.OutImage; Oupt.SetPos(19); Oupt.OutText(id);
+            for n:=n-1 while n >= 0 do
+            begin if Oupt.Pos > 63 then
+                  begin Oupt.OutImage; Oupt.SetPos(24) end;
+                  OutByte(InByte);
+            end;
+      end;
+
+      Integer Procedure ScanIndex(id); text id;
+      begin integer n; n:=InByte;
+            Oupt.OutChar(' '); Oupt.OutText(id); Oupt.OutChar(':');
+            if n>127 then n:=(n-128)*256+InByte;
+            OutByte(n); ScanIndex:=n;
+      end;
+
+      Text Procedure ScanName(id); text id;
+      begin integer n; text t; character c; n:=InByte;
+            Oupt.OutChar(' '); Oupt.OutText(id); Oupt.OutChar(':');
+            ScanName:-t:-blanks(n);
+            for n:=n-1 while n>=0 do
+            begin c:=Char(InByte); OutChar(c); t.PutChar(c) end;
+      end;
+
+      Integer Procedure ScanWord(id); text id;
+      begin integer n; n:=InByte; n:=InByte*256+n;
+            Oupt.OutChar(' '); Oupt.OutText(id); Oupt.OutChar(':');
+            PrtInt(n); ScanWord:=n;
+      end;
+
+      Procedure ScanChk;
+      begin if Lng > 1 then ScanBytes("Tail:",Lng-1); InByte;
+            if ChkSum <> 0 then ERROR("Check-Sum Error");
+            ChkSum:=0;
+      end;
+%title ***    L o g i c a l    A d d r e s s    ***
+
+      Class LogicalAddr;
+      begin integer n,F,FRAME,T,P,TARGT,FDAT,TDAT,TDIS;
+            if Lng<2 then begin ERROR("LogicalAddr-1"); goto E end;
+            Oupt.OutImage; Oupt.SetPos(18);
+            n:=InByte; TARGT:=mod(n,4); n:=n//4;
+            P:=mod(n,2); n:=n//2; T:=mod(n,2); n:=n//2;
+            FRAME:=mod(n,8); F:=n//8;
+            Oupt.OutText(" ADDRESS<F:"); PrtInt(F);
+            Oupt.OutText(" FRAME:");  PrtInt(FRAME);
+            Oupt.OutText(" T:");      PrtInt(T);
+            Oupt.OutText(" P:");      PrtInt(P);
+            Oupt.OutText(" TARGT:");  PrtInt(TARGT);
+            if F=0 and FRAME<4 then
+            begin if Lng<2 then begin ERROR("LogicalAddr-2"); goto E end;
+                  if FRAME=0 then FDAT:=ScanIndex("SegmentIndex")
+             else if FRAME=1 then FDAT:=ScanIndex("GroupIndex")
+             else if FRAME=2 then FDAT:=ScanIndex("ExternalIndex")
+             else                 FDAT:=ScanWord("FrameNumber");
+            end;
+            if T=0 then
+            begin if Lng<2 then begin ERROR("LogicalAddr-3"); goto E end;
+                  TDAT:=ScanIndex("TargetDatum");
+            end;
+            if P=0 then
+            begin if Lng<3 then begin ERROR("LogicalAddr-4"); goto E end;
+                  TDIS:=ScanWord("TargetDisplacement");
+            end;
+      E:    Oupt.OutChar('>');
+      end;
+
+      Procedure PrtAddr(x); ref(LogicalAddr) x; inspect x do
+      begin ref(Thread) ThT,ThF;
+            if T=0 then PrtIdent(TARGT,TDAT)
+       else begin ThT:-ImpTarget(TARGT); PrtIdent(ThT.Code,ThT.Val) end;
+            if P=0 then begin Oupt.OutChar('+'); PrtInt(TDIS) end;
+            Oupt.OutText("(in ");
+            if F=1 then
+            begin ThF:-ImpFrame(FRAME); PrtIdent(ThF.Code,ThF.Val) end
+       else begin if FRAME<4 then PrtIdent(FRAME,FDAT)
+             else if FRAME=4 then PrtIdent(0,CurSeg)
+             else if FRAME=5 then
+                  begin if T=1 then PrtIdent(ThT.Code,ThT.Val)
+                        else PrtIdent(TARGT,TDAT);
+                  end
+             else if FRAME=6 then Oupt.OutText("none")
+             else Oupt.OutText("????");
+            end;
+            Oupt.OutChar(')');
+      end;
+%title ***************************
+
+      Procedure THEADR;
+      begin Lng:=ScanWord("THEADR=80H Lng");
+            ScanName("ModuleName");
+      end;
+
+      Procedure MODEND;
+      begin integer n,Mattr,L; ref(LogicalAddr) adr;
+            Lng:=ScanWord("MODEND=8AH Lng");
+            n:=InByte; Mattr:=n//64; L:=mod(n,2);
+            OutText(" ModuleType:"); PrtInt(Mattr);
+            OutText(" L:"); PrtInt(L);
+            if Mattr=1 or Mattr=3 then
+            begin !*** Start Address ***;
+                  if L=1 then
+                  begin adr:-new LogicalAddr;
+                        Oupt.OutImage; Oupt.SetPos(18);
+                        Oupt.OutText("Start Address: "); PrtAddr(adr);
+                  end
+             else begin if Lng<5 then begin ERROR("MODEND"); goto E end;
+                        ScanWord("FrameNumber");
+                        ScanWord("Offset");
+                  end;
+            end;
+      E:end;
+
+      Procedure LNAMES;
+      begin Lng:=ScanWord("LNAMES=96H Lng");
+            while Lng > 1 do
+            begin if Oupt.Pos > 60 then
+                  begin Oupt.OutImage; Oupt.SetPos(18) end;
+                  nnam:=nnam+1; Names(nnam):-ScanName("Name");
+            end;
+      end;
+%page
+
+      Class SEGDEF;
+      begin integer n,A,C,B,P;
+            integer FrameNumber,Offset,LTL,MaxLng,SegLng;
+            integer SegmentNameIndex,ClassNameIndex,OverlayNameIndex;
+            Lng:=ScanWord("SEGDEF=98H Lng");
+            n:=InByte; P:=mod(n,2); n:=n//2;
+            B:=mod(n,2); n:=n//2; c:=mod(n,8); A:=n//8;
+            OutText(" A:"); Prtint(A); OutText(" C:"); Prtint(C);
+            OutText(" B:"); Prtint(B); OutText(" P:"); Prtint(P);
+            if A=0 or A=5 then
+            begin Oupt.OutImage; Oupt.SetPos(18);
+                  FrameNumber:=ScanWord("FrameNumber");
+                  Offset:=ScanByte("Offset");
+            end
+       else if A=6 then
+            begin Oupt.OutImage; Oupt.SetPos(18);
+                  LTL:=ScanByte("LTL");
+                  MaxLng:=ScanWord("MaxSegmentLength");
+                  Offset:=ScanWord("GroupOffset");
+            end;
+            SegLng:=ScanWord("SegmentLength");
+            if Lng>1 then
+            begin Oupt.OutImage; Oupt.SetPos(18);
+                  SegmentNameIndex:=ScanIndex("SegmentNameIndex");
+                  if Lng>1 then ClassNameIndex:=ScanIndex("ClassNameIndex");
+                  if Lng>1 then OverlayNameIndex:=ScanIndex("OverlayNameIndex");
+            end;
+            nseg:=nseg+1; Seg(nseg):-this SEGDEF;
+      end;
+
+      Class GRPDEF;
+      begin integer GroupNameIndex;
+            Lng:=ScanWord("GRPDEF=9AH Lng");
+            GroupNameIndex:=ScanIndex("GroupNameIndex");
+
+            ! ...   MERE SENERE ... ;
+            ! ...   MERE SENERE ... ;
+
+            ngrp:=ngrp+1; Grp(ngrp):-this GRPDEF;
+      end;
+
+      Class EXTDEF;
+      begin text ExternalName; integer TypeIndex;
+            Lng:=ScanWord("EXTDEF=8CH Lng");
+            while Lng > 2 do
+            begin ExternalName:-ScanName("ExternalName");
+                  TypeIndex:=ScanIndex("TypeIndex");
+            end;
+            next:=next+1; Ext(next):-this EXTDEF;
+      end;
+
+      Procedure PUBDEF;
+      begin integer grp,seg; Lng:=ScanWord("PUBDEF=90H Lng");
+            grp:=ScanIndex("GroupIndex");
+            seg:=ScanIndex("SegmentIndex");
+            if seg=0 then ScanWord("FrameNumber");
+            while Lng > 2 do
+            begin Oupt.OutImage; Oupt.SetPos(18);
+                  ScanName("PublicName");
+                  ScanWord("PublicOffset");
+                  ScanIndex("TypeIndex");
+            end;
+      end;
+%page
+
+      Procedure LIDATA;
+      begin
+            Procedure ScanBlock;
+            begin integer rep,blk,n;
+                  Oupt.OutImage; Oupt.SetPos(18);
+                  rep:=ScanWord("RepeatCount");
+                  blk:=ScanWord("BlockCount");
+                  if blk = 0 then
+                  begin if Lng < 2 then
+                        begin ERROR("ScanBlock-1"); goto F end;
+                        n:=InByte;
+                        if n >= Lng then
+                        begin ERROR("ScanBlock-2"); n:=Lng-1 end;
+                        ScanBytes("Data:",n);
+                  end
+             else for blk:=blk-1 while blk >= 0 do ScanBlock;
+            end;
+
+            Lng:=ScanWord("LIDATA=A2H Lng");
+            CurSeg:=ScanIndex("SegmentIndex");
+            CurOfst:=ScanWord("IteratedDataOffset");
+            while Lng > 2 do ScanBlock;
+      F:end;
+
+      Procedure LEDATA;
+      begin Lng:=ScanWord("LEDATA=A0H Lng");
+            CurSeg:=ScanIndex("SegmentIndex");
+            CurOfst:=ScanWord("DataOffset");
+            ScanBytes("Data:",Lng-1);
+      end;
+%title ***    F  I  X  U  P  P    ***
+      Procedure FIXUPP;
+      begin integer n; Lng:=ScanWord("FIXUPP=9CH Lng");
+            while Lng > 1 do
+            begin n:=inbyte; Oupt.OutImage; Oupt.SetPos(18);
+                  if n < 128 then
+                  begin integer D,Z,METHOD,THRED,Val;         !*** THREAD ***;
+                        THRED:=mod(n,4); n:=n//4;
+                        METHOD:=mod(n,8); n:=n//8;
+                        Z:=mod(n,2); D:=n//2;
+                        Oupt.OutText(" THREAD D:");  PrtInt(D);
+                        Oupt.OutText(" Z:");         PrtInt(Z);
+                        Oupt.OutText(" METHOD:");    PrtInt(METHOD);
+                        Oupt.OutText(" THRED:");     PrtInt(THRED);
+                        if D*METHOD < 4 then
+                        begin if Lng < 2 then
+                              begin ERROR("THREAD-1"); goto E end;
+                              if METHOD=0 then Val:=ScanIndex("SegmentIndex")
+                         else if METHOD=1 then Val:=ScanIndex("GroupIndex")
+                         else if METHOD=2 then Val:=ScanIndex("ExternalIndex")
+                         else begin if Lng < 3 then
+                                    begin ERROR("THREAD-2"); goto E end;
+                                    Val:=ScanWord("FrameNumber");
+                              end;
+                        end;
+                        if D=1 then ImpFrame(THRED):-new Thread(METHOD,Val)
+                               else ImpTarget(THRED):-new Thread(METHOD,Val);
+                  end
+             else begin integer M,S,LOC,OFST;                 !*** FIXUPP ***;
+                        ref(LogicalAddr) adr;
+                        if Lng<2 then begin ERROR("FIXUPP"); goto E end;
+                        OFST:=mod(n,4)*256 + InByte; n:=n//4;
+                        LOC:=mod(n,8); n:=n//8;
+                        S:=mod(n,2); n:=n//2; M:=mod(n,2);
+                        Oupt.OutText(" FIXUPP M:");  PrtInt(M);
+                        Oupt.OutText(" S:");         PrtInt(S);
+                        Oupt.OutText(" LOC:");       PrtInt(LOC);
+                        Oupt.OutText(" OFFSET:");    PrtInt(OFST);
+                        adr:-new LogicalAddr;
+                        Oupt.OutImage; Oupt.SetPos(18);
+                        if LOC=0 then Oupt.OutText("LowByte(")
+                   else if LOC=1 then Oupt.OutText("Offset(")
+                   else if LOC=2 then Oupt.OutText("Base(")
+                   else if LOC=3 then Oupt.OutText("Pointer(")
+                   else if LOC=4 then Oupt.OutText("HighByte(")
+                   else               Oupt.OutText("????(");
+                        PrtSeg(CurSeg); Oupt.OutChar('+');
+                        PrtInt(CurOfst+OFST); Oupt.OutText(")  <= ");
+                        if M=0 then Oupt.OutText("Self")
+                               else Oupt.OutText("Segm");
+                        Oupt.OutText("Rel <=  "); PrtAddr(adr);
+                  end;
+            end;
+      E:end;
+%title
+
+      Procedure COMENT;
+      begin integer n,NP,NL,ZZ,CLS;
+            Lng:=ScanWord("COMENT=88H Lng");
+            n:=InByte; ZZ:=mod(n,64); n:=n//64;
+            NL:=mod(n,2); NP:=n//2; CLS:=InByte;
+            OutText(" NP:"); PrtInt(NP);
+            OutText(" NL:"); PrtInt(NL);
+            OutText(" ZZ:"); PrtInt(ZZ);
+            OutText(" CLASS:"); PrtInt(CLS);
+      end;
+
+      Procedure TYPDEF;
+      begin Lng:=ScanWord("TYPDEF=8EH Lng");
+            ScanName("Link86Name");
+
+            ! ...   MERE SENERE ... ;
+            ! ...   MERE SENERE ... ;
+
+      end;
+
+      Procedure RHEADR;
+      begin Lng:=ScanWord("RHEADR=6EH Lng");
+
+            ! ...   MERE SENERE ... ;
+            ! ...   MERE SENERE ... ;
+
+      end;
+
+      Procedure REGINT;
+      begin Lng:=ScanWord("REGINT=70H Lng");
+
+            ! ...   MERE SENERE ... ;
+            ! ...   MERE SENERE ... ;
+
+      end;
+
+      Procedure REDATA;
+      begin Lng:=ScanWord("REDATA=72H Lng");
+
+            ! ...   MERE SENERE ... ;
+            ! ...   MERE SENERE ... ;
+
+      end;
+
+      Procedure RIDATA;
+      begin Lng:=ScanWord("RIDATA=74H Lng");
+
+            ! ...   MERE SENERE ... ;
+            ! ...   MERE SENERE ... ;
+
+      end;
+
+      Procedure OVLDEF;
+      begin Lng:=ScanWord("OVLDEF=76H Lng");
+
+            ! ...   MERE SENERE ... ;
+            ! ...   MERE SENERE ... ;
+
+      end;
+
+      Procedure ENDREC;
+      begin Lng:=ScanWord("ENDREC=78H Lng");
+
+            ! ...   MERE SENERE ... ;
+            ! ...   MERE SENERE ... ;
+
+      end;
+
+      Procedure BLKDEF;
+      begin Lng:=ScanWord("BLKDEF=7AH Lng");
+
+            ! ...   MERE SENERE ... ;
+            ! ...   MERE SENERE ... ;
+
+      end;
+
+      Procedure BLKEND;
+      begin Lng:=ScanWord("BLKEND=7CH Lng");
+
+            ! ...   MERE SENERE ... ;
+            ! ...   MERE SENERE ... ;
+
+      end;
+
+      Procedure DEBSYM;
+      begin Lng:=ScanWord("DEBSYM=7EH Lng");
+
+            ! ...   MERE SENERE ... ;
+            ! ...   MERE SENERE ... ;
+
+      end;
+
+      Procedure LHEADR;
+      begin Lng:=ScanWord("LHEADR=82H Lng");
+
+            ! ...   MERE SENERE ... ;
+            ! ...   MERE SENERE ... ;
+
+      end;
+
+      Procedure PEDATA;
+      begin Lng:=ScanWord("PEDATA=84H Lng");
+
+            ! ...   MERE SENERE ... ;
+            ! ...   MERE SENERE ... ;
+
+      end;
+
+      Procedure PIDATA;
+      begin Lng:=ScanWord("PIDATA=86H Lng");
+
+            ! ...   MERE SENERE ... ;
+            ! ...   MERE SENERE ... ;
+
+      end;
+
+      Procedure LOCSYM;
+      begin Lng:=ScanWord("LOCSYM=92H Lng");
+
+            ! ...   MERE SENERE ... ;
+            ! ...   MERE SENERE ... ;
+
+      end;
+
+      Procedure LINNUM;
+      begin Lng:=ScanWord("LINNUM=94H Lng");
+
+            ! ...   MERE SENERE ... ;
+            ! ...   MERE SENERE ... ;
+
+      end;
+
+      Procedure LIBHED;
+      begin Lng:=ScanWord("LIBHED=A4H Lng");
+
+            ! ...   MERE SENERE ... ;
+            ! ...   MERE SENERE ... ;
+
+      end;
+
+      Procedure LIBNAM;
+      begin Lng:=ScanWord("LIBNAM=A6H Lng");
+
+            ! ...   MERE SENERE ... ;
+            ! ...   MERE SENERE ... ;
+
+      end;
+
+      Procedure LIBLOC;
+      begin Lng:=ScanWord("LIBLOC=A8H Lng");
+
+            ! ...   MERE SENERE ... ;
+            ! ...   MERE SENERE ... ;
+
+      end;
+
+      Procedure LIBDIC;
+      begin Lng:=ScanWord("LIBDIC=AAH Lng");
+
+            ! ...   MERE SENERE ... ;
+            ! ...   MERE SENERE ... ;
+
+      end;
+%title ***    M O N I T O R    ***
+
+      OutText("OBJECT CODE ANALYZER - 8086/80286");
+      OutImage; OutImage; InputFile; OutputFile;
+      Start:=Prompt("Start Byte","0,1, ...").GetInt;
+      Count:=Prompt("Item Count","1,2, ...").GetInt;
+
+NESTE:
+      if Listing then Oupt.OutImage else
+      begin Oupt.SetPos(1); Oupt.image:=notext end;
+
+      Code:=InByte; if Inpt.EndFile then goto FERDIG;
+      if Listing then
+      begin Count:=Count-1;
+            if Count < 1 then
+            begin Count:=Prompt("Item Count","0,1,2, ...").GetInt;
+                  if Count <= 0 then goto FERDIG;
+            end;
+      end else Listing := Sequ >= Start;
+      Oupt.OutInt(Sequ,4); Oupt.OutText(": ");
+
+      if Code=110 then RHEADR
+ else if Code=112 then REGINT
+ else if Code=114 then REDATA
+ else if Code=116 then RIDATA
+ else if Code=118 then OVLDEF
+ else if Code=120 then ENDREC
+ else if Code=122 then BLKDEF
+ else if Code=124 then BLKEND
+ else if Code=126 then DEBSYM
+ else if Code=128 then THEADR
+ else if Code=130 then LHEADR
+ else if Code=132 then PEDATA
+ else if Code=134 then PIDATA
+ else if Code=136 then COMENT
+ else if Code=138 then MODEND
+ else if Code=140 then new EXTDEF
+ else if Code=142 then TYPDEF
+ else if Code=144 then PUBDEF
+ else if Code=146 then LOCSYM
+ else if Code=148 then LINNUM
+ else if Code=150 then LNAMES
+ else if Code=152 then new SEGDEF
+ else if Code=154 then new GRPDEF
+ else if Code=156 then FIXUPP
+
+ else if Code=160 then LEDATA
+ else if Code=162 then LIDATA
+ else if Code=164 then LIBHED
+ else if Code=166 then LIBNAM
+ else if Code=168 then LIBLOC
+ else if Code=170 then LIBDIC
+ else begin OutText("**RecType: "); PrtInt(Code);
+            Lng:=ScanWord("Lng");
+      end;
+      ScanChk; goto NESTE;
+
+FERDIG:
+
+      if Oupt =/= SysOut then Oupt.Close;
+      Inpt.Close;
+      OutImage; OutImage;
+      OutText("END  --  Input Bytes"); OutInt(Sequ-1,6);
+      OutImage; OutImage;
+end;
