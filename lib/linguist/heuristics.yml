@@ -91,9 +91,15 @@ disambiguations:
   - language: B4X
     pattern: '\A\W{0,3}(?:.*(?:\r?\n|\r)){0,9}B4(?:J|A|R|i)=true'
   - language: FreeBASIC
-    pattern: '^[ \t]*#(?i)(?:define|endif|endmacro|ifn?def|include|lang|macro)(?:$|\s)'
+    named_pattern: freebasic
+  - language: FreeBASIC
+    and:
+    - pattern: '(?i)^[ \t]*return '
+    - negative_pattern: '(?i)[ \t]*gosub '
   - language: BASIC
     pattern: '\A\s*\d'
+  - language: QuickBASIC
+    named_pattern: quickbasic
   - language: VBA
     named_pattern: vba
   - language: Visual Basic 6.0
@@ -119,7 +125,11 @@ disambiguations:
 - extensions: ['.bi']
   rules:
   - language: FreeBASIC
-    pattern: '^[ \t]*#(?i)(?:define|endif|endmacro|ifn?def|if|include|lang|macro)(?:$|\s)'
+    named_pattern: freebasic
+  - language: FreeBASIC
+    and:
+    - pattern: '(?i)^[ \t]*return '
+    - negative_pattern: '(?i)[ \t]*gosub '
 - extensions: ['.bs']
   rules:
   - language: Bikeshed
@@ -922,6 +932,10 @@ named_patterns:
   - '^\s*(?:public\s+)?include\s'
   - '^\s*(?:(?:public|export|global)\s+)?(?:atom|constant|enum|function|integer|object|procedure|sequence|type)\s'
   fortran: '^(?i:[c*][^abd-z]|      (subroutine|program|end|data)\s|\s*!)'
+  freebasic:
+  - '(?i)^[ \t]*#(?:define|endif|endmacro|ifn?def|include|lang|macro|pragma)(?:$|\s)'
+  - '(?i)^[ \t]*dim( shared)? [a-z_][a-z0-9_]* as [a-z_][a-z0-9_]* ptr'
+  - '(?i)^[ \t]*dim( shared)? as [a-z_][a-z0-9_]* [a-z_][a-z0-9_]*'
   gsc:
   - '^\s*#\s*(?:using|insert|include|define|namespace)[ \t]+\w'
   - '^\s*(?>(?:autoexec|private)\s+){0,2}function\s+(?>(?:autoexec|private)\s+){0,2}\w+\s*\('
@@ -949,6 +963,24 @@ named_patterns:
   - '^\s*(?:\*|(?:our\s*)?@)EXPORT\s*='
   - '^\s*package\s+[^\W\d]\w*(?:::\w+)*\s*(?:[;{]|\sv?\d)'
   - '[\s$][^\W\d]\w*(?::\w+)*->[a-zA-Z_\[({]'
+  quickbasic:
+  # Uppercase keywords are a good indicator of QuickBASIC (if no FreeBASIC syntax is detected)
+  - '^[ ]*(CONST|DIM|REDIM|DEFINT|PRINT|DECLARE (SUB|FUNCTION)|FUNCTION|SUB) '
+  # Preprocessor statement to set the compiler dialect in QuickBASIC ($lang) and FreeBASIC (#lang)
+  - '(#|$)lang:?\s*"?qb"?'
+  # Other QuickBASIC-specific patterns
+  - '(?i)''\$INCLUDE:'
+  - '(?i)^[ ]*CLS[ ]*(''|:|\r|\n)'
+  - '(?i)^[ ]*OPTION _EXPLICIT'
+  - '(?i)^[ ]*DIM SHARED '
+  - '(?i)^[ ]*PRINT "'
+  - '(?i) As _(Byte|Offset|MEM)'
+  - '(?i)^[ ]*_(DISPLAY|DEST|CONSOLE|SOURCE|FREEIMAGE|PALETTECOLOR|PRINTSTRING|LOADFONT|PUTIMAGE)'
+  - '(?i)^[ ]*_(TITLE|PLAYMOD) "'
+  - '(?i)^[ ]*_(LIMIT|SCREEN|DELAY) \.?\d+'
+  - '(?i)\b_(MOUSEBUTTON|NEWIMAGE|KEYDOWN|WIDTH|HEIGHT)\('
+  - '(?i)^[ ]*\$(CONSOLE|CHECKING):'
+  - '(?i)^[ ]*\$(FULLSCREEN|RESIZE|STATIC|DYNAMIC|NOPREFIX|SCREENSHOW|SCREENHIDE|EXEICON)\b'
   raku: '^\s*(?:use\s+v6\b|\bmodule\b|\b(?:my\s+)?class\b)'
   vb-class: '^[ ]*VERSION [0-9]\.[0-9] CLASS'
   vb-form: '^[ ]*VERSION [0-9]\.[0-9]{2}'
