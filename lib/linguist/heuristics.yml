@@ -101,9 +101,7 @@ disambiguations:
   - language: QuickBASIC
     named_pattern: quickbasic
   - language: VBA
-    and:
-    - named_pattern: vb-module
-    - named_pattern: vba
+    named_pattern: vba
   - language: Visual Basic 6.0
     named_pattern: vb-module
 - extensions: ['.bb']
@@ -763,6 +761,11 @@ disambiguations:
     pattern: '^\s*(?:use\s+v6\b|\bmodule\b|\bmy\s+class\b)'
   - language: Turing
     pattern: '^\s*%[ \t]+|^\s*var\s+\w+(\s*:\s*\w+)?\s*:=\s*\w+'
+- extensions: ['.tact']
+  rules:
+  - language: JSON
+    pattern: '\A\s*\{\"'
+  - language: Tact
 - extensions: ['.tag']
   rules:
   - language: Java Server Pages
@@ -782,6 +785,12 @@ disambiguations:
   - language: XML
     pattern: '<TS\b'
   - language: TypeScript
+- extensions: ['.tsp']
+  rules:
+  - language: TypeSpec
+    pattern: '^(import|using|namespace|interface|op|model|scalar|alias|union|enum)\s'
+  - language: TSPLIB data
+    pattern: '^(NAME|TYPE|DIMENSION|EDGE_WEIGHT_TYPE|EDGE_WEIGHT_FORMAT)\s*:'
 - extensions: ['.tst']
   rules:
   - language: GAP
@@ -790,10 +799,9 @@ disambiguations:
   - language: Scilab
 - extensions: ['.tsx']
   rules:
-  - language: TSX
-    pattern: '^\s*(import.+(from\s+|require\()[''"]react|\/\/\/\s*<reference\s)'
   - language: XML
     pattern: '(?i:^\s*<\?xml\s+version)'
+  - language: TSX
 - extensions: ['.txt']
   rules:
     # The following RegExp is simply a collapsed and simplified form of the
@@ -984,12 +992,12 @@ named_patterns:
   - '^[ ]*#If Win64\b'
   - '^[ ]*(?:Dim|Const) [0-9a-zA-Z_]*[ ]*As Long(?:Ptr|Long)\b'
   # Top module declarations unique to VBA
-  - '^[ ]*Option (?:Private Module|Compare (?:Database|Text|Binary))\b'
+  - '^[ ]*Option (?:Private Module|Compare Database)\b'
   # General VBA libraries and objects
   - '(?: |\()(?:Access|Excel|Outlook|PowerPoint|Visio|Word|VBIDE)\.\w'
   - '\b(?:(?:Active)?VBProjects?|VBComponents?|Application\.(?:VBE|ScreenUpdating))\b'
   # AutoCAD, Outlook, PowerPoint and Word objects
-  - '\b(?:ThisDrawing|AcadObject|Active(?:Explorer|Inspector|Window\.Presentation|Presentation|Document)|Selection\.(?:Find|Paragraphs))\b'
+  - '\b(?:ThisDrawing|AcadObject|Active(?:Explorer|Inspector|Window\.Presentation|Presentation|Document)|Selection\.(?:Document|Find|Paragraphs|Range))\b'
   # Excel objects
   - '\b(?:(?:This|Active)?Workbooks?|Worksheets?|Active(?:Sheet|Chart|Cell)|WorksheetFunction)\b'
   - '\b(?:Range\(".*|Cells\([0-9a-zA-Z_]*, (?:[0-9a-zA-Z_]*|"[a-zA-Z]{1,3}"))\)'

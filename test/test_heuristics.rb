@@ -997,6 +997,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_tact_by_heuristics
+    assert_heuristics({
+      "Tact" => all_fixtures("Tact", "*.tact"),
+      "JSON" => all_fixtures("JSON", "*.tact"),
+    })
+  end
+
   def test_tag_by_heuristics
     assert_heuristics({
       "Java Server Pages" => Dir.glob("#{fixtures_path}/Generic/tag/Java Server Pages/*"),
@@ -1021,6 +1028,13 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "TypeScript" => all_fixtures("TypeScript", "*.ts"),
       "XML" => all_fixtures("XML", "*.ts")
+    })
+  end
+
+  def test_tsp_by_heuristics
+    assert_heuristics({
+      "TypeSpec" => all_fixtures("TypeSpec", "*.tsp"),
+      "TSPLIB data" => all_fixtures("TSPLIB data", "*.tsp")
     })
   end
 
