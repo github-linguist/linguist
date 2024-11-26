@@ -722,6 +722,12 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_msg_by_heuristics
+    assert_heuristics({
+      "omnetpp-msg" => all_fixtures("omnetpp-msg", "*.msg"),
+    })
+  end
+
   def test_n_by_heuristics
     assert_heuristics({
       "Roff" => all_fixtures("Roff", "*.n"),
