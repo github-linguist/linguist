@@ -233,6 +233,7 @@ vendor/grammars/assembly:
 vendor/grammars/astro:
 - source.astro
 - text.html.markdown.astro
+- text.mdx.astro.codeblock
 vendor/grammars/atom-editorconfig:
 - source.editorconfig
 - text.plain
@@ -240,9 +241,6 @@ vendor/grammars/atom-firestore-grammar:
 - source.firestore
 vendor/grammars/atom-fstar:
 - source.fstar
-vendor/grammars/atom-language-1c-bsl:
-- source.bsl
-- source.sdbl
 vendor/grammars/atom-language-clean:
 - source.clean
 - text.restructuredtext.clean
@@ -317,9 +315,9 @@ vendor/grammars/circom-highlighting-vscode:
 - source.circom
 vendor/grammars/clarity.tmbundle:
 - source.clar
-vendor/grammars/cmake.tmbundle:
-- source.cache.cmake
-- source.cmake
+vendor/grammars/code-peggy-language:
+- inline.peggy
+- source.peggy
 vendor/grammars/common-lisp-tmlanguage:
 - markdown.commonlisp.codeblock
 - source.commonlisp
@@ -789,6 +787,13 @@ vendor/grammars/language-ti-basic:
 - source.8xp
 vendor/grammars/language-toc-wow:
 - source.toc
+vendor/grammars/language-tools:
+- markdown.vue.codeblock
+- mdx.vue.codeblock
+- source.vue
+- vue.directives
+- vue.interpolations
+- vue.sfc.style.variable.injection
 vendor/grammars/language-tsql:
 - source.tsql
 vendor/grammars/language-turing:
@@ -861,6 +866,8 @@ vendor/grammars/mojo-syntax:
 - source.mojo
 vendor/grammars/monkey:
 - source.monkey
+vendor/grammars/moonbit-tmLanguage:
+- source.moonbit
 vendor/grammars/moonscript-tmbundle:
 - source.moonscript
 vendor/grammars/nemerle.tmbundle:
@@ -885,6 +892,8 @@ vendor/grammars/ocaml.tmbundle:
 - source.ocamlyacc
 vendor/grammars/omnetpp-textmate-msg:
 - source.msg
+vendor/grammars/omnetpp-textmate-ned:
+- source.ned
 vendor/grammars/ooc.tmbundle:
 - source.ooc
 vendor/grammars/opa.tmbundle:
@@ -1082,6 +1091,8 @@ vendor/grammars/syntax:
 - source.sentinel
 vendor/grammars/syntax-mcfunction:
 - source.mcfunction
+vendor/grammars/tact-sublime:
+- source.tact
 vendor/grammars/tcl.tmbundle:
 - source.tcl
 - text.html.tcl
@@ -1103,6 +1114,8 @@ vendor/grammars/toml.tmbundle:
 vendor/grammars/turtle.tmbundle:
 - source.sparql
 - source.turtle
+vendor/grammars/typespec:
+- source.tsp
 vendor/grammars/typst-grammar:
 - source.typst
 vendor/grammars/verilog.tmbundle:
@@ -1118,6 +1131,11 @@ vendor/grammars/vsc-ember-syntax:
 - text.html.ember-handlebars
 vendor/grammars/vsc-fennel:
 - source.fnl
+vendor/grammars/vsc-language-1c-bsl:
+- source.bsl
+- source.sdbl
+vendor/grammars/vscode:
+- source.QB64
 vendor/grammars/vscode-TalonScript:
 - markdown.talon.codeblock
 - source.talon
@@ -1134,6 +1152,9 @@ vendor/grammars/vscode-caddyfile:
 vendor/grammars/vscode-cadence:
 - markdown.cadence.codeblock
 - source.cadence
+vendor/grammars/vscode-cmake-tools:
+- source.cmake
+- source.cmakecache
 vendor/grammars/vscode-codeql:
 - source.ql
 vendor/grammars/vscode-cue:
@@ -1142,6 +1163,8 @@ vendor/grammars/vscode-curry:
 - markdown.curry.codeblock
 - source.curry
 - source.icurry
+vendor/grammars/vscode-dune:
+- source.dune
 vendor/grammars/vscode-euphoria:
 - source.euphoria
 vendor/grammars/vscode-fluent:
@@ -1188,6 +1211,9 @@ vendor/grammars/vscode-lean4:
 - markdown.lean4.codeblock
 - source.lean4
 - source.lean4.markdown
+vendor/grammars/vscode-livecodescript:
+- source.lcb
+- source.livecodescript
 vendor/grammars/vscode-monkey-c:
 - source.mc
 vendor/grammars/vscode-motoko:
@@ -1195,7 +1221,7 @@ vendor/grammars/vscode-motoko:
 - source.mo
 vendor/grammars/vscode-move-syntax:
 - markdown.move.codeblock
-- mdx.LANGUAGE.codeblock
+- mdx.move.codeblock
 - source.move
 vendor/grammars/vscode-noir:
 - source.nr
@@ -1270,8 +1296,6 @@ vendor/grammars/vscode_cobol:
 - source.utreport
 vendor/grammars/vscode_mikrotik_routeros_script:
 - source.rsc
-vendor/grammars/vue-syntax-highlight:
-- text.html.vue
 vendor/grammars/wgsl-analyzer:
 - source.wgsl
 vendor/grammars/witcherscript-grammar:

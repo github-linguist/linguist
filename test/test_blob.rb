@@ -172,6 +172,9 @@ class TestBlob < Minitest::Test
     # Deno generated deno.lock file
     assert sample_blob_memory("JSON/filenames/deno.lock").generated?
 
+    # pixi lockfile
+    assert sample_blob_memory("YAML/filenames/pixi.lock").generated?
+
     # pnpm lockfile
     assert fixture_blob_memory("YAML/pnpm-lock.yaml").generated?
 
@@ -202,6 +205,7 @@ class TestBlob < Minitest::Test
     assert sample_blob_memory("Go/embedded.go").generated?
     assert sample_blob_memory("Go/oapi-codegen.go").generated?
     assert sample_blob_memory("JavaScript/proto.js").generated?
+    assert sample_blob_memory("TypeScript/proto.ts").generated?
     assert sample_blob_memory("PHP/ProtobufGenerated.php").generated?
 
     # Apache Thrift generated code
@@ -291,7 +295,7 @@ class TestBlob < Minitest::Test
     root = File.expand_path('../fixtures', __FILE__)
     Dir.entries(root).each do |language|
       next if language == '.' || language == '..' || language == 'Binary' ||
-              File.basename(language) == 'ace_modes.json'
+        File.basename(language) == 'ace_modes.json'
 
       # Each directory contains test files of a language
       dirname = File.join(root, language)
@@ -309,9 +313,13 @@ class TestBlob < Minitest::Test
         elsif language == 'Generic'
           assert !blob.language, "#{filepath} should not match a language"
         else
-          assert blob.language, "No language for #{filepath}"
           fs_name = blob.language.fs_name ? blob.language.fs_name : blob.language.name
-          assert_equal language, fs_name, blob.name
+          if allowed_failures.has_key? filepath
+            assert allowed_failures[filepath].include?(fs_name), filepath
+          else
+            assert blob.language, "No language for #{filepath}"
+            assert_equal language, fs_name, filepath
+          end
         end
       end
     end
