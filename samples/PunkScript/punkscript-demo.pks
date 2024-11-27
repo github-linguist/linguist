@@ -1,8 +1,24 @@
-// Configuração do tema
-[theme] => color = "neon_blue" | background = "black"
-
-// Configuração do prompt
+// Prompt settings
 [prompt] => symbol = "❯" | color = "neon_pink"
 
-// Configuração do módulo Git
-[modules::git] => enabled = true | symbol = ""
+// Set the prompt mode to 'cyberpunk'
+[prompt] => mode = "cyberpunk"
+
+// Theme settings
+[theme] => background_color = "neon_blue"  
+[theme] => mode = "cyberpunk"  
+
+// Git module settings
+[modules::git] => {  
+        enabled = true           
+        symbol = ""            
+        branch_display = "full"  
+        color = "neon_green"     
+    }
+
+// Custom module settings
+custom_module = {  
+        enabled = true          
+        command = "ls -la"      
+        color = "neon_orange"   
+    }
