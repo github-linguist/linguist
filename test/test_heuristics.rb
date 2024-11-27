@@ -276,10 +276,11 @@ class TestHeuristics < Minitest::Test
   def test_bas_by_heuristics
     assert_heuristics({
       "B4X" => all_fixtures("B4X", "*.bas"),
-      "FreeBasic" => all_fixtures("FreeBasic", "*.bas"),
+      "FreeBASIC" => all_fixtures("FreeBASIC", "*.bas"),
       "BASIC" => all_fixtures("BASIC", "*.bas"),
       "VBA" => all_fixtures("VBA", "*.bas"),
-      "Visual Basic 6.0" => all_fixtures("Visual Basic 6.0", "*.bas")
+      "Visual Basic 6.0" => all_fixtures("Visual Basic 6.0", "*.bas"),
+      "QuickBASIC" => all_fixtures("QuickBASIC", "*.bas")
     })
   end
 
@@ -301,7 +302,7 @@ class TestHeuristics < Minitest::Test
 
   def test_bi_by_heuristics
     assert_heuristics({
-      "FreeBasic" => all_fixtures("FreeBasic", "*.bi")
+      "FreeBASIC" => all_fixtures("FreeBASIC", "*.bi")
     })
   end
 
@@ -722,6 +723,12 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_msg_by_heuristics
+    assert_heuristics({
+      "omnetpp-msg" => all_fixtures("omnetpp-msg", "*.msg"),
+    })
+  end
+
   def test_n_by_heuristics
     assert_heuristics({
       "Roff" => all_fixtures("Roff", "*.n"),
@@ -996,6 +1003,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_tact_by_heuristics
+    assert_heuristics({
+      "Tact" => all_fixtures("Tact", "*.tact"),
+      "JSON" => all_fixtures("JSON", "*.tact"),
+    })
+  end
+
   def test_tag_by_heuristics
     assert_heuristics({
       "Java Server Pages" => Dir.glob("#{fixtures_path}/Generic/tag/Java Server Pages/*"),
@@ -1020,6 +1034,13 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "TypeScript" => all_fixtures("TypeScript", "*.ts"),
       "XML" => all_fixtures("XML", "*.ts")
+    })
+  end
+
+  def test_tsp_by_heuristics
+    assert_heuristics({
+      "TypeSpec" => all_fixtures("TypeSpec", "*.tsp"),
+      "TSPLIB data" => all_fixtures("TSPLIB data", "*.tsp")
     })
   end
 
