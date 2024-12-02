@@ -1,0 +1,211 @@
+###
+# Report if the argument is a payload strct
+# @param payload struct payload struct
+# @returns bool True if the argument is a payload struct
+###
+def is_payload_struct(payload):
+    local return_value = True
+    str = to_str(payload)
+    return_value = return_value and ("struct{"==str_sub(str, 0, 7))
+    return_value = return_value and (str_find(str, "mass", 0))
+    return_value = return_value and (str_find(str, "cog", 0))
+    return_value = return_value and (str_find(str, "inertia", 0))
+    if return_value:
+      return_value = return_value and (3 == length(payload.cog))
+      return_value = return_value and (6 == length(payload.inertia))
+    end
+    return return_value
+end
+
+###
+# Payload struct compare 
+# @param a struct first payload struct containing  mass[kg], cog(x,y,x)[m], inertia(Ixx, Iyy, Izz, Ixy, Ixz, Iyz)[kg*m^2]
+# @param b struct second payload struct containing  mass[kg], cog(x,y,x)[m], inertia(Ixx, Iyy, Izz, Ixy, Ixz, Iyz)[kg*m^2]
+# @param epsilon float epsilon
+# @returns bool True if the two payload struct are equal
+###
+def payload_cmp(a, b, epsilon=0.000001):
+    return_value = True
+    return_value = return_value and (norm(a.mass-b.mass)<epsilon)
+    return_value = return_value and (max_value_of_list(abs_of_list(a.cog-b.cog))<epsilon)
+    return_value = return_value and (max_value_of_list(abs_of_list(a.inertia-b.inertia))<epsilon)
+    return return_value
+  end
+
+###
+# Payload struct inertia less than.  
+# @param a struct first payload struct containing  mass[kg], cog(x,y,x)[m], inertia(Ixx, Iyy, Izz, Ixy, Ixz, Iyz)[kg*m^2]
+# @param b struct second payload struct containing  mass[kg], cog(x,y,x)[m], inertia(Ixx, Iyy, Izz, Ixy, Ixz, Iyz)[kg*m^2]
+# @param epsilon float epsilon
+# @returns bool True if all members if payload struct a's inertia is less than b's
+###
+def payload_inertia_lt(a, b, epsilon=0.001):
+    return_value = True
+  
+    local i = 0
+    while i < get_list_length(a.inertia):
+      if a.inertia[i]>b.inertia[i]+epsilon:
+        return_value = False
+      end
+      i=i+1
+    end
+    return return_value
+end
+
+###
+# Find max value of list  
+# @param l array list of floats or integers 
+# @returns float the maximum value in the list
+###
+def max_value_of_list(l):
+    local max = -1000000000
+    local i = 0
+    while i < get_list_length(l):
+      if l[i]>max:
+        max = l[i]
+      end
+      i=i+1
+    end
+    return max
+end
+
+###
+# Get a list where every entry is the abs of the input 
+# @param l array list of floats or integers
+# @returns array the list where every entry is positive 
+###
+def abs_of_list(l):
+    local i = 0
+    while i < get_list_length(l):
+      l[i] = norm(l[i])
+      i=i+1
+    end
+    return l
+end
+
+###
+# all test functions
+###
+def tests():
+    #1
+    assert(is_payload_struct(payload_get_struct(0,[0,0,0],[0,0,0,0,0,0])))
+
+    #2
+    assert(False == is_payload_struct(0))
+
+    #3
+    p1 = payload_get_struct(1,[1,2,3], [0,0,0,0,0,0])
+    p2 = payload_get_struct(2,[1,-4,1], [0,0,0,0,0,0])
+    p3 = payload_add(p1, p2)
+    assert(p3.mass==3)
+
+    #4
+    p1 = payload_get_struct(2,[2,2,2], [0,0,0,0,0,0])
+    p2 = payload_get_struct(2,[2,2,2], [0,0,0,0,0,0])
+    assert(payload_cmp(p1,p2))
+
+    #5
+    p1 = payload_get_struct(1,[2,2,2], [0,0,0,0,0,0])
+    p2 = payload_get_struct(2,[2,2,2], [0,0,0,0,0,0])
+    assert(not payload_cmp(p1,p2))    
+
+    #6
+    p1 = payload_get_struct(2,[2,1,2], [0,0,0,0,0,0])
+    p2 = payload_get_struct(2,[2,2,2], [0,0,0,0,0,0])
+    assert(not payload_cmp(p1,p2))        
+
+    #7
+    p1 = payload_get_struct(2,[2,2,2], [0,0,0,0,0,0])
+    p2 = payload_get_struct(2,[2,2,2], [1,1,1,0,0,0])
+    assert(not payload_cmp(p1,p2))   
+
+    #8
+    p1 = payload_get_rectangular_cuboid(1, 0.1, 0.1, 0.1)
+    p2 = payload_trans(p1, p[0.1,0,0,0,0,0])
+    p3 = payload_trans(p1, p[-0.1,0,0,0,0,0])
+    p4 = payload_add(p1, p2)
+    p4 = payload_add(p4, p3)
+    pt = payload_get_rectangular_cuboid(3, 0.3, 0.1, 0.1)
+    assert(payload_cmp(p4,pt))
+
+    #9
+    p1 = payload_get_rectangular_cuboid(1, 0.1, 0.3, 0.1)  
+    p2 = payload_get_rectangular_cuboid(1, 0.3, 0.1, 0.1)
+    pt = payload_trans(p2, p[0,0,0,0,0,d2r(90)])
+    assert(payload_cmp(p1,pt))
+
+    #10
+    p1 = payload_get_rectangular_cuboid(1, 1, 1, 3)
+    p2 = p1
+    p1 = payload_trans(p1, p[0,0,0,-d2r(45),0,0])
+    p1 = payload_trans(p1, p[0,0,0,0,d2r(45),0]) 
+    p2 = payload_trans(p2, pose_trans(p[0,0,0,0,d2r(45),0], p[0,0,0,-d2r(45),0,0]))
+    assert(payload_cmp(p1,p2))
+
+
+    
+    #11
+    p1 = payload_get_rectangular_cuboid(1, 1, 1, 1) 
+    p2 = payload_trans(p1, p[sqrt(3)/3,sqrt(3)/3,sqrt(3)/3,0,0,0])
+    p3 = payload_trans(p1, p[-sqrt(3)/3,-sqrt(3)/3,-sqrt(3)/3,0,0,0])
+    p4 = payload_add(p1, p2)
+    p4 = payload_add(p4, p3)
+    pt = payload_get_rectangular_cuboid(3, 1, 3, 1)
+    pt = payload_trans(pt, p[0,0,0,0.58312,-0.24154,-0.75994])
+    assert(payload_cmp(p4,pt, epsilon=0.0001)) 
+  
+    #12 sphere < Surrounding box
+    r = 0.1
+    m = 1
+    p1 = payload_get_sphere_solid(m, r)
+    p2 = payload_get_rectangular_cuboid(m, 2*r, 2*r, 2*r)
+    assert(payload_inertia_lt(p1, p2))
+
+    #13 sphere > box inside box
+    r = 0.1
+    m = 1
+    p1 = payload_get_sphere_solid(m, r)
+    l = 2*r*sqrt(3)/3
+    p2 = payload_get_rectangular_cuboid(m, l, l, l)
+    assert(payload_inertia_lt(p2, p1))
+
+    #14 cylinder < Surrounding box
+    r = 0.1
+    l = 2*r
+    m = 1
+
+    p1 = payload_get_cylinder(m, l,r)
+    p2 = payload_get_rectangular_cuboid(m, l, l, l)
+    assert(payload_inertia_lt(p1, p2))   
+
+    #15 cylinder > box inside box
+    r = 0.1
+    l = 2*r*sqrt(2)/2
+    m = 1
+
+    p1 = payload_get_cylinder(m, l,r)
+    p2 = payload_get_rectangular_cuboid(m, l, l, l)
+    assert(payload_inertia_lt(p2, p1))       
+
+    #16 payload_get_cylindrical_tube(0 inner diameter) == cylinder
+    r = 0.1
+    l = 2*r
+    m = 1
+    p1 = payload_get_cylinder(m, l,r)
+    p2 = payload_get_cylindrical_tube(m, l,r, 0)
+    assert(payload_cmp(p1,p2))
+
+    #17 hollow sphere > sphere
+    r = 0.1
+    m = 1
+    p1 = payload_get_sphere_solid(m, r)
+    p2 = payload_get_sphere_hollow(m, r)    
+    assert(payload_inertia_lt(p1, p2))   
+    assert(not payload_inertia_lt(p2, p1))   
+
+	popup("tests passed") 
+
+
+end
+
+tests()

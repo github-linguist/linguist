@@ -1,0 +1,251 @@
+
+###
+# Helper function to make a diagnol matrix
+# @param values array input list or pose
+# @returns matrix diagnol matrix
+###
+def adm_diag_6_6(values):
+  return [[values[0], 0, 0, 0, 0, 0], [0, values[1], 0, 0, 0, 0], [0, 0, values[2], 0, 0, 0], [0, 0, 0, values[3], 0, 0], [0, 0, 0, 0, values[4], 0], [0, 0, 0, 0, 0, values[5]]]
+end
+
+
+###
+# Helper function to extract the position part from a pose
+# @param p_in pose input pose
+# @returns array position from pose
+###
+def adm_get_pos_from_pose(p_in):
+  return [p_in[0], p_in[1], p_in[2]]
+end
+
+###
+# Helper function to extract the rotation part from a pose
+# @param p_in pose input pose
+# @returns array rotation from pose
+###
+def adm_get_rot_from_pose(p_in):
+  return [p_in[3], p_in[4], p_in[5]]
+end
+
+###
+# Get the measured wrench at the tool flange
+# @returns array wrench at the tool flange
+###
+def adm_get_flange_wrench():
+  local ft = get_tcp_force() #Tcp force returns the force and torques at the tool flange with base orientation
+  local t_end_base = pose_trans(get_target_tcp_pose(), pose_inv(get_tcp_offset()))
+  local current_rot_in_tool = pose_inv(p[0, 0, 0, t_end_base[3], t_end_base[4], t_end_base[5]])
+  local f = pose_trans(current_rot_in_tool, p[ft[0], ft[1], ft[2], 0, 0, 0])
+  local t = pose_trans(current_rot_in_tool, p[ft[3], ft[4], ft[5], 0, 0, 0])
+  return [f[0], f[1], f[2], t[0], t[1], t[2]]
+end
+
+###
+# Apply a dead band for force and torques. For make the robot stand still when not driven external forces
+# @param wrench_in array input wrench that might be zeroed
+# @param bandwidth_force number force bandwith
+# @param bandwidth_torque number torque bandwith
+# @returns array wrench that might be zeroed
+###
+def adm_apply_dead_band(wrench_in, bandwidth_force, bandwidth_torque):
+  local F = adm_get_pos_from_pose(wrench_in)
+  local F_norm = norm(F)
+  local T = adm_get_rot_from_pose(wrench_in)
+  local T_norm = norm(T)
+
+  if ((F_norm < bandwidth_force) and (T_norm < bandwidth_torque)):
+    wrench_in = wrench_in * 0
+  end
+
+  return wrench_in
+end
+
+###
+# Get a smooth dead band scale. For use in the appplying dead band functions
+# @param value number input value
+# @param deadBand number deadBand
+# @param smoothBand number smoothBand
+# @returns number scale in the range from 0-1
+###
+def adm_smooth_dead_single_dim_scale(value, deadBand, smoothBand):
+  local normVal = norm(value)
+  if normVal <= deadBand:
+    #In deadband
+    return 0
+    
+  elif normVal > (deadBand + smoothBand):
+    #Pass deadband
+    return ((normVal - deadBand - smoothBand * 0.5) / normVal)
+  end
+
+  #Smooth trancision
+  local s = normVal - deadBand
+  return (0.5 * s * s / smoothBand) / normVal
+end
+
+### TEST_START 
+# # Test function for continuity in adm_smooth_dead_single_dim_scale
+# def adm_test_smooth_dead_band():
+#   def test_smooth_config(dead_band, smooth_band):
+#     #zero in-out test
+#     assert(adm_smooth_dead_single_dim_scale(0, dead_band, smooth_band) == 0)
+
+#     #continuity test
+#     def continuity(dead_band, smooth_band):
+#       local x = 0
+#       local dx = 0.1
+#       local y = 0
+#       while x < (dead_band + smooth_band + 50):
+#         local dy = norm(adm_smooth_dead_single_dim_scale(x, dead_band, smooth_band) - y)
+#         #Test that the change in y does not gets higher than the change in x
+#         assert(dy <= dx)
+#         x = x + dx
+#         y = y + dy
+#       end
+#     end
+#     continuity(dead_band, smooth_band)
+
+#   end
+#   test_smooth_config(1, 2)
+#   test_smooth_config(10, 20)
+#   test_smooth_config(0, 20)
+#   test_smooth_config(20, 0)
+
+# end
+# adm_test_smooth_dead_band() #run test
+### TEST_STOP
+
+###
+# Apply a smooth dead band to make to robot stand still when not driven external forces
+# @param wrench_in array wrench_in that will be scaled
+# @param bandwidth_force number force bandwidth
+# @param bandwidth_torque number torque bandwidth
+# @param smooth_force number force smooth
+# @param smooth_torque number torque smooth
+# @returns array wrench where the smooth dead band is applied
+###
+def adm_apply_dead_band_smooth(wrench_in, bandwidth_force, bandwidth_torque, smooth_force, smooth_torque):
+  local wrench_gain = [adm_smooth_dead_single_dim_scale(wrench_in[0], bandwidth_force, smooth_force), adm_smooth_dead_single_dim_scale(wrench_in[1], bandwidth_force, smooth_force), adm_smooth_dead_single_dim_scale(wrench_in[2], bandwidth_force, smooth_force), adm_smooth_dead_single_dim_scale(wrench_in[3], bandwidth_torque, smooth_torque), adm_smooth_dead_single_dim_scale(wrench_in[4], bandwidth_torque, smooth_torque), adm_smooth_dead_single_dim_scale(wrench_in[5], bandwidth_torque, smooth_torque)]
+  return wrench_gain * wrench_in
+end
+
+###
+# Transform a velocity vector
+# @param t pose transformation from the input velocity to the output velocity
+# @param v array inout velocity vector
+# @returns array tranformed output velocity vector
+###
+def adm_vel_trans(t, v):
+  local vw = wrench_trans(t, [v[3], v[4], v[5], v[0], v[1], v[2]])
+  return [vw[3], vw[4], vw[5], vw[0], vw[1], vw[2]]
+end
+
+###
+# rotates a velocity into new reference frame
+# @param frame pose current velocity reference frame
+# @param velocity array input velocity vector
+# @returns array velocity with new reference frame
+###
+def adm_rotate_velocity_in_frame(frame, velocity):
+  local p_tcp = p[0, 0, 0, frame[3], frame[4], frame[5]]
+
+  local velocity_pos_p = p[velocity[0], velocity[1], velocity[2], 0, 0, 0]
+  local velocity_rot_p = p[velocity[3], velocity[4], velocity[5], 0, 0, 0]
+
+  local trans = pose_trans(p_tcp, velocity_pos_p)
+  local rot = pose_trans(p_tcp, velocity_rot_p)
+
+  return [trans[0], trans[1], trans[2], rot[0], rot[1], rot[2]]
+end
+
+###
+# rotates a wrench into new reference frame
+# @param frame pose current wrench reference frame
+# @param wrench array input wrench vector
+# @returns array wrench with new reference frame
+###
+def adm_rotate_wrench_in_frame(frame, wrench):
+  return adm_rotate_velocity_in_frame(frame, wrench)
+end
+
+# Please note that parameters needs to be tuned for each use case and robot model.
+# The default parameters is tune for a light behavior on a UR5e without payload.
+# Watch out for singular positions!
+###
+# summary
+# @param mass_scaling number scale of mases
+# @param damping_scaling number scale of the damping
+# @param mass_list array list of masses for the 6 DoF
+# @param damping_list array list of damping for the 6 DoF
+# @param base_to_compliance_frame pose compliance frame
+# @param tool_flange_to_compliance_center pose transformation from tool flange to center of compliance
+# @param dead_band array list of the deadband [Force dead band,   Torque dead band,  Force smooth band, Torque smooth band]
+# @param compliance_vector array A 6d vector of 0s and 1s. 1 means that the robot will apply admittance  in the corresponding axis of the compliance frame.
+# @param stiffness_params array list of stiffness for the 6 DoF
+# @param target_wrench array the target wrench the robot shall apply
+###
+def admittance_control(mass_scaling = 0.5, damping_scaling = 0.5, mass_list = [22.5, 22.5, 22.5, 1, 1, 1], damping_list = [25, 25, 25, 2, 2, 2], base_to_compliance_frame = p[0, 0, 0, 0, 0, 0], tool_flange_to_compliance_center = p[0, 0, 0, 0, 0, 0], dead_band = [2, 0.15, 2, 0.15], compliance_vector = [1, 1, 1, 1, 1, 1], stiffness_params = [0, 0, 0, 0, 0, 0], target_wrench = [0, 0, 0, 0, 0, 0]):
+
+  ##  Admittance control parameters ##
+  local M = adm_diag_6_6(mass_list) #Mass
+  local M = M * mass_scaling
+  local D = adm_diag_6_6(damping_list) # Damping
+  local D = D * damping_scaling
+  local K = adm_diag_6_6(stiffness_params) # Stiffness
+
+  ## Initialize Error terms ##
+  local vel_target = [0, 0, 0, 0, 0, 0]
+  local x_e = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # pos error term
+  local dx_e = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # vel error term
+  local ddx_e = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # acc error term
+  local last_ddx_e = ddx_e
+  local last_dx_e = dx_e
+  local last_x_e = x_e
+
+  ## Zero F/T sensor before starting ##
+  zero_ftsensor()
+
+  ## Admittance control loop ##
+  while True:
+    #Dead band to make to robot stand still when not driven external forces
+    local wrench_at_tool = adm_apply_dead_band_smooth(adm_get_flange_wrench(), dead_band[0], dead_band[1], dead_band[2], dead_band[3])
+
+    # Make it possible to define the compliance center relative to the tool flange by "tool_flange_to_compliance_center" argument
+    local wrench_at_compliance_center = wrench_trans(tool_flange_to_compliance_center, wrench_at_tool)
+
+    # Rotate the wrench to align with the compliance frame give by "base_to_compliance_frame" argument
+    local T_compliance_center_to_tcp = pose_trans(pose_inv(tool_flange_to_compliance_center), get_tcp_offset())
+    local T_compliance_center_to_base = pose_trans(T_compliance_center_to_tcp, pose_inv(get_target_tcp_pose()))
+    local T_compliance_frame_to_compliance_center = pose_inv(pose_trans(T_compliance_center_to_base, base_to_compliance_frame))
+    local force_torque_error = adm_rotate_wrench_in_frame(T_compliance_frame_to_compliance_center, wrench_at_compliance_center)
+
+    # Apply compliance selection in "base_to_compliance_frame"
+    force_torque_error = force_torque_error * compliance_vector
+
+    # Do the admittance integration
+    ddx_e = inv(M) * ((force_torque_error - target_wrench) - (K * x_e) - (D * dx_e))
+    dx_e = (get_steptime() * 0.5) * (ddx_e + last_ddx_e) + last_dx_e
+    x_e = (get_steptime() * 0.5) * (dx_e + last_dx_e) + last_x_e
+
+    last_ddx_e = ddx_e
+    last_dx_e = dx_e
+    last_x_e = x_e
+
+    # Rotate back from the compliance frame to the compliance tool center frame
+    local vel_target_flange = adm_rotate_wrench_in_frame(pose_inv(T_compliance_frame_to_compliance_center), dx_e)
+
+    # Transform the velocity to be based at TCP
+    local vel_target_tcp = adm_vel_trans(pose_inv(T_compliance_center_to_tcp), vel_target_flange)
+
+    # Rotation the velocity to be based at TCP with base orientation to fit the format for speedl
+    local vel_target_base_tcp = adm_rotate_velocity_in_frame(get_target_tcp_pose(), vel_target_tcp)
+
+    #Make the robot move
+    speedl(vel_target_base_tcp, a = 5, t = get_steptime(), aRot = 45)
+  end
+end
+
+# Run the admittance control function
+ALONG_AND_AROUND_Z_AXIS = [0, 0, 1, 0, 0, 1]
+ALL_AXIS = [1, 1, 1, 1, 1, 1]
+admittance_control(compliance_vector = ALL_AXIS)

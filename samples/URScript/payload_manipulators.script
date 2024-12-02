@@ -1,0 +1,75 @@
+###
+# Get a payload struct that is the resulting payload of the two arguments 
+# @param a struct first payload struct containing  mass[kg], cog(x,y,x)[m], inertia(Ixx, Iyy, Izz, Ixy, Ixz, Iyz)[kg*m^2]
+# @param b struct second payload struct containing  mass[kg], cog(x,y,x)[m], inertia(Ixx, Iyy, Izz, Ixy, Ixz, Iyz)[kg*m^2]
+# @returns struct reulting payload struct containing  mass[kg], cog(x,y,x)[m], inertia(Ixx, Iyy, Izz, Ixy, Ixz, Iyz)[kg*m^2] 
+###
+def payload_add(a,b):
+
+    #cog index
+    local X = 0
+    local Y = 1
+    local Z = 2
+
+    local IXX = 0
+    local IYY = 1
+    local IZZ = 2
+    local IXY = 3
+    local IXZ = 4
+    local IYZ = 5
+
+
+    local mass = a.mass + b.mass
+    local cog = (a.mass*a.cog + b.mass*b.cog)/mass
+
+    local disp_a = a.cog-cog
+    local disp_b = b.cog-cog
+
+
+    #point mass contribution
+    local disp_inertia_a = [0,0,0,0,0,0]
+    disp_inertia_a[IXX] = (disp_a[Y]*disp_a[Y]+disp_a[Z]*disp_a[Z])*a.mass
+    disp_inertia_a[IYY] = (disp_a[X]*disp_a[X]+disp_a[Z]*disp_a[Z])*a.mass
+    disp_inertia_a[IZZ] = (disp_a[X]*disp_a[X]+disp_a[Y]*disp_a[Y])*a.mass
+    disp_inertia_a[IXY] = -(disp_a[X]*disp_a[Y])*a.mass
+    disp_inertia_a[IXZ] = -(disp_a[X]*disp_a[Z])*a.mass
+    disp_inertia_a[IYZ] = -(disp_a[Y]*disp_a[Z])*a.mass
+    #disp_inertia_a = abs_of_list(disp_inertia_a)
+
+    local disp_inertia_b = [0,0,0,0,0,0]
+    disp_inertia_b[IXX] = (disp_b[Y]*disp_b[Y]+disp_b[Z]*disp_b[Z])*b.mass
+    disp_inertia_b[IYY] = (disp_b[X]*disp_b[X]+disp_b[Z]*disp_b[Z])*b.mass
+    disp_inertia_b[IZZ] = (disp_b[X]*disp_b[X]+disp_b[Y]*disp_b[Y])*b.mass
+    disp_inertia_b[IXY] = -(disp_b[X]*disp_b[Y])*b.mass
+    disp_inertia_b[IXZ] = -(disp_b[X]*disp_b[Z])*b.mass
+    disp_inertia_b[IYZ] = -(disp_b[Y]*disp_b[Z])*b.mass  
+    
+    local inertia = a.inertia + b.inertia + disp_inertia_a + disp_inertia_b
+
+    return payload_get_struct(mass, cog, inertia)
+end
+
+###
+# Get a payload struct that is the resulting payload of the two arguments 
+# @param payload struct payload struct containing  mass[kg], cog(x,y,x)[m], inertia(Ixx, Iyy, Izz, Ixy, Ixz, Iyz)[kg*m^2]
+# @param trans pose pose to translate the payload struct
+# @returns struct reulting payload struct containing  mass[kg], cog(x,y,x)[m], inertia(Ixx, Iyy, Izz, Ixy, Ixz, Iyz)[kg*m^2] 
+###
+def payload_trans(payload, trans):
+
+  local translation = [trans[0], trans[1], trans[2]]
+  local rotation = [trans[3], trans[4], trans[5]]
+  #translate cog
+  payload.cog = payload.cog + translation
+   
+  r_matrix = rotvec2rotmat(rotation)
+  r_matrix_t = transpose(r_matrix)
+  i_matrix = ivec2imat(payload.inertia)
+
+  i_matrix = r_matrix*i_matrix
+  i_matrix = i_matrix*r_matrix_t
+
+  payload.inertia = imat2ivec(i_matrix)
+  
+  return payload
+end
