@@ -1,0 +1,99 @@
+
+module import {
+    std.RuVix.App
+}
+
+</
+forgive me for the comments in Russian,
+because I am bad at writing regular text in English :)
+/>
+
+pack Calculator {
+    init {
+        self.result = "0"
+    }
+
+    func build_ui {
+        // Создаем главный layout
+        self.layout = RuVix.App.create_widget('BoxLayout', orientation='vertical')
+        
+        // Поле вывода
+        self.display = RuVix.App.create_widget('TextField', 
+            text=self.result,
+            halign="right",
+            size_hint_y=None,
+            height=100,
+            readonly=True,
+            font_size=32
+        )
+        
+        // Сетка для кнопок
+        grid = RuVix.App.create_widget('GridLayout', 
+            cols=4,
+            spacing=2,
+            size_hint=(1, 0.8)
+        )
+        
+        // Кнопки калькулятора
+        buttons = [
+            '7', '8', '9', '/',
+            '4', '5', '6', '*',
+            '1', '2', '3', '-',
+            'C', '0', '=', '+'
+        ]
+        
+        // Создаем кнопки и добавляем их в сетку
+        foreach btn in buttons {
+            button = RuVix.App.create_widget('RaisedButton',
+                text=btn,
+                size_hint=(0.25, 0.2)
+            )
+            
+            RuVix.App.bind_event(button, 'on_release', 
+                lambda btn=btn: self.on_button_press(btn))
+            
+            RuVix.App.add_widget(grid, button)
+        }
+        
+        // Собираем интерфейс
+        RuVix.App.add_widget(self.layout, self.display)
+        RuVix.App.add_widget(self.layout, grid)
+    }
+    
+    func on_button_press(button) {
+        if button == 'C' {
+            self.result = "0"
+        } elif button == '=' {
+            try {
+                self.result = str(eval(self.result))
+            } elerr {
+                self.result = "Error"
+            }
+        } else {
+            if self.result == "0" {
+                self.result = button
+            } else {
+                self.result += button
+            }
+        }
+        
+        self.display.text = self.result
+    }
+}
+
+func main {
+    // Создаем приложение
+    app = RuVix.App.create_app()
+    
+    // Создаем калькулятор
+    calc = Calculator()
+    calc.build_ui()
+    
+    // Устанавливаем корневой виджет
+    RuVix.App.set_root(calc.layout)
+    
+    // Запускаем приложение
+    RuVix.App.run_app()
+}
+
+main()

@@ -1,0 +1,129 @@
+
+module import {
+    std.Terminal[Terminal]
+    std.Files
+    std.System
+    std.Path
+    std.lib[clear]
+    std.String[Regex]
+    std.System:sys
+    std.DateTime[now]
+    std.MetaTable[MetaTable]
+    std.ColoRize[set_all|reset_color|colorize:clrz]
+    std.Shell[Shell]
+}
+
+trash_cleaner = true
+
+re = Regex()
+sh = Shell()
+mt = MetaTable()
+term = Terminal()
+
+// История команд
+table history {'commands': []}
+
+help_cmd = '''Delta Shell 1.0
+Created in RytonLang
+Commands:
+  ls    - list directory
+  cd    - change directory
+  pwd   - print working directory
+  cat   - read file
+  clear - clear screen
+  help  - show this help
+  exit  - exit shell'''
+
+// Алиасы команд
+table aliases {
+    'ls': "Files.list_dir()",
+    'cd': "sh.cd()", 
+    'pwd': "Path.pwd()",
+    'cat': "Files.read_file()",
+    'clear': "Terminal.clear()",
+    'help': "print(help_cmd)"
+}
+
+func parse_command(cmd) {
+    parts = cmd.split()
+    if parts [0] in aliases {
+        if parts [0] == 'cd' {
+            return sh.cd(parts[1])
+        }
+        parts [0] = aliases [parts [0]]
+    }
+    return parts
+}
+
+func execute_command(cmd) {    
+    parts = cmd.split()
+    command = parts [0]
+    args = parts [1] if len(parts) > 1 else ""
+
+    if command == "cd" {
+        output = sh.cd(args)
+        if output == True {
+            noop
+        } elif output == False {
+            print(f"Directory not found {args}")
+        }
+    } else {
+        try {
+            result = sh.run(cmd)
+            print(result)
+        } elerr {
+            Terminal.error(f"Command not found: {cmd}")
+        }
+    }
+}
+
+
+func size_term {
+    info = term.terminal_info()
+    size_cmd = info ['size'][0]
+
+    return size_cmd
+}
+
+func current_dir {
+    dir = Path.pwd()
+    home_dir = Path.get_home()
+    dir = dir.replace(home_dir, '~')
+    return dir
+}
+
+func shell_prompt {
+    indent = size_term()
+    user = f' {sys.login_name()} '
+
+    start_line = term.symbol('round_dr') + term.symbol('box_h')
+    indent = indent - len(f"{start_line} {current_dir()}") - len(user)
+    indent_line = ' ' * indent
+
+    line = f"{start_line} {current_dir()}{indent_line}{user}" 
+
+    print(line, end="")
+}
+
+func main {
+    clear()
+    term.rule("Delta Shell v0.1")
+    print(help_cmd)
+
+    infinit 0.05 {
+        shell_prompt()
+
+        cmd = input(f"{term.symbol('round_ur')}{term.symbol('line_h')}")
+        
+        if cmd == "exit" {
+            break
+        }
+        
+        if cmd {
+            history ['commands'].append(cmd)
+            execute_command(cmd)
+        }
+    }
+}
+
+main()

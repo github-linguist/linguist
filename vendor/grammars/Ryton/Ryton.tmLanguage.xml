@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>name</key>
+    <string>Ryton</string>
+    <key>scopeName</key>
+    <string>source.ryton</string>
+    <key>fileTypes</key>
+    <array>
+        <string>ry</string>
+    </array>
+    <key>patterns</key>
+    <array>
+        <dict>
+            <key>match</key>
+            <string>\b(func|pack|module|import|try|elerr|infinit|programm|table|if|else|elif|for|while|in|return|break|continue)\b</string>
+            <key>name</key>
+            <string>keyword.control.ryton</string>
+        </dict>
+        <dict>
+            <key>match</key>
+            <string>\b(true|false|none)\b</string>
+            <key>name</key>
+            <string>constant.language.ryton</string>
+        </dict>
+        <dict>
+            <key>begin</key>
+            <string>"</string>
+            <key>end</key>
+            <string>"</string>
+            <key>name</key>
+            <string>string.quoted.double.ryton</string>
+        </dict>
+        <dict>
+            <key>begin</key>
+            <string>'</string>
+            <key>end</key>
+            <string>'</string>
+            <key>name</key>
+            <string>string.quoted.single.ryton</string>
+        </dict>
+        <dict>
+            <key>match</key>
+            <string>//.*$</string>
+            <key>name</key>
+            <string>comment.line.double-slash.ryton</string>
+        </dict>
+        <dict>
+            <key>match</key>
+            <string>\b([0-9]+)\b</string>
+            <key>name</key>
+            <string>constant.numeric.ryton</string>
+        </dict>
+        <dict>
+            <key>match</key>
+            <string>\b(std\.[A-Za-z]+)\b</string>
+            <key>name</key>
+            <string>support.class.ryton</string>
+        </dict>
+    </array>
+</dict>
+</plist>
