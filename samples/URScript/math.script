@@ -1,0 +1,77 @@
+###
+# Convert a axis angle rotation vector into a rotation matrix
+# @param rotvec array rotation vector in axis angle representation (rx, ry, rx)
+# @returns floatmatrix rotation matrix
+###
+def rotvec2rotmat(rotvec):
+
+	local rx = rotvec[0]
+	local ry = rotvec[1]
+	local rz = rotvec[2]
+
+	# rotation vector to angle and unit vector
+	local theta = sqrt(rx*rx + ry*ry + rz*rz)
+  ux = 0
+  uy = 0
+  uz = 0
+  if (theta != 0):
+    ux = rx/theta
+    uy = ry/theta
+    uz = rz/theta
+  end
+	cth = cos(theta)
+	sth = sin(theta)
+	vth = 1-cos(theta)
+
+	# column 1
+	local r11 = ux*ux*vth + cth
+	local r21 = ux*uy*vth + uz*sth
+	local r31 = ux*uz*vth - uy*sth
+	# column 2
+	local r12 = ux*uy*vth - uz*sth
+	local r22 = uy*uy*vth + cth
+	local r32 = uy*uz*vth + ux*sth
+	# column 3
+	local r13 = ux*uz*vth + uy*sth
+	local r23 = uy*uz*vth - ux*sth
+	local r33 = uz*uz*vth + cth
+
+	# elements are represented as an array
+	#local rotmat = [[r11, r21, r31],[ r12, r22, r32],[ r13, r23, r33] ]
+  local rotmat = [[r11, r12, r13],[ r21, r22, r23],[ r31, r32, r33] ]
+	
+	return rotmat
+end
+
+###
+# Convert a inertia vector(Ixx, Iyy, Izz, Ixy, Ixz, Iyz) into a symetric Inertia matrix
+# @param i array input inertia vector(Ixx, Iyy, Izz, Ixy, Ixz, Iyz)
+# @returns floatmatrix symetric Inertia matrix
+###
+def ivec2imat(i):
+
+	# column 1
+	local r11 = i[0]
+	local r21 = i[3]
+	local r31 = i[4]
+	# column 2
+	local r12 = i[3]
+	local r22 = i[1]
+	local r32 = i[5]
+	# column 3
+	local r13 = i[4]
+	local r23 = i[5]
+	local r33 = i[2]
+  	local imat = [[r11, r12, r13],[ r21, r22, r23],[ r31, r32, r33] ]
+
+	return imat
+end
+
+###
+# Convert a symetric Inertia matrix into a inertia vector(Ixx, Iyy, Izz, Ixy, Ixz, Iyz) 
+# @param i floatmatrix symetric Inertia matrix
+# @returns array input inertia vector(Ixx, Iyy, Izz, Ixy, Ixz, Iyz) 
+###
+def imat2ivec(i):
+  return [i[0,0], i[1,1], i[2,2], i[0,1], i[0,2], i[1,2]]
+end
