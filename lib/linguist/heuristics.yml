@@ -709,6 +709,10 @@ disambiguations:
   - language: Markdown
     # Markdown syntax for scdoc
     pattern: '^#+\s+(NAME|SYNOPSIS|DESCRIPTION)'
+- extensions: ['.script']
+  rules:
+  - language: URScript
+    pattern: '^\s*def\s+[a-zA-Z_][a-zA-Z0-9_]*\s*\([^)]*\)\s*:[\s\S]*\s+end+\s'
 - extensions: ['.sol']
   rules:
   - language: Solidity
