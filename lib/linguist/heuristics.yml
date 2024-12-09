@@ -712,7 +712,7 @@ disambiguations:
 - extensions: ['.script']
   rules:
   - language: URScript
-    pattern: '^\s*end\b'
+    pattern: '^\s*def\s+[a-zA-Z_][a-zA-Z0-9_]*\s*\([^)]*\)\s*:[\s\S]*\s+end+\s'
 - extensions: ['.sol']
   rules:
   - language: Solidity
