@@ -507,7 +507,7 @@ disambiguations:
 - extensions: ['.msg']
   rules:
   - language: omnetpp-msg
-    pattern: '^cplusplus \{\{|^namespace[\s]*([^.\s]*\.)*[^.\s]*;|^struct \{|^message [\S]* (extends)? [\S]*[\s]*\{|^packet \{|^class (extends) [\S]*[\s]*\{|^enum \{|^import ([^.\s]*\.)*[^.\s]*;'
+    pattern: '^cplusplus\(?[\S]*\)?[\s]*\{?\{?|^namespace[\s]+([^.\s]*\.)*[^.\s]*;|^struct[\s]+[\S]+|^message[\s]+[\S]+(extends )?[\S]*[\s]*|^packet[\s]+[\S]+|^class[\s]+[\S]+(extends )?[\S]*[\s]*|^enum[\s]+[\S]+|^import ([^.\s]*\.)*[^.\s]*;'
 - extensions: ['.n']
   rules:
   - language: Roff
