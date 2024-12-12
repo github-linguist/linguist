@@ -382,10 +382,10 @@ disambiguations:
   - language: NASL
     pattern:
     - '^\s*include\s*\(\s*(?:"|'')[\\/\w\-\.:\s]+\.(?:nasl|inc)\s*(?:"|'')\s*\)\s*;'
-    - '^\s*(?:global|local)_var\s+(?:\w+(?:\s*=\s*[\w\-"'']+)?\s*)(?:,\s*\w+(?:\s*=\s*[\w\-"'']+)?\s*)*+\s*;'
+    - '^\s*(?:global|local)_var\s+(?:\w+(?:\s*=\s*[\w\-"'']+)?\s*)(?:,\s*\w+(?:\s*=\s*[\w\-"'']+)?)+\s*;'
     - '^\s*namespace\s+\w+\s*\{'
     - '^\s*object\s+\w+\s*(?:extends\s+\w+(?:::\w+)?)?\s*\{'
-    - '^\s*(?:public\s+|private\s+|\s*)function\s+\w+\s*\([\w\s,]*\)\s*\{'
+    - '^\s*(?:public|private)\s+function\s+\w+\s*\([\w\s,]*\)\s*\{'
   - language: POV-Ray SDL
     pattern: '^\s*#(declare|local|macro|while)\s'
   - language: Pascal
