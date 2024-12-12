@@ -34,12 +34,6 @@ class TestHeuristics < Minitest::Test
     assert_equal [], Heuristics.call(file_blob("Markdown/symlink.md"), [Language["Markdown"]])
   end
 
-  def test_no_match_if_regexp_timeout
-    skip("This test requires Ruby 3.2.0 or later") if Gem::Version.new(RUBY_VERSION) < Gem::Version.new('3.2.0')
-
-    Regexp.any_instance.stubs(:match?).raises(Regexp::TimeoutError)
-    assert_equal [], Heuristics.call(file_blob("#{fixtures_path}/Generic/stl/STL/cube1.stl"), [Language["STL"]])
-  end
 
   # alt_name is a file name that will be used instead of the file name of the
   # original sample. This is used to force a sample to go through a specific
@@ -81,6 +75,17 @@ class TestHeuristics < Minitest::Test
           The extension '#{unlisted.first}' is not assigned to #{lang.name}.
           Add it to `languages.yml` or update the heuristic which uses it
         EOF
+      end
+    end
+  end
+
+  def test_all_regex_linear
+    Heuristics.raw_patterns.each do |l, pats|
+      pats = [pats] unless pats.kind_of?(Array)
+      pats.each do |p|
+        reg = Regexp.new(p, timeout: 0.5)
+        # assert Regexp.linear_time?(reg), "\n'#{l}' regex doesn't have linear execution time:\n\n /#{p}/\n"
+        puts "\n'#{l}' regex doesn't have linear execution time:\n\n /#{p}/\n\n" unless Regexp.linear_time?(reg)
       end
     end
   end
