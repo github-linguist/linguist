@@ -30,8 +30,8 @@ module Linguist
       end
 
       [] # No heuristics matched
-    rescue Regexp::TimeoutError
-      [] # Return nothing if we have a bad regexp which leads to a timeout enforced by Regexp.timeout in Ruby 3.2 or later
+    # rescue Regexp::TimeoutError
+    #   [] # Return nothing if we have a bad regexp which leads to a timeout enforced by Regexp.timeout in Ruby 3.2 or later
     end
 
     # Public: Get all heuristic definitions
@@ -82,15 +82,31 @@ module Linguist
       end
     end
 
+    # Internal: Extract all regex patterns from 'heuristics.yml' mapped by language or named pattern.
+    def self.raw_patterns
+      data = self.load_config
+      named_patterns = data["named_patterns"]
+      patterns = {}
+      data["disambiguations"].each do |disambiguation|
+        rules = disambiguation["rules"]
+        rules.map! do |rule|
+          patterns[rule["language"]] = rule["pattern"] if rule["pattern"]
+        end
+      end
+      patterns.merge(named_patterns)
+    end
+
     # Internal: Converts a string or array of strings to regexp
     #
     # str: string or array of strings. If it is an array of strings,
     #      Regexp.union will be used.
+    #
+    # TODO: make this play nicely with < Ruby 3.2.0
     def self.to_regex(str)
       if str.kind_of?(Array)
-        Regexp.union(str.map { |s| Regexp.new(s) })
+        Regexp.union(str.map { |s| Regexp.new(s, timeout: 0.1) })
       else
-        Regexp.new(str)
+        Regexp.new(str, timeout: 0.1)
       end
     end
 
@@ -166,6 +182,5 @@ module Linguist
     def match?(input)
       return !@pat.match?(input)
     end
-
   end
 end
