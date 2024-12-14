@@ -12,6 +12,7 @@ class TestClassifier < Minitest::Test
     Classifier.train! db, "Ruby", fixture("Ruby/foo.rb")
     Classifier.train! db, "Objective-C", fixture("Objective-C/Foo.h")
     Classifier.train! db, "Objective-C", fixture("Objective-C/Foo.m")
+    Classifier.finalize_train! db
 
     results = Classifier.classify(db, fixture("Objective-C/hello.m"))
     assert_equal "Objective-C", results.first[0]
@@ -26,17 +27,18 @@ class TestClassifier < Minitest::Test
     Classifier.train! db, "Ruby", fixture("Ruby/foo.rb")
     Classifier.train! db, "Objective-C", fixture("Objective-C/Foo.h")
     Classifier.train! db, "Objective-C", fixture("Objective-C/Foo.m")
+    Classifier.finalize_train! db
 
     results = Classifier.classify(db, fixture("Objective-C/hello.m"), ["Objective-C"])
     assert_equal "Objective-C", results.first[0]
 
     results = Classifier.classify(db, fixture("Objective-C/hello.m"), ["Ruby"])
-    assert_equal "Ruby", results.first[0]
+    assert results.empty?
   end
 
   def test_instance_classify_empty
     results = Classifier.classify(Samples.cache, "")
-    assert results.first[1] < 0.5, results.first.inspect
+    assert results.empty?
   end
 
   def test_instance_classify_nil
@@ -46,7 +48,11 @@ class TestClassifier < Minitest::Test
   def test_classify_ambiguous_languages
     # Failures are reasonable in some cases, such as when a file is fully valid in more than one language.
     allowed_failures = {
-      "#{samples_path}/C++/rpc.h" => ["C", "C++"],
+      # Valid C and C++
+      "#{samples_path}/C/rpc.h" => ["C", "C++"],
+      # Tricky samples
+      "#{samples_path}/C/syscalldefs.h" => ["C", "C++"],
+      "#{samples_path}/C++/Types.h" => ["C", "C++"],
     }
 
     # Skip extensions with catch-all rule
@@ -70,7 +76,9 @@ class TestClassifier < Minitest::Test
 
       results = Classifier.classify(Samples.cache, File.read(sample[:path]), languages)
 
-      if allowed_failures.has_key? sample[:path]
+      if results.empty?
+        assert false, "no results for #{sample[:path]}"
+      elsif allowed_failures.has_key? sample[:path]
         assert allowed_failures[sample[:path]].include?(results.first[0]), "#{sample[:path]}\n#{results.inspect}"
       else
         assert_equal language.name, results.first[0], "#{sample[:path]}\n#{results.inspect}"

@@ -1,0 +1,139 @@
+@layout({
+  title: "Your Ultimate Resource for AdonisJS Lessons and Videos",
+  meta: {
+    url: '/pricing',
+    desc: `Take your AdonisJS skills to the next level with Adocasts. Our comprehensive video lessons cover everything from the basics to advanced topics. Join our community today and start learning!`,
+    asset: null,
+    index: true
+  }
+})
+  @slot('hero')
+    <div class="-mt-12">
+      @!pricing.home()
+    </div>
+  @endslot
+
+  @section()
+    <div class="flex flex-col justify-center items-center text-center mt-12">
+      <img class="w-auto max-w-full" src="/imgs/adocasts-plus-white-40.png" alt="Adocasts Plus" />
+      @!heading({
+        subtitle: 'Features & Perks',
+        class: 'text-center text-slate-base-100',
+      })
+    </div>
+
+    <div class="flex flex-wrap -mx-4 gap-y-8 mb-16">
+      @!pricing.feature.card({
+        icon: 'ph:lock-open-fill',
+        title: 'Unlock All Content',
+        text: 'Unlock access to all series, lessons, plus any and all other content we release'
+      })
+
+      @!pricing.feature.card({
+        icon: 'ph:clock-countdown-fill',
+        title: '2 Weeks Early Access',
+        text: "When we release free content, it's exclusive to our plus subscribers for two weeks"
+      })
+
+      @!pricing.feature.card({
+        icon: 'ph:share-fat-fill',
+        title: 'Shared Feed Posts',
+        text: 'Recent feed posts are pooled for display across the Adocasts site'
+      })
+
+      @pricing.feature.card({
+        icon: 'ph:barricade-fill',
+        title: 'Ad Free Experience',
+      })
+        You won't see any ads on the Adocasts site, not even your own 
+        <span class="text-sm italic">(except in our ad portal)</span>
+      @end
+
+      @!pricing.feature.card({
+        icon: 'ph:image-square-fill',
+        title: 'Run Ads',
+        text: 'Gain access to our ad portal to run advertisements across the Adocasts site'
+      })
+
+      @!pricing.feature.card({
+        icon: 'ph:currency-dollar-simple-bold',
+        title: 'Cancel Anytime',
+        text: 'Reminders are sent a week prior to renewal, plus you can cancel anytime!'
+      })
+    </div>
+  @end
+
+  @section()
+    <div class="flex flex-col lg:flex-row gap-4 max-w-3xl mx-auto bg-slate-100 rounded-md p-8 relative">
+      <div class="flex-1 text-center lg:text-left relative z-10">
+        @!heading({ title: 'Not Ready?', size: 'sm' })
+        <p class="lg:text-lg text-slate-700 -mt-2">
+          No worries, we have plenty of free lessons too!
+        </p>
+      </div>
+      <div class="flex justify-center lg:justify-end lg:items-center relative z-10">
+        @button({ variant: 'dark', href: route('auth.signup.create'), 'up-layer': 'new', 'up-size': 'grow' })
+          Get Started for Free
+        @end
+      </div>
+
+      <div class="absolute right-0 md:right-1/4 -bottom-16 w-24 lg:-right-24 lg:bottom-4 lg:w-32 -scale-x-100 h-full">
+        <img class="animation-float" src="/imgs/robot/slice2.svg" alt="robot mascot pointing right" />
+      </div>
+    </div>
+  @end
+
+  @section()
+    <div class="max-w-3xl mx-auto bg-slate-100 p-8 pb-4 rounded-md">
+      @!heading({ title: 'Fequently Asked Questions', size: 'sm' })
+      <p class="text-slate-700 -mt-2">
+        Is your question not listed? <a href="mailto:contact@adocasts.com?subject=Pricing Question" class="anchor">Feel free to reach out</a>!
+      </p>
+      <div class="-mx-4 mt-6">
+        @accordion()
+          @accordion.item({ title: 'How can I cancel my subscription?' })
+            <p>
+              You can cancel your subscription at any time within your billing settings. 
+              Once canceled you'll still have full access to Adocasts Plus until your current billing period is over.
+              Once your billing period is over, you won't be charged again.
+            </p>
+          @end
+          @accordion.item({ title: 'What do I get with Adocasts Plus?' })
+            <p>
+              With Adocasts Plus you'll get access to all of our <a class="anchor" href="{{ route('lessons.index') }}" up-follow>lessons</a> 
+              and <a class="anchor" href="{{ route('series.index') }}" up-follow>series</a>. 
+            </p>
+            
+            <p>
+              Adocasts Plus members also enjoy 2 weeks early access to all our new lessons (excludes contributor lessons), 
+              meaning that when we do release a free lesson it'll be exclusive to Adocasts Plus members for the first 2 weeks.
+            </p>
+
+            <p>
+              Additionally, Adocasts Plus is ad free! When you're browsing or watching the Adocasts site, we'll make sure you don't see any ads.
+            </p>
+          @end
+          @accordion.item({ title: 'Can I change plans at any time?' })
+            <p>
+              Yep! Unless you're already on our forever plan, you can switch between the monthly, annual, or even opt into the forever plan at any time.
+            </p>
+            <p>
+              When switching from our monthly to annual plan, any time remaining in your current billing period will be prorated.
+            </p>
+          @end
+          @accordion.item({ title: 'Do you offer student, purchase power parity, or other discounts?' })
+            <p>
+              Our goal is to try to make learning AdonisJS as affordable as possible. 
+              Compared to others, we feel our pricing is already pretty low.
+            </p>
+
+            <p>
+              That said, if you feel {{ plusMonthly.displayPrice }} per month is high for you, whether that's financially or due to unfair conversion rates,
+              <a href="mailto:contact@adocasts.com?subject=Student or PPP Discount Request" class="anchor">send us an email</a> and we'll see what we can do.
+            </p>
+          @end
+        @end
+      </div>
+    </div>
+  @end
+@end

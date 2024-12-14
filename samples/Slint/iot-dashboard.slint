@@ -1,0 +1,356 @@
+// Copyright © SixtyFPS GmbH <info@slint.dev>
+// SPDX-License-Identifier: MIT
+
+import { StyleMetrics } from "std-widgets.slint";
+
+struct Palette  {
+    menuBar : brush,
+    mainContent : brush,
+    box : brush,
+    lightDisplay : brush,
+    pieChart : brush,
+    roundButton : brush,
+    weekdayBox : brush,
+    text : brush,
+    shadow : brush,
+}
+
+global Skin  {
+    in property <bool> day: !StyleMetrics.dark-color-scheme;
+    out property <Palette> palette : root.day ? {
+       menuBar : #6D7BFB,
+       mainContent :  #fbfbfb,
+       box :   #ffffff,
+       lightDisplay : #ffffff,
+       pieChart : #ffffff,
+       roundButton : #f7f7f7,
+       weekdayBox : #f4f4f4,
+       text : #000,
+       shadow : #0001, // ### added alpha
+    } : {
+       menuBar : #2937A7,
+       mainContent : #040404,
+       box : #000000,
+       lightDisplay : #000000,
+       pieChart : #000000,
+       roundButton : #0a0a0a,
+       weekdayBox : #0c0c0c,
+       text : #fff,
+       shadow : #fff1, // ### added alpha
+    };
+
+    // From Skin::initHints in Skin.cpp
+    out property <length> DefaultFont: 12px;
+    out property <length> TinyFont: 9px;
+    out property <length> SmallFont: 10px;
+    out property <length> MediumFont: 13px;
+    out property <length> LargeFont: 20px;
+    out property <length> HugeFont: 27px; // (also, bold)
+    out property <length> TitleFont: 10px; // (also, bold)
+}
+
+export component Clock inherits  VerticalLayout {
+    in property <string> time <=> time-label.text;
+
+    Text {
+        text: "Current time";
+        font-size: Skin.TitleFont;
+        font-weight: 700;
+    }
+    time-label := Text {
+        // FIXME: actual time
+        text: "10:02:45";
+        font-size: Skin.HugeFont;
+        font-weight: 700;
+        color: #6776FF;
+    }
+}
+
+component PieChartBackground inherits Path {
+    in property <float> thickness;
+    in property <float> inner-radius;
+
+    fill: #aaaaaa40;
+
+    viewbox-width: 100;
+    viewbox-height: 100;
+
+    MoveTo {
+        x: 50;
+        y: 0;
+    }
+    ArcTo {
+        radius-x: 50;
+        radius-y: 50;
+        x: 50;
+        y: 100;
+        sweep: true;
+    }
+    ArcTo {
+        radius-x: 50;
+        radius-y: 50;
+        x: 50;
+        y: 0;
+        sweep: true;
+    }
+    LineTo {
+        x: 50;
+        y: root.thickness;
+    }
+    ArcTo {
+        radius-x: root.inner-radius;
+        radius-y: root.inner-radius;
+        x: 50;
+        y: 100 - root.thickness;
+    }
+    ArcTo {
+        radius-x: root.inner-radius;
+        radius-y: root.inner-radius;
+        x: 50;
+        y: root.thickness;
+    }
+}
+
+component PieChartFill inherits Path {
+    in property <float> thickness;
+    in property <float> inner-radius;
+    in property <float> progress;
+    in property <float> start : 0;
+
+    viewbox-width: 100;
+    viewbox-height: 100;
+
+    MoveTo {
+        y: 50 - 50 * cos(-root.start * 360deg);
+        x: 50 - 50 * sin(-root.start * 360deg);
+    }
+
+    LineTo {
+        y: 50 - root.inner-radius * cos(-root.start * 360deg);
+        x: 50 - root.inner-radius * sin(-root.start * 360deg);
+    }
+
+    ArcTo {
+        radius-x: root.inner-radius;
+        radius-y: root.inner-radius;
+        y: 50 - root.inner-radius*cos(-(root.start + root.progress) * 360deg);
+        x: 50 - root.inner-radius*sin(-(root.start + root.progress) * 360deg);
+        sweep: root.progress > 0;
+        large-arc: root.progress > 0.5;
+    }
+
+    LineTo {
+        y: 50 - 50*cos(-(root.start + root.progress) * 360deg);
+        x: 50 - 50*sin(-(root.start + root.progress) * 360deg);
+    }
+
+    ArcTo {
+        radius-x: 50;
+        radius-y: 50;
+        y: 50 - 50 * cos(-root.start * 360deg);
+        x: 50 - 50 * sin(-root.start * 360deg);
+        sweep: root.progress < 0;
+        large-arc: root.progress > 0.5;
+    }
+
+    LineTo {
+        y: 50 - 50 * cos(-root.start * 360deg);
+        x: 50 - 50 * sin(-root.start * 360deg);
+    }
+}
+
+component PieChartPainted inherits Rectangle {
+    in property <brush> brush <=> p.fill;
+    in property <float> progress;
+    in property <float> thickness: 15;
+    in property <float> inner-radius: 50 - root.thickness;
+
+    back := PieChartBackground {
+        width: 100%;
+        height: 100%;
+        thickness: root.thickness;
+        inner-radius: root.inner-radius;
+    }
+
+    p := PieChartFill {
+        width: 100%;
+        height: 100%;
+        thickness: root.thickness;
+        inner-radius: root.inner-radius;
+        progress: root.progress;
+    }
+}
+
+
+// From TopBar.cpp
+export component TopBar inherits HorizontalLayout {
+    padding-left: 25px;
+    padding-top: 35px;
+    padding-right: 25px;
+    padding-bottom: 0px;
+    spacing: 0px;
+
+    for item in [
+        { string: "Living Room", progress: 25, value: 175, color: #ff3122, gradient: @linear-gradient(0deg, #FF5C00, #FF3122) },
+        { string: "Bedroom", progress: 45, value: 205, color: #6776ff, gradient: @linear-gradient(0deg, #6776FF, #6100FF) },
+        { string: "Bathroom", progress: 15, value: 115, color: #f99055, gradient: @linear-gradient(0deg, #FFCE50, #FF3122) },
+        { string: "Kitchen", progress: 86, value: 289, color: #6776ff, gradient: @linear-gradient(0deg, #6776FF, #6100FF) },
+    ] : VerticalLayout {
+        padding: 0px;
+        spacing: 0px;
+
+        Text {
+            font-size: Skin.SmallFont;
+            text: item.string;
+        }
+
+        HorizontalLayout {
+            PieChartPainted {
+                brush: item.gradient;
+                progress: item.progress / 100;
+
+                Text {
+                    width: 100%;
+                    height: 100%;
+                    vertical-alignment: center;
+                    horizontal-alignment: center;
+                    text: item.progress + "%";
+                    color: item.color;
+                    font-size: Skin.TinyFont;
+                }
+            }
+
+            VerticalLayout {
+                Text {
+                    text: item.value;
+                    font-size: Skin.MediumFont;
+                }
+                Text {
+                    text: "kwH";
+                    font-size: Skin.SmallFont;
+                }
+            }
+            Rectangle {}
+        }
+    }
+    @children
+}
+
+// From Box.cpp
+
+// This element is not in the C++ version, created to share code between Box and the Usage element
+component BoxBase inherits Rectangle {
+    background: Skin.palette.box;
+    drop-shadow-offset-x: 6px;
+    drop-shadow-offset-y: 6px;
+    drop-shadow-blur: 6px;
+    drop-shadow-color: Skin.palette.shadow;
+}
+
+component Box inherits BoxBase {
+    in property <string> title;
+
+    VerticalLayout {
+        if (root.title != "") : Text {
+            text <=> root.title;
+            font-size: Skin.TitleFont;
+            font-weight: 700;
+        }
+        spacing: 10px;
+        padding: 15px;
+
+        @children
+    }
+}
+
+// From RoundedIcon.cpp
+component RoundedIcon inherits Rectangle {
+    in property <bool> isBright;
+    in property <bool> isSmall;
+    in property <image> iconName <=> m-graphicLabel.source;
+    in property <float> background-opacity <=> background-fill.opacity;
+
+    height: root.isSmall ? 60px : 68px;
+    width: root.isSmall ? 60px : 68px;
+
+    background-fill := Rectangle {
+        background: root.isBright ? @linear-gradient(180deg, #ff7d34, #ff3122) : @linear-gradient(180deg, #6776FF, #6100FF);
+        border-radius: 6px;
+        opacity: 1.0;
+    }
+
+    m-graphicLabel := Image {
+        x: (parent.width - self.width) / 2;
+        y: (parent.height - self.height) / 2;
+    }
+}
+
+//from Usage.cpp
+component UsageSpacer inherits Text {
+    text: "_____";
+    font-size: Skin.SmallFont;
+    color: #dddddd;
+    horizontal-stretch: 2;
+}
+
+// Deviation: To align the items visually better, this is using a grid layout
+export component Usage inherits Box {
+    title: "Usage";
+    horizontal-stretch: 1;
+
+    GridLayout {
+        spacing: 0px;
+        vertical-stretch: 1;
+        Row { Rectangle { vertical-stretch: 0; } }
+
+        Row {
+            Text { text: "Usage Today"; font-size: Skin.SmallFont; }
+            UsageSpacer { }
+            Text { text: "0,5 kwH"; font-size: Skin.SmallFont; }
+        }
+
+        Row {
+            Text { text: "Usage this month"; font-size: Skin.SmallFont; }
+            UsageSpacer { }
+            Text { text: "60 kwH"; font-size: Skin.SmallFont; }
+        }
+
+        Row {
+            Text { text: "Total working hours"; font-size: Skin.SmallFont; }
+            UsageSpacer { }
+            Text { text: "125 hrs"; font-size: Skin.SmallFont; }
+        }
+    }
+}
+
+// From UpAndDownButton.cpp
+component RoundButton inherits Image { //### QskPushButton
+    in property <bool> is-up; // ### QskAspect
+    in property <color> color: #929CB2; // Taken from the fill in the svg itself.
+
+    callback clicked <=> ta.clicked;
+
+    width: 30px;
+
+    Image {
+        source: root.is-up ? @image-url("images/up.svg") : @image-url("images/down.svg");
+        x: (parent.width - self.width) / 2;
+        y: (parent.height - self.height) / 2;
+        // Deviation from qskinny: Show a darker color when pressing the button to provide feedback.
+        colorize: ta.pressed ? root.color.darker(80%) : root.color;
+    }
+
+    ta := TouchArea {  }
+}
+component UpAndDownButton inherits Rectangle {
+    callback changed(int);
+    // FIXME: this is actually on the RoundButton
+    border-radius: root.width / 2;
+    background: Skin.palette.roundButton;
+
+    VerticalLayout {
+        u := RoundButton { is-up: true;  clicked => { root.changed(+1) }}
+        d := RoundButton { is-up: false; clicked => { root.changed(-1) }}
+    }
+}
+

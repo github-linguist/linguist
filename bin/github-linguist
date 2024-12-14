@@ -13,13 +13,14 @@ Linguist v#{Linguist::VERSION}
 Detect language type and determine language breakdown for a given Git repository.
 
 Usage: linguist <path>
-       linguist <path> [--rev REV] [--breakdown] [--json]
-       linguist [--rev REV] [--breakdown] [--json]
+       linguist <path> [--rev REV] [--tree-size] [--breakdown] [--json]
+       linguist [--rev REV] [--tree-size] [--breakdown] [--json]
 HELP
 
 def github_linguist(args)
   breakdown = false
   json_output = false
+  tree_size = Linguist::Repository::MAX_TREE_SIZE
   rev = 'HEAD'
   path = Dir.pwd
 
@@ -32,6 +33,8 @@ def github_linguist(args)
     opts.on("-r", "--rev REV", String,
             "Analyze specific git revision",
             "defaults to HEAD, see gitrevisions(1) for alternatives") { |r| rev = r }
+    opts.on("-t", "--tree-size=NUMBER", Integer,
+            "Maximum number of files scanned to detect languages (default: #{Linguist::Repository::MAX_TREE_SIZE})") { |t| tree_size = t }
     opts.on("-h", "--help", "Display a short usage summary, then exit") do
       puts opts
       exit
@@ -56,7 +59,7 @@ def github_linguist(args)
       puts "invalid revision '#{rev}' for repo '#{path}'"
       exit 1
     end
-    repo = Linguist::Repository.new(rugged, target_oid)
+    repo = Linguist::Repository.new(rugged, target_oid, tree_size)
 
     full_results = {}
     repo.languages.each do |language, size|

@@ -1,0 +1,12 @@
+##fileformat=VCFv4.2
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##INFO=<ID=AC,Number=A,Type=Integer,Description="Total number of alternate alleles in called genotypes">
+##INFO=<ID=AF,Number=A,Type=Float,Description="Estimated allele frequency in the range (0,1]">
+##INFO=<ID=NS,Number=1,Type=Integer,Description="Number of samples with data">
+##INFO=<ID=AN,Number=1,Type=Integer,Description="Total number of alleles in called genotypes">
+##INFO=<ID=LV,Number=1,Type=Integer,Description="Level in the snarl tree (0=top level)">
+##INFO=<ID=PS,Number=1,Type=String,Description="ID of variant corresponding to parent snarl">
+##INFO=<ID=AT,Number=R,Type=String,Description="Allele Traversal as path in graph">
+##contig=<ID=a,length=630>
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	b
+a	281	>1>9	AGCCGGGGCAGAAAGTTCTTCCTTGAATGTGGTCATCTGCATTTCAGCTCAGGAATCCTGCAAAAGACAG	CTGTCTTTTGCAGGATTCCTGTGCTGAAATGCAGATGACCGCATTCAAGGAAGAACTATCTGCCCCGGCT	60.0	.	AC=1;AF=1;AN=1;AT=>1>2>3>4>5>6>7>8>9,>1<8>10<6>11<4>12<2>9;NS=1;LV=0	GT	1

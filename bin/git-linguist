@@ -10,17 +10,18 @@ require 'tempfile'
 require 'zlib'
 
 class GitLinguist
-  def initialize(path, commit_oid, incremental = true)
+  def initialize(path, commit_oid, incremental = true, tree_size = Linguist::Repository.MAX_TREE_SIZE)
     @repo_path = path
     @commit_oid = commit_oid
     @incremental = incremental
+    @tree_size = tree_size
   end
 
   def linguist
     if @commit_oid.nil?
       raise "git-linguist must be called with a specific commit OID to perform language computation"
     end
-    repo = Linguist::Repository.new(rugged, @commit_oid)
+    repo = Linguist::Repository.new(rugged, @commit_oid, @tree_size)
 
     if @incremental && stats = load_language_stats
       old_commit_oid, old_stats = stats
@@ -98,6 +99,7 @@ end
 def git_linguist(args)
   incremental = true
   commit = nil
+  tree_size = Linguist::Repository::MAX_TREE_SIZE
 
   parser = OptionParser.new do |opts|
     opts.banner = <<~HELP
@@ -110,12 +112,14 @@ def git_linguist(args)
 
     opts.on("-f", "--force", "Force a full rescan") { incremental = false }
     opts.on("-c", "--commit=COMMIT", "Commit to index") { |v| commit = v}
+    opts.on("-t", "--tree-size=NUMBER", Integer,
+            "Maximum number of files scanned to detect languages (default: #{Linguist::Repository::MAX_TREE_SIZE})" ) { |t| tree_size = t }
   end
 
   parser.parse!(args)
   git_dir = `git rev-parse --git-dir`.strip
   raise "git-linguist must be run in a Git repository" unless $?.success?
-  wrapper = GitLinguist.new(git_dir, commit, incremental)
+  wrapper = GitLinguist.new(git_dir, commit, incremental, tree_size)
 
   case args.pop
   when "stats"

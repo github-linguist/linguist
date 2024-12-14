@@ -1,0 +1,25 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": ${jsonencode(ec2_policies)},
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": ${jsonencode(s3_policies)},
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": ${jsonencode(lambda_policies)},
+            "Resource": "*"
+        },
+         {
+            "Effect": "Allow",
+            "Action": ${jsonencode(dynamodb_policies)},
+            "Resource": "*"
+        }
+    ]
+}

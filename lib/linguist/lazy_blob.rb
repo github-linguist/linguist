@@ -1,6 +1,7 @@
 require 'linguist/blob_helper'
 require 'linguist/language'
-require 'rugged'
+require 'linguist/source/repository'
+require 'linguist/source/rugged'
 
 module Linguist
   class LazyBlob
@@ -10,8 +11,11 @@ module Linguist
                 'linguist-generated',
                 'linguist-detectable']
 
-    GIT_ATTR_OPTS = { :priority => [:index], :skip_system => true }
-    GIT_ATTR_FLAGS = Rugged::Repository::Attributes.parse_opts(GIT_ATTR_OPTS)
+    # DEPRECATED: use Linguist::Source::RuggedRepository::GIT_ATTR_OPTS instead
+    GIT_ATTR_OPTS = Linguist::Source::RuggedRepository::GIT_ATTR_OPTS
+
+    # DEPRECATED: use Linguist::Source::RuggedRepository::GIT_ATTR_FLAGS instead
+    GIT_ATTR_FLAGS = Linguist::Source::RuggedRepository::GIT_ATTR_FLAGS
 
     include BlobHelper
 
@@ -25,7 +29,12 @@ module Linguist
     alias :name :path
 
     def initialize(repo, oid, path, mode = nil)
-      @repository = repo
+      @repository = if repo.is_a? Linguist::Source::Repository
+        repo
+      else
+        # Allow this for backward-compatibility purposes
+        Linguist::Source::RuggedRepository.new(repo)
+      end
       @oid = oid
       @path = path
       @mode = mode
@@ -33,8 +42,7 @@ module Linguist
     end
 
     def git_attributes
-      @git_attributes ||= repository.fetch_attributes(
-        name, GIT_ATTR, GIT_ATTR_FLAGS)
+      @git_attributes ||= repository.load_attributes_for_path(name, GIT_ATTR)
     end
 
     def documentation?
@@ -106,7 +114,7 @@ module Linguist
     end
 
     def load_blob!
-      @data, @size = Rugged::Blob.to_buffer(repository, oid, MAX_SIZE) if @data.nil?
+      @data, @size = repository.load_blob(oid, MAX_SIZE) if @data.nil?
     end
   end
 end

@@ -1,0 +1,27 @@
+{
+	pki {
+		ca internal {
+			name "Internal"
+			root_cn "Internal Root Cert"
+			intermediate_cn "Internal Intermediate Cert"
+		}
+		ca internal-long-lived {
+			name "Long-lived"
+			root_cn "Internal Root Cert 2"
+			intermediate_cn "Internal Intermediate Cert 2"
+		}
+	}
+}
+
+acme-internal.example.com {
+	acme_server {
+		ca internal
+	}
+}
+
+acme-long-lived.example.com {
+	acme_server {
+		ca internal-long-lived
+		lifetime 7d
+	}
+}
