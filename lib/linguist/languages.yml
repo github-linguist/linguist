@@ -8468,10 +8468,38 @@ crontab:
   language_id: 705203557
 desktop:
   type: data
+  # https://en.wikipedia.org/wiki/INI_file
+  filenames:
+  - "systemd-system.conf"
+  - "systemd-user.conf"
+  - "logind.conf"
+  - "journald.conf"
+  - "journal-remote.conf"
+  - "journal-upload.conf"
+  - "systemd-sleep.conf"
+  - "timesyncd.conf"
   extensions:
   - ".desktop"
   - ".desktop.in"
+  # systemd unit-file types; extensions from
+  # https://www.freedesktop.org/software/systemd/man/latest/systemd.syntax.html
+  - ".automount"
+  - ".device"
+  - ".link"
+  - ".mount"
+  - ".netdev"
+  - ".network"
+  - ".nspawn"
+  - ".path"
+  - ".scope"
   - ".service"
+  - ".slice"
+  - ".snapshot"
+  - ".socket"
+  - ".swap"
+  - ".target"
+  - ".timer"
+  - ".unit"
   tm_scope: source.desktop
   ace_mode: text
   language_id: 412
