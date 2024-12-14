@@ -80,6 +80,8 @@ cd /path-to-repository
 github-linguist
 ```
 
+You can locally build the `github-linguist` binary either [using Docker](#docker) or via the [contributing documention](#contributing).
+
 You can try running `github-linguist` on the root directory in this repository itself:
 
 ```console
