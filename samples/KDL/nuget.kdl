@@ -1,0 +1,178 @@
+// Based on https://github.com/NuGet/NuGet.Client/blob/dev/src/NuGet.Clients/NuGet.CommandLine/NuGet.CommandLine.csproj
+Project {
+  PropertyGroup {
+    IsCommandLinePackage #true
+  }
+
+  Import Project=#"$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'README.md'))\build\common.props"#
+  Import Project=Sdk.props Sdk=Microsoft.NET.Sdk
+  Import Project=ilmerge.props
+
+  PropertyGroup {
+    RootNamespace NuGet.CommandLine
+    AssemblyName NuGet
+    AssemblyTitle "NuGet Command Line"
+    PackageId NuGet.CommandLine
+    TargetFramework "$(NETFXTargetFramework)"
+    GenerateDocumentationFile #false
+    Description "NuGet Command Line Interface."
+    ApplicationManifest app.manifest
+    Shipping #true
+    OutputType Exe
+    ComVisible #false
+    // Pack properties
+    PackProject #true
+    IncludeBuildOutput #false
+    TargetsForTfmSpecificContentInPackage "$(TargetsForTfmSpecificContentInPackage)" "CreateCommandlineNupkg"
+    SuppressDependenciesWhenPacking #true
+    DevelopmentDependency #true
+    PackageRequireLicenseAcceptance #false
+    UsePublicApiAnalyzer #false
+  }
+
+  Target Name=CreateCommandlineNupkg {
+    ItemGroup {
+      TfmSpecificPackageFile Include=#"$(ArtifactsDirectory)$(VsixOutputDirName)\NuGet.exe"# {
+        PackagePath "tools/"
+      }
+      TfmSpecificPackageFile Include=#"$(ArtifactsDirectory)$(VsixOutputDirName)\NuGet.pdb"# {
+        PackagePath "tools/"
+      }
+    }
+  }
+
+  ItemGroup Condition="$(DefineConstants.Contains(SIGNED_BUILD))" {
+    AssemblyAttribute Include=System.Runtime.CompilerServices.InternalsVisibleTo {
+      _Parameter1 "NuGet.CommandLine.FuncTest, PublicKey=002400000480000094000000060200000024000052534131000400000100010007d1fa57c4aed9f0a32e84aa0faefd0de9e8fd6aec8f87fb03766c834c99921eb23be79ad9d5dcc1dd9ad236132102900b723cf980957fc4e177108fc607774f29e8320e92ea05ece4e821c0a5efe8f1645c4c0c93c1ab99285d622caa652c1dfad63d745d6f2de5f17e5eaf0fc4963d261c8a12436518206dc093344d5ad293"
+    }
+    AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo" {
+      _Parameter1 "NuGet.CommandLine.Test, PublicKey=002400000480000094000000060200000024000052534131000400000100010007d1fa57c4aed9f0a32e84aa0faefd0de9e8fd6aec8f87fb03766c834c99921eb23be79ad9d5dcc1dd9ad236132102900b723cf980957fc4e177108fc607774f29e8320e92ea05ece4e821c0a5efe8f1645c4c0c93c1ab99285d622caa652c1dfad63d745d6f2de5f17e5eaf0fc4963d261c8a12436518206dc093344d5ad293"
+    }
+  }
+
+  ItemGroup Condition="!$(DefineConstants.Contains(SIGNED_BUILD))" {
+    AssemblyAttribute Include=System.Runtime.CompilerServices.InternalsVisibleTo {
+      _Parameter1 NuGet.CommandLine.FuncTest
+    }
+    AssemblyAttribute Include=System.Runtime.CompilerServices.InternalsVisibleTo {
+      _Parameter1 NuGet.CommandLine.Test
+    }
+  }
+
+  ItemGroup Condition="$(DefineConstants.Contains(SIGNED_BUILD))" {
+    AssemblyAttribute Include=System.Runtime.CompilerServices.InternalsVisibleTo {
+      _Parameter1 "NuGet.CommandLine.Test, PublicKey=002400000480000094000000060200000024000052534131000400000100010007d1fa57c4aed9f0a32e84aa0faefd0de9e8fd6aec8f87fb03766c834c99921eb23be79ad9d5dcc1dd9ad236132102900b723cf980957fc4e177108fc607774f29e8320e92ea05ece4e821c0a5efe8f1645c4c0c93c1ab99285d622caa652c1dfad63d745d6f2de5f17e5eaf0fc4963d261c8a12436518206dc093344d5ad293"
+    }
+  }
+
+  ItemGroup Condition="!$(DefineConstants.Contains(SIGNED_BUILD))" {
+    AssemblyAttribute Include=System.Runtime.CompilerServices.InternalsVisibleTo {
+      _Parameter1 NuGet.CommandLine.Test
+    }
+  }
+
+  ItemGroup {
+    Reference Include=Microsoft.Build.Utilities.v4.0
+    Reference Include=Microsoft.CSharp
+    Reference Include=System
+    Reference Include=System.ComponentModel.Composition
+    Reference Include=System.ComponentModel.Composition.Registration
+    Reference Include=System.ComponentModel.DataAnnotations
+    Reference Include=System.IO.Compression
+    Reference Include=System.Net.Http
+    Reference Include=System.Xml
+    Reference Include=System.Xml.Linq
+    Reference Include=NuGet.Core {
+      HintPath #"$(SolutionPackagesFolder)nuget.core\2.14.0-rtm-832\lib\net40-Client\NuGet.Core.dll"#
+      Aliases CoreV2
+    }
+  }
+  ItemGroup {
+    PackageReference Include=Microsoft.VisualStudio.Setup.Configuration.Interop
+    ProjectReference Include=#"$(NuGetCoreSrcDirectory)NuGet.PackageManagement\NuGet.PackageManagement.csproj"#
+    ProjectReference Include=#"$(NuGetCoreSrcDirectory)NuGet.Build.Tasks\NuGet.Build.Tasks.csproj"#
+  }
+
+  ItemGroup {
+    EmbeddedResource Update=NuGetCommand.resx {
+      Generator ResXFileCodeGenerator
+      LastGenOutput NuGetCommand.Designer.cs
+    }
+    Compile Update=NuGetCommand.Designer.cs {
+      DesignTime #true
+      AutoGen #true
+      DependentUpon NuGetCommand.resx
+    }
+    EmbeddedResource Update=NuGetResources.resx {
+      // Strings are shared by other projects, use public strings.
+      Generator PublicResXFileCodeGenerator
+      LastGenOutput NuGetResources.Designer.cs
+    }
+    Compile Update=NuGetResources.Designer.cs {
+      DesignTime #true
+      AutoGen #true
+      DependentUpon NuGetResources.resx
+    }
+  }
+
+  ItemGroup {
+    EmbeddedResource Include=#"$(NuGetCoreSrcDirectory)NuGet.Build.Tasks\NuGet.targets"# {
+      Link NuGet.targets
+      SubType Designer
+    }
+  }
+
+  // Since we are moving some code and strings from NuGet.CommandLine to NuGet.Commands, we opted to go through normal localization process (build .resources.dll) and then add them to the ILMerged nuget.exe
+  // This will also be called from CI build, after assemblies are localized, since our test infra takes nuget.exe before Localization
+  Target Name=ILMergeNuGetExe \
+         AfterTargets=Build \
+         Condition="'$(BuildingInsideVisualStudio)' != 'true' and '$(SkipILMergeOfNuGetExe)' != 'true'" \
+  {
+    PropertyGroup {
+      // when done after build, no localizedartifacts are built yet, so expected localized artifact count is 0.
+      ExpectedLocalizedArtifactCount 0 Condition="'$(ExpectedLocalizedArtifactCount)' == ''"
+    }
+    ItemGroup {
+      BuildArtifacts Include=#"$(OutputPath)\*.dll"# Exclude="@(MergeExclude)"
+      // NuGet.exe needs all NuGet.Commands.resources.dll merged in
+      LocalizedArtifacts Include=#"$(ArtifactsDirectory)\NuGet.Commands\**\$(NETFXTargetFramework)\**\*.resources.dll"#
+    }
+    Error Text="Build dependencies are inconsistent with mergeinclude specified in ilmerge.props" \
+          Condition="'@(BuildArtifacts-&gt;Count())' != '@(MergeInclude-&gt;Count())'"
+    Error Text="Satellite assemblies count ILMerged into NuGet.exe should be $(ExpectedLocalizedArtifactCount), but was: @(LocalizedArtifacts-&gt;Count())" \
+          Condition="'@(LocalizedArtifacts-&gt;Count())' != '$(ExpectedLocalizedArtifactCount)'"
+    PropertyGroup {
+      PathToBuiltNuGetExe "$(OutputPath)NuGet.exe"
+      IlmergeCommand #"$(ILMergeExePath) /lib:$(OutputPath) /out:$(ArtifactsDirectory)$(VsixOutputDirName)\NuGet.exe @(MergeAllowDup -> '/allowdup:%(Identity)', ' ') /log:$(OutputPath)IlMergeLog.txt"#
+      IlmergeCommand Condition="Exists($(MS_PFX_PATH))" "$(IlmergeCommand) /delaysign /keyfile:$(MS_PFX_PATH)"
+      // LocalizedArtifacts need fullpath, since there will be duplicate file names
+      IlmergeCommand "$(IlmergeCommand) $(PathToBuiltNuGetExe) @(BuildArtifacts->'%(filename)%(extension)', ' ') @(LocalizedArtifacts->'%(fullpath)', ' ')"
+    }
+    MakeDir Directories="$(ArtifactsDirectory)$(VsixOutputDirName)"
+    Exec Command="$(IlmergeCommand)" ContinueOnError=#false
+  }
+
+  Import Project="$(BuildCommonDirectory)common.targets"
+  Import Project="$(BuildCommonDirectory)embedinterop.targets"
+
+  // Do nothing. This basically strips away the framework assemblies from the resulting nuspec.
+  Target Name=_GetFrameworkAssemblyReferences DependsOnTargets=ResolveReferences
+
+  Target Name=GetSigningInputs Returns="@(DllsToSign)" {
+    ItemGroup {
+      DllsToSign Include=#"$(ArtifactsDirectory)$(VsixOutputDirName)\NuGet.exe"# {
+        StrongName MsSharedLib72
+        Authenticode Microsoft400
+      }
+    }
+  }
+
+  Target Name=GetSymbolsToIndex Returns="@(SymbolsToIndex)" {
+    ItemGroup {
+      SymbolsToIndex Include=#"$(ArtifactsDirectory)$(VsixOutputDirName)\NuGet.exe"#
+      SymbolsToIndex Include=#"$(ArtifactsDirectory)$(VsixOutputDirName)\NuGet.pdb"#
+    }
+  }
+
+  Import Project=Sdk.targets Sdk=Microsoft.NET.Sdk
+}
