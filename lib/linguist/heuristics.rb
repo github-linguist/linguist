@@ -126,7 +126,7 @@ module Linguist
     # Internal: Perform the heuristic
     def call(data)
       matched = @rules.find do |rule|
-        rule['pattern'].match(data)
+        rule['pattern'].match?(data)
       end
       if !matched.nil?
         languages = matched['language']
@@ -145,14 +145,14 @@ module Linguist
       @pats = pats
     end
 
-    def match(input)
-      return !@pats.any? { |pat| !pat.match(input) }
+    def match?(input)
+      return @pats.all? { |pat| pat.match?(input) }
     end
 
   end
 
   class AlwaysMatch
-    def match(input)
+    def match?(input)
       return true
     end
   end
@@ -163,8 +163,8 @@ module Linguist
       @pat = pat
     end
 
-    def match(input)
-      return !@pat.match(input)
+    def match?(input)
+      return !@pat.match?(input)
     end
 
   end
