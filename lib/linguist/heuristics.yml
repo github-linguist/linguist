@@ -956,7 +956,7 @@ named_patterns:
   - '^[ \t]*#[ \t]*(?:precache|using_animtree)[ \t]*\('
   json: '\A\s*[{\[]'
   key_equals_value: '^[^#!;][^=]*='
-  lpc: '(mixed|nosave|clone_object)|(^inherit [\"A-Za-z][A-Za-z0-9_]*)|(((public|private|protected)\s+)?((varargs|nomask|noshadow)+\s+)?((string|int|mixed|object|mapping)\s+)?[A-Za-z][A-Za-z0-9_]*\()'
+  lpc: '(mixed|nosave|clone_object)|(this_player\(\))|(^inherit [\"A-Za-z][A-Za-z0-9_]*)|(((public|private|protected)\s+)?((varargs|nomask|noshadow)+\s+)?((string|int|mixed|object|mapping)\s+)?[A-Za-z][A-Za-z0-9_]*\()'
   m68k:
   - '(?im)\bmoveq(?:\.l)?\s+#(?:\$-?[0-9a-f]{1,3}|%[0-1]{1,8}|-?[0-9]{1,3}),\s*d[0-7]\b'
   - '(?im)^\s*move(?:\.[bwl])?\s+(?:sr|usp),\s*[^\s]+'
