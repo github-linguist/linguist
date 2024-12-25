@@ -1,0 +1,32 @@
+// 版权 @2021 凹语言 作者。保留所有权利。
+
+type S1 struct {
+	a: i32
+}
+
+type S2 struct {
+	a: i32
+}
+
+type i1 interface {
+	f()
+}
+
+func S1.f {
+	println("This is S1, this.a==", this.a)
+}
+
+func S2.f {
+	println("This is S2, this.a==", this.a)
+}
+
+func main {
+	v1 := S1{a: 13}
+	v2 := S2{a: 42}
+
+	i: i1 = &v1
+	i.f()
+
+	i = &v2
+	i.f()
+}

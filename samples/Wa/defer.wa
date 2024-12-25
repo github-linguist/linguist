@@ -1,0 +1,15 @@
+// 版权 @2024 凹语言 作者。保留所有权利。
+
+func main {
+	defer println("a1")
+	defer println("a2")
+	println("a3")
+
+	for i := 0; i < 3; i++ {
+		defer println("i.v0:", i)
+	}
+
+	for i := 0; i < 3; i++ {
+		defer func { println("i.v1:", i) } ()
+	}
+}

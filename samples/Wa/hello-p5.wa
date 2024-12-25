@@ -1,0 +1,17 @@
+// 版权 @2024 P5-hello 作者。保留所有权利。
+
+import "js/p5"
+
+func init {
+	p5.CreateCanvas(400)
+	p5.Background(220)
+	p5.Stroke(p5.RED)
+}
+
+func Draw {
+	if p5.MouseIsPressed {
+		p5.Line(p5.MouseX, p5.MouseY, p5.PMouseX, p5.PMouseY)
+	} else {
+		p5.Point(p5.MouseX, p5.MouseY)
+	}
+}

@@ -1,0 +1,16 @@
+// 版权 @2019 凹语言 作者。保留所有权利。
+
+func main {
+	a := 0.0
+	for y := 1.5; y > -1.5; y = y - 0.15 {
+		for x := -1.5; x < 1.5; x = x + 0.07 {
+			a = x*x + y*y - 1.0
+			if a*a*a < x*x*y*y*y {
+				print("@")
+			} else {
+				print(" ")
+			}
+		}
+		println()
+	}
+}

@@ -1,0 +1,9 @@
+// 版权 @2024 凹语言 作者。保留所有权利。
+
+func main {
+	x: complex128 = complex(1, 2) // 1+2i
+	y: complex128 = complex(3, 4) // 3+4i
+	println(x*y)                  // "(-5+10i)"
+	println(real(x*y))            // "-5"
+	println(imag(x*y))            // "10"
+}

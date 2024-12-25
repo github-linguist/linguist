@@ -1,0 +1,12 @@
+// 版权 @2024 凹语言 作者。保留所有权利。
+
+func main {
+	m := make(map[string]int)
+	m["a"] = 13
+	m["b"] = 42
+	m["c"] = 29
+
+	for k, v := range m {
+		println(k, v)
+	}
+}
