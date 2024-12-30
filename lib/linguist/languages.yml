@@ -8468,7 +8468,6 @@ crontab:
   language_id: 705203557
 desktop:
   type: data
-  # https://en.wikipedia.org/wiki/INI_file
   filenames:
   - "systemd-system.conf"
   - "systemd-user.conf"
@@ -8481,8 +8480,6 @@ desktop:
   extensions:
   - ".desktop"
   - ".desktop.in"
-  # systemd unit-file types; extensions from
-  # https://www.freedesktop.org/software/systemd/man/latest/systemd.syntax.html
   - ".automount"
   - ".mount"
   - ".netdev"
