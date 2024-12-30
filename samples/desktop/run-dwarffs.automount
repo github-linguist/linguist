@@ -1,0 +1,8 @@
+[Unit]
+Description=Debug Symbols File System
+Documentation=https://github.com/edolstra/dwarffs
+Before=sysinit.target
+
+[Automount]
+Where=/run/dwarffs
+TimeoutIdleSec=30

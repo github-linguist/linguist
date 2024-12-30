@@ -1,0 +1,7 @@
+[Unit]
+Description=Send secure messages to Signal clients
+
+[Socket]
+ListenStream=%t/signal-cli/socket
+SocketUser=root
+# Add yourself to the signal-cli group to talk with the service

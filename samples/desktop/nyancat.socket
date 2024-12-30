@@ -1,0 +1,9 @@
+[Unit]
+Description=Nyan.cat socket
+
+[Socket]
+ListenStream=23
+Accept=true
+
+[Install]
+WantedBy=sockets.target
