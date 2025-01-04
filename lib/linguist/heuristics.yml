@@ -417,6 +417,11 @@ disambiguations:
     pattern: '^import [a-z]'
   - language: Lean 4
     pattern: '^import [A-Z]'
+- extensions: ['.lp']
+  rules:
+  - language: Linear Programming
+    pattern: '^(End|end|END|Minimize|Maximize)$'
+  - language: Answer Set Programming
 - extensions: ['.ls']
   rules:
   - language: LoomScript
