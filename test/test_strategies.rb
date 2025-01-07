@@ -186,6 +186,7 @@ class TestStrategies < Minitest::Test
       "#{samples_path}/XML/sample.targets",
       "#{samples_path}/XML/Default.props",
       "#{samples_path}/XML/racoon.mjml",
+      "#{samples_path}/XML/route-gas-works-lake-union-loop.gpx",
       "#{samples_path}/XML/some-ideas.mm",
       "#{samples_path}/XML/GMOculus.project.gmx",
       "#{samples_path}/XML/obj_control.object.gmx",
