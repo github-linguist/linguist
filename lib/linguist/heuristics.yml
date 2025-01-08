@@ -511,7 +511,7 @@ disambiguations:
   - language: MAXScript
 - extensions: ['.msg']
   rules:
-  - language: omnetpp-msg
+  - language: OMNeT++ MSG
     pattern: '^cplusplus\(?[\S]*\)?[\s]*\{?\{?|^namespace[\s]+([^.\s]*\.)*[^.\s]*;|^struct[\s]+[\S]+|^message[\s]+[\S]+(extends )?[\S]*[\s]*|^packet[\s]+[\S]+|^class[\s]+[\S]+(extends )?[\S]*[\s]*|^enum[\s]+[\S]+|^import ([^.\s]*\.)*[^.\s]*;'
 - extensions: ['.n']
   rules:
