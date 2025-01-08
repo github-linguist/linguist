@@ -357,6 +357,8 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Metal:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **Microsoft Visual Studio Solution:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
 - **MiniYAML:** [OpenRA/atom-miniyaml](https://github.com/OpenRA/atom-miniyaml)
+- **MiniZinc:** [Dekker1/vscode-minizinc](https://github.com/Dekker1/vscode-minizinc)
+- **MiniZinc Data:** [Dekker1/vscode-minizinc](https://github.com/Dekker1/vscode-minizinc)
 - **Mint:** [mint-lang/mint-vscode](https://github.com/mint-lang/mint-vscode)
 - **Mirah:** [atom/language-ruby](https://github.com/atom/language-ruby)
 - **Modelica:** [BorisChumichev/modelicaSublimeTextPackage](https://github.com/BorisChumichev/modelicaSublimeTextPackage)
