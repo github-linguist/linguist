@@ -944,7 +944,6 @@ named_patterns:
   freebasic:
   - '(?i)^[ \t]*#(?:define|endif|endmacro|ifn?def|include|lang|macro|pragma)(?:$|\s)'
   - '(?i)^[ \t]*dim( shared)? [a-z_][a-z0-9_]* as [a-z_][a-z0-9_]* ptr'
-  - '(?i)^[ \t]*dim( shared)? as [a-z_][a-z0-9_]* [a-z_][a-z0-9_]*'
   gsc:
   - '^\s*#\s*(?:using|insert|include|define|namespace)[ \t]+\w'
   - '^\s*(?>(?:autoexec|private)\s+){0,2}function\s+(?>(?:autoexec|private)\s+){0,2}\w+\s*\('
