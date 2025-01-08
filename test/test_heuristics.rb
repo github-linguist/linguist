@@ -279,7 +279,8 @@ class TestHeuristics < Minitest::Test
       "FreeBASIC" => all_fixtures("FreeBASIC", "*.bas"),
       "BASIC" => all_fixtures("BASIC", "*.bas"),
       "VBA" => all_fixtures("VBA", "*.bas"),
-      "Visual Basic 6.0" => all_fixtures("Visual Basic 6.0", "*.bas")
+      "Visual Basic 6.0" => all_fixtures("Visual Basic 6.0", "*.bas"),
+      "QuickBASIC" => all_fixtures("QuickBASIC", "*.bas")
     })
   end
 
@@ -719,6 +720,12 @@ class TestHeuristics < Minitest::Test
       "Roff" => all_fixtures("Roff", "*.ms"),
       "Unix Assembly" => all_fixtures("Unix Assembly", "*.ms"),
       "MAXScript" => all_fixtures("MAXScript", "*.ms")
+    })
+  end
+
+  def test_msg_by_heuristics
+    assert_heuristics({
+      "omnetpp-msg" => all_fixtures("omnetpp-msg", "*.msg"),
     })
   end
 
