@@ -295,6 +295,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Julia REPL:** [JuliaEditorSupport/atom-language-julia](https://github.com/JuliaEditorSupport/atom-language-julia)
 - **Jupyter Notebook:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
 - **Just:** [nefrob/vscode-just](https://github.com/nefrob/vscode-just)
+- **KDL:** [kdl-org/vscode-kdl](https://github.com/kdl-org/vscode-kdl)
 - **Kaitai Struct:** [atom/language-yaml](https://github.com/atom/language-yaml)
 - **KakouneScript:** [kakoune-editor/language-kak](https://github.com/kakoune-editor/language-kak)
 - **KerboScript:** [KSP-KOS/language-kerboscript](https://github.com/KSP-KOS/language-kerboscript)
