@@ -985,6 +985,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_svx_by_heuristics
+    assert_heuristics({
+      "Survex data" => all_fixtures("Survex data", "*.svx"),
+      "mdsvex" => all_fixtures("mdsvex", "*.svx")
+    })
+  end
+
   def test_sw_by_heuristics
     assert_heuristics({
       "Sway" => all_fixtures("Sway", "*.sw"),
