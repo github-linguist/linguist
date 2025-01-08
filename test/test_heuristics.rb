@@ -615,6 +615,13 @@ class TestHeuristics < Minitest::Test
     }, "main.lisp")
   end
 
+  def test_lp_by_heuristics
+    assert_heuristics({
+      "Answer Set Programming" => all_fixtures("Answer Set Programming", "*.lp"),
+      "Linear Programming" => all_fixtures("Linear Programming", "*.lp")
+    })
+  end
+
   def test_ls_by_heuristics
     assert_heuristics({
       "LiveScript" => all_fixtures("LiveScript", "*.ls"),

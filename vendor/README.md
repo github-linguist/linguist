@@ -32,6 +32,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Alpine Abuild:** [atom/language-shellscript](https://github.com/atom/language-shellscript)
 - **Altium Designer:** [textmate/ini.tmbundle](https://github.com/textmate/ini.tmbundle)
 - **AngelScript:** [wronex/sublime-angelscript](https://github.com/wronex/sublime-angelscript)
+- **Answer Set Programming:** [nickswalker/asp-syntax-highlight](https://github.com/nickswalker/asp-syntax-highlight)
 - **Ant Build System:** [textmate/ant.tmbundle](https://github.com/textmate/ant.tmbundle)
 - **Antlers:** [Stillat/vscode-antlers-language-server](https://github.com/Stillat/vscode-antlers-language-server)
 - **ApacheConf:** [textmate/apache.tmbundle](https://github.com/textmate/apache.tmbundle)

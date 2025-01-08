@@ -307,6 +307,16 @@ AngelScript:
   codemirror_mode: clike
   codemirror_mime_type: text/x-c++src
   language_id: 389477596
+Answer Set Programming:
+  type: programming
+  color: "#A9CC29"
+  extensions:
+  - ".lp"
+  interpreters:
+  - "clingo"
+  tm_scope: source.answersetprogramming
+  ace_mode: prolog
+  language_id: 433009171
 Ant Build System:
   type: data
   color: "#A9157E"
@@ -3926,6 +3936,13 @@ Limbo:
   tm_scope: none
   ace_mode: text
   language_id: 201
+Linear Programming:
+  type: programming
+  extensions:
+  - ".lp"
+  tm_scope: none
+  ace_mode: text
+  language_id: 377204539
 Linker Script:
   type: data
   extensions:
