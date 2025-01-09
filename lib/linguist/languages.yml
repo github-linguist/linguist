@@ -313,7 +313,7 @@ Answer Set Programming:
   extensions:
   - ".lp"
   interpreters:
-  - "clingo"
+  - clingo
   tm_scope: source.answersetprogramming
   ace_mode: prolog
   language_id: 433009171
@@ -5207,6 +5207,15 @@ Org:
   tm_scope: none
   ace_mode: text
   language_id: 267
+OverpassQL:
+  type: programming
+  color: "#cce2aa"
+  wrap: true
+  extensions:
+  - ".overpassql"
+  tm_scope: source.overpassql
+  ace_mode: text
+  language_id: 689079655
 Ox:
   type: programming
   extensions:
