@@ -656,6 +656,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **XQuery:** [wcandillon/language-jsoniq](https://github.com/wcandillon/language-jsoniq)
 - **XS:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **XSLT:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)
+- **Xmake:** [xmake-io/xmake-lua.tmbundle](https://github.com/xmake-io/xmake-lua.tmbundle)
 - **Xojo:** [jimmckay/XojoSyntaxTM](https://github.com/jimmckay/XojoSyntaxTM)
 - **Xonsh:** [MagicStack/MagicPython](https://github.com/MagicStack/MagicPython)
 - **Xtend:** [staltz/SublimeXtend](https://github.com/staltz/SublimeXtend)
