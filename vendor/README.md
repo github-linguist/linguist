@@ -35,7 +35,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Answer Set Programming:** [nickswalker/asp-syntax-highlight](https://github.com/nickswalker/asp-syntax-highlight)
 - **Ant Build System:** [textmate/ant.tmbundle](https://github.com/textmate/ant.tmbundle)
 - **Antlers:** [Stillat/vscode-antlers-language-server](https://github.com/Stillat/vscode-antlers-language-server)
-- **ApacheConf:** [textmate/apache.tmbundle](https://github.com/textmate/apache.tmbundle)
+- **ApacheConf:** [mrmlnc/vscode-apache](https://github.com/mrmlnc/vscode-apache)
 - **Apex:** [forcedotcom/apex-tmLanguage](https://github.com/forcedotcom/apex-tmLanguage)
 - **Apollo Guidance Computer:** [Alhadis/language-agc](https://github.com/Alhadis/language-agc)
 - **AppleScript:** [textmate/applescript.tmbundle](https://github.com/textmate/applescript.tmbundle)
