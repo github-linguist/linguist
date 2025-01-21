@@ -39,6 +39,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Apex:** [forcedotcom/apex-tmLanguage](https://github.com/forcedotcom/apex-tmLanguage)
 - **Apollo Guidance Computer:** [Alhadis/language-agc](https://github.com/Alhadis/language-agc)
 - **AppleScript:** [textmate/applescript.tmbundle](https://github.com/textmate/applescript.tmbundle)
+- **Amix:** [Robok-Engine/Robok-Amix](https://github.com/Robok-Engine/Robok-Amix)
 - **AsciiDoc:** [zuckschwerdt/asciidoc.tmbundle](https://github.com/zuckschwerdt/asciidoc.tmbundle)
 - **AspectJ:** [pchaigno/sublime-aspectj](https://github.com/pchaigno/sublime-aspectj)
 - **Assembly:** [Nessphoro/sublimeassembly](https://github.com/Nessphoro/sublimeassembly)
