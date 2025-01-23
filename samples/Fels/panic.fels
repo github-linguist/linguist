@@ -1,0 +1,19 @@
+using "fels.lang.sfm"
+
+class Exceptions {
+    func ArgumentsMissmatchException(text) {
+        panic("ArgumentsMissmatchException: " + text)
+    }
+
+    func OperationIsNotSupportedException(text) {
+        panic("OperationIsNotSupportedException: " + text)
+    }
+
+    func PanicException(text) {
+        panic("Custom exception: " + text)
+    }
+
+    func TypeException(text) {
+        panic("Type exception: " + text)
+    }
+}
