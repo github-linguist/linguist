@@ -1,0 +1,40 @@
+using "fels.lang.sfm"
+using "fels.utils.arrays"
+
+class List {
+    arr = NULL
+    lp = 0
+
+    func List(size) {
+        arr = arrays.array(size)
+    }
+
+    func size() {
+        return length(arr)
+    }
+
+    func set(pos, str) {
+        arr[pos] = str
+        lp++
+    }
+
+    func get(pos) {
+        return arr[pos]
+    }
+
+    func isPosEmpty(pos) {
+        if (arr[pos] == getEmpty()) {
+            return true
+        }
+        return false
+    }
+
+    func add(str) {
+        arr[lp] = str
+        lp++
+    }
+}
+
+l = new List(10)
+l.set(0,"adsf")
+println(l.get(0))

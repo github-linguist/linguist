@@ -1,0 +1,15 @@
+using "fels.lang.sfm"
+
+var = 0
+loop{
+    if(var <= 5){
+        break
+    }
+    println("var = "+var)
+    var++
+}
+
+
+range(5){
+    println("range loop")
+}

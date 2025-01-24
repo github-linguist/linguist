@@ -1,0 +1,28 @@
+using "fels.lang.sfm"
+
+
+class Vehicle{
+    func Vehicle(){}
+
+    func getSpeed(){
+        return this.speed
+    }
+
+    func setSpeed(speed){
+        this.speed = speed
+    }
+
+    func setPassangers(count){
+        this.passangers = count
+    }
+
+    func getPassangers(){
+        return this.passangers
+    }
+}
+
+car = new Vehicle()
+car.setSpeed(100)
+car.setPassangers(4)
+println(car.getSpeed())
+println(car.getPassangers())
