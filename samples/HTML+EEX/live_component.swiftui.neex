@@ -1,0 +1,5 @@
+<.csrf_token />
+<Style url={~p"/assets/app.<%= context.format %>.styles"} />
+<NavigationStack>
+  {@inner_content}
+</NavigationStack>
