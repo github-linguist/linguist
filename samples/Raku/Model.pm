@@ -140,7 +140,7 @@ method render-svg(
     ).plot(:xy-lines);
     $f.say(SVG.serialize($svg));
     $f.close;
-    say "Wrote ouput to '$filename'";
+    say "Wrote output to '$filename'";
 }
 
 # vim: ft=perl6
