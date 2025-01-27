@@ -276,10 +276,11 @@ class TestHeuristics < Minitest::Test
   def test_bas_by_heuristics
     assert_heuristics({
       "B4X" => all_fixtures("B4X", "*.bas"),
-      "FreeBasic" => all_fixtures("FreeBasic", "*.bas"),
+      "FreeBASIC" => all_fixtures("FreeBASIC", "*.bas"),
       "BASIC" => all_fixtures("BASIC", "*.bas"),
       "VBA" => all_fixtures("VBA", "*.bas"),
-      "Visual Basic 6.0" => all_fixtures("Visual Basic 6.0", "*.bas")
+      "Visual Basic 6.0" => all_fixtures("Visual Basic 6.0", "*.bas"),
+      "QuickBASIC" => all_fixtures("QuickBASIC", "*.bas")
     })
   end
 
@@ -301,7 +302,7 @@ class TestHeuristics < Minitest::Test
 
   def test_bi_by_heuristics
     assert_heuristics({
-      "FreeBasic" => all_fixtures("FreeBasic", "*.bi")
+      "FreeBASIC" => all_fixtures("FreeBASIC", "*.bi")
     })
   end
 
@@ -614,6 +615,13 @@ class TestHeuristics < Minitest::Test
     }, "main.lisp")
   end
 
+  def test_lp_by_heuristics
+    assert_heuristics({
+      "Answer Set Programming" => all_fixtures("Answer Set Programming", "*.lp"),
+      "Linear Programming" => all_fixtures("Linear Programming", "*.lp")
+    })
+  end
+
   def test_ls_by_heuristics
     assert_heuristics({
       "LiveScript" => all_fixtures("LiveScript", "*.ls"),
@@ -719,6 +727,12 @@ class TestHeuristics < Minitest::Test
       "Roff" => all_fixtures("Roff", "*.ms"),
       "Unix Assembly" => all_fixtures("Unix Assembly", "*.ms"),
       "MAXScript" => all_fixtures("MAXScript", "*.ms")
+    })
+  end
+
+  def test_msg_by_heuristics
+    assert_heuristics({
+      "OMNeT++ MSG" => all_fixtures("OMNeT++ MSG", "*.msg"),
     })
   end
 
@@ -978,6 +992,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_svx_by_heuristics
+    assert_heuristics({
+      "Survex data" => all_fixtures("Survex data", "*.svx"),
+      "mdsvex" => all_fixtures("mdsvex", "*.svx")
+    })
+  end
+
   def test_sw_by_heuristics
     assert_heuristics({
       "Sway" => all_fixtures("Sway", "*.sw"),
@@ -993,6 +1014,13 @@ class TestHeuristics < Minitest::Test
       "Raku" => ["Raku/01-dash-uppercase-i.t", "Raku/01-parse.t", "Raku/advent2009-day16.t",
                  "Raku/basic-open.t", "Raku/calendar.t", "Raku/for.t", "Raku/hash.t",
                  "Raku/listquote-whitespace.t"]
+    })
+  end
+
+  def test_tact_by_heuristics
+    assert_heuristics({
+      "Tact" => all_fixtures("Tact", "*.tact"),
+      "JSON" => all_fixtures("JSON", "*.tact"),
     })
   end
 
@@ -1020,6 +1048,13 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "TypeScript" => all_fixtures("TypeScript", "*.ts"),
       "XML" => all_fixtures("XML", "*.ts")
+    })
+  end
+
+  def test_tsp_by_heuristics
+    assert_heuristics({
+      "TypeSpec" => all_fixtures("TypeSpec", "*.tsp"),
+      "TSPLIB data" => all_fixtures("TSPLIB data", "*.tsp")
     })
   end
 
