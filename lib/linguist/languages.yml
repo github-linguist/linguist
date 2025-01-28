@@ -4141,8 +4141,6 @@ M4Sugar:
 MATLAB:
   type: programming
   color: "#e16737"
-  aliases:
-  - octave
   extensions:
   - ".matlab"
   - ".m"
@@ -5060,6 +5058,16 @@ Objective-J:
   tm_scope: source.js.objj
   ace_mode: text
   language_id: 259
+Octave:
+  type: programming
+  color: "#2299c4"
+  extensions:
+  - ".m"
+  tm_scope: source.octave
+  ace_mode: text
+  codemirror_mode: octave
+  codemirror_mime_type: text/x-octave
+  language_id: 854759768
 Odin:
   type: programming
   color: "#60AFFE"
