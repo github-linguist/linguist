@@ -115,7 +115,8 @@ module Linguist
       generated_jooq? ||
       generated_pascal_tlb? ||
       generated_sorbet_rbi? ||
-      generated_sqlx_query?
+      generated_sqlx_query? ||
+      generated_at_marker?
     end
 
     # Internal: Is the blob an Xcode file?
@@ -906,6 +907,15 @@ module Linguist
     # Returns true or false.
     def generated_sqlx_query?
       !!name.match(/(?:^|.*\/)\.sqlx\/query-.+\.json$/)
+    end
+
+    # Internal: Is this a file marked as generated using an @ generated marker?
+    #
+    # See https://generated.at for more information.
+    #
+    # Returns true or false.
+    def generated_at_marker?
+      lines.first(40).any? { |line| line.include?("@gen" + "erated") }
     end
   end
 end

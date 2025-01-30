@@ -216,6 +216,9 @@ class TestGenerated < Minitest::Test
     generated_sample_without_loading_data("Dummy/htmlcov/coverage_html.js")
     generated_sample_without_loading_data("Dummy/htmlcov/style.css")
     generated_sample_without_loading_data("Dummy/htmlcov/status.json")
+
+    # generated.at marker
+    generated_sample_loading_data("YAML/generated.at.yaml")
   end
 
   # We've whitelisted these files on purpose, even though they're machine-generated.
