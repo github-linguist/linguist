@@ -1,0 +1,213 @@
+//
+// common.h: Common definitions and such.
+//
+// CEN64: Cycle-Accurate Nintendo 64 Emulator.
+// Copyright (C) 2015, Tyler J. Stachecki.
+//
+// This file is subject to the terms and conditions defined in
+// 'LICENSE', which is part of this source code package.
+//
+
+#ifndef __common_h__
+#define __common_h__
+
+#define tostring(s)	#s
+#define stringify(s)	tostring(s)
+
+#ifdef _MSC_VER
+#define inline _inline
+#endif
+
+#ifndef __cplusplus
+#include <assert.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+#else
+#include <cassert>
+#include <cstddef>
+#include <cstdlib>
+#include <cstdint>
+#include <cstdio>
+#include <cstring>
+#endif
+
+#ifndef _MSC_VER
+#ifndef __cplusplus
+#include <stdbool.h>
+#else
+#include <cstdbool>
+#endif
+
+#else
+typedef char bool;
+#define false 0
+#define true 1
+#endif
+
+#ifdef __llvm__
+#define CEN64_COMPILER "llvm-" stringify(__clang_major__)"." \
+  stringify(__clang_minor__)"." stringify(__clang_patchlevel__)
+#elif defined(__GNUC__)
+#define CEN64_COMPILER "gcc-" stringify(__GNUC__)"." \
+  stringify(__GNUC_MINOR__)"." stringify(__GNUC_PATCHLEVEL__)
+#elif defined(_MSC_VER)
+#if _MSC_VER < 1300
+#define CEN64_COMPILER "MSVC 6.0"
+#elif _MSC_VER < 1500
+#define CEN64_COMPILER "MSVC 2005"
+#elif _MSC_VER < 1600
+#define CEN64_COMPILER "MSVC 2008"
+#elif _MSC_VER < 1700
+#define CEN64_COMPILER "MSVC 2010"
+#elif _MSC_VER < 1800
+#define CEN64_COMPILER "MSVC 2012"
+#elif _MSC_VER < 1900
+#define CEN64_COMPILER "MSVC 2013"
+#elif _MSC_VER < 2000
+#define CEN64_COMPILER "MSVC 2014"
+#else
+#define CEN64_COMPILER "MSVC"
+#endif
+#else
+#define CEN64_COMPILER "Unknown"
+#endif
+
+#cmakedefine CEN64_ARCH_DIR "@CEN64_ARCH_DIR@"
+#cmakedefine CEN64_ARCH_SUPPORT "@CEN64_ARCH_SUPPORT@"
+
+#define CACHE_LINE_SIZE 64
+
+// Define cen64_align().
+#ifdef _MSC_VER
+#define cen64_align(decl, value) __declspec(align(value)) decl
+
+#elif (defined __GNUC__)
+#define cen64_align(decl, value) decl __attribute__ ((aligned(value)))
+
+#else
+#define cen64_align(decl, value) decl value
+#endif
+
+// Define cen64_cold and cen64_hot.
+#ifdef __GNUC__
+#define cen64_cold __attribute__((cold))
+#define cen64_hot __attribute__((hot))
+#else
+#define cen64_cold
+#define cen64_hot
+#endif
+
+// Define cen64_flatten.
+#ifdef __GNUC__
+#define cen64_flatten __attribute__((flatten))
+#else
+#define cen64_flatten
+#endif
+
+// Define likely()/unlikely().
+#ifdef __GNUC__
+#define likely(expr) __builtin_expect(!!(expr), !0)
+#define unlikely(expr) __builtin_expect(!!(expr), 0)
+
+#else
+#define likely(expr) expr
+#define unlikely(expr) expr
+#endif
+
+// Define unused().
+#ifdef __GNUC__
+#define unused(decl) __attribute__((unused)) decl
+#else
+#define unused(decl) decl
+#endif
+
+// Byte order swap functions.
+#ifdef BIG_ENDIAN_HOST
+#define WORD_ADDR_XOR 0
+#else
+#define WORD_ADDR_XOR 4
+#endif
+
+#ifndef _MSC_VER
+#ifdef BIG_ENDIAN_HOST
+#define htonll(x) (x)
+#define ntohll(x) (x)
+#else
+#ifndef __APPLE__
+#define htonll(x) __builtin_bswap64(x)
+#define ntohll(x) __builtin_bswap64(x)
+#endif
+#endif
+#endif
+
+#ifdef __GNUC__
+__attribute__((pure))
+#endif
+static inline uint32_t byteswap_32(uint32_t word) {
+#ifdef BIG_ENDIAN_HOST
+  return word;
+#elif defined(_MSC_VER)
+  return _byteswap_ulong(word);
+#elif defined(__GNUC__)
+  return __builtin_bswap32(word);
+#else
+  return
+  (((((word) >> 24) & 0x000000FF) | \
+    (((word) >>  8) & 0x0000FF00) | \
+    (((word) <<  8) & 0x00FF0000) | \
+    (((word) << 24) & 0xFF000000));
+#endif
+}
+
+#ifdef __GNUC__
+__attribute__((pure))
+#endif
+static inline uint16_t byteswap_16(uint16_t hword) {
+#ifdef BIG_ENDIAN_HOST
+  return hword;
+#elif defined(_MSC_VER)
+  return _byteswap_ushort(hword);
+#elif defined(__GNUC__)
+  return __builtin_bswap16(hword);
+#else
+  return
+  ((((hword) >> 8) & 0x00FF) | \
+    (((hword) <<  8) & 0xFF00));
+#endif
+}
+
+// Return from simulation function.
+struct bus_controller;
+
+#ifdef __GNUC__
+ __attribute__ ((noreturn))
+#endif
+void cen64_return(struct bus_controller *bus)
+;
+
+#cmakedefine DEBUG_MMIO_REGISTER_ACCESS
+#ifdef DEBUG_MMIO_REGISTER_ACCESS
+#ifndef __cplusplus
+#include <stdio.h>
+#else
+#include <cstdio>
+#endif
+#define debug_mmio_read(what, mnemonic, val) printf(#what": READ [%s]: 0x%.8X\n", mnemonic, val)
+#define debug_mmio_write(what, mnemonic, val, dqm) printf(#what": WRITE [%s]: 0x%.8X/0x%.8X\n", mnemonic, val, dqm)
+#else
+#define debug_mmio_read(what, mnemonic, val) do {} while (0)
+#define debug_mmio_write(what, mnemonic, val, dqm) do {} while (0)
+#endif
+
+#cmakedefine VR4300_BUSY_WAIT_DETECTION
+
+#include "common/debug.h"
+
+// Common/shared LUT with one-hot semantics.
+// Returns index (0-based) of hot bit, or -1.
+extern const int8_t cen64_one_hot_lut[256];
+
+#endif
