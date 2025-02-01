@@ -615,6 +615,13 @@ class TestHeuristics < Minitest::Test
     }, "main.lisp")
   end
 
+  def test_lp_by_heuristics
+    assert_heuristics({
+      "Answer Set Programming" => all_fixtures("Answer Set Programming", "*.lp"),
+      "Linear Programming" => all_fixtures("Linear Programming", "*.lp")
+    })
+  end
+
   def test_ls_by_heuristics
     assert_heuristics({
       "LiveScript" => all_fixtures("LiveScript", "*.ls"),
@@ -725,7 +732,7 @@ class TestHeuristics < Minitest::Test
 
   def test_msg_by_heuristics
     assert_heuristics({
-      "omnetpp-msg" => all_fixtures("omnetpp-msg", "*.msg"),
+      "OMNeT++ MSG" => all_fixtures("OMNeT++ MSG", "*.msg"),
     })
   end
 
@@ -982,6 +989,13 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "STL" => Dir.glob("#{fixtures_path}/Generic/stl/STL/*"),
       nil => Dir.glob("#{fixtures_path}/Generic/stl/nil/*")
+    })
+  end
+
+  def test_svx_by_heuristics
+    assert_heuristics({
+      "Survex data" => all_fixtures("Survex data", "*.svx"),
+      "mdsvex" => all_fixtures("mdsvex", "*.svx")
     })
   end
 
