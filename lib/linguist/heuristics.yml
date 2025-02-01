@@ -701,8 +701,8 @@ disambiguations:
   rules:
   - language: Assembly
     and:
-      - negative_pattern: 'mov\s+r[a-d]x\s*,'
-      - pattern: 'mov\s+[a-d]x\s*,'
+      - negative_pattern: 'mov\s+%'
+      - pattern: 'mov\s+[^%]{2,}\s*,'
   - language: Motorola 68K Assembly
     named_pattern: m68k
 - extensions: ['.sc']
