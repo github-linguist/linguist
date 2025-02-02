@@ -702,7 +702,7 @@ disambiguations:
   - language: Assembly
     and:
       - negative_pattern: 'mov\s+%'
-      - pattern: 'mov\s+[^%]{2,},'
+      - pattern: 'mov\s+[^\n%]{2,},'
   - language: Motorola 68K Assembly
     named_pattern: m68k
 - extensions: ['.sc']
