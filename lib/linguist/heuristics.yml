@@ -701,7 +701,7 @@ disambiguations:
   rules:
   - language: Assembly
     and:
-      - negative_pattern: 'mov\s+%'
+      - negative_pattern: 'movl?\s+%'
       - pattern: 'mov\s+[^\s%]{2,},'
   - language: Motorola 68K Assembly
     named_pattern: m68k
