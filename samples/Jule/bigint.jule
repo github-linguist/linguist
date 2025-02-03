@@ -1,0 +1,23 @@
+// This work is marked with CC0 1.0 Universal
+// https://creativecommons.org/publicdomain/zero/1.0
+
+use "std/fmt"
+use "std/math/big"
+use "std/os"
+
+fn main() {
+	fmt::Println("This program computes size of the big integers.")
+	for {
+		fmt::Print("Integer: ")
+		line := os::Stdin().ReadLine()!
+		i := big::Int.Parse(line, 0) else {
+			fmt::Println("error: conversion failed, please write a valid integer")
+			continue
+		}
+		bits := i.BitLen()
+		fmt::Println("Bits: ", bits)
+		fmt::Println("Bytes: ", bits/8)
+		fmt::Println("Fits in 64-bit signed int: ", i.IsI64())
+		fmt::Println("Fits in 64-bit unsigned int: ", i.IsU64())
+	}
+}

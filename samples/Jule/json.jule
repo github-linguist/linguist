@@ -1,0 +1,28 @@
+// This work is marked with CC0 1.0 Universal
+// https://creativecommons.org/publicdomain/zero/1.0
+
+use "std/encoding/json"
+use "std/math"
+
+struct Foo {
+	Bar: str
+	Baz: i64
+	Buz: bool
+	Fiz: f64
+}
+
+fn main() {
+	mut f := Foo{
+		Bar: "foobarbaz",
+		Baz: 89,
+		Buz: true,
+		Fiz: math::Pi,
+	}
+	println(f)
+	bytes := json::Encode(f)!
+	println(str(bytes))
+	f = Foo{}
+	println(f)
+	json::Decode(bytes, f)!
+	println(f)
+}
