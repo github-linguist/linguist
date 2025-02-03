@@ -308,6 +308,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Jison Lex:** [cdibbs/language-jison](https://github.com/cdibbs/language-jison)
 - **Jolie:** [fmontesi/language-jolie](https://github.com/fmontesi/language-jolie)
 - **Jsonnet:** [google/language-jsonnet](https://github.com/google/language-jsonnet)
+- **Jule:** [julelang/vscode-jule](https://github.com/julelang/vscode-jule)
 - **Julia:** [JuliaEditorSupport/atom-language-julia](https://github.com/JuliaEditorSupport/atom-language-julia)
 - **Julia REPL:** [JuliaEditorSupport/atom-language-julia](https://github.com/JuliaEditorSupport/atom-language-julia)
 - **Jupyter Notebook:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
