@@ -7373,17 +7373,20 @@ Tcl:
   extensions:
   - ".tcl"
   - ".adp"
+  - ".exp"
   - ".sdc"
   - ".tcl.in"
   - ".tm"
   - ".xdc"
   aliases:
+  - expect
   - sdc
   - xdc
   filenames:
   - owh
   - starfield
   interpreters:
+  - expect
   - tclsh
   - wish
   tm_scope: source.tcl
