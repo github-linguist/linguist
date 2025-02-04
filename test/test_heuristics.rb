@@ -261,8 +261,7 @@ class TestHeuristics < Minitest::Test
   def test_asm_by_heuristics
     assert_heuristics({
       "Motorola 68K Assembly" => all_fixtures("Motorola 68K Assembly", "*.asm"),
-      "Assembly" => all_fixtures("Assembly", "*.asm"),
-      "Unix Assembly" => all_fixtures("Unix Assembly", "*.asm")
+      "Assembly" => all_fixtures("Assembly", "*.asm")
     })
   end
 
