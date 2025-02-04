@@ -79,6 +79,8 @@ disambiguations:
     pattern: '^(\/\/.+|((import|export)\s+)?(function|int|float|char)\s+((room|repeatedly|on|game)_)?([A-Za-z]+[A-Za-z_0-9]+)\s*[;\(])'
 - extensions: ['.asm']
   rules:
+  - language: Assembly
+    pattern: '(?i)mov\s+[^\s]{2,},'
   - language: Motorola 68K Assembly
     named_pattern: m68k
 - extensions: ['.asy']
@@ -363,6 +365,10 @@ disambiguations:
     named_pattern: m68k
   - language: SWIG
     pattern: '^[ \t]*%[a-z_]+\b|^%[{}]$'
+  - language: Assembly
+    pattern:
+    - '(?i)mov\s+[^\s]+,'
+    - '^\s+(i?)db\s+[\d\w]'
 - extensions: ['.ice']
   rules:
   - language: JSON
@@ -394,6 +400,10 @@ disambiguations:
     - '^\s*end[.;]\s*$'
   - language: BitBake
     pattern: '^inherit(\s+[\w.-]+)+\s*$'
+  - language: Assembly
+    pattern:
+    - '^(?i)[^"m]*mov\s+[^\s]+,'
+    - '^\s+(?i)db\s+[\d\w]'
 - extensions: ['.json']
   rules:
   - language: OASv2-json
@@ -699,6 +709,10 @@ disambiguations:
     pattern: '^\s*<\?xml'
 - extensions: ['.s']
   rules:
+  - language: Unix Assembly
+    pattern: '(?i)mov[lq]?\s+[%\$]'
+  - language: Assembly
+    pattern: '(?i)mov\s+[^\s%]{2,},'
   - language: Motorola 68K Assembly
     named_pattern: m68k
 - extensions: ['.sc']
