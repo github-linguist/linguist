@@ -80,9 +80,9 @@ disambiguations:
 - extensions: ['.asm', '.s']
   rules:
   - language: Unix Assembly
-    pattern: 'mov[lq]?\s+[%\$]'
+    pattern: '(?i)mov[lq]?\s+[%\$]'
   - language: Assembly
-    pattern: 'mov\s+[^\s%]{2,},'
+    pattern: '(?i)mov\s+[^\s%]{2,},'
   - language: Motorola 68K Assembly
     named_pattern: m68k
 - extensions: ['.asy']
@@ -369,8 +369,8 @@ disambiguations:
     pattern: '^[ \t]*%[a-z_]+\b|^%[{}]$'
   - language: Assembly
     pattern:
-    - 'mov\s+[^\s]+,'
-    - '^\s+db\s+[\d\w]'
+    - '(?i)mov\s+[^\s]+,'
+    - '^\s+(i?)db\s+[\d\w]'
 - extensions: ['.ice']
   rules:
   - language: JSON
@@ -404,8 +404,8 @@ disambiguations:
     pattern: '^inherit(\s+[\w.-]+)+\s*$'
   - language: Assembly
     pattern:
-    - '^[^"m]*mov\s+[^\s]+,'
-    - '^\s+db\s+[\d\w]'
+    - '^(?i)[^"m]*mov\s+[^\s]+,'
+    - '^\s+(?i)db\s+[\d\w]'
 - extensions: ['.json']
   rules:
   - language: OASv2-json
