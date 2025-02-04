@@ -367,6 +367,10 @@ disambiguations:
     named_pattern: m68k
   - language: SWIG
     pattern: '^[ \t]*%[a-z_]+\b|^%[{}]$'
+  - language: Assembly
+    pattern:
+    - 'mov\s+[^\s]+,'
+    - '^\s+db\s+[\d\w]'
 - extensions: ['.ice']
   rules:
   - language: JSON
@@ -398,6 +402,10 @@ disambiguations:
     - '^\s*end[.;]\s*$'
   - language: BitBake
     pattern: '^inherit(\s+[\w.-]+)+\s*$'
+  - language: Assembly
+    pattern:
+    - '^[^"m]*mov\s+[^\s]+,'
+    - '^\s+db\s+[\d\w]'
 - extensions: ['.json']
   rules:
   - language: OASv2-json
