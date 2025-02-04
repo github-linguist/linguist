@@ -77,8 +77,12 @@ disambiguations:
     pattern: '^[=-]+\s|\{\{[A-Za-z]'
   - language: AGS Script
     pattern: '^(\/\/.+|((import|export)\s+)?(function|int|float|char)\s+((room|repeatedly|on|game)_)?([A-Za-z]+[A-Za-z_0-9]+)\s*[;\(])'
-- extensions: ['.asm']
+- extensions: ['.asm', '.s']
   rules:
+  - language: Unix Assembly
+    pattern: 'mov[lq]?\s+[%\$]'
+  - language: Assembly
+    pattern: 'mov\s+[^\s%]{2,},'
   - language: Motorola 68K Assembly
     named_pattern: m68k
 - extensions: ['.asy']
@@ -697,14 +701,6 @@ disambiguations:
     pattern: '#include|#pragma\s+(rs|version)|__attribute__'
   - language: XML
     pattern: '^\s*<\?xml'
-- extensions: ['.s']
-  rules:
-  - language: Assembly
-    and:
-      - negative_pattern: 'mov[lq]?\s+[%\$]'
-      - pattern: 'mov\s+[^\s%]{2,},'
-  - language: Motorola 68K Assembly
-    named_pattern: m68k
 - extensions: ['.sc']
   rules:
   - language: SuperCollider
