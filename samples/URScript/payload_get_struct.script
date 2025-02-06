@@ -1,0 +1,83 @@
+###
+# Get a payload struct of a rectangular cuboid 
+# @param mass float cuboid mass[kg]
+# @param x float x lenght of cuboid[meter]
+# @param y float y lenght of cuboid[meter]
+# @param z float z lenght of cuboid[meter]
+# @returns struct payload struct containing  mass[kg], cog(x,y,x)[m], inertia(Ixx, Iyy, Izz, Ixy, Ixz, Iyz)[kg*m^2] 
+###
+def payload_get_rectangular_cuboid(mass, x, y, z):
+  local s=1/12
+  local m=mass
+  return payload_get_struct(mass, [0,0,0], [s*m*(y*y+z*z), s*m*(x*x+z*z), s*m*(x*x+y*y), 0,0,0])
+end
+
+
+###
+# Get a payload struct of a solid sphere 
+# @param mass float sphere mass[kg]
+# @param r float sphere radius[meter]
+# @returns struct payload struct containing  mass[kg], cog(x,y,x)[m], inertia(Ixx, Iyy, Izz, Ixy, Ixz, Iyz)[kg*m^2] 
+###
+def payload_get_sphere_solid(mass, r):
+  local s=2/5
+  local m=mass
+  return payload_get_struct(mass, [0,0,0], [s*m*r*r, s*m*r*r, s*m*r*r, 0,0,0])
+end
+
+###
+# Get a payload struct of a hollow sphere 
+# @param mass float sphere mass[kg]
+# @param r float sphere radius[meter]
+# @returns struct payload struct containing  mass[kg], cog(x,y,x)[m], inertia(Ixx, Iyy, Izz, Ixy, Ixz, Iyz)[kg*m^2] 
+###
+def payload_get_sphere_hollow(mass, r):
+  local s=2/3
+  local m=mass
+  return payload_get_struct(mass, [0,0,0], [s*m*r*r, s*m*r*r, s*m*r*r, 0,0,0])
+end
+
+
+
+###
+# Get a payload struct of a cylindrical tube, where the height is along the z-axis 
+# @param mass float tube mass[kg]
+# @param height float height of tube[meter]
+# @param radius1 float outer radius of tube[meter]
+# @param radius2 float inner radius of tube[meter]
+# @returns struct payload struct containing  mass[kg], cog(x,y,x)[m], inertia(Ixx, Iyy, Izz, Ixy, Ixz, Iyz)[kg*m^2] 
+###
+def payload_get_cylindrical_tube(mass, height, radius1, radius2):
+  local s=1/12
+  local m=mass
+  local h=height
+  local r1 = radius1
+  local r2 = radius2
+  return payload_get_struct(mass, [0,0,0], [s*m*(3*(r2*r2+r1*r1)+h*h), s*m*(3*(r2*r2+r1*r1)+h*h), 0.5*m*(r2*r2+r1*r1), 0,0,0])
+end
+
+###
+# Get a payload struct of a cylinder , where the height is along the z-axis 
+# @param mass float tube mass[kg]
+# @param height float height of cylinder[meter]
+# @param radius float outer radius of cylinder[meter]
+# @returns struct payload struct containing  mass[kg], cog(x,y,x)[m], inertia(Ixx, Iyy, Izz, Ixy, Ixz, Iyz)[kg*m^2] 
+###
+def payload_get_cylinder(mass, height, radius):
+  return payload_get_cylindrical_tube(mass, height, 0, radius)
+end
+
+###
+# Get a payload struct of a cylinder , where the height is along the z-axis 
+# @param mass float mass[kg]
+# @param cog array center of gravity(x,y,x)[meter]
+# @param inertia array inertia matrix(Ixx, Iyy, Izz, Ixy, Ixz, Iyz)[kg*meter^2]
+# @returns struct payload struct containing  mass[kg], cog(x,y,x)[m], inertia(Ixx, Iyy, Izz, Ixy, Ixz, Iyz)[kg*m^2] 
+###
+def payload_get_struct(mass,cog,inertia):
+    return_value = struct(mass = mass, cog = cog, inertia = inertia)
+    if not is_payload_struct(return_value):
+      return_value = struct(mass = 0, cog = [0,0,0], inertia = [0,0,0,0,0,0])
+    end
+    return return_value
+end
