@@ -1,0 +1,67 @@
+comment License: program borrowed from S-PORT https://github.com/portablesimula/S-PORT;
+begin
+external class demos;
+! klant 4
+zelfbediening en artikelvoorraad
+copyright H.G.Sol;
+Demos begin
+    Entity class Klant;
+    begin
+        Karren.Acquire(1);
+        Bier.Take(Hoevelheid.Sample);
+        Hold(Paktijd.Sample);
+        if Vragen.Sample then
+        begin
+            Bediendes.Acquire(1);
+            Hold(Helptijd.Sample);
+            Bediendes.Release(1);
+        end;
+        Kassieres.Acquire(1);
+        Hold(Betaaltijd.Sample);
+        Kassieres.Release(1);
+        Karren.Release(1);
+    end;
+
+    Entity class Bierleverantie(Frequentie);
+    real Frequentie;
+    begin
+        if Bier.Avail < 100 then
+        Bier.Give(300);
+        Hold(1/Frequentie);
+        Repeat;
+    end;
+
+    Entity class Klantengenerator(Tussentijd);
+    ref(Rdist)Tussentijd;
+    begin
+        new Klant("klant").Schedule(0);
+        Hold(Tussentijd.Sample);
+        Repeat;
+    end;
+
+    ref(Res) Karren,Bediendes,Kassieres;
+    ref(Bin) Bier;
+    ref(Rdist) Paktijd,Helptijd, Betaaltijd, Tussentijd;
+    ref(Idist) Hoevelheid;
+    ref(Bdist) Vragen;
+
+    trace;
+
+    Karren:- new Res("karren",10);
+    Bediendes:- new Res("bediendes",2);
+    Kassieres:- new Res("kassieres",2);
+    Bier:- new Bin("bier",150);
+    Tussentijd:- new Negexp("tt",.5);
+    Paktijd:- new Normal("pt",5,.5);
+    Helptijd:- new Normal("ht",2,.5);
+    Betaaltijd:- new Negexp("bt",.5);
+    Hoevelheid:- new Randint("hv",1,12);
+    Vragen:- new Draw("vr",.3);
+
+    Hold(9*60);
+    Reset;
+    new Bierleverantie("bl",1/40).Schedule(30);
+    new Klantengenerator("kg",Tussentijd).Schedule(0);
+    Hold(18*60 - 9*60);
+end;
+end;
