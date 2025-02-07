@@ -1,0 +1,42 @@
+// This work is marked with CC0 1.0 Universal
+// https://creativecommons.org/publicdomain/zero/1.0
+
+use "std/math/rand"
+use "std/time"
+
+fn Max[S: []E, E: ordered](mut s: S): E {
+	if len(s) == 0 {
+		panic("Max: empty slice")
+	}
+	mut m := s[0]
+	for _, e in s[1:] {
+		if m < e {
+			m = e
+		}
+	}
+	ret m
+}
+
+fn Min[S: []E, E: ordered](mut s: S): E {
+	if len(s) == 0 {
+		panic("Min: empty slice")
+	}
+	mut m := s[0]
+	for _, e in s[1:] {
+		if m > e {
+			m = e
+		}
+	}
+	ret m
+}
+
+fn main() {
+	rand := rand::Rand.New(rand::NewSource(u64(time::Now().Nanosecond())))
+	mut s := make([]int, 10)
+	for i in s {
+		s[i] = rand.Intn(100)
+	}
+	println(s)
+	println(Max(s))
+	println(Min(s))
+}
