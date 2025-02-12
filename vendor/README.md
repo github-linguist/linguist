@@ -171,7 +171,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Elvish Transcript:** [elves/elvish](https://github.com/elves/elvish)
 - **Emacs Lisp:** [Alhadis/language-emacs-lisp](https://github.com/Alhadis/language-emacs-lisp)
 - **EmberScript:** [atom/language-coffee-script](https://github.com/atom/language-coffee-script)
-- **Erlang:** [textmate/erlang.tmbundle](https://github.com/textmate/erlang.tmbundle)
+- **Erlang:** [erlang-ls/grammar](https://github.com/erlang-ls/grammar)
 - **Euphoria:** [OpenEuphoria/vscode-euphoria](https://github.com/OpenEuphoria/vscode-euphoria)
 - **F#:** [ionide/ionide-fsgrammar](https://github.com/ionide/ionide-fsgrammar)
 - **F\*:** [FStarLang/atom-fstar](https://github.com/FStarLang/atom-fstar)
@@ -278,6 +278,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **JSON5:** [atom/language-javascript](https://github.com/atom/language-javascript)
 - **JSONLD:** [atom/language-javascript](https://github.com/atom/language-javascript)
 - **JSONiq:** [wcandillon/language-jsoniq](https://github.com/wcandillon/language-jsoniq)
+- **Jai:** [SogoCZE/Jails](https://github.com/SogoCZE/Jails)
 - **Janet:** [janet-lang/vscode-janet](https://github.com/janet-lang/vscode-janet)
 - **Jasmin:** [atmarksharp/jasmin-sublime](https://github.com/atmarksharp/jasmin-sublime)
 - **Java:** [tree-sitter/tree-sitter-java](https://github.com/tree-sitter/tree-sitter-java) 🐌
