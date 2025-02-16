@@ -133,7 +133,7 @@ disambiguations:
 - extensions: ['.bs']
   rules:
   - language: Bikeshed
-    pattern: '^(?i:<pre\s+class)\s*=\s*(''|\"|\b)metadata\b\1[^>\r\n]*>'
+    pattern: '^(?i:<pre\s+class)\s*=\s*(''|\"|\b)metadata\b(''|\"|\b)[^>\r\n]*>'
   - language: BrighterScript
     pattern:
     - (?i:^\s*(?=^sub\s)(?:sub\s*\w+\(.*?\))|(?::\s*sub\(.*?\))$)
