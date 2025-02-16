@@ -681,7 +681,7 @@ disambiguations:
 - extensions: ['.rno']
   rules:
   - language: RUNOFF
-    pattern: '(?i:^\.!|^\f|\f$|^\.end lit(?:eral)?\b|^\.[a-zA-Z].*?;\.[a-zA-Z](?:[; \t])|\^\*[^\s*][^*]*\\\*(?=$|\s)|^\.c;[ \t]*\w+)'
+    pattern: '(?i:^\.!|^\f|\f$|^\.end lit(?:eral)?\b|^\.[a-zA-Z].*?;\.[a-zA-Z](?:[; \t])|\^\*[^\s*][^*]*\\\*(?:$|\s)|^\.c;[ \t]*\w+)'
   - language: Roff
     pattern: '^\.\\" '
 - extensions: ['.rpy']
@@ -847,7 +847,7 @@ disambiguations:
         (?<!-)\b
       )*+
 
-      (?=$|\s)
+      (?:$|\s)
   - language: Adblock Filter List
     pattern: |-
       (?x)\A
