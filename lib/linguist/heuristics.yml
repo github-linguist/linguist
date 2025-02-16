@@ -465,7 +465,7 @@ disambiguations:
 - extensions: ['.mc']
   rules:
   - language: Win32 Message File
-    pattern: '(?i)^[ \t]*(?>\/\*\s*)?MessageId=|^\.$'
+    pattern: '(?i)^[ \t]*(\/\*\s*)?MessageId=|^\.$'
   - language: M4
     pattern: '^dnl|^divert\((?:-?\d+)?\)|^\w+\(`[^\r\n]*?''[),]'
   - language: Monkey C
@@ -880,7 +880,7 @@ disambiguations:
 - extensions: ['.url']
   rules:
   - language: INI
-    pattern: '^\[InternetShortcut\](?:\r?\n|\r)(?>[^\s\[][^\r\n]*(?:\r?\n|\r))*URL='
+    pattern: '^\[InternetShortcut\](?:\r?\n|\r)([^\s\[][^\r\n]*(?:\r?\n|\r)){0,20}URL='
 - extensions: ['.v']
   rules:
   - language: Coq
@@ -951,8 +951,8 @@ named_patterns:
   - '(?i)^[ \t]*dim( shared)? [a-z_][a-z0-9_]* as [a-z_][a-z0-9_]* ptr'
   gsc:
   - '^\s*#\s*(?:using|insert|include|define|namespace)[ \t]+\w'
-  - '^\s*(?>(?:autoexec|private)\s+){0,2}function\s+(?>(?:autoexec|private)\s+){0,2}\w+\s*\('
-  - '\b(?:level|self)[ \t]+thread[ \t]+(?:\[\[[ \t]*(?>\w+\.)*\w+[ \t]*\]\]|\w+)[ \t]*\([^\r\n\)]*\)[ \t]*;'
+  - '^\s*((?:autoexec|private)\s+){0,2}function\s+((?:autoexec|private)\s+){0,2}\w+\s*\('
+  - '\b(?:level|self)[ \t]+thread[ \t]+(?:\[\[[ \t]*(\w+\.)*\w+[ \t]*\]\]|\w+)[ \t]*\([^\r\n\)]*\)[ \t]*;'
   - '^[ \t]*#[ \t]*(?:precache|using_animtree)[ \t]*\('
   json: '\A\s*[{\[]'
   key_equals_value: '^[^#!;][^=]*='
