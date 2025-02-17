@@ -952,7 +952,7 @@ named_patterns:
   gsc:
   - '^\s*#\s*(?:using|insert|include|define|namespace)[ \t]+\w'
   - '^\s*((?:autoexec|private)\s+){0,2}function\s+((?:autoexec|private)\s+){0,2}\w+\s*\('
-  - '\b(?:level|self)[ \t]+thread[ \t]+(?:\[\[[ \t]*(\w+\.)*\w+[ \t]*\]\]|\w+)[ \t]*\([^\r\n\)]*\)[ \t]*;'
+  - '\b(?:level|self)[ \t]+thread[ \t]+(?:\[\[[ \t]*(\w+\.)+[ \t]*\]\]|\w+)[ \t]*\([^\r\n\)]*\)[ \t]*;'
   - '^[ \t]*#[ \t]*(?:precache|using_animtree)[ \t]*\('
   json: '\A\s*[{\[]'
   key_equals_value: '^[^#!;][^=]*='
