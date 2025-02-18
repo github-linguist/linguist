@@ -54,6 +54,7 @@ class TestLanguage < Minitest::Test
     assert_equal Language['Ruby'], Language.find_by_alias('ruby')
     assert_equal Language['R'], Language.find_by_alias('r')
     assert_equal Language['Scheme'], Language.find_by_alias('scheme')
+    assert_equal Language['Tree-sitter Query'], Language.find_by_alias('tree-sitter-query')
     assert_equal Language['Shell'], Language.find_by_alias('bash')
     assert_equal Language['Shell'], Language.find_by_alias('sh')
     assert_equal Language['Shell'], Language.find_by_alias('shell')
