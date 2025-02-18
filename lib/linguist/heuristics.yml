@@ -710,9 +710,9 @@ disambiguations:
 - extensions: ['.s']
   rules:
   - language: Unix Assembly
-    pattern: '(?i)mov[lq]?\s+[%\$]'
+    pattern: '(?i:mov[lq]?)\s+[%\$]'
   - language: Assembly
-    pattern: '(?i)mov\s+[^\s%]{2,},'
+    pattern: '(?i:mov)\s+[^\s%]{2,},'
   - language: Motorola 68K Assembly
     named_pattern: m68k
 - extensions: ['.sc']
