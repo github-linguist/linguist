@@ -718,14 +718,16 @@ disambiguations:
   rules:
   - language: Scheme
     pattern:
-    - '(?:''[\(\w\*#]|\w->\w|\.\.\.[\s\)]|\([+\-:<>\/=~\)]|~>|\s:\w|#\()'
+    - '(?:''[\(\*#]|\w->\w|\.\.\.[\s\)]|\([+\-:<>\/=~\)]|~>|\s:\w|#\()'
     - '^\s*\((?:define|import|library|let|set)'
     negative_pattern:
     - '\(#[\w-]+[!\?]'
+    - '[\)\]"_]\s+[\*\+\?@]'
   - language: Tree-sitter Query
     pattern:
     - '\(#[\w-]+[!\?]'
     - '[\)\]"_]\s+[\*\+\?@]'
+    - '(?:^\s*\w+:\s*[\(\[\"])'
     negative_pattern:
     - '\([+\-:<>\/=~\)]'
     - '\([\w-]+[!\?]'
