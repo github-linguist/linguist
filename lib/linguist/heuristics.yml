@@ -718,8 +718,8 @@ disambiguations:
   rules:
   - language: Scheme
     pattern:
-    - '(?:''[\(\*#]|\w->\w|\.\.\.[\s\)]|\([+\-:<>\/=~\)]|~>|\s:\w|#\()'
-    - '^\s*\((?:define|import|library|let|set)'
+    - '(?:''[\(\*#]|\w->\w|\.\.\.[\s\)]|\([+\-:<>\/=~\)]|~>|\s:\w|#\()|#:\w'
+    - '^\s*\((?:define|import|library|lambda)'
     negative_pattern:
     - '\(#[\w-]+[!\?]'
     - '[\)\]"_]\s+[\*\+\?@]'
