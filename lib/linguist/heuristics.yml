@@ -718,20 +718,18 @@ disambiguations:
   rules:
   - language: Scheme
     pattern:
-    - '(?:''[\(\w\*]|[\w\-]+->[\w\-]+|\b\.\.\.\b|\([+\-#:<>\/=~\)]|~>)'
-    - '^#:\w+'
-    - '#\w*\('
-    - '^\s*\((?i:define|import|library|let)'
+    - '(?:''[\(\w\*#]|\w->\w|\.\.\.[\s\)]|\([+\-:<>\/=~\)]|~>|\s:\w|#\()'
+    - '^\s*\((?:define|import|library|let|set)'
     negative_pattern:
-    - '(["_\]\)] (@\w|\?)|'
     - '\(#[\w-]+[!\?]'
-  - language: TreeSitterQuery
+  - language: Tree-sitter Query
     pattern:
-    - '\(#\w[\w-]+[!\?]'
-    - '[\)\]"_]\s*[\*\+\?@]'
+    - '\(#[\w-]+[!\?]'
+    - '[\)\]"_]\s+[\*\+\?@]'
     negative_pattern:
-    - '\(([\w-]+!|[^\w"])'
-    - '\([\d\w\.\*\?\/><=+-:]+(\s+[\d\w\.\*\?\/><=+-:]+)+\)'
+    - '\([+\-:<>\/=~\)]'
+    - '\([\w-]+[!\?]'
+    - '\w\/\w'
 - extensions: ['.sol']
   rules:
   - language: Solidity
