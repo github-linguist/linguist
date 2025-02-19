@@ -1,161 +1,88 @@
-; Identifiers
+(string) @string
 
-(type_identifier) @type
-(primitive_type) @type.builtin
-(field_identifier) @property
+(escape_sequence) @string.escape
 
-; Identifier conventions
+(capture
+  (identifier) @type)
 
-; Assume all-caps names are constants
-((identifier) @constant
- (#match? @constant "^[A-Z][A-Z\\d_]+$'"))
+(anonymous_node
+  (string) @string)
 
-; Assume uppercase names are enum constructors
-((identifier) @constructor
- (#match? @constructor "^[A-Z]"))
+(predicate
+  name: (identifier) @function.call)
 
-; Assume that uppercase names in paths are types
-((scoped_identifier
-  path: (identifier) @type)
- (#match? @type "^[A-Z]"))
-((scoped_identifier
-  path: (scoped_identifier
-    name: (identifier) @type))
- (#match? @type "^[A-Z]"))
-((scoped_type_identifier
-  path: (identifier) @type)
- (#match? @type "^[A-Z]"))
-((scoped_type_identifier
-  path: (scoped_identifier
-    name: (identifier) @type))
- (#match? @type "^[A-Z]"))
+(named_node
+  name: (identifier) @variable)
 
-; Assume all qualified names in struct patterns are enum constructors. (They're
-; either that, or struct names; highlighting both as constructors seems to be
-; the less glaring choice of error, visually.)
-(struct_pattern
-  type: (scoped_type_identifier
-    name: (type_identifier) @constructor))
+(field_definition
+  name: (identifier) @property)
 
-; Function calls
+(negated_field
+  "!" @operator
+  (identifier) @property)
 
-(call_expression
-  function: (identifier) @function)
-(call_expression
-  function: (field_expression
-    field: (field_identifier) @function.method))
-(call_expression
-  function: (scoped_identifier
-    "::"
-    name: (identifier) @function))
+(comment) @comment @spell
 
-(generic_function
-  function: (identifier) @function)
-(generic_function
-  function: (scoped_identifier
-    name: (identifier) @function))
-(generic_function
-  function: (field_expression
-    field: (field_identifier) @function.method))
+(quantifier) @operator
 
-(macro_invocation
-  macro: (identifier) @function.macro
-  "!" @function.macro)
+(predicate_type) @punctuation.special
 
-; Function definitions
+"." @operator
 
-(function_item (identifier) @function)
-(function_signature_item (identifier) @function)
+[
+  "["
+  "]"
+  "("
+  ")"
+] @punctuation.bracket
 
-(line_comment) @comment
-(block_comment) @comment
-
-(line_comment (doc_comment)) @comment.documentation
-(block_comment (doc_comment)) @comment.documentation
-
-"(" @punctuation.bracket
-")" @punctuation.bracket
-"[" @punctuation.bracket
-"]" @punctuation.bracket
-"{" @punctuation.bracket
-"}" @punctuation.bracket
-
-(type_arguments
-  "<" @punctuation.bracket
-  ">" @punctuation.bracket)
-(type_parameters
-  "<" @punctuation.bracket
-  ">" @punctuation.bracket)
-
-"::" @punctuation.delimiter
 ":" @punctuation.delimiter
-"." @punctuation.delimiter
-"," @punctuation.delimiter
-";" @punctuation.delimiter
 
-(parameter (identifier) @variable.parameter)
+[
+  "@"
+  "#"
+] @punctuation.special
 
-(lifetime (identifier) @label)
+"_" @constant
 
-"as" @keyword
-"async" @keyword
-"await" @keyword
-"break" @keyword
-"const" @keyword
-"continue" @keyword
-"default" @keyword
-"dyn" @keyword
-"else" @keyword
-"enum" @keyword
-"extern" @keyword
-"fn" @keyword
-"for" @keyword
-"gen" @keyword
-"if" @keyword
-"impl" @keyword
-"in" @keyword
-"let" @keyword
-"loop" @keyword
-"macro_rules!" @keyword
-"match" @keyword
-"mod" @keyword
-"move" @keyword
-"pub" @keyword
-"raw" @keyword
-"ref" @keyword
-"return" @keyword
-"static" @keyword
-"struct" @keyword
-"trait" @keyword
-"type" @keyword
-"union" @keyword
-"unsafe" @keyword
-"use" @keyword
-"where" @keyword
-"while" @keyword
-"yield" @keyword
-(crate) @keyword
-(mutable_specifier) @keyword
-(use_list (self) @keyword)
-(scoped_use_list (self) @keyword)
-(scoped_identifier (self) @keyword)
-(super) @keyword
+((parameters
+  (identifier) @number)
+  (#match? @number "^[-+]?[0-9]+(.[0-9]+)?$"))
 
-(self) @variable.builtin
+((program
+  .
+  (comment)*
+  .
+  (comment) @keyword.import)
+  (#lua-match? @keyword.import "^;+ *inherits *:"))
 
-(char_literal) @string
-(string_literal) @string
-(raw_string_literal) @string
+((program
+  .
+  (comment)*
+  .
+  (comment) @keyword.directive)
+  (#lua-match? @keyword.directive "^;+ *extends *$"))
 
-(boolean_literal) @constant.builtin
-(integer_literal) @constant.builtin
-(float_literal) @constant.builtin
+((comment) @keyword.directive
+  (#lua-match? @keyword.directive "^;+%s*format%-ignore%s*$"))
 
-(escape_sequence) @escape
+((predicate
+  name: (identifier) @_name
+  parameters:
+    (parameters
+      (string
+        "\"" @string
+        "\"" @string) @string.regexp))
+  (#any-of? @_name "match" "not-match" "vim-match" "not-vim-match" "lua-match" "not-lua-match"))
 
-(attribute_item) @attribute
-(inner_attribute_item) @attribute
+((predicate
+  name: (identifier) @_name
+  parameters:
+    (parameters
+      (string
+        "\"" @string
+        "\"" @string) @string.regexp
+      .
+      (string) .))
+  (#any-of? @_name "gsub" "not-gsub"))
 
-"*" @operator
-"&" @operator
-"'" @operator

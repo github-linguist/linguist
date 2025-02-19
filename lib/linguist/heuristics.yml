@@ -722,11 +722,11 @@ disambiguations:
     - '^\s*\((?:define\*?|import|library|lambda)'
     negative_pattern:
     - '\(#[\w-]+[!\?]'
-    - '[\)\]"_]\s+(?:[\*\+\?]|@\w)'
+    - '[\)\]"_]\s*(?:[\*\+\?]|@\w)'
   - language: Tree-sitter Query
     pattern:
     - '\(#[\w-]+[!\?]'
-    - '[\)\]"_]\s+(?:[\*\+\?]|@\w)'
+    - '[\)\]"_]\s*(?:[\*\+\?]|@\w)'
     - '(?:^\s*\w+:\s*[\(\[\"])'
     - '\(#(?:set!|(?:not-)?(?:any-of|match)\?)'
     negative_pattern:
