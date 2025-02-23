@@ -728,6 +728,23 @@ disambiguations:
   - language: Markdown
     # Markdown syntax for scdoc
     pattern: '^#+\s+(NAME|SYNOPSIS|DESCRIPTION)'
+- extensions: ['.scm']
+  rules:
+  - language: Scheme
+    pattern:
+    - '(?:''[\(\*#]|\w->\w|\.\.\.[\s\)]|\([+\-:<>\/=~\)]|~>|[#`]\(|#:\w)'
+    - '^\s*\((?:define\*?|import|library|lambda)'
+    negative_pattern:
+    - '\(#[\w-]+[!\?]'
+    - '[\)\]"_]\s*(?:[\*\+\?]|@\w)'
+  - language: Tree-sitter Query
+    pattern:
+    - '\(#[\w-]+[!\?]'
+    - '[\)\]"_]\s*(?:[\*\+\?]|@\w)'
+    - '(?:^\s*\w+:\s*[\(\[\"])'
+    - '\(#(?:set!|(?:not-)?(?:any-of|match)\?)'
+    negative_pattern:
+    - '\([+\-:<>\/=~\)]'
 - extensions: ['.sol']
   rules:
   - language: Solidity

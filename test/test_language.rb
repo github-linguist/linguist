@@ -60,6 +60,7 @@ class TestLanguage < Minitest::Test
     assert_equal Language['Shell'], Language.find_by_alias('zsh')
     assert_equal Language['SuperCollider'], Language.find_by_alias('supercollider')
     assert_equal Language['TeX'], Language.find_by_alias('tex')
+    assert_equal Language['Tree-sitter Query'], Language.find_by_alias('tsq')
     assert_equal Language['TypeScript'], Language.find_by_alias('ts')
     assert_equal Language['Vim Script'], Language.find_by_alias('vim')
     assert_equal Language['Vim Script'], Language.find_by_alias('viml')

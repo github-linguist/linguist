@@ -947,6 +947,13 @@ class TestHeuristics < Minitest::Test
     }, alt_name="test.scd")
   end
 
+  def test_scm_by_heuristics
+    assert_heuristics({
+      "Scheme" => all_fixtures("Scheme", "*.scm"),
+      "Tree-sitter Query" => all_fixtures("Tree-sitter Query", "*.scm")
+    })
+  end
+
   def test_sol_by_heuristics
     assert_heuristics({
       "Gerber Image" => Dir.glob("#{fixtures_path}/Generic/sol/Gerber Image/*"),
