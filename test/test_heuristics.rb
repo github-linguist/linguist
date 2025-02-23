@@ -947,6 +947,12 @@ class TestHeuristics < Minitest::Test
     }, alt_name="test.scd")
   end
 
+  def test_script_by_heuristics
+    assert_heuristics({
+      "URScript" => all_fixtures("URScript", "*.script")
+    })
+  end
+
   def test_sol_by_heuristics
     assert_heuristics({
       "Gerber Image" => Dir.glob("#{fixtures_path}/Generic/sol/Gerber Image/*"),

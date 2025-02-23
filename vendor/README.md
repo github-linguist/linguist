@@ -606,6 +606,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **TypeScript:** [tree-sitter/tree-sitter-typescript](https://github.com/tree-sitter/tree-sitter-typescript) 🐌
 - **TypeSpec:** [microsoft/typespec](https://github.com/microsoft/typespec)
 - **Typst:** [michidk/typst-grammar](https://github.com/michidk/typst-grammar)
+- **URScript:** [ahernguo/urscript-extension](https://github.com/ahernguo/urscript-extension)
 - **Unified Parallel C:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **Unity3D Asset:** [atom/language-yaml](https://github.com/atom/language-yaml)
 - **Unix Assembly:** [calculuswhiz/Assembly-Syntax-Definition](https://github.com/calculuswhiz/Assembly-Syntax-Definition)
