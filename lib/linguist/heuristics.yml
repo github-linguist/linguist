@@ -135,7 +135,7 @@ disambiguations:
 - extensions: ['.bs']
   rules:
   - language: Bikeshed
-    pattern: '^(?i:<pre\s+class)\s*=\s*(''|\"|\b)metadata\b\1[^>\r\n]*>'
+    pattern: '^(?i:<pre\s+class)\s*=\s*(''|\"|\b)metadata\b(''|\"|\b)[^>\r\n]*>'
   - language: BrighterScript
     pattern:
     - (?i:^\s*(?=^sub\s)(?:sub\s*\w+\(.*?\))|(?::\s*sub\(.*?\))$)
@@ -297,7 +297,7 @@ disambiguations:
 - extensions: ['.ftl']
   rules:
   - language: FreeMarker
-    pattern: '^(?:<|[a-zA-Z-][a-zA-Z0-9_-]+[ \t]+\w)|\$\{\w+[^\r\n]*?\}|^[ \t]*(?:<#--.*?-->|<#([a-z]+)(?=\s|>)[^>]*>.*?</#\1>|\[#--.*?--\]|\[#([a-z]+)(?=\s|\])[^\]]*\].*?\[#\2\])'
+    pattern: '^(?:<|[a-zA-Z-][a-zA-Z0-9_-]+[ \t]+\w)|\$\{\w+[^\r\n]*?\}|^[ \t]*(?:<#--.*?-->|<#(?:[a-z]+)(?=\s|>)[^>]*>.*?</#(?:[a-z]+)>|\[#--.*?--\]|\[#(?:[a-z]+)(?=\s|\])[^\]]*\].*?\[#(?:[a-z]+)\])'
   - language: Fluent
     pattern: '^-?[a-zA-Z][a-zA-Z0-9_-]* *=|\{\$-?[a-zA-Z][-\w]*(?:\.[a-zA-Z][-\w]*)?\}'
 - extensions: ['.g']
@@ -756,7 +756,7 @@ disambiguations:
 - extensions: ['.st']
   rules:
   - language: StringTemplate
-    pattern: '\$\w+[($]|(.)!\s*.+?\s*!\1|<!\s*.+?\s*!>|\[!\s*.+?\s*!\]|\{!\s*.+?\s*!\}'
+    pattern: '\$\w+[($]|.!\s*.+?\s*!.|<!\s*.+?\s*!>|\[!\s*.+?\s*!\]|\{!\s*.+?\s*!\}'
   - language: Smalltalk
     pattern: '\A\s*[\[{(^"''\w#]|[a-zA-Z_]\w*\s*:=\s*[a-zA-Z_]\w*|class\s*>>\s*[a-zA-Z_]\w*|^[a-zA-Z_]\w*\s+[a-zA-Z_]\w*:|^Class\s*\{|if(?:True|False):\s*\['
 - extensions: ['.star']
