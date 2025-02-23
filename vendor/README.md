@@ -259,6 +259,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **IDL:** [mgalloy/idl.tmbundle](https://github.com/mgalloy/idl.tmbundle)
 - **IGOR Pro:** [byte-physics/language-igor](https://github.com/byte-physics/language-igor)
 - **INI:** [textmate/ini.tmbundle](https://github.com/textmate/ini.tmbundle)
+- **ISPC:** [ispc/ispc.syntax](https://github.com/ispc/ispc.syntax)
 - **Idris:** [idris-hackers/idris-sublime](https://github.com/idris-hackers/idris-sublime)
 - **Ignore List:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **Imba:** [imba/imba-linguist-grammar](https://github.com/imba/imba-linguist-grammar)
