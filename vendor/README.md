@@ -274,7 +274,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **JCL:** [spgennard/vscode_cobol](https://github.com/spgennard/vscode_cobol)
 - **JFlex:** [jflex-de/jflex.tmbundle](https://github.com/jflex-de/jflex.tmbundle)
 - **JSON:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
-- **JSON with Comments:** [atom/language-javascript](https://github.com/atom/language-javascript)
+- **JSON with Comments:** [DecimalTurn/vscode-jsonc-syntax-highlighting](https://github.com/DecimalTurn/vscode-jsonc-syntax-highlighting)
 - **JSON5:** [atom/language-javascript](https://github.com/atom/language-javascript)
 - **JSONLD:** [atom/language-javascript](https://github.com/atom/language-javascript)
 - **JSONiq:** [wcandillon/language-jsoniq](https://github.com/wcandillon/language-jsoniq)

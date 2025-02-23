@@ -261,8 +261,7 @@ class TestHeuristics < Minitest::Test
   def test_asm_by_heuristics
     assert_heuristics({
       "Motorola 68K Assembly" => all_fixtures("Motorola 68K Assembly", "*.asm"),
-      # Assembly lacks a heuristic
-      nil => all_fixtures("Assembly", "*.asm")
+      "Assembly" => all_fixtures("Assembly", "*.asm")
     })
   end
 
@@ -556,8 +555,7 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "Motorola 68K Assembly" => all_fixtures("Motorola 68K Assembly", "*.i"),
       "SWIG" => all_fixtures("SWIG", "*.i"),
-      # No heuristic defined for Assembly
-      nil => all_fixtures("Assembly", "*.i")
+      "Assembly" => all_fixtures("Assembly", "*.i")
     })
   end
 
@@ -576,8 +574,8 @@ class TestHeuristics < Minitest::Test
       "PHP" => all_fixtures("PHP", "*"),
       "POV-Ray SDL" => all_fixtures("POV-Ray SDL", "*"),
       "SourcePawn" => all_fixtures("SourcePawn", "*.inc"),
-      nil => all_fixtures("Assembly", "*") +
-        all_fixtures("C++", "*.inc") +
+      "Assembly" => all_fixtures("Assembly", "*.inc"),
+      nil => all_fixtures("C++", "*.inc") +
         all_fixtures("HTML", "*") +
         all_fixtures("Pawn", "*") +
         all_fixtures("SQL", "*")
@@ -929,8 +927,8 @@ class TestHeuristics < Minitest::Test
   def test_s_by_heuristics
     assert_heuristics({
       "Motorola 68K Assembly" => all_fixtures("Motorola 68K Assembly", "*.s"),
-      # Unix Assembly lacks a heuristic
-      nil => all_fixtures("Unix Assembly", "*.s")
+      "Assembly" => all_fixtures("Assembly", "*.s"),
+      "Unix Assembly" => all_fixtures("Unix Assembly", "*.s")
     })
   end
 
