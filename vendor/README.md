@@ -548,6 +548,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Sieve:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **Simple File Verification:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **Singularity:** [onnovalkering/vscode-singularity](https://github.com/onnovalkering/vscode-singularity)
+- **Slang:** [shader-slang/slang-vscode-extension](https://github.com/shader-slang/slang-vscode-extension)
 - **Slash:** [slash-lang/Slash.tmbundle](https://github.com/slash-lang/Slash.tmbundle)
 - **Slice:** [zeroc-ice/vscode-slice](https://github.com/zeroc-ice/vscode-slice)
 - **Slim:** [slim-template/ruby-slim.tmbundle](https://github.com/slim-template/ruby-slim.tmbundle)
