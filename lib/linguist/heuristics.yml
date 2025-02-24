@@ -79,6 +79,8 @@ disambiguations:
     pattern: '^(\/\/.+|((import|export)\s+)?(function|int|float|char)\s+((room|repeatedly|on|game)_)?([A-Za-z]+[A-Za-z_0-9]+)\s*[;\(])'
 - extensions: ['.asm']
   rules:
+  - language: Assembly
+    pattern: '(?i)mov\s+[^\s]{2,},'
   - language: Motorola 68K Assembly
     named_pattern: m68k
 - extensions: ['.asy']
@@ -133,7 +135,7 @@ disambiguations:
 - extensions: ['.bs']
   rules:
   - language: Bikeshed
-    pattern: '^(?i:<pre\s+class)\s*=\s*(''|\"|\b)metadata\b\1[^>\r\n]*>'
+    pattern: '^(?i:<pre\s+class)\s*=\s*(''|\"|\b)metadata\b(''|\"|\b)[^>\r\n]*>'
   - language: BrighterScript
     pattern:
     - (?i:^\s*(?:sub\s*\w+\(.*?\))|(?::\s*sub\(.*?\))$)
@@ -295,7 +297,7 @@ disambiguations:
 - extensions: ['.ftl']
   rules:
   - language: FreeMarker
-    pattern: '^(?:<|[a-zA-Z-][a-zA-Z0-9_-]+[ \t]+\w)|\$\{\w+[^\r\n]*?\}|^[ \t]*(?:<#--.*?-->|<#([a-z]+)[^>]*>.*?</#\1>|\[#--.*?--\]|\[#([a-z]+)[^\]]*\].*?\[#\2\])'
+    pattern: '^(?:<|[a-zA-Z-][a-zA-Z0-9_-]+[ \t]+\w)|\$\{\w+[^\r\n]*?\}|^[ \t]*(?:<#--.*?-->|<#(?:[a-z]+)[^>]*>.*?</#(?:[a-z]+)>|\[#--.*?--\]|\[#(?:[a-z]+)[^\]]*\].*?\[#(?:[a-z]+)\])'
   - language: Fluent
     pattern: '^-?[a-zA-Z][a-zA-Z0-9_-]* *=|\{\$-?[a-zA-Z][-\w]*(?:\.[a-zA-Z][-\w]*)?\}'
 - extensions: ['.g']
@@ -363,6 +365,10 @@ disambiguations:
     named_pattern: m68k
   - language: SWIG
     pattern: '^[ \t]*%[a-z_]+\b|^%[{}]$'
+  - language: Assembly
+    pattern:
+    - '(?i)mov\s+[^\s]+,'
+    - '^\s+(i?)db\s+[\d\w]'
 - extensions: ['.ice']
   rules:
   - language: JSON
@@ -394,6 +400,10 @@ disambiguations:
     - '^\s*end[.;]\s*$'
   - language: BitBake
     pattern: '^inherit(\s+[\w.-]+)+\s*$'
+  - language: Assembly
+    pattern:
+    - '^(?i)[^"m]*mov\s+[^\s]+,'
+    - '^\s+(?i)db\s+[\d\w]'
 - extensions: ['.json']
   rules:
   - language: OASv2-json
@@ -465,7 +475,7 @@ disambiguations:
 - extensions: ['.mc']
   rules:
   - language: Win32 Message File
-    pattern: '(?i)^[ \t]*(?>\/\*\s*)?MessageId=|^\.$'
+    pattern: '(?i)^[ \t]*(\/\*\s*)?MessageId=|^\.$'
   - language: M4
     pattern: '^dnl|^divert\((?:-?\d+)?\)|^\w+\(`[^\r\n]*?''[),]'
   - language: Monkey C
@@ -699,6 +709,10 @@ disambiguations:
     pattern: '^\s*<\?xml'
 - extensions: ['.s']
   rules:
+  - language: Unix Assembly
+    pattern: '(?i:mov[lq]?)\s+[%\$]'
+  - language: Assembly
+    pattern: '(?i:mov)\s+[^\s%]{2,},'
   - language: Motorola 68K Assembly
     named_pattern: m68k
 - extensions: ['.sc']
@@ -742,7 +756,7 @@ disambiguations:
 - extensions: ['.st']
   rules:
   - language: StringTemplate
-    pattern: '\$\w+[($]|(.)!\s*.+?\s*!\1|<!\s*.+?\s*!>|\[!\s*.+?\s*!\]|\{!\s*.+?\s*!\}'
+    pattern: '\$\w+[($]|.!\s*.+?\s*!.|<!\s*.+?\s*!>|\[!\s*.+?\s*!\]|\{!\s*.+?\s*!\}'
   - language: Smalltalk
     pattern: '\A\s*[\[{(^"''\w#]|[a-zA-Z_]\w*\s*:=\s*[a-zA-Z_]\w*|class\s*>>\s*[a-zA-Z_]\w*|^[a-zA-Z_]\w*\s+[a-zA-Z_]\w*:|^Class\s*\{|if(?:True|False):\s*\['
 - extensions: ['.star']
@@ -880,7 +894,7 @@ disambiguations:
 - extensions: ['.url']
   rules:
   - language: INI
-    pattern: '^\[InternetShortcut\](?:\r?\n|\r)(?>[^\s\[][^\r\n]*(?:\r?\n|\r))*URL='
+    pattern: '^\[InternetShortcut\](?:\r?\n|\r)([^\s\[][^\r\n]*(?:\r?\n|\r)){0,20}URL='
 - extensions: ['.v']
   rules:
   - language: Coq
@@ -951,8 +965,8 @@ named_patterns:
   - '(?i)^[ \t]*dim( shared)? [a-z_][a-z0-9_]* as [a-z_][a-z0-9_]* ptr'
   gsc:
   - '^\s*#\s*(?:using|insert|include|define|namespace)[ \t]+\w'
-  - '^\s*(?>(?:autoexec|private)\s+){0,2}function\s+(?>(?:autoexec|private)\s+){0,2}\w+\s*\('
-  - '\b(?:level|self)[ \t]+thread[ \t]+(?:\[\[[ \t]*(?>\w+\.)*\w+[ \t]*\]\]|\w+)[ \t]*\([^\r\n\)]*\)[ \t]*;'
+  - '^\s*((?:autoexec|private)\s+){0,2}function\s+((?:autoexec|private)\s+){0,2}\w+\s*\('
+  - '\b(?:level|self)[ \t]+thread[ \t]+(?:\[\[[ \t]*(\w+\.)+[ \t]*\]\]|\w+)[ \t]*\([^\r\n\)]*\)[ \t]*;'
   - '^[ \t]*#[ \t]*(?:precache|using_animtree)[ \t]*\('
   json: '\A\s*[{\[]'
   key_equals_value: '^[^#!;][^=]*='
