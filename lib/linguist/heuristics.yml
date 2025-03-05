@@ -368,7 +368,7 @@ disambiguations:
   - language: Assembly
     pattern:
     - '(?i)mov\s+[^\s]+,'
-    - '^\s+(i?)db\s+[\d\w]'
+    - '^\s+(i?)db\s+[a-z\d]'
 - extensions: ['.ice']
   rules:
   - language: JSON
@@ -403,7 +403,7 @@ disambiguations:
   - language: Assembly
     pattern:
     - '^(?i)[^"m]*mov\s+[^\s]+,'
-    - '^\s+(?i)db\s+[\d\w]'
+    - '^\s+(?i)db\s+[a-z\d]'
 - extensions: ['.json']
   rules:
   - language: OASv2-json
