@@ -1,0 +1,25 @@
+#use Foundation
+
+implementation Array: RSObject {
+    let items: Vec<RSObject>;
+    
+    fn new() -> Self {
+        Self {
+            items: Vec::new()
+        }
+    }
+    
+    fn add(&mut self, item: RSObject) {
+        self.items.push(item);
+    }
+    
+    fn count(&self) -> usize {
+        self.items.len()
+    }
+}
+
+fn main() {
+    let array = Array::new();
+    array.add(RSString::from("Hello"));
+    RSPrintln!("Count: {}", array.count());
+}
