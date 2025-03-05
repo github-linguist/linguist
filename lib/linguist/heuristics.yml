@@ -447,6 +447,14 @@ disambiguations:
   rules:
   - language: Objective-C
     named_pattern: objectivec
+  - language: Octave
+    pattern:
+    - '^\s*##'
+    - '^\s*endfunction'
+    - '^\s*endclassdef'
+    - '^\s*endif'
+    - '^\s*endfor'
+    - '^\s*endwhile'
   - language: Mercury
     pattern: ':- module'
   - language: MUF
