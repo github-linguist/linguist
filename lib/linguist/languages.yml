@@ -3073,11 +3073,22 @@ INI:
   - ".ini"
   - ".cfg"
   - ".cnf"
+  - ".conf"
+  - ".container"
+  - ".desktop"
+  - ".desktop.in"
   - ".dof"
   - ".lektorproject"
+  - ".mount"
+  - ".network"
+  - ".path"
   - ".prefs"
   - ".pro"
   - ".properties"
+  - ".service"
+  - ".socket"
+  - ".target"
+  - ".timer"
   - ".url"
   filenames:
   - ".buckconfig"
@@ -3091,6 +3102,8 @@ INI:
   - vlcrc
   tm_scope: source.ini
   aliases:
+  - conf
+  - desktop
   - dosini
   ace_mode: ini
   codemirror_mode: properties
@@ -8593,14 +8606,6 @@ crontab:
   tm_scope: text.crontab
   ace_mode: tcl
   language_id: 705203557
-desktop:
-  type: data
-  extensions:
-  - ".desktop"
-  - ".desktop.in"
-  tm_scope: source.desktop
-  ace_mode: text
-  language_id: 412
 dircolors:
   type: data
   extensions:
@@ -8798,25 +8803,6 @@ sed:
   ace_mode: text
   tm_scope: source.sed
   language_id: 847830017
-systemd unit:
-  type: data
-  aliases:
-  - systemd
-  extensions:
-  - ".service"
-  - ".container"
-  - ".mount"
-  - ".network"
-  - ".path"
-  - ".socket"
-  - ".target"
-  - ".timer"
-  ace_mode: ini
-  codemirror_mode: properties
-  codemirror_mime_type: text/x-properties
-  tm_scope: source.ini
-  group: INI
-  language_id: 985762731
 templ:
   type: markup
   color: "#66D0DD"
