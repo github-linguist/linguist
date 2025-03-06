@@ -188,7 +188,7 @@ disambiguations:
     # e.g., "[foobar]" or "# [commented out]"
     - pattern: '^[#\s]*\[[^\]]+\]\s*$'
     # e.g., "fizz = buzz" or "# disabled=i am"
-    - pattern: '^[#\s]*\S+\s?=.+$'
+    - pattern: '^(?:#\s*)?[^\s=]+\s*=.+$'
 - extensions: ['.cs']
   rules:
   - language: Smalltalk
