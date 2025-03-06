@@ -905,7 +905,7 @@ module Linguist
     #
     # Returns true or false.
     def generated_sqlx_query?
-      !!name.match(/(?:^|.*\/)\.sqlx\/query-.+\.json$/)
+      !!name.match(/(?:^|\/)\.sqlx\/query-[a-f\d]{64}\.json$/)
     end
   end
 end
