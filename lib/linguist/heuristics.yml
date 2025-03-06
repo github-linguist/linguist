@@ -181,6 +181,14 @@ disambiguations:
   rules:
   - language: Gerber Image
     pattern: '^[DGMT][0-9]{2}\*(?:\r?\n|\r)'
+- extensions: ['.conf']
+  rules:
+  - language: INI
+    and:
+    # e.g., "[foobar]" or "# [commented out]"
+    - pattern: '^[#\s]*\[[^\]]+\]\s*$'
+    # e.g., "fizz = buzz" or "# disabled=i am"
+    - pattern: '^[#\s]*\S+\s?=.+$'
 - extensions: ['.cs']
   rules:
   - language: Smalltalk
