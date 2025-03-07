@@ -187,8 +187,8 @@ disambiguations:
     and:
     # e.g., "[foobar]" or "# [commented out]"
     - pattern: '^[#\s]*\[[^\]]+\]\s*$'
-    # e.g., "fizz = buzz" or "# disabled=i am"
-    - pattern: '^(?:#\s*)?[^\s=]+\s*=.+$'
+    - named_pattern: key_equals_value
+    - negative_pattern: '^[^#;=\[]+[^ \n=]$'
 - extensions: ['.cs']
   rules:
   - language: Smalltalk
