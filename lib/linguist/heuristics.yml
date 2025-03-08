@@ -181,7 +181,7 @@ disambiguations:
   rules:
   - language: Gerber Image
     pattern: '^[DGMT][0-9]{2}\*(?:\r?\n|\r)'
-- extensions: ['.conf']
+- extensions: ['.cfg', '.cnf', '.conf', '.container', '.desktop', '.desktop.in', '.dof', '.lektorproject', '.mount', '.network', '.path', '.prefs', '.pro', '.properties', '.service', '.socket', '.target', '.timer', '.url']
   rules:
   - language: INI
     and:
