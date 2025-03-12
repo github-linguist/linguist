@@ -1,0 +1,26 @@
+#use Foundation
+
+implementation RSString: RSObject {
+    let value: String;
+    
+    fn new(s: &str) -> Self {
+        Self {
+            value: s.to_string()
+        }
+    }
+    
+    fn length(&self) -> usize {
+        self.value.len()
+    }
+    
+    fn append(&mut self, other: &RSString) {
+        self.value.push_str(&other.value);
+    }
+}
+
+fn main() {
+    let mut str = RSString::new("Hello, ");
+    let world = RSString::new("World!");
+    str.append(&world);
+    RSPrintln!("{}", str.value);
+}
