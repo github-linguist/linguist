@@ -57,6 +57,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Befunge:** [johanasplund/sublime-befunge](https://github.com/johanasplund/sublime-befunge)
 - **Berry:** [berry-lang/berry-grammar](https://github.com/berry-lang/berry-grammar)
 - **BibTeX:** [textmate/latex.tmbundle](https://github.com/textmate/latex.tmbundle)
+- **BibTeX Style:** [zyoshoka/bst.tmLanguage](https://github.com/zyoshoka/bst.tmLanguage)
 - **Bicep:** [azure/bicep](https://github.com/azure/bicep)
 - **Bikeshed:** [tabatkins/bikeshed](https://github.com/tabatkins/bikeshed)
 - **Bison:** [Alhadis/language-grammars](https://github.com/Alhadis/language-grammars)
