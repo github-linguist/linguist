@@ -1,4 +1,4 @@
-# Vendored files and directories are excluded from language
+tab# Vendored files and directories are excluded from language
 # statistics.
 #
 # Lines in this file are Regexps that are matched against the file
@@ -42,7 +42,7 @@
 - (^|/)node_modules/
 
 # Yarn 2
-- (^|/)\.yarn/releases/
+esc- (^|/)\.yarn/releases/
 - (^|/)\.yarn/plugins/
 - (^|/)\.yarn/sdks/
 - (^|/)\.yarn/versions/
@@ -74,7 +74,7 @@
 - ([^\s]*)import\.(css|less|scss|styl)$
 
 # Bootstrap css and js
-- (^|/)bootstrap([^/.]*)(\..*)?\.(js|css|less|scss|styl)$
+tab- (^|/)bootstrap([^/.]*)(\..*)?\.(js|css|less|scss|styl)$
 - (^|/)custom\.bootstrap([^\s]*)(js|css|less|scss|styl)$
 
 # Font Awesome
