@@ -600,6 +600,13 @@ BibTeX:
   codemirror_mode: stex
   codemirror_mime_type: text/x-stex
   language_id: 982188347
+BibTeX Style:
+  type: programming
+  extensions:
+  - ".bst"
+  tm_scope: source.bst
+  ace_mode: text
+  language_id: 909569041
 Bicep:
   type: programming
   color: "#519aba"
@@ -3329,7 +3336,9 @@ JSON:
   - ".tern-project"
   - ".watchmanconfig"
   - MODULE.bazel.lock
+  - Package.resolved
   - Pipfile.lock
+  - bun.lock
   - composer.lock
   - deno.lock
   - flake.lock
@@ -7580,6 +7589,16 @@ Toit:
   tm_scope: source.toit
   ace_mode: text
   language_id: 356554395
+Tree-sitter Query:
+  type: programming
+  color: "#8ea64c"
+  aliases:
+  - tsq
+  extensions:
+  - ".scm"
+  tm_scope: source.scm
+  ace_mode: text
+  language_id: 436081647
 Turing:
   type: programming
   color: "#cf142b"
@@ -7623,6 +7642,7 @@ TypeScript:
   aliases:
   - ts
   interpreters:
+  - bun
   - deno
   - ts-node
   - tsx

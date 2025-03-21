@@ -68,7 +68,7 @@ disambiguations:
 - extensions: ['.as']
   rules:
   - language: ActionScript
-    pattern: '^\s*(?:package(?:\s+[\w.]+)?\s+(?:\{|$)|import\s+[\w.*]+\s*;|(?=.*?(?:intrinsic|extends))(intrinsic\s+)?class\s+[\w<>.]+(?:\s+extends\s+[\w<>.]+)?|(?:(?:public|protected|private|static)\s+)*(?:(?:var|const|local)\s+\w+\s*:\s*[\w<>.]+(?:\s*=.*)?\s*;|function\s+\w+\s*\((?:\s*\w+\s*:\s*[\w<>.]+\s*(,\s*\w+\s*:\s*[\w<>.]+\s*)*)?\)))'
+    pattern: '^\s*(?:package(?:\s+[\w.]+)?\s+(?:\{|$)|import\s+[\w.*]+\s*;|(?:intrinsic\s+)class\s+[\w<>.]+|\s+class\s+extends\s+[\w<>.]+|(?:(?:public|protected|private|static)\s+)*(?:(?:var|const|local)\s+\w+\s*:\s*[\w<>.]+(?:\s*=.*)?\s*;|function\s+\w+\s*\((?:\s*\w+\s*:\s*[\w<>.]+\s*(,\s*\w+\s*:\s*[\w<>.]+\s*)*)?\)))'
 - extensions: ['.asc']
   rules:
   - language: Public Key
@@ -138,9 +138,9 @@ disambiguations:
     pattern: '^(?i:<pre\s+class)\s*=\s*(''|\"|\b)metadata\b(''|\"|\b)[^>\r\n]*>'
   - language: BrighterScript
     pattern:
-    - (?i:^\s*(?=^sub\s)(?:sub\s*\w+\(.*?\))|(?::\s*sub\(.*?\))$)
+    - (?i:^\s*(?:sub\s*\w+\(.*?\))|(?::\s*sub\(.*?\))$)
     - (?i:^\s*(end\ssub)$)
-    - (?i:^\s*(?=^function\s)(?:function\s*\w+\(.*?\)\s*as\s*\w*)|(?::\s*function\(.*?\)\s*as\s*\w*)$)
+    - (?i:^\s*(?:function\s*\w+\(.*?\)\s*as\s*\w*)|(?::\s*function\(.*?\)\s*as\s*\w*)$)
     - (?i:^\s*(end\sfunction)$)
   - language: Bluespec BH
     pattern: '^package\s+[A-Za-z_][A-Za-z0-9_'']*(?:\s*\(|\s+where)'
@@ -297,7 +297,7 @@ disambiguations:
 - extensions: ['.ftl']
   rules:
   - language: FreeMarker
-    pattern: '^(?:<|[a-zA-Z-][a-zA-Z0-9_-]+[ \t]+\w)|\$\{\w+[^\r\n]*?\}|^[ \t]*(?:<#--.*?-->|<#(?:[a-z]+)(?=\s|>)[^>]*>.*?</#(?:[a-z]+)>|\[#--.*?--\]|\[#(?:[a-z]+)(?=\s|\])[^\]]*\].*?\[#(?:[a-z]+)\])'
+    pattern: '^(?:<|[a-zA-Z-][a-zA-Z0-9_-]+[ \t]+\w)|\$\{\w+[^\r\n]*?\}|^[ \t]*(?:<#--.*?-->|<#(?:[a-z]+)\s[^>]*>.*?</#(?:[a-z]+)>|\[#--.*?--\]|\[#(?:[a-z]+)\s[^\]]*\].*?\[#(?:[a-z]+)\])'
   - language: Fluent
     pattern: '^-?[a-zA-Z][a-zA-Z0-9_-]* *=|\{\$-?[a-zA-Z][-\w]*(?:\.[a-zA-Z][-\w]*)?\}'
 - extensions: ['.g']
@@ -368,7 +368,7 @@ disambiguations:
   - language: Assembly
     pattern:
     - '(?i)mov\s+[^\s]+,'
-    - '^\s+(i?)db\s+[\d\w]'
+    - '^\s+(i?)db\s+[a-z\d]'
 - extensions: ['.ice']
   rules:
   - language: JSON
@@ -388,7 +388,7 @@ disambiguations:
   - language: NASL
     pattern:
     - '^\s*include\s*\(\s*(?:"|'')[\\/\w\-\.:\s]+\.(?:nasl|inc)\s*(?:"|'')\s*\)\s*;'
-    - '^\s*(?:global|local)_var\s+(?:\w+(?:\s*=\s*[\w\-"'']+)?\s*)(?:,\s*\w+(?:\s*=\s*[\w\-"'']+)?\s*)*+\s*;'
+    - '^\s*(?:global|local)_var\s+(?:\w+(?:\s*=\s*[\w\-"'']+)?\s*)(?:,\s*\w+(?:\s*=\s*[\w\-"'']+)?\s*)*\s*;'
     - '^\s*namespace\s+\w+\s*\{'
     - '^\s*object\s+\w+\s*(?:extends\s+\w+(?:::\w+)?)?\s*\{'
     - '^\s*(?:public\s+|private\s+|\s*)function\s+\w+\s*\([\w\s,]*\)\s*\{'
@@ -403,7 +403,7 @@ disambiguations:
   - language: Assembly
     pattern:
     - '^(?i)[^"m]*mov\s+[^\s]+,'
-    - '^\s+(?i)db\s+[\d\w]'
+    - '^\s+(?i)db\s+[a-z\d]'
 - extensions: ['.json']
   rules:
   - language: OASv2-json
@@ -691,7 +691,7 @@ disambiguations:
 - extensions: ['.rno']
   rules:
   - language: RUNOFF
-    pattern: '(?i:^\.!|^\f|\f$|^\.end lit(?:eral)?\b|^\.[a-zA-Z].*?;\.[a-zA-Z](?:[; \t])|\^\*[^\s*][^*]*\\\*(?=$|\s)|^\.c;[ \t]*\w+)'
+    pattern: '(?i:^\.!|^\f|\f$|^\.end lit(?:eral)?\b|^\.[a-zA-Z].*?;\.[a-zA-Z](?:[; \t])|\^\*[^\s*][^*]*\\\*(?:$|\s)|^\.c;[ \t]*\w+)'
   - language: Roff
     pattern: '^\.\\" '
 - extensions: ['.rpy']
@@ -728,10 +728,27 @@ disambiguations:
   - language: Markdown
     # Markdown syntax for scdoc
     pattern: '^#+\s+(NAME|SYNOPSIS|DESCRIPTION)'
+- extensions: ['.scm']
+  rules:
+  - language: Scheme
+    pattern:
+    - '(?:''[\(\*#]|\w->\w|\.\.\.[\s\)]|\([+\-:<>\/=~\)]|~>|[#`]\(|#:\w)'
+    - '^\s*\((?:define\*?|import|library|lambda)'
+    negative_pattern:
+    - '\(#[\w-]+[!\?]'
+    - '[\)\]"_]\s*(?:[\*\+\?]|@\w)'
+  - language: Tree-sitter Query
+    pattern:
+    - '\(#[\w-]+[!\?]'
+    - '[\)\]"_]\s*(?:[\*\+\?]|@\w)'
+    - '(?:^\s*\w+:\s*[\(\[\"])'
+    - '\(#(?:set!|(?:not-)?(?:any-of|match)\?)'
+    negative_pattern:
+    - '\([+\-:<>\/=~\)]'
 - extensions: ['.sol']
   rules:
   - language: Solidity
-    pattern: '\bpragma\s+solidity\b|\b(?:abstract\s+)?contract\s+(?!\d)[a-zA-Z0-9$_]+(?:\s+is\s+(?:[a-zA-Z0-9$_][^\{]*?)?)?\s*\{'
+    pattern: '\bpragma\s+solidity\b|\b(?:abstract\s+)?contract\s+[a-zA-Z$_][a-zA-Z0-9$_]*(?:\s+is\s+(?:[a-zA-Z0-9$_][^\{]*?)?)?\s*\{'
   - language: Gerber Image
     pattern: '^[DGMT][0-9]{2}\*(?:\r?\n|\r)'
 - extensions: ['.sql']
@@ -861,7 +878,7 @@ disambiguations:
         (?<!-)\b
       )*+
 
-      (?=$|\s)
+      (?:$|\s)
   - language: Adblock Filter List
     pattern: |-
       (?x)\A
