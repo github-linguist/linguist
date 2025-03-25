@@ -12,9 +12,9 @@ HELP_TEXT = <<~HELP
 Linguist v#{Linguist::VERSION}
 Detect language type and determine language breakdown for a given Git repository.
 
-Usage: linguist <path>
-       linguist <path> [--rev REV] [--tree-size] [--breakdown] [--json]
-       linguist [--rev REV] [--tree-size] [--breakdown] [--json]
+Usage: github-linguist <path>
+       github-linguist <path> [--rev REV] [--tree-size] [--breakdown] [--json]
+       github-linguist [--rev REV] [--tree-size] [--breakdown] [--json]
 HELP
 
 def github_linguist(args)
