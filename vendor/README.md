@@ -237,6 +237,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Groovy Server Pages:** [textmate/java.tmbundle](https://github.com/textmate/java.tmbundle)
 - **HAProxy:** [abulimov/atom-language-haproxy](https://github.com/abulimov/atom-language-haproxy)
 - **HCL:** [hashicorp/syntax](https://github.com/hashicorp/syntax)
+- **HIP:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **HLSL:** [tgjones/shaders-tmLanguage](https://github.com/tgjones/shaders-tmLanguage)
 - **HOCON:** [jacobwgillespie/language-hocon](https://github.com/jacobwgillespie/language-hocon)
 - **HTML:** [tree-sitter/tree-sitter-html](https://github.com/tree-sitter/tree-sitter-html) 🐌
