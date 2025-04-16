@@ -1,0 +1,197 @@
+.pa 1
+.he 'ROFF (I)'6/12/72'ROFF (I)'
+.ti 0
+NAME		roff  --  format text
+.sp
+.ti 0
+.nf
+SYNOPSIS	roff____ [ +_number ] [ -s__ ] [ -h__ ] file\d1\u ...
+.fi
+.sp
+.ti 0
+DESCRIPTION	roff____
+formats text according to control lines embedded
+in the text in file918, ... .
+Encountering a nonexistent file terminates printing.
+The optional argument "+_number" causes printing
+to begin at the first page
+with that number.
+The optional argument
+"-s__" causes printing to stop before each page
+including the first
+to allow paper manipulation;
+printing is resumed upon
+receipt of an interrupt signal.
+The optional argument
+"-h" causes the output to contain
+horizontal tabs for two or more spaces
+that end on a tab stop.
+An interrupt signal received during printing terminates all
+printing.
+Incoming interconsole messages are turned off during printing,
+and the original message acceptance state is restored upon
+termination.
+.sp
+At the present time, there
+is no document describing ROFF in full.
+A Request Summary is attached.
+.sp
+.ti 0
+FILES		/etc/suftab	suffix hyphenation tables
+.br
+/tmp/rtm?	temporary
+.br
+.sp
+.ti 0
+SEE ALSO	--
+.sp
+.ti 0
+DIAGNOSTICS	none
+.sp
+.ti 0
+BUGS		-
+.bp
+.de xx
+.ti 0
+..
+.tr &.
+.tc |
+.tr |
+.in 0
+.ce
+REQUEST SUMMARY
+.sp 2
+.ul
+Request	Break	Initial	Meaning
+.in 24
+.na
+.sp
+.xx
+&ad	yes	yes	Begin adjusting right margins.
+.xx
+&ar	no	arabic	Arabic page numbers.
+.xx
+&br	yes	-	Causes a line break -­ thå filling of
+the current line is stopped.
+.xx
+&bl|n	yes	-	Insert contiguous block of n blank lines.
+If necessary, a new page will be
+started to accomodate the entire block.
+.xx
+&bp|+n	yes	n=1	Begin new page and number it n.
+If n is not given, normal sequencing occurs.
+.xx
+&cc|c	no	c=.	Control character becomes `c'.
+.xx
+&ce|n	yes	-	Center the next n input lines,
+without filling.
+.xx
+&de|xx	no	-	Define macro named "xx"
+(definition ends with a line beginning with "..").
+.xx
+&ds	yes	no	Double space; same as ".ls 2".
+.xx
+&ef|t	no	t=''''	Even foot title becomes t.
+.xx
+&eh|t	no	t=''''	Even head title becomes t.
+.xx
+&fi	yes	yes	Begin filling output lines.
+.xx
+&fo	no	t=''''	All foot titles are t.
+.xx
+&hc|c	no	none	Hyphenation character set to `c'.
+.xx
+&he|t	no	t=''''	All head titles are t.
+.xx
+&hx	no	-	Title lines are suppressed.
+.xx
+&hy|n	no	n=1	Hyphenation is done, if n=1;
+and is not done, if n=0.
+.xx
+&ig	no	-	Ignore input lines until and including
+a line beginning with "..".
+.xx
+&in|+n	yes	-	Indent n spaces from left margin.
+.xx
+&ix +n	no	-	Same as ".in" but without break.
+.xx
+&li|n	no	-	Literal, treat next n lines as text.
+.xx
+&ll|+n	no	n=65	Line length including indent is n characters.
+.xx
+&ls|+n	yes	n=1	Line spacing set to n lines per output line.
+.xx
+&m1|n	no	n=2	n blank lines are put between the top
+of a new page and the head title.
+.xx
+&m2|n	no	n=2	n blanks lines put between head title
+and beginning of text on page.
+.xx
+&m3|n	no	n=1	n blank lines put between the end of
+text and the foot title.
+.xx
+&m4|n	no	n=3	n blank lines put between the foot title
+and the bottom of page.
+.xx
+&na	yes	no	Stop adjusting the right margin.
+.xx
+&ne|n	no	-	Begin new page, if n output lines
+cannot fit on present page.
+.xx
+&nn|+n	no	-	The next n output lines are not numbered.
+.xx
+&n1	no	no	Output lines are numbered sequentially
+beginning with 1 on each new page.
+Head and foot titles are not numbered.
+.xx
+&n2	no	no	Output lines are numbered sequentially
+beginning with 1 on the next output line.
+.xx
+&ni|+n	no	n=0	Line numbers are indented n.
+.xx
+&nf	yes	no	Stop filling output lines.
+.xx
+&nx|filename	-	Change to input file "filename".
+.xx
+&of|t	no	t=''''	Odd foot title becomes t.
+.xx
+&oh|t	no	t=''''	Odd head title becomes t.
+.xx
+&pa|+n	yes	n=1	Same as ".bp".
+.xx
+&pl|+n	no	n=66	Total paper length taken to be n lines.
+.xx
+&po|+n	no	n=0	Page offset.
+All lines are preceded by N spaces.
+.xx
+&ro	no	arabic	Roman page numbers.
+.xx
+&sk|n	no	-	n pages with head and foot titles but
+otherwise blank will be output beginning
+with the next page containing text.
+.xx
+&sp|n	yes	-	Insert block of n blank lines.
+If the bottom of a page is reached,
+remaining lines are not___ put on next page.
+.xx
+&ss	yes	yes	Single space output lines,
+equivalent to ".ls 1".
+.xx
+&ta|N|M|...	-	Pseudotab settings.
+Initial tab settings are columns 9,17,25,...
+.xx
+&tc|c	no	c="|"	Tab replacement character becomes "c".
+.xx
+&ti|+n	yes	-	Temporarily indent next output line
+n spaces.
+.xx
+&tr|abcd.. no	-	Translate a into b, c into d, etc.
+.xx
+&ul|n	no	-	Underline the letters and numbers on the
+next n input lines.
+.sp
+.in 0
+.fi
+.tc
+.in 16
+.tr ||

@@ -1,29 +1,32 @@
 #!/usr/bin/env ruby
 
+$LOAD_PATH[0, 0] = File.join(File.dirname(__FILE__), '..', 'lib')
+
 require 'linguist'
 require 'rugged'
 require 'optparse'
 require 'json'
-require 'tmpdir'
+require 'tempfile'
 require 'zlib'
 
 class GitLinguist
-  def initialize(path, commit_oid, incremental = true)
+  def initialize(path, commit_oid, incremental = true, tree_size = Linguist::Repository.MAX_TREE_SIZE)
     @repo_path = path
     @commit_oid = commit_oid
     @incremental = incremental
+    @tree_size = tree_size
   end
 
   def linguist
     if @commit_oid.nil?
       raise "git-linguist must be called with a specific commit OID to perform language computation"
     end
-    repo = Linguist::Repository.new(rugged, @commit_oid)
+    repo = Linguist::Repository.new(rugged, @commit_oid, @tree_size)
 
     if @incremental && stats = load_language_stats
       old_commit_oid, old_stats = stats
 
-      # A cache with NULL oid means that we want to froze
+      # A cache with NULL oid means that we want to freeze
       # these language stats in place and stop computing
       # them (for performance reasons)
       return old_stats if old_commit_oid == NULL_OID
@@ -74,18 +77,14 @@ class GitLinguist
   def write_cache(object)
     return unless File.directory? @repo_path
 
-    begin
-      tmp_path = Dir::Tmpname.make_tmpname(cache_file, nil)
-      File.open(tmp_path, "wb") do |f|
-        marshal = Marshal.dump(object)
-        f.write(Zlib::Deflate.deflate(marshal))
-      end
-
-      File.rename(tmp_path, cache_file)
-    rescue => e
-      (File.unlink(tmp_path) rescue nil)
-      raise e
+    Tempfile.open('cache_file', @repo_path) do |f|
+      marshal = Marshal.dump(object)
+      f.write(Zlib::Deflate.deflate(marshal))
+      f.close
+      File.rename(f.path, cache_file)
     end
+
+    FileUtils.chmod 0644, cache_file
   end
 
   def load_cache
@@ -100,19 +99,27 @@ end
 def git_linguist(args)
   incremental = true
   commit = nil
+  tree_size = Linguist::Repository::MAX_TREE_SIZE
 
   parser = OptionParser.new do |opts|
-    opts.banner = "Usage: git-linguist [OPTIONS] stats|breakdown|dump-cache|clear|disable"
+    opts.banner = <<~HELP
+      Linguist v#{Linguist::VERSION}
+      Detect language type and determine language breakdown for a given Git repository.
+
+      Usage:
+      git-linguist [OPTIONS] stats|breakdown|dump-cache|clear|disable
+    HELP
 
     opts.on("-f", "--force", "Force a full rescan") { incremental = false }
-    opts.on("--commit=COMMIT", "Commit to index") { |v| commit = v}
+    opts.on("-c", "--commit=COMMIT", "Commit to index") { |v| commit = v}
+    opts.on("-t", "--tree-size=NUMBER", Integer,
+            "Maximum number of files scanned to detect languages (default: #{Linguist::Repository::MAX_TREE_SIZE})" ) { |t| tree_size = t }
   end
 
   parser.parse!(args)
-
   git_dir = `git rev-parse --git-dir`.strip
-  raise "git-linguist must be ran in a Git repository (#{Dir.pwd})" unless $?.success?
-  wrapper = GitLinguist.new(git_dir, commit, incremental)
+  raise "git-linguist must be run in a Git repository" unless $?.success?
+  wrapper = GitLinguist.new(git_dir, commit, incremental, tree_size)
 
   case args.pop
   when "stats"
@@ -133,6 +140,12 @@ def git_linguist(args)
     $stderr.print(parser.help)
     exit 1
   end
+rescue SystemExit
+  exit 1
+rescue Exception => e
+  $stderr.puts e.message
+  $stderr.puts e.backtrace
+  exit 1
 end
 
 git_linguist(ARGV)

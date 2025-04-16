@@ -1,0 +1,335 @@
+.\"
+.\" This is a copy of README.md, adopted for terminal display.
+.\" I thought the combination of the name and file extension was hilarious.
+.\" More info: https://en.wikipedia.org/wiki/Troff_macro
+.\"
+.\"=== MACROS ==================================================================
+.\" 1. Verbatim text (yoinked from POD source)
+.\"      Usage:   Vb {number-of-lines-of-space-being-requested}
+.\"    Example:   Vb 3
+.de Vb
+.	ft CW
+.	nf
+.	ne \\$1
+..
+.\" 2. End verbatim text
+.de Ve
+.	ft R
+.	fi
+..
+.\"=== SETTINGS ================================================================
+.\"
+.\" Disable justification for nroff
+.	if n .ad l
+.\"
+.\"=== CONTENT =================================================================
+.\"
+.TH ALHADIS 1 "2016-04-13" "Alhadis/Coding-Style" "github.com/Alhadis/Coding-Style"
+.SH PREAMBLE
+You have open before you an unavoidably arrogant avalanche of bikeshedding which serves as an explanation of my personal coding style.
+While I don't envision any of my projects ever becoming a conduit for collaboration (since I prefer working alone),
+I'll at least have something in black\-and\-white to direct anybody to who feels compelled to send a PR on one of my projects.
+.PP
+Let's get this shed painted.
+.
+.
+.
+.SH "1. USE TABS FOR INDENTATION"
+Use \fIhard tabs\fR (U+0009) to indent.
+.PP
+If you prefer spaces for indentation, I'm automatically inclined to dislike you.
+Really, I'm not joking.
+I wish I were, as it'd imply I DON'T get eye strain when I try squinting through cramped columns
+of 2\-space\-indented JavaScript that kids these days seem to think is trendy (and some adults for some reason).
+.PP
+Everybody has their own preference on what they're most comfortable reading.
+Let them enjoy it, use tabs, and \fB use them responsibly.\fR
+.PP
+Which brings me to point 2:
+.
+.
+.
+.SH "2. DON'T USE TABS FOR ALIGNMENT"
+Never assume a tab will be of any particular length, even if your project has an `.editorconfig` file.
+Imagine a tab is an invisible, elastic region of space the coder can fluidly adjust to control their code's layout.
+Which it is.
+.PP
+Use spaces for cosmetic alignment.
+Don't let them touch leading tabulation \- tab characters should \fInever\fR come after a non\-whitespace character
+(unless it's TSV data, but obviously that's a given).
+.PP
+Avoid situations where it's tempting to use tabs as an alignment device:
+.PP
+.Vb 3
+\&        var a = "This is",
+\&            b = "A common pattern",
+\&            c = "in JavaScript";
+.Ve
+.PP
+I find this to be more readable:
+.PP
+.Vb 3
+\&        var a = "This is";
+\&        var b = "Slightly less";
+\&        var c = "Common in JavaScript";
+.Ve
+.PP
+I'm okay with the first notation, as long as it's used like this:
+.PP
+.Vb 3
+\&        var a = "This is",
+\&        b     = "Weird",
+\&        c     = "Right?";
+.Ve
+.PP
+If you're the comma\-first sort of person (which I am \fINOT\fR), you could do this:
+.PP
+.Vb 3
+\&        var a = "I hate"
+\&        ,   b = "This form"
+\&        ,   c = "Of notation."
+.Ve
+.PP
+I think you get it.
+.
+.
+.
+.SH "3. BRACING STYLE"
+I prefer the K&R style,
+with curly\-brackets only appearing on their own lines if the construct they're a part of can't be nested.
+.PP
+For instance, in PHP, you can't have one class inside another, so this is fine:
+.PP
+.Vb 6
+\&        class Store
+\&        {
+\&            function query($args = array()){
+\&
+\&            }
+\&        }
+.Ve
+.PP
+Similarly, if it's a C project, the same logic applies to functions (which can't be nested):
+.PP
+.Vb 7
+\&        int main(int argc)
+\&        {
+\&            while(true){
+\&                printf("Piss off world, I'm working.\n");
+\&                return 1;
+\&            }
+\&        }
+.Ve
+.PP
+I generally prefer no spaces between the closing bracket and the opening bracket (e.g., `function name(){`),
+but I won't bite your head off for inserting a space for readability.
+Unless of course, you're going around making wanton adjustments to existing code.
+If your PR's diffs crackle with noisy, irrelevant and cosmetic changes, it's getting kicked.
+.
+.
+.
+.SH "4. CASING STYLE"
+Depends on language.
+Stick to the style used by a language's standard library:
+.PP
+.IP "*" 4
+camelCase:  JavaScript, Haskell
+.IP "*" 4
+kebab\-case: Anywhere where dashes are legal \- HTML, CSS and filenames
+.IP "*" 4
+snake_case: Anywhere where dashes *aren't* legal (PHP, Perl, most languages)
+.PP
+Capitalisation follows the usual conventions of most programming languages:
+.PP
+.IP "*" 4
+Classes: PascalCase
+.IP "*" 4
+Constants: SCREAMING_SNAKE_CASE
+.IP "*" 4
+Anything else: lowerCase / lower-case / lower_case
+.PP
+\fINOTE\fR: My capitalisation of variable names is sometimes inconsistent when writing shell\-scripts and Makefiles.
+Generally I'll start out writing them in UPPERCASE, then switch to lowercase when there're too many variables making everything look too shouty.
+.
+.
+.
+.SH "5. SEMICOLONS"
+Use them.
+They make unfamiliar code easier to skim through by showing where each statement terminates,
+distinguishing those split across multiple lines:
+.PP
+.Vb 7
+\&    let list = items
+\&        .filter(a => a !== unwanted)
+\&        .sort(a => a < b)
+\&        .join(" ")
+\&        .replace(/[A-Z]zip/g, "")
+\&        .etc();
+.Ve
+.PP
+They're also not optional in every programming language.
+Trying to remember what languages have ASI and which don't is harder than simply hitting that damn extra key.
+.PP
+And if that's too much effort for you, well, I imagine your emails probably look like this:
+.PP
+.Vb 3
+\&    > hey sup. i pushed a few comits last nite.
+\&    > did you remember the question mark
+\&    > what's the url
+.Ve
+.
+.
+.
+.SH "6. DOUBLE\-QUOTES"
+Use double\-quotes, unless it's a language sensitive to interpolation (like shell\-scripts, Perl, or PHP).
+.PP
+An exception is a string containing double-quotes of its own: if using single\-quotes helps eliminate escape characters, use them instead:
+.PP
+.Vb 3
+\&    '"Use This"'
+\&    "\\"Not this\\""
+.Ve
+.PP
+Because there's a difference between enforcing consistency and using your brain.
+It looks like this:
+.PP
+.Vb 3
+\&    "- \\"" + name + "\\": \\"" + value + "\\""
+.Ve
+.PP
+Instead of this:
+.PP
+.Vb 3
+\&    '- "' + name + '": ' + value + '"'
+.Ve
+.PP
+That being said, don't quote keys in object literals if they don't need it:
+.PP
+.Vb 3
+\&    var obj = {
+\&        "This needs it": 1,
+\&        thisDoesNot:     1
+\&    };
+.Ve
+.PP
+.SS Reasoning behind preference:
+Double\-quotes are easier to distinguish at a glance than apostrophes.
+Sure, they involve holding an extra key.
+Who cares?
+Get a better keyboard if pressing shift keys is too cumbersome for you.
+.
+.
+.
+.SH "7. COMMA\-LAST"
+.nf
+Nobody writes like this
+, so neither should you
+, unless you had one really
+, really
+, really
+, really
+, really weird education.
+.PP
+But hey
+, less noise in your diffs
+, right? RIGHT?
+.fi
+.
+.
+.
+.SH "8. WRITING COMMIT MESSAGES"
+This entire damn article:\fI http://chris.beams.io/posts/git-commit/ \fR
+.PP
+Every point is like holy Git law to me.
+.PP
+.SS BE FOREWARNED:
+Not adhering to these points WILL get your PR rejected.
+The reason is simple: a commit message is permanent.
+Yes, it's possible to modify through rebasing, \
+but that defeats the purpose of maintaining an honest and transparent modification history
+(and I'd rather not clobber a SHA hash just to amend the tone of a commit message).
+.
+.
+.
+.SH "9. NO EMOJI"
+GitHub like using cutesy graphics in their commit messages, and NPM do too, it'd seem.
+.PP
+Submit a PR with an emoji \fBanywhere\fR and it'll get rejected \- even if your code is nothing short of brilliant.
+.PP
+Git isn't Twitter. What you're seeing on GitHub is only a decorated rendition of each commit's actual content.
+.
+.
+.
+.SH "10. NO COMMIT PREFIXES"
+This ties in with the points raised in \fB"How to write a commit message"\fR, above.
+Use the imperative tone, leave out the leading `Prefix: Fix something`.
+Assuming you're clear, direct and informative with your subject lines, grepping through a `--oneline` log shouldn't be a hassle.
+.
+.
+.
+.SH "11. LINE LENGTH"
+.IP "*" 4
+Commit subjects:         <= 69 (REQUIRED)
+.IP "*" 4
+Commit bodies:           <= 72 (REQUIRED)
+.IP "*" 4
+Prose or documentation:  <~ 80 (Encouraged, but not mandatory)
+.IP "*" 4
+Anything else/code:      -- -- (Not fussed)
+.PP
+I'm "not fussed" because none of my projects are expected to be worked on within width\-challenged editing environments.
+If a future project is being written with utmost portability in mind (think ISO/Git\-level), line length will be explicitly mentioned in `CONTRIBUTING.md`.
+.PP
+Use your best judgement when determining how long is "too long". Things like big URLs and hairy regular expressions can't always be helped.
+They won't render the rest of the document unreadable if they're folded, either.
+Keeping documentation under a character limit is more a matter of keeping diffs more readable \-
+a typo fix on a 450\-character long line really doesn't make perusing a revision history very fun.
+.PP
+(Anybody reading this the readme's source code should be advised that I DON'T expect a similar level of precision from contributions. That'd be kinda ridiculous).
+.PP
+When keeping lines under a character limit, assume tabs to be 8-characters wide.
+This is the default size assumed by virtually all terminal-like environments:
+if somebody needs stuff kept within the 80-column boundary, you can probably assume they're using a TTY with 8-character tab-stops.
+Even if you're wrong, most users will have tab-sizes set to a smaller size like 4 or 2.
+Multics used 10-character tab-stops, but if that's an issue, please let me know.
+I want to be the first to try your time machine.
+.
+.
+.
+.SH 12. USE TRADITIONAL ENGLISH SPELLING ("BRITISH" ENGLISH)
+Unsurprisingly, many open source projects suffer from an unpredictable mix of US English and traditional English (what the US call "British" English).
+I'm from a Commonwealth nation, and I was taught to use Standard English.
+Therefore, that's what I use when naming my identifiers (e.g., `class RGBColour`).
+I don't care if the language's standard library uses US English - my projects use the spelling I grew up with.
+And because I'm a pedantic prick, I'll enforce consistent language if I choose to.
+You mightn't like it.
+Tough shit.
+.PP
+If writing "colour" bothers you, spare a thought for those of us forced to write "color" because a language was authored that way.
+Then imagine what it'd be like to feel that every day of your life while doing something you enjoy.
+.
+.
+.
+.SH CONCLUSION
+I'm used to working alone \-
+I write code for code's sake, not because I'd expect my projects to become group efforts.
+That doesn't mean I'm an arsehole: in fact, most people would describe me as goofy and eccentric.
+There aren't many things I take seriously, but code is one of them.
+Whether it's one of my own projects, or somebody else's,
+I do what any coder worth their salt is expected to do - honour the styleguide,
+and respect the decisions of the maintainers.
+.PP
+Since I expect others will do the same,
+I've felt a rare moment of motivation to pen something that I've never otherwise put in writing.
+If my projects DO become group efforts one day (or become maintained posthumously),
+maintainers will have something substantial to go by.
+.PP
+Otherwise, I don't expect anybody to think anything more of these self-important ramblings than any other styleguide they read and disagree with.
+Half the reason I wrote this was just an excuse to wrap shit to 80-characters without justifying text.
+Yeah, I love lining things up, who you gonna call?
+.
+.
+.
+.SH BUGS
+Eh, what's up,
+.BR mdoc (7)?

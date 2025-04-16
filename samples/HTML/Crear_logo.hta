@@ -1,0 +1,121 @@
+<html>
+<HEAD>
+<HTA:APPLICATION ID="oHTA"
+     APPLICATIONNAME="myApp"
+     BORDER="thin"
+     BORDERSTYLE="normal"
+     CAPTION="yes"
+     ICON="icon.ico"
+	 SCROLL="no"
+     MAXIMIZEBUTTON="no"
+     MINIMIZEBUTTON="no"
+     SHOWINTASKBAR="yes"
+     SINGLEINSTANCE="yes"
+     SYSMENU="yes"
+     VERSION="-.-"
+	 CONTEXTMENU="no"
+     WINDOWSTATE="normal"/>  
+<SCRIPT Language="VBScript">
+Sub Window_onLoad
+On Error Resume Next
+    window.resizeTo 400 , 205
+	Set objFSO = CreateObject("Scripting.FileSystemObject")
+	Set f = objFSO.OpenTextFile("V")
+	document.title= document.title & f.ReadLine
+	
+	For Each objFolder In objFSO.GetFolder("AAA").SubFolders
+		Set opt = document.createElement("option")
+		myselect.options.add(opt)
+		opt.text = objFolder.Name
+		opt.value = objFolder.Name
+		opt.value = objFolder.Name
+		opt.title="Hacer Solo "+objFolder.Name
+	Next
+End Sub
+
+Sub SelectFile
+    If (comenz.style.display = "none") Then Exit Sub End If
+    strPath = ""
+    strStartPath = ""
+    strFilter = "Image (*.png;)|*.png;|All Files (*.*)|*.*|"
+    strCaption = "Select a File"
+    strPath = Dlg.openfiledlg(CStr(strStartPath), , CStr(strFilter), CStr(strCaption))
+    If(strPath = "") Then 
+    else
+    prev.src=strPath
+    End If
+End Sub
+
+Sub Process
+On Error Resume Next
+    'Get file path from INPUT
+    Dim file: file = prev.src
+    file = Replace (file , "file:///" ,"")
+    file = Replace (file , "%20" ," ")
+    Dim selects: selects = myselect.Value
+
+    'hide and show buttons
+    logs.style.display= "table"
+    comenz.style.display= "none"
+    brow.style.display= "none"
+    myselect.style.display= "none"
+    
+    Set objShell = CreateObject("Wscript.Shell")
+    objShell.Run "cmd /c rmdir ips /s/q",0,true    
+    objShell.Run "cmd /c mkdir ips",0,true
+
+    Set objFSO = CreateObject("Scripting.FileSystemObject")
+
+    If(selects = "all") Then 
+        For Each objFolder In objFSO.GetFolder("AAA").SubFolders
+            logs.Value= "Creando ips para "+objFolder.Name
+            objShell.Run "dist\pito\pito.exe AAA\"+objFolder.Name+" "+Chr(34)+file+Chr(34),0,true
+        Next
+    else
+        logs.Value= "Creando ips para "+selects
+        objShell.Run "dist\pito\pito.exe "+Chr(34)+"AAA\"+selects+Chr(34)+" "+Chr(34)+file+Chr(34),0,true
+    End If
+
+    dim folder: set folder = objFSO.getFolder("ips")
+    if folder.files.Count = 0 then
+        objShell.PopUp "Ha Habido un error convirtiendo:"& vbCrLf& file &" ",8,"Fallido",16
+    else
+        objShell.Run "cmd /c mkdir ips\atmosphere\exefs_patches\logo",0,true
+        objShell.Run "cmd /c mkdir ips\sxos\exefs_patches\logo",0,true
+        objShell.Run "cmd /c xcopy /Y/I ips\*.ips ips\atmosphere\exefs_patches\logo\",0,true    
+        objShell.Run "cmd /c move /y ips\*.ips ips\sxos\exefs_patches\logo\",0,true    
+        logs.Value= "Terminado"
+        objShell.PopUp "Termine con  "& file &", revisa IPS",8,"Terminado",64
+        objShell.Run "cmd /c explorer ips",0,true
+    End If
+    
+    'hide and show buttons
+    logs.style.display= "none"
+    comenz.style.display= "table"
+    brow.style.display= "table"
+    myselect.style.display= "table"
+End Sub
+</SCRIPT>
+</HEAD>
+<body style="background-color: #60b6eb; color: black;text-align: left;" id="body">
+<title>Logo para Switch -.- v</title>
+<p title="Esta es una Herramienta para cambiar el logo a la Nintendo Switch" style="background-color: #a5cbf0">
+&nbsp;PNG To IPS Logo Creator 1.0.0-.-12.x.x<br>
+&nbsp;&nbsp;&nbsp;"PNG" "308x350" "RGBA"<br>
+</p>
+<input type="text" name="logs" style="display: none" size="30">
+<!-- Posision Fija -->
+<img name="prev" onmouseenter="prev.style.border='2px solid #0994ed'" onmouseleave="prev.style.border='2px solid white'" title="Cambiar Icono" src="temp.png" alt="none" style="position:absolute;right:10;top:15; width:80px;border: 2px solid white;" onClick="SelectFile">
+<select title="Firmware Objetivo" style="border: none; position:absolute;right:10;top:110; width:80px; height:80px;border: 2px solid white;" name="myselect"><option  title="Make ALL" value="all">Todos</option></select>
+<input title="Crear LOGO" onmouseenter="comenz.style.border='2px solid #0994ed'" onmouseleave="comenz.style.border='2px solid white'" style="background-color: #056aab; position:absolute;left:10;bottom:10; border: 2px solid white; padding: 10px 15px;	color: white;	font-size: 14px;" type="button" name="comenz" onClick="Process" value="Convertir">
+<p id="Credit" title="Los Culpables" style="position:absolute;right:10;bottom:5;" onmouseenter="Credit.style.background='#a5cbf0'" onmouseleave="Credit.style.background=''">By D3fau4 & Kronos2308</p>
+
+<OBJECT id=Dlg classid="CLSID:3050F4E1-98B5-11CF-BB82-00AA00BDCE0B" width=0 height=0>
+</body>
+<!--
+<input style="background-color: #0994ed; border: 2px solid white;	color: white;" type="button" name="brow" onClick="SelectFile" value="Browse..."><br><br>
+<img name="prev" src="temp.png" alt="none" style="width:50px; height:55px;"><br>
+0100000000000023
+010000000000002D
+-->
+</html>

@@ -1,0 +1,39 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = tab
+insert_final_newline = true
+max_line_length = 120
+tab_width = 4
+ij_continuation_indent_size = 4
+ij_formatter_off_tag = @formatter:off
+ij_formatter_on_tag = @formatter:on
+ij_formatter_tags_enabled = false
+ij_smart_tabs = false
+ij_wrap_on_typing = false
+
+[{*.cjs, *.js, *.karma}]
+ij_continuation_indent_size = 1
+ij_javascript_align_imports = false
+ij_javascript_align_multiline_for = true
+ij_javascript_align_multiline_parameters = true
+ij_javascript_align_multiline_parameters_in_calls = false
+ij_javascript_align_multiline_ternary_operation = false
+ij_javascript_align_object_properties = 0
+ij_javascript_align_union_types = false
+ij_javascript_align_var_statements = 1
+ij_javascript_assignment_wrap = on_every_item
+ij_javascript_binary_operation_sign_on_next_line = false
+ij_javascript_binary_operation_wrap = off
+ij_javascript_blacklist_imports = rxjs/Rx, node_modules/**, **/node_modules/**, @angular/material, @angular/material/typings/**
+
+[{*.yaml, *.yml, _algolia_api_key}]
+indent_size = 2
+ij_yaml_keep_indents_on_empty_lines = false
+ij_yaml_keep_line_breaks = true
+
+[{*.htm, *.html, *.sht, *.shtm, *.shtml}]
+ij_html_do_not_break_if_inline_tags = title, h1, h2, h3, h4, h5, h6, p
+ij_html_do_not_indent_children_of_tags = html, body, thead, tbody, tfoot

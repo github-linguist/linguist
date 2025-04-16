@@ -1,0 +1,25 @@
+.PS
+	ellipse "Pic" "example"
+	arrow
+	box "This is" "a box" 
+	arrow right
+	box "Another" "box" dashed
+	move down then right;
+Thing: ellipse "This is a" "circle-thing"
+	arrow <-> from last box.r to Thing.l
+	move down then left;
+B: box "Still a box"
+	arrow from Thing.l to B.r
+	sprintf("Width = %g, Height = %g ", B.wid, B.ht) rjust at B.w
+	move down
+.ps 15
+	define sadness {
+		boxwid = 3;
+		boxht = 1;
+		textht = .5;
+		box "\"I run from my depression by" " " "burying myself in code\""
+		arrow down from last box.s
+		"Me"
+	}
+	sadness();
+.PE

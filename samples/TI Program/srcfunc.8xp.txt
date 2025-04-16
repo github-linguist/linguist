@@ -1,0 +1,194 @@
+.FUNC AlphaCS
+Lbl ADM
+DiagnosticOff
+Fix 5
+Full
+StoreGDB 
+sub(D2,13,17,70,29,"Admin Access")
+sub(D1,15,27)
+Text(15,37,"Admin Code:  -   -   -   -")
+DispGraph
+Repeat getKey->A
+End
+Text(55,37,"*")
+DispGraph
+Repeat getKey->B
+End
+Text(62,37,"*")
+DispGraph
+Repeat getKey->C
+End
+Text(69,37,"*")
+DispGraph
+Repeat getKey->D
+End
+Text(76,37,"*")
+DispGraph
+Normal
+Pause 100
+Full
+If (A!=20) or (B!=35) or (C!=18) or (D!=27)
+	Goto END
+End
+sub(D2,13,17,70,29,"Author Info")
+sub(D1,15,27)
+Bitmap(15,38,GDB0)
+DispGraph
+Repeat (getKey) and (getKey(9))
+End
+DelVar "appv alpha "
+Return
+Lbl D1
+.draws title
+Pt-On([r1]+1,[r2]+1,Pic11)
+Pt-On([r1]+10,[r2]+1,Pic12)
+Pt-On([r1]+19,[r2]+1,Pic13)
+Pt-On([r1]+28,[r2]+1,Pic14)
+Pt-On([r1]+37,[r2]+1,Pic15)
+Pt-On([r1]+48,[r2]+1,Pic16)
+Pt-On([r1]+57,[r2]+1,Pic17)
+RectI([r1],[r2],66,10)
+Pxl-Off([r1],[r2])
+RectI([r1]+14,[r2],4,5)
+RectI([r1]+23,[r2]+7,4,3)
+RectI([r1]+46,[r2]+1,1,8)
+RectI([r1]+45,[r2],3,1)
+RectI([r1]+46,[r2]+9,2,1)
+Pxl-Off([r1]+65,[r2]+9)
+Return
+Lbl D2
+.windows
+Rect([r1]+1,[r2],[r3]-2,[r4])
+Rect([r1],[r2]+1,[r3],[r4]-2)
+RectI([r1]+1,[r2]+1,[r3]-2,[r4]-2)
+Text([r1]+2,[r2]+2,[r5])
+RectI([r1]+1,[r2]+1,[r3]-2,8)
+Pt-Off([r1]+[r3]-9,[r2]+1,[C1BEAAB6AABEC1FF])
+Pxl-On([r1]+1,[r2]+[r4]-2)
+Pxl-On([r1]+[r3]-2,[r2]+[r4]-2)
+Return
+Lbl D3
+.archiving box
+sub(D2,15,22,66,20,"Archiving...")
+Text(17,31,"Please wait...")
+Return
+Lbl CODE
+sub(D2,15,22,66,20,"Access Denied")
+Text(29,32," -      -      -      - ")
+DispGraph
+1->[r2]
+Repeat getKey->[r1]
+End
+Text(29,32,"*")
+DispGraph
+If [r1]!=({[Y1]+1})
+	0->[r2]
+End
+Repeat getKey->[r1]
+End
+Text(39,32,"*")
+DispGraph
+If [r1]!=({[Y1]+2})
+	0->[r2]
+End
+Repeat getKey->[r1]
+End
+Text(49,32,"*")
+DispGraph
+If [r1]!=({[Y1]+3})
+	0->[r2]
+End
+Repeat getKey->[r1]
+End
+Text(59,32,"*")
+DispGraph
+If [r1]!=({[Y1]+4})
+	0->[r2]
+End
+Normal
+Pause 200
+Full
+Return[r2]
+Lbl NEW
+ClrDraw
+sub(D1,0,0)
+RectI(0,11,96,1)
+Text(1,12,"Installation")
+Text(1,20,"Enter your new keycode:")
+Text(1,26," -  -  -  - ")
+DispGraph
+GetCalc(Str1,16)->[r1]
+Fill([r1],16,1)
+0->{[r1]}
+Repeat getKey->[r2]
+End
+[r2]->{[r1]+1}
+Text(1,26,"*")
+DispGraph
+Repeat getKey->[r2]
+End
+[r2]->{[r1]+2}
+Text(7,26,"*")
+DispGraph
+Repeat getKey->[r2]
+End
+[r2]->{[r1]+3}
+Text(13,26,"*")
+DispGraph
+Repeat getKey->[r2]
+End
+[r2]->{[r1]+4}
+Text(19,26,"*")
+DispGraph
+Fill(L1,50,0)
+Text(1,34,"Confirm keycode:")
+Text(1,40," -  -  -  - ")
+DispGraph
+Repeat getKey->[r2]
+End
+[r2]->{L1+1}
+Text(1,40,"*")
+DispGraph
+Repeat getKey->[r2]
+End
+[r2]->{L1+2}
+Text(7,40,"*")
+DispGraph
+Repeat getKey->[r2]
+End
+[r2]->{L1+3}
+Text(13,40,"*")
+DispGraph
+Repeat getKey->[r2]
+End
+[r2]->{L1+4}
+Text(19,40,"*")
+DispGraph
+If ({[r1]+1}={L1+1}) and ({[r1]+2}={L1+2}) and ({[r1]+3}={L1+3}) and ({[r1]+4}={L1+4})
+	sub(D3)
+	DispGraph
+	GetCalc(Str2,10)
+	Archive Str1
+	GetCalc(Str1,[Y1])
+	ClrDraw
+	Return
+	Else
+	Text(1,48,"ERROR keycodes do not")
+	Text(1,54,"match.")
+	DispGraph
+	UnArchive Str1
+	DelVar Str1
+	Repeat getKey
+	End
+	Goto END
+End
+Return
+Lbl END
+Asm(FDCB249E)
+If {[Y1]+6}
+	Asm(FDCB24DE)
+End
+ClrDraw
+ClrDraw^^r
+ClrHome
+Return^^r

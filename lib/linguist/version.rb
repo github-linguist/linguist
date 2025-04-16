@@ -1,3 +1,3 @@
 module Linguist
-  VERSION = "4.8.8"
+  VERSION = File.read(File.expand_path("../VERSION", __FILE__)).strip
 end

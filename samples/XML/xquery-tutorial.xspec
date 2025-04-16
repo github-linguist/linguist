@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec" 
+               xmlns:functx="http://www.functx.com"
+               query="http://www.functx.com" 
+               query-at="xquery-tutorial.xq">
+
+  <x:scenario label="Calling function capitalize-first">
+    <x:call function="functx:capitalize-first">
+      <x:param select="'hello'"/>
+    </x:call>
+
+    <x:expect label="should capitalize the first character of the string" select="'Hello'"/>
+
+  </x:scenario>
+
+</x:description>

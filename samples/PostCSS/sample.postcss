@@ -1,0 +1,165 @@
+.markdown {
+  @apply overflow-hidden;
+
+  img {
+    @apply inline-block;
+
+    &.ally-bg {
+      @apply bg-gray-200 rounded p-2;
+
+      &.avatar {
+        @apply p-0 rounded-lg;
+      }
+    }
+
+    &[align="left"] {
+      @apply mr-5;
+    }
+
+    &[align="right"] {
+      @apply ml-5;
+    }
+  }
+
+  a {
+    @apply text-purple-500;
+
+    &:hover {
+      @apply text-purple-400;
+    }
+  }
+
+  h1 {
+    @apply text-3xl mt-8 mb-4 text-gray-600;
+
+    @media (max-width: 640px) {
+      @apply text-2xl;
+    }
+  }
+
+  h2 {
+    @apply text-2xl;
+
+    @media (max-width: 640px) {
+      @apply text-xl;
+    }
+  }
+
+  h3 {
+    @apply text-xl;
+
+    @media (max-width: 640px) {
+      @apply text-lg;
+    }
+  }
+
+  h1, h2 {
+    @apply pb-2 border-b border-gray-800;
+  }
+
+  h2, h3 {
+    @apply mt-8 mb-3 text-gray-500;
+  }
+
+  h4, h5, h6 {
+    @apply text-lg mt-6;
+
+    @media (max-width: 640px) {
+      @apply text-base;
+    }
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply flex flex-wrap items-center whitespace-pre-wrap font-bold;
+
+    &:first-child {
+      @apply mt-0;
+    }
+
+    &[align="center"] {
+      @apply justify-center;
+    }
+
+    &[align="right"] {
+      @apply justify-end;
+    }
+
+    &:hover {
+      .anchor {
+        @apply visible;
+      }
+    }
+  }
+
+  p {
+    @apply my-4;
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+
+  tr {
+    &:nth-child(2n) {
+      @apply bg-gray-850;
+    }
+  }
+
+  td, th {
+    @apply border border-gray-800 p-2;
+  }
+
+  hr {
+    @apply border-gray-800;
+  }
+
+  ul {
+    @apply list-disc;
+  }
+
+  ol {
+    @apply list-decimal;
+  }
+
+  ul, ol {
+    @apply my-2 pl-2;
+  }
+
+  li {
+    @apply ml-6;
+  }
+
+  pre {
+    @apply text-white bg-gray-850 rounded p-4 my-4 overflow-x-auto;
+    font-size: 14px;
+  }
+
+  code {
+    @apply text-white bg-gray-850 rounded px-2 py-1 break-words;
+  }
+
+  blockquote {
+    @apply pl-4 my-4 border-l-4 border-purple-700 text-gray-500;
+
+    p {
+      &:first-child {
+        @apply mt-0;
+      }
+
+      &:last-child {
+        @apply mb-0;
+      }
+    }
+  }
+
+  .markdown-body {
+    @apply p-0;
+  }
+
+  .anchor {
+    @apply invisible text-gray-600 pr-1 -ml-5 h-6 flex items-center;
+    svg {
+      @apply fill-current;
+    }
+  }
+}

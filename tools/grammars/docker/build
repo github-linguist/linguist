@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -e
+cd "$(dirname "$0")/.."
+
+image=linguist/grammar-compiler
+docker build -t $image .
+
+if [ "$1" = "--push" ]; then
+    docker push $image
+fi

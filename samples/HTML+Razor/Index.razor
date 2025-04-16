@@ -1,0 +1,115 @@
+@page "/"
+@using Microsoft.AspNetCore.Components.Forms
+
+<div class="px-4 py-4">
+    <h3>Components's team manager</h3>
+    <h5>People management made easy</h5>
+</div>
+
+<div class="px-4 py-4 grow">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Salary</th>
+                <th>Areas</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (people.Count > 0)
+            {
+                @foreach (var person in people)
+                {
+                    <tr>
+                        <td>@person.Name</td>
+                        <td>@person.Salary</td>
+                        <td>@(string.Join(", ", person.Areas.Select(a => $"{a.Name}: {(a.Percent.ToString("g") + "%")}")))</td>
+                        <td>
+                            <a onclick="@((e) => Fire(person))" class="btn btn-danger">Fire</a>
+                            <a onclick="@((e) => Edit(person))" class="btn btn-secondary">Edit</a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr><td colspan="4">Noone here (so sad)...</td></tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@if (showEditorForCreate || showEditorForEdit)
+{
+    <div class="modal">
+        <div class="modal-content">
+            <EmployeeEditor OnCancel="@CloseEditor" OnConfirm="@OnConfirm" Person="@person" />
+        </div>
+    </div>
+}
+
+<div class="px-4 py-2 status">
+    <button class="btn btn-primary" onclick="@Hire">Hire Someone...</button>
+    <label>@people.Count Employees</label>
+</div>
+
+
+@functions {
+    List<Person> people = new List<Person>();
+    Person person;
+
+    int? editIndex;
+    bool showEditorForCreate;
+    bool showEditorForEdit;
+
+    void Hire()
+    {
+        person = new Person()
+        {
+            Areas =
+            {
+                new FeatureArea(),
+            },
+        };
+        showEditorForCreate = true;
+    }
+
+    void Fire(Person person)
+    {
+        people.Remove(person);
+    }
+
+    void Edit(Person person)
+    {
+        // Don't edit this object directly - we don't want to propagate edits
+        // when the user cancels
+        this.person = new Person(person);
+        editIndex = people.IndexOf(person);
+        showEditorForEdit = true;
+    }
+
+    void CloseEditor()
+    {
+        showEditorForCreate = false;
+        showEditorForEdit = false;
+        editIndex = null;
+        person = null;
+        StateHasChanged();
+    }
+
+    void OnConfirm()
+    {
+        if (showEditorForCreate)
+        {
+            people.Add(person);
+        }
+        else
+        {
+            people[editIndex.Value] = person;
+        }
+
+        CloseEditor();
+        StateHasChanged();
+    }
+}

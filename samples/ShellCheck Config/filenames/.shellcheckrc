@@ -1,0 +1,9 @@
+shell=sh
+enable=avoid-nullary-conditions,deprecate-which,quote-safe-variables
+
+# Solaris 8-9 compatibility
+disable=SC2006  # Don't suggest $(…) instead of `…`
+disable=SC2021  # Ignore bracketed tr(1) ranges
+
+# Don't suggest explicit “-n” operators in tests
+disable=SC2244

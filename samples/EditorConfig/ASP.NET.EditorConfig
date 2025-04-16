@@ -1,0 +1,94 @@
+# ASP.NET Core EditorConfig file
+
+# NOTE: This file focuses on settings Visual Studio 2017 supports natively. For example, VS does not support insert_final_newline.
+# We do use it, but it's harder to enforce without a separate VS extension or an editor that supports it.
+# See https://docs.microsoft.com/en-us/visualstudio/ide/create-portable-custom-editor-options for more
+
+# Mark this file as the "root" for everything below this point. This means that editor config files above
+# this file will be ignored
+root = true
+
+# Default settings
+[*]
+indent_style = space
+indent_size = 4
+charset = utf-8
+insert_final_newline = true
+
+# Unix-only files
+[*.sh]
+end_of_line = lf
+
+# 2-space files
+[{*.json,*.yml}]
+indent_size = 2
+
+# .NET Code Style Settings
+# See https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference
+# REVIEW: Should these be errors? warnings? suggestions?
+[{*.cs,*.vb}]
+dotnet_sort_system_directives_first = true
+
+# Don't use 'this.'/'Me.' prefix for anything
+dotnet_style_qualification_for_field = false:error
+dotnet_style_qualification_for_property = false:error
+dotnet_style_qualification_for_method = false:error
+dotnet_style_qualification_for_event = false:error
+
+# Use language keywords over framework type names for type references
+# i.e. prefer 'string' over 'String'
+dotnet_style_predefined_type_for_locals_parameters_members = true:error
+dotnet_style_predefined_type_for_member_access = true:error
+
+# Prefer object/collection initializers
+# This is a suggestion because there are cases where this is necessary
+dotnet_style_object_initializer = true:suggestion
+dotnet_style_collection_initializer = true:suggestion
+
+# C# 7: Prefer using named tuple names over '.Item1', '.Item2', etc.
+dotnet_style_explicit_tuple_names = true:error
+
+# Prefer using 'foo ?? bar' over 'foo != null ? foo : bar'
+dotnet_style_coalesce_expression = true:error
+
+# Prefer using '?.' over ternary null checking where possible
+dotnet_style_null_propagation = true:error
+
+# Use 'var' in all cases where it can be used
+csharp_style_var_for_built_in_types = true:error
+csharp_style_var_when_type_is_apparent = true:error
+csharp_style_var_elsewhere = true:error
+
+# C# 7: Prefer using pattern matching over "if(x is T) { var t = (T)x; }" and "var t = x as T; if(t != null) { ... }"
+# REVIEW: Since this is a new C# 7 feature that replaces an existing pattern, I'm making it a suggestion
+csharp_style_pattern_matching_over_is_with_cast_check = true:warning
+csharp_style_pattern_matching_over_as_with_null_check = true:warning
+
+# C# 7: Prefer using 'out var' where possible
+# REVIEW: Since this is a new C# 7 feature that replaces an existing pattern, I'm making it a suggestion
+csharp_style_inlined_variable_declaration = true:error
+
+# C# 7: Use throw expressions when null-checking
+# @davidfowl hates them :)
+csharp_style_throw_expression = false:error
+
+# Prefer using "func?.Invoke(args)" over "if(func != null) { func(args); }"
+# REVIEW: Maybe an error?
+csharp_style_conditional_delegate_call = true:error
+
+# Newline settings
+# Unsure where docs are. Got these from https://github.com/dotnet/roslyn/blob/master/.editorconfig
+csharp_new_line_before_open_brace = all
+csharp_new_line_before_else = true
+csharp_new_line_before_catch = true
+csharp_new_line_before_finally = true
+csharp_new_line_before_members_in_object_initializers = true
+csharp_new_line_before_members_in_anonymous_types = true
+
+# Prefer expression-bodied methods, constructors, operators, etc.
+csharp_style_expression_bodied_methods = true:suggestion
+csharp_style_expression_bodied_constructors = true:suggestion
+csharp_style_expression_bodied_operators = true:suggestion
+csharp_style_expression_bodied_properties = true:suggestion
+csharp_style_expression_bodied_indexers = true:suggestion
+csharp_style_expression_bodied_accessors = true:suggestion

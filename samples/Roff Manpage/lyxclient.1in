@@ -1,0 +1,83 @@
+.\" Man page for lyxclient.
+.\" Use the following command to view man page:
+.\"
+.\"  tbl lyxclient.1 | nroff -man | less
+.\"
+.TH LYXCLIENT 1 "@LYX_DATE@" "Version @VERSION@" "lyxclient @VERSION@"
+.SH NAME
+lyxclient@version_suffix@ \- send commands to a running LyX editor
+.\"
+.\" setup
+.de Cr
+.ie n (c)
+.el \(co
+..
+.SH SYNOPSIS
+\fBlyxclient@version_suffix@\fR [ \fIoptions\fR ]
+.br
+.SH DESCRIPTION
+When LyX starts, it creates a unique, per-process local socket in the
+temporary directory through which commands can be sent. That is, it can act
+like a server, accepting connections from clients. \fBlyxclient\fR
+can be used as such client. \fBlyxclient\fR will take care of all
+connection and communication protocol details, leaving you (or your app)
+free to concentrate on what you want to send to LyX.
+.SH SERVER IDENTIFICATION OPTIONS
+\fBlyxclient\fR must first identify to which server (i.e. a running LyX)
+commands are to be sent. The following options are used to specify the server.
+.TP 6
+.TP
+.BI \-p " pid"
+specify the \fIpid\fR of the running LyX process to which \fBlyxclient\fR
+should send commands.
+.TP
+.BI \-a " socket_address"
+specify explicitly which socket special file should be used. These special
+files are located inside lyx_tmpdir<lyx_pid><hash>, in the temporary
+directory. There is one per running LyX process.
+.TP
+.BI \-t " tmp_dir"
+if LyX is configured to use a temporary directory other than /tmp, you must
+inform \fBlyxclient\fR of this.
+.PP
+If neither \fB\-a\fR nor \fB\-p\fR are invoked, \fBlyxclient\fR will search for
+sockets in /tmp (or \fItmp_dir\fR if the \fB\-t\fR option is used) and use
+the first socket to which it can connect.
+This is safe if you are running only one LyX process at any one time.
+.SH COMMAND MODE OPTIONS
+\fBlyxclient\fR can send commands to LyX from both the command-line
+and from standard input.
+LyX commands documentation can be found in LyX Help menu.
+.TP 6
+.BI \-c " command"
+send a single \fIcommand\fR, print LyX information to standard output and exit. LYXCMD prefix is needed in the given command.
+.TP
+.BI \-g " file line"
+this is simply a wrapper for the command 'server\-goto\-file\-row \fIfile\fR \fIline\fR'. It is used by the DVI previewer to elicit inverse DVI search.
+.PP
+If neither \fB\-c\fR nor \fB\-g\fR are used, \fBlyxclient\fR will regard any
+standard input as commands to be sent to LyX, printing LyX's responses to
+standard output. Commands are
+separated by newlines (the '\\n' character). To finish communication
+and terminate the \fBlyxclient\fR process, send the command 'BYE:'.
+.SH MISCELANEOUS OPTIONS
+.TP 6
+.BI \-n " name"
+when starting communication, \fBlyxclient\fR sends an idenfifier
+string to LyX. By default, this string is "PPID>PID", where PPID is
+\fBlyxclient\fR's parent pid and pid is \fBlyxclient\fR's pid.
+Use this option to override this default.
+.TP
+.BI \-h
+print the \fBlyxclient\fR version and summarize its usage.
+.SH ENVIRONMENT
+.TP
+.B LYXSOCKET
+can be used to specify the socket special file that must be used.
+LyX sets this variable.
+It is overridden by the \fB\-a\fR option.
+.SH SEE ALSO
+lyx@version_suffix@(1), xdvi(1), LFUNs.lyx.
+.SH AUTHORS
+Jo\[~a]o Luis M. Assirati <assirati@fma.if.usp.br> is the principal author
+of lyxclient.

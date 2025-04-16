@@ -1,0 +1,24 @@
+{namespace Exmaple}
+
+/**
+ * Example
+ */
+{template .foo}
+  {@param count: string}
+  {@param? name: int}
+
+  {if isNonnull($name)}
+    <h1>{$name}</h1>
+  {/if}
+
+  <div class="content">
+    {switch count}
+      {case 0}
+        {call Empty.view}
+          {param count: $count /}
+        {/call}
+      {default}
+        <h2>Wow, so many!</h2>
+    {/switch}
+  </div>
+{/template}

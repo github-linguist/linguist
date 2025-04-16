@@ -1,0 +1,52 @@
+% Copyright (C) 1992, Digital Equipment Corporation
+% All rights reserved.
+% See the file COPYRIGHT for a full description.
+%
+% Last modified on Thu Dec  1 09:42:32 PST 1994 by kalsow
+%      modified on Tue Aug 24 15:08:42 PDT 1993 by heydon
+%      modified on Mon May 24 12:00:19 PDT 1993 by swart
+%      modified on Fri May  7 12:06:08 PDT 1993 by mjordan
+%      modified on Thu Dec 31 16:23:49 PST 1992 by mcjones
+%      modified on Wed May 20 21:18:03 PDT 1992 by muller
+%      modified on Fri Feb 28 13:50:29 PST 1992 by meehan
+
+import ("m3core")
+
+%----------------------------------------------- machine dependent packages ---
+
+include_dir ("os")
+include_dir ("random")
+include_dir ("uid")
+
+%--------------------------------------------- machine independent packages ---
+
+include_dir ("rw")
+include_dir ("fmtlex")
+include_dir ("list")
+include_dir ("sx")
+% include_dir ("types") % which no longer has an m3makefile
+include_dir ("arith")
+include_dir ("geometry")
+include_dir ("statistics")
+include_dir ("formatter")
+include_dir ("params")
+include_dir ("property")
+include_dir ("table")
+include_dir ("atom")
+include_dir ("sortedtable")
+include_dir ("sort")
+include_dir ("sequence")
+include_dir ("etimer")
+include_dir ("bundleintf")
+include_dir ("perftool")
+include_dir ("pqueue")
+include_dir ("sqrt")
+%include_dir ("config") % see m3quake/MxConfig instead
+include_dir ("pickle")
+include_dir ("text")
+include_dir ("hash")
+
+% m3_option ("-times")
+
+Library ("m3")
+

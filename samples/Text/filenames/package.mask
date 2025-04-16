@@ -1,0 +1,27 @@
+#
+# @copyright 2008-2019 Krizalys. All rights reserved.
+# @link      http://www.krizalys.com/
+#
+
+# See:
+# $ man 5 ebuild
+
+sys-apps/sed
+sys-libs/zlib
+net-misc/dhcp
+sys-apps/sed-4.0.5
+sys-libs/zlib-1.1.4-r1
+net-misc/dhcp-3.0_p2
+>media-libs/libgd-1.6
+>=media-libs/libgd-1.6
+=media-libs/libgd-1.6
+<=media-libs/libgd-1.6
+<media-libs/libgd-1.6
+
+# See:
+# $ man portage
+
+# mask out versions 1.0.4496 of the nvidia
+# drivers and later
+>=media-video/nvidia-kernel-1.0.4496
+>=media-video/nvidia-glx-1.0.4496

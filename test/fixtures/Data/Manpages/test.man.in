@@ -1,0 +1,13 @@
+.\" $OpenBSD: man.in,v 1.2 2017/07/04 14:53:23 schwarze Exp $
+.TH bar-man 1 "July 17, 2012"
+.SH NAME
+\fBbar-man\fR - formatting the vertical bar symbol
+.SH DESCRIPTION
+.SS normal bar
+Manually switching fonts: \fIitalic\fRroman|roman\fPitalic
+.PP
+.B prefix | suffix
+.SS special character
+Manually switching fonts: \fIitalic\fRroman\(baroman\fPitalic
+.PP
+.B prefix \(ba suffix

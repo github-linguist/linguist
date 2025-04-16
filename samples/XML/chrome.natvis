@@ -1,0 +1,183 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- 
+Copyright 2015 The Chromium Authors. All rights reserved.
+
+https://cs.chromium.org/chromium/src/tools/win/DebugVisualizers/chrome.natvis
+-->
+<AutoVisualizer
+    xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+  <Type Name="gfx::Point">
+    <AlternativeType Name="gfx::PointF"/>
+    <DisplayString>({x_}, {y_})</DisplayString>
+  </Type>
+  <Type Name="gfx::Size">
+    <AlternativeType Name="gfx::SizeF"/>
+    <DisplayString>({width_}, {height_})</DisplayString>
+  </Type>
+  <Type Name="gfx::Rect">
+    <AlternativeType Name="gfx::RectF"/>
+    <DisplayString>({origin_.x_}, {origin_.y_}) x ({size_.width_}, {size_.height_})</DisplayString>
+  </Type>
+  <Type Name="scoped_refptr&lt;*&gt;">
+    <DisplayString Condition="ptr_ == 0">null</DisplayString>
+    <DisplayString>[{((base::subtle::RefCountedBase*)ptr_)-&gt;ref_count_}] {(void*)ptr_} {*ptr_}</DisplayString>
+    <Expand>
+      <Item Name="Ptr">ptr_</Item>
+      <Item Name="RefCount">((base::subtle::RefCountedBase*)ptr_)-&gt;ref_count_</Item>
+    </Expand>
+  </Type>
+  <Type Name="base::Optional&lt;*&gt;">
+    <DisplayString Condition="storage_.is_null_">(null)</DisplayString>
+    <DisplayString>{storage_.value_}</DisplayString>
+  </Type>
+  <Type Name="base::RefCounted&lt;*&gt;">
+    <DisplayString>RefCount: {ref_count_}</DisplayString>
+    <Expand>
+      <Item Name="RefCount">ref_count_</Item>
+    </Expand>
+  </Type>
+  <Type Name="IPC::Message::Header">
+    <DisplayString>{{Routing: {routing}, Type: {type}}}</DisplayString>
+    <Expand>
+      <Item Name="RoutingId">routing</Item>
+      <Item Name="Type">type</Item>
+      <Synthetic Name="Priority"
+                 Condition="(flags &amp; IPC::Message::PRIORITY_MASK) ==
+                                IPC::Message::PRIORITY_LOW">
+        <DisplayString>Low</DisplayString>
+      </Synthetic>
+      <Synthetic Name="Priority"
+                 Condition="(flags &amp; IPC::Message::PRIORITY_MASK) ==
+                                IPC::Message::PRIORITY_NORMAL">
+        <DisplayString>Normal</DisplayString>
+      </Synthetic>
+      <Synthetic Name="Priority"
+                 Condition="(flags &amp; IPC::Message::PRIORITY_MASK) ==
+                                IPC::Message::PRIORITY_HIGH">
+        <DisplayString>High</DisplayString>
+      </Synthetic>
+      <Synthetic Name="Sync"
+                 Condition="(flags &amp; IPC::Message::SYNC_BIT) != 0">
+        <DisplayString>true</DisplayString>
+      </Synthetic>
+      <Synthetic Name="Sync"
+                 Condition="(flags &amp; IPC::Message::SYNC_BIT) == 0">
+        <DisplayString>false</DisplayString>
+      </Synthetic>
+      <Synthetic Name="Reply"
+                 Condition="(flags &amp; IPC::Message::REPLY_BIT) != 0">
+        <DisplayString>true</DisplayString>
+      </Synthetic>
+      <Synthetic Name="Reply"
+                 Condition="(flags &amp; IPC::Message::REPLY_BIT) == 0">
+        <DisplayString>false</DisplayString>
+      </Synthetic>
+      <Synthetic Name="ReplyError"
+                 Condition="(flags &amp; IPC::Message::REPLY_ERROR_BIT) != 0">
+        <DisplayString>true</DisplayString>
+      </Synthetic>
+      <Synthetic Name="ReplyError"
+                 Condition="(flags &amp; IPC::Message::REPLY_ERROR_BIT) == 0">
+        <DisplayString>false</DisplayString>
+      </Synthetic>
+      <Synthetic Name="Unblock"
+                 Condition="(flags &amp; IPC::Message::UNBLOCK_BIT) != 0">
+        <DisplayString>true</DisplayString>
+      </Synthetic>
+      <Synthetic Name="Unblock"
+                 Condition="(flags &amp; IPC::Message::UNBLOCK_BIT) == 0">
+        <DisplayString>false</DisplayString>
+      </Synthetic>
+      <Synthetic Name="PumpingMessages"
+                 Condition="(flags &amp; IPC::Message::PUMPING_MSGS_BIT) != 0">
+        <DisplayString>true</DisplayString>
+      </Synthetic>
+      <Synthetic Name="PumpingMessages"
+                 Condition="(flags &amp; IPC::Message::PUMPING_MSGS_BIT) == 0">
+        <DisplayString>false</DisplayString>
+      </Synthetic>
+      <Synthetic Name="HasSentTime"
+                 Condition="(flags &amp; IPC::Message::HAS_SENT_TIME_BIT) != 0">
+        <DisplayString>true</DisplayString>
+      </Synthetic>
+      <Synthetic Name="HasSentTime"
+                 Condition="(flags &amp; IPC::Message::HAS_SENT_TIME_BIT) == 0">
+        <DisplayString>false</DisplayString>
+      </Synthetic>
+    </Expand>
+  </Type>
+  <Type Name="IPC::Message">
+    <DisplayString>{{size = {header_size_+capacity_after_header_}}}</DisplayString>
+    <Expand>
+      <ExpandedItem>*((IPC::Message::Header*)header_),nd</ExpandedItem>
+      <Item Name="Payload">(void*)((char*)header_ + header_size_)</Item>
+    </Expand>
+  </Type>
+  <Type Name="base::TimeDelta">
+    <DisplayString>{delta_}</DisplayString>
+    <Expand>
+      <Synthetic Name="Days">
+        <DisplayString>{(int)(delta_ / {,,base.dll}base::Time::kMicrosecondsPerDay)}</DisplayString>
+      </Synthetic>
+      <Synthetic Name="Hours">
+        <DisplayString>{(int)(delta_ / {,,base.dll}base::Time::kMicrosecondsPerHour)}</DisplayString>
+      </Synthetic>
+      <Synthetic Name="Minutes">
+        <DisplayString>{(int)(delta_ / {,,base.dll}base::Time::kMicrosecondsPerMinute)}</DisplayString>
+      </Synthetic>
+      <Synthetic Name="Seconds">
+        <DisplayString>{(int)(delta_ / {,,base.dll}base::Time::kMicrosecondsPerSecond)}</DisplayString>
+      </Synthetic>
+      <Synthetic Name="Milliseconds">
+        <DisplayString>{(int)(delta_ / {,,base.dll}base::Time::kMicrosecondsPerMillisecond)}</DisplayString>
+      </Synthetic>
+      <Item Name="Microseconds">delta_</Item>
+    </Expand>
+  </Type>
+  <Type Name="GURL">
+    <DisplayString>{spec_}</DisplayString>
+  </Type>
+  <Type Name="base::ManualConstructor&lt;*&gt;">
+    <!-- $T1 expands to the first "*" in the name which is the template
+         type. Use that to cast to the correct value. -->
+    <DisplayString>{*($T1*)space_.data_}</DisplayString>
+    <Expand>
+      <ExpandedItem>*($T1*)space_.data_</ExpandedItem>
+    </Expand>
+  </Type>
+  <Type Name="base::internal::flat_tree&lt;*&gt;">
+    <AlternativeType Name="base::flat_set&lt;*&gt;"/>
+    <DisplayString>{impl_.body_}</DisplayString>
+    <Expand>
+      <ExpandedItem>impl_.body_</ExpandedItem>
+    </Expand>
+  </Type>
+  <Type Name="base::flat_map&lt;*&gt;">
+    <DisplayString>{impl_.body_}</DisplayString>
+    <Expand>
+      <ExpandedItem>impl_.body_</ExpandedItem>
+    </Expand>
+  </Type>
+  <Type Name="base::Value">
+    <DisplayString Condition="type_ == NONE">NONE</DisplayString>
+    <DisplayString Condition="type_ == BOOLEAN">BOOLEAN {bool_value_}</DisplayString>
+    <DisplayString Condition="type_ == INTEGER">INTEGER {int_value_}</DisplayString>
+    <DisplayString Condition="type_ == DOUBLE">DOUBLE {double_value_}</DisplayString>
+    <DisplayString Condition="type_ == STRING">STRING {string_value_}</DisplayString>
+    <DisplayString Condition="type_ == BINARY">BINARY {binary_value_}</DisplayString>
+    <DisplayString Condition="type_ == DICTIONARY">DICTIONARY {dict_}</DisplayString>
+    <DisplayString Condition="type_ == LIST">LIST {list_}</DisplayString>
+    <Expand>
+      <Item Name="[type]">type_</Item>
+      <Item Condition="type_ == BOOLEAN" Name="[boolean]">bool_value_</Item>
+      <Item Condition="type_ == INTEGER" Name="[integer]">int_value_</Item>
+      <Item Condition="type_ == DOUBLE" Name="[double]">double_value_</Item>
+      <Item Condition="type_ == STRING" Name="[string]">string_value_</Item>
+      <Item Condition="type_ == BINARY" Name="[binary]">binary_value_</Item>
+      <!-- Put the members for dictionary and list directly inline without
+           requiring a separate expansion to view. -->
+      <ExpandedItem Condition="type_ == DICTIONARY">dict_</ExpandedItem>
+      <ExpandedItem Condition="type_ == LIST">list_</ExpandedItem>
+    </Expand>
+  </Type>
+</AutoVisualizer>

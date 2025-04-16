@@ -1,0 +1,139 @@
+' section with id user to define user actor
+' from https://github.com/petersgiles/silver-octo-architecture/blob/master/content/docs/includes/common.iuml'
+
+/'
+' CUT AND PASTE INTO YOUR PUML
+!include includes/common.iuml!pla_sql
+!include includes/common.iuml!pla_sp
+!include includes/common.iuml!pla_couch
+
+!include includes/common.iuml!svc_ad
+!include includes/common.iuml!svc_mi
+
+!include includes/common.iuml!sys_dsuite
+
+!include includes/common.iuml!act_user
+'/
+
+''' ACTORS
+
+@startuml(id=act_user)
+    actor "Application User" <<person>> as ACT_USER
+@enduml
+
+@startuml(id=act_guest)
+    actor "Guest" <<function>> as ACT_GUEST
+@enduml
+
+@startuml(id=act_reader)
+    actor "Reader" <<function>> as ACT_READER
+@enduml
+
+@startuml(id=act_editor)
+    actor "Editor" <<function>> as ACT_EDITOR
+@enduml
+
+@startuml(id=act_owner)
+    actor "Owner" <<function>> as ACT_OWNER
+@enduml
+
+@startuml(id=act_admin)
+    actor "Administrator" <<function>> as ACT_ADMIN
+@enduml
+
+@startuml(id=act_aps)
+    actor "APS" <<person>> as ACT_APS
+@enduml
+
+@startuml(id=act_dlo)
+    actor "DLO" <<person>> as ACT_DLO
+@enduml
+
+@startuml(id=act_pmo)
+    actor "PMO" <<person>> as ACT_PMO
+@enduml
+
+@startuml(id=act_vip)
+    actor "VIP" <<person>> as ACT_VIP
+@enduml
+
+''' PLATFORMS
+
+@startuml(id=sys_dsuite)
+    node "DSuite" <<system>> as SYS_DSUITE
+@enduml
+
+@startuml(id=pla_couch)
+    node "Couch DB" <<platform>> as PLA_COUCH
+@enduml
+
+@startuml(id=pla_web)
+    node "Web Servers" <<platform>> as PLA_WEB
+@enduml
+
+@startuml(id=pla_sp)
+    node "SharePoint" <<platform>> as PLA_SP
+@enduml
+
+@startuml(id=pla_sql)
+    node "MS SQL Server" <<platform>> as PLA_SQL
+@enduml
+
+''' SERVICES
+
+@startuml(id=svc_mi)
+    component "Mobile Iron" <<service>> as SVC_MI
+@enduml
+
+@startuml(id=svc_ad)
+    component "Active Directory" <<service>> as SVC_AD
+@enduml
+
+@startuml(id=svc_vanguard)
+    component "Vanguard" <<service>> as SVC_VANGUARD
+@enduml
+
+@startuml(id=svc_couch_proxy)
+
+    node "Proxy Service" as SVC_COUCH_PROXY <<service>> {
+        component "Authentication Manager" as CPNT_USER_AUTH
+        component "Couch Proxy" as CPNT_COUCH_PROXY
+
+        CPNT_COUCH_PROXY .right. CPNT_USER_AUTH
+    }
+
+@enduml
+
+@startuml(id=svc_event_bridge)
+    component "Event Bridge" <<service>> as SVC_EVENT_BRIDGE
+@enduml
+
+@startuml(id=svc_event_publisher)
+    component "Event Publisher" <<service>> as SVC_EVENT_PUBLISHER
+@enduml
+
+@startuml(id=svc_brief_converter)
+    component "Brief Converter" <<service>> as SVC_BRIEF_CONVERTER
+@enduml
+
+@startuml(id=svc_esb)
+    queue "Enterprise Service Bus" <<esb>> as SVC_ESB
+@enduml
+
+
+
+''' APPLICATIONS
+
+@startuml(id=app_ms_office)
+    component "Office" <<app>> as APP_MS_OFFICE
+@enduml
+
+@startuml(id=app_browser)
+    component "Web Browser" <<app>> as APP_BROWSER
+@enduml
+
+@startuml(id=app_email)
+    component "Email" <<app>> as APP_EMAIL
+@enduml
+
+''' NOTES

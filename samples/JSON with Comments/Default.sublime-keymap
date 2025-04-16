@@ -1,0 +1,6 @@
+[
+	// Disable auto-pair for single quote
+	{ "keys": ["'"], "command": "insert_snippet", "args": {"contents": "'"}, "context":
+		[{ "key": "selector", "operator": "equal", "operand": "source.rust" }]
+	}
+]

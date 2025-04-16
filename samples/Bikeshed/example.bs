@@ -1,0 +1,211 @@
+<pre class='metadata'>
+Title: WebAssembly JavaScript Interface
+Shortname: wasm-js-api
+Group: wasm
+Status: ED
+Level: 1
+TR: https://www.w3.org/TR/wasm-js-api-1/
+ED: https://webassembly.github.io/spec/js-api/
+Editor: Ms2ger (Igalia)
+Repository: WebAssembly/spec
+Markup Shorthands: css no, markdown yes
+Abstract: This document provides an explicit JavaScript API for interacting with WebAssembly.
+Prepare For TR: true
+</pre>
+
+<pre class='biblio'>
+{
+  "WEBASSEMBLY": {
+    "href": "https://webassembly.github.io/spec/core/",
+    "title": "WebAssembly Core Specification",
+    "publisher": "W3C WebAssembly Community Group",
+    "status": "Draft"
+  }
+}
+</pre>
+
+<pre class="anchors">
+urlPrefix: https://tc39.github.io/ecma262/; spec: ECMASCRIPT
+    type: interface; for: ECMAScript
+        text: ArrayBuffer; url: sec-arraybuffer-objects
+    type: exception; for: ECMAScript
+        text: Error; url: sec-error-objects
+        text: NativeError; url: sec-nativeerror-constructors
+        text: TypeError; url: sec-native-error-types-used-in-this-standard-typeerror
+        text: RangeError; url: sec-native-error-types-used-in-this-standard-rangeerror
+    type: dfn
+        text: agent cluster; url: sec-agent-clusters
+        text: agent; url: agent
+        text: data block; url: sec-data-blocks
+        text: Bound Function; url: sec-bound-function-exotic-objects
+        text: NumericLiteral; url: sec-literals-numeric-literals
+        text: surrounding agent; url: surrounding-agent
+        text: ToNumber; url: sec-tonumber
+        text: ToInt32; url: sec-toint32
+        text: ToString; url: sec-tostring
+        url: sec-ecmascript-data-types-and-values
+            text: Type
+            text: Type(x)
+        url: sec-iscallable
+            text: IsCallable
+            text: callable; for: ECMAScript
+        url: sec-well-known-intrinsic-objects
+            text: %ErrorPrototype%
+        text: %ObjectPrototype%; url: sec-properties-of-the-object-prototype-object
+        text: %FunctionPrototype%; url: sec-properties-of-the-function-prototype-object
+        text: %Promise%; url: sec-promise-constructor
+        text: Property Descriptor; url: sec-property-descriptor-specification-type
+        text: array index; url: sec-array-exotic-objects
+        text: OrdinaryGetOwnProperty; url: sec-ordinarygetownproperty
+        text: OrdinaryDefineOwnProperty; url: sec-ordinarydefineownproperty
+        text: OrdinaryPreventExtensions; url: sec-ordinarypreventextensions
+        text: OrdinarySet; url: sec-ordinaryset
+        text: equally close values; url: sec-ecmascript-language-types-number-type
+        text: internal slot; url: sec-object-internal-methods-and-internal-slots
+        text: JavaScript execution context stack; url: execution-context-stack
+        text: running JavaScript execution context; url: running-execution-context
+        text: GetIterator; url: sec-getiterator
+        text: IteratorStep; url: sec-iteratorstep
+        text: NormalCompletion; url: sec-normalcompletion
+        text: IteratorValue; url: sec-iteratorvalue
+        url: sec-well-known-symbols
+            text: @@iterator
+            text: @@toStringTag
+        text: CreateDataProperty; url: sec-createdataproperty
+        text: DetachArrayBuffer; url: sec-detacharraybuffer
+        text: SetIntegrityLevel; url: sec-setintegritylevel
+        text: Call; url: sec-call
+        text: Get; url: sec-get-o-p
+        text: DefinePropertyOrThrow; url: sec-definepropertyorthrow
+        text: current Realm; url: current-realm
+        text: ObjectCreate; url: sec-objectcreate
+        text: CreateBuiltinFunction; url: sec-createbuiltinfunction
+        text: SetFunctionName; url: sec-setfunctionname
+        text: SetFunctionLength; url: sec-setfunctionlength
+        text: the Number value; url: sec-ecmascript-language-types-number-type
+        text: NumberToRawBytes; url: sec-numbertorawbytes
+        text: Built-in Function Objects; url: sec-built-in-function-objects
+        text: NativeError Object Structure; url: sec-nativeerror-object-structure
+        text: CreateArrayFromList; url: sec-createarrayfromlist
+        text: GetMethod; url: sec-getmethod
+        text: IterableToList; url: sec-iterabletolist
+        text: ToBigInt64; url: #sec-tobigint64
+        text: BigInt; url: #sec-ecmascript-language-types-bigint-type
+    type: abstract-op
+        text: CreateMethodProperty; url: sec-createmethodproperty
+urlPrefix: https://webassembly.github.io/spec/core/; spec: WebAssembly; type: dfn
+    url: valid/modules.html#valid-module
+        text: valid
+        text: WebAssembly module validation
+    text: module grammar; url: binary/modules.html#binary-module
+    text: custom section; url: binary/modules.html#custom-section
+    text: customsec; url: binary/modules.html#binary-customsec
+    text: memory instance; url: exec/runtime.html#memory-instances
+    text: table instance; url: exec/runtime.html#table-instances
+    text: global instance; url: exec/runtime.html#global-instances
+    text: trap; url: exec/runtime.html#syntax-trap
+    url: exec/runtime.html#values
+        text: WebAssembly value
+        text: i64.const
+        text: i32.const
+        text: f32.const
+        text: f64.const
+        text: ref.null
+        text: ref.func
+        text: ref.extern
+    text: function index; url: syntax/modules.html#syntax-funcidx
+    text: function instance; url: exec/runtime.html#function-instances
+    text: store_init; url: appendix/embedding.html#embed-store-init
+    text: module_decode; url: appendix/embedding.html#embed-module-decode
+    text: module_validate; url: appendix/embedding.html#embed-module-validate
+    text: module_instantiate; url: appendix/embedding.html#embed-module-instantiate
+    text: module_imports; url: appendix/embedding.html#embed-module-imports
+    text: module_exports; url: appendix/embedding.html#embed-module-exports
+    text: instance_export; url: appendix/embedding.html#embed-instance-export
+    text: func_alloc; url: appendix/embedding.html#embed-func-alloc
+    text: func_type; url: appendix/embedding.html#embed-func-type
+    text: func_invoke; url: appendix/embedding.html#embed-func-invoke
+    text: table_alloc; url: appendix/embedding.html#embed-table-alloc
+    text: table_type; url: appendix/embedding.html#embed-table-type
+    text: table_read; url: appendix/embedding.html#embed-table-read
+    text: table_write; url: appendix/embedding.html#embed-table-write
+    text: table_size; url: appendix/embedding.html#embed-table-size
+    text: table_grow; url: appendix/embedding.html#embed-table-grow
+    text: mem_alloc; url: appendix/embedding.html#embed-mem-alloc
+    text: mem_type; url: appendix/embedding.html#embed-mem-type
+    text: mem_read; url: appendix/embedding.html#embed-mem-read
+    text: mem_write; url: appendix/embedding.html#embed-mem-write
+    text: mem_size; url: appendix/embedding.html#embed-mem-size
+    text: mem_grow; url: appendix/embedding.html#embed-mem-grow
+    text: global_alloc; url: appendix/embedding.html#embed-global-alloc
+    text: global_type; url: appendix/embedding.html#embed-global-type
+    text: global_read; url: appendix/embedding.html#embed-global-read
+    text: global_write; url: appendix/embedding.html#embed-global-write
+    text: error; url: appendix/embedding.html#embed-error
+    text: store; url: exec/runtime.html#syntax-store
+    text: table type; url: syntax/types.html#syntax-tabletype
+    text: table address; url: exec/runtime.html#syntax-tableaddr
+    text: function address; url: exec/runtime.html#syntax-funcaddr
+    text: memory address; url: exec/runtime.html#syntax-memaddr
+    text: global address; url: exec/runtime.html#syntax-globaladdr
+    text: extern address; url: exec/runtime.html#syntax-externaddr
+    url: syntax/types.html#syntax-numtype
+        text: i32
+        text: i64
+        text: f32
+        text: f64
+    url: syntax/types.html#syntax-reftype
+        text: reftype
+        text: funcref
+        text: externref
+    text: function element; url: exec/runtime.html#syntax-funcelem
+    text: import component; url: syntax/modules.html#imports
+    text: external value; url: exec/runtime.html#syntax-externval
+    text: host function; url: exec/runtime.html#syntax-hostfunc
+    text: the instantiation algorithm; url: exec/modules.html#instantiation
+    text: module; url: syntax/modules.html#syntax-module
+    text: imports; url: syntax/modules.html#syntax-module
+    text: import; url: syntax/modules.html#syntax-import
+    url: syntax/types.html#external-types
+        text: external type
+        text: func
+        text: table
+        text: mem
+        text: global
+    text: global type; url: syntax/types.html#syntax-globaltype
+    url: syntax/types.html#syntax-mut
+        text: var
+        text: const
+    text: address; url: exec/runtime.html#addresses
+    text: signed_32; url: exec/numerics.html#aux-signed
+    text: memory.grow; url: exec/instructions.html#exec-memory-grow
+    text: current frame; url: exec/conventions.html#exec-notation-textual
+    text: module; for: frame; url: exec/runtime.html#syntax-frame
+    text: memaddrs; for: moduleinst; url: exec/runtime.html#syntax-moduleinst
+    text: signed_64; url: exec/numerics.html#aux-signed
+    text: sequence; url: syntax/conventions.html#grammar-notation
+urlPrefix: https://heycam.github.io/webidl/; spec: WebIDL
+    type: dfn
+        text: create a namespace object; url: create-a-namespace-object
+</pre>
+
+<pre class='link-defaults'>
+spec:infra; type:dfn; text:list
+spec:ecma-262; type:exception; for:ECMAScript; text:Error
+spec:ecmascript; type:exception; for:ECMAScript; text:TypeError
+spec:ecmascript; type:exception; for:ECMAScript; text:RangeError
+spec:ecmascript; type:interface; for:ECMAScript; text:ArrayBuffer
+spec:webidl; type:dfn; text:resolve
+</pre>
+
+<style>
+emu-const {
+    font-family: serif;
+}
+</style>
+
+This API provides a way to access WebAssembly [[WEBASSEMBLY]] through a bridge to explicitly construct modules from JavaScript [[ECMASCRIPT]].
+
+<h2 id="sample">Sample API Usage</h2>
+
+<p><em>This section is non-normative.</em></p>

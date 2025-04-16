@@ -1,16 +1,21 @@
 require 'linguist/blob_helper'
 require 'linguist/language'
-require 'rugged'
+require 'linguist/source/repository'
+require 'linguist/source/rugged'
 
 module Linguist
   class LazyBlob
     GIT_ATTR = ['linguist-documentation',
                 'linguist-language',
                 'linguist-vendored',
-                'linguist-generated']
+                'linguist-generated',
+                'linguist-detectable']
 
-    GIT_ATTR_OPTS = { :priority => [:index], :skip_system => true }
-    GIT_ATTR_FLAGS = Rugged::Repository::Attributes.parse_opts(GIT_ATTR_OPTS)
+    # DEPRECATED: use Linguist::Source::RuggedRepository::GIT_ATTR_OPTS instead
+    GIT_ATTR_OPTS = Linguist::Source::RuggedRepository::GIT_ATTR_OPTS
+
+    # DEPRECATED: use Linguist::Source::RuggedRepository::GIT_ATTR_FLAGS instead
+    GIT_ATTR_FLAGS = Linguist::Source::RuggedRepository::GIT_ATTR_FLAGS
 
     include BlobHelper
 
@@ -24,7 +29,12 @@ module Linguist
     alias :name :path
 
     def initialize(repo, oid, path, mode = nil)
-      @repository = repo
+      @repository = if repo.is_a? Linguist::Source::Repository
+        repo
+      else
+        # Allow this for backward-compatibility purposes
+        Linguist::Source::RuggedRepository.new(repo)
+      end
       @oid = oid
       @path = path
       @mode = mode
@@ -32,29 +42,28 @@ module Linguist
     end
 
     def git_attributes
-      @git_attributes ||= repository.fetch_attributes(
-        name, GIT_ATTR, GIT_ATTR_FLAGS)
+      @git_attributes ||= repository.load_attributes_for_path(name, GIT_ATTR)
     end
 
     def documentation?
-      if attr = git_attributes['linguist-documentation']
-        boolean_attribute(attr)
+      if not git_attributes['linguist-documentation'].nil?
+        boolean_attribute(git_attributes['linguist-documentation'])
       else
         super
       end
     end
 
     def generated?
-      if attr = git_attributes['linguist-generated']
-        boolean_attribute(attr)
+      if not git_attributes['linguist-generated'].nil?
+        boolean_attribute(git_attributes['linguist-generated'])
       else
         super
       end
     end
 
     def vendored?
-      if attr = git_attributes['linguist-vendored']
-        return boolean_attribute(attr)
+      if not git_attributes['linguist-vendored'].nil?
+        boolean_attribute(git_attributes['linguist-vendored'])
       else
         super
       end
@@ -70,6 +79,14 @@ module Linguist
       end
     end
 
+    def detectable?
+      if not git_attributes['linguist-detectable'].nil?
+        boolean_attribute(git_attributes['linguist-detectable'])
+      else
+        nil
+      end
+    end
+
     def data
       load_blob!
       @data
@@ -80,19 +97,24 @@ module Linguist
       @size
     end
 
+    def symlink?
+      # We don't create LazyBlobs for symlinks.
+      false
+    end
+
     def cleanup!
       @data.clear if @data
     end
 
     protected
 
-    # Returns true if the attribute is present and not the string "false".
+    # Returns true if the attribute is present and not the string "false" and not the false boolean.
     def boolean_attribute(attribute)
-      attribute != "false"
+      attribute != "false" && attribute != false
     end
 
     def load_blob!
-      @data, @size = Rugged::Blob.to_buffer(repository, oid, MAX_SIZE) if @data.nil?
+      @data, @size = repository.load_blob(oid, MAX_SIZE) if @data.nil?
     end
   end
 end

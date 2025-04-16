@@ -1,0 +1,99 @@
+%!PS-Adobe-3.0 EPSF-3.0
+%%Title: X Logo
+%%Creator: Stephen Gildea <gildea@x.org>
+%%BoundingBox: 0 0 44 44
+%%EndComments
+%%BeginPreview: 44 44 1 44
+% fff0000000f0
+% 7ff8000001e0
+% 3ff8000003c0
+% 1ffc00000780
+% 1ffe00000780
+% 0fff00000f00
+% 07ff00001e00
+% 07ff80003c00
+% 03ffc0007800
+% 01ffc0007800
+% 00ffe000f000
+% 00fff001e000
+% 007ff803c000
+% 003ff8078000
+% 001ffc078000
+% 001ffe0f0000
+% 000fff1e0000
+% 0007ff3c0000
+% 0003ff3c0000
+% 0003fe780000
+% 0001fcf00000
+% 0000f9e00000
+% 000079f00000
+% 0000f3f80000
+% 0001e7fc0000
+% 0003cffc0000
+% 0003cffe0000
+% 00078fff0000
+% 000f07ff8000
+% 001e03ff8000
+% 001e01ffc000
+% 003c01ffe000
+% 007800fff000
+% 00f0007ff000
+% 01e0003ff800
+% 01e0003ffc00
+% 03c0001ffe00
+% 0780000ffe00
+% 0f00000fff00
+% 1e000007ff80
+% 1e000003ff80
+% 3c000001ffc0
+% 78000001ffe0
+% f0000000fff0
+%%EndPreview
+% Draw the "official" X Window System Logo, designed by Danny Chong.
+% Code translated from Xmu/DrawLogo.c by gildea, July 1994.
+/size 44 def
+/thin size 11 idiv def
+/gap thin 3 add 4 idiv def
+/d31 thin gap thin add add def
+% Draw what will be the thin strokes.
+newpath
+size  dup moveto
+size d31 sub  size lineto
+0  0 lineto
+d31  0 lineto
+closepath
+fill
+% Erase area not needed for lower thin stroke.
+1 setgray
+newpath
+d31 2 idiv  0 moveto
+size 2 idiv  dup lineto
+size 2 idiv d31 d31 2 idiv sub add  size 2 idiv lineto
+d31  0 lineto
+closepath
+% Erase area not needed for upper thin stroke.
+size d31 2 idiv sub  size moveto
+size 2 idiv  dup lineto
+size 2 idiv d31 dup 2 idiv sub sub  size 2 idiv lineto
+size d31 sub  size lineto
+closepath
+fill
+% Draw thick stroke.
+0 setgray
+newpath
+0  size moveto
+size 4 idiv  size lineto
+size  0 lineto
+size dup 4 idiv sub  0 lineto
+closepath
+fill
+% Erase to create gap.
+1 setgray
+newpath
+size thin sub  size moveto
+size thin gap add sub  size lineto
+thin  0 lineto
+thin gap add  0 lineto
+closepath
+fill
+%%EOF

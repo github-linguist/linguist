@@ -1,0 +1,20 @@
+<div class='container pt-2'><h2>Delete user: {{usernamedisplay}}</h2>
+{{#error}}<div class='alert alert-danger'>{{.}}</div>{{/error}}
+{{#info}}<div class='alert alert-info'>{{.}}</div>{{/info}}
+    <h3>Permanently delete {{usernamedisplay}}</h3>
+    <form method="post" action="deleteuser.php">
+        <input type="hidden" name="deleteuser" value="{{deleteuser}}">
+        <input type="hidden" name="usertype" value="{{usertype}}">
+        <input type="hidden" name="makechanges" value="change">
+        {{#eplocation}}<input type='hidden' name='eplocation' value='{{.}}'>{{/eplocation}}
+        {{#eppupilgroup}}<input type='hidden' name='eppupilgroup' value='{{.}}'>{{/eppupilgroup}}
+        <div class="form-check mb-2">
+            <label class="form-check-label">
+                <input type="checkbox" class="form-check-input required check" name="understood" value="yes">
+                * I understand that this will permanently delete the user and any user history.
+            </label>
+        </div>
+        <button type="submit" disabled class="btn btn-danger">Submit</button>
+        <a href="{{returntourl}}" class="btn btn-light">Cancel</a>
+    </form>
+</div>

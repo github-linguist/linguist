@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>fileTypes</key>
+	<array>
+		<string>man</string>
+	</array>
+	<key>name</key>
+	<string>Man</string>
+	<key>patterns</key>
+	<array>
+		<dict>
+			<key>match</key>
+			<string>^[A-Z](?&gt;\S|\s(?!\s))*$</string>
+			<key>name</key>
+			<string>markup.heading.man</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>((https?|ftp|file|txmt)://|mailto:)[-:@a-zA-Z0-9_.~%+/?=&amp;#]+(?&lt;![.?:])</string>
+			<key>name</key>
+			<string>markup.underline.link.man</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>([\w\.]+\(\d[a-z]?\))</string>
+			<key>name</key>
+			<string>markup.underline.link.internal.man</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>^_{2,}$</string>
+			<key>name</key>
+			<string>meta.foldingStopMarker.man</string>
+		</dict>
+	</array>
+	<key>scopeName</key>
+	<string>text.man</string>
+	<key>uuid</key>
+	<string>E8BAC30A-16BF-498D-941D-73FBAED37891</string>
+</dict>
+</plist>

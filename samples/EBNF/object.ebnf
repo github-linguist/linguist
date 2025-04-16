@@ -1,0 +1,61 @@
+(*
+  Source:  https://github.com/io7m/jsom0
+  License: ISC
+*)
+
+vertex_p3n3_name =
+  "vertex_p3n3" ;
+
+vertex_p3n3t2_name =
+  "vertex_p3n3t2" ;
+
+vertex_type =
+  vertex_p3n3_name | vertex_p3n3t2_name ;
+
+vertex_position =
+  "position" , real , real , real , ";" ;
+
+vertex_normal =
+  "normal" , real , real , real , ";" ;
+
+vertex_uv =
+  "uv" , real , real , ";" ;
+
+vertex_p3n3 =
+  vertex_p3n3_name , vertex_position , vertex_normal , "end" , ";" ;
+
+vertex_p3n3t2 =
+  vertex_p3n3t2_name , vertex_position , vertex_normal , vertex_uv , "end" , ";" ;
+
+vertex =
+  vertex_p3n3 | vertex_p3n3t2 ;
+
+vertex_array =
+  "array" , positive , vertex_type , { vertex } , "end" , ";" ;
+
+vertices =
+  "vertices" , ";" , vertex_array , "end" , ";" ;
+
+triangle =
+  "triangle" , natural , natural , natural , ";" ;
+
+triangle_array =
+  "array" , positive, "triangle" , { triangle } , "end" , ";" ;
+
+triangles =
+  "triangles" , ";" , triangle_array , "end" , ";" ;
+
+name =
+  "name" , string , ";" ;
+
+material_name =
+  "material_name" , string , ";" ;
+
+object =
+  "object" , ";" ,
+    name ,
+    material_name ,
+    vertices ,
+    triangles ,
+  "end" , ";" ;
+

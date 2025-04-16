@@ -1,0 +1,35 @@
+name:               line2pdf
+version:            0.0.7
+copyright:          2008 Audrey Tang
+license:            BSD3
+license-file:       LICENSE
+author:             Audrey Tang <audreyt@audreyt.org>
+maintainer:         Audrey Tang <audreyt@audreyt.org>
+synopsis:           Simple command-line utility to convert text into PDF
+description:        Simple command-line utility to convert text into PDF
+stability:          experimental
+build-type:         Simple
+cabal-version:      >= 1.2
+category:           Text
+extra-source-files: README
+
+flag small_base
+    description: Choose the new smaller, split-up base package.
+
+library
+    exposed-modules: Text.LineToPDF Text.LineToPDF.Internals
+    extensions:      ImplicitParams, ExistentialQuantification
+    if flag(small_base)
+        build-depends: base >= 3, containers, bytestring
+    else
+        build-depends: base < 3
+    hs-source-dirs:     src
+
+executable line2pdf
+    main-is:        line2pdf.hs
+    extensions:     ImplicitParams, ExistentialQuantification
+    if flag(small_base)
+        build-depends: base >= 3, containers, bytestring
+    else
+        build-depends: base < 3
+    hs-source-dirs:     . src

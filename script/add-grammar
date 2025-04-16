@@ -1,0 +1,140 @@
+#!/bin/sh
+# shellcheck disable=SC2006,SC2021
+set -e
+
+usage="${0##*/} [-q|--quiet] [--replace submodule] url"
+unset replace quiet
+
+# Print non-essential feedback
+log()([ "$quiet" ] || printf '%s\n' "$@")
+
+# Print an error message
+warn()(printf '%s: %s\n' "${0##*/}" "$@")
+
+# Display a shortened help summary and bail with an error code
+bad_invocation(){
+	printf '%s\n' "$usage" >&2
+	exit 2
+}
+
+
+# Parse options
+while [ -n "$1" ]; do case $1 in
+
+	# Print an unabridged usage summary, then exit
+	-h|--help|-\?)
+		cat <<-HELP
+		Usage:
+		    $usage
+
+		Options:
+		    -q, --quiet               Do not print output unless there's a failure.
+		    -r, --replace SUBMODDULE  Replace an existing grammar submodule.
+
+		Examples:
+		    $0 https://github.com/Alhadis/language-roff
+		    $0 --replace sublime-apl https://github.com/Alhadis/language-apl
+		HELP
+		exit ;;
+
+	# Hide non-essential feedback
+	-q | --quiet)
+		quiet=1
+		break ;;
+
+	# Replace an existing submodule
+	-r* | --replace | --replace=*)
+		case $1 in
+			-r|--replace) replace=$2; shift ;; # -r [module], --replace [module]
+			-r*)          replace=${1#??}   ;; # -r[module]
+			--replace=*)  replace=${1#*=}   ;; # --replace=[module]
+		esac ;;
+
+	# Double-dash: Terminate option parsing
+	--)
+		shift
+		break ;;
+
+	# Invalid option: abort
+	--* | -?*)
+		warn 'invalid option: "%s"' "${0##*/}" "$1" >&2
+		bad_invocation ;;
+
+	# Argument not prefixed with a dash
+	*) break ;;
+
+esac; shift
+done
+
+
+# Don't proceed any further if we don't have a URL
+[ "$1" ] || bad_invocation
+
+
+# Check upfront that executables we depend on are available
+for cmd in docker git sed ruby bundle; do
+	command -v "$cmd" >/dev/null 2>&1 || {
+		warn "Required command '$cmd' not found"
+		warn 'See CONTRIBUTING.md for help on getting started: https://git.io/J0eqy'
+		exit 1
+	}
+done
+
+# Make sure Docker's running
+log 'Checking Docker is installed and running'
+docker ps >/dev/null
+
+# Make sure we're running from checkout directory
+root=`git rev-parse --git-dir`
+root="${root%/.git}"
+# shellcheck disable=SC3013
+if [ ! "$root" = .git ] && [ -d "$root" ] && ! [ . -ef "$root" ] >/dev/null 2>&1; then
+	log "Switching directory to $root"
+	cd "$root"
+fi
+
+# Ensure the given URL is an HTTPS link
+url=`script/normalise-url --protocol=https "$1"`
+
+# Make sure it's not already registered
+path="vendor/grammars/${url##*/}"
+path="${path%.git}"
+if [ -e "$path" ] && [ -z "$replace" ]; then
+	warn "Submodule '$path' already exists. Did you forget the '--replace' option?"
+	warn "Run '$0 --help' for invocation advice"
+	exit 1
+fi
+
+# Remove the old submodule if we're `--replace`ing one
+if [ "$replace" ]; then
+
+	# Normalise submodule reference
+	replace=`printf %s "$replace" \
+		| tr '[A-Z]' '[a-z]' \
+		| sed 's/^\(.*\/\)\{0,1\}vendor\///; s/^grammars\///'`
+	replace=`git config --list \
+		| grep -Fi -m1 "submodule.vendor/grammars/$replace.url=" \
+		| sed 's/\.url=.*//; s/^submodule\.//' || :`
+	[ "$replace" ] || {
+		warn "Submodule '$replace' does not exist. Aborting."
+		exit 1
+	}
+
+	log "Deregistering submodule: $replace"
+	git submodule deinit "$replace"
+	git rm -rf "$replace"
+	rm -rf ".git/modules/$replace"
+	script/grammar-compiler update -f >/dev/null 2>&1
+fi
+
+log "Registering new submodule: $url"
+git submodule add -f "$url" "$path"
+script/grammar-compiler add "$path"
+
+log 'Caching grammar license'
+bundle exec licensed cache -c vendor/licenses/config.yml
+
+log 'Updating grammar documentation in vendor/README.md'
+bundle exec rake samples >/dev/null 2>&1
+script/sort-submodules
+script/list-grammars

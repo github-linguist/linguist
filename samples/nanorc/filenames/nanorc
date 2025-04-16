@@ -1,0 +1,62 @@
+set afterends
+set atblanks
+set autoindent
+set backup
+set backupdir ""
+set boldtext
+set brackets ""')>]}"
+set casesensitive
+set constantshow
+set fill -8
+set historylog
+set linenumbers
+set locking
+set matchbrackets "(<[{)>]}"
+set morespace
+set mouse
+set multibuffer
+set noconvert
+set nonewlines
+set nopauses
+set nowrap
+set operatingdir "~/nanorc/dir"
+set positionlog
+set preserve
+set punct "!.?"
+set quickblank
+set quotestr "^([ 	]*([#:>|}]|//))+"
+set rebinddelete
+set rebindkeypad
+set regexp
+set showcursor
+set smarthome
+set smooth
+set softwrap
+set speller "aspell -x -c"
+set suspend
+set tabsize 4
+
+## Convert typed tabs to spaces.
+# set tabstospaces
+
+set tempfile
+set trimblanks
+set whitespace "»·"
+set wordbounds
+set wordchars "<_>."
+set titlecolor brightwhite,blue
+set statuscolor brightwhite,green
+set errorcolor brightwhite,red
+set selectedcolor brightwhite,magenta
+set numbercolor cyan
+set keycolor cyan
+set functioncolor green
+# In root's .nanorc you might want to use:
+set titlecolor brightwhite,magenta
+set statuscolor brightwhite,magenta
+set errorcolor brightwhite,red
+set selectedcolor brightwhite,cyan
+set numbercolor magenta
+set keycolor brightmagenta
+set functioncolor magenta
+include "/usr/share/nano/*.nanorc"

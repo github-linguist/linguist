@@ -1,0 +1,68 @@
+<%= render :partial => 'header' %>
+<table>
+  <tr>
+    <td>Age group</td>
+    <td id='headers'>U5</td>
+    <td id='headers'>5-14</td>
+    <td id='headers'>>14</td>
+    <td id='headers'>Total</td>
+  </tr>
+  <tr class="header">
+    <td>Diagnosis</td>
+    <%4.times do%>
+    <td><table><tr><td id="headers">M</td><td id="headers">F</td></tr></table></td>
+    <%end%>
+  </tr>
+  <% 
+      counter = 0 
+    @diagnoses.each{|diagnosis|
+      #raise  diagnosis.to_yaml and return
+      count_male_under_five = 0
+      count_female_under_five = 0
+      count_male_in_between = 0
+      count_female_in_between = 0
+      count_male_above_fourteen = 0
+      count_female_above_fourteen = 0
+      @patient_record.each{|patient|
+        if patient['value_coded'].to_s == diagnosis.value_coded
+          if (patient['age'].to_i < 5 )
+            if (patient['sex'].to_s == 'Male')
+              count_male_under_five += 1
+            else
+              count_female_under_five += 1
+            end
+          elsif (patient['age'].to_i >= 5 and patient['age'].to_i <= 14)
+            if (patient['sex'].to_s == 'Male')
+              count_male_in_between += 1
+            else
+              count_female_in_between += 1
+            end
+          elsif (patient['age'].to_i > 14 )
+            if (patient['sex'].to_s == 'Male')
+              count_male_above_fourteen += 1
+            else
+              count_female_above_fourteen += 1
+            end
+          end
+        end 
+      }
+     counter += 1 
+  %>
+  <tr style='background-color: <%=counter % 2 == 0 ? "white" : "lightgrey"%>'>
+    <td><%= diagnosis.name%></td>
+    <td><table>
+        <tr><td id="values"><%= count_male_under_five %></td><td id="values"><%= count_female_under_five %></td></tr>
+    </table></td>
+    <td><table><tr><td id="values"><%= count_male_in_between%></td><td id="values"><%= count_female_in_between%></td></tr></table></td>
+    <td><table>
+        <tr><td id="values"><%= count_male_above_fourteen %></td><td id="values"><%= count_female_above_fourteen%></td></tr>
+    </table></td>
+    <td>
+      <table>
+        <tr><td id="values"><%= count_male_under_five + count_male_in_between + count_male_above_fourteen %></td>
+          <td id="values"><%= count_female_under_five + count_female_in_between + count_female_above_fourteen%></td></tr>
+    </table></td>
+  </tr>
+  <% }%>
+</table>
+

@@ -1,0 +1,71 @@
+# Label inodes with the fs label.
+genfscon rootfs / u:object_r:rootfs:s0
+# proc labeling can be further refined (longest matching prefix).
+genfscon proc / u:object_r:proc:s0
+genfscon proc /asound u:object_r:proc_asound:s0
+genfscon proc /bootconfig u:object_r:proc_bootconfig:s0
+genfscon proc /buddyinfo u:object_r:proc_buddyinfo:s0
+genfscon proc /cmdline u:object_r:proc_cmdline:s0
+genfscon proc /config.gz u:object_r:config_gz:s0
+genfscon proc /diskstats u:object_r:proc_diskstats:s0
+genfscon proc /filesystems u:object_r:proc_filesystems:s0
+genfscon proc /interrupts u:object_r:proc_interrupts:s0
+genfscon proc /iomem u:object_r:proc_iomem:s0
+genfscon proc /kallsyms u:object_r:proc_kallsyms:s0
+genfscon proc /keys u:object_r:proc_keys:s0
+genfscon proc /kmsg u:object_r:proc_kmsg:s0
+genfscon proc /loadavg u:object_r:proc_loadavg:s0
+genfscon proc /locks u:object_r:proc_locks:s0
+genfscon proc /lowmemorykiller u:object_r:proc_lowmemorykiller:s0
+
+genfscon fusectl / u:object_r:fusectlfs:s0
+
+# selinuxfs booleans can be individually labeled.
+genfscon selinuxfs / u:object_r:selinuxfs:s0
+genfscon cgroup / u:object_r:cgroup:s0
+genfscon cgroup2 / u:object_r:cgroup_v2:s0
+# sysfs labels can be set by userspace.
+genfscon sysfs / u:object_r:sysfs:s0
+genfscon sysfs /devices/cs_etm                    u:object_r:sysfs_devices_cs_etm:s0
+genfscon sysfs /devices/system/cpu u:object_r:sysfs_devices_system_cpu:s0
+genfscon sysfs /class/android_usb                 u:object_r:sysfs_android_usb:s0
+genfscon sysfs /class/extcon                      u:object_r:sysfs_extcon:s0
+genfscon sysfs /class/leds                        u:object_r:sysfs_leds:s0
+
+genfscon debugfs /kprobes                             u:object_r:debugfs_kprobes:s0
+genfscon debugfs /mmc0                                u:object_r:debugfs_mmc:s0
+genfscon debugfs /tracing                             u:object_r:debugfs_tracing_debug:s0
+genfscon tracefs /                                    u:object_r:debugfs_tracing_debug:s0
+genfscon debugfs /tracing/tracing_on                  u:object_r:debugfs_tracing:s0
+genfscon tracefs /tracing_on                          u:object_r:debugfs_tracing:s0
+genfscon debugfs /tracing/trace                       u:object_r:debugfs_tracing:s0
+genfscon tracefs /trace                               u:object_r:debugfs_tracing:s0
+genfscon debugfs /tracing/per_cpu/cpu                 u:object_r:debugfs_tracing:s0
+genfscon tracefs /per_cpu/cpu                         u:object_r:debugfs_tracing:s0
+
+genfscon debugfs /tracing/events/header_page                         u:object_r:debugfs_tracing:s0
+genfscon debugfs /tracing/events/f2fs/f2fs_get_data_block/           u:object_r:debugfs_tracing:s0
+genfscon debugfs /tracing/events/f2fs/f2fs_iget/                     u:object_r:debugfs_tracing:s0
+
+genfscon tracefs /events/header_page                         u:object_r:debugfs_tracing:s0
+genfscon tracefs /events/f2fs/f2fs_get_data_block/           u:object_r:debugfs_tracing:s0
+genfscon tracefs /events/f2fs/f2fs_iget/                     u:object_r:debugfs_tracing:s0
+
+genfscon tracefs /trace_clock                                            u:object_r:debugfs_tracing:s0
+genfscon tracefs /buffer_size_kb                                         u:object_r:debugfs_tracing:s0
+
+genfscon debugfs /kcov								 u:object_r:debugfs_kcov:s0
+
+genfscon securityfs / u:object_r:securityfs:s0
+
+genfscon binder /binder u:object_r:binder_device:s0
+genfscon binder /hwbinder u:object_r:hwbinder_device:s0
+genfscon binder /vndbinder u:object_r:vndbinder_device:s0
+genfscon binder /binder_logs u:object_r:binderfs_logs:s0
+genfscon binder /binder_logs/proc u:object_r:binderfs_logs_proc:s0
+
+genfscon inotifyfs / u:object_r:inotify:s0
+genfscon vfat / u:object_r:vfat:s0
+genfscon binder / u:object_r:binderfs:s0
+genfscon exfat / u:object_r:exfat:s0
+genfscon debugfs / u:object_r:debugfs:s0

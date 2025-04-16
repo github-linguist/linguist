@@ -1,0 +1,104 @@
+// configuration file for `coc.nvim` - https://github.com/neoclide/coc.nvim
+//
+// defaults - https://github.com/neoclide/coc.nvim/blob/master/data/schema.json
+//
+// this file must be symlinked to `$HOME/.config/nvim/coc-settings.json`
+// this symlinking should occur through the install script
+//
+// can also be done manually:
+// `ln -s $DOTFILES/neovim/coc.jsonc $HOME/.config/nvim/coc-settings.json`
+//
+// Note: install script symlinking works by symlinking the existing symlink in
+// `$DOTFILES/config/nvim`
+{
+  "coc.preferences.formatOnSaveFiletypes": [
+    "css",
+    "graphql",
+    "javascript",
+    "javascriptreact",
+    "json",
+    "jsonc",
+    "markdown",
+    "python",
+    "rust",
+    "sh",
+    "typescript",
+    "typescriptreact"
+  ],
+
+  "coc.preferences.rootPatterns": [
+    ".git",
+    ".projectroot",
+    ".vim",
+    "tsconfig.json"
+  ],
+
+  // how to disable LS suggestions in comments like possible for other sources?
+  // ref - https://github.com/neoclide/coc.nvim/wiki/Completion-with-sources
+  "coc.source.file.ignoreHidden": false,
+
+  // virtual text listing references & implementations
+  "codeLens.enable": true,
+  "codeLens.separator": "  ‣ ",
+
+  "diagnostic.errorSign": "◉",
+  "diagnostic.hintSign": "◉",
+  "diagnostic.infoSign": "◉",
+  "diagnostic.virtualText": true,
+  "diagnostic.virtualTextPrefix": " ~  ",
+  "diagnostic.warningSign": "◉",
+
+  "list.indicator": "λ",
+  "list.nextKeymap": "<C-k>",
+  "list.previousKeymap": "<C-l>",
+
+  "suggest.enablePreview": true,
+
+  // <<<<<<<< extension/language server specific settings >>>>>>>>
+
+  // <<<<<<< coc-diagnostic (linting & formatting) >>>>>>>
+  // extension - https://github.com/iamcco/coc-diagnostic
+  // language server - https://github.com/iamcco/diagnostic-languageserver
+  "diagnostic-languageserver.filetypes": {
+    "sh": "shellcheck"
+  },
+  "diagnostic-languageserver.formatters": {
+    "shfmt": {
+      "command": "shfmt",
+      // note: `-i 2` is a single arg but must be separated to work here
+      "args": ["-i", "2", "-bn", "-ci", "-sr"]
+    }
+  },
+  "diagnostic-languageserver.formatFiletypes": {
+    "sh": "shfmt"
+  },
+
+  // <<<< eslint >>>>
+  "eslint.filetypes": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+
+  // <<<< python >>>>
+  // ref - https://github.com/neoclide/coc-python#options
+
+  // enables Microsoft PLS
+  // ref - https://github.com/neoclide/coc-python#optional-steps
+  "python.formatting.provider": "black",
+  "python.jediEnabled": false,
+  "python.linting.mypyEnabled": true,
+  "python.linting.pylintEnabled": false,
+
+  // <<<< rust >>>>
+  // ref - https://github.com/fannheyward/coc-rust-analyzer#configurations
+  "rust-analyzer.enableCargoWatchOnStartup": "enabled",
+  "rust-analyzer.featureFlags": {
+    "notifications.workspace-loaded": false
+  },
+
+  // <<<< tsserver >>>>
+  // ref - https://github.com/neoclide/coc-tsserver#configuration-options
+  "tsserver.enableJavascript": false
+}

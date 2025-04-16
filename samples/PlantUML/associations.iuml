@@ -1,0 +1,21 @@
+' from https://raw.githubusercontent.com/freezed/ocp13/master/doc/data_model/associations.iuml
+/' = = = = = = = ASSOCIATION = = = = = = = '/
+package "tag" {
+    class tag
+}
+
+package "lead" {
+    class contact
+    class contact_tag <<assoc>>
+    rea(tag,contact,.,contact_tag)
+}
+
+package "django.contrib.auth" {
+    class user
+}
+
+package "log" {
+    class entry
+    class entry_tag <<assoc>>
+    rea(tag,entry,.,entry_tag)
+}

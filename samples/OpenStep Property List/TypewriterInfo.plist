@@ -1,0 +1,63 @@
+{
+   ApplicationDescription = "Étoilé text editor";
+   ApplicationIcon = "Typewriter.tiff";
+   NSIcon = "Typewriter.tiff";
+   ApplicationName = Typewriter;
+   ApplicationRelease = 0.1;
+   Authors = ("Yen-Ju Chen", "Günther Noack <guenther@unix-ag.uni-kl.de>");
+   Copyright = "Copyright (C) 2006 by Yen-Ju Chen";
+   CopyrightDescription = "Released under BSD Licence";
+   FullVersionID = 0.1;
+   URL = "";
+   NSTypes = (
+      {
+         NSName = "TWPlainTextType";
+         NSHumanReadableName = "Plain Text Document";
+         NSUnixExtensions = ("txt");
+         NSRole = Editor;
+	 NSIcon = Document-Text.tiff;
+         NSDocumentClass = TWDocument;
+      },
+      {
+         NSName = "TWRTFTextType";
+         NSHumanReadableName = "RTF Document";
+         NSUnixExtensions = ("rtf");
+         NSRole = Editor;
+	 NSIcon = Document-RichText.tiff;
+         NSDocumentClass = TWDocument;
+      },
+      {
+         NSName = "TWRTFDTextType";
+         NSHumanReadableName = "RTFD Document";
+         NSUnixExtensions = ("rtfd");
+         NSRole = Editor;
+	 NSIcon = Document-RichText.tiff;
+         NSDocumentClass = TWDocument;
+      }
+   );
+   NSServices = (
+     {
+       NSPortName = Typewriter;
+       NSMessage = newDocumentWithSelection;
+       NSSendTypes = (NSStringPboardType);
+       NSKeyEquivalent = {
+         default = "";
+        };
+       NSMenuItem = {
+         default = "Typewriter/New document with selection";
+        };
+     },
+     {
+       NSPortName = Typewriter;
+       NSMessage = openDocumentWithPath;
+       NSSendTypes = (NSStringPboardType);
+       NSKeyEquivalent = {
+         default = "";
+        };
+       NSMenuItem = {
+         default = "Typewriter/Open selected file";
+        };
+     }
+   );
+}
+

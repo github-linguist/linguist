@@ -1,0 +1,85 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
+  <UsingTask TaskName="Microsoft.Build.Tasks.XmlPeek" AssemblyName="Microsoft.Build.Tasks.v4.0, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"/>
+  <UsingTask TaskName="Microsoft.Build.Tasks.XmlPoke" AssemblyName="Microsoft.Build.Tasks.v4.0, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"/>
+  <PropertyGroup>
+    <SolutionRoot>$(MSBuildProjectDirectory)\..</SolutionRoot>
+    <ProjectRoot>$(SolutionRoot)\Src\Bowerbird.Website</ProjectRoot>
+    <ArtifactsDir>$(SolutionRoot)\Release</ArtifactsDir>
+    <CurrentBuildDateStamp>$([System.DateTime]::Now.ToString("yyyyMMdd"))</CurrentBuildDateStamp>
+    <CurrentBuildTimeStamp>$([System.DateTime]::Now.ToString("hhmm"))</CurrentBuildTimeStamp>
+    <CurrentBuildDir>$(ArtifactsDir)\$(CurrentBuildDateStamp)-$(Configuration)</CurrentBuildDir>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VersionMajor>0</VersionMajor>
+    <VersionMinor>1</VersionMinor>
+    <VersionPatch>0</VersionPatch>
+    <VersionPreRelease></VersionPreRelease>
+  </PropertyGroup>
+  <PropertyGroup>
+    <WebConfig>$(CurrentBuildDir)\Web.config</WebConfig>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageFiles Include="$(ProjectRoot)\**\*.*"
+                  Exclude="$(ProjectRoot)\bin\*.pdb;
+                  $(ProjectRoot)\bin\*.xml;
+                  $(ProjectRoot)\Logs\**\*.*;
+                  $(ProjectRoot)\obj\**\*.*;
+                  $(ProjectRoot)\test\**\*.*;
+                  $(ProjectRoot)\media\**\*.*;
+                  $(ProjectRoot)\**\*.orig;
+                  $(ProjectRoot)\*.config;
+                  $(ProjectRoot)\*.xml;
+                  $(ProjectRoot)\**\*.csproj;
+                  $(ProjectRoot)\*.csproj.user;">
+    </PackageFiles>
+    <ConfigFiles Include="$(ProjectRoot)\Web.config" >
+    </ConfigFiles>
+  </ItemGroup>
+  <Target Name="UpdateWebConfig"  Condition=" '$(CurrentBuildDateStamp)' != '' ">
+      <XmlPoke Namespaces="&lt;Namespace Prefix='msb' Uri='http://schemas.microsoft.com/developer/msbuild/2003'/&gt;"
+          XmlInputPath="$(WebConfig)"
+          Query="//add[@key='staticContentIncrement']/@value"
+          Value="$(CurrentBuildDateStamp)-$(CurrentBuildTimeStamp)" />
+    </Target>
+  <Target Name="CreateOutputDir">
+    <Message Text="Creating Directory $(CurrentBuildDir)" />
+    <RemoveDir Directories="$(CurrentBuildDir)" />
+    <Delete Files="$(CurrentBuildDir)" />
+    <MakeDir Directories="$(CurrentBuildDir)" />
+  </Target>
+  <Target Name="BuildMediaDirectories">
+    <MakeDir Directories="$(CurrentBuildDir)\media" />
+  </Target>
+  <Target Name="ConfigSettingsMessages">
+    <Message Text="Configuration is $(Configuration)" />
+    <Message Text="BuildNumber is $(BuildNumber)" />
+    <Message Text="ProjectRoot is $(ProjectRoot)" />
+    <Message Text="CurrentBuildDir is $(CurrentBuildDir)" />
+  </Target>
+  <Target Name="BuildSolution">
+    <MSBuild Projects="$(SolutionRoot)\Bowerbird.sln" Targets="Build" Properties="Configuration=$(Configuration)" />
+  </Target>
+  <Target Name="CopyFilesToReleaseDir">
+    <Copy SourceFiles="@(PackageFiles)" DestinationFiles="@(PackageFiles->'$(CurrentBuildDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(ConfigFiles)" DestinationFiles="$(CurrentBuildDir)\web.config" />
+  </Target>
+  <Target Name="ZipUpReleaseFiles">
+    <ItemGroup>
+      <ZipFiles Include="$(CurrentBuildDir)\**\*.*" Exclude="*.zip" />
+    </ItemGroup>
+    <Zip Files="@(ZipFiles)" WorkingDirectory="$(CurrentBuildDir)\$(Configuration)\" ZipFileName="$(CurrentBuildDateStamp)-$(Configuration).zip" ZipLevel="9" />
+  </Target>
+  <Target Name="CopyZipToReleaseDir" DependsOnTargets="ZipUpReleaseFiles">
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\$(CurrentBuildDateStamp)-$(Configuration).zip" DestinationFiles="$(ArtifactsDir)\$(CurrentBuildDateStamp)-$(Configuration).zip" />
+    <Delete Files="$(MSBuildProjectDirectory)\$(CurrentBuildDateStamp)-$(Configuration).zip" />
+  </Target>
+  <Target Name="Build" DependsOnTargets="CreateOutputDir">
+    <CallTarget Targets="BuildMediaDirectories"/>
+    <CallTarget Targets="ConfigSettingsMessages"/>
+    <CallTarget Targets="BuildSolution"/>
+    <CallTarget Targets="CopyFilesToReleaseDir"/>
+    <CallTarget Targets="UpdateWebConfig" />
+    <CallTarget Targets="CopyZipToReleaseDir"/>
+  </Target>
+</Project>

@@ -11,11 +11,13 @@ module Linguist
     #
     # path    - A path String (does not necessarily exists on the file system).
     # content - Content of the file.
+    # symlink - Whether the file is a symlink.
     #
     # Returns a Blob.
-    def initialize(path, content)
+    def initialize(path, content, symlink: false)
       @path = path
       @content = content
+      @symlink = symlink
     end
 
     # Public: Filename
@@ -63,11 +65,18 @@ module Linguist
     #
     # Returns an Array
     def extensions
-      _, *segments = name.downcase.split(".")
+      _, *segments = name.downcase.split(".", -1)
 
       segments.map.with_index do |segment, index|
         "." + segments[index..-1].join(".")
       end
+    end
+
+    # Public: Is this a symlink?
+    #
+    # Returns true or false.
+    def symlink?
+      @symlink
     end
   end
 end

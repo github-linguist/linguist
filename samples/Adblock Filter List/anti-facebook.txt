@@ -1,0 +1,99 @@
+[Adblock Plus 2.0]
+! Checksum: Ea7JI8rmiGKaIOR604if2A
+! Title: Anti-Facebook List
+! Updated: 2021-09-19 08:57 UTC
+! Expires: 9 days
+! License: http://creativecommons.org/licenses/by/3.0/
+! Homepage: http://www.fanboy.co.nz/
+! Reporting Issues: https://github.com/ryanbr/fanboy-adblock/issues
+!
+! Legal stuff (T&C's) .
+! In no event shall Fanboy List, or the list author be liable for any indirect, direct, punitive, special, incidental, or consequential damages whatsoever.
+! By downloading or viewing, or using this list, you are accepting these terms and the license.
+!
+!
+! Warning, will break on facebook-based comment sites and may also break on some facebook apps or games.
+!
+! Thirdparty Filters
+!
+||api-read.facebook.com/restserver.php?api_key=$third-party
+||api.facebook.com^$third-party
+||badge.facebook.com^$third-party
+||connect.facebook.com^$third-party,domain=~facebook.net|~fb.com
+||connect.facebook.net^$third-party,domain=~facebook.com|~fb.com
+||facebook.com/connect/$third-party
+||facebook.com/dialog/oauth?display=popup$popup,domain=humorhub.org
+||facebook.com/plugins/activity.php?$third-party
+||facebook.com/plugins/comments.php?$third-party
+||facebook.com/plugins/facepile.php?$third-party
+||facebook.com/plugins/fan.php?$third-party
+||facebook.com/plugins/follow.php$third-party
+||facebook.com/plugins/like.php?$third-party
+||facebook.com/plugins/like_box.php$third-party
+||facebook.com/plugins/likebox.php?$third-party
+||facebook.com/plugins/post.php?$third-party
+||facebook.com/plugins/recommendations.php?$third-party
+||facebook.com/plugins/recommendations_bar.php?$third-party
+||facebook.com/plugins/send.php?$third-party
+||facebook.com/plugins/share_button.php?$third-party
+||facebook.com/plugins/subscribe.php$third-party
+||facebook.com/plugins/subscribe?$third-party
+||facebook.com/restserver.php?*.getStats&$third-party
+||facebook.com/whitepages/wpminiprofile.php$third-party
+||facebook.com/widgets/activity.php?$third-party
+||facebook.com/widgets/fan.php?$third-party
+||facebook.com/widgets/like.php?$third-party
+||facebook.com/widgets/recommendations.php?$third-party
+||fbcdn-profile-a.akamaihd.net^$third-party,domain=~facebook.com
+||google.com/js/client:plusone.js$third-party
+||google.com/js/plusone.js$third-party
+||graph.facebook.com/?id=$third-party
+||graph.facebook.com^$third-party,xmlhttprequest
+||profile.ak.fbcdn.net^$third-party,domain=~facebook.com
+||scontent-a.*.fbcdn.net^$third-party,domain=~facebook.com
+||spot.im/embed/scripts/launcher.js$third-party
+||static.ak.fbcdn.net^$third-party,domain=~facebook.com
+!
+! Test Filters (For Gannett sites, which don't work anyways with Facebook blocked)
+!
+##.util-bar-module-firefly-visible
+!
+! Whitelist Filters
+!
+@@/cdn-cgi/pe/bag2?*connect.facebook.net$domain=forwardprogressives.com|onhax.net|opensubtitles.org|viralthread.com|youngcons.com
+@@||akamaihd.net/rsrc.php/$domain=facebook.com
+@@||channel.facebook.com^$domain=facebook.com
+@@||connect.facebook.com^*/AudienceNetworkPrebid.js$domain=vice.com
+@@||facebook.com/ajax/browse/$domain=facebook.com
+@@||facebook.com/ajax/bz$domain=facebook.com
+@@||facebook.com/ajax/chat/buddy_list.php$domain=facebook.com
+@@||facebook.com/ajax/chat/hovercard/$domain=facebook.com
+@@||facebook.com/ajax/hovercard/$domain=facebook.com
+@@||facebook.com/ajax/litestand/$domain=facebook.com
+@@||facebook.com/ajax/notifications/$domain=facebook.com
+@@||facebook.com/ajax/pagelet/$domain=facebook.com
+@@||facebook.com/ajax/photos/$domain=facebook.com
+@@||facebook.com/ajax/presence/$domain=facebook.com
+@@||facebook.com/ajax/typeahead/$domain=facebook.com
+@@||facebook.com/ajax/webstorage/$domain=facebook.com
+@@||facebook.com/chat/$domain=facebook.com
+@@||facebook.com/images/$domain=facebook.com
+@@||fbcdn-photos-*.akamaihd.net^$domain=facebook.com
+@@||fbcdn-profile-*.akamaihd.net^$domain=facebook.com
+@@||fbcdn-sphotos-*.akamaihd.net^$domain=facebook.com
+@@||fbexternal-*.akamaihd.net^$domain=facebook.com
+@@||scontent-*.fbcdn.net^$domain=facebook.com
+!
+! Problematic sites
+!
+@@||cloudfront.net^$font,domain=magicseaweed.com
+@@||connect.facebook.com^*/audiencenetworkprebid.js$script,domain=screenrant.com
+@@||connect.facebook.net^$script,domain=id.logi.com|tinder.com|abc.go.com|adultswim.com|contv.com|damnyouautocorrect.com|embedly.com|fitbit.com|instagram.com|interviewmagazine.com|noovo.ca|pogo.com|reddit.com|salon.com|sci2.tv|southpark.cc.com|southpark.de|upi.com
+@@||google.com/js/plusone.js$domain=abcnews.go.com|watch.nba.com
+@@||graph.facebook.com^$xmlhttprequest,domain=theguardian.com
+@@||staticxx.facebook.com/connect/$domain=embedly.com
+!
+! Cloudflare CDN
+!
+/cdn-cgi/pe/bag2?*connect.facebook.com
+/cdn-cgi/pe/bag2?*connect.facebook.net

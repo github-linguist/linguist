@@ -1,0 +1,10 @@
+#!/usr/bin/env hy
+(defn fizz [] (print "Fizz"))
+(defn buzz [] (print "Buzz"))
+(defn fizzbuzz [] (print "FizzBuzz"))
+
+(defmain [&rest args] (for [i (range 1 21)]
+                        (cond [(and (= 0 (% i 3)) (= 0 (% i 5))) (fizzbuzz)]
+                              [(= 0 (% i 3)) (fizz)]
+                              [(= 0 (% i 5)) (buzz)]
+                              [True (print i)])))

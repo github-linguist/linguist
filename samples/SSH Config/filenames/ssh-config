@@ -1,0 +1,11 @@
+# Some vagrant box
+Host client-vagrant
+	HostName 127.0.0.1
+	User vagrant
+	Port 2200
+	UserKnownHostsFile /dev/null
+	StrictHostKeyChecking no
+	PasswordAuthentication no
+	IdentityFile /Users/gableroux/somewhere/.vagrant/machines/default/virtualbox/private_key
+	IdentitiesOnly yes
+	LogLevel FATAL 

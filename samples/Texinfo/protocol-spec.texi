@@ -1,0 +1,520 @@
+\input texinfo
+@setfilename protocol-spec.texi
+@settitle ruby-debug-ide protocol
+
+@set RDEBUG_IDE @emph{ruby-debug-ide}
+@set RDEBUG_BASE @emph{ruby-debug-base}
+
+@titlepage
+@title ruby-debug-ide protocol
+@subtitle @value{EDITION} Edition
+@subtitle @value{UPDATED-MONTH}
+@author Markus Barchfeld and Martin Krauskopf
+@end titlepage
+
+@page
+
+@node Top, Summary, (dir), (dir)
+@top @value{RDEBUG_IDE} protocol
+
+This file contains specification of the protocol used by @value{RDEBUG_IDE}.
+
+@menu
+* Summary::
+* Specification::
+* Changes::
+@end menu
+
+@node Summary
+@chapter Summary
+
+This document describes protocol used by @value{RDEBUG_IDE} for communication
+between debugger engine and a frontend. It is a work in progress and might, and
+very likely will, change in the future. If you have any comments or questions
+please @email{martin.krauskopf@@gmail.com, send me} an email.
+
+The communication has two parts/sides. First ones are @emph{commands} sent from
+a frontend to the debugger engine and the second is the opposite way,
+@emph{answers} and @emph{events} sent from the debugger engine to the frontend.
+
+@emph{commands} are almost the same as the ones used by CLI ruby-debug. So you
+might want to contact @url{http://bashdb.sourceforge.net/ruby-debug.html, the
+@value{RDEBUG_IDE} document}.
+
+@emph{answers} and @emph{events} are sent in XML format described in the specification @ref{Specification, below}.
+
+@strong{Specification is far from complete.} Will be completed as time permits.
+In the meantime, source code is always the best spec.
+
+@node Specification
+@chapter Specification
+
+@menu
+* Commands::
+* Events::
+@end menu
+
+Terms:
+@itemize @bullet
+@item @emph{Command} is what frontend sends to the debugger engine
+@item @emph{Answer} is what debugger engine sends back to the frontend
+@item @emph{Example} shows simple example
+@end itemize
+
+
+@c Commands
+@node Commands
+@section Commands
+
+@menu
+* Adding Breakpoint::
+* Deleting Breakpoint::
+* Enabling Breakpoint::
+* Disabling Breakpoint::
+* Condition::
+* Catchpoint::
+* Threads::
+* Frames::
+* Variables::
+@end menu
+
+@c Adding Breakpoint
+@node Adding Breakpoint
+@subsection Adding Breakpoint
+
+Command:
+
+@smallexample
+  break <script>:<line_no>
+@end smallexample
+
+Answer:
+
+@smallexample
+  <breakpointAdded no="<id>" location="<script>:<line_no>"/>
+@end smallexample
+
+Example:
+
+@smallexample
+  C: break test.rb:2
+  A: <breakpointAdded no="1" location="test.rb:2"/>
+@end smallexample
+
+
+@c Deleting Breakpoint
+@node Deleting Breakpoint
+@subsection Deleting Breakpoint
+
+Command:
+
+@smallexample
+  delete <breakpoint_id>
+@end smallexample
+
+Answer:
+
+@smallexample
+  <breakpointDeleted no="<id>"/>
+@end smallexample
+
+Example:
+
+@smallexample
+  C: delete 2
+  A: <breakpointDeleted no="2"/>
+@end smallexample
+
+
+@c Enabling Breakpoint
+@node Enabling Breakpoint
+@subsection Enabling Breakpoint
+
+Supported @emph{@strong{since}} @value{RDEBUG_IDE} @emph{@strong{0.2.0}}
+
+Command:
+
+@smallexample
+  enable <breakpoint_id>
+@end smallexample
+
+Answer:
+
+@smallexample
+  <breakpointEnabled bp_id="<id>"/>
+@end smallexample
+
+Example:
+
+@smallexample
+  C: enable 2
+  A: <breakpointEnabled bp_id="2"/>
+@end smallexample
+
+
+@c Disabling Breakpoint
+@node Disabling Breakpoint
+@subsection Disabling Breakpoint
+
+Supported @emph{@strong{since}} @value{RDEBUG_IDE} @emph{@strong{0.2.0}}
+
+Command:
+
+@smallexample
+  disable <breakpoint_id>
+@end smallexample
+
+Answer:
+
+@smallexample
+  <breakpointDisabled bp_id="<id>"/>
+@end smallexample
+
+Example:
+
+@smallexample
+  C: disable 2
+  A: <breakpointDisabled bp_id="2"/>
+@end smallexample
+
+
+@c Condition
+@node Condition
+@subsection Setting Condition on Breakpoint
+
+Supported @emph{@strong{since}} @value{RDEBUG_IDE} @emph{@strong{0.2.0}}
+
+Command:
+
+@smallexample
+  condition <script>:<line_no>
+@end smallexample
+
+Answer:
+
+@smallexample
+  <conditionSet bp_id="<id>"/>
+@end smallexample
+
+Example:
+
+@smallexample
+  C: condition 1 x>5   # Stop on breakpoint 1 only if x>5 is true.
+  A: <conditionSet bp_id="1"/>
+@end smallexample
+
+
+@c Catchpoint
+@node Catchpoint
+@subsection Exception Breakpoint
+
+Command:
+
+@smallexample
+  catch <exception_class_name>
+@end smallexample
+
+Answer:
+
+@smallexample
+  <catchpointSet exception="<exception_class_name>"/>
+@end smallexample
+
+Example:
+
+@smallexample
+  C: catch ZeroDivisionError
+  A: <catchpointSet exception="ZeroDivisionError"/>
+@end smallexample
+
+
+@c Threads
+@node Threads
+@subsection Threads Listing
+
+Command:
+
+@smallexample
+  thread list
+@end smallexample
+
+Answer:
+
+@smallexample
+  <threads>
+    <thread id="<id>" status="<status>"/>
+    ....
+  </threads>
+@end smallexample
+
+Example:
+
+@smallexample
+  C: thread list
+  A: <threads>
+       <thread id="1" status="run"/>
+       <thread id="2" status="sleep"/>
+     </threads>
+@end smallexample
+
+
+@c Frames
+@node Frames
+@subsection Frames Listing
+
+Command:
+
+@smallexample
+  where
+@end smallexample
+
+Answer:
+
+@smallexample
+  <frames>
+    <frame no="<frame_no>" file="<script>" line="<line_no>" current="<boolean>"/>
+    <frame no="<frame_no>" file="<script>" line="<line_no>"/>
+    ...
+  </frames>
+@end smallexample
+
+Example:
+
+@smallexample
+  C: where
+  A: <frames>
+       <frame no="1" file="/path/to/test2.rb" line="3" current="true" />
+       <frame no="2" file="/path/to/test.rb" line="3" />
+     </frames>
+@end smallexample
+
+
+@c Variables
+@node Variables
+@subsection Variables Listing
+
+@subsubsection Local Variables
+
+Example:
+
+@smallexample
+  C: var local
+  A: <variables>
+       <variable name="array" kind="local" value="Array (2 element(s))" type="Array" hasChildren="true" objectId="-0x2418a904"/>
+     </variables>
+@end smallexample
+
+@subsubsection Instance Variables
+
+Example:
+
+@smallexample
+  C: var instance some_array
+  A: <variables>
+       <variable name="[0]" kind="instance" value="1" type="Fixnum" hasChildren="false" objectId="+0x3"/>
+       <variable name="[1]" kind="instance" value="2" type="Fixnum" hasChildren="false" objectId="+0x5"/>
+     </variables>
+@end smallexample
+
+@smallexample
+
+  C: var instance some_object
+  A: <variables>
+       <variable name="@@y" kind="instance" value="5" type="Fixnum" hasChildren="false" objectId="+0xb"/>
+     </variables>
+@end smallexample
+
+
+@c Events
+@node Events
+@section Events
+
+@menu
+* Breakpoint::
+* Suspension::
+* Exception::
+* Message::
+@end menu
+
+@c Breakpoint
+@node Breakpoint
+@subsection Breakpoint
+
+Event example:
+@smallexample
+  <breakpoint file="test.rb" line="1" threadId="1"/>
+@end smallexample
+
+@c Suspension
+@node Suspension
+@subsection Suspension
+Event example:
+@smallexample
+  <suspended file="/path/to/test.rb" line="2" threadId="1" frames="1"/>
+@end smallexample
+
+@c Exception
+@node Exception
+@subsection Exception
+
+Event example:
+@smallexample
+  <exception file="/path/to/test.rb" line="2" type="ZeroDivisionError" message="divided by 0" threadId="1"/>
+@end smallexample
+
+@c Message
+@node Message
+@subsection Message
+
+Event example:
+@smallexample
+  <message>some text</message>
+  <message debug='true'>some debug text</message>
+@end smallexample
+
+
+@c Changes section
+@node Changes
+@chapter Changes
+
+Mentions also related changes in the @value{RDEBUG_IDE} gem implementation.
+
+@section Changes between 0.4.9 and 0.4.10
+
+@itemize @bullet
+@item Fixes possible NoSuchMethodException
+@end itemize
+
+@section Changes between 0.4.5 and 0.4.6
+
+@itemize @bullet
+@item added Debugger::start_server (ticket #25972)
+@end itemize
+
+@section Changes between 0.4.4 and 0.4.5
+
+@itemize @bullet
+@item possibility to remove catchpoints
+@item bugfix: syntax error with Ruby 1.9
+@end itemize
+
+@section Changes between 0.4.3 and 0.4.4
+
+@itemize @bullet
+@item bugfix: print out backtrace when debuggee fails
+@end itemize
+
+@section Changes between 0.4.2 and 0.4.3
+
+@itemize @bullet
+@item depends on the "~> 0.10.3.x", rather then on 0.10.3 exactly to be
+  compatible with future ruby-debug-base 0.10.3.x releases
+@end itemize
+
+@section Changes between 0.4.1 and 0.4.2
+
+@itemize @bullet
+@item Dependency changed to @t{ruby-debug-base-0.10.3} which fixes various bugs
+  and contains bunch of RFEs
+@end itemize
+
+@section Changes between 0.4.0 and 0.4.1
+
+@itemize @bullet
+@item '--stop' switch: stop at the first line when the script is loaded.
+  Utilized by remote debugging
+@item Making '-x' switch actually work. Commenting out sending of <trace>
+  elements to the debugger. To be decided. There are large amount of such
+  events. For now serves rather for ruby-debug-ide developers.
+@item ensure 'file' attribute contains absolute path
+@item fixing CLI verbose when -d is used. Some unused code
+@end itemize
+
+
+@section Changes between 0.3.1 and 0.4.0
+
+@itemize @bullet
+@item Support for @t{debug} attribute in @t{message} element. Emitted by
+  backend when @t{--xml-debug} (new since 0.4.0) option is used.
+@item More robust failures handling in DebugThread
+@end itemize
+
+
+@section Changes between 0.3.4 and 0.3.5
+
+@itemize @bullet
+@item bugfix: syntax error with Ruby 1.9
+@end itemize
+
+
+@section Changes between 0.3.3 and 0.3.4
+
+@itemize @bullet
+@item bugfix: print out backtrace when debuggee fails
+@end itemize
+
+
+@section Changes between 0.3.2 and 0.3.3
+
+@itemize @bullet
+@item depends on the "~> 0.10.3.x", rather then on 0.10.3 exactly to be
+  compatible with future ruby-debug-base 0.10.3.x releases
+@end itemize
+
+
+@section Changes between 0.3.1 and 0.3.2
+
+@itemize @bullet
+@item Dependency changed to @t{ruby-debug-base-0.10.3} which fixes various bugs
+  and contains bunch of RFEs
+@end itemize
+
+
+@section Changes between 0.3.0 and 0.3.1
+
+@itemize @bullet
+@item Support for @emph{--load-mode} option. Hotfix, likely workaround, for
+  GlassFish debugging. Experimental, might be removed in the future. If option
+  is used, it calls @t{Debugger#debug_load with} @t{increment_start=true}
+@end itemize
+
+
+@section Changes between 0.2.1 and 0.3.0
+
+@itemize @bullet
+@item @ref{Catchpoint} now answers with @t{<conditionSet>} instead of just
+  @t{<message>} providing better control at frontend side
+@item Dependency changed to @t{ruby-debug-base-0.10.2}
+@item Bugfixes (see ChangeLog)
+@end itemize
+
+
+@section Changes between 0.2.0 and 0.2.1
+
+@itemize @bullet
+@item Hotfixing/workarounding problem with connection on some Mac OSes, see
+@url{http://ruby.netbeans.org/servlets/BrowseList?list=users&by=thread&from=861334,
+Debugger timing out} thread.
+@end itemize
+
+
+@section Changes between 0.1.10 and 0.2.0
+
+@subsection New Features
+@itemize @bullet
+@item @ref{Condition}
+@item @ref{Enabling Breakpoint}
+@item @ref{Disabling Breakpoint}
+@end itemize
+
+@subsection Uncompatible Changes
+@itemize @bullet
+@item @emph{catch off} does not work anymore, since @value{RDEBUG_BASE}s
+   support multiple catchpoints since 0.10.1, not just one.
+   @strong{Note:} however @value{RDEBUG_BASE}s in version 0.10.1 suffers with
+   @url{http://rubyforge.org/tracker/index.php?func=detail&aid=20237&group_id=1900&atid=7436, bug}
+   that it is not possible to remove catchpoints. So catchpoints removing must
+   be workarounded in higher layers. The bug is fixed in @value{RDEBUG_BASE}s
+   0.10.2 and above.
+@end itemize
+

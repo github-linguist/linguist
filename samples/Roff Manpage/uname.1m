@@ -1,0 +1,94 @@
+.\"	$OpenBSD: uname.1,v 1.17 2011/10/21 14:48:02 ajacoutot Exp $
+.\"
+.\" Copyright (c) 1990 The Regents of the University of California.
+.\" All rights reserved.
+.\"
+.\" Redistribution and use in source and binary forms, with or without
+.\" modification, are permitted provided that the following conditions
+.\" are met:
+.\" 1. Redistributions of source code must retain the above copyright
+.\"    notice, this list of conditions and the following disclaimer.
+.\" 2. Redistributions in binary form must reproduce the above copyright
+.\"    notice, this list of conditions and the following disclaimer in the
+.\"    documentation and/or other materials provided with the distribution.
+.\" 3. Neither the name of the University nor the names of its contributors
+.\"    may be used to endorse or promote products derived from this software
+.\"    without specific prior written permission.
+.\"
+.\" THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+.\" ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+.\" IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+.\" ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+.\" FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+.\" DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+.\" OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+.\" HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+.\" LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+.\" OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+.\" SUCH DAMAGE.
+.\"
+.\"     from: @(#)du.1	6.13 (Berkeley) 6/20/91
+.\"
+.Dd $Mdocdate: October 21 2011 $
+.Dt UNAME 1
+.Os
+.Sh NAME
+.Nm uname
+.Nd print operating system name
+.Sh SYNOPSIS
+.Nm uname
+.Op Fl amnprsv
+.Sh DESCRIPTION
+The
+.Nm uname
+utility writes symbols representing one or more system characteristics
+to the standard output.
+.Pp
+The options are as follows:
+.Bl -tag -width Ds
+.It Fl a
+Behave as though all of the options
+.Fl mnrsv
+were specified.
+.It Fl m
+Print the machine hardware name.
+.It Fl n
+Print the nodename (the nodename may be a name
+that the system is known by to a communications
+network).
+.It Fl p
+Print the machine processor architecture name.
+.It Fl r
+Print the operating system release.
+.It Fl s
+Print the operating system name.
+.It Fl v
+Print the operating system version.
+.El
+.Pp
+If no options are specified,
+.Nm uname
+prints the operating system name as if the
+.Fl s
+option had been specified.
+.Sh EXIT STATUS
+.Ex -std uname
+.Sh SEE ALSO
+.Xr hostname 1 ,
+.Xr machine 1 ,
+.Xr uname 3
+.Sh STANDARDS
+The
+.Nm
+utility is compliant with the
+.St -p1003.1-2008
+specification.
+.Pp
+The flag
+.Op Fl p
+is an extension to that specification.
+.Sh HISTORY
+The
+.Nm
+command appeared in
+.Bx 4.4 .

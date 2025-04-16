@@ -1,0 +1,37 @@
+.th VT III 6/4/73
+.sh NAME
+vt \*- display (vt01) interface
+.sh SYNOPSIS
+.nf
+.ft B
+openvt()
+.s3
+erase()
+.s3
+label(s)
+char s[ ];
+.s3
+line(x,y)
+.s3
+circle(x,y,r)
+.s3
+arc(x,y,x0,y0,x1,y1)
+.s3
+dot(x,y,dx,n,pattern)
+int pattern[ ];
+.s3
+move(x,y)
+.fi
+.s3
+.ft R
+.sh DESCRIPTION
+C interface routines to perform similarly named functions
+described in vt(IV).
+.it Openvt
+must be used before any of the others to open the
+storage scope for writing.
+.sh FILES
+/dev/vt0, found in /lib/libp.a
+.sh "SEE ALSO"
+vt (IV)
+.sh BUGS

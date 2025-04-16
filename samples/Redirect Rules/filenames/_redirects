@@ -1,0 +1,11 @@
+# Shadow all main pages to index by default
+/main/*	/index	200
+
+# Search queries
+/search q=:query	/search/:query	200!
+
+# 404 page
+/*	/404
+
+# Split US English
+/en/*	/en-us/:splat	302!	Language=en-US

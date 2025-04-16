@@ -1,0 +1,45 @@
+.th GREEK VII 10/31/72
+.sh NAME
+greek \*- graphics for extended ascii type-box
+.sh SYNOPSIS
+.bd "cat /usr/pub/greek"
+.sh DESCRIPTION
+.it Greek
+gives the mapping
+from ascii
+to the ``shift out'' graphics in effect between SO and SI 
+on model 37 Teletypes
+with a 128-character type-box.
+It contains:
+.s3
+.nf
+.if n .ig
+.ta 1i +.3i +.75i +1i +.3i +.75i +1i  +.3i
+alpha	\(*a	A	beta	\(*b	B	gamma	\(*g	\\
+GAMMA	\(*G	G	delta	\(*D	D	DELTA	\(*D	W
+epsilon	\(*e	S	zeta	\(*z	Q	eta	\(*y	N
+theta	\(*t	T	THETA	\(*T	O	lambda	\(*l	L
+LAMBDA	\(*L	E	mu	\(*m	M	nu	\(*n	@
+xi	\(*c	X	pi	\(*p	J	PI	\(*P	P
+rho	\(*r	K	sigma	\(*s	Y	SIGMA	\(*S	R
+tau	\(*t	I	phi	\(*f	U	PHI	\(*F	F
+psi	\(*q	V	PSI	\(*Q	H	omega	\(*o	C
+OMEGA	\(*W	Z	nabla	\(gr	[	not	\(no	\*_
+partial	\(pd	]	integral	\(is	^
+..
+.if t .ig
+.nf
+alpha	A  A  |  beta	B  B  |  gamma	\\  \\
+GAMMA	G  G  |  delta	D  D  |  DELTA	W  W
+epsilon	S  S  |  zeta	Q  Q  |  eta	N  N
+theta	T  T  |  THETA	O  O  |  lambda	L  L
+LAMBDA	E  E  |  mu	M  M  |  nu	@  @
+xi	X  X  |  pi	J  J  |  PI	P  P
+rho	K  K  |  sigma	Y  Y  |  SIGMA	R  R
+tau	I  I  |  phi	U  U  |  PHI	F  F
+psi	V  V  |  PSI	H  H  |  omega	C  C
+OMEGA	Z  Z  |  nabla	[  [  |  not	_  _
+partial	]  ]  |  integral  ^  ^
+..
+.sh "SEE ALSO"
+ascii (VII)

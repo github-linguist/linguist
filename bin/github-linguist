@@ -1,0 +1,155 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH[0, 0] = File.join(File.dirname(__FILE__), '..', 'lib')
+
+require 'linguist'
+require 'rugged'
+require 'json'
+require 'optparse'
+require 'pathname'
+
+HELP_TEXT = <<~HELP
+Linguist v#{Linguist::VERSION}
+Detect language type and determine language breakdown for a given Git repository.
+
+Usage: github-linguist <path>
+       github-linguist <path> [--rev REV] [--tree-size] [--breakdown] [--json]
+       github-linguist [--rev REV] [--tree-size] [--breakdown] [--json]
+HELP
+
+def github_linguist(args)
+  breakdown = false
+  json_output = false
+  tree_size = Linguist::Repository::MAX_TREE_SIZE
+  rev = 'HEAD'
+  path = Dir.pwd
+
+  parser = OptionParser.new do |opts|
+    opts.banner = HELP_TEXT
+    opts.version = Linguist::VERSION
+
+    opts.on("-b", "--breakdown", "Analyze entire repository and display detailed usage statistics") { breakdown = true }
+    opts.on("-j", "--json", "Output results as JSON") { json_output = true }
+    opts.on("-r", "--rev REV", String,
+            "Analyze specific git revision",
+            "defaults to HEAD, see gitrevisions(1) for alternatives") { |r| rev = r }
+    opts.on("-t", "--tree-size=NUMBER", Integer,
+            "Maximum number of files scanned to detect languages (default: #{Linguist::Repository::MAX_TREE_SIZE})") { |t| tree_size = t }
+    opts.on("-h", "--help", "Display a short usage summary, then exit") do
+      puts opts
+      exit
+    end
+  end
+
+  parser.parse!(args)
+
+  if !args.empty?
+    if File.directory?(args[0]) || File.file?(args[0])
+      path = args[0]
+    else
+      abort HELP_TEXT
+    end
+  end
+
+  if File.directory?(path)
+    rugged = Rugged::Repository.new(path)
+    begin
+      target_oid = rugged.rev_parse_oid(rev)
+    rescue
+      puts "invalid revision '#{rev}' for repo '#{path}'"
+      exit 1
+    end
+    repo = Linguist::Repository.new(rugged, target_oid, tree_size)
+
+    full_results = {}
+    repo.languages.each do |language, size|
+      percentage = ((size / repo.size.to_f) * 100)
+      percentage = sprintf '%.2f' % percentage
+      full_results.merge!({"#{language}": { size: size, percentage: percentage } })
+    end
+
+    if !json_output
+      full_results.sort_by { |_, v| v[:size] }.reverse.each do |language, details|
+        puts "%-7s %-10s %s" % ["#{details[:percentage]}%", details[:size], language]
+      end
+      if breakdown
+        puts
+        file_breakdown = repo.breakdown_by_file
+        file_breakdown.each do |lang, files|
+          puts "#{lang}:"
+          files.each do |file|
+            puts file
+          end
+          puts
+        end
+      end
+    else
+      if !breakdown
+        puts JSON.dump(full_results)
+      else
+        combined_results = full_results.merge({})
+
+        repo.breakdown_by_file.each do |language, files|
+          combined_results[language.to_sym].update({"files": files})
+        end
+        puts JSON.dump(combined_results)
+      end
+    end
+  elsif File.file?(path)
+
+    begin
+      # Check if this file is inside a git repository so we have things like
+      # `.gitattributes` applied.
+      file_full_path = File.realpath(path)
+      rugged = Rugged::Repository.discover(file_full_path)
+      file_rel_path = file_full_path.sub(rugged.workdir, '')
+      oid = -> { rugged.head.target.tree.walk_blobs { |r, b| return b[:oid] if r + b[:name] == file_rel_path } }
+      blob = Linguist::LazyBlob.new(rugged, oid.call, file_rel_path)
+    rescue Rugged::RepositoryError
+      blob = Linguist::FileBlob.new(path, Dir.pwd)
+    end
+
+    type = if blob.text?
+      'Text'
+    elsif blob.image?
+      'Image'
+    else
+      'Binary'
+    end
+
+    if json_output
+      puts JSON.generate( { path =>  {
+                                        :lines => blob.loc,
+                                        :sloc => blob.sloc,
+                                        :type => type,
+                                        :mime_type => blob.mime_type,
+                                        :language => blob.language,
+                                        :large => blob.large?,
+                                        :generated => blob.generated?,
+                                        :vendored => blob.vendored?,
+                                      }
+                          } )
+    else
+      puts "#{path}: #{blob.loc} lines (#{blob.sloc} sloc)"
+      puts "  type:      #{type}"
+      puts "  mime type: #{blob.mime_type}"
+      puts "  language:  #{blob.language}"
+
+      if blob.large?
+        puts "  blob is too large to be shown"
+      end
+
+      if blob.generated?
+        puts "  appears to be generated source code"
+      end
+
+      if blob.vendored?
+        puts "  appears to be a vendored file"
+      end
+    end
+  else
+    abort HELP_TEXT
+  end
+end
+
+github_linguist(ARGV)

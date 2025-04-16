@@ -7,6 +7,8 @@ require 'linguist/repository'
 require 'linguist/samples'
 require 'linguist/shebang'
 require 'linguist/version'
+require 'linguist/strategy/manpage'
+require 'linguist/strategy/xml'
 
 class << Linguist
   # Public: Detects the Language of the blob.
@@ -15,9 +17,9 @@ class << Linguist
   #       see Linguist::LazyBlob and Linguist::FileBlob for examples
   #
   # Returns Language or nil.
-  def detect(blob)
+  def detect(blob, allow_empty: false)
     # Bail early if the blob is binary or empty.
-    return nil if blob.likely_binary? || blob.binary? || blob.empty?
+    return nil if blob.likely_binary? || blob.binary? || (!allow_empty && blob.empty?)
 
     Linguist.instrument("linguist.detection", :blob => blob) do
       # Call each strategy until one candidate is returned.
@@ -52,15 +54,18 @@ class << Linguist
   #
   #   blob - An object that quacks like a blob.
   #   languages - An Array of candidate Language objects that were returned by the
-  #               previous strategy.
+  #               previous strategy.
   #
   # A strategy should return an Array of Language candidates.
   #
   # Strategies are called in turn until a single Language is returned.
   STRATEGIES = [
     Linguist::Strategy::Modeline,
-    Linguist::Shebang,
     Linguist::Strategy::Filename,
+    Linguist::Shebang,
+    Linguist::Strategy::Extension,
+    Linguist::Strategy::XML,
+    Linguist::Strategy::Manpage,
     Linguist::Heuristics,
     Linguist::Classifier
   ]
@@ -73,7 +78,7 @@ class << Linguist
   #       end
   #     end
   #
-  #     Linguist.instrumenter = CustomInstrumenter
+  #     Linguist.instrumenter = CustomInstrumenter.new
   #
   # The instrumenter must conform to the `ActiveSupport::Notifications`
   # interface, which defines `#instrument` and accepts:

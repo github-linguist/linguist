@@ -1,0 +1,192 @@
+---
+uti: com.xamarin.workbook
+platforms:
+- Console
+---
+
+# Using C# 6
+
+Some examples from Xamarin's [intro to C# 6](https://developer.xamarin.com/guides/cross-platform/advanced/csharp_six/).
+
+* Null-conditional operator
+
+* String Interpolation
+
+* Expression-bodied Function Members
+
+* Auto-property Initialization
+
+* Index Initializers
+
+* using static
+
+## Null-conditional operator
+
+The `?.` operator automatically does a null-check before referencing the
+specified member. The example string array below has a `null` entry:
+
+```csharp
+var names = new string[] { "Foo", null };
+```
+
+In C# 5, a null-check is required before accessing the `.Length` property:
+
+```csharp
+// C# 5
+int secondLength = 0;
+if (names[1] != null)
+  secondLength = names[1].Length;
+```
+
+C# 6 allows the length to be queried in a single line; the entire
+statement returns `null` if any object is null.
+
+```csharp
+var length0 = names[0]?.Length; // 3
+var length1 = names[1]?.Length; // null
+```
+
+This can be used in conjunction with the `??` null coalescing operator
+to set a default value (such as `0`) in the example below:
+
+```csharp
+var lengths = names.Select (names => names?.Length ?? 0); //[3, 0]
+```
+
+## String Interpolation
+
+Previously strings were built in a number of different ways:
+
+```csharp
+var animal = "Monkeys";
+var food = "bananas";
+
+var out1 = String.Format ("{0} love to eat {1}", animal, food);
+var out2 = animal + " love to eat " + food;
+// or even StringBuilder
+```
+
+C# 6 provides a simple syntax where the fieldname can be
+embedded directly in the string:
+
+```csharp
+$"{animal} love to eat {food}"
+```
+
+String-formatting can also be done with this syntax:
+
+```csharp
+var values = new int[] { 1, 2, 3, 4, 12, 123456 };
+foreach (var s in values.Select (i => $"The value is {i,10:N2}.")) {
+   Console.WriteLine (s);
+}
+```
+
+## Expression-bodied Function Members
+
+The `ToString` override in the following class is an expression-bodied
+function - a more succinct declaration syntax.
+
+```csharp
+class Person
+{
+    public string FirstName { get; }
+    public string LastName { get; }
+    public Person (string firstname, string lastname)
+    {
+       FirstName = firstname;
+       LastName = lastname;
+    }
+    // note there is no explicit `return` keyword
+    public override string ToString () => $"{LastName}, {FirstName} {LastName}";
+}
+```
+
+`void` expression bodied functions are also allowed so long as
+the expression is a statement:
+
+```csharp
+public void Log(string message) => System.Console.WriteLine($"{DateTime.Now.ToString ("s", System.Globalization.CultureInfo.InvariantCulture )}: {message}");
+```
+
+This simple example calls these two methods:
+
+```csharp
+Log(new Person("James", "Bond").ToString())
+```
+
+## Auto-property Initialization
+
+Properties (ie. specified with `{get;set;}`) can be initialized inline
+with C# 6:
+
+```csharp
+class Todo
+{
+    public bool Done { get; set; } = false;
+    public DateTime Created { get; } = DateTime.Now;
+    public string Description { get; }
+
+    public Todo (string description)
+    {
+       this.Description = description; // can assign (only in constructor!)
+    }
+    public override string ToString () => $"'{Description}' was created on {Created}";
+}
+```
+
+```csharp
+new Todo("buy apples")
+```
+
+## Index Initializers
+
+Dictionary-style data structures let you specify key/value
+types with a simple object-initializer-like syntax:
+
+```csharp
+var userInfo = new Dictionary<string,object> {
+    ["Created"] = DateTime.Now,
+    ["Due"] = DateTime.Now.AddSeconds(60 * 60 * 24),
+    ["Task"] = "buy lettuce"
+};
+```
+
+## using static
+
+Enumerations, and certain classes such as System.Math, are primarily
+holders of static values and functions. In C# 6, you can import all
+static members of a type with a single using static statement:
+
+```csharp
+using static System.Math;
+```
+
+C# 6 code can then reference the static members directly, avoiding
+repetition of the class name (eg. `Math.PI` becomes `PI`):
+
+```csharp
+public class Location 
+{
+    public Location (double lat, double @long) {Latitude = lat; Longitude = @long;} 
+    public double Latitude = 0; public double Longitude = 0; 
+}
+static public double MilesBetween(Location loc1, Location loc2)
+{
+  double rlat1  = PI * loc1.Latitude / 180;
+  double rlat2  = PI * loc2.Latitude / 180;
+  double theta  = loc1.Longitude - loc2.Longitude;
+  double rtheta = PI * theta / 180;
+  double dist =
+      Sin(rlat1) * Sin(rlat2) + Cos(rlat1) *
+      Cos(rlat2) * Cos(rtheta);
+  dist = Acos(dist);
+  dist = dist*180/PI;
+  dist = dist*60*1.1515;
+  return dist; //miles
+}
+```
+
+```csharp
+MilesBetween (new Location(-12,22), new Location(-13,33))
+```

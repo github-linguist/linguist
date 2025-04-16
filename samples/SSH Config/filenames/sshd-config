@@ -1,0 +1,8 @@
+# Router
+Host 192.168.1.1 tomato
+#Hostname tomato
+Hostname 192.168.1.1
+IdentityFile ~/.ssh/tomato_rsa
+IdentitiesOnly yes
+User root
+KexAlgorithms +diffie-hellman-group1-sha1

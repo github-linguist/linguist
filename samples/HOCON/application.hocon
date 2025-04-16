@@ -1,0 +1,164 @@
+# Copyright 2022 HM Revenue & Customs
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+include "frontend.conf"
+
+appName = "penalties-frontend"
+play.http.router = prod.Routes
+
+# An ApplicationLoader that uses Guice to bootstrap the application.
+play.application.loader = "uk.gov.hmrc.play.bootstrap.ApplicationLoader"
+
+# Primary entry point for all HTTP requests on Play applications
+play.http.requestHandler = "uk.gov.hmrc.play.bootstrap.http.RequestHandler"
+
+# Provides an implementation of AuditConnector. Use `uk.gov.hmrc.play.bootstrap.AuditModule` or create your own.
+# An audit connector must be provided.
+play.modules.enabled += "uk.gov.hmrc.play.audit.AuditModule"
+
+# Provides an implementation of MetricsFilter. Use `uk.gov.hmrc.play.bootstrap.graphite.GraphiteMetricsModule` or create your own.
+# A metric filter must be provided
+play.modules.enabled += "uk.gov.hmrc.play.bootstrap.graphite.GraphiteMetricsModule"
+
+# Provides an implementation and configures all filters required by a Platform frontend microservice.
+play.modules.enabled += "uk.gov.hmrc.play.bootstrap.frontend.FrontendModule"
+
+# Default http client
+play.modules.enabled += "uk.gov.hmrc.play.bootstrap.HttpClientModule"
+
+# Auth client module
+play.modules.enabled += "uk.gov.hmrc.play.bootstrap.AuthModule"
+
+# Custom error handler
+play.http.errorHandler = "config.ErrorHandler"
+
+play.filters.headers.contentSecurityPolicy = "default-src 'self' 'unsafe-inline' localhost:9000 localhost:9032 localhost:12345 www.google-analytics.com https://www.googletagmanager.com data:"
+
+# Play Modules
+# ~~~~
+# Additional play modules can be added here
+
+microservice {
+  metrics {
+    graphite {
+      host = localhost
+      port = 2003
+      prefix = play.${appName}.
+      enabled = true
+    }
+  }
+
+  services {
+    contact-frontend {
+      protocol = http
+      host = localhost
+      port = 9250
+    }
+
+    auth {
+      host = localhost
+      port = 8500
+    }
+
+    penalties {
+      protocol = http
+      host = localhost
+      port = 9182
+    }
+
+    vat-agent-client-lookup-frontend {
+      host = "http://localhost:9152"
+      startUrl = "/vat-through-software/test-only/vaclf-stub"
+    }
+  }
+}
+
+feature {
+  switch {
+    call-api-1812-etmp = false
+    time-machine-now = ""
+  }
+}
+
+urls {
+  vatOverview = "http://localhost:9152/vat-through-software/vat-overview"
+  btaHomepage = "http://localhost:9020/business-account"
+  vatAgentClientLookUp = "http://localhost:9149/vat-through-software/representative/client-vat-account"
+  penaltiesAppealsBaseurl = "http://localhost:9181"
+}
+
+metrics {
+  name = ${appName}
+  rateUnit = SECONDS
+  durationUnit = SECONDS
+  showSamples = true
+  jvm = true
+  enabled = false
+}
+
+auditing {
+  enabled = true
+  traceRequests = true
+  consumer {
+    baseUri {
+      host = localhost
+      port = 8100
+    }
+  }
+}
+
+controllers {
+  controllers.Assets = {
+    needsAuditing = false
+  }
+
+  uk.gov.hmrc.govukfrontend.controllers.Assets = {
+    needsAuditing = false
+  }
+
+  uk.gov.hmrc.hmrcfrontend.controllers.Assets = {
+      needsAuditing = false
+  }
+}
+
+tracking-consent-frontend {
+  gtm.container = "b"
+}
+
+signIn {
+  url = "http://localhost:9949/auth-login-stub/gg-sign-in"
+  continueBaseUrl = "http://localhost:9180"
+}
+
+signOut {
+  url = "http://localhost:9553/bas-gateway/sign-out-without-state?continue="
+}
+
+play.i18n.langs = ["en", "cy"]
+
+# Change this value to true to enable Welsh translations to be loaded from messages.cy, and to display the language toggle
+features.welsh-language-support = true
+
+timeout {
+  period = 900
+  countDown = 120
+}
+
+feedback {
+  url = "#"
+}
+
+contact-frontend.serviceId = "vat-penalties"
+
+host = "http://localhost:9180"
