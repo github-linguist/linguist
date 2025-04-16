@@ -1,5 +1,6 @@
 require 'linguist/lazy_blob'
-require 'rugged'
+require 'linguist/source/repository'
+require 'linguist/source/rugged'
 
 module Linguist
   # A Repository is an abstraction of a Grit::Repo or a basic file
@@ -23,14 +24,19 @@ module Linguist
     # Public: Initialize a new Repository to be analyzed for language
     # data
     #
-    # repo - a Rugged::Repository object
+    # repo - a Linguist::Source::Repository object
     # commit_oid - the sha1 of the commit that will be analyzed;
     #              this is usually the master branch
     # max_tree_size - the maximum tree size to consider for analysis (default: MAX_TREE_SIZE)
     #
     # Returns a Repository
     def initialize(repo, commit_oid, max_tree_size = MAX_TREE_SIZE)
-      @repository = repo
+      @repository = if repo.is_a? Linguist::Source::Repository
+        repo
+      else
+        # Allow this for backward-compatibility purposes
+        Linguist::Source::RuggedRepository.new(repo)
+      end
       @commit_oid = commit_oid
       @max_tree_size = max_tree_size
 
@@ -123,26 +129,25 @@ module Linguist
     end
 
     def read_index
-      attr_index = Rugged::Index.new
-      attr_index.read_tree(current_tree)
-      repository.index = attr_index
+      raise NotImplementedError, "read_index is deprecated" unless repository.is_a? Linguist::Source::RuggedRepository
+      repository.set_attribute_source(@commit_oid)
     end
 
     def current_tree
-      @tree ||= Rugged::Commit.lookup(repository, @commit_oid).tree
+      raise NotImplementedError, "current_tree is deprecated" unless repository.is_a? Linguist::Source::RuggedRepository
+      repository.get_tree(@commit_oid)
     end
 
     protected
     def compute_stats(old_commit_oid, cache = nil)
-      return {} if current_tree.count_recursive(@max_tree_size) >= @max_tree_size
+      return {} if repository.get_tree_size(@commit_oid, @max_tree_size) >= @max_tree_size
 
-      old_tree = old_commit_oid && Rugged::Commit.lookup(repository, old_commit_oid).tree
-      read_index
-      diff = Rugged::Tree.diff(repository, old_tree, current_tree)
+      repository.set_attribute_source(@commit_oid)
+      diff = repository.diff(old_commit_oid, @commit_oid)
 
       # Clear file map and fetch full diff if any .gitattributes files are changed
       if cache && diff.each_delta.any? { |delta| File.basename(delta.new_file[:path]) == ".gitattributes" }
-        diff = Rugged::Tree.diff(repository, old_tree = nil, current_tree)
+        diff = repository.diff(nil, @commit_oid)
         file_map = {}
       else
         file_map = cache ? cache.dup : {}
@@ -153,7 +158,7 @@ module Linguist
         new = delta.new_file[:path]
 
         file_map.delete(old)
-        next if delta.binary
+        next if delta.binary?
 
         if [:added, :modified].include? delta.status
           # Skip submodules and symlinks
