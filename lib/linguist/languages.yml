@@ -1343,15 +1343,6 @@ Cool:
   tm_scope: source.cool
   ace_mode: text
   language_id: 68
-Coq:
-  type: programming
-  color: "#d0b68c"
-  extensions:
-  - ".coq"
-  - ".v"
-  tm_scope: source.coq
-  ace_mode: text
-  language_id: 69
 Cpp-ObjDump:
   type: data
   extensions:
@@ -6359,6 +6350,18 @@ Roc:
   tm_scope: source.roc
   ace_mode: text
   language_id: 440182480
+Rocq Prover:
+  type: programming
+  color: "#d0b68c"
+  extensions:
+  - ".v"
+  - ".coq"
+  aliases:
+  - coq
+  - rocq
+  tm_scope: source.coq
+  ace_mode: text
+  language_id: 69
 Roff:
   type: markup
   color: "#ecdebe"
