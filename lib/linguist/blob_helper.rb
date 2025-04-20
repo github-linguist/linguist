@@ -124,7 +124,6 @@ module Linguist
     # Return true or false
     def binary?
       # Large blobs aren't even loaded into memory
-      puts "BlobHelper - error when data is accessed (it's a property getter for blob, not normal field)"
       if data.nil?
         true
 
@@ -153,8 +152,6 @@ module Linguist
     #
     # Return true or false
     def text?
-      # NOTE: ERROR in binary? while accessing "data" property getter
-      # that fails because blob oid is nil
       !binary?
     end
 

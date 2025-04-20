@@ -104,15 +104,11 @@ def github_linguist(args)
       rugged = Rugged::Repository.discover(file_full_path)
       file_rel_path = file_full_path.sub(rugged.workdir, '')
       oid = -> { rugged.head.target.tree.walk_blobs { |r, b| return b[:oid] if r + b[:name] == file_rel_path } }
-      puts "github-linguist (script): lazy blob: OID = #{oid.inspect}"
       blob = Linguist::LazyBlob.new(rugged, oid.call, file_rel_path)
-      puts "github-linguist (script): lazy blob property OID = #{blob.oid}"
     rescue Rugged::RepositoryError
       blob = Linguist::FileBlob.new(path, Dir.pwd)
     end
 
-    # ERROR: when "blob" is accessed (it's a property getter, not normal field)
-    # cause is that somehow blob.oid is set to nil
     type = if blob.text?
       'Text'
     elsif blob.image?
@@ -156,4 +152,4 @@ def github_linguist(args)
   end
 end
 
-github_linguist(ARGV)     # ERROR: after initializing lazy blob with oid, somehow its oid isn't set
+github_linguist(ARGV)

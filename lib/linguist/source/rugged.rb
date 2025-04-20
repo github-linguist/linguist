@@ -62,8 +62,6 @@ module Linguist
       end
 
       def load_blob(blob_id, max_size)
-        puts "BLOB ID: #{blob_id.inspect}, MAX SIZE: #{max_size.inspect}"  # BLOB ID: nil, MAX SIZE: 131072
-        # ERROR here because blob_id is nil
         Rugged::Blob.to_buffer(@rugged, blob_id, max_size)
       end
 

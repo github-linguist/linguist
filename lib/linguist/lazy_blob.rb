@@ -35,7 +35,6 @@ module Linguist
         # Allow this for backward-compatibility purposes
         Linguist::Source::RuggedRepository.new(repo)
       end
-      puts "LazyBlob initialize: OID = #{oid.inspect}"
       @oid = oid
       @path = path
       @mode = mode
@@ -115,8 +114,6 @@ module Linguist
     end
 
     def load_blob!
-      puts "LazyBlob LOAD_BLOB: OID = #{oid.inspect}"
-      # ERROR on below line, because oid is nil
       @data, @size = repository.load_blob(oid, MAX_SIZE) if @data.nil?
     end
   end
