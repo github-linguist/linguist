@@ -535,6 +535,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **SVG:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **SWIG:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
 - **Sage:** [MagicStack/MagicPython](https://github.com/MagicStack/MagicPython)
+- **Sail:** [Timmmm/sail_vscode](https://github.com/Timmmm/sail_vscode)
 - **SaltStack:** [saltstack/atom-salt](https://github.com/saltstack/atom-salt)
 - **Sass:** [atom/language-sass](https://github.com/atom/language-sass)
 - **Scala:** [scala/vscode-scala-syntax](https://github.com/scala/vscode-scala-syntax)
