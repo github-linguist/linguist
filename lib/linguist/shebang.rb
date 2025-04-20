@@ -59,7 +59,7 @@ module Linguist
 
       # Check for multiline shebang hacks that call `exec`
       if script == 'sh' &&
-        data.lines.first(5).any? { |l| l.match(/exec (\w+).+\$0.+\$@/) }
+        data.lines.first(5).any? { |l| l.match(/exec (\w+)[\s"']+\$0[\s"']+\$@/) }
         script = $1
       end
 

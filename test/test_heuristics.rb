@@ -17,8 +17,9 @@ class TestHeuristics < Minitest::Test
   end
 
   def all_fixtures(language_name, file="*")
-    fixs = Dir.glob("#{samples_path}/#{language_name}/#{file}") -
-             ["#{samples_path}/#{language_name}/filenames"]
+    fixs = Dir.glob("#{samples_path}/#{language_name}/#{file}") +
+           Dir.glob("#{fixtures_path}/#{language_name}/#{file}") -
+           ["#{samples_path}/#{language_name}/filenames"]
     fixs = fixs.reject { |f| File.symlink?(f) }
     assert !fixs.empty?, "no fixtures for #{language_name} #{file}"
     fixs
@@ -261,8 +262,7 @@ class TestHeuristics < Minitest::Test
   def test_asm_by_heuristics
     assert_heuristics({
       "Motorola 68K Assembly" => all_fixtures("Motorola 68K Assembly", "*.asm"),
-      # Assembly lacks a heuristic
-      nil => all_fixtures("Assembly", "*.asm")
+      "Assembly" => all_fixtures("Assembly", "*.asm")
     })
   end
 
@@ -386,9 +386,9 @@ class TestHeuristics < Minitest::Test
 
   def test_d_by_heuristics
     assert_heuristics({
-      "D" => all_fixtures("D"),
-      "DTrace" => all_fixtures("DTrace"),
-      "Makefile" => all_fixtures("Makefile"),
+      "D" => all_fixtures("D", "*.d"),
+      "DTrace" => all_fixtures("DTrace", "*.d"),
+      "Makefile" => all_fixtures("Makefile", "*.d"),
     }, "test.d")
   end
 
@@ -556,8 +556,7 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "Motorola 68K Assembly" => all_fixtures("Motorola 68K Assembly", "*.i"),
       "SWIG" => all_fixtures("SWIG", "*.i"),
-      # No heuristic defined for Assembly
-      nil => all_fixtures("Assembly", "*.i")
+      "Assembly" => all_fixtures("Assembly", "*.i")
     })
   end
 
@@ -570,17 +569,17 @@ class TestHeuristics < Minitest::Test
 
   def test_inc_by_heuristics
     assert_heuristics({
-      "Motorola 68K Assembly" => all_fixtures("Motorola 68K Assembly", "*"),
-      "NASL" => all_fixtures("NASL", "*"),
-      "Pascal" => all_fixtures("Pascal", "*"),
-      "PHP" => all_fixtures("PHP", "*"),
-      "POV-Ray SDL" => all_fixtures("POV-Ray SDL", "*"),
+      "Motorola 68K Assembly" => all_fixtures("Motorola 68K Assembly", "*.inc"),
+      "NASL" => all_fixtures("NASL", "*.inc"),
+      "Pascal" => all_fixtures("Pascal", "*.inc"),
+      "PHP" => all_fixtures("PHP", "*.inc"),
+      "POV-Ray SDL" => all_fixtures("POV-Ray SDL", "*.inc"),
       "SourcePawn" => all_fixtures("SourcePawn", "*.inc"),
-      nil => all_fixtures("Assembly", "*") +
-        all_fixtures("C++", "*.inc") +
-        all_fixtures("HTML", "*") +
-        all_fixtures("Pawn", "*") +
-        all_fixtures("SQL", "*")
+      "Assembly" => all_fixtures("Assembly", "*.inc"),
+      nil => all_fixtures("C++", "*.inc") +
+        all_fixtures("HTML", "*.inc") +
+        all_fixtures("Pawn", "*.inc") +
+        all_fixtures("SQL", "*.inc")
     }, alt_name="foo.inc")
   end
 
@@ -613,6 +612,13 @@ class TestHeuristics < Minitest::Test
       "Common Lisp" => all_fixtures("Common Lisp", "*.lisp") + all_fixtures("Common Lisp", "*.lsp"),
       "NewLisp" => all_fixtures("NewLisp", "*.lisp") + all_fixtures("NewLisp", "*.lsp")
     }, "main.lisp")
+  end
+
+  def test_lp_by_heuristics
+    assert_heuristics({
+      "Answer Set Programming" => all_fixtures("Answer Set Programming", "*.lp"),
+      "Linear Programming" => all_fixtures("Linear Programming", "*.lp")
+    })
   end
 
   def test_ls_by_heuristics
@@ -725,7 +731,7 @@ class TestHeuristics < Minitest::Test
 
   def test_msg_by_heuristics
     assert_heuristics({
-      "omnetpp-msg" => all_fixtures("omnetpp-msg", "*.msg"),
+      "OMNeT++ MSG" => all_fixtures("OMNeT++ MSG", "*.msg"),
     })
   end
 
@@ -922,8 +928,8 @@ class TestHeuristics < Minitest::Test
   def test_s_by_heuristics
     assert_heuristics({
       "Motorola 68K Assembly" => all_fixtures("Motorola 68K Assembly", "*.s"),
-      # Unix Assembly lacks a heuristic
-      nil => all_fixtures("Unix Assembly", "*.s")
+      "Assembly" => all_fixtures("Assembly", "*.s"),
+      "Unix Assembly" => all_fixtures("Unix Assembly", "*.s")
     })
   end
 
@@ -939,6 +945,13 @@ class TestHeuristics < Minitest::Test
       "SuperCollider" => all_fixtures("SuperCollider", "*"),
       "Markdown" => all_fixtures("Markdown", "*.scd")
     }, alt_name="test.scd")
+  end
+
+  def test_scm_by_heuristics
+    assert_heuristics({
+      "Scheme" => all_fixtures("Scheme", "*.scm"),
+      "Tree-sitter Query" => all_fixtures("Tree-sitter Query", "*.scm")
+    })
   end
 
   def test_sol_by_heuristics
@@ -982,6 +995,13 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "STL" => Dir.glob("#{fixtures_path}/Generic/stl/STL/*"),
       nil => Dir.glob("#{fixtures_path}/Generic/stl/nil/*")
+    })
+  end
+
+  def test_svx_by_heuristics
+    assert_heuristics({
+      "Survex data" => all_fixtures("Survex data", "*.svx"),
+      "mdsvex" => all_fixtures("mdsvex", "*.svx")
     })
   end
 
