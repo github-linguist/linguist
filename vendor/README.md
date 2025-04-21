@@ -681,6 +681,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **ZenScript:** [CraftTweaker/ZenScript-tmLanguage](https://github.com/CraftTweaker/ZenScript-tmLanguage)
 - **Zephir:** [phalcon/zephir-sublime](https://github.com/phalcon/zephir-sublime)
 - **Zig:** [ziglang/sublime-zig-language](https://github.com/ziglang/sublime-zig-language)
+- **Zumbra:** [Zumbra-lang/Zumbra-lang](https://github.com/Zumbra-lang/Zumbra-lang)
 - **cURL Config:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **crontab:** [textmate/cron.tmbundle](https://github.com/textmate/cron.tmbundle)
 - **desktop:** [Mailaender/desktop.tmbundle](https://github.com/Mailaender/desktop.tmbundle)
