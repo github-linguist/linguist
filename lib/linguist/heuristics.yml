@@ -914,7 +914,7 @@ disambiguations:
     pattern: '^\[InternetShortcut\](?:\r?\n|\r)([^\s\[][^\r\n]*(?:\r?\n|\r)){0,20}URL='
 - extensions: ['.v']
   rules:
-  - language: Coq
+  - language: Rocq Prover
     pattern: '(?:^|\s)(?:Proof|Qed)\.(?:$|\s)|(?:^|\s)Require[ \t]+(Import|Export)\s'
   - language: Verilog
     pattern: '^[ \t]*module\s+[^\s()]+\s+\#?\(|^[ \t]*`(?:define|ifdef|ifndef|include|timescale)|^[ \t]*always[ \t]+@|^[ \t]*initial[ \t]+(begin|@)'
