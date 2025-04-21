@@ -1,3 +1,6 @@
+; FILE FROM https://github.com/hipsleek/hipsleek/blob/6cb3008bc7a3bc633ec59446892705899619e392/demo/array/as-left.z3
+; MIT LICENSE
+
 ;; proof extracted from arr_sum_left.java
 (set-logic AUFNIA)
 (declare-fun v_int_25_629 () Int)
