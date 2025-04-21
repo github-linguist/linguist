@@ -75,7 +75,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Browserslist:** [browserslist/browserslist-vscode](https://github.com/browserslist/browserslist-vscode)
 - **C:** [tree-sitter/tree-sitter-c](https://github.com/tree-sitter/tree-sitter-c) 🐌
 - **C#:** [tree-sitter/tree-sitter-c-sharp](https://github.com/tree-sitter/tree-sitter-c-sharp) 🐌
-- **C++:** [textmate/c.tmbundle](https://github.com/textmate/c.tmbundle)
+- **C++:** [tree-sitter/tree-sitter-cpp](https://github.com/tree-sitter/tree-sitter-cpp) 🐌
 - **C-ObjDump:** [nanoant/assembly.tmbundle](https://github.com/nanoant/assembly.tmbundle)
 - **C2hs Haskell:** [atom-haskell/language-haskell](https://github.com/atom-haskell/language-haskell)
 - **CAP CDS:** [SAP/cds-textmate-grammar](https://github.com/SAP/cds-textmate-grammar)
