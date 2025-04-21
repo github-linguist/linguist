@@ -1350,15 +1350,6 @@ Cool:
   tm_scope: source.cool
   ace_mode: text
   language_id: 68
-Coq:
-  type: programming
-  color: "#d0b68c"
-  extensions:
-  - ".coq"
-  - ".v"
-  tm_scope: source.coq
-  ace_mode: text
-  language_id: 69
 Cpp-ObjDump:
   type: data
   extensions:
@@ -3771,6 +3762,7 @@ KiCad Schematic:
   - eeschema schematic
   extensions:
   - ".kicad_sch"
+  - ".kicad_sym"
   - ".sch"
   tm_scope: source.pcb.schematic
   ace_mode: text
@@ -3791,6 +3783,16 @@ Kit:
   - ".kit"
   tm_scope: text.html.basic
   language_id: 188
+Koka:
+  type: programming
+  ace_mode: text
+  extensions:
+  - ".kk"
+  interpreters:
+  - koka
+  color: "#215166"
+  tm_scope: source.koka
+  language_id: 597930447
 Kotlin:
   type: programming
   color: "#A97BFF"
@@ -6365,6 +6367,18 @@ Roc:
   tm_scope: source.roc
   ace_mode: text
   language_id: 440182480
+Rocq Prover:
+  type: programming
+  color: "#d0b68c"
+  extensions:
+  - ".v"
+  - ".coq"
+  aliases:
+  - coq
+  - rocq
+  tm_scope: source.coq
+  ace_mode: text
+  language_id: 69
 Roff:
   type: markup
   color: "#ecdebe"
@@ -6738,6 +6752,14 @@ Sage:
   codemirror_mode: python
   codemirror_mime_type: text/x-python
   language_id: 338
+Sail:
+  type: programming
+  color: "#259dd5"
+  ace_mode: text
+  extensions:
+  - ".sail"
+  tm_scope: source.sail
+  language_id: 1029438153
 SaltStack:
   type: programming
   color: "#646464"
