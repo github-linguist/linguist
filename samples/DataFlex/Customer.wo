@@ -1,0 +1,164 @@
+Use cWebView.pkg
+Use cWebPanel.pkg
+Use cWebForm.pkg
+Use cWebCheckBox.pkg
+Use cWebTabContainer.pkg
+Use cWebTabPage.pkg
+Use cWebCombo.pkg
+Use cWebEdit.pkg
+
+Use cCustomerDataDictionary.dd
+
+Object oCustomer is a cWebView
+    Set piColumnCount to 10
+    Set psCaption to "Customer Maintenance"
+    Set piMaxWidth to 800
+    Set piMinWidth to 550
+    Set psStateViewName to "Customer"
+    
+    Object oCustomerDataDictionary is a cCustomerDataDictionary
+    End_Object
+    
+    Set Main_DD to oCustomerDataDictionary
+    Set Server  to oCustomerDataDictionary
+    
+    Object oWebMainPanel is a cWebPanel
+        Set piColumnCount to 10
+        
+        Object oCustomerCustomer_Number is a cWebForm
+            Entry_Item Customer.Customer_Number
+            Set piColumnSpan to 4
+            Set piColumnIndex to 0
+            Set psLabel to "Customer Num:"
+            Set peLabelAlign to alignRight
+        End_Object
+        
+        Object oCustomerName is a cWebForm
+            Entry_Item Customer.Name
+            Set piColumnSpan to 6
+            Set piColumnIndex to 4
+            Set psLabel to "Name:"
+            Set peLabelAlign to alignRight
+            Set piLabelOffset to 60
+        End_Object
+        
+        Object oWebTabContainer is a cWebTabContainer
+            Set piColumnSpan to 10
+            Set pbShowLabel to False
+            
+            Object oAddress_page is a cWebTabPage
+                Set piColumnCount to 10
+                Set psCaption to "Address"
+                
+                Object oCustomerAddress is a cWebForm
+                    Entry_Item Customer.Address
+                    Set piColumnSpan to 9
+                    Set piColumnIndex to 0
+                    Set psLabel to "Street Address:"
+                    Set peLabelAlign to alignRight
+                End_Object
+                
+                Object oCustomerCity is a cWebForm
+                    Entry_Item Customer.City
+                    Set piColumnSpan to 5
+                    Set piColumnIndex to 0
+                    Set psLabel to "City / State / Zip:"
+                    Set peLabelAlign to alignRight
+                End_Object
+                
+                Object oCustomerState is a cWebCombo
+                    Entry_Item Customer.State
+                    Set piColumnSpan to 2
+                    Set piColumnIndex to 5
+                    Set pbShowLabel to False
+                    Set peLabelAlign to alignRight
+                End_Object
+                
+                Object oCustomerZip is a cWebForm
+                    Entry_Item Customer.Zip
+                    Set piColumnSpan to 2
+                    Set piColumnIndex to 7
+                    Set pbShowLabel to False
+                    Set peLabelAlign to alignRight
+                End_Object
+                
+                Object oCustomerPhone_Number is a cWebForm
+                    Entry_Item Customer.Phone_Number
+                    Set piColumnSpan to 5
+                    Set piColumnIndex to 0
+                    Set psLabel to "Phone Number:"
+                    Set peLabelAlign to alignRight
+                End_Object
+                
+                Object oCustomerFax_Number is a cWebForm
+                    Entry_Item Customer.Fax_Number
+                    Set piColumnSpan to 4
+                    Set piColumnIndex to 5
+                    Set psLabel to "Fax:"
+                    Set peLabelAlign to alignRight
+                    Set piLabelOffset to 50
+                End_Object
+                
+                Object oCustomerEMail_Address is a cWebForm
+                    Entry_Item Customer.EMail_Address
+                    Set piColumnSpan to 8
+                    Set piColumnIndex to 0
+                    Set psLabel to "E-Mail Address:"
+                    Set peLabelAlign to alignRight
+                End_Object
+                
+                Object oCustomerStatus is a cWebCheckBox
+                    Entry_Item Customer.Status
+                    Set piColumnIndex to 0
+                    Set psCaption to "Active Customer"
+                    Set piColumnSpan to 8
+                    Set pbShowLabel to True
+                End_Object
+            End_Object
+            
+            Object oBalances_page is a cWebTabPage
+                Set piColumnCount to 12
+                Set psCaption to "Balances"
+                
+                Object oCustomerCredit_Limit is a cWebForm
+                    Entry_Item Customer.Credit_Limit
+                    Set piColumnSpan to 6
+                    Set piColumnIndex to 0
+                    Set psLabel to "Credit Limit:"
+                    Set peLabelAlign to alignRight
+                End_Object
+                
+                Object oCustomerPurchases is a cWebForm
+                    Entry_Item Customer.Purchases
+                    Set piColumnSpan to 6
+                    Set piColumnIndex to 0
+                    Set psLabel to "Total Purchases:"
+                    Set peLabelAlign to alignRight
+                End_Object
+                
+                Object oCustomerBalance is a cWebForm
+                    Entry_Item Customer.Balance
+                    Set piColumnSpan to 6
+                    Set piColumnIndex to 0
+                    Set psLabel to "Balance Due:"
+                    Set peLabelAlign to alignRight
+                End_Object
+            End_Object
+            
+            Object oComments_page is a cWebTabPage
+                Set piColumnCount to 10
+                Set psCaption to "Comments"
+                
+                Object oCustomerComments is a cWebEdit
+                    Entry_Item Customer.Comments
+                    Set piColumnSpan to 0
+                    Set piColumnIndex to 0
+                    Set pbShowLabel to False
+                    Set pbFillHeight to True
+                    Set peLabelAlign to alignRight
+                End_Object
+            End_Object
+        End_Object
+    End_Object
+    
+End_Object

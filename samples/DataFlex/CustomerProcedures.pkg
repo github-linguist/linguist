@@ -1,0 +1,11 @@
+Open Customer
+
+Procedure CreateCustomerRecord String sFirsName String sLastName Integer iCustomerID
+	Clear Customer
+	Lock
+	Move sFirsName to Customer.Name
+    Move sLastName to Customer.LastName
+    Move iCustomerID to Customer.CustomerId
+    SaveRecord Customer
+	Unlock
+End_Procedure

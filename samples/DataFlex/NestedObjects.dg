@@ -1,0 +1,9 @@
+Object oMainPanel is a ModalPanel
+    Object oGroup1 is a Group
+        Object oButton1 is a Button
+            Procedure OnClick
+                Send Info_Box "Clicked"
+            End_Procedure
+        End_Object
+    End_Object
+End_Object
