@@ -1,0 +1,7 @@
+- extensions:
+    - pkg
+  classifiers:
+    DataFlex:
+      # Match class definitions, common DataFlex keywords, and typical syntax
+      regex: |
+        \b(Class|Procedure|Function|Use|Send|Get|Set|Move|Property|Object|End_Object|Forward Send)\b
