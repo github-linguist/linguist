@@ -1102,7 +1102,7 @@ class TestHeuristics < Minitest::Test
 
   def test_v_by_heuristics
     assert_heuristics({
-      "Coq" => all_fixtures("Coq", "*.v"),
+      "Rocq Prover" => all_fixtures("Rocq Prover", "*.v"),
       "V" => all_fixtures("V", "*.v"),
       "Verilog" => all_fixtures("Verilog", "*.v")
     })
