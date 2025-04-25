@@ -1,0 +1,12 @@
+Use Windows.pkg
+
+Class cMyClass is a cObject
+    Procedure Construct_Object
+        Forward Send Construct_Object
+        Property String psTitle "DataFlex Sample"
+    End_Procedure
+
+    Procedure ShowTitle
+        Showln (psTitle(Self))
+    End_Procedure
+End_Class

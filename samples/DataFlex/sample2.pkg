@@ -1,0 +1,8 @@
+Global_Variable Integer gCounter
+
+Procedure IncrementCounter
+    Increment gCounter
+    If (gCounter > 10) Begin
+        Move 0 to gCounter
+    End
+End_Procedure

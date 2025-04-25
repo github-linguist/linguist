@@ -1,0 +1,11 @@
+Use Windows.pkg
+Use DataDict.pkg
+
+Object oCustomer_DD is a cCustomerDataDictionary
+    Set DDO_Server to oOrderHea_DD
+End_Object
+
+Procedure InitializeObject
+    Forward Send InitializeObject
+    Send Clear of oCustomer_DD
+End_Procedure
