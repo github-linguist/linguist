@@ -17,8 +17,9 @@ class TestHeuristics < Minitest::Test
   end
 
   def all_fixtures(language_name, file="*")
-    fixs = Dir.glob("#{samples_path}/#{language_name}/#{file}") -
-             ["#{samples_path}/#{language_name}/filenames"]
+    fixs = Dir.glob("#{samples_path}/#{language_name}/#{file}") +
+           Dir.glob("#{fixtures_path}/#{language_name}/#{file}") -
+           ["#{samples_path}/#{language_name}/filenames"]
     fixs = fixs.reject { |f| File.symlink?(f) }
     assert !fixs.empty?, "no fixtures for #{language_name} #{file}"
     fixs
@@ -37,7 +38,7 @@ class TestHeuristics < Minitest::Test
   def test_no_match_if_regexp_timeout
     skip("This test requires Ruby 3.2.0 or later") if Gem::Version.new(RUBY_VERSION) < Gem::Version.new('3.2.0')
 
-    Regexp.any_instance.stubs(:match).raises(Regexp::TimeoutError)
+    Regexp.any_instance.stubs(:match?).raises(Regexp::TimeoutError)
     assert_equal [], Heuristics.call(file_blob("#{fixtures_path}/Generic/stl/STL/cube1.stl"), [Language["STL"]])
   end
 
@@ -73,7 +74,10 @@ class TestHeuristics < Minitest::Test
   def test_all_extensions_are_listed
     Heuristics.all.all? do |rule|
       rule.languages.each do |lang|
-        unlisted = rule.extensions.reject { |ext| lang.extensions.include? ext }
+        unlisted = rule.extensions.reject do |ext|
+          lang.extensions.include?(ext) or
+          lang.filenames.select {|n| n.downcase.end_with? ext.downcase}
+        end
         assert_equal [], unlisted, (<<~EOF).chomp
           The extension '#{unlisted.first}' is not assigned to #{lang.name}.
           Add it to `languages.yml` or update the heuristic which uses it
@@ -258,8 +262,7 @@ class TestHeuristics < Minitest::Test
   def test_asm_by_heuristics
     assert_heuristics({
       "Motorola 68K Assembly" => all_fixtures("Motorola 68K Assembly", "*.asm"),
-      # Assembly lacks a heuristic
-      nil => all_fixtures("Assembly", "*.asm")
+      "Assembly" => all_fixtures("Assembly", "*.asm")
     })
   end
 
@@ -272,10 +275,12 @@ class TestHeuristics < Minitest::Test
 
   def test_bas_by_heuristics
     assert_heuristics({
-      "FreeBasic" => all_fixtures("FreeBasic", "*.bas"),
+      "B4X" => all_fixtures("B4X", "*.bas"),
+      "FreeBASIC" => all_fixtures("FreeBASIC", "*.bas"),
       "BASIC" => all_fixtures("BASIC", "*.bas"),
       "VBA" => all_fixtures("VBA", "*.bas"),
-      "Visual Basic 6.0" => all_fixtures("Visual Basic 6.0", "*.bas")
+      "Visual Basic 6.0" => all_fixtures("Visual Basic 6.0", "*.bas"),
+      "QuickBASIC" => all_fixtures("QuickBASIC", "*.bas")
     })
   end
 
@@ -297,7 +302,7 @@ class TestHeuristics < Minitest::Test
 
   def test_bi_by_heuristics
     assert_heuristics({
-      "FreeBasic" => all_fixtures("FreeBasic", "*.bi")
+      "FreeBASIC" => all_fixtures("FreeBASIC", "*.bi")
     })
   end
 
@@ -313,6 +318,13 @@ class TestHeuristics < Minitest::Test
       nil => all_fixtures("Text"),
       "XML" => all_fixtures("XML", "*.builds")
     }, "test.builds")
+  end
+
+  def test_cairo_by_heuristics
+    assert_heuristics({
+      "Cairo Zero" => all_fixtures("Cairo Zero"),
+      "Cairo" => all_fixtures("Cairo")
+    })
   end
 
   def test_ch_by_heuristics
@@ -374,9 +386,9 @@ class TestHeuristics < Minitest::Test
 
   def test_d_by_heuristics
     assert_heuristics({
-      "D" => all_fixtures("D"),
-      "DTrace" => all_fixtures("DTrace"),
-      "Makefile" => all_fixtures("Makefile"),
+      "D" => all_fixtures("D", "*.d"),
+      "DTrace" => all_fixtures("DTrace", "*.d"),
+      "Makefile" => all_fixtures("Makefile", "*.d"),
     }, "test.d")
   end
 
@@ -544,8 +556,7 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "Motorola 68K Assembly" => all_fixtures("Motorola 68K Assembly", "*.i"),
       "SWIG" => all_fixtures("SWIG", "*.i"),
-      # No heuristic defined for Assembly
-      nil => all_fixtures("Assembly", "*.i")
+      "Assembly" => all_fixtures("Assembly", "*.i")
     })
   end
 
@@ -558,17 +569,17 @@ class TestHeuristics < Minitest::Test
 
   def test_inc_by_heuristics
     assert_heuristics({
-      "Motorola 68K Assembly" => all_fixtures("Motorola 68K Assembly", "*"),
-      "NASL" => all_fixtures("NASL", "*"),
-      "Pascal" => all_fixtures("Pascal", "*"),
-      "PHP" => all_fixtures("PHP", "*"),
-      "POV-Ray SDL" => all_fixtures("POV-Ray SDL", "*"),
+      "Motorola 68K Assembly" => all_fixtures("Motorola 68K Assembly", "*.inc"),
+      "NASL" => all_fixtures("NASL", "*.inc"),
+      "Pascal" => all_fixtures("Pascal", "*.inc"),
+      "PHP" => all_fixtures("PHP", "*.inc"),
+      "POV-Ray SDL" => all_fixtures("POV-Ray SDL", "*.inc"),
       "SourcePawn" => all_fixtures("SourcePawn", "*.inc"),
-      nil => all_fixtures("Assembly", "*") +
-        all_fixtures("C++", "*.inc") +
-        all_fixtures("HTML", "*") +
-        all_fixtures("Pawn", "*") +
-        all_fixtures("SQL", "*")
+      "Assembly" => all_fixtures("Assembly", "*.inc"),
+      nil => all_fixtures("C++", "*.inc") +
+        all_fixtures("HTML", "*.inc") +
+        all_fixtures("Pawn", "*.inc") +
+        all_fixtures("SQL", "*.inc")
     }, alt_name="foo.inc")
   end
 
@@ -601,6 +612,13 @@ class TestHeuristics < Minitest::Test
       "Common Lisp" => all_fixtures("Common Lisp", "*.lisp") + all_fixtures("Common Lisp", "*.lsp"),
       "NewLisp" => all_fixtures("NewLisp", "*.lisp") + all_fixtures("NewLisp", "*.lsp")
     }, "main.lisp")
+  end
+
+  def test_lp_by_heuristics
+    assert_heuristics({
+      "Answer Set Programming" => all_fixtures("Answer Set Programming", "*.lp"),
+      "Linear Programming" => all_fixtures("Linear Programming", "*.lp")
+    })
   end
 
   def test_ls_by_heuristics
@@ -711,6 +729,12 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_msg_by_heuristics
+    assert_heuristics({
+      "OMNeT++ MSG" => all_fixtures("OMNeT++ MSG", "*.msg"),
+    })
+  end
+
   def test_n_by_heuristics
     assert_heuristics({
       "Roff" => all_fixtures("Roff", "*.n"),
@@ -732,6 +756,13 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "NewLisp" => all_fixtures("NewLisp", "*.nl"),
       "NL" => all_fixtures("NL", "*.nl")
+    })
+  end
+
+  def test_nr_by_heuristics
+    assert_heuristics({
+      "Noir" => all_fixtures("Noir", "*.nr"),
+      "Roff" => all_fixtures("Roff", "*.nr")
     })
   end
 
@@ -867,6 +898,12 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_resource_by_heuristics
+    assert_heuristics({
+      "RobotFramework" => all_fixtures("RobotFramework", "*.resource")
+    })
+  end
+
   def test_rno_by_heuristics
     assert_heuristics({
       "RUNOFF" => all_fixtures("RUNOFF", "*.rno"),
@@ -891,8 +928,8 @@ class TestHeuristics < Minitest::Test
   def test_s_by_heuristics
     assert_heuristics({
       "Motorola 68K Assembly" => all_fixtures("Motorola 68K Assembly", "*.s"),
-      # Unix Assembly lacks a heuristic
-      nil => all_fixtures("Unix Assembly", "*.s")
+      "Assembly" => all_fixtures("Assembly", "*.s"),
+      "Unix Assembly" => all_fixtures("Unix Assembly", "*.s")
     })
   end
 
@@ -908,6 +945,13 @@ class TestHeuristics < Minitest::Test
       "SuperCollider" => all_fixtures("SuperCollider", "*"),
       "Markdown" => all_fixtures("Markdown", "*.scd")
     }, alt_name="test.scd")
+  end
+
+  def test_scm_by_heuristics
+    assert_heuristics({
+      "Scheme" => all_fixtures("Scheme", "*.scm"),
+      "Tree-sitter Query" => all_fixtures("Tree-sitter Query", "*.scm")
+    })
   end
 
   def test_sol_by_heuristics
@@ -954,6 +998,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_svx_by_heuristics
+    assert_heuristics({
+      "Survex data" => all_fixtures("Survex data", "*.svx"),
+      "mdsvex" => all_fixtures("mdsvex", "*.svx")
+    })
+  end
+
   def test_sw_by_heuristics
     assert_heuristics({
       "Sway" => all_fixtures("Sway", "*.sw"),
@@ -969,6 +1020,13 @@ class TestHeuristics < Minitest::Test
       "Raku" => ["Raku/01-dash-uppercase-i.t", "Raku/01-parse.t", "Raku/advent2009-day16.t",
                  "Raku/basic-open.t", "Raku/calendar.t", "Raku/for.t", "Raku/hash.t",
                  "Raku/listquote-whitespace.t"]
+    })
+  end
+
+  def test_tact_by_heuristics
+    assert_heuristics({
+      "Tact" => all_fixtures("Tact", "*.tact"),
+      "JSON" => all_fixtures("JSON", "*.tact"),
     })
   end
 
@@ -996,6 +1054,13 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "TypeScript" => all_fixtures("TypeScript", "*.ts"),
       "XML" => all_fixtures("XML", "*.ts")
+    })
+  end
+
+  def test_tsp_by_heuristics
+    assert_heuristics({
+      "TypeSpec" => all_fixtures("TypeSpec", "*.tsp"),
+      "TSPLIB data" => all_fixtures("TSPLIB data", "*.tsp")
     })
   end
 
@@ -1037,7 +1102,7 @@ class TestHeuristics < Minitest::Test
 
   def test_v_by_heuristics
     assert_heuristics({
-      "Coq" => all_fixtures("Coq", "*.v"),
+      "Rocq Prover" => all_fixtures("Rocq Prover", "*.v"),
       "V" => all_fixtures("V", "*.v"),
       "Verilog" => all_fixtures("Verilog", "*.v")
     })
@@ -1047,6 +1112,13 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "VBA" => all_fixtures("VBA", "*.vba"),
       "Vim Script" => all_fixtures("Vim Script", "*.vba")
+    })
+  end
+
+  def test_vcf_by_heuristics
+    assert_heuristics({
+      "TSV" => all_fixtures("TSV", "*.vcf"),
+      "vCard" => all_fixtures("vCard", "*.vcf")
     })
   end
 

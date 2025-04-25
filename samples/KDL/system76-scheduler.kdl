@@ -1,0 +1,91 @@
+// WARNING: Modifications to this file will not be preserved on upgrade.
+// To configure, make a config.kdl file under /etc/system76-scheduler/.
+
+// Version of the configuration file
+version "2.0"
+
+// Autogrouping nullifies nice priorities
+autogroup-enabled false
+
+// Latency profiles the kernel's Completely Fair Scheduler
+cfs-profiles enable=true {
+    // The kernel-default values which are ideal for battery life and servers
+    default latency=6 nr-latency=8 wakeup-granularity=1.0 bandwidth-size=5 preempt="voluntary"
+
+    // Zen CFS parameters that make the desktop more responsive
+    responsive latency=4 nr-latency=10 wakeup-granularity=0.5 bandwidth-size=3 preempt="full"
+}
+
+// Monitors and applies process priority adjustments
+process-scheduler enable=true {
+    // How often to reload process assignments. 0 to disable
+    refresh-rate 60
+
+    // Enable realtime process priority adjustment with execsnoop
+    execsnoop true
+
+    // Preset process assignment profiles
+    assignments {
+        // Prevent crackling and distortion from the sound server
+        sound-server nice=-15 io=(realtime)0 {
+            "/usr/bin/pipewire"
+            "/usr/bin/pipewire-pulse"
+            "/usr/bin/jackd"
+        }
+
+        // Applications with realtime audio processing needs
+        recording nice=-9 io=(best-effort)0
+
+        // Enables pipewire process monitoring and assignments
+        pipewire nice=-6 io=(best-effort)0
+
+        // Video games
+        games nice=-5 io=(best-effort)0
+
+        // Desktop environments
+        desktop-environment nice=-3 io=(best-effort)0
+
+        // Foreground process profile
+        foreground nice=0 io=(best-effort)0
+
+        // Background process profile
+        background nice=6 io="idle"
+
+        // Session services belonging to the user
+        session-services nice=9 io="idle" {
+            include cgroup="/user.slice/*.service" parent="systemd"
+            include cgroup="/user.slice/*/session.slice/*" parent="systemd"
+            exclude cgroup="/user.slice/*app-dbus*"
+        }
+
+        // System services belonging to root
+        system-services nice=12 io="idle" {
+            include cgroup="/system.slice/*"
+        }
+
+        // Package management processes
+        package-manager nice=15 sched="batch" io="idle"
+
+        // CPU-intense background tasks
+        batch nice=19 sched="idle" io="idle"
+    }
+
+    exceptions {
+        include descends="chrt"
+        include descends="gamemoderun"
+        include descends="ionice"
+        include descends="nice"
+        include descends="taskset"
+        include descends="schedtool"
+        chrt
+        dbus
+        dbus-broker
+        gamemoderun
+        ionice
+        nice
+        rtkit-daemon
+        systemd
+        taskset
+        schedtool
+    }
+}
