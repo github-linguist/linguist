@@ -1162,4 +1162,26 @@ class TestHeuristics < Minitest::Test
       "Yacc" => all_fixtures("Yacc", "*.yy")
     })
   end
+  
+  def test_pkg_files
+    # This sample looks like DataFlex
+    dataflex = <<~DF
+      Use Windows.pkg
+      Object oMain is a Panel
+          Set Size to 100 200
+      End_Object
+    DF
+
+    # This sample might represent another language (e.g. TeX)
+    not_dataflex = <<~OTHER
+      \\documentclass{article}
+      \\usepackage{graphicx}
+      \\begin{document}
+      Hello World!
+      \\end{document}
+    OTHER
+
+    assert_equal "DataFlex", Linguist::Heuristics.disambiguate_filename("example.pkg", dataflex).first.name
+    assert_not_equal "DataFlex", Linguist::Heuristics.disambiguate_filename("example.pkg", not_dataflex).first.name
+  end  
 end
