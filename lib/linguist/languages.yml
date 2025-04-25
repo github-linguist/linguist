@@ -2786,7 +2786,7 @@ HIP:
   type: programming
   color: "#4F3A4F"
   extensions:
-    - ".hip"
+  - ".hip"
   tm_scope: source.c++
   ace_mode: c_cpp
   codemirror_mode: clike
@@ -4151,6 +4151,18 @@ M:
   codemirror_mime_type: text/x-mumps
   language_id: 214
   tm_scope: none
+M3U:
+  type: data
+  aliases:
+  - hls playlist
+  - m3u playlist
+  extensions:
+  - ".m3u"
+  - ".m3u8"
+  color: "#179C7D"
+  tm_scope: source.m3u
+  ace_mode: text
+  language_id: 89638692
 M4:
   type: programming
   extensions:
