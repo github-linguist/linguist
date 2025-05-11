@@ -1,0 +1,158 @@
+<!--
+ * https://github.com/iamxjb/winxin-app-watch-life.net/blob/master/pages/index/index.wxml
+ * MIT
+ * Copyright (c) 2017  微慕 https://www.minapper.com All rights reserved.
+-->
+
+<import src="../../templates/common-list.wxml" />
+<import src="../../templates/copyright.wxml" />
+<import src="../../templates/loading.wxml" />
+
+<ui-sys	tabbar >
+
+  <ui-navbar back="{{false}}" bg="ui-BG-Main" op isSlot>
+    <view class="flex-bar p-3">
+      <image src="/images/logo.png" mode="aspectFill" style="width: 200rpx;height: 56rpx;" />
+    </view>
+  </ui-navbar>
+  <!-- 首次进入引导添加到“我的小程序” -->
+  <view class="addMyMiniapp" wx:if="{{isFirst}}" catchtap="shutAddMyMiniapp">
+    <view>点击加入我的小程序 ↑</view>
+    <text>了解"{{webSiteName}}"最新文章</text>
+  </view>
+
+
+  <view class="index-top  ">
+
+    <view class="indexbg ui-BG-Main" style="margin-top: -{{sys_navBar+sys_statusBar+sys_capsule.top}}rpx;"> </view>
+ 
+    <view class="ui-BG-card ui-BG ">
+      <!-- 搜索 -->
+      <form catchsubmit="formSubmit" catchreset="formReset" id="search-form">
+        <view class="ui-search-bar  ">
+          <!-- <view class="ui-search-action">
+            <ui-avatar slot="left" ui="round" src="/images/gravatar.png" />
+          </view> -->
+          <view class="ui-search-form   round">
+            <text class="ui-search-icon _icon-search" />
+            <input class="ui-search-input ui-search-text-left" value="" id="search-input" name="input" confirm-type="search" placeholder="搜索你感兴趣的内容..." bindconfirm="formSubmit" />
+            <text class="ui-search-close {{emptyIcon}}" wx:if="{{searchVal && isEmpty}}" catchtap="onTapEmpty" />
+          </view>
+          <view class="ui-search-action">
+            <button slot="right" class="ui-btn ui-BG-Main round sm" form-type="submit">搜索</button>
+          </view>
+        </view>
+      </form>
+
+
+      <!-- 轮播图 -->
+      <view class=" ">
+        <ui-swiper info="{{swipe_nav}}" wx:if="{{swipe_nav.length > 0}}" dotStyle="long" dotCur="ui-BG-Main"height="260rpx" imgHeight="260rpx" imgName="image" swiperCss="radius" bind:uiTap="redictAppDetail"   />
+      </view>
+
+
+    </view>
+
+
+  </view>
+
+
+  <!-- 图标导航 -->
+  <view class="index-sticky ui-BG-card ui-BG" wx:if="{{selected_nav.length > 0}}">
+    <ui-title title="精选栏目" desc="热点栏目推荐" depth="3">
+      <text slot="icon" class="ui-TC-Main cicon-slack-square" />
+    </ui-title>
+    <view class='ui-grid {{selected_nav.length<5?"ui-cols-4":"ui-cols-5"}}'>
+
+      <block wx:key="id" wx:for="{{selected_nav}}">
+        <view class="ui-item  " wx:if="{{item.enable=='yes'}}" catchtap="redictAppDetail" id="{{item.id}}" data-type="{{item.type}}" data-url="{{item.url}}" data-appid="{{item.appid}}" data-path="{{item.path}}" data-jumptype="{{item.jumptype}}" data-unassociated="{{item.unassociated}}">
+          <image class="round" mode="aspectFill" src="{{item.image}}"></image>
+          <text class="ui-TC text-df">{{item.title}}</text>
+        </view>
+      </block>
+    </view>
+
+  </view>
+
+   <!-- 精选商品 -->  
+    <view class=" ui-BG-card ui-BG" wx:if="{{wechatShopSelectProducts.length}}">
+      <ui-title title="精选商品" desc="小店精选" depth="3">
+      <text slot="icon" class="ui-TC-Main cicon-whatshot" />
+    </ui-title>
+      <hot-goods goods-list="{{wechatShopSelectProducts}}" title="精选商品" list-type="4" from="home" />
+    </view>
+
+     <view class=" ui-BG-card ui-BG" wx:if="{{wechatShopHostProducts.length}}">
+      <ui-title title="热销商品" desc="小店热销" depth="3">
+      <text slot="icon" class="ui-TC-Main cicon-whatshot" />
+    </ui-title>
+      <hot-goods goods-list="{{wechatShopHostProducts}}" title="精选商品" list-type="4" from="home" />
+    </view>
+   
+ 
+  <!-- 推荐文章 -->
+  <view class=" ui-BG-card ui-BG" wx:if="{{postsstickyList.length > 0}}">
+    <ui-title title="推荐文章" desc="汇聚精彩文章" depth="3">
+      <text slot="icon" class="ui-TC-Main cicon-whatshot" />
+    </ui-title>
+
+
+    <swiper class="sticky-list" autoplay="true" interval="5000" duration="400" circular="true" display-multiple-items="2" vertical="true">
+      <swiper-item class="sticky-list-item" wx:for="{{postsstickyList}}" wx:key="id" id="{{item.id}}" bindtap="redictDetail">
+        <view class="sticky-list-item-title ui-TC text-df">
+          <text class="dot ui-BG-Main"></text> {{item.title.rendered}}
+        </view>
+      </swiper-item>
+    </swiper>
+
+  </view>
+
+  <!-- 那年今日 -->
+  <view class=" ui-BG-card ui-BG" wx:if="{{history_post.length > 0}}">
+    <ui-title title="那年今日" desc="汇聚历史文章" depth="3">
+      <text slot="icon" class="ui-TC-Main cicon-whatshot" />
+    </ui-title>
+
+
+    <swiper class="sticky-list" autoplay="true" interval="5000" duration="400" circular="true"  vertical="true">
+      <swiper-item class="sticky-list-item" wx:for="{{history_post}}" wx:key="id" id="{{item.ID}}" bindtap="redictDetail">
+        <view class="sticky-list-item-title ui-TC text-df">
+          <text class="dot ui-BG-Main"></text> {{item.post_date}} {{item.post_title}}
+        </view>
+      </swiper-item>
+    </swiper>
+
+  </view>
+
+ <video-channels type="3"/>  
+
+  <!-- 文章列表 -->
+  <view class="container ">
+    <article list="{{postsList}}" type="{{articleStyle}}" />
+    <!-- 列表template模板 -->
+    <!-- <template is="tempCommonList" data="{{postsList:postsList,listAdsuccess:listAdsuccess}}" /> -->
+    <view style='display:{{isLoading?"block":"none"}};margin-top: 48rpx;'>
+      <template is="tempLoading" />
+    </view>
+    <!-- 无更多文章提示 -->
+    <view class="loadingmore" style="display:{{floatDisplay}}">
+      <view class="no-more" hidden="{{!isLastPage}}">- 无更多文章 -</view>
+    </view>
+    <!-- 版权信息template模板 -->
+    <view class="copyright">
+      <template is="tempCopyright" data="{{webSiteName:webSiteName,domain:domain}}" />
+    </view>
+  </view>
+
+
+  <!-- 无法访问网络 -->
+  <view class="showerror" style="display:{{showerror}}">
+      <text class="cicon-wifi-off text-xsl"></text> 
+    <view class="errortext">
+      暂时无法访问网络，下拉重试...
+    </view>
+  </view>
+
+  <!-- 隐私授权弹窗 -->
+  <privacy />
+</ui-sys>
