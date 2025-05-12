@@ -1,0 +1,7 @@
+rune GameSettings module {
+    has difficulty = "Easy";
+    does changeDifficulty(level) {
+        difficulty = level;
+        write "Difficulty set to " + difficulty;
+    }
+}

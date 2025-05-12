@@ -1,0 +1,7 @@
+rune Warrior class is Player {
+    has strength = 50;
+    does specialMove(target) {
+        target.health = target.health - strength;
+        write "Special move executed!";
+    }
+}
