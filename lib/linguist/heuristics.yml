@@ -144,6 +144,11 @@ disambiguations:
     - (?i:^\s*(end\sfunction)$)
   - language: Bluespec BH
     pattern: '^package\s+[A-Za-z_][A-Za-z0-9_'']*(?:\s*\(|\s+where)'
+- extensions: ['.bst']
+  rules:
+  - language: BibTeX Style
+    pattern: 'ENTRY\s*\{'
+  - language: BuildStream
 - extensions: ['.builds']
   rules:
   - language: XML
