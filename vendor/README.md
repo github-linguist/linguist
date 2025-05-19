@@ -73,6 +73,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **BrighterScript:** [rokucommunity/vscode-brightscript-language](https://github.com/rokucommunity/vscode-brightscript-language)
 - **Brightscript:** [rokucommunity/vscode-brightscript-language](https://github.com/rokucommunity/vscode-brightscript-language)
 - **Browserslist:** [browserslist/browserslist-vscode](https://github.com/browserslist/browserslist-vscode)
+- **BuildStream:** [atom/language-yaml](https://github.com/atom/language-yaml)
 - **C:** [tree-sitter/tree-sitter-c](https://github.com/tree-sitter/tree-sitter-c) 🐌
 - **C#:** [tree-sitter/tree-sitter-c-sharp](https://github.com/tree-sitter/tree-sitter-c-sharp) 🐌
 - **C++:** [mikomikotaishi/c.tmbundle](https://github.com/mikomikotaishi/c.tmbundle)
