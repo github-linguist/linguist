@@ -313,6 +313,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_bst_by_heuristics
+    assert_heuristics({
+      "BibTeX Style" => all_fixtures("BibTeX Style", "*.bst"),
+      "BuildStream" => all_fixtures("BuildStream", "*.bst")
+    })
+  end
+
   def test_builds_by_heuristics
     assert_heuristics({
       nil => all_fixtures("Text"),
