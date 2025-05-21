@@ -1,0 +1,32 @@
+{
+  "name": "xcreprogram",
+  "scopeName": "source.xcreprogram",
+  "patterns": [
+    {
+      "match": "@[a-zA-Z_-]+(?=\\()",
+      "name": "keyword.control.xcreprogram"
+    },
+    {
+      "match": "\\bmainl\\b",
+      "name": "entity.name.function.mainl.xcreprogram"
+    },
+    {
+      "match": "->",
+      "name": "keyword.operator.arrow.xcreprogram"
+    },
+    {
+      "match": "\\bobj\\b",
+      "name": "variable.parameter.obj.xcreprogram"
+    },
+    {
+      "match": "\"[^\"]*\"",
+      "name": "string.quoted.double.xcreprogram"
+    },
+    {
+      "match": ";",
+      "name": "punctuation.terminator.statement.xcreprogram"
+    }
+  ],
+  "fileTypes": ["xcre"],
+  "uuid": "XCRE-LMN-LNG"
+}
