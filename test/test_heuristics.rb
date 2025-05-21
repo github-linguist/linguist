@@ -511,7 +511,6 @@ class TestHeuristics < Minitest::Test
       "GLSL" => all_fixtures("GLSL", "*.gs"),
       "Genie" => all_fixtures("Genie", "*.gs") - ambiguous,
       "Gosu" => all_fixtures("Gosu", "*.gs"),
-      "MiniScript" => all_fixtures("MiniScript", "*.gs"),
     })
     assert_heuristics({
       nil => all_fixtures("JavaScript")
@@ -977,12 +976,6 @@ class TestHeuristics < Minitest::Test
       "PLpgSQL" => all_fixtures("PLpgSQL", "*.sql"),
       "SQLPL" => ["SQLPL/trigger.sql"],
       "PLSQL" => all_fixtures("PLSQL", "*.sql")
-    })
-  end
-
-  def test_src_by_heuristics
-    assert_heuristics({
-      "MiniScript" => all_fixtures("MiniScript", "*.src")
     })
   end
 

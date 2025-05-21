@@ -334,8 +334,6 @@ disambiguations:
     pattern: '^uses (java|gw)\.'
   - language: Genie
     pattern: '^\[indent=[0-9]+\]'
-  - language: MiniScript
-    pattern: '^\s*\bend (?:function|while|if|for)\b|\s\b(?:isa)\b\s'
 - extensions: ['.gsc']
   rules:
   - language: GSC
@@ -775,10 +773,6 @@ disambiguations:
   - language: TSQL
     pattern: '(?i:^\s*GO\b|BEGIN(\s+TRY|\s+CATCH)|OUTPUT\s+INSERTED|DECLARE\s+@|\[dbo\])'
   - language: SQL
-- extensions: ['.src']
-  rules:
-  - language: MiniScript
-    pattern: '^\s*\bend (?:function|while|if|for)\b|\s\b(?:isa)\b\s'
 - extensions: ['.srt']
   rules:
   - language: SubRip Text
