@@ -1,0 +1,300 @@
+// string.smod - String manipulation utilities for Sona
+// This is a core standard library module
+
+// String transformation
+func upper(s) {
+    // Convert string to uppercase
+    return _native_string_upper(s)
+}
+
+func lower(s) {
+    // Convert string to lowercase
+    return _native_string_lower(s)
+}
+
+func capitalize(s) {
+    if eq(length(s), 0) {
+        return s
+    }
+    
+    let first = upper(substr(s, 0, 1))
+    let rest = lower(substr(s, 1, length(s)))
+    
+    return first + rest
+}
+
+func strip(s) {
+    // Remove whitespace from beginning and end
+    return _native_string_strip(s)
+}
+
+func lstrip(s) {
+    // Remove whitespace from beginning
+    return _native_string_lstrip(s)
+}
+
+func rstrip(s) {
+    // Remove whitespace from end
+    return _native_string_rstrip(s)
+}
+
+// String information
+func length(s) {
+    // Get string length
+    return _native_string_length(s)
+}
+
+func is_empty(s) {
+    return eq(length(s), 0)
+}
+
+func is_numeric(s) {
+    // Check if string is numeric
+    if eq(length(s), 0) {
+        return 0
+    }
+    
+    let i = 0
+    let has_decimal = 0
+    let has_sign = 0
+    
+    // Check for sign at beginning
+    if eq(substr(s, 0, 1), "-") || eq(substr(s, 0, 1), "+") {
+        let has_sign = 1
+        let i = 1
+    }
+    
+    // Must have at least one digit after sign
+    if eq(length(s), has_sign) {
+        return 0
+    }
+    
+    while lt(i, length(s)) {
+        let char = substr(s, i, add(i, 1))
+        
+        if eq(char, ".") {
+            if has_decimal {
+                // Multiple decimal points not allowed
+                return 0
+            }
+            let has_decimal = 1
+        } else if lt(char, "0") || gt(char, "9") {
+            // Non-digit character found
+            return 0
+        }
+        
+        let i = add(i, 1)
+    }
+    
+    return 1
+}
+
+func is_alpha(s) {
+    // Check if string contains only alphabetic characters
+    if eq(length(s), 0) {
+        return 0
+    }
+    
+    let i = 0
+    while lt(i, length(s)) {
+        let char = lower(substr(s, i, add(i, 1)))
+        if lt(char, "a") || gt(char, "z") {
+            return 0
+        }
+        let i = add(i, 1)
+    }
+    
+    return 1
+}
+
+func is_alnum(s) {
+    // Check if string contains only alphanumeric characters
+    if eq(length(s), 0) {
+        return 0
+    }
+    
+    let i = 0
+    while lt(i, length(s)) {
+        let char = lower(substr(s, i, add(i, 1)))
+        if !((gte(char, "a") && lte(char, "z")) || (gte(char, "0") && lte(char, "9"))) {
+            return 0
+        }
+        let i = add(i, 1)
+    }
+    
+    return 1
+}
+
+// String operations
+func substr(s, start, end) {
+    // Extract substring from start to end (exclusive)
+    return _native_string_substr(s, start, end)
+}
+
+func contains(s, substr) {
+    // Check if string contains substring
+    return _native_string_contains(s, substr)
+}
+
+func starts_with(s, prefix) {
+    // Check if string starts with prefix
+    if lt(length(s), length(prefix)) {
+        return 0
+    }
+    
+    return eq(substr(s, 0, length(prefix)), prefix)
+}
+
+func ends_with(s, suffix) {
+    // Check if string ends with suffix
+    if lt(length(s), length(suffix)) {
+        return 0
+    }
+    
+    return eq(substr(s, subtract(length(s), length(suffix)), length(s)), suffix)
+}
+
+func index_of(s, substr) {
+    // Find first occurrence of substring
+    return _native_string_index_of(s, substr)
+}
+
+func last_index_of(s, substr) {
+    // Find last occurrence of substring
+    return _native_string_last_index_of(s, substr)
+}
+
+func count(s, substr) {
+    // Count occurrences of substring
+    if eq(length(substr), 0) {
+        return add(length(s), 1)
+    }
+    
+    let count = 0
+    let start = 0
+    let found = index_of(substr(s, start, length(s)), substr)
+    
+    while gte(found, 0) {
+        let count = add(count, 1)
+        let start = add(add(start, found), length(substr))
+        
+        if gte(start, length(s)) {
+            break
+        }
+        
+        let found = index_of(substr(s, start, length(s)), substr)
+    }
+    
+    return count
+}
+
+// String modification
+func replace(s, old, new) {
+    // Replace all occurrences of 'old' with 'new'
+    return _native_string_replace(s, old, new)
+}
+
+func insert(s, index, text) {
+    // Insert text at index
+    if lt(index, 0) || gt(index, length(s)) {
+        print("Error: Index out of bounds")
+        return s
+    }
+    
+    let before = substr(s, 0, index)
+    let after = substr(s, index, length(s))
+    
+    return before + text + after
+}
+
+func remove(s, start, end) {
+    // Remove substring from start to end
+    if lt(start, 0) || gt(end, length(s)) || gt(start, end) {
+        print("Error: Invalid range")
+        return s
+    }
+    
+    let before = substr(s, 0, start)
+    let after = substr(s, end, length(s))
+    
+    return before + after
+}
+
+// String splitting and joining
+func split(s, delimiter) {
+    // Split string by delimiter
+    return _native_string_split(s, delimiter)
+}
+
+func join(arr, delimiter) {
+    // Join array elements with delimiter
+    if eq(array.length(arr), 0) {
+        return ""
+    }
+    
+    let result = array.get(arr, 0)
+    let i = 1
+    
+    while lt(i, array.length(arr)) {
+        let result = result + delimiter + array.get(arr, i)
+        let i = add(i, 1)
+    }
+    
+    return result
+}
+
+// Padding and alignment
+func pad_left(s, length, char) {
+    // Pad string on left to specified length
+    if gte(length(s), length) {
+        return s
+    }
+    
+    let padding_length = subtract(length, length(s))
+    let padding = ""
+    let i = 0
+    
+    while lt(i, padding_length) {
+        let padding = padding + char
+        let i = add(i, 1)
+    }
+    
+    return padding + s
+}
+
+func pad_right(s, length, char) {
+    // Pad string on right to specified length
+    if gte(length(s), length) {
+        return s
+    }
+    
+    let padding_length = subtract(length, length(s))
+    let padding = ""
+    let i = 0
+    
+    while lt(i, padding_length) {
+        let padding = padding + char
+        let i = add(i, 1)
+    }
+    
+    return s + padding
+}
+
+func center(s, length, char) {
+    // Center string with padding
+    if gte(length(s), length) {
+        return s
+    }
+    
+    let padding_length = subtract(length, length(s))
+    let left_padding = divide(padding_length, 2)
+    let right_padding = subtract(padding_length, left_padding)
+    
+    return pad_left(pad_right(s, add(length(s), right_padding), char), length, char)
+}
+
+// Module initialization
+func _init_module() {
+    print("String module initialized")
+    return 1
+}

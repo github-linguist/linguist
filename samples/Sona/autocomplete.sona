@@ -1,0 +1,233 @@
+// autocomplete_tool.sona - Text prediction and autocomplete utility
+import native_stdin
+import utils.string.smod as str
+import utils.math.smod as math
+import utils.array.smod as array
+
+// Dictionary of common words and phrases
+let dictionary = array.new()
+
+// Initialize dictionary with common programming terms
+func init_dictionary() {
+    // Programming languages
+    array.push(dictionary, "python")
+    array.push(dictionary, "javascript")
+    array.push(dictionary, "java")
+    array.push(dictionary, "ruby")
+    array.push(dictionary, "sona")
+    array.push(dictionary, "c++")
+    array.push(dictionary, "golang")
+    array.push(dictionary, "swift")
+    array.push(dictionary, "kotlin")
+    array.push(dictionary, "rust")
+    
+    // Programming concepts
+    array.push(dictionary, "function")
+    array.push(dictionary, "variable")
+    array.push(dictionary, "class")
+    array.push(dictionary, "object")
+    array.push(dictionary, "inheritance")
+    array.push(dictionary, "polymorphism")
+    array.push(dictionary, "encapsulation")
+    array.push(dictionary, "abstraction")
+    array.push(dictionary, "algorithm")
+    array.push(dictionary, "data structure")
+    
+    // Sona specific terms
+    array.push(dictionary, "import")
+    array.push(dictionary, "module")
+    array.push(dictionary, "smod")
+    array.push(dictionary, "native_stdin")
+    array.push(dictionary, "let")
+    array.push(dictionary, "func")
+    array.push(dictionary, "return")
+    array.push(dictionary, "if")
+    array.push(dictionary, "else")
+    array.push(dictionary, "while")
+    array.push(dictionary, "for")
+    array.push(dictionary, "in")
+    array.push(dictionary, "to")
+}
+
+// Find matches for a prefix
+func find_matches(prefix) {
+    let matches = array.new()
+    let lower_prefix = str.lower(prefix)
+    
+    let i = 0
+    while math.lt(i, array.length(dictionary)) {
+        let word = array.get(dictionary, i)
+        let lower_word = str.lower(word)
+        
+        if str.starts_with(lower_word, lower_prefix) {
+            array.push(matches, word)
+        }
+        
+        let i = math.add(i, 1)
+    }
+    
+    return matches
+}
+
+// Display matches
+func display_matches(matches) {
+    if math.eq(array.length(matches), 0) {
+        print("No matches found.")
+        return
+    }
+    
+    print("Found " + math.to_str(array.length(matches)) + " matches:")
+    
+    let i = 0
+    while math.lt(i, array.length(matches)) {
+        print("  " + math.to_str(math.add(i, 1)) + ". " + array.get(matches, i))
+        let i = math.add(i, 1)
+    }
+}
+
+// Calculate similarity score between two strings (simplified)
+func similarity_score(s1, s2) {
+    let lower_s1 = str.lower(s1)
+    let lower_s2 = str.lower(s2)
+    
+    let min_len = math.min(str.length(lower_s1), str.length(lower_s2))
+    let max_len = math.max(str.length(lower_s1), str.length(lower_s2))
+    
+    // Count matching characters
+    let matches = 0
+    let i = 0
+    while math.lt(i, min_len) {
+        if math.eq(str.substr(lower_s1, i, math.add(i, 1)), str.substr(lower_s2, i, math.add(i, 1))) {
+            let matches = math.add(matches, 1)
+        }
+        let i = math.add(i, 1)
+    }
+    
+    // Calculate similarity as percentage
+    return math.multiply(math.divide(matches, max_len), 100)
+}
+
+// Find similar words (not just prefix matches)
+func find_similar(word) {
+    let similar = array.new()
+    let scores = array.new()
+    
+    let i = 0
+    while math.lt(i, array.length(dictionary)) {
+        let dict_word = array.get(dictionary, i)
+        let score = similarity_score(word, dict_word)
+        
+        // Only include words with similarity above threshold
+        if math.gt(score, 40) {
+            array.push(similar, dict_word)
+            array.push(scores, score)
+        }
+        
+        let i = math.add(i, 1)
+    }
+    
+    return [similar, scores]
+}
+
+// Display similar words with scores
+func display_similar(similar, scores) {
+    if math.eq(array.length(similar), 0) {
+        print("No similar words found.")
+        return
+    }
+    
+    print("Similar words:")
+    
+    let i = 0
+    while math.lt(i, array.length(similar)) {
+        let word = array.get(similar, i)
+        let score = array.get(scores, i)
+        print("  " + word + " (similarity: " + math.to_str(math.round(score)) + "%)")
+        let i = math.add(i, 1)
+    }
+}
+
+// Add custom word to dictionary
+func add_to_dictionary(word) {
+    // Check if word already exists
+    let i = 0
+    while math.lt(i, array.length(dictionary)) {
+        if math.eq(str.lower(array.get(dictionary, i)), str.lower(word)) {
+            print("Word already exists in dictionary.")
+            return
+        }
+        let i = math.add(i, 1)
+    }
+    
+    array.push(dictionary, word)
+    print("Added '" + word + "' to dictionary.")
+}
+
+// Main autocomplete function
+func run_autocomplete() {
+    init_dictionary()
+    
+    print("""
+    =======================================
+       Sona Autocomplete Tool v1.0
+    =======================================
+    Commands:
+      :prefix <text>   - Find words starting with prefix
+      :similar <text>  - Find similar words
+      :add <text>      - Add word to dictionary
+      :list            - List all words in dictionary
+      :exit            - Exit the tool
+    =======================================
+    """)
+    
+    let running = 1
+    while math.eq(running, 1) {
+        let input = native_stdin.input("\nEnter command: ")
+        
+        if str.starts_with(input, ":prefix ") {
+            let prefix = str.substr(input, 8, str.length(input))
+            if math.gt(str.length(prefix), 0) {
+                let matches = find_matches(prefix)
+                display_matches(matches)
+            } else {
+                print("Please provide a prefix.")
+            }
+        } else if str.starts_with(input, ":similar ") {
+            let word = str.substr(input, 9, str.length(input))
+            if math.gt(str.length(word), 0) {
+                let result = find_similar(word)
+                let similar = array.get(result, 0)
+                let scores = array.get(result, 1)
+                display_similar(similar, scores)
+            } else {
+                print("Please provide a word.")
+            }
+        } else if str.starts_with(input, ":add ") {
+            let word = str.substr(input, 5, str.length(input))
+            if math.gt(str.length(word), 0) {
+                add_to_dictionary(word)
+            } else {
+                print("Please provide a word to add.")
+            }
+        } else if math.eq(input, ":list") {
+            print("Dictionary contains " + math.to_str(array.length(dictionary)) + " words:")
+            let i = 0
+            while math.lt(i, array.length(dictionary)) {
+                if math.eq(math.mod(i, 5), 0) {
+                    print("  " + array.get(dictionary, i))
+                } else {
+                    print("  " + array.get(dictionary, i))
+                }
+                let i = math.add(i, 1)
+            }
+        } else if math.eq(input, ":exit") {
+            print("Exiting Sona Autocomplete Tool. Goodbye!")
+            let running = 0
+        } else {
+            print("Unknown command. Type :prefix, :similar, :add, :list, or :exit.")
+        }
+    }
+}
+
+// Run the autocomplete tool
+run_autocomplete()

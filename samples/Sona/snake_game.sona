@@ -1,0 +1,214 @@
+// snake_game.sona - Simple implementation of the Snake game in Sona
+import native_stdin
+import utils.math.smod as math
+import utils.string.smod as str
+import utils.array.smod as array
+import utils.time.smod as time
+
+// Constants
+let WIDTH = 20
+let HEIGHT = 10
+let EMPTY = " "
+let SNAKE = "O"
+let FOOD = "X"
+let UP = "w"
+let DOWN = "s"
+let LEFT = "a"
+let RIGHT = "d"
+
+// Game state
+let snake_x = array.new()
+let snake_y = array.new()
+let food_x = 0
+let food_y = 0
+let direction = RIGHT
+let game_over = 0
+let score = 0
+
+// Initialize the game
+func init_game() {
+    // Create initial snake (length 3)
+    array.push(snake_x, 5)
+    array.push(snake_y, 5)
+    array.push(snake_x, 4)
+    array.push(snake_y, 5)
+    array.push(snake_x, 3)
+    array.push(snake_y, 5)
+    
+    // Place initial food
+    place_food()
+}
+
+// Place food at random position
+func place_food() {
+    let valid_position = 0
+    
+    while math.eq(valid_position, 0) {
+        let food_x = math.floor(math.multiply(math.random(), WIDTH))
+        let food_y = math.floor(math.multiply(math.random(), HEIGHT))
+        
+        // Check if position is valid (not on snake)
+        let valid_position = 1
+        let i = 0
+        while math.lt(i, array.length(snake_x)) {
+            if math.eq(array.get(snake_x, i), food_x) && math.eq(array.get(snake_y, i), food_y) {
+                let valid_position = 0
+                break
+            }
+            let i = math.add(i, 1)
+        }
+    }
+}
+
+// Draw the game board
+func draw_board() {
+    // Clear screen (simulate with newlines)
+    print("\n\n\n\n\n\n\n\n\n\n")
+    
+    // Print score
+    print("Score: " + math.to_str(score))
+    
+    // Top border
+    let border = ""
+    let i = 0
+    while math.lt(i, math.add(WIDTH, 2)) {
+        let border = border + "-"
+        let i = math.add(i, 1)
+    }
+    print(border)
+    
+    // Draw rows
+    let y = 0
+    while math.lt(y, HEIGHT) {
+        let row = "|"
+        
+        let x = 0
+        while math.lt(x, WIDTH) {
+            let cell = EMPTY
+            
+            // Check if cell contains snake
+            let i = 0
+            while math.lt(i, array.length(snake_x)) {
+                if math.eq(array.get(snake_x, i), x) && math.eq(array.get(snake_y, i), y) {
+                    let cell = SNAKE
+                    break
+                }
+                let i = math.add(i, 1)
+            }
+            
+            // Check if cell contains food
+            if math.eq(x, food_x) && math.eq(y, food_y) {
+                let cell = FOOD
+            }
+            
+            let row = row + cell
+            let x = math.add(x, 1)
+        }
+        
+        let row = row + "|"
+        print(row)
+        let y = math.add(y, 1)
+    }
+    
+    // Bottom border
+    print(border)
+    
+    // Instructions
+    print("Controls: " + UP + " (up), " + LEFT + " (left), " + DOWN + " (down), " + RIGHT + " (right), q (quit)")
+}
+
+// Update snake position
+func update() {
+    // Get snake head position
+    let head_x = array.get(snake_x, 0)
+    let head_y = array.get(snake_y, 0)
+    
+    // Calculate new head position based on direction
+    let new_head_x = head_x
+    let new_head_y = head_y
+    
+    if math.eq(direction, UP) {
+        let new_head_y = math.subtract(head_y, 1)
+    } else if math.eq(direction, DOWN) {
+        let new_head_y = math.add(head_y, 1)
+    } else if math.eq(direction, LEFT) {
+        let new_head_x = math.subtract(head_x, 1)
+    } else if math.eq(direction, RIGHT) {
+        let new_head_x = math.add(head_x, 1)
+    }
+    
+    // Check for collisions with walls
+    if math.lt(new_head_x, 0) || math.ge(new_head_x, WIDTH) || 
+       math.lt(new_head_y, 0) || math.ge(new_head_y, HEIGHT) {
+        let game_over = 1
+        return
+    }
+    
+    // Check for collisions with self
+    let i = 0
+    while math.lt(i, array.length(snake_x)) {
+        if math.eq(array.get(snake_x, i), new_head_x) && math.eq(array.get(snake_y, i), new_head_y) {
+            let game_over = 1
+            return
+        }
+        let i = math.add(i, 1)
+    }
+    
+    // Check if food eaten
+    let ate_food = 0
+    if math.eq(new_head_x, food_x) && math.eq(new_head_y, food_y) {
+        let ate_food = 1
+        let score = math.add(score, 10)
+        place_food()
+    }
+    
+    // Move snake: add new head
+    array.unshift(snake_x, new_head_x)
+    array.unshift(snake_y, new_head_y)
+    
+    // Remove tail if no food eaten
+    if math.eq(ate_food, 0) {
+        array.pop(snake_x)
+        array.pop(snake_y)
+    }
+}
+
+// Main game loop
+func run_game() {
+    init_game()
+    
+    while math.eq(game_over, 0) {
+        draw_board()
+        
+        // Get input (non-blocking simulation)
+        print("Enter move: ")
+        let input = native_stdin.input_with_timeout(0.5)
+        
+        if math.eq(input, "q") {
+            break
+        }
+        
+        // Update direction if valid input
+        if math.eq(input, UP) || math.eq(input, DOWN) || 
+           math.eq(input, LEFT) || math.eq(input, RIGHT) {
+            let direction = input
+        }
+        
+        // Update game state
+        update()
+        
+        // Add a delay
+        time.sleep(0.2)
+    }
+    
+    if math.eq(game_over, 1) {
+        print("\nGame Over! Final score: " + math.to_str(score))
+    } else {
+        print("\nYou quit the game. Final score: " + math.to_str(score))
+    }
+}
+
+// Start the game
+print("Welcome to Sona Snake Game!")
+print("==========================")
+run_game()

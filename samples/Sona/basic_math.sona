@@ -1,0 +1,44 @@
+// basic_math.sona - Demonstrates mathematical operations in Sona
+import utils.math.smod as math
+
+// Basic arithmetic operations
+let a = 10
+let b = 5
+
+print("Basic Arithmetic:")
+print("a = " + math.to_str(a) + ", b = " + math.to_str(b))
+print("Addition: a + b = " + math.to_str(math.add(a, b)))
+print("Subtraction: a - b = " + math.to_str(math.subtract(a, b)))
+print("Multiplication: a * b = " + math.to_str(math.multiply(a, b)))
+print("Division: a / b = " + math.to_str(math.divide(a, b)))
+
+// Mathematical constants
+print("\nMathematical Constants:")
+print("Pi: " + math.to_str(math.PI))
+print("e: " + math.to_str(math.E))
+
+// More complex operations
+print("\nAdvanced Operations:")
+let radius = 7.5
+let area = math.multiply(math.PI, math.multiply(radius, radius))
+print("Area of circle with radius " + math.to_str(radius) + ": " + math.to_str(area))
+
+// Power and square root
+let base = 2
+let exponent = 8
+let power_result = math.pow(base, exponent)
+print(math.to_str(base) + " raised to power " + math.to_str(exponent) + " = " + math.to_str(power_result))
+
+let number = 16
+let sqrt_result = math.sqrt(number)
+print("Square root of " + math.to_str(number) + " = " + math.to_str(sqrt_result))
+
+// Temperature conversion example
+func celsius_to_fahrenheit(celsius) {
+    return math.add(math.multiply(celsius, 1.8), 32)
+}
+
+let temp_c = 25
+let temp_f = celsius_to_fahrenheit(temp_c)
+print("\nTemperature Conversion:")
+print(math.to_str(temp_c) + "°C = " + math.to_str(temp_f) + "°F")

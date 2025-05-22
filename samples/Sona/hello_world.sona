@@ -1,0 +1,32 @@
+// hello_world.sona - A simple introduction to Sona
+// This program demonstrates basic printing and string operations
+
+// Print a simple greeting
+print("Hello, World!")
+
+// String variable declaration and usage
+let name = "Sona"
+let version = "0.5.1"
+print("Welcome to " + name + " version " + version)
+
+// Multi-line string (triple-quoted)
+let about = """
+Sona is a modern programming language 
+designed for simplicity and creativity.
+It combines the readability of Python
+with powerful new language features.
+"""
+
+print(about)
+
+// Basic function creation and invocation
+func personalized_greeting(user_name) {
+    return "Hello, " + user_name + "! Welcome to Sona programming."
+}
+
+// Get greeting for a user
+let greeting = personalized_greeting("Developer")
+print(greeting)
+
+// Print information about the language
+print("Ready to build something amazing!")

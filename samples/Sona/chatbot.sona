@@ -1,0 +1,171 @@
+// chatbot.sona - Simple pattern-matching chatbot in Sona
+import native_stdin
+import utils.string.smod as str
+import utils.math.smod as math
+import utils.array.smod as array
+import utils.time.smod as time
+
+// ChatBot class simulation using functions and variables
+let bot_name = "SonaBot"
+let user_name = ""
+let conversation_count = 0
+let last_topic = ""
+
+// Knowledge base (patterns and responses)
+let patterns = array.new()
+let responses = array.new()
+
+// Initialize patterns and responses
+func init_knowledge_base() {
+    // Greetings
+    array.push(patterns, "hello")
+    array.push(responses, "Hello there! How are you doing today?")
+    
+    array.push(patterns, "hi")
+    array.push(responses, "Hi! Nice to chat with you.")
+    
+    array.push(patterns, "hey")
+    array.push(responses, "Hey! What's up?")
+    
+    // Questions about the bot
+    array.push(patterns, "what is your name")
+    array.push(responses, "I'm " + bot_name + ", a simple chatbot written in Sona!")
+    
+    array.push(patterns, "who are you")
+    array.push(responses, "I'm " + bot_name + ", a pattern-matching chatbot. I was created to demonstrate Sona's capabilities.")
+    
+    // Questions about Sona
+    array.push(patterns, "what is sona")
+    array.push(responses, "Sona is a modern programming language designed for simplicity and creativity. It's the language I'm written in!")
+    
+    array.push(patterns, "tell me about sona")
+    array.push(responses, "Sona is a new programming language that combines the readability of Python with powerful new features. It's perfect for beginners and experts alike.")
+    
+    // Help
+    array.push(patterns, "help")
+    array.push(responses, "I can chat about various topics. Try asking me about Sona, about myself, or just have a casual conversation!")
+    
+    // Farewells
+    array.push(patterns, "bye")
+    array.push(responses, "Goodbye! It was nice chatting with you.")
+    
+    array.push(patterns, "exit")
+    array.push(responses, "Exiting chat. Have a great day!")
+    
+    // Default responses
+    array.push(patterns, "default")
+    array.push(responses, "Interesting! Tell me more about that.")
+    
+    array.push(patterns, "unknown")
+    array.push(responses, "I'm not sure I understand. Can you rephrase that?")
+}
+
+// Find best matching pattern for input
+func find_response(input) {
+    let lower_input = str.lower(input)
+    
+    // Check each pattern
+    let i = 0
+    while math.lt(i, array.length(patterns)) {
+        let pattern = array.get(patterns, i)
+        
+        // Skip default patterns
+        if math.not_eq(pattern, "default") && math.not_eq(pattern, "unknown") {
+            if str.contains(lower_input, pattern) {
+                return array.get(responses, i)
+            }
+        }
+        
+        let i = math.add(i, 1)
+    }
+    
+    // No match found, return default response
+    if math.eq(math.mod(math.floor(math.multiply(math.random(), 3)), 2), 0) {
+        // Find index of "default" pattern
+        let j = 0
+        while math.lt(j, array.length(patterns)) {
+            if math.eq(array.get(patterns, j), "default") {
+                return array.get(responses, j)
+            }
+            let j = math.add(j, 1)
+        }
+    } else {
+        // Find index of "unknown" pattern
+        let j = 0
+        while math.lt(j, array.length(patterns)) {
+            if math.eq(array.get(patterns, j), "unknown") {
+                return array.get(responses, j)
+            }
+            let j = math.add(j, 1)
+        }
+    }
+    
+    // Fallback response if patterns aren't found
+    return "I'm not sure how to respond to that."
+}
+
+// Get user's name
+func get_user_name() {
+    let name = native_stdin.input("What's your name? ")
+    if math.eq(str.length(name), 0) {
+        return "friend"
+    }
+    return name
+}
+
+// Display welcome message
+func display_welcome() {
+    print("""
+    ==================================
+           Welcome to SonaBot!
+    ==================================
+    A simple chatbot written in Sona.
+    Type 'bye' or 'exit' to end chat.
+    Type 'help' for assistance.
+    ==================================
+    """)
+}
+
+// Main chatbot function
+func run_chatbot() {
+    display_welcome()
+    init_knowledge_base()
+    
+    let user_name = get_user_name()
+    print("\nNice to meet you, " + user_name + "! How can I help you today?")
+    
+    let chatting = 1
+    while math.eq(chatting, 1) {
+        let input = native_stdin.input("\nYou: ")
+        
+        // Simulate thinking
+        print("Thinking...")
+        time.sleep(0.5)
+        
+        // Check for exit command
+        let lower_input = str.lower(input)
+        if math.eq(lower_input, "bye") || math.eq(lower_input, "exit") {
+            print("\n" + bot_name + ": " + find_response(lower_input))
+            let chatting = 0
+            continue
+        }
+        
+        // Get and display response
+        let response = find_response(input)
+        print("\n" + bot_name + ": " + response)
+        
+        // Update conversation count
+        let conversation_count = math.add(conversation_count, 1)
+        
+        // Add occasional follow-up question after several exchanges
+        if math.eq(math.mod(conversation_count, 3), 0) {
+            time.sleep(0.8)
+            print("\n" + bot_name + ": By the way, what do you think about programming languages?")
+        }
+    }
+    
+    print("\nThank you for chatting with " + bot_name + "! Have a great day, " + user_name + "!")
+}
+
+// Start the chatbot
+run_chatbot()

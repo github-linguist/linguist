@@ -1,0 +1,180 @@
+// io.smod - Input/output operations for Sona
+// This is a core standard library module
+
+// File reading and writing
+func read_file(path) {
+    // Read entire file contents as string
+    return _native_read_file(path)
+}
+
+func write_file(path, content) {
+    // Write string content to file
+    return _native_write_file(path, content)
+}
+
+func append_file(path, content) {
+    // Append string content to existing file
+    return _native_append_file(path, content)
+}
+
+func file_exists(path) {
+    // Check if file exists
+    return _native_file_exists(path)
+}
+
+func delete_file(path) {
+    // Delete a file
+    return _native_delete_file(path)
+}
+
+// Directory operations
+func list_dir(path) {
+    // List files and subdirectories in directory
+    return _native_list_dir(path)
+}
+
+func make_dir(path) {
+    // Create directory
+    return _native_make_dir(path)
+}
+
+func remove_dir(path) {
+    // Remove directory (must be empty)
+    return _native_remove_dir(path)
+}
+
+// Path operations
+func join_path(path1, path2) {
+    // Join two path components
+    return _native_join_path(path1, path2)
+}
+
+func base_name(path) {
+    // Get filename component of path
+    return _native_base_name(path)
+}
+
+func dir_name(path) {
+    // Get directory component of path
+    return _native_dir_name(path)
+}
+
+func absolute_path(path) {
+    // Get absolute path
+    return _native_absolute_path(path)
+}
+
+// Advanced file operations
+func read_lines(path) {
+    // Read file into array of lines
+    let content = read_file(path)
+    return string.split(content, "\n")
+}
+
+func write_lines(path, lines) {
+    // Write array of lines to file
+    let content = string.join(lines, "\n")
+    return write_file(path, content)
+}
+
+func read_csv(path, delimiter) {
+    // Read CSV file into array of arrays
+    if eq(delimiter, null) {
+        let delimiter = ","
+    }
+    
+    let lines = read_lines(path)
+    let result = array.new()
+    
+    let i = 0
+    while lt(i, array.length(lines)) {
+        let line = array.get(lines, i)
+        if !string.is_empty(line) {
+            let fields = string.split(line, delimiter)
+            array.push(result, fields)
+        }
+        let i = add(i, 1)
+    }
+    
+    return result
+}
+
+func write_csv(path, data, delimiter) {
+    // Write array of arrays to CSV file
+    if eq(delimiter, null) {
+        let delimiter = ","
+    }
+    
+    let lines = array.new()
+    
+    let i = 0
+    while lt(i, array.length(data)) {
+        let row = array.get(data, i)
+        let line = string.join(row, delimiter)
+        array.push(lines, line)
+        let i = add(i, 1)
+    }
+    
+    return write_lines(path, lines)
+}
+
+// Standard input/output functions
+func input(prompt) {
+    // Get input from user with prompt
+    return _native_input(prompt)
+}
+
+func print(msg) {
+    // Print message to standard output
+    _native_print(msg)
+    return null
+}
+
+func println(msg) {
+    // Print message with newline
+    _native_print(msg + "\n")
+    return null
+}
+
+// Stream operations
+func open_file(path, mode) {
+    // Open file in specified mode (r, w, a)
+    return _native_open_file(path, mode)
+}
+
+func close_file(file_handle) {
+    // Close file
+    return _native_close_file(file_handle)
+}
+
+func read_line(file_handle) {
+    // Read single line from file
+    return _native_read_line(file_handle)
+}
+
+func write_line(file_handle, line) {
+    // Write line to file
+    return _native_write_line(file_handle, line)
+}
+
+func flush(file_handle) {
+    // Flush file buffer
+    return _native_flush(file_handle)
+}
+
+// Serialization
+func parse_json(json_str) {
+    // Parse JSON string into Sona object
+    return _native_parse_json(json_str)
+}
+
+func to_json(obj) {
+    // Convert Sona object to JSON string
+    return _native_to_json(obj)
+}
+
+// Module initialization
+func _init_module() {
+    print("IO module initialized")
+    return 1
+}

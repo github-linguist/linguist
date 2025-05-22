@@ -1,0 +1,116 @@
+// calculator.sona - Interactive calculator application in Sona
+import native_stdin
+import utils.math.smod as math
+import utils.string.smod as str
+
+// Display welcome message
+func show_welcome() {
+    print("""
+    ====================================
+            Sona Calculator v1.0
+    ====================================
+    Operations:
+      1. Addition (+)
+      2. Subtraction (-)
+      3. Multiplication (*)
+      4. Division (/)
+      5. Power (^)
+      6. Square Root (sqrt)
+      7. Exit
+    ====================================
+    """)
+}
+
+// Function to get valid number input
+func get_number(prompt) {
+    while 1 {
+        let input = native_stdin.input(prompt)
+        if str.is_numeric(input) {
+            return math.parse_float(input)
+        }
+        print("Error: Please enter a valid number.")
+    }
+}
+
+// Basic arithmetic functions
+func add(a, b) {
+    return math.add(a, b)
+}
+
+func subtract(a, b) {
+    return math.subtract(a, b)
+}
+
+func multiply(a, b) {
+    return math.multiply(a, b)
+}
+
+func divide(a, b) {
+    if math.eq(b, 0) {
+        print("Error: Cannot divide by zero!")
+        return "ERROR"
+    }
+    return math.divide(a, b)
+}
+
+func power(base, exponent) {
+    return math.pow(base, exponent)
+}
+
+func sqrt(number) {
+    if math.lt(number, 0) {
+        print("Error: Cannot calculate square root of a negative number!")
+        return "ERROR"
+    }
+    return math.sqrt(number)
+}
+
+// Main calculator function
+func run_calculator() {
+    let running = 1
+    
+    show_welcome()
+    
+    while running {
+        let choice = native_stdin.input("\nEnter operation (1-7): ")
+        
+        if math.eq(choice, "7") {
+            let running = 0
+            print("Thank you for using Sona Calculator!")
+            continue
+        }
+        
+        if math.eq(choice, "6") {
+            // Square root needs only one number
+            let num = get_number("Enter number: ")
+            let result = sqrt(num)
+            if math.not_eq(result, "ERROR") {
+                print("Square root: " + math.to_str(result))
+            }
+        } else if math.ge(math.parse_float(choice), 1) && math.le(math.parse_float(choice), 5) {
+            // Get two numbers for operations 1-5
+            let a = get_number("Enter first number: ")
+            let b = get_number("Enter second number: ")
+            
+            if math.eq(choice, "1") {
+                print("Result: " + math.to_str(add(a, b)))
+            } else if math.eq(choice, "2") {
+                print("Result: " + math.to_str(subtract(a, b)))
+            } else if math.eq(choice, "3") {
+                print("Result: " + math.to_str(multiply(a, b)))
+            } else if math.eq(choice, "4") {
+                let result = divide(a, b)
+                if math.not_eq(result, "ERROR") {
+                    print("Result: " + math.to_str(result))
+                }
+            } else if math.eq(choice, "5") {
+                print("Result: " + math.to_str(power(a, b)))
+            }
+        } else {
+            print("Invalid option. Please select from 1-7.")
+        }
+    }
+}
+
+// Run the calculator
+run_calculator()

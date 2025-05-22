@@ -1,0 +1,58 @@
+// module_usage.sona - Demonstrates importing and using Sona modules
+import * as math from 'utils.math.smod';
+import * as str from 'utils.string.smod';
+import * as array from 'utils.array.smod';
+import * as io from 'utils.io.smod';
+
+print("Sona Module Import Demonstration")
+print("===============================")
+
+// Math module usage
+print("\nMath Module Examples:")
+print("PI value: " + math.to_str(math.PI))
+print("Square root of 16: " + math.to_str(math.sqrt(16)))
+print("2^10 = " + math.to_str(math.pow(2, 10)))
+
+// String module usage
+print("\nString Module Examples:")
+let message = "hello, sona programmer!"
+print("Original: " + message)
+print("Uppercase: " + str.upper(message))
+print("Lowercase: " + str.lower(message))
+print("Length: " + math.to_str(str.length(message)))
+print("Substring (0,5): " + str.substr(message, 0, 5))
+print("Contains 'sona': " + math.to_str(str.contains(message, "sona")))
+
+// Array module usage
+print("\nArray Module Examples:")
+let my_array = array.new()
+array.push(my_array, 10)
+array.push(my_array, 20)
+array.push(my_array, 30)
+
+print("Array length: " + math.to_str(array.length(my_array)))
+print("First element: " + math.to_str(array.get(my_array, 0)))
+print("Last element: " + math.to_str(array.get(my_array, array.length(my_array) - 1)))
+
+// Modifying array
+array.set(my_array, 1, 25)
+print("Modified second element: " + math.to_str(array.get(my_array, 1)))
+
+// Array operations
+let sum = 0
+let i = 0
+while (math.lt(i, array.length(my_array))) {
+    let sum = math.add(sum, array.get(my_array, i))
+    let i = math.add(i, 1)
+}
+print("Sum of array elements: " + math.to_str(sum))
+
+// IO module usage
+print("\nIO Module Examples:")
+io.write_file("example.txt", "This is a test file created by Sona.")
+print("File written successfully.")
+
+let file_content = io.read_file("example.txt")
+print("Read from file: " + file_content)
+
+print("\nModule import aliasing allows for cleaner, more maintainable code.")

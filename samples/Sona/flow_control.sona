@@ -1,0 +1,71 @@
+// flow_control.sona - Demonstrates control flow structures in Sona
+import utils.math.smod as math
+
+// If-else statement example
+print("If-Else Statements:")
+
+let number = 42
+if math.gt(number, 50) {
+    print("Number is greater than 50")
+} else if math.eq(number, 50) {
+    print("Number is exactly 50")
+} else {
+    print("Number is less than 50")
+}
+
+// Even/odd checker with if-else
+func check_even_odd(num) {
+    if math.eq(math.mod(num, 2), 0) {
+        return "even"
+    } else {
+        return "odd"
+    }
+}
+
+print("42 is " + check_even_odd(42))
+print("17 is " + check_even_odd(17))
+
+// While loop example
+print("\nWhile Loop Example:")
+let counter = 1
+let sum = 0
+
+while math.lte(counter, 5) {
+    print("Iteration " + math.to_str(counter))
+    let sum = math.add(sum, counter)
+    let counter = math.add(counter, 1)
+}
+
+print("Sum of numbers 1 to 5: " + math.to_str(sum))
+
+// For loop example
+print("\nFor Loop Example:")
+for i in 1 to 5 {
+    print("For loop iteration: " + math.to_str(i))
+}
+
+// Nested loops for multiplication table
+print("\nMultiplication Table (1-3):")
+for i in 1 to 3 {
+    for j in 1 to 3 {
+        let product = math.multiply(i, j)
+        print(math.to_str(i) + " x " + math.to_str(j) + " = " + math.to_str(product))
+    }
+}
+
+// Function with early return
+func find_first_even(numbers) {
+    let i = 0
+    while math.lt(i, array.length(numbers)) {
+        let current = array.get(numbers, i)
+        if math.eq(math.mod(current, 2), 0) {
+            return current
+        }
+        let i = math.add(i, 1)
+    }
+    return -1  // No even number found
+}
+
+let numbers = [1, 3, 5, 8, 9]
+let first_even = find_first_even(numbers)
+print("\nFirst even number in array: " + math.to_str(first_even))

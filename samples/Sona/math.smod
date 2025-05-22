@@ -1,0 +1,285 @@
+// math.smod - Mathematical functions and constants for Sona
+// This is a core standard library module
+
+// Mathematical constants
+let PI = 3.14159265358979323846
+let E = 2.71828182845904523536
+
+// Basic arithmetic operations
+func add(a, b) {
+    return a + b
+}
+
+func subtract(a, b) {
+    return a - b
+}
+
+func multiply(a, b) {
+    return a * b
+}
+
+func divide(a, b) {
+    if eq(b, 0) {
+        print("Error: Division by zero")
+        return 0
+    }
+    return a / b
+}
+
+// Advanced mathematical functions
+func pow(base, exponent) {
+    // Basic power implementation
+    if eq(exponent, 0) {
+        return 1
+    }
+    
+    if eq(exponent, 1) {
+        return base
+    }
+    
+    if lt(exponent, 0) {
+        // Negative exponent
+        return divide(1, pow(base, negate(exponent)))
+    }
+    
+    // Integer exponent optimization
+    if eq(exponent, floor(exponent)) {
+        let result = 1
+        let i = 0
+        while lt(i, exponent) {
+            let result = multiply(result, base)
+            let i = add(i, 1)
+        }
+        return result
+    }
+    
+    // For non-integer exponents, use logarithm-based calculation
+    return exp(multiply(exponent, ln(base)))
+}
+
+func sqrt(x) {
+    if lt(x, 0) {
+        print("Error: Cannot calculate square root of negative number")
+        return 0
+    }
+    
+    // Newton's method for square root
+    let estimate = divide(x, 2)
+    let epsilon = 0.00001
+    
+    let i = 0
+    let prev = 0
+    
+    // Iterate until convergence
+    while lt(i, 100) {
+        let prev = estimate
+        let estimate = multiply(0.5, add(estimate, divide(x, estimate)))
+        
+        // Check for convergence
+        if lt(abs(subtract(estimate, prev)), epsilon) {
+            return estimate
+        }
+        
+        let i = add(i, 1)
+    }
+    
+    return estimate
+}
+
+// Logarithms
+func ln(x) {
+    // Natural logarithm implementation
+    if lte(x, 0) {
+        print("Error: Cannot calculate logarithm of non-positive number")
+        return 0
+    }
+    
+    // Implementation using Taylor series approximation
+    // ln(x) = 2 * (z + z^3/3 + z^5/5 + ...) where z = (x-1)/(x+1)
+    let z = divide(subtract(x, 1), add(x, 1))
+    let z_squared = multiply(z, z)
+    let term = z
+    let sum = z
+    
+    let i = 1
+    while lt(i, 100) {
+        let term = multiply(term, z_squared)
+        let next_term = divide(term, multiply(2, add(i, 1)))
+        let sum = add(sum, next_term)
+        
+        if lt(abs(next_term), 0.00001) {
+            break
+        }
+        
+        let i = add(i, 1)
+    }
+    
+    return multiply(2, sum)
+}
+
+func log10(x) {
+    // Base-10 logarithm
+    return divide(ln(x), ln(10))
+}
+
+// Comparison operations
+func eq(a, b) {
+    return a == b
+}
+
+func neq(a, b) {
+    return a != b
+}
+
+func lt(a, b) {
+    return a < b
+}
+
+func lte(a, b) {
+    return a <= b
+}
+
+func gt(a, b) {
+    return a > b
+}
+
+func gte(a, b) {
+    return a >= b
+}
+
+// Other utility functions
+func abs(x) {
+    if lt(x, 0) {
+        return negate(x)
+    }
+    return x
+}
+
+func negate(x) {
+    return multiply(x, -1)
+}
+
+func sign(x) {
+    if lt(x, 0) {
+        return -1
+    }
+    if gt(x, 0) {
+        return 1
+    }
+    return 0
+}
+
+func floor(x) {
+    return x - (x % 1)
+}
+
+func ceil(x) {
+    if eq(x, floor(x)) {
+        return x
+    }
+    return add(floor(x), 1)
+}
+
+func round(x) {
+    return floor(add(x, 0.5))
+}
+
+func max(a, b) {
+    if gt(a, b) {
+        return a
+    }
+    return b
+}
+
+func min(a, b) {
+    if lt(a, b) {
+        return a
+    }
+    return b
+}
+
+// Random number generation
+func random() {
+    // Returns a random number between 0 and 1
+    // Implementation depends on the native random generator
+    return _native_random()
+}
+
+func random_int(min, max) {
+    // Returns a random integer between min and max (inclusive)
+    let range = add(subtract(max, min), 1)
+    let rand = multiply(random(), range)
+    return add(floor(rand), min)
+}
+
+// Conversion utilities
+func to_str(num) {
+    // Convert number to string
+    return "" + num
+}
+
+func parse_float(str) {
+    // Parse string to float
+    return _native_parse_float(str)
+}
+
+func parse_int(str) {
+    // Parse string to integer
+    return floor(parse_float(str))
+}
+
+// Trigonometric functions
+func sin(x) {
+    // Implement using Taylor series
+    // sin(x) = x - x^3/3! + x^5/5! - ...
+    
+    // Normalize angle to -2π to 2π
+    while gt(abs(x), multiply(2, PI)) {
+        if gt(x, 0) {
+            let x = subtract(x, multiply(2, PI))
+        } else {
+            let x = add(x, multiply(2, PI))
+        }
+    }
+    
+    let term = x
+    let sum = x
+    let sign = -1
+    
+    let i = 1
+    while lt(i, 10) {
+        let term = multiply(term, multiply(x, x))
+        let term = divide(term, multiply(multiply(2, i), add(multiply(2, i), 1)))
+        let term = multiply(term, sign)
+        
+        let sum = add(sum, term)
+        let sign = multiply(sign, -1)
+        
+        let i = add(i, 1)
+    }
+    
+    return sum
+}
+
+func cos(x) {
+    // Use identity: cos(x) = sin(x + π/2)
+    return sin(add(x, divide(PI, 2)))
+}
+
+func tan(x) {
+    // tan(x) = sin(x) / cos(x)
+    let cosine = cos(x)
+    
+    if eq(cosine, 0) {
+        print("Error: Tangent undefined at this value")
+        return 0
+    }
+    
+    return divide(sin(x), cosine)
+}
+
+// Module initialization
+func _init_module() {
+    print("Math module initialized")
+    return 1
+}
