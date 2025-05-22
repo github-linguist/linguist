@@ -198,6 +198,9 @@ class TestGenerated < Minitest::Test
     # jOOQ
     generated_sample_loading_data("Java/generated-jooq-table.java")
 
+    # Package.resolved
+    generated_sample_without_loading_data("JSON/filenames/Package.resolved")
+
     # poetry
     generated_sample_without_loading_data("TOML/filenames/poetry.lock")
 
