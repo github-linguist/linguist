@@ -25,6 +25,7 @@ class TestLanguage < Minitest::Test
     assert_equal Language['Darcs Patch'], Language.find_by_alias('dpatch')
     assert_equal Language['Dart'], Language.find_by_alias('dart')
     assert_equal Language['EdgeQL'], Language.find_by_alias('esdl')
+    assert_equal Language['EdgeQL'], Language.find_by_alias('gel')
     assert_equal Language['Emacs Lisp'], Language.find_by_alias('elisp')
     assert_equal Language['Emacs Lisp'], Language.find_by_alias('emacs')
     assert_equal Language['Emacs Lisp'], Language.find_by_alias('emacs-lisp')
