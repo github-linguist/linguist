@@ -317,6 +317,28 @@ disambiguations:
     pattern: '\s*(Declare|BindGlobal|KeyDependentOperation)'
   - language: GDScript
     pattern: '\s*(extends|var|const|enum|func|class|signal|tool|yield|assert|onready)'
+- extensions: ['.gel']
+  rules:
+  - language: EdgeQL
+    pattern:
+    # We definitely want the match unicode characters as part of the \w
+    - '(?i:^\s*using\s+(extension|future)[^\n]*?;)'
+    - '(?iu:^\s*module\s+(\w+|`.+?`)\s*\{)'
+    - '(?iu:^\s*abstract\s+(inheritable\s+)?annotation\s+(\w+|`.+?`)::(\w+|`.+?`))'
+    - '(?iu:^\s*abstract\s+(constraint|index|link|property)\s+(\w+|`.+?`)::(\w+|`.+?`))'
+    - '(?iu:^\s*(alias|function)\s+(\w+|`.+?`)::(\w+|`.+?`))'
+    - '(?iu:^\s*(optional|required|single|multi)?\s*global\s+(\w+|`.+?`)::(\w+|`.+?`))'
+    - '(?iu:^\s*(abstract\s+)?(scalar\s+)?type\s+(\w+|`.+?`)::(\w+|`.+?`))'
+    negative_pattern:
+    # Check for common comments that are invalid in EdgeQL.
+    #
+    # The caveat is that they technically would be legal inside string
+    # literals, but it is extremely unlikely to have such string literals in
+    # the Gel schema (i.e. appearing as defaults or annotations). However, to
+    # reduce the possibility of false positives here we also restrict illegal
+    # comment detection to the beginning of a line.
+    - '^\/\/.+$'
+    - '^\/\*.*?\*\/'
 - extensions: ['.gml']
   rules:
   - language: XML

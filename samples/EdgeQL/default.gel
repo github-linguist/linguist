@@ -1,0 +1,16 @@
+module default {
+    abstract type HasName {
+        required name: str;
+        index on (.name);
+    }
+
+    abstract type HasEmail {
+        required email: str {
+            constraint exclusive;
+        }
+    }
+
+    type User extending HasName, HasEmail {
+        multi friends: User;
+    }
+}
