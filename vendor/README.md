@@ -381,6 +381,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Move:** [damirka/vscode-move-syntax](https://github.com/damirka/vscode-move-syntax)
 - **Muse:** [Alhadis/language-emacs-lisp](https://github.com/Alhadis/language-emacs-lisp)
 - **Mustache:** [textmate/php-smarty.tmbundle](https://github.com/textmate/php-smarty.tmbundle)
+- **MySQL View Definition Format:** [textmate/ini.tmbundle](https://github.com/textmate/ini.tmbundle)
 - **NASL:** [tenable/sublimetext-nasl](https://github.com/tenable/sublimetext-nasl)
 - **NCL:** [rpavlick/language-ncl](https://github.com/rpavlick/language-ncl)
 - **NEON:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
