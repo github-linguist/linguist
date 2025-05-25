@@ -462,7 +462,7 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "VBA" => all_fixtures("VBA", "*.frm"),
       "Visual Basic 6.0" => all_fixtures("Visual Basic 6.0", "*.frm"),
-      "MySQL View Definition Format" => all_fixtures("MySQL View Definition Format", "*.frm"),
+      "INI" => all_fixtures("INI", "*.frm"),
     })
   end
 

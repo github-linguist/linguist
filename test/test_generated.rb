@@ -114,8 +114,8 @@ class TestGenerated < Minitest::Test
     # Minified files
     generated_sample_loading_data("JavaScript/jquery-1.6.1.min.js")
 
-    # MySQL View Definition Format
-    generated_sample_loading_data("MySQL View Definition Format/metrics.frm")
+    # MySQL View Definition Format (INI)
+    generated_sample_loading_data("INI/metrics.frm")
 
     # JavaScript with source-maps
     generated_sample_loading_data("JavaScript/namespace.js")
