@@ -264,6 +264,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **ISPC:** [ispc/ispc.syntax](https://github.com/ispc/ispc.syntax)
 - **Idris:** [idris-hackers/idris-sublime](https://github.com/idris-hackers/idris-sublime)
 - **Ignore List:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
+- **ImHex Pattern Language:** [WerWolv/PatternLanguage-Grammar](https://github.com/WerWolv/PatternLanguage-Grammar)
 - **Imba:** [imba/imba-linguist-grammar](https://github.com/imba/imba-linguist-grammar)
 - **Inform 7:** [iftechfoundation/language-inform7](https://github.com/iftechfoundation/language-inform7)
 - **Ink:** [inkle/ink-tmlanguage](https://github.com/inkle/ink-tmlanguage)
