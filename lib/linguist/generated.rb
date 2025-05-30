@@ -67,6 +67,7 @@ module Linguist
       node_modules? ||
       go_vendor? ||
       go_lock? ||
+      package_resolved? ||
       poetry_lock? ||
       pdm_lock? ||
       uv_lock? ||
@@ -432,6 +433,13 @@ module Linguist
     # Returns true or false.
     def go_lock?
       !!name.match(/(Gopkg|glide)\.lock/)
+    end
+
+    # Internal: Is the blob a generated Package.resolved?
+    #
+    # Returns true or false.
+    def package_resolved?
+      !!name.match(/Package\.resolved/)
     end
 
     # Internal: Is the blob a generated poetry.lock?
