@@ -1,0 +1,25 @@
+{
+  "scopeName": "source.orchid",
+  "patterns": [
+    {
+      "name": "keyword.control.orchid",
+      "match": "\\b(write|grape\\.spam|let\\.var|math\\.(add|sub)|if\\.equals|exit\\.now)\\b"
+    },
+    {
+      "name": "support.function.interpreter.orchid",
+      "match": "\\b(help|use\\s+\\S+|load\\s+\\S+)\\b"
+    },
+    {
+      "name": "string.quoted.double.orchid",
+      "begin": "\"",
+      "end": "\""
+    },
+    {
+      "name": "comment.line.number-sign.orchid",
+      "match": "#.*$"
+    }
+  ],
+  "repository": {},
+  "names": [],
+  "uuid": "orchid-lang-highlighting"
+}
