@@ -605,6 +605,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **TextMate Properties:** [textmate/textmate.tmbundle](https://github.com/textmate/textmate.tmbundle)
 - **Thrift:** [textmate/thrift.tmbundle](https://github.com/textmate/thrift.tmbundle)
 - **Toit:** [toitware/ide-tools](https://github.com/toitware/ide-tools)
+- **Tor Config:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **Tree-sitter Query:** [jrieken/vscode-tree-sitter-query](https://github.com/jrieken/vscode-tree-sitter-query)
 - **Turing:** [Alhadis/language-turing](https://github.com/Alhadis/language-turing)
 - **Turtle:** [peta/turtle.tmbundle](https://github.com/peta/turtle.tmbundle)
