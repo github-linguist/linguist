@@ -1,0 +1,38 @@
+
+-- 📌 Creating the database
+CREATE DATABASE test_db;
+USE DATABASE test_db;
+
+-- 📌 Creating the `users` table
+CREATE TABLE users (id INT, name TEXT, age INT);
+INSERT INTO users VALUES (1, "Ángel", 25);
+INSERT INTO users VALUES (2, "María", 30);
+INSERT INTO users VALUES (3, "Carlos", 22);
+INSERT INTO users VALUES (4, "Elena", 40);
+INSERT INTO users VALUES (5, "Luis", 30);
+
+-- 📌 Creating the table `orders`
+CREATE TABLE orders (order_id INT, user_id INT, amount FLOAT);
+INSERT INTO orders VALUES (1, 1, 100.50);
+INSERT INTO orders VALUES (2, 2, 250.75);
+INSERT INTO orders VALUES (3, 3, 80.00);
+INSERT INTO orders VALUES (4, 2, 150.30);
+
+-- 📌 Basic consultation with `WHERE`
+SELECT * FROM users WHERE age >= 25 ORDER BY age;
+
+-- 📌 Consultation with `JOIN`
+SELECT users.name, orders.amount FROM users JOIN orders ON users.id = orders.user_id;
+
+-- 📌 Group orders by user and calculate total spent (`GROUP BY`)
+SELECT user_id, SUM(amount) FROM orders GROUP BY user_id;
+
+-- 📌 Creating and executing a user-defined function (UDF)
+CREATE FUNCTION welcome_message AS "RETURN 'Welcome to AXISQL!'";
+CALL welcome_message;
+
+-- 📌 Records update (`UPDATE`)
+UPDATE users SET age = 26 WHERE name = "Ángel";
+
+-- 📌 Record deletion (`DELETE`)
+DELETE FROM users WHERE age < 25;

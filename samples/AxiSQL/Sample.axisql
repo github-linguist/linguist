@@ -1,0 +1,22 @@
+CREATE DATABASE potato_db;
+USE DATABASE potato_db;
+
+CREATE TABLE users(id INT, name TEXT, age INT, profession TEXT);
+
+INSERT INTO users VALUES (1, "Alberto", 25, "Front End.");
+INSERT INTO users VALUES (2, "Luis", 35, "Back End.");
+INSERT INTO users VALUES (3, "Manolo", 45, "Back End.");
+INSERT INTO users VALUES (4, "Rumpo", 25, "Front End.");
+INSERT INTO users VALUES (5, "Birdo", 18, "Back End.");
+INSERT INTO users VALUES (6, "Juan", 20, "Front End.");
+INSERT INTO users VALUES (7, "Pedro", 21, "Front End.");
+
+CREATE TABLE scheduleMonday (nameUser TEXT, present TEXT);
+
+INSERT INTO scheduleMonday VALUES ("Alberto", "no");
+INSERT INTO scheduleMonday VALUES ("Luis", "yes");
+INSERT INTO scheduleMonday VALUES ("Manolo", "yes");
+INSERT INTO scheduleMonday VALUES ("Rumpo", "yes");
+INSERT INTO scheduleMonday VALUES ("Birdo", "no");
+INSERT INTO scheduleMonday VALUES ("Juan", "no");
+INSERT INTO scheduleMonday VALUES ("Pedro", "no");
