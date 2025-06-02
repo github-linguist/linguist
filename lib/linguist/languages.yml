@@ -6236,6 +6236,7 @@ ReScript:
   codemirror_mime_type: text/x-rustsrc
   extensions:
   - ".res"
+  - ".resi"
   interpreters:
   - ocaml
   tm_scope: source.rescript
@@ -8354,6 +8355,7 @@ XML:
   - ".scxml"
   - ".sfproj"
   - ".shproj"
+  - ".slnx"
   - ".srdf"
   - ".storyboard"
   - ".sublime-snippet"
@@ -8655,6 +8657,14 @@ Zimpl:
   tm_scope: none
   ace_mode: text
   language_id: 411
+Zmodel:
+  type: data
+  color: "#ff7100"
+  extensions:
+  - ".zmodel"
+  tm_scope: source.zmodel
+  ace_mode: text
+  language_id: 803760908
 cURL Config:
   type: data
   group: INI
