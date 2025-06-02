@@ -113,6 +113,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Clojure:** [atom/language-clojure](https://github.com/atom/language-clojure)
 - **Closure Templates:** [mthadley/language-closure-templates](https://github.com/mthadley/language-closure-templates)
 - **Cloud Firestore Security Rules:** [jaysquared/atom-firestore-grammar](https://github.com/jaysquared/atom-firestore-grammar)
+- **Clue:** [ClueLang/Clue-for-VSCode](https://github.com/ClueLang/Clue-for-VSCode)
 - **CoNLL-U:** [odanoburu/conllu-linguist-grammar](https://github.com/odanoburu/conllu-linguist-grammar)
 - **CodeQL:** [tree-sitter/tree-sitter-ql](https://github.com/tree-sitter/tree-sitter-ql) 🐌
 - **CoffeeScript:** [atom/language-coffee-script](https://github.com/atom/language-coffee-script)
