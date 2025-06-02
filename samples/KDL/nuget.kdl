@@ -1,0 +1,95 @@
+// Based on https://github.com/NuGet/NuGet.Client/blob/dev/src/NuGet.Clients/NuGet.CommandLine/NuGet.CommandLine.csproj
+Project {
+  PropertyGroup {
+    IsCommandLinePackage #true
+  }
+
+  Import Project=#"$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'README.md'))\build\common.props"#
+  Import Project=Sdk.props Sdk=Microsoft.NET.Sdk
+  Import Project=ilmerge.props
+
+  PropertyGroup {
+    RootNamespace NuGet.CommandLine
+    AssemblyName NuGet
+    AssemblyTitle "NuGet Command Line"
+    PackageId NuGet.CommandLine
+    TargetFramework "$(NETFXTargetFramework)"
+    GenerateDocumentationFile #false
+    Description "NuGet Command Line Interface."
+    ApplicationManifest app.manifest
+    Shipping #true
+    OutputType Exe
+    ComVisible #false
+    // Pack properties
+    PackProject #true
+    IncludeBuildOutput #false
+    TargetsForTfmSpecificContentInPackage "$(TargetsForTfmSpecificContentInPackage)" "CreateCommandlineNupkg"
+    SuppressDependenciesWhenPacking #true
+    DevelopmentDependency #true
+    PackageRequireLicenseAcceptance #false
+    UsePublicApiAnalyzer #false
+  }
+
+  Target Name=CreateCommandlineNupkg {
+    ItemGroup {
+      TfmSpecificPackageFile Include=#"$(ArtifactsDirectory)$(VsixOutputDirName)\NuGet.exe"# {
+        PackagePath "tools/"
+      }
+      TfmSpecificPackageFile Include=#"$(ArtifactsDirectory)$(VsixOutputDirName)\NuGet.pdb"# {
+        PackagePath "tools/"
+      }
+    }
+  }
+
+  Target Name=ILMergeNuGetExe \
+         AfterTargets=Build \
+         Condition="'$(BuildingInsideVisualStudio)' != 'true' and '$(SkipILMergeOfNuGetExe)' != 'true'" \
+  {
+    PropertyGroup {
+      // when done after build, no localizedartifacts are built yet, so expected localized artifact count is 0.
+      ExpectedLocalizedArtifactCount 0 Condition="'$(ExpectedLocalizedArtifactCount)' == ''"
+    }
+    ItemGroup {
+      BuildArtifacts Include=#"$(OutputPath)\*.dll"# Exclude="@(MergeExclude)"
+      // NuGet.exe needs all NuGet.Commands.resources.dll merged in
+      LocalizedArtifacts Include=#"$(ArtifactsDirectory)\NuGet.Commands\**\$(NETFXTargetFramework)\**\*.resources.dll"#
+    }
+    Error Text="Build dependencies are inconsistent with mergeinclude specified in ilmerge.props" \
+          Condition="'@(BuildArtifacts-&gt;Count())' != '@(MergeInclude-&gt;Count())'"
+    Error Text="Satellite assemblies count ILMerged into NuGet.exe should be $(ExpectedLocalizedArtifactCount), but was: @(LocalizedArtifacts-&gt;Count())" \
+          Condition="'@(LocalizedArtifacts-&gt;Count())' != '$(ExpectedLocalizedArtifactCount)'"
+    PropertyGroup {
+      PathToBuiltNuGetExe "$(OutputPath)NuGet.exe"
+      IlmergeCommand #"$(ILMergeExePath) /lib:$(OutputPath) /out:$(ArtifactsDirectory)$(VsixOutputDirName)\NuGet.exe @(MergeAllowDup -> '/allowdup:%(Identity)', ' ') /log:$(OutputPath)IlMergeLog.txt"#
+      IlmergeCommand Condition="Exists($(MS_PFX_PATH))" "$(IlmergeCommand) /delaysign /keyfile:$(MS_PFX_PATH)"
+      // LocalizedArtifacts need fullpath, since there will be duplicate file names
+      IlmergeCommand "$(IlmergeCommand) $(PathToBuiltNuGetExe) @(BuildArtifacts->'%(filename)%(extension)', ' ') @(LocalizedArtifacts->'%(fullpath)', ' ')"
+    }
+    MakeDir Directories="$(ArtifactsDirectory)$(VsixOutputDirName)"
+    Exec Command="$(IlmergeCommand)" ContinueOnError=#false
+  }
+
+  Import Project="$(BuildCommonDirectory)common.targets"
+  Import Project="$(BuildCommonDirectory)embedinterop.targets"
+
+  // Do nothing. This basically strips away the framework assemblies from the resulting nuspec.
+  Target Name=_GetFrameworkAssemblyReferences DependsOnTargets=ResolveReferences
+
+  Target Name=GetSigningInputs Returns="@(DllsToSign)" {
+    ItemGroup {
+      DllsToSign Include=#"$(ArtifactsDirectory)$(VsixOutputDirName)\NuGet.exe"# {
+        StrongName MsSharedLib72
+        Authenticode Microsoft400
+      }
+    }
+  }
+
+  Target Name=GetSymbolsToIndex Returns="@(SymbolsToIndex)" {
+    ItemGroup {
+      SymbolsToIndex Include=#"$(ArtifactsDirectory)$(VsixOutputDirName)\NuGet.exe"#
+      SymbolsToIndex Include=#"$(ArtifactsDirectory)$(VsixOutputDirName)\NuGet.pdb"#
+    }
+  }
+
+  Import Project=Sdk.targets Sdk=Microsoft.NET.Sdk
+}
