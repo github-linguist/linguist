@@ -2,22 +2,25 @@
 
 # Number of acceptable classification errors.
 # It should only be decreased.
-ACCEPTABLE_ERRORS = 38
+ACCEPTABLE_ERRORS = 14
 
 # Number of acceptable classification errors when using --all.
 # It should only be decreased.
-ACCEPTABLE_ERRORS_ALL = 777
+ACCEPTABLE_ERRORS_ALL = 744
 
 # Avoid buffering output.
 STDOUT.sync = true
 STDERR.sync = true
 
 def print_usage(out)
-  out.puts "Usage: #{$PROGRAM_NAME} [--all] [--test]"
+  out.puts "Usage: #{$PROGRAM_NAME} [--all] [--extensions=<list>] [--test]"
   out.puts ''
   out.puts 'Performs leave-one-out cross-validation of the classifier.'
   out.puts 'By default, outputs results only for samples with ambiguous extensions.'
   out.puts 'If the --all flag is given, all samples and languages are considered.'
+  out.puts ''
+  out.puts 'If the --extensions option is used, only the extensions specified in the comma-seperated list will be considered.'
+  out.puts 'Extensions in the list must include the starting dot.'
   out.puts ''
   out.puts 'The --test flag can be used to verify that the number of errors is acceptable.'
 end
@@ -29,12 +32,15 @@ end
 
 $all = false
 $test = false
-ARGV.each do |arg|
+$exts = []
+ARGV.each_with_index do |arg, index|
   case arg
   when '--all'
     $all = true
   when '--test'
     $test = true
+  when /^--extensions=(.*)$/
+    $exts = $1.delete("'\"").split(',').map(&:strip)
   else
     STDERR.puts "Invalid command line argument: #{arg}"
     STDERR.puts ''
@@ -70,6 +76,11 @@ end
 def eval(sample)
   return nil if $skip_extensions.include? sample[:extname]
 
+  # Apply extensions list filter
+  if $exts.any? && !$exts.include?(File.extname(sample[:path]))
+    return nil
+  end
+
   # If --all is set, use all languages. Otherwise, get only languages that are
   # ambiguous in terms of filename and extension.
   if $all
@@ -100,6 +111,7 @@ def eval(sample)
   train_samples.each do |train_sample|
     Classifier.train!(db, train_sample[:language], train_sample[:tokens])
   end
+  Classifier.finalize_train! db
 
   # Get result.
   results = Classifier.classify(db, sample[:data], languages)

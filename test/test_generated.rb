@@ -17,7 +17,7 @@ class TestGenerated < Minitest::Test
     begin
       expected = !negate
       actual = Generated.generated?(blob, lambda { raise DataLoadedError.new })
-      assert(expected == !!actual, error_message(blob, negate))
+      assert(expected == actual, error_message(blob, negate))
     rescue DataLoadedError
       assert false, "Data was loaded when calling generated? on #{blob}"
     end
@@ -28,7 +28,7 @@ class TestGenerated < Minitest::Test
       Generated.generated?(blob, lambda { raise DataLoadedError.new })
     end
     expected = !negate
-    actual = Generated.generated?(blob, lambda { IO.read(blob) })
+    actual = Generated.generated?(blob, lambda { File.read(blob) })
     assert(expected == !!actual, error_message(blob, negate))
   end
 
@@ -93,6 +93,9 @@ class TestGenerated < Minitest::Test
     generated_sample_without_loading_data("Dummy/npm-shrinkwrap.json")
     generated_sample_without_loading_data("Dummy/package-lock.json")
 
+    # pnpm lockfile
+    generated_sample_without_loading_data("Dummy/pnpm-lock.yaml")
+
     # Yarn Plug'n'Play file
     generated_sample_without_loading_data(".pnp.js")
     generated_sample_without_loading_data(".pnp.cjs")
@@ -110,6 +113,9 @@ class TestGenerated < Minitest::Test
 
     # Minified files
     generated_sample_loading_data("JavaScript/jquery-1.6.1.min.js")
+
+    # MySQL View Definition Format (INI)
+    generated_sample_loading_data("INI/metrics.frm")
 
     # JavaScript with source-maps
     generated_sample_loading_data("JavaScript/namespace.js")
@@ -149,6 +155,7 @@ class TestGenerated < Minitest::Test
     # Game Maker Studio 2
     generated_sample_loading_data("JSON/GMS2_Project.yyp")
     generated_sample_loading_data("JSON/2ea73365-b6f1-4bd1-a454-d57a67e50684.yy")
+    generated_sample_loading_data("JSON/VCT.yy")
     generated_fixture_loading_data("Generated/options_main.inherited.yy")
 
     # Pipenv
@@ -188,11 +195,33 @@ class TestGenerated < Minitest::Test
     generated_fixture_loading_data("Generated/Haxe/Main.cs")
     generated_fixture_loading_data("Generated/Haxe/Main.php")
 
+    # Cargo
+    generated_sample_without_loading_data("TOML/filenames/Cargo.toml.orig")
+
     # jOOQ
     generated_sample_loading_data("Java/generated-jooq-table.java")
 
+    # Package.resolved
+    generated_sample_without_loading_data("JSON/filenames/Package.resolved")
+
     # poetry
     generated_sample_without_loading_data("TOML/filenames/poetry.lock")
+
+    # pdm
+    generated_sample_without_loading_data("TOML/filenames/pdm.lock")
+
+    # uv
+    generated_sample_without_loading_data("TOML/filenames/uv.lock")
+
+    # coverage.py `coverage html` output
+    generated_sample_without_loading_data("htmlcov/index.html")
+    generated_sample_without_loading_data("htmlcov/coverage_html.js")
+    generated_sample_without_loading_data("htmlcov/style.css")
+    generated_sample_without_loading_data("htmlcov/status.json")
+    generated_sample_without_loading_data("Dummy/htmlcov/index.html")
+    generated_sample_without_loading_data("Dummy/htmlcov/coverage_html.js")
+    generated_sample_without_loading_data("Dummy/htmlcov/style.css")
+    generated_sample_without_loading_data("Dummy/htmlcov/status.json")
   end
 
   # We've whitelisted these files on purpose, even though they're machine-generated.

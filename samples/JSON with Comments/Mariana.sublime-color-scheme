@@ -1,0 +1,150 @@
+// This patch for Mariana.sublime-color-scheme adds some Markdown specific color definitions
+// while making use of well defined colors for code blocks.
+{
+	"variables": {
+		"line_break": "hsl(210, 15%, 20%)",
+		"raw_fg": "hsl(210, 10%, 60%)",
+		"raw_bg": "hsl(210, 15%, 20%)"
+	},
+	"rules": [
+
+		// Frontmatter
+		{
+			"name": "Frontmatter: Mapping Key Names",
+			"scope": "text.html.markdown meta.mapping.key string, text.html.markdown meta.mapping.key constant.language, text.html.markdown meta.mapping.key constant.numeric",
+			"foreground": "var(blue5)"
+		},
+
+		// Basic Formattings
+		{
+			"name": "Markdown: Bold Content",
+			"scope": "text.html.markdown markup.bold - punctuation.definition.bold",
+			"font_style": "bold"
+		},
+		{
+			"name": "Markdown: Bold Punctuation",
+			"scope": "text.html.markdown punctuation.definition.bold",
+			"font_style": ""
+		},
+		{
+			"name": "Markdown: Italic Content",
+			"scope": "text.html.markdown markup.italic - punctuation.definition.italic",
+			"font_style": "italic"
+		},
+		{
+			"name": "Markdown: Italic Punctuation",
+			"scope": "text.html.markdown punctuation.definition.italic",
+			"font_style": ""
+		},
+		{
+			"name": "Markdown: Bold Italic Content",
+			"scope": "text.html.markdown markup.bold markup.italic - punctuation.definition.bold - punctuation.definition.italic, text.html.markdown markup.bold_italic - punctuation.definition.bold",
+			"font_style": "bold italic"
+		},
+		{
+			"name": "Markdown: Underlined Content",
+			"scope": "text.html.markdown markup.underline",
+			"font_style": "underline"
+		},
+		{
+			"name": "Markdown: Bold Underlined Content",
+			"scope": "text.html.markdown & markup.bold & markup.underline - punctuation.definition.bold",
+			"font_style": "bold underline"
+		},
+		{
+			"name": "Markdown: Italic Underlined Content",
+			"scope": "text.html.markdown & markup.italic & markup.underline - punctuation.definition.italic",
+			"font_style": "italic underline"
+		},
+		{
+			"name": "Markdown: Bold Italic Underlined Content",
+			"scope": "text.html.markdown & markup.bold & markup.italic & markup.underline - punctuation.definition.bold - punctuation.definition.italic",
+			"font_style": "bold underline"
+		},
+		{
+			"name": "Markdown: Striked Content",
+			"scope": "text.html.markdown markup.strikethrough, text.html.markdown markup.strikethrough string",
+			"foreground": "var(blue4)",
+			"font_style": ""
+		},
+		{
+			"name": "Markdown: Striked Punctuations",
+			"scope": "text.html.markdown markup.strikethrough & (punctuation.definition | punctuation.separator | punctuation.definition.strikethrough | punctuation.definition.constant | punctuation.definition.image | punctuation.definition.link | punctuation.definition.metadata | markup.bold punctuation.definition.bold | markup.italic punctuation.definition.italic | string punctuation.definition.string)",
+			"foreground": "var(blue6)",
+			"font_style": ""
+		},
+		{
+			"name": "Markdown: Striked URLs",
+			"scope": "text.html.markdown markup.strikethrough & (markup.underline.link.markdown | markup.underline.link.image.markdown)",
+			"foreground": "var(blue4)"
+		},
+		{
+			"name": "Markdown: Hard Line Breaks",
+			"scope": "text.html.markdown punctuation.definition.hard-line-break",
+			"background": "var(line_break)"
+		},
+
+		// Block Quotes
+		{
+			"name": "Markdown: Block Quotes",
+			"scope": "text.html.markdown markup.quote punctuation.definition.blockquote, text.html.markdown markup.quote punctuation.definition.quote",
+			"foreground": "var(blue2)",
+			"background": "var(blue2)"
+		},
+
+		// Code Blocks
+		{
+			"name": "Markdown: Inline Code Block",
+			"scope": "text.html.markdown markup.raw.inline",
+			"foreground": "var(raw_fg)",
+			"background": "var(raw_bg)"
+		},
+		{
+			"name": "Markdown: Raw Code Block",
+			"scope": "text.html.markdown markup.raw, text.html.markdown meta.code-fence",
+			"foreground": "var(raw_fg)",
+			"background": "var(raw_bg)"
+		},
+
+		// Inline References
+		{
+			"name": "Markdown: Link Description",
+			"scope": "(meta.image.inline.description.markdown, meta.image.reference.description.markdown, meta.link.inline.description.markdown, meta.link.reference.description.markdown, meta.link.reference.literal.description.markdown, meta.link.reference.wiki.description.markdown) - comment - constant - entity - punctuation - string - markup.strikethrough",
+			"foreground": "var(blue)"
+		},
+		{
+			"name": "Markdown: Inline Link URL",
+			"scope": "text.html.markdown meta.link.inline markup.underline.link",
+			"foreground": "var(pink)"
+		},
+
+		// Keyboard Shortcuts
+		{
+			"name": "Markdown: Keyboard Shortcut Background",
+			"scope": "text.html.markdown markup.kbd",
+			"background": "var(raw_bg)"
+		},
+		{
+			"name": "Markdown: Keyboard Shortcut Tags",
+			"scope": "text.html.markdown markup.kbd entity.name.tag, text.html.markdown markup.kbd punctuation.definition.tag",
+			"foreground": "var(raw_fg)"
+		},
+		{
+			"name": "Markdown: Keyboard Shortcut Content",
+			"scope": "text.html.markdow markup.kbd.content",
+			"foreground": "var(blue)"
+		},
+
+		// Tables
+		{
+			"name": "Markdown: Table Separators / Lines",
+			"scope": "text.html.markdown meta.table.header-separator punctuation.section, text.html.markdown punctuation.section.table-header, text.html.markdown punctuation.separator.table-cell",
+			"foreground": "var(blue4)"
+		},
+		{
+			"name": "Markdown: Table Cell Content Alignment Operator",
+			"scope": "text.html.markdown meta.table.header-separator punctuation.definition",
+			"foreground": "var(pink)"
+		}
+	]
+}
