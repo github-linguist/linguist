@@ -760,6 +760,14 @@ Browserslist:
   tm_scope: text.browserslist
   ace_mode: text
   language_id: 153503348
+BuildStream:
+  type: data
+  color: "#006bff"
+  extensions:
+  - ".bst"
+  tm_scope: source.yaml
+  ace_mode: yaml
+  language_id: 84359046
 C:
   type: programming
   color: "#555555"
@@ -1579,6 +1587,14 @@ Dart:
   codemirror_mode: dart
   codemirror_mime_type: application/dart
   language_id: 87
+Daslang:
+  type: programming
+  color: "#d3d3d3"
+  extensions:
+  - ".das"
+  tm_scope: source.daslang
+  ace_mode: text
+  language_id: 648759486
 DataWeave:
   type: programming
   color: "#003a52"
@@ -3082,6 +3098,7 @@ INI:
   - ".cfg"
   - ".cnf"
   - ".dof"
+  - ".frm"
   - ".lektorproject"
   - ".prefs"
   - ".pro"
@@ -6218,6 +6235,7 @@ ReScript:
   codemirror_mime_type: text/x-rustsrc
   extensions:
   - ".res"
+  - ".resi"
   interpreters:
   - ocaml
   tm_scope: source.rescript
@@ -7635,6 +7653,16 @@ Toit:
   tm_scope: source.toit
   ace_mode: text
   language_id: 356554395
+Tor Config:
+  type: data
+  color: "#59316b"
+  filenames:
+  - torrc
+  tm_scope: source.torrc
+  ace_mode: apache_conf
+  aliases:
+  - torrc
+  language_id: 1016912802
 Tree-sitter Query:
   type: programming
   color: "#8ea64c"
@@ -8008,7 +8036,7 @@ Vyper:
   type: programming
   extensions:
   - ".vy"
-  color: "#2980b9"
+  color: "#9F4CF2"
   ace_mode: text
   tm_scope: source.vyper
   language_id: 1055641948
@@ -8326,6 +8354,7 @@ XML:
   - ".scxml"
   - ".sfproj"
   - ".shproj"
+  - ".slnx"
   - ".srdf"
   - ".storyboard"
   - ".sublime-snippet"
@@ -8627,6 +8656,14 @@ Zimpl:
   tm_scope: none
   ace_mode: text
   language_id: 411
+Zmodel:
+  type: data
+  color: "#ff7100"
+  extensions:
+  - ".zmodel"
+  tm_scope: source.zmodel
+  ace_mode: text
+  language_id: 803760908
 cURL Config:
   type: data
   group: INI

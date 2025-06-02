@@ -73,6 +73,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **BrighterScript:** [rokucommunity/vscode-brightscript-language](https://github.com/rokucommunity/vscode-brightscript-language)
 - **Brightscript:** [rokucommunity/vscode-brightscript-language](https://github.com/rokucommunity/vscode-brightscript-language)
 - **Browserslist:** [browserslist/browserslist-vscode](https://github.com/browserslist/browserslist-vscode)
+- **BuildStream:** [atom/language-yaml](https://github.com/atom/language-yaml)
 - **C:** [tree-sitter/tree-sitter-c](https://github.com/tree-sitter/tree-sitter-c) 🐌
 - **C#:** [tree-sitter/tree-sitter-c-sharp](https://github.com/tree-sitter/tree-sitter-c-sharp) 🐌
 - **C++:** [mikomikotaishi/c.tmbundle](https://github.com/mikomikotaishi/c.tmbundle)
@@ -141,6 +142,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **DTrace:** [mikomikotaishi/c.tmbundle](https://github.com/mikomikotaishi/c.tmbundle)
 - **Dafny:** [DafnyVSCode/Dafny-VSCode](https://github.com/DafnyVSCode/Dafny-VSCode)
 - **Dart:** [dart-lang/dart-syntax-highlight](https://github.com/dart-lang/dart-syntax-highlight)
+- **Daslang:** [moleium/daslang-grammar](https://github.com/moleium/daslang-grammar)
 - **DataWeave:** [mulesoft-labs/data-weave-tmLanguage](https://github.com/mulesoft-labs/data-weave-tmLanguage)
 - **Debian Package Control File:** [tsbarnes/language-debian](https://github.com/tsbarnes/language-debian)
 - **DenizenScript:** [DenizenScript/denizenscript-grammar](https://github.com/DenizenScript/denizenscript-grammar)
@@ -604,6 +606,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **TextMate Properties:** [textmate/textmate.tmbundle](https://github.com/textmate/textmate.tmbundle)
 - **Thrift:** [textmate/thrift.tmbundle](https://github.com/textmate/thrift.tmbundle)
 - **Toit:** [toitware/ide-tools](https://github.com/toitware/ide-tools)
+- **Tor Config:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **Tree-sitter Query:** [jrieken/vscode-tree-sitter-query](https://github.com/jrieken/vscode-tree-sitter-query)
 - **Turing:** [Alhadis/language-turing](https://github.com/Alhadis/language-turing)
 - **Turtle:** [peta/turtle.tmbundle](https://github.com/peta/turtle.tmbundle)
@@ -683,6 +686,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **ZenScript:** [CraftTweaker/ZenScript-tmLanguage](https://github.com/CraftTweaker/ZenScript-tmLanguage)
 - **Zephir:** [phalcon/zephir-sublime](https://github.com/phalcon/zephir-sublime)
 - **Zig:** [ziglang/sublime-zig-language](https://github.com/ziglang/sublime-zig-language)
+- **Zmodel:** [zenstackhq/zenstack](https://github.com/zenstackhq/zenstack)
 - **cURL Config:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **crontab:** [textmate/cron.tmbundle](https://github.com/textmate/cron.tmbundle)
 - **desktop:** [Mailaender/desktop.tmbundle](https://github.com/Mailaender/desktop.tmbundle)
