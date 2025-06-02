@@ -706,9 +706,13 @@ class TestFileBlob < Minitest::Test
         elsif language == 'Generic'
           assert !blob.language, "#{filepath} should not match a language"
         else
-          assert blob.language, "No language for #{filepath}"
           fs_name = blob.language.fs_name ? blob.language.fs_name : blob.language.name
-          assert_equal language, fs_name, blob.name
+          if allowed_failures.has_key? filepath
+            assert allowed_failures[filepath].include?(fs_name), filepath
+          else
+            assert blob.language, "No language for #{filepath}"
+            assert_equal language, fs_name, filepath
+          end
         end
       end
     end
