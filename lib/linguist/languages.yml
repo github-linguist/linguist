@@ -266,6 +266,14 @@ Agda:
   tm_scope: source.agda
   ace_mode: text
   language_id: 12
+Aiken:
+  type: programming
+  color: "#640ff8"
+  ace_mode: text
+  extensions:
+  - ".ak"
+  tm_scope: source.aiken
+  language_id: 899409497
 Alloy:
   type: programming
   color: "#64C800"
@@ -1232,6 +1240,14 @@ Cloud Firestore Security Rules:
   filenames:
   - firestore.rules
   language_id: 407996372
+Clue:
+  type: programming
+  color: "#0009b5"
+  extensions:
+  - ".clue"
+  tm_scope: source.clue
+  ace_mode: text
+  language_id: 163763508
 CoNLL-U:
   type: data
   extensions:
@@ -1592,6 +1608,14 @@ Dart:
   codemirror_mode: dart
   codemirror_mime_type: application/dart
   language_id: 87
+Daslang:
+  type: programming
+  color: "#d3d3d3"
+  extensions:
+  - ".das"
+  tm_scope: source.daslang
+  ace_mode: text
+  language_id: 648759486
 DataWeave:
   type: programming
   color: "#003a52"
@@ -2295,6 +2319,15 @@ GDScript:
   tm_scope: source.gdscript
   ace_mode: text
   language_id: 123
+GDShader:
+  type: programming
+  color: "#478CBF"
+  extensions:
+  - ".gdshader"
+  - ".gdshaderinc"
+  tm_scope: source.gdshader
+  ace_mode: glsl
+  language_id: 694638086
 GEDCOM:
   type: data
   color: "#003058"
@@ -3937,6 +3970,15 @@ Lean 4:
   tm_scope: source.lean4
   ace_mode: text
   language_id: 455147478
+Leo:
+  type: programming
+  color: "#6814EC"
+  extensions:
+  - ".leo"
+  tm_scope: source.leo
+  ace_mode: text
+  wrap: true
+  language_id: 916034822
 Less:
   type: markup
   color: "#1d365d"
@@ -6232,6 +6274,7 @@ ReScript:
   codemirror_mime_type: text/x-rustsrc
   extensions:
   - ".res"
+  - ".resi"
   interpreters:
   - ocaml
   tm_scope: source.rescript
@@ -7805,6 +7848,14 @@ UnrealScript:
   codemirror_mode: clike
   codemirror_mime_type: text/x-java
   language_id: 382
+Untyped Plutus Core:
+  type: programming
+  color: "#36adbd"
+  ace_mode: text
+  extensions:
+  - ".uplc"
+  tm_scope: source.uplc
+  language_id: 1061635506
 UrWeb:
   type: programming
   color: "#ccccee"
@@ -7912,6 +7963,14 @@ Velocity Template Language:
   codemirror_mode: velocity
   codemirror_mime_type: text/velocity
   language_id: 292377326
+Vento:
+  type: markup
+  color: "#ff0080"
+  extensions:
+  - ".vto"
+  tm_scope: source.vento
+  ace_mode: text
+  language_id: 757053899
 Verilog:
   type: programming
   color: "#b2b7f8"
@@ -8350,6 +8409,7 @@ XML:
   - ".scxml"
   - ".sfproj"
   - ".shproj"
+  - ".slnx"
   - ".srdf"
   - ".storyboard"
   - ".sublime-snippet"
@@ -8651,6 +8711,14 @@ Zimpl:
   tm_scope: none
   ace_mode: text
   language_id: 411
+Zmodel:
+  type: data
+  color: "#ff7100"
+  extensions:
+  - ".zmodel"
+  tm_scope: source.zmodel
+  ace_mode: text
+  language_id: 803760908
 cURL Config:
   type: data
   group: INI
