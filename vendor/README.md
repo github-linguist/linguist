@@ -113,6 +113,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Clojure:** [atom/language-clojure](https://github.com/atom/language-clojure)
 - **Closure Templates:** [mthadley/language-closure-templates](https://github.com/mthadley/language-closure-templates)
 - **Cloud Firestore Security Rules:** [jaysquared/atom-firestore-grammar](https://github.com/jaysquared/atom-firestore-grammar)
+- **Clue:** [ClueLang/Clue-for-VSCode](https://github.com/ClueLang/Clue-for-VSCode)
 - **CoNLL-U:** [odanoburu/conllu-linguist-grammar](https://github.com/odanoburu/conllu-linguist-grammar)
 - **CodeQL:** [tree-sitter/tree-sitter-ql](https://github.com/tree-sitter/tree-sitter-ql) 🐌
 - **CoffeeScript:** [atom/language-coffee-script](https://github.com/atom/language-coffee-script)
@@ -198,6 +199,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **GCC Machine Description:** [textmate/lisp.tmbundle](https://github.com/textmate/lisp.tmbundle)
 - **GDB:** [quarnster/SublimeGDB](https://github.com/quarnster/SublimeGDB)
 - **GDScript:** [godotengine/godot-vscode-plugin](https://github.com/godotengine/godot-vscode-plugin)
+- **GDShader:** [godotengine/godot-vscode-plugin](https://github.com/godotengine/godot-vscode-plugin)
 - **GEDCOM:** [fguitton/vscode-gedcom](https://github.com/fguitton/vscode-gedcom)
 - **GLSL:** [euler0/sublime-glsl](https://github.com/euler0/sublime-glsl)
 - **GN:** [devoncarew/language-gn](https://github.com/devoncarew/language-gn)
@@ -632,6 +634,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Vala:** [technosophos/Vala-TMBundle](https://github.com/technosophos/Vala-TMBundle)
 - **Valve Data Format:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
 - **Velocity Template Language:** [animecyc/AtomLanguageVelocity](https://github.com/animecyc/AtomLanguageVelocity)
+- **Vento:** [ventojs/vscode-vento](https://github.com/ventojs/vscode-vento)
 - **Verilog:** [textmate/verilog.tmbundle](https://github.com/textmate/verilog.tmbundle)
 - **Vim Help File:** [Alhadis/language-viml](https://github.com/Alhadis/language-viml)
 - **Vim Script:** [Alhadis/language-viml](https://github.com/Alhadis/language-viml)
