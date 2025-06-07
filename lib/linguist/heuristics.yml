@@ -737,14 +737,6 @@ disambiguations:
     pattern: '^#+\s+(NAME|SYNOPSIS|DESCRIPTION)'
 - extensions: ['.scm']
   rules:
-  - language: Scheme
-    pattern:
-    - '(?:''[\(\*#]|\w->\w|\.\.\.[\s\)]|\([+\-:<>\/=~\)]|~>|[#`]\(|#:\w)'
-    - '^\s*\((?:define\*?|import|library|lambda)'
-    negative_pattern:
-    - '\(#[\w-]+[!\?]'
-    - '[\)\]"_]\s*(?:[\*\+\?]|@\w)'
-    - '@[\w.-]+(?:\s|$)'
   - language: Tree-sitter Query
     pattern:
     - '\(#[\w-]+[!\?]'
@@ -754,6 +746,14 @@ disambiguations:
     - '@[\w.-]+(?:\s|$)'
     negative_pattern:
     - '\([+\-:<>\/=~\)]'
+  - language: Scheme
+    pattern:
+    - '(?:''[\(\*#]|\w->\w|\.\.\.[\s\)]|\([+\-:<>\/=~\)]|~>|[#`]\(|#:\w)'
+    - '^\s*\((?:define\*?|import|library|lambda)'
+    negative_pattern:
+    - '\(#[\w-]+[!\?]'
+    - '[\)\]"_]\s*(?:[\*\+\?]|@\w)'
+    - '@[\w.-]+(?:\s|$)'
 - extensions: ['.sol']
   rules:
   - language: Solidity
