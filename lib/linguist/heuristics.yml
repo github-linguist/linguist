@@ -544,9 +544,9 @@ disambiguations:
     pattern: '^[DGMT][0-9]{2}\*(?:\r?\n|\r)'
   - language: Nickel
     pattern:
-    - '^let\s[a-zA-Z_][a-zA-Z0-9_]*\s='
+    - '^let(?:\srec)?(?:\s[a-zA-Z_][a-zA-Z0-9_]*)?'
     - '^import\s"[^"]+"\s+as\s'
-    - '\|\>\sstd\.[a-zA-Z_]'
+    - 'std\.[a-zA-Z_][a-zA-Z0-9_]*\.'
   - language: Text
     pattern: 'THE_TITLE'
   - language: NCL
@@ -554,6 +554,7 @@ disambiguations:
     - '^load "'
     - '^begin$'
     - '[0-9]\.$'
+    - '^;'
 - extensions: ['.nl']
   rules:
   - language: NL
