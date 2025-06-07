@@ -740,7 +740,7 @@ disambiguations:
   - language: Tree-sitter Query
     pattern:
     - '\(#[\w-]+[!\?]'
-    - '[\)\]"_]\s*(?:[\*\+\?]|@\w)'
+    - '(?:[\)\]]\s*[\*\+\?](?:\s|$))'
     - '(?:^\s*\w+:\s*[\(\[\"])'
     - '\(#(?:set!|(?:not-)?(?:any-of|match)\?)'
     - '@[\w.-]+(?:\s|$)'
@@ -752,7 +752,7 @@ disambiguations:
     - '^\s*\((?:define\*?|import|library|lambda)'
     negative_pattern:
     - '\(#[\w-]+[!\?]'
-    - '[\)\]"_]\s*(?:[\*\+\?]|@\w)'
+    - '(?:[\)\]]\s*[\*\+\?](?:\s|$))'
     - '@[\w.-]+(?:\s|$)'
 - extensions: ['.sol']
   rules:
