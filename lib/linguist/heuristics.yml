@@ -744,12 +744,14 @@ disambiguations:
     negative_pattern:
     - '\(#[\w-]+[!\?]'
     - '[\)\]"_]\s*(?:[\*\+\?]|@\w)'
+    - '@[\w.-]+(?:\s|$)'
   - language: Tree-sitter Query
     pattern:
     - '\(#[\w-]+[!\?]'
     - '[\)\]"_]\s*(?:[\*\+\?]|@\w)'
     - '(?:^\s*\w+:\s*[\(\[\"])'
     - '\(#(?:set!|(?:not-)?(?:any-of|match)\?)'
+    - '@[\w.-]+(?:\s|$)'
     negative_pattern:
     - '\([+\-:<>\/=~\)]'
 - extensions: ['.sol']
