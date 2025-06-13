@@ -1,0 +1,279 @@
+{
+	"version":   "0",
+	"name":      "Verse",
+	"scopeName": "source.verse",
+	"fileTypes": ["verse"],
+	"patterns":  [{"include":"#ListInd"}],
+
+	"comment0":  "See https://github.com/stedolan/jq/wiki/Docs-for-Oniguruma-Regular-Expressions-(RE.txt)",
+
+	"repository": {
+
+		"BlockCmt": {
+			"name":          "comment.block.verse",
+			"begin":         "<#(?!>)",
+			"end":           "(?<!<)#>",
+			"patterns":      [{"include":"#BlockCmt"}]
+		},
+		"LineCmt": {
+			"name":          "comment.line.verse",
+			"begin":         "(?<!<)#(?!>)",
+			"end":           "$",
+			"patterns":      [{"include": "#BlockCmt"}]
+		},
+
+		"Ident": {
+			"name":         "variable.verse",
+			"match":        "[.]?[A-Za-z_][A-Za-z0-9_]*+('((?!<#|#>|[\\\\{}\"'])[ -~])*+')?+"
+		},
+
+		"Num": {
+			"patterns": [
+				{"name":"constant.numeric.verse",                 "match":"0x[0-9A-Fa-f]++"},
+				{"name":"constant.numeric.verse",                 "match":"(?!0o|0u)[0-9]++([.][0-9]++)?(e[+-]?[0-9]+)?(%|[A-Za-z_][A-Za-z0-9_]*+)?+", "captures":{"3":{"name":"keyword.other.unit.verse"}}}
+			]
+		},
+		"Path": {
+			"name":         "constant.language.path.verse",
+			"match":        "(^|(?<=[({\\[\\-\\&;,+*/|<=>.]|->|=>|:\\)|\\Wvar|^var|\\Wref|^ref|\\Walias|^alias|\\Wlive|^live|\\Win|^in|\\Wis|^is|\\Wdo|^do|\\Wthen|^then|\\Wuntil|^until|\\Welse|^else|\\Wover|\\Wwhile|\\Wupon|\\Wnext|\\Wwhere|\\Wof|^of|\\Wat|^at|\\Wreturn|^return|\\Wyield|^yield|\\Wbreak|^break|\\Wcontinue|^continue))([\\s\\^?]*+)(?<Path>(/[A-Za-z0-9_][A-Za-z0-9_\\-.]*+(@[A-Za-z0-9_][A-Za-z0-9_\\-.]*+)?+)(/([(]\\g<Path>:[)])?+[A-Za-z_][A-Za-z0-9_]*+('((?!<#|#>|[\\\\{}\"'])[ -~])*')?+)*+)"
+		},
+		"CharLit0": {
+			"name":          "string.quoted.single.verse",
+			"match":         "'(.|$)('(?!')|$)"
+		},
+		"CharLit1": {
+			"begin":         "'(?=\\\\(\\<(?!#)|[rnt'\\\"\\\\{}#<>&~]|$)('|$))",
+			"beginCaptures": {"0": {"name": "string.quoted.single.verse"}},
+			"end":           "'|$",
+			"endCaptures":   {"0": {"name": "string.quoted.single.verse"}},
+			"patterns":      [{"include":"#Backslash"}]
+		},
+		"CharLitInvalid": {
+			"patterns": [
+				{"name":"invalid.verse","match":"'[^']*'?"}
+			]
+    	},
+		"CharLit": {
+			"patterns":      [{"include":"#CharLit0"},{"include":"#CharLit1"},{"include":"#CharLitInvalid"}]
+		},
+		"Char8": {
+			"name":"string.quoted.single.verse",                  "match":"0o[0-9A-Fa-f]++"
+		},
+		"Char32": {
+			"name":"string.quoted.single.verse",                  "match":"0u[0-9A-Fa-f]++"
+		},
+		"Char": {
+			"patterns":      [{"include":"#CharLit"},{"include":"#Char8"},{"include":"#Char32"}]
+		},
+
+		"String": {
+			"begin":         "\"",
+      		"beginCaptures": {"0": {"name": "string.quoted.double.verse"}},
+			"end":           "(\"|$)",
+      		"endCaptures":   {"0": {"name": "string.quoted.double.verse"}},
+			"patterns":      [{"include":"#Interp"},{"include":"#Special"},{"name":"string.quoted.double.verse","match":"[\\-\\[\\]\\&`~!@#$%^*()+=|:;',.?/A-Za-z0-9_ ]++"}]
+		},
+		"Special": {
+			"patterns":      [{"include":"#Backslash"},{"include":"#BlockCmt"}]
+		},
+		"Backslash": {
+			"name":          "constant.character.escape.verse",
+			"match":         "\\\\(\\<(?!#)|[rnt'\\\"\\\\{}#<>&~]|$)"
+		},
+		"Interp": {
+			"begin":         "\\{",
+			"end":           "\\}",
+			"beginCaptures": {"0": {"name":"constant.character.escape.verse"}},
+			"endCaptures":   {"0": {"name":"constant.character.escape.verse"}},
+			"patterns":      [{"include":"#ListInd"}]
+		},
+		"Markup": {
+			"comment0":      "Recognizes Markup in enclosing Markup.",
+			"begin":         "(<(?![/#=]))\\s*([A-Za-z_][A-Za-z0-9_]*)?",
+			"beginCaptures": {"0": {"name": "punctuation.definition.tag"}},
+			"end":           "(?<!#>)(?<=>)",
+			"endCaptures":   {"0": {"name": "punctuation.definition.tag"}},
+			"patterns":      [{"include":"#Call"},{"include":"#MarkupTail1"},{"include":"#MarkupTail2"}]
+		},
+		"CodeMarkup": {
+			"comment0":      "Recognizes Markup in enclosing code.",
+			"comment1":      "Heuristic only accepts it in a prefix position, not a postfix operator position.",
+			"begin":         "(^|(?<=[({\\[\\-\\&;,+*/=|:<.@]|->|=>|\\Win|^in|\\Wis|^is|\\Wdo|^do|\\Wthen|^then|\\Wuntil|^until|\\Welse|^else|\\Wwhere|^where|\\Wof|\\Wreturn|^return|\\Wyield|^yield|\\Wbreak|^break|\\Wcontinue|^continue))([?^\\s]*+)(<(?![/#=>])\\s*([A-Za-z_][A-Za-z0-9_]*)?)",
+			"beginCaptures": {"2": {"name": "keyword.operator.verse"},"3": {"name": "punctuation.definition.tag"}},
+			"end":           "(?<!#>)(?<=>)",
+			"endCaptures":   {"0": {"name": "punctuation.definition.tag"}},
+			"patterns":      [{"include":"#Call"},{"include":"#MarkupTail1"},{"include":"#MarkupTail2"}]
+		},
+		"MarkupTail1": {
+			"comment0":      "Recognizes non-significant-indented markup following ':'.",
+			"begin":         ":(?=>)|;",
+			"beginCaptures": {"0": {"name": "punctuation.definition.tag"}},
+			"end":           ">",
+			"endCaptures":   {"0": {"name": "punctuation.definition.tag"}},
+			"patterns":      [{"include":"#ContentsInd"}]
+		},
+		"MarkupTail2": {
+			"comment0":      "Recognizes non-significant-indented HTML style markup from '>' to '</ident>.",
+			"begin":         ">",
+			"beginCaptures": {"0": {"name": "punctuation.definition.tag"}},
+			"end":           "</\\s*([A-Za-z_][A-Za-z0-9_]*)?\\s*>",
+			"endCaptures":   {"0": {"name": "punctuation.definition.tag"}},
+			"patterns":      [{"include":"#ContentsInd"}]
+		},
+		"Contents": {
+			"comment0":      "Recognizes everything allowed inside of markup that's not significantly indented.",
+			"patterns": [
+				{"include":"#BlockCmt"},
+				{"include":"#LineCmt"},
+				{"include":"#Backslash"},
+				{"include":"#Markup"},
+				{"include":"#Interp"},
+				
+				{"name":"punctuation.definition.tag", "match":"~"},
+				{"begin":"(?=&)", "end":"$|\\#|\\;", "endCaptures": {"0": {"name":"punctuation.definition.tag"}}, "patterns":[{"include":"#ListInd"}]},
+				{"name":"text.verse","match":"[\"\\-\\[\\]`!@$%^*()+=|:;',.?/A-Za-z0-9_ ]+"}
+			]
+		},
+		"ContentsInd": {
+			"comment0":      "Recognizes everything allowed inside of significantly indented markup.",
+			"patterns": [
+ 				{"include":"#MarkCmt7" }, {"include":"#MarkCmt6" }, {"include":"#MarkCmt5" }, {"include":"#MarkCmt4" }, {"include":"#MarkCmt3" }, {"include":"#MarkCmt2" }, {"include":"#MarkCmt1" }, {"include":"#MarkCmt0" },
+				{"include":"#MarkCode7"}, {"include":"#MarkCode6"}, {"include":"#MarkCode5"}, {"include":"#MarkCode4"}, {"include":"#MarkCode3"}, {"include":"#MarkCode2"}, {"include":"#MarkCode1"}, {"include":"#MarkCode0"},
+				{"include":"#Contents"}
+			]
+		},
+		"Parens": {
+			"begin":         "[(]",
+			"end":           "[)]",
+			"patterns":      [{"include":"#ListInd"}]
+		},
+		"Brackets": {
+			"begin":         "\\[",
+			"end":           "\\]",
+			"patterns":      [{"include":"#ListInd"}]
+		},
+		"Braces": {
+			"begin":         "[{]",
+			"end":           "[}]",
+			"patterns":      [{"include":"#ListInd"}]
+		},
+		"Specs": {
+			"comment0":      "Recognizes specifiers of the form a<b>.",
+			"comment1":      "Because CodeMarkup is tried before Specs, this should only activate in postfix positions.",
+			"comment2":      "Encodes a limited version of the grammar for delimiting the contents of the attribute.",
+			"name":          "punctuation.definition.tag",
+			"match":         "<(?![=#>])(?<Call>(?<BlockCmt><#(\\g<BlockCmt>|(?!#>).)*+#>)|[\\s\\^\\&?]|(?!(and\\W|or\\W|not\\W|where\\W|in\\W|is\\W|of\\W|at\\W))[A-Za-z_][A-Za-z0-9_]*+|[0-9/][A-Za-z0-9_.@]++|'(\\\\.|[^'])*+'|\"(\\\\.|[{](\\g<Call>)*+[}]|<[^#]|#[^>]|[^\\<#\"{}])*+\"|<\\g<Call>*+>|[\\[{(](\\g<Call>|<[^#]|[\\-\\&\\^.%+*/,;>:@=!|?])*+[\\]})])*+>"
+		},
+
+		"In": {
+			"comment0":      "Highlight :t=v equals sign as definition operator.",
+			"begin":         "((?!:[)]):|in(?=\\W)|(?=(var|set|ref|alias|live)\\W))\\s*+(?!#|$)",
+			"beginCaptures": {"0": {"name": "punctuation.definition.tag"}},
+			"end":           "(=(?!>)|$|(\\+=|-=|\\*=|/=)|(?=:|=>|@|,|;|\\)|\\]|\\}|(over|when|where|while|next|in|is|with|do|until|catch|then|else|of|at)\\W))",
+			"endCaptures":   {"0": {"name": "punctuation.definition.tag"}},
+			"patterns":      [{"name":"keyword.declaration.verse","match":"(var|set|ref|alias|live)(?=\\W)"},{"include":"#DefineIdent1"},{"include":"#DefineIdent2"},{"include":"#Call"}]
+		},
+		"DefineIdent1": {
+			"comment0":      "Recognizes defined identifiers for special syntax highlighting.",
+			"comment1":      "Encodes a limited version of the grammar for postfixes that participate in definitions.",
+			"match":         "(^|(?<=[({\\[\\-\\&;,+*/|<=>.]|->|=>|:\\)|\\Wvar|^var|\\Wref|^ref|\\Walias|^alias|\\Wlive|^live|\\Win|^in|\\Wis|^is|\\Wdo|^do|\\Wthen|^then|\\Wuntil|^until|\\Welse|^else|\\Wover|\\Wwhile|\\Wupon|\\Wnext|\\Wwhere|\\Wof|^of|\\Wat|^at|\\Wreturn|^return|\\Wyield|^yield|\\Wbreak|^break|\\Wcontinue|^continue))([\\s\\^?]*+)([A-Za-z_][A-Za-z0-9_]*+('((?!<#|#>|[\\\\{}\"'])[ -~])*')?+)(?=((?<Call>(?<BlockCmt><#(\\g<BlockCmt>|(?!#>).)*+#>)|[\\s\\^?]++|(&|->)\\s*[A-Za-z_][A-Za-z0-9_]*+|->|'(\\\\.|[^'])*+'|\"(\\\\.|[{](\\g<Call>)*+[}]|<[^#]|#[^>]|[^\\<#\"{}]|\\g<BlockCmt>)*+\"|<(\\g<Call>|[A-Za-z0-9_])*+>|[\\[({](\\g<Call>|<[^#]|[A-Za-z0-9_\\-\\&\\^.%+*/,;>:@=!|?])*+[\\])}]))*+((:|in\\W|is\\W)\\s*+(?![)#]|$)))",
+			"captures":      {"3": {"name":"entity.name.function.verse"}}
+		},
+		"DefineIdent2": {
+			"comment0":      "Recognizes defined identifiers using var x=y syntax.",
+			"match":         "(?<=\\Wvar|^var|\\Wref|^ref|\\Walias|^alias|\\Wlive|^live)([\\s\\^?]*+)([A-Za-z_][A-Za-z0-9_]*+)(?=((?<Call>(?<BlockCmt><#(\\g<BlockCmt>|(?!#>).)*+#>)|[\\s\\^?]++|(&|->)\\s*[A-Za-z_][A-Za-z0-9_]*+|->|'(\\\\.|[^'])*+'|\"(\\\\.|[{](\\g<Call>)*+[}]|<[^#]|#[^>]|[^\\<#\"{}]|\\g<BlockCmt>)*+\"|<(\\g<Call>|[A-Za-z0-9_])*+>|[\\[({](\\g<Call>|<[^#]|[A-Za-z0-9_\\-\\&\\^.%+*/,;>:@=!|?])*+[\\])}]))*+=)",
+			"captures":      {"2": {"name":"entity.name.function.verse"}}
+		},
+		"Keyword": {
+			"patterns": [
+				{"name":"keyword.operator.logical.verse",         "match":"(and|or|not)(?=\\W)"},
+				{"name":"punctuation.definition.tag",             "match":"[:.]\\s*+(?=(#|$))|[.](?=\\s)|@|&"},
+				{"name":"keyword.declaration.verse",              "match":"(with|do|until|catch|then|else|of|at)(?=\\W)"}
+			]
+		},
+		"Call": {
+			"patterns": [
+				{"include":"#BlockCmt"},
+				{"include":"#LineCmt"},
+
+				{"include":"#Num"},
+				{"include":"#Char"},
+				{"include":"#Path"},
+				{"include":"#String"},
+				{"include":"#CodeMarkup"},
+
+				{"include":"#Keyword"},
+				{"include":"#Ident"},
+
+				{"include":"#Parens"},
+				{"include":"#Brackets"},
+				{"include":"#Braces"},
+				{"include":"#Specs"}
+			]
+		},
+		"List": {
+			"patterns": [
+				{"include":"#Keyword"},
+				{"name":"keyword.control.verse",                  "match":"(return|yield|break|continue)(?=\\W)"},
+				{"name":"keyword.declaration.verse",              "match":"(is)(?=\\W)"},
+				{"name":"keyword.declaration.verse",              "match":"(?<=\\w\\s|\\)|\\]|\\})\\s*(over|when|where|while|next)(?=\\W)"},
+				{"include":"#DefineIdent1"},
+				{"include":"#DefineIdent2"},
+				{"include":"#In"},
+				{"name":"keyword.declaration.verse",              "match":"(in|var|set|ref|alias|live)(?=\\W)"},
+				{"include":"#Call"},
+				{"name":"punctuation.definition.tag",             "match":":="},
+				{"name":"keyword.operator.verse",                 "match":"[|]|[.][.]|=>|[+\\-*/]="},
+				{"name":"keyword.operator.arithmetic.verse",      "match":"[+\\-*/]|->"},
+				{"name":"keyword.operator.comparison.verse",      "match":"=(?!=)|<>|<=|<|>=|>"},
+				{"name":"punctuation.definition.tag",             "match":"[;,]"},
+				{"name":"invalid.verse",                          "match":"[`~$>)},\\]\\\\]|#>|[.][0-9]+|!=|=="}
+			]
+		},
+		"ListInd": {
+			"patterns": [
+				{"include":"#CodeMark7"}, {"include":"#CodeMark6"}, {"include":"#CodeMark5"}, {"include":"#CodeMark4"}, {"include":"#CodeMark3"}, {"include":"#CodeMark2"}, {"include":"#CodeMark1"}, {"include":"#CodeMark0"},
+				{"include":"#IndCmt7"  }, {"include":"#IndCmt6"  }, {"include":"#IndCmt5"  }, {"include":"#IndCmt4"  }, {"include":"#IndCmt3"  }, {"include":"#IndCmt2"  }, {"include":"#IndCmt1"  }, {"include":"#IndCmt0"  },
+				{"include":"#List"}
+			]
+		},
+
+		"EatIndCmt": {"name":"comment.block.verse", "begin":"<#>", "end":"$", "patterns": [{"include": "#BlockCmt"}]},
+
+		"IndCmt0":   {"begin":"^(?=(\\t|    ){0}[^#]*<#>)",                 "end":"^(?!(\\t|    ){0}(\\s|[^#]*<#>)|\\s*$)",                 "patterns":[{"begin":"^(?=(\\t|    ){0}\\s+(?!$))", "end":"$", "name":"comment.block.verse", "patterns":[{"include":"#BlockCmt"}]},{"include":"#EatIndCmt"},{"include":"#List"}]},
+		"IndCmt1":   {"begin":"^(?=(\\t|    ){1}[^#]*<#>)",                 "end":"^(?!(\\t|    ){1}(\\s|[^#]*<#>)|\\s*$)",                 "patterns":[{"begin":"^(?=(\\t|    ){1}\\s+(?!$))", "end":"$", "name":"comment.block.verse", "patterns":[{"include":"#BlockCmt"}]},{"include":"#EatIndCmt"},{"include":"#List"}]},
+		"IndCmt2":   {"begin":"^(?=(\\t|    ){2}[^#]*<#>)",                 "end":"^(?!(\\t|    ){2}(\\s|[^#]*<#>)|\\s*$)",                 "patterns":[{"begin":"^(?=(\\t|    ){2}\\s+(?!$))", "end":"$", "name":"comment.block.verse", "patterns":[{"include":"#BlockCmt"}]},{"include":"#EatIndCmt"},{"include":"#List"}]},
+		"IndCmt3":   {"begin":"^(?=(\\t|    ){3}[^#]*<#>)",                 "end":"^(?!(\\t|    ){3}(\\s|[^#]*<#>)|\\s*$)",                 "patterns":[{"begin":"^(?=(\\t|    ){3}\\s+(?!$))", "end":"$", "name":"comment.block.verse", "patterns":[{"include":"#BlockCmt"}]},{"include":"#EatIndCmt"},{"include":"#List"}]},
+		"IndCmt4":   {"begin":"^(?=(\\t|    ){4}[^#]*<#>)",                 "end":"^(?!(\\t|    ){4}(\\s|[^#]*<#>)|\\s*$)",                 "patterns":[{"begin":"^(?=(\\t|    ){4}\\s+(?!$))", "end":"$", "name":"comment.block.verse", "patterns":[{"include":"#BlockCmt"}]},{"include":"#EatIndCmt"},{"include":"#List"}]},
+		"IndCmt5":   {"begin":"^(?=(\\t|    ){5}[^#]*<#>)",                 "end":"^(?!(\\t|    ){5}(\\s|[^#]*<#>)|\\s*$)",                 "patterns":[{"begin":"^(?=(\\t|    ){5}\\s+(?!$))", "end":"$", "name":"comment.block.verse", "patterns":[{"include":"#BlockCmt"}]},{"include":"#EatIndCmt"},{"include":"#List"}]},
+		"IndCmt6":   {"begin":"^(?=(\\t|    ){6}[^#]*<#>)",                 "end":"^(?!(\\t|    ){6}(\\s|[^#]*<#>)|\\s*$)",                 "patterns":[{"begin":"^(?=(\\t|    ){6}\\s+(?!$))", "end":"$", "name":"comment.block.verse", "patterns":[{"include":"#BlockCmt"}]},{"include":"#EatIndCmt"},{"include":"#List"}]},
+		"IndCmt7":   {"begin":"^(?=(\\t|    ){7}[^#]*<#>)",                 "end":"^(?!(\\t|    ){7}(\\s|[^#]*<#>)|\\s*$)",                 "patterns":[{"begin":"^(?=(\\t|    ){7}\\s+(?!$))", "end":"$", "name":"comment.block.verse", "patterns":[{"include":"#BlockCmt"}]},{"include":"#EatIndCmt"},{"include":"#List"}]},
+      
+		"MarkCmt0":  {"begin":"^(?=(\\t|    ){0}[^#]*<#>)",                 "end":"^(?!(\\t|    ){0}(\\s|[^#]*<#>)|\\s*$)",                 "patterns":[{"begin":"^(?=(\\t|    ){0}\\s+(?!$))", "end":"$", "name":"comment.block.verse", "patterns":[{"include":"#BlockCmt"}]},{"include":"#EatIndCmt"},{"include":"#Contents"}]},
+		"MarkCmt1":  {"begin":"^(?=(\\t|    ){1}[^#]*<#>)",                 "end":"^(?!(\\t|    ){1}(\\s|[^#]*<#>)|\\s*$)",                 "patterns":[{"begin":"^(?=(\\t|    ){1}\\s+(?!$))", "end":"$", "name":"comment.block.verse", "patterns":[{"include":"#BlockCmt"}]},{"include":"#EatIndCmt"},{"include":"#Contents"}]},
+		"MarkCmt2":  {"begin":"^(?=(\\t|    ){2}[^#]*<#>)",                 "end":"^(?!(\\t|    ){2}(\\s|[^#]*<#>)|\\s*$)",                 "patterns":[{"begin":"^(?=(\\t|    ){2}\\s+(?!$))", "end":"$", "name":"comment.block.verse", "patterns":[{"include":"#BlockCmt"}]},{"include":"#EatIndCmt"},{"include":"#Contents"}]},
+		"MarkCmt3":  {"begin":"^(?=(\\t|    ){3}[^#]*<#>)",                 "end":"^(?!(\\t|    ){3}(\\s|[^#]*<#>)|\\s*$)",                 "patterns":[{"begin":"^(?=(\\t|    ){3}\\s+(?!$))", "end":"$", "name":"comment.block.verse", "patterns":[{"include":"#BlockCmt"}]},{"include":"#EatIndCmt"},{"include":"#Contents"}]},
+		"MarkCmt4":  {"begin":"^(?=(\\t|    ){4}[^#]*<#>)",                 "end":"^(?!(\\t|    ){4}(\\s|[^#]*<#>)|\\s*$)",                 "patterns":[{"begin":"^(?=(\\t|    ){4}\\s+(?!$))", "end":"$", "name":"comment.block.verse", "patterns":[{"include":"#BlockCmt"}]},{"include":"#EatIndCmt"},{"include":"#Contents"}]},
+		"MarkCmt5":  {"begin":"^(?=(\\t|    ){5}[^#]*<#>)",                 "end":"^(?!(\\t|    ){5}(\\s|[^#]*<#>)|\\s*$)",                 "patterns":[{"begin":"^(?=(\\t|    ){5}\\s+(?!$))", "end":"$", "name":"comment.block.verse", "patterns":[{"include":"#BlockCmt"}]},{"include":"#EatIndCmt"},{"include":"#Contents"}]},
+		"MarkCmt6":  {"begin":"^(?=(\\t|    ){6}[^#]*<#>)",                 "end":"^(?!(\\t|    ){6}(\\s|[^#]*<#>)|\\s*$)",                 "patterns":[{"begin":"^(?=(\\t|    ){6}\\s+(?!$))", "end":"$", "name":"comment.block.verse", "patterns":[{"include":"#BlockCmt"}]},{"include":"#EatIndCmt"},{"include":"#Contents"}]},
+		"MarkCmt7":  {"begin":"^(?=(\\t|    ){7}[^#]*<#>)",                 "end":"^(?!(\\t|    ){7}(\\s|[^#]*<#>)|\\s*$)",                 "patterns":[{"begin":"^(?=(\\t|    ){7}\\s+(?!$))", "end":"$", "name":"comment.block.verse", "patterns":[{"include":"#BlockCmt"}]},{"include":"#EatIndCmt"},{"include":"#Contents"}]},
+      
+		"CodeMark0": {"begin":"^(?=(\\t|    ){0}[^#]*:>\\s*(#|$))",         "end":"^(?!(\\t|    ){0}(\\s|[^#]*:>)|\\s*$)",                  "patterns":[{"begin":"^(?=(\\t|    ){0}\\s+(?!$))", "end":"$", "patterns":[{"include":"#ContentsInd"}]},{"include":"#List"}]},
+		"CodeMark1": {"begin":"^(?=(\\t|    ){1}[^#]*:>\\s*(#|$))",         "end":"^(?!(\\t|    ){1}(\\s|[^#]*:>)|\\s*$)",                  "patterns":[{"begin":"^(?=(\\t|    ){1}\\s+(?!$))", "end":"$", "patterns":[{"include":"#ContentsInd"}]},{"include":"#List"}]},
+		"CodeMark2": {"begin":"^(?=(\\t|    ){2}[^#]*:>\\s*(#|$))",         "end":"^(?!(\\t|    ){2}(\\s|[^#]*:>)|\\s*$)",                  "patterns":[{"begin":"^(?=(\\t|    ){2}\\s+(?!$))", "end":"$", "patterns":[{"include":"#ContentsInd"}]},{"include":"#List"}]},
+		"CodeMark3": {"begin":"^(?=(\\t|    ){3}[^#]*:>\\s*(#|$))",         "end":"^(?!(\\t|    ){3}(\\s|[^#]*:>)|\\s*$)",                  "patterns":[{"begin":"^(?=(\\t|    ){3}\\s+(?!$))", "end":"$", "patterns":[{"include":"#ContentsInd"}]},{"include":"#List"}]},
+		"CodeMark4": {"begin":"^(?=(\\t|    ){4}[^#]*:>\\s*(#|$))",         "end":"^(?!(\\t|    ){4}(\\s|[^#]*:>)|\\s*$)",                  "patterns":[{"begin":"^(?=(\\t|    ){4}\\s+(?!$))", "end":"$", "patterns":[{"include":"#ContentsInd"}]},{"include":"#List"}]},
+		"CodeMark5": {"begin":"^(?=(\\t|    ){5}[^#]*:>\\s*(#|$))",         "end":"^(?!(\\t|    ){5}(\\s|[^#]*:>)|\\s*$)",                  "patterns":[{"begin":"^(?=(\\t|    ){5}\\s+(?!$))", "end":"$", "patterns":[{"include":"#ContentsInd"}]},{"include":"#List"}]},
+		"CodeMark6": {"begin":"^(?=(\\t|    ){6}[^#]*:>\\s*(#|$))",         "end":"^(?!(\\t|    ){6}(\\s|[^#]*:>)|\\s*$)",                  "patterns":[{"begin":"^(?=(\\t|    ){6}\\s+(?!$))", "end":"$", "patterns":[{"include":"#ContentsInd"}]},{"include":"#List"}]},
+		"CodeMark7": {"begin":"^(?=(\\t|    ){7}[^#]*:>\\s*(#|$))",         "end":"^(?!(\\t|    ){7}(\\s|[^#]*:>)|\\s*$)",                  "patterns":[{"begin":"^(?=(\\t|    ){7}\\s+(?!$))", "end":"$", "patterns":[{"include":"#ContentsInd"}]},{"include":"#List"}]},
+
+		"MarkCode0": {"begin":"^(?=(\\t|    ){0}[^#]*&[^#]*[:.]\\s*(#|$))", "end":"^(?!(\\t|    ){0}(\\s|[^#]*&[^#]*[:.]\\s*(#|$))|\\s*$)", "patterns":[{"begin":"^(?=(\\t|    ){0}\\s+(?!$))", "end":"$", "patterns":[{"include":"#ListInd"}]},{"include":"#Contents"}]},
+		"MarkCode1": {"begin":"^(?=(\\t|    ){1}[^#]*&[^#]*[:.]\\s*(#|$))", "end":"^(?!(\\t|    ){1}(\\s|[^#]*&[^#]*[:.]\\s*(#|$))|\\s*$)", "patterns":[{"begin":"^(?=(\\t|    ){1}\\s+(?!$))", "end":"$", "patterns":[{"include":"#ListInd"}]},{"include":"#Contents"}]},
+		"MarkCode2": {"begin":"^(?=(\\t|    ){2}[^#]*&[^#]*[:.]\\s*(#|$))", "end":"^(?!(\\t|    ){2}(\\s|[^#]*&[^#]*[:.]\\s*(#|$))|\\s*$)", "patterns":[{"begin":"^(?=(\\t|    ){2}\\s+(?!$))", "end":"$", "patterns":[{"include":"#ListInd"}]},{"include":"#Contents"}]},
+		"MarkCode3": {"begin":"^(?=(\\t|    ){3}[^#]*&[^#]*[:.]\\s*(#|$))", "end":"^(?!(\\t|    ){3}(\\s|[^#]*&[^#]*[:.]\\s*(#|$))|\\s*$)", "patterns":[{"begin":"^(?=(\\t|    ){3}\\s+(?!$))", "end":"$", "patterns":[{"include":"#ListInd"}]},{"include":"#Contents"}]},
+		"MarkCode4": {"begin":"^(?=(\\t|    ){4}[^#]*&[^#]*[:.]\\s*(#|$))", "end":"^(?!(\\t|    ){4}(\\s|[^#]*&[^#]*[:.]\\s*(#|$))|\\s*$)", "patterns":[{"begin":"^(?=(\\t|    ){4}\\s+(?!$))", "end":"$", "patterns":[{"include":"#ListInd"}]},{"include":"#Contents"}]},
+		"MarkCode5": {"begin":"^(?=(\\t|    ){5}[^#]*&[^#]*[:.]\\s*(#|$))", "end":"^(?!(\\t|    ){5}(\\s|[^#]*&[^#]*[:.]\\s*(#|$))|\\s*$)", "patterns":[{"begin":"^(?=(\\t|    ){5}\\s+(?!$))", "end":"$", "patterns":[{"include":"#ListInd"}]},{"include":"#Contents"}]},
+		"MarkCode6": {"begin":"^(?=(\\t|    ){6}[^#]*&[^#]*[:.]\\s*(#|$))", "end":"^(?!(\\t|    ){6}(\\s|[^#]*&[^#]*[:.]\\s*(#|$))|\\s*$)", "patterns":[{"begin":"^(?=(\\t|    ){6}\\s+(?!$))", "end":"$", "patterns":[{"include":"#ListInd"}]},{"include":"#Contents"}]},
+		"MarkCode7": {"begin":"^(?=(\\t|    ){7}[^#]*&[^#]*[:.]\\s*(#|$))", "end":"^(?!(\\t|    ){7}(\\s|[^#]*&[^#]*[:.]\\s*(#|$))|\\s*$)", "patterns":[{"begin":"^(?=(\\t|    ){7}\\s+(?!$))", "end":"$", "patterns":[{"include":"#ListInd"}]},{"include":"#Contents"}]}
+	}
+}
