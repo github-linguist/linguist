@@ -7,8 +7,6 @@ using { /UnrealEngine.com/Temporary/UI }
         Function(EventData)
 
 
-#Wrapper Agent à voir si tu veux faire un wrapper.verse
-
 wrapper_agent(t : type) := class():
     ExtraData : t
     OutputFunc : tuple(agent, t) -> void
