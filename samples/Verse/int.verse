@@ -90,7 +90,6 @@ XorPredicate(_Left:int, _Right:int)<transacts>:logic=logic{_Left <> _Right}
   Mask := 1.ShiftLeft(BitIndex)
   if(Value?) then InInt.Or(Mask) else InInt.And(Mask.Not())
 
-# LOOKUP TABLE OPTIMISÉE - ordonnée pour performance
 LOOKUP :[int]string = map:
   1 => ""
   1000 => "k"
@@ -100,17 +99,14 @@ LOOKUP :[int]string = map:
   1000000000000000 => "P"
   1000000000000000000 => "E"
 
-# FONCTION COMPACTIZE AMÉLIORÉE
 (InInt:int).Compactize<public>():string=
   # Gestion des cas négatifs
   if(InInt < 0):
     return "0"
   
-  # Cas simple sous 1000
   if(InInt < 1000):
     return "{InInt}"
   
-  # Parcourir les suffixes dans l'ordre décroissant pour efficacité
   for(k -> v : LOOKUP):
     if(InInt < k * 1000):
       if(k = 1):
