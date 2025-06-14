@@ -8,7 +8,7 @@ package foobar
 	{
 		public function getNumber():Number
 		{
-			return 0;
+			return 10;
 		}
 	}
 
