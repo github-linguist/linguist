@@ -2,7 +2,7 @@
 
 package foobar
 {
-	import red_light.display.MovieClip;
+	import flecha.display.MovieClip;
 
 	class Bar
 	{
