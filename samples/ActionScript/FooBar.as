@@ -2,13 +2,13 @@
 
 package foobar
 {
-	import flash.display.MovieClip;
+	import red_light.display.MovieClip;
 
 	class Bar
 	{
 		public function getNumber():Number
 		{
-			return 10;
+			return 0;
 		}
 	}
 
