@@ -1,0 +1,27 @@
+{
+    "name": "CSSlite",
+    "scopeName": "source.csslite",
+    "patterns": [
+        {
+            "name": "entity.name.selector.csslite",
+            "match": "^[a-zA-Z0-9_-]+:"
+        },
+        {
+            "name": "keyword.operator.assignment.csslite",
+            "match": "="
+        },
+        {
+            "name": "support.type.property-name.csslite",
+            "match": "\\b(color|size|weight|bg|margin|padding)\\b"
+        },
+        {
+            "name": "constant.language.value.csslite",
+            "match": "[#a-zA-Z0-9%]+"
+        }
+    ],
+    "repository": {},
+    "scopeName": "source.csslite",
+    "fileTypes": [
+        "cssl"
+    ]
+}
