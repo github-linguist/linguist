@@ -611,7 +611,7 @@ class TestHeuristics < Minitest::Test
   def test_lean_by_heuristics
     assert_heuristics({
       "Lean" => all_fixtures("Lean", "*.lean"),
-      "Lean 4" => all_fixtures("Lean 4", "*.lean")
+      "Lean4" => all_fixtures("Lean4", "*.lean")
     })
   end
 
