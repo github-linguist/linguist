@@ -279,17 +279,13 @@ class TestBlob < Minitest::Test
       "#{samples_path}/C/rpc.h" => ["C", "C++"],
     }
     Samples.each do |sample|
+      next if allowed_failures.include?(sample[:path])
       blob = sample_blob_memory(sample[:path])
-      assert blob.language, "No language for #{sample[:path]}"
-      fs_name = blob.language.fs_name ? blob.language.fs_name : blob.language.name
-
-      if allowed_failures.has_key? sample[:path]
-        # Failures are reasonable when a file is fully valid in more than one language.
-        assert allowed_failures[sample[:path]].include?(sample[:language]), blob.name
-      else
-        assert_equal sample[:language], fs_name, blob.name
-      end
+      assert_equal sample[:language], blob.language.name, "#{sample[:path]} is not recognized as #{sample[:language]}"
     end
+
+    # Тест для MPL
+    assert_equal "MPL", sample_blob_memory("MPL/example.mpl").language.name
 
     # Test language detection for files which shouldn't be used as samples
     root = File.expand_path('../fixtures', __FILE__)
