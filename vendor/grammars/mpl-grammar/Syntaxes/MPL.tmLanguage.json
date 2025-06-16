@@ -1,0 +1,142 @@
+{
+  "name": "MPL",
+  "scopeName": "source.mpl",
+  "fileTypes": ["mpl"],
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#imports"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#numbers"
+    },
+    {
+      "include": "#operators"
+    },
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#types"
+    },
+    {
+      "include": "#identifiers"
+    },
+    {
+      "include": "#punctuation"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.number-sign.mpl",
+          "match": "#.*$"
+        }
+      ]
+    },
+    "imports": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.mpl",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "keyword.control.mpl",
+              "match": "\\buse\\b"
+            }
+          ]
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.mpl",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.mpl",
+              "match": "\\\\."
+            },
+            {
+              "name": "constant.character.escape.mpl",
+              "match": "\\n"
+            },
+            {
+              "name": "constant.character.escape.mpl",
+              "match": "\\t"
+            }
+          ]
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.integer.mpl",
+          "match": "\\b[0-9]+\\b"
+        },
+        {
+          "name": "constant.numeric.float.mpl",
+          "match": "\\b[0-9]+\\.[0-9]+([eE][+-]?[0-9]+)?\\b"
+        },
+        {
+          "name": "constant.numeric.hex.mpl",
+          "match": "\\b0x[0-9a-fA-F]+\\b"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.mpl",
+          "match": "[+\\-*/%<>=!&|^~@]"
+        },
+        {
+          "name": "keyword.operator.mpl",
+          "match": "\\b(LF|CR|TAB)\\b"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.mpl",
+          "match": "\\b(use|toArray|toString|joinPath|set|get|new|cast|neg|rshift|and|cat|times|dup|between|within|when|assert|pfunc|overload|same|isCombined|meetsAll|loadString|saveFile|printList|failProc|raiseStaticError|lexicalError|dynamic|struct|fieldCount|toSpan2|toSpanStatic2|toStringView|getCodePointAndSize|splitString|assembleString|uif|while|if|exportFunction|ensure|toCommandLine2|loadString|saveFile|printList|meetsAll|pfunc|overload|same|isCombined|TRUE|FALSE)\\b"
+        }
+      ]
+    },
+    "types": {
+      "patterns": [
+        {
+          "name": "storage.type.mpl",
+          "match": "\\b(Array|String|Int32|Int64|Nat8|Nat32|Natx|Real64|HashTable|Variant|CommandLine|Function|Process|Text|Cref|Ref|Cond|StringView)\\b"
+        }
+      ]
+    },
+    "identifiers": {
+      "patterns": [
+        {
+          "name": "variable.other.mpl",
+          "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\b"
+        }
+      ]
+    },
+    "punctuation": {
+      "patterns": [
+        {
+          "name": "punctuation.definition.mpl",
+          "match": "[\\[\\](){}.,;:]"
+        }
+      ]
+    }
+  }
+} 

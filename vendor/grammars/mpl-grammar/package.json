@@ -1,0 +1,39 @@
+{
+  "name": "mpl-grammar",
+  "displayName": "MPL Grammar",
+  "description": "MPL language grammar for VS Code",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "mpl",
+        "aliases": [
+          "MPL",
+          "mpl"
+        ],
+        "extensions": [
+          ".mpl"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "mpl",
+        "scopeName": "source.mpl",
+        "path": "./Syntaxes/MPL.tmLanguage.json"
+      }
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/mpl-grammar.git"
+  },
+  "license": "MIT"
+} 
