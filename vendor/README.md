@@ -70,6 +70,8 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Bluespec BH:** [B-Lang-org/language-bh](https://github.com/B-Lang-org/language-bh)
 - **Boo:** [drslump/sublime-boo](https://github.com/drslump/sublime-boo)
 - **Boogie:** [boogie-org/boogie-vscode](https://github.com/boogie-org/boogie-vscode)
+- **BoxLang:** [ortus-boxlang/boxlang.tmbundle](https://github.com/ortus-boxlang/boxlang.tmbundle)
+- **BoxLang Template:** [ortus-boxlang/boxlang.tmbundle](https://github.com/ortus-boxlang/boxlang.tmbundle)
 - **Brainfuck:** [Drako/SublimeBrainfuck](https://github.com/Drako/SublimeBrainfuck)
 - **BrighterScript:** [rokucommunity/vscode-brightscript-language](https://github.com/rokucommunity/vscode-brightscript-language)
 - **Brightscript:** [rokucommunity/vscode-brightscript-language](https://github.com/rokucommunity/vscode-brightscript-language)
