@@ -734,10 +734,7 @@ module Linguist
     def generated_dart?
       return false unless extname == '.dart'
       return false unless lines.count > 1
-      pattern = /generated code\W{2,3}do not modify/
-      return lines[0].downcase =~ pattern ||
-             lines[1].downcase =~ pattern ||
-             lines[2]&.downcase =~ pattern
+      return lines.first(3).any? { |l| l.downcase.match(/generated code\W{2,3}do not modify/) }
     end
 
     # Internal: Is the file a generated Perl/Pollution/Portability header file?
