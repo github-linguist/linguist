@@ -1,0 +1,94 @@
+/**
+ *  @License Apache-2.0
+ */
+class {
+
+	// Properties
+	property name="scheduler";
+	property name="runtime";
+	property name="logger";
+	property name="asyncService";
+	property name="cacheService";
+	property name="interceptorService";
+
+	/**
+	 * The configure method is called by the BoxLang runtime
+	 * to allow the scheduler to configure itself.
+	 *
+	 * This is where you define your tasks and setup global configuration.
+	 */
+	function configure(){
+		// Setup Scheduler Properties
+		scheduler.setSchedulerName( "My-Scheduler" )
+		scheduler.setTimezone( "UTC" )
+
+		// Define a lambda task
+		scheduler.task( "My test Task" )
+			.call( () -> {
+				println( "I am a lambda task: #dateFormat( now(), "full" )#" );
+			} )
+			.every( 2, "second" );
+	}
+
+	/**
+	 * --------------------------------------------------------------------------
+	 * Life - Cycle Callbacks
+	 * --------------------------------------------------------------------------
+	 */
+
+	/**
+	 * Called after the scheduler has registered all schedules
+	 */
+	void function onStartup(){
+		println( "I have started!" & scheduler.getSchedulerName() );
+	}
+
+	/**
+	 * Called before the scheduler is going to be shutdown
+	 */
+	void function onShutdown(){
+		println( "I have shutdown!" & scheduler.getSchedulerName() );
+	}
+
+	/**
+	 * Called whenever ANY task fails
+	 *
+	 * @task      The task that got executed
+	 * @exception The exception object
+	 */
+	function onAnyTaskError( task, exception ){
+		println( "Any task [#task.getName()#]  blew up " & exception.getMessage() );
+	}
+
+	/**
+	 * Called whenever ANY task succeeds
+	 *
+	 * @task   The task that got executed
+	 * @result The result (if any) that the task produced as an Optional
+	 */
+	function onAnyTaskSuccess( task, result ){
+		println( "on any task success [#task.getName()#]"  );
+		println( "results for task are: " & result.orElse( "No result" ) );
+	}
+
+	/**
+	 * Called before ANY task runs
+	 *
+	 * @task The task about to be executed
+	 */
+	function beforeAnyTask( task ){
+		println( "before any task [#task.getName()#]"  );
+	}
+
+	/**
+	 * Called after ANY task runs
+	 *
+	 * @task   The task that got executed
+	 * @result The result (if any) that the task produced as an Optional
+	 */
+	function afterAnyTask( task, result ){
+		println( "after any task completed [#task.getName()#]"  );
+		println( "results for task are: " & result.orElse( "No result" ) );
+	}
+
+}

@@ -1,0 +1,41 @@
+/**
+ * BoxLang Script Example
+ * @License Apache-2.0
+ *
+ * @author Brad Wood
+ */
+@singleton
+class {
+
+    property name="datasource" type="string" default="myDB";
+
+    public function init() {
+        return this;
+    }
+
+    /**
+     * Get user by ID
+     *
+     * @id The user ID to fetch
+     */
+    public User function getUserById( required numeric id, string datasource = variables.datasource ) {
+        qry = new Query(
+            datasource = arguments.datasource,
+            sql = "SELECT * FROM users WHERE id = :id"
+        );
+        qry.addParam(name="id", value=arguments.id, type="integer");
+
+        var result = qry.execute().getResult();
+
+        if (result.recordCount > 0) {
+            return new User(result.getRow(1));
+        }
+
+        throw new UserNotFoundException("User with ID #arguments.id# not found");
+    }
+
+    // Arrow function example
+    public array function getActiveUsers() {
+        return users.filter((user) => user.isActive);
+    }
+}

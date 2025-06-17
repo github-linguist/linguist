@@ -1,0 +1,137 @@
+/**
+ * Boxlang Component Which Generates the Form Tag
+ *
+ * @License Apache-2.0
+ */
+@BoxComponent( Input )
+@AllowsBody( false )
+@RequiresBody( false )
+class{
+
+	variables.formComponentName = "Form";
+
+	/**
+	 * The Input Form Component
+	 *
+	 * <pre>
+	 * <bx:input name="foo" type="text" value="" range="1,10" message="The input range must be between 1 an 10" />
+	 * </pre>
+	 *
+	 * @param context The context of the execution (IBoxContext)
+	 * @param attributes The attributes of the component that were passed in
+	 * @param body The body of the component that you can pass to `processBody(context, body, [buffer])` for execution and buffer retreival
+	 * @param executionState The execution state of the component. Each component get's one as an isolated state.
+	 *
+	 * @return A BodyResult instance or null for a default result return.
+	 */
+	function invoke( required context, Struct attributes, any body, Struct executionState ){
+
+		if( isNull( attributes.name ) ){
+			throw(
+				type		= "boxlang.forms.MissingAttributeException",
+				message		= "The name attribute is required for the Input component"
+			);
+		}
+
+		// HTML5 validation type
+		if( !isNull( attributes.validate ) && variables.acceptedTypes.contains( attributes.validate ) ){
+
+		}
+
+		if( isNull( attributes.type ) ){
+			attributes.type = "text";
+		}
+
+		var AJAXAttributes = [ "autosuggest", "autosuggestbinddelay", "autosuggestminlength", "delimiter", "maxresultsdisplayed", "onbinderror", "showautosuggestloadingicon", "typeahead", "autocomplete", "sourcefortooltip" ];
+		var nonHTMLAttributes = [ "range", "validate", "bindattribute", "bindonload", "onvalidate", "form", "formaction", "formenctype", "formmethod", "formnovalidate", "formtarget", "daynames", "firstdayofweek", "monthnames" ];
+		var unsupportedAttributes = [ "bind", "validateAt" ];
+		var conditionalAtrributes = [ "checked", "disabled", "autofocus" ];
+		var evaluativeAttributes = [ "label", "message", "passthrough" ];
+
+		if( AJAXAttributes.some( ( key ) => !isNull( attributes[ key ] )  ) ){
+			var foundUnsupported = attributes.keyArray().filter( ( key )=> AJAXAttributes.contains( key ) );
+			throw(
+				type		= "boxlang.forms.UnsupportedAttributeException",
+				message		= "The AJAX attributes #foundUnsupported.toList()# are not yet supported by the forms Input component"
+			);
+		}
+		var isHTMLAttribute = ( key ) => !AJAXAttributes.contains( key ) && !nonHTMLAttributes.contains( key ) && !unsupportedAttributes.contains( key ) && !conditionalAtrributes.contains( key ) && !evaluativeAttributes.contains( key );
+
+		var promotedAttributes = attributes.filter( ( key, value ) => lcase( left( key, 4 ) ) == "form" );
+
+		if( promotedAttributes.len() ){
+			var formParentState = context.findClosestComponent( formComponentName );
+			if( isNull( formParentState ) ){
+				BoxAnnounce(
+					"LogMessage",
+					{
+						"text" : "The attributes #promotedAttributes.keyArray().toList()# were found but a parent form component was not present. Ignoring these attributes",
+						"level" : "WARN"
+					}
+				);
+			} else {
+				param formParentState.promotions = {};
+				formParentState.promotions.append( promotedAttributes );
+			}
+		}
+
+		var tagContent = "<input";
+
+		attributes.filter( ( key ) => isHTMLAttribute( key ) ).each( ( key, value ) => {
+			tagContent &= " #key#=""#encodeForHTMLAttribute( value )#""";
+		} );
+
+		if( !isNull( attributes.passthrough ) ){
+			if( isStruct( attributes.passthrough ) ){
+				attributes.passthrough.each( ( key, value ) => {
+					tagContent &= " #key#=""#encodeForHTMLAttribute( value )#""";
+				} );
+			} else if( isArray ( attributes.passthrough ) ){
+				attributes.passthrough.each( ( key, value ) => {
+					tagContent &= " #value#";
+				} );
+			}
+			else{
+				tagContent &= " #attributes.passthrough#";
+			}
+		}
+
+
+		conditionalAtrributes.each( ( key ) => {
+			if( !isNull( attributes[ key ] ) && attributes[ key ] ){
+				tagContent &= " #key#";
+			}
+		} );
+
+		if( !isNull( attributes.range ) ){
+			var range = listToArray( attributes.range );
+			if( range.len() != 2 ){
+				throw(
+					type		= "boxlang.forms.InvalidRangeException",
+					message		= "The range attribute must be a list of two values"
+				);
+			}
+			tagContent &= " min=""#range[ 1 ]#"" max=""#range[ 2 ]#""";
+		}
+
+		if( !isNull( attributes.autosuggest ) ){}
+
+		if( !isNull( attributes.title ) ){
+			tagContext &= " tooltip";
+		}
+
+		if( !isNull( attributes.message ) ){
+			tagContent &= " data-validation-message=""#encodeForHTMLAttribute( attributes.message )#""";
+		}
+
+		tagContent &= " />";
+
+		if( !isNull( attributes.label ) ){
+			tagContent = "<label for=""#attributes.id#"">#attributes.label#</label>" & tagContent;
+		}
+
+		context.writeToBuffer( tagContent );
+
+	}
+
+}

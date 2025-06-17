@@ -1,0 +1,248 @@
+<!--- * @License Apache-2.0 --->
+<bx:script>
+	import java.lang.reflect.Modifier;
+	import ortus.boxlang.runtime.dynamic.casters.StringCaster;
+
+	expandRoot = expand ?: true;
+	// We will be dumping out the details of a class, but there may or may not be a related instance
+	// If there is an instance, we will also dump out the toString() of that instance and field values.
+	instance = null;
+	theClass = var;
+	// If we don't have a class already, then separate the class from the instance.
+	if( !(var instanceof 'java.lang.Class' ) ) {
+		instance = var;
+		theClass = var.getClass();
+	}
+</bx:script>
+<bx:output>
+	<div class="bx-dump">
+		<table class="bx-table-tertiary" title="#encodeForHTML( posInCode )#">
+			<caption
+				role="button"
+				tabindex="0"
+				<bx:if expandRoot>open aria-expanded="true"<bx:else>aria-expanded="false"</bx:if>
+				data-bx-toggle="siblings"
+			>
+				<strong>
+					<bx:if label.len() >#label# - </bx:if>
+					#encodeForHTML( theClass.getSimpleName() )#
+				</strong>
+			</caption>
+			<tbody
+				<bx:if !expandRoot>class="d-none"</bx:if>
+			>
+				<bx:if !isNull( instance ) >
+					<!--- CLASS toString --->
+					<tr>
+						<th
+							aria-expanded="true"
+							data-bx-toggle="onoff"
+							scope="row"
+							valign="top"
+							tabindex="0"
+						>
+							toString()
+						</th>
+						<td>
+							<div class="bx-onoff">
+								#encodeForHTML( instance.toString() )#
+							</div>
+						</td>
+					</tr>
+				</bx:if>
+				<!--- CLASS NAME --->
+				<tr>
+					<th
+						aria-expanded="true"
+						data-bx-toggle="onoff"
+						scope="row"
+						valign="top"
+						tabindex="0"
+					>
+						Class
+					</th>
+					<td>
+						<div class="bx-onoff">
+							<em>#encodeForHTML( theClass.getName() )#</em>
+						</div>
+					</td>
+				</tr>
+
+				<!--- CLASS FIELDS --->
+				<bx:if theClass.getFields().len()>
+					<tr>
+						<th
+							aria-expanded="true"
+							data-bx-toggle="onoff"
+							scope="row"
+							valign="top"
+							tabindex="0"
+						>
+							Field(s)
+						</th>
+						<td>
+							<div class="bx-onoff">
+								<bx:set fields = theClass.getFields()>
+								<table class="bx-table-default">
+									<thead>
+										<tr>
+											<th>Name</th>
+											<th>Signature</th>
+											<th>Value</th>
+										</tr>
+									</thead>
+									<tbody>
+										<bx:loop collection="#fields#" item="variables.field">
+											<tr>
+												<td>
+													<strong>#encodeForHTML( variables.field.getName() )#</strong>
+												</td>
+												<td>
+													<pre><code>#encodeForHTML( variables.field.toString() )#</code></pre>
+												</td>
+												<td>
+													<!--- check if this is static or we have an instance --->
+													<bx:if Modifier.isStatic(variables.field.getModifiers() ) or !isNull( instance ) >
+														<bx:set value = variables.field.get( instance )>
+														<bx:if isNull( value ) >
+															[Null]
+														<bx:else>
+															<bx:set stringCastAttempt = StringCaster.attempt( value )>
+															<bx:if stringCastAttempt.wasSuccessful()>
+																#encodeForHTML( stringCastAttempt.get() )#
+															<bx:else>
+																[#encodeForHTML( value.getClass().getName() )#<bx:if value instanceof 'java.lang.Class'>&lt;#encodeForHTML( value.getName() )#&gt;</bx:if>]
+															</bx:if>
+														</bx:if>
+													<bx:else>
+														<!--- We can't get instance fields without an instance --->
+														<em>N/A</em>
+													</bx:if>
+												</td>
+											</tr>
+										</bx:loop>
+									</tbody>
+								</table>
+							</div>
+						</td>
+					</tr>
+				</bx:if>
+
+				<!--- CLASS annotations --->
+				<bx:if theClass.getDeclaredannotations().len()>
+					<tr>
+						<th
+							aria-expanded="true"
+							data-bx-toggle="onoff"
+							scope="row"
+							valign="top"
+							tabindex="0"
+						>
+							Annotations(s)
+						</th>
+						<td>
+							<div class="bx-onoff">
+								<bx:set annotations = theClass.getDeclaredannotations()>
+								<table class="bx-table-default">
+									<thead>
+										<tr>
+											<th><b>Type</b></th>
+											<th><b>Signature</b></th>
+										</tr>
+									</thead>
+									<tbody>
+										<bx:loop collection="#annotations#" item="variables.annotation">
+											<tr>
+												<td>#variables.annotation.annotationType().toString()#</td>
+												<td>
+													<pre><code>#encodeForHTML( variables.annotation.toString() )#</code></pre>
+												</td>
+											</tr>
+										</bx:loop>
+									</tbody>
+								</table>
+							</div>
+						</td>
+					</tr>
+				</bx:if>
+
+				<!--- CLASS Constructors --->
+				<bx:if theClass.getDeclaredConstructors().len()>
+					<tr>
+						<th
+							aria-expanded="true"
+							data-bx-toggle="onoff"
+							scope="row"
+							valign="top"
+							tabindex="0"
+						>
+							Constructor(s)
+						</th>
+						<td>
+							<div class="bx-onoff">
+								<bx:set constructors = theClass.getDeclaredConstructors()>
+								<table class="bx-table-default">
+									<thead>
+										<tr>
+											<th><b>Signature</b></th>
+										</tr>
+									</thead>
+									<tbody>
+										<bx:loop collection="#constructors#" item="variables.constructor">
+											<tr>
+												<td>
+													<pre><code>#encodeForHTML( variables.constructor.toString() )#</code></pre>
+												</td>
+											</tr>
+										</bx:loop>
+									</tbody>
+								</table>
+							</div>
+						</td>
+					</tr>
+				</bx:if>
+
+				<!--- CLASS Methods --->
+				<tr>
+					<th
+						aria-expanded="true"
+						data-bx-toggle="onoff"
+						scope="row"
+						valign="top"
+						tabindex="0"
+					>
+						Method(s)
+					</th>
+					<td>
+						<div class="bx-onoff">
+							<bx:script>
+								import java.util.Arrays;
+								import java.util.Comparator;
+								variables.methods = Arrays.stream( theClass.getDeclaredMethods() )
+									.sorted( Comparator.comparing( m -> arguments.m.getName() ) )
+									.toList();
+							</bx:script>
+							<table class="bx-table-default">
+								<thead>
+									<tr><th>Name</th><th>Signature</th></tr>
+								</thead>
+								<tbody>
+									<bx:loop collection="#methods#" item="variables.method">
+										<tr>
+											<td>
+												<strong>#encodeForHTML( variables.method.getName() )#</strong>
+											</td>
+											<td>
+												<pre><code>#encodeForHTML( variables.method.toString() )#</code></pre>
+											</td>
+										</tr>
+									</bx:loop>
+								</tbody>
+							</table>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</bx:output>

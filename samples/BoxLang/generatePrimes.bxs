@@ -1,0 +1,104 @@
+// * @License Apache-2.0
+import java.util.Date;
+
+start = new Date().getTime();
+// Get primes up to num
+num = 1000000
+
+p = 1; // Counter for outer loop over array
+i = 1; // Counter inner loop finding multiples of each array index
+_p = 3 	; // Stores the value being stored at index "p" in the candidate array
+m = 0; // holds multiples
+candidates = []; // main array that holds values 1 through num
+primes = []; // final array that primes are copied to to return
+pLimit = Sqr(num); // Only
+
+// Populate the candidate array with every odd number from 1 to num
+// Throw 10 indexes in the array at a time to cut the number of
+// times "i < num" is evaluated by 90%
+while (i <= num)
+    {
+        arrayAppend( candidates, i);
+        arrayAppend( candidates, i+2);
+        arrayAppend( candidates, i+4);
+        arrayAppend( candidates, i+6);
+        arrayAppend( candidates, i+8);
+        arrayAppend( candidates, i+10);
+        arrayAppend( candidates, i+12);
+        arrayAppend( candidates, i+14);
+        arrayAppend( candidates, i+16);
+        arrayAppend( candidates, i+18);
+        i = i+20;
+    }
+// Short circuit this scenario
+if(num >= 2)   {
+    // 2 is the only even prime number.
+    // Go ahead and stick it in the primes array if num is greater than 1
+    // since I won't be finding multiples of 2 later.
+    if(num>1) primes[1] = 2;
+
+    // Loop as long as the value of index p has not surpassed the square root of num
+    while(_p<=pLimit)
+        {
+            // The first time through, p = 2 will will be a _p value of 3
+            // in other words, start by finding multiples of 3
+            p++;
+            // If the number at this index has already been marked as "0" (not prime) skip it.
+            if(!candidates[p])
+                {
+                    continue;
+                }
+            // _p is the next prime number.
+            // It is also the number we are about to start finding multiples of.
+            _p = candidates[p];
+            // Since we know _p is prime, add it ot the primes array
+            // now while we're thinking about it
+            arrayAppend( primes, _p);
+            // Start calculating multiples with a product we haven't multipied yet.  Namely _P^2
+            i = _p;
+            // Start loop over every odd number from -P
+            while (i <= num)
+                {
+                    // This product is NOT prime
+                    m = _p*i;
+                    // Assuming the product falls in our array
+                    if(m<=num)
+                        {
+                            // Mark it as not prime
+                            // Since my array contains only prime numbers, a given value of m
+                            // will be found at the index which is half of m+1.
+                            // i.e. The number 15 will be stored in the 8th index of the array.
+                            // This trick is important since I don't want to perofrm
+                            // the expensive operation of searching through the array.
+                            candidates[(m+1)/2] = 0;
+                        }
+                    else
+                        {
+                            // IF our product is outside the range we care about,
+                            // break out of the loop.
+                            break;
+                        }
+                    // increment by two to only hit odd numbers
+                    i=i+2;
+                }
+        }
+
+    // Note, the primes array is already partially populated at this point.
+    // Begin looping at the current value of p to pick up where we left off.
+    // For every remaining index in our candidate array...
+    while (++p <= arrayLen(candidates) )
+        {
+            // ... that is not been marked prime and is less than our limit ...
+            if(candidates[p] > 1 && candidates[p] <= num)
+                {
+                    // Place it in the final array of primes.
+                    arrayAppend(primes,candidates[p]);
+                }
+        }
+    // Return our list of primes
+
+}
+
+println( arrayLen( primes ) );
+
+println( new Date().getTime()-start & "ms" )
