@@ -748,21 +748,23 @@ disambiguations:
     pattern: '^#+\s+(NAME|SYNOPSIS|DESCRIPTION)'
 - extensions: ['.scm']
   rules:
+  - language: Tree-sitter Query
+    pattern:
+    - '\(#[\w-]+[!\?]'
+    - '(?:[\)\]]\s*[\*\+\?](?:\s|$))'
+    - '(?:^\s*\w+:\s*[\(\[\"])'
+    - '\(#(?:set!|(?:not-)?(?:any-of|match)\?)'
+    - '@[\w.-]+(?:\)\s|$)'
+    negative_pattern:
+    - '\([+\-:<>\/=~\)]'
   - language: Scheme
     pattern:
     - '(?:''[\(\*#]|\w->\w|\.\.\.[\s\)]|\([+\-:<>\/=~\)]|~>|[#`]\(|#:\w)'
     - '^\s*\((?:define\*?|import|library|lambda)'
     negative_pattern:
     - '\(#[\w-]+[!\?]'
-    - '[\)\]"_]\s*(?:[\*\+\?]|@\w)'
-  - language: Tree-sitter Query
-    pattern:
-    - '\(#[\w-]+[!\?]'
-    - '[\)\]"_]\s*(?:[\*\+\?]|@\w)'
-    - '(?:^\s*\w+:\s*[\(\[\"])'
-    - '\(#(?:set!|(?:not-)?(?:any-of|match)\?)'
-    negative_pattern:
-    - '\([+\-:<>\/=~\)]'
+    - '(?:[\)\]]\s*[\*\+\?](?:\s|$))'
+    - '@[\w.-]+(?:\)\s|$)'
 - extensions: ['.sol']
   rules:
   - language: Solidity
