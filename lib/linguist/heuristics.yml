@@ -754,7 +754,7 @@ disambiguations:
     - '(?:[\)\]]\s*[\*\+\?](?:\s|$))'
     - '(?:^\s*\w+:\s*[\(\[\"])'
     - '\(#(?:set!|(?:not-)?(?:any-of|match)\?)'
-    - '@[\w.-]+(?:\s|$)'
+    - '@[\w.-]+(?:\)\s|$)'
     negative_pattern:
     - '\([+\-:<>\/=~\)]'
   - language: Scheme
@@ -764,7 +764,7 @@ disambiguations:
     negative_pattern:
     - '\(#[\w-]+[!\?]'
     - '(?:[\)\]]\s*[\*\+\?](?:\s|$))'
-    - '@[\w.-]+(?:\s|$)'
+    - '@[\w.-]+(?:\)\s|$)'
 - extensions: ['.sol']
   rules:
   - language: Solidity
