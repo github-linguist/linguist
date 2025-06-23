@@ -222,6 +222,14 @@ class TestGenerated < Minitest::Test
     generated_sample_without_loading_data("Dummy/htmlcov/coverage_html.js")
     generated_sample_without_loading_data("Dummy/htmlcov/style.css")
     generated_sample_without_loading_data("Dummy/htmlcov/status.json")
+
+    # Dart
+    generated_sample_loading_data("Dart/point.dart", true)
+    generated_sample_loading_data("Dart/equals.dart", true)
+    generated_sample_loading_data("Dart/addressbook.pb.dart")
+    generated_sample_loading_data("Dart/addressbook.pbenum.dart")
+    generated_sample_loading_data("Dart/addressbook.pbjson.dart")
+    generated_sample_loading_data("Dart/equals.freezed.dart")
   end
 
   # We've whitelisted these files on purpose, even though they're machine-generated.
