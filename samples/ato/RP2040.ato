@@ -1,0 +1,223 @@
+#pragma experiment("FOR_LOOP")
+#pragma experiment("BRIDGE_CONNECT")
+import I2C
+import SPI
+import UART_Base
+import USB2_0
+import ElectricPower
+import Resistor
+import Capacitor
+
+from "atopile/buttons/buttons.ato" import ButtonPullup
+from "atopile/buttons/parts/ALPSALPINE_SKTDLDE010/ALPSALPINE_SKTDLDE010.ato" import ALPSALPINE_SKTDLDE010_package
+
+from "parts/Raspberry_Pi_RP2040/Raspberry_Pi_RP2040.ato" import Raspberry_Pi_RP2040_package
+from "parts/Winbond_Elec_W25Q128JVSIQ/Winbond_Elec_W25Q128JVSIQ.ato" import Winbond_Elec_W25Q128JVSIQ_package
+from "parts/Yangxing_Tech_X322512MSB4SI/Yangxing_Tech_X322512MSB4SI.ato" import Yangxing_Tech_X322512MSB4SI_package
+
+
+module RP2040_driver:
+    # External interfaces
+    power_3v3 = new ElectricPower
+    i2c = new I2C
+    spi = new SPI
+    spi1 = new SPI
+    qspi = new QSPI
+    uart = new UART_Base
+    usb2 = new USB2_0
+
+    # Components
+    micro = new Raspberry_Pi_RP2040_package
+    reset_btn = new ButtonPullup
+    boot_btn = new ButtonPullup
+    osc = new _Oscillator
+    flash = new _W25Q128JVSIQ
+
+    # reset_btn.btn -> ALPSALPINE_SKTDLDE010_package
+    # boot_btn.btn -> ALPSALPINE_SKTDLDE010_package
+
+    # Internal
+    signal _gnd
+    micro.GND ~ _gnd
+
+    # Reset button
+    reset_btn.output.reference ~ power_3v3
+    reset_btn.output.line ~ micro.RUN
+
+    # Boot button
+    boot_btn.output.reference ~ power_3v3
+    boot_btn.output.line ~ micro.QSPI_SS
+    boot_btn.pullup.resistance = 10kohms +/- 5%
+
+    qspi_ss_pullup = new Resistor
+    qspi_ss_pullup.resistance = 10kohms +/- 5%
+    qspi_ss_pullup.package = "R0402"
+    power_3v3.vcc ~> qspi_ss_pullup ~> micro.QSPI_SS
+
+    usb_series_resistors = new Resistor[2]
+    for resistor in usb_series_resistors:
+        resistor.resistance = 27ohms +/- 5%
+        resistor.package = "R0402"
+
+    # Connect series resistors to usb
+    usb2.usb_if.d.p.line ~> usb_series_resistors[0] ~> micro.USB_DP
+    usb2.usb_if.d.n.line ~> usb_series_resistors[1] ~> micro.USB_DM
+
+    # Flash
+    power_3v3 ~ flash.power
+    qspi ~ flash.qspi
+
+    # Oscillator
+    osc.input ~ micro.XIN
+    osc.output ~ micro.XOUT
+    osc.gnd ~ _gnd
+
+    # 1V power for internal DVDD digital logic
+    power_1V = new ElectricPower
+    power_1V.hv ~ micro.DVDD
+    power_1V.gnd ~ _gnd
+
+    # Power the 1V rail from the internal regulator
+    micro.VREG_IN ~ power_3v3.vcc
+    micro.VREG_VOUT ~ micro.DVDD
+
+    power_3v3_caps = new Capacitor[5]
+    for cap in power_3v3_caps:
+        cap.capacitance = 1uF +/- 20%
+        cap.package = "C0402"
+        power_3v3 ~ cap.power
+
+    power_1V_caps = new Capacitor[3]
+    for cap in power_1V_caps:
+        cap.capacitance = 1uF +/- 20%
+        cap.package = "C0402"
+        power_1V ~ cap.power
+
+    # make all gpio pins available at the top level
+    signal gpio0 ~ micro.GPIO0
+    signal gpio1 ~ micro.GPIO1
+    signal gpio2 ~ micro.GPIO2
+    signal gpio3 ~ micro.GPIO3
+    signal gpio4 ~ micro.GPIO4
+    signal gpio5 ~ micro.GPIO5
+    signal gpio6 ~ micro.GPIO6
+    signal gpio7 ~ micro.GPIO7
+    signal gpio8 ~ micro.GPIO8
+    signal gpio9 ~ micro.GPIO9
+    signal gpio10 ~ micro.GPIO10
+    signal gpio11 ~ micro.GPIO11
+    signal gpio12 ~ micro.GPIO12
+    signal gpio13 ~ micro.GPIO13
+    signal gpio14 ~ micro.GPIO14
+    signal gpio15 ~ micro.GPIO15
+    signal gpio16 ~ micro.GPIO16
+    signal gpio17 ~ micro.GPIO17
+    signal gpio18 ~ micro.GPIO18
+    signal gpio19 ~ micro.GPIO19
+    signal gpio20 ~ micro.GPIO20
+    signal gpio21 ~ micro.GPIO21
+    signal gpio22 ~ micro.GPIO22
+    signal gpio23 ~ micro.GPIO23
+    signal gpio24 ~ micro.GPIO24
+    signal gpio25 ~ micro.GPIO25
+    signal gpio26_a0 ~ micro.GPIO26_ADC0
+    signal gpio27_a1 ~ micro.GPIO27_ADC1
+    signal gpio28_a2 ~ micro.GPIO28_ADC2
+    signal gpio29_a3 ~ micro.GPIO29_ADC3
+
+
+    # FIXME: it's poor practice to embed interfaces within components
+    # elevate these out to the driver level
+    # The TESTEN pin is used for factory testing and should be tied to GND
+    _gnd ~ micro.TESTEN
+
+    # USB phy power is a nominal 3v3
+    # But can be tied to IOVDD is USB is not used
+    power_3v3.hv ~ micro.USB_VDD
+    power_3v3.gnd ~ _gnd
+
+    # IOVDD is a nominal 3v3
+    power_3v3.hv ~ micro.IOVDD
+    power_3v3.hv ~ micro.ADC_AVDD
+    power_3v3.gnd ~ _gnd
+
+    # I2C interface
+    i2c.sda.line ~ gpio20
+    i2c.scl.line ~ gpio21
+
+    # UART interface
+    uart.tx.line ~ gpio4
+    uart.rx.line ~ gpio5
+
+    # SPI interface
+    signal spi_cs ~ gpio9
+    spi.mosi.line ~ gpio11
+    spi.miso.line ~ gpio8
+    spi.sclk.line ~ gpio10
+
+    signal spi1_cs ~ gpio7
+    spi1.mosi.line ~ gpio11
+    spi1.miso.line ~ gpio8
+    spi1.sclk.line ~ gpio10
+
+    # QSPI interface
+    qspi.cs ~ micro.QSPI_SS
+    qspi.sclk ~ micro.QSPI_SCLK
+    qspi.io0 ~ micro.QSPI_SD0
+    qspi.io1 ~ micro.QSPI_SD1
+    qspi.io2 ~ micro.QSPI_SD2
+    qspi.io3 ~ micro.QSPI_SD3
+
+
+module _Oscillator:
+    # the oscillator itself
+    signal input
+    signal output
+    signal gnd
+
+    osc = new Yangxing_Tech_X322512MSB4SI_package
+    input ~ osc.OSC1
+    gnd ~ osc.GND
+
+    # output resistor
+    r_osc = new Resistor
+    r_osc.resistance = 1kohms +/- 5%
+    r_osc.package = "R0402"
+    output ~ r_osc.p1; r_osc.p2 ~ osc.OSC2
+
+    # load caps
+    c_osc_1 = new Capacitor
+    c_osc_1.capacitance = 20pF +/- 20%
+    c_osc_1.package = "C0402"
+    c_osc_2 = new Capacitor
+    c_osc_2.capacitance = 20pF +/- 20%
+    c_osc_2.package = "C0402"
+
+    input ~ c_osc_1.p1; c_osc_1.p2 ~ gnd
+    osc.OSC2 ~ c_osc_2.p1; c_osc_2.p2 ~ gnd
+
+
+module _W25Q128JVSIQ:
+
+    package = new Winbond_Elec_W25Q128JVSIQ_package
+
+    power = new ElectricPower
+    power.gnd ~ package.GND
+    power.hv ~ package.VCC
+
+    qspi = new QSPI
+    qspi.cs ~ package.nCS
+    qspi.sclk ~ package.CLK
+    qspi.io0 ~ package.DI
+    qspi.io1 ~ package.DO
+    qspi.io2 ~ package.IO2
+    qspi.io3 ~ package.IO3
+
+
+interface QSPI:
+    signal cs
+    signal sclk
+    signal io0
+    signal io1
+    signal io2
+    signal io3

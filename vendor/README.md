@@ -693,6 +693,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Zephir:** [phalcon/zephir-sublime](https://github.com/phalcon/zephir-sublime)
 - **Zig:** [ziglang/sublime-zig-language](https://github.com/ziglang/sublime-zig-language)
 - **Zmodel:** [zenstackhq/zenstack](https://github.com/zenstackhq/zenstack)
+- **ato:** [atopile/ato-syntax](https://github.com/atopile/ato-syntax)
 - **cURL Config:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **crontab:** [textmate/cron.tmbundle](https://github.com/textmate/cron.tmbundle)
 - **desktop:** [Mailaender/desktop.tmbundle](https://github.com/Mailaender/desktop.tmbundle)
