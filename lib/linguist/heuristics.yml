@@ -144,6 +144,11 @@ disambiguations:
     - (?i:^\s*(end\sfunction)$)
   - language: Bluespec BH
     pattern: '^package\s+[A-Za-z_][A-Za-z0-9_'']*(?:\s*\(|\s+where)'
+- extensions: ['.bst']
+  rules:
+  - language: BibTeX Style
+    pattern: 'ENTRY\s*\{'
+  - language: BuildStream
 - extensions: ['.builds']
   rules:
   - language: XML
@@ -284,6 +289,8 @@ disambiguations:
     and:
     - named_pattern: vb-form
     - pattern: '^\s*Begin\s+VB\.Form\s+'
+  - language: INI
+    pattern: '\ATYPE=VIEW'
 - extensions: ['.fs']
   rules:
   - language: Forth
@@ -535,8 +542,19 @@ disambiguations:
     pattern: '^\s*<\?xml\s+version'
   - language: Gerber Image
     pattern: '^[DGMT][0-9]{2}\*(?:\r?\n|\r)'
+  - language: Nickel
+    pattern:
+    - '^let(?:\srec)?(?:\s[a-zA-Z_][a-zA-Z0-9_]*)?'
+    - '^import\s"[^"]+"\s+as\s'
+    - 'std\.[a-zA-Z_][a-zA-Z0-9_]*\.'
   - language: Text
     pattern: 'THE_TITLE'
+  - language: NCL
+    pattern:
+    - '^load "'
+    - '^begin$'
+    - '[0-9]\.$'
+    - '^;'
 - extensions: ['.nl']
   rules:
   - language: NL
@@ -730,21 +748,23 @@ disambiguations:
     pattern: '^#+\s+(NAME|SYNOPSIS|DESCRIPTION)'
 - extensions: ['.scm']
   rules:
+  - language: Tree-sitter Query
+    pattern:
+    - '\(#[\w-]+[!\?]'
+    - '(?:[\)\]]\s*[\*\+\?](?:\s|$))'
+    - '(?:^\s*\w+:\s*[\(\[\"])'
+    - '\(#(?:set!|(?:not-)?(?:any-of|match)\?)'
+    - '@[\w.-]+(?:\)\s|$)'
+    negative_pattern:
+    - '\([+\-:<>\/=~\)]'
   - language: Scheme
     pattern:
     - '(?:''[\(\*#]|\w->\w|\.\.\.[\s\)]|\([+\-:<>\/=~\)]|~>|[#`]\(|#:\w)'
     - '^\s*\((?:define\*?|import|library|lambda)'
     negative_pattern:
     - '\(#[\w-]+[!\?]'
-    - '[\)\]"_]\s*(?:[\*\+\?]|@\w)'
-  - language: Tree-sitter Query
-    pattern:
-    - '\(#[\w-]+[!\?]'
-    - '[\)\]"_]\s*(?:[\*\+\?]|@\w)'
-    - '(?:^\s*\w+:\s*[\(\[\"])'
-    - '\(#(?:set!|(?:not-)?(?:any-of|match)\?)'
-    negative_pattern:
-    - '\([+\-:<>\/=~\)]'
+    - '(?:[\)\]]\s*[\*\+\?](?:\s|$))'
+    - '@[\w.-]+(?:\)\s|$)'
 - extensions: ['.sol']
   rules:
   - language: Solidity
