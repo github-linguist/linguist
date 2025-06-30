@@ -17,7 +17,7 @@ class TestGenerated < Minitest::Test
     begin
       expected = !negate
       actual = Generated.generated?(blob, lambda { raise DataLoadedError.new })
-      assert(expected == !!actual, error_message(blob, negate))
+      assert(expected == actual, error_message(blob, negate))
     rescue DataLoadedError
       assert false, "Data was loaded when calling generated? on #{blob}"
     end
@@ -114,6 +114,9 @@ class TestGenerated < Minitest::Test
     # Minified files
     generated_sample_loading_data("JavaScript/jquery-1.6.1.min.js")
 
+    # MySQL View Definition Format (INI)
+    generated_sample_loading_data("INI/metrics.frm")
+
     # JavaScript with source-maps
     generated_sample_loading_data("JavaScript/namespace.js")
     generated_fixture_loading_data("Generated/inline.js")
@@ -197,6 +200,9 @@ class TestGenerated < Minitest::Test
 
     # jOOQ
     generated_sample_loading_data("Java/generated-jooq-table.java")
+
+    # Package.resolved
+    generated_sample_without_loading_data("JSON/filenames/Package.resolved")
 
     # poetry
     generated_sample_without_loading_data("TOML/filenames/poetry.lock")
