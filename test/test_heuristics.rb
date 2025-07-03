@@ -802,6 +802,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_pkg_by_heuristics
+    assert_heuristics({
+      "DataFlex" => Dir.glob("#{fixtures_path}/Generic/pkg/DataFlex/*.pkg"),
+      nil => Dir.glob("#{fixtures_path}/Generic/pkg/nil/*.pkg")
+    })
+  end
+
   def test_pkl_by_heuristics
     assert_heuristics({
       "Pkl" => all_fixtures("Pkl", "*.pkl"),

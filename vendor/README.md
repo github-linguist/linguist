@@ -145,6 +145,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Dafny:** [DafnyVSCode/Dafny-VSCode](https://github.com/DafnyVSCode/Dafny-VSCode)
 - **Dart:** [dart-lang/dart-syntax-highlight](https://github.com/dart-lang/dart-syntax-highlight)
 - **Daslang:** [moleium/daslang-grammar](https://github.com/moleium/daslang-grammar)
+- **DataFlex:** [sonnyfalk/vscode-dataflex](https://github.com/sonnyfalk/vscode-dataflex)
 - **DataWeave:** [mulesoft-labs/data-weave-tmLanguage](https://github.com/mulesoft-labs/data-weave-tmLanguage)
 - **Debian Package Control File:** [tsbarnes/language-debian](https://github.com/tsbarnes/language-debian)
 - **DenizenScript:** [DenizenScript/denizenscript-grammar](https://github.com/DenizenScript/denizenscript-grammar)

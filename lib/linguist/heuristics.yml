@@ -589,6 +589,18 @@ disambiguations:
     pattern: '<\?hh'
   - language: PHP
     pattern: '<\?[^h]'
+- extensions: ['.pkg']
+  rules:
+  - language: DataFlex
+    and:
+    - pattern: '^\s*Use [a-zA-Z0-9_$]+'
+    - pattern: '^\s*Class [a-zA-Z0-9_$]+ is a|is an [a-zA-Z0-9_$]+'
+    - pattern: '^\s*End_Class'
+  - language: DataFlex
+    and:
+    - pattern: '^\s*Use [a-zA-Z0-9_$]+'
+    - pattern: '^\s*Function|Procedure [a-zA-Z0-9_$]+'
+    - pattern: '^\s*End_Function|End_Procedure'
 - extensions: ['.pkl']
   rules:
     - language: Pkl
