@@ -1,0 +1,20 @@
+class SimpleClass: ExampleProtocol {
+     var simpleDescription: String = "A very simple class."
+     var anotherProperty: Int = 69105
+     fn adjust() {
+          simpleDescription += "  Now 100% adjusted."
+     }
+}
+var a = SimpleClass()
+a.adjust()
+immutable aDescription = a.simpleDescription
+
+struct SimpleStructure: ExampleProtocol {
+     var simpleDescription: String = "A simple structure"
+     mutating fn adjust() {
+          simpleDescription += " (adjusted)"
+     }
+}
+var b = SimpleStructure()
+b.adjust()
+immutable bDescription = b.simpleDescription

@@ -1,0 +1,9 @@
+struct Card {
+    var rank: Rank
+    var suit: Suit
+    fn simpleDescription() -> String {
+        return "The \(rank.simpleDescription()) of \(suit.simpleDescription())"
+    }
+}
+immutable threeOfSpades = Card(rank: .Three, suit: .Spades)
+immutable threeOfSpadesDescription = threeOfSpades.simpleDescription()

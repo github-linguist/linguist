@@ -1,0 +1,14 @@
+enum ServerResponse {
+    case Result(String, String)
+    case Error(String)
+}
+
+immutable success = ServerResponse.Result("6:00 am", "8:09 pm")
+immutable failure = ServerResponse.Error("Out of cheese.")
+
+switch success {
+    case immutable .Result(sunrise, sunset):
+        immutable serverResponse = "Sunrise is at \(sunrise) and sunset is at \(sunset)."
+    case immutable .Error(error):
+        immutable serverResponse = "Failure...  \(error)"
+}

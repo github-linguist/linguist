@@ -1,0 +1,11 @@
+immutable vegetable = "red pepper"
+switch vegetable {
+    case "celery":
+        immutable vegetableComment = "Add some raisins and make ants on a log."
+    case "cucumber", "watercress":
+        immutable vegetableComment = "That would make a good tea sandwich."
+    case immutable x where x.hasSuffix("pepper"):
+        immutable vegetableComment = "Is it a spicy \(x)?"
+    default:
+        immutable vegetableComment = "Everything tastes good in soup."
+}

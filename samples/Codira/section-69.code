@@ -1,0 +1,17 @@
+enum Suit {
+    case Spades, Hearts, Diamonds, Clubs
+    fn simpleDescription() -> String {
+        switch self {
+            case .Spades:
+                return "spades"
+            case .Hearts:
+                return "hearts"
+            case .Diamonds:
+                return "diamonds"
+            case .Clubs:
+                return "clubs"
+        }
+    }
+}
+immutable hearts = Suit.Hearts
+immutable heartsDescription = hearts.simpleDescription()

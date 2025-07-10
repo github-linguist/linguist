@@ -1,0 +1,9 @@
+fn returnFifteen() -> Int {
+    var y = 10
+    fn add() {
+        y += 5
+    }
+    add()
+    return y
+}
+returnFifteen()
