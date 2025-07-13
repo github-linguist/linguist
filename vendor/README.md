@@ -306,6 +306,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Just:** [nefrob/vscode-just](https://github.com/nefrob/vscode-just)
 - **KCL:** [kcl-lang/vscode-kcl](https://github.com/kcl-lang/vscode-kcl)
 - **KDL:** [kdl-org/vscode-kdl](https://github.com/kdl-org/vscode-kdl)
+- **KFramework:** [LucianCumpata/K-VSCode](https://github.com/LucianCumpata/K-VSCode)
 - **Kaitai Struct:** [atom/language-yaml](https://github.com/atom/language-yaml)
 - **KakouneScript:** [kakoune-editor/language-kak](https://github.com/kakoune-editor/language-kak)
 - **KerboScript:** [KSP-KOS/language-kerboscript](https://github.com/KSP-KOS/language-kerboscript)
