@@ -937,7 +937,7 @@ disambiguations:
   - language: Rocq Prover
     pattern: '(?:^|\s)(?:Proof|Qed)\.(?:$|\s)|(?:^|\s)Require[ \t]+(Import|Export)\s'
   - language: Verilog
-    pattern: '^[ \t]*module\s+[^\s()]+\s+\#?\(|^[ \t]*`(?:define|ifdef|ifndef|include|timescale)|^[ \t]*always[ \t]+@|^[ \t]*initial[ \t]+(begin|@)'
+    pattern: '^[ \t]*module\s+[^\s()]+\s*\#?\(|^[ \t]*`(?:define|ifdef|ifndef|include|timescale|pragma)|^[ \t]*always[ \t]*@|^[ \t]*initial[ \t]*(begin|@)'
   - language: V
     pattern: '\$(?:if|else)[ \t]|^[ \t]*fn\s+[^\s()]+\(.*?\).*?\{|^[ \t]*for\s*\{'
 - extensions: ['.vba']
