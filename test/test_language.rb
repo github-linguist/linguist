@@ -453,7 +453,7 @@ class TestLanguage < Minitest::Test
       next unless language.codemirror_mode && language.codemirror_mime_type
       filename = File.expand_path("../../vendor/CodeMirror/mode/#{language.codemirror_mode}/#{language.codemirror_mode}.js", __FILE__)
       assert File.exist?(filename), "#{filename} does not exist"
-      assert File.read(filename).match(language.codemirror_mime_type), "#{language.inspect}: #{language.codemirror_mime_type} not defined in #{filename}"
+      assert File.read(filename).match(Regexp.escape language.codemirror_mime_type), "#{language.inspect}: #{language.codemirror_mime_type} not defined in #{filename}"
     end
   end
 

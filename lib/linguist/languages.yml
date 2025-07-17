@@ -1484,6 +1484,8 @@ Cypher:
   - ".cyp"
   - ".cypher"
   tm_scope: source.cypher
+  codemirror_mode: cypher
+  codemirror_mime_type: application/x-cypher-query
   ace_mode: text
   language_id: 850806976
 Cython:
@@ -1797,6 +1799,8 @@ EJS:
   - ".ejs.t"
   - ".jst"
   tm_scope: text.html.js
+  codemirror_mode: htmlembedded
+  codemirror_mime_type: application/x-ejs
   ace_mode: ejs
   language_id: 95
 EQ:
@@ -2520,6 +2524,8 @@ Gherkin:
   - ".feature"
   - ".story"
   tm_scope: text.gherkin.feature
+  codemirror_mode: gherkin
+  codemirror_mime_type: text/x-feature
   aliases:
   - cucumber
   ace_mode: text
@@ -2963,6 +2969,8 @@ HXML:
   extensions:
   - ".hxml"
   tm_scope: source.hxml
+  codemirror_mode: haxe
+  codemirror_mime_type: text/x-hxml
   language_id: 786683730
 Hack:
   type: programming
@@ -3448,7 +3456,7 @@ JSONLD:
   tm_scope: source.js
   ace_mode: javascript
   codemirror_mode: javascript
-  codemirror_mime_type: application/json
+  codemirror_mime_type: application/ld+json
   language_id: 176
 JSONiq:
   color: "#40d47e"
@@ -3634,8 +3642,8 @@ Jinja:
   - ".jinja2"
   tm_scope: text.html.django
   ace_mode: django
-  codemirror_mode: django
-  codemirror_mime_type: text/x-django
+  codemirror_mode: jinja2
+  codemirror_mime_type: text/jinja2
   language_id: 147
 Jison:
   type: programming
@@ -3984,7 +3992,7 @@ Less:
   tm_scope: source.css.less
   ace_mode: less
   codemirror_mode: css
-  codemirror_mime_type: text/css
+  codemirror_mime_type: text/x-less
   language_id: 198
 Lex:
   type: programming
@@ -5149,7 +5157,7 @@ Objective-C++:
   - ".mm"
   ace_mode: objectivec
   codemirror_mode: clike
-  codemirror_mime_type: text/x-objectivec
+  codemirror_mime_type: text/x-objectivec++
   language_id: 258
 Objective-J:
   type: programming
@@ -5622,6 +5630,8 @@ PigLatin:
   - ".pig"
   tm_scope: source.pig_latin
   ace_mode: text
+  codemirror_mode: pig
+  codemirror_mime_type: text/x-pig
   language_id: 286
 Pike:
   type: programming
@@ -7230,7 +7240,7 @@ Squirrel:
   tm_scope: source.nut
   ace_mode: c_cpp
   codemirror_mode: clike
-  codemirror_mime_type: text/x-c++src
+  codemirror_mime_type: text/x-squirrel
   language_id: 355
 Stan:
   type: programming
@@ -7253,7 +7263,7 @@ Standard ML:
   tm_scope: source.ml
   ace_mode: text
   codemirror_mode: mllike
-  codemirror_mime_type: text/x-ocaml
+  codemirror_mime_type: text/x-sml
   language_id: 357
 Starlark:
   type: programming
@@ -7309,6 +7319,8 @@ Stylus:
   - ".styl"
   tm_scope: source.stylus
   ace_mode: stylus
+  codemirror_mode: stylus
+  codemirror_mime_type: text/x-styl
   language_id: 359
 SubRip Text:
   type: data
@@ -7477,7 +7489,7 @@ TSX:
   tm_scope: source.tsx
   ace_mode: javascript
   codemirror_mode: jsx
-  codemirror_mime_type: text/jsx
+  codemirror_mime_type: text/typescript-jsx
   language_id: 94901924
 TXL:
   type: programming
@@ -8091,6 +8103,8 @@ Vue:
   - ".vue"
   tm_scope: source.vue
   ace_mode: html
+  codemirror_mode: vue
+  codemirror_mime_type: text/x-vue
   language_id: 391
 Vyper:
   type: programming
@@ -8151,8 +8165,8 @@ WebAssembly:
   - wasm
   tm_scope: source.webassembly
   ace_mode: lisp
-  codemirror_mode: commonlisp
-  codemirror_mime_type: text/x-common-lisp
+  codemirror_mode: wast
+  codemirror_mime_type: text/webassembly
   language_id: 956556503
 WebAssembly Interface Type:
   type: data
@@ -8782,7 +8796,7 @@ edn:
   type: data
   ace_mode: clojure
   codemirror_mode: clojure
-  codemirror_mime_type: text/x-clojure
+  codemirror_mime_type: application/edn
   extensions:
   - ".edn"
   tm_scope: source.clojure
@@ -8911,6 +8925,8 @@ q:
   - ".q"
   tm_scope: source.q
   ace_mode: text
+  codemirror_mode: q
+  codemirror_mime_type: text/x-q
   color: "#0040cd"
   language_id: 970539067
 reStructuredText:
