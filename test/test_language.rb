@@ -312,7 +312,7 @@ class TestLanguage < Minitest::Test
     assert_equal 'css', Language['CSS'].ace_mode
     assert_equal 'lsl', Language['LSL'].ace_mode
     assert_equal 'javascript', Language['JavaScript'].ace_mode
-    assert_equal 'text', Language['FORTRAN'].ace_mode
+    assert_equal 'fortran', Language['FORTRAN'].ace_mode
   end
 
   def test_codemirror_mode
