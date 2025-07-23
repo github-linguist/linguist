@@ -1,0 +1,7 @@
+[Unit]
+Description=Discard unused blocks on a mounted filesystem
+Documentation=man:fstrim
+
+[Timer]
+OnCalendar=monthly
+AccuracySec=1h
