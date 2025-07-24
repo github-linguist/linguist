@@ -1,0 +1,40 @@
+pragma language_version 0.16;
+
+import CompactStandardLibrary;
+
+export enum STATE { vacant, occupied }
+
+export ledger state: STATE;
+export ledger message: Maybe<Opaque<"string">>;
+export ledger instance: Counter;
+export ledger poster: Bytes<32>;
+
+constructor() {
+  state = STATE.vacant;
+  message = none<Opaque<"string">>();
+  instance.increment(1);
+}
+
+witness localSecretKey(): Bytes<32>;
+
+export circuit post(newMessage: Opaque<"string">): [] {
+  assert(state == STATE.vacant, "Attempted to post to an occupied board");
+  poster = disclose(publicKey(localSecretKey(), instance as Field as Bytes<32>));
+  message = some<Opaque<"string">>(disclose(newMessage));
+  state = STATE.occupied;
+}
+
+export circuit takeDown(): Opaque<"string"> {
+  assert(state == STATE.occupied, "Attempted to take down post from an empty board");
+  assert(poster == publicKey(localSecretKey(), instance as Field as Bytes<32>),
+    "Attempted to take down post, but not the current poster");
+  const formerMsg = message.value;
+  state = STATE.vacant;
+  instance.increment(1);
+  message = none<Opaque<"string">>();
+  return formerMsg;
+}
+
+export circuit publicKey(sk: Bytes<32>, instance: Bytes<32>): Bytes<32> {
+  return persistentHash<Vector<3, Bytes<32>>>([pad(32, "bboard:pk:"), instance, sk]);
+}

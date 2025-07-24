@@ -1,0 +1,32 @@
+pragma language_version 0.16;
+
+import CompactStandardLibrary;
+
+export ledger authority: Bytes<32>;
+export ledger round: Counter;
+
+// Constructor sets the authority to the hash of the secret key
+constructor(sk: Bytes<32>) {
+  authority = publicKey(sk);
+}
+
+// Witness to provide the secret key (kept private)
+witness secretKey(): Bytes<32>;
+
+// Helper circuit to compute the public key from the secret key
+circuit publicKey(sk: Bytes<32>): Bytes<32> {
+  return persistentHash<Vector<2, Bytes<32>>>([pad(32, "counter:auth"), sk]);
+}
+
+// Only the authorized user can increment
+export circuit increment(): [] {
+  assert(authority == publicKey(secretKey()), "Not authorized");
+  round.increment(1);
+}
+
+// Only the authorized user can decrement, and not below zero
+export circuit decrement(): [] {
+  assert(authority == publicKey(secretKey()), "Not authorized");
+  assert(round > 0, "Cannot decrement below zero");
+  round.decrement(1);
+}
