@@ -1,0 +1,169 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "compact",
+    "scopeName": "source.compact",
+    "fileTypes": [".compact"],
+    "patterns": [
+      {
+        "include": "#comments"
+      },
+      {
+        "include": "#keywords"
+      },
+      {
+        "include": "#types"
+      },
+      {
+        "include": "#constants"
+      },
+      {
+        "include": "#strings"
+      },
+      {
+        "include": "#operators"
+      },
+      {
+        "include": "#functions"
+      },
+      {
+        "include": "#punctuation"
+      }
+    ],
+    "repository": {
+      "comments": {
+        "patterns": [
+          {
+            "name": "comment.line.compact",
+            "match": "//.*$"
+          },
+          {
+            "name": "comment.block.compact",
+            "begin": "/\\*",
+            "end": "\\*/"
+          }
+        ]
+      },
+      "keywords": {
+        "patterns": [
+          {
+            "name": "keyword.control.compact",
+            "match": "\\b(pragma|include|module|export|import|prefix|struct|enum|contract|ledger|witness|circuit|constructor|return|if|else|for|const|fun|map|fold|assert|disclose|default|as|true|false|null)\\b"
+          },
+          {
+            "name": "keyword.operator.compact",
+            "match": "\\b(|||&&|==|!=|<|>|<=|>=|\\+|\\-|\\*|!|\\?|:|=|\\+=|\\-=|=>|\\.\\.)\\b"
+          }
+        ]
+      },
+      "types": {
+        "patterns": [
+          {
+            "name": "storage.type.compact",
+            "match": "\\b(Boolean|Field|Uint|Bytes|Opaque|Vector|List|Set|Map|MerkleTree|HistoricMerkleTree|Counter|Cell|Maybe|Either|CurvePoint|MerkleTreeDigest|ContractAddress|CoinInfo|QualifiedCoinInfo|ZswapCoinPublicKey|SendResult)\\b"
+          },
+          {
+            "name": "storage.type.generic.compact",
+            "match": "<[^>]+>"
+          }
+        ]
+      },
+      "constants": {
+        "patterns": [
+          {
+            "name": "constant.numeric.compact",
+            "match": "\\b([0-9]+)\\b"
+          },
+          {
+            "name": "constant.language.compact",
+            "match": "\\b(true|false|null)\\b"
+          }
+        ]
+      },
+      "strings": {
+        "patterns": [
+          {
+            "name": "string.quoted.double.compact",
+            "begin": "\"",
+            "end": "\"",
+            "patterns": [
+              {
+                "name": "constant.character.escape.compact",
+                "match": "\\\\."
+              }
+            ]
+          },
+          {
+            "name": "string.quoted.single.compact",
+            "begin": "'",
+            "end": "'",
+            "patterns": [
+              {
+                "name": "constant.character.escape.compact",
+                "match": "\\\\."
+              }
+            ]
+          }
+        ]
+      },
+      "operators": {
+        "patterns": [
+          {
+            "name": "keyword.operator.compact",
+            "match": "[\\+\\-\\*\\/%=!<>&|\\?:]"
+          }
+        ]
+      },
+      "functions": {
+        "patterns": [
+          {
+            "name": "entity.name.function.compact",
+            "match": "\\b([a-zA-Z_]\\w*)\\s*(?=\\()"
+          }
+        ]
+      },
+      "punctuation": {
+        "patterns": [
+          {
+            "name": "punctuation.terminator.compact",
+            "match": ";"
+          },
+          {
+            "name": "punctuation.separator.compact",
+            "match": ","
+          },
+          {
+            "name": "punctuation.section.block.begin.compact",
+            "match": "{"
+          },
+          {
+            "name": "punctuation.section.block.end.compact",
+            "match": "}"
+          },
+          {
+            "name": "punctuation.section.parens.begin.compact",
+            "match": "\\("
+          },
+          {
+            "name": "punctuation.section.parens.end.compact",
+            "match": "\\)"
+          },
+          {
+            "name": "punctuation.section.bracket.begin.compact",
+            "match": "\\["
+          },
+          {
+            "name": "punctuation.section.bracket.end.compact",
+            "match": "\\]"
+          },
+          {
+            "name": "punctuation.section.angle.begin.compact",
+            "match": "<"
+          },
+          {
+            "name": "punctuation.section.angle.end.compact",
+            "match": ">"
+          }
+        ]
+      }
+    }
+  }

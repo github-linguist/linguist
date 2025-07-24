@@ -869,6 +869,10 @@ disambiguations:
   - language: TSX
 - extensions: ['.txt']
   rules:
+- extensions: ['.compact']
+  rules:
+    - language: compact
+      pattern: '^\s*(pragma\s+"compact"|module\s+\w+|contract\s+\w+|ledger\s+\w+|circuit\s+\w+|witness\s+\w+)'
     # The following RegExp is simply a collapsed and simplified form of the
     # VIM_MODELINE pattern in `./lib/linguist/strategy/modeline.rb`.
   - language: Vim Help File
