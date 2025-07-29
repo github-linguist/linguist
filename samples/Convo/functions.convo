@@ -1,0 +1,26 @@
+Define calculate with numbers:
+    Let sum be 0
+    Let index be 0
+    While index less than 5:
+        Let sum be sum + numbers[index]
+        Let index be index + 1
+    Return sum
+
+Let data be [10, 20, 30, 40, 50]
+Let result be Call calculate with data
+Say "Sum of numbers: " + result
+
+If result greater than 100 then:
+    Say "The sum is quite large!"
+Else:
+    Say "The sum is moderate."
+
+Define factorial with n:
+    If n less than or equal to 1 then:
+        Return 1
+    Else:
+        Return n * Call factorial with (n - 1)
+
+Let number be 5
+Let fact be Call factorial with number
+Say "Factorial of " + number + " is " + fact

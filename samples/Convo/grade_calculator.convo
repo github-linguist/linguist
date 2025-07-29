@@ -1,0 +1,38 @@
+Say "Student Grade Calculator"
+Say "========================"
+
+Define calculate_grade with score:
+    If score greater than 90 then:
+        Say "Grade: A (Excellent!)"
+        Return "A"
+    Else:
+        If score greater than 80 then:
+            Say "Grade: B (Good work!)"
+            Return "B"
+        Else:
+            If score greater than 70 then:
+                Say "Grade: C (Satisfactory)"
+                Return "C"
+            Else:
+                Say "Grade: F (Need improvement)"
+                Return "F"
+
+Let students be ["Alice", "Bob", "Charlie"]
+Let scores be [95, 87, 76]
+Let passed be 0
+Let total be 3
+
+Let i be 0
+While i less than total:
+    Say "Student: " + students[i]
+    Say "Score: " + scores[i] + "/100"
+    Let grade be Call calculate_grade with scores[i]
+    If not grade equal to "F" then:
+        Let passed be passed + 1
+    Say ""
+    Let i be i + 1
+
+Say "Summary:"
+Say "Students passed: " + passed + "/" + total
+Let pass_rate be (passed / total) * 100
+Say "Pass rate: " + pass_rate + "%"
