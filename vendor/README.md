@@ -631,7 +631,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **VBA:** [serkonda7/vscode-vba](https://github.com/serkonda7/vscode-vba)
 - **VBScript:** [peters-ben-0007/VBDotNetSyntax](https://github.com/peters-ben-0007/VBDotNetSyntax)
 - **VCL:** [brandonwamboldt/sublime-varnish](https://github.com/brandonwamboldt/sublime-varnish)
-- **VHDL:** [textmate/vhdl.tmbundle](https://github.com/textmate/vhdl.tmbundle)
+- **VHDL:** [VHDL-LS/rust_hdl_vscode](https://github.com/VHDL-LS/rust_hdl_vscode)
 - **Vala:** [technosophos/Vala-TMBundle](https://github.com/technosophos/Vala-TMBundle)
 - **Valve Data Format:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
 - **Velocity Template Language:** [animecyc/AtomLanguageVelocity](https://github.com/animecyc/AtomLanguageVelocity)
