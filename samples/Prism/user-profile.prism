@@ -1,0 +1,98 @@
+{{-- User profile template demonstrating loops and conditionals --}}
+
+@extends('layouts.dashboard')
+
+@section('title', 'User Profile')
+
+@section('content')
+    <div class="profile-header">
+        <div class="avatar">
+            {% if $user->hasAvatar() %}
+                <img src="{{ $user->getAvatarUrl() }}" alt="{{ $user->name }}'s avatar">
+            {% else %}
+                <div class="avatar-placeholder">
+                    {{ strtoupper(substr($user->name, 0, 1)) }}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="user-info">
+            <h1>{{ $user->name }}</h1>
+            <p class="role">{{ $user->role->display_name }}</p>
+            
+            {% if $user->isOnline() %}
+                <span class="status online">Online</span>
+            {% else %}
+                <span class="status offline">
+                    Last seen {{ $user->last_seen->diffForHumans() }}
+                </span>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="profile-stats">
+        {% foreach $stats as $stat %}
+            <div class="stat-card">
+                <h3>{{ number_format($stat->value) }}</h3>
+                <p>{{ $stat->label }}</p>
+            </div>
+        {% endforeach %}
+    </div>
+
+    {% if $user->posts->isNotEmpty() %}
+        <div class="recent-posts">
+            <h2>Recent Posts</h2>
+            {% foreach $user->posts->take(5) as $post %}
+                <article class="post-preview">
+                    <h3>
+                        <a href="{{ route('posts.show', $post) }}">{{ $post->title }}</a>
+                    </h3>
+                    <p>{{ Str::limit($post->excerpt, 150) }}</p>
+                    <div class="post-meta">
+                        <time datetime="{{ $post->published_at->toISOString() }}">
+                            {{ $post->published_at->format('M j, Y') }}
+                        </time>
+                        <span class="views">{{ $post->views_count }} views</span>
+                    </div>
+                </article>
+            {% endforeach %}
+            
+            {% if $user->posts->count() > 5 %}
+                <a href="{{ route('users.posts', $user) }}" class="view-all">
+                    View all {{ $user->posts->count() }} posts
+                </a>
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <p>{{ $user->name }} hasn't published any posts yet.</p>
+        </div>
+    {% endif %}
+
+    {% php %}
+        $achievements = $user->achievements()->recent()->get();
+    {% endphp %}
+
+    {% if $achievements->isNotEmpty() %}
+        <div class="achievements">
+            <h2>Recent Achievements</h2>
+            <div class="achievement-grid">
+                {% foreach $achievements as $achievement %}
+                    <div class="achievement-badge" title="{{ $achievement->description }}">
+                        <div class="icon">{{ $achievement->icon }}</div>
+                        <span>{{ $achievement->name }}</span>
+                    </div>
+                {% endforeach %}
+            </div>
+        </div>
+    {% endif %}
+@endsection
+
+@section('scripts')
+    <script>
+        // Profile interaction JavaScript
+        document.querySelector('.avatar').addEventListener('click', function() {
+            // Avatar click handler
+        });
+    </script>
+@endsection

@@ -1,0 +1,43 @@
+{{-- This is a comment in Prism --}}
+
+@extends('layouts.app')
+
+@section('title')
+    Welcome to {{ $siteName }}
+@endsection
+
+@section('content')
+    <div class="hero">
+        <h1>{{ $pageTitle }}</h1>
+        <p>{{{ $description }}}</p>
+    </div>
+
+    {% if $showProducts %}
+        <div class="products">
+            <h2>Featured Products</h2>
+            {% foreach $products as $product %}
+                <div class="product">
+                    <h3>{{ $product->name }}</h3>
+                    <p class="price">${{ number_format($product->price, 2) }}</p>
+                    
+                    {% if $product->isOnSale() %}
+                        <span class="sale-badge">On Sale!</span>
+                    {% endif %}
+                </div>
+            {% endforeach %}
+        </div>
+    {% else %}
+        <p>No products available at this time.</p>
+    {% endif %}
+
+    @include('partials.newsletter-signup', ['variant' => 'homepage'])
+
+    {% php %}
+        $currentYear = date('Y');
+        $copyrightText = "© {$currentYear} {$siteName}";
+    {% endphp %}
+
+    <footer>
+        <p>{{ $copyrightText }}</p>
+    </footer>
+@endsection
