@@ -1,0 +1,47 @@
+{{-- Layout template example --}}
+<!DOCTYPE html>
+<html lang="{{ $locale ?? 'en' }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@yield('title') - {{ $siteName }}</title>
+    
+    {% if isset($metaDescription) %}
+        <meta name="description" content="{{ $metaDescription }}">
+    {% endif %}
+    
+    <link rel="stylesheet" href="/css/app.css">
+    @yield('head')
+</head>
+<body class="{{ $bodyClass ?? '' }}">
+    <header>
+        <nav class="navbar">
+            <a href="/" class="logo">
+                <img src="/images/logo.svg" alt="{{ $siteName }}">
+            </a>
+            
+            <ul class="nav-links">
+                {% foreach $menuItems as $item %}
+                    <li>
+                        <a href="{{ $item->url }}" 
+                           {% if $item->isActive($currentRoute) %}class="active"{% endif %}>
+                            {{ $item->title }}
+                        </a>
+                    </li>
+                {% endforeach %}
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        @yield('content')
+    </main>
+
+    {% if $showFooter %}
+        @include('partials.footer')
+    {% endif %}
+
+    <script src="/js/app.js"></script>
+    @yield('scripts')
+</body>
+</html>

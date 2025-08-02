@@ -1,0 +1,113 @@
+{
+  "name": "Prism Template",
+  "scopeName": "text.html.prism",
+  "fileTypes": ["prism"],
+  "patterns": [
+    {
+      "include": "#prism-comments"
+    },
+    {
+      "include": "#prism-directives"
+    },
+    {
+      "include": "#prism-control-structures"
+    },
+    {
+      "include": "#prism-output"
+    },
+    {
+      "include": "#prism-raw-output"
+    },
+    {
+      "include": "#prism-php-blocks"
+    },
+    {
+      "include": "text.html.basic"
+    }
+  ],
+  "repository": {
+    "prism-comments": {
+      "name": "comment.block.prism",
+      "begin": "\\{\\{--",
+      "end": "--\\}\\}",
+      "patterns": [
+        {
+          "name": "comment.block.prism",
+          "match": ".*"
+        }
+      ]
+    },
+    "prism-directives": {
+      "patterns": [
+        {
+          "name": "keyword.control.prism.directive",
+          "match": "@(extends|section|endsection|yield|include|if|endif|else|elseif|foreach|endforeach|for|endfor|while|endwhile|php|endphp)\\b"
+        },
+        {
+          "name": "entity.name.function.prism.directive",
+          "begin": "@(\\w+)\\s*\\(",
+          "end": "\\)",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.prism.directive"
+            }
+          },
+          "patterns": [
+            {
+              "include": "source.php"
+            }
+          ]
+        }
+      ]
+    },
+    "prism-control-structures": {
+      "patterns": [
+        {
+          "name": "meta.tag.prism.control",
+          "begin": "\\{%\\s*(if|elseif|else|endif|foreach|endforeach|for|endfor|while|endwhile|php|endphp)\\b",
+          "end": "%\\}",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.prism"
+            }
+          },
+          "patterns": [
+            {
+              "include": "source.php"
+            }
+          ]
+        }
+      ]
+    },
+    "prism-output": {
+      "name": "meta.tag.prism.output",
+      "begin": "\\{\\{\\s*",
+      "end": "\\s*\\}\\}",
+      "patterns": [
+        {
+          "include": "source.php"
+        }
+      ]
+    },
+    "prism-raw-output": {
+      "name": "meta.tag.prism.raw-output",
+      "begin": "\\{\\{\\{\\s*",
+      "end": "\\s*\\}\\}\\}",
+      "patterns": [
+        {
+          "include": "source.php"
+        }
+      ]
+    },
+    "prism-php-blocks": {
+      "name": "meta.tag.prism.php",
+      "begin": "\\{%\\s*php\\s*%\\}",
+      "end": "\\{%\\s*endphp\\s*%\\}",
+      "patterns": [
+        {
+          "include": "source.php"
+        }
+      ]
+    }
+  }
+}
