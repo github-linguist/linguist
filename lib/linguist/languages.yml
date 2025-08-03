@@ -864,12 +864,15 @@ C3:
   type: programming
   color: "#446be3"
   extensions:
-  - ".c3"
-  ace_mode: c3
-  codemirror_mode: clike
-  codemirror_mime_type: text/x-csrc
+    - ".c3"
+    - ".c3i"
+    - ".c3l"
+    - ".c3d"
   tm_scope: source.c3
+  ace_mode: c_cpp
+  codemirror_mode: clike
   language_id: 769248603
+
 CAP CDS:
   type: programming
   tm_scope: source.cds
