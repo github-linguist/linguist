@@ -186,11 +186,6 @@ disambiguations:
   rules:
   - language: Gerber Image
     pattern: '^[DGMT][0-9]{2}\*(?:\r?\n|\r)'
-- extensions: ['.conf']
-  rules:
-    - language: BIRD2
-      and:
-        - pattern: '\\bprotocol\\s+(?:bgp|ospf|rip|babel|mpls|static|device|direct|kernel|pipe|l3vpn|router|define)\\b'
 - extensions: ['.cs']
   rules:
   - language: Smalltalk
