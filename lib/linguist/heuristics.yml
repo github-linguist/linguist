@@ -560,6 +560,36 @@ disambiguations:
   - language: NL
     pattern: '^(b|g)[0-9]+ '
   - language: NewLisp
+- extensions: ['.nls']
+  rules:
+  - language: NetLogo
+    pattern:
+    - '^\s*;'
+    - '^\s*to\s+[\w-]+'
+    - '^\s*to-report\s+[\w-]+'
+    - '^\s*__includes\s+\['
+    - '^\s*extensions\s+\['
+    - '^\s*globals\s+\['
+    - '^\s*breed\s+\['
+    - '^\s*turtles-own\s+\['
+    - '^\s*patches-own\s+\['
+    - '^\s*links-own\s+\['
+    - '^\s*undirected-link-breed\s+\['
+    - '^\s*directed-link-breed\s+\['
+    - '^\s*ask\s+[\w-]+\s+\['
+  - language: TeX
+    pattern:
+    - '^\s*%'
+    - '^\s*\\begin'
+    - '^\s*\\nomgroup'
+    - '^\s*\\item'
+    - '^\s*\\end'
+  - language: INI
+    pattern:
+    - '^\s*[\w-]+\s*='
+    - '^\s*STRINGTABLE'
+    - '^\s*LOCALE_'
+    - '^\s*LGRPID_'
 - extensions: ['.nr']
   rules:
   - language: Roff
