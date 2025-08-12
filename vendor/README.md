@@ -403,6 +403,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Nextflow:** [nextflow-io/atom-language-nextflow](https://github.com/nextflow-io/atom-language-nextflow)
 - **Nickel:** [tweag/nickel](https://github.com/tweag/nickel)
 - **Nim:** [nim-lang/NimLime](https://github.com/nim-lang/NimLime)
+- **Nginx:** [william-voyek/vscode-nginx](https://github.com/william-voyek/vscode-nginx)
 - **Ninja:** [khyo/language-ninja](https://github.com/khyo/language-ninja)
 - **Nit:** [R4PaSs/Sublime-Nit](https://github.com/R4PaSs/Sublime-Nit)
 - **Nix:** [nix-community/tree-sitter-nix](https://github.com/nix-community/tree-sitter-nix) 🐌
@@ -635,6 +636,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Valve Data Format:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
 - **Velocity Template Language:** [animecyc/AtomLanguageVelocity](https://github.com/animecyc/AtomLanguageVelocity)
 - **Vento:** [ventojs/vscode-vento](https://github.com/ventojs/vscode-vento)
+- **VCL:** [fastly/vscode-fastly-vcl](https://github.com/fastly/vscode-fastly-vcl)
 - **Verilog:** [textmate/verilog.tmbundle](https://github.com/textmate/verilog.tmbundle)
 - **Vim Help File:** [Alhadis/language-viml](https://github.com/Alhadis/language-viml)
 - **Vim Script:** [Alhadis/language-viml](https://github.com/Alhadis/language-viml)
