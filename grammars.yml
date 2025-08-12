@@ -17,6 +17,8 @@ vendor/grammars/Bend:
 - source.bend
 vendor/grammars/CUE-Sheet_sublime:
 - source.cuesheet
+vendor/grammars/Clue-for-VSCode:
+- source.clue
 vendor/grammars/CoDT7-Sublime:
 - source.gsc
 vendor/grammars/ColdFusion:
@@ -59,8 +61,6 @@ vendor/grammars/Ligo-grammar:
 - source.religo
 vendor/grammars/Linker.tmLanguage:
 - source.c.linker
-vendor/grammars/LiveScript.tmbundle:
-- source.livescript
 vendor/grammars/Luau.tmLanguage:
 - source.luau
 vendor/grammars/MATLAB-Language-grammar:
@@ -304,7 +304,6 @@ vendor/grammars/bst.tmLanguage:
 vendor/grammars/c.tmbundle:
 - source.c
 - source.c++
-- source.c.platform
 vendor/grammars/cairo-tm-grammar:
 - source.cairo
 - source.cairo0
@@ -354,6 +353,8 @@ vendor/grammars/d2-vscode:
 - text.html.markdown.d2
 vendor/grammars/dart-syntax-highlight:
 - source.dart
+vendor/grammars/daslang-grammar:
+- source.daslang
 vendor/grammars/data-weave-tmLanguage:
 - source.data-weave
 vendor/grammars/denizenscript-grammar:
@@ -506,7 +507,7 @@ vendor/grammars/koka-textmate-grammar:
 - source.koka
 vendor/grammars/kusto-sublime:
 - source.kusto
-vendor/grammars/lang-4d:
+vendor/grammars/language-4d:
 - source.4dm
 vendor/grammars/language-agc:
 - source.agc
@@ -561,6 +562,7 @@ vendor/grammars/language-etc:
 - injections.etc
 - source.2da
 - source.bc
+- source.c.calendar
 - source.c.nwscript
 - source.curlrc
 - source.dc
@@ -578,6 +580,7 @@ vendor/grammars/language-etc:
 - source.ini.npmrc
 - source.inputrc
 - source.lcov
+- source.m3u
 - source.m4
 - source.mailmap
 - source.man-conf
@@ -597,6 +600,7 @@ vendor/grammars/language-etc:
 - source.stl
 - source.string-template
 - source.tags
+- source.torrc
 - source.ucd.nameslist
 - source.ucd.unidata
 - source.wgetrc
@@ -834,6 +838,8 @@ vendor/grammars/latex.tmbundle:
 - text.tex.latex
 - text.tex.latex.beamer
 - text.tex.latex.memoir
+vendor/grammars/leo-linguist:
+- source.leo
 vendor/grammars/linter-lilypond:
 - source.lilypond
 vendor/grammars/liquid-tm-grammar:
@@ -841,6 +847,8 @@ vendor/grammars/liquid-tm-grammar:
 - text.html.liquid
 vendor/grammars/lisp.tmbundle:
 - source.lisp
+vendor/grammars/livescript-vscode:
+- source.livescript
 vendor/grammars/llvm.tmbundle:
 - source.llvm
 vendor/grammars/logos:
@@ -884,6 +892,8 @@ vendor/grammars/nemerle.tmbundle:
 - source.nemerle
 vendor/grammars/nesC:
 - source.nesc
+vendor/grammars/nickel:
+- source.nickel
 vendor/grammars/nix-linguist:
 - source.nix
 vendor/grammars/nu-grammar:
@@ -950,6 +960,7 @@ vendor/grammars/python-django.tmbundle:
 - source.python.django
 - text.html.django
 vendor/grammars/qsharp:
+- source.openqasm
 - source.qsharp
 vendor/grammars/quake:
 - source.quake
@@ -969,8 +980,6 @@ vendor/grammars/riot-syntax-highlight:
 - text.html.riot
 vendor/grammars/roc-vscode-unofficial:
 - source.roc
-vendor/grammars/ruby-slim.tmbundle:
-- text.slim
 vendor/grammars/rust-syntax:
 - source.rust
 vendor/grammars/sail_vscode:
@@ -1155,6 +1164,9 @@ vendor/grammars/vscode:
 vendor/grammars/vscode-TalonScript:
 - markdown.talon.codeblock
 - source.talon
+vendor/grammars/vscode-aiken:
+- source.aiken
+- source.uplc
 vendor/grammars/vscode-antlers-language-server:
 - text.html.statamic
 vendor/grammars/vscode-apache:
@@ -1275,6 +1287,9 @@ vendor/grammars/vscode-rbs-syntax:
 - source.rbs
 vendor/grammars/vscode-ron:
 - source.ron
+vendor/grammars/vscode-ruby-slim:
+- injection.interpolated-ruby
+- text.slim
 vendor/grammars/vscode-scala-syntax:
 - source.scala
 vendor/grammars/vscode-singularity:
@@ -1289,6 +1304,9 @@ vendor/grammars/vscode-vba:
 - source.wwb
 vendor/grammars/vscode-vcard:
 - source.vcard
+vendor/grammars/vscode-vento:
+- source.vento
+- text.html.vento
 vendor/grammars/vscode-vlang:
 - source.v
 vendor/grammars/vscode-wit:
@@ -1314,6 +1332,7 @@ vendor/grammars/vscode_cobol:
 - source.dir
 - source.directivesmf
 - source.hlasm
+- source.ilecobol
 - source.jcl
 - source.mfu
 - source.mfupp_dir
@@ -1338,5 +1357,7 @@ vendor/grammars/xml.tmbundle:
 - text.xml.xsl
 vendor/grammars/zeek-sublime:
 - source.zeek
+vendor/grammars/zenstack:
+- source.zmodel
 vendor/grammars/zephir-sublime:
 - source.php.zephir
