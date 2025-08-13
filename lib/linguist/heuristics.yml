@@ -57,9 +57,9 @@ disambiguations:
   rules:
   - language: ROS Interface
     and:
-      - pattern: '^[a-z][a-z0-9_]*(?:/[a-zA-Z]\w*)?[<=\d\[\]]*\s+\w+\b'
+      - pattern: '^[a-z][a-z0-9_]*(?:\/[a-zA-Z]\w*)?(?:<=\d+)?(?:\[(?:<=\d+)?\])?\s+\w+\b'
       - pattern: '^---\s*$'
-      - negative_pattern: '^\s*[^@#\w-]'
+      - negative_pattern: '^\s*[^\s@#\w-]'
 - extensions: ['.al']
   rules:
   # AL pattern source from https://github.com/microsoft/AL/blob/master/grammar/alsyntax.tmlanguage - keyword.other.applicationobject.al
@@ -539,8 +539,8 @@ disambiguations:
     pattern: '^cplusplus\(?[\S]*\)?[\s]*\{?\{?|^namespace[\s]+([^.\s]*\.)*[^.\s]*;|^struct[\s]+[\S]+|^message[\s]+[\S]+(extends )?[\S]*[\s]*|^packet[\s]+[\S]+|^class[\s]+[\S]+(extends )?[\S]*[\s]*|^enum[\s]+[\S]+|^import ([^.\s]*\.)*[^.\s]*;'
   - language: ROS Interface
     and:
-      - pattern: '^[a-z][a-z0-9_]*(?:/[a-zA-Z]\w*)?[<=\d\[\]]*\s+\w+\b'
-      - negative_pattern: '^\s*[^@#\w-]'
+      - pattern: '^[a-z][a-z0-9_]*(?:\/[a-zA-Z]\w*)?(?:<=\d+)?(?:\[(?:<=\d+)?\])?\s+\w+\b'
+      - negative_pattern: '^\s*[^\s@#\w-]'
 - extensions: ['.n']
   rules:
   - language: Roff
@@ -805,9 +805,9 @@ disambiguations:
   rules:
   - language: ROS Interface
     and:
-      - pattern: '^[a-z][a-z0-9_]*(?:/[a-zA-Z]\w*)?[<=\d\[\]]*\s+\w+\b'
+      - pattern: '^[a-z][a-z0-9_]*(?:\/[a-zA-Z]\w*)?(?:<=\d+)?(?:\[(?:<=\d+)?\])?\s+\w+\b'
       - pattern: '^---\s*$'
-      - negative_pattern: '^\s*[^@#\w-]'
+      - negative_pattern: '^\s*[^\s@#\w-]'
 - extensions: ['.st']
   rules:
   - language: StringTemplate
