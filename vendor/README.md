@@ -80,6 +80,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **C++:** [mikomikotaishi/c.tmbundle](https://github.com/mikomikotaishi/c.tmbundle)
 - **C-ObjDump:** [nanoant/assembly.tmbundle](https://github.com/nanoant/assembly.tmbundle)
 - **C2hs Haskell:** [atom-haskell/language-haskell](https://github.com/atom-haskell/language-haskell)
+- **C3:** [c3lang/vscode-c3](https://github.com/c3lang/vscode-c3)
 - **CAP CDS:** [SAP/cds-textmate-grammar](https://github.com/SAP/cds-textmate-grammar)
 - **CIL:** [google/selinux-policy-languages](https://github.com/google/selinux-policy-languages)
 - **CLIPS:** [psicomante/CLIPS-sublime](https://github.com/psicomante/CLIPS-sublime)
