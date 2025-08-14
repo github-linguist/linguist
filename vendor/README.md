@@ -500,6 +500,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **REXX:** [mblocker/rexx-sublime](https://github.com/mblocker/rexx-sublime)
 - **RMarkdown:** [wooorm/markdown-tm-language](https://github.com/wooorm/markdown-tm-language)
 - **RON:** [a5huynh/vscode-ron](https://github.com/a5huynh/vscode-ron)
+- **ROS Interface:** [jtbandes/ros-tmlanguage](https://github.com/jtbandes/ros-tmlanguage)
 - **RPC:** [mikomikotaishi/c.tmbundle](https://github.com/mikomikotaishi/c.tmbundle)
 - **RPGLE:** [barrettotte/vscode-ibmi-languages](https://github.com/barrettotte/vscode-ibmi-languages)
 - **RPM Spec:** [waveclaw/language-rpm-spec](https://github.com/waveclaw/language-rpm-spec)
