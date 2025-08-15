@@ -53,6 +53,13 @@ disambiguations:
     - named_pattern: man-title
     - named_pattern: man-heading
   - language: Roff
+- extensions: ['.action']
+  rules:
+  - language: ROS Interface
+    and:
+      - pattern: '^[a-z][a-z0-9_]*(?:\/[a-zA-Z]\w*)?(?:<=\d+)?(?:\[(?:<=\d+)?\])?\s+\w+\b'
+      - pattern: '^---\s*$'
+      - negative_pattern: '^\s*[^\s@#\w-]'
 - extensions: ['.al']
   rules:
   # AL pattern source from https://github.com/microsoft/AL/blob/master/grammar/alsyntax.tmlanguage - keyword.other.applicationobject.al
@@ -68,7 +75,7 @@ disambiguations:
 - extensions: ['.as']
   rules:
   - language: ActionScript
-    pattern: '^\s*(?:package(?:\s+[\w.]+)?\s+(?:\{|$)|import\s+[\w.*]+\s*;|(?=.*?(?:intrinsic|extends))(intrinsic\s+)?class\s+[\w<>.]+(?:\s+extends\s+[\w<>.]+)?|(?:(?:public|protected|private|static)\s+)*(?:(?:var|const|local)\s+\w+\s*:\s*[\w<>.]+(?:\s*=.*)?\s*;|function\s+\w+\s*\((?:\s*\w+\s*:\s*[\w<>.]+\s*(,\s*\w+\s*:\s*[\w<>.]+\s*)*)?\)))'
+    pattern: '^\s*(?:package(?:\s+[\w.]+)?\s+(?:\{|$)|import\s+[\w.*]+\s*;|(?:intrinsic\s+)class\s+[\w<>.]+|\s+class\s+extends\s+[\w<>.]+|(?:(?:public|protected|private|static)\s+)*(?:(?:var|const|local)\s+\w+\s*:\s*[\w<>.]+(?:\s*=.*)?\s*;|function\s+\w+\s*\((?:\s*\w+\s*:\s*[\w<>.]+\s*(,\s*\w+\s*:\s*[\w<>.]+\s*)*)?\)))'
 - extensions: ['.asc']
   rules:
   - language: Public Key
@@ -79,6 +86,8 @@ disambiguations:
     pattern: '^(\/\/.+|((import|export)\s+)?(function|int|float|char)\s+((room|repeatedly|on|game)_)?([A-Za-z]+[A-Za-z_0-9]+)\s*[;\(])'
 - extensions: ['.asm']
   rules:
+  - language: Assembly
+    pattern: '(?i)mov\s+[^\s]{2,},'
   - language: Motorola 68K Assembly
     named_pattern: m68k
 - extensions: ['.asy']
@@ -133,15 +142,20 @@ disambiguations:
 - extensions: ['.bs']
   rules:
   - language: Bikeshed
-    pattern: '^<pre\s+class=[''"]?metadata[''"]?\s*>'
+    pattern: '^(?i:<pre\s+class)\s*=\s*(''|\"|\b)metadata\b(''|\"|\b)[^>\r\n]*>'
   - language: BrighterScript
     pattern:
-    - (?i:^\s*(?=^sub\s)(?:sub\s*\w+\(.*?\))|(?::\s*sub\(.*?\))$)
+    - (?i:^\s*(?:sub\s*\w+\(.*?\))|(?::\s*sub\(.*?\))$)
     - (?i:^\s*(end\ssub)$)
-    - (?i:^\s*(?=^function\s)(?:function\s*\w+\(.*?\)\s*as\s*\w*)|(?::\s*function\(.*?\)\s*as\s*\w*)$)
+    - (?i:^\s*(?:function\s*\w+\(.*?\)\s*as\s*\w*)|(?::\s*function\(.*?\)\s*as\s*\w*)$)
     - (?i:^\s*(end\sfunction)$)
   - language: Bluespec BH
     pattern: '^package\s+[A-Za-z_][A-Za-z0-9_'']*(?:\s*\(|\s+where)'
+- extensions: ['.bst']
+  rules:
+  - language: BibTeX Style
+    pattern: 'ENTRY\s*\{'
+  - language: BuildStream
 - extensions: ['.builds']
   rules:
   - language: XML
@@ -282,6 +296,8 @@ disambiguations:
     and:
     - named_pattern: vb-form
     - pattern: '^\s*Begin\s+VB\.Form\s+'
+  - language: INI
+    pattern: '\ATYPE=VIEW'
 - extensions: ['.fs']
   rules:
   - language: Forth
@@ -295,7 +311,7 @@ disambiguations:
 - extensions: ['.ftl']
   rules:
   - language: FreeMarker
-    pattern: '^(?:<|[a-zA-Z-][a-zA-Z0-9_-]+[ \t]+\w)|\$\{\w+[^\r\n]*?\}|^[ \t]*(?:<#--.*?-->|<#([a-z]+)(?=\s|>)[^>]*>.*?</#\1>|\[#--.*?--\]|\[#([a-z]+)(?=\s|\])[^\]]*\].*?\[#\2\])'
+    pattern: '^(?:<|[a-zA-Z-][a-zA-Z0-9_-]+[ \t]+\w)|\$\{\w+[^\r\n]*?\}|^[ \t]*(?:<#--.*?-->|<#(?:[a-z]+)\s[^>]*>.*?</#(?:[a-z]+)>|\[#--.*?--\]|\[#(?:[a-z]+)\s[^\]]*\].*?\[#(?:[a-z]+)\])'
   - language: Fluent
     pattern: '^-?[a-zA-Z][a-zA-Z0-9_-]* *=|\{\$-?[a-zA-Z][-\w]*(?:\.[a-zA-Z][-\w]*)?\}'
 - extensions: ['.g']
@@ -363,6 +379,10 @@ disambiguations:
     named_pattern: m68k
   - language: SWIG
     pattern: '^[ \t]*%[a-z_]+\b|^%[{}]$'
+  - language: Assembly
+    pattern:
+    - '(?i)mov\s+[^\s]+,'
+    - '^\s+(i?)db\s+[a-z\d]'
 - extensions: ['.ice']
   rules:
   - language: JSON
@@ -382,7 +402,7 @@ disambiguations:
   - language: NASL
     pattern:
     - '^\s*include\s*\(\s*(?:"|'')[\\/\w\-\.:\s]+\.(?:nasl|inc)\s*(?:"|'')\s*\)\s*;'
-    - '^\s*(?:global|local)_var\s+(?:\w+(?:\s*=\s*[\w\-"'']+)?\s*)(?:,\s*\w+(?:\s*=\s*[\w\-"'']+)?)+\s*;'
+    - '^\s*(?:global|local)_var\s+(?:\w+(?:\s*=\s*[\w\-"'']+)?\s*)(?:,\s*\w+(?:\s*=\s*[\w\-"'']+)?\s*)*\s*;'
     - '^\s*namespace\s+\w+\s*\{'
     - '^\s*object\s+\w+\s*(?:extends\s+\w+(?:::\w+)?)?\s*\{'
     - '^\s*(?:public|private)\s+function\s+\w+\s*\([\w\s,]*\)\s*\{'
@@ -394,6 +414,10 @@ disambiguations:
     - '^\s*end[.;]\s*$'
   - language: BitBake
     pattern: '^inherit(\s+[\w.-]+)+\s*$'
+  - language: Assembly
+    pattern:
+    - '^(?i)[^"m]*mov\s+[^\s]+,'
+    - '^\s+(?i)db\s+[a-z\d]'
 - extensions: ['.json']
   rules:
   - language: OASv2-json
@@ -417,6 +441,11 @@ disambiguations:
     pattern: '^import [a-z]'
   - language: Lean 4
     pattern: '^import [A-Z]'
+- extensions: ['.lp']
+  rules:
+  - language: Linear Programming
+    pattern: '^(?i:minimize|minimum|min|maximize|maximum|max)(?i:\s+multi-objectives)?$'
+  - language: Answer Set Programming
 - extensions: ['.ls']
   rules:
   - language: LoomScript
@@ -460,7 +489,7 @@ disambiguations:
 - extensions: ['.mc']
   rules:
   - language: Win32 Message File
-    pattern: '(?i)^[ \t]*(?>\/\*\s*)?MessageId=|^\.$'
+    pattern: '(?i)^[ \t]*(\/\*\s*)?MessageId=|^\.$'
   - language: M4
     pattern: '^dnl|^divert\((?:-?\d+)?\)|^\w+\(`[^\r\n]*?''[),]'
   - language: Monkey C
@@ -506,8 +535,12 @@ disambiguations:
   - language: MAXScript
 - extensions: ['.msg']
   rules:
-  - language: omnetpp-msg
-    pattern: '^cplusplus \{\{|^namespace[\s]*([^.\s]*\.)*[^.\s]*;|^struct \{|^message [\S]* (extends)? [\S]*[\s]*\{|^packet \{|^class (extends) [\S]*[\s]*\{|^enum \{|^import ([^.\s]*\.)*[^.\s]*;'
+  - language: OMNeT++ MSG
+    pattern: '^cplusplus\(?[\S]*\)?[\s]*\{?\{?|^namespace[\s]+([^.\s]*\.)*[^.\s]*;|^struct[\s]+[\S]+|^message[\s]+[\S]+(extends )?[\S]*[\s]*|^packet[\s]+[\S]+|^class[\s]+[\S]+(extends )?[\S]*[\s]*|^enum[\s]+[\S]+|^import ([^.\s]*\.)*[^.\s]*;'
+  - language: ROS Interface
+    and:
+      - pattern: '^[a-z][a-z0-9_]*(?:\/[a-zA-Z]\w*)?(?:<=\d+)?(?:\[(?:<=\d+)?\])?\s+\w+\b'
+      - negative_pattern: '^\s*[^\s@#\w-]'
 - extensions: ['.n']
   rules:
   - language: Roff
@@ -520,8 +553,19 @@ disambiguations:
     pattern: '^\s*<\?xml\s+version'
   - language: Gerber Image
     pattern: '^[DGMT][0-9]{2}\*(?:\r?\n|\r)'
+  - language: Nickel
+    pattern:
+    - '^let(?:\srec)?(?:\s[a-zA-Z_][a-zA-Z0-9_]*)?'
+    - '^import\s"[^"]+"\s+as\s'
+    - 'std\.[a-zA-Z_][a-zA-Z0-9_]*\.'
   - language: Text
     pattern: 'THE_TITLE'
+  - language: NCL
+    pattern:
+    - '^load "'
+    - '^begin$'
+    - '[0-9]\.$'
+    - '^;'
 - extensions: ['.nl']
   rules:
   - language: NL
@@ -676,7 +720,7 @@ disambiguations:
 - extensions: ['.rno']
   rules:
   - language: RUNOFF
-    pattern: '(?i:^\.!|^\f|\f$|^\.end lit(?:eral)?\b|^\.[a-zA-Z].*?;\.[a-zA-Z](?:[; \t])|\^\*[^\s*][^*]*\\\*(?=$|\s)|^\.c;[ \t]*\w+)'
+    pattern: '(?i:^\.!|^\f|\f$|^\.end lit(?:eral)?\b|^\.[a-zA-Z].*?;\.[a-zA-Z](?:[; \t])|\^\*[^\s*][^*]*\\\*(?:$|\s)|^\.c;[ \t]*\w+)'
   - language: Roff
     pattern: '^\.\\" '
 - extensions: ['.rpy']
@@ -694,6 +738,10 @@ disambiguations:
     pattern: '^\s*<\?xml'
 - extensions: ['.s']
   rules:
+  - language: Unix Assembly
+    pattern: '(?i:mov[lq]?)\s+[%\$]'
+  - language: Assembly
+    pattern: '(?i:mov)\s+[^\s%]{2,},'
   - language: Motorola 68K Assembly
     named_pattern: m68k
 - extensions: ['.sc']
@@ -709,10 +757,29 @@ disambiguations:
   - language: Markdown
     # Markdown syntax for scdoc
     pattern: '^#+\s+(NAME|SYNOPSIS|DESCRIPTION)'
+- extensions: ['.scm']
+  rules:
+  - language: Tree-sitter Query
+    pattern:
+    - '\(#[\w-]+[!\?]'
+    - '(?:[\)\]]\s*[\*\+\?](?:\s|$))'
+    - '(?:^\s*\w+:\s*[\(\[\"])'
+    - '\(#(?:set!|(?:not-)?(?:any-of|match)\?)'
+    - '@[\w.-]+(?:\)\s|$)'
+    negative_pattern:
+    - '\([+\-:<>\/=~\)]'
+  - language: Scheme
+    pattern:
+    - '(?:''[\(\*#]|\w->\w|\.\.\.[\s\)]|\([+\-:<>\/=~\)]|~>|[#`]\(|#:\w)'
+    - '^\s*\((?:define\*?|import|library|lambda)'
+    negative_pattern:
+    - '\(#[\w-]+[!\?]'
+    - '(?:[\)\]]\s*[\*\+\?](?:\s|$))'
+    - '@[\w.-]+(?:\)\s|$)'
 - extensions: ['.sol']
   rules:
   - language: Solidity
-    pattern: '\bpragma\s+solidity\b|\b(?:abstract\s+)?contract\s+(?!\d)[a-zA-Z0-9$_]+(?:\s+is\s+(?:[a-zA-Z0-9$_][^\{]*?)?)?\s*\{'
+    pattern: '\bpragma\s+solidity\b|\b(?:abstract\s+)?contract\s+[a-zA-Z$_][a-zA-Z0-9$_]*(?:\s+is\s+(?:[a-zA-Z0-9$_][^\{]*?)?)?\s*\{'
   - language: Gerber Image
     pattern: '^[DGMT][0-9]{2}\*(?:\r?\n|\r)'
 - extensions: ['.sql']
@@ -734,10 +801,17 @@ disambiguations:
   rules:
   - language: SubRip Text
     pattern: '^(\d{2}:\d{2}:\d{2},\d{3})\s*(-->)\s*(\d{2}:\d{2}:\d{2},\d{3})$'
+- extensions: ['.srv']
+  rules:
+  - language: ROS Interface
+    and:
+      - pattern: '^[a-z][a-z0-9_]*(?:\/[a-zA-Z]\w*)?(?:<=\d+)?(?:\[(?:<=\d+)?\])?\s+\w+\b'
+      - pattern: '^---\s*$'
+      - negative_pattern: '^\s*[^\s@#\w-]'
 - extensions: ['.st']
   rules:
   - language: StringTemplate
-    pattern: '\$\w+[($]|(.)!\s*.+?\s*!\1|<!\s*.+?\s*!>|\[!\s*.+?\s*!\]|\{!\s*.+?\s*!\}'
+    pattern: '\$\w+[($]|.!\s*.+?\s*!.|<!\s*.+?\s*!>|\[!\s*.+?\s*!\]|\{!\s*.+?\s*!\}'
   - language: Smalltalk
     pattern: '\A\s*[\[{(^"''\w#]|[a-zA-Z_]\w*\s*:=\s*[a-zA-Z_]\w*|class\s*>>\s*[a-zA-Z_]\w*|^[a-zA-Z_]\w*\s+[a-zA-Z_]\w*:|^Class\s*\{|if(?:True|False):\s*\['
 - extensions: ['.star']
@@ -749,6 +823,11 @@ disambiguations:
   rules:
   - language: STL
     pattern: '\A\s*solid(?:$|\s)[\s\S]*^endsolid(?:$|\s)'
+- extensions: ['.svx']
+  rules:
+  - language: Survex data
+    pattern: '\A(;|\*[^*]+$)'
+  - language: mdsvex
 - extensions: ['.sw']
   rules:
   - language: Sway
@@ -837,7 +916,7 @@ disambiguations:
         (?<!-)\b
       )*+
 
-      (?=$|\s)
+      (?:$|\s)
   - language: Adblock Filter List
     pattern: |-
       (?x)\A
@@ -870,10 +949,10 @@ disambiguations:
 - extensions: ['.url']
   rules:
   - language: INI
-    pattern: '^\[InternetShortcut\](?:\r?\n|\r)(?>[^\s\[][^\r\n]*(?:\r?\n|\r))*URL='
+    pattern: '^\[InternetShortcut\](?:\r?\n|\r)([^\s\[][^\r\n]*(?:\r?\n|\r)){0,20}URL='
 - extensions: ['.v']
   rules:
-  - language: Coq
+  - language: Rocq Prover
     pattern: '(?:^|\s)(?:Proof|Qed)\.(?:$|\s)|(?:^|\s)Require[ \t]+(Import|Export)\s'
   - language: Verilog
     pattern: '^[ \t]*module\s+[^\s()]+\s+\#?\(|^[ \t]*`(?:define|ifdef|ifndef|include|timescale)|^[ \t]*always[ \t]+@|^[ \t]*initial[ \t]+(begin|@)'
@@ -939,11 +1018,10 @@ named_patterns:
   freebasic:
   - '(?i)^[ \t]*#(?:define|endif|endmacro|ifn?def|include|lang|macro|pragma)(?:$|\s)'
   - '(?i)^[ \t]*dim( shared)? [a-z_][a-z0-9_]* as [a-z_][a-z0-9_]* ptr'
-  - '(?i)^[ \t]*dim( shared)? as [a-z_][a-z0-9_]* [a-z_][a-z0-9_]*'
   gsc:
   - '^\s*#\s*(?:using|insert|include|define|namespace)[ \t]+\w'
-  - '^\s*(?>(?:autoexec|private)\s+){0,2}function\s+(?>(?:autoexec|private)\s+){0,2}\w+\s*\('
-  - '\b(?:level|self)[ \t]+thread[ \t]+(?:\[\[[ \t]*(?>\w+\.)*\w+[ \t]*\]\]|\w+)[ \t]*\([^\r\n\)]*\)[ \t]*;'
+  - '^\s*((?:autoexec|private)\s+){0,2}function\s+((?:autoexec|private)\s+){0,2}\w+\s*\('
+  - '\b(?:level|self)[ \t]+thread[ \t]+(?:\[\[[ \t]*(\w+\.)+[ \t]*\]\]|\w+)[ \t]*\([^\r\n\)]*\)[ \t]*;'
   - '^[ \t]*#[ \t]*(?:precache|using_animtree)[ \t]*\('
   json: '\A\s*[{\[]'
   key_equals_value: '^[^#!;][^=]*='
