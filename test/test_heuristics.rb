@@ -80,13 +80,12 @@ class TestHeuristics < Minitest::Test
     end
   end
 
-  def test_all_regex_linear
+  def test_all_regex_re2_compatible
     Heuristics.raw_patterns.each do |l, pats|
       pats = [pats] unless pats.kind_of?(Array)
       pats.each do |p|
-        reg = Regexp.new(p, timeout: 0.5)
-        # assert Regexp.linear_time?(reg), "\n'#{l}' regex doesn't have linear execution time:\n\n /#{p}/\n"
-        puts "\n'#{l}' regex doesn't have linear execution time:\n\n /#{p}/\n\n" unless Regexp.linear_time?(reg)
+        reg = RE2::Regexp.new(p, log_errors: false)
+        assert reg.ok?, "'#{l}' regex can't be compiled to RE2: #{reg.error}\n\nRegex: /#{p}/\n\nSee https://github.com/google/re2/wiki/Syntax for supported syntax."
       end
     end
   end

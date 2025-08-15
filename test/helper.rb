@@ -5,6 +5,7 @@ require "linguist"
 require "linguist/blob"
 require "licensee"
 require "set"
+require "re2"
 
 def fixtures_path
   File.expand_path("../fixtures", __FILE__)
