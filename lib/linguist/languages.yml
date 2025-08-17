@@ -8784,10 +8784,25 @@ crontab:
   language_id: 705203557
 desktop:
   type: data
+  filenames:
+  - "systemd-system.conf"
+  - "systemd-user.conf"
+  - "logind.conf"
+  - "journald.conf"
+  - "journal-remote.conf"
+  - "journal-upload.conf"
+  - "systemd-sleep.conf"
+  - "timesyncd.conf"
   extensions:
   - ".desktop"
   - ".desktop.in"
+  - ".automount"
+  - ".mount"
+  - ".netdev"
+  - ".nspawn"
   - ".service"
+  - ".socket"
+  - ".timer"
   tm_scope: source.desktop
   ace_mode: text
   language_id: 412
