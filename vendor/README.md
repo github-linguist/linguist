@@ -15,6 +15,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **AGS Script:** [mikomikotaishi/c.tmbundle](https://github.com/mikomikotaishi/c.tmbundle)
 - **AIDL:** [google/aidl-language](https://github.com/google/aidl-language)
 - **AL:** [microsoft/AL](https://github.com/microsoft/AL)
+- **ALGOL:** [PolariTOON/language-algol60](https://github.com/PolariTOON/language-algol60)
 - **AMPL:** [ampl/sublime-ampl](https://github.com/ampl/sublime-ampl)
 - **ANTLR:** [textmate/antlr.tmbundle](https://github.com/textmate/antlr.tmbundle)
 - **API Blueprint:** [apiaryio/api-blueprint-sublime-plugin](https://github.com/apiaryio/api-blueprint-sublime-plugin)
