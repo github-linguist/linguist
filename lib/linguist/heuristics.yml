@@ -75,7 +75,7 @@ disambiguations:
     # ALGOL 60 comments
     - '(?i)^comment\b.*(;|comment)'
     # ALGOL 68 comments
-    - '^#[^#\n]+#$'
+    - '^#[^#\r\n]+#$'
     # ALGOL 60/68 keywords
     - '(?i)\b(integer|real|boolean|string)\b\s+\w+\s*:=\s*'
     - '(?i)^begin[\s\S]*^end'
