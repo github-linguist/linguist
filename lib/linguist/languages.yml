@@ -114,6 +114,16 @@ AL:
   tm_scope: source.al
   ace_mode: text
   language_id: 658971832
+ALGOL:
+  type: programming
+  color: "#D1E0DB"
+  extensions:
+  - ".alg"
+  tm_scope: source.algol60
+  ace_mode: pascal
+  codemirror_mode: pascal
+  codemirror_mime_type: text/x-pascal
+  language_id: 79217948
 AMPL:
   type: programming
   color: "#E6EFBB"
@@ -864,7 +874,7 @@ C3:
   type: programming
   color: "#2563eb"
   extensions:
-    - ".c3"
+  - ".c3"
   tm_scope: source.c3
   ace_mode: c_cpp
   codemirror_mode: clike
