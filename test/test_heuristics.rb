@@ -230,6 +230,12 @@ class TestHeuristics < Minitest::Test
     }, alt_name="man.#{n}")
   end
 
+  def test_action_by_heuristics
+    assert_heuristics({
+      "ROS Interface" => all_fixtures("ROS Interface", "*.action"),
+    })
+  end
+
   def test_al_by_heuristics
     assert_heuristics({
       "AL" => all_fixtures("AL", "*.al"),
@@ -740,6 +746,7 @@ class TestHeuristics < Minitest::Test
   def test_msg_by_heuristics
     assert_heuristics({
       "OMNeT++ MSG" => all_fixtures("OMNeT++ MSG", "*.msg"),
+      "ROS Interface" => all_fixtures("ROS Interface", "*.msg"),
     })
   end
 
@@ -982,6 +989,12 @@ class TestHeuristics < Minitest::Test
   def test_srt_by_heuristics
     assert_heuristics({
       "SubRip Text" => all_fixtures("SubRip Text", "*.srt")
+    })
+  end
+
+  def test_srv_by_heuristics
+    assert_heuristics({
+      "ROS Interface" => all_fixtures("ROS Interface", "*.srv"),
     })
   end
 
