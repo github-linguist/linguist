@@ -1,0 +1,89 @@
+// Actor system examples
+// Tests concurrency and message passing syntax
+
+/// A simple counter actor
+actor Counter {
+    let mut count = 0
+    
+    fn handle(msg) {
+        match msg {
+            Inc(n) => {
+                count += n
+                // Actor send operator
+                sender <- count
+            }
+            Dec(n) => {
+                count -= n  
+                sender <- count
+            }
+            Get => {
+                // Send current value back
+                sender <- count
+            }
+            Reset => {
+                count = 0
+                sender <- "reset complete"
+            }
+        }
+    }
+}
+
+/// Message types for the counter
+enum CounterMsg {
+    Inc(int),
+    Dec(int), 
+    Get,
+    Reset
+}
+
+/// Bank account actor with error handling
+actor BankAccount {
+    let mut balance: float = 0.0
+    
+    fn handle(msg: AccountMsg) -> Result<float> {
+        match msg {
+            Deposit(amount) => {
+                if amount > 0.0 {
+                    balance += amount
+                    Ok(balance)
+                } else {
+                    Err("Invalid deposit amount")
+                }
+            }
+            Withdraw(amount) => {
+                if amount <= balance {
+                    balance -= amount
+                    Ok(balance)
+                } else {
+                    Err("Insufficient funds")
+                }
+            }
+            GetBalance => Ok(balance)
+        }
+    }
+}
+
+enum AccountMsg {
+    Deposit(float),
+    Withdraw(float),
+    GetBalance
+}
+
+// Actor usage example
+fn main() {
+    let counter = spawn_actor(Counter::new())
+    let account = spawn_actor(BankAccount::new())
+    
+    // Send messages using <- operator
+    counter <- Inc(5)
+    counter <- Inc(3)
+    
+    // Ask pattern using <? operator  
+    let current_count = counter <? Get
+    
+    // Error handling with actors
+    match account <? Withdraw(100.0) {
+        Ok(balance) => println("New balance: {}", balance)
+        Err(msg) => println("Error: {}", msg)
+    }
+}

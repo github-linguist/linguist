@@ -1083,3 +1083,20 @@ named_patterns:
   # Excel objects
   - '\b(?:(?:This|Active)?Workbooks?|Worksheets?|Active(?:Sheet|Chart|Cell)|WorksheetFunction)\b'
   - '\b(?:Range\(".*|Cells\([0-9a-zA-Z_]*, (?:[0-9a-zA-Z_]*|"[a-zA-Z]{1,3}"))\)'
+
+  - extensions: ['.rhy']
+    rules:
+      - language: Ruchy
+        pattern: '^\s*(actor|spawn|<-|<\?|\>\>)'
+      - language: Ruchy
+        named_pattern: ruchy_actor
+      - language: Ruchy
+        and:
+          - named_pattern: ruchy_keywords
+          - named_pattern: ruchy_pipeline
+
+ruchy_actor: '^\s*actor\s+[A-Z]\w*\s*\{'
+ruchy_keywords: '(fn|let|mut|struct|enum|trait|impl|match|actor|spawn)'
+ruchy_pipeline: '\s+>>\s+'
+ruchy_send: '\s+<-\s+'
+ruchy_ask: '\s+<\?\s+'

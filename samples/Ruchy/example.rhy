@@ -1,0 +1,204 @@
+/// Example Ruchy program demonstrating language features
+/// This file serves as a sample for GitHub Linguist
+
+use std::collections::HashMap;
+use actor::prelude::*;
+
+/// A concurrent counter actor
+actor Counter {
+    count: u32,
+    history: Vec<u32>,
+    
+    fn handle(msg: Message) {
+        match msg {
+            Increment(n) => {
+                self.count += n;
+                self.history.push(self.count);
+            }
+            Decrement(n) => {
+                self.count = self.count.saturating_sub(n);
+                self.history.push(self.count);
+            }
+            GetCount => sender <- self.count,
+            GetHistory => sender <- self.history.clone(),
+            Reset => {
+                self.count = 0;
+                self.history.clear();
+            }
+        }
+    }
+}
+
+/// Message types for the counter actor
+enum Message {
+    Increment(u32),
+    Decrement(u32),
+    GetCount,
+    GetHistory,
+    Reset,
+}
+
+/// Data processing pipeline example
+fn process_data<T>(input: Vec<T>) -> Result<Vec<T>, Error>
+where
+    T: Clone + Send + 'static,
+{
+    input
+        >> validate
+        >> normalize
+        >> transform
+        >> filter_outliers
+        >> aggregate
+}
+
+/// Pattern matching with guards
+fn classify_number(n: i32) -> &'static str {
+    match n {
+        n if n < 0 => "negative",
+        0 => "zero",
+        1..=10 => "small",
+        11..=100 => "medium",
+        101..=1000 => "large",
+        _ => "huge",
+    }
+}
+
+/// Generic struct with trait bounds
+struct DataProcessor<T> 
+where
+    T: Process + Send + Sync,
+{
+    data: Vec<T>,
+    config: ProcessConfig,
+    actors: Vec<ActorHandle>,
+}
+
+impl<T> DataProcessor<T>
+where
+    T: Process + Send + Sync + 'static,
+{
+    pub fn new(config: ProcessConfig) -> Self {
+        Self {
+            data: Vec::new(),
+            config,
+            actors: Vec::new(),
+        }
+    }
+    
+    pub async fn process(&mut self) -> Result<(), Error> {
+        // Spawn worker actors
+        for i in 0..self.config.workers {
+            let worker = spawn Worker {
+                id: i,
+                capacity: self.config.capacity,
+            };
+            self.actors.push(worker);
+        }
+        
+        // Distribute work
+        for chunk in self.data.chunks(self.config.batch_size) {
+            let worker = self.actors[0].clone();
+            worker <- ProcessChunk(chunk.to_vec());
+        }
+        
+        // Collect results
+        let mut results = Vec::new();
+        for actor in &self.actors {
+            let result = actor <? GetResult;
+            results.push(result.await?);
+        }
+        
+        Ok(())
+    }
+}
+
+/// Closure and lambda examples
+fn functional_style() {
+    let numbers = vec![1, 2, 3, 4, 5];
+    
+    // Simple closure
+    let doubled = numbers.iter().map(|x| x * 2).collect::<Vec<_>>();
+    
+    // Multi-line closure with move
+    let processor = move |data: Vec<i32>| {
+        data.into_iter()
+            .filter(|&x| x > 0)
+            .map(|x| x.pow(2))
+            .sum::<i32>()
+    };
+    
+    // Higher-order function
+    let result = apply_twice(|x| x + 1, 5);
+}
+
+fn apply_twice<F, T>(f: F, x: T) -> T
+where
+    F: Fn(T) -> T,
+{
+    f(f(x))
+}
+
+/// Error handling with Result type
+fn safe_divide(a: f64, b: f64) -> Result<f64, String> {
+    if b == 0.0 {
+        Err("Division by zero".to_string())
+    } else {
+        Ok(a / b)
+    }
+}
+
+/// Async function with error propagation
+async fn fetch_and_process(url: &str) -> Result<ProcessedData, Error> {
+    let raw_data = fetch(url).await?;
+    let parsed = parse(raw_data)?;
+    let validated = validate(parsed)?;
+    let processed = transform(validated).await?;
+    
+    Ok(processed)
+}
+
+/// Main entry point
+fn main() {
+    // Spawn counter actor
+    let counter = spawn Counter {
+        count: 0,
+        history: Vec::new(),
+    };
+    
+    // Send messages
+    counter <- Increment(5);
+    counter <- Increment(3);
+    counter <- Decrement(2);
+    
+    // Request and wait for response
+    let count = counter <? GetCount;
+    println!("Current count: {}", count);
+    
+    // Pipeline example
+    let data = vec![1, 2, 3, 4, 5];
+    let result = data
+        >> double_all
+        >> filter_even
+        >> sum_values;
+    
+    println!("Pipeline result: {}", result);
+}
+
+// Test module
+#[cfg(test)]
+mod tests {
+    use super::*;
+    
+    #[test]
+    fn test_counter_increment() {
+        let counter = Counter { count: 0, history: vec![] };
+        // Test implementation
+        assert_eq!(counter.count, 0);
+    }
+    
+    #[test]
+    async fn test_async_processing() {
+        let result = fetch_and_process("test://data").await;
+        assert!(result.is_ok());
+    }
+}

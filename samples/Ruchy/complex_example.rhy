@@ -1,0 +1,244 @@
+// Complex Ruchy syntax example
+// Tests advanced language constructs and edge cases
+
+use std::{collections::HashMap, sync::Arc, time::Duration}
+
+/// Generic data processing pipeline with actors
+actor DataProcessor<T> where T: Send + Sync + Clone {
+    let mut buffer: Vec<T> = Vec::new()
+    let mut processors: HashMap<str, ProcessorFn<T>> = HashMap::new()
+    let config: ProcessorConfig
+    
+    fn handle(msg: ProcessorMsg<T>) -> Result<ProcessorResponse<T>> {
+        match msg {
+            Process { data, transform } => {
+                let processed = self.apply_pipeline(data, transform)?
+                Ok(ProcessorResponse::Processed(processed))
+            }
+            BatchProcess { items, batch_size } => {
+                let batches = items
+                    .chunks(batch_size)
+                    .map(|chunk| self.process_batch(chunk))
+                    .collect::<Result<Vec<_>>>()?
+                
+                Ok(ProcessorResponse::BatchProcessed(batches))
+            }
+            RegisterProcessor { name, processor } => {
+                self.processors.insert(name, processor)
+                Ok(ProcessorResponse::Registered)
+            }
+            GetStats => {
+                let stats = ProcessorStats {
+                    buffer_size: self.buffer.len(),
+                    processor_count: self.processors.len(),
+                    uptime: self.uptime()
+                }
+                Ok(ProcessorResponse::Stats(stats))
+            }
+        }
+    }
+    
+    async fn apply_pipeline(&mut self, data: T, transform: str) -> Result<T> {
+        let processor = self.processors.get(&transform)
+            .ok_or_else(|| ProcessorError::UnknownTransform(transform))?
+        
+        // Pipeline with error handling
+        let result = data
+            >> validate_input()
+            >> processor.apply()
+            >> self.post_process()
+            >> self.cache_result()
+        
+        match result {
+            Ok(processed) => {
+                self.buffer.push(processed.clone())
+                Ok(processed)
+            }
+            Err(e) => {
+                log::error("Pipeline failed: {}", e)
+                self.handle_error(e, data).await
+            }
+        }
+    }
+}
+
+/// Complex enum with associated data
+enum ProcessorMsg<T> {
+    Process { 
+        data: T, 
+        transform: str 
+    },
+    BatchProcess { 
+        items: Vec<T>, 
+        batch_size: usize 
+    },
+    RegisterProcessor { 
+        name: str, 
+        processor: ProcessorFn<T> 
+    },
+    GetStats,
+    Shutdown { 
+        graceful: bool, 
+        timeout: Option<Duration> 
+    }
+}
+
+/// Trait with complex bounds and async methods
+trait AsyncProcessor<T>: Send + Sync + Clone 
+where 
+    T: Send + Sync + 'static 
+{
+    async fn process(&self, item: T) -> Result<T, ProcessingError>
+    
+    async fn batch_process(&self, items: Vec<T>) -> Result<Vec<T>, ProcessingError> {
+        let mut results = Vec::with_capacity(items.len())
+        
+        for item in items {
+            match self.process(item).await {
+                Ok(processed) => results.push(processed),
+                Err(e) => {
+                    log::warn("Item processing failed: {}", e)
+                    // Continue with remaining items
+                }
+            }
+        }
+        
+        Ok(results)
+    }
+    
+    fn name(&self) -> &str
+    fn version(&self) -> &str { "1.0.0" }
+}
+
+/// Complex struct with generics and lifetimes  
+struct ProcessingContext<'a, T, E> 
+where 
+    T: Clone + Send + 'a,
+    E: std::error::Error + Send + Sync + 'static
+{
+    data: &'a [T],
+    error_handler: Box<dyn Fn(E) -> ProcessingDecision + Send + Sync>,
+    metrics: Arc<Mutex<ProcessingMetrics>>,
+    config: ProcessingConfig<T>,
+}
+
+impl<'a, T, E> ProcessingContext<'a, T, E> 
+where 
+    T: Clone + Send + 'a,
+    E: std::error::Error + Send + Sync + 'static
+{
+    /// Complex method with nested pattern matching
+    async fn execute_with_retry(&self, max_retries: usize) -> Result<Vec<T>, E> {
+        let mut attempt = 0
+        let mut last_error = None
+        
+        while attempt < max_retries {
+            let result = self.try_execute().await
+            
+            match result {
+                Ok(data) => {
+                    self.update_metrics(attempt, true).await
+                    return Ok(data)
+                }
+                Err(e) => {
+                    let decision = (self.error_handler)(e.clone())
+                    
+                    match decision {
+                        ProcessingDecision::Retry { delay } => {
+                            log::info("Retrying after {}ms", delay.as_millis())
+                            tokio::time::sleep(delay).await
+                            attempt += 1
+                            last_error = Some(e)
+                        }
+                        ProcessingDecision::Fail => {
+                            self.update_metrics(attempt, false).await
+                            return Err(e)
+                        }
+                        ProcessingDecision::Skip => {
+                            log::warn("Skipping due to error: {}", e)
+                            break
+                        }
+                    }
+                }
+            }
+        }
+        
+        // All retries exhausted
+        self.update_metrics(attempt, false).await
+        Err(last_error.unwrap_or_else(|| {
+            E::from("Maximum retries exceeded")
+        }))
+    }
+}
+
+/// Complex function with multiple generic parameters
+fn transform_and_collect<T, U, F, I>(
+    items: I,
+    transformer: F,
+    filter_predicate: impl Fn(&U) -> bool
+) -> Result<Vec<U>, TransformError>
+where
+    T: Clone + Send,
+    U: Clone + Send,
+    F: Fn(T) -> Result<U, TransformError> + Sync,
+    I: IntoIterator<Item = T> + Send,
+    I::IntoIter: Send
+{
+    items
+        .into_iter()
+        .map(|item| transformer(item))
+        .collect::<Result<Vec<_>, _>>()?
+        .into_iter()
+        .filter(filter_predicate)
+        .collect::<Vec<_>>()
+        .pipe(Ok)
+}
+
+/// Complex lambda and closure examples
+fn complex_data_processing() -> Result<ProcessedData> {
+    let data = load_raw_data()?
+    
+    // Multi-line lambda with complex logic
+    let processor = |batch: DataBatch| -> Result<ProcessedBatch> {
+        let filtered = batch.items
+            .into_iter()
+            .filter(|item| {
+                item.is_valid() && 
+                item.timestamp > cutoff_time() &&
+                !item.is_duplicate()
+            })
+            .collect::<Vec<_>>()
+        
+        let transformed = filtered
+            .par_iter()
+            .map(|item| {
+                item.clone()
+                    >> normalize()
+                    >> enrich_metadata()
+                    >> validate_business_rules()
+            })
+            .collect::<Result<Vec<_>>>()?
+        
+        Ok(ProcessedBatch { 
+            items: transformed,
+            processed_at: now(),
+            batch_id: generate_id()
+        })
+    }
+    
+    // Pipeline with error handling and parallel processing
+    let result = data
+        .chunks(BATCH_SIZE)
+        .par_iter()
+        .map(processor)
+        .collect::<Result<Vec<_>>>()?
+        .into_iter()
+        .flatten()
+        .collect::<Vec<_>>()
+    
+    Ok(ProcessedData {
+        items: result,
+        processing_time: processing_start.elapsed(),
+        metadata: generate_metadata()
+    })
+}
