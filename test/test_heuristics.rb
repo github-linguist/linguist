@@ -1183,4 +1183,10 @@ class TestHeuristics < Minitest::Test
       "Yacc" => all_fixtures("Yacc", "*.yy")
     })
   end
+
+  def test_zs_by_heuristics
+    assert_heuristics({
+      "ZS" => all_fixtures("ZS", "*.zs")
+    })
+  end
 end
