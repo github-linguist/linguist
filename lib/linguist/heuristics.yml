@@ -1000,6 +1000,10 @@ disambiguations:
   - language: JSON
     named_pattern: json
   - language: Yacc
+- extensions: ['.zs']
+  rules:
+  - language: ZS
+    pattern: '^\\!\\s*(ZS-CSHARP|ZS-LUA)\\b'
 named_patterns:
   cpp:
   - '^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>'
