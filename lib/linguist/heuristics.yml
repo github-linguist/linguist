@@ -1002,8 +1002,12 @@ disambiguations:
   - language: Yacc
 - extensions: ['.zs']
   rules:
-  - language: ZS
-    pattern: '^\\!\\s*(ZS-CSHARP|ZS-LUA)\\b'
+  - match: "!\\s*ZS-"
+    language: ZS
+  - match: "ZenScript"
+    language: ZenScript
+  - match: "ZSharp"
+    language: ZSharp
 named_patterns:
   cpp:
   - '^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>'
