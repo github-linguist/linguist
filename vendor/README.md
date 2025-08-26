@@ -123,6 +123,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Common Lisp:** [qingpeng9802/common-lisp-tmlanguage](https://github.com/qingpeng9802/common-lisp-tmlanguage)
 - **Common Workflow Language:** [manabuishii/language-cwl](https://github.com/manabuishii/language-cwl)
 - **Component Pascal:** [textmate/pascal.tmbundle](https://github.com/textmate/pascal.tmbundle)
+- **Cooklang:** [cooklang/CookVSCode](https://github.com/cooklang/CookVSCode)
 - **Cool:** [anunayk/cool-tmbundle](https://github.com/anunayk/cool-tmbundle)
 - **Cpp-ObjDump:** [nanoant/assembly.tmbundle](https://github.com/nanoant/assembly.tmbundle)
 - **Creole:** [Siddley/Creole](https://github.com/Siddley/Creole)
