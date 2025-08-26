@@ -53,6 +53,13 @@ disambiguations:
     - named_pattern: man-title
     - named_pattern: man-heading
   - language: Roff
+- extensions: ['.action']
+  rules:
+  - language: ROS Interface
+    and:
+      - pattern: '^[a-z][a-z0-9_]*(?:\/[a-zA-Z]\w*)?(?:<=\d+)?(?:\[(?:<=\d+)?\])?\s+\w+\b'
+      - pattern: '^---\s*$'
+      - negative_pattern: '^\s*[^\s@#\w-]'
 - extensions: ['.al']
   rules:
   # AL pattern source from https://github.com/microsoft/AL/blob/master/grammar/alsyntax.tmlanguage - keyword.other.applicationobject.al
@@ -144,6 +151,11 @@ disambiguations:
     - (?i:^\s*(end\sfunction)$)
   - language: Bluespec BH
     pattern: '^package\s+[A-Za-z_][A-Za-z0-9_'']*(?:\s*\(|\s+where)'
+- extensions: ['.bst']
+  rules:
+  - language: BibTeX Style
+    pattern: 'ENTRY\s*\{'
+  - language: BuildStream
 - extensions: ['.builds']
   rules:
   - language: XML
@@ -284,6 +296,8 @@ disambiguations:
     and:
     - named_pattern: vb-form
     - pattern: '^\s*Begin\s+VB\.Form\s+'
+  - language: INI
+    pattern: '\ATYPE=VIEW'
 - extensions: ['.fs']
   rules:
   - language: Forth
@@ -523,6 +537,10 @@ disambiguations:
   rules:
   - language: OMNeT++ MSG
     pattern: '^cplusplus\(?[\S]*\)?[\s]*\{?\{?|^namespace[\s]+([^.\s]*\.)*[^.\s]*;|^struct[\s]+[\S]+|^message[\s]+[\S]+(extends )?[\S]*[\s]*|^packet[\s]+[\S]+|^class[\s]+[\S]+(extends )?[\S]*[\s]*|^enum[\s]+[\S]+|^import ([^.\s]*\.)*[^.\s]*;'
+  - language: ROS Interface
+    and:
+      - pattern: '^[a-z][a-z0-9_]*(?:\/[a-zA-Z]\w*)?(?:<=\d+)?(?:\[(?:<=\d+)?\])?\s+\w+\b'
+      - negative_pattern: '^\s*[^\s@#\w-]'
 - extensions: ['.n']
   rules:
   - language: Roff
@@ -535,8 +553,19 @@ disambiguations:
     pattern: '^\s*<\?xml\s+version'
   - language: Gerber Image
     pattern: '^[DGMT][0-9]{2}\*(?:\r?\n|\r)'
+  - language: Nickel
+    pattern:
+    - '^let(?:\srec)?(?:\s[a-zA-Z_][a-zA-Z0-9_]*)?'
+    - '^import\s"[^"]+"\s+as\s'
+    - 'std\.[a-zA-Z_][a-zA-Z0-9_]*\.'
   - language: Text
     pattern: 'THE_TITLE'
+  - language: NCL
+    pattern:
+    - '^load "'
+    - '^begin$'
+    - '[0-9]\.$'
+    - '^;'
 - extensions: ['.nl']
   rules:
   - language: NL
@@ -730,21 +759,23 @@ disambiguations:
     pattern: '^#+\s+(NAME|SYNOPSIS|DESCRIPTION)'
 - extensions: ['.scm']
   rules:
+  - language: Tree-sitter Query
+    pattern:
+    - '\(#[\w-]+[!\?]'
+    - '(?:[\)\]]\s*[\*\+\?](?:\s|$))'
+    - '(?:^\s*\w+:\s*[\(\[\"])'
+    - '\(#(?:set!|(?:not-)?(?:any-of|match)\?)'
+    - '@[\w.-]+(?:\)\s|$)'
+    negative_pattern:
+    - '\([+\-:<>\/=~\)]'
   - language: Scheme
     pattern:
     - '(?:''[\(\*#]|\w->\w|\.\.\.[\s\)]|\([+\-:<>\/=~\)]|~>|[#`]\(|#:\w)'
     - '^\s*\((?:define\*?|import|library|lambda)'
     negative_pattern:
     - '\(#[\w-]+[!\?]'
-    - '[\)\]"_]\s*(?:[\*\+\?]|@\w)'
-  - language: Tree-sitter Query
-    pattern:
-    - '\(#[\w-]+[!\?]'
-    - '[\)\]"_]\s*(?:[\*\+\?]|@\w)'
-    - '(?:^\s*\w+:\s*[\(\[\"])'
-    - '\(#(?:set!|(?:not-)?(?:any-of|match)\?)'
-    negative_pattern:
-    - '\([+\-:<>\/=~\)]'
+    - '(?:[\)\]]\s*[\*\+\?](?:\s|$))'
+    - '@[\w.-]+(?:\)\s|$)'
 - extensions: ['.sol']
   rules:
   - language: Solidity
@@ -770,6 +801,13 @@ disambiguations:
   rules:
   - language: SubRip Text
     pattern: '^(\d{2}:\d{2}:\d{2},\d{3})\s*(-->)\s*(\d{2}:\d{2}:\d{2},\d{3})$'
+- extensions: ['.srv']
+  rules:
+  - language: ROS Interface
+    and:
+      - pattern: '^[a-z][a-z0-9_]*(?:\/[a-zA-Z]\w*)?(?:<=\d+)?(?:\[(?:<=\d+)?\])?\s+\w+\b'
+      - pattern: '^---\s*$'
+      - negative_pattern: '^\s*[^\s@#\w-]'
 - extensions: ['.st']
   rules:
   - language: StringTemplate
@@ -914,7 +952,7 @@ disambiguations:
     pattern: '^\[InternetShortcut\](?:\r?\n|\r)([^\s\[][^\r\n]*(?:\r?\n|\r)){0,20}URL='
 - extensions: ['.v']
   rules:
-  - language: Coq
+  - language: Rocq Prover
     pattern: '(?:^|\s)(?:Proof|Qed)\.(?:$|\s)|(?:^|\s)Require[ \t]+(Import|Export)\s'
   - language: Verilog
     pattern: '^[ \t]*module\s+[^\s()]+\s+\#?\(|^[ \t]*`(?:define|ifdef|ifndef|include|timescale)|^[ \t]*always[ \t]+@|^[ \t]*initial[ \t]+(begin|@)'
