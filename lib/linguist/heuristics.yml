@@ -1002,9 +1002,9 @@ disambiguations:
   - language: Yacc
 - extensions: ['.zs']
   rules:
-  - match: "!\\s*ZS-"
+  - pattern: "^\s*!\s*ZS-"
     language: ZS
-  - match: "ZenScript"
+  - pattern: "import"
     language: ZenScript
 named_patterns:
   cpp:
