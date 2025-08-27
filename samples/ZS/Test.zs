@@ -6,5 +6,5 @@ public class Test : MonoBehaviour
   private float List = [];
 
   if <gameobject> touch /|Dirt|\ then
-    Cut /|Dirt|\ with radius
+    Cut /|Dirt|\ with <radius>
 }
