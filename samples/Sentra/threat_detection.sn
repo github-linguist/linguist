@@ -1,0 +1,75 @@
+// Threat Detection Demo
+// Shows Sentra's native security pattern matching
+
+log("=== Sentra Threat Detection System ===")
+log("")
+
+// Test various payloads for threats
+let payloads = [
+    "SELECT * FROM users WHERE id = 1",
+    "' OR 1=1 --",
+    "<script>alert('XSS')</script>",
+    "../../../../etc/passwd",
+    "normal request data"
+]
+
+log("Analyzing payloads for threats:")
+log("-------------------------------")
+
+let i = 0
+while i < 5 {
+    let payload = payloads[i]
+    let result = check_threat(payload)
+    
+    if result["is_threat"] {
+        log("🚨 THREAT DETECTED: " + result["type"])
+        log("   Payload: " + payload)
+    } else {
+        log("✓ Clean: " + payload)
+    }
+    
+    i = i + 1
+}
+
+// Pattern matching demo
+log("")
+log("Pattern Matching Demo:")
+log("---------------------")
+
+let text = "Error connecting to database at 192.168.1.100:3306"
+let ip_pattern = "\\d+\\.\\d+\\.\\d+\\.\\d+"
+
+if regex_match(text, ip_pattern) {
+    log("IP address found in text")
+}
+
+// Check if text contains sensitive data
+if contains(text, "database") {
+    log("⚠️  Sensitive keyword 'database' detected")
+}
+
+if contains(text, "password") {
+    log("⚠️  Sensitive keyword 'password' detected")
+} else {
+    log("✓ No password keyword found")
+}
+
+// Firewall simulation
+log("")
+log("Firewall Rules Engine:")
+log("----------------------")
+
+// Add firewall rules
+firewall_add("BLOCK", "TCP", 23, "0.0.0.0/0")    // Block Telnet
+firewall_add("BLOCK", "TCP", 3389, "0.0.0.0/0")  // Block RDP
+firewall_add("ALLOW", "TCP", 443, "0.0.0.0/0")   // Allow HTTPS
+
+// Check connections
+let check1 = firewall_check("192.168.1.100", 23)
+log("Telnet from 192.168.1.100: " + check1)
+
+let check2 = firewall_check("10.0.0.1", 443)
+log("HTTPS from 10.0.0.1: " + check2)
+
+let check3 = firewall_check("203.0.113.5", 3389)
+log("RDP from 203.0.113.5: " + check3)

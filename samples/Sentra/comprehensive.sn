@@ -1,0 +1,163 @@
+// Sentra Security Programming Language
+// Comprehensive syntax example for GitHub Linguist
+
+import security
+import network
+import crypto
+import siem
+import cloud
+
+// Constants and type definitions
+const MAX_THREAT_LEVEL = 10
+const DEFAULT_SCAN_PORT = 443
+
+// Security configuration structure
+struct SecurityPolicy {
+    name string
+    rules []Rule
+    actions map[string]Action
+    enabled bool
+}
+
+struct Rule {
+    id string
+    condition fn(Event) bool
+    severity int
+    tags []string
+}
+
+// Interface definition
+interface Scanner {
+    scan(target string) ScanResult
+    configure(config map[string]any)
+    status() string
+}
+
+// Generic function with type parameters
+fn filter_threats[T](items []T, predicate fn(T) bool) []T {
+    let result = []
+    for item in items {
+        if predicate(item) {
+            result.push(item)
+        }
+    }
+    return result
+}
+
+// Async security scanning function
+async fn scan_network_async(cidr string) []Vulnerability {
+    let targets = network.parse_cidr(cidr)
+    let vulnerabilities = []
+    
+    // Parallel scanning with goroutines
+    let results = await parallel.map(targets, async fn(target) {
+        return await security.deep_scan(target)
+    })
+    
+    for result in results {
+        vulnerabilities.extend(result.vulnerabilities)
+    }
+    
+    return vulnerabilities
+}
+
+// Pattern matching example
+fn classify_threat(event Event) string {
+    match event.type {
+        "malware" => {
+            if event.severity > 8 {
+                return "critical"
+            }
+            return "high"
+        }
+        "intrusion" => "high"
+        "dos_attack" => "medium"
+        "suspicious" => "low"
+        _ => "unknown"
+    }
+}
+
+// Error handling with try-catch
+fn secure_connect(host string, port int) (Connection, error) {
+    try {
+        let conn = network.connect(host, port)
+        
+        // Certificate validation
+        let cert = conn.get_certificate()
+        if !crypto.verify_cert(cert) {
+            throw SecurityError("Invalid certificate")
+        }
+        
+        return conn, nil
+    } catch (e NetworkError) {
+        return nil, e
+    } catch (e SecurityError) {
+        siem.log_security_event(e)
+        return nil, e
+    }
+}
+
+// Decorator/annotation example
+@monitor(interval=60)
+@alert(channels=["slack", "email"])
+fn critical_security_check() {
+    let threats = security.get_active_threats()
+    
+    for threat in threats {
+        if threat.severity >= 9 {
+            incident.create({
+                title: "Critical Security Threat",
+                threat: threat,
+                timestamp: time.now()
+            })
+        }
+    }
+}
+
+// Lambda and closure example
+fn create_scanner(config SecurityConfig) Scanner {
+    let scan_count = 0
+    
+    return Scanner{
+        scan: fn(target string) ScanResult {
+            scan_count++
+            println("Scan #${scan_count}: ${target}")
+            return security.scan_with_config(target, config)
+        },
+        status: fn() string {
+            return "Scans performed: ${scan_count}"
+        }
+    }
+}
+
+// Main entry point with command-line parsing
+fn main(args []string) {
+    // Parse command-line arguments
+    let opts = cli.parse(args, {
+        "target": cli.string("t", "localhost", "Target host"),
+        "port": cli.int("p", 443, "Port to scan"),
+        "verbose": cli.bool("v", false, "Verbose output")
+    })
+    
+    // Initialize security modules
+    security.init()
+    siem.connect(env.get("SIEM_HOST"))
+    
+    // Run security scan
+    let result = scan_network_async(opts.target).await()
+    
+    // Generate report
+    let report = security.generate_report(result)
+    
+    if opts.verbose {
+        println(report.detailed())
+    } else {
+        println(report.summary())
+    }
+    
+    // Cleanup
+    defer {
+        security.cleanup()
+        siem.disconnect()
+    }
+}

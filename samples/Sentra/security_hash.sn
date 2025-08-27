@@ -1,0 +1,45 @@
+// Security Hashing Demo
+// Demonstrates native crypto functions in Sentra
+
+log("=== Sentra Security: Cryptographic Hashing ===")
+log("")
+
+// Test SHA256 hashing
+let password = "SuperSecret123!"
+let salt = "randomsalt"
+let data = password + salt
+
+let hash = sha256(data)
+log("SHA256 Hash: " + hash)
+
+// Test other hash functions
+let sha1_hash = sha1(data)
+log("SHA1 Hash: " + sha1_hash)
+
+let md5_hash = md5(data)
+log("MD5 Hash (legacy): " + md5_hash)
+
+// Base64 encoding
+let encoded = base64_encode(password)
+log("")
+log("Base64 Encoded: " + encoded)
+
+// Generate secure API key
+let api_key = generate_api_key("sentra", 32)
+log("Generated API Key: " + api_key)
+
+// Password strength checking
+log("")
+log("Password Security Check:")
+let weak_pass = "pass123"
+let strong_pass = "MyS3cur3P@ssw0rd!"
+
+let weak_score = check_password(weak_pass)
+let strong_score = check_password(strong_pass)
+
+log("Weak password score: " + weak_score + "/6")
+log("Strong password score: " + strong_score + "/6")
+
+// Generate secure password
+let new_password = generate_password(16)
+log("Generated secure password: " + new_password)
