@@ -139,6 +139,13 @@ disambiguations:
     and:
     - pattern: '(?i)^[ \t]*return '
     - negative_pattern: '(?i)[ \t]*gosub '
+- extensions: ['.bru']
+  rules:
+  - language: Bru
+    pattern:
+    - '^\s*(?:name|method|url|type http-request|body-mode)\s+.+$'
+    - '^\s*(?:params|headers|body|vars)(?:\(.*\))?\s*$'
+    - '^\s*\/(?:params|headers|body|vars)\s*$'
 - extensions: ['.bs']
   rules:
   - language: Bikeshed
