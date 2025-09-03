@@ -1004,7 +1004,7 @@ disambiguations:
   rules:
   - pattern: '^\s*!\s*ZS-'
     language: ZS
-  - pattern: 'import'
+  - pattern: '^\s*(import|val|var|zenClass|zenConstructor)\s'
     language: ZenScript
   - pattern: '.*'
     language: ZenScript
