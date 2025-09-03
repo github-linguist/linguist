@@ -143,9 +143,9 @@ disambiguations:
   rules:
   - language: Bru
     pattern:
-    - '^\s*(?:name|method|url|type http-request|body-mode)\s+.+$'
-    - '^\s*(?:params|headers|body|vars)(?:\(.*\))?\s*$'
-    - '^\s*\/(?:params|headers|body|vars)\s*$'
+    - '^\s*(?:get|post|put|delete|patch|head|options)\s*\{\s*$'
+    - '^\s*(?:url|headers|body):\s'
+    - '^\s*(?:headers|body)\s*\{\s*$'
 - extensions: ['.bs']
   rules:
   - language: Bikeshed
