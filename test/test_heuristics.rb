@@ -297,6 +297,12 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_bru_by_heuristics
+    assert_heuristics({
+      "Bru" => all_fixtures("Bru", "*.bru")
+    })
+  end
+
   def test_bf_by_heuristics
     assert_heuristics({
       "Beef" => all_fixtures("Beef", "*.bf"),
