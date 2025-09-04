@@ -524,6 +524,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Rich Text Format:** [nwhetsell/language-rtf](https://github.com/nwhetsell/language-rtf)
 - **Ring:** [MahmoudFayed/atom-language-ring](https://github.com/MahmoudFayed/atom-language-ring)
 - **Riot:** [riot/syntax-highlight](https://github.com/riot/syntax-highlight)
+- **Ripple:** [trueadm/ripple](https://github.com/trueadm/ripple)
 - **RobotFramework:** [shellderp/sublime-robot-plugin](https://github.com/shellderp/sublime-robot-plugin)
 - **Roc:** [ivan-demchenko/roc-vscode-unofficial](https://github.com/ivan-demchenko/roc-vscode-unofficial)
 - **Rocq Prover:** [mkolosick/Sublime-Coq](https://github.com/mkolosick/Sublime-Coq)

@@ -1,0 +1,62 @@
+import { array } from "ripple";
+
+export component Todo({ $label }) {
+    <div class="todo-item">
+        <input type="checkbox" />
+        <p>{$label}</p>
+    </div>
+
+    <style>
+        .todo-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+        }
+    </style>
+}
+
+export component TodoList() {
+	<div class="todo-list">
+		<h1>{'Simple Todo in Ripple'}</h1>
+		
+		<div>
+			let todos = array();
+			let $input = '';
+			
+			<input 
+				$value={$input} 
+				onInput={(e) => $input = e.target.value}
+				placeholder="Add a todo..."
+			/>
+			
+			<button onClick={() => {
+				todos.push($input);
+                $input = ''
+			}}>
+				{'Add Todo'}
+			</button>
+			
+			<p>{'Todo count: ' + todos.$length}</p>
+			
+			<div>
+				<h3>{'Your todos:'}</h3>
+				for (const todo of todos) {
+                    <Todo $label={todo} />
+                }
+			</div>
+		</div>
+	</div>
+
+    <style>
+        .todo-list {
+            max-width: 400px;
+            margin: auto;
+            padding: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+}
