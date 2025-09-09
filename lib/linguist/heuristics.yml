@@ -376,7 +376,7 @@ disambiguations:
 - extensions: [".huff"]
   rules:
   - language: Huff
-    named_pattern: huff
+    pattern: '#define\\s+macro'
 - extensions: ['.i']
   rules:
   - language: Motorola 68K Assembly
