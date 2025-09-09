@@ -1,0 +1,63 @@
+#define function doAction() view returns (uint256)
+#define function otherAction() view returns (uint256)
+
+#define constant LOCK_SLOT = FREE_STORAGE_POINTER()
+
+#define macro NON_REENTRANT() = takes (0) returns (0) {
+    [LOCK_SLOT]  // [lock_slot]
+    sload        // [lock]
+    iszero       // [is_unlocked]
+    unlocked     // [unlocked_jumpdest]
+    jumpi        // []
+    0x00         // [size]
+    0x00         // [offset, size]
+    revert       // []
+    unlocked:    // []
+    0x01         // [lock_value]
+    [LOCK_SLOT]  // [lock_slot, lock_value]
+    sstore       // []
+}
+
+#define macro UNLOCK() = takes (0) returns (0) {
+    0x00         // [lock_value]
+    [LOCK_SLOT]  // [lock_slot, lock_value]
+    sstore       // []
+}
+
+#define macro DO_ACTION() = takes (0) returns (2) {
+    0x45    // [value]
+    0x00    // [offset, value]
+    mstore  // []
+    0x20    // [size]
+    0x00    // [offset, size]
+}
+
+#define macro OTHER_ACTION() = takes (0) returns (2) {
+    0x00    // [size]
+    0x00    // [offset, size]
+}
+
+#define macro MAIN() = takes (0) returns (0) {
+    // Grab the function selector from the calldata
+    0x00 calldataload 0xE0 shr                          // [selector]
+    dup1 __FUNC_SIG(doAction) eq do_action jumpi        // [selector]
+    dup1 __FUNC_SIG(otherAction) eq other_action jumpi  // [selector]
+
+    // Revert if no functions match
+    0x00 0x00 revert
+
+
+    do_action:
+        NON_REENTRANT()
+        DO_ACTION()
+        finish jump
+
+    other_action:
+        OTHER_ACTION()
+        finish jump
+
+    finish:
+        // stack: [offset, size]
+        UNLOCK()
+        return
+}

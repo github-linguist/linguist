@@ -1,0 +1,19 @@
+// Entry point.
+#define function add(uint256, uint256) view returns (uint256)
+#define function sub(uint256, uint256) view returns (uint256)
+
+#define macro MAIN() = takes (0) returns (0) {
+    // Grab the function selector from the calldata
+    0x00 calldataload 0xE0 shr                 // [selector]
+
+    dup1 __FUNC_SIG(add) eq add_func jumpi     // [selector]
+    dup1 __FUNC_SIG(sub) eq sub_func jumpi     // [selector]
+
+    // Revert if no functions match
+    0x00 0x00 revert
+
+    add_func:
+        ADD()
+    sub_func:
+        SUB()
+}
