@@ -1729,6 +1729,7 @@ Dotenv:
   - ".env.production"
   - ".env.sample"
   - ".env.staging"
+  - ".env.template"
   - ".env.test"
   - ".env.testing"
   tm_scope: source.dotenv
@@ -7478,6 +7479,7 @@ TOML:
   color: "#9c4221"
   extensions:
   - ".toml"
+  - ".toml.example"
   filenames:
   - Cargo.lock
   - Cargo.toml.orig
