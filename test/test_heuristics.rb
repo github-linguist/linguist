@@ -605,6 +605,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_k_by_heuristics
+    assert_heuristics({
+      "KCL" => all_fixtures("KCL", "*.k"),
+      "KFramework" => all_fixtures("KFramework", "*.k")
+    })
+  end
+
   def test_l_by_heuristics
     assert_heuristics({
       "Common Lisp" => all_fixtures("Common Lisp", "*.l"),
