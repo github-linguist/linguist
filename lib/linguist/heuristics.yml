@@ -373,6 +373,10 @@ disambiguations:
   - language: Ecmarkup
     pattern: '<emu-(?:alg|annex|biblio|clause|eqn|example|figure|gann|gmod|gprose|grammar|intro|not-ref|note|nt|prodref|production|rhs|table|t|xref)(?:$|\s|>)'
   - language: HTML
+- extensions: [".huff"]
+  rules:
+  - language: Huff
+    named_pattern: huff
 - extensions: ['.i']
   rules:
   - language: Motorola 68K Assembly
