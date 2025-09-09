@@ -9,6 +9,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **1C Enterprise:** [1c-syntax/vsc-language-1c-bsl](https://github.com/1c-syntax/vsc-language-1c-bsl)
 - **2-Dimensional Array:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **4D:** [4d/language-4d](https://github.com/4d/language-4d)
+- **8th:** [textmate/forth.tmbundle](https://github.com/textmate/forth.tmbundle)
 - **ABAP:** [pvl/abap.tmbundle](https://github.com/pvl/abap.tmbundle)
 - **ABAP CDS:** [FreHu/abap-cds-grammar](https://github.com/FreHu/abap-cds-grammar)
 - **ABNF:** [Alhadis/language-grammars](https://github.com/Alhadis/language-grammars)
