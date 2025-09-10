@@ -1,0 +1,54 @@
+// arduino nano33 & lcd1602
+
+import (
+	"arduino/lcd1602"
+	"syscall/arduino"
+)
+
+global LED = arduino.GetPinLED()
+
+func init {
+	arduino.PinMode(LED, 1)
+	arduino.Print("凹语言(Wa)/Arduino is running ...\n")
+	arduino.Print("https://wa-lang.org\n")
+
+	lcd1602.LCDInit()
+}
+
+func Loop {
+	const s = "hello wa-lang!"
+
+	arduino.DigitalWrite(LED, arduino.HIGH)
+
+	lcd1602.LCDClear()
+	SayHello(0, 1, s)
+	SayHello(1, 0, s)
+	arduino.Delay(500)
+	arduino.DigitalWrite(LED, arduino.LOW)
+
+	lcd1602.LCDClear()
+	SayHello(0, 1, s)
+	SayHello(1, 1, s)
+	arduino.Delay(500)
+	arduino.DigitalWrite(LED, arduino.HIGH)
+
+	lcd1602.LCDClear()
+	SayHello(0, 1, s)
+	SayHello(1, 2, s)
+	arduino.Delay(500)
+	arduino.DigitalWrite(LED, arduino.LOW)
+
+	lcd1602.LCDClear()
+	SayHello(0, 1, s)
+	SayHello(1, 1, s)
+	arduino.Delay(500)
+	arduino.DigitalWrite(LED, arduino.HIGH)
+}
+
+func SayHello(row, col: i32, s: string) {
+	lcd1602.LCDSetCursor(row, col)
+
+	for i := 0; i < len(s); i++ {
+		lcd1602.LCDWriteChar(i32(s[i]))
+	}
+}
