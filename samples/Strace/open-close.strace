@@ -1,0 +1,10 @@
+openat(AT_FDCWD, "/etc/hosts", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=309, ...}) = 0
+read(3, "# Hosts file\n127.0.0.1 localhost\n", 4096) = 31
+close(3)                                = 0
+openat(AT_FDCWD, "/etc/resolv.conf", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=86, ...}) = 0
+read(3, "nameserver 8.8.8.8\n", 4096)   = 19
+close(3)                                = 0
+exit_group(0)                           = ?
++++ exited with 0 +++

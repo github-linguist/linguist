@@ -1,0 +1,7 @@
+execve("/bin/echo", ["echo", "hello"], 0x7ffcb1d558e0 /* 20 vars */) = 0
+brk(NULL)                               = 0x55e7c5f2d000
+arch_prctl(ARCH_SET_FS, 0x7f9d74b89540) = 0
+mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f9d74f40000
+write(1, "hello\n", 6)                  = 6
+exit_group(0)                           = ?
++++ exited with 0 +++
