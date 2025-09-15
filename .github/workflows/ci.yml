@@ -1,13 +1,13 @@
 name: Run Tests
 
 on:
-  # Trigger the workflow on push or pull request, but only for the master branch
+  # Trigger the workflow on push or pull request, but only for the main branch
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
   merge_group:
 
 permissions:
@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby: [ '3.2', '3.1', '3.0' ]
+        ruby: [ '3.3', '3.2', '3.1' ]
     steps:
     - uses: actions/checkout@v1
     - name: Set up Ruby
@@ -29,7 +29,7 @@ jobs:
         bundler-cache: true
     - name: Fetch grammar submodules
       run: |
-        git fetch origin master:master v2.0.0:v2.0.0 test/attributes:test/attributes test/master:test/master
+        git fetch origin main:main v2.0.0:v2.0.0 test/attributes:test/attributes test/master:test/master
         sed -i 's|git@github.com:|https://github.com/|' .gitmodules
         git submodule init
         git submodule sync --quiet
@@ -57,7 +57,7 @@ jobs:
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: '3.2'
+        ruby-version: '3.3'
         bundler-cache: true
     - name: Build
       run: bundle exec rake samples

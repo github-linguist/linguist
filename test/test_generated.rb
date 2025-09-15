@@ -17,7 +17,7 @@ class TestGenerated < Minitest::Test
     begin
       expected = !negate
       actual = Generated.generated?(blob, lambda { raise DataLoadedError.new })
-      assert(expected == !!actual, error_message(blob, negate))
+      assert(expected == actual, error_message(blob, negate))
     rescue DataLoadedError
       assert false, "Data was loaded when calling generated? on #{blob}"
     end
@@ -114,6 +114,9 @@ class TestGenerated < Minitest::Test
     # Minified files
     generated_sample_loading_data("JavaScript/jquery-1.6.1.min.js")
 
+    # MySQL View Definition Format (INI)
+    generated_sample_loading_data("INI/metrics.frm")
+
     # JavaScript with source-maps
     generated_sample_loading_data("JavaScript/namespace.js")
     generated_fixture_loading_data("Generated/inline.js")
@@ -198,6 +201,9 @@ class TestGenerated < Minitest::Test
     # jOOQ
     generated_sample_loading_data("Java/generated-jooq-table.java")
 
+    # Package.resolved
+    generated_sample_without_loading_data("JSON/filenames/Package.resolved")
+
     # poetry
     generated_sample_without_loading_data("TOML/filenames/poetry.lock")
 
@@ -216,6 +222,14 @@ class TestGenerated < Minitest::Test
     generated_sample_without_loading_data("Dummy/htmlcov/coverage_html.js")
     generated_sample_without_loading_data("Dummy/htmlcov/style.css")
     generated_sample_without_loading_data("Dummy/htmlcov/status.json")
+
+    # Dart
+    generated_sample_loading_data("Dart/point.dart", true)
+    generated_sample_loading_data("Dart/equals.dart", true)
+    generated_sample_loading_data("Dart/addressbook.pb.dart")
+    generated_sample_loading_data("Dart/addressbook.pbenum.dart")
+    generated_sample_loading_data("Dart/addressbook.pbjson.dart")
+    generated_sample_loading_data("Dart/equals.freezed.dart")
   end
 
   # We've whitelisted these files on purpose, even though they're machine-generated.
