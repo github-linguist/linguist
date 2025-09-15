@@ -1,0 +1,112 @@
+cff-version: 1.2.0
+message: "If you use CFF in your research, please cite it using these metadata."
+abstract: CITATION.cff files are plain text files with human- and machine-readable citation information for software. Code developers can include them in their repositories to let others know how to correctly cite their software. This is the specification for the Citation File Format.
+authors:
+  - family-names: Druskat
+    given-names: Stephan
+    orcid: https://orcid.org/0000-0003-4925-7248
+  - family-names: Spaaks
+    given-names: Jurriaan H.
+    orcid: https://orcid.org/0000-0002-7064-4069
+  - family-names: Chue Hong
+    given-names: Neil
+    orcid: https://orcid.org/0000-0002-8876-7606
+  - family-names: Haines
+    given-names: Robert
+    orcid: https://orcid.org/0000-0002-9538-7919
+  - family-names: Baker
+    given-names: James
+    orcid: https://orcid.org/0000-0002-2682-6922
+  - family-names: Bliven
+    given-names: Spencer
+    orcid: https://orcid.org/0000-0002-1200-1698
+    email: spencer.bliven@gmail.com
+  - family-names: Willighagen
+    given-names: Egon
+    orcid: https://orcid.org/0000-0001-7542-0286
+  - family-names: Pérez-Suárez
+    given-names: David
+    orcid: https://orcid.org/0000-0003-0784-6909
+    website: https://dpshelio.github.io
+  - family-names: Konovalov
+    given-names: Alexander
+    orcid: https://orcid.org/0000-0001-5299-3292
+title: Citation File Format
+version: 1.2.0
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.1003149
+    description: The concept DOI for the collection containing all versions of the Citation File Format.
+  - type: doi
+    value: 10.5281/zenodo.5171937
+    description: The versioned DOI for the version 1.2.0 of the Citation File Format.
+date-released: "2021-08-09"
+keywords:
+  - citation file format
+  - CFF
+  - citation files
+  - software citation
+  - file format
+  - YAML
+  - software sustainability
+  - research software
+  - credit
+license: "CC-BY-4.0"
+doi: 10.5281/zenodo.5171937
+references:
+  - authors:
+      - family-names: Smith
+        given-names: Arfon M.
+      - family-names: Katz
+        given-names: Daniel S.
+      - family-names: Niemeyer
+        given-names: Kyle E.
+      - name: "FORCE11 Software Citation Working Group"
+    doi: 10.7717/peerj-cs.86
+    journal: "PeerJ Computer Science"
+    month: 9
+    start: e86
+    title: "Software citation principles"
+    type: article
+    volume: 2
+    year: 2016
+  - authors:
+      - family-names: Druskat
+        given-names: Stephan
+    conference:
+        name: "Workshop on Sustainable Software for Science: Practice and Experiences (WSSSPE5.1)"
+    doi: 10.6084/m9.figshare.3827058
+    title: "Track 2 Lightning Talk: Should CITATION files be standardized?"
+    type: proceedings
+    year: 2017
+  - authors:
+      - family-names: Wilson
+        given-names: Robin
+    title: "Encouraging citation of software - introducing CITATION files."
+    type: blog
+    url: "https://www.software.ac.uk/blog/2013-09-02-encouraging-citation-software-introducing-citation-files"
+    year: 2013
+  - authors:
+      - family-names: Ben-Kiki
+        given-names: Oren
+      - family-names: Evans
+        given-names: Clark
+      - family-names: "döt Net"
+        given-names: Ingy
+    title: "YAML Ain't Markup Language (YAML) Version 1.2. 3rd Edition, Patched at 2009-10-01."
+    url: "https://yaml.org/spec/1.2/spec.html"
+    type: standard
+    year: 2009
+  - authors:
+      - family-names: Hufflen
+        given-names: Jean-Michel
+    collection-title: "Proceedings of the 2006 Annual Meeting"
+    end: 253
+    month: 11
+    number: 2
+    start: 243
+    title: "Names in bibtex and mlBibTeX"
+    url: "https://www.tug.org/TUGboat/tb27-2/tb87hufflen.pdf"
+    type: proceedings
+    volume: 27
+    year: 2006

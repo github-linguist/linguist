@@ -1,0 +1,67 @@
+---
+layout: ./base.vto
+page_css: docs.css
+---
+
+<div class="doc">
+  {{ include "templates/doc-navbar.vto" }}
+
+  <main class="doc-content">
+    <header class="doc-header">
+      <h1>{{ title }}</h1>
+      {{ description |> md }}
+
+      {{ include "templates/toc.vto" }}
+    </header>
+
+    <div class="doc-body">
+      {{ content }}
+
+      {{ if related }}
+      <nav class="doc-related" label="Related content">
+        <h2>Related to this</h2>
+        <ul>
+          {{ for item of related }}
+          <li>
+            {{ set p = search.data(item) }}
+            <a href="{{ p.url }}">{{ p.title }}</a>
+          </li>
+          {{ /for }}
+        </ul>
+      </nav>
+      {{ /if }}
+    </div>
+
+    <div class="doc-footer-edit">
+      <a href="https://github.com/lumeland/lume.land/edit/main{{ page.src.entry.path }}" class="doc-edit-link">
+        <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M15.5858 4.41421C16.3668 3.63316 17.6332 3.63316 18.4142 4.41421L19.5858 5.58579C20.3668 6.36683 20.3668 7.63316 19.5858 8.41421L8.58579 19.4142C8.21071 19.7893 7.70201 20 7.17157 20H4C3.44772 20 3 19.5523 3 19V15.8284C3 15.298 3.21071 14.7893 3.58579 14.4142L14.5858 3.41421C15.3668 2.63316 16.6332 2.63316 17.4142 3.41421L18.5858 4.58579C19.3668 5.36683 19.3668 6.63316 18.5858 7.41421L7.58579 18.4142C7.21071 18.7893 6.70201 19 6.17157 19H4C3.44772 19 3 18.5523 3 18V15.8284C3 15.298 3.21071 14.7893 3.58579 14.4142L14.5858 3.41421C15.3668 2.63316 16.6332 2.63316 17.4142 3.41421L18.5858 4.58579C19.3668 5.36683 19.3668 6.63316 18.5858 7.41421L7.58579 18.4142C7.21071 18.7893 6.70201 19 6.17157 19H4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Edit this page
+      </a>
+    </div>
+    <footer class="doc-footer">
+      <ul class="doc-pagination">
+        {{- set previousPost = search.previousPage(url, "url^=/docs/", "section_order order title") }}
+        {{- if previousPost }}
+        <li class="is-prev">
+          <a href="{{ previousPost.url }}" rel="prev">
+            ← Previous
+            <strong>{{ previousPost.title }}</strong>
+          </a>
+        </li>
+        {{ /if }}
+
+        {{- set nextPost = search.nextPage(url, "url^=/docs/", "section_order order title") }}
+        {{- if nextPost }}
+        <li class="is-next">
+          <a href="{{ nextPost.url }}" rel="next">
+            Next →
+            <strong>{{ nextPost.title }}</strong>
+          </a>
+        </li>
+        {{ /if }}
+      </ul>
+    </footer>
+  </main>
+</div>

@@ -1,0 +1,30 @@
+## https://en.wikipedia.org/wiki/Apache_Velocity#Code_examples
+{
+    "TableName": "happy-marketer",
+    "KeyConditionExpression": "pk = :pk AND begins_with(sk, :sk)",
+    #if ($input.params('projectStatus') == 'archived')
+    "FilterExpression": "projectStatus = :Archived",
+    #else
+    "FilterExpression": "projectStatus = :InProgress OR projectStatus = :Completed",
+    #end
+    "ExpressionAttributeValues": {
+        ":pk": {
+            "S": "project"
+        },
+        ":sk": {
+            "S": "$context.authorizer.claims.email"
+        },
+        #if ($input.params('projectStatus') == 'archived')
+        ":Archived": {
+            "S": "Archived"
+        }
+        #else
+        ":InProgress": {
+            "S": "In Progress"
+        },
+        ":Completed": {
+            "S": "Completed"
+        }
+        #end
+    }
+}

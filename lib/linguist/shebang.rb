@@ -41,7 +41,10 @@ module Linguist
       # if /usr/bin/env type shebang then walk the string
       if script == 'env'
         s.scan(/\s+/)
-        s.scan(/([^\s]+=[^\s]+\s+)*/) # skip over variable arguments e.g. foo=bar
+        while s.scan(/((-[i0uCSv]*|--\S+)\s+)+/) || # skip over optional arguments e.g. -vS
+              s.scan(/(\S+=\S+\s+)+/) # skip over variable arguments e.g. foo=bar
+          # do nothing
+        end
         script = s.scan(/\S+/)
       end
 
@@ -56,7 +59,7 @@ module Linguist
 
       # Check for multiline shebang hacks that call `exec`
       if script == 'sh' &&
-        data.lines.first(5).any? { |l| l.match(/exec (\w+).+\$0.+\$@/) }
+        data.lines.first(5).any? { |l| l.match(/exec (\w+)[\s"']+\$0[\s"']+\$@/) }
         script = $1
       end
 

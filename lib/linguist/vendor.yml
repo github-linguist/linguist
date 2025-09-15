@@ -74,7 +74,7 @@
 - ([^\s]*)import\.(css|less|scss|styl)$
 
 # Bootstrap css and js
-- (^|/)bootstrap([^.]*)\.(js|css|less|scss|styl)$
+- (^|/)bootstrap([^/.]*)(\..*)?\.(js|css|less|scss|styl)$
 - (^|/)custom\.bootstrap([^\s]*)(js|css|less|scss|styl)$
 
 # Font Awesome
@@ -357,7 +357,6 @@
 - (^|/)\.[Dd][Ss]_[Ss]tore$
 
 # R packages
-- (^|/)vignettes/
 - (^|/)inst/extdata/
 
 # Octicons
@@ -380,3 +379,15 @@
 
 # Jenkins Pipeline
 - (^|/)Jenkinsfile$
+
+# Gitpod
+- (^|/)\.gitpod\.Dockerfile$
+
+# GitHub.com
+- (^|/)\.github/
+
+# obsidian.md settings
+- (^|/)\.obsidian/
+
+# teamcity CI configuration
+- (^|/)\.teamcity/

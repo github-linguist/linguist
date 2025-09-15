@@ -1,0 +1,49 @@
+#example from https://github.com/snakemake/snakemake/edit/main/examples/hello-world/Snakefile
+configfile: "config.yaml"
+
+
+rule all:
+    input:
+        expand(
+            "plots/{country}.hist.pdf",
+            country=config["countries"]
+        )
+
+
+rule select_by_country:
+    input:
+        "data/worldcitiespop.csv"
+    output:
+        "by-country/{country}.csv"
+    conda:
+        "envs/xsv.yaml"
+    shell:
+        "xsv search -s Country '{wildcards.country}' "
+        "{input} > {output}"
+
+
+rule plot_histogram:
+    input:
+        "by-country/{country}.csv"
+    output:
+        "plots/{country}.hist.svg"
+    container:
+        "docker://faizanbashir/python-datascience:3.6"
+    script:
+        "scripts/plot-hist.py"
+
+
+rule convert_to_pdf:
+    input:
+        "{prefix}.svg"
+    output:
+        "{prefix}.pdf"
+    wrapper:
+        "0.47.0/utils/cairosvg"
+
+
+rule download_data:
+    output:
+        "data/worldcitiespop.csv"
+    shell:
+        "curl -L https://burntsushi.net/stuff/worldcitiespop.csv > {output}"

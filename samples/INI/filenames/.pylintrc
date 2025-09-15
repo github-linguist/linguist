@@ -1,0 +1,21 @@
+[BASIC]
+
+# Allow tests and private functions without docstrings
+no-docstring-rgx=(test_.*|_.*)
+
+[FORMAT]
+
+# Maximum number of characters on a single line.
+max-line-length=80
+
+# String used as indentation unit. We differ from PEP8's normal 4 spaces.
+indent-string='  '
+
+# Allow long lines which are just a string
+ignore-long-lines = ^\s*\"[^\"]+\",?$
+
+
+[MESSAGES CONTROL]
+
+# The order must be different internally vs externally
+disable=wrong-import-order

@@ -1,0 +1,82 @@
+collector {
+  interface = "0.0.0.0"
+  port = 8080
+
+  p3p {
+    policyRef = "/w3c/p3p.xml"
+    CP = "NOI DSP COR NID PSA OUR IND COM NAV STA"
+  }
+
+  crossDomain {
+    enabled = false
+    domains = [ "*" ]
+    secure = false
+  }
+
+  cookie {
+    enabled = false
+    expiration = "365 days"
+    name = collectorCookieName
+    domain = cookieDomain
+  }
+
+  doNotTrackCookie {
+    enabled = false
+    name = doNotTrackCookieName
+    value = doNotTrackCookieValue
+  }
+
+  cookieBounce {
+    enabled = false
+    name = "n3pc"
+    fallbackNetworkUserId = "00000000-0000-4000-A000-000000000000"
+    forwardedProtocolHeader = "X-Forwarded-Proto"
+  }
+
+  redirectMacro {
+    enabled = false
+    placeholder = "[TOKEN]"
+  }
+
+  rootResponse {
+    enabled = false
+    statusCode = 302
+    headers = {
+        Location = "https://127.0.0.1/",
+        X-Custom = "something"
+    }
+    body = "302, redirecting"
+  }
+  
+  streams {
+    good = raw
+    bad = bad
+    useIpAddressAsPartitionKey = false
+
+    sink {
+      enabled = nsq
+      host = nsqd
+      port = 4150
+    }
+
+    buffer {
+      byteLimit = 100
+      recordLimit = 1 # emit every record for testing purposes - NOT suitable for prod
+      timeLimit = 100
+    }
+  }
+}
+
+akka {
+  loglevel = DEBUG
+  loggers = ["akka.event.slf4j.Slf4jLogger"]
+
+  http.server {
+    remote-address-header = on
+    raw-request-uri-header = on
+    parsing {
+      max-uri-length = 32768
+      uri-parsing-mode = relaxed
+    }
+  }
+}
