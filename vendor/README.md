@@ -220,6 +220,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Gettext Catalog:** [textmate/gettext.tmbundle](https://github.com/textmate/gettext.tmbundle)
 - **Gherkin:** [cucumber/cucumber-tmbundle](https://github.com/cucumber/cucumber-tmbundle)
 - **Git Attributes:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
+- **Git Commit:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
 - **Git Config:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **Git Revision List:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
 - **Gleam:** [gleam-lang/tree-sitter-gleam](https://github.com/gleam-lang/tree-sitter-gleam) 🐌
