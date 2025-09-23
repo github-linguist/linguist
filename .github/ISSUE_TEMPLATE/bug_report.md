@@ -5,8 +5,8 @@ title: ''
 labels: Bug
 assignees: ''
 ---
-<!-- 
-NOTE: Please use Discussions for all incorrect or unexpected language analysis or 
+<!--
+NOTE: Please use Discussions for all incorrect or unexpected language analysis or
       statistics behaviour BEFORE opening a bug.
 
       If you know how to fix this bug, please feel free to submit a Pull Request
@@ -14,11 +14,11 @@ NOTE: Please use Discussions for all incorrect or unexpected language analysis o
 -->
 
 ## Describe the bug
-<!-- 
-Please provide a clear and detailed explanation of the bug you've found, and why 
-you consider it to be a bug. 
+<!--
+Please provide a clear and detailed explanation of the bug you've found, and why
+you consider it to be a bug.
 
-Ideally, please provide steps to reproduce the bug and include the output from 
+Ideally, please provide steps to reproduce the bug and include the output from
 using `github-linguist` on the command line.
 -->
 

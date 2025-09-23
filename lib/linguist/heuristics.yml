@@ -53,6 +53,13 @@ disambiguations:
     - named_pattern: man-title
     - named_pattern: man-heading
   - language: Roff
+- extensions: ['.action']
+  rules:
+  - language: ROS Interface
+    and:
+      - pattern: '^[a-z][a-z0-9_]*(?:\/[a-zA-Z]\w*)?(?:<=\d+)?(?:\[(?:<=\d+)?\])?\s+\w+\b'
+      - pattern: '^---\s*$'
+      - negative_pattern: '^\s*[^\s@#\w-]'
 - extensions: ['.al']
   rules:
   # AL pattern source from https://github.com/microsoft/AL/blob/master/grammar/alsyntax.tmlanguage - keyword.other.applicationobject.al
@@ -61,20 +68,26 @@ disambiguations:
     - pattern: '\b(?i:(CODEUNIT|PAGE|PAGEEXTENSION|PAGECUSTOMIZATION|DOTNET|ENUM|ENUMEXTENSION|VALUE|QUERY|REPORT|TABLE|TABLEEXTENSION|XMLPORT|PROFILE|CONTROLADDIN|REPORTEXTENSION|INTERFACE|PERMISSIONSET|PERMISSIONSETEXTENSION|ENTITLEMENT))\b'
   # Open-ended fallback to Perl AutoLoader
   - language: Perl
+- extensions: ['.app']
+  rules:
+  - language: Erlang
+    pattern: '^\{\s*(?:application|''application'')\s*,\s*(?:[a-z]+[\w@]*|''[^'']+'')\s*,\s*\[(?:.|[\r\n])*\]\s*\}\.[ \t]*$'
 - extensions: ['.as']
   rules:
   - language: ActionScript
-    pattern: '^\s*(?:package(?:\s+[\w.]+)?\s+(?:{|$)|import\s+[\w.*]+\s*;|(?=.*?(?:intrinsic|extends))(intrinsic\s+)?class\s+[\w<>.]+(?:\s+extends\s+[\w<>.]+)?|(?:(?:public|protected|private|static)\s+)*(?:(?:var|const|local)\s+\w+\s*:\s*[\w<>.]+(?:\s*=.*)?\s*;|function\s+\w+\s*\((?:\s*\w+\s*:\s*[\w<>.]+\s*(,\s*\w+\s*:\s*[\w<>.]+\s*)*)?\)))'
+    pattern: '^\s*(?:package(?:\s+[\w.]+)?\s+(?:\{|$)|import\s+[\w.*]+\s*;|(?:intrinsic\s+)class\s+[\w<>.]+|\s+class\s+extends\s+[\w<>.]+|(?:(?:public|protected|private|static)\s+)*(?:(?:var|const|local)\s+\w+\s*:\s*[\w<>.]+(?:\s*=.*)?\s*;|function\s+\w+\s*\((?:\s*\w+\s*:\s*[\w<>.]+\s*(,\s*\w+\s*:\s*[\w<>.]+\s*)*)?\)))'
 - extensions: ['.asc']
   rules:
   - language: Public Key
     pattern: '^(----[- ]BEGIN|ssh-(rsa|dss)) '
   - language: AsciiDoc
-    pattern: '^[=-]+(\s|\n)|{{[A-Za-z]'
+    pattern: '^[=-]+\s|\{\{[A-Za-z]'
   - language: AGS Script
     pattern: '^(\/\/.+|((import|export)\s+)?(function|int|float|char)\s+((room|repeatedly|on|game)_)?([A-Za-z]+[A-Za-z_0-9]+)\s*[;\(])'
 - extensions: ['.asm']
   rules:
+  - language: Assembly
+    pattern: '(?i)mov\s+[^\s]{2,},'
   - language: Motorola 68K Assembly
     named_pattern: m68k
 - extensions: ['.asy']
@@ -84,16 +97,28 @@ disambiguations:
   - language: Asymptote
 - extensions: ['.bas']
   rules:
-  - language: FreeBasic
-    pattern: '^[ \t]*#(?:define|endif|endmacro|ifn?def|if|include|lang|macro)\s'
+  - language: B4X
+    pattern: '\A\W{0,3}(?:.*(?:\r?\n|\r)){0,9}B4(?:J|A|R|i)=true'
+  - language: FreeBASIC
+    named_pattern: freebasic
+  - language: FreeBASIC
+    and:
+    - pattern: '(?i)^[ \t]*return '
+    - negative_pattern: '(?i)[ \t]*gosub '
   - language: BASIC
-    pattern: '^\s*\d+'
+    pattern: '\A\s*\d'
+  - language: QuickBASIC
+    named_pattern: quickbasic
+  - language: VBA
+    named_pattern: vba
+  - language: Visual Basic 6.0
+    named_pattern: vb-module
 - extensions: ['.bb']
   rules:
   - language: BlitzBasic
     pattern: '(<^\s*; |End Function)'
   - language: BitBake
-    pattern: '^\s*(# |include|require)\b'
+    pattern: '^(# |include|require|inherit)\b'
   - language: Clojure
     pattern: '\((def|defn|defmacro|let)\s'
 - extensions: ['.bf']
@@ -108,22 +133,38 @@ disambiguations:
     pattern: '(>\+>|>\+<)'
 - extensions: ['.bi']
   rules:
-  - language: FreeBasic
-    pattern: '^[ \t]*#(?:define|endif|endmacro|ifn?def|if|include|lang|macro)\s'
+  - language: FreeBASIC
+    named_pattern: freebasic
+  - language: FreeBASIC
+    and:
+    - pattern: '(?i)^[ \t]*return '
+    - negative_pattern: '(?i)[ \t]*gosub '
 - extensions: ['.bs']
   rules:
   - language: Bikeshed
-    pattern: '^(?i:<pre\s+class)\s*=\s*(''|\"|\b)metadata\b\1[^>\r\n]*>'
+    pattern: '^(?i:<pre\s+class)\s*=\s*(''|\"|\b)metadata\b(''|\"|\b)[^>\r\n]*>'
   - language: BrighterScript
     pattern:
-    - (?i:^\s*(?=^sub\s)(?:sub\s*\w+\(.*?\))|(?::\s*sub\(.*?\))$)
+    - (?i:^\s*(?:sub\s*\w+\(.*?\))|(?::\s*sub\(.*?\))$)
     - (?i:^\s*(end\ssub)$)
-    - (?i:^\s*(?=^function\s)(?:function\s*\w+\(.*?\)\s*as\s*\w*)|(?::\s*function\(.*?\)\s*as\s*\w*)$)
+    - (?i:^\s*(?:function\s*\w+\(.*?\)\s*as\s*\w*)|(?::\s*function\(.*?\)\s*as\s*\w*)$)
     - (?i:^\s*(end\sfunction)$)
+  - language: Bluespec BH
+    pattern: '^package\s+[A-Za-z_][A-Za-z0-9_'']*(?:\s*\(|\s+where)'
+- extensions: ['.bst']
+  rules:
+  - language: BibTeX Style
+    pattern: 'ENTRY\s*\{'
+  - language: BuildStream
 - extensions: ['.builds']
   rules:
   - language: XML
     pattern: '^(\s*)(?i:<Project|<Import|<Property|<?xml|xmlns)'
+- extensions: ['.cairo']
+  rules:
+    - language: Cairo Zero
+      pattern: '(^(\s*)%lang(\s+)([A-Za-z0-9_]+))|(^(\s*)%builtins(\s+)([A-Za-z0-9_]+\s*)*$)|(^(\s*)from(\s+)starkware\.(cairo|starknet)\.([A-Za-z0-9_.\s]+?)import)|(,\s*ap\+\+;$)|(;\s*ap\+\+$)'
+    - language: Cairo
 - extensions: ['.ch']
   rules:
   - language: xBase
@@ -141,23 +182,23 @@ disambiguations:
   - language: Visual Basic 6.0
     and:
     - named_pattern: vb-class
-    - pattern: '^\s*BEGIN\R\s*MultiUse\s*=.*\R\s*Persistable\s*='
+    - pattern: '^\s*BEGIN(?:\r?\n|\r)\s*MultiUse\s*=.*(?:\r?\n|\r)\s*Persistable\s*='
   - language: VBA
-    named_pattern: vb-class  
+    named_pattern: vb-class
   - language: TeX
-    pattern: '^\s*\\(?:NeedsTeXFormat|ProvidesClass){'
+    pattern: '^\s*\\(?:NeedsTeXFormat|ProvidesClass)\{'
   - language: ObjectScript
     pattern: '^Class\s'
 - extensions: ['.cmp']
   rules:
   - language: Gerber Image
-    pattern: '^[DGMT][0-9]{2}\*\r?\n'
+    pattern: '^[DGMT][0-9]{2}\*(?:\r?\n|\r)'
 - extensions: ['.cs']
   rules:
   - language: Smalltalk
     pattern: '![\w\s]+methodsFor: '
   - language: 'C#'
-    pattern: '^\s*(using\s+[A-Z][\s\w.]+;|namespace\s*[\w\.]+\s*({|;)|\/\/)'
+    pattern: '^\s*(using\s+[A-Z][\s\w.]+;|namespace\s*[\w\.]+\s*(\{|;)|\/\/)'
 - extensions: ['.csc']
   rules:
   - language: GSC
@@ -165,7 +206,7 @@ disambiguations:
 - extensions: ['.csl']
   rules:
   - language: XML
-    pattern: '(?i:^\s*(\<\?xml|xmlns))'
+    pattern: '(?i:^\s*(<\?xml|xmlns))'
   - language: Kusto
     pattern: '(^\|\s*(where|extend|project|limit|summarize))|(^\.\w+)'
 - extensions: ['.d']
@@ -173,10 +214,10 @@ disambiguations:
   - language: D
     # see http://dlang.org/spec/grammar
     # ModuleDeclaration | ImportDeclaration | FuncDeclaration | unittest
-    pattern: '^module\s+[\w.]*\s*;|import\s+[\w\s,.:]*;|\w+\s+\w+\s*\(.*\)(?:\(.*\))?\s*{[^}]*}|unittest\s*(?:\(.*\))?\s*{[^}]*}'
+    pattern: '^module\s+[\w.]*\s*;|import\s+[\w\s,.:]*;|\w+\s+\w+\s*\(.*\)(?:\(.*\))?\s*\{[^}]*\}|unittest\s*(?:\(.*\))?\s*\{[^}]*\}'
   - language: DTrace
     # see http://dtrace.org/guide/chp-prog.html, http://dtrace.org/guide/chp-profile.html, http://dtrace.org/guide/chp-opt.html
-    pattern: '^(\w+:\w*:\w*:\w*|BEGIN|END|provider\s+|(tick|profile)-\w+\s+{[^}]*}|#pragma\s+D\s+(option|attributes|depends_on)\s|#pragma\s+ident\s)'
+    pattern: '^(\w+:\w*:\w*:\w*|BEGIN|END|provider\s+|(tick|profile)-\w+\s+\{[^}]*\}|#pragma\s+D\s+(option|attributes|depends_on)\s|#pragma\s+ident\s)'
   - language: Makefile
     # path/target : dependency \
     # target : \
@@ -194,8 +235,8 @@ disambiguations:
   - language: E
     pattern:
     - '^\s*(def|var)\s+(.+):='
-    - '^\s*(def|to)\s+(\w+)(\(.+\))?\s+{'
-    - '^\s*(when)\s+(\(.+\))\s+->\s+{'
+    - '^\s*(def|to)\s+(\w+)(\(.+\))?\s+\{'
+    - '^\s*(when)\s+(\(.+\))\s+->\s+\{'
   - language: Eiffel
     pattern:
     - '^\s*\w+\s*(?:,\s*\w+)*[:]\s*\w+\s'
@@ -214,7 +255,7 @@ disambiguations:
   - language: Erlang
     pattern: '^\s*(?:%%|main\s*\(.*?\)\s*->)'
   - language: JavaScript
-    pattern: '(?m:\/\/|("|'')use strict\1|export\s+default\s|\/\*.*?\*\/)'
+    pattern: '\/\/|["'']use strict["'']|export\s+default\s|\/\*(?:.|[\r\n])*?\*\/'
 - extensions: ['.ex']
   rules:
   - language: Elixir
@@ -250,11 +291,13 @@ disambiguations:
   - language: VBA
     and:
     - named_pattern: vb-form
-    - pattern: '^\s*Begin\s+{[0-9A-Z\-]*}\s?'
+    - pattern: '^\s*Begin\s+\{[0-9A-Z\-]*\}\s?'
   - language: Visual Basic 6.0
     and:
     - named_pattern: vb-form
-    - pattern: '^\s*Begin\s+VB\.Form\s+'  
+    - pattern: '^\s*Begin\s+VB\.Form\s+'
+  - language: INI
+    pattern: '\ATYPE=VIEW'
 - extensions: ['.fs']
   rules:
   - language: Forth
@@ -268,7 +311,7 @@ disambiguations:
 - extensions: ['.ftl']
   rules:
   - language: FreeMarker
-    pattern: '^(?:<|[a-zA-Z-][a-zA-Z0-9_-]+[ \t]+\w)|\${\w+[^\n]*?}|^[ \t]*(?:<#--.*?-->|<#([a-z]+)(?=\s|>)[^>]*>.*?</#\1>|\[#--.*?--\]|\[#([a-z]+)(?=\s|\])[^\]]*\].*?\[#\2\])'
+    pattern: '^(?:<|[a-zA-Z-][a-zA-Z0-9_-]+[ \t]+\w)|\$\{\w+[^\r\n]*?\}|^[ \t]*(?:<#--.*?-->|<#(?:[a-z]+)\s[^>]*>.*?</#(?:[a-z]+)>|\[#--.*?--\]|\[#(?:[a-z]+)\s[^\]]*\].*?\[#(?:[a-z]+)\])'
   - language: Fluent
     pattern: '^-?[a-zA-Z][a-zA-Z0-9_-]* *=|\{\$-?[a-zA-Z][-\w]*(?:\.[a-zA-Z][-\w]*)?\}'
 - extensions: ['.g']
@@ -276,7 +319,7 @@ disambiguations:
   - language: GAP
     pattern: '\s*(Declare|BindGlobal|KeyDependentOperation|Install(Method|GlobalFunction)|SetPackageInfo)'
   - language: G-code
-    pattern: '^[MG][0-9]+\n'
+    pattern: '^[MG][0-9]+(?:\r?\n|\r)'
 - extensions: ['.gd']
   rules:
   - language: GAP
@@ -286,7 +329,7 @@ disambiguations:
 - extensions: ['.gml']
   rules:
   - language: XML
-    pattern: '(?i:^\s*(\<\?xml|xmlns))'
+    pattern: '(?i:^\s*(<\?xml|xmlns))'
   - language: Graph Modeling Language
     pattern: '(?i:^\s*(graph|node)\s+\[$)'
   - language: Gerber Image
@@ -308,6 +351,12 @@ disambiguations:
   rules:
   - language: GSC
     named_pattern: gsc
+- extensions: ['.gts']
+  rules:
+  - language: Gerber Image
+    pattern: '^G0.'
+  - language: Glimmer TS
+    negative_pattern: '^G0.'
 - extensions: ['.h']
   rules:
   - language: Objective-C
@@ -330,10 +379,14 @@ disambiguations:
     named_pattern: m68k
   - language: SWIG
     pattern: '^[ \t]*%[a-z_]+\b|^%[{}]$'
+  - language: Assembly
+    pattern:
+    - '(?i)mov\s+[^\s]+,'
+    - '^\s+(i?)db\s+[a-z\d]'
 - extensions: ['.ice']
   rules:
   - language: JSON
-    pattern: '\A\s*[{\[]'
+    named_pattern: json
   - language: Slice
 - extensions: ['.inc']
   rules:
@@ -343,22 +396,28 @@ disambiguations:
     pattern: '^<\?(?:php)?'
   - language: SourcePawn
     pattern:
-    - '^public\s+(?:SharedPlugin(?:\s+|:)__pl_\w+\s*=(?:\s*{)?|(?:void\s+)?__pl_\w+_SetNTVOptional\(\)(?:\s*{)?)'
+    - '^public\s+(?:SharedPlugin(?:\s+|:)__pl_\w+\s*=(?:\s*\{)?|(?:void\s+)?__pl_\w+_SetNTVOptional\(\)(?:\s*\{)?)'
     - '^methodmap\s+\w+\s+<\s+\w+'
     - '^\s*MarkNativeAsOptional\s*\('
   - language: NASL
     pattern:
     - '^\s*include\s*\(\s*(?:"|'')[\\/\w\-\.:\s]+\.(?:nasl|inc)\s*(?:"|'')\s*\)\s*;'
-    - '^\s*(?:global|local)_var\s+(?:\w+(?:\s*=\s*[\w\-"'']+)?\s*)(?:,\s*\w+(?:\s*=\s*[\w\-"'']+)?\s*)*+\s*;'
-    - '^\s*namespace\s+\w+\s*{'
-    - '^\s*object\s+\w+\s*(?:extends\s+\w+(?:::\w+)?)?\s*{'
-    - '^\s*(?:public\s+|private\s+|\s*)function\s+\w+\s*\([\w\s,]*\)\s*{'
+    - '^\s*(?:global|local)_var\s+(?:\w+(?:\s*=\s*[\w\-"'']+)?\s*)(?:,\s*\w+(?:\s*=\s*[\w\-"'']+)?\s*)*\s*;'
+    - '^\s*namespace\s+\w+\s*\{'
+    - '^\s*object\s+\w+\s*(?:extends\s+\w+(?:::\w+)?)?\s*\{'
+    - '^\s*(?:public\s+|private\s+|\s*)function\s+\w+\s*\([\w\s,]*\)\s*\{'
   - language: POV-Ray SDL
     pattern: '^\s*#(declare|local|macro|while)\s'
   - language: Pascal
     pattern:
-    - '(?i:^\s*{\$(?:mode|ifdef|undef|define)[ ]+[a-z0-9_]+})'
+    - '(?i:^\s*\{\$(?:mode|ifdef|undef|define)[ ]+[a-z0-9_]+\})'
     - '^\s*end[.;]\s*$'
+  - language: BitBake
+    pattern: '^inherit(\s+[\w.-]+)+\s*$'
+  - language: Assembly
+    pattern:
+    - '^(?i)[^"m]*mov\s+[^\s]+,'
+    - '^\s+(?i)db\s+[a-z\d]'
 - extensions: ['.json']
   rules:
   - language: OASv2-json
@@ -376,10 +435,21 @@ disambiguations:
     pattern: '^\.[A-Za-z]{2}(\s|$)'
   - language: PicoLisp
     pattern: '^\((de|class|rel|code|data|must)\s'
+- extensions: ['.lean']
+  rules:
+  - language: Lean
+    pattern: '^import [a-z]'
+  - language: Lean 4
+    pattern: '^import [A-Z]'
+- extensions: ['.lp']
+  rules:
+  - language: Linear Programming
+    pattern: '^(?i:minimize|minimum|min|maximize|maximum|max)(?i:\s+multi-objectives)?$'
+  - language: Answer Set Programming
 - extensions: ['.ls']
   rules:
   - language: LoomScript
-    pattern: '^\s*package\s*[\w\.\/\*\s]*\s*{'
+    pattern: '^\s*package\s*[\w\.\/\*\s]*\s*\{'
   - language: LiveScript
 - extensions: ['.lsp', '.lisp']
   rules:
@@ -404,7 +474,7 @@ disambiguations:
   - language: MATLAB
     pattern: '^\s*%'
   - language: Limbo
-    pattern: '^\w+\s*:\s*module\s*{'
+    pattern: '^\w+\s*:\s*module\s*\{'
 - extensions: ['.m4']
   rules:
   - language: M4Sugar
@@ -419,9 +489,9 @@ disambiguations:
 - extensions: ['.mc']
   rules:
   - language: Win32 Message File
-    pattern: '(?i)^[ \t]*(?>\/\*\s*)?MessageId=|^\.$'
+    pattern: '(?i)^[ \t]*(\/\*\s*)?MessageId=|^\.$'
   - language: M4
-    pattern: '^dnl|^divert\((?:-?\d+)?\)|^\w+\(`[^\n]*?''[),]'
+    pattern: '^dnl|^divert\((?:-?\d+)?\)|^\w+\(`[^\r\n]*?''[),]'
   - language: Monkey C
     pattern: '\b(?:using|module|function|class|var)\s+\w'
 - extensions: ['.md']
@@ -443,9 +513,17 @@ disambiguations:
   rules:
   - language: XML
     pattern: '<!ENTITY '
+  - language: NMODL
+    pattern: '\b(NEURON|INITIAL|UNITS)\b'
   - language: Modula-2
     pattern: '^\s*(?i:MODULE|END) [\w\.]+;'
   - language: [Linux Kernel Module, AMPL]
+- extensions: ['.mojo']
+  rules:
+  - language: Mojo
+    pattern: '^\s*(alias|def|from|fn|import|struct|trait)\s'
+  - language: XML
+    pattern: '^\s*<\?xml'
 - extensions: ['.ms']
   rules:
   - language: Roff
@@ -455,6 +533,14 @@ disambiguations:
       - negative_pattern: '/\*'
       - pattern: '^\s*\.(?:include\s|globa?l\s|[A-Za-z][_A-Za-z0-9]*:)'
   - language: MAXScript
+- extensions: ['.msg']
+  rules:
+  - language: OMNeT++ MSG
+    pattern: '^cplusplus\(?[\S]*\)?[\s]*\{?\{?|^namespace[\s]+([^.\s]*\.)*[^.\s]*;|^struct[\s]+[\S]+|^message[\s]+[\S]+(extends )?[\S]*[\s]*|^packet[\s]+[\S]+|^class[\s]+[\S]+(extends )?[\S]*[\s]*|^enum[\s]+[\S]+|^import ([^.\s]*\.)*[^.\s]*;'
+  - language: ROS Interface
+    and:
+      - pattern: '^[a-z][a-z0-9_]*(?:\/[a-zA-Z]\w*)?(?:<=\d+)?(?:\[(?:<=\d+)?\])?\s+\w+\b'
+      - negative_pattern: '^\s*[^\s@#\w-]'
 - extensions: ['.n']
   rules:
   - language: Roff
@@ -466,14 +552,35 @@ disambiguations:
   - language: XML
     pattern: '^\s*<\?xml\s+version'
   - language: Gerber Image
-    pattern: '^[DGMT][0-9]{2}\*\r?\n'
+    pattern: '^[DGMT][0-9]{2}\*(?:\r?\n|\r)'
+  - language: Nickel
+    pattern:
+    - '^let(?:\srec)?(?:\s[a-zA-Z_][a-zA-Z0-9_]*)?'
+    - '^import\s"[^"]+"\s+as\s'
+    - 'std\.[a-zA-Z_][a-zA-Z0-9_]*\.'
   - language: Text
     pattern: 'THE_TITLE'
+  - language: NCL
+    pattern:
+    - '^load "'
+    - '^begin$'
+    - '[0-9]\.$'
+    - '^;'
 - extensions: ['.nl']
   rules:
   - language: NL
     pattern: '^(b|g)[0-9]+ '
   - language: NewLisp
+- extensions: ['.nr']
+  rules:
+  - language: Roff
+    pattern: '^\.'
+  - language: Noir
+- extensions: ['.nu']
+  rules:
+  - language: Nushell
+    pattern: '^\s*(import|export|module|def|let|let-env) '
+  - language: Nu
 - extensions: ['.odin']
   rules:
   - language: Object Data Instance Notation
@@ -493,6 +600,13 @@ disambiguations:
     pattern: '<\?hh'
   - language: PHP
     pattern: '<\?[^h]'
+- extensions: ['.pkl']
+  rules:
+    - language: Pkl
+      pattern:
+      - '^\s*(module|import|amends|extends|local|const|fixed|abstract|open|class|typealias|@\w+)\b'
+      - '^\s*[a-zA-Z0-9_$]+\s*(=|{|:)|^\s*`[^`]+`\s*(=|{|:)|for\s*\(|when\s*\('
+    - language: Pickle
 - extensions: ['.pl']
   rules:
   - language: Prolog
@@ -506,7 +620,7 @@ disambiguations:
 - extensions: ['.plist']
   rules:
   - language: XML Property List
-    pattern: '^\s*(?:<\?xml\s|<!DOCTYPE\s+plist|<plist(?:\s+version\s*=\s*(["''])\d+(?:\.\d+)?\1)?\s*>\s*$)'
+    pattern: '^\s*(?:<\?xml\s|<!DOCTYPE\s+plist|<plist(?:\s+version\s*=\s*["'']\d+(?:\.\d+)?["''])?\s*>\s*$)'
   - language: OpenStep Property List
 - extensions: ['.plt']
   rules:
@@ -525,7 +639,7 @@ disambiguations:
 - extensions: ['.pod']
   rules:
   - language: Pod 6
-    pattern: '^[\s&&[^\n]]*=(comment|begin pod|begin para|item\d+)'
+    pattern: '^[\s&&[^\r\n]]*=(comment|begin pod|begin para|item\d+)'
   - language: Pod
 - extensions: ['.pp']
   rules:
@@ -564,7 +678,7 @@ disambiguations:
 - extensions: ['.q']
   rules:
   - language: q
-    pattern: '((?i:[A-Z.][\w.]*:{)|(^|\n)\\(cd?|d|l|p|ts?) )'
+    pattern: '((?i:[A-Z.][\w.]*:\{)|^\\(cd?|d|l|p|ts?) )'
   - language: HiveQL
     pattern: '(?i:SELECT\s+[\w*,]+\s+FROM|(CREATE|ALTER|DROP)\s(DATABASE|SCHEMA|TABLE))'
 - extensions: ['.qs']
@@ -577,6 +691,8 @@ disambiguations:
   rules:
   - language: Rebol
     pattern: '(?i:\bRebol\b)'
+  - language: Rez
+    pattern: '(#include\s+["<](Types\.r|Carbon\/Carbon\.r)[">])|((resource|data|type)\s+''[A-Za-z0-9]{4}''\s+((\(.*\)\s+){0,1}){)'
   - language: R
     pattern: '<-|^\s*#'
 - extensions: ['.re']
@@ -585,7 +701,7 @@ disambiguations:
     pattern:
     - '^\s*module\s+type\s'
     - '^\s*(?:include|open)\s+\w+\s*;\s*$'
-    - '^\s*let\s+(?:module\s\w+\s*=\s*{|\w+:\s+.*=.*;\s*$)'
+    - '^\s*let\s+(?:module\s\w+\s*=\s*\{|\w+:\s+.*=.*;\s*$)'
   - language: C++
     pattern:
     - '^\s*#(?:(?:if|ifdef|define|pragma)\s+\w|\s*include\s+<[^>]+>)'
@@ -596,16 +712,21 @@ disambiguations:
     pattern:
     - '^\s*(let|module|type)\s+\w*\s+=\s+'
     - '^\s*(?:include|open)\s+\w+\s*$'
+- extensions: ['.resource']
+  rules:
+  - language: RobotFramework
+    pattern:
+    - '^\*{3} (Settings|Variables|Keywords) \*{3}$'
 - extensions: ['.rno']
   rules:
   - language: RUNOFF
-    pattern: '(?i:^\.!|^\f|\f$|^\.end lit(?:eral)?\b|^\.[a-zA-Z].*?;\.[a-zA-Z](?:[; \t])|\^\*[^\s*][^*]*\\\*(?=$|\s)|^\.c;[ \t]*\w+)'
+    pattern: '(?i:^\.!|^\f|\f$|^\.end lit(?:eral)?\b|^\.[a-zA-Z].*?;\.[a-zA-Z](?:[; \t])|\^\*[^\s*][^*]*\\\*(?:$|\s)|^\.c;[ \t]*\w+)'
   - language: Roff
     pattern: '^\.\\" '
 - extensions: ['.rpy']
   rules:
   - language: Python
-    pattern: '(?m:^(import|from|class|def)\s)'
+    pattern: '^(import|from|class|def)\s'
   - language: "Ren'Py"
 - extensions: ['.rs']
   rules:
@@ -617,6 +738,10 @@ disambiguations:
     pattern: '^\s*<\?xml'
 - extensions: ['.s']
   rules:
+  - language: Unix Assembly
+    pattern: '(?i:mov[lq]?)\s+[%\$]'
+  - language: Assembly
+    pattern: '(?i:mov)\s+[^\s%]{2,},'
   - language: Motorola 68K Assembly
     named_pattern: m68k
 - extensions: ['.sc']
@@ -632,12 +757,31 @@ disambiguations:
   - language: Markdown
     # Markdown syntax for scdoc
     pattern: '^#+\s+(NAME|SYNOPSIS|DESCRIPTION)'
+- extensions: ['.scm']
+  rules:
+  - language: Tree-sitter Query
+    pattern:
+    - '\(#[\w-]+[!\?]'
+    - '(?:[\)\]]\s*[\*\+\?](?:\s|$))'
+    - '(?:^\s*\w+:\s*[\(\[\"])'
+    - '\(#(?:set!|(?:not-)?(?:any-of|match)\?)'
+    - '@[\w.-]+(?:\)\s|$)'
+    negative_pattern:
+    - '\([+\-:<>\/=~\)]'
+  - language: Scheme
+    pattern:
+    - '(?:''[\(\*#]|\w->\w|\.\.\.[\s\)]|\([+\-:<>\/=~\)]|~>|[#`]\(|#:\w)'
+    - '^\s*\((?:define\*?|import|library|lambda)'
+    negative_pattern:
+    - '\(#[\w-]+[!\?]'
+    - '(?:[\)\]]\s*[\*\+\?](?:\s|$))'
+    - '@[\w.-]+(?:\)\s|$)'
 - extensions: ['.sol']
   rules:
   - language: Solidity
-    pattern: '\bpragma\s+solidity\b|\b(?:abstract\s+)?contract\s+(?!\d)[a-zA-Z0-9$_]+(?:\s+is\s+(?:[a-zA-Z0-9$_][^\{]*?)?)?\s*\{'
+    pattern: '\bpragma\s+solidity\b|\b(?:abstract\s+)?contract\s+[a-zA-Z$_][a-zA-Z0-9$_]*(?:\s+is\s+(?:[a-zA-Z0-9$_][^\{]*?)?)?\s*\{'
   - language: Gerber Image
-    pattern: '^[DGMT][0-9]{2}\*\r?\n'
+    pattern: '^[DGMT][0-9]{2}\*(?:\r?\n|\r)'
 - extensions: ['.sql']
   rules:
    # Postgres
@@ -657,12 +801,19 @@ disambiguations:
   rules:
   - language: SubRip Text
     pattern: '^(\d{2}:\d{2}:\d{2},\d{3})\s*(-->)\s*(\d{2}:\d{2}:\d{2},\d{3})$'
+- extensions: ['.srv']
+  rules:
+  - language: ROS Interface
+    and:
+      - pattern: '^[a-z][a-z0-9_]*(?:\/[a-zA-Z]\w*)?(?:<=\d+)?(?:\[(?:<=\d+)?\])?\s+\w+\b'
+      - pattern: '^---\s*$'
+      - negative_pattern: '^\s*[^\s@#\w-]'
 - extensions: ['.st']
   rules:
   - language: StringTemplate
-    pattern: '\$\w+[($]|(.)!\s*.+?\s*!\1|<!\s*.+?\s*!>|\[!\s*.+?\s*!\]|\{!\s*.+?\s*!\}'
+    pattern: '\$\w+[($]|.!\s*.+?\s*!.|<!\s*.+?\s*!>|\[!\s*.+?\s*!\]|\{!\s*.+?\s*!\}'
   - language: Smalltalk
-    pattern: '\A\s*[\[{(^"''\w#]|[a-zA-Z_]\w*\s*:=\s*[a-zA-Z_]\w*|class\s*>>\s*[a-zA-Z_]\w*|^[a-zA-Z_]\w*\s+[a-zA-Z_]\w*:|^Class\s*{|if(?:True|False):\s*\['
+    pattern: '\A\s*[\[{(^"''\w#]|[a-zA-Z_]\w*\s*:=\s*[a-zA-Z_]\w*|class\s*>>\s*[a-zA-Z_]\w*|^[a-zA-Z_]\w*\s+[a-zA-Z_]\w*:|^Class\s*\{|if(?:True|False):\s*\['
 - extensions: ['.star']
   rules:
   - language: STAR
@@ -671,7 +822,18 @@ disambiguations:
 - extensions: ['.stl']
   rules:
   - language: STL
-    pattern: '\A\s*solid(?=$|\s)(?m:.*?)\Rendsolid(?:$|\s)'
+    pattern: '\A\s*solid(?:$|\s)[\s\S]*^endsolid(?:$|\s)'
+- extensions: ['.svx']
+  rules:
+  - language: Survex data
+    pattern: '\A(;|\*[^*]+$)'
+  - language: mdsvex
+- extensions: ['.sw']
+  rules:
+  - language: Sway
+    pattern: '^\s*(?:(?:abi|dep|fn|impl|mod|pub|trait)\s|#\[)'
+  - language: XML
+    pattern: '^\s*<\?xml\s+version'
 - extensions: ['.t']
   rules:
   - language: Perl
@@ -682,10 +844,19 @@ disambiguations:
     pattern: '^\s*(?:use\s+v6\b|\bmodule\b|\bmy\s+class\b)'
   - language: Turing
     pattern: '^\s*%[ \t]+|^\s*var\s+\w+(\s*:\s*\w+)?\s*:=\s*\w+'
+- extensions: ['.tact']
+  rules:
+  - language: JSON
+    pattern: '\A\s*\{\"'
+  - language: Tact
 - extensions: ['.tag']
   rules:
   - language: Java Server Pages
     pattern: '<%[@!=\s]?\s*(taglib|tag|include|attribute|variable)\s'
+- extensions: ['.tlv']
+  rules:
+  - language: TL-Verilog
+    pattern: '^\\.{0,10}TLV_version'
 - extensions: ['.toc']
   rules:
   - language: World of Warcraft Addon Data
@@ -697,6 +868,12 @@ disambiguations:
   - language: XML
     pattern: '<TS\b'
   - language: TypeScript
+- extensions: ['.tsp']
+  rules:
+  - language: TypeSpec
+    pattern: '^(import|using|namespace|interface|op|model|scalar|alias|union|enum)\s'
+  - language: TSPLIB data
+    pattern: '^(NAME|TYPE|DIMENSION|EDGE_WEIGHT_TYPE|EDGE_WEIGHT_FORMAT)\s*:'
 - extensions: ['.tst']
   rules:
   - language: GAP
@@ -705,16 +882,41 @@ disambiguations:
   - language: Scilab
 - extensions: ['.tsx']
   rules:
-  - language: TSX
-    pattern: '^\s*(import.+(from\s+|require\()[''"]react|\/\/\/\s*<reference\s)'
   - language: XML
     pattern: '(?i:^\s*<\?xml\s+version)'
+  - language: TSX
 - extensions: ['.txt']
   rules:
     # The following RegExp is simply a collapsed and simplified form of the
     # VIM_MODELINE pattern in `./lib/linguist/strategy/modeline.rb`.
   - language: Vim Help File
     pattern: '(?:(?:^|[ \t])(?:vi|Vi(?=m))(?:m[<=>]?[0-9]+|m)?|[ \t]ex)(?=:(?=[ \t]*set?[ \t][^\r\n:]+:)|:(?![ \t]*set?[ \t]))(?:(?:[ \t]*:[ \t]*|[ \t])\w*(?:[ \t]*=(?:[^\\\s]|\\.)*)?)*[ \t:](?:filetype|ft|syntax)[ \t]*=(help)(?=$|\s|:)'
+  - language: Hosts File
+    pattern: |-
+      (?xi) ^
+
+      # IPv4 address
+      (?<ipv4>
+        (?!\.)
+        (?:\.?
+          (?: 25[0-5]  # 250-255
+          |   2[0-4]\d # 200-249
+          |   1\d\d    # 100-199
+          |   [1-9]?\d # 0-99
+          )\b
+      ){4})
+
+      # CIDR notation: /[0-32]
+      (?<cidr>/(3[0-2]|[12]?\d)\b)?
+
+      # Domains list
+      (?<domains>
+        [ \t]+
+        \w[-\w]* (?:\.\w[-\w]*)*
+        (?<!-)\b
+      )*+
+
+      (?:$|\s)
   - language: Adblock Filter List
     pattern: |-
       (?x)\A
@@ -739,13 +941,18 @@ disambiguations:
     # HACK: This is a contrived use of heuristics needed to address
     # an unusual edge-case. See https://git.io/JULye for discussion.
   - language: Text
+- extensions: ['.typ']
+  rules:
+  - language: Typst
+    pattern: '^#(import|show|let|set)'
+  - language: XML
 - extensions: ['.url']
   rules:
   - language: INI
-    pattern: '^\[InternetShortcut\]\R(?>[^\s\[][^\n]*\R)*URL='
+    pattern: '^\[InternetShortcut\](?:\r?\n|\r)([^\s\[][^\r\n]*(?:\r?\n|\r)){0,20}URL='
 - extensions: ['.v']
   rules:
-  - language: Coq
+  - language: Rocq Prover
     pattern: '(?:^|\s)(?:Proof|Qed)\.(?:$|\s)|(?:^|\s)Require[ \t]+(Import|Export)\s'
   - language: Verilog
     pattern: '^[ \t]*module\s+[^\s()]+\s+\#?\(|^[ \t]*`(?:define|ifdef|ifndef|include|timescale)|^[ \t]*always[ \t]+@|^[ \t]*initial[ \t]+(begin|@)'
@@ -756,6 +963,12 @@ disambiguations:
   - language: Vim Script
     pattern: '^UseVimball'
   - language: VBA
+- extensions: ['.vcf']
+  rules:
+  - language: TSV
+    pattern: '\A##fileformat=VCF'
+  - language: vCard
+    pattern: '\ABEGIN:VCARD'
 - extensions: ['.w']
   rules:
   - language: OpenEdge ABL
@@ -767,7 +980,7 @@ disambiguations:
   - language: DirectX 3D File
     pattern:  '^xof 030(2|3)(?:txt|bin|tzip|bzip)\b'
   - language: RPC
-    pattern: '\b(program|version)\s+\w+\s*{|\bunion\s+\w+\s+switch\s*\('
+    pattern: '\b(program|version)\s+\w+\s*\{|\bunion\s+\w+\s+switch\s*\('
   - language: Logos
     pattern: '^%(end|ctor|hook|group)\b'
   - language: Linker Script
@@ -785,7 +998,7 @@ disambiguations:
 - extensions: ['.yy']
   rules:
   - language: JSON
-    pattern: '\"modelName\"\:\s*\"GM'
+    named_pattern: json
   - language: Yacc
 named_patterns:
   cpp:
@@ -795,17 +1008,22 @@ named_patterns:
   - '^[ \t]*catch\s*\('
   - '^[ \t]*(class|(using[ \t]+)?namespace)\s+\w+'
   - '^[ \t]*(private|public|protected):$'
+  - '__has_cpp_attribute|__cplusplus >'
   - 'std::\w+'
   euphoria:
   - '^\s*namespace\s'
   - '^\s*(?:public\s+)?include\s'
   - '^\s*(?:(?:public|export|global)\s+)?(?:atom|constant|enum|function|integer|object|procedure|sequence|type)\s'
   fortran: '^(?i:[c*][^abd-z]|      (subroutine|program|end|data)\s|\s*!)'
+  freebasic:
+  - '(?i)^[ \t]*#(?:define|endif|endmacro|ifn?def|include|lang|macro|pragma)(?:$|\s)'
+  - '(?i)^[ \t]*dim( shared)? [a-z_][a-z0-9_]* as [a-z_][a-z0-9_]* ptr'
   gsc:
   - '^\s*#\s*(?:using|insert|include|define|namespace)[ \t]+\w'
-  - '^\s*(?>(?:autoexec|private)\s+){0,2}function\s+(?>(?:autoexec|private)\s+){0,2}\w+\s*\('
-  - '\b(?:level|self)[ \t]+thread[ \t]+(?:\[\[[ \t]*(?>\w+\.)*\w+[ \t]*\]\]|\w+)[ \t]*\([^\r\n\)]*\)[ \t]*;'
+  - '^\s*((?:autoexec|private)\s+){0,2}function\s+((?:autoexec|private)\s+){0,2}\w+\s*\('
+  - '\b(?:level|self)[ \t]+thread[ \t]+(?:\[\[[ \t]*(\w+\.)+[ \t]*\]\]|\w+)[ \t]*\([^\r\n\)]*\)[ \t]*;'
   - '^[ \t]*#[ \t]*(?:precache|using_animtree)[ \t]*\('
+  json: '\A\s*[{\[]'
   key_equals_value: '^[^#!;][^=]*='
   m68k:
   - '(?im)\bmoveq(?:\.l)?\s+#(?:\$-?[0-9a-f]{1,3}|%[0-1]{1,8}|-?[0-9]{1,3}),\s*d[0-7]\b'
@@ -827,6 +1045,41 @@ named_patterns:
   - '^\s*(?:\*|(?:our\s*)?@)EXPORT\s*='
   - '^\s*package\s+[^\W\d]\w*(?:::\w+)*\s*(?:[;{]|\sv?\d)'
   - '[\s$][^\W\d]\w*(?::\w+)*->[a-zA-Z_\[({]'
+  quickbasic:
+  # Uppercase keywords are a good indicator of QuickBASIC (if no FreeBASIC syntax is detected)
+  - '^[ ]*(CONST|DIM|REDIM|DEFINT|PRINT|DECLARE (SUB|FUNCTION)|FUNCTION|SUB) '
+  # Preprocessor statement to set the compiler dialect in QuickBASIC ($lang) and FreeBASIC (#lang)
+  - '(#|$)lang:?\s*"?qb"?'
+  # Other QuickBASIC-specific patterns
+  - '(?i)''\$INCLUDE:'
+  - '(?i)^[ ]*CLS[ ]*(''|:|\r|\n)'
+  - '(?i)^[ ]*OPTION _EXPLICIT'
+  - '(?i)^[ ]*DIM SHARED '
+  - '(?i)^[ ]*PRINT "'
+  - '(?i) As _(Byte|Offset|MEM)'
+  - '(?i)^[ ]*_(DISPLAY|DEST|CONSOLE|SOURCE|FREEIMAGE|PALETTECOLOR|PRINTSTRING|LOADFONT|PUTIMAGE)'
+  - '(?i)^[ ]*_(TITLE|PLAYMOD) "'
+  - '(?i)^[ ]*_(LIMIT|SCREEN|DELAY) \.?\d+'
+  - '(?i)\b_(MOUSEBUTTON|NEWIMAGE|KEYDOWN|WIDTH|HEIGHT)\('
+  - '(?i)^[ ]*\$(CONSOLE|CHECKING):'
+  - '(?i)^[ ]*\$(FULLSCREEN|RESIZE|STATIC|DYNAMIC|NOPREFIX|SCREENSHOW|SCREENHIDE|EXEICON)\b'
   raku: '^\s*(?:use\s+v6\b|\bmodule\b|\b(?:my\s+)?class\b)'
-  vb-class: '^\s*VERSION\s+[0-9]\.[0-9]\s+CLASS'
-  vb-form: '^\s*VERSION\s+[0-9]\.[0-9]{2}'
+  vb-class: '^[ ]*VERSION [0-9]\.[0-9] CLASS'
+  vb-form: '^[ ]*VERSION [0-9]\.[0-9]{2}'
+  vb-module: '^[ ]*Attribute VB_Name = '
+  vba:
+  - '\b(?:VBA|[vV]ba)(?:\b|[0-9A-Z_])'
+    # VBA7 new 64-bit features
+  - '^[ ]*(?:Public|Private)? Declare PtrSafe (?:Sub|Function)\b'
+  - '^[ ]*#If Win64\b'
+  - '^[ ]*(?:Dim|Const) [0-9a-zA-Z_]*[ ]*As Long(?:Ptr|Long)\b'
+  # Top module declarations unique to VBA
+  - '^[ ]*Option (?:Private Module|Compare Database)\b'
+  # General VBA libraries and objects
+  - '(?: |\()(?:Access|Excel|Outlook|PowerPoint|Visio|Word|VBIDE)\.\w'
+  - '\b(?:(?:Active)?VBProjects?|VBComponents?|Application\.(?:VBE|ScreenUpdating))\b'
+  # AutoCAD, Outlook, PowerPoint and Word objects
+  - '\b(?:ThisDrawing|AcadObject|Active(?:Explorer|Inspector|Window\.Presentation|Presentation|Document)|Selection\.(?:Document|Find|Paragraphs|Range))\b'
+  # Excel objects
+  - '\b(?:(?:This|Active)?Workbooks?|Worksheets?|Active(?:Sheet|Chart|Cell)|WorksheetFunction)\b'
+  - '\b(?:Range\(".*|Cells\([0-9a-zA-Z_]*, (?:[0-9a-zA-Z_]*|"[a-zA-Z]{1,3}"))\)'

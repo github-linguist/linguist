@@ -12,14 +12,16 @@ HELP_TEXT = <<~HELP
 Linguist v#{Linguist::VERSION}
 Detect language type and determine language breakdown for a given Git repository.
 
-Usage: linguist <path>
-       linguist <path> [--rev REV] [--breakdown] [--json]
-       linguist [--rev REV] [--breakdown] [--json]
+Usage: github-linguist <path>
+       github-linguist <path> [--rev REV] [--tree-size] [--breakdown] [--strategies] [--json]
+       github-linguist [--rev REV] [--tree-size] [--breakdown] [--strategies] [--json]
 HELP
 
 def github_linguist(args)
   breakdown = false
   json_output = false
+  show_strategies = false
+  tree_size = Linguist::Repository::MAX_TREE_SIZE
   rev = 'HEAD'
   path = Dir.pwd
 
@@ -28,10 +30,13 @@ def github_linguist(args)
     opts.version = Linguist::VERSION
 
     opts.on("-b", "--breakdown", "Analyze entire repository and display detailed usage statistics") { breakdown = true }
+    opts.on("-s", "--strategies", "Show language detection strategy used for each file") { show_strategies = true }
     opts.on("-j", "--json", "Output results as JSON") { json_output = true }
     opts.on("-r", "--rev REV", String,
             "Analyze specific git revision",
             "defaults to HEAD, see gitrevisions(1) for alternatives") { |r| rev = r }
+    opts.on("-t", "--tree-size=NUMBER", Integer,
+            "Maximum number of files scanned to detect languages (default: #{Linguist::Repository::MAX_TREE_SIZE})") { |t| tree_size = t }
     opts.on("-h", "--help", "Display a short usage summary, then exit") do
       puts opts
       exit
@@ -56,7 +61,12 @@ def github_linguist(args)
       puts "invalid revision '#{rev}' for repo '#{path}'"
       exit 1
     end
-    repo = Linguist::Repository.new(rugged, target_oid)
+
+    # Set up instrumentation to track detection strategies if requested
+    instrumenter = show_strategies ? Linguist::BasicInstrumenter.new : nil
+    Linguist.instrumenter = instrumenter
+
+    repo = Linguist::Repository.new(rugged, target_oid, tree_size)
 
     full_results = {}
     repo.languages.each do |language, size|
@@ -69,13 +79,18 @@ def github_linguist(args)
       full_results.sort_by { |_, v| v[:size] }.reverse.each do |language, details|
         puts "%-7s %-10s %s" % ["#{details[:percentage]}%", details[:size], language]
       end
-      if breakdown
+      if breakdown || show_strategies
         puts
         file_breakdown = repo.breakdown_by_file
         file_breakdown.each do |lang, files|
           puts "#{lang}:"
           files.each do |file|
-            puts file
+            strategy_info = instrumenter&.detected_info&.[](file)
+            if show_strategies && strategy_info
+              puts "  #{file} [#{strategy_info[:strategy]}]"
+            else
+              puts "  #{file}"
+            end
           end
           puts
         end
@@ -93,6 +108,9 @@ def github_linguist(args)
       end
     end
   elsif File.file?(path)
+    # Set up instrumentation to track detection strategies if requested
+    instrumenter = show_strategies ? Linguist::BasicInstrumenter.new : nil
+    Linguist.instrumenter = instrumenter
 
     begin
       # Check if this file is inside a git repository so we have things like
@@ -131,6 +149,10 @@ def github_linguist(args)
       puts "  type:      #{type}"
       puts "  mime type: #{blob.mime_type}"
       puts "  language:  #{blob.language}"
+      if show_strategies && blob.language
+        strategy_info = instrumenter.detected_info[blob.name]
+        puts "  strategy:  #{strategy_info[:strategy]}" if strategy_info
+      end
 
       if blob.large?
         puts "  blob is too large to be shown"

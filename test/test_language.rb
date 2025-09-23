@@ -24,6 +24,7 @@ class TestLanguage < Minitest::Test
     assert_equal Language['Common Lisp'], Language.find_by_alias('lisp')
     assert_equal Language['Darcs Patch'], Language.find_by_alias('dpatch')
     assert_equal Language['Dart'], Language.find_by_alias('dart')
+    assert_equal Language['EdgeQL'], Language.find_by_alias('esdl')
     assert_equal Language['Emacs Lisp'], Language.find_by_alias('elisp')
     assert_equal Language['Emacs Lisp'], Language.find_by_alias('emacs')
     assert_equal Language['Emacs Lisp'], Language.find_by_alias('emacs-lisp')
@@ -59,6 +60,7 @@ class TestLanguage < Minitest::Test
     assert_equal Language['Shell'], Language.find_by_alias('zsh')
     assert_equal Language['SuperCollider'], Language.find_by_alias('supercollider')
     assert_equal Language['TeX'], Language.find_by_alias('tex')
+    assert_equal Language['Tree-sitter Query'], Language.find_by_alias('tsq')
     assert_equal Language['TypeScript'], Language.find_by_alias('ts')
     assert_equal Language['Vim Script'], Language.find_by_alias('vim')
     assert_equal Language['Vim Script'], Language.find_by_alias('viml')
@@ -310,7 +312,7 @@ class TestLanguage < Minitest::Test
     assert_equal 'css', Language['CSS'].ace_mode
     assert_equal 'lsl', Language['LSL'].ace_mode
     assert_equal 'javascript', Language['JavaScript'].ace_mode
-    assert_equal 'text', Language['FORTRAN'].ace_mode
+    assert_equal 'fortran', Language['FORTRAN'].ace_mode
   end
 
   def test_codemirror_mode
@@ -353,10 +355,10 @@ class TestLanguage < Minitest::Test
     scopes = YAML.load(File.read(File.expand_path("../../grammars.yml", __FILE__))).values.flatten
     missing = Language.all.reject { |language| language.tm_scope == "none" || scopes.include?(language.tm_scope) }
     message = "The following languages' scopes are not listed in grammars.yml. Please add grammars for all new languages.\n"
-    message << "If no grammar exists for a language, mark the language with `tm_scope: none` in lib/linguist/languages.yml.\n"
+    message += "If no grammar exists for a language, mark the language with `tm_scope: none` in lib/linguist/languages.yml.\n"
 
     width = missing.map { |language| language.name.length }.max
-    message << missing.map { |language| sprintf("%-#{width}s %s", language.name, language.tm_scope) }.sort.join("\n")
+    message += missing.map { |language| sprintf("%-#{width}s %s", language.name, language.tm_scope) }.sort.join("\n")
     assert missing.empty?, message
   end
 
@@ -364,7 +366,7 @@ class TestLanguage < Minitest::Test
     languages = YAML.load(File.read(File.expand_path("../../lib/linguist/languages.yml", __FILE__)))
     missing = languages.reject { |name,language| language.has_key?('tm_scope') }
     message = "The following languages do not have a `tm_scope` field defined. Use `tm_scope: none` if the language has no grammar.\n"
-    message << missing.keys.sort.join("\n")
+    message += missing.keys.sort.join("\n")
     assert missing.empty?, message
   end
 
@@ -373,7 +375,7 @@ class TestLanguage < Minitest::Test
     message = "The following languages do not have a type listed in grammars.yml. Please add types for all new languages.\n"
 
     width = missing.map { |language| language.name.length }.max
-    message << missing.map { |language| sprintf("%-#{width}s", language.name) }.sort.join("\n")
+    message += missing.map { |language| sprintf("%-#{width}s", language.name) }.sort.join("\n")
     assert missing.empty?, message
   end
 
@@ -414,10 +416,10 @@ class TestLanguage < Minitest::Test
 
     missing = Language.all.reject { |language| language.ace_mode == "text" || existing_ace_modes.include?(language.ace_mode) }
     message = "The following languages do not have an Ace mode listed in languages.yml. Please add an Ace mode for all new languages.\n"
-    message << "If no Ace mode exists for a language, mark the language with `ace_mode: text` in lib/linguist/languages.yml.\n"
+    message += "If no Ace mode exists for a language, mark the language with `ace_mode: text` in lib/linguist/languages.yml.\n"
 
     width = missing.map { |language| language.name.length }.max
-    message << missing.map { |language| sprintf("%-#{width}s %s", language.name, language.ace_mode) }.sort.join("\n")
+    message += missing.map { |language| sprintf("%-#{width}s %s", language.name, language.ace_mode) }.sort.join("\n")
     assert missing.empty?, message
   end
 
@@ -451,7 +453,7 @@ class TestLanguage < Minitest::Test
       next unless language.codemirror_mode && language.codemirror_mime_type
       filename = File.expand_path("../../vendor/CodeMirror/mode/#{language.codemirror_mode}/#{language.codemirror_mode}.js", __FILE__)
       assert File.exist?(filename), "#{filename} does not exist"
-      assert File.read(filename).match(language.codemirror_mime_type), "#{language.inspect}: #{language.codemirror_mime_type} not defined in #{filename}"
+      assert File.read(filename).match(Regexp.escape language.codemirror_mime_type), "#{language.inspect}: #{language.codemirror_mime_type} not defined in #{filename}"
     end
   end
 
@@ -460,7 +462,7 @@ class TestLanguage < Minitest::Test
 
     missing = popular - Language.all.map(&:name)
     message = "The following languages are listed in lib/linguist/popular.yml but not in lib/linguist/languages.yml.\n"
-    message << missing.sort.join("\n")
+    message += missing.sort.join("\n")
     assert missing.empty?, message
   end
 

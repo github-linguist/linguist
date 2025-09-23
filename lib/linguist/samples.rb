@@ -25,7 +25,14 @@ module Linguist
     # Hash of serialized samples object, uncached
     def self.load_samples
       serializer = defined?(Yajl) ? Yajl : JSON
-      serializer.load(File.read(PATH, encoding: 'utf-8'))
+      data = serializer.load(File.read(PATH, encoding: 'utf-8'))
+      # JSON serialization does not allow integer keys, we fix them here
+      for lang in data['centroids'].keys
+        fixed = data['centroids'][lang].to_a.map { |k,v| [k.to_i, v] }
+        data['centroids'][lang] = Hash[fixed]
+      end
+
+      data
     end
 
     # Public: Iterate over each sample.
@@ -106,6 +113,7 @@ module Linguist
         Classifier.train!(db, language_name, data)
       end
 
+      Classifier.finalize_train! db
       db['sha256'] = Linguist::SHA256.hexdigest(db)
 
       db

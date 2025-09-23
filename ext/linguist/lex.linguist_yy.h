@@ -435,6 +435,7 @@ void yyfree ( void * , yyscan_t yyscanner );
 #define python_dcomment 5
 #define python_scomment 6
 #define roff_comment 7
+#define lean_comment 8
 
 #endif
 
@@ -694,9 +695,9 @@ extern int yylex (yyscan_t yyscanner);
 #undef yyTABLES_NAME
 #endif
 
-#line 173 "tokenizer.l"
+#line 176 "tokenizer.l"
 
 
-#line 701 "lex.linguist_yy.h"
+#line 702 "lex.linguist_yy.h"
 #undef linguist_yyIN_HEADER
 #endif /* linguist_yyHEADER_H */
