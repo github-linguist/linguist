@@ -73,7 +73,13 @@ module Linguist
       return @language if defined?(@language)
 
       @language = if lang = git_attributes['linguist-language']
-        Language.find_by_alias(lang)
+        detected_language = Language.find_by_alias(lang)
+        # Instrument the gitattributes override as a strategy
+        if detected_language
+          strategy = Struct.new(:name).new("Linguist::Strategy::GitAttributes")
+          Linguist.instrument("linguist.detected", blob: self, strategy: strategy, language: detected_language)
+        end
+        detected_language
       else
         super
       end

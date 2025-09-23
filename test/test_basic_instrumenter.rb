@@ -81,4 +81,25 @@ class TestBasicInstrumenter < Minitest::Test
     assert_equal "Filename", @instrumenter.detected_info[blob.name][:strategy]
     assert_equal "Dockerfile", @instrumenter.detected_info[blob.name][:language]
   end
+
+  def test_tracks_override_strategy
+    # Simulate a blob with a gitattributes override
+    blob = Linguist::FileBlob.new("Gemfile", "")
+    # Simulate detection with gitattributes strategy
+    strategy = Struct.new(:name).new("Linguist::Strategy::GitAttributes")
+    language = Struct.new(:name).new("Java")
+    @instrumenter.instrument("linguist.detected", blob: blob, strategy: strategy, language: language) {}
+    assert @instrumenter.detected_info.key?(blob.name)
+    assert_equal "GitAttributes", @instrumenter.detected_info[blob.name][:strategy]
+    assert_equal "Java", @instrumenter.detected_info[blob.name][:language]
+  end
+end
+
+def test_override_strategy_is_recorded
+  # This file is overridden by .gitattributes to be detectable and language Markdown
+  blob = sample_blob("Markdown/tender.md")
+  Linguist.detect(blob)
+  assert @instrumenter.detected_info.key?(blob.name)
+  assert_includes ["GitAttributes"], @instrumenter.detected_info[blob.name][:strategy]
+  assert_equal "Markdown", @instrumenter.detected_info[blob.name][:language]
 end
