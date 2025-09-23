@@ -39,7 +39,7 @@ class TestCLIIntegration < Minitest::Test
 
     assert status.success?, "CLI command failed: #{stderr}"
     assert_match(/language:\s+Ruby/, stdout, "Should detect Ruby language")
-    assert_match(/strategy:\s+GitAttributes/, stdout, "Should show GitAttributes strategy")
+    assert_match(/strategy:\s+.*\(overridden by \.gitattributes\)/, stdout, "Should show override in strategy")
   end
 
   def test_strategies_flag_with_normal_detection
@@ -81,7 +81,7 @@ class TestCLIIntegration < Minitest::Test
     assert status.success?, "CLI command failed: #{stderr}"
 
     # Check that GitAttributes strategy appears for the overridden file
-    assert_match(/override\.special \[GitAttributes\]/, stdout, "Should show GitAttributes strategy for overridden file")
+    assert_match(/override\.special \[.* \(overridden by \.gitattributes\)\]/, stdout, "Should show override for overridden file")
 
     # Check that normal detection strategies appear for other files
     assert_match(/normal\.js \[Extension\]/, stdout, "Should show Extension strategy for .js file")
@@ -134,6 +134,6 @@ class TestCLIIntegration < Minitest::Test
 
     # Verify that both normal and override detection work in repository scan
     assert_match(/src\/app\.rb \[Extension\]/, stdout, "Should show Extension strategy for Ruby file")
-    assert_match(/config\.config \[GitAttributes\]/, stdout, "Should show GitAttributes strategy for overridden file")
+    assert_match(/config\.config \[.* \(overridden by \.gitattributes\)\]/, stdout, "Should show override for overridden file")
   end
 end
