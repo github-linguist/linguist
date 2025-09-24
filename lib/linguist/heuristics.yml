@@ -853,6 +853,13 @@ disambiguations:
   rules:
   - language: Java Server Pages
     pattern: '<%[@!=\s]?\s*(taglib|tag|include|attribute|variable)\s'
+- extensions: ['.tl']
+  rules:
+  - language: Teal
+    and:
+    - pattern: '--.*'
+    - pattern: '\b(local|function|end|record|interface|enum)\b'
+  - language: Type Language
 - extensions: ['.tlv']
   rules:
   - language: TL-Verilog
