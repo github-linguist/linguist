@@ -768,6 +768,14 @@ Browserslist:
   tm_scope: text.browserslist
   ace_mode: text
   language_id: 153503348
+Bru:
+  type: markup
+  color: "#F4AA41"
+  extensions:
+  - ".bru"
+  tm_scope: source.bru
+  ace_mode: text
+  language_id: 906627898
 BuildStream:
   type: data
   color: "#006bff"
@@ -2173,6 +2181,14 @@ Filterscript:
   tm_scope: none
   ace_mode: text
   language_id: 112
+Flix:
+  type: programming
+  color: "#d44a45"
+  extensions:
+  - ".flix"
+  tm_scope: source.flix
+  ace_mode: flix
+  language_id: 800935960
 Fluent:
   type: programming
   color: "#ffcc33"
@@ -3865,6 +3881,14 @@ Kit:
   - ".kit"
   tm_scope: text.html.basic
   language_id: 188
+KoLMafia ASH:
+  type: programming
+  color: "#B9D9B9"
+  extensions:
+  - ".ash"
+  tm_scope: source.ash
+  ace_mode: text
+  language_id: 852099832
 Koka:
   type: programming
   ace_mode: text
@@ -3997,6 +4021,8 @@ Lean:
 Lean 4:
   type: programming
   group: Lean
+  aliases:
+  - lean4
   extensions:
   - ".lean"
   tm_scope: source.lean4
