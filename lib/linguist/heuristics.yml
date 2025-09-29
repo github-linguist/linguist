@@ -418,6 +418,16 @@ disambiguations:
     pattern:
     - '^(?i)[^"m]*mov\s+[^\s]+,'
     - '^\s+(?i)db\s+[a-z\d]'
+- extensions: ['.jac']
+  rules:
+  - language: Jac
+    pattern: '^\s*walker\s+\w+'
+  - language: Jac
+    pattern: '^\s*node\s+\w+'
+  - language: Jac
+    pattern: '\bwith\s+entry\b'
+  - language: Jac
+    pattern: '\bbyllm\b'
 - extensions: ['.json']
   rules:
   - language: OASv2-json
