@@ -230,6 +230,14 @@ class TestGenerated < Minitest::Test
     generated_sample_loading_data("Dart/addressbook.pbenum.dart")
     generated_sample_loading_data("Dart/addressbook.pbjson.dart")
     generated_sample_loading_data("Dart/equals.freezed.dart")
+
+    # Gradle Wrapper
+    generated_sample_without_loading_data("Gradle/gradlew")
+    generated_sample_without_loading_data("Gradle/gradlew.bat")
+
+    # Maven Wrapper
+    generated_sample_without_loading_data("Maven POM/mvnw")
+    generated_sample_without_loading_data("Maven POB/mvnw.bat")
   end
 
   # We've whitelisted these files on purpose, even though they're machine-generated.
