@@ -237,7 +237,7 @@ class TestGenerated < Minitest::Test
 
     # Maven Wrapper
     generated_sample_without_loading_data("Maven POM/mvnw")
-    generated_sample_without_loading_data("Maven POB/mvnw.bat")
+    generated_sample_without_loading_data("Maven POB/mvnw.cmd")
   end
 
   # We've whitelisted these files on purpose, even though they're machine-generated.
