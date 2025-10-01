@@ -74,6 +74,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **BrighterScript:** [rokucommunity/vscode-brightscript-language](https://github.com/rokucommunity/vscode-brightscript-language)
 - **Brightscript:** [rokucommunity/vscode-brightscript-language](https://github.com/rokucommunity/vscode-brightscript-language)
 - **Browserslist:** [browserslist/browserslist-vscode](https://github.com/browserslist/browserslist-vscode)
+- **Bru:** [usebruno/bruno-ide-extensions](https://github.com/usebruno/bruno-ide-extensions)
 - **BuildStream:** [atom/language-yaml](https://github.com/atom/language-yaml)
 - **C:** [tree-sitter/tree-sitter-c](https://github.com/tree-sitter/tree-sitter-c) 🐌
 - **C#:** [tree-sitter/tree-sitter-c-sharp](https://github.com/tree-sitter/tree-sitter-c-sharp) 🐌
@@ -188,6 +189,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Fantom:** [rkoeninger/sublime-fantom](https://github.com/rkoeninger/sublime-fantom)
 - **Faust:** [jpcima/language-faust](https://github.com/jpcima/language-faust)
 - **Fennel:** [kongeor/vsc-fennel](https://github.com/kongeor/vsc-fennel)
+- **Flix:** [flix/textmate](https://github.com/flix/textmate)
 - **Fluent:** [macabeus/vscode-fluent](https://github.com/macabeus/vscode-fluent)
 - **Forth:** [textmate/forth.tmbundle](https://github.com/textmate/forth.tmbundle)
 - **Fortran:** [textmate/fortran.tmbundle](https://github.com/textmate/fortran.tmbundle)
@@ -315,6 +317,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **KiCad Schematic:** [Alhadis/language-pcb](https://github.com/Alhadis/language-pcb)
 - **Kickstart:** [wgwoods/language-kickstart](https://github.com/wgwoods/language-kickstart)
 - **Kit:** [atom/language-html](https://github.com/atom/language-html)
+- **KoLMafia ASH:** [midgleyc/vscode-kolmafia-ash](https://github.com/midgleyc/vscode-kolmafia-ash)
 - **Koka:** [koka-community/koka-textmate-grammar](https://github.com/koka-community/koka-textmate-grammar)
 - **Kotlin:** [nishtahir/language-kotlin](https://github.com/nishtahir/language-kotlin)
 - **Kusto:** [mmanela/kusto-sublime](https://github.com/mmanela/kusto-sublime)
