@@ -564,7 +564,7 @@ module Linguist
     #
     # Returns true or false.
     def gradle_wrapper?
-      !!name.match(/gradlew(\.bat)?/)
+      !!name.match(/(?:^|\/)gradlew(?:\.bat)?$/i)
     end
 
     # Internal: Is the blob a generated maven wrapper file?
