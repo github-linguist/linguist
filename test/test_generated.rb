@@ -232,12 +232,12 @@ class TestGenerated < Minitest::Test
     generated_sample_loading_data("Dart/equals.freezed.dart")
 
     # Gradle Wrapper
-    generated_sample_without_loading_data("Gradle/gradlew")
-    generated_sample_without_loading_data("Gradle/gradlew.bat")
+    generated_sample_without_loading_data("Shell/filenames/gradlew")
+    generated_sample_without_loading_data("Batchfile/filenames/gradlew.bat")
 
     # Maven Wrapper
-    generated_sample_without_loading_data("Maven POM/mvnw")
-    generated_sample_without_loading_data("Maven POB/mvnw.cmd")
+    generated_sample_without_loading_data("Shell/filenames/mvnw")
+    generated_sample_without_loading_data("Batchfile/filenames/mvnw.cmd")
   end
 
   # We've whitelisted these files on purpose, even though they're machine-generated.
