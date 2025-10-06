@@ -404,6 +404,16 @@ Arc:
   tm_scope: none
   ace_mode: text
   language_id: 20
+ArkTS:
+  type: programming
+  color: "#0080ff"
+  extensions:
+  - ".ets"
+  tm_scope: source.ets
+  ace_mode: typescript
+  codemirror_mode: javascript
+  codemirror_mime_type: application/typescript
+  language_id: 56341321
 AsciiDoc:
   type: prose
   color: "#73a0c5"
@@ -2580,6 +2590,17 @@ Git Attributes:
   codemirror_mode: shell
   codemirror_mime_type: text/x-sh
   language_id: 956324166
+Git Commit:
+  type: data
+  color: "#F44D27"
+  aliases:
+  - commit
+  filenames:
+  - COMMIT_EDITMSG
+  ace_mode: text
+  tm_scope: text.git-commit
+  wrap: true
+  language_id: 131750475
 Git Config:
   type: data
   color: "#F44D27"
@@ -3873,7 +3894,7 @@ Kit:
   - ".kit"
   tm_scope: text.html.basic
   language_id: 188
-KoLMafia ASH:
+KoLmafia ASH:
   type: programming
   color: "#B9D9B9"
   extensions:
