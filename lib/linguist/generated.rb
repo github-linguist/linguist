@@ -571,7 +571,7 @@ module Linguist
     #
     # Returns true or false.
     def maven_wrapper?
-      !!name.match(/mvnw(\.cmd)?/)
+      !!name.match(/(?:^|\/)mvnw(?:\.cmd)?$/i)
     end
 
     # Is the blob a VCR Cassette file?
