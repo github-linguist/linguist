@@ -1,8 +1,10 @@
-Kuromi <Game Start>
-Print "Welcome to the Kuromi Language!"
-Let name = "Lyko"
-Print "Hello, " + name
-Let a = 5
-Let b = 15
-Print "Sum ="
-Print a + b
+// KuromiScript Sample Game 💜
+Kuromi <Start>
+
+ShowText (centered) "Welcome to KuromiScript!" 400 300
+DrawCircle 400 300 60 "purple"
+DrawRectangle 350 360 100 40 "black"
+ShowText (centered) "Made with KuromiCore 🎀" 400 420
+
+Wait 2000
+Kuromi <Close>
