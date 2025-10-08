@@ -1058,6 +1058,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_tl_by_heuristics
+    assert_heuristics({
+      "Teal" => all_fixtures("Teal", "*.tl"),
+      "Type Language" => all_fixtures("Type Language", "*.tl")
+    })
+  end
+
   def test_tlv_by_heuristics
     assert_heuristics({
       "TL-Verilog" => all_fixtures("TL-Verilog", "*.tlv"),
