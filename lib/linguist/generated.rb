@@ -89,6 +89,8 @@ module Linguist
       generated_postscript? ||
       compiled_cython_file? ||
       pipenv_lock? ||
+      gradle_wrapper? ||
+      maven_wrapper? ||
       generated_go? ||
       generated_protocol_buffer_from_go? ||
       generated_protocol_buffer? ||
@@ -556,6 +558,20 @@ module Linguist
     # Returns true or false
     def bazel_lock?
       !!name.match(/(^|\/)MODULE\.bazel\.lock$/)
+    end
+
+    # Internal: Is the blob a generated gradle wrapper file?
+    #
+    # Returns true or false.
+    def gradle_wrapper?
+      !!name.match(/(?:^|\/)gradlew(?:\.bat)?$/i)
+    end
+
+    # Internal: Is the blob a generated maven wrapper file?
+    #
+    # Returns true or false.
+    def maven_wrapper?
+      !!name.match(/(?:^|\/)mvnw(?:\.cmd)?$/i)
     end
 
     # Is the blob a VCR Cassette file?
