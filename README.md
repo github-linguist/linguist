@@ -180,15 +180,13 @@ Ruby:
   …
 ```
 
-If a file's language was overridden using `.gitattributes`, the strategy will show the original detection method along with an override note:
+If a file's language was overridden using `.gitattributes`, the strategy will show the original detection method along with an override note (fictional example):
 
 ```console
-$ github-linguist --strategies .devcontainer/devcontainer.json
-.devcontainer/devcontainer.json: 27 lines (27 sloc)
-  type:      Text
-  mime type: application/json
-  language:  JSON with Comments
-  strategy:  Filename (overridden by .gitattributes)
+100.00% 217        JavaScript
+
+JavaScript:
+  demo.ts [Heuristics (overridden by .gitattributes)]
 ```
 
 ##### `--json`
@@ -241,6 +239,17 @@ lib/linguist.rb: 105 lines (96 sloc)
   mime type: application/x-ruby
   language:  Ruby
   strategy:  Extension
+```
+
+If a file's language was overridden using `.gitattributes`, the strategy will show the original detection method along with an override note:
+
+```console
+$ github-linguist --strategies .devcontainer/devcontainer.json
+.devcontainer/devcontainer.json: 27 lines (27 sloc)
+  type:      Text
+  mime type: application/json
+  language:  JSON with Comments
+  strategy:  Filename (overridden by .gitattributes)
 ```
 
 ##### `--json`
