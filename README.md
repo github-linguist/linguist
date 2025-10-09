@@ -70,9 +70,14 @@ project.languages      #=> { "Ruby" => 119387 }
 
 ### Command line usage
 
+The `github-linguist` executable operates in two distinct modes:
+
+1. **[Git Repository mode](#git-repository)** - Analyzes an entire Git repository (when given a directory path or no path)
+2. **[Single file mode](#single-file)** - Analyzes a specific file (when given a file path)
+
 #### Git Repository
 
-A repository's languages stats can also be assessed from the command line using the `github-linguist` executable.
+A repository's languages stats can be assessed from the command line using the `github-linguist` executable.
 Without any options, `github-linguist` will output the language breakdown by percentage and file size.
 
 ```bash
@@ -151,6 +156,41 @@ lib/linguist.rb
 …
 ```
 
+##### `--strategies`
+
+The `--strategies` or `-s` flag will show the language detection strategy used for each file. This is useful for understanding how Linguist determined the language of specific files. Note that unless the `--json` flag is specified, this flag will set the `--breakdown` flag implicitly.
+
+You can try running `github-linguist` on the root directory in this repository itself with the strategies flag:
+
+```console
+$ github-linguist --breakdown --strategies
+66.84%  264519     Ruby
+24.68%  97685      C
+6.57%   25999      Go
+1.29%   5098       Lex
+0.32%   1257       Shell
+0.31%   1212       Dockerfile
+
+Ruby:
+  Gemfile [Filename]
+  Rakefile [Filename]
+  bin/git-linguist [Extension]
+  bin/github-linguist [Extension]
+  lib/linguist.rb [Extension]
+  …
+```
+
+If a file's language was overridden using `.gitattributes`, the strategy will show the original detection method along with an override note:
+
+```console
+$ github-linguist --strategies .devcontainer/devcontainer.json
+.devcontainer/devcontainer.json: 27 lines (27 sloc)
+  type:      Text
+  mime type: application/json
+  language:  JSON with Comments
+  strategy:  Filename (overridden by .gitattributes)
+```
+
 ##### `--json`
 
 The `--json` or `-j` flag output the data into JSON format.
@@ -168,6 +208,8 @@ $ github-linguist --breakdown --json
 
 ```
 
+NB. The `--strategies` flag has no effect, when the `--json` flag is present.
+
 #### Single file
 
 Alternatively you can find stats for a single file using the `github-linguist` executable.
@@ -181,6 +223,36 @@ grammars.yml: 884 lines (884 sloc)
   mime type: text/x-yaml
   language:  YAML
 ```
+
+#### Additional options
+
+##### `--breakdown`
+
+This flag has no effect in *Single file* mode.
+
+##### `--strategies`
+
+When using the `--strategies` or `-s` flag with a single file, you can see which detection method was used:
+
+```console
+$ github-linguist --strategies lib/linguist.rb 
+lib/linguist.rb: 105 lines (96 sloc)
+  type:      Text
+  mime type: application/x-ruby
+  language:  Ruby
+  strategy:  Extension
+```
+
+##### `--json`
+
+Using the `--json` flag will give you the output for a single file in JSON format:
+
+```console
+$ github-linguist --strategies --json  lib/linguist.rb
+{"lib/linguist.rb":{"lines":105,"sloc":96,"type":"Text","mime_type":"application/x-ruby","language":"Ruby","large":false,"generated":false,"vendored":false}}
+```
+
+NB. The `--strategies` has no effect, when the `--json` flag is present.
 
 #### Docker
 
