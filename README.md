@@ -180,13 +180,25 @@ Ruby:
   …
 ```
 
-If a file's language was overridden using `.gitattributes`, the strategy will show the original detection method along with an override note (fictional example):
+If a file's language is affected by `.gitattributes`, the strategy will show the original detection method along with a note indicating whether the gitattributes setting changed the result or confirmed it.
+
+For instance, if you had the following .gitattributes overrides in your repo:
+
+```gitattributes
+
+*.ts linguist-language=JavaScript
+*.js linguist-language=JavaScript
+
+```
+
+the output of Linguist would be something like this:
 
 ```console
 100.00% 217        JavaScript
 
 JavaScript:
   demo.ts [Heuristics (overridden by .gitattributes)]
+  demo.js [Extension (confirmed by .gitattributes)]
 ```
 
 ##### `--json`
@@ -241,16 +253,28 @@ lib/linguist.rb: 105 lines (96 sloc)
   strategy:  Extension
 ```
 
-If a file's language was overridden using `.gitattributes`, the strategy will show the original detection method along with an override note:
+If a file's language is affected by `.gitattributes`, the strategy will show whether the gitattributes setting changed the result or confirmed it:
 
+In this fictitious example, it says "confirmed by .gitattributes" since the detection process (using the Filename strategy) would have given the same output as the override:
 ```console
-$ github-linguist --strategies .devcontainer/devcontainer.json
 .devcontainer/devcontainer.json: 27 lines (27 sloc)
   type:      Text
   mime type: application/json
   language:  JSON with Comments
-  strategy:  Filename (overridden by .gitattributes)
+  strategy:  Filename (confirmed by .gitattributes)
 ```
+
+In this other fictitious example, it says "overridden by .gitattributes" since the gitattributes setting changes the detected language to something different:
+
+```console
+test.rb: 13 lines (11 sloc)
+  type:      Text
+  mime type: application/x-ruby
+  language:  Java
+  strategy:  Extension (overridden by .gitattributes)
+```
+
+Here, the `.rb` file would normally be detected as Ruby by the Extension strategy, but `.gitattributes` overrides it to be detected as Java instead.
 
 ##### `--json`
 

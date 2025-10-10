@@ -75,14 +75,19 @@ module Linguist
       @language = if lang = git_attributes['linguist-language']
         detected_language = Language.find_by_alias(lang)
 
-        # If strategies are being tracked, get the overridden strategy that would have been used with a note that it was overridden
+        # If strategies are being tracked, get the original strategy that would have been used
         if detected_language && Linguist.instrumenter
-          # Get the overridden strategy by calling super (which calls Linguist.detect)
-          super
-          overridden_strategy_info = Linguist.instrumenter.detected_info[self.name]
-          overridden_strategy = overridden_strategy_info ? overridden_strategy_info[:strategy] : "Unknown"
+          # Get the original strategy by calling super (which calls Linguist.detect)
+          original_language = super
+          original_strategy_info = Linguist.instrumenter.detected_info[self.name]
+          original_strategy = original_strategy_info ? original_strategy_info[:strategy] : "Unknown"
 
-          strategy_name = "#{overridden_strategy} (overridden by .gitattributes)"
+          if original_language == detected_language
+            strategy_name = "#{original_strategy} (confirmed by .gitattributes)"
+          else
+            strategy_name = "#{original_strategy} (overridden by .gitattributes)"
+          end
+
           strategy = Struct.new(:name).new(strategy_name)
           Linguist.instrument("linguist.detected", blob: self, strategy: strategy, language: detected_language)
         end
