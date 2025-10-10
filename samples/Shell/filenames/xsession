@@ -1,0 +1,26 @@
+# use UTF-8 everywhere
+export LANG=en_US.UTF-8
+
+# specify location of kshrc
+export ENV=$HOME/.kshrc
+
+export PATH HOME TERM
+export ENV=$HOME/.kshrc
+export PATH=$PATH:$HOME/.local/bin
+export PATH=$PATH:$HOME/.yarn/bin
+export PATH=$PATH:$HOME/.npm-packages
+
+NPM_PACKAGES=$HOME/.npm-packages
+NODE_PATH="$NPM_PACKAGES/lib/modules:$NODE_PATH"
+export PATH=$NPM_PACKAGES/bin:$PATH
+
+# load Xresources file
+xrdb -merge $HOME/.Xresources &
+
+# disable system beep
+xset b off &
+
+# set your background color
+xsetroot -solid gray40 &
+
+exec ck-launch-session startxfce4
