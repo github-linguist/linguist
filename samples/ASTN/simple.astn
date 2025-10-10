@@ -1,0 +1,24 @@
+// Simple ASTN example showing basic syntax
+{
+    `user`: (
+        'name': "John Doe"
+        'age': | 'number' "30"
+        'active': true
+    )
+    
+    `settings`: {
+        `theme`: "dark"
+        `language`: "en"
+        `notifications`: [
+            "email"
+            "push"
+        ]
+    }
+    
+    `coordinates`: <10.5 20.3 30.1>
+    
+    /* Block comment
+       spanning multiple lines */
+    `optional_field`: * "maybe present"
+    `not_set_field`: ~
+}
