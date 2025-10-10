@@ -1,0 +1,46 @@
+! "Application Configuration"
+
+// Main configuration document
+{
+    `app`: (
+        'name': "MyApplication"
+        'version': "1.2.3"
+        'enabled': true
+        'created': "2025-07-21T10:30:00Z"
+    )
+    
+    `database`: {
+        `local`: (
+            'host': "localhost"
+            'port': | 'number' "5432"
+            'ssl': ~  // not set
+        )
+        `remote`: (
+            'host': "remote.example.com"
+            'port': | 'number' "5432"
+            'ssl': * true  // optional value
+        )
+    }
+    
+    `features`: [
+        "authentication"
+        "logging" 
+        "monitoring"
+        "caching"
+    ]
+    
+    /* Multi-line comment describing
+       the tagged values below */
+    `coordinates`: <10 20 30>  // concise group for x,y,z
+    
+    `metadata`: (
+        'author': "Development Team"
+        'description': "Multi-line
+        string with embedded
+        newlines supported"
+        'tags': [`web` `typescript` `api`]
+    )
+    
+    // File inclusion example
+    `external_config`: @ "shared/common.astn"
+}
