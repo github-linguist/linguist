@@ -443,6 +443,8 @@ disambiguations:
     pattern: '^import [A-Z]'
 - extensions: ['.lp']
   rules:
+  - language: Lambdapi
+    pattern: '(?:\bsymbol\b[^\n]*?:[^\n]*?;)|(?:^rule\s[^\n]*?(?:;|(?:\r?\nwith\s[^\n]*?;)))'
   - language: Linear Programming
     pattern: '^(?i:minimize|minimum|min|maximize|maximum|max)(?i:\s+multi-objectives)?$'
   - language: Answer Set Programming
