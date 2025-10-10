@@ -293,6 +293,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **JSON5:** [atom/language-javascript](https://github.com/atom/language-javascript)
 - **JSONLD:** [atom/language-javascript](https://github.com/atom/language-javascript)
 - **JSONiq:** [wcandillon/language-jsoniq](https://github.com/wcandillon/language-jsoniq)
+- **Jac:** [jaseci-labs/jac-linguistic-syntax](https://github.com/jaseci-labs/jac-linguistic-syntax)
 - **Jai:** [SogoCZE/Jails](https://github.com/SogoCZE/Jails)
 - **Janet:** [janet-lang/vscode-janet](https://github.com/janet-lang/vscode-janet)
 - **Jasmin:** [atmarksharp/jasmin-sublime](https://github.com/atmarksharp/jasmin-sublime)
