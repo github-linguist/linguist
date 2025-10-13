@@ -4513,30 +4513,6 @@ Mask:
   - ".mask"
   tm_scope: source.mask
   language_id: 223
-Mathematica:
-  type: programming
-  color: "#dd1100"
-  extensions:
-  - ".mathematica"
-  - ".cdf"
-  - ".m"
-  - ".ma"
-  - ".mt"
-  - ".nb"
-  - ".nbp"
-  - ".wl"
-  - ".wlt"
-  aliases:
-  - mma
-  - wolfram
-  - wolfram language
-  - wolfram lang
-  - wl
-  tm_scope: source.mathematica
-  ace_mode: text
-  codemirror_mode: mathematica
-  codemirror_mime_type: text/x-mathematica
-  language_id: 224
 Maven POM:
   type: data
   group: XML
@@ -8386,6 +8362,40 @@ Witcher Script:
   ace_mode: text
   tm_scope: source.witcherscript
   language_id: 686821385
+Wolfram Language:
+  type: programming
+  color: "#dd1100"
+  extensions:
+  - ".mathematica"
+  - ".cdf"
+  - ".m"
+  - ".ma"
+  - ".mt"
+  - ".nb"
+  - ".nbp"
+  - ".wl"
+  - ".wls"
+  - ".wlt"
+  aliases:
+  - mathematica
+  - mma
+  - wolfram
+  - wolfram lang
+  - wl
+  interpreters:
+  - wolfram
+  - WolframKernel
+  - wolframscript
+  - math
+  - MathKernel
+  - MathematicaScript
+  - WolframNB
+  - Mathematica
+  tm_scope: source.mathematica
+  ace_mode: text
+  codemirror_mode: mathematica
+  codemirror_mime_type: text/x-mathematica
+  language_id: 224
 Wollok:
   type: programming
   color: "#a23738"
