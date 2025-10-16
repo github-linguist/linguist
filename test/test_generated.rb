@@ -222,6 +222,22 @@ class TestGenerated < Minitest::Test
     generated_sample_without_loading_data("Dummy/htmlcov/coverage_html.js")
     generated_sample_without_loading_data("Dummy/htmlcov/style.css")
     generated_sample_without_loading_data("Dummy/htmlcov/status.json")
+
+    # Dart
+    generated_sample_loading_data("Dart/point.dart", true)
+    generated_sample_loading_data("Dart/equals.dart", true)
+    generated_sample_loading_data("Dart/addressbook.pb.dart")
+    generated_sample_loading_data("Dart/addressbook.pbenum.dart")
+    generated_sample_loading_data("Dart/addressbook.pbjson.dart")
+    generated_sample_loading_data("Dart/equals.freezed.dart")
+
+    # Gradle Wrapper
+    generated_sample_without_loading_data("Shell/filenames/gradlew")
+    generated_sample_without_loading_data("Batchfile/filenames/gradlew.bat")
+
+    # Maven Wrapper
+    generated_sample_without_loading_data("Shell/filenames/mvnw")
+    generated_sample_without_loading_data("Batchfile/filenames/mvnw.cmd")
   end
 
   # We've whitelisted these files on purpose, even though they're machine-generated.

@@ -404,6 +404,16 @@ Arc:
   tm_scope: none
   ace_mode: text
   language_id: 20
+ArkTS:
+  type: programming
+  color: "#0080ff"
+  extensions:
+  - ".ets"
+  tm_scope: source.ets
+  ace_mode: typescript
+  codemirror_mode: javascript
+  codemirror_mime_type: application/typescript
+  language_id: 56341321
 AsciiDoc:
   type: prose
   color: "#73a0c5"
@@ -564,6 +574,9 @@ Batchfile:
   extensions:
   - ".bat"
   - ".cmd"
+  filenames:
+  - "gradlew.bat"
+  - "mvnw.cmd"
   tm_scope: source.batchfile
   ace_mode: batchfile
   color: "#C1F12E"
@@ -768,6 +781,14 @@ Browserslist:
   tm_scope: text.browserslist
   ace_mode: text
   language_id: 153503348
+Bru:
+  type: markup
+  color: "#F4AA41"
+  extensions:
+  - ".bru"
+  tm_scope: source.bru
+  ace_mode: text
+  language_id: 906627898
 BuildStream:
   type: data
   color: "#006bff"
@@ -864,7 +885,7 @@ C3:
   type: programming
   color: "#2563eb"
   extensions:
-    - ".c3"
+  - ".c3"
   tm_scope: source.c3
   ace_mode: c_cpp
   codemirror_mode: clike
@@ -1046,6 +1067,16 @@ CameLIGO:
   codemirror_mime_type: text/x-ocaml
   group: LigoLANG
   language_id: 829207807
+Cangjie:
+  type: programming
+  tm_scope: source.cj
+  extensions:
+  - ".cj"
+  color: "#00868B"
+  ace_mode: swift
+  codemirror_mode: swift
+  codemirror_mime_type: text/x-swift
+  language_id: 581895317
 Cap'n Proto:
   type: programming
   color: "#c42727"
@@ -1370,6 +1401,15 @@ Component Pascal:
   codemirror_mode: pascal
   codemirror_mime_type: text/x-pascal
   language_id: 67
+Cooklang:
+  type: markup
+  color: "#E15A29"
+  wrap: true
+  extensions:
+  - ".cook"
+  ace_mode: text
+  tm_scope: source.cooklang
+  language_id: 788037493
 Cool:
   type: programming
   extensions:
@@ -1720,6 +1760,7 @@ Dotenv:
   - ".env.production"
   - ".env.sample"
   - ".env.staging"
+  - ".env.template"
   - ".env.test"
   - ".env.testing"
   tm_scope: source.dotenv
@@ -2163,6 +2204,14 @@ Filterscript:
   tm_scope: none
   ace_mode: text
   language_id: 112
+Flix:
+  type: programming
+  color: "#d44a45"
+  extensions:
+  - ".flix"
+  tm_scope: source.flix
+  ace_mode: flix
+  language_id: 800935960
 Fluent:
   type: programming
   color: "#ffcc33"
@@ -2244,6 +2293,7 @@ FreeMarker:
   - ftl
   extensions:
   - ".ftl"
+  - ".ftlh"
   tm_scope: text.html.ftl
   ace_mode: ftl
   language_id: 115
@@ -2553,6 +2603,17 @@ Git Attributes:
   codemirror_mode: shell
   codemirror_mime_type: text/x-sh
   language_id: 956324166
+Git Commit:
+  type: data
+  color: "#F44D27"
+  aliases:
+  - commit
+  filenames:
+  - COMMIT_EDITMSG
+  ace_mode: text
+  tm_scope: text.git-commit
+  wrap: true
+  language_id: 131750475
 Git Config:
   type: data
   color: "#F44D27"
@@ -3092,6 +3153,14 @@ Hosts File:
   tm_scope: source.hosts
   ace_mode: text
   language_id: 231021894
+Hurl:
+  type: programming
+  color: "#FF0288"
+  extensions:
+  - ".hurl"
+  tm_scope: source.hurl
+  ace_mode: text
+  language_id: 959040217
 Hy:
   type: programming
   ace_mode: text
@@ -3846,6 +3915,14 @@ Kit:
   - ".kit"
   tm_scope: text.html.basic
   language_id: 188
+KoLmafia ASH:
+  type: programming
+  color: "#B9D9B9"
+  extensions:
+  - ".ash"
+  tm_scope: source.ash
+  ace_mode: text
+  language_id: 852099832
 Koka:
   type: programming
   ace_mode: text
@@ -3978,6 +4055,8 @@ Lean:
 Lean 4:
   type: programming
   group: Lean
+  aliases:
+  - lean4
   extensions:
   - ".lean"
   tm_scope: source.lean4
@@ -4434,30 +4513,6 @@ Mask:
   - ".mask"
   tm_scope: source.mask
   language_id: 223
-Mathematica:
-  type: programming
-  color: "#dd1100"
-  extensions:
-  - ".mathematica"
-  - ".cdf"
-  - ".m"
-  - ".ma"
-  - ".mt"
-  - ".nb"
-  - ".nbp"
-  - ".wl"
-  - ".wlt"
-  aliases:
-  - mma
-  - wolfram
-  - wolfram language
-  - wolfram lang
-  - wl
-  tm_scope: source.mathematica
-  ace_mode: text
-  codemirror_mode: mathematica
-  codemirror_mime_type: text/x-mathematica
-  language_id: 224
 Maven POM:
   type: data
   group: XML
@@ -5659,6 +5714,7 @@ Pip Requirements:
   color: "#FFD343"
   filenames:
   - requirements-dev.txt
+  - requirements.lock.txt
   - requirements.txt
   ace_mode: text
   tm_scope: source.pip-requirements
@@ -6062,6 +6118,14 @@ Quake:
   ace_mode: text
   tm_scope: source.quake
   language_id: 375265331
+QuakeC:
+  type: programming
+  extensions:
+  - ".qc"
+  color: "#975777"
+  ace_mode: text
+  tm_scope: source.quakec
+  language_id: 472308069
 QuickBASIC:
   type: programming
   color: "#008080"
@@ -7013,6 +7077,8 @@ Shell:
   - ".login"
   - ".profile"
   - ".tmux.conf"
+  - ".xinitrc"
+  - ".xsession"
   - ".zlogin"
   - ".zlogout"
   - ".zprofile"
@@ -7029,8 +7095,11 @@ Shell:
   - kshrc
   - login
   - man
+  - mvnw
   - profile
   - tmux.conf
+  - xinitrc
+  - xsession
   - zlogin
   - zlogout
   - zprofile
@@ -7460,6 +7529,7 @@ TOML:
   color: "#9c4221"
   extensions:
   - ".toml"
+  - ".toml.example"
   filenames:
   - Cargo.lock
   - Cargo.toml.orig
@@ -7608,6 +7678,18 @@ Tea:
   tm_scope: source.tea
   ace_mode: text
   language_id: 370
+Teal:
+  type: programming
+  extensions:
+  - ".tl"
+  color: "#00B1BC"
+  tm_scope: source.teal
+  ace_mode: lua
+  codemirror_mode: lua
+  codemirror_mime_type: text/x-lua
+  interpreters:
+  - tl
+  language_id: 719038619
 Terra:
   type: programming
   extensions:
@@ -8280,6 +8362,40 @@ Witcher Script:
   ace_mode: text
   tm_scope: source.witcherscript
   language_id: 686821385
+Wolfram Language:
+  type: programming
+  color: "#dd1100"
+  extensions:
+  - ".mathematica"
+  - ".cdf"
+  - ".m"
+  - ".ma"
+  - ".mt"
+  - ".nb"
+  - ".nbp"
+  - ".wl"
+  - ".wls"
+  - ".wlt"
+  aliases:
+  - mathematica
+  - mma
+  - wolfram
+  - wolfram lang
+  - wl
+  interpreters:
+  - wolfram
+  - WolframKernel
+  - wolframscript
+  - math
+  - MathKernel
+  - MathematicaScript
+  - WolframNB
+  - Mathematica
+  tm_scope: source.mathematica
+  ace_mode: text
+  codemirror_mode: mathematica
+  codemirror_mime_type: text/x-mathematica
+  language_id: 224
 Wollok:
   type: programming
   color: "#a23738"

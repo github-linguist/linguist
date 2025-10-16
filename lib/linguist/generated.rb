@@ -89,6 +89,8 @@ module Linguist
       generated_postscript? ||
       compiled_cython_file? ||
       pipenv_lock? ||
+      gradle_wrapper? ||
+      maven_wrapper? ||
       generated_go? ||
       generated_protocol_buffer_from_go? ||
       generated_protocol_buffer? ||
@@ -558,6 +560,20 @@ module Linguist
       !!name.match(/(^|\/)MODULE\.bazel\.lock$/)
     end
 
+    # Internal: Is the blob a generated gradle wrapper file?
+    #
+    # Returns true or false.
+    def gradle_wrapper?
+      !!name.match(/(?:^|\/)gradlew(?:\.bat)?$/i)
+    end
+
+    # Internal: Is the blob a generated maven wrapper file?
+    #
+    # Returns true or false.
+    def maven_wrapper?
+      !!name.match(/(?:^|\/)mvnw(?:\.cmd)?$/i)
+    end
+
     # Is the blob a VCR Cassette file?
     #
     # Returns true or false
@@ -722,19 +738,19 @@ module Linguist
 
     # Internal: Is this a generated Dart file?
     #
-    # A dart-lang/appengine generated file contains:
+    # A google/protoc-plugin generated file contains:
     # // Generated code. Do not modify.
-    # on the first line.
+    # on the second line.
     #
-    # An owl generated file contains:
+    # A source_gen generated file may contain:
     # // GENERATED CODE - DO NOT MODIFY
-    # on the first line.
+    # on the first, second, or third line.
     #
     # Return true or false
     def generated_dart?
       return false unless extname == '.dart'
       return false unless lines.count > 1
-      return lines.first.downcase =~ /generated code\W{2,3}do not modify/
+      return lines.first(3).any? { |l| l.downcase.match(/generated code\W{2,3}do not modify/) }
     end
 
     # Internal: Is the file a generated Perl/Pollution/Portability header file?
