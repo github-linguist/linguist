@@ -1,0 +1,98 @@
+// ============================================
+// Basic Syntax - Sintaks Dasar RenzmcLang
+// ============================================
+// Demonstrasi sintaks dasar bahasa RenzmcLang
+
+// 1. Output dan Print
+tampilkan "=== RenzmcLang Basic Syntax ==="
+tampilkan ""
+
+// 2. Variables dan Assignment
+nama itu "Budi"
+umur itu 25
+tinggi itu 175.5
+is_active itu benar
+
+tampilkan "Nama: " + nama
+tampilkan "Umur: " + ke_teks(umur)
+tampilkan "Tinggi: " + ke_teks(tinggi) + " cm"
+tampilkan "Status: " + ke_teks(is_active)
+tampilkan ""
+
+// 3. Data Types
+angka_bulat itu 42
+angka_desimal itu 3.14159
+teks_string itu "Hello, RenzmcLang!"
+boolean_true itu benar
+boolean_false itu salah
+nilai_kosong itu kosong
+
+// 4. Lists
+buah itu ["Apel", "Jeruk", "Mangga", "Pisang"]
+angka_list itu [1, 2, 3, 4, 5]
+
+tampilkan "Buah: " + ke_teks(buah)
+tampilkan "Angka: " + ke_teks(angka_list)
+tampilkan ""
+
+// 5. Dictionaries
+mahasiswa itu {
+    "nama": "Ani",
+    "nim": "12345",
+    "jurusan": "Informatika",
+    "ipk": 3.75
+}
+
+tampilkan "Mahasiswa: " + ke_teks(mahasiswa)
+tampilkan "Nama: " + mahasiswa["nama"]
+tampilkan "IPK: " + ke_teks(mahasiswa["ipk"])
+tampilkan ""
+
+// 6. Operators
+a itu 10
+b itu 3
+
+tampilkan "=== Operators ==="
+tampilkan "a + b = " + ke_teks(a + b)
+tampilkan "a - b = " + ke_teks(a - b)
+tampilkan "a * b = " + ke_teks(a * b)
+tampilkan "a / b = " + ke_teks(a / b)
+tampilkan "a % b = " + ke_teks(a % b)
+tampilkan "a ** b = " + ke_teks(a ** b)
+tampilkan ""
+
+// 7. Comparison
+tampilkan "=== Comparison ==="
+tampilkan "10 > 5: " + ke_teks(10 > 5)
+tampilkan "10 < 5: " + ke_teks(10 < 5)
+tampilkan "10 == 10: " + ke_teks(10 == 10)
+tampilkan "10 != 5: " + ke_teks(10 != 5)
+tampilkan ""
+
+// 8. Logical Operators
+tampilkan "=== Logical Operators ==="
+tampilkan "benar dan benar: " + ke_teks(benar dan benar)
+tampilkan "benar atau salah: " + ke_teks(benar atau salah)
+tampilkan "tidak benar: " + ke_teks(tidak benar)
+tampilkan ""
+
+// 9. String Operations
+teks1 itu "Hello"
+teks2 itu "World"
+gabungan itu teks1 + " " + teks2
+
+tampilkan "=== String Operations ==="
+tampilkan "Gabungan: " + gabungan
+tampilkan "Panjang: " + ke_teks(panjang(gabungan))
+tampilkan "Uppercase: " + huruf_besar(gabungan)
+tampilkan "Lowercase: " + huruf_kecil(gabungan)
+tampilkan ""
+
+// 10. F-Strings
+nama_user itu "Citra"
+nilai_user itu 95
+
+tampilkan "=== F-Strings ==="
+tampilkan f"Halo, {nama_user}!"
+tampilkan f"Nilai {nama_user} adalah {nilai_user}"
+tampilkan f"Hasil: {10 + 20}"
