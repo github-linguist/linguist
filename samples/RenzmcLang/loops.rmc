@@ -1,0 +1,114 @@
+// ============================================
+// Loops - Perulangan
+// ============================================
+// Demonstrasi for, while, for-each loops
+
+tampilkan "=== Loop Examples ==="
+tampilkan ""
+
+// 1. For Loop dengan Range
+tampilkan "=== For Loop (1-5) ==="
+untuk i dari 1 sampai 5
+    tampilkan f"Iterasi {i}"
+selesai
+tampilkan ""
+
+// 2. Even Numbers using List Comprehension
+tampilkan "=== Even Numbers ==="
+angka_genap itu [i untuk setiap i dari range(0, 11) jika i % 2 == 0]
+untuk setiap num dari angka_genap
+    tampilkan f"Angka genap: {num}"
+selesai
+tampilkan ""
+
+// 3. For-Each Loop dengan List
+tampilkan "=== For-Each Loop ==="
+buah itu ["Apel", "Jeruk", "Mangga", "Pisang", "Anggur"]
+
+untuk setiap item dari buah
+    tampilkan f"Buah: {item}"
+selesai
+tampilkan ""
+
+// 4. For-Each dengan Index
+tampilkan "=== For-Each dengan Index ==="
+buah_enum itu enumerate(buah)
+untuk setiap item dari buah_enum
+    idx itu item[0]
+    buah_item itu item[1]
+    tampilkan f"{idx + 1}. {buah_item}"
+selesai
+tampilkan ""
+
+// 5. While Loop
+tampilkan "=== While Loop ==="
+counter itu 1
+
+selama counter <= 5
+    tampilkan f"Counter: {counter}"
+    counter itu counter + 1
+selesai
+tampilkan ""
+
+// 6. While dengan Kondisi Kompleks
+tampilkan "=== While dengan Break ==="
+angka itu 1
+
+selama angka <= 5
+    tampilkan f"Angka: {angka}"
+    angka itu angka + 1
+selesai
+tampilkan ""
+
+// 7. Loop dengan Continue
+tampilkan "=== Loop dengan Continue ==="
+untuk i dari 1 sampai 10
+    jika i % 2 == 0
+        lanjut
+    selesai
+    tampilkan f"Angka ganjil: {i}"
+selesai
+tampilkan ""
+
+// 8. Nested Loops
+tampilkan "=== Nested Loops ==="
+untuk i dari 1 sampai 3
+    untuk j dari 1 sampai 3
+        tampilkan f"({i}, {j})"
+    selesai
+selesai
+tampilkan ""
+
+// 9. Loop dengan List Comprehension
+tampilkan "=== List Comprehension ==="
+angka_list itu [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+// Kuadrat semua angka
+kuadrat itu [x * x untuk setiap x dari angka_list]
+tampilkan f"Kuadrat: {kuadrat}"
+
+// Filter angka genap
+genap itu [x untuk setiap x dari angka_list jika x % 2 == 0]
+tampilkan f"Genap: {genap}"
+
+// Filter angka ganjil
+ganjil itu [x untuk setiap x dari angka_list jika x % 2 != 0]
+tampilkan f"Ganjil: {ganjil}"
+tampilkan ""
+
+// 10. Dict Comprehension
+tampilkan "=== Dict Comprehension ==="
+angka_dict itu {x: x * x untuk setiap x dari [1, 2, 3, 4, 5]}
+tampilkan f"Dict kuadrat: {angka_dict}"
+
+// 11. Loop dengan Enumerate dan Zip
+tampilkan "=== Enumerate dan Zip ==="
+nama_list itu ["Budi", "Ani", "Citra"]
+nilai_list itu [85, 90, 88]
+
+zip_result itu zip(nama_list, nilai_list)
+untuk setiap item dari zip_result
+    nama itu item[0]
+    nilai itu item[1]
+    tampilkan f"{nama}: {nilai}"
+selesai

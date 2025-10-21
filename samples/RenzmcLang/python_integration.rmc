@@ -1,0 +1,141 @@
+// ============================================
+// Python Integration - Integrasi Python
+// ============================================
+// Demonstrasi penggunaan library Python
+
+tampilkan "=== Python Integration Examples ==="
+tampilkan ""
+
+// 1. Import Python Modules
+tampilkan "=== Import Python Modules ==="
+impor_python "math"
+impor_python "random"
+impor_python "datetime"
+impor_python "json"
+
+tampilkan "Python modules imported successfully"
+tampilkan ""
+
+// 2. Using Python Math Module
+tampilkan "=== Python Math Module ==="
+pi itu panggil_python math.pi
+e itu panggil_python math.e
+
+tampilkan f"Pi: {pi}"
+tampilkan f"E: {e}"
+tampilkan f"sqrt(16): {panggil_python math.sqrt(16)}"
+tampilkan f"pow(2, 10): {panggil_python math.pow(2, 10)}"
+tampilkan f"sin(pi/2): {panggil_python math.sin(pi/2)}"
+tampilkan f"cos(0): {panggil_python math.cos(0)}"
+tampilkan ""
+
+// 3. Using Python Random Module
+tampilkan "=== Python Random Module ==="
+random_int itu panggil_python random.randint(1, 100)
+random_float itu panggil_python random.random()
+random_choice itu panggil_python random.choice([1, 2, 3, 4, 5])
+
+tampilkan f"Random int (1-100): {random_int}"
+tampilkan f"Random float: {random_float}"
+tampilkan f"Random choice: {random_choice}"
+tampilkan ""
+
+// 4. Using Python Datetime
+tampilkan "=== Python Datetime ==="
+sekarang itu panggil_python datetime.datetime.now()
+tampilkan f"Current datetime: {sekarang}"
+
+tanggal itu panggil_python datetime.date.today()
+tampilkan f"Today's date: {tanggal}"
+tampilkan ""
+
+// 5. Using Python JSON
+tampilkan "=== Python JSON ==="
+data_dict itu {
+    "nama": "Budi",
+    "umur": 25,
+    "hobi": ["coding", "reading", "gaming"]
+}
+
+json_string itu panggil_python json.dumps(data_dict)
+tampilkan f"JSON string: {json_string}"
+
+parsed_data itu panggil_python json.loads(json_string)
+tampilkan f"Parsed data: {parsed_data}"
+tampilkan ""
+
+// 6. Using Python String Methods
+tampilkan "=== Python String Methods ==="
+impor_python "string"
+
+teks itu "hello world"
+uppercase itu panggil_python teks.upper()
+title itu panggil_python teks.title()
+replaced itu panggil_python teks.replace("world", "RenzmcLang")
+
+tampilkan f"Original: {teks}"
+tampilkan f"Uppercase: {uppercase}"
+tampilkan f"Title: {title}"
+tampilkan f"Replaced: {replaced}"
+tampilkan ""
+
+// 7. Using Python Collections
+tampilkan "=== Python Collections ==="
+impor_python "collections"
+
+counter itu panggil_python collections.Counter([1, 2, 2, 3, 3, 3, 4, 4, 4, 4])
+tampilkan f"Counter: {counter}"
+
+most_common itu panggil_python counter.most_common(2)
+tampilkan f"Most common: {most_common}"
+tampilkan ""
+
+// 8. Using Python OS Module
+tampilkan "=== Python OS Module ==="
+impor_python "os"
+
+cwd itu panggil_python os.getcwd()
+tampilkan f"Current directory: {cwd}"
+
+env_path itu panggil_python os.environ.get("PATH", "Not found")
+tampilkan f"PATH exists: {env_path != 'Not found'}"
+tampilkan ""
+
+// 9. Combining RenzmcLang and Python
+tampilkan "=== Combining RenzmcLang and Python ==="
+
+fungsi hitung_statistik(data):
+    // Use RenzmcLang built-in
+    total itu jumlah(data)
+    rata itu rata_rata(data)
+    
+    // Use Python math
+    std_dev itu panggil_python math.sqrt(
+        jumlah([(x - rata) ** 2 untuk setiap x dari data]) / panjang(data)
+    )
+    
+    hasil {
+        "total": total,
+        "mean": rata,
+        "std_dev": std_dev,
+        "count": panjang(data)
+    }
+selesai
+
+data_angka itu [10, 20, 30, 40, 50]
+stats itu hitung_statistik(data_angka)
+
+tampilkan f"Data: {data_angka}"
+tampilkan f"Statistics: {stats}"
+tampilkan ""
+
+// 10. Using Python with Error Handling
+tampilkan "=== Python with Error Handling ==="
+
+coba:
+    impor_python "sys"
+    python_version itu panggil_python sys.version
+    tampilkan f"Python version: {python_version}"
+tangkap Exception sebagai e:
+    tampilkan f"Error: {e}"
+selesai

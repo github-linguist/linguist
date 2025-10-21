@@ -1,0 +1,174 @@
+// ============================================
+// Data Structures - Struktur Data
+// ============================================
+// Demonstrasi lists, dicts, sets, tuples
+
+tampilkan "=== Data Structures Examples ==="
+tampilkan ""
+
+// 1. Lists - Basic Operations
+tampilkan "=== Lists ==="
+buah itu ["Apel", "Jeruk", "Mangga"]
+tampilkan f"List awal: {buah}"
+
+// Append
+tambah(buah, "Pisang")
+tampilkan f"Setelah append: {buah}"
+
+// Insert (using list concatenation)
+buah_baru itu [buah[0], "Anggur"] + buah[1:]
+buah itu buah_baru
+tampilkan f"Setelah insert: {buah}"
+
+// Remove
+hapus(buah, "Jeruk")
+tampilkan f"Setelah remove: {buah}"
+
+// Pop (manual removal of last element)
+item_terakhir itu buah[-1]
+buah_baru2 itu buah[:-1]
+buah itu buah_baru2
+tampilkan f"Pop: {item_terakhir}, List: {buah}"
+
+// Length
+tampilkan f"Panjang list: {panjang(buah)}"
+tampilkan ""
+
+// 2. List Slicing
+tampilkan "=== List Slicing ==="
+angka itu [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+tampilkan f"List: {angka}"
+tampilkan f"angka[0:5]: {angka[0:5]}"
+tampilkan f"angka[5:]: {angka[5:]}"
+tampilkan f"angka[:5]: {angka[:5]}"
+tampilkan f"angka[::2]: {angka[::2]}"
+tampilkan f"angka[::-1]: {angka[::-1]}"
+tampilkan ""
+
+// 3. List Methods
+tampilkan "=== List Methods ==="
+nums itu [3, 1, 4, 1, 5, 9, 2, 6]
+tampilkan f"Original: {nums}"
+tampilkan f"Max: {max(nums)}"
+tampilkan f"Min: {min(nums)}"
+tampilkan f"Sum: {jumlah(nums)}"
+tampilkan f"Sorted: {sorted(nums)}"
+tampilkan f"Reversed: {reversed(nums)}"
+tampilkan ""
+
+// 4. Dictionaries - Basic Operations
+tampilkan "=== Dictionaries ==="
+mahasiswa itu {
+    "nama": "Budi",
+    "nim": "12345",
+    "jurusan": "Informatika",
+    "ipk": 3.75
+}
+
+tampilkan f"Dict: {mahasiswa}"
+tampilkan f"Nama: {mahasiswa['nama']}"
+tampilkan f"IPK: {mahasiswa['ipk']}"
+
+// Add new key
+mahasiswa["semester"] itu 6
+tampilkan f"Setelah tambah: {mahasiswa}"
+
+// Update value
+mahasiswa["ipk"] itu 3.80
+tampilkan f"Setelah update: {mahasiswa}"
+
+// Keys and Values
+tampilkan f"Keys: {keys(mahasiswa)}"
+tampilkan f"Values: {values(mahasiswa)}"
+tampilkan ""
+
+// 5. Dictionary Methods
+tampilkan "=== Dictionary Methods ==="
+data itu {"a": 1, "b": 2, "c": 3}
+tampilkan f"Dict: {data}"
+tampilkan f"Get 'a': {get(data, 'a')}"
+tampilkan f"Get 'd' (default 0): {get(data, 'd', 0)}"
+tampilkan f"Items: {items(data)}"
+tampilkan ""
+
+// 6. Set Operations with Lists (Sets not directly supported)
+tampilkan "=== Set-like Operations ==="
+list1 itu [1, 2, 3, 4, 5]
+list2 itu [4, 5, 6, 7, 8]
+
+tampilkan f"List 1: {list1}"
+tampilkan f"List 2: {list2}"
+
+// Union (combine and remove duplicates)
+union_list itu list(set(list1 + list2))
+tampilkan f"Union: {union_list}"
+
+// Intersection (common elements)
+intersection_list itu [x untuk setiap x dari list1 jika x dalam list2]
+tampilkan f"Intersection: {intersection_list}"
+
+// Difference (elements in list1 not in list2)
+difference_list itu [x untuk setiap x dari list1 jika x tidak dalam list2]
+tampilkan f"Difference: {difference_list}"
+tampilkan ""
+
+// 7. Tuples
+tampilkan "=== Tuples ==="
+koordinat itu (10, 20)
+tampilkan f"Koordinat: {koordinat}"
+tampilkan f"X: {koordinat[0]}, Y: {koordinat[1]}"
+
+// Tuple unpacking
+x, y itu koordinat
+tampilkan f"Unpacked - X: {x}, Y: {y}"
+tampilkan ""
+
+// 8. Nested Data Structures
+tampilkan "=== Nested Structures ==="
+siswa_list itu [
+    {"nama": "Budi", "nilai": 85},
+    {"nama": "Ani", "nilai": 90},
+    {"nama": "Citra", "nilai": 88}
+]
+
+tampilkan "Daftar Siswa:"
+untuk setiap siswa dari siswa_list
+    tampilkan f"  {siswa['nama']}: {siswa['nilai']}"
+selesai
+tampilkan ""
+
+// 9. List of Lists (Matrix)
+tampilkan "=== Matrix (List of Lists) ==="
+matrix itu [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+]
+
+tampilkan "Matrix:"
+untuk setiap baris dari matrix
+    tampilkan f"  {baris}"
+selesai
+tampilkan ""
+
+// 10. Advanced List Operations
+tampilkan "=== Advanced Operations ==="
+angka_list itu [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+// Filter
+genap itu [x untuk setiap x dari angka_list jika x % 2 == 0]
+tampilkan f"Genap: {genap}"
+
+// Map
+kuadrat itu [x * x untuk setiap x dari angka_list]
+tampilkan f"Kuadrat: {kuadrat}"
+
+// Reduce-like operation
+total itu jumlah(angka_list)
+tampilkan f"Total: {total}"
+
+// Any and All
+semua_positif itu all([x > 0 untuk setiap x dari angka_list])
+ada_genap itu any([x % 2 == 0 untuk setiap x dari angka_list])
+tampilkan f"Semua positif: {semua_positif}"
+tampilkan f"Ada genap: {ada_genap}"

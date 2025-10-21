@@ -1,0 +1,149 @@
+// ============================================
+// Built-in Functions - Fungsi Bawaan
+// ============================================
+// Demonstrasi 184+ fungsi built-in RenzmcLang
+
+tampilkan "=== Built-in Functions Examples ==="
+tampilkan ""
+
+// 1. String Functions
+tampilkan "=== String Functions ==="
+teks itu "Hello RenzmcLang"
+
+tampilkan f"Original: {teks}"
+tampilkan f"Length: {panjang(teks)}"
+tampilkan f"Uppercase: {huruf_besar(teks)}"
+tampilkan f"Lowercase: {huruf_kecil(teks)}"
+tampilkan f"Title: {title_case(teks)}"
+tampilkan f"Replace: {ganti(teks, 'Hello', 'Halo')}"
+tampilkan f"Split: {pisah(teks, ' ')}"
+tampilkan f"Strip: {strip('  spasi  ')}"
+tampilkan ""
+
+// 2. Math Functions
+tampilkan "=== Math Functions ==="
+angka_list itu [10, 20, 30, 40, 50]
+
+tampilkan f"List: {angka_list}"
+tampilkan f"Sum: {jumlah(angka_list)}"
+tampilkan f"Average: {rata_rata(angka_list)}"
+tampilkan f"Max: {max(angka_list)}"
+tampilkan f"Min: {min(angka_list)}"
+tampilkan f"Median: {median(angka_list)}"
+tampilkan f"Abs(-10): {abs(-10)}"
+tampilkan f"Round(3.7): {round(3.7)}"
+tampilkan f"Floor(3.7): {floor(3.7)}"
+tampilkan f"Ceil(3.2): {ceil(3.2)}"
+tampilkan ""
+
+// 3. List Functions
+tampilkan "=== List Functions ==="
+data itu [3, 1, 4, 1, 5, 9, 2, 6]
+
+tampilkan f"Original: {data}"
+tampilkan f"Sorted: {sorted(data)}"
+tampilkan f"Reversed: {reversed(data)}"
+tampilkan f"Count(1): {count(data, 1)}"
+tampilkan f"Index(5): {index(data, 5)}"
+
+// Append, Insert, Remove
+list_test itu [1, 2, 3]
+tambah(list_test, 4)
+tampilkan f"After append: {list_test}"
+
+sisip(list_test, 0, 0)
+tampilkan f"After insert: {list_test}"
+
+hapus(list_test, 2)
+tampilkan f"After remove: {list_test}"
+tampilkan ""
+
+// 4. Dict Functions
+tampilkan "=== Dict Functions ==="
+dict_data itu {"a": 1, "b": 2, "c": 3}
+
+tampilkan f"Dict: {dict_data}"
+tampilkan f"Keys: {keys(dict_data)}"
+tampilkan f"Values: {values(dict_data)}"
+tampilkan f"Items: {items(dict_data)}"
+tampilkan f"Get 'a': {get(dict_data, 'a')}"
+tampilkan f"Get 'd' (default): {get(dict_data, 'd', 0)}"
+tampilkan ""
+
+// 5. Type Conversion Functions
+tampilkan "=== Type Conversion ==="
+tampilkan f"int('42'): {int('42')}"
+tampilkan f"float('3.14'): {float('3.14')}"
+tampilkan f"str(123): {str(123)}"
+tampilkan f"bool(1): {bool(1)}"
+tampilkan f"bool(0): {bool(0)}"
+tampilkan f"list('abc'): {list('abc')}"
+tampilkan ""
+
+// 6. Iteration Functions
+tampilkan "=== Iteration Functions ==="
+list1 itu [1, 2, 3]
+list2 itu [4, 5, 6]
+
+tampilkan f"List 1: {list1}"
+tampilkan f"List 2: {list2}"
+tampilkan f"Zip: {list(zip(list1, list2))}"
+tampilkan f"Enumerate: {list(enumerate(list1))}"
+tampilkan f"Range(5): {list(range(5))}"
+tampilkan f"Range(2, 8): {list(range(2, 8))}"
+tampilkan f"Range(0, 10, 2): {list(range(0, 10, 2))}"
+tampilkan ""
+
+// 7. Filter and Map
+tampilkan "=== Filter and Map ==="
+angka itu [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+genap itu [x untuk setiap x dari angka jika x % 2 == 0]
+tampilkan f"Even numbers: {genap}"
+
+kuadrat itu [x * x untuk setiap x dari angka]
+tampilkan f"Squares: {kuadrat}"
+
+ganjil_kuadrat itu [x * x untuk setiap x dari angka jika x % 2 != 0]
+tampilkan f"Odd squares: {ganjil_kuadrat}"
+tampilkan ""
+
+// 8. Boolean Functions
+tampilkan "=== Boolean Functions ==="
+list_bool itu [benar, benar, benar]
+list_mixed itu [benar, salah, benar]
+
+tampilkan f"All true: {all(list_bool)}"
+tampilkan f"All mixed: {all(list_mixed)}"
+tampilkan f"Any mixed: {any(list_mixed)}"
+tampilkan f"Any false: {any([salah, salah])}"
+tampilkan ""
+
+// 9. String Validation
+tampilkan "=== String Validation ==="
+test_str itu "Hello123"
+test_num itu "12345"
+test_alpha itu "Hello"
+
+tampilkan f"'{test_str}' is alnum: {is_alnum(test_str)}"
+tampilkan f"'{test_num}' is digit: {is_digit(test_num)}"
+tampilkan f"'{test_alpha}' is alpha: {is_alpha(test_alpha)}"
+tampilkan f"'HELLO' is upper: {is_upper('HELLO')}"
+tampilkan f"'hello' is lower: {is_lower('hello')}"
+tampilkan ""
+
+// 10. Utility Functions
+tampilkan "=== Utility Functions ==="
+tampilkan f"Type of 42: {type(42)}"
+tampilkan f"Type of 'text': {type('text')}"
+tampilkan f"Type of [1,2,3]: {type([1,2,3])}"
+tampilkan f"Len of 'hello': {panjang('hello')}"
+tampilkan f"Len of [1,2,3,4,5]: {panjang([1,2,3,4,5])}"
+
+obj1 itu [1, 2, 3]
+obj2 itu obj1
+obj3 itu [1, 2, 3]
+
+tampilkan f"obj1 is obj2: {obj1 is obj2}"
+tampilkan f"obj1 is obj3: {obj1 is obj3}"
+tampilkan f"obj1 == obj3: {obj1 == obj3}"

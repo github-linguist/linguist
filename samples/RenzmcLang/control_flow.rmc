@@ -1,0 +1,117 @@
+// ============================================
+// Control Flow - Alur Kontrol
+// ============================================
+// Demonstrasi if-else, switch-case, ternary
+
+tampilkan "=== Control Flow Examples ==="
+tampilkan ""
+
+// 1. If-Else Statement
+tampilkan "=== If-Else ==="
+nilai itu 85
+
+jika nilai >= 90
+    tampilkan "Grade: A"
+lainnya jika nilai >= 80
+    tampilkan "Grade: B"
+lainnya jika nilai >= 70
+    tampilkan "Grade: C"
+lainnya jika nilai >= 60
+    tampilkan "Grade: D"
+lainnya
+    tampilkan "Grade: E"
+selesai
+tampilkan ""
+
+// 2. Nested If
+umur itu 25
+punya_sim itu benar
+
+tampilkan "=== Nested If ==="
+jika umur >= 17
+    jika punya_sim
+        tampilkan "Boleh mengemudi"
+    lainnya
+        tampilkan "Harus punya SIM dulu"
+    selesai
+lainnya
+    tampilkan "Belum cukup umur"
+selesai
+tampilkan ""
+
+// 3. Ternary Operator
+tampilkan "=== Ternary Operator ==="
+angka itu 10
+status itu "Genap" jika angka % 2 == 0 lainnya "Ganjil"
+tampilkan f"Angka {angka} adalah {status}"
+
+nilai_ujian itu 75
+hasil itu "Lulus" jika nilai_ujian >= 60 lainnya "Tidak Lulus"
+tampilkan f"Nilai {nilai_ujian}: {hasil}"
+tampilkan ""
+
+// 4. Switch-Case (Pattern Matching)
+tampilkan "=== Switch-Case ==="
+hari itu 3
+
+cocok hari
+    kasus 1:
+        tampilkan "Senin"
+    kasus 2:
+        tampilkan "Selasa"
+    kasus 3:
+        tampilkan "Rabu"
+    kasus 4:
+        tampilkan "Kamis"
+    kasus 5:
+        tampilkan "Jumat"
+    kasus 6:
+        tampilkan "Sabtu"
+    kasus 7:
+        tampilkan "Minggu"
+    bawaan:
+        tampilkan "Hari tidak valid"
+selesai
+tampilkan ""
+
+// 5. Multiple Conditions
+tampilkan "=== Multiple Conditions ==="
+suhu itu 28
+hujan itu salah
+
+jika suhu > 30 dan tidak hujan
+    tampilkan "Cuaca panas dan cerah"
+lainnya jika suhu > 30 dan hujan
+    tampilkan "Cuaca panas dan hujan"
+lainnya jika suhu <= 30 dan hujan
+    tampilkan "Cuaca sejuk dan hujan"
+lainnya
+    tampilkan "Cuaca sejuk dan cerah"
+selesai
+tampilkan ""
+
+// 6. Membership Test
+tampilkan "=== Membership Test ==="
+daftar_nama itu ["Budi", "Ani", "Citra"]
+nama_cari itu "Ani"
+
+jika nama_cari dalam daftar_nama
+    tampilkan f"{nama_cari} ada dalam daftar"
+lainnya
+    tampilkan f"{nama_cari} tidak ada dalam daftar"
+selesai
+tampilkan ""
+
+// 7. Complex Conditions
+tampilkan "=== Complex Conditions ==="
+saldo itu 500000
+harga_barang itu 300000
+diskon itu 10
+
+total itu harga_barang - (harga_barang * diskon / 100)
+
+jika saldo >= total
+    tampilkan f"Pembelian berhasil! Sisa saldo: Rp {saldo - total}"
+lainnya
+    tampilkan f"Saldo tidak cukup. Kurang: Rp {total - saldo}"
+selesai

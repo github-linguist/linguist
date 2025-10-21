@@ -1,0 +1,224 @@
+// ============================================
+// Advanced Features - Fitur Lanjutan
+// ============================================
+// Demonstrasi HTTP, decorators, generators, context managers
+
+tampilkan "=== Advanced Features Examples ==="
+tampilkan ""
+
+// 1. HTTP Client - GET Request
+tampilkan "=== HTTP GET Request ==="
+response itu http_get("https://jsonplaceholder.typicode.com/posts/1")
+
+jika response["status"] == 200
+    data itu json_parse(response["body"])
+    tampilkan f"Title: {data['title']}"
+    tampilkan f"Body: {data['body'][:50]}..."
+lainnya
+    tampilkan f"Error: {response['status']}"
+selesai
+tampilkan ""
+
+// 2. HTTP Client - POST Request
+tampilkan "=== HTTP POST Request ==="
+post_data itu {
+    "title": "Test Post",
+    "body": "This is a test post from RenzmcLang",
+    "userId": 1
+}
+
+post_response itu http_post(
+    "https://jsonplaceholder.typicode.com/posts",
+    post_data
+)
+
+jika post_response["status"] == 201
+    created itu json_parse(post_response["body"])
+    tampilkan f"Created post ID: {created['id']}"
+lainnya
+    tampilkan f"Error: {post_response['status']}"
+selesai
+tampilkan ""
+
+// 3. Walrus Operator
+tampilkan "=== Walrus Operator ==="
+data_list itu [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+// Using walrus in comprehension
+filtered itu [y untuk setiap x dari data_list jika (y := x * 2) > 10]
+tampilkan f"Filtered (doubled > 10): {filtered}"
+
+// Using walrus in condition
+jika (n := panjang(data_list)) > 5
+    tampilkan f"List has {n} items (more than 5)"
+selesai
+tampilkan ""
+
+// 4. With Statement (Context Manager)
+tampilkan "=== With Statement ==="
+
+dengan buka_file("test_with.txt", "w") sebagai f:
+    tulis(f, "Line 1\n")
+    tulis(f, "Line 2\n")
+    tulis(f, "Line 3\n")
+selesai
+
+tampilkan "File written using with statement"
+
+dengan buka_file("test_with.txt", "r") sebagai f:
+    content itu baca(f)
+    tampilkan f"Content: {content}"
+selesai
+
+// Cleanup
+hapus_file("test_with.txt")
+tampilkan ""
+
+// 5. Generators dengan Yield
+tampilkan "=== Generators ==="
+
+fungsi number_generator(n):
+    i itu 0
+    selama i < n
+        yield i
+        i itu i + 1
+    selesai
+selesai
+
+tampilkan "Generated numbers:"
+untuk setiap num dari number_generator(5)
+    tampilkan f"  {num}"
+selesai
+tampilkan ""
+
+// 6. Fibonacci Generator
+tampilkan "=== Fibonacci Generator ==="
+
+fungsi fibonacci_gen(n):
+    a, b itu 0, 1
+    count itu 0
+    selama count < n
+        yield a
+        a, b itu b, a + b
+        count itu count + 1
+    selesai
+selesai
+
+fib_numbers itu list(fibonacci_gen(10))
+tampilkan f"First 10 Fibonacci: {fib_numbers}"
+tampilkan ""
+
+// 7. Decorators
+tampilkan "=== Decorators ==="
+
+fungsi timer_decorator(func):
+    fungsi wrapper(*args, **kwargs):
+        start itu waktu_sekarang()
+        result itu func(*args, **kwargs)
+        end itu waktu_sekarang()
+        tampilkan f"Execution time: {end - start} seconds"
+        hasil result
+    selesai
+    hasil wrapper
+selesai
+
+@timer_decorator
+fungsi slow_function():
+    total itu 0
+    untuk i dari 1 sampai 1000000
+        total itu total + i
+    selesai
+    hasil total
+selesai
+
+result itu slow_function()
+tampilkan f"Result: {result}"
+tampilkan ""
+
+// 8. Multiple Decorators
+tampilkan "=== Multiple Decorators ==="
+
+fungsi log_decorator(func):
+    fungsi wrapper(*args, **kwargs):
+        tampilkan f"Calling {func.__name__}"
+        result itu func(*args, **kwargs)
+        tampilkan f"Finished {func.__name__}"
+        hasil result
+    selesai
+    hasil wrapper
+selesai
+
+@log_decorator
+@timer_decorator
+fungsi calculate_sum(n):
+    hasil jumlah(range(n))
+selesai
+
+sum_result itu calculate_sum(1000000)
+tampilkan f"Sum: {sum_result}"
+tampilkan ""
+
+// 9. Advanced List Operations
+tampilkan "=== Advanced List Operations ==="
+
+// Nested comprehension
+matrix itu [[i * j untuk setiap j dari range(1, 4)] untuk setiap i dari range(1, 4)]
+tampilkan "Matrix:"
+untuk setiap row dari matrix
+    tampilkan f"  {row}"
+selesai
+
+// Flatten matrix
+flattened itu [item untuk setiap row dari matrix untuk setiap item dari row]
+tampilkan f"Flattened: {flattened}"
+tampilkan ""
+
+// 10. Advanced Dict Operations
+tampilkan "=== Advanced Dict Operations ==="
+
+// Dict comprehension dengan condition
+angka_dict itu {x: x**2 untuk setiap x dari range(1, 11) jika x % 2 == 0}
+tampilkan f"Even squares: {angka_dict}"
+
+// Merge dicts
+dict1 itu {"a": 1, "b": 2}
+dict2 itu {"c": 3, "d": 4}
+merged itu {**dict1, **dict2}
+tampilkan f"Merged dict: {merged}"
+tampilkan ""
+
+// 11. Pattern Matching Advanced
+tampilkan "=== Advanced Pattern Matching ==="
+
+fungsi process_value(value):
+    cocok type(value)
+        kasus "int":
+            tampilkan f"Integer: {value}"
+        kasus "str":
+            tampilkan f"String: {value}"
+        kasus "list":
+            tampilkan f"List with {panjang(value)} items"
+        kasus "dict":
+            tampilkan f"Dict with {panjang(keys(value))} keys"
+        bawaan:
+            tampilkan f"Unknown type: {type(value)}"
+    selesai
+selesai
+
+process_value(42)
+process_value("Hello")
+process_value([1, 2, 3])
+process_value({"key": "value"})
+tampilkan ""
+
+// 12. Chaining Operations
+tampilkan "=== Chaining Operations ==="
+
+result itu (
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    |> [x * 2 untuk setiap x dari _]
+    |> [x untuk setiap x dari _ jika x > 10]
+    |> sorted(_)
+)
+
+tampilkan f"Chained result: {result}"

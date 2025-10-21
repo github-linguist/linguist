@@ -1,0 +1,148 @@
+// ============================================
+// Error Handling - Penanganan Error
+// ============================================
+// Demonstrasi try-catch-finally
+
+tampilkan "=== Error Handling Examples ==="
+tampilkan ""
+
+// 1. Basic Try-Catch
+tampilkan "=== Basic Try-Catch ==="
+coba:
+    angka itu 10
+    hasil itu angka / 2
+    tampilkan f"Hasil: {hasil}"
+tangkap Exception sebagai e:
+    tampilkan f"Error: {e}"
+selesai
+tampilkan ""
+
+// 2. Division by Zero
+tampilkan "=== Division by Zero ==="
+coba:
+    x itu 10
+    y itu 0
+    hasil itu x / y
+    tampilkan f"Hasil: {hasil}"
+tangkap ZeroDivisionError sebagai e:
+    tampilkan "Error: Pembagian dengan nol!"
+tangkap Exception sebagai e:
+    tampilkan f"Error lain: {e}"
+selesai
+tampilkan ""
+
+// 3. Try-Catch-Finally
+tampilkan "=== Try-Catch-Finally ==="
+coba:
+    tampilkan "Mencoba operasi..."
+    nilai itu 100 / 5
+    tampilkan f"Hasil: {nilai}"
+tangkap Exception sebagai e:
+    tampilkan f"Error: {e}"
+akhirnya:
+    tampilkan "Blok finally selalu dijalankan"
+selesai
+tampilkan ""
+
+// 4. Multiple Exception Types
+tampilkan "=== Multiple Exceptions ==="
+coba:
+    data itu [1, 2, 3]
+    tampilkan data[5]
+tangkap IndexError sebagai e:
+    tampilkan "Error: Index di luar jangkauan"
+tangkap KeyError sebagai e:
+    tampilkan "Error: Key tidak ditemukan"
+tangkap Exception sebagai e:
+    tampilkan f"Error umum: {e}"
+selesai
+tampilkan ""
+
+// 5. Nested Try-Catch
+tampilkan "=== Nested Try-Catch ==="
+coba:
+    tampilkan "Outer try block"
+    coba:
+        tampilkan "Inner try block"
+        hasil itu 10 / 0
+    tangkap ZeroDivisionError sebagai e:
+        tampilkan "Inner catch: Division by zero"
+    selesai
+    tampilkan "Outer try continues"
+tangkap Exception sebagai e:
+    tampilkan f"Outer catch: {e}"
+selesai
+tampilkan ""
+
+// 6. Function dengan Error Handling
+fungsi bagi_aman(a, b):
+    coba:
+        hasil a / b
+    tangkap ZeroDivisionError:
+        tampilkan "Error: Tidak bisa membagi dengan nol"
+        hasil kosong
+    tangkap Exception sebagai e:
+        tampilkan f"Error: {e}"
+        hasil kosong
+    selesai
+selesai
+
+tampilkan "=== Function dengan Error Handling ==="
+hasil1 itu bagi_aman(10, 2)
+tampilkan f"10 / 2 = {hasil1}"
+
+hasil2 itu bagi_aman(10, 0)
+tampilkan f"10 / 0 = {hasil2}"
+tampilkan ""
+
+// 7. Validasi Input dengan Error Handling
+fungsi validasi_umur(umur):
+    coba:
+        umur_int itu int(umur)
+        jika umur_int < 0
+            tampilkan "Error: Umur tidak boleh negatif"
+            hasil salah
+        lainnya jika umur_int > 150
+            tampilkan "Error: Umur tidak valid"
+            hasil salah
+        lainnya
+            tampilkan f"Umur valid: {umur_int}"
+            hasil benar
+        selesai
+    tangkap ValueError:
+        tampilkan "Error: Input harus berupa angka"
+        hasil salah
+    tangkap Exception sebagai e:
+        tampilkan f"Error: {e}"
+        hasil salah
+    selesai
+selesai
+
+tampilkan "=== Validasi Input ==="
+validasi_umur(25)
+validasi_umur(-5)
+validasi_umur("abc")
+tampilkan ""
+
+// 8. Custom Error Messages
+fungsi cek_saldo(saldo, jumlah):
+    coba:
+        jika jumlah > saldo
+            lempar Exception("Saldo tidak cukup")
+        lainnya
+            tampilkan f"Transaksi berhasil: Rp {jumlah}"
+            hasil saldo - jumlah
+        selesai
+    tangkap Exception sebagai e:
+        tampilkan f"Error: {e}"
+        hasil saldo
+    selesai
+selesai
+
+tampilkan "=== Custom Error Messages ==="
+saldo_awal itu 1000000
+saldo_baru itu cek_saldo(saldo_awal, 500000)
+tampilkan f"Saldo: Rp {saldo_baru}"
+
+saldo_baru itu cek_saldo(saldo_baru, 2000000)
+tampilkan f"Saldo: Rp {saldo_baru}"

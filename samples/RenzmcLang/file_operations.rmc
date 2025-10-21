@@ -1,0 +1,123 @@
+// ============================================
+// File Operations - Operasi File
+// ============================================
+// Demonstrasi read, write, append, delete files
+
+tampilkan "=== File Operations Examples ==="
+tampilkan ""
+
+// 1. Write File
+tampilkan "=== Write File ==="
+konten itu "Hello, RenzmcLang!\nIni adalah file test.\nBaris ketiga."
+tulis_file("test.txt", konten)
+tampilkan "File 'test.txt' berhasil ditulis"
+tampilkan ""
+
+// 2. Read File
+tampilkan "=== Read File ==="
+isi_file itu baca_file("test.txt")
+tampilkan "Isi file:"
+tampilkan isi_file
+tampilkan ""
+
+// 3. Append File
+tampilkan "=== Append File ==="
+tambahan itu "\nBaris tambahan dari append."
+tambah_file("test.txt", tambahan)
+tampilkan "Konten ditambahkan ke file"
+
+isi_baru itu baca_file("test.txt")
+tampilkan "Isi file setelah append:"
+tampilkan isi_baru
+tampilkan ""
+
+// 4. Check File Exists
+tampilkan "=== Check File Exists ==="
+jika ada_file("test.txt")
+    tampilkan "File 'test.txt' ada"
+lainnya
+    tampilkan "File 'test.txt' tidak ada"
+selesai
+
+jika ada_file("tidak_ada.txt")
+    tampilkan "File 'tidak_ada.txt' ada"
+lainnya
+    tampilkan "File 'tidak_ada.txt' tidak ada"
+selesai
+tampilkan ""
+
+// 5. Write JSON File
+tampilkan "=== Write JSON ==="
+data_json itu {
+    "nama": "Budi",
+    "umur": 25,
+    "hobi": ["membaca", "coding", "gaming"],
+    "aktif": benar
+}
+
+tulis_json("data.json", data_json)
+tampilkan "File JSON berhasil ditulis"
+tampilkan ""
+
+// 6. Read JSON File
+tampilkan "=== Read JSON ==="
+data_baca itu baca_json("data.json")
+tampilkan f"Data dari JSON: {data_baca}"
+tampilkan f"Nama: {data_baca['nama']}"
+tampilkan f"Umur: {data_baca['umur']}"
+tampilkan f"Hobi: {data_baca['hobi']}"
+tampilkan ""
+
+// 7. Write Multiple Lines
+tampilkan "=== Write Multiple Lines ==="
+baris_list itu [
+    "Baris pertama",
+    "Baris kedua",
+    "Baris ketiga",
+    "Baris keempat"
+]
+
+konten_gabung itu gabung(baris_list, "\n")
+tulis_file("lines.txt", konten_gabung)
+tampilkan "File dengan multiple lines berhasil ditulis"
+tampilkan ""
+
+// 8. Read Lines
+tampilkan "=== Read Lines ==="
+isi_lines itu baca_file("lines.txt")
+lines itu pisah(isi_lines, "\n")
+
+tampilkan "Membaca per baris:"
+untuk setiap idx, line dari enumerate(lines)
+    tampilkan f"{idx + 1}. {line}"
+selesai
+tampilkan ""
+
+// 9. File Path Operations
+tampilkan "=== File Path Operations ==="
+path itu "test.txt"
+tampilkan f"File exists: {ada_file(path)}"
+tampilkan f"Is file: {is_file(path)}"
+tampilkan f"Basename: {basename(path)}"
+tampilkan f"Dirname: {dirname(path)}"
+tampilkan ""
+
+// 10. Delete File
+tampilkan "=== Delete File ==="
+jika ada_file("test.txt")
+    hapus_file("test.txt")
+    tampilkan "File 'test.txt' berhasil dihapus"
+selesai
+
+jika ada_file("lines.txt")
+    hapus_file("lines.txt")
+    tampilkan "File 'lines.txt' berhasil dihapus"
+selesai
+
+jika ada_file("data.json")
+    hapus_file("data.json")
+    tampilkan "File 'data.json' berhasil dihapus"
+selesai
+
+tampilkan ""
+tampilkan "Semua file test berhasil dibersihkan"

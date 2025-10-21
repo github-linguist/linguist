@@ -1,0 +1,154 @@
+// ============================================
+// Type System - Sistem Tipe
+// ============================================
+// Demonstrasi optional type hints dan validasi
+
+tampilkan "=== Type System Examples ==="
+tampilkan ""
+
+// 1. Basic Type Hints
+tampilkan "=== Basic Type Hints ==="
+nama: teks itu "Budi"
+umur: angka itu 25
+tinggi: desimal itu 175.5
+aktif: boolean itu benar
+
+tampilkan f"Nama ({type(nama)}): {nama}"
+tampilkan f"Umur ({type(umur)}): {umur}"
+tampilkan f"Tinggi ({type(tinggi)}): {tinggi}"
+tampilkan f"Aktif ({type(aktif)}): {aktif}"
+tampilkan ""
+
+// 2. Function Type Hints
+tampilkan "=== Function Type Hints ==="
+
+fungsi tambah(a: angka, b: angka) -> angka:
+    hasil a + b
+selesai
+
+fungsi sapa(nama: teks) -> teks:
+    hasil f"Hello, {nama}!"
+selesai
+
+fungsi is_genap(n: angka) -> boolean:
+    hasil n % 2 == 0
+selesai
+
+tampilkan f"tambah(5, 3) = {tambah(5, 3)}"
+tampilkan f"sapa('Ani') = {sapa('Ani')}"
+tampilkan f"is_genap(4) = {is_genap(4)}"
+tampilkan f"is_genap(7) = {is_genap(7)}"
+tampilkan ""
+
+// 3. Collection Type Hints
+tampilkan "=== Collection Type Hints ==="
+angka_list: list itu [1, 2, 3, 4, 5]
+data_dict: dict itu {"nama": "Budi", "umur": 25}
+angka_set: set itu {1, 2, 3, 4, 5}
+
+tampilkan f"List: {angka_list}"
+tampilkan f"Dict: {data_dict}"
+tampilkan f"Set: {angka_set}"
+tampilkan ""
+
+// 4. Optional Types
+tampilkan "=== Optional Types ==="
+nilai: opsional[angka] itu 42
+nilai_kosong: opsional[teks] itu kosong
+
+tampilkan f"Nilai: {nilai}"
+tampilkan f"Nilai kosong: {nilai_kosong}"
+
+jika nilai_kosong == kosong
+    tampilkan "Nilai kosong adalah None"
+selesai
+tampilkan ""
+
+// 5. Union Types
+tampilkan "=== Union Types ==="
+hasil: angka | teks itu 42
+tampilkan f"Hasil (angka): {hasil}"
+
+hasil itu "Success"
+tampilkan f"Hasil (teks): {hasil}"
+tampilkan ""
+
+// 6. Type Validation in Functions
+tampilkan "=== Type Validation ==="
+
+fungsi hitung_luas(panjang: desimal, lebar: desimal) -> desimal:
+    hasil panjang * lebar
+selesai
+
+fungsi format_nama(depan: teks, belakang: teks) -> teks:
+    hasil f"{depan} {belakang}"
+selesai
+
+luas itu hitung_luas(10.5, 5.2)
+tampilkan f"Luas: {luas}"
+
+nama_lengkap itu format_nama("Budi", "Santoso")
+tampilkan f"Nama: {nama_lengkap}"
+tampilkan ""
+
+// 7. Complex Type Hints
+tampilkan "=== Complex Type Hints ==="
+
+fungsi proses_data(data: list[angka]) -> dict:
+    hasil {
+        "total": jumlah(data),
+        "rata": rata_rata(data),
+        "max": max(data),
+        "min": min(data)
+    }
+selesai
+
+angka_data itu [10, 20, 30, 40, 50]
+statistik itu proses_data(angka_data)
+tampilkan f"Data: {angka_data}"
+tampilkan f"Statistik: {statistik}"
+tampilkan ""
+
+// 8. Type Aliases
+tampilkan "=== Type Aliases ==="
+Koordinat itu tuple[desimal, desimal]
+Point: Koordinat itu (10.5, 20.3)
+
+tampilkan f"Point: {Point}"
+tampilkan f"X: {Point[0]}, Y: {Point[1]}"
+tampilkan ""
+
+// 9. Literal Types
+tampilkan "=== Literal Types ==="
+status: literal["aktif", "nonaktif"] itu "aktif"
+tampilkan f"Status: {status}"
+
+level: literal[1, 2, 3, 4, 5] itu 3
+tampilkan f"Level: {level}"
+tampilkan ""
+
+// 10. Type Checking
+tampilkan "=== Type Checking ==="
+
+fungsi cek_tipe(nilai):
+    tipe itu type(nilai)
+    tampilkan f"Nilai: {nilai}, Tipe: {tipe}"
+    
+    jika tipe == "int" atau tipe == "float"
+        tampilkan "  -> Ini adalah angka"
+    lainnya jika tipe == "str"
+        tampilkan "  -> Ini adalah string"
+    lainnya jika tipe == "list"
+        tampilkan "  -> Ini adalah list"
+    lainnya jika tipe == "dict"
+        tampilkan "  -> Ini adalah dictionary"
+    lainnya
+        tampilkan f"  -> Tipe lain: {tipe}"
+    selesai
+selesai
+
+cek_tipe(42)
+cek_tipe(3.14)
+cek_tipe("Hello")
+cek_tipe([1, 2, 3])
+cek_tipe({"key": "value"})

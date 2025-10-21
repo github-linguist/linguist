@@ -1,0 +1,150 @@
+// ============================================
+// Functions - Fungsi
+// ============================================
+// Demonstrasi function definition, parameters, return values
+
+tampilkan "=== Function Examples ==="
+tampilkan ""
+
+// 1. Simple Function
+fungsi sapa():
+    tampilkan "Hello, World!"
+selesai
+
+tampilkan "=== Simple Function ==="
+sapa()
+tampilkan ""
+
+// 2. Function dengan Parameter
+fungsi sapa_nama(nama):
+    tampilkan f"Hello, {nama}!"
+selesai
+
+tampilkan "=== Function dengan Parameter ==="
+sapa_nama("Budi")
+sapa_nama("Ani")
+tampilkan ""
+
+// 3. Function dengan Return Value
+fungsi tambah_dua(a, b):
+    hasil a + b
+selesai
+
+fungsi kali_dua(a, b):
+    hasil a * b
+selesai
+
+tampilkan "=== Function dengan Return ==="
+hasil_tambah itu tambah_dua(5, 3)
+hasil_kali itu kali_dua(4, 6)
+tampilkan f"5 + 3 = {hasil_tambah}"
+tampilkan f"4 × 6 = {hasil_kali}"
+tampilkan ""
+
+// 4. Function dengan Multiple Parameters
+fungsi hitung_luas_persegi_panjang(panjang, lebar):
+    hasil panjang * lebar
+selesai
+
+fungsi hitung_volume_balok(p, l, t):
+    hasil p * l * t
+selesai
+
+tampilkan "=== Multiple Parameters ==="
+luas itu hitung_luas_persegi_panjang(10, 5)
+volume itu hitung_volume_balok(10, 5, 3)
+tampilkan f"Luas: {luas}"
+tampilkan f"Volume: {volume}"
+tampilkan ""
+
+// 5. Function dengan Parameter Manual
+fungsi sapa_dengan_gelar(nama, gelar):
+    hasil f"{gelar} {nama}"
+selesai
+
+tampilkan "=== Parameter Manual ==="
+tampilkan sapa_dengan_gelar("Budi", "Bapak")
+tampilkan sapa_dengan_gelar("Ani", "Ibu")
+tampilkan ""
+
+// 6. Lambda Functions
+tampilkan "=== Lambda Functions ==="
+kuadrat itu lambda dengan x -> x * x
+kubik itu lambda dengan x -> x * x * x
+tambah_10 itu lambda dengan x -> x + 10
+
+tampilkan f"Kuadrat 5: {kuadrat(5)}"
+tampilkan f"Kubik 3: {kubik(3)}"
+tampilkan f"Tambah 10 ke 15: {tambah_10(15)}"
+tampilkan ""
+
+// 7. Lambda dengan Ternary
+tampilkan "=== Lambda dengan Ternary ==="
+abs_lambda itu lambda dengan x -> x jika x >= 0 lainnya -x
+is_genap itu lambda dengan x -> benar jika x % 2 == 0 lainnya salah
+
+tampilkan f"Abs(-5): {abs_lambda(-5)}"
+tampilkan f"Abs(5): {abs_lambda(5)}"
+tampilkan f"Is 4 genap? {is_genap(4)}"
+tampilkan f"Is 7 genap? {is_genap(7)}"
+tampilkan ""
+
+// 8. Higher-Order Functions
+fungsi operasi(a, b, func):
+    hasil func(a, b)
+selesai
+
+fungsi tambah_func(x, y):
+    hasil x + y
+selesai
+
+fungsi kali_func(x, y):
+    hasil x * y
+selesai
+
+tampilkan "=== Higher-Order Functions ==="
+hasil1 itu operasi(5, 3, tambah_func)
+hasil2 itu operasi(5, 3, kali_func)
+tampilkan f"Operasi tambah: {hasil1}"
+tampilkan f"Operasi kali_dua: {hasil2}"
+tampilkan ""
+
+// 9. Recursive Function
+fungsi faktorial(n):
+    jika n <= 1
+        hasil 1
+    lainnya
+        hasil n * faktorial(n - 1)
+    selesai
+selesai
+
+fungsi fibonacci(n):
+    jika n <= 1
+        hasil n
+    lainnya
+        hasil fibonacci(n - 1) + fibonacci(n - 2)
+    selesai
+selesai
+
+tampilkan "=== Recursive Functions ==="
+tampilkan f"Faktorial 5: {faktorial(5)}"
+tampilkan f"Fibonacci 7: {fibonacci(7)}"
+tampilkan ""
+
+// 10. Function dengan Multiple Returns
+fungsi statistik(angka_list):
+    total itu jumlah(angka_list)
+    rata itu rata_rata(angka_list)
+    maks itu max(angka_list)
+    min_val itu min(angka_list)
+    hasil [total, rata, maks, min_val]
+selesai
+
+tampilkan "=== Multiple Returns ==="
+data itu [10, 20, 30, 40, 50]
+stats itu statistik(data)
+tampilkan f"Data: {data}"
+tampilkan f"Total: {stats[0]}"
+tampilkan f"Rata-rata: {stats[1]}"
+tampilkan f"Max: {stats[2]}"
+tampilkan f"Min: {stats[3]}"

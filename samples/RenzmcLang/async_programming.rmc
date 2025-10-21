@@ -1,0 +1,141 @@
+// ============================================
+// Async Programming - Pemrograman Asinkron
+// ============================================
+// Demonstrasi async/await untuk operasi asinkron
+
+tampilkan "=== Async Programming Examples ==="
+tampilkan ""
+
+// 1. Basic Async Function
+tampilkan "=== Basic Async Function ==="
+
+async fungsi fetch_data():
+    tampilkan "Fetching data..."
+    await sleep(1)
+    tampilkan "Data fetched!"
+    hasil {"status": "success", "data": [1, 2, 3, 4, 5]}
+selesai
+
+// Run async function
+data itu await fetch_data()
+tampilkan f"Result: {data}"
+tampilkan ""
+
+// 2. Async dengan Parameter
+tampilkan "=== Async dengan Parameter ==="
+
+async fungsi fetch_user(user_id):
+    tampilkan f"Fetching user {user_id}..."
+    await sleep(0.5)
+    hasil {
+        "id": user_id,
+        "nama": f"User_{user_id}",
+        "email": f"user{user_id}@example.com"
+    }
+selesai
+
+user itu await fetch_user(123)
+tampilkan f"User: {user}"
+tampilkan ""
+
+// 3. Multiple Async Calls
+tampilkan "=== Multiple Async Calls ==="
+
+async fungsi get_posts():
+    tampilkan "Getting posts..."
+    await sleep(0.5)
+    hasil ["Post 1", "Post 2", "Post 3"]
+selesai
+
+async fungsi get_comments():
+    tampilkan "Getting comments..."
+    await sleep(0.5)
+    hasil ["Comment 1", "Comment 2"]
+selesai
+
+posts itu await get_posts()
+comments itu await get_comments()
+
+tampilkan f"Posts: {posts}"
+tampilkan f"Comments: {comments}"
+tampilkan ""
+
+// 4. Async dengan Error Handling
+tampilkan "=== Async dengan Error Handling ==="
+
+async fungsi risky_operation():
+    coba:
+        tampilkan "Attempting risky operation..."
+        await sleep(0.3)
+        // Simulate success
+        hasil {"status": "success"}
+    tangkap Exception sebagai e:
+        tampilkan f"Error: {e}"
+        hasil {"status": "error", "message": ke_teks(e)}
+    selesai
+selesai
+
+result itu await risky_operation()
+tampilkan f"Result: {result}"
+tampilkan ""
+
+// 5. Async Loop
+tampilkan "=== Async Loop ==="
+
+async fungsi process_item(item):
+    tampilkan f"Processing {item}..."
+    await sleep(0.2)
+    hasil f"{item}_processed"
+selesai
+
+items itu ["item1", "item2", "item3"]
+processed itu []
+
+untuk setiap item dari items
+    result itu await process_item(item)
+    tambah(processed, result)
+selesai
+
+tampilkan f"Processed items: {processed}"
+tampilkan ""
+
+// 6. Async dengan Conditional
+tampilkan "=== Async dengan Conditional ==="
+
+async fungsi check_status(id):
+    await sleep(0.2)
+    jika id % 2 == 0
+        hasil "active"
+    lainnya
+        hasil "inactive"
+    selesai
+selesai
+
+status1 itu await check_status(2)
+status2 itu await check_status(3)
+
+tampilkan f"Status ID 2: {status1}"
+tampilkan f"Status ID 3: {status2}"
+tampilkan ""
+
+// 7. Async Function Returning Complex Data
+tampilkan "=== Complex Async Return ==="
+
+async fungsi get_dashboard_data():
+    tampilkan "Loading dashboard..."
+    await sleep(0.5)
+    
+    hasil {
+        "users": 1250,
+        "posts": 3420,
+        "comments": 8765,
+        "likes": 15432
+    }
+selesai
+
+dashboard itu await get_dashboard_data()
+tampilkan "Dashboard Data:"
+tampilkan f"  Users: {dashboard['users']}"
+tampilkan f"  Posts: {dashboard['posts']}"
+tampilkan f"  Comments: {dashboard['comments']}"
+tampilkan f"  Likes: {dashboard['likes']}"

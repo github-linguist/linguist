@@ -1,0 +1,155 @@
+// ============================================
+// Object-Oriented Programming - OOP
+// ============================================
+// Demonstrasi classes, objects, inheritance
+
+tampilkan "=== OOP Examples ==="
+tampilkan ""
+
+// 1. Basic Class
+kelas Mahasiswa:
+    konstruktor(nama, nim):
+        diri.nama itu nama
+        diri.nim itu nim
+    selesai
+    
+    metode perkenalan():
+        tampilkan f"Nama: {diri.nama}, NIM: {diri.nim}"
+    selesai
+selesai
+
+tampilkan "=== Basic Class ==="
+mhs1 itu Mahasiswa("Budi", "12345")
+mhs1.perkenalan()
+tampilkan ""
+
+// 2. Class dengan Properties
+kelas BankAccount:
+    konstruktor(pemilik, saldo_awal):
+        diri.pemilik itu pemilik
+        diri.saldo itu saldo_awal
+    selesai
+    
+    metode deposit(jumlah):
+        diri.saldo itu diri.saldo + jumlah
+        tampilkan f"Deposit Rp {jumlah} berhasil"
+    selesai
+    
+    metode withdraw(jumlah):
+        jika jumlah <= diri.saldo
+            diri.saldo itu diri.saldo - jumlah
+            tampilkan f"Withdraw Rp {jumlah} berhasil"
+        lainnya
+            tampilkan "Saldo tidak cukup"
+        selesai
+    selesai
+    
+    metode cek_saldo():
+        tampilkan f"Saldo {diri.pemilik}: Rp {diri.saldo}"
+    selesai
+selesai
+
+tampilkan "=== Bank Account Class ==="
+akun itu BankAccount("Ani", 1000000)
+akun.cek_saldo()
+akun.deposit(500000)
+akun.withdraw(300000)
+akun.cek_saldo()
+tampilkan ""
+
+// 3. Class dengan Multiple Methods
+kelas Kalkulator:
+    metode tambah(a, b):
+        hasil a + b
+    selesai
+    
+    metode kurang(a, b):
+        hasil a - b
+    selesai
+    
+    metode kali(a, b):
+        hasil a * b
+    selesai
+    
+    metode bagi(a, b):
+        jika b != 0
+            hasil a / b
+        lainnya
+            hasil "Error: Pembagian dengan nol"
+        selesai
+    selesai
+selesai
+
+tampilkan "=== Kalkulator Class ==="
+calc itu Kalkulator()
+tampilkan f"10 + 5 = {calc.tambah(10, 5)}"
+tampilkan f"10 - 5 = {calc.kurang(10, 5)}"
+tampilkan f"10 × 5 = {calc.kali(10, 5)}"
+tampilkan f"10 ÷ 5 = {calc.bagi(10, 5)}"
+tampilkan ""
+
+// 4. Class dengan Private-like Attributes
+kelas Produk:
+    konstruktor(nama, harga, stok):
+        diri.nama itu nama
+        diri._harga itu harga
+        diri._stok itu stok
+    selesai
+    
+    metode get_harga():
+        hasil diri._harga
+    selesai
+    
+    metode set_harga(harga_baru):
+        jika harga_baru > 0
+            diri._harga itu harga_baru
+            tampilkan "Harga berhasil diupdate"
+        lainnya
+            tampilkan "Harga harus positif"
+        selesai
+    selesai
+    
+    metode get_stok():
+        hasil diri._stok
+    selesai
+    
+    metode tambah_stok(jumlah):
+        diri._stok itu diri._stok + jumlah
+        tampilkan f"Stok ditambah {jumlah}"
+    selesai
+    
+    metode info():
+        tampilkan f"Produk: {diri.nama}"
+        tampilkan f"Harga: Rp {diri._harga}"
+        tampilkan f"Stok: {diri._stok}"
+    selesai
+selesai
+
+tampilkan "=== Produk Class ==="
+produk itu Produk("Laptop", 5000000, 10)
+produk.info()
+produk.set_harga(4500000)
+produk.tambah_stok(5)
+produk.info()
+tampilkan ""
+
+// 5. Class dengan Static-like Methods
+kelas MathUtils:
+    metode luas_lingkaran(radius):
+        hasil 3.14159 * radius * radius
+    selesai
+    
+    metode keliling_lingkaran(radius):
+        hasil 2 * 3.14159 * radius
+    selesai
+    
+    metode luas_persegi(sisi):
+        hasil sisi * sisi
+    selesai
+selesai
+
+tampilkan "=== Math Utils Class ==="
+math itu MathUtils()
+tampilkan f"Luas lingkaran r=5: {math.luas_lingkaran(5)}"
+tampilkan f"Keliling lingkaran r=5: {math.keliling_lingkaran(5)}"
+tampilkan f"Luas persegi s=4: {math.luas_persegi(4)}"
