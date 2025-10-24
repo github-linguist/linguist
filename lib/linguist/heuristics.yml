@@ -244,6 +244,12 @@ disambiguations:
     - '^\s*(?:across|deferred|elseif|ensure|feature|from|inherit|inspect|invariant|note|once|require|undefine|variant|when)\s*$'
   - language: Euphoria
     named_pattern: euphoria
+- extensions: ['.easy']
+  rules:
+  - language: Easy
+    pattern:
+    - '^PROGRAM'
+    - '^END PROGRAM'
 - extensions: ['.ecl']
   rules:
   - language: ECLiPSe

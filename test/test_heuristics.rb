@@ -420,6 +420,12 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_easy_by_heuristics
+    assert_heuristics({
+      "life" => all_fixtures("life", "*.easy"),
+    })
+  end
+
   def test_ecl_by_heuristics
     assert_heuristics({
       "ECL" => all_fixtures("ECL", "*.ecl"),
