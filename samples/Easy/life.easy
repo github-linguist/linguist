@@ -1,0 +1,131 @@
+PROGRAM Life:
+  TYPE Field IS ARRAY[25] OF ARRAY[80] OF BOOLEAN;
+
+  DECLARE (w, h) INTEGER;
+  DECLARE field Field;
+
+  DECLARE (x, y) INTEGER;
+  DECLARE i INTEGER;
+
+  FUNCTION valid(x INTEGER, y INTEGER) BOOLEAN:
+    RETURN NOT (x < 0 | x >= w | y < 0 | y >= h);
+  END FUNCTION valid;
+
+  FUNCTION neighbours(x INTEGER, y INTEGER) INTEGER:
+    DECLARE n INTEGER;
+    DECLARE (xx, yy) INTEGER;
+
+    SET n := 0;
+    FOR xx := x-1 TO x+1 DO
+      FOR yy := y-1 TO y+1 DO
+        IF xx <> x | yy <> y THEN
+          IF valid(xx, yy) THEN
+            IF field[yy][xx] THEN SET n := n + 1; FI;
+          FI;
+        FI;
+      END FOR;
+    END FOR;
+
+    RETURN n;
+  END FUNCTION neighbours;
+
+  PROCEDURE clearscreen:
+    OUTPUT CHARACTER(27), "[", "H", CHARACTER(27), "[", "J";
+  END PROCEDURE clearscreen;
+
+  PROCEDURE print:
+    DECLARE (x, y) INTEGER;
+
+    CALL clearscreen;
+
+    OUTPUT "** [ EASY LIFE ]", " ";
+    FOR x := 0 TO w+1 - 17 DO OUTPUT "*"; END FOR; OUTPUT " " || CHARACTER(13);
+    FOR y := 0 TO h-1 DO
+      OUTPUT "*";
+      FOR x := 0 TO w-1 DO
+        IF field[y][x] = TRUE THEN
+          OUTPUT "x";
+        ELSE
+          OUTPUT " ";
+        FI;
+      END FOR;
+      OUTPUT "*" || CHARACTER(13);
+    END FOR;
+    FOR x := 0 TO w+1 DO OUTPUT "*"; END FOR; OUTPUT " " || CHARACTER(13);
+  END PROCEDURE print;
+  
+  PROCEDURE glider(x INTEGER, y INTEGER):
+    SET field[y][x] := TRUE;
+    SET field[y][x+1] := TRUE;
+    SET field[y][x+2] := TRUE;
+    SET field[y+1][x] := TRUE;
+    SET field[y+2][x+1] := TRUE;
+  END PROCEDURE glider;
+
+  PROCEDURE glider2(x INTEGER, y INTEGER):
+    SET field[y][x] := TRUE;
+    SET field[y][x+1] := TRUE;
+    SET field[y][x+2] := TRUE;
+    SET field[y][x+3] := TRUE;
+    SET field[y+1][x+4] := TRUE;
+    SET field[y+3][x+4] := TRUE;
+    SET field[y+1][x] := TRUE;
+    SET field[y+2][x] := TRUE;
+    SET field[y+3][x+1] := TRUE;
+  END PROCEDURE glider2;
+
+  PROCEDURE evolution:
+    DECLARE (x, y) INTEGER;
+    DECLARE next Field;
+
+    FOR y := 0 TO h-1 DO
+      FOR x := 0 TO w-1 DO
+        DECLARE alive BOOLEAN;
+        DECLARE n INTEGER;
+
+        SET alive := field[y][x];
+        SET n := neighbours(x, y);
+
+        IF alive = TRUE THEN
+          IF n < 2 | n > 3 THEN SET alive := FALSE; FI;
+        ELSE
+          IF n = 3 THEN SET alive := TRUE; FI;
+        FI;
+
+        SET next[y][x] := alive;
+      END FOR;
+    END FOR;
+
+    SET field := next;
+  END PROCEDURE evolution;
+
+  SET w := 80;
+  SET h := 25;
+
+  FOR y := 0 TO h-1 DO
+    FOR x := 0 TO w-1 DO
+      SET field[y][x] := FALSE;
+    END FOR;
+  END FOR;
+
+  CALL glider(30, 15);
+  CALL glider(40, 10);
+  CALL glider2(50, 15);
+
+  FOR i := 1 WHILE TRUE DO
+    CALL print;
+    OUTPUT "GENERATION: " || i;
+
+    CALL evolution;
+
+    CALL runtime_pause(0.3);
+
+    IF i MOD 10 = 0 THEN
+      CALL glider(40, 10);
+      CALL glider(30, 15);
+    FI;
+  END FOR;
+
+  EXIT;
+
+END PROGRAM Life;

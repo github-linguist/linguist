@@ -575,8 +575,8 @@ Batchfile:
   - ".bat"
   - ".cmd"
   filenames:
-  - "gradlew.bat"
-  - "mvnw.cmd"
+  - gradlew.bat
+  - mvnw.cmd
   tm_scope: source.batchfile
   ace_mode: batchfile
   color: "#C1F12E"
@@ -1884,6 +1884,14 @@ Earthly:
   filenames:
   - Earthfile
   language_id: 963512632
+Easy:
+  type: programming
+  color: "#fcb103"
+  extensions:
+  - ".easy"
+  tm_scope: source.easy
+  ace_mode: text
+  language_id: 104361786
 Easybuild:
   type: data
   color: "#069406"
