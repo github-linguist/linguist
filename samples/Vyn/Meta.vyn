@@ -1,0 +1,49 @@
+-- Single-line comment
+-- [[
+  Multi-line comment test
+  Should highlight properly too
+]]
+
+X = 5
+local Y = 2
+private Z = 7
+
+msg = "Hello, world!"
+phrase = "The result is: "
+
+function add(a, b)
+  return a + b
+end
+
+func div(a, b):
+  return a / b
+
+fn mult(a, b) {
+  return a * b
+}
+
+-- Math ops
+sum = add(X, Y)
+diff = X - Y
+prod = mult(X, Y)
+expo = X ^ Y
+percent = (X / 100) * Y
+
+if X > Y then
+  print(phrase .. "X is greater than Y")
+else
+  print(phrase .. "Y is greater or equal to X")
+end
+
+if X < 10:
+  print("X is less than 10")
+
+if Y == 2 {
+  print("Y equals 2")
+}
+
+-- Private var reset test
+{
+  private temp = add(X, Z)
+  print("Temp result: " .. temp)
+}
