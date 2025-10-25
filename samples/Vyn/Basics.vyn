@@ -1,0 +1,9 @@
+local X = 14
+private Z = 4 # Private Variables a temporary variables that get wiped after their block finished, used for temporary data/use.
+
+if X >= Z then
+  # Z is now wiped from the data, since the block is finished.
+  print(X)
+else
+  print(100 / 2)
+end
