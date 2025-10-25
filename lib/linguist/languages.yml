@@ -581,6 +581,13 @@ Batchfile:
   ace_mode: batchfile
   color: "#C1F12E"
   language_id: 29
+Baz:
+  type: programming
+  extensions:
+    - ".baz"
+  tm_scope: source.baz
+  tree_sitter:
+    grammar: calint/tree-sitter-baz
 Beef:
   type: programming
   color: "#a52f4e"
