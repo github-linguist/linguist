@@ -1,0 +1,28 @@
+local A = 5
+local B = 7
+
+function add(x, y)
+  return x + y
+end
+
+func mult(x, y) { 
+  return x * y
+}
+
+fn div(x, y):
+  return x / y
+
+# One of the awesome features of Vyn, that other languages dont have, is multi-syntax support, which allows multiple types of ways, to write the same thing
+  
+print(add(A, B))
+
+if add(A, B) < mult((A - 4), B) {
+  print(add(A, B))
+}
+
+if div(B, A) == mult(A * 1, B + (A - 3)):
+  print "It is equal!"
+else:
+  print "It isn't equal!"
+
+# Prints work with/without a parenthesis
