@@ -1,0 +1,42 @@
+// Created by Ilya Shchepetkov
+
+IMPLEMENTATION Leftpad_i
+REFINES Leftpad
+
+/*
+On the implementation level, B requires you to specify concrete values for all
+constants and sets you defined before. I've decided to specify Chars as a set
+of 3 integers. It should not affect proofs in any way.
+*/
+VALUES
+     Chars = {1, 2, 3}
+
+OPERATIONS
+
+result ← leftpad(cc, nn, ss) =
+    BEGIN
+        // Declare local variables
+        VAR pad, ii IN
+            pad := max({nn - size(ss), 0});
+            ii := 0;
+            result := ss;
+
+            WHILE ii < pad DO
+                result := cc ⇾ result;
+                ii := ii + 1
+            // loop invariants
+            INVARIANT
+                ii ≥ 0 ∧
+                ii ≤ pad ∧
+                result ∈ seq(Chars) ∧
+                size(result) = size(ss) + ii ∧
+                ∀jj . (jj ∈ ℕ ∧ jj ≥ 0 ∧ jj < ii ⇒ result(jj + 1) = cc) ∧
+                ∀jj . (jj ∈ ℕ ∧ jj ≥ 0 ∧ jj < size(ss) ⇒ result(ii + jj + 1) = ss(jj + 1))
+            // loop variant
+            VARIANT
+                pad - ii
+            END
+        END
+    END
+
+END
