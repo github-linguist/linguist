@@ -388,6 +388,11 @@ disambiguations:
   - language: JSON
     named_pattern: json
   - language: Slice
+- extensions: ['.imp']
+  rules:
+  - language: B (Formal Method)
+    pattern:
+    - 'IMPLEMENTATION[\S\s]*OPERATIONS[\S\s]*END'
 - extensions: ['.inc']
   rules:
   - language: Motorola 68K Assembly
@@ -494,6 +499,11 @@ disambiguations:
     pattern: '^dnl|^divert\((?:-?\d+)?\)|^\w+\(`[^\r\n]*?''[),]'
   - language: Monkey C
     pattern: '\b(?:using|module|function|class|var)\s+\w'
+- extensions: ['.mch']
+  rules:
+    - language: B (Formal Method)
+      pattern:
+      - 'MACHINE[\S\s]*END'
 - extensions: ['.md']
   rules:
   - language: Markdown
@@ -706,6 +716,11 @@ disambiguations:
     pattern:
     - '^\s*#(?:(?:if|ifdef|define|pragma)\s+\w|\s*include\s+<[^>]+>)'
     - '^\s*template\s*<'
+- extensions: ['.ref']
+  rules:
+  - language: B (Formal Method)
+    pattern:
+    - 'REFINEMENT[\S\s]*REFINES[\S\s]*END'
 - extensions: ['.res']
   rules:
   - language: ReScript
