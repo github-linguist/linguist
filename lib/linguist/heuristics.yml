@@ -53,6 +53,13 @@ disambiguations:
     - named_pattern: man-title
     - named_pattern: man-heading
   - language: Roff
+- extensions: ['.action']
+  rules:
+  - language: ROS Interface
+    and:
+      - pattern: '(?i)^[a-z]\w*(?:\/[a-z]\w*)?(?:<=\d+)?(?:\[(?:<=\d+)?\])?\s+\w+\b'
+      - pattern: '^---\s*$'
+      - negative_pattern: '^\s*[^\s@#\w-]'
 - extensions: ['.al']
   rules:
   # AL pattern source from https://github.com/microsoft/AL/blob/master/grammar/alsyntax.tmlanguage - keyword.other.applicationobject.al
@@ -472,7 +479,7 @@ disambiguations:
     pattern: '^: '
   - language: M
     pattern: '^\s*;'
-  - language: Mathematica
+  - language: Wolfram Language
     and:
       - pattern: '\(\*'
       - pattern: '\*\)$'
@@ -542,6 +549,10 @@ disambiguations:
   rules:
   - language: OMNeT++ MSG
     pattern: '^cplusplus\(?[\S]*\)?[\s]*\{?\{?|^namespace[\s]+([^.\s]*\.)*[^.\s]*;|^struct[\s]+[\S]+|^message[\s]+[\S]+(extends )?[\S]*[\s]*|^packet[\s]+[\S]+|^class[\s]+[\S]+(extends )?[\S]*[\s]*|^enum[\s]+[\S]+|^import ([^.\s]*\.)*[^.\s]*;'
+  - language: ROS Interface
+    and:
+      - pattern: '(?i)^[a-z]\w*(?:\/[a-z]\w*)?(?:<=\d+)?(?:\[(?:<=\d+)?\])?\s+\w+\b'
+      - negative_pattern: '^\s*[^\s@#\w-]'
 - extensions: ['.n']
   rules:
   - language: Roff
@@ -802,6 +813,13 @@ disambiguations:
   rules:
   - language: SubRip Text
     pattern: '^(\d{2}:\d{2}:\d{2},\d{3})\s*(-->)\s*(\d{2}:\d{2}:\d{2},\d{3})$'
+- extensions: ['.srv']
+  rules:
+  - language: ROS Interface
+    and:
+      - pattern: '(?i)^[a-z]\w*(?:\/[a-z]\w*)?(?:<=\d+)?(?:\[(?:<=\d+)?\])?\s+\w+\b'
+      - pattern: '^---\s*$'
+      - negative_pattern: '^\s*[^\s@#\w-]'
 - extensions: ['.st']
   rules:
   - language: StringTemplate
@@ -847,6 +865,13 @@ disambiguations:
   rules:
   - language: Java Server Pages
     pattern: '<%[@!=\s]?\s*(taglib|tag|include|attribute|variable)\s'
+- extensions: ['.tl']
+  rules:
+  - language: Teal
+    and:
+    - pattern: '--.*'
+    - pattern: '\b(local|function|end|record|interface|enum)\b'
+  - language: Type Language
 - extensions: ['.tlv']
   rules:
   - language: TL-Verilog
