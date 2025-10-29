@@ -2,33 +2,25 @@
  * Author: 
  * Creation date: 10/21/25
  */
-MACHINE
+REFINEMENT
+    Airlock_r
+REFINES
     Airlock
-SEES 
+SEES
     Airlock_pressure_bs
-SETS
-    PHASE = {ACQ, CTRL}
-VARIABLES
+CONCRETE_VARIABLES
     airlock_pressure1,
     airlock_pressure2,
     airlock_pressure3,
     is_indoor_door_openable,
     is_outdoor_door_openable,
     cycle
-INVARIANT
-    airlock_pressure1 : PRESSURE &
-    airlock_pressure2 : PRESSURE &
-    airlock_pressure3 : PRESSURE &
-    is_indoor_door_openable : BOOL &
-    is_outdoor_door_openable : BOOL &
-    cycle : PHASE &
-    not(is_indoor_door_openable = TRUE & is_outdoor_door_openable = TRUE)
 INITIALISATION
-    airlock_pressure1 :: PRESSURE ||
-    airlock_pressure2 :: PRESSURE ||
-    airlock_pressure3 :: PRESSURE ||
-    is_indoor_door_openable := FALSE ||
-    is_outdoor_door_openable := FALSE ||
+    airlock_pressure1 := other_pressure;
+    airlock_pressure2 := other_pressure;
+    airlock_pressure3 := other_pressure;
+    is_indoor_door_openable := FALSE;
+    is_outdoor_door_openable := FALSE;
     cycle := ACQ
 OPERATIONS
 

@@ -1,17 +1,10 @@
 /* Airlock_i
- * Author:
+ * Author: 
  * Creation date: 10/27/25
  */
 IMPLEMENTATION Airlock_i
-REFINES Airlock
+REFINES Airlock_r
 SEES Airlock_pressure_bs
-CONCRETE_VARIABLES
-    airlock_pressure1,
-    airlock_pressure2,
-    airlock_pressure3,
-    is_indoor_door_openable,
-    is_outdoor_door_openable,
-    cycle
 INITIALISATION
     airlock_pressure1 := other_pressure;
     airlock_pressure2 := other_pressure;
@@ -19,16 +12,16 @@ INITIALISATION
     is_indoor_door_openable := FALSE;
     is_outdoor_door_openable := FALSE;
     cycle := ACQ
-
+    
 OPERATIONS
-    actualize_pressure =
+    actualize_pressure = 
     BEGIN
         airlock_pressure1 <-- get_pressure ;
         airlock_pressure2 <-- get_pressure ;
         airlock_pressure3 <-- get_pressure ;
         cycle := CTRL
     END;
-
+    
     enable_doors_opening =
     BEGIN
         CASE airlock_pressure1 OF
@@ -85,7 +78,7 @@ OPERATIONS
         END;
         cycle := ACQ
     END;
-
+    
     ret <-- get_airlock_pressure1 =
     BEGIN
         ret := airlock_pressure1
@@ -113,4 +106,6 @@ OPERATIONS
     BEGIN
         ret := cycle
     END
+
+
 END
