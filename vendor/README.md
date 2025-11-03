@@ -366,6 +366,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Macaulay2:** [Macaulay2/language-macaulay2](https://github.com/Macaulay2/language-macaulay2)
 - **Makefile:** [textmate/make.tmbundle](https://github.com/textmate/make.tmbundle)
 - **Mako:** [marconi/mako-tmbundle](https://github.com/marconi/mako-tmbundle)
+- **Maple:** [yu961549745/VSCodeHighlightForMaple](https://github.com/yu961549745/VSCodeHighlightForMaple?tab=readme-ov-file)
 - **Markdown:** [wooorm/markdown-tm-language](https://github.com/wooorm/markdown-tm-language)
 - **Marko:** [marko-js/marko-tmbundle](https://github.com/marko-js/marko-tmbundle)
 - **Mask:** [tenbits/sublime-mask](https://github.com/tenbits/sublime-mask)
