@@ -1,0 +1,70 @@
+# afni/afni/src/maple/sharm.maple
+
+with(codegen):
+
+sharm2_u := proc(x,y,z) local xq,yq,zq , v ;
+      xq := x*x ; yq := y*y ; zq := z*z ;
+      v :=  a_u +  b2_u * y
+             + c4_u * (2.0*zq-xq-yq)
+             + c7_u * (xq-yq)
+             + (c5_u*x + c6_u*y + b3_u) * z
+             + (c8_u*y + b1_u) * x ;
+      return v ;
+end :
+
+sharm2_v := proc(x,y,z) local xq,yq,zq , v ;
+      xq := x*x ; yq := y*y ; zq := z*z ;
+      v :=  a_v +  b2_v * y
+             + c4_v * (2.0*zq-xq-yq)
+             + c7_v * (xq-yq)
+             + (c5_v*x + c6_v*y + b3_v) * z
+             + (c8_v*y + b1_v) * x ;
+      return v ;
+end :
+
+sharm2_w := proc(x,y,z) local xq,yq,zq , v ;
+      xq := x*x ; yq := y*y ; zq := z*z ;
+      v :=  a_w +  b2_w * y
+             + c4_w * (2.0*zq-xq-yq)
+             + c7_w * (xq-yq)
+             + (c5_w*x + c6_w*y + b3_w) * z
+             + (c8_w*y + b1_w) * x ;
+      return v ;
+end :
+
+s2_uvw := [ u2=sharm2_u(x,y,z) , v2=sharm2_v(x,y,z) , w2=sharm2_w(x,y,z) ] :
+
+sharm3_u := proc(x,y,z) local xq,yq,zq,rr , v;
+      xq := x*x ; yq := y*y ; zq := z*z ; rr := xq+yq ;
+      v :=  a_u + ( b2_u + d15_u * (3.0*xq-yq) ) * y
+             + c4_u * (2.0*zq-xq-yq)
+             + (c7_u + d12_u*z) * (xq-yq)
+             + (c5_u*x + c6_u*y + b3_u + d9_u*(2.0*zq-3.0*rr) ) * z
+             + (c8_u*y + b1_u + d13_u*y*z + d14_u*(xq-3.0*yq) ) * x
+             + (d10_u*x + d11_u*y)*(4.0*zq-rr) ;
+      return v ;
+end :
+
+sharm3_v := proc(x,y,z) local xq,yq,zq,rr , v;
+      xq := x*x ; yq := y*y ; zq := z*z ; rr := xq+yq ;
+      v :=  a_v + ( b2_v + d15_v * (3.0*xq-yq) ) * y
+             + c4_v * (2.0*zq-xq-yq)
+             + (c7_v + d12_v*z) * (xq-yq)
+             + (c5_v*x + c6_v*y + b3_v + d9_v*(2.0*zq-3.0*rr) ) * z
+             + (c8_v*y + b1_v + d13_v*y*z + d14_v*(xq-3.0*yq) ) * x
+             + (d10_v*x + d11_v*y)*(4.0*zq-rr) ;
+      return v ;
+end :
+
+sharm3_w := proc(x,y,z) local xq,yq,zq,rr , v;
+      xq := x*x ; yq := y*y ; zq := z*z ; rr := xq+yq ;
+      v :=  a_w + ( b2_w + d15_w * (3.0*xq-yq) ) * y
+             + c4_w * (2.0*zq-xq-yq)
+             + (c7_w + d12_w*z) * (xq-yq)
+             + (c5_w*x + c6_w*y + b3_w + d9_w*(2.0*zq-3.0*rr) ) * z
+             + (c8_w*y + b1_w + d13_w*y*z + d14_w*(xq-3.0*yq) ) * x
+             + (d10_w*x + d11_w*y)*(4.0*zq-rr) ;
+      return v ;
+end :
+
+s3_uvw := [ u3=sharm3_u(x,y,z) , v3=sharm3_v(x,y,z) , w3=sharm3_w(x,y,z) ] :
