@@ -1,4 +1,4 @@
-wimport from byllm.llm { Model }
+import from byllm.llm { Model }
 import time;
 
 glob llm = Model(model_name="gpt-4o");
