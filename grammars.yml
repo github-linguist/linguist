@@ -4,6 +4,8 @@ vendor/grammars/AL:
 - source.al
 vendor/grammars/Alloy.tmbundle:
 - source.alloy
+vendor/grammars/ArkTS:
+- source.ets
 vendor/grammars/Assembly-Syntax-Definition:
 - source.x86
 vendor/grammars/Atom-PostScript:
@@ -15,6 +17,8 @@ vendor/grammars/AutoHotkey:
 - source.ahk
 vendor/grammars/CUE-Sheet_sublime:
 - source.cuesheet
+vendor/grammars/Clue-for-VSCode:
+- source.clue
 vendor/grammars/CoDT7-Sublime:
 - source.gsc
 vendor/grammars/ColdFusion:
@@ -22,6 +26,8 @@ vendor/grammars/ColdFusion:
 - source.cfscript.cfc
 - text.cfml.basic
 - text.html.cfm
+vendor/grammars/CookVSCode:
+- source.cooklang
 vendor/grammars/Cylc.tmbundle:
 - source.cylc
 vendor/grammars/Dafny-VSCode:
@@ -84,6 +90,7 @@ vendor/grammars/NovaGrammars:
 - source.solution
 - source.win32-messages
 - source.ws
+- text.git-commit
 - text.hash-commented
 - text.robots-txt
 vendor/grammars/ObjectScript.tmBundle:
@@ -295,6 +302,8 @@ vendor/grammars/bqn-vscode:
 - source.bqn
 vendor/grammars/browserslist-vscode:
 - text.browserslist
+vendor/grammars/bruno-ide-extensions:
+- source.bru
 vendor/grammars/bst.tmLanguage:
 - source.bst
 vendor/grammars/c.tmbundle:
@@ -349,6 +358,8 @@ vendor/grammars/d2-vscode:
 - text.html.markdown.d2
 vendor/grammars/dart-syntax-highlight:
 - source.dart
+vendor/grammars/daslang-grammar:
+- source.daslang
 vendor/grammars/data-weave-tmLanguage:
 - source.data-weave
 vendor/grammars/denizenscript-grammar:
@@ -583,6 +594,7 @@ vendor/grammars/language-etc:
 - source.odin-ehr
 - source.openbsd-pkg.contents
 - source.opts
+- source.psl
 - source.record-jar
 - source.sexp
 - source.sfv
@@ -594,12 +606,14 @@ vendor/grammars/language-etc:
 - source.stl
 - source.string-template
 - source.tags
+- source.torrc
 - source.ucd.nameslist
 - source.ucd.unidata
 - source.wgetrc
 - text.checksums
 - text.codeowners
 - text.html.ecmarkup
+- text.jira
 - text.lesshst
 - text.openbsd-pkg.desc
 - text.savane
@@ -655,6 +669,8 @@ vendor/grammars/language-hql:
 - source.hql
 vendor/grammars/language-html:
 - text.html.basic
+vendor/grammars/language-hurl:
+- source.hurl
 vendor/grammars/language-igor:
 - source.igor
 vendor/grammars/language-inform7:
@@ -703,10 +719,14 @@ vendor/grammars/language-mermaid:
 - source.mermaid.gitgraph
 - source.mermaid.mindmap
 - source.mermaid.pie-chart
+- source.mermaid.quad-chart
 - source.mermaid.requirement-diagram
+- source.mermaid.sankey
 - source.mermaid.sequence-diagram
 - source.mermaid.state-diagram
+- source.mermaid.timeline
 - source.mermaid.user-journey
+- source.mermaid.zenuml
 vendor/grammars/language-meson:
 - source.meson
 vendor/grammars/language-msl:
@@ -831,6 +851,8 @@ vendor/grammars/latex.tmbundle:
 - text.tex.latex
 - text.tex.latex.beamer
 - text.tex.latex.memoir
+vendor/grammars/leo-linguist:
+- source.leo
 vendor/grammars/linter-lilypond:
 - source.lilypond
 vendor/grammars/liquid-tm-grammar:
@@ -885,6 +907,8 @@ vendor/grammars/nemerle.tmbundle:
 - source.nemerle
 vendor/grammars/nesC:
 - source.nesc
+vendor/grammars/nickel:
+- source.nickel
 vendor/grammars/nix-linguist:
 - source.nix
 vendor/grammars/nu-grammar:
@@ -936,6 +960,8 @@ vendor/grammars/pike-textmate:
 - source.pike
 vendor/grammars/pkl.tmbundle:
 - source.pkl
+vendor/grammars/playground-cj:
+- source.cj
 vendor/grammars/polar-grammar:
 - source.polar
 vendor/grammars/portugol-grammar:
@@ -951,9 +977,12 @@ vendor/grammars/python-django.tmbundle:
 - source.python.django
 - text.html.django
 vendor/grammars/qsharp:
+- source.openqasm
 - source.qsharp
 vendor/grammars/quake:
 - source.quake
+vendor/grammars/quakec-syntax:
+- source.quakec
 vendor/grammars/r.tmbundle:
 - source.r
 - text.tex.latex.rd
@@ -970,10 +999,12 @@ vendor/grammars/riot-syntax-highlight:
 - text.html.riot
 vendor/grammars/roc-vscode-unofficial:
 - source.roc
-vendor/grammars/ruby-slim.tmbundle:
-- text.slim
+vendor/grammars/ros-tmlanguage:
+- source.rosmsg
 vendor/grammars/rust-syntax:
 - source.rust
+vendor/grammars/rust_hdl_vscode:
+- source.vhdl
 vendor/grammars/sail_vscode:
 - source.sail
 vendor/grammars/sas.tmbundle:
@@ -1051,8 +1082,6 @@ vendor/grammars/sublime-nearley:
 vendor/grammars/sublime-netlinx:
 - source.netlinx
 - source.netlinx.erb
-vendor/grammars/sublime-nginx:
-- source.nginx
 vendor/grammars/sublime-odin:
 - source.odin
 vendor/grammars/sublime-opal:
@@ -1080,8 +1109,6 @@ vendor/grammars/sublime-terra:
 - source.terra
 vendor/grammars/sublime-text-ox:
 - source.ox
-vendor/grammars/sublime-varnish:
-- source.varnish.vcl
 vendor/grammars/sublime-zig-language:
 - source.zig
 vendor/grammars/sublimeassembly:
@@ -1115,6 +1142,8 @@ vendor/grammars/tcl.tmbundle:
 - text.html.tcl
 vendor/grammars/templ-vscode:
 - source.templ
+vendor/grammars/textmate:
+- source.flix
 vendor/grammars/textmate.tmbundle:
 - source.regexp.oniguruma
 - source.tm-properties
@@ -1137,8 +1166,6 @@ vendor/grammars/typst-grammar:
 - source.typst
 vendor/grammars/verilog.tmbundle:
 - source.verilog
-vendor/grammars/vhdl:
-- source.vhdl
 vendor/grammars/vsc-ember-syntax:
 - inline.hbs
 - inline.template
@@ -1156,6 +1183,9 @@ vendor/grammars/vscode:
 vendor/grammars/vscode-TalonScript:
 - markdown.talon.codeblock
 - source.talon
+vendor/grammars/vscode-aiken:
+- source.aiken
+- source.uplc
 vendor/grammars/vscode-antlers-language-server:
 - text.html.statamic
 vendor/grammars/vscode-apache:
@@ -1164,6 +1194,8 @@ vendor/grammars/vscode-bitbake:
 - source.bb
 vendor/grammars/vscode-brightscript-language:
 - source.brs
+vendor/grammars/vscode-c3:
+- source.c3
 vendor/grammars/vscode-caddyfile:
 - source.Caddyfile
 - source.Caddyfile-test
@@ -1186,6 +1218,8 @@ vendor/grammars/vscode-dune:
 - source.dune
 vendor/grammars/vscode-euphoria:
 - source.euphoria
+vendor/grammars/vscode-fastly-vcl:
+- source.vcl
 vendor/grammars/vscode-fluent:
 - source.ftl
 vendor/grammars/vscode-gcode-syntax:
@@ -1226,6 +1260,8 @@ vendor/grammars/vscode-just:
 - source.just
 vendor/grammars/vscode-kdl:
 - source.kdl
+vendor/grammars/vscode-kolmafia-ash:
+- source.ash
 vendor/grammars/vscode-lean:
 - markdown.lean.codeblock
 - source.lean
@@ -1248,6 +1284,8 @@ vendor/grammars/vscode-move-syntax:
 - markdown.move.codeblock
 - mdx.move.codeblock
 - source.move
+vendor/grammars/vscode-nginx:
+- source.nginx
 vendor/grammars/vscode-noir:
 - source.nr
 vendor/grammars/vscode-opa:
@@ -1276,6 +1314,9 @@ vendor/grammars/vscode-rbs-syntax:
 - source.rbs
 vendor/grammars/vscode-ron:
 - source.ron
+vendor/grammars/vscode-ruby-slim:
+- injection.interpolated-ruby
+- text.slim
 vendor/grammars/vscode-scala-syntax:
 - source.scala
 vendor/grammars/vscode-singularity:
@@ -1283,6 +1324,8 @@ vendor/grammars/vscode-singularity:
 vendor/grammars/vscode-slice:
 - source.ice
 - source.slice
+vendor/grammars/vscode-teal:
+- source.teal
 vendor/grammars/vscode-tree-sitter-query:
 - source.scm
 vendor/grammars/vscode-vba:
@@ -1290,6 +1333,9 @@ vendor/grammars/vscode-vba:
 - source.wwb
 vendor/grammars/vscode-vcard:
 - source.vcard
+vendor/grammars/vscode-vento:
+- source.vento
+- text.html.vento
 vendor/grammars/vscode-vlang:
 - source.v
 vendor/grammars/vscode-wit:
@@ -1315,6 +1361,7 @@ vendor/grammars/vscode_cobol:
 - source.dir
 - source.directivesmf
 - source.hlasm
+- source.ilecobol
 - source.jcl
 - source.mfu
 - source.mfupp_dir
@@ -1325,6 +1372,7 @@ vendor/grammars/vscode_cobol:
 vendor/grammars/vscode_mikrotik_routeros_script:
 - source.rsc
 vendor/grammars/wgsl-analyzer:
+- source.wesl
 - source.wgsl
 vendor/grammars/witcherscript-grammar:
 - source.witcherscript
@@ -1339,5 +1387,7 @@ vendor/grammars/xml.tmbundle:
 - text.xml.xsl
 vendor/grammars/zeek-sublime:
 - source.zeek
+vendor/grammars/zenstack:
+- source.zmodel
 vendor/grammars/zephir-sublime:
 - source.php.zephir
