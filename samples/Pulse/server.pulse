@@ -1,0 +1,60 @@
+// Todo app API with SQLite database
+
+import env from 'std/env'
+import http from 'std/http'
+import sql from 'std/sql'
+
+contract Todo {
+  title: string,
+  completed: boolean
+}
+
+fn initDatabase() {
+  sql.exec('CREATE TABLE IF NOT EXISTS todos (id INTEGER PRIMARY KEY, title TEXT, completed INTEGER)', [])
+  print('Database initialized')
+}
+
+fn main() {
+  initDatabase()
+
+  // Get all todos
+  http.get('/api/todos', fn(req, res) {
+    const todos = sql.many('SELECT * FROM todos', [])
+    res.json(todos)
+  })
+
+  // Create todo
+  http.post('/api/todos', fn(req, res) {
+    const data = req.json()
+    Todo.validate(data)
+
+    sql.exec('INSERT INTO todos (title, completed) VALUES (?, ?)', [data.title, data.completed || false])
+
+    const todos = sql.many('SELECT * FROM todos', [])
+    res.json({ message: 'Todo created', todos: todos }, 201)
+  })
+
+  // Update todo
+  http.put('/api/todos/:id', fn(req, res) {
+    const id = req.params.id
+    const data = req.json()
+
+    sql.exec('UPDATE todos SET title = ?, completed = ? WHERE id = ?', [data.title, data.completed, id])
+
+    const todo = sql.one('SELECT * FROM todos WHERE id = ?', [id])
+    res.json(todo)
+  })
+
+  // Delete todo
+  http.delete('/api/todos/:id', fn(req, res) {
+    const id = req.params.id
+    sql.exec('DELETE FROM todos WHERE id = ?', [id])
+    res.json({ message: 'Todo deleted' })
+  })
+
+  const port = env.get('PORT') || '8080'
+  print('Todo API server listening on port ' + port)
+  http.listen(port)
+}
+
+main()

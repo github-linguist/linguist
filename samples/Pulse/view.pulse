@@ -1,0 +1,28 @@
+// Web Component with reactive state
+
+view Counter(props) {
+  let count = 0
+
+  fn increment() {
+    count = count + 1
+  }
+
+  fn decrement() {
+    count = count - 1
+  }
+
+  fn reset() {
+    count = 0
+  }
+
+  return `
+    <div class="counter">
+      <h1>Count: {{count}}</h1>
+      <div class="buttons">
+        <button data-handler="decrement">-</button>
+        <button data-handler="reset">Reset</button>
+        <button data-handler="increment">+</button>
+      </div>
+    </div>
+  `
+}

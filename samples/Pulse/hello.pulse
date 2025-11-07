@@ -1,0 +1,24 @@
+// Basic Pulse syntax demo
+
+fn greet(name) {
+  return 'Hello, ' + name + '!'
+}
+
+fn main() {
+  const message = greet('World')
+  print(message)
+
+  // Numbers and arithmetic
+  let x = 10
+  let y = 20
+  print('Sum: ' + (x + y))
+
+  // Boolean logic
+  if (x < y) {
+    print('x is less than y')
+  } else {
+    print('x is greater than or equal to y')
+  }
+}
+
+main()
