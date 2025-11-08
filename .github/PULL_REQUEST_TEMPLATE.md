@@ -39,14 +39,14 @@
     - Sample source(s):
       - [URL to each sample source, if applicable]
     - Sample license(s):
-  - [ ] I have included a change to the heuristics to distinguish my language from others using the same extension.
+      - [ ] I have included a change to the heuristics #to distinguish my language from others using the same extension.
 
 - [ ] **I am changing the source of a syntax highlighting grammar**
   - Old: [URL to grammar repo]
   - New: [URL to grammar repo]
 
 - [ ] **I am updating a grammar submodule**
-  <!-- That's not necessary, grammar submodules are updated automatically with each new release. -->
+  <!-- That's not necessary, grammar submodules are updated automatically with each new release. 
 
 - [ ] **I am adding new or changing current functionality**
   <!-- This includes modifying the vendor, documentation, and generated lists. -->
