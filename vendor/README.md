@@ -407,7 +407,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **NetLinx+ERB:** [amclain/sublime-netlinx](https://github.com/amclain/sublime-netlinx)
 - **NetLogo:** [textmate/lisp.tmbundle](https://github.com/textmate/lisp.tmbundle)
 - **NewLisp:** [textmate/lisp.tmbundle](https://github.com/textmate/lisp.tmbundle)
-- **Nextflow:** [nextflow-io/atom-language-nextflow](https://github.com/nextflow-io/atom-language-nextflow)
+- **Nextflow:** [nextflow-io/vscode-language-nextflow](https://github.com/nextflow-io/vscode-language-nextflow)
 - **Nginx:** [william-voyek/vscode-nginx](https://github.com/william-voyek/vscode-nginx)
 - **Nickel:** [tweag/nickel](https://github.com/tweag/nickel)
 - **Nim:** [nim-lang/NimLime](https://github.com/nim-lang/NimLime)
