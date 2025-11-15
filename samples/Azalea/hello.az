@@ -12,3 +12,14 @@ end
 call sum a b put result
 say result
 
+// Flexible syntax examples
+let num x = 20
+var num y is 30
+if x > 10 do
+    say x
+end
+
+loop 5 do
+    say step
+end
+
