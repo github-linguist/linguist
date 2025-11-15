@@ -1,0 +1,100 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Azalea",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#numbers"
+    },
+    {
+      "include": "#operators"
+    },
+    {
+      "include": "#functions"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.azalea",
+          "match": "//.*"
+        },
+        {
+          "name": "comment.block.azalea",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.azalea",
+          "match": "\\b(form|let|var|const|set|create|act|def|fn|func|function|call|if|when|else|otherwise|loop|while|for|repeat|each|do|end|give|return|say|print|output|display|log|put|from|to|with|as|make|on|serve|view|read|write|net|file|vm|play|show|render|style|css)\\b"
+        },
+        {
+          "name": "keyword.operator.azalea",
+          "match": "\\b(plus|minus|times|div|divide|add|subtract|multiply|over|under|greater|less|same|equals|is|are|not|notequal|and|or|andalso|orelse|mod|power)\\b"
+        },
+        {
+          "name": "storage.type.azalea",
+          "match": "\\b(num|text|bool|list|map|void)\\b"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.azalea",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.azalea",
+              "match": "\\\\."
+            }
+          ]
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.azalea",
+          "match": "\\b\\d+\\.?\\d*\\b"
+        },
+        {
+          "name": "constant.language.azalea",
+          "match": "\\b(zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand|million|true|false)\\b"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.arithmetic.azalea",
+          "match": "[+\\-*/%=<>!&|^]"
+        }
+      ]
+    },
+    "functions": {
+      "patterns": [
+        {
+          "name": "entity.name.function.azalea",
+          "match": "\\b(call)\\s+\\w+"
+        }
+      ]
+    }
+  },
+  "scopeName": "source.azalea"
+}
+
