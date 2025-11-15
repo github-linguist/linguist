@@ -1,0 +1,30 @@
+// Web application example
+// Shows UI and backend integration
+
+act home_page req do
+    call view header style "background" "#ffc5cd" do
+        call view h1 "Welcome to Azalea"
+        call view p "Elegant, minimal, powerful"
+    end
+    
+    call view main do
+        call view section do
+            call view h2 "Features"
+            form list features from ["Fast", "Simple", "Powerful"]
+            call view list features
+        end
+    end
+end
+
+act api_handler req do
+    form text method from req method
+    if method same "GET" do
+        call serve json "Hello from Azalea API"
+    end
+end
+
+call serve get "/" give home_page
+call serve get "/api" give api_handler
+call serve on 3000
+say Server running on port 3000
+

@@ -1,0 +1,25 @@
+// Real-world Azalea example
+// Demonstrates common patterns and syntax
+
+act calculate_total items do
+    form num total from 0
+    loop items do
+        total give total plus step
+    end
+    give total
+end
+
+act process_order order do
+    form list items from order items
+    call calculate_total items put total
+    if total over 100 do
+        say Free shipping!
+    end
+    give total
+end
+
+form list cart from ["item1", "item2", "item3"]
+call process_order cart put result
+say Order total
+say result
+
