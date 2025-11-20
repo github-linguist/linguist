@@ -568,6 +568,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **ShellSession:** [atom/language-shellscript](https://github.com/atom/language-shellscript)
 - **Shen:** [rkoeninger/sublime-shen](https://github.com/rkoeninger/sublime-shen)
 - **Sieve:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
+- **Silverstripe Templates:** [gorriecoe/atom-silverstripe](https://github.com/gorriecoe/atom-silverstripe)
 - **Simple File Verification:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **Singularity:** [onnovalkering/vscode-singularity](https://github.com/onnovalkering/vscode-singularity)
 - **Slang:** [shader-slang/slang-vscode-extension](https://github.com/shader-slang/slang-vscode-extension)
