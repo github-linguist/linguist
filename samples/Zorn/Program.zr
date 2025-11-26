@@ -1,0 +1,14 @@
+#!/usr/bin/env zorn
+using System;
+using static System.Console;
+
+namespace HelloWorld {
+    // Just the initial demo. A sample application for Linguist to test with.
+    public class Program {
+        public static int Main(string[] args) {
+            WriteLine("This is a small sample code to test GitHub's Linguist module.");
+            let name = ReadLine("Enter your name>");
+            WriteLine($"Hello, {name}!");
+        }
+    }
+}
