@@ -870,6 +870,12 @@ disambiguations:
     pattern: '^## |@no-lib-strip@'
   - language: TeX
     pattern: '^\\(contentsline|defcounter|beamer|boolfalse)'
+- extensions: ['.tpl']
+  rules:
+  - language: Go Template
+    pattern: '\{\{-?\s*(\`?\"\\?\"?|\/\*\s|\w*)\b'
+  - language: Smarty
+    pattern: '(?<!\{)\{(\*\s|\$|\/)?\w*\b'
 - extensions: ['.ts']
   rules:
   - language: XML
