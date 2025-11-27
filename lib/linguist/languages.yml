@@ -2739,6 +2739,8 @@ Go Module:
 Go Template:
   type: markup
   color: "#00ADD8"
+  aliases:
+  - gotmpl
   extensions:
   - ".gohtml"
   - ".gotmpl"
@@ -2747,7 +2749,7 @@ Go Template:
   - ".tpl"
   filenames:
   - _helpers.tpl
-  tm_scope: text.html.go-template
+  tm_scope: source.go-template
   ace_mode: text
   language_id: 247918769
 Go Workspace:
