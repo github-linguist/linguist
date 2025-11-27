@@ -1,4 +1,4 @@
-{{/* Generate basic labels */}}
+{{- /* Generate basic labels */ -}}
 {{- define "mychart.labels" }}
   labels:
     generator: helm
