@@ -8,6 +8,7 @@ require 'linguist/samples'
 require 'linguist/shebang'
 require 'linguist/version'
 require 'linguist/strategy/manpage'
+require 'linguist/strategy/prefix'
 require 'linguist/strategy/xml'
 require 'linguist/instrumenter'
 
@@ -65,6 +66,7 @@ class << Linguist
     Linguist::Strategy::Filename,
     Linguist::Shebang,
     Linguist::Strategy::Extension,
+    Linguist::Strategy::Prefix,
     Linguist::Strategy::XML,
     Linguist::Strategy::Manpage,
     Linguist::Heuristics,

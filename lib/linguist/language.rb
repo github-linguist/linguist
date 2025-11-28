@@ -31,6 +31,7 @@ module Linguist
     @extension_index    = Hash.new { |h,k| h[k] = [] }
     @interpreter_index  = Hash.new { |h,k| h[k] = [] }
     @filename_index     = Hash.new { |h,k| h[k] = [] }
+    @prefix_index       = Hash.new { |h,k| h[k] = [] }
 
 
     # Detect languages by a specific type
@@ -83,6 +84,10 @@ module Linguist
 
       language.filenames.each do |filename|
         @filename_index[filename] << language
+      end
+
+      language.prefixes.each do |prefix|
+        @prefix_index[prefix.downcase] << language
       end
 
       @language_id_index[language.language_id] = language
@@ -169,6 +174,20 @@ module Linguist
       end
 
       @extension_index[extname]
+    end
+
+    # Public: Look up Languages by prefix.
+    #
+    # filename - The path string.
+    #
+    # Examples
+    #
+    #   Language.find_by_prefix('Makefile.amd64')
+    #   # => [#<Language name="Makefile">]
+    #
+    # Returns the matching languages.
+    def self.find_by_prefix(prefix)
+      @prefix_index[prefix]
     end
 
     # Public: Look up Languages by interpreter.
@@ -285,6 +304,7 @@ module Linguist
       @extensions   = attributes[:extensions]   || []
       @interpreters = attributes[:interpreters] || []
       @filenames    = attributes[:filenames]    || []
+      @prefixes     = attributes[:prefixes]     || []
 
       # Set popular flag
       @popular    = attributes.key?(:popular)    ? attributes[:popular]    : false
@@ -405,6 +425,15 @@ module Linguist
     # Returns the extensions Array
     attr_reader :extensions
 
+    # Public: Get prefixes
+    #
+    # Examples
+    #
+    #   # => ['Dockerfile.', 'Makefile.', 'Jenkinsfile.']
+    #
+    # Returns the prefixes Array
+    attr_reader :prefixes
+
     # Public: Get interpreters
     #
     # Examples
@@ -506,6 +535,7 @@ module Linguist
     options['extensions']   ||= []
     options['interpreters'] ||= []
     options['filenames']    ||= []
+    options['prefixes']     ||= []
 
     if extnames = extensions[name]
       extnames.each do |extname|
@@ -542,6 +572,7 @@ module Linguist
       :extensions        => Array(options['extensions']),
       :interpreters      => options['interpreters'].sort,
       :filenames         => options['filenames'],
+      :prefixes          => options['prefixes'],
       :popular           => popular.include?(name)
     )
   end

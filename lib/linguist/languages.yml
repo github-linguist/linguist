@@ -1731,6 +1731,8 @@ Dockerfile:
   filenames:
   - Containerfile
   - Dockerfile
+  prefixes:
+  - Dockerfile.
   ace_mode: dockerfile
   codemirror_mode: dockerfile
   codemirror_mime_type: text/x-dockerfile
@@ -2858,6 +2860,8 @@ Groovy:
   - groovy
   filenames:
   - Jenkinsfile
+  prefixes:
+  - Jenkinsfile.
   language_id: 142
 Groovy Server Pages:
   type: programming
@@ -4451,6 +4455,8 @@ Makefile:
   - makefile
   - makefile.sco
   - mkfile
+  prefixes:
+  - Makefile.
   interpreters:
   - make
   tm_scope: source.makefile
@@ -7763,6 +7769,8 @@ Text:
   - test.me
   - use.mask
   - use.stable.mask
+  prefixes:
+  - README.
   tm_scope: none
   ace_mode: text
   language_id: 372
