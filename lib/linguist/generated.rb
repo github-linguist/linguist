@@ -75,6 +75,7 @@ module Linguist
       esy_lock? ||
       npm_shrinkwrap_or_package_lock? ||
       pnpm_lock? ||
+      bun_lock? ||
       terraform_lock? ||
       generated_yarn_plugnplay? ||
       godeps? ||
@@ -501,6 +502,13 @@ module Linguist
     # Returns true or false.
     def pnpm_lock?
       !!name.match(/pnpm-lock\.yaml/)
+    end
+
+    # Internal: Is the blob a generated bun lockfile?
+    #
+    # Returns true or false.
+    def bun_lock?
+      !!name.match(/(?:^|\/)bun\.lockb?$/)
     end
 
     # Internal: Is the blob a generated Yarn Plug'n'Play?
