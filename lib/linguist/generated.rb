@@ -92,6 +92,7 @@ module Linguist
       pipenv_lock? ||
       gradle_wrapper? ||
       maven_wrapper? ||
+      mise_lock? ||
       generated_go? ||
       generated_protocol_buffer_from_go? ||
       generated_protocol_buffer? ||
@@ -580,6 +581,13 @@ module Linguist
     # Returns true or false.
     def maven_wrapper?
       !!name.match(/(?:^|\/)mvnw(?:\.cmd)?$/i)
+    end
+
+    # Internal: Is the blob a mise-en-place lock file?
+    #
+    # Returns true or false.
+    def mise_lock?
+      !!name.match(/(?:^|\/)mise(?:\.local)?\.lock$/)
     end
 
     # Is the blob a VCR Cassette file?
