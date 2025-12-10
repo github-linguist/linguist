@@ -234,6 +234,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Go:** [tree-sitter/tree-sitter-go](https://github.com/tree-sitter/tree-sitter-go) 🐌
 - **Go Checksums:** [golang/vscode-go](https://github.com/golang/vscode-go)
 - **Go Module:** [golang/vscode-go](https://github.com/golang/vscode-go)
+- **Go Template:** [jinliming2/vscode-go-template](https://github.com/jinliming2/vscode-go-template)
 - **Go Workspace:** [golang/vscode-go](https://github.com/golang/vscode-go)
 - **Godot Resource:** [godotengine/godot-vscode-plugin](https://github.com/godotengine/godot-vscode-plugin)
 - **Golo:** [TypeUnsafe/sublime-golo](https://github.com/TypeUnsafe/sublime-golo)
