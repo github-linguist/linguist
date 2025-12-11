@@ -1,0 +1,182 @@
+{
+  "name": "Kleis",
+  "scopeName": "source.kleis",
+  "fileTypes": ["kleis"],
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#numbers" },
+    { "include": "#booleans" },
+    { "include": "#symbolic-constants" },
+    { "include": "#types" },
+    { "include": "#quantifiers" },
+    { "include": "#keywords" },
+    { "include": "#annotations" },
+    { "include": "#operators" },
+    { "include": "#constructors" },
+    { "include": "#greek-types" },
+    { "include": "#variables" },
+    { "include": "#identifiers" }
+  ],
+  "repository": {
+
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.kleis",
+          "match": "//.*$"
+        },
+        {
+          "name": "comment.block.kleis",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    },
+
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.kleis",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.kleis",
+              "match": "\\\\."
+            }
+          ]
+        }
+      ]
+    },
+
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.kleis",
+          "match": "\\b[0-9]+(?:\\.[0-9]+)?(?:[eE][+-]?[0-9]+)?\\b"
+        }
+      ]
+    },
+
+    "booleans": {
+      "patterns": [
+        {
+          "name": "constant.language.boolean.kleis",
+          "match": "\\b(True|False)\\b"
+        }
+      ]
+    },
+
+    "symbolic-constants": {
+      "patterns": [
+        {
+          "name": "constant.language.symbolic.kleis",
+          "match": "\\b(e|i|c)\\b"
+        },
+        {
+          "name": "constant.language.placeholder.kleis",
+          "match": "□"
+        },
+        {
+          "name": "constant.language.symbolic.kleis",
+          "match": "[πℏφ∞∅]"
+        }
+      ]
+    },
+
+    "types": {
+      "patterns": [
+        {
+          "name": "storage.type.primitive.kleis",
+          "match": "ℝ|ℂ|ℤ|ℕ|ℚ|\\b(Real|Complex|Integer|Nat|Rational|Bool|String|Field|Type)\\b"
+        }
+      ]
+    },
+
+    "quantifiers": {
+      "patterns": [
+        {
+          "name": "keyword.operator.quantifier.kleis",
+          "match": "[∀∃λ]|\\b(forall|exists|lambda)\\b"
+        }
+      ]
+    },
+
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.kleis",
+          "match": "\\b(data|structure|implements|operation|element|axiom|supports|notation|define|let|in|if|then|else|match|type|object|const|narrow|over|extends|verify|where)\\b"
+        }
+      ]
+    },
+
+    "annotations": {
+      "patterns": [
+        {
+          "name": "storage.type.annotation.kleis",
+          "match": "@[A-Za-z_][A-Za-z0-9_]*"
+        },
+        {
+          "name": "punctuation.definition.annotation.block.kleis",
+          "begin": "@\\{",
+          "end": "\\}",
+          "patterns": [
+            { "include": "$self" }
+          ]
+        }
+      ]
+    },
+
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.kleis",
+          "match": "(==|!=|<=|>=|->|=>|→|⇒|⟹|⊗|∘|∗|×|·|\\+|-|\\*|/|\\^|=|≠|<|>|≤|≥|≈|≡|~|∈|∉|⊂|⊆|∧|∨|¬|∂|∇|∫|√|!|†|ᵀ|\\^T|d/dx)"
+        }
+        ,
+        {
+          "name": "keyword.operator.unicode.kleis",
+          "match": "(⊕|⊙|⊛|⨂|⨁|⋆|•|∪|∩|⊖|⊘|⨀|⨄|⊚|⊝|⊞|⊟|⊠|⊡|⊻|⊼|⊽|⊓|⊔|⩒|⩓|⨂|⋅|◦)"
+        }
+      ]
+    },
+
+    "constructors": {
+      "patterns": [
+        {
+          "name": "entity.name.type.constructor.kleis",
+          "match": "\\b[A-Z][A-Za-z0-9_]*\\b"
+        }
+      ]
+    },
+
+    "greek-types": {
+      "patterns": [
+        {
+          "name": "variable.type.greek.kleis",
+          "match": "\\b[α-ωΑ-Ω]\\b"
+        }
+      ]
+    },
+
+    "variables": {
+      "patterns": [
+        {
+          "name": "variable.other.kleis",
+          "match": "\\b[a-z_][A-Za-z0-9_]*\\b"
+        }
+      ]
+    },
+
+    "identifiers": {
+      "patterns": [
+        {
+          "name": "identifier.other.kleis",
+          "match": "\\b[A-Za-z_][A-Za-z0-9_]*\\b"
+        }
+      ]
+    }
+  }
+}

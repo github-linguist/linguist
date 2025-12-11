@@ -1,0 +1,191 @@
+// Kleis Language Syntax Highlighting Example
+// Real code demonstrating all language features
+
+// --- Matrix structures with type parameters ---
+structure Matrix(m: Nat, n: Nat, T) {
+    operation transpose : Matrix(m, n, T) → Matrix(n, m, T)
+    operation trace : Matrix(n, n, T) → T
+}
+
+implements Matrix(m, n, ℝ) {
+    operation transpose = builtin_transpose
+    operation trace = builtin_trace
+}
+
+// --- Vector spaces and operations ---
+structure VectorSpace(V, F) {
+    operation (⊕) : V → V → V
+    operation (⊙) : F → V → V
+    
+    axiom associativity:
+        ∀(u v w : V). (u ⊕ v) ⊕ w = u ⊕ (v ⊕ w)
+    
+    axiom identity:
+        ∃(zero : V). ∀(v : V). v ⊕ zero = v
+    
+    axiom distributivity:
+        ∀(α : F)(v w : V). α ⊙ (v ⊕ w) = (α ⊙ v) ⊕ (α ⊙ w)
+}
+
+// --- Quantum mechanics structures ---
+structure HilbertSpace(H, ℂ) extends VectorSpace(H, ℂ) {
+    operation (•) : H → H → ℂ  // Inner product
+    operation (⊗) : H → H → H  // Tensor product
+    
+    axiom inner_product_conjugate_symmetry:
+        ∀(ψ φ : H). ψ • φ = conj(φ • ψ)
+}
+
+// --- Symbolic constants in physics ---
+data PhysicalConstant =
+    | SpeedOfLight(c)      // c ≈ 3×10⁸ m/s
+    | PlanckReduced(ℏ)     // ℏ ≈ 1.055×10⁻³⁴ J·s
+    | GoldenRatio(φ)       // φ = (1+√5)/2
+    | Pi(π)                // π ≈ 3.14159
+    | Euler(e)             // e ≈ 2.71828
+    | Imaginary(i)         // i² = -1
+
+// --- Set operations with Unicode operators ---
+structure Set(T) {
+    operation (∪) : Set(T) → Set(T) → Set(T)  // Union
+    operation (∩) : Set(T) → Set(T) → Set(T)  // Intersection
+    operation (⊖) : Set(T) → Set(T) → Set(T)  // Symmetric difference
+    operation (∅) : Set(T)                     // Empty set
+    
+    axiom union_commutative:
+        ∀(A B : Set(T)). A ∪ B = B ∪ A
+    
+    axiom intersection_idempotent:
+        ∀(A : Set(T)). A ∩ A = A
+    
+    axiom empty_identity:
+        ∀(A : Set(T)). A ∪ ∅ = A
+}
+
+// --- Algebraic structures with binary operations ---
+structure Monoid(M) {
+    operation (⋆) : M → M → M
+    element identity : M
+    
+    axiom associative:
+        ∀(a b c : M). (a ⋆ b) ⋆ c = a ⋆ (b ⋆ c)
+    
+    axiom left_identity:
+        ∀(a : M). identity ⋆ a = a
+    
+    axiom right_identity:
+        ∀(a : M). a ⋆ identity = a
+}
+
+// --- Pattern matching with algebraic data types ---
+data Option(T) = None | Some(T)
+data Result(T, E) = Ok(T) | Err(E)
+
+define safeDivide(x: ℝ, y: ℝ) = match y {
+    0 => None
+    _ => Some(x / y)
+}
+
+define unwrapOr(opt: Option(T), default: T) = match opt {
+    None => default
+    Some(value) => value
+}
+
+// --- Field axioms with Greek variables ---
+structure Field(F) {
+    operation (+) : F → F → F
+    operation (×) : F → F → F
+    operation (-) : F → F
+    operation (/) : F → F → F
+    
+    axiom addition_commutative:
+        ∀(α β : F). α + β = β + α
+    
+    axiom multiplication_associative:
+        ∀(α β γ : F). (α × β) × γ = α × (β × γ)
+    
+    axiom distributive:
+        ∀(α β γ : F). α × (β + γ) = (α × β) + (α × γ)
+    
+    axiom multiplicative_inverse:
+        ∀(α : F). α ≠ 0 ⇒ ∃(α⁻¹ : F). α × α⁻¹ = 1
+}
+
+// --- Template placeholders for structural editor ---
+define quadratic_formula(a: ℝ, b: ℝ, c: ℝ) =
+    (□ ± √(□² - 4·□·□)) / (2·□)
+    //  Placeholders for guided formula construction
+
+// --- Lattice operations ---
+structure Lattice(L) {
+    operation (⊔) : L → L → L  // Join (supremum)
+    operation (⊓) : L → L → L  // Meet (infimum)
+    
+    axiom join_commutative:
+        ∀(x y : L). x ⊔ y = y ⊔ x
+    
+    axiom meet_associative:
+        ∀(x y z : L). (x ⊓ y) ⊓ z = x ⊓ (y ⊓ z)
+}
+
+// --- Ring operations with direct sum ---
+structure Ring(R) {
+    operation (⊕) : R → R → R  // Addition (explicit)
+    operation (⊙) : R → R → R  // Multiplication (explicit)
+    
+    axiom ring_distributive:
+        ∀(a b c : R). a ⊙ (b ⊕ c) = (a ⊙ b) ⊕ (a ⊙ c)
+}
+
+// --- Tensor products and contractions ---
+structure TensorSpace(T) {
+    operation (⊗) : T → T → T  // Tensor product
+    operation (⨂) : List(T) → T  // n-ary tensor product
+    operation contract : T → T  // Contraction
+}
+
+// --- Boolean algebra with XOR, NAND, NOR ---
+structure BooleanAlgebra(B) {
+    operation (⊻) : B → B → B  // XOR (exclusive or)
+    operation (⊼) : B → B → B  // NAND
+    operation (⊽) : B → B → B  // NOR
+    
+    axiom xor_commutative:
+        ∀(p q : B). p ⊻ q = q ⊻ p
+}
+
+// --- Composition operators ---
+define compose(f: A → B, g: B → C) : A → C =
+    λ(x : A). g(f(x))
+    // Function composition: (g ∘ f)(x) = g(f(x))
+
+// --- Multiset and bag operations ---
+structure Multiset(T) {
+    operation (⊎) : Multiset(T) → Multiset(T) → Multiset(T)  // Multiset sum
+    operation (⊍) : Multiset(T) → Multiset(T) → Multiset(T)  // Multiset union
+}
+
+// --- Block comments with complex nested structure ---
+/*
+   This is a block comment demonstrating:
+   - Axiom verification with Z3
+   - Type inference with Hindley-Milner
+   - Universal verification across domains
+   
+   Example: ∀(x : ℝ). x² ≥ 0
+   
+   Nested comment style:
+   /* Inner comment */ (not supported by most parsers)
+*/
+
+// --- Real quantum mechanics example ---
+axiom schrodinger_equation:
+    ∀(ψ : HilbertSpace(ℂ))(H : Operator).
+        i·ℏ·(∂ψ/∂t) = H·ψ
+
+// --- Einstein field equations ---
+axiom einstein_field_equations:
+    ∀(μ ν : Nat).
+        Rμν - (1/2)·gμν·R + Λ·gμν = (8·π·G/c⁴)·Tμν
+
+/* End of Kleis syntax highlighting example */

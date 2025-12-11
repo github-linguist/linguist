@@ -1,0 +1,57 @@
+{
+  "name": "kleis",
+  "displayName": "Kleis Language Support",
+  "description": "Syntax highlighting for the Kleis formal verification language",
+  "version": "0.1.0",
+  "publisher": "eatikrh",
+  "author": "Engin Atik <eatik@redhat.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eatikrh/kleis"
+  },
+  "homepage": "https://kleis.io",
+  "engines": {
+    "vscode": "^1.70.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "keywords": [
+    "kleis",
+    "formal verification",
+    "type system",
+    "mathematics",
+    "theorem proving"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "kleis",
+        "aliases": ["Kleis", "kleis"],
+        "extensions": [".kleis"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "kleis",
+        "scopeName": "source.kleis",
+        "path": "./syntaxes/kleis.tmLanguage.json"
+      }
+    ]
+  }
+,
+  "scripts": {
+    "lint-grammar": "node ./tools/lintGrammar.js",
+    "inspect-scopes": "npm run lint-grammar && node ./tools/inspectScopes.js",
+    "prepublishOnly": "npm run lint-grammar",
+    "test-syntax": "node ./tools/tests/tokenScopeTest.js"
+  },
+  "devDependencies": {
+    "vscode-textmate": "^5.3.0",
+    "vscode-oniguruma": "^1.6.2"
+  }
+}
+
+
