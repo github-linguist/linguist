@@ -1,115 +1,152 @@
-# ===----------------------------------------------------------------------=== #
-# Copyright (c) 2025, Modular Inc. All rights reserved.
-#
-# Licensed under the Apache License v2.0 with LLVM Exceptions:
-# https://llvm.org/LICENSE.txt
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-# ===----------------------------------------------------------------------=== #
-
-from collections import OptionalReg
-from sys import align_of, simd_width_of, size_of, has_nvidia_gpu_accelerator
-from sys.info import _is_sm_100x_or_newer
-
-from algorithm import elementwise
-from buffer.buffer import NDBuffer
-from gpu.host import DeviceContext, get_gpu_target
-from gpu.host.info import B200
-
-from utils import Index, IndexList
-
-from ...utils import elementwise_epilogue_type
-from ...utils_gpu import MatmulConfig
-from .blas import matmul as vendor_matmul
+from autotune import autotune, search
+from algorithm import parallelize, Static2DTileUnitFunc as Tile2DFunc, vectorize_unroll
+from benchmark import Benchmark
+from sys.intrinsics import strided_load
+from utils.list import VariadicList
+from math import div_ceil, min
+from memory import memset_zero
+from memory.unsafe import DTypePointer, Pointer
+from random import rand, random_float64
+from sys.info import simdwidthof
+from time import now
 
 
-fn matmul[
-    c_type: DType,
-    a_type: DType,
-    b_type: DType, //,
-    transpose_b: Bool = False,
-    elementwise_lambda_fn: OptionalReg[elementwise_epilogue_type] = None,
-    config: OptionalReg[
-        MatmulConfig[a_type, b_type, c_type, transpose_b]
-    ] = None,
-](
-    c: NDBuffer[mut=True, c_type, 2, _, _],
-    a: NDBuffer[a_type, 2, _, _],
-    b: NDBuffer[b_type, 2, _, _],
-    ctx: DeviceContext,
-) raises:
-    """This implements the matmul kernel for the Blackwell architecture. Note
-    that we do not currently have pure mojo kernels which would utilize blackwell
-    architectures, so in place we just call the CUBLAS library.
-    """
+struct Matrix:
+    var data: DTypePointer[DType.float32]
+    var rows: Int
+    var cols: Int
 
+    fn __init__(inout self, rows: Int, cols: Int):
+        self.data = DTypePointer[DType.float32].alloc(rows * cols)
+        rand(self.data, rows * cols)
+        self.rows = rows
+        self.cols = cols
+
+    fn __del__(owned self):
+        self.data.free()
+
+    fn zero(inout self):
+        memset_zero(self.data, self.rows * self.cols)
+
+    @always_inline
+    fn __getitem__(self, y: Int, x: Int) -> Float32:
+        return self.load[1](y, x)
+
+    @always_inline
+    fn load[nelts: Int](self, y: Int, x: Int) -> SIMD[DType.float32, nelts]:
+        return self.data.simd_load[nelts](y * self.cols + x)
+
+    @always_inline
+    fn __setitem__(self, y: Int, x: Int, val: Float32):
+        return self.store[1](y, x, val)
+
+    @always_inline
+    fn store[nelts: Int](self, y: Int, x: Int, val: SIMD[DType.float32, nelts]):
+        self.data.simd_store[nelts](y * self.cols + x, val)
+
+
+alias matmul_fn_sig_type = fn (Matrix, Matrix, Matrix) -> None
+
+
+# Perform 2D tiling on the iteration space defined by end_x and end_y.
+fn tile[tiled_fn: Tile2DFunc, tile_x: Int, tile_y: Int](end_x: Int, end_y: Int):
+    # Note: this assumes that ends are multiples of the tiles.
+    for y in range(0, end_y, tile_y):
+        for x in range(0, end_x, tile_x):
+            tiled_fn[tile_x, tile_y](x, y)
+
+
+alias nelts = simdwidthof[DType.float32]()  # The SIMD vector width.
+
+
+# Autotune the tile size used in the matmul.
+@adaptive
+fn matmul_autotune_impl(C: Matrix, A: Matrix, B: Matrix):
     @parameter
-    if not elementwise_lambda_fn:
-        if not c.data:
-            raise "c must be allocated"
-        vendor_matmul[use_tf32=True](
-            ctx, c, a, b, c_row_major=True, transpose_b=transpose_b
-        )
-        return
-    else:
-        comptime epilogue = elementwise_lambda_fn.value()
-        # We hardcode simd width to 16B for Nvidia GPUs but >= sm_100
-        # arch support 32B load/store to global memory, see KERN-2037.
-        comptime use_32b_simd = (
-            has_nvidia_gpu_accelerator()
-            and ctx.default_device_info.compute >= B200.compute
-        )
-        comptime simd_size = 32 // size_of[c.type]() if use_32b_simd else (
-            simd_width_of[c.type, target = get_gpu_target()]()
-        )
-
+    fn calc_row(m: Int):
         @parameter
-        @__copy_capture(c)
-        fn epilogue_wrapper[
-            simd_width: Int, rank: Int, alignment: Int = 1
-        ](idx: IndexList[rank]):
-            var c_coord = Index(idx[0], idx[1])
-            var c_val = c.load[
-                width=simd_width,
-                # Load takes alignment in bytes, lambda takes number of elements
-                alignment = alignment * size_of[c_type](),
-            ](c_coord)
-            epilogue[c.type, simd_width, alignment=alignment](c_coord, c_val)
+        fn calc_tile[tile_x: Int, tile_y: Int](x: Int, y: Int):
+            for k in range(y, y + tile_y):
 
-        # If c is already allocated, we can just use the vendor matmul and
-        # apply the epilogue.
-        if c.data:
-            var m = c.dim[0]()
-            var n = c.dim[1]()
+                @parameter
+                fn dot[
+                    nelts: Int,
+                ](n: Int):
+                    C.store[nelts](
+                        m,
+                        n + x,
+                        C.load[nelts](m, n + x) + A[m, k] * B.load[nelts](k, n + x),
+                    )
 
-            # For D = alpha * A * B + beta * C, vendor matmul currently sets
-            # C to null, i.e don't fuse linear operations into gemm, KERN-1774.
-            vendor_matmul[use_tf32=True](
-                ctx, c, a, b, c_row_major=True, transpose_b=transpose_b
-            )
-            elementwise[epilogue_wrapper, simd_size, target="gpu"](
-                Index(m, n), ctx
-            )
-            return
+                vectorize_unroll[nelts, tile_x // nelts, dot](tile_x)
 
-        # Otherwise, we need to allocate a new buffer for c and apply the epilogue.
-        var tmp_device_buffer = ctx.enqueue_create_buffer[c.type](
-            c.num_elements()
-        )
+        # Instead of hardcoding to tile_size = 4, search for the fastest
+        # tile size by evaluting this function as tile size varies.
+        alias tile_size = autotune(1, 2, 4, 8, 16, 32)
+        tile[calc_tile, nelts * tile_size, tile_size](A.cols, C.cols)
 
-        # We do not want to mark c as `mut` in the function signature, so we
-        # create a new shallow copy of c as a temporary buffer.
-        var c_tmp = c
-        c_tmp.data = tmp_device_buffer.unsafe_ptr()
+    parallelize[calc_row](C.rows)
 
-        matmul[
-            transpose_b=transpose_b,
-            elementwise_lambda_fn=elementwise_lambda_fn,
-            config=config,
-        ](c_tmp, a, b, ctx)
 
-        _ = tmp_device_buffer^
+fn matmul_evaluator(funcs: Pointer[matmul_fn_sig_type], size: Int) -> Int:
+    print("matmul_evaluator, number of candidates: ", size)
+
+    let eval_begin: Int = now()
+
+    # This size is picked at random, in real code we could use a real size
+    # distribution here.
+    let M = 512
+    let N = 512
+    let K = 512
+    print("Optimizing for size:", M, "x", N, "x", K)
+
+    var best_idx: Int = -1
+    var best_time: Int = -1
+
+    alias eval_iterations = 10
+    alias eval_samples = 10
+
+    var C = Matrix(M, N)
+    var A = Matrix(M, K)
+    var B = Matrix(K, N)
+    let Cptr = Pointer[Matrix].address_of(C).address
+    let Aptr = Pointer[Matrix].address_of(A).address
+    let Bptr = Pointer[Matrix].address_of(B).address
+
+    # Find the function that's the fastest on the size we're optimizing for
+    for f_idx in range(size):
+        let func = funcs.load(f_idx)
+
+        @always_inline
+        @parameter
+        fn wrapper():
+            func(C, A, B)
+
+        let cur_time = Benchmark(1, 100_000, 500_000_000, 1000_000_000).run[wrapper]()
+
+        if best_idx < 0:
+            best_idx = f_idx
+            best_time = cur_time
+        if best_time > cur_time:
+            best_idx = f_idx
+            best_time = cur_time
+
+    let eval_end: Int = now()
+    # Prevent matrices from being destroyed before we finished benchmarking them.
+    _ = A.data
+    _ = B.data
+    _ = C.data
+    print("Time spent in matmul_evaluator, ms:", (eval_end - eval_begin) // 1000000)
+    print("Best candidate idx:", best_idx)
+    return best_idx
+
+
+fn matmul_autotune(C: Matrix, A: Matrix, B: Matrix):
+    alias best_impl: matmul_fn_sig_type
+    search[
+        matmul_fn_sig_type,
+        VariadicList(matmul_autotune_impl.__adaptive_set),
+        matmul_evaluator -> best_impl
+    ]()
+    # Run the best candidate
+    return best_impl(C, A, B)
