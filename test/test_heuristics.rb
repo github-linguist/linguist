@@ -605,6 +605,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_k_by_heuristics
+    assert_heuristics({
+      "KCL" => all_fixtures("KCL", "*.k"),
+      "KFramework" => all_fixtures("KFramework", "*.k")
+    })
+  end
+
   def test_l_by_heuristics
     assert_heuristics({
       "Common Lisp" => all_fixtures("Common Lisp", "*.l"),
@@ -1075,6 +1082,13 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "TeX" => all_fixtures("TeX", "*.toc"),
       "World of Warcraft Addon Data" => all_fixtures("World of Warcraft Addon Data", "*.toc")
+    })
+  end
+
+  def test_tpl_by_heuristics
+    assert_heuristics({
+      "Go Template" => all_fixtures("Go Template", "*.tpl"),
+      "Smarty" => all_fixtures("Smarty", "*.tpl")
     })
   end
 
