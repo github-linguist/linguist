@@ -139,6 +139,8 @@ disambiguations:
     and:
     - pattern: '(?i)^[ \t]*return '
     - negative_pattern: '(?i)[ \t]*gosub '
+  - language: QuickBASIC
+    named_pattern: quickbasic
 - extensions: ['.bs']
   rules:
   - language: Bikeshed
