@@ -230,6 +230,12 @@ class TestHeuristics < Minitest::Test
     }, alt_name="man.#{n}")
   end
 
+  def test_action_by_heuristics
+    assert_heuristics({
+      "ROS Interface" => all_fixtures("ROS Interface", "*.action"),
+    })
+  end
+
   def test_al_by_heuristics
     assert_heuristics({
       "AL" => all_fixtures("AL", "*.al"),
@@ -657,7 +663,7 @@ class TestHeuristics < Minitest::Test
       "Mercury" => all_fixtures("Mercury", "*.m"),
       "MUF" => all_fixtures("MUF", "*.m"),
       "M" => all_fixtures("M", "MDB.m"),
-      "Mathematica" => all_fixtures("Mathematica", "*.m") - all_fixtures("Mathematica", "Problem12.m"),
+      "Wolfram Language" => all_fixtures("Wolfram Language", "*.m") - all_fixtures("Wolfram Language", "Problem12.m"),
       "MATLAB" => all_fixtures("MATLAB", "create_ieee_paper_plots.m"),
       "Limbo" => all_fixtures("Limbo", "*.m"),
       nil => ambiguous
@@ -740,6 +746,7 @@ class TestHeuristics < Minitest::Test
   def test_msg_by_heuristics
     assert_heuristics({
       "OMNeT++ MSG" => all_fixtures("OMNeT++ MSG", "*.msg"),
+      "ROS Interface" => all_fixtures("ROS Interface", "*.msg"),
     })
   end
 
@@ -985,6 +992,12 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_srv_by_heuristics
+    assert_heuristics({
+      "ROS Interface" => all_fixtures("ROS Interface", "*.srv"),
+    })
+  end
+
   def test_st_by_heuristics
     assert_heuristics({
       "StringTemplate" => all_fixtures("StringTemplate", "*.st"),
@@ -1045,6 +1058,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_tl_by_heuristics
+    assert_heuristics({
+      "Teal" => all_fixtures("Teal", "*.tl"),
+      "Type Language" => all_fixtures("Type Language", "*.tl")
+    })
+  end
+
   def test_tlv_by_heuristics
     assert_heuristics({
       "TL-Verilog" => all_fixtures("TL-Verilog", "*.tlv"),
@@ -1055,6 +1075,13 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "TeX" => all_fixtures("TeX", "*.toc"),
       "World of Warcraft Addon Data" => all_fixtures("World of Warcraft Addon Data", "*.toc")
+    })
+  end
+
+  def test_tpl_by_heuristics
+    assert_heuristics({
+      "Go Template" => all_fixtures("Go Template", "*.tpl"),
+      "Smarty" => all_fixtures("Smarty", "*.tpl")
     })
   end
 
