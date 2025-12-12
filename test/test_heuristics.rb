@@ -1078,6 +1078,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_tpl_by_heuristics
+    assert_heuristics({
+      "Go Template" => all_fixtures("Go Template", "*.tpl"),
+      "Smarty" => all_fixtures("Smarty", "*.tpl")
+    })
+  end
+
   def test_ts_by_heuristics
     assert_heuristics({
       "TypeScript" => all_fixtures("TypeScript", "*.ts"),
