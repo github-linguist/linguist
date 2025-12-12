@@ -96,6 +96,9 @@ class TestGenerated < Minitest::Test
     # pnpm lockfile
     generated_sample_without_loading_data("Dummy/pnpm-lock.yaml")
 
+    # Bun lockfile
+    generated_sample_without_loading_data("JSON/filenames/bun.lock")
+
     # Yarn Plug'n'Play file
     generated_sample_without_loading_data(".pnp.js")
     generated_sample_without_loading_data(".pnp.cjs")
