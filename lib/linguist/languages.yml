@@ -2736,6 +2736,22 @@ Go Module:
   tm_scope: go.mod
   ace_mode: text
   language_id: 947461016
+Go Template:
+  type: markup
+  color: "#00ADD8"
+  aliases:
+  - gotmpl
+  extensions:
+  - ".gohtml"
+  - ".gotmpl"
+  - ".html.tmpl"
+  - ".tmpl"
+  - ".tpl"
+  filenames:
+  - _helpers.tpl
+  tm_scope: source.go-template
+  ace_mode: text
+  language_id: 247918769
 Go Workspace:
   type: data
   color: "#00ADD8"
@@ -3502,6 +3518,7 @@ JSON with Comments:
   - ".sublime-workspace"
   - ".sublime_metrics"
   - ".sublime_session"
+  - ".tsconfig.json"
   filenames:
   - ".babelrc"
   - ".devcontainer.json"
@@ -4274,6 +4291,7 @@ Lua:
   - ".luacheckrc"
   interpreters:
   - lua
+  - luajit
   language_id: 213
 Luau:
   type: programming
@@ -5713,6 +5731,7 @@ Pip Requirements:
   type: data
   color: "#FFD343"
   filenames:
+  - dev-requirements.txt
   - requirements-dev.txt
   - requirements.lock.txt
   - requirements.txt
@@ -6131,6 +6150,7 @@ QuickBASIC:
   color: "#008080"
   extensions:
   - ".bas"
+  - ".bi"
   tm_scope: source.QB64
   aliases:
   - qb
