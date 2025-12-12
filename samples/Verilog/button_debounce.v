@@ -61,7 +61,7 @@ module button_debounce
   always @ (posedge clk or negedge reset_n)
     state <= (!reset_n) ? WAIT : next_state;
 
-  always@(posedge clk or negedge reset_n) begin
+  always @ (posedge clk or negedge reset_n) begin
     if (!reset_n) begin
       debounce <= 0;
       count    <= 0;
