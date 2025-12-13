@@ -4,6 +4,8 @@ vendor/grammars/AL:
 - source.al
 vendor/grammars/Alloy.tmbundle:
 - source.alloy
+vendor/grammars/ArkTS:
+- source.ets
 vendor/grammars/Assembly-Syntax-Definition:
 - source.x86
 vendor/grammars/Atom-PostScript:
@@ -24,6 +26,8 @@ vendor/grammars/ColdFusion:
 - source.cfscript.cfc
 - text.cfml.basic
 - text.html.cfm
+vendor/grammars/CookVSCode:
+- source.cooklang
 vendor/grammars/Cylc.tmbundle:
 - source.cylc
 vendor/grammars/Dafny-VSCode:
@@ -50,6 +54,8 @@ vendor/grammars/JSyntax:
 - source.j
 vendor/grammars/Jails:
 - source.jai
+vendor/grammars/K-VSCode:
+- text.k
 vendor/grammars/LOLCODE-grammar-vscode:
 - source.lolcode
 vendor/grammars/Ligo-grammar:
@@ -86,6 +92,7 @@ vendor/grammars/NovaGrammars:
 - source.solution
 - source.win32-messages
 - source.ws
+- text.git-commit
 - text.hash-commented
 - text.robots-txt
 vendor/grammars/ObjectScript.tmBundle:
@@ -297,6 +304,8 @@ vendor/grammars/bqn-vscode:
 - source.bqn
 vendor/grammars/browserslist-vscode:
 - text.browserslist
+vendor/grammars/bruno-ide-extensions:
+- source.bru
 vendor/grammars/bst.tmLanguage:
 - source.bst
 vendor/grammars/c.tmbundle:
@@ -587,6 +596,7 @@ vendor/grammars/language-etc:
 - source.odin-ehr
 - source.openbsd-pkg.contents
 - source.opts
+- source.psl
 - source.record-jar
 - source.sexp
 - source.sfv
@@ -605,6 +615,7 @@ vendor/grammars/language-etc:
 - text.checksums
 - text.codeowners
 - text.html.ecmarkup
+- text.jira
 - text.lesshst
 - text.openbsd-pkg.desc
 - text.savane
@@ -660,6 +671,8 @@ vendor/grammars/language-hql:
 - source.hql
 vendor/grammars/language-html:
 - text.html.basic
+vendor/grammars/language-hurl:
+- source.hurl
 vendor/grammars/language-igor:
 - source.igor
 vendor/grammars/language-inform7:
@@ -690,6 +703,8 @@ vendor/grammars/language-kickstart:
 - source.kickstart
 vendor/grammars/language-kotlin:
 - source.kotlin
+vendor/grammars/language-langium:
+- source.langium
 vendor/grammars/language-less:
 - source.css.less
 vendor/grammars/language-m68k:
@@ -708,10 +723,14 @@ vendor/grammars/language-mermaid:
 - source.mermaid.gitgraph
 - source.mermaid.mindmap
 - source.mermaid.pie-chart
+- source.mermaid.quad-chart
 - source.mermaid.requirement-diagram
+- source.mermaid.sankey
 - source.mermaid.sequence-diagram
 - source.mermaid.state-diagram
+- source.mermaid.timeline
 - source.mermaid.user-journey
+- source.mermaid.zenuml
 vendor/grammars/language-meson:
 - source.meson
 vendor/grammars/language-msl:
@@ -943,6 +962,8 @@ vendor/grammars/pike-textmate:
 - source.pike
 vendor/grammars/pkl.tmbundle:
 - source.pkl
+vendor/grammars/playground-cj:
+- source.cj
 vendor/grammars/polar-grammar:
 - source.polar
 vendor/grammars/portugol-grammar:
@@ -962,6 +983,8 @@ vendor/grammars/qsharp:
 - source.qsharp
 vendor/grammars/quake:
 - source.quake
+vendor/grammars/quakec-syntax:
+- source.quakec
 vendor/grammars/r.tmbundle:
 - source.r
 - text.tex.latex.rd
@@ -978,8 +1001,12 @@ vendor/grammars/riot-syntax-highlight:
 - text.html.riot
 vendor/grammars/roc-vscode-unofficial:
 - source.roc
+vendor/grammars/ros-tmlanguage:
+- source.rosmsg
 vendor/grammars/rust-syntax:
 - source.rust
+vendor/grammars/rust_hdl_vscode:
+- source.vhdl
 vendor/grammars/sail_vscode:
 - source.sail
 vendor/grammars/sas.tmbundle:
@@ -1117,6 +1144,8 @@ vendor/grammars/tcl.tmbundle:
 - text.html.tcl
 vendor/grammars/templ-vscode:
 - source.templ
+vendor/grammars/textmate:
+- source.flix
 vendor/grammars/textmate.tmbundle:
 - source.regexp.oniguruma
 - source.tm-properties
@@ -1139,8 +1168,6 @@ vendor/grammars/typst-grammar:
 - source.typst
 vendor/grammars/verilog.tmbundle:
 - source.verilog
-vendor/grammars/vhdl:
-- source.vhdl
 vendor/grammars/vsc-ember-syntax:
 - inline.hbs
 - inline.template
@@ -1169,6 +1196,8 @@ vendor/grammars/vscode-bitbake:
 - source.bb
 vendor/grammars/vscode-brightscript-language:
 - source.brs
+vendor/grammars/vscode-c3:
+- source.c3
 vendor/grammars/vscode-caddyfile:
 - source.Caddyfile
 - source.Caddyfile-test
@@ -1205,6 +1234,12 @@ vendor/grammars/vscode-gleam:
 vendor/grammars/vscode-go:
 - go.mod
 - go.sum
+vendor/grammars/vscode-go-template:
+- source.go-template
+- source.go.injection.double.go-template
+- source.go.injection.raw.go-template
+- text.injection.go-template
+- text.markdown.go-template.codeblock
 vendor/grammars/vscode-hack:
 - markdown.hack.codeblock
 - source.hack
@@ -1231,8 +1266,12 @@ vendor/grammars/vscode-jsonc-syntax-highlighting:
 - source.json.comments
 vendor/grammars/vscode-just:
 - source.just
+vendor/grammars/vscode-kcl:
+- source.kcl
 vendor/grammars/vscode-kdl:
 - source.kdl
+vendor/grammars/vscode-kolmafia-ash:
+- source.ash
 vendor/grammars/vscode-lean:
 - markdown.lean.codeblock
 - source.lean
@@ -1295,6 +1334,8 @@ vendor/grammars/vscode-singularity:
 vendor/grammars/vscode-slice:
 - source.ice
 - source.slice
+vendor/grammars/vscode-teal:
+- source.teal
 vendor/grammars/vscode-tree-sitter-query:
 - source.scm
 vendor/grammars/vscode-vba:
@@ -1341,6 +1382,7 @@ vendor/grammars/vscode_cobol:
 vendor/grammars/vscode_mikrotik_routeros_script:
 - source.rsc
 vendor/grammars/wgsl-analyzer:
+- source.wesl
 - source.wgsl
 vendor/grammars/witcherscript-grammar:
 - source.witcherscript
