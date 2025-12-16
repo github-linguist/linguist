@@ -1,0 +1,69 @@
+addon "svm" {
+    rpc_api_url = input.rpc_api_url
+    network_id = input.network_id
+}
+
+variable "program" {
+    value = svm::get_program_from_anchor_project("hello_pyth")
+}
+
+variable "starting_pair" {
+    description = "BTC/USD"
+    value = "4cSM2e6rvbGQUFiJbqytoVMi5GgghSMr8LwVrT9VPSPo"
+    editable = true
+}
+
+variable "starting_pair_feed_id" {
+    description = "BTC/USD feed ID"
+    value = "0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43"
+    editable = true
+}
+
+variable "bridging_pair" {
+    description = "ETH/BTC"
+    value = "5JwbqPPMNpzE2jVAdobWo6m5gkhsDhRdGBo3FYbSfmaK"
+    editable = true
+}
+
+variable "bridging_pair_feed_id" {
+    description = "ETH/BTC feed ID"
+    value = "0xc96458d393fe9deb7a7d63a0ac41e2898a67a7750dbd166673279e06c868df0a"
+    editable = true
+}
+
+variable "crossing_pair" {
+    description = "ETH/USD"
+    value = "42amVS4KgzR9rA28tkVYqVXjq9Qa8dcZQMbH5EYFX6XC"
+    editable = true
+}
+
+variable "crossing_pair_feed_id" {
+    description = "ETH/USD feed ID"
+    value = "0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace"
+    editable = true
+}
+
+action "call" "svm::process_instructions" {
+    signers = [signer.caller]
+    instruction {
+        program_idl = variable.program.idl
+        instruction_name = "update_triangular_arbitrage"
+        instruction_args = [
+            variable.starting_pair_feed_id,
+            variable.bridging_pair_feed_id,
+            variable.crossing_pair_feed_id,
+        ]
+        sender {
+            public_key = signer.caller.public_key
+        }
+        starting_pair_account {
+            public_key = variable.starting_pair
+        }
+        bridging_pair_account {
+            public_key = variable.bridging_pair
+        }
+        crossing_pair_account {
+            public_key = variable.crossing_pair
+        }
+    }
+}
