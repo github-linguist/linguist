@@ -1,10 +1,10 @@
 /* Airlock
- * Author: 
+ * Author:
  * Creation date: 10/21/25
  */
 MACHINE
     Airlock
-SEES 
+SEES
     Airlock_pressure_bs
 SETS
     PHASE = {ACQ, CTRL}
@@ -41,16 +41,16 @@ OPERATIONS
         airlock_pressure3 :: PRESSURE ||
         cycle := CTRL
     END;
-    
+
     enable_doors_opening =
     PRE
         cycle = CTRL
     THEN
-        is_indoor_door_openable, is_outdoor_door_openable: ( 
-            is_indoor_door_openable: BOOL & 
-            is_outdoor_door_openable: BOOL & 
-            (is_indoor_door_openable = TRUE => (indoor_pressure: {airlock_pressure1, airlock_pressure2, airlock_pressure3} & outdoor_pressure /: {airlock_pressure1, airlock_pressure2, airlock_pressure3})) & 
-            (is_outdoor_door_openable = TRUE => (outdoor_pressure: {airlock_pressure1, airlock_pressure2, airlock_pressure3} & indoor_pressure /: {airlock_pressure1, airlock_pressure2, airlock_pressure3}))  
+        is_indoor_door_openable, is_outdoor_door_openable: (
+            is_indoor_door_openable: BOOL &
+            is_outdoor_door_openable: BOOL &
+            (is_indoor_door_openable = TRUE => (indoor_pressure: {airlock_pressure1, airlock_pressure2, airlock_pressure3} & outdoor_pressure /: {airlock_pressure1, airlock_pressure2, airlock_pressure3})) &
+            (is_outdoor_door_openable = TRUE => (outdoor_pressure: {airlock_pressure1, airlock_pressure2, airlock_pressure3} & indoor_pressure /: {airlock_pressure1, airlock_pressure2, airlock_pressure3}))
         ) ||
         cycle := ACQ
     END;
@@ -80,7 +80,7 @@ OPERATIONS
     THEN
         ret := is_indoor_door_openable
     END;
-    
+
     ret <-- get_is_outdoor_door_openable=
     PRE
         ret : BOOL

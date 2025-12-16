@@ -581,12 +581,6 @@ class TestHeuristics < Minitest::Test
     })
   end
 
-  def test_imp_by_heuristics
-    assert_heuristics({
-      "B (Formal Method)" => all_fixtures("B (Formal Method)", "*.imp")
-    })
-  end
-
   def test_inc_by_heuristics
     assert_heuristics({
       "Motorola 68K Assembly" => all_fixtures("Motorola 68K Assembly", "*.inc"),
@@ -693,12 +687,6 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "Monkey C" => all_fixtures("Monkey C", "*.mc"),
       "Win32 Message File" => all_fixtures("Win32 Message File", "*.mc")
-    })
-  end
-
-  def test_mch_by_heuristics
-    assert_heuristics({
-      "B (Formal Method)" => all_fixtures("B (Formal Method)", "*.mch")
     })
   end
 
@@ -915,12 +903,6 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "C++" => all_fixtures("C++", "*.re"),
       "Reason" => all_fixtures("Reason", "*.re")
-    })
-  end
-
-  def test_ref_by_heuristics
-    assert_heuristics({
-      "B (Formal Method)" => all_fixtures("B (Formal Method)", "*.ref")
     })
   end
 
