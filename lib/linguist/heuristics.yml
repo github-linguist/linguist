@@ -458,8 +458,12 @@ disambiguations:
 - extensions: ['.lp']
   rules:
   - language: Linear Programming
-    pattern: '^(?i:minimize|minimum|min|maximize|maximum|max)(?i:\s+multi-objectives)?$'
+    pattern: '^\s*(?i:minimize|minimum|min|maximize|maximum|max)(?i:\s+multi-objectives)?(?:\s|$)'
   - language: Answer Set Programming
+    pattern:
+    - '^\s*#(?:include|const|program|script|show|minimize|maximize|heuristic|project|edge|theory|defined)\b'
+    - '^\s*(?:[A-Za-z_]\w*(?:\([^)]*\))?\s*:-|:-)\s.*\.'
+    - '^\s*[a-z_][a-zA-Z0-9_]*(?:\([^)]*\))?\s*\.\s*$'
 - extensions: ['.ls']
   rules:
   - language: LoomScript
