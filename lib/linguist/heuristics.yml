@@ -139,6 +139,8 @@ disambiguations:
     and:
     - pattern: '(?i)^[ \t]*return '
     - negative_pattern: '(?i)[ \t]*gosub '
+  - language: QuickBASIC
+    named_pattern: quickbasic
 - extensions: ['.bs']
   rules:
   - language: Bikeshed
@@ -425,6 +427,18 @@ disambiguations:
   - language: OASv3-json
     pattern: '"openapi":\s?"3.[0-9.]+"'
   - language: JSON
+- extensions: ['.k']
+  rules:
+  - language: KCL
+    pattern:
+      - '^schema [A-Za-z0-9_-]+'
+      - '^\}$'
+      - '\s*\}\s*'
+  - language: KFramework
+    pattern:
+    - '^requires\s+"[^"]+"$'
+    - '^syntax\s+\w+\s+::=.*'
+    - '^endmodule$'
 - extensions: ['.l']
   rules:
   - language: Common Lisp
@@ -870,6 +884,12 @@ disambiguations:
     pattern: '^## |@no-lib-strip@'
   - language: TeX
     pattern: '^\\(contentsline|defcounter|beamer|boolfalse)'
+- extensions: ['.tpl']
+  rules:
+  - language: Go Template
+    pattern: '\{\{-?\s*(\`?\"\\?\"?|\/\*\s|\w*)\b'
+  - language: Smarty
+    pattern: '(?<!\{)\{(\*\s|\$|\/)?\w*\b'
 - extensions: ['.ts']
   rules:
   - language: XML
