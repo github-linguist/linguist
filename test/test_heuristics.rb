@@ -742,6 +742,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_mps_by_heuristics
+    assert_heuristics({
+      "JetBrains MPS" => all_fixtures("JetBrains MPS", "*.mps"),
+      "Mathematical Programming System" => all_fixtures("Mathematical Programming System", "*.mps"),
+    })
+  end
+
   def test_ms_by_heuristics
     assert_heuristics({
       "Roff" => all_fixtures("Roff", "*.ms"),
