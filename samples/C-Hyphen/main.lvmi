@@ -1,0 +1,15 @@
+using std;
+
+println("Loading Sudoku example...");
+
+#Include "puzzles.lvmi"
+#Include "board.lvmi"
+#Include "logic.lvmi"
+#Include "game.lvmi"
+
+static func main() {
+    playSudoku();
+}
+
+main();
+
