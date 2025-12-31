@@ -1,0 +1,90 @@
+static func askYesNo(string prompt) {
+    while (true) {
+        var reply = std.readln(prompt);
+        if (reply == "y" || reply == "Y" || reply == "yes" || reply == "YES") return true;
+        if (reply == "n" || reply == "N" || reply == "no" || reply == "NO") return false;
+        println("Please answer y or n.");
+    }
+}
+
+static func describeDifficulty(int level) {
+    if (level <= 1) return "Easy";
+    if (level <= 2) return "Medium";
+    return "Hard";
+}
+
+static func promptDifficulty() {
+    while (true) {
+        println("");
+        println("Choose a Sudoku puzzle:");
+        println("1) Easy");
+        println("2) Medium");
+        println("3) Hard");
+        println("0) Quit");
+        var choice = std.readint("Choice: ");
+        if (choice >= 0 && choice <= 3) return choice;
+        println("Enter a number between 0 and 3.");
+    }
+}
+
+static func playPuzzle(int difficulty) {
+    var puzzle = loadPuzzle(difficulty);
+    var board = cloneBoard(puzzle);
+    var givens = buildGivenMask(puzzle);
+
+    while (true) {
+        std.clear();
+        println("Sudoku (" + describeDifficulty(difficulty) + ")");
+        printLegend();
+        println("");
+        printBoard(board, givens);
+
+        if (isSolved(board)) {
+            println("Puzzle solved! Great job.");
+            return true;
+        }
+
+        println("Enter -1 to pick another puzzle, -2 to quit.");
+        var row = std.readint("Row (0-8): ");
+        if (row == -2) return false;
+        if (row == -1) return true;
+        if (row < 0 || row > 8) { println("Row must be 0-8."); std.readln("Press enter to continue..."); continue; }
+
+        var col = std.readint("Column (0-8): ");
+        if (col < 0 || col > 8) { println("Column must be 0-8."); std.readln("Press enter to continue..."); continue; }
+
+        if (puzzle[row][col] > 0) { println("That cell is fixed. Pick another."); std.readln("Press enter to continue..."); continue; }
+
+        var val = std.readint("Value 1-9 (0 to clear): ");
+        if (val < 0 || val > 9) { println("Value must be 0 or 1-9."); std.readln("Press enter to continue..."); continue; }
+
+        var previous = board[row][col];
+        board[row][col] = 0;
+        if (val != 0 && !isValidPlacement(board, row, col, val)) {
+            println("Move violates Sudoku rules.");
+            board[row][col] = previous;
+            std.readln("Press enter to continue...");
+            continue;
+        }
+
+        board[row][col] = val;
+    }
+}
+
+static func playSudoku() {
+    println("Welcome to Sudoku!");
+    printLegend();
+
+    var running = true;
+    while (running) {
+        var difficulty = promptDifficulty();
+        if (difficulty == 0) break;
+
+        running = playPuzzle(difficulty);
+        if (running) {
+            running = askYesNo("Play another puzzle? (y/n): ");
+        }
+    }
+
+    println("Thanks for playing Sudoku!");
+}

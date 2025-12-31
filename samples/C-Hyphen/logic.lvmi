@@ -1,0 +1,40 @@
+static func isValidPlacement(var board, int row, int col, int value) {
+    var i = 0;
+    while (i < 9) {
+        if (board[row][i] == value && i != col) return false;
+        if (board[i][col] == value && i != row) return false;
+        i = i + 1;
+    }
+
+    var startRow = (row / 3) * 3;
+    var startCol = (col / 3) * 3;
+    var r = startRow;
+    while (r < startRow + 3) {
+        var c = startCol;
+        while (c < startCol + 3) {
+            if (board[r][c] == value && !(r == row && c == col)) return false;
+            c = c + 1;
+        }
+        r = r + 1;
+    }
+    return true;
+}
+
+static func isSolved(var board) {
+    var r = 0;
+    while (r < 9) {
+        var c = 0;
+        while (c < 9) {
+            var val = board[r][c];
+            if (val == 0) return false;
+            board[r][c] = 0;
+            var ok = isValidPlacement(board, r, c, val);
+            board[r][c] = val;
+            if (!ok) return false;
+            c = c + 1;
+        }
+        r = r + 1;
+    }
+    return true;
+}
+

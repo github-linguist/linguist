@@ -1,0 +1,55 @@
+static func makeRow(int a, int b, int c, int d, int e, int f, int g, int h, int i) {
+    var row[9];
+    row[0] = a; row[1] = b; row[2] = c;
+    row[3] = d; row[4] = e; row[5] = f;
+    row[6] = g; row[7] = h; row[8] = i;
+    return row;
+}
+
+static func puzzleEasy() {
+    var board[9];
+    board[0] = makeRow(5, 3, 0, 0, 7, 0, 0, 0, 0);
+    board[1] = makeRow(6, 0, 0, 1, 9, 5, 0, 0, 0);
+    board[2] = makeRow(0, 9, 8, 0, 0, 0, 0, 6, 0);
+    board[3] = makeRow(8, 0, 0, 0, 6, 0, 0, 0, 3);
+    board[4] = makeRow(4, 0, 0, 8, 0, 3, 0, 0, 1);
+    board[5] = makeRow(7, 0, 0, 0, 2, 0, 0, 0, 6);
+    board[6] = makeRow(0, 6, 0, 0, 0, 0, 2, 8, 0);
+    board[7] = makeRow(0, 0, 0, 4, 1, 9, 0, 0, 5);
+    board[8] = makeRow(0, 0, 0, 0, 8, 0, 0, 7, 9);
+    return board;
+}
+
+static func puzzleMedium() {
+    var board[9];
+    board[0] = makeRow(0, 0, 0, 0, 0, 3, 0, 8, 0);
+    board[1] = makeRow(0, 0, 1, 0, 2, 0, 0, 0, 0);
+    board[2] = makeRow(0, 9, 0, 0, 0, 0, 1, 0, 6);
+    board[3] = makeRow(0, 0, 5, 0, 0, 0, 0, 0, 1);
+    board[4] = makeRow(6, 0, 0, 1, 0, 2, 0, 0, 8);
+    board[5] = makeRow(8, 0, 0, 0, 0, 0, 5, 0, 0);
+    board[6] = makeRow(4, 0, 7, 0, 0, 0, 0, 3, 0);
+    board[7] = makeRow(0, 0, 0, 0, 3, 0, 8, 0, 0);
+    board[8] = makeRow(0, 3, 0, 8, 0, 0, 0, 0, 0);
+    return board;
+}
+
+static func puzzleHard() {
+    var board[9];
+    board[0] = makeRow(0, 0, 0, 0, 0, 0, 0, 0, 0);
+    board[1] = makeRow(0, 0, 0, 0, 0, 3, 0, 8, 5);
+    board[2] = makeRow(0, 0, 1, 0, 2, 0, 0, 0, 0);
+    board[3] = makeRow(0, 0, 0, 5, 0, 7, 0, 0, 0);
+    board[4] = makeRow(0, 0, 4, 0, 0, 0, 1, 0, 0);
+    board[5] = makeRow(0, 9, 0, 0, 0, 0, 0, 0, 0);
+    board[6] = makeRow(5, 0, 0, 0, 0, 0, 0, 7, 3);
+    board[7] = makeRow(0, 0, 2, 0, 1, 0, 0, 0, 0);
+    board[8] = makeRow(0, 0, 0, 0, 4, 0, 0, 0, 9);
+    return board;
+}
+
+static func loadPuzzle(int choice) {
+    if (choice <= 1) return puzzleEasy();
+    if (choice <= 2) return puzzleMedium();
+    return puzzleHard();
+}
