@@ -361,8 +361,9 @@ class TestHeuristics < Minitest::Test
       "VBA" => all_fixtures("VBA", "*.cls"),
       "TeX" => all_fixtures("TeX", "*.cls"),
       "ObjectScript" => all_fixtures("ObjectScript", "*.cls"),
+      "OpenEdge ABL" => all_fixtures("OpenEdge ABL", "*.cls"),
       # Missing heuristics
-      nil => all_fixtures("Apex", "*.cls") + all_fixtures("OpenEdge ABL", "*.cls"),
+      nil => all_fixtures("Apex", "*.cls"),
     })
   end
 
@@ -805,7 +806,7 @@ class TestHeuristics < Minitest::Test
   def test_p_by_heuristics
     assert_heuristics({
       "Gnuplot" => all_fixtures("Gnuplot"),
-      "OpenEdge ABL" => all_fixtures("OpenEdge ABL")
+      "OpenEdge ABL" => all_fixtures("OpenEdge ABL", "*.p"),
     }, alt_name="test.p")
   end
 

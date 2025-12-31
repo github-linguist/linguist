@@ -191,6 +191,8 @@ disambiguations:
     pattern: '^\s*\\(?:NeedsTeXFormat|ProvidesClass)\{'
   - language: ObjectScript
     pattern: '^Class\s'
+  - language: OpenEdge ABL
+    pattern: '(?i)^\s*(end\s+(class|interface)\.|(?:class|interface)\s+[a-z_][a-z0-9_#$%&-]*:)'
 - extensions: ['.cmp']
   rules:
   - language: Gerber Image
@@ -608,6 +610,7 @@ disambiguations:
     - '^s?plot\b'
     - '^set\s+(term|terminal|out|output|[xy]tics|[xy]label|[xy]range|style)\b'
   - language: OpenEdge ABL
+    pattern: '^\s*(?i)(end\s+procedure\.|procedure\s+[a-z_][a-z0-9_#$%&-]*:|define\s+variable\s+[a-z_][a-z0-9_#$%&-]*\s+as\s+[^.]+\.)'
 - extensions: ['.php']
   rules:
   - language: Hack
