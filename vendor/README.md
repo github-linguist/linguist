@@ -80,6 +80,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **C:** [tree-sitter/tree-sitter-c](https://github.com/tree-sitter/tree-sitter-c) 🐌
 - **C#:** [tree-sitter/tree-sitter-c-sharp](https://github.com/tree-sitter/tree-sitter-c-sharp) 🐌
 - **C++:** [mikomikotaishi/c.tmbundle](https://github.com/mikomikotaishi/c.tmbundle)
+- **C-Hyphen:** [cyrusadibian/C-Hyphen](https://github.com/cyrusadibian/C-Hyphen)
 - **C-ObjDump:** [nanoant/assembly.tmbundle](https://github.com/nanoant/assembly.tmbundle)
 - **C2hs Haskell:** [atom-haskell/language-haskell](https://github.com/atom-haskell/language-haskell)
 - **C3:** [c3lang/vscode-c3](https://github.com/c3lang/vscode-c3)
