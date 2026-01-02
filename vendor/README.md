@@ -588,6 +588,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Solidity:** [davidhq/SublimeEthereum](https://github.com/davidhq/SublimeEthereum)
 - **Soong:** [flimberger/android-system-tools](https://github.com/flimberger/android-system-tools)
 - **SourcePawn:** [Sarrus1/sourcepawn-vscode](https://github.com/Sarrus1/sourcepawn-vscode)
+- **Surge** [vovakirdan/surge-vscode-extension](https://github.com/vovakirdan/surge-vscode-extension)
 - **Spline Font Database:** [Alhadis/language-fontforge](https://github.com/Alhadis/language-fontforge)
 - **Squirrel:** [mathewmariani/squirrel-language](https://github.com/mathewmariani/squirrel-language)
 - **Stan:** [stan-dev/atom-language-stan](https://github.com/stan-dev/atom-language-stan)
