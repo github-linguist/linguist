@@ -192,7 +192,7 @@ disambiguations:
   - language: ObjectScript
     pattern: '^Class\s'
   - language: OpenEdge ABL
-    pattern: '(?i)^\s*(end\s+(class|interface)\.|(?:class|interface)\s+[a-z_][a-z0-9_#$%&-]*:)'
+    pattern: '(?i)^\s*(?:end\s+(?:class|interface)\.|(?:class|interface)\s+[a-z_][a-z0-9_#$%&-]*:)'
 - extensions: ['.cmp']
   rules:
   - language: Gerber Image
@@ -610,7 +610,9 @@ disambiguations:
     - '^s?plot\b'
     - '^set\s+(term|terminal|out|output|[xy]tics|[xy]label|[xy]range|style)\b'
   - language: OpenEdge ABL
-    pattern: '^\s*(?i)(end\s+procedure\.|procedure\s+[a-z_][a-z0-9_#$%&-]*:|define\s+variable\s+[a-z_][a-z0-9_#$%&-]*\s+as\s+[^.]+\.)'
+    pattern:
+    - '(?i)\bDEFINE\s+(?:VARIABLE|TEMP-TABLE|BUFFER|QUERY|INPUT\s+PARAMETER|OUTPUT\s+PARAMETER)\b'
+    - '(?i)\bEND(?:\s+(?:PROCEDURE|FUNCTION|DO|FOR\s+EACH))?\.'
 - extensions: ['.php']
   rules:
   - language: Hack
