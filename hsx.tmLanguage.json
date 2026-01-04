@@ -1,0 +1,90 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "HSX",
+  "scopeName": "source.hsx",
+  "patterns": [
+    {
+      "name": "comment.line.double-slash.hsx",
+      "match": "//.*$"
+    },
+    {
+      "name": "keyword.control.hsx",
+      "match": "\\bhsx\\s+(attach|define component|render|end|security)\\b"
+    },
+    {
+      "name": "support.type.media.hsx",
+      "match": "\\b(image|video|audio)\\b"
+    },
+    {
+      "name": "variable.component-name.hsx",
+      "match": "(?<=hsx define component\\s)\\w+|(?<=hsx render\\s)\\w+"
+    },
+    {
+      "name": "constant.language.hsx",
+      "match": "\\b(on|off|true|false)\\b"
+    },
+    {
+      "name": "string.quoted.double.hsx",
+      "begin": "\"",
+      "end": "\""
+    },
+    {
+      "name": "meta.block.js.hsx",
+      "begin": "\\{js",
+      "end": "\\}",
+      "patterns": [
+        {
+          "include": "source.js"
+        }
+      ]
+    },
+    {
+      "name": "meta.block.py.hsx",
+      "begin": "\\{py",
+      "end": "\\}",
+      "patterns": [
+        {
+          "include": "source.python"
+        }
+      ]
+    },
+    {
+      "name": "meta.block.hsx.hsx",
+      "begin": "\\{hsx",
+      "end": "\\}",
+      "patterns": [
+        {
+          "include": "#hsx-inner"
+        }
+      ]
+    }
+  ],
+  "repository": {
+    "hsx-inner": {
+      "patterns": [
+        {
+          "name": "keyword.control.hsx",
+          "match": "\\bhsx\\s+(attach|define component|render|end|security)\\b"
+        },
+        {
+          "name": "support.type.media.hsx",
+          "match": "\\b(image|video|audio)\\b"
+        },
+        {
+          "name": "variable.component-name.hsx",
+          "match": "\\w+"
+        },
+        {
+          "name": "constant.language.hsx",
+          "match": "\\b(on|off|true|false)\\b"
+        },
+        {
+          "name": "string.quoted.double.hsx",
+          "begin": "\"",
+          "end": "\""
+        }
+      ]
+    }
+  },
+  "scopeName": "source.hsx"
+}

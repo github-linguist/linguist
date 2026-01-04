@@ -1,0 +1,56 @@
+// Mist.hsx — Example HSX file
+
+// === Import frameworks / user modules ===
+hsx exist import correct file jsx/App.jsx
+hsx exist import simple file MistBundle.js
+
+// === Import Node modules ===
+hsx exist import node module react
+hsx exist import node built-in module fs
+
+// === Export / combine everything into Lua app ===
+hsx file import all to Mist_Extracted/app.lua
+
+// === Optionally rename converted files ===
+hsx file import/make/rename Mist_Extracted/app.lua-to-lua.app.jsx
+
+// === Media for runtime ===
+hsx attach image "image.png"
+hsx attach video "logo.mp4"
+hsx attach audio "theme.mp3"
+
+// === Define a component ===
+hsx define component HelloWorld
+  <div>
+    <h1>Hello World!</h1>
+    <p>This is a sample HSX component.</p>
+  </div>
+hsx end
+
+// === Render a component ===
+hsx render HelloWorld
+
+// === JS block ===
+{js
+console.log("💻 JS block executed via HSX runtime!");
+alert("Hello from HSX JS block!");
+}
+
+// === Python block ===
+{py
+print("🐍 Python block executed via HSX runtime!")
+x = 42
+print(f"Value of x: {x}")
+}
+
+// === Nested HSX block ===
+{hsx
+hsx define component NestedExample
+  <span>Nested HSX component!</span>
+hsx end
+
+hsx render NestedExample
+}
+
+// === Security mode toggle ===
+hsx security on
