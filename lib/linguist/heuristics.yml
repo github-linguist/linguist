@@ -462,7 +462,7 @@ disambiguations:
   - language: Answer Set Programming
     pattern:
     - '^\s*#(?:include|const|program|script|show|minimize|maximize|heuristic|project|edge|theory|defined)\b'
-    - '^\s*(?:[A-Za-z_]\w*(?:\([^)]*\))?\s*:-|:-)\s.*\.'
+    - '^\s*(?:[A-Za-z_]\w*(?:\([^)]*\))?\s*:-|:-)\s[^.]*\.'
     - '^\s*[a-z_][a-zA-Z0-9_]*(?:\([^)]*\))?\s*\.\s*$'
 - extensions: ['.ls']
   rules:
