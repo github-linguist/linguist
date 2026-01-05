@@ -3518,6 +3518,7 @@ JSON with Comments:
   - ".sublime-workspace"
   - ".sublime_metrics"
   - ".sublime_session"
+  - ".tsconfig.json"
   filenames:
   - ".babelrc"
   - ".devcontainer.json"
@@ -3525,6 +3526,7 @@ JSON with Comments:
   - ".jscsrc"
   - ".jshintrc"
   - ".jslintrc"
+  - ".oxlintrc.json"
   - ".swcrc"
   - api-extractor.json
   - devcontainer.json
@@ -3828,6 +3830,17 @@ Just:
   - ".just"
   ace_mode: text
   language_id: 128447695
+KCL:
+  type: programming
+  color: "#7ABABF"
+  tm_scope: source.kcl
+  extensions:
+  - ".k"
+  filenames:
+  - kcl.mod
+  - kcl.mod.lock
+  ace_mode: text
+  language_id: 1052003890
 KDL:
   type: data
   color: "#ffb3b3"
@@ -3838,6 +3851,14 @@ KDL:
   codemirror_mode: yacas
   codemirror_mime_type: text/x-yacas
   language_id: 931123626
+KFramework:
+  type: programming
+  color: "#4195c5"
+  tm_scope: text.k
+  extensions:
+  - ".k"
+  ace_mode: text
+  language_id: 9479532
 KRL:
   type: programming
   color: "#28430A"
@@ -4027,6 +4048,14 @@ LabVIEW:
   codemirror_mode: xml
   codemirror_mime_type: text/xml
   language_id: 194
+Langium:
+  type: programming
+  color: "#2c8c87"
+  extensions:
+  - ".langium"
+  tm_scope: source.langium
+  ace_mode: text
+  language_id: 548603830
 Lark:
   type: data
   color: "#2980B9"
@@ -4290,6 +4319,7 @@ Lua:
   - ".luacheckrc"
   interpreters:
   - lua
+  - luajit
   language_id: 213
 Luau:
   type: programming
@@ -5729,6 +5759,7 @@ Pip Requirements:
   type: data
   color: "#FFD343"
   filenames:
+  - dev-requirements.txt
   - requirements-dev.txt
   - requirements.lock.txt
   - requirements.txt
@@ -6147,6 +6178,7 @@ QuickBASIC:
   color: "#008080"
   extensions:
   - ".bas"
+  - ".bi"
   tm_scope: source.QB64
   aliases:
   - qb
