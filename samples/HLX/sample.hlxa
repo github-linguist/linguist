@@ -1,0 +1,31 @@
+// Sample HLX program demonstrating language syntax
+
+program fibonacci {
+    fn fib(n) -> int {
+        if n <= 1 {
+            return n;
+        }
+        return fib(n - 1) + fib(n - 2);
+    }
+
+    fn factorial(n) -> int {
+        if n <= 1 {
+            return 1;
+        }
+        return n * factorial(n - 1);
+    }
+
+    fn main() {
+        // Compute fibonacci numbers
+        let fib_result = fib(10);
+        print("Fibonacci(10):");
+        print(fib_result);
+
+        // Compute factorial
+        let fact_result = factorial(5);
+        print("Factorial(5):");
+        print(fact_result);
+
+        return 0;
+    }
+}
