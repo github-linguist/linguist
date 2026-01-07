@@ -39,6 +39,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **ApacheConf:** [mrmlnc/vscode-apache](https://github.com/mrmlnc/vscode-apache)
 - **Apex:** [forcedotcom/apex-tmLanguage](https://github.com/forcedotcom/apex-tmLanguage)
 - **Apollo Guidance Computer:** [Alhadis/language-agc](https://github.com/Alhadis/language-agc)
+- **ArkTS:** [ohosvscode/arkTS](https://github.com/ohosvscode/arkTS)
 - **AppleScript:** [textmate/applescript.tmbundle](https://github.com/textmate/applescript.tmbundle)
 - **AsciiDoc:** [zuckschwerdt/asciidoc.tmbundle](https://github.com/zuckschwerdt/asciidoc.tmbundle)
 - **AspectJ:** [pchaigno/sublime-aspectj](https://github.com/pchaigno/sublime-aspectj)
