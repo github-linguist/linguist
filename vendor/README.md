@@ -93,6 +93,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **COLLADA:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)
 - **CSON:** [atom/language-coffee-script](https://github.com/atom/language-coffee-script)
 - **CSS:** [tree-sitter/tree-sitter-css](https://github.com/tree-sitter/tree-sitter-css) 🐌
+- **CSV:** [Alhadis/language-dsv](https://github.com/Alhadis/language-dsv)
 - **CUE:** [cue-sh/vscode-cue](https://github.com/cue-sh/vscode-cue)
 - **Cabal Config:** [atom-haskell/language-haskell](https://github.com/atom-haskell/language-haskell)
 - **Caddyfile:** [caddyserver/vscode-caddyfile](https://github.com/caddyserver/vscode-caddyfile)
@@ -614,7 +615,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **TLA:** [tlaplus-community/tree-sitter-tlaplus](https://github.com/tlaplus-community/tree-sitter-tlaplus) 🐌
 - **TOML:** [textmate/toml.tmbundle](https://github.com/textmate/toml.tmbundle)
 - **TSQL:** [beau-witter/language-tsql](https://github.com/beau-witter/language-tsql)
-- **TSV:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
+- **TSV:** [Alhadis/language-dsv](https://github.com/Alhadis/language-dsv)
 - **TSX:** [Microsoft/TypeScript-TmLanguage](https://github.com/Microsoft/TypeScript-TmLanguage)
 - **TXL:** [MikeHoffert/Sublime-Text-TXL-syntax](https://github.com/MikeHoffert/Sublime-Text-TXL-syntax)
 - **Tact:** [tact-lang/tact-sublime](https://github.com/tact-lang/tact-sublime)
