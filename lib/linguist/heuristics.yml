@@ -458,7 +458,7 @@ disambiguations:
 - extensions: ['.lp']
   rules:
   - language: Linear Programming
-    pattern: '^\s*(?i:minimize|minimum|min|maximize|maximum|max)(?i:\s+multi-objectives)?(?:\s|$)'
+    pattern: '(?i)^\s*(?:minimize|minimum|min|maximize|maximum|max)(?:\s+multi-objectives)?\s*$'
   - language: Answer Set Programming
     pattern:
     - '^\s*#(?:include|const|program|script|show|minimize|maximize|heuristic|project|edge|theory|defined)\b'
