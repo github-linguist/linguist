@@ -670,7 +670,7 @@ class TestFileBlob < Minitest::Test
   def test_language
     # Failures are reasonable in some cases, such as when a file is fully valid in more than one language.
     allowed_failures = {
-      "#{samples_path}/C++/rpc.h" => ["C", "C++"],
+      "#{samples_path}/C/rpc.h" => ["C", "C++"],
     }
     Samples.each do |sample|
       blob = sample_blob(sample[:path])
@@ -706,9 +706,13 @@ class TestFileBlob < Minitest::Test
         elsif language == 'Generic'
           assert !blob.language, "#{filepath} should not match a language"
         else
-          assert blob.language, "No language for #{filepath}"
           fs_name = blob.language.fs_name ? blob.language.fs_name : blob.language.name
-          assert_equal language, fs_name, blob.name
+          if allowed_failures.has_key? filepath
+            assert allowed_failures[filepath].include?(fs_name), filepath
+          else
+            assert blob.language, "No language for #{filepath}"
+            assert_equal language, fs_name, filepath
+          end
         end
       end
     end
