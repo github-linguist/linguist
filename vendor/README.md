@@ -507,6 +507,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **QuickBASIC:** [QB64Official/vscode](https://github.com/QB64Official/vscode)
 - **R:** [textmate/r.tmbundle](https://github.com/textmate/r.tmbundle)
 - **RAML:** [atom/language-yaml](https://github.com/atom/language-yaml)
+- **RAScript:** [joshraphael/rascript-syntax](https://github.com/joshraphael/rascript-syntax)
 - **RBS:** [soutaro/vscode-rbs-syntax](https://github.com/soutaro/vscode-rbs-syntax)
 - **RDoc:** [joshaven/RDoc.tmbundle](https://github.com/joshaven/RDoc.tmbundle)
 - **REALbasic:** [peters-ben-0007/VBDotNetSyntax](https://github.com/peters-ben-0007/VBDotNetSyntax)
