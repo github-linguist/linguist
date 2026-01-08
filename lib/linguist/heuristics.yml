@@ -558,6 +558,12 @@ disambiguations:
     pattern: '^\s*(alias|def|from|fn|import|struct|trait)\s'
   - language: XML
     pattern: '^\s*<\?xml'
+- extensions: ['.mps']
+  rules:
+  - language: JetBrains MPS
+    pattern: '<persistence'
+  - language: Mathematical Programming System
+    pattern: '(?i)^\s*(ROWS|COLUMNS)\s*$'
 - extensions: ['.ms']
   rules:
   - language: Roff
