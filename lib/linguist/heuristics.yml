@@ -41,6 +41,7 @@ disambiguations:
     - named_pattern: man-heading
   - language: Roff
     pattern: '^\.(?:[A-Za-z]{2}(?:\s|$)|\\")'
+  - language: Text
 - extensions: ['.1in', '.1m', '.1x', '.3in', '.3m', '.3p', '.3pm', '.3qt', '.3x', '.man', '.mdoc']
   rules:
   - language: Roff Manpage
@@ -139,6 +140,8 @@ disambiguations:
     and:
     - pattern: '(?i)^[ \t]*return '
     - negative_pattern: '(?i)[ \t]*gosub '
+  - language: QuickBASIC
+    named_pattern: quickbasic
 - extensions: ['.bs']
   rules:
   - language: Bikeshed
@@ -189,6 +192,8 @@ disambiguations:
     pattern: '^\s*\\(?:NeedsTeXFormat|ProvidesClass)\{'
   - language: ObjectScript
     pattern: '^Class\s'
+  - language: OpenEdge ABL
+    pattern: '(?i)^\s*(?:end\s+(?:class|interface)\.|(?:class|interface)\s+[a-z_][a-z0-9_#$%&-]*:)'
 - extensions: ['.cmp']
   rules:
   - language: Gerber Image
@@ -425,6 +430,18 @@ disambiguations:
   - language: OASv3-json
     pattern: '"openapi":\s?"3.[0-9.]+"'
   - language: JSON
+- extensions: ['.k']
+  rules:
+  - language: KCL
+    pattern:
+      - '^schema [A-Za-z0-9_-]+'
+      - '^\}$'
+      - '\s*\}\s*'
+  - language: KFramework
+    pattern:
+    - '^requires\s+"[^"]+"$'
+    - '^syntax\s+\w+\s+::=.*'
+    - '^endmodule$'
 - extensions: ['.l']
   rules:
   - language: Common Lisp
@@ -596,6 +613,9 @@ disambiguations:
     - '^s?plot\b'
     - '^set\s+(term|terminal|out|output|[xy]tics|[xy]label|[xy]range|style)\b'
   - language: OpenEdge ABL
+    pattern:
+    - '(?i)\bDEFINE\s+(?:VARIABLE|TEMP-TABLE|BUFFER|QUERY|INPUT\s+PARAMETER|OUTPUT\s+PARAMETER)\b'
+    - '(?i)\bEND(?:\s+(?:PROCEDURE|FUNCTION|DO|FOR\s+EACH))?\.'
 - extensions: ['.php']
   rules:
   - language: Hack
@@ -872,6 +892,12 @@ disambiguations:
     pattern: '^## |@no-lib-strip@'
   - language: TeX
     pattern: '^\\(contentsline|defcounter|beamer|boolfalse)'
+- extensions: ['.tpl']
+  rules:
+  - language: Go Template
+    pattern: '\{\{-?\s*(\`?\"\\?\"?|\/\*\s|\w*)\b'
+  - language: Smarty
+    pattern: '(?<!\{)\{(\*\s|\$|\/)?\w*\b'
 - extensions: ['.ts']
   rules:
   - language: XML
@@ -964,7 +990,7 @@ disambiguations:
   - language: Rocq Prover
     pattern: '(?:^|\s)(?:Proof|Qed)\.(?:$|\s)|(?:^|\s)Require[ \t]+(Import|Export)\s'
   - language: Verilog
-    pattern: '^[ \t]*module\s+[^\s()]+\s+\#?\(|^[ \t]*`(?:define|ifdef|ifndef|include|timescale)|^[ \t]*always[ \t]+@|^[ \t]*initial[ \t]+(begin|@)'
+    pattern: '^[ \t]*module\s+[^\s()]+\s*\#?\(|^[ \t]*`(?:define|ifdef|ifndef|include|timescale|pragma)|^[ \t]*always[ \t]*@|^[ \t]*initial[ \t]*(begin|@)'
   - language: V
     pattern: '\$(?:if|else)[ \t]|^[ \t]*fn\s+[^\s()]+\(.*?\).*?\{|^[ \t]*for\s*\{'
 - extensions: ['.vba']
