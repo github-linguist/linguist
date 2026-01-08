@@ -336,6 +336,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **LSL:** [textmate/secondlife-lsl.tmbundle](https://github.com/textmate/secondlife-lsl.tmbundle)
 - **LTspice Symbol:** [Alhadis/language-pcb](https://github.com/Alhadis/language-pcb)
 - **LabVIEW:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)
+- **Lambdapi:** [Deducteam/sublime-lambdapi](https://github.com/Deducteam/sublime-lambdapi)
 - **Langium:** [eclipse-langium/language-langium](https://github.com/eclipse-langium/language-langium)
 - **Lark:** [Alhadis/language-grammars](https://github.com/Alhadis/language-grammars)
 - **Lasso:** [bfad/Sublime-Lasso](https://github.com/bfad/Sublime-Lasso)
