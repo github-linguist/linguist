@@ -114,6 +114,16 @@ AL:
   tm_scope: source.al
   ace_mode: text
   language_id: 658971832
+ALGOL:
+  type: programming
+  color: "#D1E0DB"
+  extensions:
+  - ".alg"
+  tm_scope: source.algol60
+  ace_mode: pascal
+  codemirror_mode: pascal
+  codemirror_mime_type: text/x-pascal
+  language_id: 79217948
 AMPL:
   type: programming
   color: "#E6EFBB"
@@ -981,7 +991,7 @@ CSV:
   type: data
   color: "#237346"
   ace_mode: csv
-  tm_scope: none
+  tm_scope: source.csv
   extensions:
   - ".csv"
   language_id: 51
@@ -2909,9 +2919,11 @@ HCL:
   - ".nomad"
   - ".tf"
   - ".tfvars"
+  - ".tofu"
   - ".workflow"
   aliases:
   - HashiCorp Configuration Language
+  - opentofu
   - terraform
   ace_mode: terraform
   codemirror_mode: ruby
@@ -4059,6 +4071,14 @@ LabVIEW:
   codemirror_mode: xml
   codemirror_mime_type: text/xml
   language_id: 194
+Lambdapi:
+  type: programming
+  color: "#8027a3"
+  extensions:
+  - ".lp"
+  tm_scope: source.lp
+  ace_mode: text
+  language_id: 759240513
 Langium:
   type: programming
   color: "#2c8c87"
@@ -6232,6 +6252,14 @@ RAML:
   extensions:
   - ".raml"
   language_id: 308
+RAScript:
+  type: programming
+  ace_mode: text
+  extensions:
+  - ".rascript"
+  tm_scope: source.rascript
+  color: "#2C97FA"
+  language_id: 601118790
 RBS:
   type: data
   ace_mode: ruby
@@ -7503,6 +7531,16 @@ SuperCollider:
   tm_scope: source.supercollider
   ace_mode: text
   language_id: 361
+SurrealQL:
+  type: programming
+  color: "#ff00a0"
+  aliases:
+  - surql
+  extensions:
+  - ".surql"
+  ace_mode: text
+  tm_scope: source.surrealql
+  language_id: 735141027
 Survex data:
   type: data
   color: "#ffcc99"
@@ -7627,7 +7665,7 @@ TSV:
   type: data
   color: "#237346"
   ace_mode: tsv
-  tm_scope: source.generic-db
+  tm_scope: source.tsv
   extensions:
   - ".tsv"
   - ".vcf"

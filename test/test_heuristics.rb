@@ -243,6 +243,12 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_alg_by_heuristics
+    assert_heuristics({
+      "ALGOL" => all_fixtures("ALGOL", "*.alg"),
+    })
+  end
+
   def test_app_by_heuristics
     assert_heuristics({
       "Erlang" => Dir.glob("#{fixtures_path}/Generic/app/Erlang/*"),
@@ -638,6 +644,7 @@ class TestHeuristics < Minitest::Test
 
   def test_lp_by_heuristics
     assert_heuristics({
+      "Lambdapi" => all_fixtures("Lambdapi", "*.lp"),
       "Answer Set Programming" => all_fixtures("Answer Set Programming", "*.lp"),
       "Linear Programming" => all_fixtures("Linear Programming", "*.lp")
     })
