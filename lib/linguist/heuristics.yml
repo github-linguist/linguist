@@ -69,6 +69,17 @@ disambiguations:
     - pattern: '\b(?i:(CODEUNIT|PAGE|PAGEEXTENSION|PAGECUSTOMIZATION|DOTNET|ENUM|ENUMEXTENSION|VALUE|QUERY|REPORT|TABLE|TABLEEXTENSION|XMLPORT|PROFILE|CONTROLADDIN|REPORTEXTENSION|INTERFACE|PERMISSIONSET|PERMISSIONSETEXTENSION|ENTITLEMENT))\b'
   # Open-ended fallback to Perl AutoLoader
   - language: Perl
+- extensions: ['.alg']
+  rules:
+  - language: ALGOL
+    pattern:
+    # ALGOL 60 comments
+    - '(?i)^comment\b.*(;|comment)'
+    # ALGOL 68 comments
+    - '^#[^#\r\n]+#$'
+    # ALGOL 60/68 keywords
+    - '(?i)\b(integer|real|boolean|string)\b\s+\w+\s*:=\s*'
+    - '(?i)^begin[\s\S]*^end'
 - extensions: ['.app']
   rules:
   - language: Erlang

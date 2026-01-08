@@ -243,6 +243,12 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_alg_by_heuristics
+    assert_heuristics({
+      "ALGOL" => all_fixtures("ALGOL", "*.alg"),
+    })
+  end
+
   def test_app_by_heuristics
     assert_heuristics({
       "Erlang" => Dir.glob("#{fixtures_path}/Generic/app/Erlang/*"),
