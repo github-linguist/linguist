@@ -58,6 +58,8 @@ class TestLanguage < Minitest::Test
     assert_equal Language['Shell'], Language.find_by_alias('sh')
     assert_equal Language['Shell'], Language.find_by_alias('shell')
     assert_equal Language['Shell'], Language.find_by_alias('zsh')
+    assert_equal Language['SurrealQL'], Language.find_by_alias('surql')
+    assert_equal Language['SurrealQL'], Language.find_by_alias('surrealql')
     assert_equal Language['SuperCollider'], Language.find_by_alias('supercollider')
     assert_equal Language['TeX'], Language.find_by_alias('tex')
     assert_equal Language['Tree-sitter Query'], Language.find_by_alias('tsq')

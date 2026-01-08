@@ -603,6 +603,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **SubRip Text:** [Alhadis/language-subtitles](https://github.com/Alhadis/language-subtitles)
 - **SugarSS:** [hudochenkov/Syntax-highlighting-for-PostCSS](https://github.com/hudochenkov/Syntax-highlighting-for-PostCSS)
 - **SuperCollider:** [supercollider/language-supercollider](https://github.com/supercollider/language-supercollider)
+- **SurrealQL:** [surrealdb/surrealql-grammar](https://github.com/surrealdb/surrealql-grammar)
 - **Svelte:** [sebastinez/svelte-atom](https://github.com/sebastinez/svelte-atom)
 - **Sway:** [FuelLabs/sway-vscode-plugin](https://github.com/FuelLabs/sway-vscode-plugin)
 - **Sweave:** [textmate/sweave.tmbundle](https://github.com/textmate/sweave.tmbundle)
