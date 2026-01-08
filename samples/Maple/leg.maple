@@ -1,0 +1,79 @@
+# afni/afni/src/maple/leg.maple
+
+with(orthopoly) :
+assume(x>0,y>0,z>0) :
+
+# Modified Legendre polynomial
+
+pnm := proc(n, m, x)
+          local f, y;
+          if m = 0 then RETURN(P(n, x)) end if;
+          f := (1 - y^2)^(1/2*m)*diff(P(n, y), y $ m);
+          f := subs(y = x, f);
+          RETURN(f)
+end proc :
+
+# (n,m)-th spherical harmonic - cosine
+
+QQ := (n,m) -> simplify( sqrt(x**2+y**2+z**2)^n
+                         * pnm(n,m,z/sqrt(x**2+y**2+z**2))
+                         * T(m,x/sqrt(x**2+y**2))) :
+
+# (n,m)-th Bz function - cosine
+
+qq := (n,m) -> factor(diff(simplify( sqrt(x**2+y**2+z**2)^n
+                                     * pnm(n,m,z/sqrt(x**2+y**2+z**2))
+                                     * T(m,x/sqrt(x**2+y**2))),z)) :
+
+# (n,m)-th spherical harmonic - sine
+
+WW := (n,m) -> simplify( sqrt(x**2+y**2+z**2)^n
+                         * pnm(n,m,z/sqrt(x**2+y**2+z**2))
+                         * y/sqrt(x*x+y*y)*U(m-1,x/sqrt(x**2+y**2))) :
+
+# (n,m)-th Bz function - sine
+
+ww := (n,m) -> factor(diff(simplify( sqrt(x**2+y**2+z**2)^n
+                                     * pnm(n,m,z/sqrt(x**2+y**2+z**2))
+                                     * y/sqrt(x*x+y*y)*U(m-1,x/sqrt(x**2+y**2))),z)) :
+
+# Laplacian operator (for checking)
+
+lap := ff -> diff(f,x,x) + diff(f,y,y) + diff(f,z,z) :
+
+# Max value of qq and ww
+
+qqmax := (n,m) -> max( abs(subs(x=1,y=0,z=0,qq(n,m))) ,
+                       abs(subs(x=1,y=1,z=0,qq(n,m))) ,
+                       abs(subs(x=1,y=1,z=1,qq(n,m))) ,
+                       abs(subs(x=0,y=1,z=1,qq(n,m))) ,
+                       abs(subs(x=0,y=1,z=0,qq(n,m))) ,
+                       abs(subs(x=1,y=0,z=1,qq(n,m))) ,
+                       abs(subs(x=0,y=0,z=1,qq(n,m))) ,
+                       abs(subs(x=1/2,y=0,z=0,qq(n,m))) ,
+                       abs(subs(x=1/2,y=1/2,z=0,qq(n,m))) ,
+                       abs(subs(x=1/2,y=1/2,z=1/2,qq(n,m))) ,
+                       abs(subs(x=0,y=1/2,z=0,qq(n,m))) ,
+                       abs(subs(x=0,y=1/2,z=1/2,qq(n,m))) ,
+                       abs(subs(x=1/2,y=0,z=1/2,qq(n,m))) ,
+                       abs(subs(x=0,y=0,z=1/2,qq(n,m)))  ) :
+
+wwmax := (n,m) -> max( abs(subs(x=1,y=0,z=0,ww(n,m))) ,
+                       abs(subs(x=1,y=1,z=0,ww(n,m))) ,
+                       abs(subs(x=1,y=1,z=1,ww(n,m))) ,
+                       abs(subs(x=0,y=1,z=1,ww(n,m))) ,
+                       abs(subs(x=1,y=0,z=1,ww(n,m))) ,
+                       abs(subs(x=0,y=0,z=1,ww(n,m))) ,
+                       abs(subs(x=0,y=1,z=0,qq(n,m))) ,
+                       abs(subs(x=1/2,y=0,z=0,qq(n,m))) ,
+                       abs(subs(x=1/2,y=1/2,z=0,qq(n,m))) ,
+                       abs(subs(x=0,y=1/2,z=0,qq(n,m))) ,
+                       abs(subs(x=1/2,y=1/2,z=1/2,qq(n,m))) ,
+                       abs(subs(x=0,y=1/2,z=1/2,qq(n,m))) ,
+                       abs(subs(x=1/2,y=0,z=1/2,qq(n,m))) ,
+                       abs(subs(x=0,y=0,z=1/2,qq(n,m)))  ) :
+
+shc := (n,m) -> qq(n,m) / qqmax(n,m) :
+shs := (n,m) -> ww(n,m) / wwmax(n,m) :
+
+shtab := (nn) -> [ seq(shc(nn,mm),mm=0..nn-1) , seq(shs(nn,mm),mm=1..nn-1) ] ;
