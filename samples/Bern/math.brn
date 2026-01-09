@@ -1,0 +1,251 @@
+import core
+
+-- Bern Math Library (C-like)
+-- This module provides common math helpers and approximations inspired by <math.h>.
+
+-- Constants
+pi = 3.141592653589793
+tau = 6.283185307179586
+e = 2.718281828459045
+
+-- Absolute value (integer or double)
+def abs(x) do
+	zero = x - x  -- preserves the input numeric type
+	if (x < zero) then
+		return -x
+	else
+		return x
+	end
+end
+
+-- Alias that mirrors C's fabs
+def fabs(x) -> abs(x)
+
+-- Min / Max helpers (operate in Double space to allow mixed numeric inputs)
+def fmin(a, b) do
+	a = a + 0.0
+	b = b + 0.0
+	if (a < b) then
+		return a
+	else
+		return b
+	end
+end
+
+def fmax(a, b) do
+	a = a + 0.0
+	b = b + 0.0
+	if (a > b) then
+		return a
+	else
+		return b
+	end
+end
+
+-- Clamp a value to a [lo, hi] interval
+def clamp(x, lo, hi) -> fmin(fmax(x, lo), hi)
+
+-- Floating-point remainder (C's fmod)
+def fmod(x, y) -> x % y
+
+-- Integer exponentiation by squaring. Negative exponents return reciprocals.
+-- Note: exp is expected to be an integer; fractional exponents will give an approximation.
+def pow(_, 0) -> 1
+def pow(base, exp) do
+	if (exp < 0) then
+		return 1 / pow(base, -exp)
+	else if (exp % 2 == 0) then
+			half = pow(base, exp / 2)
+			return half * half
+		else
+			return base * pow(base, exp - 1)
+		end
+	end
+end
+
+-- Square root using Newton-Raphson iterations
+def sqrt(x) do
+	-- work in Double to avoid integer division issues
+	x = x + 0.0
+	zero = x - x
+	if (x < zero) then
+		return 0 / 0  -- NaN for negative inputs
+	else if (x == zero) then
+		return zero
+	else
+		g = x / 2
+		for i : range(1, 12) do
+			g = 0.5 * (g + x / g)
+		end
+		return g
+	end
+end
+
+-- Hypotenuse length: sqrt(a^2 + b * b)
+def hypot(a, b) -> sqrt(a * a + b * b)
+
+-- Exponential function using a truncated Taylor series around 0
+def exp(x) do
+	term = 1.0
+	sum = 1.0
+	for k : range(1, 15) do
+		term = term * x / k
+		sum = sum + term
+	end
+	return sum
+end
+
+-- Natural logarithm using Newton's method on exp(y) = x
+def log(x) do
+	-- operate in Double domain and keep the argument within a stable range
+	x = x + 0.0
+	zero = x - x
+	if (x <= zero) then
+		return 0 / 0  -- NaN for non-positive inputs
+	end
+
+	-- Range reduction: bring x into [0.5, 2] using powers of two
+	ln2 = 0.6931471805599453
+	two = 2.0
+	k = 0.0
+	while (x > two) do
+		x = x / two
+		k = k + 1.0
+	end
+	while (x < 0.5) do
+		x = x * 2.0
+		k = k - 1.0
+	end
+
+	-- Use the atanh-style series: ln(x) = 2 * sum_{n>=1} (y^(2n-1))/(2n-1)
+	y = (x - 1.0) / (x + 1.0)
+	y2 = y * y
+	term = y
+	sum = 0.0
+	for n : range(1, 15) do
+		sum = sum + term / (2 * n - 1.0)
+		term = term * y2
+	end
+	return 2.0 * sum + k * ln2
+end
+
+-- Base-10 logarithm
+def log10(x) -> log(x) / 2.302585092994046
+
+-- Angle wrapping to [-pi, pi]
+def _wrapAngle(rad) do
+	rad = rad + 0.0
+	t = rad
+	while (t > pi) do
+		t = t - tau
+	end
+	while (t < -pi) do
+		t = t + tau
+	end
+	return t
+end
+
+-- Sine using a Taylor series (angle in radians)
+def sin(x) do
+	rad = _wrapAngle(x)
+	term = rad
+	sum = rad
+	x2 = rad * rad
+	for n : range(1, 8) do
+		a = 2 * n
+		b = a + 1
+		term = term * (-1) * x2 / (a * b)
+		sum = sum + term
+	end
+	return sum
+end
+
+-- Cosine using a Taylor series (angle in radians)
+def cos(x) do
+	rad = _wrapAngle(x)
+	term = 1.0
+	sum = 1.0
+	x2 = rad * rad
+	for n : range(1, 8) do
+		a = 2 * n - 1
+		b = 2 * n
+		term = term * (-1) * x2 / (a * b)
+		sum = sum + term
+	end
+	return sum
+end
+
+-- Tangent derived from sine / cosine
+def tan(x) do
+	c = cos(x)
+	zero = c - c
+	if (c == zero) then
+		return 0 / 0  -- NaN at odd multiples of pi/2
+	else
+		return sin(x) / c
+	end
+end
+
+-- Inverse tangent via iterative refinement (sufficient for simple uses)
+def atan(z) do
+	-- operate in Double to avoid integer division artifacts
+	z = z + 0.0
+	zero = z - z
+	if (z == zero) then
+		return 0
+	end
+
+	-- Normalize sign; work with non-negative z and restore later
+	sign = 1.0
+	if (z < zero) then
+		sign = -1.0
+		z = -z
+	end
+
+	-- Range reduction
+	one = zero + 1.0
+	if (z > one) then
+		return sign * (pi / 2) - sign * atan(1 / z)
+	end
+	if (z > 0.5) then
+		return sign * (pi / 4) + sign * atan((z - 1.0) / (z + 1.0))
+	end
+
+	-- Power series for |z| <= 0.5
+	term = z
+	sum = z
+	z2 = z * z
+	for n : range(1, 15) do
+		term = term * (-1) * z2
+		denom = 2 * n + 1.0
+		sum = sum + term / denom
+	end
+	return sign * sum
+end
+
+-- atan2(y, x) that respects quadrants
+def atan2(y, x) do
+	xZero = x - x
+	yZero = y - y
+	if (x > xZero) then
+		return atan(y / x)
+	else if (x < xZero && y >= yZero) then
+			return atan(y / x) + pi
+		else if (x < xZero && y < yZero) then
+				return atan(y / x) - pi
+			else if (x == xZero && y > yZero) then
+					return pi / 2
+				else if (x == xZero && y < yZero) then
+						return -pi / 2
+					else
+						return 0  -- undefined; default to 0
+					end
+				end
+			end
+		end
+	end
+end
+
+-- Degrees / radians conversion
+def toRadians(deg) -> deg * pi / 180
+def toDegrees(rad) -> rad * 180 / pi

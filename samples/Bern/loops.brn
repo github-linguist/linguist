@@ -1,0 +1,81 @@
+"_____________________________________________________________"
+"Bern uses a Odin-like syntax for loops."
+"This means that the only word for loops is \"for\""
+"And the way you type it changes how the loop behaves."
+"_____________________________________________________________\n"
+
+"[1. Repeat For]"
+"The \"Repeat For\" loop repeats an action a specified number of times:"
+"for 3 do"
+"    \"Hello, Loops!\""
+"end"
+
+"\nResult:"
+for 3 do
+    "Hello, Loops!"
+end
+
+"\n_____________________________________________________________\n"
+
+
+"[2. Conditional For]"
+"The \"Conditional For\" loop repeats an action until the conditional is false:"
+"counter = 2"
+"for counter > 0 do"
+"    \"Hello, Loops!\""
+"    counter = counter - 1"
+"end"
+
+"\nResult:"
+counter = 2
+for (counter > 0) do
+    "Hello, Loops!"
+    counter = counter - 1
+end
+
+"\n_____________________________________________________________\n"
+"[3. Infinite For]"
+"To do a Infinite Loop, use for true like this:"
+"for true do"
+"   \"Hello!\""
+"end"
+
+-- Commented to run normally.
+-- for true do
+--    "Hello!"
+-- end
+
+
+"\n_____________________________________________________________\n"
+"[3. For-In]"
+"A For-In can be used to iterate every object of a List, Set or String."
+"Consider the example:"
+"text = \"Bern\""
+"for char : text do"
+"   \"Current char is:\" + char"
+"end"
+
+"\nResult:"
+
+text = "Bern"
+for char : text do
+   "Current char is: " + char
+end
+
+"\n_____________________________________________________________\n"
+"[3. For-In with Counter]"
+"An automatic enumeration is also available with the following syntax:"
+"Consider the example:"
+"text = \"Bern\""
+"for char, index : text do"
+"   \"Current char is:\" + char"
+"   \"Current index is:\" + index"
+"end"
+
+"\nResult:"
+
+textt = "Bern"
+for char, index : textt do
+   "Current char is: " + char
+    "Current index is: " + index
+end

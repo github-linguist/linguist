@@ -1,0 +1,157 @@
+-- Bern String Library
+-- This module provides common string manipulation functions.
+import core
+
+def substring(s, start, end) do
+    result = ""
+    i = start
+    while (i < end && i < length(s)) do
+        result = result + s[i]
+        i = i + 1
+    end
+    return result
+end
+
+def char_at(s, index) -> s[index]
+
+def split(s, delimiter) do
+    result = []
+    current = ""
+    delim_len = length(delimiter)
+    i = 0
+    while (i < length(s)) do
+        if (substring(s, i, i + delim_len) == delimiter) then
+            result = result <> [current]
+            current = ""
+            i = i + delim_len
+        else
+            current = current + s[i]
+            i = i + 1
+        end
+    end
+    result = result <> [current]
+    return result
+end
+
+def char_to_upper('a') -> 'A'
+def char_to_upper('b') -> 'B'
+def char_to_upper('c') -> 'C'
+def char_to_upper('d') -> 'D'
+def char_to_upper('e') -> 'E'
+def char_to_upper('f') -> 'F'
+def char_to_upper('g') -> 'G'
+def char_to_upper('h') -> 'H'
+def char_to_upper('i') -> 'I'
+def char_to_upper('j') -> 'J'
+def char_to_upper('k') -> 'K'
+def char_to_upper('l') -> 'L'
+def char_to_upper('m') -> 'M'
+def char_to_upper('n') -> 'N'
+def char_to_upper('o') -> 'O'
+def char_to_upper('p') -> 'P'
+def char_to_upper('q') -> 'Q'
+def char_to_upper('r') -> 'R'
+def char_to_upper('s') -> 'S'
+def char_to_upper('t') -> 'T'
+def char_to_upper('u') -> 'U'
+def char_to_upper('v') -> 'V'
+def char_to_upper('w') -> 'W'
+def char_to_upper('x') -> 'X'
+def char_to_upper('y') -> 'Y'
+def char_to_upper('z') -> 'Z'
+def char_to_upper(c) -> c
+
+def char_to_lower('A') -> 'a'
+def char_to_lower('B') -> 'b'
+def char_to_lower('C') -> 'c'
+def char_to_lower('D') -> 'd'
+def char_to_lower('E') -> 'e'
+def char_to_lower('F') -> 'f'
+def char_to_lower('G') -> 'g'
+def char_to_lower('H') -> 'h'
+def char_to_lower('I') -> 'i'
+def char_to_lower('J') -> 'j'
+def char_to_lower('K') -> 'k'
+def char_to_lower('L') -> 'l'
+def char_to_lower('M') -> 'm'
+def char_to_lower('N') -> 'n'
+def char_to_lower('O') -> 'o'
+def char_to_lower('P') -> 'p'
+def char_to_lower('Q') -> 'q'
+def char_to_lower('R') -> 'r'
+def char_to_lower('S') -> 's'
+def char_to_lower('T') -> 't'
+def char_to_lower('U') -> 'u'
+def char_to_lower('V') -> 'v'
+def char_to_lower('W') -> 'w'
+def char_to_lower('X') -> 'x'
+def char_to_lower('Y') -> 'y'
+def char_to_lower('Z') -> 'z'
+def char_to_lower(c) -> c
+
+def to_upper(s) -> map(s, char_to_upper)
+def to_lower(s) -> map(s, char_to_lower)
+
+def trim(s) do
+    start = 0
+    final = length(s) - 1
+
+    while (start <= final && (s[start] == ' ' || s[start] == '\n' || s[start] == '\t')) do
+        start = start + 1
+    end
+
+    while (final >= start && (s[final] == ' ' || s[final] == '\n' || s[final] == '\t')) do
+        final = final - 1
+    end
+
+    return substring(s, start, final + 1)
+end
+
+def contains(s, sub) do
+    s_len = length(s)
+    sub_len = length(sub)
+
+    i = 0
+    while (i <= s_len - sub_len) do
+        if (substring(s, i, i + sub_len) == sub) then
+            return true
+        end
+        i = i + 1
+    end
+    return false
+end
+
+def replace(s, old, new) do
+    result = ""
+    i = 0
+    old_len = length(old)
+
+    while (i < length(s)) do
+        if (substring(s, i, i + old_len) == old) then
+            result = result + new
+            i = i + old_len
+        else
+            result = result + s[i]
+            i = i + 1
+        end
+    end
+
+    return result
+end
+
+def starts_with(s, prefix) do
+    prefix_len = length(prefix)
+    if (length(s) < prefix_len) then
+        return false
+    end
+    return substring(s, 0, prefix_len) == prefix
+end
+
+def ends_with(s, suffix) do
+    suffix_len = length(suffix)
+    s_len = length(s)
+    if (s_len < suffix_len) then
+        return false
+    end
+    return substring(s, s_len - suffix_len, s_len) == suffix
+end

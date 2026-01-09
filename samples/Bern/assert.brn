@@ -1,0 +1,19 @@
+-- Bern's library for assertions in tests
+
+def approx_eq(a, b, tolind) -> abs(a - b) <= tol
+
+def assert_approx(name, got, expected, tol) do
+	if (approx_eq(got, expected, tol)) then
+		return name + " PASS"
+	else
+		return name + " FAIL"
+	end
+end
+
+def assert_equals(name, got, expected) do
+	if (got == expected) then
+		return name + " PASS"
+	else
+		return name + " FAIL"
+	end
+end

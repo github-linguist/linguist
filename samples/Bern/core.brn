@@ -1,0 +1,220 @@
+-- Bern Standard Library
+
+-- Map: Apply a function to each element of a list
+def map([], f) -> []
+def map([head|tail], f) -> [f(head)] <> map(tail, f)
+
+-- Filter: Keep elements where predicate returns true
+def filter([], f) -> []
+def filter([head|tail], f) do
+    if (f(head)) then
+        return [head] <> filter(tail, f)
+    else
+        return filter(tail, f)
+    end
+end
+
+-- Fold left: Reduce a list from the left
+def foldl([], acc, f) -> acc
+def foldl([head|tail], acc, f) -> foldl(tail, f(acc, head), f)
+
+-- Fold right: Reduce a list from the right
+def foldr([], acc, f) -> acc
+def foldr([head|tail], acc, f) -> f(head, foldr(tail, acc, f))
+
+-- Sum all elements in a list
+def sum(list) -> foldl(list, 0, \acc, x -> acc + x)
+
+-- Product of all elements in a list
+def product(list) -> foldl(list, 1, \acc, x -> acc * x)
+
+-- Reverse a list
+def reverse_list([]) -> []
+def reverse_list([head|tail]) -> reverse_list(tail) <> [head]
+
+-- Reverse a set
+def reverse_set({}) -> {}
+def reverse_set({head|tail}) -> reverse_set(tail) <> {head}
+
+-- General reverse function based on type
+def reverse(x) do
+    if (::x == "List") then
+        return reverse_list(x)
+    else if (::x == "Set") then
+            return reverse_set(x)
+    else 
+        "Reverse function not supported for this type."
+    end
+end
+-- Take first n elements
+def take(0, _) -> []
+def take(_, []) -> []
+def take(n, [head|tail]) -> [head] <> take(n - 1, tail)
+
+-- Drop first n elements
+def drop(0, list) -> list
+def drop(_, []) -> []
+def drop(n, [_|tail]) -> drop(n - 1, tail)
+
+-- Get head of list
+def head([h|_]) -> h
+
+-- Get tail of list
+def tail([_|t]) -> t
+
+-- Check if list is empty
+def isEmpty([]) -> true
+def isEmpty(_) -> false
+
+-- Any: Check if any element satisfies predicate
+def any([], f) -> false
+def any([head|tail], f) do
+    if (f(head)) then
+        return true
+    else
+        return any(tail, f)
+    end
+end
+
+-- All: Check if all elements satisfy predicate
+def all([], f) -> true
+def all([head|tail], f) do
+    if (f(head)) then
+        return all(tail, f)
+    else
+        return false
+    end
+end
+
+-- Find: Return first element matching predicate; returns false when not found
+def find([], f) -> false
+def find([head|tail], f) do
+    if (f(head)) then
+        return head
+    else
+        return find(tail, f)
+    end
+end
+
+-- Zip two lists together
+def zip([], _) -> []
+def zip(_, []) -> []
+def zip([h1|t1], [h2|t2]) -> [[h1, h2]] <> zip(t1, t2)
+
+-- ZipWith: Combine two lists with a function
+def zipWith([], _, f) -> []
+def zipWith(_, [], f) -> []
+def zipWith([h1|t1], [h2|t2], f) -> [f(h1, h2)] <> zipWith(t1, t2, f)
+
+-- Range: Create a list from start to end (inclusive)
+-- Abstraction for [x..y]
+def range(start, end) -> [start..end]
+
+-- Minimum of a list
+def min([x]) -> x
+def min([head|tail]) do
+    tailMin = min(tail)
+    if (head < tailMin) then
+        return head
+    else
+        return tailMin
+    end
+end
+
+-- Maximum of a list
+def max([x]) -> x
+def max([head|tail]) do
+    tailMax = max(tail)
+    if (head > tailMax) then
+        return head
+    else
+        return tailMax
+    end
+end
+
+-- Compose two functions without requiring closures
+def compose(f, g, x) -> f(g(x))
+
+-- Identity function
+def id(x) -> x
+-- Although string literals return normally, there is
+-- a print() function in the core library for explicit printing.
+def print(x) -> id(x)
+
+-- TypeOf function: returns the type of the argument as a string
+-- Abstraction for built in type retrieval
+def typeOf(x) -> ::x
+
+-- Length function for strings, lists, and sets
+-- Abstraction for built in length retrieval
+def length(x) -> :>x
+
+-- Constant function: always returns the first argument
+def const(x, _) -> x
+
+-- Flip: swap arguments of a binary function (no closures)
+def flip(f, x, y) -> f(y, x)
+
+-- Convert string to integer using pattern matching
+def char_to_digit('0') -> 0
+def char_to_digit('1') -> 1
+def char_to_digit('2') -> 2
+def char_to_digit('3') -> 3
+def char_to_digit('4') -> 4
+def char_to_digit('5') -> 5
+def char_to_digit('6') -> 6
+def char_to_digit('7') -> 7
+def char_to_digit('8') -> 8
+def char_to_digit('9') -> 9
+
+def append([], y) -> y
+def append([head|tail], y) -> [head] <> append(tail, y)
+
+def to_int(s) do
+    def helper([], acc) -> acc
+    def helper([head|tail], acc) do
+        digit = char_to_digit(head)
+        newAcc = acc * 10 + digit
+        return helper(tail, newAcc)
+    end
+    return helper(s, 0)
+end
+
+-- get the index of an element in a list or set.
+def index_of(x, target) do
+    if (::x == "List") then
+        return index_of_list(x, target)
+    else if (::x == "Set") then
+            return index_of_set(x, target)
+    else 
+        return -1
+    end
+end
+
+def index_of_list([], _) -> -1
+def index_of_list([head|tail], target) do
+    if (head == target) then
+        return 0
+    else
+        idx = index_of_list(tail, target)
+        if (idx == -1) then
+            return -1
+        else
+            return idx + 1
+        end
+    end
+end
+
+def index_of_set({}, _) -> -1
+def index_of_set({head|tail}, target) do
+    if (head == target) then
+        return 0
+    else
+        idx = index_of_set(tail, target)
+        if (idx == -1) then
+            return -1
+        else
+            return idx + 1
+        end
+    end
+end

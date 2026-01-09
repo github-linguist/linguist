@@ -1,0 +1,67 @@
+import core
+import assert
+import math
+
+-- Simple assertion helpers
+"Core library smoke tests"
+
+-- map / filter / folds
+assert_equals("map", map([1,2,3], \x -> x * 2), [2,4,6])
+assert_equals("filter", filter([1,2,3,4,5], \x -> x % 2 == 0), [2,4])
+assert_equals("foldl sum", foldl([1,2,3,4], 0, \acc, x -> acc + x), 10)
+assert_equals("foldr concat", foldr(["a","b","c"], "", \x, acc -> x + acc), "abc")
+
+-- sum / product
+assert_equals("sum", sum([1,2,3,4]), 10)
+assert_equals("product", product([1,2,3,4]), 24)
+
+-- reverse family
+assert_equals("reverse list", reverse([1,2,3]), [3,2,1])
+assert_equals("reverse string", reverse("bern"), "nreb")
+
+-- take / drop / head / tail / isEmpty
+assert_equals("take", take(2, [1,2,3,4]), [1,2])
+assert_equals("drop", drop(2, [1,2,3,4]), [3,4])
+assert_equals("head", head([9,8,7]), 9)
+assert_equals("tail", tail([9,8,7]), [8,7])
+assert_equals("isEmpty true", isEmpty([]), true)
+assert_equals("isEmpty false", isEmpty([1]), false)
+
+-- any / all / find
+assert_equals("any even", any([1,3,5,6], \x -> x % 2 == 0), true)
+assert_equals("any none", any([1,3,5], \x -> x % 2 == 0), false)
+assert_equals("all even", all([2,4,6], \x -> x % 2 == 0), true)
+assert_equals("all mixed", all([2,3,4], \x -> x % 2 == 0), false)
+assert_equals("find hit", find([1,4,5], \x -> x == 4), 4)
+assert_equals("find miss", find([1,4,5], \x -> x == 9), false)
+
+-- zip / zipWith / range
+assert_equals("zip", zip([1,2], [3,4,5]), [[1,3],[2,4]])
+assert_equals("zipWith add", zipWith([1,2,3], [4,5,6], \a, b -> a + b), [5,7,9])
+assert_equals("range", range(1,5), [1,2,3,4,5])
+
+-- min / max
+assert_equals("min", min([3,1,4,2]), 1)
+assert_equals("max", max([3,1,4,2]), 4)
+
+-- compose / id / print / const / flip
+def doubleThenInc(x) -> compose(\y -> y + 1, \y -> y * 2, x)
+assert_equals("compose", doubleThenInc(5), 11)
+assert_equals("id", id("hello"), "hello")
+assert_equals("print", print(42), 42)
+assert_equals("const", const("keep", "drop"), "keep")
+assert_equals("flip", flip(\x, y -> x - y, 5, 2), -3)
+
+-- typeOf / length
+assert_equals("typeOf list", typeOf([1,2,3]), "List")
+assert_equals("typeOf string", typeOf("hi"), "List")
+assert_equals("length list", length([1,2,3,4]), 4)
+assert_equals("length string", length("bern"), 4)
+assert_equals("length set", length({1,2,3}), 3)
+
+-- approx helper sanity
+assert_approx("approxEq", 1.0005, 1.0, 0.001)
+assert_equals("to_int", to_int("12345"), 12345)
+
+assert_equals("index_of", index_of([10,20,30,20], 20), 1)
+assert_equals("index_of not found", index_of([10,20,30], 40), -1)
