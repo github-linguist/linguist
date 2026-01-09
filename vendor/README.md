@@ -369,6 +369,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Markdown:** [wooorm/markdown-tm-language](https://github.com/wooorm/markdown-tm-language)
 - **Marko:** [marko-js/marko-tmbundle](https://github.com/marko-js/marko-tmbundle)
 - **Mask:** [tenbits/sublime-mask](https://github.com/tenbits/sublime-mask)
+- **Mathematical Programming System:** [sharktide/mps-vscode](https://github.com/sharktide/mps-vscode)
 - **Maven POM:** [textmate/maven.tmbundle](https://github.com/textmate/maven.tmbundle)
 - **Max:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
 - **Mercury:** [sebgod/mercury-tmlanguage](https://github.com/sebgod/mercury-tmlanguage)
