@@ -1,0 +1,95 @@
+// Examples: Common Algorithms
+// Demonstrates: practical algorithm implementations
+
+import io from str
+import math from str
+
+io.print("=== Fibonacci Sequence ===")
+var a: int = 0
+var b: int = 1
+
+for (var i: int = 0; i < 10; var i: int = i + 1) {
+  io.print(a)
+  let temp: int = a + b
+  var a: int = b
+  var b: int = temp
+}
+
+io.print("=== Prime Number Check ===")
+
+func isPrime(n: int) => bool {
+  if (n <= 1) {
+    return false
+  }
+  
+  if (n == 2) {
+    return true
+  }
+  
+  if (n % 2 == 0) {
+    return false
+  }
+  
+  var i: int = 3
+  while (i * i <= n) {
+    if (n % i == 0) {
+      return false
+    }
+    var i: int = i + 2
+  }
+  
+  return true
+}
+
+io.print("Primes up to 30:")
+for (var num: int = 2; num <= 30; var num: int = num + 1) {
+  if (isPrime(num)) {
+    io.print(num)
+  }
+}
+
+io.print("=== Sum of Digits ===")
+
+func sumDigits(n: int) => int {
+  var sum: int = 0
+  var num: int = n
+  
+  while (num > 0) {
+    var digit: int = num % 10
+    var sum: int = sum + digit
+    var num: int = num / 10
+  }
+  
+  return sum
+}
+
+io.print(sumDigits(12345))
+io.print(sumDigits(999))
+
+io.print("=== GCD (Greatest Common Divisor) ===")
+
+func gcd(a: int, b: int) => int {
+  while (b != 0) {
+    let temp: int = b
+    var b: int = a % b
+    var a: int = temp
+  }
+  return a
+}
+
+io.print(gcd(48, 18))
+io.print(gcd(100, 75))
+
+io.print("=== Linear Search ===")
+
+func contains(target: int) => bool {
+  for (var i: int = 1; i <= 10; var i: int = i + 1) {
+    if (i == target) {
+      return true
+    }
+  }
+  return false
+}
+
+io.print(contains(5))
+io.print(contains(15))
