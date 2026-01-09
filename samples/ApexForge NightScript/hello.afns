@@ -1,0 +1,16 @@
+package demo;
+
+import forge.log as log;
+
+fun apex()::Option<Result> {
+  let name::String = "ApexForge";
+  let age::i32 = 2;
+
+  log.info(q"Hello $name, age=$age");
+
+  check age {
+    0..=10 => log.info("young");
+    _ => log.info("unknown");
+  }
+ Some(Ok())
+  }
