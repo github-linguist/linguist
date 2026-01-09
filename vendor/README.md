@@ -57,6 +57,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Batchfile:** [mmims/language-batchfile](https://github.com/mmims/language-batchfile)
 - **Beef:** [dotnet/csharp-tmLanguage](https://github.com/dotnet/csharp-tmLanguage)
 - **Befunge:** [johanasplund/sublime-befunge](https://github.com/johanasplund/sublime-befunge)
+- **Bern:** [mirvoxtm/BernSyntaxHighlighting](https://github.com/mirvoxtm/BernSyntaxHighlighting)
 - **Berry:** [berry-lang/berry-grammar](https://github.com/berry-lang/berry-grammar)
 - **BibTeX:** [textmate/latex.tmbundle](https://github.com/textmate/latex.tmbundle)
 - **BibTeX Style:** [zyoshoka/bst.tmLanguage](https://github.com/zyoshoka/bst.tmLanguage)
