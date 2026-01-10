@@ -1,0 +1,49 @@
+# HTTP Server with PostgreSQL transactions
+# Demonstrates: pattern matching, traits, async, connection pooling
+
+use stdlib.server.{serve, respondHtml, redirect, respond503}
+use stdlib.pool.{init, tryTransaction}
+
+type User = { id: Int, name: String, credits: Int }
+
+# Mutable variable for request counting
+mvar requestCount: Int = 0
+
+# Transfer credits between users with ACID guarantees
+handleTransfer(req) = match req.method {
+    "POST" -> {
+        fromId = getParam(req.formParams, "from")
+        toId = getParam(req.formParams, "to")
+        amount = String.toInt(getParam(req.formParams, "amount"))
+
+        # Fast-fail pattern: return 503 if pool exhausted
+        result = tryTransaction(conn => {
+            Pg.execute(conn, "UPDATE users SET credits = credits - $1 WHERE id = $2", (amount, fromId))
+            Pg.execute(conn, "UPDATE users SET credits = credits + $1 WHERE id = $2", (amount, toId))
+        })
+
+        match result {
+            Some(_) -> redirect(req, "/")
+            None -> respond503(req, "Server busy")
+        }
+    }
+    _ -> respond405(req)
+}
+
+# Recursive factorial with pattern matching
+factorial(n) = match n {
+    0 -> 1
+    n -> n * factorial(n - 1)
+}
+
+# List processing with higher-order functions
+processUsers(users) =
+    users
+    |> List.filter(u => u.credits > 0)
+    |> List.map(u => { ...u, name: String.toUpper(u.name) })
+
+main() = {
+    init("host=localhost user=postgres")
+    println("Server starting on port 8080")
+    serve(8080, handleTransfer)
+}
