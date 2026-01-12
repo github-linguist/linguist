@@ -614,6 +614,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **TI Program:** [TIny-Hacker/language-ti-basic](https://github.com/TIny-Hacker/language-ti-basic)
 - **TL-Verilog:** [adamint/tlv-vscode](https://github.com/adamint/tlv-vscode)
 - **TLA:** [tlaplus-community/tree-sitter-tlaplus](https://github.com/tlaplus-community/tree-sitter-tlaplus) 🐌
+- **TMDL:** [microsoft/vscode-tmdl](https://github.com/microsoft/vscode-tmdl)
 - **TOML:** [textmate/toml.tmbundle](https://github.com/textmate/toml.tmbundle)
 - **TSQL:** [beau-witter/language-tsql](https://github.com/beau-witter/language-tsql)
 - **TSV:** [Alhadis/language-dsv](https://github.com/Alhadis/language-dsv)
