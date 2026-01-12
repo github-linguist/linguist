@@ -243,6 +243,12 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_alg_by_heuristics
+    assert_heuristics({
+      "ALGOL" => all_fixtures("ALGOL", "*.alg"),
+    })
+  end
+
   def test_app_by_heuristics
     assert_heuristics({
       "Erlang" => Dir.glob("#{fixtures_path}/Generic/app/Erlang/*"),
@@ -638,6 +644,7 @@ class TestHeuristics < Minitest::Test
 
   def test_lp_by_heuristics
     assert_heuristics({
+      "Lambdapi" => all_fixtures("Lambdapi", "*.lp"),
       "Answer Set Programming" => all_fixtures("Answer Set Programming", "*.lp"),
       "Linear Programming" => all_fixtures("Linear Programming", "*.lp")
     })
@@ -740,6 +747,13 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "Mojo" => all_fixtures("Mojo", "*.mojo"),
       "XML" => all_fixtures("XML", "*.mojo"),
+    })
+  end
+
+  def test_mps_by_heuristics
+    assert_heuristics({
+      "JetBrains MPS" => all_fixtures("JetBrains MPS", "*.mps"),
+      "Mathematical Programming System" => all_fixtures("Mathematical Programming System", "*.mps"),
     })
   end
 
