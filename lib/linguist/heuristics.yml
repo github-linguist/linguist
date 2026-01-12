@@ -167,7 +167,7 @@ disambiguations:
   rules:
     - language: LPC
       named_pattern: lpc
-      negative_pattern: '(?i)([ \t]*(unsigned|uint|enum)|^\s*\*[A-Za-z]|([A-Za-z][A-Za-z0-9_]*\[\]))'
+      negative_pattern: '(?i:(?:[ \t]*(?:unsigned|uint|enum)|^\s*\*[A-Za-z]|[A-Za-z][A-Za-z0-9_]*\[\]))'
     - language: C
 - extensions: ['.cairo']
   rules:
@@ -376,7 +376,7 @@ disambiguations:
     named_pattern: cpp
   - language: LPC
     named_pattern: lpc
-    negative_pattern: '(?i)([ \t]*(unsigned|uint|enum|extern|pragma mark|__inline__)|\s*\*\(|^\s*\*[A-Za-z]|([A-Za-z][A-Za-z0-9_]*\[\]))'
+    negative_pattern: '(?i:(?:^[ \t]*(?:unsigned|uint|enum|extern|pragma[ \t]+mark|__inline__)\b|[ \t]*\*\(|^[ \t]*\*[A-Za-z]|[A-Za-z][A-Za-z0-9_]*\[\]))'
   - language: C
 - extensions: ['.hh']
   rules:
@@ -1067,7 +1067,7 @@ named_patterns:
   - '^[ \t]*#[ \t]*(?:precache|using_animtree)[ \t]*\('
   json: '\A\s*[{\[]'
   key_equals_value: '^[^#!;][^=]*='
-  lpc: '(mixed|nosave|clone_object)|(this_player\(\))|(^inherit [\"A-Za-z][A-Za-z0-9_]*)|(((public|private|protected)\s+)?((varargs|nomask|noshadow)+\s+)?((string|int|mixed|object|mapping)\s+)?[A-Za-z][A-Za-z0-9_]*\()'
+  lpc: '(?:\bmixed\b|\bnosave\b|\bclone_object\b)|(?:\bthis_player\(\))|(?:^inherit\s+"?[A-Za-z][A-Za-z0-9_]*)|(?:^(?:(?:public|private|protected)\s+)?(?:(?:(?:varargs|nomask|noshadow)\s+)*)?(?:(?:string|int|mixed|object|mapping)\s+)?[A-Za-z][A-Za-z0-9_]*(?=\())'
   m68k:
   - '(?im)\bmoveq(?:\.l)?\s+#(?:\$-?[0-9a-f]{1,3}|%[0-1]{1,8}|-?[0-9]{1,3}),\s*d[0-7]\b'
   - '(?im)^\s*move(?:\.[bwl])?\s+(?:sr|usp),\s*[^\s]+'
