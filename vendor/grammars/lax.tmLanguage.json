@@ -1,0 +1,55 @@
+{
+  "name": "Lax",
+  "scopeName": "source.lax",
+  "fileTypes": ["lx"],
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#keywords" },
+    { "include": "#commands" },
+    { "include": "#brackets" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.semicolon.lax",
+          "match": ";.*$"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.lax",
+          "begin": "\"",
+          "end": "\""
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.lax",
+          "match": "\\b(start|spot|if|let|chlet|else|and|or|not)\\b"
+        }
+      ]
+    },
+    "commands": {
+      "patterns": [
+        {
+          "name": "support.function.lax",
+          "match": "\\b(image|input|nl|quit|println|string->sign|string->atom|to-number|number\\?|string-length|substring|eq\\?|eqv\\?|sign\\?|eof-object\\?|list\\*|cons|assq|tail|expt|sqrt)\\b"
+        }
+      ]
+    },
+    "brackets": {
+      "patterns": [
+        {
+          "name": "punctuation.section.brackets.lax",
+          "match": "[\\[\\]]"
+        }
+      ]
+    }
+  }
+}
