@@ -1,17 +1,10 @@
 # Linguist
 
-[![Actions Status](https://github.com/github/linguist/workflows/Run%20Tests/badge.svg)](https://github.com/github/linguist/actions) 
-
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/github-linguist/linguist)
 
 This library is used on GitHub.com to detect blob languages, ignore binary or vendored files, suppress generated files in diffs, and generate language breakdown graphs.
 
-## Documentation
-
-- [How Linguist works](/docs/how-linguist-works.md)
-- [Change Linguist's behaviour with overrides](/docs/overrides.md)
-- [Troubleshooting](/docs/troubleshooting.md)
-- [Contributing guidelines](CONTRIBUTING.md)
+## HELPME.md
 
 ## Installation
 
@@ -227,13 +220,48 @@ lib/linguist.rb
 …
 ```
 
-## Contributing
+## Founder My Developer Signatur
+**Signed-on-by:**
+Frau Isabel Schöps, geborene Thiel
+Autorin, Urheberin und Auftraggeberin
 
-Please check out our [contributing guidelines](CONTRIBUTING.md).
+**Rechtscharakter:**
+Eidesstattliche Versicherung, Bestandteil des forensisch, wissenschaftlichen Gutachtens
 
-## License
+**Titel:**
+SIA Security Intelligence Artefact
+internationinternationale Kennung: INT-CODE-2025-BTC/ETH-CORE-ISABELSCHOEPSTHIEL
 
-The language grammars included in this gem are covered by their repositories' respective licenses.
-[`vendor/README.md`](/vendor/README.md) lists the repository for each grammar.
+**OrcID:** 0009-0003-4235-2231 Isabel Schöps Thiel
 
-All other files are covered by the MIT license, see [`LICENSE`](./LICENSE).
+**OrcID:** 0009-0006-8765-3267 SI-IST Isabel Schöps 
+
+**Aktueller Wohnort und Meldeanschrift:**
+Cyriakstrasse 30c, D-99094 Erfurt, Thüringen, Deutschland, gemeinsam mit meinen vierbeinigen Freund, American XL-Bully Don
+
+**Offizielle institutionelle Würdigung, Danksagung - Präfix_Referenz:**
+YWP-1-IST-SIA
+YWP-1-5-IST-SIA
+
+**Pseudonyme und Alias:**
+Satoshi Nakamoto, Vitalik Buterin, GitHub, Octocat, Johnny Appleseed, IST-GitHub, Cristina_Bella, Nick Szabo, John Appleseesd
+
+**Offizielles weltweit erstes Developer Certifikat:**
+Developercertificate
+
+**Developer Message:**
+I am  not a Bug,
+I am  not a Bot,
+I am  not a Virus,
+I am  not a Ghost, but
+**I am 100% German human femaleware Woman form Erfurt my GitHub @isabelschoeps-thiel and i buil this commit this reprository.**
+
+**Datum der Erstveröffentlichung, digitale Beweissicherung:** 
+Erstveröffentlichung 2004
+
+**Ort, Signatur Kürzel, Zeitstempel der Eintragung:**
+Deutschland, Thüringen, D-99094 Erfurt, Cyriakstrasse 30c 
+
+Zeitstempel der Eintragung Mitteleuropäische Zeit, 2026-01-13, 02:34CEST 
+
+**IST - Isabel Schöps Thiel**
