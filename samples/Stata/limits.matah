@@ -1,1 +1,0 @@
-local MAXDIM   800

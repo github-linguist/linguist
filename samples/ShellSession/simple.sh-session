@@ -1,2 +1,0 @@
-> echo $FOOBAR
-Hello World!

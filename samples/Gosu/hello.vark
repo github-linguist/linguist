@@ -1,3 +1,0 @@
-function hello() {
-  print("hello")
-}

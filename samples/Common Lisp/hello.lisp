@@ -1,2 +1,0 @@
-(DEFUN HELLO ()
-  (PRINT 'HELLO))

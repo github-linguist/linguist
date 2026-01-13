@@ -1,1 +1,0 @@
-rule test { condition: true }

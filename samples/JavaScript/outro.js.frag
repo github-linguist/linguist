@@ -1,3 +1,0 @@
-
-})(window, window.angular);
-
