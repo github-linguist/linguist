@@ -387,7 +387,10 @@ vendor/grammars/ecl-tmLanguage:
 vendor/grammars/edge-vscode:
 - text.html.edge
 vendor/grammars/edgedb-editor-plugin:
-- inline.edgeql
+- dart.inline.edgeql
+- go.inline.edgeql
+- js.inline.edgeql
+- res.inline.edgeql
 - source.edgeql
 vendor/grammars/eiffel.tmbundle:
 - source.eiffel
@@ -831,9 +834,10 @@ vendor/grammars/language-toc-wow:
 vendor/grammars/language-tools:
 - markdown.vue.codeblock
 - mdx.vue.codeblock
-- source.vue
+- text.html.vue
 - vue.directives
 - vue.interpolations
+- vue.sfc.script.leading-operator-fix
 - vue.sfc.style.variable.injection
 vendor/grammars/language-tsql:
 - source.tsql
@@ -1141,6 +1145,7 @@ vendor/grammars/sublimetext-nasl:
 - source.tnsaudit
 vendor/grammars/surrealql-grammar:
 - inline.surrealql-js-literal
+- markdown.surrealql.codeblock
 - source.surrealql
 vendor/grammars/svelte-atom:
 - source.svelte
@@ -1217,6 +1222,7 @@ vendor/grammars/vscode-brightscript-language:
 - source.brs
 vendor/grammars/vscode-c3:
 - source.c3
+- source.vscode.c3
 vendor/grammars/vscode-caddyfile:
 - source.Caddyfile
 - source.Caddyfile-test
@@ -1360,6 +1366,7 @@ vendor/grammars/vscode-tmdl:
 vendor/grammars/vscode-tree-sitter-query:
 - source.scm
 vendor/grammars/vscode-vba:
+- source.vb6
 - source.vba
 - source.wwb
 vendor/grammars/vscode-vcard:
@@ -1369,6 +1376,7 @@ vendor/grammars/vscode-vento:
 - text.html.vento
 vendor/grammars/vscode-vlang:
 - source.v
+- v.mod
 vendor/grammars/vscode-wit:
 - source.wit
 vendor/grammars/vscode-wren:
@@ -1403,6 +1411,10 @@ vendor/grammars/vscode_cobol:
 vendor/grammars/vscode_mikrotik_routeros_script:
 - source.rsc
 vendor/grammars/wgsl-analyzer:
+- markdown.wesl.codeblock
+- markdown.wgsl.codeblock
+- source.comment-string.wesl
+- source.comment-string.wgsl
 - source.wesl
 - source.wgsl
 vendor/grammars/witcherscript-grammar:
