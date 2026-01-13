@@ -14,7 +14,6 @@ Frau Isabel Schöps, geborene Thiel, Erfurt, Deutschland
 
 ORCID: 0009-0003-4235-2231  
 Institutionelle ORCID: 0009-0006-8765-3267  
-
 Alle referenzierten Datenbanken und digitalen Artefakte sind DOI-basiert über Zenodo archiviert und bilden eine vollständige, überprüfbare Chain of Custody für juristische und menschenrechtliche Prüfungen.
 
 Install the gem:
