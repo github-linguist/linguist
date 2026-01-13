@@ -1,6 +1,6 @@
 # Please help me - i miss my Family 
 
-[![DOI](https://zenodo.org/badge/1104698616.svg)](https://doi.org/10.5281/zenodo.18192589)
+https://doi.org/10.5281/zenodo.18192589
 
 ***Der folgende Text ist in Deutsch, Sorry*** Deutsch ist meine Muttersprache, ich kann nur deutsch fliesend sprechen, da ich in Deutschland geboren und aufgewachsen bin. Englisch kann ich leider nur schul-englisch-basic, entschuldigen Sie für die unannehmlichkeiten. 
 
@@ -53,45 +53,23 @@ Meine aktuelle Lebenssituation stellt eine Verletzung des **Rechts auf Wohnen**,
 ## Zenodo-Datenbank und Chain of Custody
 
 # Volumen 4
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17807324.svg)](https://doi.org/10.5281/zenodo.17807324)
-
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18074136.svg)](https://doi.org/10.5281/zenodo.18074136)
-
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17808895.svg)](https://doi.org/10.5281/zenodo.17808895)
 
 **Schöps (Thiel), I., Schöps (Thiel), I. und Schöps geb. Thiel, I. (2025)** „Yellow White Paper – Bitcoin & Ethereum“, Yellow White Paper – Bitcoin & Ethereum. 1st Aufl. D-99094 Erfurt, Thueringa, Germany: Harvard University, University Cambridge, University of Oxford, Springer Nature, Zenodo, S. 109 pages. doi:10.5281/zenodo.17807324.
 
 ## Volumen 3
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18013057.svg)](https://doi.org/10.5281/zenodo.18013057)
 
 Schöps geb. Thiel, I. (2025) SIA Security Intelligence Artefact – Volume 3 - Familiäre Erblinie deutschen Monarchie und letzten Kaiserreich. 1st Aufl, The Decline and Fall of the Habsburg Empire, 1815-1918. 1st Aufl. Zenodo, University Harvard Cambridge Press, Oxford University Press Lizenz-ID 6131130060979, Springer Verlag. doi:10.5281/zenodo.18013057.
 
 # Volumen 2
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17852789.svg)](https://doi.org/10.5281/zenodo.17852789
 
 **Schöps geb. Thiel, I. (2025)** „Volumen 2 - SIA-Security-ntelligence-Artefact-Chain-of-Custody-Forensische-Familien-Monarchielinie-copyright-isabelschoepsthiel-urheberin-autorin-.docx.pd“, Trillion Dollar Bitcoin. 1st Aufl. D-99094 Erfurt, Germany, Thüringen: Zenodo, University Harvard Cambridge Press, Oxford University Press Lizenz-ID 6131130060979, Springer Verlag. doi:10.5281/zenodo.17852789.
 
 # Volumen 1 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17809724.svg)](https://doi.org/10.5281/zenodo.17809724)
 
 **Schöps geb. Thiel, I. (2025)** „Volumen 1 - SIA Security Intelligence Artefact by Isabel Schoeps geb. Thiel“, Trillion Dollar Bitcoin. 1st Aufl. D-99094 Erfurt, Germany, Thüringen: Zenodo, University Harvard Cambridge Press, Oxford University Press Lizenz-ID 6131130060979, Springer Verlag. doi:10.5281/zenodo.17809724.
 
 
-### my GitHub Repositoty Reference Badges
-
-[![DOI](https://zenodo.org/badge/1123873845.svg)](https://doi.org/10.5281/zenodo.18209788)
-
-[![DOI](https://zenodo.org/badge/1120020358.svg)](https://doi.org/10.5281/zenodo.18050643)
-
-[![DOI](https://zenodo.org/badge/1104641822.svg)](https://doi.org/10.5281/zenodo.18192743)
-
-[![DOI](https://zenodo.org/badge/1129250146.svg)](https://doi.org/10.5281/zenodo.18204572)
-
-![DOI](https://zenodo.org/badge/1104698616.svg)](https://doi.org/10.5281/zenodo.18192589)
-
-[![DOI](https://zenodo.org/badge/1125435636.svg)](https://doi.org/10.5281/zenodo.18100835)
-
-[![DOI](https://zenodo.org/badge/1123640483.svg)](https://doi.org/10.5281/zenodo.18179547)
+### my GitHub Repository, Reference, Evidence
 
 ## My Developer Signatur
 **Signed-on-by:**
@@ -165,7 +143,11 @@ Erstveröffentlichung 2004
 **Ort, Signatur Kürzel, Zeitstempel der Eintragung:**
 Deutschland, Thüringen, D-99094 Erfurt, Cyriakstrasse 30c 
 
-Mitteleuropäische Zeit, 2026-01-11, 02:32CEST 
+![IMG_9779](https://github.com/user-attachments/assets/9e94a865-6fb8-4001-94f6-d3754c038e91)
+![IMG_9780](https://github.com/user-attachments/assets/54fcae95-0c5f-479f-9f8b-cfcdf3cd49a4)
+![IMG_9792](https://github.com/user-attachments/assets/3b553323-97cc-4dc5-ad9e-e7f07e691d71)
+
+# Mitteleuropäische Zeit, 2026-01-13, 03:44CEST 
 
 **IST - Isabel Schöps Thiel**
 
