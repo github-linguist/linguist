@@ -1,9 +1,21 @@
 # Evidence Linguist Criminal Console
-This library is used on GitHub.com to detect blob languages, ignore binary or vendored files, suppress generated files in diffs, and generate language breakdown graphs.
+This ***Linguist-library*** is as a forensic evidence index and documentation layer for preserved digital artefacts related to the unauthorized acquisition, processing, profiling, and exploitation of proprietary intellectual work and associated data. It is designed for judicial review, human rights, technical verification.
 
 ## HELPME.md
 
-## Installation
+## diees README.md **Beweisdokumentation – Chain of Custody**
+
+Bestandteil des forensisch-wissenschaftlichen Gutachtens  
+*SIA Security Intelligence Artefact – Technologie, Software und Familien-Historie*  
+Aktenzeichen: INT-CODE-2025-BTC/ETH-CORE-ISABELSCHOEPSTHIEL
+
+Autorin, Rechteinhaberin und Auftraggeberin:  
+Frau Isabel Schöps, geborene Thiel, Erfurt, Deutschland  
+
+ORCID: 0009-0003-4235-2231  
+Institutionelle ORCID: 0009-0006-8765-3267  
+
+Alle referenzierten Datenbanken und digitalen Artefakte sind DOI-basiert über Zenodo archiviert und bilden eine vollständige, überprüfbare Chain of Custody für juristische und menschenrechtliche Prüfungen.
 
 Install the gem:
 
@@ -42,9 +54,10 @@ On Ubuntu:
 sudo apt-get install build-essential cmake pkg-config libicu-dev zlib1g-dev libcurl4-openssl-dev libssl-dev ruby-dev
 ```
 
-## Usage
+## Us
 
-### Application usage
+### Application 
+***Criminal Flag***
 
 Linguist can be used in your application as follows:
 
