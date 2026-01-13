@@ -1,7 +1,5 @@
-# Contributing
-
-# **Please help me !**  
-[![DOI](https://zenodo.org/badge/1104698616.svg)](https://doi.org/10.5281/zenodo.18192589)
+## **Please help me !**  
+https://doi.org/10.5281/zenodo.18192589
 
 Text ist in Deutsch Sorry ich kann nur deutsch Sprechen, da ich auch in Deutschland geboren und aufgewachsen bin. Bitte beachten Sie meine **Würdigung, Danksagung und Spendenzusage und institutionelle Anerkennung, mit der Präfix_Referenz_YWP-1-5-IST-SIA**  
   
