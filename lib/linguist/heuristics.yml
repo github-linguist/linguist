@@ -384,10 +384,7 @@ disambiguations:
   - language: Objective-C
     named_pattern: objectivec
   - language: C++
-    named_pattern: cpp
-  - language: LPC
-    named_pattern: lpc
-    negative_pattern: '(?i:(?:^[ \t]*(?:unsigned|uint|enum|extern|pragma[ \t]+mark|__inline__)\b|[ \t]*\*\(|^[ \t]*\*[A-Za-z]|[A-Za-z][A-Za-z0-9_]*\[\]))'
+    named_pattern: cpp  
   - language: C
 - extensions: ['.hh']
   rules:
