@@ -1,4 +1,0 @@
-base:
-  '*':
-    - packages
-    - coffeestats

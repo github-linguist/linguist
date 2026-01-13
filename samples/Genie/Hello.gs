@@ -1,2 +1,0 @@
-init
-	print( "Hello, World!" )

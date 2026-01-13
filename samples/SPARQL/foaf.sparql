@@ -1,7 +1,0 @@
-PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-SELECT ?name ?email
-WHERE {
-  ?person a foaf:Person.
-  ?person foaf:name ?name.
-  ?person foaf:mbox ?email.
-}

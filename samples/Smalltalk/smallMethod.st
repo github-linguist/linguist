@@ -1,3 +1,0 @@
-ChartJs
-dataFunction
-	^ 'bars'
