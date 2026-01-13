@@ -114,6 +114,16 @@ AL:
   tm_scope: source.al
   ace_mode: text
   language_id: 658971832
+ALGOL:
+  type: programming
+  color: "#D1E0DB"
+  extensions:
+  - ".alg"
+  tm_scope: source.algol60
+  ace_mode: pascal
+  codemirror_mode: pascal
+  codemirror_mime_type: text/x-pascal
+  language_id: 79217948
 AMPL:
   type: programming
   color: "#E6EFBB"
@@ -404,16 +414,6 @@ Arc:
   tm_scope: none
   ace_mode: text
   language_id: 20
-ArkTS:
-  type: programming
-  color: "#0080ff"
-  extensions:
-  - ".ets"
-  tm_scope: source.ets
-  ace_mode: typescript
-  codemirror_mode: javascript
-  codemirror_mime_type: application/typescript
-  language_id: 56341321
 AsciiDoc:
   type: prose
   color: "#73a0c5"
@@ -528,6 +528,14 @@ Awk:
   tm_scope: source.awk
   ace_mode: text
   language_id: 28
+B (Formal Method):
+  type: programming
+  color: "#8aa8c5"
+  extensions:
+  - ".mch"
+  tm_scope: source.b
+  ace_mode: text
+  language_id: 700792152
 B4X:
   type: programming
   color: "#00e4ff"
@@ -575,8 +583,8 @@ Batchfile:
   - ".bat"
   - ".cmd"
   filenames:
-  - "gradlew.bat"
-  - "mvnw.cmd"
+  - gradlew.bat
+  - mvnw.cmd
   tm_scope: source.batchfile
   ace_mode: batchfile
   color: "#C1F12E"
@@ -959,6 +967,14 @@ COLLADA:
   codemirror_mode: xml
   codemirror_mime_type: text/xml
   language_id: 49
+CQL:
+  type: programming
+  color: "#006091"
+  extensions:
+  - ".cql"
+  tm_scope: source.cql
+  ace_mode: text
+  language_id: 71155397
 CSON:
   type: data
   color: "#244776"
@@ -983,7 +999,7 @@ CSV:
   type: data
   color: "#237346"
   ace_mode: csv
-  tm_scope: none
+  tm_scope: source.csv
   extensions:
   - ".csv"
   language_id: 51
@@ -2651,6 +2667,8 @@ Gleam:
   language_id: 1054258749
 Glimmer JS:
   type: programming
+  aliases:
+  - gjs
   extensions:
   - ".gjs"
   ace_mode: javascript
@@ -2660,6 +2678,8 @@ Glimmer JS:
   language_id: 5523150
 Glimmer TS:
   type: programming
+  aliases:
+  - gts
   extensions:
   - ".gts"
   ace_mode: typescript
@@ -2907,9 +2927,11 @@ HCL:
   - ".nomad"
   - ".tf"
   - ".tfvars"
+  - ".tofu"
   - ".workflow"
   aliases:
   - HashiCorp Configuration Language
+  - opentofu
   - terraform
   ace_mode: terraform
   codemirror_mode: ruby
@@ -3565,6 +3587,14 @@ JSONiq:
   - ".jq"
   tm_scope: source.jsoniq
   language_id: 177
+Jac:
+  type: programming
+  color: "#FC792D"
+  extensions:
+  - ".jac"
+  tm_scope: source.jac
+  ace_mode: text
+  language_id: 235277043
 Jai:
   type: programming
   color: "#ab8b4b"
@@ -4048,6 +4078,14 @@ LabVIEW:
   codemirror_mode: xml
   codemirror_mime_type: text/xml
   language_id: 194
+Lambdapi:
+  type: programming
+  color: "#8027a3"
+  extensions:
+  - ".lp"
+  tm_scope: source.lp
+  ace_mode: text
+  language_id: 759240513
 Langium:
   type: programming
   color: "#2c8c87"
@@ -4559,6 +4597,14 @@ Mask:
   - ".mask"
   tm_scope: source.mask
   language_id: 223
+Mathematical Programming System:
+  type: programming
+  color: "#0530ad"
+  extensions:
+  - ".mps"
+  tm_scope: text.source.mps
+  ace_mode: text
+  language_id: 429002699
 Maven POM:
   type: data
   group: XML
@@ -6220,6 +6266,14 @@ RAML:
   extensions:
   - ".raml"
   language_id: 308
+RAScript:
+  type: programming
+  ace_mode: text
+  extensions:
+  - ".rascript"
+  tm_scope: source.rascript
+  color: "#2C97FA"
+  language_id: 601118790
 RBS:
   type: data
   ace_mode: ruby
@@ -6870,7 +6924,6 @@ SQL:
   codemirror_mime_type: text/x-sql
   extensions:
   - ".sql"
-  - ".cql"
   - ".ddl"
   - ".inc"
   - ".mysql"
@@ -7105,7 +7158,9 @@ Shell:
   - ".command"
   - ".fcgi"
   - ".ksh"
+  - ".sbatch"
   - ".sh.in"
+  - ".slurm"
   - ".tmux"
   - ".tool"
   - ".trigger"
@@ -7489,6 +7544,16 @@ SuperCollider:
   tm_scope: source.supercollider
   ace_mode: text
   language_id: 361
+SurrealQL:
+  type: programming
+  color: "#ff00a0"
+  aliases:
+  - surql
+  extensions:
+  - ".surql"
+  ace_mode: text
+  tm_scope: source.surrealql
+  language_id: 735141027
 Survex data:
   type: data
   color: "#ffcc99"
@@ -7572,6 +7637,16 @@ TLA:
   tm_scope: source.tla
   ace_mode: text
   language_id: 364
+TMDL:
+  type: data
+  color: "#f0c913"
+  extensions:
+  - ".tmdl"
+  aliases:
+  - "Tabular Model Definition Language"
+  tm_scope: source.tmdl
+  ace_mode: text
+  language_id: 769162295
 TOML:
   type: data
   color: "#9c4221"
@@ -7613,7 +7688,7 @@ TSV:
   type: data
   color: "#237346"
   ace_mode: tsv
-  tm_scope: source.generic-db
+  tm_scope: source.tsv
   extensions:
   - ".tsv"
   - ".vcf"
@@ -8253,7 +8328,7 @@ Vue:
   color: "#41b883"
   extensions:
   - ".vue"
-  tm_scope: source.vue
+  tm_scope: text.html.vue
   ace_mode: vue
   codemirror_mode: vue
   codemirror_mime_type: text/x-vue
@@ -8604,6 +8679,7 @@ XML:
   - ".ps1xml"
   - ".psc1"
   - ".pt"
+  - ".pubxml"
   - ".qhelp"
   - ".rdf"
   - ".res"
