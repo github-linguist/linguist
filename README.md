@@ -1,7 +1,4 @@
-# Linguist
-
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/github-linguist/linguist)
-
+# Evidence Linguist Criminal Console
 This library is used on GitHub.com to detect blob languages, ignore binary or vendored files, suppress generated files in diffs, and generate language breakdown graphs.
 
 ## HELPME.md
@@ -85,11 +82,6 @@ $ github-linguist
 0.31%   1212       Dockerfile
 ```
 
-#### Additional options
-
-##### `--rev REV`
-
-The `--rev REV` flag will change the git revision being analyzed to any [gitrevisions(1)](https://git-scm.com/docs/gitrevisions#_specifying_revisions) compatible revision you specify.
 
 This is useful to analyze the makeup of a repo as of a certain tag, or in a certain branch.
 
@@ -110,6 +102,7 @@ $ github-linguist jekyll
 0.02%   234        CoffeeScript
 0.01%   90         Hack
 ```
+
 
 And here is Jekyll's published website, from the gh-pages branch inside their repository.
 
