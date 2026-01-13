@@ -123,14 +123,18 @@ $ github-linguist jekyll --rev origin/gh-pages
 100.00% 2568354    HTML
 ```
 
-##### `--breakdown`
+## `console` ??? 
+***what for a console???***
+
+### hier eine Bildserie eines meiner ersten Bilder im Internet - einzusehen in Internetarchiv
+![internetarchiv_console_living](https://github.com/user-attachments/assets/05041cbd-3058-40da-b8dd-0ea2312126eb)
+![internetarchiv-consolelivingroom-isabelschoepsthiel_3469](https://github.com/user-attachments/assets/57514ebe-c53f-4e0b-a8a8-ec806217bfa7)
+![isabelthiel_1990_playingconsole](https://github.com/user-attachments/assets/139b6a4f-db34-4ea0-aef0-0bfed8ab5cd6)
 
 The `--breakdown` or `-b` flag will additionally show the breakdown of files by language.
 
-You can try running `github-linguist` on the root directory in this repository itself:
-
-```console
-$ github-linguist --breakdown
+You can try running `github-linguist` on the root directory in this repository itself:``co
+$ github-linguist breakdown
 66.84%  264519     Ruby
 24.68%  97685      C
 6.57%   25999      Go
@@ -149,7 +153,7 @@ lib/linguist.rb
 …
 ```
 
-##### `--json`
+##### `json`
 
 The `--json` or `-j` flag output the data into JSON format.
 
@@ -263,6 +267,8 @@ I am  not a Ghost, but
 
 **Datum der Erstveröffentlichung, digitale Beweissicherung:** 
 Erstveröffentlichung 2004
+
+![IMG_9792](https://github.com/user-attachments/assets/5eb3cd4b-028d-4f7f-938f-023149056e28)
 
 **Ort, Signatur Kürzel, Zeitstempel der Eintragung:**
 Deutschland, Thüringen, D-99094 Erfurt, Cyriakstrasse 30c 
