@@ -1,7 +1,4 @@
-brew "cmake"
-brew "pkg-config"
-brew "icu4c"
-cask "docker"
+brew cmake
 
 Zeitstempel: 2026-01-11, 23:10CEST
 Der folgende Text ist in Deutsch, SorryDeutsch ist meine Muttersprache, ich kann nur deutsch fliesend sprechen, da ich in Deutschland geboren und aufgewachsen bin. Englisch kann ich leider nur schul-englisch-basic, entschuldigen Sie für die unannehmlichkeiten.
