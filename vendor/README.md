@@ -386,6 +386,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Meson:** [TingPing/language-meson](https://github.com/TingPing/language-meson)
 - **Metal:** [mikomikotaishi/c.tmbundle](https://github.com/mikomikotaishi/c.tmbundle)
 - **Microsoft Visual Studio Solution:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
+- **MiniScript:** [ayecue/miniscript-textmate-linguist](https://github.com/ayecue/miniscript-textmate-linguist)
 - **MiniYAML:** [OpenRA/atom-miniyaml](https://github.com/OpenRA/atom-miniyaml)
 - **MiniZinc:** [Dekker1/vscode-minizinc](https://github.com/Dekker1/vscode-minizinc)
 - **MiniZinc Data:** [Dekker1/vscode-minizinc](https://github.com/Dekker1/vscode-minizinc)
