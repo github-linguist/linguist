@@ -583,8 +583,8 @@ Batchfile:
   - ".bat"
   - ".cmd"
   filenames:
-  - "gradlew.bat"
-  - "mvnw.cmd"
+  - gradlew.bat
+  - mvnw.cmd
   tm_scope: source.batchfile
   ace_mode: batchfile
   color: "#C1F12E"
@@ -967,6 +967,14 @@ COLLADA:
   codemirror_mode: xml
   codemirror_mime_type: text/xml
   language_id: 49
+CQL:
+  type: programming
+  color: "#006091"
+  extensions:
+  - ".cql"
+  tm_scope: source.cql
+  ace_mode: text
+  language_id: 71155397
 CSON:
   type: data
   color: "#244776"
@@ -4590,6 +4598,14 @@ Mask:
   - ".mask"
   tm_scope: source.mask
   language_id: 223
+Mathematical Programming System:
+  type: programming
+  color: "#0530ad"
+  extensions:
+  - ".mps"
+  tm_scope: text.source.mps
+  ace_mode: text
+  language_id: 429002699
 Maven POM:
   type: data
   group: XML
@@ -6910,7 +6926,6 @@ SQL:
   codemirror_mime_type: text/x-sql
   extensions:
   - ".sql"
-  - ".cql"
   - ".ddl"
   - ".inc"
   - ".mysql"
@@ -7624,6 +7639,16 @@ TLA:
   tm_scope: source.tla
   ace_mode: text
   language_id: 364
+TMDL:
+  type: data
+  color: "#f0c913"
+  extensions:
+  - ".tmdl"
+  aliases:
+  - "Tabular Model Definition Language"
+  tm_scope: source.tmdl
+  ace_mode: text
+  language_id: 769162295
 TOML:
   type: data
   color: "#9c4221"
@@ -8306,7 +8331,7 @@ Vue:
   color: "#41b883"
   extensions:
   - ".vue"
-  tm_scope: source.vue
+  tm_scope: text.html.vue
   ace_mode: vue
   codemirror_mode: vue
   codemirror_mime_type: text/x-vue
