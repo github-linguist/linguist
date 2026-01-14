@@ -91,6 +91,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **COBOL:** [spgennard/vscode_cobol](https://github.com/spgennard/vscode_cobol)
 - **CODEOWNERS:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **COLLADA:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)
+- **CQL:** [Akzestia/cqlTextMate](https://github.com/Akzestia/cqlTextMate)
 - **CSON:** [atom/language-coffee-script](https://github.com/atom/language-coffee-script)
 - **CSS:** [tree-sitter/tree-sitter-css](https://github.com/tree-sitter/tree-sitter-css) 🐌
 - **CSV:** [Alhadis/language-dsv](https://github.com/Alhadis/language-dsv)
