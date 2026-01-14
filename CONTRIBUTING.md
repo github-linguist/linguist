@@ -88,7 +88,7 @@ To add support for a new extension:
    The more representative of the structure of the language, the better.
 
   > [!IMPORTANT]
-  > "Hello world" and other examples commonly used in learning a language will not be accepted.
+  > "Hello world" and other examples found in tutorials will not be accepted.
 
 3. Open a pull request, linking to a [GitHub search result][search-example] showing in-the-wild usage.
    If you are adding a sample, please state clearly the license covering the code.
@@ -133,7 +133,7 @@ To add support for a new language:
    The more representative of the structure of the language, the better.
 
   > [!IMPORTANT]
-  > "Hello world" and other examples commonly used in learning a language will not be accepted.
+  > "Hello world" and other examples found in tutorials will not be accepted.
 
 4. Generate a unique ID for your language by running `script/update-ids`.
 5. Open a pull request, linking to [GitHub search results][search-example] showing in-the-wild usage.
@@ -217,9 +217,9 @@ If there are official branding guidelines to support the colour choice, please l
 ## Language extension and filename usage requirements
 
 In order to a new language extension or filename to be accepted in Linguist, we require that there is sufficient wide-spread usage on public GitHub repositories.
-This means we do not accept PRs for very new or hobby languages and will close PRs that are clearly very new or hobby languages.
+This means we do not accept PRs for very new or hobby languages, and will close any such PRs that attempt to add them.
 We use GitHub's Search to assess the popularity and rely on the search query we ask you to provide in the PR template to support the claim your language usage meets our requirements; the better your search query, the more likely your PR will be accepted.
-This also means we are limited by Search's [limitations][search-limitations].
+Note that there are [limitations][search-limitations] imposed on what results are indexed by GitHub Search.
 
 The usage requirements are:
 
