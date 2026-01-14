@@ -218,7 +218,7 @@ If there are official branding guidelines to support the colour choice, please l
 
 In order to a new language extension or filename to be accepted in Linguist, we require that there is sufficient wide-spread usage on public GitHub repositories.
 This means we do not accept PRs for very new or hobby languages, and will close any such PRs that attempt to add them.
-We use GitHub's Search to assess popularity. The search query we ask you to provide in the PR template is required to support evidence of your language's usage in the wild. The better your search query, the more likely your PR will be accepted.
+We use GitHub's Search to assess popularity. The search query we ask you to provide in the PR template is required to support evidence of your language's usage in the wild.
 Note that there are [limitations][search-limitations] imposed on what results are indexed by GitHub Search.
 
 The usage requirements are:
