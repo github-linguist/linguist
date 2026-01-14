@@ -87,16 +87,16 @@ To add support for a new extension:
    We prefer examples of real-world code showing common usage.
    The more representative of the structure of the language, the better.
 
-   > [!IMPORTANT]
-   > "Hello world" and other examples commonly used in learning a language will not be accepted.
+  > [!IMPORTANT]
+  > "Hello world" and other examples commonly used in learning a language will not be accepted.
 
 3. Open a pull request, linking to a [GitHub search result][search-example] showing in-the-wild usage.
    If you are adding a sample, please state clearly the license covering the code.
    If possible, link to the original source of the sample.
    If you wrote the sample specifically for the PR and are happy for it to be included under the MIT license that covers Linguist, you can state this instead.
 
-   > [!IMPORTANT]
-   > Pull requests will not be reviewed if the template is not used or not filled in. 
+  > [!IMPORTANT]
+  > Pull requests will not be reviewed if the template is not used or not filled in. 
 
 Additionally, if this extension is already listed in [`languages.yml`][languages] and associated with another language, then a few more steps will need to be taken:
 
@@ -125,15 +125,15 @@ To add support for a new language:
    This command will analyze the grammar and, if no problems are found, add it to the repository.
    If problems are found, please report them to the grammar maintainer as you will otherwise be unable to add it.
 
-   > [!IMPORTANT]
-   > Please only add grammars that have [one of these licenses][licenses].
+  > [!IMPORTANT]
+  > Please only add grammars that have [one of these licenses][licenses].
 
 3. Add samples for your language to the [samples directory][samples] in the correct subdirectory.
    We prefer examples of real-world code showing common usage.
    The more representative of the structure of the language, the better.
 
-   > [!IMPORTANT]
-   > "Hello world" and other examples commonly used in learning a language will not be accepted.
+  > [!IMPORTANT]
+  > "Hello world" and other examples commonly used in learning a language will not be accepted.
 
 4. Generate a unique ID for your language by running `script/update-ids`.
 5. Open a pull request, linking to [GitHub search results][search-example] showing in-the-wild usage.
@@ -141,8 +141,8 @@ To add support for a new language:
    Link directly to the original source if possible.
    If you wrote the sample specifically for the PR and are happy for it to be included under the MIT license that covers Linguist, you can state this instead.
 
-   > [!IMPORTANT]
-   > Pull requests will not be reviewed if the template is not used or not filled in. 
+  > [!IMPORTANT]
+  > Pull requests will not be reviewed if the template is not used or not filled in. 
 
 In addition, if your new language defines an extension that is already listed in [`languages.yml`][languages] and associated with another language, then a few more steps will need to be taken:
 
@@ -225,9 +225,10 @@ The usage requirements are:
 
 - at least 2000 files per extension or filenme indexed in the last year (the number you see at the top of the search results), excluding forks, for extensions or filenames expected to occur more than once per repo, like Ruby's `.rb` extension.
 - at least 200 files per extension or filename indexed in the last year, excluding forks, for extensions or filenames expected to only occur once per repo, like a `Makefile`.
-- the results should show a reasonable distribution across unique `:user/:repo` combinations assessed by manually and randomly clicking through the results. If particular users are showing a high proportion of the results, for example the primary language owner, we will filter out those users using `-user:<username>` to reduce their impact on the assessment.
+- the results should show a reasonable distribution across unique `:user/:repo` combinations assessed by manually and randomly clicking through the results. 
+  If particular users are showing a high proportion of the results, for example the primary language owner, we will filter out those users using `-user:<username>` to reduce their impact on the assessment.
 
-This method of assessment is reviewed periodically to see if a better method becomes available.
+This method of assessment is reviewed periodically to see if a better method becomes available. If you have a better approach, please open a new [discussion][].
 
 ## Testing
 
@@ -262,6 +263,7 @@ As Linguist is a production dependency for GitHub we have a couple of workflow r
 - Anyone with commit rights can merge Pull Requests provided that there is a :+1: from a GitHub staff member.
 - Releases are performed by GitHub staff so we can ensure GitHub.com always stays up to date with the latest release of Linguist and there are no regressions in production.
 
+[discussion]: https://github.com/github-linguist/linguist/discussions
 [grammars]: /vendor/README.md
 [heuristic]: https://github.com/github/linguist/blob/master/lib/linguist/heuristics.yml
 [languages]: /lib/linguist/languages.yml
