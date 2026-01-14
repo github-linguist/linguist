@@ -1,0 +1,21 @@
+// This work is marked with CC0 1.0 Universal
+// https://creativecommons.org/publicdomain/zero/1.0
+
+// Simple "cat" command.
+
+use "std/fmt"
+use "std/os"
+
+fn main() {
+	args := os::Args()
+	if len(args) == 1 {
+		ret
+	}
+	for _, path in args[1:] {
+		data := os::ReadFile(path) else {
+			fmt::Println("cat: ", path, " error: ", error)
+			continue
+		}
+		print(str(data))
+	}
+}
