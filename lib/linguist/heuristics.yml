@@ -1022,7 +1022,7 @@ disambiguations:
 - extensions: ['.vim']
   rules:
   - language: Vim9 script
-    pattern: '^\s*vim9script\s*$'
+    pattern: '^\s*vim9script(?:\s+noclear)?\s*$'
   - language: Vim script
 - extensions: ['.vcf']
   rules:
