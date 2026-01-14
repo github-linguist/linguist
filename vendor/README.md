@@ -640,6 +640,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Turing:** [Alhadis/language-turing](https://github.com/Alhadis/language-turing)
 - **Turtle:** [peta/turtle.tmbundle](https://github.com/peta/turtle.tmbundle)
 - **Twig:** [Anomareh/PHP-Twig.tmbundle](https://github.com/Anomareh/PHP-Twig.tmbundle)
+- **Txtx:** [txtx/txtx-grammar](https://github.com/txtx/txtx-grammar)
 - **Type Language:** [goodmind/language-typelanguage](https://github.com/goodmind/language-typelanguage)
 - **TypeScript:** [tree-sitter/tree-sitter-typescript](https://github.com/tree-sitter/tree-sitter-typescript) 🐌
 - **TypeSpec:** [microsoft/typespec](https://github.com/microsoft/typespec)
