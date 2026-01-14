@@ -1019,6 +1019,11 @@ disambiguations:
   - language: Vim Script
     pattern: '^UseVimball'
   - language: VBA
+- extensions: ['.vim']
+  rules:
+  - language: Vim9 script
+    pattern: '^\s*vim9script\s*$'
+  - language: Vim script
 - extensions: ['.vcf']
   rules:
   - language: TSV
@@ -1056,11 +1061,6 @@ disambiguations:
   - language: JSON
     named_pattern: json
   - language: Yacc
-- extensions: ['.vim']
-  rules:
-  - language: Vim9 script
-    pattern: '^\s*vim9script\s*$'
-  - language: Vim script
 named_patterns:
   cpp:
   - '^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>'
