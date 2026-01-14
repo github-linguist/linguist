@@ -75,9 +75,8 @@ bundle exec bin/github-linguist --breakdown
 
 ## Adding an extension to a language
 
-We try only to add new extensions once they have some usage on GitHub.
-In most cases we prefer that each new file extension be in use in at least 200 unique `:user/:repo` repositories before supporting them in Linguist
-(but see [#5756][] for a temporary change in the criteria).
+We will only add new extensions once they have sufficient usage on GitHub.
+We detail our usage requirements and assessment method later at [Language extension and filename usage requirements](#language-extension-and-filename-usage-requirements).
 
 To add support for a new extension:
 
@@ -88,11 +87,16 @@ To add support for a new extension:
    We prefer examples of real-world code showing common usage.
    The more representative of the structure of the language, the better.
 
-   **"Hello world" examples will not be accepted.**
+  > [!IMPORTANT]
+  > "Hello world" and other examples found in tutorials will not be accepted.
+
 3. Open a pull request, linking to a [GitHub search result][search-example] showing in-the-wild usage.
    If you are adding a sample, please state clearly the license covering the code.
    If possible, link to the original source of the sample.
    If you wrote the sample specifically for the PR and are happy for it to be included under the MIT license that covers Linguist, you can state this instead.
+
+  > [!IMPORTANT]
+  > Pull requests will not be reviewed if the template is not used or not filled in. 
 
 Additionally, if this extension is already listed in [`languages.yml`][languages] and associated with another language, then a few more steps will need to be taken:
 
@@ -105,9 +109,8 @@ See [My Linguist PR has been merged but GitHub doesn't reflect my changes][merge
 
 ## Adding a language
 
-We try only to add languages once they have some usage on GitHub.
-In most cases we prefer that each new file extension be in use in at least 200 unique `:user/:repo` repositories before supporting them in Linguist
-(but see [#5756][] for a temporary change in the criteria).
+We will only add new extensions once they have sufficient usage on GitHub.
+We detail our usage requirements and assessment method later at [Language extension and filename usage requirements](#language-extension-and-filename-usage-requirements).
 
 To add support for a new language:
 
@@ -122,21 +125,28 @@ To add support for a new language:
    This command will analyze the grammar and, if no problems are found, add it to the repository.
    If problems are found, please report them to the grammar maintainer as you will otherwise be unable to add it.
 
-   **Please only add grammars that have [one of these licenses][licenses].**
+  > [!IMPORTANT]
+  > Please only add grammars that have [one of these licenses][licenses].
+
 3. Add samples for your language to the [samples directory][samples] in the correct subdirectory.
    We prefer examples of real-world code showing common usage.
    The more representative of the structure of the language, the better.
 
-   **"Hello world" examples will not be accepted.**
+  > [!IMPORTANT]
+  > "Hello world" and other examples found in tutorials will not be accepted.
+
 4. Generate a unique ID for your language by running `script/update-ids`.
 5. Open a pull request, linking to [GitHub search results][search-example] showing in-the-wild usage.
    Please state clearly the license covering the code in the samples.
    Link directly to the original source if possible.
    If you wrote the sample specifically for the PR and are happy for it to be included under the MIT license that covers Linguist, you can state this instead.
 
+  > [!IMPORTANT]
+  > Pull requests will not be reviewed if the template is not used or not filled in. 
+
 In addition, if your new language defines an extension that is already listed in [`languages.yml`][languages] and associated with another language, then a few more steps will need to be taken:
 
-1. Make sure that at least two example `.foo` files are present in the [samples directory][samples] for each language that uses `.foo`.
+1. Make sure that at least two example `.yourextension` files are present in the [samples directory][samples] for each language that uses `.yourextension`.
 2. If the two languages look vaguely similar, or one of the languages has uniquely identifiable characteristics, consider writing a [heuristic][] to help with the classification.
 
 Remember, the goal here is to try and avoid false positives!
@@ -187,7 +197,8 @@ script/add-grammar --replace MyGrammar https://github.com/PeterPan/MyGrammar
 This command will analyze the grammar and, if no problems are found, add it to the repository.
 If problems are found, please report these problems to the grammar maintainer as you will not be able to add the grammar if problems are found.
 
-**Please only add grammars that have [one of these licenses][licenses].**
+> [!IMPORTANT]
+> Please only add grammars that have [one of these licenses][licenses].
 
 Please then open a pull request for the updated grammar.
 
@@ -202,6 +213,22 @@ Please do this in a community forum or repository used and known by the wider co
 
 Once you've received consensus that the community is happy with your proposed color change, please feel free to open a PR making the change and link to the public discussion where this was agreed by the community.
 If there are official branding guidelines to support the colour choice, please link to those too.
+
+## Language extension and filename usage requirements
+
+In order to a new language extension or filename to be accepted in Linguist, we require that there is sufficient wide-spread usage on public GitHub repositories.
+This means we do not accept PRs for very new or hobby languages, and will close any such PRs that attempt to add them.
+We use GitHub's Search to assess popularity. The search query we ask you to provide in the PR template is required to support evidence of your language's usage in the wild.
+Note that there are [limitations][search-limitations] imposed on what results are indexed by GitHub Search.
+
+The usage requirements are:
+
+- at least 2000 files per extension or filenme indexed in the last year (the number you see at the top of the search results), excluding forks, for extensions or filenames expected to occur more than once per repo, like Ruby's `.rb` extension.
+- at least 200 files per extension or filename indexed in the last year, excluding forks, for extensions or filenames expected to only occur once per repo, like a `Makefile`.
+- the results should show a reasonable distribution across unique `:user/:repo` combinations assessed by manually and randomly clicking through the results. 
+  If particular users are showing a high proportion of the results, for example the primary language owner, we will filter out those users using `-user:<username>` to reduce their impact on the assessment.
+
+This method of assessment is reviewed periodically to see if a better method becomes available. If you have a better approach, please open a new [discussion][].
 
 ## Testing
 
@@ -236,11 +263,13 @@ As Linguist is a production dependency for GitHub we have a couple of workflow r
 - Anyone with commit rights can merge Pull Requests provided that there is a :+1: from a GitHub staff member.
 - Releases are performed by GitHub staff so we can ensure GitHub.com always stays up to date with the latest release of Linguist and there are no regressions in production.
 
+[discussion]: https://github.com/github-linguist/linguist/discussions
 [grammars]: /vendor/README.md
 [heuristic]: https://github.com/github/linguist/blob/master/lib/linguist/heuristics.yml
 [languages]: /lib/linguist/languages.yml
 [licenses]: https://github.com/github/linguist/blob/9b1023ed5d308cb3363a882531dea1e272b59977/vendor/licenses/config.yml#L4-L15
 [samples]: /samples
 [search-example]: https://github.com/search?type=code&q=NOT+is%3Afork+path%3A*.boot
+[search-limitations]: https://docs.github.com/en/search-github/github-code-search/about-github-code-search
 [#5756]: https://github.com/github/linguist/issues/5756
 [merged-pr]: /docs/troubleshooting.md#my-linguist-pr-has-been-merged-but-gitHub-doesnt-reflect-my-changes
