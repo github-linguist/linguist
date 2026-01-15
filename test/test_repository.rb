@@ -230,3 +230,64 @@ class EmptyRepository < Linguist::Source::Repository
     Diff.new
   end
 end
+
+################################################################################
+
+class TestGetTreeSize < Minitest::Test
+  def test_get_tree_size_normal_repo
+    rugged = Rugged::Repository.new(File.expand_path("../../.git", __FILE__))
+    source = Linguist::Repository.new(rugged, rugged.head.target_id)
+
+    # With a high limit, should return the actual blob count
+    size = source.repository.get_tree_size(rugged.head.target_id, 100_000)
+    assert size > 0
+    assert size < 100_000
+
+    # With a low limit, should return the limit
+    assert_equal 10, source.repository.get_tree_size(rugged.head.target_id, 10)
+  end
+
+  def test_get_tree_size_pathological_repo
+    # Create a minimal git bomb in a temp directory
+    Dir.mktmpdir("git-bomb-test") do |dir|
+      # Initialize repo
+      system("git", "-C", dir, "init", "-q", out: File::NULL, err: File::NULL)
+      system("git", "-C", dir, "config", "user.email", "test@test.com")
+      system("git", "-C", dir, "config", "user.name", "Test")
+
+      # Create a blob
+      blob_sha = IO.popen(["git", "-C", dir, "hash-object", "-w", "--stdin"], "r+") do |io|
+        io.write("content")
+        io.close_write
+        io.read.strip
+      end
+
+      # Create deeply nested trees, 1000 levels deep
+      current_sha = blob_sha
+      current_mode = "100644"  # blob mode
+      1000.times do |i|
+        # Tree entry format: "<mode> <name>\0<20-byte SHA>"
+        entry = "#{current_mode} entry\0#{[current_sha].pack('H*')}"
+        current_sha = IO.popen(["git", "-C", dir, "hash-object", "-t", "tree", "-w", "--stdin"], "r+b") do |io|
+          io.write(entry)
+          io.close_write
+          io.read.strip
+        end
+        current_mode = "40000"  # tree mode
+      end
+
+      # Create commit
+      commit_content = "tree #{current_sha}\nauthor Test <test@test.com> 0 +0000\ncommitter Test <test@test.com> 0 +0000\n\ntest"
+      commit_sha = IO.popen(["git", "-C", dir, "hash-object", "-t", "commit", "-w", "--stdin"], "r+") do |io|
+        io.write(commit_content)
+        io.close_write
+        io.read.strip
+      end
+
+      # With limit of 100, should hit tree limit quickly (1000 trees > 100)
+      rugged = Rugged::Repository.new(dir)
+      source = Linguist::Repository.new(rugged, commit_sha)
+      assert_equal 100, source.repository.get_tree_size(commit_sha, 100)
+    end
+  end
+end
