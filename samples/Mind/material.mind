@@ -1,0 +1,343 @@
+// material.mind - Material System for Mind Ray Path Tracer
+//
+// This module implements physically-based materials for path tracing.
+// Each material type defines how light interacts with a surface:
+//
+// Material Types:
+// - Diffuse: Lambertian (matte) surfaces that scatter light uniformly
+// - Metal: Reflective surfaces with optional roughness/fuzz
+// - Dielectric: Transparent materials (glass, water) with refraction
+// - Emissive: Light-emitting surfaces for area lights
+//
+// All scattering functions return both the scattered ray and an updated
+// RNG state, enabling deterministic rendering.
+//
+// References:
+// - "Physically Based Rendering" by Pharr, Jakob, Humphreys
+// - "Ray Tracing in One Weekend" by Peter Shirley
+//
+// Author: STARGA Inc.
+// License: MIT
+
+// =============================================================================
+// Material Data Types
+// =============================================================================
+
+/// Diffuse (Lambertian) material
+///
+/// Scatters light uniformly in all directions according to Lambert's cosine law.
+/// The albedo represents the fraction of light reflected (per channel).
+pub struct MaterialDiffuse {
+    /// Surface color/reflectance (RGB, each in [0, 1])
+    albedo: Vec3,
+}
+
+/// Metallic material with optional roughness
+///
+/// Reflects light like a mirror, with optional fuzz/roughness that
+/// perturbs the reflection direction.
+pub struct MaterialMetal {
+    /// Surface reflectance (RGB, each in [0, 1])
+    albedo: Vec3,
+    /// Surface roughness (0 = perfect mirror, 1 = very fuzzy)
+    roughness: f32,
+}
+
+/// Dielectric (glass-like) material
+///
+/// Transmits and reflects light according to Snell's law and
+/// Fresnel equations. Supports total internal reflection.
+pub struct MaterialDielectric {
+    /// Tint color for transmitted light
+    albedo: Vec3,
+    /// Index of refraction (1.0 = air, 1.5 = glass, 1.33 = water)
+    ior: f32,
+}
+
+/// Emissive (light-emitting) material
+///
+/// Emits light of the specified color and strength.
+/// Used for area lights in the scene.
+pub struct MaterialEmissive {
+    /// Emission color (RGB)
+    color: Vec3,
+    /// Emission strength multiplier
+    strength: f32,
+}
+
+/// Sum type for all material variants
+///
+/// Each geometry primitive references a material by index into the scene's
+/// material array. The material enum determines scattering behavior.
+pub enum Material {
+    /// Matte/Lambertian surface
+    Diffuse(MaterialDiffuse),
+    /// Reflective metal surface
+    Metal(MaterialMetal),
+    /// Transparent glass-like surface
+    Dielectric(MaterialDielectric),
+    /// Light-emitting surface
+    Emissive(MaterialEmissive),
+}
+
+// =============================================================================
+// Scatter Result
+// =============================================================================
+
+/// Result of a material scattering event
+///
+/// Contains the scattered ray direction and the attenuation (color filter)
+/// applied to the light traveling along that path.
+pub struct ScatterResult {
+    /// The scattered ray (origin at hit point, direction from material)
+    scattered: Ray,
+    /// Color attenuation applied to light (RGB multiplier)
+    attenuation: Vec3,
+    /// Whether scattering occurred (false = ray absorbed)
+    did_scatter: bool,
+}
+
+// =============================================================================
+// Scattering Functions
+// =============================================================================
+
+/// Scatter light from a diffuse (Lambertian) surface
+///
+/// Generates a random scatter direction in the hemisphere around the normal,
+/// following Lambert's cosine law for diffuse reflection.
+///
+/// # Arguments
+/// * `mat` - Diffuse material properties
+/// * `r_in` - Incoming ray (unused for diffuse, included for API consistency)
+/// * `hit_point` - Point of intersection
+/// * `normal` - Surface normal at hit point
+/// * `rng` - Random number generator state
+///
+/// # Returns
+/// * Tuple of (ScatterResult, updated_rng_state)
+///
+/// # Algorithm
+/// 1. Generate random unit vector
+/// 2. Add to normal (cosine-weighted hemisphere sampling)
+/// 3. Handle degenerate case where sum is near-zero
+pub fn scatter_diffuse(
+    mat: MaterialDiffuse,
+    r_in: Ray,
+    hit_point: Vec3,
+    normal: Vec3,
+    rng: RngState
+) -> (ScatterResult, RngState) {
+    let (random_vec, new_rng) = rng_vec3_unit_vector(rng);
+    let scatter_dir_raw = v3_add(normal, random_vec);
+
+    // Handle degenerate case where random vector is opposite to normal
+    let scatter_dir = if v3_near_zero(scatter_dir_raw) {
+        normal
+    } else {
+        scatter_dir_raw
+    };
+
+    let scattered = ray_new(hit_point, v3_normalize(scatter_dir));
+
+    let result = ScatterResult {
+        scattered: scattered,
+        attenuation: mat.albedo,
+        did_scatter: true,
+    };
+
+    (result, new_rng)
+}
+
+/// Scatter light from a metallic surface
+///
+/// Reflects the incoming ray about the normal with optional roughness.
+/// Roughness adds random perturbation to simulate brushed or imperfect metals.
+///
+/// # Arguments
+/// * `mat` - Metal material properties
+/// * `r_in` - Incoming ray
+/// * `hit_point` - Point of intersection
+/// * `normal` - Surface normal at hit point
+/// * `rng` - Random number generator state
+///
+/// # Returns
+/// * Tuple of (ScatterResult, updated_rng_state)
+/// * did_scatter will be false if the fuzzed ray goes below the surface
+pub fn scatter_metal(
+    mat: MaterialMetal,
+    r_in: Ray,
+    hit_point: Vec3,
+    normal: Vec3,
+    rng: RngState
+) -> (ScatterResult, RngState) {
+    // Perfect reflection direction
+    let reflected = v3_reflect(r_in.direction, normal);
+
+    // Add roughness/fuzz by perturbing the reflection
+    let (fuzz, new_rng) = rng_vec3_unit_sphere(rng);
+    let fuzzed = v3_add(reflected, v3_mul(fuzz, mat.roughness));
+
+    // Handle degenerate case where fuzzed vector is near-zero
+    let safe_fuzzed = if v3_near_zero(fuzzed) {
+        reflected  // Fall back to perfect reflection
+    } else {
+        fuzzed
+    };
+
+    let scattered = ray_new(hit_point, v3_normalize(safe_fuzzed));
+
+    // Reject if fuzzed ray points into the surface
+    let did_scatter = v3_dot(safe_fuzzed, normal) > 0.0;
+
+    let result = ScatterResult {
+        scattered: scattered,
+        attenuation: mat.albedo,
+        did_scatter: did_scatter,
+    };
+
+    (result, new_rng)
+}
+
+/// Scatter light from a dielectric (glass-like) surface
+///
+/// Handles both reflection and refraction using Snell's law.
+/// Uses Schlick's approximation for Fresnel reflectance.
+/// Correctly handles total internal reflection.
+///
+/// # Arguments
+/// * `mat` - Dielectric material properties (includes IOR)
+/// * `r_in` - Incoming ray
+/// * `hit_point` - Point of intersection
+/// * `normal` - Surface normal (always points outward)
+/// * `front_face` - True if ray hit front face, false for back face
+/// * `rng` - Random number generator state
+///
+/// # Returns
+/// * Tuple of (ScatterResult, updated_rng_state)
+///
+/// # Physics
+/// - Snell's law: n1 * sin(theta1) = n2 * sin(theta2)
+/// - Total internal reflection when sin(theta2) > 1
+/// - Fresnel effect: more reflection at grazing angles
+pub fn scatter_dielectric(
+    mat: MaterialDielectric,
+    r_in: Ray,
+    hit_point: Vec3,
+    normal: Vec3,
+    front_face: bool,
+    rng: RngState
+) -> (ScatterResult, RngState) {
+    // Determine refraction ratio based on which side we're hitting
+    // front_face: entering material (air -> glass)
+    // back_face: exiting material (glass -> air)
+    let refraction_ratio = if front_face { 1.0 / mat.ior } else { mat.ior };
+
+    let unit_direction = v3_normalize(r_in.direction);
+    let cos_theta = f32_min(-v3_dot(unit_direction, normal), 1.0);
+    let sin_theta = f32_sqrt(1.0 - cos_theta * cos_theta);
+
+    // Check for total internal reflection
+    let cannot_refract = refraction_ratio * sin_theta > 1.0;
+
+    // Use Schlick's approximation for Fresnel reflectance
+    let (reflectance_val, rng1) = rng_f32(rng);
+    let use_reflect = cannot_refract || (reflectance(cos_theta, refraction_ratio) > reflectance_val);
+
+    let direction = if use_reflect {
+        v3_reflect(unit_direction, normal)
+    } else {
+        v3_refract(unit_direction, normal, refraction_ratio)
+    };
+
+    let scattered = ray_new(hit_point, direction);
+
+    let result = ScatterResult {
+        scattered: scattered,
+        attenuation: mat.albedo,
+        did_scatter: true,
+    };
+
+    (result, rng1)
+}
+
+// =============================================================================
+// Fresnel Approximation
+// =============================================================================
+
+/// Schlick's approximation for Fresnel reflectance
+///
+/// Approximates the fraction of light that is reflected vs transmitted
+/// at a dielectric interface. More light is reflected at grazing angles.
+///
+/// # Arguments
+/// * `cosine` - Cosine of the incident angle
+/// * `ref_idx` - Ratio of refractive indices (n1/n2)
+///
+/// # Returns
+/// * Reflectance coefficient in [0, 1]
+///
+/// # Formula
+/// R(theta) = R0 + (1 - R0) * (1 - cos(theta))^5
+/// where R0 = ((n1 - n2) / (n1 + n2))^2
+#[inline]
+fn reflectance(cosine: f32, ref_idx: f32) -> f32 {
+    // R0: reflectance at normal incidence
+    let r0 = (1.0 - ref_idx) / (1.0 + ref_idx);
+    let r0_sq = r0 * r0;
+
+    // Schlick's polynomial approximation of Fresnel
+    let one_minus_cos = 1.0 - cosine;
+    let power = one_minus_cos * one_minus_cos * one_minus_cos * one_minus_cos * one_minus_cos;
+    r0_sq + (1.0 - r0_sq) * power
+}
+
+// =============================================================================
+// Emissive Material Functions
+// =============================================================================
+
+/// Handle scattering for emissive materials
+///
+/// Emissive materials do not scatter light - they only emit it.
+/// This function always returns did_scatter = false.
+///
+/// # Arguments
+/// * `mat` - Emissive material properties
+/// * `hit_point` - Point of intersection
+/// * `normal` - Surface normal at hit point
+/// * `rng` - Random number generator state
+///
+/// # Returns
+/// * Tuple of (ScatterResult with did_scatter=false, unchanged_rng_state)
+pub fn scatter_emissive(
+    mat: MaterialEmissive,
+    hit_point: Vec3,
+    normal: Vec3,
+    rng: RngState
+) -> (ScatterResult, RngState) {
+    // Emissive materials do not scatter - they only emit light
+    // The scattered ray is arbitrary since did_scatter is false
+    let result = ScatterResult {
+        scattered: ray_new(hit_point, normal),
+        attenuation: vec3_zero(),
+        did_scatter: false,
+    };
+
+    (result, rng)
+}
+
+/// Get the emission color from an emissive material
+///
+/// Returns the emission color multiplied by strength for emissive materials,
+/// or zero for all other material types.
+///
+/// # Arguments
+/// * `mat` - Material to query
+///
+/// # Returns
+/// * Emission color (Vec3) or zero if material is not emissive
+pub fn material_emitted(mat: &Material) -> Vec3 {
+    match mat {
+        Material::Emissive(e) => v3_mul(e.color, e.strength),
+        _ => vec3_zero(),
+    }
+}

@@ -1,0 +1,247 @@
+// camera.mind - Camera Model for Mind Ray Path Tracer
+//
+// This module implements a virtual pinhole camera for ray generation.
+// The camera uses a look-at model with configurable field of view
+// and aspect ratio.
+//
+// Coordinate System:
+// - Right-handed coordinate system with Y-up
+// - +X: Right, +Y: Up, +Z: Toward camera (out of screen)
+// - Camera looks along negative Z by default
+// - Image plane is at distance 1 from the camera origin
+//
+// Camera Model:
+// - Pinhole camera (no depth of field by default)
+// - Rays originate from a single point (camera origin)
+// - Image plane defines the viewing frustum
+//
+// The camera generates rays for each pixel, with optional jitter for
+// anti-aliasing (handled in the render module).
+//
+// GPU Compatibility:
+// - All fields are f32 for GPU alignment
+// - No dynamic allocations
+// - Pure functions (no side effects)
+//
+// Author: STARGA Inc.
+// License: MIT
+
+// =============================================================================
+// Constants
+// =============================================================================
+
+/// Pi constant for degree-to-radian conversion
+const PI: f32 = 3.14159265358979323846;
+
+/// Degrees to radians conversion factor
+const DEG_TO_RAD: f32 = 0.017453292519943295;  // PI / 180
+
+/// Epsilon for near-zero vector detection
+const CAMERA_EPSILON: f32 = 0.0001;
+
+// =============================================================================
+// Camera Type
+// =============================================================================
+
+/// Virtual camera for ray generation
+///
+/// Stores precomputed values for efficient ray generation. The camera
+/// defines a viewing frustum with the image plane at unit distance.
+///
+/// # Coordinate Frame
+/// - origin: camera position in world space
+/// - horizontal: vector spanning image width
+/// - vertical: vector spanning image height
+/// - lower_left: position of bottom-left corner of image plane
+pub struct Camera {
+    /// Camera position in world space
+    origin: Vec3,
+    /// Bottom-left corner of the image plane
+    lower_left: Vec3,
+    /// Vector spanning the full image width
+    horizontal: Vec3,
+    /// Vector spanning the full image height
+    vertical: Vec3,
+}
+
+// =============================================================================
+// Camera Construction
+// =============================================================================
+
+/// Create a new camera with look-at positioning
+///
+/// Constructs a camera positioned at `lookfrom`, looking toward `lookat`,
+/// with the specified field of view and aspect ratio.
+///
+/// # Arguments
+/// * `lookfrom` - Camera position in world space
+/// * `lookat` - Point the camera is aimed at
+/// * `vup` - World up vector (typically (0, 1, 0))
+/// * `vfov` - Vertical field of view in degrees (typically 30-90)
+/// * `aspect_ratio` - Image width / height ratio
+///
+/// # Returns
+/// * Configured Camera ready for ray generation
+///
+/// # Camera Axes
+/// - w: points backward (opposite to viewing direction)
+/// - u: points right (perpendicular to w and vup)
+/// - v: points up (perpendicular to w and u, may differ from vup if tilted)
+///
+/// # Example
+/// ```mind
+/// let cam = camera_new(
+///     vec3(0, 1, 5),      // lookfrom: slightly above, behind origin
+///     vec3(0, 0, 0),      // lookat: origin
+///     vec3(0, 1, 0),      // vup: Y is up
+///     60.0,               // 60 degree vertical FOV
+///     16.0 / 9.0          // 16:9 aspect ratio
+/// );
+/// ```
+pub fn camera_new(
+    lookfrom: Vec3,
+    lookat: Vec3,
+    vup: Vec3,
+    vfov: f32,
+    aspect_ratio: f32
+) -> Camera {
+    // Convert vertical FOV from degrees to radians
+    // Clamp vfov to sensible range (0.1 to 179.0) to avoid tan(0) or tan(pi/2)
+    let clamped_vfov = f32_clamp(vfov, 0.1, 179.0);
+    let theta = clamped_vfov * DEG_TO_RAD;
+    // Half-height of viewport at distance 1
+    let h = f32_tan(theta / 2.0);
+    let viewport_height = 2.0 * h;
+    // Ensure aspect_ratio is positive
+    let safe_aspect = if aspect_ratio <= 0.0 { 1.0 } else { aspect_ratio };
+    let viewport_width = safe_aspect * viewport_height;
+
+    // Build orthonormal camera basis vectors
+    // w: points backward (from lookat to lookfrom)
+    let view_dir = v3_sub(lookfrom, lookat);
+
+    // Handle degenerate case: lookfrom == lookat
+    // Default to looking along -Z (standard forward direction)
+    let w = if v3_length_sq(view_dir) < CAMERA_EPSILON * CAMERA_EPSILON {
+        vec3(0.0, 0.0, 1.0)  // Default backward direction (+Z)
+    } else {
+        v3_normalize(view_dir)
+    };
+
+    // u: points right (perpendicular to vup and w)
+    let cross_result = v3_cross(vup, w);
+
+    // Handle degenerate case: vup parallel to w
+    // Use an alternate up vector to construct valid basis
+    let u = if v3_length_sq(cross_result) < CAMERA_EPSILON * CAMERA_EPSILON {
+        // vup is parallel to w, use alternate up vector
+        let alt_up = if f32_abs(w.y) < 0.9 {
+            vec3(0.0, 1.0, 0.0)  // Y-up
+        } else {
+            vec3(1.0, 0.0, 0.0)  // X-up fallback
+        };
+        v3_normalize(v3_cross(alt_up, w))
+    } else {
+        v3_normalize(cross_result)
+    };
+
+    // v: points up (perpendicular to w and u)
+    let v = v3_cross(w, u);
+
+    let origin = lookfrom;
+    // Scale basis vectors to viewport dimensions
+    let horizontal = v3_mul(u, viewport_width);
+    let vertical = v3_mul(v, viewport_height);
+
+    // Compute lower-left corner of image plane
+    // Image plane is at distance 1 from camera (along -w)
+    let lower_left = v3_sub(
+        v3_sub(v3_sub(origin, v3_div(horizontal, 2.0)), v3_div(vertical, 2.0)),
+        w
+    );
+
+    Camera {
+        origin: origin,
+        lower_left: lower_left,
+        horizontal: horizontal,
+        vertical: vertical,
+    }
+}
+
+// =============================================================================
+// Ray Generation
+// =============================================================================
+
+/// Generate a ray from the camera through a point on the image plane
+///
+/// Given normalized image coordinates (u, v), generates a ray from the
+/// camera origin through the corresponding point on the image plane.
+///
+/// # Arguments
+/// * `cam` - Camera configuration
+/// * `u` - Horizontal image coordinate (0 = left edge, 1 = right edge)
+/// * `v` - Vertical image coordinate (0 = bottom edge, 1 = top edge)
+///
+/// # Returns
+/// * Ray from camera origin through the specified image plane point
+///
+/// # Coordinate Mapping
+/// For proper pixel coordinates:
+/// - u = (x + 0.5) / width for pixel center
+/// - v = (y + 0.5) / height for pixel center
+/// Add random offset within [0, 1/width] x [0, 1/height] for anti-aliasing.
+///
+/// # Edge Cases
+/// - u, v outside [0, 1] produces rays outside the normal frustum
+/// - Values are not clamped to allow overscan/bleeding effects
+///
+/// # Performance
+/// ~15 float operations (no branches, no function calls except normalize)
+#[inline]
+pub fn camera_get_ray(cam: Camera, u: f32, v: f32) -> Ray {
+    // Point on image plane = lower_left + u*horizontal + v*vertical
+    // Direction = point - origin
+    let direction = v3_sub(
+        v3_add(
+            v3_add(cam.lower_left, v3_mul(cam.horizontal, u)),
+            v3_mul(cam.vertical, v)
+        ),
+        cam.origin
+    );
+
+    // Create normalized ray
+    ray_new(cam.origin, v3_normalize(direction))
+}
+
+/// Validate camera configuration
+///
+/// Checks that the camera parameters are valid for ray generation.
+///
+/// # Arguments
+/// * `cam` - Camera to validate
+///
+/// # Returns
+/// * true if camera is valid, false otherwise
+#[inline]
+pub fn camera_is_valid(cam: &Camera) -> bool {
+    // Check that vectors are not degenerate (near-zero length)
+    let h_len_sq = v3_length_sq(cam.horizontal);
+    let v_len_sq = v3_length_sq(cam.vertical);
+
+    // Minimum valid vector length squared (1e-6)
+    let min_len_sq = 0.000001;
+
+    h_len_sq > min_len_sq && v_len_sq > min_len_sq
+}
+
+// =============================================================================
+// External Dependencies
+// =============================================================================
+// Math utilities imported from math_stubs.mind:
+// - f32_tan: Tangent function for FOV calculation
+//
+// Vector utilities imported from vec3.mind:
+// - v3_normalize, v3_sub, v3_add, v3_mul, v3_div, v3_cross
+//
+// Ray utilities imported from ray.mind:
+// - ray_new: Ray constructor

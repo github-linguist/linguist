@@ -1,0 +1,540 @@
+// NikolaChess v3.17 - GPU-Accelerated TensorBoard
+// Copyright (c) 2025 STARGA, Inc. All rights reserved.
+// 16-channel packed tensor for RTX Tensor Core acceleration
+
+import std.tensor;
+import std.cuda;
+import std.atomic;
+import std.simd;
+import std.mem;
+
+// ============================================================================
+// TENSORBOARD CONSTANTS
+// ============================================================================
+
+const BOARD_SIZE: i32 = 8;
+const NUM_PIECES: i32 = 12;
+const NUM_CHANNELS: i32 = 16;
+
+// Channel layout:
+// 0-5:   White pieces (P, N, B, R, Q, K)
+// 6-11:  Black pieces (p, n, b, r, q, k)
+// 12:    All white occupancy (precomputed)
+// 13:    All black occupancy (precomputed)
+// 14:    Attack map (GPU-computed)
+// 15:    Draw probability cache
+
+const CH_WHITE_PAWN: i32 = 0;
+const CH_WHITE_KNIGHT: i32 = 1;
+const CH_WHITE_BISHOP: i32 = 2;
+const CH_WHITE_ROOK: i32 = 3;
+const CH_WHITE_QUEEN: i32 = 4;
+const CH_WHITE_KING: i32 = 5;
+const CH_BLACK_PAWN: i32 = 6;
+const CH_BLACK_KNIGHT: i32 = 7;
+const CH_BLACK_BISHOP: i32 = 8;
+const CH_BLACK_ROOK: i32 = 9;
+const CH_BLACK_QUEEN: i32 = 10;
+const CH_BLACK_KING: i32 = 11;
+const CH_WHITE_OCC: i32 = 12;
+const CH_BLACK_OCC: i32 = 13;
+const CH_ATTACKS: i32 = 14;
+const CH_DRAW_CACHE: i32 = 15;
+
+// GPU cache sizes
+const HASH_CACHE_SIZE: i32 = 65536;
+const ATTACK_BATCH_SIZE: i32 = 4096;
+
+// ============================================================================
+// TENSORBOARD STRUCTURE
+// ============================================================================
+
+struct TensorBoard {
+    // Primary 16x8x8 tensor (f16 for RTX Tensor Core acceleration)
+    // Using f16 gives 2x throughput on RTX 4090/4080
+    data: tensor<f16, (NUM_CHANNELS, BOARD_SIZE, BOARD_SIZE)>,
+
+    // GPU-side persistent caches (stay in VRAM)
+    @cuda.device hash_cache: tensor<u64, (HASH_CACHE_SIZE,)>,
+    @cuda.device draw_cache: tensor<f16, (HASH_CACHE_SIZE,)>,
+    @cuda.device attack_cache: tensor<f16, (ATTACK_BATCH_SIZE, 8, 8)>,
+
+    // Current game state (mirrored on CPU for validation)
+    stm: i32,              // Side to move (0=white, 1=black)
+    ep_square: i32,        // En passant square (-1 if none)
+    castling: u8,          // Castling rights (4 bits)
+    halfmove: u8,          // Halfmove clock for 50-move rule
+    fullmove: u16,         // Full move counter
+
+    // Zobrist hash (64-bit for strong collision resistance)
+    hash: u64,
+
+    // Incremental update tracking
+    @atomic dirty: u32,    // Dirty flag for GPU sync
+    last_draw_score: f32,  // Cached draw probability
+
+    // History for repetition detection
+    history: Vec<u64>,
+}
+
+// ============================================================================
+// ZOBRIST HASHING TABLES
+// ============================================================================
+
+// GPU-resident Zobrist keys for fast hashing
+@cuda.constant ZOBRIST_PIECES: tensor<u64, (12, 64)>;
+@cuda.constant ZOBRIST_CASTLING: tensor<u64, (16,)>;
+@cuda.constant ZOBRIST_EP: tensor<u64, (8,)>;
+@cuda.constant ZOBRIST_STM: u64;
+
+fn init_zobrist() {
+    // Initialize with random 64-bit keys
+    let mut rng = create_rng(0xDEADBEEF);
+
+    on(gpu0) {
+        for piece in 0..12 {
+            for sq in 0..64 {
+                ZOBRIST_PIECES[piece, sq] = rng.next_u64();
+            }
+        }
+
+        for castle in 0..16 {
+            ZOBRIST_CASTLING[castle] = rng.next_u64();
+        }
+
+        for file in 0..8 {
+            ZOBRIST_EP[file] = rng.next_u64();
+        }
+
+        ZOBRIST_STM = rng.next_u64();
+    }
+}
+
+// ============================================================================
+// TENSORBOARD CREATION
+// ============================================================================
+
+fn create_tensor_board() -> TensorBoard {
+    return TensorBoard {
+        data: tensor.zeros[f16, (NUM_CHANNELS, BOARD_SIZE, BOARD_SIZE)],
+        hash_cache: tensor.zeros[u64, (HASH_CACHE_SIZE,)],
+        draw_cache: tensor.zeros[f16, (HASH_CACHE_SIZE,)],
+        attack_cache: tensor.zeros[f16, (ATTACK_BATCH_SIZE, 8, 8)],
+        stm: 0,
+        ep_square: -1,
+        castling: 0x0F,  // All castling rights
+        halfmove: 0,
+        fullmove: 1,
+        hash: 0,
+        dirty: atomic.new(0),
+        last_draw_score: 0.5,
+        history: Vec.new(),
+    };
+}
+
+fn starting_tensor_board() -> TensorBoard {
+    let mut board = create_tensor_board();
+
+    // Set up starting position
+    // White pieces
+    board.data[CH_WHITE_PAWN, 1, 0] = 1.0;  // a2
+    board.data[CH_WHITE_PAWN, 1, 1] = 1.0;  // b2
+    board.data[CH_WHITE_PAWN, 1, 2] = 1.0;  // c2
+    board.data[CH_WHITE_PAWN, 1, 3] = 1.0;  // d2
+    board.data[CH_WHITE_PAWN, 1, 4] = 1.0;  // e2
+    board.data[CH_WHITE_PAWN, 1, 5] = 1.0;  // f2
+    board.data[CH_WHITE_PAWN, 1, 6] = 1.0;  // g2
+    board.data[CH_WHITE_PAWN, 1, 7] = 1.0;  // h2
+
+    board.data[CH_WHITE_ROOK, 0, 0] = 1.0;   // a1
+    board.data[CH_WHITE_KNIGHT, 0, 1] = 1.0; // b1
+    board.data[CH_WHITE_BISHOP, 0, 2] = 1.0; // c1
+    board.data[CH_WHITE_QUEEN, 0, 3] = 1.0;  // d1
+    board.data[CH_WHITE_KING, 0, 4] = 1.0;   // e1
+    board.data[CH_WHITE_BISHOP, 0, 5] = 1.0; // f1
+    board.data[CH_WHITE_KNIGHT, 0, 6] = 1.0; // g1
+    board.data[CH_WHITE_ROOK, 0, 7] = 1.0;   // h1
+
+    // Black pieces
+    board.data[CH_BLACK_PAWN, 6, 0] = 1.0;  // a7
+    board.data[CH_BLACK_PAWN, 6, 1] = 1.0;  // b7
+    board.data[CH_BLACK_PAWN, 6, 2] = 1.0;  // c7
+    board.data[CH_BLACK_PAWN, 6, 3] = 1.0;  // d7
+    board.data[CH_BLACK_PAWN, 6, 4] = 1.0;  // e7
+    board.data[CH_BLACK_PAWN, 6, 5] = 1.0;  // f7
+    board.data[CH_BLACK_PAWN, 6, 6] = 1.0;  // g7
+    board.data[CH_BLACK_PAWN, 6, 7] = 1.0;  // h7
+
+    board.data[CH_BLACK_ROOK, 7, 0] = 1.0;   // a8
+    board.data[CH_BLACK_KNIGHT, 7, 1] = 1.0; // b8
+    board.data[CH_BLACK_BISHOP, 7, 2] = 1.0; // c8
+    board.data[CH_BLACK_QUEEN, 7, 3] = 1.0;  // d8
+    board.data[CH_BLACK_KING, 7, 4] = 1.0;   // e8
+    board.data[CH_BLACK_BISHOP, 7, 5] = 1.0; // f8
+    board.data[CH_BLACK_KNIGHT, 7, 6] = 1.0; // g8
+    board.data[CH_BLACK_ROOK, 7, 7] = 1.0;   // h8
+
+    // Compute occupancy channels
+    update_occupancy(&mut board);
+
+    // Compute initial hash
+    board.hash = compute_hash(&board);
+
+    return board;
+}
+
+// ============================================================================
+// GPU KERNELS
+// ============================================================================
+
+// Kernel: Update occupancy channels
+@cuda_kernel
+fn update_occupancy_kernel(data: &mut tensor<f16, (16, 8, 8)>) {
+    let rank = cuda.thread_idx() / 8;
+    let file = cuda.thread_idx() % 8;
+
+    // Sum white pieces
+    let mut white_occ: f16 = 0.0;
+    for ch in 0..6 {
+        white_occ += data[ch, rank, file];
+    }
+    data[CH_WHITE_OCC, rank, file] = if white_occ > 0.0 { 1.0 } else { 0.0 };
+
+    // Sum black pieces
+    let mut black_occ: f16 = 0.0;
+    for ch in 6..12 {
+        black_occ += data[ch, rank, file];
+    }
+    data[CH_BLACK_OCC, rank, file] = if black_occ > 0.0 { 1.0 } else { 0.0 };
+}
+
+fn update_occupancy(board: &mut TensorBoard) {
+    on(gpu0) {
+        update_occupancy_kernel<<<1, 64>>>(&mut board.data);
+    }
+}
+
+// Kernel: Compute attack maps (for all squares simultaneously)
+@cuda_kernel
+fn compute_attacks_kernel(
+    data: tensor<f16, (16, 8, 8)>,
+    stm: i32,
+    attacks: &mut tensor<f16, (8, 8)>
+) {
+    let sq = cuda.thread_idx();
+    let rank = sq / 8;
+    let file = sq % 8;
+
+    let mut is_attacked: f16 = 0.0;
+
+    // Check knight attacks
+    let knight_ch = if stm == 0 { CH_WHITE_KNIGHT } else { CH_BLACK_KNIGHT };
+    let knight_offsets = [
+        (-2, -1), (-2, 1), (-1, -2), (-1, 2),
+        (1, -2), (1, 2), (2, -1), (2, 1)
+    ];
+    for (dr, df) in knight_offsets.iter() {
+        let nr = rank + *dr;
+        let nf = file + *df;
+        if nr >= 0 && nr < 8 && nf >= 0 && nf < 8 {
+            is_attacked += data[knight_ch, nr, nf];
+        }
+    }
+
+    // Check pawn attacks
+    let pawn_ch = if stm == 0 { CH_WHITE_PAWN } else { CH_BLACK_PAWN };
+    let pawn_dir = if stm == 0 { -1 } else { 1 };
+    let pr = rank + pawn_dir;
+    if pr >= 0 && pr < 8 {
+        if file > 0 { is_attacked += data[pawn_ch, pr, file - 1]; }
+        if file < 7 { is_attacked += data[pawn_ch, pr, file + 1]; }
+    }
+
+    // Check king attacks (adjacent squares)
+    let king_ch = if stm == 0 { CH_WHITE_KING } else { CH_BLACK_KING };
+    for dr in -1..2 {
+        for df in -1..2 {
+            if dr == 0 && df == 0 { continue; }
+            let nr = rank + dr;
+            let nf = file + df;
+            if nr >= 0 && nr < 8 && nf >= 0 && nf < 8 {
+                is_attacked += data[king_ch, nr, nf];
+            }
+        }
+    }
+
+    // Sliding pieces (simplified - full implementation uses bitboard rays)
+    // This is a simplified version for the kernel
+
+    attacks[rank, file] = if is_attacked > 0.0 { 1.0 } else { 0.0 };
+}
+
+fn compute_attacks(board: &mut TensorBoard) {
+    on(gpu0) {
+        let mut attacks = tensor.zeros[f16, (8, 8)];
+        compute_attacks_kernel<<<1, 64>>>(board.data, board.stm, &mut attacks);
+
+        // Copy to attack channel
+        for rank in 0..8 {
+            for file in 0..8 {
+                board.data[CH_ATTACKS, rank, file] = attacks[rank, file];
+            }
+        }
+    }
+}
+
+// ============================================================================
+// HASH COMPUTATION
+// ============================================================================
+
+fn compute_hash(board: &TensorBoard) -> u64 {
+    let mut hash: u64 = 0;
+
+    // Piece positions
+    for ch in 0..12 {
+        for rank in 0..8 {
+            for file in 0..8 {
+                if board.data[ch, rank, file] > 0.0 {
+                    let sq = rank * 8 + file;
+                    hash ^= ZOBRIST_PIECES[ch, sq];
+                }
+            }
+        }
+    }
+
+    // Castling rights
+    hash ^= ZOBRIST_CASTLING[board.castling as i32];
+
+    // En passant
+    if board.ep_square >= 0 {
+        let ep_file = board.ep_square % 8;
+        hash ^= ZOBRIST_EP[ep_file];
+    }
+
+    // Side to move
+    if board.stm == 1 {
+        hash ^= ZOBRIST_STM;
+    }
+
+    return hash;
+}
+
+// Incremental hash update (for make_move)
+fn update_hash_move(board: &mut TensorBoard, m: Move) {
+    // Remove piece from source
+    let from_sq = m.from;
+    let from_rank = from_sq / 8;
+    let from_file = from_sq % 8;
+    board.hash ^= ZOBRIST_PIECES[m.piece, from_sq];
+
+    // Add piece to destination
+    let to_sq = m.to;
+    let to_rank = to_sq / 8;
+    let to_file = to_sq % 8;
+
+    if m.promotion != 0 {
+        board.hash ^= ZOBRIST_PIECES[m.promotion, to_sq];
+    } else {
+        board.hash ^= ZOBRIST_PIECES[m.piece, to_sq];
+    }
+
+    // Remove captured piece
+    if m.capture != 0 {
+        board.hash ^= ZOBRIST_PIECES[m.capture, to_sq];
+    }
+
+    // Update castling (if changed)
+    // ... (simplified)
+
+    // Update en passant
+    // ... (simplified)
+
+    // Flip side to move
+    board.hash ^= ZOBRIST_STM;
+}
+
+// ============================================================================
+// MOVE MAKING
+// ============================================================================
+
+fn make_tensor_move(board: &mut TensorBoard, m: Move) -> TensorBoard {
+    let mut new_board = board.clone();
+
+    let from_rank = m.from / 8;
+    let from_file = m.from % 8;
+    let to_rank = m.to / 8;
+    let to_file = m.to % 8;
+
+    // Clear source square
+    new_board.data[m.piece, from_rank, from_file] = 0.0;
+
+    // Clear destination square (capture)
+    if m.capture != 0 {
+        new_board.data[m.capture, to_rank, to_file] = 0.0;
+    }
+
+    // Set destination square
+    if m.promotion != 0 {
+        new_board.data[m.promotion, to_rank, to_file] = 1.0;
+    } else {
+        new_board.data[m.piece, to_rank, to_file] = 1.0;
+    }
+
+    // Update state
+    new_board.stm = 1 - new_board.stm;
+    new_board.halfmove += 1;
+    if new_board.stm == 0 {
+        new_board.fullmove += 1;
+    }
+
+    // Reset halfmove on pawn move or capture
+    if m.piece == CH_WHITE_PAWN || m.piece == CH_BLACK_PAWN || m.capture != 0 {
+        new_board.halfmove = 0;
+    }
+
+    // Update occupancy
+    update_occupancy(&mut new_board);
+
+    // Update hash
+    update_hash_move(&mut new_board, m);
+
+    // Add to history
+    new_board.history.push(new_board.hash);
+
+    return new_board;
+}
+
+// ============================================================================
+// DRAW PROBABILITY CACHE
+// ============================================================================
+
+fn cache_draw_probability(board: &mut TensorBoard, prob: f32) {
+    let cache_idx = (board.hash as i32) % HASH_CACHE_SIZE;
+
+    on(gpu0) {
+        board.hash_cache[cache_idx] = board.hash;
+        board.draw_cache[cache_idx] = prob as f16;
+    }
+
+    board.last_draw_score = prob;
+
+    // Update draw channel in tensor
+    let draw_val = prob as f16;
+    for rank in 0..8 {
+        for file in 0..8 {
+            board.data[CH_DRAW_CACHE, rank, file] = draw_val;
+        }
+    }
+}
+
+fn lookup_draw_probability(board: &TensorBoard) -> (bool, f32) {
+    let cache_idx = (board.hash as i32) % HASH_CACHE_SIZE;
+
+    let cached_hash = board.hash_cache[cache_idx];
+    if cached_hash == board.hash {
+        let cached_prob = board.draw_cache[cache_idx] as f32;
+        return (true, cached_prob);
+    }
+
+    return (false, 0.5);
+}
+
+// ============================================================================
+// BATCH OPERATIONS
+// ============================================================================
+
+const TENSOR_BATCH_SIZE: i32 = 256;
+
+fn evaluate_batch(boards: &[TensorBoard], network: &DrawNetwork) -> Vec<f32> {
+    let n = boards.len();
+    let mut results = Vec.with_capacity(n);
+
+    // Stack boards into batch tensor
+    let mut batch = tensor.zeros[f16, (TENSOR_BATCH_SIZE, NUM_CHANNELS, 8, 8)];
+
+    for (i, board) in boards.iter().enumerate() {
+        if i >= TENSOR_BATCH_SIZE { break; }
+        batch[i] = board.data;
+    }
+
+    // GPU batch evaluation
+    on(gpu0) {
+        let outputs = network_forward_batch(network, batch, n as i32);
+
+        for i in 0..n {
+            results.push(outputs[i] as f32);
+        }
+    }
+
+    return results;
+}
+
+// ============================================================================
+// CONVERSION UTILITIES
+// ============================================================================
+
+fn tensor_to_bitboard(board: &TensorBoard, channel: i32) -> u64 {
+    let mut bb: u64 = 0;
+
+    for rank in 0..8 {
+        for file in 0..8 {
+            if board.data[channel, rank, file] > 0.0 {
+                let sq = rank * 8 + file;
+                bb |= 1u64 << sq;
+            }
+        }
+    }
+
+    return bb;
+}
+
+fn bitboard_to_tensor(bb: u64, tensor: &mut tensor<f16, (8, 8)>) {
+    for sq in 0..64 {
+        let rank = sq / 8;
+        let file = sq % 8;
+        tensor[rank, file] = if (bb & (1u64 << sq)) != 0 { 1.0 } else { 0.0 };
+    }
+}
+
+// ============================================================================
+// STATISTICS
+// ============================================================================
+
+fn tensor_board_stats(board: &TensorBoard) {
+    println!("=== TensorBoard Statistics ===");
+    println!("Hash: 0x{:016X}", board.hash);
+    println!("Side to move: {}", if board.stm == 0 { "White" } else { "Black" });
+    println!("Halfmove: {}", board.halfmove);
+    println!("Fullmove: {}", board.fullmove);
+    println!("Castling: 0x{:02X}", board.castling);
+    println!("EP square: {}", board.ep_square);
+    println!("History length: {}", board.history.len());
+    println!("Cached draw score: {:.3}", board.last_draw_score);
+
+    // Count pieces
+    let mut white_count = 0;
+    let mut black_count = 0;
+
+    for ch in 0..6 {
+        for rank in 0..8 {
+            for file in 0..8 {
+                if board.data[ch, rank, file] > 0.0 {
+                    white_count += 1;
+                }
+            }
+        }
+    }
+
+    for ch in 6..12 {
+        for rank in 0..8 {
+            for file in 0..8 {
+                if board.data[ch, rank, file] > 0.0 {
+                    black_count += 1;
+                }
+            }
+        }
+    }
+
+    println!("White pieces: {}", white_count);
+    println!("Black pieces: {}", black_count);
+}

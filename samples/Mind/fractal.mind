@@ -1,0 +1,418 @@
+// fractal.mind - Fractal Iteration Algorithms for Fractal Voyager
+//
+// Implements classic fractal iteration algorithms using MIND tensor operations:
+//   - Mandelbrot: z_{n+1} = z_n^2 + c (z_0 = 0)
+//   - Julia: z_{n+1} = z_n^2 + c (z_0 varies, c fixed)
+//   - Burning Ship: z_{n+1} = (|Re(z)| + i|Im(z)|)^2 + c
+//   - Tricorn: z_{n+1} = conj(z)^2 + c
+//
+// All algorithms compute smooth iteration counts for banding-free coloring.
+// Operations are vectorized over entire images for GPU parallelism.
+//
+// Author: STARGA Inc. <noreply@star.ga>
+// License: MIT
+// Specification reference: spec/v1.0/language.md
+
+import tensor::zeros;
+import tensor::ones;
+import math::sqrt;
+import math::log;
+import math::abs;
+import math::max;
+import math::min;
+
+// =============================================================================
+// Constants
+// =============================================================================
+
+// Escape radius squared (|z|^2 > 4 means point escaped)
+fn escape_radius_sq() -> f32 {
+    4.0
+}
+
+// Log(2) for smooth coloring calculations
+fn log2() -> f32 {
+    0.693147180559945
+}
+
+// =============================================================================
+// Fractal Type Codes
+// =============================================================================
+// 0 = Mandelbrot
+// 1 = Julia
+// 2 = Burning Ship
+// 3 = Tricorn
+
+// =============================================================================
+// Single-Point Fractal Iteration
+// =============================================================================
+
+// Mandelbrot iteration for a single point
+// c: complex coordinate to test [real, imag]
+// max_iter: maximum iterations
+// Returns: [smooth_iter, escaped] where escaped is 1.0 if escaped, 0.0 if in set
+fn mandelbrot_point(c: Tensor<f32, [2]>, max_iter: i32) -> Tensor<f32, [2]> {
+    let z = [0.0, 0.0];  // z_0 = 0
+    let escape_r_sq = escape_radius_sq();
+    let log_2 = log2();
+
+    // Iterative computation
+    let result = iterate(max_iter, z, fn(i: i32, z: Tensor<f32, [2]>) -> Tensor<f32, [2]> {
+        let z_sq = z[0] * z[0] + z[1] * z[1];
+
+        // Check escape condition
+        select(z_sq > escape_r_sq, z,
+            // z = z^2 + c
+            [z[0] * z[0] - z[1] * z[1] + c[0],
+             2.0 * z[0] * z[1] + c[1]])
+    });
+
+    // Compute smooth iteration count
+    let z_final = result;
+    let z_sq_final = z_final[0] * z_final[0] + z_final[1] * z_final[1];
+    let escaped = z_sq_final > escape_r_sq;
+
+    let smooth_iter = select(escaped,
+        // Smooth coloring formula: i + 1 - log(log|z|)/log(2)
+        cast(count_iterations(c, max_iter), f32) + 1.0 -
+            log(log(sqrt(z_sq_final)) / log_2) / log_2,
+        cast(max_iter, f32));
+
+    [smooth_iter, select(escaped, 1.0, 0.0)]
+}
+
+// Julia iteration for a single point
+// z0: initial z value (screen coordinate)
+// c: Julia constant
+// max_iter: maximum iterations
+fn julia_point(z0: Tensor<f32, [2]>, c: Tensor<f32, [2]>, max_iter: i32) -> Tensor<f32, [2]> {
+    let z = z0;
+    let escape_r_sq = escape_radius_sq();
+    let log_2 = log2();
+
+    let result = iterate(max_iter, z, fn(i: i32, z: Tensor<f32, [2]>) -> Tensor<f32, [2]> {
+        let z_sq = z[0] * z[0] + z[1] * z[1];
+
+        select(z_sq > escape_r_sq, z,
+            [z[0] * z[0] - z[1] * z[1] + c[0],
+             2.0 * z[0] * z[1] + c[1]])
+    });
+
+    let z_sq_final = result[0] * result[0] + result[1] * result[1];
+    let escaped = z_sq_final > escape_r_sq;
+
+    let smooth_iter = select(escaped,
+        cast(count_julia_iterations(z0, c, max_iter), f32) + 1.0 -
+            log(log(sqrt(z_sq_final)) / log_2) / log_2,
+        cast(max_iter, f32));
+
+    [smooth_iter, select(escaped, 1.0, 0.0)]
+}
+
+// =============================================================================
+// Vectorized Fractal Computation (GPU-Parallel)
+// =============================================================================
+
+// Compute Mandelbrot for entire image grid
+// c_grid: Tensor<f32, [H, W, 2]> - complex coordinates for each pixel
+// max_iter: maximum iterations
+// Returns: Tensor<f32, [H, W]> - smooth iteration counts
+fn mandelbrot_grid(c_grid: Tensor<f32, [H, W, 2]>, max_iter: i32) -> Tensor<f32, [H, W]> {
+    let escape_r_sq = escape_radius_sq();
+    let log_2 = log2();
+
+    // Initialize z to zeros for all pixels
+    let z_real = zeros([H, W]);
+    let z_imag = zeros([H, W]);
+    let iterations = zeros([H, W]);
+    let escaped = zeros([H, W]);  // 0 = not escaped, 1 = escaped
+
+    // Extract c components
+    let c_real = c_grid[:, :, 0];  // [H, W]
+    let c_imag = c_grid[:, :, 1];  // [H, W]
+
+    // Iterate all pixels in parallel
+    let state = [z_real, z_imag, iterations, escaped];
+
+    let final_state = fold(range(max_iter), state,
+        fn(i: i32, state: Tensor<f32, [4, H, W]>) -> Tensor<f32, [4, H, W]> {
+            let z_r = state[0];
+            let z_i = state[1];
+            let iter = state[2];
+            let esc = state[3];
+
+            // Magnitude squared: |z|^2
+            let z_sq = z_r * z_r + z_i * z_i;
+
+            // Check which pixels should continue
+            let should_continue = (z_sq <= escape_r_sq) * (1.0 - esc);
+
+            // z^2 = (x^2 - y^2) + 2xyi
+            let new_z_r = z_r * z_r - z_i * z_i + c_real;
+            let new_z_i = 2.0 * z_r * z_i + c_imag;
+
+            // Update only pixels that haven't escaped
+            let z_r_next = select(should_continue > 0.5, new_z_r, z_r);
+            let z_i_next = select(should_continue > 0.5, new_z_i, z_i);
+
+            // Increment iteration count for non-escaped pixels
+            let iter_next = iter + should_continue;
+
+            // Mark newly escaped pixels
+            let z_sq_next = z_r_next * z_r_next + z_i_next * z_i_next;
+            let just_escaped = (z_sq_next > escape_r_sq) * should_continue;
+            let esc_next = esc + just_escaped;
+
+            stack([z_r_next, z_i_next, iter_next, esc_next], axis=0)
+        });
+
+    // Extract final state
+    let z_r_final = final_state[0];
+    let z_i_final = final_state[1];
+    let iter_final = final_state[2];
+    let esc_final = final_state[3];
+
+    // Compute smooth iteration count
+    let z_sq_final = z_r_final * z_r_final + z_i_final * z_i_final;
+
+    // Smooth coloring: iter + 1 - log(log|z|)/log(2)
+    let log_zn = log(z_sq_final) / 2.0;
+    let nu = log(log_zn / log_2) / log_2;
+    let smooth = iter_final + 1.0 - nu;
+
+    // Return max_iter for points still in set
+    select(esc_final > 0.5, smooth, cast(max_iter, f32) * ones([H, W]))
+}
+
+// Compute Julia set for entire image grid
+// z_grid: Tensor<f32, [H, W, 2]> - initial z values (screen coordinates)
+// c: Julia constant [real, imag]
+// max_iter: maximum iterations
+fn julia_grid(z_grid: Tensor<f32, [H, W, 2]>, c: Tensor<f32, [2]>, max_iter: i32) -> Tensor<f32, [H, W]> {
+    let escape_r_sq = escape_radius_sq();
+    let log_2 = log2();
+
+    // Initialize z from grid
+    let z_real = z_grid[:, :, 0];
+    let z_imag = z_grid[:, :, 1];
+    let iterations = zeros([H, W]);
+    let escaped = zeros([H, W]);
+
+    // Julia constant (broadcast to all pixels)
+    let c_real = c[0];
+    let c_imag = c[1];
+
+    let state = stack([z_real, z_imag, iterations, escaped], axis=0);
+
+    let final_state = fold(range(max_iter), state,
+        fn(i: i32, state: Tensor<f32, [4, H, W]>) -> Tensor<f32, [4, H, W]> {
+            let z_r = state[0];
+            let z_i = state[1];
+            let iter = state[2];
+            let esc = state[3];
+
+            let z_sq = z_r * z_r + z_i * z_i;
+            let should_continue = (z_sq <= escape_r_sq) * (1.0 - esc);
+
+            let new_z_r = z_r * z_r - z_i * z_i + c_real;
+            let new_z_i = 2.0 * z_r * z_i + c_imag;
+
+            let z_r_next = select(should_continue > 0.5, new_z_r, z_r);
+            let z_i_next = select(should_continue > 0.5, new_z_i, z_i);
+            let iter_next = iter + should_continue;
+
+            let z_sq_next = z_r_next * z_r_next + z_i_next * z_i_next;
+            let just_escaped = (z_sq_next > escape_r_sq) * should_continue;
+            let esc_next = esc + just_escaped;
+
+            stack([z_r_next, z_i_next, iter_next, esc_next], axis=0)
+        });
+
+    let z_r_final = final_state[0];
+    let z_i_final = final_state[1];
+    let iter_final = final_state[2];
+    let esc_final = final_state[3];
+
+    let z_sq_final = z_r_final * z_r_final + z_i_final * z_i_final;
+    let log_zn = log(z_sq_final) / 2.0;
+    let nu = log(log_zn / log_2) / log_2;
+    let smooth = iter_final + 1.0 - nu;
+
+    select(esc_final > 0.5, smooth, cast(max_iter, f32) * ones([H, W]))
+}
+
+// Compute Burning Ship for entire image grid
+// Uses |Re(z)| and |Im(z)| before squaring
+fn burning_ship_grid(c_grid: Tensor<f32, [H, W, 2]>, max_iter: i32) -> Tensor<f32, [H, W]> {
+    let escape_r_sq = escape_radius_sq();
+    let log_2 = log2();
+
+    let z_real = zeros([H, W]);
+    let z_imag = zeros([H, W]);
+    let iterations = zeros([H, W]);
+    let escaped = zeros([H, W]);
+
+    let c_real = c_grid[:, :, 0];
+    let c_imag = c_grid[:, :, 1];
+
+    let state = stack([z_real, z_imag, iterations, escaped], axis=0);
+
+    let final_state = fold(range(max_iter), state,
+        fn(i: i32, state: Tensor<f32, [4, H, W]>) -> Tensor<f32, [4, H, W]> {
+            let z_r = state[0];
+            let z_i = state[1];
+            let iter = state[2];
+            let esc = state[3];
+
+            let z_sq = z_r * z_r + z_i * z_i;
+            let should_continue = (z_sq <= escape_r_sq) * (1.0 - esc);
+
+            // Burning Ship: take absolute values before squaring
+            let z_r_abs = abs(z_r);
+            let z_i_abs = abs(z_i);
+
+            let new_z_r = z_r_abs * z_r_abs - z_i_abs * z_i_abs + c_real;
+            let new_z_i = 2.0 * z_r_abs * z_i_abs + c_imag;
+
+            let z_r_next = select(should_continue > 0.5, new_z_r, z_r);
+            let z_i_next = select(should_continue > 0.5, new_z_i, z_i);
+            let iter_next = iter + should_continue;
+
+            let z_sq_next = z_r_next * z_r_next + z_i_next * z_i_next;
+            let just_escaped = (z_sq_next > escape_r_sq) * should_continue;
+            let esc_next = esc + just_escaped;
+
+            stack([z_r_next, z_i_next, iter_next, esc_next], axis=0)
+        });
+
+    let z_r_final = final_state[0];
+    let z_i_final = final_state[1];
+    let iter_final = final_state[2];
+    let esc_final = final_state[3];
+
+    let z_sq_final = z_r_final * z_r_final + z_i_final * z_i_final;
+    let log_zn = log(z_sq_final) / 2.0;
+    let nu = log(log_zn / log_2) / log_2;
+    let smooth = iter_final + 1.0 - nu;
+
+    select(esc_final > 0.5, smooth, cast(max_iter, f32) * ones([H, W]))
+}
+
+// Compute Tricorn (Mandelbar) for entire image grid
+// Uses conjugate: z_{n+1} = conj(z_n)^2 + c
+fn tricorn_grid(c_grid: Tensor<f32, [H, W, 2]>, max_iter: i32) -> Tensor<f32, [H, W]> {
+    let escape_r_sq = escape_radius_sq();
+    let log_2 = log2();
+
+    let z_real = zeros([H, W]);
+    let z_imag = zeros([H, W]);
+    let iterations = zeros([H, W]);
+    let escaped = zeros([H, W]);
+
+    let c_real = c_grid[:, :, 0];
+    let c_imag = c_grid[:, :, 1];
+
+    let state = stack([z_real, z_imag, iterations, escaped], axis=0);
+
+    let final_state = fold(range(max_iter), state,
+        fn(i: i32, state: Tensor<f32, [4, H, W]>) -> Tensor<f32, [4, H, W]> {
+            let z_r = state[0];
+            let z_i = state[1];
+            let iter = state[2];
+            let esc = state[3];
+
+            let z_sq = z_r * z_r + z_i * z_i;
+            let should_continue = (z_sq <= escape_r_sq) * (1.0 - esc);
+
+            // Tricorn: conj(z)^2 = (x - yi)^2 = (x^2 - y^2) - 2xyi
+            let new_z_r = z_r * z_r - z_i * z_i + c_real;
+            let new_z_i = -2.0 * z_r * z_i + c_imag;  // Note: negative for conjugate
+
+            let z_r_next = select(should_continue > 0.5, new_z_r, z_r);
+            let z_i_next = select(should_continue > 0.5, new_z_i, z_i);
+            let iter_next = iter + should_continue;
+
+            let z_sq_next = z_r_next * z_r_next + z_i_next * z_i_next;
+            let just_escaped = (z_sq_next > escape_r_sq) * should_continue;
+            let esc_next = esc + just_escaped;
+
+            stack([z_r_next, z_i_next, iter_next, esc_next], axis=0)
+        });
+
+    let z_r_final = final_state[0];
+    let z_i_final = final_state[1];
+    let iter_final = final_state[2];
+    let esc_final = final_state[3];
+
+    let z_sq_final = z_r_final * z_r_final + z_i_final * z_i_final;
+    let log_zn = log(z_sq_final) / 2.0;
+    let nu = log(log_zn / log_2) / log_2;
+    let smooth = iter_final + 1.0 - nu;
+
+    select(esc_final > 0.5, smooth, cast(max_iter, f32) * ones([H, W]))
+}
+
+// =============================================================================
+// Unified Interface
+// =============================================================================
+
+// Compute fractal for image grid using specified type
+// fractal_type: 0=Mandelbrot, 1=Julia, 2=Burning Ship, 3=Tricorn
+// c_grid: complex coordinates [H, W, 2]
+// julia_c: Julia constant (only used when fractal_type=1)
+// max_iter: maximum iterations
+fn compute_fractal_grid(
+    fractal_type: i32,
+    c_grid: Tensor<f32, [H, W, 2]>,
+    julia_c: Tensor<f32, [2]>,
+    max_iter: i32
+) -> Tensor<f32, [H, W]> {
+    select(fractal_type == 0, mandelbrot_grid(c_grid, max_iter),
+    select(fractal_type == 1, julia_grid(c_grid, julia_c, max_iter),
+    select(fractal_type == 2, burning_ship_grid(c_grid, max_iter),
+           tricorn_grid(c_grid, max_iter))))
+}
+
+// =============================================================================
+// Coordinate Mapping
+// =============================================================================
+
+// Generate complex coordinate grid from screen parameters
+// width, height: screen dimensions
+// center: view center in complex plane [real, imag]
+// zoom: zoom level (higher = more zoomed in)
+fn make_coordinate_grid(
+    width: i32,
+    height: i32,
+    center: Tensor<f32, [2]>,
+    zoom: f32
+) -> Tensor<f32, [height, width, 2]> {
+    let aspect = cast(width, f32) / cast(height, f32);
+    let scale = 3.5 / zoom;
+
+    // Generate pixel coordinates
+    let x_coords = linspace(0.0, cast(width - 1, f32), width);   // [W]
+    let y_coords = linspace(0.0, cast(height - 1, f32), height); // [H]
+
+    // Create meshgrid
+    let x_grid = broadcast(x_coords, [height, width]);  // [H, W]
+    let y_grid = broadcast(expand_dims(y_coords, 1), [height, width]);  // [H, W]
+
+    // Map to [-0.5, 0.5] range
+    let u = x_grid / cast(width, f32) - 0.5;
+    let v = y_grid / cast(height, f32) - 0.5;
+
+    // Apply zoom, aspect ratio, and center offset
+    let real = u * scale * aspect + center[0];
+    let imag = v * scale + center[1];
+
+    stack([real, imag], axis=2)
+}
+
+// Calculate adaptive iteration count based on zoom level
+fn adaptive_iterations(zoom: f32, base_iter: i32, max_allowed: i32) -> i32 {
+    let log_2 = log2();
+    let zoom_factor = log(max(1.0, zoom)) / log_2;
+    let iter = base_iter + cast(zoom_factor * 50.0, i32);
+    min(iter, max_allowed)
+}

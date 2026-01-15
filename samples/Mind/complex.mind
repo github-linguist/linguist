@@ -1,0 +1,190 @@
+// complex.mind - Complex Number Operations for Fractal Voyager
+//
+// Complex numbers are represented as Tensor<f32, [2]> where:
+//   - index 0 = real part
+//   - index 1 = imaginary part
+//
+// For batched operations (computing many pixels):
+//   - Tensor<f32, [N, 2]> for N complex numbers
+//   - Tensor<f32, [H, W, 2]> for a 2D grid of complex numbers
+//
+// All operations use MIND's tensor semantics with broadcasting.
+//
+// Author: STARGA Inc. <noreply@star.ga>
+// License: MIT
+// Specification reference: spec/v1.0/language.md
+
+import tensor::zeros;
+import tensor::ones;
+import math::sqrt;
+import math::log;
+
+// =============================================================================
+// Complex Number Creation
+// =============================================================================
+
+// Create complex number from real and imaginary parts
+// Returns: Tensor<f32, [2]> representing (real + imag*i)
+fn complex(real: f32, imag: f32) -> Tensor<f32, [2]> {
+    [real, imag]
+}
+
+// Complex zero: 0 + 0i
+fn complex_zero() -> Tensor<f32, [2]> {
+    [0.0, 0.0]
+}
+
+// Complex one: 1 + 0i
+fn complex_one() -> Tensor<f32, [2]> {
+    [1.0, 0.0]
+}
+
+// Complex i: 0 + 1i
+fn complex_i() -> Tensor<f32, [2]> {
+    [0.0, 1.0]
+}
+
+// =============================================================================
+// Complex Arithmetic (Single Complex Numbers)
+// =============================================================================
+
+// Complex addition: (a + bi) + (c + di) = (a+c) + (b+d)i
+fn c_add(z1: Tensor<f32, [2]>, z2: Tensor<f32, [2]>) -> Tensor<f32, [2]> {
+    z1 + z2
+}
+
+// Complex subtraction: (a + bi) - (c + di) = (a-c) + (b-d)i
+fn c_sub(z1: Tensor<f32, [2]>, z2: Tensor<f32, [2]>) -> Tensor<f32, [2]> {
+    z1 - z2
+}
+
+// Complex multiplication: (a + bi) * (c + di) = (ac - bd) + (ad + bc)i
+fn c_mul(z1: Tensor<f32, [2]>, z2: Tensor<f32, [2]>) -> Tensor<f32, [2]> {
+    let a = z1[0];
+    let b = z1[1];
+    let c = z2[0];
+    let d = z2[1];
+    [a * c - b * d, a * d + b * c]
+}
+
+// Complex square: z^2 = (x + yi)^2 = (x^2 - y^2) + 2xyi
+// Optimized special case of c_mul(z, z)
+fn c_sq(z: Tensor<f32, [2]>) -> Tensor<f32, [2]> {
+    let x = z[0];
+    let y = z[1];
+    [x * x - y * y, 2.0 * x * y]
+}
+
+// Complex conjugate: conj(a + bi) = a - bi
+fn c_conj(z: Tensor<f32, [2]>) -> Tensor<f32, [2]> {
+    [z[0], -z[1]]
+}
+
+// Complex magnitude squared: |z|^2 = x^2 + y^2
+// Avoids sqrt for escape radius checks
+fn c_abs_sq(z: Tensor<f32, [2]>) -> f32 {
+    z[0] * z[0] + z[1] * z[1]
+}
+
+// Complex magnitude: |z| = sqrt(x^2 + y^2)
+fn c_abs(z: Tensor<f32, [2]>) -> f32 {
+    sqrt(c_abs_sq(z))
+}
+
+// Scalar multiplication: t * (a + bi) = ta + tbi
+fn c_scale(z: Tensor<f32, [2]>, t: f32) -> Tensor<f32, [2]> {
+    z * t
+}
+
+// Component-wise absolute value (for Burning Ship fractal)
+fn c_abs_components(z: Tensor<f32, [2]>) -> Tensor<f32, [2]> {
+    [abs(z[0]), abs(z[1])]
+}
+
+// =============================================================================
+// Batched Complex Operations (for GPU parallelism)
+// =============================================================================
+
+// Batched complex multiplication: compute many multiplications at once
+// Shape: [N, 2] @ [N, 2] -> [N, 2]
+fn c_mul_batch(z1: Tensor<f32, [N, 2]>, z2: Tensor<f32, [N, 2]>) -> Tensor<f32, [N, 2]> {
+    let a = z1[:, 0];  // Shape [N]
+    let b = z1[:, 1];  // Shape [N]
+    let c = z2[:, 0];  // Shape [N]
+    let d = z2[:, 1];  // Shape [N]
+
+    let real = a * c - b * d;  // Shape [N]
+    let imag = a * d + b * c;  // Shape [N]
+
+    stack([real, imag], axis=1)  // Shape [N, 2]
+}
+
+// Batched complex square: z^2 for many complex numbers
+// Shape: [N, 2] -> [N, 2]
+fn c_sq_batch(z: Tensor<f32, [N, 2]>) -> Tensor<f32, [N, 2]> {
+    let x = z[:, 0];  // Shape [N]
+    let y = z[:, 1];  // Shape [N]
+
+    let real = x * x - y * y;
+    let imag = 2.0 * x * y;
+
+    stack([real, imag], axis=1)
+}
+
+// Batched magnitude squared: |z|^2 for many complex numbers
+// Shape: [N, 2] -> [N]
+fn c_abs_sq_batch(z: Tensor<f32, [N, 2]>) -> Tensor<f32, [N]> {
+    let x = z[:, 0];
+    let y = z[:, 1];
+    x * x + y * y
+}
+
+// Batched complex addition
+// Shape: [N, 2] + [N, 2] -> [N, 2]
+fn c_add_batch(z1: Tensor<f32, [N, 2]>, z2: Tensor<f32, [N, 2]>) -> Tensor<f32, [N, 2]> {
+    z1 + z2
+}
+
+// Batched component-wise absolute value (Burning Ship)
+// Shape: [N, 2] -> [N, 2]
+fn c_abs_components_batch(z: Tensor<f32, [N, 2]>) -> Tensor<f32, [N, 2]> {
+    abs(z)
+}
+
+// Batched conjugate (Tricorn)
+// Shape: [N, 2] -> [N, 2]
+fn c_conj_batch(z: Tensor<f32, [N, 2]>) -> Tensor<f32, [N, 2]> {
+    let real = z[:, 0];
+    let imag = -z[:, 1];
+    stack([real, imag], axis=1)
+}
+
+// =============================================================================
+// 2D Grid Complex Operations (for image rendering)
+// =============================================================================
+
+// Complex square for 2D grid of complex numbers
+// Shape: [H, W, 2] -> [H, W, 2]
+fn c_sq_grid(z: Tensor<f32, [H, W, 2]>) -> Tensor<f32, [H, W, 2]> {
+    let x = z[:, :, 0];  // Shape [H, W]
+    let y = z[:, :, 1];  // Shape [H, W]
+
+    let real = x * x - y * y;
+    let imag = 2.0 * x * y;
+
+    stack([real, imag], axis=2)
+}
+
+// Magnitude squared for 2D grid
+// Shape: [H, W, 2] -> [H, W]
+fn c_abs_sq_grid(z: Tensor<f32, [H, W, 2]>) -> Tensor<f32, [H, W]> {
+    let x = z[:, :, 0];
+    let y = z[:, :, 1];
+    x * x + y * y
+}
+
+// Add two grids of complex numbers
+// Shape: [H, W, 2] + [H, W, 2] -> [H, W, 2]
+fn c_add_grid(z1: Tensor<f32, [H, W, 2]>, z2: Tensor<f32, [H, W, 2]>) -> Tensor<f32, [H, W, 2]> {
+    z1 + z2
+}

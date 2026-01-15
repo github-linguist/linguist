@@ -1,0 +1,333 @@
+// render.mind - Core Path Tracing Renderer
+//
+// This module implements the Monte Carlo path tracing algorithm. Each pixel
+// is sampled multiple times with random ray directions, and the results are
+// averaged to produce a smooth, noise-reduced image.
+//
+// Key Components:
+// - ray_color: Traces a single ray through the scene, accumulating light
+// - render_pixel: Samples a pixel with anti-aliasing and returns final color
+// - tonemap: Reinhard operator for HDR to LDR conversion
+// - gamma_correct: sRGB gamma encoding (2.2)
+//
+// Path Tracing Algorithm:
+// 1. Cast primary ray from camera through pixel
+// 2. Find closest intersection with scene geometry
+// 3. If hit: evaluate material, accumulate emission, scatter new ray
+// 4. If miss: accumulate background/sky color and terminate
+// 5. Repeat steps 2-4 until max bounces or Russian roulette termination
+//
+// Thread Safety: All functions are pure (no global state mutation) and can
+// be safely called from multiple threads with independent RNG states.
+//
+// Author: STARGA Inc.
+// License: MIT
+
+// =============================================================================
+// Constants
+// =============================================================================
+
+/// Minimum ray hit distance (prevents self-intersection artifacts)
+const RAY_T_MIN: f32 = 0.001;
+
+/// Maximum ray travel distance
+const RAY_T_MAX: f32 = 1000000.0;
+
+/// Minimum bounce count before Russian roulette is applied
+const RR_MIN_BOUNCES: i32 = 3;
+
+/// Maximum Russian roulette survival probability
+const RR_MAX_SURVIVAL: f32 = 0.95;
+
+// =============================================================================
+// Path Tracing
+// =============================================================================
+
+/// Trace a ray through the scene and compute accumulated radiance
+///
+/// Implements unbiased Monte Carlo path tracing with Russian roulette
+/// termination. Handles diffuse, metallic, dielectric, and emissive materials.
+///
+/// # Algorithm
+/// 1. Cast ray into scene
+/// 2. On hit: accumulate emission, scatter ray based on material
+/// 3. On miss: accumulate background color, terminate
+/// 4. Apply Russian roulette after 3+ bounces for efficiency
+///
+/// # Arguments
+/// * `r` - Initial ray to trace
+/// * `scene` - Scene containing geometry and materials
+/// * `max_bounces` - Maximum path length (prevents infinite loops)
+/// * `rng` - Random number generator state
+///
+/// # Returns
+/// * Tuple of (accumulated_color, updated_rng_state)
+///
+/// # Energy Conservation
+/// The path maintains a throughput multiplier that ensures energy conservation.
+/// Russian roulette adjusts throughput to maintain unbiased estimates.
+fn ray_color(
+    r: Ray,
+    scene: Scene,
+    max_bounces: i32,
+    rng: RngState
+) -> (Vec3, RngState) {
+    let mut current_ray = r;
+    let mut current_rng = rng;
+    let mut throughput = vec3_ones();
+    let mut accumulated_light = vec3_zero();
+
+    for bounce in 0..max_bounces {
+        let hit = scene_hit(scene, current_ray, RAY_T_MIN, RAY_T_MAX);
+
+        if !hit.did_hit {
+            // Hit sky/background
+            let sky_color = scene.background;
+            let contribution = v3_hadamard(throughput, sky_color);
+            accumulated_light = v3_add(accumulated_light, contribution);
+            break;
+        }
+
+        // Get material
+        let mat = scene.materials[hit.material_idx];
+
+        // Handle emissive materials
+        match mat {
+            Material::Emissive(emissive) => {
+                let emission = v3_mul(emissive.color, emissive.strength);
+                let contribution = v3_hadamard(throughput, emission);
+                accumulated_light = v3_add(accumulated_light, contribution);
+                // Don't continue bouncing from lights
+                break;
+            },
+            _ => {
+                // Non-emissive material, continue bouncing
+            }
+        }
+
+        // Scatter ray based on material type
+        let (scatter_result, new_rng) = match mat {
+            Material::Diffuse(diff) => {
+                scatter_diffuse(diff, current_ray, hit.point, hit.normal, current_rng)
+            },
+            Material::Metal(metal) => {
+                scatter_metal(metal, current_ray, hit.point, hit.normal, current_rng)
+            },
+            Material::Dielectric(diel) => {
+                scatter_dielectric(diel, current_ray, hit.point, hit.normal, hit.front_face, current_rng)
+            },
+            Material::Emissive(_) => {
+                // Already handled above
+                let no_scatter = ScatterResult {
+                    scattered: current_ray,
+                    attenuation: vec3_zero(),
+                    did_scatter: false,
+                };
+                (no_scatter, current_rng)
+            },
+        };
+
+        current_rng = new_rng;
+
+        if !scatter_result.did_scatter {
+            break;
+        }
+
+        // Update throughput and ray
+        throughput = v3_hadamard(throughput, scatter_result.attenuation);
+        current_ray = scatter_result.scattered;
+
+        // Russian roulette path termination after RR_MIN_BOUNCES
+        // This provides unbiased early termination for dim paths
+        if bounce >= RR_MIN_BOUNCES {
+            let max_component = f32_max(f32_max(throughput.x, throughput.y), throughput.z);
+            let survival_prob = f32_min(max_component, RR_MAX_SURVIVAL);
+
+            // Terminate if survival probability is zero (prevents division by zero)
+            if survival_prob <= 0.0 {
+                break;
+            }
+
+            let (rr_sample, rng_after_rr) = rng_f32(current_rng);
+            current_rng = rng_after_rr;
+
+            if rr_sample > survival_prob {
+                break;
+            }
+
+            // Boost throughput to maintain energy
+            throughput = v3_div(throughput, survival_prob);
+        }
+    }
+
+    (accumulated_light, current_rng)
+}
+
+// =============================================================================
+// Pixel Rendering
+// =============================================================================
+
+/// Render a single pixel with multi-sample anti-aliasing
+///
+/// Casts multiple rays through slightly offset positions within the pixel
+/// to achieve sub-pixel anti-aliasing. Each sample uses the full path tracing
+/// algorithm. Results are averaged and post-processed.
+///
+/// # Algorithm
+/// 1. Initialize deterministic RNG based on pixel coordinates and seed
+/// 2. For each sample:
+///    a. Add random offset within pixel for AA
+///    b. Generate camera ray
+///    c. Trace ray through scene
+///    d. Accumulate color
+/// 3. Average accumulated color
+/// 4. Apply tone mapping (HDR -> LDR)
+/// 5. Apply gamma correction (linear -> sRGB)
+/// 6. Clamp to [0, 1] range
+///
+/// # Arguments
+/// * `x` - Pixel X coordinate (0 to width-1)
+/// * `y` - Pixel Y coordinate (0 to height-1)
+/// * `width` - Image width in pixels
+/// * `height` - Image height in pixels
+/// * `spp` - Samples per pixel (higher = less noise)
+/// * `max_bounces` - Maximum path length per sample
+/// * `camera` - Camera configuration for ray generation
+/// * `scene` - Scene to render
+/// * `seed` - Base RNG seed for deterministic rendering
+///
+/// # Returns
+/// * Final pixel color in [0, 1] range (ready for output)
+///
+/// # Determinism
+/// The same (x, y, seed) inputs will always produce the same output color,
+/// enabling reproducible renders and distributed rendering.
+fn render_pixel(
+    x: i32,
+    y: i32,
+    width: i32,
+    height: i32,
+    spp: i32,
+    max_bounces: i32,
+    camera: Camera,
+    scene: Scene,
+    seed: i32
+) -> Vec3 {
+    let pixel_idx = y * width + x;
+    let base_seed = seed ^ (pixel_idx * 747796405);
+
+    let mut rng = rng_init(base_seed);
+    let mut color = vec3_zero();
+
+    let aspect = (width as f32) / (height as f32);
+
+    for _sample in 0..spp {
+        // Anti-aliasing offset
+        let (offset_x, rng1) = rng_f32(rng);
+        let (offset_y, rng2) = rng_f32(rng1);
+
+        // Use width/height for proper [0,1) mapping without division by zero
+        let u = ((x as f32) + offset_x) / (width as f32);
+        let v = ((y as f32) + offset_y) / (height as f32);
+
+        let ray = camera_get_ray(camera, u, 1.0 - v);  // Flip v for image coords
+
+        let (sample_color, new_rng) = ray_color(ray, scene, max_bounces, rng2);
+
+        color = v3_add(color, sample_color);
+        rng = new_rng;
+    }
+
+    // Average samples (guard against spp=0)
+    if spp > 0 {
+        color = v3_div(color, spp as f32);
+    }
+
+    // Tone mapping and gamma correction
+    color = tonemap(color);
+    color = gamma_correct(color);
+
+    v3_clamp01(color)
+}
+
+// =============================================================================
+// Post-Processing
+// =============================================================================
+
+/// sRGB gamma value for encoding
+const GAMMA: f32 = 2.2;
+
+/// Inverse gamma for decoding (pre-computed for efficiency)
+const INV_GAMMA: f32 = 0.4545454545;  // 1.0 / 2.2
+
+/// Apply Reinhard tone mapping to HDR color
+///
+/// Maps high dynamic range values to [0, 1] display range.
+/// The Reinhard operator is a simple but effective global tone mapper
+/// that preserves relative luminance while compressing bright values.
+///
+/// Formula: L_out = L_in / (1 + L_in)
+///
+/// # Arguments
+/// * `color` - HDR color (can have values > 1.0)
+///
+/// # Returns
+/// * Tone-mapped color in [0, 1] range
+///
+/// # Properties
+/// - Preserves 0: tonemap(0) = 0
+/// - Asymptotes to 1: tonemap(inf) -> 1
+/// - Monotonic: brighter inputs always produce brighter outputs
+#[inline]
+fn tonemap(color: Vec3) -> Vec3 {
+    vec3(
+        tonemap_component(color.x),
+        tonemap_component(color.y),
+        tonemap_component(color.z)
+    )
+}
+
+/// Reinhard tone mapping for a single color component
+///
+/// # Arguments
+/// * `x` - Input value (clamped to non-negative)
+///
+/// # Returns
+/// * Tone-mapped value in [0, 1)
+#[inline]
+fn tonemap_component(x: f32) -> f32 {
+    let clamped = f32_max(0.0, x);
+    clamped / (1.0 + clamped)
+}
+
+/// Apply sRGB gamma correction to linear color
+///
+/// Converts linear-space color to gamma-encoded sRGB for display.
+/// Most displays expect sRGB-encoded values.
+///
+/// Formula: c_out = c_in ^ (1/2.2)
+///
+/// # Arguments
+/// * `color` - Linear-space color (should be in [0, 1] after tonemapping)
+///
+/// # Returns
+/// * Gamma-encoded sRGB color
+///
+/// # Note
+/// For accurate sRGB, a piecewise function should be used for values < 0.0031308.
+/// This simplified gamma curve is sufficient for path tracer output.
+#[inline]
+fn gamma_correct(color: Vec3) -> Vec3 {
+    vec3(
+        f32_pow(color.x, INV_GAMMA),
+        f32_pow(color.y, INV_GAMMA),
+        f32_pow(color.z, INV_GAMMA)
+    )
+}
+
+// =============================================================================
+// External Dependencies
+// =============================================================================
+// Math utilities imported from math_stubs.mind:
+// - f32_pow: Power function for gamma correction
+// - f32_max: Maximum of two floats

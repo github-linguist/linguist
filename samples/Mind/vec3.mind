@@ -1,0 +1,290 @@
+// vec3.mind - 3D Vector Mathematics for Mind Ray
+//
+// This module provides 3D vector types and operations essential for ray tracing.
+// All operations are designed to be GPU-friendly with no heap allocation.
+//
+// Design Principles:
+// - All functions are pure (no side effects)
+// - No heap allocation (fixed-size struct)
+// - Numerically stable implementations
+// - Consistent naming: v3_* prefix for operations
+//
+// Coordinate System:
+// - Right-handed coordinate system
+// - Y-axis points up
+// - Z-axis points toward the viewer (camera looks toward -Z)
+//
+// Author: STARGA Inc.
+// License: MIT
+
+// =============================================================================
+// Constants
+// =============================================================================
+
+/// Small epsilon for near-zero comparisons
+const VEC3_EPSILON: f32 = 0.00001;
+
+/// Minimum length for safe normalization
+const NORMALIZE_MIN_LEN: f32 = 0.0001;
+
+// =============================================================================
+// Vector Type
+// =============================================================================
+
+/// 3D vector type for positions, directions, and colors
+///
+/// Uses single-precision floats for GPU efficiency. In ray tracing contexts:
+/// - Positions: world-space coordinates
+/// - Directions: unit vectors (normalized)
+/// - Colors: RGB values (typically in [0, 1] range, but can exceed for HDR)
+pub struct Vec3 {
+    /// X component (red for colors, right for directions)
+    x: f32,
+    /// Y component (green for colors, up for directions)
+    y: f32,
+    /// Z component (blue for colors, forward for directions)
+    z: f32,
+}
+
+// =============================================================================
+// Constructors
+// =============================================================================
+
+/// Create a new Vec3 from components
+///
+/// # Arguments
+/// * `x` - X component
+/// * `y` - Y component
+/// * `z` - Z component
+///
+/// # Returns
+/// * New Vec3 with the specified components
+#[inline]
+pub fn vec3(x: f32, y: f32, z: f32) -> Vec3 {
+    Vec3 { x: x, y: y, z: z }
+}
+
+/// Create a zero vector (0, 0, 0)
+///
+/// Useful for:
+/// - Initializing accumulators
+/// - Representing absence of light/color
+/// - Default/invalid vectors
+#[inline]
+pub fn vec3_zero() -> Vec3 {
+    vec3(0.0, 0.0, 0.0)
+}
+
+/// Create a ones vector (1, 1, 1)
+///
+/// Useful for:
+/// - Initial throughput in path tracing
+/// - White color
+/// - Identity for component-wise multiplication
+#[inline]
+pub fn vec3_ones() -> Vec3 {
+    vec3(1.0, 1.0, 1.0)
+}
+
+// =============================================================================
+// Arithmetic Operations
+// =============================================================================
+
+/// Vector addition: a + b
+#[inline]
+pub fn v3_add(a: Vec3, b: Vec3) -> Vec3 {
+    vec3(a.x + b.x, a.y + b.y, a.z + b.z)
+}
+
+/// Vector subtraction: a - b
+#[inline]
+pub fn v3_sub(a: Vec3, b: Vec3) -> Vec3 {
+    vec3(a.x - b.x, a.y - b.y, a.z - b.z)
+}
+
+/// Scalar multiplication: v * t
+#[inline]
+pub fn v3_mul(v: Vec3, t: f32) -> Vec3 {
+    vec3(v.x * t, v.y * t, v.z * t)
+}
+
+/// Scalar division: v / t
+///
+/// Uses reciprocal multiplication for efficiency (1 div + 3 mul vs 3 div).
+/// Returns zero vector if t is near zero to prevent infinity/NaN.
+///
+/// # Arguments
+/// * `v` - Vector to divide
+/// * `t` - Scalar divisor
+///
+/// # Returns
+/// * Divided vector, or zero vector if divisor is near zero
+#[inline]
+pub fn v3_div(v: Vec3, t: f32) -> Vec3 {
+    // Guard against division by zero or near-zero
+    if f32_abs(t) < VEC3_EPSILON {
+        return vec3_zero();
+    }
+    let inv = 1.0 / t;
+    v3_mul(v, inv)
+}
+
+/// Hadamard (component-wise) product: a * b
+///
+/// Used for color attenuation in path tracing.
+/// Each component is multiplied independently.
+#[inline]
+pub fn v3_hadamard(a: Vec3, b: Vec3) -> Vec3 {
+    vec3(a.x * b.x, a.y * b.y, a.z * b.z)
+}
+
+/// Vector negation: -v
+#[inline]
+pub fn v3_neg(v: Vec3) -> Vec3 {
+    vec3(-v.x, -v.y, -v.z)
+}
+
+// =============================================================================
+// Geometric Operations
+// =============================================================================
+
+/// Dot product: a . b
+///
+/// Returns the scalar projection of a onto b times |b|.
+/// Geometrically: |a| * |b| * cos(angle)
+#[inline]
+pub fn v3_dot(a: Vec3, b: Vec3) -> f32 {
+    a.x * b.x + a.y * b.y + a.z * b.z
+}
+
+/// Cross product: a x b
+///
+/// Returns a vector perpendicular to both a and b.
+/// The magnitude equals |a| * |b| * sin(angle).
+/// Follows right-hand rule for direction.
+#[inline]
+pub fn v3_cross(a: Vec3, b: Vec3) -> Vec3 {
+    vec3(
+        a.y * b.z - a.z * b.y,
+        a.z * b.x - a.x * b.z,
+        a.x * b.y - a.y * b.x
+    )
+}
+
+/// Squared length: |v|^2
+///
+/// Avoids the sqrt operation when only comparing lengths.
+#[inline]
+pub fn v3_length_sq(v: Vec3) -> f32 {
+    v3_dot(v, v)
+}
+
+/// Vector length (magnitude): |v|
+#[inline]
+pub fn v3_length(v: Vec3) -> f32 {
+    f32_sqrt(v3_length_sq(v))
+}
+
+/// Normalize vector to unit length
+///
+/// Returns zero vector if input length is below NORMALIZE_MIN_LEN
+/// to prevent division by near-zero values.
+///
+/// # Arguments
+/// * `v` - Vector to normalize
+///
+/// # Returns
+/// * Unit vector in same direction, or zero if too small
+#[inline]
+pub fn v3_normalize(v: Vec3) -> Vec3 {
+    let len = v3_length(v);
+    if len > NORMALIZE_MIN_LEN {
+        v3_div(v, len)
+    } else {
+        vec3_zero()
+    }
+}
+
+/// Reflect vector v about normal n
+///
+/// Computes the reflection of incident vector v about surface normal n.
+/// Assumes n is a unit vector.
+///
+/// # Arguments
+/// * `v` - Incident direction (pointing toward surface)
+/// * `n` - Surface normal (unit vector, pointing outward)
+///
+/// # Returns
+/// * Reflected direction
+#[inline]
+pub fn v3_reflect(v: Vec3, n: Vec3) -> Vec3 {
+    v3_sub(v, v3_mul(n, 2.0 * v3_dot(v, n)))
+}
+
+/// Refract vector through interface using Snell's law
+///
+/// Computes the refracted direction for a ray passing through a material
+/// boundary with the given ratio of refractive indices.
+///
+/// # Arguments
+/// * `uv` - Incident direction (unit vector, pointing toward surface)
+/// * `n` - Surface normal (unit vector, pointing into incident medium)
+/// * `etai_over_etat` - Ratio of refractive indices (n1/n2)
+///
+/// # Returns
+/// * Refracted direction, or reflected direction if total internal reflection occurs
+///
+/// # Total Internal Reflection
+/// When sin(theta_t) > 1, refraction is impossible and reflection occurs.
+/// This is detected when 1 - |r_out_perp|^2 < 0.
+#[inline]
+pub fn v3_refract(uv: Vec3, n: Vec3, etai_over_etat: f32) -> Vec3 {
+    let cos_theta = f32_min(-v3_dot(uv, n), 1.0);
+    let r_out_perp = v3_mul(v3_add(uv, v3_mul(n, cos_theta)), etai_over_etat);
+    let perp_len_sq = v3_length_sq(r_out_perp);
+    let discriminant = 1.0 - perp_len_sq;
+
+    // Handle total internal reflection: if discriminant < 0, return reflection
+    if discriminant < 0.0 {
+        return v3_reflect(uv, n);
+    }
+
+    let parallel_component = -f32_sqrt(discriminant);
+    let r_out_parallel = v3_mul(n, parallel_component);
+    v3_add(r_out_perp, r_out_parallel)
+}
+
+// =============================================================================
+// Utility Functions
+// =============================================================================
+
+/// Check if vector is approximately zero
+///
+/// Returns true if all components are within VEC3_EPSILON of zero.
+/// Useful for detecting degenerate cases (e.g., parallel vectors in cross product).
+#[inline]
+pub fn v3_near_zero(v: Vec3) -> bool {
+    (f32_abs(v.x) < VEC3_EPSILON) && (f32_abs(v.y) < VEC3_EPSILON) && (f32_abs(v.z) < VEC3_EPSILON)
+}
+
+/// Clamp all components to [0, 1] range
+///
+/// Used for final color output to prevent overflow in image files.
+#[inline]
+pub fn v3_clamp01(v: Vec3) -> Vec3 {
+    vec3(
+        f32_clamp(v.x, 0.0, 1.0),
+        f32_clamp(v.y, 0.0, 1.0),
+        f32_clamp(v.z, 0.0, 1.0)
+    )
+}
+
+// =============================================================================
+// External Dependencies
+// =============================================================================
+// Math utilities imported from math_stubs.mind:
+// - f32_sqrt: Square root
+// - f32_abs: Absolute value
+// - f32_min: Minimum of two floats
+// - f32_max: Maximum of two floats
+// - f32_clamp: Clamp to range

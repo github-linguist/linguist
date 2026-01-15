@@ -1,0 +1,129 @@
+// MIND Language Example: MLP Backpropagation
+// Specification reference: spec/v1.0/autodiff.md
+//
+// This example demonstrates automatic differentiation through
+// a simple multi-layer perceptron (MLP) for training.
+
+import diff::grad;
+import tensor::zeros;
+import tensor::randn;
+
+// MLP structure: input -> hidden -> output
+// Reference: spec/v1.0/autodiff.md (composition of differentiable ops)
+
+// Layer weights (would be parameters in real training)
+struct MLPParams {
+    w1: Tensor<f32, [input_dim, hidden_dim]>,
+    b1: Tensor<f32, [hidden_dim]>,
+    w2: Tensor<f32, [hidden_dim, output_dim]>,
+    b2: Tensor<f32, [output_dim]>,
+}
+
+// Forward pass through MLP
+// Reference: spec/v1.0/ir.md#linear-and-tensor-algebra (MatMul)
+// Reference: spec/v1.0/ir.md#activation-and-elementwise-unary-operations (Relu)
+fn mlp_forward(
+    x: Tensor<f32, [batch, input_dim]>,
+    params: MLPParams
+) -> Tensor<f32, [batch, output_dim]> {
+    // Layer 1: linear + ReLU
+    // z1 = x @ W1 + b1
+    let z1 = matmul(x, params.w1) + params.b1;  // Broadcasting b1
+
+    // Activation: ReLU(z1)
+    // Reference: spec/v1.0/ir.md#activation-and-elementwise-unary-operations
+    let h = relu(z1);
+
+    // Layer 2: linear (no activation for output)
+    // z2 = h @ W2 + b2
+    let output = matmul(h, params.w2) + params.b2;
+
+    output
+}
+
+// Mean squared error loss
+// Reference: spec/v1.0/ir.md#reductions (Mean)
+fn mse_loss(
+    predictions: Tensor<f32, [batch, output_dim]>,
+    targets: Tensor<f32, [batch, output_dim]>
+) -> f32 {
+    let diff = predictions - targets;
+    let squared = diff * diff;
+    mean(squared, axes=[], keepdims=false)
+}
+
+// Combined forward + loss for gradient computation
+fn loss_fn(
+    x: Tensor<f32, [batch, input_dim]>,
+    targets: Tensor<f32, [batch, output_dim]>,
+    params: MLPParams
+) -> f32 {
+    let predictions = mlp_forward(x, params);
+    mse_loss(predictions, targets)
+}
+
+// Compute gradients for all parameters
+// Reference: spec/v1.0/autodiff.md
+// Returns gradients with same shapes as parameters
+fn compute_gradients(
+    x: Tensor<f32, [batch, input_dim]>,
+    targets: Tensor<f32, [batch, output_dim]>,
+    params: MLPParams
+) -> MLPParams {
+    // Gradient of loss with respect to parameters
+    // The autodiff system traces through:
+    //   1. Forward pass (matmul, add, relu, matmul, add)
+    //   2. Loss computation (sub, mul, mean)
+    // Then applies chain rule backward
+
+    let grad_params = grad(|p| loss_fn(x, targets, p))(params);
+
+    grad_params
+}
+
+// Single training step with gradient descent
+fn train_step(
+    x: Tensor<f32, [batch, input_dim]>,
+    targets: Tensor<f32, [batch, output_dim]>,
+    params: MLPParams,
+    learning_rate: f32
+) -> MLPParams {
+    // Compute gradients
+    let grads = compute_gradients(x, targets, params);
+
+    // Update parameters: param = param - lr * grad
+    // Reference: spec/v1.0/shapes.md#broadcasting (scalar broadcast)
+    let new_params = MLPParams {
+        w1: params.w1 - learning_rate * grads.w1,
+        b1: params.b1 - learning_rate * grads.b1,
+        w2: params.w2 - learning_rate * grads.w2,
+        b2: params.b2 - learning_rate * grads.b2,
+    };
+
+    new_params
+}
+
+// Example usage
+fn main() {
+    // Initialize parameters
+    let params = MLPParams {
+        w1: randn([4, 8]),   // 4 inputs, 8 hidden
+        b1: zeros([8]),
+        w2: randn([8, 2]),   // 8 hidden, 2 outputs
+        b2: zeros([2]),
+    };
+
+    // Example batch
+    let x: Tensor<f32, [16, 4]> = randn([16, 4]);
+    let targets: Tensor<f32, [16, 2]> = randn([16, 2]);
+
+    // Training loop
+    let lr: f32 = 0.01;
+    let mut current_params = params;
+
+    // Would typically loop here
+    current_params = train_step(x, targets, current_params, lr);
+
+    // Compute final loss
+    let final_loss = loss_fn(x, targets, current_params);
+}
