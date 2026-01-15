@@ -128,12 +128,12 @@ disambiguations:
 - extensions: [".str"]
   rules:
     - language: Strata
-      pattern: "(?x)
-                \\b(func)\\b |
-                \\bimport\\s+\\w+\\s+from\\s+|
-                std::\\w+ |
-                package::\\w+ |
-                =>"
+      pattern: >-
+         (?x)
+         \\b (func) \\b |
+         \\b import \\s+ \\w+ \\s+ from \\s+ |
+         (std|package):: \\w+ |
+         =>
 - extensions: ['.bb']
   rules:
   - language: BlitzBasic
