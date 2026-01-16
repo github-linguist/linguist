@@ -736,6 +736,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **nesC:** [cdwilson/nesC.tmbundle](https://github.com/cdwilson/nesC.tmbundle)
 - **ooc:** [nilium/ooc.tmbundle](https://github.com/nilium/ooc.tmbundle)
 - **q:** [komsit37/sublime-q](https://github.com/komsit37/sublime-q)
+- **reStructuredPython:** [sharktide/repython-vs](https://github.com/sharktide/repython-vs)
 - **reStructuredText:** [Lukasa/language-restructuredtext](https://github.com/Lukasa/language-restructuredtext)
 - **robots.txt:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
 - **sed:** [Alhadis/language-sed](https://github.com/Alhadis/language-sed)
