@@ -174,6 +174,11 @@ disambiguations:
   rules:
   - language: XML
     pattern: '^(\s*)(?i:<Project|<Import|<Property|<?xml|xmlns)'
+- extensions: ['.c']
+  rules:
+    - language: LPC
+      named_pattern: lpc
+    - language: C
 - extensions: ['.cairo']
   rules:
     - language: Cairo Zero
@@ -378,7 +383,9 @@ disambiguations:
   - language: Objective-C
     named_pattern: objectivec
   - language: C++
-    named_pattern: cpp
+    named_pattern: cpp  
+  - language: LPC
+    named_pattern: lpc
   - language: C
 - extensions: ['.hh']
   rules:
@@ -1081,6 +1088,12 @@ named_patterns:
   - '^[ \t]*#[ \t]*(?:precache|using_animtree)[ \t]*\('
   json: '\A\s*[{\[]'
   key_equals_value: '^[^#!;][^=]*='
+  lpc:
+  - '(?m)^[ \t]*inherit\s+"[^"\r\n]+"'
+  - '\b(?:this_player|this_object|previous_object|clone_object|call_out|remove_call_out|notify_fail|seteuid|getuid|find_player|tell_object|objectp|environment|present)\s*\('
+  - '(?m)^[ \t]*(?:private|public|protected)\s+(?:static\s+)?object\b'
+  - '(?m)^[ \t]*(?:(?:public|private|protected)\s*)?(?:(?:mixed|object|int|string|mapping)\s*)?\*?(?:[A-Za-z_][A-Za-z0-9_]*\s*=)\s*\(\{.*\}\)'
+  - '(?mi)"[a-z0-9_/]+"\s*->\s*[a-z][a-z0-9_]*\s*\('
   m68k:
   - '(?im)\bmoveq(?:\.l)?\s+#(?:\$-?[0-9a-f]{1,3}|%[0-1]{1,8}|-?[0-9]{1,3}),\s*d[0-7]\b'
   - '(?im)^\s*move(?:\.[bwl])?\s+(?:sr|usp),\s*[^\s]+'
