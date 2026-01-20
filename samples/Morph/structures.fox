@@ -1,0 +1,109 @@
+; Data Structures in Morph
+; Demonstrates struct definitions and loops
+
+; Define a Person structure
+struktur Person
+    prop name 8      ; char* name
+    prop age 8       ; uint64_t age
+    prop height 8    ; uint64_t height (cm)
+tutup_struktur
+
+fungsi create_person
+    ; Allocate memory for Person struct
+    ; Input: rdi (name), rsi (age), rdx (height)
+    ; Output: rax (Person pointer)
+
+    push r12
+    push r13
+    push r14
+    push r15
+
+    ; Save parameters
+    mov r12, rdi    ; name
+    mov r13, rsi    ; age
+    mov r14, rdx    ; height
+
+    ; Allocate Person struct
+    mov rdi, Compiler_Person_SIZE
+    call MorphLib_mem_alloc
+    mov r15, rax    ; person pointer
+
+    ; Set name field
+    mov [r15], r12
+
+    ; Set age field
+    mov rbx, r15
+    add rbx, 8
+    mov [rbx], r13
+
+    ; Set height field
+    add rbx, 8
+    mov [rbx], r14
+
+    ; Return person pointer
+    mov rax, r15
+
+    pop r15
+    pop r14
+    pop r13
+    pop r12
+    ret
+tutup_fungsi
+
+fungsi print_person
+    ; Print person information
+    ; Input: rdi (Person pointer)
+
+    push r12
+    mov r12, rdi
+
+    ; Print name
+    mov rsi, [r12]
+    mov rdi, 1
+    mov rdx, 20
+    call MorphLib_sys_write
+
+    ; Print age
+    mov rbx, r12
+    add rbx, 8
+    mov rdi, [rbx]
+    call MorphLib_print_decimal
+
+    call MorphLib_print_newline
+
+    pop r12
+    ret
+tutup_fungsi
+
+fungsi Start
+    ; Create array of people
+    mov r10, 0      ; counter
+
+    loop create_people
+        cmp r10, 5
+        jika_sama
+            henti
+        tutup_jika
+
+        ; Create person
+        mov rdi, NAME_BUFFER
+        mov rsi, r10
+        mov rdx, 170
+        call create_person
+
+        ; Print person
+        mov rdi, rax
+        call print_person
+
+        inc r10
+        lanjut
+    tutup_loop
+
+    ; Exit
+    mov rax, 60
+    mov rdi, 0
+    syscall
+tutup_fungsi
+
+NAME_BUFFER:
+    data "Person \0"

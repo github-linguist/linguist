@@ -1,0 +1,18 @@
+; Hello World in Morph Language
+; Demonstrates basic I/O and syscalls
+
+fungsi Start
+    ; Print greeting message
+    mov rdi, 1              ; stdout file descriptor
+    mov rsi, MSG_HELLO      ; message pointer
+    mov rdx, 14             ; message length
+    call MorphLib_sys_write
+
+    ; Exit successfully
+    mov rax, 60             ; sys_exit
+    mov rdi, 0              ; exit code 0
+    syscall
+tutup_fungsi
+
+MSG_HELLO:
+    data "Hello, World!\n\0"

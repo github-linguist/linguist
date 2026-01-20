@@ -1,0 +1,51 @@
+; Fibonacci Calculator in Morph
+; Demonstrates recursion and conditional flow
+
+fungsi fibonacci
+    ; Calculate fibonacci number
+    ; Input: rdi (n)
+    ; Output: rax (fib(n))
+
+    cmp rdi, 2
+    jika_kurang
+        ; Base case: fib(0) = 0, fib(1) = 1
+        mov rax, rdi
+        ret
+    tutup_jika
+
+    ; Recursive case: fib(n) = fib(n-1) + fib(n-2)
+    push rdi
+
+    ; Calculate fib(n-1)
+    dec rdi
+    call fibonacci
+    pop rdi
+
+    ; Save result
+    push rax
+
+    ; Calculate fib(n-2)
+    sub rdi, 2
+    call fibonacci
+    pop rbx
+
+    ; Sum results
+    add rax, rbx
+    ret
+tutup_fungsi
+
+fungsi Start
+    ; Calculate fib(10)
+    mov rdi, 10
+    call fibonacci
+
+    ; Print result
+    mov rdi, rax
+    call MorphLib_print_decimal
+    call MorphLib_print_newline
+
+    ; Exit
+    mov rax, 60
+    mov rdi, 0
+    syscall
+tutup_fungsi
