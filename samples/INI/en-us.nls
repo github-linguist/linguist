@@ -1,0 +1,73 @@
+[ID]
+; Идентификатор какой это язык
+Lang=en-US
+DisplayName=English (United States)
+Author=Параметры
+Version=1.0
+
+[Application]
+Title=SimpleEdit
+NewDocument=New
+StatusBarTemplate={path}{modified} ({size} bytes)
+AboutDescription=(c) Параметры 2025\n\nA simple text editor made with Python. Inspired by a Windows Notepad from Windows 95
+Close=Close
+
+[Menu.File]
+Label=File
+New=New
+Open=Open...
+Save=Save
+SaveAs=Save As...
+Exit=Exit
+
+[Menu.Edit]
+Label=Edit
+Undo=Undo
+Redo=Redo
+Cut=Cut
+Copy=Copy
+Paste=Paste
+Delete=Delete
+SelectAll=Select All
+InsertTime=Insert Time and Date
+
+[Menu.View]
+Label=View
+ShowToolbar=Show Toolbar
+ShowStatusbar=Show Status Bar
+WordWrap=Word Wrap
+
+[Menu.Search]
+Label=Search
+Find=Find
+FindNext=Find Next
+Replace=Replace
+
+[Menu.Help]
+Label=Help
+Help=Help
+About=About
+
+[Dialog]
+UnsavedTitle=Unsaved changes
+UnsavedMessage=You have unsaved changes. Do you want to save them?
+ReplaceTitle=Replace Text
+FindLabel=Find:
+ReplaceLabel=Replace with:
+ReplaceButton=Replace
+
+[Error]
+General=Error
+FileOpenError=Could not open file:\n{error}
+FileSaveError=Could not save file:\n{error}
+HelpNotFound=Help file not found. Please make sure 'help.rtf' exists
+SearchEnd=Reached end. Continue from beginning?
+SearchRestart=Reached the end of the document. Continue from the beginning?
+
+[ContextMenu]
+Undo=Undo
+Cut=Cut
+Copy=Copy
+Paste=Paste
+Delete=Delete
+SelectAll=Select All

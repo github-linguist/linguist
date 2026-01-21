@@ -1,0 +1,440 @@
+#
+# Copyright (c) 2000, 2020 IBM Corp. and others
+#
+# This program and the accompanying materials are made available under
+# the terms of the Eclipse Public License 2.0 which accompanies this
+# distribution and is available at https://www.eclipse.org/legal/epl-2.0/
+# or the Apache License, Version 2.0 which accompanies this distribution and
+# is available at https://www.apache.org/licenses/LICENSE-2.0.
+#
+# This Source Code may also be made available under the following
+# Secondary Licenses when the conditions for such availability set
+# forth in the Eclipse Public License, v. 2.0 are satisfied: GNU
+# General Public License, version 2 with the GNU Classpath
+# Exception [1] and GNU General Public License, version 2 with the
+# OpenJDK Assembly Exception [2].
+#
+# [1] https://www.gnu.org/software/classpath/license.html
+# [2] http://openjdk.java.net/legal/assembly-exception.html
+#
+# SPDX-License-Identifier: EPL-2.0 OR Apache-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 OR LicenseRef-GPL-2.0 WITH Assembly-exception
+#
+
+# Externalised messages for the Bytecode Verification errors.
+#
+# Note to developers:
+#
+# New messages MUST be added at the end of this file.
+# DO NOT delete messages from this file, as it will change their indices.
+# If you wish to remove a message, delete its text, but leave the key in place
+#
+# Note to translators:
+#
+# This file uses printf style substitutions. Sequences such as %s, %.*s, %10d
+# etc. will be substituted at runtime. The special case of %% is not a substitution.
+# It indicates a single percent sign. Please do not modify the format specifiers, or 
+# change their order. For instance, in a message like "from %d to %s", %d
+# MUST appear before %s in any translated message, or a run-time crash
+# could occur. This is a known limitation of the product.
+#
+# Every NLS message needs to have the following information provided:
+#
+# J9NLS_BCV_SAMPLE_MESSAGE=This is a sample message that takes two parameters parameter 1 is a string  %1$s  parameter 2 is a number  %2$d
+# J9NLS_BCV_SAMPLE_MESSAGE.sample_input_1=string parameter
+# J9NLS_BCV_SAMPLE_MESSAGE.sample_input_2=2
+# J9NLS_BCV_SAMPLE_MESSAGE.explanation=Explanation for what the message means
+# J9NLS_BCV_SAMPLE_MESSAGE.system_action=What will the JVM or more generally the system do when this message is output
+# J9NLS_BCV_SAMPLE_MESSAGE.user_response=What should the user do when seeing this message
+#
+# NLS_ENCODING=UNICODE
+# NLS_MESSAGEFORMAT_NONE
+#
+
+J9NLS.MODULE=VRFY
+J9NLS.HEADER=j9bcvnls.h
+
+#Example: JVMCRFY114; class=Foo, method=main([Ljava/lang/String;)V, pc=5
+J9NLS_BCV_ERROR_TEMPLATE_WITH_PC=%1$s; class=%3$.*2$s, method=%5$.*4$s%7$.*6$s, pc=%8$u
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERROR_TEMPLATE_WITH_PC.sample_input_1=JVMCRFY114; 
+J9NLS_BCV_ERROR_TEMPLATE_WITH_PC.sample_input_2=3
+J9NLS_BCV_ERROR_TEMPLATE_WITH_PC.sample_input_3=Foo
+J9NLS_BCV_ERROR_TEMPLATE_WITH_PC.sample_input_4=4
+J9NLS_BCV_ERROR_TEMPLATE_WITH_PC.sample_input_5=main
+J9NLS_BCV_ERROR_TEMPLATE_WITH_PC.sample_input_6=22
+J9NLS_BCV_ERROR_TEMPLATE_WITH_PC.sample_input_7=([Ljava/lang/String;)V
+J9NLS_BCV_ERROR_TEMPLATE_WITH_PC.sample_input_8=5
+
+J9NLS_BCV_ERROR_TEMPLATE_WITH_PC.explanation=NOTAG
+J9NLS_BCV_ERROR_TEMPLATE_WITH_PC.system_action=
+J9NLS_BCV_ERROR_TEMPLATE_WITH_PC.user_response=
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERROR_TEMPLATE_NO_PC=%1$s; class=%3$.*2$s, method=%5$.*4$s%7$.*6$s
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERROR_TEMPLATE_NO_PC.sample_input_1=JVMCRFY114; 
+J9NLS_BCV_ERROR_TEMPLATE_NO_PC.sample_input_2=3
+J9NLS_BCV_ERROR_TEMPLATE_NO_PC.sample_input_3=Foo
+J9NLS_BCV_ERROR_TEMPLATE_NO_PC.sample_input_4=4
+J9NLS_BCV_ERROR_TEMPLATE_NO_PC.sample_input_5=main
+J9NLS_BCV_ERROR_TEMPLATE_NO_PC.sample_input_6=22
+J9NLS_BCV_ERROR_TEMPLATE_NO_PC.sample_input_7=([Ljava/lang/String;)V
+
+J9NLS_BCV_ERROR_TEMPLATE_NO_PC.explanation=NOTAG
+J9NLS_BCV_ERROR_TEMPLATE_NO_PC.system_action=
+J9NLS_BCV_ERROR_TEMPLATE_NO_PC.user_response=
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_BYTECODES_INVALID=bytecode sequence invalid
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_BYTECODES_INVALID.explanation=An undefined bytecode was encountered in the classfile
+J9NLS_BCV_ERR_BYTECODES_INVALID.system_action=The JVM will throw a VerifyError
+J9NLS_BCV_ERR_BYTECODES_INVALID.user_response=Contact the provider of the classfile for a corrected version
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_NO_PRE_VERIFY_DATA=class does not contain pre-verify data
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_NO_PRE_VERIFY_DATA.explanation=THIS MESSAGE IS RESERVED FOR FUTURE USE
+J9NLS_BCV_ERR_NO_PRE_VERIFY_DATA.system_action=THIS MESSAGE IS RESERVED FOR FUTURE USE
+J9NLS_BCV_ERR_NO_PRE_VERIFY_DATA.user_response=None required
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_TOO_MANY_JSRS=jsr inlining encountered too many jsrs
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_TOO_MANY_JSRS.explanation=The classfile contains too many 'jsr' bytecodes and cannot be loaded
+J9NLS_BCV_ERR_TOO_MANY_JSRS.system_action=The JVM will throw a VerifyError
+J9NLS_BCV_ERR_TOO_MANY_JSRS.user_response=Contact the provider of the classfile for a corrected version.  The 'jsr' bytecode has effectively been deprecated.
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_TEMP_NOT_COMPATIBLE=local not type compatible
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_TEMP_NOT_COMPATIBLE.explanation=None
+J9NLS_BCV_ERR_TEMP_NOT_COMPATIBLE.system_action=THIS MESSAGE IS RESERVED FOR FUTURE USE
+J9NLS_BCV_ERR_TEMP_NOT_COMPATIBLE.user_response=None
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_ARRAY_SIZE_NOT_INTEGER=new array size not integer
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_ARRAY_SIZE_NOT_INTEGER.explanation=None
+J9NLS_BCV_ERR_ARRAY_SIZE_NOT_INTEGER.system_action=THIS MESSAGE IS RESERVED FOR FUTURE USE
+J9NLS_BCV_ERR_ARRAY_SIZE_NOT_INTEGER.user_response=None
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_FINAL_METHOD_OVERRIDE=final method overridden
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_FINAL_METHOD_OVERRIDE.explanation=The class redefines a method that has been marked 'final' in a super class
+J9NLS_BCV_ERR_FINAL_METHOD_OVERRIDE.system_action=The JVM will throw a VerifyError
+J9NLS_BCV_ERR_FINAL_METHOD_OVERRIDE.user_response=Contact the provider of the classfile for a corrected version.
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_ARRAY_INDEX_NOT_INTEGER=array index not integer
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_ARRAY_INDEX_NOT_INTEGER.explanation=None
+J9NLS_BCV_ERR_ARRAY_INDEX_NOT_INTEGER.system_action=THIS MESSAGE IS RESERVED FOR FUTURE USE
+J9NLS_BCV_ERR_ARRAY_INDEX_NOT_INTEGER.user_response=None
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_ARRAY_TYPE_MISMATCH=array not type compatible
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_ARRAY_TYPE_MISMATCH.explanation=Verification failed due to an incorrect 'anewarray' bytecode
+J9NLS_BCV_ERR_ARRAY_TYPE_MISMATCH.system_action=The JVM will throw a verification or classloading related exception such as java.lang.VerifyError.
+J9NLS_BCV_ERR_ARRAY_TYPE_MISMATCH.user_response=Contact the provider of the classfile for a corrected version.  
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_MULTIPLE_JSR=multiple jsrs use single return
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_MULTIPLE_JSR.explanation=Verification failed due to multiple 'jsr' bytecodes using the same 'ret' instruction.
+J9NLS_BCV_ERR_MULTIPLE_JSR.system_action=The JVM will throw a verification or classloading related exception such as java.lang.VerifyError.
+J9NLS_BCV_ERR_MULTIPLE_JSR.user_response=Contact the provider of the classfile for a corrected version.  The 'jsr' bytecode has effectively been deprecated.
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_LOOKUPSWITCH_NOT_INTEGER=lookupswitch parameter not integer
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_LOOKUPSWITCH_NOT_INTEGER.explanation=None
+J9NLS_BCV_ERR_LOOKUPSWITCH_NOT_INTEGER.system_action=THIS MESSAGE IS RESERVED FOR FUTURE USE
+J9NLS_BCV_ERR_LOOKUPSWITCH_NOT_INTEGER.user_response=None
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_INCONSISTENT_STACK=stack shape inconsistent
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_INCONSISTENT_STACK.explanation=Verification failed as the stack shape is inconsistent at a merge point
+J9NLS_BCV_ERR_INCONSISTENT_STACK.system_action=The JVM will throw a verification or classloading related exception such as java.lang.VerifyError.
+J9NLS_BCV_ERR_INCONSISTENT_STACK.user_response=Contact the provider of the classfile for a corrected version.
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_CLASSLOADING_CONSTRAINT=class loading constraint violated
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_CLASSLOADING_CONSTRAINT.explanation=A classloader has visibility to two different instances of the same class. 
+J9NLS_BCV_ERR_CLASSLOADING_CONSTRAINT.system_action=The JVM will throw a verification or classloading related exception such as java.lang.VerifyError.
+J9NLS_BCV_ERR_CLASSLOADING_CONSTRAINT.user_response=Adjust the class loading process of the application to ensure each classloader only has visibility to one instance of the class. 
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_RETURN_INCOMPATIBLE=return bytecode incompatible with return type
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_RETURN_INCOMPATIBLE.explanation=None
+J9NLS_BCV_ERR_RETURN_INCOMPATIBLE.system_action=THIS MESSAGE IS RESERVED FOR FUTURE USE
+J9NLS_BCV_ERR_RETURN_INCOMPATIBLE.user_response=None
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_MULTIPLE_RET=multiple returns to single jsr
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_MULTIPLE_RET.explanation=Verification failed as multiple 'ret' bytecodes can return to the same 'jsr' bytecode
+J9NLS_BCV_ERR_MULTIPLE_RET.system_action=The JVM will throw a verification or classloading related exception such as java.lang.VerifyError.
+J9NLS_BCV_ERR_MULTIPLE_RET.user_response=Contact the provider of the classfile for a corrected version.  The 'jsr' bytecode has effectively been deprecated.
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_SHIFT_NOT_INTEGER=shift bytecode parameter not integer
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_SHIFT_NOT_INTEGER.explanation=None
+J9NLS_BCV_ERR_SHIFT_NOT_INTEGER.system_action=THIS MESSAGE IS RESERVED FOR FUTURE USE
+J9NLS_BCV_ERR_SHIFT_NOT_INTEGER.user_response=None
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_INIT_NOT_CALL_INIT=<init> does not call this <init> or super <init>
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_INIT_NOT_CALL_INIT.explanation=Every <init> method must either call a sibling constructor or a super constructor method to ensure all constructor methods in the superclass chain have been called.
+J9NLS_BCV_ERR_INIT_NOT_CALL_INIT.system_action=The JVM will throw a verification or classloading related exception such as java.lang.VerifyError.
+J9NLS_BCV_ERR_INIT_NOT_CALL_INIT.user_response=Contact the provider of the classfile for a corrected version.
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_STACK_OVERFLOW=max stack exceeded
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_STACK_OVERFLOW.explanation=Verification failed as the bytecodes use more stack space then the method declares
+J9NLS_BCV_ERR_STACK_OVERFLOW.system_action=The JVM will throw a verification or classloading related exception such as java.lang.VerifyError.
+J9NLS_BCV_ERR_STACK_OVERFLOW.user_response=Contact the provider of the classfile for a corrected version.
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_CLASS_LOAD_FAILED=class load failed
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_CLASS_LOAD_FAILED.explanation=Verification failed as a required class was not found.
+J9NLS_BCV_ERR_CLASS_LOAD_FAILED.system_action=The JVM will prevent this from loading.
+J9NLS_BCV_ERR_CLASS_LOAD_FAILED.user_response=Ensure that all required classfiles are accessible by the classloader.
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_ARGS_NOT_COMPATIBLE=invoke arguments not type compatible
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_ARGS_NOT_COMPATIBLE.explanation=None
+J9NLS_BCV_ERR_ARGS_NOT_COMPATIBLE.system_action=THIS MESSAGE IS RESERVED FOR FUTURE USE
+J9NLS_BCV_ERR_ARGS_NOT_COMPATIBLE.user_response=None
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_NOT_THROWABLE=thrown object not throwable
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_NOT_THROWABLE.explanation=Verification failed as an 'athrow' bytecode attempted to throw something that is not a subclass of java.lang.Throwable.
+J9NLS_BCV_ERR_NOT_THROWABLE.system_action=The JVM will throw a verification or classloading related exception such as java.lang.VerifyError.
+J9NLS_BCV_ERR_NOT_THROWABLE.user_response=Contact the provider of the classfile for a corrected version.
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_UNEXPECTED_SUBROUTINE_NOT_WALKED=subroutines must be re-walked for each jsr
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_UNEXPECTED_SUBROUTINE_NOT_WALKED.explanation=None
+J9NLS_BCV_ERR_UNEXPECTED_SUBROUTINE_NOT_WALKED.system_action=THIS MESSAGE IS RESERVED FOR FUTURE USE
+J9NLS_BCV_ERR_UNEXPECTED_SUBROUTINE_NOT_WALKED.user_response=None
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_TABLESWITCH_NOT_INTEGER=tableswitch parameter not integer
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_TABLESWITCH_NOT_INTEGER.explanation=None
+J9NLS_BCV_ERR_TABLESWITCH_NOT_INTEGER.system_action=THIS MESSAGE IS RESERVED FOR FUTURE USE
+J9NLS_BCV_ERR_TABLESWITCH_NOT_INTEGER.user_response=None
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_ARGUMENTS_INCOMPATIBLE=arguments are not type compatible
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_ARGUMENTS_INCOMPATIBLE.explanation=Verification failed as the arguments to the method have the wrong type, or too many, or too few arguments were passed.
+J9NLS_BCV_ERR_ARGUMENTS_INCOMPATIBLE.system_action=The JVM will throw a verification or classloading related exception such as java.lang.VerifyError.
+J9NLS_BCV_ERR_ARGUMENTS_INCOMPATIBLE.user_response=None
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_BAD_ACCESS_PROTECTED=bad access to protected data
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_BAD_ACCESS_PROTECTED.explanation=Verification failed due to bytecodes trying to access a protected field or method from outside the defining package.
+J9NLS_BCV_ERR_BAD_ACCESS_PROTECTED.system_action=The JVM will throw a verification or classloading related exception such as java.lang.VerifyError.
+J9NLS_BCV_ERR_BAD_ACCESS_PROTECTED.user_response=Contact the provider of the classfile for a corrected version.
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_UNEXPECTED_EOF=unexpected EOF
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_UNEXPECTED_EOF.explanation=Verification failed due to truncated data, such as a method, in the classfile.
+J9NLS_BCV_ERR_UNEXPECTED_EOF.system_action=The JVM will throw a verification or classloading related exception such as java.lang.VerifyError.
+J9NLS_BCV_ERR_UNEXPECTED_EOF.user_response=Contact the provider of the classfile for a corrected version.
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_RECEIVER_NOT_COMPATIBLE=receiver is incompatible with declaring class
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_RECEIVER_NOT_COMPATIBLE.explanation=Verification failed as the receiver of the method is incompatible with the class declaring the method.
+J9NLS_BCV_ERR_RECEIVER_NOT_COMPATIBLE.system_action=The JVM will throw a verification or classloading related exception such as java.lang.VerifyError.
+J9NLS_BCV_ERR_RECEIVER_NOT_COMPATIBLE.user_response=Contact the provider of the classfile for a corrected version.
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_ARRAY_DIMENSION_MISMATCH=bad dimension
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_ARRAY_DIMENSION_MISMATCH.explanation=Verification failed due to a malformed 'multianewarray' bytecode.
+J9NLS_BCV_ERR_ARRAY_DIMENSION_MISMATCH.system_action=The JVM will throw a verification or classloading related exception such as java.lang.VerifyError.
+J9NLS_BCV_ERR_ARRAY_DIMENSION_MISMATCH.user_response=Contact the provider of the classfile for a corrected version.
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_TEMP_NOT_RET_ADDRESS=invalid returnAddress for ret instruction
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_TEMP_NOT_RET_ADDRESS.explanation=Verification failed as a 'ret' bytecode attempted to use an invalid value as a 'returnAddress'.
+J9NLS_BCV_ERR_TEMP_NOT_RET_ADDRESS.system_action=The JVM will throw a verification or classloading related exception such as java.lang.VerifyError.
+J9NLS_BCV_ERR_TEMP_NOT_RET_ADDRESS.user_response=Contact the provider of the classfile for a corrected version.  The 'jsr' bytecode has effectively been deprecated.
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_BAD_TYPE_ON_STACK=bad type on stack
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_BAD_TYPE_ON_STACK.explanation=None
+J9NLS_BCV_ERR_BAD_TYPE_ON_STACK.system_action=THIS MESSAGE IS RESERVED FOR FUTURE USE
+J9NLS_BCV_ERR_BAD_TYPE_ON_STACK.user_response=None
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_IINC_NOT_INTEGER=attempt to iinc non integer
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_IINC_NOT_INTEGER.explanation=None
+J9NLS_BCV_ERR_IINC_NOT_INTEGER.system_action=THIS MESSAGE IS RESERVED FOR FUTURE USE
+J9NLS_BCV_ERR_IINC_NOT_INTEGER.user_response=None
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_BAD_INIT=bad receiver for <init>
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_BAD_INIT.explanation=An <init> method may only be invoked on an uninitialized value.  Verification failed as the receiver is either initialized or a primitive.
+J9NLS_BCV_ERR_BAD_INIT.system_action=The JVM will throw a verification or classloading related exception such as java.lang.VerifyError.
+J9NLS_BCV_ERR_BAD_INIT.user_response=Contact the provider of the classfile for a corrected version.
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_FIELD_TYPE_INCOMPATIBLE=field not type compatible
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_FIELD_TYPE_INCOMPATIBLE.explanation=None
+J9NLS_BCV_ERR_FIELD_TYPE_INCOMPATIBLE.system_action=THIS MESSAGE IS RESERVED FOR FUTURE USE
+J9NLS_BCV_ERR_FIELD_TYPE_INCOMPATIBLE.user_response=None
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_BAD_BRANCH=target PC invalid
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_BAD_BRANCH.explanation=None
+J9NLS_BCV_ERR_BAD_BRANCH.system_action=THIS MESSAGE IS RESERVED FOR FUTURE USE
+J9NLS_BCV_ERR_BAD_BRANCH.user_response=None
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_NO_ERROR=no error
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_NO_ERROR.explanation=None
+J9NLS_BCV_ERR_NO_ERROR.system_action=THIS MESSAGE IS RESERVED FOR FUTURE USE
+J9NLS_BCV_ERR_NO_ERROR.user_response=None
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_STACK_UNDERFLOW=stack underflow
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_STACK_UNDERFLOW.explanation=Verification failed as the bytecodes attempt to pop more items from the stack then there are on the stack.
+J9NLS_BCV_ERR_STACK_UNDERFLOW.system_action=The JVM will throw a verification or classloading related exception such as java.lang.VerifyError.
+J9NLS_BCV_ERR_STACK_UNDERFLOW.user_response=Contact the provider of the classfile for a corrected version.
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_BRANCH_WITH_INIT=uninitialized object during backwards branch
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_BRANCH_WITH_INIT.explanation=None
+J9NLS_BCV_ERR_BRANCH_WITH_INIT.system_action=THIS MESSAGE IS RESERVED FOR FUTURE USE
+J9NLS_BCV_ERR_BRANCH_WITH_INIT.user_response=None
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_BAD_INVOKESPECIAL=invokespecial on invalid target
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_BAD_INVOKESPECIAL.explanation=Verification failed due to an invalid invokespecial instruction.
+J9NLS_BCV_ERR_BAD_INVOKESPECIAL.system_action=The JVM will throw a verification or classloading related exception such as java.lang.VerifyError.
+J9NLS_BCV_ERR_BAD_INVOKESPECIAL.user_response=Contact the provider of the classfile for a corrected version.
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_BC_UNKNOWN=unknown bytecode
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_BC_UNKNOWN.explanation=An undefined bytecode was encountered in the classfile.
+J9NLS_BCV_ERR_BC_UNKNOWN.system_action=The JVM will throw a verification or classloading related exception such as java.lang.VerifyError.
+J9NLS_BCV_ERR_BC_UNKNOWN.user_response=Contact the provider of the classfile for a corrected version.
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_VERIFY_OUT_OF_MEMORY=verifier unable to allocate native memory
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_VERIFY_OUT_OF_MEMORY.explanation=A native memory request failed during verification.
+J9NLS_BCV_ERR_VERIFY_OUT_OF_MEMORY.system_action=The JVM will throw a java.lang.OutOfMemoryError.
+J9NLS_BCV_ERR_VERIFY_OUT_OF_MEMORY.user_response=Ensure the system has sufficient memory to satisfy all native allocations.
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_WRONG_INIT_METHOD=invokespecial of wrong initializer
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_WRONG_INIT_METHOD.explanation=An 'invokespecial' bytecode targets an <init> method of the wrong class for the uninitialized object being constructed.
+J9NLS_BCV_ERR_WRONG_INIT_METHOD.system_action=The JVM will throw a verification or classloading related exception such as java.lang.VerifyError.
+J9NLS_BCV_ERR_WRONG_INIT_METHOD.user_response=Contact the provider of the classfile for a corrected version.
+# END NON-TRANSLATABLE
+
+#Example: JVMVRFY012; class=Foo, method=main([Ljava/lang/String;)V, pc=5; Type Mismatch, argument 0 in signature Foo."<init>":(Ljava/lang/String;)V does not match
+J9NLS_BCV_ERROR_TEMPLATE_TYPE_MISMATCH=%1$s; class=%3$.*2$s, method=%5$.*4$s%7$.*6$s, pc=%8$u; Type Mismatch, argument %9$d in signature %11$.*10$s.%13$.*12$s:%15$.*14$s does not match
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERROR_TEMPLATE_TYPE_MISMATCH.sample_input_1=JVMVRFY012; 
+J9NLS_BCV_ERROR_TEMPLATE_TYPE_MISMATCH.sample_input_2=3
+J9NLS_BCV_ERROR_TEMPLATE_TYPE_MISMATCH.sample_input_3=Foo
+J9NLS_BCV_ERROR_TEMPLATE_TYPE_MISMATCH.sample_input_4=4
+J9NLS_BCV_ERROR_TEMPLATE_TYPE_MISMATCH.sample_input_5=main
+J9NLS_BCV_ERROR_TEMPLATE_TYPE_MISMATCH.sample_input_6=22
+J9NLS_BCV_ERROR_TEMPLATE_TYPE_MISMATCH.sample_input_7=([Ljava/lang/String;)V
+J9NLS_BCV_ERROR_TEMPLATE_TYPE_MISMATCH.sample_input_8=5
+J9NLS_BCV_ERROR_TEMPLATE_TYPE_MISMATCH.sample_input_9=0
+J9NLS_BCV_ERROR_TEMPLATE_TYPE_MISMATCH.sample_input_10=3
+J9NLS_BCV_ERROR_TEMPLATE_TYPE_MISMATCH.sample_input_11=Foo
+J9NLS_BCV_ERROR_TEMPLATE_TYPE_MISMATCH.sample_input_12=6
+J9NLS_BCV_ERROR_TEMPLATE_TYPE_MISMATCH.sample_input_13=<init>
+J9NLS_BCV_ERROR_TEMPLATE_TYPE_MISMATCH.sample_input_14=22
+J9NLS_BCV_ERROR_TEMPLATE_TYPE_MISMATCH.sample_input_15=([Ljava/lang/String;)V
+
+J9NLS_BCV_ERROR_TEMPLATE_TYPE_MISMATCH.explanation=NOTAG
+J9NLS_BCV_ERROR_TEMPLATE_TYPE_MISMATCH.system_action=
+J9NLS_BCV_ERROR_TEMPLATE_TYPE_MISMATCH.user_response=
+
+# END NON-TRANSLATABLE
+
+J9NLS_BCV_ERR_BC_NEW_ARRAY=new bytecode cannot create arrays
+# START NON-TRANSLATABLE
+J9NLS_BCV_ERR_BC_NEW_ARRAY.explanation=Verification failed due to an incorrect 'new' bytecode
+J9NLS_BCV_ERR_BC_NEW_ARRAY.system_action=The JVM will throw a verification or classloading related exception such as java.lang.VerifyError.
+J9NLS_BCV_ERR_BC_NEW_ARRAY.user_response=Contact the provider of the classfile for a corrected version.  
+
+# END NON-TRANSLATABLE

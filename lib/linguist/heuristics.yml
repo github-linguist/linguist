@@ -614,33 +614,29 @@ disambiguations:
 - extensions: ['.nls']
   rules:
   - language: NetLogo
-    pattern:
-    - '^\s*;'
-    - '^\s*to\s+[\w-]+'
-    - '^\s*to-report\s+[\w-]+'
-    - '^\s*__includes\s+\['
-    - '^\s*extensions\s+\['
-    - '^\s*globals\s+\['
-    - '^\s*breed\s+\['
-    - '^\s*turtles-own\s+\['
-    - '^\s*patches-own\s+\['
-    - '^\s*links-own\s+\['
-    - '^\s*undirected-link-breed\s+\['
-    - '^\s*directed-link-breed\s+\['
-    - '^\s*ask\s+[\w-]+\s+\['
+    pattern: >-
+      (?x) ^ \s*
+      ( to(-report)?                  \s+ \w[\w-]*
+      | (extension|global|__include)s \s* \[
+      | (turtles|patches|links)-own   \s* \[
+      | ((un)?directed-link-)?breed   \s* \[
+      )
   - language: TeX
-    pattern:
-    - '^\s*%'
-    - '^\s*\\begin'
-    - '^\s*\\nomgroup'
-    - '^\s*\\item'
-    - '^\s*\\end'
+    pattern: >-
+      (?x) ^ \s*
+      ( \\begin    \{
+      | \\end      \{
+      | \\nomgroup \{
+      | \\item
+      )
   - language: INI
-    pattern:
-    - '^\s*[\w-]+\s*='
-    - '^\s*STRINGTABLE'
-    - '^\s*LOCALE_'
-    - '^\s*LGRPID_'
+    pattern: >-
+      (?x) ^ \s*
+      ( [\w#-]+\s*=
+      | STRINGTABLE
+      | LOCALE_
+      | LGRPID_
+      )
 - extensions: ['.nr']
   rules:
   - language: Roff
