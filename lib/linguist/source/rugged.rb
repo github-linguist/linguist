@@ -44,28 +44,19 @@ module Linguist
       end
 
       def get_tree_size(commit_id, limit)
-        tree = get_tree(commit_id)
         tree_count = 0
         count = 0
-        stack = [tree.each]
 
-        while !stack.empty?
-          begin
-            entry = stack.last.next
-          rescue StopIteration
-            stack.pop
-            next
-          end
-
-          if entry[:type] == :tree
-            tree_count += 1
-            return limit if tree_count >= limit
-            subtree = @rugged.lookup(entry[:oid])
-            stack.push(subtree.each)
-          else
+        get_tree(commit_id).walk(:preorder) do |root, entry|
+          case entry[:type]
+          when :blob
             count += 1
             return limit if count >= limit
+          when :tree
+            tree_count += 1
+            return limit if tree_count >= limit
           end
+          true
         end
 
         count
