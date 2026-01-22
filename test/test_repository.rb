@@ -255,25 +255,21 @@ class TestGetTreeSize < Minitest::Test
       system("git", "-C", dir, "config", "user.email", "test@test.com")
       system("git", "-C", dir, "config", "user.name", "Test")
 
-      # Create a blob
-      blob_sha = IO.popen(["git", "-C", dir, "hash-object", "-w", "--stdin"], "r+") do |io|
-        io.write("content")
-        io.close_write
-        io.read.strip
-      end
-
-      # Create deeply nested trees, 1000 levels deep
-      current_sha = blob_sha
-      current_mode = "100644"  # blob mode
-      1000.times do |i|
-        # Tree entry format: "<mode> <name>\0<20-byte SHA>"
-        entry = "#{current_mode} entry\0#{[current_sha].pack('H*')}"
+      # Create git bomb, 2^32-1 directories, no files
+      current_sha = nil
+      mode = "40000"  # tree mode
+      32.times do |i|
         current_sha = IO.popen(["git", "-C", dir, "hash-object", "-t", "tree", "-w", "--stdin"], "r+b") do |io|
-          io.write(entry)
+          if current_sha then
+            # Tree entry format: "<mode> <name>\0<20-byte SHA>"
+            sha = [current_sha].pack('H*')
+            entry0 = "#{mode} entry0\0#{sha}"
+            entry1 = "#{mode} entry1\0#{sha}"
+            io.write(entry0 + entry1)
+          end
           io.close_write
           io.read.strip
         end
-        current_mode = "40000"  # tree mode
       end
 
       # Create commit
@@ -284,10 +280,10 @@ class TestGetTreeSize < Minitest::Test
         io.read.strip
       end
 
-      # With limit of 100, should hit tree limit quickly (1000 trees > 100)
+      # Should hit tree limit quickly (2^32 trees > 500)
       rugged = Rugged::Repository.new(dir)
       source = Linguist::Repository.new(rugged, commit_sha)
-      assert_equal 100, source.repository.get_tree_size(commit_sha, 100)
+      assert_equal 500, source.repository.get_tree_size(commit_sha, 500)
     end
   end
 end
