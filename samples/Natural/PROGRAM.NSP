@@ -1,0 +1,70 @@
+*/**
+* The MIT License (MIT)
+* Copyright (c) 2026 Fernando Ghinzelli
+*
+* Permission is hereby granted, free of charge, to any person obtaining
+* a copy of this software and associated documentation files (the
+* "Software"), to deal in the Software without restriction, including
+* without limitation the rights to use, copy, modify, merge, publish,
+* distribute, sublicense, and/or sell copies of the Software, and to
+* permit persons to whom the Software is furnished to do so, subject to
+* the following conditions:
+*
+* The above copyright notice and this permission notice shall be
+* included in all copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+* IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+* > Natural Example: Consultar Funcionários no Adabas <
+* --------------------------------------------------
+DEFINE DATA
+LOCAL
+1 EMP-VIEW VIEW OF EMPLOYEES
+  2 PERSONNEL-ID
+  2 NAME
+  2 FIRST-NAME
+  2 DEPT
+  2 SALARY (1)
+*
+1 #DEPT-PROCURADO (A3)  INIT <'SAL'>
+1 #MSG             (A40)
+END-DEFINE
+*
+FORMAT PS=20 LS=80
+*
+WRITE '--- RELATORIO DE FUNCIONARIOS (DEP:' #DEPT-PROCURADO ') ---' /
+*
+/* Busca no banco Adabas usando o descritor DEPT
+FIND EMP-VIEW WITH DEPT = #DEPT-PROCURADO
+  WHERE SALARY(1) > 25000
+  
+  IF NO RECORDS FOUND
+    MOVE 'NENHUM FUNCIONARIO ENCONTRADO.' TO #MSG
+    ESCAPE BOTTOM
+  END-NOREC
+  
+  DISPLAY 
+    PERSONNEL-ID 
+    NAME 
+    FIRST-NAME 
+    SALARY (1)
+    
+  AT END OF DATA
+    SKIP 2
+    WRITE 'TOTAL DE REGISTROS PROCESSADOS:' *NUMBER
+  END-ENDDATA
+  
+END-FIND
+*
+IF #MSG ^= ' '
+  WRITE #MSG
+END-IF
+*
+END
