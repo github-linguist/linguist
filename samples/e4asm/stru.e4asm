@@ -1,0 +1,37 @@
+
+; ** ultrahla.e4asm **
+
+; persona
+stru Persona {
+    ; puntero al nombre
+    .Nombre db 4
+    ; u8 de edad, por que quien puede
+    ; tener -1 años, y aparte quien puede 
+    ; aguantar mas de 255 dias
+    .Edad db 1
+}
+
+; salario
+stru Salario {
+    ; nadie puede tener mas que un u32 o si? aparte
+    ; no te pueden quitar dinero
+    .SalarioPorCadaDias db 4
+    ; cada cuantos dias
+    .SalarioCadaCuantos db 1
+}
+
+; un trabajador
+imp Trabajador {
+    ; implementa estructura de persona
+    imps stru Persona
+    ; implementar salario
+    imps stru Salario
+}
+
+; implementar el trabajador
+imp Trabajador at Pablo
+
+; el salario por cada cuantos dias
+Pablo.SalarioPorCadaDias = (dword)10
+; cada cuantos se da salario
+Pablo.SalarioCadaCuantos = (byte)2
