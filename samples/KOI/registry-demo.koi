@@ -1,0 +1,184 @@
+// Registry Demo - Shared data store between agents
+package "registry.demo"
+
+role Worker { can execute }
+
+// Agent that writes data to the registry
+Agent Writer : Worker {
+  on saveUser(args: Json) {
+    const userId = args.id
+    const userData = {
+      name: args.name,
+      age: args.age,
+      email: args.email,
+      createdAt: Date.now()
+    }
+
+    await registry.set("user:" + userId, userData)
+
+    console.log("✅ Saved user:", userId)
+    return { saved: true, userId: userId }
+  }
+
+  on saveConfig(args: Json) {
+    await registry.set("config:app", {
+      theme: args.theme || "dark",
+      language: args.language || "en",
+      notifications: args.notifications !== false
+    })
+
+    console.log("✅ Saved config")
+    return { saved: true }
+  }
+}
+
+// Agent that reads data from the registry
+Agent Reader : Worker {
+  on getUser(args: Json) {
+    const userId = args.id
+    const user = await registry.get("user:" + userId)
+
+    if (!user) {
+      console.log("❌ User not found:", userId)
+      return { found: false, userId: userId }
+    }
+
+    console.log("📖 Retrieved user:", user.name)
+    return { found: true, user: user }
+  }
+
+  on getConfig(args: Json) {
+    const config = await registry.get("config:app")
+
+    if (!config) {
+      console.log("⚙️  No config found, using defaults")
+      return { found: false, config: null }
+    }
+
+    console.log("⚙️  Retrieved config:", JSON.stringify(config))
+    return { found: true, config: config }
+  }
+
+  on listUsers(args: Json) {
+    const userKeys = await registry.keys("user:")
+    console.log("📋 Found", userKeys.length, "users")
+
+    const users = []
+    for (const key of userKeys) {
+      const user = await registry.get(key)
+      users.push({ id: key.replace("user:", ""), ...user })
+    }
+
+    return { count: users.length, users: users }
+  }
+}
+
+// Agent that searches the registry
+Agent Searcher : Worker {
+  on findAdults(args: Json) {
+    const results = await registry.search({
+      age: { $gte: 18 }
+    })
+
+    console.log("🔍 Found", results.length, "adults")
+
+    const adults = results.map(r => ({
+      id: r.key.replace("user:", ""),
+      ...r.value
+    }))
+
+    return { count: adults.length, adults: adults }
+  }
+
+  on findByName(args: Json) {
+    const results = await registry.search({
+      name: { $regex: args.pattern }
+    })
+
+    console.log("🔍 Found", results.length, "matching users")
+
+    const matches = results.map(r => ({
+      id: r.key.replace("user:", ""),
+      ...r.value
+    }))
+
+    return { count: matches.length, matches: matches }
+  }
+}
+
+// Orchestrator that coordinates the demo
+Agent Demo : Worker {
+  on start(args: Json) {
+    console.log("═════════════════════════════════════════════")
+    console.log("  Registry Demo - Shared Data Store")
+    console.log("═════════════════════════════════════════════")
+    console.log("")
+
+    // 1. Save some users
+    console.log("1️⃣  Saving users...")
+    await Writer.handle("saveUser", { id: "001", name: "Alice", age: 30, email: "alice@example.com" })
+    await Writer.handle("saveUser", { id: "002", name: "Bob", age: 25, email: "bob@example.com" })
+    await Writer.handle("saveUser", { id: "003", name: "Charlie", age: 17, email: "charlie@example.com" })
+    await Writer.handle("saveUser", { id: "004", name: "Diana", age: 35, email: "diana@example.com" })
+    console.log("")
+
+    // 2. Save config
+    console.log("2️⃣  Saving config...")
+    await Writer.handle("saveConfig", { theme: "light", language: "es", notifications: true })
+    console.log("")
+
+    // 3. Read individual user
+    console.log("3️⃣  Reading user...")
+    const userResult = await Reader.handle("getUser", { id: "001" })
+    console.log("   User:", JSON.stringify(userResult.user, null, 2))
+    console.log("")
+
+    // 4. Read config
+    console.log("4️⃣  Reading config...")
+    const configResult = await Reader.handle("getConfig", {})
+    console.log("   Config:", JSON.stringify(configResult.config, null, 2))
+    console.log("")
+
+    // 5. List all users
+    console.log("5️⃣  Listing all users...")
+    const listResult = await Reader.handle("listUsers", {})
+    for (const user of listResult.users) {
+      console.log("   -", user.name, "(" + user.age + " years old)")
+    }
+    console.log("")
+
+    // 6. Search for adults
+    console.log("6️⃣  Searching for adults (age >= 18)...")
+    const adultsResult = await Searcher.handle("findAdults", {})
+    for (const adult of adultsResult.adults) {
+      console.log("   -", adult.name, "(" + adult.age + " years old)")
+    }
+    console.log("")
+
+    // 7. Search by name pattern
+    console.log("7️⃣  Searching for names containing 'a'...")
+    const searchResult = await Searcher.handle("findByName", { pattern: "a" })
+    for (const match of searchResult.matches) {
+      console.log("   -", match.name)
+    }
+    console.log("")
+
+    // 8. Show stats
+    console.log("8️⃣  Registry stats...")
+    const stats = await registry.stats()
+    console.log("   Backend:", stats.backend)
+    console.log("   Entries:", stats.count)
+    console.log("   File:", stats.file)
+    console.log("   Size:", stats.size, "bytes")
+    console.log("")
+
+    console.log("═════════════════════════════════════════════")
+    console.log("  Demo Complete!")
+    console.log("  Data persisted to:", stats.file)
+    console.log("═════════════════════════════════════════════")
+
+    return { success: true }
+  }
+}
+
+run Demo.start({})

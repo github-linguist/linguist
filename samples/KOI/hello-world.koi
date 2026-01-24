@@ -1,0 +1,52 @@
+// ============================================================
+// Koi — Hello World with LLM Playbook
+// Simple example showing playbook execution with real LLM
+// ============================================================
+
+package "demo.koi.helloworld"
+
+role Worker { can execute }
+
+// Agent with playbook only (will execute with LLM)
+Agent Greeter : Worker {
+  llm default = { provider: "openai", model: "gpt-4o-mini", temperature: 0.7, max_tokens: 200 }
+
+  on greet(args: Json) {
+    playbook """
+    You are a friendly greeter. Generate a warm, creative greeting for the person whose name is in args.name.
+
+    Return a JSON object with this exact structure:
+    {
+      "greeting": "Your creative greeting here",
+      "language": "english",
+      "style": "friendly"
+    }
+
+    Make the greeting unique and warm, but keep it under 50 words.
+    """
+  }
+}
+
+Team HelloTeam {
+  greeter = Greeter
+}
+
+// Orchestrator with procedural code
+Agent Orchestrator : Worker {
+  uses Team HelloTeam
+
+  on start(args: Json) {
+    const name = args.name
+
+    const result =
+      await send peers.event("greet").role(Worker).any()({ name: name }) timeout 30s
+
+    return {
+      success: true,
+      name: name,
+      response: result
+    }
+  }
+}
+
+run Orchestrator.start({ name: "World" })

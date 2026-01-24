@@ -1,0 +1,326 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Koi",
+  "scopeName": "source.koi",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#import-declaration" },
+    { "include": "#package-declaration" },
+    { "include": "#role-declaration" },
+    { "include": "#agent-declaration" },
+    { "include": "#team-declaration" },
+    { "include": "#skill-declaration" },
+    { "include": "#run-statement" },
+    { "include": "#keywords" },
+    { "include": "#strings" },
+    { "include": "#playbook" },
+    { "include": "#numbers" },
+    { "include": "#operators" },
+    { "include": "#functions" },
+    { "include": "#types" },
+    { "include": "#constants" }
+  ],
+  "repository": {
+    "import-declaration": {
+      "match": "\\b(import)\\s+([\"'][^\"']+[\"'])",
+      "captures": {
+        "1": { "name": "keyword.control.import.koi" },
+        "2": { "name": "string.quoted.double.koi" }
+      }
+    },
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.koi",
+          "begin": "//",
+          "end": "$"
+        },
+        {
+          "name": "comment.block.koi",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    },
+    "package-declaration": {
+      "match": "\\b(package)\\s+([\"'][^\"']+[\"'])",
+      "captures": {
+        "1": { "name": "keyword.control.package.koi" },
+        "2": { "name": "string.quoted.double.koi" }
+      }
+    },
+    "role-declaration": {
+      "begin": "\\b(role)\\s+(\\w+)\\s*\\{",
+      "beginCaptures": {
+        "1": { "name": "keyword.control.role.koi" },
+        "2": { "name": "entity.name.type.role.koi" }
+      },
+      "end": "\\}",
+      "patterns": [
+        {
+          "match": "\\b(can)\\s+(\\w+)",
+          "captures": {
+            "1": { "name": "keyword.control.can.koi" },
+            "2": { "name": "entity.name.function.capability.koi" }
+          }
+        }
+      ]
+    },
+    "agent-declaration": {
+      "begin": "\\b(Agent)\\s+(\\w+)\\s*:\\s*(\\w+)\\s*\\{",
+      "beginCaptures": {
+        "1": { "name": "keyword.control.agent.koi" },
+        "2": { "name": "entity.name.class.agent.koi" },
+        "3": { "name": "entity.name.type.role.koi" }
+      },
+      "end": "\\}",
+      "patterns": [
+        { "include": "#llm-config" },
+        { "include": "#state-declaration" },
+        { "include": "#event-handler" },
+        { "include": "#keywords" },
+        { "include": "#strings" },
+        { "include": "#playbook" },
+        { "include": "#comments" }
+      ]
+    },
+    "team-declaration": {
+      "begin": "\\b(Team)\\s+(\\w+)\\s*\\{",
+      "beginCaptures": {
+        "1": { "name": "keyword.control.team.koi" },
+        "2": { "name": "entity.name.class.team.koi" }
+      },
+      "end": "\\}",
+      "patterns": [
+        {
+          "match": "(\\w+)\\s*=\\s*(\\w+)",
+          "captures": {
+            "1": { "name": "variable.other.property.koi" },
+            "2": { "name": "entity.name.class.agent.koi" }
+          }
+        },
+        { "include": "#comments" }
+      ]
+    },
+    "skill-declaration": {
+      "begin": "\\b(Skill)\\s+(\\w+)\\s*\\{",
+      "beginCaptures": {
+        "1": { "name": "keyword.control.skill.koi" },
+        "2": { "name": "entity.name.class.skill.koi" }
+      },
+      "end": "\\}",
+      "patterns": [
+        { "include": "#affordance" },
+        { "include": "#agent-declaration" },
+        { "include": "#team-declaration" },
+        { "include": "#export-function" },
+        { "include": "#comments" }
+      ]
+    },
+    "llm-config": {
+      "begin": "\\b(llm)\\s+(default)\\s*=\\s*\\{",
+      "beginCaptures": {
+        "1": { "name": "keyword.control.llm.koi" },
+        "2": { "name": "keyword.control.default.koi" }
+      },
+      "end": "\\}",
+      "patterns": [
+        {
+          "match": "(\\w+)\\s*:",
+          "captures": {
+            "1": { "name": "variable.other.property.koi" }
+          }
+        },
+        { "include": "#strings" },
+        { "include": "#numbers" }
+      ]
+    },
+    "state-declaration": {
+      "begin": "\\b(state)\\s*\\{",
+      "beginCaptures": {
+        "1": { "name": "keyword.control.state.koi" }
+      },
+      "end": "\\}",
+      "patterns": [
+        {
+          "match": "(\\w+)\\s*:\\s*(\\w+)\\s*(=)?",
+          "captures": {
+            "1": { "name": "variable.other.property.koi" },
+            "2": { "name": "entity.name.type.koi" },
+            "3": { "name": "keyword.operator.assignment.koi" }
+          }
+        },
+        { "include": "#numbers" },
+        { "include": "#strings" }
+      ]
+    },
+    "event-handler": {
+      "begin": "\\b(on)\\s+(\\w+)\\s*\\(([^)]*)\\)\\s*\\{",
+      "beginCaptures": {
+        "1": { "name": "keyword.control.on.koi" },
+        "2": { "name": "entity.name.function.event.koi" },
+        "3": { "patterns": [{ "include": "#function-params" }] }
+      },
+      "end": "\\}",
+      "patterns": [
+        { "include": "#playbook" },
+        { "include": "#keywords" },
+        { "include": "#strings" },
+        { "include": "#numbers" },
+        { "include": "#operators" },
+        { "include": "#comments" }
+      ]
+    },
+    "affordance": {
+      "begin": "\\b(affordance)\\s+(\"\"\")",
+      "beginCaptures": {
+        "1": { "name": "keyword.control.affordance.koi" },
+        "2": { "name": "string.quoted.triple.delimiter.koi" }
+      },
+      "end": "\"\"\"",
+      "endCaptures": {
+        "0": { "name": "string.quoted.triple.delimiter.koi" }
+      },
+      "name": "string.quoted.triple.affordance.koi"
+    },
+    "playbook": {
+      "begin": "\\b(playbook)\\s+(\"\"\")",
+      "beginCaptures": {
+        "1": { "name": "keyword.control.playbook.koi" },
+        "2": { "name": "string.quoted.triple.delimiter.koi" }
+      },
+      "end": "\"\"\"",
+      "endCaptures": {
+        "0": { "name": "string.quoted.triple.delimiter.koi" }
+      },
+      "name": "string.quoted.triple.playbook.koi"
+    },
+    "export-function": {
+      "begin": "\\b(export)\\s+(async)?\\s*(function)\\s+(\\w+)",
+      "beginCaptures": {
+        "1": { "name": "keyword.control.export.koi" },
+        "2": { "name": "keyword.control.async.koi" },
+        "3": { "name": "keyword.control.function.koi" },
+        "4": { "name": "entity.name.function.koi" }
+      },
+      "end": "(?<=\\})",
+      "patterns": [
+        { "include": "#keywords" },
+        { "include": "#strings" },
+        { "include": "#operators" }
+      ]
+    },
+    "run-statement": {
+      "match": "\\b(run)\\s+(\\w+)\\.(\\w+)",
+      "captures": {
+        "1": { "name": "keyword.control.run.koi" },
+        "2": { "name": "entity.name.class.koi" },
+        "3": { "name": "entity.name.function.koi" }
+      }
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.koi",
+          "match": "\\b(package|import|role|Agent|Team|Skill|on|playbook|run|export|function|async|await|send|timeout|state|llm|default|can|uses|peers|affordance|event|any|all)\\b"
+        },
+        {
+          "name": "keyword.control.flow.koi",
+          "match": "\\b(if|else|return|while|for|break|continue)\\b"
+        },
+        {
+          "name": "storage.type.koi",
+          "match": "\\b(const|let|var)\\b"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.triple.koi",
+          "begin": "\"\"\"",
+          "end": "\"\"\""
+        },
+        {
+          "name": "string.quoted.double.koi",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.koi",
+              "match": "\\\\."
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.single.koi",
+          "begin": "'",
+          "end": "'",
+          "patterns": [
+            {
+              "name": "constant.character.escape.koi",
+              "match": "\\\\."
+            }
+          ]
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.float.koi",
+          "match": "\\b\\d+\\.\\d+([eE][+-]?\\d+)?\\b"
+        },
+        {
+          "name": "constant.numeric.integer.koi",
+          "match": "\\b\\d+\\b"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.comparison.koi",
+          "match": "(==|!=|<=|>=|<|>)"
+        },
+        {
+          "name": "keyword.operator.logical.koi",
+          "match": "(&&|\\|\\||!)"
+        },
+        {
+          "name": "keyword.operator.assignment.koi",
+          "match": "(=|\\+=|-=|\\*=|/=)"
+        },
+        {
+          "name": "keyword.operator.arithmetic.koi",
+          "match": "(\\+|-|\\*|/|%)"
+        }
+      ]
+    },
+    "types": {
+      "name": "entity.name.type.koi",
+      "match": "\\b(Json|Int|String|Bool|Float|Array|Object|Promise|any)\\b"
+    },
+    "constants": {
+      "name": "constant.language.koi",
+      "match": "\\b(true|false|null|undefined)\\b"
+    },
+    "functions": {
+      "match": "\\b(\\w+)\\s*\\(",
+      "captures": {
+        "1": { "name": "entity.name.function.koi" }
+      }
+    },
+    "function-params": {
+      "patterns": [
+        {
+          "match": "(\\w+)\\s*:\\s*(\\w+)",
+          "captures": {
+            "1": { "name": "variable.parameter.koi" },
+            "2": { "name": "entity.name.type.koi" }
+          }
+        }
+      ]
+    }
+  }
+}

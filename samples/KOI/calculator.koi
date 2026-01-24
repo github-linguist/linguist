@@ -1,0 +1,61 @@
+// ============================================================
+// Koi — Calculator Example
+// Simple calculator with multiple operations (procedural code only)
+// ============================================================
+
+package "demo.koi.calculator"
+
+role Worker { can execute }
+
+// All handlers use procedural code (no playbooks)
+Agent Calculator : Worker {
+  on add(args: Json) {
+    const a = args.a
+    const b = args.b
+    return { result: a + b, operation: "add" }
+  }
+
+  on multiply(args: Json) {
+    const a = args.a
+    const b = args.b
+    return { result: a * b, operation: "multiply" }
+  }
+
+  on divide(args: Json) {
+    const a = args.a
+    const b = args.b
+
+    if b == 0 {
+      return { error: "Division by zero", operation: "divide" }
+    }
+
+    return { result: a / b, operation: "divide" }
+  }
+}
+
+Team CalcTeam {
+  calc = Calculator
+}
+
+Agent Orchestrator : Worker {
+  uses Team CalcTeam
+
+  on start(args: Json) {
+    const sum =
+      await send peers.event("add").role(Worker).any()({ a: 10, b: 5 }) timeout 2s
+
+    const product =
+      await send peers.event("multiply").role(Worker).any()({ a: 10, b: 5 }) timeout 2s
+
+    const quotient =
+      await send peers.event("divide").role(Worker).any()({ a: 10, b: 5 }) timeout 2s
+
+    return {
+      sum: sum,
+      product: product,
+      quotient: quotient
+    }
+  }
+}
+
+run Orchestrator.start({})
