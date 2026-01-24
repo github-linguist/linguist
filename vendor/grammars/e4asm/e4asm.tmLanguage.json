@@ -1,0 +1,160 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "e4asm",
+	"patterns": [
+		{
+			"include": "#keywords"
+		},
+		{
+			"include": "#strings"
+		},
+		{
+			"include": "#comments"
+		},
+		{
+			"include": "#methods"
+		},
+		{
+			"include": "#registers"
+		},
+		{
+			"include": "#numbers"
+		},
+		{
+			"include": "#modules"
+		},
+		{
+			"include": "#propietys"
+		},
+		{
+			"include": "#functions"
+		},
+		{
+			"include": "#ultra_hla"
+		},
+		{
+			"name": "variable.e4asm",
+			"match": "\\w"
+		}
+	],
+	"repository": {
+		"ultra_hla": {
+			"patterns": [
+				{
+					"name": "constant.language.e4asm",
+					"match": "\\b(stru|imp|at|imps)\\b"
+				},
+				{
+					"name": "entity.name.class.e4asm",
+					"match": "(?<=\\bstru\\b\\s+)\\w+"
+				},
+				{
+					"name": "entity.name.type.struct.e4asm",
+					"match": "(?<=\\bimp\\b\\s+)\\w+"
+				}
+			]	
+		},
+		"functions": {
+			"name": "entity.name.function.e4asm",
+			"match": "(?<=\\b(label|call|cq|cnq|cg|cng)\\b)\\s+(\\w+)"
+		},
+		"keywords": {
+			"patterns": [{
+				"name": "keyword.control.e4asm",
+				"match": "\\b(mov|add|sub|div|mul|ret|call|cq|cnq|cg|cng|pub|pul|gub|gul|ivar|push|pop|loop|inc|dec|in|out|sti|cli|hlt|cmp|shl|shr)\\b"
+			}]
+		},
+		"modules": {
+			"comment": "se que es ensamblador pero tambien puedo darle sus gustos",
+			"patterns": [
+				{
+					"name": "keyword.control.e4asm",
+					"match": "\\b(import)\\b(?=\\s+<-\\s+\\w+)"
+				},
+				{
+					"name": "keyword.control.e4asm",
+					"match": "\\b(namespace)\\b(?=\\s+\\w+\\s+<-\\s+\\w+)"
+				},
+				{
+					"name": "entity.name.class.e4asm",
+					"match": "(?<=\\bnamespace\\b\\s+)\\w+(?=\\s*<-)"
+				},
+				{
+					"name": "entity.name.class.e4asm",
+					"match": "(?<=\\bnamespace\\b\\s+\\w+\\s+<-\\s*)[\\w.]+"
+				},
+				{
+					"name": "entity.name.class.e4asm",
+					"match": "(?<=\\bimport\\b\\s+<-\\s*)\\w+(?:.\\w+)*"
+				},
+				{
+					"name": "entity.name.class.e4asm",
+					"match": "(?<=\\bimport\\b\\s+<-\\s*)\\w+"
+				}
+			]
+		},
+		"comments":{
+			"patterns": [{
+				"name": "comment.line",
+				"begin": ";",
+				"end": "\n"
+			}]
+		},
+		"propietys":{
+			"patterns": [
+				{
+					"name": "entity.name.function.e4asm",
+					"match": "(?<=@)\\b(for|impl_begins|impl_ends)\\b"
+				},
+				{
+					"name": "entity.name.class.e4asm",
+					"match": "(?<=@)\\w+"
+				}
+			]
+		},
+		"methods": {
+			"patterns": [{
+				"name": "constant.language.e4asm",
+				"match": "\\b(label|align|db|byte|dword|org)\\b"
+			}]
+		},
+		"registers": {
+			"patterns": [{
+				"name": "storage.type.e4asm",
+				"match": "\\b(a|b|c|d|e|f|cycl|off|ds|sp)\\b"
+			}]
+		},
+		"strings": {
+			"name": "string.quoted.double.e4asm",
+			"begin": "'",
+			"end": "'",
+			"patterns": [
+				{
+					"name": "constant.character.escape.e4asm",
+					"match": "\\\\."
+				}
+			]
+		},
+		"numbers": {
+			"patterns": [
+				{
+				"name": "constant.numeric.hex.e4asm",
+				"match": "\\b0x[0-9A-Fa-f]+\\b"
+				},
+				{
+				"name": "constant.numeric.decimal.e4asm",
+				"match": "\\b[0-9]+\\b"
+				},
+				{
+				"name": "constant.numeric.hexsuffix.e4asm",
+				"match": "\\b[0-9A-Fa-f]+h\\b"
+				},
+				{
+				"name": "constant.numeric.binary.e4asm",
+				"match": "\\b[01]+b\\b"
+				}
+			]
+		}
+	},
+	"scopeName": "source.e4asm"
+}

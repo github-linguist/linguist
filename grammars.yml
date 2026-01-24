@@ -1434,3 +1434,15 @@ vendor/grammars/zenstack:
 - source.zmodel
 vendor/grammars/zephir-sublime:
 - source.php.zephir
+e4asm:
+  type: programming
+  aliases:
+    - e4asm
+  extensions:
+    - .e4asm
+  tm_scope: source.e4asm
+  ace_mode: text
+  colorize: true
+  fs_name: e4asm
+  grammar: vendor/grammars/e4asm.tmLanguage.json
+  color: "#6E4C13"
