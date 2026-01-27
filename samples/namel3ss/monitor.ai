@@ -1,0 +1,95 @@
+spec is "1.0"
+
+use "monitor_core" as core
+
+identity "Operator":
+  field "username" is text must be present
+  field "access_level" is text must be present
+
+record "MetricSnapshot":
+  field "timestamp" is text must be present
+  field "service_name" is text must be present
+  field "cpu_usage" is number must be present
+  field "memory_usage" is number must be present
+  field "error_count" is number must be present
+
+record "Alert":
+  field "id" is text must be present
+  field "severity" is text must be present
+  field "message" is text must be present
+  field "acknowledged" is text must be present
+
+agent "health_checker":
+  ai is "core.monitor_ai"
+  system_prompt is "Check service health and report anomalies."
+
+tool "fetch_metrics":
+  implemented using python
+
+  input:
+    service is text
+
+  output:
+    cpu is number
+    memory is number
+    errors is number
+
+flow "collect_metrics": requires true
+  run tool "fetch_metrics" with:
+    service is "api_gateway"
+  as metrics
+  create "MetricSnapshot" with:
+    timestamp is state.now
+    service_name is "api_gateway"
+    cpu_usage is metrics.cpu
+    memory_usage is metrics.memory
+    error_count is metrics.errors
+  as snapshot
+  if metrics.errors > 10:
+    create "Alert" with:
+      id is state.alert_id
+      severity is "high"
+      message is "High error rate detected"
+      acknowledged is "false"
+    as alert
+  return "collected"
+
+page "monitor": requires true
+  title is "System Monitor"
+  theme is "dark"
+
+  row:
+    column:
+      card "Service Health":
+        table is "MetricSnapshot":
+          columns:
+            include "service_name"
+            label "service_name" is "Service"
+            include "cpu_usage"
+            label "cpu_usage" is "CPU %"
+            include "memory_usage"
+            label "memory_usage" is "Memory %"
+          sort:
+            by is "timestamp"
+            order is desc
+          empty_text is "No metrics available."
+
+        button "Refresh Metrics":
+          calls flow "collect_metrics"
+
+    column:
+      card "Active Alerts":
+        table is "Alert":
+          columns:
+            include "severity"
+            include "message"
+            include "acknowledged"
+          sort:
+            by is "severity"
+            order is asc
+          empty_text is "No active alerts."
+
+  section "Actions":
+    divider
+    button "Acknowledge All Alerts":
+      calls flow "core.acknowledge_all"

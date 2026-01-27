@@ -1,0 +1,65 @@
+spec is "1.0"
+
+identity "Reviewer":
+  field "email" is text must be present
+  field "role" is text must be present
+
+record "TriageItem":
+  field "id" is text must be present
+  field "summary" is text must be present
+  field "priority" is number must be present
+  field "status" is text must be present
+
+ai "triage_ai":
+  provider is "openai"
+  model is "gpt-4"
+  system_prompt is "You are a triage assistant for incoming requests."
+  tools:
+    expose "classify"
+  memory:
+    short_term is 5
+    semantic is false
+    profile is false
+
+tool "classify":
+  implemented using python
+
+  input:
+    content is text
+
+  output:
+    category is text
+    priority is number
+
+flow "auto_triage": requires true
+  find "TriageItem" where status is "pending"
+  let count is list length of triageitem_results
+  if count is 0:
+    return "no_pending"
+  let first_index is 0
+  let item is list get triageitem_results at first_index
+  ask "triage_ai" with item.summary as response
+  set state.update with:
+    status is "triaged"
+    priority is response.priority
+  save "TriageItem" with state.update where id is item.id
+  return "triaged"
+
+page "dashboard": requires true
+  title is "Triage Dashboard"
+  text is "Manage and prioritize incoming requests."
+
+  card "Pending Items":
+    table is "TriageItem":
+      columns:
+        include "id"
+        include "summary"
+        include "priority"
+        include "status"
+      sort:
+        by is "priority"
+        order is desc
+      empty_text is "No items to triage."
+
+    button "Run Auto-Triage":
+      calls flow "auto_triage"
