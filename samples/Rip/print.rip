@@ -1,0 +1,448 @@
+# ============================================================================
+# rip-print — Syntax-highlighted source code printer
+#
+# Author: Steve Shreeve (steve.shreeve@gmail.com)
+#   Date: Feb 9, 2026
+#
+# Highlights source code using Shiki (VS Code's syntax engine) and serves
+# the result in the browser for viewing and printing. Serves once and exits.
+# ============================================================================
+
+import hljs from 'highlight.js'
+import ripLanguage from './hljs-rip.js'
+import { existsSync, readdirSync, readFileSync, statSync } from 'fs'
+import { basename, extname, join, relative } from 'path'
+import { execSync } from 'child_process'
+
+# Register Rip language with highlight.js
+hljs.registerLanguage 'rip', ripLanguage
+
+# ============================================================================
+# CLI argument parsing
+# ============================================================================
+
+args = process.argv.slice(2)
+
+if args.includes('-v') or args.includes('--version')
+  console.log "rip-print 0.1.8"
+  process.exit(0)
+
+if args.includes('-h') or args.includes('--help')
+  console.log """
+    usage: rip-print [options] <paths ...>
+
+    Options:
+      -b, --bypass     Strip leading comment blocks from files
+      -d, --dark       Use dark theme (default: light)
+      -h, --help       Show this help message
+      -v, --version    Show version and quit
+      -x <exts>        Comma list of extensions to exclude
+
+    Examples:
+      rip-print src/              # Print all source files in src/
+      rip-print *.rip             # Print all .rip files
+      rip-print -d src/           # Dark theme
+      rip-print -b src/           # Strip top comments
+      rip-print -x lock,map src/  # Exclude .lock and .map files
+    """
+  process.exit(0)
+
+dark   = args.includes('-d') or args.includes('--dark')
+bypass = args.includes('-b') or args.includes('--bypass')
+
+# Extract -x excludes
+excludeExts = new Set()
+for arg, i in args
+  if arg is '-x' and args[i + 1]
+    for ext in args[i + 1].split(',')
+      excludeExts.add ext.toLowerCase().replace(/^\./, '')
+
+# Filter out flags, get paths
+xIdx = args.indexOf('-x')
+paths = args.filter (a, i) -> not a.startsWith('-') and (xIdx < 0 or i isnt xIdx + 1)
+paths = ['.'] if paths.length is 0
+
+# Default exclusions (binary, generated, etc.)
+defaultExclude = new Set [
+  'css', 'gif', 'ico', 'jpg', 'jpeg', 'png', 'svg', 'pdf', 'webp',
+  'otf', 'ttf', 'eot', 'woff', 'woff2',
+  'o', 'a', 'dylib', 'so', 'dll',
+  'gem', 'gz', 'zip', 'tar', 'br',
+  'lock', 'db', 'sqlite3', 'sqlite',
+  'map', 'min.js', 'min.css',
+  'vsix', 'DS_Store'
+]
+
+for ext in excludeExts
+  defaultExclude.add ext
+
+# ============================================================================
+# File discovery
+# ============================================================================
+
+skipDirs = new Set ['.git', 'node_modules', '.rip-cache', '.zig-cache', 'zig-out', 'dist', 'misc']
+
+def walkDir(dir, base = dir)
+  files = []
+  try
+    entries = readdirSync dir
+  catch
+    return files
+  for entry in entries
+    full = join dir, entry
+    try
+      stat = statSync full
+    catch
+      continue
+    if stat.isDirectory()
+      continue if entry.startsWith('.') or skipDirs.has(entry)
+      files = files.concat walkDir(full, base)
+    else if stat.isFile()
+      ext = entry.split('.').pop()?.toLowerCase() or ''
+      continue if defaultExclude.has(ext)
+      continue if entry.startsWith('.')
+      files.push relative(base, full) or full
+  files.sort()
+
+allFiles = []
+for p in paths
+  if not existsSync(p)
+    console.error "Not found: #{p}"
+    continue
+  stat = statSync p
+  if stat.isDirectory()
+    allFiles = allFiles.concat walkDir(p, p).map (f) -> join(p, f)
+  else if stat.isFile()
+    allFiles.push p
+
+if allFiles.length is 0
+  console.error "No files found"
+  process.exit(1)
+
+console.log "#{allFiles.length} file#{if allFiles.length > 1 then 's' else ''}"
+
+# ============================================================================
+# Language detection
+# ============================================================================
+
+extToLang =
+  rip:    'rip'
+  coffee: 'coffeescript'
+  js:     'javascript'
+  mjs:    'javascript'
+  cjs:    'javascript'
+  ts:     'typescript'
+  mts:    'typescript'
+  cts:    'typescript'
+  jsx:    'jsx'
+  tsx:    'tsx'
+  rb:     'ruby'
+  py:     'python'
+  rs:     'rust'
+  go:     'go'
+  sh:     'bash'
+  bash:   'bash'
+  zsh:    'bash'
+  fish:   'fish'
+  yml:    'yaml'
+  yaml:   'yaml'
+  json:   'json'
+  jsonc:  'jsonc'
+  md:     'markdown'
+  html:   'html'
+  htm:    'html'
+  xml:    'xml'
+  css:    'css'
+  scss:   'scss'
+  sass:   'sass'
+  less:   'less'
+  sql:    'sql'
+  c:      'c'
+  h:      'c'
+  cpp:    'cpp'
+  hpp:    'cpp'
+  zig:    'zig'
+  toml:   'toml'
+  ini:    'ini'
+  dockerfile: 'dockerfile'
+  makefile:   'makefile'
+
+def getLang(file)
+  base = basename(file).toLowerCase()
+  return 'makefile'   if base is 'makefile' or base is 'gnumakefile'
+  return 'dockerfile' if base is 'dockerfile'
+  return 'yaml'       if base is '.prettierrc' or base is '.eslintrc'
+  return 'json'       if base is '.babelrc'
+  return 'bash'       if base is '.bashrc' or base is '.zshrc' or base is '.profile'
+  return 'toml'       if base is 'bunfig.toml'
+
+  ext = extname(file).slice(1).toLowerCase()
+  lang = extToLang[ext]
+  return lang if lang and hljs.getLanguage(lang)
+  return 'plaintext'
+
+# ============================================================================
+# Highlight and build HTML
+# ============================================================================
+
+def stripTopComments(code)
+  lines = code.split('\n')
+  i = 0
+  i++ while i < lines.length and (lines[i].startsWith('#') or lines[i].trim() is '')
+  return code if i is 0
+  lines.slice(i).join('\n')
+
+def escapeHtml(str)
+  str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+
+def highlightCode(code, lang)
+  highlighted = null
+  try
+    if lang isnt 'plaintext'
+      result = hljs.highlight code, { language: lang }
+      highlighted = result.value
+  catch
+    # fall through
+  highlighted ?= escapeHtml code
+
+  # Add line numbers (fixed 4-digit width for consistent gutter)
+  lines = highlighted.split('\n')
+  numbered = lines.map (line, i) ->
+    num = String(i + 1).padStart(4)
+    cls = if i is 0 then 'line-num first' else 'line-num'
+    "<span class=\"#{cls}\">#{num}</span>  #{line}"
+  numbered.join('\n')
+
+sections = []
+for file in allFiles
+  try
+    code = readFileSync file, 'utf-8'
+  catch
+    console.error "  Skipping: #{file} (unreadable)"
+    continue
+  code = code.replace /\t/g, '  '
+  code = code.replace /\r\n?/g, '\n'
+  code = stripTopComments(code) if bypass
+  lang = getLang file
+  lineCount = code.split('\n').length
+  mtime = statSync(file).mtime
+  timestamp = mtime.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) + ' at ' + mtime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }).toLowerCase()
+  console.log "  #{file} (#{lineCount} lines) [#{lang}]"
+  highlighted = highlightCode code, lang
+  html = "<pre><code class=\"hljs\">#{highlighted}</code></pre>"
+  sections.push { file, lineCount, lang, timestamp, html }
+
+# ============================================================================
+# HTML template
+# ============================================================================
+
+bgColor    = if dark then '#0d1117' else '#ffffff'
+textColor  = if dark then '#e6edf3' else '#1f2328'
+headerBg   = if dark then '#161b22' else '#f6f8fa'
+borderColor = if dark then '#30363d' else '#d0d7de'
+
+toc = ''
+if sections.length > 1
+  toc = """
+    <div class="toc">
+      <h2>Files (#{sections.length})</h2>
+      <ol>
+    """
+  for section in sections
+    toc += """
+          <li><a href="##{section.file}">#{section.file}</a> <span class="meta">(#{section.lineCount} lines)</span></li>
+      """
+  toc += """
+      </ol>
+    </div>
+    """
+
+fileSections = ''
+count = sections.length
+for section, i in sections
+  prev = sections[(i - 1 + count) % count]
+  next = sections[(i + 1) % count]
+  nav = ""
+  nav += "<a href=\"##{prev.file}\">prev</a> " if count > 1
+  nav += "<a href=\"##{next.file}\">next</a> " if count > 1
+  nav += "<a href=\"#top\">&uarr; top</a>"
+  fileSections += """
+    <div class="file-section">
+      <div class="file-header" id="#{section.file}">
+        <span>#{section.file} <span class="meta">(#{section.lineCount} lines) [#{section.lang}] on #{section.timestamp}</span></span>
+        <span class="nav">#{nav}</span>
+      </div>
+      <div class="code-container">
+        #{section.html}
+      </div>
+    </div>
+
+    """
+
+# Load highlight.js theme CSS files
+hljsMain = import.meta.resolve 'highlight.js'
+hljsDir = join hljsMain.replace('file://', '').replace(/\/[^/]+$/, ''), '..', 'styles'
+
+themes = [
+  { id: 'github',              name: 'GitHub Light',       dark: false }
+  { id: 'atom-one-light',      name: 'Atom One Light',     dark: false }
+  { id: 'vs',                  name: 'Visual Studio',      dark: false }
+  { id: 'xcode',               name: 'Xcode',              dark: false }
+  { id: 'intellij-light',      name: 'IntelliJ Light',     dark: false }
+  { id: 'stackoverflow-light', name: 'Stack Overflow',     dark: false }
+  { id: 'default',             name: 'Default Light',      dark: false }
+  { id: 'github-dark',         name: 'GitHub Dark',        dark: true }
+  { id: 'atom-one-dark',       name: 'Atom One Dark',      dark: true }
+  { id: 'monokai',             name: 'Monokai',            dark: true }
+  { id: 'nord',                name: 'Nord',               dark: true }
+  { id: 'vs2015',              name: 'VS 2015 Dark',       dark: true }
+  { id: 'tokyo-night-dark',    name: 'Tokyo Night',        dark: true }
+  { id: 'night-owl',           name: 'Night Owl',          dark: true }
+]
+
+defaultTheme = if dark then 'github-dark' else 'github'
+
+# Load all theme CSS into a JS object for runtime switching
+defaultCss = readFileSync join(hljsDir, "#{defaultTheme}.css"), 'utf-8'
+themeEntries = []
+themeOptions = ''
+for theme in themes
+  css = readFileSync join(hljsDir, "#{theme.id}.css"), 'utf-8'
+  encoded = Buffer.from(css).toString('base64')
+  themeEntries.push "'#{theme.id}':{d:#{theme.dark},c:atob('#{encoded}')}"
+  selected = if theme.id is defaultTheme then ' selected' else ''
+  themeOptions += "<option value=\"#{theme.id}\" data-dark=\"#{theme.dark}\"#{selected}>#{theme.name}</option>\n"
+themeData = themeEntries.join(",\n    ")
+
+html = """
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Rip Print - #{new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })} at #{new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }).toLowerCase()}</title>
+    <link rel="icon" href="data:,">
+    <style id="hljs-theme">#{defaultCss}</style>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #{bgColor}; color: #{textColor}; }
+
+      .toolbar { padding: 8px 16px; border-bottom: 1px solid #{borderColor}; text-align: right; font-size: 13px; }
+      .toolbar select { font-size: 13px; padding: 4px 8px; border-radius: 3px; border: 1px solid #{borderColor}; background: #{bgColor}; color: #{textColor}; }
+      .toolbar label { color: #888; margin-left: 16px; }
+      .toc { padding: 20px 30px; border-bottom: 1px solid #{borderColor}; }
+      .toc h2 { font-size: 18px; margin-bottom: 10px; }
+      .toc ol { padding-left: 24px; columns: 2; column-gap: 40px; }
+      .toc li { font-size: 13px; line-height: 1.8; }
+      .toc a { color: #{textColor}; text-decoration: none; }
+      .toc a:hover { text-decoration: underline; }
+      .meta { color: #888; font-size: 12px; }
+
+      .file-section { margin-bottom: 0; margin-top: -1px; }
+      .file-header {
+        background: #{headerBg}; padding: 10px 16px 10px 5.85em; font-size: 13px; font-weight: 600;
+        border-top: 1px solid #{borderColor}; border-bottom: 1px solid #{borderColor};
+        display: flex; justify-content: space-between; align-items: center;
+      }
+      .nav { font-weight: normal; font-size: 12px; }
+      .nav a { color: #888; text-decoration: none; padding: 6px 10px; border-radius: 3px; }
+      .nav a:hover { color: #{textColor}; background: #{if dark then '#30363d' else '#e0e0e0'}; }
+
+      .code-container { overflow-x: auto; border-bottom: 1px solid #{borderColor}; }
+      .code-container pre { margin: 0; border-radius: 0; }
+      .code-container code { font-size: 13px; line-height: 1.5; padding: 0 !important; display: block; }
+      .line-num { color: #aaa; background: #{if dark then '#161b22' else '#f4f4f4'}; user-select: none; display: inline-block; min-width: 2em; text-align: right; padding: 0 0.7em; margin-right: 0.7em; border-right: 1px solid #{borderColor}; }
+      .line-num.first { padding-top: 4px; }
+
+      @media print {
+        .toc { page-break-after: always; }
+        .file-header { background: #f0f0f0 !important; color: #000 !important; }
+        .toolbar { display: none; }
+        .nav { display: none; }
+        body { background: white !important; color: black !important; }
+        code { font-size: 11px !important; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="toolbar">
+      <label>Theme: <select id="theme-picker">
+        <optgroup label="Light">#{themeOptions.split('\n').filter((o) -> o.includes('data-dark="false"')).join('')}</optgroup>
+        <optgroup label="Dark">#{themeOptions.split('\n').filter((o) -> o.includes('data-dark="true"')).join('')}</optgroup>
+      </select></label>
+    </div>
+    <a name="top"></a>
+    #{toc}
+    #{fileSections}
+    <script>
+      var themes = {
+        #{themeData}
+      };
+      document.getElementById('theme-picker').addEventListener('change', function(e) {
+        var id = e.target.value;
+        localStorage.setItem('rip-print-theme', id);
+        var t = themes[id];
+        if (!t) return;
+        document.getElementById('hljs-theme').textContent = t.c;
+        var d = t.d;
+        var bg = d ? '#0d1117' : '#ffffff';
+        var fg = d ? '#e6edf3' : '#1f2328';
+        var hdr = d ? '#161b22' : '#f6f8fa';
+        var brd = d ? '#30363d' : '#d0d7de';
+        var gut = d ? '#161b22' : '#f4f4f4';
+        document.body.style.background = bg;
+        document.body.style.color = fg;
+        document.querySelectorAll('.toolbar').forEach(function(e) { e.style.borderColor = brd; });
+        document.querySelectorAll('.toolbar select').forEach(function(e) { e.style.background = bg; e.style.color = fg; e.style.borderColor = brd; });
+        document.querySelectorAll('.toc').forEach(function(e) { e.style.borderColor = brd; });
+        document.querySelectorAll('.file-header').forEach(function(e) { e.style.background = hdr; e.style.borderColor = brd; e.style.color = fg; });
+        document.querySelectorAll('.line-num').forEach(function(e) { e.style.background = gut; e.style.borderColor = brd; });
+        document.querySelectorAll('.code-container').forEach(function(e) { e.style.borderColor = brd; });
+        document.querySelectorAll('.toc a').forEach(function(e) { e.style.color = fg; });
+      });
+      // Restore saved theme
+      var saved = localStorage.getItem('rip-print-theme');
+      if (saved && themes[saved]) {
+        document.getElementById('theme-picker').value = saved;
+        document.getElementById('theme-picker').dispatchEvent(new Event('change'));
+      }
+    </script>
+  </body>
+  </html>
+  """
+
+# ============================================================================
+# Serve once and open browser
+# ============================================================================
+
+served = false
+
+server = Bun.serve
+  port: 9111
+  fetch: (req) ->
+    served = true
+    new Response html, headers: { 'Content-Type': 'text/html; charset=utf-8' }
+
+console.log "\nOpening browser..."
+
+# Open browser
+try
+  if process.platform is 'darwin'
+    execSync "open 'http://localhost:#{server.port}/'"
+  else if process.platform is 'linux'
+    execSync "xdg-open 'http://localhost:#{server.port}/'"
+  else
+    execSync "start 'http://localhost:#{server.port}/'"
+catch
+  console.log "Visit: http://localhost:#{server.port}/"
+
+# Exit after serving
+setTimeout ->
+  if served
+    server.stop()
+    process.exit(0)
+  else
+    setTimeout ->
+      server.stop()
+      process.exit(0)
+    , 5000
+, 3000

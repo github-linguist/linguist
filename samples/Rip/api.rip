@@ -1,0 +1,655 @@
+# ==============================================================================
+# @rip-lang/api — Pure Rip API Framework
+# ==============================================================================
+#
+# A zero-dependency, Hono-compatible API framework written entirely in Rip.
+# Provides Sinatra-style elegance with AsyncLocalStorage-powered context.
+#
+# Public exports:
+#   DSL:        get, post, put, patch, del, all, use, prefix
+#   Server:     start, startHandler, fetch, App
+#   Filters:    raw, before, after
+#   Handlers:   onError, notFound
+#   Validation: read, validators, registerValidator, getValidator
+#   Context:    ctx, session, env, subrequest
+#   Utilities:  isBlank, toName, toPhone, mimeType
+#   Dev:        resetGlobals
+# ==============================================================================
+
+import { AsyncLocalStorage } from 'node:async_hooks'
+
+# ==============================================================================
+# Module State
+# ==============================================================================
+
+_                = null  # Match capture holder for Rip's =~
+_errorHandler    = null  # Custom error handler
+_notFoundHandler = null  # Custom 404 handler
+_rawFilter       = null  # Raw request filter (before body parsing)
+_beforeFilters   = []    # Before request filters
+_afterFilters    = []    # After request filters
+_routes          = []    # Route definitions
+_middlewares     = []    # Global middleware functions
+_prefix          = ''    # Current route prefix for grouping
+_corsPreflight   = false # Enable early OPTIONS handling (set by cors middleware)
+
+export resetGlobals = ->
+  _errorHandler    = null
+  _notFoundHandler = null
+  _rawFilter       = null
+  _beforeFilters   = []
+  _afterFilters    = []
+  _routes          = []
+  _middlewares     = []
+  _prefix          = ''
+  _corsPreflight   = false
+
+# Enable early OPTIONS handling (called by cors middleware with preflight: true)
+export enableCorsPreflight = -> _corsPreflight = true
+
+# AsyncLocalStorage for request context (enables sync read() in handlers)
+export requestContext = new AsyncLocalStorage()
+
+# ==============================================================================
+# Router: Pattern Compiler
+# ==============================================================================
+
+compilePattern = (path) ->
+  keys = []
+  path = path.replace /\?$/, ''
+  escaped = path.replace /[.+^${}()|[\]\\]/g, '\\$&'
+  regex = escaped.replace /:(\w+)(?:\{([^}]+)\})?/g, (match, key, pattern) ->
+    keys.push key
+    "(#{pattern or '[^/]+'})"
+  regex = regex.replace /(?<![\\*])\*(?!\*)/g, '(.*)'
+  { regex: new RegExp("^#{regex}/?$"), keys }
+
+# ==============================================================================
+# Router: Route Matching
+# ==============================================================================
+
+matchRoute = (method, pathname) ->
+  for route in _routes
+    continue if route.middleware
+    continue unless route.method is method or route.method is 'ALL'
+    match = pathname.match route.regex
+    if match
+      params = {}
+      for key, i in route.keys
+        params[key] = decodeURIComponent(match[i + 1]) if match[i + 1]?
+      return { handler: route.handler, params, route }
+  null
+
+# ==============================================================================
+# MIME Types — Auto-detect content type from file extension
+# ==============================================================================
+
+_mimeTypes =
+  '.html':  'text/html; charset=UTF-8'
+  '.htm':   'text/html; charset=UTF-8'
+  '.css':   'text/css; charset=UTF-8'
+  '.js':    'application/javascript'
+  '.mjs':   'application/javascript'
+  '.json':  'application/json'
+  '.txt':   'text/plain; charset=UTF-8'
+  '.csv':   'text/csv; charset=UTF-8'
+  '.xml':   'application/xml'
+  '.svg':   'image/svg+xml'
+  '.png':   'image/png'
+  '.jpg':   'image/jpeg'
+  '.jpeg':  'image/jpeg'
+  '.gif':   'image/gif'
+  '.webp':  'image/webp'
+  '.avif':  'image/avif'
+  '.ico':   'image/x-icon'
+  '.woff':  'font/woff'
+  '.woff2': 'font/woff2'
+  '.ttf':   'font/ttf'
+  '.otf':   'font/otf'
+  '.mp3':   'audio/mpeg'
+  '.mp4':   'video/mp4'
+  '.webm':  'video/webm'
+  '.ogg':   'audio/ogg'
+  '.pdf':   'application/pdf'
+  '.zip':   'application/zip'
+  '.gz':    'application/gzip'
+  '.wasm':  'application/wasm'
+  '.rip':   'text/plain; charset=UTF-8'
+
+export mimeType = (path) ->
+  ext = path.substring(path.lastIndexOf('.'))
+  _mimeTypes[ext] or 'application/octet-stream'
+
+# ==============================================================================
+# Context Factory
+# ==============================================================================
+
+createContext = (req, params = {}) ->
+  url = new URL(req.url)
+  out = new Headers()
+
+  ctx =
+    json: (data, status = 200, headers = {}) ->
+      out.set 'Content-Type', 'application/json'
+      for k, v of headers then out.set(k, v)
+      new Response JSON.stringify(data), { status, headers: out }
+
+    text: (str, status = 200, headers = {}) ->
+      out.set 'Content-Type', 'text/plain; charset=UTF-8'
+      for k, v of headers then out.set(k, v)
+      new Response str, { status, headers: out }
+
+    html: (str, status = 200, headers = {}) ->
+      out.set 'Content-Type', 'text/html; charset=UTF-8'
+      for k, v of headers then out.set(k, v)
+      new Response str, { status, headers: out }
+
+    redirect: (location, status = 302) ->
+      new Response null, { status, headers: { Location: String(location) } }
+
+    body: (data, status = 200, headers = {}) ->
+      for k, v of headers then out.set(k, v)
+      new Response data, { status, headers: out }
+
+    send: (path, type) ->
+      out.set 'Content-Type', (type or mimeType(path))
+      new Response Bun.file(path), { status: 200, headers: out }
+
+    header: (name, value, opts = {}) ->
+      if value?
+        if opts.append then out.append(name, value) else out.set(name, value)
+        return
+      out.get(name)
+
+    session: {}
+
+    req:
+      raw: req
+      method: req.method
+      url: req.url
+      path: url.pathname
+      param: (key) -> if key? then params[key] else { ...params }
+      query: (key) -> if key? then url.searchParams.get(key) else Object.fromEntries(url.searchParams)
+      header: (key) -> if key? then req.headers.get(key) else Object.fromEntries(req.headers)
+      json: -> req.json()
+      text: -> req.text()
+      formData: -> req.formData()
+      parseBody: (opts = {}) ->
+        ct = req.headers.get('content-type') or ''
+        if ct =~ /json/i
+          req.json!
+        else if ct =~ /form/i
+          fd = req.formData!
+          Object.fromEntries(fd)
+        else
+          {}
+
+  ctx
+
+# ==============================================================================
+# Middleware Composition (Koa-style)
+# ==============================================================================
+
+compose = (middlewares, beforeFilters, afterFilters, handler) ->
+  (c) ->
+    index = -1
+    dispatch = (i) ->
+      if i <= index
+        throw new Error 'next() called multiple times'
+      index = i
+
+      # Run middlewares first
+      if i < middlewares.length
+        fn = middlewares[i]
+        result = fn.call! c, c, -> dispatch!(i + 1)
+        c._response = result if result instanceof Response
+        return
+
+      # After middlewares, run before filters, handler, after filters
+      if i is middlewares.length
+        # Run before filters
+        for filter in beforeFilters
+          result = filter.call!(c, c)
+          if result instanceof Response
+            c._response = result
+            return
+
+        # Run handler
+        result = handler.call!(c, c)
+        c._response = result if result instanceof Response
+
+        # Run after filters
+        for filter in afterFilters
+          filter.call!(c, c)
+
+    dispatch!(0)
+    c
+
+# ==============================================================================
+# Smart Response Wrapper
+# ==============================================================================
+
+smart = (fn) ->
+  (c, next) ->
+    try
+      result = if fn.length > 0 then fn.call!(c, c) else fn.call!(c)
+      return result if result instanceof Response
+      return c.json(result) if result? and typeof result is 'object'
+      if typeof result is 'string'
+        type = if result.trimStart().startsWith('<') then 'html' else 'text'
+        return c[type](result)
+      return c.text(String(result)) if typeof result in ['number', 'boolean']
+      if result is null or result is undefined
+        return new Response(null, { status: 204 })
+      result
+    catch err
+      console.error 'Handler error:', err
+      status = err?.status or 500
+      message = err?.message or 'Internal Server Error'
+      new Response message, { status, headers: { 'Content-Type': 'text/plain' } }
+
+# ==============================================================================
+# DSL: Route Registration
+# ==============================================================================
+
+addRoute = (method, path, ...handlers) ->
+  fullPath = "#{_prefix}#{path}"
+  if fullPath.includes(':') and fullPath.endsWith('?')
+    basePath = fullPath.slice(0, -1).replace(/\/:[^\/]+$/, '')
+    addRoute method, basePath, ...handlers if basePath and basePath isnt fullPath.slice(0, -1)
+    fullPath = fullPath.slice(0, -1)
+  { regex, keys } = compilePattern(fullPath)
+  for handler in handlers
+    _routes.push { method: method.toUpperCase(), regex, keys, handler: smart(handler), path: fullPath }
+
+export get   = (path, ...handlers) -> addRoute 'GET',    path, ...handlers
+export post  = (path, ...handlers) -> addRoute 'POST',   path, ...handlers
+export put   = (path, ...handlers) -> addRoute 'PUT',    path, ...handlers
+export patch = (path, ...handlers) -> addRoute 'PATCH',  path, ...handlers
+export del   = (path, ...handlers) -> addRoute 'DELETE', path, ...handlers
+export all   = (path, ...handlers) -> addRoute 'ALL',    path, ...handlers
+
+export use = (pathOrMw, mw = null) ->
+  if typeof pathOrMw is 'function'
+    _middlewares.push pathOrMw
+  else
+    { regex, keys } = compilePattern(pathOrMw)
+    _routes.push { method: 'ALL', regex, keys, handler: mw, path: pathOrMw, middleware: true }
+
+export prefix = (base, fn) ->
+  old = _prefix
+  _prefix = "#{_prefix}#{base}"
+  try
+    fn?.()
+  finally
+    _prefix = old
+
+export onError = (handler) -> _errorHandler = handler
+export notFound = (handler) -> _notFoundHandler = handler
+
+export raw = (fn) -> _rawFilter = fn
+export before = (fn) -> _beforeFilters.push fn
+export after = (fn) -> _afterFilters.push fn
+
+# ==============================================================================
+# Main Fetch Handler
+# ==============================================================================
+
+export fetch = (req) ->
+  url = new URL(req.url)
+  pathname = url.pathname
+  method = req.method
+
+  if method is 'HEAD'
+    res = fetch!(new Request(req.url, { method: 'GET', headers: req.headers }))
+    return new Response(null, { status: res.status, headers: res.headers })
+
+  # Handle CORS preflight (OPTIONS) requests early, before route matching
+  # Enabled when cors middleware is used with preflight: true
+  if method is 'OPTIONS' and _corsPreflight
+    return new Response null,
+      status: 204
+      headers:
+        'Access-Control-Allow-Origin': req.headers.get('origin') or '*'
+        'Access-Control-Allow-Credentials': 'true'
+        'Access-Control-Allow-Methods': 'GET,HEAD,POST,PUT,PATCH,DELETE,OPTIONS'
+        'Access-Control-Allow-Headers': req.headers.get('access-control-request-headers') or 'Content-Type,Authorization'
+        'Access-Control-Max-Age': '86400'
+
+  match = matchRoute(method, pathname)
+
+  unless match
+    c = createContext(req)
+    if _notFoundHandler?
+      return _notFoundHandler.call!(c, c)
+    return new Response('Not Found', { status: 404 })
+
+  c = createContext(req, match.params)
+
+  # Run raw filter before body parsing (e.g., fix content-type)
+  _rawFilter?.(req) if method in ['POST', 'PUT', 'PATCH']
+
+  # Pre-parse body and query for sync read() — baked in, zero ceremony
+  data = {}
+  try
+    ct = req.headers.get('content-type') or ''
+    if method in ['POST', 'PUT', 'PATCH']
+      if ct =~ /json/i
+        data = c.req.json!
+      else if ct =~ /x-www-form-urlencoded|form-data/i
+        data = c.req.parseBody!
+        keys = Object.keys(data)
+        data = { body: keys[0] } if keys.length is 1 and data[keys[0]] is ''
+      else if ct =~ /text\//i
+        data = { body: c.req.text! }
+  catch
+    data = {}
+  merged = { ...data, ...c.req.query(), ...match.params }
+
+  # Run handler inside AsyncLocalStorage context
+  requestContext.run! { env: c, data: merged }, ->
+    runHandler!(c, match.handler)
+
+# Internal: Execute handler with middleware and error handling
+runHandler = (c, handler) ->
+  try
+    # Compose runs: middlewares → before filters → handler → after filters
+    compose!(_middlewares, _beforeFilters, _afterFilters, handler)(c)
+    c._response or new Response('', { status: 204 })
+  catch err
+    console.error 'Request error:', err
+    if _errorHandler?
+      _errorHandler.call!(c, err, c)
+    else
+      new Response err?.message or 'Internal Server Error', { status: err?.status or 500 }
+
+# ==============================================================================
+# Server Startup
+# ==============================================================================
+
+export startHandler = -> fetch
+
+export start = (opts = {}) ->
+  handler = startHandler()
+
+  # If running under rip-server, set global handler and return
+  if process.env.WORKER_ID? or process.env.SOCKET_PATH?
+    globalThis.__ripHandler = handler
+    return handler
+
+  # Otherwise start standalone server
+  host = opts.host or '0.0.0.0'
+  port = opts.port or 3000
+  server = Bun.serve { hostname: host, port: port, fetch: handler }
+  console.log "rip-api listening on http://#{host}:#{port}"
+  server
+
+export App = (fn) ->
+  resetGlobals()
+  fn?.()
+  startHandler()
+
+# ==============================================================================
+# Utility: Get Current Environment/Context
+# ==============================================================================
+
+export ctx = ->
+  store = requestContext.getStore()
+  store?.env or null
+
+# Subrequest — run a function with new data but same @ context
+# Enables read() to work against a synthetic payload while preserving
+# all @ variables from the parent request (e.g., @token).
+export subrequest = (data, fn) ->
+  store = requestContext.getStore() or throw new Error 'no context for subrequest()'
+  requestContext.run! { env: store.env, data }, ->
+    fn.call!(store.env)
+
+# Session proxy — access session.foo anywhere (via AsyncLocalStorage)
+export session = new Proxy {},
+  get: (_, key) ->
+    requestContext.getStore()?.env?.session?[key]
+  set: (_, key, value) ->
+    ctx = requestContext.getStore()?.env
+    return false unless ctx?
+    ctx.session ?= {}
+    ctx.session[key] = value
+    true
+  deleteProperty: (_, key) ->
+    ctx = requestContext.getStore()?.env
+    delete ctx.session[key] if ctx?.session?
+    true
+
+# Env proxy — access env.FOO anywhere (shortcut for process.env)
+export env = new Proxy {}, get: (_, key) -> process.env[key]
+
+# ==============================================================================
+# Utility Functions
+# ==============================================================================
+
+export isBlank = (obj) ->
+  return true unless obj?
+  return true if obj is false
+  return true if typeof obj is 'string' and /^\s*$/.test obj
+  return true if Array.isArray(obj) and obj.length is 0
+  return true if typeof obj is 'object' and Object.keys(obj).length is 0
+  false
+
+capitalize = (str) -> str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
+
+toMoney = (value, half, cents) ->
+  m = value.replace(/[$, ]/g, '').match(/^([-+]?)(\d*)\.?(\d*)$/)
+  return null unless m
+  intp = m[2] or ''
+  raw  = m[3] or ''
+  return null unless intp.length or raw.length
+  neg  = m[1] is '-'
+  frac = raw.padEnd(3, '0')
+  c    = parseInt((intp or '0') + frac[0] + frac[1], 10) or 0
+  d    = parseInt(frac[2], 10) or 0
+  rest = raw.length > 3 and /[1-9]/.test(raw.slice(3))
+  up = d > 5 or (d is 5 and rest) or (d is 5 and not rest and (if half then c % 2 isnt 0 else true))
+  c += 1 if up
+  c = if neg then -c else c
+  if cents then c else c / 100
+
+export toName = (str, ...type) ->
+  s = String(str)
+  s = s.toLowerCase().replace(/\s+/g, ' ').trim()
+  s = s.replace /(^|(?<=\P{L}))(\p{L})/gu, (m, pre, ch) -> pre + ch.toUpperCase()
+  s = s.replace(/[`'']/g, "'").replace(/[""]/g, '"')
+  s = s.replace /\b([a-z])\. ?([bcdfghjklmnpqrstvwxyz])\.?(?=\W|$)/gi, (match, p1, p2) -> (p1 + p2).toUpperCase()
+  s = s.replace /(?<=^|\P{L})([A-Za-z](?:(?![AEIOUYaeiouy])[A-Za-z]){1,4})(?=$|\P{L})/gu, (m) -> m.toUpperCase()
+  s = s.replace /\b([djs]r|us|acct|[ai]nn?|apps|ed|erb|elk|esq|grp|in[cj]|of[cf]|st|up)\.?(?=\W|$)/gi, (match) -> capitalize(match)
+  s = s.replace /(^|(?<=\d ))?\b(and|at|as|of|then?|in|on|or|for|to|by|de l[ao]s?|del?|(el-)|el|las)($)?\b/ig, (m, p1, p2, p3, p4, offset) ->
+    if offset is 0 or p1? or p3? or p4? then capitalize(p2) else p2.toLowerCase()
+  s = s.replace /\b(mc|mac(?=d[ao][a-k,m-z][a-z]|[fgmpw])|[dol]')([a-z])/gi, (m, p1, p2) -> capitalize(p1) + capitalize(p2)
+  if type.includes 'name'
+    s = s.replace /\b(ahn|an[gh]|al|art[sz]?|ash|e[dnv]|echt|elms|emms|eng|epps|essl|i[mp]|mrs?|ms|ng|ock|o[hm]|ohrt|ong|orr|ohrt|ost|ott|oz|sng|tsz|u[br]|ung)\b/gi, (match) -> capitalize(match)
+  if type.includes 'address'
+    s = s.replace /(?<=^| |\p{P})(apt?s?|arch|ave?|bldg|blvd|cr?t|co?mn|drv?|elm|end|f[lt]|hts?|ln|old|pkw?y|plc?|prk|pt|r[dm]|spc|s[qt]r?|srt|street|[nesw])\.?(?=$|[^\p{L}\p{N}_])/giu, (matched) -> capitalize(matched)
+  s = s.replace /(1st|2nd|3rd|[\d]th|\bde l[ao]s)\b/gi, (match) -> match.toLowerCase()
+  s = s.replace /\b(ca|dba|fbo|ihop|mri|ucla|usa|vru|[ns][ew]|i{1,3}v?)\b/gi, (match) -> match.toUpperCase()
+  s = s.replace /\b([-@.\w]+\.(?:com|net|io|org))\b/gi, (match) -> match.toLowerCase()
+  s = s.replace /(?<=\p{L}')S\b/gu, 's'
+  s = s.replace /# /g, '#'
+  s = s.replace /\s*[.,#]+$/, ''
+  s = s.replace /\bP\.? ?O\.? ?Box/i, 'PO Box'
+  s
+
+export toPhone = (str) ->
+  return "" if isBlank(str)
+  num = str.toString().replace(/\s+/g, ' ').trim()
+  [num, ext] = num.split(/\s*(?:, ?)?(?:ext?\.?|x|#|:|,)\s*/i, 2)
+  ext = ext.replace(/\D+/g, "") if ext
+  if num =~ /^\+([-+#*.,\d ]+)$/
+    etc = _[1].replace(/[^#*,\d]+/g, "")
+    if etc.replace(/\D+/g, "").length >= 6
+      if etc =~ /^1(\d{10})$/
+        [num, ext] = [_[1], ""]
+      else
+        return "+#{etc}"
+  num = num.replace(/^[^2-9]*/, "").replace(/\D+/g, "")
+  if num =~ /^([2-9][0-8][0-9])([2-9]\d\d)(\d{4})$/
+    num = "(#{_[1]}) #{_[2]}-#{_[3]}"
+    num += ", ext. #{ext}" if ext
+  else
+    num = null
+  num
+
+# ==============================================================================
+# Validators
+# ==============================================================================
+
+export validators =
+  # Numbers & money
+  id:         (v) -> v[/^([1-9]\d{0,14})$/]                          and parseInt(_[1])
+  int:        (v) -> v[/^([-+]?(?:0|[1-9]\d{0,14}))$/]               and parseInt(_[1])
+  whole:      (v) -> v[/^(0|[1-9]\d{0,14})$/]                        and parseInt(_[1])
+  float:      (v) -> v[/^([-+]?\d+(?:\.\d*)?|\.\d+)$/]               and parseFloat(_[1])
+  money:      (v) -> v[/^([-+]? ?\$? ?(?:[\d,]+(?:\.\d*)?|\.\d+))$/] and toMoney(_[1])
+  money_even: (v) -> v[/^([-+]? ?\$? ?(?:[\d,]+(?:\.\d*)?|\.\d+))$/] and toMoney(_[1], true)
+  cents:      (v) -> v[/^([-+]? ?\$? ?(?:[\d,]+(?:\.\d*)?|\.\d+))$/] and toMoney(_[1], false, true)
+  cents_even: (v) -> v[/^([-+]? ?\$? ?(?:[\d,]+(?:\.\d*)?|\.\d+))$/] and toMoney(_[1], true,  true)
+
+  # Strings & formatting
+  string:    (v) -> v.replace(/(?:\t+|\s{2,})/g, ' ')
+  text:      (v) -> v.replace(/  +/g  , ' ')
+
+  # Name/address
+  name:      (v) -> v = v.replace(/\s+/g, ' ') and toName v, 'name'
+  address:   (v) -> v = v.replace(/\s+/g, ' ') and toName v, 'address'
+
+  # Date & time
+  date:      (v) -> v[/^\d{4}(-?)\d{2}\1\d{2}$/]                                and _[0]
+  time:      (v) -> v[/^(2[0-3]|[01]?\d):([0-5]\d)(?::([0-5]\d))?$/]            and _[0]
+  time12:    (v) -> v[/^(1[0-2]|0?[1-9]):([0-5]\d)(?::([0-5]\d))?\s?(am|pm)$/i] and _[0].toLowerCase()
+
+  # Booleans
+  truthy:    (v) -> (v =~ /^(true|t|1|yes|y|on)$/i)  and true
+  falsy:     (v) -> (v =~ /^(false|f|0|no|n|off)$/i) and true
+  bool:      (v) -> if v =~ /^(true|t|1|yes|y|on)$/i then true else if v =~ /^(false|f|0|no|n|off)$/i then false else null
+
+  # Contact, geo, identity
+  email:     (v) -> v[/^([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/i] and _[0]
+  state:     (v) -> v[/^([a-z][a-z])$/i]              and _[1].toUpperCase()
+  zip:       (v) -> v[/^(\d{5})/]                     and _[1]
+  zipplus4:  (v) -> v[/^(\d{5})-?(\d{4})$/]           and "#{_[1]}-#{_[2]}"
+  ssn:       (v) -> v[/^(\d{3})-?(\d{2})-?(\d{4})$/]  and "#{_[1]}#{_[2]}#{_[3]}"
+  sex:       (v) -> v[/^(m|male|f|female|o|other)$/i] and _[1][0].toLowerCase()
+
+  # Phone
+  phone:     (v) -> toPhone(v)
+
+  # Web & technical
+  username:  (v) -> v[/^([a-zA-Z0-9_-]{3,20})$/] and _[1].toLowerCase()
+  ip:        (v) -> v[/^(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(?:\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$/] and _[0]
+  mac:       (v) -> v[/^([0-9a-fA-F]{2})(?:[:-]?)([0-9a-fA-F]{2})(?:[:-]?)([0-9a-fA-F]{2})(?:[:-]?)([0-9a-fA-F]{2})(?:[:-]?)([0-9a-fA-F]{2})(?:[:-]?)([0-9a-fA-F]{2})$/] and "#{_[1]}:#{_[2]}:#{_[3]}:#{_[4]}:#{_[5]}:#{_[6]}".toLowerCase()
+  url:       (v) -> v[/^(https?:\/\/)[^\s/$.?#].[^\s]*$/i] and _[0]
+  color:     (v) -> v[/^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/] and "##{_[1].toLowerCase()}"
+  uuid:      (v) -> v[/^([0-9a-f]{8})-?([0-9a-f]{4})-?([0-9a-f]{4})-?([0-9a-f]{4})-?([0-9a-f]{12})$/i] and "#{_[1]}-#{_[2]}-#{_[3]}-#{_[4]}-#{_[5]}".toLowerCase()
+  semver:    (v) -> v[/^(\d+)\.(\d+)\.(\d+)(?:-([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*))?(?:\+([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*))?$/] and _[0]
+
+  # Collections & structured
+  array:     (v) -> Array.isArray(v) and v or null
+  hash:      (v) -> (v? and typeof v is 'object' and not Array.isArray(v)) and v or null
+  json:      (v) -> if typeof v is 'string' then (try JSON.parse(v) catch then null) else if typeof v is 'object' then v else null
+
+  # Slugs & ids list
+  slug:      (v) -> v[/^([a-z0-9]+(?:-[a-z0-9]+)*)$/i] and _[1].toLowerCase()
+  ids:       (v) ->
+    cleaned = v.replace(/[, ]+/g, ' ').trim()
+    return null unless cleaned
+    try
+      nums = []
+      for part in cleaned.split(' ')
+        return null unless part[/^([1-9]\d{0,19})$/]
+        nums.push parseInt(_[1])
+      Array.from(new Set(nums)).sort((a, b) -> a - b)
+    catch then null
+
+export registerValidator = (name, fn) -> validators[name] = fn
+export getValidator      = (name)     -> validators[name]
+
+# ==============================================================================
+# read() — Sinatra-style Parameter Reading
+# ==============================================================================
+
+export read = (name = null, type = null, miss = null) ->
+  store = requestContext.getStore() or throw new Error 'no context for read()'
+
+  # missing value helper
+  done = (must = false) ->
+    return miss() if typeof miss is 'function'
+    throw new Error "Missing required field: #{name}" if must
+    return miss ?? null
+
+  # get value from store
+  v = store.data or {}
+  v = v[name] if name?
+  v = v.trim() if typeof v is 'string'
+
+  # value only, no validator
+  if !type?
+    return v if v?
+    return done()
+
+  # String: apply validator function
+  else if typeof type is 'string'
+
+    # detect required value (trailing '!')
+    if type.endsWith '!'
+      must = true
+      type = type.slice(0, -1)
+
+    # apply validator function
+    f = getValidator(type)
+    v = String(v ?? '') unless type in ['array', 'hash', 'json']
+    v = if f then f(v) else null
+
+  # Regex: apply regex pattern
+  else if type instanceof RegExp
+    s = String(v ?? '')
+    v = s.match(type)?[0] or null
+
+  # Array: [min, max] constraint or enumeration
+  else if Array.isArray(type)
+    s = String(v ?? '')
+    y = true
+    if typeof type[0] is 'number'
+      [min, max] = type
+      if typeof v is 'number' or (s =~ /^[-+]?\d+$/)
+        n = if typeof v is 'number' then v else +s
+        y = false if min? and n < min
+        y = false if max? and n > max
+        v = if y then n else null
+      else
+        y = false if min? and s.length < min
+        y = false if max? and s.length > max
+        v = if y then s else null
+    else
+      v = if type.includes(s) then s else null
+
+  # Object: start/end, min/max
+  else if type? and typeof type is 'object'
+    s = String(v ?? '')
+    if type.start? or type.end?
+      n = if s =~ /^[-+]?\d+$/ then +s else NaN
+      v = if not isNaN(n) and (not type.start? or n >= type.start) and (not type.end? or n <= type.end) then n else null
+    else if type.min? or type.max?
+      y = true
+      if typeof v is 'number' or (s =~ /^[-+]?\d+$/)
+        n = if typeof v is 'number' then v else +s
+        y = false if type.min? and n < type.min
+        y = false if type.max? and n > type.max
+        v = if y then n else null
+      else
+        y = false if type.min? and s.length < type.min
+        y = false if type.max? and s.length > type.max
+        v = if y then s else null
+
+  # blank / missing value handling
+  if not v? or (typeof v is 'string' and v.trim() is '')
+    return done(must)
+
+  v
