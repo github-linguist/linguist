@@ -1,0 +1,70 @@
+# Rip — A modern language that compiles to JavaScript
+# https://github.com/shreeve/rip-lang
+
+import { get, post, read, start } from '@rip-lang/api'
+
+# Classes with Ruby-style constructors
+class User
+  constructor: (@name, @email) ->
+
+  greet: -> "Hello, #{@name}!"
+
+  toString: -> "#{@name} <#{@email}>"
+
+# Reactivity — language-level operators
+count := 0
+doubled ~= count * 2
+~> console.log "Count: #{count}, Doubled: #{doubled}"
+
+# Functions
+def fibonacci(n)
+  if n <= 1
+    n
+  else
+    fibonacci(n - 1) + fibonacci(n - 2)
+
+# Async with dammit operator
+def loadUser(id)
+  data = fetchUser!(id) or return {error: "Not found"}
+  posts = getPosts!(data.id)
+  {user: data, posts}
+
+# Comprehensions
+squares = (x * x for x in [1..10])
+evens = (x for x in squares when x % 2 is 0)
+
+# Regex match with captures
+if text =~ /Hello, (\w+)/
+  console.log "Found: #{_[1]}"
+
+# Destructuring
+{name, age} = user
+[first, ...rest] = items
+
+# API routes with implicit commas
+get '/' -> { message: 'Hello, Rip!' }
+get '/users/:id' -> User.find!(read 'id', 'id!')
+
+post '/users' ->
+  email = read 'email', 'email!'
+  name = read 'name', 'string!'
+  user = User.new name, email
+  {success: true, user}
+
+# Operators
+MAX =! 100                  # readonly (const)
+result = a ?? b             # nullish coalescing
+quotient = 7 // 2           # floor division
+remainder = -1 %% 3         # true modulo
+domain = "a@b.com"[/@(.+)$/, 1]  # regex indexing
+
+# Type annotations (optional, emit .d.ts)
+def add(a:: number, b:: number):: number
+  a + b
+
+Point ::= type
+  x: number
+  y: number
+
+# Start server
+start port: 3000

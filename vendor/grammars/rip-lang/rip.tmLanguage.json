@@ -1,0 +1,495 @@
+{
+  "information_for_contributors": [
+    "Adapted from VS Code's built-in CoffeeScript grammar (MIT licensed).",
+    "Original: https://github.com/atom/language-coffee-script",
+    "Extended for Rip: type annotations, reactive operators, enums, interfaces, components."
+  ],
+  "name": "Rip",
+  "scopeName": "source.rip",
+  "fileTypes": ["rip"],
+  "patterns": [
+
+    {"comment": "=== COMMENTS (must be first to prevent # in strings from matching) ==="},
+    {
+      "begin": "(?<!#)###(?!#)",
+      "beginCaptures": { "0": { "name": "punctuation.definition.comment.rip" } },
+      "end": "###",
+      "endCaptures": { "0": { "name": "punctuation.definition.comment.rip" } },
+      "name": "comment.block.rip",
+      "patterns": [
+        { "match": "(?<=^|\\s)@\\w*(?=\\s)", "name": "storage.type.annotation.rip" }
+      ]
+    },
+    {
+      "match": "(#)(?!\\{).*$",
+      "name": "comment.line.number-sign.rip",
+      "captures": { "1": { "name": "punctuation.definition.comment.rip" } }
+    },
+
+    {"comment": "=== HEREDOCS (before regular strings — triple quotes first) ==="},
+    {
+      "begin": "'''",
+      "beginCaptures": { "0": { "name": "punctuation.definition.string.begin.rip" } },
+      "end": "'''",
+      "endCaptures": { "0": { "name": "punctuation.definition.string.end.rip" } },
+      "name": "string.quoted.single.heredoc.rip",
+      "patterns": [
+        { "match": "(\\\\).", "name": "constant.character.escape.backslash.rip",
+          "captures": { "1": { "name": "punctuation.definition.escape.backslash.rip" } } }
+      ]
+    },
+    {
+      "begin": "\"\"\"",
+      "beginCaptures": { "0": { "name": "punctuation.definition.string.begin.rip" } },
+      "end": "\"\"\"",
+      "endCaptures": { "0": { "name": "punctuation.definition.string.end.rip" } },
+      "name": "string.quoted.double.heredoc.rip",
+      "patterns": [
+        { "match": "(\\\\).", "name": "constant.character.escape.backslash.rip",
+          "captures": { "1": { "name": "punctuation.definition.escape.backslash.rip" } } },
+        { "include": "#interpolated_rip" }
+      ]
+    },
+
+    {"comment": "=== STRINGS ==="},
+    {
+      "begin": "'",
+      "beginCaptures": { "0": { "name": "punctuation.definition.string.begin.rip" } },
+      "end": "'",
+      "endCaptures": { "0": { "name": "punctuation.definition.string.end.rip" } },
+      "name": "string.quoted.single.rip",
+      "patterns": [
+        { "match": "(\\\\).", "name": "constant.character.escape.backslash.rip",
+          "captures": { "1": { "name": "punctuation.definition.escape.backslash.rip" } } }
+      ]
+    },
+    {
+      "begin": "\"",
+      "beginCaptures": { "0": { "name": "punctuation.definition.string.begin.rip" } },
+      "end": "\"",
+      "endCaptures": { "0": { "name": "punctuation.definition.string.end.rip" } },
+      "name": "string.quoted.double.rip",
+      "patterns": [
+        { "match": "(\\\\).", "name": "constant.character.escape.backslash.rip",
+          "captures": { "1": { "name": "punctuation.definition.escape.backslash.rip" } } },
+        { "include": "#interpolated_rip" }
+      ]
+    },
+
+    {"comment": "=== INLINE JAVASCRIPT ==="},
+    {
+      "match": "(`)(.*)(`)",
+      "name": "string.quoted.script.rip",
+      "captures": {
+        "1": { "name": "punctuation.definition.string.begin.rip" },
+        "2": { "name": "source.js.embedded.rip", "patterns": [{ "include": "source.js" }] },
+        "3": { "name": "punctuation.definition.string.end.rip" }
+      }
+    },
+
+    {"comment": "=== HEREGEX and REGEX ==="},
+    {
+      "begin": "///",
+      "end": "(///)[gimsuy]*",
+      "name": "string.regexp.multiline.rip",
+      "beginCaptures": { "0": { "name": "punctuation.definition.string.begin.rip" } },
+      "endCaptures": { "1": { "name": "punctuation.definition.string.end.rip" } },
+      "patterns": [
+        { "include": "#interpolated_rip" },
+        { "match": "\\\\.", "name": "constant.character.escape.backslash.rip" },
+        { "match": "#.*$", "name": "comment.line.number-sign.rip" }
+      ]
+    },
+    {
+      "begin": "(?<![\\w$])(/)(?=(?![/*+?])([^/\\\\]|\\\\.)*?/[gimsuy]*(?!\\s*[\\w$/(]))",
+      "beginCaptures": { "1": { "name": "punctuation.definition.string.begin.rip" } },
+      "end": "(/)[gimsuy]*",
+      "endCaptures": { "1": { "name": "punctuation.definition.string.end.rip" } },
+      "name": "string.regexp.rip",
+      "patterns": [
+        { "match": "\\\\.", "name": "constant.character.escape.backslash.rip" }
+      ]
+    },
+
+    {"comment": "=== TYPE DECLARATIONS (enum, interface — before keywords to get name capture) ==="},
+    {
+      "match": "\\b(enum)\\s+([A-Z]\\w*)",
+      "captures": {
+        "1": { "name": "storage.type.enum.rip" },
+        "2": { "name": "entity.name.type.enum.rip" }
+      }
+    },
+    {
+      "match": "\\b(interface)\\s+([A-Z]\\w*)(?:\\s+(extends)\\s+([A-Z]\\w*))?",
+      "captures": {
+        "1": { "name": "storage.type.interface.rip" },
+        "2": { "name": "entity.name.type.interface.rip" },
+        "3": { "name": "storage.modifier.extends.rip" },
+        "4": { "name": "entity.other.inherited-class.rip" }
+      }
+    },
+    {
+      "match": "\\b(class)\\s+(\\w+(?:\\.\\w*)*)(?:\\s+(extends)\\s+(\\w+(?:\\.\\w*)*))?",
+      "name": "meta.class.rip",
+      "captures": {
+        "1": { "name": "storage.type.class.rip" },
+        "2": { "name": "entity.name.type.class.rip" },
+        "3": { "name": "keyword.control.inheritance.rip" },
+        "4": { "name": "entity.other.inherited-class.rip" }
+      }
+    },
+
+    {"comment": "=== FUNCTION DEFINITIONS ==="},
+    {
+      "comment": "def name or def name!",
+      "match": "\\b(def)\\s+([a-zA-Z_$]\\w*[!?]?)",
+      "captures": {
+        "1": { "name": "storage.type.function.rip" },
+        "2": { "name": "entity.name.function.rip" }
+      }
+    },
+    {
+      "comment": "name = (...) -> or name = ->",
+      "begin": "((@)?[a-zA-Z_$][\\w$]*)\\s*(=)\\s*(?=(\\([^()]*\\)\\s*)?[=-]>)",
+      "beginCaptures": {
+        "1": { "name": "entity.name.function.rip" },
+        "2": { "name": "variable.other.readwrite.instance.rip" },
+        "3": { "name": "keyword.operator.assignment.rip" }
+      },
+      "end": "[=-]>",
+      "endCaptures": { "0": { "name": "storage.type.function.rip" } },
+      "name": "meta.function.rip",
+      "patterns": [{ "include": "#function_params" }]
+    },
+    {
+      "comment": "name: (...) -> or name: -> (method in object/class)",
+      "begin": "((@)?[a-zA-Z_$][\\w$]*)\\s*(:)\\s*(?=(\\([^()]*\\)\\s*)?[=-]>)",
+      "beginCaptures": {
+        "1": { "name": "entity.name.function.rip" },
+        "2": { "name": "variable.other.readwrite.instance.rip" },
+        "3": { "name": "keyword.operator.assignment.rip" }
+      },
+      "end": "[=-]>",
+      "endCaptures": { "0": { "name": "storage.type.function.rip" } },
+      "name": "meta.function.rip",
+      "patterns": [{ "include": "#function_params" }]
+    },
+    {
+      "comment": "Inline arrow: (...) -> or ->",
+      "begin": "(?=(\\([^()]*\\)\\s*)?[=-]>)",
+      "end": "[=-]>",
+      "endCaptures": { "0": { "name": "storage.type.function.rip" } },
+      "name": "meta.function.inline.rip",
+      "patterns": [{ "include": "#function_params" }]
+    },
+
+    {"comment": "=== CONSTRUCTOR: new and .new() ==="},
+    {
+      "match": "(new)\\s+(?:(?:(class)\\s+(\\w+(?:\\.\\w*)*)?)|(\\w+(?:\\.\\w*)*))",
+      "name": "meta.class.instance.constructor.rip",
+      "captures": {
+        "1": { "name": "keyword.operator.new.rip" },
+        "2": { "name": "storage.type.class.rip" },
+        "3": { "name": "entity.name.type.instance.rip" },
+        "4": { "name": "entity.name.type.instance.rip" }
+      }
+    },
+    {
+      "comment": "Ruby-style .new()",
+      "match": "(\\.)(new)\\s*(?=\\()",
+      "captures": {
+        "1": { "name": "punctuation.accessor.rip" },
+        "2": { "name": "keyword.operator.new.rip" }
+      }
+    },
+
+    {"comment": "=== CONSTANTS ==="},
+    { "match": "\\b(true|yes|on)\\b",    "name": "constant.language.boolean.true.rip" },
+    { "match": "\\b(false|no|off)\\b",  "name": "constant.language.boolean.false.rip" },
+    { "match": "\\b(null)\\b",          "name": "constant.language.null.rip" },
+    { "match": "\\b(undefined)\\b",     "name": "constant.language.undefined.rip" },
+    { "match": "\\b(NaN|Infinity)\\b",  "name": "constant.language.rip" },
+    { "match": "\\b(this)\\b",          "name": "variable.language.this.rip" },
+
+    {"comment": "=== INSTANCE VARIABLES (@name) ==="},
+    {
+      "match": "(@)([a-zA-Z_$]\\w*)?",
+      "name": "variable.other.readwrite.instance.rip",
+      "captures": {
+        "1": { "name": "punctuation.definition.variable.rip" }
+      }
+    },
+
+    {"comment": "=== KEYWORDS ==="},
+    {
+      "match": "\\b(return|throw|break|continue|switch|when|then|if|else|unless|for|in|of|by|as|while|until|loop|do|try|catch|finally|yield|await|import|export|from|default|delete|typeof|instanceof|new|super|debugger|use|own|extends|component|render)\\b",
+      "name": "keyword.control.rip"
+    },
+    {
+      "match": "\\b(and|or|not|is|isnt)\\b",
+      "name": "keyword.operator.logical.word.rip"
+    },
+
+    {"comment": "=== TYPE DECLARATIONS AND ANNOTATIONS ==="},
+    {
+      "comment": "Type alias: Name ::= type-expression (single line or 'type' keyword)",
+      "begin": "(::=)\\s*",
+      "beginCaptures": { "1": { "name": "keyword.operator.type-alias.rip" } },
+      "end": "$|(?=#)",
+      "contentName": "meta.type.rip",
+      "patterns": [{ "include": "#type_expression" }]
+    },
+    {
+      "comment": "Type annotation: name:: Type",
+      "begin": "(::)(?!=)",
+      "beginCaptures": { "1": { "name": "keyword.operator.type-annotation.rip" } },
+      "end": "(?=\\s*(?:=(?![>=])|:=|~=|~>|=!|<=>|\\)|,|->))|$|(?=#)",
+      "contentName": "meta.type.rip",
+      "patterns": [{ "include": "#type_expression" }]
+    },
+
+    {"comment": "=== REACTIVE OPERATORS (before general assignment) ==="},
+    { "match": "~=",   "name": "keyword.operator.assignment.reactive.rip" },
+    { "match": ":=",   "name": "keyword.operator.assignment.reactive.rip" },
+    { "match": "~>",   "name": "keyword.operator.assignment.reactive.rip" },
+    { "match": "<=>",  "name": "keyword.operator.assignment.reactive.rip" },
+    { "match": "=!",   "name": "keyword.operator.assignment.readonly.rip" },
+
+    {"comment": "=== SPECIAL OPERATORS (before general operators) ==="},
+    { "match": "!\\?",            "name": "keyword.operator.otherwise.rip" },
+    { "match": "\\?\\?",          "name": "keyword.operator.nullish.rip" },
+    { "match": "\\?\\.(?![0-9])", "name": "keyword.operator.optional-chaining.rip" },
+    { "match": "(?<=[a-zA-Z0-9_$)])!(?![=?])", "name": "keyword.operator.dammit.rip" },
+
+    {"comment": "=== REGEX MATCH (before comparison) ==="},
+    { "match": "=~", "name": "keyword.operator.regex-match.rip" },
+
+    {"comment": "=== COMPARISON (before assignment to prevent == matching =) ==="},
+    { "match": "===|!==|==|!=|<=|>=", "name": "keyword.operator.comparison.rip" },
+
+    {"comment": "=== COMPOUND ASSIGNMENT (before simple assignment) ==="},
+    { "match": "&&=|\\|\\|=|\\?\\?=|\\+=|-=|\\*\\*=|\\*=|//=|%%=|/=|%=|<<=|>>>=|>>=|&=|\\|=|\\^=",
+      "name": "keyword.operator.assignment.compound.rip" },
+
+    {"comment": "=== ASSIGNMENT (with variable name capture) ==="},
+    {
+      "match": "([a-zA-Z$_][\\w$]*)\\s*(=)(?![>=])",
+      "captures": {
+        "1": { "name": "variable.assignment.rip" },
+        "2": { "name": "keyword.operator.assignment.rip" }
+      }
+    },
+
+    {"comment": "=== LOGICAL ==="},
+    { "match": "&&",  "name": "keyword.operator.logical.rip" },
+    { "match": "\\|\\|",  "name": "keyword.operator.logical.rip" },
+    { "match": "!(?![=?])", "name": "keyword.operator.logical.rip" },
+
+    {"comment": "=== ARITHMETIC (longest match first) ==="},
+    { "match": "\\*\\*", "name": "keyword.operator.arithmetic.rip" },
+    { "match": "//",     "name": "keyword.operator.arithmetic.rip" },
+    { "match": "%%",     "name": "keyword.operator.arithmetic.rip" },
+    { "match": "\\+\\+", "name": "keyword.operator.increment.rip" },
+    { "match": "--",      "name": "keyword.operator.decrement.rip" },
+    { "match": "[+\\-*/%]", "name": "keyword.operator.arithmetic.rip" },
+
+    {"comment": "=== BITWISE ==="},
+    { "match": ">>>|>>|<<", "name": "keyword.operator.bitwise.shift.rip" },
+    { "match": "[&|^~]",    "name": "keyword.operator.bitwise.rip" },
+
+    {"comment": "=== COMPARISON (< > after bitwise shifts to prevent <<= matching) ==="},
+    { "match": "[<>]", "name": "keyword.operator.comparison.rip" },
+
+    {"comment": "=== RANGE AND SPREAD ==="},
+    { "match": "\\.\\.\\.", "name": "keyword.operator.splat.rip" },
+    { "match": "\\.\\.",     "name": "keyword.operator.range.rip" },
+
+    {"comment": "=== EXISTENTIAL ==="},
+    { "match": "\\?", "name": "keyword.operator.existential.rip" },
+
+    {"comment": "=== NUMBERS ==="},
+    { "match": "\\b0x[0-9a-fA-F](?:_?[0-9a-fA-F])*n?\\b", "name": "constant.numeric.hex.rip" },
+    { "match": "\\b0o[0-7](?:_?[0-7])*n?\\b",               "name": "constant.numeric.octal.rip" },
+    { "match": "\\b0b[01](?:_?[01])*n?\\b",                  "name": "constant.numeric.binary.rip" },
+    { "match": "\\b\\d[\\d_]*(?:\\.[\\d][\\d_]*)?(?:[eE][+-]?\\d+)?n?\\b", "name": "constant.numeric.decimal.rip" },
+
+    {"comment": "=== METHOD CALLS (.method()) ==="},
+    {
+      "match": "(\\.)([a-zA-Z_$]\\w*)\\s*(?=\\()",
+      "captures": {
+        "1": { "name": "punctuation.accessor.rip" },
+        "2": { "name": "entity.name.function.method.rip" }
+      }
+    },
+
+    {"comment": "=== FUNCTION CALLS (name()) ==="},
+    {
+      "match": "\\b([a-zA-Z_$]\\w*)\\s*(?=\\()",
+      "captures": { "1": { "name": "entity.name.function.rip" } }
+    },
+
+    {"comment": "=== DAMMIT CALLS (name!) ==="},
+    {
+      "match": "\\b([a-zA-Z_$]\\w*)(!)",
+      "captures": {
+        "1": { "name": "entity.name.function.rip" },
+        "2": { "name": "keyword.operator.dammit.rip" }
+      }
+    },
+
+    {"comment": "=== PROPERTY ACCESS ==="},
+    {
+      "match": "(\\.)([a-zA-Z_$]\\w*)",
+      "captures": {
+        "1": { "name": "punctuation.accessor.rip" },
+        "2": { "name": "variable.other.property.rip" }
+      }
+    },
+
+    {"comment": "=== OBJECT KEYS (name: value, name?: optional) ==="},
+    {
+      "match": "\\b([a-zA-Z_$]\\w*)(\\?)?([:])(?![:=])",
+      "captures": {
+        "1": { "name": "variable.other.property.rip" },
+        "2": { "name": "keyword.operator.type.optional.rip" },
+        "3": { "name": "punctuation.separator.key-value.rip" }
+      }
+    }
+  ],
+
+  "repository": {
+    "type_expression": {
+      "patterns": [
+        {
+          "comment": "Built-in types",
+          "match": "\\b(number|string|boolean|void|any|never|unknown|object|symbol|bigint)\\b",
+          "name": "support.type.primitive.rip"
+        },
+        {
+          "comment": "Type names (PascalCase)",
+          "match": "\\b([A-Z]\\w*)\\b",
+          "name": "entity.name.type.rip"
+        },
+        {
+          "comment": "Generic brackets",
+          "match": "[<>]",
+          "name": "punctuation.definition.typeparameters.rip"
+        },
+        {
+          "comment": "Array type brackets",
+          "match": "\\[\\]",
+          "name": "punctuation.definition.typeparameters.rip"
+        },
+        {
+          "comment": "Union pipe",
+          "match": "\\|",
+          "name": "keyword.operator.type.union.rip"
+        },
+        {
+          "comment": "Intersection",
+          "match": "&",
+          "name": "keyword.operator.type.intersection.rip"
+        },
+        {
+          "comment": "Function type arrow",
+          "match": "=>",
+          "name": "storage.type.function.arrow.rip"
+        },
+        {
+          "comment": "Optional type suffix",
+          "match": "\\?",
+          "name": "keyword.operator.type.optional.rip"
+        },
+        {
+          "comment": "Non-nullable suffix",
+          "match": "!",
+          "name": "keyword.operator.type.nonnullable.rip"
+        },
+        {
+          "comment": "Type keyword (for structural types)",
+          "match": "\\b(type)\\b",
+          "name": "storage.type.rip"
+        },
+        {
+          "comment": "Parentheses in function types",
+          "match": "[()]",
+          "name": "punctuation.definition.typeparameters.rip"
+        },
+        {
+          "comment": "Comma separator",
+          "match": ",",
+          "name": "punctuation.separator.comma.rip"
+        },
+        {
+          "comment": "Colon in function type params",
+          "match": ":",
+          "name": "punctuation.separator.type.rip"
+        },
+        {
+          "comment": "Lowercase identifiers in types (param names)",
+          "match": "\\b[a-z_$]\\w*\\b",
+          "name": "variable.parameter.type.rip"
+        },
+        { "include": "#strings" }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "begin": "\"",
+          "end": "\"",
+          "name": "string.quoted.double.rip",
+          "patterns": [{ "match": "\\\\.", "name": "constant.character.escape.rip" }]
+        },
+        {
+          "begin": "'",
+          "end": "'",
+          "name": "string.quoted.single.rip",
+          "patterns": [{ "match": "\\\\.", "name": "constant.character.escape.rip" }]
+        }
+      ]
+    },
+    "interpolated_rip": {
+      "patterns": [
+        {
+          "begin": "\\#\\{",
+          "beginCaptures": { "0": { "name": "punctuation.section.embedded.begin.rip" } },
+          "end": "\\}",
+          "endCaptures": { "0": { "name": "punctuation.section.embedded.end.rip" } },
+          "name": "source.rip.embedded.source",
+          "patterns": [{ "include": "$self" }]
+        },
+        {
+          "begin": "\\$\\{",
+          "beginCaptures": { "0": { "name": "punctuation.section.embedded.begin.rip" } },
+          "end": "\\}",
+          "endCaptures": { "0": { "name": "punctuation.section.embedded.end.rip" } },
+          "name": "source.rip.embedded.source",
+          "patterns": [{ "include": "$self" }]
+        }
+      ]
+    },
+    "function_params": {
+      "patterns": [
+        {
+          "begin": "\\(",
+          "beginCaptures": { "0": { "name": "punctuation.definition.parameters.begin.bracket.round.rip" } },
+          "end": "\\)",
+          "endCaptures": { "0": { "name": "punctuation.definition.parameters.end.bracket.round.rip" } },
+          "name": "meta.parameters.rip",
+          "patterns": [
+            {
+              "match": "(@)?([a-zA-Z_$][\\w$]*)(\\.\\.\\.)?",
+              "captures": {
+                "1": { "name": "variable.other.readwrite.instance.rip" },
+                "2": { "name": "variable.parameter.function.rip" },
+                "3": { "name": "keyword.operator.splat.rip" }
+              }
+            },
+            { "include": "$self" }
+          ]
+        }
+      ]
+    }
+  }
+}
