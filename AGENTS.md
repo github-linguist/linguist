@@ -99,7 +99,7 @@ These are all maintained by the `script/add-grammars` script.
 ## PR Requirements
 
 All PRs must:
-1. Use the provided PR template.
+1. Use the provided PR template. Irrelevant sections may be removed.
 2. Link to GitHub search results showing in-the-wild usage, excluding forks, for each extension being added (minimum 2000 files for common extensions, 200 for once-per-repo files or extensions).
 3. Link to the original source of any samples added. This must not be a link to the fork of Linguist used for the contribution.
 4. State the license of any sample code added individually.
@@ -122,10 +122,3 @@ Only add grammars with approved licenses (see `vendor/licenses/config.yml` for t
 - `charlock_holmes` - Character encoding detection (requires ICU)
 - `rugged` - libgit2 bindings for Ruby
 - Docker - Required for grammar operations
-
-## Maintainers
-
-- @Alhadis
-- @lildude (GitHub staff)
-
-PRs need approval from a GitHub staff member to be merged. Releases are performed by GitHub staff.
