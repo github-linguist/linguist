@@ -59,6 +59,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Beef:** [dotnet/csharp-tmLanguage](https://github.com/dotnet/csharp-tmLanguage)
 - **Befunge:** [johanasplund/sublime-befunge](https://github.com/johanasplund/sublime-befunge)
 - **Berry:** [berry-lang/berry-grammar](https://github.com/berry-lang/berry-grammar)
+- **Bend:** [HigherOrderCO/tree-sitter-bend](https://github.com/ppmpreetham/language-bend)
 - **BibTeX:** [textmate/latex.tmbundle](https://github.com/textmate/latex.tmbundle)
 - **BibTeX Style:** [zyoshoka/bst.tmLanguage](https://github.com/zyoshoka/bst.tmLanguage)
 - **Bicep:** [azure/bicep](https://github.com/azure/bicep)
