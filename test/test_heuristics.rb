@@ -1179,6 +1179,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_vim_by_heuristics
+    assert_heuristics({
+      "Vim9 Script" => all_fixtures("Vim9 Script", "*.vim"),
+      "Vim Script" => all_fixtures("Vim Script", "*.vim")
+    })
+  end
+
   def test_w_by_heuristics
     assert_heuristics({
       "CWeb" => all_fixtures("CWeb", "*.w"),
