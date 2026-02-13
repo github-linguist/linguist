@@ -1,0 +1,37 @@
+MODPATH=${0%/*}
+
+#installer options
+#Below you can see the decoding of the names of the points, 
+#or trust the numerical values of the points.
+
+#STEP1=Select volume steps
+#STEP2=Increase media volumes
+#STEP3=Improving microphones sensitivity
+#STEP4=Select audio format (16..float)
+#STEP5=Select sampling rates (96..384000)
+#STEP6=Turn off sound interference
+#STEP7=Patching device_features files
+#STEP8=Other patches in mixer_paths files
+#STEP9=Tweaks for build.prop files
+#STEP10=Improve bluetooth
+#STEP11=Switch audio output (DIRECT -> DIRECT_PCM)
+#STEP12=Install custom preset for iir
+#STEP13=Ignore all audio effects
+#STEP14=Install experimental tweaks for tinymix
+#STEP15=Configure Dolby Atmos
+
+VOLSTEPS=skip
+VOLMEDIA=skip
+VOLMIC=skip
+BITNES=skip
+SAMPLERATE=skip
+STEP6=false
+STEP7=false
+STEP8=false
+STEP9=false
+STEP10=false
+STEP11=false
+STEP12=false
+STEP13=false
+STEP14=false
+STEP15=false
