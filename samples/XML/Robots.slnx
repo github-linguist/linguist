@@ -1,0 +1,10 @@
+<Solution>
+  <Project Path="build\Robots.Build\Robots.Build.csproj" />
+  <Project Path="src\Robots.Grasshopper\Robots.Grasshopper.csproj">
+    <BuildDependency Project="src\Robots\Robots.csproj" />
+  </Project>
+  <Project Path="src\Robots\Robots.csproj" />
+  <Project Path="tests\Robots.Tests\Robots.Tests.csproj">
+    <BuildDependency Project="src\Robots\Robots.csproj" />
+  </Project>
+</Solution>

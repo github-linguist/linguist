@@ -1,0 +1,30 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# dependencies = [
+#   "pandas",
+#   "lxml"
+# ]
+# ///
+
+"""Download names, country codes etc. of all countries of the world. A Standalone Uv python script.
+
+Run this script in terminal:
+$ chmod +x ./uv-download-countries-info    # make script executable
+$ ./uv-download-countries-info             # run script
+
+Code source: https://www.kaggle.com/datasets/sohangchopra/countries-with-aliases-alternative-english-names/
+
+How to write a uv script: https://docs.astral.sh/uv/guides/scripts/#declaring-script-dependencies
+"""
+import pandas as pd
+
+print('Downloading table from wikipedia...')
+country_tables = pd.read_html(
+    'https://en.wikipedia.org/wiki/List_of_alternative_country_names', 
+    header=0        # first row is header
+)
+df = pd.concat([df for df in country_tables if not df.empty])
+df['Description'] = df['Description'].str.removesuffix('a').str.strip()
+print("Countries of the World:\n", df)
+df.to_csv('wikipedia_countries.csv', index=False, encoding='utf-8-sig')
+print('Saved downloaded data to wikipedia_countries.csv')
