@@ -1,0 +1,19 @@
+fn classify(x: int64): int64 {
+  switch (x % 3) {
+    case 0: {
+      print_str("divisible by 3\n");
+      return 0;
+    }
+    case 1: print_str("remainder 1\n");
+    default: {
+      print_str("other\n");
+      return 2;
+    }
+  }
+}
+
+fn main(): int64 {
+  print_int(classify(10));
+  print_str("\n");
+  return 0;
+}
