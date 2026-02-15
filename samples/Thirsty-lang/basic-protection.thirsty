@@ -1,0 +1,16 @@
+// Thirsty-lang Security Example: Basic Protection
+// Demonstrates shield, sanitize, and armor keywords
+
+shield basicProtection {
+  // User input with sanitization
+  drink userName = sip "Enter your name"
+  sanitize userName
+  
+  // Protected data
+  drink secretKey = "my-secret-123"
+  armor secretKey
+  
+  // Safe output
+  pour "Hello, " + userName
+  pour "Your data is protected!"
+}

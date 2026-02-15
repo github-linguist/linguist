@@ -1,0 +1,65 @@
+// Thirsty++ Advanced Security Example
+// Demonstrates comprehensive defensive programming features
+
+import { detect, defend } from "security.thirsty"
+
+shield advancedProtection {
+  // Input validation and sanitization
+  glass secureInput(prompt) {
+    drink rawInput = sip prompt
+    sanitize rawInput
+    
+    // Detect potential threats
+    detect rawInput {
+      pattern: malicious
+      action: defend
+    }
+    
+    return rawInput
+  }
+  
+  // Protected data structure
+  glass SecureUser(name, email) {
+    armor name
+    armor email
+    
+    glass getName() {
+      return name
+    }
+    
+    glass getEmail() {
+      // Morph email for privacy
+      morph email {
+        strategy: obfuscate
+        level: medium
+    }
+      return email
+    }
+  }
+  
+  // Main protected execution
+  glass main() {
+    pour "=== Secure User Registration ==="
+    
+    drink userName = secureInput("Enter your name: ")
+    drink userEmail = secureInput("Enter your email: ")
+    
+    // Create protected user object
+    drink user = SecureUser(userName, userEmail)
+    
+    pour "User registered securely!"
+    pour "Name: " + user.getName()
+    pour "Email (protected): " + user.getEmail()
+    
+    // Cleanup sensitive data
+    cleanup userName
+    cleanup userEmail
+    
+    pour "✓ All sensitive data protected"
+  }
+}
+
+// Execute with shield protection
+shield advancedProtection {
+  main()
+}

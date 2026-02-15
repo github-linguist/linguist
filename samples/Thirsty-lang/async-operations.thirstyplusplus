@@ -1,0 +1,61 @@
+// Thirsty++ Async Operations Example  
+// Demonstrates cascade (promise/async) and await functionality
+
+import { fountain } from "async.thirsty"
+
+glass fetchWaterQuality(source) {
+  cascade quality = fountain.fetch(source)
+  
+  await quality {
+    pour "Water quality data received"
+    return quality.data
+  } spillage error {
+    pour "Error fetching data: " + error
+    return reservoir
+  }
+}
+
+glass processWaterSamples(samples) {
+  drink results = []
+  
+  cascade allTests = samples.map(sample => {
+    return fountain.test(sample)
+  })
+  
+  await fountain.all(allTests) {
+    pour "All samples processed"
+    results = allTests.results
+  } spillage error {
+    pour "Processing failed: " + error
+    results = []
+  }
+  
+  return results
+}
+
+glass main() {
+  pour "=== Water Quality Monitoring System ==="
+  
+  // Fetch quality data asynchronously
+  drink sources = ["tap", "well", "spring"]
+  
+  cascade qualityChecks = sources.map(source => {
+    return fetchWaterQuality(source)
+  })
+  
+  await fountain.all(qualityChecks) {
+    pour "✓ All water sources checked"
+    
+    refill drink i = 0; i < sources.length; i = i + 1 {
+      pour sources[i] + ": " + qualityChecks[i].quality
+    }
+  } spillage error {
+    pour "❌ Quality check failed"
+    cleanup qualityChecks
+  }
+  
+  pour "Monitoring complete"
+}
+
+// Execute with async context
+fountain.run(main)

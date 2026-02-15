@@ -1,0 +1,34 @@
+// Thirsty+ Control Flow Example
+// Demonstrates conditional logic
+
+drink temperature = 35
+drink water_consumed = 6
+
+// If-else statement
+thirsty temperature > 30
+  pour "It's hot! Drink more water!"
+  drink recommended = 10
+hydrated
+  pour "Normal temperature"
+  drink recommended = 8
+
+pour "Recommended daily intake:"
+pour recommended
+
+// Check consumption
+thirsty water_consumed < recommended
+  drink deficit = recommended - water_consumed
+  pour "You need to drink more!"
+  pour deficit
+  pour "liters remaining"
+hydrated
+  pour "Great job! You're well hydrated!"
+
+// Boolean values
+drink is_thirsty = parched  // true
+drink is_quenched = quenched  // false
+
+thirsty is_thirsty
+  pour "Time to hydrate!"
+
+// Stay healthy and hydrated! 💧

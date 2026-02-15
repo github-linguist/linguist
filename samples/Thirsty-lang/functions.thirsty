@@ -1,0 +1,30 @@
+// Thirsty-lang Functions Example
+// Demonstrates glass (function) declaration and usage
+
+glass greet(name) {
+  drink message = "Welcome, " + name
+  pour message
+  return message
+}
+
+glass calculateHydration(weight) {
+  // Recommended water intake: 30-35ml per kg of body weight
+  drink baseIntake = weight * 0.033
+  return baseIntake
+}
+
+glass main() {
+  // Call greet function
+  drink userName = "Hydration Hero"
+  greet(userName)
+  
+  // Calculate recommended water intake
+  drink bodyWeight = 70
+  drink dailyGoal = calculateHydration(bodyWeight)
+  
+  pour "Daily hydration goal:"
+  pour dailyGoal
+  pour "liters"
+}
+
+main()

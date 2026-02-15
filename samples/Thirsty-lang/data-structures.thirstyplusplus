@@ -1,0 +1,83 @@
+// Thirsty+++ Data Structures Example
+// Demonstrates advanced data handling with reservoir, stream, ocean
+
+import { reservoir, stream, ocean } from "collections.thirsty"
+
+glass main() {
+  pour "=== Advanced Data Structures ==="
+  
+  // Reservoir: Map/Dictionary structure
+  drink userScores = reservoir {
+    "Alice": 95,
+    "Bob": 87,
+    "Charlie": 92
+  }
+  
+  pour "\nUser Scores (Reservoir):"
+  userScores.forEach(glass(name, score) {
+    pour "  " + name + ": " + score + " points"
+  })
+  
+  // Stream: Iterable/Generator pattern
+  glass fibonacciStream(limit) {
+    drink a = 0
+    drink b = 1
+    drink count = 0
+    
+    stream {
+      refill count < limit {
+        yield a
+        drink temp = a + b
+        a = b
+       b = temp
+        count = count + 1
+      }
+    }
+  }
+  
+  pour "\nFibonacci Sequence (Stream):"
+  drink fibStream = fibonacciStream(10)
+  fibStream.forEach(glass(num) {
+    pour "  " + num
+  })
+  
+  // Ocean: Large dataset with lazy evaluation
+  drink hydrationLogs = ocean.create()
+  
+  // Populate ocean with sample data
+  refill drink day = 1; day <= 30; day = day + 1 {
+    hydrationLogs.add({
+      day: day,
+      glasses: 8 + (day % 3),
+      quality: parched
+    })
+  }
+  
+  pour "\nHydration Analytics (Ocean):"
+  
+  // Lazy evaluation - process only when needed
+  drink avgGlasses = hydrationLogs
+    .filter(glass(log) { return log.glasses > 8 })
+    .map(glass(log) { return log.glasses })
+    .reduce(glass(sum, glasses) { return sum + glasses }, 0)
+  
+  avgGlasses = avgGlasses / hydrationLogs.count()
+  
+  pour "  Average glasses (>8): " + avgGlasses
+  pour "  Total days logged: " + hydrationLogs.count()
+  
+  // Stream processing
+  drink topDays = hydrationLogs
+    .orderBy(glass(log) { return log.glasses })
+    .take(5)
+    .toArray()
+  
+  pour "\n  Top 5 hydration days:"
+  topDays.forEach(glass(log) {
+    pour "    Day " + log.day + ": " + log.glasses + " glasses"
+  })
+  
+  pour "\n✓ Data processing complete"
+}
+
+main()

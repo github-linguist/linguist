@@ -1,0 +1,88 @@
+// Thirsty-lang Error Handling Example
+// Demonstrates spillage (error handling) and cleanup
+
+glass safeDivide(a, b) {
+  thirsty b == 0
+    spillage "Division by zero error"
+  
+  return a / b
+}
+
+glass processUserInput() {
+  drink result = reservoir
+  
+  shield inputProtection {
+    drink rawInput = sip "Enter a number: "
+    sanitize rawInput
+    
+    // Convert to number with error handling
+    drink number = parseFloat(rawInput)
+    
+    thirsty isNaN(number)
+      spillage "Invalid number format"
+    
+    result = number
+    
+  } spillage error {
+    pour "Input error: " + error
+    cleanup rawInput
+    result = 0
+  }
+  
+  return result
+}
+
+glass main() {
+  pour "=== Error Handling Demo ==="
+  
+  // Try safe division
+  drink value1 = 100
+  drink value2 = 0
+  
+  shield divisionProtection {
+    drink result = safeDivide(value1, value2)
+    pour "Result: " + result
+    
+  } spillage error {
+    pour "Math error: " + error
+    pour "Fallback: Using default value"
+    drink result = 0
+  }
+  
+  // Process user input with validation
+  drink userNumber = processUserInput()
+  pour "Processed number: " + userNumber
+  
+  // Nested error handling
+  shield nestedProtection {
+    drink data = reservoir {
+      "values": [1, 2, 3]
+    }
+    
+    thirsty data.values.length > 0
+      pour "Processing " + data.values.length + " items"
+      
+      refill drink i = 0; i < data.values.length; i = i + 1 {
+        shield itemProtection {
+          drink processed = data.values[i] * 2
+          pour "Item " + i + ": " + processed
+          
+        } spillage itemError {
+          pour "Item processing failed, skipping..."
+        }
+      }
+    hydrated
+      spillage "No data to process"
+    
+  } spillage mainError {
+    pour "Main processing error: " + mainError
+  } cleanup {
+    // Always execute cleanup
+    pour "Releasing resources..."
+    cleanup data
+  }
+  
+  pour "\n✓ Error handling complete"
+}
+
+main()

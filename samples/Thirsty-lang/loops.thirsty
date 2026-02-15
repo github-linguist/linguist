@@ -1,0 +1,39 @@
+// Thirsty-lang Loops Example
+// Demonstrates refill (loop) functionality
+
+glass main() {
+  // Simple refill loop - count glasses of water
+  drink glassCount = 0
+  drink target = 8
+  
+  pour "Drinking water throughout the day..."
+  
+  refill glassCount < target {
+    glassCount = glassCount + 1
+    pour "Glass #" + glassCount + " consumed"
+  }
+  
+  pour "Daily goal achieved!"
+  pour glassCount + " glasses"
+  
+  // Nested loop example
+  drink days = 0
+  drink weekGoal = 7
+  
+  pour "\nWeekly hydration tracker:"
+  
+  refill days < weekGoal {
+    days = days + 1
+    drink dailyGlasses = 0
+    
+    pour "Day " + days + ":"
+    refill dailyGlasses < target {
+      dailyGlasses = dailyGlasses + 1
+    }
+    pour "  Completed " + dailyGlasses + " glasses"
+  }
+  
+  pour "\nWeek complete! Stay hydrated! 💧"
+}
+
+main()

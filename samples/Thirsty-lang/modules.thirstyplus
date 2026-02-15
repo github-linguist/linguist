@@ -1,0 +1,68 @@
+// Thirsty++ Module System Example
+// Demonstrates import/export functionality
+
+export glass WaterBottle {
+  drink capacity
+  drink currentLevel
+  
+  glass constructor(size) {
+    capacity = size
+    currentLevel = 0
+  }
+  
+  glass fill() {
+    currentLevel = capacity
+    pour "Bottle filled to " + capacity + "ml"
+  }
+  
+  glass drink(amount) {
+    thirsty currentLevel >= amount
+      currentLevel = currentLevel - amount
+      pour "Drank " + amount + "ml"
+      return parched
+    hydrated
+      pour "Not enough water in bottle!"
+      return quenched
+  }
+  
+  glass getLevel() {
+    return currentLevel
+  }
+  
+  glass isEmpty() {
+    return currentLevel == 0
+  }
+}
+
+export glass HydrationTracker {
+  drink totalConsumed
+  drink dailyGoal
+  
+  glass constructor(goal) {
+    totalConsumed = 0
+    dailyGoal = goal
+  }
+  
+  glass addWater(amount) {
+    totalConsumed = totalConsumed + amount
+    pour "Logged " + amount + "ml"
+  }
+  
+  glass getProgress() {
+    drink percentage = (totalConsumed / dailyGoal) * 100
+    return percentage
+  }
+  
+  glass isGoalMet() {
+    return totalConsumed >= dailyGoal
+  }
+}
+
+export glass calculateDailyGoal(weight, activityLevel) {
+  drink baseGoal = weight * 33
+  
+  thirsty activityLevel > 1
+    baseGoal = baseGoal * 1.5
+  
+  return baseGoal
+}
