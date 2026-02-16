@@ -274,6 +274,10 @@ class TestBlob < Minitest::Test
     assert sample_blob("Go/testdata/foo.yml").vendored?
   end
 
+  def test_cow_language
+    assert_equal "COW", sample_blob_memory("COW/fibonacci.cow").language.name
+  end
+
   def test_language
     allowed_failures = {
       "#{samples_path}/C/rpc.h" => ["C", "C++"],
