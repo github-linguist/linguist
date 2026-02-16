@@ -1,0 +1,66 @@
+// Examples: Function Declarations
+// Demonstrates: func with type annotations and return types
+
+import io from str
+
+// Simple function - no parameters
+func greet() => string {
+  return "Hello, Strata!"
+}
+
+io.print("=== Greeting ===")
+io.print(greet())
+
+// Function with parameters
+func add(a: int, b: int) => int {
+  return a + b
+}
+
+io.print("=== Addition ===")
+let result: int = add(10, 20)
+io.print(result)
+
+// Function with multiple parameters
+func multiply(x: int, y: int) => int {
+  return x * y
+}
+
+io.print("=== Multiplication ===")
+io.print(multiply(6, 7))
+
+// Function with boolean return
+func isEven(n: int) => bool {
+  return n % 2 == 0
+}
+
+io.print("=== Is Even Check ===")
+io.print(isEven(4))
+io.print(isEven(7))
+
+// Function with float
+func average(a: float, b: float) => float {
+  return (a + b) / 2
+}
+
+io.print("=== Average ===")
+io.print(average(10.5, 20.5))
+
+// Function that uses loops
+func factorial(n: int) => int {
+  var result: int = 1
+  for (var i: int = 1; i <= n; var i: int = i + 1) {
+    var result: int = result * i
+  }
+  return result
+}
+
+io.print("=== Factorial ===")
+io.print(factorial(5))
+
+// Function that doesn't return a value
+func printNumber(n: int) => any {
+  io.print(n)
+}
+
+io.print("=== Print via Function ===")
+printNumber(42)
