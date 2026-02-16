@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+require "licensed/version"
+require "licensed/shell"
+require "licensed/dependency_record"
+require "licensed/dependency"
+require "licensed/git"
+require "licensed/sources"
+require "licensed/configuration"
+require "licensed/report"
+require "licensed/reporters"
+require "licensed/commands"
+require "licensed/ui/shell"
+require "licensed/migrations"

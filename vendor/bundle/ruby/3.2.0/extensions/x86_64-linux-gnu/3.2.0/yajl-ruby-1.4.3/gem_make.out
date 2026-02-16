@@ -1,0 +1,30 @@
+current directory: /home/engine/project/vendor/bundle/ruby/3.2.0/gems/yajl-ruby-1.4.3/ext/yajl
+/usr/bin/ruby3.2 -I/usr/lib/ruby/vendor_ruby extconf.rb
+creating Makefile
+
+current directory: /home/engine/project/vendor/bundle/ruby/3.2.0/gems/yajl-ruby-1.4.3/ext/yajl
+make DESTDIR\= sitearchdir\=./.gem.20260216-2027-44rvvg sitelibdir\=./.gem.20260216-2027-44rvvg clean
+
+current directory: /home/engine/project/vendor/bundle/ruby/3.2.0/gems/yajl-ruby-1.4.3/ext/yajl
+make DESTDIR\= sitearchdir\=./.gem.20260216-2027-44rvvg sitelibdir\=./.gem.20260216-2027-44rvvg
+compiling yajl.c
+compiling yajl_alloc.c
+compiling yajl_buf.c
+compiling yajl_encode.c
+compiling yajl_ext.c
+yajl_ext.c: In function 'rb_yajl_parser_parse':
+yajl_ext.c:538:17: warning: variable 'stat' set but not used [-Wunused-but-set-variable]
+  538 |     yajl_status stat;
+      |                 ^~~~
+compiling yajl_gen.c
+compiling yajl_lex.c
+compiling yajl_parser.c
+compiling yajl_version.c
+linking shared-object yajl/yajl.so
+
+current directory: /home/engine/project/vendor/bundle/ruby/3.2.0/gems/yajl-ruby-1.4.3/ext/yajl
+make DESTDIR\= sitearchdir\=./.gem.20260216-2027-44rvvg sitelibdir\=./.gem.20260216-2027-44rvvg install
+/usr/bin/install -c -m 0755 yajl.so ./.gem.20260216-2027-44rvvg/yajl
+
+current directory: /home/engine/project/vendor/bundle/ruby/3.2.0/gems/yajl-ruby-1.4.3/ext/yajl
+make DESTDIR\= sitearchdir\=./.gem.20260216-2027-44rvvg sitelibdir\=./.gem.20260216-2027-44rvvg clean

@@ -1,0 +1,31 @@
+current directory: /home/engine/project/vendor/bundle/ruby/3.2.0/gems/io-console-0.8.2/ext/io/console
+/usr/bin/ruby3.2 -I/usr/lib/ruby/vendor_ruby extconf.rb
+checking for rb_syserr_fail_str(0, Qnil)... yes
+checking for rb_interned_str_cstr()... yes
+checking for rb_io_path() in ruby/io.h... no
+checking for rb_io_descriptor() in ruby/io.h... yes
+checking for rb_io_get_write_io() in ruby/io.h... yes
+checking for rb_io_closed_p() in ruby/io.h... no
+checking for rb_io_open_descriptor() in ruby/io.h... no
+checking for rb_ractor_local_storage_value_newkey()... yes
+checking for termios.h... yes
+checking for cfmakeraw() in termios.h... yes
+checking for sys/ioctl.h... yes
+checking for HAVE_RUBY_FIBER_SCHEDULER_H... yes
+checking for ttyname_r()... yes
+creating Makefile
+
+current directory: /home/engine/project/vendor/bundle/ruby/3.2.0/gems/io-console-0.8.2/ext/io/console
+make DESTDIR\= sitearchdir\=./.gem.20260216-2027-x390ks sitelibdir\=./.gem.20260216-2027-x390ks clean
+
+current directory: /home/engine/project/vendor/bundle/ruby/3.2.0/gems/io-console-0.8.2/ext/io/console
+make DESTDIR\= sitearchdir\=./.gem.20260216-2027-x390ks sitelibdir\=./.gem.20260216-2027-x390ks
+compiling console.c
+linking shared-object io/console.so
+
+current directory: /home/engine/project/vendor/bundle/ruby/3.2.0/gems/io-console-0.8.2/ext/io/console
+make DESTDIR\= sitearchdir\=./.gem.20260216-2027-x390ks sitelibdir\=./.gem.20260216-2027-x390ks install
+/usr/bin/install -c -m 0755 console.so ./.gem.20260216-2027-x390ks/io
+
+current directory: /home/engine/project/vendor/bundle/ruby/3.2.0/gems/io-console-0.8.2/ext/io/console
+make DESTDIR\= sitearchdir\=./.gem.20260216-2027-x390ks sitelibdir\=./.gem.20260216-2027-x390ks clean

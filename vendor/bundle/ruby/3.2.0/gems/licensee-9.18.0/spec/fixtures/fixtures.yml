@@ -1,0 +1,234 @@
+# Map of fixtures to expectation as an added integration test
+---
+agpl-3.0_markdown:
+  key: agpl-3.0
+  matcher: dice
+  hash: f84aaf84faf0196e6a05f41d7a097778b238be59
+apache-2.0_markdown:
+  key: apache-2.0
+  matcher: dice
+  hash: 62937105bf0baec879cc6cc96d2fc2ce4922fc6d
+apache-with-readme-notice:
+  key: apache-2.0
+  matcher: exact
+  hash: bec905d850e7f5dc2e2db78a950d4a9db560a0b8
+artistic-2.0_markdown:
+  key: artistic-2.0
+  matcher: dice
+  hash: a3684106623ab2f9791ad7297b6874e07ee71c81
+bom:
+  key: mit
+  matcher: exact
+  hash: 4c2c763d64bbc7ef2e58b0ec6d06d90cee9755c9
+bsd-2-author:
+  key: bsd-2-clause
+  matcher: dice
+  hash: 309d3b93b58ad8858d916588206a1fccf2b358f6
+bsd-3-authorowner:
+  key: bsd-3-clause
+  matcher: dice
+  hash: 2e6f215833d1a3d10e6194d479dbb2b4be2f64d7
+bsd-3-clause_markdown:
+  key: bsd-3-clause
+  matcher: dice
+  hash: 2449fc8ece2fa342f2e82bbbf86f01d19329a531
+bsd-3-lists:
+  key: bsd-3-clause
+  matcher:
+  hash:
+bsd-3-noendorseslash:
+  key: bsd-3-clause
+  matcher: dice
+  hash: cc09daf7c96498abafdb708f3578654d6d5b2a3b
+bsd-plus-patents:
+  key: other
+  matcher:
+  hash:
+bsl:
+  key: bsl-1.0
+  matcher: exact
+  hash: 27e28f20b57048cf04be07e1532b6fb501a0753b
+case-sensitive:
+  key: other
+  matcher:
+  hash: da39a3ee5e6b4b0d3255bfef95601890afd80709
+cc-by-4.0_markdown:
+  key: cc-by-4.0
+  matcher: dice
+  hash: b72312bbcd6400de2c6103f2b9981e6239d89f36
+cc-by-nc-sa:
+  key: other
+  matcher:
+  hash: c1c5bf7b6f130913568b20ed0441a6dbef5d6f11
+cc-by-nd:
+  key: other
+  matcher:
+  hash: a006cd136405570d81aafb4cfd19de78012bbbe4
+cc-by-sa-4.0_markdown:
+  key: cc-by-sa-4.0
+  matcher: dice
+  hash: 973d41ed4a3fca2a1205ace75835029d66c1e224
+cc-by-sa-mdlinks:
+  key: cc-by-sa-4.0
+  matcher: dice
+  hash: 4b0a634a0db5015914cbdde602672b2addfd66e9
+cc-by-sa-nocclicensor:
+  key: cc-by-sa-4.0
+  matcher: dice
+  hash: 9cf238d2d4dd703a149d8b5ae7d3f5a04206f772
+cc0-1.0_markdown:
+  key: cc0-1.0
+  matcher: dice
+  hash: 0df42ed381dc00ba7fe800ea65db52134eff9e90
+cc0-cal2013:
+  key: cc0-1.0
+  matcher: dice
+  hash: 1ec0b9707ba246e7f25ebcb08888badf0abaefae
+cc0-cc:
+  key: cc0-1.0
+  matcher: exact
+  hash: 34dbb82be40b15f7c521d4f2d1a36ebe76246936
+copyright-encoding:
+  key: no-license
+  matcher: copyright
+  hash: da39a3ee5e6b4b0d3255bfef95601890afd80709
+crlf-bsd:
+  key: bsd-3-clause
+  matcher: exact
+  hash: a961b19cc6921d510e29a13b0ba1a826fcffe41c
+crlf-license:
+  key: gpl-3.0
+  matcher: exact
+  hash: 7d4cdf499d39e2e1ce27b2878e22872f0f5a74dd
+description-license:
+  key: other
+  matcher:
+  hash: ab0fb718684bbc67c7dfc2e9ab2175dab4fcb819
+epl-1.0_markdown:
+  key: epl-1.0
+  matcher: dice
+  hash: bae4ee4c336e237f3693b1ba153fc144364e683b
+eupl-cal2017:
+  key: eupl-1.2
+  matcher: exact
+  hash: 7425a276b011dea63591fe8876146f2451cfd777
+fcpl-modified-mpl:
+  key: other
+  matcher:
+  hash: 97b12cefc05cdb701e4ae9a59e7c11f25cdb8edc
+gemspec:
+  key:
+  matcher:
+  hash:
+gfdl-1.3_markdown:
+  key: gfdl-1.3
+  matcher: dice
+  hash: fccaacd02277c1aff3ec015192f7c7a2fb7d0e0e
+gpl-2.0_markdown:
+  key: gpl-2.0
+  matcher: exact
+  hash: 32d258b04aadb94f8762547b9f26ac1c61a1b1f7
+gpl-2.0_markdown_headings:
+  key: gpl-2.0
+  matcher: exact
+  hash: 74e2c1e8b8ff13e284dd222f214b79e9f4d3590b
+gpl-3.0_markdown:
+  key: gpl-3.0
+  matcher: dice
+  hash: 858a252e4c484678585ddc38be7ede7deb140953
+gpl3-without-instructions:
+  key: gpl-3.0
+  matcher: exact
+  hash: 7d4cdf499d39e2e1ce27b2878e22872f0f5a74dd
+html:
+  key: epl-1.0
+  matcher: dice
+  hash: cc33ea9c29348d147e633c02c5696e76c722b00e
+lgpl:
+  key: lgpl-3.0
+  matcher: exact
+  hash: 2f434698bab479f8f6c5043f2796767287f40495
+lgpl-2.1_markdown:
+  key: lgpl-2.1
+  matcher: dice
+  hash: ad731153900d95393a8c718ccf9c35de074b8e4c
+lgpl-3.0_markdown:
+  key: lgpl-3.0
+  matcher: exact
+  hash: f91734065bdeeefeb8541cb57724030eea2cc544
+license-folder:
+  key:
+  matcher:
+  hash:
+license-in-parent-folder:
+  key: mit
+  matcher: exact
+  hash: 4c2c763d64bbc7ef2e58b0ec6d06d90cee9755c9
+license-with-readme-reference:
+  key: mit
+  matcher: exact
+  hash: 4c2c763d64bbc7ef2e58b0ec6d06d90cee9755c9
+mit:
+  key: mit
+  matcher: exact
+  hash: 4c2c763d64bbc7ef2e58b0ec6d06d90cee9755c9
+mit-optional:
+  key: mit
+  matcher: exact
+  hash: 4c2c763d64bbc7ef2e58b0ec6d06d90cee9755c9
+mit-with-copyright:
+  key: mit
+  matcher:
+  hash:
+mit_markdown:
+  key: mit
+  matcher: exact
+  hash: 4c2c763d64bbc7ef2e58b0ec6d06d90cee9755c9
+mpl-2.0_markdown:
+  key: mpl-2.0
+  matcher: exact
+  hash: 9d898bc8e265a13ed09bd9e09d64f66f8976fffe
+mpl-without-hrs:
+  key: mpl-2.0
+  matcher: exact
+  hash: 820048a1dbef5dfac65547bd9eb935beb76b2257
+multiple-arrs:
+  key: bsd-3-clause
+  matcher: exact
+  hash: a961b19cc6921d510e29a13b0ba1a826fcffe41c
+multiple-license-files:
+  key: other
+  matcher:
+  hash:
+pixar-modified-apache:
+  key: other
+  matcher:
+  hash: efb005bb5924d60314b2aaedb4fceef92c5d5631
+readme:
+  key: mit
+  matcher:
+  hash:
+readme-invalid-encoding:
+  key: mit
+  matcher:
+  hash:
+unlicense-noinfo:
+  key: unlicense
+  matcher: exact
+  hash: 859a7d829d402dd6e047293d87979dacc1b88f37
+unlicense_markdown:
+  key: unlicense
+  matcher: exact
+  hash: 859a7d829d402dd6e047293d87979dacc1b88f37
+vim:
+  key: vim
+  matcher: dice
+  hash: 6e1bfd854c9ad8626d61367ccfecc9f96e54ce92
+webmock:
+  key:
+  matcher:
+  hash:
+wrk-modified-apache:
+  key: other
+  matcher:
+  hash: '09df4f164a92a0464452178cf1e4eb58c3f25c01'

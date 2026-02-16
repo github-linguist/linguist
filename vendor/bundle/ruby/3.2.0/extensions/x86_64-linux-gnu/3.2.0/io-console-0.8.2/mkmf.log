@@ -1,0 +1,430 @@
+have_func: checking for rb_syserr_fail_str(0, Qnil)... -------------------- yes
+
+LD_LIBRARY_PATH=.:/usr/lib/x86_64-linux-gnu "x86_64-linux-gnu-gcc -o conftest -I/usr/include/x86_64-linux-gnu/ruby-3.2.0 -I/usr/include/ruby-3.2.0/ruby/backward -I/usr/include/ruby-3.2.0 -I. -Wdate-time -D_FORTIFY_SOURCE=3   -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=BUILDDIR=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=BUILDDIR=/usr/src/ruby3.2-3.2.3-1ubuntu0.24.04.6 -fPIC conftest.c  -L. -L/usr/lib/x86_64-linux-gnu -L. -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -fstack-protector-strong -rdynamic -Wl,-export-dynamic -Wl,--no-as-needed     -lruby-3.2  -lm -lpthread  -lc"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: int main(int argc, char **argv)
+4: {
+5:   return !!argv[argc];
+6: }
+/* end */
+
+LD_LIBRARY_PATH=.:/usr/lib/x86_64-linux-gnu "x86_64-linux-gnu-gcc -o conftest -I/usr/include/x86_64-linux-gnu/ruby-3.2.0 -I/usr/include/ruby-3.2.0/ruby/backward -I/usr/include/ruby-3.2.0 -I. -Wdate-time -D_FORTIFY_SOURCE=3   -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=BUILDDIR=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=BUILDDIR=/usr/src/ruby3.2-3.2.3-1ubuntu0.24.04.6 -fPIC conftest.c  -L. -L/usr/lib/x86_64-linux-gnu -L. -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -fstack-protector-strong -rdynamic -Wl,-export-dynamic -Wl,--no-as-needed     -lruby-3.2  -lm -lpthread  -lc"
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int main(int argc, char **argv)
+ 6: {
+ 7:   if (argc > 1000000) {
+ 8:     int (* volatile tp)(void)=(int (*)(void))&t;
+ 9:     printf("%d", (*tp)());
+10:   }
+11: 
+12:   return !!argv[argc];
+13: }
+14: 
+15: int t(void) { rb_syserr_fail_str(0, Qnil); return 0; }
+/* end */
+
+--------------------
+
+have_func: checking for rb_interned_str_cstr()... -------------------- yes
+
+LD_LIBRARY_PATH=.:/usr/lib/x86_64-linux-gnu "x86_64-linux-gnu-gcc -o conftest -I/usr/include/x86_64-linux-gnu/ruby-3.2.0 -I/usr/include/ruby-3.2.0/ruby/backward -I/usr/include/ruby-3.2.0 -I. -Wdate-time -D_FORTIFY_SOURCE=3   -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=BUILDDIR=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=BUILDDIR=/usr/src/ruby3.2-3.2.3-1ubuntu0.24.04.6 -fPIC conftest.c  -L. -L/usr/lib/x86_64-linux-gnu -L. -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -fstack-protector-strong -rdynamic -Wl,-export-dynamic -Wl,--no-as-needed     -lruby-3.2  -lm -lpthread  -lc"
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int main(int argc, char **argv)
+ 6: {
+ 7:   if (argc > 1000000) {
+ 8:     int (* volatile tp)(void)=(int (*)(void))&t;
+ 9:     printf("%d", (*tp)());
+10:   }
+11: 
+12:   return !!argv[argc];
+13: }
+14: int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_interned_str_cstr; return !p; }
+/* end */
+
+--------------------
+
+have_func: checking for rb_io_path() in ruby/io.h... -------------------- no
+
+LD_LIBRARY_PATH=.:/usr/lib/x86_64-linux-gnu "x86_64-linux-gnu-gcc -o conftest -I/usr/include/x86_64-linux-gnu/ruby-3.2.0 -I/usr/include/ruby-3.2.0/ruby/backward -I/usr/include/ruby-3.2.0 -I. -Wdate-time -D_FORTIFY_SOURCE=3   -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=BUILDDIR=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=BUILDDIR=/usr/src/ruby3.2-3.2.3-1ubuntu0.24.04.6 -fPIC conftest.c  -L. -L/usr/lib/x86_64-linux-gnu -L. -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -fstack-protector-strong -rdynamic -Wl,-export-dynamic -Wl,--no-as-needed     -lruby-3.2  -lm -lpthread  -lc"
+conftest.c: In function 't':
+conftest.c:16:57: error: 'rb_io_path' undeclared (first use in this function); did you mean 'rb_io_puts'?
+   16 | int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_io_path; return !p; }
+      |                                                         ^~~~~~~~~~
+      |                                                         rb_io_puts
+conftest.c:16:57: note: each undeclared identifier is reported only once for each function it appears in
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <ruby/io.h>
+ 4: 
+ 5: /*top*/
+ 6: extern int t(void);
+ 7: int main(int argc, char **argv)
+ 8: {
+ 9:   if (argc > 1000000) {
+10:     int (* volatile tp)(void)=(int (*)(void))&t;
+11:     printf("%d", (*tp)());
+12:   }
+13: 
+14:   return !!argv[argc];
+15: }
+16: int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_io_path; return !p; }
+/* end */
+
+LD_LIBRARY_PATH=.:/usr/lib/x86_64-linux-gnu "x86_64-linux-gnu-gcc -o conftest -I/usr/include/x86_64-linux-gnu/ruby-3.2.0 -I/usr/include/ruby-3.2.0/ruby/backward -I/usr/include/ruby-3.2.0 -I. -Wdate-time -D_FORTIFY_SOURCE=3   -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=BUILDDIR=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=BUILDDIR=/usr/src/ruby3.2-3.2.3-1ubuntu0.24.04.6 -fPIC conftest.c  -L. -L/usr/lib/x86_64-linux-gnu -L. -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -fstack-protector-strong -rdynamic -Wl,-export-dynamic -Wl,--no-as-needed     -lruby-3.2  -lm -lpthread  -lc"
+/usr/bin/ld: /tmp/ccehBIab.o: in function `t':
+/home/engine/project/vendor/bundle/ruby/3.2.0/gems/io-console-0.8.2/ext/io/console/conftest.c:17:(.text+0xb): undefined reference to `rb_io_path'
+collect2: error: ld returned 1 exit status
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <ruby/io.h>
+ 4: 
+ 5: /*top*/
+ 6: extern int t(void);
+ 7: int main(int argc, char **argv)
+ 8: {
+ 9:   if (argc > 1000000) {
+10:     int (* volatile tp)(void)=(int (*)(void))&t;
+11:     printf("%d", (*tp)());
+12:   }
+13: 
+14:   return !!argv[argc];
+15: }
+16: extern void rb_io_path();
+17: int t(void) { rb_io_path(); return 0; }
+/* end */
+
+--------------------
+
+have_func: checking for rb_io_descriptor() in ruby/io.h... -------------------- yes
+
+LD_LIBRARY_PATH=.:/usr/lib/x86_64-linux-gnu "x86_64-linux-gnu-gcc -o conftest -I/usr/include/x86_64-linux-gnu/ruby-3.2.0 -I/usr/include/ruby-3.2.0/ruby/backward -I/usr/include/ruby-3.2.0 -I. -Wdate-time -D_FORTIFY_SOURCE=3   -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=BUILDDIR=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=BUILDDIR=/usr/src/ruby3.2-3.2.3-1ubuntu0.24.04.6 -fPIC conftest.c  -L. -L/usr/lib/x86_64-linux-gnu -L. -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -fstack-protector-strong -rdynamic -Wl,-export-dynamic -Wl,--no-as-needed     -lruby-3.2  -lm -lpthread  -lc"
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <ruby/io.h>
+ 4: 
+ 5: /*top*/
+ 6: extern int t(void);
+ 7: int main(int argc, char **argv)
+ 8: {
+ 9:   if (argc > 1000000) {
+10:     int (* volatile tp)(void)=(int (*)(void))&t;
+11:     printf("%d", (*tp)());
+12:   }
+13: 
+14:   return !!argv[argc];
+15: }
+16: int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_io_descriptor; return !p; }
+/* end */
+
+--------------------
+
+have_func: checking for rb_io_get_write_io() in ruby/io.h... -------------------- yes
+
+LD_LIBRARY_PATH=.:/usr/lib/x86_64-linux-gnu "x86_64-linux-gnu-gcc -o conftest -I/usr/include/x86_64-linux-gnu/ruby-3.2.0 -I/usr/include/ruby-3.2.0/ruby/backward -I/usr/include/ruby-3.2.0 -I. -Wdate-time -D_FORTIFY_SOURCE=3   -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=BUILDDIR=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=BUILDDIR=/usr/src/ruby3.2-3.2.3-1ubuntu0.24.04.6 -fPIC conftest.c  -L. -L/usr/lib/x86_64-linux-gnu -L. -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -fstack-protector-strong -rdynamic -Wl,-export-dynamic -Wl,--no-as-needed     -lruby-3.2  -lm -lpthread  -lc"
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <ruby/io.h>
+ 4: 
+ 5: /*top*/
+ 6: extern int t(void);
+ 7: int main(int argc, char **argv)
+ 8: {
+ 9:   if (argc > 1000000) {
+10:     int (* volatile tp)(void)=(int (*)(void))&t;
+11:     printf("%d", (*tp)());
+12:   }
+13: 
+14:   return !!argv[argc];
+15: }
+16: int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_io_get_write_io; return !p; }
+/* end */
+
+--------------------
+
+have_func: checking for rb_io_closed_p() in ruby/io.h... -------------------- no
+
+LD_LIBRARY_PATH=.:/usr/lib/x86_64-linux-gnu "x86_64-linux-gnu-gcc -o conftest -I/usr/include/x86_64-linux-gnu/ruby-3.2.0 -I/usr/include/ruby-3.2.0/ruby/backward -I/usr/include/ruby-3.2.0 -I. -Wdate-time -D_FORTIFY_SOURCE=3   -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=BUILDDIR=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=BUILDDIR=/usr/src/ruby3.2-3.2.3-1ubuntu0.24.04.6 -fPIC conftest.c  -L. -L/usr/lib/x86_64-linux-gnu -L. -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -fstack-protector-strong -rdynamic -Wl,-export-dynamic -Wl,--no-as-needed     -lruby-3.2  -lm -lpthread  -lc"
+conftest.c: In function 't':
+conftest.c:16:57: error: 'rb_io_closed_p' undeclared (first use in this function); did you mean 'rb_io_close'?
+   16 | int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_io_closed_p; return !p; }
+      |                                                         ^~~~~~~~~~~~~~
+      |                                                         rb_io_close
+conftest.c:16:57: note: each undeclared identifier is reported only once for each function it appears in
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <ruby/io.h>
+ 4: 
+ 5: /*top*/
+ 6: extern int t(void);
+ 7: int main(int argc, char **argv)
+ 8: {
+ 9:   if (argc > 1000000) {
+10:     int (* volatile tp)(void)=(int (*)(void))&t;
+11:     printf("%d", (*tp)());
+12:   }
+13: 
+14:   return !!argv[argc];
+15: }
+16: int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_io_closed_p; return !p; }
+/* end */
+
+LD_LIBRARY_PATH=.:/usr/lib/x86_64-linux-gnu "x86_64-linux-gnu-gcc -o conftest -I/usr/include/x86_64-linux-gnu/ruby-3.2.0 -I/usr/include/ruby-3.2.0/ruby/backward -I/usr/include/ruby-3.2.0 -I. -Wdate-time -D_FORTIFY_SOURCE=3   -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=BUILDDIR=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=BUILDDIR=/usr/src/ruby3.2-3.2.3-1ubuntu0.24.04.6 -fPIC conftest.c  -L. -L/usr/lib/x86_64-linux-gnu -L. -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -fstack-protector-strong -rdynamic -Wl,-export-dynamic -Wl,--no-as-needed     -lruby-3.2  -lm -lpthread  -lc"
+/usr/bin/ld: /tmp/ccxofGHW.o: in function `t':
+/home/engine/project/vendor/bundle/ruby/3.2.0/gems/io-console-0.8.2/ext/io/console/conftest.c:17:(.text+0xb): undefined reference to `rb_io_closed_p'
+collect2: error: ld returned 1 exit status
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <ruby/io.h>
+ 4: 
+ 5: /*top*/
+ 6: extern int t(void);
+ 7: int main(int argc, char **argv)
+ 8: {
+ 9:   if (argc > 1000000) {
+10:     int (* volatile tp)(void)=(int (*)(void))&t;
+11:     printf("%d", (*tp)());
+12:   }
+13: 
+14:   return !!argv[argc];
+15: }
+16: extern void rb_io_closed_p();
+17: int t(void) { rb_io_closed_p(); return 0; }
+/* end */
+
+--------------------
+
+have_func: checking for rb_io_open_descriptor() in ruby/io.h... -------------------- no
+
+LD_LIBRARY_PATH=.:/usr/lib/x86_64-linux-gnu "x86_64-linux-gnu-gcc -o conftest -I/usr/include/x86_64-linux-gnu/ruby-3.2.0 -I/usr/include/ruby-3.2.0/ruby/backward -I/usr/include/ruby-3.2.0 -I. -Wdate-time -D_FORTIFY_SOURCE=3   -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=BUILDDIR=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=BUILDDIR=/usr/src/ruby3.2-3.2.3-1ubuntu0.24.04.6 -fPIC conftest.c  -L. -L/usr/lib/x86_64-linux-gnu -L. -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -fstack-protector-strong -rdynamic -Wl,-export-dynamic -Wl,--no-as-needed     -lruby-3.2  -lm -lpthread  -lc"
+conftest.c: In function 't':
+conftest.c:16:57: error: 'rb_io_open_descriptor' undeclared (first use in this function); did you mean 'rb_io_descriptor'?
+   16 | int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_io_open_descriptor; return !p; }
+      |                                                         ^~~~~~~~~~~~~~~~~~~~~
+      |                                                         rb_io_descriptor
+conftest.c:16:57: note: each undeclared identifier is reported only once for each function it appears in
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <ruby/io.h>
+ 4: 
+ 5: /*top*/
+ 6: extern int t(void);
+ 7: int main(int argc, char **argv)
+ 8: {
+ 9:   if (argc > 1000000) {
+10:     int (* volatile tp)(void)=(int (*)(void))&t;
+11:     printf("%d", (*tp)());
+12:   }
+13: 
+14:   return !!argv[argc];
+15: }
+16: int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_io_open_descriptor; return !p; }
+/* end */
+
+LD_LIBRARY_PATH=.:/usr/lib/x86_64-linux-gnu "x86_64-linux-gnu-gcc -o conftest -I/usr/include/x86_64-linux-gnu/ruby-3.2.0 -I/usr/include/ruby-3.2.0/ruby/backward -I/usr/include/ruby-3.2.0 -I. -Wdate-time -D_FORTIFY_SOURCE=3   -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=BUILDDIR=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=BUILDDIR=/usr/src/ruby3.2-3.2.3-1ubuntu0.24.04.6 -fPIC conftest.c  -L. -L/usr/lib/x86_64-linux-gnu -L. -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -fstack-protector-strong -rdynamic -Wl,-export-dynamic -Wl,--no-as-needed     -lruby-3.2  -lm -lpthread  -lc"
+/usr/bin/ld: /tmp/cckefCNS.o: in function `t':
+/home/engine/project/vendor/bundle/ruby/3.2.0/gems/io-console-0.8.2/ext/io/console/conftest.c:17:(.text+0xb): undefined reference to `rb_io_open_descriptor'
+collect2: error: ld returned 1 exit status
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <ruby/io.h>
+ 4: 
+ 5: /*top*/
+ 6: extern int t(void);
+ 7: int main(int argc, char **argv)
+ 8: {
+ 9:   if (argc > 1000000) {
+10:     int (* volatile tp)(void)=(int (*)(void))&t;
+11:     printf("%d", (*tp)());
+12:   }
+13: 
+14:   return !!argv[argc];
+15: }
+16: extern void rb_io_open_descriptor();
+17: int t(void) { rb_io_open_descriptor(); return 0; }
+/* end */
+
+--------------------
+
+have_func: checking for rb_ractor_local_storage_value_newkey()... -------------------- yes
+
+LD_LIBRARY_PATH=.:/usr/lib/x86_64-linux-gnu "x86_64-linux-gnu-gcc -o conftest -I/usr/include/x86_64-linux-gnu/ruby-3.2.0 -I/usr/include/ruby-3.2.0/ruby/backward -I/usr/include/ruby-3.2.0 -I. -Wdate-time -D_FORTIFY_SOURCE=3   -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=BUILDDIR=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=BUILDDIR=/usr/src/ruby3.2-3.2.3-1ubuntu0.24.04.6 -fPIC conftest.c  -L. -L/usr/lib/x86_64-linux-gnu -L. -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -fstack-protector-strong -rdynamic -Wl,-export-dynamic -Wl,--no-as-needed     -lruby-3.2  -lm -lpthread  -lc"
+conftest.c: In function 't':
+conftest.c:14:57: error: 'rb_ractor_local_storage_value_newkey' undeclared (first use in this function)
+   14 | int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_ractor_local_storage_value_newkey; return !p; }
+      |                                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+conftest.c:14:57: note: each undeclared identifier is reported only once for each function it appears in
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int main(int argc, char **argv)
+ 6: {
+ 7:   if (argc > 1000000) {
+ 8:     int (* volatile tp)(void)=(int (*)(void))&t;
+ 9:     printf("%d", (*tp)());
+10:   }
+11: 
+12:   return !!argv[argc];
+13: }
+14: int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_ractor_local_storage_value_newkey; return !p; }
+/* end */
+
+LD_LIBRARY_PATH=.:/usr/lib/x86_64-linux-gnu "x86_64-linux-gnu-gcc -o conftest -I/usr/include/x86_64-linux-gnu/ruby-3.2.0 -I/usr/include/ruby-3.2.0/ruby/backward -I/usr/include/ruby-3.2.0 -I. -Wdate-time -D_FORTIFY_SOURCE=3   -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=BUILDDIR=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=BUILDDIR=/usr/src/ruby3.2-3.2.3-1ubuntu0.24.04.6 -fPIC conftest.c  -L. -L/usr/lib/x86_64-linux-gnu -L. -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -fstack-protector-strong -rdynamic -Wl,-export-dynamic -Wl,--no-as-needed     -lruby-3.2  -lm -lpthread  -lc"
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int main(int argc, char **argv)
+ 6: {
+ 7:   if (argc > 1000000) {
+ 8:     int (* volatile tp)(void)=(int (*)(void))&t;
+ 9:     printf("%d", (*tp)());
+10:   }
+11: 
+12:   return !!argv[argc];
+13: }
+14: extern void rb_ractor_local_storage_value_newkey();
+15: int t(void) { rb_ractor_local_storage_value_newkey(); return 0; }
+/* end */
+
+--------------------
+
+LD_LIBRARY_PATH=.:/usr/lib/x86_64-linux-gnu "x86_64-linux-gnu-gcc -I/usr/include/x86_64-linux-gnu/ruby-3.2.0 -I/usr/include/ruby-3.2.0/ruby/backward -I/usr/include/ruby-3.2.0 -I. -Wdate-time -D_FORTIFY_SOURCE=3   -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=BUILDDIR=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=BUILDDIR=/usr/src/ruby3.2-3.2.3-1ubuntu0.24.04.6 -fPIC   -c conftest.c"
+conftest.c:5:3: error: #error 
+    5 | # error
+      |   ^~~~~
+conftest.c:6:1: error: expected identifier or '(' before '|' token
+    6 | |:/ === _WIN32 undefined === /:|
+      | ^
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: /*top*/
+4: #ifndef _WIN32
+5: # error
+6: |:/ === _WIN32 undefined === /:|
+7: #endif
+/* end */
+
+have_header: checking for termios.h... -------------------- yes
+
+LD_LIBRARY_PATH=.:/usr/lib/x86_64-linux-gnu "x86_64-linux-gnu-gcc -I/usr/include/x86_64-linux-gnu/ruby-3.2.0 -I/usr/include/ruby-3.2.0/ruby/backward -I/usr/include/ruby-3.2.0 -I. -Wdate-time -D_FORTIFY_SOURCE=3   -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=BUILDDIR=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=BUILDDIR=/usr/src/ruby3.2-3.2.3-1ubuntu0.24.04.6 -fPIC   -c conftest.c"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <termios.h>
+/* end */
+
+--------------------
+
+have_func: checking for cfmakeraw() in termios.h... -------------------- yes
+
+LD_LIBRARY_PATH=.:/usr/lib/x86_64-linux-gnu "x86_64-linux-gnu-gcc -o conftest -I/usr/include/x86_64-linux-gnu/ruby-3.2.0 -I/usr/include/ruby-3.2.0/ruby/backward -I/usr/include/ruby-3.2.0 -I. -Wdate-time -D_FORTIFY_SOURCE=3   -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=BUILDDIR=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=BUILDDIR=/usr/src/ruby3.2-3.2.3-1ubuntu0.24.04.6 -fPIC conftest.c  -L. -L/usr/lib/x86_64-linux-gnu -L. -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -fstack-protector-strong -rdynamic -Wl,-export-dynamic -Wl,--no-as-needed     -lruby-3.2  -lm -lpthread  -lc"
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <termios.h>
+ 4: 
+ 5: /*top*/
+ 6: extern int t(void);
+ 7: int main(int argc, char **argv)
+ 8: {
+ 9:   if (argc > 1000000) {
+10:     int (* volatile tp)(void)=(int (*)(void))&t;
+11:     printf("%d", (*tp)());
+12:   }
+13: 
+14:   return !!argv[argc];
+15: }
+16: int t(void) { void ((*volatile p)()); p = (void ((*)()))cfmakeraw; return !p; }
+/* end */
+
+--------------------
+
+have_header: checking for sys/ioctl.h... -------------------- yes
+
+LD_LIBRARY_PATH=.:/usr/lib/x86_64-linux-gnu "x86_64-linux-gnu-gcc -I/usr/include/x86_64-linux-gnu/ruby-3.2.0 -I/usr/include/ruby-3.2.0/ruby/backward -I/usr/include/ruby-3.2.0 -I. -Wdate-time -D_FORTIFY_SOURCE=3   -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=BUILDDIR=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=BUILDDIR=/usr/src/ruby3.2-3.2.3-1ubuntu0.24.04.6 -fPIC   -c conftest.c"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <sys/ioctl.h>
+/* end */
+
+--------------------
+
+have_macro: checking for HAVE_RUBY_FIBER_SCHEDULER_H... -------------------- yes
+
+LD_LIBRARY_PATH=.:/usr/lib/x86_64-linux-gnu "x86_64-linux-gnu-gcc -I/usr/include/x86_64-linux-gnu/ruby-3.2.0 -I/usr/include/ruby-3.2.0/ruby/backward -I/usr/include/ruby-3.2.0 -I. -Wdate-time -D_FORTIFY_SOURCE=3   -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=BUILDDIR=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=BUILDDIR=/usr/src/ruby3.2-3.2.3-1ubuntu0.24.04.6 -fPIC   -c conftest.c"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: /*top*/
+4: #ifndef HAVE_RUBY_FIBER_SCHEDULER_H
+5: # error
+6: |:/ === HAVE_RUBY_FIBER_SCHEDULER_H undefined === /:|
+7: #endif
+/* end */
+
+--------------------
+
+have_func: checking for ttyname_r()... -------------------- yes
+
+LD_LIBRARY_PATH=.:/usr/lib/x86_64-linux-gnu "x86_64-linux-gnu-gcc -o conftest -I/usr/include/x86_64-linux-gnu/ruby-3.2.0 -I/usr/include/ruby-3.2.0/ruby/backward -I/usr/include/ruby-3.2.0 -I. -Wdate-time -D_FORTIFY_SOURCE=3   -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=BUILDDIR=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=BUILDDIR=/usr/src/ruby3.2-3.2.3-1ubuntu0.24.04.6 -fPIC conftest.c  -L. -L/usr/lib/x86_64-linux-gnu -L. -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -fstack-protector-strong -rdynamic -Wl,-export-dynamic -Wl,--no-as-needed     -lruby-3.2  -lm -lpthread  -lc"
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int main(int argc, char **argv)
+ 6: {
+ 7:   if (argc > 1000000) {
+ 8:     int (* volatile tp)(void)=(int (*)(void))&t;
+ 9:     printf("%d", (*tp)());
+10:   }
+11: 
+12:   return !!argv[argc];
+13: }
+14: int t(void) { void ((*volatile p)()); p = (void ((*)()))ttyname_r; return !p; }
+/* end */
+
+--------------------
+

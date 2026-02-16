@@ -1,0 +1,15 @@
+macro(ENABLE_WARNINGS flag)
+	add_c_flag_if_supported(-W${flag})
+endmacro()
+
+macro(DISABLE_WARNINGS flag)
+	add_c_flag_if_supported(-Wno-${flag})
+endmacro()
+
+if(ENABLE_WERROR)
+	if(MSVC)
+		add_compile_options(-WX)
+	else()
+		add_c_flag_if_supported(-Werror)
+	endif()
+endif()

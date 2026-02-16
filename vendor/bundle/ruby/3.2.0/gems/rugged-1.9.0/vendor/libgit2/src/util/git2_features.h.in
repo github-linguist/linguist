@@ -1,0 +1,79 @@
+#ifndef INCLUDE_features_h__
+#define INCLUDE_features_h__
+
+#cmakedefine GIT_DEBUG_POOL 1
+#cmakedefine GIT_DEBUG_STRICT_ALLOC 1
+#cmakedefine GIT_DEBUG_STRICT_OPEN 1
+
+#cmakedefine GIT_THREADS 1
+#cmakedefine GIT_WIN32_LEAKCHECK 1
+
+#cmakedefine GIT_ARCH_64 1
+#cmakedefine GIT_ARCH_32 1
+
+#cmakedefine GIT_USE_ICONV 1
+#cmakedefine GIT_USE_NSEC 1
+#cmakedefine GIT_USE_STAT_MTIM 1
+#cmakedefine GIT_USE_STAT_MTIMESPEC 1
+#cmakedefine GIT_USE_STAT_MTIME_NSEC 1
+#cmakedefine GIT_USE_FUTIMENS 1
+
+#cmakedefine GIT_REGEX_REGCOMP_L
+#cmakedefine GIT_REGEX_REGCOMP
+#cmakedefine GIT_REGEX_PCRE
+#cmakedefine GIT_REGEX_PCRE2
+#cmakedefine GIT_REGEX_BUILTIN 1
+
+#cmakedefine GIT_QSORT_BSD
+#cmakedefine GIT_QSORT_GNU
+#cmakedefine GIT_QSORT_C11
+#cmakedefine GIT_QSORT_MSC
+
+#cmakedefine GIT_SSH 1
+#cmakedefine GIT_SSH_EXEC 1
+#cmakedefine GIT_SSH_LIBSSH2 1
+#cmakedefine GIT_SSH_LIBSSH2_MEMORY_CREDENTIALS 1
+
+#cmakedefine GIT_NTLM 1
+#cmakedefine GIT_GSSAPI 1
+#cmakedefine GIT_GSSFRAMEWORK 1
+
+#cmakedefine GIT_WINHTTP 1
+#cmakedefine GIT_HTTPS 1
+#cmakedefine GIT_OPENSSL 1
+#cmakedefine GIT_OPENSSL_DYNAMIC 1
+#cmakedefine GIT_SECURE_TRANSPORT 1
+#cmakedefine GIT_MBEDTLS 1
+#cmakedefine GIT_SCHANNEL 1
+
+#cmakedefine GIT_HTTPPARSER_HTTPPARSER 1
+#cmakedefine GIT_HTTPPARSER_LLHTTP 1
+#cmakedefine GIT_HTTPPARSER_BUILTIN 1
+
+#cmakedefine GIT_SHA1_COLLISIONDETECT 1
+#cmakedefine GIT_SHA1_WIN32 1
+#cmakedefine GIT_SHA1_COMMON_CRYPTO 1
+#cmakedefine GIT_SHA1_OPENSSL 1
+#cmakedefine GIT_SHA1_OPENSSL_FIPS 1
+#cmakedefine GIT_SHA1_OPENSSL_DYNAMIC 1
+#cmakedefine GIT_SHA1_MBEDTLS 1
+
+#cmakedefine GIT_SHA256_BUILTIN 1
+#cmakedefine GIT_SHA256_WIN32 1
+#cmakedefine GIT_SHA256_COMMON_CRYPTO 1
+#cmakedefine GIT_SHA256_OPENSSL 1
+#cmakedefine GIT_SHA256_OPENSSL_FIPS 1
+#cmakedefine GIT_SHA256_OPENSSL_DYNAMIC 1
+#cmakedefine GIT_SHA256_MBEDTLS 1
+
+#cmakedefine GIT_COMPRESSION_BUILTIN 1
+#cmakedefine GIT_COMPRESSION_ZLIB 1
+
+#cmakedefine GIT_RAND_GETENTROPY 1
+#cmakedefine GIT_RAND_GETLOADAVG 1
+
+#cmakedefine GIT_IO_POLL 1
+#cmakedefine GIT_IO_WSAPOLL 1
+#cmakedefine GIT_IO_SELECT 1
+
+#endif
