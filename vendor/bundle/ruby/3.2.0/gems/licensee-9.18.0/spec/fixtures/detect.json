@@ -1,0 +1,107 @@
+{
+  "licenses": [
+    {
+      "key": "mit",
+      "spdx_id": "MIT",
+      "meta": {
+        "title": "MIT License",
+        "source": "https://spdx.org/licenses/MIT.html",
+        "description": "A short and simple permissive license with conditions only requiring preservation of copyright and license notices. Licensed works, modifications, and larger works may be distributed under different terms and without source code.",
+        "how": "Create a text file (typically named LICENSE or LICENSE.txt) in the root of your source code and copy the text of the license into the file. Replace [year] with the current year and [fullname] with the name (or names) of the copyright holders.",
+        "using": {
+          "Babel": "https://github.com/babel/babel/blob/master/LICENSE",
+          ".NET": "https://github.com/dotnet/runtime/blob/main/LICENSE.TXT",
+          "Rails": "https://github.com/rails/rails/blob/master/MIT-LICENSE"
+        },
+        "featured": true,
+        "hidden": false,
+        "nickname": null,
+        "note": null
+      },
+      "url": "http://choosealicense.com/licenses/mit/",
+      "rules": {
+        "permissions": [
+          {
+            "tag": "commercial-use",
+            "label": "Commercial use",
+            "description": "The licensed material and derivatives may be used for commercial purposes."
+          },
+          {
+            "tag": "modifications",
+            "label": "Modification",
+            "description": "The licensed material may be modified."
+          },
+          {
+            "tag": "distribution",
+            "label": "Distribution",
+            "description": "The licensed material may be distributed."
+          },
+          {
+            "tag": "private-use",
+            "label": "Private use",
+            "description": "The licensed material may be used and modified in private."
+          }
+        ],
+        "conditions": [
+          {
+            "tag": "include-copyright",
+            "label": "License and copyright notice",
+            "description": "A copy of the license and copyright notice must be included with the licensed material."
+          }
+        ],
+        "limitations": [
+          {
+            "tag": "liability",
+            "label": "Liability",
+            "description": "This license includes a limitation of liability."
+          },
+          {
+            "tag": "warranty",
+            "label": "Warranty",
+            "description": "This license explicitly states that it does NOT provide any warranty."
+          }
+        ]
+      },
+      "fields": [
+        {
+          "name": "year",
+          "description": "The current year"
+        },
+        {
+          "name": "fullname",
+          "description": "The full name or username of the repository owner"
+        }
+      ],
+      "other": false,
+      "gpl": false,
+      "lgpl": false,
+      "cc": false
+    }
+  ],
+  "matched_files": [
+    {
+      "filename": "LICENSE.md",
+      "content": "MIT License\n\nCopyright (c) 2014-2021 Ben Balter and Licensee contributors\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n",
+      "content_hash": "4c2c763d64bbc7ef2e58b0ec6d06d90cee9755c9",
+      "content_normalized": "permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'software'), to deal in the software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the software, and to permit persons to whom the software is furnished to do so, subject to the following conditions: the above copyright notice and this permission notice shall be included in all copies or substantial portions of the software. the software is provided 'as is', without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement. in no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the software.",
+      "matcher": {
+        "name": "exact",
+        "confidence": 100
+      },
+      "matched_license": "MIT",
+      "attribution": "Copyright (c) 2014-2021 Ben Balter and Licensee contributors"
+    },
+    {
+      "filename": "licensee.gemspec",
+      "content": "# frozen_string_literal: true\n\nrequire File.expand_path('lib/licensee/version', __dir__)\n\nGem::Specification.new do |gem|\n  gem.name    = 'licensee'\n  gem.version = Licensee::VERSION\n\n  gem.summary = 'A Ruby Gem to detect open source project licenses'\n  gem.description = <<-DESC\n    Licensee automates the process of reading LICENSE files and\n    compares their contents to known licenses using a fancy maths.\n  DESC\n\n  gem.authors  = ['Ben Balter']\n  gem.email    = 'ben.balter@github.com'\n  gem.homepage = 'https://github.com/benbalter/licensee'\n  gem.license  = 'MIT'\n  gem.metadata['rubygems_mfa_required'] = 'true'\n\n  gem.bindir = 'bin'\n  gem.executables << 'licensee'\n\n  gem.add_dependency('dotenv', '>= 2', '< 4')\n  gem.add_dependency('octokit', '>= 4.20', '< 10.0')\n  gem.add_dependency('reverse_markdown', '>= 1', '< 4')\n  gem.add_dependency('rugged', '>= 0.24', '<2.0')\n  gem.add_dependency('thor', '>= 0.19', '< 2.0')\n\n  gem.add_development_dependency('gem-release', '~> 2.0')\n  gem.add_development_dependency('mustache', '>= 0.9', '< 2.0')\n  gem.add_development_dependency('pry', '~> 0.9')\n  gem.add_development_dependency('rspec', '~> 3.5')\n  gem.add_development_dependency('rubocop', '~> 1.0')\n  gem.add_development_dependency('rubocop-performance', '~> 1.5')\n  gem.add_development_dependency('rubocop-rspec', '~> 3.0')\n  gem.add_development_dependency('simplecov', '~> 0.16')\n  gem.add_development_dependency('webmock', '~> 3.1')\n\n  gem.required_ruby_version = '>= 3.0'\n\n  # ensure the gem is built out of versioned files\n  gem.files = Dir[\n    '{bin,lib,man,test,vendor,spec}/**/*',\n    'README*', 'LICENSE*'\n  ] & `git ls-files -z`.split(\"\\0\")\nend\n",
+      "content_hash": null,
+      "content_normalized": null,
+      "matcher": {
+        "name": "gemspec",
+        "confidence": 90
+      },
+      "matched_license": "MIT",
+      "attribution": null
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+function(ADD_CLAR_TEST project name)
+        if(NOT USE_LEAK_CHECKER STREQUAL "OFF")
+                add_test(${name} "${PROJECT_SOURCE_DIR}/script/${USE_LEAK_CHECKER}.sh" "${PROJECT_BINARY_DIR}/${project}" ${ARGN})
+        else()
+                add_test(${name} "${PROJECT_BINARY_DIR}/${project}" ${ARGN})
+        endif()
+endfunction(ADD_CLAR_TEST)

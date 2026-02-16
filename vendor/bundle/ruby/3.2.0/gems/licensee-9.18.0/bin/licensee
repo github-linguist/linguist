@@ -1,0 +1,44 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'dotenv/load'
+require 'thor'
+require 'json'
+
+require_relative '../lib/licensee'
+
+class LicenseeCLI < Thor
+  package_name 'Licensee'
+  class_option :remote, type: :boolean, desc: 'Assume PATH is a GitHub owner/repo path'
+  default_task :detect
+
+  def self.exit_on_failure?
+    true
+  end
+
+  private
+
+  def path
+    @path ||= if !options[:remote] || args.first =~ %r{^https://}
+                args.first || Dir.pwd
+              else
+                "https://github.com/#{args.first}"
+              end
+  end
+
+  def project
+    @project ||= Licensee.project(path,
+                                  detect_packages: options[:packages],
+                                  detect_readme:   options[:readme],
+                                  ref:             options[:ref])
+  end
+
+  def remote?
+    path =~ %r{^https://}
+  end
+end
+
+commands_dir = File.expand_path '../lib/licensee/commands/', __dir__
+Dir["#{commands_dir}/*.rb"].each { |c| require(c) }
+
+LicenseeCLI.start(ARGV)

@@ -1,0 +1,11 @@
+prefix="/usr/local"
+libdir="/usr/local/lib"
+includedir="/usr/local/include"
+
+Name: libgit2
+Description: The git library, take 2
+Version: 1.9.0
+Libs: -L${libdir} -lgit2
+Libs.private: -lrt
+Requires.private: openssl zlib
+Cflags: -I${includedir} 

@@ -1,0 +1,59 @@
+#include <winver.h>
+#include "../../include/git2/version.h"
+
+#ifndef LIBGIT2_FILENAME
+# ifdef __GNUC__
+#  define LIBGIT2_FILENAME git2
+# else
+#  define LIBGIT2_FILENAME "git2"
+# endif
+#endif
+
+#ifndef LIBGIT2_COMMENTS
+# define LIBGIT2_COMMENTS "For more information visit https://libgit2.org/"
+#endif
+
+#ifdef __GNUC__
+# define _STR(x) #x
+# define STR(x) _STR(x)
+#else
+# define STR(x) x
+#endif
+
+#ifdef __GNUC__
+VS_VERSION_INFO		VERSIONINFO
+#else
+VS_VERSION_INFO		VERSIONINFO	MOVEABLE IMPURE LOADONCALL DISCARDABLE
+#endif
+  FILEVERSION		LIBGIT2_VERSION_MAJOR,LIBGIT2_VERSION_MINOR,LIBGIT2_VERSION_REVISION,LIBGIT2_VERSION_PATCH
+  PRODUCTVERSION	LIBGIT2_VERSION_MAJOR,LIBGIT2_VERSION_MINOR,LIBGIT2_VERSION_REVISION,LIBGIT2_VERSION_PATCH
+  FILEFLAGSMASK		VS_FFI_FILEFLAGSMASK
+#ifdef _DEBUG
+  FILEFLAGS		VS_FF_DEBUG
+#else
+  FILEFLAGS		0
+#endif
+  FILEOS		VOS_NT_WINDOWS32
+  FILETYPE		VFT_DLL
+  FILESUBTYPE	VFT2_UNKNOWN
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "040904E4"
+    //language ID = U.S. English, char set = Windows, Multilingual
+    BEGIN
+      VALUE "FileDescription",	"libgit2 - the Git linkable library\0"
+      VALUE "FileVersion",	LIBGIT2_VERSION "\0"
+      VALUE "InternalName",	STR(LIBGIT2_FILENAME) ".dll\0"
+      VALUE "LegalCopyright",	"Copyright (C) the libgit2 contributors. All rights reserved.\0"
+      VALUE "OriginalFilename",	STR(LIBGIT2_FILENAME) ".dll\0"
+      VALUE "ProductName",	"libgit2\0"
+      VALUE "ProductVersion",	LIBGIT2_VERSION "\0"
+      VALUE "Comments",		LIBGIT2_COMMENTS "\0"
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x0409, 1252
+  END
+END
