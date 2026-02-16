@@ -664,6 +664,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Vim Help File:** [Alhadis/language-viml](https://github.com/Alhadis/language-viml)
 - **Vim Script:** [Alhadis/language-viml](https://github.com/Alhadis/language-viml)
 - **Vim Snippet:** [Alhadis/language-viml](https://github.com/Alhadis/language-viml)
+- **Vim9 Script:** [DanBradbury/language-vim9](https://github.com/DanBradbury/language-vim9)
 - **Visual Basic .NET:** [peters-ben-0007/VBDotNetSyntax](https://github.com/peters-ben-0007/VBDotNetSyntax)
 - **Visual Basic 6.0:** [serkonda7/vscode-vba](https://github.com/serkonda7/vscode-vba)
 - **Volt:** [textmate/d.tmbundle](https://github.com/textmate/d.tmbundle)
