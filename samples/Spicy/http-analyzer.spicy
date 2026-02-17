@@ -1,0 +1,213 @@
+# Copyright (c) 2021 by the Zeek Project. See LICENSE for details.
+
+module HTTP;
+
+import spicy;
+import filter;
+
+type DeliveryMode = enum { EndOfData, Length, Multipart, Chunked };
+
+const Token      = /[^ \t\r\n]+/;
+const URI        = /[^ \t\r\n]+/;
+const NewLine    = /\r?\n/;
+const RestOfLine = /[^\r\n]*/;
+const FullLine   = /[^\r\n]*\r?\n/;
+const Integer    = /[0-9]+/;
+const HexInteger = /[0-9a-zA-Z]+/;
+const WhiteSpace = /[ \t]+/;
+const OptionalWhiteSpace = /[ \t]*/;
+
+function reply_code_needs_body(status: uint64) : bool {
+   return status <= 99 || (status >= 200 && status != 204 && status != 304);
+}
+
+public type Requests = unit {
+    %port = 80/tcp &originator;
+
+    :  Request[];
+};
+
+type Request = unit {
+    request: RequestLine;
+    message: Message(False, True);
+};
+
+public type Replies = unit {
+    %port = 80/tcp &responder;
+
+    :  Reply[];
+};
+
+type Reply = unit {
+    reply: ReplyLine;
+    message: Message(reply_code_needs_body(self.reply.status), False);
+};
+
+type Version = unit {
+    :        /HTTP\//;
+    number: /[0-9]+\.[0-9]*/;
+};
+
+type RequestLine = unit {
+    method:  Token;
+    :        WhiteSpace;
+    uri:     URI;
+    :        WhiteSpace;
+    version: Version;
+    :        NewLine;
+};
+
+type ReplyLine = unit {
+    version: Version;
+    :        WhiteSpace;
+    status:  Integer &convert=$$.to_uint();
+    :        OptionalWhiteSpace;
+    reason:  RestOfLine;
+    :        NewLine;
+};
+
+type Message = unit(body_default: bool, is_request: bool) {
+    headers:    (Header(self))[];
+    end_of_hdr: NewLine;
+    body:       Body(self, self.delivery_mode, is_request) if ( self.has_body );
+
+    var has_body: bool;
+    var is_request: bool;
+
+	var content_encoding: bytes &optional;
+	var use_content_length: bool = True;
+    var body_len: uint64 &optional;
+    var content_length: uint64 &optional;
+    var content_type: tuple<bytes, bytes> = (b"TEXT", b"PLAIN");
+    var content_type_parameter: bytes &optional;
+    var delivery_mode: DeliveryMode = DeliveryMode::EndOfData;
+    var multipart_boundary: bytes &optional;
+    var transfer_encoding: bytes &optional;
+
+    on %init {
+        self.has_body = body_default;
+        self.is_request = is_request;
+        }
+
+    on end_of_hdr {
+        if ( self?.content_length )
+            self.delivery_mode = DeliveryMode::Length;
+
+        if ( self.content_type[0] == b"MULTIPART" ) {
+            local boundary = self.content_type_parameter.match(/boundary="([^"]*)"/, 1);
+
+            if ( ! boundary )
+                boundary = self.content_type_parameter.match(/boundary=([^ ;]*)/, 1);
+
+            self.delivery_mode = DeliveryMode::Multipart;
+            self.multipart_boundary = b"--" + *boundary + b"--\r\n";
+        }
+
+        if ( self?.transfer_encoding && self.transfer_encoding == b"chunked" )
+            self.delivery_mode = DeliveryMode::Chunked;
+    }
+};
+
+const HeaderName  = /[^:\r\n]+/;
+const HeaderValue = /[^\r\n]*/;
+
+type Header = unit(inout msg: Message) {
+    name:    HeaderName;
+    :        /:[\t ]*/;
+    content: HeaderValue;
+    :        NewLine;
+
+    on content {
+        local name = self.name.upper();
+
+        if ( name == b"CONTENT-LENGTH" ) {
+            msg.content_length = self.content.to_uint();
+            msg.has_body = True;
+            }
+
+        if ( name == b"TRANSFER-ENCODING" ) {
+            msg.transfer_encoding = self.content;
+            msg.has_body = True;
+            }
+
+        if ( name == b"CONTENT-ENCODING" )
+            msg.content_encoding = self.content;
+
+        if ( name == b"CONTENT-TYPE" ) {
+            local ct: tuple<bytes,bytes> = self.content.split1(b";");
+            local ty: tuple<bytes,bytes> = ct[0].split1(b"/");
+            msg.content_type = (ty[0].strip().upper(), ty[1].strip().upper());
+            msg.content_type_parameter = ct[1].strip();
+            }
+        }
+};
+
+type Body = unit(inout msg: Message, delivery_mode: DeliveryMode, is_request: bool) {
+    switch ( delivery_mode ) {
+
+      DeliveryMode::EndOfData -> : bytes &eod &chunked -> self.data;
+
+      DeliveryMode::Length    -> : bytes &size=msg.content_length &eod &chunked -> self.data;
+
+      DeliveryMode::Multipart -> : FullLine[] &until=($$ == msg.multipart_boundary)
+                                   foreach { self.data.write($$); }
+
+      DeliveryMode::Chunked   -> : Chunks(self, msg);
+    };
+
+    sink data;
+
+    on %init priority=20 {
+        if ( msg.content_type[0] != b"" && msg.content_type[1] != b"" )
+            self.data.connect_mime_type(msg.content_type[0] + b"/" + msg.content_type[1]);
+
+        if ( msg?.content_encoding ) {
+		    if ( msg.content_encoding == b"gzip" ) {
+                self.data.connect_filter(new filter::Zlib);
+                msg.use_content_length = False;
+				}
+
+		    if ( msg.content_encoding == b"deflate" ) {
+                self.data.connect_filter(new filter::Zlib);
+                msg.use_content_length = False;
+				}
+        }
+
+        self.data.connect(new Content(msg));
+    }
+
+	on %done priority=15 {
+		msg.body_len = |self.data|;
+ 		}
+
+	on %error priority=15 {
+		msg.body_len = |self.data|;
+ 		}
+};
+
+type Content = unit(msg: Message) {
+    data: bytes &chunked &eod {
+        if ( |self.data| > 0 ) {
+            self.have_content = True;
+            # Bro::file_data_in(self.data);
+            }
+	}
+
+    var have_content: bool = False;
+};
+
+type Chunks = unit(inout body: Body, inout msg: Message) {
+    :        (Chunk(body))[] &until=($$.length == 0);
+    trailer: (Header(msg))[]
+                foreach { msg.headers.push_back($$); }
+    :        NewLine;
+};
+
+type Chunk = unit(inout body: Body) {
+    length:    HexInteger &convert=$$.to_uint(16);
+    :          OptionalWhiteSpace;
+    extension: RestOfLine;
+    :          NewLine;
+    :          bytes &size=self.length &eod &chunked -> body.data;
+    :          NewLine if ( self.length != 0 );
+};
