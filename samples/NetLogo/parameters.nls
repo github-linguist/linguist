@@ -1,0 +1,1072 @@
+breed [farmers farmer]                                  ;; ceate a breed to represent the farmers
+breed [RiverVolumes RiverVolume]                        ;; ceate a breed to represent river volumes
+breed [IrrigationVolumes IrrigationVolume]              ;; ceate a breed to represent irrigation volumes
+breed [StorageVolumes StorageVolume]                    ;; ceate a breed to represent storage volumes
+breed [BarleyPlants BarleyPlant]                        ;; ceate a breed to represent the barley
+breed [HarvestBarleyRecords HarvestBarleyRecord]        ;; create a breed to record if there is a harvest in the barley field
+breed [ComparisonRecords ComparisonRecord]              ;; create a breed to record if there is a comparison
+
+
+globals
+[
+  time
+  day
+  Year
+  InitialLandscape                                           ;; land type variable for reading the file is then coverted to a patch variable
+  ExpandedLandscape
+  folderPath                                                 ;; the path where the files will be written to
+  Q_randomizer                                               ;; the actual random value for deviation of Qin_average
+  RandomSeedVariable                                         ;; the random seed variable
+  FarmerAverageAvailableWater                                ;; the average available water for a farmer
+  SowingChoice                                               ;; the choice of new sowing to cultivate if a fallow field is ready to be cultivated
+  IrrigationStatus                                           ;; varaible used to present fields irrigated or not
+  StartTotalBarley                                           ;; the aggregated amount of barley of all the farmers at the start  
+  FarmerBarley                                               ;; variable used to store the barley of a farmer when he makes a decision on sowing barley after the first harvest
+  BarleyFarmerPerYear                                        ;; barley amount of each farmer per year               
+  TotalBarleyYieldPerFarmerPerYear
+  AverageBarleyPerField                                              ;; the average barley per field per farmer per year, use to strict the expanding condition
+  TotalBarleyPerFarmer                                               ;; the amount of barley harvest a farmer 
+  
+  BarleyYieldPerYearF1                                             ;; the 1st farmer's yields per year
+  BarleyYieldPerYearF2                                             ;; the 2nd farmer's yields per year
+  BarleyYieldPerYearF3                                             ;; the 3rd farmer's yields per year
+  BarleyYieldPerYearF4                                             ;; the 4th farmer's yields per year
+  BarleyYieldPerYearF5                                             ;; the 5th farmer's yields per year
+  BarleyYieldPerYearF6                                             ;; the 6th farmer's yields per year
+  BarleyYieldPerYearF7                                             ;; the 7th farmer's yields per year
+  BarleyYieldPerYearF8                                             ;; the 8th farmer's yields per year
+  BarleyYieldPerYearF9                                             ;; the 9th farmer's yields per year
+  BarleyYieldPerYearF10                                            ;; the 10th farmer's yields per year  
+  BarleyYieldPerYearF11                                            ;; the 11th farmer's yields per year 
+  BarleyYieldPerYearF12                                            ;; the 12th farmer's yields per year 
+  BarleyYieldPerYearF13                                            ;; the 13th farmer's yields per year
+  BarleyYieldPerYearF14                                            ;; the 14th farmer's yields per year  
+  BarleyYieldPerYearF15                                            ;; the 15th farmer's yields per year 
+  BarleyYieldPerYearF16                                            ;; the 16th farmer's yields per year 
+  BarleyYieldPerYearF17                                            ;; the 17th farmer's yields per year 
+  BarleyYieldPerYearF18                                            ;; the 18th farmer's yields per year 
+  BarleyYieldPerYearF19                                            ;; the 19th farmer's yields per year
+  BarleyYieldPerYearF20                                            ;; the 19th farmer's yields per year
+  BarleyYieldPerYearF21                                            ;; the 19th farmer's yields per year
+  BarleyYieldPerYearF22                                            ;; the 19th farmer's yields per year
+  
+  FarmersBarleyYieldList                                           ;; the list for F1-10's yields
+  UpstreamFarmersBarleyYieldList                                   ;; the yields list for upstream farmers: F1 F2 F3
+  MiddlestreamFarmersBarleyYieldList                               ;; the yields list for middle stream farmers: F4 F5 F6 F7
+  DownstreamFarmersBarleyYieldList                                 ;; the yields list for downstream farmers: F8 F9 F10
+
+  MiddlestreamF12-13BarleyYieldList                                ;; the yields list for middle stream farmers: F12 13
+  MiddlestreamF12-14BarleyYieldList                                ;; the yields list for middle stream farmers: F12 13 14                                
+  UpstreamF11-12BarleyYieldList                                    ;; the yields list for upstream farmers:F11 12  
+  MiddlestreamF13-14BarleyYieldList                                ;; the yields list for middle stream farmers: F13 14
+  DownstreamF15-16BarleyYieldList                                  ;; the yields list for downstream farmers: F15 1
+
+  NumberofHarvestFieldsF1                                          ;; the 1st farmers' harvest fields
+  NumberofHarvestFieldsF2                                          ;; the 2nd farmers' harvest fields
+  NumberofHarvestFieldsF3                                          ;; the 3rd farmers' harvest fields
+  NumberofHarvestFieldsF4                                          ;; the 4th farmers' harvest fields
+  NumberofHarvestFieldsF5                                          ;; the 5th farmers' harvest fields
+  NumberofHarvestFieldsF6                                          ;; the 6th farmers' harvest fields
+  NumberofHarvestFieldsF7                                          ;; the 7th farmers' harvest fields
+  NumberofHarvestFieldsF8                                          ;; the 8th farmers' harvest fields
+  NumberofHarvestFieldsF9                                          ;; the 9th farmers' harvest fields
+  NumberofHarvestFieldsF10                                         ;; the 10th farmers' harvest fields
+  NumberofHarvestFieldsF11                                         ;; the 11th farmers' harvest fields
+  NumberofHarvestFieldsF12                                         ;; the 12th farmers' harvest fields
+  NumberofHarvestFieldsF13                                         ;; the 13th farmers' harvest fields
+  NumberofHarvestFieldsF14                                         ;; the 14th farmers' harvest fields
+  NumberofHarvestFieldsF15                                         ;; the 15th farmers' harvest fields
+  NumberofHarvestFieldsF16                                         ;; the 16th farmers' harvest fields
+  NumberofHarvestFieldsF17                                         ;; the 17th farmers' harvest fields
+  NumberofHarvestFieldsF18                                         ;; the 18th farmers' harvest fields
+  NumberofHarvestFieldsF19                                         ;; the 19th farmers' harvest fields
+  NumberofHarvestFieldsF20                                         ;; the 20th farmers' harvest fields
+  NumberofHarvestFieldsF21                                         ;; the 21th farmers' harvest fields
+  NumberofHarvestFieldsF22                                         ;; the 22th farmers' harvest fields  
+  FarmersHarvestFieldsList
+  UpstreamfarmersHarvestFieldsList                                 ;; upsream farmers: F1 F2 F3
+  MiddlestreamfarmersHarvestFieldsList                             ;; middle stream farmers: F4 F5 F6 F7
+  DownstreamfarmersHarvestFieldsList                               ;; downstream farmers: F8 F9 F10 
+  MiddlestreamF12-13HarvestFieldsList 
+  MiddlestreamF12-14HarvestFieldsList 
+  UpstreamF11-12HarvestFieldsList 
+  MiddlestreamF13-14HarvestFieldsList 
+  DownstreamF15-16HarvestFieldsList
+  MiddlestreamF18-19BarleyYieldList 
+  MiddlestreamF18-19HarvestFieldsList  
+  MiddlestreamF18-20BarleyYieldList 
+  MiddlestreamF18-20HarvestFieldsList 
+  UpstreamF17-18BarleyYieldList 
+  UpstreamF17-18HarvestFieldsList 
+  MiddlestreamF19-20BarleyYieldList 
+  MiddlestreamF19-20HarvestFieldsList 
+  DownstreamF21-22BarleyYieldList 
+  DownstreamF21-22HarvestFieldsList   
+  
+  
+;  ReadyforGCDecision                                              ;; ready for GC change (boolean)
+;  ReadyforGFDecision                                              ;; ready for GF gate flow change (boolean)       
+  ReadyforGCDecision_PrimaryCanal                           ;; ready for GC change (boolean)
+  ReadyforGCDecision_SecondaryCanal                         ;; ready for GC change (boolean)
+  ReadyforGCDecision_SecondaryCanalF11-14
+  ReadyforGCDecision_SecondaryCanalF11-15
+  ReadyforGCDecision_SecondaryCanalF11-16
+  ReadyforGCDecisionF17-19
+  ReadyforGCDecisionF17-20
+  ReadyforGCDecisionF17-21
+  ReadyforGCDecisionF17-22  
+  CommunicationYear                                         ;; the first compare year-The year when farmers along the same canal comparing their harvest situation and if there is poor harvest sitation the upstream and middle stream farmers will decrease their GC
+  ;ContinuousPoorYearNumber                                  ;; record the number of tines when poor year appears
+  AW_List                                                     ;; the list shows the year and the available water in this year
+]
+
+turtles-own
+[
+  ;FeedbackChoice                                            ;; what decision each farmer has made after the communication among within the canal
+]
+
+patches-own
+[
+  LandType                                                  ;; land type variable for a patch
+  ;TotalBarleyPerFarmer                                               ;; the amount of barley harvest a farmer has
+  QHeadGateMax                                              ;; the gate capacity of the heading gate
+  QGateMax                                                  ;; the gate capacity of each farmer
+  GCF11_F13
+  GCF12_F13
+  GCF13_F13
+  GCF11_F14                                                 ;; the initial GC of farmer11 when expanding to farmer14
+  GCF12_F14                                                 ;; the initial GC of farmer12 when expanding to farmer14
+  GCF13_F14                                                 ;; the initial GC of farmer13 when expanding to farmer14
+  GCF14_F14
+  GCF11_F15                                                 ;; the initial GC of farmer11 when expanding to farmer15
+  GCF12_F15                                                 ;; the initial GC of farmer12 when expanding to farmer15
+  GCF13_F15                                                 ;; the initial GC of farmer13 when expanding to farmer15
+  GCF14_F15                                                 ;; the initial GC of farmer14 when expanding to farmer15
+  GCF15_F15
+  GCF11_F16                                                 ;; the initial GC of farmer11 when expanding to farmer16
+  GCF12_F16                                                 ;; the initial GC of farmer12 when expanding to farmer16
+  GCF13_F16                                                 ;; the initial GC of farmer13 when expanding to farmer16
+  GCF14_F16                                                 ;; the initial GC of farmer14 when expanding to farmer16
+  GCF15_F16                                                 ;; the initial GC of farmer15 when expanding to farmer16  
+  
+  GCF17_F19
+  GCF18_F19
+  GCF19_F19
+  GCF17_F20                                                 ;; the initial GC of farmer17 when expanding to farmer20
+  GCF18_F20                                                 ;; the initial GC of farmer18 when expanding to farmer20
+  GCF19_F20                                                 ;; the initial GC of farmer19 when expanding to farmer20
+  GCF20_F20
+  GCF17_F21                                                 ;; the initial GC of farmer17 when expanding to farmer21
+  GCF18_F21                                                 ;; the initial GC of farmer18 when expanding to farmer21
+  GCF19_F21                                                 ;; the initial GC of farmer19 when expanding to farmer21
+  GCF20_F21                                                 ;; the initial GC of farmer20 when expanding to farmer21
+  GCF21_F21
+  GCF17_F22                                                 ;; the initial GC of farmer17 when expanding to farmer21
+  GCF18_F22                                                 ;; the initial GC of farmer18 when expanding to farmer21
+  GCF19_F22                                                 ;; the initial GC of farmer19 when expanding to farmer21
+  GCF20_F22                                                 ;; the initial GC of farmer20 when expanding to farmer21
+  GCF21_F22                                                 ;; the initial GC of farmer21 when expanding to farmer21 
+  
+  IrrigationDemand                                          ;; the amount of water that barley desires per tick
+  ;TotalIrrigationDemand                                    ;; if barely sowed it is (120+80+80+70+60), if not it is 0
+  PreIrrigationDemand                                       ;; irrigation demand at the preparation stage
+  CurrentStorage                                            ;; the irrigation storage of fields
+  IrrigationMemory                                          ;; how long ago were the crops irrigated  
+  CountDown                                                 ;; variable used to record the irrigation time of each farmer
+  Field-IrrigationVolume1                                   ;; the amount of water that needs to be supplied by irrigation in field1
+  Field-IrrigationVolume2                                   ;; the amount of water that needs to be supplied by irrigation in field2
+  Field-IrrigationVolume2-sub
+  Field-IrrigationVolume3                                   ;; the amount of water that needs to be supplied by irrigation in field3
+  Field-IrrigationVolume4                                   ;; the amount of water that needs to be supplied by irrigation in field4
+  Field-IrrigationVolume5                                   ;; the amount of water that needs to be supplied by irrigation in field5
+  Counter                                                   ;; used to count irrigation volumes at fields
+  ;BarleyWaterStress                                        ;; barley starts without any water stress
+  BarleyQuality                                             ;; the quality of the crops on the field goes down if it doesn't receive it's water demand too frequent GOOD: 3 MEDIUM: 2 POOR: 1 DEAD: 0 --> becomes fellow
+  BarleyQuality1
+  BarleyQuality2
+  BarleyQuality3
+  BarleyYield
+
+  BarleyDied                                                ;; keeps track if barley died
+  FallowCountDown                                           ;; how much time left befor cropselection procedure might start
+  ReadyForBarley                                            ;; ready for crop selection (boolean)
+  AlreadyWithBarley                                         ;; already sowed barley and both keeping the fields and expand a new fields
+  HarvestCycle                                              ;; how many days left till harvest
+  ReceivedWater                                             ;; 
+  ReceivedWater1                                            ;; the amount of received water at the preparation stage
+  ReceivedWater2                                            ;; the amount of received water at the first irrigation stage
+  ReceivedWater3                                            ;; the amount of received water at the second irrigation stage
+  ReceivedWater4                                            ;; the amount of received water at the third irrigation stage
+  ReceivedWater5                                            ;; the amount of received water at the fourth irrigation stage
+  FieldReceivedWater-Stage1
+  FieldReceivedWater-Stage2
+  FieldReceivedWater-Stage3
+  FeedbackChoice                                            ;; what decision each farmer has made after the communication among within the canal
+  AverageHarvestBarley
+  HarvestBarleyY1
+  HarvestBarleyY2
+  HarvestBarleyY3
+  HarvestBarleyY4
+  HarvestBarleyY5
+  HarvestBarleyY6
+  HarvestBarleyY7
+  HarvestBarleyY8
+  HarvestBarleyY9
+  HarvestBarleyY10
+  HarvestBarleyY11
+  HarvestBarleyY12
+  HarvestBarleyY13
+  HarvestBarleyY14
+  HarvestBarleyY15
+  HarvestBarleyY16
+  HarvestBarleyY17
+  HarvestBarleyY18
+  HarvestBarleyY19
+  HarvestBarleyY20
+  HarvestBarleyY21
+  HarvestBarleyY22
+  HarvestBarleyY23
+  HarvestBarleyY24
+  HarvestBarleyY25
+  HarvestBarleyY26
+  HarvestBarleyY27
+  HarvestBarleyY28
+  HarvestBarleyY29
+  HarvestBarleyY30
+  HarvestBarleyY31
+  HarvestBarleyY32
+  HarvestBarleyY33
+  HarvestBarleyY34
+  HarvestBarleyY35
+  HarvestBarleyY36
+  HarvestBarleyY37
+  HarvestBarleyY38
+  HarvestBarleyY39
+  HarvestBarleyY40
+  HarvestBarleyY41
+  HarvestBarleyY42
+  HarvestBarleyY43
+  HarvestBarleyY44
+  HarvestBarleyY45
+  HarvestBarleyY46
+  HarvestBarleyY47
+  HarvestBarleyY48
+  HarvestBarleyY49
+  HarvestBarleyY50
+  HarvestBarleyY51
+  HarvestBarleyY52
+  HarvestBarleyY53
+  HarvestBarleyY54
+  HarvestBarleyY55
+  HarvestBarleyY56
+  HarvestBarleyY57
+  HarvestBarleyY58
+  HarvestBarleyY59
+  HarvestBarleyY60
+  HarvestBarleyY61
+  HarvestBarleyY62
+  HarvestBarleyY63
+  HarvestBarleyY64
+  HarvestBarleyY65
+  HarvestBarleyY66
+  HarvestBarleyY67
+  HarvestBarleyY68
+  HarvestBarleyY69
+  HarvestBarleyY70
+  HarvestBarleyY71
+  HarvestBarleyY72
+  HarvestBarleyY73
+  HarvestBarleyY74
+  HarvestBarleyY75
+  HarvestBarleyY76
+  HarvestBarleyY77
+  HarvestBarleyY78
+  HarvestBarleyY79
+  HarvestBarleyY80
+  HarvestBarleyY81
+  HarvestBarleyY82
+  HarvestBarleyY83
+  HarvestBarleyY84
+  HarvestBarleyY85
+  HarvestBarleyY86
+  HarvestBarleyY87
+  HarvestBarleyY88
+  HarvestBarleyY89
+  HarvestBarleyY90
+  HarvestBarleyY91
+  HarvestBarleyY92
+  HarvestBarleyY93
+  HarvestBarleyY94
+  HarvestBarleyY95
+  HarvestBarleyY96
+  HarvestBarleyY97
+  HarvestBarleyY98
+  HarvestBarleyY99
+  HarvestBarleyY100  
+
+  Landed_Year                                               ;; variable to record passed rivervolumes on a storage patch in one year  
+  Landed                                                    ;; variable used to record passed rivervolumes on a storage patch
+    
+  AverageAvailableWater                                     ;; the average available water after at the current timestep days
+  AvailableWaterY100
+  AvailableWaterY99
+  AvailableWaterY98
+  AvailableWaterY97
+  AvailableWaterY96
+  AvailableWaterY95
+  AvailableWaterY94
+  AvailableWaterY93
+  AvailableWaterY92
+  AvailableWaterY91
+  AvailableWaterY90
+  AvailableWaterY89
+  AvailableWaterY88
+  AvailableWaterY87
+  AvailableWaterY86
+  AvailableWaterY85
+  AvailableWaterY84
+  AvailableWaterY83
+  AvailableWaterY82
+  AvailableWaterY81
+  AvailableWaterY80
+  AvailableWaterY79
+  AvailableWaterY78
+  AvailableWaterY77
+  AvailableWaterY76
+  AvailableWaterY75
+  AvailableWaterY74
+  AvailableWaterY73
+  AvailableWaterY72
+  AvailableWaterY71
+  AvailableWaterY70
+  AvailableWaterY69
+  AvailableWaterY68
+  AvailableWaterY67
+  AvailableWaterY66
+  AvailableWaterY65
+  AvailableWaterY64
+  AvailableWaterY63
+  AvailableWaterY62
+  AvailableWaterY61
+  AvailableWaterY60
+  AvailableWaterY59
+  AvailableWaterY58
+  AvailableWaterY57
+  AvailableWaterY56
+  AvailableWaterY55
+  AvailableWaterY54
+  AvailableWaterY53
+  AvailableWaterY52
+  AvailableWaterY51
+  AvailableWaterY50
+  AvailableWaterY49
+  AvailableWaterY48
+  AvailableWaterY47
+  AvailableWaterY46
+  AvailableWaterY45
+  AvailableWaterY44
+  AvailableWaterY43
+  AvailableWaterY42
+  AvailableWaterY41
+  AvailableWaterY40 
+  AvailableWaterY39
+  AvailableWaterY38
+  AvailableWaterY37
+  AvailableWaterY36
+  AvailableWaterY35
+  AvailableWaterY34
+  AvailableWaterY33
+  AvailableWaterY32
+  AvailableWaterY31
+  AvailableWaterY30                                         ;; the available water after 30 days
+  AvailableWaterY29                                         ;; the available water after 29 days
+  AvailableWaterY28                                         ;; the available water after 28 days
+  AvailableWaterY27                                         ;; the available water after 27 days
+  AvailableWaterY26                                         ;; the available water after 26 days
+  AvailableWaterY25                                         ;; the available water after 25 days
+  AvailableWaterY24                                         ;; the available water after 24 days
+  AvailableWaterY23                                         ;; the available water after 23 days
+  AvailableWaterY22                                         ;; the available water after 22 days
+  AvailableWaterY21                                         ;; the available water after 21 days
+  AvailableWaterY20                                         ;; the available water after 20 days
+  AvailableWaterY19                                         ;; the available water after 19 days
+  AvailableWaterY18                                         ;; the available water after 18 days
+  AvailableWaterY17                                         ;; the available water after 17 days
+  AvailableWaterY16                                         ;; the available water after 16 days
+  AvailableWaterY15                                         ;; the available water after 15 days
+  AvailableWaterY14                                         ;; the available water after 14 days
+  AvailableWaterY13                                         ;; the available water after 13 days
+  AvailableWaterY12                                         ;; the available water after 12 days
+  AvailableWaterY11                                         ;; the available water after 11 days
+  AvailableWaterY10                                         ;; the available water after 10 days
+  AvailableWaterY9                                          ;; the available water after 9 days
+  AvailableWaterY8                                          ;; the available water after 8 days
+  AvailableWaterY7                                          ;; the available water after 7 days
+  AvailableWaterY6                                          ;; the available water after 6 days
+  AvailableWaterY5                                          ;; the available water after 5 days
+  AvailableWaterY4                                          ;; the available water after 4 days
+  AvailableWaterY3                                          ;; the available water after 3 days
+  AvailableWaterY2                                          ;; the available water after 2 days
+  AvailableWaterY1                                          ;; the available water after 1 day
+  AvailableWater                                            ;; the available water after at the current timestep days  
+  ComparisonProcedure1                                      ;; the first time of poor harvest situation
+  ComparisonProcedure                                       ;; the following comparison procedure
+  ContinuousPoorYearNumberPrimary                           ;; record the number of times when poor year appears along the primary canal
+  ContinuousPoorYearNumberSecondary                         ;; record the number of times when poor year appears along the primary canal
+  ContinuousPoorYearNumberSecondaryF11-14
+  ContinuousPoorYearNumberSecondaryF11-15
+  ContinuousPoorYearNumberSecondaryF11-16
+  ContinuousPoorYearNumberF17-19
+  ContinuousPoorYearNumberF17-20
+  ContinuousPoorYearNumberF17-21
+  ContinuousPoorYearNumberF17-22  
+  CompareOnceAYear                                          ;; the procedure of comparing the harvest every year, for F1-13
+  CompareOnceAYearF11-14                                    ;; the procedure of comparing the harvest every year, for F1-14
+  CompareOnceAYearF11-15                                    ;; the procedure of comparing the harvest every year, for F1-15
+  CompareOnceAYearF11-16                                    ;; the procedure of comparing the harvest every year, for F1-16
+  CompareOnceAYearF17-19
+  CompareOnceAYearF17-20
+  CompareOnceAYearF17-21
+  CompareOnceAYearF17-22
+  CompareEveryTwoYearsPrimary                               ;; the procedure of comparing the harvest every two years along the primary canal
+  CompareEveryTwoYearsSecondary                             ;; the procedure of comparing the harvest every two years along the secondary canal
+  CompareEveryTwoYearsSecondaryF11-14                             ;; the procedure of comparing the harvest every two years along the secondary canal
+  CompareEveryTwoYearsSecondaryF11-15                             ;; the procedure of comparing the harvest every two years along the secondary canal
+  CompareEveryTwoYearsSecondaryF11-16                             ;; the procedure of comparing the harvest every two years along the secondary canal
+  CompareEveryTwoYearsF17-19
+  CompareEveryTwoYearsF17-20
+  CompareEveryTwoYearsF17-21
+  CompareEveryTwoYearsF17-22
+  ComparisonCountDownPrimary;ComparisonTime                 ;; use to present how often to compare the harvest
+  ComparisonCountDownSecondary
+  ComparisonCountDownSecondaryF11-14
+  ComparisonCountDownSecondaryF11-15
+  ComparisonCountDownSecondaryF11-16
+  ComparisonCountDownF17-19
+  ComparisonCountDownF17-20
+  ComparisonCountDownF17-21
+  ComparisonCountDownF17-22
+       
+  ContinuouslySameHarvestYear                               ;; use to record the number of continuously year that all farmers have the same harvest (prepare for the canal expansion)
+  ContinuouslyPoorHarvestYear                               ;; use to record the number of continuously year that farmers have poor harvest (prepare for the farmers' movement)
+;;;;;;these for meet good harvest first  
+  ContinuouslySameHarvestYearProcedure_1year_1st?           ;; use to record the continuously same good harvest year with 1 year, appear at the 1st time
+  ContinuouslySameHarvestYearProcedure_1year_2nd?           ;; use to record the continuously same good harvest year with 1 year, appear at the 2nd time
+  ContinuouslySameHarvestYearProcedure_1year_3rd?           ;; use to record the continuously same good harvest year with 1 year, appear at the 3rd time
+  ContinuouslySameHarvestYearProcedure_1year_4th?           ;; use to record the continuously same good harvest year with 1 year, appear at the 4th time
+  ContinuouslySameHarvestYearProcedure_1year_5th?           ;; use to record the continuously same good harvest year with 1 year, appear at the 5th time
+  ContinuouslySameHarvestYearProcedure_1year_6th?           ;; use to record the continuously same good harvest year with 1 year, appear at the 6th time
+  ContinuouslySameHarvestYearProcedure_1year_7th?           ;; use to record the continuously same good harvest year with 1 year, appear at the 7th time
+  ContinuouslySameHarvestYearProcedure_1year_8th?           ;; use to record the continuously same good harvest year with 1 year, appear at the 8th time
+  ContinuouslySameHarvestYearProcedure_1year_9th?           ;; use to record the continuously same good harvest year with 1 year, appear at the 9th time
+  ContinuouslySameHarvestYearProcedure_1year_10th?           ;; use to record the continuously same good harvest year with 1 year, appear at the 10th time
+  ContinuouslySameHarvestYearProcedure_1year_11th?           ;; use to record the continuously same good harvest year with 1 year, appear at the 11th time
+  ContinuouslySameHarvestYearProcedure_1year_12th?           ;; use to record the continuously same good harvest year with 1 year, appear at the 12th time
+  ContinuouslySameHarvestYearProcedure_1year_13th?           ;; use to record the continuously same good harvest year with 1 year, appear at the 13th time
+  ContinuouslySameHarvestYearProcedure_1year_14th?           ;; use to record the continuously same good harvest year with 1 year, appear at the 14th time
+  ContinuouslySameHarvestYearProcedure_1year_15th?           ;; use to record the continuously same good harvest year with 1 year, appear at the 15th time
+  ContinuouslySameHarvestYearProcedure_1year_16th?           ;; use to record the continuously same good harvest year with 1 year, appear at the 16th time
+  
+  ContinuouslySameHarvestYearProcedure_2years_1st?          ;; use to record the continuously same good harvest year with 2 years, appear at the 1st time
+  ContinuouslySameHarvestYearProcedure_2years_2nd?          ;; use to record the continuously same good harvest year with 2 years, appear at the 2nd time
+  ContinuouslySameHarvestYearProcedure_2years_3rd?          ;; use to record the continuously same good harvest year with 2 years, appear at the 3rd time
+  ContinuouslySameHarvestYearProcedure_2years_4th?          ;; use to record the continuously same good harvest year with 2 years, appear at the 4th time
+  ContinuouslySameHarvestYearProcedure_2years_5th?          ;; use to record the continuously same good harvest year with 2 years, appear at the 5th time
+  ContinuouslySameHarvestYearProcedure_2years_6th?          ;; use to record the continuously same good harvest year with 2 years, appear at the 6th time
+  ContinuouslySameHarvestYearProcedure_2years_7th?          ;; use to record the continuously same good harvest year with 2 years, appear at the 7th time
+  ContinuouslySameHarvestYearProcedure_2years_8th?          ;; use to record the continuously same good harvest year with 2 years, appear at the 8th time
+  
+  ContinuouslySameHarvestYearProcedure_3years_1st?          ;; use to record the continuously same good harvest year with 3 years, appear at the 1st time
+  ContinuouslySameHarvestYearProcedure_3years_2nd?          ;; use to record the continuously same good harvest year with 3 years, appear at the 2nd time
+  ContinuouslySameHarvestYearProcedure_3years_3rd?          ;; use to record the continuously same good harvest year with 3 years, appear at the 3rd time
+  ContinuouslySameHarvestYearProcedure_3years_4th?          ;; use to record the continuously same good harvest year with 3 years, appear at the 4th time
+  ContinuouslySameHarvestYearProcedure_3years_5th?          ;; use to record the continuously same good harvest year with 3 years, appear at the 5th time
+  ContinuouslySameHarvestYearProcedure_3years_6th?          ;; use to record the continuously same good harvest year with 3 years, appear at the 6th time
+  
+  ContinuouslySameHarvestYearProcedure_4years_1st?          ;; use to record the continuously same good harvest year with 4 years, appear at the 1st time
+  ContinuouslySameHarvestYearProcedure_4years_2nd?          ;; use to record the continuously same good harvest year with 4 years, appear at the 2nd time
+  ContinuouslySameHarvestYearProcedure_4years_3rd?          ;; use to record the continuously same good harvest year with 4 years, appear at the 3rd time
+  ContinuouslySameHarvestYearProcedure_4years_4th?          ;; use to record the continuously same good harvest year with 4 years, appear at the 4th time
+  ContinuouslySameHarvestYearProcedure_4years_5th?          ;; use to record the continuously same good harvest year with 4 years, appear at the 5th time
+  ContinuouslySameHarvestYearProcedure_4years_6th?          ;; use to record the continuously same good harvest year with 4 years, appear at the 6th time
+  
+  ContinuouslySameHarvestYearProcedure_5years_1st?          ;; use to record the continuously same good harvest year with 5 years, appear at the 1st time
+  ContinuouslySameHarvestYearProcedure_5years_2nd?          ;; use to record the continuously same good harvest year with 5 years, appear at the 2nd time
+  ContinuouslySameHarvestYearProcedure_5years_3rd?          ;; use to record the continuously same good harvest year with 5 years, appear at the 3rd time
+  ContinuouslySameHarvestYearProcedure_5years_4th?          ;; use to record the continuously same good harvest year with 5 years, appear at the 4th time
+  ContinuouslySameHarvestYearProcedure_5years_5th?          ;; use to record the continuously same good harvest year with 5 years, appear at the 5th time
+  ContinuouslySameHarvestYearProcedure_5years_6th?          ;; use to record the continuously same good harvest year with 5 years, appear at the 6th time
+  
+  ContinuouslySameHarvestYearProcedure_6years_1st?          ;; use to record the continuously same good harvest year with 6 years, appear at the 1st time
+  ContinuouslySameHarvestYearProcedure_6years_2nd?          ;; use to record the continuously same good harvest year with 6 years, appear at the 2nd time
+  ContinuouslySameHarvestYearProcedure_6years_3rd?          ;; use to record the continuously same good harvest year with 6 years, appear at the 3rd time
+  ContinuouslySameHarvestYearProcedure_6years_4th?          ;; use to record the continuously same good harvest year with 6 years, appear at the 4th time
+  ContinuouslySameHarvestYearProcedure_6years_5th?          ;; use to record the continuously same good harvest year with 6 years, appear at the 5th time
+  ContinuouslySameHarvestYearProcedure_6years_6th?          ;; use to record the continuously same good harvest year with 6 years, appear at the 6th time    
+  
+  ContinuouslyPoorHarvestYearProcedure_1year_1st?           ;; use to record the continuously Poor harvest year with 1 year, appear at the 1st time
+  ContinuouslyPoorHarvestYearProcedure_1year_2nd?           ;; use to record the continuously Poor harvest year with 1 year, appear at the 2nd time
+  ContinuouslyPoorHarvestYearProcedure_1year_3rd?           ;; use to record the continuously Poor harvest year with 1 year, appear at the 3rd time
+  ContinuouslyPoorHarvestYearProcedure_1year_4th?           ;; use to record the continuously Poor harvest year with 1 year, appear at the 4th time
+  ContinuouslyPoorHarvestYearProcedure_1year_5th?           ;; use to record the continuously Poor harvest year with 1 year, appear at the 5th time
+  ContinuouslyPoorHarvestYearProcedure_1year_6th?           ;; use to record the continuously Poor harvest year with 1 year, appear at the 6th time
+  ContinuouslyPoorHarvestYearProcedure_1year_7th?           ;; use to record the continuously Poor harvest year with 1 year, appear at the 7th time
+  ContinuouslyPoorHarvestYearProcedure_1year_8th?           ;; use to record the continuously Poor harvest year with 1 year, appear at the 8th time
+  ContinuouslyPoorHarvestYearProcedure_1year_9th?           ;; use to record the continuously Poor harvest year with 1 year, appear at the 9th time
+  ContinuouslyPoorHarvestYearProcedure_1year_10th?           ;; use to record the continuously Poor harvest year with 1 year, appear at the 10th time
+  ContinuouslyPoorHarvestYearProcedure_1year_11th?           ;; use to record the continuously Poor harvest year with 1 year, appear at the 11th time
+  ContinuouslyPoorHarvestYearProcedure_1year_12th?           ;; use to record the continuously Poor harvest year with 1 year, appear at the 12th time
+  ContinuouslyPoorHarvestYearProcedure_1year_13th?           ;; use to record the continuously Poor harvest year with 1 year, appear at the 13th time
+  ContinuouslyPoorHarvestYearProcedure_1year_14th?           ;; use to record the continuously Poor harvest year with 1 year, appear at the 14th time
+  ContinuouslyPoorHarvestYearProcedure_1year_15th?           ;; use to record the continuously Poor harvest year with 1 year, appear at the 15th time
+  ContinuouslyPoorHarvestYearProcedure_1year_16th?           ;; use to record the continuously Poor harvest year with 1 year, appear at the 16th time
+  
+  ContinuouslyPoorHarvestYearProcedure_2years_1st?          ;; use to record the continuously Poor harvest year with 2 years, appear at the 1st time
+  ContinuouslyPoorHarvestYearProcedure_2years_2nd?          ;; use to record the continuously Poor harvest year with 2 years, appear at the 2nd time
+  ContinuouslyPoorHarvestYearProcedure_2years_3rd?          ;; use to record the continuously Poor harvest year with 2 years, appear at the 3rd time
+  ContinuouslyPoorHarvestYearProcedure_2years_4th?          ;; use to record the continuously Poor harvest year with 2 years, appear at the 4th time
+  ContinuouslyPoorHarvestYearProcedure_2years_5th?          ;; use to record the continuously Poor harvest year with 2 years, appear at the 5th time
+  ContinuouslyPoorHarvestYearProcedure_2years_6th?          ;; use to record the continuously Poor harvest year with 2 years, appear at the 6th time
+  ContinuouslyPoorHarvestYearProcedure_2years_7th?          ;; use to record the continuously Poor harvest year with 2 years, appear at the 7th time 
+  ContinuouslyPoorHarvestYearProcedure_2years_8th?          ;; use to record the continuously Poor harvest year with 2 years, appear at the 8th time 
+  
+  
+  ContinuouslyPoorHarvestYearProcedure_3years_1st?          ;; use to record the continuously Poor harvest year with 3 years, appear at the 1st time
+  ContinuouslyPoorHarvestYearProcedure_3years_2nd?          ;; use to record the continuously Poor harvest year with 3 years, appear at the 2nd time
+  ContinuouslyPoorHarvestYearProcedure_3years_3rd?          ;; use to record the continuously Poor harvest year with 3 years, appear at the 3rd time
+  ContinuouslyPoorHarvestYearProcedure_3years_4th?          ;; use to record the continuously Poor harvest year with 3 years, appear at the 4th time
+  ContinuouslyPoorHarvestYearProcedure_3years_5th?          ;; use to record the continuously Poor harvest year with 3 years, appear at the 5th time
+  ContinuouslyPoorHarvestYearProcedure_3years_6th?          ;; use to record the continuously Poor harvest year with 3 years, appear at the 6th time
+  
+  ContinuouslyPoorHarvestYearProcedure_4years_1st?          ;; use to record the continuously Poor harvest year with 4 years, appear at the 1st time
+  ContinuouslyPoorHarvestYearProcedure_4years_2nd?          ;; use to record the continuously Poor harvest year with 4 years, appear at the 2nd time
+  ContinuouslyPoorHarvestYearProcedure_4years_3rd?          ;; use to record the continuously Poor harvest year with 4 years, appear at the 3rd time
+  ContinuouslyPoorHarvestYearProcedure_4years_4th?          ;; use to record the continuously Poor harvest year with 4 years, appear at the 4th time
+  ContinuouslyPoorHarvestYearProcedure_4years_5th?          ;; use to record the continuously Poor harvest year with 4 years, appear at the 5th time
+  ContinuouslyPoorHarvestYearProcedure_4years_6th?          ;; use to record the continuously Poor harvest year with 4 years, appear at the 6th time
+  
+  ContinuouslyPoorHarvestYearProcedure_5years_1st?          ;; use to record the continuously Poor harvest year with 5 years, appear at the 1st time
+  ContinuouslyPoorHarvestYearProcedure_5years_2nd?          ;; use to record the continuously Poor harvest year with 5 years, appear at the 2nd time
+  ContinuouslyPoorHarvestYearProcedure_5years_3rd?          ;; use to record the continuously Poor harvest year with 5 years, appear at the 3rd time
+  ContinuouslyPoorHarvestYearProcedure_5years_4th?          ;; use to record the continuously Poor harvest year with 5 years, appear at the 4th time
+  ContinuouslyPoorHarvestYearProcedure_5years_5th?          ;; use to record the continuously Poor harvest year with 5 years, appear at the 5th time
+  ContinuouslyPoorHarvestYearProcedure_5years_6th?          ;; use to record the continuously Poor harvest year with 5 years, appear at the 6th time
+  
+  ContinuouslyPoorHarvestYearProcedure_6years_1st?          ;; use to record the continuously Poor harvest year with 6 years, appear at the 1st time
+  ContinuouslyPoorHarvestYearProcedure_6years_2nd?          ;; use to record the continuously Poor harvest year with 6 years, appear at the 2nd time
+  ContinuouslyPoorHarvestYearProcedure_6years_3rd?          ;; use to record the continuously Poor harvest year with 6 years, appear at the 3rd time
+  ContinuouslyPoorHarvestYearProcedure_6years_4th?          ;; use to record the continuously Poor harvest year with 6 years, appear at the 4th time
+  ContinuouslyPoorHarvestYearProcedure_6years_5th?          ;; use to record the continuously Poor harvest year with 6 years, appear at the 5th time
+  ContinuouslyPoorHarvestYearProcedure_6years_6th?          ;; use to record the continuously Poor harvest year with 6 years, appear at the 6th time  
+  
+  CountDownExpansion1_1                                     ;; use to record the continuously same good harvest year with 1 year, appear at the 1st time
+  CountDownExpansion1_2                                     ;; use to record the continuously same good harvest year with 1 year, appear at the 2nd time
+  CountDownExpansion1_3                                     ;; use to record the continuously same good harvest year with 1 year, appear at the 3rd time
+  CountDownExpansion1_4                                     ;; use to record the continuously same good harvest year with 1 year, appear at the 4th time
+  CountDownExpansion1_5                                     ;; use to record the continuously same good harvest year with 1 year, appear at the 5th time
+  CountDownExpansion1_6                                     ;; use to record the continuously same good harvest year with 1 year, appear at the 6th time
+  CountDownExpansion1_7                                     ;; use to record the continuously same good harvest year with 1 year, appear at the 7th time
+  CountDownExpansion1_8                                     ;; use to record the continuously same good harvest year with 1 year, appear at the 8th time
+  CountDownExpansion1_9                                     ;; use to record the continuously same good harvest year with 1 year, appear at the 9th time
+  CountDownExpansion1_10                                     ;; use to record the continuously same good harvest year with 1 year, appear at the 10th time
+  CountDownExpansion1_11                                     ;; use to record the continuously same good harvest year with 1 year, appear at the 11th time
+  CountDownExpansion1_12                                     ;; use to record the continuously same good harvest year with 1 year, appear at the 12th time
+  CountDownExpansion1_13                                     ;; use to record the continuously same good harvest year with 1 year, appear at the 13th time
+  CountDownExpansion1_14                                     ;; use to record the continuously same good harvest year with 1 year, appear at the 14th time
+  CountDownExpansion1_15                                     ;; use to record the continuously same good harvest year with 1 year, appear at the 15th time
+  CountDownExpansion1_16                                     ;; use to record the continuously same good harvest year with 1 year, appear at the 16th time  
+  
+  CountDownExpansion2_1                                     ;; use to record the continuously same good harvest year with 2 year, appear at the 1st time
+  CountDownExpansion2_2                                     ;; use to record the continuously same good harvest year with 2 year, appear at the 2nd time
+  CountDownExpansion2_3                                     ;; use to record the continuously same good harvest year with 2 year, appear at the 3rd time
+  CountDownExpansion2_4                                     ;; use to record the continuously same good harvest year with 2 year, appear at the 4th time
+  CountDownExpansion2_5                                     ;; use to record the continuously same good harvest year with 2 year, appear at the 5th time
+  CountDownExpansion2_6                                     ;; use to record the continuously same good harvest year with 2 year, appear at the 6th time
+  CountDownExpansion2_7                                     ;; use to record the continuously same good harvest year with 2 year, appear at the 7th time
+  CountDownExpansion2_8                                     ;; use to record the continuously same good harvest year with 2 year, appear at the 8th time  
+  
+  CountDownExpansion3_1                                     ;; use to record the continuously same good harvest year with 3 year, appear at the 1st time
+  CountDownExpansion3_2                                     ;; use to record the continuously same good harvest year with 3 year, appear at the 2nd time
+  CountDownExpansion3_3                                     ;; use to record the continuously same good harvest year with 3 year, appear at the 3rd time
+  CountDownExpansion3_4                                     ;; use to record the continuously same good harvest year with 3 year, appear at the 4th time
+  CountDownExpansion3_5                                     ;; use to record the continuously same good harvest year with 3 year, appear at the 5th time
+  CountDownExpansion3_6                                     ;; use to record the continuously same good harvest year with 3 year, appear at the 6th time
+  
+  CountDownExpansion4_1                                     ;; use to record the continuously same good harvest year with 4 year, appear at the 1st time
+  CountDownExpansion4_2                                     ;; use to record the continuously same good harvest year with 4 year, appear at the 2nd time
+  CountDownExpansion4_3                                     ;; use to record the continuously same good harvest year with 4 year, appear at the 3rd time
+  CountDownExpansion4_4                                     ;; use to record the continuously same good harvest year with 4 year, appear at the 4th time
+  CountDownExpansion4_5                                     ;; use to record the continuously same good harvest year with 4 year, appear at the 5th time
+  CountDownExpansion4_6                                     ;; use to record the continuously same good harvest year with 4 year, appear at the 6th time
+
+  CountDownExpansion5_1                                     ;; use to record the continuously same good harvest year with 5 year, appear at the 1st time
+  CountDownExpansion5_2                                     ;; use to record the continuously same good harvest year with 5 year, appear at the 2nd time
+  CountDownExpansion5_3                                     ;; use to record the continuously same good harvest year with 5 year, appear at the 3rd time
+  CountDownExpansion5_4                                     ;; use to record the continuously same good harvest year with 5 year, appear at the 4th time
+  CountDownExpansion5_5                                     ;; use to record the continuously same good harvest year with 5 year, appear at the 5th time
+  CountDownExpansion5_6                                     ;; use to record the continuously same good harvest year with 5 year, appear at the 6th time
+
+  CountDownExpansion6_1                                     ;; use to record the continuously same good harvest year with 6 year, appear at the 1st time
+  CountDownExpansion6_2                                     ;; use to record the continuously same good harvest year with 6 year, appear at the 2nd time
+  CountDownExpansion6_3                                     ;; use to record the continuously same good harvest year with 6 year, appear at the 3rd time
+  CountDownExpansion6_4                                     ;; use to record the continuously same good harvest year with 6 year, appear at the 4th time
+  CountDownExpansion6_5                                     ;; use to record the continuously same good harvest year with 6 year, appear at the 5th time
+  CountDownExpansion6_6                                     ;; use to record the continuously same good harvest year with 6 year, appear at the 6th time   
+  
+  CountDownMovement1_1                                      ;; use to record the continuously Poor harvest year with 1 year, appear at the 1st time
+  CountDownMovement1_2                                      ;; use to record the continuously Poor harvest year with 1 year, appear at the 2nd time
+  CountDownMovement1_3                                      ;; use to record the continuously Poor harvest year with 1 year, appear at the 3rd time
+  CountDownMovement1_4                                      ;; use to record the continuously Poor harvest year with 1 year, appear at the 4th time
+  CountDownMovement1_5                                      ;; use to record the continuously Poor harvest year with 1 year, appear at the 5th time
+  CountDownMovement1_6                                      ;; use to record the continuously Poor harvest year with 1 year, appear at the 6th time
+  CountDownMovement1_7                                     ;; use to record the continuously Poor harvest year with 1 year, appear at the 7th time
+  CountDownMovement1_8                                     ;; use to record the continuously Poor harvest year with 1 year, appear at the 8th time
+  CountDownMovement1_9                                     ;; use to record the continuously Poor harvest year with 1 year, appear at the 9th time
+  CountDownMovement1_10                                     ;; use to record the continuously Poor harvest year with 1 year, appear at the 10th time
+  CountDownMovement1_11                                     ;; use to record the continuously Poor harvest year with 1 year, appear at the 11th time
+  CountDownMovement1_12                                     ;; use to record the continuously Poor harvest year with 1 year, appear at the 12th time
+  CountDownMovement1_13                                     ;; use to record the continuously Poor harvest year with 1 year, appear at the 13th time
+  CountDownMovement1_14                                     ;; use to record the continuously Poor harvest year with 1 year, appear at the 14th time
+  CountDownMovement1_15                                     ;; use to record the continuously Poor harvest year with 1 year, appear at the 15th time
+  CountDownMovement1_16                                     ;; use to record the continuously Poor harvest year with 1 year, appear at the 16th time 
+  
+  CountDownMovement2_1                                      ;; use to record the continuously Poor harvest year with 2 year, appear at the 1st time
+  CountDownMovement2_2                                      ;; use to record the continuously Poor harvest year with 2 year, appear at the 2nd time
+  CountDownMovement2_3                                      ;; use to record the continuously Poor harvest year with 2 year, appear at the 3rd time
+  CountDownMovement2_4                                      ;; use to record the continuously Poor harvest year with 2 year, appear at the 4th time
+  CountDownMovement2_5                                      ;; use to record the continuously Poor harvest year with 2 year, appear at the 5th time
+  CountDownMovement2_6                                      ;; use to record the continuously Poor harvest year with 2 year, appear at the 6th time
+  CountDownMovement2_7                                      ;; use to record the continuously Poor harvest year with 2 year, appear at the 7th time
+  CountDownMovement2_8                                      ;; use to record the continuously Poor harvest year with 2 year, appear at the 8th time
+  
+  CountDownMovement3_1                                      ;; use to record the continuously Poor harvest year with 3 year, appear at the 1st time
+  CountDownMovement3_2                                      ;; use to record the continuously Poor harvest year with 3 year, appear at the 2nd time
+  CountDownMovement3_3                                      ;; use to record the continuously Poor harvest year with 3 year, appear at the 3rd time
+  CountDownMovement3_4                                      ;; use to record the continuously Poor harvest year with 3 year, appear at the 4th time
+  CountDownMovement3_5                                      ;; use to record the continuously Poor harvest year with 3 year, appear at the 5th time
+  CountDownMovement3_6                                      ;; use to record the continuously Poor harvest year with 3 year, appear at the 6th time
+  
+  CountDownMovement4_1                                      ;; use to record the continuously Poor harvest year with 4 year, appear at the 1st time
+  CountDownMovement4_2                                      ;; use to record the continuously Poor harvest year with 4 year, appear at the 2nd time
+  CountDownMovement4_3                                      ;; use to record the continuously Poor harvest year with 4 year, appear at the 3rd time
+  CountDownMovement4_4                                      ;; use to record the continuously Poor harvest year with 4 year, appear at the 4th time
+  CountDownMovement4_5                                      ;; use to record the continuously Poor harvest year with 4 year, appear at the 5th time
+  CountDownMovement4_6                                      ;; use to record the continuously Poor harvest year with 4 year, appear at the 6th time
+
+  CountDownMovement5_1                                      ;; use to record the continuously Poor harvest year with 5 year, appear at the 1st time
+  CountDownMovement5_2                                      ;; use to record the continuously Poor harvest year with 5 year, appear at the 2nd time
+  CountDownMovement5_3                                      ;; use to record the continuously Poor harvest year with 5 year, appear at the 3rd time
+  CountDownMovement5_4                                      ;; use to record the continuously Poor harvest year with 5 year, appear at the 4th time
+  CountDownMovement5_5                                      ;; use to record the continuously Poor harvest year with 5 year, appear at the 5th time
+  CountDownMovement5_6                                      ;; use to record the continuously Poor harvest year with 5 year, appear at the 6th time
+  
+  CountDownMovement6_1                                      ;; use to record the continuously Poor harvest year with 6 year, appear at the 1st time
+  CountDownMovement6_2                                      ;; use to record the continuously Poor harvest year with 6 year, appear at the 2nd time
+  CountDownMovement6_3                                      ;; use to record the continuously Poor harvest year with 6 year, appear at the 3rd time
+  CountDownMovement6_4                                      ;; use to record the continuously Poor harvest year with 6 year, appear at the 4th time
+  CountDownMovement6_5                                      ;; use to record the continuously Poor harvest year with 6 year, appear at the 5th time
+  CountDownMovement6_6                                      ;; use to record the continuously Poor harvest year with 6 year, appear at the 6th time
+  
+;;;;;;these for meet poor harvest first(each variable end with p)  
+  ContinuouslySameHarvestYearProcedure_1year_1st?p           ;; use to record the continuously same good harvest year with 1 year, appear at the 1st time
+  ContinuouslySameHarvestYearProcedure_1year_2nd?p          ;; use to record the continuously same good harvest year with 1 year, appear at the 2nd time
+  ContinuouslySameHarvestYearProcedure_1year_3rd?p           ;; use to record the continuously same good harvest year with 1 year, appear at the 3rd time
+  ContinuouslySameHarvestYearProcedure_1year_4th?p           ;; use to record the continuously same good harvest year with 1 year, appear at the 4th time
+  ContinuouslySameHarvestYearProcedure_1year_5th?p           ;; use to record the continuously same good harvest year with 1 year, appear at the 5th time
+  ContinuouslySameHarvestYearProcedure_1year_6th?p           ;; use to record the continuously same good harvest year with 1 year, appear at the 6th time
+  ContinuouslySameHarvestYearProcedure_1year_7th?p           ;; use to record the continuously same good harvest year with 1 year, appear at the 7th time
+  ContinuouslySameHarvestYearProcedure_1year_8th?p           ;; use to record the continuously same good harvest year with 1 year, appear at the 8th time
+  ContinuouslySameHarvestYearProcedure_1year_9th?p           ;; use to record the continuously same good harvest year with 1 year, appear at the 9th time
+  ContinuouslySameHarvestYearProcedure_1year_10th?p           ;; use to record the continuously same good harvest year with 1 year, appear at the 10th time
+  ContinuouslySameHarvestYearProcedure_1year_11th?p           ;; use to record the continuously same good harvest year with 1 year, appear at the 11th time
+  ContinuouslySameHarvestYearProcedure_1year_12th?p           ;; use to record the continuously same good harvest year with 1 year, appear at the 12th time
+  ContinuouslySameHarvestYearProcedure_1year_13th?p           ;; use to record the continuously same good harvest year with 1 year, appear at the 13th time
+  ContinuouslySameHarvestYearProcedure_1year_14th?p           ;; use to record the continuously same good harvest year with 1 year, appear at the 14th time
+  ContinuouslySameHarvestYearProcedure_1year_15th?p           ;; use to record the continuously same good harvest year with 1 year, appear at the 15th time
+  ContinuouslySameHarvestYearProcedure_1year_16th?p           ;; use to record the continuously same good harvest year with 1 year, appear at the 16th time
+  
+  ContinuouslySameHarvestYearProcedure_2years_1st?p          ;; use to record the continuously same good harvest year with 2 years, appear at the 1st time
+  ContinuouslySameHarvestYearProcedure_2years_2nd?p          ;; use to record the continuously same good harvest year with 2 years, appear at the 2nd time
+  ContinuouslySameHarvestYearProcedure_2years_3rd?p          ;; use to record the continuously same good harvest year with 2 years, appear at the 3rd time
+  ContinuouslySameHarvestYearProcedure_2years_4th?p          ;; use to record the continuously same good harvest year with 2 years, appear at the 4th time
+  ContinuouslySameHarvestYearProcedure_2years_5th?p          ;; use to record the continuously same good harvest year with 2 years, appear at the 5th time
+  ContinuouslySameHarvestYearProcedure_2years_6th?p          ;; use to record the continuously same good harvest year with 2 years, appear at the 6th time
+  ContinuouslySameHarvestYearProcedure_2years_7th?p          ;; use to record the continuously same good harvest year with 2 years, appear at the 7th time
+  ContinuouslySameHarvestYearProcedure_2years_8th?p          ;; use to record the continuously same good harvest year with 2 years, appear at the 8th time
+  
+  ContinuouslySameHarvestYearProcedure_3years_1st?p          ;; use to record the continuously same good harvest year with 3 years, appear at the 1st time
+  ContinuouslySameHarvestYearProcedure_3years_2nd?p          ;; use to record the continuously same good harvest year with 3 years, appear at the 2nd time
+  ContinuouslySameHarvestYearProcedure_3years_3rd?p          ;; use to record the continuously same good harvest year with 3 years, appear at the 3rd time
+  ContinuouslySameHarvestYearProcedure_3years_4th?p          ;; use to record the continuously same good harvest year with 3 years, appear at the 4th time
+  ContinuouslySameHarvestYearProcedure_3years_5th?p          ;; use to record the continuously same good harvest year with 3 years, appear at the 5th time
+  ContinuouslySameHarvestYearProcedure_3years_6th?p          ;; use to record the continuously same good harvest year with 3 years, appear at the 6th time
+  
+  ContinuouslySameHarvestYearProcedure_4years_1st?p          ;; use to record the continuously same good harvest year with 4 years, appear at the 1st time
+  ContinuouslySameHarvestYearProcedure_4years_2nd?p          ;; use to record the continuously same good harvest year with 4 years, appear at the 2nd time
+  ContinuouslySameHarvestYearProcedure_4years_3rd?p          ;; use to record the continuously same good harvest year with 4 years, appear at the 3rd time
+  ContinuouslySameHarvestYearProcedure_4years_4th?p          ;; use to record the continuously same good harvest year with 4 years, appear at the 4th time
+  ContinuouslySameHarvestYearProcedure_4years_5th?p          ;; use to record the continuously same good harvest year with 4 years, appear at the 5th time
+  ContinuouslySameHarvestYearProcedure_4years_6th?p          ;; use to record the continuously same good harvest year with 4 years, appear at the 6th time
+  
+  ContinuouslySameHarvestYearProcedure_5years_1st?p          ;; use to record the continuously same good harvest year with 5 years, appear at the 1st time
+  ContinuouslySameHarvestYearProcedure_5years_2nd?p          ;; use to record the continuously same good harvest year with 5 years, appear at the 2nd time
+  ContinuouslySameHarvestYearProcedure_5years_3rd?p          ;; use to record the continuously same good harvest year with 5 years, appear at the 3rd time
+  ContinuouslySameHarvestYearProcedure_5years_4th?p          ;; use to record the continuously same good harvest year with 5 years, appear at the 4th time
+  ContinuouslySameHarvestYearProcedure_5years_5th?p          ;; use to record the continuously same good harvest year with 5 years, appear at the 5th time
+  ContinuouslySameHarvestYearProcedure_5years_6th?p          ;; use to record the continuously same good harvest year with 5 years, appear at the 6th time
+  
+  ContinuouslySameHarvestYearProcedure_6years_1st?p          ;; use to record the continuously same good harvest year with 6 years, appear at the 1st time
+  ContinuouslySameHarvestYearProcedure_6years_2nd?p          ;; use to record the continuously same good harvest year with 6 years, appear at the 2nd time
+  ContinuouslySameHarvestYearProcedure_6years_3rd?p          ;; use to record the continuously same good harvest year with 6 years, appear at the 3rd time
+  ContinuouslySameHarvestYearProcedure_6years_4th?p          ;; use to record the continuously same good harvest year with 6 years, appear at the 4th time
+  ContinuouslySameHarvestYearProcedure_6years_5th?p          ;; use to record the continuously same good harvest year with 6 years, appear at the 5th time
+  ContinuouslySameHarvestYearProcedure_6years_6th?p          ;; use to record the continuously same good harvest year with 6 years, appear at the 6th time    
+  
+  ContinuouslyPoorHarvestYearProcedure_1year_1st?p           ;; use to record the continuously Poor harvest year with 1 year, appear at the 1st time
+  ContinuouslyPoorHarvestYearProcedure_1year_2nd?p           ;; use to record the continuously Poor harvest year with 1 year, appear at the 2nd time
+  ContinuouslyPoorHarvestYearProcedure_1year_3rd?p           ;; use to record the continuously Poor harvest year with 1 year, appear at the 3rd time
+  ContinuouslyPoorHarvestYearProcedure_1year_4th?p           ;; use to record the continuously Poor harvest year with 1 year, appear at the 4th time
+  ContinuouslyPoorHarvestYearProcedure_1year_5th?p           ;; use to record the continuously Poor harvest year with 1 year, appear at the 5th time
+  ContinuouslyPoorHarvestYearProcedure_1year_6th?p           ;; use to record the continuously Poor harvest year with 1 year, appear at the 6th time
+  ContinuouslyPoorHarvestYearProcedure_1year_7th?p           ;; use to record the continuously Poor harvest year with 1 year, appear at the 7th time
+  ContinuouslyPoorHarvestYearProcedure_1year_8th?p           ;; use to record the continuously Poor harvest year with 1 year, appear at the 8th time
+  ContinuouslyPoorHarvestYearProcedure_1year_9th?p           ;; use to record the continuously Poor harvest year with 1 year, appear at the 9th time
+  ContinuouslyPoorHarvestYearProcedure_1year_10th?p           ;; use to record the continuously Poor harvest year with 1 year, appear at the 10th time
+  ContinuouslyPoorHarvestYearProcedure_1year_11th?p           ;; use to record the continuously Poor harvest year with 1 year, appear at the 11th time
+  ContinuouslyPoorHarvestYearProcedure_1year_12th?p           ;; use to record the continuously Poor harvest year with 1 year, appear at the 12th time
+  ContinuouslyPoorHarvestYearProcedure_1year_13th?p           ;; use to record the continuously Poor harvest year with 1 year, appear at the 13th time
+  ContinuouslyPoorHarvestYearProcedure_1year_14th?p           ;; use to record the continuously Poor harvest year with 1 year, appear at the 14th time
+  ContinuouslyPoorHarvestYearProcedure_1year_15th?p           ;; use to record the continuously Poor harvest year with 1 year, appear at the 15th time
+  ContinuouslyPoorHarvestYearProcedure_1year_16th?p           ;; use to record the continuously Poor harvest year with 1 year, appear at the 16th time
+  
+  ContinuouslyPoorHarvestYearProcedure_2years_1st?p          ;; use to record the continuously Poor harvest year with 2 years, appear at the 1st time
+  ContinuouslyPoorHarvestYearProcedure_2years_2nd?p          ;; use to record the continuously Poor harvest year with 2 years, appear at the 2nd time
+  ContinuouslyPoorHarvestYearProcedure_2years_3rd?p          ;; use to record the continuously Poor harvest year with 2 years, appear at the 3rd time
+  ContinuouslyPoorHarvestYearProcedure_2years_4th?p          ;; use to record the continuously Poor harvest year with 2 years, appear at the 4th time
+  ContinuouslyPoorHarvestYearProcedure_2years_5th?p          ;; use to record the continuously Poor harvest year with 2 years, appear at the 5th time
+  ContinuouslyPoorHarvestYearProcedure_2years_6th?p          ;; use to record the continuously Poor harvest year with 2 years, appear at the 6th time
+  ContinuouslyPoorHarvestYearProcedure_2years_7th?p          ;; use to record the continuously Poor harvest year with 2 years, appear at the 7th time 
+  ContinuouslyPoorHarvestYearProcedure_2years_8th?p          ;; use to record the continuously Poor harvest year with 2 years, appear at the 8th time 
+  
+  
+  ContinuouslyPoorHarvestYearProcedure_3years_1st?p          ;; use to record the continuously Poor harvest year with 3 years, appear at the 1st time
+  ContinuouslyPoorHarvestYearProcedure_3years_2nd?p          ;; use to record the continuously Poor harvest year with 3 years, appear at the 2nd time
+  ContinuouslyPoorHarvestYearProcedure_3years_3rd?p          ;; use to record the continuously Poor harvest year with 3 years, appear at the 3rd time
+  ContinuouslyPoorHarvestYearProcedure_3years_4th?p          ;; use to record the continuously Poor harvest year with 3 years, appear at the 4th time
+  ContinuouslyPoorHarvestYearProcedure_3years_5th?p          ;; use to record the continuously Poor harvest year with 3 years, appear at the 5th time
+  ContinuouslyPoorHarvestYearProcedure_3years_6th?p          ;; use to record the continuously Poor harvest year with 3 years, appear at the 6th time
+  
+  ContinuouslyPoorHarvestYearProcedure_4years_1st?p          ;; use to record the continuously Poor harvest year with 4 years, appear at the 1st time
+  ContinuouslyPoorHarvestYearProcedure_4years_2nd?p          ;; use to record the continuously Poor harvest year with 4 years, appear at the 2nd time
+  ContinuouslyPoorHarvestYearProcedure_4years_3rd?p          ;; use to record the continuously Poor harvest year with 4 years, appear at the 3rd time
+  ContinuouslyPoorHarvestYearProcedure_4years_4th?p          ;; use to record the continuously Poor harvest year with 4 years, appear at the 4th time
+  ContinuouslyPoorHarvestYearProcedure_4years_5th?p          ;; use to record the continuously Poor harvest year with 4 years, appear at the 5th time
+  ContinuouslyPoorHarvestYearProcedure_4years_6th?p          ;; use to record the continuously Poor harvest year with 4 years, appear at the 6th time
+  
+  ContinuouslyPoorHarvestYearProcedure_5years_1st?p          ;; use to record the continuously Poor harvest year with 5 years, appear at the 1st time
+  ContinuouslyPoorHarvestYearProcedure_5years_2nd?p          ;; use to record the continuously Poor harvest year with 5 years, appear at the 2nd time
+  ContinuouslyPoorHarvestYearProcedure_5years_3rd?p          ;; use to record the continuously Poor harvest year with 5 years, appear at the 3rd time
+  ContinuouslyPoorHarvestYearProcedure_5years_4th?p          ;; use to record the continuously Poor harvest year with 5 years, appear at the 4th time
+  ContinuouslyPoorHarvestYearProcedure_5years_5th?p          ;; use to record the continuously Poor harvest year with 5 years, appear at the 5th time
+  ContinuouslyPoorHarvestYearProcedure_5years_6th?p          ;; use to record the continuously Poor harvest year with 5 years, appear at the 6th time
+  
+  ContinuouslyPoorHarvestYearProcedure_6years_1st?p          ;; use to record the continuously Poor harvest year with 6 years, appear at the 1st time
+  ContinuouslyPoorHarvestYearProcedure_6years_2nd?p          ;; use to record the continuously Poor harvest year with 6 years, appear at the 2nd time
+  ContinuouslyPoorHarvestYearProcedure_6years_3rd?p          ;; use to record the continuously Poor harvest year with 6 years, appear at the 3rd time
+  ContinuouslyPoorHarvestYearProcedure_6years_4th?p          ;; use to record the continuously Poor harvest year with 6 years, appear at the 4th time
+  ContinuouslyPoorHarvestYearProcedure_6years_5th?p          ;; use to record the continuously Poor harvest year with 6 years, appear at the 5th time
+  ContinuouslyPoorHarvestYearProcedure_6years_6th?p          ;; use to record the continuously Poor harvest year with 6 years, appear at the 6th time  
+  
+  CountDownExpansion1_1p                                     ;; use to record the continuously same good harvest year with 1 year, appear at the 1st time
+  CountDownExpansion1_2p                                     ;; use to record the continuously same good harvest year with 1 year, appear at the 2nd time
+  CountDownExpansion1_3p                                     ;; use to record the continuously same good harvest year with 1 year, appear at the 3rd time
+  CountDownExpansion1_4p                                     ;; use to record the continuously same good harvest year with 1 year, appear at the 4th time
+  CountDownExpansion1_5p                                     ;; use to record the continuously same good harvest year with 1 year, appear at the 5th time
+  CountDownExpansion1_6p                                     ;; use to record the continuously same good harvest year with 1 year, appear at the 6th time
+  CountDownExpansion1_7p                                     ;; use to record the continuously same good harvest year with 1 year, appear at the 7th time
+  CountDownExpansion1_8p                                     ;; use to record the continuously same good harvest year with 1 year, appear at the 8th time
+  CountDownExpansion1_9p                                     ;; use to record the continuously same good harvest year with 1 year, appear at the 9th time
+  CountDownExpansion1_10p                                     ;; use to record the continuously same good harvest year with 1 year, appear at the 10th time
+  CountDownExpansion1_11p                                     ;; use to record the continuously same good harvest year with 1 year, appear at the 11th time
+  CountDownExpansion1_12p                                     ;; use to record the continuously same good harvest year with 1 year, appear at the 12th time
+  CountDownExpansion1_13p                                     ;; use to record the continuously same good harvest year with 1 year, appear at the 13th time
+  CountDownExpansion1_14p                                     ;; use to record the continuously same good harvest year with 1 year, appear at the 14th time
+  CountDownExpansion1_15p                                     ;; use to record the continuously same good harvest year with 1 year, appear at the 15th time
+  CountDownExpansion1_16p                                     ;; use to record the continuously same good harvest year with 1 year, appear at the 16th time  
+  
+  CountDownExpansion2_1p                                     ;; use to record the continuously same good harvest year with 2 year, appear at the 1st time
+  CountDownExpansion2_2p                                    ;; use to record the continuously same good harvest year with 2 year, appear at the 2nd time
+  CountDownExpansion2_3p                                     ;; use to record the continuously same good harvest year with 2 year, appear at the 3rd time
+  CountDownExpansion2_4p                                     ;; use to record the continuously same good harvest year with 2 year, appear at the 4th time
+  CountDownExpansion2_5p                                     ;; use to record the continuously same good harvest year with 2 year, appear at the 5th time
+  CountDownExpansion2_6p                                     ;; use to record the continuously same good harvest year with 2 year, appear at the 6th time
+  CountDownExpansion2_7p                                     ;; use to record the continuously same good harvest year with 2 year, appear at the 7th time
+  CountDownExpansion2_8p                                     ;; use to record the continuously same good harvest year with 2 year, appear at the 8th time  
+  
+  CountDownExpansion3_1p                                     ;; use to record the continuously same good harvest year with 3 year, appear at the 1st time
+  CountDownExpansion3_2p                                     ;; use to record the continuously same good harvest year with 3 year, appear at the 2nd time
+  CountDownExpansion3_3p                                     ;; use to record the continuously same good harvest year with 3 year, appear at the 3rd time
+  CountDownExpansion3_4p                                     ;; use to record the continuously same good harvest year with 3 year, appear at the 4th time
+  CountDownExpansion3_5p                                     ;; use to record the continuously same good harvest year with 3 year, appear at the 5th time
+  CountDownExpansion3_6p                                     ;; use to record the continuously same good harvest year with 3 year, appear at the 6th time
+  
+  CountDownExpansion4_1p                                     ;; use to record the continuously same good harvest year with 4 year, appear at the 1st time
+  CountDownExpansion4_2p                                     ;; use to record the continuously same good harvest year with 4 year, appear at the 2nd time
+  CountDownExpansion4_3p                                     ;; use to record the continuously same good harvest year with 4 year, appear at the 3rd time
+  CountDownExpansion4_4p                                     ;; use to record the continuously same good harvest year with 4 year, appear at the 4th time
+  CountDownExpansion4_5p                                     ;; use to record the continuously same good harvest year with 4 year, appear at the 5th time
+  CountDownExpansion4_6p                                     ;; use to record the continuously same good harvest year with 4 year, appear at the 6th time
+
+  CountDownExpansion5_1p                                     ;; use to record the continuously same good harvest year with 5 year, appear at the 1st time
+  CountDownExpansion5_2p                                     ;; use to record the continuously same good harvest year with 5 year, appear at the 2nd time
+  CountDownExpansion5_3p                                     ;; use to record the continuously same good harvest year with 5 year, appear at the 3rd time
+  CountDownExpansion5_4p                                     ;; use to record the continuously same good harvest year with 5 year, appear at the 4th time
+  CountDownExpansion5_5p                                     ;; use to record the continuously same good harvest year with 5 year, appear at the 5th time
+  CountDownExpansion5_6p                                     ;; use to record the continuously same good harvest year with 5 year, appear at the 6th time
+
+  CountDownExpansion6_1p                                     ;; use to record the continuously same good harvest year with 6 year, appear at the 1st time
+  CountDownExpansion6_2p                                     ;; use to record the continuously same good harvest year with 6 year, appear at the 2nd time
+  CountDownExpansion6_3p                                     ;; use to record the continuously same good harvest year with 6 year, appear at the 3rd time
+  CountDownExpansion6_4p                                     ;; use to record the continuously same good harvest year with 6 year, appear at the 4th time
+  CountDownExpansion6_5p                                     ;; use to record the continuously same good harvest year with 6 year, appear at the 5th time
+  CountDownExpansion6_6p                                     ;; use to record the continuously same good harvest year with 6 year, appear at the 6th time   
+  
+  CountDownMovement1_1p                                      ;; use to record the continuously Poor harvest year with 1 year, appear at the 1st time
+  CountDownMovement1_2p                                      ;; use to record the continuously Poor harvest year with 1 year, appear at the 2nd time
+  CountDownMovement1_3p                                      ;; use to record the continuously Poor harvest year with 1 year, appear at the 3rd time
+  CountDownMovement1_4p                                      ;; use to record the continuously Poor harvest year with 1 year, appear at the 4th time
+  CountDownMovement1_5p                                      ;; use to record the continuously Poor harvest year with 1 year, appear at the 5th time
+  CountDownMovement1_6p                                      ;; use to record the continuously Poor harvest year with 1 year, appear at the 6th time
+  CountDownMovement1_7p                                     ;; use to record the continuously Poor harvest year with 1 year, appear at the 7th time
+  CountDownMovement1_8p                                    ;; use to record the continuously Poor harvest year with 1 year, appear at the 8th time
+  CountDownMovement1_9p                                     ;; use to record the continuously Poor harvest year with 1 year, appear at the 9th time
+  CountDownMovement1_10p                                     ;; use to record the continuously Poor harvest year with 1 year, appear at the 10th time
+  CountDownMovement1_11p                                     ;; use to record the continuously Poor harvest year with 1 year, appear at the 11th time
+  CountDownMovement1_12p                                     ;; use to record the continuously Poor harvest year with 1 year, appear at the 12th time
+  CountDownMovement1_13p                                     ;; use to record the continuously Poor harvest year with 1 year, appear at the 13th time
+  CountDownMovement1_14p                                     ;; use to record the continuously Poor harvest year with 1 year, appear at the 14th time
+  CountDownMovement1_15p                                     ;; use to record the continuously Poor harvest year with 1 year, appear at the 15th time
+  CountDownMovement1_16p                                     ;; use to record the continuously Poor harvest year with 1 year, appear at the 16th time 
+  
+  CountDownMovement2_1p                                      ;; use to record the continuously Poor harvest year with 2 year, appear at the 1st time
+  CountDownMovement2_2p                                      ;; use to record the continuously Poor harvest year with 2 year, appear at the 2nd time
+  CountDownMovement2_3p                                      ;; use to record the continuously Poor harvest year with 2 year, appear at the 3rd time
+  CountDownMovement2_4p                                      ;; use to record the continuously Poor harvest year with 2 year, appear at the 4th time
+  CountDownMovement2_5p                                      ;; use to record the continuously Poor harvest year with 2 year, appear at the 5th time
+  CountDownMovement2_6p                                      ;; use to record the continuously Poor harvest year with 2 year, appear at the 6th time
+  CountDownMovement2_7p                                      ;; use to record the continuously Poor harvest year with 2 year, appear at the 7th time
+  CountDownMovement2_8p                                      ;; use to record the continuously Poor harvest year with 2 year, appear at the 8th time
+  
+  CountDownMovement3_1p                                      ;; use to record the continuously Poor harvest year with 3 year, appear at the 1st time
+  CountDownMovement3_2p                                      ;; use to record the continuously Poor harvest year with 3 year, appear at the 2nd time
+  CountDownMovement3_3p                                      ;; use to record the continuously Poor harvest year with 3 year, appear at the 3rd time
+  CountDownMovement3_4p                                      ;; use to record the continuously Poor harvest year with 3 year, appear at the 4th time
+  CountDownMovement3_5p                                      ;; use to record the continuously Poor harvest year with 3 year, appear at the 5th time
+  CountDownMovement3_6p                                      ;; use to record the continuously Poor harvest year with 3 year, appear at the 6th time
+  
+  CountDownMovement4_1p                                      ;; use to record the continuously Poor harvest year with 4 year, appear at the 1st time
+  CountDownMovement4_2p                                      ;; use to record the continuously Poor harvest year with 4 year, appear at the 2nd time
+  CountDownMovement4_3p                                      ;; use to record the continuously Poor harvest year with 4 year, appear at the 3rd time
+  CountDownMovement4_4p                                      ;; use to record the continuously Poor harvest year with 4 year, appear at the 4th time
+  CountDownMovement4_5p                                      ;; use to record the continuously Poor harvest year with 4 year, appear at the 5th time
+  CountDownMovement4_6p                                      ;; use to record the continuously Poor harvest year with 4 year, appear at the 6th time
+
+  CountDownMovement5_1p                                      ;; use to record the continuously Poor harvest year with 5 year, appear at the 1st time
+  CountDownMovement5_2p                                      ;; use to record the continuously Poor harvest year with 5 year, appear at the 2nd time
+  CountDownMovement5_3p                                      ;; use to record the continuously Poor harvest year with 5 year, appear at the 3rd time
+  CountDownMovement5_4p                                      ;; use to record the continuously Poor harvest year with 5 year, appear at the 4th time
+  CountDownMovement5_5p                                      ;; use to record the continuously Poor harvest year with 5 year, appear at the 5th time
+  CountDownMovement5_6p                                      ;; use to record the continuously Poor harvest year with 5 year, appear at the 6th time
+  
+  CountDownMovement6_1p                                      ;; use to record the continuously Poor harvest year with 6 year, appear at the 1st time
+  CountDownMovement6_2p                                      ;; use to record the continuously Poor harvest year with 6 year, appear at the 2nd time
+  CountDownMovement6_3p                                      ;; use to record the continuously Poor harvest year with 6 year, appear at the 3rd time
+  CountDownMovement6_4p                                      ;; use to record the continuously Poor harvest year with 6 year, appear at the 4th time
+  CountDownMovement6_5p                                      ;; use to record the continuously Poor harvest year with 6 year, appear at the 5th time
+  CountDownMovement6_6p                                      ;; use to record the continuously Poor harvest year with 6 year, appear at the 6th time 
+;;there is farmers11 12 13, and compare these three farmers per year to see if it possible to expand to farmer14  
+  F11-13WithGoodHarvestYears
+  F11-13WithGoodHarvestYearsProcedure_1year?
+  F11-13WithGoodHarvestYearsProcedure_2years?
+  F11-13WithGoodHarvestYearsProcedure_3years?
+  F11-13WithGoodHarvestYearsProcedure_4years?
+  F11-13WithGoodHarvestYearsProcedure_5years?
+  F11-13WithGoodHarvestYearsProcedure_6years?
+  F11-13CountDownExpansion_1year
+  F11-13CountDownExpansion_2years
+  F11-13CountDownExpansion_3years
+  F11-13CountDownExpansion_4years
+  F11-13CountDownExpansion_5years  
+  
+;;there is farmers11 12 13, and compare these three farmers per year to see if there is poor harvest situation and then expand to farmer17-19, a new primary canal 
+  F11-13WithPoorHarvestYears
+  F11-13WithPoorHarvestYearsProcedure_1year?
+  F11-13WithPoorHarvestYearsProcedure_2years?
+  F11-13WithPoorHarvestYearsProcedure_3years?
+  F11-13WithPoorHarvestYearsProcedure_4years?
+  F11-13WithPoorHarvestYearsProcedure_5years?
+  F11-13WithPoorHarvestYearsProcedure_6years?  
+  
+;;there is farmers11 12 13,14 and compare these three farmers per year to see if it possible to expand to farmer15  
+  F11-14WithGoodHarvestYears
+  F11-14WithGoodHarvestYearsProcedure_1year?
+  F11-14WithGoodHarvestYearsProcedure_2years?
+  F11-14WithGoodHarvestYearsProcedure_3years?
+  F11-14WithGoodHarvestYearsProcedure_4years?
+  F11-14WithGoodHarvestYearsProcedure_5years?
+  F11-14WithGoodHarvestYearsProcedure_6years?
+  F11-14CountDownExpansion_1year
+  F11-14CountDownExpansion_2years
+  F11-14CountDownExpansion_3years
+  F11-14CountDownExpansion_4years
+  F11-14CountDownExpansion_5years 
+  
+;;there is farmers11 12 13,14,15 and compare these three farmers per year to see if it possible to expand to farmer16
+  F11-15WithGoodHarvestYears
+  F11-15WithGoodHarvestYearsProcedure_1year?
+  F11-15WithGoodHarvestYearsProcedure_2years?
+  F11-15WithGoodHarvestYearsProcedure_3years?
+  F11-15WithGoodHarvestYearsProcedure_4years?
+  F11-15WithGoodHarvestYearsProcedure_5years?
+  F11-15WithGoodHarvestYearsProcedure_6years?
+  F11-15CountDownExpansion_1year
+  F11-15CountDownExpansion_2years
+  F11-15CountDownExpansion_3years
+  F11-15CountDownExpansion_4years
+  F11-15CountDownExpansion_5years
+  
+;;there is farmers11 12 13,14,15, 16 and compare these three farmers per year to see if it possible to expand to another primary canal
+  F11-16WithGoodHarvestYears
+  F11-16WithGoodHarvestYearsProcedure_1year?
+  F11-16WithGoodHarvestYearsProcedure_2years?
+  F11-16WithGoodHarvestYearsProcedure_3years?
+  F11-16WithGoodHarvestYearsProcedure_4years?
+  F11-16WithGoodHarvestYearsProcedure_5years?
+  F11-16WithGoodHarvestYearsProcedure_6years?
+  F11-16CountDownExpansion_1year
+  F11-16CountDownExpansion_2years
+  F11-16CountDownExpansion_3years
+  F11-16CountDownExpansion_4years
+  F11-16CountDownExpansion_5years 
+  
+;;there is farmers17, 18, 19 and compare these three farmers per year to see if it possible to expand to F20
+  F17-19WithGoodHarvestYears
+  F17-19WithGoodHarvestYearsProcedure_1year?
+  F17-19WithGoodHarvestYearsProcedure_2years?
+  F17-19WithGoodHarvestYearsProcedure_3years?
+  F17-19WithGoodHarvestYearsProcedure_4years?
+  F17-19WithGoodHarvestYearsProcedure_5years?
+  F17-19WithGoodHarvestYearsProcedure_6years?
+  F17-19CountDownExpansion_1year
+  F17-19CountDownExpansion_2years
+  F17-19CountDownExpansion_3years
+  F17-19CountDownExpansion_4years
+  F17-19CountDownExpansion_5years  
+  
+;;there is farmers17, 18, 19 due to movement of poor harvest situation
+  F17-19WithPoorHarvestYears
+  F17-19WithPoorHarvestYearsProcedure_1year?
+  F17-19WithPoorHarvestYearsProcedure_2years?
+  F17-19WithPoorHarvestYearsProcedure_3years?
+  F17-19WithPoorHarvestYearsProcedure_4years?
+  F17-19WithPoorHarvestYearsProcedure_5years?
+  F17-19WithPoorHarvestYearsProcedure_6years?  
+  
+;;there is farmers17, 18, 19, 20 and compare these three farmers per year to see if it possible to expand to F21
+  F17-20WithGoodHarvestYears
+  F17-20WithGoodHarvestYearsProcedure_1year?
+  F17-20WithGoodHarvestYearsProcedure_2years?
+  F17-20WithGoodHarvestYearsProcedure_3years?
+  F17-20WithGoodHarvestYearsProcedure_4years?
+  F17-20WithGoodHarvestYearsProcedure_5years?
+  F17-20WithGoodHarvestYearsProcedure_6years?
+  F17-20CountDownExpansion_1year
+  F17-20CountDownExpansion_2years
+  F17-20CountDownExpansion_3years
+  F17-20CountDownExpansion_4years
+  F17-20CountDownExpansion_5years    
+
+;;there is farmers17, 18, 19, 20, 21 and compare these three farmers per year to see if it possible to expand to F22
+  F17-21WithGoodHarvestYears
+  F17-21WithGoodHarvestYearsProcedure_1year?
+  F17-21WithGoodHarvestYearsProcedure_2years?
+  F17-21WithGoodHarvestYearsProcedure_3years?
+  F17-21WithGoodHarvestYearsProcedure_4years?
+  F17-21WithGoodHarvestYearsProcedure_5years?
+  F17-21WithGoodHarvestYearsProcedure_6years?
+  F17-21CountDownExpansion_1year
+  F17-21CountDownExpansion_2years
+  F17-21CountDownExpansion_3years
+  F17-21CountDownExpansion_4years
+  F17-21CountDownExpansion_5years
+
+;;there is farmers17, 18, 19, 20, 21,22 and compare these three farmers per year to see if it possible to expand to F23
+  F17-22WithGoodHarvestYears
+  F17-22WithGoodHarvestYearsProcedure_1year?
+  F17-22WithGoodHarvestYearsProcedure_2years?
+  F17-22WithGoodHarvestYearsProcedure_3years?
+  F17-22WithGoodHarvestYearsProcedure_4years?
+  F17-22WithGoodHarvestYearsProcedure_5years?
+  F17-22WithGoodHarvestYearsProcedure_6years?
+  F17-22CountDownExpansion_1year
+  F17-22CountDownExpansion_2years
+  F17-22CountDownExpansion_3years
+  F17-22CountDownExpansion_4years
+  F17-22CountDownExpansion_5years   
+  
+  F11NeverWithBarley?                                              ;; use to record the farmer has the first harvest or not
+  TheFirstHarvestYearF11  
+  CountDownBarleyF11  
+  F11NeverWithLand?
+  F11FirstWithLand
+  CountDownLandF11
+  
+  F14NeverWithBarley?                                              ;; use to record the farmer has the first harvest or not
+  TheFirstHarvestYearF14  
+  CountDownBarleyF14  
+  F14NeverWithLand?
+  F14FirstWithLand
+  CountDownLandF14
+
+  F15NeverWithBarley?                                              ;; use to record the farmer has the first harvest or not
+  TheFirstHarvestYearF15  
+  CountDownBarleyF15  
+  F15NeverWithLand?
+  F15FirstWithLand
+  CountDownLandF15
+
+  F16NeverWithBarley?                                              ;; use to record the farmer has the first harvest or not
+  TheFirstHarvestYearF16  
+  CountDownBarleyF16  
+  F16NeverWithLand?
+  F16FirstWithLand
+  CountDownLandF16  
+  
+  F17NeverWithBarley?                                              ;; use to record the farmer has the first harvest or not
+  TheFirstHarvestYearF17  
+  CountDownBarleyF17  
+  F17NeverWithLand?
+  F17FirstWithLand
+  CountDownLandF17 
+
+  F20NeverWithBarley?                                              ;; use to record the farmer has the first harvest or not
+  TheFirstHarvestYearF20  
+  CountDownBarleyF20  
+  F20NeverWithLand?
+  F20FirstWithLand
+  CountDownLandF20
+
+  F21NeverWithBarley?                                              ;; use to record the farmer has the first harvest or not
+  TheFirstHarvestYearF21 
+  CountDownBarleyF21  
+  F21NeverWithLand?
+  F21FirstWithLand
+  CountDownLandF21
+
+  F22NeverWithBarley?                                              ;; use to record the farmer has the first harvest or not
+  TheFirstHarvestYearF22  
+  CountDownBarleyF22  
+  F22NeverWithLand?
+  F22FirstWithLand
+  CountDownLandF22  
+] 

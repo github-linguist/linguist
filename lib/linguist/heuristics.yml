@@ -611,6 +611,32 @@ disambiguations:
   - language: NL
     pattern: '^(b|g)[0-9]+ '
   - language: NewLisp
+- extensions: ['.nls']
+  rules:
+  - language: NetLogo
+    pattern: >-
+      (?x) ^ \s*
+      ( to(-report)?                  \s+ \w[\w-]*
+      | (extension|global|__include)s \s* \[
+      | (turtles|patches|links)-own   \s* \[
+      | ((un)?directed-link-)?breed   \s* \[
+      )
+  - language: TeX
+    pattern: >-
+      (?x) ^ \s*
+      ( \\begin    \{
+      | \\end      \{
+      | \\nomgroup \{
+      | \\item
+      )
+  - language: INI
+    pattern: >-
+      (?x) ^ \s*
+      ( [\w#-]+\s*=
+      | STRINGTABLE
+      | LOCALE_
+      | LGRPID_
+      )
 - extensions: ['.nr']
   rules:
   - language: Roff
