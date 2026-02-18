@@ -184,7 +184,20 @@ grammars.yml: 884 lines (884 sloc)
 
 #### Docker
 
-If you have Docker installed you can build an image and run Linguist within a container:
+If you have Docker installed you can either build or use
+our pre-built images and run Linguist within a container:
+
+```console
+$ docker run --rm -v $(pwd):$(pwd):Z -w $(pwd) -t ghcr.io/github-linguist/linguist:latest
+66.84%  264519     Ruby
+24.68%  97685      C
+6.57%   25999      Go
+1.29%   5098       Lex
+0.32%   1257       Shell
+0.31%   1212       Dockerfile
+```
+
+##### Building the image
 
 ```console
 $ docker build -t linguist .

@@ -53,6 +53,7 @@ var GrammarsInNonStdPath = map[string]bool{
 // IgnoredFiles is a list of files that look like syntax files but aren't, or are known to be broken and never likely to be fixed.
 var IgnoredFiles = map[string]bool{
 	"ballerina-grammar/syntaxes/ballerina.monarch.json":           true,
+  "ballerina-grammar/syntaxes/ballerina.tmLanguage.json":        true,
 	"oz-tmbundle/Originals/Oz.tmLanguage":                         true,
 	"abl-tmlanguage/package-lock.json":                            true,
 	"abl-tmlanguage/package.json":                                 true,
@@ -64,4 +65,7 @@ var IgnoredFiles = map[string]bool{
 	"liquid-tm-grammar/tests/syntaxes/javascript.tmLanguage.json": true,
 	"liquid-tm-grammar/tests/syntaxes/json.tmLanguage.json":       true,
 	"godot-vscode-plugin/syntaxes/.prettierrc.json":               true,
+  "vscode-kcl/syntaxes/toml.tmLanguage.json":                    true,
+  "vscode-jest/syntaxes/ExtSettingsSchema.json":                 true,
+  "vscode_cobol/syntaxes/rexx.tmLanguage.json":                 true,
 }
