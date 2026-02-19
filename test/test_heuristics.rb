@@ -761,7 +761,8 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "Roff" => all_fixtures("Roff", "*.ms"),
       "Unix Assembly" => all_fixtures("Unix Assembly", "*.ms"),
-      "MAXScript" => all_fixtures("MAXScript", "*.ms")
+      "MAXScript" => all_fixtures("MAXScript", "*.ms"),
+      "MiniScript" => all_fixtures("MiniScript", "*.ms"),
     })
   end
 
