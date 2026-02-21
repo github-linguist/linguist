@@ -112,7 +112,7 @@
       },
       "name": "meta.definition.function.loon",
       "patterns": [
-        { "include": "#param-list" },
+        { "include": "#fn-params" },
         { "include": "#multi-arity-clauses" },
         { "include": "$self" }
       ]
@@ -146,7 +146,7 @@
       },
       "name": "meta.definition.test.loon",
       "patterns": [
-        { "include": "#param-list" },
+        { "include": "#fn-params" },
         { "include": "$self" }
       ]
     },
@@ -158,8 +158,9 @@
         "3": { "name": "entity.name.namespace.loon" }
       }
     },
-    "param-list": {
-      "begin": "(\\[)",
+    "fn-params": {
+      "comment": "Matches only simple param lists [a b c] without nested brackets",
+      "begin": "(\\[)(?=[^\\[\\]]*\\])",
       "beginCaptures": {
         "1": { "name": "punctuation.section.params.begin.loon" }
       },
@@ -169,30 +170,10 @@
       },
       "name": "meta.parameters.loon",
       "patterns": [
-        { "include": "#destructuring" },
         {
           "match": "[a-zA-Z_][\\w\\-\\?\\!]*",
           "name": "variable.parameter.loon"
-        },
-        { "include": "$self" }
-      ]
-    },
-    "destructuring": {
-      "begin": "(\\[)",
-      "beginCaptures": {
-        "1": { "name": "punctuation.section.destructuring.begin.loon" }
-      },
-      "end": "(\\])",
-      "endCaptures": {
-        "1": { "name": "punctuation.section.destructuring.end.loon" }
-      },
-      "name": "meta.destructuring.loon",
-      "patterns": [
-        {
-          "match": "[a-zA-Z_][\\w\\-\\?\\!]*",
-          "name": "variable.parameter.loon"
-        },
-        { "include": "$self" }
+        }
       ]
     },
     "multi-arity-clauses": {
