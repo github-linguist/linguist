@@ -381,6 +381,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Mathematical Programming System:** [sharktide/mps-vscode](https://github.com/sharktide/mps-vscode)
 - **Maven POM:** [textmate/maven.tmbundle](https://github.com/textmate/maven.tmbundle)
 - **Max:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
+- **MeTTa:** [Abigiya-M/metta-textmate-linguist](https://github.com/Abigiya-M/metta-textmate-linguist)
 - **Mercury:** [sebgod/mercury-tmlanguage](https://github.com/sebgod/mercury-tmlanguage)
 - **Mermaid:** [Alhadis/language-mermaid](https://github.com/Alhadis/language-mermaid)
 - **Meson:** [TingPing/language-meson](https://github.com/TingPing/language-meson)
