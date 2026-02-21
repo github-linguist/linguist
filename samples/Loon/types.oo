@@ -1,0 +1,17 @@
+[type Shape
+  [Circle f64]
+  [Rect f64 f64]
+  Point]
+
+[fn area [shape]
+  [match shape
+    [Circle r] [* 3.14159 [* r r]]
+    [Rect w h] [* w h]
+    Point      0.0]]
+
+[fn main []
+  [let c [Circle 5.0]]
+  [let r [Rect 3.0 4.0]]
+  [println [area c]]
+  [println [area r]]
+  [println [area Point]]]

@@ -1,0 +1,305 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Loon",
+  "scopeName": "source.loon",
+  "fileTypes": ["oo", "loon"],
+  "patterns": [
+    { "include": "#comment" },
+    { "include": "#string" },
+    { "include": "#effect-set" },
+    { "include": "#vector-literal" },
+    { "include": "#map" },
+    { "include": "#definition" },
+    { "include": "#type-definition" },
+    { "include": "#test-definition" },
+    { "include": "#use-form" },
+    { "include": "#expression" },
+    { "include": "#tuple" },
+    { "include": "#keyword" },
+    { "include": "#constant" },
+    { "include": "#number" },
+    { "include": "#type-constructor" },
+    { "include": "#module-access" },
+    { "include": "#symbol" }
+  ],
+  "repository": {
+    "comment": {
+      "begin": ";",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.comment.loon" }
+      },
+      "end": "$",
+      "name": "comment.line.semicolon.loon"
+    },
+    "string": {
+      "begin": "\"",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.string.begin.loon" }
+      },
+      "end": "\"",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.string.end.loon" }
+      },
+      "name": "string.quoted.double.loon",
+      "patterns": [
+        {
+          "match": "\\\\[\\\\\"nrt0]",
+          "name": "constant.character.escape.loon"
+        },
+        {
+          "begin": "\\{",
+          "beginCaptures": {
+            "0": { "name": "punctuation.section.interpolation.begin.loon" }
+          },
+          "end": "\\}",
+          "endCaptures": {
+            "0": { "name": "punctuation.section.interpolation.end.loon" }
+          },
+          "name": "meta.interpolation.loon",
+          "contentName": "source.loon.embedded",
+          "patterns": [
+            { "include": "$self" }
+          ]
+        }
+      ]
+    },
+    "keyword": {
+      "match": ":[a-zA-Z][\\w\\-]*",
+      "name": "constant.other.keyword.loon"
+    },
+    "constant": {
+      "match": "\\b(true|false|None)\\b",
+      "name": "constant.language.loon"
+    },
+    "number": {
+      "patterns": [
+        {
+          "match": "[-+]?\\d+\\.\\d+([eE][-+]?\\d+)?",
+          "name": "constant.numeric.float.loon"
+        },
+        {
+          "match": "[-+]?0[xX][0-9a-fA-F]+",
+          "name": "constant.numeric.hex.loon"
+        },
+        {
+          "match": "[-+]?\\d+",
+          "name": "constant.numeric.integer.loon"
+        }
+      ]
+    },
+    "type-constructor": {
+      "match": "\\b[A-Z][a-zA-Z0-9]*\\b",
+      "name": "entity.name.type.loon"
+    },
+    "module-access": {
+      "match": "\\b([a-z][\\w\\-]*)(\\.)",
+      "captures": {
+        "1": { "name": "entity.name.namespace.loon" },
+        "2": { "name": "punctuation.accessor.loon" }
+      }
+    },
+    "definition": {
+      "begin": "(\\[)\\s*(pub\\s+)?(fn)\\s+([a-zA-Z][\\w\\-\\?\\!]*)",
+      "beginCaptures": {
+        "1": { "name": "punctuation.section.expression.begin.loon" },
+        "2": { "name": "storage.modifier.loon" },
+        "3": { "name": "keyword.control.loon" },
+        "4": { "name": "entity.name.function.loon" }
+      },
+      "end": "(\\])",
+      "endCaptures": {
+        "1": { "name": "punctuation.section.expression.end.loon" }
+      },
+      "name": "meta.definition.function.loon",
+      "patterns": [
+        { "include": "#param-list" },
+        { "include": "#multi-arity-clauses" },
+        { "include": "$self" }
+      ]
+    },
+    "type-definition": {
+      "begin": "(\\[)\\s*(type)\\s+([A-Z][a-zA-Z0-9]*)",
+      "beginCaptures": {
+        "1": { "name": "punctuation.section.expression.begin.loon" },
+        "2": { "name": "keyword.control.loon" },
+        "3": { "name": "entity.name.type.definition.loon" }
+      },
+      "end": "(\\])",
+      "endCaptures": {
+        "1": { "name": "punctuation.section.expression.end.loon" }
+      },
+      "name": "meta.definition.type.loon",
+      "patterns": [
+        { "include": "$self" }
+      ]
+    },
+    "test-definition": {
+      "begin": "(\\[)\\s*(test)\\s+([a-zA-Z][\\w\\-\\?\\!]*)",
+      "beginCaptures": {
+        "1": { "name": "punctuation.section.expression.begin.loon" },
+        "2": { "name": "keyword.control.loon" },
+        "3": { "name": "entity.name.function.test.loon" }
+      },
+      "end": "(\\])",
+      "endCaptures": {
+        "1": { "name": "punctuation.section.expression.end.loon" }
+      },
+      "name": "meta.definition.test.loon",
+      "patterns": [
+        { "include": "#param-list" },
+        { "include": "$self" }
+      ]
+    },
+    "use-form": {
+      "match": "(\\[)\\s*(use)\\s+([a-zA-Z][\\w\\-\\.]*)",
+      "captures": {
+        "1": { "name": "punctuation.section.expression.begin.loon" },
+        "2": { "name": "keyword.control.import.loon" },
+        "3": { "name": "entity.name.namespace.loon" }
+      }
+    },
+    "param-list": {
+      "begin": "(\\[)",
+      "beginCaptures": {
+        "1": { "name": "punctuation.section.params.begin.loon" }
+      },
+      "end": "(\\])",
+      "endCaptures": {
+        "1": { "name": "punctuation.section.params.end.loon" }
+      },
+      "name": "meta.parameters.loon",
+      "patterns": [
+        { "include": "#destructuring" },
+        {
+          "match": "[a-zA-Z_][\\w\\-\\?\\!]*",
+          "name": "variable.parameter.loon"
+        },
+        { "include": "$self" }
+      ]
+    },
+    "destructuring": {
+      "begin": "(\\[)",
+      "beginCaptures": {
+        "1": { "name": "punctuation.section.destructuring.begin.loon" }
+      },
+      "end": "(\\])",
+      "endCaptures": {
+        "1": { "name": "punctuation.section.destructuring.end.loon" }
+      },
+      "name": "meta.destructuring.loon",
+      "patterns": [
+        {
+          "match": "[a-zA-Z_][\\w\\-\\?\\!]*",
+          "name": "variable.parameter.loon"
+        },
+        { "include": "$self" }
+      ]
+    },
+    "multi-arity-clauses": {
+      "begin": "(\\()",
+      "beginCaptures": {
+        "1": { "name": "punctuation.section.arity.begin.loon" }
+      },
+      "end": "(\\))",
+      "endCaptures": {
+        "1": { "name": "punctuation.section.arity.end.loon" }
+      },
+      "name": "meta.arity-clause.loon",
+      "patterns": [
+        { "include": "#param-list" },
+        { "include": "$self" }
+      ]
+    },
+    "expression": {
+      "begin": "(\\[)",
+      "beginCaptures": {
+        "1": { "name": "punctuation.section.expression.begin.loon" }
+      },
+      "end": "(\\])",
+      "endCaptures": {
+        "1": { "name": "punctuation.section.expression.end.loon" }
+      },
+      "name": "meta.expression.loon",
+      "patterns": [
+        {
+          "match": "(?<=\\[)(fn|let|match|if|do|pipe|handle|resume|for|cond|and|or|not|when)(?=\\s|\\])",
+          "name": "keyword.control.loon"
+        },
+        {
+          "match": "(?<=\\[)(assert-eq|assert|println|str|fmt|get|set|update|map|filter|flat-map|fold|reduce|each|take|drop|sort|sort-by|group-by|entries|range|len|sum|nth|split|join|lowercase|uppercase|empty\\?|not|cons|append|concat|into|reverse|zip|first|rest|last|push|pop|peek)(?=\\s|\\])",
+          "name": "support.function.loon"
+        },
+        {
+          "match": "(?<=\\[)([+\\-*/=<>!]+|>=|<=|!=|mod|rem)(?=\\s)",
+          "name": "keyword.operator.loon"
+        },
+        {
+          "match": "(?<=\\[)([a-zA-Z][\\w\\-\\?\\!]*(?:\\.[a-zA-Z][\\w\\-\\?\\!]*)*)(?=\\s|\\])",
+          "name": "entity.name.function.call.loon"
+        },
+        { "include": "$self" }
+      ]
+    },
+    "tuple": {
+      "begin": "(\\()",
+      "beginCaptures": {
+        "1": { "name": "punctuation.section.tuple.begin.loon" }
+      },
+      "end": "(\\))",
+      "endCaptures": {
+        "1": { "name": "punctuation.section.tuple.end.loon" }
+      },
+      "name": "meta.tuple.loon",
+      "patterns": [
+        { "include": "$self" }
+      ]
+    },
+    "map": {
+      "begin": "(\\{)",
+      "beginCaptures": {
+        "1": { "name": "punctuation.section.map.begin.loon" }
+      },
+      "end": "(\\})",
+      "endCaptures": {
+        "1": { "name": "punctuation.section.map.end.loon" }
+      },
+      "name": "meta.map.loon",
+      "patterns": [
+        { "include": "$self" }
+      ]
+    },
+    "vector-literal": {
+      "begin": "(#\\[)",
+      "beginCaptures": {
+        "1": { "name": "punctuation.section.vector.begin.loon" }
+      },
+      "end": "(\\])",
+      "endCaptures": {
+        "1": { "name": "punctuation.section.vector.end.loon" }
+      },
+      "name": "meta.vector.loon",
+      "patterns": [
+        { "include": "$self" }
+      ]
+    },
+    "effect-set": {
+      "begin": "(#\\{)",
+      "beginCaptures": {
+        "1": { "name": "punctuation.section.effect-set.begin.loon" }
+      },
+      "end": "(\\})",
+      "endCaptures": {
+        "1": { "name": "punctuation.section.effect-set.end.loon" }
+      },
+      "name": "meta.effect-set.loon",
+      "patterns": [
+        { "include": "#type-constructor" },
+        { "include": "$self" }
+      ]
+    },
+    "symbol": {
+      "match": "[a-zA-Z_][\\w\\-\\?\\!]*",
+      "name": "variable.other.loon"
+    }
+  }
+}
