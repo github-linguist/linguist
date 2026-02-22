@@ -1,0 +1,10 @@
+; Test effect handling — mock IO
+[fn load-config [path] #{IO Fail}
+  [IO.read-file path]]
+
+[fn main []
+  [let result
+    [handle [load-config "app.toml"]
+      [IO.read-file path] [resume "name = test"]
+      [Fail.fail msg]     "error"]]
+  [println result]]

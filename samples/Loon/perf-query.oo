@@ -1,0 +1,28 @@
+; Analysis functions — format-agnostic, operate on normalized profiles
+
+; Network sorted by size (largest first)
+[pub fn network-by-size [profile]
+  [sort-by [fn [r] [get r :size 0]] :desc [get profile :network #[]]]]
+
+; Network totals by MIME type
+[pub fn network-by-mime [profile]
+  [pipe [get profile :network #[]]
+    [group-by [fn [r] [get r :mime-type "unknown"]]]
+    [entries]
+    [map [fn [[mime reqs]]
+      { :mime mime
+        :count [len reqs]
+        :bytes [sum [map [fn [r] [get r :size 0]] reqs]] }]]
+    [sort-by [fn [r] [get r :bytes 0]] :desc]]]
+
+; Frame timing stats
+[pub fn frame-stats [profile]
+  [let frames [get profile :frames #[]]]
+  [let durations [map [fn [f] [- [get f :end 0.0] [get f :start 0.0]]] frames]]
+  [let dur-ms [map [fn [d] [* d 1000.0]] durations]]
+  [let sorted [sort dur-ms]]
+  { :count [len frames]
+    :avg-ms [if [empty? dur-ms] 0.0 [/ [sum dur-ms] [len dur-ms]]]
+    :min-ms [if [empty? sorted] 0.0 [nth sorted 0]]
+    :max-ms [if [empty? sorted] 0.0 [nth sorted [- [len sorted] 1]]]
+    :jank   [len [filter [fn [d] [> d 16.67]] dur-ms]] }]
