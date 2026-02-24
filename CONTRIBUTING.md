@@ -223,7 +223,7 @@ Note that there are [limitations][search-limitations] imposed on what results ar
 
 The usage requirements are:
 
-- at least 2000 files per extension or filenme indexed in the last year (the number you see at the top of the search results), excluding forks, for extensions or filenames expected to occur more than once per repo, like Ruby's `.rb` extension.
+- at least 2000 files per extension or filename indexed in the last year (the number you see at the top of the search results), excluding forks, for extensions or filenames expected to occur more than once per repo, like Ruby's `.rb` extension.
 - at least 200 files per extension or filename indexed in the last year, excluding forks, for extensions or filenames expected to only occur once per repo, like a `Makefile`.
 - the results should show a reasonable distribution across unique `:user/:repo` combinations assessed by manually and randomly clicking through the results. 
   If particular users are showing a high proportion of the results, for example the primary language owner, we will filter out those users using `-user:<username>` to reduce their impact on the assessment.
