@@ -572,6 +572,8 @@ disambiguations:
     and:
       - negative_pattern: '/\*'
       - pattern: '^\s*\.(?:include\s|globa?l\s|[A-Za-z][_A-Za-z0-9]*:)'
+  - language: MiniScript
+    pattern: '^\s*\bend (?:function|while|if|for)\b|\s\b(?:isa)\b\s'
   - language: MAXScript
 - extensions: ['.msg']
   rules:
