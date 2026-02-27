@@ -201,7 +201,7 @@ $ docker run --rm -v $(pwd):$(pwd):Z -w $(pwd) -t ghcr.io/github-linguist/lingui
 
 ```console
 $ docker build -t linguist .
-$ docker run --rm -v $(pwd):$(pwd):Z -w $(pwd) -t linguist
+$ docker run --rm -v $(pwd):$(pwd) -w $(pwd) -t linguist
 66.84%  264519     Ruby
 24.68%  97685      C
 6.57%   25999      Go
