@@ -1,0 +1,37 @@
+// main.kode - Main application using multiple modules
+// Demonstrates various import syntax styles
+
+// Style 1: Simple import
+import "config";
+
+// Style 2: Aliased import
+import "math" as m;
+
+// Style 3: Named destructuring import
+import { Person, createPerson, Address } from "data";
+
+func main() {
+    print("=== Module System Demo ===");
+    
+    // Using config module (Style 1)
+    print("App: ");
+    print(config.APP_NAME);
+    print("Version: ");
+    print(config.VERSION);
+    
+    // Using math module (Style 2 - aliased)
+    print("Math operations:");
+    print(m.add(10, 5));           // 15
+    print(m.multiply(3, 4));       // 12
+    print(m.PI);
+    
+    // Using data module (Style 3 - named imports)
+    print("Person struct:");
+    let person = createPerson("Alice", 30, "alice@example.com");
+    print(person.name);
+    print(person.age);
+    
+    // Multiple operations
+    let sum = m.add(100, 50);
+    print(sum);
+}

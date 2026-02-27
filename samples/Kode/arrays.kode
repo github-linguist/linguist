@@ -1,0 +1,45 @@
+// Kode Language - Array Examples
+// This file demonstrates array operations in Kode v0.3+
+
+// Basic array creation and access
+let numbers = [1, 2, 3, 4, 5]
+print(numbers[0])  // Output: 1
+print(numbers[2])  // Output: 3
+
+// Arrays with strings
+let greeting = ["hello", "world"]
+print(greeting[0])  // Output: hello
+
+// Arrays with different element types (mixed - type system will improve this)
+let mixed = [10, 20, 30]
+
+// Array access with expressions
+print(numbers[1 + 1])  // Output: 3
+
+// Array arithmetic
+let results = [10 + 5, 20 - 5, 3 * 4]
+print(results[0])  // Output: 15
+print(results[1])  // Output: 15
+print(results[2])  // Output: 12
+
+// Using variables as indices
+let index = 2
+print(numbers[index])  // Output: 3
+
+// Complex expressions
+let x = 42
+let arr = [x, x + 1, x - 1]
+print(arr[0])  // Output: 42
+print(arr[1])  // Output: 43
+print(arr[2])  // Output: 41
+
+// For loop with arrays (future: array.len() method)
+for i = 0; i < 5; i++ {
+  print(numbers[i])
+}
+
+// Future features (not yet implemented):
+// arr.push(x)       - Add element
+// arr.pop()         - Remove last element
+// arr.len()         - Get length
+// arr[i] = value    - Assignment (OpArrayStore)

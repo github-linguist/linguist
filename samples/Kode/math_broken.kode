@@ -1,0 +1,14 @@
+// math_broken.kode - Math module with intentional error
+
+export func add(a: int, b: int) {
+    print(a + b);
+}
+
+export func broken_function(a: int, b: int) {
+    // This will cause a type error - trying to add string to int
+    print(a + "hello");
+}
+
+export func subtract(a: int, b: int) {
+    print(a - b);
+}

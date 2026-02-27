@@ -1,0 +1,80 @@
+// interactive_calculator.kode - Calculator with various operations
+
+import { add, subtract, multiply, divide, power, absoluteValue } from "math";
+
+func showMenu() {
+    print("--- Calculator Menu ---");
+    print("1. Add");
+    print("2. Subtract");
+    print("3. Multiply");
+    print("4. Divide");
+    print("5. Power");
+    print("6. Absolute Value");
+    print("");
+}
+
+func calculateSum() {
+    print("Adding: 100 + 50");
+    add(100, 50);
+}
+
+func calculateDifference() {
+    print("Subtracting: 100 - 35");
+    subtract(100, 35);
+}
+
+func calculateProduct() {
+    print("Multiplying: 12 * 25");
+    multiply(12, 25);
+}
+
+func calculateQuotient() {
+    print("Dividing: 144 / 12");
+    divide(144, 12);
+}
+
+func calculatePower() {
+    print("Power: 5 ^ 3");
+    power(5, 3);
+}
+
+func calculateAbsValue() {
+    print("Absolute Value of -100");
+    absoluteValue(0 - 100);
+}
+
+func main() {
+    print("");
+    print("╔════════════════════════════╗");
+    print("║   Kode Simple Calculator   ║");
+    print("║   Using Math Module        ║");
+    print("╚════════════════════════════╝");
+    print("");
+    
+    showMenu();
+    
+    print("Running all operations:");
+    print("");
+    
+    calculateSum();
+    print("");
+    
+    calculateDifference();
+    print("");
+    
+    calculateProduct();
+    print("");
+    
+    calculateQuotient();
+    print("");
+    
+    calculatePower();
+    print("");
+    
+    calculateAbsValue();
+    
+    print("");
+    print("Calculator complete!");
+}
+
+main();

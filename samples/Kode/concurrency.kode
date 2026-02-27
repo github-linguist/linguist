@@ -1,0 +1,20 @@
+ch := make(chan int)
+
+spawn worker(ch, 10)
+
+result := <-ch
+print("Received:", result)
+
+spawn async_task()
+
+func worker(ch: chan int, value: int) {
+    doubled := value * 2
+    ch <- doubled
+}
+
+func async_task() {
+    print("Async task running")
+    for i in 0..5 {
+        print("Iteration:", i)
+    }
+}

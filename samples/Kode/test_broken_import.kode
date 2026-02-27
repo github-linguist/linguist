@@ -1,0 +1,10 @@
+// test_broken_import.kode - Test importing from broken module
+
+import { add, broken_function } from "math_broken";
+
+func main() {
+    add(5, 3);
+    broken_function(10, 5);
+}
+
+main();

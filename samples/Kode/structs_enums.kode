@@ -1,0 +1,30 @@
+// ========== STRUCTS ==========
+// Struct definition
+struct Point {
+  x: int
+  y: int
+}
+
+// Struct instantiation
+let p = Point { x: 10, y: 20 }
+
+// Field access
+print(p.x)
+print(p.y)
+
+// ========== ENUMS ==========
+// Enum definition
+enum Color {
+  Red
+  Green
+  Blue
+}
+
+// Enum pattern matching
+let c = Color::Red
+
+match c {
+  Color::Red => print("red")
+  Color::Green => print("green")
+  Color::Blue => print("blue")
+}

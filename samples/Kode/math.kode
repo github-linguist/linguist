@@ -1,0 +1,39 @@
+// math.kode - Simple math operations module
+
+export func add(a: int, b: int) {
+    print(a + b);
+}
+
+export func subtract(a: int, b: int) {
+    print(a - b);
+}
+
+export func multiply(a: int, b: int) {
+    print(a * b);
+}
+
+export func divide(a: int, b: int) {
+    if (b == 0) {
+        print("Error: Division by zero");
+    } else {
+        print(a / b);
+    }
+}
+
+export func power(a: int, b: int) {
+    let result = 1;
+    let i = 0;
+    while (i < b) {
+        result = result * a;
+        i = i + 1;
+    }
+    print(result);
+}
+
+export func absoluteValue(a: int) {
+    if (a < 0) {
+        print(0 - a);
+    } else {
+        print(a);
+    }
+}

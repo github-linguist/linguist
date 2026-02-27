@@ -1,0 +1,84 @@
+service UserService {
+    route GET "/users" {
+        // Get all users
+        users := get_users()
+        return json_response(users)
+    }
+
+    route POST "/users" {
+        // Create a new user
+        user := parse_user_from_request()
+        created := create_user(user)
+        return json_response(created)
+    }
+
+    route GET "/users/:id" {
+        // Get user by ID
+        id := parse_id_from_path()
+        user := get_user_by_id(id)
+
+        if user.id == 0 {
+            return error_response(404, "User not found")
+        }
+
+        return json_response(user)
+    }
+}
+
+struct User {
+    id: int
+    name: string
+    email: string
+}
+
+func get_users() []User {
+    // Mock data
+    return [
+        User{id: 1, name: "Alice", email: "alice@example.com"},
+        User{id: 2, name: "Bob", email: "bob@example.com"}
+    ]
+}
+
+func create_user(user: User) User {
+    // Mock creation
+    return User{id: 3, name: user.name, email: user.email}
+}
+
+func get_user_by_id(id: int) User {
+    users := get_users()
+
+    for user in users {
+        if user.id == id {
+            return user
+        }
+    }
+
+    return User{id: 0, name: "", email: ""}
+}
+
+func parse_user_from_request() User {
+    // Mock parsing
+    return User{id: 0, name: "New User", email: "new@example.com"}
+}
+
+func parse_id_from_path() int {
+    // Mock parsing
+    return 1
+}
+
+func json_response(data: interface{}) Response {
+    return Response{status: 200, body: to_json(data)}
+}
+
+func error_response(status: int, message: string) Response {
+    return Response{status: status, body: message}
+}
+
+func to_json(data: interface{}) string {
+    return "{}" // placeholder
+}
+
+struct Response {
+    status: int
+    body: string
+}

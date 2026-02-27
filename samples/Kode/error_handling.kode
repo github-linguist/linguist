@@ -1,0 +1,12 @@
+result := divide(10, 2)
+print("Result:", result)
+
+result2 := divide(10, 0)
+print("Result2:", result2)
+
+func divide(a: int, b: int) int {
+    if b == 0 {
+        panic("Division by zero")
+    }
+    return a / b
+}

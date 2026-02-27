@@ -1,0 +1,26 @@
+struct User {
+    name: string
+    age: int
+    email: string
+}
+
+enum Status {
+    Active
+    Inactive
+    Pending
+}
+
+user := User {
+    name: "Alice"
+    age: 30
+    email: "alice@example.com"
+}
+
+status := Status.Active
+
+match status {
+    Status.Active => print("User is active")
+    Status.Inactive => print("User is inactive")
+    Status.Pending => print("User is pending")
+    _ => print("Unknown status")
+}

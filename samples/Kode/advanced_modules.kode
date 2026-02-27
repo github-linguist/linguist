@@ -1,0 +1,24 @@
+// Advanced Module Examples
+
+import "config" as cfg;
+
+func main() {
+    print("OK");
+}
+
+main();
+
+export func log(message: string) {
+    print(message);
+}
+
+export struct User {
+    id: int,
+    name: string
+}
+
+export const APP_NAME: string = "MyApp";
+export const VERSION: string = "1.0";
+
+export let PORT: int = 8080;
+

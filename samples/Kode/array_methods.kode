@@ -1,0 +1,118 @@
+// ============================================
+// Kode v0.3.1 - Array Methods & Member Access
+// ============================================
+
+// =================
+// Basic Array Usage
+// =================
+
+// Array literals and indexing
+let numbers = [10, 20, 30, 40, 50]
+print(numbers[0])      // 10
+print(numbers[4])      // 50
+
+// String arrays
+let words = ["hello", "world", "kode"]
+print(words[0])        // hello
+print(words[2])        // kode
+
+// Mixed type arrays (commented - not yet supported in type system)
+// let mixed = [1, "two", 30]
+// print(mixed[1])        // two
+
+// ========================
+// ARRAY METHODS - v0.3.1
+// ========================
+
+// Array.len method
+let arr1 = [1, 2, 3, 4, 5]
+print(arr1.len)        // 5
+
+let arr2 = ["a", "b", "c"]
+print(arr2.len)        // 3
+
+let arr3 = []
+print(arr3.len)        // 0 (empty array)
+
+// =======================
+// Array with expressions
+// =======================
+
+let results = [10 + 5, 20 * 3, 50 - 40]
+print(results[0])      // 15
+print(results[1])      // 60
+print(results[2])      // 10
+
+// Length of expression array
+print([1+1, 2+2, 3+3].len)  // 3
+
+// ==================
+// Loops with arrays
+// ==================
+
+let arr = [100, 200, 300, 400]
+
+// Access elements in loop
+for (let i = 0; i < 4; i++) {
+  print(arr[i])
+}
+
+// ========================
+// Array Value Operations
+// ========================
+
+let data = [5, 10, 15, 20, 25]
+let first = data[0]
+let last = data[4]
+let middle = data[2]
+
+print("First: ")
+print(first)
+
+print("Last: ")
+print(last)
+
+print("Middle: ")
+print(middle)
+
+// ====================
+// Nested operations
+// ====================
+
+let arr_nested = [[1, 2], [3, 4]]
+// Note: Nested array access would be: arr_nested[0][1]
+// Currently we support: arr_nested[0]
+print(arr_nested[0])   // [1 2]
+
+// ===========================
+// Method access demonstration
+// ===========================
+
+let test_arr = [7, 8, 9]
+let len_test = test_arr.len
+print(len_test)        // 3
+
+// Check array length conditions
+if (test_arr.len > 0) {
+  print("Array has elements")
+}
+
+// =================
+// Function example
+// =================
+
+// Future: function accepting array
+// fn sum(arr: []int) int =
+//   arr.fold(0, fn(acc, x) = acc + x)
+
+// ========================
+// MEMBER ACCESS FOUNDATION
+// ========================
+
+// The member access system (dot notation) enables:
+// 1. Array methods (.len, .push, .pop)
+// 2. Struct fields (future: obj.field)
+// 3. Enum variants (future: Enum::Variant)
+// 4. Custom methods (future: obj.method())
+
+print("v0.3.1 Complete - Array methods working!")

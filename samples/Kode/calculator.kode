@@ -1,0 +1,35 @@
+// calculator.kode - Simple calculator using math module
+
+import { add, subtract, multiply, divide, power } from "math";
+
+func main() {
+    print("╔════════════════════════════╗");
+    print("║   Kode Simple Calculator   ║");
+    print("╚════════════════════════════╝");
+    print("");
+    
+    print("Addition: 25 + 15 = ");
+    add(25, 15);
+    
+    print("");
+    print("Subtraction: 100 - 30 = ");
+    subtract(100, 30);
+    
+    print("");
+    print("Multiplication: 12 * 8 = ");
+    multiply(12, 8);
+    
+    print("");
+    print("Division: 144 / 12 = ");
+    divide(144, 12);
+    
+    print("");
+    print("Division by zero: 50 / 0 = ");
+    divide(50, 0);
+    
+    print("");
+    print("Power: 3 ^ 5 = ");
+    power(3, 5);
+}
+
+main();
