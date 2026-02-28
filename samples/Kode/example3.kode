@@ -1,0 +1,71 @@
+// Real-World Example: Employee Payroll System
+// Calculate salary with deductions and benefits
+
+struct Employee {
+    name: String,
+    position: String,
+    baseSalary: Float,
+    hoursWorked: Float,
+    overtimeMultiplier: Float
+}
+
+func getBonus(baseSalary: Float, years: Int) -> Float {
+    if (years >= 5) {
+        return baseSalary * 0.10;
+    } else if (years >= 3) {
+        return baseSalary * 0.05;
+    } else if (years >= 1) {
+        return baseSalary * 0.02;
+    }
+    return 0.0;
+}
+
+func calculateNetSalary(employee: Employee, taxRate: Float, years: Int) -> Float {
+    let overtime = 0.0;
+    if (employee.hoursWorked > 40) {
+        overtime = (employee.hoursWorked - 40) * (employee.baseSalary / 40) * employee.overtimeMultiplier;
+    }
+    
+    let bonus = getBonus(employee.baseSalary, years);
+    let grossSalary = employee.baseSalary + overtime + bonus;
+    let tax = grossSalary * taxRate;
+    let netSalary = grossSalary - tax;
+    
+    return netSalary;
+}
+
+func printPayslip(employee: Employee, years: Int) {
+    let netSalary = calculateNetSalary(employee, 0.20, years);
+    let gross = employee.baseSalary + getBonus(employee.baseSalary, years);
+    
+    print("\n=== PAYSLIP ===");
+    print("Employee: " + employee.name);
+    print("Position: " + employee.position);
+    print("Gross Salary: $" + gross);
+    print("Tax (20%): $" + (gross * 0.20));
+    print("Net Salary: $" + netSalary);
+}
+
+func main() {
+    let emp1 = Employee {
+        name: "Alice Johnson",
+        position: "Senior Developer",
+        baseSalary: 8000.0,
+        hoursWorked: 45.0,
+        overtimeMultiplier: 1.5
+    };
+    
+    printPayslip(emp1, 5);
+    
+    let emp2 = Employee {
+        name: "Bob Smith",
+        position: "Junior Developer",
+        baseSalary: 5000.0,
+        hoursWorked: 40.0,
+        overtimeMultiplier: 1.5
+    };
+    
+    printPayslip(emp2, 2);
+}
+
+main();

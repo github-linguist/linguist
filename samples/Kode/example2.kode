@@ -1,0 +1,54 @@
+// Real-World Example: Bank Account Management
+// Track deposits, withdrawals, and balance
+
+struct BankAccount {
+    accountNumber: String,
+    holder: String,
+    balance: Float,
+    transactions: [String]
+}
+
+func deposit(account: BankAccount, amount: Float) -> BankAccount {
+    account.balance = account.balance + amount;
+    account.transactions = account.transactions + ["Deposit: +$" + amount];
+    return account;
+}
+
+func withdraw(account: BankAccount, amount: Float) -> BankAccount {
+    if (account.balance >= amount) {
+        account.balance = account.balance - amount;
+        account.transactions = account.transactions + ["Withdrawal: -$" + amount];
+    } else {
+        print("Insufficient funds!");
+    }
+    return account;
+}
+
+func printStatement(account: BankAccount) {
+    print("\n=== Account Statement ===");
+    print("Account: " + account.accountNumber);
+    print("Holder: " + account.holder);
+    print("Current Balance: $" + account.balance);
+    print("\nRecent Transactions:");
+    for transaction in account.transactions {
+        print("  " + transaction);
+    }
+}
+
+func main() {
+    let myAccount = BankAccount {
+        accountNumber: "1234567890",
+        holder: "John Doe",
+        balance: 5000.0,
+        transactions: []
+    };
+    
+    myAccount = deposit(myAccount, 1500.0);
+    myAccount = withdraw(myAccount, 800.0);
+    myAccount = deposit(myAccount, 300.0);
+    myAccount = withdraw(myAccount, 200.0);
+    
+    printStatement(myAccount);
+}
+
+main();

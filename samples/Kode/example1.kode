@@ -1,0 +1,45 @@
+// Real-World Example: E-Commerce Shopping Cart
+// Calculate total price with tax and discounts
+
+struct Product {
+    name: String,
+    price: Float,
+    quantity: Int
+}
+
+func calculateSubtotal(products: [Product]) -> Float {
+    let total = 0.0;
+    for product in products {
+        total = total + (product.price * product.quantity);
+    }
+    return total;
+}
+
+func applyDiscount(amount: Float, discountPercent: Int) -> Float {
+    return amount - (amount * discountPercent / 100);
+}
+
+func calculateTax(amount: Float, taxPercent: Int) -> Float {
+    return amount * taxPercent / 100;
+}
+
+func main() {
+    let items = [
+        Product { name: "Laptop", price: 999.99, quantity: 1 },
+        Product { name: "Mouse", price: 29.99, quantity: 2 },
+        Product { name: "Keyboard", price: 79.99, quantity: 1 }
+    ];
+    
+    let subtotal = calculateSubtotal(items);
+    print("Subtotal: $" + subtotal);
+    
+    let discountedAmount = applyDiscount(subtotal, 10);
+    print("After 10% discount: $" + discountedAmount);
+    
+    let tax = calculateTax(discountedAmount, 8);
+    let finalTotal = discountedAmount + tax;
+    print("Tax (8%): $" + tax);
+    print("Final Total: $" + finalTotal);
+}
+
+main();
