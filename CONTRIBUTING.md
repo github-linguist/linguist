@@ -11,6 +11,25 @@ By participating, you are expected to uphold this code.
 
 The majority of contributions won't need to touch any Ruby code at all.
 
+
+## Table of Contents
+
+- [Setting up a working environment](#setting-up-a-working-environment)
+   - [Using GitHub Codespaces](#using-github-codespaces)
+   - [Using the dev container locally](#using-the-dev-container-locally)
+   - [Using your local system without the dev container](#using-your-local-system-without-the-dev-container)
+      - [Dependencies](#dependencies)
+      - [Getting started](#getting-started)
+- [Adding an extension to a language](#adding-an-extension-to-a-language)
+- [Adding a language](#adding-a-language)
+- [Fixing a misclassified language](#fixing-a-misclassified-language)
+- [Fixing syntax highlighting](#fixing-syntax-highlighting)
+- [Changing the source of a syntax highlighting grammar](#changing-the-source-of-a-syntax-highlighting-grammar)
+- [Changing the color associated with a language](#changing-the-color-associated-with-a-language)
+- [Language extension and filename usage requirements](#language-extension-and-filename-usage-requirements)
+- [Testing](#testing)
+
+
 ## Setting up a working environment
 
 In order to start contributing to Linguist, you will need to setup your working environment.
