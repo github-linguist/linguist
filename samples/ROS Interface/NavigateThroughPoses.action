@@ -1,0 +1,28 @@
+# From https://github.com/ros-navigation/navigation2/blob/f7b665406c46494b0f6fbfe80bd16d4f0d85e1df/nav2_msgs/action/NavigateThroughPoses.action
+
+#goal definition
+nav_msgs/Goals poses
+string behavior_tree
+---
+#result definition
+
+# Error codes
+# Note: The expected priority order of the errors should match the message order
+uint16 NONE=0
+uint16 UNKNOWN=9100
+uint16 FAILED_TO_LOAD_BEHAVIOR_TREE=9101
+uint16 TF_ERROR=9102
+uint16 TIMEOUT=9103
+
+uint16 error_code
+string error_msg
+WaypointStatus[] waypoint_statuses
+---
+#feedback definition
+geometry_msgs/PoseStamped current_pose
+builtin_interfaces/Duration navigation_time
+builtin_interfaces/Duration estimated_time_remaining
+int16 number_of_recoveries
+float32 distance_remaining
+int16 number_of_poses_remaining
+WaypointStatus[] waypoint_statuses

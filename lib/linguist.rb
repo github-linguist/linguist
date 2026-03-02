@@ -9,6 +9,7 @@ require 'linguist/shebang'
 require 'linguist/version'
 require 'linguist/strategy/manpage'
 require 'linguist/strategy/xml'
+require 'linguist/instrumenter'
 
 class << Linguist
   # Public: Detects the Language of the blob.
