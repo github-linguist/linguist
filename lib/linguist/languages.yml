@@ -396,6 +396,7 @@ Apollo Guidance Computer:
 AppleScript:
   type: programming
   aliases:
+  - apples
   - osascript
   extensions:
   - ".applescript"
@@ -2033,6 +2034,8 @@ Emacs Lisp:
   tm_scope: source.emacs.lisp
   color: "#c065db"
   aliases:
+  - cask
+  - eask
   - elisp
   - emacs
   filenames:
@@ -2043,6 +2046,7 @@ Emacs Lisp:
   - ".spacemacs"
   - ".viper"
   - Cask
+  - Eask
   - Project.ede
   - _emacs
   - abbrev_defs
@@ -4632,6 +4636,14 @@ Max:
   codemirror_mode: javascript
   codemirror_mime_type: application/json
   language_id: 227
+MeTTa:
+  type: programming
+  color: "#6a5acd"
+  extensions:
+  - ".metta"
+  tm_scope: source.metta
+  ace_mode: text
+  language_id: 1037612668
 Mercury:
   type: programming
   color: "#ff2b2b"
@@ -6139,6 +6151,8 @@ Python:
   - pypy3
   - uv
   aliases:
+  - py
+  - py3
   - python3
   - rusthon
   language_id: 303
@@ -7699,6 +7713,8 @@ TSX:
   type: programming
   color: "#3178c6"
   group: TypeScript
+  aliases:
+  - typescriptreact
   extensions:
   - ".tsx"
   tm_scope: source.tsx
