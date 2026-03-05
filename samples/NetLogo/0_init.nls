@@ -1,0 +1,204 @@
+extensions [ gis profiler nw csv ]
+
+breed [ bands band ]
+breed [ volcanoes volcano ]
+
+globals [
+  year
+  
+  ; start: GIS globals used for loading in map data
+  europe-landmass ; visualize the continent
+  europe-altitude ; altitude
+  europe-grid ; overlay a grid with graticules of 10
+  europe-tri ; terrain roughness index
+  
+  ; mean precipitation GIS
+  europe_prec_djf ; DJF: December, January, February
+  europe_prec_mam ; MAM: March, April, May
+  europe_prec_jja ; JJA: June, July, August
+  europe_prec_son ; September, October, November
+  
+  ; mean temperature GIS
+  europe_temp_djf
+  europe_temp_mam
+  europe_temp_jja
+  europe_temp_son
+  europe_temp_range ; Annual Temeprature Range
+                    ; end: GIS globals
+  
+  ; standard deviation of temperature
+  sd_temp_djf
+  sd_temp_mam
+  sd_temp_jja
+  sd_temp_son
+  ; standard deviation of precipitation
+  sd_prec_djf
+  sd_prec_mam
+  sd_prec_jja
+  sd_prec_son
+  
+  ;the list of ch4 levels in Greenland and Antarctica
+  GISP2_climate_trend
+  
+  ;A set of patches that are not water
+  land_patches
+  
+  ;The thresholds from which bands start sharing knowledge
+  technology_sharing_threshold
+  first_threshold_connection
+  second_threshold_connection
+  fourth_threshold_connection
+  
+  ;Keeps track of the current season which is based on ticks and will make sure the right data is used
+  current_season
+  
+  ;The number of days that bands can spend in total, always set to 90 (3 months)
+  time_available
+
+  
+  ; climate change
+  temp_change
+  prec_change
+  sd_temp_change
+  sd_prec_change
+  
+  
+  ; global variables keeping track of statistics in the model (KPI's)
+  total_movement
+  
+  ;  impacted_bands
+  
+  ; connectedness
+  unique_communities
+  agentset_unique_communities
+  ;  number_links
+  
+  
+  ;; Compound Events KPI's
+  ;; - environment
+  average_temperature_of_patches
+  average_precipitation_of_patches
+  ;; - volcano impact
+  impact_by_ash
+  death_by_volcano
+  death_by_ash
+  event_cultural_capital_loss
+  lost_resources
+  ;; - patch availability
+  average_food_available
+  average_resources_available
+  ;; Connectedness
+  number_of_communities
+  average_community_size
+  number_of_links
+  ;; Band characteristics
+  average_knowledge_locations
+  average_cultural_capital
+  average_technology_level
+  average_time_spent_moving
+  ;; Population
+  mean_group_size
+  total_number_of_bands
+  total_population
+  extinct_bands
+  
+]
+
+bands-own [
+  group_size
+  
+  food_needed
+  resources_needed
+  food_owned
+  resources_owned
+  
+  effectiveness
+  cultural_capital
+  technology_level
+  initial_mobility
+  mobility
+  
+  death_rate
+  health
+  
+  ;if bands decide to split, mother is used to copy the links of the old complete band
+  mother
+  
+  ;Keeps track of the knowledge on locations per season
+  known_locations_summer
+  known_locations_fall
+  known_locations_winter
+  known_locations_spring
+  known_locations_current
+  count_known_locations_current
+  
+  
+  ;Keeps track of the current and previous home location, to be able to calculate the time needed to move from the "previous home" to the potential new home
+  current_home_location
+  previous_home_location
+  
+  
+  ;Keeps track of how much time is spent on what activity
+  time_spent
+  time_spent_exploring
+  time_spent_moving
+  time_spent_gathering
+  
+  event_impact?
+  
+  ;Keeps track of the communities that the bands belongs to
+  community
+  community_name
+  community_size
+]
+
+links-own [
+  strength_of_connection
+  updated?
+]
+
+patches-own [
+  max_food
+  max_resources
+  food_available
+  resources_available
+  altitude
+  ruggedness_index
+  landmass
+  
+  prec_djf
+  prec_mam
+  prec_jja
+  prec_son
+  prec_year
+  average_prec
+  prec_current
+  min_temperature
+  max_temperature
+  
+  temp_djf
+  temp_mam
+  temp_jja
+  temp_son
+  temp_range
+  temp_year
+  average_temp
+  temp_current
+  min_precipitation
+  max_precipitation
+  
+  temp_deviation
+  prec_deviation
+  
+  ; compound event impact
+  volcano_impact?
+  ash_impact?
+  ash_fall
+]
+
+to debug [string]
+  ; small function for debugging
+  if debug? [
+    print string
+  ]
+end
