@@ -1,0 +1,30 @@
+[Serializable]
+clase Persona {
+    publico inicio(nombre, edad) {
+        este.nombre = nombre;
+        este.edad = edad;
+    }
+
+    [Log]
+    publico saludar() {
+        imprimir("Hola, soy " + este.nombre);
+    }
+}
+
+variable p = nueva Persona("Alejandro", 30);
+variable tipoP = Tipo.tipoDe(p);
+
+imprimir("--- Información de Clase ---");
+imprimir("Clase: " + tipoP);
+imprimir("Atributos de Clase: " + Tipo.obtenerAtributos(tipoP));
+
+variable metodos = Tipo.obtenerMetodos(tipoP);
+imprimir("Métodos: " + metodos);
+
+imprimir("--- Información de Instancia ---");
+variable campos = Tipo.obtenerCampos(p);
+imprimir("Campos: " + campos);
+
+imprimir("--- Información de Método ---");
+variable saludarMetodo = p.saludar;
+imprimir("Atributos de saludar: " + Tipo.obtenerAtributos(saludarMetodo));

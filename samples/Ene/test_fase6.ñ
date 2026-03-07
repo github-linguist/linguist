@@ -1,0 +1,31 @@
+// Prueba de Ene.Archivo
+variable ruta = "prueba.txt";
+variable contenido = "Hola desde Ñ, este es un archivo de prueba. 12345";
+
+imprimir("Escribiendo archivo...");
+Ene.Archivo.escribirToda(ruta, contenido);
+
+si (Ene.Archivo.existe(ruta)) {
+    imprimir("¡El archivo existe!");
+    variable leido = Ene.Archivo.leerToda(ruta);
+    imprimir("Contenido leído: " + leido);
+} sino {
+    imprimir("Error: El archivo no se creó.");
+}
+
+// Prueba de Ene.Json
+variable datos = diccionario();
+datos.poner("nombre", "Jorge");
+datos.poner("edad", 30);
+datos.poner("lenguajes", lista());
+datos.obtener("lenguajes").añadir("Ñ");
+datos.obtener("lenguajes").añadir("CSharp");
+
+imprimir("Codificando a JSON...");
+variable jsonStr = Ene.Json.codificar(datos);
+imprimir("JSON: " + jsonStr);
+
+imprimir("Decodificando JSON...");
+variable obj = Ene.Json.decodificar(jsonStr);
+imprimir("Nombre decodificado: " + obj.obtener("nombre"));
+imprimir("Edad decodificada: " + obj.obtener("edad"));

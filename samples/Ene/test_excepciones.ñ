@@ -1,0 +1,15 @@
+intentar {
+    imprimir("Intentando algo peligroso...");
+    variable x = 10 / 0; // Esto debería lanzar un error interno de división por cero o similar que manejamos
+} capturar(error) {
+    imprimir("¡Atrapé un error!: " + error);
+}
+
+imprimir("El programa continúa después del error.");
+
+intentar {
+    imprimir("Llamando a algo que no existe...");
+    variable p = nueva PersonaInexistente();
+} capturar(e) {
+    imprimir("Error capturado: " + e);
+}

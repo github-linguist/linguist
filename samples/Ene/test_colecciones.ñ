@@ -1,0 +1,23 @@
+variable misNumeros = lista();
+misNumeros.añadir(10);
+misNumeros.añadir(20);
+misNumeros.añadir(30);
+
+imprimir("Tamaño de la lista: " + misNumeros.tamaño());
+imprimir("Elemento en 1: " + misNumeros.obtener(1));
+
+imprimir("Recorriendo lista con para-en:");
+para (variable n en misNumeros) {
+    imprimir("Número: " + n);
+}
+
+variable miDicc = diccionario();
+miDicc.poner("clave1", "valor1");
+miDicc.poner("clave2", "valor2");
+
+imprimir("Valor de clave1: " + miDicc.obtener("clave1"));
+
+imprimir("Recorriendo claves del diccionario:");
+para (variable k en miDicc) {
+    imprimir("Clave: " + k + " -> Valor: " + miDicc.obtener(k));
+}

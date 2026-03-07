@@ -1,0 +1,30 @@
+clase Persona {
+    inicio(nombre, edad) {
+        este.nombre = nombre;
+        este.edad = edad;
+    }
+
+    saludar() {
+        imprimir("Hola, mi nombre es " + este.nombre + " y tengo " + este.edad + " años.");
+    }
+
+    cumplirAnios() {
+        este.edad = este.edad + 1;
+        imprimir("¡Felicidades! Ahora tengo " + este.edad + " años.");
+    }
+}
+
+variable juan = nueva Persona("Juan", 25);
+juan.saludar();
+juan.cumplirAnios();
+
+imprimir("---");
+
+clase Calculadora {
+    sumar(a, b) {
+        devolver a + b;
+    }
+}
+
+variable calc = nueva Calculadora();
+imprimir("Resultado suma: " + calc.sumar(10, 5));

@@ -1,0 +1,29 @@
+contrato Identificable {
+    obtenerId();
+}
+
+clase Usuario implementa Identificable {
+    inicio(i) { este.id = i; }
+    publico funcion obtenerId() { devolver este.id; }
+}
+
+// Genérico con restricción (donde G hereda Identificable)
+// Nota: 'hereda' se usa tanto para clases como contratos en restricciones
+clase Repositorio<G> donde G hereda Identificable {
+    inicio() { este.items = lista(); }
+    publico funcion añadir(item) { este.items.añadir(item); }
+    publico funcion mostrarTodos() {
+        para (item en este.items) {
+            imprimir("ID: " + item.obtenerId());
+        }
+    }
+}
+
+// Inferencia de tipos (variable sin tipo complejo explícito)
+variable repo = nueva Repositorio();
+variable user1 = nueva Usuario(101);
+variable user2 = nueva Usuario(202);
+
+repo.añadir(user1);
+repo.añadir(user2);
+repo.mostrarTodos();

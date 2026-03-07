@@ -1,0 +1,16 @@
+clase Persona {
+    privado cadena nombre;
+    privado entero edad;
+
+    funcion inicio(cadena nombre, entero edad) {
+        este.nombre = nombre;
+        este.edad = edad;
+    }
+
+    funcion presentarse() {
+        imprimir("Hola, mi nombre es " + este.nombre + " y tengo " + este.edad + " años.");
+    }
+}
+
+Persona juan = nueva Persona("Juan", 30);
+juan.presentarse();

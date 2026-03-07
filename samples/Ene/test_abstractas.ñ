@@ -1,0 +1,18 @@
+abstracta clase Figura {
+    inicio(n) { este.nombre = n; }
+    publico funcion saludar() { imprimir("Soy una figura: " + este.nombre); }
+}
+
+clase Circulo hereda Figura {
+    inicio(r) { super.inicio("Círculo"); este.radio = r; }
+}
+
+variable c = nueva Circulo(5);
+c.saludar();
+
+imprimir("Intentando instanciar Figura (abstracta)...");
+intentar {
+    variable f = nueva Figura("Error");
+} capturar(e) {
+    imprimir("Capturado error esperado: " + e);
+}

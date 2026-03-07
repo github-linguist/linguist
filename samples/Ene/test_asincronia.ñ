@@ -1,0 +1,10 @@
+asincrono funcion tareaLanzada(ms) {
+    imprimir("Tarea asíncrona iniciada...");
+    devolver "Tarea completada con éxito";
+}
+
+imprimir("Lanzando tarea...");
+variable t = tareaLanzada(1000);
+imprimir("Esperando resultado...");
+variable r = esperar t;
+imprimir("Resultado: " + r);

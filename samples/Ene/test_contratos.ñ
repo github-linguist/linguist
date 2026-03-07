@@ -1,0 +1,17 @@
+contrato Volador {
+    volar();
+    aterrizar();
+}
+
+clase Pajaro implementa Volador {
+    publico funcion volar() {
+        imprimir("El pájaro está volando...");
+    }
+    publico funcion aterrizar() {
+        imprimir("El pájaro ha aterrizado.");
+    }
+}
+
+variable miPajaro = nueva Pajaro();
+miPajaro.volar();
+miPajaro.aterrizar();

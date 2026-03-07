@@ -1,0 +1,15 @@
+ññ Prueba de rendimiento JIT Compiler
+
+imprimir("Probando JIT Compiler vs Tree-Walk...");
+
+variable i = 0;
+variable suma = 0;
+
+mientras (i < 100000) {
+    suma = suma + i;
+    i = i + 1;
+}
+
+imprimir("Ciclos completados.");
+imprimir("Suma total:");
+imprimir(suma);
