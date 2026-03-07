@@ -1,0 +1,10 @@
+ññ Benchmark: bucle con operaciones aritméticas
+
+variable resultado = 0;
+variable i = 0;
+mientras (i < 100000) {
+    resultado = resultado + i * 2;
+    i = i + 1;
+}
+imprimir("Resultado: " + resultado);
+imprimir("Iteraciones: " + i);

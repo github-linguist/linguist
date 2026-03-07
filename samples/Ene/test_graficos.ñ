@@ -1,0 +1,52 @@
+ññ test_graficos.ñ
+imprimir("== Prueba de Ene.Gráficos ==");
+
+ññ Inicializar ventana
+variable ancho = 800;
+variable alto = 600;
+Ene.Gráficos.iniciarVentana(ancho, alto, "Mi Primera Ventana con Ene.Graficos");
+
+ññ Colores RGB(A)
+variable colorFondo = Ene.lista();
+colorFondo.añadir(245); colorFondo.añadir(245); colorFondo.añadir(245); colorFondo.añadir(255);
+
+variable colorCaja = Ene.lista();
+colorCaja.añadir(50); colorCaja.añadir(150); colorCaja.añadir(250); colorCaja.añadir(255);
+
+variable colorTexto = Ene.lista();
+colorTexto.añadir(20); colorTexto.añadir(20); colorTexto.añadir(20); colorTexto.añadir(255);
+
+ññ Variables de animación
+variable posX = 100;
+variable posY = 250;
+variable velX = 4;
+
+variable fps = 60;
+variable espera_ms = 1000 / fps;
+
+imprimir("Presiona la X en la ventana para salir...");
+
+mientras (!Ene.Gráficos.ventanaDeberiaCerrar()) {
+    
+    ññ Actualizar lógica
+    posX = posX + velX;
+    si (posX > ancho - 50) { velX = -4; }
+    si (posX < 0) { velX = 4; }
+
+    ññ Dibujar
+    Ene.Gráficos.iniciarDibujo();
+    Ene.Gráficos.limpiarFondo(colorFondo);
+    
+    ññ x, y, ancho, alto, color
+    Ene.Gráficos.dibujarRectangulo(posX, posY, 50, 50, colorCaja);
+    
+    ññ texto, x, y, tamaño_fuente, color
+    Ene.Gráficos.dibujarTexto("Animacion con N!", 280, 200, 20, colorTexto);
+    
+    Ene.Gráficos.terminarDibujo();
+    
+    Ene.Sistema.dormir(espera_ms);
+}
+
+Ene.Gráficos.cerrarVentana();
+imprimir("Ventana cerrada.");

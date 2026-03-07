@@ -1,0 +1,10 @@
+contrato Volador {
+    volar();
+}
+
+// Esta clase debería fallar al no implementar 'volar'
+clase Piedra implementa Volador {
+    publico funcion saludar() { imprimir("Soy una piedra"); }
+}
+
+imprimir("Esto no debería ejecutarse.");

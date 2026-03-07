@@ -1,0 +1,69 @@
+ññ Test completo de Paralelismo Real en Ñ
+
+ññ --- Test 1: Hilos con variable atómica ---
+variable contador = nueva Atomico(0);
+
+funcion tarea(id) {
+    variable i = 0;
+    mientras (i < 3) {
+        contador.incrementar();
+        imprimir("Hilo " + id + " - iteración " + i);
+        i = i + 1;
+    }
+}
+
+variable h1 = nueva Hilo(tarea, 1);
+variable h2 = nueva Hilo(tarea, 2);
+
+imprimir("=== Iniciando hilos ===");
+h1.iniciar();
+h2.iniciar();
+h1.unir();
+h2.unir();
+
+imprimir("Hilos terminados.");
+imprimir("Contador final (esperado 6): " + contador.obtener());
+
+ññ --- Test 2: Bloqueo (sección crítica) ---
+imprimir("");
+imprimir("=== Test de Bloqueo ===");
+variable bloqueo = nueva Bloqueo();
+variable recurso = nueva Atomico(0);
+
+funcion tareaConBloqueo(id) {
+    bloqueo.ejecutar(funcion() {
+        variable val = recurso.obtener();
+        recurso.establecer(val + 1);
+        imprimir("Hilo " + id + " incrementó recurso a " + recurso.obtener());
+    });
+}
+
+variable h3 = nueva Hilo(tareaConBloqueo, 3);
+variable h4 = nueva Hilo(tareaConBloqueo, 4);
+h3.iniciar();
+h4.iniciar();
+h3.unir();
+h4.unir();
+imprimir("Recurso final (esperado 2): " + recurso.obtener());
+
+ññ --- Test 3: Semáforo ---
+imprimir("");
+imprimir("=== Test de Semáforo ===");
+variable sem = nueva Semaforo(1);
+
+funcion tareaConSemaforo(id) {
+    sem.adquirir();
+    imprimir("Hilo " + id + " entró a la sección crítica");
+    sem.liberar();
+    imprimir("Hilo " + id + " salió de la sección crítica");
+}
+
+variable h5 = nueva Hilo(tareaConSemaforo, 5);
+variable h6 = nueva Hilo(tareaConSemaforo, 6);
+h5.iniciar();
+h6.iniciar();
+h5.unir();
+h6.unir();
+
+imprimir("");
+imprimir("=== Test de paralelismo completado ===");

@@ -1,0 +1,7 @@
+imprimir("Realizando petición HTTP...");
+intentar {
+    variable respuesta = Ene.Red.obtener("https://api.github.com/zen");
+    imprimir("Respuesta de GitHub: " + respuesta);
+} capturar (e) {
+    imprimir("Error en la red: " + e);
+}

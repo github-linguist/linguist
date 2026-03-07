@@ -1,0 +1,17 @@
+contrato Volador { volar(); }
+clase Ave implementa Volador { publico funcion volar() { imprimir("Volando..."); } }
+clase Avion implementa Volador { publico funcion volar() { imprimir("Motor encendido..."); } }
+clase Perro { }
+
+variable miAve = nueva Ave();
+variable miPerro = nueva Perro();
+
+imprimir("¿miAve es Ave? " + (miAve es Ave));
+imprimir("¿miAve es Volador? " + (miAve es Volador));
+imprimir("¿miPerro es Volador? " + (miPerro es Volador));
+imprimir("¿10 es entero? " + (10 es "entero"));
+imprimir("¿'hola' es cadena? " + ("hola" es "cadena"));
+
+si (miAve es Volador) {
+    miAve.volar();
+}

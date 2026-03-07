@@ -1,0 +1,28 @@
+clase Animal {
+    publico funcion inicio(nombre) {
+        este.nombre = nombre;
+    }
+
+    publico funcion hacerSonido() {
+        imprimir(este.nombre + " hace un sonido genérico.");
+    }
+}
+
+clase Perro hereda Animal {
+    publico funcion inicio(nombre, raza) {
+        super.inicio(nombre);
+        este.raza = raza;
+    }
+
+    publico funcion hacerSonido() {
+        imprimir(este.nombre + " (un " + este.raza + ") dice: ¡Guau!");
+    }
+
+    publico funcion sonidoBase() {
+        super.hacerSonido();
+    }
+}
+
+variable miPerro = nueva Perro("Bobby", "Labrador");
+miPerro.hacerSonido();
+miPerro.sonidoBase();

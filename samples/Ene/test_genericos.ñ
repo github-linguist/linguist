@@ -1,0 +1,7 @@
+clase Caja<G> {
+    inicio(v) { este.valor = v; }
+    publico funcion obtener() { devolver este.valor; }
+}
+
+variable miCaja = nueva Caja<Cadena>("Diamante");
+imprimir("Caja contiene: " + miCaja.obtener());

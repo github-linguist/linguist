@@ -1,0 +1,31 @@
+ññ test_datos.ñ
+imprimir("== Prueba de Ene.Datos ==");
+
+Ene.Archivo.borrar("prueba.db"); ññ Por si acaso
+
+variable bd = Ene.Datos.abrir("Data Source=prueba.db");
+
+ññ Crear tabla
+bd.ejecutar("CREATE TABLE Usuarios (id INTEGER PRIMARY KEY, nombre TEXT, edad INTEGER)");
+imprimir("Tabla Usuarios creada.");
+
+ññ Insertar datos
+bd.ejecutar("INSERT INTO Usuarios (nombre, edad) VALUES ('Ana', 25)");
+bd.ejecutar("INSERT INTO Usuarios (nombre, edad) VALUES ('Beto', 30)");
+bd.ejecutar("INSERT INTO Usuarios (nombre, edad) VALUES ('Carlos', 22)");
+imprimir("Usuarios insertados.");
+
+ññ Consultar
+variable usuarios = bd.consultar("SELECT * FROM Usuarios");
+imprimir("Resultados de la consulta:");
+imprimir("Total de usuarios: " + usuarios.tamaño());
+
+variable i = 0;
+mientras (i < usuarios.tamaño()) {
+    variable u = usuarios.obtener(i);
+    imprimir("ID: " + u.obtener("id") + " - Nombre: " + u.obtener("nombre") + " - Edad: " + u.obtener("edad"));
+    i = i + 1;
+}
+
+bd.cerrar();
+imprimir("Base de datos cerrada.");

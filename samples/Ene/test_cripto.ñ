@@ -1,0 +1,33 @@
+ññ test_cripto.ñ
+imprimir("== Prueba de Ene.Cripto ==");
+
+variable texto = "Este es un mensaje secreto en Ñ";
+imprimir("Texto original: " + texto);
+
+ññ Hash
+variable hash = Ene.Cripto.hash256(texto);
+imprimir("Hash SHA-256: " + hash);
+
+ññ Base64
+variable b64_cifrado = Ene.Cripto.cifrarBase64(texto);
+imprimir("Texto en Base64: " + b64_cifrado);
+variable b64_descifrado = Ene.Cripto.descifrarBase64(b64_cifrado);
+imprimir("Decodificado Base64: " + b64_descifrado);
+
+si (texto != b64_descifrado) {
+    imprimir("ERROR al decodificar Base64");
+}
+
+ññ AES
+variable clave = "SuperClaveSecreta123";
+variable aes_cifrado = Ene.Cripto.cifrarAES(texto, clave);
+imprimir("Cifrado AES (Base64): " + aes_cifrado);
+
+variable aes_descifrado = Ene.Cripto.descifrarAES(aes_cifrado, clave);
+imprimir("Descifrado AES: " + aes_descifrado);
+
+si (texto != aes_descifrado) {
+    imprimir("ERROR al descifrar AES");
+} sino {
+    imprimir("AES funciona correctamente!");
+}

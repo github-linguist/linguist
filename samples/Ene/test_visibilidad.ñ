@@ -1,0 +1,20 @@
+clase Cuenta {
+    privado funcion secreto() {
+        imprimir("Esto es un secreto.");
+    }
+
+    publico funcion verSaldo() {
+        imprimir("Tu saldo es 1000.");
+        este.secreto(); // Acceso interno permitido
+    }
+}
+
+variable miCuenta = nueva Cuenta();
+miCuenta.verSaldo(); // Debería funcionar
+
+intentar {
+    imprimir("Intentando acceder a método privado...");
+    miCuenta.secreto(); // Debería fallar
+} capturar(error) {
+    imprimir("Error esperado: " + error);
+}

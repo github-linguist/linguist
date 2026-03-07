@@ -1,0 +1,16 @@
+imprimir("Probando romper y continuar:");
+variable i = 0;
+mientras (i < 10) {
+    i = i + 1;
+    si (i == 5) continuar;
+    si (i == 8) romper;
+    imprimir("Contando: " + i);
+}
+
+imprimir("Probando segun:");
+variable color = "rojo";
+segun (color) {
+    caso "azul" { imprimir("El color es azul"); }
+    caso "rojo" { imprimir("El color es rojo"); }
+    predeterminado { imprimir("Color desconocido"); }
+}

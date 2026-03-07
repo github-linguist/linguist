@@ -1,0 +1,13 @@
+enum Direccion {
+    Norte,
+    Sur,
+    Este,
+    Oeste
+}
+
+variable miDir = Direccion.Norte;
+imprimir("Mi dirección es: " + miDir);
+
+si (miDir == Direccion.Norte) {
+    imprimir("Voy hacia el Norte.");
+}

@@ -1,0 +1,41 @@
+// Prueba Final de Librería Base 1.0
+
+// 1. Archivos Avanzados
+imprimir("--- Prueba de Archivos ---");
+Ene.Archivo.crearCarpeta("respaldo");
+Ene.Archivo.escribirToda("nota.txt", "Esta es una nota importante.");
+imprimir("Archivo creado.");
+Ene.Archivo.mover("nota.txt", "respaldo/nota_v1.txt");
+imprimir("Archivo movido a carpeta 'respaldo'.");
+
+// 2. Sistema
+imprimir("--- Prueba de Sistema ---");
+imprimir("Argumentos del programa: " + Ene.Sistema.argumentos());
+
+// 3. GUI Interactiva
+imprimir("--- Lanzando GUI Interactiva ---");
+variable contador = 0;
+
+funcion refrescar() {
+    variable html = "<html><body style='background:#1a1a2e; color:#e94560; text-align:center; padding-top:100px; font-family:Arial;'>";
+    html = html + "<h1 style='text-shadow: 2px 2px #0f3460;'>Consola Interactiva \u00D1</h1>";
+    html = html + "<div style='font-size:80px; margin:20px; font-weight:bold;'>" + contador + "</div>";
+    html = html + "<button onclick=\"enviarEvento('mas')\" style='padding:20px 40px; font-size:30px; background:#e94560; color:white; border:none; border-radius:10px; cursor:pointer;'>Aumentar</button>";
+    html = html + "<p style='color:#ccc; margin-top:50px;'>Pulsa el bot\u00F3n para interactuar con el int\u00E9rprete</p>";
+    html = html + "</body></html>";
+    Ene.Interfase.actualizar(html);
+}
+
+Ene.Interfase.alClic("mas", funcion() {
+    contador = contador + 1;
+    imprimir("[Interfase] Boton pulsado. Contador: " + contador);
+    refrescar();
+});
+
+refrescar();
+Ene.Interfase.ventana("Mi App en \u00D1");
+
+imprimir("Manteniendo aplicacion abierta (Ctrl+C para salir)...");
+mientras (verdadero) {
+    Ene.Sistema.dormir(100);
+}
