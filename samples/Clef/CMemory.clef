@@ -1,0 +1,12 @@
+/// Minimal libc memory bindings for ExternCall regression test.
+/// This is a subset of the Farscape-generated Fidelity.Libc.Memory module,
+/// containing only malloc and free to isolate the ExternCall pathway test.
+module ExternCallSample.CMemory
+
+[<FidelityExtern("c", "malloc")>]
+let malloc (size: unativeint) : option<nativeint> =
+    NativeDefault.zeroed ()
+
+[<FidelityExtern("c", "free")>]
+let free (ptr: nativeint) : unit =
+    NativeDefault.zeroed ()

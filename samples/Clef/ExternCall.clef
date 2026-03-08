@@ -1,0 +1,29 @@
+/// Sample 17: ExternCall — First sample using [<FidelityExtern>] bindings
+///
+/// Exercises the ExternCall pathway end-to-end:
+///   [<FidelityExtern>] declaration → PlatformBindingResolution → ExternCall coeffect
+///   → pExternCallResolved witness → func.call @malloc with "link" = "c"
+///
+/// Also exercises CaseElimination on option-typed ExternCall return:
+///   malloc returns option<nativeint> → match Some/None
+module ExternCallSample
+
+open ExternCallSample.CMemory
+
+[<EntryPoint>]
+let main _ =
+    Console.writeln "=== ExternCall Test ==="
+
+    // Call malloc via ExternCall — returns option<nativeint>
+    let result = malloc 64un
+
+    match result with
+    | Some ptr ->
+        Console.writeln "malloc succeeded"
+        // Free the allocated memory
+        free ptr
+        Console.writeln "free completed"
+        0
+    | None ->
+        Console.writeln "malloc failed"
+        1

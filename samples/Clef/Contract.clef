@@ -1,0 +1,15 @@
+module HelloArty.Contract
+
+open Fidelity.Platform.FPGA.Xilinx.Artix7.ArtyA7_100T.Prelude
+
+/// BAREWire-serialisable report transmitted from the FPGA to the CPU monitor
+/// over the Arty A7 USB-UART connection.
+///
+/// The FPGA Program emits this on UartReport; the Monitor decodes it from
+/// /dev/ttyUSB1. Both programs reference this module — neither owns it.
+[<BAREWireSchema>]
+type ArtyReport = {
+    Color:    Color
+    Mode:     Mode
+    PeriodMs: int
+}

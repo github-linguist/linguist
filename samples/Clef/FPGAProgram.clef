@@ -1,0 +1,13 @@
+module HelloArty.Program
+
+open Fidelity.Platform.FPGA.Xilinx.Artix7.ArtyA7_100T.Prelude
+open HelloArty.Contract
+open HelloArty.Behavior
+
+[<HardwareModule>]
+let helloArtyTop : Design<BreathState, ArtyReport> = {
+    InitialState = { Counter = 0; StepTick = 0; Phase = 0
+                     PeriodMs = defaultPeriodMs }
+    Step = step
+    Clock = Endpoints.clock
+}

@@ -1,0 +1,143 @@
+module HelloArty.Behavior
+
+open Fidelity.Platform.FPGA.Xilinx.Artix7.ArtyA7_100T.Prelude
+open HelloArty.Contract
+
+/// Default wave cycle: 4 seconds for a full LED0→LED3 chase.
+let defaultPeriodMs = 4000
+
+/// PWM resolution: 128 levels.
+let private pwmCeiling = 256
+
+/// Minimum brightness: LEDs brightness is not linear
+let pwmFloor = 0
+
+/// Ramp range: brightness steps from floor to ceiling.
+let private rampRange = pwmCeiling - pwmFloor
+
+/// Full wave cycle: 4 × pwmCeiling = 512 phase steps (power of 2 for free modulus).
+/// Each LED: ramp up (124 steps) + ramp down (124 steps) + dim hold (264 steps).
+let private cycleSteps = 4 * pwmCeiling
+
+/// Phase offset between adjacent LEDs (quarter cycle).
+let private ledOffset = pwmCeiling
+
+/// Ticks between phase steps. Full period maps to cycleSteps increments.
+let ticksPerStep periodMs = (periodMs * ticksPerMs) / cycleSteps
+
+/// Decode 3-bit switch vector to Color (SW2=MSB, SW0=LSB).
+let colorFromSwitches sw0 sw1 sw2 =
+    match sw0, sw1, sw2 with
+    | false, false, false -> Off
+    | true,  false, false -> Red
+    | false, true,  false -> Green
+    | false, false, true  -> Blue
+    | true,  true,  false -> Yellow
+    | false, true,  true  -> Cyan
+    | true,  false, true  -> Magenta
+    | true,  true,  true  -> White
+
+/// Select breath period from buttons (latching, priority-encoded).
+///   BTN0 pressed → default period (slowest)
+///   BTN1 pressed → half
+///   BTN2 pressed → quarter
+///   BTN3 pressed → eighth (fastest)
+///   no buttons   → previous rate held
+let periodFromButtons btn0 btn1 btn2 btn3 currentPeriodMs =
+    if btn3 then defaultPeriodMs / 8
+    else if btn2 then defaultPeriodMs / 4
+    else if btn1 then defaultPeriodMs / 2
+    else if btn0 then defaultPeriodMs
+    else currentPeriodMs
+
+/// Hardware register state for the wave chase design.
+type BreathState = {
+    Counter: int        // free-running tick counter (for PWM sub-cycle)
+    StepTick: int       // ticks since last phase step
+    Phase: int          // master wave phase (0..cycleSteps-1)
+    PeriodMs: int       // latched breath period (full wave cycle)
+}
+
+/// Mealy transition: state × inputs → state × outputs.
+///
+/// Wave chase: 4 green LEDs breathe in sequence with quarter-cycle offsets,
+/// creating a sinusoidal chasing wave. Each RGB LED follows its green
+/// counterpart with SW0-SW2 color selection. SW3 = master on/off.
+/// Buttons latch cadence. Rate persists after button release.
+let step (state: BreathState) (inputs: Inputs) : BreathState * Outputs<ArtyReport> =
+    let color = colorFromSwitches inputs.Sw0 inputs.Sw1 inputs.Sw2
+    let periodMs = periodFromButtons inputs.Btn0 inputs.Btn1 inputs.Btn2 inputs.Btn3 state.PeriodMs
+    let masterOn = inputs.Sw3
+
+    // Advance tick counter within current phase step
+    let nextStepTick = state.StepTick + 1
+    let threshold = ticksPerStep periodMs
+
+    // Time to advance phase?
+    let advancePhase = nextStepTick >= threshold
+
+    let nextPhase =
+        if not advancePhase then state.Phase
+        else (state.Phase + 1) % cycleSteps
+
+    let resetStepTick =
+        if advancePhase then 0
+        else nextStepTick
+
+    // Free-running counter for PWM sub-cycle
+    let maxTicks = defaultPeriodMs * ticksPerMs * 2
+    let nextCounter = (state.Counter + 1) % maxTicks
+    let pwmSubCycle = nextCounter % pwmCeiling
+    let doubleRamp = 2 * rampRange
+
+    // ── LED 0 (no offset) ──
+    let ph0 = nextPhase % cycleSteps
+    let raw0 =
+        if ph0 < rampRange then pwmFloor + ph0
+        else if ph0 < doubleRamp then pwmFloor + (doubleRamp - 1 - ph0)
+        else pwmFloor
+    let p0 = raw0 - pwmFloor
+    let smooth0 = pwmFloor + (3 * p0 * p0 - 2 * p0 * p0 * p0 / rampRange) / rampRange
+    let led0On = if masterOn then pwmSubCycle < smooth0 else false
+
+    // ── LED 1 (quarter-cycle offset) ──
+    let ph1 = (nextPhase + ledOffset) % cycleSteps
+    let raw1 =
+        if ph1 < rampRange then pwmFloor + ph1
+        else if ph1 < doubleRamp then pwmFloor + (doubleRamp - 1 - ph1)
+        else pwmFloor
+    let p1 = raw1 - pwmFloor
+    let smooth1 = pwmFloor + (3 * p1 * p1 - 2 * p1 * p1 * p1 / rampRange) / rampRange
+    let led1On = if masterOn then pwmSubCycle < smooth1 else false
+
+    // ── LED 2 (half-cycle offset) ──
+    let ph2 = (nextPhase + 2 * ledOffset) % cycleSteps
+    let raw2 =
+        if ph2 < rampRange then pwmFloor + ph2
+        else if ph2 < doubleRamp then pwmFloor + (doubleRamp - 1 - ph2)
+        else pwmFloor
+    let p2 = raw2 - pwmFloor
+    let smooth2 = pwmFloor + (3 * p2 * p2 - 2 * p2 * p2 * p2 / rampRange) / rampRange
+    let led2On = if masterOn then pwmSubCycle < smooth2 else false
+
+    // ── LED 3 (three-quarter-cycle offset) ──
+    let ph3 = (nextPhase + 3 * ledOffset) % cycleSteps
+    let raw3 =
+        if ph3 < rampRange then pwmFloor + ph3
+        else if ph3 < doubleRamp then pwmFloor + (doubleRamp - 1 - ph3)
+        else pwmFloor
+    let p3 = raw3 - pwmFloor
+    let smooth3 = pwmFloor + (3 * p3 * p3 - 2 * p3 * p3 * p3 / rampRange) / rampRange
+    let led3On = if masterOn then pwmSubCycle < smooth3 else false
+
+    // RGB LEDs follow corresponding green LED with color selection
+    let rgb0 = colorToRgbBits color led0On
+    let rgb1 = colorToRgbBits color led1On
+    let rgb2 = colorToRgbBits color led2On
+    let rgb3 = colorToRgbBits color led3On
+
+    { Counter = nextCounter; StepTick = resetStepTick; Phase = nextPhase
+      PeriodMs = periodMs },
+    { Leds = { Led0 = led0On; Led1 = led1On; Led2 = led2On; Led3 = led3On
+               Rgb0 = rgb0; Rgb1 = rgb1; Rgb2 = rgb2; Rgb3 = rgb3 }
+      UartReport = ValueNone }
