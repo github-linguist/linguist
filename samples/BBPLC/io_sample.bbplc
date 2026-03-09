@@ -1,0 +1,40 @@
+; Example 5: Input and output
+; Demonstrates: READ, PRINT, PRTLN, TOSTR
+
+; String prompts for the user
+DECLARE DB prompt1 = "Enter first number: "
+DECLARE DB prompt2 = "Enter second number: "
+DECLARE DB divider = "---"
+
+; Reserved buffers for input (10 bytes each)
+DECLARE RESERVE RB first_num 10
+DECLARE RESERVE RB second_num 10
+
+; Numeric variables
+DECLARE DD num1 = 0
+DECLARE DD num2 = 0
+
+; === Input first number ===
+; Print prompt
+PRINT prompt1
+; Read user input into buffer
+READ first_num
+
+; Print empty line
+PRTLN
+
+; === Input second number ===
+; Print prompt
+PRINT prompt2
+; Read user input into buffer
+READ second_num
+
+; Print separator
+PRTLN
+PRINT divider
+PRTLN
+
+; === Output entered values ===
+DECLARE DB echo_label = "You entered: "
+PRINT echo_label
+PRINT first_num

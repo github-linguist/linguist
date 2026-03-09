@@ -1,0 +1,49 @@
+; Example 3: Arithmetic operations
+; Demonstrates: ADD, SUB, MUL, DIV, MOV
+
+; Initial numbers
+DECLARE DD num1 = 10
+DECLARE DD num2 = 5
+; Variable for results
+DECLARE DD result = 0
+
+; Labels for output
+DECLARE DB add_label = "10 + 5 = "
+DECLARE DB sub_label = "10 - 5 = "
+DECLARE DB mul_label = "10 * 5 = "
+DECLARE DB div_label = "10 / 5 = "
+
+; === Addition ===
+; Copy first operand to result
+MOV result num1
+; Add second operand
+ADD result num2
+; Convert result to string and print
+PRINT add_label
+TOSTR result
+PRINT result
+PRTLN
+
+; === Subtraction ===
+MOV result num1
+SUB result num2
+PRINT sub_label
+TOSTR result
+PRINT result
+PRTLN
+
+; === Multiplication ===
+MOV result num1
+MUL result num2
+PRINT mul_label
+TOSTR result
+PRINT result
+PRTLN
+
+; === Division ===
+MOV result num1
+DIV result num2
+PRINT div_label
+TOSTR result
+PRINT result
+PRTLN
