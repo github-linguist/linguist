@@ -396,6 +396,7 @@ Apollo Guidance Computer:
 AppleScript:
   type: programming
   aliases:
+  - apples
   - osascript
   extensions:
   - ".applescript"
@@ -583,8 +584,8 @@ Batchfile:
   - ".bat"
   - ".cmd"
   filenames:
-  - "gradlew.bat"
-  - "mvnw.cmd"
+  - gradlew.bat
+  - mvnw.cmd
   tm_scope: source.batchfile
   ace_mode: batchfile
   color: "#C1F12E"
@@ -967,6 +968,14 @@ COLLADA:
   codemirror_mode: xml
   codemirror_mime_type: text/xml
   language_id: 49
+CQL:
+  type: programming
+  color: "#006091"
+  extensions:
+  - ".cql"
+  tm_scope: source.cql
+  ace_mode: text
+  language_id: 71155397
 CSON:
   type: data
   color: "#244776"
@@ -991,7 +1000,7 @@ CSV:
   type: data
   color: "#237346"
   ace_mode: csv
-  tm_scope: none
+  tm_scope: source.csv
   extensions:
   - ".csv"
   language_id: 51
@@ -2025,6 +2034,8 @@ Emacs Lisp:
   tm_scope: source.emacs.lisp
   color: "#c065db"
   aliases:
+  - cask
+  - eask
   - elisp
   - emacs
   filenames:
@@ -2035,6 +2046,7 @@ Emacs Lisp:
   - ".spacemacs"
   - ".viper"
   - Cask
+  - Eask
   - Project.ede
   - _emacs
   - abbrev_defs
@@ -2212,6 +2224,14 @@ Filterscript:
   tm_scope: none
   ace_mode: text
   language_id: 112
+FlatBuffers:
+  type: data
+  color: "#ed284a"
+  extensions:
+  - ".fbs"
+  tm_scope: source.flatbuffers
+  ace_mode: text
+  language_id: 577640576
 Flix:
   type: programming
   color: "#d44a45"
@@ -4597,6 +4617,14 @@ Mask:
   - ".mask"
   tm_scope: source.mask
   language_id: 223
+Mathematical Programming System:
+  type: programming
+  color: "#0530ad"
+  extensions:
+  - ".mps"
+  tm_scope: text.source.mps
+  ace_mode: text
+  language_id: 429002699
 Maven POM:
   type: data
   group: XML
@@ -4624,6 +4652,14 @@ Max:
   codemirror_mode: javascript
   codemirror_mime_type: application/json
   language_id: 227
+MeTTa:
+  type: programming
+  color: "#6a5acd"
+  extensions:
+  - ".metta"
+  tm_scope: source.metta
+  ace_mode: text
+  language_id: 1037612668
 Mercury:
   type: programming
   color: "#ff2b2b"
@@ -6131,6 +6167,8 @@ Python:
   - pypy3
   - uv
   aliases:
+  - py
+  - py3
   - python3
   - rusthon
   language_id: 303
@@ -6916,7 +6954,6 @@ SQL:
   codemirror_mime_type: text/x-sql
   extensions:
   - ".sql"
-  - ".cql"
   - ".ddl"
   - ".inc"
   - ".mysql"
@@ -7630,6 +7667,16 @@ TLA:
   tm_scope: source.tla
   ace_mode: text
   language_id: 364
+TMDL:
+  type: data
+  color: "#f0c913"
+  extensions:
+  - ".tmdl"
+  aliases:
+  - "Tabular Model Definition Language"
+  tm_scope: source.tmdl
+  ace_mode: text
+  language_id: 769162295
 TOML:
   type: data
   color: "#9c4221"
@@ -7671,7 +7718,7 @@ TSV:
   type: data
   color: "#237346"
   ace_mode: tsv
-  tm_scope: source.generic-db
+  tm_scope: source.tsv
   extensions:
   - ".tsv"
   - ".vcf"
@@ -7682,6 +7729,8 @@ TSX:
   type: programming
   color: "#3178c6"
   group: TypeScript
+  aliases:
+  - typescriptreact
   extensions:
   - ".tsx"
   tm_scope: source.tsx
@@ -8311,7 +8360,7 @@ Vue:
   color: "#41b883"
   extensions:
   - ".vue"
-  tm_scope: source.vue
+  tm_scope: text.html.vue
   ace_mode: vue
   codemirror_mode: vue
   codemirror_mime_type: text/x-vue
