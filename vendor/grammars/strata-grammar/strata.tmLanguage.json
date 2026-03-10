@@ -1,0 +1,46 @@
+{
+  "scopeName": "source.strata",
+  "name": "Strata",
+  "patterns": [
+    { "include": "#keywords" },
+    { "include": "#modules" },
+    { "include": "#functions" },
+    { "include": "#strings" },
+    { "include": "#numbers" },
+    { "include": "#comments" }
+  ],
+  "repository": {
+    "keywords": {
+      "patterns": [
+        { "name": "keyword.control.strata", "match": "\\b(func|create|type|set|var|import|from)\\b" }
+      ]
+    },
+    "modules": {
+      "patterns": [
+        { "name": "support.other.module.strata", "match": "\\b(str\\.io|str\\.math|str\\.util|str\\.time|str\\.lang|str\\.net|str\\.sql|str\\.xml|str\\.rmi|str\\.security|str\\.text)\\b" }
+      ]
+    },
+    "functions": {
+      "patterns": [
+        { "name": "support.function.strata", "match": "\\b(io\\.print|math\\.sqrt|math\\.pow|math\\.random|util\\.randomInt|time\\.now)\\b" }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        { "name": "string.quoted.single.strata", "match": "'[^']*'" },
+        { "name": "string.quoted.double.strata", "match": "\"[^\"]*\"" }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        { "name": "constant.numeric.strata", "match": "\\b\\d+\\b" }
+      ]
+    },
+    "comments": {
+      "patterns": [
+        { "name": "comment.line.double-slash.strata", "match": "//.*$" },
+        { "name": "comment.block.strata", "begin": "/\\*", "end": "\\*/" }
+      ]
+    }
+  }
+}

@@ -125,6 +125,15 @@ disambiguations:
     named_pattern: vba
   - language: Visual Basic 6.0
     named_pattern: vb-module
+- extensions: [".str"]
+  rules:
+    - language: Strata
+      pattern: >-
+         (?x)
+         \\b (func) \\b |
+         \\b import \\s+ \\w+ \\s+ from \\s+ |
+         (std|package):: \\w+ |
+         =>
 - extensions: ['.bb']
   rules:
   - language: BlitzBasic
