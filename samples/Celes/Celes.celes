@@ -1,0 +1,205 @@
+<!Celes-0.1.4>
+<title>{Celes Language Sample}
+<author>{Sourasish Das}
+<date>{11/03/2025}
+
+; This is the official Celes language sample file for GitHub Linguist.
+; Celes is a tag-based markup language. Syntax: <tag -attr=val>{content}
+
+; ── Document Structure ────────────────────────────────────────────────
+
+<section>{Introduction}
+
+<header -size=1>{What is Celes?}
+<line>{Celes is a <bold>{tag-based markup language} designed to be explicit, readable, and unambiguous.}
+<line>{Unlike Markdown, every element in Celes has a <italic>{named tag} — there are no ambiguous symbols.}
+<line>{The core syntax is: <code>{<tag -attribute=value>{content}}}
+<newline>
+
+<header -size=2>{Design Goals}
+<list -bullet=circle>{<bold>{Explicit} — every tag is named, every attribute is declared}
+<list -bullet=circle>{<bold>{Strict} — the parser rejects malformed input clearly}
+<list -bullet=circle>{<bold>{Readable} — documents are easy to read in raw form}
+<list -bullet=circle>{<bold>{Unambiguous} — one way to write each construct}
+<newline>
+
+; ── Inline Formatting ─────────────────────────────────────────────────
+
+<section>{Inline Formatting}
+
+<header -size=2>{Text Styles}
+<line>{This is <bold>{bold text} in a sentence.}
+<line>{This is <italic>{italic text} in a sentence.}
+<line>{This is <bold+italic>{bold and italic} combined.}
+<line>{This is <underline>{underlined text}.}
+<line>{This is <strike>{strikethrough text}.}
+<line>{This is <mark>{highlighted text} using the mark tag.}
+<line>{This is <code>{inline code} in a sentence.}
+<newline>
+
+<header -size=2>{Superscript and Subscript}
+<line>{Einstein's equation: E = mc<super>{2}}
+<line>{Water molecule: H<sub>{2}O}
+<line>{Footnote reference<super>{1} in a line of text.}
+<line>{Carbon dioxide: CO<sub>{2}}
+<line>{The area of a circle is πr<super>{2}.}
+<newline>
+
+<header -size=2>{Links and Buttons}
+<line>{Visit <link -body=the official website>{https://github.com/rr1ck/celes} for more.}
+<line>{Read the <link -body=documentation>{https://github.com/rr1ck/celes/blob/main/Celes-0.1.4-Spec.md}.}
+<line>{<button -body=Get Started>{https://github.com/rr1ck/celes}}
+<line>{<button -body=Download>{https://pypi.org/project/celes}}
+<newline>
+
+; ── Block Elements ────────────────────────────────────────────────────
+
+<section>{Block Elements}
+
+<header -size=2>{Paragraphs and Alignment}
+<line>{This is a standard left-aligned paragraph line.}
+<line -align=left>{This is explicitly left-aligned.}
+<line -align=center>{This line is centered on the page.}
+<line -align=right>{This line is right-aligned.}
+<newline>
+
+<header -size=2>{Blockquotes}
+<blockquote>{The best markup language is the one that gets out of your way.}
+<newline>
+<blockquote>{Outer blockquote content goes here. <nestquote>{This is a nested quote inside the blockquote.}}
+<newline>
+
+<header -size=2>{Code Blocks}
+<codeblock>{def parse_celes(source):
+    tokens = tokenize(source)
+    return tags_to_html(tokens)}
+<newline>
+<codeblock>{pip install celes
+celes parse document.celes output.html}
+<newline>
+
+<header -size=2>{Images}
+<image>{https://example.com/logo.png}
+<linkimage -image=logo.png>{https://example.com}
+<newline>
+
+; ── Headings ──────────────────────────────────────────────────────────
+
+<section>{Headings}
+
+<header -size=1>{Heading Level 1}
+<header -size=2>{Heading Level 2}
+<header -size=3>{Heading Level 3}
+<header -size=4>{Heading Level 4}
+<header -size=5>{Heading Level 5}
+<header -size=6>{Heading Level 6}
+<newline>
+
+; ── Lists ─────────────────────────────────────────────────────────────
+
+<section>{Lists}
+
+<header -size=2>{Bullet Lists}
+<list -bullet=circle>{First item}
+<list -bullet=circle>{Second item}
+<list -bullet=circle>{Third item with a <bold>{bold} word}
+<newline>
+
+<header -size=2>{Numbered Lists}
+<list -bullet=number>{Install Python 3.8 or higher}
+<list -bullet=number>{Run <code>{pip install celes}}
+<list -bullet=number>{Create a <code>{.celes} file}
+<list -bullet=number>{Parse it with <code>{celes parse file.celes out.html}}
+<newline>
+
+<header -size=2>{Nested Lists}
+<list -bullet=circle>{Programming Languages}
+<sublist -bullet=circle>{Python}<subsublist -bullet=circle>{CPython}<subsublist -bullet=circle>{PyPy}
+<sublist -bullet=circle>{JavaScript}<subsublist -bullet=circle>{Node.js}<subsublist -bullet=circle>{Deno}
+<sublist -bullet=circle>{Rust}
+<list -bullet=circle>{Markup Languages}
+<sublist -bullet=circle>{Document formats}<subsublist -bullet=circle>{Celes}<subsublist -bullet=circle>{Markdown}
+<sublist -bullet=circle>{Web formats}<subsublist -bullet=circle>{HTML}<subsublist -bullet=circle>{XML}
+<newline>
+
+<header -size=2>{Task Lists}
+<list -bullet=circle>{<checkmark -check>{Install Celes via pip}}
+<list -bullet=circle>{<checkmark -check>{Write first .celes document}}
+<list -bullet=circle>{<checkmark -uncheck>{Set up VS Code extension}}
+<list -bullet=circle>{<checkmark -uncheck>{Publish to GitHub}}
+<newline>
+
+; ── Tables ────────────────────────────────────────────────────────────
+
+<section>{Tables}
+
+<header -size=2>{Comparison Table}
+<table>{Feature, Markdown, Celes}
+<item>{Syntax style, Symbol-based, Tag-based}
+<item>{Parser strictness, Lenient, Strict}
+<item>{Attributes, Implicit, Explicit}
+<item>{Nested quotes, Limited, Native}
+<item>{Superscript, Extension, Built-in}
+<item>{Subscript, Extension, Built-in}
+<item>{Highlight, Extension, Built-in}
+<item>{Buttons, No, Built-in}
+<newline>
+
+<header -size=2>{Tag Reference}
+<table>{Tag, Type, Description}
+<item>{header, Block, Heading h1-h6}
+<item>{line, Block, Paragraph}
+<item>{blockquote, Block, Blockquote}
+<item>{codeblock, Block, Code block}
+<item>{list, Block, List item}
+<item>{table, Block, Table header row}
+<item>{bold, Inline, Bold text}
+<item>{italic, Inline, Italic text}
+<item>{mark, Inline, Highlighted text}
+<item>{super, Inline, Superscript}
+<item>{sub, Inline, Subscript}
+<item>{button, Inline, Clickable button}
+<item>{link, Inline, Hyperlink}
+<item>{newline, Self-closing, Line break}
+<item>{insertspace, Self-closing, Horizontal rule}
+<item>{pagebreak, Self-closing, Page break}
+<newline>
+
+; ── Spacing and Breaks ────────────────────────────────────────────────
+
+<section>{Spacing}
+
+<line>{Before insert space:}
+<insertspace>
+<line>{After insert space.}
+<newline>
+<line>{Line one.}
+<newline>
+<line>{Line two after a newline.}
+<newline>
+
+; ── Raw Text ──────────────────────────────────────────────────────────
+
+<section>{Raw Text}
+
+<line>{Use the empty tag to write literal angle brackets: <empty>{<header -size=1>{like this}}}
+<line>{Use it for literal braces too: <empty>{{this won't be parsed}}}
+<line>{Useful for writing about Celes in Celes itself.}
+<newline>
+
+; ── End ───────────────────────────────────────────────────────────────
+
+<section>{About}
+
+<header -size=2>{License}
+<line>{Celes is released under the Server-Lab Open-Control License (SOCL) 1.0.}
+<line>{Copyright 2025 Sourasish Das.}
+<newline>
+
+<header -size=2>{Links}
+<list -bullet=circle>{<link -body=GitHub Repository>{https://github.com/rr1ck/celes}}
+<list -bullet=circle>{<link -body=PyPI Package>{https://pypi.org/project/celes}}
+<list -bullet=circle>{<link -body=Language Spec>{https://github.com/rr1ck/celes/blob/main/Celes-0.1.4-Spec.md}}
+<newline>
+
+<line -align=center>{Made with <bold>{Celes} 0.1.4}
