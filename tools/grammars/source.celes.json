@@ -1,0 +1,78 @@
+{
+  "name": "Celes",
+  "scopeName": "source.celes",
+  "fileTypes": ["celes"],
+  "patterns": [
+    { "include": "#comment" },
+    { "include": "#declaration" },
+    { "include": "#self_closing_tag" },
+    { "include": "#block_tag" }
+  ],
+  "repository": {
+    "comment": {
+      "name": "comment.line.semicolon.celes",
+      "match": ";.*$"
+    },
+    "declaration": {
+      "name": "keyword.control.declaration.celes",
+      "match": "<!Celes[^>]*>"
+    },
+    "self_closing_tag": {
+      "name": "keyword.operator.self-closing.celes",
+      "match": "<(newline|pagebreak|insertspace)>",
+      "captures": {
+        "1": { "name": "entity.name.tag.celes" }
+      }
+    },
+    "block_tag": {
+      "begin": "(<)(title|author|date|section|header|line|blockquote|codeblock|image|linkimage|list|sublist|subsublist|table|item|bold\\+italic|bold|italic|underline|strike|super|sub|mark|code|link|button|checkmark|nestquote|empty)([^>]*)(>)(\\{?)",
+      "end": "(\\})?$|^(?!.*<)",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.celes" },
+        "2": { "name": "entity.name.tag.celes" },
+        "3": { "name": "entity.other.attribute-name.celes" },
+        "4": { "name": "punctuation.definition.tag.end.celes" },
+        "5": { "name": "punctuation.section.block.begin.celes" }
+      },
+      "endCaptures": {
+        "1": { "name": "punctuation.section.block.end.celes" }
+      },
+      "patterns": [
+        { "include": "#attribute" },
+        { "include": "#inline_tag" },
+        { "include": "#string_content" }
+      ]
+    },
+    "attribute": {
+      "match": "(-)(\\w+)(=)([^\\s>}]*)",
+      "captures": {
+        "1": { "name": "punctuation.definition.attribute.celes" },
+        "2": { "name": "entity.other.attribute-name.celes" },
+        "3": { "name": "keyword.operator.assignment.celes" },
+        "4": { "name": "string.unquoted.attribute-value.celes" }
+      }
+    },
+    "inline_tag": {
+      "begin": "(<)(bold\\+italic|bold|italic|underline|strike|super|sub|mark|code|link|button|checkmark|nestquote|empty|newline)([^>]*)(>)(\\{?)",
+      "end": "(\\})",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.celes" },
+        "2": { "name": "entity.name.tag.inline.celes" },
+        "3": { "name": "entity.other.attribute-name.celes" },
+        "4": { "name": "punctuation.definition.tag.end.celes" },
+        "5": { "name": "punctuation.section.block.begin.celes" }
+      },
+      "endCaptures": {
+        "1": { "name": "punctuation.section.block.end.celes" }
+      },
+      "patterns": [
+        { "include": "#attribute" },
+        { "include": "#string_content" }
+      ]
+    },
+    "string_content": {
+      "name": "string.other.celes",
+      "match": "[^<{}]+"
+    }
+  }
+}
