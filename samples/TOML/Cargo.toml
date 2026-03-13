@@ -1,0 +1,15 @@
+[package]
+name = "sample-project"
+description = "A sample project manifest for Linguist"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+categories = ["command-line-utilities"]
+keywords = ["cli", "terminal"]
+
+[dependencies.clap]
+version = "4"
+features = ["derive"]
+
+[dev-dependencies]
+rstest = "0.26"

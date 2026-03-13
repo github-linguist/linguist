@@ -1,0 +1,17 @@
+# From https://github.com/ros-navigation/navigation2/blob/f7b665406c46494b0f6fbfe80bd16d4f0d85e1df/nav2_msgs/srv/LoadMap.srv
+
+# URL of map resource
+# Can be an absolute path to a file: file:///path/to/maps/floor1.yaml
+# Or, relative to a ROS package: package://my_ros_package/maps/floor2.yaml
+string map_url
+---
+# Result code definitions
+uint8 RESULT_SUCCESS=0
+uint8 RESULT_MAP_DOES_NOT_EXIST=1
+uint8 RESULT_INVALID_MAP_DATA=2
+uint8 RESULT_INVALID_MAP_METADATA=3
+uint8 RESULT_UNDEFINED_FAILURE=255
+
+# Returned map is only valid if result equals RESULT_SUCCESS
+nav_msgs/OccupancyGrid map
+uint8 result
