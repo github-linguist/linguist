@@ -1,12 +1,27 @@
-FROM ruby:2-alpine3.13
+FROM ruby:3.3-slim
 
-RUN apk --update add --virtual build_deps \
-    build-base \
-    libc-dev \
+# Install native dependencies needed by charlock_holmes, rugged, etc.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
     cmake \
-    && apk add icu-dev openssl-dev \
-    && gem install github-linguist \
-    && apk del build_deps \
-	&& rm /var/cache/apk/*
+    pkg-config \
+    libicu-dev \
+    libssl-dev \
+    zlib1g-dev \
+    libcurl4-openssl-dev \
+    git \
+    && rm -rf /var/lib/apt/lists/*
 
-CMD ["github-linguist"]
+WORKDIR /linguist
+
+# Copy everything (use .dockerignore to skip vendor/bundle if needed)
+COPY . .
+
+RUN bundle install --jobs 4
+
+# Build linguist's native C extension and generate samples.json
+RUN bundle exec rake compile
+RUN bundle exec rake samples
+RUN bundle exec github-linguist --version
+
+CMD ["bash"]
