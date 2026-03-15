@@ -1,3 +1,5 @@
+-*- mode: php; -*-
+-*- c++ -*-
 # Overrides
 
 Linguist supports a number of different custom override strategies for language definitions and file paths.
