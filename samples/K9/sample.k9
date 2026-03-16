@@ -1,0 +1,40 @@
+K9!
+# SPDX-License-Identifier: MIT
+# hello.k9 - Example Kennel-level component (pure data)
+#
+# Security Level: 'Kennel (no execution, safe anywhere)
+#
+# This is the simplest K9 component: just data.
+# It can be parsed and displayed without any risk.
+
+---
+metadata:
+  name: hello-k9
+  version: 1.0.0
+  description: A friendly greeting from the K9 pack
+  author: hyperpolymath
+  license: PMPL-1.0-or-later
+
+content:
+  greeting: "Hello from K9!"
+  message: |
+    Welcome to the K9 Self-Validating Component system.
+
+    This file demonstrates the 'Kennel security level:
+    - Pure data only
+    - No code execution
+    - Safe to open anywhere
+
+    Think of it as a smarter YAML that knows what it is.
+
+  facts:
+    - K9 files start with the magic number "K9!"
+    - The must-just-nickel triad enables self-validation
+    - Three security levels: 'Kennel, 'Yard, 'Hunt
+    - Podman-first deployment prevents host pollution
+
+tags:
+  - example
+  - kennel
+  - hello-world
+  - safe
