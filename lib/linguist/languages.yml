@@ -396,6 +396,7 @@ Apollo Guidance Computer:
 AppleScript:
   type: programming
   aliases:
+  - apples
   - osascript
   extensions:
   - ".applescript"
@@ -2033,6 +2034,8 @@ Emacs Lisp:
   tm_scope: source.emacs.lisp
   color: "#c065db"
   aliases:
+  - cask
+  - eask
   - elisp
   - emacs
   filenames:
@@ -2043,6 +2046,7 @@ Emacs Lisp:
   - ".spacemacs"
   - ".viper"
   - Cask
+  - Eask
   - Project.ede
   - _emacs
   - abbrev_defs
@@ -2220,6 +2224,14 @@ Filterscript:
   tm_scope: none
   ace_mode: text
   language_id: 112
+FlatBuffers:
+  type: data
+  color: "#ed284a"
+  extensions:
+  - ".fbs"
+  tm_scope: source.flatbuffers
+  ace_mode: text
+  language_id: 577640576
 Flix:
   type: programming
   color: "#d44a45"
@@ -4241,6 +4253,14 @@ Liquid:
   tm_scope: text.html.liquid
   ace_mode: liquid
   language_id: 204
+Liquidsoap:
+  type: programming
+  color: "#990066"
+  extensions:
+  - ".liq"
+  tm_scope: source.liquidsoap
+  ace_mode: text
+  language_id: 614641732
 Literate Agda:
   type: programming
   color: "#315665"
@@ -4632,6 +4652,14 @@ Max:
   codemirror_mode: javascript
   codemirror_mime_type: application/json
   language_id: 227
+MeTTa:
+  type: programming
+  color: "#6a5acd"
+  extensions:
+  - ".metta"
+  tm_scope: source.metta
+  ace_mode: text
+  language_id: 1037612668
 Mercury:
   type: programming
   color: "#ff2b2b"
@@ -6029,6 +6057,7 @@ Protocol Buffer Text Format:
   - ".textproto"
   - ".pbt"
   - ".pbtxt"
+  - ".txtpb"
   tm_scope: source.textproto
   ace_mode: text
   language_id: 436568854
@@ -6139,6 +6168,8 @@ Python:
   - pypy3
   - uv
   aliases:
+  - py
+  - py3
   - python3
   - rusthon
   language_id: 303
@@ -7699,6 +7730,8 @@ TSX:
   type: programming
   color: "#3178c6"
   group: TypeScript
+  aliases:
+  - typescriptreact
   extensions:
   - ".tsx"
   tm_scope: source.tsx
@@ -8665,6 +8698,7 @@ XML:
   - ".grxml"
   - ".gst"
   - ".hzp"
+  - ".icls"
   - ".iml"
   - ".ivy"
   - ".jelly"
