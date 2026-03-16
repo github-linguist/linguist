@@ -1,4 +1,0 @@
-class foo
-{
-	int bar;
-};
