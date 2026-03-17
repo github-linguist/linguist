@@ -1,0 +1,35 @@
+# MIT License
+# Copyright (c) 2026 annuaicoder
+
+# If / else / else if
+var score = 85
+
+if score >= 90 {
+    show "Grade: A"
+} else if score >= 80 {
+    show "Grade: B"
+} else if score >= 70 {
+    show "Grade: C"
+} else {
+    show "Grade: F"
+}
+
+# While loop
+var count = 0
+while count < 5 {
+    show "count = " + str(count)
+    count = count + 1
+}
+
+# For loop
+show "--- for loop ---"
+for i in range(5) {
+    show i
+}
+
+# Booleans and logic
+var a = true
+var b = false
+show a and b
+show a or b
+show not b

@@ -1,0 +1,46 @@
+# MIT License
+# Copyright (c) 2026 annuaicoder
+
+
+# Functions in Engine
+
+func greet(name) {
+    show "Hello, " + name + "!"
+}
+
+greet("Alice")
+greet("Bob")
+
+# Function with return value
+func add(a, b) {
+    return a + b
+}
+
+var result = add(3, 7)
+show "3 + 7 = " + str(result)
+
+# Recursive factorial
+func factorial(n) {
+    if n <= 1 {
+        return 1
+    }
+    return n * factorial(n - 1)
+}
+
+show "5! = " + str(factorial(5))
+show "10! = " + str(factorial(10))
+
+# Closures — inner function can see outer variables
+func make_counter() {
+    var count = 0
+    func increment() {
+        count = count + 1
+        return count
+    }
+    return increment
+}
+
+var counter = make_counter()
+show counter()
+show counter()
+show counter()

@@ -1,0 +1,85 @@
+# MIT License
+# Copyright (c) 2026 annuaicoder
+
+# Matrix utility library for Engine
+
+func matrix_create(rows, cols, fill_value) {
+    var m = []
+    for i in range(rows) {
+        var row = []
+        for j in range(cols) {
+            row.push(fill_value)
+        }
+        m.push(row)
+    }
+    return m
+}
+
+func matrix_multiply(a, b) {
+    var rows_a = len(a)
+    var cols_a = len(a[0])
+    var cols_b = len(b[0])
+    var result = matrix_create(rows_a, cols_b, 0)
+
+    for i in range(rows_a) {
+        for j in range(cols_b) {
+            var sum = 0
+            for k in range(cols_a) {
+                sum = sum + a[i][k] * b[k][j]
+            }
+            result[i][j] = sum
+        }
+    }
+    return result
+}
+
+func matrix_transpose(m) {
+    var rows = len(m)
+    var cols = len(m[0])
+    var result = matrix_create(cols, rows, 0)
+    for i in range(rows) {
+        for j in range(cols) {
+            result[j][i] = m[i][j]
+        }
+    }
+    return result
+}
+
+func matrix_determinant(m) {
+    var n = len(m)
+    if n == 1 {
+        return m[0][0]
+    }
+    if n == 2 {
+        return m[0][0] * m[1][1] - m[0][1] * m[1][0]
+    }
+    var det = 0
+    for col in range(n) {
+        var sub = []
+        for i in range(1, n) {
+            var row = []
+            for j in range(n) {
+                if j != col {
+                    row.push(m[i][j])
+                }
+            }
+            sub.push(row)
+        }
+        var sign = 1
+        if col % 2 != 0 {
+            sign = -1
+        }
+        det = det + sign * m[0][col] * matrix_determinant(sub)
+    }
+    return det
+}
+
+var identity = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+var data = [[2, 3, 1], [4, 1, 5], [3, 2, 4]]
+var product = matrix_multiply(data, identity)
+show "Determinant: " + str(matrix_determinant(data))
+
+var transposed = matrix_transpose(data)
+for row in transposed {
+    show row
+}

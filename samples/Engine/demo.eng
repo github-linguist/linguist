@@ -1,0 +1,46 @@
+# MIT License
+# Copyright (c) 2026 annuaicoder
+
+
+# Engine Language Demo
+
+# Variables
+var name = "Engine"
+var version = 1
+show "Welcome to " + name + " v" + str(version) + "!"
+
+# Math
+var a = 15
+var b = 4
+show str(a) + " + " + str(b) + " = " + str(a + b)
+show str(a) + " * " + str(b) + " = " + str(a * b)
+
+# Function
+func fibonacci(n) {
+    if n <= 1 {
+        return n
+    }
+    return fibonacci(n - 1) + fibonacci(n - 2)
+}
+
+show "--- Fibonacci ---"
+for i in range(10) {
+    show "fib(" + str(i) + ") = " + str(fibonacci(i))
+}
+
+# Lists and strings
+var langs = ["Engine", "Python", "Rust", "Go"]
+show "--- Languages ---"
+for lang in langs {
+    show lang.upper()
+}
+
+# Conditionals
+var temp = 72
+if temp > 85 {
+    show "It's hot!"
+} else if temp > 65 {
+    show "Nice weather!"
+} else {
+    show "It's cold!"
+}

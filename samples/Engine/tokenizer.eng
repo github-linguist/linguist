@@ -1,0 +1,91 @@
+# MIT License
+# Copyright (c) 2026 annuaicoder
+
+# Simple tokenizer for arithmetic expressions in Engine
+
+var TOKEN_NUMBER = "NUMBER"
+var TOKEN_PLUS = "PLUS"
+var TOKEN_MINUS = "MINUS"
+var TOKEN_STAR = "STAR"
+var TOKEN_SLASH = "SLASH"
+var TOKEN_LPAREN = "LPAREN"
+var TOKEN_RPAREN = "RPAREN"
+var TOKEN_EOF = "EOF"
+
+func is_digit(ch) {
+    return ch >= "0" and ch <= "9"
+}
+
+func is_whitespace(ch) {
+    return ch == " " or ch == "\t" or ch == "\n"
+}
+
+func tokenize(source) {
+    var tokens = []
+    var pos = 0
+    var length = len(source)
+
+    while pos < length {
+        var ch = source[pos]
+
+        if is_whitespace(ch) {
+            pos = pos + 1
+        } else if is_digit(ch) or ch == "." {
+            var start = pos
+            var has_dot = false
+            while pos < length and (is_digit(source[pos]) or source[pos] == ".") {
+                if source[pos] == "." {
+                    if has_dot {
+                        show "Error: unexpected '.' at position " + str(pos)
+                        return []
+                    }
+                    has_dot = true
+                }
+                pos = pos + 1
+            }
+            tokens.push([TOKEN_NUMBER, source.slice(start, pos)])
+        } else if ch == "+" {
+            tokens.push([TOKEN_PLUS, "+"])
+            pos = pos + 1
+        } else if ch == "-" {
+            tokens.push([TOKEN_MINUS, "-"])
+            pos = pos + 1
+        } else if ch == "*" {
+            tokens.push([TOKEN_STAR, "*"])
+            pos = pos + 1
+        } else if ch == "/" {
+            tokens.push([TOKEN_SLASH, "/"])
+            pos = pos + 1
+        } else if ch == "(" {
+            tokens.push([TOKEN_LPAREN, "("])
+            pos = pos + 1
+        } else if ch == ")" {
+            tokens.push([TOKEN_RPAREN, ")"])
+            pos = pos + 1
+        } else {
+            show "Error: unexpected character '" + ch + "' at position " + str(pos)
+            return []
+        }
+    }
+
+    tokens.push([TOKEN_EOF, ""])
+    return tokens
+}
+
+func format_tokens(tokens) {
+    var parts = []
+    for tok in tokens {
+        parts.push(tok[0] + "(" + tok[1] + ")")
+    }
+    return parts.join(", ")
+}
+
+var expr = "(3 + 45.2) * 10 - 7 / 2"
+var result = tokenize(expr)
+show "Expression: " + expr
+show "Tokens: " + format_tokens(result)
+
+var complex_expr = "((100 + 200) * (3.14 - 1)) / 42"
+var complex_tokens = tokenize(complex_expr)
+show "Expression: " + complex_expr
+show "Tokens: " + format_tokens(complex_tokens)

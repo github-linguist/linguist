@@ -1,0 +1,41 @@
+# MIT License
+# Copyright (c) 2026 annuaicoder
+
+# Lists
+var fruits = ["apple", "banana", "cherry"]
+show fruits
+show fruits[0]
+show fruits[2]
+
+# List methods
+fruits.push("date")
+show fruits
+show len(fruits)
+
+# Iterate over a list
+for fruit in fruits {
+    show "I like " + fruit
+}
+
+# String methods
+var msg = "  Hello Engine  "
+show msg.strip()
+show msg.strip().upper()
+show msg.strip().lower()
+
+var sentence = "one-two-three"
+var parts = sentence.split("-")
+show parts
+show parts.join(" + ")
+
+# Check contents
+show "banana".contains("nan")
+show "hello".starts_with("he")
+show "world".ends_with("ld")
+
+# List operations
+var nums = [5, 2, 8, 1, 9, 3]
+nums.sort()
+show nums
+show min(nums)
+show max(nums)
