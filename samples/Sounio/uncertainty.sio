@@ -1,0 +1,31 @@
+struct Measurement { value: f64, uncertainty: f64 }
+
+fn meas_add(a: Measurement, b: Measurement) -> Measurement with Mut, Panic, Div {
+    let v = a.value + b.value
+    let u = meas_sqrt(a.uncertainty * a.uncertainty + b.uncertainty * b.uncertainty)
+    Measurement { value: v, uncertainty: u }
+}
+
+fn meas_sqrt(x: f64) -> f64 with Mut, Panic, Div {
+    if x <= 0.0 { return 0.0 }
+    var g = x
+    var i: i64 = 0
+    while i < 50 { g = 0.5 * (g + x / g); i = i + 1 }
+    g
+}
+
+fn meas_abs(x: f64) -> f64 {
+    if x < 0.0 { 0.0 - x } else { x }
+}
+
+fn main() -> i32 with IO, Mut, Panic, Div {
+    let a = Measurement { value: 10.0, uncertainty: 0.1 }
+    let b = Measurement { value: 20.0, uncertainty: 0.2 }
+    let c = meas_add(a, b)
+
+    assert(meas_abs(c.value - 30.0) < 0.001)
+    assert(meas_abs(c.uncertainty - 0.2236) < 0.001)
+
+    println("Uncertainty propagation: PASS")
+    0
+}

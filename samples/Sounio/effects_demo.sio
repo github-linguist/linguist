@@ -1,0 +1,25 @@
+fn pure_add(a: i64, b: i64) -> i64 {
+    a + b
+}
+
+fn divide(a: f64, b: f64) -> f64 with Div, Panic {
+    a / b
+}
+
+fn mutate(x: &!i64) with Mut {
+    *x = *x + 1
+}
+
+fn main() -> i32 with IO, Mut, Panic, Div {
+    let sum = pure_add(3, 4)
+    assert(sum == 7)
+
+    let ratio = divide(10.0, 3.0)
+
+    var counter: i64 = 0
+    mutate(&! counter)
+    assert(counter == 1)
+
+    println("Effects demo: PASS")
+    0
+}

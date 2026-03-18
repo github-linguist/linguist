@@ -1,0 +1,24 @@
+fn fibonacci(n: i64) -> i64 with Mut, Panic, Div {
+    if n <= 1 { return n }
+    var a: i64 = 0
+    var b: i64 = 1
+    var i: i64 = 2
+    while i <= n {
+        let temp = b
+        b = a + b
+        a = temp
+        i = i + 1
+    }
+    b
+}
+
+fn main() -> i32 with IO, Mut, Panic, Div {
+    var i: i64 = 0
+    while i < 10 {
+        print(fibonacci(i))
+        print(" ")
+        i = i + 1
+    }
+    println("")
+    0
+}

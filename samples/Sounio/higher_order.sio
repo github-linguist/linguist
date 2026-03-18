@@ -1,0 +1,33 @@
+fn double(x: i64) -> i64 { x * 2 }
+fn square(x: i64) -> i64 { x * x }
+fn add(a: i64, b: i64) -> i64 { a + b }
+
+fn map4(arr: [i64; 4], f: fn(i64) -> i64) -> [i64; 4] with Mut, Panic, Div {
+    var out: [i64; 4] = [0; 4]
+    var i: i64 = 0
+    while i < 4 { out[i] = f(arr[i]); i = i + 1 }
+    out
+}
+
+fn fold4(arr: [i64; 4], init: i64, f: fn(i64, i64) -> i64) -> i64 with Mut, Panic, Div {
+    var acc = init
+    var i: i64 = 0
+    while i < 4 { acc = f(acc, arr[i]); i = i + 1 }
+    acc
+}
+
+fn main() -> i32 with IO, Mut, Panic, Div {
+    let data: [i64; 4] = [1, 2, 3, 4]
+    let doubled = map4(data, double)
+    assert(doubled[0] == 2)
+    assert(doubled[3] == 8)
+
+    let sum = fold4(data, 0, add)
+    assert(sum == 10)
+
+    let sum_sq = fold4(map4(data, square), 0, add)
+    assert(sum_sq == 30)
+
+    println("Higher-order functions: PASS")
+    0
+}
