@@ -1,0 +1,111 @@
+// Rey Programming Language 
+// Fast, simple, and powerful. Rust power without Rust complexity.
+// github.com/rey-language/rey
+//
+// Rey features clean syntax, structs with methods, strong type inference,
+// string interpolation, null safety, and a smart compiler that manages
+// memory so you don't have to.
+//
+
+
+struct Vector {
+    x: int,
+    y: int,
+
+    pub func create(x: int, y: int): Vector {
+        return Vector { x: x, y: y };
+    }
+
+    pub func add(other: Vector): Vector {
+        return Vector { x: x + other.x, y: y + other.y };
+    }
+
+    pub func magnitude(): int {
+        return x * x + y * y;
+    }
+
+    pub func print(): Void {
+        println("Vector({x}, {y})");
+    }
+}
+
+func fibonacci(n: int): int {
+    if (n <= 1) {
+        return n;
+    }
+    return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+func isPrime(n: int): bool {
+    if (n < 2) {
+        return false;
+    }
+    var i: int = 2;
+    while (i * i <= n) {
+        if (n % i == 0) {
+            return false;
+        }
+        i++;
+    }
+    return true;
+}
+
+func main(): Void {
+    // structs with methods
+    var v1 = Vector.create(3, 4);
+    var v2 = Vector.create(1, 2);
+    var v3 = v1.add(v2);
+    v3.print();
+    println("magnitude: {v1.magnitude()}");
+
+    // arrays and builtins
+    var nums: [int] = [10, 3, 7, 1, 9];
+    var fibs = [];
+    var i: int = 0;
+    while (i < len(nums)) {
+        push(fibs, fibonacci(nums[i]));
+        i++;
+    }
+    println("fibs: {fibs}");
+
+    // dictionaries
+    var scores = {"alice": 95, "bob": 87, "misbah": 99};
+    println("misbah scored: {scores.misbah}");
+
+    // string interpolation + methods
+    var lang: String = "rey language";
+    println(lang.upper());
+    println("length: {lang.length()}");
+
+    // control flow
+    var primes = [];
+    var n: int = 2;
+    while (n < 30) {
+        if (isPrime(n)) {
+            push(primes, n);
+        }
+        n++;
+    }
+    println("primes: {primes}");
+
+    // for loop with range
+    var sum: int = 0;
+    for x in range(1, 11) {
+        sum += x;
+    }
+    println("sum 1-10: {sum}");
+
+    // null safety
+    var maybe: int? = null;
+    if (maybe == null) {
+        println("safely handled null");
+    }
+
+    // multiline string
+    var msg = """
+Rey is fast.
+Rey is simple.
+Rey is powerful.
+""";
+    println(msg);
+}
