@@ -910,6 +910,7 @@ module Linguist
     # Returns true or false
     def generated_mysql_view_definition_format?
       return false unless extname.downcase == '.frm'
+      return false if lines.empty?
       return lines[0].include?("TYPE=VIEW")
     end
 
