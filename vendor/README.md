@@ -397,7 +397,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Modelica:** [BorisChumichev/modelicaSublimeTextPackage](https://github.com/BorisChumichev/modelicaSublimeTextPackage)
 - **Modula-2:** [harogaston/Sublime-Modula-2](https://github.com/harogaston/Sublime-Modula-2)
 - **Modula-3:** [newgrammars/m3](https://github.com/newgrammars/m3)
-- **Mojo:** [modularml/mojo-syntax](https://github.com/modularml/mojo-syntax)
+- **Mojo:** [modular/vscode-mojo](https://github.com/modular/vscode-mojo)
 - **Monkey:** [gingerbeardman/monkey.tmbundle](https://github.com/gingerbeardman/monkey.tmbundle)
 - **Monkey C:** [ghisguth/vscode-monkey-c](https://github.com/ghisguth/vscode-monkey-c)
 - **MoonBit:** [moonbitlang/moonbit-tmLanguage](https://github.com/moonbitlang/moonbit-tmLanguage)
