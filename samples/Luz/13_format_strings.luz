@@ -1,0 +1,31 @@
+# 13_format_strings.luz
+# Format strings: $"text {expression} text"
+
+name  = "Luz"
+version = 1
+write($"Welcome to {name} v{version}!")
+
+# Expressions inside {}
+a = 10
+b = 3
+write($"{a} + {b} = {a + b}")
+write($"{a} * {b} = {a * b}")
+write($"{a} / {b} = {round(a / b, 4)}")
+
+# Function calls inside {}
+words = ["the", "quick", "brown", "fox"]
+sep = " "
+write($"Word count: {len(words)}")
+write($"Joined: {join(sep, words)}")
+write($"Uppercase first: {uppercase(words[0])}")
+
+# Null and booleans display correctly
+x = null
+flag = true
+write($"x is {x}, flag is {flag}")
+
+# Nested format — typeof inside {}
+values = [42, 3.14, "hello", true, null]
+for val in values {
+    write($"  {val} -> {typeof(val)}")
+}

@@ -1,0 +1,40 @@
+# 14_math_builtins.luz
+# Demonstration of all math built-in functions.
+
+write("=== abs ===")
+write(abs(-42))
+write(abs(7))
+
+write("")
+write("=== sqrt / floor / ceil / round ===")
+write($"sqrt(2)        = {sqrt(2)}")
+write($"floor(3.9)     = {floor(3.9)}")
+write($"ceil(3.1)      = {ceil(3.1)}")
+write($"round(3.14159, 3) = {round(3.14159, 3)}")
+
+write("")
+write("=== clamp ===")
+write($"clamp(15, 0, 10) = {clamp(15, 0, 10)}")
+write($"clamp(-5, 0, 10) = {clamp(-5, 0, 10)}")
+write($"clamp(5,  0, 10) = {clamp(5,  0, 10)}")
+
+write("")
+write("=== max / min ===")
+write($"max(3, 8, 1, 9, 2)   = {max(3, 8, 1, 9, 2)}")
+write($"min(3, 8, 1, 9, 2)   = {min(3, 8, 1, 9, 2)}")
+nums = [7, 2, 5, 1, 9, 3]
+write($"max of list {nums} = {max(nums)}")
+write($"min of list {nums} = {min(nums)}")
+
+write("")
+write("=== sign / odd / even ===")
+for n in [-5, 0, 7] {
+    write($"sign({n}) = {sign(n)}")
+}
+for n in [1, 2, 3, 4, 5] {
+    if odd(n) {
+        write($"{n} is odd")
+    } else {
+        write($"{n} is even")
+    }
+}

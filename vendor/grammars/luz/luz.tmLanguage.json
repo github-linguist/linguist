@@ -1,0 +1,49 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "Luz",
+    "scopeName": "source.luz",
+    "patterns": [
+        { "include": "#comments" },
+        { "include": "#keywords" },
+        { "include": "#strings" },
+        { "include": "#numbers" },
+        { "include": "#builtins" }
+    ],
+    "repository": {
+        "comments": {
+            "patterns": [{
+                "name": "comment.line.number-sign.luz",
+                "match": "#.*$"
+            }]
+        },
+        "keywords": {
+            "patterns": [{
+                "name": "keyword.control.luz",
+                "match": "\\b(if|elif|else|while|for|to|function|return|and|or|not)\\b"
+            }, {
+                "name": "constant.language.boolean.luz",
+                "match": "\\b(true|false)\\b"
+            }]
+        },
+        "builtins": {
+            "patterns": [{
+                "name": "entity.name.function.luz",
+                "match": "\\b(write|listen)\\b"
+            }]
+        },
+        "strings": {
+            "name": "string.quoted.double.luz",
+            "begin": "\"",
+            "end": "\"",
+            "patterns": [
+                { "name": "constant.character.escape.luz", "match": "\\\\." }
+            ]
+        },
+        "numbers": {
+            "patterns": [{
+                "name": "constant.numeric.luz",
+                "match": "\\b\\d+(\\.\\d+)?\\b"
+            }]
+        }
+    }
+}

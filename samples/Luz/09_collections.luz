@@ -1,0 +1,97 @@
+# Collections
+# Demonstrates lists and dictionaries: creation, access,
+# mutation, and iteration patterns.
+
+write("=== Lists ===")
+
+scores = [88, 72, 95, 61, 84, 77, 91]
+write("Scores:", scores)
+write("Count :", len(scores))
+
+# Manual sum and max using a loop
+total = 0
+best = scores[0]
+i = 0
+while i < len(scores) {
+    total = total + scores[i]
+    if scores[i] > best {
+        best = scores[i]
+    }
+    i = i + 1
+}
+
+average = total / len(scores)
+write("Total  :", total)
+write("Average:", average)
+write("Best   :", best)
+
+write("")
+
+# Filter: keep only passing scores (>= 70)
+passing = []
+i = 0
+while i < len(scores) {
+    if scores[i] >= 70 {
+        append(passing, scores[i])
+    }
+    i = i + 1
+}
+write("Passing scores:", passing)
+
+write("")
+write("=== Dictionaries ===")
+
+person = {
+    "name": "Alice",
+    "age": 30,
+    "city": "Madrid",
+    "score": 95
+}
+
+write("Name :", person["name"])
+write("Age  :", person["age"])
+write("City :", person["city"])
+
+write("Keys  :", keys(person))
+write("Values:", values(person))
+
+person["age"] = 31
+person["language"] = "Luz"
+write("Updated:", person)
+
+write("")
+write("=== Dictionary as frequency counter ===")
+
+words = ["apple", "banana", "apple", "cherry", "banana", "apple"]
+freq = {}
+
+i = 0
+while i < len(words) {
+    word = words[i]
+    if contains(join(",", keys(freq)), word) {
+        freq[word] = freq[word] + 1
+    } else {
+        freq[word] = 1
+    }
+    i = i + 1
+}
+
+write("Words  :", words)
+write("Counts :", freq)
+
+write("")
+write("=== Nested structures ===")
+
+students = [
+    {"name": "Alice", "grade": 92},
+    {"name": "Bob",   "grade": 78},
+    {"name": "Carol", "grade": 85}
+]
+
+write("Student grades:")
+i = 0
+while i < len(students) {
+    s = students[i]
+    write("  " + s["name"] + " → " + to_str(s["grade"]))
+    i = i + 1
+}

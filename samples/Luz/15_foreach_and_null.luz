@@ -1,0 +1,50 @@
+# 15_foreach_and_null.luz
+# For-each loops over lists, strings, and dicts. Also shows null usage.
+
+# Iterating a list
+scores = [88, 92, 75, 60, 95, 81]
+total = 0
+for score in scores {
+    total = total + score
+}
+avg = round(total / len(scores), 1)
+write($"Scores: {scores}")
+write($"Average: {avg}")
+
+write("")
+
+# Iterating characters of a string
+word = "Luz"
+write($"Letters in '{word}':")
+for ch in word {
+    write($"  {ch}")
+}
+
+write("")
+
+# Iterating a dict
+inventory = {"apples": 5, "bananas": 12, "cherries": 3}
+write("Inventory:")
+for item in inventory {
+    write($"  {item}: {inventory[item]}")
+}
+
+write("")
+
+# null — representing optional / missing values
+function find_user(id) {
+    users = {"1": "Alice", "2": "Bob", "3": "Charlie"}
+    if contains(join(",", keys(users)), id) {
+        return users[id]
+    }
+    return null
+}
+
+for id in ["1", "3", "99"] {
+    user = find_user(id)
+    if user == null {
+        write($"User '{id}' not found")
+    } else {
+        write($"User '{id}': {user}")
+    }
+}

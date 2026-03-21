@@ -1,0 +1,34 @@
+# 11_oop_basics.luz
+# Classes, instances, attributes, and methods.
+
+class Person {
+    function init(self, name, age) {
+        self.name = name
+        self.age  = age
+    }
+
+    function greet(self) {
+        write($"Hi, I am {self.name} and I am {self.age} years old.")
+    }
+
+    function is_adult(self) {
+        return self.age >= 18
+    }
+
+    function birthday(self) {
+        self.age = self.age + 1
+        write($"{self.name} is now {self.age}!")
+    }
+}
+
+alice = Person("Alice", 30)
+bob   = Person("Bob", 16)
+
+alice.greet()
+bob.greet()
+
+write($"Alice is an adult: {alice.is_adult()}")
+write($"Bob is an adult:   {bob.is_adult()}")
+
+bob.birthday()
+write($"Bob is an adult now: {bob.is_adult()}")

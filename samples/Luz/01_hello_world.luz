@@ -1,0 +1,10 @@
+# Hello World
+# The classic first program, expanded a little.
+
+write("Hello, World!")
+
+name = listen("What is your name? ")
+write("Nice to meet you, " + name + "!")
+
+age = listen("How old are you? ")
+write("In 10 years you will be " + to_str(age + 10) + " years old.")

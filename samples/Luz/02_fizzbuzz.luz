@@ -1,0 +1,15 @@
+# FizzBuzz
+# Print numbers 1 to 100.
+# Multiples of 3 → "Fizz", multiples of 5 → "Buzz", both → "FizzBuzz".
+
+for i = 1 to 100 {
+    if i % 15 == 0 {
+        write("FizzBuzz")
+    } elif i % 3 == 0 {
+        write("Fizz")
+    } elif i % 5 == 0 {
+        write("Buzz")
+    } else {
+        write(i)
+    }
+}

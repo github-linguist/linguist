@@ -1,0 +1,50 @@
+# Interactive Calculator
+# Supports +, -, *, /, %, **
+# Type "exit" as the first number to quit.
+
+write("=== Luz Calculator ===")
+write("Supported operators: + - * / % **")
+write("Type \"exit\" to quit.\n")
+
+running = true
+
+while running {
+    first = listen("First number: ")
+
+    if first == "exit" {
+        running = false
+        continue
+    }
+
+    op = listen("Operator: ")
+    second = listen("Second number: ")
+
+    attempt {
+        result = 0
+
+        if op == "+" {
+            result = first + second
+        } elif op == "-" {
+            result = first - second
+        } elif op == "*" {
+            result = first * second
+        } elif op == "/" {
+            if second == 0 { alert "Cannot divide by zero" }
+            result = first / second
+        } elif op == "%" {
+            if second == 0 { alert "Cannot modulo by zero" }
+            result = first % second
+        } elif op == "**" {
+            result = first ** second
+        } else {
+            alert "Unknown operator: " + op
+        }
+
+        write("= " + to_str(result) + "\n")
+
+    } rescue (e) {
+        write("Error: " + e + "\n")
+    }
+}
+
+write("Goodbye!")

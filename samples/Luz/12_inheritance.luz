@@ -1,0 +1,61 @@
+# 12_inheritance.luz
+# Inheritance, method overriding, and super.
+
+class Shape {
+    function init(self, color) {
+        self.color = color
+    }
+
+    function area(self) {
+        return 0
+    }
+
+    function describe(self) {
+        write($"{typeof(self)} | color: {self.color} | area: {self.area()}")
+    }
+}
+
+class Circle extends Shape {
+    function init(self, color, radius) {
+        super.init(color)
+        self.radius = radius
+    }
+
+    function area(self) {
+        return round(self.radius * self.radius * 3.14159, 2)
+    }
+}
+
+class Rectangle extends Shape {
+    function init(self, color, width, height) {
+        super.init(color)
+        self.width  = width
+        self.height = height
+    }
+
+    function area(self) {
+        return self.width * self.height
+    }
+}
+
+class Square extends Rectangle {
+    function init(self, color, side) {
+        super.init(color, side, side)
+    }
+}
+
+shapes = [
+    Circle("red", 5),
+    Rectangle("blue", 4, 6),
+    Square("green", 3),
+]
+
+for shape in shapes {
+    shape.describe()
+}
+
+write("")
+write($"instanceof checks:")
+write($"  Circle is a Shape:    {instanceof(shapes[0], Shape)}")
+write($"  Square is a Rectangle: {instanceof(shapes[2], Rectangle)}")
+write($"  Circle is a Rectangle: {instanceof(shapes[0], Rectangle)}")

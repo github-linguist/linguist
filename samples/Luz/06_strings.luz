@@ -1,0 +1,60 @@
+# String Operations
+# Demonstrates all string built-in functions.
+
+sentence = "  The quick brown fox jumps over the lazy dog  "
+
+write("=== Basic operations ===")
+write("Original : \"" + sentence + "\"")
+write("Trimmed  :", trim(sentence))
+write("Uppercase:", uppercase(trim(sentence)))
+write("Lowercase:", lowercase(trim(sentence)))
+
+write("")
+write("=== Search ===")
+clean = trim(sentence)
+write("Contains \"fox\" :", contains(clean, "fox"))
+write("Contains \"cat\" :", contains(clean, "cat"))
+write("Begins with \"The\" :", begins(clean, "The"))
+write("Ends with \"dog\"   :", ends(clean, "dog"))
+write("Index of \"fox\"    :", find(clean, "fox"))
+write("Index of \"cat\"    :", find(clean, "cat"))
+
+write("")
+write("=== Modification ===")
+write("Original  :", clean)
+write("After swap:", swap(clean, "fox", "cat"))
+
+write("")
+write("=== Split and join ===")
+words = split(clean, " ")
+write("Words  :", words)
+write("Count  :", len(words))
+write("Joined :", join(" | ", words))
+
+write("")
+write("=== Counting ===")
+pangram = "how much wood would a woodchuck chuck"
+write("Sentence   :", pangram)
+write("Occurrences of \"wood\" :", count(pangram, "wood"))
+write("Occurrences of \"o\"    :", count(pangram, "o"))
+
+write("")
+write("=== Indexing ===")
+word = "Luz"
+write("Word       :", word)
+write("First char :", word[0])
+write("Last char  :", word[-1])
+
+i = 0
+result = ""
+while i < len(word) {
+    result = result + word[i] + "-"
+    i = i + 1
+}
+write("Spelled out:", result)
+
+write("")
+write("=== Escape sequences ===")
+write("Newline:  line1\nline2")
+write("Tab:      col1\tcol2\tcol3")
+write("Quote:    she said \"hello\"")

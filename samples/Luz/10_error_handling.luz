@@ -1,0 +1,102 @@
+# Error Handling
+# Demonstrates attempt/rescue blocks and the alert keyword.
+
+# --- Basic attempt/rescue ---
+
+write("=== Division with error handling ===")
+
+function safe_divide(a, b) {
+    if b == 0 {
+        alert "Cannot divide " + to_str(a) + " by zero"
+    }
+    return a / b
+}
+
+pairs = [[10, 2], [7, 0], [9, 3], [5, 0], [8, 4]]
+
+i = 0
+while i < len(pairs) {
+    a = pairs[i][0]
+    b = pairs[i][1]
+    attempt {
+        result = safe_divide(a, b)
+        write(to_str(a) + " / " + to_str(b) + " = " + to_str(result))
+    } rescue (e) {
+        write("Error: " + e)
+    }
+    i = i + 1
+}
+
+write("")
+
+# --- Type errors ---
+
+write("=== Catching type errors ===")
+
+values = [10, "hello", 5, true, 3]
+
+i = 0
+while i < len(values) {
+    attempt {
+        result = values[i] * 2
+        write(to_str(values[i]) + " * 2 = " + to_str(result))
+    } rescue (e) {
+        write("Cannot multiply \"" + to_str(values[i]) + "\": " + e)
+    }
+    i = i + 1
+}
+
+write("")
+
+# --- Nested attempt/rescue ---
+
+write("=== Nested error handling ===")
+
+function parse_and_double(input) {
+    attempt {
+        n = to_int(input)
+        if n < 0 {
+            alert "Negative numbers not allowed"
+        }
+        return n * 2
+    } rescue (e) {
+        write("Inner rescue caught: " + e)
+        return -1
+    }
+}
+
+inputs = ["5", "-3", "abc", "12"]
+i = 0
+while i < len(inputs) {
+    result = parse_and_double(inputs[i])
+    write("parse_and_double(\"" + inputs[i] + "\") → " + to_str(result))
+    i = i + 1
+}
+
+write("")
+
+# --- Using alert to validate input ---
+
+write("=== Input validation ===")
+
+function validate_age(age) {
+    if age < 0 {
+        alert "Age cannot be negative"
+    }
+    if age > 150 {
+        alert "Age " + to_str(age) + " is not realistic"
+    }
+    return true
+}
+
+test_ages = [25, -5, 200, 0, 99]
+i = 0
+while i < len(test_ages) {
+    attempt {
+        validate_age(test_ages[i])
+        write("Age " + to_str(test_ages[i]) + " is valid.")
+    } rescue (e) {
+        write("Invalid age " + to_str(test_ages[i]) + ": " + e)
+    }
+    i = i + 1
+}

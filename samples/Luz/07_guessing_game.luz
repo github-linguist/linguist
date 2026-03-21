@@ -1,0 +1,46 @@
+# Number Guessing Game
+# The player has 7 attempts to guess a secret number between 1 and 100.
+# Change the value of `secret` to play with a different number.
+
+secret = 42
+max_attempts = 7
+attempts = 0
+won = false
+
+write("=== Guessing Game ===")
+write("I'm thinking of a number between 1 and 100.")
+write("You have " + to_str(max_attempts) + " attempts.\n")
+
+while attempts < max_attempts {
+    remaining = max_attempts - attempts
+    guess = listen("Attempt " + to_str(attempts + 1) + "/" + to_str(max_attempts) + " → ")
+    attempts = attempts + 1
+
+    if guess == secret {
+        won = true
+        break
+    } elif guess < secret {
+        if remaining - 1 > 0 {
+            write("Too low!  (" + to_str(remaining - 1) + " attempts left)\n")
+        }
+    } else {
+        if remaining - 1 > 0 {
+            write("Too high! (" + to_str(remaining - 1) + " attempts left)\n")
+        }
+    }
+}
+
+write("")
+if won {
+    write("You got it in " + to_str(attempts) + " attempt(s)!")
+    if attempts == 1 {
+        write("Incredible! First try!")
+    } elif attempts <= 3 {
+        write("Great job!")
+    } else {
+        write("Well done!")
+    }
+} else {
+    write("Game over. The number was " + to_str(secret) + ".")
+    write("Better luck next time!")
+}
