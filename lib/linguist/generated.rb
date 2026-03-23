@@ -336,6 +336,7 @@ module Linguist
 
     def generated_go?
       return false unless extname == '.go'
+      return true if !!name.match(/(^|\/)[^\/]*_generated\..+\.go$/)
       return false unless lines.count > 1
 
       return lines.first(40).any? { |l| l =~ %r{^// Code generated .*} }
