@@ -1,0 +1,21 @@
+// Bloom Language — Functions example
+fn add(a: int, b: int) -> int {
+    return a + b
+}
+
+fn greet(name: string) -> string {
+    return "Hello, " + name + "!"
+}
+
+fn factorial(n: int) -> int {
+    if n <= 1 {
+        return 1
+    }
+    return n * factorial(n - 1)
+}
+
+fn main() {
+    print(add(3, 4))
+    print(greet("Bloom"))
+    print(factorial(5))
+}

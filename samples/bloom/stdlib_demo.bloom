@@ -1,0 +1,31 @@
+use io
+use string
+use math
+
+fn main() {
+    print("--- 🌸 Bloom Stdlib Demo ---")
+
+    // 1. File IO
+    let filename = "test_output.txt"
+    let message = "Bloom is growing naturally."
+    
+    print("Writing to file...")
+    write_file(filename, message)
+    
+    print("Reading from file...")
+    let content = read_file(filename)
+    print("Content: " + content)
+
+    // 2. String Manipulation
+    print("Upper: " + string_upper(content))
+    print("Lower: " + string_lower(content))
+    
+    let spaced = "   extra space   "
+    print("Trimmed: [" + string_trim(spaced) + "]")
+
+    // 3. Math (already partially built-in, now in lib/math too)
+    print("Sqrt of 25: " + str(sqrt(25.0)))
+    print("2 ^ 10: " + str(pow(2.0, 10.0)))
+
+    print("--- Demo Complete ---")
+}
