@@ -1,0 +1,545 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// Bloom Language — Comprehensive Showcase
+//
+// This program exercises every language feature available in Bloom v0.1:
+//   • Variables and type annotations (int, float, string, bool)
+//   • All arithmetic operators (+ - * / %)
+//   • All comparison operators (== != < <= > >=)
+//   • Logical operators (&& || !)
+//   • String concatenation
+//   • if / else if / else
+//   • for loops with ranges
+//   • User-defined functions with typed parameters and return types
+//   • Recursion (factorial, Fibonacci)
+//   • Built-in math functions (abs, min, max, sqrt, pow, floor, ceil)
+//   • Built-in conversion functions (int, float, str, len)
+//   • Nested loops
+//   • FizzBuzz
+//   • Prime sieve
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ── Section header helper ────────────────────────────────────────────────────
+
+fn section(title: string) {
+    print("-----------------------------")
+    print(title)
+    print("-----------------------------")
+}
+
+// ── Arithmetic helpers ───────────────────────────────────────────────────────
+
+fn add(a: int, b: int) -> int {
+    return a + b
+}
+
+fn subtract(a: int, b: int) -> int {
+    return a - b
+}
+
+fn multiply(a: int, b: int) -> int {
+    return a * b
+}
+
+fn divide(a: int, b: int) -> int {
+    return a / b
+}
+
+fn modulo(a: int, b: int) -> int {
+    return a % b
+}
+
+// ── Recursion: factorial ─────────────────────────────────────────────────────
+
+fn factorial(n: int) -> int {
+    if n <= 1 {
+        return 1
+    }
+    return n * factorial(n - 1)
+}
+
+// ── Recursion: Fibonacci ─────────────────────────────────────────────────────
+
+fn fib(n: int) -> int {
+    if n <= 0 {
+        return 0
+    }
+    if n == 1 {
+        return 1
+    }
+    return fib(n - 1) + fib(n - 2)
+}
+
+// ── Classification helpers ───────────────────────────────────────────────────
+
+fn classify_number(n: int) -> string {
+    if n < 0 {
+        return "negative"
+    } else if n == 0 {
+        return "zero"
+    } else {
+        return "positive"
+    }
+}
+
+fn is_even(n: int) -> bool {
+    return n % 2 == 0
+}
+
+fn absolute_diff(a: int, b: int) -> int {
+    if a > b {
+        return a - b
+    }
+    return b - a
+}
+
+// ── Triangle type classifier ─────────────────────────────────────────────────
+
+fn classify_triangle(a: int, b: int, c: int) -> string {
+    if a == b && b == c {
+        return "equilateral"
+    } else if a == b || b == c || a == c {
+        return "isosceles"
+    } else {
+        return "scalene"
+    }
+}
+
+// ── FizzBuzz ─────────────────────────────────────────────────────────────────
+
+fn fizzbuzz(n: int) -> string {
+    if n % 15 == 0 {
+        return "FizzBuzz"
+    } else if n % 3 == 0 {
+        return "Fizz"
+    } else if n % 5 == 0 {
+        return "Buzz"
+    } else {
+        return str(n)
+    }
+}
+
+// ── Primality test ───────────────────────────────────────────────────────────
+
+fn is_prime(n: int) -> bool {
+    if n < 2 {
+        return false
+    }
+    if n == 2 {
+        return true
+    }
+    if n % 2 == 0 {
+        return false
+    }
+    let i = 3
+    let limit = int(sqrt(float(n))) + 1
+    let prime = true
+    for i in 3..limit {
+        if n % i == 0 {
+            prime = false
+        }
+    }
+    return prime
+}
+
+// ── Greatest common divisor (iterative Euclidean) ────────────────────────────
+
+fn gcd(a: int, b: int) -> int {
+    if b == 0 {
+        return a
+    }
+    return gcd(b, a % b)
+}
+
+// ── Power (integer exponentiation) ───────────────────────────────────────────
+
+fn ipow(base: int, exp: int) -> int {
+    if exp == 0 {
+        return 1
+    }
+    return base * ipow(base, exp - 1)
+}
+
+// ── Sum of a range 0..n ──────────────────────────────────────────────────────
+
+fn range_sum(n: int) -> int {
+    let total = 0
+    for i in 0..n {
+        total = total + i
+    }
+    return total
+}
+
+// ── Count digits in a positive integer ──────────────────────────────────────
+
+fn count_digits(n: int) -> int {
+    if n == 0 {
+        return 1
+    }
+    let count = 0
+    let remaining = n
+    for i in 0..20 {
+        if remaining > 0 {
+            remaining = remaining / 10
+            count = count + 1
+        }
+    }
+    return count
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Main program
+// ─────────────────────────────────────────────────────────────────────────────
+
+fn main() {
+
+    // ── 1. Variables & types ─────────────────────────────────────────────
+
+    section("1. Variables and Types")
+
+    let age: int = 25
+    let height: float = 1.82
+    let name: string = "Bloom"
+    let fast: bool = true
+
+    print("Name:")
+    print(name)
+    print("Age:")
+    print(age)
+    print("Height:")
+    print(height)
+    print("Fast?")
+    print(fast)
+
+    // Type inference (no annotation needed)
+    let inferred_int = 99
+    let inferred_float = 2.718
+    let inferred_bool = false
+
+    print("Inferred int:")
+    print(inferred_int)
+    print("Inferred float:")
+    print(inferred_float)
+    print("Inferred bool:")
+    print(inferred_bool)
+
+    // ── 2. Arithmetic ────────────────────────────────────────────────────
+
+    section("2. Arithmetic")
+
+    let a = 48
+    let b = 7
+
+    print("a =")
+    print(a)
+    print("b =")
+    print(b)
+    print("add(a,b):")
+    print(add(a, b))
+    print("subtract(a,b):")
+    print(subtract(a, b))
+    print("multiply(a,b):")
+    print(multiply(a, b))
+    print("divide(a,b):")
+    print(divide(a, b))
+    print("modulo(a,b):")
+    print(modulo(a, b))
+
+    // Float arithmetic
+    let fa: float = 10.5
+    let fb: float = 3.2
+    print("float 10.5 + 3.2 =")
+    print(fa + fb)
+    print("float 10.5 * 3.2 =")
+    print(fa * fb)
+    print("float 10.5 / 3.2 =")
+    print(fa / fb)
+
+    // ── 3. Comparisons & logic ───────────────────────────────────────────
+
+    section("3. Comparisons and Logic")
+
+    print("10 == 10:")
+    print(10 == 10)
+    print("10 != 5:")
+    print(10 != 5)
+    print("3 < 7:")
+    print(3 < 7)
+    print("7 <= 7:")
+    print(7 <= 7)
+    print("9 > 4:")
+    print(9 > 4)
+    print("5 >= 6:")
+    print(5 >= 6)
+
+    print("true && false:")
+    print(true && false)
+    print("true || false:")
+    print(true || false)
+    print("!true:")
+    print(!true)
+    print("!false:")
+    print(!false)
+
+    // Compound conditions
+    let x = 42
+    print("x > 10 && x < 100:")
+    print(x > 10 && x < 100)
+    print("x < 0 || x > 40:")
+    print(x < 0 || x > 40)
+
+    // ── 4. String operations ─────────────────────────────────────────────
+
+    section("4. String Operations")
+
+    let greeting = "Hello"
+    let world = ", World!"
+    print("Concatenation:")
+    print(greeting + world)
+    print("len(greeting):")
+    print(len(greeting))
+    print("str(12345):")
+    print(str(12345))
+    print("int(str(99)):")
+    print(int("99"))
+    print("float(str(3.14)):")
+    print(float("3.14"))
+
+    // ── 5. Built-in math functions ───────────────────────────────────────
+
+    section("5. Built-in Math Functions")
+
+    print("abs(-42):")
+    print(abs(-42))
+    print("abs(7):")
+    print(abs(7))
+    print("min(3, 9):")
+    print(min(3, 9))
+    print("max(3, 9):")
+    print(max(3, 9))
+    print("sqrt(144.0):")
+    print(sqrt(144.0))
+    print("pow(2.0, 10.0):")
+    print(pow(2.0, 10.0))
+    print("floor(3.9):")
+    print(floor(3.9))
+    print("ceil(3.1):")
+    print(ceil(3.1))
+    print("sqrt(2.0):")
+    print(sqrt(2.0))
+
+    // ── 6. if / else if / else ───────────────────────────────────────────
+
+    section("6. Conditionals")
+
+    let score = 78
+    if score >= 90 {
+        print("Grade: A")
+    } else if score >= 80 {
+        print("Grade: B")
+    } else if score >= 70 {
+        print("Grade: C")
+    } else if score >= 60 {
+        print("Grade: D")
+    } else {
+        print("Grade: F")
+    }
+
+    print("classify_number(-5):")
+    print(classify_number(-5))
+    print("classify_number(0):")
+    print(classify_number(0))
+    print("classify_number(42):")
+    print(classify_number(42))
+
+    print("is_even(4):")
+    print(is_even(4))
+    print("is_even(7):")
+    print(is_even(7))
+
+    print("classify_triangle(5,5,5):")
+    print(classify_triangle(5, 5, 5))
+    print("classify_triangle(3,3,5):")
+    print(classify_triangle(3, 3, 5))
+    print("classify_triangle(3,4,5):")
+    print(classify_triangle(3, 4, 5))
+
+    // ── 7. For loops ─────────────────────────────────────────────────────
+
+    section("7. For Loops")
+
+    print("Counting 1..6:")
+    for i in 1..6 {
+        print(i)
+    }
+
+    print("Sum 0..10:")
+    let running = 0
+    for i in 0..10 {
+        running = running + i
+    }
+    print(running)
+
+    print("Squares 1..8:")
+    for i in 1..8 {
+        print(i * i)
+    }
+
+    // ── 8. Nested loops ──────────────────────────────────────────────────
+
+    section("8. Nested Loops (multiplication table 1..5)")
+
+    for row in 1..5 {
+        for col in 1..5 {
+            print(row * col)
+        }
+    }
+
+    // ── 9. Factorial ─────────────────────────────────────────────────────
+
+    section("9. Factorial (recursion)")
+
+    for i in 0..11 {
+        print(factorial(i))
+    }
+
+    // ── 10. Fibonacci ────────────────────────────────────────────────────
+
+    section("10. Fibonacci (recursion)")
+
+    for i in 0..13 {
+        print(fib(i))
+    }
+
+    // ── 11. FizzBuzz 1..21 ───────────────────────────────────────────────
+
+    section("11. FizzBuzz (1..21)")
+
+    for i in 1..21 {
+        print(fizzbuzz(i))
+    }
+
+    // ── 12. Primes up to 50 ──────────────────────────────────────────────
+
+    section("12. Primes up to 50")
+
+    for n in 2..51 {
+        if is_prime(n) {
+            print(n)
+        }
+    }
+
+    // ── 13. GCD examples ────────────────────────────────────────────────
+
+    section("13. Greatest Common Divisor")
+
+    print("gcd(48, 18):")
+    print(gcd(48, 18))
+    print("gcd(100, 75):")
+    print(gcd(100, 75))
+    print("gcd(17, 13):")
+    print(gcd(17, 13))
+
+    // ── 14. Integer power ────────────────────────────────────────────────
+
+    section("14. Integer Power (2^0 to 2^10)")
+
+    for exp in 0..11 {
+        print(ipow(2, exp))
+    }
+
+    // ── 15. Range sums ───────────────────────────────────────────────────
+
+    section("15. Range Sums")
+
+    print("sum(0..10):")
+    print(range_sum(10))
+    print("sum(0..100):")
+    print(range_sum(100))
+
+    // ── 16. Absolute difference ──────────────────────────────────────────
+
+    section("16. Absolute Difference")
+
+    print("abs_diff(10, 3):")
+    print(absolute_diff(10, 3))
+    print("abs_diff(3, 10):")
+    print(absolute_diff(3, 10))
+
+    // ── 17. Digit counting ───────────────────────────────────────────────
+
+    section("17. Digit Counting")
+
+    print("digits in 0:")
+    print(count_digits(0))
+    print("digits in 42:")
+    print(count_digits(42))
+    print("digits in 1000000:")
+    print(count_digits(1000000))
+
+    // ── 18. Mixed float and int expressions ──────────────────────────────
+
+    section("18. Float Expressions")
+
+    let pi: float = 3.14159
+    let r: float = 5.0
+    let area = pi * r * r
+    print("pi * 5^2 (circle area):")
+    print(area)
+
+    let hyp = sqrt(3.0 * 3.0 + 4.0 * 4.0)
+    print("hypotenuse of 3-4-5 triangle:")
+    print(hyp)
+
+    // ── 19. Boolean expressions ──────────────────────────────────────────
+
+    section("19. Boolean Logic")
+
+    let p = true
+    let q = false
+    print("p && q:")
+    print(p && q)
+    print("p || q:")
+    print(p || q)
+    print("!p || q:")
+    print(!p || q)
+    print("!(p && q):")
+    print(!(p && q))
+    print("p && !q:")
+    print(p && !q)
+
+    // ── 20. Accumulator patterns ─────────────────────────────────────────
+
+    section("20. Accumulator Patterns")
+
+    // Count evens in 0..20
+    let even_count = 0
+    for i in 0..20 {
+        if is_even(i) {
+            even_count = even_count + 1
+        }
+    }
+    print("Even numbers in 0..20:")
+    print(even_count)
+
+    // Count primes in 2..30
+    let prime_count = 0
+    for n in 2..30 {
+        if is_prime(n) {
+            prime_count = prime_count + 1
+        }
+    }
+    print("Primes in 2..30:")
+    print(prime_count)
+
+    // Product of 1..6 (5!)
+    let product = 1
+    for i in 1..6 {
+        product = product * i
+    }
+    print("Product 1*2*3*4*5:")
+    print(product)
+
+    // Done
+    section("Showcase complete!")
+    print("Bloom is growing. 🌸")
+}
