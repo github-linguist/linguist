@@ -661,7 +661,7 @@ Bison:
   color: "#6A463F"
   group: Yacc
   tm_scope: source.yacc
-  extensions:
+:
   - ".bison"
   ace_mode: text
   language_id: 31
@@ -2768,6 +2768,25 @@ Go Module:
   tm_scope: go.mod
   ace_mode: text
   language_id: 947461016
+# Ajoutez ce bloc dans lib/linguist/languages.yml
+Goscript:
+  type: programming
+  color: "#7c3aed"
+  extensions:
+    - ".gjs"
+    - ".gos"
+  aliases:
+    - goscript
+    - gjs
+  ace_mode: "text"
+  codemirror_mode: "javascript"
+  codemirror_mime_type: "text/x-goscript"
+  filenames:
+    - "goscriptfile"
+  interpreters:
+    - "goscript"
+  tm_scope: "source.goscript"
+  language_id: 987654321
 Go Template:
   type: markup
   color: "#00ADD8"
