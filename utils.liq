@@ -1,3 +1,4 @@
+
 %ifdef environment
 # Get the value of an environment variable.
 # Returns `default` if the variable is not set.
