@@ -1,0 +1,117 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Goscript",
+  "scopeName": "source.goscript",
+  "fileTypes": ["gjs", "gos"],
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#types"
+    },
+    {
+      "include": "#functions"
+    },
+    {
+      "include": "#numbers"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.goscript",
+          "match": "//.*$"
+        },
+        {
+          "name": "comment.block.goscript",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.goscript",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.goscript",
+              "match": "\\\\."
+            }
+          ]
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.goscript",
+          "match": "\\b(if|else|match|return|ret|break|continue|loop|while|for|in|as|from)\\b"
+        },
+        {
+          "name": "keyword.declaration.goscript",
+          "match": "\\b(fn|lt|cn|muts|const|struct|enum|impl|packet|module|import|export|pub|unsafe)\\b"
+        },
+        {
+          "name": "keyword.other.goscript",
+          "match": "\\b(nnl|jmp|new|extends|only|sandbox|timeout)\\b"
+        }
+      ]
+    },
+    "types": {
+      "patterns": [
+        {
+          "name": "storage.type.primitive.goscript",
+          "match": "\\b(int|i8|i16|i32|i64|u8|u16|u32|u64|float|f32|f64|double|string|str|char|bool|boolean|void|nil|any)\\b"
+        },
+        {
+          "name": "storage.type.composite.goscript",
+          "match": "\\b(dict|map|array|list|vector)\\b"
+        }
+      ]
+    },
+    "functions": {
+      "patterns": [
+        {
+          "name": "entity.name.function.goscript",
+          "match": "\\bfn\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\s*\\(",
+          "captures": {
+            "1": {
+              "name": "entity.name.function.goscript"
+            }
+          }
+        },
+        {
+          "name": "support.function.builtin.goscript",
+          "match": "\\b(print|println|len|cap|append|delete)\\b"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.integer.goscript",
+          "match": "\\b[0-9]+\\b"
+        },
+        {
+          "name": "constant.numeric.float.goscript",
+          "match": "\\b[0-9]+\\.[0-9]+\\b"
+        },
+        {
+          "name": "constant.language.goscript",
+          "match": "\\b(true|false|nil|null)\\b"
+        }
+      ]
+    }
+  }
+}
