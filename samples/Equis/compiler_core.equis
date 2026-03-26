@@ -1,0 +1,147 @@
+// =========================================================================
+// EQUIS COMPILER - Main Entry Point
+// -------------------------------------------------------------------------
+// Architecture: Multi-pass recursive descent parser with LLVM IR generation
+// Memory Model: Hybrid ARC (Automatic Reference Counting) + Arena
+// Semantic Model: Resource-Event-Agent (REA) Duality Enforcement
+// =========================================================================
+
+use "std/sys.equis";
+use "std/string.equis";
+use "std/collections.equis";
+use "compiler/constants.equis";
+use "compiler/lexer.equis";
+use "compiler/parser.equis";
+use "compiler/analyzer.equis";
+use "compiler/semantics.equis";
+use "compiler/codegen.equis";
+use "compiler/borrow_checker.equis";
+use "compiler/lsp.equis";
+let mut global_ast_buffer = 0;
+let mut loaded_files = 0;
+let mut include_paths = 0;
+
+fn compile_file(path) {
+    if (path == 0) { return 0; }
+    if (map_get(loaded_files, path)) { return 0; }
+    map_put(loaded_files, path, 1);
+
+    write(2, "  Loading: ", 11); write(2, path, sys_strlen(path)); write(2, "\n", 1);
+
+    let mut source = sys_read_entire_file(path);
+    if (source == 0) {
+        let mut i = 0;
+        let size = vec_size(include_paths);
+        while (i < size) {
+            let full_path = str_concat(str_concat(vec_get(include_paths, i), "/"), path);
+            source = sys_read_entire_file(full_path);
+            if (source != 0) {
+                i = size;
+            }
+            i = i + 1;
+        }
+    }
+
+    if (source == 0) {
+        write(2, "error: could not read file: ", 28);
+        write(2, path, sys_strlen(path));
+        write(2, "\n", 1);
+        exit(1);
+    }
+
+    write(2, "  Lexing...\n", 12);
+    let lex = lexer_new(source);
+    lexer_scan_tokens(lex);
+
+    write(2, "  Parsing...\n", 13);
+    let p = parser_new(lex[4]);
+    let ast = parse_program(p);
+
+    if (ast == 0) { write(2, "  AST NULL!\n", 12); return 0; }
+
+    let mut j = 0;
+    let ast_size = vec_size(ast);
+    while (j < ast_size) {
+        let node = vec_get(ast, j);
+        if (node != 0) {
+            if (node[0] == STMT_USE) {
+                compile_file(node[1]);
+            }
+            global_ast_buffer = vec_push(global_ast_buffer, node);
+        }
+        j = j + 1;
+    }
+    return 1;
+}
+
+fn main() {
+    write(2, "STARTING STAGE-2 COMPILER\n", 26);
+    global_ast_buffer = vec_new(4096);
+    loaded_files = map_new(100);
+    include_paths = vec_new(10);
+
+    let argc = sys_get_argc();
+    let mut start_file = 0;
+
+    let mut i = 1;
+    let mut lsp_mode = 0;
+    while (i < argc) {
+        let arg = sys_get_argv(i);
+        if (str_equal(arg, "--lsp")) {
+            lsp_mode = 1;
+        } else if (str_equal(arg, "-I")) {
+            include_paths = vec_push(include_paths, sys_get_argv(i + 1));
+            i = i + 1;
+        } else {
+            if (start_file == 0) { start_file = arg; }
+        }
+        i = i + 1;
+    }
+
+    if (lsp_mode) {
+        lsp_loop();
+        return 0;
+    }
+
+    if (start_file == 0) {
+        write(2, "No input file.\n", 15);
+        exit(1);
+    }
+
+    compile_file(start_file);
+
+    write(2, "  Analyzing...\n", 15);
+    let analyzer = analyzer_new();
+    analyze_program(analyzer, global_ast_buffer);
+    
+    let diags = analyzer[4];
+    if (diags) {
+        if (vec_size(diags) > 0) {
+            let mut d_idx = 0; let d_sz = vec_size(diags);
+            while (d_idx < d_sz) {
+                let d = vec_get(diags, d_idx);
+                analyze_error(d[0], d[1], d[2]);
+                d_idx = d_idx + 1;
+            }
+            exit(1);
+        }
+    }
+    
+    write(2, "  Borrow Checking...\n", 21);
+    let bc = borrow_checker_new();
+    borrow_check_program(bc, global_ast_buffer);
+    
+    write(2, "  Generating Code...\n", 21);
+    let ctx = codegen_new(0, 0);
+    if (ctx == 0) {
+        write(2, "error: failed to create codegen context\n", 40);
+        exit(1);
+    }
+    if (global_ast_buffer == 0) {
+        write(2, "error: empty AST buffer\n", 24);
+        exit(1);
+    }
+    gen_program(ctx, global_ast_buffer);
+    write(2, "DONE\n", 5);
+}
+main();
