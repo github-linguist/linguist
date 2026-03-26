@@ -1,0 +1,108 @@
+use "std/sys.equis";
+use "std/collections.equis";
+use "std/string.equis";
+
+// =========================================================================
+// EQUIS LANGUAGE EXAMPLE
+// =========================================================================
+
+// 1. DATA TYPES AND ABSTRACTION
+struct Inventory { item_id; qty; }
+interface DigitalAgent { fn ping(timestamp); }
+
+// 2. RESOURCE-EVENT-AGENT (REA) MODELING
+// Agents can have specific roles and metadata fields
+Agent Buyer roles { "CONSUMER" } { id: "B1"; status: "active"; }
+Agent Seller roles { "VENDOR" } { id: "S1"; status: "active"; }
+
+// Resources represent assets with unit definitions
+Resource Cash { unit: USD; decimals: 2; }
+Resource Item { unit: PCS; }
+
+// Valuators encapsulate pricing or exchange rate logic
+Valuator MarketRate {
+    print_raw_str("[Valuator] Calculating market rate...\n");
+}
+
+// Policies enforce business rules or compliance constraints
+Policy RiskLimit {
+    logic {
+        let max_val = 5000;
+        assert(max_val <= 10000); // Standard risk check
+    }
+}
+
+// Commitments represent promises to execute future events
+Commitment Order_01 evaluated_by MarketRate {
+    flow {
+        out 5 Item from Seller to Buyer;
+        in 50 Cash from Buyer to Seller;
+    }
+}
+
+// Events fulfill commitments and execute specific logic and flows
+Event Purchase fulfills Order_01 evaluated_by MarketRate roles { "CONSUMER" } {
+    logic {
+        assert(1 > 0);
+        print_raw_str("[Event] Executing REA Purchase contract...\n");
+    }
+    flow {
+        in 5 Item from Seller to Buyer;
+        out 50 Cash from Buyer to Seller;
+    }
+}
+
+Event Delivery fulfills Order_01 evaluated_by MarketRate roles { "VENDOR" } {
+    flow {
+        out 5 Item from Seller to Buyer;
+        in 50 Cash from Buyer to Seller;
+    }
+}
+
+// Higher-order economic structures
+exchange Trade { Purchase; Delivery; }
+transformation Manufacture evaluated_by MarketRate roles { "VENDOR" } {
+    flow {
+        in 10 Item from Seller to Buyer;
+        out 10 Item from Buyer to Seller;
+    }
+}
+
+// 3. CORE LOGIC WRAPPER
+fn run_demos() {
+    print_raw_str("--------------------------------------\n");
+    print_raw_str("Equis Core Feature Verification\n");
+    print_raw_str("--------------------------------------\n\n");
+
+    // Variable and arithmetic operations
+    let mut balance = 1000;
+    let cost = 500;
+    balance = balance - cost;
+    
+    print_raw_str("System Balance: ");
+    print_raw(balance);
+    print_raw_str("\n");
+
+    // Dynamic Collections (std/collections)
+    let list = vec_new(4);
+    vec_push(list, 777);
+    print_raw_str("Vector Get(0): ");
+    print_raw(vec_get(list, 0));
+    print_raw_str("\n\n");
+
+    // REA Operations
+    print_raw_str("--- REA Execution Flow ---\n");
+    execute Purchase { sig: Buyer; timestamp: "1700000000" };
+    
+    print_raw_str("--- REA Reverse Flow ---\n");
+    reverse Purchase { reason: "Customer Refund" };
+    
+    print_raw_str("\nEquis core systems verified.\n");
+}
+
+// 4. ENTRY POINT
+fn main() {
+    run_demos();
+}
+
+main();
