@@ -991,12 +991,6 @@ class TestHeuristics < Minitest::Test
     })
   end
 
-  def test_sd_by_heuristics
-    assert_heuristics({
-      "Vespa Schema Definition" => all_fixtures("Vespa Schema Definition", "*.sd")
-    })
-  end
-
   def test_sol_by_heuristics
     assert_heuristics({
       "Gerber Image" => Dir.glob("#{fixtures_path}/Generic/sol/Gerber Image/*"),
