@@ -1,4 +1,6 @@
-// server.js (Run with: bun run server.js)
+#!/usr/bin/env bun
+
+
 const db = new Map();
 let idCounter = 1;
 
