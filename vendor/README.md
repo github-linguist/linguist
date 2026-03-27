@@ -664,6 +664,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Velocity Template Language:** [animecyc/AtomLanguageVelocity](https://github.com/animecyc/AtomLanguageVelocity)
 - **Vento:** [ventojs/vscode-vento](https://github.com/ventojs/vscode-vento)
 - **Verilog:** [textmate/verilog.tmbundle](https://github.com/textmate/verilog.tmbundle)
+- **Vespa Schema Definition:** [vespa-engine/vespa](https://github.com/vespa-engine/vespa)
 - **Vim Help File:** [Alhadis/language-viml](https://github.com/Alhadis/language-viml)
 - **Vim Script:** [Alhadis/language-viml](https://github.com/Alhadis/language-viml)
 - **Vim Snippet:** [Alhadis/language-viml](https://github.com/Alhadis/language-viml)

@@ -819,6 +819,10 @@ disambiguations:
     - '\(#[\w-]+[!\?]'
     - '(?:[\)\]]\s*[\*\+\?](?:\s|$))'
     - '@[\w.-]+(?:\)\s|$)'
+- extensions: ['.sd']
+  rules:
+  - language: Vespa Schema Definition
+    pattern: '^\s*(schema|document|field|rank-profile)\b'
 - extensions: ['.sol']
   rules:
   - language: Solidity
