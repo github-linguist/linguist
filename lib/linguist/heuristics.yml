@@ -443,6 +443,11 @@ disambiguations:
   - language: JSON
 - extensions: ['.k']
   rules:
+  - language: Krypton
+    pattern:
+    - '^\s*just\s+run\s*\{'
+    - '^\s*go\s+\w+\s*\{'
+    - '\bemit\s+'
   - language: KCL
     pattern:
       - '^schema [A-Za-z0-9_-]+'
