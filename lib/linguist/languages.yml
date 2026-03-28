@@ -7726,6 +7726,29 @@ TSV:
   aliases:
   - tab-seperated values
   language_id: 1035892117
+MagPhos:
+  type: programming
+  color: "#FF8800"
+  extensions:
+    - ".mp"
+    - ".mgph"        # optional: secondary extension
+    - ".magphos" # optional: long-form extension
+  tm_scope: source.magphos
+  ace_mode: text
+  codemirror_mode: clike
+  codemirror_mime_type: text/x-magphos
+  language_id: 999999999
+  interpreters:
+    - magphos
+    - mp
+  aliases:
+    - mp
+    - magphoslang
+  group: MagPhos
+  wrap: false
+  searchable: true
+  documentation_url: "https://github.com/raptor4mc/MagPhos"
+
 TSX:
   type: programming
   color: "#3178c6"
