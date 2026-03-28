@@ -416,8 +416,8 @@ disambiguations:
     - '^methodmap\s+\w+\s+<\s+\w+'
     - '^\s*MarkNativeAsOptional\s*\('
     # MagPhos heuristic rules
-  - language: MagPhos
-     extensions:
+ - language: MagPhos
+  extensions:
     - ".mp"
   patterns:
     - "\\bvar\\s+[A-Za-z_][A-Za-z0-9_]*\\s*="
@@ -425,6 +425,7 @@ disambiguations:
     - "\\bloop\\s+[0-9]+\\s*\\{"
     - "\\bset\\s+[A-Za-z_][A-Za-z0-9_]*\\s*="
     - "\\bif\\s+[A-Za-z_][A-Za-z0-9_\\s><=!+\\-*/]*\\s*\\{"
+
 
   - language: NASL
     pattern:
