@@ -415,6 +415,17 @@ disambiguations:
     - '^public\s+(?:SharedPlugin(?:\s+|:)__pl_\w+\s*=(?:\s*\{)?|(?:void\s+)?__pl_\w+_SetNTVOptional\(\)(?:\s*\{)?)'
     - '^methodmap\s+\w+\s+<\s+\w+'
     - '^\s*MarkNativeAsOptional\s*\('
+    # MagPhos heuristic rules
+  - language: MagPhos
+     extensions:
+    - ".mp"
+  patterns:
+    - "\\bvar\\s+[A-Za-z_][A-Za-z0-9_]*\\s*="
+    - "\\bprint\\s+\""
+    - "\\bloop\\s+[0-9]+\\s*\\{"
+    - "\\bset\\s+[A-Za-z_][A-Za-z0-9_]*\\s*="
+    - "\\bif\\s+[A-Za-z_][A-Za-z0-9_\\s><=!+\\-*/]*\\s*\\{"
+
   - language: NASL
     pattern:
     - '^\s*include\s*\(\s*(?:"|'')[\\/\w\-\.:\s]+\.(?:nasl|inc)\s*(?:"|'')\s*\)\s*;'
