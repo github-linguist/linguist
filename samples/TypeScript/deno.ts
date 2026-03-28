@@ -1,6 +1,6 @@
 #!/usr/bin/env -S deno run --allow-env
 /**
- * @file user.ts
+ * @file deno.ts
  * @description Demonstrates Object-Oriented Programming (OOP) in Deno using TypeScript.
  * Features encapsulated data, constructors, and methods.
  */
