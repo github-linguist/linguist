@@ -1,0 +1,64 @@
+start
+
+load library native
+load library logger
+
+take cli_args from native as args
+take capture from native
+take print_error from logger
+take print_success from logger
+take print_warning from logger
+
+set REQUIRED_API to "api 1.0"
+
+create function runtime_preflight()
+    set version_out to trim of(capture("sicht version"))
+    if length of(version_out) is equal to 0 then
+        print_warning("Runtime version is unknown, continuing.")
+        give true
+    endif
+
+    if version_out contains REQUIRED_API then
+        give true
+    endif
+
+    if version_out contains "SICHT: VERSION" then
+        print_warning("Runtime did not expose explicit API contract.")
+        give true
+    endif
+
+    print_error("Unsupported runtime contract.")
+    print_error("Expected: " + REQUIRED_API)
+    print_error("Detected: " + version_out)
+    give false
+endfunction
+
+create function main()
+    if runtime_preflight() is equal to false then
+        exit 1
+    endif
+
+    if length of(args) is less than 2 then
+        print_error("usage: sightctl <command>")
+        give false
+    endif
+
+    set cmd to element 1 of(args)
+    if cmd is equal to "check" then
+        print_success("runtime check passed")
+        give true
+    otherwise if cmd is equal to "version" then
+        print_success(capture("sicht version"))
+        give true
+    otherwise
+        print_error("unknown command: " + cmd)
+        give false
+    endif
+endfunction
+
+if main() is equal to false then
+    exit 1
+endif
+
+end
+
