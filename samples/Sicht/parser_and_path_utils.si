@@ -1,0 +1,74 @@
+start
+
+create library parser_utils
+
+    create function starts_with(text, prefix)
+        if length of(text) is less than length of(prefix) then
+            give false
+        endif
+
+        set i to 0
+        while i is less than length of(prefix)
+            if character i of(text) is not equal to character i of(prefix) then
+                give false
+            endif
+            set i to i + 1
+        endwhile
+        give true
+    endfunction
+
+    create function split(text, delim)
+        set parts to []
+        if length of(delim) is equal to 0 then
+            add text to(parts)
+            give parts
+        endif
+
+        set chunk to ""
+        set i to 0
+        while i is less than length of(text)
+            set match to true
+            set j to 0
+            while j is less than length of(delim)
+                if i + j is greater than or equal to length of(text) then
+                    set match to false
+                    exit
+                endif
+                if character (i + j) of(text) is not equal to character j of(delim) then
+                    set match to false
+                    exit
+                endif
+                set j to j + 1
+            endwhile
+
+            if match is equal to true then
+                add chunk to(parts)
+                set chunk to ""
+                set i to i + length of(delim)
+                next
+            endif
+
+            set chunk to chunk + character i of(text)
+            set i to i + 1
+        endwhile
+
+        add chunk to(parts)
+        give parts
+    endfunction
+
+    create function get_directory(path)
+        set i to length of(path) - 1
+        while i is greater than or equal to 0
+            set ch to character i of(path)
+            if ch is equal to "/" or ch is equal to character 0 of("\\") then
+                give substring(path, 0, i)
+            endif
+            set i to i - 1
+        endwhile
+        give "."
+    endfunction
+
+endlibrary
+
+end
+
