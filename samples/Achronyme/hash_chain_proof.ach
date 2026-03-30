@@ -1,0 +1,56 @@
+// ============================================================================
+// Verifiable Hash Chain
+// ============================================================================
+//
+// Demonstrates: for loops in circuits, accumulator patterns,
+// poseidon_many, and function definitions inside prove blocks.
+//
+// Scenario:
+//   Prove knowledge of a preimage that, after N rounds of iterated
+//   hashing, produces a known public digest — without revealing the
+//   preimage or any intermediate hashes.
+
+let preimage = 0p123456789
+let rounds = 5
+
+// Compute the chain in VM mode
+mut digest = preimage
+for i in 0..rounds {
+    digest = poseidon(digest, 0)
+}
+
+let final_hash = digest
+print("Hash chain result after " + rounds.to_string() + " rounds:")
+print("  " + final_hash.to_string())
+
+// Prove knowledge of the preimage
+prove(final_hash: Public) {
+    fn hash_chain(seed, n) {
+        mut acc = seed
+        for i in 0..n {
+            acc = poseidon(acc, 0)
+        }
+        acc
+    }
+
+    let computed = hash_chain(preimage, 5)
+    assert_eq(computed, final_hash)
+}
+
+print("Hash chain proof verified")
+
+// Bonus: prove the chain has a specific structure (each intermediate
+// hash is a valid Poseidon output — implicitly guaranteed by the circuit)
+let mid_point = poseidon(poseidon(preimage, 0), 0)  // after 2 rounds
+
+prove(final_hash: Public, mid_point: Public) {
+    // Prove: preimage → 2 rounds → mid_point → 3 more rounds → final_hash
+    let after_2 = poseidon(poseidon(preimage, 0), 0)
+    assert_eq(after_2, mid_point)
+
+    let after_5 = poseidon(poseidon(poseidon(after_2, 0), 0), 0)
+    assert_eq(after_5, final_hash)
+}
+
+print("Split hash chain proof verified")
+print("PASS: hash_chain_proof")

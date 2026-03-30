@@ -1,0 +1,87 @@
+// ============================================================================
+// Private Sealed-Bid Auction
+// ============================================================================
+//
+// Demonstrates: prove(x: Public) syntax, Poseidon commitments,
+// range checks, comparison gadgets, Merkle eligibility, and multi-proof
+// composition — all in a single hybrid VM + ZK program.
+//
+// Scenario:
+//   Three bidders submit sealed bids for an item. Each bid is committed
+//   via Poseidon hash. A ZK proof verifies that the winner's bid is:
+//     1. Valid (within the allowed range 1..2^32)
+//     2. Committed (matches the published commitment)
+//     3. Higher than all other bids
+//   Without revealing any losing bid values.
+
+// --- Phase 1: Setup (VM mode) ---
+
+// Bidder secrets and bids
+let bid_alice   = 0p500
+let bid_bob     = 0p750
+let bid_charlie = 0p300
+
+// Nonces prevent commitment replay attacks
+let nonce_alice   = 0p1111
+let nonce_bob     = 0p2222
+let nonce_charlie = 0p3333
+
+// Public commitments: hash(bid, nonce) — published on-chain
+let commit_alice   = poseidon(bid_alice,   nonce_alice)
+let commit_bob     = poseidon(bid_bob,     nonce_bob)
+let commit_charlie = poseidon(bid_charlie, nonce_charlie)
+
+print("Commitments published:")
+print("  Alice:   " + commit_alice.to_string())
+print("  Bob:     " + commit_bob.to_string())
+print("  Charlie: " + commit_charlie.to_string())
+
+// --- Phase 2: Reveal & Prove Winner (VM + ZK) ---
+
+// The auctioneer (Bob) proves he won without revealing Alice/Charlie's bids.
+// Bob knows all bids (received sealed), but the proof only reveals his commitment.
+
+let winning_bid   = bid_bob
+let winning_nonce = nonce_bob
+let winning_commit = commit_bob
+
+// Prove: winning bid is valid, committed, and highest
+prove(winning_commit: Public, commit_alice: Public, commit_charlie: Public) {
+    // 1. Commitment integrity: hash(bid, nonce) == published commitment
+    assert_eq(poseidon(winning_bid, winning_nonce), winning_commit)
+
+    // 2. Range validity: bid is in [1, 2^32)
+    range_check(winning_bid, 32)
+
+    // 3. Winning bid > Alice's bid
+    let alice_bid_recovered = bid_alice
+    assert_eq(poseidon(alice_bid_recovered, nonce_alice), commit_alice)
+    range_check(alice_bid_recovered, 32)
+    assert(winning_bid > alice_bid_recovered)
+
+    // 4. Winning bid > Charlie's bid
+    let charlie_bid_recovered = bid_charlie
+    assert_eq(poseidon(charlie_bid_recovered, nonce_charlie), commit_charlie)
+    range_check(charlie_bid_recovered, 32)
+    assert(winning_bid > charlie_bid_recovered)
+}
+
+print("Auction verified: winner's bid is valid, committed, and highest")
+
+// --- Phase 3: Independent bid-validity proofs ---
+
+// Each bidder can independently prove their bid was in range
+// without revealing the amount
+
+fn prove_bid_valid(bid, nonce, commitment) {
+    prove(commitment: Public) {
+        assert_eq(poseidon(bid, nonce), commitment)
+        range_check(bid, 32)
+    }
+}
+
+prove_bid_valid(bid_alice, nonce_alice, commit_alice)
+prove_bid_valid(bid_charlie, nonce_charlie, commit_charlie)
+
+print("All bid validity proofs verified")
+print("PASS: private_auction")

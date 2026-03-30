@@ -1,0 +1,152 @@
+// ============================================================================
+// Tornado Cash–style Private Mixer
+// ============================================================================
+//
+// Demonstrates: circuit declarations with typed visibility params,
+// Poseidon commitments, Merkle membership, nullifier derivation, and
+// the deposit→withdraw flow of a privacy-preserving mixer.
+//
+// Protocol overview:
+//   1. DEPOSIT: User picks (nullifier, secret), computes
+//      commitment = Poseidon(nullifier, secret), and publishes it.
+//      Commitments form leaves in a Merkle tree.
+//
+//   2. WITHDRAW: User proves in ZK:
+//      a) They know (nullifier, secret) for some commitment in the tree
+//      b) The nullifier_hash matches (prevents double-spending)
+//      c) A recipient address is bound to the proof (prevents front-running)
+//      Without revealing WHICH commitment is theirs.
+//
+// This is a faithful translation of the Tornado Cash circuit from Circom,
+// adapted to Achronyme's syntax with type annotations and visibility.
+
+// --- Phase 1: Setup deposit tree (VM mode) ---
+
+// Four users deposit into the mixer
+// Each user generates a random (nullifier, secret) pair
+
+let nullifier_0 = 0p111111
+let secret_0    = 0p222222
+let commitment_0 = poseidon(nullifier_0, secret_0)
+
+let nullifier_1 = 0p333333
+let secret_1    = 0p444444
+let commitment_1 = poseidon(nullifier_1, secret_1)
+
+let nullifier_2 = 0p555555
+let secret_2    = 0p666666
+let commitment_2 = poseidon(nullifier_2, secret_2)
+
+let nullifier_3 = 0p777777
+let secret_3    = 0p888888
+let commitment_3 = poseidon(nullifier_3, secret_3)
+
+// Build a depth-2 Merkle tree of commitments
+//
+//           root
+//          /    \
+//      node_L   node_R
+//      /   \     /   \
+//    c_0  c_1  c_2  c_3
+
+let node_left  = poseidon(commitment_0, commitment_1)
+let node_right = poseidon(commitment_2, commitment_3)
+let root = poseidon(node_left, node_right)
+
+print("=== Tornado Mixer ===")
+print("Deposit tree root: " + root.to_string())
+print("4 deposits registered")
+
+// --- Phase 2: User 0 withdraws (VM + ZK) ---
+
+// User 0 wants to withdraw. They prove they know a valid deposit
+// without revealing which one.
+
+// Public: root, nullifier_hash, recipient
+// Witness: nullifier, secret, merkle proof path + indices
+
+// Nullifier hash: published on-chain to prevent double-spending
+let nullifier_hash = poseidon(nullifier_0, 0p0)
+
+// Recipient address (a field element representing an Ethereum address)
+let recipient = 0p42
+
+// Merkle proof for commitment_0:
+//   Sibling path: [commitment_1, node_right]
+//   Indices:      [0, 0] (left at both levels)
+let path: Field[2] = [commitment_1, node_right]
+let indices: Field[2] = [0p0, 0p0]
+
+print("")
+print("User 0 withdrawing...")
+
+prove withdrawal(root: Public, nullifier_hash: Public, recipient: Public) {
+    // === Core Tornado Cash circuit ===
+
+    // 1. Reconstruct commitment from secret inputs
+    let commitment = poseidon(nullifier_0, secret_0)
+
+    // 2. Verify commitment is in the Merkle tree
+    //    This proves "I deposited" without revealing which leaf
+    merkle_verify(root, commitment, path, indices)
+
+    // 3. Verify nullifier hash matches
+    //    Nullifier is derived deterministically from the secret,
+    //    so each deposit can only be withdrawn once
+    assert_eq(poseidon(nullifier_0, 0p0), nullifier_hash)
+
+    // 4. Bind the recipient to the proof
+    //    Without this, a miner could replace the recipient address
+    //    (front-running attack). The recipient is a public input,
+    //    so changing it invalidates the proof.
+    //    We include it as a dummy constraint: recipient² = recipient²
+    let r_sq = recipient * recipient
+    assert_eq(r_sq, recipient * recipient)
+}
+
+print("Withdrawal proof verified!")
+print("Nullifier hash: " + nullifier_hash.to_string())
+print("Recipient:      " + recipient.to_string())
+
+// --- Phase 3: Double-spend prevention ---
+
+// If user 0 tries to withdraw again with the same nullifier,
+// the on-chain contract would reject it because nullifier_hash
+// was already seen. In ZK, we can demonstrate this:
+
+prove double_spend_check(nullifier_hash: Public) {
+    // Same nullifier produces same hash — deterministic
+    assert_eq(poseidon(nullifier_0, 0p0), nullifier_hash)
+}
+
+print("")
+print("Same nullifier → same hash (double-spend detected on-chain)")
+print("Nullifier hash: " + nullifier_hash.to_string())
+
+// --- Phase 4: User 2 withdraws independently ---
+
+let nullifier_hash_2 = poseidon(nullifier_2, 0p0)
+let recipient_2 = 0p99
+
+// Merkle proof for commitment_2:
+//   Sibling path: [commitment_3, node_left]
+//   Indices:      [0, 1] (left at level 0, right at level 1)
+let path_2: Field[2] = [commitment_3, node_left]
+let idx_2: Field[2] = [0p0, 0p1]
+
+print("")
+print("User 2 withdrawing...")
+
+prove withdrawal_2(root: Public, nullifier_hash_2: Public, recipient_2: Public) {
+    let commitment = poseidon(nullifier_2, secret_2)
+    merkle_verify(root, commitment, path_2, idx_2)
+    assert_eq(poseidon(nullifier_2, 0p0), nullifier_hash_2)
+
+    let r_sq = recipient_2 * recipient_2
+    assert_eq(r_sq, recipient_2 * recipient_2)
+}
+
+print("User 2 withdrawal verified!")
+print("")
+print("=== Both withdrawals complete, no identities revealed ===")
+print("PASS: tornado_mixer")

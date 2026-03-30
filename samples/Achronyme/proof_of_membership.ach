@@ -1,0 +1,121 @@
+// ============================================================================
+// Proof of Membership — Zero-Knowledge Set Inclusion
+// ============================================================================
+//
+// Demonstrates: Poseidon commitments, Merkle tree construction,
+// private witnesses, public inputs, and merkle_verify in a prove block.
+//
+// Scenario: A club has 8 members, each identified by a secret key.
+// Member commitments form a Merkle tree.  Any member can prove they
+// belong to the club WITHOUT revealing which member they are.
+//
+//                        root
+//                      /      \
+//                   n01        n23
+//                  /    \     /    \
+//                n0     n1   n2    n3
+//               / \    / \  / \   / \
+//              m0 m1 m2 m3 m4 m5 m6 m7
+//
+// Public input:  merkle_root (the club's public commitment)
+// Private witness: secret_key, merkle path (3 siblings + 3 direction bits)
+
+// --- Phase 1: Club setup (all in the clear, done by club operator) ---
+
+// 8 member secret keys (in production, each member keeps theirs private)
+let key_0 = 0p101
+let key_1 = 0p202
+let key_2 = 0p303
+let key_3 = 0p404
+let key_4 = 0p505
+let key_5 = 0p606
+let key_6 = 0p707
+let key_7 = 0p808
+
+// Member commitments: hash of secret key (one-way binding)
+let m0 = poseidon(key_0, 0)
+let m1 = poseidon(key_1, 0)
+let m2 = poseidon(key_2, 0)
+let m3 = poseidon(key_3, 0)
+let m4 = poseidon(key_4, 0)
+let m5 = poseidon(key_5, 0)
+let m6 = poseidon(key_6, 0)
+let m7 = poseidon(key_7, 0)
+
+// Build depth-3 Merkle tree (bottom-up)
+// Level 1: pair leaves
+let n0 = poseidon(m0, m1)
+let n1 = poseidon(m2, m3)
+let n2 = poseidon(m4, m5)
+let n3 = poseidon(m6, m7)
+
+// Level 2: pair level-1 nodes
+let n01 = poseidon(n0, n1)
+let n23 = poseidon(n2, n3)
+
+// Root
+let merkle_root = poseidon(n01, n23)
+
+print("=== Proof of Membership ===")
+print("Club Merkle root: " + merkle_root.to_string())
+print("8 members registered")
+print("")
+
+// --- Phase 2: Member 5 proves membership ---
+//
+// Member 5 (key_5) wants to prove they're in the club.
+// They construct a Merkle proof: the path from their leaf to the root.
+//
+// m5 is at index 5 (binary: 101)
+//   Level 0: m5 is RIGHT child of n2 → sibling = m4, index = 1
+//   Level 1: n2 is LEFT child of n23 → sibling = n3, index = 0
+//   Level 2: n23 is RIGHT child of root → sibling = n01, index = 1
+//
+let proof_path: Field[3] = [m4, n3, n01]
+let proof_indices: Field[3] = [0p1, 0p0, 0p1]
+
+print("Member 5 proving membership...")
+
+prove membership(merkle_root: Public) {
+    // The prover knows their secret key (private witness via capture)
+    let my_commitment = poseidon(key_5, 0)
+
+    // Verify: my_commitment is a leaf in the tree rooted at merkle_root
+    // This unfolds into 3 levels of: conditional swap + single hash
+    // (2 mux + 1 poseidon per level), then assert_eq(computed_root, merkle_root)
+    merkle_verify(merkle_root, my_commitment, proof_path, proof_indices)
+}
+
+print("Membership verified!")
+print("")
+
+// --- Phase 3: Verify the proof reveals nothing ---
+//
+// The verifier sees: merkle_root (public) + a valid proof.
+// They learn NOTHING about which member proved membership.
+// The secret key, the leaf index, and the path are all private.
+
+// --- Phase 4: Member 0 also proves membership ---
+
+let path_0: Field[3] = [m1, n1, n23]
+let idx_0: Field[3] = [0p0, 0p0, 0p0]
+
+print("Member 0 proving membership...")
+
+prove membership_0(merkle_root: Public) {
+    let my_commitment = poseidon(key_0, 0)
+    merkle_verify(merkle_root, my_commitment, path_0, idx_0)
+}
+
+print("Membership verified!")
+print("")
+
+// --- Phase 5: Non-member fails ---
+//
+// A non-member with a fake key cannot produce a valid proof
+// because no leaf in the tree matches their commitment.
+// (We don't demonstrate failure here — the prover simply cannot
+// construct a valid witness that satisfies the constraints.)
+
+print("=== Both members proved membership without revealing identity ===")
+print("PASS: proof_of_membership")
