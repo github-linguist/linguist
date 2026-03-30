@@ -1,0 +1,90 @@
+{{!-- Sline grammar example --}}
+{{!-- Written for the GitHub Linguist PR. MIT License. --}}
+
+{{product | image_url(width=100, height=200, quality=100) | append("?test=1")}}
+
+{{ "str1" }}
+
+{{ `str1` }}
+
+{{ 123 }}
+
+{{ as }}
+
+{{ true }}
+
+{{ product }}
+
+{{ abc }}
+
+{{ aaa }}
+
+{{ page_title }}
+
+{{ product.featured_image }}
+
+{{ product.featured_image.id }}
+
+{{ product.tags[123] }}
+
+{{ product.tags["id"] }}
+
+{{ product.tags[id] }}
+
+{{#var tags = product.tags /}}
+
+{{ tags[123] }}
+
+{{ tags["id"] }}
+
+{{ tags[key] }}
+
+{{#var num = 123 /}}
+
+{{#var bool = true /}}
+
+{{#var str1 = "hello" /}}
+
+{{#var str2 = `hello` /}}
+
+{{#var str3 = "string：\<>\"',abc：😂🎉🚀" /}}
+
+{{#if num > 1}}hello{{/if}}
+
+{{#for item in arr }}
+  {{#var current_price_break = item.price /}}
+{{/for}}
+
+{{#component "stylesheet" src="./customers-account.css" | asset_url() /}}
+
+{{#image_tag
+  src | image_url(width=100, height=200, quality=100) | append("?test=1")
+  class="img"
+  loading=loading
+/}}
+
+{{#if arr | size() > 0 || (b == "test" && c ) }}
+  OK
+{{/if}}
+
+{{#schema}}
+{
+  "name": "account",
+  "settings": [
+    {
+      "id": "color_scheme",
+      "type": "color_scheme",
+      "label": 123,
+      "default": true
+    },
+    {
+      {{#if settings.test}}
+        "type": "style.spacing",
+      {{/if}}
+      "id": "{{settings.id}}",
+      "label": {{settings.label}},
+      "default": ""
+    }
+  ]
+}
+{{/schema}}
