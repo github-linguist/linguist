@@ -588,6 +588,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Slash:** [slash-lang/Slash.tmbundle](https://github.com/slash-lang/Slash.tmbundle)
 - **Slice:** [zeroc-ice/vscode-slice](https://github.com/zeroc-ice/vscode-slice)
 - **Slim:** [borama/vscode-ruby-slim](https://github.com/borama/vscode-ruby-slim)
+- **Sline:** [shoplineos/sline-textmate](https://github.com/shoplineos/sline-textmate)
 - **Slint:** [slint-ui/slint-tmLanguage](https://github.com/slint-ui/slint-tmLanguage)
 - **SmPL:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **Smali:** [ShaneWilton/sublime-smali](https://github.com/ShaneWilton/sublime-smali)
