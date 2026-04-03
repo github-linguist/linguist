@@ -1,0 +1,20 @@
+# SPDX-License-Identifier: PMPL-1.0-or-later
+# A2ML — Attested Markup Language example
+
+@abstract
+  name: burble-voice-platform
+  version: 1.0.0
+  type: application
+  purpose: "P2P encrypted voice chat with AI data channel"
+
+@pedigree
+  attested-by: "Jonathan D.A. Jewell"
+  trust-level: verified
+  provenance: https://github.com/hyperpolymath/burble
+  integrity: sha256:e3b0c44298fc1c149afbf4c8996fb924
+  chain-of-custody: hyperpolymath → rhodibot → hypatia
+  compliance: PMPL-1.0-or-later
+
+@refs
+  specification: https://github.com/hyperpolymath/standards/tree/main/a2ml
+  related: burble, gossamer, panll
