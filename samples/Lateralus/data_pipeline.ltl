@@ -1,0 +1,137 @@
+// ═══════════════════════════════════════════════════════════════════
+// LATERALUS v1.5 — Data Pipeline Example
+// Demonstrates pipeline operators for ETL-style data processing
+// ═══════════════════════════════════════════════════════════════════
+
+import math
+import strings
+
+// ── Stage 1: Generate sample data ─────────────────────────────────
+
+fn make_record(product: str, region: str, amount: float, units: int) -> map {
+    let r = {}
+    r["product"] = product
+    r["region"]  = region
+    r["amount"]  = amount
+    r["units"]   = units
+    return r
+}
+
+fn generate_sales_data() -> list {
+    return [
+        make_record("Widget A", "North", 1250.50, 42),
+        make_record("Widget B", "South", 890.25,  31),
+        make_record("Widget A", "East",  2100.00, 67),
+        make_record("Widget C", "North", 450.75,  15),
+        make_record("Widget B", "West",  1780.00, 55),
+        make_record("Widget A", "South", 3200.00, 98),
+        make_record("Widget C", "East",  675.50,  22),
+        make_record("Widget B", "North", 1100.00, 38),
+    ]
+}
+
+// ── Stage 2: Transform pipeline ───────────────────────────────────
+
+fn enrich_record(record: map) -> map {
+    let amount = record["amount"]
+    let units  = record["units"]
+    let price_per_unit = amount / units
+    record["price_per_unit"] = round(price_per_unit, 2)
+    if amount > 2000 {
+        record["revenue_tier"] = "high"
+    } else {
+        if amount > 1000 {
+            record["revenue_tier"] = "medium"
+        } else {
+            record["revenue_tier"] = "low"
+        }
+    }
+    return record
+}
+
+// ── Stage 3: Analysis ─────────────────────────────────────────────
+
+fn analyze_by_product(data: list) -> map {
+    let products = data
+        |> map(fn(r) { r["product"] })
+        |> unique()
+
+    let result = {}
+    for product in products {
+        let product_data = data
+            |> filter(fn(r) { r["product"] == product })
+
+        let total_revenue = product_data
+            |> map(fn(r) { r["amount"] })
+            |> sum()
+
+        let total_units = product_data
+            |> map(fn(r) { r["units"] })
+            |> sum()
+
+        let avg_price = product_data
+            |> map(fn(r) { r["price_per_unit"] })
+            |> mean()
+
+        let stats = {}
+        stats["total_revenue"]      = round(total_revenue, 2)
+        stats["total_units"]        = total_units
+        stats["avg_price_per_unit"] = round(avg_price, 2)
+        stats["num_regions"]        = len(product_data)
+        result[product] = stats
+    }
+    return result
+}
+
+// ── Stage 4: Reporting ────────────────────────────────────────────
+
+fn format_report(analysis: map) -> str {
+    let lines = ["═══ Sales Analysis Report ═══", ""]
+
+    for product in sorted(keys(analysis)) {
+        let stats = analysis[product]
+        lines = lines + [
+            "Product: " + product,
+            "  Revenue:    \$" + str(stats["total_revenue"]),
+            "  Units:      " + str(stats["total_units"]),
+            "  Avg Price:  \$" + str(stats["avg_price_per_unit"]),
+            "  Regions:    " + str(stats["num_regions"]),
+            "",
+        ]
+    }
+
+    return lines |> join("\n")
+}
+
+// ── Main: The full ETL pipeline ───────────────────────────────────
+
+fn main() {
+    let report = generate_sales_data()
+        |> map(enrich_record)
+        |> analyze_by_product()
+        |> format_report()
+
+    println(report)
+
+    // Pipeline with filtering
+    println("\n═══ High-Revenue Records ═══")
+    let enriched = generate_sales_data() |> map(enrich_record)
+    let high_rev = enriched |> filter(fn(r) { r["revenue_tier"] == "high" })
+    for r in high_rev {
+        println(r["product"] + " (" + r["region"] + "): \$" + str(r["amount"]))
+    }
+
+    // Sequential pipeline
+    let data = generate_sales_data()
+    data = data |> map(enrich_record)
+    data = data |> filter(fn(r) { r["units"] > 30 })
+    data = data |> sort_by(fn(r) { r["amount"] })
+    data = data |> reverse()
+
+    println("\n═══ Top Records (>30 units, by revenue) ═══")
+    for record in data {
+        println(record["product"] + ": " + str(record["units"]) + " units, \$" + str(record["amount"]))
+    }
+}
+
+main()

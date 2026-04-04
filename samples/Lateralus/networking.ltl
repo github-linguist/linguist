@@ -1,0 +1,222 @@
+// ═══════════════════════════════════════════════════════════════════════════════
+// LATERALUS — networking.ltl
+// TCP/UDP socket programming, DNS resolution, and basic HTTP client
+// ═══════════════════════════════════════════════════════════════════════════════
+
+import net
+import io
+import strings
+
+// ─── Address types ─────────────────────────────────────────────────────────────
+
+struct IpAddr {
+    raw: str
+}
+
+struct SocketAddr {
+    ip:   IpAddr
+    port: int
+}
+
+fn parse_addr(s: str) -> SocketAddr {
+    let parts = split(s, ":")
+    return SocketAddr {
+        ip:   IpAddr { raw: parts[0] },
+        port: int(parts[1])
+    }
+}
+
+fn addr_to_str(addr: SocketAddr) -> str {
+    return "{addr.ip.raw}:{addr.port}"
+}
+
+// ─── TCP client ────────────────────────────────────────────────────────────────
+
+struct TcpConn {
+    addr:      SocketAddr
+    connected: bool
+    handle:    net.Handle?
+}
+
+fn tcp_connect(addr: SocketAddr) -> TcpConn {
+    let conn = TcpConn {
+        addr:      addr,
+        connected: false,
+        handle:    none
+    }
+    let h = net.tcp_connect(addr.ip.raw, addr.port)
+    conn.connected = true
+    conn.handle    = h
+    return conn
+}
+
+fn tcp_send(conn: TcpConn, data: str) -> int {
+    if !conn.connected { return 0 }
+    return net.write(conn.handle, data)
+}
+
+fn tcp_recv(conn: TcpConn, max_bytes: int) -> str {
+    if !conn.connected { return "" }
+    return net.read(conn.handle, max_bytes)
+}
+
+fn tcp_close(conn: TcpConn) {
+    if conn.handle != none {
+        net.close(conn.handle)
+    }
+    conn.connected = false
+}
+
+// ─── HTTP client ───────────────────────────────────────────────────────────────
+
+struct HttpResponse {
+    status:  int
+    headers: map
+    body:    str
+}
+
+fn http_get(url: str) -> HttpResponse {
+    let parts    = strings.split_url(url)
+    let host     = parts["host"]
+    let path     = parts["path"]
+    let port     = if contains(url, "https://") { 443 } else { 80 }
+
+    let conn = tcp_connect(parse_addr("{host}:{port}"))
+
+    let request = "GET {path} HTTP/1.1\r\nHost: {host}\r\nConnection: close\r\n\r\n"
+    tcp_send(conn, request)
+
+    let raw      = tcp_recv(conn, 65536)
+    tcp_close(conn)
+
+    return parse_http_response(raw)
+}
+
+fn parse_http_response(raw: str) -> HttpResponse {
+    let lines    = split(raw, "\r\n")
+    let status   = 0
+    let headers  = {}
+    let body     = ""
+    let in_body  = false
+
+    for i in range(len(lines)) {
+        let line = lines[i]
+        if i == 0 {
+            let parts  = split(line, " ")
+            status     = int(parts[1])
+        } else if line == "" {
+            in_body = true
+        } else if in_body {
+            body = body + line + "\n"
+        } else {
+            let colon = strings.index_of(line, ":")
+            if colon > 0 {
+                let key           = trim(slice(line, 0, colon))
+                let val           = trim(slice(line, colon + 1, len(line)))
+                headers[key]      = val
+            }
+        }
+    }
+
+    return HttpResponse { status: status, headers: headers, body: body }
+}
+
+// ─── UDP socket ────────────────────────────────────────────────────────────────
+
+struct UdpSocket {
+    handle: net.Handle
+    bound:  bool
+}
+
+fn udp_bind(port: int) -> UdpSocket {
+    let h = net.udp_bind(port)
+    return UdpSocket { handle: h, bound: true }
+}
+
+fn udp_send_to(sock: UdpSocket, data: str, addr: SocketAddr) {
+    net.udp_send(sock.handle, data, addr.ip.raw, addr.port)
+}
+
+fn udp_recv_from(sock: UdpSocket, max_bytes: int) -> (str, SocketAddr) {
+    let result = net.udp_recv(sock.handle, max_bytes)
+    let addr   = parse_addr(result["from"])
+    return (result["data"], addr)
+}
+
+// ─── DNS resolver ──────────────────────────────────────────────────────────────
+
+fn resolve(hostname: str) -> list {
+    return net.dns_lookup(hostname)
+}
+
+fn reverse_lookup(ip: str) -> str {
+    return net.dns_reverse(ip)
+}
+
+// ─── Ping ──────────────────────────────────────────────────────────────────────
+
+struct PingResult {
+    host:      str
+    alive:     bool
+    rtt_ms:    float
+    ttl:       int
+}
+
+fn ping(host: str, count: int) -> list {
+    let results = []
+    for i in range(count) {
+        let r = net.icmp_echo(host, 1000)
+        push(results, PingResult {
+            host:   host,
+            alive:  r["ok"],
+            rtt_ms: r["rtt_ms"],
+            ttl:    r["ttl"]
+        })
+    }
+    return results
+}
+
+// ─── Port scanner ──────────────────────────────────────────────────────────────
+
+fn scan_port(host: str, port: int, timeout_ms: int) -> bool {
+    let result = net.tcp_probe(host, port, timeout_ms)
+    return result["open"]
+}
+
+fn scan_host(host: str, ports: list, timeout_ms: int) -> map {
+    let open = {}
+    for port in ports {
+        if scan_port(host, port, timeout_ms) {
+            let service      = net.service_name(port)
+            open[str(port)]  = service
+        }
+    }
+    return open
+}
+
+// ─── Demo ──────────────────────────────────────────────────────────────────────
+
+fn main() {
+    // DNS lookup
+    let addrs = resolve("example.com")
+    io.println("example.com → {addrs}")
+
+    // HTTP GET
+    let resp = http_get("http://example.com/")
+    io.println("HTTP {resp.status}  body_len={len(resp.body)}")
+
+    // Port scan common ports
+    let common = [21, 22, 23, 25, 53, 80, 110, 143, 443, 3389]
+    let open   = scan_host("192.168.1.1", common, 500)
+    io.println("Open ports on 192.168.1.1: {keys(open)}")
+
+    // Ping
+    let pings = ping("8.8.8.8", 3)
+    for r in pings {
+        if r.alive {
+            io.println("  {r.host} alive  rtt={r.rtt_ms}ms  ttl={r.ttl}")
+        } else {
+            io.println("  {r.host} timeout")
+        }
+    }
+}

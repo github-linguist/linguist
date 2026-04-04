@@ -1,0 +1,314 @@
+// ═══════════════════════════════════════════════════════════════════════════════
+// LATERALUS — parser.ltl
+// Recursive-descent parser: tokeniser, AST, and evaluator for arithmetic exprs
+// ═══════════════════════════════════════════════════════════════════════════════
+
+import io
+import math
+
+// ─── Token types ───────────────────────────────────────────────────────────────
+
+enum TokenKind {
+    Number
+    Plus
+    Minus
+    Star
+    Slash
+    Caret
+    LParen
+    RParen
+    Ident
+    Eof
+    Unknown
+}
+
+struct Token {
+    kind:  TokenKind
+    value: str
+    pos:   int
+}
+
+// ─── Lexer ─────────────────────────────────────────────────────────────────────
+
+struct Lexer {
+    src:  str
+    pos:  int
+}
+
+fn lexer_new(src: str) -> Lexer {
+    return Lexer { src: src, pos: 0 }
+}
+
+fn lexer_peek(lex: Lexer) -> str {
+    if lex.pos >= len(lex.src) { return "" }
+    return slice(lex.src, lex.pos, lex.pos + 1)
+}
+
+fn lexer_advance(lex: Lexer) {
+    lex.pos = lex.pos + 1
+}
+
+fn is_digit(ch: str) -> bool {
+    return ch >= "0" and ch <= "9"
+}
+
+fn is_alpha(ch: str) -> bool {
+    return (ch >= "a" and ch <= "z") or (ch >= "A" and ch <= "Z") or ch == "_"
+}
+
+fn lexer_next(lex: Lexer) -> Token {
+    // skip whitespace
+    while lex.pos < len(lex.src) {
+        let ch = lexer_peek(lex)
+        if ch == " " or ch == "\t" or ch == "\n" {
+            lexer_advance(lex)
+        } else {
+            break
+        }
+    }
+
+    let start = lex.pos
+    if lex.pos >= len(lex.src) {
+        return Token { kind: TokenKind.Eof, value: "", pos: start }
+    }
+
+    let ch = lexer_peek(lex)
+    lexer_advance(lex)
+
+    match ch {
+        "+" => return Token { kind: TokenKind.Plus,   value: "+", pos: start }
+        "-" => return Token { kind: TokenKind.Minus,  value: "-", pos: start }
+        "*" => return Token { kind: TokenKind.Star,   value: "*", pos: start }
+        "/" => return Token { kind: TokenKind.Slash,  value: "/", pos: start }
+        "^" => return Token { kind: TokenKind.Caret,  value: "^", pos: start }
+        "(" => return Token { kind: TokenKind.LParen, value: "(", pos: start }
+        ")" => return Token { kind: TokenKind.RParen, value: ")", pos: start }
+        _   => {
+            if is_digit(ch) {
+                let num = ch
+                while lex.pos < len(lex.src) {
+                    let nc = lexer_peek(lex)
+                    if is_digit(nc) or nc == "." {
+                        num = num + nc
+                        lexer_advance(lex)
+                    } else { break }
+                }
+                return Token { kind: TokenKind.Number, value: num, pos: start }
+            } else if is_alpha(ch) {
+                let ident = ch
+                while lex.pos < len(lex.src) {
+                    let nc = lexer_peek(lex)
+                    if is_alpha(nc) or is_digit(nc) {
+                        ident = ident + nc
+                        lexer_advance(lex)
+                    } else { break }
+                }
+                return Token { kind: TokenKind.Ident, value: ident, pos: start }
+            }
+            return Token { kind: TokenKind.Unknown, value: ch, pos: start }
+        }
+    }
+}
+
+fn tokenize(src: str) -> list {
+    let lex    = lexer_new(src)
+    let tokens = []
+    while true {
+        let tok = lexer_next(lex)
+        push(tokens, tok)
+        if tok.kind == TokenKind.Eof { break }
+    }
+    return tokens
+}
+
+// ─── AST nodes ─────────────────────────────────────────────────────────────────
+
+enum NodeKind {
+    Num
+    Unary
+    Binary
+    Call
+    Var
+}
+
+struct AstNode {
+    kind:  NodeKind
+    value: str
+    left:  AstNode?
+    right: AstNode?
+    args:  list
+}
+
+fn num_node(v: str) -> AstNode {
+    return AstNode { kind: NodeKind.Num, value: v, left: none, right: none, args: [] }
+}
+
+fn binary_node(op: str, l: AstNode, r: AstNode) -> AstNode {
+    return AstNode { kind: NodeKind.Binary, value: op, left: l, right: r, args: [] }
+}
+
+fn unary_node(op: str, operand: AstNode) -> AstNode {
+    return AstNode { kind: NodeKind.Unary, value: op, left: operand, right: none, args: [] }
+}
+
+fn call_node(name: str, args: list) -> AstNode {
+    return AstNode { kind: NodeKind.Call, value: name, left: none, right: none, args: args }
+}
+
+// ─── Parser ────────────────────────────────────────────────────────────────────
+
+struct Parser {
+    tokens: list
+    pos:    int
+}
+
+fn parser_new(tokens: list) -> Parser {
+    return Parser { tokens: tokens, pos: 0 }
+}
+
+fn peek_tok(p: Parser) -> Token {
+    if p.pos >= len(p.tokens) { return Token { kind: TokenKind.Eof, value: "", pos: 0 } }
+    return p.tokens[p.pos]
+}
+
+fn consume(p: Parser) -> Token {
+    let tok = peek_tok(p)
+    p.pos = p.pos + 1
+    return tok
+}
+
+fn parse_primary(p: Parser) -> AstNode {
+    let tok = peek_tok(p)
+    match tok.kind {
+        TokenKind.Number => {
+            consume(p)
+            return num_node(tok.value)
+        }
+        TokenKind.Ident => {
+            consume(p)
+            // Check for function call
+            if peek_tok(p).kind == TokenKind.LParen {
+                consume(p)
+                let args = []
+                while peek_tok(p).kind != TokenKind.RParen {
+                    push(args, parse_expr(p))
+                    if peek_tok(p).value == "," { consume(p) }
+                }
+                consume(p)
+                return call_node(tok.value, args)
+            }
+            return AstNode { kind: NodeKind.Var, value: tok.value,
+                             left: none, right: none, args: [] }
+        }
+        TokenKind.LParen => {
+            consume(p)
+            let inner = parse_expr(p)
+            consume(p)  // RParen
+            return inner
+        }
+        TokenKind.Minus => {
+            consume(p)
+            return unary_node("-", parse_primary(p))
+        }
+        _ => return num_node("0")
+    }
+}
+
+fn parse_power(p: Parser) -> AstNode {
+    let base = parse_primary(p)
+    if peek_tok(p).kind == TokenKind.Caret {
+        consume(p)
+        let exp = parse_power(p)  // right-associative
+        return binary_node("^", base, exp)
+    }
+    return base
+}
+
+fn parse_term(p: Parser) -> AstNode {
+    let left = parse_power(p)
+    while peek_tok(p).kind == TokenKind.Star or peek_tok(p).kind == TokenKind.Slash {
+        let op  = consume(p).value
+        let right = parse_power(p)
+        left    = binary_node(op, left, right)
+    }
+    return left
+}
+
+fn parse_expr(p: Parser) -> AstNode {
+    let left = parse_term(p)
+    while peek_tok(p).kind == TokenKind.Plus or peek_tok(p).kind == TokenKind.Minus {
+        let op    = consume(p).value
+        let right = parse_term(p)
+        left      = binary_node(op, left, right)
+    }
+    return left
+}
+
+fn parse(src: str) -> AstNode {
+    let tokens = tokenize(src)
+    let p      = parser_new(tokens)
+    return parse_expr(p)
+}
+
+// ─── Evaluator ─────────────────────────────────────────────────────────────────
+
+fn eval(node: AstNode, vars: map) -> float {
+    match node.kind {
+        NodeKind.Num    => return float(node.value)
+        NodeKind.Var    => return float(vars[node.value])
+        NodeKind.Unary  => {
+            let v = eval(node.left, vars)
+            if node.value == "-" { return -v }
+            return v
+        }
+        NodeKind.Binary => {
+            let l = eval(node.left,  vars)
+            let r = eval(node.right, vars)
+            match node.value {
+                "+" => return l + r
+                "-" => return l - r
+                "*" => return l * r
+                "/" => return l / r
+                "^" => return math.pow(l, r)
+                _   => return 0.0
+            }
+        }
+        NodeKind.Call => {
+            let arg0 = if len(node.args) > 0 { eval(node.args[0], vars) } else { 0.0 }
+            match node.value {
+                "sin"  => return math.sin(arg0)
+                "cos"  => return math.cos(arg0)
+                "sqrt" => return sqrt(arg0)
+                "abs"  => return abs(arg0)
+                "log"  => return math.log(arg0)
+                _      => return 0.0
+            }
+        }
+    }
+    return 0.0
+}
+
+// ─── Demo ──────────────────────────────────────────────────────────────────────
+
+fn main() {
+    let exprs = [
+        "2 + 3 * 4",
+        "(2 + 3) * 4",
+        "2 ^ 10",
+        "sqrt(144)",
+        "sin(3.14159265) * 2",
+        "-5 + 10",
+    ]
+
+    for expr in exprs {
+        let ast    = parse(expr)
+        let result = eval(ast, {})
+        io.println("{expr}  =  {result}")
+    }
+
+    // With variables
+    let vars = { "x": "3.0", "y": "4.0" }
+    let dist_expr = parse("sqrt(x * x + y * y)")
+    let dist      = eval(dist_expr, vars)
+    io.println("distance(3,4) = {dist}")
+}
