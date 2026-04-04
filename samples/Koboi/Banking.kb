@@ -1,0 +1,111 @@
+using std::io
+using std::memory
+
+env ID
+
+module Logger {
+    static Count = 0
+
+    export fn Log(Message : String) {
+        Count += 1
+
+        pln("[LOG", Count, "]", Message)
+    }
+}
+
+struct Account {
+    Name : String
+    Balance : int
+}
+
+enum TransactionResult {
+    SUCCESS,
+    FAILURE
+}
+
+macro repeat(LOOPS, BODY) {
+    i = 0
+    while i < LOOPS {
+        BODY
+
+        i += 1
+    }
+}
+
+fn Deposit(A : Account, Amount : int) {
+    A.Balance += Amount
+
+    return A
+}
+
+fn Withdraw(A : Account, Amount : int) {
+    if A.Balance >= Amount {
+        A.Balance -= Amount
+
+        return SUCCESS
+    }
+
+    return FAILURE
+}
+
+fn ProcessTransaction(A : Account, Amount : int) {
+    Result = Withdraw(A, Amount)
+
+    match Result {
+        SUCCESS >> Logger::Log("Withdrawal successful"),
+        FAILURE >> Logger::Log("Withdrawal failed")
+    }
+
+    return A
+}
+
+fn Transfer(A : Account, B : Account, Amount : int) {
+    transaction {
+        A.Balance -= Amount
+        B.Balance += Amount
+
+        if A.Balance < 0 {
+            rollback
+        }
+    }
+
+    return A, B
+}
+
+fn main() provides env ID {
+    Logger::Log("System starting")
+
+    region Memory {
+        Account1 = Account { Name : "Alice", Balance : 100 }
+        Account2 = Account { Name : "Bob", Balance : 50 }
+
+        pln("Initial State:")
+
+        pln(Account1.Name, Account1.Balance)
+        pln(Account2.Name, Account2.Balance)
+
+        Reference = &Account1
+
+        pln("Borrowed:", Reference)
+
+        CopyAccount = @Account2
+
+        Account1 = Deposit(Account1, 25)
+
+        Logger::Log("Deposited into Alice")
+
+        Account1 = ProcessTransaction(Account1, 40)
+        Account1, Account2 = Transfer(Account1, Account2, 30)
+
+        pln("After Transactions:")
+
+        pln(Account1.Name, Account1.Balance)
+        pln(Account2.Name, Account2.Balance)
+
+        repeat(3, {
+            Logger::Log("Loop iteration")
+        })
+    }
+
+    Logger::Log("System shutting down")
+}
