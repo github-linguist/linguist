@@ -1,0 +1,80 @@
+; examples/fibonacci.ltasm  ─  Fibonacci in Lateralus Assembly
+;
+; Recursive fibonacci implementation using the LTasm call stack.
+; Demonstrates: CALL, RET, CMP, JLE, SUB, ADD, DUP, PUSH_IMM
+
+.section code
+.global _start
+
+; ── Entry point ───────────────────────────────────────────────────────────────
+_start:
+    PUSH_STR    "Fibonacci sequence (LTasm):"
+    PRINTLN
+
+    ; Print fib(0) through fib(12)
+    PUSH_IMM    0          ; i = 0
+.loop:
+    DUP                    ; stack: i i
+    PUSH_IMM    12
+    CMPGT                  ; (i > 12) ?
+    JT          .done
+
+    DUP                    ; stack: i i  (for CALL arg)
+    CALL        .fib       ; result = fib(i)  (consumes top i, pushes result)
+
+    ; Build string "fib(i) = result"
+    INT_TO_STR
+    PUSH_STR    " = "
+    SWAP
+    STR_CAT                ; " = result"
+
+    ; Prepend "fib(i)"
+    SWAP                   ; stack: result_str  i
+    DUP
+    INT_TO_STR
+    PUSH_STR    "fib("
+    SWAP
+    STR_CAT
+    PUSH_STR    ")"
+    STR_CAT
+    SWAP                   ; stack: i  "fib(i)"
+    SWAP                   ; stack: "fib(i)"  " = result"
+    STR_CAT
+    PRINTLN
+
+    INC                    ; i += 1
+    JMP         .loop
+
+.done:
+    POP
+    PUSH_IMM    0
+    HALT
+
+
+; ── fib(n) — recursive ────────────────────────────────────────────────────────
+; Input:  n on stack (consumed)
+; Output: fib(n) pushed onto stack
+fib:
+    DUP
+    PUSH_IMM    1
+    CMPLE
+    JT          .fib_base  ; if n <= 1: return n
+
+    ; fib(n-1)
+    DUP
+    DEC
+    CALL        .fib
+
+    ; fib(n-2)
+    SWAP
+    PUSH_IMM    2
+    SUB
+    CALL        .fib
+
+    ; fib(n-1) + fib(n-2)
+    ADD
+    RET
+
+.fib_base:
+    ; n is already on stack (0 or 1)
+    RET

@@ -1,0 +1,159 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// examples/enum_demo.ltl  –  Enums, variants & pattern matching  (v1.1.0)
+// ─────────────────────────────────────────────────────────────────────────────
+//
+// Demonstrates:
+//   • Simple enum (no data fields)
+//   • Enum with associated data per variant
+//   • type aliases
+//   • match expressions on enum values
+//   • impl blocks on enums
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ── Direction ─────────────────────────────────────────────────────────────────
+
+pub enum Direction {
+    North
+    South
+    East
+    West
+}
+
+impl Direction {
+    pub fn opposite(self) -> Direction {
+        match self {
+            Direction.North => Direction.South
+            Direction.South => Direction.North
+            Direction.East  => Direction.West
+            Direction.West  => Direction.East
+        }
+    }
+
+    pub fn to_delta(self) -> list {
+        match self {
+            Direction.North => [0, 1]
+            Direction.South => [0, -1]
+            Direction.East  => [1, 0]
+            Direction.West  => [-1, 0]
+        }
+    }
+
+    pub fn to_str(self) -> str {
+        match self {
+            Direction.North => "North"
+            Direction.South => "South"
+            Direction.East  => "East"
+            Direction.West  => "West"
+        }
+    }
+}
+
+// ── Color (enum with integer values) ─────────────────────────────────────────
+
+pub enum Color {
+    Red   = 0xff0000
+    Green = 0x00ff00
+    Blue  = 0x0000ff
+    Black = 0x000000
+    White = 0xffffff
+}
+
+// ── Result<T, E> style enum ───────────────────────────────────────────────────
+
+pub enum Outcome {
+    Ok    // success (no data in this demo)
+    Err   // failure
+    Empty // neither
+}
+
+// type alias
+pub type MaybeInt = Outcome
+
+fn safe_divide(a: int, b: int) -> Outcome {
+    if b == 0 {
+        return Outcome.Err
+    }
+    return Outcome.Ok
+}
+
+fn describe_outcome(o: Outcome) -> str {
+    match o {
+        Outcome.Ok    => "Success"
+        Outcome.Err   => "Error"
+        Outcome.Empty => "Empty"
+    }
+}
+
+// ── Token enum (like a real lexer) ────────────────────────────────────────────
+
+pub enum Token {
+    Number
+    Plus
+    Minus
+    Star
+    Slash
+    LParen
+    RParen
+    EOF
+}
+
+fn token_name(t: Token) -> str {
+    match t {
+        Token.Number  => "Number"
+        Token.Plus    => "+"
+        Token.Minus   => "-"
+        Token.Star    => "*"
+        Token.Slash   => "/"
+        Token.LParen  => "("
+        Token.RParen  => ")"
+        Token.EOF     => "<EOF>"
+    }
+}
+
+// ── Demo ─────────────────────────────────────────────────────────────────────
+
+fn main() {
+    // Direction demo
+    println("=== Direction ===")
+    let d = Direction.North
+    println("Direction: " + d.to_str())
+    println("Opposite:  " + d.opposite().to_str())
+
+    let delta = d.to_delta()
+    println("Delta:     [" + str(delta[0]) + ", " + str(delta[1]) + "]")
+
+    // Compass walk
+    let dirs = [Direction.North, Direction.East, Direction.East, Direction.South]
+    let x = 0
+    let y = 0
+    let i = 0
+    while i < len(dirs) {
+        let dv = dirs[i].to_delta()
+        x = x + dv[0]
+        y = y + dv[1]
+        i = i + 1
+    }
+    println("After walk: (" + str(x) + ", " + str(y) + ")")
+
+    // Outcome demo
+    println("\n=== Outcome ===")
+    println("10 / 2  → " + describe_outcome(safe_divide(10, 2)))
+    println("10 / 0  → " + describe_outcome(safe_divide(10, 0)))
+
+    // Token stream
+    println("\n=== Token stream ===")
+    let tokens = [
+        Token.Number, Token.Plus, Token.Number,
+        Token.Star,   Token.LParen, Token.Number, Token.RParen, Token.EOF
+    ]
+    let j = 0
+    while j < len(tokens) {
+        print(token_name(tokens[j]) + " ")
+        j = j + 1
+    }
+    println("")
+
+    println("\nAll done!")
+}
+
+main()

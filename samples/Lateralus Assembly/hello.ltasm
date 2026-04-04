@@ -1,0 +1,39 @@
+; examples/hello.ltasm  ─  Hello World in Lateralus Assembly
+;
+; Demonstrates core LTasm instructions:
+;   PUSH_STR, PRINTLN, PUSH_IMM, ADD, PRINTLN, HALT
+;
+; Assemble and run:
+;   ltlc run hello.ltasm
+
+.section code
+.global _start
+
+_start:
+    ; Push the greeting string and print it
+    PUSH_STR    "Hello from LATERALUS Assembly!"
+    PRINTLN
+
+    ; Arithmetic: compute 6 * 7
+    PUSH_IMM    6
+    PUSH_IMM    7
+    MUL
+    INT_TO_STR
+    PUSH_STR    "6 * 7 = "
+    SWAP
+    STR_CAT
+    PRINTLN
+
+    ; Demonstrate the call stack
+    CALL        .print_version
+    
+    ; Exit with code 0
+    PUSH_IMM    0
+    HALT
+
+
+; Subroutine: print version info
+print_version:
+    PUSH_STR    "LTasm VM  v1.0.0"
+    PRINTLN
+    RET
