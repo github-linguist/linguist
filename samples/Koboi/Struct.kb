@@ -1,0 +1,19 @@
+using std::io
+
+struct User {
+    Name : String
+    Age : int
+}
+
+fn Greet(UserData : User) {
+    pln("Hello,", UserData.Name)
+}
+
+fn main() {
+    Person = User {
+        Name : "Averi",
+        Age : 10
+    }
+
+    Greet(Person)
+}
