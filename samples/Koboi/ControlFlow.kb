@@ -1,0 +1,16 @@
+fn main() {
+    for i=0, i < 5, i += 1 {
+        print(i, "\n")
+    }
+
+    while 1 {
+        static int Count = 0
+        
+        Count += 1
+
+        print(Count, "\n")
+
+        if Count >= 5
+            break
+    }
+}
