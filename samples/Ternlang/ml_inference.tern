@@ -1,0 +1,30 @@
+// std::ml::inference — sparse ternary inference primitives
+// RFI-IRFOS Ternary Intelligence Stack
+// use std::ml::inference;
+
+// Ternary linear layer: sparse matrix-vector product
+// W is a weight matrix (quantized to -1/0/+1), x is the input vector
+// Zero-weighted connections are skipped entirely via @sparseskip
+fn linear(W: trittensor<1 x 1>, x: trittensor<1 x 1>) -> trittensor<1 x 1> {
+    @sparseskip let out: trittensor<1 x 1> = matmul(W, x);
+    return out;
+}
+
+// Dense linear layer: no zero skipping (baseline comparison)
+fn linear_dense(W: trittensor<1 x 1>, x: trittensor<1 x 1>) -> trittensor<1 x 1> {
+    let out: trittensor<1 x 1> = matmul(W, x);
+    return out;
+}
+
+// Ternary attention score: consensus of query and key projections
+// Returns hold (0) when query and key are orthogonal — naturally sparse
+fn attend(q: trit, k: trit) -> trit {
+    return consensus(q, k);
+}
+
+// Accumulate evidence: reduce a tensor to a single trit decision
+// Counts truth vs conflict, returns whichever wins; ties → hold
+fn decide(evidence: trittensor<1 x 1>) -> trit {
+    let s: trit = sparsity(evidence);
+    return s;
+}

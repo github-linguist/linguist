@@ -1,0 +1,38 @@
+// std::math — ternary arithmetic helpers
+// RFI-IRFOS Ternary Intelligence Stack
+// use std::math;
+
+// Balanced ternary addition of three trits with carry propagation
+fn ternadd3(a: trit, b: trit, c: trit) -> trit {
+    let ab: trit = consensus(a, b);
+    return consensus(ab, c);
+}
+
+// Negate: maps +1↔-1, 0→0
+fn neg(x: trit) -> trit {
+    return invert(x);
+}
+
+// Balance: push any extreme signal toward hold
+// Used to dampen oscillating signals in feedback loops
+fn balance(x: trit, damping: trit) -> trit {
+    return consensus(x, invert(damping));
+}
+
+// Step function: hold → truth (useful for activation-like behaviour)
+fn step(x: trit) -> trit {
+    match x {
+         1 => { return  1; }
+         0 => { return  1; }
+        -1 => { return -1; }
+    }
+}
+
+// Rectify: map conflict to hold (ternary ReLU analogue)
+fn rectify(x: trit) -> trit {
+    match x {
+         1 => { return  1; }
+         0 => { return  0; }
+        -1 => { return  0; }
+    }
+}

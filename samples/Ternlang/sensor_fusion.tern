@@ -1,0 +1,55 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// sensor_fusion.tern — Fusing uncertain signals from multiple sensors
+//
+// A self-driving car has: camera, lidar, radar, GPS.
+// Each sensor independently classifies the situation:
+//   +1 = clear path
+//    0 = uncertain (occlusion, noise, degraded signal)
+//   -1 = obstacle detected
+//
+// The fusion rule: any -1 triggers a safety hold.
+// Three or more +1 votes override individual uncertainty.
+// Otherwise: hold and continue gathering data.
+// ─────────────────────────────────────────────────────────────────────────────
+
+fn fuse_two(a: trit, b: trit) -> trit {
+    // If either sensor detects an obstacle, the pair votes obstacle
+    match a {
+        -1 => { return conflict(); }
+         0 => {
+            match b {
+                -1 => { return conflict(); }
+                 0 => { return hold();    }
+                 1 => { return hold();    }  // one clear, one uncertain → hold
+            }
+         }
+         1 => {
+            match b {
+                -1 => { return conflict(); }  // one clear, one obstacle → obstacle wins
+                 0 => { return hold();    }
+                 1 => { return truth();   }   // both clear → clear
+            }
+         }
+    }
+}
+
+fn fuse_four(cam: trit, lidar: trit, radar: trit, gps: trit) -> trit {
+    let optical:  trit = fuse_two(cam, lidar);
+    let radio:    trit = fuse_two(radar, gps);
+    let combined: trit = fuse_two(optical, radio);
+    return combined;
+}
+
+// Current sensor readings
+let camera: trit = truth();      // +1 — clear
+let lidar:  trit = truth();      // +1 — clear
+let radar:  trit = hold();       //  0 — rain degrading signal
+let gps:    trit = truth();      // +1 — position locked
+
+let path_clear: trit = fuse_four(camera, lidar, radar, gps);
+
+match path_clear {
+    -1 => { return conflict(); }   // BRAKE — obstacle confirmed
+     0 => { return hold();    }   // SLOW — uncertain, proceed cautiously
+     1 => { return truth();   }   // CLEAR — normal speed
+}
