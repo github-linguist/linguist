@@ -1,0 +1,77 @@
+// Looping over data structures is a very common operation done in all programming
+// practices. In fact, I'd argue 97% of all programming problems can be solved by
+// putting information into an array and looping over it. For this reason, for loops
+// in Onyx are extremely simple to use by design and should make programming very
+// enjoyable. But I digress, let's look at some examples.
+
+
+
+use core {package, *}
+
+main :: (args: [] cstr) {
+    // Currently, for loops can iterate over five kinds of data structures in Onyx in
+    //      * Ranges
+    //      * Fixed arrays
+    //      * Slices
+    //      * Dynamic arrays
+    //      * Custom iterators
+
+    // The syntax of for loops is very simple in
+    // for ^? <iteration variable> in <iterator> <block>
+
+    // For example, this will print out the numbers in the array literal:
+    for i in u32.[ 10, 20, 30, 40, 50 ] {
+        println(i);
+    }
+    print("\n\n");
+
+
+    // You may have noticed the options caret (^) in the definition of the for loop
+    // syntax. When a caret is placed before the iteration variable, the iteration
+    // variable will be a *pointer* to the data inside the iterator. This is useful
+    // for iterating over larger data structures that don't need to be copied for
+    // every iteration, or when you want to modify the elements of the iterator, as
+    // so:
+
+    primes := u32.[ 2, 3, 5, 7, 11, 13, 17 ];
+    for ^prime in primes {
+        *prime *= 2;
+    }
+
+    print("Doubled primes: ");
+    println(primes);
+
+    // There is also support for custom iterators using the built-in Iterator type.
+    // You have to specify a next, close, and data member. The semantics are roughly
+    // as follows:
+    //
+    //     1. next is called to get two values: the next iteration value, and a
+    //        continuation flag. If the continuation flag is true, then the iteration
+    //        will continue for another iteration. If the continuation flag is false
+    //        the iteration immediately terminates and the iteration value will be
+    //        ignored.
+    //
+    //     2. close is called whenever the for-loop exits in any manner (finished,
+    //        break, return).
+
+    {
+        value: i32 = 10;
+
+        //       This is pointer provided to the iterator structure.
+        next :: (v: ^i32) -> (i32, bool) {
+            defer *v -= 1;
+            return *v, *v >= 0;
+        }
+
+        close :: (v: ^i32) {
+            println("Closing the iterator.");
+        }
+
+        iterator: Iterator(i32) = .{ data = ^value, next = next, close = close };
+
+        // Simply use the iterator.
+        for v in iterator {
+            println(v);
+        }
+    }
+}

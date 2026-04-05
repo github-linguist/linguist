@@ -1,0 +1,138 @@
+// Macros allow you to write reusable blocks of code, much like procedures. Macros
+// are different in that they are expanded at the call site, and then symbol resolution
+// occurs. This means that every time a macro is called, it is expanded at the call site,
+// and then it uses the symbols from the current scope.
+
+main :: (args: [] cstr) {
+    // A macro in Onyx looks just like a procedure, just with the word "macro" in front of it.
+    a_simple_macro :: macro () {
+        println("This is a simple macro");
+    }
+
+    a_simple_macro();
+
+    // The powerful thing about macros is that they can access variables from their enclosing scope.
+    // For example, this macro prints the value of 'x'.
+    print_x :: macro () {
+        printf("x is {}\n", x);
+    }
+
+    {
+        x := 10;
+        print_x(); 
+    }
+
+    {
+        x := "a message";
+        print_x();
+    }
+
+    // Macros can take on two different forms depending on if they return a value or not.
+    // Macros that return a value are called "expression macros". Expression macros behave
+    // mostly just like inlined functions, with the addition that they can access variables
+    // from the calling-site's scope. Below is a simple expression macro.
+
+    add_x_y :: macro () -> i32 {
+        return x + y;
+    }
+
+    {
+        x := 10;
+        y := 20;
+        z := add_x_y();
+        printf("x + y is {}\n", z);
+    }
+
+    // Macros that do not return a value are called "block macros". Block macros behave differently
+    // from expression macros when it comes to "return" and "defer" statements. Block macros do not
+    // flush deferred statements when they end. A return statement in a block macro behaves like a
+    // return in the caller.
+
+    block_macro :: macro () {
+        defer println("Block macro's deferred print.");
+
+        println("Block macro's print.");
+    }
+
+    block_macro_that_returns :: macro () {
+        println("Returning...");
+        return;
+    }
+
+    calls_block_macro :: () {
+        block_macro();
+
+        println("This would be doing some work.");
+
+        block_macro_that_returns();
+        println("This will never be printed");
+    }
+
+    calls_block_macro();
+
+
+    // A powerful feature of Onyx that enables macros to be very useful is code blocks.
+    // Code blocks allow you to capture code and treat it as a compile-time object that can
+    // be passed around. To create a code blocks, simply put '[]' in front of the block
+    // of code you want to capture. Notice that this uses '::' because this is a compile-time
+    // value.
+    simple_code :: [] {
+        println("This is a code block!");
+    }
+
+    // You can then use the '#unquote' directive to place the code wherever you need it.
+    // We can paste it 3 times for examples in
+    #unquote simple_code;
+    #unquote simple_code;
+    #unquote simple_code;
+
+    // Because simple_code is a compile-time value, it can be passed to procedures as so:
+    triple :: ($body: Code) {
+        println("Running 3 times!");
+        #unquote body;
+        #unquote body;
+        #unquote body;
+    }
+
+    triple(simple_code);
+
+    // Because macros just alias their parameter names to the values passed, you don't need the
+    // compile-time parameter (the '$').
+    triple_macro :: macro (body: Code) {
+        println("Running 3 times in a macro!");
+        #unquote body;
+        #unquote body;
+        #unquote body;
+    }
+
+    triple_macro(simple_code);
+
+    // As another small shorthand, if a code block only contains one expression (like the code block above),
+    // then you can write by wrapping the expression in [](...).
+    triple_macro([](println("Short code block!")));
+
+    // As yet another small piece of syntactic sugar, you can pass a code block to a macro or procedure in
+    // the following way:
+
+    cool_block :: macro (param: i32, body: Code) {
+        local_variable := param * 2;
+        #unquote body;
+    }
+
+    cool_block(10) {
+        println(local_variable);
+    }
+
+    // Whenever there is a call at the statement level, the compiler will look one token ahead and see if there
+    // is a '{'. If there is, then the compiler will parse the '{' as the start of a code block, and will pass that
+    // code block as the last non-named argument to the function call. This allows you to write blocks of code that are
+    // prefaced by a controlling macro, which enables you do whatever crazy things you can imagine. For example, you
+    // could do something like `#pragma omp parallel for` in Onyx without relying on compiler magic.
+    //
+    //     parallel_for(iterable, thread_count=4) {
+    //         println(it); // Will be automatically assigned from the called macro.
+    //     }
+}
+
+
+use core {*}

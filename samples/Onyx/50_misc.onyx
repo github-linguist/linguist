@@ -1,0 +1,70 @@
+//
+// This file contains abunch of miscellaneous quirks/features of Onyx
+// that make programming it enjoyable.
+//
+
+underscore_is_weird :: () {
+    //
+    // Underscores are allowed in variable names, obviously.
+    // One feature I decided to add early one was to allow for the variable
+    // name '_' to be special, in that it can be declared and reused as
+    // many times as necesssary without causing an error. This means that
+    // it is great if you want to ignore a returned value. Take this
+    // example.
+
+    multiple_returns :: () -> (i32, str) {
+        return 123, "Hello";
+    }
+
+    _, s := multiple_returns();
+    printf("s: {}\n", s);
+
+    i, _ := multiple_returns();
+    printf("i: {}\n\n", i);
+}
+
+multiple_declaration_improvements :: () {
+    //
+    // Sometimes you want to call a function that returns multiple things
+    // and assign each of them to a new variable. This is totally within
+    // the normal semantics of the language and looks like so.
+
+    multiple_returns :: () -> (i32, str) {
+        return 123, "Hello";
+    }
+
+    i, s := multiple_returns();
+    printf("i: {}\ns: {}\n\n", i, s);
+
+    //
+    // However sometimes you want to declare one new variable and reuse
+    // old variable in the compound assignment. This is tricky, because
+    // if you were to write the following, you would get an error saying
+    // that 's' is already declared.
+    //
+    //     k, s := multiple_returns();
+    //
+    // You're trying to declare a new variable k, while using the old variable
+    // s in the same declaration. To get around this issue, there is a special
+    // syntax you can use that tell the compiler that s is a not a new
+    // variable, but the same one as above. You simple place a ~ after the
+    // variable that you want to reuse.
+
+    k, s~ := multiple_returns();
+    printf("k: {}\ns: {}\n\n", k, s);
+
+    //
+    // Obviously this assumes that s is the same type as before. If the types
+    // were different, you would not be able to do this.
+}
+
+
+//
+// A simple main to run all the examples.
+main :: (args) => {
+    underscore_is_weird();
+    multiple_declaration_improvements();
+}
+
+
+use core {*}
