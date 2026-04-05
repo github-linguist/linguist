@@ -1,0 +1,37 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// hello_trit.tern — Your first ternary program
+//
+// In binary, everything is true or false.
+// In ternary, there is a third state: hold.
+//
+//   -1 = conflict  — the signal is definitively negative
+//    0 = hold      — not undecided, but actively waiting for more evidence
+//   +1 = truth     — the signal is definitively positive
+//
+// The hold state is the core innovation. It is not null. It is not zero.
+// It is a computational instruction: gather more before acting.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// The three fundamental trit values
+let yes:     trit = truth();       // +1
+let maybe:   trit = hold();        //  0
+let no:      trit = conflict();    // -1
+
+// Negation: invert flips the sign, hold stays hold
+let not_yes: trit = invert(yes);   // → -1
+let not_no:  trit = invert(no);    // → +1
+let not_maybe: trit = invert(maybe); // → 0  (hold is its own inverse)
+
+// Consensus: agreement yields the shared value, disagreement yields hold
+let agree:    trit = consensus(yes, yes);       // → +1 (both affirm)
+let disagree: trit = consensus(yes, no);        // → +1 carry -1 (ternary add)
+let one_hold: trit = consensus(yes, maybe);     // → +1 carry 0
+
+// Final answer: a decisive affirmation
+let answer: trit = truth();
+
+match answer {
+    -1 => { return conflict(); }   // no
+     0 => { return hold();    }   // not yet
+     1 => { return truth();   }   // yes — hello, ternary world!
+}

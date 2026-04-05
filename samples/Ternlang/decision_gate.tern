@@ -1,0 +1,54 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// decision_gate.tern — Three-way decision with safety hard gate
+//
+// Classic binary logic: if conditions are met → act, else → don't act.
+// Ternary logic adds the hold state: conditions are partially met → wait.
+//
+// Pattern: safety is evaluated FIRST. A negative safety signal vetoes
+// everything else, regardless of how good the other signals are.
+// This is the architectural equivalent of an interlock.
+// ─────────────────────────────────────────────────────────────────────────────
+
+fn classify(signal: trit) -> trit {
+    match signal {
+        -1 => { return conflict(); }   // clear negative — reject
+         0 => { return hold();    }   // ambiguous — wait for more data
+         1 => { return truth();   }   // clear positive — proceed
+    }
+}
+
+fn gate(safety: trit, relevance: trit, confidence: trit) -> trit {
+    // Safety is a hard gate — negative safety means immediate reject
+    match safety {
+        -1 => { return conflict(); }   // VETO — do not pass go
+
+         0 => {
+            // Safety is uncertain — check other signals before deciding
+            let combined: trit = consensus(relevance, confidence);
+            match combined {
+                -1 => { return conflict(); }
+                 0 => { return hold();    }
+                 1 => { return hold();    }  // uncertain safety → hold even if rest is good
+            }
+         }
+
+         1 => {
+            // Safety clear — now evaluate the actual task signals
+            let combined: trit = consensus(relevance, confidence);
+            return combined;
+         }
+    }
+}
+
+// Scenario 1: Everything green
+let s1: trit = gate(truth(), truth(), truth());
+
+// Scenario 2: Safety uncertain → hold regardless of task quality
+let s2: trit = gate(hold(), truth(), truth());
+
+// Scenario 3: Safety veto → immediate reject
+let s3: trit = gate(conflict(), truth(), truth());
+
+// Return the most conservative result
+let result: trit = consensus(s1, s2);
+return result;

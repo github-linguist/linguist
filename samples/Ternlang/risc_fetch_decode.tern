@@ -1,0 +1,105 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// risc_fetch_decode.tern — Ternary CPU fetch-decode-execute cycle
+//
+// Conceptually inspired by Brandon Smith's 9-trit RISC simulator (Python).
+// Brandon's work demonstrated a full fetch-decode-execute loop on 9-trit words
+// using balanced ternary arithmetic — an existence proof that a ternary ISA
+// can be implemented cleanly in software without collapsing to binary at any
+// layer. His simulator used 9-trit words; the BET ISA uses 27-trit words.
+//
+// This file models the *trit-level decision logic* of a ternary CPU pipeline:
+//   fetch  → is the instruction bus ready?
+//   decode → is the opcode valid?
+//   execute→ is the operand well-formed?
+//
+// Pipeline stall = hold. Illegal instruction = conflict. Ready = truth.
+//
+// Reference: Smith, B. — 9-trit RISC Simulator (Python, open source)
+//            https://github.com/bsmith89/balanced-ternary (conceptual lineage)
+// ─────────────────────────────────────────────────────────────────────────────
+
+fn fetch_ready(bus: trit, memory_valid: trit) -> trit {
+    // Both the instruction bus and memory must be valid to fetch
+    match bus {
+        -1 => { return conflict(); }   // bus error — pipeline fault
+         0 => { return hold();    }   // bus busy — pipeline stall
+         1 => {
+            match memory_valid {
+                -1 => { return conflict(); }   // memory fault
+                 0 => { return hold();    }   // memory not ready — stall
+                 1 => { return truth();   }   // bus + memory ready — fetch
+            }
+         }
+    }
+}
+
+fn decode_opcode(opcode_trit: trit, isa_hit: trit) -> trit {
+    // opcode_trit: +1 = known opcode, 0 = ambiguous prefix, -1 = illegal
+    // isa_hit: +1 = found in ISA table, 0 = partial match, -1 = not found
+    match opcode_trit {
+        -1 => { return conflict(); }   // illegal opcode — SIGILL
+         0 => { return hold();    }   // prefix needs more trits — stall one cycle
+         1 => {
+            // Opcode syntactically valid — check ISA table
+            let verified: trit = consensus(opcode_trit, isa_hit);
+            return verified;
+         }
+    }
+}
+
+fn execute_ready(operand_a: trit, operand_b: trit) -> trit {
+    // Both operands must be resolved (not stale register reads)
+    let both: trit = consensus(operand_a, operand_b);
+    match both {
+        -1 => { return conflict(); }   // operand hazard — structural hazard
+         0 => { return hold();    }   // data hazard — wait for writeback
+         1 => { return truth();   }   // all operands ready — execute
+    }
+}
+
+fn pipeline_cycle(
+    bus:           trit,
+    memory_valid:  trit,
+    opcode_trit:   trit,
+    isa_hit:       trit,
+    operand_a:     trit,
+    operand_b:     trit
+) -> trit {
+    // Stage 1: fetch
+    let fetched: trit = fetch_ready(bus, memory_valid);
+    match fetched {
+        -1 => { return conflict(); }   // pipeline fault — raise exception
+         0 => { return hold();    }   // stall — try again next cycle
+         1 => {
+            // Stage 2: decode
+            let decoded: trit = decode_opcode(opcode_trit, isa_hit);
+            match decoded {
+                -1 => { return conflict(); }   // illegal instruction
+                 0 => { return hold();    }   // multi-trit opcode — stall
+                 1 => {
+                    // Stage 3: execute
+                    return execute_ready(operand_a, operand_b);
+                 }
+            }
+         }
+    }
+}
+
+// ── Scenario: clean pipeline ─────────────────────────────────────────────────
+// Bus ready, memory valid, known opcode found in ISA, both operands resolved
+let cycle_result: trit = pipeline_cycle(
+    truth(),    // bus ready
+    truth(),    // memory valid
+    truth(),    // opcode known
+    truth(),    // ISA hit
+    truth(),    // operand A ready
+    truth()     // operand B ready
+);
+
+// → truth: pipeline advances — instruction executes this cycle
+
+match cycle_result {
+    -1 => { return conflict(); }   // FAULT — raise CPU exception
+     0 => { return hold();    }   // STALL — advance PC on next cycle
+     1 => { return truth();   }   // EXECUTE — PC + 1
+}
