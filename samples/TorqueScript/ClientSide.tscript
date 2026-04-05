@@ -1,0 +1,3 @@
+function onClientEnterGame(%client) {
+    messageClient(%client, 'MsgWelcome', "Hello, World!");
+}

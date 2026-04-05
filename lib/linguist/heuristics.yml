@@ -215,6 +215,15 @@ disambiguations:
     pattern: '![\w\s]+methodsFor: '
   - language: 'C#'
     pattern: '^\s*(using\s+[A-Z][\s\w.]+;|namespace\s*[\w\.]+\s*(\{|;)|\/\/)'
+- extensions:
+  - .cs
+  rules:
+  - language: TorqueScript
+    and:
+      - pattern: |
+          (?m)^datablock\s+\w+\s*\(|^function\s+\w+\s*\(
+      - pattern: |
+          (?m)^\s*(?:\$|%)\w+\s*=
 - extensions: ['.csc']
   rules:
   - language: GSC
@@ -862,6 +871,8 @@ disambiguations:
   - language: STAR
     pattern: '^loop_\s*$'
   - language: Starlark
+
+
 - extensions: ['.stl']
   rules:
   - language: STL
@@ -903,6 +914,7 @@ disambiguations:
     - pattern: '--.*'
     - pattern: '\b(local|function|end|record|interface|enum)\b'
   - language: Type Language
+
 - extensions: ['.tlv']
   rules:
   - language: TL-Verilog
@@ -931,6 +943,7 @@ disambiguations:
   - language: TSPLIB data
     pattern: '^(NAME|TYPE|DIMENSION|EDGE_WEIGHT_TYPE|EDGE_WEIGHT_FORMAT)\s*:'
 - extensions: ['.tst']
+
   rules:
   - language: GAP
     pattern: 'gap> '

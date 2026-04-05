@@ -7674,7 +7674,7 @@ TMDL:
   extensions:
   - ".tmdl"
   aliases:
-  - "Tabular Model Definition Language"
+  - Tabular Model Definition Language
   tm_scope: source.tmdl
   ace_mode: text
   language_id: 769162295
@@ -7979,6 +7979,15 @@ Tor Config:
   aliases:
   - torrc
   language_id: 1016912802
+TorqueScript:
+  type: programming
+  color: "#e30000"
+  extensions:
+  - ".tscript"
+  - ".cs"
+  tm_scope: none
+  ace_mode: c_cpp
+  language_id: 659520821
 Tree-sitter Query:
   type: programming
   color: "#8ea64c"

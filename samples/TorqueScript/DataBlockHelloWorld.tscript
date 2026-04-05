@@ -1,0 +1,5 @@
+datablock ScriptObject(GreetingData) {
+    message = "Hello, World!";
+};
+
+echo(GreetingData.message);
