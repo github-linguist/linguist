@@ -1,0 +1,25 @@
+// Three-way exhaustive match — the compiler enforces all arms are present.
+// match0 is the "hold" arm: not false, not null — actively insufficient evidence.
+
+fn classify(signal: trit) -> trit {
+    match signal {
+        -1 => { return reject; }   // conflict  — definitively negative
+         0 => { return tend;   }   // hold       — actively waiting (match0)
+         1 => { return affirm; }   // truth      — definitively positive
+    }
+}
+
+// @sparseskip: the BET VM skips zero-trit (tend) elements in this loop.
+// At 56% sparsity → 2.3× fewer multiply operations.
+@sparseskip
+fn inference(weights: trittensor<8 x 8>, input: trittensor<8 x 1>) -> trittensor<8 x 1> {
+    return matmul(weights, input);
+}
+
+// Actor model: spawn a deliberation agent, send a trit, await ternary reply.
+fn deliberate(evidence: trit) -> trit {
+    let agent: agentref = spawn ValidatorAgent;
+    send agent evidence;
+    let decision: trit = await agent;
+    return decision;
+}
