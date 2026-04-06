@@ -1,0 +1,44 @@
+-- lists.rail — list operations
+--
+-- Demonstrates: cons, head, tail, length, reverse, append, range,
+--               map, fold, filter, join
+
+double x = x * 2
+showNum x = show x
+add a b = a + b
+isEven x = x - ((x / 2) * 2) == 0
+
+doubleAll xs = map double xs
+showAll xs = map showNum xs
+
+main =
+  -- Building lists
+  let xs = [1, 2, 3, 4, 5]
+  let _ = print (join " " (showAll xs))
+
+  -- cons, head, tail
+  let ys = cons 0 xs
+  let _ = print (show (head ys))
+  let _ = print (show (length ys))
+
+  -- reverse
+  let _ = print (join " " (showAll (reverse xs)))
+
+  -- append
+  let zs = append [10, 20] [30, 40]
+  let _ = print (join " " (showAll zs))
+
+  -- range
+  let _ = print (join " " (showAll (range 8)))
+
+  -- map
+  let _ = print (join " " (showAll (doubleAll xs)))
+
+  -- fold (sum)
+  let _ = print (show (fold add 0 xs))
+
+  -- filter
+  let evens = filter isEven (range 10)
+  let _ = print (show (length evens))
+
+  0

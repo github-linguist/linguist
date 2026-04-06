@@ -1,0 +1,22 @@
+-- fizzbuzz.rail — the classic interview question
+--
+-- Demonstrates: recursion, if/then/else, modular arithmetic, string output
+
+mod3 n = n - ((n / 3) * 3)
+mod5 n = n - ((n / 5) * 5)
+
+fizzbuzz n =
+  if mod3 n == 0 then
+    if mod5 n == 0 then "FizzBuzz"
+    else "Fizz"
+  else if mod5 n == 0 then "Buzz"
+  else show n
+
+go i max =
+  if i > max then 0
+  else let _ = print (fizzbuzz i)
+       go (i + 1) max
+
+main =
+  let _ = go 1 30
+  0

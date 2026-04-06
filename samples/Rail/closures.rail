@@ -1,0 +1,51 @@
+-- closures.rail — closures and higher-order functions
+--
+-- Demonstrates: lambdas, nested lambdas, closures capturing variables,
+--               higher-order functions (apply, map, fold, filter)
+
+double x = x * 2
+square x = x * x
+inc x = x + 1
+showNum x = show x
+
+apply f x = f x
+
+isPositive x = x > 0
+
+doubleAll xs = map double xs
+squareAll xs = map square xs
+showAll xs = map showNum xs
+
+add a b = a + b
+
+main =
+  -- Simple higher-order: apply
+  let _ = print (show (apply double 21))
+  let _ = print (show (apply inc 99))
+
+  -- Lambda
+  let f = \x -> x * x + 1
+  let _ = print (show (f 5))
+
+  -- Nested lambda
+  let g = \a -> \b -> a * b
+  let _ = print (show (g 6 7))
+
+  -- Closure capturing a variable
+  let offset = 100
+  let h = \x -> x + offset
+  let _ = print (show (h 5))
+
+  -- Map and fold on lists
+  let xs = [1, 2, 3, 4, 5]
+  let _ = print (join " " (showAll (doubleAll xs)))
+  let _ = print (join " " (showAll (squareAll xs)))
+  let total = fold add 0 xs
+  let _ = print (show total)
+
+  -- Filter with named predicate
+  let mixed = [3, -1, 4, -1, 5, -9, 2, 6]
+  let positives = filter isPositive mixed
+  let _ = print (show (length positives))
+
+  0

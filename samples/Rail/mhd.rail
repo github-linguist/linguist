@@ -1,0 +1,377 @@
+-- mhd.rail — 2D Ideal MHD Simulator
+-- Orszag-Tang vortex → shocks + current sheets + magnetic islands
+-- Lax-Friedrichs scheme, periodic boundaries
+-- Pure Rail, zero dependencies
+--
+-- WORKAROUNDS for Rail compiler limitations:
+-- 1. Float-heavy code in separate functions (TCO clobbers d-registers)
+-- 2. No top-level float globals (segfault when accessed from TCO call chain)
+-- 3. All derived constants as precomputed literals
+-- 4. 1D loops only (2D recursive loops with 3+ args don't TCO reliably)
+
+-- Integer constants only at top level
+nn = 128
+nn2 = 16384
+state_size = 98304
+
+-- Field indices
+f_rho = 0
+f_mx  = 1
+f_my  = 2
+f_bx  = 3
+f_by  = 4
+f_en  = 5
+
+-- ═══════════════════════════════════════════════════════════
+-- GRID ACCESS (integer only at top level)
+-- ═══════════════════════════════════════════════════════════
+
+wrap i = if i < 0 then i + nn else if i >= nn then i - nn else i
+idx f x y = f * nn2 + wrap y * nn + wrap x
+get state f x y = float_arr_get state (idx f x y)
+put state f x y v = float_arr_set state (idx f x y) v
+
+-- ═══════════════════════════════════════════════════════════
+-- INITIAL CONDITIONS: ORSZAG-TANG VORTEX
+-- Float constants inlined (no top-level float globals)
+-- gamma = 5/3 = 1.6666666666666667
+-- dx = 2*pi/128 = 0.04908738521234052
+-- ═══════════════════════════════════════════════════════════
+
+init_cell state i =
+  let x = i % nn
+  let y = i / nn
+  let xp = to_float x * 0.04908738521234052
+  let yp = to_float y * 0.04908738521234052
+  let rho = 2.77777777777778
+  let vx = 0.0 - sin yp
+  let vy = sin xp
+  let bx = 0.0 - sin yp
+  let by = sin (2.0 * xp)
+  let p = 1.6666666666666667
+  let ke = 0.5 * rho * (vx * vx + vy * vy)
+  let me = 0.5 * (bx * bx + by * by)
+  let e = p / 0.6666666666666667 + ke + me
+  let _ = put state f_rho x y rho
+  let _ = put state f_mx  x y (rho * vx)
+  let _ = put state f_my  x y (rho * vy)
+  let _ = put state f_bx  x y bx
+  let _ = put state f_by  x y by
+  put state f_en  x y e
+
+init_loop state i =
+  if i >= nn2 then 0
+  else
+    let _ = init_cell state i
+    init_loop state (i + 1)
+
+init_state =
+  let state = float_arr_new state_size 0.0
+  let _ = init_loop state 0
+  state
+
+-- ═══════════════════════════════════════════════════════════
+-- PRIMITIVE VARIABLE RECOVERY
+-- gamma - 1 = 0.6666666666666667
+-- ═══════════════════════════════════════════════════════════
+
+pressure state x y =
+  let rho = get state f_rho x y
+  let mx  = get state f_mx x y
+  let my  = get state f_my x y
+  let bx  = get state f_bx x y
+  let by  = get state f_by x y
+  let e   = get state f_en x y
+  let v2 = (mx * mx + my * my) / (rho * rho)
+  let b2 = bx * bx + by * by
+  let p = 0.6666666666666667 * (e - 0.5 * rho * v2 - 0.5 * b2)
+  if p < 0.0000000001 then 0.0000000001 else p
+
+-- ═══════════════════════════════════════════════════════════
+-- MHD FLUX COMPUTATION
+-- ═══════════════════════════════════════════════════════════
+
+x_flux state x y fa =
+  let rho = get state f_rho x y
+  let mx  = get state f_mx x y
+  let my  = get state f_my x y
+  let bx  = get state f_bx x y
+  let by  = get state f_by x y
+  let e   = get state f_en x y
+  let vx = mx / rho
+  let vy = my / rho
+  let b2 = bx * bx + by * by
+  let p = pressure state x y
+  let pt = p + 0.5 * b2
+  let vdb = vx * bx + vy * by
+  let _ = float_arr_set fa 0 mx
+  let _ = float_arr_set fa 1 (mx * vx + pt - bx * bx)
+  let _ = float_arr_set fa 2 (mx * vy - bx * by)
+  let _ = float_arr_set fa 3 0.0
+  let _ = float_arr_set fa 4 (vx * by - vy * bx)
+  float_arr_set fa 5 ((e + pt) * vx - bx * vdb)
+
+y_flux state x y fa =
+  let rho = get state f_rho x y
+  let mx  = get state f_mx x y
+  let my  = get state f_my x y
+  let bx  = get state f_bx x y
+  let by  = get state f_by x y
+  let e   = get state f_en x y
+  let vx = mx / rho
+  let vy = my / rho
+  let b2 = bx * bx + by * by
+  let p = pressure state x y
+  let pt = p + 0.5 * b2
+  let vdb = vx * bx + vy * by
+  let _ = float_arr_set fa 0 my
+  let _ = float_arr_set fa 1 (my * vx - bx * by)
+  let _ = float_arr_set fa 2 (my * vy + pt - by * by)
+  let _ = float_arr_set fa 3 (vy * bx - vx * by)
+  let _ = float_arr_set fa 4 0.0
+  float_arr_set fa 5 ((e + pt) * vy - by * vdb)
+
+-- ═══════════════════════════════════════════════════════════
+-- WAVE SPEED (gamma = 5/3 = 1.6666666666666667)
+-- ═══════════════════════════════════════════════════════════
+
+cell_speed state x y =
+  let rho = get state f_rho x y
+  let mx  = get state f_mx x y
+  let my  = get state f_my x y
+  let bx  = get state f_bx x y
+  let by  = get state f_by x y
+  let p = pressure state x y
+  let vx = mx / rho
+  let vy = my / rho
+  let b2 = bx * bx + by * by
+  let a2 = 1.6666666666666667 * p / rho
+  let va2 = b2 / rho
+  let cf = sqrt (a2 + va2)
+  sqrt (vx * vx + vy * vy) + cf
+
+speed_check state i acc =
+  let s = cell_speed state (i % nn) (i / nn)
+  let cur = float_arr_get acc 0
+  if s > cur then float_arr_set acc 0 s else 0
+
+speed_loop state i acc =
+  if i >= nn2 then 0
+  else
+    let _ = speed_check state i acc
+    speed_loop state (i + 1) acc
+
+max_speed state =
+  let acc = float_arr_new 1 0.0
+  let _ = speed_loop state 0 acc
+  float_arr_get acc 0
+
+-- ═══════════════════════════════════════════════════════════
+-- LAX-FRIEDRICHS TIME STEP
+-- dx = 0.04908738521234052, 2*dx = 0.09817477042468104
+-- ═══════════════════════════════════════════════════════════
+
+-- coeffs[0] = cx = dt/(2*dx), coeffs[1] = cy = dt/(2*dy)
+lxf_update_cell state ns coeffs fxr fxl fyu fyd x y =
+  let _ = x_flux state (x + 1) y fxr
+  let _ = x_flux state (x - 1) y fxl
+  let _ = y_flux state x (y + 1) fyu
+  let _ = y_flux state x (y - 1) fyd
+  lxf_update_fields state ns coeffs fxr fxl fyu fyd x y 0
+
+lxf_update_fields state ns coeffs fxr fxl fyu fyd x y f =
+  if f >= 6 then 0
+  else
+    let avg = (get state f (x - 1) y + get state f (x + 1) y + get state f x (y - 1) + get state f x (y + 1)) / 4.0
+    let dfx = float_arr_get fxr f - float_arr_get fxl f
+    let dfy = float_arr_get fyu f - float_arr_get fyd f
+    let cx = float_arr_get coeffs 0
+    let cy = float_arr_get coeffs 1
+    let val = avg - cx * dfx - cy * dfy
+    let _ = float_arr_set ns (idx f x y) val
+    lxf_update_fields state ns coeffs fxr fxl fyu fyd x y (f + 1)
+
+lxf_step_cell state ns coeffs fxr fxl fyu fyd i =
+  lxf_update_cell state ns coeffs fxr fxl fyu fyd (i % nn) (i / nn)
+
+lxf_loop state ns coeffs fxr fxl fyu fyd i =
+  if i >= nn2 then 0
+  else
+    let _ = lxf_step_cell state ns coeffs fxr fxl fyu fyd i
+    lxf_loop state ns coeffs fxr fxl fyu fyd (i + 1)
+
+lxf_step state dt =
+  let coeffs = float_arr_new 2 0.0
+  let _ = float_arr_set coeffs 0 (dt / 0.09817477042468104)
+  let _ = float_arr_set coeffs 1 (dt / 0.09817477042468104)
+  let ns = float_arr_new state_size 0.0
+  let fxr = float_arr_new 6 0.0
+  let fxl = float_arr_new 6 0.0
+  let fyu = float_arr_new 6 0.0
+  let fyd = float_arr_new 6 0.0
+  let _ = lxf_loop state ns coeffs fxr fxl fyu fyd 0
+  ns
+
+-- ═══════════════════════════════════════════════════════════
+-- CONSERVATION DIAGNOSTICS
+-- ═══════════════════════════════════════════════════════════
+
+sum_field state f i acc =
+  if i >= nn2 then 0
+  else
+    let _ = float_arr_set acc 0 (float_arr_get acc 0 + float_arr_get state (f * nn2 + i))
+    sum_field state f (i + 1) acc
+
+total_mass state =
+  let acc = float_arr_new 1 0.0
+  let _ = sum_field state f_rho 0 acc
+  float_arr_get acc 0
+
+total_energy state =
+  let acc = float_arr_new 1 0.0
+  let _ = sum_field state f_en 0 acc
+  float_arr_get acc 0
+
+divb_cell state i =
+  let x = i % nn
+  let y = i / nn
+  let dbx = (get state f_bx (x + 1) y - get state f_bx (x - 1) y) / 0.09817477042468104
+  let dby = (get state f_by x (y + 1) - get state f_by x (y - 1)) / 0.09817477042468104
+  let div = dbx + dby
+  if div < 0.0 then 0.0 - div else div
+
+divb_check state i acc =
+  let adiv = divb_cell state i
+  let cur = float_arr_get acc 0
+  if adiv > cur then float_arr_set acc 0 adiv else 0
+
+divb_loop state i acc =
+  if i >= nn2 then 0
+  else
+    let _ = divb_check state i acc
+    divb_loop state (i + 1) acc
+
+max_div_b state =
+  let acc = float_arr_new 1 0.0
+  let _ = divb_loop state 0 acc
+  float_arr_get acc 0
+
+minrho_check state i acc =
+  let rho = float_arr_get state i
+  let cur = float_arr_get acc 0
+  if rho < cur then float_arr_set acc 0 rho else 0
+
+minrho_loop state i acc =
+  if i >= nn2 then 0
+  else
+    let _ = minrho_check state i acc
+    minrho_loop state (i + 1) acc
+
+min_density state =
+  let acc = float_arr_new 1 999999999999.0
+  let _ = minrho_loop state 0 acc
+  float_arr_get acc 0
+
+-- ═══════════════════════════════════════════════════════════
+-- FRAME DUMP (density field as space-separated text)
+-- ═══════════════════════════════════════════════════════════
+
+dump_row state field y i acc =
+  if i >= nn then acc
+  else
+    let v = get state field i y
+    let sep = if i == nn - 1 then "\n" else " "
+    dump_row state field y (i + 1) (cat [acc, show_float v, sep])
+
+dump_field_rows state field y acc =
+  if y >= nn then acc
+  else dump_field_rows state field (y + 1) (cat [acc, dump_row state field y 0 ""])
+
+dump_field state field path =
+  let data = dump_field_rows state field 0 ""
+  write_file path data
+
+-- ═══════════════════════════════════════════════════════════
+-- DIAGNOSTICS PRINTER
+-- ═══════════════════════════════════════════════════════════
+
+print_diag step state m0 e0 dt t =
+  let mass = total_mass state
+  let energy = total_energy state
+  let divb = max_div_b state
+  let minrho = min_density state
+  let dm = (mass - m0) / m0
+  let de = (energy - e0) / e0
+  print (cat ["step ", show step, " t=", show_float t, " dt=", show_float dt, " dm=", show_float dm, " dE=", show_float de, " divB=", show_float divb, " rho_min=", show_float minrho])
+
+-- ═══════════════════════════════════════════════════════════
+-- TIME STEPPING
+-- CFL: dt = 0.2 * dx / max_speed = 0.2 * 0.04908738521234052 / smax
+-- ═══════════════════════════════════════════════════════════
+
+compute_dt state =
+  let smax = max_speed state
+  0.00981747704246810 / smax
+
+-- ═══════════════════════════════════════════════════════════
+-- MAIN
+-- ═══════════════════════════════════════════════════════════
+
+-- All float state in arrays to keep TCO loop integer-only
+-- ctx[0] = time, ctx[1] = m0, ctx[2] = e0
+do_step state ctx step =
+  let dt = compute_dt state
+  let ns = lxf_step state dt
+  let t = float_arr_get ctx 0
+  let nt = t + dt
+  let _ = float_arr_set ctx 0 nt
+  let m0 = float_arr_get ctx 1
+  let e0 = float_arr_get ctx 2
+  let _ = if step % 50 == 0 then print_diag step ns m0 e0 dt nt else 0
+  let _ = if step % 15 == 0 then
+    let fnum = step / 15
+    let tag = if fnum < 10 then cat ["00", show fnum] else if fnum < 100 then cat ["0", show fnum] else show fnum
+    let _ = dump_field ns 0 (cat ["/tmp/mhd_live/frame_", tag, ".dat"])
+    print (cat ["  -> frame ", tag])
+  else 0
+  ns
+
+check_done ctx step max_steps =
+  if step >= max_steps then 1
+  else if float_arr_get ctx 0 > 3.14159265358979 then 2
+  else 0
+
+sim_loop state ctx step max_steps =
+  let done = check_done ctx step max_steps
+  if done == 1 then
+    let _ = print (cat ["\nDone: ", show step, " steps, t=", show_float (float_arr_get ctx 0)])
+    0
+  else if done == 2 then
+    let _ = print (cat ["\nReached t=pi at step ", show step])
+    0
+  else
+    let ns = do_step state ctx step
+    sim_loop ns ctx (step + 1) max_steps
+
+main =
+  let _ = print "=================================="
+  let _ = print "  RAIL PLASMA — 2D MHD Simulator"
+  let _ = print "  Orszag-Tang Vortex, 128x128"
+  let _ = print "  Lax-Friedrichs, periodic BC"
+  let _ = print "=================================="
+  let _ = print ""
+  let _ = print "Initializing..."
+  let state = init_state
+  let m0 = total_mass state
+  let e0 = total_energy state
+  let d0 = max_div_b state
+  let _ = print (cat ["Initial: mass=", show_float m0, " energy=", show_float e0, " divB=", show_float d0])
+  let _ = print ""
+  -- Dump initial density
+  let _ = dump_field state 0 "/tmp/mhd_frame_000.dat"
+  let _ = print "Running to t=pi (~800 steps)..."
+  let ctx = float_arr_new 3 0.0
+  let _ = float_arr_set ctx 1 m0
+  let _ = float_arr_set ctx 2 e0
+  let _ = sim_loop state ctx 0 800
+  0

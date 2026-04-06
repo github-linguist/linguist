@@ -1,0 +1,10 @@
+-- hello.rail — first Rail program (compiles natively)
+
+double x = x * 2
+factorial n = if n <= 1 then 1 else n * factorial (n - 1)
+
+main =
+  let _ = print "hello, rail"
+  let _ = print (factorial 10)
+  let _ = print (double 21)
+  0

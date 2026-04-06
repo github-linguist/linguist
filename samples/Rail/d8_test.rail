@@ -1,0 +1,115 @@
+-- d8_test.rail — Compiler test for d8 callee-saved float TCO support
+--
+-- Before the d8 fix, functions with float operations in their body
+-- could not get self-loop optimization (the all_params_int guard blocked them).
+-- After the fix, float-bodied functions with integer parameters get the
+-- fast-path self-loop, and d8 is saved in the prologue.
+--
+-- This test exercises three patterns that were previously blocked or fragile:
+--   1. Self-recursive integer loop with float operations in body
+--   2. Float accumulation through float_arr
+--   3. Mixed float arithmetic in a tight integer loop
+
+cat parts = join "" parts
+
+-- Test 1: Compute sum of i*i for i in [0, n) as floats
+-- Was blocked from self-loop before because body has float ops
+sum_squares_loop arr n i =
+  if i >= n then 0
+  else
+    let v = to_float (i * i) * 0.5
+    let _ = float_arr_set arr 0 (float_arr_get arr 0 + v)
+    sum_squares_loop arr n (i + 1)
+
+-- Test 2: Compute pi via Leibniz series in a tight loop
+-- Float ops in body, integer counter
+leibniz_loop acc n i =
+  if i >= n then 0
+  else
+    let sign = if i % 2 == 0 then 1.0 else 0.0 - 1.0
+    let term = sign / to_float (2 * i + 1)
+    let _ = float_arr_set acc 0 (float_arr_get acc 0 + term)
+    leibniz_loop acc n (i + 1)
+
+-- Test 3: Geometric mean of float_arr
+-- Mixed: int loop, float multiply accumulator
+geomean_loop arr acc n i =
+  if i >= n then 0
+  else
+    let v = float_arr_get arr i
+    let _ = float_arr_set acc 0 (float_arr_get acc 0 * v)
+    geomean_loop arr acc n (i + 1)
+
+-- Test 4: Polynomial evaluation at multiple points
+-- p(x) = 3x^3 - 2x^2 + x - 5
+poly_eval x =
+  3.0 * x * x * x - 2.0 * x * x + x - 5.0
+
+poly_loop xs out n i =
+  if i >= n then 0
+  else
+    let x = float_arr_get xs i
+    let _ = float_arr_set out i (poly_eval x)
+    poly_loop xs out n (i + 1)
+
+main =
+  let _ = print "═══ d8 Float TCO Compiler Test ═══"
+  let _ = print ""
+
+  -- Test 1: sum of i*i for i in [0,100) * 0.5
+  -- sum = 99*100*199/6 = 328350, times 0.5 = 164175
+  let acc1 = float_arr_new 1 0.0
+  let _ = sum_squares_loop acc1 100 0
+  let r1 = float_arr_get acc1 0
+  let _ = print (cat ["Test 1: sum(i*i)*0.5 for i in [0,100) = ", show_float r1, " (expected 164175)"])
+  let pass1 = if r1 > 164174.0 && r1 < 164176.0 then "PASS" else "FAIL"
+  let _ = print (cat ["  ", pass1])
+
+  -- Test 2: Leibniz pi (4 * sum(...)) ≈ pi for large n
+  let acc2 = float_arr_new 1 0.0
+  let _ = leibniz_loop acc2 1000 0
+  let pi_approx = 4.0 * float_arr_get acc2 0
+  let _ = print (cat ["Test 2: Leibniz pi(1000) = ", show_float pi_approx, " (expected ~3.14)"])
+  let pass2 = if pi_approx > 3.13 && pi_approx < 3.15 then "PASS" else "FAIL"
+  let _ = print (cat ["  ", pass2])
+
+  -- Test 3: Geometric mean of [2, 2, 2, 2] = 16
+  let arr3 = float_arr_new 4 2.0
+  let acc3 = float_arr_new 1 1.0
+  let _ = geomean_loop arr3 acc3 4 0
+  let r3 = float_arr_get acc3 0
+  let _ = print (cat ["Test 3: product([2,2,2,2]) = ", show_float r3, " (expected 16)"])
+  let pass3 = if r3 > 15.99 && r3 < 16.01 then "PASS" else "FAIL"
+  let _ = print (cat ["  ", pass3])
+
+  -- Test 4: poly_eval(2) = 24 - 8 + 2 - 5 = 13
+  let xs = float_arr_new 3 0.0
+  let _ = float_arr_set xs 0 1.0
+  let _ = float_arr_set xs 1 2.0
+  let _ = float_arr_set xs 2 3.0
+  let out = float_arr_new 3 0.0
+  let _ = poly_loop xs out 3 0
+  let r4 = float_arr_get out 1
+  let _ = print (cat ["Test 4: poly_eval(2) = ", show_float r4, " (expected 13)"])
+  let pass4 = if r4 > 12.99 && r4 < 13.01 then "PASS" else "FAIL"
+  let _ = print (cat ["  ", pass4])
+
+  -- Stress test: Run the loops 10x to verify reproducibility
+  let _ = print ""
+  let _ = print "Stress: 10x repetition (verifies no register corruption)"
+  let stress_acc = float_arr_new 1 0.0
+  let _ = stress_loop stress_acc 10 0
+  let r5 = float_arr_get stress_acc 0
+  let _ = print (cat ["  10 * 164175 = ", show_float r5, " (expected 1641750)"])
+  let pass5 = if r5 > 1641749.0 && r5 < 1641751.0 then "PASS" else "FAIL"
+  let _ = print (cat ["  ", pass5])
+
+  let _ = print ""
+  let _ = print "Done."
+  0
+
+stress_loop acc reps i =
+  if i >= reps then 0
+  else
+    let _ = sum_squares_loop acc 100 0
+    stress_loop acc reps (i + 1)

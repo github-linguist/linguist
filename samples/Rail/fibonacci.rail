@@ -1,0 +1,18 @@
+-- fibonacci.rail — recursive Fibonacci sequence
+--
+-- Demonstrates: recursion, if/then/else, show, range, map
+
+fib n = if n <= 1 then n else fib (n - 1) + fib (n - 2)
+
+showNum x = show x
+
+fibOf x = fib x
+
+main =
+  let _ = print "Fibonacci sequence (0-15):"
+  let nums = range 16
+  let fibs = map fibOf nums
+  let _ = print (join " " (map showNum fibs))
+  let _ = print ""
+  let _ = print (append "fib(30) = " (show (fib 30)))
+  0
