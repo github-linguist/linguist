@@ -1,7 +1,6 @@
-#!include "settings.opy"
-
 # Source: https://github.com/Zezombye/overpy/blob/master/examples/meipocalypse/meipocalypse.opy
 
+#!include "settings.opy"
 #!include "debug_settings.opy"
 
 ##!obfuscate noRuleFilling noConstantObfuscation

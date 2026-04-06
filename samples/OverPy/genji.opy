@@ -1,5 +1,3 @@
-#!mainFile "../framework.opy"
-
 # Source: https://github.com/tylovejoy/genji-framework/blob/master/FwHero/Genji.opy
 
 ################################################################################
