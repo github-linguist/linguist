@@ -779,8 +779,14 @@ disambiguations:
     pattern: '#include|#pragma\s+(rs|version)|__attribute__'
   - language: XML
     pattern: '^\s*<\?xml'
+- extensions: ['.S']
+  rules:
+  - language: PowerPC Assembly
+    pattern: '\b(mflr|mtlr|bdnz|lis|mfspr|mtspr|stwu|lwzu|rlwinm|rldicl|mfocrf|mtocrf|mfsprg[0-3]|stdu|rfid)\b'
 - extensions: ['.s']
   rules:
+  - language: PowerPC Assembly
+    pattern: '\b(mflr|mtlr|bdnz|lis|mfspr|mtspr|stwu|lwzu|rlwinm|rldicl|mfocrf|mtocrf|mfsprg[0-3]|stdu|rfid)\b'
   - language: Unix Assembly
     pattern: '(?i:mov[lq]?)\s+[%\$]'
   - language: Assembly
