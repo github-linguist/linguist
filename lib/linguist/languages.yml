@@ -4871,7 +4871,7 @@ Motoko:
   language_id: 202937027
 Motorola 68K Assembly:
   type: programming
-  color: "#005daa"
+  color: "#0f62fe"
   group: Assembly
   aliases:
   - m68k
@@ -5948,6 +5948,21 @@ PowerBuilder:
   tm_scope: source.powerbuilder
   ace_mode: text
   language_id: 292
+PowerPC Assembly:
+  type: programming
+  color: "#0f62fe"
+  group: Assembly
+  aliases:
+  - ppc
+  - ppc-asm
+  - powerpc
+  extensions:
+  - ".ppc"
+  - ".S"
+  - ".s"
+  tm_scope: source.asm
+  ace_mode: text
+  language_id: 798592640
 PowerShell:
   type: programming
   color: "#012456"

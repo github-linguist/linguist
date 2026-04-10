@@ -1,0 +1,74 @@
+/*
+ * AltiVec/VMX accelerated memset for 64-bit PowerPC.
+ * MIT License
+ */
+
+	.machine "altivec"
+	.section .text
+	.p2align 4
+
+/*
+ * void *memset_altivec(void *dst, int c, size_t len)
+ *   r3 = dst, r4 = fill byte, r5 = length.
+ *   Returns dst in r3.
+ *
+ * Scalar fill until 16-byte aligned, then splat the fill byte
+ * into a vector register and store 16 bytes per iteration.
+ */
+	.globl	memset_altivec
+	.type	memset_altivec, @function
+memset_altivec:
+	mflr	r0
+	std	r0, 16(r1)
+	stdu	r1, -64(r1)
+
+	mr	r9, r3
+	cmpldi	r5, 0
+	beq	.Ldone
+
+	/* scalar head: align to 16 bytes */
+	andi.	r6, r3, 15
+	beq	.Lvec_setup
+	subfic	r6, r6, 16
+	cmplw	r6, r5
+	bgt	.Lsmall
+	mtctr	r6
+	sub	r5, r5, r6
+.Lhead:
+	stb	r4, 0(r3)
+	addi	r3, r3, 1
+	bdnz	.Lhead
+
+.Lvec_setup:
+	stb	r4, -1(r1)
+	li	r7, -1
+	lvebx	v0, r7, r1
+	vspltb	v0, v0, 0		/* fill byte in all 16 lanes */
+
+	srdi	r6, r5, 4
+	andi.	r5, r5, 15
+	cmpldi	r6, 0
+	beq	.Ltail
+	mtctr	r6
+
+.Lvec_store:
+	stvx	v0, 0, r3
+	addi	r3, r3, 16
+	bdnz	.Lvec_store
+
+.Ltail:
+	cmpldi	r5, 0
+	beq	.Ldone
+.Lsmall:
+	mtctr	r5
+.Ltail_byte:
+	stb	r4, 0(r3)
+	addi	r3, r3, 1
+	bdnz	.Ltail_byte
+
+.Ldone:
+	mr	r3, r9
+	ld	r1, 0(r1)
+	ld	r0, 16(r1)
+	mtlr	r0
+	blr
