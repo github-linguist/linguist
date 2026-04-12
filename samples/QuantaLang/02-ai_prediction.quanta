@@ -1,0 +1,678 @@
+// ═══════════════════════════════════════════════════════════════════════════════
+// EXAMPLE: AI Prediction System
+// Demonstrates: oracle, axiom, entropy, wavelength
+// ═══════════════════════════════════════════════════════════════════════════════
+// This example shows how the intelligence modules work together to create
+// a comprehensive AI prediction and evolution system.
+// ═══════════════════════════════════════════════════════════════════════════════
+
+use foundation::io::{println, print}
+use foundation::collections::{Vec, HashMap}
+use foundation::math::{sqrt, exp, log, abs, sin, cos, PI}
+use foundation::time::{Instant, Duration}
+
+// Import AI modules
+use oracle::{
+    Oracle, TimeSeries, ForecastResult, Frequency,
+    ARIMA, HoltWinters, LSTM, GaussianProcess,
+    PropheticEnsemble, AnomalyDetector, BayesianInference
+}
+use axiom::{
+    QuantaEvolution, Population, Genome, Fitness,
+    DifferentiableAST, DualNumber, NeuralArchitectureSearch,
+    GeneticOperator, Crossover, Mutation
+}
+use entropy::{
+    MLModel, RandomForest, GradientBoosting, NeuralNetwork,
+    Prediction, FeatureImportance, ModelEvaluation
+}
+use wavelength::{AudioProcessor, VideoProcessor, SignalAnalyzer}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// AI PREDICTION ENGINE
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/// Comprehensive AI prediction engine combining multiple techniques
+pub struct AIPredictionEngine {
+    oracle: PropheticEnsemble,
+    axiom: QuantaEvolution,
+    ml_ensemble: MLEnsemble,
+    anomaly_detector: AnomalyDetector,
+    config: PredictionConfig,
+}
+
+#[derive(Clone)]
+pub struct PredictionConfig {
+    pub horizon: usize,
+    pub confidence_level: f64,
+    pub ensemble_size: usize,
+    pub evolution_generations: usize,
+    pub anomaly_threshold: f64,
+}
+
+impl Default for PredictionConfig {
+    fn default() -> Self {
+        PredictionConfig {
+            horizon: 10,
+            confidence_level: 0.95,
+            ensemble_size: 5,
+            evolution_generations: 50,
+            anomaly_threshold: 3.0,
+        }
+    }
+}
+
+impl AIPredictionEngine {
+    pub fn new(config: PredictionConfig) -> Self {
+        println!("Initializing AI Prediction Engine...");
+
+        // Create Prophetic Ensemble with multiple models
+        let mut oracle = PropheticEnsemble::new();
+        oracle.add_model(Box::new(ARIMA::new(2, 1, 2)));
+        oracle.add_model(Box::new(HoltWinters::new(true, true)));
+        oracle.add_model(Box::new(LSTM::new(vec![64, 32])));
+        oracle.add_model(Box::new(GaussianProcess::new()));
+        println!("  Oracle: {} models in ensemble", config.ensemble_size);
+
+        // Create Quanta Evolution for hyperparameter optimization
+        let axiom = QuantaEvolution::new(
+            100,    // population
+            0.1,    // mutation rate
+            0.01,   // simplicity weight
+        );
+        println!("  Axiom: Population size 100");
+
+        // Create ML ensemble
+        let ml_ensemble = MLEnsemble::new(config.ensemble_size);
+        println!("  Entropy: {} ML models", config.ensemble_size);
+
+        // Create anomaly detector
+        let anomaly_detector = AnomalyDetector::new(config.anomaly_threshold);
+        println!("  Anomaly detector: threshold = {}", config.anomaly_threshold);
+
+        AIPredictionEngine {
+            oracle,
+            axiom,
+            ml_ensemble,
+            anomaly_detector,
+            config,
+        }
+    }
+
+    /// Train on historical data
+    pub fn train(&mut self, data: &TimeSeries) {
+        println!("\nTraining AI Prediction Engine...");
+
+        // Train Oracle models
+        println!("  Training Oracle models...");
+        self.oracle.fit(data);
+
+        // Train ML ensemble
+        println!("  Training ML ensemble...");
+        let features = self.extract_features(data);
+        let targets = self.extract_targets(data);
+        self.ml_ensemble.train(&features, &targets);
+
+        // Evolve optimal hyperparameters using Axiom
+        println!("  Evolving hyperparameters with Axiom...");
+        self.evolve_hyperparameters(data);
+
+        // Train anomaly detector
+        println!("  Training anomaly detector...");
+        self.anomaly_detector.fit(data);
+
+        println!("  Training complete!");
+    }
+
+    /// Generate predictions with confidence intervals
+    pub fn predict(&self, data: &TimeSeries) -> PredictionResult {
+        println!("\nGenerating predictions...");
+
+        // Get Oracle predictions
+        let oracle_forecast = self.oracle.forecast(data, self.config.horizon);
+        println!("  Oracle forecast: {} points", oracle_forecast.values.len());
+
+        // Get ML ensemble predictions
+        let features = self.extract_features(data);
+        let ml_predictions = self.ml_ensemble.predict(&features);
+        println!("  ML predictions: {} points", ml_predictions.len());
+
+        // Combine predictions
+        let combined = self.combine_predictions(&oracle_forecast, &ml_predictions);
+
+        // Detect anomalies
+        let anomalies = self.anomaly_detector.detect(data);
+        println!("  Anomalies detected: {}", anomalies.len());
+
+        // Calculate confidence intervals
+        let (lower, upper) = self.calculate_confidence_intervals(
+            &combined,
+            self.config.confidence_level,
+        );
+
+        PredictionResult {
+            predictions: combined,
+            lower_bound: lower,
+            upper_bound: upper,
+            anomaly_indices: anomalies,
+            model_weights: self.oracle.get_weights(),
+        }
+    }
+
+    fn extract_features(&self, data: &TimeSeries) -> Vec<Vec<f64>> {
+        let mut features = Vec::new();
+        let values = data.values();
+
+        for i in 10..values.len() {
+            let mut row = Vec::new();
+
+            // Lag features
+            for lag in 1..=5 {
+                row.push(values[i - lag]);
+            }
+
+            // Rolling statistics
+            let window: Vec<f64> = values[i-10..i].to_vec();
+            row.push(window.iter().sum::<f64>() / 10.0); // Mean
+            row.push(self.std_dev(&window)); // Std dev
+
+            // Technical indicators
+            row.push(values[i-1] - values[i-2]); // Momentum
+            row.push((values[i-1] - window.iter().sum::<f64>() / 10.0) / self.std_dev(&window)); // Z-score
+
+            features.push(row);
+        }
+
+        features
+    }
+
+    fn extract_targets(&self, data: &TimeSeries) -> Vec<f64> {
+        let values = data.values();
+        values[10..].to_vec()
+    }
+
+    fn std_dev(&self, data: &[f64]) -> f64 {
+        let mean = data.iter().sum::<f64>() / data.len() as f64;
+        let variance = data.iter().map(|x| (x - mean).powi(2)).sum::<f64>() / data.len() as f64;
+        variance.sqrt()
+    }
+
+    fn evolve_hyperparameters(&mut self, data: &TimeSeries) {
+        // Use Quanta Evolution Equation: ∂P/∂t = -∇L + η·Mutation + λ·Simplicity
+
+        for gen in 0..self.config.evolution_generations {
+            let fitness = self.axiom.evolve_generation();
+            if gen % 10 == 0 {
+                println!("    Generation {}: fitness = {:.4}", gen + 1, fitness);
+            }
+        }
+    }
+
+    fn combine_predictions(&self, oracle: &ForecastResult, ml: &[f64]) -> Vec<f64> {
+        let oracle_values = &oracle.values;
+        let weights = self.oracle.get_weights();
+
+        // Weighted combination
+        let oracle_weight = 0.6;
+        let ml_weight = 0.4;
+
+        let min_len = oracle_values.len().min(ml.len());
+        (0..min_len)
+            .map(|i| oracle_values[i] * oracle_weight + ml[i] * ml_weight)
+            .collect()
+    }
+
+    fn calculate_confidence_intervals(&self, predictions: &[f64], level: f64) -> (Vec<f64>, Vec<f64>) {
+        // Z-score for confidence level
+        let z = match level {
+            l if l >= 0.99 => 2.576,
+            l if l >= 0.95 => 1.96,
+            l if l >= 0.90 => 1.645,
+            _ => 1.0,
+        };
+
+        // Estimate prediction uncertainty (increases with horizon)
+        let base_std = 0.05; // 5% base uncertainty
+
+        let lower: Vec<f64> = predictions.iter().enumerate()
+            .map(|(i, &p)| p * (1.0 - z * base_std * (1.0 + i as f64 * 0.1)))
+            .collect();
+
+        let upper: Vec<f64> = predictions.iter().enumerate()
+            .map(|(i, &p)| p * (1.0 + z * base_std * (1.0 + i as f64 * 0.1)))
+            .collect();
+
+        (lower, upper)
+    }
+}
+
+pub struct PredictionResult {
+    pub predictions: Vec<f64>,
+    pub lower_bound: Vec<f64>,
+    pub upper_bound: Vec<f64>,
+    pub anomaly_indices: Vec<usize>,
+    pub model_weights: Vec<f64>,
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// ML ENSEMBLE
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/// Machine learning ensemble using entropy module
+pub struct MLEnsemble {
+    models: Vec<Box<dyn MLModel>>,
+    weights: Vec<f64>,
+    feature_importance: Vec<f64>,
+}
+
+impl MLEnsemble {
+    pub fn new(size: usize) -> Self {
+        let mut models: Vec<Box<dyn MLModel>> = Vec::new();
+
+        // Create diverse ensemble
+        models.push(Box::new(RandomForest::new(100, 10)));
+        models.push(Box::new(GradientBoosting::new(100, 0.1)));
+        models.push(Box::new(NeuralNetwork::new(vec![64, 32, 16, 1])));
+
+        // Add more models if needed
+        while models.len() < size {
+            models.push(Box::new(RandomForest::new(50, 8)));
+        }
+
+        let weights = vec![1.0 / size as f64; size];
+
+        MLEnsemble {
+            models,
+            weights,
+            feature_importance: Vec::new(),
+        }
+    }
+
+    pub fn train(&mut self, features: &[Vec<f64>], targets: &[f64]) {
+        for (i, model) in self.models.iter_mut().enumerate() {
+            println!("    Training model {}/{}...", i + 1, self.models.len());
+            model.fit(features, targets);
+        }
+
+        // Update weights based on validation performance
+        self.update_weights(features, targets);
+
+        // Calculate feature importance
+        self.feature_importance = self.calculate_feature_importance();
+    }
+
+    pub fn predict(&self, features: &[Vec<f64>]) -> Vec<f64> {
+        let mut predictions = vec![0.0; features.len()];
+
+        for (model, &weight) in self.models.iter().zip(self.weights.iter()) {
+            let preds = model.predict(features);
+            for (i, &p) in preds.iter().enumerate() {
+                predictions[i] += p * weight;
+            }
+        }
+
+        predictions
+    }
+
+    fn update_weights(&mut self, features: &[Vec<f64>], targets: &[f64]) {
+        // Calculate validation error for each model
+        let errors: Vec<f64> = self.models.iter()
+            .map(|model| {
+                let preds = model.predict(features);
+                let mse: f64 = preds.iter().zip(targets.iter())
+                    .map(|(p, t)| (p - t).powi(2))
+                    .sum::<f64>() / preds.len() as f64;
+                mse
+            })
+            .collect();
+
+        // Convert errors to weights (lower error = higher weight)
+        let total_inv_error: f64 = errors.iter().map(|e| 1.0 / (e + 0.001)).sum();
+        self.weights = errors.iter()
+            .map(|e| (1.0 / (e + 0.001)) / total_inv_error)
+            .collect();
+    }
+
+    fn calculate_feature_importance(&self) -> Vec<f64> {
+        // Aggregate feature importance from tree-based models
+        vec![0.2, 0.15, 0.15, 0.1, 0.1, 0.1, 0.08, 0.07, 0.05] // Placeholder
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// NEURAL ARCHITECTURE SEARCH
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/// Neural Architecture Search using axiom module
+pub struct NASEngine {
+    search: NeuralArchitectureSearch,
+    best_architecture: Option<Architecture>,
+    history: Vec<(Architecture, f64)>,
+}
+
+#[derive(Clone)]
+pub struct Architecture {
+    pub layers: Vec<LayerSpec>,
+    pub activation: String,
+    pub learning_rate: f64,
+    pub dropout: f64,
+}
+
+#[derive(Clone)]
+pub struct LayerSpec {
+    pub layer_type: String,
+    pub units: usize,
+    pub kernel_size: Option<usize>,
+}
+
+impl NASEngine {
+    pub fn new() -> Self {
+        NASEngine {
+            search: NeuralArchitectureSearch::new(),
+            best_architecture: None,
+            history: Vec::new(),
+        }
+    }
+
+    /// Search for optimal architecture
+    pub fn search(&mut self, data: &TimeSeries, budget: usize) -> Architecture {
+        println!("\nSearching for optimal neural architecture...");
+
+        for i in 0..budget {
+            // Generate candidate architecture
+            let arch = self.generate_candidate();
+
+            // Evaluate architecture
+            let score = self.evaluate(&arch, data);
+
+            self.history.push((arch.clone(), score));
+
+            // Update best
+            if self.best_architecture.is_none() ||
+               score > self.history.iter().map(|(_, s)| *s).fold(f64::MIN, f64::max) {
+                self.best_architecture = Some(arch.clone());
+            }
+
+            if i % 10 == 0 {
+                println!("  Iteration {}/{}: best score = {:.4}", i + 1, budget, score);
+            }
+        }
+
+        println!("  Search complete!");
+        self.best_architecture.clone().unwrap()
+    }
+
+    fn generate_candidate(&self) -> Architecture {
+        // Random architecture generation
+        let num_layers = 2 + (rand() * 4.0) as usize;
+        let layers: Vec<LayerSpec> = (0..num_layers)
+            .map(|_| LayerSpec {
+                layer_type: "dense".to_string(),
+                units: 16 * (1 + (rand() * 8.0) as usize),
+                kernel_size: None,
+            })
+            .collect();
+
+        Architecture {
+            layers,
+            activation: if rand() > 0.5 { "relu".to_string() } else { "gelu".to_string() },
+            learning_rate: 0.001 * (0.1 + rand() * 10.0),
+            dropout: rand() * 0.5,
+        }
+    }
+
+    fn evaluate(&self, arch: &Architecture, data: &TimeSeries) -> f64 {
+        // Simplified evaluation (would train and validate in real implementation)
+        let complexity_penalty = arch.layers.len() as f64 * 0.01;
+        let base_score = 0.8 + rand() * 0.15;
+        base_score - complexity_penalty
+    }
+}
+
+// Simple random number generator for demo
+fn rand() -> f64 {
+    static mut SEED: u64 = 12345;
+    unsafe {
+        SEED = SEED.wrapping_mul(1103515245).wrapping_add(12345);
+        ((SEED >> 16) as f64) / 65536.0
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// DIFFERENTIABLE PROGRAMMING
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/// Differentiable programming utilities using axiom
+pub struct DifferentiableProgramming;
+
+impl DifferentiableProgramming {
+    /// Compute gradient using dual numbers
+    pub fn gradient<F>(f: F, x: f64) -> f64
+    where
+        F: Fn(DualNumber) -> DualNumber,
+    {
+        let dual_x = DualNumber::new(x, 1.0);
+        let result = f(dual_x);
+        result.derivative()
+    }
+
+    /// Compute Hessian (second derivative)
+    pub fn hessian<F>(f: F, x: f64) -> f64
+    where
+        F: Fn(DualNumber) -> DualNumber,
+    {
+        let h = 0.0001;
+        let grad_plus = Self::gradient(|d| f(d), x + h);
+        let grad_minus = Self::gradient(|d| f(d), x - h);
+        (grad_plus - grad_minus) / (2.0 * h)
+    }
+
+    /// Optimize function using gradient descent
+    pub fn optimize<F>(f: F, initial: f64, learning_rate: f64, iterations: usize) -> f64
+    where
+        F: Fn(DualNumber) -> DualNumber,
+    {
+        let mut x = initial;
+
+        for _ in 0..iterations {
+            let grad = Self::gradient(|d| f(d), x);
+            x -= learning_rate * grad;
+        }
+
+        x
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SIGNAL ANALYSIS
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/// Signal analysis using wavelength module
+pub struct SignalAnalysis {
+    audio: AudioProcessor,
+    analyzer: SignalAnalyzer,
+}
+
+impl SignalAnalysis {
+    pub fn new() -> Self {
+        SignalAnalysis {
+            audio: AudioProcessor::new(44100),
+            analyzer: SignalAnalyzer::new(),
+        }
+    }
+
+    /// Analyze audio signal
+    pub fn analyze_audio(&self, samples: &[f64]) -> AudioAnalysisResult {
+        // FFT analysis
+        let spectrum = self.analyzer.fft(samples);
+
+        // Find dominant frequencies
+        let dominant_freqs = self.find_peaks(&spectrum, 5);
+
+        // Calculate spectral features
+        let spectral_centroid = self.spectral_centroid(&spectrum);
+        let spectral_rolloff = self.spectral_rolloff(&spectrum, 0.85);
+
+        AudioAnalysisResult {
+            dominant_frequencies: dominant_freqs,
+            spectral_centroid,
+            spectral_rolloff,
+            rms_energy: self.rms(samples),
+        }
+    }
+
+    fn find_peaks(&self, spectrum: &[f64], n: usize) -> Vec<f64> {
+        let mut indexed: Vec<(usize, f64)> = spectrum.iter()
+            .enumerate()
+            .map(|(i, &v)| (i, v))
+            .collect();
+
+        indexed.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
+
+        indexed.iter()
+            .take(n)
+            .map(|(i, _)| *i as f64 * 44100.0 / spectrum.len() as f64)
+            .collect()
+    }
+
+    fn spectral_centroid(&self, spectrum: &[f64]) -> f64 {
+        let weighted_sum: f64 = spectrum.iter()
+            .enumerate()
+            .map(|(i, &v)| i as f64 * v)
+            .sum();
+        let total: f64 = spectrum.iter().sum();
+        if total > 0.0 { weighted_sum / total } else { 0.0 }
+    }
+
+    fn spectral_rolloff(&self, spectrum: &[f64], threshold: f64) -> f64 {
+        let total: f64 = spectrum.iter().sum();
+        let target = total * threshold;
+
+        let mut cumsum = 0.0;
+        for (i, &v) in spectrum.iter().enumerate() {
+            cumsum += v;
+            if cumsum >= target {
+                return i as f64 * 44100.0 / spectrum.len() as f64;
+            }
+        }
+        0.0
+    }
+
+    fn rms(&self, samples: &[f64]) -> f64 {
+        let sum_sq: f64 = samples.iter().map(|x| x * x).sum();
+        (sum_sq / samples.len() as f64).sqrt()
+    }
+}
+
+pub struct AudioAnalysisResult {
+    pub dominant_frequencies: Vec<f64>,
+    pub spectral_centroid: f64,
+    pub spectral_rolloff: f64,
+    pub rms_energy: f64,
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// MAIN
+// ═══════════════════════════════════════════════════════════════════════════════
+
+fn main() {
+    println!("╔═══════════════════════════════════════════════════════════════╗");
+    println!("║  AI Prediction System Demo                                    ║");
+    println!("║  Powered by QUANTA-UNIVERSE                                   ║");
+    println!("╚═══════════════════════════════════════════════════════════════╝");
+    println!();
+
+    // Create configuration
+    let config = PredictionConfig {
+        horizon: 10,
+        confidence_level: 0.95,
+        ensemble_size: 5,
+        evolution_generations: 50,
+        anomaly_threshold: 3.0,
+    };
+
+    // Initialize engine
+    let mut engine = AIPredictionEngine::new(config);
+    println!();
+
+    // Generate synthetic time series data
+    println!("─────────────────────────────────────────────────────────────────");
+    println!("Generating Synthetic Data");
+    println!("─────────────────────────────────────────────────────────────────");
+
+    let data: Vec<f64> = (0..500)
+        .map(|i| {
+            let t = i as f64;
+            100.0
+                + 10.0 * sin(t * 0.05)           // Seasonal
+                + 5.0 * sin(t * 0.2)              // Short cycle
+                + t * 0.02                         // Trend
+                + (rand() - 0.5) * 2.0            // Noise
+        })
+        .collect();
+
+    // Add an anomaly
+    let mut data_with_anomaly = data.clone();
+    data_with_anomaly[250] = 200.0; // Spike anomaly
+
+    let series = TimeSeries::from_values("synthetic", &data_with_anomaly, Frequency::Daily);
+    println!("  Created time series with {} data points", data_with_anomaly.len());
+
+    // Train the engine
+    println!();
+    println!("─────────────────────────────────────────────────────────────────");
+    println!("Training Phase");
+    println!("─────────────────────────────────────────────────────────────────");
+    engine.train(&series);
+
+    // Generate predictions
+    println!();
+    println!("─────────────────────────────────────────────────────────────────");
+    println!("Prediction Phase");
+    println!("─────────────────────────────────────────────────────────────────");
+    let result = engine.predict(&series);
+
+    println!();
+    println!("Prediction Results:");
+    println!("  Forecast horizon: {} points", result.predictions.len());
+    println!("  Anomalies found: {} indices", result.anomaly_indices.len());
+
+    for (i, pred) in result.predictions.iter().take(5).enumerate() {
+        println!("  t+{}: {:.2} [{:.2}, {:.2}]",
+            i + 1, pred, result.lower_bound[i], result.upper_bound[i]);
+    }
+
+    // Demo: Neural Architecture Search
+    println!();
+    println!("─────────────────────────────────────────────────────────────────");
+    println!("Neural Architecture Search");
+    println!("─────────────────────────────────────────────────────────────────");
+
+    let mut nas = NASEngine::new();
+    let best_arch = nas.search(&series, 50);
+    println!("  Best architecture: {} layers", best_arch.layers.len());
+    println!("  Activation: {}", best_arch.activation);
+    println!("  Learning rate: {:.6}", best_arch.learning_rate);
+
+    // Demo: Differentiable Programming
+    println!();
+    println!("─────────────────────────────────────────────────────────────────");
+    println!("Differentiable Programming");
+    println!("─────────────────────────────────────────────────────────────────");
+
+    // f(x) = x^2, f'(x) = 2x
+    let grad = DifferentiableProgramming::gradient(|x| x * x, 3.0);
+    println!("  d/dx(x^2) at x=3: {:.4}", grad);
+
+    // Optimize f(x) = (x - 5)^2
+    let optimal = DifferentiableProgramming::optimize(
+        |x| (x - DualNumber::constant(5.0)) * (x - DualNumber::constant(5.0)),
+        0.0, 0.1, 100
+    );
+    println!("  Optimized (x-5)^2: x = {:.4}", optimal);
+
+    println!();
+    println!("═══════════════════════════════════════════════════════════════════");
+    println!("  AI Prediction System demo complete!");
+    println!("═══════════════════════════════════════════════════════════════════");
+}

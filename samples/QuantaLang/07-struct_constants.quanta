@@ -1,0 +1,26 @@
+struct Color {
+    r: f64,
+    g: f64,
+    b: f64,
+}
+
+const WHITE: Color = Color { r: 1.0, g: 1.0, b: 1.0 };
+const BLACK: Color = Color { r: 0.0, g: 0.0, b: 0.0 };
+
+fn brightness(c: Color) -> f64 {
+    0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b
+}
+
+fn main() {
+    let w = brightness(WHITE);
+    assert(w == 1.0);
+
+    let b = brightness(BLACK);
+    assert(b == 0.0);
+
+    let gray: Color = Color { r: 0.5, g: 0.5, b: 0.5 };
+    let g = brightness(gray);
+    assert(g == 0.5);
+
+    println!("Struct constant tests passed!");
+}

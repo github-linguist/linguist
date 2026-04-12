@@ -1,0 +1,534 @@
+// ═══════════════════════════════════════════════════════════════════════════════
+// EXAMPLE: Graphics Pipeline
+// Demonstrates: photon, spectrum, chromatic, lumina, neutrino, prism
+// ═══════════════════════════════════════════════════════════════════════════════
+// This example shows how the rendering modules work together to create
+// a complete graphics pipeline with color science and neural upscaling.
+// ═══════════════════════════════════════════════════════════════════════════════
+
+use foundation::io::{println, print}
+use foundation::collections::{Vec, HashMap}
+use foundation::math::{sin, cos, sqrt, pow, PI}
+
+// Import rendering modules
+use photon::{
+    OmniscientEngine, UniversalHook, ShaderInjector,
+    RenderTarget, SwapChain, GraphicsAPI, Frame
+}
+use spectrum::{RGB, HSL, HSV, OKLab, OKLCH, XYZ, ColorSpace, Gamut}
+use chromatic::{PerceptualColor, DeltaE, ColorDifference, CAM16}
+use lumina::{
+    PostProcess, Effect, EffectChain,
+    Bloom, Tonemapping, ColorGrading, DOF, MotionBlur, FXAA, TAA
+}
+use neutrino::{NeuralUpscaler, DLSS, FSR, XeSS, UpscaleQuality}
+use prism::{LUT, LUT3D, ColorTransform, GamutMapping}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// GRAPHICS PIPELINE
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/// Complete graphics pipeline with all rendering features
+pub struct GraphicsPipeline {
+    engine: OmniscientEngine,
+    color_pipeline: ColorPipeline,
+    post_process: PostProcessPipeline,
+    upscaler: Option<Box<dyn NeuralUpscaler>>,
+    config: PipelineConfig,
+    stats: PipelineStats,
+}
+
+#[derive(Clone)]
+pub struct PipelineConfig {
+    pub resolution: (u32, u32),
+    pub render_scale: f32,
+    pub hdr_enabled: bool,
+    pub upscaling: UpscaleMethod,
+    pub color_space: OutputColorSpace,
+    pub post_effects: Vec<String>,
+}
+
+#[derive(Clone, Copy, PartialEq)]
+pub enum UpscaleMethod {
+    None,
+    DLSS,
+    FSR,
+    XeSS,
+    Neutrino,
+}
+
+#[derive(Clone, Copy)]
+pub enum OutputColorSpace {
+    SRGB,
+    DisplayP3,
+    Rec2020,
+    ACES,
+}
+
+#[derive(Default)]
+pub struct PipelineStats {
+    pub frames_rendered: u64,
+    pub avg_frame_time_ms: f64,
+    pub gpu_memory_mb: f64,
+    pub shader_count: u32,
+    pub draw_calls: u32,
+}
+
+impl GraphicsPipeline {
+    pub fn new(config: PipelineConfig) -> Self {
+        println!("Initializing Graphics Pipeline...");
+
+        // Initialize the Omniscient Engine
+        let engine = OmniscientEngine::new();
+        println!("  Photon Engine initialized");
+
+        // Setup color pipeline
+        let color_pipeline = ColorPipeline::new(config.color_space);
+        println!("  Color pipeline configured for {:?}", config.color_space);
+
+        // Setup post-processing
+        let post_process = PostProcessPipeline::new(&config.post_effects);
+        println!("  Post-process chain: {} effects", config.post_effects.len());
+
+        // Setup upscaling
+        let upscaler: Option<Box<dyn NeuralUpscaler>> = match config.upscaling {
+            UpscaleMethod::DLSS => Some(Box::new(DLSS::new(UpscaleQuality::Quality))),
+            UpscaleMethod::FSR => Some(Box::new(FSR::new(UpscaleQuality::Quality))),
+            UpscaleMethod::XeSS => Some(Box::new(XeSS::new(UpscaleQuality::Quality))),
+            UpscaleMethod::Neutrino => Some(Box::new(neutrino::NeutrinoUpscaler::new())),
+            UpscaleMethod::None => None,
+        };
+
+        if upscaler.is_some() {
+            println!("  Neural upscaling: {:?}", config.upscaling);
+        }
+
+        GraphicsPipeline {
+            engine,
+            color_pipeline,
+            post_process,
+            upscaler,
+            config,
+            stats: PipelineStats::default(),
+        }
+    }
+
+    /// Render a complete frame
+    pub fn render_frame(&mut self, scene: &Scene) -> Frame {
+        self.stats.frames_rendered += 1;
+
+        // Step 1: Render at internal resolution
+        let internal_res = self.calculate_internal_resolution();
+        println!("  Rendering at {}x{}", internal_res.0, internal_res.1);
+
+        let mut frame = self.engine.render(scene, internal_res);
+        self.stats.draw_calls = frame.draw_calls;
+
+        // Step 2: Apply post-processing
+        frame = self.post_process.apply(frame);
+
+        // Step 3: Neural upscaling (if enabled)
+        if let Some(ref upscaler) = self.upscaler {
+            frame = upscaler.upscale(frame, self.config.resolution);
+            println!("  Upscaled to {}x{}", self.config.resolution.0, self.config.resolution.1);
+        }
+
+        // Step 4: Color space conversion
+        frame = self.color_pipeline.transform(frame);
+
+        // Step 5: Final output
+        frame
+    }
+
+    fn calculate_internal_resolution(&self) -> (u32, u32) {
+        let scale = self.config.render_scale;
+        (
+            (self.config.resolution.0 as f32 * scale) as u32,
+            (self.config.resolution.1 as f32 * scale) as u32,
+        )
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// COLOR PIPELINE
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/// Color science pipeline using spectrum and chromatic modules
+pub struct ColorPipeline {
+    working_space: ColorSpace,
+    output_space: OutputColorSpace,
+    lut: Option<LUT3D>,
+    gamut_mapper: GamutMapping,
+}
+
+impl ColorPipeline {
+    pub fn new(output_space: OutputColorSpace) -> Self {
+        // Use OKLab as working space for perceptual uniformity
+        let working_space = ColorSpace::OKLab;
+
+        // Setup gamut mapping for output
+        let gamut = match output_space {
+            OutputColorSpace::SRGB => Gamut::SRGB,
+            OutputColorSpace::DisplayP3 => Gamut::DisplayP3,
+            OutputColorSpace::Rec2020 => Gamut::Rec2020,
+            OutputColorSpace::ACES => Gamut::ACES,
+        };
+
+        ColorPipeline {
+            working_space,
+            output_space,
+            lut: None,
+            gamut_mapper: GamutMapping::new(gamut),
+        }
+    }
+
+    /// Load a 3D LUT for color grading
+    pub fn load_lut(&mut self, path: &str) -> Result<(), String> {
+        self.lut = Some(LUT3D::load(path)?);
+        Ok(())
+    }
+
+    /// Transform frame colors
+    pub fn transform(&self, mut frame: Frame) -> Frame {
+        // Apply LUT if present
+        if let Some(ref lut) = self.lut {
+            frame = self.apply_lut(frame, lut);
+        }
+
+        // Gamut mapping to output space
+        frame = self.map_gamut(frame);
+
+        frame
+    }
+
+    fn apply_lut(&self, frame: Frame, lut: &LUT3D) -> Frame {
+        // Apply 3D LUT to each pixel
+        frame.map_pixels(|rgb| {
+            lut.lookup(rgb)
+        })
+    }
+
+    fn map_gamut(&self, frame: Frame) -> Frame {
+        frame.map_pixels(|rgb| {
+            self.gamut_mapper.map(rgb)
+        })
+    }
+}
+
+/// Color analysis utilities
+pub struct ColorAnalyzer;
+
+impl ColorAnalyzer {
+    /// Calculate perceptual color difference using DeltaE 2000
+    pub fn color_difference(c1: &RGB, c2: &RGB) -> f64 {
+        let lab1 = c1.to_oklab();
+        let lab2 = c2.to_oklab();
+        DeltaE::delta_e_2000(&lab1, &lab2)
+    }
+
+    /// Find the most perceptually distinct colors in a palette
+    pub fn find_distinct_colors(colors: &[RGB], count: usize) -> Vec<RGB> {
+        let mut selected = Vec::new();
+        let mut remaining: Vec<RGB> = colors.to_vec();
+
+        // Start with first color
+        if let Some(first) = remaining.pop() {
+            selected.push(first);
+        }
+
+        // Greedily select most distinct colors
+        while selected.len() < count && !remaining.is_empty() {
+            let mut best_idx = 0;
+            let mut best_min_dist = 0.0;
+
+            for (i, candidate) in remaining.iter().enumerate() {
+                let min_dist = selected.iter()
+                    .map(|s| Self::color_difference(candidate, s))
+                    .fold(f64::INFINITY, f64::min);
+
+                if min_dist > best_min_dist {
+                    best_min_dist = min_dist;
+                    best_idx = i;
+                }
+            }
+
+            selected.push(remaining.remove(best_idx));
+        }
+
+        selected
+    }
+
+    /// Generate a perceptually uniform gradient
+    pub fn uniform_gradient(start: RGB, end: RGB, steps: usize) -> Vec<RGB> {
+        let start_lab = start.to_oklab();
+        let end_lab = end.to_oklab();
+
+        (0..steps).map(|i| {
+            let t = i as f64 / (steps - 1) as f64;
+            let lab = OKLab::lerp(&start_lab, &end_lab, t);
+            lab.to_rgb()
+        }).collect()
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// POST-PROCESS PIPELINE
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/// Post-processing effect chain using lumina module
+pub struct PostProcessPipeline {
+    effects: EffectChain,
+}
+
+impl PostProcessPipeline {
+    pub fn new(effect_names: &[String]) -> Self {
+        let mut effects = EffectChain::new();
+
+        for name in effect_names {
+            match name.as_str() {
+                "bloom" => effects.add(Bloom::default()),
+                "tonemapping" => effects.add(Tonemapping::aces()),
+                "color_grading" => effects.add(ColorGrading::default()),
+                "dof" => effects.add(DOF::default()),
+                "motion_blur" => effects.add(MotionBlur::default()),
+                "fxaa" => effects.add(FXAA::default()),
+                "taa" => effects.add(TAA::default()),
+                _ => println!("    Unknown effect: {}", name),
+            }
+        }
+
+        PostProcessPipeline { effects }
+    }
+
+    pub fn apply(&self, frame: Frame) -> Frame {
+        self.effects.apply(frame)
+    }
+}
+
+/// HDR Bloom effect configuration
+pub struct BloomConfig {
+    pub threshold: f32,
+    pub intensity: f32,
+    pub radius: f32,
+    pub mip_levels: u32,
+}
+
+impl Default for BloomConfig {
+    fn default() -> Self {
+        BloomConfig {
+            threshold: 1.0,
+            intensity: 0.5,
+            radius: 0.005,
+            mip_levels: 5,
+        }
+    }
+}
+
+/// Tonemapping operators
+pub enum TonemapOperator {
+    Reinhard,
+    ACES,
+    Filmic,
+    AgX,
+    Neutral,
+}
+
+impl TonemapOperator {
+    pub fn apply(&self, hdr: RGB) -> RGB {
+        match self {
+            Self::Reinhard => self.reinhard(hdr),
+            Self::ACES => self.aces(hdr),
+            Self::Filmic => self.filmic(hdr),
+            Self::AgX => self.agx(hdr),
+            Self::Neutral => self.neutral(hdr),
+        }
+    }
+
+    fn reinhard(&self, c: RGB) -> RGB {
+        RGB::new(
+            (c.r as f64 / (1.0 + c.r as f64) * 255.0) as u8,
+            (c.g as f64 / (1.0 + c.g as f64) * 255.0) as u8,
+            (c.b as f64 / (1.0 + c.b as f64) * 255.0) as u8,
+        )
+    }
+
+    fn aces(&self, c: RGB) -> RGB {
+        // ACES filmic tone mapping curve
+        let a = 2.51;
+        let b = 0.03;
+        let c_val = 2.43;
+        let d = 0.59;
+        let e = 0.14;
+
+        let tonemap = |x: f64| -> f64 {
+            let result = (x * (a * x + b)) / (x * (c_val * x + d) + e);
+            result.max(0.0).min(1.0)
+        };
+
+        RGB::new(
+            (tonemap(c.r as f64 / 255.0) * 255.0) as u8,
+            (tonemap(c.g as f64 / 255.0) * 255.0) as u8,
+            (tonemap(c.b as f64 / 255.0) * 255.0) as u8,
+        )
+    }
+
+    fn filmic(&self, c: RGB) -> RGB {
+        // Hejl-Dawson filmic curve
+        c // Placeholder
+    }
+
+    fn agx(&self, c: RGB) -> RGB {
+        // AgX by Troy Sobotka
+        c // Placeholder
+    }
+
+    fn neutral(&self, c: RGB) -> RGB {
+        // Neutral tone mapper
+        c // Placeholder
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SHADER INJECTION
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/// Shader injection system using photon
+pub struct ShaderManager {
+    injector: ShaderInjector,
+    shaders: HashMap<u64, ShaderInfo>,
+}
+
+pub struct ShaderInfo {
+    pub hash: u64,
+    pub name: String,
+    pub stage: ShaderStage,
+    pub original: Vec<u8>,
+    pub modified: Option<Vec<u8>>,
+}
+
+#[derive(Clone, Copy)]
+pub enum ShaderStage {
+    Vertex,
+    Pixel,
+    Compute,
+    Geometry,
+    Hull,
+    Domain,
+}
+
+impl ShaderManager {
+    pub fn new() -> Self {
+        ShaderManager {
+            injector: ShaderInjector::new(),
+            shaders: HashMap::new(),
+        }
+    }
+
+    /// Register a shader for potential modification
+    pub fn register(&mut self, hash: u64, bytecode: &[u8], stage: ShaderStage) {
+        self.shaders.insert(hash, ShaderInfo {
+            hash,
+            name: format!("shader_{:016x}", hash),
+            stage,
+            original: bytecode.to_vec(),
+            modified: None,
+        });
+    }
+
+    /// Inject a modified shader
+    pub fn inject(&mut self, hash: u64, modified: Vec<u8>) -> Result<(), String> {
+        if let Some(shader) = self.shaders.get_mut(&hash) {
+            shader.modified = Some(modified.clone());
+            self.injector.inject(hash, &modified)?;
+            Ok(())
+        } else {
+            Err(format!("Shader {:016x} not found", hash))
+        }
+    }
+
+    /// List all registered shaders
+    pub fn list_shaders(&self) -> Vec<&ShaderInfo> {
+        self.shaders.values().collect()
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SCENE (for demo purposes)
+// ═══════════════════════════════════════════════════════════════════════════════
+
+pub struct Scene {
+    pub name: String,
+    pub objects: u32,
+    pub lights: u32,
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// MAIN
+// ═══════════════════════════════════════════════════════════════════════════════
+
+fn main() {
+    println!("╔═══════════════════════════════════════════════════════════════╗");
+    println!("║  Graphics Pipeline Demo                                       ║");
+    println!("║  Powered by QUANTA-UNIVERSE                                   ║");
+    println!("╚═══════════════════════════════════════════════════════════════╝");
+    println!();
+
+    // Configure the pipeline
+    let config = PipelineConfig {
+        resolution: (3840, 2160),  // 4K output
+        render_scale: 0.5,         // Render at 1080p
+        hdr_enabled: true,
+        upscaling: UpscaleMethod::DLSS,
+        color_space: OutputColorSpace::DisplayP3,
+        post_effects: vec![
+            "bloom".to_string(),
+            "tonemapping".to_string(),
+            "color_grading".to_string(),
+            "taa".to_string(),
+        ],
+    };
+
+    // Create pipeline
+    let mut pipeline = GraphicsPipeline::new(config);
+    println!();
+
+    // Demo: Color analysis
+    println!("─────────────────────────────────────────────────────────────────");
+    println!("Color Science Demo (Spectrum + Chromatic)");
+    println!("─────────────────────────────────────────────────────────────────");
+
+    let red = RGB::new(255, 0, 0);
+    let orange = RGB::new(255, 165, 0);
+    let diff = ColorAnalyzer::color_difference(&red, &orange);
+    println!("  Delta E between red and orange: {:.2}", diff);
+
+    let gradient = ColorAnalyzer::uniform_gradient(red, RGB::new(0, 0, 255), 5);
+    println!("  Perceptual gradient: {} colors", gradient.len());
+
+    // Demo: Create a test scene
+    let scene = Scene {
+        name: "Test Scene".to_string(),
+        objects: 1000,
+        lights: 8,
+    };
+
+    println!();
+    println!("─────────────────────────────────────────────────────────────────");
+    println!("Rendering Demo (Photon + Lumina + Neutrino)");
+    println!("─────────────────────────────────────────────────────────────────");
+
+    // Render a frame
+    let _frame = pipeline.render_frame(&scene);
+
+    println!();
+    println!("─────────────────────────────────────────────────────────────────");
+    println!("Pipeline Statistics");
+    println!("─────────────────────────────────────────────────────────────────");
+    println!("  Frames rendered: {}", pipeline.stats.frames_rendered);
+    println!("  Draw calls: {}", pipeline.stats.draw_calls);
+
+    println!();
+    println!("═══════════════════════════════════════════════════════════════════");
+    println!("  Graphics Pipeline demo complete!");
+    println!("═══════════════════════════════════════════════════════════════════");
+}

@@ -1,0 +1,19 @@
+// Test 16: Closures / Lambda Functions
+// Non-capturing closures passed to higher-order functions
+
+fn apply(f: fn(i32) -> i32, x: i32) -> i32 {
+    f(x)
+}
+
+fn main() {
+    let double = |x: i32| -> i32 { x * 2 };
+    let result = apply(double, 21);
+    println!("Result: {}", result);
+
+    let negate = |x: i32| -> i32 { 0 - x };
+    let neg_result = apply(negate, 7);
+    println!("Negated: {}", neg_result);
+
+    let add_ten = |x: i32| -> i32 { x + 10 };
+    println!("Add ten: {}", apply(add_ten, 5));
+}

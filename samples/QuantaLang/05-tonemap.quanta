@@ -1,0 +1,21 @@
+// QuantaLang ACES Tone Mapping Shader
+// Compile to HLSL: quantac tonemap.quanta --target hlsl -o tonemap.hlsl
+// Drop into ReShade shader folder and use immediately
+
+fn aces_tonemap(x: f64) -> f64 {
+    let a = 2.51;
+    let b = 0.03;
+    let c = 2.43;
+    let d = 0.59;
+    let e = 0.14;
+    let num = x * (a * x + b);
+    let den = x * (c * x + d) + e;
+    num / den
+}
+
+fn main() {
+    let r = aces_tonemap(0.8);
+    let g = aces_tonemap(0.4);
+    let b = aces_tonemap(0.2);
+    println!("tonemapped: ({}, {}, {})", r, g, b);
+}
