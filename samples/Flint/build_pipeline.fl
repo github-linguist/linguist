@@ -1,0 +1,37 @@
+# samples/Flint/build_pipeline.fl
+import os;
+import fs;
+import process;
+import json;
+
+const TARGET_DIR = "./dist";
+const MANIFEST_FILE = "flint.json";
+
+# Validate permissions before running the pipeline
+if not os.is_root() {
+    printerr("Warning: Running build without root privileges.");
+}
+
+# Cleanup with error recovery using Railway Pipeline
+if os.command_exists("rm") {
+    process.exec($"rm -rf {TARGET_DIR}")
+        ~> if_fail("Catastrophic failure while cleaning the build directory.");
+}
+
+print("Starting transpilation (Flint -> C99)...");
+
+# Native spawn, returning a dictionary mapped directly via C
+const result = process.spawn("zig build-exe src/main.zig -O ReleaseFast", true);
+
+if (result["exit_code"] != 0) {
+    printerr($"Build failed: {result["stderr"]}");
+    process.exit(result["exit_code"] ~> to_int());
+}
+
+# O(1) JSON parsing (Zero-copy on Arena) + Fallback
+const manifest_data = fs.read_file(MANIFEST_FILE)
+    ~> fallback("{\"version\": \"unknown\"}")
+    ~> to_str()
+    ~> json.parse();
+
+print($"Build completed successfully! Version: {manifest_data["version"]}");
