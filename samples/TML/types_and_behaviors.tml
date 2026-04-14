@@ -1,0 +1,137 @@
+/// Type definitions, behaviors (traits), and generic implementations.
+use core::traits::cmp::{Ord, PartialEq, Ordering}
+use std::fmt::Display
+
+// ─── Struct type ─────────────────────────────────────────────────────────────
+
+pub type Point {
+    x: F64,
+    y: F64,
+}
+
+impl Point {
+    pub func new(x: F64, y: F64) -> Point {
+        return Point { x: x, y: y }
+    }
+
+    pub func distance(this, other: ref Point) -> F64 {
+        let dx = this.x - other.x
+        let dy = this.y - other.y
+        return (dx * dx + dy * dy).sqrt()
+    }
+}
+
+impl Display for Point {
+    pub func fmt(this) -> Str {
+        return `({this.x}, {this.y})`
+    }
+}
+
+// ─── Enum type ───────────────────────────────────────────────────────────────
+
+pub type Shape {
+    Circle(F64),
+    Rectangle(F64, F64),
+    Triangle(F64, F64, F64),
+}
+
+impl Shape {
+    pub func area(this) -> F64 {
+        when this {
+            Shape::Circle(r)         => 3.14159265 * r * r,
+            Shape::Rectangle(w, h)   => w * h,
+            Shape::Triangle(a, b, c) => {
+                let s = (a + b + c) / 2.0
+                return (s * (s - a) * (s - b) * (s - c)).sqrt()
+            },
+        }
+    }
+
+    pub func perimeter(this) -> F64 {
+        when this {
+            Shape::Circle(r)         => 2.0 * 3.14159265 * r,
+            Shape::Rectangle(w, h)   => 2.0 * (w + h),
+            Shape::Triangle(a, b, c) => a + b + c,
+        }
+    }
+}
+
+// ─── Generic behavior ────────────────────────────────────────────────────────
+
+pub behavior Summable[T] {
+    func sum(this) -> T
+}
+
+pub behavior Container[T] {
+    func len(this) -> I64
+    func is_empty(this) -> Bool {
+        return this.len() == 0
+    }
+    func get(this, index: I64) -> Maybe[T]
+}
+
+// ─── Generic struct ──────────────────────────────────────────────────────────
+
+pub type Stack[T] {
+    items: List[T],
+}
+
+impl[T] Stack[T] {
+    pub func new() -> Stack[T] {
+        return Stack { items: List::new() }
+    }
+
+    pub func push(mut this, value: T) {
+        this.items.push(value)
+    }
+
+    pub func pop(mut this) -> Maybe[T] {
+        if this.items.len() == 0 {
+            return Nothing
+        }
+        return Just(this.items.pop())
+    }
+
+    pub func peek(this) -> Maybe[ref T] {
+        if this.items.len() == 0 {
+            return Nothing
+        }
+        return Just(ref this.items.get(this.items.len() - 1))
+    }
+}
+
+impl[T] Container[T] for Stack[T] {
+    pub func len(this) -> I64 {
+        return this.items.len()
+    }
+
+    pub func get(this, index: I64) -> Maybe[T] {
+        if index < 0 or index >= this.items.len() {
+            return Nothing
+        }
+        return Just(this.items.get(index))
+    }
+}
+
+// ─── Entry point ─────────────────────────────────────────────────────────────
+
+func main() {
+    let p1 = Point::new(0.0, 0.0)
+    let p2 = Point::new(3.0, 4.0)
+    println(`Distance: {p1.distance(ref p2)}`)
+
+    let circle = Shape::Circle(5.0)
+    let rect   = Shape::Rectangle(4.0, 6.0)
+    println(`Circle area: {circle.area()}`)
+    println(`Rectangle area: {rect.area()}`)
+
+    let mut stack: Stack[I64] = Stack::new()
+    stack.push(10)
+    stack.push(20)
+    stack.push(30)
+
+    loop {
+        let Just(value) = stack.pop() else { break }
+        println(`Popped: {value}`)
+    }
+}

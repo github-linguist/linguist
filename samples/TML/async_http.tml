@@ -1,0 +1,110 @@
+/// Asynchronous HTTP server example demonstrating TML's async/await model.
+use std::net::{TcpListener, TcpStream}
+use std::http::{Request, Response, Method, StatusCode}
+use std::json
+use std::collections::HashMap
+use std::runtime::Runtime
+
+// ─── Request handler ─────────────────────────────────────────────────────────
+
+@auto(duplicate)
+pub type AppState {
+    counters: Shared[Mutex[HashMap[Str, I64]]],
+}
+
+impl AppState {
+    pub func new() -> AppState {
+        return AppState {
+            counters: Shared::new(Mutex::new(HashMap::new())),
+        }
+    }
+}
+
+pub async func handle_request(req: Request, state: AppState) -> Response {
+    when req.method {
+        Method::GET => {
+            let path = req.path()
+            when path {
+                "/health" => {
+                    return Response::ok().json(`{"status": "healthy"}`)
+                },
+                "/counters" => {
+                    let guard = state.counters.lock().await
+                    let body = format_counters(ref *guard)
+                    return Response::ok().json(body)
+                },
+                _ => {
+                    return Response::not_found().text("Not Found")
+                },
+            }
+        },
+        Method::POST => {
+            let path = req.path()
+            if path.starts_with("/counter/") {
+                let name = path.trim_start("/counter/")
+                let mut guard = state.counters.lock().await
+                let current = guard.get(name).unwrap_or(0)
+                guard.set(name, current + 1)
+                return Response::ok().json(`{"name": "{name}", "value": {current + 1}}`)
+            }
+            return Response::not_found().text("Not Found")
+        },
+        _ => {
+            return Response::status(StatusCode::MethodNotAllowed).text("Method Not Allowed")
+        },
+    }
+}
+
+func format_counters(counters: ref HashMap[Str, I64]) -> Str {
+    var parts: List[Str] = List::new()
+    // Iteration over HashMap entries
+    let iter = counters.iter()
+    loop {
+        let Just(entry) = iter.next() else { break }
+        parts.push(`"{entry.key}": {entry.value}`)
+    }
+    return `{` + parts.join(", ") + `}`
+}
+
+// ─── Server setup ────────────────────────────────────────────────────────────
+
+pub async func run_server(addr: Str) -> Outcome[Unit, Str] {
+    let listener = TcpListener::bind(addr).await?
+    println(`Listening on {addr}`)
+
+    let state = AppState::new()
+
+    loop {
+        let (stream, peer_addr) = listener.accept().await?
+        let state_clone = state.duplicate()
+
+        // Spawn a task per connection
+        Runtime::spawn(async {
+            when handle_connection(stream, peer_addr, state_clone).await {
+                Ok(_)    => {},
+                Err(msg) => println(`Connection error from {peer_addr}: {msg}`),
+            }
+        })
+    }
+
+    return Ok(())
+}
+
+async func handle_connection(
+    mut stream: TcpStream,
+    peer_addr: Str,
+    state: AppState
+) -> Outcome[Unit, Str] {
+    let req = Request::parse(ref mut stream).await?
+    let resp = handle_request(req, state).await
+    resp.write(ref mut stream).await?
+    return Ok(())
+}
+
+func main() {
+    let rt = Runtime::new()
+    when rt.block_on(run_server("0.0.0.0:8080")) {
+        Ok(_)    => {},
+        Err(msg) => println(`Server error: {msg}`),
+    }
+}

@@ -1,0 +1,138 @@
+/// Low-level memory operations and FFI bindings.
+use core::alloc::{Layout, GlobalAlloc}
+
+// ─── External C function binding ────────────────────────────────────────────
+
+@extern("c")
+func memcpy(dst: *U8, src: *U8, n: I64) -> *U8
+
+@extern("c")
+func memset(dst: *U8, val: I32, n: I64) -> *U8
+
+@extern("c")
+func malloc(size: I64) -> *U8
+
+@extern("c")
+func free(ptr: *U8)
+
+// ─── Arena allocator ────────────────────────────────────────────────────────
+
+pub type Arena {
+    buffer: *U8,
+    capacity: I64,
+    offset: I64,
+}
+
+impl Arena {
+    @allocates
+    pub func new(capacity: I64) -> Arena {
+        let buf = lowlevel { mem_alloc(capacity as U64) as *U8 }
+        return Arena {
+            buffer: buf,
+            capacity: capacity,
+            offset: 0,
+        }
+    }
+
+    pub func alloc(mut this, size: I64, align: I64) -> Maybe[*U8] {
+        let aligned = (this.offset + align - 1) and (not (align - 1))
+        if aligned + size > this.capacity {
+            return Nothing
+        }
+        let ptr = lowlevel { ptr_add[U8](this.buffer, aligned as U64) }
+        this.offset = aligned + size
+        return Just(ptr)
+    }
+
+    pub func reset(mut this) {
+        this.offset = 0
+    }
+
+    pub func free(this) {
+        lowlevel { mem_free(this.buffer as *U8) }
+    }
+}
+
+// ─── SIMD vector operations ──────────────────────────────────────────────────
+
+use core::simd::{F32x4, I32x4}
+
+pub func dot_product_simd(a: *F32, b: *F32, len: I64) -> F32 {
+    var sum = F32x4::zero()
+    let chunks = len / 4
+    for i in 0 to chunks {
+        let va = F32x4::load(lowlevel { ptr_add[F32](a, (i * 4) as U64) })
+        let vb = F32x4::load(lowlevel { ptr_add[F32](b, (i * 4) as U64) })
+        sum = sum + va * vb
+    }
+    var result: F32 = sum.horizontal_sum()
+    // Handle remainder
+    let start = chunks * 4
+    for i in start to len {
+        let ai = lowlevel { ptr_read[F32](ptr_add[F32](a, i as U64)) }
+        let bi = lowlevel { ptr_read[F32](ptr_add[F32](b, i as U64)) }
+        result = result + ai * bi
+    }
+    return result
+}
+
+// ─── Custom global allocator ─────────────────────────────────────────────────
+
+pub type BumpAllocator {
+    start: *U8,
+    current: *U8,
+    end: *U8,
+}
+
+impl GlobalAlloc for BumpAllocator {
+    pub func alloc(mut this, layout: Layout) -> *U8 {
+        let size  = layout.size() as I64
+        let align = layout.align() as I64
+        let addr  = this.current as I64
+        let aligned = (addr + align - 1) and (not (align - 1))
+        let new_ptr = aligned + size
+        if new_ptr > this.end as I64 {
+            return 0 as *U8  // null — out of memory
+        }
+        this.current = new_ptr as *U8
+        return aligned as *U8
+    }
+
+    pub func dealloc(mut this, ptr: *U8, layout: Layout) {
+        // Bump allocators don't support individual dealloc
+    }
+}
+
+// ─── Inline assembly / compiler intrinsic ────────────────────────────────────
+
+@intrinsic
+pub func count_leading_zeros(x: U64) -> I32
+
+@intrinsic
+pub func count_trailing_zeros(x: U64) -> I32
+
+pub func next_power_of_two(n: U64) -> U64 {
+    if n <= 1 { return 1 }
+    let clz = count_leading_zeros(n - 1) as U64
+    return 1 << (64 - clz)
+}
+
+func main() {
+    let mut arena = Arena::new(1024 * 1024)  // 1 MB
+
+    let ptr = arena.alloc(64, 8)
+    when ptr {
+        Just(p) => println(`Allocated 64 bytes at offset {arena.offset - 64}`),
+        Nothing => println("Allocation failed"),
+    }
+
+    arena.free()
+
+    let a = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]
+    let b = [8.0, 7.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.0]
+    // dot product: 1*8+2*7+3*6+4*5+5*4+6*3+7*2+8*1 = 120
+    println(`SIMD dot product: {dot_product_simd(a.as_ptr(), b.as_ptr(), 8)}`)
+
+    println(`next_power_of_two(100) = {next_power_of_two(100)}`)
+    println(`next_power_of_two(128) = {next_power_of_two(128)}`)
+}

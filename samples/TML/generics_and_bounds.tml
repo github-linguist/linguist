@@ -1,0 +1,149 @@
+/// Generic types with behavior bounds, associated types, and lifetime-free memory.
+use core::traits::cmp::{Ord, PartialEq, Eq}
+use core::traits::clone::Duplicate
+use core::fmt::Display
+
+// ─── Behavior with associated type ──────────────────────────────────────────
+
+pub behavior Transformer {
+    type Input
+    type Output
+
+    func transform(this, input: This::Input) -> This::Output
+    func transform_all(this, inputs: List[This::Input]) -> List[This::Output] {
+        let mut outputs: List[This::Output] = List::new()
+        for i in 0 to inputs.len() {
+            outputs.push(this.transform(inputs.get(i)))
+        }
+        return outputs
+    }
+}
+
+// ─── Multiple behavior bounds ────────────────────────────────────────────────
+
+pub func sort_and_display[T: Ord + Display + Duplicate](mut items: List[T]) -> Str {
+    // Insertion sort
+    for i in 1 to items.len() {
+        var j = i
+        loop (j > 0 and items.get(j).lt(ref items.get(j - 1))) {
+            let tmp = items.get(j).duplicate()
+            items.set(j, items.get(j - 1).duplicate())
+            items.set(j - 1, tmp)
+            j = j - 1
+        }
+    }
+    var parts: List[Str] = List::new()
+    for i in 0 to items.len() {
+        parts.push(items.get(i).fmt())
+    }
+    return "[" + parts.join(", ") + "]"
+}
+
+// ─── Behavior aliases ────────────────────────────────────────────────────────
+
+pub behavior SortKey = Ord + Duplicate + Display
+
+// ─── Heap-allocated recursive type ──────────────────────────────────────────
+
+pub type Tree[T] {
+    Leaf(T),
+    Node(Heap[Tree[T]], T, Heap[Tree[T]]),
+}
+
+impl[T: Ord + Duplicate] Tree[T] {
+    pub func insert(this, value: T) -> Tree[T] {
+        when this {
+            Tree::Leaf(v) => {
+                if value.lt(ref v) {
+                    return Tree::Node(
+                        Heap::new(Tree::Leaf(value)),
+                        v,
+                        Heap::new(Tree::Leaf(value)),
+                    )
+                }
+                return Tree::Node(
+                    Heap::new(Tree::Leaf(v.duplicate())),
+                    value,
+                    Heap::new(Tree::Leaf(v)),
+                )
+            },
+            Tree::Node(left, v, right) => {
+                if value.lt(ref v) {
+                    return Tree::Node(
+                        Heap::new((*left).insert(value)),
+                        v,
+                        right,
+                    )
+                }
+                return Tree::Node(
+                    left,
+                    v,
+                    Heap::new((*right).insert(value)),
+                )
+            },
+        }
+    }
+
+    pub func contains(this, value: ref T) -> Bool {
+        when this {
+            Tree::Leaf(v)              => return v.eq(value),
+            Tree::Node(left, v, right) => {
+                if value.eq(ref v)  { return true }
+                if value.lt(ref v)  { return (*left).contains(value) }
+                return (*right).contains(value)
+            },
+        }
+    }
+
+    pub func to_sorted_list(this) -> List[T] {
+        when this {
+            Tree::Leaf(v) => {
+                let mut list: List[T] = List::new()
+                list.push(v)
+                return list
+            },
+            Tree::Node(left, v, right) => {
+                let mut list = (*left).to_sorted_list()
+                list.push(v)
+                let right_list = (*right).to_sorted_list()
+                for i in 0 to right_list.len() {
+                    list.push(right_list.get(i))
+                }
+                return list
+            },
+        }
+    }
+}
+
+// ─── impl with where clause ──────────────────────────────────────────────────
+
+pub func zip_with[A, B, C](
+    a: List[A],
+    b: List[B],
+    f: func(A, B) -> C
+) -> List[C] where A: Duplicate, B: Duplicate {
+    let len = if a.len() < b.len() { a.len() } else { b.len() }
+    let mut result: List[C] = List::new()
+    for i in 0 to len {
+        result.push(f(a.get(i).duplicate(), b.get(i).duplicate()))
+    }
+    return result
+}
+
+func main() {
+    let mut tree = Tree::Leaf(5)
+    let values = [3, 7, 1, 4, 6, 8, 2]
+    for i in 0 to values.len() {
+        tree = tree.insert(values.get(i))
+    }
+
+    let sorted = tree.to_sorted_list()
+    println(`Sorted: {sorted}`)
+    println(`Contains 4: {tree.contains(ref 4)}`)
+    println(`Contains 9: {tree.contains(ref 9)}`)
+
+    let nums  = [1, 2, 3, 4, 5]
+    let words = ["one", "two", "three", "four", "five"]
+    let pairs = zip_with(nums, words, do(n, w) `{n}={w}`)
+    println(`Pairs: {pairs}`)
+}

@@ -1,0 +1,120 @@
+/// Demonstrates TML pattern matching, let-else, and optional chaining.
+use std::json
+use std::collections::HashMap
+
+// ─── Algebraic data type ─────────────────────────────────────────────────────
+
+pub type Expr {
+    Num(F64),
+    Var(Str),
+    Add(Heap[Expr], Heap[Expr]),
+    Mul(Heap[Expr], Heap[Expr]),
+    Neg(Heap[Expr]),
+}
+
+pub func eval(expr: ref Expr, env: ref HashMap[Str, F64]) -> Maybe[F64] {
+    when *expr {
+        Expr::Num(n)    => return Just(n),
+        Expr::Var(name) => return env.get(name),
+        Expr::Neg(e)    => {
+            let Just(v) = eval(ref *e, env) else { return Nothing }
+            return Just(-v)
+        },
+        Expr::Add(lhs, rhs) => {
+            let Just(l) = eval(ref *lhs, env) else { return Nothing }
+            let Just(r) = eval(ref *rhs, env) else { return Nothing }
+            return Just(l + r)
+        },
+        Expr::Mul(lhs, rhs) => {
+            let Just(l) = eval(ref *lhs, env) else { return Nothing }
+            let Just(r) = eval(ref *rhs, env) else { return Nothing }
+            return Just(l * r)
+        },
+    }
+}
+
+// ─── Pattern guards ──────────────────────────────────────────────────────────
+
+pub func classify(n: I64) -> Str {
+    when n {
+        0             => "zero",
+        x if x < 0   => "negative",
+        x if x < 10  => "small positive",
+        x if x < 100 => "medium positive",
+        _             => "large positive",
+    }
+}
+
+// ─── Optional chaining ───────────────────────────────────────────────────────
+
+pub func get_user_city(json_str: Str) -> Maybe[Str] {
+    return json::parse(json_str)?.get_object("address")?.get_string("city")
+}
+
+// ─── For-in loops ────────────────────────────────────────────────────────────
+
+pub func fibonacci(n: I64) -> List[I64] {
+    let mut fibs: List[I64] = List::new()
+    fibs.push(0)
+    fibs.push(1)
+    for i in 2 to n {
+        let a = fibs.get(i - 2)
+        let b = fibs.get(i - 1)
+        fibs.push(a + b)
+    }
+    return fibs
+}
+
+// ─── Error handling with Outcome ─────────────────────────────────────────────
+
+pub type ParseError {
+    EmptyInput,
+    InvalidChar(Char, I64),
+    Overflow,
+}
+
+pub func parse_positive_int(s: Str) -> Outcome[I64, ParseError] {
+    if s.len() == 0 {
+        return Err(ParseError::EmptyInput)
+    }
+    var result: I64 = 0
+    for i in 0 to s.len() {
+        let c = s.char_at(i)
+        if c < '0' or c > '9' {
+            return Err(ParseError::InvalidChar(c, i))
+        }
+        result = result * 10 + (c as I64 - '0' as I64)
+        if result < 0 {
+            return Err(ParseError::Overflow)
+        }
+    }
+    return Ok(result)
+}
+
+func main() {
+    let mut env: HashMap[Str, F64] = HashMap::new()
+    env.set("x", 3.0)
+    env.set("y", 4.0)
+
+    let expr = Expr::Add(
+        Heap::new(Expr::Var("x")),
+        Heap::new(Expr::Mul(
+            Heap::new(Expr::Num(2.0)),
+            Heap::new(Expr::Var("y")),
+        )),
+    )
+
+    when eval(ref expr, ref env) {
+        Just(result) => println(`x + 2*y = {result}`),
+        Nothing      => println("Evaluation failed"),
+    }
+
+    let numbers = [-5, 0, 3, 42, 999]
+    for i in 0 to numbers.len() {
+        let n = numbers.get(i)
+        println(`{n} is {classify(n)}`)
+    }
+
+    let fibs = fibonacci(10)
+    println(`First 10 Fibonacci numbers: {fibs}`)
+}
