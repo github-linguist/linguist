@@ -1,0 +1,104 @@
+// Izel Lexer implementation in Izel
+// Part of Phase 7: Self-Hosting
+
+shape Token {
+    kind: Kind
+    start: Int
+    end: Int
+}
+
+forge tokenize {
+    params: [source: Str]
+    ret: List[Token]
+    body: {
+        ~ tokens: List[Token] = []
+        ~ i = 0
+        ~ len = source.len()
+
+        while i < len {
+            ~ char = source[i]
+
+            given char {
+                ' ' | '\t' | '\r' | '\n' -> { i = i + 1 }
+                '+' -> { tokens.push(Token { kind: Kind::Plus, start: i, end: i + 1 }); i = i + 1 }
+                '-' -> {
+                    if i + 1 < len and source[i+1] == '>' {
+                        tokens.push(Token { kind: Kind::Arrow, start: i, end: i + 2 })
+                        i = i + 2
+                    } else {
+                        tokens.push(Token { kind: Kind::Minus, start: i, end: i + 1 })
+                        i = i + 1
+                    }
+                }
+                '*' -> { tokens.push(Token { kind: Kind::Star, start: i, end: i + 1 }); i = i + 1 }
+                '/' -> { tokens.push(Token { kind: Kind::Slash, start: i, end: i + 1 }); i = i + 1 }
+                '=' -> {
+                    if i + 1 < len and source[i+1] == '=' {
+                        tokens.push(Token { kind: Kind::EqEq, start: i, end: i + 2 })
+                        i = i + 2
+                    } else if i + 1 < len and source[i+1] == '>' {
+                        tokens.push(Token { kind: Kind::FatArrow, start: i, end: i + 2 })
+                        i = i + 2
+                    } else {
+                        tokens.push(Token { kind: Kind::Eq, start: i, end: i + 1 })
+                        i = i + 1
+                    }
+                }
+                ':' -> {
+                    if i + 1 < len and source[i+1] == ':' {
+                        tokens.push(Token { kind: Kind::DoubleColon, start: i, end: i + 2 })
+                        i = i + 2
+                    } else {
+                        tokens.push(Token { kind: Kind::Colon, start: i, end: i + 1 })
+                        i = i + 1
+                    }
+                }
+                '(' -> { tokens.push(Token { kind: Kind::LParen, start: i, end: i + 1 }); i = i + 1 }
+                ')' -> { tokens.push(Token { kind: Kind::RParen, start: i, end: i + 1 }); i = i + 1 }
+                '{' -> { tokens.push(Token { kind: Kind::LBrace, start: i, end: i + 1 }); i = i + 1 }
+                '}' -> { tokens.push(Token { kind: Kind::RBrace, start: i, end: i + 1 }); i = i + 1 }
+                '[' -> { tokens.push(Token { kind: Kind::LBracket, start: i, end: i + 1 }); i = i + 1 }
+                ']' -> { tokens.push(Token { kind: Kind::RBracket, start: i, end: i + 1 }); i = i + 1 }
+                ',' -> { tokens.push(Token { kind: Kind::Comma, start: i, end: i + 1 }); i = i + 1 }
+                ';' -> { tokens.push(Token { kind: Kind::Semi, start: i, end: i + 1 }); i = i + 1 }
+                '.' -> { tokens.push(Token { kind: Kind::Dot, start: i, end: i + 1 }); i = i + 1 }
+                '~' -> { tokens.push(Token { kind: Kind::Tide, start: i, end: i + 1 }); i = i + 1 }
+
+                _ -> {
+                    if is_digit(char) {
+                        ~ start = i
+                        while i < len and is_digit(source[i]) { i = i + 1 }
+                        tokens.push(Token { kind: Kind::Int, start: start, end: i })
+                    } else if is_alpha(char) {
+                        ~ start = i
+                        while i < len and (is_alpha(source[i]) or is_digit(source[i])) { i = i + 1 }
+                        ~ text = source.slice(start, i)
+                        tokens.push(Token { kind: get_keyword_kind(text), start: start, end: i })
+                    } else {
+                        i = i + 1 // skip unknown
+                    }
+                }
+            }
+        }
+
+        return tokens
+    }
+}
+
+forge get_keyword_kind {
+    params: [text: Str]
+    ret: Kind
+    body: {
+        given text {
+            "forge" -> return Kind::Forge
+            "shape" -> return Kind::Shape
+            "given" -> return Kind::Given
+            "each"  -> return Kind::Each
+            "return" -> return Kind::Return
+            "let"   -> return Kind::Let
+            "if"    -> return Kind::If
+            "else"  -> return Kind::Else
+            _       -> return Kind::Ident
+        }
+    }
+}

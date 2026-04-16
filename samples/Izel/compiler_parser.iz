@@ -1,0 +1,82 @@
+// Izel Parser implementation in Izel
+// Part of Phase 7: Self-Hosting
+
+shape Parser {
+    tokens: List[Token]
+    pos: Int
+}
+
+forge parse_forge {
+    params: [p: Parser]
+    ret: AstNode
+    body: {
+        p.expect(Kind::Forge)
+        ~ name = p.expect(Kind::Ident).text()
+        ~ params = p.parse_params()
+        ~ ret_type = p.parse_type()
+        ~ body = p.parse_block()
+        return AstNode::Forge(name, params, ret_type, body)
+    }
+}
+
+forge parse_stmt {
+    params: [p: Parser]
+    ret: AstNode
+    body: {
+        ~ token = p.peek()
+        given token.kind {
+            Kind::Let   -> return p.parse_let()
+            Kind::Given -> return p.parse_given()
+            Kind::Each  -> return p.parse_each()
+            Kind::Return -> return p.parse_return()
+            _           -> return p.parse_expr_stmt()
+        }
+    }
+}
+
+forge parse_expr {
+    params: [p: Parser, min_prec: Int]
+    ret: AstNode
+    body: {
+        ~ left = p.parse_primary()
+
+        loop {
+            ~ op = p.peek()
+            ~ prec = get_precedence(op.kind)
+            if prec < min_prec { break }
+
+            p.advance()
+            ~ right = p.parse_expr(prec + 1)
+            left = AstNode::Binary(op.kind, left, right)
+        }
+
+        return left
+    }
+}
+
+forge get_precedence {
+    params: [kind: Kind]
+    ret: Int
+    body: {
+        given kind {
+            Kind::Plus | Kind::Minus -> return 10
+            Kind::Star | Kind::Slash -> return 20
+            Kind::EqEq | Kind::NotEq -> return 5
+            _ -> return 0
+        }
+    }
+}
+
+// ... helper methods for Parser ...
+forge expect {
+    params: [p: Parser, kind: Kind]
+    ret: Token
+    body: {
+        ~ t = p.peek()
+        if t.kind == kind {
+            return p.advance()
+        }
+        // error handling here
+        return t
+    }
+}
