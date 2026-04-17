@@ -1,0 +1,237 @@
+// -----------------------------------------------------------------------------
+// examples/advanced_pipeline.ltl  –  Multi-stage data pipelines  (v1.1.0)
+// -----------------------------------------------------------------------------
+//
+// Demonstrates:
+//   • Structs and impl blocks to model a data pipeline stage
+//   • Function references (higher-order programming)
+//   • Collections: map / filter / foldl / zip / chunk
+//   • String formatting helpers from stdlib/strings
+//   • Composing multiple pipeline stages with |> (pipe) style calls
+//   • Type aliases for readability
+// -----------------------------------------------------------------------------
+
+from stdlib.strings     import join, pad_left, format_int
+from stdlib.collections import map, filter, foldl, zip, chunk, sort, reverse, enumerate_list
+
+// -- Type aliases -------------------------------------------------------------
+
+pub type Row     = list    // A single CSV row (list of values)
+pub type Table   = list    // A list of rows
+pub type PipelineFn = fn   // fn(Table) -> Table
+
+// -- Pipeline stage ------------------------------------------------------------
+
+pub struct Stage {
+    name:    str
+    process: fn      // fn(Table) -> Table
+}
+
+impl Stage {
+    pub fn new(name: str, process: fn) -> Stage {
+        return Stage { name: name, process: process }
+    }
+
+    pub fn run(self, data: Table) -> Table {
+        println("  [" + self.name + "] rows in: " + str(len(data)))
+        let result = self.process(data)
+        println("  [" + self.name + "] rows out: " + str(len(result)))
+        return result
+    }
+}
+
+// -- Pipeline -----------------------------------------------------------------
+
+pub struct Pipeline {
+    stages: list
+    name:   str
+}
+
+impl Pipeline {
+    pub fn new(name: str) -> Pipeline {
+        return Pipeline { stages: [], name: name }
+    }
+
+    pub fn add_stage(self, stage: Stage) -> Pipeline {
+        return Pipeline {
+            name:   self.name,
+            stages: push(self.stages, stage)
+        }
+    }
+
+    pub fn execute(self, data: Table) -> Table {
+        println("\nPipeline: " + self.name)
+        println("-------------------------------------")
+        let current = data
+        let i = 0
+        while i < len(self.stages) {
+            current = self.stages[i].run(current)
+            i = i + 1
+        }
+        println("-------------------------------------")
+        return current
+    }
+}
+
+// -- Stage implementations -----------------------------------------------------
+
+// Filter rows where column `col` (index) is > threshold.
+fn make_filter_gt(col: int, threshold: any) -> fn {
+    fn stage_fn(data: Table) -> Table {
+        let result = []
+        let i = 0
+        while i < len(data) {
+            let row = data[i]
+            if len(row) > col and row[col] > threshold {
+                result = push(result, row)
+            }
+            i = i + 1
+        }
+        return result
+    }
+    return stage_fn
+}
+
+// Adds a derived column: the product of col_a and col_b at the end of each row.
+fn make_add_product(col_a: int, col_b: int) -> fn {
+    fn stage_fn(data: Table) -> Table {
+        let result = []
+        let i = 0
+        while i < len(data) {
+            let row = data[i]
+            let product = row[col_a] * row[col_b]
+            result = push(result, push(row, product))
+            i = i + 1
+        }
+        return result
+    }
+    return stage_fn
+}
+
+// Sorts the table ascending by the given column index.
+fn make_sort_by_col(col: int) -> fn {
+    fn stage_fn(data: Table) -> Table {
+        // Insertion sort on rows
+        let result = list_copy(data)
+        let n = len(result)
+        let i = 1
+        while i < n {
+            let key = result[i]
+            let j   = i - 1
+            while j >= 0 and result[j][col] > key[col] {
+                result = list_set(result, j + 1, result[j])
+                j = j - 1
+            }
+            result = list_set(result, j + 1, key)
+            i = i + 1
+        }
+        return result
+    }
+    return stage_fn
+}
+
+// Keeps only the top-N rows.
+fn make_top_n(n: int) -> fn {
+    fn stage_fn(data: Table) -> Table {
+        let end = n
+        if end > len(data) { end = len(data) }
+        return slice_list(data, 0, end)
+    }
+    return stage_fn
+}
+
+// -- Pretty-print a table ------------------------------------------------------
+
+fn print_table(headers: list, data: Table) {
+    // Header row
+    let header_line = join(map(headers, fn(h: str) -> str { pad_left(h, 12, " ") }), " | ")
+    println(header_line)
+    println(repeat_str("-", len(header_line)))
+    // Data rows
+    let i = 0
+    while i < len(data) {
+        let row = data[i]
+        let cells = []
+        let j = 0
+        while j < len(row) {
+            cells = push(cells, pad_left(str(row[j]), 12, " "))
+            j = j + 1
+        }
+        println(join(cells, " | "))
+        i = i + 1
+    }
+}
+
+// -- Sales analysis pipeline ---------------------------------------------------
+//
+// Sample dataset: [product_id, units_sold, unit_price]
+
+fn build_sales_data() -> Table {
+    return [
+        [1001, 120,  9],
+        [1002,   5, 99],
+        [1003, 300,  3],
+        [1004,  50, 25],
+        [1005,   0, 15],
+        [1006, 200,  7],
+        [1007,  80, 40],
+        [1008,  15, 60],
+        [1009, 450,  2],
+        [1010,  10, 88]
+    ]
+}
+
+fn main() {
+    let raw = build_sales_data()
+
+    println("=== Raw Sales Data ===")
+    print_table(["product_id", "units_sold", "unit_price"], raw)
+
+    // Build the pipeline
+    let pipeline = Pipeline.new("Sales Analysis")
+        |> add_stage(Stage.new("filter:units>0",    make_filter_gt(1, 0)))
+        |> add_stage(Stage.new("add:revenue",       make_add_product(1, 2)))
+        |> add_stage(Stage.new("filter:revenue>500", make_filter_gt(3, 500)))
+        |> add_stage(Stage.new("sort:revenue_desc", fn(t: Table) -> Table {
+                                                        return reverse(make_sort_by_col(3)(t))
+                                                    }))
+        |> add_stage(Stage.new("top:5",             make_top_n(5)))
+
+    let result = pipeline.execute(raw)
+
+    println("\n=== Top Revenue Products ===")
+    print_table(["product_id", "units_sold", "unit_price", "revenue"], result)
+
+    // Aggregate stats using foldl
+    let total_revenue = foldl(result, 0, fn(acc: int, row: Row) -> int {
+        return acc + row[3]
+    })
+    println("\nTotal revenue (top 5): " + str(total_revenue))
+
+    // Average units sold
+    let total_units = foldl(result, 0, fn(acc: int, row: Row) -> int {
+        return acc + row[1]
+    })
+    let avg_units = total_units / len(result)
+    println("Average units sold:    " + str(avg_units))
+
+    // Chunk into batches for downstream processing
+    let batches = chunk(result, 2)
+    println("\nBatches:")
+    let i = 0
+    while i < len(batches) {
+        let batch = batches[i]
+        let ids = []
+        let j = 0
+        while j < len(batch) {
+            ids = push(ids, str(batch[j][0]))
+            j = j + 1
+        }
+        println("  Batch " + str(i + 1) + ": [" + join(ids, ", ") + "]")
+        i = i + 1
+    }
+
+    println("\nAll done!")
+}
+
+main()

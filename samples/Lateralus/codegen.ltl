@@ -1,0 +1,100 @@
+// =======================================================================
+// LATERALUS Self-Hosting Bootstrap — Code Generator (Identity Transform)
+// Translates LATERALUS AST back to LATERALUS source code
+//
+// This is the third stage of the self-hosting compiler:
+//   v2_lexer.ltl → v2_parser.ltl → v2_codegen.ltl
+//
+// Generates LATERALUS output (identity transform / pretty-printer).
+// See v2_ir_codegen.ltl for the IR generation backend.
+// =======================================================================
+
+// --- Code Generation Context -----------------------------------------
+
+struct CodeGenContext {
+    output: str,
+    indent_level: int,
+    indent_str: str,
+}
+
+fn new_codegen() -> CodeGenContext {
+    return CodeGenContext {
+        output: "",
+        indent_level: 0,
+        indent_str: "    ",
+    }
+}
+
+fn cg_emit(ctx: CodeGenContext, text: str) {
+    ctx.output = ctx.output + text
+}
+
+fn cg_emit_indent(ctx: CodeGenContext) {
+    for i in range(ctx.indent_level) {
+        cg_emit(ctx, ctx.indent_str)
+    }
+}
+
+fn cg_emit_line(ctx: CodeGenContext, text: str) {
+    cg_emit_indent(ctx)
+    cg_emit(ctx, text + "\n")
+}
+
+fn indent(ctx: CodeGenContext) {
+    ctx.indent_level = ctx.indent_level + 1
+}
+
+fn dedent(ctx: CodeGenContext) {
+    ctx.indent_level = ctx.indent_level - 1
+}
+
+// --- Expression Generation -------------------------------------------
+
+fn gen_expression(ctx: CodeGenContext, node: ASTNode) -> str {
+    match node.kind {
+        "INT_LIT" => { return node.value },
+        "FLOAT_LIT" => { return node.value },
+        "STRING_LIT" => { return "\"" + node.value + "\"" },
+        "BOOL_LIT" => { return node.value },
+        "NONE_LIT" => { return "none" },
+
+        "IDENT_EXPR" => { return node.value },
+
+        "BINARY_EXPR" => {
+            let left = gen_expression(ctx, node.children[0])
+            let right = gen_expression(ctx, node.children[1])
+            return left + " " + node.value + " " + right
+        },
+
+        "UNARY_EXPR" => {
+            let operand = gen_expression(ctx, node.children[0])
+            if node.value == "not" {
+                return "not " + operand
+            }
+            return node.value + operand
+        },
+
+        "CALL_EXPR" => {
+            let args = []
+            for child in node.children {
+                args = args + [gen_expression(ctx, child)]
+            }
+            return node.value + "(" + join(args, ", ") + ")"
+        },
+
+        "PIPE_EXPR" => {
+            let left = gen_expression(ctx, node.children[0])
+            let right = gen_expression(ctx, node.children[1])
+            return left + " " + node.value + " " + right
+        },
+
+        "LIST_LIT" => {
+            let items = []
+            for child in node.children {
+                items = items + [gen_expression(ctx, child)]
+            }
+            return "[" + join(items, ", ") + "]"
+        },
+
+        _ => {
+            return "/* unknown: " + node.kind + " */"
