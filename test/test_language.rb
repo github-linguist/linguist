@@ -215,9 +215,12 @@ class TestLanguage < Minitest::Test
       "python2" => "Python",
       "python3" => "Python",
       "sbcl" => "Common Lisp",
-      "sclang" => "SuperCollider"
+      "sclang" => "SuperCollider",
+      "node" => ["JavaScript", "TypeScript"],
+      "nodejs" => ["JavaScript", "TypeScript"],
     }.each do |interpreter, language|
-      assert_equal [Language[language]], Language.find_by_interpreter(interpreter)
+      languages = Array(language).map { |lang| Language[lang] }
+      assert_equal languages, Language.find_by_interpreter(interpreter)
     end
 
     assert_equal [], Language.find_by_interpreter(nil)

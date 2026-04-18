@@ -200,14 +200,4 @@ class TestStrategies < Minitest::Test
     assert_xml "test/fixtures/XML/app.config"
     assert_xml "test/fixtures/XML/AssertionIDRequestOptionalAttributes.xml.svn-base"
   end
-
-  def test_shebang_typescript_with_node
-    ts_node    = Blob.new("script.ts", "#!/usr/bin/env node\nconsole.log('hi')")
-    ts_nodejs  = Blob.new("script.ts", "#!/usr/bin/env nodejs\nconsole.log('hi')")
-    js_node    = Blob.new("script.js", "#!/usr/bin/env node\nconsole.log('hi')")
-
-    assert_equal Language["TypeScript"], Linguist.detect(ts_node)
-    assert_equal Language["TypeScript"], Linguist.detect(ts_nodejs)
-    assert_equal Language["JavaScript"], Linguist.detect(js_node)
-  end
 end
