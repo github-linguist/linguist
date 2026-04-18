@@ -587,7 +587,7 @@ module Linguist
     #
     # Returns true or false.
     def mise_lock?
-      !!name.match(/(?:^|\/)mise(?:\.local)?\.lock$/)
+      !!name.match(/(?:^|\/)mise(?:\.[^\/]+)?\.lock$/)
     end
 
     # Is the blob a VCR Cassette file?
