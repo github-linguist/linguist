@@ -1,0 +1,37 @@
+(ns examples\data-pipeline)
+
+;; Compose transformations over a collection with threading and higher-order helpers.
+
+(def tasks
+  [{:title "Write spec" :owner "Ava" :estimate 3 :status :todo}
+   {:title "Draft pitch" :owner "Lee" :estimate 2 :status :in-progress}
+   {:title "Review pull request" :owner "Ava" :estimate 1 :status :in-progress}
+   {:title "Record demo" :owner "Lee" :estimate 5 :status :todo}
+   {:title "Ship newsletter" :owner "Kai" :estimate 2 :status :done}
+   {:title "Optimize query" :owner "Ava" :estimate 8 :status :in-progress}])
+
+(defn total-estimate [items]
+  (reduce + 0 (map (fn [task] (get task :estimate)) items)))
+
+(defn focus-list [items]
+  (->> items
+       (filter (fn [task] (not= :done (get task :status))))
+       (sort-by (fn [task] (get task :estimate)))
+       (map (fn [task] (get task :title)))
+       (take 2)))
+
+(defn owner-summary [items]
+  (let [by-owner (group-by (fn [task] (get task :owner)) items)]
+    (for [[owner owner-tasks] :pairs by-owner]
+      {:owner owner
+       :open-focus (focus-list owner-tasks)
+       :total-estimate (total-estimate owner-tasks)})))
+
+(defn main []
+  (println "Team snapshot:")
+  (for [summary :in (owner-summary tasks)]
+    (println "-" (get summary :owner)
+             "has" (get summary :total-estimate) "points scheduled"
+             "with focus on" (get summary :open-focus))))
+
+(main)
