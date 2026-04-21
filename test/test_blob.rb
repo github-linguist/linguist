@@ -275,6 +275,7 @@ class TestBlob < Minitest::Test
   end
 
   def test_language
+    assert_blob_language "samples/Rail/hello.rr", "Rail"
     allowed_failures = {
       "#{samples_path}/C/rpc.h" => ["C", "C++"],
     }
