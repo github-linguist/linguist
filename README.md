@@ -9,8 +9,11 @@ This library is used on GitHub.com to detect blob languages, ignore binary or ve
 ## Documentation
 
 - [How Linguist works](/docs/how-linguist-works.md)
+
 - [Change Linguist's behaviour with overrides](/docs/overrides.md)
+
 - [Troubleshooting](/docs/troubleshooting.md)
+
 - [Contributing guidelines](CONTRIBUTING.md)
 
 ## Installation
@@ -18,6 +21,7 @@ This library is used on GitHub.com to detect blob languages, ignore binary or ve
 Install the gem:
 
 ```bash
+#!/usr/bin/env bash
 gem install github-linguist
 ```
 
@@ -27,28 +31,37 @@ Linguist is a Ruby library so you will need a recent version of Ruby installed.
 There are known problems with the macOS/Xcode supplied version of Ruby that causes problems installing some of the dependencies.
 Accordingly, we highly recommend you install a version of Ruby using Homebrew, `rbenv`, `rvm`, `ruby-build`, `asdf` or other packaging system, before attempting to install Linguist and the dependencies.
 
-Linguist uses [`charlock_holmes`](https://github.com/brianmario/charlock_holmes) for character encoding and [`rugged`](https://github.com/libgit2/rugged) for libgit2 bindings for Ruby.
-These components have their own dependencies.
+Linguist uses [`charlock_holmes`](https://github.com/brianmario/charlock_holmes) for character encoding and [`rugged`](https://github.com/libgit2/rugged) for `libgit2` bindings for Ruby.
+These components have their own dependencies:
 
-1. charlock_holmes
-    * cmake
-    * pkg-config
+1. `charlock_holmes`
+
+    * `cmake`
+
+    * `pkg-config`
+
     * [ICU](http://site.icu-project.org/)
-    * [zlib](https://zlib.net/)
-2. rugged
-    * [libcurl](https://curl.haxx.se/libcurl/)
+
+    * [`zlib`](https://zlib.net/)
+
+3. `rugged`
+
+    * [`libcurl`](https://curl.haxx.se/libcurl/)
+
     * [OpenSSL](https://www.openssl.org)
 
 You may need to install missing dependencies before you can install Linguist.
 For example, on macOS with [Homebrew](http://brew.sh/):
 
 ```bash
+#!/usr/bin/env bash
 brew install cmake pkg-config icu4c
 ```
 
 On Ubuntu:
 
 ```bash
+#!/usr/bin/env bash
 sudo apt-get install build-essential cmake pkg-config libicu-dev zlib1g-dev libcurl4-openssl-dev libssl-dev ruby-dev
 ```
 
@@ -72,8 +85,9 @@ project.languages      #=> { "Ruby" => 119387 }
 
 The `github-linguist` executable operates in two distinct modes:
 
-1. **[Git Repository mode](#git-repository)** - Analyzes an entire Git repository (when given a directory path or no path)
-2. **[Single file mode](#single-file)** - Analyzes a specific file (when given a file path)
+1. **[Git Repository mode](#git-repository)** – Analyzes an entire Git repository (when given a directory path or no path).
+
+2. **[Single file mode](#single-file)** – Analyzes a specific file (when given a file path).
 
 #### Git Repository
 
@@ -185,10 +199,8 @@ If a file's language is affected by `.gitattributes`, the strategy will show the
 For instance, if you had the following .gitattributes overrides in your repo:
 
 ```gitattributes
-
 *.ts linguist-language=JavaScript
 *.js linguist-language=JavaScript
-
 ```
 
 the output of Linguist would be something like this:
@@ -215,7 +227,6 @@ This option can be used in conjunction with `--breakdown` to get a full list of 
 ```console
 $ github-linguist --breakdown --json
 {"Dockerfile":{"size":1212,"percentage":"0.31","files":["Dockerfile","tools/grammars/Dockerfile"]},"Ruby":{"size":264519,"percentage":"66.84","files":["Gemfile","Rakefile","bin/git-linguist","bin/github-linguist","ext/linguist/extconf.rb","github-linguist.gemspec","lib/linguist.rb",...]}}
-
 ```
 
 NB. The `--strategies` flag has no effect, when the `--json` flag is present.
