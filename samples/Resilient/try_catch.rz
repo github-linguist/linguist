@@ -1,0 +1,44 @@
+// RES-224 (RES-387 follow-up) — structured failure handler.
+//
+// The MVP of RES-387 required every `fails` variant to propagate on
+// the caller. This example exercises the OTHER legal option:
+// handling the failure at the call site with a `try { ... } catch V
+// { ... }` block. Once every declared variant is caught, the caller
+// may have an empty `fails` list — the propagation obligation is
+// fully discharged by the handler.
+//
+// Verification points this golden covers:
+//
+//   1. The parser accepts `try { ... } catch Variant { ... }` as a
+//      statement.
+//   2. Each `catch Variant` arm subtracts that variant from the set
+//      the caller would otherwise have to declare on its signature.
+//   3. An exhaustive handler (every callee variant caught) typechecks
+//      in a caller with NO `fails` clause of its own.
+//
+// The MVP fault model does not yet inject runtime Failure values, so
+// the callee returns normally and the handler body is statically-
+// verified but runtime-unreachable. Observed program output is the
+// happy-path result.
+
+fn read_sensor(int addr)
+    requires addr >= 0
+    fails Timeout
+{
+    return addr;
+}
+
+fn caller(int addr) {
+    try {
+        let v = read_sensor(addr);
+        println(v);
+    } catch Timeout {
+        println(-1);
+    }
+}
+
+fn main() {
+    caller(42);
+}
+
+main();
