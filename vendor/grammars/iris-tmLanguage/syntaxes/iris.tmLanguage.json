@@ -1,0 +1,341 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "IRIS",
+  "scopeName": "source.iris",
+  "fileTypes": ["iris"],
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#fstrings" },
+    { "include": "#keywords" },
+    { "include": "#declarations" },
+    { "include": "#types" },
+    { "include": "#constants" },
+    { "include": "#functions" },
+    { "include": "#operators" },
+    { "include": "#numbers" },
+    { "include": "#builtins" },
+    { "include": "#identifiers" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.iris",
+          "match": "//.*$"
+        }
+      ]
+    },
+    "strings": {
+      "name": "string.quoted.double.iris",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.iris",
+          "match": "\\\\(n|t|r|\\\\|\")"
+        }
+      ]
+    },
+    "fstrings": {
+      "name": "string.interpolated.iris",
+      "begin": "f\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "meta.embedded.iris",
+          "begin": "\\{",
+          "end": "\\}",
+          "patterns": [
+            { "include": "$self" }
+          ]
+        },
+        {
+          "name": "constant.character.escape.iris",
+          "match": "\\\\(n|t|r|\\\\|\")"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.flow.iris",
+          "match": "\\b(if|else|when|for|while|loop|break|continue|return|in)\\b"
+        },
+        {
+          "name": "keyword.control.iris",
+          "match": "\\b(val|var|bring|pub)\\b"
+        },
+        {
+          "name": "keyword.declaration.iris",
+          "match": "\\b(def|record|choice|type|const|extern|trait|impl|async|await|spawn|par|where)\\b"
+        },
+        {
+          "name": "keyword.operator.iris",
+          "match": "\\b(to|and|or|not)\\b"
+        }
+      ]
+    },
+    "declarations": {
+      "patterns": [
+        {
+          "name": "meta.function.definition.iris",
+          "match": "\\b(def)\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\b",
+          "captures": {
+            "1": { "name": "keyword.declaration.iris" },
+            "2": { "name": "entity.name.function.iris" }
+          }
+        },
+        {
+          "name": "meta.record.definition.iris",
+          "match": "\\b(record|choice)\\s+([A-Z][a-zA-Z0-9_]*)\\b",
+          "captures": {
+            "1": { "name": "keyword.declaration.iris" },
+            "2": { "name": "entity.name.type.iris" }
+          }
+        },
+        {
+          "name": "meta.type.alias.iris",
+          "match": "\\b(type)\\s+([A-Z][a-zA-Z0-9_]*)\\b",
+          "captures": {
+            "1": { "name": "keyword.declaration.iris" },
+            "2": { "name": "entity.name.type.iris" }
+          }
+        },
+        {
+          "name": "meta.const.definition.iris",
+          "match": "\\b(const)\\s+([A-Z_][A-Z0-9_]*)\\b",
+          "captures": {
+            "1": { "name": "keyword.declaration.iris" },
+            "2": { "name": "entity.name.constant.iris" }
+          }
+        }
+      ]
+    },
+    "types": {
+      "patterns": [
+        {
+          "name": "support.type.primitive.iris",
+          "match": "\\b(i64|i32|i8|u8|u32|u64|usize|f64|f32|bool|str)\\b"
+        },
+        {
+          "name": "support.type.iris",
+          "match": "\\b(option|result|list|map|tensor|tuple|chan|atomic|grad|sparse|deque|bitset|mutex)\\b"
+        }
+      ]
+    },
+    "constants": {
+      "patterns": [
+        {
+          "name": "constant.language.iris",
+          "match": "\\b(true|false|none|unit)\\b"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.float.iris",
+          "match": "\\b[0-9]+\\.[0-9]+([eE][+-]?[0-9]+)?\\b"
+        },
+        {
+          "name": "constant.numeric.hex.iris",
+          "match": "\\b0x[0-9a-fA-F]+\\b"
+        },
+        {
+          "name": "constant.numeric.integer.iris",
+          "match": "\\b[0-9]+\\b"
+        }
+      ]
+    },
+    "builtins": {
+      "patterns": [
+        {
+          "comment": "Core builtins: I/O, assertions, conversions",
+          "name": "support.function.builtin.iris",
+          "match": "\\b(print|panic|assert|len|to_str|format|read_line|read_i64|read_f64|type_of)\\b"
+        },
+        {
+          "comment": "String builtins",
+          "name": "support.function.builtin.iris",
+          "match": "\\b(concat|contains|starts_with|ends_with|to_upper|to_lower|trim|repeat|split|join|find|slice|str_index|parse_i64|parse_f64|char_at|str_reverse|str_pad_left|str_pad_right|str_chars|str_bytes|str_count)\\b"
+        },
+        {
+          "comment": "Math builtins",
+          "name": "support.function.builtin.iris",
+          "match": "\\b(sqrt|abs|floor|ceil|sin|cos|tan|exp|log|log2|round|sign|pow|min|max|clamp|math_pi|math_e|math_inf|is_nan|is_inf)\\b"
+        },
+        {
+          "comment": "Bitwise builtins",
+          "name": "support.function.builtin.iris",
+          "match": "\\b(band|bor|bxor|shl|shr|bitnot)\\b"
+        },
+        {
+          "comment": "Option / Result builtins",
+          "name": "support.function.builtin.iris",
+          "match": "\\b(some|none|is_some|unwrap|ok|err|is_ok|is_err)\\b"
+        },
+        {
+          "comment": "List builtins",
+          "name": "support.function.builtin.iris",
+          "match": "\\b(list|push|pop|list_get|list_set|list_len|list_pop|list_map|list_filter|list_reduce|list_any|list_all|list_zip|list_enumerate|list_flatten|list_unique|list_reverse|list_sorted|list_sum|list_min|list_max|list_index_of|list_count|list_take|list_drop)\\b"
+        },
+        {
+          "comment": "Map builtins",
+          "name": "support.function.builtin.iris",
+          "match": "\\b(map|map_get|map_set|map_keys|map_values|map_contains)\\b"
+        },
+        {
+          "comment": "Cell builtins",
+          "name": "support.function.builtin.iris",
+          "match": "\\b(cell|cell_get|cell_set)\\b"
+        },
+        {
+          "comment": "Tensor / linear algebra builtins",
+          "name": "support.function.builtin.iris",
+          "match": "\\b(zeros|ones|fill|linspace|grad|grad_of|sparsify|densify|einsum)\\b"
+        },
+        {
+          "comment": "Concurrency builtins",
+          "name": "support.function.builtin.iris",
+          "match": "\\b(atomic|atomic_load|atomic_store|atomic_add|channel|send|recv|chan_try_recv|chan_len|select|timeout|thread_count)\\b"
+        },
+        {
+          "comment": "Deque builtins",
+          "name": "support.function.builtin.iris",
+          "match": "\\b(deque_new|deque_push_front|deque_push_back|deque_pop_front|deque_pop_back|deque_len|deque_front|deque_back)\\b"
+        },
+        {
+          "comment": "Sorted / BitSet builtins",
+          "name": "support.function.builtin.iris",
+          "match": "\\b(sorted_keys|bitset_new|bitset_set|bitset_get|bitset_count|bitset_clear)\\b"
+        },
+        {
+          "comment": "FFI builtins — C, Python, Rust",
+          "name": "support.function.builtin.iris",
+          "match": "\\b(ffi_open|ffi_call|ffi_close|ffi_call_i64|ffi_call_f64|ffi_call_str|ffi_call_void|ffi_call_args|python_eval|python_exec|python_call|python_version|rust_lib_open|rust_call_i64|rust_call_f64|rust_call_void)\\b"
+        },
+        {
+          "comment": "HTTP / JSON / Regex builtins",
+          "name": "support.function.builtin.iris",
+          "match": "\\b(http_get|http_post|http_request|http_post_json|json_stringify|regex_match|regex_find_all|regex_replace)\\b"
+        },
+        {
+          "comment": "TCP / UDP networking builtins",
+          "name": "support.function.builtin.iris",
+          "match": "\\b(tcp_connect|tcp_listen|tcp_accept|tcp_read|tcp_write|tcp_close|udp_open|udp_send|udp_recv|udp_close)\\b"
+        },
+        {
+          "comment": "Terminal / interactive input builtins",
+          "name": "support.function.builtin.iris",
+          "match": "\\b(read_key|read_password|term_clear|term_cursor|term_show_cursor|term_set_color|term_reset|term_rows|term_cols)\\b"
+        },
+        {
+          "comment": "Date / Time builtins",
+          "name": "support.function.builtin.iris",
+          "match": "\\b(datetime_now|datetime_timestamp|datetime_format)\\b"
+        },
+        {
+          "comment": "OS / System builtins",
+          "name": "support.function.builtin.iris",
+          "match": "\\b(cwd|list_dir|path_join|mkdir|remove_file|env_get|env_set|exit_code|exec_cmd|pid)\\b"
+        },
+        {
+          "comment": "Random / Hash / Crypto builtins",
+          "name": "support.function.builtin.iris",
+          "match": "\\b(random|random_range|hash|base64_encode|base64_decode|uuid|sha256|hex_encode|hex_decode)\\b"
+        },
+        {
+          "comment": "ML stdlib: linear algebra, activations, loss, metrics",
+          "name": "support.function.stdlib.iris",
+          "match": "\\b(dot|vec_add|vec_sub|vec_scale|norm|vec_mean|vec_var|vec_std|standardize|min_max_normalize|shuffle_indices|train_test_split)\\b"
+        },
+        {
+          "comment": "ML stdlib: activations and loss functions",
+          "name": "support.function.stdlib.iris",
+          "match": "\\b(sigmoid|sigmoid_deriv|relu|relu_deriv|leaky_relu|tanh_act|tanh_deriv|softmax|mse|binary_cross_entropy|cross_entropy|mae)\\b"
+        },
+        {
+          "comment": "ML stdlib: algorithms",
+          "name": "support.function.stdlib.iris",
+          "match": "\\b(linear_regression_train|linear_predict|linreg_train|linreg_predict|logreg_train|logreg_predict_prob|logreg_predict|euclidean_dist|knn_predict)\\b"
+        },
+        {
+          "comment": "ML stdlib: clustering and Bayesian",
+          "name": "support.function.stdlib.iris",
+          "match": "\\b(kmeans_init_centroids|kmeans_assign|kmeans_update|kmeans_train|gnb_train|gnb_predict|gini|majority_class)\\b"
+        },
+        {
+          "comment": "ML stdlib: optimizers and dense layer",
+          "name": "support.function.stdlib.iris",
+          "match": "\\b(sgd_update|sgd_momentum_update|adam_update|dense_forward|apply_relu|apply_sigmoid|apply_tanh|xavier_init|zero_bias)\\b"
+        },
+        {
+          "comment": "ML stdlib: metrics",
+          "name": "support.function.stdlib.iris",
+          "match": "\\b(accuracy|r2_score|confusion_matrix_binary|precision|recall|f1_score)\\b"
+        },
+        {
+          "comment": "NN stdlib: MLP",
+          "name": "support.function.stdlib.iris",
+          "match": "\\b(mlp_create|mlp_forward|mlp_backward|mlp_train_step|mlp_train|mlp_predict|mlp_predict_class|mlp_eval_loss|encode_shape|shape_n_in|shape_n_out|layer_weight_offset|layer_bias_offset)\\b"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.arithmetic.iris",
+          "match": "(\\+|-|\\*|/|%)"
+        },
+        {
+          "name": "keyword.operator.comparison.iris",
+          "match": "(==|!=|<=|>=|<|>)"
+        },
+        {
+          "name": "keyword.operator.logical.iris",
+          "match": "(&&|\\|\\||!)"
+        },
+        {
+          "name": "keyword.operator.assignment.iris",
+          "match": "="
+        },
+        {
+          "name": "keyword.operator.arrow.iris",
+          "match": "->"
+        },
+        {
+          "name": "keyword.operator.range.iris",
+          "match": "\\.\\."
+        },
+        {
+          "name": "keyword.operator.question.iris",
+          "match": "\\?"
+        }
+      ]
+    },
+    "functions": {
+      "patterns": [
+        {
+          "name": "meta.function.call.iris",
+          "match": "\\b([a-z_][a-zA-Z0-9_]*)\\s*(?=\\()",
+          "captures": {
+            "1": { "name": "entity.name.function.call.iris" }
+          }
+        }
+      ]
+    },
+    "identifiers": {
+      "patterns": [
+        {
+          "name": "variable.other.iris",
+          "match": "\\b[a-z_][a-zA-Z0-9_]*\\b"
+        },
+        {
+          "name": "entity.name.type.iris",
+          "match": "\\b[A-Z][a-zA-Z0-9_]*\\b"
+        }
+      ]
+    }
+  }
+}
