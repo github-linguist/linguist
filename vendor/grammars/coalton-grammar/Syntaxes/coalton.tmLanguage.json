@@ -1,0 +1,96 @@
+{
+  "name": "Coalton",
+  "scopeName": "source.coalton",
+  "fileTypes": ["ct"],
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#keywords" },
+    { "include": "#types" },
+    { "include": "#constants" },
+    { "include": "#operators" },
+    { "include": "#numbers" },
+    { "include": "#punctuation" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.semicolon.coalton",
+          "match": ";.*$"
+        }
+      ]
+    },
+    "strings": {
+      "name": "string.quoted.double.coalton",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.coalton",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.coalton",
+          "match": "\\b(define|define-type|define-type-alias|define-class|define-instance|define-struct|define-exception|define-resumption|coalton-toplevel|coalton|declare|fn|lambda|λ|let|let\\*|letrec|rec|match|if|cond|when|unless|and|or|for|for\\*|do|progn|return|throw|catch|resume-to|resumable|dynamic-bind|lisp|as|try-as|unwrap-as|nest|pipe|make-list|to-boolean|assert|values|the|break|continue)\\b"
+        },
+        {
+          "name": "keyword.operator.coalton",
+          "match": "\\b(->|→|=>|⇒|forall|∀|inline|noinline|likely|unlikely|specialize|unable-to-codegen|monomorphize|repr|derive)\\b"
+        }
+      ]
+    },
+    "types": {
+      "patterns": [
+        {
+          "name": "storage.type.coalton",
+          "match": "\\b(Unit|Boolean|True|False|Char|Bit|U8|U16|U32|U64|I8|I16|I32|I64|Integer|IFix|UFix|F32|F64|Single-Float|Double-Float|String|Fraction|Arrow|List|Cons|Nil|Optional|Some|None)\\b"
+        }
+      ]
+    },
+    "constants": {
+      "patterns": [
+        {
+          "name": "constant.language.coalton",
+          "match": "\\b(Unit/Unit|Boolean/True|Boolean/False|True|False)\\b"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.assignment.coalton",
+          "match": "="
+        },
+        {
+          "name": "keyword.operator.arithmetic.coalton",
+          "match": "[+\\-*/]"
+        },
+        {
+          "name": "keyword.operator.comparison.coalton",
+          "match": "(<|>|<=|>=|==|/=)"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.coalton",
+          "match": "\\b\\d+(\\.\\d+)?([eE][+-]?\\d+)?\\b"
+        }
+      ]
+    },
+    "punctuation": {
+      "patterns": [
+        {
+          "name": "punctuation.parenthesis.coalton",
+          "match": "[()\\[\\]{}]"
+        }
+      ]
+    }
+  }
+}
