@@ -28,6 +28,20 @@
 #
 ---
 disambiguations:
+  - extensions: ['.iris']
+    rules:
+      - language: IRIS
+        and:
+          - pattern: '\bdef\s+[a-zA-Z_][a-zA-Z0-9_]*\s*\('
+          - pattern:
+              - '\b(val|var|bring|record|choice|spawn)\b'
+              - '->\s*[A-Za-z_][A-Za-z0-9_<>, ]*'
+              - '\blist<[^>]+>'
+              - '\boption<[^>]+>'
+              - '\bresult<[^>]+>'
+          - negative_pattern:
+              - '^\s*#include\b'
+              - '^\s*<\?xml\b'
 - extensions: ['.1', '.2', '.3', '.4', '.5', '.6', '.7', '.8', '.9']
   rules:
   - language: Roff Manpage
