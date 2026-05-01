@@ -1,0 +1,49 @@
+/*
+ * Author: Marshall A Burns
+ * GitHub: @SchoolyB
+ */
+
+const Direction enum {
+    NORTH
+    EAST
+    SOUTH
+    WEST
+}
+
+#flags
+const Permissions enum {
+    READ
+    WRITE
+    EXECUTE
+    DELETE
+}
+
+const Status enum {
+    TODO = "todo"
+    IN_PROGRESS = "in_progress"
+    DONE = "done"
+}
+
+const Priority enum {
+    LOW
+    MEDIUM
+    HIGH
+}
+
+do main() {
+    mut current int = Direction.SOUTH
+    println("Direction.SOUTH = ${current}")
+
+    println("Permissions.READ = ${Permissions.READ}")
+    println("Permissions.WRITE = ${Permissions.WRITE}")
+    println("Permissions.EXECUTE = ${Permissions.EXECUTE}")
+    println("Permissions.DELETE = ${Permissions.DELETE}")
+
+    mut status string = Status.IN_PROGRESS
+    println("Current status: ${status}")
+
+    mut priority int = Priority.HIGH
+    if priority >= Priority.MEDIUM {
+        println("High priority task")
+    }
+}

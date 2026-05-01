@@ -1,0 +1,63 @@
+/*
+ * Author: Marshall A Burns
+ * GitHub: @SchoolyB
+ */
+
+import @math
+
+const Point struct {
+    x int
+    y int
+
+    do create(x int, y int) -> Point {
+        return Point{x: x, y: y}
+    }
+
+    do distance(a Point, b Point) -> float {
+        return math.sqrt(math.pow(float(a.x - b.x), 2) + math.pow(float(a.y - b.y), 2))
+    }
+
+    do origin() -> Point {
+        return Point{x: 0, y: 0}
+    }
+
+    private do validate(p Point) -> bool {
+        return p.x >= 0 && p.y >= 0
+    }
+
+    do is_valid(x int, y int) -> bool {
+        mut p = Point.create(x, y)
+        return Point.validate(p)
+    }
+}
+
+const Counter struct {
+    value int
+
+    do zero() -> Counter {
+        return Counter{value: 0}
+    }
+
+    do increment(c Counter) -> Counter {
+        return Counter{value: c.value + 1}
+    }
+}
+
+do main() {
+    mut p1 = Point.create(3, 4)
+    mut p2 = Point.create(0, 0)
+    mut d = Point.distance(p1, p2)
+
+    println("Distance from (3,4) to origin: ${d}")
+
+    mut o = Point.origin()
+    println("Origin: (${o.x}, ${o.y})")
+
+    println("Point(5, 10) valid: ${Point.is_valid(5, 10)}")
+    println("Point(-1, 5) valid: ${Point.is_valid(-1, 5)}")
+
+    mut c = Counter.zero()
+    c = Counter.increment(c)
+    c = Counter.increment(c)
+    println("Counter after 2 increments: ${c.value}")
+}

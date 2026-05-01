@@ -1,0 +1,78 @@
+/*
+ * Author: Marshall A Burns
+ * GitHub: @SchoolyB
+ */
+
+do main() {
+    // if/or/otherwise
+    mut val int = 15
+    mut result string = ""
+    if val < 10 {
+        result = "small"
+    } or val < 20 {
+        result = "medium"
+    } otherwise {
+        result = "large"
+    }
+    println("${val} is ${result}")
+
+    // for with range
+    mut sum int = 0
+    for i in range(0, 5) {
+        sum += i
+    }
+    println("Sum 0..4: ${sum}")
+
+    // as_long_as (while loop)
+    mut w int = 0
+    as_long_as w < 3 {
+        w += 1
+    }
+
+    // for_each over an array
+    mut items [string] = {"a", "b", "c"}
+    mut concat string = ""
+    for_each item in items {
+        concat = "${concat}${item}"
+    }
+    println("Concatenated: ${concat}")
+
+    // break
+    mut break_sum int = 0
+    for i in range(0, 10) {
+        if i == 3 {
+            break
+        }
+        break_sum += i
+    }
+    println("Sum before break: ${break_sum}")
+
+    // continue
+    mut nums [int] = {1, 2, 3, 4, 5}
+    mut skip_sum int = 0
+    for_each n in nums {
+        if n == 3 {
+            continue
+        }
+        skip_sum += n
+    }
+    println("Sum skipping 3: ${skip_sum}")
+
+    // nested loops
+    mut nested_sum int = 0
+    for i in range(0, 3) {
+        for j in range(0, 2) {
+            nested_sum += 1
+        }
+    }
+    println("Nested 3x2: ${nested_sum}")
+
+    // for with conditional
+    mut even_sum int = 0
+    for i in range(0, 6) {
+        if i % 2 == 0 {
+            even_sum += i
+        }
+    }
+    println("Even sum 0..5: ${even_sum}")
+}
