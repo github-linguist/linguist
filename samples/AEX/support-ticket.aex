@@ -1,0 +1,24 @@
+agent support_ticket v0
+
+goal "Draft a customer support reply using CRM context."
+
+use crm.lookup, ticket.read, email.draft
+deny email.send, payment.*, admin.*, secrets.read
+
+need customer_id: str
+need ticket_id: str
+
+do crm.lookup(id=customer_id) -> customer
+do ticket.read(id=ticket_id) -> ticket
+
+make reply: markdown from customer, ticket with:
+  - summarize the customer's issue
+  - acknowledge prior interactions
+  - propose the next step
+  - mark any uncertainty
+
+check reply does not include customer.internal_notes
+
+do email.draft(to=customer.email, body=reply) -> draft
+
+return draft
