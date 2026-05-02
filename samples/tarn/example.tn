@@ -1,0 +1,58 @@
+// TARN LANGUAGE SAMPLE FILE
+// Demonstrates core language features: variables, control flow, functions, and loops
+
+module main
+
+// ------------------------------------------------------------
+// FUNCTION: is_even
+// Checks if a number is even using repeated subtraction
+// Returns: 1 if even, 0 if odd
+// ------------------------------------------------------------
+proc is_even(n: u64) -> u64 {
+    let temp: u64 = n; // copy input value for processing
+
+    loop {
+        if (temp < 2) {
+            break; // stop when value is too small to subtract further
+        }
+
+        temp = temp - 2; // reduce by 2 each iteration
+    }
+
+    return temp == 0; // even if perfectly divisible by 2
+}
+
+
+// ------------------------------------------------------------
+// FUNCTION: count_evens
+// Counts how many even numbers exist from 0 to a limit
+// ------------------------------------------------------------
+proc count_evens(limit: u64) -> u64 {
+    let i: u64 = 0;       // loop counter
+    let count: u64 = 0;   // accumulator for even numbers
+
+    loop {
+        if (i == limit) {
+            break; // stop once limit is reached
+        }
+
+        if (is_even(i) == 1) {
+            count = count + 1; // increment if number is even
+        }
+
+        i = i + 1; // advance loop
+    }
+
+    return count;
+}
+
+
+// ------------------------------------------------------------
+// ENTRY POINT
+// Program starts execution here
+// ------------------------------------------------------------
+proc entry() {
+    let result: u64 = count_evens(10); // compute evens from 0..9
+
+    return result; // return final computed value
+}
