@@ -597,6 +597,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Snakemake:** [MagicStack/MagicPython](https://github.com/MagicStack/MagicPython)
 - **Solidity:** [davidhq/SublimeEthereum](https://github.com/davidhq/SublimeEthereum)
 - **Soong:** [flimberger/android-system-tools](https://github.com/flimberger/android-system-tools)
+- **Sophia:** [mradkov/vscode-sophia](https://github.com/mradkov/vscode-sophia)
 - **SourcePawn:** [Sarrus1/sourcepawn-vscode](https://github.com/Sarrus1/sourcepawn-vscode)
 - **SpiceDB Schema:** [authzed/spicedb-vscode](https://github.com/authzed/spicedb-vscode)
 - **Spline Font Database:** [Alhadis/language-fontforge](https://github.com/Alhadis/language-fontforge)
