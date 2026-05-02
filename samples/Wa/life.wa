@@ -1,0 +1,120 @@
+import (
+	"image"
+	"image/color"
+	"js/canvas"
+	"math/rand"
+	"unsafe"
+)
+
+func main {
+	println("hello life-game")
+
+	c, _ := canvas.QueryCanvas("canvas")
+	ctx, _ := c.GetContext2D()
+	ctxCanvas = ctx
+}
+
+global (
+	width  :int = 0
+	height :int = 0
+
+	randSeed :int  = 0
+	pausing  :bool = false
+
+	cells0    :*image.Gray = nil
+	cells1    :*image.Gray = nil
+	cellsRGBA :*image.RGBA = nil
+
+	ctxCanvas :canvas.Context2D
+)
+
+func LifeInit(w, h, s: int) {
+	width = w
+	height = h
+	randSeed = s
+
+	cells0 = image.NewGray(w, h)
+	cells1 = image.NewGray(w, h)
+	cellsRGBA = image.NewRGBA(w, h)
+
+	rand.Seed(i64(s))
+	for i := 0; i < width*height; i++ {
+		if (rand.Int() % 2) != 0 {
+			cells0.Pix[i] = color.Gray(1)
+		} else {
+			cells0.Pix[i] = color.Gray(0)
+		}
+	}
+}
+
+type DIR :struct {
+	x: int
+	y: int
+}
+
+global dirs = [...]DIR{
+	{-1, -1}, {0, -1}, {1, -1}, {-1, 0}, {1, 0}, {-1, 1}, {0, 1}, {1, 1},
+}
+
+func lifeEvolve {
+	for y := 0; y < height; y++ {
+		for x := 0; x < width; x++ {
+			live_count := 0
+			for i := 0; i < 8; i++ {
+				nx := (x + dirs[i].x + width) % width
+				ny := (y + dirs[i].y + height) % height
+				if cells0.Pix[ny*width+nx] != 0 {
+					live_count++
+				}
+			}
+
+			if cells0.Pix[y*width+x] != 0 {
+				switch live_count {
+				case 2, 3:
+					cells1.Pix[y*width+x] = color.Gray(1)
+				default:
+					cells1.Pix[y*width+x] = color.Gray(0)
+				}
+			} else {
+				switch live_count {
+				case 3:
+					cells1.Pix[y*width+x] = color.Gray(1)
+				default:
+					cells1.Pix[y*width+x] = color.Gray(0)
+				}
+			}
+		}
+	}
+
+	cells0, cells1 = cells1, cells0
+}
+
+func LifeStep {
+	if cellsRGBA == nil {
+		return
+	}
+
+	if !pausing {
+		lifeEvolve()
+	}
+
+	for x := 0; x < width; x++ {
+		for y := 0; y < height; y++ {
+			if cells0.Pix[y*width+x] != 0 {
+				cellsRGBA.SetRGBA(x, y, 0xFF0000FF)
+			} else {
+				cellsRGBA.SetRGBA(x, y, 0xFFFFFFFF)
+			}
+		}
+	}
+
+	ctxCanvas.PutImageData(
+		unsafe.Raw(cellsRGBA.Pix), 0, 0, 0, 0,
+		f32(width), f32(height),
+	)
+}
+
+func LifePausing {
+	println("pausing:", pausing)
+	pausing = !pausing
+}
