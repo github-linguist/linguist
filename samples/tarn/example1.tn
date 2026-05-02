@@ -1,0 +1,75 @@
+# =========================================================
+# Tarn language sample (original showcase file)
+# =========================================================
+
+module main
+
+# -------------------------
+# DATA STRUCTURE EXAMPLE
+# -------------------------
+
+state Buffer {
+    size: u64
+    used: u64
+}
+
+proc init_buffer(capacity: u64) -> Buffer {
+    let b: Buffer;
+
+    b.size = capacity;
+    b.used = 0;
+
+    return b;
+}
+
+# -------------------------
+# CONTROL FLOW EXAMPLE
+# -------------------------
+
+proc clamp_value(x: u64, max: u64) -> u64 {
+    let value: u64 = x;
+
+    loop {
+        if (value <= max) {
+            break;
+        }
+
+        value = value - 1;
+    }
+
+    return value;
+}
+
+# -------------------------
+# POINTER / MEMORY EXAMPLE
+# -------------------------
+
+proc write_to_memory() -> u64 {
+    bound {
+        let ptr: ptr<u64> = alloc(u64);
+
+        *ptr = 128;        // write raw value
+        let result: u64 = *ptr;
+
+        free(ptr);         // release memory
+
+        return result;
+    }
+
+    return 0;
+}
+
+# -------------------------
+# HIGH-LEVEL INTERFACE
+# -------------------------
+
+fn compute() {
+    let buffer = init_buffer(64);
+    let value = clamp_value(100, 50);
+
+    print(value);
+}
+
+fn main() {
+    compute();
+}
