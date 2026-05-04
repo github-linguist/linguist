@@ -1,0 +1,153 @@
+// Constant-product (XYK) DEX sample with basic pool lifecycle.
+// Pools are keyed by a caller-provided `Name` so multiple pairs can coexist.
+seiyaku IrohaSwap {
+  // Pool metadata
+  state PoolAssetA: Map<Name, AssetDefinitionId>;
+  state PoolAssetB: Map<Name, AssetDefinitionId>;
+  state PoolAccount: Map<Name, AccountId>;
+  state PoolLpAsset: Map<Name, AssetDefinitionId>;
+
+  // Pool accounting (reserves and LP supply)
+  state ReserveA: Map<Name, int>;
+  state ReserveB: Map<Name, int>;
+  state LpSupply: Map<Name, int>;
+
+  fn min(a: int, b: int) -> int {
+    if (a < b) { return a; } else { return b; }
+  }
+
+  fn ensure_pool(pool: Name) {
+    assert(contains(PoolAssetA, pool), "unknown pool");
+  }
+
+  // Create a new pool with caller-chosen LP asset and pool account.
+  #[access(read="*", write="*")]
+	  kotoage fn init_pool(pool: Name,
+	                       asset_a: AssetDefinitionId,
+	                       asset_b: AssetDefinitionId,
+	                       pool_account: AccountId,
+	                       lp_asset: AssetDefinitionId) permission(Admin) {
+    assert(asset_a != asset_b, "identical assets");
+    // Refuse re-init.
+    assert(!contains(PoolAssetA, pool), "pool exists");
+    PoolAssetA[pool] = asset_a;
+    PoolAssetB[pool] = asset_b;
+    PoolAccount[pool] = pool_account;
+    PoolLpAsset[pool] = lp_asset;
+    ReserveA[pool] = 0;
+    ReserveB[pool] = 0;
+    LpSupply[pool] = 0;
+    info("pool_initialized");
+  }
+
+  // Provide liquidity; mints LP proportional to contribution.
+  #[access(read="*", write="*")]
+	  kotoage fn deposit_liquidity(provider: AccountId,
+	                               pool: Name,
+	                               amount_a: int,
+	                               amount_b: int) permission(Admin) {
+    assert(amount_a > 0, "invalid amount_a");
+    assert(amount_b > 0, "invalid amount_b");
+    ensure_pool(pool);
+
+    let asset_a = PoolAssetA[pool];
+    let asset_b = PoolAssetB[pool];
+    let pool_account = PoolAccount[pool];
+    let lp_asset = PoolLpAsset[pool];
+
+    let reserve_a = get_or_insert_default(ReserveA, pool, 0);
+    let reserve_b = get_or_insert_default(ReserveB, pool, 0);
+    let total_lp = get_or_insert_default(LpSupply, pool, 0);
+
+    let minted = (total_lp == 0) ? isqrt(amount_a * amount_b) : min((amount_a * total_lp) / reserve_a,
+                                                                   (amount_b * total_lp) / reserve_b);
+
+    assert(minted > 0, "zero lp");
+
+    // Move tokens into the pool account.
+    transfer_asset(provider, pool_account, asset_a, amount_a);
+    transfer_asset(provider, pool_account, asset_b, amount_b);
+    // Mint LP tokens to the provider.
+    mint_asset(provider, lp_asset, minted);
+
+    ReserveA[pool] = reserve_a + amount_a;
+    ReserveB[pool] = reserve_b + amount_b;
+    LpSupply[pool] = total_lp + minted;
+  }
+
+  // Withdraw liquidity; burns LP and returns proportional reserves.
+  #[access(read="*", write="*")]
+	  kotoage fn withdraw_liquidity(provider: AccountId,
+	                                pool: Name,
+	                                lp_amount: int) permission(Admin) {
+    assert(lp_amount > 0, "invalid lp");
+    ensure_pool(pool);
+
+    let asset_a = PoolAssetA[pool];
+    let asset_b = PoolAssetB[pool];
+    let pool_account = PoolAccount[pool];
+    let lp_asset = PoolLpAsset[pool];
+
+    let reserve_a = get_or_insert_default(ReserveA, pool, 0);
+    let reserve_b = get_or_insert_default(ReserveB, pool, 0);
+    let total_lp = get_or_insert_default(LpSupply, pool, 0);
+    assert(total_lp > 0, "empty pool");
+
+    let amount_a = (lp_amount * reserve_a) / total_lp;
+    let amount_b = (lp_amount * reserve_b) / total_lp;
+    assert(amount_a > 0, "zero out a");
+    assert(amount_b > 0, "zero out b");
+
+    burn_asset(provider, lp_asset, lp_amount);
+    transfer_asset(pool_account, provider, asset_a, amount_a);
+    transfer_asset(pool_account, provider, asset_b, amount_b);
+
+    ReserveA[pool] = reserve_a - amount_a;
+    ReserveB[pool] = reserve_b - amount_b;
+    LpSupply[pool] = total_lp - lp_amount;
+  }
+
+  // Swap with 0.3% fee (997/1000).
+  #[access(read="*", write="*")]
+	  kotoage fn swap(trader: AccountId,
+	                  pool: Name,
+	                  input_asset: AssetDefinitionId,
+	                  amount_in: int,
+	                  min_output: int) -> int permission(Admin) {
+    assert(amount_in > 0, "invalid amount");
+    ensure_pool(pool);
+
+    let asset_a = PoolAssetA[pool];
+    let asset_b = PoolAssetB[pool];
+    let pool_account = PoolAccount[pool];
+
+    let reserve_a = get_or_insert_default(ReserveA, pool, 0);
+    let reserve_b = get_or_insert_default(ReserveB, pool, 0);
+
+    let is_a_in = input_asset == asset_a;
+    let is_b_in = input_asset == asset_b;
+    assert(is_a_in || is_b_in, "asset not in pool");
+
+    let reserve_in = (is_a_in) ? reserve_a : reserve_b;
+    let reserve_out = (is_a_in) ? reserve_b : reserve_a;
+
+    let effective = (amount_in * 997) / 1000;
+    let out = (reserve_out * effective) / (reserve_in + effective);
+    assert(out >= min_output, "slippage");
+    assert(out > 0, "insufficient output");
+
+    if (is_a_in) {
+      ReserveA[pool] = reserve_in + amount_in;
+      ReserveB[pool] = reserve_out - out;
+      transfer_asset(trader, pool_account, asset_a, amount_in);
+      transfer_asset(pool_account, trader, asset_b, out);
+    } else {
+      ReserveB[pool] = reserve_in + amount_in;
+      ReserveA[pool] = reserve_out - out;
+      transfer_asset(trader, pool_account, asset_b, amount_in);
+      transfer_asset(pool_account, trader, asset_a, out);
+    }
+
+    return out;
+  }
+}

@@ -1,0 +1,75 @@
+// Demonstrates the intended flow for shielded voting and unshield operations
+// using Kotodama ZK intrinsics followed by the vendor bridge to enqueue ISIs.
+//
+// These intrinsics lower to IVM syscalls with strict pointer‑ABI:
+//   - `zk_vote_verify_ballot(norito_bytes(...))` → ZK_VOTE_VERIFY_BALLOT (0x62)
+//   - `zk_verify_unshield(norito_bytes(...))` → ZK_VERIFY_UNSHIELD (0x61)
+//   - `execute_instruction(<Blob NoritoBytes InstructionBox>)` → SMARTCONTRACT_EXECUTE_INSTRUCTION (0xA0)
+//
+// Note: This sample uses string literals and inline builders to construct
+// Blob/NoritoBytes pointers for illustration. Real clients should prepare
+// proper Norito TLVs (envelopes and InstructionBox bytes) and may preload them
+// into INPUT.
+seiyaku ZkVoteAndUnshield {
+  meta {
+    abi_version: 1,
+    features: ["zk"],
+    max_cycles: 0,
+  }
+
+  // Verify a ballot proof, then enqueue a prebuilt SubmitBallot instruction via the vendor bridge.
+  #[access(read="*", write="*")]
+  fn verify_and_submit_ballot(proof_env: Blob, submit: Blob) {
+    // 1) Verify the ballot using ZK_VOTE_VERIFY_BALLOT.
+    //    `proof_env` must be a Norito-encoded OpenVerifyEnvelope in a NoritoBytes TLV.
+    zk_vote_verify_ballot(proof_env);
+
+    // 2) Enqueue the prebuilt SubmitBallot InstructionBox.
+    // Generic entry point: lowers to SMARTCONTRACT_EXECUTE_INSTRUCTION (0xA0)
+    execute_instruction(submit);
+  }
+
+  // Verify an unshield proof, then enqueue a prebuilt Unshield instruction via the vendor bridge.
+  #[access(read="*", write="*")]
+  fn verify_and_unshield(proof_env: Blob, unshield: Blob) {
+    // 1) Verify the unshield using ZK_VERIFY_UNSHIELD (0x61).
+    zk_verify_unshield(proof_env);
+
+    // 2) Enqueue the prebuilt Unshield instruction.
+    execute_instruction(unshield);
+  }
+
+  // Optional demo entrypoint: verifies and enqueues both operations using literal data.
+  #[access(read="*", write="*")]
+  kotoage fn demo() {
+    // Mock envelope bytes (opaque here); in practice, pass a Norito-encoded OpenVerifyEnvelope.
+    let env_ballot = norito_bytes("ENV-BALLOT");
+    let env_unshield = norito_bytes("ENV-UNSHIELD");
+    let nullifier = blob!("0123456789abcdef0123456789abcdef");
+    let proof = blob!("proof-bytes");
+    let vk = blob!("vk-bytes");
+
+    // Inline builders require literal inputs; for runtime data, prebuild
+    // the Norito InstructionBox and pass it as a Blob/NoritoBytes pointer.
+    let submit = build_submit_ballot_inline(
+      "election-1",
+      blob!("ciphertext"),
+      nullifier,
+      "halo2/ipa",
+      proof,
+      vk
+    );
+    verify_and_submit_ballot(env_ballot, submit);
+
+    let unshield = build_unshield_inline(
+      asset_definition!("62Fk4FPcMuLvW5QjDGNF2a4jAmjM"),
+      authority(),
+      1,
+      nullifier,
+      "halo2/ipa",
+      proof,
+      vk
+    );
+    verify_and_unshield(env_unshield, unshield);
+  }
+}
