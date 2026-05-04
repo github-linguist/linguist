@@ -1,0 +1,33 @@
+(ns examples\macro-playground)
+
+;; Use a macro to build a declarative DSL for milestone planning.
+
+(defmacro timeline [& stages]
+  (let [ordered (map-indexed (fn [idx stage]
+                               `(assoc ~stage :order ~(inc idx)))
+                             stages)]
+    `(vector ~@ordered)))
+
+(def launch-plan
+  (timeline
+   {:title "Explore idea" :owner "Product" :duration-weeks 1}
+   {:title "Build slice" :owner "Engineering" :duration-weeks 3}
+   {:title "Invite beta" :owner "Growth" :duration-weeks 2}))
+
+(defn describe-stage [stage]
+  (let [duration (get stage :duration-weeks)]
+    (str (get stage :order) ". " (get stage :title)
+         " – " (get stage :owner)
+         (when duration (str " (" duration " weeks)")))))
+
+(defn total-duration [stages]
+  (reduce + 0
+          (map (fn [stage] (or (get stage :duration-weeks) 0)) stages)))
+
+(defn main []
+  (println "Macro-generated launch plan:")
+  (for [stage :in launch-plan]
+    (println " •" (describe-stage stage)))
+  (println "Total duration:" (total-duration launch-plan) "weeks"))
+
+(main)

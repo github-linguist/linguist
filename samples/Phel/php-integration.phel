@@ -1,0 +1,46 @@
+(ns examples\php-integration
+  (:use DateInterval DateTimeImmutable DateTimeZone)
+  (:require phel\json :as json))
+
+(def workshop-blocks
+  [{:title "Welcome coffee" :length "PT30M"}
+   {:title "Keynote" :length "PT45M"}
+   {:title "Hands-on lab" :length "PT90M"}
+   {:title "Panel Q&A" :length "PT40M"}])
+
+(defn schedule-blocks [start blocks]
+  (let [result
+        (for [block :in blocks
+              :reduce [acc {:cursor start :entries []}]]
+          (let [cursor (get acc :cursor)
+                interval (php/new DateInterval (get block :length))
+                finish (php/-> cursor (add interval))
+                entry {:title (get block :title)
+                       :start (php/-> cursor (format "H:i"))
+                       :end (php/-> finish (format "H:i"))
+                       :length (get block :length)}]
+            {:cursor finish
+             :entries (conj (get acc :entries) entry)}))]
+    (get result :entries)))
+
+(defn iso [datetime]
+  (php/-> datetime (format "c")))
+
+(defn main []
+  (let [timezone (php/new DateTimeZone "Europe/Berlin")
+        start (php/new DateTimeImmutable "2024-06-01 09:00" timezone)
+        plan (schedule-blocks start workshop-blocks)
+        payload {:timezone (php/-> timezone (getName))
+                 :starts (iso start)
+                 :sessions plan}]
+    (println "Workshop agenda (" (get payload :timezone) "):")
+    (for [session :in plan]
+      (println (php/sprintf "%s-%s %s"
+                            (get session :start)
+                            (get session :end)
+                            (get session :title))))
+    (println)
+    (println "JSON hand-off for PHP:")
+    (println (json/encode payload {:flags php/JSON_PRETTY_PRINT :depth 256}))))
+
+(main)
