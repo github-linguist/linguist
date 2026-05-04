@@ -121,7 +121,8 @@ module Linguist
       generated_pascal_tlb? ||
       generated_sorbet_rbi? ||
       generated_mysql_view_definition_format? ||
-      generated_sqlx_query?
+      generated_sqlx_query? ||
+      mise_lock?
     end
 
     # Internal: Is the blob an Xcode file?
@@ -928,6 +929,13 @@ module Linguist
     # Returns true or false.
     def htmlcov?
       !!name.match(/(?:^|\/)htmlcov\//)
+    end
+
+    # Internal: Is the blob a generated mise.lock?
+    #
+    # Returns true or false.
+    def mise_lock?
+      !!name.match(/mise\.lock/)
     end
 
     # Internal: Extract a Hash of name/content pairs from an HTML <meta> tag

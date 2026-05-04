@@ -99,6 +99,9 @@ class TestGenerated < Minitest::Test
     # Bun lockfile
     generated_sample_without_loading_data("JSON/filenames/bun.lock")
 
+    # mise lockfile
+    generated_sample_without_loading_data("TOML/filenames/mise.lock")
+
     # Yarn Plug'n'Play file
     generated_sample_without_loading_data(".pnp.js")
     generated_sample_without_loading_data(".pnp.cjs")
