@@ -1,0 +1,61 @@
+{{!-- Sline injection example: HTML / JSON / Script / Style --}}
+{{!-- Written for the GitHub Linguist PR. MIT License. --}}
+
+<div
+  {{ settings.color_scheme.id }}
+
+  class="{{ settings.color_scheme.id }}"
+
+  data-options="{{settings.spacing | class_list()}}"
+
+  {{#if settings.article_card_style == "card"}}article-card-border-shadow{{/if}}
+>
+
+  {{ product.title }}
+
+</div>
+
+<script type="application/ld+json" {{{settings.test}}} {{#if true}}data-test="123"{{/if}}>
+  {
+    "@type": "Product",
+
+    "name": "{{product.title}}",
+
+    "url": "{{{request.origin | append(product.url)}}}",
+
+    {{#if seo_media}}
+      "image": [
+        "{{{seo_media.preview_image.src}}}"
+      ],
+    {{/if}}
+
+    "description": {{{product.description | strip_html() | json()}}}
+  }
+</script>
+
+<script {{settings.test}}>
+
+  let foo: string = {{settings.var}};
+
+  let foo: string = "{{settings.string}}";
+
+  function test() {
+
+    var arr = [0,1,2,3,4,5,{{settings.item | append("123")}}];
+
+    console.log(arr);
+
+  }
+</script>
+
+<style {{settings.test}}>
+  .foo {
+
+    width: "{{settings.width | append("123")}}px";
+
+    height: {{settings.height | append("456")}};
+
+    {{settings.display}}: block;
+
+  }
+</style>
