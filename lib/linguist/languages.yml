@@ -3,9 +3,10 @@ Axiom:
   color: "#9842f5"
   extensions:
   - ".axm"
-  - ".axi"
-  - '.axiom-lang'
+  - ".ax"
+  - ".axiom-lang"
   tm_scope: source.axiom
   ace_mode: text
-  aliases:
-  - axiom-lang
+  heuristics:
+    disambiguator: |
+      (^|\n)\s*(import\s+ai|var\s+\w+\s*=|val\s+\w+\s*=|fun\s+\w+|for\s*\(|clrprint)
