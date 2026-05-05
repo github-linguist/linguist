@@ -1,0 +1,54 @@
+#!RUNE
+
+# Simple REST API example
+
+import "parts"
+
+@App
+name = User API
+version = 1.0
+type = REST
+swagger = true
+
+@Schema/User
+id = number
+name = string
+email = string
+
+@Route/GET /users
+run:
+    log "Fetching all users"
+    users = csv.read "users.csv"
+    respond 200 users
+
+@Route/POST /users
+expect = User
+run:
+    parse-json
+    validate body #User
+    users = csv.read "users.csv"
+    user = users.find it.id == body.id
+    if user != null:
+        respond 400 "User exists already"
+    csv.append "users.csv" body
+    respond 201 "User added"
+
+@Route/GET /users/{id}
+run:
+    log "Fetching user {id}"
+    users = csv.read "users.csv"
+    user = users.find it.id == id
+    if user == null:
+        respond 404 "User not found"
+    respond 200 user
+
+@Route/DELETE /users/{id}
+run:
+    users = csv.read "users.csv"
+    index = users.find-index it.id == id
+    if index == -1:
+        respond 404 "User not found"
+    users.remove index
+    csv.write "users.csv" users
+    respond 200 "User deleted"
+
