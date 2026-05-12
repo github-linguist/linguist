@@ -241,6 +241,12 @@ class TestGenerated < Minitest::Test
     # Maven Wrapper
     generated_sample_without_loading_data("Shell/filenames/mvnw")
     generated_sample_without_loading_data("Batchfile/filenames/mvnw.cmd")
+
+    # mise-en-place lock files
+    generated_sample_without_loading_data("TOML/filenames/mise.lock")
+    generated_sample_without_loading_data("TOML/filenames/mise.local.lock")
+    generated_sample_without_loading_data("TOML/filenames/mise.test.lock")
+    generated_sample_without_loading_data("TOML/filenames/mise.test.local.lock")
   end
 
   # We've whitelisted these files on purpose, even though they're machine-generated.
