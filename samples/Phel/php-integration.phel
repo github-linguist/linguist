@@ -1,6 +1,6 @@
-(ns examples\php-integration
+(ns examples.php-integration
   (:use DateInterval DateTimeImmutable DateTimeZone)
-  (:require phel\json :as json))
+  (:require phel.json :as json))
 
 (def workshop-blocks
   [{:title "Welcome coffee" :length "PT30M"}

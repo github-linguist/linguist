@@ -1,5 +1,5 @@
-(ns examples\html-rendering
-  (:require phel\html :as html))
+(ns examples.html-rendering
+  (:require phel.html :as html))
 
 ;; Generate HTML strings with the built-in templating helpers.
 (def sessions
@@ -26,7 +26,7 @@
        (for [session :in sessions]
          [:li
           [:time {:datetime (get session :time)} (get session :time)]
-          " — "
+          " - "
           [:strong (get session :title)]])]]
      [:section
       [:h2 "Attendees"]
