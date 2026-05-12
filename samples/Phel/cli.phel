@@ -1,0 +1,95 @@
+;; Runnable phel.cli demo: a tiny todo-list CLI.
+;;
+;;   ./bin/phel run docs/examples/12_cli.phel add "buy milk"
+;;   ./bin/phel run docs/examples/12_cli.phel list
+;;   ./bin/phel run docs/examples/12_cli.phel list --format=markdown
+;;   ./bin/phel run docs/examples/12_cli.phel done 1
+;;   ./bin/phel run docs/examples/12_cli.phel wipe
+;;
+;; Persists to /tmp/phel-todo.json, not production-grade, just a demo.
+
+(ns examples.cli
+  (:require phel.cli :as cli)
+  (:require phel.json :as json))
+
+(def store-file "/tmp/phel-todo.json")
+
+;; ----- persistence helpers ------------------------------------------------
+
+(defn- load-todos []
+  (if (php/file_exists store-file)
+    (json/decode (php/file_get_contents store-file))
+    []))
+
+(defn- save-todos [xs]
+  (php/file_put_contents store-file (json/encode xs)))
+
+;; ----- command handlers ---------------------------------------------------
+
+(defn- add-todo [ctx]
+  (let [text  (cli/arg ctx "text")
+        items (conj (load-todos) {:text text :done? false})]
+    (save-todos items)
+    (cli/success ctx (str "Added: " text))))
+
+(defn- list-todos [ctx]
+  (let [items  (load-todos)
+        style  (cli/opt ctx "format")
+        rows   (for [[i item] :pairs items]
+                 [(+ i 1)
+                  (if (get item :done?) "✔" " ")
+                  (get item :text)])]
+    (if (empty? rows)
+      (cli/note ctx "No todos yet. Add one with `add`.")
+      (cli/table ctx ["#" "done" "text"] rows
+                 {:style (keyword (or style "default"))}))))
+
+(defn- done-todo [ctx]
+  (let [idx   (- (cli/arg ctx "num") 1)
+        items (load-todos)]
+    (if (or (< idx 0) (>= idx (count items)))
+      (do (cli/error ctx (str "No todo at position " (+ idx 1))) 2)
+      (do
+        (save-todos (assoc items idx (assoc (get items idx) :done? true)))
+        (cli/success ctx (str "Marked #" (+ idx 1) " done"))))))
+
+(defn- wipe-todos [ctx]
+  (when (cli/confirm ctx "Really delete all todos?" false)
+    (save-todos [])
+    (cli/success ctx "All gone.")))
+
+;; ----- application --------------------------------------------------------
+
+(def app
+  (cli/application
+    {:name     "todo"
+     :version  "0.1.0"
+     :default  "list"
+     :commands [{:name    "add"
+                 :doc     "Add a todo"
+                 :args    [{:name "text" :mode :required :doc "Item text"}]
+                 :run     add-todo}
+
+                {:name    "list"
+                 :doc     "List all todos"
+                 :opts    [{:name "format" :short "f" :mode :required
+                            :doc "Table style (:default :markdown :box)"
+                            :default "default"
+                            :complete (fn [_] ["default" "markdown" "box" "compact"])}]
+                 :run     list-todos}
+
+                {:name    "done"
+                 :doc     "Mark a todo complete"
+                 :args    [{:name "num" :mode :required :coerce :int
+                            :doc "Position (1-based)"}]
+                 :run     done-todo}
+
+                {:name    "wipe"
+                 :doc     "Delete all todos"
+                 :aliases ["clear"]
+                 :run     wipe-todos}]}))
+
+;; Pass Phel's `argv` explicitly so Symfony sees the user arguments rather
+;; than `phel run <file> ...`. `cli/argv` wraps a vector of tokens into a
+;; Symfony `ArgvInput`.
+(cli/run app (cli/argv argv))
