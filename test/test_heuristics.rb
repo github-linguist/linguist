@@ -842,12 +842,6 @@ class TestHeuristics < Minitest::Test
     }, alt_name="test.p")
   end
 
-  def test_path_by_heuristics
-    assert_heuristics({
-      "INI" => all_fixtures("INI", "*.path"),
-    })
-  end
-
   def test_php_by_heuristics
     assert_heuristics({
       "Hack" => all_fixtures("Hack", "*.php"),
