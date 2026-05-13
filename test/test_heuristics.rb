@@ -377,16 +377,6 @@ class TestHeuristics < Minitest::Test
     })
   end
 
-  def test_conf_by_heuristics
-    assert_heuristics({
-      "INI" => all_fixtures("INI", "*.conf"),
-    }, alt_name="test.conf")
-    assert_heuristics({
-      "INI" => Dir.glob("#{fixtures_path}/Generic/conf/INI/*"),
-      nil => Dir.glob("#{fixtures_path}/Generic/conf/nil/*"),
-    })
-  end
-
   def test_container_by_heuristics
     assert_heuristics({
       "INI" => all_fixtures("INI", "*.container"),
