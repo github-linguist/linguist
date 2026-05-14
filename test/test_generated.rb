@@ -247,6 +247,12 @@ class TestGenerated < Minitest::Test
     generated_sample_without_loading_data("TOML/filenames/mise.local.lock")
     generated_sample_without_loading_data("TOML/filenames/mise.test.lock")
     generated_sample_without_loading_data("TOML/filenames/mise.test.local.lock")
+
+    # Julia package manifests
+    generated_sample_without_loading_data("TOML/filenames/Manifest.toml")
+    generated_sample_without_loading_data("TOML/filenames/JuliaManifest.toml")
+    generated_sample_without_loading_data("TOML/filenames/Manifest-v1.12.toml")
+    generated_sample_without_loading_data("TOML/filenames/JuliaManifest-v1.12.toml")
   end
 
   # We've whitelisted these files on purpose, even though they're machine-generated.
