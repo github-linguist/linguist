@@ -1,0 +1,70 @@
+{
+  "name": "Zeta",
+  "scopeName": "source.zeta",
+  "fileTypes": ["z", "zeta"],
+  "patterns": [
+    { "include": "#keywords" },
+    { "include": "#types" },
+    { "include": "#strings" },
+    { "include": "#comments" },
+    { "include": "#numbers" },
+    { "include": "#functions" },
+    { "include": "#attributes" },
+    { "include": "#macros" },
+    { "include": "#operators" }
+  ],
+  "repository": {
+    "keywords": {
+      "patterns": [
+        {"match": "\\b(fn|let|mut|const|static|struct|enum|trait|impl|concept|use|mod|pub|crate|self|super|return|if|else|match|while|for|in|loop|break|continue|true|false|async|await|unsafe|extern|type|where|move|ref|as|dyn|abstract|virtual|override|private|protected|internal)\\b", "name": "keyword.control.zeta"},
+        {"match": "\\b(if|else|match|while|for|in|loop|break|continue|return)\\b", "name": "keyword.control.zeta"},
+        {"match": "\\b(let|mut|const|static)\\b", "name": "keyword.declaration.zeta"},
+        {"match": "\\b(u8|u16|u32|u64|u128|i8|i16|i32|i64|i128|f32|f64|bool|char|str|String|Vec|Option|Result|Box|Arc|Rc|Cell|RefCell|HashMap|HashSet|Duration|Ordering)\\b", "name": "storage.type.zeta"}
+      ]
+    },
+    "types": {
+      "patterns": [
+        {"match": "\\b[A-Z][a-zA-Z0-9]*\\b", "name": "support.class.zeta"}
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {"begin": "\"", "end": "\"", "name": "string.quoted.double.zeta", "patterns": [{"match": "\\\\[0-7]{1,3}|\\\\[\\\\\"'nrt0]", "name": "constant.character.escape.zeta"}]},
+        {"begin": "'", "end": "'", "name": "string.quoted.single.zeta"}
+      ]
+    },
+    "comments": {
+      "patterns": [
+        {"begin": "///", "end": "$", "name": "comment.line.documentation.zeta"},
+        {"begin": "//!", "end": "$", "name": "comment.line.documentation.zeta"},
+        {"begin": "//", "end": "$", "name": "comment.line.double-slash.zeta"},
+        {"begin": "/\\*", "end": "\\*/", "name": "comment.block.zeta"}
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {"match": "\\b(0x[0-9a-fA-F_]+|0o[0-7_]+|0b[01_]+|[0-9][0-9_]*([.][0-9_]*)?([eE][+-]?[0-9_]+)?)\\b", "name": "constant.numeric.zeta"}
+      ]
+    },
+    "functions": {
+      "patterns": [
+        {"match": "\\b([a-z_][a-zA-Z0-9_]*)\\s*(?=\\()", "name": "support.function.zeta"}
+      ]
+    },
+    "attributes": {
+      "patterns": [
+        {"begin": "#\\[", "end": "\\]", "name": "meta.attribute.zeta"}
+      ]
+    },
+    "macros": {
+      "patterns": [
+        {"match": "\\b([a-z_][a-zA-Z0-9_]*)\\s*!", "name": "support.function.macro.zeta"}
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {"match": "->|=>|::|\\.\\.=|\\?\\.|\\.\\.|\\|\\||&&|<<|>>|==|!=|<=|>=|\\+\\+|--|\\+=|-=|\\*=|/=|%=|&=|\\|=|\\^=", "name": "keyword.operator.zeta"}
+      ]
+    }
+  }
+}
