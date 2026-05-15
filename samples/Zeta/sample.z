@@ -1,0 +1,43 @@
+// Zeta language sample
+// Used for GitHub language statistics
+
+use std::collections::HashMap;
+
+pub struct Config {
+    pub name: String,
+    pub version: u32,
+    pub debug: bool,
+}
+
+impl Config {
+    pub fn new(name: String) -> Self {
+        Config { name, version: 0, debug: false }
+    }
+
+    pub fn display(&self) {
+        println!("Config: {} v{}", self.name, self.version);
+    }
+}
+
+pub enum Result<T, E> {
+    Ok(T),
+    Err(E),
+}
+
+pub fn parse_config(path: &str) -> Result<Config, String> {
+    if path.is_empty() {
+        return Result::Err("path cannot be empty".to_string());
+    }
+
+    let mut map = HashMap::new();
+    map.insert("key", 42);
+
+    match map.get("key") {
+        Some(val) => Result::Ok(Config::new("test".to_string())),
+        None => Result::Err("not found".to_string()),
+    }
+}
+
+pub const fn add(a: i32, b: i32) -> i32 {
+    a + b
+}
