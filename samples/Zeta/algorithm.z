@@ -1,0 +1,109 @@
+// src/algorithm.z — Algorithmic Refinement (Stepanov Elements of Programming)
+// Concept-constrained algorithms with refinement-based dispatch and structured results
+
+// === Structured Results ===
+// Algorithms return tuples for combined results
+
+// Find with found flag: (iterator, found: bool)
+fn find_with_flag[T: InputIterator](first: T, last: T, val: value_type(T)) -> (T, bool) {
+    let mut it = first;
+    while it != last {
+        if source(it) == val {
+            return (it, true);
+        }
+        it = successor(it);
+    }
+    return (last, false);
+}
+
+// Min and max in one pass: (min, max)
+fn minmax[T: TotallyOrdered](a: T, b: T) -> (T, T) {
+    if a < b {
+        return (a, b);
+    }
+    return (b, a);
+}
+
+// Range minmax: find min and max elements in range
+fn minmax_range[T: InputIterator](first: T, last: T) -> (value_type(T), value_type(T)) {
+    let mut it = successor(first);
+    let mut min_val = source(first);
+    let mut max_val = source(first);
+    while it != last {
+        let val = source(it);
+        if val < min_val {
+            min_val = val;
+        }
+        if max_val < val {
+            max_val = val;
+        }
+        it = successor(it);
+    }
+    return (min_val, max_val);
+}
+
+// === Refinement-based advance ===
+// For InputIterator/ForwardIterator: loop successor n times
+// For RandomAccessIterator: direct pointer arithmetic (O(1))
+
+// Generic advance — dispatches based on iterator_category
+fn advance_n[T](it: T, n: i64) -> T {
+    // Compile-time dispatch: if RandomAccessIterator, use + n
+    // otherwise, loop successor
+    // For now, use generic pointer arithmetic
+    return advance(it, n);
+}
+
+// === Swap Ranges ===
+
+// Swap elements in corresponding positions of two ranges
+fn swap_ranges[T: ForwardIterator, U: ForwardIterator](first: T, last: T, out: U) -> U {
+    let mut src = first;
+    let mut dst = out;
+    while src != last {
+        let tmp = source(src);
+        sink(src, source(dst));
+        sink(dst, tmp);
+        src = successor(src);
+        dst = successor(dst);
+    }
+    return dst;
+}
+
+// === Fill ===
+
+// Assign value to every element in range
+fn fill[T: ForwardIterator](first: T, last: T, val: value_type(T)) {
+    let mut it = first;
+    while it != last {
+        sink(it, val);
+        it = successor(it);
+    }
+}
+
+// === Iota ===
+
+// Assign increasing values: [n, n+1, n+2, ...]
+fn iota[T: ForwardIterator](first: T, last: T, n: value_type(T)) {
+    let mut it = first;
+    let mut cur = n;
+    while it != last {
+        sink(it, cur);
+        it = successor(it);
+        cur = cur + 1;
+    }
+}
+
+// === Partition Point ===
+
+// Find the first position where predicate is false
+fn partition_point[T: ForwardIterator](first: T, last: T, pred) -> T {
+    let mut it = first;
+    while it != last {
+        if !pred(source(it)) {
+            return it;
+        }
+        it = successor(it);
+    }
+    return last;
+}

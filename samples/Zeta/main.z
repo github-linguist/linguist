@@ -1,0 +1,158 @@
+// zeta_src/main.z
+use zeta::frontend::ast::AstNode;
+use zeta::frontend::parser::top_level::parse_zeta;
+use zeta::middle::resolver::resolver::Resolver;
+use zeta::middle::mir::mir::Mir;
+use zeta::middle::specialization::{is_cache_safe, lookup_specialization, record_specialization};
+use zeta::backend::codegen::codegen::LLVMCodegen;
+use zeta::runtime::actor::channel;
+use zeta::runtime::actor::scheduler;
+use std::collections::HashMap;
+use std::fs;
+use std::io::{self, BufRead, Write};
+
+// Ported simple utility functions from src/main.rs and src/lib.rs
+
+// From src/lib.rs: compile_and_run_zeta
+fn compile_and_run_zeta(code: &str) -> Result<i64, String> {
+    // Init runtime.
+    scheduler::init_runtime();
+    // Parse to AST.
+    let (_, asts) = parse_zeta(code).map_err(|e| format!("Parse error: {:?}", e))?;
+    // Resolve and check.
+    let mut resolver = Resolver::new();
+    for ast in &asts {
+        resolver.register(ast.clone());
+    }
+    resolver.typecheck(&asts);
+    // LLVM setup.
+    let mut codegen = LLVMCodegen::new("bench");
+    // Lower main to MIR.
+    let main_func = asts
+        .iter()
+        .find(|a| if let AstNode::FuncDef { name, .. } = a { name == "main" } else { false })
+        .ok_or("No main function".to_string())?;
+    let mir = resolver.lower_to_mir(main_func);
+    codegen.gen_mirs(&[mir]);
+    let ee = codegen.finalize_and_jit().map_err(|e| e.to_string())?;
+    // Map std_free.
+    // Mappings handled in host_llvm_jit
+    // Execute.
+    unsafe {
+        let main: extern "C" fn() -> i64 = ee.get_function("main").map_err(|_| "No main".to_string())?;
+        Ok(main())
+    }
+}
+
+// From src/main.rs: repl
+fn repl(dump_mir: bool) -> Result<(), Box<dyn std::error::Error>> {
+    let stdin = io::stdin();
+    let mut stdin_lock = stdin.lock();
+    loop {
+        print!("> ");
+        io::stdout().flush()?;
+        let mut line = String::new();
+        stdin_lock.read_line(&mut line)?;
+        let line = line.trim();
+        if line.is_empty() {
+            continue;
+        }
+        let code = format!("fn main() -> i64 {{ {} }}", line);
+        let (_, asts) = parse_zeta(&code).map_err(|e| format!("Parse error: {:?}", e))?;
+        if asts.is_empty() {
+            continue;
+        }
+        let mut resolver = Resolver::new();
+        for ast in &asts {
+            resolver.register(ast.clone());
+        }
+        let type_ok = resolver.typecheck(&asts);
+        if !type_ok {
+            println!("Typecheck failed");
+            continue;
+        }
+        let mir_map: HashMap<String, Mir> = asts
+            .iter()
+            .filter_map(|ast| {
+                if let AstNode::FuncDef { name, .. } = ast {
+                    Some((name.clone(), resolver.lower_to_mir(ast)))
+                } else {
+                    None
+                }
+            })
+            .collect();
+        if dump_mir && let Some(main_mir) = mir_map.get("main") {
+            println!("=== REPL MIR for main ===");
+            println!("{main_mir:#?}");
+        }
+        let mut codegen = LLVMCodegen::new("repl");
+        codegen.gen_mirs(&mir_map.values().cloned().collect::<Vec<_>>());
+        let ee = codegen.finalize_and_jit()?;
+        unsafe {
+            let main: extern "C" fn() -> i64 = ee.get_function("main").ok_or("No main")?;
+            let res = main();
+            println!("{}", res);
+        }
+    }
+}
+
+// Existing compile function (updated to use ported middle/backend)
+fn compile(source: String) -> i64 {
+    let (_, asts) = parse_zeta(&source).unwrap();
+    println("=== Parsed AST ===");
+    println("{:#?}", asts);
+    let mut resolver = Resolver::new();
+    let type_ok = resolver.typecheck(&asts);
+    if !type_ok {
+        println("Typecheck failed");
+        return -1;
+    }
+    let mut mono_mirs = vec![];
+    let mut mir_gen = zeta::middle::mir::gen::MirGen::new();
+    for ast in asts {
+        if let AstNode::FuncDef { .. } = ast {
+            let mir = mir_gen.lower_to_mir(&ast);
+            mono_mirs.push(mir);
+        }
+    }
+    println("=== Generated MIR ===");
+    for mir in &mono_mirs {
+        println("{:#?}", mir);
+    }
+    let mut codegen = LLVMCodegen::new("zeta_module");
+    codegen.gen_mirs(&mono_mirs);
+    let ir = codegen.finalize();
+    println("=== Generated LLVM IR ===");
+    println!("{}", ir);
+    let executor = finalize_and_jit(codegen).unwrap();
+    if let Some(main_fn) = executor.get_main() {
+        let result = main_fn();
+        println("Execution result: {}", result);
+        result as i64
+    } else {
+        println("No main function found");
+        -2
+    }
+}
+
+fn main() -> i64 {
+    let test_source = r#"
+fn main() -> i64 {
+    return 42;
+}
+"#;
+    compile(test_source.to_string())
+}
+
+// Benchmark ports; ensure no regressions.
+fn benchmark_self_compile() {
+    let start = host_datetime_now();
+    // Run self-compile logic...
+    let end = host_datetime_now();
+    let duration = end - start;
+    if duration > 14 {
+        println!("Regression: {}ms > 14ms", duration);
+    } else {
+        println!("OK: {}ms", duration);
+    }
+}

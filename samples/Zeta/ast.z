@@ -1,0 +1,170 @@
+// zeta_src/frontend/ast.z
+// Full AST definition synchronized with Rust bootstrap compiler
+// Complete for Phase 1 (v0.2.2) — all variants, fields, and doc/attrs support
+
+/// Match expression arm with pattern and body.
+#[derive(Clone, Debug, PartialEq)]
+pub struct MatchArm {
+    /// Pattern to match against
+    pattern: Box<AstNode>,
+    /// Guard expression (optional)
+    guard: Option<Box<AstNode>>,
+    /// Body expression to evaluate if pattern matches
+    body: Box<AstNode>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub enum AstNode {
+    Program(Vec<AstNode>),
+    ConceptDef {
+        name: String,
+        generics: Vec<String>,
+        methods: Vec<AstNode>,
+        doc: String,
+    },
+    ImplBlock {
+        concept: String,
+        ty: String,
+        body: Vec<AstNode>,
+        doc: String,
+    },
+    FuncDef {
+        name: String,
+        generics: Vec<String>,
+        params: Vec<(String, String)>,
+        ret: String,
+        body: Vec<AstNode>,
+        attrs: Vec<String>,
+        ret_expr: Option<Box<AstNode>>,
+        single_line: bool,
+        doc: String,
+    },
+    EnumDef {
+        name: String,
+        variants: Vec<(String, Vec<String>)>,
+        doc: String,
+    },
+    StructDef {
+        name: String,
+        fields: Vec<(String, String)>,
+        doc: String,
+    },
+    Call {
+        receiver: Option<Box<AstNode>>,
+        method: String,
+        args: Vec<AstNode>,
+        type_args: Vec<String>,
+        structural: bool,
+    },
+    PathCall {
+        path: Vec<String>,
+        method: String,
+        args: Vec<AstNode>,
+    },
+    Spawn {
+        func: String,
+        args: Vec<AstNode>,
+    },
+    Lit(i64),
+    FloatLit(f64),
+    StringLit(String),
+    FString(Vec<AstNode>),
+    Var(String),
+    Assign(Box<AstNode>, Box<AstNode>),
+    BinaryOp {
+        op: String,
+        left: Box<AstNode>,
+        right: Box<AstNode>,
+    },
+    TimingOwned {
+        ty: String,
+        inner: Box<AstNode>,
+    },
+    Defer(Box<AstNode>),
+    TryProp {
+        expr: Box<AstNode>,
+    },
+    DictLit {
+        entries: Vec<(AstNode, AstNode)>,
+    },
+    Subscript {
+        base: Box<AstNode>,
+        index: Box<AstNode>,
+    },
+    ArrayLit {
+        elem_type: String,
+        dynamic: bool,
+        elements: Vec<AstNode>,
+    },
+    Return(Box<AstNode>),
+    If {
+        cond: Box<AstNode>,
+        then_: Vec<AstNode>,
+        else_: Vec<AstNode>,
+    },
+    ExprStmt {
+        expr: Box<AstNode>,
+    },
+    Let {
+        name: String,
+        ty: Option<String>,
+        value: Box<AstNode>,
+    },
+    Match {
+        scrutinee: Box<AstNode>,
+        arms: Vec<MatchArm>,
+    },
+    // ML-specific AST nodes
+    TensorType {
+        elem_type: String,
+        shape: Vec<AstNode>, // Can be integer literals or dynamic dimensions (?)
+        requires_grad: bool,
+    },
+    TensorLit {
+        data: Vec<AstNode>, // Nested array literals
+        shape: Vec<i64>,
+        dtype: String,
+    },
+    TensorOp {
+        op: String, // "add", "matmul", "conv", "relu", etc.
+        inputs: Vec<AstNode>,
+        attrs: Vec<(String, AstNode)>, // Operation attributes
+    },
+    DiffFuncDef {
+        name: String,
+        generics: Vec<String>,
+        params: Vec<(String, String)>,
+        ret: String,
+        body: Vec<AstNode>,
+        attrs: Vec<String>,
+        doc: String,
+    },
+    LayerDef {
+        name: String,
+        params: Vec<(String, String)>,
+        fields: Vec<(String, String)>,
+        forward: Box<AstNode>, // Function definition for forward pass
+        doc: String,
+    },
+    ModelDef {
+        name: String,
+        layers: Vec<AstNode>,
+        forward: Box<AstNode>,
+        doc: String,
+    },
+    TrainStmt {
+        model: Box<AstNode>,
+        config: Vec<(String, AstNode)>,
+        body: Vec<AstNode>,
+    },
+    GradientCall {
+        func: Box<AstNode>,
+        wrt: Vec<AstNode>,
+    },
+    BackwardStmt {
+        loss: Box<AstNode>,
+    },
+    StepStmt {
+        optimizer: Box<AstNode>,
+    },
+}
