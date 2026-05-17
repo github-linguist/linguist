@@ -1,0 +1,340 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinusso/TextMate-grammar/master/schema.json",
+  "name": "Zeta",
+  "scopeName": "source.zeta",
+  "fileTypes": ["z", "zeta"],
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#preprocessor"
+    },
+    {
+      "include": "#attributes"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#characters"
+    },
+    {
+      "include": "#raw_strings"
+    },
+    {
+      "include": "#numbers"
+    },
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#types"
+    },
+    {
+      "include": "#function_declaration"
+    },
+    {
+      "include": "#variable_declaration"
+    },
+    {
+      "include": "#module_declaration"
+    },
+    {
+      "include": "#operators"
+    },
+    {
+      "include": "#punctuation"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.block.zeta",
+          "begin": "/\\*",
+          "end": "\\*/"
+        },
+        {
+          "name": "comment.line.double-slash.zeta",
+          "begin": "//",
+          "end": "$"
+        },
+        {
+          "name": "comment.block.documentation.zeta",
+          "begin": "///",
+          "end": "$"
+        }
+      ]
+    },
+    "preprocessor": {
+      "patterns": [
+        {
+          "name": "keyword.control.preprocessor.zeta",
+          "match": "#\\s*(if|else|endif|error|warning)\\b"
+        }
+      ]
+    },
+    "attributes": {
+      "patterns": [
+        {
+          "name": "meta.attribute.zeta",
+          "begin": "#\\[",
+          "end": "\\]",
+          "patterns": [
+            {
+              "include": "#strings"
+            },
+            {
+              "include": "#numbers"
+            }
+          ]
+        }
+      ]
+    },
+    "strings": {
+      "name": "string.quoted.double.zeta",
+      "begin": "\"",
+      "end": "\"",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.begin.zeta"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.end.zeta"
+        }
+      },
+      "patterns": [
+        {
+          "name": "constant.character.escape.zeta",
+          "match": "\\\\[0nrt\"\\\\]"
+        },
+        {
+          "name": "constant.character.escape.unicode.zeta",
+          "match": "\\\\x[0-9a-fA-F]{2}|\\\\u[0-9a-fA-F]{4}|\\\\U[0-9a-fA-F]{8}"
+        }
+      ]
+    },
+    "characters": {
+      "name": "string.quoted.single.zeta",
+      "begin": "'",
+      "end": "'",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.begin.zeta"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.end.zeta"
+        }
+      },
+      "patterns": [
+        {
+          "name": "constant.character.escape.zeta",
+          "match": "\\\\[0nrt'\"\\\\]"
+        }
+      ]
+    },
+    "raw_strings": {
+      "name": "string.quoted.raw.zeta",
+      "begin": "r#\"",
+      "end": "\"#",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.begin.zeta"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.end.zeta"
+        }
+      }
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.integer.binary.zeta",
+          "match": "\\b0b[01](_?[01])*[iI]?(8|16|32|64|size)?\\b"
+        },
+        {
+          "name": "constant.numeric.integer.hexadecimal.zeta",
+          "match": "\\b0x[0-9a-fA-F](_?[0-9a-fA-F])*[iI]?(8|16|32|64|size)?\\b"
+        },
+        {
+          "name": "constant.numeric.float.zeta",
+          "match": "\\b[0-9](_?[0-9])*\\.[0-9](_?[0-9])*([eE][+-]?[0-9]+)?[fF]?(32|64)?\\b"
+        },
+        {
+          "name": "constant.numeric.integer.zeta",
+          "match": "\\b[0-9](_?[0-9])*[iI]?(8|16|32|64|size)?\\b"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.zeta",
+          "match": "\\b(if|else|while|for|match|in|return|break|continue|then|yield|defer|async|await|try)\\b"
+        },
+        {
+          "name": "keyword.declaration.zeta",
+          "match": "\\b(fn|let|mut|const|static|struct|enum|impl|trait|type|union|mod|use|pub|super|crate|self|where|extern|abstract|override|virtual|macro|package|import|export|alias|with)\\b"
+        },
+        {
+          "name": "storage.type.zeta",
+          "match": "\\b(ref|move|as)\\b"
+        },
+        {
+          "name": "constant.language.zeta",
+          "match": "\\b(true|false)\\b"
+        },
+        {
+          "name": "keyword.other.zeta",
+          "match": "\\b(unsafe|default|override|pure|inline|no_mangle)\\b"
+        }
+      ]
+    },
+    "types": {
+      "patterns": [
+        {
+          "name": "storage.type.primitive.zeta",
+          "match": "\\b(i8|i16|i32|i64|u8|u16|u32|u64|f32|f64|bool|string|char|void|never|usize|isize)\\b"
+        }
+      ]
+    },
+    "function_declaration": {
+      "name": "meta.function.zeta",
+      "begin": "\\b(fn)\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.declaration.zeta"
+        },
+        "2": {
+          "name": "entity.name.function.zeta"
+        }
+      },
+      "end": "(?=\\{|;)",
+      "patterns": [
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#types"
+        },
+        {
+          "include": "#keywords"
+        },
+        {
+          "include": "#numbers"
+        },
+        {
+          "include": "#strings"
+        },
+        {
+          "include": "#operators"
+        }
+      ]
+    },
+    "variable_declaration": {
+      "name": "meta.variable.declaration.zeta",
+      "begin": "\\b(let|mut|const|static)\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.declaration.zeta"
+        },
+        "2": {
+          "name": "variable.name.zeta"
+        }
+      },
+      "end": "(?=;|$|=|\\{|\\})",
+      "patterns": [
+        {
+          "include": "#types"
+        },
+        {
+          "include": "#comments"
+        }
+      ]
+    },
+    "module_declaration": {
+      "name": "meta.module.zeta",
+      "begin": "\\b(package|module|use|import|export)\\b",
+      "end": ";",
+      "patterns": [
+        {
+          "include": "#punctuation"
+        },
+        {
+          "include": "#comments"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.assignment.zeta",
+          "match": "="
+        },
+        {
+          "name": "keyword.operator.comparison.zeta",
+          "match": "==|!=|<=|>=|<|>"
+        },
+        {
+          "name": "keyword.operator.arithmetic.zeta",
+          "match": "\\+|-|\\*|/|%"
+        },
+        {
+          "name": "keyword.operator.logical.zeta",
+          "match": "&&|\\|\\||!"
+        },
+        {
+          "name": "keyword.operator.bitwise.zeta",
+          "match": "&|\\||\\^|~|<<|>>"
+        },
+        {
+          "name": "keyword.operator.pipe.zeta",
+          "match": "\\|>"
+        },
+        {
+          "name": "keyword.operator.range.zeta",
+          "match": "\\.\\.(\\.)?"
+        },
+        {
+          "name": "keyword.operator.arrow.zeta",
+          "match": "->"
+        },
+        {
+          "name": "keyword.operator.fatarrow.zeta",
+          "match": "=>"
+        },
+        {
+          "name": "keyword.operator.elvis.zeta",
+          "match": "\\?:"
+        }
+      ]
+    },
+    "punctuation": {
+      "patterns": [
+        {
+          "name": "punctuation.separator.zeta",
+          "match": ",|;|:"
+        },
+        {
+          "name": "punctuation.bracket.zeta",
+          "match": "\\(|\\)|\\[|\\]|\\{|\\}"
+        },
+        {
+          "name": "punctuation.accessor.zeta",
+          "match": "\\."
+        },
+        {
+          "name": "punctuation.path.zeta",
+          "match": "::"
+        }
+      ]
+    }
+  }
+}
