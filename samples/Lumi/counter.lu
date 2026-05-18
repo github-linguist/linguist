@@ -1,0 +1,40 @@
+# ============================================================
+#  counter.lu — Simple counter app
+#  Run: lumi counter.lu
+# ============================================================
+
+let count is 0
+let app_title is "Lumi Counter"
+
+create window main:
+    width is 400
+    height is 300
+    title is app_title
+
+    create layout body:
+        direction is "vertical"
+        spacing is 20
+
+        create text display:
+            content is "Counter starts at 0"
+            size is 28
+
+        create layout buttons:
+            direction is "horizontal"
+            spacing is 12
+
+            create button increment:
+                text is "Increment"
+                on click:
+                    set count is 1
+                    print "Count is now:"
+                    print count
+
+            create button reset:
+                text is "Reset"
+                on click:
+                    set count is 0
+                    print "Counter reset!"
+
+print "Counter app loaded."
+print app_title

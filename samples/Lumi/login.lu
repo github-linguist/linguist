@@ -1,0 +1,51 @@
+# ============================================================
+#  login.lu — Login form demo
+#  Run: lumi login.lu
+# ============================================================
+
+let is_authenticated is false
+let app_version is "1.0"
+
+create window login:
+    width is 420
+    height is 380
+    title is "Sign In — Lumi"
+
+    create layout form:
+        direction is "vertical"
+        spacing is 16
+
+        create text heading:
+            content is "Welcome Back"
+            size is 30
+
+        create text subheading:
+            content is "Sign in to continue"
+            size is 14
+
+        create input email_field:
+            placeholder is "Email address"
+            value is ""
+
+        create input password_field:
+            placeholder is "Password"
+            value is ""
+
+        create button login_btn:
+            text is "Sign In"
+            on click:
+                print "Attempting sign in..."
+                set is_authenticated is true
+                if is_authenticated:
+                    print "Login successful! Welcome."
+                else:
+                    print "Invalid credentials."
+
+        create button signup_btn:
+            text is "Create Account"
+            on click:
+                print "Redirecting to sign up..."
+
+let status is "App ready"
+print status
+print app_version
