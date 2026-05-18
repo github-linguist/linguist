@@ -1,0 +1,17 @@
+#hello.lu — First Lumi program
+#Run: lumi hello.lu
+
+create window main:
+    width is 500
+    height is 300
+    title is "My First Lumi App"
+
+    create text welcome:
+        content is "Hello, World!"
+        size is 24
+
+    create button greet:
+        text is "Click Me"
+        on click:
+            print "Hello from Lumi!"
+            print "Welcome to clean, readable code."
