@@ -1,0 +1,53 @@
+{
+  "name": "Lumi",
+  "scopeName": "source.lumi",
+  "fileTypes": ["lu"],
+  "patterns": [
+    {
+      "name": "comment.line.number-sign.lumi",
+      "match": "#.*"
+    },
+    {
+      "name": "string.quoted.double.lumi",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.lumi",
+          "match": "\\\\."
+        }
+      ]
+    },
+    {
+      "name": "string.quoted.single.lumi",
+      "begin": "'",
+      "end": "'",
+      "patterns": [
+        {
+          "name": "constant.character.escape.lumi",
+          "match": "\\\\."
+        }
+      ]
+    },
+    {
+      "name": "constant.numeric.lumi",
+      "match": "\\b\\d+(\\.\\d+)?\\b"
+    },
+    {
+      "name": "keyword.control.lumi",
+      "match": "\\b(create|let|set|print|if|else|while|return|on)\\b"
+    },
+    {
+      "name": "keyword.operator.lumi",
+      "match": "\\b(is|and|or|not)\\b"
+    },
+    {
+      "name": "constant.language.boolean.lumi",
+      "match": "\\b(true|false)\\b"
+    },
+    {
+      "name": "storage.type.lumi",
+      "match": "\\b(window|button|text|input|layout)\\b"
+    }
+  ]
+}
