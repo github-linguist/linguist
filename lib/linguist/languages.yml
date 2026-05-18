@@ -3252,6 +3252,17 @@ IGOR Pro:
   tm_scope: source.igor
   ace_mode: text
   language_id: 162
+IL Assembly:
+  type: programming
+  color: "#512BD4"
+  extensions:
+  - ".il"
+  tm_scope: source.il
+  ace_mode: text
+  aliases:
+  - ilasm
+  - msil
+  language_id: 592065806
 INI:
   type: data
   color: "#d1dbe0"
@@ -7450,6 +7461,14 @@ SourcePawn:
   tm_scope: source.sourcepawn
   ace_mode: text
   language_id: 354
+SpiceDB Schema:
+  type: data
+  color: "#a5318a"
+  extensions:
+  - ".zed"
+  tm_scope: source.spicedb
+  ace_mode: text
+  language_id: 864005057
 Spline Font Database:
   type: data
   extensions:
@@ -7674,7 +7693,7 @@ TMDL:
   extensions:
   - ".tmdl"
   aliases:
-  - "Tabular Model Definition Language"
+  - Tabular Model Definition Language
   tm_scope: source.tmdl
   ace_mode: text
   language_id: 769162295
@@ -7689,6 +7708,8 @@ TOML:
   - Cargo.toml.orig
   - Gopkg.lock
   - Pipfile
+  - mise.local.lock
+  - mise.lock
   - pdm.lock
   - poetry.lock
   - uv.lock
