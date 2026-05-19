@@ -277,6 +277,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Hy:** [tshakalekholoane/vscode-hy](https://github.com/tshakalekholoane/vscode-hy)
 - **IDL:** [mgalloy/idl.tmbundle](https://github.com/mgalloy/idl.tmbundle)
 - **IGOR Pro:** [byte-physics/language-igor](https://github.com/byte-physics/language-igor)
+- **IL Assembly:** [mg0x7BE/il-assembly-grammar](https://github.com/mg0x7BE/il-assembly-grammar)
 - **INI:** [textmate/ini.tmbundle](https://github.com/textmate/ini.tmbundle)
 - **ISPC:** [ispc/ispc.syntax](https://github.com/ispc/ispc.syntax)
 - **Idris:** [idris-hackers/idris-sublime](https://github.com/idris-hackers/idris-sublime)
