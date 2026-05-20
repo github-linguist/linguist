@@ -1,0 +1,40 @@
+"debian dependencies"
+
+REPOS = [
+    "trixie",
+    "trixie_java",
+    "trixie_adoptium",
+    "trixie_python",
+    "bookworm",
+    "bookworm_python",
+]
+
+apt = use_extension("@rules_distroless//apt:extensions.bzl", "apt")
+
+[
+    apt.install(
+        name = repo,
+        lock = "//private/repos/deb:{}.lock.json".format(repo),
+        manifest = "//private/repos/deb:{}.yaml".format(repo),
+        ## merged usr fs is only enabled on debian13+, remove this line once we remove debian12 builds
+        mergedusr = repo.startswith("trixie"),
+        package_template = "//private/repos/deb:package.BUILD.tmpl",
+        resolve_transitive = False,
+    )
+    for repo in REPOS
+]
+
+use_repo(apt, "bookworm", "bookworm_python", "trixie", "trixie_adoptium", "trixie_java", "trixie_python")
+
+### VERSIONS HUB REPO ###
+version = use_extension("//private/extensions:version.bzl", "version")
+
+[
+    version.from_lock(
+        lock = "//private/repos/deb:{}.lock.json".format(repo),
+        repo_name = repo,
+    )
+    for repo in REPOS
+]
+
+use_repo(version, "versions")
