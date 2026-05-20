@@ -1025,6 +1025,11 @@ disambiguations:
     pattern: '\A##fileformat=VCF'
   - language: vCard
     pattern: '\ABEGIN:VCARD'
+- extensions: ['.vim']
+  rules:
+  - language: Vim9 script
+    pattern: '^\s*vim9script(?:\s+noclear)?\s*$'
+  - language: Vim script
 - extensions: ['.w']
   rules:
   - language: OpenEdge ABL
