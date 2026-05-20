@@ -3270,12 +3270,19 @@ INI:
   - ".ini"
   - ".cfg"
   - ".cnf"
+  - ".container"
   - ".dof"
   - ".frm"
   - ".lektorproject"
+  - ".mount"
+  - ".network"
   - ".prefs"
   - ".pro"
   - ".properties"
+  - ".service"
+  - ".socket"
+  - ".target"
+  - ".timer"
   - ".url"
   filenames:
   - ".buckconfig"
@@ -3289,6 +3296,7 @@ INI:
   - vlcrc
   tm_scope: source.ini
   aliases:
+  - conf
   - dosini
   ace_mode: ini
   codemirror_mode: properties
@@ -9086,11 +9094,11 @@ crontab:
   ace_mode: tcl
   language_id: 705203557
 desktop:
+  group: INI
   type: data
   extensions:
   - ".desktop"
   - ".desktop.in"
-  - ".service"
   tm_scope: source.desktop
   ace_mode: text
   language_id: 412
