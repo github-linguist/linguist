@@ -1002,6 +1002,13 @@ disambiguations:
   - language: Typst
     pattern: '^#(import|show|let|set)'
   - language: XML
+- extensions: ['.ui']
+  rules:
+  - language: Swiss UI
+    pattern: '\bcomponent\s+[A-Z][A-Za-z0-9_]*\s*\{|\breactive\s+let\s+[a-z]|\b@requires\s*\('
+  - language: XML
+    pattern: '<\?xml\b|<ui\s+version='
+  - language: XML
 - extensions: ['.url']
   rules:
   - language: INI
