@@ -1,0 +1,67 @@
+import { Signal } from '@swissjs/core';
+
+@requires('network', 'analytics')
+component PaymentForm {
+  state {
+    let amount: number = 0;
+    let status: 'idle' | 'processing' | 'success' | 'error' = 'idle';
+    let errorMessage: string = '';
+  }
+
+  props = {
+    currency: String,
+    onSuccess: Function,
+    onError: Function,
+  };
+
+  computed get isValid() {
+    return this.amount > 0 && this.status === 'idle';
+  }
+
+  async mount() {
+    this.trackView();
+  }
+
+  trackView() {
+    analytics.track('payment_form_viewed', { currency: this.currency });
+  }
+
+  async submit() {
+    if (!this.isValid) return;
+    this.status = 'processing';
+    try {
+      const result = await fetch('/api/payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: this.amount, currency: this.currency }),
+      });
+      const data = await result.json();
+      this.status = 'success';
+      this.onSuccess(data);
+    } catch (err) {
+      this.status = 'error';
+      this.errorMessage = err instanceof Error ? err.message : 'Payment failed';
+      this.onError(this.errorMessage);
+    }
+  }
+
+  render() {
+    return html`
+      <form class="payment-form" onsubmit="${(e: Event) => { e.preventDefault(); this.submit(); }}">
+        <label>
+          Amount (${this.currency})
+          <input
+            type="number"
+            min="1"
+            v-bind="amount"
+            oninput="${(e: InputEvent) => (this.amount = Number((e.target as HTMLInputElement).value))}"
+          />
+        </label>
+        ${this.status === 'error' ? html`<p class="error">${this.errorMessage}</p>` : ''}
+        <button type="submit" *if="${this.isValid}">
+          ${this.status === 'processing' ? 'Processing...' : 'Pay Now'}
+        </button>
+      </form>
+    `;
+  }
+}

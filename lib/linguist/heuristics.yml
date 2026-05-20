@@ -1002,6 +1002,11 @@ disambiguations:
   - language: Typst
     pattern: '^#(import|show|let|set)'
   - language: XML
+- extensions: ['.ui']
+  rules:
+  - language: SwissJS
+    pattern: '\bcomponent\s+[A-Z][A-Za-z0-9_]*\s*\{'
+  - language: XML
 - extensions: ['.url']
   rules:
   - language: INI

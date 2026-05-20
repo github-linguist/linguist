@@ -1,0 +1,39 @@
+import { Signal } from '@swissjs/core';
+
+component Counter {
+  state {
+    let count: number = 0;
+    let step: number = 1;
+  }
+
+  computed get doubled() {
+    return this.count * 2;
+  }
+
+  mount {
+    console.log('Counter mounted');
+  }
+
+  unmount {
+    console.log('Counter unmounted');
+  }
+
+  increment() {
+    this.count += this.step;
+  }
+
+  decrement() {
+    this.count = Math.max(0, this.count - this.step);
+  }
+
+  render() {
+    return html`
+      <div class="counter">
+        <p>Count: ${this.count}</p>
+        <p>Doubled: ${this.doubled}</p>
+        <button onclick="${() => this.decrement()}">-</button>
+        <button onclick="${() => this.increment()}">+</button>
+      </div>
+    `;
+  }
+}

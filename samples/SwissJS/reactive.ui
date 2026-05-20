@@ -1,0 +1,60 @@
+import { Signal } from '@swissjs/core';
+
+component SearchBox {
+  reactive let query: string = '';
+  reactive let results: string[] = [];
+
+  state {
+    let loading: boolean = false;
+    let error: string | null = null;
+  }
+
+  props = {
+    placeholder: String,
+    onSelect: Function,
+  };
+
+  effect {
+    if (this.query.length > 2) {
+      this.fetchResults(this.query);
+    } else {
+      this.results = [];
+    }
+  }
+
+  async mount() {
+    console.log('SearchBox ready');
+  }
+
+  async fetchResults(q: string) {
+    this.loading = true;
+    try {
+      const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`);
+      this.results = await res.json();
+    } catch (e) {
+      this.error = 'Search failed';
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  render() {
+    return html`
+      <div class="search-box">
+        <input
+          type="text"
+          placeholder="${this.placeholder}"
+          v-bind="query"
+          oninput="${(e: InputEvent) => (this.query = (e.target as HTMLInputElement).value)}"
+        />
+        ${this.loading ? html`<span class="loading">Searching...</span>` : ''}
+        ${this.error ? html`<span class="error">${this.error}</span>` : ''}
+        <ul>
+          ${this.results.map((r) => html`
+            <li onclick="${() => this.onSelect(r)}">${r}</li>
+          `)}
+        </ul>
+      </div>
+    `;
+  }
+}
