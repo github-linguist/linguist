@@ -209,6 +209,14 @@ disambiguations:
   rules:
   - language: Gerber Image
     pattern: '^[DGMT][0-9]{2}\*(?:\r?\n|\r)'
+- extensions: ['.conf', '.container', '.mount', '.network', '.path', '.service', '.socket', '.target', '.timer']
+  rules:
+  - language: INI
+    and:
+    # e.g., "[foobar]" or "# [commented out]"
+    - pattern: '^[#\s]*\[[^\]]+\]\s*$'
+    - named_pattern: key_equals_value
+    - negative_pattern: '^[^#;=\[]+[^ \n=]$'
 - extensions: ['.cs']
   rules:
   - language: Smalltalk
