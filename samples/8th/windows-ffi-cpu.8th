@@ -1,0 +1,113 @@
+\
+\ Simple CPU load display
+\
+
+ns: cpu
+
+"kernel32.dll" lib k32
+
+k32 drop
+"TPPP" "GetSystemTimes" func: GetSystemTimes
+
+0 "L" ptr:pack var, idle
+0 "L" ptr:pack var, kernel
+0 "L" ptr:pack var, user
+
+var last-idle
+var last-kernel
+var last-user
+
+var usr
+var ker
+var idl
+
+var sys
+
+: load?  \ -- load%
+  idle @ ptr:unpack last-idle !
+  kernel @ ptr:unpack last-kernel !
+  user @ ptr:unpack last-user !
+
+  idle @ kernel @ user @ GetSystemTimes drop
+
+  user @ ptr:unpack last-user @ n:- usr !
+  kernel @ ptr:unpack last-kernel @ n:- ker !
+  idle @ ptr:unpack last-idle @ n:- idl !
+
+  ker @ usr @ n:+ sys !
+
+  sys @ idl @ n:- 100 n:* sys @ n:/ n:int 0 100 n:clamp ;
+
+
+ns: user
+
+needs nk/gui
+
+with: nk
+
+var font1
+
+: new-win
+  {
+    name: "main",
+    wide: 220,
+    high: 140,
+    bg: "palegreen",
+    fonts: {
+      font2: ["tahoma:24", "arial:24", "ubuntu:24"]
+    },
+    font: "font1",
+    title: "CPU load"
+  }
+  \ because we load font1 after this bit is compiled, we'll load it directly
+  "fonts" m:@
+    "font1" font1 @ m:!
+    drop
+
+  \ invoke nk:win to create the outermost window from the JSON definition:
+  win ;
+
+: secs
+  d:ticks d:ticks/sec n:/ ;
+
+0 var, update-delay
+var percentage
+
+: draw-stuff
+  update-delay @ secs n:< if
+    cpu:load? percentage !
+    secs n:1+ update-delay !
+  then
+
+  [60,5,100,110] 0 1 "black" stroke-rect
+  percentage @ >r
+  r@ 70 n:> if
+    65 10 100 n:+ r@ n:- 90 r@ 4 a:close 0 "red" fill-rect
+  else
+    65 10 100 n:+ r@ n:- 90 r@ 4 a:close 0 "green" fill-rect
+  then
+
+  win-high 1.7 n:* 1 layout-row-dynamic
+  r> "%d%%" s:strfmt TEXT_CENTERED "black" label-colored ;
+
+: main-render
+  {
+    title: "simple",
+    bg: "white",
+    font: "font2",
+    padding: [8,8],
+    flags: [ @WINDOW_NO_SCROLLBAR ]
+  }
+
+  begin
+    draw-stuff
+  end ;
+
+: app:main
+  \ in order to be cross-platform, let's use a system font chosen by our library:
+  font:system 0 a:_@                   \ let it be 16 pixels high. Font string format is "/path/to/font.ttf:pixelsize".
+  \ There are other acceptable inputs to font:new, see the documentation:
+  "%s:16" s:strfmt font:new font1 !
+
+  new-win
+  ' main-render 1000 nk:render-loop ;
