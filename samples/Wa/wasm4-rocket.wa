@@ -1,0 +1,82 @@
+import "syscall/wasm4"
+
+global rocket = [13]byte{
+	0b00111100,
+	0b01111110,
+	0b11111111,
+	0b11111111,
+	0b11000011,
+	0b11000011,
+	0b11111111,
+	0b11111111,
+	0b01111110,
+	0b11111111,
+	0b11111111,
+	0b00111100,
+	0b00011000,
+}
+
+global rocket_unthrust = [13]byte{
+	0b00111100,
+	0b01111110,
+	0b11111111,
+	0b11111111,
+	0b11000011,
+	0b11000011,
+	0b11111111,
+	0b11111111,
+	0b01111110,
+	0b11111111,
+	0b11111111,
+	0b00000000,
+	0b00000000,
+}
+
+global car_pos_x = 0
+global car_pos_y = 0
+
+func init {
+	frameBuffer := wasm4.GetFramebuffer()
+	for i := range frameBuffer {
+		frameBuffer[i] = 1 | (1 << 2) | (1 << 4) | (1 << 6)
+	}
+}
+
+#wa:export update
+func Update {
+	wasm4.SetPalette2(0xff0000)
+
+	wasm4.SetDrawColorsU16(0x31)
+	wasm4.Blit(rocket_unthrust[:], car_pos_x, car_pos_y, 8, 13, wasm4.BLIT_1BPP)
+
+	gamepad := wasm4.GetGamePad1()
+
+	if gamepad&wasm4.BUTTON_LEFT != 0 {
+		if car_pos_x > 0 {
+			car_pos_x--
+		}
+		wasm4.Blit(rocket_unthrust[:], car_pos_x, car_pos_y, 8, 13, wasm4.BLIT_1BPP)
+	}
+
+	wasm4.Text("<", 0, 150)
+	if gamepad&wasm4.BUTTON_RIGHT != 0 {
+		if car_pos_x < 150 {
+			car_pos_x++
+		}
+		wasm4.Blit(rocket_unthrust[:], car_pos_x, car_pos_y, 8, 13, wasm4.BLIT_1BPP)
+	}
+	wasm4.Text(">", 152, 150)
+	if gamepad&wasm4.BUTTON_UP != 0 {
+		if car_pos_y > 0 {
+			car_pos_y--
+		}
+		wasm4.Blit(rocket[:], car_pos_x, car_pos_y, 8, 13, wasm4.BLIT_1BPP)
+	}
+
+	if gamepad&wasm4.BUTTON_DOWN != 0 {
+		if car_pos_y < 150 {
+			car_pos_y++
+		}
+		wasm4.Blit(rocket_unthrust[:], car_pos_x, car_pos_y, 8, 13, wasm4.BLIT_1BPP)
+	}
+}
