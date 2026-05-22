@@ -1,0 +1,14 @@
+# Fibonacci — M11.2 example (ADR-0034).
+#
+# Real recursive algorithm. Demonstrates user-defined fn calls via
+# `Constant::FnRef` Call lowering (forward-declaration two-pass per
+# ADR-0034 §"Decision" Option 3). fib(10) = 55.
+fn fib(n: i64) -> i64:
+    if n < 2:
+        return n
+    return fib(n - 1) + fib(n - 2)
+
+fn main() -> i64:
+    print("fib(10) =")
+    print(fib(10))
+    return 0

@@ -1,0 +1,24 @@
+# FizzBuzz — M11.1 example (ADR-0030).
+#
+# Real algorithm: while loop + if/elif/elif/else + modulo arithmetic.
+# Demonstrates:
+#   - while loop with mutation
+#   - if/elif/elif/else with if as the first statement in the loop body
+#   - modulo operator (%)
+#   - print (polymorphic: string and integer, ADR-0064)
+#
+# The M11 prelude fixes (ADR-0030) enable this after the while-loop-
+# with-leading-if codegen regression was resolved.
+fn main() -> i64:
+    let n: i64 = 1
+    while n <= 15:
+        if n % 15 == 0:
+            print("FizzBuzz")
+        elif n % 3 == 0:
+            print("Fizz")
+        elif n % 5 == 0:
+            print("Buzz")
+        else:
+            print(n)
+        n = n + 1
+    return 0

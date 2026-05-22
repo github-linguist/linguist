@@ -1,0 +1,37 @@
+# LC-022 hashmap-valid-anagram (ADR-0047 LC-100 Tier A bucket B1).
+#
+# Input  (stdin): Line 1: string s; Line 2: string t
+# Output: "true" if s and t are anagrams, else "false"
+# Algorithm: 26-slot frequency count; increment for s, decrement for t
+
+fn main() -> i64:
+    let s = input("")
+    let t = input("")
+    let sn = str_len(&s)
+    let tn = str_len(&t)
+    if sn != tn:
+        print("false")
+        return 0
+    let freq = list_new(26)
+    let i: i64 = 0
+    while i < 26:
+        list_set(freq, i, 0)
+        i = i + 1
+    let j: i64 = 0
+    while j < sn:
+        let code = str_ord(str_at(&s, j)) - 97
+        list_set(freq, code, list_get(freq, code) + 1)
+        j = j + 1
+    let k: i64 = 0
+    while k < tn:
+        let code2 = str_ord(str_at(&t, k)) - 97
+        list_set(freq, code2, list_get(freq, code2) - 1)
+        k = k + 1
+    let m: i64 = 0
+    while m < 26:
+        if list_get(freq, m) != 0:
+            print("false")
+            return 0
+        m = m + 1
+    print("true")
+    return 0
