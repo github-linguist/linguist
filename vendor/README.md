@@ -168,6 +168,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **ECLiPSe:** [alnkpa/sublimeprolog](https://github.com/alnkpa/sublimeprolog)
 - **EJS:** [tree-sitter/tree-sitter-embedded-template](https://github.com/tree-sitter/tree-sitter-embedded-template) 🐌
 - **EQ:** [dotnet/csharp-tmLanguage](https://github.com/dotnet/csharp-tmLanguage)
+- **ES|QL:** [elastic/esql-syntax](https://github.com/elastic/esql-syntax)
 - **Eagle:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)
 - **Earthly:** [earthly/earthfile-grammar](https://github.com/earthly/earthfile-grammar)
 - **Easybuild:** [MagicStack/MagicPython](https://github.com/MagicStack/MagicPython)
@@ -184,7 +185,6 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Emacs Lisp:** [Alhadis/language-emacs-lisp](https://github.com/Alhadis/language-emacs-lisp)
 - **EmberScript:** [atom/language-coffee-script](https://github.com/atom/language-coffee-script)
 - **Erlang:** [erlang-ls/grammar](https://github.com/erlang-ls/grammar)
-- **ES|QL:** [elastic/esql-syntax](https://github.com/elastic/esql-syntax)
 - **Euphoria:** [OpenEuphoria/vscode-euphoria](https://github.com/OpenEuphoria/vscode-euphoria)
 - **F#:** [ionide/ionide-fsgrammar](https://github.com/ionide/ionide-fsgrammar)
 - **F\*:** [FStarLang/atom-fstar](https://github.com/FStarLang/atom-fstar)
