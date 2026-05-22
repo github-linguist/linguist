@@ -184,6 +184,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Emacs Lisp:** [Alhadis/language-emacs-lisp](https://github.com/Alhadis/language-emacs-lisp)
 - **EmberScript:** [atom/language-coffee-script](https://github.com/atom/language-coffee-script)
 - **Erlang:** [erlang-ls/grammar](https://github.com/erlang-ls/grammar)
+- **ES|QL:** [elastic/esql-syntax](https://github.com/elastic/esql-syntax)
 - **Euphoria:** [OpenEuphoria/vscode-euphoria](https://github.com/OpenEuphoria/vscode-euphoria)
 - **F#:** [ionide/ionide-fsgrammar](https://github.com/ionide/ionide-fsgrammar)
 - **F\*:** [FStarLang/atom-fstar](https://github.com/FStarLang/atom-fstar)

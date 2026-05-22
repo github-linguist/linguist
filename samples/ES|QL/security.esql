@@ -1,0 +1,44 @@
+// Detect brute force login attempts
+FROM logs-auth-*
+| WHERE event.action == "authentication_failure"
+| STATS attempt_count = COUNT(*) BY source.ip, user.name
+| WHERE attempt_count > 10
+| SORT attempt_count DESC
+
+// Identify anomalous data transfer volumes
+FROM logs-network-*
+| WHERE @timestamp >= NOW() - 24h
+| STATS total_bytes = SUM(network.bytes) BY source.ip, destination.ip
+| EVAL gb_transferred = total_bytes / 1073741824
+| WHERE gb_transferred > 1.0
+| SORT gb_transferred DESC
+| LIMIT 20
+
+// Process execution chain analysis
+FROM logs-endpoint-*
+| WHERE event.category == "process" AND event.type == "start"
+| EVAL parent_child = CONCAT(process.parent.name, " -> ", process.name)
+| STATS count = COUNT(*) BY parent_child, host.name
+| WHERE count < 3
+| SORT count ASC
+
+// Alert on rare user-agent strings
+FROM logs-web-*
+| STATS ua_count = COUNT(*) BY user_agent.original
+| WHERE ua_count < 5
+| SORT ua_count ASC
+| LIMIT 50
+
+// Kubernetes pod restart storm
+FROM metrics-kubernetes-*
+| WHERE @timestamp >= NOW() - 30minutes
+| STATS restarts = SUM(kubernetes.pod.restart_count) BY kubernetes.pod.name, kubernetes.namespace
+| WHERE restarts > 5
+| SORT restarts DESC
+
+// Lateral movement: rare process on multiple hosts
+FROM logs-endpoint-*
+| WHERE event.type == "start"
+| STATS host_count = COUNT_DISTINCT(host.name) BY process.name
+| WHERE host_count > 3 AND host_count < 10
+| SORT host_count DESC
