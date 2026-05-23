@@ -77,7 +77,7 @@ module Linguist
         detected_language = Language.find_by_alias(lang) || Language.create(name: lang, type: :programming)
 
         if color = git_attributes['linguist-color']
-          detected_language.color = color
+          detected_language.color = "##{color}"
         end
 
         # If strategies are being tracked, get the original strategy that would have been used
