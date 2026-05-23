@@ -9,7 +9,8 @@ module Linguist
                 'linguist-language',
                 'linguist-vendored',
                 'linguist-generated',
-                'linguist-detectable']
+                'linguist-detectable',
+                'linguist-color']
 
     # DEPRECATED: use Linguist::Source::RuggedRepository::GIT_ATTR_OPTS instead
     GIT_ATTR_OPTS = Linguist::Source::RuggedRepository::GIT_ATTR_OPTS
@@ -74,6 +75,10 @@ module Linguist
 
       @language = if lang = git_attributes['linguist-language']
         detected_language = Language.find_by_alias(lang) || Language.create(name: lang, type: :programming)
+
+        if color = git_attributes['linguist-color']
+          detected_language.color = color
+        end
 
         # If strategies are being tracked, get the original strategy that would have been used
         if detected_language && Linguist.instrumenter
