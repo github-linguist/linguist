@@ -73,7 +73,7 @@ module Linguist
       return @language if defined?(@language)
 
       @language = if lang = git_attributes['linguist-language']
-        detected_language = Language.find_by_alias(lang)
+        detected_language = Language.find_by_alias(lang) || Language.create(name: lang, type: :programming)
 
         # If strategies are being tracked, get the original strategy that would have been used
         if detected_language && Linguist.instrumenter
