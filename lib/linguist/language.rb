@@ -324,10 +324,10 @@ module Linguist
     # Returns a type Symbol or nil.
     attr_reader :type
 
-    # Public: Get color.
+    # Public: Get color or set color.
     #
     # Returns a hex color String.
-    attr_reader :color
+    attr_accessor :color
 
     # Public: Get aliases
     #
