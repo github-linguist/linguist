@@ -1,0 +1,54 @@
+m=collections;
+
+i=io:std.io;
+i=str:std.str;
+
+f=range(n:i64):@i64{
+  let result=mut.@();
+  lp(let i=0;i<n;i=i+1){
+    result=result.push(i);
+  };
+  <result;
+};
+
+f=sum(arr:@i64):i64{
+  let acc=mut.0;
+  lp(let i=0;i<arr.len;i=i+1){
+    acc=acc+arr.get(i);
+  };
+  <acc;
+};
+
+f=filter_positive(arr:@i64):@i64{
+  let out=mut.@();
+  lp(let i=0;i<arr.len;i=i+1){
+    let val=arr.get(i);
+    if(val>0){
+      out=out.push(val);
+    };
+  };
+  <out;
+};
+
+f=main():i64{
+  let nums=range(10);
+  let total=sum(nums);
+  io.println(str.concat("sum 0..9 = "; str.fromInt(total)));
+
+  let mixed=@(0-3;0-1;0;2;4;0-5;7);
+  let pos=filter_positive(mixed);
+  io.println(str.concat("positive count: "; str.fromInt(pos.len as i64)));
+
+  let ages=@("alice":30;"bob":25;"carol":28);
+  if(ages.contains("alice")){
+    let age=ages.get("alice");
+    io.println(str.concat("alice is "; str.concat(str.fromInt(age); " years old")));
+  };
+
+  let ages2=mut.ages;
+  ages2=ages2.put("dave"; 35);
+  ages2=ages2.delete("bob");
+  io.println(str.concat("map size: "; str.fromInt(ages2.len as i64)));
+
+  <0;
+};

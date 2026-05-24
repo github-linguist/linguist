@@ -1,0 +1,43 @@
+m=notes;
+
+i=http:std.http;
+i=json:std.json;
+i=file:std.file;
+i=log:std.log;
+i=str:std.str;
+
+t=$err{code:i64};
+
+f=loadnotes(path:$str):$str!$err{
+  let raw=file.read(path)!$err;
+  let notes=json.dec(raw)!$err;
+  < json.enc(notes)!$err
+};
+
+f=healthbody():$str{
+  < str.concat("{\"status\":\"ok\",\"service\":\"";
+               str.concat("notes-api\"}"; ""))
+};
+
+f=notfoundbody():$str{
+  < "{\"error\":\"not found\"}"
+};
+
+f=main():i64!$err{
+  log.info("starting notes-api on port 8080");
+
+  let notesfile="data/notes.json";
+  let notesbody=loadnotes(notesfile)|{
+    $ok:v v;
+    $err:e "{\"error\":\"could not load notes\"}"
+  };
+
+  http.getstatic("/health"; healthbody());
+  http.getstatic("/api/notes"; notesbody);
+  http.getstatic("/404"; notfoundbody());
+
+  log.info("routes registered: /health /api/notes /404");
+  http.serveworkers(8080; 4)!$err;
+
+  < 0
+};

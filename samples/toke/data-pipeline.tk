@@ -1,0 +1,62 @@
+m=datapipeline;
+
+i=file:std.file;
+i=str:std.str;
+i=log:std.log;
+
+t=$err{code:i64};
+
+f=getfield(row:$str;col:i64):$str{
+  let fields=str.split(row; ",");
+  if(col<fields.len as i64){
+    < fields.get(col)
+  }el{
+    < ""
+  }
+};
+
+f=countmatches(rows:@$str;col:i64;target:$str):i64{
+  let count=mut.0;
+  lp(let i=0;i<rows.len as i64;i=i+1){
+    let val=str.trim(getfield(rows.get(i); col));
+    if(val=target){
+      count=count+1
+    }
+  };
+  < count
+};
+
+f=buildreport(target:$str;total:i64;cnt:i64):$str{
+  let pct=cnt*100/total;
+  let line1=str.concat("filter: "; target);
+  let line2=str.concat("total rows: "; str.fromInt(total));
+  let line3=str.concat("matching: "; str.fromInt(cnt));
+  let line4=str.concat("percent: "; str.concat(str.fromInt(pct); "%"));
+  < str.concat(line1;
+    str.concat("\n";
+      str.concat(line2;
+        str.concat("\n";
+          str.concat(line3;
+            str.concat("\n"; line4))))))
+};
+
+f=run(csvpath:$str;col:i64;target:$str;outpath:$str):i64!$err{
+  let raw=file.read(csvpath)!$err;
+  let allrows=str.split(raw; "\n");
+  let datarows=mut.0;
+  lp(let i=1;i<allrows.len as i64;i=i+1){
+    let row=str.trim(allrows.get(i));
+    if(!(row="")){ datarows=datarows+1 }
+  };
+  let matched=countmatches(allrows; col; target);
+  let report=buildreport(target; datarows; matched);
+  log.info(report);
+  file.write(outpath; report)!$err;
+  log.info(str.concat("report written to "; outpath));
+  < 0
+};
+
+f=main():i64!$err{
+  run("data/sales.csv"; 2; "active"; "out/summary.txt")!$err;
+  < 0
+};

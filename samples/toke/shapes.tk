@@ -1,0 +1,43 @@
+m=shapes;
+
+i=io:std.io;
+i=str:std.str;
+
+t=$shape{
+  $circle:f64;
+  $square:f64;
+  $rect:f64
+};
+
+f=area(s:$shape):f64{
+  <mt s {
+    $circle:r 3.14159*r*r;
+    $square:side side*side;
+    $rect:w w*2.0
+  };
+};
+
+f=describe(s:$shape):$str{
+  <mt s {
+    $circle:r str.concat("circle r="; str.fromFloat(r));
+    $square:side str.concat("square side="; str.fromFloat(side));
+    $rect:w str.concat("rect w="; str.fromFloat(w))
+  };
+};
+
+f=main():i64{
+  let shapes=@(
+    $circle(5.0);
+    $square(3.0);
+    $rect(4.0)
+  );
+
+  lp(let i=0;i<shapes.len;i=i+1){
+    let s=shapes.get(i);
+    let desc=describe(s);
+    let a=area(s);
+    io.println(str.concat(desc; str.concat(" area="; str.fromFloat(a))));
+  };
+
+  <0;
+};

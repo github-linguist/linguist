@@ -1,0 +1,58 @@
+m=filereader;
+
+i=io:std.io;
+i=file:std.file;
+i=str:std.str;
+i=log:std.log;
+
+t=$fileerr{
+  $notfound:$str;
+  $permdenied:$str
+};
+
+f=readfile(path:$str):$str!$fileerr{
+  let content=file.read(path)!$fileerr;
+  <content;
+};
+
+f=linecount(text:$str):i64{
+  let lines=str.split(text; "\n");
+  <lines.len as i64;
+};
+
+f=wordcount(text:$str):i64{
+  let words=str.split(text; " ");
+  let count=mut.0;
+  lp(let i=0;i<words.len;i=i+1){
+    let w=str.trim(words.get(i));
+    if(!(w="")){
+      count=count+1;
+    };
+  };
+  <count;
+};
+
+f=processfile(path:$str):void{
+  let result=readfile(path);
+  mt result {
+    $ok:content {
+      let lines=linecount(content);
+      let words=wordcount(content);
+      log.info(str.concat("file: "; path));
+      log.info(str.concat("lines: "; str.fromInt(lines)));
+      log.info(str.concat("words: "; str.fromInt(words)));
+    };
+    $err:e mt e {
+      $notfound:p io.println(str.concat("not found: "; p));
+      $permdenied:p io.println(str.concat("permission denied: "; p))
+    }
+  };
+};
+
+f=main():i64{
+  let files=@("README.md";"src/main.tk";"missing.txt");
+  lp(let i=0;i<files.len;i=i+1){
+    processfile(files.get(i));
+  };
+  <0;
+};
