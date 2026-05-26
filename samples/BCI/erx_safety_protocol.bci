@@ -1,0 +1,8 @@
+// H.O.L.M.E.S. BCI Standard Implementation
+electrode frontal_lobe = Cyton(TX);
+stream brain_state = frontal_lobe >> spectrum();
+model intent_net = load("denovo_model.tflite");
+
+when intent_net.predict(brain_state) == "FOCUS" {
+    trigger log.write("Synthesis Intent Detected!");
+}
