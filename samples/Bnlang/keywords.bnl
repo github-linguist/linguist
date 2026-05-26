@@ -1,0 +1,105 @@
+// var, true, false, null
+var name    = "Mamun";
+var age     = 23;
+var active  = true;
+var paused  = false;
+var nothing = null;
+
+print("Bangladesh is my country!");
+print("My mother language is Bangla!");
+print(name, age, active, paused, nothing);
+
+// if, else, and, or, not
+if (age >= 18 and active) {
+    print("welcome,", name);
+} else {
+    print("not allowed");
+}
+
+if (paused or not active) {
+    print("on a break");
+}
+
+// while
+var i = 0;
+while (i < 3) {
+    print("tick", i);
+    i = i + 1;
+}
+
+// for, of (walks a list)
+var fruits = ["apple", "banana", "cherry"];
+for (var f of fruits) {
+    print("fruit:", f);
+}
+
+// for (counted), break, continue
+for (var n = 0; n < 5; n = n + 1) {
+    if (n == 1) { 
+        continue; // skip 1
+    }
+    if (n == 4) { 
+        break; // stop at 4
+    }
+    print("n =", n);
+}
+
+// function, return
+function add(a, b) {
+    return a + b;
+}
+print("2 + 3 =", add(2, 3));
+
+// class, extends, super
+class Animal {
+    function init(self, name) {
+        self.name = name;
+    }
+    function speak(self) {
+        return self.name + " makes a sound";
+    }
+}
+
+class Dog extends Animal {
+    function init(self, name) {
+        super(name);
+    }
+    function speak(self) {
+        return self.name + " barks";
+    }
+}
+
+print(Dog("Rex").speak());
+
+// switch, case, default
+function day_name(n) {
+    switch (n) {
+        case 1:  { return "Monday";  }
+        case 2:  { return "Tuesday"; }
+        default: { return "other";   }
+    }
+}
+print(day_name(1));
+print(day_name(9));
+
+// try, catch, throw, finally
+try {
+    throw "oops";
+} catch (e) {
+    print("caught:", e);
+} finally {
+    print("cleanup");
+}
+
+// import, as
+import "math" as math;
+print("sqrt(16) =", math.sqrt(16));
+
+// wait (suspends until a Future settles)
+function later() {
+    var value = wait Future.of("ready");
+    return value;
+}
+later().next(function (v) {
+    print("got:", v);
+});

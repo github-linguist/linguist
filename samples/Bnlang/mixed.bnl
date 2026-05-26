@@ -1,0 +1,24 @@
+function greet(name) {
+    যদি (name == null) {
+        ফেরত "hello, friend";
+    }
+    return "hello, " + name;
+}
+
+ফাংশন count_up_to(n) {
+    চলক i = 1;
+    while (i <= n) {
+        লিখুন(i);
+        i = i + 1;
+    }
+}
+
+print(greet("world"));
+print(greet(null));
+
+count_up_to(3);
+
+// Word-form operators match across spellings: `and` ↔ `এবং`, `or` ↔ `অথবা`,
+// `not` ↔ `না`, `true` ↔ `সত্য`, `false` ↔ `মিথ্যা`.
+var ok = true এবং না false;
+যদি (ok or মিথ্যা) { print("ok"); }
