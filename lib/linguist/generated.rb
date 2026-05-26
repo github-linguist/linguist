@@ -75,6 +75,7 @@ module Linguist
       esy_lock? ||
       npm_shrinkwrap_or_package_lock? ||
       pnpm_lock? ||
+      bun_lock? ||
       terraform_lock? ||
       generated_yarn_plugnplay? ||
       godeps? ||
@@ -89,6 +90,10 @@ module Linguist
       generated_postscript? ||
       compiled_cython_file? ||
       pipenv_lock? ||
+      gradle_wrapper? ||
+      maven_wrapper? ||
+      mise_lock? ||
+      julia_manifest? ||
       generated_go? ||
       generated_protocol_buffer_from_go? ||
       generated_protocol_buffer? ||
@@ -501,6 +506,13 @@ module Linguist
       !!name.match(/pnpm-lock\.yaml/)
     end
 
+    # Internal: Is the blob a generated bun lockfile?
+    #
+    # Returns true or false.
+    def bun_lock?
+      !!name.match(/(?:^|\/)bun\.lockb?$/)
+    end
+
     # Internal: Is the blob a generated Yarn Plug'n'Play?
     #
     # Returns true or false.
@@ -556,6 +568,34 @@ module Linguist
     # Returns true or false
     def bazel_lock?
       !!name.match(/(^|\/)MODULE\.bazel\.lock$/)
+    end
+
+    # Internal: Is the blob a generated gradle wrapper file?
+    #
+    # Returns true or false.
+    def gradle_wrapper?
+      !!name.match(/(?:^|\/)gradlew(?:\.bat)?$/i)
+    end
+
+    # Internal: Is the blob a generated maven wrapper file?
+    #
+    # Returns true or false.
+    def maven_wrapper?
+      !!name.match(/(?:^|\/)mvnw(?:\.cmd)?$/i)
+    end
+
+    # Internal: Is the blob a mise-en-place lock file?
+    #
+    # Returns true or false.
+    def mise_lock?
+      !!name.match(/(?:^|\/)mise(?:\.[^\/]+)?\.lock$/)
+    end
+
+    # Internal: Is the blob a Julia Manifest.toml file?
+    #
+    # Returns true or false.
+    def julia_manifest?
+      !!name.match(/(?:^|\/)(Julia)?Manifest(-v\d+\.\d+)?\.toml$/)
     end
 
     # Is the blob a VCR Cassette file?
