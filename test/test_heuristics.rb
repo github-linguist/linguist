@@ -824,6 +824,13 @@ class TestHeuristics < Minitest::Test
     }, alt_name="test.p")
   end
 
+  def test_pc_by_heuristics
+    assert_heuristics({
+      "pkg-config" => all_fixtures("pkg-config", "*.pc"),
+      "Pro*C" => all_fixtures("ProC", "*.pc"),
+    })
+  end
+
   def test_php_by_heuristics
     assert_heuristics({
       "Hack" => all_fixtures("Hack", "*.php"),
