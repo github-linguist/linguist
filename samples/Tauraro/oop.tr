@@ -1,0 +1,146 @@
+# Object-oriented programming in Tauraro
+# Classes, interfaces, enums, extend blocks, generics
+
+from std.core.vec import Vec
+
+# --- Interface ---
+
+interface Shape:
+    def area(self) -> f64
+    def perimeter(self) -> f64
+    def describe(self) -> str
+
+# --- Enum ---
+
+enum Color:
+    Red
+    Green
+    Blue
+    Custom(i32, i32, i32)
+
+# --- Classes ---
+
+pub class Circle:
+    pub radius: f64
+    pub color:  Color
+
+extend Circle:
+    pub def init(r: f64, c: Color) -> Circle:
+        mut circle = Circle()
+        circle.radius = r
+        circle.color  = c
+        return circle
+
+    pub def area(self) -> f64:
+        return 3.14159265 * self.radius * self.radius
+
+    pub def perimeter(self) -> f64:
+        return 2.0 * 3.14159265 * self.radius
+
+    pub def describe(self) -> str:
+        return f"Circle(r={self.radius})"
+
+pub class Rectangle:
+    pub width:  f64
+    pub height: f64
+
+extend Rectangle:
+    pub def init(w: f64, h: f64) -> Rectangle:
+        mut r = Rectangle()
+        r.width  = w
+        r.height = h
+        return r
+
+    pub def area(self) -> f64:
+        return self.width * self.height
+
+    pub def perimeter(self) -> f64:
+        return 2.0 * (self.width + self.height)
+
+    pub def describe(self) -> str:
+        return f"Rect({self.width}x{self.height})"
+
+# --- Generics ---
+
+pub class Stack[T]:
+    pub items: Vec[T]
+    pub size:  i32
+
+extend Stack[T]:
+    pub def init() -> Stack[T]:
+        mut s = Stack[T]()
+        s.items = Vec[T].init(8)
+        s.size  = 0
+        return s
+
+    pub def push(self, item: T):
+        self.items.push(item)
+        self.size = self.size + 1
+
+    pub def pop(self) -> Option[T]:
+        if self.size == 0:
+            return none
+        self.size = self.size - 1
+        return self.items.pop()
+
+    pub def peek(self) -> Option[T]:
+        if self.size == 0:
+            return none
+        return self.items.get(self.size - 1)
+
+    pub def is_empty(self) -> bool:
+        return self.size == 0
+
+# --- Exception handling ---
+
+pub class Parser:
+    pub source: str
+    pub pos:    i32
+
+extend Parser:
+    pub def init(src: str) -> Parser:
+        mut p = Parser()
+        p.source = src
+        p.pos    = 0
+        return p
+
+    pub def parse_int(self) -> i32:
+        try:
+            return int(self.source)
+        except ValueError as e:
+            raise ValueError(f"Invalid integer: '{self.source}'")
+
+# --- Decorators ---
+
+@cached
+def fibonacci(n: i32) -> i64:
+    if n <= 1:
+        return n
+    return fibonacci(n - 1) + fibonacci(n - 2)
+
+@deprecated("use fibonacci() instead")
+def fib_old(n: i32) -> i64:
+    return fibonacci(n)
+
+def main():
+    mut c = Circle.init(5.0, Color.Red)
+    mut r = Rectangle.init(4.0, 6.0)
+
+    print(c.describe())
+    print(f"  area      = {c.area()}")
+    print(f"  perimeter = {c.perimeter()}")
+
+    print(r.describe())
+    print(f"  area      = {r.area()}")
+
+    mut stack = Stack[i32].init()
+    for i in range(5):
+        stack.push(i * i)
+
+    while not stack.is_empty():
+        match stack.pop():
+            case v:
+                print(f"popped: {v}")
+
+    print(f"fib(10) = {fibonacci(10)}")
+

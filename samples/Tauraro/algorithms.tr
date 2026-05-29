@@ -1,0 +1,130 @@
+# Algorithms and data structures in Tauraro
+# Demonstrates: generics, ownership, unsafe blocks, extern C, async
+
+from std.core.vec import Vec
+
+extern "C":
+    def _tr_int_to_str(n: int) -> str
+    def _tr_c_malloc(size: int) -> Pointer[char]
+    def _tr_c_free(ptr: Pointer[char])
+
+# --- Sorting ---
+
+def bubble_sort(arr: List[i32]) -> List[i32]:
+    mut n = len(arr)
+    mut a = arr
+    for i in range(n):
+        for j in range(n - i - 1):
+            if a[j] > a[j + 1]:
+                mut tmp = a[j]
+                a[j]     = a[j + 1]
+                a[j + 1] = tmp
+    return a
+
+def binary_search(arr: List[i32], target: i32) -> i32:
+    mut lo = 0
+    mut hi = len(arr) - 1
+    while lo <= hi:
+        mut mid = (lo + hi) // 2
+        if arr[mid] == target:
+            return mid
+        elif arr[mid] < target:
+            lo = mid + 1
+        else:
+            hi = mid - 1
+    return -1
+
+# --- Tree ---
+
+pub class TreeNode:
+    pub value: i32
+    pub left:  Pointer[TreeNode]
+    pub right: Pointer[TreeNode]
+
+extend TreeNode:
+    pub def init(v: i32) -> Pointer[TreeNode]:
+        mut node = _tr_c_malloc(sizeof(TreeNode)) as Pointer[TreeNode]
+        mut n = TreeNode()
+        n.value = v
+        n.left  = 0 as Pointer[TreeNode]
+        n.right = 0 as Pointer[TreeNode]
+        node.write(n)
+        return node
+
+    pub def insert(self, v: i32):
+        if v < self.value:
+            if self.left as int == 0:
+                self.left = TreeNode.init(v)
+            else:
+                self.left.read().insert(v)
+        else:
+            if self.right as int == 0:
+                self.right = TreeNode.init(v)
+            else:
+                self.right.read().insert(v)
+
+    pub def contains(self, v: i32) -> bool:
+        if v == self.value:
+            return true
+        elif v < self.value:
+            if self.left as int == 0:
+                return false
+            return self.left.read().contains(v)
+        else:
+            if self.right as int == 0:
+                return false
+            return self.right.read().contains(v)
+
+# --- Unsafe low-level memory ---
+
+def raw_copy(src: Pointer[i32], dst: Pointer[i32], n: i32):
+    unsafe:
+        mut i = 0
+        while i < n:
+            mut v = (src + i).read()
+            (dst + i).write(v)
+            i = i + 1
+
+# --- Async ---
+
+async def fetch_data(url: str) -> str:
+    # Simulate async I/O
+    mut result = await http_get(url)
+    return result
+
+async def process_urls(urls: List[str]) -> List[str]:
+    mut results: List[str] = []
+    for url in urls:
+        mut data = await fetch_data(url)
+        results.push(data)
+    return results
+
+# --- Hausa keyword example ---
+
+aiki kirga_jimla(lambobi: List[i32]) -> i64:
+    mut jimla: i64 = 0
+    ga lamba in lambobi:
+        jimla = jimla + lamba
+    dawo jimla
+
+# --- Entry point ---
+
+def main():
+    mut arr = [64, 34, 25, 12, 22, 11, 90]
+    mut sorted = bubble_sort(arr)
+    print(f"sorted: {sorted}")
+
+    mut idx = binary_search(sorted, 25)
+    print(f"binary_search(25) at index {idx}")
+
+    mut root = TreeNode.init(50)
+    for v in [30, 70, 20, 40, 60, 80]:
+        root.read().insert(v)
+
+    print(f"contains 40: {root.read().contains(40)}")
+    print(f"contains 99: {root.read().contains(99)}")
+
+    mut nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    print(f"jimla = {kirga_jimla(nums)}")
+
+
