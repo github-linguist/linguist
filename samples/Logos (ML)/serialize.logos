@@ -1,0 +1,76 @@
+module vryx.canvas.parsers.fields_serialize
+
+import common
+import emirates_id
+import driving_license
+import vehicle_mulkiya
+import passport
+
+pub append_field(acc: String, key: String, value: String) -> String =
+  if value == "" then acc
+  else if acc == "" then string_concat(key, string_concat("=", value))
+  else string_concat(acc, string_concat(";", string_concat(key, string_concat("=", value))))
+
+pub serialize_eid(f: EidFields) -> String =
+  append_field(
+  append_field(
+  append_field(
+  append_field(
+  append_field(
+  append_field(
+  append_field(
+  append_field("", "date_of_birth", f.date_of_birth),
+    "doc_side", f.doc_side),
+    "eid_number", f.eid_number),
+    "expiry_date", f.expiry_date),
+    "full_name", f.full_name),
+    "issuing_date", f.issuing_date),
+    "nationality", f.nationality),
+    "sex", f.sex)
+
+pub serialize_dl(f: DlFields) -> String =
+  append_field(
+  append_field(
+  append_field(
+  append_field(
+  append_field(
+  append_field(
+  append_field("", "date_of_birth", f.date_of_birth),
+    "expiry_date", f.expiry_date),
+    "full_name", f.full_name),
+    "issue_date", f.issue_date),
+    "license_class", f.license_class),
+    "license_number", f.license_number),
+    "nationality", f.nationality)
+
+pub serialize_mulkiya(f: MulkiyaFields) -> String =
+  append_field(
+  append_field(
+  append_field(
+  append_field(
+  append_field(
+  append_field(
+  append_field(
+  append_field(
+  append_field("", "chassis_number", f.chassis_number),
+    "engine_number", f.engine_number),
+    "make", f.make),
+    "model", f.model),
+    "nationality", f.nationality),
+    "owner_name", f.owner_name),
+    "plate_number", f.plate_number),
+    "registration_expiry", f.registration_expiry),
+    "year", f.year)
+
+pub serialize_passport(f: PassportFields) -> String =
+  append_field(
+  append_field(
+  append_field(
+  append_field(
+  append_field("", "date_of_birth", f.date_of_birth),
+    "expiry_date", f.expiry_date),
+    "full_name", f.full_name),
+    "nationality", f.nationality),
+    "passport_number", f.passport_number)
+
+pub main() -> Int = 0
