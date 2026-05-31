@@ -1,0 +1,248 @@
+module vryx.canvas.parsers.common
+
+pub type StringList =
+  | Nil
+  | Cons(String, StringList)
+
+pub string_length(s: String) -> Int
+pub string_concat(a: String, b: String) -> String
+pub string_slice(s: String, from: Int, len: Int) -> String
+pub string_contains(haystack: String, needle: String) -> Bool
+pub string_to_lower(s: String) -> String
+
+pub char_at(s: String, i: Int) -> String =
+  string_slice(s, i, 1)
+
+pub has(text: String, needle: String) -> Bool =
+  string_contains(string_to_lower(text), string_to_lower(needle))
+
+pub is_digit(ch: String) -> Bool =
+  ch == "0" || ch == "1" || ch == "2" || ch == "3" || ch == "4" ||
+  ch == "5" || ch == "6" || ch == "7" || ch == "8" || ch == "9"
+
+pub is_upper(ch: String) -> Bool =
+  ch == "A" || ch == "B" || ch == "C" || ch == "D" || ch == "E" ||
+  ch == "F" || ch == "G" || ch == "H" || ch == "I" || ch == "J" ||
+  ch == "K" || ch == "L" || ch == "M" || ch == "N" || ch == "O" ||
+  ch == "P" || ch == "Q" || ch == "R" || ch == "S" || ch == "T" ||
+  ch == "U" || ch == "V" || ch == "W" || ch == "X" || ch == "Y" || ch == "Z"
+
+pub is_lower(ch: String) -> Bool =
+  ch == "a" || ch == "b" || ch == "c" || ch == "d" || ch == "e" ||
+  ch == "f" || ch == "g" || ch == "h" || ch == "i" || ch == "j" ||
+  ch == "k" || ch == "l" || ch == "m" || ch == "n" || ch == "o" ||
+  ch == "p" || ch == "q" || ch == "r" || ch == "s" || ch == "t" ||
+  ch == "u" || ch == "v" || ch == "w" || ch == "x" || ch == "y" || ch == "z"
+
+pub is_alpha(ch: String) -> Bool =
+  is_upper(ch) || is_lower(ch)
+
+pub is_alnum(ch: String) -> Bool =
+  is_alpha(ch) || is_digit(ch)
+
+pub is_sep(ch: String) -> Bool =
+  ch == " " || ch == "\t" || ch == ":" || ch == "." || ch == "," || ch == ";" || ch == "-"
+
+pub is_line_break(ch: String) -> Bool =
+  ch == "\n" || ch == "\r"
+
+pub trim_left(s: String) -> String =
+  if string_length(s) == 0 then s
+  else if is_sep(char_at(s, 0)) then trim_left(string_slice(s, 1, string_length(s) - 1))
+  else s
+
+pub trim_right_len(s: String, n: Int) -> Int =
+  if n <= 0 then 0
+  else if is_sep(char_at(s, n - 1)) || is_line_break(char_at(s, n - 1)) then trim_right_len(s, n - 1)
+  else n
+
+pub trim(s: String) -> String =
+  let left = trim_left(s) in
+  string_slice(left, 0, trim_right_len(left, string_length(left)))
+
+pub first_line(s: String) -> String =
+  first_line_at(s, 0)
+
+pub first_line_at(s: String, i: Int) -> String =
+  if i >= string_length(s) then s
+  else if is_line_break(char_at(s, i)) then string_slice(s, 0, i)
+  else first_line_at(s, i + 1)
+
+pub after_first_line(s: String) -> String =
+  after_first_line_at(s, 0)
+
+pub after_first_line_at(s: String, i: Int) -> String =
+  if i >= string_length(s) then ""
+  else if is_line_break(char_at(s, i)) then string_slice(s, i + 1, string_length(s) - i - 1)
+  else after_first_line_at(s, i + 1)
+
+pub starts_with_at(text: String, needle: String, i: Int, j: Int) -> Bool =
+  if j >= string_length(needle) then true
+  else if i + j >= string_length(text) then false
+  else if char_at(text, i + j) == char_at(needle, j) then starts_with_at(text, needle, i, j + 1)
+  else false
+
+pub index_of_from(text: String, needle: String, i: Int) -> Int =
+  if string_length(needle) == 0 then 0
+  else if i + string_length(needle) > string_length(text) then -1
+  else if starts_with_at(text, needle, i, 0) then i
+  else index_of_from(text, needle, i + 1)
+
+pub index_of(text: String, needle: String) -> Int =
+  index_of_from(text, needle, 0)
+
+pub token_until_sep(s: String, i: Int) -> String =
+  if i >= string_length(s) then s
+  else if is_sep(char_at(s, i)) || is_line_break(char_at(s, i)) then string_slice(s, 0, i)
+  else token_until_sep(s, i + 1)
+
+pub first_word(s: String) -> String =
+  string_to_lower(token_until_sep(trim(s), 0))
+
+pub blocked_word(word: String) -> Bool =
+  word == "vehicle" || word == "nationality" || word == "name" || word == "owner" ||
+  word == "sponsor" || word == "date" || word == "issue" || word == "issuing" ||
+  word == "expiry" || word == "expires" || word == "license" || word == "licence" ||
+  word == "licensing" || word == "driving" || word == "emirates" || word == "identity" ||
+  word == "federal" || word == "resident" || word == "citizenship" || word == "signature" ||
+  word == "place" || word == "passport" || word == "sex" || word == "gender" ||
+  word == "birth" || word == "plate" || word == "chassis" || word == "chasis" ||
+  word == "engine" || word == "model" || word == "make" || word == "origin" ||
+  word == "year" || word == "color" || word == "colour" || word == "category" ||
+  word == "class" || word == "mortgage" || word == "policy" || word == "insurance" ||
+  word == "reg" || word == "registration" || word == "card" || word == "occupation" ||
+  word == "employer" || word == "valid" || word == "traffic" || word == "toyota" ||
+  word == "lexus" || word == "nissan" || word == "honda" || word == "mitsubishi" ||
+  word == "mazda" || word == "ford" || word == "chevrolet" || word == "hyundai" ||
+  word == "kia" || word == "bmw" || word == "mercedes" || word == "audi" ||
+  word == "land" || word == "range" || word == "jeep" || word == "volvo"
+
+pub starts_with_label_word(s: String) -> Bool =
+  blocked_word(first_word(s))
+
+pub month_day_sep_at(s: String, i: Int) -> Bool =
+  char_at(s, i) == "/" || char_at(s, i) == "-"
+
+pub date_at(s: String, i: Int) -> Bool =
+  if i + 8 > string_length(s) then false
+  else
+    is_digit(char_at(s, i)) &&
+    (is_digit(char_at(s, i + 1)) || month_day_sep_at(s, i + 1)) &&
+    (month_day_sep_at(s, i + 1) || month_day_sep_at(s, i + 2)) &&
+    (is_digit(char_at(s, i + 2)) || is_digit(char_at(s, i + 3))) &&
+    (month_day_sep_at(s, i + 3) || month_day_sep_at(s, i + 4) || month_day_sep_at(s, i + 5)) &&
+    (is_digit(char_at(s, i + 4)) || is_digit(char_at(s, i + 5)) || is_digit(char_at(s, i + 6)))
+
+pub date_len_at(s: String, i: Int, n: Int) -> Int =
+  if i + n >= string_length(s) then n
+  else if n >= 10 then n
+  else if is_digit(char_at(s, i + n)) || month_day_sep_at(s, i + n) then date_len_at(s, i, n + 1)
+  else n
+
+pub first_date_from(s: String, i: Int) -> String =
+  if i >= string_length(s) then ""
+  else if date_at(s, i) then string_slice(s, i, date_len_at(s, i, 0))
+  else first_date_from(s, i + 1)
+
+pub date_shape(s: String) -> String =
+  first_date_from(s, 0)
+
+pub word_len_at(s: String, i: Int) -> Int =
+  if i >= string_length(s) then 0
+  else if is_alpha(char_at(s, i)) || char_at(s, i) == "'" || char_at(s, i) == "-" then 1 + word_len_at(s, i + 1)
+  else 0
+
+pub count_name_words(s: String, i: Int, count: Int) -> Int =
+  if i >= string_length(s) then count
+  else if is_sep(char_at(s, i)) then count_name_words(s, i + 1, count)
+  else
+    let len = word_len_at(s, i) in
+    if len >= 2 then count_name_words(s, i + len, count + 1) else -100
+
+pub name_shape(s: String) -> String =
+  let t = trim(s) in
+  let words = count_name_words(t, 0, 0) in
+  if words >= 2 && words <= 8 && not starts_with_label_word(t) then t else ""
+
+pub sex_shape(s: String) -> String =
+  let t = trim(s) in
+  if string_length(t) >= 1 && (char_at(t, 0) == "M" || char_at(t, 0) == "m") then "M"
+  else if string_length(t) >= 1 && (char_at(t, 0) == "F" || char_at(t, 0) == "f") then "F"
+  else ""
+
+pub alnum_token_from(s: String, i: Int, len: Int) -> String =
+  if i + len >= string_length(s) then string_slice(s, i, len)
+  else if is_alnum(char_at(s, i + len)) || char_at(s, i + len) == "-" then alnum_token_from(s, i, len + 1)
+  else string_slice(s, i, len)
+
+pub first_alnum_id_from(s: String, i: Int) -> String =
+  if i >= string_length(s) then ""
+  else if is_alnum(char_at(s, i)) then
+    let tok = alnum_token_from(s, i, 0) in
+    if string_length(tok) >= 4 && string_length(tok) <= 20 then tok else first_alnum_id_from(s, i + 1)
+  else first_alnum_id_from(s, i + 1)
+
+pub alnum_id_shape(s: String) -> String =
+  first_alnum_id_from(s, 0)
+
+pub apply_shape(value: String, shape: String) -> String =
+  if shape == "date" then date_shape(value)
+  else if shape == "name" then name_shape(value)
+  else if shape == "sex" then sex_shape(value)
+  else if shape == "alnum" then alnum_id_shape(value)
+  else trim(value)
+
+pub line_candidate(tail: String, shape: String) -> String =
+  let line = trim(first_line(tail)) in
+  if line == "" then ""
+  else
+    let shaped = apply_shape(line, shape) in
+    if shape != "" then shaped
+    else if starts_with_label_word(line) then "" else shaped
+
+pub next_line_candidate(rest: String, shape: String, depth: Int) -> String =
+  if depth <= 0 || rest == "" then ""
+  else
+    let line = trim(first_line(rest)) in
+    let shaped = apply_shape(line, shape) in
+    let cand = if line == "" then "" else if shape != "" then shaped else if starts_with_label_word(line) then "" else shaped in
+    if cand != "" then cand else next_line_candidate(after_first_line(rest), shape, depth - 1)
+
+pub value_after_one(text: String, label: String, shape: String) -> String =
+  let lower = string_to_lower(text) in
+  let idx = index_of(lower, string_to_lower(label)) in
+  if idx < 0 then ""
+  else
+    let tail = trim_left(string_slice(text, idx + string_length(label), string_length(text) - idx - string_length(label))) in
+    let same = line_candidate(tail, shape) in
+    if same != "" then same else next_line_candidate(after_first_line(tail), shape, 25)
+
+pub value_after_shape(text: String, labels: StringList, shape: String) -> String =
+  match labels with
+    | Nil => ""
+    | Cons(label, rest) =>
+        let value = value_after_one(text, label, shape) in
+        if value != "" then value else value_after_shape(text, rest, shape)
+
+pub value_after(text: String, labels: StringList) -> String =
+  value_after_shape(text, labels, "")
+
+pub eid_at(text: String, i: Int) -> Bool =
+  i + 18 <= string_length(text) &&
+  is_digit(char_at(text, i)) && is_digit(char_at(text, i + 1)) && is_digit(char_at(text, i + 2)) &&
+  char_at(text, i + 3) == "-" &&
+  is_digit(char_at(text, i + 4)) && is_digit(char_at(text, i + 5)) && is_digit(char_at(text, i + 6)) && is_digit(char_at(text, i + 7)) &&
+  char_at(text, i + 8) == "-" &&
+  is_digit(char_at(text, i + 9)) && is_digit(char_at(text, i + 10)) && is_digit(char_at(text, i + 11)) && is_digit(char_at(text, i + 12)) &&
+  is_digit(char_at(text, i + 13)) && is_digit(char_at(text, i + 14)) && is_digit(char_at(text, i + 15)) &&
+  char_at(text, i + 16) == "-" && is_digit(char_at(text, i + 17))
+
+pub first_eid_from(text: String, i: Int) -> String =
+  if i + 18 > string_length(text) then ""
+  else if eid_at(text, i) then string_slice(text, i, 18)
+  else first_eid_from(text, i + 1)
+
+pub first_eid(text: String) -> String =
+  first_eid_from(text, 0)
+
+pub main() -> Int = 0

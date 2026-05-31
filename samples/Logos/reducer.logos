@@ -1,0 +1,85 @@
+module vryx.canvas.state.reducer
+
+import customer_card
+import fact_types
+import customer_match
+import customer_attach
+
+pub update_customer(list: CustomerList, id: String, replacement: CustomerCard) -> CustomerList =
+  match list with
+    | NoCustomers => NoCustomers
+    | CustomerCons(head, tail) =>
+        if head.customer_fact_id == id then CustomerCons(replacement, tail)
+        else CustomerCons(head, update_customer(tail, id, replacement))
+
+pub find_customer(list: CustomerList, id: String) -> CustomerCard =
+  match list with
+    | NoCustomers => empty_customer("", 0)
+    | CustomerCons(head, tail) => if head.customer_fact_id == id then head else find_customer(tail, id)
+
+pub add_customer(set: CustomerSet, c: CustomerCard) -> CustomerSet =
+  if set.count >= max_customers() then set
+  else CustomerSet { customers: CustomerCons(c, set.customers), count: set.count + 1, orphan_artifacts: set.orphan_artifacts }
+
+pub replace_customer(set: CustomerSet, id: String, c: CustomerCard) -> CustomerSet =
+  CustomerSet { customers: update_customer(set.customers, id, c), count: set.count, orphan_artifacts: set.orphan_artifacts }
+
+pub apply_parsed_eid(set: CustomerSet, fact_id: String, artifact_id: String, extraction_id: String, side: String, name: String, eid: String, dob: String, nat: String, sex: String, expiry: String, ts_ms: Int) -> CustomerSet =
+  let eid_match = index_for_eid(set, eid) in
+  let name_match = if eid_match == "" then index_for_name(set, name) else eid_match in
+  let target = if name_match == "" then fact_id else name_match in
+  let base = if name_match == "" then empty_customer(fact_id, ts_ms) else find_customer(set.customers, name_match) in
+  let enriched = with_identity(update_side(base, side), artifact_id, fact_id, name, eid, dob, nat, sex, ts_ms) in
+  let attached = attach_dedup(enriched, AttachedDoc { fact_id: fact_id, filename: "", doc_kind: "emirates_id", doc_side: side, expiry: expiry }) in
+  if name_match == "" then add_customer(set, attached) else replace_customer(set, target, attached)
+
+pub apply_parsed_other(set: CustomerSet, fact_id: String, artifact_id: String, doc_kind: String, side: String, name: String, expiry: String) -> CustomerSet =
+  let target = index_for_name(set, name) in
+  if target == "" then set
+  else
+    let base = find_customer(set.customers, target) in
+    let attached = attach_dedup(base, AttachedDoc { fact_id: fact_id, filename: "", doc_kind: doc_kind, doc_side: side, expiry: expiry }) in
+    replace_customer(set, target, attached)
+
+pub apply_customer_fact(set: CustomerSet, fact_id: String, source_parsed: String, source_artifact: String, name: String, eid: String, dob: String, nat: String, sex: String, side: String, face: String, age: Int, ts_ms: Int) -> CustomerSet =
+  let by_id = index_for_customer_id(set, fact_id) in
+  let by_eid = if by_id == "" then index_for_eid(set, eid) else by_id in
+  if by_eid == "" then
+    if set.count >= max_customers() then set
+    else add_customer(set, overwrite_customer(empty_customer(fact_id, ts_ms), fact_id, source_parsed, source_artifact, name, eid, dob, nat, sex, side, face, age, ts_ms))
+  else
+    replace_customer(set, by_eid, overwrite_customer(find_customer(set.customers, by_eid), fact_id, source_parsed, source_artifact, name, eid, dob, nat, sex, side, face, age, ts_ms))
+
+pub apply_contact_fact(set: CustomerSet, fact_id: String, customer_id: String, phone: String, email: String, address: String, ts_ms: Int) -> CustomerSet =
+  let target = index_for_customer_id(set, customer_id) in
+  if target == "" then set
+  else replace_customer(set, target, apply_contact(find_customer(set.customers, target), fact_id, phone, email, address, ts_ms))
+
+pub apply_manual_attach_fact(set: CustomerSet, fact_id: String, customer_id: String, artifact_id: String, doc_kind: String, side: String, filename: String, expiry: String) -> CustomerSet =
+  let target = index_for_customer_id(set, customer_id) in
+  if target == "" then set
+  else if not orphan_exists(set.orphan_artifacts, artifact_id) then set
+  else
+    let base = find_customer(set.customers, target) in
+    let attached = attach_dedup(base, AttachedDoc { fact_id: fact_id, filename: filename, doc_kind: doc_kind, doc_side: side, expiry: expiry }) in
+    replace_customer(set, target, attached)
+
+pub apply_fact(set: CustomerSet, fact: Fact) -> CustomerSet =
+  match fact with
+    | ArtifactV1(fid, hash, filename, mime, path, ts) =>
+        CustomerSet { customers: set.customers, count: set.count, orphan_artifacts: add_orphan(set.orphan_artifacts, OrphanArtifact { fact_id: fid, content_hash: hash, filename: filename, mime_hint: mime, path: path, ts_ms: ts }) }
+    | ExtractionV1(_, _, _, _) => set
+    | ParsedV1(fid, artifact, extraction, kind, side, name, eid, dob, nat, sex, expiry, ts) =>
+        if kind == "emirates_id" then apply_parsed_eid(set, fid, artifact, extraction, side, name, eid, dob, nat, sex, expiry, ts)
+        else apply_parsed_other(set, fid, artifact, kind, side, name, expiry)
+    | CustomerV1(fid, source_parsed, source_artifact, name, eid, dob, nat, sex, side, face, age, ts) =>
+        apply_customer_fact(set, fid, source_parsed, source_artifact, name, eid, dob, nat, sex, side, face, age, ts)
+    | ContactV1(fid, customer_id, phone, email, address, ts) =>
+        apply_contact_fact(set, fid, customer_id, phone, email, address, ts)
+    | ManualAttachV1(fid, customer_id, artifact_id, kind, side, filename, expiry, _) =>
+        apply_manual_attach_fact(set, fid, customer_id, artifact_id, kind, side, filename, expiry)
+
+pub fold_facts(set: CustomerSet, facts: FactList) -> CustomerSet =
+  match facts with
+    | NoFacts => set
+    | FactCons(head, tail) => fold_facts(apply_fact(set, head), tail)

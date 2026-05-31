@@ -1,0 +1,13 @@
+module vryx.canvas.state.fact_types
+
+pub type Fact =
+  | ArtifactV1(String, String, String, String, String, Int)
+  | ExtractionV1(String, String, String, Int)
+  | ParsedV1(String, String, String, String, String, String, String, String, String, String, String, Int)
+  | CustomerV1(String, String, String, String, String, String, String, String, String, String, Int, Int)
+  | ContactV1(String, String, String, String, String, Int)
+  | ManualAttachV1(String, String, String, String, String, String, String, Int)
+
+pub type FactList =
+  | NoFacts
+  | FactCons(Fact, FactList)

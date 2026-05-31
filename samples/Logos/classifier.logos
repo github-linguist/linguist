@@ -1,0 +1,140 @@
+module vryx.canvas.classifier
+
+pub type DocKind =
+  | EmiratesId
+  | DrivingLicense
+  | VehicleMulkiya
+  | Passport
+  | TradeLicense
+  | Invoice
+  | InsurancePolicy
+  | GenericDoc
+
+pub string_length(s: String) -> Int
+pub string_slice(s: String, from: Int, len: Int) -> String
+pub string_contains(haystack: String, needle: String) -> Bool
+pub string_to_lower(s: String) -> String
+
+has(text: String, needle: String) -> Bool =
+  string_contains(text, needle)
+
+is_digit(ch: String) -> Bool =
+  ch == "0" || ch == "1" || ch == "2" || ch == "3" || ch == "4" ||
+  ch == "5" || ch == "6" || ch == "7" || ch == "8" || ch == "9"
+
+char_at(s: String, index: Int) -> String =
+  string_slice(s, index, 1)
+
+eid_at(text: String, i: Int) -> Bool =
+  is_digit(char_at(text, i)) &&
+  is_digit(char_at(text, i + 1)) &&
+  is_digit(char_at(text, i + 2)) &&
+  char_at(text, i + 3) == "-" &&
+  is_digit(char_at(text, i + 4)) &&
+  is_digit(char_at(text, i + 5)) &&
+  is_digit(char_at(text, i + 6)) &&
+  is_digit(char_at(text, i + 7)) &&
+  char_at(text, i + 8) == "-" &&
+  is_digit(char_at(text, i + 9)) &&
+  is_digit(char_at(text, i + 10)) &&
+  is_digit(char_at(text, i + 11)) &&
+  is_digit(char_at(text, i + 12)) &&
+  is_digit(char_at(text, i + 13)) &&
+  is_digit(char_at(text, i + 14)) &&
+  is_digit(char_at(text, i + 15)) &&
+  char_at(text, i + 16) == "-" &&
+  is_digit(char_at(text, i + 17))
+
+eid_scan_from(text: String, i: Int) -> Bool =
+  if i + 18 > string_length(text) then false
+  else if eid_at(text, i) then true
+  else eid_scan_from(text, i + 1)
+
+has_eid_format(text: String) -> Bool =
+  eid_scan_from(text, 0)
+
+has_mrz_passport(text: String) -> Bool =
+  has(text, "p<") &&
+  (has(text, "p<are") || has(text, "p<uae") || has(text, "p<ind") ||
+   has(text, "p<gbr") || has(text, "p<pak") || has(text, "p<qat") ||
+   has(text, "p<sau") || has(text, "p<omn"))
+
+is_eid(text: String) -> Bool =
+  has(text, "resident identity card") ||
+  has(text, "identity & citizenship") ||
+  has(text, "federal authority for identity") ||
+  has_eid_format(text) ||
+  (has(text, "card number") && (has(text, "occupation") || has(text, "employer") || has(text, "sponsor")))
+
+is_driving_license(text: String) -> Bool =
+  has(text, "driving licence") ||
+  has(text, "driving license") ||
+  has(text, "licence no") ||
+  has(text, "license no")
+
+is_vehicle_mulkiya(text: String) -> Bool =
+  has(text, "mulkiya") ||
+  has(text, "vehicle registration") ||
+  has(text, "vehicle license") ||
+  has(text, "vehicle licence") ||
+  has(text, "chassis no") ||
+  has(text, "chassis number") ||
+  has(text, "chasis no") ||
+  has(text, "chasis number") ||
+  has(text, "vch. type") ||
+  has(text, "eng. no") ||
+  has(text, "plate no") ||
+  has(text, "reg. date")
+
+is_passport(text: String) -> Bool =
+  has(text, "passport no") ||
+  has(text, "passport number") ||
+  has_mrz_passport(text)
+
+is_trade_license(text: String) -> Bool =
+  has(text, "trade license") ||
+  has(text, "trade licence") ||
+  has(text, "commercial registration")
+
+is_invoice(text: String) -> Bool =
+  has(text, "tax invoice") ||
+  has(text, "invoice no")
+
+is_insurance_policy(text: String) -> Bool =
+  has(text, "policy schedule") ||
+  has(text, "policy no")
+
+pub classify_doc(text: String) -> DocKind =
+  let lower = string_to_lower(text) in
+  if is_eid(lower) then EmiratesId
+  else if is_driving_license(lower) then DrivingLicense
+  else if is_vehicle_mulkiya(lower) then VehicleMulkiya
+  else if is_passport(lower) then Passport
+  else if is_trade_license(lower) then TradeLicense
+  else if is_invoice(lower) then Invoice
+  else if is_insurance_policy(lower) then InsurancePolicy
+  else GenericDoc
+
+pub doc_kind_tag(kind: DocKind) -> Int =
+  match kind with
+    | EmiratesId => 1
+    | DrivingLicense => 2
+    | VehicleMulkiya => 3
+    | Passport => 4
+    | TradeLicense => 5
+    | Invoice => 6
+    | InsurancePolicy => 7
+    | GenericDoc => 8
+
+pub doc_kind_name(kind: DocKind) -> String =
+  match kind with
+    | EmiratesId => "emirates_id"
+    | DrivingLicense => "driving_license"
+    | VehicleMulkiya => "vehicle_mulkiya"
+    | Passport => "passport"
+    | TradeLicense => "trade_license"
+    | Invoice => "invoice"
+    | InsurancePolicy => "insurance_policy"
+    | GenericDoc => "generic"
+
+main() -> Int = doc_kind_tag(classify_doc("hello")) - 8
