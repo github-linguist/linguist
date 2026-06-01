@@ -664,7 +664,6 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **VHDL:** [VHDL-LS/rust_hdl_vscode](https://github.com/VHDL-LS/rust_hdl_vscode)
 - **Vala:** [technosophos/Vala-TMBundle](https://github.com/technosophos/Vala-TMBundle)
 - **Valve Data Format:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
-- **Valve Map Format:** [meowcat767/vmf-grammar](https://github.com/meowcat767/vmf-grammar)
 - **Velocity Template Language:** [animecyc/AtomLanguageVelocity](https://github.com/animecyc/AtomLanguageVelocity)
 - **Vento:** [ventojs/vscode-vento](https://github.com/ventojs/vscode-vento)
 - **Verilog:** [textmate/verilog.tmbundle](https://github.com/textmate/verilog.tmbundle)
